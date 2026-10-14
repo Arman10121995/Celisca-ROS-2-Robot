@@ -214,3 +214,45 @@ def test_grasp_is_rejected_without_a_documented_object(tmp_path):
     assert 'no documented grasp object' in control.status
     assert control.grasp['state'] == 'idle'
 
+
+@pytest.mark.parametrize('support_first', [True, False])
+def test_actual_support_force_is_measured_in_both_contact_geom_orders(tmp_path, support_first):
+    source, original, _, node, _ = _pad_hand(tmp_path)
+    spec = mj.MjSpec.from_file(str(source))
+    def support():
+        body = spec.worldbody.add_body(name='test_support', pos=[0, 0, .059])
+        body.add_geom(type=mj.mjtGeom.mjGEOM_BOX, size=[.015, .015, .059])
+    def cube():
+        body = spec.worldbody.add_body(name='manipulation_object', pos=[0, 0, .1299])
+        body.add_freejoint()
+        body.add_geom(type=mj.mjtGeom.mjGEOM_BOX, size=[.01, .01, .012], mass=.05)
+    if support_first:
+        support(); cube()
+    else:
+        cube(); support()
+    node.model = spec.compile()
+    node.data = mj.MjData(node.model)
+    node.robot_bodies, node.robot_joints = original.nbody, original.njnt
+    node.object_body = mj.mj_name2id(node.model, mj.mjtObj.mjOBJ_BODY, 'manipulation_object')
+    mj.mj_forward(node.model, node.data)
+    control = NativeHandControl(node, hand_contract(node.model, source))
+    measurement = control.object_contacts()
+    assert measurement['supported'] and measurement['support_force_z_n'] > .1
+    assert measurement['support_contact_count'] > 0
+    assert measurement['left_force_n'] == 0. and measurement['right_force_n'] == 0.
+    assert measurement['contact_count'] == 0
+    control.grasp.update(state='holding', contact_limit_n=1.)
+    control.update_grasp()
+    assert control.grasp['state'] == 'contact_lost'
+    assert control.grasp['contact_state'] == 'no_contact'
+    control.grasp['state'] = 'closing'
+    control.last_heartbeat = -float('inf')
+    control.before_step()
+    assert control.grasp['state'] == 'interrupted'
+
+
+def test_nonfinite_slip_cannot_claim_a_contact_hold():
+    result = classify_grasp(.5, .5, True, float('nan'))
+    assert result['grasp'] == 'invalid_measurement'
+    assert not result['two_sided_contact']
+

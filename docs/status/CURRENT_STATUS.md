@@ -1,9 +1,17 @@
 # Current Robot Lab status
 
+The October 14 next extension is now scoped as R10: shared-world fleets,
+fleet management, ground/aerial swarms, underwater robots/maps and six/eight/
+many-legged robot families. Source research and agent instructions are
+recorded; runtime remains queued after current implementation work. GUI Health
+shows the same status. [Detailed guide](../NEXT_EXTENSION_GUIDE.md).
+
 October 14 hand integration: four source hand profiles now have experimental
 coordinated poses, source PID/tendon actuation, individual finger groups,
 measured external contacts/effort and guarded advancement. Normal GUI
-DEX-EE/Robotiq movement diagnostics and 27 focused checks are recorded;
+DEX-EE/Robotiq movement diagnostics, actual GUI free-cube contact/release
+and 34 focused checks are recorded. Fixture/adapter forwarding, actual support/
+contact-loss state and collision-based placement are repaired;
 stable grasp/release, all templates/objects and other backends remain pending.
 [Guide](../tutorials/native-hand-controls.md),
 [scope and retained failure](native-hands-2026-10-14.md).

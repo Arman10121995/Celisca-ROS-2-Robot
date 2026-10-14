@@ -71,6 +71,11 @@ def format_platform_status(data):
                 lines.append('  Validation: '+item.get('validation', 'pending'))
         lines.extend(['', 'Deferred validation', delivery.get('deferred_validation', {}).get('scope', '')])
     readiness = data.get('readiness_order', {})
+    extension = data.get('next_extension', {})
+    if extension:
+        lines.extend(['', 'Next extension — runtime '+extension.get('runtime_state', 'queued'),
+                      extension.get('priority', ''), extension.get('scope', ''),
+                      'Agent guide: '+extension.get('guide', '')])
     if readiness:
         lines.extend(['', 'Current robot priority: Motion → SLAM → Navigation',
                       readiness.get('scope', ''), readiness.get('next_work', '')])

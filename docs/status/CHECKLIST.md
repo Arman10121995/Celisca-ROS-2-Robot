@@ -1,5 +1,13 @@
 # Robot Lab done and remaining checklist
 
+- [x] Define the October 14 next extension and researched source/agent guide;
+  expose its queued runtime status in GUI Health.
+- [ ] R10 shared-world sessions, fleet management and ground/aerial swarm control.
+- [ ] R10 underwater ROV/AUV physics, maps, sensing, estimation, SLAM and navigation.
+- [ ] R10 complete hexapod/octopod, centipede/segmented and further robot families.
+- [ ] R10 native Fleet/Swarm/Marine panels and measured mission/workload support.
+  These follow current initial implementation. See [the guide](../NEXT_EXTENSION_GUIDE.md).
+
 - [x] October 14: mapped/depth obstacle consumers, capture transforms, bounded
   observed/static aerial planning, async route recheck, stale/blockage Hold and
   GUI dependency selection/autofill/observation status.

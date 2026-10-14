@@ -1,5 +1,11 @@
 # Robot Lab — Multi-Robot Simulation and Algorithm Laboratory
 
+The next extension includes **fleet management, ground/aerial swarms,
+underwater robots/maps, six/eight-legged and centipede/segmented robots**.
+Runtime integration is queued after current implementation work.
+[R10 roadmap](ROADMAP.md#r10--next-extension-fleets-swarms-and-new-robot-forms),
+[source research and agent guide](docs/NEXT_EXTENSION_GUIDE.md).
+
 October 14 adds experimental **DEX-EE, Robotiq and UMI Hand controls**:
 source PID/tendon motors, coordinated finger poses, measured contacts/effort,
 Stop and command autofill. Stable object grasps and other backends remain open.

@@ -40,12 +40,13 @@ def _robotiq_2f85_v4_spec(tmp_path, gap=0.09):
     source = folder / 'robotiq_2f85_v4.xml'
     source.write_text(
         '<mujoco><compiler angle="radian" autolimits="true"/>'
+        '<option integrator="implicitfast"/>'
         '<worldbody><body name="mount" pos="0 0 .05">'
         '<body name="left_pad" pos="%f 0 0.1">'
         '<joint name="left_driver_joint" type="slide" axis="1 0 0" range="0 .05"/>'
         '<geom type="box" size=".004 .012 .012"/></body>'
         '<body name="right_pad" pos="%f 0 0.1">'
-        '<joint name="right_driver_joint" type="slide" axis="1 0 0" range="-.05 0"/>'
+        '<joint name="right_driver_joint" type="slide" axis="-1 0 0" range="0 .05"/>'
         '<geom type="box" size=".004 .012 .012"/></body>'
         '</body></worldbody>'
         '<tendon><fixed name="split"><joint joint="left_driver_joint" coef=".5"/>'
@@ -119,6 +120,7 @@ def test_native_hand_grasp_fixture_authors_object_between_pads_and_flows_held_re
         control.receive(_send(control, 'hand_grasp'))
         assert control.grasp['state'] == 'closing'
         for _ in range(400):
+            control.heartbeat(None)
             node.tick()
             if control.grasp['state'] in ('holding', 'slipping'):
                 break
@@ -136,6 +138,7 @@ def test_native_hand_grasp_fixture_authors_object_between_pads_and_flows_held_re
         control.receive(_send(control, 'hand_release'))
         assert control.grasp['state'] == 'releasing'
         for _ in range(300):
+            control.heartbeat(None)
             node.tick()
             if control.grasp['state'] == 'released':
                 break

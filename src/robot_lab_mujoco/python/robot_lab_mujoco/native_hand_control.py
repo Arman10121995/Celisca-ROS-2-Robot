@@ -70,6 +70,9 @@ class NativeHandControl(NativeArticulationControl):
         self.commanded = self.target.copy()
         self.guard = None
         self.motion.update(state='interrupted', reason=reason)
+        if hasattr(self, 'grasp') and self.grasp['state'] != 'idle':
+            self.grasp.update(state='interrupted', scope=reason)
+            self.grasp_anchor = None
         self.reset_pid_memory()
 
     def receive(self, message):
@@ -128,7 +131,8 @@ class NativeHandControl(NativeArticulationControl):
         object body. Hand self-contact and other environment contacts are
         excluded so this cannot be mistaken for an object grasp.
         """
-        result = dict(left_force_n=0., right_force_n=0., supported=False, contact_count=0)
+        result = dict(left_force_n=0., right_force_n=0., supported=False, contact_count=0,
+            support_contact_count=0, support_force_z_n=0.)
         if self.object_body < 0 or not self.object_sides:
             return result
         left, right = self.object_sides
@@ -137,22 +141,30 @@ class NativeHandControl(NativeArticulationControl):
             bodies = [int(self.model.geom_bodyid[g]) for g in geoms]
             if self.object_body not in bodies:
                 continue
-            finger = [body for body in bodies if body != self.object_body]
-            if not finger or not any(0 < body < self.node.robot_bodies for body in finger):
+            other = bodies[1] if bodies[0] == self.object_body else bodies[0]
+            if other == self.object_body:
                 continue
             force = np.zeros(6)
             self.node.mujoco.mj_contactForce(self.model, self.data, index, force)
             normal = max(0., float(force[0]))
-            result['contact_count'] += 1
-            if any(body in left for body in finger):
+            if other in left:
+                result['contact_count'] += 1
                 result['left_force_n'] += normal
-            elif any(body in right for body in finger):
+            elif other in right:
+                result['contact_count'] += 1
                 result['right_force_n'] += normal
             # Support: a contact whose normal points up on the object from a
             # non-finger body (the pedestal/ground) carries the object's weight.
-            elif force[2] > 0. and np.dot(np.array([0., 0., 1.]),
-                    self.data.contact[index].frame[:3]) > .5:
-                result['supported'] = True
+            else:
+                # mj_contactForce is expressed in contact-frame axes. The
+                # force is on geom 1; reverse it when the object is geom 0.
+                sign = 1. if bodies[1] == self.object_body else -1.
+                world_force = sign*contact.frame.reshape(3, 3).T@force[:3]
+                upward = max(0., float(world_force[2]))
+                if upward > 1e-4:
+                    result['support_contact_count'] += 1
+                    result['support_force_z_n'] += upward
+                    result['supported'] = True
         return result
 
     def grasp_object(self, request):
@@ -181,8 +193,9 @@ class NativeHandControl(NativeArticulationControl):
                 left_force_n=0., right_force_n=0., supported=False, slip_m=0.,
                 contact_limit_n=contact_limit, effort_fraction=effort_fraction)
             # Close every group with the same guarded targets used by Apply.
-            pose = str(request.get('pose') if request.get('pose') in
-                [*self.contract['poses'], 'Open'] else 'Close')
+            requested = request.get('pose')
+            pose = str(requested if requested in self.contract['poses'] and requested != 'Spread'
+                else self.contract['poses'][0])
             targets = hand_pose_targets(self.contract, pose, float(request.get('closure', 1.)),
                 float(request.get('spread', 0.)), 'All')
             for slot, channel in enumerate(self.channels):
@@ -210,7 +223,7 @@ class NativeHandControl(NativeArticulationControl):
             self.hold('Object release requested')
             self.grasp_anchor = None
             self.grasp = dict(state='releasing', scope='Opening; object motion returns to contact physics',
-                left_force_n=0., right_force_n=0., supported=True, slip_m=0.)
+                left_force_n=0., right_force_n=0., supported=False, slip_m=0.)
             targets = hand_pose_targets(self.contract, 'Open', 0., 0., 'All')
             for slot, channel in enumerate(self.channels):
                 if channel['name'] in targets:
@@ -224,7 +237,7 @@ class NativeHandControl(NativeArticulationControl):
 
     def update_grasp(self):
         """Refresh the measured grasp state from contact/support/slip evidence."""
-        if self.object_body < 0 or self.grasp['state'] == 'idle':
+        if self.object_body < 0:
             return
         measured = self.object_contacts()
         position = self.data.xpos[self.object_body].copy()
@@ -236,12 +249,18 @@ class NativeHandControl(NativeArticulationControl):
         slip = 0. if self.grasp_anchor is None else float(np.linalg.norm(position-self.grasp_anchor))
         if self.grasp['state'] == 'holding' and slip > .01:
             self.grasp['state'] = 'slipping'
+        if self.grasp['state'] in ('holding', 'slipping') and (
+                measured['left_force_n'] < threshold or measured['right_force_n'] < threshold):
+            self.grasp['state'] = 'contact_lost'
         verdict = classify_grasp(measured['left_force_n'], measured['right_force_n'],
-            measured['supported'] or self.grasp['state'] in ('holding', 'slipping'), slip)
+            measured['supported'], slip, contact_threshold_n=threshold)
         self.grasp.update(left_force_n=measured['left_force_n'],
             right_force_n=measured['right_force_n'], supported=measured['supported'],
             slip_m=slip, contact_count=measured['contact_count'],
-            scope=verdict['scope'] if self.grasp['state'] != 'closing' else self.grasp['scope'])
+            support_contact_count=measured['support_contact_count'], support_force_z_n=measured['support_force_z_n'],
+            contact_state=verdict['grasp'])
+        if self.grasp['state'] in ('holding', 'slipping', 'contact_lost'):
+            self.grasp['scope'] = verdict['scope']
         if self.grasp['state'] == 'releasing' and measured['contact_count'] == 0:
             self.grasp.update(state='released', scope='Fingers open; object free under contact physics')
 
@@ -275,11 +294,18 @@ class NativeHandControl(NativeArticulationControl):
     def stop_group(self, group, reason):
         measured = self.bounded(self.measured_controls())
         names = set(group['channels'])
+        # A requested object grasp must retain the bounded source setpoint's
+        # contact preload. Projecting to the measured contact position would
+        # remove all position error/force and immediately release the object.
+        # Stop/heartbeat loss still use measured hold and reset owned PID state.
+        grasp_hold = bool(self.guard.get('grasp'))
         for slot, channel in enumerate(self.channels):
             if channel['name'] in names:
-                self.target[slot] = measured[slot]
-                self.commanded[slot] = measured[slot]
-        self.reset_pid_memory(names)
+                value = self.bounded(self.commanded)[slot] if grasp_hold else measured[slot]
+                self.target[slot] = value
+                self.commanded[slot] = value
+        if not grasp_hold:
+            self.reset_pid_memory(names)
         self.guard['blocked'][group['name']] = reason
         self.motion.update(state='contact_or_effort_limited', reason=reason)
         self.status = 'Hand advancement limited; inspect measured contacts, then Open or Stop'
@@ -352,6 +378,7 @@ class NativeHandControl(NativeArticulationControl):
         # or replace the source actuators; Panda/other controller paths retain
         # their own existing publication contracts.
         self.node.mujoco.mj_forward(self.model, self.data)
+        self.update_grasp()
         super().publish()
 
     def extra_state(self):
@@ -364,6 +391,7 @@ class NativeHandControl(NativeArticulationControl):
             contacts=self.contacts(), blocked_groups=self.guard['blocked'] if self.guard else {},
             guard_scope='Stop advancement at measured thresholds; source hard bounds unchanged; no grasp guarantee',
             object_grasp=self.grasp,
+            object_present=self.object_body >= 0, object_body_id=self.object_body,
             source_effort_limits={c['name']: self.model.actuator_forcerange[c['index']].tolist()
                 if self.model.actuator_forcelimited[c['index']] else None for c in self.channels},
             qualification='experimental; measured contact hold only, object lift/release and other backend missions pending'))

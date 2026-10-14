@@ -1067,6 +1067,10 @@ def _build_simulation_actions(context):
                 raise ValueError('Native Panda control is available only for menagerie_franka_emika_panda')
             display_args['arm_control'] = arm
             display_args['grasp_fixture'] = _launch_value(context, 'grasp_fixture')
+            if _as_bool(display_args['grasp_fixture']) and robot_config.get('native_hand'):
+                if not native_articulation:
+                    raise ValueError('Native hand object fixture requires enabled native joint controls')
+                display_args['hand_adapter'] = robot_config['native_hand']['adapter']
             if planning == 'native_moveit':
                 from robot_lab_utils.native_planning_description import ARM_FRAMES, fixed_arm_planning_model
                 if (simulator != 'mujoco' or not native_articulation or robot_model not in ARM_FRAMES

@@ -16,6 +16,7 @@ class NativeHandControls(ttk.Frame):
         self.effort = tk.DoubleVar(value=.6)
         self.contact = tk.DoubleVar(value=1.)
         self.guarded = tk.BooleanVar(value=True)
+        self.fixture = tk.BooleanVar(value=False)
         self.feedback = tk.StringVar(value='Enable native joint controls and Run to receive the hand contract.')
         self.note = tk.StringVar(value='Experimental native hand controls')
         self.columnconfigure((0, 1), weight=1)
@@ -42,8 +43,8 @@ class NativeHandControls(ttk.Frame):
         self.apply_button.grid(row=9, column=0, sticky='ew', padx=2, pady=5)
         self.grasp_object_button = ttk.Button(self, text='Grasp object', command=self.grasp_object)
         self.release_object_button = ttk.Button(self, text='Release object', command=self.release_object)
-        self.grasp_object_button.grid(row=9, column=2, sticky='ew', padx=2, pady=5)
-        self.release_object_button.grid(row=10, column=2, sticky='ew', padx=2, pady=5)
+        self.grasp_object_button.grid(row=14, column=0, sticky='ew', padx=2, pady=5)
+        self.release_object_button.grid(row=14, column=1, sticky='ew', padx=2, pady=5)
         self.stop_button = ttk.Button(self, text='Stop hand / hold', command=self.owner.stop)
         self.open_button.grid(row=9, column=1, sticky='ew', padx=2, pady=5)
         self.stop_button.grid(row=10, column=0, columnspan=2, sticky='ew', pady=3)
@@ -56,6 +57,15 @@ class NativeHandControls(ttk.Frame):
             wraplength=305).grid(row=12, column=0, columnspan=2, sticky='w', pady=5)
         self.enable_button = ttk.Button(self, text='Enable hand controls for next Run', command=self.enable)
         self.enable_button.grid(row=13, column=0, columnspan=2, sticky='ew', pady=5)
+        self.fixture_button = ttk.Checkbutton(self, text='Add free grasp object on next Run',
+            variable=self.fixture, command=self.fixture_changed)
+        self.fixture_button.grid(row=15, column=0, columnspan=2, sticky='w', pady=5)
+
+    def fixture_changed(self):
+        if self.selected() and not self.owner.app._launch_running:
+            if self.fixture.get():
+                self.owner.app.native_articulation_var.set(True)
+            self.owner.app._update_from_selection()
 
     def enable(self):
         if self.selected() and not self.owner.app._launch_running:
@@ -71,10 +81,13 @@ class NativeHandControls(ttk.Frame):
             return
         self.grid()
         self.enable_button.state(['disabled'] if self.owner.app._launch_running else ['!disabled'])
+        self.fixture_button.state(['disabled'] if self.owner.app._launch_running else ['!disabled'])
         hand = (self.owner.state or {}).get('hand', {})
         ready = bool(self.owner.ready() and hand.get('contract_sha256') and hand.get('groups'))
         for button in (self.apply_button, self.open_button, self.stop_button):
             button.state(['!disabled'] if ready else ['disabled'])
+        for button in (self.grasp_object_button, self.release_object_button):
+            button.state(['!disabled'] if ready and hand.get('object_present') else ['disabled'])
         if not ready:
             self.feedback.set('Waiting for fresh source hand feedback from the selected Run.')
             return
@@ -93,7 +106,8 @@ class NativeHandControls(ttk.Frame):
         self.feedback.set(hand['motion']['state']+'\n'
             + '\n'.join(details)
             + ('\nStopped groups: '+blocked if blocked else '')
-            + ('\nDocumented object present: grasp/release enabled' if self.owner.object_body >= 0 else ''))
+            + ('\nObject: '+hand.get('object_grasp', {}).get('state', 'unassessed')
+                + '\n'+hand.get('object_grasp', {}).get('scope', '') if hand.get('object_present') else ''))
 
     def apply(self, pose=None):
         if not self.owner.ready():
@@ -130,17 +144,19 @@ class NativeHandControls(ttk.Frame):
             return
         state = self.owner.state
         hand = state.get('hand')
-        if self.owner.object_body < 0:
+        if not (hand or {}).get('object_present'):
             self.feedback.set('Enable the object fixture before Grasp object.')
             return
         if not hand:
             self.feedback.set('No hand contract; enable native hand controls and Run.')
             return
         try:
-            from std_msgs.msg import String
+            from std_msgs.msg import Empty, String
+            self.owner.heartbeat.publish(Empty())
             self.owner.pub.publish(String(data=json.dumps(dict(operation='hand_grasp',
                 plant_id=state['plant_id'], source_sha256=state['source_sha256'],
                 contract_sha256=hand['contract_sha256'], closure=1., spread=0.,
+                pose=self.pose.get(),
                 guarded=bool(self.guarded.get()), effort_fraction=float(self.effort.get()),
                 contact_limit_n=float(self.contact.get())))))
             self.feedback.set('Closing on the documented object; measured contact hold pending.')
@@ -154,14 +170,15 @@ class NativeHandControls(ttk.Frame):
             return
         state = self.owner.state
         hand = state.get('hand')
-        if self.owner.object_body < 0:
+        if not (hand or {}).get('object_present'):
             self.feedback.set('Enable the object fixture before Release object.')
             return
         if not hand:
             self.feedback.set('No hand contract; enable native hand controls and Run.')
             return
         try:
-            from std_msgs.msg import String
+            from std_msgs.msg import Empty, String
+            self.owner.heartbeat.publish(Empty())
             self.owner.pub.publish(String(data=json.dumps(dict(operation='hand_release',
                 plant_id=state['plant_id'], source_sha256=state['source_sha256'],
                 contract_sha256=hand['contract_sha256']))))

@@ -43,6 +43,7 @@ if(BUILD_TESTING)
   ament_add_pytest_test(mobile_task_and_takeoff test/test_mobile_task_and_takeoff.py TIMEOUT 60 ENV PYTEST_DISABLE_PLUGIN_AUTOLOAD=1)
   ament_add_pytest_test(native_planning_description test/test_native_planning_description.py TIMEOUT 60 ENV PYTEST_DISABLE_PLUGIN_AUTOLOAD=1)
   ament_add_pytest_test(native_hand test/test_native_hand.py TIMEOUT 60 ENV PYTEST_DISABLE_PLUGIN_AUTOLOAD=1)
+  ament_add_pytest_test(native_hand_object test/test_native_hand_object.py TIMEOUT 60 ENV PYTEST_DISABLE_PLUGIN_AUTOLOAD=1)
 endif()
 
 ament_package()

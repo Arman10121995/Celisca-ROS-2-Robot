@@ -1,0 +1,2064 @@
+{
+  "robot": "menagerie_shadow_dexee",
+  "backend": "mujoco",
+  "map": "nav_empty",
+  "mode": "display",
+  "complete": true,
+  "scope": "One installed Tk/ROS/source-physics hand diagnostic; no grasp/object/other-backend qualification",
+  "command": "ros2 launch robot_lab_bringup simulated_robot.launch.py robot_model:=menagerie_shadow_dexee simulator:=mujoco use_sim_time:=true map_name:=nav_empty world_package:=robot_lab_maps world_name:=nav_empty world_path:=maps/nav_empty/worlds/nav_empty.world map_yaml:=maps/nav_empty/maps/map.yaml mode:=display gui:=false perception:=none enable_native_articulation:=true",
+  "pid": 1393847,
+  "source_sha256": "7d7ad518b01451f58d3e5f3e59e58719741efead2d7730c9cf800f7d766f267a",
+  "contract_sha256": "3800fbd29d4948976c2d26a8c34313423d8382f22082edda28636b02a4a5ea80",
+  "initial_state": {
+    "plant_id": "ac9f5aaea1984494a317cbc1cd22da46",
+    "channels": [
+      {
+        "index": 0,
+        "name": "F0/J0_actuator",
+        "joint": "F0/J0",
+        "units": "rad",
+        "limits": [
+          -0.8727,
+          0.8727
+        ],
+        "max_rate": 0.4,
+        "actuation": "pid_position",
+        "pid": {
+          "kp": 2.8,
+          "ki": 4.0,
+          "kd": 0.03,
+          "imax": 0.1,
+          "slewmax": 3.14159
+        },
+        "source_force_limits": [
+          -0.9,
+          0.53
+        ],
+        "source_force_units": "N m",
+        "target": -0.00023259766806389744,
+        "command": -0.00023259766806389744,
+        "home": 0.0,
+        "measured": -0.00023259766898976213,
+        "measured_rate": -4.62932345611733e-10,
+        "actuator_force": 1.64877984204119e-11
+      },
+      {
+        "index": 1,
+        "name": "F0/J1_actuator",
+        "joint": "F0/J1",
+        "units": "rad",
+        "limits": [
+          -1.3963,
+          0.7854
+        ],
+        "max_rate": 0.4,
+        "actuation": "pid_position",
+        "pid": {
+          "kp": 2.5,
+          "ki": 3.0,
+          "kd": 0.02,
+          "imax": 0.2,
+          "slewmax": 3.14159
+        },
+        "source_force_limits": [
+          -0.35,
+          1.2
+        ],
+        "source_force_units": "N m",
+        "target": -0.018717410917384908,
+        "command": -0.018717410917384908,
+        "home": 0.0,
+        "measured": -0.018717411334229737,
+        "measured_rate": -2.0842241440437766e-07,
+        "actuator_force": 5.213061430782548e-09
+      },
+      {
+        "index": 2,
+        "name": "F0/J2_actuator",
+        "joint": "F0/J2",
+        "units": "rad",
+        "limits": [
+          0.0,
+          1.3963
+        ],
+        "max_rate": 0.4,
+        "actuation": "pid_position",
+        "pid": {
+          "kp": 1.1,
+          "ki": 3.0,
+          "kd": 0.01,
+          "imax": 0.2,
+          "slewmax": 3.14159
+        },
+        "source_force_limits": [
+          -0.52,
+          0.7
+        ],
+        "source_force_units": "N m",
+        "target": 0.014327612897730957,
+        "command": 0.014327612897730957,
+        "home": 0.0,
+        "measured": 0.01432761345765979,
+        "measured_rate": 2.7996441602591455e-07,
+        "actuator_force": -3.418925448967064e-09
+      },
+      {
+        "index": 3,
+        "name": "F0/J3_actuator",
+        "joint": "F0/J3",
+        "units": "rad",
+        "limits": [
+          -0.5236,
+          1.4835
+        ],
+        "max_rate": 0.4,
+        "actuation": "pid_position",
+        "pid": {
+          "kp": 0.6,
+          "ki": 3.0,
+          "kd": 0.008,
+          "imax": 0.1,
+          "slewmax": 3.14159
+        },
+        "source_force_limits": [
+          -0.3,
+          0.3
+        ],
+        "source_force_units": "N m",
+        "target": 0.01601618507313465,
+        "command": 0.01601618507313465,
+        "home": 0.0,
+        "measured": 0.016016186180008888,
+        "measured_rate": 5.534371190811613e-07,
+        "actuator_force": -5.098262740937464e-09
+      },
+      {
+        "index": 4,
+        "name": "F1/J0_actuator",
+        "joint": "F1/J0",
+        "units": "rad",
+        "limits": [
+          -0.8727,
+          0.8727
+        ],
+        "max_rate": 0.4,
+        "actuation": "pid_position",
+        "pid": {
+          "kp": 2.8,
+          "ki": 4.0,
+          "kd": 0.03,
+          "imax": 0.1,
+          "slewmax": 3.14159
+        },
+        "source_force_limits": [
+          -0.9,
+          0.53
+        ],
+        "source_force_units": "N m",
+        "target": 0.08477419015863047,
+        "command": 0.08477419015863047,
+        "home": 0.0,
+        "measured": 0.0847742060340374,
+        "measured_rate": 7.937703466197243e-06,
+        "actuator_force": -2.8270924665514434e-07
+      },
+      {
+        "index": 5,
+        "name": "F1/J1_actuator",
+        "joint": "F1/J1",
+        "units": "rad",
+        "limits": [
+          -1.3963,
+          0.7854
+        ],
+        "max_rate": 0.4,
+        "actuation": "pid_position",
+        "pid": {
+          "kp": 2.5,
+          "ki": 3.0,
+          "kd": 0.02,
+          "imax": 0.2,
+          "slewmax": 3.14159
+        },
+        "source_force_limits": [
+          -0.35,
+          1.2
+        ],
+        "source_force_units": "N m",
+        "target": -0.015244743184819453,
+        "command": -0.015244743184819453,
+        "home": 0.0,
+        "measured": -0.01524474349657032,
+        "measured_rate": -1.5587543332467497e-07,
+        "actuator_force": 3.898756337795416e-09
+      },
+      {
+        "index": 6,
+        "name": "F1/J2_actuator",
+        "joint": "F1/J2",
+        "units": "rad",
+        "limits": [
+          0.0,
+          1.3963
+        ],
+        "max_rate": 0.4,
+        "actuation": "pid_position",
+        "pid": {
+          "kp": 1.1,
+          "ki": 3.0,
+          "kd": 0.01,
+          "imax": 0.2,
+          "slewmax": 3.14159
+        },
+        "source_force_limits": [
+          -0.52,
+          0.7
+        ],
+        "source_force_units": "N m",
+        "target": 0.009709455276147711,
+        "command": 0.009709455276147711,
+        "home": 0.0,
+        "measured": 0.009709455884130492,
+        "measured_rate": 3.0399139013452924e-07,
+        "actuator_force": -3.712342856511991e-09
+      },
+      {
+        "index": 7,
+        "name": "F1/J3_actuator",
+        "joint": "F1/J3",
+        "units": "rad",
+        "limits": [
+          -0.5236,
+          1.4835
+        ],
+        "max_rate": 0.4,
+        "actuation": "pid_position",
+        "pid": {
+          "kp": 0.6,
+          "ki": 3.0,
+          "kd": 0.008,
+          "imax": 0.1,
+          "slewmax": 3.14159
+        },
+        "source_force_limits": [
+          -0.3,
+          0.3
+        ],
+        "source_force_units": "N m",
+        "target": -0.008508708575541972,
+        "command": -0.008508708575541972,
+        "home": 0.0,
+        "measured": -0.008508709153339206,
+        "measured_rate": -2.888986168724541e-07,
+        "actuator_force": 2.661334058583395e-09
+      },
+      {
+        "index": 8,
+        "name": "F2/J0_actuator",
+        "joint": "F2/J0",
+        "units": "rad",
+        "limits": [
+          -0.8727,
+          0.8727
+        ],
+        "max_rate": 0.4,
+        "actuation": "pid_position",
+        "pid": {
+          "kp": 2.8,
+          "ki": 4.0,
+          "kd": 0.03,
+          "imax": 0.1,
+          "slewmax": 3.14159
+        },
+        "source_force_limits": [
+          -0.9,
+          0.53
+        ],
+        "source_force_units": "N m",
+        "target": -0.08373383114737151,
+        "command": -0.08373383114737151,
+        "home": 0.0,
+        "measured": -0.08373384660164279,
+        "measured_rate": -7.727135640157945e-06,
+        "actuator_force": 2.7520966295717606e-07
+      },
+      {
+        "index": 9,
+        "name": "F2/J1_actuator",
+        "joint": "F2/J1",
+        "units": "rad",
+        "limits": [
+          -1.3963,
+          0.7854
+        ],
+        "max_rate": 0.4,
+        "actuation": "pid_position",
+        "pid": {
+          "kp": 2.5,
+          "ki": 3.0,
+          "kd": 0.02,
+          "imax": 0.2,
+          "slewmax": 3.14159
+        },
+        "source_force_limits": [
+          -0.35,
+          1.2
+        ],
+        "source_force_units": "N m",
+        "target": -0.015563403073722672,
+        "command": -0.015563403073722672,
+        "home": 0.0,
+        "measured": -0.015563403395264491,
+        "measured_rate": -1.6077090920873803e-07,
+        "actuator_force": 4.0212019831202025e-09
+      },
+      {
+        "index": 10,
+        "name": "F2/J2_actuator",
+        "joint": "F2/J2",
+        "units": "rad",
+        "limits": [
+          0.0,
+          1.3963
+        ],
+        "max_rate": 0.4,
+        "actuation": "pid_position",
+        "pid": {
+          "kp": 1.1,
+          "ki": 3.0,
+          "kd": 0.01,
+          "imax": 0.2,
+          "slewmax": 3.14159
+        },
+        "source_force_limits": [
+          -0.52,
+          0.7
+        ],
+        "source_force_units": "N m",
+        "target": 0.009628864399943125,
+        "command": 0.009628864399943125,
+        "home": 0.0,
+        "measured": 0.00962886502466564,
+        "measured_rate": 3.123612574577286e-07,
+        "actuator_force": -3.814555676209905e-09
+      },
+      {
+        "index": 11,
+        "name": "F2/J3_actuator",
+        "joint": "F2/J3",
+        "units": "rad",
+        "limits": [
+          -0.5236,
+          1.4835
+        ],
+        "max_rate": 0.4,
+        "actuation": "pid_position",
+        "pid": {
+          "kp": 0.6,
+          "ki": 3.0,
+          "kd": 0.008,
+          "imax": 0.1,
+          "slewmax": 3.14159
+        },
+        "source_force_limits": [
+          -0.3,
+          0.3
+        ],
+        "source_force_units": "N m",
+        "target": -0.009284801168278213,
+        "command": -0.009284801168278213,
+        "home": 0.0,
+        "measured": -0.009284801822924984,
+        "measured_rate": -3.2732338519324643e-07,
+        "actuator_force": 3.0153030246629924e-09
+      }
+    ],
+    "source_sha256": "7d7ad518b01451f58d3e5f3e59e58719741efead2d7730c9cf800f7d766f267a",
+    "sequence": {
+      "state": "idle",
+      "index": 0,
+      "total": 0
+    },
+    "native_model": "/workspace/molar/robot_lab_runtime/external_assets/sources/mujoco_menagerie/4d038b3feae26ec82b46a4d586379114012a8ac7/shadow_dexee/shadow_dexee.xml",
+    "status": "heartbeat lost; holding measured position",
+    "fault": "",
+    "time": 0.16000000000000011,
+    "servo": null,
+    "planning": null,
+    "mobile_state": null,
+    "qualification": "implemented experimental position controls; validation pending",
+    "hand": {
+      "adapter": "shadow_dexee",
+      "actuation": "authored mujoco.pid position plugin",
+      "contract_sha256": "3800fbd29d4948976c2d26a8c34313423d8382f22082edda28636b02a4a5ea80",
+      "groups": [
+        {
+          "name": "F0",
+          "channels": [
+            "F0/J0_actuator",
+            "F0/J1_actuator",
+            "F0/J2_actuator",
+            "F0/J3_actuator"
+          ]
+        },
+        {
+          "name": "F1",
+          "channels": [
+            "F1/J0_actuator",
+            "F1/J1_actuator",
+            "F1/J2_actuator",
+            "F1/J3_actuator"
+          ]
+        },
+        {
+          "name": "F2",
+          "channels": [
+            "F2/J0_actuator",
+            "F2/J1_actuator",
+            "F2/J2_actuator",
+            "F2/J3_actuator"
+          ]
+        }
+      ],
+      "poses": [
+        "Curl",
+        "Pinch F0 + F1",
+        "Spread"
+      ],
+      "motion": {
+        "state": "interrupted",
+        "completion_scope": "Hand coordinates only; object grasp unassessed",
+        "reason": "heartbeat lost; holding measured position"
+      },
+      "contacts": {
+        "F0": {
+          "normal_force_n": 0.0,
+          "contact_count": 0,
+          "contacts": []
+        },
+        "F1": {
+          "normal_force_n": 0.0,
+          "contact_count": 0,
+          "contacts": []
+        },
+        "F2": {
+          "normal_force_n": 0.0,
+          "contact_count": 0,
+          "contacts": []
+        }
+      },
+      "blocked_groups": {},
+      "guard_scope": "Stop advancement at measured thresholds; source hard bounds unchanged; no grasp guarantee",
+      "source_effort_limits": {
+        "F0/J0_actuator": [
+          -0.9,
+          0.53
+        ],
+        "F0/J1_actuator": [
+          -0.35,
+          1.2
+        ],
+        "F0/J2_actuator": [
+          -0.52,
+          0.7
+        ],
+        "F0/J3_actuator": [
+          -0.3,
+          0.3
+        ],
+        "F1/J0_actuator": [
+          -0.9,
+          0.53
+        ],
+        "F1/J1_actuator": [
+          -0.35,
+          1.2
+        ],
+        "F1/J2_actuator": [
+          -0.52,
+          0.7
+        ],
+        "F1/J3_actuator": [
+          -0.3,
+          0.3
+        ],
+        "F2/J0_actuator": [
+          -0.9,
+          0.53
+        ],
+        "F2/J1_actuator": [
+          -0.35,
+          1.2
+        ],
+        "F2/J2_actuator": [
+          -0.52,
+          0.7
+        ],
+        "F2/J3_actuator": [
+          -0.3,
+          0.3
+        ]
+      },
+      "qualification": "experimental; object grasp/release and other backend missions pending"
+    }
+  },
+  "initial_joint_state": {
+    "time": 0.2,
+    "positions": {
+      "F0/J0": -0.00023259767255886182,
+      "F0/J1": -0.018717413104852063,
+      "F0/J2": 0.014327615981777167,
+      "F0/J3": 0.016016191328853825,
+      "F1/J0": 0.08477426613451874,
+      "F1/J1": -0.015244744832614756,
+      "F1/J2": 0.009709458690825198,
+      "F1/J3": -0.008508711879835559,
+      "F2/J0": -0.08373390510792503,
+      "F2/J1": -0.01556340477301546,
+      "F2/J2": 0.009628867914028505,
+      "F2/J3": -0.00928480490871009
+    },
+    "velocities": {
+      "F0/J0": -3.844299289610782e-12,
+      "F0/J1": -2.6615916016774836e-09,
+      "F0/J2": 4.3701982191893485e-09,
+      "F0/J3": 9.912712976884822e-09,
+      "F1/J0": 5.974405383955876e-08,
+      "F1/J1": -2.0775980324650066e-09,
+      "F1/J2": 5.251406902554522e-09,
+      "F1/J3": -5.468770638820748e-09,
+      "F2/J0": -5.8159819127802235e-08,
+      "F2/J1": -2.141054860554412e-09,
+      "F2/J2": 5.431760512402746e-09,
+      "F2/J3": -6.1718569534568594e-09
+    }
+  },
+  "after_state": {
+    "plant_id": "ac9f5aaea1984494a317cbc1cd22da46",
+    "channels": [
+      {
+        "index": 0,
+        "name": "F0/J0_actuator",
+        "joint": "F0/J0",
+        "units": "rad",
+        "limits": [
+          -0.8727,
+          0.8727
+        ],
+        "max_rate": 0.4,
+        "actuation": "pid_position",
+        "pid": {
+          "kp": 2.8,
+          "ki": 4.0,
+          "kd": 0.03,
+          "imax": 0.1,
+          "slewmax": 3.14159
+        },
+        "source_force_limits": [
+          -0.9,
+          0.53
+        ],
+        "source_force_units": "N m",
+        "target": 0.0,
+        "command": 0.0,
+        "home": 0.0,
+        "measured": -0.0002325355667178443,
+        "measured_rate": -3.948030340771043e-09,
+        "actuator_force": 0.0026045439273003437
+      },
+      {
+        "index": 1,
+        "name": "F0/J1_actuator",
+        "joint": "F0/J1",
+        "units": "rad",
+        "limits": [
+          -1.3963,
+          0.7854
+        ],
+        "max_rate": 0.4,
+        "actuation": "pid_position",
+        "pid": {
+          "kp": 2.5,
+          "ki": 3.0,
+          "kd": 0.02,
+          "imax": 0.2,
+          "slewmax": 3.14159
+        },
+        "source_force_limits": [
+          -0.35,
+          1.2
+        ],
+        "source_force_units": "N m",
+        "target": -0.1,
+        "command": -0.1,
+        "home": 0.0,
+        "measured": -0.1017183072713257,
+        "measured_rate": 0.001968989033752781,
+        "actuator_force": 0.009061094752482074
+      },
+      {
+        "index": 2,
+        "name": "F0/J2_actuator",
+        "joint": "F0/J2",
+        "units": "rad",
+        "limits": [
+          0.0,
+          1.3963
+        ],
+        "max_rate": 0.4,
+        "actuation": "pid_position",
+        "pid": {
+          "kp": 1.1,
+          "ki": 3.0,
+          "kd": 0.01,
+          "imax": 0.2,
+          "slewmax": 3.14159
+        },
+        "source_force_limits": [
+          -0.52,
+          0.7
+        ],
+        "source_force_units": "N m",
+        "target": 0.225,
+        "command": 0.225,
+        "home": 0.0,
+        "measured": 0.22730551837548496,
+        "measured_rate": -0.006832961035710368,
+        "actuator_force": -0.009042812631876063
+      },
+      {
+        "index": 3,
+        "name": "F0/J3_actuator",
+        "joint": "F0/J3",
+        "units": "rad",
+        "limits": [
+          -0.5236,
+          1.4835
+        ],
+        "max_rate": 0.4,
+        "actuation": "pid_position",
+        "pid": {
+          "kp": 0.6,
+          "ki": 3.0,
+          "kd": 0.008,
+          "imax": 0.1,
+          "slewmax": 3.14159
+        },
+        "source_force_limits": [
+          -0.3,
+          0.3
+        ],
+        "source_force_units": "N m",
+        "target": 0.125,
+        "command": 0.125,
+        "home": 0.0,
+        "measured": 0.125613723049829,
+        "measured_rate": -0.003734136955939636,
+        "actuator_force": -0.009029013603555704
+      },
+      {
+        "index": 4,
+        "name": "F1/J0_actuator",
+        "joint": "F1/J0",
+        "units": "rad",
+        "limits": [
+          -0.8727,
+          0.8727
+        ],
+        "max_rate": 0.4,
+        "actuation": "pid_position",
+        "pid": {
+          "kp": 2.8,
+          "ki": 4.0,
+          "kd": 0.03,
+          "imax": 0.1,
+          "slewmax": 3.14159
+        },
+        "source_force_limits": [
+          -0.9,
+          0.53
+        ],
+        "source_force_units": "N m",
+        "target": 0.08477426653423242,
+        "command": 0.08477426653423242,
+        "home": 0.0,
+        "measured": 0.0847742665903023,
+        "measured_rate": 3.493828672227134e-16,
+        "actuator_force": -6.262715539949414e-10
+      },
+      {
+        "index": 5,
+        "name": "F1/J1_actuator",
+        "joint": "F1/J1",
+        "units": "rad",
+        "limits": [
+          -1.3963,
+          0.7854
+        ],
+        "max_rate": 0.4,
+        "actuation": "pid_position",
+        "pid": {
+          "kp": 2.5,
+          "ki": 3.0,
+          "kd": 0.02,
+          "imax": 0.2,
+          "slewmax": 3.14159
+        },
+        "source_force_limits": [
+          -0.35,
+          1.2
+        ],
+        "source_force_units": "N m",
+        "target": -0.015244744848207946,
+        "command": -0.015244744848207946,
+        "home": 0.0,
+        "measured": -0.01524474485238542,
+        "measured_rate": -8.759284224265182e-13,
+        "actuator_force": 3.248059886875308e-11
+      },
+      {
+        "index": 6,
+        "name": "F1/J2_actuator",
+        "joint": "F1/J2",
+        "units": "rad",
+        "limits": [
+          0.0,
+          1.3963
+        ],
+        "max_rate": 0.4,
+        "actuation": "pid_position",
+        "pid": {
+          "kp": 1.1,
+          "ki": 3.0,
+          "kd": 0.01,
+          "imax": 0.2,
+          "slewmax": 3.14159
+        },
+        "source_force_limits": [
+          -0.52,
+          0.7
+        ],
+        "source_force_units": "N m",
+        "target": 0.009709458731363113,
+        "command": 0.009709458731363113,
+        "home": 0.0,
+        "measured": 0.009709458739911367,
+        "measured_rate": -2.873043569525691e-14,
+        "actuator_force": -6.315457883098287e-11
+      },
+      {
+        "index": 7,
+        "name": "F1/J3_actuator",
+        "joint": "F1/J3",
+        "units": "rad",
+        "limits": [
+          -0.5236,
+          1.4835
+        ],
+        "max_rate": 0.4,
+        "actuation": "pid_position",
+        "pid": {
+          "kp": 0.6,
+          "ki": 3.0,
+          "kd": 0.008,
+          "imax": 0.1,
+          "slewmax": 3.14159
+        },
+        "source_force_limits": [
+          -0.3,
+          0.3
+        ],
+        "source_force_units": "N m",
+        "target": -0.008508711922820834,
+        "command": -0.008508711922820834,
+        "home": 0.0,
+        "measured": -0.008508711932415603,
+        "measured_rate": -1.4244799563015675e-17,
+        "actuator_force": 6.592732130996669e-11
+      },
+      {
+        "index": 8,
+        "name": "F2/J0_actuator",
+        "joint": "F2/J0",
+        "units": "rad",
+        "limits": [
+          -0.8727,
+          0.8727
+        ],
+        "max_rate": 0.4,
+        "actuation": "pid_position",
+        "pid": {
+          "kp": 2.8,
+          "ki": 4.0,
+          "kd": 0.03,
+          "imax": 0.1,
+          "slewmax": 3.14159
+        },
+        "source_force_limits": [
+          -0.9,
+          0.53
+        ],
+        "source_force_units": "N m",
+        "target": -0.08373390549704039,
+        "command": -0.08373390549704039,
+        "home": 0.0,
+        "measured": -0.08373390555162398,
+        "measured_rate": 3.433194400623399e-16,
+        "actuator_force": 6.096705199831313e-10
+      },
+      {
+        "index": 9,
+        "name": "F2/J1_actuator",
+        "joint": "F2/J1",
+        "units": "rad",
+        "limits": [
+          -1.3963,
+          0.7854
+        ],
+        "max_rate": 0.4,
+        "actuation": "pid_position",
+        "pid": {
+          "kp": 2.5,
+          "ki": 3.0,
+          "kd": 0.02,
+          "imax": 0.2,
+          "slewmax": 3.14159
+        },
+        "source_force_limits": [
+          -0.35,
+          1.2
+        ],
+        "source_force_units": "N m",
+        "target": -0.015563404789080621,
+        "command": -0.015563404789080621,
+        "home": 0.0,
+        "measured": -0.0155634047933374,
+        "measured_rate": -8.627670974679087e-13,
+        "actuator_force": 3.323087785743712e-11
+      },
+      {
+        "index": 10,
+        "name": "F2/J2_actuator",
+        "joint": "F2/J2",
+        "units": "rad",
+        "limits": [
+          0.0,
+          1.3963
+        ],
+        "max_rate": 0.4,
+        "actuation": "pid_position",
+        "pid": {
+          "kp": 1.1,
+          "ki": 3.0,
+          "kd": 0.01,
+          "imax": 0.2,
+          "slewmax": 3.14159
+        },
+        "source_force_limits": [
+          -0.52,
+          0.7
+        ],
+        "source_force_units": "N m",
+        "target": 0.009628867955999092,
+        "command": 0.009628867955999092,
+        "home": 0.0,
+        "measured": 0.009628867964873944,
+        "measured_rate": -2.8289915845799164e-14,
+        "actuator_force": -6.5560056681614e-11
+      },
+      {
+        "index": 11,
+        "name": "F2/J3_actuator",
+        "joint": "F2/J3",
+        "units": "rad",
+        "limits": [
+          -0.5236,
+          1.4835
+        ],
+        "max_rate": 0.4,
+        "actuation": "pid_position",
+        "pid": {
+          "kp": 0.6,
+          "ki": 3.0,
+          "kd": 0.008,
+          "imax": 0.1,
+          "slewmax": 3.14159
+        },
+        "source_force_limits": [
+          -0.3,
+          0.3
+        ],
+        "source_force_units": "N m",
+        "target": -0.009284804957192173,
+        "command": -0.009284804957192173,
+        "home": 0.0,
+        "measured": -0.009284804967996305,
+        "measured_rate": -1.3948954775049097e-17,
+        "actuator_force": 7.42373006268468e-11
+      }
+    ],
+    "source_sha256": "7d7ad518b01451f58d3e5f3e59e58719741efead2d7730c9cf800f7d766f267a",
+    "sequence": {
+      "state": "idle",
+      "index": 0,
+      "total": 0
+    },
+    "native_model": "/workspace/molar/robot_lab_runtime/external_assets/sources/mujoco_menagerie/4d038b3feae26ec82b46a4d586379114012a8ac7/shadow_dexee/shadow_dexee.xml",
+    "status": "Hand coordinates reached; grasp stability unassessed",
+    "fault": "",
+    "time": 2.319999999999966,
+    "servo": null,
+    "planning": null,
+    "mobile_state": null,
+    "qualification": "implemented experimental position controls; validation pending",
+    "hand": {
+      "adapter": "shadow_dexee",
+      "actuation": "authored mujoco.pid position plugin",
+      "contract_sha256": "3800fbd29d4948976c2d26a8c34313423d8382f22082edda28636b02a4a5ea80",
+      "groups": [
+        {
+          "name": "F0",
+          "channels": [
+            "F0/J0_actuator",
+            "F0/J1_actuator",
+            "F0/J2_actuator",
+            "F0/J3_actuator"
+          ]
+        },
+        {
+          "name": "F1",
+          "channels": [
+            "F1/J0_actuator",
+            "F1/J1_actuator",
+            "F1/J2_actuator",
+            "F1/J3_actuator"
+          ]
+        },
+        {
+          "name": "F2",
+          "channels": [
+            "F2/J0_actuator",
+            "F2/J1_actuator",
+            "F2/J2_actuator",
+            "F2/J3_actuator"
+          ]
+        }
+      ],
+      "poses": [
+        "Curl",
+        "Pinch F0 + F1",
+        "Spread"
+      ],
+      "motion": {
+        "state": "coordinates_reached",
+        "pose": "Curl",
+        "finger": "F0",
+        "closure": 0.25,
+        "spread": 0.0,
+        "guarded": true,
+        "completion_scope": "Coordinates/contact stops only; stable grasp unassessed"
+      },
+      "contacts": {
+        "F0": {
+          "normal_force_n": 0.0,
+          "contact_count": 0,
+          "contacts": []
+        },
+        "F1": {
+          "normal_force_n": 0.0,
+          "contact_count": 0,
+          "contacts": []
+        },
+        "F2": {
+          "normal_force_n": 0.0,
+          "contact_count": 0,
+          "contacts": []
+        }
+      },
+      "blocked_groups": {},
+      "guard_scope": "Stop advancement at measured thresholds; source hard bounds unchanged; no grasp guarantee",
+      "source_effort_limits": {
+        "F0/J0_actuator": [
+          -0.9,
+          0.53
+        ],
+        "F0/J1_actuator": [
+          -0.35,
+          1.2
+        ],
+        "F0/J2_actuator": [
+          -0.52,
+          0.7
+        ],
+        "F0/J3_actuator": [
+          -0.3,
+          0.3
+        ],
+        "F1/J0_actuator": [
+          -0.9,
+          0.53
+        ],
+        "F1/J1_actuator": [
+          -0.35,
+          1.2
+        ],
+        "F1/J2_actuator": [
+          -0.52,
+          0.7
+        ],
+        "F1/J3_actuator": [
+          -0.3,
+          0.3
+        ],
+        "F2/J0_actuator": [
+          -0.9,
+          0.53
+        ],
+        "F2/J1_actuator": [
+          -0.35,
+          1.2
+        ],
+        "F2/J2_actuator": [
+          -0.52,
+          0.7
+        ],
+        "F2/J3_actuator": [
+          -0.3,
+          0.3
+        ]
+      },
+      "qualification": "experimental; object grasp/release and other backend missions pending"
+    }
+  },
+  "after_joint_state": {
+    "time": 2.3999999990000003,
+    "positions": {
+      "F0/J0": -0.00023253555716127626,
+      "F0/J1": -0.10153862437958783,
+      "F0/J2": 0.2268354899141048,
+      "F0/J3": 0.12537919068722833,
+      "F1/J0": 0.0847742665903023,
+      "F1/J1": -0.015244744852458378,
+      "F1/J2": 0.009709458739908975,
+      "F1/J3": -0.008508711932415603,
+      "F2/J0": -0.08373390555162398,
+      "F2/J1": -0.015563404793409253,
+      "F2/J2": 0.009628867964871588,
+      "F2/J3": -0.009284804967996305
+    },
+    "velocities": {
+      "F0/J0": 9.130194003934691e-10,
+      "F0/J1": 0.001712790981519416,
+      "F0/J2": -0.005354799701930678,
+      "F0/J3": -0.002264891291265148,
+      "F1/J0": 3.6009706802128013e-16,
+      "F1/J1": -9.027954523907995e-13,
+      "F1/J2": -2.960671411064586e-14,
+      "F1/J3": -1.4150665201089698e-17,
+      "F2/J0": 3.5379033522460577e-16,
+      "F2/J1": -8.890862343540175e-13,
+      "F2/J2": -2.9148074165851865e-14,
+      "F2/J3": -1.3856495753805467e-17
+    }
+  },
+  "maximum_coordinate_change": 0.21297790491782517,
+  "stopped_state": {
+    "plant_id": "ac9f5aaea1984494a317cbc1cd22da46",
+    "channels": [
+      {
+        "index": 0,
+        "name": "F0/J0_actuator",
+        "joint": "F0/J0",
+        "units": "rad",
+        "limits": [
+          -0.8727,
+          0.8727
+        ],
+        "max_rate": 0.4,
+        "actuation": "pid_position",
+        "pid": {
+          "kp": 2.8,
+          "ki": 4.0,
+          "kd": 0.03,
+          "imax": 0.1,
+          "slewmax": 3.14159
+        },
+        "source_force_limits": [
+          -0.9,
+          0.53
+        ],
+        "source_force_units": "N m",
+        "target": -0.000232535548327322,
+        "command": -0.000232535548327322,
+        "home": 0.0,
+        "measured": -0.00023253548130142094,
+        "measured_rate": 3.073814457576538e-09,
+        "actuator_force": -2.8254323836571625e-10
+      },
+      {
+        "index": 1,
+        "name": "F0/J1_actuator",
+        "joint": "F0/J1",
+        "units": "rad",
+        "limits": [
+          -1.3963,
+          0.7854
+        ],
+        "max_rate": 0.4,
+        "actuation": "pid_position",
+        "pid": {
+          "kp": 2.5,
+          "ki": 3.0,
+          "kd": 0.02,
+          "imax": 0.2,
+          "slewmax": 3.14159
+        },
+        "source_force_limits": [
+          -0.35,
+          1.2
+        ],
+        "source_force_units": "N m",
+        "target": -0.1015079261353559,
+        "command": -0.1015079261353559,
+        "home": 0.0,
+        "measured": -0.10149124739034895,
+        "measured_rate": 0.0002973801901416887,
+        "actuator_force": -4.834662553064815e-05
+      },
+      {
+        "index": 2,
+        "name": "F0/J2_actuator",
+        "joint": "F0/J2",
+        "units": "rad",
+        "limits": [
+          0.0,
+          1.3963
+        ],
+        "max_rate": 0.4,
+        "actuation": "pid_position",
+        "pid": {
+          "kp": 1.1,
+          "ki": 3.0,
+          "kd": 0.01,
+          "imax": 0.2,
+          "slewmax": 3.14159
+        },
+        "source_force_limits": [
+          -0.52,
+          0.7
+        ],
+        "source_force_units": "N m",
+        "target": 0.2267415066508112,
+        "command": 0.2267415066508112,
+        "home": 0.0,
+        "measured": 0.22669283950056088,
+        "measured_rate": -0.0008560207322903228,
+        "actuator_force": 6.414730349692415e-05
+      },
+      {
+        "index": 3,
+        "name": "F0/J3_actuator",
+        "joint": "F0/J3",
+        "units": "rad",
+        "limits": [
+          -0.5236,
+          1.4835
+        ],
+        "max_rate": 0.4,
+        "actuation": "pid_position",
+        "pid": {
+          "kp": 0.6,
+          "ki": 3.0,
+          "kd": 0.008,
+          "imax": 0.1,
+          "slewmax": 3.14159
+        },
+        "source_force_limits": [
+          -0.3,
+          0.3
+        ],
+        "source_force_units": "N m",
+        "target": 0.12534055894952972,
+        "command": 0.12534055894952972,
+        "home": 0.0,
+        "measured": 0.12532095635979634,
+        "measured_rate": -0.0003491788989657239,
+        "actuator_force": 1.538032272362625e-05
+      },
+      {
+        "index": 4,
+        "name": "F1/J0_actuator",
+        "joint": "F1/J0",
+        "units": "rad",
+        "limits": [
+          -0.8727,
+          0.8727
+        ],
+        "max_rate": 0.4,
+        "actuation": "pid_position",
+        "pid": {
+          "kp": 2.8,
+          "ki": 4.0,
+          "kd": 0.03,
+          "imax": 0.1,
+          "slewmax": 3.14159
+        },
+        "source_force_limits": [
+          -0.9,
+          0.53
+        ],
+        "source_force_units": "N m",
+        "target": 0.0847742665903023,
+        "command": 0.0847742665903023,
+        "home": 0.0,
+        "measured": 0.0847742665903023,
+        "measured_rate": 4.251638787634338e-17,
+        "actuator_force": -1.2754916362903012e-18
+      },
+      {
+        "index": 5,
+        "name": "F1/J1_actuator",
+        "joint": "F1/J1",
+        "units": "rad",
+        "limits": [
+          -1.3963,
+          0.7854
+        ],
+        "max_rate": 0.4,
+        "actuation": "pid_position",
+        "pid": {
+          "kp": 2.5,
+          "ki": 3.0,
+          "kd": 0.02,
+          "imax": 0.2,
+          "slewmax": 3.14159
+        },
+        "source_force_limits": [
+          -0.35,
+          1.2
+        ],
+        "source_force_units": "N m",
+        "target": -0.015244744852474687,
+        "command": -0.015244744852474687,
+        "home": 0.0,
+        "measured": -0.015244744852482728,
+        "measured_rate": -1.1936870754361307e-13,
+        "actuator_force": 2.2836724697108907e-14
+      },
+      {
+        "index": 6,
+        "name": "F1/J2_actuator",
+        "joint": "F1/J2",
+        "units": "rad",
+        "limits": [
+          0.0,
+          1.3963
+        ],
+        "max_rate": 0.4,
+        "actuation": "pid_position",
+        "pid": {
+          "kp": 1.1,
+          "ki": 3.0,
+          "kd": 0.01,
+          "imax": 0.2,
+          "slewmax": 3.14159
+        },
+        "source_force_limits": [
+          -0.52,
+          0.7
+        ],
+        "source_force_units": "N m",
+        "target": 0.009709458739908444,
+        "command": 0.009709458739908444,
+        "home": 0.0,
+        "measured": 0.009709458739908399,
+        "measured_rate": 7.117755136218639e-15,
+        "actuator_force": -1.6526822975013056e-17
+      },
+      {
+        "index": 7,
+        "name": "F1/J3_actuator",
+        "joint": "F1/J3",
+        "units": "rad",
+        "limits": [
+          -0.5236,
+          1.4835
+        ],
+        "max_rate": 0.4,
+        "actuation": "pid_position",
+        "pid": {
+          "kp": 0.6,
+          "ki": 3.0,
+          "kd": 0.008,
+          "imax": 0.1,
+          "slewmax": 3.14159
+        },
+        "source_force_limits": [
+          -0.3,
+          0.3
+        ],
+        "source_force_units": "N m",
+        "target": -0.008508711932415603,
+        "command": -0.008508711932415603,
+        "home": 0.0,
+        "measured": -0.008508711932415577,
+        "measured_rate": 1.1859161626724334e-15,
+        "actuator_force": -2.5849241126792713e-17
+      },
+      {
+        "index": 8,
+        "name": "F2/J0_actuator",
+        "joint": "F2/J0",
+        "units": "rad",
+        "limits": [
+          -0.8727,
+          0.8727
+        ],
+        "max_rate": 0.4,
+        "actuation": "pid_position",
+        "pid": {
+          "kp": 2.8,
+          "ki": 4.0,
+          "kd": 0.03,
+          "imax": 0.1,
+          "slewmax": 3.14159
+        },
+        "source_force_limits": [
+          -0.9,
+          0.53
+        ],
+        "source_force_units": "N m",
+        "target": -0.08373390555162398,
+        "command": -0.08373390555162398,
+        "home": 0.0,
+        "measured": -0.08373390555162398,
+        "measured_rate": 4.1765876453607263e-17,
+        "actuator_force": -1.2529762936082178e-18
+      },
+      {
+        "index": 9,
+        "name": "F2/J1_actuator",
+        "joint": "F2/J1",
+        "units": "rad",
+        "limits": [
+          -1.3963,
+          0.7854
+        ],
+        "max_rate": 0.4,
+        "actuation": "pid_position",
+        "pid": {
+          "kp": 2.5,
+          "ki": 3.0,
+          "kd": 0.02,
+          "imax": 0.2,
+          "slewmax": 3.14159
+        },
+        "source_force_limits": [
+          -0.35,
+          1.2
+        ],
+        "source_force_units": "N m",
+        "target": -0.015563404793425314,
+        "command": -0.015563404793425314,
+        "home": 0.0,
+        "measured": -0.015563404793433233,
+        "measured_rate": -1.1755127591961604e-13,
+        "actuator_force": 2.2491543244200817e-14
+      },
+      {
+        "index": 10,
+        "name": "F2/J2_actuator",
+        "joint": "F2/J2",
+        "units": "rad",
+        "limits": [
+          0.0,
+          1.3963
+        ],
+        "max_rate": 0.4,
+        "actuation": "pid_position",
+        "pid": {
+          "kp": 1.1,
+          "ki": 3.0,
+          "kd": 0.01,
+          "imax": 0.2,
+          "slewmax": 3.14159
+        },
+        "source_force_limits": [
+          -0.52,
+          0.7
+        ],
+        "source_force_units": "N m",
+        "target": 0.009628867964871057,
+        "command": 0.009628867964871057,
+        "home": 0.0,
+        "measured": 0.009628867964871012,
+        "measured_rate": 7.0107166041429416e-15,
+        "actuator_force": -1.5456437654256083e-17
+      },
+      {
+        "index": 11,
+        "name": "F2/J3_actuator",
+        "joint": "F2/J3",
+        "units": "rad",
+        "limits": [
+          -0.5236,
+          1.4835
+        ],
+        "max_rate": 0.4,
+        "actuation": "pid_position",
+        "pid": {
+          "kp": 0.6,
+          "ki": 3.0,
+          "kd": 0.008,
+          "imax": 0.1,
+          "slewmax": 3.14159
+        },
+        "source_force_limits": [
+          -0.3,
+          0.3
+        ],
+        "source_force_units": "N m",
+        "target": -0.009284804967996305,
+        "command": -0.009284804967996305,
+        "home": 0.0,
+        "measured": -0.009284804967996281,
+        "measured_rate": 1.167395810375457e-15,
+        "actuator_force": -2.4639427541119094e-17
+      }
+    ],
+    "source_sha256": "7d7ad518b01451f58d3e5f3e59e58719741efead2d7730c9cf800f7d766f267a",
+    "sequence": {
+      "state": "idle",
+      "index": 0,
+      "total": 0
+    },
+    "native_model": "/workspace/molar/robot_lab_runtime/external_assets/sources/mujoco_menagerie/4d038b3feae26ec82b46a4d586379114012a8ac7/shadow_dexee/shadow_dexee.xml",
+    "status": "stopped; holding measured hand coordinates",
+    "fault": "",
+    "time": 2.439999999999953,
+    "servo": null,
+    "planning": null,
+    "mobile_state": null,
+    "qualification": "implemented experimental position controls; validation pending",
+    "hand": {
+      "adapter": "shadow_dexee",
+      "actuation": "authored mujoco.pid position plugin",
+      "contract_sha256": "3800fbd29d4948976c2d26a8c34313423d8382f22082edda28636b02a4a5ea80",
+      "groups": [
+        {
+          "name": "F0",
+          "channels": [
+            "F0/J0_actuator",
+            "F0/J1_actuator",
+            "F0/J2_actuator",
+            "F0/J3_actuator"
+          ]
+        },
+        {
+          "name": "F1",
+          "channels": [
+            "F1/J0_actuator",
+            "F1/J1_actuator",
+            "F1/J2_actuator",
+            "F1/J3_actuator"
+          ]
+        },
+        {
+          "name": "F2",
+          "channels": [
+            "F2/J0_actuator",
+            "F2/J1_actuator",
+            "F2/J2_actuator",
+            "F2/J3_actuator"
+          ]
+        }
+      ],
+      "poses": [
+        "Curl",
+        "Pinch F0 + F1",
+        "Spread"
+      ],
+      "motion": {
+        "state": "interrupted",
+        "pose": "Curl",
+        "finger": "F0",
+        "closure": 0.25,
+        "spread": 0.0,
+        "guarded": true,
+        "completion_scope": "Coordinates/contact stops only; stable grasp unassessed",
+        "reason": "stopped; holding measured hand coordinates"
+      },
+      "contacts": {
+        "F0": {
+          "normal_force_n": 0.0,
+          "contact_count": 0,
+          "contacts": []
+        },
+        "F1": {
+          "normal_force_n": 0.0,
+          "contact_count": 0,
+          "contacts": []
+        },
+        "F2": {
+          "normal_force_n": 0.0,
+          "contact_count": 0,
+          "contacts": []
+        }
+      },
+      "blocked_groups": {},
+      "guard_scope": "Stop advancement at measured thresholds; source hard bounds unchanged; no grasp guarantee",
+      "source_effort_limits": {
+        "F0/J0_actuator": [
+          -0.9,
+          0.53
+        ],
+        "F0/J1_actuator": [
+          -0.35,
+          1.2
+        ],
+        "F0/J2_actuator": [
+          -0.52,
+          0.7
+        ],
+        "F0/J3_actuator": [
+          -0.3,
+          0.3
+        ],
+        "F1/J0_actuator": [
+          -0.9,
+          0.53
+        ],
+        "F1/J1_actuator": [
+          -0.35,
+          1.2
+        ],
+        "F1/J2_actuator": [
+          -0.52,
+          0.7
+        ],
+        "F1/J3_actuator": [
+          -0.3,
+          0.3
+        ],
+        "F2/J0_actuator": [
+          -0.9,
+          0.53
+        ],
+        "F2/J1_actuator": [
+          -0.35,
+          1.2
+        ],
+        "F2/J2_actuator": [
+          -0.52,
+          0.7
+        ],
+        "F2/J3_actuator": [
+          -0.3,
+          0.3
+        ]
+      },
+      "qualification": "experimental; object grasp/release and other backend missions pending"
+    }
+  },
+  "open_state": {
+    "plant_id": "ac9f5aaea1984494a317cbc1cd22da46",
+    "channels": [
+      {
+        "index": 0,
+        "name": "F0/J0_actuator",
+        "joint": "F0/J0",
+        "units": "rad",
+        "limits": [
+          -0.8727,
+          0.8727
+        ],
+        "max_rate": 0.4,
+        "actuation": "pid_position",
+        "pid": {
+          "kp": 2.8,
+          "ki": 4.0,
+          "kd": 0.03,
+          "imax": 0.1,
+          "slewmax": 3.14159
+        },
+        "source_force_limits": [
+          -0.9,
+          0.53
+        ],
+        "source_force_units": "N m",
+        "target": 0.0,
+        "command": 0.0,
+        "home": 0.0,
+        "measured": -0.00023252506076460616,
+        "measured_rate": -5.310883620462123e-10,
+        "actuator_force": 0.002529761597707634
+      },
+      {
+        "index": 1,
+        "name": "F0/J1_actuator",
+        "joint": "F0/J1",
+        "units": "rad",
+        "limits": [
+          -1.3963,
+          0.7854
+        ],
+        "max_rate": 0.4,
+        "actuation": "pid_position",
+        "pid": {
+          "kp": 2.5,
+          "ki": 3.0,
+          "kd": 0.02,
+          "imax": 0.2,
+          "slewmax": 3.14159
+        },
+        "source_force_limits": [
+          -0.35,
+          1.2
+        ],
+        "source_force_units": "N m",
+        "target": 0.0,
+        "command": 0.0,
+        "home": 0.0,
+        "measured": 0.0015879796683718609,
+        "measured_rate": -0.0019388957674638368,
+        "actuator_force": -0.009016024482584655
+      },
+      {
+        "index": 2,
+        "name": "F0/J2_actuator",
+        "joint": "F0/J2",
+        "units": "rad",
+        "limits": [
+          0.0,
+          1.3963
+        ],
+        "max_rate": 0.4,
+        "actuation": "pid_position",
+        "pid": {
+          "kp": 1.1,
+          "ki": 3.0,
+          "kd": 0.01,
+          "imax": 0.2,
+          "slewmax": 3.14159
+        },
+        "source_force_limits": [
+          -0.52,
+          0.7
+        ],
+        "source_force_units": "N m",
+        "target": 0.0,
+        "command": 0.0,
+        "home": 0.0,
+        "measured": 0.0,
+        "measured_rate": -2.381030896026316e-07,
+        "actuator_force": 0.005093022933140798
+      },
+      {
+        "index": 3,
+        "name": "F0/J3_actuator",
+        "joint": "F0/J3",
+        "units": "rad",
+        "limits": [
+          -0.5236,
+          1.4835
+        ],
+        "max_rate": 0.4,
+        "actuation": "pid_position",
+        "pid": {
+          "kp": 0.6,
+          "ki": 3.0,
+          "kd": 0.008,
+          "imax": 0.1,
+          "slewmax": 3.14159
+        },
+        "source_force_limits": [
+          -0.3,
+          0.3
+        ],
+        "source_force_units": "N m",
+        "target": 0.0,
+        "command": 0.0,
+        "home": 0.0,
+        "measured": -0.0002807234764008482,
+        "measured_rate": 0.001676994920090851,
+        "actuator_force": 0.009014119284231374
+      },
+      {
+        "index": 4,
+        "name": "F1/J0_actuator",
+        "joint": "F1/J0",
+        "units": "rad",
+        "limits": [
+          -0.8727,
+          0.8727
+        ],
+        "max_rate": 0.4,
+        "actuation": "pid_position",
+        "pid": {
+          "kp": 2.8,
+          "ki": 4.0,
+          "kd": 0.03,
+          "imax": 0.1,
+          "slewmax": 3.14159
+        },
+        "source_force_limits": [
+          -0.9,
+          0.53
+        ],
+        "source_force_units": "N m",
+        "target": 0.0847742665903023,
+        "command": 0.0847742665903023,
+        "home": 0.0,
+        "measured": 0.0847742665903023,
+        "measured_rate": 1.2156925047715818e-20,
+        "actuator_force": -3.6470775143147454e-22
+      },
+      {
+        "index": 5,
+        "name": "F1/J1_actuator",
+        "joint": "F1/J1",
+        "units": "rad",
+        "limits": [
+          -1.3963,
+          0.7854
+        ],
+        "max_rate": 0.4,
+        "actuation": "pid_position",
+        "pid": {
+          "kp": 2.5,
+          "ki": 3.0,
+          "kd": 0.02,
+          "imax": 0.2,
+          "slewmax": 3.14159
+        },
+        "source_force_limits": [
+          -0.35,
+          1.2
+        ],
+        "source_force_units": "N m",
+        "target": -0.015244744852483578,
+        "command": -0.015244744852483578,
+        "home": 0.0,
+        "measured": -0.015244744852483677,
+        "measured_rate": -3.0477553785186254e-17,
+        "actuator_force": 8.44861302917151e-16
+      },
+      {
+        "index": 6,
+        "name": "F1/J2_actuator",
+        "joint": "F1/J2",
+        "units": "rad",
+        "limits": [
+          0.0,
+          1.3963
+        ],
+        "max_rate": 0.4,
+        "actuation": "pid_position",
+        "pid": {
+          "kp": 1.1,
+          "ki": 3.0,
+          "kd": 0.01,
+          "imax": 0.2,
+          "slewmax": 3.14159
+        },
+        "source_force_limits": [
+          -0.52,
+          0.7
+        ],
+        "source_force_units": "N m",
+        "target": 0.00970945873990849,
+        "command": 0.00970945873990849,
+        "home": 0.0,
+        "measured": 0.009709458739908512,
+        "measured_rate": -1.0002355290387361e-18,
+        "actuator_force": -1.6095845842754856e-16
+      },
+      {
+        "index": 7,
+        "name": "F1/J3_actuator",
+        "joint": "F1/J3",
+        "units": "rad",
+        "limits": [
+          -0.5236,
+          1.4835
+        ],
+        "max_rate": 0.4,
+        "actuation": "pid_position",
+        "pid": {
+          "kp": 0.6,
+          "ki": 3.0,
+          "kd": 0.008,
+          "imax": 0.1,
+          "slewmax": 3.14159
+        },
+        "source_force_limits": [
+          -0.3,
+          0.3
+        ],
+        "source_force_units": "N m",
+        "target": -0.008508711932415565,
+        "command": -0.008508711932415565,
+        "home": 0.0,
+        "measured": -0.008508711932415565,
+        "measured_rate": -5.568578440387635e-22,
+        "actuator_force": 4.454862752310108e-24
+      },
+      {
+        "index": 8,
+        "name": "F2/J0_actuator",
+        "joint": "F2/J0",
+        "units": "rad",
+        "limits": [
+          -0.8727,
+          0.8727
+        ],
+        "max_rate": 0.4,
+        "actuation": "pid_position",
+        "pid": {
+          "kp": 2.8,
+          "ki": 4.0,
+          "kd": 0.03,
+          "imax": 0.1,
+          "slewmax": 3.14159
+        },
+        "source_force_limits": [
+          -0.9,
+          0.53
+        ],
+        "source_force_units": "N m",
+        "target": -0.08373390555162398,
+        "command": -0.08373390555162398,
+        "home": 0.0,
+        "measured": -0.08373390555162398,
+        "measured_rate": 1.17391515606278e-20,
+        "actuator_force": -3.52174546818834e-22
+      },
+      {
+        "index": 9,
+        "name": "F2/J1_actuator",
+        "joint": "F2/J1",
+        "units": "rad",
+        "limits": [
+          -1.3963,
+          0.7854
+        ],
+        "max_rate": 0.4,
+        "actuation": "pid_position",
+        "pid": {
+          "kp": 2.5,
+          "ki": 3.0,
+          "kd": 0.02,
+          "imax": 0.2,
+          "slewmax": 3.14159
+        },
+        "source_force_limits": [
+          -0.35,
+          1.2
+        ],
+        "source_force_units": "N m",
+        "target": -0.015563404793434066,
+        "command": -0.015563404793434066,
+        "home": 0.0,
+        "measured": -0.015563404793434165,
+        "measured_rate": -2.949971453434201e-17,
+        "actuator_force": 8.44841746132134e-16
+      },
+      {
+        "index": 10,
+        "name": "F2/J2_actuator",
+        "joint": "F2/J2",
+        "units": "rad",
+        "limits": [
+          0.0,
+          1.3963
+        ],
+        "max_rate": 0.4,
+        "actuation": "pid_position",
+        "pid": {
+          "kp": 1.1,
+          "ki": 3.0,
+          "kd": 0.01,
+          "imax": 0.2,
+          "slewmax": 3.14159
+        },
+        "source_force_limits": [
+          -0.52,
+          0.7
+        ],
+        "source_force_units": "N m",
+        "target": 0.009628867964871102,
+        "command": 0.009628867964871102,
+        "home": 0.0,
+        "measured": 0.009628867964871125,
+        "measured_rate": -9.680322403491381e-19,
+        "actuator_force": -1.6095878046043543e-16
+      },
+      {
+        "index": 11,
+        "name": "F2/J3_actuator",
+        "joint": "F2/J3",
+        "units": "rad",
+        "limits": [
+          -0.5236,
+          1.4835
+        ],
+        "max_rate": 0.4,
+        "actuation": "pid_position",
+        "pid": {
+          "kp": 0.6,
+          "ki": 3.0,
+          "kd": 0.008,
+          "imax": 0.1,
+          "slewmax": 3.14159
+        },
+        "source_force_limits": [
+          -0.3,
+          0.3
+        ],
+        "source_force_units": "N m",
+        "target": -0.009284804967996269,
+        "command": -0.009284804967996269,
+        "home": 0.0,
+        "measured": -0.009284804967996269,
+        "measured_rate": -5.56497677321319e-22,
+        "actuator_force": 4.4519814185705514e-24
+      }
+    ],
+    "source_sha256": "7d7ad518b01451f58d3e5f3e59e58719741efead2d7730c9cf800f7d766f267a",
+    "sequence": {
+      "state": "idle",
+      "index": 0,
+      "total": 0
+    },
+    "native_model": "/workspace/molar/robot_lab_runtime/external_assets/sources/mujoco_menagerie/4d038b3feae26ec82b46a4d586379114012a8ac7/shadow_dexee/shadow_dexee.xml",
+    "status": "Hand coordinates reached; grasp stability unassessed",
+    "fault": "",
+    "time": 4.479999999999729,
+    "servo": null,
+    "planning": null,
+    "mobile_state": null,
+    "qualification": "implemented experimental position controls; validation pending",
+    "hand": {
+      "adapter": "shadow_dexee",
+      "actuation": "authored mujoco.pid position plugin",
+      "contract_sha256": "3800fbd29d4948976c2d26a8c34313423d8382f22082edda28636b02a4a5ea80",
+      "groups": [
+        {
+          "name": "F0",
+          "channels": [
+            "F0/J0_actuator",
+            "F0/J1_actuator",
+            "F0/J2_actuator",
+            "F0/J3_actuator"
+          ]
+        },
+        {
+          "name": "F1",
+          "channels": [
+            "F1/J0_actuator",
+            "F1/J1_actuator",
+            "F1/J2_actuator",
+            "F1/J3_actuator"
+          ]
+        },
+        {
+          "name": "F2",
+          "channels": [
+            "F2/J0_actuator",
+            "F2/J1_actuator",
+            "F2/J2_actuator",
+            "F2/J3_actuator"
+          ]
+        }
+      ],
+      "poses": [
+        "Curl",
+        "Pinch F0 + F1",
+        "Spread"
+      ],
+      "motion": {
+        "state": "coordinates_reached",
+        "pose": "Open",
+        "finger": "F0",
+        "closure": 0.25,
+        "spread": 0.0,
+        "guarded": false,
+        "completion_scope": "Coordinates/contact stops only; stable grasp unassessed"
+      },
+      "contacts": {
+        "F0": {
+          "normal_force_n": 0.0,
+          "contact_count": 0,
+          "contacts": []
+        },
+        "F1": {
+          "normal_force_n": 0.0,
+          "contact_count": 0,
+          "contacts": []
+        },
+        "F2": {
+          "normal_force_n": 0.0,
+          "contact_count": 0,
+          "contacts": []
+        }
+      },
+      "blocked_groups": {},
+      "guard_scope": "Stop advancement at measured thresholds; source hard bounds unchanged; no grasp guarantee",
+      "source_effort_limits": {
+        "F0/J0_actuator": [
+          -0.9,
+          0.53
+        ],
+        "F0/J1_actuator": [
+          -0.35,
+          1.2
+        ],
+        "F0/J2_actuator": [
+          -0.52,
+          0.7
+        ],
+        "F0/J3_actuator": [
+          -0.3,
+          0.3
+        ],
+        "F1/J0_actuator": [
+          -0.9,
+          0.53
+        ],
+        "F1/J1_actuator": [
+          -0.35,
+          1.2
+        ],
+        "F1/J2_actuator": [
+          -0.52,
+          0.7
+        ],
+        "F1/J3_actuator": [
+          -0.3,
+          0.3
+        ],
+        "F2/J0_actuator": [
+          -0.9,
+          0.53
+        ],
+        "F2/J1_actuator": [
+          -0.35,
+          1.2
+        ],
+        "F2/J2_actuator": [
+          -0.52,
+          0.7
+        ],
+        "F2/J3_actuator": [
+          -0.3,
+          0.3
+        ]
+      },
+      "qualification": "experimental; object grasp/release and other backend missions pending"
+    }
+  },
+  "joint_samples": 229,
+  "state_samples": 229,
+  "cleanup_returncode": 0,
+  "producer_sha256": "1f89281628c7d3244a168ae3fab43b07f57dc8d4e0fffd72e6b40cace6d3b1f7"
+}

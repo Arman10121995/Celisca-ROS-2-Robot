@@ -59,6 +59,22 @@ ros2 launch robot_lab_bringup simulated_robot.launch.py \
 
 ## Understand the guard and measurements
 
+For the experimental free-object workflow, select **Add free grasp object on
+next Run** in Hand. It enables native controls and adds `grasp_fixture:=true`
+to the command. The object is authored on a pedestal from actual collision-pad
+vertices; visual-only pad origins are excluded. **Grasp object** closes the
+source motors and reports opposing contact, actual support and slip.
+**Release object** opens the hand; the cube remains a free physics body and
+can rest on its support. Fixture selection is locked during a run.
+
+Grasp guards freeze the current bounded closing setpoint to retain contact
+preload. Regular pose guards and Stop/heartbeat loss use measured-coordinate
+hold instead. Grasp status downgrades on contact loss; support is computed
+from actual world contact forces, not inferred from a previous hold state.
+There is no automatic resume. A displayed contact hold is not proof of a
+stable lift or pick/place mission. The normal Robotiq diagnostic records a
+12 N contact overshoot despite a 2 N threshold; this is not force regulation.
+
 **Guard closure** stops advancement of each affected finger group when its
 summed external normal contact force exceeds the selected threshold, or a
 source actuator reaches the selected fraction of its signed effort bound.
@@ -117,6 +133,6 @@ replay, GUI/process loss, and bounded source effort. For a grasp claim add a
 real collision object, measure both fingers' contact, object pose/velocity,
 slip, gravity release and repeated hold/lift behavior. A stationary mounted
 hand needs an actual arm or the UMI placement axes for a lift. Do not use a
-visual/physics weld as grasp evidence. Arbitrary object fixtures, learned
+visual/physics weld as grasp evidence. Arbitrary-object scene editing, learned
 grasp selection, raw torque/tendon-motor hands and additional backends remain
 separate implementation tasks.

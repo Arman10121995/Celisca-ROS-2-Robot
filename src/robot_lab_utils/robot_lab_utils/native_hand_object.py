@@ -31,7 +31,7 @@ GRASP_SIDES = {
 # GRASP_SIDES sets remain in charge of measured two-sided contact detection.
 GRASP_PADS = {
     'shadow_dexee': (('F0/finger_distal',), ('F1/finger_distal', 'F2/finger_distal')),
-    'robotiq_2f85': (('left_silicone_pad',), ('right_silicone_pad',)),
+    'robotiq_2f85': (('left_pad',), ('right_pad',)),
     'robotiq_2f85_v4': (('left_pad',), ('right_pad',)),
     'umi_gripper': (('left_finger_holder',), ('right_finger_holder',)),
 }
@@ -98,8 +98,27 @@ def object_geometry(model, data, adapter, contract):
     import mujoco as mj
     left, right = grasp_pads(model, adapter)
     mj.mj_forward(model, data)
-    left_points = np.array([data.xpos[b] for b in left])
-    right_points = np.array([data.xpos[b] for b in right])
+    def collision_points(bodies):
+        points = []
+        for geom in range(model.ngeom):
+            if (int(model.geom_bodyid[geom]) not in bodies
+                    or not (model.geom_contype[geom] or model.geom_conaffinity[geom])):
+                continue
+            kind, half = int(model.geom_type[geom]), model.geom_size[geom]
+            if kind == int(mj.mjtGeom.mjGEOM_MESH):
+                mesh = int(model.geom_dataid[geom])
+                first, count = int(model.mesh_vertadr[mesh]), int(model.mesh_vertnum[mesh])
+                local = model.mesh_vert[first:first+count]
+            elif kind == int(mj.mjtGeom.mjGEOM_BOX):
+                local = np.array([[x, y, z] for x in (-half[0], half[0])
+                    for y in (-half[1], half[1]) for z in (-half[2], half[2])])
+            else:
+                raise ValueError('Hand object placement needs reviewed mesh/box collision pads')
+            points.extend(local@data.geom_xmat[geom].reshape(3, 3).T+data.geom_xpos[geom])
+        if not points:
+            raise ValueError('Hand grasp pad has no authored collision surface')
+        return np.asarray(points)
+    left_points, right_points = collision_points(left), collision_points(right)
     left_center, right_center = left_points.mean(axis=0), right_points.mean(axis=0)
     axis = right_center-left_center
     span = float(np.linalg.norm(axis))
@@ -107,18 +126,28 @@ def object_geometry(model, data, adapter, contract):
         raise ValueError('Native hand opposing grasp surfaces are coincident')
     direction = axis/span
     center = (left_center+right_center)/2.
+    left_face = float(np.max(left_points@direction))
+    right_face = float(np.min(right_points@direction))
+    gap = right_face-left_face
+    if gap <= .002 or not np.isfinite(gap):
+        raise ValueError('Hand has no clear collision-pad opening for a free object')
+    center += ((left_face+right_face)/2.-float(center@direction))*direction
     # A cube that fits inside the open pad gap on the closing axis, so the
     # fingers must travel to meet and pass its faces. Keep the closing-axis
     # half-size well inside the open span, and cap the transverse size to the
     # smaller pad extent so the object stays between the pads, not beside them.
-    half_along = min(.32*span, .032)
-    transverse = min(.03, .32*span)
+    # Axis-aligned cube projections remain inside the measured opening even
+    # after an arbitrary source/global mount rotation. Keep it small enough
+    # for the actual pad, rather than centering on a visual child body origin.
+    half_along = min(.015, .3*gap/float(np.sum(np.abs(direction))))
+    transverse = half_along
     half_size = np.array([transverse, transverse, transverse])
     closing = int(np.argmax(np.abs(direction)))
     half_size[closing] = half_along
     return dict(center=center.tolist(), half_size=half_size.tolist(),
         left_bodies=left, right_bodies=right,
-        closing_axis=closing, direction=direction.tolist(), open_span=span)
+        closing_axis=closing, direction=direction.tolist(), open_span=span, clear_gap=gap,
+        placement_scope='Authored collision pad vertices; no visual-only pad origins')
 
 
 def classify_grasp(left_force_n, right_force_n, object_supported, object_slip_m,
@@ -132,6 +161,12 @@ def classify_grasp(left_force_n, right_force_n, object_supported, object_slip_m,
     or measured slip downgrades the state honestly. This never asserts stability.
     """
     left_force_n, right_force_n = float(left_force_n), float(right_force_n)
+    if (not np.all(np.isfinite([left_force_n, right_force_n, object_slip_m,
+            contact_threshold_n, slip_threshold_m])) or min(left_force_n, right_force_n,
+            object_slip_m) < 0 or min(contact_threshold_n, slip_threshold_m) <= 0):
+        return dict(grasp='invalid_measurement', scope='Finite nonnegative contact/slip evidence required',
+            two_sided_contact=False, supported=False, left_force_n=left_force_n,
+            right_force_n=right_force_n, slip_m=float(object_slip_m))
     both = left_force_n >= contact_threshold_n and right_force_n >= contact_threshold_n
     state = dict(left_force_n=left_force_n, right_force_n=right_force_n,
         two_sided_contact=bool(both), supported=bool(object_supported),

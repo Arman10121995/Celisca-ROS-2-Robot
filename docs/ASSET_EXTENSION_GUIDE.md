@@ -1,5 +1,10 @@
 # Worlds, robot assets and manipulation: continuation guide
 
+The October 14 next extension adds fleet/swarm, underwater ROV/AUV/worlds and
+six/eight/many-legged robot families after current initial implementation.
+[R10 agent guide](NEXT_EXTENSION_GUIDE.md) records sources and concrete
+requirements. These are queued runtime integrations, not installed models.
+
 October 14 hand continuation: [native hand GUI controls](tutorials/native-hand-controls.md)
 reuse DEX-EE's authored PID plugin and the Robotiq/UMI coupled tendons. Four
 experimental adapters and actual contacts/effort feedback are implemented;

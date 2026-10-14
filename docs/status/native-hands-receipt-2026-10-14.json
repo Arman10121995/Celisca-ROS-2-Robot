@@ -1,0 +1,736 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-14",
+  "task": "R5.8.native_hands",
+  "baseline_revision": "b41a33a",
+  "repository_revision": "b41a33a87b897e04ced40779da5c97daa1757acb",
+  "dirty_feature_stage": true,
+  "scope": "Initial experimental hand/GUI/free-object implementation, focused SDK/software fixtures and one actual GUI Robotiq contact/release diagnostic; no stable lift/all-class qualification",
+  "host": "Jetson AGX Orin, Ubuntu 22.04, ROS Humble, arm64",
+  "mujoco_version": "3.12.0",
+  "numpy_version": "2.2.6",
+  "implementation_state": "implemented",
+  "validation_state": "partial; repetitions/objects/backends/force regulation pending",
+  "physical_diagnostic": {
+    "robot": "menagerie_robotiq_2f85",
+    "world": "nav_empty",
+    "backend": "mujoco",
+    "mode": "display",
+    "command": "ros2 launch robot_lab_bringup simulated_robot.launch.py robot_model:=menagerie_robotiq_2f85 simulator:=mujoco use_sim_time:=true map_name:=nav_empty world_package:=robot_lab_maps world_name:=nav_empty world_path:=maps/nav_empty/worlds/nav_empty.world map_yaml:=maps/nav_empty/maps/map.yaml mode:=display gui:=false perception:=none enable_native_articulation:=true grasp_fixture:=true",
+    "source_sha256": "d48aca5f9151798ffd38111ce4e8b2081f3ec2d4f525161b33643451580010de",
+    "contract_sha256": "6941a8051709abed2ea00fd1420e76d00a3fe97863cfc17319e8c7cc6edd79e4",
+    "producer_sha256": "016e502cc239eb0a5da7ea2220bf417a074da1a1cdfa9badb326696c15748842",
+    "joint_samples": 523,
+    "state_samples": 523,
+    "cleanup_returncode": 0,
+    "before": {
+      "state": "idle",
+      "scope": "Documented free object present; measure contact/support/slip",
+      "left_force_n": 0.0,
+      "right_force_n": 0.0,
+      "supported": true,
+      "slip_m": 0.0,
+      "contact_count": 0,
+      "support_contact_count": 4,
+      "support_force_z_n": 0.49054253372867596,
+      "contact_state": "no_contact"
+    },
+    "grasp": {
+      "state": "holding",
+      "scope": "Two-sided measured contact with support and no measured slip; stability/lift unassessed",
+      "left_force_n": 11.94118725309647,
+      "right_force_n": 11.941187256691148,
+      "supported": true,
+      "slip_m": 0.0001700928652990806,
+      "contact_limit_n": 2.0,
+      "effort_fraction": 0.8,
+      "contact_count": 4,
+      "support_contact_count": 4,
+      "support_force_z_n": 1.3856685935271922,
+      "contact_state": "contact_hold"
+    },
+    "after": {
+      "state": "released",
+      "scope": "Fingers open; object free under contact physics",
+      "left_force_n": 0.0,
+      "right_force_n": 0.0,
+      "supported": true,
+      "slip_m": 0.0,
+      "contact_count": 0,
+      "support_contact_count": 4,
+      "support_force_z_n": 0.4905,
+      "contact_state": "no_contact"
+    }
+  },
+  "checks": {
+    "focused_tests": "34 passed",
+    "log": "/workspace/molar/robot_lab_runtime/native-hands-2026-10-14/object-checks-published.log",
+    "selection_only_gui": "/workspace/molar/robot_lab_runtime/native-hands-2026-10-14/gui-object-commands.json"
+  },
+  "source_modules": [
+    {
+      "module": "robot_lab_utils.native_hand",
+      "loaded_path": "/workspace/molar/ros_ws/bumperbot_ws/src/robot_lab_utils/robot_lab_utils/native_hand.py",
+      "source": "/workspace/molar/ros_ws/bumperbot_ws/src/robot_lab_utils/robot_lab_utils/native_hand.py",
+      "snapshot": "/workspace/molar/robot_lab_runtime/native-hands-2026-10-14/source-snapshot-object/robot_lab_utils_native_hand.py",
+      "sha256": "730ea644cf4f47734d60cc6783a4f4aab9cbfd2ea0d8ea31ce9ef74dbf36c0bb"
+    },
+    {
+      "module": "robot_lab_utils.native_hand_object",
+      "loaded_path": "/workspace/molar/ros_ws/bumperbot_ws/src/robot_lab_utils/robot_lab_utils/native_hand_object.py",
+      "source": "/workspace/molar/ros_ws/bumperbot_ws/src/robot_lab_utils/robot_lab_utils/native_hand_object.py",
+      "snapshot": "/workspace/molar/robot_lab_runtime/native-hands-2026-10-14/source-snapshot-object/robot_lab_utils_native_hand_object.py",
+      "sha256": "7b98f7c9829fae7873b6e2d6abc497a370a889ac5793fd9058840adfb579dce5"
+    },
+    {
+      "module": "robot_lab_utils.installed_assets",
+      "loaded_path": "/workspace/molar/ros_ws/bumperbot_ws/src/robot_lab_utils/robot_lab_utils/installed_assets.py",
+      "source": "/workspace/molar/ros_ws/bumperbot_ws/src/robot_lab_utils/robot_lab_utils/installed_assets.py",
+      "snapshot": "/workspace/molar/robot_lab_runtime/native-hands-2026-10-14/source-snapshot-object/robot_lab_utils_installed_assets.py",
+      "sha256": "07d4769df1a3de1c40adf81c128d9d6dfb4748280599c4c44b52920ed915954f"
+    },
+    {
+      "module": "robot_lab_mujoco.native_hand_control",
+      "loaded_path": "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_mujoco/lib/python3.10/site-packages/robot_lab_mujoco/native_hand_control.py",
+      "source": "/workspace/molar/ros_ws/bumperbot_ws/src/robot_lab_mujoco/python/robot_lab_mujoco/native_hand_control.py",
+      "snapshot": "/workspace/molar/robot_lab_runtime/native-hands-2026-10-14/source-snapshot-object/robot_lab_mujoco_native_hand_control.py",
+      "sha256": "fcd441fe2960decdb4bd928a50082d78b8453b1944987d4321c45e03cb278f44"
+    },
+    {
+      "module": "robot_lab_mujoco.native_articulation_control",
+      "loaded_path": "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_mujoco/lib/python3.10/site-packages/robot_lab_mujoco/native_articulation_control.py",
+      "source": "/workspace/molar/ros_ws/bumperbot_ws/src/robot_lab_mujoco/python/robot_lab_mujoco/native_articulation_control.py",
+      "snapshot": "/workspace/molar/robot_lab_runtime/native-hands-2026-10-14/source-snapshot-object/robot_lab_mujoco_native_articulation_control.py",
+      "sha256": "a4b0effd159bdaf4f0bcadec0e838c4aeb3a8b87ff638b41c6f2fdd2eaf73386"
+    },
+    {
+      "module": "robot_lab_mujoco.native_asset_display",
+      "loaded_path": "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_mujoco/lib/python3.10/site-packages/robot_lab_mujoco/native_asset_display.py",
+      "source": "/workspace/molar/ros_ws/bumperbot_ws/src/robot_lab_mujoco/python/robot_lab_mujoco/native_asset_display.py",
+      "snapshot": "/workspace/molar/robot_lab_runtime/native-hands-2026-10-14/source-snapshot-object/robot_lab_mujoco_native_asset_display.py",
+      "sha256": "e4a8798e6367193de3acc6512f879b449cd9f4cea6cd64401f9915407d960fef"
+    },
+    {
+      "module": "robot_lab_gui.native_hand_controls",
+      "loaded_path": "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_gui/lib/python3.10/site-packages/robot_lab_gui/native_hand_controls.py",
+      "source": "/workspace/molar/ros_ws/bumperbot_ws/src/robot_lab_gui/robot_lab_gui/native_hand_controls.py",
+      "snapshot": "/workspace/molar/robot_lab_runtime/native-hands-2026-10-14/source-snapshot-object/robot_lab_gui_native_hand_controls.py",
+      "sha256": "57ef4f775fa198da1c66be7a29f72356aec2e70d35be58ec5de7ba2be4e5623d"
+    },
+    {
+      "module": "robot_lab_gui.articulation_controls",
+      "loaded_path": "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_gui/lib/python3.10/site-packages/robot_lab_gui/articulation_controls.py",
+      "source": "/workspace/molar/ros_ws/bumperbot_ws/src/robot_lab_gui/robot_lab_gui/articulation_controls.py",
+      "snapshot": "/workspace/molar/robot_lab_runtime/native-hands-2026-10-14/source-snapshot-object/robot_lab_gui_articulation_controls.py",
+      "sha256": "36ebfcf4f3f8b66796d93a4111c030d516dd3c3d18042047460d6c35cb3ee96d"
+    },
+    {
+      "module": "robot_lab_gui.hand_tab",
+      "loaded_path": "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_gui/lib/python3.10/site-packages/robot_lab_gui/hand_tab.py",
+      "source": "/workspace/molar/ros_ws/bumperbot_ws/src/robot_lab_gui/robot_lab_gui/hand_tab.py",
+      "snapshot": "/workspace/molar/robot_lab_runtime/native-hands-2026-10-14/source-snapshot-object/robot_lab_gui_hand_tab.py",
+      "sha256": "e4dea3cc4bf7a31f7cae6d9f7f9bb7438f78dae3d0e202ee8894c4fca9bd3cd4"
+    },
+    {
+      "module": "robot_lab_gui.launcher",
+      "loaded_path": "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_gui/lib/python3.10/site-packages/robot_lab_gui/launcher.py",
+      "source": "/workspace/molar/ros_ws/bumperbot_ws/src/robot_lab_gui/robot_lab_gui/launcher.py",
+      "snapshot": "/workspace/molar/robot_lab_runtime/native-hands-2026-10-14/source-snapshot-object/robot_lab_gui_launcher.py",
+      "sha256": "e1ea5d77e8cbc43a0cf3d8799ea4e08b9c13ff89827c2230b6b7107f3d9fb1d8"
+    },
+    {
+      "module": "robot_lab_gui.lab_tabs",
+      "loaded_path": "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_gui/lib/python3.10/site-packages/robot_lab_gui/lab_tabs.py",
+      "source": "/workspace/molar/ros_ws/bumperbot_ws/src/robot_lab_gui/robot_lab_gui/lab_tabs.py",
+      "snapshot": "/workspace/molar/robot_lab_runtime/native-hands-2026-10-14/source-snapshot-object/robot_lab_gui_lab_tabs.py",
+      "sha256": "224c1c2e397ebf28cb642aee24d1f4c51166abd10a529cc1b39dbfd6029974e6"
+    },
+    {
+      "source": "/workspace/molar/ros_ws/bumperbot_ws/src/robot_lab_bringup/launch/simulated_robot.launch.py",
+      "snapshot": "/workspace/molar/robot_lab_runtime/native-hands-2026-10-14/source-snapshot-object/simulated_robot.launch.py",
+      "sha256": "d4c3df928a9051e25da9b82006f6faadad45c70cd038ef91d99d48be5412f50d"
+    },
+    {
+      "source": "/workspace/molar/ros_ws/bumperbot_ws/src/robot_lab_mujoco/launch/mujoco_simulator.launch.py",
+      "snapshot": "/workspace/molar/robot_lab_runtime/native-hands-2026-10-14/source-snapshot-object/mujoco_simulator.launch.py",
+      "sha256": "4b78eff7aff4b3f0fb00b96194b844d4822951a6bc9a5aea0726ad4c76bcec50"
+    }
+  ],
+  "artifacts": [
+    {
+      "path": "/workspace/molar/robot_lab_runtime/native-hands-2026-10-14/actuation-check.json",
+      "bytes": 5805,
+      "sha256": "e12b0b0532125fabf725406cd7dd3513b1e83cf0716f8b462da8ed3901ca01a1"
+    },
+    {
+      "path": "/workspace/molar/robot_lab_runtime/native-hands-2026-10-14/actuation-check.log",
+      "bytes": 929,
+      "sha256": "451f43f18d1f51438d3ea0e1c77722bf254211d68453fd781640504e9f0ce5e7"
+    },
+    {
+      "path": "/workspace/molar/robot_lab_runtime/native-hands-2026-10-14/build-2.log",
+      "bytes": 1297,
+      "sha256": "4694b41e033754cbcd4f017821dce29859404d43979f9002851a583adb8bb02d"
+    },
+    {
+      "path": "/workspace/molar/robot_lab_runtime/native-hands-2026-10-14/build-3.log",
+      "bytes": 1297,
+      "sha256": "583b1e5eaf2b80df90c8f640a82abd44f70fecebfae7796caf3e19c61e818760"
+    },
+    {
+      "path": "/workspace/molar/robot_lab_runtime/native-hands-2026-10-14/build-geometry.log",
+      "bytes": 1118,
+      "sha256": "742eacf3e62895809b9f2cc624fa17ffb8696411bcfeaa34237e96ce65080cf1"
+    },
+    {
+      "path": "/workspace/molar/robot_lab_runtime/native-hands-2026-10-14/build-object-final.log",
+      "bytes": 1128,
+      "sha256": "0a539731421af6733d83aec0283b25358f3fbc73500dc8e58b9367a5ccc27f74"
+    },
+    {
+      "path": "/workspace/molar/robot_lab_runtime/native-hands-2026-10-14/build-object.log",
+      "bytes": 1297,
+      "sha256": "cda83faceb85c724fd36eaee999c2d54f444f71bbccacbc41b791677d4952404"
+    },
+    {
+      "path": "/workspace/molar/robot_lab_runtime/native-hands-2026-10-14/build-preload.log",
+      "bytes": 168,
+      "sha256": "0cdcd285af3fdb50f16b20aaab765f42d4952e8cfc2e37009d7cbfff4fc5b07f"
+    },
+    {
+      "path": "/workspace/molar/robot_lab_runtime/native-hands-2026-10-14/build-publication-object.log",
+      "bytes": 105,
+      "sha256": "ff5a7229e4d6f01bc7230b6c5f5d667354f0028177edd08bca1ebafeab0b874f"
+    },
+    {
+      "path": "/workspace/molar/robot_lab_runtime/native-hands-2026-10-14/build-publication.log",
+      "bytes": 1066,
+      "sha256": "9f6f518f3a38c53c8ee0a72410134968ac19feccc7d4d5ba08ac62693987e7f4"
+    },
+    {
+      "path": "/workspace/molar/robot_lab_runtime/native-hands-2026-10-14/build-unclipped.log",
+      "bytes": 1055,
+      "sha256": "c45ad45344a562be69bccd781a4ef9fefa0366d7d23e3098b50c3069f36737c9"
+    },
+    {
+      "path": "/workspace/molar/robot_lab_runtime/native-hands-2026-10-14/build.log",
+      "bytes": 1297,
+      "sha256": "e3b4d1616527476c4439fbee641ec6b09e939003d137dfb5e94153a7ab42a746"
+    },
+    {
+      "path": "/workspace/molar/robot_lab_runtime/native-hands-2026-10-14/contract-check.log",
+      "bytes": 1743,
+      "sha256": "46bdbd35bc695060e686fd58804f9e371e1985e4e26b8fc8bf58d981e401f84e"
+    },
+    {
+      "path": "/workspace/molar/robot_lab_runtime/native-hands-2026-10-14/dexee-1/articulation.jsonl",
+      "bytes": 1717714,
+      "sha256": "51e503c33064ce99d780d3db79883d5ee02998ce41c5acc721334afb91e0ece3"
+    },
+    {
+      "path": "/workspace/molar/robot_lab_runtime/native-hands-2026-10-14/dexee-1/gui-output.log",
+      "bytes": 1324,
+      "sha256": "8a6b75291102bbbc2f95193299dd34b0ed2bbbbc35817c34b31c1c3287768be1"
+    },
+    {
+      "path": "/workspace/molar/robot_lab_runtime/native-hands-2026-10-14/dexee-1/joints.jsonl",
+      "bytes": 186645,
+      "sha256": "0a504831537c83f3d946be309ede9d5cdd7926fdb090179c52fa8881895f1d3f"
+    },
+    {
+      "path": "/workspace/molar/robot_lab_runtime/native-hands-2026-10-14/dexee-1/report.json",
+      "bytes": 50395,
+      "sha256": "96172074035b84ff523e170e141288300e7c214f8e35ce43e00b49f9bfa55b6c"
+    },
+    {
+      "path": "/workspace/molar/robot_lab_runtime/native-hands-2026-10-14/dexee-1-producer.log",
+      "bytes": 1026,
+      "sha256": "15ca0f954fc38acf0b3899b87cd3e5166610a160ea46975b7808856e6acdecff"
+    },
+    {
+      "path": "/workspace/molar/robot_lab_runtime/native-hands-2026-10-14/dexee-2/articulation.jsonl",
+      "bytes": 1805283,
+      "sha256": "d3706e9cd3f6c6d3dfd023e8c817ef5521d92e1929ba4ee709b6b20fbbc6ca59"
+    },
+    {
+      "path": "/workspace/molar/robot_lab_runtime/native-hands-2026-10-14/dexee-2/gui-output.log",
+      "bytes": 1324,
+      "sha256": "5cbe05055e735cd7469d0d131d7f98def58ff33a27535f2d08400090227bfb76"
+    },
+    {
+      "path": "/workspace/molar/robot_lab_runtime/native-hands-2026-10-14/dexee-2/joints.jsonl",
+      "bytes": 188154,
+      "sha256": "d36f157c2c5f410df328eb322bd0a0ccda4289f20b1bbed7a5a971e0235837af"
+    },
+    {
+      "path": "/workspace/molar/robot_lab_runtime/native-hands-2026-10-14/dexee-2/report.json",
+      "bytes": 52172,
+      "sha256": "043f6293602a4de37368ddceeb9e8ee35e4667f1b1de7f7aae94010f55849643"
+    },
+    {
+      "path": "/workspace/molar/robot_lab_runtime/native-hands-2026-10-14/dexee-2-producer.log",
+      "bytes": 1028,
+      "sha256": "6f142af0af6202d9e81a470d35e8c06577e332f4570e085106f45b6ca12087b3"
+    },
+    {
+      "path": "/workspace/molar/robot_lab_runtime/native-hands-2026-10-14/dexee-3/articulation.jsonl",
+      "bytes": 1844980,
+      "sha256": "7237ebd0707c45a6257bf4a516aa7fd4fca962ae18fb7033bacbbc7980b5a88f"
+    },
+    {
+      "path": "/workspace/molar/robot_lab_runtime/native-hands-2026-10-14/dexee-3/gui-output.log",
+      "bytes": 1324,
+      "sha256": "145df319ff54877aff9a8ee9020b8947dd2c27e1d34037a193513466722d73a1"
+    },
+    {
+      "path": "/workspace/molar/robot_lab_runtime/native-hands-2026-10-14/dexee-3/joints.jsonl",
+      "bytes": 191917,
+      "sha256": "d063ac16f3124c56110734c0efb1112a152d30671de1e1fd28aba2aa94df4700"
+    },
+    {
+      "path": "/workspace/molar/robot_lab_runtime/native-hands-2026-10-14/dexee-3/report.json",
+      "bytes": 52178,
+      "sha256": "abafdc0dc624e852bc24a3ad74b6e6f1635e26321640807d7e1b209a76928262"
+    },
+    {
+      "path": "/workspace/molar/robot_lab_runtime/native-hands-2026-10-14/dexee-3-producer.log",
+      "bytes": 1027,
+      "sha256": "00712cc067ebc2d2b2e26ad8a4bb885aec12ae2f51cf9971620f3cf996fa5761"
+    },
+    {
+      "path": "/workspace/molar/robot_lab_runtime/native-hands-2026-10-14/fixture-debug.log",
+      "bytes": 5111,
+      "sha256": "0572c1c31bdcdf5531c92475447b1d2d09973dde9d4b19988673317d30656c5d"
+    },
+    {
+      "path": "/workspace/molar/robot_lab_runtime/native-hands-2026-10-14/focused-checks-final.log",
+      "bytes": 99,
+      "sha256": "3770ea7dc13d4179dcbbb8216c59a95c9f26ba1ed7ef81a669063fdb01994b0a"
+    },
+    {
+      "path": "/workspace/molar/robot_lab_runtime/native-hands-2026-10-14/focused-checks-publication.log",
+      "bytes": 99,
+      "sha256": "4dc7bff85035fe9cb5dd1a0e5e331eafe070acc965ab2e1a45bab2999292eed3"
+    },
+    {
+      "path": "/workspace/molar/robot_lab_runtime/native-hands-2026-10-14/focused-checks-unclipped.log",
+      "bytes": 99,
+      "sha256": "59e715b06b204a38d638cd99af2b560952d3b555b64164407634a49c2ba1cc90"
+    },
+    {
+      "path": "/workspace/molar/robot_lab_runtime/native-hands-2026-10-14/focused-checks.log",
+      "bytes": 99,
+      "sha256": "b02e2daa970bafa73c519f2c18cd0088bec75e7df7b20686422c05ee2c0c2afe"
+    },
+    {
+      "path": "/workspace/molar/robot_lab_runtime/native-hands-2026-10-14/gui-commands.json",
+      "bytes": 3377,
+      "sha256": "72bb5a78e868f6ec4f27c202e464d7f60793f72f84ec625c6fb510a1d5d8df64"
+    },
+    {
+      "path": "/workspace/molar/robot_lab_runtime/native-hands-2026-10-14/gui-commands.log",
+      "bytes": 58,
+      "sha256": "ba46c9fb7f5582873e4751064fcbe8006ce2b48d27473e1c77b9c840b6743b23"
+    },
+    {
+      "path": "/workspace/molar/robot_lab_runtime/native-hands-2026-10-14/gui-hand-smoke.py",
+      "bytes": 5370,
+      "sha256": "1f89281628c7d3244a168ae3fab43b07f57dc8d4e0fffd72e6b40cace6d3b1f7"
+    },
+    {
+      "path": "/workspace/molar/robot_lab_runtime/native-hands-2026-10-14/gui-object-commands.json",
+      "bytes": 2183,
+      "sha256": "199a4b0aecec24abc8ddac8d9aceb89a520fcbad48c3c7e7475eee1073979534"
+    },
+    {
+      "path": "/workspace/molar/robot_lab_runtime/native-hands-2026-10-14/gui-object-commands.log",
+      "bytes": 67,
+      "sha256": "abb439e87b4f2a0462cd33c73336a158c5a6fceaf37319fbfd22089be6b22174"
+    },
+    {
+      "path": "/workspace/molar/robot_lab_runtime/native-hands-2026-10-14/gui-object-smoke.py",
+      "bytes": 5138,
+      "sha256": "016e502cc239eb0a5da7ea2220bf417a074da1a1cdfa9badb326696c15748842"
+    },
+    {
+      "path": "/workspace/molar/robot_lab_runtime/native-hands-2026-10-14/object-checks-2.log",
+      "bytes": 4982,
+      "sha256": "fbfa385abe7d4be27f54da9cfc3d3d6f6ec6d5022a10157f669bbd15cada833d"
+    },
+    {
+      "path": "/workspace/molar/robot_lab_runtime/native-hands-2026-10-14/object-checks-3.log",
+      "bytes": 3905,
+      "sha256": "24481d63746d670f0cbe2c02c06262bac08fd154130db9b0a2517b69cdc453a1"
+    },
+    {
+      "path": "/workspace/molar/robot_lab_runtime/native-hands-2026-10-14/object-checks-final.log",
+      "bytes": 3905,
+      "sha256": "efae52dfcb8d449368fb04324df4f6e856ac287ef901e19180ca8fd79a4b8b64"
+    },
+    {
+      "path": "/workspace/molar/robot_lab_runtime/native-hands-2026-10-14/object-checks-geometry.log",
+      "bytes": 99,
+      "sha256": "1cde73d92347f3b2f10fb8801418a97cb15c042c2e9879c148ea4058e0812f98"
+    },
+    {
+      "path": "/workspace/molar/robot_lab_runtime/native-hands-2026-10-14/object-checks-preload.log",
+      "bytes": 3915,
+      "sha256": "ae8f862f3fd6fdb5b044b36cc1d01e02259e01a8f0dbf1ffcd250f65005d0bfb"
+    },
+    {
+      "path": "/workspace/molar/robot_lab_runtime/native-hands-2026-10-14/object-checks-stable-fixture.log",
+      "bytes": 99,
+      "sha256": "6ce778a0eeb0616a8976a74b14349d5b41d7dd050e101ce8b0dc3322c2198439"
+    },
+    {
+      "path": "/workspace/molar/robot_lab_runtime/native-hands-2026-10-14/object-checks.log",
+      "bytes": 6065,
+      "sha256": "89424234d9901b175ad0a47a3b83ea0425202d1189cab2b0db0b2bf3afbda4de"
+    },
+    {
+      "path": "/workspace/molar/robot_lab_runtime/native-hands-2026-10-14/plugin-api-probe.log",
+      "bytes": 680,
+      "sha256": "77e699632fa1061a1c80bbfb12eb20d3152a2082b1513e926b62fe79794175eb"
+    },
+    {
+      "path": "/workspace/molar/robot_lab_runtime/native-hands-2026-10-14/plugin-spec-probe.log",
+      "bytes": 650,
+      "sha256": "f7234ba9caf8f85d63973ea08891ff9f2807632fae5266183f3a7870738a34d1"
+    },
+    {
+      "path": "/workspace/molar/robot_lab_runtime/native-hands-2026-10-14/robotiq-1/articulation.jsonl",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/workspace/molar/robot_lab_runtime/native-hands-2026-10-14/robotiq-1/gui-output.log",
+      "bytes": 2518,
+      "sha256": "bd3ae11faf1ade96e06c9b0b9bf7f5845e48a9ceaf86f4cbcc6154ca101e386e"
+    },
+    {
+      "path": "/workspace/molar/robot_lab_runtime/native-hands-2026-10-14/robotiq-1/joints.jsonl",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/workspace/molar/robot_lab_runtime/native-hands-2026-10-14/robotiq-1/report.json",
+      "bytes": 1474,
+      "sha256": "7127202a9e87ba9b82b4f1a3d64446911deac59f3802caeb800256a9bdb66ede"
+    },
+    {
+      "path": "/workspace/molar/robot_lab_runtime/native-hands-2026-10-14/robotiq-1-producer.log",
+      "bytes": 1474,
+      "sha256": "7127202a9e87ba9b82b4f1a3d64446911deac59f3802caeb800256a9bdb66ede"
+    },
+    {
+      "path": "/workspace/molar/robot_lab_runtime/native-hands-2026-10-14/robotiq-2/articulation.jsonl",
+      "bytes": 397629,
+      "sha256": "9b4dff0893286bc6f6e9a11ae38496a7504430a28ea4a39c09ec5558b05617d9"
+    },
+    {
+      "path": "/workspace/molar/robot_lab_runtime/native-hands-2026-10-14/robotiq-2/gui-output.log",
+      "bytes": 1315,
+      "sha256": "0c2f6349e922dee17571c66ac989bc9bec14b20481426435c65ca25a1ba61293"
+    },
+    {
+      "path": "/workspace/molar/robot_lab_runtime/native-hands-2026-10-14/robotiq-2/joints.jsonl",
+      "bytes": 179589,
+      "sha256": "7c204196de2d1c5a38d288670648d7ea580110a920af0ce838235e9e6d2aa031"
+    },
+    {
+      "path": "/workspace/molar/robot_lab_runtime/native-hands-2026-10-14/robotiq-2/report.json",
+      "bytes": 12261,
+      "sha256": "8e6334829a9dc7d61f5fc78a32b6a89931c1966f512329b78a6df3d8c9e5da6c"
+    },
+    {
+      "path": "/workspace/molar/robot_lab_runtime/native-hands-2026-10-14/robotiq-2-producer.log",
+      "bytes": 1026,
+      "sha256": "c94526a9825135965ca305f60d0887fb350d787bc5756578b2b999c3d5dd15e9"
+    },
+    {
+      "path": "/workspace/molar/robot_lab_runtime/native-hands-2026-10-14/robotiq-equality-probe.log",
+      "bytes": 1065,
+      "sha256": "f90eb075a4254dffdd3b95f9676bad6be834934dba2d046c205fd25b4ba8b83d"
+    },
+    {
+      "path": "/workspace/molar/robot_lab_runtime/native-hands-2026-10-14/robotiq-object-1/articulation.jsonl",
+      "bytes": 3327524,
+      "sha256": "6e18d1fbf333f8ed3e0144ffb8061521e226a9a0cde3e192f36a936f92ef5395"
+    },
+    {
+      "path": "/workspace/molar/robot_lab_runtime/native-hands-2026-10-14/robotiq-object-1/gui-output.log",
+      "bytes": 1335,
+      "sha256": "bf27fc9faa97476c539b350469fddb40028a7d428e951150602b0101af534196"
+    },
+    {
+      "path": "/workspace/molar/robot_lab_runtime/native-hands-2026-10-14/robotiq-object-1/joints.jsonl",
+      "bytes": 479153,
+      "sha256": "30f5ee29a98aba4945148517f04f99d29668bd12fcafc62f5ab0d4065545325d"
+    },
+    {
+      "path": "/workspace/molar/robot_lab_runtime/native-hands-2026-10-14/robotiq-object-1/report.json",
+      "bytes": 45383,
+      "sha256": "df890d43c3119ca7c1fdf2307e845bda4965dd607a44303b9bf24a7c4e532be1"
+    },
+    {
+      "path": "/workspace/molar/robot_lab_runtime/native-hands-2026-10-14/robotiq-object-1-producer.log",
+      "bytes": 1015,
+      "sha256": "986a972ed0b2db58041d8b75fcb92e0ee2cf30c37153a2abd8fec3dcf994a790"
+    },
+    {
+      "path": "/workspace/molar/robot_lab_runtime/native-hands-2026-10-14/robotiq-object-2/articulation.jsonl",
+      "bytes": 2002118,
+      "sha256": "b81baac900e5a72c6e13fecca9c57f875f66753f1afadd31d118accc726e9ce0"
+    },
+    {
+      "path": "/workspace/molar/robot_lab_runtime/native-hands-2026-10-14/robotiq-object-2/gui-output.log",
+      "bytes": 1335,
+      "sha256": "603ad5ee6c72bddac3346f01656d5d4486ee0434652cb6ee0530b222bb84a86b"
+    },
+    {
+      "path": "/workspace/molar/robot_lab_runtime/native-hands-2026-10-14/robotiq-object-2/joints.jsonl",
+      "bytes": 408835,
+      "sha256": "b0862f802491c6c96a0aae8670d8412925a786a0b0060fa1fcc1fe7b9a9e2a8b"
+    },
+    {
+      "path": "/workspace/molar/robot_lab_runtime/native-hands-2026-10-14/robotiq-object-2/report.json",
+      "bytes": 30166,
+      "sha256": "81c216afd84751ad3a8729079e3e6463a765e06c7353172d57cc388b7d9779f5"
+    },
+    {
+      "path": "/workspace/molar/robot_lab_runtime/native-hands-2026-10-14/robotiq-object-2-producer.log",
+      "bytes": 1015,
+      "sha256": "d5223ae96c38416241df3e731f5002813ca7ad64c7bd316bc90e45c5ff5a97d8"
+    },
+    {
+      "path": "/workspace/molar/robot_lab_runtime/native-hands-2026-10-14/source-snapshot/manifest.json",
+      "bytes": 4081,
+      "sha256": "bfc8b823b5ae494179a230f15125cdc86e50fa5223e9baed54cd11e7b445464b"
+    },
+    {
+      "path": "/workspace/molar/robot_lab_runtime/native-hands-2026-10-14/source-snapshot/robot_lab_gui_articulation_controls.py",
+      "bytes": 10938,
+      "sha256": "fd2b1b9363452ac39980974c4484d426f6b0467ae26ce4fb45fd4e14ebcc70fc"
+    },
+    {
+      "path": "/workspace/molar/robot_lab_runtime/native-hands-2026-10-14/source-snapshot/robot_lab_gui_hand_tab.py",
+      "bytes": 9843,
+      "sha256": "e4dea3cc4bf7a31f7cae6d9f7f9bb7438f78dae3d0e202ee8894c4fca9bd3cd4"
+    },
+    {
+      "path": "/workspace/molar/robot_lab_runtime/native-hands-2026-10-14/source-snapshot/robot_lab_gui_launcher.py",
+      "bytes": 177846,
+      "sha256": "f0a90720505ce7afd429d4b598c229abcd254c094770b8bb9e2efedd9706e844"
+    },
+    {
+      "path": "/workspace/molar/robot_lab_runtime/native-hands-2026-10-14/source-snapshot/robot_lab_gui_native_hand_controls.py",
+      "bytes": 7052,
+      "sha256": "1a37b319ca8f1af3d0d95fb1087cef03b4e1aa3841bc1e31e8c2370cae1ec4a8"
+    },
+    {
+      "path": "/workspace/molar/robot_lab_runtime/native-hands-2026-10-14/source-snapshot/robot_lab_mujoco_native_articulation_control.py",
+      "bytes": 17125,
+      "sha256": "a4b0effd159bdaf4f0bcadec0e838c4aeb3a8b87ff638b41c6f2fdd2eaf73386"
+    },
+    {
+      "path": "/workspace/molar/robot_lab_runtime/native-hands-2026-10-14/source-snapshot/robot_lab_mujoco_native_asset_display.py",
+      "bytes": 21492,
+      "sha256": "05540a205b869a4af1040244ccb3cbdef7357acd09ca5596b3e23bf2f0498c28"
+    },
+    {
+      "path": "/workspace/molar/robot_lab_runtime/native-hands-2026-10-14/source-snapshot/robot_lab_mujoco_native_hand_control.py",
+      "bytes": 10532,
+      "sha256": "1b3033eddcfd0c9cf8ec06592bc0984991e03b09446f302fa2723c0c1d5a931c"
+    },
+    {
+      "path": "/workspace/molar/robot_lab_runtime/native-hands-2026-10-14/source-snapshot/robot_lab_utils_installed_assets.py",
+      "bytes": 2947,
+      "sha256": "07d4769df1a3de1c40adf81c128d9d6dfb4748280599c4c44b52920ed915954f"
+    },
+    {
+      "path": "/workspace/molar/robot_lab_runtime/native-hands-2026-10-14/source-snapshot/robot_lab_utils_native_actuation.py",
+      "bytes": 2862,
+      "sha256": "70579b030de5727fe9f0e03b0efffb12b4be789e12edc59aab0e453171bca650"
+    },
+    {
+      "path": "/workspace/molar/robot_lab_runtime/native-hands-2026-10-14/source-snapshot/robot_lab_utils_native_hand.py",
+      "bytes": 13931,
+      "sha256": "42e94d60df4ce67d61066759dc3a95527b8fa0c7c02be1a4e949b7ae46067cc3"
+    },
+    {
+      "path": "/workspace/molar/robot_lab_runtime/native-hands-2026-10-14/source-snapshot-final/manifest.json",
+      "bytes": 5258,
+      "sha256": "7a7b32dc3fed42066bd9c09c2a015f7915c7d3ba15e61f04db8db3439392997e"
+    },
+    {
+      "path": "/workspace/molar/robot_lab_runtime/native-hands-2026-10-14/source-snapshot-final/robot_lab_gui_articulation_controls.py",
+      "bytes": 11045,
+      "sha256": "36ebfcf4f3f8b66796d93a4111c030d516dd3c3d18042047460d6c35cb3ee96d"
+    },
+    {
+      "path": "/workspace/molar/robot_lab_runtime/native-hands-2026-10-14/source-snapshot-final/robot_lab_gui_hand_tab.py",
+      "bytes": 9843,
+      "sha256": "e4dea3cc4bf7a31f7cae6d9f7f9bb7438f78dae3d0e202ee8894c4fca9bd3cd4"
+    },
+    {
+      "path": "/workspace/molar/robot_lab_runtime/native-hands-2026-10-14/source-snapshot-final/robot_lab_gui_launcher.py",
+      "bytes": 177846,
+      "sha256": "f0a90720505ce7afd429d4b598c229abcd254c094770b8bb9e2efedd9706e844"
+    },
+    {
+      "path": "/workspace/molar/robot_lab_runtime/native-hands-2026-10-14/source-snapshot-final/robot_lab_gui_native_hand_controls.py",
+      "bytes": 7052,
+      "sha256": "1a37b319ca8f1af3d0d95fb1087cef03b4e1aa3841bc1e31e8c2370cae1ec4a8"
+    },
+    {
+      "path": "/workspace/molar/robot_lab_runtime/native-hands-2026-10-14/source-snapshot-final/robot_lab_mujoco_native_articulation_control.py",
+      "bytes": 17125,
+      "sha256": "a4b0effd159bdaf4f0bcadec0e838c4aeb3a8b87ff638b41c6f2fdd2eaf73386"
+    },
+    {
+      "path": "/workspace/molar/robot_lab_runtime/native-hands-2026-10-14/source-snapshot-final/robot_lab_mujoco_native_asset_display.py",
+      "bytes": 21492,
+      "sha256": "05540a205b869a4af1040244ccb3cbdef7357acd09ca5596b3e23bf2f0498c28"
+    },
+    {
+      "path": "/workspace/molar/robot_lab_runtime/native-hands-2026-10-14/source-snapshot-final/robot_lab_mujoco_native_hand_control.py",
+      "bytes": 10532,
+      "sha256": "1b3033eddcfd0c9cf8ec06592bc0984991e03b09446f302fa2723c0c1d5a931c"
+    },
+    {
+      "path": "/workspace/molar/robot_lab_runtime/native-hands-2026-10-14/source-snapshot-final/robot_lab_utils_installed_assets.py",
+      "bytes": 2947,
+      "sha256": "07d4769df1a3de1c40adf81c128d9d6dfb4748280599c4c44b52920ed915954f"
+    },
+    {
+      "path": "/workspace/molar/robot_lab_runtime/native-hands-2026-10-14/source-snapshot-final/robot_lab_utils_native_actuation.py",
+      "bytes": 2862,
+      "sha256": "70579b030de5727fe9f0e03b0efffb12b4be789e12edc59aab0e453171bca650"
+    },
+    {
+      "path": "/workspace/molar/robot_lab_runtime/native-hands-2026-10-14/source-snapshot-final/robot_lab_utils_native_hand.py",
+      "bytes": 14804,
+      "sha256": "730ea644cf4f47734d60cc6783a4f4aab9cbfd2ea0d8ea31ce9ef74dbf36c0bb"
+    },
+    {
+      "path": "/workspace/molar/robot_lab_runtime/native-hands-2026-10-14/source-snapshot-object/manifest.json",
+      "bytes": 5767,
+      "sha256": "70e3c62f4fee4f9f0c3ab9de707ffbb3dce1806b15d9d7354b84ae56159a5514"
+    },
+    {
+      "path": "/workspace/molar/robot_lab_runtime/native-hands-2026-10-14/source-snapshot-object/robot_lab_gui_articulation_controls.py",
+      "bytes": 11045,
+      "sha256": "36ebfcf4f3f8b66796d93a4111c030d516dd3c3d18042047460d6c35cb3ee96d"
+    },
+    {
+      "path": "/workspace/molar/robot_lab_runtime/native-hands-2026-10-14/source-snapshot-object/robot_lab_gui_hand_tab.py",
+      "bytes": 9843,
+      "sha256": "e4dea3cc4bf7a31f7cae6d9f7f9bb7438f78dae3d0e202ee8894c4fca9bd3cd4"
+    },
+    {
+      "path": "/workspace/molar/robot_lab_runtime/native-hands-2026-10-14/source-snapshot-object/robot_lab_gui_lab_tabs.py",
+      "bytes": 59185,
+      "sha256": "224c1c2e397ebf28cb642aee24d1f4c51166abd10a529cc1b39dbfd6029974e6"
+    },
+    {
+      "path": "/workspace/molar/robot_lab_runtime/native-hands-2026-10-14/source-snapshot-object/robot_lab_gui_launcher.py",
+      "bytes": 178651,
+      "sha256": "e1ea5d77e8cbc43a0cf3d8799ea4e08b9c13ff89827c2230b6b7107f3d9fb1d8"
+    },
+    {
+      "path": "/workspace/molar/robot_lab_runtime/native-hands-2026-10-14/source-snapshot-object/robot_lab_gui_native_hand_controls.py",
+      "bytes": 11005,
+      "sha256": "57ef4f775fa198da1c66be7a29f72356aec2e70d35be58ec5de7ba2be4e5623d"
+    },
+    {
+      "path": "/workspace/molar/robot_lab_runtime/native-hands-2026-10-14/source-snapshot-object/robot_lab_mujoco_native_articulation_control.py",
+      "bytes": 17125,
+      "sha256": "a4b0effd159bdaf4f0bcadec0e838c4aeb3a8b87ff638b41c6f2fdd2eaf73386"
+    },
+    {
+      "path": "/workspace/molar/robot_lab_runtime/native-hands-2026-10-14/source-snapshot-object/robot_lab_mujoco_native_asset_display.py",
+      "bytes": 24026,
+      "sha256": "e4a8798e6367193de3acc6512f879b449cd9f4cea6cd64401f9915407d960fef"
+    },
+    {
+      "path": "/workspace/molar/robot_lab_runtime/native-hands-2026-10-14/source-snapshot-object/robot_lab_mujoco_native_hand_control.py",
+      "bytes": 23226,
+      "sha256": "fcd441fe2960decdb4bd928a50082d78b8453b1944987d4321c45e03cb278f44"
+    },
+    {
+      "path": "/workspace/molar/robot_lab_runtime/native-hands-2026-10-14/source-snapshot-object/robot_lab_utils_installed_assets.py",
+      "bytes": 2947,
+      "sha256": "07d4769df1a3de1c40adf81c128d9d6dfb4748280599c4c44b52920ed915954f"
+    },
+    {
+      "path": "/workspace/molar/robot_lab_runtime/native-hands-2026-10-14/source-snapshot-object/robot_lab_utils_native_hand.py",
+      "bytes": 14804,
+      "sha256": "730ea644cf4f47734d60cc6783a4f4aab9cbfd2ea0d8ea31ce9ef74dbf36c0bb"
+    },
+    {
+      "path": "/workspace/molar/robot_lab_runtime/native-hands-2026-10-14/source-snapshot-object/robot_lab_utils_native_hand_object.py",
+      "bytes": 9555,
+      "sha256": "7b98f7c9829fae7873b6e2d6abc497a370a889ac5793fd9058840adfb579dce5"
+    },
+    {
+      "path": "/workspace/molar/robot_lab_runtime/native-hands-2026-10-14/source-snapshot-publication/manifest.json",
+      "bytes": 5318,
+      "sha256": "359b3aa2332f9a2bd51a7c9442f2b6268ed8cf68004da36921c4003c3e412b0c"
+    },
+    {
+      "path": "/workspace/molar/robot_lab_runtime/native-hands-2026-10-14/source-snapshot-publication/robot_lab_gui_articulation_controls.py",
+      "bytes": 11045,
+      "sha256": "36ebfcf4f3f8b66796d93a4111c030d516dd3c3d18042047460d6c35cb3ee96d"
+    },
+    {
+      "path": "/workspace/molar/robot_lab_runtime/native-hands-2026-10-14/source-snapshot-publication/robot_lab_gui_hand_tab.py",
+      "bytes": 9843,
+      "sha256": "e4dea3cc4bf7a31f7cae6d9f7f9bb7438f78dae3d0e202ee8894c4fca9bd3cd4"
+    },
+    {
+      "path": "/workspace/molar/robot_lab_runtime/native-hands-2026-10-14/source-snapshot-publication/robot_lab_gui_launcher.py",
+      "bytes": 177846,
+      "sha256": "f0a90720505ce7afd429d4b598c229abcd254c094770b8bb9e2efedd9706e844"
+    },
+    {
+      "path": "/workspace/molar/robot_lab_runtime/native-hands-2026-10-14/source-snapshot-publication/robot_lab_gui_native_hand_controls.py",
+      "bytes": 7052,
+      "sha256": "1a37b319ca8f1af3d0d95fb1087cef03b4e1aa3841bc1e31e8c2370cae1ec4a8"
+    },
+    {
+      "path": "/workspace/molar/robot_lab_runtime/native-hands-2026-10-14/source-snapshot-publication/robot_lab_mujoco_native_articulation_control.py",
+      "bytes": 17125,
+      "sha256": "a4b0effd159bdaf4f0bcadec0e838c4aeb3a8b87ff638b41c6f2fdd2eaf73386"
+    },
+    {
+      "path": "/workspace/molar/robot_lab_runtime/native-hands-2026-10-14/source-snapshot-publication/robot_lab_mujoco_native_asset_display.py",
+      "bytes": 21492,
+      "sha256": "05540a205b869a4af1040244ccb3cbdef7357acd09ca5596b3e23bf2f0498c28"
+    },
+    {
+      "path": "/workspace/molar/robot_lab_runtime/native-hands-2026-10-14/source-snapshot-publication/robot_lab_mujoco_native_hand_control.py",
+      "bytes": 11002,
+      "sha256": "3833ed70732028f089e94e72926f83fde9f21f19b97e7fa3e241724ebfe4fcfc"
+    },
+    {
+      "path": "/workspace/molar/robot_lab_runtime/native-hands-2026-10-14/source-snapshot-publication/robot_lab_utils_installed_assets.py",
+      "bytes": 2947,
+      "sha256": "07d4769df1a3de1c40adf81c128d9d6dfb4748280599c4c44b52920ed915954f"
+    },
+    {
+      "path": "/workspace/molar/robot_lab_runtime/native-hands-2026-10-14/source-snapshot-publication/robot_lab_utils_native_actuation.py",
+      "bytes": 2862,
+      "sha256": "70579b030de5727fe9f0e03b0efffb12b4be789e12edc59aab0e453171bca650"
+    },
+    {
+      "path": "/workspace/molar/robot_lab_runtime/native-hands-2026-10-14/source-snapshot-publication/robot_lab_utils_native_hand.py",
+      "bytes": 14804,
+      "sha256": "730ea644cf4f47734d60cc6783a4f4aab9cbfd2ea0d8ea31ce9ef74dbf36c0bb"
+    },
+    {
+      "path": "/workspace/molar/robot_lab_runtime/native-hands-2026-10-14/object-checks-published.log",
+      "bytes": 99,
+      "sha256": "7633b25c1757b3a41f6c53a7a8eec72f933de690ae709bd43dd544fe578f0f9e"
+    }
+  ]
+}

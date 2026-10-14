@@ -2,8 +2,14 @@
 # Counts are audited observations, not targets or proof of runtime qualification.
 schema_version: 2
 updated: "2026-10-14"
-current_revision: "October 14 published native arm planning at 0049ee2: 13 experimental profiles, two actual GUI UR5e/SO101 reaches on MuJoCo/nav_empty with 0.489/0.147 mm endpoint errors. Continued with actual RTAB-Map/depth consumers, observed/static aerial planning, asynchronous execution rechecks and stale/blocked-route Hold. Four packages build; 23 PX4-venv checks, explicitly synthetic ROS/TF ingestion and actual Tk autofill diagnostics pass. No new flight or full mission qualification; the full platform remains partial."
+current_revision: "October 14 continuation from b41a33a: completed source hand/GUI object wiring, unclipped source-stamped feedback, actual support/contact-loss/interruption reporting and collision-pad free-cube placement. 34 focused checks and actual GUI Robotiq contact/release diagnostic (523 joint/state samples, clean exit) recorded; threshold overshoot and broader grasp/mission gaps remain explicit. Prior 13 native arm planning and mapped/depth aerial candidates retained. Added researched R10 fleets/swarm/underwater/multi-legged next extension with queued runtime tasks and GUI Health status. Full platform remains partial."
 goal: "unified_multi_robot_algorithm_lab"
+next_extension:
+  requested: "2026-10-14"
+  runtime_state: "queued"
+  priority: "Continue current initial implementation first; this is the next extension"
+  scope: "Shared-world fleets, fleet management, ground/aerial swarms, underwater ROV/AUV/maps, six/eight-legged and centipede/segmented robots, additional snake/tracked/surface/amphibious forms"
+  guide: "docs/NEXT_EXTENSION_GUIDE.md"
 overall_state: "partial"
 assessment: "Partial multi-robot lab with scoped real flight, wheeled navigation/mapping/reset and occupancy exports. Latest October 9 steering: implementation first, prioritizing reusable controllers and missing end-to-end workflows over repeated qualification sweeps. Motion -> SLAM -> navigation remains the feature dependency order. Broad validation is a separate follow-up lane; historical measurements remain scoped and full release remains blocked."
 audit_revision: "dff388f"
@@ -961,20 +967,23 @@ tasks:
           - "docs/status/evidence/panda-gripper-2026-10-06/README.md: actual Tk producer, physical measurements, independent joint/object trace hashes, source and installed-module hashes, retained stale-module negative."
           - "docs/status/asset-runtime-support.yaml: checked model/controller/report contracts enable only the native Panda hand and named measured screens."
           - "docs/status/evidence/extensions-finish-2026-10-08/controls/README.md"
-        next_action: "Implement dexterous hand-specific torque/tendon synergy controls and object manipulation for incompatible models; position-channel jogging alone does not establish dexterous grasp readiness."
+        next_action: "Continue further torque/tendon hand adapters, force-regulated grasping and arbitrary-object workflows. Existing source PID/tendon candidates and free-cube GUI contact/release are implemented; stable grasp/lift/repeats, all hands/templates and other backends remain open. Preserve Panda qualification separately."
         implementation_summary: "Generic Hand/Arm panel preserves native coupled-position tendons, bounds and units; original Panda gripper remains separate. Cartesian tool-origin jogging extends compatible direct joint controllers."
         implementation_validation: "Pending; no new physical mission/test campaign for October 9 candidates."
         tasks:
           R5.8.native_hands:
             title: "Source-authored dexterous PID and coupled-tendon hand controls"
-            state: "active"
+            state: "partial"
             owner: "codex"
             depends_on: ["R5.8"]
             scope_paths: ["src/robot_lab_utils/", "src/robot_lab_mujoco/", "src/robot_lab_bringup/", "src/robot_lab_gui/", "scripts/provision_extension_assets.py", "docs/", "README.md", "ROADMAP.md"]
-            active_scope: "2026-10-14: add explicit experimental source-specific hand actuator adapters, coordinated finger/tendon targets and measured force/contact feedback in the existing GUI. Preserve Panda, arm planning and Claude's independent lanes. Source motor semantics and Stop/watchdog are implementation requirements; repeated grasp/object and cross-backend acceptance remain pending."
+            active_scope: "2026-10-14 continuation at b41a33a: preserve source-authored hand controls and new object code. Finish actual GUI/launch fixture wiring, source-stamped unclipped feedback and truthful support/contact-loss/interruption state; complete receipts and missing documentation. Preserve Panda and existing work. Object missions and other backends remain unqualified."
             acceptance_ref: "ROADMAP.md R5.8"
-            implementation_state: "in progress"
-            validation_state: "pending"
+            implementation_state: "implemented"
+            validation_state: "34 focused checks; scoped normal GUI Robotiq contact/release; broader acceptance pending"
+            result: "Four source hand candidates with original PID/tendon motors, coordinated poses, actual effort/contact guards and GUI command/fixture/profile wiring. Normal Robotiq/nav_empty object starts clear, records two-sided contact and loses finger contact on release; contact overshoot is not a hard force limit. Raw pose/fixture negatives retained and corrected; Panda remains separate."
+            evidence: ["docs/status/native-hands-2026-10-14.md", "docs/status/native-hands-receipt-2026-10-14.json", "docs/status/evidence/r58-native-hands-2026-10-14/README.md"]
+            next_action: "Implement force/contact regulation and arbitrary-object/repeated lift/place, further source hands/mobile arms and other backend adapters. Qualify all fingers/templates, source limits, Stop/loss/reset/replay and real object outcomes after initial implementation."
       R5.9:
         title: "Mobile manipulator missions and combined control"
         state: "active"
@@ -1549,6 +1558,74 @@ tasks:
         next_action: "Wait for physical equipment, safe test setup and explicit authorization. Review serial timeouts, units, direction, limits, disconnect and e-stop before powered motion."
         blocked_by:
           - "hardware_hil"
+  R10:
+    title: "Next extension: fleets, swarms, aquatic and multi-legged robots"
+    state: "partial"
+    owner: "codex"
+    priority: "After the current initial implementation batches; preserve the existing motion/SLAM/navigation queue"
+    depends_on: ["R3.6", "R5", "R8.3"]
+    scope_paths: ["docs/", "README.md", "ROADMAP.md", "src/robot_lab_gui/", "src/robot_lab_utils/", "src/robot_lab_bringup/", "src/robot_lab/robot_lab_registry/", "scripts/"]
+    acceptance_ref: "ROADMAP.md R10"
+    active_scope: "2026-10-14 user request: define and record the next extension, research primary upstream sources and expose queued status in GUI Health. Shared-world fleet/swarm, marine physics/maps and six/eight/many-legged runtime integrations are separate queued implementation tasks; do not invent ready robots or missions."
+    tasks:
+      R10.0:
+        title: "Extension design, upstream research and agent implementation guide"
+        state: "done"
+        owner: "codex"
+        scope_paths: ["docs/", "README.md", "ROADMAP.md", "src/robot_lab_gui/robot_lab_gui/lab_tabs.py"]
+        implementation_state: "documented"
+        validation_state: "primary-source research and actual GUI queued-status rendering; no runtime mission"
+        acceptance_ref: "ROADMAP.md R10.0"
+        evidence: ["docs/NEXT_EXTENSION_GUIDE.md", "ROADMAP.md R10", "docs/status/platform-status.yaml next_extension", "/workspace/molar/robot_lab_runtime/native-hands-2026-10-14/gui-object-commands.json"]
+      R10.1:
+        title: "Shared-world multi-robot sessions and per-instance control"
+        state: "queued"
+        owner: null
+        depends_on: ["R3.6", "R8.3"]
+        acceptance_ref: "ROADMAP.md R10.1"
+      R10.2:
+        title: "Fleet management and Open-RMF mission adapters"
+        state: "queued"
+        owner: null
+        depends_on: ["R10.1"]
+        acceptance_ref: "ROADMAP.md R10.2"
+      R10.3:
+        title: "Ground and aerial swarm control"
+        state: "queued"
+        owner: null
+        depends_on: ["R10.1", "R5.10"]
+        acceptance_ref: "ROADMAP.md R10.3"
+      R10.4:
+        title: "Complete underwater ROV/AUV models and controllers"
+        state: "queued"
+        owner: null
+        depends_on: ["R3.6"]
+        acceptance_ref: "ROADMAP.md R10.4"
+      R10.5:
+        title: "Underwater maps, sensors, estimation, SLAM and navigation"
+        state: "queued"
+        owner: null
+        depends_on: ["R10.4", "R6.7"]
+        acceptance_ref: "ROADMAP.md R10.5"
+      R10.6:
+        title: "Six-legged hexapod and eight-legged octopod robots"
+        state: "queued"
+        owner: null
+        depends_on: ["R3.6", "R5.2", "R5.3"]
+        acceptance_ref: "ROADMAP.md R10.6"
+      R10.7:
+        title: "Centipede/segmented and additional robot families"
+        state: "queued"
+        owner: null
+        depends_on: ["R10.6"]
+        acceptance_ref: "ROADMAP.md R10.7"
+      R10.8:
+        title: "Native fleet/swarm/marine GUI, taxonomy and experiment workflows"
+        state: "queued"
+        owner: null
+        depends_on: ["R10.1", "R10.2", "R10.3", "R10.4", "R10.5", "R10.6", "R10.7"]
+        acceptance_ref: "ROADMAP.md R10.8"
+
 known_blockers:
   -
     id: "hardware_hil"

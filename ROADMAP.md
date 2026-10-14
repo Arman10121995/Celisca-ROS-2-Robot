@@ -917,7 +917,7 @@ Dependencies: `R3.6`, `R5.7`.
   contact/effort feedback and per-group guarded stops. GUI command opt-in and
   taught replay remain source-bound. Motor/coupling checks preserve source
   semantics; the Robotiq spawn-anchor rounding failure and repair are retained.
-  Normal GUI hand-motion diagnostics and 27 software checks establish this
+  Normal GUI hand-motion/free-cube contact/release diagnostics and 34 software checks establish this
   limited implementation scope. [Guide](docs/tutorials/native-hand-controls.md),
   [receipt/scope](docs/status/native-hands-2026-10-14.md). Stable physical object
   grasps, repeated release/lift, raw torque/tendon hands, arbitrary object
@@ -1370,6 +1370,86 @@ These describe families, not the installed Humble API. Verify the selected relea
 and local interfaces before coding; research the primary paper/documentation for
 each new method. Prefer maintained upstream implementations where suitable and
 label educational approximations honestly.
+
+## R10 — Next extension: fleets, swarms and new robot forms
+
+Requested October 14, after current initial implementation batches. Source
+research is recorded; runtime integration remains queued. Existing R3–R9
+acceptance stays open. [Detailed agent guide](docs/NEXT_EXTENSION_GUIDE.md)
+defines source candidates, compatibility gaps, implementation order and GUI
+requirements. These task paths inherit the ledger's R10 scope until claimed.
+
+### R10.0 — Extension design and source research
+
+Deliver source candidates, dependency order and truthful ledger/GUI status.
+Acceptance: docs and GUI Health distinguish research from runnable robots;
+no runtime mission is claimed by this planning task.
+
+### R10.1 — Shared-world multi-robot sessions
+
+Implement distinct entities, namespaced controllers/sensors/actions, unique
+TF, one world/clock, real inter-robot contacts, per-instance/group Drive,
+all-stop and scoped reset. Acceptance: two existing bases execute independent
+tasks in one physical world without topic/frame cross-talk; contacts, member
+loss/reset and shutdown are measured per advertised backend. Isolated
+experiment jobs do not establish a fleet.
+
+### R10.2 — Fleet management
+
+Implement compatible Open-RMF/Nav2 adapters, real dispatch/allocation, traffic
+coordination, pause/resume/cancel, measured robot/task health and supported
+charging/infrastructure. Acceptance: actual missions coordinate at shared
+resources and task status agrees with physical outcomes. Missing battery,
+charger, door or lift simulation stays unknown/unavailable.
+
+### R10.3 — Swarm robotics
+
+Implement formation, rendezvous, dispersion, flocking and cooperative coverage
+with timestamped neighbors, bounded collision-aware commands, group Stop,
+communication loss and join/remove. Ground first, then multi-FCU flight with
+distinct ids/ports/leases/model/frame bindings. Acceptance: physical relative
+motion, obstacle/member-loss outcomes and contact/separation traces for each
+advertised class/backend; pose animation is not swarm control.
+
+### R10.4 — Underwater robots and controllers
+
+Implement complete source ROV/AUV, bounded thrusters/fins and real buoyancy,
+drag/added mass/current dynamics, depth/heading control and command-loss Stop.
+Acceptance: measured station keeping, surge/sway/heave/yaw/depth, disturbance
+and loss with actual body/water-force/effort evidence. Visual import stays
+Display-only until the marine force adapter exists.
+
+### R10.5 — Underwater worlds, sensing, SLAM and navigation
+
+Implement tank, seabed/reef, harbor, cave/tunnel and wreck worlds with water/
+collision semantics; actual supported pressure/IMU/DVL/sonar/cameras, estimation,
+bathymetry/3D mapping, save/reload and volumetric routes. Acceptance: physical
+frame/depth/collision alignment and obstacle/inspection missions from real
+sensors/estimates. Flat occupancy or invented underwater GPS is insufficient.
+
+### R10.6 — Six- and eight-legged robots
+
+Implement complete hexapod/octopod variants and exact-source actuator/IK/gait/
+policy contracts. Stance/forward/reverse/turn/Stop/reset precede sensing, saved
+SLAM and navigation. Acceptance: physical walking/terrain, foot/body contacts,
+tilt/effort/loss/reset and sensor missions on each advertised backend. Count
+physical legs; six- and eight-legged controllers require separate contracts.
+
+### R10.7 — Segmented/centipede and additional families
+
+Implement licensed or first-party complete many-legged segmented sources,
+body/leg phase and segment controllers; expand to snake, tracked, surface and
+amphibious forms. Group limbs/components under complete families. Acceptance:
+physical locomotion, body/terrain/obstacle clearance and class-specific sensor/
+map missions. Catalog pieces and animated wave poses do not qualify a robot.
+
+### R10.8 — GUI and experiment integration
+
+Implement native Fleet/Swarm/Marine panels as adapters arrive, instance/group
+selection, latched/depth controls, taxonomy, compatible algorithm defaults and
+autofill, guides and real workload/result adapters. Acceptance: actual GUI
+commands exercise the claimed runtime with exact-source measured artifacts.
+Queued features remain visible as queued, without nonfunctional launch entries.
 
 ## Common implementation and evidence contract
 

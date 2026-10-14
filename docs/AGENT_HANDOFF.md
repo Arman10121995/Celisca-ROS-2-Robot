@@ -62,6 +62,13 @@ published checkpoint, and the [workflow](WORKFLOW.md) for commands.
 
 ## Current continuation
 
+**October 14 next-extension request:** R10 adds fleets/swarm, underwater robots
+and maps, hexapod/octopod and segmented/centipede forms. Continue current
+initial implementation first. [The guide](NEXT_EXTENSION_GUIDE.md) defines
+primary source candidates, namespaces/shared-world and marine/gait contracts.
+Runtime tasks are queued; research and isolated queue jobs do not qualify
+fleet/swarm or underwater support. Provision on SSD and group complete models.
+
 **October 14 Codex hand lane:** `R5.8.native_hands` adds source-authored
 DEX-EE PID and Robotiq/UMI coupled-tendon controls, normal GUI poses/autofill,
 measured effort/contact guards and owned PID Stop memory. Read

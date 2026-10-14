@@ -83,7 +83,8 @@ class NativeAssetDisplay(Node):
                     raise ValueError('The grasp fixture requires display posture only')
                 preview = spec.compile()
                 preview_data = mujoco.MjData(preview)
-                mujoco.mj_resetDataKeyframe(preview, preview_data, 0)
+                if preview.nkey:
+                    mujoco.mj_resetDataKeyframe(preview, preview_data, 0)
                 mujoco.mj_forward(preview, preview_data)
                 geometry = object_geometry(preview, preview_data, adapter, None)
                 center, half = geometry['center'], geometry['half_size']
@@ -195,6 +196,8 @@ class NativeAssetDisplay(Node):
                 from robot_lab_mujoco.native_hand_control import NativeHandControl
                 self.articulation = NativeHandControl(self, hand)
             else:
+                if self.get_parameter('grasp_fixture').value:
+                    raise ValueError('Generic hand fixture requires a reviewed native hand adapter')
                 from robot_lab_mujoco.native_articulation_control import NativeArticulationControl
                 self.articulation = NativeArticulationControl(self)
             self.create_service(Trigger, '/robot_lab/reset', self.reset)

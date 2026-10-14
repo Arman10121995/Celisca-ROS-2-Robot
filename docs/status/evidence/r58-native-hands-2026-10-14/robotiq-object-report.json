@@ -1,0 +1,1053 @@
+{
+  "robot": "menagerie_robotiq_2f85",
+  "backend": "mujoco",
+  "map": "nav_empty",
+  "mode": "display",
+  "complete": true,
+  "scope": "One installed GUI free-object wiring/grasp/release diagnostic; stable grasp/lift/repeats/other backends unqualified",
+  "command": "ros2 launch robot_lab_bringup simulated_robot.launch.py robot_model:=menagerie_robotiq_2f85 simulator:=mujoco use_sim_time:=true map_name:=nav_empty world_package:=robot_lab_maps world_name:=nav_empty world_path:=maps/nav_empty/worlds/nav_empty.world map_yaml:=maps/nav_empty/maps/map.yaml mode:=display gui:=false perception:=none enable_native_articulation:=true grasp_fixture:=true",
+  "pid": 1592222,
+  "source_sha256": "d48aca5f9151798ffd38111ce4e8b2081f3ec2d4f525161b33643451580010de",
+  "contract_sha256": "6941a8051709abed2ea00fd1420e76d00a3fe97863cfc17319e8c7cc6edd79e4",
+  "initial_state": {
+    "plant_id": "9091975a39d84797b6667b8026c460b0",
+    "channels": [
+      {
+        "index": 0,
+        "name": "fingers_actuator",
+        "joint": "",
+        "units": "source control",
+        "limits": [
+          0.0,
+          255.0
+        ],
+        "max_rate": 51.0,
+        "source_force_units": "N m",
+        "target": 0.38793171335250404,
+        "command": 0.38793171335250404,
+        "home": 0.0,
+        "measured": 0.8434254267434307,
+        "measured_rate": 2.5372643457925323,
+        "actuator_force": -0.22250044553201864
+      }
+    ],
+    "source_sha256": "d48aca5f9151798ffd38111ce4e8b2081f3ec2d4f525161b33643451580010de",
+    "sequence": {
+      "state": "idle",
+      "index": 0,
+      "total": 0
+    },
+    "native_model": "/workspace/molar/robot_lab_runtime/external_assets/sources/mujoco_menagerie/4d038b3feae26ec82b46a4d586379114012a8ac7/robotiq_2f85/2f85.xml",
+    "status": "holding measured position",
+    "fault": "",
+    "time": 0.16000000000000011,
+    "servo": null,
+    "planning": null,
+    "mobile_state": null,
+    "qualification": "implemented experimental position controls; validation pending",
+    "hand": {
+      "adapter": "robotiq_2f85",
+      "actuation": "authored coupled position tendon",
+      "contract_sha256": "6941a8051709abed2ea00fd1420e76d00a3fe97863cfc17319e8c7cc6edd79e4",
+      "groups": [
+        {
+          "name": "Coupled fingers",
+          "channels": [
+            "fingers_actuator"
+          ]
+        }
+      ],
+      "poses": [
+        "Close"
+      ],
+      "motion": {
+        "state": "interrupted",
+        "completion_scope": "Hand coordinates only; object grasp unassessed",
+        "reason": "heartbeat lost; holding measured position"
+      },
+      "contacts": {
+        "Coupled fingers": {
+          "normal_force_n": 20086.54226029903,
+          "contact_count": 8,
+          "contacts": [
+            {
+              "geom_ids": [
+                38,
+                19
+              ],
+              "body_ids": [
+                15,
+                5
+              ],
+              "geom_names": [
+                "manipulation_pedestal_geom",
+                ""
+              ],
+              "normal_force_n": 2509.462162391648,
+              "penetration_m": 0.011780159534182544
+            },
+            {
+              "geom_ids": [
+                38,
+                19
+              ],
+              "body_ids": [
+                15,
+                5
+              ],
+              "geom_names": [
+                "manipulation_pedestal_geom",
+                ""
+              ],
+              "normal_force_n": 2512.1734026831573,
+              "penetration_m": 0.011792661429962048
+            },
+            {
+              "geom_ids": [
+                38,
+                19
+              ],
+              "body_ids": [
+                15,
+                5
+              ],
+              "geom_names": [
+                "manipulation_pedestal_geom",
+                ""
+              ],
+              "normal_force_n": 2512.1734026831573,
+              "penetration_m": 0.011792661429962048
+            },
+            {
+              "geom_ids": [
+                38,
+                19
+              ],
+              "body_ids": [
+                15,
+                5
+              ],
+              "geom_names": [
+                "manipulation_pedestal_geom",
+                ""
+              ],
+              "normal_force_n": 2509.462162391648,
+              "penetration_m": 0.011780159534182544
+            },
+            {
+              "geom_ids": [
+                38,
+                31
+              ],
+              "body_ids": [
+                15,
+                11
+              ],
+              "geom_names": [
+                "manipulation_pedestal_geom",
+                ""
+              ],
+              "normal_force_n": 2509.462162391601,
+              "penetration_m": 0.011780159534182322
+            },
+            {
+              "geom_ids": [
+                38,
+                31
+              ],
+              "body_ids": [
+                15,
+                11
+              ],
+              "geom_names": [
+                "manipulation_pedestal_geom",
+                ""
+              ],
+              "normal_force_n": 2512.1734026831105,
+              "penetration_m": 0.011792661429961826
+            },
+            {
+              "geom_ids": [
+                38,
+                31
+              ],
+              "body_ids": [
+                15,
+                11
+              ],
+              "geom_names": [
+                "manipulation_pedestal_geom",
+                ""
+              ],
+              "normal_force_n": 2512.1734026831105,
+              "penetration_m": 0.011792661429961826
+            },
+            {
+              "geom_ids": [
+                38,
+                31
+              ],
+              "body_ids": [
+                15,
+                11
+              ],
+              "geom_names": [
+                "manipulation_pedestal_geom",
+                ""
+              ],
+              "normal_force_n": 2509.462162391601,
+              "penetration_m": 0.011780159534182322
+            }
+          ]
+        }
+      },
+      "blocked_groups": {},
+      "guard_scope": "Stop advancement at measured thresholds; source hard bounds unchanged; no grasp guarantee",
+      "object_grasp": {
+        "state": "idle",
+        "scope": "Documented free object present; measure contact/support/slip",
+        "left_force_n": 0.0,
+        "right_force_n": 0.0,
+        "supported": true,
+        "slip_m": 0.0,
+        "contact_count": 0,
+        "support_contact_count": 4,
+        "support_force_z_n": 0.49054253372867596,
+        "contact_state": "no_contact"
+      },
+      "object_present": true,
+      "object_body_id": 16,
+      "source_effort_limits": {
+        "fingers_actuator": [
+          -5.0,
+          5.0
+        ]
+      },
+      "qualification": "experimental; measured contact hold only, object lift/release and other backend missions pending"
+    }
+  },
+  "initial_joint_state": {
+    "time": 0.18000000000000002,
+    "positions": {
+      "right_driver_joint": 0.002789109771889357,
+      "right_coupler_joint": 0.00013437726297129942,
+      "right_spring_link_joint": 0.002982281481130195,
+      "right_follower_joint": -0.0031525829306333357,
+      "left_driver_joint": 0.0027891097718893572,
+      "left_coupler_joint": 0.00013437726297130625,
+      "left_spring_link_joint": 0.002982281481131537,
+      "left_follower_joint": -0.003152582930637251
+    },
+    "velocities": {
+      "right_driver_joint": 0.006535620662270548,
+      "right_coupler_joint": -3.7689364837493437e-06,
+      "right_spring_link_joint": 0.006497615402530845,
+      "right_follower_joint": -0.006199295898521366,
+      "left_driver_joint": 0.006535620662272165,
+      "left_coupler_joint": -3.768936473499949e-06,
+      "left_spring_link_joint": 0.006497615402578333,
+      "left_follower_joint": -0.006199295898523812
+    }
+  },
+  "grasp_state": {
+    "plant_id": "9091975a39d84797b6667b8026c460b0",
+    "channels": [
+      {
+        "index": 0,
+        "name": "fingers_actuator",
+        "joint": "",
+        "units": "source control",
+        "limits": [
+          0.0,
+          255.0
+        ],
+        "max_rate": 51.0,
+        "source_force_units": "N m",
+        "target": 173.20447143588467,
+        "command": 173.20447143588467,
+        "home": 0.0,
+        "measured": 168.7178892659671,
+        "measured_rate": 0.018150992309676848,
+        "actuator_force": 1.406985791634689
+      }
+    ],
+    "source_sha256": "d48aca5f9151798ffd38111ce4e8b2081f3ec2d4f525161b33643451580010de",
+    "sequence": {
+      "state": "idle",
+      "index": 0,
+      "total": 0
+    },
+    "native_model": "/workspace/molar/robot_lab_runtime/external_assets/sources/mujoco_menagerie/4d038b3feae26ec82b46a4d586379114012a8ac7/robotiq_2f85/2f85.xml",
+    "status": "Hand advancement limited; inspect measured contacts, then Open or Stop",
+    "fault": "",
+    "time": 5.239999999999645,
+    "servo": null,
+    "planning": null,
+    "mobile_state": null,
+    "qualification": "implemented experimental position controls; validation pending",
+    "hand": {
+      "adapter": "robotiq_2f85",
+      "actuation": "authored coupled position tendon",
+      "contract_sha256": "6941a8051709abed2ea00fd1420e76d00a3fe97863cfc17319e8c7cc6edd79e4",
+      "groups": [
+        {
+          "name": "Coupled fingers",
+          "channels": [
+            "fingers_actuator"
+          ]
+        }
+      ],
+      "poses": [
+        "Close"
+      ],
+      "motion": {
+        "state": "contact_or_effort_limited",
+        "pose": "Close",
+        "finger": "All",
+        "closure": 1.0,
+        "spread": 0.0,
+        "guarded": true,
+        "completion_scope": "Closing on the documented object; measured contact hold only",
+        "reason": "Measured two-sided object-contact threshold reached"
+      },
+      "contacts": {
+        "Coupled fingers": {
+          "normal_force_n": 20115.24325982613,
+          "contact_count": 16,
+          "contacts": [
+            {
+              "geom_ids": [
+                38,
+                19
+              ],
+              "body_ids": [
+                15,
+                5
+              ],
+              "geom_names": [
+                "manipulation_pedestal_geom",
+                ""
+              ],
+              "normal_force_n": 2511.8309144829,
+              "penetration_m": 0.01179116694414728
+            },
+            {
+              "geom_ids": [
+                38,
+                19
+              ],
+              "body_ids": [
+                15,
+                5
+              ],
+              "geom_names": [
+                "manipulation_pedestal_geom",
+                ""
+              ],
+              "normal_force_n": 2509.9708864769786,
+              "penetration_m": 0.011782434375855078
+            },
+            {
+              "geom_ids": [
+                38,
+                19
+              ],
+              "body_ids": [
+                15,
+                5
+              ],
+              "geom_names": [
+                "manipulation_pedestal_geom",
+                ""
+              ],
+              "normal_force_n": 2509.9708864769786,
+              "penetration_m": 0.011782434375855078
+            },
+            {
+              "geom_ids": [
+                38,
+                19
+              ],
+              "body_ids": [
+                15,
+                5
+              ],
+              "geom_names": [
+                "manipulation_pedestal_geom",
+                ""
+              ],
+              "normal_force_n": 2511.8309144829,
+              "penetration_m": 0.01179116694414728
+            },
+            {
+              "geom_ids": [
+                38,
+                21
+              ],
+              "body_ids": [
+                15,
+                6
+              ],
+              "geom_names": [
+                "manipulation_pedestal_geom",
+                ""
+              ],
+              "normal_force_n": 1.0384203696104117,
+              "penetration_m": 6.213027043812027e-05
+            },
+            {
+              "geom_ids": [
+                38,
+                21
+              ],
+              "body_ids": [
+                15,
+                6
+              ],
+              "geom_names": [
+                "manipulation_pedestal_geom",
+                ""
+              ],
+              "normal_force_n": 1.0384203696104117,
+              "penetration_m": 6.213027043812027e-05
+            },
+            {
+              "geom_ids": [
+                22,
+                39
+              ],
+              "body_ids": [
+                7,
+                16
+              ],
+              "geom_names": [
+                "right_pad1",
+                "manipulation_object_geom"
+              ],
+              "normal_force_n": 5.970593626081325,
+              "penetration_m": 0.00011156594014831432
+            },
+            {
+              "geom_ids": [
+                22,
+                39
+              ],
+              "body_ids": [
+                7,
+                16
+              ],
+              "geom_names": [
+                "right_pad1",
+                "manipulation_object_geom"
+              ],
+              "normal_force_n": 5.970593630609823,
+              "penetration_m": 0.00011156594022929688
+            },
+            {
+              "geom_ids": [
+                38,
+                31
+              ],
+              "body_ids": [
+                15,
+                11
+              ],
+              "geom_names": [
+                "manipulation_pedestal_geom",
+                ""
+              ],
+              "normal_force_n": 2511.830914482899,
+              "penetration_m": 0.011791166944147502
+            },
+            {
+              "geom_ids": [
+                38,
+                31
+              ],
+              "body_ids": [
+                15,
+                11
+              ],
+              "geom_names": [
+                "manipulation_pedestal_geom",
+                ""
+              ],
+              "normal_force_n": 2509.9708864768495,
+              "penetration_m": 0.011782434375854245
+            },
+            {
+              "geom_ids": [
+                38,
+                31
+              ],
+              "body_ids": [
+                15,
+                11
+              ],
+              "geom_names": [
+                "manipulation_pedestal_geom",
+                ""
+              ],
+              "normal_force_n": 2509.9708864768495,
+              "penetration_m": 0.011782434375854245
+            },
+            {
+              "geom_ids": [
+                38,
+                31
+              ],
+              "body_ids": [
+                15,
+                11
+              ],
+              "geom_names": [
+                "manipulation_pedestal_geom",
+                ""
+              ],
+              "normal_force_n": 2511.830914482899,
+              "penetration_m": 0.011791166944147502
+            },
+            {
+              "geom_ids": [
+                38,
+                33
+              ],
+              "body_ids": [
+                15,
+                12
+              ],
+              "geom_names": [
+                "manipulation_pedestal_geom",
+                ""
+              ],
+              "normal_force_n": 1.0384203689340845,
+              "penetration_m": 6.213027036668446e-05
+            },
+            {
+              "geom_ids": [
+                38,
+                33
+              ],
+              "body_ids": [
+                15,
+                12
+              ],
+              "geom_names": [
+                "manipulation_pedestal_geom",
+                ""
+              ],
+              "normal_force_n": 1.0384203689340845,
+              "penetration_m": 6.213027036668446e-05
+            },
+            {
+              "geom_ids": [
+                34,
+                39
+              ],
+              "body_ids": [
+                13,
+                16
+              ],
+              "geom_names": [
+                "left_pad1",
+                "manipulation_object_geom"
+              ],
+              "normal_force_n": 5.9705936242839455,
+              "penetration_m": 0.00011156594011590741
+            },
+            {
+              "geom_ids": [
+                34,
+                39
+              ],
+              "body_ids": [
+                13,
+                16
+              ],
+              "geom_names": [
+                "left_pad1",
+                "manipulation_object_geom"
+              ],
+              "normal_force_n": 5.970593628812524,
+              "penetration_m": 0.0001115659401968906
+            }
+          ]
+        }
+      },
+      "blocked_groups": {
+        "Coupled fingers": "Measured two-sided object-contact threshold reached"
+      },
+      "guard_scope": "Stop advancement at measured thresholds; source hard bounds unchanged; no grasp guarantee",
+      "object_grasp": {
+        "state": "holding",
+        "scope": "Two-sided measured contact with support and no measured slip; stability/lift unassessed",
+        "left_force_n": 11.94118725309647,
+        "right_force_n": 11.941187256691148,
+        "supported": true,
+        "slip_m": 0.0001700928652990806,
+        "contact_limit_n": 2.0,
+        "effort_fraction": 0.8,
+        "contact_count": 4,
+        "support_contact_count": 4,
+        "support_force_z_n": 1.3856685935271922,
+        "contact_state": "contact_hold"
+      },
+      "object_present": true,
+      "object_body_id": 16,
+      "source_effort_limits": {
+        "fingers_actuator": [
+          -5.0,
+          5.0
+        ]
+      },
+      "qualification": "experimental; measured contact hold only, object lift/release and other backend missions pending"
+    }
+  },
+  "released_state": {
+    "plant_id": "9091975a39d84797b6667b8026c460b0",
+    "channels": [
+      {
+        "index": 0,
+        "name": "fingers_actuator",
+        "joint": "",
+        "units": "source control",
+        "limits": [
+          0.0,
+          255.0
+        ],
+        "max_rate": 51.0,
+        "source_force_units": "N m",
+        "target": 0.0,
+        "command": 0.0,
+        "home": 0.0,
+        "measured": 0.7115935948415674,
+        "measured_rate": -2.924108005905116e-06,
+        "actuator_force": -0.2232449646017435
+      }
+    ],
+    "source_sha256": "d48aca5f9151798ffd38111ce4e8b2081f3ec2d4f525161b33643451580010de",
+    "sequence": {
+      "state": "idle",
+      "index": 0,
+      "total": 0
+    },
+    "native_model": "/workspace/molar/robot_lab_runtime/external_assets/sources/mujoco_menagerie/4d038b3feae26ec82b46a4d586379114012a8ac7/robotiq_2f85/2f85.xml",
+    "status": "Hand coordinates reached; grasp stability unassessed",
+    "fault": "",
+    "time": 10.320000000000116,
+    "servo": null,
+    "planning": null,
+    "mobile_state": null,
+    "qualification": "implemented experimental position controls; validation pending",
+    "hand": {
+      "adapter": "robotiq_2f85",
+      "actuation": "authored coupled position tendon",
+      "contract_sha256": "6941a8051709abed2ea00fd1420e76d00a3fe97863cfc17319e8c7cc6edd79e4",
+      "groups": [
+        {
+          "name": "Coupled fingers",
+          "channels": [
+            "fingers_actuator"
+          ]
+        }
+      ],
+      "poses": [
+        "Close"
+      ],
+      "motion": {
+        "state": "coordinates_reached",
+        "pose": "Open",
+        "finger": "All",
+        "closure": 0.0,
+        "spread": 0.0,
+        "guarded": false,
+        "completion_scope": "Opening fingers; object release unassessed"
+      },
+      "contacts": {
+        "Coupled fingers": {
+          "normal_force_n": 20086.60829050668,
+          "contact_count": 8,
+          "contacts": [
+            {
+              "geom_ids": [
+                38,
+                19
+              ],
+              "body_ids": [
+                15,
+                5
+              ],
+              "geom_names": [
+                "manipulation_pedestal_geom",
+                ""
+              ],
+              "normal_force_n": 2509.5288255953683,
+              "penetration_m": 0.01178035979508496
+            },
+            {
+              "geom_ids": [
+                38,
+                19
+              ],
+              "body_ids": [
+                15,
+                5
+              ],
+              "geom_names": [
+                "manipulation_pedestal_geom",
+                ""
+              ],
+              "normal_force_n": 2512.123247031337,
+              "penetration_m": 0.01179253866241381
+            },
+            {
+              "geom_ids": [
+                38,
+                19
+              ],
+              "body_ids": [
+                15,
+                5
+              ],
+              "geom_names": [
+                "manipulation_pedestal_geom",
+                ""
+              ],
+              "normal_force_n": 2512.123247031337,
+              "penetration_m": 0.01179253866241381
+            },
+            {
+              "geom_ids": [
+                38,
+                19
+              ],
+              "body_ids": [
+                15,
+                5
+              ],
+              "geom_names": [
+                "manipulation_pedestal_geom",
+                ""
+              ],
+              "normal_force_n": 2509.5288255953683,
+              "penetration_m": 0.01178035979508496
+            },
+            {
+              "geom_ids": [
+                38,
+                31
+              ],
+              "body_ids": [
+                15,
+                11
+              ],
+              "geom_names": [
+                "manipulation_pedestal_geom",
+                ""
+              ],
+              "normal_force_n": 2509.528825595321,
+              "penetration_m": 0.01178035979508485
+            },
+            {
+              "geom_ids": [
+                38,
+                31
+              ],
+              "body_ids": [
+                15,
+                11
+              ],
+              "geom_names": [
+                "manipulation_pedestal_geom",
+                ""
+              ],
+              "normal_force_n": 2512.1232470313134,
+              "penetration_m": 0.011792538662413588
+            },
+            {
+              "geom_ids": [
+                38,
+                31
+              ],
+              "body_ids": [
+                15,
+                11
+              ],
+              "geom_names": [
+                "manipulation_pedestal_geom",
+                ""
+              ],
+              "normal_force_n": 2512.1232470313134,
+              "penetration_m": 0.011792538662413588
+            },
+            {
+              "geom_ids": [
+                38,
+                31
+              ],
+              "body_ids": [
+                15,
+                11
+              ],
+              "geom_names": [
+                "manipulation_pedestal_geom",
+                ""
+              ],
+              "normal_force_n": 2509.528825595321,
+              "penetration_m": 0.01178035979508485
+            }
+          ]
+        }
+      },
+      "blocked_groups": {},
+      "guard_scope": "Stop advancement at measured thresholds; source hard bounds unchanged; no grasp guarantee",
+      "object_grasp": {
+        "state": "released",
+        "scope": "Fingers open; object free under contact physics",
+        "left_force_n": 0.0,
+        "right_force_n": 0.0,
+        "supported": true,
+        "slip_m": 0.0,
+        "contact_count": 0,
+        "support_contact_count": 4,
+        "support_force_z_n": 0.4905,
+        "contact_state": "no_contact"
+      },
+      "object_present": true,
+      "object_body_id": 16,
+      "source_effort_limits": {
+        "fingers_actuator": [
+          -5.0,
+          5.0
+        ]
+      },
+      "qualification": "experimental; measured contact hold only, object lift/release and other backend missions pending"
+    }
+  },
+  "stopped_state": {
+    "plant_id": "9091975a39d84797b6667b8026c460b0",
+    "channels": [
+      {
+        "index": 0,
+        "name": "fingers_actuator",
+        "joint": "",
+        "units": "source control",
+        "limits": [
+          0.0,
+          255.0
+        ],
+        "max_rate": 51.0,
+        "source_force_units": "N m",
+        "target": 0.7115934109296357,
+        "command": 0.7115934109296357,
+        "home": 0.0,
+        "measured": 0.841770176464291,
+        "measured_rate": 5.746595635707079,
+        "actuator_force": -0.22112512976674462
+      }
+    ],
+    "source_sha256": "d48aca5f9151798ffd38111ce4e8b2081f3ec2d4f525161b33643451580010de",
+    "sequence": {
+      "state": "idle",
+      "index": 0,
+      "total": 0
+    },
+    "native_model": "/workspace/molar/robot_lab_runtime/external_assets/sources/mujoco_menagerie/4d038b3feae26ec82b46a4d586379114012a8ac7/robotiq_2f85/2f85.xml",
+    "status": "stopped; holding measured hand coordinates",
+    "fault": "",
+    "time": 10.440000000000156,
+    "servo": null,
+    "planning": null,
+    "mobile_state": null,
+    "qualification": "implemented experimental position controls; validation pending",
+    "hand": {
+      "adapter": "robotiq_2f85",
+      "actuation": "authored coupled position tendon",
+      "contract_sha256": "6941a8051709abed2ea00fd1420e76d00a3fe97863cfc17319e8c7cc6edd79e4",
+      "groups": [
+        {
+          "name": "Coupled fingers",
+          "channels": [
+            "fingers_actuator"
+          ]
+        }
+      ],
+      "poses": [
+        "Close"
+      ],
+      "motion": {
+        "state": "interrupted",
+        "pose": "Open",
+        "finger": "All",
+        "closure": 0.0,
+        "spread": 0.0,
+        "guarded": false,
+        "completion_scope": "Opening fingers; object release unassessed",
+        "reason": "stopped; holding measured hand coordinates"
+      },
+      "contacts": {
+        "Coupled fingers": {
+          "normal_force_n": 20086.543297310738,
+          "contact_count": 8,
+          "contacts": [
+            {
+              "geom_ids": [
+                38,
+                19
+              ],
+              "body_ids": [
+                15,
+                5
+              ],
+              "geom_names": [
+                "manipulation_pedestal_geom",
+                ""
+              ],
+              "normal_force_n": 2509.430586592375,
+              "penetration_m": 0.011780162637456848
+            },
+            {
+              "geom_ids": [
+                38,
+                19
+              ],
+              "body_ids": [
+                15,
+                5
+              ],
+              "geom_names": [
+                "manipulation_pedestal_geom",
+                ""
+              ],
+              "normal_force_n": 2512.2052377353566,
+              "penetration_m": 0.011792659539990535
+            },
+            {
+              "geom_ids": [
+                38,
+                19
+              ],
+              "body_ids": [
+                15,
+                5
+              ],
+              "geom_names": [
+                "manipulation_pedestal_geom",
+                ""
+              ],
+              "normal_force_n": 2512.2052377353566,
+              "penetration_m": 0.011792659539990535
+            },
+            {
+              "geom_ids": [
+                38,
+                19
+              ],
+              "body_ids": [
+                15,
+                5
+              ],
+              "geom_names": [
+                "manipulation_pedestal_geom",
+                ""
+              ],
+              "normal_force_n": 2509.430586592375,
+              "penetration_m": 0.011780162637456848
+            },
+            {
+              "geom_ids": [
+                38,
+                31
+              ],
+              "body_ids": [
+                15,
+                11
+              ],
+              "geom_names": [
+                "manipulation_pedestal_geom",
+                ""
+              ],
+              "normal_force_n": 2509.430586592329,
+              "penetration_m": 0.011780162637456626
+            },
+            {
+              "geom_ids": [
+                38,
+                31
+              ],
+              "body_ids": [
+                15,
+                11
+              ],
+              "geom_names": [
+                "manipulation_pedestal_geom",
+                ""
+              ],
+              "normal_force_n": 2512.2052377353084,
+              "penetration_m": 0.011792659539990313
+            },
+            {
+              "geom_ids": [
+                38,
+                31
+              ],
+              "body_ids": [
+                15,
+                11
+              ],
+              "geom_names": [
+                "manipulation_pedestal_geom",
+                ""
+              ],
+              "normal_force_n": 2512.2052377353084,
+              "penetration_m": 0.011792659539990313
+            },
+            {
+              "geom_ids": [
+                38,
+                31
+              ],
+              "body_ids": [
+                15,
+                11
+              ],
+              "geom_names": [
+                "manipulation_pedestal_geom",
+                ""
+              ],
+              "normal_force_n": 2509.430586592329,
+              "penetration_m": 0.011780162637456626
+            }
+          ]
+        }
+      },
+      "blocked_groups": {},
+      "guard_scope": "Stop advancement at measured thresholds; source hard bounds unchanged; no grasp guarantee",
+      "object_grasp": {
+        "state": "interrupted",
+        "scope": "stopped; holding measured hand coordinates",
+        "left_force_n": 0.0,
+        "right_force_n": 0.0,
+        "supported": true,
+        "slip_m": 0.0,
+        "contact_count": 0,
+        "support_contact_count": 4,
+        "support_force_z_n": 0.4905000000000001,
+        "contact_state": "no_contact"
+      },
+      "object_present": true,
+      "object_body_id": 16,
+      "source_effort_limits": {
+        "fingers_actuator": [
+          -5.0,
+          5.0
+        ]
+      },
+      "qualification": "experimental; measured contact hold only, object lift/release and other backend missions pending"
+    }
+  },
+  "joint_samples": 523,
+  "state_samples": 523,
+  "cleanup_returncode": 0,
+  "producer_sha256": "016e502cc239eb0a5da7ea2220bf417a074da1a1cdfa9badb326696c15748842"
+}

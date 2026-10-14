@@ -2346,6 +2346,11 @@ class SimulationLauncherGui(tk.Tk):
             if self._robot_config().get('arm_planning') == 'moveit':
                 command = [part for part in command if not part.startswith('arm_planning:=')]
                 command.append('arm_planning:=moveit')
+        if command and self._robot_config().get('native_hand') and self._native_articulation_selectable():
+            controls = self.hand_tab.generic_controls.hand_controls
+            if controls.fixture.get():
+                command = [part for part in command if not part.startswith('grasp_fixture:=')]
+                command.append('grasp_fixture:=true')
         self._prepared_command = list(command)
         self.command_var.set(shlex.join(command))
         self.command_preview.configure(state="normal")
@@ -2706,6 +2711,7 @@ class SimulationLauncherGui(tk.Tk):
                         'native_task': self.native_task_var.get(),
                         'enable_native_articulation': bool(self.native_articulation_var.get()),
                         'native_arm_planning': bool(self.native_arm_planning_var.get()),
+                        'native_hand_fixture': bool(self.hand_tab.generic_controls.hand_controls.fixture.get()),
                         'px4_camera': bool(self.px4_camera_var.get()),
                         'aerial_mapping': bool(self.aerial_mapping_var.get()),
                         'aerial_obstacles': bool(self.aerial_obstacles_var.get()),
@@ -2729,6 +2735,7 @@ class SimulationLauncherGui(tk.Tk):
             'native_task': self.native_task_var.get(),
             'enable_native_articulation': bool(self.native_articulation_var.get()),
             'native_arm_planning': bool(self.native_arm_planning_var.get()),
+            'native_hand_fixture': bool(self.hand_tab.generic_controls.hand_controls.fixture.get()),
             'px4_camera': bool(self.px4_camera_var.get()),
             'aerial_mapping': bool(self.aerial_mapping_var.get()),
             'aerial_obstacles': bool(self.aerial_obstacles_var.get()),
@@ -2757,6 +2764,7 @@ class SimulationLauncherGui(tk.Tk):
         self.native_task_var.set(options.get('native_task', 'display'))
         self.native_articulation_var.set(bool(options.get('enable_native_articulation', False)))
         self.native_arm_planning_var.set(bool(options.get('native_arm_planning', False)))
+        self.hand_tab.generic_controls.hand_controls.fixture.set(bool(options.get('native_hand_fixture', False)))
         self.px4_camera_var.set(bool(options.get('px4_camera', False)))
         self.aerial_mapping_var.set(bool(options.get('aerial_mapping', False)))
         self.aerial_obstacles_var.set(bool(options.get('aerial_obstacles', False)))
@@ -2811,6 +2819,7 @@ class SimulationLauncherGui(tk.Tk):
             self.native_task_var.set(cfg.get('native_task', 'display'))
             self.native_articulation_var.set(bool(cfg.get('enable_native_articulation', False)))
             self.native_arm_planning_var.set(bool(cfg.get('native_arm_planning', False)))
+            self.hand_tab.generic_controls.hand_controls.fixture.set(bool(cfg.get('native_hand_fixture', False)))
             self.px4_camera_var.set(bool(cfg.get('px4_camera', False)))
             self.aerial_mapping_var.set(bool(cfg.get('aerial_mapping', False)))
             self.aerial_obstacles_var.set(bool(cfg.get('aerial_obstacles', False)))
