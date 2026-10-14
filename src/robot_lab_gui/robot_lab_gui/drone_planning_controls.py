@@ -8,12 +8,13 @@ from tkinter import ttk
 
 class DronePlanningControls(ttk.LabelFrame):
     def __init__(self, parent, app):
-        super().__init__(parent, text='3D target / static-world planning (experimental)', padding=8)
+        super().__init__(parent, text='3D target / route planning (experimental)', padding=8)
         self.app, self.node, self.state, self.position = app, None, {}, None
         self.received, self.pose_received = -math.inf, -math.inf
         self.flight_state, self.flight_received = {}, -math.inf
         self.status = tk.StringVar(value='Check takeoff clearance, then Takeoff. Once airborne, edit a measured target and Plan / Execute.')
         self.takeoff_status = tk.StringVar(value='Takeoff clearance has not been checked.')
+        self.obstacle_status = tk.StringVar(value='Route observations are off; canonical static world only.')
         self.target = [tk.DoubleVar(value=0.) for _ in range(3)]
         ttk.Button(self, text='Use current FCU position', command=self.use_measured).grid(row=0, column=0, columnspan=4, sticky='ew')
         for row, (axis, variable) in enumerate(zip('XYZ', self.target), 1):
@@ -42,6 +43,8 @@ class DronePlanningControls(ttk.LabelFrame):
             'The static planner uses a conservative 0.7 m spherical envelope. '
             'Moving actors, flight tracking and contact validation remain separate.',
             wraplength=305).grid(row=9, column=0, columnspan=4, sticky='w', pady=6)
+        ttk.Label(self, textvariable=self.obstacle_status, wraplength=305).grid(
+            row=10, column=0, columnspan=4, sticky='w', pady=4)
         self.after(200, self.poll)
 
     def owned(self):
@@ -158,12 +161,25 @@ class DronePlanningControls(ttk.LabelFrame):
             takeoff_message += ' · climb %.2f m%s' % (takeoff['rise_m'], ' (ceiling limited)' if takeoff.get('ceiling_limited') else '')
         self.takeoff_status.set(takeoff_message)
         fresh_flight = self.ready() and time.monotonic()-self.flight_received < 1.5
+        observations = self.state.get('obstacles', {})
+        if observations.get('enabled'):
+            messages = ['Observed route layer: '+('ready' if observations.get('ready') else 'waiting/held')]
+            for kind in ('map', 'depth'):
+                value = observations.get(kind, {})
+                messages.append(kind+': '+(value.get('error') or '%d cells, %.1f s old' %
+                    (value.get('occupied_cells', 0), value.get('age_wall_s', 0.))))
+            if not observations.get('intrinsics_ready'):
+                messages.append('CameraInfo missing/stale')
+            self.obstacle_status.set(' · '.join(messages))
+        else:
+            self.obstacle_status.set('Route observations are off; canonical static world only.')
         self.check_button.state(['!disabled'] if fresh_flight and self.flight_state.get('takeoff_ready')
             and takeoff.get('state') != 'checking' and self.state.get('state') != 'planning' else ['disabled'])
         self.plan_button.state(['!disabled'] if fresh_flight and self.flight_state.get('phase') == 'flying'
-            and self.state.get('state') != 'planning' else ['disabled'])
+            and self.state.get('state') not in ('planning', 'checking_execution')
+            and (not observations.get('enabled') or observations.get('ready')) else ['disabled'])
         self.execute_button.state(['!disabled'] if self.ready() and self.state.get('state') == 'planned'
-            and self.target_matches_plan() else ['disabled'])
+            and self.target_matches_plan() and (not observations.get('enabled') or observations.get('ready')) else ['disabled'])
         self.stop_button.state(['!disabled'] if self.owned() else ['disabled'])
         if self.winfo_exists():
             self.after(200, self.poll)

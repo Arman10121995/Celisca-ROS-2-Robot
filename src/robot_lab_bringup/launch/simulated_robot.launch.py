@@ -756,6 +756,7 @@ def _build_simulation_actions(context):
             # RGB-D variant and RTAB-Map 3D mapping (R5.10, experimental).
             vehicle = _launch_value(context, 'px4_vehicle') or 'x500'
             mapping = _launch_value(context, 'aerial_mapping') or 'none'
+            obstacles = _launch_value(context, 'aerial_obstacles') or 'none'
             database = _launch_value(context, 'aerial_map_database')
             if vehicle not in ('x500', 'x500_depth') or mapping not in ('none', 'rtabmap'):
                 raise RuntimeError('px4_vehicle must be x500 or x500_depth; aerial_mapping none or rtabmap')
@@ -763,7 +764,10 @@ def _build_simulation_actions(context):
                 raise RuntimeError('aerial_mapping:=rtabmap needs px4_vehicle:=x500_depth in mode:=flight')
             if database and (mapping == 'none' or not Path(database).is_file()):
                 raise RuntimeError('aerial_map_database needs aerial_mapping:=rtabmap and an existing file: '+database)
+            if obstacles not in ('none', 'mapped_depth') or obstacles != 'none' and (mapping != 'rtabmap' or mode_name != 'flight'):
+                raise RuntimeError('aerial_obstacles must be none or mapped_depth with RGB-D RTAB-Map Flight')
             command += ['--vehicle', vehicle, '--mapping', mapping]
+            command += ['--obstacles', obstacles]
             if database:
                 command += ['--map-database', database]
             for axis in ('x', 'y', 'z'):
@@ -1859,6 +1863,8 @@ def generate_launch_description():
                               description="PX4 airframe: x500 or x500_depth (upstream OakD-Lite RGB-D variant)"),
         DeclareLaunchArgument('aerial_mapping', default_value='none',
                               description="Drone 3D mapping in mode:=flight: none or rtabmap (needs x500_depth)"),
+        DeclareLaunchArgument('aerial_obstacles', default_value='none',
+                              description='Experimental route occupancy: none or mapped_depth (needs RGB-D RTAB-Map Flight)'),
         DeclareLaunchArgument('aerial_map_database', default_value='',
                               description="Saved aerial RTAB-Map database to localize in; empty starts a new map"),
         DeclareLaunchArgument('arm_planning', default_value='auto',

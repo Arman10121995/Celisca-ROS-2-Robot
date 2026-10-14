@@ -1,5 +1,11 @@
 # Implement robot readiness and hand off validation
 
+The [mapped drone guide](tutorials/mapped-drone-planning.md) now defines the
+actual-flight validation handoff for observed occupancy: independent pose,
+real collision-model intrusion, real camera loss, held manual/Stop/goal/Cancel
+interruptions and retained source artifacts. Its software/ROS-fixture checks
+are implementation diagnostics, not a working flight mission.
+
 October 14: [13 native fixed arm planning candidates](tutorials/native-arm-planning.md)
 now have initial implementation. Two actual GUI reaches are diagnostic scope,
 not all-arm/object/backend acceptance. [The continuation](status/native-arm-planning-2026-10-14.md)

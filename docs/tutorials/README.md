@@ -24,6 +24,7 @@ a guide, imported model or numerical example does not qualify every mission.
 | [Native controls and Stretch](native-controls.md) | Unitree exact-model policies; 28 fixed actuator candidates, Cartesian/teach-replay; Stretch base/sensors and explicit higher workflows |
 | [Concurrent experiments](concurrent-experiments.md) | Real bounded subprocess queue, actual telemetry and owned cancel/reset; mission qualification remains separate |
 | [PX4 X500](px4_x500.md) | Gazebo Harmonic flight, manual Drive/altitude, hold/goals/land in named worlds; wider flight-world/planning matrix remains |
+| [Mapped drone routes](mapped-drone-planning.md) | RTAB-Map + registered depth supplements static planning; async execution rechecks, stale/blockage Hold, actual flight acceptance pending |
 | [Go2 policy](go2.md) | Bounded MuJoCo policy trials and their recorded failures; terrain/recovery/navigation remain unqualified |
 
 Use these commands from the existing workspace root:

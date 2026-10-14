@@ -222,7 +222,7 @@ def x500_urdf(upstream, camera=False):
     return ET.tostring(robot, encoding='unicode')
 
 
-def rtabmap_command(database, localization, parameter_file, ros_prefix=CAMERA_ROS_PREFIX):
+def rtabmap_command(database, localization, parameter_file, ros_prefix=CAMERA_ROS_PREFIX, observed_obstacles=False):
     """RTAB-Map 3D mapping on the FCU odometry (TF map -> base_link).
 
     The FCU estimate is the odometry frame ('map', the frame the Drone
@@ -244,6 +244,8 @@ def rtabmap_command(database, localization, parameter_file, ros_prefix=CAMERA_RO
         'Mem/IncrementalMemory': 'false' if localization else 'true',
         'Mem/InitWMWithAllNodes': 'true' if localization else 'false',
     }
+    if observed_obstacles:
+        parameters.update(map_always_update=True, latch=True)
     Path(parameter_file).write_text(yaml.safe_dump({'/**': {'ros__parameters': parameters}}))
     command = ['ros2', 'run', 'rtabmap_slam', 'rtabmap']
     if not localization:
@@ -390,6 +392,8 @@ def main():
     parser.add_argument('--map-database', default='',
                         help='Saved RTAB-Map database to localize in (read-only); '
                              'empty starts a new map in the run directory')
+    parser.add_argument('--obstacles', default='none', choices=('none', 'mapped_depth'),
+                        help='Observed occupancy and live depth route interruption (needs RGB-D mapping Flight)')
     args = parser.parse_args()
     if not math.isfinite(args.log_limit_mb) or args.log_limit_mb <= 0:
         parser.error('PX4 log limit must be positive and finite')
@@ -397,6 +401,8 @@ def main():
         parser.error('Aerial mapping needs the RGB-D vehicle (--vehicle x500_depth)')
     if args.map_database and (args.mapping == 'none' or not Path(args.map_database).is_file()):
         parser.error('--map-database needs --mapping rtabmap and an existing database file')
+    if args.obstacles != 'none' and (args.mapping != 'rtabmap' or args.vehicle != 'x500_depth' or args.flight_enabled != 'true'):
+        parser.error('--obstacles mapped_depth needs --mapping rtabmap, --vehicle x500_depth and --flight-enabled true')
     root = Path(args.px4_root).resolve()
     build = root/'build/px4_sitl_default'
     upstream = root/'Tools/simulation/gz'
@@ -490,7 +496,7 @@ def main():
                 mode='localization' if args.map_database else 'mapping',
                 odometry='FCU estimate (TF map -> base_link)', camera_topic=CAMERA_ROS_PREFIX)))
             processes.append(subprocess.Popen(
-                rtabmap_command(database, bool(args.map_database), run/'rtabmap.yaml'),
+                rtabmap_command(database, bool(args.map_database), run/'rtabmap.yaml', observed_obstacles=args.obstacles != 'none'),
                 stdout=(run/'rtabmap.log').open('w'), stderr=subprocess.STDOUT,
                 env=rtabmap_environment(dict(os.environ)), start_new_session=True))
             print('Aerial RTAB-Map database: '+str(database), flush=True)
@@ -511,7 +517,8 @@ def main():
         if camera:
             from robot_lab_utils.aerial_takeoff import extend_envelope
             envelope = extend_envelope(envelope, camera_collision_corners(), camera_model)
-        planner = PX4Planning(controller, args.world or str(upstream/'worlds/default.sdf'), envelope)
+        planner = PX4Planning(controller, args.world or str(upstream/'worlds/default.sdf'), envelope,
+            observed_obstacles=args.obstacles != 'none')
         executor.add_node(planner)
         while rclpy.ok() and fcu.poll() is None:
             executor.spin_once(timeout_sec=0.05)

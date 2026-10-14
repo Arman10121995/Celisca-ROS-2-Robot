@@ -62,6 +62,16 @@ published checkpoint, and the [workflow](WORKFLOW.md) for commands.
 
 ## Current continuation
 
+**October 14 Codex aerial lane:** `R5.10.mapped_obstacles` implements
+RTAB-Map/depth occupancy ingestion and capture-time map transforms, observed/
+static 3D planning, async pre-execution recheck, current lookahead Hold and
+operator-command generation guards. [Guide](tutorials/mapped-drone-planning.md),
+[scope/receipt](status/aerial-obstacles-2026-10-14.md). The 23 SDK tests and
+synthetic ROS/TF diagnostic launch no FCU/plant. Do not refresh old flight
+certificates from these checks. Follow the guide's actual insertion/sensor-loss
+flight handoff; unknown world geometry, future prediction and other backends
+remain separate.
+
 **October 14 Codex independent lane:** `R5.7.native_planning` implements
 source-derived full arm planning and actual bounded native action execution
 on 13 candidate profiles. [Guide](tutorials/native-arm-planning.md) and

@@ -1,5 +1,10 @@
 # Worlds, robot assets and manipulation: continuation guide
 
+October 14 aerial continuation: [observed route planning](tutorials/mapped-drone-planning.md)
+adds RTAB-Map/depth consumers and interruption to the native X500 workflow.
+The [receipt scope](status/aerial-obstacles-2026-10-14.md) has no new flight;
+do not qualify sensors/clearance/actors from synthetic message or voxel counts.
+
 October 14: [native fixed arm planning](tutorials/native-arm-planning.md)
 extends 13 installed profiles with real KDL/OMPL/native trajectory execution
 and GUI defaults/autofill. [The receipt](status/native-arm-planning-2026-10-14.md)

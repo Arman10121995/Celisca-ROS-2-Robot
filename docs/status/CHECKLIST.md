@@ -1,5 +1,12 @@
 # Robot Lab done and remaining checklist
 
+- [x] October 14: mapped/depth obstacle consumers, capture transforms, bounded
+  observed/static aerial planning, async route recheck, stale/blockage Hold and
+  GUI dependency selection/autofill/observation status.
+- [ ] Actual mapped flight, physical new-obstacle and sensor-loss interruption,
+  body/clearance/latency/cadence checks; dynamic prediction and other backends.
+  See [aerial implementation](aerial-obstacles-2026-10-14.md).
+
 - [x] October 14: source-derived collision-aware MoveIt planning, bounded native
   arm action and GUI opt-in/autofill for 13 compatible fixed arm variants.
 - [x] Actual normal GUI UR5e and SO101 one-shot reaches on MuJoCo/nav_empty,

@@ -1,5 +1,9 @@
 # Robot Lab: implementation roadmap and continuation plan
 
+October 14 aerial continuation: [mapped/depth route obstacles](docs/status/aerial-obstacles-2026-10-14.md)
+implements observed/static planning, fresh-sensor route interruption and GUI
+autofill. Actual flight/clearance and future actor prediction remain open.
+
 October 14 continuation: [fixed native arm planning](docs/status/native-arm-planning-2026-10-14.md)
 adds 13 experimental MoveIt/native-actuator candidates and GUI command autofill.
 Two actual GUI reaches are measured; other arm/object/backend missions remain.

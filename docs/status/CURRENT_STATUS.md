@@ -1,5 +1,13 @@
 # Current Robot Lab status
 
+October 14 aerial integration: an opt-in mapped/depth route layer now combines
+actual RTAB-Map clouds and registered depth with static-world planning, rechecks
+before execution and requests Hold on blocked/stale observations. GUI selects
+sensing/mapping dependencies and shows ages. Four packages build and 23 SDK
+checks pass; ROS fixture inputs are explicitly synthetic, with no new flight
+qualification. [Guide](../tutorials/mapped-drone-planning.md),
+[scope/remaining work](aerial-obstacles-2026-10-14.md).
+
 October 14: thirteen native fixed arms now have experimental MoveIt KDL/OMPL
 planning, original-actuator trajectory execution and normal GUI command
 autofill. Actual GUI UR5e and SO101 reaches on MuJoCo/nav_empty have 0.489 mm

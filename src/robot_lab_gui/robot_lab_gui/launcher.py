@@ -515,6 +515,7 @@ class SimulationLauncherGui(tk.Tk):
         self.native_task_var = tk.StringVar(value='display')
         self.px4_camera_var = tk.BooleanVar(value=False)
         self.aerial_mapping_var = tk.BooleanVar(value=False)
+        self.aerial_obstacles_var = tk.BooleanVar(value=False)
         self.aerial_map_database_var = tk.StringVar(value='')
         self.steering_mode_var = tk.StringVar(value="")
         self.drive_status_var = tk.StringVar(value="Keyboard/joystick off")
@@ -960,6 +961,14 @@ class SimulationLauncherGui(tk.Tk):
             'Builds a 3D RTAB-Map database from the RGB-D camera and FCU odometry while you fly. '
             'Stop saves it (and an exported PLY cloud) in the PX4 run directory. '
             'Choose a saved database to localize in it instead. Validation pending.')
+        self.aerial_obstacles_checkbox = ttk.Checkbutton(advanced,
+            text='Drone route: mapped + live depth obstacles (experimental)',
+            variable=self.aerial_obstacles_var, command=self._aerial_obstacles_changed)
+        self.aerial_obstacles_checkbox.grid(row=41, column=0, sticky='w', pady=(8, 0))
+        add_tooltip(self.aerial_obstacles_checkbox,
+            'Enables RGB-D + RTAB-Map and supplements the static world with observed occupancy. '
+            'Fresh live depth can interrupt a planned route; stale sensing holds it. '
+            'Manual Drive/Takeoff remain their existing control paths. Flight qualification pending.')
         saved_map = ttk.Frame(advanced)
         saved_map.grid(row=32, column=0, sticky='ew')
         ttk.Label(saved_map, text='Saved map').pack(side='left')
@@ -2207,6 +2216,14 @@ class SimulationLauncherGui(tk.Tk):
         # Mapping needs the camera; dropping the camera drops mapping.
         if self.aerial_mapping_var.get() and not self.px4_camera_var.get():
             self.px4_camera_var.set(True)
+        if not self.px4_camera_var.get() or not self.aerial_mapping_var.get():
+            self.aerial_obstacles_var.set(False)
+        self._update_from_selection()
+
+    def _aerial_obstacles_changed(self):
+        if self._flight_selectable() and self.aerial_obstacles_var.get():
+            self.px4_camera_var.set(True)
+            self.aerial_mapping_var.set(True)
         self._update_from_selection()
 
     def _browse_aerial_map(self):
@@ -2304,7 +2321,12 @@ class SimulationLauncherGui(tk.Tk):
             command.append("steering_mode:=%s" % self.steering_mode_var.get())
         if command and self._px4_sensing_selectable():
             command = [part for part in command if not part.startswith(
-                ('px4_vehicle:=', 'aerial_mapping:=', 'aerial_map_database:='))]
+                ('px4_vehicle:=', 'aerial_mapping:=', 'aerial_map_database:=', 'aerial_obstacles:='))]
+            observed = self._flight_selectable() and self.aerial_obstacles_var.get()
+            if observed:
+                self.px4_camera_var.set(True)
+                self.aerial_mapping_var.set(True)
+            command.append('aerial_obstacles:='+('mapped_depth' if observed else 'none'))
             if self.px4_camera_var.get():
                 command.append('px4_vehicle:=x500_depth')
             if self.px4_camera_var.get() and self.aerial_mapping_var.get() \
@@ -2418,6 +2440,7 @@ class SimulationLauncherGui(tk.Tk):
         self.px4_camera_checkbox.state(['!disabled'] if px4 else ['disabled'])
         mapping = px4 and self.mode_var.get() == 'flight'
         self.aerial_mapping_checkbox.state(['!disabled'] if mapping else ['disabled'])
+        self.aerial_obstacles_checkbox.state(['!disabled'] if self._flight_selectable() else ['disabled'])
         for widget in (self.aerial_map_entry, self.aerial_map_browse):
             widget.state(['!disabled'] if mapping and self.aerial_mapping_var.get() else ['disabled'])
         self.steering_mode_combo.configure(
@@ -2489,6 +2512,9 @@ class SimulationLauncherGui(tk.Tk):
                          'Drone includes experimental static-world Plan/Execute; direct /px4/goal and manual input remain unchecked paths. Health contains the flight guide and measured results.')
             lines.append('Optional RGB-D camera and RTAB-Map 3D mapping (advanced options, experimental): '
                          'Stop saves aerial_map.db and a PLY cloud in the PX4 run directory; Saved map localizes in a copy.')
+            lines.append('Optional mapped + live depth route obstacles: source/frame/freshness checked observations '
+                'supplement the canonical world; a blocked or stale planned route requests Hold. '
+                'Unseen obstacles and future actor motion remain unqualified.')
         if config.get('arm_control') == 'panda':
             lines.append('Arm tab: native Panda joint jogging, Home, Stop and bounded position trajectories on MuJoCo. '
                          'See Hand for qualified gripper controls; other arm backends remain pending.')
@@ -2677,6 +2703,7 @@ class SimulationLauncherGui(tk.Tk):
                         'native_arm_planning': bool(self.native_arm_planning_var.get()),
                         'px4_camera': bool(self.px4_camera_var.get()),
                         'aerial_mapping': bool(self.aerial_mapping_var.get()),
+                        'aerial_obstacles': bool(self.aerial_obstacles_var.get()),
                         'aerial_map_database': self.aerial_map_database_var.get()}
                     save_manifest(name, manifest)
                     self.status_var.set(f"Profile '{name}' saved (manifest)")
@@ -2699,6 +2726,7 @@ class SimulationLauncherGui(tk.Tk):
             'native_arm_planning': bool(self.native_arm_planning_var.get()),
             'px4_camera': bool(self.px4_camera_var.get()),
             'aerial_mapping': bool(self.aerial_mapping_var.get()),
+            'aerial_obstacles': bool(self.aerial_obstacles_var.get()),
             'aerial_map_database': self.aerial_map_database_var.get(),
         }
         save_profile(name, config)
@@ -2726,6 +2754,7 @@ class SimulationLauncherGui(tk.Tk):
         self.native_arm_planning_var.set(bool(options.get('native_arm_planning', False)))
         self.px4_camera_var.set(bool(options.get('px4_camera', False)))
         self.aerial_mapping_var.set(bool(options.get('aerial_mapping', False)))
+        self.aerial_obstacles_var.set(bool(options.get('aerial_obstacles', False)))
         self.aerial_map_database_var.set(options.get('aerial_map_database', ''))
         mode = resolved_from.get("mode") or manifest.get("mode")
         if mode and mode in self.mode_profiles:
@@ -2779,6 +2808,7 @@ class SimulationLauncherGui(tk.Tk):
             self.native_arm_planning_var.set(bool(cfg.get('native_arm_planning', False)))
             self.px4_camera_var.set(bool(cfg.get('px4_camera', False)))
             self.aerial_mapping_var.set(bool(cfg.get('aerial_mapping', False)))
+            self.aerial_obstacles_var.set(bool(cfg.get('aerial_obstacles', False)))
             self.aerial_map_database_var.set(cfg.get('aerial_map_database', ''))
 
         self._update_from_selection()

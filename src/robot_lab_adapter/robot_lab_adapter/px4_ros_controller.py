@@ -42,6 +42,8 @@ class PX4Controller(Node):
         self.manual = (0.0, 0.0, 0.0, 0.0)
         self.configured = False
         self.route, self.route_status = [], 'idle'
+        self.command_generation = 0
+        self.route_guard = None
         self.takeoff_guard = None
         self.odom_pub = self.create_publisher(Odometry, '/px4/odometry', 10)
         self.status_pub = self.create_publisher(String, '/px4/status', 10)
@@ -159,6 +161,7 @@ class PX4Controller(Node):
             self.target_yaw = math.atan2(2*(q.w*q.z+q.x*q.y), 1-2*(q.y*q.y+q.z*q.z))
 
     def clear_path(self, reason):
+        self.command_generation += 1
         if self.route:
             self.route_status = reason
         self.route = []
@@ -176,6 +179,33 @@ class PX4Controller(Node):
         self.route_status = 'tracking static waypoints'
         self.route_progress = time.monotonic()
         self.route_best_distance = math.inf
+
+    def advance_route(self, now, dt):
+        if self.route_guard:
+            try:
+                reason = self.route_guard(self.position(), self.route)
+            except Exception as exc:
+                reason = 'Observed route guard failed: '+str(exc)
+            if reason:
+                self.clear_path(reason)
+                self.target = self.position()
+                return
+        distance = math.dist(self.position(), self.route[0])
+        if distance < self.route_best_distance-.02:
+            self.route_best_distance, self.route_progress = distance, now
+        if distance <= .05:
+            self.target = self.route.pop(0)
+            self.route_best_distance, self.route_progress = math.inf, now
+            if not self.route:
+                self.route_status = 'FCU waypoint setpoints reached; mission/contact validation separate'
+        elif now-self.route_progress > 60:
+            self.clear_path('waypoint progress timeout')
+            self.target = self.position()
+        else:
+            delta = [goal-current for goal, current in zip(self.route[0], self.target)]
+            length = math.sqrt(sum(v*v for v in delta))
+            scale = min(1., .4*dt/length) if length else 0.
+            self.target = [current+v*scale for current, v in zip(self.target, delta)]
 
     def tick(self):
         f = self.flight
@@ -240,24 +270,7 @@ class PX4Controller(Node):
                 self.target = self.position()
                 self.manual = (0.0, 0.0, 0.0, 0.0)
             elif self.route:
-                distance = math.dist(self.position(), self.route[0])
-                if distance < self.route_best_distance-.02:
-                    self.route_best_distance, self.route_progress = distance, now
-                if distance <= .05:
-                    self.target = self.route.pop(0)
-                    self.route_best_distance, self.route_progress = math.inf, now
-                    if not self.route:
-                        self.route_status = 'FCU waypoint setpoints reached; mission/contact validation separate'
-                elif now-self.route_progress > 60:
-                    self.clear_path('waypoint progress timeout')
-                    self.target = self.position()
-                else:
-                    # Advance the position setpoint along the checked segment
-                    # instead of making a full distant-position jump.
-                    delta = [goal-current for goal, current in zip(self.route[0], self.target)]
-                    length = math.sqrt(sum(v*v for v in delta))
-                    scale = min(1., .4*dt/length) if length else 0.
-                    self.target = [current+v*scale for current, v in zip(self.target, delta)]
+                self.advance_route(now, dt)
         if self.phase in ('priming', 'arming', 'ascending', 'flying'):
             xyz = enu_to_ned(*(a-b for a, b in zip(self.target, self.origin)))
             f.send_setpoint(*xyz, math.pi/2-self.target_yaw)

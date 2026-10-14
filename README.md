@@ -1,5 +1,12 @@
 # Robot Lab — Multi-Robot Simulation and Algorithm Laboratory
 
+The new experimental **mapped + live depth drone route** option selects RGB-D
+and RTAB-Map automatically, adds observed occupancy to static-world planning,
+and requests Hold on stale/blocked planned routes. Software/ROS fixture/GUI
+checks pass; actual mapped flight qualification remains pending.
+[Guide](docs/tutorials/mapped-drone-planning.md),
+[implementation scope](docs/status/aerial-obstacles-2026-10-14.md).
+
 October 14 adds **MoveIt Plan/Execute for 13 native fixed arm candidates**,
 with source-derived collision models, original actuator execution and GUI
 autofill. UR5e and SO101 each complete one actual MuJoCo/nav_empty GUI reach;

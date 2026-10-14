@@ -1,0 +1,194 @@
+{
+  "task": "R5.10.mapped_obstacles",
+  "base_revision": "0049ee23bbb45511a38eb523e96f30d935b4abf4",
+  "host": {
+    "architecture": "aarch64",
+    "ros": "Humble"
+  },
+  "runtime_python": "/workspace/molar/robot_lab_runtime/px4/venv/bin/python3",
+  "libraries": {
+    "numpy": "2.2.6",
+    "scipy": "1.15.3"
+  },
+  "scope": "Initial mapped/depth route implementation; source/SDK, explicitly synthetic ROS transport/TF and installed Tk selection diagnostics only",
+  "source_sha256": {
+    "src/robot_lab_utils/robot_lab_utils/observed_aerial_scene.py": "97bc8f2938983da04883dd3fbbdd9dc892592674be2e34f34ef1fdc7328b2bd5",
+    "src/robot_lab_adapter/robot_lab_adapter/aerial_obstacles.py": "5e0150c2843c60aaa23c234cb8699ecbc1931cb91374450511e30dab90c91115",
+    "src/robot_lab_adapter/robot_lab_adapter/px4_planning.py": "51d0d67656bd2b0ae9a94dfa432b2192c68e3c4636c49283b3b70bf15a7a2a91",
+    "src/robot_lab_adapter/robot_lab_adapter/px4_ros_controller.py": "35c7a9a66145d48bb4fad851992f671c828b7a5f7870de09791589bb577e87b7",
+    "src/robot_lab_adapter/robot_lab_adapter/px4_sitl_runtime.py": "abf9c23833573a6bbebdabc83c26f6509371535790042aace6b6a86b469d078f",
+    "src/robot_lab_gui/robot_lab_gui/drone_planning_controls.py": "77b64fde6548bb3cbfae3cc148dc1ce975dc1e57443b0f36d3ff3e74678b48e5",
+    "src/robot_lab_gui/robot_lab_gui/launcher.py": "d1f4c437b94314a0a7575e1116f5a81ab70e7c6e0061a22a5534637578930425",
+    "src/robot_lab_bringup/launch/simulated_robot.launch.py": "75e802ae3d80025b6c41ad6fb3f47e892ba9a9ce5da494ce562daf66b3199c43"
+  },
+  "installed_sha256": {
+    "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_utils/lib/python3.10/site-packages/robot_lab_utils/observed_aerial_scene.py": "97bc8f2938983da04883dd3fbbdd9dc892592674be2e34f34ef1fdc7328b2bd5",
+    "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_adapter/lib/python3.10/site-packages/robot_lab_adapter/aerial_obstacles.py": "5e0150c2843c60aaa23c234cb8699ecbc1931cb91374450511e30dab90c91115",
+    "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_adapter/lib/python3.10/site-packages/robot_lab_adapter/px4_planning.py": "51d0d67656bd2b0ae9a94dfa432b2192c68e3c4636c49283b3b70bf15a7a2a91",
+    "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_adapter/lib/python3.10/site-packages/robot_lab_adapter/px4_ros_controller.py": "35c7a9a66145d48bb4fad851992f671c828b7a5f7870de09791589bb577e87b7",
+    "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_adapter/lib/python3.10/site-packages/robot_lab_adapter/px4_sitl_runtime.py": "abf9c23833573a6bbebdabc83c26f6509371535790042aace6b6a86b469d078f",
+    "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_gui/lib/python3.10/site-packages/robot_lab_gui/drone_planning_controls.py": "77b64fde6548bb3cbfae3cc148dc1ce975dc1e57443b0f36d3ff3e74678b48e5",
+    "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_gui/lib/python3.10/site-packages/robot_lab_gui/launcher.py": "d1f4c437b94314a0a7575e1116f5a81ab70e7c6e0061a22a5534637578930425",
+    "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_bringup/share/robot_lab_bringup/launch/simulated_robot.launch.py": "75e802ae3d80025b6c41ad6fb3f47e892ba9a9ce5da494ce562daf66b3199c43"
+  },
+  "checks": {
+    "packages_built": [
+      "robot_lab_utils",
+      "robot_lab_adapter",
+      "robot_lab_bringup",
+      "robot_lab_gui"
+    ],
+    "sdk_checks_passed": 23,
+    "synthetic_ros_ingestion": {
+      "scope": "ROS transport/TF with explicitly synthetic observations; no FCU, simulator, drone or flight qualification",
+      "checks": {
+        "capture_tf_and_projection": {
+          "enabled": true,
+          "ready": true,
+          "frame": "map",
+          "radius_m": 0.7,
+          "voxel_m": 0.15,
+          "lookahead_m": 2.0,
+          "scope": "Observed occupancy supplements known static world; unseen/dynamic prediction unqualified",
+          "intrinsics_ready": true,
+          "map": {
+            "age_wall_s": 0.0891201010090299,
+            "stamp": 1791963719.0335062,
+            "occupied_cells": 1,
+            "source_points": 1,
+            "sha256": "1c2ad4ac66c75b2b88b05088632d7f4483197590c723cf935bf3e23453c5c193",
+            "source_frame": "aerial_map"
+          },
+          "depth": {
+            "age_wall_s": 0.08893613601685502,
+            "stamp": 1791963719.0335062,
+            "occupied_cells": 256,
+            "source_points": 256,
+            "sha256": "b6fae10548cc850a0c8be479db54f25d333e1b7e3a730e933650413b2c5afebc",
+            "source_frame": "camera_optical_frame"
+          }
+        },
+        "new_obstacle_blocks": {
+          "enabled": true,
+          "ready": true,
+          "frame": "map",
+          "radius_m": 0.7,
+          "voxel_m": 0.15,
+          "lookahead_m": 2.0,
+          "scope": "Observed occupancy supplements known static world; unseen/dynamic prediction unqualified",
+          "intrinsics_ready": true,
+          "map": {
+            "age_wall_s": 0.004271611018339172,
+            "stamp": 1791963719.1356728,
+            "occupied_cells": 1,
+            "source_points": 1,
+            "sha256": "9c245dc89187f2bd60d941148081e043f4eee92952384498bd77376568a4222d",
+            "source_frame": "aerial_map"
+          },
+          "depth": {
+            "age_wall_s": 0.10607179600629024,
+            "stamp": 1791963719.0335062,
+            "occupied_cells": 256,
+            "source_points": 256,
+            "sha256": "b6fae10548cc850a0c8be479db54f25d333e1b7e3a730e933650413b2c5afebc",
+            "source_frame": "camera_optical_frame"
+          }
+        },
+        "depth_loss_rejects": {
+          "enabled": true,
+          "ready": false,
+          "frame": "map",
+          "radius_m": 0.7,
+          "voxel_m": 0.15,
+          "lookahead_m": 2.0,
+          "scope": "Observed occupancy supplements known static world; unseen/dynamic prediction unqualified",
+          "intrinsics_ready": true,
+          "map": {
+            "age_wall_s": 0.7622106999915559,
+            "stamp": 1791963719.1356728,
+            "occupied_cells": 1,
+            "source_points": 1,
+            "sha256": "9c245dc89187f2bd60d941148081e043f4eee92952384498bd77376568a4222d",
+            "source_frame": "aerial_map"
+          },
+          "depth": {
+            "age_wall_s": 0.7597964350134134,
+            "stamp": 1791963719.1356728,
+            "occupied_cells": 256,
+            "source_points": 256,
+            "sha256": "b6fae10548cc850a0c8be479db54f25d333e1b7e3a730e933650413b2c5afebc",
+            "source_frame": "camera_optical_frame"
+          }
+        }
+      },
+      "completed": true
+    },
+    "gui_selection": {
+      "scope": "Actual installed Tk selection only; no FCU or plant",
+      "command": "ros2 launch robot_lab_bringup simulated_robot.launch.py robot_model:=px4_x500 simulator:=gazebo use_sim_time:=false map_name:=nav_empty world_package:=robot_lab_maps world_name:=nav_empty world_path:=maps/nav_empty/worlds/nav_empty.world map_yaml:=maps/nav_empty/maps/map.yaml mode:=flight spawn_z:=0.0 gui:=false aerial_obstacles:=mapped_depth px4_vehicle:=x500_depth aerial_mapping:=rtabmap",
+      "display_command": "ros2 launch robot_lab_bringup simulated_robot.launch.py robot_model:=px4_x500 simulator:=gazebo use_sim_time:=false map_name:=nav_empty world_package:=robot_lab_maps world_name:=nav_empty world_path:=maps/nav_empty/worlds/nav_empty.world map_yaml:=maps/nav_empty/maps/map.yaml mode:=display spawn_z:=0.0 gui:=false perception:=none aerial_obstacles:=none px4_vehicle:=x500_depth"
+    },
+    "rtabmap_command_parameters": {
+      "map_always_update": true,
+      "latch": true
+    }
+  },
+  "artifacts": {
+    "/workspace/molar/robot_lab_runtime/aerial-obstacles-2026-10-14/build.log": {
+      "sha256": "739862ce0cd9fa9d5aeab7b8c73b5ad6d78fe9a3a6a9b6496302671116f3892e",
+      "bytes": 1190
+    },
+    "/workspace/molar/robot_lab_runtime/aerial-obstacles-2026-10-14/build-final.log": {
+      "sha256": "bf2733d3fdbd81ae2da6a835abdc81f83133a3f19c01b8e9c4a6586821c6ab78",
+      "bytes": 1190
+    },
+    "/workspace/molar/robot_lab_runtime/aerial-obstacles-2026-10-14/numerical-checks.log": {
+      "sha256": "43e76e0bb41fe265ec38cbe418b6f9231a422686c7adf17d30343a521e8ebcf6",
+      "bytes": 1671
+    },
+    "/workspace/molar/robot_lab_runtime/aerial-obstacles-2026-10-14/sdk-checks.log": {
+      "sha256": "29209d349ebb0d63a021221c97e38e8072f7d19a3e0c769742a36c8b3d3140d8",
+      "bytes": 99
+    },
+    "/workspace/molar/robot_lab_runtime/aerial-obstacles-2026-10-14/sdk-checks-final.log": {
+      "sha256": "73fe2684d0b852eab2790118e83ac8b19d65e430359dad4f94bfeae44426924d",
+      "bytes": 99
+    },
+    "/workspace/molar/robot_lab_runtime/aerial-obstacles-2026-10-14/ros-ingestion-check.py": {
+      "sha256": "6a237f11edce1f1e13f7b6638a71fb793a6ea3571671dc5515449ec0134f403e",
+      "bytes": 3487
+    },
+    "/workspace/molar/robot_lab_runtime/aerial-obstacles-2026-10-14/ros-ingestion.json": {
+      "sha256": "46e459f53837fc2e7b2c366aa3b8e984e2e15eaf5eafc8d5cc2636d2d79667be",
+      "bytes": 2854
+    },
+    "/workspace/molar/robot_lab_runtime/aerial-obstacles-2026-10-14/ros-ingestion.log": {
+      "sha256": "46e459f53837fc2e7b2c366aa3b8e984e2e15eaf5eafc8d5cc2636d2d79667be",
+      "bytes": 2854
+    },
+    "/workspace/molar/robot_lab_runtime/aerial-obstacles-2026-10-14/gui-command.json": {
+      "sha256": "1ff7c87ba5d6c1b0c2dc6bd69678e0184a283a67b543af4b2588fdda8af68266",
+      "bytes": 881
+    },
+    "/workspace/molar/robot_lab_runtime/aerial-obstacles-2026-10-14/gui-command.log": {
+      "sha256": "1ff7c87ba5d6c1b0c2dc6bd69678e0184a283a67b543af4b2588fdda8af68266",
+      "bytes": 881
+    },
+    "/workspace/molar/robot_lab_runtime/aerial-obstacles-2026-10-14/rtabmap-command-only.yaml": {
+      "sha256": "405a5dbab29c47eccf8542f3d0b042b0ad4b514c3264b40669237ea1e113d00e",
+      "bytes": 737
+    }
+  },
+  "negative": "Initial ordinary-host Python lacks pymavlink; preserved failure. SDK-dependent checks run successfully in the actual SSD PX4 venv, with no host installation.",
+  "fcu_started": false,
+  "simulator_started": false,
+  "flight_qualified": false,
+  "historical_certificates_refreshed": false,
+  "remaining": [
+    "normal GUI actual mapped flight",
+    "real collision-object intrusion and camera-loss hold",
+    "independent body tracking/clearance/contact/alignment/latency/setpoint cadence",
+    "saved maps/repeats/remaining worlds/backends",
+    "future prediction and automatic dynamic detours"
+  ]
+}
