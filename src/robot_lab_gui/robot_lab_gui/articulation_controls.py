@@ -8,7 +8,7 @@ from tkinter import ttk
 
 
 class ArticulationControls(ttk.Frame):
-    def __init__(self, parent, app, include_planning=False):
+    def __init__(self, parent, app, include_planning=False, include_hand=False):
         super().__init__(parent)
         self.app = app
         self.node = None
@@ -68,6 +68,12 @@ class ArticulationControls(ttk.Frame):
             self.planning_controls = NativePlanningControls(self, self)
             self.planning_controls.grid(row=14, column=0, columnspan=4, sticky='ew', pady=8)
             self.planning_controls.grid_remove()
+        self.hand_controls = None
+        if include_hand:
+            from .native_hand_controls import NativeHandControls
+            self.hand_controls = NativeHandControls(self, self)
+            self.hand_controls.grid(row=15, column=0, columnspan=4, sticky='ew', pady=8)
+            self.hand_controls.grid_remove()
 
     def selected(self):
         return (bool(self.app._robot_config().get('native_articulation'))
@@ -141,7 +147,8 @@ class ArticulationControls(ttk.Frame):
                 channel = self.current()
                 if channel:
                     self.feedback.set('Measured %.4f %s · range %.4f … %.4f · force %.3f' %
-                        (channel['measured'], channel['units'], *channel['limits'], channel['actuator_force']))
+                        (channel['measured'], channel['units'], *channel['limits'], channel['actuator_force'])
+                        + (' '+channel['source_force_units'] if channel.get('source_force_units') else ''))
             else:
                 self.status.set((self.state or {}).get('fault') or 'Waiting for fresh native actuator state…')
         else:
@@ -154,6 +161,8 @@ class ArticulationControls(ttk.Frame):
         self.mobile_tasks.poll()
         if self.planning_controls:
             self.planning_controls.poll()
+        if self.hand_controls:
+            self.hand_controls.poll()
 
     def send(self, targets):
         if not self.ready():

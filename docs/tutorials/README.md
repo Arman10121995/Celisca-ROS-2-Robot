@@ -1,5 +1,9 @@
 # Robot Lab tutorials
 
+New: [native dexterous-hand and coupled-gripper controls](native-hand-controls.md)
+for four experimental MuJoCo profiles. Use measured contacts and source effort
+feedback; object-grasp qualification remains separate.
+
 Updated October 14, 2026. Thirteen [native fixed arm planning candidates](native-arm-planning.md)
 have normal GUI Plan/Execute/autofill; UR5e and SO101 each have one scoped
 MuJoCo/nav_empty reach. Broader arm/object/backend acceptance remains open.

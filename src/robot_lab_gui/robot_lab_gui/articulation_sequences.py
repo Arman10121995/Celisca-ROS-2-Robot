@@ -60,6 +60,10 @@ class ArticulationSequences(ttk.LabelFrame):
         if len(self.points) >= 64:
             self.status.set('Maximum 64 taught configurations per sequence.')
             return
+        if any(not channel['limits'][0] <= channel['measured'] <= channel['limits'][1]
+               for channel in self.control.state['channels']):
+            self.status.set('Measured coordinate is outside the command bounds. Jog inside the bounds before teaching.')
+            return
         self.points.append(dict(name='Configuration '+str(len(self.points)+1), settle_s=.5,
             targets={channel['name']: channel['measured'] for channel in self.control.state['channels']}))
         self.refresh()

@@ -27,6 +27,9 @@ def installed_profiles(kind):
         if kind == 'robots' and profile.get('native_mjcf'):
             paths.append(profile['native_mjcf'])
         if paths and all(path and Path(path).is_file() for path in paths):
+            if kind == 'robots':
+                from .native_hand import hand_profile
+                profile = hand_profile(name, profile)
             if kind == 'robots' and profile.get('native_articulation') and not profile.get('mobile_control_config'):
                 from .native_planning_description import ARM_FRAMES
                 if name in ARM_FRAMES and profile.get('source_id') == 'mujoco_menagerie':
@@ -53,5 +56,11 @@ def installed_registry_entities(kind):
     path = installation_root() / ('registry_' + kind + '.yaml')
     if not path.is_file():
         return []
-    return [entity for entity in yaml.safe_load(path.read_text()) or []
-            if entity.get('id') in profiles]
+    entities = [entity for entity in yaml.safe_load(path.read_text()) or [] if entity.get('id') in profiles]
+    if kind == 'robots':
+        for index, entity in enumerate(entities):
+            profile = profiles[entity['id']]
+            if profile.get('native_hand'):
+                entities[index] = dict(entity, description=profile['notes'],
+                    tags=list(dict.fromkeys([*entity.get('tags', []), 'hand', 'experimental_control'])))
+    return entities

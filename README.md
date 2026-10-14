@@ -1,5 +1,11 @@
 # Robot Lab — Multi-Robot Simulation and Algorithm Laboratory
 
+October 14 adds experimental **DEX-EE, Robotiq and UMI Hand controls**:
+source PID/tendon motors, coordinated finger poses, measured contacts/effort,
+Stop and command autofill. Stable object grasps and other backends remain open.
+[GUI guide](docs/tutorials/native-hand-controls.md),
+[implementation scope](docs/status/native-hands-2026-10-14.md).
+
 The new experimental **mapped + live depth drone route** option selects RGB-D
 and RTAB-Map automatically, adds observed occupancy to static-world planning,
 and requests Hold on stale/blocked planned routes. Software/ROS fixture/GUI

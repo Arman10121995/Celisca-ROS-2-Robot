@@ -1,5 +1,10 @@
 # Stabilization and remaining work: agent execution guide
 
+October 14 hand continuation: [native hand controls](tutorials/native-hand-controls.md)
+and [diagnostic scope](status/native-hands-2026-10-14.md). Four source-bound
+experimental adapters are implemented; source motor limits and measured
+contact feedback precede later actual object grasp/release qualification.
+
 October 14 continuation: [native fixed arm planning and measured diagnostics](status/native-arm-planning-2026-10-14.md).
 Thirteen compatible models have initial implementation; remaining arm/object/
 backend missions stay open. Read [the guide](tutorials/native-arm-planning.md)

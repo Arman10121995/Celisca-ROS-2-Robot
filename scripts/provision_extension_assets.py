@@ -564,10 +564,16 @@ def install_robots(store, download, selected_source=None):
                         profile['arm_control'] = 'panda'
                     else:
                         from robot_lab_utils.native_actuation import position_channels
-                        channels = position_channels(model)
+                        from robot_lab_utils.native_hand import hand_contract
+                        hand = hand_contract(model, model_path)
+                        channels = hand['channels'] if hand else position_channels(model)
                         if channels:
                             profile['native_articulation'] = {'channels': channels,
                                 'implementation_state': 'implemented', 'validation_state': 'pending'}
+                        if hand:
+                            profile['native_hand'] = {'adapter': hand['adapter'],
+                                'implementation_state': 'experimental', 'validation_state': 'pending',
+                                'contract_sha256': hand['contract_sha256'], 'backend': 'mujoco'}
                     del model
                 else:
                     if source['id'] in ('turtlebot3_vendor','husky_vendor','turtlebot4_vendor'):

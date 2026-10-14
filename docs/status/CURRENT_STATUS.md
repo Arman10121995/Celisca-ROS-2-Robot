@@ -1,5 +1,13 @@
 # Current Robot Lab status
 
+October 14 hand integration: four source hand profiles now have experimental
+coordinated poses, source PID/tendon actuation, individual finger groups,
+measured external contacts/effort and guarded advancement. Normal GUI
+DEX-EE/Robotiq movement diagnostics and 27 focused checks are recorded;
+stable grasp/release, all templates/objects and other backends remain pending.
+[Guide](../tutorials/native-hand-controls.md),
+[scope and retained failure](native-hands-2026-10-14.md).
+
 October 14 aerial integration: an opt-in mapped/depth route layer now combines
 actual RTAB-Map clouds and registered depth with static-world planning, rechecks
 before execution and requests Hold on blocked/stale observations. GUI selects

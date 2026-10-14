@@ -57,6 +57,9 @@ the older roadmap. Existing stabilization fixes must remain working.
   position controllers, with authored sites, joint limits and contact prediction.
 - [x] Teach measured native arm/hand configurations, save/load source-matched
   sequences and replay with actual settling, bounds, deadlines and interruption.
+- [x] Source PID DEX-EE and coupled Robotiq/UMI hand adapters: coordinated
+  poses, finger selection, measured effort/external contact guards, original
+  motor bounds, GUI opt-in and command autofill. Grasp qualification pending.
 - [x] Measured Panda cube/pedestal planning scene, acknowledged attach/detach,
   fresh FK/contact requirements and scene-change invalidation.
 - [x] Stretch/Stretch 3 native wheels, base/articulation ownership, actual
@@ -71,8 +74,8 @@ the older roadmap. Existing stabilization fixes must remain working.
   cancel/reset and owned cleanup; remove invented legacy benchmark metrics.
 - [x] PX4 single-instance lease, SSD log budget and startup-error cleanup.
 - [ ] Complete source-specific controllers for remaining robots/backends,
-  dexterous hands, arbitrary-object/mobile tasks, mapped/dynamic aerial
-  avoidance and other backends, independently owned terrain/provider work and substantive algorithm
+  further torque/tendon hands, arbitrary-object/mobile tasks, automatic dynamic aerial
+  detours and other backends, independently owned terrain/provider work and substantive algorithm
   adapters plus seed/mission/result comparison contracts.
 - [ ] Run the focused and broad validation handoff after those implementations.
 
@@ -301,8 +304,9 @@ code delivery, not a passed mission or universal support.
   beyond the measured MoveIt Cartesian/static-world screens to Servo,
   attached-object scenes, repeated pick/place and the other arm backends.
 - [ ] **R5.8:** Preserve the native Panda physical cube grasp and interruption
-  proof. Add model-specific Robotiq/dexterous-hand controls and measure other
-  objects, repeated pick/place and the other backends.
+  proof and the experimental DEX-EE/Robotiq/UMI controls. Add remaining source
+  hand adapters and object workflows; measure physical grasp/release, repeated
+  hold/lift, all finger templates and the other backends.
 - [ ] **R5.9:** Combine a mobile base and arm with consistent TF/controllers,
   navigation-to-object and grasp/place missions through the GUI.
 

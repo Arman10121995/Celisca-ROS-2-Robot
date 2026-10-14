@@ -1,5 +1,11 @@
 # Implement robot readiness and hand off validation
 
+October 14: [DEX-EE/Robotiq/UMI Hand controls](tutorials/native-hand-controls.md)
+now expose coordinated source motor targets, actual contacts/effort and guarded
+advancement in the normal GUI. Preserve [source stages and the retained spawn
+failure](status/native-hands-2026-10-14.md). Further torque/tendon adapters,
+arbitrary-object grasp workflows and measured grasp/release remain open.
+
 The [mapped drone guide](tutorials/mapped-drone-planning.md) now defines the
 actual-flight validation handoff for observed occupancy: independent pose,
 real collision-model intrusion, real camera loss, held manual/Stop/goal/Cancel

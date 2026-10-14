@@ -1,5 +1,11 @@
 # Worlds, robot assets and manipulation: continuation guide
 
+October 14 hand continuation: [native hand GUI controls](tutorials/native-hand-controls.md)
+reuse DEX-EE's authored PID plugin and the Robotiq/UMI coupled tendons. Four
+experimental adapters and actual contacts/effort feedback are implemented;
+[the scope](status/native-hands-2026-10-14.md) keeps stable object grasp,
+remaining hand motors and further backend acceptance open.
+
 October 14 aerial continuation: [observed route planning](tutorials/mapped-drone-planning.md)
 adds RTAB-Map/depth consumers and interruption to the native X500 workflow.
 The [receipt scope](status/aerial-obstacles-2026-10-14.md) has no new flight;

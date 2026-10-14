@@ -53,7 +53,7 @@ class HandTab(ttk.Frame):
         self.was_owned = False
         self.closed = False
         from .articulation_controls import ArticulationControls
-        self.generic_controls = ArticulationControls(body, app)
+        self.generic_controls = ArticulationControls(body, app, include_hand=True)
         self.generic_controls.grid(row=9, column=0, columnspan=4, sticky='ew')
         self.generic_controls.grid_remove()
         self.refresh_selection()

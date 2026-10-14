@@ -72,8 +72,8 @@ qualification is deferred. The detailed [implementation checkpoint](docs/status/
 links operators, source/install commands and validation responsibilities.
 
 Initial features still missing: other source-specific robot/back-end controllers,
-dexterous hands/full arbitrary-object/grasp outcomes and other mobile platforms,
-aerial sensing/mapping/dynamic avoidance and other backends, remaining world/provider
+other torque/tendon hand adapters, full arbitrary-object/grasp outcomes and other mobile platforms,
+automatic dynamic aerial detours/prediction and other backends, remaining world/provider
 functionality and substantive algorithm/applied-seed/other-mission/comparison contracts.
 The R6.7 terrain/provider lane remains separately owned. Acceptance states
 below stay partial/active until their actual later criteria pass; these new
@@ -910,6 +910,18 @@ Dependencies: `R3.6`, `R5.7`.
 
 - Implement: Import licensed simple gripper and dexterous hand models; preserve mimic joints, tendon/coupling laws, force/position limits and contact geometry. GUI supports open/close, individual joint/pose control, Stop and robot-specific presets.
 - Acceptance: Measured articulated motion and contact-based grasp/release for a documented object; effort/force limits, cancellation and reset pass on every advertised backend. Visual attachment without grasp forces is not a hand mission.
+
+- October 14 independent `R5.8.native_hands` implementation: DEX-EE's original
+  PID plugin and three coupled-tendon hand profiles have coordinated GUI
+  targets, normalized closure/spread, finger selection, actual external
+  contact/effort feedback and per-group guarded stops. GUI command opt-in and
+  taught replay remain source-bound. Motor/coupling checks preserve source
+  semantics; the Robotiq spawn-anchor rounding failure and repair are retained.
+  Normal GUI hand-motion diagnostics and 27 software checks establish this
+  limited implementation scope. [Guide](docs/tutorials/native-hand-controls.md),
+  [receipt/scope](docs/status/native-hands-2026-10-14.md). Stable physical object
+  grasps, repeated release/lift, raw torque/tendon hands, arbitrary object
+  workflows and further backends remain implementation/validation gaps.
 
 - Partial evidence (2026-10-06): native Panda/MuJoCo/`nav_empty` uses the original finger tendon, equality and collision geometry through GripperCommand and the actual GUI Hand tab. A 3 cm, 50 g cube closes at 29.94 mm opening with a 0.5 N per-finger actuator bound, lifts 7.57 cm, holds for two simulation seconds, and falls under gravity on release. Invalid commands, Cancel/Stop, heartbeat loss at 0.808679 wall seconds and GUI reset during closing pass. [Evidence](docs/status/evidence/panda-gripper-2026-10-06/README.md) names exact source and executed installed modules. Other hands, objects, repeated missions and backends remain open.
 

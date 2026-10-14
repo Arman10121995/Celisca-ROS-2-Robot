@@ -2525,6 +2525,11 @@ class SimulationLauncherGui(tk.Tk):
             lines.append('Hand tab: native coupled-finger Open/Close/Stop and bounded force. '
                          'The selected grasp fixture has a measured cube lift/release/reset on MuJoCo/nav_empty. '
                          'Dexterous hands and other gripper backends remain pending.')
+        if config.get('native_hand'):
+            lines.append('Experimental native Hand controls: enable Native joint controls before Run '
+                '(or use Enable hand controls in Hand). Coordinated poses use the authored PID/tendon '
+                'motors, source bounds, measured effort and external contact stops. Editing controls '
+                'causes no motion. Stable object grasps and other hand backends remain pending.')
         if config.get('native_arm_planning'):
             lines.append('Experimental fixed-arm planning: enable Native arm planning before Run. '
                 'MoveIt KDL + OMPL RRTConnect and measured native trajectory execution are selected automatically. '

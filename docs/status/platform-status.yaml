@@ -964,6 +964,17 @@ tasks:
         next_action: "Implement dexterous hand-specific torque/tendon synergy controls and object manipulation for incompatible models; position-channel jogging alone does not establish dexterous grasp readiness."
         implementation_summary: "Generic Hand/Arm panel preserves native coupled-position tendons, bounds and units; original Panda gripper remains separate. Cartesian tool-origin jogging extends compatible direct joint controllers."
         implementation_validation: "Pending; no new physical mission/test campaign for October 9 candidates."
+        tasks:
+          R5.8.native_hands:
+            title: "Source-authored dexterous PID and coupled-tendon hand controls"
+            state: "active"
+            owner: "codex"
+            depends_on: ["R5.8"]
+            scope_paths: ["src/robot_lab_utils/", "src/robot_lab_mujoco/", "src/robot_lab_bringup/", "src/robot_lab_gui/", "scripts/provision_extension_assets.py", "docs/", "README.md", "ROADMAP.md"]
+            active_scope: "2026-10-14: add explicit experimental source-specific hand actuator adapters, coordinated finger/tendon targets and measured force/contact feedback in the existing GUI. Preserve Panda, arm planning and Claude's independent lanes. Source motor semantics and Stop/watchdog are implementation requirements; repeated grasp/object and cross-backend acceptance remain pending."
+            acceptance_ref: "ROADMAP.md R5.8"
+            implementation_state: "in progress"
+            validation_state: "pending"
       R5.9:
         title: "Mobile manipulator missions and combined control"
         state: "active"

@@ -18,9 +18,10 @@ from robot_lab_utils.native_actuation import position_channels
 
 
 class NativeArticulationControl:
-    def __init__(self, node):
+    def __init__(self, node, channels=None, enable_servo=True):
         self.node, self.model, self.data = node, node.model, node.data
-        self.channels = position_channels(self.model, node.robot_joints, allow_mobile_base=node.mobile is not None)
+        self.channels = channels if channels is not None else position_channels(
+            self.model, node.robot_joints, allow_mobile_base=node.mobile is not None)
         excluded = set(map(int, self.model.jnt_bodyid[node.mobile.joints])) if node.mobile else set()
         self.contact_bodies = set(range(2, node.robot_bodies))-excluded
         if not self.channels:
@@ -42,7 +43,7 @@ class NativeArticulationControl:
         self.servo_channels = [index for index, channel in enumerate(self.channels)
                                if channel['joint'] and channel['units'] in ('rad', 'm')]
         self.servo = None
-        if self.servo_channels:
+        if self.servo_channels and enable_servo:
             from robot_lab_mujoco.native_cartesian_servo import NativeCartesianServo
             names = [self.channels[index]['joint'] for index in self.servo_channels]
             if len(set(names)) == len(names):
@@ -94,6 +95,9 @@ class NativeArticulationControl:
         gain = self.model.actuator_gainprm[self.indices, 0]
         bias = self.model.actuator_biasprm[self.indices]
         values = (-bias[:, 0] - bias[:, 1] * self.data.actuator_length[self.indices]) / gain
+        for index, channel in enumerate(self.channels):
+            if channel.get('actuation') == 'pid_position':
+                values[index] = self.data.actuator_length[channel['index']]
         return np.clip(values, *self.model.actuator_ctrlrange[self.indices].T)
 
     def receive(self, message):
@@ -191,6 +195,9 @@ class NativeArticulationControl:
     def measured_rates(self):
         gain = self.model.actuator_gainprm[self.indices, 0]
         factor = -self.model.actuator_biasprm[self.indices, 1]/gain
+        for index, channel in enumerate(self.channels):
+            if channel.get('actuation') == 'pid_position':
+                factor[index] = 1.
         return self.data.actuator_velocity[self.indices]*factor
 
     def advance_sequence(self):
@@ -287,6 +294,9 @@ class NativeArticulationControl:
             if self.status == 'jogging':
                 self.status = 'holding target; inspect measured joint feedback'
 
+    def extra_state(self):
+        return {}
+
     def publish(self):
         measured = self.measured_controls()
         velocities = self.measured_rates()
@@ -305,6 +315,7 @@ class NativeArticulationControl:
             mobile_state=dict(moving=self.node.mobile.moving(), arm_stowed=bool(self.node.mobile.stowed()),
                 status=self.node.mobile.status,
                 task_active=bool(self.node.mobile_tasks and self.node.mobile_tasks.active())) if self.node.mobile else None,
-            qualification='implemented experimental position controls; validation pending'))))
+            qualification='implemented experimental position controls; validation pending',
+            **self.extra_state()))))
         if self.planning:
             self.planning.publish_feedback()

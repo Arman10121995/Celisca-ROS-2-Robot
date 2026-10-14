@@ -62,6 +62,17 @@ published checkpoint, and the [workflow](WORKFLOW.md) for commands.
 
 ## Current continuation
 
+**October 14 Codex hand lane:** `R5.8.native_hands` adds source-authored
+DEX-EE PID and Robotiq/UMI coupled-tendon controls, normal GUI poses/autofill,
+measured effort/contact guards and owned PID Stop memory. Read
+[the guide](tutorials/native-hand-controls.md) and
+[scope/receipt](status/native-hands-2026-10-14.md). Preserve the original Panda
+gripper. Retain the Robotiq equality-anchor rounding failure; only frame
+rounding is tolerated, not altered joint/tendon coefficients. The normal GUI
+movement diagnostics and software fixture contact test do not qualify a
+stable object grasp or another backend. Continue source hand/object adapters;
+broader validation stays separate.
+
 **October 14 Codex aerial lane:** `R5.10.mapped_obstacles` implements
 RTAB-Map/depth occupancy ingestion and capture-time map transforms, observed/
 static 3D planning, async pre-execution recheck, current lookahead Hold and

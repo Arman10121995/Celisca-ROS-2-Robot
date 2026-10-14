@@ -156,8 +156,14 @@ class NativeAssetDisplay(Node):
                 raise ValueError('Native mobile control already owns articulation')
             if controller != 'none' or policy_config or self.get_parameter('grasp_fixture').value:
                 raise ValueError('Generic articulation requires exclusive actuator ownership')
-            from robot_lab_mujoco.native_articulation_control import NativeArticulationControl
-            self.articulation = NativeArticulationControl(self)
+            from robot_lab_utils.native_hand import hand_contract
+            hand = hand_contract(self.model, self.get_parameter('native_mjcf').value)
+            if hand:
+                from robot_lab_mujoco.native_hand_control import NativeHandControl
+                self.articulation = NativeHandControl(self, hand)
+            else:
+                from robot_lab_mujoco.native_articulation_control import NativeArticulationControl
+                self.articulation = NativeArticulationControl(self)
             self.create_service(Trigger, '/robot_lab/reset', self.reset)
             self.hold = False
         if policy_config:
