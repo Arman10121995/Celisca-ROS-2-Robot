@@ -55,9 +55,18 @@ class NativeArticulationControl:
         node.create_subscription(String, '/articulation/command', self.receive, 1)
         node.create_subscription(Empty, '/articulation/heartbeat', self.heartbeat, 1)
         node.create_service(Trigger, '/articulation/stop', self.stop)
+        self.planning = None
+        configuration = node.get_parameter('arm_planning_config').value
+        if configuration:
+            if node.mobile:
+                raise ValueError('Fixed-arm planning is separate from mobile manipulation')
+            from robot_lab_mujoco.native_joint_planning import NativeJointPlanning
+            self.planning = NativeJointPlanning(self, configuration)
 
     def heartbeat(self, _message):
         self.last_heartbeat = time.monotonic()
+        if self.status == 'heartbeat lost; holding measured position':
+            self.status = 'holding measured position'
 
     def servo_command(self, message):
         if self.servo is None or self.fault or time.monotonic()-self.last_heartbeat > .8:
@@ -73,6 +82,8 @@ class NativeArticulationControl:
                 self.node.mobile_tasks.cancel('Manual Cartesian jog interrupted task')
             if self.sequence is not None:
                 self.hold('Cartesian jog interrupted replay')
+            if self.planning and self.planning.reserved:
+                self.planning.finish(reason='Manual Cartesian jog interrupted the arm plan')
             self.servo.receive(message)
             if not self.servo.active():
                 self.hold('Servo released; holding measured position')
@@ -98,6 +109,8 @@ class NativeArticulationControl:
                 raise ValueError('Stop the mobile base before articulation control')
             if self.fault or time.monotonic() - self.last_heartbeat > .8:
                 raise ValueError('Controller fault or operator heartbeat missing')
+            if self.planning and self.planning.reserved:
+                self.planning.finish(reason='Manual articulation interrupted the arm plan')
             if request.get('operation') == 'sequence':
                 self.start_sequence(request)
                 return
@@ -124,6 +137,8 @@ class NativeArticulationControl:
             self.hold('Rejected command: '+str(exc))
 
     def hold(self, reason='stopped; holding measured position'):
+        if self.planning and self.planning.reserved:
+            self.planning.finish(reason=reason)
         self.cancel_sequence(reason)
         if self.servo:
             self.servo.clear()
@@ -223,11 +238,15 @@ class NativeArticulationControl:
 
     def before_step(self):
         if self.fault:
+            if self.planning and self.planning.reserved:
+                self.planning.finish(reason=self.fault)
             self.cancel_sequence(self.fault)
             self.data.ctrl[self.indices] = 0
             return
         if not np.all(np.isfinite(self.data.qpos)) or not np.all(np.isfinite(self.data.qvel)):
             self.fault = 'Non-finite native state; reset required'
+            if self.planning and self.planning.reserved:
+                self.planning.finish(reason=self.fault)
             self.cancel_sequence(self.fault)
             self.data.ctrl[self.indices] = 0
             return
@@ -252,11 +271,17 @@ class NativeArticulationControl:
             elif self.status == 'experimental Cartesian servo':
                 self.hold(self.servo.error or 'Servo command expired; holding measured position')
         rates = np.array([channel['max_rate'] for channel in self.channels])
+        if self.planning:
+            self.planning.before_step()
         self.commanded += np.clip(self.target - self.commanded,
                                  -rates * self.model.opt.timestep, rates * self.model.opt.timestep)
         self.data.ctrl[self.indices] = self.commanded
+        if self.planning:
+            self.planning.apply_bias()
 
     def after_step(self):
+        if self.planning:
+            self.planning.after_step()
         self.advance_sequence()
         if np.max(np.abs(self.target - self.commanded)) < 1e-6:
             if self.status == 'jogging':
@@ -276,7 +301,10 @@ class NativeArticulationControl:
             native_model=self.node.get_parameter('native_mjcf').value,
             status=self.status, fault=self.fault, time=float(self.data.time),
             servo=self.servo.state() if self.servo else None,
+            planning=self.planning.state() if self.planning else None,
             mobile_state=dict(moving=self.node.mobile.moving(), arm_stowed=bool(self.node.mobile.stowed()),
                 status=self.node.mobile.status,
                 task_active=bool(self.node.mobile_tasks and self.node.mobile_tasks.active())) if self.node.mobile else None,
             qualification='implemented experimental position controls; validation pending'))))
+        if self.planning:
+            self.planning.publish_feedback()

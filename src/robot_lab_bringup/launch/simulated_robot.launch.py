@@ -1043,6 +1043,10 @@ def _build_simulation_actions(context):
             "gui": gui_value,
         }
         display_args.update(drive_args)
+        planning = _launch_value(context, 'arm_planning').strip().lower()
+        if planning == 'auto':
+            planning = robot_config.get('arm_planning', 'none')
+        native_planning_model = None
         if robot_config.get('native_mjcf'):
             display_args['native_mjcf'] = robot_config['native_mjcf']
             if native_locomotion:
@@ -1059,6 +1063,20 @@ def _build_simulation_actions(context):
                 raise ValueError('Native Panda control is available only for menagerie_franka_emika_panda')
             display_args['arm_control'] = arm
             display_args['grasp_fixture'] = _launch_value(context, 'grasp_fixture')
+            if planning == 'native_moveit':
+                from robot_lab_utils.native_planning_description import ARM_FRAMES, fixed_arm_planning_model
+                if (simulator != 'mujoco' or not native_articulation or robot_model not in ARM_FRAMES
+                        or native_mobile or native_locomotion or arm != 'none'
+                        or _as_bool(display_args['grasp_fixture'])):
+                    raise ValueError('Experimental native MoveIt requires a compatible fixed arm with native joint controls on MuJoCo Display')
+                runtime = Path(os.environ.get('ROBOT_LAB_RUNTIME_ROOT', '/workspace/molar/robot_lab_runtime'))
+                runtime.mkdir(parents=True, exist_ok=True)
+                if runtime.stat().st_dev == Path('/').stat().st_dev:
+                    raise ValueError('Native planning exports must be on the workspace SSD')
+                native_planning_model = fixed_arm_planning_model(robot_config['native_mjcf'],
+                    runtime/'arm_planning'/uuid.uuid4().hex, ARM_FRAMES[robot_model],
+                    tuple(float(display_args['spawn_'+axis]) for axis in ('x', 'y', 'z', 'yaw')))
+                display_args['arm_planning_config'] = native_planning_model['config']
         if simulator in ("mujoco", "isaac"):
             display_args["hold_position"] = _launch_value(context, "display_hold")
         elif simulator == "pybullet":
@@ -1069,10 +1087,14 @@ def _build_simulation_actions(context):
                 launch_arguments=display_args.items(),
             )
         )
-        planning = _launch_value(context, 'arm_planning').strip().lower()
-        if planning == 'auto':
-            planning = robot_config.get('arm_planning', 'none')
-        if planning != 'none':
+        if planning == 'native_moveit':
+            if not native_planning_model:
+                raise ValueError('Native planning requires an installed compatible native arm')
+            actions.append(IncludeLaunchDescription(
+                PythonLaunchDescriptionSource(_launch_file(bringup_share, 'native_arm_planning.launch.py')),
+                launch_arguments=dict(planning_config=native_planning_model['config'], world_path=world_path,
+                    use_sim_time=use_sim_time, spawn_z=spawn_z).items()))
+        elif planning != 'none':
             if (planning != 'moveit' or simulator != 'mujoco'
                     or robot_model != 'menagerie_franka_emika_panda'
                     or display_args.get('arm_control') != 'panda'):
@@ -1840,7 +1862,7 @@ def generate_launch_description():
         DeclareLaunchArgument('aerial_map_database', default_value='',
                               description="Saved aerial RTAB-Map database to localize in; empty starts a new map"),
         DeclareLaunchArgument('arm_planning', default_value='auto',
-                              description='Native Panda collision planning: auto, none or moveit'),
+                              description='Arm collision planning: auto, none, moveit (Panda), native_moveit (experimental fixed native arms)'),
         DeclareLaunchArgument('grasp_fixture', default_value='false',
                              description='Add a physical Panda object/pedestal for grasp trials'),
         DeclareLaunchArgument("display_hold", default_value="auto",

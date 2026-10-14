@@ -1,12 +1,18 @@
 # Stabilization and remaining work: agent execution guide
 
+October 14 continuation: [native fixed arm planning and measured diagnostics](status/native-arm-planning-2026-10-14.md).
+Thirteen compatible models have initial implementation; remaining arm/object/
+backend missions stay open. Read [the guide](tutorials/native-arm-planning.md)
+before extending source frames/actuator contracts. Do not change Panda padding
+or source certificates to qualify a different model.
+
 Latest implementation continuation: [October 9 tasks, takeoff and workload
 contracts](status/implementation-continuation-2026-10-09.md). Preserve shared
 Drone/Drive click latches, source/scene-bound mobile tasks and actual Nav2
 workload result identities. Native Takeoff requires a fresh selected-world
 clearance check. These are new candidates; physical acceptance stays open.
 
-Updated 2026-10-09. This guide implements the user's requested patch queue
+Updated 2026-10-14. This guide implements the user's requested patch queue
 and preserves its remaining acceptance. The latest user instruction prioritizes
 the new extensions first, then resumes this older queue; follow
 [ASSET_EXTENSION_GUIDE](ASSET_EXTENSION_GUIDE.md) and the live handoff/task owners.

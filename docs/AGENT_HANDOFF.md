@@ -62,6 +62,15 @@ published checkpoint, and the [workflow](WORKFLOW.md) for commands.
 
 ## Current continuation
 
+**October 14 Codex independent lane:** `R5.7.native_planning` implements
+source-derived full arm planning and actual bounded native action execution
+on 13 candidate profiles. [Guide](tutorials/native-arm-planning.md) and
+[status/receipt](status/native-arm-planning-2026-10-14.md) record two normal GUI
+UR5e/SO101 reach diagnostics, source/FK checks and retained failures. Preserve
+Panda's separate actuator/10 mm padding contract; generic arms use explicit
+1 mm padding and labeled authored frames. Stop/loss/reset, other eleven arms,
+objects and backends remain pending. No old source certificate was broadened.
+
 **October 13 codex independent lane:** `R7.8.bicycle` adds a separate car-only
 FollowPath server, source-profile geometry/footprints, forward DUBIN selection,
 three GUI controllers and a [bicycle guide](tutorials/bicycle-control.md).

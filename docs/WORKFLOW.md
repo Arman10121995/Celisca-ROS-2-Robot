@@ -1,6 +1,6 @@
 # Robot Lab operational workflow
 
-Updated October 9, 2026; exact source stages are in the current status and checkpoint.
+Updated October 14, 2026; exact source stages are in the current status and checkpoint.
 [Current status](status/CURRENT_STATUS.md) lists the measured scopes.
 This is the source/evidence workflow for the repository. It separates
 static checks, isolated runtime probes, scenario trials and promotion claims.
@@ -9,6 +9,13 @@ for task state and ownership; [ROADMAP.md](../ROADMAP.md) is authoritative for
 acceptance criteria.
 
 ## Current implementation priority
+
+Thirteen [native fixed-arm planning candidates](tutorials/native-arm-planning.md)
+now use actual MoveIt and source-bounded native action execution through normal
+GUI autofill. Two one-shot reaches are recorded in
+[the latest arm implementation](status/native-arm-planning-2026-10-14.md).
+Continue missing adapters/object/aerial/world features before broad campaigns;
+retain exact scoped source receipts and do not promote catalog counts.
 
 The [same-day continuation](status/implementation-continuation-2026-10-09.md)
 adds coordinated mobile tasks, checked takeoff, measured Nav2 workloads and

@@ -1,0 +1,182 @@
+{
+  "task": "R5.7.native_planning",
+  "base_revision": "f3df4fe4494b4c800acdb9264a30092de9945b76",
+  "host": {
+    "architecture": "aarch64",
+    "ros": "Humble"
+  },
+  "scope": "Initial fixed native arm planning implementation and focused source/GUI/actual reach diagnostics; no full mission qualification",
+  "source_sha256": {
+    "src/robot_lab_gui/robot_lab_gui/articulation_controls.py": "0e1a9434da62734e5dae31ca17af31ade4805cc81fe93403e4ba234e139914c0",
+    "src/robot_lab_gui/robot_lab_gui/arm_tab.py": "8e5cc4c4abc09ae7b0bb511b17751b4f3788d9cea01ed713bd15898736e11361",
+    "src/robot_lab_gui/robot_lab_gui/native_planning_controls.py": "38df06e4128f984fb7e6d4f825cb215ced77ca83eb72d3eed717b94389081f13",
+    "src/robot_lab_gui/robot_lab_gui/launcher.py": "3a03518f72a9bfee33b7a97be743903646c71db4c3d2c8c2f2b5f9423ceb6e6a",
+    "src/robot_lab_utils/robot_lab_utils/installed_assets.py": "44401275dc420f11dbab84a1637b2309a6ca5529e8d3c80a19647ac24e603e4d",
+    "src/robot_lab_utils/robot_lab_utils/native_actuation.py": "70579b030de5727fe9f0e03b0efffb12b4be789e12edc59aab0e453171bca650",
+    "src/robot_lab_utils/robot_lab_utils/native_arm_trajectory.py": "1c353b00a66adaa0d1b5ecbaea9780a426b661f713a45a16bb4a9698cda72a0b",
+    "src/robot_lab_utils/robot_lab_utils/native_planning_description.py": "82f1203015e784aa0fbb3f5daa97189c26068a31d25124bcec56c273f5d7fdef",
+    "src/robot_lab_bringup/scripts/native_arm_scene.py": "1be85c9178902b22045f1691df24a460693361e3ebad9370266a7f8f186695e7",
+    "src/robot_lab_bringup/launch/native_arm_planning.launch.py": "30674cdee7be5a675ea3563f715cc8931ddbadc4458c00508a7496ce1afe9e46",
+    "src/robot_lab_bringup/launch/simulated_robot.launch.py": "3c64bbcd1e1e87a47bae9a3d41a5dcd78a2814770be6e95607cb73bff27999ca",
+    "src/robot_lab_mujoco/python/robot_lab_mujoco/native_asset_display.py": "5f30f2ef60c17f6070dd55da6558e5ba60b6bf4aa1d628979ecc299322308af5",
+    "src/robot_lab_mujoco/python/robot_lab_mujoco/native_joint_planning.py": "88717838ed3352981a644300553cd86449d87aada14dc7fccf180632b1c8a040",
+    "src/robot_lab_mujoco/python/robot_lab_mujoco/native_articulation_control.py": "1eacb8217d0b2c7bb8b840bf63287cdee199c74621852e887bb7dbbc434b47cf",
+    "src/robot_lab_mujoco/launch/mujoco_simulator.launch.py": "4dab466244e952e6a9a822734d53bf774b7d99b9ae9e4a412e18c884561442b5"
+  },
+  "installed_sha256": {
+    "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_utils/lib/python3.10/site-packages/robot_lab_utils/native_planning_description.py": "82f1203015e784aa0fbb3f5daa97189c26068a31d25124bcec56c273f5d7fdef",
+    "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_utils/lib/python3.10/site-packages/robot_lab_utils/native_arm_trajectory.py": "1c353b00a66adaa0d1b5ecbaea9780a426b661f713a45a16bb4a9698cda72a0b",
+    "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_utils/lib/python3.10/site-packages/robot_lab_utils/native_actuation.py": "70579b030de5727fe9f0e03b0efffb12b4be789e12edc59aab0e453171bca650",
+    "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_utils/lib/python3.10/site-packages/robot_lab_utils/installed_assets.py": "44401275dc420f11dbab84a1637b2309a6ca5529e8d3c80a19647ac24e603e4d",
+    "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_mujoco/lib/python3.10/site-packages/robot_lab_mujoco/native_joint_planning.py": "88717838ed3352981a644300553cd86449d87aada14dc7fccf180632b1c8a040",
+    "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_mujoco/lib/python3.10/site-packages/robot_lab_mujoco/native_articulation_control.py": "1eacb8217d0b2c7bb8b840bf63287cdee199c74621852e887bb7dbbc434b47cf",
+    "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_mujoco/lib/python3.10/site-packages/robot_lab_mujoco/native_asset_display.py": "5f30f2ef60c17f6070dd55da6558e5ba60b6bf4aa1d628979ecc299322308af5",
+    "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_gui/lib/python3.10/site-packages/robot_lab_gui/native_planning_controls.py": "38df06e4128f984fb7e6d4f825cb215ced77ca83eb72d3eed717b94389081f13",
+    "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_gui/lib/python3.10/site-packages/robot_lab_gui/articulation_controls.py": "0e1a9434da62734e5dae31ca17af31ade4805cc81fe93403e4ba234e139914c0",
+    "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_gui/lib/python3.10/site-packages/robot_lab_gui/arm_tab.py": "8e5cc4c4abc09ae7b0bb511b17751b4f3788d9cea01ed713bd15898736e11361",
+    "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_gui/lib/python3.10/site-packages/robot_lab_gui/launcher.py": "3a03518f72a9bfee33b7a97be743903646c71db4c3d2c8c2f2b5f9423ceb6e6a",
+    "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_bringup/share/robot_lab_bringup/launch/native_arm_planning.launch.py": "30674cdee7be5a675ea3563f715cc8931ddbadc4458c00508a7496ce1afe9e46",
+    "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_bringup/share/robot_lab_bringup/launch/simulated_robot.launch.py": "3c64bbcd1e1e87a47bae9a3d41a5dcd78a2814770be6e95607cb73bff27999ca",
+    "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_bringup/lib/robot_lab_bringup/native_arm_scene.py": "1be85c9178902b22045f1691df24a460693361e3ebad9370266a7f8f186695e7",
+    "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_mujoco/share/robot_lab_mujoco/launch/mujoco_simulator.launch.py": "4dab466244e952e6a9a822734d53bf774b7d99b9ae9e4a412e18c884561442b5"
+  },
+  "checks": {
+    "packages_built": [
+      "robot_lab_utils",
+      "robot_lab_mujoco",
+      "robot_lab_bringup",
+      "robot_lab_gui"
+    ],
+    "source_checks_passed": 22,
+    "compiled_fk_models": 13,
+    "actual_gui_command_selections": 13,
+    "excluded_profiles": [
+      "bumperbot",
+      "menagerie_franka_emika_panda",
+      "menagerie_aloha"
+    ]
+  },
+  "actual_reach_diagnostics": {
+    "ur5e-4": {
+      "robot": "menagerie_universal_robots_ur5e",
+      "backend": "mujoco",
+      "world": "nav_empty",
+      "mode": "display",
+      "command": "ros2 launch robot_lab_bringup simulated_robot.launch.py robot_model:=menagerie_universal_robots_ur5e simulator:=mujoco use_sim_time:=true map_name:=nav_empty world_package:=robot_lab_maps world_name:=nav_empty world_path:=maps/nav_empty/worlds/nav_empty.world map_yaml:=maps/nav_empty/maps/map.yaml mode:=display gui:=false perception:=none enable_native_articulation:=true arm_planning:=native_moveit",
+      "complete": true,
+      "displacement_m": 0.01983294548475932,
+      "endpoint_error_m": 0.0004889467312947217,
+      "cleanup_returncode": 0
+    },
+    "so101-1": {
+      "robot": "menagerie_robotstudio_so101",
+      "backend": "mujoco",
+      "world": "nav_empty",
+      "mode": "display",
+      "command": "ros2 launch robot_lab_bringup simulated_robot.launch.py robot_model:=menagerie_robotstudio_so101 simulator:=mujoco use_sim_time:=true map_name:=nav_empty world_package:=robot_lab_maps world_name:=nav_empty world_path:=maps/nav_empty/worlds/nav_empty.world map_yaml:=maps/nav_empty/maps/map.yaml mode:=display gui:=false perception:=none enable_native_articulation:=true arm_planning:=native_moveit",
+      "complete": true,
+      "displacement_m": 0.00989516547088411,
+      "endpoint_error_m": 0.00014724555715678344,
+      "cleanup_returncode": 0
+    }
+  },
+  "artifacts": {
+    "/workspace/molar/robot_lab_runtime/native-arm-planning-2026-10-13/build-4.log": {
+      "sha256": "775f4d3cbd042ef5526a2073a5dcc95cfa8f35742e8a9da3a9c236066e11e400",
+      "bytes": 1297
+    },
+    "/workspace/molar/robot_lab_runtime/native-arm-planning-2026-10-13/gui-status-build.log": {
+      "sha256": "7e5ff6d17d1a452d2735e04b1415af0c7c4e83b7089374f662b034fcc18e2341",
+      "bytes": 99
+    },
+    "/workspace/molar/robot_lab_runtime/native-arm-planning-2026-10-13/feedback-build.log": {
+      "sha256": "21da344549f7c28fcbd59e2589c0b88480f5af49532d214f76bbd9be7b562bcd",
+      "bytes": 105
+    },
+    "/workspace/molar/robot_lab_runtime/native-arm-planning-2026-10-13/numerical-checks-final.log": {
+      "sha256": "8331da7c270e40ab9cf74a64dc452983ef0076a98608460f830b0fb1b877a105",
+      "bytes": 99
+    },
+    "/workspace/molar/robot_lab_runtime/native-arm-planning-2026-10-13/catalog-fk.json": {
+      "sha256": "cf5e52bc03b1923bc74fc4741a6771fbb10b88076154799c9e5cb31e217001aa",
+      "bytes": 9400
+    },
+    "/workspace/molar/robot_lab_runtime/native-arm-planning-2026-10-13/catalog-fk-3.log": {
+      "sha256": "dc27d74f321c0d20d1258081ea80c7d2739ba5aad3106a40333c497f5ddd4061",
+      "bytes": 1213
+    },
+    "/workspace/molar/robot_lab_runtime/native-arm-planning-2026-10-13/gui-commands.json": {
+      "sha256": "45c468a130e50ae945c5d6d447c176e2776217959508a09085dd71ac6239746f",
+      "bytes": 6581
+    },
+    "/workspace/molar/robot_lab_runtime/native-arm-planning-2026-10-13/gui-commands.log": {
+      "sha256": "f608631aff4e7f441905c2d48823e3573b5f034aa79eeea6c9c3e35f91c39741",
+      "bytes": 6913
+    },
+    "/workspace/molar/robot_lab_runtime/native-arm-planning-2026-10-13/gui-smoke.py": {
+      "sha256": "1125dc852b454fa3c50e6066f19e2b7c03a87edc1d26fbfb567431a1dd9ddd86",
+      "bytes": 7438
+    },
+    "/workspace/molar/robot_lab_runtime/native-arm-planning-2026-10-13/gui-smoke-initial.py": {
+      "sha256": "52c25f5dd222043f1c22da7bbd2709d72697a9a1308fb4a4ae38e69c9ae4df44",
+      "bytes": 6584
+    },
+    "/workspace/molar/robot_lab_runtime/native-arm-planning-2026-10-13/ur5e-4/report.json": {
+      "sha256": "9cc4c56be09a995963ccc609c51548253cfba89564a7540276edd0591cc481a7",
+      "bytes": 9827
+    },
+    "/workspace/molar/robot_lab_runtime/native-arm-planning-2026-10-13/ur5e-4/joints.jsonl": {
+      "sha256": "29a4fb6fd93b79de237899b0df570d8b4ccf5c4a4c3c3b48c8314c334bddc62e",
+      "bytes": 61673
+    },
+    "/workspace/molar/robot_lab_runtime/native-arm-planning-2026-10-13/ur5e-4/articulation.jsonl": {
+      "sha256": "c801d582569619f2663bc2ffd7e531da94d3bfb89125f13f4c0655ce91d35ed4",
+      "bytes": 508068
+    },
+    "/workspace/molar/robot_lab_runtime/native-arm-planning-2026-10-13/ur5e-4/source-manifest.json": {
+      "sha256": "14b52202881c539159db0f91794a8001e9c17c980e449aa8f013a9a5c0b61c96",
+      "bytes": 2094
+    },
+    "/workspace/molar/robot_lab_runtime/native-arm-planning-2026-10-13/so101-1/report.json": {
+      "sha256": "afe2ff15fc2369e7cc548b49f4508fa72e11caa2ab6ae7ba47188448aa8edee8",
+      "bytes": 9638
+    },
+    "/workspace/molar/robot_lab_runtime/native-arm-planning-2026-10-13/so101-1/joints.jsonl": {
+      "sha256": "0d7cd36bb0df318c4ef4156e55ee63364f0a5c39611c4f1910a80b73b4f2b60a",
+      "bytes": 92347
+    },
+    "/workspace/molar/robot_lab_runtime/native-arm-planning-2026-10-13/so101-1/articulation.jsonl": {
+      "sha256": "d1d96113922574e909ffaaa917c12a09b5aa25a1043f7aea1769be79ac69a174",
+      "bytes": 771146
+    },
+    "/workspace/molar/robot_lab_runtime/native-arm-planning-2026-10-13/numerical-checks.log": {
+      "sha256": "9a335a13614ad7a93a3434598a10e348831484afb66b498f1677804b7c24f208",
+      "bytes": 11015
+    },
+    "/workspace/molar/robot_lab_runtime/native-arm-planning-2026-10-13/catalog-fk-2.log": {
+      "sha256": "4de6c57c8165bb41d86f464a989e7282553c394c54791bfb8601c17d3e4a1831",
+      "bytes": 1438
+    },
+    "/workspace/molar/robot_lab_runtime/native-arm-planning-2026-10-13/ur5e-2/report.json": {
+      "sha256": "1790589c9b411330f09d1dc335d178d0e0f8eb6283e813f9c5d56d2a9934b96e",
+      "bytes": 4396
+    },
+    "/workspace/molar/robot_lab_runtime/native-arm-planning-2026-10-13/ur5e-3/report.json": {
+      "sha256": "6fbb05216d1c52c1e8f0e58c1d6e58ef2752949cf63dcc163f5f758456c1422f",
+      "bytes": 4648
+    }
+  },
+  "post_reach_changes": [
+    "GUI rejected/completed action messages copied into Cartesian status",
+    "Native action feedback now carries actual simulation timestamp; targets/actuator/collision/settling calculations unchanged"
+  ],
+  "qualification_pending": [
+    "remaining eleven arm missions",
+    "full Stop/cancel/loss/reset/repeats",
+    "arbitrary objects and grasp/pick/place",
+    "other maps/backends",
+    "coupled/equality/torque models",
+    "full platform acceptance"
+  ],
+  "historical_certificates_refreshed": false
+}

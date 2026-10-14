@@ -1,5 +1,13 @@
 # Robot Lab done and remaining checklist
 
+- [x] October 14: source-derived collision-aware MoveIt planning, bounded native
+  arm action and GUI opt-in/autofill for 13 compatible fixed arm variants.
+- [x] Actual normal GUI UR5e and SO101 one-shot reaches on MuJoCo/nav_empty,
+  with independent measured tool TF and original actuators.
+- [ ] Remaining eleven arm missions, held interruption/reset checks, arbitrary
+  objects/pick-place, coupled mechanisms and other arm backends.
+  See [the arm continuation](native-arm-planning-2026-10-14.md).
+
 - [x] October 13: separate source-profile bicycle pursuit/Stanley/MPC controls,
   car-only GUI/launch dispatch, full stopping footprint and freshness/cancel guards.
 - [ ] Physical bicycle-controller car missions and forward/reverse extension.
@@ -20,7 +28,7 @@ Latest [initial implementation continuation](implementation-continuation-2026-10
   adapters, mapped/dynamic aerial avoidance and other backends, world/provider work,
   simulator-applied seeds and fair algorithm comparisons.
 
-Updated October 13, 2026. **The project is partial.** The user prioritizes
+Updated October 14, 2026. **The project is partial.** The user prioritizes
 initial implementation before testing/validation. [Current status](CURRENT_STATUS.md)
 and [the checkpoint](continuation-2026-10-08.md) link exact physical source stages,
 publication and software checks. A checked item below

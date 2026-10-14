@@ -66,7 +66,7 @@ class ArmTab(ttk.Frame):
         from .cartesian_controls import CartesianControls
         self.cartesian = CartesianControls(self)
         from .articulation_controls import ArticulationControls
-        self.articulation = ArticulationControls(body, app)
+        self.articulation = ArticulationControls(body, app, include_planning=True)
         from .servo_controls import ServoControls
         self.servo_controls = ServoControls(body, self, '/arm/servo_command')
         self.servo_controls.grid(row=13, column=0, columnspan=5, sticky='ew', pady=8)

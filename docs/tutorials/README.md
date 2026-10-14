@@ -1,6 +1,9 @@
 # Robot Lab tutorials
 
-Updated October 9, 2026. New controls/workflows have an
+Updated October 14, 2026. Thirteen [native fixed arm planning candidates](native-arm-planning.md)
+have normal GUI Plan/Execute/autofill; UR5e and SO101 each have one scoped
+MuJoCo/nav_empty reach. Broader arm/object/backend acceptance remains open.
+Earlier controls/workflows have an
 [implementation checkpoint](../status/implementation-2026-10-09.md), with
 physical validation deferred. Earlier named measurements remain in the
 [extension checkpoint](../status/continuation-2026-10-08.md). Start with [current status](../status/CURRENT_STATUS.md) and the
@@ -17,6 +20,7 @@ a guide, imported model or numerical example does not qualify every mission.
 | [TurtleBot4](turtlebot4.md) | Standard/Lite, measured four-backend Drive/localization/2D/3D SLAM/export/navigation; other maps and vendor behavior remain |
 | [Husky](husky.md) | Original four-wheel skid geometry, declared lab sensor/motor kit and evidence-gated modes; exact backend/map screens remain separate from wider readiness |
 | [Native Panda](panda_arm.md) | Measured prior joint/Hand/static planning; new experimental Servo and measured object attach/detach await validation |
+| [Native fixed arm planning](native-arm-planning.md) | 13 experimental KDL/OMPL/native trajectory candidates; actual UR5e/SO101 reaches, authored frames and explicit pending qualification |
 | [Native controls and Stretch](native-controls.md) | Unitree exact-model policies; 28 fixed actuator candidates, Cartesian/teach-replay; Stretch base/sensors and explicit higher workflows |
 | [Concurrent experiments](concurrent-experiments.md) | Real bounded subprocess queue, actual telemetry and owned cancel/reset; mission qualification remains separate |
 | [PX4 X500](px4_x500.md) | Gazebo Harmonic flight, manual Drive/altitude, hold/goals/land in named worlds; wider flight-world/planning matrix remains |

@@ -27,6 +27,12 @@ def installed_profiles(kind):
         if kind == 'robots' and profile.get('native_mjcf'):
             paths.append(profile['native_mjcf'])
         if paths and all(path and Path(path).is_file() for path in paths):
+            if kind == 'robots' and profile.get('native_articulation') and not profile.get('mobile_control_config'):
+                from .native_planning_description import ARM_FRAMES
+                if name in ARM_FRAMES and profile.get('source_id') == 'mujoco_menagerie':
+                    profile = dict(profile, native_arm_planning=dict(source_frame=ARM_FRAMES[name],
+                        implementation_state='experimental', validation_state='pending', backend='mujoco',
+                        algorithms='MoveIt KDL + OMPL RRTConnect + native position trajectory'))
             available[name] = profile
     return available
 

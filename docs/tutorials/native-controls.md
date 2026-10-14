@@ -1,5 +1,11 @@
 # Native walking, joint and Cartesian controls
 
+October 14 adds [collision-aware native fixed arm planning](native-arm-planning.md)
+to 13 compatible profiles. Enable **Native arm planning: MoveIt** before Run;
+the GUI selects the native trajectory controller and algorithms together.
+UR5e/SO101 reach diagnostics are recorded; other arm/object/backend missions
+remain pending. Joint/Hand/Servo/teach controls described here remain separate.
+
 The [same-day continuation](../status/implementation-continuation-2026-10-09.md)
 adds coordinated native mobile tasks described below. All new physical task
 qualification is pending.

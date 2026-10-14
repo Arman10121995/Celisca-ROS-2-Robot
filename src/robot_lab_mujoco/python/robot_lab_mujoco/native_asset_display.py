@@ -38,6 +38,7 @@ class NativeAssetDisplay(Node):
                             ('mobile_control_config', ''),
                             ('native_task', 'display'),
                             ('articulation_control', False), ('spawn_x', 0.),
+                            ('arm_planning_config', ''),
                             ('spawn_y', 0.), ('spawn_z', 0.), ('spawn_yaw', 0.)]:
             self.declare_parameter(name, value)
         # EGL avoids the Jetson GLX passive viewer's shutdown crash.

@@ -29,7 +29,10 @@ def position_channels(model, robot_joints=None, allow_mobile_base=False):
         if transmission == mujoco.mjtTrn.mjTRN_JOINT:
             joint = int(model.actuator_trnid[index, 0])
             joint_name = mujoco.mj_id2name(model, mujoco.mjtObj.mjOBJ_JOINT, joint)
-            if (model.jnt_type[joint] in (mujoco.mjtJoint.mjJNT_HINGE, mujoco.mjtJoint.mjJNT_SLIDE)
+            # NumPy 2 scalar comparison is asymmetric with pybind enums:
+            # `np.int32(3) == enum` can be true while tuple membership is
+            # false. Use integer values before selecting physical units/rates.
+            if (int(model.jnt_type[joint]) in (int(mujoco.mjtJoint.mjJNT_HINGE), int(mujoco.mjtJoint.mjJNT_SLIDE))
                     and np.allclose(model.actuator_gear[index], [1, 0, 0, 0, 0, 0])
                     and np.isclose(gain, -bias[1]) and np.isclose(bias[0], 0)):
                 units = 'm' if model.jnt_type[joint] == mujoco.mjtJoint.mjJNT_SLIDE else 'rad'

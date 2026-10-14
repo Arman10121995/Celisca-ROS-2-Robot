@@ -1,12 +1,18 @@
 # Worlds, robot assets and manipulation: continuation guide
 
+October 14: [native fixed arm planning](tutorials/native-arm-planning.md)
+extends 13 installed profiles with real KDL/OMPL/native trajectory execution
+and GUI defaults/autofill. [The receipt](status/native-arm-planning-2026-10-14.md)
+records two actual GUI reaches and pending coupled/object/backend work.
+Do not infer other-arm or all-map qualification from source export counts.
+
 The [October 9 continuation](status/implementation-continuation-2026-10-09.md)
 connects native Stretch Nav2/taught-articulation tasks, X500 world-specific
 takeoff checks and real Nav2 queue workloads. Candidates remain experimental;
 other model/backend control, arbitrary-object/dexterous/grasp and aerial map
 adapters plus physical qualification remain.
 
-Updated October 9, 2026. New [initial implementations](status/implementation-2026-10-09.md)
+Updated October 14, 2026. Earlier [initial implementations](status/implementation-2026-10-09.md)
 include exact-model Unitree policies, generic native actuator/Servo/teach-replay,
 measured Panda object scenes, Stretch sensor/navigation candidates, static
 PX4 planning and a real isolated experiment queue. Physical qualification

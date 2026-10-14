@@ -65,6 +65,7 @@ class NativeArmScene(Node):
         self.declare_parameter('world_path', '')
         self.declare_parameter('spawn_z', 0.)
         self.declare_parameter('grasp_fixture', False)
+        self.declare_parameter('planning_config', '')
         self.publisher = self.create_publisher(String, '/arm/planning_scene_status', 10)
         self.client = self.create_client(ApplyPlanningScene, '/apply_planning_scene')
         self.read_client = self.create_client(GetPlanningScene, '/get_planning_scene')
@@ -72,13 +73,28 @@ class NativeArmScene(Node):
         self.future = None
         self.matrix_loaded = False
         self.static_complete = False
-        from native_scene_objects import MeasuredObjects
-        self.objects = MeasuredObjects(self, collision_object, self.get_parameter('grasp_fixture').value)
+        configuration = self.get_parameter('planning_config').value
+        model = json.loads(Path(configuration).read_text()) if configuration else None
+        self.objects = None
+        if not model:
+            from native_scene_objects import MeasuredObjects
+            self.objects = MeasuredObjects(self, collision_object, self.get_parameter('grasp_fixture').value)
+        else:
+            self.status['export_sha256'] = hashlib.sha256(Path(configuration).read_bytes()).hexdigest()
+            self.status['source_sha256'] = model['source_sha256']
+            self.status['source_frame'] = model['source_frame']
+        self.fixed_links = model['fixed_links'] if model else ['native_body_1']
         self.request = ApplyPlanningScene.Request()
         self.request.scene = PlanningScene(is_diff=True)
         self.request.scene.robot_state.is_diff = True
-        self.request.scene.link_padding = [LinkPadding(link_name='native_body_'+str(i), padding=.01)
-                                            for i in range(2, 12)]
+        padding_links = [link for link in model['body_links'] if link not in self.fixed_links] if model else [
+            'native_body_'+str(i) for i in range(2, 12)]
+        # Miniature/native arms can have only 3 mm floor clearance at an
+        # actuated shoulder. Use the generic adapter's explicit 1 mm planning
+        # padding, retaining actual moving-link floor checks. Panda stays 10 mm.
+        padding = float(model['link_padding_m']) if model else .01
+        self.status['link_padding_m'] = padding
+        self.request.scene.link_padding = [LinkPadding(link_name=link, padding=padding) for link in padding_links]
         self.start = time.monotonic()
         try:
             path = self.get_parameter('world_path').value
@@ -114,17 +130,18 @@ class NativeArmScene(Node):
                 # Retain the native semantic exclusions. A new partial ACM
                 # would otherwise replace the planner's self-collision rules.
                 matrix = self.future.result().scene.allowed_collision_matrix
-                for name in ['native_body_1']+self.floors:
+                for name in self.fixed_links+self.floors:
                     if name not in matrix.entry_names:
                         matrix.entry_names.append(name)
                         for entry in matrix.entry_values:
                             entry.enabled.append(False)
                         matrix.entry_values.append(AllowedCollisionEntry(enabled=[False]*len(matrix.entry_names)))
-                base = matrix.entry_names.index('native_body_1')
-                for name in self.floors:
-                    floor = matrix.entry_names.index(name)
-                    matrix.entry_values[base].enabled[floor] = True
-                    matrix.entry_values[floor].enabled[base] = True
+                for link in self.fixed_links:
+                    base = matrix.entry_names.index(link)
+                    for name in self.floors:
+                        floor = matrix.entry_names.index(name)
+                        matrix.entry_values[base].enabled[floor] = True
+                        matrix.entry_values[floor].enabled[base] = True
                 self.request.scene.allowed_collision_matrix = matrix
                 self.matrix_loaded, self.future = True, None
             elif self.matrix_loaded and self.future is None and self.client.service_is_ready():
@@ -136,8 +153,10 @@ class NativeArmScene(Node):
                     self.status['error'] = 'MoveIt rejected the selected-world collision scene'
             elif time.monotonic()-self.start > 20:
                 self.status['error'] = 'MoveIt planning-scene acknowledgement timed out'
-        if self.static_complete:
+        if self.static_complete and self.objects:
             self.objects.poll(self.status)
+        elif self.static_complete:
+            self.status['scene_revision'] = 1
         self.publisher.publish(String(data=json.dumps(self.status)))
 
 

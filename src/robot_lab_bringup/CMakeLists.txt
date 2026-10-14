@@ -41,6 +41,7 @@ if(BUILD_TESTING)
   ament_add_pytest_test(process_lifetime test/test_process_lifetime.py TIMEOUT 60 ENV PYTEST_DISABLE_PLUGIN_AUTOLOAD=1)
   ament_add_pytest_test(mode_capability test/test_mode_capability.py TIMEOUT 60 ENV PYTEST_DISABLE_PLUGIN_AUTOLOAD=1)
   ament_add_pytest_test(mobile_task_and_takeoff test/test_mobile_task_and_takeoff.py TIMEOUT 60 ENV PYTEST_DISABLE_PLUGIN_AUTOLOAD=1)
+  ament_add_pytest_test(native_planning_description test/test_native_planning_description.py TIMEOUT 60 ENV PYTEST_DISABLE_PLUGIN_AUTOLOAD=1)
 endif()
 
 ament_package()

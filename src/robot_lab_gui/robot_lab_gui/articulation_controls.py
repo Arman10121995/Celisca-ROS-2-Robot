@@ -8,7 +8,7 @@ from tkinter import ttk
 
 
 class ArticulationControls(ttk.Frame):
-    def __init__(self, parent, app):
+    def __init__(self, parent, app, include_planning=False):
         super().__init__(parent)
         self.app = app
         self.node = None
@@ -62,6 +62,12 @@ class ArticulationControls(ttk.Frame):
         self.mobile_tasks = MobileTaskControls(self, self)
         self.mobile_tasks.grid(row=13, column=0, columnspan=4, sticky='ew', pady=8)
         self.mobile_tasks.grid_remove()
+        self.planning_controls = None
+        if include_planning:
+            from .native_planning_controls import NativePlanningControls
+            self.planning_controls = NativePlanningControls(self, self)
+            self.planning_controls.grid(row=14, column=0, columnspan=4, sticky='ew', pady=8)
+            self.planning_controls.grid_remove()
 
     def selected(self):
         return (bool(self.app._robot_config().get('native_articulation'))
@@ -146,10 +152,14 @@ class ArticulationControls(ttk.Frame):
         self.servo_controls.poll()
         self.sequences.poll()
         self.mobile_tasks.poll()
+        if self.planning_controls:
+            self.planning_controls.poll()
 
     def send(self, targets):
         if not self.ready():
             return
+        if self.planning_controls:
+            self.planning_controls.stop()
         from std_msgs.msg import Empty, String
         self.heartbeat.publish(Empty())
         self.pub.publish(String(data=json.dumps(dict(plant_id=self.state['plant_id'], targets=targets))))
@@ -185,6 +195,8 @@ class ArticulationControls(ttk.Frame):
             self.send({channel['name']: channel['home'] for channel in self.state['channels']})
 
     def stop(self):
+        if self.planning_controls:
+            self.planning_controls.stop()
         self.servo_controls.stop()
         if self.node and self.owned() and self.stop_client.service_is_ready():
             from std_srvs.srv import Trigger

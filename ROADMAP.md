@@ -1,11 +1,15 @@
 # Robot Lab: implementation roadmap and continuation plan
 
-October 13 continuation: [current delivered work and remaining scope](docs/status/continuation-2026-10-13-codex.md).
+October 14 continuation: [fixed native arm planning](docs/status/native-arm-planning-2026-10-14.md)
+adds 13 experimental MoveIt/native-actuator candidates and GUI command autofill.
+Two actual GUI reaches are measured; other arm/object/backend missions remain.
+
+October 13 continuation: [source-profile car controls](docs/status/continuation-2026-10-13-codex.md).
 The new `R7.8.bicycle` lane adds three source-profile car controllers and GUI
 dispatch; physical comparisons remain pending. Preserve Claude's live trials
 and their source-scoped measurements.
 
-Updated: 2026-10-13. See [current measured and implemented status](docs/status/CURRENT_STATUS.md) and [the historical extension checkpoint](docs/status/continuation-2026-10-08.md)
+Updated: 2026-10-14. See [current measured and implemented status](docs/status/CURRENT_STATUS.md) and [the historical extension checkpoint](docs/status/continuation-2026-10-08.md)
 for exact physical source stages and publication checks. The
 [completion audit](docs/status/audit-2026-10-02.md) reopens unsupported
 R6/R7/R8/R9 claims: demonstration frameworks and metadata are retained,
@@ -878,6 +882,16 @@ Dependencies: `R5.1`, `R3.3`.
 ### R5.7 — Manipulators and motion planning
 
 Dependencies: `R3.6`, `R2.2`, `R3.4`.
+
+- October 14 independent `R5.7.native_planning` implementation: thirteen native
+  fixed arms have source-derived KDL/OMPL planning, real bounded trajectory
+  actions and GUI opt-in/autofill. Authored tool/body frames, full measured
+  state, source fingerprints, native contact guards and explicit 1 mm generic
+  link padding retain source actuation. UR5e and five-joint SO101 each complete
+  one normal GUI MuJoCo/nav_empty reach (0.489/0.147 mm endpoint errors).
+  Coupled models, arbitrary objects, remaining arms, Stop/loss/reset campaigns
+  and other backends remain acceptance gaps. [Guide](docs/tutorials/native-arm-planning.md),
+  [implementation receipt](docs/status/native-arm-planning-receipt-2026-10-14.json).
 
 - Implement: Start with a licensed Panda/UR5 source; add bounded joint jogging, home, Stop, trajectory actions, actual joint state/TF and robot-specific gains. Add MoveIt 2 planning and Servo Cartesian jogging with a real planning scene, limits and cancellation. Robot GUI selections resolve to executable backend-specific controllers.
 - Acceptance: Actual arm motion tracks joint and Cartesian targets; limit/collision checks, cancel/Stop and publisher loss pass. Repeat reach and pick/place with measured object/arm state on Gazebo, MuJoCo, PyBullet and Isaac. A URDF view is not control.

@@ -1,5 +1,14 @@
 # Robot Lab — Multi-Robot Simulation and Algorithm Laboratory
 
+October 14 adds **MoveIt Plan/Execute for 13 native fixed arm candidates**,
+with source-derived collision models, original actuator execution and GUI
+autofill. UR5e and SO101 each complete one actual MuJoCo/nav_empty GUI reach;
+remaining arm/object/backend missions stay pending. Read
+[the guide](docs/tutorials/native-arm-planning.md) and
+[current implementation status](docs/status/native-arm-planning-2026-10-14.md).
+October 13's [experimental bicycle controllers](docs/tutorials/bicycle-control.md)
+remain selectable for compatible cars.
+
 October 9 continuation adds **persistent click-to-latch Drone/Drive buttons**,
 **Stretch navigate + arm/hand tasks**, **selected-world drone takeoff clearance**,
 and **measured Nav2 workloads in the experiment queue**. These implementations
@@ -9,7 +18,7 @@ Robot Lab aims to make robots, simulators, maps and algorithms independently sel
 
 **Current state: partial research platform with measured mobile, flight and native Panda workflows.** The GUI, simulator adapters, installed assets and algorithm framework support the named experiments below. Full robot/map/mode/backend qualification, controller breadth and reproducible algorithm comparisons remain open.
 
-Status updated on **2026-10-09**. The October 8 extension checkpoint has exact
+Status updated on **2026-10-14**. The October 8 extension checkpoint has exact
 physical source manifests; its publication and software checks are recorded in
 [October 8 evidence](docs/status/evidence/extensions-finish-2026-10-08/README.md). [Current status](docs/status/CURRENT_STATUS.md)
 collects verified work, limits and the next tasks. The [completion audit](docs/status/audit-2026-10-02.md)

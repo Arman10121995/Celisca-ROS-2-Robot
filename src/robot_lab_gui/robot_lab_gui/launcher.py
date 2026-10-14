@@ -510,6 +510,7 @@ class SimulationLauncherGui(tk.Tk):
         self.bhl_policy_var = tk.BooleanVar(value=True)
         self.native_policy_var = tk.BooleanVar(value=False)
         self.native_articulation_var = tk.BooleanVar(value=False)
+        self.native_arm_planning_var = tk.BooleanVar(value=False)
         self.native_mobile_var = tk.BooleanVar(value=False)
         self.native_task_var = tk.StringVar(value='display')
         self.px4_camera_var = tk.BooleanVar(value=False)
@@ -919,6 +920,14 @@ class SimulationLauncherGui(tk.Tk):
         add_tooltip(self.native_articulation_checkbox,
             'Enable before Run to jog compatible fixed-base native position actuators in Arm. '
             'Supports source-bounded joints and coupled tendons; validation pending.')
+        self.native_arm_planning_checkbox = ttk.Checkbutton(advanced,
+            text='Native arm planning: MoveIt (experimental)', variable=self.native_arm_planning_var,
+            command=self._native_arm_planning_changed)
+        self.native_arm_planning_checkbox.grid(row=40, column=0, sticky='w', pady=(8, 0))
+        add_tooltip(self.native_arm_planning_checkbox,
+            'Enables native joint controls and KDL + OMPL RRTConnect planning for compatible fixed arms. '
+            'Arm provides measured tool XYZ, target steps, Plan, Execute and Stop. '
+            'Uses authored sites or labeled body origins; physical qualification remains pending.')
         self.native_mobile_checkbox = ttk.Checkbutton(advanced,
             text='Native mobile controls (experimental)', variable=self.native_mobile_var,
             command=self._update_from_selection)
@@ -2150,6 +2159,14 @@ class SimulationLauncherGui(tk.Tk):
                 and self.mode_var.get() == 'display'
                 and self.launch_kind_var.get() == 'simulation')
 
+    def _native_arm_planning_selectable(self):
+        return self._native_articulation_selectable() and bool(self._robot_config().get('native_arm_planning'))
+
+    def _native_arm_planning_changed(self):
+        if self._native_arm_planning_selectable() and self.native_arm_planning_var.get():
+            self.native_articulation_var.set(True)
+        self._update_from_selection()
+
     def _native_mobile_selectable(self):
         return (bool(self._robot_config().get('mobile_control_config'))
                 and self.simulator_var.get() == 'mujoco' and self.mode_var.get() == 'display'
@@ -2270,7 +2287,11 @@ class SimulationLauncherGui(tk.Tk):
             command.append('enable_native_locomotion:=' + ('true' if self.native_policy_var.get() else 'false'))
         if command and self._native_articulation_selectable():
             command = [part for part in command if not part.startswith('enable_native_articulation:=')]
-            command.append('enable_native_articulation:=' + ('true' if self.native_articulation_var.get() else 'false'))
+            planning = self._native_arm_planning_selectable() and self.native_arm_planning_var.get()
+            command.append('enable_native_articulation:=' + ('true' if self.native_articulation_var.get() or planning else 'false'))
+            if self._native_arm_planning_selectable():
+                command = [part for part in command if not part.startswith('arm_planning:=')]
+                command.append('arm_planning:='+('native_moveit' if planning else 'none'))
         if command and self._native_mobile_selectable():
             command = [part for part in command if not part.startswith('enable_native_mobile:=')]
             command.append('enable_native_mobile:=' + ('true' if self.native_mobile_var.get() else 'false'))
@@ -2382,6 +2403,8 @@ class SimulationLauncherGui(tk.Tk):
             ['!disabled'] if self._native_policy_selectable() else ['disabled'])
         self.native_articulation_checkbox.state(
             ['!disabled'] if self._native_articulation_selectable() else ['disabled'])
+        self.native_arm_planning_checkbox.state(
+            ['!disabled'] if self._native_arm_planning_selectable() else ['disabled'])
         self.native_mobile_checkbox.state(['!disabled'] if self._native_mobile_selectable() else ['disabled'])
         self.native_task_combo.configure(state='readonly' if self._native_mobile_selectable()
             and self.native_mobile_var.get() else 'disabled')
@@ -2476,6 +2499,11 @@ class SimulationLauncherGui(tk.Tk):
             lines.append('Hand tab: native coupled-finger Open/Close/Stop and bounded force. '
                          'The selected grasp fixture has a measured cube lift/release/reset on MuJoCo/nav_empty. '
                          'Dexterous hands and other gripper backends remain pending.')
+        if config.get('native_arm_planning'):
+            lines.append('Experimental fixed-arm planning: enable Native arm planning before Run. '
+                'MoveIt KDL + OMPL RRTConnect and measured native trajectory execution are selected automatically. '
+                'Tool frame: '+config['native_arm_planning']['source_frame']+'. '
+                'Physical reach, pick/place and other backends remain pending.')
         if config.get('drive_in_display'):
             lines.append('Drive/WASD: physical wheel control in Display with bounded speed and timeout. '
                          'Vendor docking/hazards remain pending.')
@@ -2646,6 +2674,7 @@ class SimulationLauncherGui(tk.Tk):
                         'enable_native_mobile': bool(self.native_mobile_var.get()),
                         'native_task': self.native_task_var.get(),
                         'enable_native_articulation': bool(self.native_articulation_var.get()),
+                        'native_arm_planning': bool(self.native_arm_planning_var.get()),
                         'px4_camera': bool(self.px4_camera_var.get()),
                         'aerial_mapping': bool(self.aerial_mapping_var.get()),
                         'aerial_map_database': self.aerial_map_database_var.get()}
@@ -2667,6 +2696,7 @@ class SimulationLauncherGui(tk.Tk):
             'enable_native_mobile': bool(self.native_mobile_var.get()),
             'native_task': self.native_task_var.get(),
             'enable_native_articulation': bool(self.native_articulation_var.get()),
+            'native_arm_planning': bool(self.native_arm_planning_var.get()),
             'px4_camera': bool(self.px4_camera_var.get()),
             'aerial_mapping': bool(self.aerial_mapping_var.get()),
             'aerial_map_database': self.aerial_map_database_var.get(),
@@ -2693,6 +2723,7 @@ class SimulationLauncherGui(tk.Tk):
         self.native_mobile_var.set(bool(options.get('enable_native_mobile', False)))
         self.native_task_var.set(options.get('native_task', 'display'))
         self.native_articulation_var.set(bool(options.get('enable_native_articulation', False)))
+        self.native_arm_planning_var.set(bool(options.get('native_arm_planning', False)))
         self.px4_camera_var.set(bool(options.get('px4_camera', False)))
         self.aerial_mapping_var.set(bool(options.get('aerial_mapping', False)))
         self.aerial_map_database_var.set(options.get('aerial_map_database', ''))
@@ -2745,6 +2776,7 @@ class SimulationLauncherGui(tk.Tk):
             self.native_mobile_var.set(bool(cfg.get('enable_native_mobile', False)))
             self.native_task_var.set(cfg.get('native_task', 'display'))
             self.native_articulation_var.set(bool(cfg.get('enable_native_articulation', False)))
+            self.native_arm_planning_var.set(bool(cfg.get('native_arm_planning', False)))
             self.px4_camera_var.set(bool(cfg.get('px4_camera', False)))
             self.aerial_mapping_var.set(bool(cfg.get('aerial_mapping', False)))
             self.aerial_map_database_var.set(cfg.get('aerial_map_database', ''))

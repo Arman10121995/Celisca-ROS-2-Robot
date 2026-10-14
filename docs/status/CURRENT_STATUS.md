@@ -1,5 +1,13 @@
 # Current Robot Lab status
 
+October 14: thirteen native fixed arms now have experimental MoveIt KDL/OMPL
+planning, original-actuator trajectory execution and normal GUI command
+autofill. Actual GUI UR5e and SO101 reaches on MuJoCo/nav_empty have 0.489 mm
+and 0.147 mm endpoint errors. The other eleven arms, objects, interruptions,
+additional worlds and backends remain unqualified.
+[Guide](../tutorials/native-arm-planning.md),
+[implementation and retained failures](native-arm-planning-2026-10-14.md).
+
 October 13: implemented on master, experimental.
 
 - **Car controls (R7.8.bicycle, Codex).** Three additional source-profile

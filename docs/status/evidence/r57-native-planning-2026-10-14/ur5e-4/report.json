@@ -1,0 +1,437 @@
+{
+  "scope": "One actual GUI Plan/Execute implementation diagnostic; no object/backend/all-map qualification",
+  "robot": "menagerie_universal_robots_ur5e",
+  "backend": "mujoco",
+  "world": "nav_empty",
+  "mode": "display",
+  "complete": true,
+  "command": "ros2 launch robot_lab_bringup simulated_robot.launch.py robot_model:=menagerie_universal_robots_ur5e simulator:=mujoco use_sim_time:=true map_name:=nav_empty world_package:=robot_lab_maps world_name:=nav_empty world_path:=maps/nav_empty/worlds/nav_empty.world map_yaml:=maps/nav_empty/maps/map.yaml mode:=display gui:=false perception:=none enable_native_articulation:=true arm_planning:=native_moveit",
+  "pid": 1355760,
+  "before": [
+    -0.63399782546606,
+    -0.008000701587518014,
+    0.4880003673189922
+  ],
+  "fk_reference": [
+    -0.6339978254661617,
+    -0.00800070158864727,
+    0.4880003673218912
+  ],
+  "initial_state_valid": true,
+  "initial_contacts": [],
+  "plan": [
+    {
+      "time": 0.7278469260175714,
+      "positions": [
+        -1.5699237980867733,
+        -1.5702360704655203,
+        1.5178238852286772,
+        -1.5197104933095777,
+        -1.5711791064373217,
+        0.0007664826209661151
+      ]
+    }
+  ],
+  "target": [
+    -0.6339978254661617,
+    -0.00800070158864727,
+    0.5080003673218912
+  ],
+  "scene": {
+    "ready": true,
+    "scope": "Static selected-world collision scene",
+    "geometry_count": 9,
+    "export_sha256": "ce2d671d4af75f8f2a55778275ae54b754a406fc01dc7ac93e9fe0e181ba2e9c",
+    "source_sha256": "ffd0a7b336d3c2d27c35a15cc0d4aaa95196769aca190ac8d6522d3318c345a0",
+    "source_frame": "site:attachment_site",
+    "link_padding_m": 0.001,
+    "world_path": "/workspace/molar/ros_ws/bumperbot_ws/src/robot_lab_maps/maps/nav_empty/worlds/nav_empty.world",
+    "world_sha256": "0ba78b1173d9353ab4eb92b042f3860211b3f5ef95fb6933f1518484940a776d",
+    "scene_revision": 1
+  },
+  "planning_state": {
+    "group": "native_arm",
+    "tip": "native_site_0",
+    "frame": "native_world",
+    "source_frame": "site:attachment_site",
+    "tip_body": 7,
+    "joint_names": [
+      "shoulder_pan_joint",
+      "shoulder_lift_joint",
+      "elbow_joint",
+      "wrist_1_joint",
+      "wrist_2_joint",
+      "wrist_3_joint"
+    ],
+    "joint_indices": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+    ],
+    "actuator_indices": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+    ],
+    "limits": [
+      [
+        -6.2831,
+        6.2831
+      ],
+      [
+        -6.2831,
+        6.2831
+      ],
+      [
+        -3.1415,
+        3.1415
+      ],
+      [
+        -6.2831,
+        6.2831
+      ],
+      [
+        -6.2831,
+        6.2831
+      ],
+      [
+        -6.2831,
+        6.2831
+      ]
+    ],
+    "margins": [
+      0.005,
+      0.005,
+      0.005,
+      0.005,
+      0.005,
+      0.005
+    ],
+    "max_velocity": [
+      0.3,
+      0.3,
+      0.3,
+      0.3,
+      0.3,
+      0.3
+    ],
+    "units": [
+      "rad",
+      "rad",
+      "rad",
+      "rad",
+      "rad",
+      "rad"
+    ],
+    "position_only_ik": false,
+    "all_joint_names": [
+      "shoulder_pan_joint",
+      "shoulder_lift_joint",
+      "elbow_joint",
+      "wrist_1_joint",
+      "wrist_2_joint",
+      "wrist_3_joint"
+    ],
+    "source_sha256": "ffd0a7b336d3c2d27c35a15cc0d4aaa95196769aca190ac8d6522d3318c345a0",
+    "export_sha256": "ce2d671d4af75f8f2a55778275ae54b754a406fc01dc7ac93e9fe0e181ba2e9c",
+    "plant_id": "e5bb0c146abf4252b478d1c27def8590",
+    "controller": "native_arm_planning",
+    "positions": [
+      -1.5708,
+      -1.5708,
+      1.5708,
+      -1.5708,
+      -1.5708,
+      -2.180818401465424e-22
+    ],
+    "velocities": [
+      -1.3781885990778337e-16,
+      -6.328866683330915e-16,
+      -8.078097403612271e-16,
+      7.720783013362841e-16,
+      -1.1149486876558864e-15,
+      1.2726035545866685e-20
+    ],
+    "busy": false,
+    "contact_blocked": false,
+    "status": "holding measured position",
+    "bias_compensation": [
+      1.931433185030772e-34,
+      -0.007928543287861231,
+      -0.007928612956631836,
+      -0.0027623008505273604,
+      -1.0505459981935416e-09,
+      0.0
+    ]
+  },
+  "terminal_state": {
+    "group": "native_arm",
+    "tip": "native_site_0",
+    "frame": "native_world",
+    "source_frame": "site:attachment_site",
+    "tip_body": 7,
+    "joint_names": [
+      "shoulder_pan_joint",
+      "shoulder_lift_joint",
+      "elbow_joint",
+      "wrist_1_joint",
+      "wrist_2_joint",
+      "wrist_3_joint"
+    ],
+    "joint_indices": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+    ],
+    "actuator_indices": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+    ],
+    "limits": [
+      [
+        -6.2831,
+        6.2831
+      ],
+      [
+        -6.2831,
+        6.2831
+      ],
+      [
+        -3.1415,
+        3.1415
+      ],
+      [
+        -6.2831,
+        6.2831
+      ],
+      [
+        -6.2831,
+        6.2831
+      ],
+      [
+        -6.2831,
+        6.2831
+      ]
+    ],
+    "margins": [
+      0.005,
+      0.005,
+      0.005,
+      0.005,
+      0.005,
+      0.005
+    ],
+    "max_velocity": [
+      0.3,
+      0.3,
+      0.3,
+      0.3,
+      0.3,
+      0.3
+    ],
+    "units": [
+      "rad",
+      "rad",
+      "rad",
+      "rad",
+      "rad",
+      "rad"
+    ],
+    "position_only_ik": false,
+    "all_joint_names": [
+      "shoulder_pan_joint",
+      "shoulder_lift_joint",
+      "elbow_joint",
+      "wrist_1_joint",
+      "wrist_2_joint",
+      "wrist_3_joint"
+    ],
+    "source_sha256": "ffd0a7b336d3c2d27c35a15cc0d4aaa95196769aca190ac8d6522d3318c345a0",
+    "export_sha256": "ce2d671d4af75f8f2a55778275ae54b754a406fc01dc7ac93e9fe0e181ba2e9c",
+    "plant_id": "e5bb0c146abf4252b478d1c27def8590",
+    "controller": "native_arm_planning",
+    "positions": [
+      -1.5700043767891634,
+      -1.5703299331176452,
+      1.522735330173157,
+      -1.5244802916695759,
+      -1.571143798724869,
+      0.0006951484371563942
+    ],
+    "velocities": [
+      0.00041397515552219405,
+      0.0002774428200599493,
+      -0.025023780155180645,
+      0.024141851940618235,
+      -0.00017911863800719932,
+      0.0003621302013917358
+    ],
+    "busy": false,
+    "contact_blocked": false,
+    "status": "Measured arm waypoint reached; object mission unassessed",
+    "bias_compensation": [
+      4.475343926760275e-08,
+      -0.007929563303512554,
+      -0.00792053852334498,
+      -0.002762651979836825,
+      -9.917862209474215e-08,
+      3.025594000598958e-14
+    ]
+  },
+  "after": [
+    -0.6343747343172337,
+    -0.008260142849727231,
+    0.5078280337613854
+  ],
+  "endpoint_error_m": 0.0004889467312947217,
+  "displacement_m": 0.01983294548475932,
+  "last_scene": {
+    "ready": true,
+    "scope": "Static selected-world collision scene",
+    "geometry_count": 9,
+    "export_sha256": "ce2d671d4af75f8f2a55778275ae54b754a406fc01dc7ac93e9fe0e181ba2e9c",
+    "source_sha256": "ffd0a7b336d3c2d27c35a15cc0d4aaa95196769aca190ac8d6522d3318c345a0",
+    "source_frame": "site:attachment_site",
+    "link_padding_m": 0.001,
+    "world_path": "/workspace/molar/ros_ws/bumperbot_ws/src/robot_lab_maps/maps/nav_empty/worlds/nav_empty.world",
+    "world_sha256": "0ba78b1173d9353ab4eb92b042f3860211b3f5ef95fb6933f1518484940a776d",
+    "scene_revision": 1
+  },
+  "last_arm_state": {
+    "group": "native_arm",
+    "tip": "native_site_0",
+    "frame": "native_world",
+    "source_frame": "site:attachment_site",
+    "tip_body": 7,
+    "joint_names": [
+      "shoulder_pan_joint",
+      "shoulder_lift_joint",
+      "elbow_joint",
+      "wrist_1_joint",
+      "wrist_2_joint",
+      "wrist_3_joint"
+    ],
+    "joint_indices": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+    ],
+    "actuator_indices": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+    ],
+    "limits": [
+      [
+        -6.2831,
+        6.2831
+      ],
+      [
+        -6.2831,
+        6.2831
+      ],
+      [
+        -3.1415,
+        3.1415
+      ],
+      [
+        -6.2831,
+        6.2831
+      ],
+      [
+        -6.2831,
+        6.2831
+      ],
+      [
+        -6.2831,
+        6.2831
+      ]
+    ],
+    "margins": [
+      0.005,
+      0.005,
+      0.005,
+      0.005,
+      0.005,
+      0.005
+    ],
+    "max_velocity": [
+      0.3,
+      0.3,
+      0.3,
+      0.3,
+      0.3,
+      0.3
+    ],
+    "units": [
+      "rad",
+      "rad",
+      "rad",
+      "rad",
+      "rad",
+      "rad"
+    ],
+    "position_only_ik": false,
+    "all_joint_names": [
+      "shoulder_pan_joint",
+      "shoulder_lift_joint",
+      "elbow_joint",
+      "wrist_1_joint",
+      "wrist_2_joint",
+      "wrist_3_joint"
+    ],
+    "source_sha256": "ffd0a7b336d3c2d27c35a15cc0d4aaa95196769aca190ac8d6522d3318c345a0",
+    "export_sha256": "ce2d671d4af75f8f2a55778275ae54b754a406fc01dc7ac93e9fe0e181ba2e9c",
+    "plant_id": "e5bb0c146abf4252b478d1c27def8590",
+    "controller": "native_arm_planning",
+    "positions": [
+      -1.5700043767891634,
+      -1.5703299331176452,
+      1.522735330173157,
+      -1.5244802916695759,
+      -1.571143798724869,
+      0.0006951484371563942
+    ],
+    "velocities": [
+      0.00041397515552219405,
+      0.0002774428200599493,
+      -0.025023780155180645,
+      0.024141851940618235,
+      -0.00017911863800719932,
+      0.0003621302013917358
+    ],
+    "busy": false,
+    "contact_blocked": false,
+    "status": "Measured arm waypoint reached; object mission unassessed",
+    "bias_compensation": [
+      4.475343926760275e-08,
+      -0.007929563303512554,
+      -0.00792053852334498,
+      -0.002762651979836825,
+      -9.917862209474215e-08,
+      3.025594000598958e-14
+    ]
+  },
+  "gui_status": "Executing through the original native position actuators. / site:attachment_site \u00b7 executing collision-checked arm trajectory \u00b7 validation pending",
+  "cleanup_returncode": 0,
+  "producer_sha256": "1125dc852b454fa3c50e6066f19e2b7c03a87edc1d26fbfb567431a1dd9ddd86"
+}
