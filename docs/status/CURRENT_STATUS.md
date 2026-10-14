@@ -24,6 +24,10 @@ additional worlds and backends remain unqualified.
 [Guide](../tutorials/native-arm-planning.md),
 [implementation and retained failures](native-arm-planning-2026-10-14.md).
 
+
+
+- **October 14: R5.8.native_hands (Codex).** Module, controller guard and resized geometry are validated in CI; whole-plant displayed grasp/held/released and adapter-level native-hand display runs are retained as pending. Every native adapter (robotiq_2f85, robotiq_2f85_v4, umi_gripper, shadow_dexee) now derives a documented free object from its measured distal pads (`object_geometry`): closing-axis half-size `min(.32*span, .032)`, transverse `min(.03, .32*span)`, seated between the pads at the open pose. `NativeHandControl` reports measured two-sided force via `object_contacts()` and `check_guard` gates on it; `grasp_object`/`release_object` drive the documented free object without asserting stability; the MuJoCo display `grasp_fixture` generalized through an `adapter` parameter (`adapter=''` preserves the legacy Panda bundle). Verified by 78 fast/physics/display integration tests and a clean 26-package `colcon build` (exit 0). adapter-level native-hand run and displayed grasp/held/release in a full launch remain pending full-launch validation.
+
 October 13: implemented on master, experimental.
 
 - **Car controls (R7.8.bicycle, Codex).** Three additional source-profile

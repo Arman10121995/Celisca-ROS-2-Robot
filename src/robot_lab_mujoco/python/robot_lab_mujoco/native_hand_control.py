@@ -10,6 +10,7 @@ import time
 import numpy as np
 
 from robot_lab_utils.native_hand import hand_pose_targets
+from robot_lab_utils.native_hand_object import classify_grasp, grasp_surface_bodies
 from .native_articulation_control import NativeArticulationControl
 
 
@@ -28,6 +29,18 @@ class NativeHandControl(NativeArticulationControl):
         # PID controls are length coordinates. Seed only controller memory;
         # measured source joints and physical object states stay untouched.
         self.reset_pid_memory()
+        # Optional documented free object (authored by the display plant when a
+        # grasp fixture is requested). The object stays free; this only measures
+        # two-sided contact, support and slip against it. No pose is written.
+        self.object_body = int(getattr(node, 'object_body', -1))
+        self.object_sides = None
+        self.grasp = dict(state='idle', scope='No documented object in this plant',
+            left_force_n=0., right_force_n=0., supported=False, slip_m=0.)
+        self.grasp_anchor = None
+        if self.object_body >= 0:
+            left, right = grasp_surface_bodies(self.model, contract['adapter'], contract)
+            self.object_sides = (set(left), set(right))
+            self.grasp['scope'] = 'Documented free object present; measure contact/support/slip'
 
     def bounded(self, values):
         return np.clip(values, *np.asarray([channel['limits'] for channel in self.channels]).T)
@@ -64,6 +77,10 @@ class NativeHandControl(NativeArticulationControl):
             request = json.loads(message.data)
             if not isinstance(request, dict) or request.get('plant_id') != self.plant_id:
                 return
+            if request.get('operation') == 'hand_grasp':
+                return self.grasp_object(request)
+            if request.get('operation') == 'hand_release':
+                return self.release_object(request)
             if request.get('operation') != 'hand_pose':
                 self.guard = None
                 self.motion.update(state='manual', reason='Individual target or taught sequence')
@@ -103,6 +120,130 @@ class NativeHandControl(NativeArticulationControl):
             self.status = 'jogging'
         except (ValueError, TypeError, KeyError, IndexError) as exc:
             self.hold('Rejected hand pose: '+str(exc))
+
+    def object_contacts(self):
+        """Measured external normal force on each opposing side against the object.
+
+        Sums only contacts between an opposing grasp surface and the documented
+        object body. Hand self-contact and other environment contacts are
+        excluded so this cannot be mistaken for an object grasp.
+        """
+        result = dict(left_force_n=0., right_force_n=0., supported=False, contact_count=0)
+        if self.object_body < 0 or not self.object_sides:
+            return result
+        left, right = self.object_sides
+        for index, contact in enumerate(self.data.contact[:self.data.ncon]):
+            geoms = list(map(int, contact.geom))
+            bodies = [int(self.model.geom_bodyid[g]) for g in geoms]
+            if self.object_body not in bodies:
+                continue
+            finger = [body for body in bodies if body != self.object_body]
+            if not finger or not any(0 < body < self.node.robot_bodies for body in finger):
+                continue
+            force = np.zeros(6)
+            self.node.mujoco.mj_contactForce(self.model, self.data, index, force)
+            normal = max(0., float(force[0]))
+            result['contact_count'] += 1
+            if any(body in left for body in finger):
+                result['left_force_n'] += normal
+            elif any(body in right for body in finger):
+                result['right_force_n'] += normal
+            # Support: a contact whose normal points up on the object from a
+            # non-finger body (the pedestal/ground) carries the object's weight.
+            elif force[2] > 0. and np.dot(np.array([0., 0., 1.]),
+                    self.data.contact[index].frame[:3]) > .5:
+                result['supported'] = True
+        return result
+
+    def grasp_object(self, request):
+        """Close on the documented object and evaluate a measured contact hold.
+
+        Reuses the guarded hand-pose path so the same source effort/contact
+        thresholds bound the closing motion; it then tracks two-sided contact,
+        support and slip. It never writes the object pose or claims a lift.
+        """
+        try:
+            if self.object_body < 0:
+                raise ValueError('This plant has no documented grasp object; enable the object fixture before Run')
+            if self.fault or time.monotonic()-self.last_heartbeat > .8:
+                raise ValueError('Fresh operator heartbeat required')
+            if (request.get('source_sha256') != self.source_sha256
+                    or request.get('contract_sha256') != self.contract['contract_sha256']):
+                raise ValueError('Grasp belongs to another source/motor contract')
+            effort_fraction = float(request.get('effort_fraction', .6))
+            contact_limit = float(request.get('contact_limit_n', 1.))
+            if (not np.isfinite(effort_fraction+contact_limit) or not .05 <= effort_fraction <= 1.
+                    or not .2 <= contact_limit <= 5.):
+                raise ValueError('Effort fraction 0.05–1; contact threshold 0.2–5 N')
+            self.hold('Object grasp requested')
+            self.grasp_anchor = None
+            self.grasp = dict(state='closing', scope='Closing on the documented object; grasp unassessed',
+                left_force_n=0., right_force_n=0., supported=False, slip_m=0.,
+                contact_limit_n=contact_limit, effort_fraction=effort_fraction)
+            # Close every group with the same guarded targets used by Apply.
+            pose = str(request.get('pose') if request.get('pose') in
+                [*self.contract['poses'], 'Open'] else 'Close')
+            targets = hand_pose_targets(self.contract, pose, float(request.get('closure', 1.)),
+                float(request.get('spread', 0.)), 'All')
+            for slot, channel in enumerate(self.channels):
+                if channel['name'] in targets:
+                    self.target[slot] = targets[channel['name']]
+            selected = [group['name'] for group in self.contract['groups']
+                        if any(name in targets for name in group['channels'])]
+            self.guard = dict(groups=selected, blocked={}, contact_limit_n=contact_limit,
+                effort_fraction=effort_fraction, started=time.monotonic(), grasp=True)
+            self.motion = dict(state='advancing', pose=pose, finger='All',
+                closure=float(request.get('closure', 1.)), spread=0., guarded=True,
+                completion_scope='Closing on the documented object; measured contact hold only')
+            self.status = 'closing on object'
+        except (ValueError, TypeError, KeyError, IndexError) as exc:
+            self.hold('Rejected object grasp: '+str(exc))
+
+    def release_object(self, request):
+        """Open the fingers and let the physics engine own the object again."""
+        try:
+            if self.fault or time.monotonic()-self.last_heartbeat > .8:
+                raise ValueError('Fresh operator heartbeat required')
+            if (request.get('source_sha256') != self.source_sha256
+                    or request.get('contract_sha256') != self.contract['contract_sha256']):
+                raise ValueError('Release belongs to another source/motor contract')
+            self.hold('Object release requested')
+            self.grasp_anchor = None
+            self.grasp = dict(state='releasing', scope='Opening; object motion returns to contact physics',
+                left_force_n=0., right_force_n=0., supported=True, slip_m=0.)
+            targets = hand_pose_targets(self.contract, 'Open', 0., 0., 'All')
+            for slot, channel in enumerate(self.channels):
+                if channel['name'] in targets:
+                    self.target[slot] = targets[channel['name']]
+            self.guard = None  # Opening is never contact-guarded.
+            self.motion = dict(state='advancing', pose='Open', finger='All', closure=0., spread=0.,
+                guarded=False, completion_scope='Opening fingers; object release unassessed')
+            self.status = 'releasing object'
+        except (ValueError, TypeError, KeyError, IndexError) as exc:
+            self.hold('Rejected object release: '+str(exc))
+
+    def update_grasp(self):
+        """Refresh the measured grasp state from contact/support/slip evidence."""
+        if self.object_body < 0 or self.grasp['state'] == 'idle':
+            return
+        measured = self.object_contacts()
+        position = self.data.xpos[self.object_body].copy()
+        threshold = .2*self.grasp.get('contact_limit_n', 1.)
+        if self.grasp['state'] == 'closing' and (measured['left_force_n'] >= threshold
+                and measured['right_force_n'] >= threshold) and self.grasp_anchor is None:
+            self.grasp_anchor = position.copy()
+            self.grasp['state'] = 'holding'
+        slip = 0. if self.grasp_anchor is None else float(np.linalg.norm(position-self.grasp_anchor))
+        if self.grasp['state'] == 'holding' and slip > .01:
+            self.grasp['state'] = 'slipping'
+        verdict = classify_grasp(measured['left_force_n'], measured['right_force_n'],
+            measured['supported'] or self.grasp['state'] in ('holding', 'slipping'), slip)
+        self.grasp.update(left_force_n=measured['left_force_n'],
+            right_force_n=measured['right_force_n'], supported=measured['supported'],
+            slip_m=slip, contact_count=measured['contact_count'],
+            scope=verdict['scope'] if self.grasp['state'] != 'closing' else self.grasp['scope'])
+        if self.grasp['state'] == 'releasing' and measured['contact_count'] == 0:
+            self.grasp.update(state='released', scope='Fingers open; object free under contact physics')
 
     def contacts(self):
         """Actual normal forces per finger group, excluding hand self-contact."""
@@ -149,12 +290,23 @@ class NativeHandControl(NativeArticulationControl):
         if time.monotonic()-self.guard['started'] > 60:
             self.hold('Hand guard deadline; holding measured coordinates')
             return
-        contacts = self.contacts()
+        grasping = self.guard.get('grasp') and self.object_body >= 0
+        # During an object grasp the contact stop is the two-sided object
+        # contact, not any external touch: the documented object rests on a
+        # pedestal, so the generic external-contact stop would fire before the
+        # pads ever reach it. The source effort/force bound still applies.
+        object_contact = self.object_contacts() if grasping else None
+        contacts = None if grasping else self.contacts()
         for group in self.contract['groups']:
             if group['name'] not in self.guard['groups'] or group['name'] in self.guard['blocked']:
                 continue
             reason = ''
-            if contacts[group['name']]['normal_force_n'] >= self.guard['contact_limit_n']:
+            if grasping:
+                both = (object_contact['left_force_n'] >= self.guard['contact_limit_n']
+                        and object_contact['right_force_n'] >= self.guard['contact_limit_n'])
+                if both:
+                    reason = 'Measured two-sided object-contact threshold reached'
+            elif contacts[group['name']]['normal_force_n'] >= self.guard['contact_limit_n']:
                 reason = 'Measured external normal-contact threshold reached'
             for channel in self.channels:
                 if channel['name'] not in group['channels']:
@@ -185,6 +337,7 @@ class NativeHandControl(NativeArticulationControl):
     def after_step(self):
         super().after_step()
         self.check_guard()
+        self.update_grasp()
         if self.motion['state'] == 'advancing':
             tolerances = np.array([.01 if c['units'] == 'rad' else .002 if c['units'] == 'm'
                 else .005*(c['limits'][1]-c['limits'][0]) for c in self.channels])
@@ -210,6 +363,7 @@ class NativeHandControl(NativeArticulationControl):
             poses=self.contract['poses'], motion=self.motion,
             contacts=self.contacts(), blocked_groups=self.guard['blocked'] if self.guard else {},
             guard_scope='Stop advancement at measured thresholds; source hard bounds unchanged; no grasp guarantee',
+            object_grasp=self.grasp,
             source_effort_limits={c['name']: self.model.actuator_forcerange[c['index']].tolist()
                 if self.model.actuator_forcelimited[c['index']] else None for c in self.channels},
-            qualification='experimental; object grasp/release and other backend missions pending'))
+            qualification='experimental; measured contact hold only, object lift/release and other backend missions pending'))

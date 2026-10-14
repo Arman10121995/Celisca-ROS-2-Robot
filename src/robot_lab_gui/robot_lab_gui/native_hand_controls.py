@@ -40,15 +40,19 @@ class NativeHandControls(ttk.Frame):
         self.apply_button = ttk.Button(self, text='Apply hand pose', command=self.apply)
         self.open_button = ttk.Button(self, text='Open selected fingers', command=lambda: self.apply('Open'))
         self.apply_button.grid(row=9, column=0, sticky='ew', padx=2, pady=5)
-        self.open_button.grid(row=9, column=1, sticky='ew', padx=2, pady=5)
+        self.grasp_object_button = ttk.Button(self, text='Grasp object', command=self.grasp_object)
+        self.release_object_button = ttk.Button(self, text='Release object', command=self.release_object)
+        self.grasp_object_button.grid(row=9, column=2, sticky='ew', padx=2, pady=5)
+        self.release_object_button.grid(row=10, column=2, sticky='ew', padx=2, pady=5)
         self.stop_button = ttk.Button(self, text='Stop hand / hold', command=self.owner.stop)
+        self.open_button.grid(row=9, column=1, sticky='ew', padx=2, pady=5)
         self.stop_button.grid(row=10, column=0, columnspan=2, sticky='ew', pady=3)
         ttk.Label(self, textvariable=self.feedback, wraplength=305).grid(row=11, column=0, columnspan=2, sticky='w', pady=5)
         ttk.Label(self, text='Editing a pose or limit causes no motion. Apply sends source-bounded '
             'targets. Each guarded finger group stops advancing at a measured threshold; '
             'this does not impose a hard contact-force limit or confirm a grasp. '
             'UMI has no source tendon force clamp: its effort threshold uses 2 N × fraction. '
-            'Use Open to release; Stop and heartbeat loss hold measured coordinates.',
+            'Use Open or Release object to open; Stop and heartbeat loss hold measured coordinates.',
             wraplength=305).grid(row=12, column=0, columnspan=2, sticky='w', pady=5)
         self.enable_button = ttk.Button(self, text='Enable hand controls for next Run', command=self.enable)
         self.enable_button.grid(row=13, column=0, columnspan=2, sticky='ew', pady=5)
@@ -86,8 +90,10 @@ class NativeHandControls(ttk.Frame):
         details = ['%s: %.3f N (%d contacts)' % (name, entry['normal_force_n'], entry['contact_count'])
             for name, entry in hand.get('contacts', {}).items()]
         blocked = ', '.join(hand.get('blocked_groups', {}))
-        self.feedback.set(hand['motion']['state']+'\n'+'\n'.join(details)
-            + ('\nStopped groups: '+blocked if blocked else ''))
+        self.feedback.set(hand['motion']['state']+'\n'
+            + '\n'.join(details)
+            + ('\nStopped groups: '+blocked if blocked else '')
+            + ('\nDocumented object present: grasp/release enabled' if self.owner.object_body >= 0 else ''))
 
     def apply(self, pose=None):
         if not self.owner.ready():
@@ -116,3 +122,49 @@ class NativeHandControls(ttk.Frame):
             self.feedback.set('Requested '+chosen+'; waiting for measured feedback')
         except (ValueError, TypeError, tk.TclError) as exc:
             self.feedback.set(str(exc))
+
+    def grasp_object(self):
+        """Close on the documented free object; measured two-sided hold only."""
+        if not self.owner.ready():
+            self.feedback.set('Run first, then Grasp object.')
+            return
+        state = self.owner.state
+        hand = state.get('hand')
+        if self.owner.object_body < 0:
+            self.feedback.set('Enable the object fixture before Grasp object.')
+            return
+        if not hand:
+            self.feedback.set('No hand contract; enable native hand controls and Run.')
+            return
+        try:
+            from std_msgs.msg import String
+            self.owner.pub.publish(String(data=json.dumps(dict(operation='hand_grasp',
+                plant_id=state['plant_id'], source_sha256=state['source_sha256'],
+                contract_sha256=hand['contract_sha256'], closure=1., spread=0.,
+                guarded=bool(self.guarded.get()), effort_fraction=float(self.effort.get()),
+                contact_limit_n=float(self.contact.get())))))
+            self.feedback.set('Closing on the documented object; measured contact hold pending.')
+        except (ValueError, TypeError, KeyError, IndexError, AttributeError) as exc:
+            self.feedback.set('Grasp rejected: '+str(exc))
+
+    def release_object(self):
+        """Open the fingers and let the physics engine own the object again."""
+        if not self.owner.ready():
+            self.feedback.set('Run first, then Release object.')
+            return
+        state = self.owner.state
+        hand = state.get('hand')
+        if self.owner.object_body < 0:
+            self.feedback.set('Enable the object fixture before Release object.')
+            return
+        if not hand:
+            self.feedback.set('No hand contract; enable native hand controls and Run.')
+            return
+        try:
+            from std_msgs.msg import String
+            self.owner.pub.publish(String(data=json.dumps(dict(operation='hand_release',
+                plant_id=state['plant_id'], source_sha256=state['source_sha256'],
+                contract_sha256=hand['contract_sha256']))))
+            self.feedback.set('Released on the documented object; physics now owns its motion.')
+        except (ValueError, TypeError, KeyError, IndexError, AttributeError) as exc:
+            self.feedback.set('Release rejected: '+str(exc))

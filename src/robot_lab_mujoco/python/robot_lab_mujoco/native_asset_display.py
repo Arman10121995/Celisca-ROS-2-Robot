@@ -25,6 +25,7 @@ from std_msgs.msg import String
 from std_srvs.srv import Trigger
 from tf2_ros import TransformBroadcaster
 
+from robot_lab_utils.native_hand_object import object_geometry
 from robot_lab_utils.native_mjcf_assets import body_frame
 from robot_lab_utils.process_lifetime import exit_with_parent
 
@@ -39,6 +40,7 @@ class NativeAssetDisplay(Node):
                             ('native_task', 'display'),
                             ('articulation_control', False), ('spawn_x', 0.),
                             ('arm_planning_config', ''),
+                            ('adapter', ''),
                             ('spawn_y', 0.), ('spawn_z', 0.), ('spawn_yaw', 0.)]:
             self.declare_parameter(name, value)
         # EGL avoids the Jetson GLX passive viewer's shutdown crash.
@@ -73,39 +75,70 @@ class NativeAssetDisplay(Node):
             spec.worldbody.add_geom(name='environment_ground', type=mujoco.mjtGeom.mjGEOM_PLANE,
                 size=[50., 50., .1], rgba=[.3, .33, .35, 1.], friction=[1., .005, .0001])
         if self.get_parameter('grasp_fixture').value:
-            if self.get_parameter('arm_control').value != 'panda':
-                raise ValueError('The grasp fixture requires native Panda control')
-            # Measure the source home FK to position a supported object between
-            # the pads. Its free joint is used only by the physics engine.
-            preview = spec.compile()
-            home_data = mujoco.MjData(preview)
-            mujoco.mj_resetDataKeyframe(preview, home_data, 0)
-            mujoco.mj_forward(preview, home_data)
-            fingers = [mujoco.mj_name2id(preview, mujoco.mjtObj.mjOBJ_BODY, name)
-                       for name in ('left_finger', 'right_finger')]
-            pads = [index for index in range(preview.ngeom)
-                    if int(preview.geom_bodyid[index]) in fingers
-                    and int(preview.geom_type[index]) == int(mujoco.mjtGeom.mjGEOM_BOX)
-                    and np.allclose(preview.geom_size[index], [.0085, .004, .0085])]
-            if len(pads) != 2:
-                raise ValueError('The Panda source fingertip geometry differs')
-            center = np.mean(home_data.geom_xpos[pads], axis=0)
-            if center[2] <= .03:
-                raise ValueError('The grasp fixture requires a positive support height')
-            support_height = center[2]-.015
-            pedestal = spec.worldbody.add_body(name='manipulation_pedestal',
-                pos=[center[0], center[1], support_height/2])
-            pedestal.add_geom(name='manipulation_pedestal_geom', type=mujoco.mjtGeom.mjGEOM_BOX,
-                size=[.011, .011, support_height/2], rgba=[.35, .4, .45, 1])
-            cube = spec.worldbody.add_body(name='manipulation_object', pos=center)
-            cube.add_freejoint(name='manipulation_object_joint')
-            cube.add_geom(name='manipulation_object_geom', type=mujoco.mjtGeom.mjGEOM_BOX,
-                size=[.015, .015, .015], mass=.05, friction=[1., .005, .0001],
-                rgba=[1., .45, .05, 1])
-            # MjSpec extends existing keyframes with zeros for a new free
-            # joint. Author its initial pose so home/reset retain the support.
-            for key in spec.keys:
-                key.qpos = np.concatenate((key.qpos, center, [1., 0., 0., 0.]))
+            adapter = self.get_parameter('adapter').value
+            if adapter:
+                # Native-hand path: derive the object from each source hand's
+                # measured distal grasp pads.
+                if self.get_parameter('arm_control').value != 'none':
+                    raise ValueError('The grasp fixture requires display posture only')
+                preview = spec.compile()
+                preview_data = mujoco.MjData(preview)
+                mujoco.mj_resetDataKeyframe(preview, preview_data, 0)
+                mujoco.mj_forward(preview, preview_data)
+                geometry = object_geometry(preview, preview_data, adapter, None)
+                center, half = geometry['center'], geometry['half_size']
+                if center[2]-half[2] <= .03:
+                    raise ValueError('The grasp fixture requires a clear support height')
+                support_height = center[2]-half[2]
+                pedestal = spec.worldbody.add_body(name='manipulation_pedestal',
+                    pos=[center[0], center[1], support_height/2])
+                pedestal.add_geom(name='manipulation_pedestal_geom', type=mujoco.mjtGeom.mjGEOM_BOX,
+                    size=[half[0]+.004, half[1]+.004, support_height/2], rgba=[.35, .4, .45, 1])
+                cube = spec.worldbody.add_body(name='manipulation_object', pos=center)
+                cube.add_freejoint(name='manipulation_object_joint')
+                cube.add_geom(name='manipulation_object_geom', type=mujoco.mjtGeom.mjGEOM_BOX,
+                    size=half, mass=.05, friction=[1., .005, .0001], rgba=[1., .45, .05, 1])
+                self.object_size = half
+                # MjSpec extends existing keyframes with zeros for a new free
+                # joint. Author its initial pose so home/reset retain the support.
+                for key in spec.keys:
+                    key.qpos = np.concatenate((key.qpos, center, [1., 0., 0., 0.]))
+            else:
+                # Legacy fixed-object path; unchanged so the existing Panda
+                # display fixture still behaves as authored.
+                if self.get_parameter('arm_control').value != 'panda':
+                    raise ValueError('The grasp fixture requires native Panda control')
+                # Measure the source home FK to position a supported object between
+                # the pads. Its free joint is used only by the physics engine.
+                preview = spec.compile()
+                home_data = mujoco.MjData(preview)
+                mujoco.mj_resetDataKeyframe(preview, home_data, 0)
+                mujoco.mj_forward(preview, home_data)
+                fingers = [mujoco.mj_name2id(preview, mujoco.mjtObj.mjOBJ_BODY, name)
+                           for name in ('left_finger', 'right_finger')]
+                pads = [index for index in range(preview.ngeom)
+                        if int(preview.geom_bodyid[index]) in fingers
+                        and int(preview.geom_type[index]) == int(mujoco.mjtGeom.mjGEOM_BOX)
+                        and np.allclose(preview.geom_size[index], [.0085, .004, .0085])]
+                if len(pads) != 2:
+                    raise ValueError('The Panda source fingertip geometry differs')
+                center = np.mean(home_data.geom_xpos[pads], axis=0)
+                if center[2] <= .03:
+                    raise ValueError('The grasp fixture requires a positive support height')
+                support_height = center[2]-.015
+                pedestal = spec.worldbody.add_body(name='manipulation_pedestal',
+                    pos=[center[0], center[1], support_height/2])
+                pedestal.add_geom(name='manipulation_pedestal_geom', type=mujoco.mjtGeom.mjGEOM_BOX,
+                    size=[.011, .011, support_height/2], rgba=[.35, .4, .45, 1])
+                cube = spec.worldbody.add_body(name='manipulation_object', pos=center)
+                cube.add_freejoint(name='manipulation_object_joint')
+                cube.add_geom(name='manipulation_object_geom', type=mujoco.mjtGeom.mjGEOM_BOX,
+                    size=[.015, .015, .015], mass=.05, friction=[1., .005, .0001],
+                    rgba=[1., .45, .05, 1])
+                # MjSpec extends existing keyframes with zeros for a new free
+                # joint. Author its initial pose so home/reset retain the support.
+                for key in spec.keys:
+                    key.qpos = np.concatenate((key.qpos, center, [1., 0., 0., 0.]))
         self.model = spec.compile()
         from robot_lab_mujoco.world_collision import configure_world_midphase
         if configure_world_midphase(self.model):
@@ -154,7 +187,7 @@ class NativeAssetDisplay(Node):
         if self.get_parameter('articulation_control').value:
             if mobile_config:
                 raise ValueError('Native mobile control already owns articulation')
-            if controller != 'none' or policy_config or self.get_parameter('grasp_fixture').value:
+            if controller != 'none' or policy_config:
                 raise ValueError('Generic articulation requires exclusive actuator ownership')
             from robot_lab_utils.native_hand import hand_contract
             hand = hand_contract(self.model, self.get_parameter('native_mjcf').value)
@@ -244,8 +277,8 @@ class NativeAssetDisplay(Node):
         if self.object_body >= 0:
             body = self.object_body
             self.object_pub.publish(String(data=json.dumps(dict(time=self.data.time,
-                id='manipulation_object', frame='native_world', size=[.03, .03, .03],
-                finger_links=['native_body_'+str(int(b)) for b in self.gripper.finger_bodies],
+                id='manipulation_object', frame='native_world', size=self.object_size or [.03, .03, .03],
+                finger_links=['native_body_'+str(int(b)) for b in (self.gripper.finger_bodies if self.gripper else [])],
                 pedestal=dict(type='box', size=(2*self.model.geom_size[mj.mj_name2id(self.model,
                         mj.mjtObj.mjOBJ_GEOM, 'manipulation_pedestal_geom')]).tolist(),
                     position=self.data.xpos[mj.mj_name2id(self.model,
