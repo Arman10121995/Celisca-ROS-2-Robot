@@ -226,35 +226,35 @@ Unlisted combinations are untested. No row establishes full mission support.
 | unitree_a1 | nav_obstacle | isaac | navigation_mission /  | passed_screen |
 | unitree_g1_29dof | nav_obstacle | isaac | navigation_mission /  | failed_screen |
 | ackermann_car | nav_obstacle | gazebo | navigation_mission /  | failed_screen |
-| anti_ackermann_car | nav_obstacle | gazebo | navigation_mission /  | passed_screen |
-| rear_steer_car | nav_obstacle | gazebo | navigation_mission /  | passed_screen |
-| ackermann_car | nav_obstacle | isaac | navigation_mission /  | passed_screen |
-| anti_ackermann_car | nav_obstacle | isaac | navigation_mission /  | passed_screen |
+| anti_ackermann_car | nav_obstacle | gazebo | navigation_mission /  | failed_screen |
+| rear_steer_car | nav_obstacle | gazebo | navigation_mission /  | failed_screen |
+| ackermann_car | nav_obstacle | isaac | navigation_mission /  | failed_screen |
+| anti_ackermann_car | nav_obstacle | isaac | navigation_mission /  | failed_screen |
 | rear_steer_car | nav_obstacle | isaac | navigation_mission /  | failed_screen |
-| ackermann_car | nav_obstacle | mujoco | navigation_mission /  | passed_screen |
-| anti_ackermann_car | nav_obstacle | mujoco | navigation_mission /  | passed_screen |
+| ackermann_car | nav_obstacle | mujoco | navigation_mission /  | failed_screen |
+| anti_ackermann_car | nav_obstacle | mujoco | navigation_mission /  | failed_screen |
 | rear_steer_car | nav_obstacle | mujoco | navigation_mission /  | failed_screen |
-| ackermann_car | nav_obstacle | pybullet | navigation_mission /  | passed_screen |
-| anti_ackermann_car | nav_obstacle | pybullet | navigation_mission /  | passed_screen |
+| ackermann_car | nav_obstacle | pybullet | navigation_mission /  | failed_screen |
+| anti_ackermann_car | nav_obstacle | pybullet | navigation_mission /  | failed_screen |
 | rear_steer_car | nav_obstacle | pybullet | navigation_mission /  | failed_screen |
 | four_wheel_steer_car | nav_obstacle | gazebo | navigation_mission / ackermann | passed_screen |
-| four_wheel_steer_car | nav_obstacle | gazebo | navigation_mission / crab | passed_screen |
-| four_wheel_steer_car | nav_obstacle | gazebo | navigation_mission / in_phase | passed_screen |
+| four_wheel_steer_car | nav_obstacle | gazebo | navigation_mission / crab | failed_screen |
+| four_wheel_steer_car | nav_obstacle | gazebo | navigation_mission / in_phase | failed_screen |
 | mecanum_car | nav_obstacle | gazebo | navigation_mission /  | passed_screen |
 | four_wheel_steer_car | nav_obstacle | gazebo | navigation_mission / pivot | passed_screen |
 | four_wheel_steer_car | nav_obstacle | isaac | navigation_mission / ackermann | passed_screen |
-| four_wheel_steer_car | nav_obstacle | isaac | navigation_mission / crab | passed_screen |
-| four_wheel_steer_car | nav_obstacle | isaac | navigation_mission / in_phase | passed_screen |
+| four_wheel_steer_car | nav_obstacle | isaac | navigation_mission / crab | failed_screen |
+| four_wheel_steer_car | nav_obstacle | isaac | navigation_mission / in_phase | failed_screen |
 | mecanum_car | nav_obstacle | isaac | navigation_mission /  | passed_screen |
 | four_wheel_steer_car | nav_obstacle | isaac | navigation_mission / pivot | passed_screen |
 | four_wheel_steer_car | nav_obstacle | mujoco | navigation_mission / ackermann | passed_screen |
-| four_wheel_steer_car | nav_obstacle | mujoco | navigation_mission / crab | passed_screen |
-| four_wheel_steer_car | nav_obstacle | mujoco | navigation_mission / in_phase | passed_screen |
+| four_wheel_steer_car | nav_obstacle | mujoco | navigation_mission / crab | failed_screen |
+| four_wheel_steer_car | nav_obstacle | mujoco | navigation_mission / in_phase | failed_screen |
 | mecanum_car | nav_obstacle | mujoco | navigation_mission /  | passed_screen |
 | four_wheel_steer_car | nav_obstacle | mujoco | navigation_mission / pivot | passed_screen |
 | four_wheel_steer_car | nav_obstacle | pybullet | navigation_mission / ackermann | passed_screen |
-| four_wheel_steer_car | nav_obstacle | pybullet | navigation_mission / crab | passed_screen |
-| four_wheel_steer_car | nav_obstacle | pybullet | navigation_mission / in_phase | passed_screen |
+| four_wheel_steer_car | nav_obstacle | pybullet | navigation_mission / crab | failed_screen |
+| four_wheel_steer_car | nav_obstacle | pybullet | navigation_mission / in_phase | failed_screen |
 | mecanum_car | nav_obstacle | pybullet | navigation_mission /  | passed_screen |
 | four_wheel_steer_car | nav_obstacle | pybullet | navigation_mission / pivot | passed_screen |
 

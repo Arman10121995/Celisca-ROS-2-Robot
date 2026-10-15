@@ -7545,3 +7545,1027 @@ records:
   limitations:
   - One seed
   - Source hashes derived from git at the recorded revision after the run
+- robot_id: four_wheel_steer_car
+  environment_id: nav_obstacle
+  simulator: gazebo
+  task_type: navigation_mission
+  steering_mode: ackermann
+  date: '2026-10-15'
+  revision: 371f724 (round 35, from 21:53; later commits changed no drive, Nav2 or mission file)
+  report: docs/status/evidence/wheeled-repeats-2026-10-15/gazebo_ackermann_seed2_nav_obstacle.json
+  sha256: eb1afd9fcaf8d5240b766f8a7c06b2fb300c403c68e3b1efcd082f286bc4ebd6
+  source_hashes: docs/status/evidence/wheeled-repeats-2026-10-15/source-hashes-371f724.json
+  source_hashes_sha256: 02b3606350567f05bc2c4d254718b20cc94842d99f2f45cf45a7bb2e149d2904
+  report_kind: mission_screen
+  scope: nav_obstacle mission per 4WS steering pattern and for the mecanum car, goal seeds 2 and 3; truth-measured
+    final poses and the measured drive configuration. Details in docs/status/evidence/wheeled-repeats-2026-10-15.
+  limitations:
+  - Goal seeds 2 and 3; seed 1 is the October 13 round
+- robot_id: four_wheel_steer_car
+  environment_id: nav_obstacle
+  simulator: gazebo
+  task_type: navigation_mission
+  steering_mode: ackermann
+  date: '2026-10-15'
+  revision: 371f724 (round 35, from 21:53; later commits changed no drive, Nav2 or mission file)
+  report: docs/status/evidence/wheeled-repeats-2026-10-15/gazebo_ackermann_seed3_nav_obstacle.json
+  sha256: d0810c560f95a5e5b536ee433476d936dbde41d8570c6fe6fe5d0c590557cbf9
+  source_hashes: docs/status/evidence/wheeled-repeats-2026-10-15/source-hashes-371f724.json
+  source_hashes_sha256: 02b3606350567f05bc2c4d254718b20cc94842d99f2f45cf45a7bb2e149d2904
+  report_kind: mission_screen
+  scope: nav_obstacle mission per 4WS steering pattern and for the mecanum car, goal seeds 2 and 3; truth-measured
+    final poses and the measured drive configuration. Details in docs/status/evidence/wheeled-repeats-2026-10-15.
+  limitations:
+  - Goal seeds 2 and 3; seed 1 is the October 13 round
+- robot_id: four_wheel_steer_car
+  environment_id: nav_obstacle
+  simulator: gazebo
+  task_type: navigation_mission
+  steering_mode: crab
+  date: '2026-10-15'
+  revision: 371f724 (round 35, from 21:53; later commits changed no drive, Nav2 or mission file)
+  report: docs/status/evidence/wheeled-repeats-2026-10-15/gazebo_crab_seed2_nav_obstacle.json
+  sha256: 4dcd1d65a453ef5ed0766eedea1c2a970c3501556e2387471bd51ec0aff251a9
+  source_hashes: docs/status/evidence/wheeled-repeats-2026-10-15/source-hashes-371f724.json
+  source_hashes_sha256: 02b3606350567f05bc2c4d254718b20cc94842d99f2f45cf45a7bb2e149d2904
+  report_kind: mission_screen
+  scope: nav_obstacle mission per 4WS steering pattern and for the mecanum car, goal seeds 2 and 3; truth-measured
+    final poses and the measured drive configuration. Details in docs/status/evidence/wheeled-repeats-2026-10-15.
+  limitations:
+  - Goal seeds 2 and 3; seed 1 is the October 13 round
+- robot_id: four_wheel_steer_car
+  environment_id: nav_obstacle
+  simulator: gazebo
+  task_type: navigation_mission
+  steering_mode: crab
+  date: '2026-10-15'
+  revision: 371f724 (round 35, from 21:53; later commits changed no drive, Nav2 or mission file)
+  report: docs/status/evidence/wheeled-repeats-2026-10-15/gazebo_crab_seed3_nav_obstacle.json
+  sha256: ab1b6ead582df0896d1f679e5e63be6266f4289cf7a09d395e634fc21d77d335
+  source_hashes: docs/status/evidence/wheeled-repeats-2026-10-15/source-hashes-371f724.json
+  source_hashes_sha256: 02b3606350567f05bc2c4d254718b20cc94842d99f2f45cf45a7bb2e149d2904
+  report_kind: mission_screen
+  scope: nav_obstacle mission per 4WS steering pattern and for the mecanum car, goal seeds 2 and 3; truth-measured
+    final poses and the measured drive configuration. Details in docs/status/evidence/wheeled-repeats-2026-10-15.
+  limitations:
+  - Goal seeds 2 and 3; seed 1 is the October 13 round
+- robot_id: four_wheel_steer_car
+  environment_id: nav_obstacle
+  simulator: gazebo
+  task_type: navigation_mission
+  steering_mode: in_phase
+  date: '2026-10-15'
+  revision: 371f724 (round 35, from 21:53; later commits changed no drive, Nav2 or mission file)
+  report: docs/status/evidence/wheeled-repeats-2026-10-15/gazebo_in_phase_seed2_nav_obstacle.json
+  sha256: ea160408b9c0ff60ca939351f83c5752209fd3b35fe869ac4ea176baaaf26e1d
+  source_hashes: docs/status/evidence/wheeled-repeats-2026-10-15/source-hashes-371f724.json
+  source_hashes_sha256: 02b3606350567f05bc2c4d254718b20cc94842d99f2f45cf45a7bb2e149d2904
+  report_kind: mission_screen
+  scope: nav_obstacle mission per 4WS steering pattern and for the mecanum car, goal seeds 2 and 3; truth-measured
+    final poses and the measured drive configuration. Details in docs/status/evidence/wheeled-repeats-2026-10-15.
+  limitations:
+  - Goal seeds 2 and 3; seed 1 is the October 13 round
+- robot_id: four_wheel_steer_car
+  environment_id: nav_obstacle
+  simulator: gazebo
+  task_type: navigation_mission
+  steering_mode: in_phase
+  date: '2026-10-15'
+  revision: 371f724 (round 35, from 21:53; later commits changed no drive, Nav2 or mission file)
+  report: docs/status/evidence/wheeled-repeats-2026-10-15/gazebo_in_phase_seed3_nav_obstacle.json
+  sha256: f59b799f171dbcf1e5336e7290bad22f3ba33ce4e2a542d121ddd838b8262dbe
+  source_hashes: docs/status/evidence/wheeled-repeats-2026-10-15/source-hashes-371f724.json
+  source_hashes_sha256: 02b3606350567f05bc2c4d254718b20cc94842d99f2f45cf45a7bb2e149d2904
+  report_kind: mission_screen
+  scope: nav_obstacle mission per 4WS steering pattern and for the mecanum car, goal seeds 2 and 3; truth-measured
+    final poses and the measured drive configuration. Details in docs/status/evidence/wheeled-repeats-2026-10-15.
+  limitations:
+  - Goal seeds 2 and 3; seed 1 is the October 13 round
+- robot_id: mecanum_car
+  environment_id: nav_obstacle
+  simulator: gazebo
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-10-15'
+  revision: 371f724 (round 35, from 21:53; later commits changed no drive, Nav2 or mission file)
+  report: docs/status/evidence/wheeled-repeats-2026-10-15/gazebo_mecanum_seed2_nav_obstacle.json
+  sha256: ff453b726c993e6690253c17bd49053b1f8d1c2595051da9aa841acbbc010e3c
+  source_hashes: docs/status/evidence/wheeled-repeats-2026-10-15/source-hashes-371f724.json
+  source_hashes_sha256: 02b3606350567f05bc2c4d254718b20cc94842d99f2f45cf45a7bb2e149d2904
+  report_kind: mission_screen
+  scope: nav_obstacle mission per 4WS steering pattern and for the mecanum car, goal seeds 2 and 3; truth-measured
+    final poses and the measured drive configuration. Details in docs/status/evidence/wheeled-repeats-2026-10-15.
+  limitations:
+  - Goal seeds 2 and 3; seed 1 is the October 13 round
+- robot_id: mecanum_car
+  environment_id: nav_obstacle
+  simulator: gazebo
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-10-15'
+  revision: 371f724 (round 35, from 21:53; later commits changed no drive, Nav2 or mission file)
+  report: docs/status/evidence/wheeled-repeats-2026-10-15/gazebo_mecanum_seed3_nav_obstacle.json
+  sha256: cc0acad3ad9b31ba349eb4c86848bf9648894c9644135b2968ffc842da13c443
+  source_hashes: docs/status/evidence/wheeled-repeats-2026-10-15/source-hashes-371f724.json
+  source_hashes_sha256: 02b3606350567f05bc2c4d254718b20cc94842d99f2f45cf45a7bb2e149d2904
+  report_kind: mission_screen
+  scope: nav_obstacle mission per 4WS steering pattern and for the mecanum car, goal seeds 2 and 3; truth-measured
+    final poses and the measured drive configuration. Details in docs/status/evidence/wheeled-repeats-2026-10-15.
+  limitations:
+  - Goal seeds 2 and 3; seed 1 is the October 13 round
+- robot_id: four_wheel_steer_car
+  environment_id: nav_obstacle
+  simulator: gazebo
+  task_type: navigation_mission
+  steering_mode: pivot
+  date: '2026-10-15'
+  revision: 371f724 (round 35, from 21:53; later commits changed no drive, Nav2 or mission file)
+  report: docs/status/evidence/wheeled-repeats-2026-10-15/gazebo_pivot_seed2_nav_obstacle.json
+  sha256: 47de58ccbe0536d239f675c1d4ce095153c17a07b1e13ae0d6a289a54982a6b8
+  source_hashes: docs/status/evidence/wheeled-repeats-2026-10-15/source-hashes-371f724.json
+  source_hashes_sha256: 02b3606350567f05bc2c4d254718b20cc94842d99f2f45cf45a7bb2e149d2904
+  report_kind: mission_screen
+  scope: nav_obstacle mission per 4WS steering pattern and for the mecanum car, goal seeds 2 and 3; truth-measured
+    final poses and the measured drive configuration. Details in docs/status/evidence/wheeled-repeats-2026-10-15.
+  limitations:
+  - Goal seeds 2 and 3; seed 1 is the October 13 round
+- robot_id: four_wheel_steer_car
+  environment_id: nav_obstacle
+  simulator: gazebo
+  task_type: navigation_mission
+  steering_mode: pivot
+  date: '2026-10-15'
+  revision: 371f724 (round 35, from 21:53; later commits changed no drive, Nav2 or mission file)
+  report: docs/status/evidence/wheeled-repeats-2026-10-15/gazebo_pivot_seed3_nav_obstacle.json
+  sha256: 46b1b95c9c4aaa3050c1a72751ada5fb230f966e6e790bb9ad5a4745121389da
+  source_hashes: docs/status/evidence/wheeled-repeats-2026-10-15/source-hashes-371f724.json
+  source_hashes_sha256: 02b3606350567f05bc2c4d254718b20cc94842d99f2f45cf45a7bb2e149d2904
+  report_kind: mission_screen
+  scope: nav_obstacle mission per 4WS steering pattern and for the mecanum car, goal seeds 2 and 3; truth-measured
+    final poses and the measured drive configuration. Details in docs/status/evidence/wheeled-repeats-2026-10-15.
+  limitations:
+  - Goal seeds 2 and 3; seed 1 is the October 13 round
+- robot_id: four_wheel_steer_car
+  environment_id: nav_obstacle
+  simulator: isaac
+  task_type: navigation_mission
+  steering_mode: ackermann
+  date: '2026-10-15'
+  revision: 371f724 (round 35, from 21:53; later commits changed no drive, Nav2 or mission file)
+  report: docs/status/evidence/wheeled-repeats-2026-10-15/isaac_ackermann_seed2_nav_obstacle.json
+  sha256: 6a8079db7cc3f920d188dd67dcb6421d780213a7cbdb00b8e725ab46b631c930
+  source_hashes: docs/status/evidence/wheeled-repeats-2026-10-15/source-hashes-371f724.json
+  source_hashes_sha256: 02b3606350567f05bc2c4d254718b20cc94842d99f2f45cf45a7bb2e149d2904
+  report_kind: mission_screen
+  scope: nav_obstacle mission per 4WS steering pattern and for the mecanum car, goal seeds 2 and 3; truth-measured
+    final poses and the measured drive configuration. Details in docs/status/evidence/wheeled-repeats-2026-10-15.
+  limitations:
+  - Goal seeds 2 and 3; seed 1 is the October 13 round
+- robot_id: four_wheel_steer_car
+  environment_id: nav_obstacle
+  simulator: isaac
+  task_type: navigation_mission
+  steering_mode: ackermann
+  date: '2026-10-15'
+  revision: 371f724 (round 35, from 21:53; later commits changed no drive, Nav2 or mission file)
+  report: docs/status/evidence/wheeled-repeats-2026-10-15/isaac_ackermann_seed3_nav_obstacle.json
+  sha256: 5e66f1e9441305c8845258baffc58c78349c5ca48eccaddd60431a9a0bb7634a
+  source_hashes: docs/status/evidence/wheeled-repeats-2026-10-15/source-hashes-371f724.json
+  source_hashes_sha256: 02b3606350567f05bc2c4d254718b20cc94842d99f2f45cf45a7bb2e149d2904
+  report_kind: mission_screen
+  scope: nav_obstacle mission per 4WS steering pattern and for the mecanum car, goal seeds 2 and 3; truth-measured
+    final poses and the measured drive configuration. Details in docs/status/evidence/wheeled-repeats-2026-10-15.
+  limitations:
+  - Goal seeds 2 and 3; seed 1 is the October 13 round
+- robot_id: four_wheel_steer_car
+  environment_id: nav_obstacle
+  simulator: isaac
+  task_type: navigation_mission
+  steering_mode: crab
+  date: '2026-10-15'
+  revision: 371f724 (round 35, from 21:53; later commits changed no drive, Nav2 or mission file)
+  report: docs/status/evidence/wheeled-repeats-2026-10-15/isaac_crab_seed2_nav_obstacle.json
+  sha256: 4c0ff9e74ef5707dd505de3c2f984fa2d434fa28651235dafd03848a53cb4fca
+  source_hashes: docs/status/evidence/wheeled-repeats-2026-10-15/source-hashes-371f724.json
+  source_hashes_sha256: 02b3606350567f05bc2c4d254718b20cc94842d99f2f45cf45a7bb2e149d2904
+  report_kind: mission_screen
+  scope: nav_obstacle mission per 4WS steering pattern and for the mecanum car, goal seeds 2 and 3; truth-measured
+    final poses and the measured drive configuration. Details in docs/status/evidence/wheeled-repeats-2026-10-15.
+  limitations:
+  - Goal seeds 2 and 3; seed 1 is the October 13 round
+- robot_id: four_wheel_steer_car
+  environment_id: nav_obstacle
+  simulator: isaac
+  task_type: navigation_mission
+  steering_mode: crab
+  date: '2026-10-15'
+  revision: 371f724 (round 35, from 21:53; later commits changed no drive, Nav2 or mission file)
+  report: docs/status/evidence/wheeled-repeats-2026-10-15/isaac_crab_seed3_nav_obstacle.json
+  sha256: 936653a00b902891f99bc48be0e570ebe95f2ce32452ce0ca67790b80d9b3bda
+  source_hashes: docs/status/evidence/wheeled-repeats-2026-10-15/source-hashes-371f724.json
+  source_hashes_sha256: 02b3606350567f05bc2c4d254718b20cc94842d99f2f45cf45a7bb2e149d2904
+  report_kind: mission_screen
+  scope: nav_obstacle mission per 4WS steering pattern and for the mecanum car, goal seeds 2 and 3; truth-measured
+    final poses and the measured drive configuration. Details in docs/status/evidence/wheeled-repeats-2026-10-15.
+  limitations:
+  - Goal seeds 2 and 3; seed 1 is the October 13 round
+- robot_id: four_wheel_steer_car
+  environment_id: nav_obstacle
+  simulator: isaac
+  task_type: navigation_mission
+  steering_mode: in_phase
+  date: '2026-10-15'
+  revision: 371f724 (round 35, from 21:53; later commits changed no drive, Nav2 or mission file)
+  report: docs/status/evidence/wheeled-repeats-2026-10-15/isaac_in_phase_seed2_nav_obstacle.json
+  sha256: 4b3606d124e83e5b0f9cdfe9a1043e23370c01f9313596fbd996b3345d14ba8a
+  source_hashes: docs/status/evidence/wheeled-repeats-2026-10-15/source-hashes-371f724.json
+  source_hashes_sha256: 02b3606350567f05bc2c4d254718b20cc94842d99f2f45cf45a7bb2e149d2904
+  report_kind: mission_screen
+  scope: nav_obstacle mission per 4WS steering pattern and for the mecanum car, goal seeds 2 and 3; truth-measured
+    final poses and the measured drive configuration. Details in docs/status/evidence/wheeled-repeats-2026-10-15.
+  limitations:
+  - Goal seeds 2 and 3; seed 1 is the October 13 round
+- robot_id: four_wheel_steer_car
+  environment_id: nav_obstacle
+  simulator: isaac
+  task_type: navigation_mission
+  steering_mode: in_phase
+  date: '2026-10-15'
+  revision: 371f724 (round 35, from 21:53; later commits changed no drive, Nav2 or mission file)
+  report: docs/status/evidence/wheeled-repeats-2026-10-15/isaac_in_phase_seed3_nav_obstacle.json
+  sha256: b0335e0df4079393adcc5c0ed15c2805bd6793b6876a22ceee38c3b6a7e36fa1
+  source_hashes: docs/status/evidence/wheeled-repeats-2026-10-15/source-hashes-371f724.json
+  source_hashes_sha256: 02b3606350567f05bc2c4d254718b20cc94842d99f2f45cf45a7bb2e149d2904
+  report_kind: mission_screen
+  scope: nav_obstacle mission per 4WS steering pattern and for the mecanum car, goal seeds 2 and 3; truth-measured
+    final poses and the measured drive configuration. Details in docs/status/evidence/wheeled-repeats-2026-10-15.
+  limitations:
+  - Goal seeds 2 and 3; seed 1 is the October 13 round
+- robot_id: mecanum_car
+  environment_id: nav_obstacle
+  simulator: isaac
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-10-15'
+  revision: 371f724 (round 35, from 21:53; later commits changed no drive, Nav2 or mission file)
+  report: docs/status/evidence/wheeled-repeats-2026-10-15/isaac_mecanum_seed2_nav_obstacle.json
+  sha256: f5cd72f458559ea410ef483762643c9551bb20d10388d6196ab1fa5d534dcfd3
+  source_hashes: docs/status/evidence/wheeled-repeats-2026-10-15/source-hashes-371f724.json
+  source_hashes_sha256: 02b3606350567f05bc2c4d254718b20cc94842d99f2f45cf45a7bb2e149d2904
+  report_kind: mission_screen
+  scope: nav_obstacle mission per 4WS steering pattern and for the mecanum car, goal seeds 2 and 3; truth-measured
+    final poses and the measured drive configuration. Details in docs/status/evidence/wheeled-repeats-2026-10-15.
+  limitations:
+  - Goal seeds 2 and 3; seed 1 is the October 13 round
+- robot_id: mecanum_car
+  environment_id: nav_obstacle
+  simulator: isaac
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-10-15'
+  revision: 371f724 (round 35, from 21:53; later commits changed no drive, Nav2 or mission file)
+  report: docs/status/evidence/wheeled-repeats-2026-10-15/isaac_mecanum_seed3_nav_obstacle.json
+  sha256: c263de89309123b44ae76c81c8b656a9c007af57a0cb6f3e5a5db3a8b7aa6270
+  source_hashes: docs/status/evidence/wheeled-repeats-2026-10-15/source-hashes-371f724.json
+  source_hashes_sha256: 02b3606350567f05bc2c4d254718b20cc94842d99f2f45cf45a7bb2e149d2904
+  report_kind: mission_screen
+  scope: nav_obstacle mission per 4WS steering pattern and for the mecanum car, goal seeds 2 and 3; truth-measured
+    final poses and the measured drive configuration. Details in docs/status/evidence/wheeled-repeats-2026-10-15.
+  limitations:
+  - Goal seeds 2 and 3; seed 1 is the October 13 round
+- robot_id: four_wheel_steer_car
+  environment_id: nav_obstacle
+  simulator: isaac
+  task_type: navigation_mission
+  steering_mode: pivot
+  date: '2026-10-15'
+  revision: 371f724 (round 35, from 21:53; later commits changed no drive, Nav2 or mission file)
+  report: docs/status/evidence/wheeled-repeats-2026-10-15/isaac_pivot_seed2_nav_obstacle.json
+  sha256: 18d321e0c535d8a3d7ee71c1fe32a467de785a810b1942c55bfaf15273c8af63
+  source_hashes: docs/status/evidence/wheeled-repeats-2026-10-15/source-hashes-371f724.json
+  source_hashes_sha256: 02b3606350567f05bc2c4d254718b20cc94842d99f2f45cf45a7bb2e149d2904
+  report_kind: mission_screen
+  scope: nav_obstacle mission per 4WS steering pattern and for the mecanum car, goal seeds 2 and 3; truth-measured
+    final poses and the measured drive configuration. Details in docs/status/evidence/wheeled-repeats-2026-10-15.
+  limitations:
+  - Goal seeds 2 and 3; seed 1 is the October 13 round
+- robot_id: four_wheel_steer_car
+  environment_id: nav_obstacle
+  simulator: isaac
+  task_type: navigation_mission
+  steering_mode: pivot
+  date: '2026-10-15'
+  revision: 371f724 (round 35, from 21:53; later commits changed no drive, Nav2 or mission file)
+  report: docs/status/evidence/wheeled-repeats-2026-10-15/isaac_pivot_seed3_nav_obstacle.json
+  sha256: 86e0807cb287c932643e54bff0517d99158a0a4a88a52658c53d9f650bdd69c2
+  source_hashes: docs/status/evidence/wheeled-repeats-2026-10-15/source-hashes-371f724.json
+  source_hashes_sha256: 02b3606350567f05bc2c4d254718b20cc94842d99f2f45cf45a7bb2e149d2904
+  report_kind: mission_screen
+  scope: nav_obstacle mission per 4WS steering pattern and for the mecanum car, goal seeds 2 and 3; truth-measured
+    final poses and the measured drive configuration. Details in docs/status/evidence/wheeled-repeats-2026-10-15.
+  limitations:
+  - Goal seeds 2 and 3; seed 1 is the October 13 round
+- robot_id: four_wheel_steer_car
+  environment_id: nav_obstacle
+  simulator: mujoco
+  task_type: navigation_mission
+  steering_mode: ackermann
+  date: '2026-10-15'
+  revision: 371f724 (round 35, from 21:53; later commits changed no drive, Nav2 or mission file)
+  report: docs/status/evidence/wheeled-repeats-2026-10-15/mujoco_ackermann_seed2_nav_obstacle.json
+  sha256: 9dc63b617715f06ea5589a99372b52fbbb68f99e6563cb708f3ff92196e5d499
+  source_hashes: docs/status/evidence/wheeled-repeats-2026-10-15/source-hashes-371f724.json
+  source_hashes_sha256: 02b3606350567f05bc2c4d254718b20cc94842d99f2f45cf45a7bb2e149d2904
+  report_kind: mission_screen
+  scope: nav_obstacle mission per 4WS steering pattern and for the mecanum car, goal seeds 2 and 3; truth-measured
+    final poses and the measured drive configuration. Details in docs/status/evidence/wheeled-repeats-2026-10-15.
+  limitations:
+  - Goal seeds 2 and 3; seed 1 is the October 13 round
+- robot_id: four_wheel_steer_car
+  environment_id: nav_obstacle
+  simulator: mujoco
+  task_type: navigation_mission
+  steering_mode: ackermann
+  date: '2026-10-15'
+  revision: 371f724 (round 35, from 21:53; later commits changed no drive, Nav2 or mission file)
+  report: docs/status/evidence/wheeled-repeats-2026-10-15/mujoco_ackermann_seed3_nav_obstacle.json
+  sha256: 688b82101a28e0b56549db185c80493b745b5598fdd3dfa0cd92232250950aee
+  source_hashes: docs/status/evidence/wheeled-repeats-2026-10-15/source-hashes-371f724.json
+  source_hashes_sha256: 02b3606350567f05bc2c4d254718b20cc94842d99f2f45cf45a7bb2e149d2904
+  report_kind: mission_screen
+  scope: nav_obstacle mission per 4WS steering pattern and for the mecanum car, goal seeds 2 and 3; truth-measured
+    final poses and the measured drive configuration. Details in docs/status/evidence/wheeled-repeats-2026-10-15.
+  limitations:
+  - Goal seeds 2 and 3; seed 1 is the October 13 round
+- robot_id: four_wheel_steer_car
+  environment_id: nav_obstacle
+  simulator: mujoco
+  task_type: navigation_mission
+  steering_mode: crab
+  date: '2026-10-15'
+  revision: 371f724 (round 35, from 21:53; later commits changed no drive, Nav2 or mission file)
+  report: docs/status/evidence/wheeled-repeats-2026-10-15/mujoco_crab_seed2_nav_obstacle.json
+  sha256: 84283292e702f388076049005bdff8f381ff54bd9452f9c4b233365b24f4a382
+  source_hashes: docs/status/evidence/wheeled-repeats-2026-10-15/source-hashes-371f724.json
+  source_hashes_sha256: 02b3606350567f05bc2c4d254718b20cc94842d99f2f45cf45a7bb2e149d2904
+  report_kind: mission_screen
+  scope: nav_obstacle mission per 4WS steering pattern and for the mecanum car, goal seeds 2 and 3; truth-measured
+    final poses and the measured drive configuration. Details in docs/status/evidence/wheeled-repeats-2026-10-15.
+  limitations:
+  - Goal seeds 2 and 3; seed 1 is the October 13 round
+- robot_id: four_wheel_steer_car
+  environment_id: nav_obstacle
+  simulator: mujoco
+  task_type: navigation_mission
+  steering_mode: crab
+  date: '2026-10-15'
+  revision: 371f724 (round 35, from 21:53; later commits changed no drive, Nav2 or mission file)
+  report: docs/status/evidence/wheeled-repeats-2026-10-15/mujoco_crab_seed3_nav_obstacle.json
+  sha256: d6939b6ab81374866c4eb07779a8a5fa8b9aaa40cb47808c08d0b7e1b0db3009
+  source_hashes: docs/status/evidence/wheeled-repeats-2026-10-15/source-hashes-371f724.json
+  source_hashes_sha256: 02b3606350567f05bc2c4d254718b20cc94842d99f2f45cf45a7bb2e149d2904
+  report_kind: mission_screen
+  scope: nav_obstacle mission per 4WS steering pattern and for the mecanum car, goal seeds 2 and 3; truth-measured
+    final poses and the measured drive configuration. Details in docs/status/evidence/wheeled-repeats-2026-10-15.
+  limitations:
+  - Goal seeds 2 and 3; seed 1 is the October 13 round
+- robot_id: four_wheel_steer_car
+  environment_id: nav_obstacle
+  simulator: mujoco
+  task_type: navigation_mission
+  steering_mode: in_phase
+  date: '2026-10-15'
+  revision: 371f724 (round 35, from 21:53; later commits changed no drive, Nav2 or mission file)
+  report: docs/status/evidence/wheeled-repeats-2026-10-15/mujoco_in_phase_seed2_nav_obstacle.json
+  sha256: 0a7ede6755ec4ce7dafd25f5057edd18311f34a22cd742d32c74454c1ede78c9
+  source_hashes: docs/status/evidence/wheeled-repeats-2026-10-15/source-hashes-371f724.json
+  source_hashes_sha256: 02b3606350567f05bc2c4d254718b20cc94842d99f2f45cf45a7bb2e149d2904
+  report_kind: mission_screen
+  scope: nav_obstacle mission per 4WS steering pattern and for the mecanum car, goal seeds 2 and 3; truth-measured
+    final poses and the measured drive configuration. Details in docs/status/evidence/wheeled-repeats-2026-10-15.
+  limitations:
+  - Goal seeds 2 and 3; seed 1 is the October 13 round
+- robot_id: four_wheel_steer_car
+  environment_id: nav_obstacle
+  simulator: mujoco
+  task_type: navigation_mission
+  steering_mode: in_phase
+  date: '2026-10-15'
+  revision: 371f724 (round 35, from 21:53; later commits changed no drive, Nav2 or mission file)
+  report: docs/status/evidence/wheeled-repeats-2026-10-15/mujoco_in_phase_seed3_nav_obstacle.json
+  sha256: 08a2618f46463e27b151dc88215887f86664363a9caec1e10d051a17fcd06a47
+  source_hashes: docs/status/evidence/wheeled-repeats-2026-10-15/source-hashes-371f724.json
+  source_hashes_sha256: 02b3606350567f05bc2c4d254718b20cc94842d99f2f45cf45a7bb2e149d2904
+  report_kind: mission_screen
+  scope: nav_obstacle mission per 4WS steering pattern and for the mecanum car, goal seeds 2 and 3; truth-measured
+    final poses and the measured drive configuration. Details in docs/status/evidence/wheeled-repeats-2026-10-15.
+  limitations:
+  - Goal seeds 2 and 3; seed 1 is the October 13 round
+- robot_id: mecanum_car
+  environment_id: nav_obstacle
+  simulator: mujoco
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-10-15'
+  revision: 371f724 (round 35, from 21:53; later commits changed no drive, Nav2 or mission file)
+  report: docs/status/evidence/wheeled-repeats-2026-10-15/mujoco_mecanum_seed2_nav_obstacle.json
+  sha256: 12215efe2e043866bec5512c1eb7fa7d203885c643100be6912de30cf7e2a9a5
+  source_hashes: docs/status/evidence/wheeled-repeats-2026-10-15/source-hashes-371f724.json
+  source_hashes_sha256: 02b3606350567f05bc2c4d254718b20cc94842d99f2f45cf45a7bb2e149d2904
+  report_kind: mission_screen
+  scope: nav_obstacle mission per 4WS steering pattern and for the mecanum car, goal seeds 2 and 3; truth-measured
+    final poses and the measured drive configuration. Details in docs/status/evidence/wheeled-repeats-2026-10-15.
+  limitations:
+  - Goal seeds 2 and 3; seed 1 is the October 13 round
+- robot_id: mecanum_car
+  environment_id: nav_obstacle
+  simulator: mujoco
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-10-15'
+  revision: 371f724 (round 35, from 21:53; later commits changed no drive, Nav2 or mission file)
+  report: docs/status/evidence/wheeled-repeats-2026-10-15/mujoco_mecanum_seed3_nav_obstacle.json
+  sha256: b08b410890c601dc8b6317086e7612a632841cf7a469d2df94e3ff0b44381d2f
+  source_hashes: docs/status/evidence/wheeled-repeats-2026-10-15/source-hashes-371f724.json
+  source_hashes_sha256: 02b3606350567f05bc2c4d254718b20cc94842d99f2f45cf45a7bb2e149d2904
+  report_kind: mission_screen
+  scope: nav_obstacle mission per 4WS steering pattern and for the mecanum car, goal seeds 2 and 3; truth-measured
+    final poses and the measured drive configuration. Details in docs/status/evidence/wheeled-repeats-2026-10-15.
+  limitations:
+  - Goal seeds 2 and 3; seed 1 is the October 13 round
+- robot_id: four_wheel_steer_car
+  environment_id: nav_obstacle
+  simulator: mujoco
+  task_type: navigation_mission
+  steering_mode: pivot
+  date: '2026-10-15'
+  revision: 371f724 (round 35, from 21:53; later commits changed no drive, Nav2 or mission file)
+  report: docs/status/evidence/wheeled-repeats-2026-10-15/mujoco_pivot_seed2_nav_obstacle.json
+  sha256: 1fce9669257167bd4ec9334a702d18bfcafc00c528a45d550fe51b1a08140f2c
+  source_hashes: docs/status/evidence/wheeled-repeats-2026-10-15/source-hashes-371f724.json
+  source_hashes_sha256: 02b3606350567f05bc2c4d254718b20cc94842d99f2f45cf45a7bb2e149d2904
+  report_kind: mission_screen
+  scope: nav_obstacle mission per 4WS steering pattern and for the mecanum car, goal seeds 2 and 3; truth-measured
+    final poses and the measured drive configuration. Details in docs/status/evidence/wheeled-repeats-2026-10-15.
+  limitations:
+  - Goal seeds 2 and 3; seed 1 is the October 13 round
+- robot_id: four_wheel_steer_car
+  environment_id: nav_obstacle
+  simulator: mujoco
+  task_type: navigation_mission
+  steering_mode: pivot
+  date: '2026-10-15'
+  revision: 371f724 (round 35, from 21:53; later commits changed no drive, Nav2 or mission file)
+  report: docs/status/evidence/wheeled-repeats-2026-10-15/mujoco_pivot_seed3_nav_obstacle.json
+  sha256: 4d4a990e4f90d47ef78ca69b05747fa8d130653846d9285943c26cf0702cc3be
+  source_hashes: docs/status/evidence/wheeled-repeats-2026-10-15/source-hashes-371f724.json
+  source_hashes_sha256: 02b3606350567f05bc2c4d254718b20cc94842d99f2f45cf45a7bb2e149d2904
+  report_kind: mission_screen
+  scope: nav_obstacle mission per 4WS steering pattern and for the mecanum car, goal seeds 2 and 3; truth-measured
+    final poses and the measured drive configuration. Details in docs/status/evidence/wheeled-repeats-2026-10-15.
+  limitations:
+  - Goal seeds 2 and 3; seed 1 is the October 13 round
+- robot_id: four_wheel_steer_car
+  environment_id: nav_obstacle
+  simulator: pybullet
+  task_type: navigation_mission
+  steering_mode: ackermann
+  date: '2026-10-15'
+  revision: 371f724 (round 35, from 21:53; later commits changed no drive, Nav2 or mission file)
+  report: docs/status/evidence/wheeled-repeats-2026-10-15/pybullet_ackermann_seed2_nav_obstacle.json
+  sha256: 61c7a819244198d9150cc9af3744859aab9b0c958132cd2fa9e3a0812b23b3bb
+  source_hashes: docs/status/evidence/wheeled-repeats-2026-10-15/source-hashes-371f724.json
+  source_hashes_sha256: 02b3606350567f05bc2c4d254718b20cc94842d99f2f45cf45a7bb2e149d2904
+  report_kind: mission_screen
+  scope: nav_obstacle mission per 4WS steering pattern and for the mecanum car, goal seeds 2 and 3; truth-measured
+    final poses and the measured drive configuration. Details in docs/status/evidence/wheeled-repeats-2026-10-15.
+  limitations:
+  - Goal seeds 2 and 3; seed 1 is the October 13 round
+- robot_id: four_wheel_steer_car
+  environment_id: nav_obstacle
+  simulator: pybullet
+  task_type: navigation_mission
+  steering_mode: ackermann
+  date: '2026-10-15'
+  revision: 371f724 (round 35, from 21:53; later commits changed no drive, Nav2 or mission file)
+  report: docs/status/evidence/wheeled-repeats-2026-10-15/pybullet_ackermann_seed3_nav_obstacle.json
+  sha256: 5b6ea6ad1521c24c18dd9eb95955f3ddd34e499d59439146460a3eb63daa1c1a
+  source_hashes: docs/status/evidence/wheeled-repeats-2026-10-15/source-hashes-371f724.json
+  source_hashes_sha256: 02b3606350567f05bc2c4d254718b20cc94842d99f2f45cf45a7bb2e149d2904
+  report_kind: mission_screen
+  scope: nav_obstacle mission per 4WS steering pattern and for the mecanum car, goal seeds 2 and 3; truth-measured
+    final poses and the measured drive configuration. Details in docs/status/evidence/wheeled-repeats-2026-10-15.
+  limitations:
+  - Goal seeds 2 and 3; seed 1 is the October 13 round
+- robot_id: four_wheel_steer_car
+  environment_id: nav_obstacle
+  simulator: pybullet
+  task_type: navigation_mission
+  steering_mode: crab
+  date: '2026-10-15'
+  revision: 371f724 (round 35, from 21:53; later commits changed no drive, Nav2 or mission file)
+  report: docs/status/evidence/wheeled-repeats-2026-10-15/pybullet_crab_seed2_nav_obstacle.json
+  sha256: a345f34d9eb5873ae55a6d0cd2f48bf4ec38227a689502475ff51ee197c8d8ca
+  source_hashes: docs/status/evidence/wheeled-repeats-2026-10-15/source-hashes-371f724.json
+  source_hashes_sha256: 02b3606350567f05bc2c4d254718b20cc94842d99f2f45cf45a7bb2e149d2904
+  report_kind: mission_screen
+  scope: nav_obstacle mission per 4WS steering pattern and for the mecanum car, goal seeds 2 and 3; truth-measured
+    final poses and the measured drive configuration. Details in docs/status/evidence/wheeled-repeats-2026-10-15.
+  limitations:
+  - Goal seeds 2 and 3; seed 1 is the October 13 round
+- robot_id: four_wheel_steer_car
+  environment_id: nav_obstacle
+  simulator: pybullet
+  task_type: navigation_mission
+  steering_mode: crab
+  date: '2026-10-15'
+  revision: 371f724 (round 35, from 21:53; later commits changed no drive, Nav2 or mission file)
+  report: docs/status/evidence/wheeled-repeats-2026-10-15/pybullet_crab_seed3_nav_obstacle.json
+  sha256: 861225f703563b49a04d4a88916dd1f2927e1a4e11137455be9f7a656f7f005e
+  source_hashes: docs/status/evidence/wheeled-repeats-2026-10-15/source-hashes-371f724.json
+  source_hashes_sha256: 02b3606350567f05bc2c4d254718b20cc94842d99f2f45cf45a7bb2e149d2904
+  report_kind: mission_screen
+  scope: nav_obstacle mission per 4WS steering pattern and for the mecanum car, goal seeds 2 and 3; truth-measured
+    final poses and the measured drive configuration. Details in docs/status/evidence/wheeled-repeats-2026-10-15.
+  limitations:
+  - Goal seeds 2 and 3; seed 1 is the October 13 round
+- robot_id: four_wheel_steer_car
+  environment_id: nav_obstacle
+  simulator: pybullet
+  task_type: navigation_mission
+  steering_mode: in_phase
+  date: '2026-10-15'
+  revision: 371f724 (round 35, from 21:53; later commits changed no drive, Nav2 or mission file)
+  report: docs/status/evidence/wheeled-repeats-2026-10-15/pybullet_in_phase_seed2_nav_obstacle.json
+  sha256: 41f266bfbffa9639bb99a53d96dbb6a5734c628aae32d93f0fc9ae5af22999a4
+  source_hashes: docs/status/evidence/wheeled-repeats-2026-10-15/source-hashes-371f724.json
+  source_hashes_sha256: 02b3606350567f05bc2c4d254718b20cc94842d99f2f45cf45a7bb2e149d2904
+  report_kind: mission_screen
+  scope: nav_obstacle mission per 4WS steering pattern and for the mecanum car, goal seeds 2 and 3; truth-measured
+    final poses and the measured drive configuration. Details in docs/status/evidence/wheeled-repeats-2026-10-15.
+  limitations:
+  - Goal seeds 2 and 3; seed 1 is the October 13 round
+- robot_id: four_wheel_steer_car
+  environment_id: nav_obstacle
+  simulator: pybullet
+  task_type: navigation_mission
+  steering_mode: in_phase
+  date: '2026-10-15'
+  revision: 371f724 (round 35, from 21:53; later commits changed no drive, Nav2 or mission file)
+  report: docs/status/evidence/wheeled-repeats-2026-10-15/pybullet_in_phase_seed3_nav_obstacle.json
+  sha256: a4a5bc5699b1bfecf1021651cda467af2738fc429e2190a16ad7f39d891227c5
+  source_hashes: docs/status/evidence/wheeled-repeats-2026-10-15/source-hashes-371f724.json
+  source_hashes_sha256: 02b3606350567f05bc2c4d254718b20cc94842d99f2f45cf45a7bb2e149d2904
+  report_kind: mission_screen
+  scope: nav_obstacle mission per 4WS steering pattern and for the mecanum car, goal seeds 2 and 3; truth-measured
+    final poses and the measured drive configuration. Details in docs/status/evidence/wheeled-repeats-2026-10-15.
+  limitations:
+  - Goal seeds 2 and 3; seed 1 is the October 13 round
+- robot_id: mecanum_car
+  environment_id: nav_obstacle
+  simulator: pybullet
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-10-15'
+  revision: 371f724 (round 35, from 21:53; later commits changed no drive, Nav2 or mission file)
+  report: docs/status/evidence/wheeled-repeats-2026-10-15/pybullet_mecanum_seed2_nav_obstacle.json
+  sha256: 2bfe238e5e415a35c674f16d36f0118896daeb2678c70e845a51fdc6473a441b
+  source_hashes: docs/status/evidence/wheeled-repeats-2026-10-15/source-hashes-371f724.json
+  source_hashes_sha256: 02b3606350567f05bc2c4d254718b20cc94842d99f2f45cf45a7bb2e149d2904
+  report_kind: mission_screen
+  scope: nav_obstacle mission per 4WS steering pattern and for the mecanum car, goal seeds 2 and 3; truth-measured
+    final poses and the measured drive configuration. Details in docs/status/evidence/wheeled-repeats-2026-10-15.
+  limitations:
+  - Goal seeds 2 and 3; seed 1 is the October 13 round
+- robot_id: mecanum_car
+  environment_id: nav_obstacle
+  simulator: pybullet
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-10-15'
+  revision: 371f724 (round 35, from 21:53; later commits changed no drive, Nav2 or mission file)
+  report: docs/status/evidence/wheeled-repeats-2026-10-15/pybullet_mecanum_seed3_nav_obstacle.json
+  sha256: d97d98f098a0586cb74d2c2a52e5ae7351b46a90cd856787d96691419f5498c5
+  source_hashes: docs/status/evidence/wheeled-repeats-2026-10-15/source-hashes-371f724.json
+  source_hashes_sha256: 02b3606350567f05bc2c4d254718b20cc94842d99f2f45cf45a7bb2e149d2904
+  report_kind: mission_screen
+  scope: nav_obstacle mission per 4WS steering pattern and for the mecanum car, goal seeds 2 and 3; truth-measured
+    final poses and the measured drive configuration. Details in docs/status/evidence/wheeled-repeats-2026-10-15.
+  limitations:
+  - Goal seeds 2 and 3; seed 1 is the October 13 round
+- robot_id: four_wheel_steer_car
+  environment_id: nav_obstacle
+  simulator: pybullet
+  task_type: navigation_mission
+  steering_mode: pivot
+  date: '2026-10-15'
+  revision: 371f724 (round 35, from 21:53; later commits changed no drive, Nav2 or mission file)
+  report: docs/status/evidence/wheeled-repeats-2026-10-15/pybullet_pivot_seed2_nav_obstacle.json
+  sha256: e94239b814a17237db47ff5f521292b5df6289006ae362596b5c0dcea1e194f7
+  source_hashes: docs/status/evidence/wheeled-repeats-2026-10-15/source-hashes-371f724.json
+  source_hashes_sha256: 02b3606350567f05bc2c4d254718b20cc94842d99f2f45cf45a7bb2e149d2904
+  report_kind: mission_screen
+  scope: nav_obstacle mission per 4WS steering pattern and for the mecanum car, goal seeds 2 and 3; truth-measured
+    final poses and the measured drive configuration. Details in docs/status/evidence/wheeled-repeats-2026-10-15.
+  limitations:
+  - Goal seeds 2 and 3; seed 1 is the October 13 round
+- robot_id: four_wheel_steer_car
+  environment_id: nav_obstacle
+  simulator: pybullet
+  task_type: navigation_mission
+  steering_mode: pivot
+  date: '2026-10-15'
+  revision: 371f724 (round 35, from 21:53; later commits changed no drive, Nav2 or mission file)
+  report: docs/status/evidence/wheeled-repeats-2026-10-15/pybullet_pivot_seed3_nav_obstacle.json
+  sha256: c8503a5265fb1642eaa9f3c9a29878340af7f497944b3b3b9dc6f7026eeb6881
+  source_hashes: docs/status/evidence/wheeled-repeats-2026-10-15/source-hashes-371f724.json
+  source_hashes_sha256: 02b3606350567f05bc2c4d254718b20cc94842d99f2f45cf45a7bb2e149d2904
+  report_kind: mission_screen
+  scope: nav_obstacle mission per 4WS steering pattern and for the mecanum car, goal seeds 2 and 3; truth-measured
+    final poses and the measured drive configuration. Details in docs/status/evidence/wheeled-repeats-2026-10-15.
+  limitations:
+  - Goal seeds 2 and 3; seed 1 is the October 13 round
+- robot_id: ackermann_car
+  environment_id: nav_obstacle
+  simulator: gazebo
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-10-15'
+  revision: 371f724 (round 35, from 21:53; later commits changed no drive, Nav2 or mission file)
+  report: docs/status/evidence/wheeled-repeats-2026-10-15/gazebo_ackermann_car_seed2_nav_obstacle.json
+  sha256: 7f7ee56dab9fbf5844e801eae53ef71f30cccaee445dc5fe4d425faabd86ff99
+  source_hashes: docs/status/evidence/wheeled-repeats-2026-10-15/source-hashes-371f724-d2ed68a7.json
+  source_hashes_sha256: d2ed68a790dfa722edd2f1f8b16d791ee300dd858805ada4b0cd9a20373ac51a
+  report_kind: mission_screen
+  scope: nav_obstacle car mission (detour, cancel, resume, near-obstacle goal), goal seeds 2 and 3; truth-measured
+    final poses. Details in docs/status/evidence/wheeled-repeats-2026-10-15.
+  limitations:
+  - Goal seeds 2 and 3; seed 1 is the October 13 round
+- robot_id: ackermann_car
+  environment_id: nav_obstacle
+  simulator: gazebo
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-10-15'
+  revision: 371f724 (round 35, from 21:53; later commits changed no drive, Nav2 or mission file)
+  report: docs/status/evidence/wheeled-repeats-2026-10-15/gazebo_ackermann_car_seed3_nav_obstacle.json
+  sha256: 31f9128930dbabb821de6b4523d585f431262d7680ca6a2288d126849c66e313
+  source_hashes: docs/status/evidence/wheeled-repeats-2026-10-15/source-hashes-371f724-d2ed68a7.json
+  source_hashes_sha256: d2ed68a790dfa722edd2f1f8b16d791ee300dd858805ada4b0cd9a20373ac51a
+  report_kind: mission_screen
+  scope: nav_obstacle car mission (detour, cancel, resume, near-obstacle goal), goal seeds 2 and 3; truth-measured
+    final poses. Details in docs/status/evidence/wheeled-repeats-2026-10-15.
+  limitations:
+  - Goal seeds 2 and 3; seed 1 is the October 13 round
+- robot_id: anti_ackermann_car
+  environment_id: nav_obstacle
+  simulator: gazebo
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-10-15'
+  revision: 371f724 (round 35, from 21:53; later commits changed no drive, Nav2 or mission file)
+  report: docs/status/evidence/wheeled-repeats-2026-10-15/gazebo_anti_ackermann_car_seed2_nav_obstacle.json
+  sha256: 7e9bd1f0277c51174afb5082a2977ba2c49c93e234ac5e66249373c0346b1d74
+  source_hashes: docs/status/evidence/wheeled-repeats-2026-10-15/source-hashes-371f724-d2ed68a7.json
+  source_hashes_sha256: d2ed68a790dfa722edd2f1f8b16d791ee300dd858805ada4b0cd9a20373ac51a
+  report_kind: mission_screen
+  scope: nav_obstacle car mission (detour, cancel, resume, near-obstacle goal), goal seeds 2 and 3; truth-measured
+    final poses. Details in docs/status/evidence/wheeled-repeats-2026-10-15.
+  limitations:
+  - Goal seeds 2 and 3; seed 1 is the October 13 round
+- robot_id: anti_ackermann_car
+  environment_id: nav_obstacle
+  simulator: gazebo
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-10-15'
+  revision: 371f724 (round 35, from 21:53; later commits changed no drive, Nav2 or mission file)
+  report: docs/status/evidence/wheeled-repeats-2026-10-15/gazebo_anti_ackermann_car_seed3_nav_obstacle.json
+  sha256: 9bebabd4ad6b645fd1c1e2fbdfa933b806c53b0b8811a28301e3b8c2896910e0
+  source_hashes: docs/status/evidence/wheeled-repeats-2026-10-15/source-hashes-371f724-d2ed68a7.json
+  source_hashes_sha256: d2ed68a790dfa722edd2f1f8b16d791ee300dd858805ada4b0cd9a20373ac51a
+  report_kind: mission_screen
+  scope: nav_obstacle car mission (detour, cancel, resume, near-obstacle goal), goal seeds 2 and 3; truth-measured
+    final poses. Details in docs/status/evidence/wheeled-repeats-2026-10-15.
+  limitations:
+  - Goal seeds 2 and 3; seed 1 is the October 13 round
+- robot_id: rear_steer_car
+  environment_id: nav_obstacle
+  simulator: gazebo
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-10-15'
+  revision: 371f724 (round 35, from 21:53; later commits changed no drive, Nav2 or mission file)
+  report: docs/status/evidence/wheeled-repeats-2026-10-15/gazebo_rear_steer_car_seed2_nav_obstacle.json
+  sha256: 97c31186f89b0e8f8ca2bc1e4449f26afee11ecaedefaa3fff276f821dfa1b1c
+  source_hashes: docs/status/evidence/wheeled-repeats-2026-10-15/source-hashes-371f724-d2ed68a7.json
+  source_hashes_sha256: d2ed68a790dfa722edd2f1f8b16d791ee300dd858805ada4b0cd9a20373ac51a
+  report_kind: mission_screen
+  scope: nav_obstacle car mission (detour, cancel, resume, near-obstacle goal), goal seeds 2 and 3; truth-measured
+    final poses. Details in docs/status/evidence/wheeled-repeats-2026-10-15.
+  limitations:
+  - Goal seeds 2 and 3; seed 1 is the October 13 round
+- robot_id: rear_steer_car
+  environment_id: nav_obstacle
+  simulator: gazebo
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-10-15'
+  revision: 371f724 (round 35, from 21:53; later commits changed no drive, Nav2 or mission file)
+  report: docs/status/evidence/wheeled-repeats-2026-10-15/gazebo_rear_steer_car_seed3_nav_obstacle.json
+  sha256: 7ea9929a8d7e2f10ce576cbd9a3b63c747784ff997cdbb9b41a98c44c273e9d1
+  source_hashes: docs/status/evidence/wheeled-repeats-2026-10-15/source-hashes-371f724-d2ed68a7.json
+  source_hashes_sha256: d2ed68a790dfa722edd2f1f8b16d791ee300dd858805ada4b0cd9a20373ac51a
+  report_kind: mission_screen
+  scope: nav_obstacle car mission (detour, cancel, resume, near-obstacle goal), goal seeds 2 and 3; truth-measured
+    final poses. Details in docs/status/evidence/wheeled-repeats-2026-10-15.
+  limitations:
+  - Goal seeds 2 and 3; seed 1 is the October 13 round
+- robot_id: ackermann_car
+  environment_id: nav_obstacle
+  simulator: isaac
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-10-15'
+  revision: 371f724 (round 35, from 21:53; later commits changed no drive, Nav2 or mission file)
+  report: docs/status/evidence/wheeled-repeats-2026-10-15/isaac_ackermann_car_seed2_nav_obstacle.json
+  sha256: 9508a950e39cb11c3605fac9a7853dc3914bb8e2a16081ddd8c1c1ec8f4ab1e0
+  source_hashes: docs/status/evidence/wheeled-repeats-2026-10-15/source-hashes-371f724-d2ed68a7.json
+  source_hashes_sha256: d2ed68a790dfa722edd2f1f8b16d791ee300dd858805ada4b0cd9a20373ac51a
+  report_kind: mission_screen
+  scope: nav_obstacle car mission (detour, cancel, resume, near-obstacle goal), goal seeds 2 and 3; truth-measured
+    final poses. Details in docs/status/evidence/wheeled-repeats-2026-10-15.
+  limitations:
+  - Goal seeds 2 and 3; seed 1 is the October 13 round
+- robot_id: ackermann_car
+  environment_id: nav_obstacle
+  simulator: isaac
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-10-15'
+  revision: 371f724 (round 35, from 21:53; later commits changed no drive, Nav2 or mission file)
+  report: docs/status/evidence/wheeled-repeats-2026-10-15/isaac_ackermann_car_seed3_nav_obstacle.json
+  sha256: ee271ea6a8acf1be0126949d10cbb0b1687f57fd2d40d42d66d4e1af7028848a
+  source_hashes: docs/status/evidence/wheeled-repeats-2026-10-15/source-hashes-371f724-d2ed68a7.json
+  source_hashes_sha256: d2ed68a790dfa722edd2f1f8b16d791ee300dd858805ada4b0cd9a20373ac51a
+  report_kind: mission_screen
+  scope: nav_obstacle car mission (detour, cancel, resume, near-obstacle goal), goal seeds 2 and 3; truth-measured
+    final poses. Details in docs/status/evidence/wheeled-repeats-2026-10-15.
+  limitations:
+  - Goal seeds 2 and 3; seed 1 is the October 13 round
+- robot_id: anti_ackermann_car
+  environment_id: nav_obstacle
+  simulator: isaac
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-10-15'
+  revision: 371f724 (round 35, from 21:53; later commits changed no drive, Nav2 or mission file)
+  report: docs/status/evidence/wheeled-repeats-2026-10-15/isaac_anti_ackermann_car_seed2_nav_obstacle.json
+  sha256: 8637b020fb5bd40931d878c31cb7c41c1b82a7096241e7ca275e400c971fefd5
+  source_hashes: docs/status/evidence/wheeled-repeats-2026-10-15/source-hashes-371f724-d2ed68a7.json
+  source_hashes_sha256: d2ed68a790dfa722edd2f1f8b16d791ee300dd858805ada4b0cd9a20373ac51a
+  report_kind: mission_screen
+  scope: nav_obstacle car mission (detour, cancel, resume, near-obstacle goal), goal seeds 2 and 3; truth-measured
+    final poses. Details in docs/status/evidence/wheeled-repeats-2026-10-15.
+  limitations:
+  - Goal seeds 2 and 3; seed 1 is the October 13 round
+- robot_id: anti_ackermann_car
+  environment_id: nav_obstacle
+  simulator: isaac
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-10-15'
+  revision: 371f724 (round 35, from 21:53; later commits changed no drive, Nav2 or mission file)
+  report: docs/status/evidence/wheeled-repeats-2026-10-15/isaac_anti_ackermann_car_seed3_nav_obstacle.json
+  sha256: 1c868d71fc1b6759921b438b735499426caba8364c1908fed2914fc5c67244d6
+  source_hashes: docs/status/evidence/wheeled-repeats-2026-10-15/source-hashes-371f724-d2ed68a7.json
+  source_hashes_sha256: d2ed68a790dfa722edd2f1f8b16d791ee300dd858805ada4b0cd9a20373ac51a
+  report_kind: mission_screen
+  scope: nav_obstacle car mission (detour, cancel, resume, near-obstacle goal), goal seeds 2 and 3; truth-measured
+    final poses. Details in docs/status/evidence/wheeled-repeats-2026-10-15.
+  limitations:
+  - Goal seeds 2 and 3; seed 1 is the October 13 round
+- robot_id: rear_steer_car
+  environment_id: nav_obstacle
+  simulator: isaac
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-10-15'
+  revision: 371f724 (round 35, from 21:53; later commits changed no drive, Nav2 or mission file)
+  report: docs/status/evidence/wheeled-repeats-2026-10-15/isaac_rear_steer_car_seed2_nav_obstacle.json
+  sha256: 6f4f9817ea8d3bd1146b2c1b83f445cd972186d9dcd8ce8700d288f56a96e1d5
+  source_hashes: docs/status/evidence/wheeled-repeats-2026-10-15/source-hashes-371f724-d2ed68a7.json
+  source_hashes_sha256: d2ed68a790dfa722edd2f1f8b16d791ee300dd858805ada4b0cd9a20373ac51a
+  report_kind: mission_screen
+  scope: nav_obstacle car mission (detour, cancel, resume, near-obstacle goal), goal seeds 2 and 3; truth-measured
+    final poses. Details in docs/status/evidence/wheeled-repeats-2026-10-15.
+  limitations:
+  - Goal seeds 2 and 3; seed 1 is the October 13 round
+- robot_id: rear_steer_car
+  environment_id: nav_obstacle
+  simulator: isaac
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-10-15'
+  revision: 371f724 (round 35, from 21:53; later commits changed no drive, Nav2 or mission file)
+  report: docs/status/evidence/wheeled-repeats-2026-10-15/isaac_rear_steer_car_seed3_nav_obstacle.json
+  sha256: 0422c66da29e4f21097c75141f400ec79109dad57ce8cabdb866727d156cf3b2
+  source_hashes: docs/status/evidence/wheeled-repeats-2026-10-15/source-hashes-371f724-d2ed68a7.json
+  source_hashes_sha256: d2ed68a790dfa722edd2f1f8b16d791ee300dd858805ada4b0cd9a20373ac51a
+  report_kind: mission_screen
+  scope: nav_obstacle car mission (detour, cancel, resume, near-obstacle goal), goal seeds 2 and 3; truth-measured
+    final poses. Details in docs/status/evidence/wheeled-repeats-2026-10-15.
+  limitations:
+  - Goal seeds 2 and 3; seed 1 is the October 13 round
+- robot_id: ackermann_car
+  environment_id: nav_obstacle
+  simulator: mujoco
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-10-15'
+  revision: 371f724 (round 35, from 21:53; later commits changed no drive, Nav2 or mission file)
+  report: docs/status/evidence/wheeled-repeats-2026-10-15/mujoco_ackermann_car_seed2_nav_obstacle.json
+  sha256: d5cb352332f62bec088eeb097ffe5a3e1e56c34a82720dfcbe9bcffbef22457b
+  source_hashes: docs/status/evidence/wheeled-repeats-2026-10-15/source-hashes-371f724-d2ed68a7.json
+  source_hashes_sha256: d2ed68a790dfa722edd2f1f8b16d791ee300dd858805ada4b0cd9a20373ac51a
+  report_kind: mission_screen
+  scope: nav_obstacle car mission (detour, cancel, resume, near-obstacle goal), goal seeds 2 and 3; truth-measured
+    final poses. Details in docs/status/evidence/wheeled-repeats-2026-10-15.
+  limitations:
+  - Goal seeds 2 and 3; seed 1 is the October 13 round
+- robot_id: ackermann_car
+  environment_id: nav_obstacle
+  simulator: mujoco
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-10-15'
+  revision: 371f724 (round 35, from 21:53; later commits changed no drive, Nav2 or mission file)
+  report: docs/status/evidence/wheeled-repeats-2026-10-15/mujoco_ackermann_car_seed3_nav_obstacle.json
+  sha256: 9c5a94b9d797c0e21059dcd77fbb6146b65d4002a05114ad3eed358dc7b4782b
+  source_hashes: docs/status/evidence/wheeled-repeats-2026-10-15/source-hashes-371f724-d2ed68a7.json
+  source_hashes_sha256: d2ed68a790dfa722edd2f1f8b16d791ee300dd858805ada4b0cd9a20373ac51a
+  report_kind: mission_screen
+  scope: nav_obstacle car mission (detour, cancel, resume, near-obstacle goal), goal seeds 2 and 3; truth-measured
+    final poses. Details in docs/status/evidence/wheeled-repeats-2026-10-15.
+  limitations:
+  - Goal seeds 2 and 3; seed 1 is the October 13 round
+- robot_id: anti_ackermann_car
+  environment_id: nav_obstacle
+  simulator: mujoco
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-10-15'
+  revision: 371f724 (round 35, from 21:53; later commits changed no drive, Nav2 or mission file)
+  report: docs/status/evidence/wheeled-repeats-2026-10-15/mujoco_anti_ackermann_car_seed2_nav_obstacle.json
+  sha256: e710ce2e229346f804a1f090b8ba87f9a307934cc629b8542dd95b1e2047e7d1
+  source_hashes: docs/status/evidence/wheeled-repeats-2026-10-15/source-hashes-371f724-d2ed68a7.json
+  source_hashes_sha256: d2ed68a790dfa722edd2f1f8b16d791ee300dd858805ada4b0cd9a20373ac51a
+  report_kind: mission_screen
+  scope: nav_obstacle car mission (detour, cancel, resume, near-obstacle goal), goal seeds 2 and 3; truth-measured
+    final poses. Details in docs/status/evidence/wheeled-repeats-2026-10-15.
+  limitations:
+  - Goal seeds 2 and 3; seed 1 is the October 13 round
+- robot_id: anti_ackermann_car
+  environment_id: nav_obstacle
+  simulator: mujoco
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-10-15'
+  revision: 371f724 (round 35, from 21:53; later commits changed no drive, Nav2 or mission file)
+  report: docs/status/evidence/wheeled-repeats-2026-10-15/mujoco_anti_ackermann_car_seed3_nav_obstacle.json
+  sha256: 2f626635d913bd9ba90be9317fc83fc9990d04ff52a786dd9b49aa7a217fdd47
+  source_hashes: docs/status/evidence/wheeled-repeats-2026-10-15/source-hashes-371f724-d2ed68a7.json
+  source_hashes_sha256: d2ed68a790dfa722edd2f1f8b16d791ee300dd858805ada4b0cd9a20373ac51a
+  report_kind: mission_screen
+  scope: nav_obstacle car mission (detour, cancel, resume, near-obstacle goal), goal seeds 2 and 3; truth-measured
+    final poses. Details in docs/status/evidence/wheeled-repeats-2026-10-15.
+  limitations:
+  - Goal seeds 2 and 3; seed 1 is the October 13 round
+- robot_id: rear_steer_car
+  environment_id: nav_obstacle
+  simulator: mujoco
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-10-15'
+  revision: 371f724 (round 35, from 21:53; later commits changed no drive, Nav2 or mission file)
+  report: docs/status/evidence/wheeled-repeats-2026-10-15/mujoco_rear_steer_car_seed2_nav_obstacle.json
+  sha256: 45c1594a3d108ef6bc4e7377d81b64cfe3a2e75dcb828bb4cf9df08d95b0e0e4
+  source_hashes: docs/status/evidence/wheeled-repeats-2026-10-15/source-hashes-371f724-d2ed68a7.json
+  source_hashes_sha256: d2ed68a790dfa722edd2f1f8b16d791ee300dd858805ada4b0cd9a20373ac51a
+  report_kind: mission_screen
+  scope: nav_obstacle car mission (detour, cancel, resume, near-obstacle goal), goal seeds 2 and 3; truth-measured
+    final poses. Details in docs/status/evidence/wheeled-repeats-2026-10-15.
+  limitations:
+  - Goal seeds 2 and 3; seed 1 is the October 13 round
+- robot_id: rear_steer_car
+  environment_id: nav_obstacle
+  simulator: mujoco
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-10-15'
+  revision: 371f724 (round 35, from 21:53; later commits changed no drive, Nav2 or mission file)
+  report: docs/status/evidence/wheeled-repeats-2026-10-15/mujoco_rear_steer_car_seed3_nav_obstacle.json
+  sha256: 9414ccc1a8eaac96d1b6be2ec7b0c70173d374598d52114abed1ed7d23adb0d3
+  source_hashes: docs/status/evidence/wheeled-repeats-2026-10-15/source-hashes-371f724-d2ed68a7.json
+  source_hashes_sha256: d2ed68a790dfa722edd2f1f8b16d791ee300dd858805ada4b0cd9a20373ac51a
+  report_kind: mission_screen
+  scope: nav_obstacle car mission (detour, cancel, resume, near-obstacle goal), goal seeds 2 and 3; truth-measured
+    final poses. Details in docs/status/evidence/wheeled-repeats-2026-10-15.
+  limitations:
+  - Goal seeds 2 and 3; seed 1 is the October 13 round
+- robot_id: ackermann_car
+  environment_id: nav_obstacle
+  simulator: pybullet
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-10-15'
+  revision: 371f724 (round 35, from 21:53; later commits changed no drive, Nav2 or mission file)
+  report: docs/status/evidence/wheeled-repeats-2026-10-15/pybullet_ackermann_car_seed2_nav_obstacle.json
+  sha256: 616913a65bbf7eb7be327d426b504429318187ed1e09e5ba0b7a1ecafe19b797
+  source_hashes: docs/status/evidence/wheeled-repeats-2026-10-15/source-hashes-371f724-d2ed68a7.json
+  source_hashes_sha256: d2ed68a790dfa722edd2f1f8b16d791ee300dd858805ada4b0cd9a20373ac51a
+  report_kind: mission_screen
+  scope: nav_obstacle car mission (detour, cancel, resume, near-obstacle goal), goal seeds 2 and 3; truth-measured
+    final poses. Details in docs/status/evidence/wheeled-repeats-2026-10-15.
+  limitations:
+  - Goal seeds 2 and 3; seed 1 is the October 13 round
+- robot_id: ackermann_car
+  environment_id: nav_obstacle
+  simulator: pybullet
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-10-15'
+  revision: 371f724 (round 35, from 21:53; later commits changed no drive, Nav2 or mission file)
+  report: docs/status/evidence/wheeled-repeats-2026-10-15/pybullet_ackermann_car_seed3_nav_obstacle.json
+  sha256: 430c2952e489d7a8a176cb06e1eda7cfa498901063d0b830053b7789b0546298
+  source_hashes: docs/status/evidence/wheeled-repeats-2026-10-15/source-hashes-371f724-d2ed68a7.json
+  source_hashes_sha256: d2ed68a790dfa722edd2f1f8b16d791ee300dd858805ada4b0cd9a20373ac51a
+  report_kind: mission_screen
+  scope: nav_obstacle car mission (detour, cancel, resume, near-obstacle goal), goal seeds 2 and 3; truth-measured
+    final poses. Details in docs/status/evidence/wheeled-repeats-2026-10-15.
+  limitations:
+  - Goal seeds 2 and 3; seed 1 is the October 13 round
+- robot_id: anti_ackermann_car
+  environment_id: nav_obstacle
+  simulator: pybullet
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-10-15'
+  revision: 371f724 (round 35, from 21:53; later commits changed no drive, Nav2 or mission file)
+  report: docs/status/evidence/wheeled-repeats-2026-10-15/pybullet_anti_ackermann_car_seed2_nav_obstacle.json
+  sha256: e3e3150afd4f86fe82e3a067db049db9ed91b3e84b80e8d20cffd24a7d11d17b
+  source_hashes: docs/status/evidence/wheeled-repeats-2026-10-15/source-hashes-371f724-d2ed68a7.json
+  source_hashes_sha256: d2ed68a790dfa722edd2f1f8b16d791ee300dd858805ada4b0cd9a20373ac51a
+  report_kind: mission_screen
+  scope: nav_obstacle car mission (detour, cancel, resume, near-obstacle goal), goal seeds 2 and 3; truth-measured
+    final poses. Details in docs/status/evidence/wheeled-repeats-2026-10-15.
+  limitations:
+  - Goal seeds 2 and 3; seed 1 is the October 13 round
+- robot_id: anti_ackermann_car
+  environment_id: nav_obstacle
+  simulator: pybullet
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-10-15'
+  revision: 371f724 (round 35, from 21:53; later commits changed no drive, Nav2 or mission file)
+  report: docs/status/evidence/wheeled-repeats-2026-10-15/pybullet_anti_ackermann_car_seed3_nav_obstacle.json
+  sha256: e1122795d56bdffa9a114cb20c9ed9cf1dc23f4802f133224604c501d00366b5
+  source_hashes: docs/status/evidence/wheeled-repeats-2026-10-15/source-hashes-371f724-d2ed68a7.json
+  source_hashes_sha256: d2ed68a790dfa722edd2f1f8b16d791ee300dd858805ada4b0cd9a20373ac51a
+  report_kind: mission_screen
+  scope: nav_obstacle car mission (detour, cancel, resume, near-obstacle goal), goal seeds 2 and 3; truth-measured
+    final poses. Details in docs/status/evidence/wheeled-repeats-2026-10-15.
+  limitations:
+  - Goal seeds 2 and 3; seed 1 is the October 13 round
+- robot_id: rear_steer_car
+  environment_id: nav_obstacle
+  simulator: pybullet
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-10-15'
+  revision: 371f724 (round 35, from 21:53; later commits changed no drive, Nav2 or mission file)
+  report: docs/status/evidence/wheeled-repeats-2026-10-15/pybullet_rear_steer_car_seed2_nav_obstacle.json
+  sha256: 923fffca7cd8b43603f2157c8f044168f4144bc8f9a69f19922f05f14ca0a7ea
+  source_hashes: docs/status/evidence/wheeled-repeats-2026-10-15/source-hashes-371f724-d2ed68a7.json
+  source_hashes_sha256: d2ed68a790dfa722edd2f1f8b16d791ee300dd858805ada4b0cd9a20373ac51a
+  report_kind: mission_screen
+  scope: nav_obstacle car mission (detour, cancel, resume, near-obstacle goal), goal seeds 2 and 3; truth-measured
+    final poses. Details in docs/status/evidence/wheeled-repeats-2026-10-15.
+  limitations:
+  - Goal seeds 2 and 3; seed 1 is the October 13 round
+- robot_id: rear_steer_car
+  environment_id: nav_obstacle
+  simulator: pybullet
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-10-15'
+  revision: 371f724 (round 35, from 21:53; later commits changed no drive, Nav2 or mission file)
+  report: docs/status/evidence/wheeled-repeats-2026-10-15/pybullet_rear_steer_car_seed3_nav_obstacle.json
+  sha256: c0232df3791085cdd0cecd05fa4177e2ac64f298dbc644d3e32bc90d7665f61f
+  source_hashes: docs/status/evidence/wheeled-repeats-2026-10-15/source-hashes-371f724-d2ed68a7.json
+  source_hashes_sha256: d2ed68a790dfa722edd2f1f8b16d791ee300dd858805ada4b0cd9a20373ac51a
+  report_kind: mission_screen
+  scope: nav_obstacle car mission (detour, cancel, resume, near-obstacle goal), goal seeds 2 and 3; truth-measured
+    final poses. Details in docs/status/evidence/wheeled-repeats-2026-10-15.
+  limitations:
+  - Goal seeds 2 and 3; seed 1 is the October 13 round

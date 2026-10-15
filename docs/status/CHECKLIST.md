@@ -282,6 +282,10 @@ code delivery, not a passed mission or universal support.
   mapping on wheel odometry holds 1.1-2.5 cm for the mecanum car in all four
   backends and the 4WS ackermann/pivot patterns in MuJoCo and Gazebo
   ([evidence](evidence/p7-legged-slam-mapping-2026-10-13/README.md)).
+  Over goal seeds 2 and 3 (2026-10-15), 4WS ackermann, pivot and the
+  mecanum car pass 24/24, but crab and in_phase abort goal B in all 16 runs
+  and the cars pass 13/24, missing goal B by 0.26-0.36 m
+  ([evidence](evidence/wheeled-repeats-2026-10-15/README.md)).
   Driven sideways at a fixed heading (`--holonomic`), the 4WS crab and
   in_phase patterns hold 0.9-1.7 cm in MuJoCo and Gazebo. The strafing
   mecanum car holds 2.4 cm in MuJoCo and 11 cm in Gazebo, where its rollers
@@ -403,8 +407,8 @@ code delivery, not a passed mission or universal support.
     hardware and Gazebo/Isaac/PX4 in the clean host remain.
 - [ ] **R9.3:** Regenerate the release matrix as those tasks pass. The current
   matrix intentionally remains partial with full-release gates blocked.
-  Regenerated 2026-10-15 with the October 13-15 missions: 251 measured cells
-  (243 passed, 7 failed screens)
+  Regenerated 2026-10-15 with the October 13-15 missions and the wheeled
+  seed 2/3 repeats: 251 measured cells (227 passed, 23 failed screens)
   ([evidence](evidence/support-matrix-2026-10-15/README.md)).
 - [ ] **R9.4, optional hardware:** Arrange the actual robot, supervised setup
   and explicit hardware-operation authorization. Simulation work is separate.

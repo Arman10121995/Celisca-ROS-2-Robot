@@ -86,6 +86,9 @@ def main():
                               'run; uncommitted working-tree changes at run time are not captured',
                    'files': {f: git_sha256(group['hash_revision'], f) for f in files}}
         text = json.dumps(content, indent=1) + '\n'
+        if os.path.exists(manifest) and open(manifest).read() != text:
+            # Another group of the same folder and revision hashed other files.
+            manifest = manifest[:-len('.json')] + '-%s.json' % hashlib.sha256(text.encode()).hexdigest()[:8]
         with open(manifest, 'w') as handle:
             handle.write(text)
         for report in reports:
@@ -108,6 +111,9 @@ def main():
                 'limitations': list(group['limitations'])})
             known.add(relative)
             added += 1
+    if not new_records:
+        print('nothing new to index; index unchanged (%d records)' % len(index['records']))
+        return
     # Append as text: the existing records keep their bytes.
     class NoAliases(yaml.SafeDumper):
         def ignore_aliases(self, data):

@@ -1,0 +1,56 @@
+# Seed 2 and 3 repeats of the wheeled nav_obstacle missions (round 35),
+# indexed by scripts/r9_3_index_missions.py after the seed-1 rounds.
+date: '2026-10-15'
+scope: "Exact hashed named simulation screens through October 15; unlisted cells remain untested."
+source_files:
+  - scripts/sim_nav_mission.py
+  - scripts/sim_nav_mission.sh
+  - scripts/gazebo_isolation.sh
+  - src/robot_lab_bringup/launch/simulated_robot.launch.py
+  - src/robot_lab_bringup/config/sim_maps.yaml
+  - src/robot_lab_navigation/launch/navigation.launch.py
+  - src/robot_lab_navigation/config/controller_server.yaml
+  - src/robot_lab_navigation/config/planner_server.yaml
+  - src/robot_lab_robots/config/robots.yaml
+  - src/robot_lab_mujoco/python/robot_lab_mujoco/mujoco_spawner.py
+  - src/robot_lab_pybullet/python/robot_lab_pybullet/pybullet_spawner.py
+  - src/robot_lab_isaac/python/robot_lab_isaac/isaac_runtime.py
+  - src/robot_lab_isaac/python/robot_lab_isaac/isaac_spawner.py
+  - src/robot_lab_utils/robot_lab_utils/drive_kinematics.py
+groups:
+  - reports:
+      - docs/status/evidence/wheeled-repeats-2026-10-15/*_ackermann_seed*_nav_obstacle.json
+      - docs/status/evidence/wheeled-repeats-2026-10-15/*_in_phase_seed*_nav_obstacle.json
+      - docs/status/evidence/wheeled-repeats-2026-10-15/*_crab_seed*_nav_obstacle.json
+      - docs/status/evidence/wheeled-repeats-2026-10-15/*_pivot_seed*_nav_obstacle.json
+      - docs/status/evidence/wheeled-repeats-2026-10-15/*_mecanum_seed*_nav_obstacle.json
+    four_wheel: true
+    date: '2026-10-15'
+    revision: "371f724 (round 35, from 21:53; later commits changed no drive, Nav2 or mission file)"
+    hash_revision: 371f724
+    source_files:
+      - src/robot_lab_navigation/config/robots/four_wheel_steer_car.yaml
+      - src/robot_lab_navigation/config/robots/mecanum_car.yaml
+    scope: >-
+      nav_obstacle mission per 4WS steering pattern and for the mecanum car,
+      goal seeds 2 and 3; truth-measured final poses and the measured drive
+      configuration. Details in docs/status/evidence/wheeled-repeats-2026-10-15.
+    limitations:
+      - Goal seeds 2 and 3; seed 1 is the October 13 round
+  - reports:
+      - docs/status/evidence/wheeled-repeats-2026-10-15/*_ackermann_car_seed*_nav_obstacle.json
+      - docs/status/evidence/wheeled-repeats-2026-10-15/*_rear_steer_car_seed*_nav_obstacle.json
+      - docs/status/evidence/wheeled-repeats-2026-10-15/*_anti_ackermann_car_seed*_nav_obstacle.json
+    date: '2026-10-15'
+    revision: "371f724 (round 35, from 21:53; later commits changed no drive, Nav2 or mission file)"
+    hash_revision: 371f724
+    source_files:
+      - src/robot_lab_navigation/config/robots/ackermann_car.yaml
+      - src/robot_lab_navigation/config/robots/rear_steer_car.yaml
+      - src/robot_lab_navigation/config/robots/anti_ackermann_car.yaml
+    scope: >-
+      nav_obstacle car mission (detour, cancel, resume, near-obstacle goal),
+      goal seeds 2 and 3; truth-measured final poses. Details in
+      docs/status/evidence/wheeled-repeats-2026-10-15.
+    limitations:
+      - Goal seeds 2 and 3; seed 1 is the October 13 round

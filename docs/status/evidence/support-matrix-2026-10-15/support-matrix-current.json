@@ -1,5 +1,5 @@
 {
-  "generated_utc": "2026-10-15T16:28:46.220702+00:00",
+  "generated_utc": "2026-10-15T22:15:18.213620+00:00",
   "task": "R9.3",
   "status": "partial",
   "qualification": "Exact hashed screens only; artifact validation does not rerun a mission",
@@ -5053,19 +5053,18 @@
       "task_type": "navigation_mission",
       "support_level": "experimental",
       "evidence_level": "runtime_evidence",
-      "last_tested": "2026-10-13",
-      "revision": "7b1b19e..b8e8ba5 (01:32-05:55, master moved without drive/Nav2/checker changes; the Gazebo cells reran after the truth-publisher fix, the anti_ackermann_car cell at 42d1ccb, 07:22)",
+      "last_tested": "2026-10-15",
+      "revision": "371f724 (round 35, from 21:53; later commits changed no drive, Nav2 or mission file)",
       "test_result": "failed_screen",
       "artifacts": [
-        "docs/status/evidence/r55-car-missions-2026-10-13/gazebo_ackermann_car_nav_obstacle.json",
-        "docs/status/evidence/r55-car-missions-2026-10-13/source-hashes-b8e8ba5.json"
+        "docs/status/evidence/wheeled-repeats-2026-10-15/gazebo_ackermann_car_seed3_nav_obstacle.json",
+        "docs/status/evidence/wheeled-repeats-2026-10-15/source-hashes-371f724-d2ed68a7.json"
       ],
       "limitations": [
-        "One seed per cell",
-        "Source hashes derived from git at the recorded revision after the run",
+        "Goal seeds 2 and 3; seed 1 is the October 13 round",
         "Screen evidence; full ROADMAP mission acceptance remains separate"
       ],
-      "notes": "nav_obstacle car mission (detour, cancel, resume, near-obstacle goal) on Hybrid-A* with Regulated Pure Pursuit; truth-measured final poses. Details in docs/status/evidence/r55-car-missions-2026-10-13.",
+      "notes": "nav_obstacle car mission (detour, cancel, resume, near-obstacle goal), goal seeds 2 and 3; truth-measured final poses. Details in docs/status/evidence/wheeled-repeats-2026-10-15.",
       "steering_mode": ""
     },
     {
@@ -5073,21 +5072,20 @@
       "environment_id": "nav_obstacle",
       "simulator": "gazebo",
       "task_type": "navigation_mission",
-      "support_level": "partially_supported",
+      "support_level": "experimental",
       "evidence_level": "runtime_evidence",
-      "last_tested": "2026-10-13",
-      "revision": "7b1b19e..b8e8ba5 (01:32-05:55, master moved without drive/Nav2/checker changes; the Gazebo cells reran after the truth-publisher fix, the anti_ackermann_car cell at 42d1ccb, 07:22)",
-      "test_result": "passed_screen",
+      "last_tested": "2026-10-15",
+      "revision": "371f724 (round 35, from 21:53; later commits changed no drive, Nav2 or mission file)",
+      "test_result": "failed_screen",
       "artifacts": [
-        "docs/status/evidence/r55-car-missions-2026-10-13/gazebo_anti_ackermann_car_nav_obstacle.json",
-        "docs/status/evidence/r55-car-missions-2026-10-13/source-hashes-b8e8ba5.json"
+        "docs/status/evidence/wheeled-repeats-2026-10-15/gazebo_anti_ackermann_car_seed3_nav_obstacle.json",
+        "docs/status/evidence/wheeled-repeats-2026-10-15/source-hashes-371f724-d2ed68a7.json"
       ],
       "limitations": [
-        "One seed per cell",
-        "Source hashes derived from git at the recorded revision after the run",
+        "Goal seeds 2 and 3; seed 1 is the October 13 round",
         "Screen evidence; full ROADMAP mission acceptance remains separate"
       ],
-      "notes": "nav_obstacle car mission (detour, cancel, resume, near-obstacle goal) on Hybrid-A* with Regulated Pure Pursuit; truth-measured final poses. Details in docs/status/evidence/r55-car-missions-2026-10-13.",
+      "notes": "nav_obstacle car mission (detour, cancel, resume, near-obstacle goal), goal seeds 2 and 3; truth-measured final poses. Details in docs/status/evidence/wheeled-repeats-2026-10-15.",
       "steering_mode": ""
     },
     {
@@ -5095,21 +5093,20 @@
       "environment_id": "nav_obstacle",
       "simulator": "gazebo",
       "task_type": "navigation_mission",
-      "support_level": "partially_supported",
+      "support_level": "experimental",
       "evidence_level": "runtime_evidence",
-      "last_tested": "2026-10-13",
-      "revision": "7b1b19e..b8e8ba5 (01:32-05:55, master moved without drive/Nav2/checker changes; the Gazebo cells reran after the truth-publisher fix, the anti_ackermann_car cell at 42d1ccb, 07:22)",
-      "test_result": "passed_screen",
+      "last_tested": "2026-10-15",
+      "revision": "371f724 (round 35, from 21:53; later commits changed no drive, Nav2 or mission file)",
+      "test_result": "failed_screen",
       "artifacts": [
-        "docs/status/evidence/r55-car-missions-2026-10-13/gazebo_rear_steer_car_nav_obstacle.json",
-        "docs/status/evidence/r55-car-missions-2026-10-13/source-hashes-b8e8ba5.json"
+        "docs/status/evidence/wheeled-repeats-2026-10-15/gazebo_rear_steer_car_seed3_nav_obstacle.json",
+        "docs/status/evidence/wheeled-repeats-2026-10-15/source-hashes-371f724-d2ed68a7.json"
       ],
       "limitations": [
-        "One seed per cell",
-        "Source hashes derived from git at the recorded revision after the run",
+        "Goal seeds 2 and 3; seed 1 is the October 13 round",
         "Screen evidence; full ROADMAP mission acceptance remains separate"
       ],
-      "notes": "nav_obstacle car mission (detour, cancel, resume, near-obstacle goal) on Hybrid-A* with Regulated Pure Pursuit; truth-measured final poses. Details in docs/status/evidence/r55-car-missions-2026-10-13.",
+      "notes": "nav_obstacle car mission (detour, cancel, resume, near-obstacle goal), goal seeds 2 and 3; truth-measured final poses. Details in docs/status/evidence/wheeled-repeats-2026-10-15.",
       "steering_mode": ""
     },
     {
@@ -5117,21 +5114,20 @@
       "environment_id": "nav_obstacle",
       "simulator": "isaac",
       "task_type": "navigation_mission",
-      "support_level": "partially_supported",
+      "support_level": "experimental",
       "evidence_level": "runtime_evidence",
-      "last_tested": "2026-10-13",
-      "revision": "7b1b19e..b8e8ba5 (01:32-05:55, master moved without drive/Nav2/checker changes; the Gazebo cells reran after the truth-publisher fix, the anti_ackermann_car cell at 42d1ccb, 07:22)",
-      "test_result": "passed_screen",
+      "last_tested": "2026-10-15",
+      "revision": "371f724 (round 35, from 21:53; later commits changed no drive, Nav2 or mission file)",
+      "test_result": "failed_screen",
       "artifacts": [
-        "docs/status/evidence/r55-car-missions-2026-10-13/isaac_ackermann_car_nav_obstacle.json",
-        "docs/status/evidence/r55-car-missions-2026-10-13/source-hashes-b8e8ba5.json"
+        "docs/status/evidence/wheeled-repeats-2026-10-15/isaac_ackermann_car_seed3_nav_obstacle.json",
+        "docs/status/evidence/wheeled-repeats-2026-10-15/source-hashes-371f724-d2ed68a7.json"
       ],
       "limitations": [
-        "One seed per cell",
-        "Source hashes derived from git at the recorded revision after the run",
+        "Goal seeds 2 and 3; seed 1 is the October 13 round",
         "Screen evidence; full ROADMAP mission acceptance remains separate"
       ],
-      "notes": "nav_obstacle car mission (detour, cancel, resume, near-obstacle goal) on Hybrid-A* with Regulated Pure Pursuit; truth-measured final poses. Details in docs/status/evidence/r55-car-missions-2026-10-13.",
+      "notes": "nav_obstacle car mission (detour, cancel, resume, near-obstacle goal), goal seeds 2 and 3; truth-measured final poses. Details in docs/status/evidence/wheeled-repeats-2026-10-15.",
       "steering_mode": ""
     },
     {
@@ -5139,21 +5135,20 @@
       "environment_id": "nav_obstacle",
       "simulator": "isaac",
       "task_type": "navigation_mission",
-      "support_level": "partially_supported",
+      "support_level": "experimental",
       "evidence_level": "runtime_evidence",
-      "last_tested": "2026-10-13",
-      "revision": "7b1b19e..b8e8ba5 (01:32-05:55, master moved without drive/Nav2/checker changes; the Gazebo cells reran after the truth-publisher fix, the anti_ackermann_car cell at 42d1ccb, 07:22)",
-      "test_result": "passed_screen",
+      "last_tested": "2026-10-15",
+      "revision": "371f724 (round 35, from 21:53; later commits changed no drive, Nav2 or mission file)",
+      "test_result": "failed_screen",
       "artifacts": [
-        "docs/status/evidence/r55-car-missions-2026-10-13/isaac_anti_ackermann_car_nav_obstacle.json",
-        "docs/status/evidence/r55-car-missions-2026-10-13/source-hashes-b8e8ba5.json"
+        "docs/status/evidence/wheeled-repeats-2026-10-15/isaac_anti_ackermann_car_seed3_nav_obstacle.json",
+        "docs/status/evidence/wheeled-repeats-2026-10-15/source-hashes-371f724-d2ed68a7.json"
       ],
       "limitations": [
-        "One seed per cell",
-        "Source hashes derived from git at the recorded revision after the run",
+        "Goal seeds 2 and 3; seed 1 is the October 13 round",
         "Screen evidence; full ROADMAP mission acceptance remains separate"
       ],
-      "notes": "nav_obstacle car mission (detour, cancel, resume, near-obstacle goal) on Hybrid-A* with Regulated Pure Pursuit; truth-measured final poses. Details in docs/status/evidence/r55-car-missions-2026-10-13.",
+      "notes": "nav_obstacle car mission (detour, cancel, resume, near-obstacle goal), goal seeds 2 and 3; truth-measured final poses. Details in docs/status/evidence/wheeled-repeats-2026-10-15.",
       "steering_mode": ""
     },
     {
@@ -5163,19 +5158,18 @@
       "task_type": "navigation_mission",
       "support_level": "experimental",
       "evidence_level": "runtime_evidence",
-      "last_tested": "2026-10-13",
-      "revision": "7b1b19e..b8e8ba5 (01:32-05:55, master moved without drive/Nav2/checker changes; the Gazebo cells reran after the truth-publisher fix, the anti_ackermann_car cell at 42d1ccb, 07:22)",
+      "last_tested": "2026-10-15",
+      "revision": "371f724 (round 35, from 21:53; later commits changed no drive, Nav2 or mission file)",
       "test_result": "failed_screen",
       "artifacts": [
-        "docs/status/evidence/r55-car-missions-2026-10-13/isaac_rear_steer_car_nav_obstacle.json",
-        "docs/status/evidence/r55-car-missions-2026-10-13/source-hashes-b8e8ba5.json"
+        "docs/status/evidence/wheeled-repeats-2026-10-15/isaac_rear_steer_car_seed3_nav_obstacle.json",
+        "docs/status/evidence/wheeled-repeats-2026-10-15/source-hashes-371f724-d2ed68a7.json"
       ],
       "limitations": [
-        "One seed per cell",
-        "Source hashes derived from git at the recorded revision after the run",
+        "Goal seeds 2 and 3; seed 1 is the October 13 round",
         "Screen evidence; full ROADMAP mission acceptance remains separate"
       ],
-      "notes": "nav_obstacle car mission (detour, cancel, resume, near-obstacle goal) on Hybrid-A* with Regulated Pure Pursuit; truth-measured final poses. Details in docs/status/evidence/r55-car-missions-2026-10-13.",
+      "notes": "nav_obstacle car mission (detour, cancel, resume, near-obstacle goal), goal seeds 2 and 3; truth-measured final poses. Details in docs/status/evidence/wheeled-repeats-2026-10-15.",
       "steering_mode": ""
     },
     {
@@ -5183,21 +5177,20 @@
       "environment_id": "nav_obstacle",
       "simulator": "mujoco",
       "task_type": "navigation_mission",
-      "support_level": "partially_supported",
+      "support_level": "experimental",
       "evidence_level": "runtime_evidence",
-      "last_tested": "2026-10-13",
-      "revision": "7b1b19e..b8e8ba5 (01:32-05:55, master moved without drive/Nav2/checker changes; the Gazebo cells reran after the truth-publisher fix, the anti_ackermann_car cell at 42d1ccb, 07:22)",
-      "test_result": "passed_screen",
+      "last_tested": "2026-10-15",
+      "revision": "371f724 (round 35, from 21:53; later commits changed no drive, Nav2 or mission file)",
+      "test_result": "failed_screen",
       "artifacts": [
-        "docs/status/evidence/r55-car-missions-2026-10-13/mujoco_ackermann_car_nav_obstacle.json",
-        "docs/status/evidence/r55-car-missions-2026-10-13/source-hashes-b8e8ba5.json"
+        "docs/status/evidence/wheeled-repeats-2026-10-15/mujoco_ackermann_car_seed3_nav_obstacle.json",
+        "docs/status/evidence/wheeled-repeats-2026-10-15/source-hashes-371f724-d2ed68a7.json"
       ],
       "limitations": [
-        "One seed per cell",
-        "Source hashes derived from git at the recorded revision after the run",
+        "Goal seeds 2 and 3; seed 1 is the October 13 round",
         "Screen evidence; full ROADMAP mission acceptance remains separate"
       ],
-      "notes": "nav_obstacle car mission (detour, cancel, resume, near-obstacle goal) on Hybrid-A* with Regulated Pure Pursuit; truth-measured final poses. Details in docs/status/evidence/r55-car-missions-2026-10-13.",
+      "notes": "nav_obstacle car mission (detour, cancel, resume, near-obstacle goal), goal seeds 2 and 3; truth-measured final poses. Details in docs/status/evidence/wheeled-repeats-2026-10-15.",
       "steering_mode": ""
     },
     {
@@ -5205,21 +5198,20 @@
       "environment_id": "nav_obstacle",
       "simulator": "mujoco",
       "task_type": "navigation_mission",
-      "support_level": "partially_supported",
+      "support_level": "experimental",
       "evidence_level": "runtime_evidence",
-      "last_tested": "2026-10-13",
-      "revision": "7b1b19e..b8e8ba5 (01:32-05:55, master moved without drive/Nav2/checker changes; the Gazebo cells reran after the truth-publisher fix, the anti_ackermann_car cell at 42d1ccb, 07:22)",
-      "test_result": "passed_screen",
+      "last_tested": "2026-10-15",
+      "revision": "371f724 (round 35, from 21:53; later commits changed no drive, Nav2 or mission file)",
+      "test_result": "failed_screen",
       "artifacts": [
-        "docs/status/evidence/r55-car-missions-2026-10-13/mujoco_anti_ackermann_car_nav_obstacle.json",
-        "docs/status/evidence/r55-car-missions-2026-10-13/source-hashes-b8e8ba5.json"
+        "docs/status/evidence/wheeled-repeats-2026-10-15/mujoco_anti_ackermann_car_seed3_nav_obstacle.json",
+        "docs/status/evidence/wheeled-repeats-2026-10-15/source-hashes-371f724-d2ed68a7.json"
       ],
       "limitations": [
-        "One seed per cell",
-        "Source hashes derived from git at the recorded revision after the run",
+        "Goal seeds 2 and 3; seed 1 is the October 13 round",
         "Screen evidence; full ROADMAP mission acceptance remains separate"
       ],
-      "notes": "nav_obstacle car mission (detour, cancel, resume, near-obstacle goal) on Hybrid-A* with Regulated Pure Pursuit; truth-measured final poses. Details in docs/status/evidence/r55-car-missions-2026-10-13.",
+      "notes": "nav_obstacle car mission (detour, cancel, resume, near-obstacle goal), goal seeds 2 and 3; truth-measured final poses. Details in docs/status/evidence/wheeled-repeats-2026-10-15.",
       "steering_mode": ""
     },
     {
@@ -5229,19 +5221,18 @@
       "task_type": "navigation_mission",
       "support_level": "experimental",
       "evidence_level": "runtime_evidence",
-      "last_tested": "2026-10-13",
-      "revision": "a84ab0c (MuJoCo rear-steer rerun with tf2 0.25.24, 12:09)",
+      "last_tested": "2026-10-15",
+      "revision": "371f724 (round 35, from 21:53; later commits changed no drive, Nav2 or mission file)",
       "test_result": "failed_screen",
       "artifacts": [
-        "docs/status/evidence/r55-car-missions-2026-10-13/rerun-tf2/mujoco_rear_steer_car_nav_obstacle.json",
-        "docs/status/evidence/r55-car-missions-2026-10-13/rerun-tf2/source-hashes-a84ab0c.json"
+        "docs/status/evidence/wheeled-repeats-2026-10-15/mujoco_rear_steer_car_seed3_nav_obstacle.json",
+        "docs/status/evidence/wheeled-repeats-2026-10-15/source-hashes-371f724-d2ed68a7.json"
       ],
       "limitations": [
-        "One seed",
-        "Source hashes derived from git at the recorded revision after the run",
+        "Goal seeds 2 and 3; seed 1 is the October 13 round",
         "Screen evidence; full ROADMAP mission acceptance remains separate"
       ],
-      "notes": "MuJoCo rear_steer_car nav_obstacle mission rerun after the tf2 0.25.24 install.",
+      "notes": "nav_obstacle car mission (detour, cancel, resume, near-obstacle goal), goal seeds 2 and 3; truth-measured final poses. Details in docs/status/evidence/wheeled-repeats-2026-10-15.",
       "steering_mode": ""
     },
     {
@@ -5249,21 +5240,20 @@
       "environment_id": "nav_obstacle",
       "simulator": "pybullet",
       "task_type": "navigation_mission",
-      "support_level": "partially_supported",
+      "support_level": "experimental",
       "evidence_level": "runtime_evidence",
-      "last_tested": "2026-10-13",
-      "revision": "7b1b19e..b8e8ba5 (01:32-05:55, master moved without drive/Nav2/checker changes; the Gazebo cells reran after the truth-publisher fix, the anti_ackermann_car cell at 42d1ccb, 07:22)",
-      "test_result": "passed_screen",
+      "last_tested": "2026-10-15",
+      "revision": "371f724 (round 35, from 21:53; later commits changed no drive, Nav2 or mission file)",
+      "test_result": "failed_screen",
       "artifacts": [
-        "docs/status/evidence/r55-car-missions-2026-10-13/pybullet_ackermann_car_nav_obstacle.json",
-        "docs/status/evidence/r55-car-missions-2026-10-13/source-hashes-b8e8ba5.json"
+        "docs/status/evidence/wheeled-repeats-2026-10-15/pybullet_ackermann_car_seed3_nav_obstacle.json",
+        "docs/status/evidence/wheeled-repeats-2026-10-15/source-hashes-371f724-d2ed68a7.json"
       ],
       "limitations": [
-        "One seed per cell",
-        "Source hashes derived from git at the recorded revision after the run",
+        "Goal seeds 2 and 3; seed 1 is the October 13 round",
         "Screen evidence; full ROADMAP mission acceptance remains separate"
       ],
-      "notes": "nav_obstacle car mission (detour, cancel, resume, near-obstacle goal) on Hybrid-A* with Regulated Pure Pursuit; truth-measured final poses. Details in docs/status/evidence/r55-car-missions-2026-10-13.",
+      "notes": "nav_obstacle car mission (detour, cancel, resume, near-obstacle goal), goal seeds 2 and 3; truth-measured final poses. Details in docs/status/evidence/wheeled-repeats-2026-10-15.",
       "steering_mode": ""
     },
     {
@@ -5271,21 +5261,20 @@
       "environment_id": "nav_obstacle",
       "simulator": "pybullet",
       "task_type": "navigation_mission",
-      "support_level": "partially_supported",
+      "support_level": "experimental",
       "evidence_level": "runtime_evidence",
-      "last_tested": "2026-10-13",
-      "revision": "7b1b19e..b8e8ba5 (01:32-05:55, master moved without drive/Nav2/checker changes; the Gazebo cells reran after the truth-publisher fix, the anti_ackermann_car cell at 42d1ccb, 07:22)",
-      "test_result": "passed_screen",
+      "last_tested": "2026-10-15",
+      "revision": "371f724 (round 35, from 21:53; later commits changed no drive, Nav2 or mission file)",
+      "test_result": "failed_screen",
       "artifacts": [
-        "docs/status/evidence/r55-car-missions-2026-10-13/pybullet_anti_ackermann_car_nav_obstacle.json",
-        "docs/status/evidence/r55-car-missions-2026-10-13/source-hashes-b8e8ba5.json"
+        "docs/status/evidence/wheeled-repeats-2026-10-15/pybullet_anti_ackermann_car_seed3_nav_obstacle.json",
+        "docs/status/evidence/wheeled-repeats-2026-10-15/source-hashes-371f724-d2ed68a7.json"
       ],
       "limitations": [
-        "One seed per cell",
-        "Source hashes derived from git at the recorded revision after the run",
+        "Goal seeds 2 and 3; seed 1 is the October 13 round",
         "Screen evidence; full ROADMAP mission acceptance remains separate"
       ],
-      "notes": "nav_obstacle car mission (detour, cancel, resume, near-obstacle goal) on Hybrid-A* with Regulated Pure Pursuit; truth-measured final poses. Details in docs/status/evidence/r55-car-missions-2026-10-13.",
+      "notes": "nav_obstacle car mission (detour, cancel, resume, near-obstacle goal), goal seeds 2 and 3; truth-measured final poses. Details in docs/status/evidence/wheeled-repeats-2026-10-15.",
       "steering_mode": ""
     },
     {
@@ -5295,19 +5284,18 @@
       "task_type": "navigation_mission",
       "support_level": "experimental",
       "evidence_level": "runtime_evidence",
-      "last_tested": "2026-10-13",
-      "revision": "7b1b19e..b8e8ba5 (01:32-05:55, master moved without drive/Nav2/checker changes; the Gazebo cells reran after the truth-publisher fix, the anti_ackermann_car cell at 42d1ccb, 07:22)",
+      "last_tested": "2026-10-15",
+      "revision": "371f724 (round 35, from 21:53; later commits changed no drive, Nav2 or mission file)",
       "test_result": "failed_screen",
       "artifacts": [
-        "docs/status/evidence/r55-car-missions-2026-10-13/pybullet_rear_steer_car_nav_obstacle.json",
-        "docs/status/evidence/r55-car-missions-2026-10-13/source-hashes-b8e8ba5.json"
+        "docs/status/evidence/wheeled-repeats-2026-10-15/pybullet_rear_steer_car_seed3_nav_obstacle.json",
+        "docs/status/evidence/wheeled-repeats-2026-10-15/source-hashes-371f724-d2ed68a7.json"
       ],
       "limitations": [
-        "One seed per cell",
-        "Source hashes derived from git at the recorded revision after the run",
+        "Goal seeds 2 and 3; seed 1 is the October 13 round",
         "Screen evidence; full ROADMAP mission acceptance remains separate"
       ],
-      "notes": "nav_obstacle car mission (detour, cancel, resume, near-obstacle goal) on Hybrid-A* with Regulated Pure Pursuit; truth-measured final poses. Details in docs/status/evidence/r55-car-missions-2026-10-13.",
+      "notes": "nav_obstacle car mission (detour, cancel, resume, near-obstacle goal), goal seeds 2 and 3; truth-measured final poses. Details in docs/status/evidence/wheeled-repeats-2026-10-15.",
       "steering_mode": ""
     },
     {
@@ -5317,19 +5305,18 @@
       "task_type": "navigation_mission",
       "support_level": "partially_supported",
       "evidence_level": "runtime_evidence",
-      "last_tested": "2026-10-13",
-      "revision": "feb9a3b..8a57b76 (06:06-06:50 and the MuJoCo reruns to 07:21, with the wider arrival window)",
+      "last_tested": "2026-10-15",
+      "revision": "371f724 (round 35, from 21:53; later commits changed no drive, Nav2 or mission file)",
       "test_result": "passed_screen",
       "artifacts": [
-        "docs/status/evidence/r56-4ws-missions-2026-10-13/v2/gazebo_ackermann_nav_obstacle.json",
-        "docs/status/evidence/r56-4ws-missions-2026-10-13/v2/source-hashes-8a57b76.json"
+        "docs/status/evidence/wheeled-repeats-2026-10-15/gazebo_ackermann_seed3_nav_obstacle.json",
+        "docs/status/evidence/wheeled-repeats-2026-10-15/source-hashes-371f724.json"
       ],
       "limitations": [
-        "One seed per cell",
-        "Source hashes derived from git at the recorded revision after the run",
+        "Goal seeds 2 and 3; seed 1 is the October 13 round",
         "Screen evidence; full ROADMAP mission acceptance remains separate"
       ],
-      "notes": "nav_obstacle mission per 4WS steering pattern and for the mecanum car, second run with the wider arrival window; truth-measured final poses.",
+      "notes": "nav_obstacle mission per 4WS steering pattern and for the mecanum car, goal seeds 2 and 3; truth-measured final poses and the measured drive configuration. Details in docs/status/evidence/wheeled-repeats-2026-10-15.",
       "steering_mode": "ackermann"
     },
     {
@@ -5337,21 +5324,20 @@
       "environment_id": "nav_obstacle",
       "simulator": "gazebo",
       "task_type": "navigation_mission",
-      "support_level": "partially_supported",
+      "support_level": "experimental",
       "evidence_level": "runtime_evidence",
-      "last_tested": "2026-10-13",
-      "revision": "feb9a3b..8a57b76 (06:06-06:50 and the MuJoCo reruns to 07:21, with the wider arrival window)",
-      "test_result": "passed_screen",
+      "last_tested": "2026-10-15",
+      "revision": "371f724 (round 35, from 21:53; later commits changed no drive, Nav2 or mission file)",
+      "test_result": "failed_screen",
       "artifacts": [
-        "docs/status/evidence/r56-4ws-missions-2026-10-13/v2/gazebo_crab_nav_obstacle.json",
-        "docs/status/evidence/r56-4ws-missions-2026-10-13/v2/source-hashes-8a57b76.json"
+        "docs/status/evidence/wheeled-repeats-2026-10-15/gazebo_crab_seed3_nav_obstacle.json",
+        "docs/status/evidence/wheeled-repeats-2026-10-15/source-hashes-371f724.json"
       ],
       "limitations": [
-        "One seed per cell",
-        "Source hashes derived from git at the recorded revision after the run",
+        "Goal seeds 2 and 3; seed 1 is the October 13 round",
         "Screen evidence; full ROADMAP mission acceptance remains separate"
       ],
-      "notes": "nav_obstacle mission per 4WS steering pattern and for the mecanum car, second run with the wider arrival window; truth-measured final poses.",
+      "notes": "nav_obstacle mission per 4WS steering pattern and for the mecanum car, goal seeds 2 and 3; truth-measured final poses and the measured drive configuration. Details in docs/status/evidence/wheeled-repeats-2026-10-15.",
       "steering_mode": "crab"
     },
     {
@@ -5359,21 +5345,20 @@
       "environment_id": "nav_obstacle",
       "simulator": "gazebo",
       "task_type": "navigation_mission",
-      "support_level": "partially_supported",
+      "support_level": "experimental",
       "evidence_level": "runtime_evidence",
-      "last_tested": "2026-10-13",
-      "revision": "feb9a3b..8a57b76 (06:06-06:50 and the MuJoCo reruns to 07:21, with the wider arrival window)",
-      "test_result": "passed_screen",
+      "last_tested": "2026-10-15",
+      "revision": "371f724 (round 35, from 21:53; later commits changed no drive, Nav2 or mission file)",
+      "test_result": "failed_screen",
       "artifacts": [
-        "docs/status/evidence/r56-4ws-missions-2026-10-13/v2/gazebo_in_phase_nav_obstacle.json",
-        "docs/status/evidence/r56-4ws-missions-2026-10-13/v2/source-hashes-8a57b76.json"
+        "docs/status/evidence/wheeled-repeats-2026-10-15/gazebo_in_phase_seed3_nav_obstacle.json",
+        "docs/status/evidence/wheeled-repeats-2026-10-15/source-hashes-371f724.json"
       ],
       "limitations": [
-        "One seed per cell",
-        "Source hashes derived from git at the recorded revision after the run",
+        "Goal seeds 2 and 3; seed 1 is the October 13 round",
         "Screen evidence; full ROADMAP mission acceptance remains separate"
       ],
-      "notes": "nav_obstacle mission per 4WS steering pattern and for the mecanum car, second run with the wider arrival window; truth-measured final poses.",
+      "notes": "nav_obstacle mission per 4WS steering pattern and for the mecanum car, goal seeds 2 and 3; truth-measured final poses and the measured drive configuration. Details in docs/status/evidence/wheeled-repeats-2026-10-15.",
       "steering_mode": "in_phase"
     },
     {
@@ -5383,19 +5368,18 @@
       "task_type": "navigation_mission",
       "support_level": "partially_supported",
       "evidence_level": "runtime_evidence",
-      "last_tested": "2026-10-13",
-      "revision": "f36bc5e (mecanum rerun, 11:21-11:30)",
+      "last_tested": "2026-10-15",
+      "revision": "371f724 (round 35, from 21:53; later commits changed no drive, Nav2 or mission file)",
       "test_result": "passed_screen",
       "artifacts": [
-        "docs/status/evidence/r56-4ws-missions-2026-10-13/v3-mecanum/gazebo_mecanum_nav_obstacle.json",
-        "docs/status/evidence/r56-4ws-missions-2026-10-13/v3-mecanum/source-hashes-f36bc5e.json"
+        "docs/status/evidence/wheeled-repeats-2026-10-15/gazebo_mecanum_seed3_nav_obstacle.json",
+        "docs/status/evidence/wheeled-repeats-2026-10-15/source-hashes-371f724.json"
       ],
       "limitations": [
-        "One seed per cell",
-        "Source hashes derived from git at the recorded revision after the run",
+        "Goal seeds 2 and 3; seed 1 is the October 13 round",
         "Screen evidence; full ROADMAP mission acceptance remains separate"
       ],
-      "notes": "nav_obstacle mecanum car mission with the 4WS arrival window and the tf2 overlay.",
+      "notes": "nav_obstacle mission per 4WS steering pattern and for the mecanum car, goal seeds 2 and 3; truth-measured final poses and the measured drive configuration. Details in docs/status/evidence/wheeled-repeats-2026-10-15.",
       "steering_mode": ""
     },
     {
@@ -5405,19 +5389,18 @@
       "task_type": "navigation_mission",
       "support_level": "partially_supported",
       "evidence_level": "runtime_evidence",
-      "last_tested": "2026-10-13",
-      "revision": "feb9a3b..8a57b76 (06:06-06:50 and the MuJoCo reruns to 07:21, with the wider arrival window)",
+      "last_tested": "2026-10-15",
+      "revision": "371f724 (round 35, from 21:53; later commits changed no drive, Nav2 or mission file)",
       "test_result": "passed_screen",
       "artifacts": [
-        "docs/status/evidence/r56-4ws-missions-2026-10-13/v2/gazebo_pivot_nav_obstacle.json",
-        "docs/status/evidence/r56-4ws-missions-2026-10-13/v2/source-hashes-8a57b76.json"
+        "docs/status/evidence/wheeled-repeats-2026-10-15/gazebo_pivot_seed3_nav_obstacle.json",
+        "docs/status/evidence/wheeled-repeats-2026-10-15/source-hashes-371f724.json"
       ],
       "limitations": [
-        "One seed per cell",
-        "Source hashes derived from git at the recorded revision after the run",
+        "Goal seeds 2 and 3; seed 1 is the October 13 round",
         "Screen evidence; full ROADMAP mission acceptance remains separate"
       ],
-      "notes": "nav_obstacle mission per 4WS steering pattern and for the mecanum car, second run with the wider arrival window; truth-measured final poses.",
+      "notes": "nav_obstacle mission per 4WS steering pattern and for the mecanum car, goal seeds 2 and 3; truth-measured final poses and the measured drive configuration. Details in docs/status/evidence/wheeled-repeats-2026-10-15.",
       "steering_mode": "pivot"
     },
     {
@@ -5427,19 +5410,18 @@
       "task_type": "navigation_mission",
       "support_level": "partially_supported",
       "evidence_level": "runtime_evidence",
-      "last_tested": "2026-10-13",
-      "revision": "feb9a3b..8a57b76 (06:06-06:50 and the MuJoCo reruns to 07:21, with the wider arrival window)",
+      "last_tested": "2026-10-15",
+      "revision": "371f724 (round 35, from 21:53; later commits changed no drive, Nav2 or mission file)",
       "test_result": "passed_screen",
       "artifacts": [
-        "docs/status/evidence/r56-4ws-missions-2026-10-13/v2/isaac_ackermann_nav_obstacle.json",
-        "docs/status/evidence/r56-4ws-missions-2026-10-13/v2/source-hashes-8a57b76.json"
+        "docs/status/evidence/wheeled-repeats-2026-10-15/isaac_ackermann_seed3_nav_obstacle.json",
+        "docs/status/evidence/wheeled-repeats-2026-10-15/source-hashes-371f724.json"
       ],
       "limitations": [
-        "One seed per cell",
-        "Source hashes derived from git at the recorded revision after the run",
+        "Goal seeds 2 and 3; seed 1 is the October 13 round",
         "Screen evidence; full ROADMAP mission acceptance remains separate"
       ],
-      "notes": "nav_obstacle mission per 4WS steering pattern and for the mecanum car, second run with the wider arrival window; truth-measured final poses.",
+      "notes": "nav_obstacle mission per 4WS steering pattern and for the mecanum car, goal seeds 2 and 3; truth-measured final poses and the measured drive configuration. Details in docs/status/evidence/wheeled-repeats-2026-10-15.",
       "steering_mode": "ackermann"
     },
     {
@@ -5447,21 +5429,20 @@
       "environment_id": "nav_obstacle",
       "simulator": "isaac",
       "task_type": "navigation_mission",
-      "support_level": "partially_supported",
+      "support_level": "experimental",
       "evidence_level": "runtime_evidence",
-      "last_tested": "2026-10-13",
-      "revision": "feb9a3b..8a57b76 (06:06-06:50 and the MuJoCo reruns to 07:21, with the wider arrival window)",
-      "test_result": "passed_screen",
+      "last_tested": "2026-10-15",
+      "revision": "371f724 (round 35, from 21:53; later commits changed no drive, Nav2 or mission file)",
+      "test_result": "failed_screen",
       "artifacts": [
-        "docs/status/evidence/r56-4ws-missions-2026-10-13/v2/isaac_crab_nav_obstacle.json",
-        "docs/status/evidence/r56-4ws-missions-2026-10-13/v2/source-hashes-8a57b76.json"
+        "docs/status/evidence/wheeled-repeats-2026-10-15/isaac_crab_seed3_nav_obstacle.json",
+        "docs/status/evidence/wheeled-repeats-2026-10-15/source-hashes-371f724.json"
       ],
       "limitations": [
-        "One seed per cell",
-        "Source hashes derived from git at the recorded revision after the run",
+        "Goal seeds 2 and 3; seed 1 is the October 13 round",
         "Screen evidence; full ROADMAP mission acceptance remains separate"
       ],
-      "notes": "nav_obstacle mission per 4WS steering pattern and for the mecanum car, second run with the wider arrival window; truth-measured final poses.",
+      "notes": "nav_obstacle mission per 4WS steering pattern and for the mecanum car, goal seeds 2 and 3; truth-measured final poses and the measured drive configuration. Details in docs/status/evidence/wheeled-repeats-2026-10-15.",
       "steering_mode": "crab"
     },
     {
@@ -5469,21 +5450,20 @@
       "environment_id": "nav_obstacle",
       "simulator": "isaac",
       "task_type": "navigation_mission",
-      "support_level": "partially_supported",
+      "support_level": "experimental",
       "evidence_level": "runtime_evidence",
-      "last_tested": "2026-10-13",
-      "revision": "feb9a3b..8a57b76 (06:06-06:50 and the MuJoCo reruns to 07:21, with the wider arrival window)",
-      "test_result": "passed_screen",
+      "last_tested": "2026-10-15",
+      "revision": "371f724 (round 35, from 21:53; later commits changed no drive, Nav2 or mission file)",
+      "test_result": "failed_screen",
       "artifacts": [
-        "docs/status/evidence/r56-4ws-missions-2026-10-13/v2/isaac_in_phase_nav_obstacle.json",
-        "docs/status/evidence/r56-4ws-missions-2026-10-13/v2/source-hashes-8a57b76.json"
+        "docs/status/evidence/wheeled-repeats-2026-10-15/isaac_in_phase_seed3_nav_obstacle.json",
+        "docs/status/evidence/wheeled-repeats-2026-10-15/source-hashes-371f724.json"
       ],
       "limitations": [
-        "One seed per cell",
-        "Source hashes derived from git at the recorded revision after the run",
+        "Goal seeds 2 and 3; seed 1 is the October 13 round",
         "Screen evidence; full ROADMAP mission acceptance remains separate"
       ],
-      "notes": "nav_obstacle mission per 4WS steering pattern and for the mecanum car, second run with the wider arrival window; truth-measured final poses.",
+      "notes": "nav_obstacle mission per 4WS steering pattern and for the mecanum car, goal seeds 2 and 3; truth-measured final poses and the measured drive configuration. Details in docs/status/evidence/wheeled-repeats-2026-10-15.",
       "steering_mode": "in_phase"
     },
     {
@@ -5493,19 +5473,18 @@
       "task_type": "navigation_mission",
       "support_level": "partially_supported",
       "evidence_level": "runtime_evidence",
-      "last_tested": "2026-10-13",
-      "revision": "cdcb01c (Isaac capsule rollers)",
+      "last_tested": "2026-10-15",
+      "revision": "371f724 (round 35, from 21:53; later commits changed no drive, Nav2 or mission file)",
       "test_result": "passed_screen",
       "artifacts": [
-        "docs/status/evidence/p56-drive-patterns-2026-10-12/isaac_mecanum_nav_obstacle_capsules_2026-10-13.json",
-        "docs/status/evidence/p56-drive-patterns-2026-10-12/source-hashes-cdcb01c.json"
+        "docs/status/evidence/wheeled-repeats-2026-10-15/isaac_mecanum_seed3_nav_obstacle.json",
+        "docs/status/evidence/wheeled-repeats-2026-10-15/source-hashes-371f724.json"
       ],
       "limitations": [
-        "One seed",
-        "Source hashes derived from git at the recorded revision after the run",
+        "Goal seeds 2 and 3; seed 1 is the October 13 round",
         "Screen evidence; full ROADMAP mission acceptance remains separate"
       ],
-      "notes": "Isaac mecanum nav_obstacle mission with capsule roller collisions.",
+      "notes": "nav_obstacle mission per 4WS steering pattern and for the mecanum car, goal seeds 2 and 3; truth-measured final poses and the measured drive configuration. Details in docs/status/evidence/wheeled-repeats-2026-10-15.",
       "steering_mode": ""
     },
     {
@@ -5515,19 +5494,18 @@
       "task_type": "navigation_mission",
       "support_level": "partially_supported",
       "evidence_level": "runtime_evidence",
-      "last_tested": "2026-10-13",
-      "revision": "feb9a3b..8a57b76 (06:06-06:50 and the MuJoCo reruns to 07:21, with the wider arrival window)",
+      "last_tested": "2026-10-15",
+      "revision": "371f724 (round 35, from 21:53; later commits changed no drive, Nav2 or mission file)",
       "test_result": "passed_screen",
       "artifacts": [
-        "docs/status/evidence/r56-4ws-missions-2026-10-13/v2/isaac_pivot_nav_obstacle.json",
-        "docs/status/evidence/r56-4ws-missions-2026-10-13/v2/source-hashes-8a57b76.json"
+        "docs/status/evidence/wheeled-repeats-2026-10-15/isaac_pivot_seed3_nav_obstacle.json",
+        "docs/status/evidence/wheeled-repeats-2026-10-15/source-hashes-371f724.json"
       ],
       "limitations": [
-        "One seed per cell",
-        "Source hashes derived from git at the recorded revision after the run",
+        "Goal seeds 2 and 3; seed 1 is the October 13 round",
         "Screen evidence; full ROADMAP mission acceptance remains separate"
       ],
-      "notes": "nav_obstacle mission per 4WS steering pattern and for the mecanum car, second run with the wider arrival window; truth-measured final poses.",
+      "notes": "nav_obstacle mission per 4WS steering pattern and for the mecanum car, goal seeds 2 and 3; truth-measured final poses and the measured drive configuration. Details in docs/status/evidence/wheeled-repeats-2026-10-15.",
       "steering_mode": "pivot"
     },
     {
@@ -5537,19 +5515,18 @@
       "task_type": "navigation_mission",
       "support_level": "partially_supported",
       "evidence_level": "runtime_evidence",
-      "last_tested": "2026-10-13",
-      "revision": "feb9a3b..8a57b76 (06:06-06:50 and the MuJoCo reruns to 07:21, with the wider arrival window)",
+      "last_tested": "2026-10-15",
+      "revision": "371f724 (round 35, from 21:53; later commits changed no drive, Nav2 or mission file)",
       "test_result": "passed_screen",
       "artifacts": [
-        "docs/status/evidence/r56-4ws-missions-2026-10-13/v2/mujoco_ackermann_nav_obstacle.json",
-        "docs/status/evidence/r56-4ws-missions-2026-10-13/v2/source-hashes-8a57b76.json"
+        "docs/status/evidence/wheeled-repeats-2026-10-15/mujoco_ackermann_seed3_nav_obstacle.json",
+        "docs/status/evidence/wheeled-repeats-2026-10-15/source-hashes-371f724.json"
       ],
       "limitations": [
-        "One seed per cell",
-        "Source hashes derived from git at the recorded revision after the run",
+        "Goal seeds 2 and 3; seed 1 is the October 13 round",
         "Screen evidence; full ROADMAP mission acceptance remains separate"
       ],
-      "notes": "nav_obstacle mission per 4WS steering pattern and for the mecanum car, second run with the wider arrival window; truth-measured final poses.",
+      "notes": "nav_obstacle mission per 4WS steering pattern and for the mecanum car, goal seeds 2 and 3; truth-measured final poses and the measured drive configuration. Details in docs/status/evidence/wheeled-repeats-2026-10-15.",
       "steering_mode": "ackermann"
     },
     {
@@ -5557,21 +5534,20 @@
       "environment_id": "nav_obstacle",
       "simulator": "mujoco",
       "task_type": "navigation_mission",
-      "support_level": "partially_supported",
+      "support_level": "experimental",
       "evidence_level": "runtime_evidence",
-      "last_tested": "2026-10-13",
-      "revision": "feb9a3b..8a57b76 (06:06-06:50 and the MuJoCo reruns to 07:21, with the wider arrival window)",
-      "test_result": "passed_screen",
+      "last_tested": "2026-10-15",
+      "revision": "371f724 (round 35, from 21:53; later commits changed no drive, Nav2 or mission file)",
+      "test_result": "failed_screen",
       "artifacts": [
-        "docs/status/evidence/r56-4ws-missions-2026-10-13/v2/mujoco_crab_nav_obstacle.json",
-        "docs/status/evidence/r56-4ws-missions-2026-10-13/v2/source-hashes-8a57b76.json"
+        "docs/status/evidence/wheeled-repeats-2026-10-15/mujoco_crab_seed3_nav_obstacle.json",
+        "docs/status/evidence/wheeled-repeats-2026-10-15/source-hashes-371f724.json"
       ],
       "limitations": [
-        "One seed per cell",
-        "Source hashes derived from git at the recorded revision after the run",
+        "Goal seeds 2 and 3; seed 1 is the October 13 round",
         "Screen evidence; full ROADMAP mission acceptance remains separate"
       ],
-      "notes": "nav_obstacle mission per 4WS steering pattern and for the mecanum car, second run with the wider arrival window; truth-measured final poses.",
+      "notes": "nav_obstacle mission per 4WS steering pattern and for the mecanum car, goal seeds 2 and 3; truth-measured final poses and the measured drive configuration. Details in docs/status/evidence/wheeled-repeats-2026-10-15.",
       "steering_mode": "crab"
     },
     {
@@ -5579,21 +5555,20 @@
       "environment_id": "nav_obstacle",
       "simulator": "mujoco",
       "task_type": "navigation_mission",
-      "support_level": "partially_supported",
+      "support_level": "experimental",
       "evidence_level": "runtime_evidence",
-      "last_tested": "2026-10-13",
-      "revision": "feb9a3b..8a57b76 (06:06-06:50 and the MuJoCo reruns to 07:21, with the wider arrival window)",
-      "test_result": "passed_screen",
+      "last_tested": "2026-10-15",
+      "revision": "371f724 (round 35, from 21:53; later commits changed no drive, Nav2 or mission file)",
+      "test_result": "failed_screen",
       "artifacts": [
-        "docs/status/evidence/r56-4ws-missions-2026-10-13/v2/mujoco_in_phase_nav_obstacle.json",
-        "docs/status/evidence/r56-4ws-missions-2026-10-13/v2/source-hashes-8a57b76.json"
+        "docs/status/evidence/wheeled-repeats-2026-10-15/mujoco_in_phase_seed3_nav_obstacle.json",
+        "docs/status/evidence/wheeled-repeats-2026-10-15/source-hashes-371f724.json"
       ],
       "limitations": [
-        "One seed per cell",
-        "Source hashes derived from git at the recorded revision after the run",
+        "Goal seeds 2 and 3; seed 1 is the October 13 round",
         "Screen evidence; full ROADMAP mission acceptance remains separate"
       ],
-      "notes": "nav_obstacle mission per 4WS steering pattern and for the mecanum car, second run with the wider arrival window; truth-measured final poses.",
+      "notes": "nav_obstacle mission per 4WS steering pattern and for the mecanum car, goal seeds 2 and 3; truth-measured final poses and the measured drive configuration. Details in docs/status/evidence/wheeled-repeats-2026-10-15.",
       "steering_mode": "in_phase"
     },
     {
@@ -5603,19 +5578,18 @@
       "task_type": "navigation_mission",
       "support_level": "partially_supported",
       "evidence_level": "runtime_evidence",
-      "last_tested": "2026-10-13",
-      "revision": "f36bc5e (mecanum rerun, 11:21-11:30)",
+      "last_tested": "2026-10-15",
+      "revision": "371f724 (round 35, from 21:53; later commits changed no drive, Nav2 or mission file)",
       "test_result": "passed_screen",
       "artifacts": [
-        "docs/status/evidence/r56-4ws-missions-2026-10-13/v3-mecanum/mujoco_mecanum_nav_obstacle.json",
-        "docs/status/evidence/r56-4ws-missions-2026-10-13/v3-mecanum/source-hashes-f36bc5e.json"
+        "docs/status/evidence/wheeled-repeats-2026-10-15/mujoco_mecanum_seed3_nav_obstacle.json",
+        "docs/status/evidence/wheeled-repeats-2026-10-15/source-hashes-371f724.json"
       ],
       "limitations": [
-        "One seed per cell",
-        "Source hashes derived from git at the recorded revision after the run",
+        "Goal seeds 2 and 3; seed 1 is the October 13 round",
         "Screen evidence; full ROADMAP mission acceptance remains separate"
       ],
-      "notes": "nav_obstacle mecanum car mission with the 4WS arrival window and the tf2 overlay.",
+      "notes": "nav_obstacle mission per 4WS steering pattern and for the mecanum car, goal seeds 2 and 3; truth-measured final poses and the measured drive configuration. Details in docs/status/evidence/wheeled-repeats-2026-10-15.",
       "steering_mode": ""
     },
     {
@@ -5625,19 +5599,18 @@
       "task_type": "navigation_mission",
       "support_level": "partially_supported",
       "evidence_level": "runtime_evidence",
-      "last_tested": "2026-10-13",
-      "revision": "feb9a3b..8a57b76 (06:06-06:50 and the MuJoCo reruns to 07:21, with the wider arrival window)",
+      "last_tested": "2026-10-15",
+      "revision": "371f724 (round 35, from 21:53; later commits changed no drive, Nav2 or mission file)",
       "test_result": "passed_screen",
       "artifacts": [
-        "docs/status/evidence/r56-4ws-missions-2026-10-13/v2/mujoco_pivot_nav_obstacle.json",
-        "docs/status/evidence/r56-4ws-missions-2026-10-13/v2/source-hashes-8a57b76.json"
+        "docs/status/evidence/wheeled-repeats-2026-10-15/mujoco_pivot_seed3_nav_obstacle.json",
+        "docs/status/evidence/wheeled-repeats-2026-10-15/source-hashes-371f724.json"
       ],
       "limitations": [
-        "One seed per cell",
-        "Source hashes derived from git at the recorded revision after the run",
+        "Goal seeds 2 and 3; seed 1 is the October 13 round",
         "Screen evidence; full ROADMAP mission acceptance remains separate"
       ],
-      "notes": "nav_obstacle mission per 4WS steering pattern and for the mecanum car, second run with the wider arrival window; truth-measured final poses.",
+      "notes": "nav_obstacle mission per 4WS steering pattern and for the mecanum car, goal seeds 2 and 3; truth-measured final poses and the measured drive configuration. Details in docs/status/evidence/wheeled-repeats-2026-10-15.",
       "steering_mode": "pivot"
     },
     {
@@ -5647,19 +5620,18 @@
       "task_type": "navigation_mission",
       "support_level": "partially_supported",
       "evidence_level": "runtime_evidence",
-      "last_tested": "2026-10-13",
-      "revision": "feb9a3b..8a57b76 (06:06-06:50 and the MuJoCo reruns to 07:21, with the wider arrival window)",
+      "last_tested": "2026-10-15",
+      "revision": "371f724 (round 35, from 21:53; later commits changed no drive, Nav2 or mission file)",
       "test_result": "passed_screen",
       "artifacts": [
-        "docs/status/evidence/r56-4ws-missions-2026-10-13/v2/pybullet_ackermann_nav_obstacle.json",
-        "docs/status/evidence/r56-4ws-missions-2026-10-13/v2/source-hashes-8a57b76.json"
+        "docs/status/evidence/wheeled-repeats-2026-10-15/pybullet_ackermann_seed3_nav_obstacle.json",
+        "docs/status/evidence/wheeled-repeats-2026-10-15/source-hashes-371f724.json"
       ],
       "limitations": [
-        "One seed per cell",
-        "Source hashes derived from git at the recorded revision after the run",
+        "Goal seeds 2 and 3; seed 1 is the October 13 round",
         "Screen evidence; full ROADMAP mission acceptance remains separate"
       ],
-      "notes": "nav_obstacle mission per 4WS steering pattern and for the mecanum car, second run with the wider arrival window; truth-measured final poses.",
+      "notes": "nav_obstacle mission per 4WS steering pattern and for the mecanum car, goal seeds 2 and 3; truth-measured final poses and the measured drive configuration. Details in docs/status/evidence/wheeled-repeats-2026-10-15.",
       "steering_mode": "ackermann"
     },
     {
@@ -5667,21 +5639,20 @@
       "environment_id": "nav_obstacle",
       "simulator": "pybullet",
       "task_type": "navigation_mission",
-      "support_level": "partially_supported",
+      "support_level": "experimental",
       "evidence_level": "runtime_evidence",
-      "last_tested": "2026-10-13",
-      "revision": "feb9a3b..8a57b76 (06:06-06:50 and the MuJoCo reruns to 07:21, with the wider arrival window)",
-      "test_result": "passed_screen",
+      "last_tested": "2026-10-15",
+      "revision": "371f724 (round 35, from 21:53; later commits changed no drive, Nav2 or mission file)",
+      "test_result": "failed_screen",
       "artifacts": [
-        "docs/status/evidence/r56-4ws-missions-2026-10-13/v2/pybullet_crab_nav_obstacle.json",
-        "docs/status/evidence/r56-4ws-missions-2026-10-13/v2/source-hashes-8a57b76.json"
+        "docs/status/evidence/wheeled-repeats-2026-10-15/pybullet_crab_seed3_nav_obstacle.json",
+        "docs/status/evidence/wheeled-repeats-2026-10-15/source-hashes-371f724.json"
       ],
       "limitations": [
-        "One seed per cell",
-        "Source hashes derived from git at the recorded revision after the run",
+        "Goal seeds 2 and 3; seed 1 is the October 13 round",
         "Screen evidence; full ROADMAP mission acceptance remains separate"
       ],
-      "notes": "nav_obstacle mission per 4WS steering pattern and for the mecanum car, second run with the wider arrival window; truth-measured final poses.",
+      "notes": "nav_obstacle mission per 4WS steering pattern and for the mecanum car, goal seeds 2 and 3; truth-measured final poses and the measured drive configuration. Details in docs/status/evidence/wheeled-repeats-2026-10-15.",
       "steering_mode": "crab"
     },
     {
@@ -5689,21 +5660,20 @@
       "environment_id": "nav_obstacle",
       "simulator": "pybullet",
       "task_type": "navigation_mission",
-      "support_level": "partially_supported",
+      "support_level": "experimental",
       "evidence_level": "runtime_evidence",
-      "last_tested": "2026-10-13",
-      "revision": "feb9a3b..8a57b76 (06:06-06:50 and the MuJoCo reruns to 07:21, with the wider arrival window)",
-      "test_result": "passed_screen",
+      "last_tested": "2026-10-15",
+      "revision": "371f724 (round 35, from 21:53; later commits changed no drive, Nav2 or mission file)",
+      "test_result": "failed_screen",
       "artifacts": [
-        "docs/status/evidence/r56-4ws-missions-2026-10-13/v2/pybullet_in_phase_nav_obstacle.json",
-        "docs/status/evidence/r56-4ws-missions-2026-10-13/v2/source-hashes-8a57b76.json"
+        "docs/status/evidence/wheeled-repeats-2026-10-15/pybullet_in_phase_seed3_nav_obstacle.json",
+        "docs/status/evidence/wheeled-repeats-2026-10-15/source-hashes-371f724.json"
       ],
       "limitations": [
-        "One seed per cell",
-        "Source hashes derived from git at the recorded revision after the run",
+        "Goal seeds 2 and 3; seed 1 is the October 13 round",
         "Screen evidence; full ROADMAP mission acceptance remains separate"
       ],
-      "notes": "nav_obstacle mission per 4WS steering pattern and for the mecanum car, second run with the wider arrival window; truth-measured final poses.",
+      "notes": "nav_obstacle mission per 4WS steering pattern and for the mecanum car, goal seeds 2 and 3; truth-measured final poses and the measured drive configuration. Details in docs/status/evidence/wheeled-repeats-2026-10-15.",
       "steering_mode": "in_phase"
     },
     {
@@ -5713,19 +5683,18 @@
       "task_type": "navigation_mission",
       "support_level": "partially_supported",
       "evidence_level": "runtime_evidence",
-      "last_tested": "2026-10-13",
-      "revision": "f36bc5e (mecanum rerun, 11:21-11:30)",
+      "last_tested": "2026-10-15",
+      "revision": "371f724 (round 35, from 21:53; later commits changed no drive, Nav2 or mission file)",
       "test_result": "passed_screen",
       "artifacts": [
-        "docs/status/evidence/r56-4ws-missions-2026-10-13/v3-mecanum/pybullet_mecanum_nav_obstacle.json",
-        "docs/status/evidence/r56-4ws-missions-2026-10-13/v3-mecanum/source-hashes-f36bc5e.json"
+        "docs/status/evidence/wheeled-repeats-2026-10-15/pybullet_mecanum_seed3_nav_obstacle.json",
+        "docs/status/evidence/wheeled-repeats-2026-10-15/source-hashes-371f724.json"
       ],
       "limitations": [
-        "One seed per cell",
-        "Source hashes derived from git at the recorded revision after the run",
+        "Goal seeds 2 and 3; seed 1 is the October 13 round",
         "Screen evidence; full ROADMAP mission acceptance remains separate"
       ],
-      "notes": "nav_obstacle mecanum car mission with the 4WS arrival window and the tf2 overlay.",
+      "notes": "nav_obstacle mission per 4WS steering pattern and for the mecanum car, goal seeds 2 and 3; truth-measured final poses and the measured drive configuration. Details in docs/status/evidence/wheeled-repeats-2026-10-15.",
       "steering_mode": ""
     },
     {
@@ -5735,19 +5704,18 @@
       "task_type": "navigation_mission",
       "support_level": "partially_supported",
       "evidence_level": "runtime_evidence",
-      "last_tested": "2026-10-13",
-      "revision": "feb9a3b..8a57b76 (06:06-06:50 and the MuJoCo reruns to 07:21, with the wider arrival window)",
+      "last_tested": "2026-10-15",
+      "revision": "371f724 (round 35, from 21:53; later commits changed no drive, Nav2 or mission file)",
       "test_result": "passed_screen",
       "artifacts": [
-        "docs/status/evidence/r56-4ws-missions-2026-10-13/v2/pybullet_pivot_nav_obstacle.json",
-        "docs/status/evidence/r56-4ws-missions-2026-10-13/v2/source-hashes-8a57b76.json"
+        "docs/status/evidence/wheeled-repeats-2026-10-15/pybullet_pivot_seed3_nav_obstacle.json",
+        "docs/status/evidence/wheeled-repeats-2026-10-15/source-hashes-371f724.json"
       ],
       "limitations": [
-        "One seed per cell",
-        "Source hashes derived from git at the recorded revision after the run",
+        "Goal seeds 2 and 3; seed 1 is the October 13 round",
         "Screen evidence; full ROADMAP mission acceptance remains separate"
       ],
-      "notes": "nav_obstacle mission per 4WS steering pattern and for the mecanum car, second run with the wider arrival window; truth-measured final poses.",
+      "notes": "nav_obstacle mission per 4WS steering pattern and for the mecanum car, goal seeds 2 and 3; truth-measured final poses and the measured drive configuration. Details in docs/status/evidence/wheeled-repeats-2026-10-15.",
       "steering_mode": "pivot"
     }
   ],

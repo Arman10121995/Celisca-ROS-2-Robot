@@ -54,3 +54,22 @@ counts as passes (0.27 and 0.28 m) are failed screens here. Both judgements
 are kept as recorded.
 
 All full-release gates stay blocked: R5-R9 tasks remain partial.
+
+## Update: seed 2 and 3 repeats (round 35, 00:2x)
+
+The 64 wheeled repeats ([wheeled-repeats-2026-10-15](../wheeled-repeats-2026-10-15/README.md))
+were indexed after the seed-1 records, with
+[their own batch](../wheeled-repeats-2026-10-15/mission-batch.yaml). Two
+manifests now sit beside them, one per group, because the two groups hash
+different files at the same revision.
+
+The index holds 444 records, still 251 cells (no new combinations): **227
+passed and 23 failed screens**, 1 unverified. The latest record, seed 3,
+now controls each wheeled cell:
+
+- the eight 4WS crab and in_phase cells fail: goal B aborted;
+- all twelve car cells fail the 0.25 m screen. Their near-obstacle errors
+  are 0.26-0.36 m, or the goal aborted.
+
+The 4WS ackermann and pivot cells and the mecanum car still pass in every
+backend.

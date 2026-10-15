@@ -13,9 +13,10 @@ owns task states and the [roadmap](../../ROADMAP.md) defines acceptance.
 
 The [generated measured matrix](evidence/support-matrix-2026-10-15/support-matrix-current.md)
 and [JSON report](evidence/support-matrix-2026-10-15/support-matrix-current.json)
-validate **380 indexed reports / 251 distinct measured cells**. October 15
+validate **444 indexed reports / 251 distinct measured cells**. October 15
 adds 40 cells: the walking robots, cars and 4WS/mecanum patterns on the
-nav_obstacle mission. 243 cells are passed screens and 7 failed screens
+nav_obstacle mission, then the wheeled seed 2 and 3 repeats. 227 cells are
+passed screens and 23 failed screens
 ([what changed](evidence/support-matrix-2026-10-15/README.md)). The
 [October 12 matrix](evidence/support-matrix-2026-10-12/support-matrix-current.md)
 (211 cells) and the
