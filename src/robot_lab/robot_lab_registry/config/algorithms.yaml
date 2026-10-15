@@ -167,7 +167,11 @@
   evidence:
     - kind: unit_test
       reference: "test_r7_perception_algorithms.py::TestDepthToPoints"
-      description: "Implemented, experimental: back-projection, invalid depths, stride and depth encodings; simulator runs pending"
+      description: "Implemented, experimental: back-projection, invalid depths, stride and depth encodings"
+      date: "2026-10-15"
+    - kind: benchmark
+      reference: "docs/status/evidence/r72-perception-benchmark-2026-10-13/depth-node/README.md"
+      description: "Live beside a 26 m drive in Gazebo, MuJoCo, PyBullet and Isaac: 3.3-6.6 ms per cloud; ground removal and clustering on its cloud score as on Gazebo's own; identical to Gazebo's cloud with the pixel-centre principal point"
       date: "2026-10-15"
 - id: camera_calibration
   version: 2.0.0
@@ -215,7 +219,11 @@
   evidence:
     - kind: unit_test
       reference: "test_r7_camera_calibration.py"
-      description: "Implemented, experimental: recovers fx within 0.2% and the half-pixel principal point (cx 159.48 for 159.50) from 27 ray-cast board views; no simulated world holds a chessboard yet"
+      description: "Implemented, experimental: recovers fx within 0.2% and the half-pixel principal point (cx 159.48 for 159.50) from 27 ray-cast board views"
+      date: "2026-10-15"
+    - kind: benchmark
+      reference: "docs/status/evidence/r72-perception-benchmark-2026-10-13/calibration/README.md"
+      description: "Gazebo: a spawned chessboard moved through 100 poses; 73 views give the principal point (159.37, 119.53), within 0.13 px of the pixel centres, and fx 0.7% short (the check's own error); the dispatched node calibrated from 15 views"
       date: "2026-10-15"
 - id: feature_detection
   version: 2.0.0
@@ -262,7 +270,11 @@
   evidence:
     - kind: unit_test
       reference: "test_r7_visual_odometry.py"
-      description: "Implemented, experimental: every detector recovers a known camera path in a ray-cast textured room; simulator runs pending"
+      description: "Implemented, experimental: every detector recovers a known camera path in a ray-cast textured room"
+      date: "2026-10-15"
+    - kind: benchmark
+      reference: "docs/status/evidence/r72-perception-benchmark-2026-10-13/feature-odometry/README.md"
+      description: "Recorded drives replayed through all five detectors: in Gazebo small_house ORB at 30 Hz holds 0.54 m RMSE (2.9% drift) over 28.4 m and the live node scores the same; every detector fails in the flat-shaded nav_obstacle world and on Isaac's noisy or MuJoCo's untextured images"
       date: "2026-10-15"
 - id: odometry_motion_model
   version: 1.0.0

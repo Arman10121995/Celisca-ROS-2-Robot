@@ -195,11 +195,19 @@ Recorded drives were replayed through all five detectors:
 ## Camera calibration
 
 `camera_calibration` keeps chessboard views that differ in position, size
-or tilt, then solves the camera matrix. On 27 ray-cast views it recovers
-fx within 0.2% and the principal point within 0.15 px. In Gazebo, a
-spawned board is moved in front of the camera by
-`scripts/r7_2_calibration_check.sh`; see the evidence page for the
-current state of that check.
+or tilt, then solves the camera matrix
+([evidence](../status/evidence/r72-perception-benchmark-2026-10-13/calibration/README.md)).
+
+- On 27 ray-cast views it recovers fx within 0.2% and the principal
+  point within 0.15 px.
+- In Gazebo, `scripts/r7_2_calibration_check.sh` moves a spawned board
+  through 100 poses in front of Bumperbot's camera. From 73 kept views the
+  principal point comes out at (159.37, 119.53): within 0.13 px of the
+  pixel centres, as the depth check found, and 0.5-0.6 px from the camera
+  info.
+- Its focal length comes out 0.7% short. Gazebo's depth images rule that
+  out for the camera, so it is the calibration's own error on the
+  aliased 320 x 240 frames.
 
 ## Limits
 

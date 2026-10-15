@@ -1,0 +1,45 @@
+{
+ "world": "nav_empty",
+ "pattern": "8x6",
+ "square_m": 0.05,
+ "seed": 7,
+ "spawn": 0,
+ "outcomes": {
+  "kept": 20,
+  "no board": 36,
+  "similar": 4
+ },
+ "camera_info": {
+  "fx": 221.76500407999384,
+  "fy": 221.76500407999382,
+  "cx": 160.0,
+  "cy": 120.0,
+  "width": 320,
+  "height": 240
+ },
+ "pixel_centres": {
+  "cx": 159.5,
+  "cy": 119.5
+ },
+ "script_calibration": {
+  "views": 20,
+  "rms_px": 0.5472,
+  "fx": 220.842,
+  "fy": 219.348,
+  "cx": 160.488,
+  "cy": 116.139,
+  "distortion": [
+   -0.02116,
+   0.0105,
+   -0.00553,
+   0.00457,
+   0.03098
+  ],
+  "coverage": [
+   0.32,
+   0.19,
+   0.19,
+   0.51
+  ]
+ }
+}
