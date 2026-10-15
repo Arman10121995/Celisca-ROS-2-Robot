@@ -41,17 +41,21 @@ from robot_lab_algorithms.visual_odometry import (  # noqa: E402
 
 
 def board_png(path, pattern, pixels=40):
-    """Chessboard with (columns + 1) x (rows + 1) squares and a white margin."""
+    """Square texture: a chessboard of (columns + 1) x (rows + 1) squares
+    centred in white.  Square, so that however the renderer orients the
+    texture on the square plane, the squares stay square (the first check
+    stretched a 0.55 x 0.45 m board onto a transposed plane)."""
     import cv2
     columns, rows = pattern
-    squares_x, squares_y = columns + 3, rows + 3   # board plus a one-square margin each side
-    image = np.full((squares_y * pixels, squares_x * pixels), 255, np.uint8)
+    side = max(columns, rows) + 3   # the board plus at least one white square each side
+    image = np.full((side * pixels, side * pixels), 255, np.uint8)
+    left, top = (side - columns - 1) // 2, (side - rows - 1) // 2
     for j in range(rows + 1):
         for i in range(columns + 1):
             if (i + j) % 2 == 0:
-                image[(j + 1) * pixels:(j + 2) * pixels, (i + 1) * pixels:(i + 2) * pixels] = 0
+                image[(top + j) * pixels:(top + j + 1) * pixels, (left + i) * pixels:(left + i + 1) * pixels] = 0
     cv2.imwrite(path, image)
-    return squares_x, squares_y
+    return side, side
 
 
 def board_sdf(texture, width, height):
