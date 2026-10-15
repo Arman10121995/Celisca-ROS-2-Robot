@@ -376,6 +376,11 @@ code delivery, not a passed mission or universal support.
   scores do not count.
 - [ ] **R8.1/R8.2/R8.3:** Complete the backend mission matrix and real isolated
   concurrent experiments with resource limits, cleanup and repeatable results.
+  First campaign (2026-10-15): MuJoCo and PyBullet Bumperbot Nav2 jobs pass
+  serially and simultaneously. Budgets stop only their own job, cancel
+  works and nothing survives
+  ([evidence](evidence/r83-concurrency-2026-10-15/README.md)). Seeds,
+  contacts, Gazebo/Isaac pairs and repeats remain.
 - [ ] **R9.1/R9.2:**
   - Declared dependency licenses are resolved from installed metadata
     (120/125 with the SSD environment sourced; the other 5 are unused

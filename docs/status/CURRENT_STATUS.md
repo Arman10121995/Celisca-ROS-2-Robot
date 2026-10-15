@@ -218,6 +218,15 @@ October 13: implemented on master, experimental.
     12** pass. MuJoCo rear-steer hit the tf2 freeze; Gazebo Ackermann
     aborted its detour after repeated collision-ahead stops
     ([evidence](evidence/r55-car-missions-2026-10-13/README.md)).
+- **Two simulations at once (R8.3, 2026-10-15).** The concurrent
+  coordinator's Nav2 workload had never run; three bugs stopped it and are
+  fixed.
+  - MuJoCo and PyBullet Bumperbot jobs then reach both Nav2 goals within
+    2-10 cm of truth, one at a time and side by side, with unchanged
+    real-time factors.
+  - A memory budget stops only its own job, a coordinator cancel aborts
+    the running goal within 3 s, and no process is left behind
+    ([evidence](evidence/r83-concurrency-2026-10-15/README.md)).
 - **Gazebo cars.** The car description had no ground-truth publisher, so
   Gazebo car missions timed out; it now has one, in the spawned
   description too.
