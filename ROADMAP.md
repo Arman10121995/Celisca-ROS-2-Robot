@@ -227,7 +227,7 @@ those labels from being treated as universal runtime claims.
 
 | Legacy phase | Current state | Retained work / remaining obligation | Tasks |
 |---|---|---|---|
-| P0 baseline | Partial | Published core build/required CI and scoped installed/runtime checks pass; clean-host mission/license and hardware reproduction remain | R1, R2, R9 |
+| P0 baseline | Partial | Published core build/required CI and scoped installed/runtime checks pass; a clean container builds, passes the fast tier and a MuJoCo mission (2026-10-15); a golden comparison rerun there and hardware reproduction remain | R1, R2, R9 |
 | P1 foundation | Partial | Typed registry/resolver and exact source/numeric runtime gates exist; universal class/backend compatibility remains unqualified | R3.1, R3.2 |
 | P2 composition | Partial | Shared commands/algorithms, source variants and control-column GUI are measured; remaining model/task workflows and broader composition acceptance remain | R3.3–R3.6 |
 | P3 robots | Partial | BHL/Go2 bounded MuJoCo walks and native PX4 Flight are measured; robust legged terrain/recovery and the broader robot/mode matrix remain | R5 |
@@ -235,7 +235,7 @@ those labels from being treated as universal runtime claims.
 | P4 environments | Partial | Installed worlds, actual occupancy exports and named mapping/reset/contact screens; remaining actors, reviewed occupancy and terrain/world missions | R6 |
 | P5 algorithms | Partial | Kernels, adapters and selected real stack workflows exist; substantive method contracts and five-method fair comparisons remain | R7 |
 | P6 benchmarking | Partial | Real named mission producers/reporting retained; legacy generated metrics are excluded and fair repeated comparisons remain | R4, R7, R9 |
-| P7 hardening | Partial | Exact required CI passes; full backend/class, concurrency, provenance and clean-host qualification remain | R1, R8, R9 |
+| P7 hardening | Partial | Exact required CI passes; a first two-simulation campaign and a clean-container reproduction are measured (2026-10-15); full backend/class, concurrency and provenance qualification remain | R1, R8, R9 |
 | P7.5 hardware | Blocked | Equipment, safe setup and explicit operation authorization required | R9.4 |
 | P7.7/P7.8/P7.8b | Partial measured runtime | Named four-backend mobile modes and native flight/manipulation screens; universal robot/map/backend parity remains open | R2, R8 |
 
