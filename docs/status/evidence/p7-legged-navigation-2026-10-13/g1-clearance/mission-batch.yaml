@@ -1,0 +1,28 @@
+# G1 nav_obstacle seeds 1-3 with the wider global inflation (round 36),
+# indexed after the earlier legged rounds.
+date: '2026-10-16'
+scope: "Exact hashed named simulation screens through October 16; unlisted cells remain untested."
+source_files:
+  - scripts/sim_nav_mission.py
+  - scripts/sim_nav_mission.sh
+  - src/robot_lab_bringup/launch/simulated_robot.launch.py
+  - src/robot_lab_navigation/launch/navigation.launch.py
+  - src/robot_lab_navigation/config/controller_server.yaml
+  - src/robot_lab_navigation/config/planner_server.yaml
+  - src/robot_lab_navigation/config/robots/unitree_g1_29dof.yaml
+  - src/robot_lab_robots/config/robots.yaml
+  - src/robot_lab_algorithms/robot_lab_algorithms/leg_odometry.py
+  - src/robot_lab_mujoco/python/robot_lab_mujoco/mujoco_spawner.py
+  - src/robot_lab_isaac/python/robot_lab_isaac/isaac_runtime.py
+  - src/robot_lab_isaac/python/robot_lab_isaac/isaac_spawner.py
+groups:
+  - reports: [docs/status/evidence/p7-legged-navigation-2026-10-13/g1-clearance/*_nav_obstacle.json]
+    date: '2026-10-16'
+    revision: "80b52f0 (round 36, 00:12-00:30, G1 inflation 0.8 m / cost scaling 2.0 from f276b83)"
+    hash_revision: 80b52f0
+    scope: >-
+      nav_obstacle mission (detour, cancel, resume, near-obstacle goal) for the
+      G1 humanoid on its provisioned policy with leg kinematic odometry and the
+      wider global inflation; truth-measured final poses.
+    limitations:
+      - One goal seed per report (seeds 1-3)

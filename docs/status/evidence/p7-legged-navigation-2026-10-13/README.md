@@ -265,6 +265,30 @@ instead of iterations, and the lookahead is 1.25 times the turning radius
   before forward_arc.
 - No run has a stale-transform signature.
 
+## G1 with a wider, flatter inflation (`g1-clearance/`, 2026-10-16)
+
+After the Isaac seed-3 abort was explained (paths along walls; see
+Repeats), the G1's global inflation went from 0.55 m at cost scaling 3.0
+to 0.8 m at 2.0 (`f276b83`). Planned paths now keep more clearance from
+walls.
+
+Round 36 (00:12-00:30, `80b52f0`) reran seeds 1-3 in Isaac and MuJoCo.
+**All six pass:**
+
+| Seed | Isaac A / B (truth) | MuJoCo A / B (truth) |
+|---|---|---|
+| 1 | 0.209 / 0.146 m | 0.145 / 0.169 m |
+| 2 | 0.081 / 0.189 m | 0.106 / 0.202 m |
+| 3 | 0.172 / 0.256 m | 0.084 / 0.139 m |
+
+- Isaac seed 3 now passes; it had aborted the detour with "start in
+  lethal space".
+- The G1 is now 3/3 in both simulators, over three seeds.
+- The Isaac seed-3 near-obstacle error, 0.256 m, is within the mission's
+  0.30 m but just over the support matrix's 0.25 m screen.
+- The Isaac runs took 4-6 min each. On October 13, with the host busier,
+  they took about 10 min.
+
 ## Files
 
 - `v1/`: round 1 missions and leg odometry screens.

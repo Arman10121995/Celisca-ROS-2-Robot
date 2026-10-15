@@ -169,7 +169,8 @@ October 13: implemented on master, experimental.
 - **Walking robots navigate (P7).** Leg kinematic odometry feeds the EKF,
   and slam/nav modes select each robot's policy. Over three goal seeds
   (2026-10-15):
-  - A1 passes 3/3 in MuJoCo and Isaac; G1 3/3 in MuJoCo and 2/3 in Isaac.
+  - A1 passes 3/3 in MuJoCo and Isaac; G1 3/3 in both, Isaac after its
+    inflation was widened (2026-10-16; 2/3 before).
   - Go2 passes 3/3 in MuJoCo and **3/3 in Gazebo**, and 2/3 in Isaac.
   - B2 passes 2/3 in MuJoCo; the miss is 4 mm over the 0.30 m test.
 

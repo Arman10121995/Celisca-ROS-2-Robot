@@ -153,12 +153,14 @@ goal; [evidence](../status/evidence/p7-legged-navigation-2026-10-13/README.md)):
 | Go2 | **3/3** (forward_arc) | 2/3 | **3/3** (forward_arc) |
 | A1 | **3/3** | **3/3** | not available |
 | B2 | 2/3 (forward_arc; the miss is 4 mm over the 0.30 m test) | not run (drifts) | not available |
-| G1 | **3/3** | 2/3 | not available |
+| G1 | **3/3** | **3/3** (wider inflation, 2026-10-16; 2/3 before) | not available |
 
 Three goal seeds per cell. Passing goals end 0.01-0.23 m from truth. B2 and G1
 needed minimum speeds of 0.4 and 0.3 m/s: below those their gaits stand
 still (the G1's leg odometry then crept on in Isaac, so Nav2 declared
-goals reached 0.5 m short).
+goals reached 0.5 m short). The G1's Isaac seed-3 abort came from a path
+along a wall: with its global inflation widened to 0.8 m at cost scaling
+2.0, it passes all three seeds in both simulators.
 
 **Mapping.** `mode:=slam` runs slam_toolbox on the robot's laser scan, with
 leg odometry as the only odometry. Over a 26 m loop through nav_obstacle

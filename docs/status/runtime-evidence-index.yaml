@@ -1,6 +1,6 @@
 schema_version: 1
-date: '2026-10-15'
-scope: "Exact hashed named simulation screens through October 15; unlisted cells remain untested."
+date: '2026-10-16'
+scope: "Exact hashed named simulation screens through October 16; unlisted cells remain untested."
 raw_artifact_root: /workspace/molar/robot_lab_runtime/r56-qualification-2026-10-05
 records:
 - robot_id: four_wheel_steer_car
@@ -8569,3 +8569,99 @@ records:
     final poses. Details in docs/status/evidence/wheeled-repeats-2026-10-15.
   limitations:
   - Goal seeds 2 and 3; seed 1 is the October 13 round
+- robot_id: unitree_g1_29dof
+  environment_id: nav_obstacle
+  simulator: isaac
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-10-16'
+  revision: 80b52f0 (round 36, 00:12-00:30, G1 inflation 0.8 m / cost scaling 2.0 from f276b83)
+  report: docs/status/evidence/p7-legged-navigation-2026-10-13/g1-clearance/isaac_unitree_g1_29dof_seed1_nav_obstacle.json
+  sha256: c16e361236468f3efe34813cdfb4c786704899b944b5acb367bfd8d6b373a4ef
+  source_hashes: docs/status/evidence/p7-legged-navigation-2026-10-13/g1-clearance/source-hashes-80b52f0.json
+  source_hashes_sha256: 65618ad3e8f998166252b4aa336f77d2377a4d8817cb1c6899415e200ec19b31
+  report_kind: mission_screen
+  scope: nav_obstacle mission (detour, cancel, resume, near-obstacle goal) for the G1 humanoid on its provisioned
+    policy with leg kinematic odometry and the wider global inflation; truth-measured final poses.
+  limitations:
+  - One goal seed per report (seeds 1-3)
+- robot_id: unitree_g1_29dof
+  environment_id: nav_obstacle
+  simulator: isaac
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-10-16'
+  revision: 80b52f0 (round 36, 00:12-00:30, G1 inflation 0.8 m / cost scaling 2.0 from f276b83)
+  report: docs/status/evidence/p7-legged-navigation-2026-10-13/g1-clearance/isaac_unitree_g1_29dof_seed2_nav_obstacle.json
+  sha256: edddca8e9f458c5729ebeb8537e02e318f20d96ad6c3e5497d6ac33a64c20a47
+  source_hashes: docs/status/evidence/p7-legged-navigation-2026-10-13/g1-clearance/source-hashes-80b52f0.json
+  source_hashes_sha256: 65618ad3e8f998166252b4aa336f77d2377a4d8817cb1c6899415e200ec19b31
+  report_kind: mission_screen
+  scope: nav_obstacle mission (detour, cancel, resume, near-obstacle goal) for the G1 humanoid on its provisioned
+    policy with leg kinematic odometry and the wider global inflation; truth-measured final poses.
+  limitations:
+  - One goal seed per report (seeds 1-3)
+- robot_id: unitree_g1_29dof
+  environment_id: nav_obstacle
+  simulator: isaac
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-10-16'
+  revision: 80b52f0 (round 36, 00:12-00:30, G1 inflation 0.8 m / cost scaling 2.0 from f276b83)
+  report: docs/status/evidence/p7-legged-navigation-2026-10-13/g1-clearance/isaac_unitree_g1_29dof_seed3_nav_obstacle.json
+  sha256: a9beb44c10db11becf28080bce01d45b9516820a4172b9198648501dd1d1123d
+  source_hashes: docs/status/evidence/p7-legged-navigation-2026-10-13/g1-clearance/source-hashes-80b52f0.json
+  source_hashes_sha256: 65618ad3e8f998166252b4aa336f77d2377a4d8817cb1c6899415e200ec19b31
+  report_kind: mission_screen
+  scope: nav_obstacle mission (detour, cancel, resume, near-obstacle goal) for the G1 humanoid on its provisioned
+    policy with leg kinematic odometry and the wider global inflation; truth-measured final poses.
+  limitations:
+  - One goal seed per report (seeds 1-3)
+- robot_id: unitree_g1_29dof
+  environment_id: nav_obstacle
+  simulator: mujoco
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-10-16'
+  revision: 80b52f0 (round 36, 00:12-00:30, G1 inflation 0.8 m / cost scaling 2.0 from f276b83)
+  report: docs/status/evidence/p7-legged-navigation-2026-10-13/g1-clearance/mujoco_unitree_g1_29dof_seed1_nav_obstacle.json
+  sha256: 81734e501aceb48189e828598df75996b3e7afead2ab26a393bae3691045a297
+  source_hashes: docs/status/evidence/p7-legged-navigation-2026-10-13/g1-clearance/source-hashes-80b52f0.json
+  source_hashes_sha256: 65618ad3e8f998166252b4aa336f77d2377a4d8817cb1c6899415e200ec19b31
+  report_kind: mission_screen
+  scope: nav_obstacle mission (detour, cancel, resume, near-obstacle goal) for the G1 humanoid on its provisioned
+    policy with leg kinematic odometry and the wider global inflation; truth-measured final poses.
+  limitations:
+  - One goal seed per report (seeds 1-3)
+- robot_id: unitree_g1_29dof
+  environment_id: nav_obstacle
+  simulator: mujoco
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-10-16'
+  revision: 80b52f0 (round 36, 00:12-00:30, G1 inflation 0.8 m / cost scaling 2.0 from f276b83)
+  report: docs/status/evidence/p7-legged-navigation-2026-10-13/g1-clearance/mujoco_unitree_g1_29dof_seed2_nav_obstacle.json
+  sha256: 70324215abe964fe6a99dc3313cefd7d6a4b3cf2279324b78d487bb70dffc845
+  source_hashes: docs/status/evidence/p7-legged-navigation-2026-10-13/g1-clearance/source-hashes-80b52f0.json
+  source_hashes_sha256: 65618ad3e8f998166252b4aa336f77d2377a4d8817cb1c6899415e200ec19b31
+  report_kind: mission_screen
+  scope: nav_obstacle mission (detour, cancel, resume, near-obstacle goal) for the G1 humanoid on its provisioned
+    policy with leg kinematic odometry and the wider global inflation; truth-measured final poses.
+  limitations:
+  - One goal seed per report (seeds 1-3)
+- robot_id: unitree_g1_29dof
+  environment_id: nav_obstacle
+  simulator: mujoco
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-10-16'
+  revision: 80b52f0 (round 36, 00:12-00:30, G1 inflation 0.8 m / cost scaling 2.0 from f276b83)
+  report: docs/status/evidence/p7-legged-navigation-2026-10-13/g1-clearance/mujoco_unitree_g1_29dof_seed3_nav_obstacle.json
+  sha256: b64e917ad072a9c66d5001269c47b9dfd05ca4d4ce346dab52da54228760f8d7
+  source_hashes: docs/status/evidence/p7-legged-navigation-2026-10-13/g1-clearance/source-hashes-80b52f0.json
+  source_hashes_sha256: 65618ad3e8f998166252b4aa336f77d2377a4d8817cb1c6899415e200ec19b31
+  report_kind: mission_screen
+  scope: nav_obstacle mission (detour, cancel, resume, near-obstacle goal) for the G1 humanoid on its provisioned
+    policy with leg kinematic odometry and the wider global inflation; truth-measured final poses.
+  limitations:
+  - One goal seed per report (seeds 1-3)

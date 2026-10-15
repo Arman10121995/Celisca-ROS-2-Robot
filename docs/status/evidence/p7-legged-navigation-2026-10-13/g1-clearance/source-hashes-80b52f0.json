@@ -1,0 +1,18 @@
+{
+ "revision": "80b52f0",
+ "derived": "sha256 of each file as git stores it at this revision, computed 2026-10-15 after the run; uncommitted working-tree changes at run time are not captured",
+ "files": {
+  "scripts/sim_nav_mission.py": "b859965f84c391066b2ad0ccad45755b97bd10439d14a3c849d9610943bea3ed",
+  "scripts/sim_nav_mission.sh": "85403e42783bf0cf0f325cf6e0c7ed14c342be06608a97d22d06de6246854099",
+  "src/robot_lab_algorithms/robot_lab_algorithms/leg_odometry.py": "4114146eb62f08c5c2e0105a94eb1f770d8c953cd01884f4bc8b8b5a95761921",
+  "src/robot_lab_bringup/launch/simulated_robot.launch.py": "a2e77a9b195a6f2823ba92e64d9be2d6dd95089642223802883421d5df9e80ac",
+  "src/robot_lab_isaac/python/robot_lab_isaac/isaac_runtime.py": "acb142b116d3146a8037890e78da17dd5d8942e889c7439bef22f6865185b781",
+  "src/robot_lab_isaac/python/robot_lab_isaac/isaac_spawner.py": "32d55b9a6520c8da83b95c22c4b20e4b25f2f4b7f6b969079ecbdd03729f64bf",
+  "src/robot_lab_mujoco/python/robot_lab_mujoco/mujoco_spawner.py": "8aab8550fea1551c2e782d400baf1e704bc2f4e3f89aa06c3401cbe04f10b807",
+  "src/robot_lab_navigation/config/controller_server.yaml": "43b46d5931c3df601e767ea2ea604d3cbcaadde4bbab2c35e166bca408485802",
+  "src/robot_lab_navigation/config/planner_server.yaml": "b7a59f2d472ceb59c0f789c056a4903d6c173db73a8ad5b35aa330d1d7087d71",
+  "src/robot_lab_navigation/config/robots/unitree_g1_29dof.yaml": "4640a2a0b4b1202e87d603849b45c0fc6a11bf67351d5f0897aa532ab253e1b6",
+  "src/robot_lab_navigation/launch/navigation.launch.py": "523870766512910a8d45b1fc12b65e980602a20f017bc0b8ec423d158be1ecd8",
+  "src/robot_lab_robots/config/robots.yaml": "f5a2f13cbf68b2ecba43ffc42bea294f81a8bee4c49187faf317b868f923a309"
+ }
+}

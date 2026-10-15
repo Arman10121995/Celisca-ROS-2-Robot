@@ -1,5 +1,5 @@
 {
-  "generated_utc": "2026-10-15T22:15:18.213620+00:00",
+  "generated_utc": "2026-10-15T22:30:30.837872+00:00",
   "task": "R9.3",
   "status": "partial",
   "qualification": "Exact hashed screens only; artifact validation does not rerun a mission",
@@ -4938,20 +4938,18 @@
       "task_type": "navigation_mission",
       "support_level": "partially_supported",
       "evidence_level": "runtime_evidence",
-      "last_tested": "2026-10-13",
-      "revision": "d17ffa5 (repeats, seeds 2 and 3, 17:28-17:58)",
+      "last_tested": "2026-10-16",
+      "revision": "80b52f0 (round 36, 00:12-00:30, G1 inflation 0.8 m / cost scaling 2.0 from f276b83)",
       "test_result": "passed_screen",
       "artifacts": [
-        "docs/status/evidence/p7-legged-navigation-2026-10-13/repeats/mujoco_unitree_g1_29dof_seed3_nav_obstacle.json",
-        "docs/status/evidence/p7-legged-navigation-2026-10-13/repeats/source-hashes-d17ffa5.json"
+        "docs/status/evidence/p7-legged-navigation-2026-10-13/g1-clearance/mujoco_unitree_g1_29dof_seed3_nav_obstacle.json",
+        "docs/status/evidence/p7-legged-navigation-2026-10-13/g1-clearance/source-hashes-80b52f0.json"
       ],
       "limitations": [
-        "One goal seed per report; repeats are separate records",
-        "Flat nav_obstacle world; no terrain",
-        "Source hashes derived from git at the recorded revision after the run",
+        "One goal seed per report (seeds 1-3)",
         "Screen evidence; full ROADMAP mission acceptance remains separate"
       ],
-      "notes": "nav_obstacle mission (detour goal, cancel after travel with stop check, resume, near-obstacle goal) for a walking robot on its provisioned policy with leg kinematic odometry; truth-measured final poses after a settled simulated second. Round details in docs/status/evidence/p7-legged-navigation-2026-10-13.",
+      "notes": "nav_obstacle mission (detour, cancel, resume, near-obstacle goal) for the G1 humanoid on its provisioned policy with leg kinematic odometry and the wider global inflation; truth-measured final poses.",
       "steering_mode": ""
     },
     {
@@ -5030,20 +5028,18 @@
       "task_type": "navigation_mission",
       "support_level": "experimental",
       "evidence_level": "runtime_evidence",
-      "last_tested": "2026-10-13",
-      "revision": "d17ffa5 (repeats, seeds 2 and 3, 17:28-17:58)",
+      "last_tested": "2026-10-16",
+      "revision": "80b52f0 (round 36, 00:12-00:30, G1 inflation 0.8 m / cost scaling 2.0 from f276b83)",
       "test_result": "failed_screen",
       "artifacts": [
-        "docs/status/evidence/p7-legged-navigation-2026-10-13/repeats/isaac_unitree_g1_29dof_seed3_nav_obstacle.json",
-        "docs/status/evidence/p7-legged-navigation-2026-10-13/repeats/source-hashes-d17ffa5.json"
+        "docs/status/evidence/p7-legged-navigation-2026-10-13/g1-clearance/isaac_unitree_g1_29dof_seed3_nav_obstacle.json",
+        "docs/status/evidence/p7-legged-navigation-2026-10-13/g1-clearance/source-hashes-80b52f0.json"
       ],
       "limitations": [
-        "One goal seed per report; repeats are separate records",
-        "Flat nav_obstacle world; no terrain",
-        "Source hashes derived from git at the recorded revision after the run",
+        "One goal seed per report (seeds 1-3)",
         "Screen evidence; full ROADMAP mission acceptance remains separate"
       ],
-      "notes": "nav_obstacle mission (detour goal, cancel after travel with stop check, resume, near-obstacle goal) for a walking robot on its provisioned policy with leg kinematic odometry; truth-measured final poses after a settled simulated second. Round details in docs/status/evidence/p7-legged-navigation-2026-10-13.",
+      "notes": "nav_obstacle mission (detour, cancel, resume, near-obstacle goal) for the G1 humanoid on its provisioned policy with leg kinematic odometry and the wider global inflation; truth-measured final poses.",
       "steering_mode": ""
     },
     {

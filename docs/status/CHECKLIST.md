@@ -302,8 +302,8 @@ code delivery, not a passed mission or universal support.
   in all three backends
   ([evidence](evidence/p7-legged-slam-mapping-2026-10-13/README.md)).
   Over three goal seeds: Go2 3/3 in MuJoCo and Gazebo (forward-arc
-  navigation) and 2/3 in Isaac, A1 3/3 in both, G1 3/3 MuJoCo and 2/3
-  Isaac, B2 2/3 in MuJoCo. Other maps, terrain and B2 in Isaac remain.
+  navigation) and 2/3 in Isaac, A1 3/3 in both, G1 3/3 in both (Isaac
+  after the wider inflation of 2026-10-16), B2 2/3 in MuJoCo. Other maps, terrain and B2 in Isaac remain.
 - [ ] **R5.3/P7:** Resolve BHL held-turn/low-speed stalls and qualify robust
   balance/walk/turn. Audit and adapt model-specific policies for the remaining
   humanoids/quadrupeds, including joint/action/observation contracts and live
