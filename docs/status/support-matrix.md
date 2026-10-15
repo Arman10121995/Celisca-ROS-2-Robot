@@ -11,14 +11,16 @@ owns task states and the [roadmap](../../ROADMAP.md) defines acceptance.
 
 ## Read support by exact composition
 
-The [generated measured matrix](evidence/support-matrix-2026-10-12/support-matrix-current.md)
-and [JSON report](evidence/support-matrix-2026-10-12/support-matrix-current.json)
-validate **269 indexed reports / 211 distinct measured cells** (October 12 adds
-63 cells: the 32-cell Celisca missions, the 20-cell 4WS/mecanum drive matrix and
-11 legged-policy walks across MuJoCo, Isaac and Gazebo, one of them the failing
-Isaac B2 stop; the earlier
+The [generated measured matrix](evidence/support-matrix-2026-10-15/support-matrix-current.md)
+and [JSON report](evidence/support-matrix-2026-10-15/support-matrix-current.json)
+validate **380 indexed reports / 251 distinct measured cells**. October 15
+adds 40 cells: the walking robots, cars and 4WS/mecanum patterns on the
+nav_obstacle mission. 243 cells are passed screens and 7 failed screens
+([what changed](evidence/support-matrix-2026-10-15/README.md)). The
+[October 12 matrix](evidence/support-matrix-2026-10-12/support-matrix-current.md)
+(211 cells) and the
 [October 8 matrix](evidence/extensions-finish-2026-10-08/support-matrix-current.md)
-is kept). The latest
+are kept. The latest
 measurement for an exact robot/map/backend/task/steering cell controls its
 record. Unlisted combinations are **not tested**. All full-release gates
 remain blocked by unfinished robot, world, algorithm, backend and reproduction

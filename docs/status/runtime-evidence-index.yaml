@@ -1,7 +1,6 @@
 schema_version: 1
-date: '2026-10-12'
-scope: Exact hashed named simulation screens through October 8; unlisted cells remain
-  untested.
+date: '2026-10-15'
+scope: "Exact hashed named simulation screens through October 15; unlisted cells remain untested."
 raw_artifact_root: /workspace/molar/robot_lab_runtime/r56-qualification-2026-10-05
 records:
 - robot_id: four_wheel_steer_car
@@ -5547,3 +5546,2002 @@ records:
     PhysX drives at 200 Hz; MuJoCo: in-step PD), loc mode on nav_empty; truth-measured /cmd_vel phases.'
   limitations:
   - Flat-map velocity screen; no terrain, push or mission
+- robot_id: unitree_go2
+  environment_id: nav_obstacle
+  simulator: gazebo
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-10-13'
+  revision: b8e8ba5 (round 1, 03:10-03:31, before 0bf1aef)
+  report: docs/status/evidence/p7-legged-navigation-2026-10-13/v1/gazebo_unitree_go2_nav_obstacle.json
+  sha256: d3b29b0d325d0b75020787a8695564560db4c344bf3cf69e99cf473646759634
+  source_hashes: docs/status/evidence/p7-legged-navigation-2026-10-13/v1/source-hashes-b8e8ba5.json
+  source_hashes_sha256: 1de046bea5aaf44c218fe1be0bdb9e14b8ee19ec92ba874a72ff6679ff18d1ae
+  report_kind: mission_screen
+  scope: nav_obstacle mission (detour goal, cancel after travel with stop check, resume, near-obstacle goal) for
+    a walking robot on its provisioned policy with leg kinematic odometry; truth-measured final poses after a settled
+    simulated second. Round details in docs/status/evidence/p7-legged-navigation-2026-10-13.
+  limitations:
+  - One goal seed per report; repeats are separate records
+  - Flat nav_obstacle world; no terrain
+  - Source hashes derived from git at the recorded revision after the run
+- robot_id: unitree_go2
+  environment_id: nav_obstacle
+  simulator: isaac
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-10-13'
+  revision: b8e8ba5 (round 1, 03:10-03:31, before 0bf1aef)
+  report: docs/status/evidence/p7-legged-navigation-2026-10-13/v1/isaac_unitree_go2_nav_obstacle.json
+  sha256: 4ab5c9cd52182bddf51cd1b908b1aed77e656040063bfb51cf0803e0bc78d575
+  source_hashes: docs/status/evidence/p7-legged-navigation-2026-10-13/v1/source-hashes-b8e8ba5.json
+  source_hashes_sha256: 1de046bea5aaf44c218fe1be0bdb9e14b8ee19ec92ba874a72ff6679ff18d1ae
+  report_kind: mission_screen
+  scope: nav_obstacle mission (detour goal, cancel after travel with stop check, resume, near-obstacle goal) for
+    a walking robot on its provisioned policy with leg kinematic odometry; truth-measured final poses after a settled
+    simulated second. Round details in docs/status/evidence/p7-legged-navigation-2026-10-13.
+  limitations:
+  - One goal seed per report; repeats are separate records
+  - Flat nav_obstacle world; no terrain
+  - Source hashes derived from git at the recorded revision after the run
+- robot_id: unitree_a1
+  environment_id: nav_obstacle
+  simulator: mujoco
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-10-13'
+  revision: b8e8ba5 (round 1, 03:10-03:31, before 0bf1aef)
+  report: docs/status/evidence/p7-legged-navigation-2026-10-13/v1/mujoco_unitree_a1_nav_obstacle.json
+  sha256: 0507ee0d3a55e75b3749ec1910823f93ec7b817c32f23efa5b62495c440cdff1
+  source_hashes: docs/status/evidence/p7-legged-navigation-2026-10-13/v1/source-hashes-b8e8ba5.json
+  source_hashes_sha256: 1de046bea5aaf44c218fe1be0bdb9e14b8ee19ec92ba874a72ff6679ff18d1ae
+  report_kind: mission_screen
+  scope: nav_obstacle mission (detour goal, cancel after travel with stop check, resume, near-obstacle goal) for
+    a walking robot on its provisioned policy with leg kinematic odometry; truth-measured final poses after a settled
+    simulated second. Round details in docs/status/evidence/p7-legged-navigation-2026-10-13.
+  limitations:
+  - One goal seed per report; repeats are separate records
+  - Flat nav_obstacle world; no terrain
+  - Source hashes derived from git at the recorded revision after the run
+- robot_id: unitree_g1_29dof
+  environment_id: nav_obstacle
+  simulator: mujoco
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-10-13'
+  revision: b8e8ba5 (round 1, 03:10-03:31, before 0bf1aef)
+  report: docs/status/evidence/p7-legged-navigation-2026-10-13/v1/mujoco_unitree_g1_29dof_nav_obstacle.json
+  sha256: 144ed955e4fd86e2473997fe372cafc01b0c8dda91ee68c1990846cb6302e620
+  source_hashes: docs/status/evidence/p7-legged-navigation-2026-10-13/v1/source-hashes-b8e8ba5.json
+  source_hashes_sha256: 1de046bea5aaf44c218fe1be0bdb9e14b8ee19ec92ba874a72ff6679ff18d1ae
+  report_kind: mission_screen
+  scope: nav_obstacle mission (detour goal, cancel after travel with stop check, resume, near-obstacle goal) for
+    a walking robot on its provisioned policy with leg kinematic odometry; truth-measured final poses after a settled
+    simulated second. Round details in docs/status/evidence/p7-legged-navigation-2026-10-13.
+  limitations:
+  - One goal seed per report; repeats are separate records
+  - Flat nav_obstacle world; no terrain
+  - Source hashes derived from git at the recorded revision after the run
+- robot_id: unitree_go2
+  environment_id: nav_obstacle
+  simulator: mujoco
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-10-13'
+  revision: b8e8ba5 (round 1, 03:10-03:31, before 0bf1aef)
+  report: docs/status/evidence/p7-legged-navigation-2026-10-13/v1/mujoco_unitree_go2_nav_obstacle.json
+  sha256: 3126ecfbe336c9c693cf7b33f6d99f067eff8fd898bbe9356b29b8332f91fef6
+  source_hashes: docs/status/evidence/p7-legged-navigation-2026-10-13/v1/source-hashes-b8e8ba5.json
+  source_hashes_sha256: 1de046bea5aaf44c218fe1be0bdb9e14b8ee19ec92ba874a72ff6679ff18d1ae
+  report_kind: mission_screen
+  scope: nav_obstacle mission (detour goal, cancel after travel with stop check, resume, near-obstacle goal) for
+    a walking robot on its provisioned policy with leg kinematic odometry; truth-measured final poses after a settled
+    simulated second. Round details in docs/status/evidence/p7-legged-navigation-2026-10-13.
+  limitations:
+  - One goal seed per report; repeats are separate records
+  - Flat nav_obstacle world; no terrain
+  - Source hashes derived from git at the recorded revision after the run
+- robot_id: unitree_go2
+  environment_id: nav_obstacle
+  simulator: gazebo
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-10-13'
+  revision: 0df755d (round 2, 06:54-07:15, after 0bf1aef and 71b2dbb)
+  report: docs/status/evidence/p7-legged-navigation-2026-10-13/v2/gazebo_unitree_go2_nav_obstacle.json
+  sha256: 35d3cdffc2e78c07c498718ec00de69fc7ad45a45e39bfc9ddb0a7d22b45c4b8
+  source_hashes: docs/status/evidence/p7-legged-navigation-2026-10-13/v2/source-hashes-0df755d.json
+  source_hashes_sha256: d659ee32fab923828f89292e99ca11c314bc4e1dee076a931ecc086b618186f3
+  report_kind: mission_screen
+  scope: nav_obstacle mission (detour goal, cancel after travel with stop check, resume, near-obstacle goal) for
+    a walking robot on its provisioned policy with leg kinematic odometry; truth-measured final poses after a settled
+    simulated second. Round details in docs/status/evidence/p7-legged-navigation-2026-10-13.
+  limitations:
+  - One goal seed per report; repeats are separate records
+  - Flat nav_obstacle world; no terrain
+  - Source hashes derived from git at the recorded revision after the run
+- robot_id: unitree_go2
+  environment_id: nav_obstacle
+  simulator: isaac
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-10-13'
+  revision: 0df755d (round 2, 06:54-07:15, after 0bf1aef and 71b2dbb)
+  report: docs/status/evidence/p7-legged-navigation-2026-10-13/v2/isaac_unitree_go2_nav_obstacle.json
+  sha256: 0ef01cf5de5d8658087243d38cd556abaaf1356df11bf0cbb34cce65ae06932e
+  source_hashes: docs/status/evidence/p7-legged-navigation-2026-10-13/v2/source-hashes-0df755d.json
+  source_hashes_sha256: d659ee32fab923828f89292e99ca11c314bc4e1dee076a931ecc086b618186f3
+  report_kind: mission_screen
+  scope: nav_obstacle mission (detour goal, cancel after travel with stop check, resume, near-obstacle goal) for
+    a walking robot on its provisioned policy with leg kinematic odometry; truth-measured final poses after a settled
+    simulated second. Round details in docs/status/evidence/p7-legged-navigation-2026-10-13.
+  limitations:
+  - One goal seed per report; repeats are separate records
+  - Flat nav_obstacle world; no terrain
+  - Source hashes derived from git at the recorded revision after the run
+- robot_id: unitree_a1
+  environment_id: nav_obstacle
+  simulator: mujoco
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-10-13'
+  revision: 0df755d (round 2, 06:54-07:15, after 0bf1aef and 71b2dbb)
+  report: docs/status/evidence/p7-legged-navigation-2026-10-13/v2/mujoco_unitree_a1_nav_obstacle.json
+  sha256: b0dced2f5e3f0df664226f28ea9aa521aa0da5e26c001c32217cb5e60bf8c045
+  source_hashes: docs/status/evidence/p7-legged-navigation-2026-10-13/v2/source-hashes-0df755d.json
+  source_hashes_sha256: d659ee32fab923828f89292e99ca11c314bc4e1dee076a931ecc086b618186f3
+  report_kind: mission_screen
+  scope: nav_obstacle mission (detour goal, cancel after travel with stop check, resume, near-obstacle goal) for
+    a walking robot on its provisioned policy with leg kinematic odometry; truth-measured final poses after a settled
+    simulated second. Round details in docs/status/evidence/p7-legged-navigation-2026-10-13.
+  limitations:
+  - One goal seed per report; repeats are separate records
+  - Flat nav_obstacle world; no terrain
+  - Source hashes derived from git at the recorded revision after the run
+- robot_id: unitree_b2
+  environment_id: nav_obstacle
+  simulator: mujoco
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-10-13'
+  revision: 0df755d (round 2, 06:54-07:15, after 0bf1aef and 71b2dbb)
+  report: docs/status/evidence/p7-legged-navigation-2026-10-13/v2/mujoco_unitree_b2_nav_obstacle.json
+  sha256: 2f1be09b32c85e7f9873ea0d8af54005e5861712d71d51371220f89d7e6999f6
+  source_hashes: docs/status/evidence/p7-legged-navigation-2026-10-13/v2/source-hashes-0df755d.json
+  source_hashes_sha256: d659ee32fab923828f89292e99ca11c314bc4e1dee076a931ecc086b618186f3
+  report_kind: mission_screen
+  scope: nav_obstacle mission (detour goal, cancel after travel with stop check, resume, near-obstacle goal) for
+    a walking robot on its provisioned policy with leg kinematic odometry; truth-measured final poses after a settled
+    simulated second. Round details in docs/status/evidence/p7-legged-navigation-2026-10-13.
+  limitations:
+  - One goal seed per report; repeats are separate records
+  - Flat nav_obstacle world; no terrain
+  - Source hashes derived from git at the recorded revision after the run
+- robot_id: unitree_g1_29dof
+  environment_id: nav_obstacle
+  simulator: mujoco
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-10-13'
+  revision: 0df755d (round 2, 06:54-07:15, after 0bf1aef and 71b2dbb)
+  report: docs/status/evidence/p7-legged-navigation-2026-10-13/v2/mujoco_unitree_g1_29dof_nav_obstacle.json
+  sha256: cb65fc599ae6dad8e5662d7ac3ad6db06716b90388aaf48b67ff81a246c5698f
+  source_hashes: docs/status/evidence/p7-legged-navigation-2026-10-13/v2/source-hashes-0df755d.json
+  source_hashes_sha256: d659ee32fab923828f89292e99ca11c314bc4e1dee076a931ecc086b618186f3
+  report_kind: mission_screen
+  scope: nav_obstacle mission (detour goal, cancel after travel with stop check, resume, near-obstacle goal) for
+    a walking robot on its provisioned policy with leg kinematic odometry; truth-measured final poses after a settled
+    simulated second. Round details in docs/status/evidence/p7-legged-navigation-2026-10-13.
+  limitations:
+  - One goal seed per report; repeats are separate records
+  - Flat nav_obstacle world; no terrain
+  - Source hashes derived from git at the recorded revision after the run
+- robot_id: unitree_go2
+  environment_id: nav_obstacle
+  simulator: mujoco
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-10-13'
+  revision: 0df755d (round 2, 06:54-07:15, after 0bf1aef and 71b2dbb)
+  report: docs/status/evidence/p7-legged-navigation-2026-10-13/v2/mujoco_unitree_go2_nav_obstacle.json
+  sha256: 5c387e3f3c8d5727360f4bd3d5ceccf2916e6ae3bc26525c0d345ce5c9eb0075
+  source_hashes: docs/status/evidence/p7-legged-navigation-2026-10-13/v2/source-hashes-0df755d.json
+  source_hashes_sha256: d659ee32fab923828f89292e99ca11c314bc4e1dee076a931ecc086b618186f3
+  report_kind: mission_screen
+  scope: nav_obstacle mission (detour goal, cancel after travel with stop check, resume, near-obstacle goal) for
+    a walking robot on its provisioned policy with leg kinematic odometry; truth-measured final poses after a settled
+    simulated second. Round details in docs/status/evidence/p7-legged-navigation-2026-10-13.
+  limitations:
+  - One goal seed per report; repeats are separate records
+  - Flat nav_obstacle world; no terrain
+  - Source hashes derived from git at the recorded revision after the run
+- robot_id: unitree_go2
+  environment_id: nav_obstacle
+  simulator: gazebo
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-10-13'
+  revision: f36bc5e (round 3, from 10:58)
+  report: docs/status/evidence/p7-legged-navigation-2026-10-13/v3/gazebo_unitree_go2_nav_obstacle.json
+  sha256: 3401dafae368d21237aa101faac72716fe6f516db991a2fd62f7180fc785e7d4
+  source_hashes: docs/status/evidence/p7-legged-navigation-2026-10-13/v3/source-hashes-f36bc5e.json
+  source_hashes_sha256: f15e333faed4a1e4dadf7adef26ba91ca599f806715fc30aafc948f8a8f26949
+  report_kind: mission_screen
+  scope: nav_obstacle mission (detour goal, cancel after travel with stop check, resume, near-obstacle goal) for
+    a walking robot on its provisioned policy with leg kinematic odometry; truth-measured final poses after a settled
+    simulated second. Round details in docs/status/evidence/p7-legged-navigation-2026-10-13.
+  limitations:
+  - One goal seed per report; repeats are separate records
+  - Flat nav_obstacle world; no terrain
+  - Source hashes derived from git at the recorded revision after the run
+- robot_id: unitree_a1
+  environment_id: nav_obstacle
+  simulator: isaac
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-10-13'
+  revision: f36bc5e (round 3, from 10:58)
+  report: docs/status/evidence/p7-legged-navigation-2026-10-13/v3/isaac_unitree_a1_nav_obstacle.json
+  sha256: 47e48fbe67bd3aa5dae3e72923982a27f0287f21d61085650e4b89e1c0265987
+  source_hashes: docs/status/evidence/p7-legged-navigation-2026-10-13/v3/source-hashes-f36bc5e.json
+  source_hashes_sha256: f15e333faed4a1e4dadf7adef26ba91ca599f806715fc30aafc948f8a8f26949
+  report_kind: mission_screen
+  scope: nav_obstacle mission (detour goal, cancel after travel with stop check, resume, near-obstacle goal) for
+    a walking robot on its provisioned policy with leg kinematic odometry; truth-measured final poses after a settled
+    simulated second. Round details in docs/status/evidence/p7-legged-navigation-2026-10-13.
+  limitations:
+  - One goal seed per report; repeats are separate records
+  - Flat nav_obstacle world; no terrain
+  - Source hashes derived from git at the recorded revision after the run
+- robot_id: unitree_g1_29dof
+  environment_id: nav_obstacle
+  simulator: isaac
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-10-13'
+  revision: f36bc5e (round 3, from 10:58)
+  report: docs/status/evidence/p7-legged-navigation-2026-10-13/v3/isaac_unitree_g1_29dof_nav_obstacle.json
+  sha256: 1590ef2f360c5fa3b73375eada64a8a5229cb258798285e0536c9635802abed9
+  source_hashes: docs/status/evidence/p7-legged-navigation-2026-10-13/v3/source-hashes-f36bc5e.json
+  source_hashes_sha256: f15e333faed4a1e4dadf7adef26ba91ca599f806715fc30aafc948f8a8f26949
+  report_kind: mission_screen
+  scope: nav_obstacle mission (detour goal, cancel after travel with stop check, resume, near-obstacle goal) for
+    a walking robot on its provisioned policy with leg kinematic odometry; truth-measured final poses after a settled
+    simulated second. Round details in docs/status/evidence/p7-legged-navigation-2026-10-13.
+  limitations:
+  - One goal seed per report; repeats are separate records
+  - Flat nav_obstacle world; no terrain
+  - Source hashes derived from git at the recorded revision after the run
+- robot_id: unitree_a1
+  environment_id: nav_obstacle
+  simulator: mujoco
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-10-13'
+  revision: f36bc5e (round 3, from 10:58)
+  report: docs/status/evidence/p7-legged-navigation-2026-10-13/v3/mujoco_unitree_a1_nav_obstacle.json
+  sha256: a8626b08f3c784c5912f5adab50a047231e6cbf5ef7bc295b3d19e1b0508e926
+  source_hashes: docs/status/evidence/p7-legged-navigation-2026-10-13/v3/source-hashes-f36bc5e.json
+  source_hashes_sha256: f15e333faed4a1e4dadf7adef26ba91ca599f806715fc30aafc948f8a8f26949
+  report_kind: mission_screen
+  scope: nav_obstacle mission (detour goal, cancel after travel with stop check, resume, near-obstacle goal) for
+    a walking robot on its provisioned policy with leg kinematic odometry; truth-measured final poses after a settled
+    simulated second. Round details in docs/status/evidence/p7-legged-navigation-2026-10-13.
+  limitations:
+  - One goal seed per report; repeats are separate records
+  - Flat nav_obstacle world; no terrain
+  - Source hashes derived from git at the recorded revision after the run
+- robot_id: unitree_b2
+  environment_id: nav_obstacle
+  simulator: mujoco
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-10-13'
+  revision: f36bc5e (round 3, from 10:58)
+  report: docs/status/evidence/p7-legged-navigation-2026-10-13/v3/mujoco_unitree_b2_nav_obstacle.json
+  sha256: dab0b84605260447991d4a9ba32193ad10b457451cc8eb9b158b6724fe681792
+  source_hashes: docs/status/evidence/p7-legged-navigation-2026-10-13/v3/source-hashes-f36bc5e.json
+  source_hashes_sha256: f15e333faed4a1e4dadf7adef26ba91ca599f806715fc30aafc948f8a8f26949
+  report_kind: mission_screen
+  scope: nav_obstacle mission (detour goal, cancel after travel with stop check, resume, near-obstacle goal) for
+    a walking robot on its provisioned policy with leg kinematic odometry; truth-measured final poses after a settled
+    simulated second. Round details in docs/status/evidence/p7-legged-navigation-2026-10-13.
+  limitations:
+  - One goal seed per report; repeats are separate records
+  - Flat nav_obstacle world; no terrain
+  - Source hashes derived from git at the recorded revision after the run
+- robot_id: unitree_g1_29dof
+  environment_id: nav_obstacle
+  simulator: mujoco
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-10-13'
+  revision: f36bc5e (round 3, from 10:58)
+  report: docs/status/evidence/p7-legged-navigation-2026-10-13/v3/mujoco_unitree_g1_29dof_nav_obstacle.json
+  sha256: 4f3183644b19329419770ec559ae849d33dc94450a34945320dc17edbeaabd57
+  source_hashes: docs/status/evidence/p7-legged-navigation-2026-10-13/v3/source-hashes-f36bc5e.json
+  source_hashes_sha256: f15e333faed4a1e4dadf7adef26ba91ca599f806715fc30aafc948f8a8f26949
+  report_kind: mission_screen
+  scope: nav_obstacle mission (detour goal, cancel after travel with stop check, resume, near-obstacle goal) for
+    a walking robot on its provisioned policy with leg kinematic odometry; truth-measured final poses after a settled
+    simulated second. Round details in docs/status/evidence/p7-legged-navigation-2026-10-13.
+  limitations:
+  - One goal seed per report; repeats are separate records
+  - Flat nav_obstacle world; no terrain
+  - Source hashes derived from git at the recorded revision after the run
+- robot_id: unitree_go2
+  environment_id: nav_obstacle
+  simulator: mujoco
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-10-13'
+  revision: f36bc5e (round 3, from 10:58)
+  report: docs/status/evidence/p7-legged-navigation-2026-10-13/v3/mujoco_unitree_go2_nav_obstacle.json
+  sha256: 8dd6f9827de1f5c2685b1ba857a70ecb5b547b1926db4340ea3b9b5e1c9356b5
+  source_hashes: docs/status/evidence/p7-legged-navigation-2026-10-13/v3/source-hashes-f36bc5e.json
+  source_hashes_sha256: f15e333faed4a1e4dadf7adef26ba91ca599f806715fc30aafc948f8a8f26949
+  report_kind: mission_screen
+  scope: nav_obstacle mission (detour goal, cancel after travel with stop check, resume, near-obstacle goal) for
+    a walking robot on its provisioned policy with leg kinematic odometry; truth-measured final poses after a settled
+    simulated second. Round details in docs/status/evidence/p7-legged-navigation-2026-10-13.
+  limitations:
+  - One goal seed per report; repeats are separate records
+  - Flat nav_obstacle world; no terrain
+  - Source hashes derived from git at the recorded revision after the run
+- robot_id: unitree_go2
+  environment_id: nav_obstacle
+  simulator: gazebo
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-10-13'
+  revision: 59c6ca6 (round 4, from 11:55)
+  report: docs/status/evidence/p7-legged-navigation-2026-10-13/v4/gazebo_unitree_go2_nav_obstacle.json
+  sha256: ac4fc8c32b9564f822e6e1e77f72bdd8bfe9f91610a65148475cde2832258e93
+  source_hashes: docs/status/evidence/p7-legged-navigation-2026-10-13/v4/source-hashes-59c6ca6.json
+  source_hashes_sha256: c88083e662267f910bd8f08836032719d010b1d3f32b711d46e2b451e27c587f
+  report_kind: mission_screen
+  scope: nav_obstacle mission (detour goal, cancel after travel with stop check, resume, near-obstacle goal) for
+    a walking robot on its provisioned policy with leg kinematic odometry; truth-measured final poses after a settled
+    simulated second. Round details in docs/status/evidence/p7-legged-navigation-2026-10-13.
+  limitations:
+  - One goal seed per report; repeats are separate records
+  - Flat nav_obstacle world; no terrain
+  - Source hashes derived from git at the recorded revision after the run
+- robot_id: unitree_g1_29dof
+  environment_id: nav_obstacle
+  simulator: isaac
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-10-13'
+  revision: 59c6ca6 (round 4, from 11:55)
+  report: docs/status/evidence/p7-legged-navigation-2026-10-13/v4/isaac_unitree_g1_29dof_nav_obstacle.json
+  sha256: 5b9d0d622016d83ab1303392581d61bdc91d5bd0ef982a5799b79ed17d93bc13
+  source_hashes: docs/status/evidence/p7-legged-navigation-2026-10-13/v4/source-hashes-59c6ca6.json
+  source_hashes_sha256: c88083e662267f910bd8f08836032719d010b1d3f32b711d46e2b451e27c587f
+  report_kind: mission_screen
+  scope: nav_obstacle mission (detour goal, cancel after travel with stop check, resume, near-obstacle goal) for
+    a walking robot on its provisioned policy with leg kinematic odometry; truth-measured final poses after a settled
+    simulated second. Round details in docs/status/evidence/p7-legged-navigation-2026-10-13.
+  limitations:
+  - One goal seed per report; repeats are separate records
+  - Flat nav_obstacle world; no terrain
+  - Source hashes derived from git at the recorded revision after the run
+- robot_id: unitree_b2
+  environment_id: nav_obstacle
+  simulator: mujoco
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-10-13'
+  revision: 59c6ca6 (round 4, from 11:55)
+  report: docs/status/evidence/p7-legged-navigation-2026-10-13/v4/mujoco_unitree_b2_nav_obstacle.json
+  sha256: e11b3c6e0edd396832ee41505af3fdd042377203b17266490c0ca43b6b4d9f41
+  source_hashes: docs/status/evidence/p7-legged-navigation-2026-10-13/v4/source-hashes-59c6ca6.json
+  source_hashes_sha256: c88083e662267f910bd8f08836032719d010b1d3f32b711d46e2b451e27c587f
+  report_kind: mission_screen
+  scope: nav_obstacle mission (detour goal, cancel after travel with stop check, resume, near-obstacle goal) for
+    a walking robot on its provisioned policy with leg kinematic odometry; truth-measured final poses after a settled
+    simulated second. Round details in docs/status/evidence/p7-legged-navigation-2026-10-13.
+  limitations:
+  - One goal seed per report; repeats are separate records
+  - Flat nav_obstacle world; no terrain
+  - Source hashes derived from git at the recorded revision after the run
+- robot_id: unitree_g1_29dof
+  environment_id: nav_obstacle
+  simulator: mujoco
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-10-13'
+  revision: 59c6ca6 (round 4, from 11:55)
+  report: docs/status/evidence/p7-legged-navigation-2026-10-13/v4/mujoco_unitree_g1_29dof_nav_obstacle.json
+  sha256: 82d044d15cc1eec27f2eea90b21b4b41bb8296399804f6e7fb805a6c4d8bfd7b
+  source_hashes: docs/status/evidence/p7-legged-navigation-2026-10-13/v4/source-hashes-59c6ca6.json
+  source_hashes_sha256: c88083e662267f910bd8f08836032719d010b1d3f32b711d46e2b451e27c587f
+  report_kind: mission_screen
+  scope: nav_obstacle mission (detour goal, cancel after travel with stop check, resume, near-obstacle goal) for
+    a walking robot on its provisioned policy with leg kinematic odometry; truth-measured final poses after a settled
+    simulated second. Round details in docs/status/evidence/p7-legged-navigation-2026-10-13.
+  limitations:
+  - One goal seed per report; repeats are separate records
+  - Flat nav_obstacle world; no terrain
+  - Source hashes derived from git at the recorded revision after the run
+- robot_id: unitree_go2
+  environment_id: nav_obstacle
+  simulator: gazebo
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-10-13'
+  revision: e0e496e (round 5, Gazebo Go2 at 2 ms physics)
+  report: docs/status/evidence/p7-legged-navigation-2026-10-13/v5/gazebo_unitree_go2_nav_obstacle.json
+  sha256: ab6361891dbf4c4a87f8dd4c3fb2a1775868f9d80202f264dba673d1006bfba5
+  source_hashes: docs/status/evidence/p7-legged-navigation-2026-10-13/v5/source-hashes-e0e496e.json
+  source_hashes_sha256: 40bbf28b9c4b13759489d1879c8a054b8ff31de447252c8770f9d23f9d13d158
+  report_kind: mission_screen
+  scope: nav_obstacle mission (detour goal, cancel after travel with stop check, resume, near-obstacle goal) for
+    a walking robot on its provisioned policy with leg kinematic odometry; truth-measured final poses after a settled
+    simulated second. Round details in docs/status/evidence/p7-legged-navigation-2026-10-13.
+  limitations:
+  - One goal seed per report; repeats are separate records
+  - Flat nav_obstacle world; no terrain
+  - Source hashes derived from git at the recorded revision after the run
+- robot_id: unitree_a1
+  environment_id: nav_obstacle
+  simulator: isaac
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-10-13'
+  revision: d17ffa5 (repeats, seeds 2 and 3, 17:28-17:58)
+  report: docs/status/evidence/p7-legged-navigation-2026-10-13/repeats/isaac_unitree_a1_seed2_nav_obstacle.json
+  sha256: 8a1d849c405f3ebe5285736d3378ba26d1f981f77c9713223c3060a6385ab79d
+  source_hashes: docs/status/evidence/p7-legged-navigation-2026-10-13/repeats/source-hashes-d17ffa5.json
+  source_hashes_sha256: 6c96560f1ed5c326cc2362e0a4cb4966da572587e5b05f03f5de4a7e61a9f685
+  report_kind: mission_screen
+  scope: nav_obstacle mission (detour goal, cancel after travel with stop check, resume, near-obstacle goal) for
+    a walking robot on its provisioned policy with leg kinematic odometry; truth-measured final poses after a settled
+    simulated second. Round details in docs/status/evidence/p7-legged-navigation-2026-10-13.
+  limitations:
+  - One goal seed per report; repeats are separate records
+  - Flat nav_obstacle world; no terrain
+  - Source hashes derived from git at the recorded revision after the run
+- robot_id: unitree_a1
+  environment_id: nav_obstacle
+  simulator: isaac
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-10-13'
+  revision: d17ffa5 (repeats, seeds 2 and 3, 17:28-17:58)
+  report: docs/status/evidence/p7-legged-navigation-2026-10-13/repeats/isaac_unitree_a1_seed3_nav_obstacle.json
+  sha256: 9d3c5ca6439731dbbcaa9aafe8fac126ad3e75a6390874f58d24327bd1d378a1
+  source_hashes: docs/status/evidence/p7-legged-navigation-2026-10-13/repeats/source-hashes-d17ffa5.json
+  source_hashes_sha256: 6c96560f1ed5c326cc2362e0a4cb4966da572587e5b05f03f5de4a7e61a9f685
+  report_kind: mission_screen
+  scope: nav_obstacle mission (detour goal, cancel after travel with stop check, resume, near-obstacle goal) for
+    a walking robot on its provisioned policy with leg kinematic odometry; truth-measured final poses after a settled
+    simulated second. Round details in docs/status/evidence/p7-legged-navigation-2026-10-13.
+  limitations:
+  - One goal seed per report; repeats are separate records
+  - Flat nav_obstacle world; no terrain
+  - Source hashes derived from git at the recorded revision after the run
+- robot_id: unitree_g1_29dof
+  environment_id: nav_obstacle
+  simulator: isaac
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-10-13'
+  revision: d17ffa5 (repeats, seeds 2 and 3, 17:28-17:58)
+  report: docs/status/evidence/p7-legged-navigation-2026-10-13/repeats/isaac_unitree_g1_29dof_seed2_nav_obstacle.json
+  sha256: 148eb0a86e35ef23e83afa647a3cda16de4ee00b364dfbd07df19de050e92353
+  source_hashes: docs/status/evidence/p7-legged-navigation-2026-10-13/repeats/source-hashes-d17ffa5.json
+  source_hashes_sha256: 6c96560f1ed5c326cc2362e0a4cb4966da572587e5b05f03f5de4a7e61a9f685
+  report_kind: mission_screen
+  scope: nav_obstacle mission (detour goal, cancel after travel with stop check, resume, near-obstacle goal) for
+    a walking robot on its provisioned policy with leg kinematic odometry; truth-measured final poses after a settled
+    simulated second. Round details in docs/status/evidence/p7-legged-navigation-2026-10-13.
+  limitations:
+  - One goal seed per report; repeats are separate records
+  - Flat nav_obstacle world; no terrain
+  - Source hashes derived from git at the recorded revision after the run
+- robot_id: unitree_g1_29dof
+  environment_id: nav_obstacle
+  simulator: isaac
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-10-13'
+  revision: d17ffa5 (repeats, seeds 2 and 3, 17:28-17:58)
+  report: docs/status/evidence/p7-legged-navigation-2026-10-13/repeats/isaac_unitree_g1_29dof_seed3_nav_obstacle.json
+  sha256: e0589e9fad4b35cc3122845bffd62ca73fd4ee6298c80f5c6d9f10726366bfa4
+  source_hashes: docs/status/evidence/p7-legged-navigation-2026-10-13/repeats/source-hashes-d17ffa5.json
+  source_hashes_sha256: 6c96560f1ed5c326cc2362e0a4cb4966da572587e5b05f03f5de4a7e61a9f685
+  report_kind: mission_screen
+  scope: nav_obstacle mission (detour goal, cancel after travel with stop check, resume, near-obstacle goal) for
+    a walking robot on its provisioned policy with leg kinematic odometry; truth-measured final poses after a settled
+    simulated second. Round details in docs/status/evidence/p7-legged-navigation-2026-10-13.
+  limitations:
+  - One goal seed per report; repeats are separate records
+  - Flat nav_obstacle world; no terrain
+  - Source hashes derived from git at the recorded revision after the run
+- robot_id: unitree_go2
+  environment_id: nav_obstacle
+  simulator: isaac
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-10-13'
+  revision: d17ffa5 (repeats, seeds 2 and 3, 17:28-17:58)
+  report: docs/status/evidence/p7-legged-navigation-2026-10-13/repeats/isaac_unitree_go2_seed2_nav_obstacle.json
+  sha256: a8d7d20f267d25c6b831aa09b0d6a9567ce00cfb3094f3e40794086aa3c383b3
+  source_hashes: docs/status/evidence/p7-legged-navigation-2026-10-13/repeats/source-hashes-d17ffa5.json
+  source_hashes_sha256: 6c96560f1ed5c326cc2362e0a4cb4966da572587e5b05f03f5de4a7e61a9f685
+  report_kind: mission_screen
+  scope: nav_obstacle mission (detour goal, cancel after travel with stop check, resume, near-obstacle goal) for
+    a walking robot on its provisioned policy with leg kinematic odometry; truth-measured final poses after a settled
+    simulated second. Round details in docs/status/evidence/p7-legged-navigation-2026-10-13.
+  limitations:
+  - One goal seed per report; repeats are separate records
+  - Flat nav_obstacle world; no terrain
+  - Source hashes derived from git at the recorded revision after the run
+- robot_id: unitree_go2
+  environment_id: nav_obstacle
+  simulator: isaac
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-10-13'
+  revision: d17ffa5 (repeats, seeds 2 and 3, 17:28-17:58)
+  report: docs/status/evidence/p7-legged-navigation-2026-10-13/repeats/isaac_unitree_go2_seed3_nav_obstacle.json
+  sha256: 02577b70041630a4ee854933bf422a28440e19a4d9dacfc37bba77b45b5c8f5d
+  source_hashes: docs/status/evidence/p7-legged-navigation-2026-10-13/repeats/source-hashes-d17ffa5.json
+  source_hashes_sha256: 6c96560f1ed5c326cc2362e0a4cb4966da572587e5b05f03f5de4a7e61a9f685
+  report_kind: mission_screen
+  scope: nav_obstacle mission (detour goal, cancel after travel with stop check, resume, near-obstacle goal) for
+    a walking robot on its provisioned policy with leg kinematic odometry; truth-measured final poses after a settled
+    simulated second. Round details in docs/status/evidence/p7-legged-navigation-2026-10-13.
+  limitations:
+  - One goal seed per report; repeats are separate records
+  - Flat nav_obstacle world; no terrain
+  - Source hashes derived from git at the recorded revision after the run
+- robot_id: unitree_a1
+  environment_id: nav_obstacle
+  simulator: mujoco
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-10-13'
+  revision: d17ffa5 (repeats, seeds 2 and 3, 17:28-17:58)
+  report: docs/status/evidence/p7-legged-navigation-2026-10-13/repeats/mujoco_unitree_a1_seed2_nav_obstacle.json
+  sha256: ea4082d9f8590d01df91b07c4cb221b0350b9766b73a9d89ebed12b2a4609b2a
+  source_hashes: docs/status/evidence/p7-legged-navigation-2026-10-13/repeats/source-hashes-d17ffa5.json
+  source_hashes_sha256: 6c96560f1ed5c326cc2362e0a4cb4966da572587e5b05f03f5de4a7e61a9f685
+  report_kind: mission_screen
+  scope: nav_obstacle mission (detour goal, cancel after travel with stop check, resume, near-obstacle goal) for
+    a walking robot on its provisioned policy with leg kinematic odometry; truth-measured final poses after a settled
+    simulated second. Round details in docs/status/evidence/p7-legged-navigation-2026-10-13.
+  limitations:
+  - One goal seed per report; repeats are separate records
+  - Flat nav_obstacle world; no terrain
+  - Source hashes derived from git at the recorded revision after the run
+- robot_id: unitree_a1
+  environment_id: nav_obstacle
+  simulator: mujoco
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-10-13'
+  revision: d17ffa5 (repeats, seeds 2 and 3, 17:28-17:58)
+  report: docs/status/evidence/p7-legged-navigation-2026-10-13/repeats/mujoco_unitree_a1_seed3_nav_obstacle.json
+  sha256: 0090c53f0a7ee2d752bce4a3e6323c49a47d32d38c6fe15e4cc6d02cddbc1b27
+  source_hashes: docs/status/evidence/p7-legged-navigation-2026-10-13/repeats/source-hashes-d17ffa5.json
+  source_hashes_sha256: 6c96560f1ed5c326cc2362e0a4cb4966da572587e5b05f03f5de4a7e61a9f685
+  report_kind: mission_screen
+  scope: nav_obstacle mission (detour goal, cancel after travel with stop check, resume, near-obstacle goal) for
+    a walking robot on its provisioned policy with leg kinematic odometry; truth-measured final poses after a settled
+    simulated second. Round details in docs/status/evidence/p7-legged-navigation-2026-10-13.
+  limitations:
+  - One goal seed per report; repeats are separate records
+  - Flat nav_obstacle world; no terrain
+  - Source hashes derived from git at the recorded revision after the run
+- robot_id: unitree_b2
+  environment_id: nav_obstacle
+  simulator: mujoco
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-10-13'
+  revision: d17ffa5 (repeats, seeds 2 and 3, 17:28-17:58)
+  report: docs/status/evidence/p7-legged-navigation-2026-10-13/repeats/mujoco_unitree_b2_seed2_nav_obstacle.json
+  sha256: 8305b4f28d13a5acc95b8b644da2dceabb6aa742034f33cf6b39ba382f0a054c
+  source_hashes: docs/status/evidence/p7-legged-navigation-2026-10-13/repeats/source-hashes-d17ffa5.json
+  source_hashes_sha256: 6c96560f1ed5c326cc2362e0a4cb4966da572587e5b05f03f5de4a7e61a9f685
+  report_kind: mission_screen
+  scope: nav_obstacle mission (detour goal, cancel after travel with stop check, resume, near-obstacle goal) for
+    a walking robot on its provisioned policy with leg kinematic odometry; truth-measured final poses after a settled
+    simulated second. Round details in docs/status/evidence/p7-legged-navigation-2026-10-13.
+  limitations:
+  - One goal seed per report; repeats are separate records
+  - Flat nav_obstacle world; no terrain
+  - Source hashes derived from git at the recorded revision after the run
+- robot_id: unitree_b2
+  environment_id: nav_obstacle
+  simulator: mujoco
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-10-13'
+  revision: d17ffa5 (repeats, seeds 2 and 3, 17:28-17:58)
+  report: docs/status/evidence/p7-legged-navigation-2026-10-13/repeats/mujoco_unitree_b2_seed3_nav_obstacle.json
+  sha256: 86778bf3dd26df17bbc0ed2b89dacde529cee28477c67c3cadd867e47e1c53a5
+  source_hashes: docs/status/evidence/p7-legged-navigation-2026-10-13/repeats/source-hashes-d17ffa5.json
+  source_hashes_sha256: 6c96560f1ed5c326cc2362e0a4cb4966da572587e5b05f03f5de4a7e61a9f685
+  report_kind: mission_screen
+  scope: nav_obstacle mission (detour goal, cancel after travel with stop check, resume, near-obstacle goal) for
+    a walking robot on its provisioned policy with leg kinematic odometry; truth-measured final poses after a settled
+    simulated second. Round details in docs/status/evidence/p7-legged-navigation-2026-10-13.
+  limitations:
+  - One goal seed per report; repeats are separate records
+  - Flat nav_obstacle world; no terrain
+  - Source hashes derived from git at the recorded revision after the run
+- robot_id: unitree_g1_29dof
+  environment_id: nav_obstacle
+  simulator: mujoco
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-10-13'
+  revision: d17ffa5 (repeats, seeds 2 and 3, 17:28-17:58)
+  report: docs/status/evidence/p7-legged-navigation-2026-10-13/repeats/mujoco_unitree_g1_29dof_seed2_nav_obstacle.json
+  sha256: 7cc938a4e342bfa7315b0945dba5cc2e1cfdc6f9e3b38c3abdfca7cb63ec4608
+  source_hashes: docs/status/evidence/p7-legged-navigation-2026-10-13/repeats/source-hashes-d17ffa5.json
+  source_hashes_sha256: 6c96560f1ed5c326cc2362e0a4cb4966da572587e5b05f03f5de4a7e61a9f685
+  report_kind: mission_screen
+  scope: nav_obstacle mission (detour goal, cancel after travel with stop check, resume, near-obstacle goal) for
+    a walking robot on its provisioned policy with leg kinematic odometry; truth-measured final poses after a settled
+    simulated second. Round details in docs/status/evidence/p7-legged-navigation-2026-10-13.
+  limitations:
+  - One goal seed per report; repeats are separate records
+  - Flat nav_obstacle world; no terrain
+  - Source hashes derived from git at the recorded revision after the run
+- robot_id: unitree_g1_29dof
+  environment_id: nav_obstacle
+  simulator: mujoco
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-10-13'
+  revision: d17ffa5 (repeats, seeds 2 and 3, 17:28-17:58)
+  report: docs/status/evidence/p7-legged-navigation-2026-10-13/repeats/mujoco_unitree_g1_29dof_seed3_nav_obstacle.json
+  sha256: 908767c4de524f0b9e936e6c92b3d4b3ee6ae00e297120535f6b8b8c13146b79
+  source_hashes: docs/status/evidence/p7-legged-navigation-2026-10-13/repeats/source-hashes-d17ffa5.json
+  source_hashes_sha256: 6c96560f1ed5c326cc2362e0a4cb4966da572587e5b05f03f5de4a7e61a9f685
+  report_kind: mission_screen
+  scope: nav_obstacle mission (detour goal, cancel after travel with stop check, resume, near-obstacle goal) for
+    a walking robot on its provisioned policy with leg kinematic odometry; truth-measured final poses after a settled
+    simulated second. Round details in docs/status/evidence/p7-legged-navigation-2026-10-13.
+  limitations:
+  - One goal seed per report; repeats are separate records
+  - Flat nav_obstacle world; no terrain
+  - Source hashes derived from git at the recorded revision after the run
+- robot_id: unitree_go2
+  environment_id: nav_obstacle
+  simulator: mujoco
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-10-13'
+  revision: d17ffa5 (repeats, seeds 2 and 3, 17:28-17:58)
+  report: docs/status/evidence/p7-legged-navigation-2026-10-13/repeats/mujoco_unitree_go2_seed2_nav_obstacle.json
+  sha256: abf4b923032611c3f4b00aa57c10f6c787d064d633a160f992c8765b8dbfe52d
+  source_hashes: docs/status/evidence/p7-legged-navigation-2026-10-13/repeats/source-hashes-d17ffa5.json
+  source_hashes_sha256: 6c96560f1ed5c326cc2362e0a4cb4966da572587e5b05f03f5de4a7e61a9f685
+  report_kind: mission_screen
+  scope: nav_obstacle mission (detour goal, cancel after travel with stop check, resume, near-obstacle goal) for
+    a walking robot on its provisioned policy with leg kinematic odometry; truth-measured final poses after a settled
+    simulated second. Round details in docs/status/evidence/p7-legged-navigation-2026-10-13.
+  limitations:
+  - One goal seed per report; repeats are separate records
+  - Flat nav_obstacle world; no terrain
+  - Source hashes derived from git at the recorded revision after the run
+- robot_id: unitree_go2
+  environment_id: nav_obstacle
+  simulator: mujoco
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-10-13'
+  revision: d17ffa5 (repeats, seeds 2 and 3, 17:28-17:58)
+  report: docs/status/evidence/p7-legged-navigation-2026-10-13/repeats/mujoco_unitree_go2_seed3_nav_obstacle.json
+  sha256: a0138880f7cb5f9fe973b2ce776b7d1d609750f70196ed3f11e0f14acae48b6d
+  source_hashes: docs/status/evidence/p7-legged-navigation-2026-10-13/repeats/source-hashes-d17ffa5.json
+  source_hashes_sha256: 6c96560f1ed5c326cc2362e0a4cb4966da572587e5b05f03f5de4a7e61a9f685
+  report_kind: mission_screen
+  scope: nav_obstacle mission (detour goal, cancel after travel with stop check, resume, near-obstacle goal) for
+    a walking robot on its provisioned policy with leg kinematic odometry; truth-measured final poses after a settled
+    simulated second. Round details in docs/status/evidence/p7-legged-navigation-2026-10-13.
+  limitations:
+  - One goal seed per report; repeats are separate records
+  - Flat nav_obstacle world; no terrain
+  - Source hashes derived from git at the recorded revision after the run
+- robot_id: unitree_go2
+  environment_id: nav_obstacle
+  simulator: gazebo
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-10-13'
+  revision: 4e93bcc (round 6, Gazebo Go2 back-up recovery, 17:58)
+  report: docs/status/evidence/p7-legged-navigation-2026-10-13/v6/gazebo_unitree_go2_nav_obstacle.json
+  sha256: b2972f5913848f9d07bd2091d39f9beb647dfc5180de08cd8c507f922a46a58c
+  source_hashes: docs/status/evidence/p7-legged-navigation-2026-10-13/v6/source-hashes-4e93bcc.json
+  source_hashes_sha256: 93e94aa5b610a47fa05f0efa392fe80064d0718c691c6b579f49c3d5f66503bf
+  report_kind: mission_screen
+  scope: nav_obstacle mission (detour goal, cancel after travel with stop check, resume, near-obstacle goal) for
+    a walking robot on its provisioned policy with leg kinematic odometry; truth-measured final poses after a settled
+    simulated second. Round details in docs/status/evidence/p7-legged-navigation-2026-10-13.
+  limitations:
+  - One goal seed per report; repeats are separate records
+  - Flat nav_obstacle world; no terrain
+  - Source hashes derived from git at the recorded revision after the run
+- robot_id: unitree_go2
+  environment_id: nav_obstacle
+  simulator: gazebo
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-10-15'
+  revision: 8f3bf4f (forward-arc round 1, 11:11-11:20)
+  report: docs/status/evidence/p7-legged-navigation-2026-10-13/forward-arc-1/gazebo_unitree_go2_seed1_nav_obstacle.json
+  sha256: 2c2888775c506c3f24527cdefc20c70c76ac687aad7d46ae3340724d3db314ed
+  source_hashes: docs/status/evidence/p7-legged-navigation-2026-10-13/forward-arc-1/source-hashes-8f3bf4f.json
+  source_hashes_sha256: faee70cafa7039085c031a5214eff31897a7b3d37e0ed22fbd15074792abfbdf
+  report_kind: mission_screen
+  scope: nav_obstacle mission (detour goal, cancel after travel with stop check, resume, near-obstacle goal) for
+    a walking robot on its provisioned policy with leg kinematic odometry; truth-measured final poses after a settled
+    simulated second. Round details in docs/status/evidence/p7-legged-navigation-2026-10-13.
+  limitations:
+  - One goal seed per report; repeats are separate records
+  - Flat nav_obstacle world; no terrain
+  - Source hashes derived from git at the recorded revision after the run
+- robot_id: unitree_b2
+  environment_id: nav_obstacle
+  simulator: mujoco
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-10-15'
+  revision: 8f3bf4f (forward-arc round 1, 11:11-11:20)
+  report: docs/status/evidence/p7-legged-navigation-2026-10-13/forward-arc-1/mujoco_unitree_b2_seed1_nav_obstacle.json
+  sha256: d14bc20303f1e463c2d667c2e0d3fbd3e0bed932ff760b99a3e64d1063894b59
+  source_hashes: docs/status/evidence/p7-legged-navigation-2026-10-13/forward-arc-1/source-hashes-8f3bf4f.json
+  source_hashes_sha256: faee70cafa7039085c031a5214eff31897a7b3d37e0ed22fbd15074792abfbdf
+  report_kind: mission_screen
+  scope: nav_obstacle mission (detour goal, cancel after travel with stop check, resume, near-obstacle goal) for
+    a walking robot on its provisioned policy with leg kinematic odometry; truth-measured final poses after a settled
+    simulated second. Round details in docs/status/evidence/p7-legged-navigation-2026-10-13.
+  limitations:
+  - One goal seed per report; repeats are separate records
+  - Flat nav_obstacle world; no terrain
+  - Source hashes derived from git at the recorded revision after the run
+- robot_id: unitree_b2
+  environment_id: nav_obstacle
+  simulator: mujoco
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-10-15'
+  revision: 8f3bf4f (forward-arc round 1, 11:11-11:20)
+  report: docs/status/evidence/p7-legged-navigation-2026-10-13/forward-arc-1/mujoco_unitree_b2_seed2_nav_obstacle.json
+  sha256: 07c6868063e353929670c3ce75c55f7100b08851772a11fa5075327e84ef0c46
+  source_hashes: docs/status/evidence/p7-legged-navigation-2026-10-13/forward-arc-1/source-hashes-8f3bf4f.json
+  source_hashes_sha256: faee70cafa7039085c031a5214eff31897a7b3d37e0ed22fbd15074792abfbdf
+  report_kind: mission_screen
+  scope: nav_obstacle mission (detour goal, cancel after travel with stop check, resume, near-obstacle goal) for
+    a walking robot on its provisioned policy with leg kinematic odometry; truth-measured final poses after a settled
+    simulated second. Round details in docs/status/evidence/p7-legged-navigation-2026-10-13.
+  limitations:
+  - One goal seed per report; repeats are separate records
+  - Flat nav_obstacle world; no terrain
+  - Source hashes derived from git at the recorded revision after the run
+- robot_id: unitree_b2
+  environment_id: nav_obstacle
+  simulator: mujoco
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-10-15'
+  revision: 8f3bf4f (forward-arc round 1, 11:11-11:20)
+  report: docs/status/evidence/p7-legged-navigation-2026-10-13/forward-arc-1/mujoco_unitree_b2_seed3_nav_obstacle.json
+  sha256: b9073f0d889c8a7359c97ecebdd0119936a9c16c5b0b6bda6c350b4012fb4245
+  source_hashes: docs/status/evidence/p7-legged-navigation-2026-10-13/forward-arc-1/source-hashes-8f3bf4f.json
+  source_hashes_sha256: faee70cafa7039085c031a5214eff31897a7b3d37e0ed22fbd15074792abfbdf
+  report_kind: mission_screen
+  scope: nav_obstacle mission (detour goal, cancel after travel with stop check, resume, near-obstacle goal) for
+    a walking robot on its provisioned policy with leg kinematic odometry; truth-measured final poses after a settled
+    simulated second. Round details in docs/status/evidence/p7-legged-navigation-2026-10-13.
+  limitations:
+  - One goal seed per report; repeats are separate records
+  - Flat nav_obstacle world; no terrain
+  - Source hashes derived from git at the recorded revision after the run
+- robot_id: unitree_go2
+  environment_id: nav_obstacle
+  simulator: mujoco
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-10-15'
+  revision: 8f3bf4f (forward-arc round 1, 11:11-11:20)
+  report: docs/status/evidence/p7-legged-navigation-2026-10-13/forward-arc-1/mujoco_unitree_go2_seed1_nav_obstacle.json
+  sha256: f20880f6bfca882838ada000d23bbfa3846beaa4261598a582e9fd4faf597c2d
+  source_hashes: docs/status/evidence/p7-legged-navigation-2026-10-13/forward-arc-1/source-hashes-8f3bf4f.json
+  source_hashes_sha256: faee70cafa7039085c031a5214eff31897a7b3d37e0ed22fbd15074792abfbdf
+  report_kind: mission_screen
+  scope: nav_obstacle mission (detour goal, cancel after travel with stop check, resume, near-obstacle goal) for
+    a walking robot on its provisioned policy with leg kinematic odometry; truth-measured final poses after a settled
+    simulated second. Round details in docs/status/evidence/p7-legged-navigation-2026-10-13.
+  limitations:
+  - One goal seed per report; repeats are separate records
+  - Flat nav_obstacle world; no terrain
+  - Source hashes derived from git at the recorded revision after the run
+- robot_id: unitree_go2
+  environment_id: nav_obstacle
+  simulator: mujoco
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-10-15'
+  revision: 8f3bf4f (forward-arc round 1, 11:11-11:20)
+  report: docs/status/evidence/p7-legged-navigation-2026-10-13/forward-arc-1/mujoco_unitree_go2_seed2_nav_obstacle.json
+  sha256: 841a2fcbe3f5f57f992bea3144a72157295644d190f999f954e961b4334874f9
+  source_hashes: docs/status/evidence/p7-legged-navigation-2026-10-13/forward-arc-1/source-hashes-8f3bf4f.json
+  source_hashes_sha256: faee70cafa7039085c031a5214eff31897a7b3d37e0ed22fbd15074792abfbdf
+  report_kind: mission_screen
+  scope: nav_obstacle mission (detour goal, cancel after travel with stop check, resume, near-obstacle goal) for
+    a walking robot on its provisioned policy with leg kinematic odometry; truth-measured final poses after a settled
+    simulated second. Round details in docs/status/evidence/p7-legged-navigation-2026-10-13.
+  limitations:
+  - One goal seed per report; repeats are separate records
+  - Flat nav_obstacle world; no terrain
+  - Source hashes derived from git at the recorded revision after the run
+- robot_id: unitree_go2
+  environment_id: nav_obstacle
+  simulator: mujoco
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-10-15'
+  revision: 8f3bf4f (forward-arc round 1, 11:11-11:20)
+  report: docs/status/evidence/p7-legged-navigation-2026-10-13/forward-arc-1/mujoco_unitree_go2_seed3_nav_obstacle.json
+  sha256: a769361f21a648e78d28b23f8008af933ad0d5b3e031c90769c2685c3b2c2bb2
+  source_hashes: docs/status/evidence/p7-legged-navigation-2026-10-13/forward-arc-1/source-hashes-8f3bf4f.json
+  source_hashes_sha256: faee70cafa7039085c031a5214eff31897a7b3d37e0ed22fbd15074792abfbdf
+  report_kind: mission_screen
+  scope: nav_obstacle mission (detour goal, cancel after travel with stop check, resume, near-obstacle goal) for
+    a walking robot on its provisioned policy with leg kinematic odometry; truth-measured final poses after a settled
+    simulated second. Round details in docs/status/evidence/p7-legged-navigation-2026-10-13.
+  limitations:
+  - One goal seed per report; repeats are separate records
+  - Flat nav_obstacle world; no terrain
+  - Source hashes derived from git at the recorded revision after the run
+- robot_id: unitree_go2
+  environment_id: nav_obstacle
+  simulator: gazebo
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-10-15'
+  revision: 463117e (forward-arc round 2)
+  report: docs/status/evidence/p7-legged-navigation-2026-10-13/forward-arc-2/gazebo_unitree_go2_seed2_nav_obstacle.json
+  sha256: 232adc315b467f7e4896321d72ae6f07e312147dafef3730f7812d9c29177413
+  source_hashes: docs/status/evidence/p7-legged-navigation-2026-10-13/forward-arc-2/source-hashes-463117e.json
+  source_hashes_sha256: 19738833528a95eca4fb6899cd8453a70ac7578d7b84a899e068ae40c1b381f8
+  report_kind: mission_screen
+  scope: nav_obstacle mission (detour goal, cancel after travel with stop check, resume, near-obstacle goal) for
+    a walking robot on its provisioned policy with leg kinematic odometry; truth-measured final poses after a settled
+    simulated second. Round details in docs/status/evidence/p7-legged-navigation-2026-10-13.
+  limitations:
+  - One goal seed per report; repeats are separate records
+  - Flat nav_obstacle world; no terrain
+  - Source hashes derived from git at the recorded revision after the run
+- robot_id: unitree_go2
+  environment_id: nav_obstacle
+  simulator: gazebo
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-10-15'
+  revision: 463117e (forward-arc round 2)
+  report: docs/status/evidence/p7-legged-navigation-2026-10-13/forward-arc-2/gazebo_unitree_go2_seed3_nav_obstacle.json
+  sha256: 6b4de7222f03bf6d7bb4261247927cbf615f992a42dd390f11c256072ef4cf5b
+  source_hashes: docs/status/evidence/p7-legged-navigation-2026-10-13/forward-arc-2/source-hashes-463117e.json
+  source_hashes_sha256: 19738833528a95eca4fb6899cd8453a70ac7578d7b84a899e068ae40c1b381f8
+  report_kind: mission_screen
+  scope: nav_obstacle mission (detour goal, cancel after travel with stop check, resume, near-obstacle goal) for
+    a walking robot on its provisioned policy with leg kinematic odometry; truth-measured final poses after a settled
+    simulated second. Round details in docs/status/evidence/p7-legged-navigation-2026-10-13.
+  limitations:
+  - One goal seed per report; repeats are separate records
+  - Flat nav_obstacle world; no terrain
+  - Source hashes derived from git at the recorded revision after the run
+- robot_id: unitree_b2
+  environment_id: nav_obstacle
+  simulator: mujoco
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-10-15'
+  revision: 463117e (forward-arc round 2)
+  report: docs/status/evidence/p7-legged-navigation-2026-10-13/forward-arc-2/mujoco_unitree_b2_seed1_nav_obstacle.json
+  sha256: 6b8f67a5e69dac76bb43d99e08a60dc44f510297c4ac8f491fb62d22dc59d9c9
+  source_hashes: docs/status/evidence/p7-legged-navigation-2026-10-13/forward-arc-2/source-hashes-463117e.json
+  source_hashes_sha256: 19738833528a95eca4fb6899cd8453a70ac7578d7b84a899e068ae40c1b381f8
+  report_kind: mission_screen
+  scope: nav_obstacle mission (detour goal, cancel after travel with stop check, resume, near-obstacle goal) for
+    a walking robot on its provisioned policy with leg kinematic odometry; truth-measured final poses after a settled
+    simulated second. Round details in docs/status/evidence/p7-legged-navigation-2026-10-13.
+  limitations:
+  - One goal seed per report; repeats are separate records
+  - Flat nav_obstacle world; no terrain
+  - Source hashes derived from git at the recorded revision after the run
+- robot_id: unitree_b2
+  environment_id: nav_obstacle
+  simulator: mujoco
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-10-15'
+  revision: 463117e (forward-arc round 2)
+  report: docs/status/evidence/p7-legged-navigation-2026-10-13/forward-arc-2/mujoco_unitree_b2_seed2_nav_obstacle.json
+  sha256: c25d91dca0327799d7ad8127b6a021a7bfee4043f663f2df0df4c085efb790b5
+  source_hashes: docs/status/evidence/p7-legged-navigation-2026-10-13/forward-arc-2/source-hashes-463117e.json
+  source_hashes_sha256: 19738833528a95eca4fb6899cd8453a70ac7578d7b84a899e068ae40c1b381f8
+  report_kind: mission_screen
+  scope: nav_obstacle mission (detour goal, cancel after travel with stop check, resume, near-obstacle goal) for
+    a walking robot on its provisioned policy with leg kinematic odometry; truth-measured final poses after a settled
+    simulated second. Round details in docs/status/evidence/p7-legged-navigation-2026-10-13.
+  limitations:
+  - One goal seed per report; repeats are separate records
+  - Flat nav_obstacle world; no terrain
+  - Source hashes derived from git at the recorded revision after the run
+- robot_id: unitree_b2
+  environment_id: nav_obstacle
+  simulator: mujoco
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-10-15'
+  revision: 463117e (forward-arc round 2)
+  report: docs/status/evidence/p7-legged-navigation-2026-10-13/forward-arc-2/mujoco_unitree_b2_seed3_nav_obstacle.json
+  sha256: 579387d849e0ec985fb47f27e831f31f0f084dc33453728f066be2d5fa23c4e7
+  source_hashes: docs/status/evidence/p7-legged-navigation-2026-10-13/forward-arc-2/source-hashes-463117e.json
+  source_hashes_sha256: 19738833528a95eca4fb6899cd8453a70ac7578d7b84a899e068ae40c1b381f8
+  report_kind: mission_screen
+  scope: nav_obstacle mission (detour goal, cancel after travel with stop check, resume, near-obstacle goal) for
+    a walking robot on its provisioned policy with leg kinematic odometry; truth-measured final poses after a settled
+    simulated second. Round details in docs/status/evidence/p7-legged-navigation-2026-10-13.
+  limitations:
+  - One goal seed per report; repeats are separate records
+  - Flat nav_obstacle world; no terrain
+  - Source hashes derived from git at the recorded revision after the run
+- robot_id: unitree_go2
+  environment_id: nav_obstacle
+  simulator: mujoco
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-10-15'
+  revision: 463117e (forward-arc round 2)
+  report: docs/status/evidence/p7-legged-navigation-2026-10-13/forward-arc-2/mujoco_unitree_go2_seed1_nav_obstacle.json
+  sha256: dcc8f46e0ad81102af5a666cf28d84008c0bd9f62d5248b1c14b140b53bca508
+  source_hashes: docs/status/evidence/p7-legged-navigation-2026-10-13/forward-arc-2/source-hashes-463117e.json
+  source_hashes_sha256: 19738833528a95eca4fb6899cd8453a70ac7578d7b84a899e068ae40c1b381f8
+  report_kind: mission_screen
+  scope: nav_obstacle mission (detour goal, cancel after travel with stop check, resume, near-obstacle goal) for
+    a walking robot on its provisioned policy with leg kinematic odometry; truth-measured final poses after a settled
+    simulated second. Round details in docs/status/evidence/p7-legged-navigation-2026-10-13.
+  limitations:
+  - One goal seed per report; repeats are separate records
+  - Flat nav_obstacle world; no terrain
+  - Source hashes derived from git at the recorded revision after the run
+- robot_id: unitree_go2
+  environment_id: nav_obstacle
+  simulator: mujoco
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-10-15'
+  revision: 463117e (forward-arc round 2)
+  report: docs/status/evidence/p7-legged-navigation-2026-10-13/forward-arc-2/mujoco_unitree_go2_seed2_nav_obstacle.json
+  sha256: b6a241026d75204a907ed7c77ccf336bfcf6a86769b465b9a80aa96d290cba80
+  source_hashes: docs/status/evidence/p7-legged-navigation-2026-10-13/forward-arc-2/source-hashes-463117e.json
+  source_hashes_sha256: 19738833528a95eca4fb6899cd8453a70ac7578d7b84a899e068ae40c1b381f8
+  report_kind: mission_screen
+  scope: nav_obstacle mission (detour goal, cancel after travel with stop check, resume, near-obstacle goal) for
+    a walking robot on its provisioned policy with leg kinematic odometry; truth-measured final poses after a settled
+    simulated second. Round details in docs/status/evidence/p7-legged-navigation-2026-10-13.
+  limitations:
+  - One goal seed per report; repeats are separate records
+  - Flat nav_obstacle world; no terrain
+  - Source hashes derived from git at the recorded revision after the run
+- robot_id: unitree_go2
+  environment_id: nav_obstacle
+  simulator: mujoco
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-10-15'
+  revision: 463117e (forward-arc round 2)
+  report: docs/status/evidence/p7-legged-navigation-2026-10-13/forward-arc-2/mujoco_unitree_go2_seed3_nav_obstacle.json
+  sha256: 8ea1cc86e69a7eec2c4d0a931213805d4429f0630078c43339fe2e187c37e9cd
+  source_hashes: docs/status/evidence/p7-legged-navigation-2026-10-13/forward-arc-2/source-hashes-463117e.json
+  source_hashes_sha256: 19738833528a95eca4fb6899cd8453a70ac7578d7b84a899e068ae40c1b381f8
+  report_kind: mission_screen
+  scope: nav_obstacle mission (detour goal, cancel after travel with stop check, resume, near-obstacle goal) for
+    a walking robot on its provisioned policy with leg kinematic odometry; truth-measured final poses after a settled
+    simulated second. Round details in docs/status/evidence/p7-legged-navigation-2026-10-13.
+  limitations:
+  - One goal seed per report; repeats are separate records
+  - Flat nav_obstacle world; no terrain
+  - Source hashes derived from git at the recorded revision after the run
+- robot_id: ackermann_car
+  environment_id: nav_obstacle
+  simulator: gazebo
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-10-13'
+  revision: 7b1b19e..b8e8ba5 (01:32-05:55, master moved without drive/Nav2/checker changes; the Gazebo cells reran
+    after the truth-publisher fix, the anti_ackermann_car cell at 42d1ccb, 07:22)
+  report: docs/status/evidence/r55-car-missions-2026-10-13/gazebo_ackermann_car_nav_obstacle.json
+  sha256: 03b8c91a644a2f2e0d5676b0133836428929b874474be2d2429864000ca16473
+  source_hashes: docs/status/evidence/r55-car-missions-2026-10-13/source-hashes-b8e8ba5.json
+  source_hashes_sha256: 687aab1f1a3e46a0510ffe94e9b12c23bd9e3153db684b4da30ab33f7aaa3e80
+  report_kind: mission_screen
+  scope: nav_obstacle car mission (detour, cancel, resume, near-obstacle goal) on Hybrid-A* with Regulated Pure
+    Pursuit; truth-measured final poses. Details in docs/status/evidence/r55-car-missions-2026-10-13.
+  limitations:
+  - One seed per cell
+  - Source hashes derived from git at the recorded revision after the run
+- robot_id: anti_ackermann_car
+  environment_id: nav_obstacle
+  simulator: gazebo
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-10-13'
+  revision: 7b1b19e..b8e8ba5 (01:32-05:55, master moved without drive/Nav2/checker changes; the Gazebo cells reran
+    after the truth-publisher fix, the anti_ackermann_car cell at 42d1ccb, 07:22)
+  report: docs/status/evidence/r55-car-missions-2026-10-13/gazebo_anti_ackermann_car_nav_obstacle.json
+  sha256: 1c5a185c5fe71f8872e9a585597b6afadcdf4132f960ce347b449fb6d69f6dd9
+  source_hashes: docs/status/evidence/r55-car-missions-2026-10-13/source-hashes-b8e8ba5.json
+  source_hashes_sha256: 687aab1f1a3e46a0510ffe94e9b12c23bd9e3153db684b4da30ab33f7aaa3e80
+  report_kind: mission_screen
+  scope: nav_obstacle car mission (detour, cancel, resume, near-obstacle goal) on Hybrid-A* with Regulated Pure
+    Pursuit; truth-measured final poses. Details in docs/status/evidence/r55-car-missions-2026-10-13.
+  limitations:
+  - One seed per cell
+  - Source hashes derived from git at the recorded revision after the run
+- robot_id: rear_steer_car
+  environment_id: nav_obstacle
+  simulator: gazebo
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-10-13'
+  revision: 7b1b19e..b8e8ba5 (01:32-05:55, master moved without drive/Nav2/checker changes; the Gazebo cells reran
+    after the truth-publisher fix, the anti_ackermann_car cell at 42d1ccb, 07:22)
+  report: docs/status/evidence/r55-car-missions-2026-10-13/gazebo_rear_steer_car_nav_obstacle.json
+  sha256: 30facabc61eba1dfe1aacf2897a44b25d3f37be17c5346170458d5a79ea1dc4d
+  source_hashes: docs/status/evidence/r55-car-missions-2026-10-13/source-hashes-b8e8ba5.json
+  source_hashes_sha256: 687aab1f1a3e46a0510ffe94e9b12c23bd9e3153db684b4da30ab33f7aaa3e80
+  report_kind: mission_screen
+  scope: nav_obstacle car mission (detour, cancel, resume, near-obstacle goal) on Hybrid-A* with Regulated Pure
+    Pursuit; truth-measured final poses. Details in docs/status/evidence/r55-car-missions-2026-10-13.
+  limitations:
+  - One seed per cell
+  - Source hashes derived from git at the recorded revision after the run
+- robot_id: ackermann_car
+  environment_id: nav_obstacle
+  simulator: isaac
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-10-13'
+  revision: 7b1b19e..b8e8ba5 (01:32-05:55, master moved without drive/Nav2/checker changes; the Gazebo cells reran
+    after the truth-publisher fix, the anti_ackermann_car cell at 42d1ccb, 07:22)
+  report: docs/status/evidence/r55-car-missions-2026-10-13/isaac_ackermann_car_nav_obstacle.json
+  sha256: b4f9d5106a9e4095a197c8182f590cf100c8da22d1393f23641c1aaef313427b
+  source_hashes: docs/status/evidence/r55-car-missions-2026-10-13/source-hashes-b8e8ba5.json
+  source_hashes_sha256: 687aab1f1a3e46a0510ffe94e9b12c23bd9e3153db684b4da30ab33f7aaa3e80
+  report_kind: mission_screen
+  scope: nav_obstacle car mission (detour, cancel, resume, near-obstacle goal) on Hybrid-A* with Regulated Pure
+    Pursuit; truth-measured final poses. Details in docs/status/evidence/r55-car-missions-2026-10-13.
+  limitations:
+  - One seed per cell
+  - Source hashes derived from git at the recorded revision after the run
+- robot_id: anti_ackermann_car
+  environment_id: nav_obstacle
+  simulator: isaac
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-10-13'
+  revision: 7b1b19e..b8e8ba5 (01:32-05:55, master moved without drive/Nav2/checker changes; the Gazebo cells reran
+    after the truth-publisher fix, the anti_ackermann_car cell at 42d1ccb, 07:22)
+  report: docs/status/evidence/r55-car-missions-2026-10-13/isaac_anti_ackermann_car_nav_obstacle.json
+  sha256: f2301aed134e9ad251984e920662d7f0d4c9f2a3bec984494a11a8d265f548b9
+  source_hashes: docs/status/evidence/r55-car-missions-2026-10-13/source-hashes-b8e8ba5.json
+  source_hashes_sha256: 687aab1f1a3e46a0510ffe94e9b12c23bd9e3153db684b4da30ab33f7aaa3e80
+  report_kind: mission_screen
+  scope: nav_obstacle car mission (detour, cancel, resume, near-obstacle goal) on Hybrid-A* with Regulated Pure
+    Pursuit; truth-measured final poses. Details in docs/status/evidence/r55-car-missions-2026-10-13.
+  limitations:
+  - One seed per cell
+  - Source hashes derived from git at the recorded revision after the run
+- robot_id: rear_steer_car
+  environment_id: nav_obstacle
+  simulator: isaac
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-10-13'
+  revision: 7b1b19e..b8e8ba5 (01:32-05:55, master moved without drive/Nav2/checker changes; the Gazebo cells reran
+    after the truth-publisher fix, the anti_ackermann_car cell at 42d1ccb, 07:22)
+  report: docs/status/evidence/r55-car-missions-2026-10-13/isaac_rear_steer_car_nav_obstacle.json
+  sha256: 32d42d6b6aa3c9a6f66af0f57c97b8e169d2a104f269c8c601925518cbebcd6f
+  source_hashes: docs/status/evidence/r55-car-missions-2026-10-13/source-hashes-b8e8ba5.json
+  source_hashes_sha256: 687aab1f1a3e46a0510ffe94e9b12c23bd9e3153db684b4da30ab33f7aaa3e80
+  report_kind: mission_screen
+  scope: nav_obstacle car mission (detour, cancel, resume, near-obstacle goal) on Hybrid-A* with Regulated Pure
+    Pursuit; truth-measured final poses. Details in docs/status/evidence/r55-car-missions-2026-10-13.
+  limitations:
+  - One seed per cell
+  - Source hashes derived from git at the recorded revision after the run
+- robot_id: ackermann_car
+  environment_id: nav_obstacle
+  simulator: mujoco
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-10-13'
+  revision: 7b1b19e..b8e8ba5 (01:32-05:55, master moved without drive/Nav2/checker changes; the Gazebo cells reran
+    after the truth-publisher fix, the anti_ackermann_car cell at 42d1ccb, 07:22)
+  report: docs/status/evidence/r55-car-missions-2026-10-13/mujoco_ackermann_car_nav_obstacle.json
+  sha256: 5ab1963d1152920b8e5ce1ea6c3e4aa258760dbb9d5e593e825da8b616ff0619
+  source_hashes: docs/status/evidence/r55-car-missions-2026-10-13/source-hashes-b8e8ba5.json
+  source_hashes_sha256: 687aab1f1a3e46a0510ffe94e9b12c23bd9e3153db684b4da30ab33f7aaa3e80
+  report_kind: mission_screen
+  scope: nav_obstacle car mission (detour, cancel, resume, near-obstacle goal) on Hybrid-A* with Regulated Pure
+    Pursuit; truth-measured final poses. Details in docs/status/evidence/r55-car-missions-2026-10-13.
+  limitations:
+  - One seed per cell
+  - Source hashes derived from git at the recorded revision after the run
+- robot_id: anti_ackermann_car
+  environment_id: nav_obstacle
+  simulator: mujoco
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-10-13'
+  revision: 7b1b19e..b8e8ba5 (01:32-05:55, master moved without drive/Nav2/checker changes; the Gazebo cells reran
+    after the truth-publisher fix, the anti_ackermann_car cell at 42d1ccb, 07:22)
+  report: docs/status/evidence/r55-car-missions-2026-10-13/mujoco_anti_ackermann_car_nav_obstacle.json
+  sha256: 70b7ea11c24126d3c28683298f403da3d2318317028c7408be8a8211c363f580
+  source_hashes: docs/status/evidence/r55-car-missions-2026-10-13/source-hashes-b8e8ba5.json
+  source_hashes_sha256: 687aab1f1a3e46a0510ffe94e9b12c23bd9e3153db684b4da30ab33f7aaa3e80
+  report_kind: mission_screen
+  scope: nav_obstacle car mission (detour, cancel, resume, near-obstacle goal) on Hybrid-A* with Regulated Pure
+    Pursuit; truth-measured final poses. Details in docs/status/evidence/r55-car-missions-2026-10-13.
+  limitations:
+  - One seed per cell
+  - Source hashes derived from git at the recorded revision after the run
+- robot_id: rear_steer_car
+  environment_id: nav_obstacle
+  simulator: mujoco
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-10-13'
+  revision: 7b1b19e..b8e8ba5 (01:32-05:55, master moved without drive/Nav2/checker changes; the Gazebo cells reran
+    after the truth-publisher fix, the anti_ackermann_car cell at 42d1ccb, 07:22)
+  report: docs/status/evidence/r55-car-missions-2026-10-13/mujoco_rear_steer_car_nav_obstacle.json
+  sha256: bca722228d334b00523744dbb09406275bf9c46d9717b0f6a61a8d5af63a1940
+  source_hashes: docs/status/evidence/r55-car-missions-2026-10-13/source-hashes-b8e8ba5.json
+  source_hashes_sha256: 687aab1f1a3e46a0510ffe94e9b12c23bd9e3153db684b4da30ab33f7aaa3e80
+  report_kind: mission_screen
+  scope: nav_obstacle car mission (detour, cancel, resume, near-obstacle goal) on Hybrid-A* with Regulated Pure
+    Pursuit; truth-measured final poses. Details in docs/status/evidence/r55-car-missions-2026-10-13.
+  limitations:
+  - One seed per cell
+  - Source hashes derived from git at the recorded revision after the run
+- robot_id: ackermann_car
+  environment_id: nav_obstacle
+  simulator: pybullet
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-10-13'
+  revision: 7b1b19e..b8e8ba5 (01:32-05:55, master moved without drive/Nav2/checker changes; the Gazebo cells reran
+    after the truth-publisher fix, the anti_ackermann_car cell at 42d1ccb, 07:22)
+  report: docs/status/evidence/r55-car-missions-2026-10-13/pybullet_ackermann_car_nav_obstacle.json
+  sha256: 60253e5f4075684bf135b76a285e89b03ded19b3f1a7250b138e26bb420c716f
+  source_hashes: docs/status/evidence/r55-car-missions-2026-10-13/source-hashes-b8e8ba5.json
+  source_hashes_sha256: 687aab1f1a3e46a0510ffe94e9b12c23bd9e3153db684b4da30ab33f7aaa3e80
+  report_kind: mission_screen
+  scope: nav_obstacle car mission (detour, cancel, resume, near-obstacle goal) on Hybrid-A* with Regulated Pure
+    Pursuit; truth-measured final poses. Details in docs/status/evidence/r55-car-missions-2026-10-13.
+  limitations:
+  - One seed per cell
+  - Source hashes derived from git at the recorded revision after the run
+- robot_id: anti_ackermann_car
+  environment_id: nav_obstacle
+  simulator: pybullet
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-10-13'
+  revision: 7b1b19e..b8e8ba5 (01:32-05:55, master moved without drive/Nav2/checker changes; the Gazebo cells reran
+    after the truth-publisher fix, the anti_ackermann_car cell at 42d1ccb, 07:22)
+  report: docs/status/evidence/r55-car-missions-2026-10-13/pybullet_anti_ackermann_car_nav_obstacle.json
+  sha256: fd861384dcfe986861451382ae715a0b1ec42acfc6b7d21553bdf0bd8f9f5e6c
+  source_hashes: docs/status/evidence/r55-car-missions-2026-10-13/source-hashes-b8e8ba5.json
+  source_hashes_sha256: 687aab1f1a3e46a0510ffe94e9b12c23bd9e3153db684b4da30ab33f7aaa3e80
+  report_kind: mission_screen
+  scope: nav_obstacle car mission (detour, cancel, resume, near-obstacle goal) on Hybrid-A* with Regulated Pure
+    Pursuit; truth-measured final poses. Details in docs/status/evidence/r55-car-missions-2026-10-13.
+  limitations:
+  - One seed per cell
+  - Source hashes derived from git at the recorded revision after the run
+- robot_id: rear_steer_car
+  environment_id: nav_obstacle
+  simulator: pybullet
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-10-13'
+  revision: 7b1b19e..b8e8ba5 (01:32-05:55, master moved without drive/Nav2/checker changes; the Gazebo cells reran
+    after the truth-publisher fix, the anti_ackermann_car cell at 42d1ccb, 07:22)
+  report: docs/status/evidence/r55-car-missions-2026-10-13/pybullet_rear_steer_car_nav_obstacle.json
+  sha256: c46d076d288d0034ba00d9c34eeafc26af0b6c73f1202216db9a244d69949d2e
+  source_hashes: docs/status/evidence/r55-car-missions-2026-10-13/source-hashes-b8e8ba5.json
+  source_hashes_sha256: 687aab1f1a3e46a0510ffe94e9b12c23bd9e3153db684b4da30ab33f7aaa3e80
+  report_kind: mission_screen
+  scope: nav_obstacle car mission (detour, cancel, resume, near-obstacle goal) on Hybrid-A* with Regulated Pure
+    Pursuit; truth-measured final poses. Details in docs/status/evidence/r55-car-missions-2026-10-13.
+  limitations:
+  - One seed per cell
+  - Source hashes derived from git at the recorded revision after the run
+- robot_id: rear_steer_car
+  environment_id: nav_obstacle
+  simulator: mujoco
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-10-13'
+  revision: a84ab0c (MuJoCo rear-steer rerun with tf2 0.25.24, 12:09)
+  report: docs/status/evidence/r55-car-missions-2026-10-13/rerun-tf2/mujoco_rear_steer_car_nav_obstacle.json
+  sha256: 16562911775d2a9cd78032dc790c210d220dfe19bc2547d201d94b912784bc1a
+  source_hashes: docs/status/evidence/r55-car-missions-2026-10-13/rerun-tf2/source-hashes-a84ab0c.json
+  source_hashes_sha256: 8342d1b48ef13f1066ef01ba42e28d9ae55570a75f4c77c7d754f99fc29848f6
+  report_kind: mission_screen
+  scope: MuJoCo rear_steer_car nav_obstacle mission rerun after the tf2 0.25.24 install.
+  limitations:
+  - One seed
+  - Source hashes derived from git at the recorded revision after the run
+- robot_id: four_wheel_steer_car
+  environment_id: nav_obstacle
+  simulator: gazebo
+  task_type: navigation_mission
+  steering_mode: ackermann
+  date: '2026-10-13'
+  revision: 58b8a70..b8e8ba5 (02:19-03:01, master moved without drive/mission changes)
+  report: docs/status/evidence/r56-4ws-missions-2026-10-13/v1/gazebo_ackermann_nav_obstacle.json
+  sha256: 493072b83cf421515279cbc2b74cbfe40fd1ae26f6c7b9b03533270f082752d4
+  source_hashes: docs/status/evidence/r56-4ws-missions-2026-10-13/v1/source-hashes-b8e8ba5.json
+  source_hashes_sha256: 86aafddd7278486f098d137a4fad63b700a9ab22dbaf248261c0fbc32326bf4f
+  report_kind: mission_screen
+  scope: nav_obstacle mission per 4WS steering pattern and for the mecanum car; truth-measured final poses and the
+    measured drive configuration. Details in docs/status/evidence/r56-4ws-missions-2026-10-13.
+  limitations:
+  - One seed per cell
+  - Source hashes derived from git at the recorded revision after the run
+- robot_id: four_wheel_steer_car
+  environment_id: nav_obstacle
+  simulator: gazebo
+  task_type: navigation_mission
+  steering_mode: crab
+  date: '2026-10-13'
+  revision: 58b8a70..b8e8ba5 (02:19-03:01, master moved without drive/mission changes)
+  report: docs/status/evidence/r56-4ws-missions-2026-10-13/v1/gazebo_crab_nav_obstacle.json
+  sha256: 32e47d9c215570cbf3721c6b2bcc63bb31e3aba08c0d912ee289ba486b6a09ec
+  source_hashes: docs/status/evidence/r56-4ws-missions-2026-10-13/v1/source-hashes-b8e8ba5.json
+  source_hashes_sha256: 86aafddd7278486f098d137a4fad63b700a9ab22dbaf248261c0fbc32326bf4f
+  report_kind: mission_screen
+  scope: nav_obstacle mission per 4WS steering pattern and for the mecanum car; truth-measured final poses and the
+    measured drive configuration. Details in docs/status/evidence/r56-4ws-missions-2026-10-13.
+  limitations:
+  - One seed per cell
+  - Source hashes derived from git at the recorded revision after the run
+- robot_id: four_wheel_steer_car
+  environment_id: nav_obstacle
+  simulator: gazebo
+  task_type: navigation_mission
+  steering_mode: in_phase
+  date: '2026-10-13'
+  revision: 58b8a70..b8e8ba5 (02:19-03:01, master moved without drive/mission changes)
+  report: docs/status/evidence/r56-4ws-missions-2026-10-13/v1/gazebo_in_phase_nav_obstacle.json
+  sha256: 6b4d2bd8aebfcc55dddb781cc573e3ee533b0fd49566535dfd5b21cc2f737379
+  source_hashes: docs/status/evidence/r56-4ws-missions-2026-10-13/v1/source-hashes-b8e8ba5.json
+  source_hashes_sha256: 86aafddd7278486f098d137a4fad63b700a9ab22dbaf248261c0fbc32326bf4f
+  report_kind: mission_screen
+  scope: nav_obstacle mission per 4WS steering pattern and for the mecanum car; truth-measured final poses and the
+    measured drive configuration. Details in docs/status/evidence/r56-4ws-missions-2026-10-13.
+  limitations:
+  - One seed per cell
+  - Source hashes derived from git at the recorded revision after the run
+- robot_id: mecanum_car
+  environment_id: nav_obstacle
+  simulator: gazebo
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-10-13'
+  revision: 58b8a70..b8e8ba5 (02:19-03:01, master moved without drive/mission changes)
+  report: docs/status/evidence/r56-4ws-missions-2026-10-13/v1/gazebo_mecanum_nav_obstacle.json
+  sha256: f9901e46ebe187fb22a2a0ac307aae043f33ce4ed596940f708adfd954114765
+  source_hashes: docs/status/evidence/r56-4ws-missions-2026-10-13/v1/source-hashes-b8e8ba5.json
+  source_hashes_sha256: 86aafddd7278486f098d137a4fad63b700a9ab22dbaf248261c0fbc32326bf4f
+  report_kind: mission_screen
+  scope: nav_obstacle mission per 4WS steering pattern and for the mecanum car; truth-measured final poses and the
+    measured drive configuration. Details in docs/status/evidence/r56-4ws-missions-2026-10-13.
+  limitations:
+  - One seed per cell
+  - Source hashes derived from git at the recorded revision after the run
+- robot_id: four_wheel_steer_car
+  environment_id: nav_obstacle
+  simulator: gazebo
+  task_type: navigation_mission
+  steering_mode: pivot
+  date: '2026-10-13'
+  revision: 58b8a70..b8e8ba5 (02:19-03:01, master moved without drive/mission changes)
+  report: docs/status/evidence/r56-4ws-missions-2026-10-13/v1/gazebo_pivot_nav_obstacle.json
+  sha256: 1c79e2ab924195dca81d72203af9eef61c901bbeefab5bd2dcdbda19c85f0c2d
+  source_hashes: docs/status/evidence/r56-4ws-missions-2026-10-13/v1/source-hashes-b8e8ba5.json
+  source_hashes_sha256: 86aafddd7278486f098d137a4fad63b700a9ab22dbaf248261c0fbc32326bf4f
+  report_kind: mission_screen
+  scope: nav_obstacle mission per 4WS steering pattern and for the mecanum car; truth-measured final poses and the
+    measured drive configuration. Details in docs/status/evidence/r56-4ws-missions-2026-10-13.
+  limitations:
+  - One seed per cell
+  - Source hashes derived from git at the recorded revision after the run
+- robot_id: four_wheel_steer_car
+  environment_id: nav_obstacle
+  simulator: isaac
+  task_type: navigation_mission
+  steering_mode: ackermann
+  date: '2026-10-13'
+  revision: 58b8a70..b8e8ba5 (02:19-03:01, master moved without drive/mission changes)
+  report: docs/status/evidence/r56-4ws-missions-2026-10-13/v1/isaac_ackermann_nav_obstacle.json
+  sha256: 8fa8be9cf60ef9c994d582b4aef4f54c13bfa398349fcc75b26481bdcc994706
+  source_hashes: docs/status/evidence/r56-4ws-missions-2026-10-13/v1/source-hashes-b8e8ba5.json
+  source_hashes_sha256: 86aafddd7278486f098d137a4fad63b700a9ab22dbaf248261c0fbc32326bf4f
+  report_kind: mission_screen
+  scope: nav_obstacle mission per 4WS steering pattern and for the mecanum car; truth-measured final poses and the
+    measured drive configuration. Details in docs/status/evidence/r56-4ws-missions-2026-10-13.
+  limitations:
+  - One seed per cell
+  - Source hashes derived from git at the recorded revision after the run
+- robot_id: four_wheel_steer_car
+  environment_id: nav_obstacle
+  simulator: isaac
+  task_type: navigation_mission
+  steering_mode: crab
+  date: '2026-10-13'
+  revision: 58b8a70..b8e8ba5 (02:19-03:01, master moved without drive/mission changes)
+  report: docs/status/evidence/r56-4ws-missions-2026-10-13/v1/isaac_crab_nav_obstacle.json
+  sha256: 5ce5973b73a1d01cb0315150c5d10abd8d353dbef645185f79e7e4753af9db94
+  source_hashes: docs/status/evidence/r56-4ws-missions-2026-10-13/v1/source-hashes-b8e8ba5.json
+  source_hashes_sha256: 86aafddd7278486f098d137a4fad63b700a9ab22dbaf248261c0fbc32326bf4f
+  report_kind: mission_screen
+  scope: nav_obstacle mission per 4WS steering pattern and for the mecanum car; truth-measured final poses and the
+    measured drive configuration. Details in docs/status/evidence/r56-4ws-missions-2026-10-13.
+  limitations:
+  - One seed per cell
+  - Source hashes derived from git at the recorded revision after the run
+- robot_id: four_wheel_steer_car
+  environment_id: nav_obstacle
+  simulator: isaac
+  task_type: navigation_mission
+  steering_mode: in_phase
+  date: '2026-10-13'
+  revision: 58b8a70..b8e8ba5 (02:19-03:01, master moved without drive/mission changes)
+  report: docs/status/evidence/r56-4ws-missions-2026-10-13/v1/isaac_in_phase_nav_obstacle.json
+  sha256: e8febb30b379455bdb9bdce3537953a3f6157408fbb329f8d48bf003befea8ab
+  source_hashes: docs/status/evidence/r56-4ws-missions-2026-10-13/v1/source-hashes-b8e8ba5.json
+  source_hashes_sha256: 86aafddd7278486f098d137a4fad63b700a9ab22dbaf248261c0fbc32326bf4f
+  report_kind: mission_screen
+  scope: nav_obstacle mission per 4WS steering pattern and for the mecanum car; truth-measured final poses and the
+    measured drive configuration. Details in docs/status/evidence/r56-4ws-missions-2026-10-13.
+  limitations:
+  - One seed per cell
+  - Source hashes derived from git at the recorded revision after the run
+- robot_id: mecanum_car
+  environment_id: nav_obstacle
+  simulator: isaac
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-10-13'
+  revision: 58b8a70..b8e8ba5 (02:19-03:01, master moved without drive/mission changes)
+  report: docs/status/evidence/r56-4ws-missions-2026-10-13/v1/isaac_mecanum_nav_obstacle.json
+  sha256: 48df43100b70caa80c9c9ef4358061bb3981470fca94aca049b456f8e4e7f233
+  source_hashes: docs/status/evidence/r56-4ws-missions-2026-10-13/v1/source-hashes-b8e8ba5.json
+  source_hashes_sha256: 86aafddd7278486f098d137a4fad63b700a9ab22dbaf248261c0fbc32326bf4f
+  report_kind: mission_screen
+  scope: nav_obstacle mission per 4WS steering pattern and for the mecanum car; truth-measured final poses and the
+    measured drive configuration. Details in docs/status/evidence/r56-4ws-missions-2026-10-13.
+  limitations:
+  - One seed per cell
+  - Source hashes derived from git at the recorded revision after the run
+- robot_id: four_wheel_steer_car
+  environment_id: nav_obstacle
+  simulator: isaac
+  task_type: navigation_mission
+  steering_mode: pivot
+  date: '2026-10-13'
+  revision: 58b8a70..b8e8ba5 (02:19-03:01, master moved without drive/mission changes)
+  report: docs/status/evidence/r56-4ws-missions-2026-10-13/v1/isaac_pivot_nav_obstacle.json
+  sha256: 914ddde4d486b6b5e6f233422a932cff4af3fea5cdc506ea9e2a41d5293f92ca
+  source_hashes: docs/status/evidence/r56-4ws-missions-2026-10-13/v1/source-hashes-b8e8ba5.json
+  source_hashes_sha256: 86aafddd7278486f098d137a4fad63b700a9ab22dbaf248261c0fbc32326bf4f
+  report_kind: mission_screen
+  scope: nav_obstacle mission per 4WS steering pattern and for the mecanum car; truth-measured final poses and the
+    measured drive configuration. Details in docs/status/evidence/r56-4ws-missions-2026-10-13.
+  limitations:
+  - One seed per cell
+  - Source hashes derived from git at the recorded revision after the run
+- robot_id: four_wheel_steer_car
+  environment_id: nav_obstacle
+  simulator: mujoco
+  task_type: navigation_mission
+  steering_mode: ackermann
+  date: '2026-10-13'
+  revision: 58b8a70..b8e8ba5 (02:19-03:01, master moved without drive/mission changes)
+  report: docs/status/evidence/r56-4ws-missions-2026-10-13/v1/mujoco_ackermann_nav_obstacle.json
+  sha256: c750d1547fcd64088c8eb0e5d9f31364a08b78645e733827440ace3f7b73913e
+  source_hashes: docs/status/evidence/r56-4ws-missions-2026-10-13/v1/source-hashes-b8e8ba5.json
+  source_hashes_sha256: 86aafddd7278486f098d137a4fad63b700a9ab22dbaf248261c0fbc32326bf4f
+  report_kind: mission_screen
+  scope: nav_obstacle mission per 4WS steering pattern and for the mecanum car; truth-measured final poses and the
+    measured drive configuration. Details in docs/status/evidence/r56-4ws-missions-2026-10-13.
+  limitations:
+  - One seed per cell
+  - Source hashes derived from git at the recorded revision after the run
+- robot_id: four_wheel_steer_car
+  environment_id: nav_obstacle
+  simulator: mujoco
+  task_type: navigation_mission
+  steering_mode: crab
+  date: '2026-10-13'
+  revision: 58b8a70..b8e8ba5 (02:19-03:01, master moved without drive/mission changes)
+  report: docs/status/evidence/r56-4ws-missions-2026-10-13/v1/mujoco_crab_nav_obstacle.json
+  sha256: 80a80b210721e9f4b6cb4b7dc4fdc81972db5639a8e8376708e8d62519882d75
+  source_hashes: docs/status/evidence/r56-4ws-missions-2026-10-13/v1/source-hashes-b8e8ba5.json
+  source_hashes_sha256: 86aafddd7278486f098d137a4fad63b700a9ab22dbaf248261c0fbc32326bf4f
+  report_kind: mission_screen
+  scope: nav_obstacle mission per 4WS steering pattern and for the mecanum car; truth-measured final poses and the
+    measured drive configuration. Details in docs/status/evidence/r56-4ws-missions-2026-10-13.
+  limitations:
+  - One seed per cell
+  - Source hashes derived from git at the recorded revision after the run
+- robot_id: four_wheel_steer_car
+  environment_id: nav_obstacle
+  simulator: mujoco
+  task_type: navigation_mission
+  steering_mode: in_phase
+  date: '2026-10-13'
+  revision: 58b8a70..b8e8ba5 (02:19-03:01, master moved without drive/mission changes)
+  report: docs/status/evidence/r56-4ws-missions-2026-10-13/v1/mujoco_in_phase_nav_obstacle.json
+  sha256: 54b02317d3462c775a5ebf94a021eda29eafe04ff25e2415de7ddd8a3cd0e194
+  source_hashes: docs/status/evidence/r56-4ws-missions-2026-10-13/v1/source-hashes-b8e8ba5.json
+  source_hashes_sha256: 86aafddd7278486f098d137a4fad63b700a9ab22dbaf248261c0fbc32326bf4f
+  report_kind: mission_screen
+  scope: nav_obstacle mission per 4WS steering pattern and for the mecanum car; truth-measured final poses and the
+    measured drive configuration. Details in docs/status/evidence/r56-4ws-missions-2026-10-13.
+  limitations:
+  - One seed per cell
+  - Source hashes derived from git at the recorded revision after the run
+- robot_id: mecanum_car
+  environment_id: nav_obstacle
+  simulator: mujoco
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-10-13'
+  revision: 58b8a70..b8e8ba5 (02:19-03:01, master moved without drive/mission changes)
+  report: docs/status/evidence/r56-4ws-missions-2026-10-13/v1/mujoco_mecanum_nav_obstacle.json
+  sha256: 2fea26df5ae64baf17a20b548fd5061af1c64f41c1c186f293c8db1681ff2d3d
+  source_hashes: docs/status/evidence/r56-4ws-missions-2026-10-13/v1/source-hashes-b8e8ba5.json
+  source_hashes_sha256: 86aafddd7278486f098d137a4fad63b700a9ab22dbaf248261c0fbc32326bf4f
+  report_kind: mission_screen
+  scope: nav_obstacle mission per 4WS steering pattern and for the mecanum car; truth-measured final poses and the
+    measured drive configuration. Details in docs/status/evidence/r56-4ws-missions-2026-10-13.
+  limitations:
+  - One seed per cell
+  - Source hashes derived from git at the recorded revision after the run
+- robot_id: four_wheel_steer_car
+  environment_id: nav_obstacle
+  simulator: mujoco
+  task_type: navigation_mission
+  steering_mode: pivot
+  date: '2026-10-13'
+  revision: 58b8a70..b8e8ba5 (02:19-03:01, master moved without drive/mission changes)
+  report: docs/status/evidence/r56-4ws-missions-2026-10-13/v1/mujoco_pivot_nav_obstacle.json
+  sha256: fed6989c7b75fd889fd61ef8d8c2d6946969ca62b632bc6a89638c8ca9d13875
+  source_hashes: docs/status/evidence/r56-4ws-missions-2026-10-13/v1/source-hashes-b8e8ba5.json
+  source_hashes_sha256: 86aafddd7278486f098d137a4fad63b700a9ab22dbaf248261c0fbc32326bf4f
+  report_kind: mission_screen
+  scope: nav_obstacle mission per 4WS steering pattern and for the mecanum car; truth-measured final poses and the
+    measured drive configuration. Details in docs/status/evidence/r56-4ws-missions-2026-10-13.
+  limitations:
+  - One seed per cell
+  - Source hashes derived from git at the recorded revision after the run
+- robot_id: four_wheel_steer_car
+  environment_id: nav_obstacle
+  simulator: pybullet
+  task_type: navigation_mission
+  steering_mode: ackermann
+  date: '2026-10-13'
+  revision: 58b8a70..b8e8ba5 (02:19-03:01, master moved without drive/mission changes)
+  report: docs/status/evidence/r56-4ws-missions-2026-10-13/v1/pybullet_ackermann_nav_obstacle.json
+  sha256: a3b76ecbf796e5c4c14d49e85c81b3e897d9418580e716315d2e89062c7671f1
+  source_hashes: docs/status/evidence/r56-4ws-missions-2026-10-13/v1/source-hashes-b8e8ba5.json
+  source_hashes_sha256: 86aafddd7278486f098d137a4fad63b700a9ab22dbaf248261c0fbc32326bf4f
+  report_kind: mission_screen
+  scope: nav_obstacle mission per 4WS steering pattern and for the mecanum car; truth-measured final poses and the
+    measured drive configuration. Details in docs/status/evidence/r56-4ws-missions-2026-10-13.
+  limitations:
+  - One seed per cell
+  - Source hashes derived from git at the recorded revision after the run
+- robot_id: four_wheel_steer_car
+  environment_id: nav_obstacle
+  simulator: pybullet
+  task_type: navigation_mission
+  steering_mode: crab
+  date: '2026-10-13'
+  revision: 58b8a70..b8e8ba5 (02:19-03:01, master moved without drive/mission changes)
+  report: docs/status/evidence/r56-4ws-missions-2026-10-13/v1/pybullet_crab_nav_obstacle.json
+  sha256: 6053e8ec7053d440cdd8b86b671f08dbb09971948d008e2487c4b367aeac0ecd
+  source_hashes: docs/status/evidence/r56-4ws-missions-2026-10-13/v1/source-hashes-b8e8ba5.json
+  source_hashes_sha256: 86aafddd7278486f098d137a4fad63b700a9ab22dbaf248261c0fbc32326bf4f
+  report_kind: mission_screen
+  scope: nav_obstacle mission per 4WS steering pattern and for the mecanum car; truth-measured final poses and the
+    measured drive configuration. Details in docs/status/evidence/r56-4ws-missions-2026-10-13.
+  limitations:
+  - One seed per cell
+  - Source hashes derived from git at the recorded revision after the run
+- robot_id: four_wheel_steer_car
+  environment_id: nav_obstacle
+  simulator: pybullet
+  task_type: navigation_mission
+  steering_mode: in_phase
+  date: '2026-10-13'
+  revision: 58b8a70..b8e8ba5 (02:19-03:01, master moved without drive/mission changes)
+  report: docs/status/evidence/r56-4ws-missions-2026-10-13/v1/pybullet_in_phase_nav_obstacle.json
+  sha256: 0fd8198eb26306ad3222c1a111b9f53f913db1d13baf880b736a725ca6979281
+  source_hashes: docs/status/evidence/r56-4ws-missions-2026-10-13/v1/source-hashes-b8e8ba5.json
+  source_hashes_sha256: 86aafddd7278486f098d137a4fad63b700a9ab22dbaf248261c0fbc32326bf4f
+  report_kind: mission_screen
+  scope: nav_obstacle mission per 4WS steering pattern and for the mecanum car; truth-measured final poses and the
+    measured drive configuration. Details in docs/status/evidence/r56-4ws-missions-2026-10-13.
+  limitations:
+  - One seed per cell
+  - Source hashes derived from git at the recorded revision after the run
+- robot_id: mecanum_car
+  environment_id: nav_obstacle
+  simulator: pybullet
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-10-13'
+  revision: 58b8a70..b8e8ba5 (02:19-03:01, master moved without drive/mission changes)
+  report: docs/status/evidence/r56-4ws-missions-2026-10-13/v1/pybullet_mecanum_nav_obstacle.json
+  sha256: 9a9ae24320f83500d072c075c31402ebe3b6b7d91574d1af1aa4b24870cf988f
+  source_hashes: docs/status/evidence/r56-4ws-missions-2026-10-13/v1/source-hashes-b8e8ba5.json
+  source_hashes_sha256: 86aafddd7278486f098d137a4fad63b700a9ab22dbaf248261c0fbc32326bf4f
+  report_kind: mission_screen
+  scope: nav_obstacle mission per 4WS steering pattern and for the mecanum car; truth-measured final poses and the
+    measured drive configuration. Details in docs/status/evidence/r56-4ws-missions-2026-10-13.
+  limitations:
+  - One seed per cell
+  - Source hashes derived from git at the recorded revision after the run
+- robot_id: four_wheel_steer_car
+  environment_id: nav_obstacle
+  simulator: pybullet
+  task_type: navigation_mission
+  steering_mode: pivot
+  date: '2026-10-13'
+  revision: 58b8a70..b8e8ba5 (02:19-03:01, master moved without drive/mission changes)
+  report: docs/status/evidence/r56-4ws-missions-2026-10-13/v1/pybullet_pivot_nav_obstacle.json
+  sha256: 4dfba106a80774e1b21d240f4cd428324bc0db9856e2c66bd5fafb007c140d59
+  source_hashes: docs/status/evidence/r56-4ws-missions-2026-10-13/v1/source-hashes-b8e8ba5.json
+  source_hashes_sha256: 86aafddd7278486f098d137a4fad63b700a9ab22dbaf248261c0fbc32326bf4f
+  report_kind: mission_screen
+  scope: nav_obstacle mission per 4WS steering pattern and for the mecanum car; truth-measured final poses and the
+    measured drive configuration. Details in docs/status/evidence/r56-4ws-missions-2026-10-13.
+  limitations:
+  - One seed per cell
+  - Source hashes derived from git at the recorded revision after the run
+- robot_id: four_wheel_steer_car
+  environment_id: nav_obstacle
+  simulator: gazebo
+  task_type: navigation_mission
+  steering_mode: ackermann
+  date: '2026-10-13'
+  revision: feb9a3b..8a57b76 (06:06-06:50 and the MuJoCo reruns to 07:21, with the wider arrival window)
+  report: docs/status/evidence/r56-4ws-missions-2026-10-13/v2/gazebo_ackermann_nav_obstacle.json
+  sha256: b86ff434585e5d2e97441bec488f7b03440f404c93748a981d682c2a184dbd17
+  source_hashes: docs/status/evidence/r56-4ws-missions-2026-10-13/v2/source-hashes-8a57b76.json
+  source_hashes_sha256: 17d7898092faa86be3e19701ed09077d846c4422b86e964994efc0e37847aaca
+  report_kind: mission_screen
+  scope: nav_obstacle mission per 4WS steering pattern and for the mecanum car, second run with the wider arrival
+    window; truth-measured final poses.
+  limitations:
+  - One seed per cell
+  - Source hashes derived from git at the recorded revision after the run
+- robot_id: four_wheel_steer_car
+  environment_id: nav_obstacle
+  simulator: gazebo
+  task_type: navigation_mission
+  steering_mode: crab
+  date: '2026-10-13'
+  revision: feb9a3b..8a57b76 (06:06-06:50 and the MuJoCo reruns to 07:21, with the wider arrival window)
+  report: docs/status/evidence/r56-4ws-missions-2026-10-13/v2/gazebo_crab_nav_obstacle.json
+  sha256: 0d9a29b353630d13286f77cf0b67b6fdd54c4a23fc090b49127bdbbf86222a72
+  source_hashes: docs/status/evidence/r56-4ws-missions-2026-10-13/v2/source-hashes-8a57b76.json
+  source_hashes_sha256: 17d7898092faa86be3e19701ed09077d846c4422b86e964994efc0e37847aaca
+  report_kind: mission_screen
+  scope: nav_obstacle mission per 4WS steering pattern and for the mecanum car, second run with the wider arrival
+    window; truth-measured final poses.
+  limitations:
+  - One seed per cell
+  - Source hashes derived from git at the recorded revision after the run
+- robot_id: four_wheel_steer_car
+  environment_id: nav_obstacle
+  simulator: gazebo
+  task_type: navigation_mission
+  steering_mode: in_phase
+  date: '2026-10-13'
+  revision: feb9a3b..8a57b76 (06:06-06:50 and the MuJoCo reruns to 07:21, with the wider arrival window)
+  report: docs/status/evidence/r56-4ws-missions-2026-10-13/v2/gazebo_in_phase_nav_obstacle.json
+  sha256: 017f5d46b8c3de6f4423956ddfd3d9623062effb1d2d4e2a620faa5814dcb57e
+  source_hashes: docs/status/evidence/r56-4ws-missions-2026-10-13/v2/source-hashes-8a57b76.json
+  source_hashes_sha256: 17d7898092faa86be3e19701ed09077d846c4422b86e964994efc0e37847aaca
+  report_kind: mission_screen
+  scope: nav_obstacle mission per 4WS steering pattern and for the mecanum car, second run with the wider arrival
+    window; truth-measured final poses.
+  limitations:
+  - One seed per cell
+  - Source hashes derived from git at the recorded revision after the run
+- robot_id: mecanum_car
+  environment_id: nav_obstacle
+  simulator: gazebo
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-10-13'
+  revision: feb9a3b..8a57b76 (06:06-06:50 and the MuJoCo reruns to 07:21, with the wider arrival window)
+  report: docs/status/evidence/r56-4ws-missions-2026-10-13/v2/gazebo_mecanum_nav_obstacle.json
+  sha256: caab8b4041eb18c4134e1d72c0ce40c79e9841ea35a6ace32358712df7478cd6
+  source_hashes: docs/status/evidence/r56-4ws-missions-2026-10-13/v2/source-hashes-8a57b76.json
+  source_hashes_sha256: 17d7898092faa86be3e19701ed09077d846c4422b86e964994efc0e37847aaca
+  report_kind: mission_screen
+  scope: nav_obstacle mission per 4WS steering pattern and for the mecanum car, second run with the wider arrival
+    window; truth-measured final poses.
+  limitations:
+  - One seed per cell
+  - Source hashes derived from git at the recorded revision after the run
+- robot_id: four_wheel_steer_car
+  environment_id: nav_obstacle
+  simulator: gazebo
+  task_type: navigation_mission
+  steering_mode: pivot
+  date: '2026-10-13'
+  revision: feb9a3b..8a57b76 (06:06-06:50 and the MuJoCo reruns to 07:21, with the wider arrival window)
+  report: docs/status/evidence/r56-4ws-missions-2026-10-13/v2/gazebo_pivot_nav_obstacle.json
+  sha256: 03f5cfeac557b3918a10d2b9ac2c0847b65cf9db8d378f0271d5cbdd14beec64
+  source_hashes: docs/status/evidence/r56-4ws-missions-2026-10-13/v2/source-hashes-8a57b76.json
+  source_hashes_sha256: 17d7898092faa86be3e19701ed09077d846c4422b86e964994efc0e37847aaca
+  report_kind: mission_screen
+  scope: nav_obstacle mission per 4WS steering pattern and for the mecanum car, second run with the wider arrival
+    window; truth-measured final poses.
+  limitations:
+  - One seed per cell
+  - Source hashes derived from git at the recorded revision after the run
+- robot_id: four_wheel_steer_car
+  environment_id: nav_obstacle
+  simulator: isaac
+  task_type: navigation_mission
+  steering_mode: ackermann
+  date: '2026-10-13'
+  revision: feb9a3b..8a57b76 (06:06-06:50 and the MuJoCo reruns to 07:21, with the wider arrival window)
+  report: docs/status/evidence/r56-4ws-missions-2026-10-13/v2/isaac_ackermann_nav_obstacle.json
+  sha256: 96205ec5cd537ae67b560bbb119ec59da7712f9b1d5d2be8079590e85d665e7d
+  source_hashes: docs/status/evidence/r56-4ws-missions-2026-10-13/v2/source-hashes-8a57b76.json
+  source_hashes_sha256: 17d7898092faa86be3e19701ed09077d846c4422b86e964994efc0e37847aaca
+  report_kind: mission_screen
+  scope: nav_obstacle mission per 4WS steering pattern and for the mecanum car, second run with the wider arrival
+    window; truth-measured final poses.
+  limitations:
+  - One seed per cell
+  - Source hashes derived from git at the recorded revision after the run
+- robot_id: four_wheel_steer_car
+  environment_id: nav_obstacle
+  simulator: isaac
+  task_type: navigation_mission
+  steering_mode: crab
+  date: '2026-10-13'
+  revision: feb9a3b..8a57b76 (06:06-06:50 and the MuJoCo reruns to 07:21, with the wider arrival window)
+  report: docs/status/evidence/r56-4ws-missions-2026-10-13/v2/isaac_crab_nav_obstacle.json
+  sha256: f51f40c0d57cca50e4cf7e89be5d5452250c8dc1c8103dd35f2dc745b12068e5
+  source_hashes: docs/status/evidence/r56-4ws-missions-2026-10-13/v2/source-hashes-8a57b76.json
+  source_hashes_sha256: 17d7898092faa86be3e19701ed09077d846c4422b86e964994efc0e37847aaca
+  report_kind: mission_screen
+  scope: nav_obstacle mission per 4WS steering pattern and for the mecanum car, second run with the wider arrival
+    window; truth-measured final poses.
+  limitations:
+  - One seed per cell
+  - Source hashes derived from git at the recorded revision after the run
+- robot_id: four_wheel_steer_car
+  environment_id: nav_obstacle
+  simulator: isaac
+  task_type: navigation_mission
+  steering_mode: in_phase
+  date: '2026-10-13'
+  revision: feb9a3b..8a57b76 (06:06-06:50 and the MuJoCo reruns to 07:21, with the wider arrival window)
+  report: docs/status/evidence/r56-4ws-missions-2026-10-13/v2/isaac_in_phase_nav_obstacle.json
+  sha256: 0146357b30eae7bf6376d07c95a5a525ef02e7a79ee315ab179d772e48bc1ca0
+  source_hashes: docs/status/evidence/r56-4ws-missions-2026-10-13/v2/source-hashes-8a57b76.json
+  source_hashes_sha256: 17d7898092faa86be3e19701ed09077d846c4422b86e964994efc0e37847aaca
+  report_kind: mission_screen
+  scope: nav_obstacle mission per 4WS steering pattern and for the mecanum car, second run with the wider arrival
+    window; truth-measured final poses.
+  limitations:
+  - One seed per cell
+  - Source hashes derived from git at the recorded revision after the run
+- robot_id: mecanum_car
+  environment_id: nav_obstacle
+  simulator: isaac
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-10-13'
+  revision: feb9a3b..8a57b76 (06:06-06:50 and the MuJoCo reruns to 07:21, with the wider arrival window)
+  report: docs/status/evidence/r56-4ws-missions-2026-10-13/v2/isaac_mecanum_nav_obstacle.json
+  sha256: 2b1e82509a187fb0dd7c26869615bed5f5fbe547f31b20ffd414067d9cf8f5ab
+  source_hashes: docs/status/evidence/r56-4ws-missions-2026-10-13/v2/source-hashes-8a57b76.json
+  source_hashes_sha256: 17d7898092faa86be3e19701ed09077d846c4422b86e964994efc0e37847aaca
+  report_kind: mission_screen
+  scope: nav_obstacle mission per 4WS steering pattern and for the mecanum car, second run with the wider arrival
+    window; truth-measured final poses.
+  limitations:
+  - One seed per cell
+  - Source hashes derived from git at the recorded revision after the run
+- robot_id: four_wheel_steer_car
+  environment_id: nav_obstacle
+  simulator: isaac
+  task_type: navigation_mission
+  steering_mode: pivot
+  date: '2026-10-13'
+  revision: feb9a3b..8a57b76 (06:06-06:50 and the MuJoCo reruns to 07:21, with the wider arrival window)
+  report: docs/status/evidence/r56-4ws-missions-2026-10-13/v2/isaac_pivot_nav_obstacle.json
+  sha256: 120785b8ae15662685ea366e95e409bd72a05d49a2082ed2b5bddcc4ca5f4a56
+  source_hashes: docs/status/evidence/r56-4ws-missions-2026-10-13/v2/source-hashes-8a57b76.json
+  source_hashes_sha256: 17d7898092faa86be3e19701ed09077d846c4422b86e964994efc0e37847aaca
+  report_kind: mission_screen
+  scope: nav_obstacle mission per 4WS steering pattern and for the mecanum car, second run with the wider arrival
+    window; truth-measured final poses.
+  limitations:
+  - One seed per cell
+  - Source hashes derived from git at the recorded revision after the run
+- robot_id: four_wheel_steer_car
+  environment_id: nav_obstacle
+  simulator: mujoco
+  task_type: navigation_mission
+  steering_mode: ackermann
+  date: '2026-10-13'
+  revision: feb9a3b..8a57b76 (06:06-06:50 and the MuJoCo reruns to 07:21, with the wider arrival window)
+  report: docs/status/evidence/r56-4ws-missions-2026-10-13/v2/mujoco_ackermann_nav_obstacle.json
+  sha256: 8d2f2fa1e957e32bc071c8bf830cfe437d8d1be3f144f9be27ae61fc83deeaf9
+  source_hashes: docs/status/evidence/r56-4ws-missions-2026-10-13/v2/source-hashes-8a57b76.json
+  source_hashes_sha256: 17d7898092faa86be3e19701ed09077d846c4422b86e964994efc0e37847aaca
+  report_kind: mission_screen
+  scope: nav_obstacle mission per 4WS steering pattern and for the mecanum car, second run with the wider arrival
+    window; truth-measured final poses.
+  limitations:
+  - One seed per cell
+  - Source hashes derived from git at the recorded revision after the run
+- robot_id: four_wheel_steer_car
+  environment_id: nav_obstacle
+  simulator: mujoco
+  task_type: navigation_mission
+  steering_mode: crab
+  date: '2026-10-13'
+  revision: feb9a3b..8a57b76 (06:06-06:50 and the MuJoCo reruns to 07:21, with the wider arrival window)
+  report: docs/status/evidence/r56-4ws-missions-2026-10-13/v2/mujoco_crab_nav_obstacle.json
+  sha256: c84cac8380da7f031e18d743dea5f14f28f33b999c7f4ea400ab2f1ec93eb0e5
+  source_hashes: docs/status/evidence/r56-4ws-missions-2026-10-13/v2/source-hashes-8a57b76.json
+  source_hashes_sha256: 17d7898092faa86be3e19701ed09077d846c4422b86e964994efc0e37847aaca
+  report_kind: mission_screen
+  scope: nav_obstacle mission per 4WS steering pattern and for the mecanum car, second run with the wider arrival
+    window; truth-measured final poses.
+  limitations:
+  - One seed per cell
+  - Source hashes derived from git at the recorded revision after the run
+- robot_id: four_wheel_steer_car
+  environment_id: nav_obstacle
+  simulator: mujoco
+  task_type: navigation_mission
+  steering_mode: in_phase
+  date: '2026-10-13'
+  revision: feb9a3b..8a57b76 (06:06-06:50 and the MuJoCo reruns to 07:21, with the wider arrival window)
+  report: docs/status/evidence/r56-4ws-missions-2026-10-13/v2/mujoco_in_phase_nav_obstacle.json
+  sha256: ae573fb0d18a3a498941b7ad057856f13856cfae96781a47b33ba9acd5016b63
+  source_hashes: docs/status/evidence/r56-4ws-missions-2026-10-13/v2/source-hashes-8a57b76.json
+  source_hashes_sha256: 17d7898092faa86be3e19701ed09077d846c4422b86e964994efc0e37847aaca
+  report_kind: mission_screen
+  scope: nav_obstacle mission per 4WS steering pattern and for the mecanum car, second run with the wider arrival
+    window; truth-measured final poses.
+  limitations:
+  - One seed per cell
+  - Source hashes derived from git at the recorded revision after the run
+- robot_id: mecanum_car
+  environment_id: nav_obstacle
+  simulator: mujoco
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-10-13'
+  revision: feb9a3b..8a57b76 (06:06-06:50 and the MuJoCo reruns to 07:21, with the wider arrival window)
+  report: docs/status/evidence/r56-4ws-missions-2026-10-13/v2/mujoco_mecanum_nav_obstacle.json
+  sha256: cc5eb3db8d087239c4a2da5ab2b10504b978e539c70ae8bc20402e5f8efc6a28
+  source_hashes: docs/status/evidence/r56-4ws-missions-2026-10-13/v2/source-hashes-8a57b76.json
+  source_hashes_sha256: 17d7898092faa86be3e19701ed09077d846c4422b86e964994efc0e37847aaca
+  report_kind: mission_screen
+  scope: nav_obstacle mission per 4WS steering pattern and for the mecanum car, second run with the wider arrival
+    window; truth-measured final poses.
+  limitations:
+  - One seed per cell
+  - Source hashes derived from git at the recorded revision after the run
+- robot_id: four_wheel_steer_car
+  environment_id: nav_obstacle
+  simulator: mujoco
+  task_type: navigation_mission
+  steering_mode: pivot
+  date: '2026-10-13'
+  revision: feb9a3b..8a57b76 (06:06-06:50 and the MuJoCo reruns to 07:21, with the wider arrival window)
+  report: docs/status/evidence/r56-4ws-missions-2026-10-13/v2/mujoco_pivot_nav_obstacle.json
+  sha256: c14a201af2747b95d52f22a36088eb3e28184bca4bc8bcf7420e01a7b21884b7
+  source_hashes: docs/status/evidence/r56-4ws-missions-2026-10-13/v2/source-hashes-8a57b76.json
+  source_hashes_sha256: 17d7898092faa86be3e19701ed09077d846c4422b86e964994efc0e37847aaca
+  report_kind: mission_screen
+  scope: nav_obstacle mission per 4WS steering pattern and for the mecanum car, second run with the wider arrival
+    window; truth-measured final poses.
+  limitations:
+  - One seed per cell
+  - Source hashes derived from git at the recorded revision after the run
+- robot_id: four_wheel_steer_car
+  environment_id: nav_obstacle
+  simulator: pybullet
+  task_type: navigation_mission
+  steering_mode: ackermann
+  date: '2026-10-13'
+  revision: feb9a3b..8a57b76 (06:06-06:50 and the MuJoCo reruns to 07:21, with the wider arrival window)
+  report: docs/status/evidence/r56-4ws-missions-2026-10-13/v2/pybullet_ackermann_nav_obstacle.json
+  sha256: 8a2e587cf9be08530fd33aaa7236412b1b0ea0be945721964c783629dba24f21
+  source_hashes: docs/status/evidence/r56-4ws-missions-2026-10-13/v2/source-hashes-8a57b76.json
+  source_hashes_sha256: 17d7898092faa86be3e19701ed09077d846c4422b86e964994efc0e37847aaca
+  report_kind: mission_screen
+  scope: nav_obstacle mission per 4WS steering pattern and for the mecanum car, second run with the wider arrival
+    window; truth-measured final poses.
+  limitations:
+  - One seed per cell
+  - Source hashes derived from git at the recorded revision after the run
+- robot_id: four_wheel_steer_car
+  environment_id: nav_obstacle
+  simulator: pybullet
+  task_type: navigation_mission
+  steering_mode: crab
+  date: '2026-10-13'
+  revision: feb9a3b..8a57b76 (06:06-06:50 and the MuJoCo reruns to 07:21, with the wider arrival window)
+  report: docs/status/evidence/r56-4ws-missions-2026-10-13/v2/pybullet_crab_nav_obstacle.json
+  sha256: a8f3ed1135f56bf5fe4fb84d575e23c1f7ed2541f27b0e06d6dd6e43476ae74e
+  source_hashes: docs/status/evidence/r56-4ws-missions-2026-10-13/v2/source-hashes-8a57b76.json
+  source_hashes_sha256: 17d7898092faa86be3e19701ed09077d846c4422b86e964994efc0e37847aaca
+  report_kind: mission_screen
+  scope: nav_obstacle mission per 4WS steering pattern and for the mecanum car, second run with the wider arrival
+    window; truth-measured final poses.
+  limitations:
+  - One seed per cell
+  - Source hashes derived from git at the recorded revision after the run
+- robot_id: four_wheel_steer_car
+  environment_id: nav_obstacle
+  simulator: pybullet
+  task_type: navigation_mission
+  steering_mode: in_phase
+  date: '2026-10-13'
+  revision: feb9a3b..8a57b76 (06:06-06:50 and the MuJoCo reruns to 07:21, with the wider arrival window)
+  report: docs/status/evidence/r56-4ws-missions-2026-10-13/v2/pybullet_in_phase_nav_obstacle.json
+  sha256: cad4897ad07f89584892d1246abcf4e08e8ed7b2fa6dd3bbb06d53b33854d4fb
+  source_hashes: docs/status/evidence/r56-4ws-missions-2026-10-13/v2/source-hashes-8a57b76.json
+  source_hashes_sha256: 17d7898092faa86be3e19701ed09077d846c4422b86e964994efc0e37847aaca
+  report_kind: mission_screen
+  scope: nav_obstacle mission per 4WS steering pattern and for the mecanum car, second run with the wider arrival
+    window; truth-measured final poses.
+  limitations:
+  - One seed per cell
+  - Source hashes derived from git at the recorded revision after the run
+- robot_id: mecanum_car
+  environment_id: nav_obstacle
+  simulator: pybullet
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-10-13'
+  revision: feb9a3b..8a57b76 (06:06-06:50 and the MuJoCo reruns to 07:21, with the wider arrival window)
+  report: docs/status/evidence/r56-4ws-missions-2026-10-13/v2/pybullet_mecanum_nav_obstacle.json
+  sha256: a9ecc4f2e151f972de6a7b096ea4c569f72ad1ec467eb48036b588e2fa464cc3
+  source_hashes: docs/status/evidence/r56-4ws-missions-2026-10-13/v2/source-hashes-8a57b76.json
+  source_hashes_sha256: 17d7898092faa86be3e19701ed09077d846c4422b86e964994efc0e37847aaca
+  report_kind: mission_screen
+  scope: nav_obstacle mission per 4WS steering pattern and for the mecanum car, second run with the wider arrival
+    window; truth-measured final poses.
+  limitations:
+  - One seed per cell
+  - Source hashes derived from git at the recorded revision after the run
+- robot_id: four_wheel_steer_car
+  environment_id: nav_obstacle
+  simulator: pybullet
+  task_type: navigation_mission
+  steering_mode: pivot
+  date: '2026-10-13'
+  revision: feb9a3b..8a57b76 (06:06-06:50 and the MuJoCo reruns to 07:21, with the wider arrival window)
+  report: docs/status/evidence/r56-4ws-missions-2026-10-13/v2/pybullet_pivot_nav_obstacle.json
+  sha256: 3a2fcfcb28ac9185763a0be9ccd2e14fc249c3570f2963c6133f9f99724c8428
+  source_hashes: docs/status/evidence/r56-4ws-missions-2026-10-13/v2/source-hashes-8a57b76.json
+  source_hashes_sha256: 17d7898092faa86be3e19701ed09077d846c4422b86e964994efc0e37847aaca
+  report_kind: mission_screen
+  scope: nav_obstacle mission per 4WS steering pattern and for the mecanum car, second run with the wider arrival
+    window; truth-measured final poses.
+  limitations:
+  - One seed per cell
+  - Source hashes derived from git at the recorded revision after the run
+- robot_id: mecanum_car
+  environment_id: nav_obstacle
+  simulator: gazebo
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-10-13'
+  revision: f36bc5e (mecanum rerun, 11:21-11:30)
+  report: docs/status/evidence/r56-4ws-missions-2026-10-13/v3-mecanum/gazebo_mecanum_nav_obstacle.json
+  sha256: eea6a26c5167ebae41fa2e8e568992157f0a916008d99662f6d2300ed93907bd
+  source_hashes: docs/status/evidence/r56-4ws-missions-2026-10-13/v3-mecanum/source-hashes-f36bc5e.json
+  source_hashes_sha256: f14fadc9d7f49edda0bac54ba9cd6a515e6fd80227395e5f176879846ca631c7
+  report_kind: mission_screen
+  scope: nav_obstacle mecanum car mission with the 4WS arrival window and the tf2 overlay.
+  limitations:
+  - One seed per cell
+  - Source hashes derived from git at the recorded revision after the run
+- robot_id: mecanum_car
+  environment_id: nav_obstacle
+  simulator: isaac
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-10-13'
+  revision: f36bc5e (mecanum rerun, 11:21-11:30)
+  report: docs/status/evidence/r56-4ws-missions-2026-10-13/v3-mecanum/isaac_mecanum_nav_obstacle.json
+  sha256: b62de840a90214edccd5e5bf6c537b8c2346b6a4f2f42fd4c471c6c2b692c9b5
+  source_hashes: docs/status/evidence/r56-4ws-missions-2026-10-13/v3-mecanum/source-hashes-f36bc5e.json
+  source_hashes_sha256: f14fadc9d7f49edda0bac54ba9cd6a515e6fd80227395e5f176879846ca631c7
+  report_kind: mission_screen
+  scope: nav_obstacle mecanum car mission with the 4WS arrival window and the tf2 overlay.
+  limitations:
+  - One seed per cell
+  - Source hashes derived from git at the recorded revision after the run
+- robot_id: mecanum_car
+  environment_id: nav_obstacle
+  simulator: mujoco
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-10-13'
+  revision: f36bc5e (mecanum rerun, 11:21-11:30)
+  report: docs/status/evidence/r56-4ws-missions-2026-10-13/v3-mecanum/mujoco_mecanum_nav_obstacle.json
+  sha256: adaf849b71cffbcd2e5c6eecbcccc9f927221388bad8a8c062e76d13fec2efcb
+  source_hashes: docs/status/evidence/r56-4ws-missions-2026-10-13/v3-mecanum/source-hashes-f36bc5e.json
+  source_hashes_sha256: f14fadc9d7f49edda0bac54ba9cd6a515e6fd80227395e5f176879846ca631c7
+  report_kind: mission_screen
+  scope: nav_obstacle mecanum car mission with the 4WS arrival window and the tf2 overlay.
+  limitations:
+  - One seed per cell
+  - Source hashes derived from git at the recorded revision after the run
+- robot_id: mecanum_car
+  environment_id: nav_obstacle
+  simulator: pybullet
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-10-13'
+  revision: f36bc5e (mecanum rerun, 11:21-11:30)
+  report: docs/status/evidence/r56-4ws-missions-2026-10-13/v3-mecanum/pybullet_mecanum_nav_obstacle.json
+  sha256: 2fcfaa4ccf3aa8f5639b85595abb4042f441532814f26f7f1f3a724dc47a33f1
+  source_hashes: docs/status/evidence/r56-4ws-missions-2026-10-13/v3-mecanum/source-hashes-f36bc5e.json
+  source_hashes_sha256: f14fadc9d7f49edda0bac54ba9cd6a515e6fd80227395e5f176879846ca631c7
+  report_kind: mission_screen
+  scope: nav_obstacle mecanum car mission with the 4WS arrival window and the tf2 overlay.
+  limitations:
+  - One seed per cell
+  - Source hashes derived from git at the recorded revision after the run
+- robot_id: mecanum_car
+  environment_id: nav_obstacle
+  simulator: isaac
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-10-13'
+  revision: cdcb01c (Isaac capsule rollers)
+  report: docs/status/evidence/p56-drive-patterns-2026-10-12/isaac_mecanum_nav_obstacle_capsules_2026-10-13.json
+  sha256: 0fb1b1448f136aef0a801059b2d1fe81bd87eb49ed3c20f480c52df62c0e682d
+  source_hashes: docs/status/evidence/p56-drive-patterns-2026-10-12/source-hashes-cdcb01c.json
+  source_hashes_sha256: 64c4926bcb26d3ca31285111ec0c45bd825852726c4780b95ea7932284b42a42
+  report_kind: mission_screen
+  scope: Isaac mecanum nav_obstacle mission with capsule roller collisions.
+  limitations:
+  - One seed
+  - Source hashes derived from git at the recorded revision after the run

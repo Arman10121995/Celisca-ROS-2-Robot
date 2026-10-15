@@ -399,6 +399,9 @@ code delivery, not a passed mission or universal support.
     installation remains.
 - [ ] **R9.3:** Regenerate the release matrix as those tasks pass. The current
   matrix intentionally remains partial with full-release gates blocked.
+  Regenerated 2026-10-15 with the October 13-15 missions: 251 measured cells
+  (243 passed, 7 failed screens)
+  ([evidence](evidence/support-matrix-2026-10-15/README.md)).
 - [ ] **R9.4, optional hardware:** Arrange the actual robot, supervised setup
   and explicit hardware-operation authorization. Simulation work is separate.
 

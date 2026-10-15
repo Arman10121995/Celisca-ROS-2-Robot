@@ -1,0 +1,24 @@
+{
+ "revision": "4e93bcc",
+ "derived": "sha256 of each file as git stores it at this revision, computed 2026-10-15 after the run; uncommitted working-tree changes at run time are not captured",
+ "files": {
+  "scripts/gazebo_isolation.sh": "0acd9a6ff62a99a3d0ce12f531e63c67272e11b70afffe2ec20b248da5d1baeb",
+  "scripts/sim_nav_mission.py": "b859965f84c391066b2ad0ccad45755b97bd10439d14a3c849d9610943bea3ed",
+  "scripts/sim_nav_mission.sh": "85403e42783bf0cf0f325cf6e0c7ed14c342be06608a97d22d06de6246854099",
+  "src/robot_lab_algorithms/robot_lab_algorithms/leg_odometry.py": "4114146eb62f08c5c2e0105a94eb1f770d8c953cd01884f4bc8b8b5a95761921",
+  "src/robot_lab_bringup/config/sim_maps.yaml": "d2d872ec0f062d960cdab8921b1f169bca10618f4b6af622a3489b3d29856fe0",
+  "src/robot_lab_bringup/launch/simulated_robot.launch.py": "d5cfa5b93189a98f826c0edbe813d35bbe1c2b3fbb83c3b5cf88793bb53cab76",
+  "src/robot_lab_isaac/python/robot_lab_isaac/isaac_runtime.py": "acb142b116d3146a8037890e78da17dd5d8942e889c7439bef22f6865185b781",
+  "src/robot_lab_isaac/python/robot_lab_isaac/isaac_spawner.py": "32d55b9a6520c8da83b95c22c4b20e4b25f2f4b7f6b969079ecbdd03729f64bf",
+  "src/robot_lab_mujoco/python/robot_lab_mujoco/mujoco_spawner.py": "9c3e1f8a1c267aa63401f12f8b3389df4f836994543782a1042bd46f0dc748a7",
+  "src/robot_lab_navigation/config/controller_server.yaml": "43b46d5931c3df601e767ea2ea604d3cbcaadde4bbab2c35e166bca408485802",
+  "src/robot_lab_navigation/config/planner_server.yaml": "b7a59f2d472ceb59c0f789c056a4903d6c173db73a8ad5b35aa330d1d7087d71",
+  "src/robot_lab_navigation/config/robots/unitree_a1.yaml": "368f3afdb3c86b4cbb6562769532d63fcd9cf8a12088fa9f83a7b33ac408b41e",
+  "src/robot_lab_navigation/config/robots/unitree_b2.yaml": "d4997a3cdc27ab4c825a42b903817d0c72fe4df888f5975b20ca5286d660eb86",
+  "src/robot_lab_navigation/config/robots/unitree_g1_29dof.yaml": "77bded317ddd33c062ecb70da4e6ad32be5f4250abe89360c8a18428347a6bd9",
+  "src/robot_lab_navigation/config/robots/unitree_go2.yaml": "8c6b8eba15e2b7f1eb656b0eedfab5bae3f96b867f3a194acb0354025711fde6",
+  "src/robot_lab_navigation/launch/navigation.launch.py": "7b6e7d504fa1feb8eb0b5f00841c125bd430fec07caa19e080444f9b0d3120fe",
+  "src/robot_lab_pybullet/python/robot_lab_pybullet/pybullet_spawner.py": "92271526a2908f9fa3c82b0f33ba5c0170cd39332610edae04ca989482af9caa",
+  "src/robot_lab_robots/config/robots.yaml": "cc3f50cef9c60f0cafe1ec91fc729bbd7e8abd67f71d016a8a0cf96baf0a31ca"
+ }
+}

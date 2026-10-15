@@ -1,0 +1,178 @@
+# Mission reports of October 13-15 indexed by scripts/r9_3_index_missions.py.
+# Order matters: within one robot/map/backend/pattern cell the last record
+# controls the matrix, so rounds are listed in the order they ran.
+date: '2026-10-15'
+scope: "Exact hashed named simulation screens through October 15; unlisted cells remain untested."
+source_files:
+  - scripts/sim_nav_mission.py
+  - scripts/sim_nav_mission.sh
+  - scripts/gazebo_isolation.sh
+  - src/robot_lab_bringup/launch/simulated_robot.launch.py
+  - src/robot_lab_bringup/config/sim_maps.yaml
+  - src/robot_lab_navigation/launch/navigation.launch.py
+  - src/robot_lab_navigation/config/controller_server.yaml
+  - src/robot_lab_navigation/config/planner_server.yaml
+  - src/robot_lab_robots/config/robots.yaml
+  - src/robot_lab_mujoco/python/robot_lab_mujoco/mujoco_spawner.py
+  - src/robot_lab_pybullet/python/robot_lab_pybullet/pybullet_spawner.py
+  - src/robot_lab_isaac/python/robot_lab_isaac/isaac_runtime.py
+  - src/robot_lab_isaac/python/robot_lab_isaac/isaac_spawner.py
+legged_files: &legged
+  - src/robot_lab_algorithms/robot_lab_algorithms/leg_odometry.py
+  - src/robot_lab_navigation/config/robots/unitree_go2.yaml
+  - src/robot_lab_navigation/config/robots/unitree_a1.yaml
+  - src/robot_lab_navigation/config/robots/unitree_b2.yaml
+  - src/robot_lab_navigation/config/robots/unitree_g1_29dof.yaml
+legged_scope: &legged_scope >-
+  nav_obstacle mission (detour goal, cancel after travel with stop check,
+  resume, near-obstacle goal) for a walking robot on its provisioned policy
+  with leg kinematic odometry; truth-measured final poses after a settled
+  simulated second. Round details in docs/status/evidence/p7-legged-navigation-2026-10-13.
+legged_limits: &legged_limits
+  - One goal seed per report; repeats are separate records
+  - Flat nav_obstacle world; no terrain
+  - Source hashes derived from git at the recorded revision after the run
+groups:
+  - reports: [docs/status/evidence/p7-legged-navigation-2026-10-13/v1/*.json]
+    date: '2026-10-13'
+    revision: "b8e8ba5 (round 1, 03:10-03:31, before 0bf1aef)"
+    hash_revision: b8e8ba5
+    source_files: *legged
+    scope: *legged_scope
+    limitations: *legged_limits
+  - reports: [docs/status/evidence/p7-legged-navigation-2026-10-13/v2/*.json]
+    date: '2026-10-13'
+    revision: "0df755d (round 2, 06:54-07:15, after 0bf1aef and 71b2dbb)"
+    hash_revision: 0df755d
+    source_files: *legged
+    scope: *legged_scope
+    limitations: *legged_limits
+  - reports: [docs/status/evidence/p7-legged-navigation-2026-10-13/v3/*.json]
+    date: '2026-10-13'
+    revision: "f36bc5e (round 3, from 10:58)"
+    hash_revision: f36bc5e
+    source_files: *legged
+    scope: *legged_scope
+    limitations: *legged_limits
+  - reports: [docs/status/evidence/p7-legged-navigation-2026-10-13/v4/*.json]
+    date: '2026-10-13'
+    revision: "59c6ca6 (round 4, from 11:55)"
+    hash_revision: 59c6ca6
+    source_files: *legged
+    scope: *legged_scope
+    limitations: *legged_limits
+  - reports: [docs/status/evidence/p7-legged-navigation-2026-10-13/v5/*.json]
+    date: '2026-10-13'
+    revision: "e0e496e (round 5, Gazebo Go2 at 2 ms physics)"
+    hash_revision: e0e496e
+    source_files: *legged
+    scope: *legged_scope
+    limitations: *legged_limits
+  - reports: [docs/status/evidence/p7-legged-navigation-2026-10-13/repeats/*.json]
+    date: '2026-10-13'
+    revision: "d17ffa5 (repeats, seeds 2 and 3, 17:28-17:58)"
+    hash_revision: d17ffa5
+    source_files: *legged
+    scope: *legged_scope
+    limitations: *legged_limits
+  - reports: [docs/status/evidence/p7-legged-navigation-2026-10-13/v6/*.json]
+    date: '2026-10-13'
+    revision: "4e93bcc (round 6, Gazebo Go2 back-up recovery, 17:58)"
+    hash_revision: 4e93bcc
+    source_files: *legged
+    scope: *legged_scope
+    limitations: *legged_limits
+  - reports: [docs/status/evidence/p7-legged-navigation-2026-10-13/forward-arc-1/*.json]
+    date: '2026-10-15'
+    revision: "8f3bf4f (forward-arc round 1, 11:11-11:20)"
+    hash_revision: 8f3bf4f
+    source_files: *legged
+    scope: *legged_scope
+    limitations: *legged_limits
+  - reports: [docs/status/evidence/p7-legged-navigation-2026-10-13/forward-arc-2/*.json]
+    date: '2026-10-15'
+    revision: "463117e (forward-arc round 2)"
+    hash_revision: 463117e
+    source_files: *legged
+    scope: *legged_scope
+    limitations: *legged_limits
+  - reports: [docs/status/evidence/r55-car-missions-2026-10-13/*.json]
+    date: '2026-10-13'
+    revision: "7b1b19e..b8e8ba5 (01:32-05:55, master moved without drive/Nav2/checker changes; the Gazebo cells
+      reran after the truth-publisher fix, the anti_ackermann_car cell at 42d1ccb, 07:22)"
+    hash_revision: b8e8ba5
+    source_files:
+      - src/robot_lab_navigation/config/robots/ackermann_car.yaml
+      - src/robot_lab_navigation/config/robots/rear_steer_car.yaml
+      - src/robot_lab_navigation/config/robots/anti_ackermann_car.yaml
+    scope: >-
+      nav_obstacle car mission (detour, cancel, resume, near-obstacle goal) on
+      Hybrid-A* with Regulated Pure Pursuit; truth-measured final poses.
+      Details in docs/status/evidence/r55-car-missions-2026-10-13.
+    limitations:
+      - One seed per cell
+      - Source hashes derived from git at the recorded revision after the run
+  - reports: [docs/status/evidence/r55-car-missions-2026-10-13/rerun-tf2/*.json]
+    date: '2026-10-13'
+    revision: "a84ab0c (MuJoCo rear-steer rerun with tf2 0.25.24, 12:09)"
+    hash_revision: a84ab0c
+    source_files:
+      - src/robot_lab_navigation/config/robots/rear_steer_car.yaml
+    scope: MuJoCo rear_steer_car nav_obstacle mission rerun after the tf2 0.25.24 install.
+    limitations:
+      - One seed
+      - Source hashes derived from git at the recorded revision after the run
+  - reports: [docs/status/evidence/r56-4ws-missions-2026-10-13/v1/*.json]
+    four_wheel: true
+    date: '2026-10-13'
+    revision: "58b8a70..b8e8ba5 (02:19-03:01, master moved without drive/mission changes)"
+    hash_revision: b8e8ba5
+    source_files:
+      - src/robot_lab_navigation/config/robots/four_wheel_steer_car.yaml
+      - src/robot_lab_navigation/config/robots/mecanum_car.yaml
+      - src/robot_lab_utils/robot_lab_utils/drive_kinematics.py
+    scope: >-
+      nav_obstacle mission per 4WS steering pattern and for the mecanum car;
+      truth-measured final poses and the measured drive configuration.
+      Details in docs/status/evidence/r56-4ws-missions-2026-10-13.
+    limitations:
+      - One seed per cell
+      - Source hashes derived from git at the recorded revision after the run
+  - reports: [docs/status/evidence/r56-4ws-missions-2026-10-13/v2/*.json]
+    four_wheel: true
+    date: '2026-10-13'
+    revision: "feb9a3b..8a57b76 (06:06-06:50 and the MuJoCo reruns to 07:21, with the wider arrival window)"
+    hash_revision: 8a57b76
+    source_files:
+      - src/robot_lab_navigation/config/robots/four_wheel_steer_car.yaml
+      - src/robot_lab_navigation/config/robots/mecanum_car.yaml
+      - src/robot_lab_utils/robot_lab_utils/drive_kinematics.py
+    scope: >-
+      nav_obstacle mission per 4WS steering pattern and for the mecanum car,
+      second run with the wider arrival window; truth-measured final poses.
+    limitations:
+      - One seed per cell
+      - Source hashes derived from git at the recorded revision after the run
+  - reports: [docs/status/evidence/r56-4ws-missions-2026-10-13/v3-mecanum/*.json]
+    four_wheel: true
+    date: '2026-10-13'
+    revision: "f36bc5e (mecanum rerun, 11:21-11:30)"
+    hash_revision: f36bc5e
+    source_files:
+      - src/robot_lab_navigation/config/robots/mecanum_car.yaml
+    scope: nav_obstacle mecanum car mission with the 4WS arrival window and the tf2 overlay.
+    limitations:
+      - One seed per cell
+      - Source hashes derived from git at the recorded revision after the run
+  - reports: [docs/status/evidence/p56-drive-patterns-2026-10-12/isaac_mecanum_nav_obstacle_capsules_2026-10-13.json]
+    four_wheel: true
+    name_override: isaac_mecanum_nav_obstacle.json
+    date: '2026-10-13'
+    revision: "cdcb01c (Isaac capsule rollers)"
+    hash_revision: cdcb01c
+    source_files:
+      - src/robot_lab_navigation/config/robots/mecanum_car.yaml
+    scope: Isaac mecanum nav_obstacle mission with capsule roller collisions.
+    limitations:
+      - One seed
+      - Source hashes derived from git at the recorded revision after the run
