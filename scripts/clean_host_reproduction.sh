@@ -20,8 +20,14 @@ REV=$(git -C "$REPO" rev-parse --short "${1:-HEAD}") || exit 2
 OUT=$ROBOT_LAB_RUNTIME_ROOT/clean_host/$REV
 CTX=$OUT/context
 IMAGE=robot-lab-clean-host:$REV
-mkdir -p "$OUT" && rm -rf "$CTX" && mkdir -p "$CTX/ws"
+mkdir -p "$OUT" && rm -rf "$CTX" "$OUT/lfs_errors.txt" && mkdir -p "$CTX/ws" "$CTX/manifests"
 git -C "$REPO" archive "$REV" | tar -x -C "$CTX/ws"
+# A clone with git-lfs gets file contents, while an archive keeps the LFS
+# pointers: smudge every LFS path to its content, as a clone would.
+git -C "$REPO" lfs ls-files -n "$REV" | while read -r path; do
+  git -C "$REPO" show "$REV:$path" | git -C "$REPO" lfs smudge -- "$path" > "$CTX/ws/$path" || echo "lfs: $path" >> "$OUT/lfs_errors.txt"
+done
+(cd "$CTX/ws" && find src -name package.xml -o -name COLCON_IGNORE | cpio -pdm "$CTX/manifests" 2>/dev/null)
 cp "$REPO/docker/clean_host/Dockerfile" "$REPO/docker/clean_host/requirements.txt" "$CTX/"
 started=$(date +%s)
 docker build --progress=plain -t "$IMAGE" "$CTX" > "$OUT/build.log" 2>&1

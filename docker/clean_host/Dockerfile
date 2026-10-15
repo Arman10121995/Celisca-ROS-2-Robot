@@ -13,7 +13,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
       libgl1-mesa-dri libglx-mesa0 mesa-utils \
     && rm -rf /var/lib/apt/lists/*
 WORKDIR /ws
-COPY ws/src /ws/src
+# Package manifests only, so the dependency layer is reused when sources change.
+COPY manifests/src /ws/src
 # ORB_SLAM3 needs Pangolin, which is not packaged for Ubuntu 22.04; no
 # integrated algorithm uses it (feature_detection is the lab's own).
 RUN touch /ws/src/ORB_SLAM3/COLCON_IGNORE
