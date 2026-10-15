@@ -480,3 +480,62 @@ class TestUprightClouds(unittest.TestCase):
         from robot_lab_algorithms.perception import upright_points
         cloud = [(float(i), 0.0, 0.0) for i in range(10000)]
         self.assertLessEqual(len(upright_points(cloud, np.eye(3), (0, 0, 0), max_points=3000)), 3000)
+
+
+class TestDepthToPoints(unittest.TestCase):
+    """Depth image back-projection (the depth_image_to_pointcloud node)."""
+
+    # The OAK-D of every backend: 320 x 240, horizontal field of view 1.25 rad.
+    FX = 160.0 / math.tan(0.625)
+    CX, CY = 160.0, 120.0
+
+    def test_a_floor_seen_from_a_level_camera_lands_at_camera_height(self):
+        from robot_lab_algorithms.perception import depth_to_points
+        height = 0.17
+        v = np.arange(240, dtype=np.float32)[:, None] * np.ones((1, 320), dtype=np.float32)
+        with np.errstate(divide='ignore'):
+            depth = np.where(v > self.CY, height * self.FX / (v - self.CY), np.inf).astype(np.float32)
+        points = depth_to_points(depth, self.FX, self.FX, self.CX, self.CY)
+        # Rows below the horizon; the first three see the floor beyond 10 m.
+        self.assertEqual(len(points), (119 - 3) * 320)
+        np.testing.assert_allclose(points[:, 1], height, atol=1e-5)   # optical y points down
+
+    def test_a_pixel_back_projects_to_the_point_that_produced_it(self):
+        from robot_lab_algorithms.perception import depth_to_points
+        depth = np.full((240, 320), np.nan, dtype=np.float32)
+        point = np.array([0.4, -0.25, 1.6])
+        u = self.FX * point[0] / point[2] + self.CX
+        v = self.FX * point[1] / point[2] + self.CY
+        depth[int(round(v)), int(round(u))] = point[2]
+        (x, y, z), = depth_to_points(depth, self.FX, self.FX, self.CX, self.CY)
+        self.assertAlmostEqual(z, 1.6, places=6)
+        self.assertLess(math.hypot(x - point[0], y - point[1]), 1.6 / self.FX)   # within a pixel
+
+    def test_invalid_and_out_of_range_depths_are_dropped(self):
+        from robot_lab_algorithms.perception import depth_to_points
+        depth = np.array([[np.nan, np.inf, -np.inf, 0.0], [0.01, 1.0, 9.9, 12.0]], dtype=np.float32)
+        points = depth_to_points(depth, 100.0, 100.0, 2.0, 1.0, min_range=0.05, max_range=10.0)
+        np.testing.assert_allclose(sorted(points[:, 2]), [1.0, 9.9], rtol=1e-6)
+
+    def test_stride_keeps_every_kth_row_and_column(self):
+        from robot_lab_algorithms.perception import depth_to_points
+        depth = np.ones((240, 320), dtype=np.float32)
+        self.assertEqual(len(depth_to_points(depth, self.FX, self.FX, self.CX, self.CY, stride=2)), 120 * 160)
+        self.assertEqual(len(depth_to_points(depth, self.FX, self.FX, self.CX, self.CY, stride=3)), 80 * 107)
+
+    def test_depth_encodings_decode_to_metres(self):
+        from types import SimpleNamespace
+        from robot_lab_algorithms.perception import decode_depth
+        floats = np.array([[1.5, np.nan], [2.0, 0.5]], dtype='<f4')
+        padded = np.zeros((2, 3), dtype='<f4')   # 4 bytes of row padding
+        padded[:, :2] = floats
+        msg = SimpleNamespace(encoding='32FC1', is_bigendian=0, height=2, width=2, step=12,
+                              data=padded.tobytes())
+        np.testing.assert_allclose(decode_depth(msg), floats)
+        millimetres = np.array([[1500, 0], [2000, 500]], dtype='>u2')
+        msg = SimpleNamespace(encoding='16UC1', is_bigendian=1, height=2, width=2, step=4,
+                              data=millimetres.tobytes())
+        np.testing.assert_allclose(decode_depth(msg), [[1.5, np.nan], [2.0, 0.5]])   # 0 = no return
+        with self.assertRaises(ValueError):
+            decode_depth(SimpleNamespace(encoding='rgb8', is_bigendian=0, height=1, width=1, step=3,
+                                         data=bytes(3)))

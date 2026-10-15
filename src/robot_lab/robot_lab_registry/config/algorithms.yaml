@@ -125,37 +125,50 @@
   - costmap
   - obstacle
 - id: depth_image_to_pointcloud
-  version: 1.0.0
+  version: 2.0.0
   name: Depth Image to PointCloud
-  description: Converts depth images to point clouds
-  status: cataloged
+  description: "Pinhole back-projection of a depth image (32FC1 metres or 16UC1 millimetres) with its camera info to a PointCloud2 in the camera's optical frame: the model of depth_image_proc's point_cloud_xyz, which is not installed in this workspace"
+  status: integrated
   category: perception
   family: pointcloud_conversion
   implementation:
-    package: depth_image_proc
-    executable: depth_image_proc_node
-    language: cpp
+    package: robot_lab_algorithms
+    executable: depth_image_to_pointcloud
+    module: robot_lab_algorithms.perception
+    language: python
   input_contract:
     required_topics:
-    - /camera/depth/image_raw
-    - /camera/depth/camera_info
+    - /oakd/depth/image_raw
+    - /oakd/rgb/camera_info
   output_contract:
     provided_topics:
-    - /camera/depth/points
+    - /perception/depth_points
   required_capabilities: []
   supported_robot_classes:
   - mobile
   - legged
   - humanoid
   - aerial
-  parameters: {}
+  parameters:
+    stride: 2
+    min_range: 0.05
+    max_range: 10.0
   source:
-    repository: https://github.com/ros-perception/depth_image_proc
-    license: BSD-3-Clause
+    repository: internal
+    license: Apache-2.0
+    reference: "depth_image_proc point_cloud_xyz (https://github.com/ros-perception/image_pipeline), the same pinhole model"
   tags:
   - depth
   - vision
   - pointcloud
+  - r7_2
+  created: '2026-08-31'
+  updated: '2026-10-15'
+  evidence:
+    - kind: unit_test
+      reference: "test_r7_perception_algorithms.py::TestDepthToPoints"
+      description: "Implemented, experimental: back-projection, invalid depths, stride and depth encodings; simulator runs pending"
+      date: "2026-10-15"
 - id: camera_calibration
   version: 1.0.0
   name: Camera Calibration

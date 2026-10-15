@@ -423,6 +423,100 @@ def upright_points(points, rotation, translation, max_points=0):
     return pts @ np.asarray(rotation, dtype=float).T + np.asarray(translation, dtype=float)
 
 
+def depth_to_points(depth, fx, fy, cx, cy, stride=1, min_range=0.05, max_range=10.0):
+    """Pinhole back-projection of a depth image (metres) to optical-frame points.
+
+    x = (u - cx) z / fx, y = (v - cy) z / fy, z = depth; every ``stride``-th
+    row and column; NaN, inf and out-of-range depths are dropped.  Returns an
+    N x 3 array (x right, y down, z forward, as the camera's optical frame).
+    """
+    import numpy as np
+    depth = np.asarray(depth, dtype=np.float32)
+    rows = np.arange(0, depth.shape[0], max(1, int(stride)))
+    cols = np.arange(0, depth.shape[1], max(1, int(stride)))
+    z = depth[np.ix_(rows, cols)]
+    v, u = np.meshgrid(rows, cols, indexing='ij')
+    ok = np.isfinite(z) & (z >= min_range) & (z <= max_range)
+    z, u, v = z[ok], u[ok], v[ok]
+    return np.column_stack([(u - cx) * z / fx, (v - cy) * z / fy, z])
+
+
+def decode_depth(msg):
+    """sensor_msgs/Image depth (32FC1 metres or 16UC1 millimetres) as metres."""
+    import numpy as np
+    if msg.encoding in ('32FC1', '32fc1'):
+        dtype, scale = np.float32, 1.0
+    elif msg.encoding in ('16UC1', '16uc1', 'mono16'):
+        dtype, scale = np.uint16, 0.001
+    else:
+        raise ValueError('unsupported depth encoding %s' % msg.encoding)
+    dtype = np.dtype(dtype).newbyteorder('>' if msg.is_bigendian else '<')
+    row = np.frombuffer(bytes(msg.data), dtype=dtype).reshape(msg.height, msg.step // dtype.itemsize)
+    image = row[:, :msg.width].astype(np.float32) * scale
+    if scale != 1.0:
+        image[image <= 0.0] = np.nan  # 16-bit depth marks no return with 0
+    return image
+
+
+class DepthImageToPointCloudNode(Node):
+    """Depth image + camera info -> PointCloud2 in the camera's optical frame.
+
+    The pinhole back-projection of depth_image_proc's point_cloud_xyz, which
+    is not installed in this workspace (the id was cataloged only until
+    2026-10-15).  Publishes on ``output_topic`` with the depth image's header
+    (``frame_id`` overrides the frame); ``stride`` thins rows and columns.
+    Intrinsics come from ``info_topic`` and are scaled when the depth image
+    has another resolution.
+    """
+
+    def __init__(self, node_name='depth_image_to_pointcloud'):
+        super().__init__(node_name)
+        self.declare_parameter('depth_topic', '/oakd/depth/image_raw')
+        self.declare_parameter('info_topic', '/oakd/rgb/camera_info')
+        self.declare_parameter('output_topic', '/perception/depth_points')
+        self.declare_parameter('frame_id', '')
+        self.declare_parameter('stride', 2)
+        self.declare_parameter('min_range', 0.05)
+        self.declare_parameter('max_range', 10.0)
+        from sensor_msgs.msg import CameraInfo, Image
+        self.info = None
+        self.frame_id = str(self.get_parameter('frame_id').value)
+        self.stride = int(self.get_parameter('stride').value)
+        self.min_range = float(self.get_parameter('min_range').value)
+        self.max_range = float(self.get_parameter('max_range').value)
+        self._pub = self.create_publisher(PointCloud2, self.get_parameter('output_topic').value, 10)
+        self.create_subscription(CameraInfo, self.get_parameter('info_topic').value,
+                                 self._on_info, qos_profile_sensor_data)
+        self.create_subscription(Image, self.get_parameter('depth_topic').value,
+                                 self._on_depth, qos_profile_sensor_data)
+        self.points = None
+        self.get_logger().info('depth_image_to_pointcloud ready')
+
+    def _on_info(self, msg):
+        k = list(msg.k)
+        if k[0] > 0 and k[4] > 0 and msg.width > 0 and msg.height > 0:
+            self.info = (k[0], k[4], k[2], k[5], msg.width, msg.height)
+
+    def _on_depth(self, msg):
+        if self.info is None:
+            self.get_logger().warn('no camera info yet', throttle_duration_sec=5.0)
+            return
+        from sensor_msgs_py import point_cloud2
+        try:
+            depth = decode_depth(msg)
+        except ValueError as exc:
+            self.get_logger().warn(str(exc), throttle_duration_sec=5.0)
+            return
+        fx, fy, cx, cy, width, height = self.info
+        sx, sy = msg.width / float(width), msg.height / float(height)
+        self.points = depth_to_points(depth, fx * sx, fy * sy, cx * sx, cy * sy,
+                                      self.stride, self.min_range, self.max_range)
+        header = msg.header
+        if self.frame_id:
+            header.frame_id = self.frame_id
+        self._pub.publish(point_cloud2.create_cloud_xyz32(header, self.points.astype(np.float32)))
+
+
 class _UprightCloud:
     """Ground segmentation needs z up.  A depth camera publishes in its
     optical frame (z forward, y down): the height threshold then cut by
@@ -644,6 +738,10 @@ def dbscan_clusterer_main(args=None):
 
 def ransac_ground_removal_main(args=None):
     return _run(RANSACGroundRemovalNode, 'ransac_ground_removal', args=args)
+
+
+def depth_image_to_pointcloud_main(args=None):
+    return _run(DepthImageToPointCloudNode, 'depth_image_to_pointcloud', args=args)
 
 
 if __name__ == '__main__':

@@ -42,7 +42,7 @@ algorithms:
     ransac_ground_removal:
       node: {package: robot_lab_algorithms, executable: ransac_ground_removal}
     depth_image_to_pointcloud:
-      unavailable: "cataloged only - depth_image_proc adapter not integrated"
+      node: {package: robot_lab_algorithms, executable: depth_image_to_pointcloud}
     camera_calibration:
       unavailable: "cataloged only - offline calibration tool, not a runtime pipeline"
     feature_detection:
