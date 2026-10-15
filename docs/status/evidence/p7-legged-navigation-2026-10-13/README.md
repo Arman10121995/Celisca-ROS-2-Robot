@@ -196,7 +196,23 @@ began at the start, a 0.5 m gap below the corner of a 2.5 m block:
   (0.13-0.31 m; 0.309 m is just over the 0.30 m limit).
 - **G1 Isaac seed 3:** the planner found the start "in lethal space" on the
   first goal, though the start is 0.65 m from any wall. Both later goals
-  succeeded. Not explained.
+  succeeded. Explained afterwards from the run's truth trace and TF bag
+  (2026-10-15):
+  - The "start" is the robot's estimated pose at the 1 Hz replan, not the
+    mission start.
+  - The G1 had turned on the spot, then walked north along the west wall
+    at 0.35 m/s while still turning. That brought it 0.44-0.48 m from the
+    wall (truth).
+  - Its pose estimate (AMCL on leg odometry) sat 0.10-0.20 m closer:
+    0.30-0.37 m from the nearest wall cell.
+  - With `robot_radius: 0.3`, that is at the inscribed radius. Every cell
+    there costs at least 253, which the grid planner treats as a
+    collision.
+  - The spin recovery followed, and the back-up stopped at "collision
+    ahead", so the goal aborted.
+  - The path itself passed within 0.15 m of the inscribed radius. Paths
+    keep more clearance with a lower `cost_scaling_factor` (default 3.0)
+    or a larger G1 radius; neither has been tried.
 - **Go2 MuJoCo seed 3** got past the start and reached the detour goal,
   then arced into an obstacle on the near-obstacle goal.
 
