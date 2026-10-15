@@ -174,6 +174,24 @@ def test_forward_arc_navigation_plans_curves_and_never_spins():
     assert follow['FollowPath.allow_reversing'] is False
 
 
+
+def test_parallel_steering_samples_backward_translation():
+    """Crab/in_phase wheels translate in any direction: DWB must sample
+    backwards too, or a goal behind the base deadlocks (2026-10-15)."""
+    import importlib.util
+    path = os.path.join(os.path.dirname(__file__), '..', '..', 'robot_lab_navigation', 'launch',
+                        'navigation.launch.py')
+    spec = importlib.util.spec_from_file_location('robot_lab_navigation_launch_parallel', path)
+    navigation = importlib.util.module_from_spec(spec)
+    try:
+        spec.loader.exec_module(navigation)
+    except Exception as exc:  # pragma: no cover - workspace not installed
+        pytest.skip('navigation launch needs ROS: %s' % exc)
+    follow = navigation._motion_model_overrides(
+        'controller_server', 'omni_parallel', 'nav2_navfn_planner/NavfnPlanner')[0]
+    assert follow['FollowPath.min_vel_x'] < 0 < follow['FollowPath.max_vel_y']
+    assert 'robot_lab_controller::ParallelSteeringCritic' in follow['FollowPath.critics']
+
 @pytest.mark.integration
 def test_forward_arc_robots_default_to_a_curvature_aware_planner():
     from launch.actions import IncludeLaunchDescription

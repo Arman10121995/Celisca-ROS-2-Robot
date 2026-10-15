@@ -31,7 +31,8 @@ LAUNCH=$!
 # Diagnosis of stale map->odom transforms in Nav2 servers: /tf bag and a
 # one-shot probe on the launch log (scripts/tf_freeze_probe.sh).
 rm -rf "$OUT.tf.bag"
-ros2 bag record -o "$OUT.tf.bag" /tf /tf_static /amcl_pose > /dev/null 2>&1 &
+# EXTRA_BAG_TOPICS (e.g. "/evaluation /cmd_vel") are recorded too, for diagnosis.
+ros2 bag record -o "$OUT.tf.bag" /tf /tf_static /amcl_pose ${EXTRA_BAG_TOPICS:-} > /dev/null 2>&1 &
 TF_BAG=$!
 "$HERE/tf_freeze_probe.sh" "$OUT.launch.log" "$OUT.tf_freeze.txt" &
 TF_PROBE=$!

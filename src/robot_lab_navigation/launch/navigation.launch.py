@@ -272,6 +272,15 @@ def _motion_model_overrides(exec_name, motion_model, global_planner_plugin, turn
                     'RotateToGoal', 'Oscillation', 'ObstacleFootprint', 'PathDist', 'GoalDist'],
                 'progress_checker.required_movement_radius': 0.2,
                 'progress_checker.movement_time_allowance': 20.0,
+                # Parallel wheels translate in any direction, backwards
+                # included. With DWB's forward-only sampling (min_vel_x 0)
+                # a goal behind the base needed a pivot, which the parallel
+                # steering critic penalises and which does not shorten the
+                # goal distance within one horizon: DWB chose standing still
+                # and every seed-2/3 crab and in_phase mission aborted
+                # (2026-10-15, /evaluation recorded).
+                'FollowPath.min_vel_x': -0.3,
+                'FollowPath.vx_samples': 21,
             })
     return [overrides] if overrides else []
 
