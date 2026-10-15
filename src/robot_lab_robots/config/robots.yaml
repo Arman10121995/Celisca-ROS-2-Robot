@@ -433,6 +433,12 @@ robots:
     # walking validation per backend pending.
     features: [legged_policy]
     supports_room_vacuum: false
+    # b2_robot_lab spins (0.89 rad/s), but its 1.1 m footprint cannot rotate
+    # within about 0.6 m of a wall: turning on the spot beside the block at
+    # the nav_obstacle start, the first goal aborted in 2 of 3 runs
+    # (2026-10-13).  In MuJoCo it plans forward curves instead.
+    no_spin_in_place: [mujoco]
+    forward_arc_radius: 0.5
 
   unitree_b2_mujoco:
     package: robot_lab_robots
@@ -500,8 +506,11 @@ robots:
     # cleanly in nav_empty (2 ms).  Coarser worlds launch as a capped copy.
     gazebo_max_physics_step_s: 0.002
     # go2_himloco turns on the spot in Isaac (0.43 rad/s) but not in MuJoCo
-    # (0.014) or Gazebo (0.020): Nav2 backs up there instead of spinning.
+    # (0.014) or Gazebo (0.020).  There Nav2 plans forward-only curves of at
+    # least this radius (motion_model forward_arc; it turns at about 0.3 m
+    # at 0.25 m/s and 0.8 rad/s) and never spins or backs it up.
     no_spin_in_place: [mujoco, gazebo]
+    forward_arc_radius: 0.4
 
   unitree_go2w:
     package: robot_lab_robots

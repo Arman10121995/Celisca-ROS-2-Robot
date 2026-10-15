@@ -1533,10 +1533,15 @@ def _build_simulation_actions(context):
     # starts everything at once, as before.
     gated_actions = []
 
+    # A robot that cannot turn on the spot in this backend (and declares the
+    # radius it turns at while walking) plans forward-only curves.
+    forward_arc = (_launch_value(context, "simulator") in (robot_config.get("no_spin_in_place") or [])
+                   and robot_config.get("forward_arc_radius"))
     motion_model = ("ackermann" if drive_type == "ackermann" else
                     "omni" if drive_type == "mecanum" else
                     "omni_parallel" if drive_type == "four_wheel_steer" and
                         drive_config.get("steering_mode") in ("crab", "in_phase") else
+                    "forward_arc" if forward_arc else
                     "diff")
 
     if _section_enabled(mode_config.get("global_localization")):
@@ -1684,6 +1689,7 @@ def _build_simulation_actions(context):
             # instead of running Nav2's Spin recovery.
             "spin_recovery": "false" if _launch_value(context, "simulator") in (
                 robot_config.get("no_spin_in_place") or []) else "true",
+            "turning_radius": str(robot_config.get("forward_arc_radius") or 0.4),
         }
         # A node planner that serves a Nav2 action replaces the plugin
         # server's in the navigator's tree (robot_lab_algorithms.nav2_adapters);

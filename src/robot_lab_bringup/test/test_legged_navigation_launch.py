@@ -133,3 +133,42 @@ def test_robots_that_cannot_spin_back_up_instead(robot, simulator, spin):
             'navigation.launch.py')]
     arguments = {_text(context, k): _text(context, v) for k, v in navigation[0].launch_arguments}
     assert arguments['spin_recovery'] == spin
+
+
+@pytest.mark.integration
+@pytest.mark.parametrize('robot,simulator,model,radius', [
+    ('unitree_go2', 'mujoco', 'forward_arc', '0.4'), ('unitree_go2', 'isaac', 'diff', None),
+    ('unitree_b2', 'mujoco', 'forward_arc', '0.5'), ('bumperbot', 'mujoco', 'diff', None)])
+def test_robots_that_cannot_turn_on_the_spot_plan_forward_arcs(robot, simulator, model, radius):
+    from launch.actions import IncludeLaunchDescription
+    context, actions = _build(robot_model=robot, simulator=simulator, mode='nav',
+                              map_name='nav_obstacle')
+    navigation = [a for a in _walk(actions) if isinstance(a, IncludeLaunchDescription) and _text(
+        context, a.launch_description_source._LaunchDescriptionSource__location).endswith(
+            'navigation.launch.py')]
+    arguments = {_text(context, k): _text(context, v) for k, v in navigation[0].launch_arguments}
+    assert arguments['motion_model'] == model
+    if radius:
+        assert arguments['turning_radius'] == radius
+
+
+def test_forward_arc_navigation_plans_curves_and_never_spins():
+    import importlib.util
+    spec = importlib.util.spec_from_file_location('robot_lab_navigation_launch', os.path.join(
+        _BRINGUP, '..', 'robot_lab_navigation', 'launch', 'navigation.launch.py'))
+    navigation = importlib.util.module_from_spec(spec)
+    try:
+        spec.loader.exec_module(navigation)
+    except Exception as exc:  # pragma: no cover - workspace not installed
+        pytest.skip('navigation launch needs ROS: %s' % exc)
+    planner, controller = navigation._compatible_planners('forward_arc', 'auto', 'auto')
+    assert planner == 'nav2_smac_planner/SmacPlannerHybrid'
+    with pytest.raises(ValueError):
+        navigation._compatible_planners('forward_arc', 'nav2_smac_planner/SmacPlanner2D', 'auto')
+    plan = navigation._motion_model_overrides('planner_server', 'forward_arc', planner, 0.4)[0]
+    assert plan['GridBased.minimum_turning_radius'] == 0.4
+    assert plan['GridBased.motion_model_for_search'] == 'DUBIN'
+    assert plan['GridBased.allow_reverse_expansion'] is False
+    follow = navigation._motion_model_overrides('controller_server', 'forward_arc', planner, 0.4)[0]
+    assert follow['FollowPath.use_rotate_to_heading'] is False
+    assert follow['FollowPath.allow_reversing'] is False

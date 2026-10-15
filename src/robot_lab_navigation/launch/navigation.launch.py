@@ -73,18 +73,11 @@ LOCAL_PLANNER_EXTRA_PARAMS = {
             "GoalAngleCritic", "PathAlignCritic", "PathFollowCritic",
             "PathAngleCritic", "PreferForwardCritic",
         ],
-        # Arrival.  At Nav2's defaults MPPI reached 7/15 Bumperbot goals:
-        # the other eight ended 0.05-0.19 m and < 4.5 deg away and never
-        # settled into the 0.07 m / 0.03 rad window (R7.7, 2026-10-13).
-        # Stronger goal critics and narrower sampling near the goal.
-        "FollowPath.vx_std": 0.1,
-        "FollowPath.wz_std": 0.3,
-        "FollowPath.GoalCritic.cost_weight": 10.0,
-        "FollowPath.GoalCritic.cost_power": 1,
-        "FollowPath.GoalCritic.threshold_to_consider": 1.0,
-        "FollowPath.GoalAngleCritic.cost_weight": 8.0,
-        "FollowPath.GoalAngleCritic.cost_power": 1,
-        "FollowPath.GoalAngleCritic.threshold_to_consider": 0.5,
+        # Arrival (R7.7): at Nav2's defaults MPPI reached 7/15 Bumperbot
+        # goals; the others ended 0.05-0.19 m away, outside the 0.07 m /
+        # 0.03 rad window.  Goal critics weighted 10/8 with vx/wz sampling
+        # noise 0.1/0.3 reached 6/15 and took twice as long (2026-10-13),
+        # so MPPI keeps Nav2's defaults.
     },
 }
 
@@ -156,6 +149,29 @@ CAR_PARAMS = {
     },
 }
 
+# What a robot that turns only while moving forward (motion_model:=
+# forward_arc) changes.  Go2 himloco does not turn on the spot in MuJoCo or
+# Gazebo and does not walk slowly backwards; on grid plans Regulated Pure
+# Pursuit arced it into the block beside the nav_obstacle start ("collision
+# ahead"), and the first goal aborted in 3 of 6 runs (2026-10-13).  Hybrid-A*
+# plans forward-only (DUBIN) curves of at least the robot's turning radius
+# and checks the oriented footprint along them; nothing rotates the robot
+# in place or backs it up, and goals are position goals.
+def forward_arc_params(turning_radius):
+    return {
+        "planner_server": {
+            "GridBased.minimum_turning_radius": float(turning_radius),
+            "GridBased.motion_model_for_search": "DUBIN",
+            "GridBased.allow_reverse_expansion": False,
+        },
+        "controller_server": {
+            "FollowPath.use_rotate_to_heading": False,
+            "FollowPath.allow_reversing": False,
+            "general_goal_checker.yaw_goal_tolerance": 6.3,
+        },
+    }
+
+
 # Parameters for lateral travel on physical mecanum / parallel-steered bases.
 # Keep limits in the sampler, MPPI model and AMCL consistent with linear.y.
 HOLONOMIC_PARAMS = {
@@ -187,13 +203,16 @@ CAR_LOCAL_PLUGINS = {
 def _compatible_planners(motion_model, global_plugin, local_plugin):
     if global_plugin == "auto":
         global_plugin = ("nav2_smac_planner/SmacPlannerHybrid"
-                         if motion_model == "ackermann" else
+                         if motion_model in ("ackermann", "forward_arc") else
                          "nav2_smac_planner/SmacPlanner2D")
     if local_plugin == "auto":
         local_plugin = ("dwb_core::DWBLocalPlanner" if motion_model.startswith("omni") else
                         "nav2_regulated_pure_pursuit_controller::RegulatedPurePursuitController")
     if motion_model == 'omni_parallel' and local_plugin != 'dwb_core::DWBLocalPlanner':
         raise ValueError('Parallel steering navigation requires DWB with ParallelSteeringCritic')
+    if motion_model == "forward_arc" and global_plugin not in CAR_GLOBAL_PLUGINS:
+        raise ValueError(
+            f"forward-arc navigation requires a curvature-aware global planner, got {global_plugin}")
     if motion_model == "ackermann":
         if global_plugin not in CAR_GLOBAL_PLUGINS:
             raise ValueError(
@@ -213,12 +232,12 @@ def _lattice_file(motion_model):
         share = get_package_share_directory("nav2_smac_planner")
     except Exception:
         return ""
-    variant = "ackermann" if motion_model == "ackermann" else "diff"
+    variant = "ackermann" if motion_model in ("ackermann", "forward_arc") else "diff"
     return os.path.join(share, "sample_primitives", "5cm_resolution",
                         "0.5m_turning_radius", variant, "output.json")
 
 
-def _motion_model_overrides(exec_name, motion_model, global_planner_plugin):
+def _motion_model_overrides(exec_name, motion_model, global_planner_plugin, turning_radius=0.4):
     """Parameters the robot's motion model sets on top of the plugin choice."""
     overrides = {}
     if exec_name in _PLANNER_SERVERS \
@@ -226,6 +245,8 @@ def _motion_model_overrides(exec_name, motion_model, global_planner_plugin):
         overrides["GridBased.lattice_filepath"] = _lattice_file(motion_model)
     if motion_model == "ackermann":
         overrides.update(CAR_PARAMS.get(exec_name, {}))
+    elif motion_model == "forward_arc":
+        overrides.update(forward_arc_params(turning_radius).get(exec_name, {}))
     elif motion_model.startswith("omni") and exec_name in _CONTROLLER_SERVERS:
         overrides.update(HOLONOMIC_PARAMS)
         # Evaluate the oriented footprint, not only the centre cell, for
@@ -308,6 +329,7 @@ def _setup(context, *args, **kwargs):
     car_search_model = LaunchConfiguration('car_search_model').perform(context).strip()
     spin_recovery = LaunchConfiguration("spin_recovery").perform(context).strip().lower() not in (
         "false", "0", "no")
+    turning_radius = float(LaunchConfiguration("turning_radius").perform(context).strip() or 0.4)
     compute_path_server = LaunchConfiguration("compute_path_server").perform(context).strip()
     follow_path_server = LaunchConfiguration("follow_path_server").perform(context).strip()
     requested_plugins = (global_planner_plugin, local_planner_plugin)
@@ -335,7 +357,7 @@ def _setup(context, *args, **kwargs):
         parameters += overlay_params
         parameters.append({"use_sim_time": use_sim_time})
         parameters.extend(_motion_model_overrides(
-            exec_name, motion_model, global_planner_plugin))
+            exec_name, motion_model, global_planner_plugin, turning_radius))
         if exec_name == 'planner_server' and car_search_model != 'auto':
             parameters.append({'GridBased.motion_model_for_search': car_search_model})
         if exec_name == "bt_navigator":
@@ -345,7 +367,11 @@ def _setup(context, *args, **kwargs):
             # cannot turn on the spot (Go2 himloco in MuJoCo and Gazebo)
             # uses it too: its Spin recovery never turned the Go2 out of the
             # nav_obstacle start corner (Gazebo, 2026-10-13).
-            tree_name = ("car_navigation_w_replanning_and_recovery.xml"
+            # A forward-arc robot neither spins nor backs up slowly: it
+            # clears its local costmap, waits and replans.
+            tree_name = ("forward_navigation_w_replanning_and_recovery.xml"
+                         if motion_model == "forward_arc" else
+                         "car_navigation_w_replanning_and_recovery.xml"
                          if motion_model == "ackermann" or not spin_recovery else
                          "simple_navigation_w_replanning_and_recovery.xml")
             bt_xml = os.path.join(
@@ -431,9 +457,14 @@ def generate_launch_description():
         DeclareLaunchArgument(
             "motion_model",
             default_value="diff",
-            description="'diff', 'omni' (lateral travel) or 'ackermann' (a car: "
+            description="'diff', 'omni' (lateral travel), 'forward_arc' (turns only "
+                        "while moving forward) or 'ackermann' (a car: "
                         "turning-radius-aware planning, no rotation in place)",
         ),
+        DeclareLaunchArgument(
+            "turning_radius", default_value="0.4",
+            description="motion_model forward_arc: the smallest radius the robot "
+                        "turns at while walking forward (m)"),
         DeclareLaunchArgument(
             "spin_recovery", default_value="true",
             description="'false': the recovery tree backs up instead of spinning "

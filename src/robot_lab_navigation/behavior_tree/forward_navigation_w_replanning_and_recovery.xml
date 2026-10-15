@@ -1,0 +1,19 @@
+<root main_tree_to_execute="MainTree">
+    <BehaviorTree ID="MainTree">
+        <RecoveryNode number_of_retries="1" name="NavigateRecovery">
+            <PipelineSequence name="NavigateWithReplanning">
+                <RateController hz="1.0">
+                    <ComputePathToPose goal="{goal}" path="{path}" planner_id="GridBased"/>
+                </RateController>
+                <FollowPath path="{path}" controller_id="FollowPath"/>
+            </PipelineSequence>
+            <!-- A robot that turns only while walking forward (motion_model
+                 forward_arc) can neither spin nor back up slowly: clear the
+                 local costmap, wait, and replan from where it stands. -->
+            <Sequence>
+                <ClearEntireCostmap name="ClearLocalCostmap" service_name="local_costmap/clear_entirely_local_costmap"/>
+                <Wait wait_duration="2.0"/>
+            </Sequence>
+        </RecoveryNode>
+    </BehaviorTree>
+</root>
