@@ -94,6 +94,20 @@ patterns (crab, in_phase) are not exercised.
   13.1 cm on a second run), and 14% of its map cells are more than 0.10 m
   from any reference wall (Go2 in the same world: 5%); the cause is not
   established.
+- **Bumperbot's slam pose is worse than its own odometry.** Checked
+  2026-10-15 on a later Gazebo drive (round 22, same loop):
+  - slam_toolbox's pose was 9.6 cm RMSE from truth;
+  - the EKF odometry it was given (TF `odom -> base_footprint`, aligned
+    at the start) was 2.7 cm;
+  - for the mecanum car, slam corrected its odometry from 24.9 cm to
+    2.4 cm.
+  - Bumperbot's slam heading drifted to about -0.9° with its first 90°
+    turn, and the position error peaked at 18 cm on the far side of the
+    loop.
+  - Both robots carry the same lidar model. Bumperbot's chassis sits
+    pitched 0.6° on its casters, which at 0.15 m keeps the beams off the
+    floor within the 12 m range.
+  - The cause is not established.
 - **Gazebo maps show cells off the reference walls in the same places for
   both robots** (around (-3.5, 3.5), far from the route). That points at
   a Gazebo world/map mismatch there; not verified.
