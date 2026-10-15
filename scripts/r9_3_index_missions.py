@@ -11,7 +11,7 @@ batch's order, so the latest round controls a cell in the matrix.
 
 Only sim_nav_mission reports (a 'steps' object) are indexed.  Report
 identity comes from the file name: <simulator>_<robot>[_seedN]_<map>.json,
-or, for the 4WS rounds, <simulator>_<pattern>_<map>.json (pattern mecanum
+or, for the 4WS rounds, <simulator>_<pattern>[_seedN]_<map>.json (pattern mecanum
 means the mecanum car).  Records already indexed (same report path) are
 skipped.
 
@@ -45,6 +45,8 @@ def identity(name, robot_ids, four_wheel):
     if four_wheel:
         pattern = next(p for p in PATTERNS if rest.startswith(p + '_'))
         environment = rest[len(pattern) + 1:]
+        if environment.startswith('seed'):
+            environment = environment.split('_', 1)[1]
         if pattern == 'mecanum':
             return 'mecanum_car', environment, simulator, ''
         return 'four_wheel_steer_car', environment, simulator, pattern
