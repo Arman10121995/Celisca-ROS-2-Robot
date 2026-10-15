@@ -187,11 +187,15 @@ def replay(bag, base_frame, detectors, every, max_features):
             'ms_p50': round(float(np.median(run['ms'])), 1)})
         out['methods'][name] = result
     if wheel_rows and start is not None:
+        # Wheel odometry can begin after the first camera frame (MuJoCo,
+        # PyBullet): it starts at the true pose of its first sample.
         wheels = Track(wheel_rows)
-        w0 = wheels.at(start_time)
-        if w0 is not None:
-            estimates = [(t, start[0] @ np.linalg.inv(w0) @ w) for t, w in zip(wheels.times, wheels.poses)
-                         if start_time <= t <= times[-1]]
+        first = next((i for i, t in enumerate(wheels.times) if t >= start_time), None)
+        anchor = truth.at(wheels.times[first]) if first is not None else None
+        if anchor is not None:
+            w0 = wheels.poses[first]
+            estimates = [(t, anchor @ np.linalg.inv(w0) @ w) for t, w in zip(wheels.times[first:], wheels.poses[first:])
+                         if t <= times[-1]]
             result = errors(estimates, truth)
             result['drift_percent'] = round(100.0 * result['final_error_m'] / driven, 2) if driven else None
             out['methods']['wheel odometry (baseline)'] = result

@@ -1,0 +1,98 @@
+{
+ "depth_topic": "/oakd/depth/image_raw",
+ "topic": "/perception/depth_points",
+ "reference": "/oakd/points",
+ "depth_images": 2992,
+ "clouds": 2813,
+ "reference_clouds": 2615,
+ "cloud_frames": [
+  "oakd_rgb_camera_optical_frame"
+ ],
+ "images_without_cloud": 179,
+ "images_before_first_cloud": 1,
+ "camera_info_fx_fy_cx_cy": [
+  221.76500407999384,
+  221.76500407999382,
+  160.0,
+  120.0
+ ],
+ "points_per_cloud": {
+  "median": 55098.0,
+  "p95": 65425.0,
+  "max": 65425.0
+ },
+ "latency_ms": {
+  "median": 6.6,
+  "p95": 10.4,
+  "max": 27.7
+ },
+ "agreement": {
+  "pairs": 90,
+  "nearest_reference_median_m": {
+   "median": 0.003759,
+   "p95": 0.004445,
+   "max": 0.00514
+  },
+  "nearest_reference_p95_m": {
+   "median": 0.016173,
+   "p95": 0.019924,
+   "max": 0.021535
+  },
+  "nearest_reference_max_m": {
+   "median": 0.027113,
+   "p95": 0.031698,
+   "max": 0.031884
+  },
+  "reference_coverage_1cm": {
+   "median": 0.8641,
+   "p95": 0.987,
+   "max": 1.0
+  },
+  "node_points": {
+   "median": 55312.0,
+   "p95": 65425.0,
+   "max": 65425.0
+  },
+  "reference_points_in_range": {
+   "median": 55312.0,
+   "p95": 65425.0,
+   "max": 65425.0
+  },
+  "back_projected_here": {
+   "camera_info": {
+    "median_m": {
+     "median": 0.003759,
+     "p95": 0.004445,
+     "max": 0.00514
+    },
+    "p95_m": {
+     "median": 0.016173,
+     "p95": 0.019924,
+     "max": 0.021535
+    },
+    "max_m": {
+     "median": 0.027113,
+     "p95": 0.031698,
+     "max": 0.031884
+    }
+   },
+   "pixel_centres": {
+    "median_m": {
+     "median": 0.0,
+     "p95": 0.0,
+     "max": 0.0
+    },
+    "p95_m": {
+     "median": 0.0,
+     "p95": 1e-06,
+     "max": 1e-06
+    },
+    "max_m": {
+     "median": 1e-06,
+     "p95": 2e-06,
+     "max": 2e-06
+    }
+   }
+  }
+ }
+}

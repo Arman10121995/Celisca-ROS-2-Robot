@@ -87,9 +87,58 @@ axes.
 
 The rerun below checks this directly.
 
+## The half-pixel principal point, confirmed (`v2/`, 12:21 and 16:02)
+
+**Gazebo rerun (`a691fae`).** The projection check also back-projected
+each depth image itself, at stride 1, with two principal points
+([gazebo_projection.json](v2/gazebo_projection.json), 90 stamps).
+
+| Principal point | Median distance to Gazebo's points | Maximum |
+|---|---|---|
+| camera info (160, 120) | 3.8 mm | 31.9 mm |
+| half a pixel up and left (159.5, 119.5) | **0.000 mm** | **0.002 mm** |
+
+With (159.5, 119.5), the node's cloud and Gazebo's are the same points.
+
+**All four simulators.** `scripts/r7_2_depth_floor_bias.py` replayed the
+depth frames recorded in round 23 (Bumperbot, the same loop, every 10th
+Gazebo frame and every frame elsewhere). It moved the pixels into the
+world with the true pose and took the median height of the floor pixels
+(within 2 cm of z = 0) per depth bin
+([floor_bias.json](v2/floor_bias.json)):
+
+| Simulator | Principal point | 0.5-1 m | 1-2 m | 2-3 m | 3-4 m |
+|---|---|---|---|---|---|
+| Gazebo | camera info | +1.5 mm | +2.9 mm | +5.4 mm | +6.9 mm |
+| Gazebo | pixel centres | **0.0** | **0.0** | **0.0** | **0.0** |
+| Isaac | camera info | +1.5 | +3.0 | +5.4 | +7.4 |
+| Isaac | pixel centres | **0.0** | **0.0** | **0.0** | **0.0** |
+| MuJoCo | camera info | +2.7 | +5.1 | +9.4 | +12.0 |
+| MuJoCo | pixel centres | +1.1 | +2.2 | +4.0 | +5.2 |
+| PyBullet | camera info | +3.0 | +6.1 | +10.5 | +15.2 |
+| PyBullet | pixel centres | +1.5 | +3.0 | +5.2 | +7.6 |
+
+- A half-pixel error lifts the floor by 0.5 z / fy, 2.25 mm per metre.
+- Gazebo's and Isaac's depth images are exact once the principal point
+  is (159.5, 119.5).
+- MuJoCo and PyBullet keep a further lift of about 1.5 and 2 mm per metre.
+  That is 0.08-0.12° of camera pitch, or a third of a pixel more; the cause
+  is not established.
+
+**Fix (`8ac644b`).** `robot_lab_utils.camera_model.intrinsics`, which
+the MuJoCo, PyBullet and Isaac bridges use for their camera info, now
+gives ((width - 1) / 2, (height - 1) / 2).
+
+Gazebo's camera info comes from gz-sensors and still says (160, 120). The
+depth node, the visual odometry and RTAB-Map take the camera info as given.
+In Gazebo they therefore keep the half-pixel offset: at most 3.2 mm per
+metre of range, perpendicular to the ray.
+
 ## Limits
 
 - One drive per simulator, one flat world, Bumperbot's OAK-D model
   (320 × 240).
 - Latency is wall-clock on the loaded host, with the simulator and the
-  scorers running.
+  scorers running. In the Gazebo rerun, with the visual odometry node and
+  an RGB-D bag recording too, 178 of 2992 images got no cloud (6%); none
+  were missed in MuJoCo.

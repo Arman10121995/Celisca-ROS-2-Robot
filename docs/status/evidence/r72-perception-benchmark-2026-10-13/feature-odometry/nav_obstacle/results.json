@@ -1,0 +1,300 @@
+{
+ "revision": "d65fc2e2e431ab60999bc609c73f4af2268f1cd3",
+ "host": "molar1 aarch64",
+ "runs": {
+  "mujoco_bumperbot_nav_obstacle.json.tf.bag": {
+   "frames_paired": 523,
+   "frames_used": 522,
+   "every": 1,
+   "seconds": 104.2,
+   "driven_m": 25.4,
+   "intrinsics": [
+    221.76500407999384,
+    221.76500407999384,
+    160.0,
+    120.0
+   ],
+   "methods": {
+    "orb": {
+     "position_rmse_m": 4.915,
+     "position_max_m": 10.073,
+     "final_error_m": 10.073,
+     "heading_rmse_deg": 102.98,
+     "drift_percent": 39.66,
+     "frames_lost": 295,
+     "features_mean": 46.6,
+     "inliers_median": 22,
+     "ms_p50": 3.2
+    },
+    "akaze": {
+     "position_rmse_m": 4.104,
+     "position_max_m": 9.015,
+     "final_error_m": 9.015,
+     "heading_rmse_deg": 100.38,
+     "drift_percent": 35.49,
+     "frames_lost": 326,
+     "features_mean": 21.5,
+     "inliers_median": 17,
+     "ms_p50": 21.8
+    },
+    "brisk": {
+     "position_rmse_m": 3.953,
+     "position_max_m": 8.217,
+     "final_error_m": 8.217,
+     "heading_rmse_deg": 108.02,
+     "drift_percent": 32.35,
+     "frames_lost": 342,
+     "features_mean": 29.7,
+     "inliers_median": 15,
+     "ms_p50": 1.6
+    },
+    "sift": {
+     "position_rmse_m": 4.422,
+     "position_max_m": 8.054,
+     "final_error_m": 2.503,
+     "heading_rmse_deg": 106.13,
+     "drift_percent": 9.85,
+     "frames_lost": 477,
+     "features_mean": 13.1,
+     "inliers_median": 12,
+     "ms_p50": 29.9
+    },
+    "gftt_orb": {
+     "position_rmse_m": 4.171,
+     "position_max_m": 7.615,
+     "final_error_m": 3.057,
+     "heading_rmse_deg": 107.95,
+     "drift_percent": 12.04,
+     "frames_lost": 435,
+     "features_mean": 30.1,
+     "inliers_median": 12,
+     "ms_p50": 2.4
+    }
+   }
+  },
+  "pybullet_bumperbot_nav_obstacle.json.tf.bag": {
+   "frames_paired": 478,
+   "frames_used": 477,
+   "every": 1,
+   "seconds": 96.7,
+   "driven_m": 25.63,
+   "intrinsics": [
+    221.76500407999384,
+    221.76500407999384,
+    160.0,
+    120.0
+   ],
+   "methods": {
+    "orb": {
+     "position_rmse_m": 3.627,
+     "position_max_m": 7.608,
+     "final_error_m": 7.608,
+     "heading_rmse_deg": 91.51,
+     "drift_percent": 29.68,
+     "frames_lost": 297,
+     "features_mean": 83.0,
+     "inliers_median": 17,
+     "ms_p50": 3.9
+    },
+    "akaze": {
+     "position_rmse_m": 4.591,
+     "position_max_m": 7.196,
+     "final_error_m": 7.191,
+     "heading_rmse_deg": 100.12,
+     "drift_percent": 28.06,
+     "frames_lost": 282,
+     "features_mean": 46.8,
+     "inliers_median": 14,
+     "ms_p50": 22.3
+    },
+    "brisk": {
+     "position_rmse_m": 3.866,
+     "position_max_m": 6.153,
+     "final_error_m": 6.138,
+     "heading_rmse_deg": 85.67,
+     "drift_percent": 23.95,
+     "frames_lost": 326,
+     "features_mean": 81.8,
+     "inliers_median": 16,
+     "ms_p50": 3.1
+    },
+    "sift": {
+     "position_rmse_m": 4.968,
+     "position_max_m": 8.857,
+     "final_error_m": 2.383,
+     "heading_rmse_deg": 96.09,
+     "drift_percent": 9.3,
+     "frames_lost": 410,
+     "features_mean": 30.4,
+     "inliers_median": 11,
+     "ms_p50": 30.2
+    },
+    "gftt_orb": {
+     "position_rmse_m": 4.364,
+     "position_max_m": 7.567,
+     "final_error_m": 4.429,
+     "heading_rmse_deg": 97.21,
+     "drift_percent": 17.28,
+     "frames_lost": 342,
+     "features_mean": 66.0,
+     "inliers_median": 15,
+     "ms_p50": 3.3
+    }
+   }
+  },
+  "isaac_bumperbot_nav_obstacle.json.tf.bag": {
+   "frames_paired": 528,
+   "frames_used": 527,
+   "every": 1,
+   "seconds": 105.2,
+   "driven_m": 25.35,
+   "intrinsics": [
+    221.76500407999384,
+    221.76500407999384,
+    160.0,
+    120.0
+   ],
+   "methods": {
+    "orb": {
+     "position_rmse_m": 3.894,
+     "position_max_m": 7.217,
+     "final_error_m": 7.217,
+     "heading_rmse_deg": 90.78,
+     "drift_percent": 28.47,
+     "frames_lost": 222,
+     "features_mean": 800.0,
+     "inliers_median": 17,
+     "ms_p50": 19.6
+    },
+    "akaze": {
+     "position_rmse_m": 4.379,
+     "position_max_m": 9.402,
+     "final_error_m": 9.402,
+     "heading_rmse_deg": 101.19,
+     "drift_percent": 37.09,
+     "frames_lost": 265,
+     "features_mean": 229.9,
+     "inliers_median": 13,
+     "ms_p50": 34.0
+    },
+    "brisk": {
+     "position_rmse_m": 5.907,
+     "position_max_m": 10.597,
+     "final_error_m": 0.226,
+     "heading_rmse_deg": 110.72,
+     "drift_percent": 0.89,
+     "frames_lost": 525,
+     "features_mean": 1000.0,
+     "inliers_median": 6,
+     "ms_p50": 62.4
+    },
+    "sift": {
+     "position_rmse_m": 5.876,
+     "position_max_m": 10.564,
+     "final_error_m": 0.121,
+     "heading_rmse_deg": 110.73,
+     "drift_percent": 0.48,
+     "frames_lost": 524,
+     "features_mean": 320.3,
+     "inliers_median": 7,
+     "ms_p50": 34.7
+    },
+    "gftt_orb": {
+     "position_rmse_m": 5.919,
+     "position_max_m": 10.674,
+     "final_error_m": 0.07,
+     "heading_rmse_deg": 110.96,
+     "drift_percent": 0.28,
+     "frames_lost": 524,
+     "features_mean": 638.0,
+     "inliers_median": 6,
+     "ms_p50": 16.6
+    },
+    "wheel odometry (baseline)": {
+     "position_rmse_m": 2.862,
+     "position_max_m": 6.385,
+     "final_error_m": 6.385,
+     "heading_rmse_deg": 21.08,
+     "drift_percent": 25.19
+    }
+   }
+  },
+  "gazebo_bumperbot_nav_obstacle.json.tf.bag": {
+   "frames_paired": 3187,
+   "frames_used": 3187,
+   "every": 1,
+   "seconds": 105.1,
+   "driven_m": 25.43,
+   "intrinsics": [
+    221.76500407999384,
+    221.76500407999382,
+    160.0,
+    120.0
+   ],
+   "methods": {
+    "orb": {
+     "position_rmse_m": 7.073,
+     "position_max_m": 14.701,
+     "final_error_m": 14.701,
+     "heading_rmse_deg": 38.44,
+     "drift_percent": 57.8,
+     "frames_lost": 860,
+     "features_mean": 49.7,
+     "inliers_median": 28,
+     "ms_p50": 3.8
+    },
+    "akaze": {
+     "position_rmse_m": 4.956,
+     "position_max_m": 11.235,
+     "final_error_m": 11.235,
+     "heading_rmse_deg": 105.38,
+     "drift_percent": 44.17,
+     "frames_lost": 1614,
+     "features_mean": 29.4,
+     "inliers_median": 22,
+     "ms_p50": 20.4
+    },
+    "brisk": {
+     "position_rmse_m": 4.682,
+     "position_max_m": 9.565,
+     "final_error_m": 9.565,
+     "heading_rmse_deg": 66.9,
+     "drift_percent": 37.61,
+     "frames_lost": 1004,
+     "features_mean": 41.7,
+     "inliers_median": 21,
+     "ms_p50": 2.7
+    },
+    "sift": {
+     "position_rmse_m": 3.467,
+     "position_max_m": 5.325,
+     "final_error_m": 5.208,
+     "heading_rmse_deg": 98.6,
+     "drift_percent": 20.48,
+     "frames_lost": 2571,
+     "features_mean": 16.8,
+     "inliers_median": 14,
+     "ms_p50": 29.6
+    },
+    "gftt_orb": {
+     "position_rmse_m": 4.567,
+     "position_max_m": 7.562,
+     "final_error_m": 5.041,
+     "heading_rmse_deg": 90.3,
+     "drift_percent": 19.82,
+     "frames_lost": 1250,
+     "features_mean": 46.3,
+     "inliers_median": 18,
+     "ms_p50": 3.3
+    },
+    "wheel odometry (baseline)": {
+     "position_rmse_m": 0.102,
+     "position_max_m": 0.19,
+     "final_error_m": 0.047,
+     "heading_rmse_deg": 1.09,
+     "drift_percent": 0.18
+    }
+   }
+  }
+ }
+}

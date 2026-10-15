@@ -158,9 +158,13 @@ simulators, and the ground and cluster scorers ran on its cloud
 - MuJoCo, PyBullet and Isaac publish only depth images, so these are
   their first scored clouds.
 - In Gazebo the node's cloud matches Gazebo's own to half a pixel. The
-  simulators' camera info puts the principal point at half the image
-  size, while rendered pixel centres put it half a pixel lower. That lifts
-  far floor points by a few millimetres; the evidence page has the check.
+  camera info put the principal point at half the image size, (160, 120),
+  but renderers draw pixel centres at u + 0.5. At (159.5, 119.5) the two
+  clouds are identical, and the Gazebo and Isaac floors lie at exactly
+  z = 0.
+- The lab's MuJoCo, PyBullet and Isaac cameras now publish (159.5, 119.5).
+  Gazebo's camera info, which comes from gz-sensors, still lifts floor
+  points by 2.25 mm per metre of depth.
 
 ## Limits
 

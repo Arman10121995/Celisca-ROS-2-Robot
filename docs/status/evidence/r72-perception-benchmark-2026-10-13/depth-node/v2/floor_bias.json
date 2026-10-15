@@ -1,0 +1,198 @@
+{
+ "gazebo_bumperbot_nav_obstacle.json.tf.bag": {
+  "depth_frames": 3187,
+  "frames_used": 319,
+  "every": 10,
+  "intrinsics": [
+   221.76500407999384,
+   221.76500407999382,
+   160.0,
+   120.0
+  ],
+  "band_m": 0.02,
+  "camera_info": {
+   "0.5-1.0 m": {
+    "median_mm": 1.51,
+    "points": 1124600
+   },
+   "1.0-2.0 m": {
+    "median_mm": 2.91,
+    "points": 590727
+   },
+   "2.0-3.0 m": {
+    "median_mm": 5.37,
+    "points": 117830
+   },
+   "3.0-4.0 m": {
+    "median_mm": 6.93,
+    "points": 56966
+   }
+  },
+  "pixel_centres": {
+   "0.5-1.0 m": {
+    "median_mm": -0.0,
+    "points": 1124633
+   },
+   "1.0-2.0 m": {
+    "median_mm": -0.0,
+    "points": 593344
+   },
+   "2.0-3.0 m": {
+    "median_mm": -0.0,
+    "points": 120459
+   },
+   "3.0-4.0 m": {
+    "median_mm": -0.0,
+    "points": 60126
+   }
+  },
+  "half_pixel_lift_mm_per_m": 2.25
+ },
+ "mujoco_bumperbot_nav_obstacle.json.tf.bag": {
+  "depth_frames": 523,
+  "frames_used": 52,
+  "every": 10,
+  "intrinsics": [
+   221.76500407999384,
+   221.76500407999384,
+   160.0,
+   120.0
+  ],
+  "band_m": 0.02,
+  "camera_info": {
+   "0.5-1.0 m": {
+    "median_mm": 2.65,
+    "points": 184420
+   },
+   "1.0-2.0 m": {
+    "median_mm": 5.1,
+    "points": 95085
+   },
+   "2.0-3.0 m": {
+    "median_mm": 9.39,
+    "points": 18745
+   },
+   "3.0-4.0 m": {
+    "median_mm": 11.98,
+    "points": 8993
+   }
+  },
+  "pixel_centres": {
+   "0.5-1.0 m": {
+    "median_mm": 1.13,
+    "points": 184420
+   },
+   "1.0-2.0 m": {
+    "median_mm": 2.19,
+    "points": 95509
+   },
+   "2.0-3.0 m": {
+    "median_mm": 4.03,
+    "points": 19175
+   },
+   "3.0-4.0 m": {
+    "median_mm": 5.16,
+    "points": 9725
+   }
+  },
+  "half_pixel_lift_mm_per_m": 2.25
+ },
+ "pybullet_bumperbot_nav_obstacle.json.tf.bag": {
+  "depth_frames": 478,
+  "frames_used": 47,
+  "every": 10,
+  "intrinsics": [
+   221.76500407999384,
+   221.76500407999384,
+   160.0,
+   120.0
+  ],
+  "band_m": 0.02,
+  "camera_info": {
+   "0.5-1.0 m": {
+    "median_mm": 3.01,
+    "points": 172648
+   },
+   "1.0-2.0 m": {
+    "median_mm": 6.07,
+    "points": 80560
+   },
+   "2.0-3.0 m": {
+    "median_mm": 10.47,
+    "points": 22443
+   },
+   "3.0-4.0 m": {
+    "median_mm": 15.17,
+    "points": 7293
+   }
+  },
+  "pixel_centres": {
+   "0.5-1.0 m": {
+    "median_mm": 1.5,
+    "points": 172650
+   },
+   "1.0-2.0 m": {
+    "median_mm": 3.04,
+    "points": 80865
+   },
+   "2.0-3.0 m": {
+    "median_mm": 5.23,
+    "points": 22797
+   },
+   "3.0-4.0 m": {
+    "median_mm": 7.6,
+    "points": 7762
+   }
+  },
+  "half_pixel_lift_mm_per_m": 2.25
+ },
+ "isaac_bumperbot_nav_obstacle.json.tf.bag": {
+  "depth_frames": 528,
+  "frames_used": 52,
+  "every": 10,
+  "intrinsics": [
+   221.76500407999384,
+   221.76500407999384,
+   160.0,
+   120.0
+  ],
+  "band_m": 0.02,
+  "camera_info": {
+   "0.5-1.0 m": {
+    "median_mm": 1.51,
+    "points": 183236
+   },
+   "1.0-2.0 m": {
+    "median_mm": 3.01,
+    "points": 96431
+   },
+   "2.0-3.0 m": {
+    "median_mm": 5.37,
+    "points": 19272
+   },
+   "3.0-4.0 m": {
+    "median_mm": 7.37,
+    "points": 9055
+   }
+  },
+  "pixel_centres": {
+   "0.5-1.0 m": {
+    "median_mm": -0.0,
+    "points": 183242
+   },
+   "1.0-2.0 m": {
+    "median_mm": -0.0,
+    "points": 96815
+   },
+   "2.0-3.0 m": {
+    "median_mm": -0.01,
+    "points": 19872
+   },
+   "3.0-4.0 m": {
+    "median_mm": -0.01,
+    "points": 9372
+   }
+  },
+  "half_pixel_lift_mm_per_m": 2.25
+ }
+}
