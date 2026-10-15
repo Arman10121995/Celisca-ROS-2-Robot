@@ -39,6 +39,10 @@ Ground Localization/SLAM/Nav2 modes and other simulators remain unavailable.
 The five worlds contain real static obstacles and fluid density boundaries;
 they are not flat 2D occupancy maps.
 
+## Run
+
+The same session from a sourced terminal:
+
 ```bash
 ros2 launch robot_lab_bringup simulated_robot.launch.py \
   robot_model:=tethys_auv simulator:=gazebo mode:=marine map_name:=marine_reef

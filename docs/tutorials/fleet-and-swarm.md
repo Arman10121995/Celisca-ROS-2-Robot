@@ -122,7 +122,7 @@ stamped poses; the original reported twist is retained separately. Sensor
 samples must advance and match the current world clock. Wheel and localization
 estimates are labeled and never replaced with simulator truth for navigation.
 
-## CLI and artifacts
+## Run from a terminal, and artifacts
 
 ```bash
 source scripts/ssd_env.sh

@@ -70,3 +70,19 @@ clear/obstacle curved approaches, cancellation/Stop/loss, infeasible/reverse
 path rejection, contact/clearance, solver deadlines and end errors. Numerical
 constraint tests and installation checks are separate from those missions.
 See [current status](../status/CURRENT_STATUS.md) and [the ledger](../status/platform-status.yaml).
+
+## Run
+
+From a sourced workspace, the Ackermann car on the obstacle map with the
+bicycle Pure Pursuit tracker (Hybrid A\* stays the car's default planner):
+
+```bash
+source scripts/ssd_env.sh
+source /opt/ros/humble/setup.bash
+source install/setup.bash
+ros2 launch robot_lab_bringup simulated_robot.launch.py \
+  robot_model:=ackermann_car simulator:=mujoco mode:=nav map_name:=nav_obstacle \
+  control:=bicycle_pure_pursuit
+```
+
+`control:=bicycle_stanley` or `control:=bicycle_mpc` select the other two.

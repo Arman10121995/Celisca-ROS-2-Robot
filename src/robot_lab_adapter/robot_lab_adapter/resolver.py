@@ -160,6 +160,18 @@ def _default_of(registry_entries: Dict[str, Dict[str, Any]],
         return None
     return next(iter(registry_entries), None)
 
+
+# The reference robot and world an empty request resolves to.  Registry
+# order is not a default: newer robots (R10 marine and multi-leg bases) are
+# declared first, and an empty request resolved to tethys_auv (2026-10-15).
+DEFAULT_ROBOT = 'bumperbot'
+DEFAULT_ENVIRONMENT = 'small_office'
+
+
+def _reference_default(registry_entries: Dict[str, Dict[str, Any]], reference: str) -> Optional[str]:
+    """The reference entry when it is registered, else the first declared one."""
+    return reference if reference in registry_entries else _default_of(registry_entries, None)
+
 def _world_arguments(environment: Dict[str, Any]) -> Dict[str, str]:
     """
     Derive concrete world/map launch arguments from an environment entity.
@@ -293,8 +305,9 @@ def resolve_experiment(registry: Any, request: ExperimentRequest) -> Tuple[bool,
     robots = registry.robots.get_all()
     environments = registry.environments.get_all()
 
-    robot_id = resolved.robot_id or base['robot_id'] or _default_of(robots, None)
-    environment_id = resolved.environment_id or base['environment_id'] or _default_of(environments, None)
+    robot_id = resolved.robot_id or base['robot_id'] or _reference_default(robots, DEFAULT_ROBOT)
+    environment_id = (resolved.environment_id or base['environment_id']
+                      or _reference_default(environments, DEFAULT_ENVIRONMENT))
 
     if not robot_id:
         outcome['errors'].append('No robot selected and no default robot available')

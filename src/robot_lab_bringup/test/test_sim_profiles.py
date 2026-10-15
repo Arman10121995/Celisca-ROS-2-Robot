@@ -246,7 +246,8 @@ def test_bhl_physics_timestep_launch_override_is_opt_in():
 
 
 def test_expected_profiles_are_present():
-    assert set(MODES) == {"display", "loc", "slam", "3d_slam", "nav", "flight"}
+    # gait (R10.6 multi-leg bases) and marine (R10.4 ROV/AUV) joined on 2026-10-15.
+    assert set(MODES) == {"display", "loc", "slam", "3d_slam", "nav", "flight", "gait", "marine"}
     # 14 legacy maps existed before P4.2; the P4.2/P4.3/P4.4/P4.5 arenas added more.
     assert len(MAPS) >= 14
     for legacy in (
@@ -330,6 +331,8 @@ def test_robot_modes_and_features_are_compatible(robot_name, robot_config):
 @pytest.mark.parametrize("map_name,map_config", MAPS.items())
 def test_bumperbot_mode_map_matrix(mode_name, mode_config, map_name, map_config):
     assert mode_name in ROBOTS["bumperbot"]["supported_modes"]
+    if "marine" in map_config:
+        pytest.skip(f"{map_name} is a water world for the marine bases, not a ground map")
     has_2d_map = map_config.get("map", {}).get("has_2d_map", False)
     compatible = not mode_config.get("requires_2d_map", False) or has_2d_map
     if map_name in {"simple_box", "empty", "residential_demo"}:

@@ -53,7 +53,7 @@ another channel invalidates the plan and interrupts execution. The GUI's Hand
 page remains available for source position channels; this does not establish
 grasp or payload readiness.
 
-## Command and installation
+## Run: build and launch
 
 From this workspace:
 

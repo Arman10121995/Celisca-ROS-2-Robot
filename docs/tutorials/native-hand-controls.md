@@ -48,7 +48,9 @@ sequence controls remain available. Teach captures actual settled source
 coordinates. Saved sequences are source-matched and replay actual motors;
 coordinate completion says nothing about whether an object stayed grasped.
 
-Equivalent launch, after sourcing ROS and `install/setup.bash`:
+## Run
+
+The equivalent launch, after sourcing ROS and `install/setup.bash`:
 
 ```bash
 source scripts/ssd_env.sh

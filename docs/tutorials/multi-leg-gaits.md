@@ -37,7 +37,9 @@ The models do not gain Localization/SLAM/Nav2 merely from having legs or a
 MuJoCo range sensor. Terrain, independent odometry/perception, saved-map and
 obstacle missions need their own integration and later qualification.
 
-Example:
+## Run
+
+The same octopod session from a terminal:
 
 ```bash
 ros2 launch robot_lab_bringup simulated_robot.launch.py \

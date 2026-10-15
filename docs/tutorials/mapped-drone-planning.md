@@ -32,7 +32,7 @@ The existing manual Drive/yaw/altitude and Takeoff controls remain separate
 control paths. Enabling the observation option requests no takeoff or motion.
 Data recovery does not resume an interrupted route automatically.
 
-## Command
+## Run
 
 ```bash
 source scripts/ssd_env.sh
