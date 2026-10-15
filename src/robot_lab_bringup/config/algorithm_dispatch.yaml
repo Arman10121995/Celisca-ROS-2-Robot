@@ -46,7 +46,7 @@ algorithms:
     camera_calibration:
       unavailable: "cataloged only - offline calibration tool, not a runtime pipeline"
     feature_detection:
-      unavailable: "cataloged only - ORB-SLAM3 build carries an OpenCV ABI mismatch"
+      node: {package: robot_lab_algorithms, executable: feature_detection}
 
   localization:
     amcl:

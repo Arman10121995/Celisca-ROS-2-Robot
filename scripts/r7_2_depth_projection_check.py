@@ -12,7 +12,12 @@ optical frame) and measures their agreement:
 * distance from each node point to the nearest reference point (median,
   p95, max);
 * coverage: the share of reference points within the node's depth range
-  that have a node point within 1 cm (meaningful at stride 1).
+  that have a node point within 1 cm (meaningful at stride 1);
+* the same distances for the depth image back-projected here at stride 1,
+  once with the camera info's principal point and once with it moved half
+  a pixel up and left (``pixel_centres``: renderers put pixel centres at
+  u + 0.5, so an image centred on the optical axis has cx = (width - 1) / 2,
+  while the simulators' camera info says width / 2).
 
 MuJoCo, PyBullet and Isaac publish only the depth image, so there only the
 timing and point counts are reported (``--reference ''``).
@@ -23,6 +28,7 @@ import argparse
 import json
 import os
 import signal
+import sys
 import time
 
 for _variable in ('OPENBLAS_NUM_THREADS', 'OMP_NUM_THREADS', 'MKL_NUM_THREADS'):
@@ -30,6 +36,11 @@ for _variable in ('OPENBLAS_NUM_THREADS', 'OMP_NUM_THREADS', 'MKL_NUM_THREADS'):
 
 import numpy as np  # noqa: E402
 from scipy.spatial import cKDTree  # noqa: E402
+
+HERE = os.path.dirname(os.path.abspath(__file__))
+sys.path.insert(0, os.path.join(os.path.dirname(HERE), 'src', 'robot_lab_algorithms'))
+
+from robot_lab_algorithms.perception import decode_depth, depth_to_points  # noqa: E402
 
 
 def stamp_key(header):
@@ -46,6 +57,7 @@ def xyz(cloud):
 def main():
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     parser.add_argument('--depth', default='/oakd/depth/image_raw')
+    parser.add_argument('--info', default='/oakd/rgb/camera_info')
     parser.add_argument('--topic', default='/perception/depth_points')
     parser.add_argument('--reference', default='/oakd/points', help="the simulator's cloud ('' for none)")
     parser.add_argument('--period', type=float, default=1.0, help='sim seconds between compared pairs')
@@ -58,16 +70,18 @@ def main():
     from rclpy.node import Node
     from rclpy.parameter import Parameter
     from rclpy.qos import qos_profile_sensor_data
-    from sensor_msgs.msg import Image, PointCloud2
+    from sensor_msgs.msg import CameraInfo, Image, PointCloud2
 
     rclpy.init()
     node = Node('r7_2_depth_projection_check',
                 parameter_overrides=[Parameter('use_sim_time', Parameter.Type.BOOL, True)])
     arrivals, latencies, counts = {}, [], []
-    clouds, references = {}, {}
+    clouds, references, images = {}, {}, {}
     pairs = {'compared': 0, 'median_m': [], 'p95_m': [], 'max_m': [], 'coverage': [],
              'node_points': [], 'reference_points': []}
-    seen = {'images': 0, 'clouds': 0, 'references': 0, 'last_compared': -1e9, 'frames': set()}
+    variants = {name: {'median_m': [], 'p95_m': [], 'max_m': []} for name in ('camera_info', 'pixel_centres')}
+    seen = {'images': 0, 'clouds': 0, 'references': 0, 'last_compared': -1e9, 'frames': set(),
+            'images_before_first_cloud': None, 'info': None}
 
     def compare(key):
         ours, theirs = clouds.pop(key), references.pop(key)
@@ -84,6 +98,18 @@ def main():
         pairs['coverage'].append(float(np.mean(np.isfinite(covered))) if len(in_range) else None)
         pairs['node_points'].append(len(ours))
         pairs['reference_points'].append(len(in_range))
+        image, info = images.get(key), seen['info']
+        if image is None or info is None:
+            return
+        fx, fy, cx, cy = info
+        tree, depth_image = cKDTree(theirs), decode_depth(image)
+        for name, shift in (('camera_info', 0.0), ('pixel_centres', 0.5)):
+            mine = depth_to_points(depth_image, fx, fy, cx - shift, cy - shift, 1, args.min_range, args.max_range)
+            if len(mine):
+                d, _ = tree.query(mine)
+                variants[name]['median_m'].append(float(np.median(d)))
+                variants[name]['p95_m'].append(float(np.percentile(d, 95)))
+                variants[name]['max_m'].append(float(d.max()))
 
     def due(key):
         t = key[0] + key[1] * 1e-9
@@ -94,14 +120,25 @@ def main():
 
     def on_image(msg):
         seen['images'] += 1
-        arrivals[stamp_key(msg.header)] = time.monotonic()
+        key = stamp_key(msg.header)
+        arrivals[key] = time.monotonic()
         for old in sorted(arrivals)[:-200]:
             arrivals.pop(old)
+        if args.reference:
+            images[key] = msg
+            for old in sorted(images)[:-90]:
+                images.pop(old)
+
+    def on_info(msg):
+        if msg.k[0] > 0 and msg.k[4] > 0:
+            seen['info'] = (msg.k[0], msg.k[4], msg.k[2], msg.k[5])
 
     def on_cloud(msg):
         now = time.monotonic()
         key = stamp_key(msg.header)
         seen['clouds'] += 1
+        if seen['images_before_first_cloud'] is None:
+            seen['images_before_first_cloud'] = seen['images']
         seen['frames'].add(msg.header.frame_id)
         counts.append(msg.width * msg.height)
         if key in arrivals:
@@ -125,6 +162,7 @@ def main():
             references.pop(old)
 
     node.create_subscription(Image, args.depth, on_image, qos_profile_sensor_data)
+    node.create_subscription(CameraInfo, args.info, on_info, qos_profile_sensor_data)
     node.create_subscription(PointCloud2, args.topic, on_cloud, qos_profile_sensor_data)
     if args.reference:
         node.create_subscription(PointCloud2, args.reference, on_reference, qos_profile_sensor_data)
@@ -147,6 +185,8 @@ def main():
         'depth_images': seen['images'], 'clouds': seen['clouds'], 'reference_clouds': seen['references'],
         'cloud_frames': sorted(seen['frames']),
         'images_without_cloud': max(0, seen['images'] - seen['clouds']),
+        'images_before_first_cloud': seen['images_before_first_cloud'],
+        'camera_info_fx_fy_cx_cy': seen['info'],
         'points_per_cloud': summary(counts, 0),
         'latency_ms': summary(latencies, 1),
         'agreement': None if not pairs['compared'] else {
@@ -156,7 +196,9 @@ def main():
             'nearest_reference_max_m': summary(pairs['max_m'], 6),
             'reference_coverage_1cm': summary(pairs['coverage']),
             'node_points': summary(pairs['node_points'], 0),
-            'reference_points_in_range': summary(pairs['reference_points'], 0)},
+            'reference_points_in_range': summary(pairs['reference_points'], 0),
+            'back_projected_here': {name: {key: summary(values, 6) for key, values in v.items()}
+                                    for name, v in variants.items()}},
     }
     with open(args.out, 'w') as handle:
         json.dump(results, handle, indent=1)

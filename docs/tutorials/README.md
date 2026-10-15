@@ -54,11 +54,11 @@ limits. [Perception](perception.md), [planning](planning.md),
 Some examples are sketches or approximations; ROS node initialization and
 real input/output must be qualified separately.
 
-## Comparison drafts
+## Measured comparisons
 
 R7 breadth and R9.2 measured comparisons remain **partial**. **Global
 planning** (eight planners) and **local planning** (five controllers) are
-now measured comparisons on the same seeded goals, with per-goal truth
+measured comparisons on the same seeded goals, with per-goal truth
 metrics and failures (2026-10-12/13). **Control** (six path-tracking
 controllers) is measured on a model plant and in Gazebo, and **sensor
 fusion** (five attitude and three pose filters) on modelled sensors,
@@ -66,21 +66,22 @@ offline and over ROS (2026-10-13). **Perception** (six kernels on
 synthetic scenes), **localization** (four scan matchers and dead
 reckoning on nav_maze trajectories recorded in Gazebo) and **state
 estimation** (six filters on noisy position fixes) are measured offline
-with known truth (2026-10-13); localization also on recorded Gazebo and
-MuJoCo scans. Perception and state estimation on simulator data are
-pending. The "Method comparison" pages are older drafts that describe
-planned experiments; they are not measured rankings.
+with known truth (2026-10-13). All four also have simulator-data runs:
+localization on recorded Gazebo and MuJoCo scans, perception on recorded
+scans and on live depth clouds, state estimation on recorded AMCL fixes
+and sensor fusion on recorded Gazebo IMU and wheel odometry (2026-10-15).
 
-| Category | Experiment draft | Comparison notes |
-|---|---|---|
-| Perception | [**Measured: obstacles, ground and clusters on synthetic scenes**](perception_comparison.md) | [Method comparison](comparison_perception.md) |
-| Localization | [**Measured: scan matchers on nav_maze trajectories**](localization_comparison.md) | [Method comparison](comparison_localization.md) |
-| State estimation | [**Measured: six filters on noisy position fixes**](state_estimation_comparison.md) | [Method comparison](comparison_state_estimation.md) |
-| Sensor fusion | [**Measured: attitude and pose filters on modelled sensors**](sensor_fusion_comparison.md) | [Method comparison](comparison_sensor_fusion.md) |
-| Global planning | [**Measured: eight planners on nav_maze**](global_planning_comparison.md) | [Method comparison](comparison_global_planning.md) |
-| Local planning | [**Measured: five controllers on nav_maze**](local_planning_comparison.md) | [Method comparison](comparison_local_planning.md) |
-| Control | [**Measured: six path trackers, model plant and Gazebo**](control_comparison.md) | [Method comparison](comparison_control.md) |
+| Category | Measured comparison |
+|---|---|
+| Perception | [Obstacles, ground, clusters and depth clouds](perception_comparison.md) |
+| Localization | [Scan matchers on nav_maze trajectories](localization_comparison.md) |
+| State estimation | [Six filters on noisy position fixes](state_estimation_comparison.md) |
+| Sensor fusion | [Attitude and pose filters](sensor_fusion_comparison.md) |
+| Global planning | [Eight planners on nav_maze](global_planning_comparison.md) |
+| Local planning | [Five controllers on nav_maze](local_planning_comparison.md) |
+| Control | [Six path trackers, model plant and Gazebo](control_comparison.md) |
 
+The older generated `comparison_*.md` drafts now only point to these pages.
 Historical generated scores and placeholder commands were withdrawn by the
 [October 2 audit](../status/audit-2026-10-02.md). A fair comparison still needs
 actual executables/plugins, matched inputs/parameters/seed budgets, real

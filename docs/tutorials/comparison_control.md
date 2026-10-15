@@ -1,87 +1,13 @@
-# Control Method Comparison
+# Control Method Comparison (superseded draft)
 
-Documentation reviewed October 7, 2026 against runtime checkpoint `091d388`.
-Read [current status](../status/CURRENT_STATUS.md) for available workflows and
-remaining qualification; evidence below retains its named source stages.
+This page was a generated draft written before any control method
+was measured. The [October 2 audit](../status/audit-2026-10-02.md) withdrew
+its scores, which came from `random.uniform`, and its placeholder commands.
 
-> Draft template, not a measured comparison. The 2026-10-02 audit withdrew
-> the generated scores and placeholder command claims. R9.2 remains partial.
-
-
-**Category:** control  
-**Type:** comparison_guide  
-**Target Audience:** intermediate  
-**Estimated Time:** 60 minutes  
-
-## Description
-
-Compare 5 control methods on common benchmarks
-
-## Prerequisites
-
-- Basic understanding of control
-- ROS 2 and robot_lab installed
-- Completed numerical demos
-
-
-## Learning Objectives
-
-- Understand control algorithm differences
-- Learn to compare methods fairly
-- Interpret performance metrics
-- Select appropriate methods for different scenarios
-
+The measured comparison is **[control_comparison.md](control_comparison.md)**: the methods, how
+they are measured against known truth, the results with their evidence
+folders, and the limits. This page is kept so that older links resolve.
 
 ## Run
 
-Only the method/experiment declarations can currently be checked with this page:
-
-```bash
-PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 PYTHONPATH=src/robot_lab_algorithms python3 -m pytest -q src/robot_lab_algorithms/test/test_r7_benchmark_framework.py
-```
-
-This checks numerical fixtures and configuration contracts. It does not execute
-five robot methods or produce the proposed comparison results below. Follow
-[the completion audit](../status/audit-2026-10-02.md) and
-[workflow](../WORKFLOW.md) to turn this draft into an exercised comparison.
-
-
-## Proposed artifacts
-
-An executed comparison must produce and validate these artifacts:
-
-- `docs/tutorials/control_comparison.md`
-- `docs/tutorials/control_results.json`
-- `docs/tutorials/control_plots/`
-
-
-## Success Criteria
-
-- [ ] All methods execute without errors
-- [ ] Performance metrics collected
-- [ ] Comparison tables and plots generated
-- [ ] Clear recommendations documented
-
-
-## Related tutorials
-
-- [Tutorial index](README.md)
-- [Numerical learning notes](control.md)
-- [Related comparison draft](control_comparison.md)
-- [Measured-run and failure workflow](../WORKFLOW.md)
-- [Current done/remaining checklist](../status/CHECKLIST.md)
-
-## Notes
-
-- This tutorial assumes you have a working robot_lab installation
-- All commands should be run from the workspace root
-- For GUI tutorials, ensure you have a display available or use a tested X11 display
-- Results may vary based on your hardware configuration
-
----
-
-*Draft reviewed: 2026-10-07; original generated template: 2026-10-01*
-
-*Part of R9.2: Seven Real Comparison Tutorials
-
-*See [ROADMAP.md](../../ROADMAP.md) for task details*
+Follow [Run](control_comparison.md#run) in the measured tutorial.

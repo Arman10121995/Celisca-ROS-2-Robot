@@ -204,35 +204,52 @@
   - calibration
   - vision
 - id: feature_detection
-  version: 1.0.0
-  name: Feature Detection
-  description: ORB feature detection for visual odometry and SLAM
-  status: cataloged
+  version: 2.0.0
+  name: Feature Detection (RGB-D visual odometry)
+  description: "Feature-based RGB-D visual odometry: ORB (default), AKAZE, BRISK, SIFT or Shi-Tomasi corners with ORB descriptors, matched to a keyframe, lifted with depth and solved by PnP in RANSAC; publishes the base pose on /perception/visual_odometry. Replaces the cataloged ORB-SLAM3 entry, whose build here carries an OpenCV ABI mismatch"
+  status: integrated
   category: perception
   family: feature_detection
   implementation:
-    package: orb_slam3_ros
-    executable: orb_slam3_ros_node
-    language: cpp
+    package: robot_lab_algorithms
+    executable: feature_detection
+    module: robot_lab_algorithms.visual_odometry
+    language: python
   input_contract:
     required_topics:
-    - /camera/image_raw
+    - /oakd/rgb/image_raw
+    - /oakd/depth/image_raw
+    - /oakd/rgb/camera_info
+    - /tf_static
   output_contract:
     provided_topics:
-    - /orb_slam3/tracking
+    - /perception/visual_odometry
+    - /perception/features
   required_capabilities: []
   supported_robot_classes:
   - mobile
   - legged
   - humanoid
   - aerial
+  parameters:
+    detector: orb
+    max_features: 1000
   source:
-    repository: https://github.com/UZ-SLAMLab/ORB_SLAM3
-    license: GPL-3.0
+    repository: internal
+    license: Apache-2.0
+    reference: "Rublee et al., ORB (ICCV 2011); Alcantarilla et al., AKAZE (BMVC 2013); Leutenegger et al., BRISK (ICCV 2011); Lowe, SIFT (IJCV 2004); Shi and Tomasi, Good features to track (CVPR 1994)"
   tags:
-  - slam
   - visual
   - feature
+  - odometry
+  - r7_2
+  created: '2026-08-31'
+  updated: '2026-10-15'
+  evidence:
+    - kind: unit_test
+      reference: "test_r7_visual_odometry.py"
+      description: "Implemented, experimental: every detector recovers a known camera path in a ray-cast textured room; simulator runs pending"
+      date: "2026-10-15"
 - id: odometry_motion_model
   version: 1.0.0
   name: Odometry Motion Model

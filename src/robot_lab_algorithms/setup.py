@@ -27,6 +27,7 @@ setup(
             'dbscan_clusterer = robot_lab_algorithms.perception:dbscan_clusterer_main',
             'ransac_ground_removal = robot_lab_algorithms.perception:ransac_ground_removal_main',
             'depth_image_to_pointcloud = robot_lab_algorithms.perception:depth_image_to_pointcloud_main',
+            'feature_detection = robot_lab_algorithms.visual_odometry:feature_detection_main',
             # Localization
             'dead_reckoning = robot_lab_algorithms.localization:dead_reckoning_main',
             'amcl = robot_lab_algorithms.localization:amcl_main',
