@@ -121,7 +121,11 @@ def main():
                'ransac_ground_removal': RANSACGroundRemoval(distance_threshold=0.04, max_iterations=200)}
     clusterers = {'euclidean_clusterer': lambda p: EuclideanClusterer(tolerance=0.12, min_points=20).cluster(p),
                   'dbscan_clusterer': lambda p: DBSCANClusterer(eps=0.12, min_samples=8).cluster(p)[0]}
+    # The same segmenters on the camera-frame cloud, as the nodes ran before
+    # they moved clouds upright (2026-10-15 fix).
     totals = {name: {'tp': 0, 'fp': 0, 'fn': 0, 'ms': []} for name in methods}
+    totals.update({name + ' [optical frame, before the fix]': {'tp': 0, 'fp': 0, 'fn': 0, 'ms': []}
+                   for name in methods})
     cluster_totals = {name: {'found': 0, 'visible': 0, 'clusters': 0, 'ms': []} for name in clusterers}
     meta = {'samples': 0, 'points_scored': 0, 'ground_points': 0, 'obstacle_points': 0, 'other_points': 0,
             'ground_z_median_m': []}
@@ -150,6 +154,7 @@ def main():
             continue
         q, tr = t.transform.rotation, t.transform.translation
         base = upright_points(raw, quaternion_matrix(q.x, q.y, q.z, q.w), (tr.x, tr.y, tr.z), args.max_points)
+        optical = upright_points(raw, np.eye(3), (0.0, 0.0, 0.0), args.max_points)  # same thinning
         p, o = truth.pose.pose.position, truth.pose.pose.orientation
         world = base @ quaternion_matrix(o.x, o.y, o.z, o.w).T + np.array([p.x, p.y, p.z])
         ground = world[:, 2] <= args.ground_band
@@ -164,16 +169,20 @@ def main():
             meta['ground_z_median_m'].append(float(np.median(world[ground, 2])))
         tuples = [tuple(row) for row in base]
         index = {pt: i for i, pt in enumerate(tuples)}
+        optical_tuples = [tuple(row) for row in optical]
+        optical_index = {pt: i for i, pt in enumerate(optical_tuples)}
         scored = ground | obstacle
         for name, method in methods.items():
-            start = time.perf_counter()
-            predicted_ground, _ = method.segment(tuples)
-            totals[name]['ms'].append((time.perf_counter() - start) * 1e3)
-            predicted = np.zeros(len(tuples), dtype=bool)
-            predicted[[index[pt] for pt in predicted_ground]] = True
-            totals[name]['tp'] += int(np.sum(predicted & ground & scored))
-            totals[name]['fp'] += int(np.sum(predicted & obstacle))
-            totals[name]['fn'] += int(np.sum(~predicted & ground))
+            for key, pts, where in ((name, tuples, index),
+                                    (name + ' [optical frame, before the fix]', optical_tuples, optical_index)):
+                start = time.perf_counter()
+                predicted_ground, _ = method.segment(pts)
+                totals[key]['ms'].append((time.perf_counter() - start) * 1e3)
+                predicted = np.zeros(len(pts), dtype=bool)
+                predicted[[where[pt] for pt in predicted_ground]] = True
+                totals[key]['tp'] += int(np.sum(predicted & ground & scored))
+                totals[key]['fp'] += int(np.sum(predicted & obstacle))
+                totals[key]['fn'] += int(np.sum(~predicted & ground))
         obstacle_tuples = [tuples[i] for i in np.nonzero(obstacle)[0]]
         object_of_point = np.full(len(tuples), -1)
         object_of_point[obstacle] = cell_object[nearest[obstacle]]
