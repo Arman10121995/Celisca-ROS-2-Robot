@@ -404,7 +404,65 @@ class ScanClustererNode(Node):
             self.clusters, msg.header.frame_id, msg.header.stamp, 'clusters'))
 
 
-class PointcloudSegmenterNode(Node):
+def quaternion_matrix(x, y, z, w):
+    """3x3 rotation of a unit quaternion."""
+    import numpy as np
+    return np.array([
+        [1 - 2 * (y * y + z * z), 2 * (x * y - z * w), 2 * (x * z + y * w)],
+        [2 * (x * y + z * w), 1 - 2 * (x * x + z * z), 2 * (y * z - x * w)],
+        [2 * (x * z - y * w), 2 * (y * z + x * w), 1 - 2 * (x * x + y * y)]])
+
+
+def upright_points(points, rotation, translation, max_points=0):
+    """Points moved into a z-up frame (``p @ R.T + t``), every k-th point
+    kept so at most ``max_points`` remain (0: all)."""
+    import numpy as np
+    pts = np.asarray(points, dtype=float).reshape(-1, 3)
+    if max_points and len(pts) > max_points:
+        pts = pts[::int(math.ceil(len(pts) / float(max_points)))]
+    return pts @ np.asarray(rotation, dtype=float).T + np.asarray(translation, dtype=float)
+
+
+class _UprightCloud:
+    """Ground segmentation needs z up.  A depth camera publishes in its
+    optical frame (z forward, y down): the height threshold then cut by
+    depth and RANSAC's near-vertical normal test picked walls facing the
+    camera (found 2026-10-15).  Clouds are moved into ``target_frame``
+    (default base_footprint) first, and thinned to ``max_points``."""
+
+    def _setup_upright(self, default_frame='base_footprint'):
+        self.declare_parameter('target_frame', default_frame)
+        self.declare_parameter('max_points', 8000)
+        self.target_frame = str(self.get_parameter('target_frame').value)
+        self.max_points = int(self.get_parameter('max_points').value)
+        from tf2_ros import Buffer, TransformListener
+        self._tf_buffer = Buffer()
+        self._tf_listener = TransformListener(self._tf_buffer, self)
+
+    def _upright(self, msg, points):
+        """(points as a list of tuples in target_frame, header) or (None, None)."""
+        from rclpy.time import Time
+        header = msg.header
+        if not self.target_frame or header.frame_id == self.target_frame:
+            return [tuple(p) for p in upright_points(points, [[1, 0, 0], [0, 1, 0], [0, 0, 1]],
+                                                     [0, 0, 0], self.max_points)], header
+        try:
+            transform = self._tf_buffer.lookup_transform(self.target_frame, header.frame_id, Time())
+        except Exception as exc:
+            self.get_logger().warn('no transform %s -> %s yet: %s' % (
+                header.frame_id, self.target_frame, exc), throttle_duration_sec=5.0)
+            return None, None
+        q, t = transform.transform.rotation, transform.transform.translation
+        moved = upright_points(points, quaternion_matrix(q.x, q.y, q.z, q.w), (t.x, t.y, t.z),
+                               self.max_points)
+        from std_msgs.msg import Header
+        out = Header()
+        out.stamp = header.stamp
+        out.frame_id = self.target_frame
+        return [tuple(p) for p in moved], out
+
+
+class PointcloudSegmenterNode(_UprightCloud, Node):
     """PointCloud2 -> ground / non-ground clouds by height threshold."""
 
     def __init__(self, node_name='pointcloud_segmenter'):
@@ -415,6 +473,7 @@ class PointcloudSegmenterNode(Node):
         self.declare_parameter('obstacles_topic', '/perception/obstacle_cloud')
         self.segmenter = PointcloudSegmenter(
             ground_threshold=float(self.get_parameter('ground_threshold').value))
+        self._setup_upright()
         self._ground_pub = self.create_publisher(
             PointCloud2, self.get_parameter('ground_topic').value, 10)
         self._object_pub = self.create_publisher(
@@ -435,11 +494,14 @@ class PointcloudSegmenterNode(Node):
         points = [(float(p[0]), float(p[1]), float(p[2]))
                   for p in point_cloud2.read_points(
                       msg, field_names=('x', 'y', 'z'), skip_nans=True)]
+        points, header = self._upright(msg, points)
+        if points is None:
+            return
         self.ground, self.objects = self.segmenter.segment(points)
         self._ground_pub.publish(
-            point_cloud2.create_cloud_xyz32(msg.header, self.ground))
+            point_cloud2.create_cloud_xyz32(header, self.ground))
         self._object_pub.publish(
-            point_cloud2.create_cloud_xyz32(msg.header, self.objects))
+            point_cloud2.create_cloud_xyz32(header, self.objects))
 
 
 class EuclideanClustererNode(Node):
@@ -511,7 +573,7 @@ class DBSCANClustererNode(Node):
             self.clusters, msg.header.frame_id, msg.header.stamp, 'dbscan'))
 
 
-class RANSACGroundRemovalNode(Node):
+class RANSACGroundRemovalNode(_UprightCloud, Node):
     """PointCloud2 -> RANSAC ground/obstacle segmentation on /perception/ransac_ground and /perception/ransac_obstacles."""
 
     def __init__(self, node_name='ransac_ground_removal'):
@@ -526,6 +588,7 @@ class RANSACGroundRemovalNode(Node):
             max_iterations=int(self.get_parameter('max_iterations').value),
             distance_threshold=float(self.get_parameter('distance_threshold').value),
             normal_threshold=float(self.get_parameter('normal_threshold').value))
+        self._setup_upright()
         self._ground_pub = self.create_publisher(
             PointCloud2, self.get_parameter('ground_topic').value, 10)
         self._object_pub = self.create_publisher(
@@ -546,11 +609,14 @@ class RANSACGroundRemovalNode(Node):
         points = [(float(p[0]), float(p[1]), float(p[2]))
                   for p in point_cloud2.read_points(
                       msg, field_names=('x', 'y', 'z'), skip_nans=True)]
+        points, header = self._upright(msg, points)
+        if points is None:
+            return
         self.ground, self.objects = self.segmenter.segment(points)
         self._ground_pub.publish(
-            point_cloud2.create_cloud_xyz32(msg.header, self.ground))
+            point_cloud2.create_cloud_xyz32(header, self.ground))
         self._object_pub.publish(
-            point_cloud2.create_cloud_xyz32(msg.header, self.objects))
+            point_cloud2.create_cloud_xyz32(header, self.objects))
 
 
 from ._runtime import run as _run, spin_node as _spin_node  # noqa: E402

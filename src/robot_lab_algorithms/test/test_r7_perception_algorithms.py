@@ -455,3 +455,28 @@ class TestPerceptionEdgeCases(unittest.TestCase):
 
 if __name__ == '__main__':
     unittest.main()
+
+class TestUprightClouds(unittest.TestCase):
+    """Ground segmentation must see z up, not a camera's optical frame."""
+
+    def test_optical_frame_floor_point_lands_on_the_floor(self):
+        from robot_lab_algorithms.perception import quaternion_matrix, upright_points
+        # base <- optical: rpy (-pi/2, 0, -pi/2), the camera 0.17 m up, 0.06 m forward.
+        rotation = quaternion_matrix(-0.5, 0.5, -0.5, 0.5)
+        np.testing.assert_allclose(rotation, [[0, 0, 1], [-1, 0, 0], [0, -1, 0]], atol=1e-12)
+        floor_two_metres_ahead = [(0.0, 0.17, 2.0)]   # optical: x right, y down, z forward
+        moved = upright_points(floor_two_metres_ahead, rotation, (0.06, 0.0, 0.17))
+        np.testing.assert_allclose(moved, [[2.06, 0.0, 0.0]], atol=1e-12)
+
+    def test_height_threshold_works_after_the_move(self):
+        from robot_lab_algorithms.perception import PointcloudSegmenter, quaternion_matrix, upright_points
+        rotation = quaternion_matrix(-0.5, 0.5, -0.5, 0.5)
+        optical = [(0.0, 0.17, 1.5), (0.0, -0.3, 1.5)]   # a floor point and one 0.47 m up
+        ground, objects = PointcloudSegmenter(ground_threshold=0.1).segment(
+            [tuple(p) for p in upright_points(optical, rotation, (0.0, 0.0, 0.17))])
+        self.assertEqual((len(ground), len(objects)), (1, 1))
+
+    def test_large_clouds_are_thinned(self):
+        from robot_lab_algorithms.perception import upright_points
+        cloud = [(float(i), 0.0, 0.0) for i in range(10000)]
+        self.assertLessEqual(len(upright_points(cloud, np.eye(3), (0, 0, 0), max_points=3000)), 3000)

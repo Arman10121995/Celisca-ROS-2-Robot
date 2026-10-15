@@ -20,9 +20,20 @@ rm -rf "$OUT.tf.bag"
 # EXTRA_BAG_TOPICS (e.g. "/imu/out /scan") are recorded too, for offline replays.
 ros2 bag record -o "$OUT.tf.bag" /tf /tf_static /odom/ground_truth ${EXTRA_BAG_TOPICS:-} > /dev/null 2>&1 &
 BAG=$!
+# SIDECAR: a command run beside the drive (e.g. a live perception scorer);
+# it gets SIGINT when the drive ends.
+SIDE=
+if [ -n "${SIDECAR:-}" ]; then
+  bash -c "$SIDECAR" > "$OUT.sidecar.log" 2>&1 &
+  SIDE=$!
+fi
 python3 "$HERE/slam_mapping_check.py" --map "$MAP" --map-out "${OUT%.json}.pgm" ${CHECK_ARGS:-} \
   > "$OUT" 2> "$OUT.err"
 CHECK_RESULT=$?
+if [ -n "$SIDE" ]; then
+  pkill -INT -P "$SIDE" 2>/dev/null; kill -INT "$SIDE" 2>/dev/null
+  for _ in $(seq 1 30); do kill -0 "$SIDE" 2>/dev/null || break; sleep 1; done
+fi
 kill -INT "$BAG" 2>/dev/null
 kill -INT "$LAUNCH" 2>/dev/null
 for _ in $(seq 1 40); do kill -0 "$LAUNCH" 2>/dev/null || break; sleep 1; done
