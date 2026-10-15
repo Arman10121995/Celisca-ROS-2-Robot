@@ -130,7 +130,8 @@ class Nav2Workload(Node):
                 return
             self.ever_accepted = True
             self.goal_handle = handle
-            self.record(kind='goal_accepted', goal_uuid=list(handle.goal_id.uuid))
+            # GoalInfo.uuid arrives as a NumPy uint8 array, which json cannot write.
+            self.record(kind='goal_accepted', goal_uuid=[int(b) for b in handle.goal_id.uuid])
             handle.get_result_async().add_done_callback(self.result)
             if self.complete or self.interrupted:
                 handle.cancel_goal_async()
