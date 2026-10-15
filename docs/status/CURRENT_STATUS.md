@@ -415,8 +415,14 @@ required fast 1002/five skips, scheduled fast 1004/three skips; 27 physics;
 retains its separate successful CI stage. The predecessor `73fcc47` also passes required CI and Scheduled Full Test Suite
 after the shared-utilities import fix. [October 8 evidence](evidence/extensions-finish-2026-10-08/README.md)
 retains those exact complete logs separately from the final runtime checks. Local tests, remote CI and simulator trials keep
-separate source stages and skip/failure records. Clean-host mission reproduction,
-physical joystick/hardware checks and concurrent-simulator qualification remain open.
+separate source stages and skip/failure records. A clean container now
+builds the workspace, passes the fast tier and passes a MuJoCo Bumperbot
+mission from rosdep and pinned pip dependencies alone
+([R9.1 evidence](evidence/r91-clean-host-2026-10-15/README.md)), and two
+simulations have run side by side with budgets, cancel and cleanup
+([R8.3 evidence](evidence/r83-concurrency-2026-10-15/README.md)). Other
+hardware, physical joystick/hardware checks and broader concurrent
+qualification remain open.
 
 ## Work order for continuing agents
 

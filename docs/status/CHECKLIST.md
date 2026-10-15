@@ -395,8 +395,12 @@ code delivery, not a passed mission or universal support.
     package manifest (`scripts/asset_attribution.py`,
     [evidence](evidence/r91-asset-attribution-2026-10-13/README.md));
     all robot entries agree except px4_x500, whose license is checked
-    against the PX4 checkout outside the workspace. A real clean-host
-    installation remains.
+    against the PX4 checkout outside the workspace.
+  - Clean host (2026-10-15): in a fresh ROS 2 Humble container with only
+    rosdep and pinned pip dependencies, the workspace builds, the fast tier
+    passes and a headless MuJoCo Bumperbot mission passes
+    ([evidence](evidence/r91-clean-host-2026-10-15/README.md)). Other
+    hardware and Gazebo/Isaac/PX4 in the clean host remain.
 - [ ] **R9.3:** Regenerate the release matrix as those tasks pass. The current
   matrix intentionally remains partial with full-release gates blocked.
   Regenerated 2026-10-15 with the October 13-15 missions: 251 measured cells
