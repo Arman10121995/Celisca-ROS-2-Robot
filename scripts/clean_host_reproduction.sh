@@ -11,6 +11,7 @@
 #   rosdep-install.log, pip-freeze.txt, colcon-build.log   copied from the image
 #   fast_tier.log        scripts/test_tiers.sh fast inside the container
 #   mission/             scripts/sim_nav_mission.sh mujoco bumperbot nav_obstacle
+#   golden_comparison.json  the seeded R7.2 perception benchmark, container vs host
 #   result.json          exit codes and timings
 set -u
 HERE=$(cd "$(dirname "$0")" && pwd)
@@ -38,7 +39,7 @@ built=$(date +%s)
   docker image inspect "$IMAGE" --format 'image {{.Id}} platform {{.Os}}/{{.Architecture}} created {{.Created}}' 2>&1
   docker image inspect ros:humble-ros-base-jammy --format 'base {{index .RepoDigests 0}}' 2>&1
 } > "$OUT/image.txt"
-TESTS=-1; MISSION=-1
+TESTS=-1; MISSION=-1; GOLDEN=-1
 if [ $BUILD -eq 0 ]; then
   for f in rosdep-install.log pip-freeze.txt colcon-build.log; do
     docker run --rm "$IMAGE" cat "/$f" > "$OUT/$f" 2>/dev/null
@@ -59,14 +60,37 @@ if [ $BUILD -eq 0 ]; then
      timeout 1800 scripts/sim_nav_mission.sh mujoco bumperbot nav_obstacle /workspace/mission/mujoco_bumperbot_nav_obstacle.json odometry_source:=wheels' \
     > "$OUT/mission.log" 2>&1
   MISSION=$?
+  # Golden comparison: the seeded R7.2 perception benchmark in the container
+  # and on this host from the same archive; their accuracy figures must
+  # agree (timings may not).
+  docker run --rm -v "$OUT/workspace:/workspace" "$IMAGE" bash -c \
+    'cd /ws && source /opt/ros/humble/setup.bash && python3 scripts/r7_2_perception_benchmark.py --out /workspace/golden/container' \
+    > "$OUT/golden_container.log" 2>&1
+  (cd "$CTX/ws" && /usr/bin/python3 scripts/r7_2_perception_benchmark.py --out "$OUT/golden_host") > "$OUT/golden_host.log" 2>&1
   # The container ran as root: hand the bind-mounted outputs back.
   docker run --rm -v "$OUT/workspace:/workspace" "$IMAGE" chown -R "$(id -u):$(id -g)" /workspace
   cp -r "$OUT/workspace/mission" "$OUT/" 2>/dev/null
+  python3 - "$OUT/workspace/golden/container/results.json" "$OUT/golden_host/results.json" "$OUT/golden_comparison.json" <<'PY'
+import json, sys
+def accuracy(node, path=''):
+    if isinstance(node, dict):
+        for key, value in node.items():
+            if key in ('revision', 'host') or key.startswith('ms'):
+                continue
+            yield from accuracy(value, path + '/' + key)
+    else:
+        yield path, node
+container, host = (dict(accuracy(json.load(open(p)))) for p in sys.argv[1:3])
+differences = {k: [container.get(k), host.get(k)] for k in sorted(set(container) | set(host)) if container.get(k) != host.get(k)}
+json.dump({'compared': len(set(container) | set(host)), 'differences': differences}, open(sys.argv[3], 'w'), indent=1)
+sys.exit(1 if differences or not container else 0)
+PY
+  GOLDEN=$?
 fi
 finished=$(date +%s)
 cat > "$OUT/result.json" <<EOF
 {"revision": "$REV", "image": "$IMAGE", "build_exit": $BUILD, "fast_tier_exit": $TESTS,
- "mission_exit": $MISSION, "build_s": $((built - started)), "tests_s": $(( ${tested:-$built} - built )),
+ "mission_exit": $MISSION, "golden_comparison_exit": $GOLDEN, "build_s": $((built - started)), "tests_s": $(( ${tested:-$built} - built )),
  "total_s": $((finished - started))}
 EOF
 cat "$OUT/result.json"
