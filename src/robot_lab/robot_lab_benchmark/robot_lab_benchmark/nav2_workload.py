@@ -37,7 +37,7 @@ class Nav2Workload(Node):
         self.stop_pub = self.create_publisher(Twist, '/key_vel', 1)
         self.create_subscription(Clock, '/clock', self.clock, qos_profile_sensor_data)
         self.create_subscription(Odometry, '/odom/ground_truth', self.truth, qos_profile_sensor_data)
-        self.pose, self.velocity, self.previous, self.handle = None, None, None, None
+        self.pose, self.velocity, self.previous, self.goal_handle = None, None, None, None
         self.sim_time, self.truth_stamp = None, None
         self.last_truth, self.last_clock, self.last_clock_record = -math.inf, -math.inf, -math.inf
         self.truth_count, self.clock_count, self.distance = 0, 0, 0.
@@ -58,8 +58,8 @@ class Nav2Workload(Node):
             self.state, self.reason, self.complete = 'failed', reason, True
             self.record(kind='failure', reason=reason)
             self.stop_pub.publish(Twist())
-            if self.handle:
-                self.handle.cancel_goal_async()
+            if self.goal_handle:
+                self.goal_handle.cancel_goal_async()
 
     def clock(self, message):
         value = message.clock.sec+message.clock.nanosec*1e-9
@@ -117,7 +117,7 @@ class Nav2Workload(Node):
             if not handle.accepted:
                 self.fail('Nav2 rejected the requested goal.')
                 return
-            self.handle = handle
+            self.goal_handle = handle
             self.record(kind='goal_accepted', goal_uuid=list(handle.goal_id.uuid))
             handle.get_result_async().add_done_callback(self.result)
             if self.complete or self.interrupted:
@@ -126,7 +126,7 @@ class Nav2Workload(Node):
             self.fail('Nav2 request response failed: '+str(exc))
 
     def result(self, future):
-        self.handle = None
+        self.goal_handle = None
         try:
             self.nav_status = int(future.result().status)
             self.record(kind='nav2_result', nav2_status=self.nav_status)
@@ -188,7 +188,7 @@ class Nav2Workload(Node):
         if not self.complete:
             self.fail('Workload closed before completion.')
         deadline = time.monotonic()+5.
-        while (self.pending or self.handle is not None) and rclpy.ok() and time.monotonic() < deadline:
+        while (self.pending or self.goal_handle is not None) and rclpy.ok() and time.monotonic() < deadline:
             rclpy.spin_once(self, timeout_sec=.1)
         self.trace.close()
         result = dict(schema=RESULT_SCHEMA, run_id=os.environ['ROBOT_LAB_EXPERIMENT_ID'],
@@ -196,7 +196,7 @@ class Nav2Workload(Node):
             success=self.state == 'measured_goals_reached', goals=self.measured_goals,
             goal_contract=dict(position_m=.15, heading_rad=math.radians(5), settle_sim_s=1.),
             physical_path_length_m=self.distance, truth_samples=self.truth_count, clock_samples=self.clock_count,
-            nav2_terminal=not self.pending and self.handle is None, wall_duration_s=time.monotonic()-self.started,
+            nav2_terminal=not self.pending and self.goal_handle is None, wall_duration_s=time.monotonic()-self.started,
             contacts=None, swept_footprint_clearance_m=None,
             scope='Actual Nav2 terminal statuses and selected-world independent body endpoints/settling only; full mission/contact qualification separate',
             seed_requested=os.environ.get('ROBOT_LAB_EXPERIMENT_SEED'), simulator_seed_applied=None,

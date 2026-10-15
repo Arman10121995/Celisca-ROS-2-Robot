@@ -1,0 +1,20 @@
+# Python packages the Robot Lab runtime imports that ROS Humble's apt
+# repositories do not provide (or provide too old), pinned to the versions
+# the reference Jetson runs (/usr/bin/python3 user site, 2026-10-15).
+# Heavy optional tools (torch, open3d, pymeshlab) stay out: only legged
+# policy provisioning and offline asset tools use them.
+numpy==2.2.6
+scipy==1.15.3
+mujoco==3.12.0
+pybullet==3.2.7
+opencv-python-headless==4.13.0.92
+jsonschema==4.26.0
+trimesh==4.11.5
+pillow==12.2.0
+networkx==3.4.2
+shapely==2.1.2
+rtree==1.4.1
+onnxruntime==1.23.2
+numpy-stl==3.2.0
+pygame==2.6.1
+glfw==2.10.2
