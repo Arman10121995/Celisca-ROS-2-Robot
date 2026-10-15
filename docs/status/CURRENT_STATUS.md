@@ -211,9 +211,15 @@ October 13: implemented on master, experimental.
     backends ([evidence](evidence/r61-workflow-reset-2026-10-13/README.md)).
   - 4WS/mecanum obstacle missions: 13 of 20 passed first, 19 of 20 on
     the rerun with a wider arrival window, and the mecanum rerun with the
-    same window passes in all four backends. **Every 4WS pattern and the
-    mecanum car now pass in every backend**
+    same window passes in all four backends. Every 4WS pattern and the
+    mecanum car passed seed 1 in every backend
     ([evidence](evidence/r56-4ws-missions-2026-10-13/README.md)).
+  - Over goal seeds 2 and 3 (2026-10-15), 4WS ackermann, pivot and the
+    mecanum car pass 24/24, but **crab and in_phase abort the near-obstacle
+    goal in all 16 runs**: the drive stops in the open with zero controller
+    commands until Nav2 gives up. The cars pass 13/24, missing that goal by
+    0.26-0.36 m against the 0.30 m limit
+    ([evidence](evidence/wheeled-repeats-2026-10-15/README.md)).
   - Car obstacle missions (Ackermann, rear-steer, anti-Ackermann): **10 of
     12** pass. MuJoCo rear-steer hit the tf2 freeze; Gazebo Ackermann
     aborted its detour after repeated collision-ahead stops
