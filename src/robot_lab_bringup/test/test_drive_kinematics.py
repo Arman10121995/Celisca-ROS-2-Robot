@@ -360,6 +360,21 @@ def test_crab_honours_a_lateral_command_and_ackermann_does_not():
     assert all(rate == 0.0 for rate in lateral_only.velocity.values())
 
 
+def test_reversing_a_sideways_crab_command_keeps_the_wheel_angle():
+    """+90 deg rolling backwards equals -90 deg forwards: no 180 deg re-steer."""
+    crab = _4ws("crab")
+    for _ in range(100):   # settle at full left lock, moving left
+        left = crab.targets(0.0, 0.0, dt=0.02, vy=0.3)
+    assert all(angle == pytest.approx(math.pi / 2) for angle in left.position.values())
+    for _ in range(40):   # decelerate through zero and drive right
+        right = crab.targets(0.0, 0.0, dt=0.02, vy=-0.3)
+        # The wheels never leave +90 deg (no stop to re-steer through 180 deg).
+        assert all(angle == pytest.approx(math.pi / 2) for angle in right.position.values())
+    assert all(rate < 0.0 for rate in right.velocity.values())
+    measured = crab.measured_twist([right.velocity[j] for j in crab.wheel_joints], right.position)
+    assert measured[1] < 0.0
+
+
 def test_crab_lateral_command_is_clamped_to_the_steering_limit():
     """An unreachable lateral direction must not cause diagonal motion."""
     crab = drive_from_config({"type": "four_wheel_steer", "steering_mode": "crab",

@@ -370,13 +370,21 @@ class FourWheelSteerDrive:
         goals = {}
         for wheel, joint, x, y in self._contacts():
             u, v = vx - wz * y, vy + wz * x
-            angle = self._angles.get(joint, 0.0)
+            current = self._angles.get(joint, 0.0)
+            angle = current
             if math.hypot(u, v) > 1e-8:
                 angle = math.atan2(v, u)
                 if angle > math.pi / 2:
                     angle -= math.pi
                 elif angle < -math.pi / 2:
                     angle += math.pi
+                # A wheel at +90 deg rolling backwards drives the same way
+                # as one at -90 deg rolling forwards. Keep the one nearer the
+                # current angle: reversing a sideways (crab) command then
+                # needs no 180 deg re-steer with the wheels stopped.
+                other = angle - math.copysign(math.pi, angle)
+                if abs(other) <= self.max_steer + 1e-9 and abs(other - current) < abs(angle - current):
+                    angle = other
             goals[joint] = angle
             limited = max(-self.max_steer, min(self.max_steer, angle))
             if dt is not None and dt > 0:
