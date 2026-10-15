@@ -170,24 +170,27 @@
       description: "Implemented, experimental: back-projection, invalid depths, stride and depth encodings; simulator runs pending"
       date: "2026-10-15"
 - id: camera_calibration
-  version: 1.0.0
-  name: Camera Calibration
-  description: Camera calibration for monocular and stereo cameras
-  status: cataloged
+  version: 2.0.0
+  name: Camera Calibration (chessboard)
+  description: "Zhang's planar chessboard calibration with OpenCV: finds the board's inner corners in each frame, keeps views that differ in position, size or tilt, and solves the camera matrix and plumb_bob distortion; publishes the calibrated CameraInfo and writes a ROS camera-info YAML. The method of ROS's cameracalibrator.py, which is not installed here"
+  status: integrated
   category: perception
   family: calibration
   implementation:
-    package: camera_calibration
-    executable: cameracalibrator.py
+    package: robot_lab_algorithms
+    executable: camera_calibration
+    module: robot_lab_algorithms.camera_calibration
     language: python
   input_contract:
     required_topics:
-    - /camera/image_raw
+    - /oakd/rgb/image_raw
+    - /oakd/rgb/camera_info
     required_parameters:
-    - image_width
+    - pattern
+    - square
   output_contract:
-    provided_services:
-    - /calibrate_camera
+    provided_topics:
+    - /perception/calibrated_camera_info
   required_capabilities: []
   supported_robot_classes:
   - mobile
@@ -195,14 +198,25 @@
   - humanoid
   - aerial
   parameters:
-    image_width: 640
-    image_height: 480
+    pattern: 8x6
+    square: 0.05
+    min_views: 15
+    max_views: 40
   source:
-    repository: https://github.com/ros-perception/camera_calibration
-    license: BSD-3-Clause
+    repository: internal
+    license: Apache-2.0
+    reference: "Zhang, A flexible new technique for camera calibration (TPAMI 2000); ROS camera_calibration (https://github.com/ros-perception/image_pipeline)"
   tags:
   - calibration
   - vision
+  - r7_2
+  created: '2026-08-31'
+  updated: '2026-10-15'
+  evidence:
+    - kind: unit_test
+      reference: "test_r7_camera_calibration.py"
+      description: "Implemented, experimental: recovers fx within 0.2% and the half-pixel principal point (cx 159.48 for 159.50) from 27 ray-cast board views; no simulated world holds a chessboard yet"
+      date: "2026-10-15"
 - id: feature_detection
   version: 2.0.0
   name: Feature Detection (RGB-D visual odometry)

@@ -44,7 +44,7 @@ algorithms:
     depth_image_to_pointcloud:
       node: {package: robot_lab_algorithms, executable: depth_image_to_pointcloud}
     camera_calibration:
-      unavailable: "cataloged only - offline calibration tool, not a runtime pipeline"
+      node: {package: robot_lab_algorithms, executable: camera_calibration}
     feature_detection:
       node: {package: robot_lab_algorithms, executable: feature_detection}
 

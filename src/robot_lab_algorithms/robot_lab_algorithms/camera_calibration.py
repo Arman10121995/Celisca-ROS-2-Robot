@@ -191,6 +191,9 @@ class CameraCalibrationNode(Node):
         if outcome == 'kept':
             self.get_logger().info('view %d kept; coverage x %.2f y %.2f size %.2f skew %.2f' % (
                 (len(self.calibrator.views),) + self.calibrator.coverage()))
+        elif outcome == 'no board':
+            self.get_logger().info('no %dx%d chessboard in view' % self.calibrator.pattern,
+                                   throttle_duration_sec=30.0)
         if self.calibrator.ready():
             self._finish(msg)
 
