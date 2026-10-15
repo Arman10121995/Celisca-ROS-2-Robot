@@ -172,3 +172,23 @@ def test_forward_arc_navigation_plans_curves_and_never_spins():
     follow = navigation._motion_model_overrides('controller_server', 'forward_arc', planner, 0.4)[0]
     assert follow['FollowPath.use_rotate_to_heading'] is False
     assert follow['FollowPath.allow_reversing'] is False
+
+
+@pytest.mark.integration
+def test_forward_arc_robots_default_to_a_curvature_aware_planner():
+    from launch.actions import IncludeLaunchDescription
+    context, actions = _build(robot_model='unitree_go2', simulator='mujoco', mode='nav',
+                              map_name='nav_obstacle')
+    navigation = [a for a in _walk(actions) if isinstance(a, IncludeLaunchDescription) and _text(
+        context, a.launch_description_source._LaunchDescriptionSource__location).endswith(
+            'navigation.launch.py')]
+    arguments = {_text(context, k): _text(context, v) for k, v in navigation[0].launch_arguments}
+    assert arguments['global_planner_plugin'] == 'nav2_smac_planner/SmacPlannerHybrid'
+    # Where the Go2 can spin (Isaac), the mode default grid planner stays.
+    context, actions = _build(robot_model='unitree_go2', simulator='isaac', mode='nav',
+                              map_name='nav_obstacle')
+    navigation = [a for a in _walk(actions) if isinstance(a, IncludeLaunchDescription) and _text(
+        context, a.launch_description_source._LaunchDescriptionSource__location).endswith(
+            'navigation.launch.py')]
+    arguments = {_text(context, k): _text(context, v) for k, v in navigation[0].launch_arguments}
+    assert arguments['global_planner_plugin'] == 'nav2_smac_planner/SmacPlanner2D'

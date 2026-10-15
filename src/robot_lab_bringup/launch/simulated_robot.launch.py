@@ -539,6 +539,12 @@ def _resolve_algorithm_selection(context, mode_config, dispatch, robot_config=No
     for category, algorithm in ((robot_config or {}).get("default_algorithms") or {}).items():
         if category in defaults:
             defaults[category] = str(algorithm)
+    # A robot that turns only while moving forward in this backend
+    # (no_spin_in_place + forward_arc_radius; navigation motion model
+    # forward_arc) plans curvature-limited paths by default.
+    if ((robot_config or {}).get("forward_arc_radius") and "global_planning" in defaults
+            and _launch_value(context, "simulator") in ((robot_config or {}).get("no_spin_in_place") or [])):
+        defaults["global_planning"] = "hybrid_a_star_planner"
     selection, plugins, nodes, notes = {}, {}, [], []
 
     # Backwards compatibility: the deprecated single `algorithm:=` argument
