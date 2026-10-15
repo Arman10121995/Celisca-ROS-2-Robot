@@ -160,12 +160,23 @@ October 13: implemented on master, experimental.
   It cured their aborts beside the block at the nav_obstacle start. B2 and
   G1 first stood still at the 0.2 m/s approach speed; their minimum speeds
   are now 0.4 and 0.3 m/s.
+  - The G1's Isaac "start in lethal space" is explained. The G1 walked
+    0.44 m from the west wall while still turning, and its leg-odometry
+    estimate sat 0.1-0.2 m nearer. That put its centre at the 0.3 m
+    inscribed radius, which the grid planner counts as a collision.
   - Walking robots also map: in slam mode on leg odometry, slam_toolbox
     held every walking robot within 4.5-7.1 cm RMSE of truth over a 26 m
     loop (MuJoCo, Isaac, Gazebo), and the MuJoCo/Isaac maps place every
     wall cell on a real wall. The mecanum and 4WS cars map the same loop on
     their wheel odometry to 1.1-2.5 cm in every backend
     ([evidence](evidence/p7-legged-slam-mapping-2026-10-13/README.md)).
+    Driven sideways at a fixed heading (2026-10-15), the 4WS crab and
+    in_phase patterns hold 0.9-1.7 cm in MuJoCo and Gazebo. The strafing
+    mecanum car holds 2.4 cm in MuJoCo and 11 cm in Gazebo, where roller
+    slip leaves its odometry 1.02 m off.
+  - Bumperbot is the exception in Gazebo: slam_toolbox ends 9.6 cm from
+    truth, while the EKF odometry it is given holds 2.7 cm. Its heading
+    slips about 0.9° at the first 90° turn; the cause is open.
   - Gazebo Go2 now starts standing, and with its physics step capped at
     2 ms (the worlds' 10 ms had run its 500 Hz PD loop at 100 Hz) it walks
     the whole mapping loop and passes the mission

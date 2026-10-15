@@ -34,10 +34,12 @@ def spin_node(node, timeout_sec=0.1):
             rclpy.spin_once(node, timeout_sec=timeout_sec)
     except (KeyboardInterrupt, ExternalShutdownException):
         pass
-    except RCLError:
-        # A publish/timer that raced the shutdown of the context. Only a
-        # genuine shutdown can invalidate the context here, so this is the
-        # same normal stop as the exceptions above.
+    except (RCLError, RuntimeError):
+        # A publish/timer that raced the shutdown of the context, or a
+        # subscription take after it ("Unable to convert call argument to
+        # Python object", seen on SIGINT 2026-10-15). Only a genuine
+        # shutdown can invalidate the context here, so this is the same
+        # normal stop as the exceptions above.
         if rclpy.ok():
             raise
     finally:

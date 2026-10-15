@@ -87,16 +87,19 @@ def rotation(axis, angle):
                      [z * x * (1 - c) - y * s, z * y * (1 - c) + x * s, c + z * z * (1 - c)]])
 
 
-def board_pose_in_camera(rng):
+def board_pose_in_camera(rng, fx, fy, cx, cy, width, height):
     """Board pose in the camera's optical frame: its visible +x face toward
-    the camera, at 0.55-0.95 m, offset and tilted."""
-    distance = rng.uniform(0.55, 0.95)
-    centre = np.array([rng.uniform(-0.22, 0.22) * distance, rng.uniform(-0.16, 0.16) * distance, distance])
+    the camera, 0.6-1.0 m away, its centre on a random pixel of the middle
+    60% of the image, tilted up to 30 deg."""
+    distance = rng.uniform(0.6, 1.0)
+    u = rng.uniform(0.2, 0.8) * width
+    v = rng.uniform(0.2, 0.8) * height
+    centre = np.array([(u - cx) * distance / fx, (v - cy) * distance / fy, distance])
     # Board x (its normal) toward the camera, board y along -x_camera, board z along +y_camera.
     base = np.column_stack([(0, 0, -1), (-1, 0, 0), (0, 1, 0)]).astype(float)
-    tilt = (rotation((0, 1, 0), math.radians(rng.uniform(-35, 35)))
-            @ rotation((0, 0, 1), math.radians(rng.uniform(-35, 35)))
-            @ rotation((1, 0, 0), math.radians(rng.uniform(-25, 25))))
+    tilt = (rotation((0, 1, 0), math.radians(rng.uniform(-30, 30)))
+            @ rotation((0, 0, 1), math.radians(rng.uniform(-30, 30)))
+            @ rotation((1, 0, 0), math.radians(rng.uniform(-20, 20))))
     pose = np.eye(4)
     pose[:3, :3] = base @ tilt
     pose[:3, 3] = centre
@@ -111,8 +114,9 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     parser.add_argument('--world', default='nav_empty', help='Gazebo world name')
     parser.add_argument('--pattern', default='8x6')
-    parser.add_argument('--square', type=float, default=0.05)
-    parser.add_argument('--poses', type=int, default=60)
+    parser.add_argument('--square', type=float, default=0.035,
+                        help='square size of the spawned board (the intrinsics do not depend on it)')
+    parser.add_argument('--poses', type=int, default=100)
     parser.add_argument('--seed', type=int, default=7)
     parser.add_argument('--camera-frame', default='oakd_rgb_camera_optical_frame')
     parser.add_argument('--out', required=True)
@@ -186,10 +190,12 @@ def main():
                                         truth.orientation.w))
     world_from_camera = world_from_base @ base_from_camera
     rng = np.random.default_rng(args.seed)
-    calibrator = ChessboardCalibrator(pattern, args.square, min_views=15, max_views=60, min_difference=0.05)
+    calibrator = ChessboardCalibrator(pattern, args.square, min_views=15, max_views=100, min_difference=0.05)
     outcomes = []
+    k_info = list(info.k)
+    misses = 0
     for _ in range(args.poses):
-        pose = world_from_camera @ board_pose_in_camera(rng)
+        pose = world_from_camera @ board_pose_in_camera(rng, k_info[0], k_info[4], k_info[2], k_info[5], width, height)
         x, y, z = pose[:3, 3]
         qx, qy, qz, qw = matrix_quaternion(pose[:3, :3])
         request = ('name: "calibration_board", position: {x: %.5f, y: %.5f, z: %.5f}, '
@@ -212,23 +218,29 @@ def main():
         if image is None:
             outcomes.append('no image')
             continue
-        outcomes.append(calibrator.add(decode_gray(image)))
+        gray = decode_gray(image)
+        outcome = calibrator.add(gray)
+        outcomes.append(outcome)
+        if outcome == 'no board' and misses < 4:
+            import cv2
+            cv2.imwrite(os.path.splitext(args.out)[0] + '_no_board_%d.png' % misses, gray)
+            misses += 1
         spin(0.6)   # the node samples at 2 Hz of sim time
     spin(3.0)
     report['outcomes'] = {k: outcomes.count(k) for k in sorted(set(outcomes))}
-    k_info = list(info.k)
     report['camera_info'] = {'fx': k_info[0], 'fy': k_info[4], 'cx': k_info[2], 'cy': k_info[5],
                              'width': width, 'height': height}
     report['pixel_centres'] = {'cx': (width - 1) / 2.0, 'cy': (height - 1) / 2.0}
     if calibrator.ready():
-        result = calibrator.calibrate()
-        k = result['camera_matrix']
-        report['script_calibration'] = {
-            'views': result['views'], 'rms_px': round(result['rms_px'], 4),
-            'fx': round(float(k[0, 0]), 3), 'fy': round(float(k[1, 1]), 3),
-            'cx': round(float(k[0, 2]), 3), 'cy': round(float(k[1, 2]), 3),
-            'distortion': [round(float(v), 5) for v in result['distortion']],
-            'coverage': [round(v, 2) for v in calibrator.coverage()]}
+        for model in ('plumb_bob', 'pinhole'):
+            result = calibrator.calibrate(model)
+            k = result['camera_matrix']
+            report['script_calibration_' + model] = {
+                'views': result['views'], 'rms_px': round(result['rms_px'], 4),
+                'fx': round(float(k[0, 0]), 3), 'fy': round(float(k[1, 1]), 3),
+                'cx': round(float(k[0, 2]), 3), 'cy': round(float(k[1, 2]), 3),
+                'distortion': [round(float(v), 5) for v in result['distortion']],
+                'coverage': [round(v, 2) for v in calibrator.coverage()]}
     calibrated = state['calibrated']
     if calibrated is not None:
         report['node_calibration'] = {'fx': round(calibrated.k[0], 3), 'fy': round(calibrated.k[4], 3),
@@ -241,7 +253,7 @@ def main():
     with open(args.out, 'w') as handle:
         json.dump(report, handle, indent=1)
     print(json.dumps(report, indent=1))
-    return 0 if 'script_calibration' in report else 1
+    return 0 if 'script_calibration_pinhole' in report else 1
 
 
 if __name__ == '__main__':

@@ -109,14 +109,23 @@ class ChessboardCalibrator:
         s = np.array(self.signatures)
         return tuple(float(v) for v in s.max(axis=0) - s.min(axis=0))
 
-    def calibrate(self):
-        """Camera matrix, distortion (k1, k2, p1, p2, k3) and RMS reprojection error (px)."""
+    def calibrate(self, model='plumb_bob'):
+        """Camera matrix, distortion (k1, k2, p1, p2, k3) and RMS reprojection
+        error (px).  ``model='pinhole'`` holds the distortion at zero, as for a
+        rendered camera; it also steadies the principal point when the views
+        cover the image narrowly."""
         import cv2
         if not self.views:
             raise ValueError('no chessboard views')
+        if model not in ('plumb_bob', 'pinhole'):
+            raise ValueError('model must be plumb_bob or pinhole')
+        flags = 0
+        if model == 'pinhole':
+            flags = (cv2.CALIB_ZERO_TANGENT_DIST | cv2.CALIB_FIX_K1 | cv2.CALIB_FIX_K2 | cv2.CALIB_FIX_K3)
         objects = [board_points(self.pattern, self.square)] * len(self.views)
         images = [v.reshape(-1, 1, 2) for v in self.views]
-        rms, matrix, distortion, _, _ = cv2.calibrateCamera(objects, images, self.image_size, None, None)
+        rms, matrix, distortion, _, _ = cv2.calibrateCamera(objects, images, self.image_size, None, None,
+                                                            flags=flags)
         self.result = {'camera_matrix': matrix, 'distortion': distortion.ravel()[:5], 'rms_px': float(rms),
                        'views': len(self.views), 'image_size': self.image_size}
         return self.result
@@ -158,13 +167,14 @@ class CameraCalibrationNode(Node):
         for name, value in (('image_topic', '/oakd/rgb/image_raw'), ('info_topic', '/oakd/rgb/camera_info'),
                             ('output_topic', '/perception/calibrated_camera_info'), ('pattern', '8x6'),
                             ('square', 0.05), ('min_views', 15), ('max_views', 40), ('rate', 2.0),
-                            ('output_path', '')):
+                            ('model', 'plumb_bob'), ('output_path', '')):
             self.declare_parameter(name, value)
         param = lambda name: self.get_parameter(name).value  # noqa: E731
         self.calibrator = ChessboardCalibrator(parse_pattern(param('pattern')), float(param('square')),
                                                int(param('min_views')), int(param('max_views')))
         self.period = 1.0 / max(0.1, float(param('rate')))
         self.output_path = str(param('output_path'))
+        self.model = str(param('model'))
         self.published_info = None
         self.last_try = -math.inf
         self.calibrated = None
@@ -199,7 +209,7 @@ class CameraCalibrationNode(Node):
 
     def _finish(self, image):
         from sensor_msgs.msg import CameraInfo
-        result = self.calibrator.calibrate()
+        result = self.calibrator.calibrate(self.model)
         k = result['camera_matrix']
         info = CameraInfo()
         info.header.frame_id = image.header.frame_id

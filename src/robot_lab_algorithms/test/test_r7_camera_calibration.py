@@ -88,6 +88,15 @@ class CalibrationTests(unittest.TestCase):
         self.assertIn('image_width: 320', text)
         self.assertIn('distortion_model: plumb_bob', text)
 
+    def test_the_pinhole_model_holds_distortion_at_zero(self):
+        result = self.calibrator.calibrate('pinhole')
+        k = result['camera_matrix']
+        self.assertTrue(np.all(result['distortion'] == 0.0))
+        self.assertLess(abs(k[0, 2] - CX), 1.0)
+        self.assertLess(abs(k[1, 2] - CY), 1.0)
+        with self.assertRaises(ValueError):
+            self.calibrator.calibrate('fisheye')
+
     def test_a_blank_image_has_no_board(self):
         calibrator = ChessboardCalibrator(PATTERN, SQUARE)
         self.assertEqual(calibrator.add(np.full((HEIGHT, WIDTH), 128, np.uint8)), 'no board')
