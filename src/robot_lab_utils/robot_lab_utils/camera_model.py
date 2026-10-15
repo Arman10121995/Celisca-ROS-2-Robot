@@ -39,9 +39,17 @@ def vertical_fov(horizontal_fov, width, height):
 
 
 def intrinsics(width, height, horizontal_fov):
-    """``(fx, fy, cx, cy)`` of an ideal pinhole with square pixels."""
+    """``(fx, fy, cx, cy)`` of an ideal pinhole with square pixels.
+
+    Renderers put pixel centres at u + 0.5, so the optical axis crosses
+    pixel coordinate (width - 1) / 2 in the ROS/OpenCV convention, where
+    pixel u's centre is at u.  Gazebo's camera info says width / 2; its own
+    point cloud and every simulator's depth image agree with (width - 1) / 2
+    (measured 2026-10-15: docs/status/evidence/
+    r72-perception-benchmark-2026-10-13/depth-node).
+    """
     fx = (width / 2.0) / math.tan(horizontal_fov / 2.0)
-    return fx, fx, width / 2.0, height / 2.0
+    return fx, fx, (width - 1) / 2.0, (height - 1) / 2.0
 
 
 def camera_info_fields(width, height, horizontal_fov):

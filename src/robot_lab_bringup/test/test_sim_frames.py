@@ -453,7 +453,8 @@ class CameraModelTests(unittest.TestCase):
     def test_intrinsics_follow_the_horizontal_field_of_view(self):
         fx, fy, cx, cy = self.cm.intrinsics(320, 240, 1.25)
         self.assertAlmostEqual(160.0 / math.tan(0.625), fx)
-        self.assertEqual((fx, 160.0, 120.0), (fy, cx, cy))
+        # Pixel centres at u + 0.5: the optical axis is at (159.5, 119.5).
+        self.assertEqual((fx, 159.5, 119.5), (fy, cx, cy))
         vertical = self.cm.vertical_fov(1.25, 320, 240)
         self.assertAlmostEqual(120.0, math.tan(vertical / 2.0) * fy)
 
