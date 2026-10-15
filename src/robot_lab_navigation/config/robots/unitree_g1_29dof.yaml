@@ -7,8 +7,14 @@ global_costmap:
   global_costmap:
     ros__parameters:
       robot_radius: 0.3
+      # Plan through the middle of corridors: the G1 walked 0.44-0.48 m from
+      # the west wall while still turning, its leg-odometry estimate sat
+      # 0.1-0.2 m nearer, and the planner found that estimated start inside
+      # the inscribed radius (Isaac seed 3, 2026-10-13).  A wider, flatter
+      # inflation keeps planned paths further from walls.
       inflation_layer:
-        inflation_radius: 0.55
+        inflation_radius: 0.8
+        cost_scaling_factor: 2.0
 local_costmap:
   local_costmap:
     ros__parameters:
