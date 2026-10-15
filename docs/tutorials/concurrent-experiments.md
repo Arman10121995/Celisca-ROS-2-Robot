@@ -88,6 +88,7 @@ source install/setup.bash
 ros2 run robot_lab_benchmark robot-lab-concurrent \
   /workspace/molar/robot_lab_runtime/experiments/jobs.json \
   --output /workspace/molar/robot_lab_runtime/experiments/run-001 --parallel 1
+```
 
 ## Run
 
@@ -120,7 +121,6 @@ Expected outputs are `workload.json`, `mission-trace.jsonl` and
 `mission-result.json`, plus per-job logs and telemetry (only
 `/odom/ground_truth` if Nav2 is used; stationary captures contain no
 robot motion).
-```
 
 Use `readiness_topic: /px4/odometry` for PX4. Duration is limited to 3600 s,
 startup to 600 s. CPU is aggregate process CPU, so one full core is approximately
