@@ -368,8 +368,12 @@ code delivery, not a passed mission or universal support.
   [state estimation](../tutorials/state_estimation_comparison.md)).
   Localization, perception (scans), state estimation (AMCL fixes) and
   sensor fusion (Gazebo IMU and wheel odometry) are also measured on
-  recorded simulator data, and perception on a live Gazebo depth camera.
-  Numerical kernels or generated scores do not count.
+  recorded simulator data, and perception on live depth cameras in all
+  four simulators. The last cataloged perception ids now run
+  (2026-10-15): depth images to clouds, feature-based visual odometry
+  (2.9% drift in Gazebo's textured house; it fails without texture) and
+  chessboard calibration (Gazebo only). Numerical kernels or generated
+  scores do not count.
 - [ ] **R8.1/R8.2/R8.3:** Complete the backend mission matrix and real isolated
   concurrent experiments with resource limits, cleanup and repeatable results.
 - [ ] **R9.1/R9.2:**
@@ -380,7 +384,8 @@ code delivery, not a passed mission or universal support.
   - Three of the seven comparison tutorials are measured in Gazebo
     (global, local, control). The other four (perception, localization,
     state estimation, sensor fusion) are measured offline with known
-    truth; their simulator-data runs remain.
+    truth and on recorded or live simulator data. The older generated
+    `comparison_*.md` drafts now only point to them.
   - Model/asset attribution is checked against the nearest LICENSE or
     package manifest (`scripts/asset_attribution.py`,
     [evidence](evidence/r91-asset-attribution-2026-10-13/README.md));

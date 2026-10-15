@@ -121,7 +121,26 @@ October 13: implemented on master, experimental.
 - **Perception, localization, state estimation (R7.2-R7.4).** The ids now
   run real methods, each measured offline with known truth; localization,
   state estimation and perception are also measured on recorded simulator
-  scans and AMCL fixes, and perception on a live Gazebo depth camera.
+  scans and AMCL fixes, and perception on live depth cameras.
+  - The three cataloged perception ids now run (2026-10-15, implemented,
+    experimental). `depth_image_to_pointcloud` turns depth images into
+    clouds in all four simulators, 3.3-6.6 ms each, and the ground and
+    cluster scores on its clouds match Gazebo's own. These are the first
+    depth-cloud scores for MuJoCo, PyBullet and Isaac
+    ([evidence](evidence/r72-perception-benchmark-2026-10-13/depth-node/README.md)).
+  - The simulators' camera info put the principal point half a pixel off,
+    at (160, 120) for a 320 x 240 image. Depth geometry and a chessboard
+    calibration in Gazebo both place it at the pixel centres,
+    (159.5, 119.5). The lab's MuJoCo, PyBullet and Isaac cameras now
+    publish that.
+  - `feature_detection` is feature-based RGB-D visual odometry. In Gazebo's
+    textured small_house it drifts 2.9% with ORB at 30 Hz. It fails in
+    flat-shaded worlds, on MuJoCo's untextured renders and on Isaac's
+    noisy RGB
+    ([evidence](evidence/r72-perception-benchmark-2026-10-13/feature-odometry/README.md)).
+  - `camera_calibration` calibrates from chessboard views; a Gazebo board
+    run gives the principal point within 0.13 px and fx 0.7% short
+    ([evidence](evidence/r72-perception-benchmark-2026-10-13/calibration/README.md)).
   - Perception: KD-tree clustering, adaptive scan breakpoints and a refined
     RANSAC. RANSAC finds all of a 2° floor where a height threshold finds
     43%. On a live Gazebo RGB-D stream the cloud nodes turned out to
