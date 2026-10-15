@@ -294,7 +294,9 @@ code delivery, not a passed mission or universal support.
   Slam-mode mapping on leg odometry holds 4.5-7.1 cm over a 26 m loop
   in all three backends
   ([evidence](evidence/p7-legged-slam-mapping-2026-10-13/README.md)).
-  Gazebo Go2 navigation and repeats remain.
+  Over three goal seeds: Go2 3/3 in MuJoCo and Gazebo (forward-arc
+  navigation) and 2/3 in Isaac, A1 3/3 in both, G1 3/3 MuJoCo and 2/3
+  Isaac, B2 2/3 in MuJoCo. Other maps, terrain and B2 in Isaac remain.
 - [ ] **R5.3/P7:** Resolve BHL held-turn/low-speed stalls and qualify robust
   balance/walk/turn. Audit and adapt model-specific policies for the remaining
   humanoids/quadrupeds, including joint/action/observation contracts and live
@@ -363,7 +365,7 @@ code delivery, not a passed mission or universal support.
   [state estimation](../tutorials/state_estimation_comparison.md)).
   Localization, perception (scans), state estimation (AMCL fixes) and
   sensor fusion (Gazebo IMU and wheel odometry) are also measured on
-  recorded simulator data; perception on simulator depth clouds remains.
+  recorded simulator data, and perception on a live Gazebo depth camera.
   Numerical kernels or generated scores do not count.
 - [ ] **R8.1/R8.2/R8.3:** Complete the backend mission matrix and real isolated
   concurrent experiments with resource limits, cleanup and repeatable results.

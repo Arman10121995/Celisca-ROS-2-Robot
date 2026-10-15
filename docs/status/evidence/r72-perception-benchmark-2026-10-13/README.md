@@ -108,7 +108,10 @@ Raw numbers are in [results.json](results.json) and [report.md](report.md).
 - **Limits.** The scenes are synthetic: perfect circles and boxes, no
   reflectance dropouts, no motion blur or multi-echo returns. The 2D-laser
   half of the next step — real Gazebo/MuJoCo `/scan` — is in
-  [live](live/README.md); the depth-cloud half still needs a recorded cloud.
+  [live](live/README.md). The depth-cloud half — a live Gazebo RGB-D stream
+  — is in [depth-live](depth-live/README.md). It found that the cloud
+  nodes worked in the camera's optical frame, where neither ground method
+  found the floor; they now segment in the robot frame (`cdb8b34`).
 
 ## Reproduce
 

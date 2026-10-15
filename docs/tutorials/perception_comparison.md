@@ -103,11 +103,32 @@ found all 80 boxes, in 16 ms per cloud.
 - **Clustering separates well-spaced boxes either way.** The two methods
   differ only on sparse surfaces, which DBSCAN breaks into more pieces.
 
+## On a Gazebo depth camera
+
+Scored live on Bumperbot's RGB-D stream during a 26 m drive
+([evidence](../status/evidence/r72-perception-benchmark-2026-10-13/depth-live/README.md)):
+
+| Method | Ground precision | Ground recall | Time per cloud |
+|---|---|---|---|
+| Height threshold (robot frame) | 0.97 | 1.00 | 2 ms |
+| RANSAC (robot frame) | 0.99 | 1.00 | 43 ms |
+
+- **Segment ground in a z-up frame.** A camera publishes in its optical
+  frame (z forward, y down). Run there, as the nodes did before
+  2026-10-15, the height threshold found no ground at all and RANSAC 3% of
+  it. The nodes now move each cloud into `base_footprint` first
+  (parameters `target_frame`, `max_points`).
+- On a flat floor both methods work; the tilted-floor case above is where
+  they differ.
+- Clustering the obstacle points found 72% of the visible objects
+  (Euclidean) and 62% (DBSCAN). A long wall counts as one object, so it is
+  often seen in several pieces.
+
 ## Limits
 
-- The scenes are synthetic: perfect circles and boxes, no missing returns
-  from dark or shiny surfaces, no motion.
-- A run on Gazebo scans and depth clouds is the next step.
+- The ranked tables above use synthetic scenes: perfect circles and boxes,
+  no missing returns from dark or shiny surfaces, no motion. The Gazebo
+  depth run is one drive on one flat world.
 
 ## Related tutorials
 

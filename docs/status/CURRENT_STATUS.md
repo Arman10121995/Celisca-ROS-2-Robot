@@ -121,11 +121,13 @@ October 13: implemented on master, experimental.
 - **Perception, localization, state estimation (R7.2-R7.4).** The ids now
   run real methods, each measured offline with known truth; localization,
   state estimation and perception are also measured on recorded simulator
-  scans and AMCL fixes. Only the perception depth-cloud half on simulator
-  data is pending.
+  scans and AMCL fixes, and perception on a live Gazebo depth camera.
   - Perception: KD-tree clustering, adaptive scan breakpoints and a refined
     RANSAC. RANSAC finds all of a 2° floor where a height threshold finds
-    43% ([evidence](evidence/r72-perception-benchmark-2026-10-13/README.md),
+    43%. On a live Gazebo RGB-D stream the cloud nodes turned out to
+    segment in the camera's optical frame, where neither method found the
+    floor; in the robot frame both now find all of it (precision 0.97-0.99)
+    ([evidence](evidence/r72-perception-benchmark-2026-10-13/README.md),
     [tutorial](../tutorials/perception_comparison.md)). On recorded Gazebo
     and MuJoCo `/scan` the same kernels split maze wall corners: single
     linkage and the fixed scan clusterer lead (F1 0.66-0.67; precision 0.85,
@@ -146,10 +148,18 @@ October 13: implemented on master, experimental.
     a white-noise filter nothing to remove
     ([live evidence](evidence/r74-state-estimation-benchmark-2026-10-13/live/README.md)).
 - **Walking robots navigate (P7).** Leg kinematic odometry feeds the EKF,
-  and slam/nav modes select each robot's policy. The obstacle mission
-  passes in every MuJoCo and Isaac cell run: Go2, A1 and G1 in both, B2
-  in MuJoCo. B2 and G1 first stood still at the 0.2 m/s approach speed;
-  their minimum speeds are now 0.4 and 0.3 m/s.
+  and slam/nav modes select each robot's policy. Over three goal seeds
+  (2026-10-15):
+  - A1 passes 3/3 in MuJoCo and Isaac; G1 3/3 in MuJoCo and 2/3 in Isaac.
+  - Go2 passes 3/3 in MuJoCo and **3/3 in Gazebo**, and 2/3 in Isaac.
+  - B2 passes 2/3 in MuJoCo; the miss is 4 mm over the 0.30 m test.
+
+  Robots that cannot turn on the spot there (Go2 in MuJoCo/Gazebo) or are
+  too long to (B2) use the new forward_arc navigation: forward-only
+  Hybrid-A* curves with their footprint, and no spin or back-up recovery.
+  It cured their aborts beside the block at the nav_obstacle start. B2 and
+  G1 first stood still at the 0.2 m/s approach speed; their minimum speeds
+  are now 0.4 and 0.3 m/s.
   - Walking robots also map: in slam mode on leg odometry, slam_toolbox
     held every walking robot within 4.5-7.1 cm RMSE of truth over a 26 m
     loop (MuJoCo, Isaac, Gazebo), and the MuJoCo/Isaac maps place every
@@ -158,8 +168,7 @@ October 13: implemented on master, experimental.
     ([evidence](evidence/p7-legged-slam-mapping-2026-10-13/README.md)).
   - Gazebo Go2 now starts standing, and with its physics step capped at
     2 ms (the worlds' 10 ms had run its 500 Hz PD loop at 100 Hz) it walks
-    the whole mapping loop. Its navigation mission still failed in the
-    start corner; Nav2 now backs up instead of spinning there
+    the whole mapping loop and passes the mission
     ([evidence](evidence/p7-legged-navigation-2026-10-13/README.md),
     [tutorial](../tutorials/legged-policies.md)).
 - **Planner reruns.** With a clearance margin, RRT/RRT\* reach 14/15 goals

@@ -57,10 +57,11 @@ purity.
 | euclidean_clusterer (0.12 m, 20 points) | **100/138** (72%) | 6.1 | 35 |
 | dbscan_clusterer (eps 0.12 m, 8 samples) | 86/138 (62%) | 6.7 | 35 |
 
-The misses are mostly long wall components seen in pieces through gaps
-(a wall run is one reference object, but the camera sees separate
-stretches of it). DBSCAN's density requirement splits sparse far
-surfaces more often.
+A reference object is a whole connected wall run or block, and the
+camera often sees separate stretches of one wall, which no single cluster
+can hold at 80%. Some misses are expected for that reason; the scorer does
+not break them down further. DBSCAN, which also needs 8 neighbours per
+core point, likely splits sparse far surfaces more often.
 
 ## Limits
 
