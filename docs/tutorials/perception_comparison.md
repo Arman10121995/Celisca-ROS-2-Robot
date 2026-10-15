@@ -25,6 +25,14 @@ Three perception jobs, each with known answers:
 | `euclidean_clusterer` | 3 | Join points closer than a tolerance (PCL's Euclidean clustering) |
 | `dbscan_clusterer` | 3 | Join points that have enough neighbours within a radius (DBSCAN) |
 
+Three more perception selections feed or check the others:
+
+| Selection (`perception:=`) | What it does |
+|---|---|
+| `depth_image_to_pointcloud` | Back-projects the depth image through the camera's pinhole model into `/perception/depth_points` (depth_image_proc's `point_cloud_xyz`) |
+| `feature_detection` | Feature-based RGB-D visual odometry: ORB, AKAZE, BRISK, SIFT or Shi-Tomasi corners matched to a keyframe and solved with PnP; publishes `/perception/visual_odometry` |
+| `camera_calibration` | Chessboard calibration (Zhang's method, as ROS's cameracalibrator.py): publishes `/perception/calibrated_camera_info` once enough distinct views of a board are seen |
+
 The equations, parameters and sources are in
 `src/robot_lab_algorithms/config/r7_method_subrecords.yaml` (perception)
 and the module `robot_lab_algorithms.perception`.
@@ -35,6 +43,16 @@ Benchmark (about a minute; no simulator):
 
 ```bash
 python3 scripts/r7_2_perception_benchmark.py --out <dir>
+```
+
+Depth clouds scored live during a drive (one simulator at a time):
+
+```bash
+SIDECAR="install/robot_lab_algorithms/lib/robot_lab_algorithms/depth_image_to_pointcloud \
+  --ros-args -p use_sim_time:=true & python3 scripts/r7_2_depth_live.py --map nav_obstacle \
+  --topic /perception/depth_points --out depth.json & wait" \
+CHECK_ARGS="--speed 0.3 --min-speed 0.1 --turn-in-place --radius 0.3" \
+  scripts/slam_mapping_check.sh mujoco bumperbot nav_obstacle drive.json odometry_source:=wheels
 ```
 
 On a robot, the scan methods read `/scan` and the cloud methods read
@@ -123,6 +141,26 @@ Scored live on Bumperbot's RGB-D stream during a 26 m drive
 - Clustering the obstacle points found 72% of the visible objects
   (Euclidean) and 62% (DBSCAN). A long wall counts as one object, so it is
   often seen in several pieces.
+
+## Depth images to clouds, in every simulator
+
+`depth_image_to_pointcloud` ran beside the same 26 m drive in all four
+simulators, and the ground and cluster scorers ran on its cloud
+([evidence](../status/evidence/r72-perception-benchmark-2026-10-13/depth-node/README.md)):
+
+| Simulator | Cloud latency (median) | Height threshold P / R | RANSAC P / R |
+|---|---|---|---|
+| Gazebo (30 Hz, every pixel) | 6.6 ms | 0.97 / 1.00 | 0.98 / 1.00 |
+| MuJoCo (5 Hz, every 2nd pixel) | 4.4 ms | 0.95 / 1.00 | 0.98 / 1.00 |
+| PyBullet (5 Hz, every 2nd pixel) | 3.7 ms | 0.97 / 1.00 | 0.98 / 1.00 |
+| Isaac (5 Hz, every 2nd pixel) | 3.3 ms | 0.97 / 1.00 | 0.98 / 1.00 |
+
+- MuJoCo, PyBullet and Isaac publish only depth images, so these are
+  their first scored clouds.
+- In Gazebo the node's cloud matches Gazebo's own to half a pixel. The
+  simulators' camera info puts the principal point at half the image
+  size, while rendered pixel centres put it half a pixel lower. That lifts
+  far floor points by a few millimetres; the evidence page has the check.
 
 ## Limits
 
