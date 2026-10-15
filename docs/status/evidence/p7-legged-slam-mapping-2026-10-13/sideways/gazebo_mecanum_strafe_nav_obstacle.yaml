@@ -1,0 +1,14 @@
+free_thresh: 0.196
+image: gazebo_mecanum_strafe_nav_obstacle.pgm
+mode: trinary
+negate: 0
+occupied_thresh: 0.65
+origin:
+- -1.5565844449639121
+- -1.6493779029102134
+- 0.0
+resolution: 0.05000000074505806
+world_from_map:
+- -6.999992344226809
+- -7.00000583269685
+- 5.220911392544991e-06

@@ -81,6 +81,38 @@ both 4WS patterns pivot when stopped and arc when moving. So in this drive
 the two patterns move the same way (identical paths); their sideways
 patterns (crab, in_phase) are not exercised.
 
+## Sideways travel (`sideways/`, 16:09-16:37, `d65fc2e`)
+
+`slam_mapping_check.py --holonomic` drives the same loop without turning.
+The velocity points at the pure-pursuit carrot, in the base frame, and the
+start heading is held. This runs the mecanum car strafing and the 4WS car
+in its crab and in_phase patterns, on wheel odometry in MuJoCo (Gazebo's
+default odometry in Gazebo).
+
+| Robot, pattern | Simulator | Slam pose RMSE / max | Odometry alone (RMSE) | Precision | Surface distance mean | Recall |
+|---|---|---|---|---|---|---|
+| Mecanum, strafing | MuJoCo | 2.4 / 4.8 cm | 25 cm | 1.00 | 5.4 cm | 0.56 |
+| 4WS, crab | MuJoCo | 1.7 / 3.8 cm | | 1.00 | 5.5 cm | 0.66 |
+| 4WS, in_phase | MuJoCo | 0.9 / 2.3 cm | | 1.00 | 5.8 cm | 0.64 |
+| Mecanum, strafing | Gazebo | 11.0 / 24.7 cm | 102 cm | 1.00 | 5.9 cm | 0.67 |
+| 4WS, crab | Gazebo | 1.7 / 3.2 cm | 3.5 cm | 1.00 | 6.4 cm | 0.71 |
+| 4WS, in_phase | Gazebo | 1.6 / 4.2 cm | | 1.00 | 6.4 cm | 0.71 |
+
+- All six drives completed the 25 m loop with no back-off or skipped
+  route point. The body heading stayed within 1.4° of its start
+  (95th percentile).
+- The odometry column is TF `odom -> base_footprint` against truth,
+  aligned at the start. It was computed for three runs only.
+- **The 4WS car maps as well sideways as turning.** Crab and in_phase
+  hold 0.9-1.7 cm.
+- **The mecanum car's rollers slip sideways in Gazebo.** Its odometry ends
+  a strafing loop 1.02 m RMSE off, against 25 cm in MuJoCo. Slam brings
+  that back to 11 cm, the only drift above 2.5 cm among the wheeled
+  robots. The precision of its map stays at 1.00.
+- crab and in_phase move identically when the command has a sideways part
+  (`drive_kinematics.FourWheelSteerDrive.targets`); in_phase differs
+  only when a turn rate is commanded without one.
+
 ## What it shows
 
 - **Leg odometry is good enough for mapping.** Slam_toolbox kept every

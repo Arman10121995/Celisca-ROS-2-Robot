@@ -1,0 +1,14 @@
+free_thresh: 0.196
+image: mujoco_mecanum_strafe_nav_obstacle.pgm
+mode: trinary
+negate: 0
+occupied_thresh: 0.65
+origin:
+- -1.5364595489562225
+- -1.5502718711619459
+- 0.0
+resolution: 0.05000000074505806
+world_from_map:
+- -6.999168184927894
+- -7.000031839702328
+- 2.3133037556632985e-06

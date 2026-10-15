@@ -281,8 +281,11 @@ code delivery, not a passed mission or universal support.
   ([evidence](evidence/r56-4ws-missions-2026-10-13/README.md)). Slam
   mapping on wheel odometry holds 1.1-2.5 cm for the mecanum car in all four
   backends and the 4WS ackermann/pivot patterns in MuJoCo and Gazebo
-  ([evidence](evidence/p7-legged-slam-mapping-2026-10-13/README.md));
-  crab/in_phase mapping remains.
+  ([evidence](evidence/p7-legged-slam-mapping-2026-10-13/README.md)).
+  Driven sideways at a fixed heading (`--holonomic`), the 4WS crab and
+  in_phase patterns hold 0.9-1.7 cm in MuJoCo and Gazebo. The strafing
+  mecanum car holds 2.4 cm in MuJoCo and 11 cm in Gazebo, where its rollers
+  slip (1.02 m odometry RMSE).
 - [ ] **R5.2:** Resolve Go2 stair/terrain traversal and roll-axis recovery;
   existing failed get-up trials remain negative evidence. Qualify robust
   walking/turning and sensor/goal missions before broader mode enablement.
