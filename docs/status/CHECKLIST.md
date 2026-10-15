@@ -1,12 +1,26 @@
 # Robot Lab done and remaining checklist
 
-- [x] Define the October 14 next extension and researched source/agent guide;
-  expose its queued runtime status in GUI Health.
-- [ ] R10 shared-world sessions, fleet management and ground/aerial swarm control.
-- [ ] R10 underwater ROV/AUV physics, maps, sensing, estimation, SLAM and navigation.
-- [ ] R10 complete hexapod/octopod, centipede/segmented and further robot families.
-- [ ] R10 native Fleet/Swarm/Marine panels and measured mission/workload support.
-  These follow current initial implementation. See [the guide](../NEXT_EXTENSION_GUIDE.md).
+October 15: R10 extension implementation comes first. Each parent remains partial.
+
+- [x] Source research, detailed agent guide and truthful GUI Health status.
+- [x] Native Fleet & Swarm shared-world base controls, real Nav2 dispatch and
+  initial ground group kernels; scoped GUI measurements recorded.
+- [x] First physical ROV, five marine collision/water worlds, native thrusters
+  and Marine controls; tank surge/depth/Stop diagnostic recorded.
+- [x] Complete source hexapod, authored octopod and segmented twelve-leg robot,
+  MuJoCo Gait/Drive, source IK/PD, actual contact/tilt feedback and previews;
+  short forward/Stop diagnostics recorded.
+- [ ] Complete AUV, independent underwater sensing/estimation, saved 3D marine
+  SLAM and volumetric routes; other backend force adapters.
+- [ ] Remaining fleet queues/Open-RMF/traffic, cooperative coverage, multi-FCU
+  aerial swarms and additional shared-world adapters.
+- [ ] Legged terrain/recovery, independent estimates, saved SLAM/navigation,
+  remaining robot forms, experiment workloads and broad physical validation.
+
+Read [R10 guide](../NEXT_EXTENSION_GUIDE.md), [fleet scope](fleet-2026-10-15.md),
+[marine scope](marine-2026-10-15.md) and [gait scope](gaits-2026-10-15.md).
+Checked items mean initial implementation in the stated scope; older remaining
+work follows this extension, with broad qualification handed off separately.
 
 - [x] October 14: mapped/depth obstacle consumers, capture transforms, bounded
   observed/static aerial planning, async route recheck, stale/blockage Hold and

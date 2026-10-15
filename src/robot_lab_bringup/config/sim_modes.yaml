@@ -1,4 +1,14 @@
 modes:
+  gait:
+    category: "Multi-leg gait control"
+    steps:
+    - {id: simulator, label: "MuJoCo physical leg/body contacts"}
+    - {id: gait_controller, label: "Exact-source IK and bounded in-step joint PD"}
+    - {id: visualizer, label: "Actual joint/body/contact observations"}
+    requires_2d_map: false
+    required_features: [source_gait]
+    simulators: [mujoco]
+    rviz: {enabled: true}
   marine:
     category: "Marine ROV control"
     steps:

@@ -1,5 +1,14 @@
 # Robot Lab — Multi-Robot Simulation and Algorithm Laboratory
 
+October 15 adds **six-, eight- and twelve-legged robots** to the normal robot
+list, registry preview and Launch controls. Source hexapod, Laboratory octopod
+and articulated centipede have experimental MuJoCo **Gait** control, latched
+Drive, source IK, bounded joint motors and actual contact/tilt feedback.
+Short GUI runs record forward motion and Stop on each. Independent legged
+SLAM/navigation, terrain/recovery and other backends remain pending.
+[Gait guide](docs/tutorials/multi-leg-gaits.md),
+[actual scope and remaining work](docs/status/gaits-2026-10-15.md).
+
 October 15 also adds **Laboratory ROV + Marine controls** and five installed
 underwater worlds. Native Gazebo buoyancy, drag and eight thrusters drive the
 body; the normal GUI tank diagnostic measures forward motion, depth Down/Up
@@ -20,7 +29,8 @@ The next extension includes **fleet management, ground/aerial swarms,
 underwater robots/maps, six/eight-legged and centipede/segmented robots**.
 The latest instruction prioritizes this extension first, then the remaining
 roadmap. Shared-world Gazebo bases and the first ROV/Marine workflow are
-implemented experimentally; additional marine and gait integration remains.
+implemented experimentally, together with the first six/eight/many-legged
+gaits. Additional marine, fleet and legged mission integration remains.
 [R10 roadmap](ROADMAP.md#r10--next-extension-fleets-swarms-and-new-robot-forms),
 [source research and agent guide](docs/NEXT_EXTENSION_GUIDE.md).
 

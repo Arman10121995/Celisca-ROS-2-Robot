@@ -743,6 +743,19 @@ def _build_simulation_actions(context):
         )
         _validate_robot_for_mode(robot_model, robot_config, mode_name, mode_config,
                                  _launch_value(context, "simulator"))
+        if robot_config.get('gait_model'):
+            if _launch_value(context, 'simulator') != 'mujoco' or mode_name not in ('display', 'gait'):
+                raise RuntimeError('Source multi-leg gait currently supports MuJoCo Display/Gait only')
+            gait_args = dict(robot_model=robot_model, map_name='empty' if map_free else map_name,
+                control='true' if mode_name == 'gait' else 'false', gui=_config_value(context, 'gui', 'true'),
+                rviz='true' if _auto_bool(context, 'start_rviz', True) else 'false')
+            if _is_auto(gait_args['gui']):
+                gait_args['gui'] = 'true' if os.environ.get('DISPLAY') else 'false'
+            for axis in ('x', 'y', 'z', 'yaw'):
+                supplied = _launch_value(context, 'spawn_' + axis)
+                if not _is_auto(supplied):gait_args['spawn_' + axis] = supplied
+            return _run_id_actions() + [IncludeLaunchDescription(PythonLaunchDescriptionSource(
+                _launch_file(bringup_share, 'gait_simulator.launch.py')), launch_arguments=gait_args.items())]
         if robot_config.get('marine_model'):
             if _launch_value(context, 'simulator') != 'gazebo' or mode_name not in ('display', 'marine'):
                 raise RuntimeError('The laboratory ROV currently supports Gazebo Display/Marine only')

@@ -51,7 +51,7 @@ DEFAULT_MODE_FEATURES: Dict[str, Tuple[str, ...]] = {
     "3d_slam": ("rgbd_camera",),
 }
 
-MODE_ORDER = ["display", "loc", "slam", "3d_slam", "nav", "flight", "marine"]
+MODE_ORDER = ["display", "loc", "slam", "3d_slam", "nav", "flight", "marine", "gait"]
 
 # Canonical algorithm category taxonomy (mirrors registry algorithms.yaml).
 ALGORITHM_CATEGORIES: List[str] = [
@@ -86,6 +86,7 @@ MODE_CATEGORIES: Dict[str, str] = {
     "nav": "Navigation",
     "flight": "PX4 Flight",
     "marine": "Marine ROV control",
+    "gait": "Multi-leg gait control",
 }
 
 MODE_ALGORITHM_SLOTS: Dict[str, Tuple[str, ...]] = {

@@ -2,6 +2,15 @@
 # A variant is not an alias for its parent's controllers or measured missions.
 schema_version: 1
 robots:
+  - id: hexapod_ros2
+    name: Source hexapod
+    members: [{id: hexapod_ros2, label: Complete six-legged source model}]
+  - id: lab_octopod
+    name: Laboratory octopod
+    members: [{id: lab_octopod, label: Complete eight-legged robot}]
+  - id: lab_centipede
+    name: Laboratory centipede
+    members: [{id: lab_centipede, label: Complete six-segment twelve-legged robot}]
   - id: lab_rov
     name: Laboratory ROV
     members:

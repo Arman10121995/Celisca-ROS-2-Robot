@@ -168,6 +168,8 @@ def _build_mujoco_actions(context):
     # joint_pd.py); built and validated by the parent launch from the
     # policy's own contract.  Empty keeps the passive/effort plant.
     joint_pd_config = LaunchConfiguration("joint_pd_config").perform(context).strip()
+    spawner_params["gait_contact_config"] = LaunchConfiguration("gait_contact_config").perform(context)
+    spawner_params["gait_floor_reference"] = LaunchConfiguration("gait_floor_reference").perform(context)
     if joint_pd_config:
         spawner_params["joint_pd_config"] = joint_pd_config
         spawner_params["pd_joint_armature"] = ParameterValue(
@@ -249,6 +251,8 @@ def generate_launch_description():
         DeclareLaunchArgument("perturbation_duration_s", default_value="0.0"),
         DeclareLaunchArgument("perturbation_axis", default_value="1"),
         DeclareLaunchArgument("initial_joint_positions", default_value=""),
+        DeclareLaunchArgument("gait_contact_config", default_value=""),
+        DeclareLaunchArgument("gait_floor_reference", default_value=""),
         DeclareLaunchArgument("robot_package", default_value="robot_lab_robots"),
         DeclareLaunchArgument("robot_xacro", default_value=""),
         DeclareLaunchArgument("robot_name", default_value="bumperbot"),

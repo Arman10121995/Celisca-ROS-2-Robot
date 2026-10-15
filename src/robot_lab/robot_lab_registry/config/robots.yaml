@@ -2,6 +2,54 @@
 # Version 0.1.0
 # This file catalogs all robots available in the platform
 
+- id: hexapod_ros2
+  version: "0.1.0"
+  name: Source hexapod
+  status: available
+  robot_class: legged
+  maturity: prototype
+  supported_simulators: [mujoco]
+  supported_modes: [display, gait]
+  locomotion: {type: hexapod, legs: 6, dof: 20, max_velocity: 0.025}
+  capabilities: [control]
+  command_interfaces: [geometry_msgs/Twist]
+  state_interfaces: [sensor_msgs/JointState, nav_msgs/Odometry]
+  frames: [odom, base_footprint, base_link]
+  assets: {urdf: robot_lab_robots/hexapod_ros2/urdf/hexapod_ros2.urdf}
+  source: {repository: "https://github.com/ariegweomamerie/hexapod_ros2", revision: b146f84d58123caabfcea8fe2a5e2a353acc33de, license: MIT}
+  tags: [extension, hexapod, six_legs, complete_robot, source_geometry, authored_pd_adapter, experimental_gait]
+- id: lab_octopod
+  version: "0.1.0"
+  name: Laboratory octopod
+  status: available
+  robot_class: legged
+  maturity: prototype
+  supported_simulators: [mujoco]
+  supported_modes: [display, gait]
+  locomotion: {type: octopod, legs: 8, dof: 24, max_velocity: 0.045}
+  capabilities: [control]
+  command_interfaces: [geometry_msgs/Twist]
+  state_interfaces: [sensor_msgs/JointState, nav_msgs/Odometry]
+  frames: [odom, base_footprint, base_link]
+  assets: {urdf: robot_lab_robots/lab_octopod/urdf/lab_octopod.urdf}
+  source: {repository: internal, license: Apache-2.0}
+  tags: [extension, octopod, eight_legs, complete_robot, first_party, experimental_gait]
+- id: lab_centipede
+  version: "0.1.0"
+  name: Laboratory centipede
+  status: available
+  robot_class: legged
+  maturity: prototype
+  supported_simulators: [mujoco]
+  supported_modes: [display, gait]
+  locomotion: {type: segmented, legs: 12, segments: 6, dof: 41, max_velocity: 0.045}
+  capabilities: [control]
+  command_interfaces: [geometry_msgs/Twist]
+  state_interfaces: [sensor_msgs/JointState, nav_msgs/Odometry]
+  frames: [odom, base_footprint, base_link]
+  assets: {urdf: robot_lab_robots/lab_centipede/urdf/lab_centipede.urdf}
+  source: {repository: internal, license: Apache-2.0}
+  tags: [extension, centipede, twelve_legs, six_segments, articulated_spine, complete_robot, first_party, experimental_gait]
 - id: lab_rov
   version: "0.1.0"
   name: Laboratory ROV

@@ -1,0 +1,163 @@
+schema_version: 1
+robot_id: lab_octopod
+description: lab_octopod/urdf/lab_octopod.urdf
+forward_yaw: 0.0
+body_center:
+- 0.0
+- 0.0
+standing_height: 0.196
+cycle_s: 1.6
+step_height: 0.025
+max_stride: 0.045
+max_speed: 0.045
+max_yaw: 0.15
+default_gait: tetrapod
+legs:
+- id: leg_l1
+  root: base_link
+  joints:
+  - leg_l1_coxa
+  - leg_l1_femur
+  - leg_l1_tibia
+  foot: leg_l1_foot
+  initial:
+  - 0.0
+  - 0.3
+  - 1.1
+  pair: 0
+  side: l
+  contact_geoms:
+  - leg_l1_foot_collision
+  body_offset:
+  - 0.0
+  - 0.0
+- id: leg_r1
+  root: base_link
+  joints:
+  - leg_r1_coxa
+  - leg_r1_femur
+  - leg_r1_tibia
+  foot: leg_r1_foot
+  initial:
+  - 0.0
+  - 0.3
+  - 1.1
+  pair: 0
+  side: r
+  contact_geoms:
+  - leg_r1_foot_collision
+  body_offset:
+  - 0.0
+  - 0.0
+- id: leg_l2
+  root: base_link
+  joints:
+  - leg_l2_coxa
+  - leg_l2_femur
+  - leg_l2_tibia
+  foot: leg_l2_foot
+  initial:
+  - 0.0
+  - 0.3
+  - 1.1
+  pair: 1
+  side: l
+  contact_geoms:
+  - leg_l2_foot_collision
+  body_offset:
+  - 0.0
+  - 0.0
+- id: leg_r2
+  root: base_link
+  joints:
+  - leg_r2_coxa
+  - leg_r2_femur
+  - leg_r2_tibia
+  foot: leg_r2_foot
+  initial:
+  - 0.0
+  - 0.3
+  - 1.1
+  pair: 1
+  side: r
+  contact_geoms:
+  - leg_r2_foot_collision
+  body_offset:
+  - 0.0
+  - 0.0
+- id: leg_l3
+  root: base_link
+  joints:
+  - leg_l3_coxa
+  - leg_l3_femur
+  - leg_l3_tibia
+  foot: leg_l3_foot
+  initial:
+  - 0.0
+  - 0.3
+  - 1.1
+  pair: 2
+  side: l
+  contact_geoms:
+  - leg_l3_foot_collision
+  body_offset:
+  - 0.0
+  - 0.0
+- id: leg_r3
+  root: base_link
+  joints:
+  - leg_r3_coxa
+  - leg_r3_femur
+  - leg_r3_tibia
+  foot: leg_r3_foot
+  initial:
+  - 0.0
+  - 0.3
+  - 1.1
+  pair: 2
+  side: r
+  contact_geoms:
+  - leg_r3_foot_collision
+  body_offset:
+  - 0.0
+  - 0.0
+- id: leg_l4
+  root: base_link
+  joints:
+  - leg_l4_coxa
+  - leg_l4_femur
+  - leg_l4_tibia
+  foot: leg_l4_foot
+  initial:
+  - 0.0
+  - 0.3
+  - 1.1
+  pair: 3
+  side: l
+  contact_geoms:
+  - leg_l4_foot_collision
+  body_offset:
+  - 0.0
+  - 0.0
+- id: leg_r4
+  root: base_link
+  joints:
+  - leg_r4_coxa
+  - leg_r4_femur
+  - leg_r4_tibia
+  foot: leg_r4_foot
+  initial:
+  - 0.0
+  - 0.3
+  - 1.1
+  pair: 3
+  side: r
+  contact_geoms:
+  - leg_r4_foot_collision
+  body_offset:
+  - 0.0
+  - 0.0
+spines: []
+kp: 75.0
+kd: 2.5
+torque_limit: 8.0

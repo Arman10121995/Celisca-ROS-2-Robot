@@ -1117,6 +1117,8 @@ class MuJoCoSpawner(Node):
         # robot_lab_mujoco.joint_pd); used by learned legged policies.
         self.declare_parameter("joint_pd_config", "")
         self.declare_parameter("pd_joint_armature", 0.01)
+        self.declare_parameter("gait_contact_config", "")
+        self.declare_parameter("gait_floor_reference", "")
         # Optional coarser model timestep for robots that only drive wheels
         # (no effort stream, no explicit physics_timestep).  Off by default:
         # at 4 ms Bumperbot tracked unchanged but Labbot drifted (straight
@@ -1173,6 +1175,7 @@ class MuJoCoSpawner(Node):
         self._go2_trunk_ids = []
         self._go2_support_ids = []
         self._go2_contact_pub = None
+        self._gait_contacts = self._gait_contact_pub = None
         self._go2_trunk_pub = None
         self._go2_support_pub = None
         self._effort_subscription = None
@@ -1495,6 +1498,12 @@ class MuJoCoSpawner(Node):
                 "MuJoCo midphase disabled for %d static world flex elements "
                 "(same contacts, cheaper step)" % self._model.nflexelem)
         self._data = mujoco.MjData(self._model)
+        gait_contacts = self.get_parameter("gait_contact_config").value
+        if gait_contacts:
+            from robot_lab_mujoco.gait_contacts import GaitContacts
+            from std_msgs.msg import String
+            self._gait_contacts = GaitContacts(self._model, gait_contacts)
+            self._gait_contact_pub = self.create_publisher(String, '/gait/contacts', 10)
         self._substeps = _physics_substeps(self._dt, self._model.opt.timestep)
         self._camera = self._camera_setup()
 
@@ -1905,6 +1914,11 @@ class MuJoCoSpawner(Node):
             last[0] = sim_time
             if not getattr(self, "_robot_free", False):
                 self._pub_joint_states()
+                if self._gait_contact_pub is not None:
+                    from std_msgs.msg import String
+                    measured = self._gait_contacts.measure(self._model, self._data)
+                    measured['clock_time'] = self._sim_t
+                    self._gait_contact_pub.publish(String(data=json.dumps(measured, allow_nan=False)))
                 if self._go2_contact_pub is not None:
                     forces = Float64MultiArray()
                     forces.data = _foot_world_contact_forces(
@@ -2064,6 +2078,13 @@ class MuJoCoSpawner(Node):
         if hasattr(self._data, "xfrc_applied"):
             self._data.xfrc_applied[:, :] = 0.0
         mujoco.mj_forward(self._model, self._data)
+        gait_floor = self.get_parameter('gait_floor_reference').value
+        if adr >= 0 and self._gait_contacts is not None and gait_floor:
+            reference = float(gait_floor)
+            if not math.isfinite(reference):
+                raise ValueError('Gait floor reference must be finite')
+            result = self._gait_contacts.align_spawn(self._model, self._data, adr, reference)
+            self.get_logger().info('Measured initial foothold placement: ' + json.dumps(result))
         # Place the lowest robot collision surface above the ground plane.
         # A trunk-rooted robot and a wheel-footprint-rooted robot cannot use
         # the same literal root z when the GUI selects a zero-height spawn.

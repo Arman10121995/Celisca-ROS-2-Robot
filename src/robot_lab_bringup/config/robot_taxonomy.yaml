@@ -1,6 +1,18 @@
 # Structural catalog tags, never a runtime/controller qualification.
 schema_version: 1
 classes:
+  - category: Legged robots
+    subtype: Six legs
+    tags: [Hexapod, Tripod, Source geometry, Experimental gait]
+    members: [hexapod_ros2]
+  - category: Legged robots
+    subtype: Eight legs
+    tags: [Octopod, Tetrapod gait, First-party complete robot]
+    members: [lab_octopod]
+  - category: Legged robots
+    subtype: Many legs and segments
+    tags: [Twelve legs, Six segments, Five spine joints, Wave gait]
+    members: [lab_centipede]
   - category: Underwater robots
     subtype: ROV
     tags: [Eight thrusters, Six-axis allocation, Marine dynamics, Experimental control]

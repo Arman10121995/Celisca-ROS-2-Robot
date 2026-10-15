@@ -273,8 +273,18 @@ def prepare_scene(kind, profile, output, package_share):
                 description = load_description(source, 'is_sim:=false')
             if description is not None:
                 (output/'robot.urdf').write_text(description)
-                shapes, notes = urdf_shapes(description, resolve, str(source.parent))
-                notes.append('URDF nominal joint pose; static inspection, no controller or plant')
+                joint_positions=None
+                if profile.get('gait_model'):
+                    import yaml
+                    gait_path=Path(profile['gait_model'])
+                    if not gait_path.is_absolute():gait_path=Path(package_share(profile['package']))/gait_path
+                    gait=yaml.safe_load(gait_path.read_text())
+                    joint_positions={name:value for leg in gait['legs'] for name,value in zip(leg['joints'],leg['initial'])}
+                    joint_positions.update({spine['joint']:0. for spine in gait.get('spines',[])})
+                    joint_positions.update(gait.get('passive_targets',{}))
+                shapes, notes = urdf_shapes(description, resolve, str(source.parent), joint_positions)
+                notes.append(('Configured source stance' if joint_positions is not None else 'URDF nominal joint pose')+
+                             '; static inspection, no controller or plant')
             else:
                 notes.append('SDF nominal link pose; static inspection, no flight controller or plant')
     else:

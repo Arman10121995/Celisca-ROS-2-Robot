@@ -31,8 +31,11 @@ install(PROGRAMS
   ${PROJECT_NAME}/safety_stop.py
   ${PROJECT_NAME}/fleet_controller.py
   ${PROJECT_NAME}/marine_controller.py
+  ${PROJECT_NAME}/gait_controller.py
   DESTINATION lib/${PROJECT_NAME}
 )
+
+install(FILES ${PROJECT_NAME}/vendor/HEXAPOD_LICENSE DESTINATION share/${PROJECT_NAME}/licenses)
 
 
 ament_package()

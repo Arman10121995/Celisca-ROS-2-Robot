@@ -158,7 +158,7 @@ def selection_value(value):
     return NONE_VALUE if is_none_selection(value) else str(value).strip()
 
 
-MODE_ORDER = ["display", "loc", "slam", "3d_slam", "nav", "flight", "marine"]
+MODE_ORDER = ["display", "loc", "slam", "3d_slam", "nav", "flight", "marine", "gait"]
 MODE_TOOLTIPS = {
     "display": "Visualize a robot and/or a map in the selected simulator "
                "(unactuated legged robots hold their pose; no localization).",
@@ -168,6 +168,7 @@ MODE_TOOLTIPS = {
     "nav": "Navigation: plan and follow paths (2D map required).",
     "flight": "PX4 X500: takeoff, manual flight and experimental static-world 3D Plan/Execute. Moving obstacles remain unsupported.",
     "marine": "Experimental ROV native thrusters, depth/heading hold and actual water forces. Independent underwater localization/SLAM/navigation remain pending.",
+    "gait": "Experimental source-bound six/eight/many-legged IK and physical joint control. Measured contacts/tilt guard motion; independent SLAM/navigation remain pending.",
 }
 MODE_LABELS = {
     "display": "Display",
@@ -177,6 +178,7 @@ MODE_LABELS = {
     "nav": "Navigation",
     "flight": "PX4 Flight",
     "marine": "Marine ROV",
+    "gait": "Multi-leg gait",
 }
 
 SIMULATOR_ORDER = ["gazebo", "isaac", "pybullet", "mujoco"]
@@ -1276,7 +1278,9 @@ class SimulationLauncherGui(tk.Tk):
             ' · Controls require a compatible controller and an owned running simulation.')
         if robot != getattr(self, '_control_robot', None):
             self._control_robot = robot
-            if self._marine_selectable() and hasattr(self, 'marine_controls'):
+            if self._gait_selectable() and hasattr(self, 'gait_controls'):
+                self.control_notebook.select(self.gait_controls)
+            elif self._marine_selectable() and hasattr(self, 'marine_controls'):
                 self.control_notebook.select(self.marine_controls)
             elif self._flight_selectable():
                 self.control_notebook.select(self.drone_page)
@@ -1292,7 +1296,7 @@ class SimulationLauncherGui(tk.Tk):
 
     def _stop_all_motion(self):
         self._stop_drive()
-        for name in ('arm_tab', 'hand_tab', 'marine_controls'):
+        for name in ('arm_tab', 'hand_tab', 'marine_controls', 'gait_controls'):
             control = getattr(self, name, None)
             if control is not None:
                 control.stop()
@@ -1640,6 +1644,8 @@ class SimulationLauncherGui(tk.Tk):
                 and self._robot_can_run(mode, sim)]
 
     def _map_ok_for_mode(self, map_id):
+        if self._robot_config().get('gait_model'):
+            return not self.map_profiles.get(map_id, {}).get('marine')
         if self.robot_profiles.get(self.robot_var.get(), {}).get("marine_model"):
             return bool(self.map_profiles.get(map_id, {}).get("marine"))
         if self._mode_requires_2d_map(self.mode_var.get()):
@@ -2204,6 +2210,8 @@ class SimulationLauncherGui(tk.Tk):
 
     def _extension_drive_unavailable(self):
         profile = self._robot_config()
+        if profile.get('gait_model') and not self._gait_selectable():
+            return True
         return bool(profile.get('source_id') and not profile.get('drive')
                     and not (self._native_policy_selectable() and self.native_policy_var.get())
                     and not (self._native_mobile_selectable() and self.native_mobile_var.get()))
@@ -2224,7 +2232,7 @@ class SimulationLauncherGui(tk.Tk):
                 and self.launch_kind_var.get() == "simulation")
 
     def _lateral_drive_selectable(self):
-        return (self._flight_selectable() or self._mecanum_selectable() or
+        return (self._gait_selectable() or self._flight_selectable() or self._mecanum_selectable() or
                 (self._native_policy_selectable() and self.native_policy_var.get()) or
                 (self._four_wheel_steer_selectable() and
                  self.steering_mode_var.get() in ("crab", "in_phase")))
@@ -2265,6 +2273,10 @@ class SimulationLauncherGui(tk.Tk):
     def _marine_selectable(self):
         return (bool(self._robot_config().get('marine_model')) and self.mode_var.get() == 'marine'
                 and self.simulator_var.get() == 'gazebo' and self.launch_kind_var.get() == 'simulation')
+
+    def _gait_selectable(self):
+        return (bool(self._robot_config().get('gait_model')) and self.mode_var.get() == 'gait'
+                and self.simulator_var.get() == 'mujoco' and self.launch_kind_var.get() == 'simulation')
 
     def _flight_action(self, action):
         if not self._flight_selectable():
@@ -3346,6 +3358,8 @@ class SimulationLauncherGui(tk.Tk):
             self.drive_repeat_job = self.after(100, self._repeat_drive)
 
     def _stop_drive(self, keep_input_enabled=False):
+        if hasattr(self, 'gait_controls'):
+            self.gait_controls.stop()
         if self.drive_repeat_job is not None:
             self.after_cancel(self.drive_repeat_job)
             self.drive_repeat_job = None
@@ -3622,6 +3636,8 @@ class SimulationLauncherGui(tk.Tk):
             self.stop_bg_process(key)
 
     def _on_close(self):
+        if hasattr(self, 'gait_controls'):
+            self.gait_controls.close()
         if hasattr(self, 'marine_controls'):
             self.marine_controls.close()
         if hasattr(self, 'fleet_tab'):

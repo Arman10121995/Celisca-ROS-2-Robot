@@ -1,0 +1,820 @@
+<?xml version='1.0' encoding='utf-8'?>
+<robot name="Hexapod_Robot">
+  <material name="silver">
+    <color rgba="0.700 0.700 0.700 1.000" />
+  </material>
+  <link name="base_footprint" />
+  <joint name="base_footprint_joint" type="fixed">
+    <origin rpy="0 0 0" xyz="0 0 0" />
+    <parent link="base_link" />
+    <child link="base_footprint" />
+  </joint>
+  <link name="base_link">
+    <inertial>
+      <origin rpy="0 0 0" xyz="0.11456741037796862 0.1087879851109223 0.05265501684792295" />
+      <mass value="11.924165027690854" />
+      <inertia ixx="0.104112" ixy="-7e-06" ixz="-0.000256" iyy="0.070049" iyz="-0.000382" izz="0.13759" />
+    </inertial>
+    <visual>
+      <origin rpy="0 0 0" xyz="0 0 0" />
+      <geometry>
+        <mesh filename="package://robot_lab_robots/hexapod_ros2/description/meshes/base_link.stl" scale="0.001 0.001 0.001" />
+      </geometry>
+      <material name="silver" />
+    </visual>
+    <collision>
+      <origin rpy="0 0 0" xyz="0 0 0" />
+      <geometry>
+        <mesh filename="package://robot_lab_robots/hexapod_ros2/description/meshes/base_link.stl" scale="0.001 0.001 0.001" />
+      </geometry>
+    </collision>
+  </link>
+  <link name="left_hip_swing_forward_back1_link_1">
+    <inertial>
+      <origin rpy="0 0 0" xyz="0.02722355354628611 -0.005765123935482315 -0.05103630040946177" />
+      <mass value="1.0039554041082914" />
+      <inertia ixx="0.00093" ixy="0.00025" ixz="0.00046" iyy="0.00117" iyz="-0.000246" izz="0.001002" />
+    </inertial>
+    <visual>
+      <origin rpy="0 0 0" xyz="-0.223004 0.015003 -0.080704" />
+      <geometry>
+        <mesh filename="package://robot_lab_robots/hexapod_ros2/description/meshes/left_hip_swing_forward_back1_link_1.stl" scale="0.001 0.001 0.001" />
+      </geometry>
+      <material name="silver" />
+    </visual>
+    <collision>
+      <origin rpy="0 0 0" xyz="-0.223004 0.015003 -0.080704" />
+      <geometry>
+        <mesh filename="package://robot_lab_robots/hexapod_ros2/description/meshes/left_hip_swing_forward_back1_link_1.stl" scale="0.001 0.001 0.001" />
+      </geometry>
+    </collision>
+  </link>
+  <link name="left_hip_swing_forward_back2_link_1">
+    <inertial>
+      <origin rpy="0 0 0" xyz="0.026458833582975738 0.008619073243331582 -0.05103630040946182" />
+      <mass value="1.0039554041082914" />
+      <inertia ixx="0.000773" ixy="2.1e-05" ixz="0.000521" iyy="0.001327" iyz="1.7e-05" izz="0.001002" />
+    </inertial>
+    <visual>
+      <origin rpy="0 0 0" xyz="-0.231004 -0.114997 -0.080704" />
+      <geometry>
+        <mesh filename="package://robot_lab_robots/hexapod_ros2/description/meshes/left_hip_swing_forward_back2_link_1.stl" scale="0.001 0.001 0.001" />
+      </geometry>
+      <material name="silver" />
+    </visual>
+    <collision>
+      <origin rpy="0 0 0" xyz="-0.231004 -0.114997 -0.080704" />
+      <geometry>
+        <mesh filename="package://robot_lab_robots/hexapod_ros2/description/meshes/left_hip_swing_forward_back2_link_1.stl" scale="0.001 0.001 0.001" />
+      </geometry>
+    </collision>
+  </link>
+  <link name="left_hip_swing_forward_back3_link_1">
+    <inertial>
+      <origin rpy="0 0 0" xyz="0.02332648436599366 0.015173456755262688 -0.051036300409461735" />
+      <mass value="1.0039554041082914" />
+      <inertia ixx="0.000799" ixy="-0.00012" ixz="0.000499" iyy="0.0013" iyz="0.000151" izz="0.001002" />
+    </inertial>
+    <visual>
+      <origin rpy="0 0 0" xyz="-0.223004 -0.244997 -0.080704" />
+      <geometry>
+        <mesh filename="package://robot_lab_robots/hexapod_ros2/description/meshes/left_hip_swing_forward_back3_link_1.stl" scale="0.001 0.001 0.001" />
+      </geometry>
+      <material name="silver" />
+    </visual>
+    <collision>
+      <origin rpy="0 0 0" xyz="-0.223004 -0.244997 -0.080704" />
+      <geometry>
+        <mesh filename="package://robot_lab_robots/hexapod_ros2/description/meshes/left_hip_swing_forward_back3_link_1.stl" scale="0.001 0.001 0.001" />
+      </geometry>
+    </collision>
+  </link>
+  <link name="left_tibia_knee1_link_1">
+    <inertial>
+      <origin rpy="0 0 0" xyz="0.03192935357853338 0.01026326859326153 0.04206380119937546" />
+      <mass value="0.23887332143395074" />
+      <inertia ixx="0.000385" ixy="-2.8e-05" ixz="-0.00012" iyy="0.000312" iyz="3.8e-05" izz="0.00027" />
+    </inertial>
+    <visual>
+      <origin rpy="0 0 0" xyz="-0.278581 0.064128 -0.005487" />
+      <geometry>
+        <mesh filename="package://robot_lab_robots/hexapod_ros2/description/meshes/left_tibia_knee1_link_1.stl" scale="0.001 0.001 0.001" />
+      </geometry>
+      <material name="silver" />
+    </visual>
+    <collision>
+      <origin rpy="0 0 0" xyz="-0.278581 0.064128 -0.005487" />
+      <geometry>
+        <mesh filename="package://robot_lab_robots/hexapod_ros2/description/meshes/left_tibia_knee1_link_1.stl" scale="0.001 0.001 0.001" />
+      </geometry>
+    </collision>
+  </link>
+  <link name="left_tibia_knee2_link_1">
+    <inertial>
+      <origin rpy="0 0 0" xyz="0.022519573557786943 0.024852970410265546 0.04206380119937539" />
+      <mass value="0.23887332143395074" />
+      <inertia ixx="0.000391" ixy="1.8e-05" ixz="-0.000123" iyy="0.000306" iyz="-2.7e-05" izz="0.00027" />
+    </inertial>
+    <visual>
+      <origin rpy="0 0 0" xyz="-0.303698 -0.100242 -0.005487" />
+      <geometry>
+        <mesh filename="package://robot_lab_robots/hexapod_ros2/description/meshes/left_tibia_knee2_link_1.stl" scale="0.001 0.001 0.001" />
+      </geometry>
+      <material name="silver" />
+    </visual>
+    <collision>
+      <origin rpy="0 0 0" xyz="-0.303698 -0.100242 -0.005487" />
+      <geometry>
+        <mesh filename="package://robot_lab_robots/hexapod_ros2/description/meshes/left_tibia_knee2_link_1.stl" scale="0.001 0.001 0.001" />
+      </geometry>
+    </collision>
+  </link>
+  <link name="left_tibia_knee3_link_1">
+    <inertial>
+      <origin rpy="0 0 0" xyz="0.0202508543973397 0.03234772001410513 0.03791633557601756" />
+      <mass value="0.23887332143395074" />
+      <inertia ixx="0.000347" ixy="2.2e-05" ixz="-0.000123" iyy="0.000313" iyz="-6.3e-05" izz="0.000307" />
+    </inertial>
+    <visual>
+      <origin rpy="0 0 0" xyz="-0.29704 -0.24956 -0.005487" />
+      <geometry>
+        <mesh filename="package://robot_lab_robots/hexapod_ros2/description/meshes/left_tibia_knee3_link_1.stl" scale="0.001 0.001 0.001" />
+      </geometry>
+      <material name="silver" />
+    </visual>
+    <collision>
+      <origin rpy="0 0 0" xyz="-0.29704 -0.24956 -0.005487" />
+      <geometry>
+        <mesh filename="package://robot_lab_robots/hexapod_ros2/description/meshes/left_tibia_knee3_link_1.stl" scale="0.001 0.001 0.001" />
+      </geometry>
+    </collision>
+  </link>
+  <link name="femur_lift_leg3_link_1">
+    <inertial>
+      <origin rpy="0 0 0" xyz="-0.0001900785298836194 0.02982560287376279 -0.027371578569205093" />
+      <mass value="0.9037080537423837" />
+      <inertia ixx="0.003075" ixy="-1.5e-05" ixz="0.000391" iyy="0.003177" iyz="7.2e-05" izz="0.000258" />
+    </inertial>
+    <visual>
+      <origin rpy="0 0 0" xyz="-0.355 -0.276954 -0.082278" />
+      <geometry>
+        <mesh filename="package://robot_lab_robots/hexapod_ros2/description/meshes/femur_lift_leg3_link_1.stl" scale="0.001 0.001 0.001" />
+      </geometry>
+      <material name="silver" />
+    </visual>
+    <collision>
+      <origin rpy="0 0 0" xyz="-0.355 -0.276954 -0.082278" />
+      <geometry>
+        <mesh filename="package://robot_lab_robots/hexapod_ros2/description/meshes/femur_lift_leg3_link_1.stl" scale="0.001 0.001 0.001" />
+      </geometry>
+    </collision>
+  </link>
+  <link name="femur_lift_leg2_link_1">
+    <inertial>
+      <origin rpy="0 0 0" xyz="0.010864236412003236 0.030556222245335357 -0.02526616790998558" />
+      <mass value="0.9037080537423837" />
+      <inertia ixx="0.002918" ixy="-6e-06" ixz="0.000757" iyy="0.003177" iyz="5.3e-05" izz="0.000415" />
+    </inertial>
+    <visual>
+      <origin rpy="0 0 0" xyz="-0.356074 -0.108402 -0.090358" />
+      <geometry>
+        <mesh filename="package://robot_lab_robots/hexapod_ros2/description/meshes/femur_lift_leg2_link_1.stl" scale="0.001 0.001 0.001" />
+      </geometry>
+      <material name="silver" />
+    </visual>
+    <collision>
+      <origin rpy="0 0 0" xyz="-0.356074 -0.108402 -0.090358" />
+      <geometry>
+        <mesh filename="package://robot_lab_robots/hexapod_ros2/description/meshes/femur_lift_leg2_link_1.stl" scale="0.001 0.001 0.001" />
+      </geometry>
+    </collision>
+  </link>
+  <link name="femur_lift_leg1_link_1">
+    <inertial>
+      <origin rpy="0 0 0" xyz="0.02456260276582528 0.020645162698077882 -0.025263963458400346" />
+      <mass value="0.9037080537423837" />
+      <inertia ixx="0.002978" ixy="0.000109" ixz="0.000682" iyy="0.003117" iyz="-0.000333" izz="0.000415" />
+    </inertial>
+    <visual>
+      <origin rpy="0 0 0" xyz="-0.328021 0.08325 -0.090358" />
+      <geometry>
+        <mesh filename="package://robot_lab_robots/hexapod_ros2/description/meshes/femur_lift_leg1_link_1.stl" scale="0.001 0.001 0.001" />
+      </geometry>
+      <material name="silver" />
+    </visual>
+    <collision>
+      <origin rpy="0 0 0" xyz="-0.328021 0.08325 -0.090358" />
+      <geometry>
+        <mesh filename="package://robot_lab_robots/hexapod_ros2/description/meshes/femur_lift_leg1_link_1.stl" scale="0.001 0.001 0.001" />
+      </geometry>
+    </collision>
+  </link>
+  <link name="right_hip_swing_forward_back1_link_1">
+    <inertial>
+      <origin rpy="0 0 0" xyz="-0.024803341322268392 -0.012598853342512576 -0.05113326775181333" />
+      <mass value="1.0061122351650025" />
+      <inertia ixx="0.001069" ixy="-0.000275" ixz="-0.00038" iyy="0.001028" iyz="-0.000354" izz="0.000999" />
+    </inertial>
+    <visual>
+      <origin rpy="0 0 0" xyz="-0.007004 0.015003 -0.080704" />
+      <geometry>
+        <mesh filename="package://robot_lab_robots/hexapod_ros2/description/meshes/right_hip_swing_forward_back1_link_1.stl" scale="0.001 0.001 0.001" />
+      </geometry>
+      <material name="silver" />
+    </visual>
+    <collision>
+      <origin rpy="0 0 0" xyz="-0.007004 0.015003 -0.080704" />
+      <geometry>
+        <mesh filename="package://robot_lab_robots/hexapod_ros2/description/meshes/right_hip_swing_forward_back1_link_1.stl" scale="0.001 0.001 0.001" />
+      </geometry>
+    </collision>
+  </link>
+  <link name="right_hip_swing_forward_back2_link_1">
+    <inertial>
+      <origin rpy="0 0 0" xyz="-0.027779755467817333 0.0014907000781658047 -0.051133267751813566" />
+      <mass value="1.0061122351650025" />
+      <inertia ixx="0.00082" ixy="-0.000155" ixz="-0.000506" iyy="0.001277" iyz="-0.000117" izz="0.000999" />
+    </inertial>
+    <visual>
+      <origin rpy="0 0 0" xyz="0.000996 -0.114997 -0.080704" />
+      <geometry>
+        <mesh filename="package://robot_lab_robots/hexapod_ros2/description/meshes/right_hip_swing_forward_back2_link_1.stl" scale="0.001 0.001 0.001" />
+      </geometry>
+      <material name="silver" />
+    </visual>
+    <collision>
+      <origin rpy="0 0 0" xyz="0.000996 -0.114997 -0.080704" />
+      <geometry>
+        <mesh filename="package://robot_lab_robots/hexapod_ros2/description/meshes/right_hip_swing_forward_back2_link_1.stl" scale="0.001 0.001 0.001" />
+      </geometry>
+    </collision>
+  </link>
+  <link name="right_tibia_knee1_link_1">
+    <inertial>
+      <origin rpy="0 0 0" xyz="-0.03503037349570142 0.001013918465166172 0.040954233568781466" />
+      <mass value="0.23887342839275658" />
+      <inertia ixx="0.000359" ixy="3.8e-05" ixz="0.00011" iyy="0.000327" iyz="7.1e-05" izz="0.00028" />
+    </inertial>
+    <visual>
+      <origin rpy="0 0 0" xyz="0.033393 0.07637 -0.006083" />
+      <geometry>
+        <mesh filename="package://robot_lab_robots/hexapod_ros2/description/meshes/right_tibia_knee1_link_1.stl" scale="0.001 0.001 0.001" />
+      </geometry>
+      <material name="silver" />
+    </visual>
+    <collision>
+      <origin rpy="0 0 0" xyz="0.033393 0.07637 -0.006083" />
+      <geometry>
+        <mesh filename="package://robot_lab_robots/hexapod_ros2/description/meshes/right_tibia_knee1_link_1.stl" scale="0.001 0.001 0.001" />
+      </geometry>
+    </collision>
+  </link>
+  <link name="right_tibia_knee2_link_1">
+    <inertial>
+      <origin rpy="0 0 0" xyz="-0.029815774022840608 0.018077106294382014 0.040955750523917034" />
+      <mass value="0.23887342839275658" />
+      <inertia ixx="0.000384" ixy="5e-06" ixz="0.00013" iyy="0.000302" iyz="6e-06" izz="0.00028" />
+    </inertial>
+    <visual>
+      <origin rpy="0 0 0" xyz="0.066664 -0.08205 -0.006083" />
+      <geometry>
+        <mesh filename="package://robot_lab_robots/hexapod_ros2/description/meshes/right_tibia_knee2_link_1.stl" scale="0.001 0.001 0.001" />
+      </geometry>
+      <material name="silver" />
+    </visual>
+    <collision>
+      <origin rpy="0 0 0" xyz="0.066664 -0.08205 -0.006083" />
+      <geometry>
+        <mesh filename="package://robot_lab_robots/hexapod_ros2/description/meshes/right_tibia_knee2_link_1.stl" scale="0.001 0.001 0.001" />
+      </geometry>
+    </collision>
+  </link>
+  <link name="right_hip_swing_forward_back3_link_1">
+    <inertial>
+      <origin rpy="0 0 0" xyz="-0.027537261742744325 0.003954252827174848 -0.05113326775181348" />
+      <mass value="1.0061122351650025" />
+      <inertia ixx="0.000796" ixy="-0.000113" ixz="-0.000515" iyy="0.001301" iyz="-7.1e-05" izz="0.000999" />
+    </inertial>
+    <visual>
+      <origin rpy="0 0 0" xyz="-0.007004 -0.244997 -0.080704" />
+      <geometry>
+        <mesh filename="package://robot_lab_robots/hexapod_ros2/description/meshes/right_hip_swing_forward_back3_link_1.stl" scale="0.001 0.001 0.001" />
+      </geometry>
+      <material name="silver" />
+    </visual>
+    <collision>
+      <origin rpy="0 0 0" xyz="-0.007004 -0.244997 -0.080704" />
+      <geometry>
+        <mesh filename="package://robot_lab_robots/hexapod_ros2/description/meshes/right_hip_swing_forward_back3_link_1.stl" scale="0.001 0.001 0.001" />
+      </geometry>
+    </collision>
+  </link>
+  <link name="right_tibia_knee3_link_1">
+    <inertial>
+      <origin rpy="0 0 0" xyz="-0.027980158894274215 0.02326756621286863 0.04094322521168447" />
+      <mass value="0.23887342839275658" />
+      <inertia ixx="0.000384" ixy="-2e-06" ixz="0.00013" iyy="0.000302" iyz="-5e-06" izz="0.00028" />
+    </inertial>
+    <visual>
+      <origin rpy="0 0 0" xyz="0.061333 -0.218018 -0.006083" />
+      <geometry>
+        <mesh filename="package://robot_lab_robots/hexapod_ros2/description/meshes/right_tibia_knee3_link_1.stl" scale="0.001 0.001 0.001" />
+      </geometry>
+      <material name="silver" />
+    </visual>
+    <collision>
+      <origin rpy="0 0 0" xyz="0.061333 -0.218018 -0.006083" />
+      <geometry>
+        <mesh filename="package://robot_lab_robots/hexapod_ros2/description/meshes/right_tibia_knee3_link_1.stl" scale="0.001 0.001 0.001" />
+      </geometry>
+    </collision>
+  </link>
+  <link name="femur_right_leg1_link_1">
+    <inertial>
+      <origin rpy="0 0 0" xyz="-0.023484497219367045 0.012827089337785716 -0.027978023883439902" />
+      <mass value="0.9038602883439664" />
+      <inertia ixx="0.003153" ixy="-4e-05" ixz="-0.000181" iyy="0.00313" iyz="-0.000234" izz="0.000234" />
+    </inertial>
+    <visual>
+      <origin rpy="0 0 0" xyz="0.079719 0.108345 -0.088768" />
+      <geometry>
+        <mesh filename="package://robot_lab_robots/hexapod_ros2/description/meshes/femur_right_leg1_link_1.stl" scale="0.001 0.001 0.001" />
+      </geometry>
+      <material name="silver" />
+    </visual>
+    <collision>
+      <origin rpy="0 0 0" xyz="0.079719 0.108345 -0.088768" />
+      <geometry>
+        <mesh filename="package://robot_lab_robots/hexapod_ros2/description/meshes/femur_right_leg1_link_1.stl" scale="0.001 0.001 0.001" />
+      </geometry>
+    </collision>
+  </link>
+  <link name="femur_right_leg2_link_1">
+    <inertial>
+      <origin rpy="0 0 0" xyz="-0.013925159277990817 0.02285051194514176 -0.027978506928304364" />
+      <mass value="0.9038602883439664" />
+      <inertia ixx="0.003113" ixy="-3e-05" ixz="-0.000274" iyy="0.003171" iyz="-0.000112" izz="0.000234" />
+    </inertial>
+    <visual>
+      <origin rpy="0 0 0" xyz="0.122756 -0.077206 -0.08877" />
+      <geometry>
+        <mesh filename="package://robot_lab_robots/hexapod_ros2/description/meshes/femur_right_leg2_link_1.stl" scale="0.001 0.001 0.001" />
+      </geometry>
+      <material name="silver" />
+    </visual>
+    <collision>
+      <origin rpy="0 0 0" xyz="0.122756 -0.077206 -0.08877" />
+      <geometry>
+        <mesh filename="package://robot_lab_robots/hexapod_ros2/description/meshes/femur_right_leg2_link_1.stl" scale="0.001 0.001 0.001" />
+      </geometry>
+    </collision>
+  </link>
+  <link name="femur_right_leg3_link_1">
+    <inertial>
+      <origin rpy="0 0 0" xyz="-0.011724159547273669 0.026705473905582006 -0.02799101754893424" />
+      <mass value="0.9038602883439664" />
+      <inertia ixx="0.003108" ixy="-2.5e-05" ixz="-0.000282" iyy="0.003176" iyz="-8.7e-05" izz="0.000234" />
+    </inertial>
+    <visual>
+      <origin rpy="0 0 0" xyz="0.117523 -0.220791 -0.088757" />
+      <geometry>
+        <mesh filename="package://robot_lab_robots/hexapod_ros2/description/meshes/femur_right_leg3_link_1.stl" scale="0.001 0.001 0.001" />
+      </geometry>
+      <material name="silver" />
+    </visual>
+    <collision>
+      <origin rpy="0 0 0" xyz="0.117523 -0.220791 -0.088757" />
+      <geometry>
+        <mesh filename="package://robot_lab_robots/hexapod_ros2/description/meshes/femur_right_leg3_link_1.stl" scale="0.001 0.001 0.001" />
+      </geometry>
+    </collision>
+  </link>
+  <link name="face_bracet_base_link_1">
+    <inertial>
+      <origin rpy="0 0 0" xyz="-0.010814042357898693 -0.014482023912285253 0.02150847396145008" />
+      <mass value="0.6417963770855601" />
+      <inertia ixx="0.000382" ixy="-1.1e-05" ixz="-4e-06" iyy="0.000406" iyz="-1.3e-05" izz="0.000523" />
+    </inertial>
+    <visual>
+      <origin rpy="0 0 0" xyz="-0.124241 -0.005792 -0.027095" />
+      <geometry>
+        <mesh filename="package://robot_lab_robots/hexapod_ros2/description/meshes/face_bracet_base_link_1.stl" scale="0.001 0.001 0.001" />
+      </geometry>
+      <material name="silver" />
+    </visual>
+    <collision>
+      <origin rpy="0 0 0" xyz="-0.124241 -0.005792 -0.027095" />
+      <geometry>
+        <mesh filename="package://robot_lab_robots/hexapod_ros2/description/meshes/face_bracet_base_link_1.stl" scale="0.001 0.001 0.001" />
+      </geometry>
+    </collision>
+  </link>
+  <link name="face_link_1">
+    <inertial>
+      <origin rpy="0 0 0" xyz="0.03378752080746006 -0.029890278010824445 0.032664038437643546" />
+      <mass value="1.8822427069022054" />
+      <inertia ixx="0.002704" ixy="3.5e-05" ixz="-2.3e-05" iyy="0.002592" iyz="0.000166" izz="0.002599" />
+    </inertial>
+    <visual>
+      <origin rpy="0 0 0" xyz="-0.088412 0.049262 -0.041775" />
+      <geometry>
+        <mesh filename="package://robot_lab_robots/hexapod_ros2/description/meshes/face_link_1.stl" scale="0.001 0.001 0.001" />
+      </geometry>
+      <material name="silver" />
+    </visual>
+    <collision>
+      <origin rpy="0 0 0" xyz="-0.088412 0.049262 -0.041775" />
+      <geometry>
+        <mesh filename="package://robot_lab_robots/hexapod_ros2/description/meshes/face_link_1.stl" scale="0.001 0.001 0.001" />
+      </geometry>
+    </collision>
+  </link>
+  <joint name="leg_l1_coxa" type="revolute">
+    <origin rpy="0 0 -0.259239" xyz="0.223004 -0.015003 0.080704" />
+    <parent link="base_link" />
+    <child link="left_hip_swing_forward_back1_link_1" />
+    <axis xyz="0.0 0.0 1.0" />
+    <limit effort="100" lower="-0.523599" upper="0.523599" velocity="100" />
+  </joint>
+  <joint name="leg_l2_coxa" type="revolute">
+    <origin rpy="0 0 -0.174847" xyz="0.231004 0.114997 0.080704" />
+    <parent link="base_link" />
+    <child link="left_hip_swing_forward_back2_link_1" />
+    <axis xyz="0.0 0.0 1.0" />
+    <limit effort="100" lower="-0.523599" upper="0.523599" velocity="100" />
+  </joint>
+  <joint name="leg_l3_coxa" type="revolute">
+    <origin rpy="0 0 0.174892" xyz="0.223004 0.244997 0.080704" />
+    <parent link="base_link" />
+    <child link="left_hip_swing_forward_back3_link_1" />
+    <axis xyz="0.0 0.0 1.0" />
+    <limit effort="100" lower="-0.523599" upper="0.523599" velocity="100" />
+  </joint>
+  <joint name="leg_l1_femur" type="revolute">
+    <origin rpy="0 0 0" xyz="0.055577 -0.049125 -0.075217" />
+    <parent link="left_hip_swing_forward_back1_link_1" />
+    <child link="left_tibia_knee1_link_1" />
+    <axis xyz="-0.304951 -0.952352 0.005443" />
+    <limit effort="100" lower="-1.570796" upper="0.0" velocity="100" />
+  </joint>
+  <joint name="leg_l2_femur" type="revolute">
+    <origin rpy="0 0 0" xyz="0.072694 -0.014755 -0.075217" />
+    <parent link="left_hip_swing_forward_back2_link_1" />
+    <child link="left_tibia_knee2_link_1" />
+    <axis xyz="0.212081 -0.977237 0.005443" />
+    <limit effort="100" lower="-1.570796" upper="0.0" velocity="100" />
+  </joint>
+  <joint name="leg_l3_femur" type="revolute">
+    <origin rpy="0 0 0" xyz="0.074036 0.004563 -0.075217" />
+    <parent link="left_hip_swing_forward_back3_link_1" />
+    <child link="left_tibia_knee3_link_1" />
+    <axis xyz="0.457782 -0.889048 0.005443" />
+    <limit effort="100" lower="-1.570796" upper="0.0" velocity="100" />
+  </joint>
+  <joint name="leg_l3_tibia" type="revolute">
+    <origin rpy="0 0 0" xyz="0.05796 0.027394 0.076791" />
+    <parent link="left_tibia_knee3_link_1" />
+    <child link="femur_lift_leg3_link_1" />
+    <axis xyz="0.457782 -0.889048 0.005443" />
+    <limit effort="100" lower="-0.349066" upper="0.698132" velocity="100" />
+  </joint>
+  <joint name="leg_l2_tibia" type="revolute">
+    <origin rpy="0 0 0" xyz="0.052376 0.00816 0.084871" />
+    <parent link="left_tibia_knee2_link_1" />
+    <child link="femur_lift_leg2_link_1" />
+    <axis xyz="0.212081 -0.977237 0.005443" />
+    <limit effort="100" lower="-0.349066" upper="0.698132" velocity="100" />
+  </joint>
+  <joint name="leg_l1_tibia" type="revolute">
+    <origin rpy="0 0 0" xyz="0.04944 -0.019122 0.084871" />
+    <parent link="left_tibia_knee1_link_1" />
+    <child link="femur_lift_leg1_link_1" />
+    <axis xyz="-0.304951 -0.952352 0.005443" />
+    <limit effort="100" lower="-0.349066" upper="0.698132" velocity="100" />
+  </joint>
+  <joint name="leg_r1_coxa" type="revolute">
+    <origin rpy="0 0 -0.012547" xyz="0.007004 -0.015003 0.080704" />
+    <parent link="base_link" />
+    <child link="right_hip_swing_forward_back1_link_1" />
+    <axis xyz="0.0 0.0 1.0" />
+    <limit effort="100" lower="-0.523599" upper="0.523599" velocity="100" />
+  </joint>
+  <joint name="leg_r2_coxa" type="revolute">
+    <origin rpy="0 0 -0.101613" xyz="-0.000996 0.114997 0.080704" />
+    <parent link="base_link" />
+    <child link="right_hip_swing_forward_back2_link_1" />
+    <axis xyz="0.0 0.0 1.0" />
+    <limit effort="100" lower="-0.523599" upper="0.523599" velocity="100" />
+  </joint>
+  <joint name="leg_r1_femur" type="revolute">
+    <origin rpy="0 0 0" xyz="-0.040397 -0.061367 -0.074621" />
+    <parent link="right_hip_swing_forward_back1_link_1" />
+    <child link="right_tibia_knee1_link_1" />
+    <axis xyz="0.539916 -0.841705 0.004792" />
+    <limit effort="100" lower="0.0" upper="1.570796" velocity="100" />
+  </joint>
+  <joint name="leg_r2_femur" type="revolute">
+    <origin rpy="0 0 0" xyz="-0.065668 -0.032947 -0.074621" />
+    <parent link="right_hip_swing_forward_back2_link_1" />
+    <child link="right_tibia_knee2_link_1" />
+    <axis xyz="0.046728 -0.998896 0.004792" />
+    <limit effort="100" lower="0.0" upper="1.570796" velocity="100" />
+  </joint>
+  <joint name="leg_r3_coxa" type="revolute">
+    <origin rpy="0 0 -0.588333" xyz="0.007004 0.244997 0.080704" />
+    <parent link="base_link" />
+    <child link="right_hip_swing_forward_back3_link_1" />
+    <axis xyz="0.0 0.0 1.0" />
+    <limit effort="100" lower="-0.523599" upper="0.523599" velocity="100" />
+  </joint>
+  <joint name="leg_r3_femur" type="revolute">
+    <origin rpy="0 0 0" xyz="-0.068337 -0.026979 -0.074621" />
+    <parent link="right_hip_swing_forward_back3_link_1" />
+    <child link="right_tibia_knee3_link_1" />
+    <axis xyz="-0.042253 -0.999095 0.004792" />
+    <limit effort="100" lower="0.0" upper="1.570796" velocity="100" />
+  </joint>
+  <joint name="leg_r1_tibia" type="revolute">
+    <origin rpy="0 0 0" xyz="-0.046326 -0.031975 0.082685" />
+    <parent link="right_tibia_knee1_link_1" />
+    <child link="femur_right_leg1_link_1" />
+    <axis xyz="0.539916 -0.841705 0.004792" />
+    <limit effort="100" lower="-0.698132" upper="0.349066" velocity="100" />
+  </joint>
+  <joint name="leg_r2_tibia" type="revolute">
+    <origin rpy="0 0 0" xyz="-0.056092 -0.004844 0.082687" />
+    <parent link="right_tibia_knee2_link_1" />
+    <child link="femur_right_leg2_link_1" />
+    <axis xyz="0.046728 -0.998896 0.004792" />
+    <limit effort="100" lower="-0.698132" upper="0.349066" velocity="100" />
+  </joint>
+  <joint name="leg_r3_tibia" type="revolute">
+    <origin rpy="0 0 0" xyz="-0.05619 0.002773 0.082674" />
+    <parent link="right_tibia_knee3_link_1" />
+    <child link="femur_right_leg3_link_1" />
+    <axis xyz="-0.042253 -0.999095 0.004792" />
+    <limit effort="100" lower="-0.698132" upper="0.349066" velocity="100" />
+  </joint>
+  <joint name="face_pan" type="revolute">
+    <origin rpy="0 0 0.029124" xyz="0.124241 0.005792 0.027095" />
+    <parent link="base_link" />
+    <child link="face_bracet_base_link_1" />
+    <axis xyz="-0.0 -0.0 1.0" />
+    <limit effort="100" lower="-0.378190" upper="0.319942" velocity="100" />
+  </joint>
+  <joint name="face_tilt" type="revolute">
+    <origin rpy="0.362002 -0.010440 -0.001911" xyz="-0.035829 -0.055054 0.01468" />
+    <parent link="face_bracet_base_link_1" />
+    <child link="face_link_1" />
+    <axis xyz="-0.999566 0.029467 0.0" />
+    <limit effort="100" lower="-0.423252" upper="0.623945" velocity="100" />
+  </joint>
+  <link name="face_camera_link">
+    <inertial>
+      <origin rpy="0 0 0" xyz="0 0 0" />
+      <mass value="0.001" />
+      <inertia ixx="1e-7" ixy="0.0" ixz="0.0" iyy="1e-7" iyz="0.0" izz="1e-7" />
+    </inertial>
+  </link>
+  <joint name="face_camera_joint" type="fixed">
+    <origin rpy="-0.000309 -0.362146 -1.599897" xyz="0.030837 -0.099027 0.057062" />
+    <parent link="face_link_1" />
+    <child link="face_camera_link" />
+  </joint>
+  <gazebo reference="face_camera_joint">
+    <disableFixedJointLumping>true</disableFixedJointLumping>
+    <preserveFixedJoint>true</preserveFixedJoint>
+  </gazebo>
+  <link name="face_camera_optical_frame" />
+  <joint name="face_camera_optical_joint" type="fixed">
+    <origin rpy="-1.570796 0 -1.570796" xyz="0 0 0" />
+    <parent link="face_camera_link" />
+    <child link="face_camera_optical_frame" />
+  </joint>
+  <link name="leg_l1_foot">
+    <collision name="leg_l1_foot_collision">
+      <origin rpy="0 0 0" xyz="0 0 0" />
+      <geometry>
+        <sphere radius="0.013" />
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="0.02" />
+      <inertia ixx="1e-6" ixy="0" ixz="0" iyy="1e-6" iyz="0" izz="1e-6" />
+    </inertial>
+  </link>
+  <joint name="leg_l1_foot_joint" type="fixed">
+    <origin rpy="0 0 0" xyz="0.0532 0.0113 -0.1702" />
+    <parent link="femur_lift_leg1_link_1" />
+    <child link="leg_l1_foot" />
+  </joint>
+  <gazebo reference="leg_l1_foot_joint">
+    <preserveFixedJoint>true</preserveFixedJoint>
+    <disableFixedJointLumping>true</disableFixedJointLumping>
+  </gazebo>
+  <gazebo reference="leg_l1_foot">
+    <mu1>1.5</mu1>
+    <mu2>1.5</mu2>
+    <kp>1000000.0</kp>
+    <kd>100.0</kd>
+    <minDepth>0.001</minDepth>
+    <maxVel>0.0</maxVel>
+    <sensor name="leg_l1_contact" type="contact">
+      <always_on>true</always_on>
+      <update_rate>50</update_rate>
+      <contact>
+        <collision>leg_l1_foot_collision_collision</collision>
+      </contact>
+      <topic>contact/leg_l1</topic>
+    </sensor>
+  </gazebo>
+  <link name="leg_l2_foot">
+    <collision name="leg_l2_foot_collision">
+      <origin rpy="0 0 0" xyz="0 0 0" />
+      <geometry>
+        <sphere radius="0.013" />
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="0.02" />
+      <inertia ixx="1e-6" ixy="0" ixz="0" iyy="1e-6" iyz="0" izz="1e-6" />
+    </inertial>
+  </link>
+  <joint name="leg_l2_foot_joint" type="fixed">
+    <origin rpy="0 0 0" xyz="0.0403 0.0368 -0.1702" />
+    <parent link="femur_lift_leg2_link_1" />
+    <child link="leg_l2_foot" />
+  </joint>
+  <gazebo reference="leg_l2_foot_joint">
+    <preserveFixedJoint>true</preserveFixedJoint>
+    <disableFixedJointLumping>true</disableFixedJointLumping>
+  </gazebo>
+  <gazebo reference="leg_l2_foot">
+    <mu1>1.5</mu1>
+    <mu2>1.5</mu2>
+    <kp>1000000.0</kp>
+    <kd>100.0</kd>
+    <minDepth>0.001</minDepth>
+    <maxVel>0.0</maxVel>
+    <sensor name="leg_l2_contact" type="contact">
+      <always_on>true</always_on>
+      <update_rate>50</update_rate>
+      <contact>
+        <collision>leg_l2_foot_collision_collision</collision>
+      </contact>
+      <topic>contact/leg_l2</topic>
+    </sensor>
+  </gazebo>
+  <link name="leg_l3_foot">
+    <collision name="leg_l3_foot_collision">
+      <origin rpy="0 0 0" xyz="0 0 0" />
+      <geometry>
+        <sphere radius="0.013" />
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="0.02" />
+      <inertia ixx="1e-6" ixy="0" ixz="0" iyy="1e-6" iyz="0" izz="1e-6" />
+    </inertial>
+  </link>
+  <joint name="leg_l3_foot_joint" type="fixed">
+    <origin rpy="0 0 0" xyz="0.0088 0.0341 -0.1751" />
+    <parent link="femur_lift_leg3_link_1" />
+    <child link="leg_l3_foot" />
+  </joint>
+  <gazebo reference="leg_l3_foot_joint">
+    <preserveFixedJoint>true</preserveFixedJoint>
+    <disableFixedJointLumping>true</disableFixedJointLumping>
+  </gazebo>
+  <gazebo reference="leg_l3_foot">
+    <mu1>1.5</mu1>
+    <mu2>1.5</mu2>
+    <kp>1000000.0</kp>
+    <kd>100.0</kd>
+    <minDepth>0.001</minDepth>
+    <maxVel>0.0</maxVel>
+    <sensor name="leg_l3_contact" type="contact">
+      <always_on>true</always_on>
+      <update_rate>50</update_rate>
+      <contact>
+        <collision>leg_l3_foot_collision_collision</collision>
+      </contact>
+      <topic>contact/leg_l3</topic>
+    </sensor>
+  </gazebo>
+  <link name="leg_r1_foot">
+    <collision name="leg_r1_foot_collision">
+      <origin rpy="0 0 0" xyz="0 0 0" />
+      <geometry>
+        <sphere radius="0.013" />
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="0.02" />
+      <inertia ixx="1e-6" ixy="0" ixz="0" iyy="1e-6" iyz="0" izz="1e-6" />
+    </inertial>
+  </link>
+  <joint name="leg_r1_foot_joint" type="fixed">
+    <origin rpy="0 0 0" xyz="-0.0276 0.0108 -0.176" />
+    <parent link="femur_right_leg1_link_1" />
+    <child link="leg_r1_foot" />
+  </joint>
+  <gazebo reference="leg_r1_foot_joint">
+    <preserveFixedJoint>true</preserveFixedJoint>
+    <disableFixedJointLumping>true</disableFixedJointLumping>
+  </gazebo>
+  <gazebo reference="leg_r1_foot">
+    <mu1>1.5</mu1>
+    <mu2>1.5</mu2>
+    <kp>1000000.0</kp>
+    <kd>100.0</kd>
+    <minDepth>0.001</minDepth>
+    <maxVel>0.0</maxVel>
+    <sensor name="leg_r1_contact" type="contact">
+      <always_on>true</always_on>
+      <update_rate>50</update_rate>
+      <contact>
+        <collision>leg_r1_foot_collision_collision</collision>
+      </contact>
+      <topic>contact/leg_r1</topic>
+    </sensor>
+  </gazebo>
+  <link name="leg_r2_foot">
+    <collision name="leg_r2_foot_collision">
+      <origin rpy="0 0 0" xyz="0 0 0" />
+      <geometry>
+        <sphere radius="0.013" />
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="0.02" />
+      <inertia ixx="1e-6" ixy="0" ixz="0" iyy="1e-6" iyz="0" izz="1e-6" />
+    </inertial>
+  </link>
+  <joint name="leg_r2_foot_joint" type="fixed">
+    <origin rpy="0 0 0" xyz="-0.0185 0.0232 -0.176" />
+    <parent link="femur_right_leg2_link_1" />
+    <child link="leg_r2_foot" />
+  </joint>
+  <gazebo reference="leg_r2_foot_joint">
+    <preserveFixedJoint>true</preserveFixedJoint>
+    <disableFixedJointLumping>true</disableFixedJointLumping>
+  </gazebo>
+  <gazebo reference="leg_r2_foot">
+    <mu1>1.5</mu1>
+    <mu2>1.5</mu2>
+    <kp>1000000.0</kp>
+    <kd>100.0</kd>
+    <minDepth>0.001</minDepth>
+    <maxVel>0.0</maxVel>
+    <sensor name="leg_r2_contact" type="contact">
+      <always_on>true</always_on>
+      <update_rate>50</update_rate>
+      <contact>
+        <collision>leg_r2_foot_collision_collision</collision>
+      </contact>
+      <topic>contact/leg_r2</topic>
+    </sensor>
+  </gazebo>
+  <link name="leg_r3_foot">
+    <collision name="leg_r3_foot_collision">
+      <origin rpy="0 0 0" xyz="0 0 0" />
+      <geometry>
+        <sphere radius="0.013" />
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="0.02" />
+      <inertia ixx="1e-6" ixy="0" ixz="0" iyy="1e-6" iyz="0" izz="1e-6" />
+    </inertial>
+  </link>
+  <joint name="leg_r3_foot_joint" type="fixed">
+    <origin rpy="0 0 0" xyz="-0.0162 0.0274 -0.176" />
+    <parent link="femur_right_leg3_link_1" />
+    <child link="leg_r3_foot" />
+  </joint>
+  <gazebo reference="leg_r3_foot_joint">
+    <preserveFixedJoint>true</preserveFixedJoint>
+    <disableFixedJointLumping>true</disableFixedJointLumping>
+  </gazebo>
+  <gazebo reference="leg_r3_foot">
+    <mu1>1.5</mu1>
+    <mu2>1.5</mu2>
+    <kp>1000000.0</kp>
+    <kd>100.0</kd>
+    <minDepth>0.001</minDepth>
+    <maxVel>0.0</maxVel>
+    <sensor name="leg_r3_contact" type="contact">
+      <always_on>true</always_on>
+      <update_rate>50</update_rate>
+      <contact>
+        <collision>leg_r3_foot_collision_collision</collision>
+      </contact>
+      <topic>contact/leg_r3</topic>
+    </sensor>
+  </gazebo>
+  <gazebo reference="base_link">
+    <mu1>1.0</mu1>
+    <mu2>1.0</mu2>
+  </gazebo>
+</robot>

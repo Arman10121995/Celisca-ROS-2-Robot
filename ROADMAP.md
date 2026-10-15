@@ -1375,7 +1375,8 @@ label educational approximations honestly.
 
 Latest October 14 priority: implement R10 first, then resume the previous
 initial implementation queue. Source research is recorded; shared-world
-Gazebo runtime/GUI and the first ROV implementation are partial; remaining marine/gait integration stays open. Existing R3–R9
+Gazebo runtime/GUI, first ROV and six/eight/many-legged gait implementations
+are partial; remaining marine/fleet/legged mission integration stays open. Existing R3–R9
 acceptance stays open. [Detailed agent guide](docs/NEXT_EXTENSION_GUIDE.md)
 defines source candidates, compatibility gaps, implementation order and GUI
 requirements. These task paths inherit the ledger's R10 scope until claimed.
@@ -1462,6 +1463,15 @@ sensors/estimates. Flat occupancy or invented underwater GPS is insufficient.
 
 ### R10.6 — Six- and eight-legged robots
 
+October 15: pinned MIT source hexapod and complete authored octopod now have
+source FK/IK, tripod/tetrapod/ripple/wave schedules, bounded MuJoCo in-step PD,
+actual world contact/body observations and native Gait/Drive controls/autofill.
+Normal GUI nav_empty runs measure forward input and Stop. Source mass/root
+preservation and initial-foot floor placement are repaired. [Guide](docs/tutorials/multi-leg-gaits.md),
+[exact diagnostic scope](docs/status/gaits-2026-10-15.md). Terrain/recovery,
+loss/reset campaigns, independent estimation/SLAM/navigation and other
+backends remain open.
+
 Implement complete hexapod/octopod variants and exact-source actuator/IK/gait/
 policy contracts. Stance/forward/reverse/turn/Stop/reset precede sensing, saved
 SLAM and navigation. Acceptance: physical walking/terrain, foot/body contacts,
@@ -1469,6 +1479,13 @@ tilt/effort/loss/reset and sensor missions on each advertised backend. Count
 physical legs; six- and eight-legged controllers require separate contracts.
 
 ### R10.7 — Segmented/centipede and additional families
+
+October 15: complete authored six-body/twelve-leg/five-spine centipede and
+bounded wave/ripple/curvature gait are implemented with the same native GUI
+workflow. A physical GUI nav_empty input/Stop is measured, including a repeat
+after timestamp/reset barriers. Stable terrain/tail-clearance/obstacle missions,
+independent estimation and additional snake/tracked/surface/amphibious forms
+remain pending.
 
 Implement licensed or first-party complete many-legged segmented sources,
 body/leg phase and segment controllers; expand to snake, tracked, surface and
@@ -1482,8 +1499,9 @@ October 15: native Fleet & Swarm editor/presets/autofill, live instance/group
 controls, actual Nav2 goals, leave/rejoin and scoped reset are implemented and
 exercised by the recorded normal GUI diagnostic. Marine controls/default water
 selection/autofill are also implemented, with actual tank surge/depth/Stop.
-Gait controls, other configurations, physical joystick and shared-world/marine
-experiment workloads remain.
+Gait controls, source-stance registry previews and normal robot/map/backend/
+mode command defaults are also implemented. Other configurations, physical
+joystick and shared-world/marine/gait experiment workloads remain.
 
 Implement native Fleet/Swarm/Marine panels as adapters arrive, instance/group
 selection, latched/depth controls, taxonomy, compatible algorithm defaults and

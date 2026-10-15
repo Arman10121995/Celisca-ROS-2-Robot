@@ -521,7 +521,10 @@ def check_composition(
     # backend check, and retain class restrictions for algorithms/scenarios
     # and every operational mode.
     if composition.mode != 'display' or composition.scenario_id or algorithms:
-        env_result = check_robot_environment_compatibility(robot, environment)
+        # A converted world can run on several backends. Its catalog primary
+        # is not the simulator actually selected by this composition.
+        selected_environment = dict(environment, simulator=composition.simulator)
+        env_result = check_robot_environment_compatibility(robot, selected_environment)
         result.merge(env_result)
     
     # 3. Check scenario requirements

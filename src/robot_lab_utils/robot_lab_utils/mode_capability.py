@@ -53,6 +53,7 @@ MODE_ROBOT_FEATURES = {
     "nav": ("lidar_2d", "velocity_base"),
     "flight": ("flight_controller",),
     "marine": ("marine_dynamics",),
+    "gait": ("source_gait",),
 }
 
 FEATURE_LABELS = {
@@ -67,6 +68,7 @@ FEATURE_LABELS = {
     "holonomic_base": "a base that translates sideways as well as forward",
     "flight_controller": "a live PX4 flight controller",
     "marine_dynamics": "a native water-force and bounded thruster controller",
+    "source_gait": "a source-bound multi-leg IK/gait and bounded joint controller",
     "legged_policy": "a provisioned model-matched learned locomotion policy",
 }
 

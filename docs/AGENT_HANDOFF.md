@@ -62,6 +62,17 @@ published checkpoint, and the [workflow](WORKFLOW.md) for commands.
 
 ## Current continuation
 
+**October 15 multi-leg continuation from `8ede6f2`:** source hexapod plus
+authored octopod and six-segment/twelve-leg centipede now have MuJoCo Gait,
+native Gait/Drive controls/defaults and source-stance previews. Read
+[the guide](tutorials/multi-leg-gaits.md), [scope/receipt](status/gaits-2026-10-15.md)
+and each model's provenance. Preserve massive trunk roots, original CAD axes/
+inertia, in-step force bounds, real contact vs planned support fields, actual
+surface spawn rays and timestamp/reset/ownership barriers. Short forward/Stop
+diagnostics do not qualify terrain, independent odometry/SLAM/navigation or
+other backends. Continue remaining R10 AUV/marine and fleet/swarm integration
+before R3–R9; hand off broad qualification separately.
+
 **October 15 marine continuation from `aa72d24`:** one complete first-party
 ROV, five water/collision worlds and the native Marine control column now run
 with actual Fortress buoyancy/hydrodynamics/thrusters. Read
@@ -90,7 +101,8 @@ the existing R3–R9 work. R10 adds fleets/swarm, underwater robots and maps,
 hexapod/octopod and segmented/centipede forms. Codex owns R10.1/2/3/8 shared-world
 Gazebo base/GUI work. [The guide](NEXT_EXTENSION_GUIDE.md) defines
 primary source candidates, namespaces/shared-world and marine/gait contracts.
-Shared-world and first ROV implementation are partial; remaining marine and gait tasks stay open.
+Shared-world, first ROV and first multi-leg gait implementation are partial;
+their remaining missions/adapters stay open.
 Research and isolated queue jobs do not qualify fleet/swarm or underwater
 support. Provision on SSD and group complete models. Preserve existing source
 certificates and feature implementations; unfinished old parent acceptance

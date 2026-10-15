@@ -20,6 +20,14 @@ measures surge/depth/Stop with a simulator-pose observer. Complete AUV,
 independent marine sensing/estimation and volumetric missions remain separate;
 do not treat a water scene or ideal pressure emulation as underwater SLAM.
 
+October 15 also implements [six/eight/many-legged Gait controls](tutorials/multi-leg-gaits.md):
+a pinned MIT source hexapod and separate authored octopod/centipede models,
+source IK, bounded physical PD and measured contact/tilt guards. Normal GUI
+nav_empty forward/Stop diagnostics exist for each. [Receipt and gaps](status/gaits-2026-10-15.md).
+Remaining AUV/marine and fleet/swarm features precede the older roadmap;
+terrain/recovery, independent legged estimation/SLAM/navigation and other
+backends remain separate initial integrations/qualification.
+
 ## Deliver in this order
 
 | Task | Concrete outcome | First implementation target |
@@ -57,11 +65,14 @@ models into the existing registry; do not add user-facing download buttons.
 | MuJoCo hexapod | [C-1N spider](https://github.com/haidmoham/spider) | Inspect exact standing/walking model and named policy artifacts. License/checkpoint audit is unresolved; upstream performance claims do not qualify Robot Lab. |
 | Hexapod geometry/IK reference | [mithi hexapod](https://github.com/mithi/hexapod) | Kinematics reference only; browser animation does not establish physical walking. |
 
-No suitable eight-legged or centipede source is selected yet. Record this gap
-instead of calling a four-legged ant an eight-legged robot because it has
-eight motors. If licensed source discovery fails, author a complete primitive
-model and parameterized controller, retaining provenance and documenting its
-design limits. Segment/limb pieces belong under one complete robot family.
+The selected hexapod source is now pinned at
+`b146f84d58123caabfcea8fe2a5e2a353acc33de`, with retained MIT notice, original
+CAD and unchanged KDL conversion. Robot Lab uses an authored MuJoCo gait/PD
+adapter, not upstream Jazzy/Harmonic runtime claims. No suitable licensed
+octopod/centipede source was selected: the complete first-party primitive
+models have distinct eight- and twelve-leg configurations and documented
+design limits. Their segments/limbs stay under complete families. Count legs,
+not motors, and do not reuse a learned four-leg policy by padding vectors.
 
 ## R10.1: shared-world sessions are the foundation
 

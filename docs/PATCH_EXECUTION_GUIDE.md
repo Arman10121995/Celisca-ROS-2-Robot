@@ -16,6 +16,13 @@ only tank surge/depth/zero-thrust Stop; independent marine sensing/navigation,
 AUV and other backends remain open. R10 gait integration is the next initial
 feature lane, with remaining marine/fleet adapters before the old patch queue.
 
+The first [multi-leg workflows](tutorials/multi-leg-gaits.md) are now also
+implemented. Preserve actual source mass/geometry, per-model IK/schedules,
+in-step PD, measured contacts and timestamp/reset/ownership guards. The
+[receipt](status/gaits-2026-10-15.md) records short physical forward/Stop runs,
+not all-map or higher-mode support. Continue remaining R10 marine/fleet initial
+features, then the old patch queue; broad validation stays separate.
+
 October 14 hand continuation: [native hand controls](tutorials/native-hand-controls.md)
 and [diagnostic scope](status/native-hands-2026-10-14.md). Four source-bound
 experimental adapters are implemented; source motor limits and measured

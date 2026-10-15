@@ -1,5 +1,15 @@
 # Current Robot Lab status
 
+October 15 multi-leg continuation: complete **source hexapod, Laboratory
+octopod and articulated centipede** now have native MuJoCo Gait/Drive,
+source-stance previews and automatic compatible mode/command selection.
+Short actual GUI inputs measure about 0.0974/0.1760/0.1252 m forward motion
+and held Stop. A second centipede run after timestamp/reset guards measures
+0.1235 m. Eight source/contact/IK checks and 19 typed composition checks pass.
+Terrain/recovery, independent estimation, SLAM/navigation, other backends and
+broader missions remain pending. [Guide](../tutorials/multi-leg-gaits.md),
+[exact source/diagnostic scope](gaits-2026-10-15.md).
+
 October 15 marine continuation: **Laboratory ROV**, five actual water/collision
 worlds and the native Launch **Marine** controls are implemented experimentally
 on Gazebo Fortress. The normal GUI tank run measures physical surge, 1.00 →
@@ -25,7 +35,7 @@ The October 14 next extension is now scoped as R10: shared-world fleets,
 fleet management, ground/aerial swarms, underwater robots/maps and six/eight/
 many-legged robot families. Source research and agent instructions are
 recorded. The latest instruction puts R10 first: shared-world Gazebo base/GUI
-and first ROV initial implementation are now partial, followed by remaining marine and gait workflows and fleet/swarm integration,
+first ROV and first multi-leg gait implementations are now partial, followed by remaining marine/fleet integrations and legged missions,
 then the previous roadmap. GUI Health shows the same status.
 [Detailed guide](../NEXT_EXTENSION_GUIDE.md).
 

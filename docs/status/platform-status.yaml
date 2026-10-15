@@ -2,7 +2,7 @@
 # Counts are audited observations, not targets or proof of runtime qualification.
 schema_version: 2
 updated: "2026-10-15"
-current_revision: "October 15 R10-first continuation from aa72d24: native Marine control column, complete first-party ROV and five real water/collision worlds implemented using Fortress buoyancy/hydrodynamics/thrusters. Normal GUI tank diagnostic measures actual surge and 1.00 -> 1.19 -> 1.01 m depth changes, neutral connection and zero-thrust Stop (227 states/997 final body samples); seven focused source checks and seven-package build pass. Simulator-pose observer and ideal-pressure emulation stay explicit; AUV/independent estimation/SLAM/routes remain open. Preserve shared-world fleet scope and older certificates. Six/eight/many-legged implementation is next; full platform remains partial."
+current_revision: "October 15 R10-first continuation from 8ede6f2: complete pinned-MIT hexapod, authored octopod and six-body/twelve-leg/five-spine centipede; MuJoCo source IK/gaits, bounded in-step PD, real contact/tilt observations, timestamp/reset/lease guards and native Gait/Drive/autofill/source-stance preview implemented. Short normal GUI nav_empty inputs/Stop measured ~0.0974/0.1760/0.1252 m (centipede repeat 0.1235 m after freshness guards). Source masses preserved; eight gait and 19 composition checks pass. Independent estimates, SLAM/navigation, terrain/recovery and other backends remain open. Preserve fleet/ROV and historical support scopes; R10 AUV/marine/fleet initial integrations continue before old R3–R9. Full platform remains partial."
 goal: "unified_multi_robot_algorithm_lab"
 next_extension:
   requested: "2026-10-14"
@@ -11,7 +11,7 @@ next_extension:
   scope: "Shared-world fleets, fleet management, ground/aerial swarms, underwater ROV/AUV/maps, six/eight-legged and centipede/segmented robots, additional snake/tracked/surface/amphibious forms"
   guide: "docs/NEXT_EXTENSION_GUIDE.md"
 overall_state: "partial"
-assessment: "Partial multi-robot lab with scoped real flight, wheeled navigation/mapping/reset, occupancy exports, initial shared-world fleet/swarm and first physical ROV/Marine implementation. Latest instruction: implement R10 extensions first, then resume existing work; initial feature delivery precedes broad validation. Motion -> SLAM -> navigation remains the feature dependency order. Historical measurements stay source/task scoped and full release remains blocked."
+assessment: "Partial multi-robot lab with scoped real flight, wheeled navigation/mapping/reset, occupancy exports, initial shared-world fleet/swarm, first physical ROV/Marine and six/eight/many-legged Gait implementations. Latest instruction: implement R10 extensions first, then resume existing work; initial feature delivery precedes broad validation. Motion -> SLAM -> navigation remains the feature dependency order. Historical measurements stay source/task scoped and full release remains blocked."
 audit_revision: "dff388f"
 documentation_only_revision: false
 priority_patches:
@@ -1564,7 +1564,7 @@ tasks:
     owner: "codex"
     priority: "First: latest user instruction prioritizes this extension before resuming R3–R9"
     depends_on: []
-    scope_paths: ["docs/", "README.md", "ROADMAP.md", "src/robot_lab_gui/", "src/robot_lab_utils/", "src/robot_lab_bringup/", "src/robot_lab_adapter/", "src/robot_lab_description/", "src/robot_lab_controller/", "src/robot_lab_navigation/", "src/robot_lab_robots/", "src/robot_lab_maps/", "src/robot_lab/robot_lab_registry/", "scripts/"]
+    scope_paths: ["docs/", "README.md", "ROADMAP.md", "src/robot_lab_gui/", "src/robot_lab_utils/", "src/robot_lab_bringup/", "src/robot_lab_adapter/", "src/robot_lab_description/", "src/robot_lab_controller/", "src/robot_lab_navigation/", "src/robot_lab_mujoco/", "src/robot_lab_robots/", "src/robot_lab_maps/", "src/robot_lab/robot_lab_registry/", "scripts/"]
     acceptance_ref: "ROADMAP.md R10"
     active_scope: "2026-10-14 latest user steering: implement R10 first, then continue the previous roadmap. Codex owns shared-world Gazebo Bumperbot/Labbot runtime and native GUI instance controls first; reuse existing qualified single-robot components without requiring completion of every R3/R5/R8 acceptance gate. Fleet/swarm, marine and gait tasks remain separate scoped integrations."
     tasks:
@@ -1631,25 +1631,34 @@ tasks:
         acceptance_ref: "ROADMAP.md R10.5"
       R10.6:
         title: "Six-legged hexapod and eight-legged octopod robots"
-        state: "queued"
-        owner: null
-        depends_on: ["R3.6", "R5.2", "R5.3"]
+        state: "partial"
+        owner: "codex"
+        depends_on: []
+        scope_paths: ["docs/", "README.md", "ROADMAP.md", "src/robot_lab_utils/", "src/robot_lab_mujoco/", "src/robot_lab_bringup/", "src/robot_lab_robots/", "src/robot_lab_maps/", "src/robot_lab_gui/", "src/robot_lab/robot_lab_registry/", "scripts/"]
+        active_scope: "2026-10-15 after marine checkpoint: complete source-bound six/eight-legged models, exact leg geometry/limits, IK/gait, actual effort actuation/contact/tilt feedback, neutral enable/Stop/watchdog and native GUI. Reuse pinned MIT hexapod_ros2 geometry/KDL conversion with explicit MuJoCo in-step bounded PD; authored eight/segmented variants retain separate identities. Add src/robot_lab_mujoco/ for opt-in actual contact telemetry. Motion implementation precedes sensing/SLAM/navigation qualification."
+        implementation_state: "Pinned MIT source hexapod + authored complete octopod, source-chain IK, tripod/tetrapod/ripple/wave schedules, bounded MuJoCo in-step PD, actual contact/tilt/timestamp/lease guards and Gait/Drive GUI implemented"
+        validation_state: "Actual short normal GUI nav_empty forward/Stop measured on both; source-mass/IK/contact contracts pass. Terrain, recovery, reverse/turn/loss/reset, independent estimation/SLAM/navigation and other backends pending"
+        evidence: ["docs/tutorials/multi-leg-gaits.md", "docs/status/gaits-2026-10-15.md", "docs/status/gaits-receipt-2026-10-15.json"]
         acceptance_ref: "ROADMAP.md R10.6"
       R10.7:
         title: "Centipede/segmented and additional robot families"
-        state: "queued"
-        owner: null
+        state: "partial"
+        owner: "codex"
         depends_on: ["R10.6"]
+        active_scope: "2026-10-15: first complete authored segmented many-legged variant with real spine/leg joints, body-wave coupling and bounded gait/effort actuation. Individual segments stay nested under the complete family; additional snake/tracked/surface/amphibious forms remain separate."
+        implementation_state: "Complete authored six-body/twelve-leg/five-spine model, local leg IK, wave/ripple and bounded spine curvature, actual physical contacts/tilt and native GUI implemented"
+        validation_state: "Actual short GUI nav_empty forward/Stop measured, with a repeat after timestamp/reset guards; terrain/tail-clearance/recovery/independent estimates/missions and additional robot forms pending"
+        evidence: ["docs/tutorials/multi-leg-gaits.md", "docs/status/gaits-2026-10-15.md", "docs/status/gaits-receipt-2026-10-15.json"]
         acceptance_ref: "ROADMAP.md R10.7"
       R10.8:
         title: "Native fleet/swarm/marine GUI, taxonomy and experiment workflows"
         state: "partial"
         owner: "codex"
         depends_on: ["R10.1", "R10.2", "R10.3", "R10.4", "R10.5", "R10.6", "R10.7"]
-        active_scope: "Native Fleet & Swarm and Marine controls: shared map/member editor, commands/presets/default compatible water maps, latched per-instance/group or ROV Drive, real Nav2 or depth/heading actions and measured state. Gait and experiment adapters remain."
-        implementation_state: "Fleet & Swarm tab and Marine control column, compatible robot/map/backend/mode autofill and live controls implemented; gait and shared-world/marine workloads pending"
-        validation_state: "Actual normal GUI diagnostic on two bases/nav_empty/Gazebo and one ROV/tank/Gazebo; physical joystick and remaining configurations pending"
-        evidence: ["docs/tutorials/fleet-and-swarm.md", "docs/status/fleet-2026-10-15.md", "docs/tutorials/marine-rov.md", "docs/status/marine-2026-10-15.md"]
+        active_scope: "Native Fleet & Swarm and Marine controls: shared map/member editor, commands/presets/default compatible water maps, latched per-instance/group or ROV Drive, real Nav2 or depth/heading actions and measured state. Gait ownership/Drive/source-stance preview controls are also implemented; experiment adapters remain."
+        implementation_state: "Fleet & Swarm tab, Marine/Gait control columns, compatible robot/map/backend/mode autofill, source-stance previews and live controls implemented; shared-world/marine/gait workloads pending"
+        validation_state: "Actual normal GUI diagnostics on two bases/nav_empty/Gazebo, one ROV/tank/Gazebo and three multi-leg models/nav_empty/MuJoCo, with exact per-run source hashes; physical joystick and remaining configurations pending"
+        evidence: ["docs/tutorials/fleet-and-swarm.md", "docs/status/fleet-2026-10-15.md", "docs/tutorials/marine-rov.md", "docs/status/marine-2026-10-15.md", "docs/tutorials/multi-leg-gaits.md", "docs/status/gaits-2026-10-15.md"]
         acceptance_ref: "ROADMAP.md R10.8"
 
 known_blockers:
@@ -1694,11 +1703,11 @@ risks:
       - "R3.5"
     description: "Tests may launch/reset/record; isolate middleware/simulator instances and own processes."
 handoff:
-  next_task: "R10.6"
+  next_task: "R10.4"
   parallel_ready_after_R0:
     - "R1.1"
     - "R1.2"
-  next_action: "R10 first: preserve shared-world fleet and physical first-ROV/Marine workflows and exact diagnostic scopes. Implement six/eight/many-legged source/gait workflows next, then remaining AUV/marine measurement/volumetric features, task queues/Open-RMF/coverage/multi-FCU and shared backend adapters. Initial implementation precedes broad qualification. Resume older R3–R9 afterward; preserve owner/source scopes and SSD outputs. Read fleet-and-swarm.md and marine-rov.md for concrete runtime contracts and retained failures."
+  next_action: "R10 first: preserve shared-world fleet, physical ROV/Marine and complete six/eight/many-legged Gait workflows with their exact diagnostic scopes. Continue complete AUV and independent marine measurement/volumetric features, then fleet queues/Open-RMF/coverage/multi-FCU and remaining shared adapters/robot forms. Initial implementation precedes broad qualification. Keep higher legged modes gated until real estimation/SLAM/navigation integration. Resume older R3–R9 after this extension. Read fleet-and-swarm.md, marine-rov.md and multi-leg-gaits.md for source contracts and retained failures."
   protocol: "docs/AGENT_HANDOFF.md"
   plan: "ROADMAP.md"
   audit: "docs/status/audit-2026-10-02.md"
@@ -1747,8 +1756,8 @@ implementation_first:
   - title: R10 shared worlds, fleet/swarm, marine and additional robot forms first
     tasks: [R10.1, R10.2, R10.3, R10.4, R10.5, R10.6, R10.7, R10.8]
     outcome: Implement complete usable workflows for the new extension before resuming the older queue; reuse source controllers/plugins and provision complete models/maps into the native GUI.
-    implemented: Experimental one-world Gazebo Bumperbot/Labbot, native Fleet & Swarm tab/autofill, real per-instance Nav2 dispatch/allocation, four ground kernels, Stop/heartbeat and scoped reset. Marine/gait, task queues/Open-RMF/coverage, multi-FCU and additional shared backends remain.
-    validation: "Scoped normal GUI nav_empty diagnostic and 13 focused checks recorded; broader runtime acceptance remains pending"
+    implemented: Experimental one-world Gazebo Bumperbot/Labbot, native Fleet & Swarm tab/autofill, real per-instance Nav2 dispatch/allocation, four ground kernels, Stop/heartbeat and scoped reset. First ROV/five water worlds/native Marine and three complete multi-leg models/native Gait/Drive/source-stance previews are also implemented. AUV/independent marine features, queues/Open-RMF/coverage, multi-FCU and additional shared backends/missions remain.
+    validation: "Scoped fleet/nav_empty, ROV/tank and multi-leg/nav_empty actual GUI diagnostics with per-run source hashes recorded; broader runtime acceptance remains pending"
   - title: Reusable model-matched motion controllers and policies
     tasks:
     - R3.6

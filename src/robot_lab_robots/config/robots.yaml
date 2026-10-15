@@ -1,4 +1,43 @@
 robots:
+  hexapod_ros2:
+    package: robot_lab_robots
+    xacro: hexapod_ros2/urdf/hexapod_ros2.urdf
+    name: hexapod_ros2
+    type: legged
+    gait_model: hexapod_ros2/config/gait.yaml
+    supported_modes: [display, gait]
+    default_mode: gait
+    default_map: nav_empty
+    supported_simulators: [mujoco]
+    features: [source_gait]
+    drive: {type: gait, max_speed: 0.025, max_accel: 0.06, max_angular_speed: 0.12, max_angular_accel: 0.25}
+    notes: "Pinned MIT hexapod_ros2 CAD geometry and KDL conversion; experimental authored gait and bounded in-step PD. Actual contact/tilt guards. Independent legged estimation, SLAM/navigation and other backends pending."
+  lab_octopod:
+    package: robot_lab_robots
+    xacro: lab_octopod/urdf/lab_octopod.urdf
+    name: lab_octopod
+    type: legged
+    gait_model: lab_octopod/config/gait.yaml
+    supported_modes: [display, gait]
+    default_mode: gait
+    default_map: nav_empty
+    supported_simulators: [mujoco]
+    features: [source_gait]
+    drive: {type: gait, max_speed: 0.045, max_accel: 0.06, max_angular_speed: 0.15, max_angular_accel: 0.25}
+    notes: "Complete authored eight-legged robot with its own geometry and alternating tetrapod/ripple/wave schedules. Experimental physical gait; higher modes/other backends pending."
+  lab_centipede:
+    package: robot_lab_robots
+    xacro: lab_centipede/urdf/lab_centipede.urdf
+    name: lab_centipede
+    type: legged
+    gait_model: lab_centipede/config/gait.yaml
+    supported_modes: [display, gait]
+    default_mode: gait
+    default_map: nav_empty
+    supported_simulators: [mujoco]
+    features: [source_gait]
+    drive: {type: gait, max_speed: 0.045, max_accel: 0.06, max_angular_speed: 0.15, max_angular_accel: 0.25}
+    notes: "Complete authored six-segment/twelve-legged robot; five actual spine joints and bounded wave/ripple leg schedules. Experimental physical gait; higher modes/other backends pending."
   lab_rov:
     package: robot_lab_robots
     xacro: lab_rov/urdf/lab_rov.urdf.xacro
