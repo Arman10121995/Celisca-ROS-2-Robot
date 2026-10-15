@@ -1,0 +1,9 @@
+mujoco unitree_go2 seed1 exit=0
+mujoco unitree_b2 seed1 exit=0
+mujoco unitree_go2 seed2 exit=0
+mujoco unitree_b2 seed2 exit=1
+mujoco unitree_go2 seed3 exit=0
+mujoco unitree_b2 seed3 exit=0
+gazebo unitree_go2 seed2 exit=0
+gazebo unitree_go2 seed3 exit=0
+ALLDONE

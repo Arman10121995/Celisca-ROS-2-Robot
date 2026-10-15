@@ -1,0 +1,45 @@
+{
+ "map": "nav_obstacle",
+ "topic": "/oakd/points",
+ "reference_objects": 13,
+ "samples": 53,
+ "points_scored": 390337,
+ "ground_points": 246985,
+ "obstacle_points": 143352,
+ "other_points": 0,
+ "ground_z_median_m": 0.0,
+ "ground_removal": {
+  "pointcloud_segmenter (height 0.1 m)": {
+   "precision": 0.9724,
+   "recall": 0.999,
+   "ms_p50": 2.1
+  },
+  "ransac_ground_removal": {
+   "precision": 0.9871,
+   "recall": 1.0,
+   "ms_p50": 43.2
+  },
+  "pointcloud_segmenter (height 0.1 m) [optical frame, before the fix]": {
+   "precision": null,
+   "recall": 0.0,
+   "ms_p50": 1.5
+  },
+  "ransac_ground_removal [optical frame, before the fix]": {
+   "precision": 0.1222,
+   "recall": 0.0282,
+   "ms_p50": 21.8
+  }
+ },
+ "clustering": {
+  "euclidean_clusterer": {
+   "objects_found": "100/138",
+   "clusters_per_cloud": 6.0566,
+   "ms_p50": 34.6
+  },
+  "dbscan_clusterer": {
+   "objects_found": "86/138",
+   "clusters_per_cloud": 6.6604,
+   "ms_p50": 34.6
+  }
+ }
+}

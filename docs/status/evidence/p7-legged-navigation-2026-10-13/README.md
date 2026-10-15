@@ -2,9 +2,17 @@
 
 Status: **implemented, experimental**. Quadrupeds and the G1 humanoid walk
 Nav2 missions on their rl_sar policies, localized from leg kinematic
-odometry: **every MuJoCo and Isaac cell passes** (Go2, A1, B2, G1). The
-Go2 in Gazebo now stands and walks but does not pass the mission. One
-seeded mission per cell.
+odometry. Over three goal seeds per cell (latest configuration, updated
+2026-10-15):
+
+| Robot | MuJoCo | Isaac | Gazebo |
+|---|---|---|---|
+| Go2 | 3/3 (forward-arc) | 2/3 | 3/3 (forward-arc) |
+| A1 | 3/3 | 3/3 | not available |
+| G1 | 3/3 | 2/3 | not available |
+| B2 | 2/3 (forward-arc; one 4 mm miss) | not run | not available |
+
+The rounds below record how each cell got there, failures included.
 
 ## What was built
 
@@ -195,6 +203,51 @@ began at the start, a 0.5 m gap below the corner of a 2.5 m block:
 This led to the forward-arc motion model (`7a8a3cf`): Go2 (MuJoCo,
 Gazebo) and B2 (MuJoCo) now plan forward-only Hybrid-A* curves with their
 footprint, and never spin or back up.
+
+## Forward-arc navigation (2026-10-15)
+
+**What it is.** `motion_model:=forward_arc` is selected for a robot whose
+profile lists the backend in `no_spin_in_place` and gives a
+`forward_arc_radius`.
+
+- Hybrid-A* plans forward-only (DUBIN) curves of at least that radius and
+  checks the oriented footprint along them. The default planner becomes
+  hybrid_a_star_planner; an explicit grid planner is rejected.
+- Regulated Pure Pursuit never rotates in place or reverses. Goals are
+  position goals.
+- The recovery tree clears the local costmap, waits and replans. It does
+  not spin, and it does not back up at a speed the gaits cannot walk.
+
+**Round 1** (`forward-arc-1/`, 11:11-11:20, `8f3bf4f`; the first launch
+attempt stopped at once, because the mode's grid planner was rejected,
+and is not counted):
+
+- The start block no longer stopped anything. Every cancel and detour
+  step passed: Go2 3/3, B2 3/3 in MuJoCo, and Gazebo Go2 seed 1.
+- B2 passed all three seeds, and **Gazebo Go2 seed 1 passed**: its first
+  complete mission.
+- Go2 MuJoCo seeds 2 and 3 failed on the near-obstacle goal.
+  - Seed 2: Hybrid-A* hit its 1,000,000-iteration cap in 2.8 s.
+  - Seed 3: RPP's 0.8 m lookahead cut a 0.4 m-radius curve until its
+    collision check stopped it.
+
+**Round 2** (`forward-arc-2/`, `463117e`). The search is now bounded by 10 s
+instead of iterations, and the lookahead is 1.25 times the turning radius
+(at least 0.5 m).
+
+| Robot | Simulator | Seed 1 | Seed 2 | Seed 3 |
+|---|---|---|---|---|
+| Go2 | MuJoCo | **pass** (0.09 / 0.08 m) | **pass** (0.02 / 0.20 m) | **pass** (0.06 / 0.23 m) |
+| Go2 | Gazebo | **pass** (round 1: 0.12 / 0.23 m) | **pass** (0.15 / 0.10 m) | **pass** (0.11 / 0.18 m) |
+| B2 | MuJoCo | **pass** (0.11 / 0.15 m) | fail: second goal 0.304 m from truth | **pass** (0.08 / 0.21 m) |
+
+- **Go2 now passes every seed in MuJoCo and Gazebo.** It had passed 1 of
+  3 in MuJoCo and none in Gazebo.
+- B2's one miss is 4 mm over the 0.30 m test. B2 keeps a 0.25 m goal
+  tolerance because it cannot walk slower than 0.4 m/s; with localization
+  error that sometimes ends just past 0.30 m. Seed 2 also missed by 9 mm
+  before forward_arc.
+- No run has a stale-transform signature.
 
 ## Files
 

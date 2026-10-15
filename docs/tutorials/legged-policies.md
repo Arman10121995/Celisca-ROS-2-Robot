@@ -133,17 +133,29 @@ speed each gait actually walks at, and no turn ramp (a gait that ignores
 0.1 rad/s would never start turning). Go2 does not rotate to the goal
 heading, because himloco cannot turn on the spot in MuJoCo or Gazebo.
 
+Where a robot cannot turn on the spot (Go2 in MuJoCo and Gazebo), or is
+too long to turn beside walls (B2 in MuJoCo), its profile selects
+`motion_model:=forward_arc`:
+
+- Hybrid-A* plans forward-only curves (0.4 m radius for Go2, 0.5 m for
+  B2) and checks the robot's footprint along them;
+- the follower never spins or reverses;
+- recovery clears the local costmap and replans instead of spinning or
+  backing up.
+
+This fixed the aborts beside the block at the nav_obstacle start.
+
 **Measured** on the nav_obstacle mission (detour, cancel, resume, second
 goal; [evidence](../status/evidence/p7-legged-navigation-2026-10-13/README.md)):
 
 | Robot | MuJoCo | Isaac | Gazebo |
 |---|---|---|---|
-| Go2 | **pass** | **pass** | fail: walks, but lost localization mid-mission |
-| A1 | **pass** | **pass** | not available |
-| B2 | **pass** | not run (drifts) | not available |
-| G1 | **pass** | **pass** | not available |
+| Go2 | **3/3** (forward_arc) | 2/3 | **3/3** (forward_arc) |
+| A1 | **3/3** | **3/3** | not available |
+| B2 | 2/3 (forward_arc; the miss is 4 mm over the 0.30 m test) | not run (drifts) | not available |
+| G1 | **3/3** | 2/3 | not available |
 
-Latest round per cell. Passing goals end 0.01-0.22 m from truth. B2 and G1
+Three goal seeds per cell. Passing goals end 0.01-0.23 m from truth. B2 and G1
 needed minimum speeds of 0.4 and 0.3 m/s: below those their gaits stand
 still (the G1's leg odometry then crept on in Isaac, so Nav2 declared
 goals reached 0.5 m short).
