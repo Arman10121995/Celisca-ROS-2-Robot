@@ -158,15 +158,26 @@ CAR_PARAMS = {
 # and checks the oriented footprint along them; nothing rotates the robot
 # in place or backs it up, and goals are position goals.
 def forward_arc_params(turning_radius):
+    # Round 2 (2026-10-15): with these the start-block aborts were gone, but
+    # Go2 near-obstacle goals failed twice: Hybrid-A* hit its 1,000,000
+    # iteration cap in 2.8 s, and RPP's 0.8 m lookahead cut a 0.4 m-radius
+    # curve until its collision check stopped it.  The search is bounded by
+    # time instead, and the lookahead scales with the turning radius.
+    lookahead = max(0.5, 1.25 * float(turning_radius))
     return {
         "planner_server": {
             "GridBased.minimum_turning_radius": float(turning_radius),
             "GridBased.motion_model_for_search": "DUBIN",
             "GridBased.allow_reverse_expansion": False,
+            "GridBased.max_iterations": -1,
+            "GridBased.max_planning_time": 10.0,
         },
         "controller_server": {
             "FollowPath.use_rotate_to_heading": False,
             "FollowPath.allow_reversing": False,
+            "FollowPath.lookahead_dist": lookahead,
+            "FollowPath.min_lookahead_dist": round(0.7 * lookahead, 3),
+            "FollowPath.max_lookahead_dist": round(1.6 * lookahead, 3),
             "general_goal_checker.yaw_goal_tolerance": 6.3,
         },
     }
