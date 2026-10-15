@@ -1213,10 +1213,13 @@ def create_tabs(notebook, app):
     app.hand_tab = HandTab(app.control_notebook, app)
     from .fleet_tab import FleetTab
     app.fleet_tab = FleetTab(notebook, app)
+    from .marine_controls import MarineControls
+    app.marine_controls = MarineControls(app.control_notebook, app)
     tabs = [
         app.arm_tab,
         app.hand_tab,
         app.fleet_tab,
+        app.marine_controls,
         RegistryTab(notebook, app),
         WorldsTab(notebook, app),
         AssetsTab(notebook, app),

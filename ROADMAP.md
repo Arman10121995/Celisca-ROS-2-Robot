@@ -1375,7 +1375,7 @@ label educational approximations honestly.
 
 Latest October 14 priority: implement R10 first, then resume the previous
 initial implementation queue. Source research is recorded; shared-world
-Gazebo runtime/GUI initial implementation is partial and marine/gait integration remains queued. Existing R3–R9
+Gazebo runtime/GUI and the first ROV implementation are partial; remaining marine/gait integration stays open. Existing R3–R9
 acceptance stays open. [Detailed agent guide](docs/NEXT_EXTENSION_GUIDE.md)
 defines source candidates, compatibility gaps, implementation order and GUI
 requirements. These task paths inherit the ledger's R10 scope until claimed.
@@ -1433,6 +1433,13 @@ advertised class/backend; pose animation is not swarm control.
 
 ### R10.4 — Underwater robots and controllers
 
+October 15: complete first-party eight-thruster Laboratory ROV, actual Fortress
+water forces, source-derived allocation, bounded manual/depth/heading controls
+and zero-thrust Stop/watchdog are implemented. Normal GUI tank surge and depth
+Down/Up are measured; AUV, all-axis/current/loss/contact campaigns, independent
+estimation and other backend adapters remain. [Guide](docs/tutorials/marine-rov.md),
+[scope/receipt](docs/status/marine-2026-10-15.md).
+
 Implement complete source ROV/AUV, bounded thrusters/fins and real buoyancy,
 drag/added mass/current dynamics, depth/heading control and command-loss Stop.
 Acceptance: measured station keeping, surge/sway/heave/yaw/depth, disturbance
@@ -1440,6 +1447,12 @@ and loss with actual body/water-force/effort evidence. Visual import stays
 Display-only until the marine force adapter exists.
 
 ### R10.5 — Underwater worlds, sensing, SLAM and navigation
+
+October 15: five installed complete tank/reef/harbor/cave/wreck water worlds,
+explicit submerged spawns, native IMU/RGB-D and rotor joint-state bridges, actual
+pose observation and labeled ideal pressure are implemented. Only tank body
+motion/depth is measured; independent measurement/filtering, sonar/DVL,
+underwater 3D mapping and routes remain pending.
 
 Implement tank, seabed/reef, harbor, cave/tunnel and wreck worlds with water/
 collision semantics; actual supported pressure/IMU/DVL/sonar/cameras, estimation,
@@ -1467,8 +1480,10 @@ map missions. Catalog pieces and animated wave poses do not qualify a robot.
 
 October 15: native Fleet & Swarm editor/presets/autofill, live instance/group
 controls, actual Nav2 goals, leave/rejoin and scoped reset are implemented and
-exercised by the recorded normal GUI diagnostic. Marine/gait controls, other
-configurations, physical joystick and shared-world experiment workloads remain.
+exercised by the recorded normal GUI diagnostic. Marine controls/default water
+selection/autofill are also implemented, with actual tank surge/depth/Stop.
+Gait controls, other configurations, physical joystick and shared-world/marine
+experiment workloads remain.
 
 Implement native Fleet/Swarm/Marine panels as adapters arrive, instance/group
 selection, latched/depth controls, taxonomy, compatible algorithm defaults and

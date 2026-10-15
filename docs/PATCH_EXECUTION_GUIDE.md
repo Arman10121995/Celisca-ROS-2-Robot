@@ -10,6 +10,12 @@ and [scoped diagnostic](status/fleet-2026-10-15.md). Continue marine/gait and
 remaining fleet/swarm initial adapters before this old patch queue. Startup
 defects and their exact fixes are recorded in the tutorial's agent handoff.
 
+The first [Marine ROV workflow](tutorials/marine-rov.md) and five actual water
+worlds are also implemented. [Its receipt](status/marine-2026-10-15.md) measures
+only tank surge/depth/zero-thrust Stop; independent marine sensing/navigation,
+AUV and other backends remain open. R10 gait integration is the next initial
+feature lane, with remaining marine/fleet adapters before the old patch queue.
+
 October 14 hand continuation: [native hand controls](tutorials/native-hand-controls.md)
 and [diagnostic scope](status/native-hands-2026-10-14.md). Four source-bound
 experimental adapters are implemented; source motor limits and measured

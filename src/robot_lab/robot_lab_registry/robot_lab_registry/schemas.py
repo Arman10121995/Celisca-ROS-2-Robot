@@ -23,7 +23,7 @@ from jsonschema.validators import Draft7Validator
 ID_PATTERN = r"^[a-zA-Z][a-zA-Z0-9_\-]*$"
 VERSION_PATTERN = r"^[0-9]+\.[0-9]+\.[0-9]+$"
 STATUS_OPTIONS = ["cataloged", "available", "integrated", "benchmarked", "blocked"]
-ROBOT_CLASS_OPTIONS = ["mobile", "legged", "humanoid", "aerial", "manipulator", "hybrid"]
+ROBOT_CLASS_OPTIONS = ["mobile", "legged", "humanoid", "aerial", "aquatic", "manipulator", "hybrid"]
 ENVIRONMENT_DIMENSION_OPTIONS = ["2D", "3D", "2.5D"]
 SIMULATOR_OPTIONS = ["gazebo", "ignition", "pybullet", "mujoco", "isaac", "real"]
 ALGORITHM_CATEGORY_OPTIONS = [

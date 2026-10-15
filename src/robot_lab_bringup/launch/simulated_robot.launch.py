@@ -743,6 +743,22 @@ def _build_simulation_actions(context):
         )
         _validate_robot_for_mode(robot_model, robot_config, mode_name, mode_config,
                                  _launch_value(context, "simulator"))
+        if robot_config.get('marine_model'):
+            if _launch_value(context, 'simulator') != 'gazebo' or mode_name not in ('display', 'marine'):
+                raise RuntimeError('The laboratory ROV currently supports Gazebo Display/Marine only')
+            selected_map = 'marine_tank' if map_free else map_name
+            if not map_configs['maps'].get(selected_map, {}).get('marine'):
+                raise RuntimeError('Choose a marine water world for the laboratory ROV')
+            marine_args = dict(map_name=selected_map, control='true' if mode_name == 'marine' else 'false',
+                gui=_config_value(context, 'gui', 'true'), rviz='true' if _auto_bool(context, 'start_rviz', True) else 'false')
+            if _is_auto(marine_args['gui']):
+                marine_args['gui'] = 'true' if os.environ.get('DISPLAY') else 'false'
+            for axis in ('x', 'y', 'z', 'yaw'):
+                supplied = _launch_value(context, 'spawn_' + axis)
+                if not _is_auto(supplied):
+                    marine_args['spawn_' + axis] = supplied
+            return _run_id_actions() + [IncludeLaunchDescription(PythonLaunchDescriptionSource(
+                _launch_file(bringup_share, 'marine_simulator.launch.py')), launch_arguments=marine_args.items())]
         if robot_model == 'px4_x500':
             spawn = map_config.get('spawn', {})
             python = os.environ.get('PX4_PYTHON', '/workspace/molar/robot_lab_runtime/px4/venv/bin/python3')

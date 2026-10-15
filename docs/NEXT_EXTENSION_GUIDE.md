@@ -4,8 +4,8 @@ Requested October 14, 2026. The latest user instruction puts this extension
 first, then resumes the previous initial implementation work. R3–R9 and their remaining acceptance stay open.
 R10 defines the additional scope; a researched source or planned GUI panel is
 not a runnable robot. GUI Health reads the same task ledger. Shared-world
-Gazebo Bumperbot/Labbot initial implementation is now partial; marine/gait integration is
-queued separately. Ground robots currently use Humble's Fortress 6 server and
+Gazebo Bumperbot/Labbot and first ROV implementation are now partial; remaining
+marine/gait integration is tracked separately. Ground robots currently use Humble's Fortress 6 server and
 plugins; PX4 uses a separate Harmonic 8 runtime. Do not mix their plugin ABIs.
 
 October 15: [the native Fleet & Swarm workflow](tutorials/fleet-and-swarm.md)
@@ -13,6 +13,12 @@ and [actual scoped diagnostic](status/fleet-2026-10-15.md) are implemented.
 The current handoff moves to marine/gait initial integration, while remaining
 queues/Open-RMF/coverage/multi-FCU and shared backend adapters stay open.
 Do not replace these with catalog counts or broaden the one nav_empty result.
+
+October 15 also implements the [first ROV/Marine workflow](tutorials/marine-rov.md)
+and five actual water/collision worlds. [The actual tank diagnostic](status/marine-2026-10-15.md)
+measures surge/depth/Stop with a simulator-pose observer. Complete AUV,
+independent marine sensing/estimation and volumetric missions remain separate;
+do not treat a water scene or ideal pressure emulation as underwater SLAM.
 
 ## Deliver in this order
 

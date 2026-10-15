@@ -52,6 +52,7 @@ MODE_ROBOT_FEATURES = {
     "3d_slam": ("rgbd_camera", "velocity_base"),
     "nav": ("lidar_2d", "velocity_base"),
     "flight": ("flight_controller",),
+    "marine": ("marine_dynamics",),
 }
 
 FEATURE_LABELS = {
@@ -65,6 +66,7 @@ FEATURE_LABELS = {
     "car_steering": "a car-like base that cannot turn on the spot",
     "holonomic_base": "a base that translates sideways as well as forward",
     "flight_controller": "a live PX4 flight controller",
+    "marine_dynamics": "a native water-force and bounded thruster controller",
     "legged_policy": "a provisioned model-matched learned locomotion policy",
 }
 

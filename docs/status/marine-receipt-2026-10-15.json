@@ -1,0 +1,427 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-15",
+  "baseline_revision": "aa72d246216a85ac7815683be844895dace43806",
+  "scope": {
+    "robot": "lab_rov",
+    "map": "marine_tank",
+    "backend": "Gazebo Fortress 6",
+    "host": "aarch64",
+    "observer": "simulator pose, not independent estimation"
+  },
+  "command": [
+    "ros2",
+    "launch",
+    "robot_lab_bringup",
+    "simulated_robot.launch.py",
+    "robot_model:=lab_rov",
+    "simulator:=gazebo",
+    "use_sim_time:=true",
+    "map_name:=marine_tank",
+    "world_package:=robot_lab_maps",
+    "world_name:=marine_tank",
+    "world_path:=maps/marine_tank/worlds/marine_tank.world",
+    "map_yaml:=maps/marine_tank/maps/map.yaml",
+    "mode:=marine",
+    "gui:=false",
+    "start_rviz:=false"
+  ],
+  "source_sha256": {
+    "src/robot_lab_utils/robot_lab_utils/marine_model.py": "ea1b8b99aae03dbbe8a986808843c0564b6cdbe441d837b3066c1aece19925a3",
+    "src/robot_lab_utils/robot_lab_utils/marine_controller.py": "52840d655851d48e4a5207be44a0d16e2e59bcb8b836259ee5758d00913d8e2b",
+    "src/robot_lab_gui/robot_lab_gui/marine_controls.py": "bf26d626a76596999eab5987c33241b41930af21674466edab46de3a224feda8",
+    "src/robot_lab_bringup/launch/marine_simulator.launch.py": "428ae23e4da36df39ecb78ec27bc6c2e0ceaed237f94713bf4f0522d8febcbda",
+    "src/robot_lab_robots/lab_rov/urdf/lab_rov.urdf.xacro": "a96003a21bd095be303c8d73096f2d4237c364063469d745f059501768cc48cf",
+    "src/robot_lab_maps/maps/marine_tank/worlds/marine_tank.world": "30539b83c4b387b246b625148a5495e49336b570c11fe2be4644ad13cb51fec6"
+  },
+  "metrics": {
+    "sampled_states": 227,
+    "final_body_samples": 997,
+    "surge_displacement_at_input_end_m": 0.29212026551338416,
+    "depth_down_m": 1.1936601275461194,
+    "depth_down_target_m": 1.2003396235945296,
+    "depth_up_m": 1.006681778912689,
+    "depth_up_target_m": 1.0003396235945297,
+    "stop_forces_N": [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "stop_body_downward_speed_m_s": 0.022269384786422406,
+    "launch_exit": 0
+  },
+  "milestones": [
+    {
+      "label": "actual body ready; disarmed",
+      "elapsed": 5.616810410981998,
+      "state": {
+        "schema_version": 1,
+        "session_id": "d421e0dc377341dc8c93fddeb316370b",
+        "robot_id": "lab_rov",
+        "enabled": false,
+        "ready": true,
+        "control_allowed": true,
+        "reason": "Operator changed; neutral ownership",
+        "operator_id": "marine-gui-dbb98f72159443a5b450f20a8e581565",
+        "operator_fresh": true,
+        "depth": 1.0001329157546175,
+        "target_depth": null,
+        "position": {
+          "x": -8.061797945014005e-07,
+          "y": 1.6940537208741055e-22,
+          "z": -1.0001329157546175
+        },
+        "rpy": [
+          -4.389332182102148e-22,
+          -3.81050025230047e-05,
+          1.750823645652976e-21
+        ],
+        "velocity_world": [
+          -1.7064928215437273e-05,
+          3.6448017994906165e-21,
+          -0.0028532643546075325
+        ],
+        "commanded_thruster_forces_N": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "force_allocation_scale": 1.0,
+        "mass_kg": 18.54170000000001,
+        "displaced_volume_m3": 0.017985475,
+        "gravity_trim_N": 1.0456295062500875,
+        "body_samples": 4,
+        "sim_time": 0.09000000000000001,
+        "observer": "Actual simulator pose finite difference; ideal pressure is emulated from that pose. Independent estimation/SLAM unimplemented.",
+        "scope": "Authored laboratory ROV + native Gazebo marine forces; hardware calibration and mission qualification pending"
+      }
+    },
+    {
+      "label": "armed depth hold",
+      "elapsed": 8.629344410001067,
+      "state": {
+        "schema_version": 1,
+        "session_id": "d421e0dc377341dc8c93fddeb316370b",
+        "robot_id": "lab_rov",
+        "enabled": true,
+        "ready": true,
+        "control_allowed": true,
+        "reason": "Depth/heading hold armed; planar commands neutral",
+        "operator_id": "marine-gui-dbb98f72159443a5b450f20a8e581565",
+        "operator_fresh": true,
+        "depth": 1.0018012197427155,
+        "target_depth": 1.0005154457856356,
+        "position": {
+          "x": -6.817331340998055e-07,
+          "y": -4.545979935092091e-08,
+          "z": -1.0018012197427155
+        },
+        "rpy": [
+          -9.993710128351745e-08,
+          -0.0005192922050737739,
+          -5.841241030879254e-05
+        ],
+        "velocity_world": [
+          4.090929363293077e-08,
+          1.054677076115324e-08,
+          0.0009008678562572029
+        ],
+        "commanded_thruster_forces_N": [
+          0.0002020376062705671,
+          0.0001828208410653276,
+          0.00020182920070705725,
+          0.00018302924662885997,
+          0.2601262336777025,
+          0.26012593456630817,
+          0.2644772663057121,
+          0.26447696719431785
+        ],
+        "force_allocation_scale": 1.0,
+        "mass_kg": 18.54170000000001,
+        "displaced_volume_m3": 0.017985475,
+        "gravity_trim_N": 1.0456295062500875,
+        "body_samples": 154,
+        "sim_time": 3.087,
+        "observer": "Actual simulator pose finite difference; ideal pressure is emulated from that pose. Independent estimation/SLAM unimplemented.",
+        "scope": "Authored laboratory ROV + native Gazebo marine forces; hardware calibration and mission qualification pending"
+      }
+    },
+    {
+      "label": "physical surge input",
+      "elapsed": 12.642034087999491,
+      "state": {
+        "schema_version": 1,
+        "session_id": "d421e0dc377341dc8c93fddeb316370b",
+        "robot_id": "lab_rov",
+        "enabled": true,
+        "ready": true,
+        "control_allowed": true,
+        "reason": "Depth/heading hold armed; planar commands neutral",
+        "operator_id": "marine-gui-dbb98f72159443a5b450f20a8e581565",
+        "operator_fresh": true,
+        "depth": 1.0003452453755954,
+        "target_depth": 1.0005154457856356,
+        "position": {
+          "x": 0.29211595529219686,
+          "y": -5.983756574373513e-06,
+          "z": -1.0003452453755954
+        },
+        "rpy": [
+          1.605812087643282e-05,
+          -0.007116696700614875,
+          -5.724491407942568e-07
+        ],
+        "velocity_world": [
+          0.1679379109943857,
+          -7.236475147300955e-07,
+          0.00014310034653907902
+        ],
+        "commanded_thruster_forces_N": [
+          0.9037388866040927,
+          0.9037606917653787,
+          0.9037581566067621,
+          0.9037414217627093,
+          0.31227370053095893,
+          0.3125327485392219,
+          0.19728952633717448,
+          0.19754857434543754
+        ],
+        "force_allocation_scale": 1.0,
+        "mass_kg": 18.54170000000001,
+        "displaced_volume_m3": 0.017985475,
+        "gravity_trim_N": 1.0456295062500875,
+        "body_samples": 354,
+        "sim_time": 7.096,
+        "observer": "Actual simulator pose finite difference; ideal pressure is emulated from that pose. Independent estimation/SLAM unimplemented.",
+        "scope": "Authored laboratory ROV + native Gazebo marine forces; hardware calibration and mission qualification pending"
+      }
+    },
+    {
+      "label": "physical surge hold",
+      "elapsed": 14.651104268996278,
+      "state": {
+        "schema_version": 1,
+        "session_id": "d421e0dc377341dc8c93fddeb316370b",
+        "robot_id": "lab_rov",
+        "enabled": true,
+        "ready": true,
+        "control_allowed": true,
+        "reason": "Physical depth/heading controller active",
+        "operator_id": "marine-gui-dbb98f72159443a5b450f20a8e581565",
+        "operator_fresh": true,
+        "depth": 1.0003902443393538,
+        "target_depth": 1.0003396235945297,
+        "position": {
+          "x": 0.4346639001121705,
+          "y": -5.359824284307245e-06,
+          "z": -1.0003902443393538
+        },
+        "rpy": [
+          -2.7211619758833877e-05,
+          -0.0008893623049780814,
+          -1.0313806992180829e-05
+        ],
+        "velocity_world": [
+          0.019535418028715917,
+          -2.1297249068876287e-06,
+          8.228583725511561e-06
+        ],
+        "commanded_thruster_forces_N": [
+          -0.0963756327808751,
+          -0.09635692542963269,
+          -0.09637066196238729,
+          -0.09636189624812047,
+          0.24996962666762337,
+          0.2498678686253474,
+          0.27352004845116284,
+          0.2734182904088869
+        ],
+        "force_allocation_scale": 1.0,
+        "mass_kg": 18.54170000000001,
+        "displaced_volume_m3": 0.017985475,
+        "gravity_trim_N": 1.0456295062500875,
+        "body_samples": 455,
+        "sim_time": 9.101,
+        "observer": "Actual simulator pose finite difference; ideal pressure is emulated from that pose. Independent estimation/SLAM unimplemented.",
+        "scope": "Authored laboratory ROV + native Gazebo marine forces; hardware calibration and mission qualification pending"
+      }
+    },
+    {
+      "label": "physical depth down",
+      "elapsed": 19.669286040996667,
+      "state": {
+        "schema_version": 1,
+        "session_id": "d421e0dc377341dc8c93fddeb316370b",
+        "robot_id": "lab_rov",
+        "enabled": true,
+        "ready": true,
+        "control_allowed": true,
+        "reason": "Physical depth/heading controller active",
+        "operator_id": "marine-gui-dbb98f72159443a5b450f20a8e581565",
+        "operator_fresh": true,
+        "depth": 1.1936601275461194,
+        "target_depth": 1.2003396235945296,
+        "position": {
+          "x": 0.4528147310875792,
+          "y": -3.551718515286716e-06,
+          "z": -1.1936601275461194
+        },
+        "rpy": [
+          -1.7536436799317131e-06,
+          -0.0005107779448355942,
+          -6.478562894001103e-05
+        ],
+        "velocity_world": [
+          0.00011118813192379188,
+          1.4740093045595785e-08,
+          -0.007433857999583785
+        ],
+        "commanded_thruster_forces_N": [
+          -0.00034178202301168723,
+          -0.0003601308448136434,
+          -0.00034341011370949526,
+          -0.00035850275411581175,
+          0.2738747930422032,
+          0.2738610027342293,
+          0.27821773217171814,
+          0.2782039418637442
+        ],
+        "force_allocation_scale": 1.0,
+        "mass_kg": 18.54170000000001,
+        "displaced_volume_m3": 0.017985475,
+        "gravity_trim_N": 1.0456295062500875,
+        "body_samples": 701,
+        "sim_time": 14.024,
+        "observer": "Actual simulator pose finite difference; ideal pressure is emulated from that pose. Independent estimation/SLAM unimplemented.",
+        "scope": "Authored laboratory ROV + native Gazebo marine forces; hardware calibration and mission qualification pending"
+      }
+    },
+    {
+      "label": "physical depth up",
+      "elapsed": 24.707014013984008,
+      "state": {
+        "schema_version": 1,
+        "session_id": "d421e0dc377341dc8c93fddeb316370b",
+        "robot_id": "lab_rov",
+        "enabled": true,
+        "ready": true,
+        "control_allowed": true,
+        "reason": "Physical depth/heading controller active",
+        "operator_id": "marine-gui-dbb98f72159443a5b450f20a8e581565",
+        "operator_fresh": true,
+        "depth": 1.006681778912689,
+        "target_depth": 1.0003396235945297,
+        "position": {
+          "x": 0.4529493524150543,
+          "y": -3.7077226064792294e-06,
+          "z": -1.006681778912689
+        },
+        "rpy": [
+          -6.821271699560943e-08,
+          -0.0005339843848917696,
+          3.059532584876267e-05
+        ],
+        "velocity_world": [
+          2.9419699121292014e-06,
+          -3.727142656091528e-10,
+          0.007098567002716978
+        ],
+        "commanded_thruster_forces_N": [
+          0.0001653117759217821,
+          0.00017896979543477636,
+          0.00016526971094786054,
+          0.00017901186040871915,
+          0.24503598310328073,
+          0.245035410717476,
+          0.24943148443368968,
+          0.24943091204788495
+        ],
+        "force_allocation_scale": 1.0,
+        "mass_kg": 18.54170000000001,
+        "displaced_volume_m3": 0.017985475,
+        "gravity_trim_N": 1.0456295062500875,
+        "body_samples": 953,
+        "sim_time": 19.071,
+        "observer": "Actual simulator pose finite difference; ideal pressure is emulated from that pose. Independent estimation/SLAM unimplemented.",
+        "scope": "Authored laboratory ROV + native Gazebo marine forces; hardware calibration and mission qualification pending"
+      }
+    },
+    {
+      "label": "thrust zero after Stop",
+      "elapsed": 25.71184889698634,
+      "state": {
+        "schema_version": 1,
+        "session_id": "d421e0dc377341dc8c93fddeb316370b",
+        "robot_id": "lab_rov",
+        "enabled": false,
+        "ready": true,
+        "control_allowed": true,
+        "reason": "Operator Stop; thruster forces zero",
+        "operator_id": "marine-gui-dbb98f72159443a5b450f20a8e581565",
+        "operator_fresh": true,
+        "depth": 1.0138829354922836,
+        "target_depth": null,
+        "position": {
+          "x": 0.4529367736120696,
+          "y": -3.9910733902223115e-06,
+          "z": -1.0138829354922836
+        },
+        "rpy": [
+          -5.7300113681899115e-06,
+          -0.0012612614656449745,
+          0.0008330783814110144
+        ],
+        "velocity_world": [
+          -2.562004638995196e-06,
+          7.554891250875748e-08,
+          -0.022269384786422406
+        ],
+        "commanded_thruster_forces_N": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "force_allocation_scale": 1.0,
+        "mass_kg": 18.54170000000001,
+        "displaced_volume_m3": 0.017985475,
+        "gravity_trim_N": 1.0456295062500875,
+        "body_samples": 997,
+        "sim_time": 19.944,
+        "observer": "Actual simulator pose finite difference; ideal pressure is emulated from that pose. Independent estimation/SLAM unimplemented.",
+        "scope": "Authored laboratory ROV + native Gazebo marine forces; hardware calibration and mission qualification pending"
+      }
+    }
+  ],
+  "artifacts": {
+    "report": "/workspace/molar/robot_lab_runtime/r104-marine-2026-10-15/tank-gui-2/report.json",
+    "console": "/workspace/molar/robot_lab_runtime/r104-marine-2026-10-15/tank-gui-2/gui-console.log",
+    "producer": "/workspace/molar/robot_lab_runtime/r104-marine-2026-10-15/gui-marine-smoke.py",
+    "snapshot": "/workspace/molar/robot_lab_runtime/r104-marine-2026-10-15/source-snapshot-live"
+  },
+  "preserved_failures": [
+    "tank-gui-1: inherited auto spawn values rejected before startup"
+  ],
+  "remaining": [
+    "Complete AUV/source actuator contract",
+    "All-axis/current/contact/loss/reset and other-world trials",
+    "Independent pressure/DVL/sonar and marine estimation",
+    "Sensor-based saved underwater SLAM and volumetric navigation",
+    "Other backends and marine experiment workloads",
+    "Physical joystick validation"
+  ]
+}

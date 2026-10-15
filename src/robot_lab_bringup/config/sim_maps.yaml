@@ -1,4 +1,29 @@
 maps:
+  marine_tank:
+    gazebo: {world_package: robot_lab_maps, world_name: marine_tank, world_path: maps/marine_tank/worlds/marine_tank.world}
+    map: {has_2d_map: false}
+    marine: {surface_z: 0.0, bottom_z: -6.0, density: 1025.0}
+    spawn: {x: 0.0, y: 0.0, z: -1.0, yaw: 0.0}
+  marine_reef:
+    gazebo: {world_package: robot_lab_maps, world_name: marine_reef, world_path: maps/marine_reef/worlds/marine_reef.world}
+    map: {has_2d_map: false}
+    marine: {surface_z: 0.0, bottom_z: -6.0, density: 1025.0}
+    spawn: {x: 0.0, y: 0.0, z: -1.0, yaw: 0.0}
+  marine_harbor:
+    gazebo: {world_package: robot_lab_maps, world_name: marine_harbor, world_path: maps/marine_harbor/worlds/marine_harbor.world}
+    map: {has_2d_map: false}
+    marine: {surface_z: 0.0, bottom_z: -6.0, density: 1025.0}
+    spawn: {x: -2.0, y: 0.0, z: -1.5, yaw: 0.0}
+  marine_cave:
+    gazebo: {world_package: robot_lab_maps, world_name: marine_cave, world_path: maps/marine_cave/worlds/marine_cave.world}
+    map: {has_2d_map: false}
+    marine: {surface_z: 0.0, bottom_z: -6.0, density: 1025.0}
+    spawn: {x: -3.0, y: 0.0, z: -3.0, yaw: 0.0}
+  marine_wreck:
+    gazebo: {world_package: robot_lab_maps, world_name: marine_wreck, world_path: maps/marine_wreck/worlds/marine_wreck.world}
+    map: {has_2d_map: false}
+    marine: {surface_z: 0.0, bottom_z: -6.0, density: 1025.0}
+    spawn: {x: -3.0, y: 0.0, z: -2.5, yaw: 0.0}
   celisca_floor_1:
     gazebo:
       world_package: robot_lab_maps

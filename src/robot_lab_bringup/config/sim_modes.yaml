@@ -1,4 +1,14 @@
 modes:
+  marine:
+    category: "Marine ROV control"
+    steps:
+    - {id: simulator, label: "Gazebo Fortress water physics"}
+    - {id: marine_controller, label: "Bounded thrusters, depth and heading hold"}
+    - {id: visualizer, label: "Actual body pose, IMU and RGB-D"}
+    requires_2d_map: false
+    required_features: [marine_dynamics]
+    simulators: [gazebo]
+    rviz: {enabled: true}
   flight:
     category: "PX4 Flight"
     steps:

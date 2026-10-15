@@ -1,0 +1,245 @@
+<?xml version='1.0' encoding='utf-8'?>
+<sdf version="1.7">
+  <world name="marine_wreck">
+    <physics name="marine_physics" type="ode">
+      <max_step_size>0.001</max_step_size>
+      <real_time_factor>1</real_time_factor>
+    </physics>
+    <gravity>0 0 -9.81</gravity>
+    <plugin filename="ignition-gazebo-physics-system" name="ignition::gazebo::systems::Physics" />
+    <plugin filename="ignition-gazebo-user-commands-system" name="ignition::gazebo::systems::UserCommands" />
+    <plugin filename="ignition-gazebo-scene-broadcaster-system" name="ignition::gazebo::systems::SceneBroadcaster" />
+    <plugin filename="ignition-gazebo-sensors-system" name="ignition::gazebo::systems::Sensors">
+      <render_engine>ogre2</render_engine>
+    </plugin>
+    <plugin filename="ignition-gazebo-imu-system" name="ignition::gazebo::systems::Imu" />
+    <plugin filename="ignition-gazebo-buoyancy-system" name="ignition::gazebo::systems::Buoyancy">
+      <graded_buoyancy>
+        <default_density>1025</default_density>
+        <density_change>
+          <above_depth>0</above_depth>
+          <density>1.225</density>
+        </density_change>
+      </graded_buoyancy>
+      <enable>lab_rov</enable>
+    </plugin>
+    <scene>
+      <ambient>.3 .55 .6 1</ambient>
+      <background>.05 .18 .25 1</background>
+    </scene>
+    <light name="sun" type="directional">
+      <pose>0 0 10 0 0 0</pose>
+      <diffuse>.8 .9 1 1</diffuse>
+      <direction>-.3 .2 -1</direction>
+    </light>
+    <model name="seafloor">
+      <static>true</static>
+      <pose>0 0 -6.2 0 0 0</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <box>
+              <size>18 14 0.4</size>
+            </box>
+          </geometry>
+          <material>
+            <ambient>.35 .3 .2 1</ambient>
+            <diffuse>.35 .3 .2 1</diffuse>
+          </material>
+        </visual>
+        <collision name="collision">
+          <geometry>
+            <box>
+              <size>18 14 0.4</size>
+            </box>
+          </geometry>
+        </collision>
+      </link>
+    </model>
+    <model name="water_surface">
+      <static>true</static>
+      <pose>0 0 0 0 0 0</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <box>
+              <size>18 14 0.015</size>
+            </box>
+          </geometry>
+          <material>
+            <ambient>0 .4 .6 .18</ambient>
+            <diffuse>0 .4 .6 .18</diffuse>
+          </material>
+        </visual>
+      </link>
+    </model>
+    <model name="wreck_keel">
+      <static>true</static>
+      <pose>2 0 -5.8 0 0 0</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <box>
+              <size>6 3 0.3</size>
+            </box>
+          </geometry>
+          <material>
+            <ambient>.3 .17 .1 1</ambient>
+            <diffuse>.3 .17 .1 1</diffuse>
+          </material>
+        </visual>
+        <collision name="collision">
+          <geometry>
+            <box>
+              <size>6 3 0.3</size>
+            </box>
+          </geometry>
+        </collision>
+      </link>
+    </model>
+    <model name="wreck_rib_0">
+      <static>true</static>
+      <pose>0.1 0 -4.8 0 0 0</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <box>
+              <size>0.15 3 2</size>
+            </box>
+          </geometry>
+          <material>
+            <ambient>.28 .15 .09 1</ambient>
+            <diffuse>.28 .15 .09 1</diffuse>
+          </material>
+        </visual>
+        <collision name="collision">
+          <geometry>
+            <box>
+              <size>0.15 3 2</size>
+            </box>
+          </geometry>
+        </collision>
+      </link>
+    </model>
+    <model name="wreck_rib_1">
+      <static>true</static>
+      <pose>1.2000000000000002 0 -4.8 0 0 0</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <box>
+              <size>0.15 3 2</size>
+            </box>
+          </geometry>
+          <material>
+            <ambient>.28 .15 .09 1</ambient>
+            <diffuse>.28 .15 .09 1</diffuse>
+          </material>
+        </visual>
+        <collision name="collision">
+          <geometry>
+            <box>
+              <size>0.15 3 2</size>
+            </box>
+          </geometry>
+        </collision>
+      </link>
+    </model>
+    <model name="wreck_rib_2">
+      <static>true</static>
+      <pose>2.3000000000000003 0 -4.8 0 0 0</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <box>
+              <size>0.15 3 2</size>
+            </box>
+          </geometry>
+          <material>
+            <ambient>.28 .15 .09 1</ambient>
+            <diffuse>.28 .15 .09 1</diffuse>
+          </material>
+        </visual>
+        <collision name="collision">
+          <geometry>
+            <box>
+              <size>0.15 3 2</size>
+            </box>
+          </geometry>
+        </collision>
+      </link>
+    </model>
+    <model name="wreck_rib_3">
+      <static>true</static>
+      <pose>3.4000000000000004 0 -4.8 0 0 0</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <box>
+              <size>0.15 3 2</size>
+            </box>
+          </geometry>
+          <material>
+            <ambient>.28 .15 .09 1</ambient>
+            <diffuse>.28 .15 .09 1</diffuse>
+          </material>
+        </visual>
+        <collision name="collision">
+          <geometry>
+            <box>
+              <size>0.15 3 2</size>
+            </box>
+          </geometry>
+        </collision>
+      </link>
+    </model>
+    <model name="wreck_rib_4">
+      <static>true</static>
+      <pose>4.5 0 -4.8 0 0 0</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <box>
+              <size>0.15 3 2</size>
+            </box>
+          </geometry>
+          <material>
+            <ambient>.28 .15 .09 1</ambient>
+            <diffuse>.28 .15 .09 1</diffuse>
+          </material>
+        </visual>
+        <collision name="collision">
+          <geometry>
+            <box>
+              <size>0.15 3 2</size>
+            </box>
+          </geometry>
+        </collision>
+      </link>
+    </model>
+    <model name="wreck_side">
+      <static>true</static>
+      <pose>2 -1.5 -4.8 0 0 0</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <box>
+              <size>6 0.15 2</size>
+            </box>
+          </geometry>
+          <material>
+            <ambient>.28 .15 .09 1</ambient>
+            <diffuse>.28 .15 .09 1</diffuse>
+          </material>
+        </visual>
+        <collision name="collision">
+          <geometry>
+            <box>
+              <size>6 0.15 2</size>
+            </box>
+          </geometry>
+        </collision>
+      </link>
+    </model>
+  </world>
+</sdf>

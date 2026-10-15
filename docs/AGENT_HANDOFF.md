@@ -62,6 +62,17 @@ published checkpoint, and the [workflow](WORKFLOW.md) for commands.
 
 ## Current continuation
 
+**October 15 marine continuation from `aa72d24`:** one complete first-party
+ROV, five water/collision worlds and the native Marine control column now run
+with actual Fortress buoyancy/hydrodynamics/thrusters. Read
+[the guide](tutorials/marine-rov.md) and [scope/receipt](status/marine-2026-10-15.md).
+Preserve source force allocation, `auto` spawn inheritance handling, neutral
+ownership, zero-thrust Stop and explicit truth-observer/ideal-pressure labels.
+Tank surge/depth/Stop is measured; other worlds, independent sensors/navigation
+and AUV remain open. Continue R10 six/eight/many-legged initial integration and
+remaining marine/fleet features before the old roadmap; broad validation stays
+separate.
+
 **October 15 R10 implementation:** the native Fleet & Swarm shared-world
 Gazebo base workflow is implemented experimentally. Read
 [the guide](tutorials/fleet-and-swarm.md) and
@@ -79,7 +90,7 @@ the existing R3–R9 work. R10 adds fleets/swarm, underwater robots and maps,
 hexapod/octopod and segmented/centipede forms. Codex owns R10.1/2/3/8 shared-world
 Gazebo base/GUI work. [The guide](NEXT_EXTENSION_GUIDE.md) defines
 primary source candidates, namespaces/shared-world and marine/gait contracts.
-Shared-world initial implementation is partial; marine and gait tasks remain queued.
+Shared-world and first ROV implementation are partial; remaining marine and gait tasks stay open.
 Research and isolated queue jobs do not qualify fleet/swarm or underwater
 support. Provision on SSD and group complete models. Preserve existing source
 certificates and feature implementations; unfinished old parent acceptance

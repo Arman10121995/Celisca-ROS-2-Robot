@@ -2,6 +2,10 @@
 # A variant is not an alias for its parent's controllers or measured missions.
 schema_version: 1
 robots:
+  - id: lab_rov
+    name: Laboratory ROV
+    members:
+      - {id: lab_rov, label: Complete eight-thruster source model}
   - id: bhl
     name: Berkeley Humanoid Lite
     preferred: berkeley_humanoid_lite_sim

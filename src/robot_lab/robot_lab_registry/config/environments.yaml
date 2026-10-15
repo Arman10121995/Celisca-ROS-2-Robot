@@ -1,3 +1,73 @@
+- id: marine_tank
+  version: "0.1.0"
+  name: Marine tank
+  status: available
+  dimension: 3D
+  simulator: gazebo
+  simulators: [gazebo]
+  ros_package: robot_lab_maps
+  world_file: robot_lab_maps/maps/marine_tank/worlds/marine_tank.world
+  supported_robot_classes: [aquatic]
+  ground_truth_available: true
+  dynamics: {static_obstacles: true, dynamic_obstacles: false}
+  source: {repository: internal, license: Apache-2.0}
+  tags: [underwater, water_surface, physical_buoyancy, tank, experimental]
+- id: marine_reef
+  version: "0.1.0"
+  name: Reef and seabed
+  status: available
+  dimension: 3D
+  simulator: gazebo
+  simulators: [gazebo]
+  ros_package: robot_lab_maps
+  world_file: robot_lab_maps/maps/marine_reef/worlds/marine_reef.world
+  supported_robot_classes: [aquatic]
+  ground_truth_available: true
+  dynamics: {static_obstacles: true, dynamic_obstacles: false}
+  source: {repository: internal, license: Apache-2.0}
+  tags: [underwater, water_surface, bathymetry, reef, experimental]
+- id: marine_harbor
+  version: "0.1.0"
+  name: Harbor pilings
+  status: available
+  dimension: 3D
+  simulator: gazebo
+  simulators: [gazebo]
+  ros_package: robot_lab_maps
+  world_file: robot_lab_maps/maps/marine_harbor/worlds/marine_harbor.world
+  supported_robot_classes: [aquatic]
+  ground_truth_available: true
+  dynamics: {static_obstacles: true, dynamic_obstacles: false}
+  source: {repository: internal, license: Apache-2.0}
+  tags: [underwater, water_surface, harbor, pilings, experimental]
+- id: marine_cave
+  version: "0.1.0"
+  name: Underwater cave and tunnel
+  status: available
+  dimension: 3D
+  simulator: gazebo
+  simulators: [gazebo]
+  ros_package: robot_lab_maps
+  world_file: robot_lab_maps/maps/marine_cave/worlds/marine_cave.world
+  supported_robot_classes: [aquatic]
+  ground_truth_available: true
+  dynamics: {static_obstacles: true, dynamic_obstacles: false}
+  source: {repository: internal, license: Apache-2.0}
+  tags: [underwater, water_surface, cave, tunnel, experimental]
+- id: marine_wreck
+  version: "0.1.0"
+  name: Wreck inspection
+  status: available
+  dimension: 3D
+  simulator: gazebo
+  simulators: [gazebo]
+  ros_package: robot_lab_maps
+  world_file: robot_lab_maps/maps/marine_wreck/worlds/marine_wreck.world
+  supported_robot_classes: [aquatic]
+  ground_truth_available: true
+  dynamics: {static_obstacles: true, dynamic_obstacles: false}
+  source: {repository: internal, license: Apache-2.0}
+  tags: [underwater, water_surface, wreck, inspection, experimental]
 - id: small_office
   version: 1.0.0
   name: Simple Office

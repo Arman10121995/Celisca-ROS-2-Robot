@@ -1,6 +1,10 @@
 # Structural catalog tags, never a runtime/controller qualification.
 schema_version: 1
 classes:
+  - category: Underwater robots
+    subtype: ROV
+    tags: [Eight thrusters, Six-axis allocation, Marine dynamics, Experimental control]
+    members: [lab_rov]
   - category: Mobile robots
     subtype: Two-wheel drive
     tags: [Differential drive]

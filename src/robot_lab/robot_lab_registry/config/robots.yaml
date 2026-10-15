@@ -2,6 +2,28 @@
 # Version 0.1.0
 # This file catalogs all robots available in the platform
 
+- id: lab_rov
+  version: "0.1.0"
+  name: Laboratory ROV
+  ros_package: robot_lab_robots
+  description: "Complete first-party eight-thruster ROV with authored mass/hull/curve/damping, native marine forces and experimental simulator-observer control. Independent estimation/SLAM/navigation and hardware calibration pending."
+  status: available
+  robot_class: aquatic
+  maturity: prototype
+  supported_simulators: [gazebo]
+  supported_modes: [display, marine]
+  locomotion: {type: vectored_thrusters, dof: 6, max_velocity: 0.35}
+  capabilities: [control, perception]
+  command_interfaces: [geometry_msgs/Twist]
+  state_interfaces: [nav_msgs/Odometry, sensor_msgs/Imu, sensor_msgs/JointState]
+  sensors:
+  - {type: imu, name: marine_imu, frame: base_link, topic: /marine/imu, message_type: sensor_msgs/Imu}
+  - {type: rgbd_camera, name: oakd, frame: oakd_rgb_camera_optical_frame, topic: /oakd/depth/image_raw, message_type: sensor_msgs/Image}
+  frames: [map, base_link, oakd_rgb_camera_optical_frame]
+  assets: {urdf: robot_lab_robots/lab_rov/urdf/lab_rov.urdf.xacro}
+  source: {repository: internal, license: Apache-2.0, maintainer: Robot Lab Team}
+  tags: [underwater, rov, complete_robot, first_party, experimental_control, marine_dynamics]
+
 # ============================================================================
 # Mobile Robots
 # ============================================================================

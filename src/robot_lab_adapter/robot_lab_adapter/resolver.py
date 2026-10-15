@@ -187,7 +187,10 @@ def _world_arguments(environment: Dict[str, Any]) -> Dict[str, str]:
         args['world_package'] = WORLD_PACKAGE
         args['world_name'] = key
         args['world_path'] = f'maps/{key}/worlds/{key}.world'
-        args['map_yaml'] = f'maps/{key}/maps/map.yaml'
+        # Water volumes have no planar occupancy map. Preserve the legacy
+        # ground-map convention without inventing a nonexistent marine grid.
+        if 'underwater' not in environment.get('tags', []):
+            args['map_yaml'] = f'maps/{key}/maps/map.yaml'
     return args
 
 

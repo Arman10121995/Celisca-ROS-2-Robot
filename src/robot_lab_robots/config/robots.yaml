@@ -1,4 +1,22 @@
 robots:
+  lab_rov:
+    package: robot_lab_robots
+    xacro: lab_rov/urdf/lab_rov.urdf.xacro
+    name: lab_rov
+    type: aquatic
+    marine_model: true
+    supported_modes: [display, marine]
+    default_mode: marine
+    default_map: marine_tank
+    supported_simulators: [gazebo]
+    features: [marine_dynamics, rgbd_camera]
+    drive:
+      type: marine
+      max_speed: 0.35
+      max_accel: 0.4
+      max_angular_speed: 0.35
+      max_angular_accel: 0.5
+    notes: "Authored complete laboratory ROV, eight native thrusters and six-axis allocation, actual buoyancy/drag/added mass/current physics. Experimental Gazebo Fortress control with simulator-pose observer and ideal pressure emulation; independent underwater estimation, sonar/DVL, SLAM/navigation and other backends pending. Display never actuates."
   px4_x500:
     package: robot_lab_adapter
     name: px4_x500

@@ -158,7 +158,7 @@ def selection_value(value):
     return NONE_VALUE if is_none_selection(value) else str(value).strip()
 
 
-MODE_ORDER = ["display", "loc", "slam", "3d_slam", "nav", "flight"]
+MODE_ORDER = ["display", "loc", "slam", "3d_slam", "nav", "flight", "marine"]
 MODE_TOOLTIPS = {
     "display": "Visualize a robot and/or a map in the selected simulator "
                "(unactuated legged robots hold their pose; no localization).",
@@ -167,6 +167,7 @@ MODE_TOOLTIPS = {
     "3d_slam": "3D SLAM: build a 3D map (RGB-D sensor required).",
     "nav": "Navigation: plan and follow paths (2D map required).",
     "flight": "PX4 X500: takeoff, manual flight and experimental static-world 3D Plan/Execute. Moving obstacles remain unsupported.",
+    "marine": "Experimental ROV native thrusters, depth/heading hold and actual water forces. Independent underwater localization/SLAM/navigation remain pending.",
 }
 MODE_LABELS = {
     "display": "Display",
@@ -175,6 +176,7 @@ MODE_LABELS = {
     "3d_slam": "3D SLAM",
     "nav": "Navigation",
     "flight": "PX4 Flight",
+    "marine": "Marine ROV",
 }
 
 SIMULATOR_ORDER = ["gazebo", "isaac", "pybullet", "mujoco"]
@@ -1274,7 +1276,9 @@ class SimulationLauncherGui(tk.Tk):
             ' · Controls require a compatible controller and an owned running simulation.')
         if robot != getattr(self, '_control_robot', None):
             self._control_robot = robot
-            if self._flight_selectable():
+            if self._marine_selectable() and hasattr(self, 'marine_controls'):
+                self.control_notebook.select(self.marine_controls)
+            elif self._flight_selectable():
                 self.control_notebook.select(self.drone_page)
             elif self._robot_config().get('arm_control') and hasattr(self, 'arm_tab'):
                 self.control_notebook.select(self.arm_tab)
@@ -1288,7 +1292,7 @@ class SimulationLauncherGui(tk.Tk):
 
     def _stop_all_motion(self):
         self._stop_drive()
-        for name in ('arm_tab', 'hand_tab'):
+        for name in ('arm_tab', 'hand_tab', 'marine_controls'):
             control = getattr(self, name, None)
             if control is not None:
                 control.stop()
@@ -1453,6 +1457,12 @@ class SimulationLauncherGui(tk.Tk):
             if mode not in self.mode_profiles:
                 reasons[mode] = "not defined in sim_modes.yaml"
                 continue
+            if mode == 'marine' and not self._map_config().get('marine'):
+                reasons[mode] = 'Choose a marine water world for ROV control'
+                continue
+            if mode == 'display' and robot_config.get('marine_model') and not map_free and not self._map_config().get('marine'):
+                reasons[mode] = 'ROV Display needs a marine water world, or choose no map for the default tank'
+                continue
             # Robot-free / map-free runs only make sense for visualization.
             if (robot_free or map_free) and mode != "display":
                 missing = "robot" if robot_free else "map"
@@ -1564,6 +1574,15 @@ class SimulationLauncherGui(tk.Tk):
                      if _simulator_supports_mode(simulator, mode,
                                                  self.mode_profiles)
                      and self._robot_can_run(mode, simulator)]
+            if not modes:
+                # A new family can require a different mode AND backend
+                # (e.g. a ROV selected after MuJoCo ground navigation).
+                # Break that mutual dependency before choosing its backend.
+                modes = [mode for mode in self._robot_map_modes()
+                         if any(_allowed_simulators(mode, self.mode_profiles)
+                                .get(candidate, (False, ""))[0]
+                                and self._robot_can_run(mode, candidate)
+                                for candidate in SIMULATOR_ORDER)]
             if self.mode_var.get() not in modes:
                 new_mode, note = _correction_for(
                     self.mode_var.get(), modes,
@@ -1621,6 +1640,8 @@ class SimulationLauncherGui(tk.Tk):
                 and self._robot_can_run(mode, sim)]
 
     def _map_ok_for_mode(self, map_id):
+        if self.robot_profiles.get(self.robot_var.get(), {}).get("marine_model"):
+            return bool(self.map_profiles.get(map_id, {}).get("marine"))
         if self._mode_requires_2d_map(self.mode_var.get()):
             return self._map_has_2d_map(map_id)
         return True
@@ -2241,6 +2262,10 @@ class SimulationLauncherGui(tk.Tk):
                 and self.simulator_var.get() == 'gazebo'
                 and self.launch_kind_var.get() == 'simulation')
 
+    def _marine_selectable(self):
+        return (bool(self._robot_config().get('marine_model')) and self.mode_var.get() == 'marine'
+                and self.simulator_var.get() == 'gazebo' and self.launch_kind_var.get() == 'simulation')
+
     def _flight_action(self, action):
         if not self._flight_selectable():
             return
@@ -2375,7 +2400,8 @@ class SimulationLauncherGui(tk.Tk):
         # occupancy map on disk.
         allowed_maps = self._allowed_maps()
         if self.map_var.get() not in allowed_maps and allowed_maps:
-            self.map_var.set(allowed_maps[0])
+            preferred_map = self.robot_profiles.get(self.robot_var.get(), {}).get("default_map")
+            self.map_var.set(preferred_map if preferred_map in allowed_maps else allowed_maps[0])
 
         # 2. Correct only what cannot be represented at all, then gate the
         # rest: an option the current selection cannot run is disabled with
@@ -3480,6 +3506,8 @@ class SimulationLauncherGui(tk.Tk):
                              daemon=False).start()
 
     def _stop_launch(self):
+        if hasattr(self, 'marine_controls'):
+            self.marine_controls.stop()
         if hasattr(self, 'fleet_tab'):
             self.fleet_tab.all_stop()
         self._stop_aux_commands()
@@ -3594,6 +3622,8 @@ class SimulationLauncherGui(tk.Tk):
             self.stop_bg_process(key)
 
     def _on_close(self):
+        if hasattr(self, 'marine_controls'):
+            self.marine_controls.close()
         if hasattr(self, 'fleet_tab'):
             self.fleet_tab.close()
         preview = getattr(self, 'registry_preview', None)

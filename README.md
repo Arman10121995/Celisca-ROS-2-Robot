@@ -1,5 +1,13 @@
 # Robot Lab — Multi-Robot Simulation and Algorithm Laboratory
 
+October 15 also adds **Laboratory ROV + Marine controls** and five installed
+underwater worlds. Native Gazebo buoyancy, drag and eight thrusters drive the
+body; the normal GUI tank diagnostic measures forward motion, depth Down/Up
+and zero-thrust Stop. The observer currently uses simulator poses; independent
+marine estimation, AUV, SLAM/navigation and other backends remain pending.
+[Marine guide](docs/tutorials/marine-rov.md),
+[measured scope](docs/status/marine-2026-10-15.md).
+
 October 15 adds the native **Fleet & Swarm** tab: several Bumperbot/Labbot
 instances in one Gazebo world, independent/group latched Drive, per-robot
 AMCL/Nav2, real dispatch/allocation, ground group controllers and scoped reset.
@@ -11,8 +19,8 @@ open. [GUI guide](docs/tutorials/fleet-and-swarm.md),
 The next extension includes **fleet management, ground/aerial swarms,
 underwater robots/maps, six/eight-legged and centipede/segmented robots**.
 The latest instruction prioritizes this extension first, then the remaining
-roadmap. Shared-world Gazebo base/GUI work is implemented experimentally; marine/gait integration
-remains queued.
+roadmap. Shared-world Gazebo bases and the first ROV/Marine workflow are
+implemented experimentally; additional marine and gait integration remains.
 [R10 roadmap](ROADMAP.md#r10--next-extension-fleets-swarms-and-new-robot-forms),
 [source research and agent guide](docs/NEXT_EXTENSION_GUIDE.md).
 
@@ -47,7 +55,7 @@ Robot Lab aims to make robots, simulators, maps and algorithms independently sel
 
 **Current state: partial research platform with measured mobile, flight and native Panda workflows.** The GUI, simulator adapters, installed assets and algorithm framework support the named experiments below. Full robot/map/mode/backend qualification, controller breadth and reproducible algorithm comparisons remain open.
 
-Status updated on **2026-10-14**. The October 8 extension checkpoint has exact
+Status updated on **2026-10-15**. The October 8 extension checkpoint has exact
 physical source manifests; its publication and software checks are recorded in
 [October 8 evidence](docs/status/evidence/extensions-finish-2026-10-08/README.md). [Current status](docs/status/CURRENT_STATUS.md)
 collects verified work, limits and the next tasks. The [completion audit](docs/status/audit-2026-10-02.md)
