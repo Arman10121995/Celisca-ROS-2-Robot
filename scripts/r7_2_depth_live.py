@@ -145,6 +145,7 @@ def main():
         last = stamp
         raw = np.array([[p[0], p[1], p[2]] for p in point_cloud2.read_points(
             cloud, field_names=('x', 'y', 'z'), skip_nans=True)], dtype=float)
+        raw = raw[np.isfinite(raw).all(axis=1)]  # beyond the far plane: inf
         if len(raw) < 100:
             continue
         q, tr = t.transform.rotation, t.transform.translation
