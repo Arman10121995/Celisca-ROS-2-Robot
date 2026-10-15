@@ -1,0 +1,83 @@
+{
+ "revision": "91931edd0184b8d15b0cd4184b20887ee58f20d5",
+ "host": "molar1 aarch64",
+ "runs": {
+  "gazebo_bumperbot_small_house.json.tf.bag": {
+   "frames_paired": 3755,
+   "frames_used": 626,
+   "every": 6,
+   "seconds": 123.7,
+   "driven_m": 28.44,
+   "intrinsics": [
+    221.76500407999384,
+    221.76500407999382,
+    160.0,
+    120.0
+   ],
+   "methods": {
+    "orb": {
+     "position_rmse_m": 3.263,
+     "position_max_m": 6.733,
+     "final_error_m": 3.593,
+     "heading_rmse_deg": 34.18,
+     "drift_percent": 12.63,
+     "frames_lost": 7,
+     "features_mean": 539.0,
+     "inliers_median": 120,
+     "ms_p50": 8.4
+    },
+    "akaze": {
+     "position_rmse_m": 10.208,
+     "position_max_m": 18.736,
+     "final_error_m": 9.416,
+     "heading_rmse_deg": 107.95,
+     "drift_percent": 33.11,
+     "frames_lost": 36,
+     "features_mean": 154.1,
+     "inliers_median": 55,
+     "ms_p50": 20.6
+    },
+    "brisk": {
+     "position_rmse_m": 1.182,
+     "position_max_m": 2.511,
+     "final_error_m": 2.139,
+     "heading_rmse_deg": 16.9,
+     "drift_percent": 7.52,
+     "frames_lost": 12,
+     "features_mean": 383.7,
+     "inliers_median": 79,
+     "ms_p50": 12.9
+    },
+    "sift": {
+     "position_rmse_m": 11.563,
+     "position_max_m": 20.923,
+     "final_error_m": 10.891,
+     "heading_rmse_deg": 125.87,
+     "drift_percent": 38.29,
+     "frames_lost": 41,
+     "features_mean": 140.8,
+     "inliers_median": 39,
+     "ms_p50": 30.3
+    },
+    "gftt_orb": {
+     "position_rmse_m": 2.741,
+     "position_max_m": 5.657,
+     "final_error_m": 2.448,
+     "heading_rmse_deg": 22.06,
+     "drift_percent": 8.61,
+     "frames_lost": 7,
+     "features_mean": 130.8,
+     "inliers_median": 41,
+     "ms_p50": 4.6
+    },
+    "wheel odometry (baseline)": {
+     "position_rmse_m": 0.081,
+     "position_max_m": 0.163,
+     "final_error_m": 0.163,
+     "heading_rmse_deg": 1.27,
+     "drift_percent": 0.57
+    }
+   }
+  }
+ }
+}

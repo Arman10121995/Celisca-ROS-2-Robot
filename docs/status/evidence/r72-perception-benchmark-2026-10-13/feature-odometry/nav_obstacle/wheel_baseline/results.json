@@ -1,0 +1,72 @@
+{
+ "revision": "91931edd0184b8d15b0cd4184b20887ee58f20d5",
+ "host": "molar1 aarch64",
+ "runs": {
+  "mujoco_bumperbot_nav_obstacle.json.tf.bag": {
+   "frames_paired": 523,
+   "frames_used": 522,
+   "every": 1,
+   "seconds": 104.2,
+   "driven_m": 25.4,
+   "intrinsics": [
+    221.76500407999384,
+    221.76500407999384,
+    160.0,
+    120.0
+   ],
+   "methods": {
+    "orb": {
+     "position_rmse_m": 4.915,
+     "position_max_m": 10.073,
+     "final_error_m": 10.073,
+     "heading_rmse_deg": 102.98,
+     "drift_percent": 39.66,
+     "frames_lost": 295,
+     "features_mean": 46.6,
+     "inliers_median": 22,
+     "ms_p50": 3.4
+    },
+    "wheel odometry (baseline)": {
+     "position_rmse_m": 0.184,
+     "position_max_m": 0.432,
+     "final_error_m": 0.429,
+     "heading_rmse_deg": 1.54,
+     "drift_percent": 1.69
+    }
+   }
+  },
+  "pybullet_bumperbot_nav_obstacle.json.tf.bag": {
+   "frames_paired": 478,
+   "frames_used": 477,
+   "every": 1,
+   "seconds": 96.7,
+   "driven_m": 25.63,
+   "intrinsics": [
+    221.76500407999384,
+    221.76500407999384,
+    160.0,
+    120.0
+   ],
+   "methods": {
+    "orb": {
+     "position_rmse_m": 3.627,
+     "position_max_m": 7.608,
+     "final_error_m": 7.608,
+     "heading_rmse_deg": 91.51,
+     "drift_percent": 29.68,
+     "frames_lost": 297,
+     "features_mean": 83.0,
+     "inliers_median": 17,
+     "ms_p50": 3.8
+    },
+    "wheel odometry (baseline)": {
+     "position_rmse_m": 4.14,
+     "position_max_m": 9.355,
+     "final_error_m": 9.355,
+     "heading_rmse_deg": 66.01,
+     "drift_percent": 36.5
+    }
+   }
+  }
+ }
+}

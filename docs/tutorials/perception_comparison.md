@@ -166,6 +166,41 @@ simulators, and the ground and cluster scorers ran on its cloud
   Gazebo's camera info, which comes from gz-sensors, still lifts floor
   points by 2.25 mm per metre of depth.
 
+## Visual odometry from features
+
+`feature_detection` tracks image features from frame to frame with depth
+([evidence](../status/evidence/r72-perception-benchmark-2026-10-13/feature-odometry/README.md)).
+Recorded drives were replayed through all five detectors:
+
+| Gazebo small_house, 28.4 m loop | Position RMSE | Drift | Lost frames | Time per frame |
+|---|---|---|---|---|
+| ORB, 30 Hz | **0.54 m** | **2.9%** | 3 of 3755 | 8.3 ms |
+| Shi-Tomasi + ORB, 30 Hz | 0.97 m | 9.0% | 1 | **4.3 ms** |
+| BRISK, 30 Hz | 1.25 m | 9.1% | 12 | 12.6 ms |
+| AKAZE / SIFT, 30 Hz | 7.95 / 5.70 m | 28-29% | 180 / 123 | 22 / 31 ms |
+| BRISK, 5 Hz | **1.18 m** | 7.5% | 12 | 12.9 ms |
+| ORB, 5 Hz | 3.26 m | 13% | 7 | 8.4 ms |
+
+- **It needs texture.** In the flat-shaded nav_obstacle world every
+  detector lost a quarter to all of its frames, in all four simulators.
+- **Only Gazebo renders textures for it.** MuJoCo draws the house
+  untextured and dim, and Isaac's RGB carries per-pixel noise that no
+  detector can track.
+- **Use ORB at camera rate and BRISK when frames are far apart.** AKAZE
+  and SIFT lose track in the 0.8 rad/s turns, and every lost frame costs
+  heading.
+- Bumperbot's wheel odometry stays ten times better (0.08 m) on the same
+  drive. Visual odometry is a second, independent estimate.
+
+## Camera calibration
+
+`camera_calibration` keeps chessboard views that differ in position, size
+or tilt, then solves the camera matrix. On 27 ray-cast views it recovers
+fx within 0.2% and the principal point within 0.15 px. In Gazebo, a
+spawned board is moved in front of the camera by
+`scripts/r7_2_calibration_check.sh`; see the evidence page for the
+current state of that check.
+
 ## Limits
 
 - The ranked tables above use synthetic scenes: perfect circles and boxes,

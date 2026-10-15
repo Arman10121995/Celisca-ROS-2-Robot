@@ -1,0 +1,52 @@
+{
+ "world": "small_house",
+ "base": "base_footprint",
+ "holonomic": false,
+ "waypoints": [
+  [
+   -4.47,
+   1.98
+  ],
+  [
+   6.53,
+   2.48
+  ],
+  [
+   6.0,
+   -3.0
+  ],
+  [
+   -0.0,
+   0.0
+  ]
+ ],
+ "route_points": 148,
+ "route_m": 32.56,
+ "backoffs": 67,
+ "skipped_points": 137,
+ "completed_route": true,
+ "drive_wall_s": 590.4,
+ "trajectory": {
+  "samples": 847,
+  "driven_m": 5.44,
+  "rmse_m": 1.298,
+  "max_m": 1.997,
+  "final_m": 1.997,
+  "heading_rmse_deg": 110.42
+ },
+ "world_from_map": [
+  -0.0,
+  0.0,
+  0.0001
+ ],
+ "map": {
+  "slam_occupied_cells": 4665,
+  "precision_0p10": 0.115,
+  "mean_surface_distance_m": 1.16,
+  "p95_surface_distance_m": 4.024,
+  "reference_walls_near_path": 384,
+  "recall_0p10": 0.154,
+  "slam_free_cells": 83216,
+  "resolution_m": 0.05
+ }
+}
