@@ -1,0 +1,46 @@
+{
+ "A_serial": [
+  {
+   "id": "1248613c65b748adbc2b40c9f29e082b",
+   "backend": "pybullet",
+   "ros_domain_id": 20,
+   "state": "canceled",
+   "mission_success": false,
+   "mission_state": "failed",
+   "mission_reason": "Nav2 request response failed: Object of type uint8 is not JSON serializable",
+   "mission_result_error": null,
+   "goals": [],
+   "goal_rejections_before_nav2_active": 3,
+   "path_length_m": 0.0,
+   "wall_duration_s": 19.2,
+   "real_time_factor": 0.363,
+   "peak_rss_mb": 1221,
+   "peak_cpu_percent": 1031,
+   "resource_samples": 49,
+   "budget_rss_mb": 4096.0,
+   "cleanup_complete": true,
+   "observed_surviving_pids": []
+  },
+  {
+   "id": "ed654cf6c771443884741c1ccc7ac724",
+   "backend": "mujoco",
+   "ros_domain_id": 20,
+   "state": "task_process_completed",
+   "mission_success": false,
+   "mission_state": "failed",
+   "mission_reason": "Nav2 request response failed: Object of type uint8 is not JSON serializable",
+   "mission_result_error": null,
+   "goals": [],
+   "goal_rejections_before_nav2_active": 2,
+   "path_length_m": 0.0,
+   "wall_duration_s": 17.3,
+   "real_time_factor": 0.844,
+   "peak_rss_mb": 1617,
+   "peak_cpu_percent": 1000,
+   "resource_samples": 50,
+   "budget_rss_mb": 4096.0,
+   "cleanup_complete": true,
+   "observed_surviving_pids": []
+  }
+ ]
+}

@@ -1,0 +1,46 @@
+{
+ "A_serial": [
+  {
+   "id": "99ce0e79c5d74106be49a0d1e6b24355",
+   "backend": "pybullet",
+   "ros_domain_id": 20,
+   "state": "task_process_completed",
+   "mission_success": false,
+   "mission_state": "failed",
+   "mission_reason": "Nav2 rejected the requested goal.",
+   "mission_result_error": null,
+   "goals": [],
+   "goal_rejections_before_nav2_active": null,
+   "path_length_m": 0.0,
+   "wall_duration_s": 10.7,
+   "real_time_factor": 0.376,
+   "peak_rss_mb": 1201,
+   "peak_cpu_percent": 1022,
+   "resource_samples": 26,
+   "budget_rss_mb": 4096.0,
+   "cleanup_complete": true,
+   "observed_surviving_pids": []
+  },
+  {
+   "id": "c6b5b274e1cd499d9884849d73bc78fd",
+   "backend": "mujoco",
+   "ros_domain_id": 20,
+   "state": "task_process_completed",
+   "mission_success": false,
+   "mission_state": "failed",
+   "mission_reason": "Nav2 rejected the requested goal.",
+   "mission_result_error": null,
+   "goals": [],
+   "goal_rejections_before_nav2_active": null,
+   "path_length_m": 0.0,
+   "wall_duration_s": 10.1,
+   "real_time_factor": 0.747,
+   "peak_rss_mb": 1603,
+   "peak_cpu_percent": 837,
+   "resource_samples": 24,
+   "budget_rss_mb": 4096.0,
+   "cleanup_complete": true,
+   "observed_surviving_pids": []
+  }
+ ]
+}

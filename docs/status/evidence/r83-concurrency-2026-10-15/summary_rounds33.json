@@ -1,0 +1,339 @@
+{
+ "A_serial": [
+  {
+   "id": "08ff42defed142c3a1102aef1b949a68",
+   "backend": "mujoco",
+   "ros_domain_id": 20,
+   "state": "task_process_completed",
+   "mission_success": true,
+   "mission_state": "measured_goals_reached",
+   "mission_reason": null,
+   "mission_result_error": null,
+   "goals": [
+    {
+     "requested": [
+      -3.8,
+      -3.3,
+      0.0
+     ],
+     "position_error_m": 0.08,
+     "heading_error_deg": 0.73,
+     "nav2_status": 4,
+     "sim_time": 42.7
+    },
+    {
+     "requested": [
+      -5.5,
+      -7.0,
+      3.14159
+     ],
+     "position_error_m": 0.022,
+     "heading_error_deg": 1.75,
+     "nav2_status": 4,
+     "sim_time": 72.6
+    }
+   ],
+   "goal_rejections_before_nav2_active": 1,
+   "path_length_m": 11.43,
+   "wall_duration_s": 90.6,
+   "real_time_factor": 0.87,
+   "peak_rss_mb": 1617,
+   "peak_cpu_percent": 957,
+   "resource_samples": 285,
+   "budget_rss_mb": 4096.0,
+   "cleanup_complete": true,
+   "observed_surviving_pids": []
+  },
+  {
+   "id": "3870c22d6729430388227e30ce59744f",
+   "backend": "pybullet",
+   "ros_domain_id": 20,
+   "state": "task_process_completed",
+   "mission_success": true,
+   "mission_state": "measured_goals_reached",
+   "mission_reason": null,
+   "mission_result_error": null,
+   "goals": [
+    {
+     "requested": [
+      -3.8,
+      -3.3,
+      0.0
+     ],
+     "position_error_m": 0.045,
+     "heading_error_deg": 0.85,
+     "nav2_status": 4,
+     "sim_time": 41.6
+    },
+    {
+     "requested": [
+      -5.5,
+      -7.0,
+      3.14159
+     ],
+     "position_error_m": 0.067,
+     "heading_error_deg": 1.81,
+     "nav2_status": 4,
+     "sim_time": 70.7
+    }
+   ],
+   "goal_rejections_before_nav2_active": 3,
+   "path_length_m": 11.39,
+   "wall_duration_s": 204.7,
+   "real_time_factor": 0.358,
+   "peak_rss_mb": 1233,
+   "peak_cpu_percent": 984,
+   "resource_samples": 658,
+   "budget_rss_mb": 4096.0,
+   "cleanup_complete": true,
+   "observed_surviving_pids": []
+  }
+ ],
+ "B_simultaneous": [
+  {
+   "id": "87610ef40a8044939a90d36611ad4a95",
+   "backend": "mujoco",
+   "ros_domain_id": 21,
+   "state": "task_process_completed",
+   "mission_success": true,
+   "mission_state": "measured_goals_reached",
+   "mission_reason": null,
+   "mission_result_error": null,
+   "goals": [
+    {
+     "requested": [
+      -3.8,
+      -3.3,
+      0.0
+     ],
+     "position_error_m": 0.074,
+     "heading_error_deg": 1.35,
+     "nav2_status": 4,
+     "sim_time": 42.2
+    },
+    {
+     "requested": [
+      -5.5,
+      -7.0,
+      3.14159
+     ],
+     "position_error_m": 0.053,
+     "heading_error_deg": 1.87,
+     "nav2_status": 4,
+     "sim_time": 71.0
+    }
+   ],
+   "goal_rejections_before_nav2_active": 1,
+   "path_length_m": 11.36,
+   "wall_duration_s": 87.8,
+   "real_time_factor": 0.882,
+   "peak_rss_mb": 1689,
+   "peak_cpu_percent": 933,
+   "resource_samples": 269,
+   "budget_rss_mb": 4096.0,
+   "cleanup_complete": true,
+   "observed_surviving_pids": []
+  },
+  {
+   "id": "e1db1858dc1245088ae31f9b5d405ba2",
+   "backend": "pybullet",
+   "ros_domain_id": 20,
+   "state": "task_process_completed",
+   "mission_success": true,
+   "mission_state": "measured_goals_reached",
+   "mission_reason": null,
+   "mission_result_error": null,
+   "goals": [
+    {
+     "requested": [
+      -3.8,
+      -3.3,
+      0.0
+     ],
+     "position_error_m": 0.104,
+     "heading_error_deg": 2.15,
+     "nav2_status": 4,
+     "sim_time": 42.5
+    },
+    {
+     "requested": [
+      -5.5,
+      -7.0,
+      3.14159
+     ],
+     "position_error_m": 0.043,
+     "heading_error_deg": 0.72,
+     "nav2_status": 4,
+     "sim_time": 71.9
+    }
+   ],
+   "goal_rejections_before_nav2_active": 3,
+   "path_length_m": 11.38,
+   "wall_duration_s": 206.8,
+   "real_time_factor": 0.361,
+   "peak_rss_mb": 1219,
+   "peak_cpu_percent": 847,
+   "resource_samples": 655,
+   "budget_rss_mb": 4096.0,
+   "cleanup_complete": true,
+   "observed_surviving_pids": []
+  }
+ ],
+ "C_overload": [
+  {
+   "id": "1d8a0b6bff644d85969c28a6f9d801e3",
+   "backend": "mujoco",
+   "ros_domain_id": 20,
+   "state": "resource_budget_exceeded",
+   "mission_success": null,
+   "mission_state": null,
+   "mission_reason": null,
+   "mission_result_error": "No measured workload result was produced.",
+   "goals": [],
+   "goal_rejections_before_nav2_active": null,
+   "path_length_m": null,
+   "wall_duration_s": 4.8,
+   "real_time_factor": null,
+   "peak_rss_mb": 741,
+   "peak_cpu_percent": 299,
+   "resource_samples": 14,
+   "budget_rss_mb": 300.0,
+   "cleanup_complete": true,
+   "observed_surviving_pids": []
+  },
+  {
+   "id": "95239628addc47dfb0c93d4b65fefc55",
+   "backend": "pybullet",
+   "ros_domain_id": 21,
+   "state": "task_process_completed",
+   "mission_success": true,
+   "mission_state": "measured_goals_reached",
+   "mission_reason": null,
+   "mission_result_error": null,
+   "goals": [
+    {
+     "requested": [
+      -3.8,
+      -3.3,
+      0.0
+     ],
+     "position_error_m": 0.044,
+     "heading_error_deg": 0.93,
+     "nav2_status": 4,
+     "sim_time": 42.6
+    },
+    {
+     "requested": [
+      -5.5,
+      -7.0,
+      3.14159
+     ],
+     "position_error_m": 0.059,
+     "heading_error_deg": 0.78,
+     "nav2_status": 4,
+     "sim_time": 72.7
+    }
+   ],
+   "goal_rejections_before_nav2_active": 3,
+   "path_length_m": 11.48,
+   "wall_duration_s": 210.1,
+   "real_time_factor": 0.359,
+   "peak_rss_mb": 1241,
+   "peak_cpu_percent": 998,
+   "resource_samples": 674,
+   "budget_rss_mb": 4096.0,
+   "cleanup_complete": true,
+   "observed_surviving_pids": []
+  }
+ ],
+ "D_cancel": [
+  {
+   "id": "73583353644448ab8ddafcebcd019f49",
+   "backend": "mujoco",
+   "ros_domain_id": 20,
+   "state": "task_process_completed",
+   "mission_success": true,
+   "mission_state": "measured_goals_reached",
+   "mission_reason": null,
+   "mission_result_error": null,
+   "goals": [
+    {
+     "requested": [
+      -3.8,
+      -3.3,
+      0.0
+     ],
+     "position_error_m": 0.101,
+     "heading_error_deg": 1.51,
+     "nav2_status": 4,
+     "sim_time": 43.2
+    },
+    {
+     "requested": [
+      -5.5,
+      -7.0,
+      3.14159
+     ],
+     "position_error_m": 0.069,
+     "heading_error_deg": 1.26,
+     "nav2_status": 4,
+     "sim_time": 71.9
+    }
+   ],
+   "goal_rejections_before_nav2_active": 1,
+   "path_length_m": 11.43,
+   "wall_duration_s": 88.7,
+   "real_time_factor": 0.881,
+   "peak_rss_mb": 1625,
+   "peak_cpu_percent": 893,
+   "resource_samples": 265,
+   "budget_rss_mb": 4096.0,
+   "cleanup_complete": true,
+   "observed_surviving_pids": []
+  },
+  {
+   "id": "a6010b843cdc4af7b8d7ee8d021ddba1",
+   "backend": "pybullet",
+   "ros_domain_id": 21,
+   "state": "task_process_completed",
+   "mission_success": true,
+   "mission_state": "measured_goals_reached",
+   "mission_reason": null,
+   "mission_result_error": null,
+   "goals": [
+    {
+     "requested": [
+      -3.8,
+      -3.3,
+      0.0
+     ],
+     "position_error_m": 0.052,
+     "heading_error_deg": 0.62,
+     "nav2_status": 4,
+     "sim_time": 41.6
+    },
+    {
+     "requested": [
+      -5.5,
+      -7.0,
+      3.14159
+     ],
+     "position_error_m": 0.032,
+     "heading_error_deg": 2.01,
+     "nav2_status": 4,
+     "sim_time": 71.4
+    }
+   ],
+   "goal_rejections_before_nav2_active": 3,
+   "path_length_m": 11.51,
+   "wall_duration_s": 205.9,
+   "real_time_factor": 0.361,
+   "peak_rss_mb": 1232,
+   "peak_cpu_percent": 884,
+   "resource_samples": 644,
+   "budget_rss_mb": 4096.0,
+   "cleanup_complete": true,
+   "observed_surviving_pids": []
+  }
+ ]
+}

@@ -1,0 +1,96 @@
+[
+ {
+  "command": [
+   "ros2",
+   "launch",
+   "robot_lab_bringup",
+   "simulated_robot.launch.py",
+   "robot_model:=bumperbot",
+   "simulator:=mujoco",
+   "mode:=nav",
+   "map_name:=nav_obstacle",
+   "gui:=false",
+   "start_rviz:=false",
+   "enable_joystick:=false",
+   "odometry_source:=wheels"
+  ],
+  "duration_s": 600,
+  "startup_timeout_s": 300,
+  "max_rss_mb": 4096,
+  "max_cpu_percent": 800,
+  "max_log_mb": 256,
+  "readiness_topic": "/clock",
+  "selection": {
+   "robot": "bumperbot",
+   "map": "nav_obstacle",
+   "backend": "mujoco",
+   "mode": "nav"
+  },
+  "seed": 42,
+  "record_bag": false,
+  "task_command": [],
+  "workload": {
+   "schema": "robot_lab.nav2_workload.v1",
+   "truth_coordinates": "selected_world",
+   "goals": [
+    [
+     -3.8,
+     -3.3,
+     0.0
+    ],
+    [
+     -5.5,
+     -7.0,
+     3.14159
+    ]
+   ]
+  }
+ },
+ {
+  "command": [
+   "ros2",
+   "launch",
+   "robot_lab_bringup",
+   "simulated_robot.launch.py",
+   "robot_model:=bumperbot",
+   "simulator:=pybullet",
+   "mode:=nav",
+   "map_name:=nav_obstacle",
+   "gui:=false",
+   "start_rviz:=false",
+   "enable_joystick:=false",
+   "odometry_source:=wheels"
+  ],
+  "duration_s": 600,
+  "startup_timeout_s": 300,
+  "max_rss_mb": 4096,
+  "max_cpu_percent": 800,
+  "max_log_mb": 256,
+  "readiness_topic": "/clock",
+  "selection": {
+   "robot": "bumperbot",
+   "map": "nav_obstacle",
+   "backend": "pybullet",
+   "mode": "nav"
+  },
+  "seed": 42,
+  "record_bag": false,
+  "task_command": [],
+  "workload": {
+   "schema": "robot_lab.nav2_workload.v1",
+   "truth_coordinates": "selected_world",
+   "goals": [
+    [
+     -3.8,
+     -3.3,
+     0.0
+    ],
+    [
+     -5.5,
+     -7.0,
+     3.14159
+    ]
+   ]
+  }
+ }
+]

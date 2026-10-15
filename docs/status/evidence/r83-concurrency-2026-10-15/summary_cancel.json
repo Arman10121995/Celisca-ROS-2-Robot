@@ -1,0 +1,81 @@
+{
+ "D2_cancel_coordinator": [
+  {
+   "id": "4823aa376e9e41d28b46c8f62df19e91",
+   "backend": "pybullet",
+   "ros_domain_id": 21,
+   "state": "canceled",
+   "mission_success": false,
+   "mission_state": "failed",
+   "mission_reason": "Workload interrupted/canceled.",
+   "mission_result_error": null,
+   "goals": [
+    {
+     "requested": [
+      -3.8,
+      -3.3,
+      0.0
+     ],
+     "position_error_m": 0.07,
+     "heading_error_deg": 0.63,
+     "nav2_status": 4,
+     "sim_time": 42.4
+    }
+   ],
+   "goal_rejections_before_nav2_active": 3,
+   "path_length_m": 7.43,
+   "wall_duration_s": 151.8,
+   "real_time_factor": 0.36,
+   "peak_rss_mb": 1227,
+   "peak_cpu_percent": 826,
+   "resource_samples": 478,
+   "budget_rss_mb": 4096.0,
+   "cleanup_complete": true,
+   "observed_surviving_pids": []
+  },
+  {
+   "id": "b6580dad98634dc09f4aa2039689aa4c",
+   "backend": "mujoco",
+   "ros_domain_id": 20,
+   "state": "task_process_completed",
+   "mission_success": true,
+   "mission_state": "measured_goals_reached",
+   "mission_reason": null,
+   "mission_result_error": null,
+   "goals": [
+    {
+     "requested": [
+      -3.8,
+      -3.3,
+      0.0
+     ],
+     "position_error_m": 0.048,
+     "heading_error_deg": 0.46,
+     "nav2_status": 4,
+     "sim_time": 42.8
+    },
+    {
+     "requested": [
+      -5.5,
+      -7.0,
+      3.14159
+     ],
+     "position_error_m": 0.016,
+     "heading_error_deg": 1.97,
+     "nav2_status": 4,
+     "sim_time": 71.8
+    }
+   ],
+   "goal_rejections_before_nav2_active": 1,
+   "path_length_m": 11.39,
+   "wall_duration_s": 88.5,
+   "real_time_factor": 0.88,
+   "peak_rss_mb": 1678,
+   "peak_cpu_percent": 889,
+   "resource_samples": 274,
+   "budget_rss_mb": 4096.0,
+   "cleanup_complete": true,
+   "observed_surviving_pids": []
+  }
+ ]
+}
