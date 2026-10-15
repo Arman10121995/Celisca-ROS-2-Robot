@@ -10,7 +10,7 @@
 #   image.txt            image id, base image digest, platform
 #   rosdep-install.log, pip-freeze.txt, colcon-build.log   copied from the image
 #   fast_tier.log        scripts/test_tiers.sh fast inside the container
-#   mission/             scripts/sim_nav_mission.sh mujoco bumperbot nav_obstacle
+#   mission/             timeout 1800 scripts/sim_nav_mission.sh mujoco bumperbot nav_obstacle
 #   result.json          exit codes and timings
 set -u
 HERE=$(cd "$(dirname "$0")" && pwd)
@@ -51,8 +51,12 @@ if [ $BUILD -eq 0 ]; then
   TESTS=$?
   tested=$(date +%s)
   mkdir -p "$OUT/workspace/mission"
-  docker run --rm -v "$OUT/workspace:/workspace" -e ROS_DOMAIN_ID=41 "$IMAGE" bash -c \
-    'cd /ws && xvfb-run -a scripts/sim_nav_mission.sh mujoco bumperbot nav_obstacle /workspace/mission/mujoco_bumperbot_nav_obstacle.json odometry_source:=wheels' \
+  # xvfb-run as the container's first process waits forever for Xvfb's
+  # ready signal (2026-10-15: 2 h 15 min); an init process and a plain Xvfb
+  # avoid it.  The mission is bounded at 30 minutes.
+  docker run --rm --init -v "$OUT/workspace:/workspace" -e ROS_DOMAIN_ID=41 "$IMAGE" bash -c \
+    'Xvfb :99 -screen 0 1280x1024x24 -nolisten tcp > /dev/null 2>&1 & export DISPLAY=:99; sleep 2; cd /ws &&
+     timeout 1800 scripts/sim_nav_mission.sh mujoco bumperbot nav_obstacle /workspace/mission/mujoco_bumperbot_nav_obstacle.json odometry_source:=wheels' \
     > "$OUT/mission.log" 2>&1
   MISSION=$?
   # The container ran as root: hand the bind-mounted outputs back.
