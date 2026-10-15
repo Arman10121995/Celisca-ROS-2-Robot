@@ -10,7 +10,7 @@
 #   image.txt            image id, base image digest, platform
 #   rosdep-install.log, pip-freeze.txt, colcon-build.log   copied from the image
 #   fast_tier.log        scripts/test_tiers.sh fast inside the container
-#   mission/             timeout 1800 scripts/sim_nav_mission.sh mujoco bumperbot nav_obstacle
+#   mission/             scripts/sim_nav_mission.sh mujoco bumperbot nav_obstacle
 #   result.json          exit codes and timings
 set -u
 HERE=$(cd "$(dirname "$0")" && pwd)
