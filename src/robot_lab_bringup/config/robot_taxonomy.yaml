@@ -1,6 +1,10 @@
 # Structural catalog tags, never a runtime/controller qualification.
 schema_version: 1
 classes:
+  - category: Underwater robots
+    subtype: AUV
+    tags: [Propeller and fins, Native source dynamics, Cruise guidance, Experimental control]
+    members: [tethys_auv]
   - category: Legged robots
     subtype: Six legs
     tags: [Hexapod, Tripod, Source geometry, Experimental gait]

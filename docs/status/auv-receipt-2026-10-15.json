@@ -1,0 +1,1039 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-15",
+  "baseline_revision": "815e54e5bfb051968949a34e0ea69ab847e4fa49",
+  "scope": "Actual short GUI Gazebo Fortress 6.18 native Tethys/reef and corrected ROV/tank diagnostics; experimental guidance with simulator-pose observer, not independent navigation or broad mission qualification",
+  "metrics": {
+    "auv": {
+      "sampled_states": 282,
+      "final_body_samples": 1315,
+      "final_joint_samples": 26294,
+      "neutral_displacement_m": 0.0,
+      "surge_input_planar_m": 2.05054874446709,
+      "depth_target_m": 1.7,
+      "depth_observed_m": 1.6888578031177766,
+      "depth_error_m": 0.011142196882223399,
+      "turn_yaw_change_rad": 0.2422945318721479,
+      "depth_during_turn_m": 1.7002940985221966,
+      "stop_propeller_force_N": [
+        0.0
+      ],
+      "stop_fin_targets_rad": [
+        0.0,
+        0.0
+      ],
+      "stop_coast_planar_m": 1.2638832001388767,
+      "launch_exit": 0
+    },
+    "rov": {
+      "sampled_states": 223,
+      "surge_input_planar_m": 0.3057875517383842,
+      "depth_down_m": 1.1883544254933036,
+      "depth_up_m": 1.0138813478921656,
+      "stop_forces_N": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "launch_exit": 0
+    }
+  },
+  "runs": [
+    {
+      "robot": "tethys_auv",
+      "map": "marine_reef",
+      "command": [
+        "ros2",
+        "launch",
+        "robot_lab_bringup",
+        "simulated_robot.launch.py",
+        "robot_model:=tethys_auv",
+        "simulator:=gazebo",
+        "use_sim_time:=true",
+        "map_name:=marine_reef",
+        "world_package:=robot_lab_maps",
+        "world_name:=marine_reef",
+        "world_path:=maps/marine_reef/worlds/marine_reef.world",
+        "mode:=marine",
+        "gui:=false",
+        "spawn_x:=-5.0",
+        "spawn_y:=-3.0",
+        "spawn_z:=-1.5",
+        "spawn_yaw:=0.5",
+        "start_rviz:=false"
+      ],
+      "source_sha256": {
+        "src/robot_lab_utils/robot_lab_utils/auv_controller.py": "c8a875b47bf5ca946267d3fc3c40b785b74503ea82c80ad3458b3e9d9728fa7f",
+        "src/robot_lab_utils/robot_lab_utils/marine_controller.py": "52840d655851d48e4a5207be44a0d16e2e59bcb8b836259ee5758d00913d8e2b",
+        "src/robot_lab_gui/robot_lab_gui/marine_controls.py": "81a7c665c9a979746c03e55bb9d9e4031a2a3f358935dd5dbe2eecef51bdbbce",
+        "src/robot_lab_bringup/launch/auv_simulator.launch.py": "10a7a8ca32888396cac373200472f290e20fd550b51e1c28b8ad4d4d1b9cc237",
+        "src/robot_lab_robots/tethys_auv/model.sdf": "ad7850e916fd99584022055199990aff45e7e819c5c4e9bde120cc860b6a7a65",
+        "src/robot_lab_robots/tethys_auv/urdf/tethys_auv.urdf": "c23a50d929911bb42799238693de26ddfe05995bbb0bb27641f9c0ba5a1fbce1",
+        "src/robot_lab_robots/tethys_auv/calibration.json": "2b5039f5a1a394ce4a6dae1abc0edae420582a94a2c320accc0a73ae639d5aab"
+      },
+      "source_snapshot": "/workspace/molar/robot_lab_runtime/r104-auv-2026-10-15/reef-gui-2/source-snapshot",
+      "milestones": [
+        {
+          "label": "ready disarmed",
+          "elapsed": 4.114898653002456,
+          "state": {
+            "schema_version": 1,
+            "session_id": "52f1788c966146319e0f8f9e85f9ea52",
+            "robot_id": "tethys_auv",
+            "enabled": false,
+            "ready": true,
+            "control_allowed": true,
+            "reason": "Operator changed; neutral ownership",
+            "operator_id": "marine-gui-48c7c29e63f248788a496d4c15adfc8a",
+            "operator_fresh": true,
+            "depth": 1.5,
+            "target_depth": null,
+            "position": {
+              "x": -5.0,
+              "y": -3.0,
+              "z": -1.5
+            },
+            "rpy": [
+              -1.529874652469366e-24,
+              1.7102591944818544e-19,
+              -2.641592653589793
+            ],
+            "velocity_world": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "commanded_thruster_forces_N": [
+              0.0
+            ],
+            "fin_targets_rad": [
+              0.0,
+              0.0
+            ],
+            "actual_joints_rad": {
+              "propeller_joint": 1.5203717406298103e-24,
+              "vertical_fins_joint": 6.467348709759419e-21,
+              "horizontal_fins_joint": -6.255952224962956e-17
+            },
+            "measured_forward_surge_m_s": 0.0,
+            "cruise_guidance_active": false,
+            "body_samples": 6,
+            "joint_samples": 117,
+            "sim_time": 0.136,
+            "limits": {
+              "surge": 0.7,
+              "sway": 0.0,
+              "yaw": 0.15
+            },
+            "propulsion_kind": "propeller_fins",
+            "calibration": {
+              "source_mass_kg": 148.35709999999997,
+              "displaced_volume_m3": 0.14835710000020003,
+              "ballast_mass_kg": 3.70892750020505,
+              "complete_mass_kg": 152.06602750020502,
+              "fluid_density_kg_m3": 1025.0,
+              "center_of_buoyancy_m": [
+                0.0036994912949852763,
+                0.0,
+                0.0
+              ],
+              "ballast_note": "Declared sealed internal mass below center of buoyancy (z=-0.08 m), no added collision volume; original mass/inertia untouched",
+              "source_fuel_version": 3,
+              "source_zip_sha256": "81cded5384f86c77afa1afa56050f024463379db912c33a60d938d27d28f4a15",
+              "source_model_sha256": "a9e6b39850139ce93cbe7b3198cc5e094541a28b81b14553b4db62ccca98ae16",
+              "source_physics_sha256": "ace3dc63c21079d738d7b86ce2eb72e820ac6c98a4e1b5f031c43caa48b0d161",
+              "thrust_limit_N": 35.0,
+              "fin_limit_rad": 0.261799,
+              "source_forward_yaw": 3.141592653589793,
+              "added_mass_convention": "Fortress 6.18 applies -Ma*acceleration; derived mass diagonals are positive, original example retained unchanged",
+              "scope": "Native source AUV forces/fins; authored trim and experimental guidance, no independent estimation/SLAM/navigation"
+            },
+            "observer": "Actual simulator pose finite difference and joint observations; pressure is explicitly ideal pose-derived emulation. Independent estimation/SLAM unimplemented.",
+            "scope": "Pinned native Tethys AUV + declared trim ballast and authored bounded cruise guidance; no hover/strafe/pivot/depth hold at zero flow or mission qualification"
+          }
+        },
+        {
+          "label": "neutral physical AUV",
+          "elapsed": 6.121287785004824,
+          "state": {
+            "schema_version": 1,
+            "session_id": "52f1788c966146319e0f8f9e85f9ea52",
+            "robot_id": "tethys_auv",
+            "enabled": false,
+            "ready": true,
+            "control_allowed": true,
+            "reason": "Operator changed; neutral ownership",
+            "operator_id": "marine-gui-48c7c29e63f248788a496d4c15adfc8a",
+            "operator_fresh": true,
+            "depth": 1.5,
+            "target_depth": null,
+            "position": {
+              "x": -5.0,
+              "y": -3.0,
+              "z": -1.5
+            },
+            "rpy": [
+              -1.529874652469366e-24,
+              1.7102591944818544e-19,
+              -2.641592653589793
+            ],
+            "velocity_world": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "commanded_thruster_forces_N": [
+              0.0
+            ],
+            "fin_targets_rad": [
+              0.0,
+              0.0
+            ],
+            "actual_joints_rad": {
+              "propeller_joint": 1.5203731573782536e-24,
+              "vertical_fins_joint": -5.023856881278315e-21,
+              "horizontal_fins_joint": -3.074376015345155e-18
+            },
+            "measured_forward_surge_m_s": 0.0,
+            "cruise_guidance_active": false,
+            "body_samples": 106,
+            "joint_samples": 2112,
+            "sim_time": 2.132,
+            "limits": {
+              "surge": 0.7,
+              "sway": 0.0,
+              "yaw": 0.15
+            },
+            "propulsion_kind": "propeller_fins",
+            "calibration": {
+              "source_mass_kg": 148.35709999999997,
+              "displaced_volume_m3": 0.14835710000020003,
+              "ballast_mass_kg": 3.70892750020505,
+              "complete_mass_kg": 152.06602750020502,
+              "fluid_density_kg_m3": 1025.0,
+              "center_of_buoyancy_m": [
+                0.0036994912949852763,
+                0.0,
+                0.0
+              ],
+              "ballast_note": "Declared sealed internal mass below center of buoyancy (z=-0.08 m), no added collision volume; original mass/inertia untouched",
+              "source_fuel_version": 3,
+              "source_zip_sha256": "81cded5384f86c77afa1afa56050f024463379db912c33a60d938d27d28f4a15",
+              "source_model_sha256": "a9e6b39850139ce93cbe7b3198cc5e094541a28b81b14553b4db62ccca98ae16",
+              "source_physics_sha256": "ace3dc63c21079d738d7b86ce2eb72e820ac6c98a4e1b5f031c43caa48b0d161",
+              "thrust_limit_N": 35.0,
+              "fin_limit_rad": 0.261799,
+              "source_forward_yaw": 3.141592653589793,
+              "added_mass_convention": "Fortress 6.18 applies -Ma*acceleration; derived mass diagonals are positive, original example retained unchanged",
+              "scope": "Native source AUV forces/fins; authored trim and experimental guidance, no independent estimation/SLAM/navigation"
+            },
+            "observer": "Actual simulator pose finite difference and joint observations; pressure is explicitly ideal pose-derived emulation. Independent estimation/SLAM unimplemented.",
+            "scope": "Pinned native Tethys AUV + declared trim ballast and authored bounded cruise guidance; no hover/strafe/pivot/depth hold at zero flow or mission qualification"
+          }
+        },
+        {
+          "label": "armed neutral",
+          "elapsed": 7.324541797017446,
+          "state": {
+            "schema_version": 1,
+            "session_id": "52f1788c966146319e0f8f9e85f9ea52",
+            "robot_id": "tethys_auv",
+            "enabled": true,
+            "ready": true,
+            "control_allowed": true,
+            "reason": "AUV armed neutral; depth/heading guidance requires forward flow",
+            "operator_id": "marine-gui-48c7c29e63f248788a496d4c15adfc8a",
+            "operator_fresh": true,
+            "depth": 1.5,
+            "target_depth": 1.5,
+            "position": {
+              "x": -5.0,
+              "y": -3.0,
+              "z": -1.5
+            },
+            "rpy": [
+              -1.529874652469366e-24,
+              1.7102591944818544e-19,
+              -2.641592653589793
+            ],
+            "velocity_world": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "commanded_thruster_forces_N": [
+              0.0
+            ],
+            "fin_targets_rad": [
+              0.0,
+              0.0
+            ],
+            "actual_joints_rad": {
+              "propeller_joint": 1.5203712182079894e-24,
+              "vertical_fins_joint": -3.959596807683153e-21,
+              "horizontal_fins_joint": 9.653481357594582e-18
+            },
+            "measured_forward_surge_m_s": 0.0,
+            "cruise_guidance_active": false,
+            "body_samples": 163,
+            "joint_samples": 3252,
+            "sim_time": 3.2720000000000002,
+            "limits": {
+              "surge": 0.7,
+              "sway": 0.0,
+              "yaw": 0.15
+            },
+            "propulsion_kind": "propeller_fins",
+            "calibration": {
+              "source_mass_kg": 148.35709999999997,
+              "displaced_volume_m3": 0.14835710000020003,
+              "ballast_mass_kg": 3.70892750020505,
+              "complete_mass_kg": 152.06602750020502,
+              "fluid_density_kg_m3": 1025.0,
+              "center_of_buoyancy_m": [
+                0.0036994912949852763,
+                0.0,
+                0.0
+              ],
+              "ballast_note": "Declared sealed internal mass below center of buoyancy (z=-0.08 m), no added collision volume; original mass/inertia untouched",
+              "source_fuel_version": 3,
+              "source_zip_sha256": "81cded5384f86c77afa1afa56050f024463379db912c33a60d938d27d28f4a15",
+              "source_model_sha256": "a9e6b39850139ce93cbe7b3198cc5e094541a28b81b14553b4db62ccca98ae16",
+              "source_physics_sha256": "ace3dc63c21079d738d7b86ce2eb72e820ac6c98a4e1b5f031c43caa48b0d161",
+              "thrust_limit_N": 35.0,
+              "fin_limit_rad": 0.261799,
+              "source_forward_yaw": 3.141592653589793,
+              "added_mass_convention": "Fortress 6.18 applies -Ma*acceleration; derived mass diagonals are positive, original example retained unchanged",
+              "scope": "Native source AUV forces/fins; authored trim and experimental guidance, no independent estimation/SLAM/navigation"
+            },
+            "observer": "Actual simulator pose finite difference and joint observations; pressure is explicitly ideal pose-derived emulation. Independent estimation/SLAM unimplemented.",
+            "scope": "Pinned native Tethys AUV + declared trim ballast and authored bounded cruise guidance; no hover/strafe/pivot/depth hold at zero flow or mission qualification"
+          }
+        },
+        {
+          "label": "actual propeller surge",
+          "elapsed": 15.346184225025354,
+          "state": {
+            "schema_version": 1,
+            "session_id": "52f1788c966146319e0f8f9e85f9ea52",
+            "robot_id": "tethys_auv",
+            "enabled": true,
+            "ready": true,
+            "control_allowed": true,
+            "reason": "AUV armed neutral; depth/heading guidance requires forward flow",
+            "operator_id": "marine-gui-48c7c29e63f248788a496d4c15adfc8a",
+            "operator_fresh": true,
+            "depth": 1.5213140889009387,
+            "target_depth": 1.5,
+            "position": {
+              "x": -3.2005778804021197,
+              "y": -2.016724764403461,
+              "z": -1.5213140889009387
+            },
+            "rpy": [
+              0.0009940480450290677,
+              0.02306385095974968,
+              -2.6417446121688495
+            ],
+            "velocity_world": [
+              0.5270789121930909,
+              0.28794948953612737,
+              0.008561253825712005
+            ],
+            "commanded_thruster_forces_N": [
+              -11.0033705123512
+            ],
+            "fin_targets_rad": [
+              0.019137033834698093,
+              -0.00022097205165909838
+            ],
+            "actual_joints_rad": {
+              "propeller_joint": -313.1808406591741,
+              "vertical_fins_joint": -0.00022037382872333654,
+              "horizontal_fins_joint": 0.01926590442597038
+            },
+            "measured_forward_surge_m_s": 0.6006055935956099,
+            "cruise_guidance_active": true,
+            "body_samples": 567,
+            "joint_samples": 11321,
+            "sim_time": 11.34,
+            "limits": {
+              "surge": 0.7,
+              "sway": 0.0,
+              "yaw": 0.15
+            },
+            "propulsion_kind": "propeller_fins",
+            "calibration": {
+              "source_mass_kg": 148.35709999999997,
+              "displaced_volume_m3": 0.14835710000020003,
+              "ballast_mass_kg": 3.70892750020505,
+              "complete_mass_kg": 152.06602750020502,
+              "fluid_density_kg_m3": 1025.0,
+              "center_of_buoyancy_m": [
+                0.0036994912949852763,
+                0.0,
+                0.0
+              ],
+              "ballast_note": "Declared sealed internal mass below center of buoyancy (z=-0.08 m), no added collision volume; original mass/inertia untouched",
+              "source_fuel_version": 3,
+              "source_zip_sha256": "81cded5384f86c77afa1afa56050f024463379db912c33a60d938d27d28f4a15",
+              "source_model_sha256": "a9e6b39850139ce93cbe7b3198cc5e094541a28b81b14553b4db62ccca98ae16",
+              "source_physics_sha256": "ace3dc63c21079d738d7b86ce2eb72e820ac6c98a4e1b5f031c43caa48b0d161",
+              "thrust_limit_N": 35.0,
+              "fin_limit_rad": 0.261799,
+              "source_forward_yaw": 3.141592653589793,
+              "added_mass_convention": "Fortress 6.18 applies -Ma*acceleration; derived mass diagonals are positive, original example retained unchanged",
+              "scope": "Native source AUV forces/fins; authored trim and experimental guidance, no independent estimation/SLAM/navigation"
+            },
+            "observer": "Actual simulator pose finite difference and joint observations; pressure is explicitly ideal pose-derived emulation. Independent estimation/SLAM unimplemented.",
+            "scope": "Pinned native Tethys AUV + declared trim ballast and authored bounded cruise guidance; no hover/strafe/pivot/depth hold at zero flow or mission qualification"
+          }
+        },
+        {
+          "label": "cruise depth request",
+          "elapsed": 25.375376545998733,
+          "state": {
+            "schema_version": 1,
+            "session_id": "52f1788c966146319e0f8f9e85f9ea52",
+            "robot_id": "tethys_auv",
+            "enabled": true,
+            "ready": true,
+            "control_allowed": true,
+            "reason": "Physical depth/heading controller active",
+            "operator_id": "marine-gui-48c7c29e63f248788a496d4c15adfc8a",
+            "operator_fresh": true,
+            "depth": 1.6888578031177766,
+            "target_depth": 1.7,
+            "position": {
+              "x": 2.7666356005962207,
+              "y": 1.241642941868486,
+              "z": -1.6888578031177766
+            },
+            "rpy": [
+              -0.0013027914537086472,
+              0.0068340187374044655,
+              -2.6416967740045023
+            ],
+            "velocity_world": [
+              0.6118011389788865,
+              0.3341496778910229,
+              0.04863002563310174
+            ],
+            "commanded_thruster_forces_N": [
+              -3.283345709426533
+            ],
+            "fin_targets_rad": [
+              0.0017292677430267855,
+              -5.184104412609903e-05
+            ],
+            "actual_joints_rad": {
+              "propeller_joint": -563.8270927932463,
+              "vertical_fins_joint": -5.785250547073589e-05,
+              "horizontal_fins_joint": 0.0020182233515962504
+            },
+            "measured_forward_surge_m_s": 0.6971059036321683,
+            "cruise_guidance_active": true,
+            "body_samples": 1067,
+            "joint_samples": 21336,
+            "sim_time": 21.356,
+            "limits": {
+              "surge": 0.7,
+              "sway": 0.0,
+              "yaw": 0.15
+            },
+            "propulsion_kind": "propeller_fins",
+            "calibration": {
+              "source_mass_kg": 148.35709999999997,
+              "displaced_volume_m3": 0.14835710000020003,
+              "ballast_mass_kg": 3.70892750020505,
+              "complete_mass_kg": 152.06602750020502,
+              "fluid_density_kg_m3": 1025.0,
+              "center_of_buoyancy_m": [
+                0.0036994912949852763,
+                0.0,
+                0.0
+              ],
+              "ballast_note": "Declared sealed internal mass below center of buoyancy (z=-0.08 m), no added collision volume; original mass/inertia untouched",
+              "source_fuel_version": 3,
+              "source_zip_sha256": "81cded5384f86c77afa1afa56050f024463379db912c33a60d938d27d28f4a15",
+              "source_model_sha256": "a9e6b39850139ce93cbe7b3198cc5e094541a28b81b14553b4db62ccca98ae16",
+              "source_physics_sha256": "ace3dc63c21079d738d7b86ce2eb72e820ac6c98a4e1b5f031c43caa48b0d161",
+              "thrust_limit_N": 35.0,
+              "fin_limit_rad": 0.261799,
+              "source_forward_yaw": 3.141592653589793,
+              "added_mass_convention": "Fortress 6.18 applies -Ma*acceleration; derived mass diagonals are positive, original example retained unchanged",
+              "scope": "Native source AUV forces/fins; authored trim and experimental guidance, no independent estimation/SLAM/navigation"
+            },
+            "observer": "Actual simulator pose finite difference and joint observations; pressure is explicitly ideal pose-derived emulation. Independent estimation/SLAM unimplemented.",
+            "scope": "Pinned native Tethys AUV + declared trim ballast and authored bounded cruise guidance; no hover/strafe/pivot/depth hold at zero flow or mission qualification"
+          }
+        },
+        {
+          "label": "actual fin turn request",
+          "elapsed": 28.38301458102069,
+          "state": {
+            "schema_version": 1,
+            "session_id": "52f1788c966146319e0f8f9e85f9ea52",
+            "robot_id": "tethys_auv",
+            "enabled": true,
+            "ready": true,
+            "control_allowed": true,
+            "reason": "Physical depth/heading controller active",
+            "operator_id": "marine-gui-48c7c29e63f248788a496d4c15adfc8a",
+            "operator_fresh": true,
+            "depth": 1.7002940985221966,
+            "target_depth": 1.7,
+            "position": {
+              "x": 4.6380690632876425,
+              "y": 2.18563104556988,
+              "z": -1.7002940985221966
+            },
+            "rpy": [
+              0.0013532806769808244,
+              -0.010690080779408384,
+              -2.3994022421323544
+            ],
+            "velocity_world": [
+              0.5790347215171144,
+              0.36610733026390624,
+              -0.05293259472522018
+            ],
+            "commanded_thruster_forces_N": [
+              -5.116134256416471
+            ],
+            "fin_targets_rad": [
+              0.004461967693010813,
+              -0.24429183466487792
+            ],
+            "actual_joints_rad": {
+              "propeller_joint": -634.6075425711234,
+              "vertical_fins_joint": -0.24394196008933938,
+              "horizontal_fins_joint": 0.004078328358061345
+            },
+            "measured_forward_surge_m_s": 0.6741960467947941,
+            "cruise_guidance_active": true,
+            "body_samples": 1218,
+            "joint_samples": 24356,
+            "sim_time": 24.376,
+            "limits": {
+              "surge": 0.7,
+              "sway": 0.0,
+              "yaw": 0.15
+            },
+            "propulsion_kind": "propeller_fins",
+            "calibration": {
+              "source_mass_kg": 148.35709999999997,
+              "displaced_volume_m3": 0.14835710000020003,
+              "ballast_mass_kg": 3.70892750020505,
+              "complete_mass_kg": 152.06602750020502,
+              "fluid_density_kg_m3": 1025.0,
+              "center_of_buoyancy_m": [
+                0.0036994912949852763,
+                0.0,
+                0.0
+              ],
+              "ballast_note": "Declared sealed internal mass below center of buoyancy (z=-0.08 m), no added collision volume; original mass/inertia untouched",
+              "source_fuel_version": 3,
+              "source_zip_sha256": "81cded5384f86c77afa1afa56050f024463379db912c33a60d938d27d28f4a15",
+              "source_model_sha256": "a9e6b39850139ce93cbe7b3198cc5e094541a28b81b14553b4db62ccca98ae16",
+              "source_physics_sha256": "ace3dc63c21079d738d7b86ce2eb72e820ac6c98a4e1b5f031c43caa48b0d161",
+              "thrust_limit_N": 35.0,
+              "fin_limit_rad": 0.261799,
+              "source_forward_yaw": 3.141592653589793,
+              "added_mass_convention": "Fortress 6.18 applies -Ma*acceleration; derived mass diagonals are positive, original example retained unchanged",
+              "scope": "Native source AUV forces/fins; authored trim and experimental guidance, no independent estimation/SLAM/navigation"
+            },
+            "observer": "Actual simulator pose finite difference and joint observations; pressure is explicitly ideal pose-derived emulation. Independent estimation/SLAM unimplemented.",
+            "scope": "Pinned native Tethys AUV + declared trim ballast and authored bounded cruise guidance; no hover/strafe/pivot/depth hold at zero flow or mission qualification"
+          }
+        },
+        {
+          "label": "propulsion zero after Stop",
+          "elapsed": 30.393202106002718,
+          "state": {
+            "schema_version": 1,
+            "session_id": "52f1788c966146319e0f8f9e85f9ea52",
+            "robot_id": "tethys_auv",
+            "enabled": false,
+            "ready": true,
+            "control_allowed": true,
+            "reason": "Operator Stop; thruster forces zero",
+            "operator_id": "marine-gui-48c7c29e63f248788a496d4c15adfc8a",
+            "operator_fresh": true,
+            "depth": 1.7597676465743992,
+            "target_depth": null,
+            "position": {
+              "x": 5.620043101454068,
+              "y": 2.9813242854308273,
+              "z": -1.7597676465743992
+            },
+            "rpy": [
+              0.02840512711451458,
+              0.06443787363218059,
+              -2.236441647726466
+            ],
+            "velocity_world": [
+              0.44419843373263274,
+              0.4380425869885278,
+              -0.0009944806069084535
+            ],
+            "commanded_thruster_forces_N": [
+              0.0
+            ],
+            "fin_targets_rad": [
+              0.0,
+              0.0
+            ],
+            "actual_joints_rad": {
+              "propeller_joint": -636.2950834654127,
+              "vertical_fins_joint": 0.0007682113437801516,
+              "horizontal_fins_joint": 4.586877659389981e-06
+            },
+            "measured_forward_surge_m_s": 0.6188507767852154,
+            "cruise_guidance_active": false,
+            "body_samples": 1315,
+            "joint_samples": 26294,
+            "sim_time": 26.314,
+            "limits": {
+              "surge": 0.7,
+              "sway": 0.0,
+              "yaw": 0.15
+            },
+            "propulsion_kind": "propeller_fins",
+            "calibration": {
+              "source_mass_kg": 148.35709999999997,
+              "displaced_volume_m3": 0.14835710000020003,
+              "ballast_mass_kg": 3.70892750020505,
+              "complete_mass_kg": 152.06602750020502,
+              "fluid_density_kg_m3": 1025.0,
+              "center_of_buoyancy_m": [
+                0.0036994912949852763,
+                0.0,
+                0.0
+              ],
+              "ballast_note": "Declared sealed internal mass below center of buoyancy (z=-0.08 m), no added collision volume; original mass/inertia untouched",
+              "source_fuel_version": 3,
+              "source_zip_sha256": "81cded5384f86c77afa1afa56050f024463379db912c33a60d938d27d28f4a15",
+              "source_model_sha256": "a9e6b39850139ce93cbe7b3198cc5e094541a28b81b14553b4db62ccca98ae16",
+              "source_physics_sha256": "ace3dc63c21079d738d7b86ce2eb72e820ac6c98a4e1b5f031c43caa48b0d161",
+              "thrust_limit_N": 35.0,
+              "fin_limit_rad": 0.261799,
+              "source_forward_yaw": 3.141592653589793,
+              "added_mass_convention": "Fortress 6.18 applies -Ma*acceleration; derived mass diagonals are positive, original example retained unchanged",
+              "scope": "Native source AUV forces/fins; authored trim and experimental guidance, no independent estimation/SLAM/navigation"
+            },
+            "observer": "Actual simulator pose finite difference and joint observations; pressure is explicitly ideal pose-derived emulation. Independent estimation/SLAM unimplemented.",
+            "scope": "Pinned native Tethys AUV + declared trim ballast and authored bounded cruise guidance; no hover/strafe/pivot/depth hold at zero flow or mission qualification"
+          }
+        }
+      ],
+      "report": "/workspace/molar/robot_lab_runtime/r104-auv-2026-10-15/reef-gui-2/report.json",
+      "console": "/workspace/molar/robot_lab_runtime/r104-auv-2026-10-15/reef-gui-2/gui-console.log"
+    },
+    {
+      "robot": "lab_rov",
+      "map": "marine_tank",
+      "command": [
+        "ros2",
+        "launch",
+        "robot_lab_bringup",
+        "simulated_robot.launch.py",
+        "robot_model:=lab_rov",
+        "simulator:=gazebo",
+        "use_sim_time:=true",
+        "map_name:=marine_tank",
+        "world_package:=robot_lab_maps",
+        "world_name:=marine_tank",
+        "world_path:=maps/marine_tank/worlds/marine_tank.world",
+        "mode:=marine",
+        "gui:=false",
+        "start_rviz:=false"
+      ],
+      "source_sha256": {
+        "src/robot_lab_utils/robot_lab_utils/marine_model.py": "ea1b8b99aae03dbbe8a986808843c0564b6cdbe441d837b3066c1aece19925a3",
+        "src/robot_lab_utils/robot_lab_utils/marine_controller.py": "52840d655851d48e4a5207be44a0d16e2e59bcb8b836259ee5758d00913d8e2b",
+        "src/robot_lab_gui/robot_lab_gui/marine_controls.py": "cfc58278b86247691ecc62e656d28b0dec632c5cd75fe77f1e0e0b08ea2d66fd",
+        "src/robot_lab_bringup/launch/marine_simulator.launch.py": "428ae23e4da36df39ecb78ec27bc6c2e0ceaed237f94713bf4f0522d8febcbda",
+        "src/robot_lab_robots/lab_rov/urdf/lab_rov.urdf.xacro": "d909ca73edfec3ebfb295c31006a1ddf45e35d4d5a30160e3e65ff26fe72a9ff",
+        "src/robot_lab_maps/maps/marine_tank/worlds/marine_tank.world": "30539b83c4b387b246b625148a5495e49336b570c11fe2be4644ad13cb51fec6"
+      },
+      "source_snapshot": "/workspace/molar/robot_lab_runtime/r104-auv-2026-10-15/rov-sign-correction/source-snapshot",
+      "milestones": [
+        {
+          "label": "actual body ready; disarmed",
+          "elapsed": 5.217747046001023,
+          "state": {
+            "schema_version": 1,
+            "session_id": "5418800004c844ccb32bbff9a1ec976e",
+            "robot_id": "lab_rov",
+            "enabled": false,
+            "ready": true,
+            "control_allowed": true,
+            "reason": "Operator changed; neutral ownership",
+            "operator_id": "marine-gui-446bd007bf16477ba692215caeb82876",
+            "operator_fresh": true,
+            "depth": 1.0002767858584927,
+            "target_depth": null,
+            "position": {
+              "x": -2.102277957192287e-06,
+              "y": 2.9158033489570315e-22,
+              "z": -1.0002767858584927
+            },
+            "rpy": [
+              -7.574917932882799e-22,
+              -7.303580276490001e-05,
+              2.6035569752604735e-21
+            ],
+            "velocity_world": [
+              -4.5270097263932895e-05,
+              6.347589803117524e-21,
+              -0.006029129749252072
+            ],
+            "commanded_thruster_forces_N": [
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "force_allocation_scale": 1.0,
+            "mass_kg": 18.54170000000001,
+            "displaced_volume_m3": 0.017985475,
+            "gravity_trim_N": 1.0456295062500875,
+            "body_samples": 4,
+            "sim_time": 0.083,
+            "observer": "Actual simulator pose finite difference; ideal pressure is emulated from that pose. Independent estimation/SLAM unimplemented.",
+            "scope": "Authored laboratory ROV + native Gazebo marine forces; hardware calibration and mission qualification pending"
+          }
+        },
+        {
+          "label": "armed depth hold",
+          "elapsed": 8.22791392399813,
+          "state": {
+            "schema_version": 1,
+            "session_id": "5418800004c844ccb32bbff9a1ec976e",
+            "robot_id": "lab_rov",
+            "enabled": true,
+            "ready": true,
+            "control_allowed": true,
+            "reason": "Depth/heading hold armed; planar commands neutral",
+            "operator_id": "marine-gui-446bd007bf16477ba692215caeb82876",
+            "operator_fresh": true,
+            "depth": 1.0024546593126702,
+            "target_depth": 1.001352725479877,
+            "position": {
+              "x": -1.2451059333993234e-05,
+              "y": 1.9668477237972852e-08,
+              "z": -1.0024546593126702
+            },
+            "rpy": [
+              -9.781560958832672e-09,
+              -0.0005225436479283049,
+              -5.977408486957125e-05
+            ],
+            "velocity_world": [
+              1.9282296747436377e-07,
+              2.184345877442936e-08,
+              0.0006911068013870641
+            ],
+            "commanded_thruster_forces_N": [
+              0.00019070140804582425,
+              0.00019571399785570312,
+              0.0001904160030155757,
+              0.0001959994028859742,
+              0.2605828635461645,
+              0.26058274981786245,
+              0.2648980959785756,
+              0.26489798225027356
+            ],
+            "force_allocation_scale": 1.0,
+            "mass_kg": 18.54170000000001,
+            "displaced_volume_m3": 0.017985475,
+            "gravity_trim_N": 1.0456295062500875,
+            "body_samples": 154,
+            "sim_time": 3.088,
+            "observer": "Actual simulator pose finite difference; ideal pressure is emulated from that pose. Independent estimation/SLAM unimplemented.",
+            "scope": "Authored laboratory ROV + native Gazebo marine forces; hardware calibration and mission qualification pending"
+          }
+        },
+        {
+          "label": "physical surge input",
+          "elapsed": 12.240827700006776,
+          "state": {
+            "schema_version": 1,
+            "session_id": "5418800004c844ccb32bbff9a1ec976e",
+            "robot_id": "lab_rov",
+            "enabled": true,
+            "ready": true,
+            "control_allowed": true,
+            "reason": "Depth/heading hold armed; planar commands neutral",
+            "operator_id": "marine-gui-446bd007bf16477ba692215caeb82876",
+            "operator_fresh": true,
+            "depth": 1.0014940794715532,
+            "target_depth": 1.001352725479877,
+            "position": {
+              "x": 0.3057751006166883,
+              "y": -6.156008658635266e-06,
+              "z": -1.0014940794715532
+            },
+            "rpy": [
+              1.3295285041726253e-05,
+              -0.006738608990136148,
+              7.250386947576563e-08
+            ],
+            "velocity_world": [
+              0.17470810516958132,
+              -7.581281303369235e-07,
+              4.478228375903622e-05
+            ],
+            "commanded_thruster_forces_N": [
+              0.8701163788944816,
+              0.8701368591938662,
+              0.870135917908153,
+              0.8701173201801947,
+              0.31186745334573923,
+              0.31210943790745455,
+              0.20338113374840988,
+              0.20362311831012525
+            ],
+            "force_allocation_scale": 1.0,
+            "mass_kg": 18.54170000000001,
+            "displaced_volume_m3": 0.017985475,
+            "gravity_trim_N": 1.0456295062500875,
+            "body_samples": 349,
+            "sim_time": 6.993,
+            "observer": "Actual simulator pose finite difference; ideal pressure is emulated from that pose. Independent estimation/SLAM unimplemented.",
+            "scope": "Authored laboratory ROV + native Gazebo marine forces; hardware calibration and mission qualification pending"
+          }
+        },
+        {
+          "label": "physical surge hold",
+          "elapsed": 14.249034678010503,
+          "state": {
+            "schema_version": 1,
+            "session_id": "5418800004c844ccb32bbff9a1ec976e",
+            "robot_id": "lab_rov",
+            "enabled": true,
+            "ready": true,
+            "control_allowed": true,
+            "reason": "Physical depth/heading controller active",
+            "operator_id": "marine-gui-446bd007bf16477ba692215caeb82876",
+            "operator_fresh": true,
+            "depth": 1.0013378603838565,
+            "target_depth": 1.0014867244608154,
+            "position": {
+              "x": 0.44353456705425753,
+              "y": -6.624859350379072e-06,
+              "z": -1.0013378603838565
+            },
+            "rpy": [
+              -2.1168872596706807e-05,
+              -0.0010299655898899508,
+              -8.440171319065436e-06
+            ],
+            "velocity_world": [
+              0.010711854310310971,
+              -5.059263559147197e-07,
+              -6.976394709701388e-05
+            ],
+            "commanded_thruster_forces_N": [
+              -0.052639171322592056,
+              -0.052642198595175126,
+              -0.052649260238781234,
+              -0.05263210967898592,
+              0.2528033145067654,
+              0.2526177168158773,
+              0.26958340680612203,
+              0.269397809115234
+            ],
+            "force_allocation_scale": 1.0,
+            "mass_kg": 18.54170000000001,
+            "displaced_volume_m3": 0.017985475,
+            "gravity_trim_N": 1.0456295062500875,
+            "body_samples": 450,
+            "sim_time": 9.017,
+            "observer": "Actual simulator pose finite difference; ideal pressure is emulated from that pose. Independent estimation/SLAM unimplemented.",
+            "scope": "Authored laboratory ROV + native Gazebo marine forces; hardware calibration and mission qualification pending"
+          }
+        },
+        {
+          "label": "physical depth down",
+          "elapsed": 19.26855919600348,
+          "state": {
+            "schema_version": 1,
+            "session_id": "5418800004c844ccb32bbff9a1ec976e",
+            "robot_id": "lab_rov",
+            "enabled": true,
+            "ready": true,
+            "control_allowed": true,
+            "reason": "Physical depth/heading controller active",
+            "operator_id": "marine-gui-446bd007bf16477ba692215caeb82876",
+            "operator_fresh": true,
+            "depth": 1.1883544254933036,
+            "target_depth": 1.2014867244608154,
+            "position": {
+              "x": 0.4507055888578212,
+              "y": -7.315385972451067e-06,
+              "z": -1.1883544254933036
+            },
+            "rpy": [
+              -2.8900626983082046e-07,
+              -0.0005127047637234066,
+              -5.469617635401209e-05
+            ],
+            "velocity_world": [
+              3.820878785587648e-06,
+              3.801776840197847e-08,
+              -0.0081489154112881
+            ],
+            "commanded_thruster_forces_N": [
+              0.0001406977389559161,
+              0.0001766316879970302,
+              0.00014001158624632844,
+              0.00017731784070663893,
+              0.24278297630728796,
+              0.2427813832368884,
+              0.24703638654453897,
+              0.2470347934741394
+            ],
+            "force_allocation_scale": 1.0,
+            "mass_kg": 18.54170000000001,
+            "displaced_volume_m3": 0.017985475,
+            "gravity_trim_N": 1.0456295062500875,
+            "body_samples": 701,
+            "sim_time": 14.028,
+            "observer": "Actual simulator pose finite difference; ideal pressure is emulated from that pose. Independent estimation/SLAM unimplemented.",
+            "scope": "Authored laboratory ROV + native Gazebo marine forces; hardware calibration and mission qualification pending"
+          }
+        },
+        {
+          "label": "physical depth up",
+          "elapsed": 24.302562143013347,
+          "state": {
+            "schema_version": 1,
+            "session_id": "5418800004c844ccb32bbff9a1ec976e",
+            "robot_id": "lab_rov",
+            "enabled": true,
+            "ready": true,
+            "control_allowed": true,
+            "reason": "Physical depth/heading controller active",
+            "operator_id": "marine-gui-446bd007bf16477ba692215caeb82876",
+            "operator_fresh": true,
+            "depth": 1.0138813478921656,
+            "target_depth": 1.0014867244608154,
+            "position": {
+              "x": 0.45075108947228604,
+              "y": -7.2267015769405195e-06,
+              "z": -1.0138813478921656
+            },
+            "rpy": [
+              -1.0269292710882555e-08,
+              -0.0005306963681790393,
+              2.7535487882528082e-05
+            ],
+            "velocity_world": [
+              3.032821951909413e-06,
+              -2.5887589384573643e-09,
+              0.007700049356773761
+            ],
+            "commanded_thruster_forces_N": [
+              0.00020766150951245045,
+              0.00017797734068370692,
+              0.00020768724243052375,
+              0.00017795160776565739,
+              0.2747303046627577,
+              0.2747304549759344,
+              0.2791033228614481,
+              0.2791034731746248
+            ],
+            "force_allocation_scale": 1.0,
+            "mass_kg": 18.54170000000001,
+            "displaced_volume_m3": 0.017985475,
+            "gravity_trim_N": 1.0456295062500875,
+            "body_samples": 949,
+            "sim_time": 18.996,
+            "observer": "Actual simulator pose finite difference; ideal pressure is emulated from that pose. Independent estimation/SLAM unimplemented.",
+            "scope": "Authored laboratory ROV + native Gazebo marine forces; hardware calibration and mission qualification pending"
+          }
+        },
+        {
+          "label": "thrust zero after Stop",
+          "elapsed": 25.310323715006234,
+          "state": {
+            "schema_version": 1,
+            "session_id": "5418800004c844ccb32bbff9a1ec976e",
+            "robot_id": "lab_rov",
+            "enabled": false,
+            "ready": true,
+            "control_allowed": true,
+            "reason": "Operator Stop; thruster forces zero",
+            "operator_id": "marine-gui-446bd007bf16477ba692215caeb82876",
+            "operator_fresh": true,
+            "depth": 1.0350774495427533,
+            "target_depth": null,
+            "position": {
+              "x": 0.45074032562120225,
+              "y": -7.617367875277342e-06,
+              "z": -1.0350774495427533
+            },
+            "rpy": [
+              -5.6940077774970345e-06,
+              -0.0011213905013261207,
+              0.0012700406194079835
+            ],
+            "velocity_world": [
+              4.943635527055007e-05,
+              -1.5056134957922146e-06,
+              -0.044270533783453525
+            ],
+            "commanded_thruster_forces_N": [
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            "force_allocation_scale": 1.0,
+            "mass_kg": 18.54170000000001,
+            "displaced_volume_m3": 0.017985475,
+            "gravity_trim_N": 1.0456295062500875,
+            "body_samples": 1000,
+            "sim_time": 20.009,
+            "observer": "Actual simulator pose finite difference; ideal pressure is emulated from that pose. Independent estimation/SLAM unimplemented.",
+            "scope": "Authored laboratory ROV + native Gazebo marine forces; hardware calibration and mission qualification pending"
+          }
+        }
+      ],
+      "report": "/workspace/molar/robot_lab_runtime/r104-auv-2026-10-15/rov-sign-correction/report.json",
+      "console": "/workspace/molar/robot_lab_runtime/r104-auv-2026-10-15/rov-sign-correction/gui-console.log"
+    }
+  ],
+  "retained_failures": [
+    "Initial model.zip URL 404; pinned version/name archive succeeds",
+    "tank-gui-1/2 and reef-gui-1 preserve native rudder-sign, negative added-mass, early wall/coast and cleanup limitations",
+    "contracts.log first source-structure comparison failed only on tail whitespace; retained original SHA remained exact"
+  ],
+  "publication_changes": [
+    "Marine panel idle text now names both ROV and AUV; controller/model source unchanged from measured final AUV run",
+    "Static marine MJCF scenery is included for generator consistency, with non-colliding visual water surfaces; no other-backend force support inferred",
+    "Final dedicated startup guard verifies Fortress major 6 >= 6.18 before either native marine plant; current host reports 6.18.0. This version check does not change physical control/model equations."
+  ],
+  "remaining": [
+    "Independent pressure/DVL/sonar/state estimation",
+    "Saved sensor-based underwater 3D SLAM and feasible volumetric ROV/AUV routes",
+    "Current/disturbance, reverse, loss/reset/contact and longer inspection missions",
+    "Other map spawns, backends, host reproduction and physical joystick",
+    "Fleet queues/Open-RMF/coverage/multi-FCU and remaining robot forms before old roadmap"
+  ]
+}

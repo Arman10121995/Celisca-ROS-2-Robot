@@ -1,5 +1,14 @@
 # Robot Lab — Multi-Robot Simulation and Algorithm Laboratory
 
+October 15 adds the **native MBARI Tethys AUV** with a real propeller, fins,
+explicit trim ballast and experimental cruise guidance in the Marine panel.
+A GUI reef run reaches 1.689 m for a 1.70 m depth target and turns while
+cruising. The installed Fortress added-mass convention is corrected for both
+marine vehicles. Stop removes propulsion; the AUV coasts. Independent
+underwater estimation, SLAM/navigation and broader missions remain open.
+[AUV guide](docs/tutorials/tethys-auv.md),
+[measured scope](docs/status/auv-2026-10-15.md).
+
 October 15 adds **six-, eight- and twelve-legged robots** to the normal robot
 list, registry preview and Launch controls. Source hexapod, Laboratory octopod
 and articulated centipede have experimental MuJoCo **Gait** control, latched
@@ -13,7 +22,8 @@ October 15 also adds **Laboratory ROV + Marine controls** and five installed
 underwater worlds. Native Gazebo buoyancy, drag and eight thrusters drive the
 body; the normal GUI tank diagnostic measures forward motion, depth Down/Up
 and zero-thrust Stop. The observer currently uses simulator poses; independent
-marine estimation, AUV, SLAM/navigation and other backends remain pending.
+marine estimation, SLAM/navigation and other backends remain pending. The
+separate native Tethys AUV is now implemented experimentally.
 [Marine guide](docs/tutorials/marine-rov.md),
 [measured scope](docs/status/marine-2026-10-15.md).
 

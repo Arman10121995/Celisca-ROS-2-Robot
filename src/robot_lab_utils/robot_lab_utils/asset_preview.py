@@ -223,6 +223,9 @@ def prepare_scene(kind, profile, output, package_share):
         if not source.is_absolute():
             source = Path(package_share(gazebo['world_package']))/source
         shapes, notes = extract_static_shapes(str(source), resolve, prefer_visual=True)
+        if profile.get('marine'):
+            shapes = [shape for shape in shapes if shape.get('model') != 'water_surface']
+            notes.append('Water surface hidden for underwater inspection; static preview only')
     elif kind == 'robots':
         if profile.get('native_mjcf'):
             import mujoco

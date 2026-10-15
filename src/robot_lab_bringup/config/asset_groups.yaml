@@ -2,6 +2,9 @@
 # A variant is not an alias for its parent's controllers or measured missions.
 schema_version: 1
 robots:
+  - id: tethys_auv
+    name: MBARI Tethys AUV
+    members: [{id: tethys_auv, label: Complete source propeller-and-fin vehicle}]
   - id: hexapod_ros2
     name: Source hexapod
     members: [{id: hexapod_ros2, label: Complete six-legged source model}]

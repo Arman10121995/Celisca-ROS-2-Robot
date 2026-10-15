@@ -777,7 +777,7 @@ def _build_simulation_actions(context):
                 if not _is_auto(supplied):
                     marine_args['spawn_' + axis] = supplied
             return _run_id_actions() + [IncludeLaunchDescription(PythonLaunchDescriptionSource(
-                _launch_file(bringup_share, 'marine_simulator.launch.py')), launch_arguments=marine_args.items())]
+                _launch_file(bringup_share, 'auv_simulator.launch.py' if robot_model == 'tethys_auv' else 'marine_simulator.launch.py')), launch_arguments=marine_args.items())]
         if robot_model == 'px4_x500':
             spawn = map_config.get('spawn', {})
             python = os.environ.get('PX4_PYTHON', '/workspace/molar/robot_lab_runtime/px4/venv/bin/python3')

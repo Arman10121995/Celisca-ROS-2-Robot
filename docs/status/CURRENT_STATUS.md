@@ -1,5 +1,15 @@
 # Current Robot Lab status
 
+October 15 AUV continuation: **native Tethys propeller/fins, explicit trim
+and experimental Marine cruise guidance** are installed. One actual GUI reef
+run reaches 1.68886 m for a 1.70 m target and 1.70029 m during the following
+turn. Both vehicles now use the installed Fortress added-mass sign convention;
+the corrected ROV has its own tank surge/depth/Stop diagnostic. AUV Stop
+zeros propulsion/fins and allows physical coasting. Independent underwater
+estimation, saved SLAM/navigation, other backends and broader qualification
+remain open. [Guide](../tutorials/tethys-auv.md),
+[source/measurement scope](auv-2026-10-15.md).
+
 October 15 multi-leg continuation: complete **source hexapod, Laboratory
 octopod and articulated centipede** now have native MuJoCo Gait/Drive,
 source-stance previews and automatic compatible mode/command selection.

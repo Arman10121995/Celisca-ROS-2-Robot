@@ -1,4 +1,21 @@
 robots:
+  tethys_auv:
+    package: robot_lab_robots
+    xacro: tethys_auv/urdf/tethys_auv.urdf
+    name: tethys_auv
+    type: aquatic
+    marine_model: true
+    marine_propulsion: propeller_fins
+    spawn_by_map:
+      marine_tank: {x: -4.0, y: -3.0, z: -1.5, yaw: 0.5}
+      marine_reef: {x: -5.0, y: -3.0, z: -1.5, yaw: 0.5}
+    supported_modes: [display, marine]
+    default_mode: marine
+    default_map: marine_tank
+    supported_simulators: [gazebo]
+    features: [marine_dynamics]
+    drive: {type: marine, max_speed: 0.7, max_accel: 0.4, max_angular_speed: 0.15, max_angular_accel: 0.3}
+    notes: "Pinned CC-BY-4.0 native MBARI Tethys AUV/Fortress marine systems with explicit internal trim ballast and bounded propeller/fins. Experimental cruise guidance uses simulator-pose observer and real joints; no strafe/pivot/hover/depth hold at zero flow. Independent estimation, SLAM/navigation and other backends pending."
   hexapod_ros2:
     package: robot_lab_robots
     xacro: hexapod_ros2/urdf/hexapod_ros2.urdf

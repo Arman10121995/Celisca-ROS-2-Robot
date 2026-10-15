@@ -1,0 +1,22 @@
+{
+  "source_mass_kg": 148.35709999999997,
+  "displaced_volume_m3": 0.14835710000020003,
+  "ballast_mass_kg": 3.70892750020505,
+  "complete_mass_kg": 152.06602750020502,
+  "fluid_density_kg_m3": 1025.0,
+  "center_of_buoyancy_m": [
+    0.0036994912949852763,
+    0.0,
+    0.0
+  ],
+  "ballast_note": "Declared sealed internal mass below center of buoyancy (z=-0.08 m), no added collision volume; original mass/inertia untouched",
+  "source_fuel_version": 3,
+  "source_zip_sha256": "81cded5384f86c77afa1afa56050f024463379db912c33a60d938d27d28f4a15",
+  "source_model_sha256": "a9e6b39850139ce93cbe7b3198cc5e094541a28b81b14553b4db62ccca98ae16",
+  "source_physics_sha256": "ace3dc63c21079d738d7b86ce2eb72e820ac6c98a4e1b5f031c43caa48b0d161",
+  "thrust_limit_N": 35.0,
+  "fin_limit_rad": 0.261799,
+  "source_forward_yaw": 3.141592653589793,
+  "added_mass_convention": "Fortress 6.18 applies -Ma*acceleration; derived mass diagonals are positive, original example retained unchanged",
+  "scope": "Native source AUV forces/fins; authored trim and experimental guidance, no independent estimation/SLAM/navigation"
+}

@@ -85,7 +85,7 @@ MODE_CATEGORIES: Dict[str, str] = {
     "3d_slam": "3D Mapping & Localization",
     "nav": "Navigation",
     "flight": "PX4 Flight",
-    "marine": "Marine ROV control",
+    "marine": "Marine robot control",
     "gait": "Multi-leg gait control",
 }
 

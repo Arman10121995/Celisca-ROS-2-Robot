@@ -1,5 +1,11 @@
 # Stabilization and remaining work: agent execution guide
 
+October 15: [native Tethys AUV](tutorials/tethys-auv.md) and corrected marine
+added-mass conversion now have real scoped GUI depth/turn/Stop artifacts.
+Read [the receipt](status/auv-2026-10-15.md); preserve source originals and
+positive Fortress 6.18 added-mass diagonals, signed damping and actual Coriolis.
+Remaining R10 fleet/marine integration continues before this older queue.
+
 Latest October 14 priority: finish the new R10 extension implementation first,
 then resume this older patch queue. Read [NEXT_EXTENSION_GUIDE](NEXT_EXTENSION_GUIDE.md)
 and the claimed shared-world/fleet/GUI tasks in the live ledger. Keep broad

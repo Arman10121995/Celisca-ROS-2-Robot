@@ -1,0 +1,124 @@
+<?xml version='1.0' encoding='utf-8'?>
+<robot name="tethys_auv">
+  <link name="base_link">
+    <inertial>
+      <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0" />
+      <mass value="147.8671" />
+      <inertia ixx="3.000000" ixy="0" ixz="0" iyy="41.980233" iyz="0" izz="41.980233" />
+    </inertial>
+    <collision name="base_link_main_body_buoyancy">
+      <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0" />
+      <geometry>
+        <box size="2 0.3 0.246445166667" />
+      </geometry>
+    </collision>
+    <visual name="base_link_visual">
+      <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0" />
+      <geometry>
+        <mesh filename="package://robot_lab_robots/tethys_auv/meshes/Body.stl" />
+      </geometry>
+      <material name="tethys_color">
+        <color rgba=".85 .55 .08 1" />
+      </material>
+    </visual>
+  </link>
+  <link name="horizontal_fins">
+    <inertial>
+      <origin xyz="0.0 0.0 0.0" rpy="1.57 0.0 0.5" />
+      <mass value="0.2" />
+      <inertia ixx="0.0007924568755" ixy="-0.0000000002674" ixz="0.0003978158176" iyy="0.0010546736475" iyz="-0.0000000006729" izz="0.0002633558262" />
+    </inertial>
+    <collision name="horizontal_fins_collision">
+      <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0" />
+      <geometry>
+        <box size="0.1 0.1 0.02" />
+      </geometry>
+    </collision>
+    <visual name="horizontal_fins_visual">
+      <origin xyz="-1.05 0.0 0.0" rpy="0.0 0.0 0.0" />
+      <geometry>
+        <mesh filename="package://robot_lab_robots/tethys_auv/meshes/Fins_Horizontal.stl" />
+      </geometry>
+      <material name="tethys_color">
+        <color rgba=".85 .55 .08 1" />
+      </material>
+    </visual>
+  </link>
+  <link name="vertical_fins">
+    <inertial>
+      <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0" />
+      <mass value="0.2" />
+      <inertia ixx="0.0007924568755" ixy="-0.0000000002674" ixz="0.0003978158176" iyy="0.0010546736475" iyz="-0.0000000006729" izz="0.0002633558262" />
+    </inertial>
+    <collision name="vertical_fins_collision">
+      <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0" />
+      <geometry>
+        <box size="0.1 0.1 0.02" />
+      </geometry>
+    </collision>
+    <visual name="vertical_fins_visual">
+      <origin xyz="-1.05 0.0 0.0" rpy="0.0 0.0 0.0" />
+      <geometry>
+        <mesh filename="package://robot_lab_robots/tethys_auv/meshes/Fins_vertical.stl" />
+      </geometry>
+      <material name="tethys_color">
+        <color rgba=".85 .55 .08 1" />
+      </material>
+    </visual>
+  </link>
+  <link name="propeller">
+    <inertial>
+      <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0" />
+      <mass value="0.09" />
+      <inertia ixx="0.000143971303" ixy="0.000000000008" ixz="-0.000000000224" iyy="0.000140915448" iyz="-0.000025236433" izz="0.000033571862" />
+    </inertial>
+    <collision name="propeller_collision">
+      <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0" />
+      <geometry>
+        <box size="0.03 0.1 0.03" />
+      </geometry>
+    </collision>
+    <visual name="propeller_visual">
+      <origin xyz="-1.43162 0.0 0.0" rpy="0.0 0.0 0.0" />
+      <geometry>
+        <mesh filename="package://robot_lab_robots/tethys_auv/meshes/Prop.stl" />
+      </geometry>
+      <material name="tethys_color">
+        <color rgba=".85 .55 .08 1" />
+      </material>
+    </visual>
+  </link>
+  <link name="lab_trim_ballast">
+    <inertial>
+      <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0" />
+      <mass value="3.70892750020505" />
+      <inertia ixx="0.001335213900073818" iyy="0.001335213900073818" izz="0.001335213900073818" ixy="0.0" ixz="0.0" iyz="0.0" />
+    </inertial>
+  </link>
+  <joint name="horizontal_fins_joint" type="revolute">
+    <parent link="base_link" />
+    <child link="horizontal_fins" />
+    <origin xyz="1.05 0.0 0.0" rpy="0.0 0.0 0.0" />
+    <axis xyz="0 1 0" />
+    <limit lower="-0.261799" upper="0.261799" effort="2.0" velocity="100.0" />
+  </joint>
+  <joint name="vertical_fins_joint" type="revolute">
+    <parent link="base_link" />
+    <child link="vertical_fins" />
+    <origin xyz="1.05 0.0 0.0" rpy="0.0 0.0 0.0" />
+    <axis xyz="0 0 1" />
+    <limit lower="-0.261799" upper="0.261799" effort="2.0" velocity="100.0" />
+  </joint>
+  <joint name="propeller_joint" type="continuous">
+    <parent link="base_link" />
+    <child link="propeller" />
+    <origin xyz="1.43162 0.0 0.0" rpy="0.0 0.0 0.0" />
+    <axis xyz="1 0 0" />
+    <limit lower="-1e+12" upper="1e+12" effort="2.0" velocity="100.0" />
+  </joint>
+  <joint name="lab_trim_ballast_joint" type="fixed">
+    <parent link="base_link" />
+    <child link="lab_trim_ballast" />
+    <origin xyz="0.0036994912949852763 0.0 -0.08" rpy="0.0 0.0 0.0" />
+  </joint>
+</robot>

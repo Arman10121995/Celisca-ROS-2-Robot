@@ -1,4 +1,7 @@
 # Track large mesh files with Git LFS
+# Preserve retained upstream text bytes, including their original CRLF.
+/src/robot_lab_robots/hexapod_ros2/description/urdf/materials.xacro -text
+/src/robot_lab_robots/tethys_auv/source/** -text
 *.stl filter=lfs diff=lfs merge=lfs -text
 *.dae filter=lfs diff=lfs merge=lfs -text
 *.usd filter=lfs diff=lfs merge=lfs -text

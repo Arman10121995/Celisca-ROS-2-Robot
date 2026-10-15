@@ -10,11 +10,11 @@ modes:
     simulators: [mujoco]
     rviz: {enabled: true}
   marine:
-    category: "Marine ROV control"
+    category: "Marine robot control"
     steps:
     - {id: simulator, label: "Gazebo Fortress water physics"}
-    - {id: marine_controller, label: "Bounded thrusters, depth and heading hold"}
-    - {id: visualizer, label: "Actual body pose, IMU and RGB-D"}
+    - {id: marine_controller, label: "Bounded marine actuation and experimental guidance"}
+    - {id: visualizer, label: "Actual body, joints and supported sensors"}
     requires_2d_map: false
     required_features: [marine_dynamics]
     simulators: [gazebo]

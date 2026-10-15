@@ -84,7 +84,9 @@ def robot():
             child(plugin, tag, value)
     gazebo = child(root, 'gazebo')
     hydro = child(gazebo, 'plugin', filename='ignition-gazebo-hydrodynamics-system', name='ignition::gazebo::systems::Hydrodynamics')
-    parameters = dict(link_name='base_link', xDotU=-3,yDotV=-5,zDotW=-7,kDotP=-.04,mDotQ=-.08,nDotR=-.08,
+    # Fortress 6.18 applies -Ma*acceleration; positive mass diagonals oppose
+    # acceleration. The signed damping coefficients below remain negative.
+    parameters = dict(link_name='base_link', xDotU=3,yDotV=5,zDotW=7,kDotP=.04,mDotQ=.08,nDotR=.08,
                       xU=-8,yV=-12,zW=-15,kP=-.2,mQ=-.3,nR=-.3,
                       xUabsU=-20,yVabsV=-30,zWabsW=-35,kPabsP=-.3,mQabsQ=-.5,nRabsR=-.5)
     for tag,value in parameters.items():

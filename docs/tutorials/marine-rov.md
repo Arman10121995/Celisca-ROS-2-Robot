@@ -1,5 +1,11 @@
 # Laboratory ROV and underwater worlds
 
+The later [native Tethys AUV workflow](tethys-auv.md) is also installed. Both
+marine plants now use positive added-mass diagonals for Fortress 6.18's
+**−Ma × acceleration** convention; signed damping stays negative. Read the
+[latest marine receipt](../status/auv-2026-10-15.md) for the corrected ROV and
+the distinct propeller/fin AUV. Original diagnostics retain their old sources.
+
 The first marine workflow is an experimental, complete, first-party eight-
 thruster ROV in **Gazebo Fortress 6**. It uses actual buoyancy, hydrodynamic
 drag/added mass and joint-mounted thruster forces. It does not write body poses
@@ -84,9 +90,9 @@ single-operator ownership and wall-clock watchdogs in every adapter.
 
 The bounded normal-GUI diagnostic measures depth/surge/Stop in the tank only.
 Retain the failed first spawn run and exact source hashes; do not generalize
-it to the other four worlds or all six axes. First complete a separately
-reviewed AUV model/actuator contract, independent marine measurements and a
-sensor-based volumetric mapping/route pipeline. Then hand off disturbance,
+it to the other four worlds or all six axes. The separate native AUV contract
+is now installed; continue independent marine measurements and a sensor-based
+volumetric mapping/route pipeline. Then hand off disturbance,
 contact, communication-loss and repeated mission qualification. R10 gait and
 remaining fleet integrations still precede the old roadmap. Broad campaigns
 are deferred under the user's implementation-first priority.

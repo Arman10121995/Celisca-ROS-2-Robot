@@ -297,12 +297,12 @@
   <gazebo>
     <plugin filename="ignition-gazebo-hydrodynamics-system" name="ignition::gazebo::systems::Hydrodynamics">
       <link_name>base_link</link_name>
-      <xDotU>-3</xDotU>
-      <yDotV>-5</yDotV>
-      <zDotW>-7</zDotW>
-      <kDotP>-0.04</kDotP>
-      <mDotQ>-0.08</mDotQ>
-      <nDotR>-0.08</nDotR>
+      <xDotU>3</xDotU>
+      <yDotV>5</yDotV>
+      <zDotW>7</zDotW>
+      <kDotP>0.04</kDotP>
+      <mDotQ>0.08</mDotQ>
+      <nDotR>0.08</nDotR>
       <xU>-8</xU>
       <yV>-12</yV>
       <zW>-15</zW>

@@ -32,13 +32,14 @@ class MarineControls(ttk.Frame):
         self.keyboard=tk.BooleanVar(value=False)
         self.linear_delta=tk.DoubleVar(value=.01);self.angular_delta=tk.DoubleVar(value=.025)
         self.depth=tk.DoubleVar(value=1.)
-        self.status=tk.StringVar(value='Choose Laboratory ROV + marine world + Marine mode. Experimental native water forces.')
+        self.status=tk.StringVar(value='Choose ROV or AUV + marine world + Marine mode. Experimental native water forces.')
         self.feedback=tk.StringVar(value='Awaiting actual body/force feedback')
-        ttk.Label(self,text='ROV · physical thrusters',font=('',11,'bold')).grid(row=0,column=0,sticky='w')
+        ttk.Label(self,text='Marine · physical propulsion',font=('',11,'bold')).grid(row=0,column=0,sticky='w')
         ttk.Label(self,textvariable=self.status,wraplength=300).grid(row=1,column=0,sticky='ew',pady=5)
         connect=ttk.Frame(self);connect.grid(row=2,column=0,sticky='ew')
         ttk.Button(connect,text='Connect',command=self.connect).pack(side='left',expand=True,fill='x')
-        ttk.Button(connect,text='Arm depth/heading hold',command=lambda:self.operation('arm')).pack(side='left',expand=True,fill='x')
+        self.arm_label=tk.StringVar(value='Arm depth/heading hold')
+        ttk.Button(connect,textvariable=self.arm_label,command=lambda:self.operation('arm')).pack(side='left',expand=True,fill='x')
         pad=ttk.Frame(self);pad.grid(row=3,column=0,sticky='ew',pady=5)
         self.buttons={}
         for label,direction,row,col in [('↖',(1,1,0),0,0),('↑',(1,0,0),0,1),('↗',(1,-1,0),0,2),
@@ -64,7 +65,8 @@ class MarineControls(ttk.Frame):
         ttk.Button(depth,text='Near surface',command=lambda:self.operation('surface')).grid(row=1,column=2,sticky='ew')
         ttk.Label(self,textvariable=self.feedback,wraplength=300,justify='left').grid(row=7,column=0,sticky='ew',pady=5)
         ttk.Label(self,text='Click to latch; click again to brake. Connect/keyboard starts neutral.\n'
-                  'Stop removes thrust; passive buoyancy/drag continue.\n'
+                  'Stop removes propulsion; physical drift/coasting can continue.\n'
+                  'AUV fins need forward flow; no hover, strafe or pivot.\n'
                   'Observer uses simulator poses. Independent marine SLAM/navigation, sonar/DVL and other backends remain pending.',
                   wraplength=300).grid(row=8,column=0,sticky='ew')
         app.bind('<KeyPress>',self.key_press,add='+');app.bind('<KeyRelease>',self.key_release,add='+')
@@ -91,7 +93,8 @@ class MarineControls(ttk.Frame):
         try:
             if len(msg.data)>65536:return
             data=json.loads(msg.data)
-            if data.get('schema_version')!=1 or data.get('robot_id')!='lab_rov':return
+            if data.get('schema_version')!=1 or not self.app.robot_profiles.get(data.get('robot_id'),{}).get('marine_model'):return
+            if data['robot_id']!=self.app.robot_var.get():return
             if self.runtime and self.runtime['session_id']!=data['session_id']:self.clear()
             self.runtime,self.runtime_at=data,time.monotonic()
             p=data.get('position');v=data.get('velocity_world')
@@ -102,6 +105,10 @@ class MarineControls(ttk.Frame):
                 text+=f"Position ({p['x']:.2f}, {p['y']:.2f}, {p['z']:.2f}) m\n"
             if v:text+=f"Measured world velocity ({v[0]:.2f}, {v[1]:.2f}, {v[2]:.2f}) m/s\n"
             text+='Thrust N: '+', '.join(f'{f:.1f}' for f in data['commanded_thruster_forces_N'])
+            if data.get('propulsion_kind')=='propeller_fins':
+                text+='\nFin targets rad: '+', '.join(f'{v:.3f}' for v in data['fin_targets_rad'])
+                text+='\nMeasured fins rad: '+', '.join(f"{k}: {v:.3f}" for k,v in data.get('actual_joints_rad',{}).items() if k!='propeller_joint')
+                text+='\nCruise guidance '+('active' if data['cruise_guidance_active'] else 'requires forward flow')
             text+=f"\nActual body samples: {data['body_samples']}"
             self.feedback.set(text)
             if not data['enabled']:self.clear()
@@ -110,7 +117,7 @@ class MarineControls(ttk.Frame):
     def send(self,op,**extra):
         if not self.node or not self.runtime or time.monotonic()-self.runtime_at>1.:
             self.status.set('Connect to actual marine telemetry first');return False
-        if op!='stop' and (not self.selected() or not self.runtime.get('control_allowed')):
+        if op!='stop' and (not self.selected() or self.runtime['robot_id']!=self.app.robot_var.get() or not self.runtime.get('control_allowed')):
             self.status.set('Select Marine mode in a compatible Gazebo water world');return False
         self.command_pub.publish(String(data=json.dumps(dict(session_id=self.runtime['session_id'],operator_id=self.operator,op=op,**extra),allow_nan=False)))
         self.status.set('Requested '+op+'; actual feedback below')
@@ -166,9 +173,13 @@ class MarineControls(ttk.Frame):
     def tick(self):
         if self.closed:return
         now=time.monotonic()
+        auv=self.app._robot_config().get('marine_propulsion')=='propeller_fins'
+        self.arm_label.set('Arm AUV cruise guidance' if auv else 'Arm depth/heading hold')
+        for direction,button in self.buttons.items():
+            if direction[2]:button.state(['disabled'] if auv else ['!disabled'])
         if self.executor and rclpy.ok():self.executor.spin_once(timeout_sec=0.)
         state=self.runtime
-        if state and now-self.runtime_at<1. and self.selected():
+        if state and now-self.runtime_at<1. and self.selected() and state['robot_id']==self.app.robot_var.get():
             if now-self.last_hb>.2:
                 self.last_hb=now
                 self.hb_pub.publish(String(data=json.dumps(dict(session_id=state['session_id'],operator_id=self.operator))))
@@ -182,8 +193,11 @@ class MarineControls(ttk.Frame):
                 try:
                     dl,da=self.linear_delta.get(),self.angular_delta.get()
                     if not 0<dl<=.04 or not 0<da<=.05:raise ValueError('Marine increments: linear (0,.04], yaw (0,.05]')
+                    limits=state.get('limits',{})
+                    self.ramp.max_linear=float(limits.get('surge',.35));self.ramp.min_linear=-self.ramp.max_linear
+                    self.ramp.max_angular=float(limits.get('yaw',.35));self.ramp.min_angular=-self.ramp.max_angular
                     vx,wz=self.ramp.step(linear,angular,dl,da)
-                    vy=max(-.25,min(.25,lateral*.15))
+                    sway=float(limits.get('sway',.25));vy=max(-sway,min(sway,lateral*.15))
                     if linear or angular or lateral or self.driving or vx or wz:
                         message=Twist();message.linear.x=vx;message.linear.y=vy;message.angular.z=wz
                         self.drive_pub.publish(message)

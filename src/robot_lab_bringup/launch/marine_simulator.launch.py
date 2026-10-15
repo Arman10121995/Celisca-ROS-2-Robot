@@ -19,6 +19,8 @@ from launch_ros.parameter_descriptions import ParameterValue
 
 
 def _setup(context):
+    from robot_lab_utils.marine_runtime import require_fortress_mass_convention
+    require_fortress_mass_convention()
     from robot_lab_utils.robot_description import load_description
     from robot_lab_utils.marine_model import MarineModel
     from robot_lab_utils.fleet_session import finite

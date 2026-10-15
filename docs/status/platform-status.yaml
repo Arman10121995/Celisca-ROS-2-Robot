@@ -2,7 +2,7 @@
 # Counts are audited observations, not targets or proof of runtime qualification.
 schema_version: 2
 updated: "2026-10-15"
-current_revision: "October 15 R10-first continuation from 8ede6f2: complete pinned-MIT hexapod, authored octopod and six-body/twelve-leg/five-spine centipede; MuJoCo source IK/gaits, bounded in-step PD, real contact/tilt observations, timestamp/reset/lease guards and native Gait/Drive/autofill/source-stance preview implemented. Short normal GUI nav_empty inputs/Stop measured ~0.0974/0.1760/0.1252 m (centipede repeat 0.1235 m after freshness guards). Source masses preserved; eight gait and 19 composition checks pass. Independent estimates, SLAM/navigation, terrain/recovery and other backends remain open. Preserve fleet/ROV and historical support scopes; R10 AUV/marine/fleet initial integrations continue before old R3–R9. Full platform remains partial."
+current_revision: "October 15 R10-first continuation from 815e54e: native pinned CC-BY Tethys AUV, explicit trim, bounded propeller/fins and GUI cruise guidance integrated. Fortress 6.18 positive added-mass convention corrected for both marine plants, with native added mass/Coriolis retained and a version startup guard. Actual GUI reef run records neutral enable, 2.05055 m surge input, 1.68886 m for 1.70 m depth target, 0.24229 rad turn and zero-output/coasting Stop (282 states); corrected ROV/tank surge/depth/Stop separately recorded. Preserve retained earlier drift/cleanup failures and exact source snapshots. Fleet, marine and three multi-leg GUI implementations remain partial; independent marine estimates/SLAM/routes, remaining fleet/swarm features and broader qualification stay open before older R3–R9."
 goal: "unified_multi_robot_algorithm_lab"
 next_extension:
   requested: "2026-10-14"
@@ -1614,10 +1614,11 @@ tasks:
         owner: "codex"
         depends_on: []
         scope_paths: ["docs/", "README.md", "ROADMAP.md", "src/robot_lab_utils/", "src/robot_lab_bringup/", "src/robot_lab_adapter/", "src/robot_lab_robots/", "src/robot_lab_maps/", "src/robot_lab_gui/", "src/robot_lab/robot_lab_registry/", "scripts/"]
-        active_scope: "2026-10-15 after aa72d24: first complete first-party ROV with actual Fortress buoyancy/thruster/hydrodynamics, bounded velocity/depth/heading controls, neutral enable/Stop/heartbeat and normal GUI/registry/autofill integration. Source AUV integration, other backends and broad missions remain separate."
-        implementation_state: "First complete authored ROV, native Fortress water forces, source-derived bounded allocation, manual/depth/heading control, Stop/lease/watchdog and Marine GUI implemented; AUV/other backend adapters pending"
-        validation_state: "Actual normal GUI tank neutral connection, surge, Depth Down/Up and zero-thrust Stop measured; all-axis/current/contact/loss/reset and other-world qualification pending"
-        evidence: ["docs/tutorials/marine-rov.md", "docs/status/marine-2026-10-15.md", "docs/status/marine-receipt-2026-10-15.json", "docs/status/evidence/r104-marine-2026-10-15/README.md"]
+        active_scope: "2026-10-15 after 815e54e: preserve first physical ROV and new multi-leg batch; inspect/provision Gazebo Fortress Tethys AUV source/license and integrate source propeller/fins/hydrodynamics with a separate bounded GUI/controller contract. Independent marine measurements/volumetric features and broad qualification remain separate; no thruster-only ROV relabeling as AUV."
+        additional_scope_paths: [".gitattributes"]
+        implementation_state: "Complete authored ROV + pinned native Tethys AUV, source/trim/actuator contracts, positive Fortress 6.18 mass convention, bounded manual/depth/cruise guidance and native GUI implemented; independent estimates/routes and other backend adapters pending"
+        validation_state: "Actual GUI AUV/reef neutral enable, surge, 1.70 m depth target/turn and zero-output coasting Stop measured; corrected ROV/tank separately measured. All-axis/current/contact/loss/reset and other-world qualification pending"
+        evidence: ["docs/tutorials/marine-rov.md", "docs/status/marine-2026-10-15.md", "docs/status/marine-receipt-2026-10-15.json", "docs/status/evidence/r104-marine-2026-10-15/README.md", "docs/tutorials/tethys-auv.md", "docs/status/auv-2026-10-15.md", "docs/status/auv-receipt-2026-10-15.json"]
         acceptance_ref: "ROADMAP.md R10.4"
       R10.5:
         title: "Underwater maps, sensors, estimation, SLAM and navigation"
@@ -1625,9 +1626,9 @@ tasks:
         owner: "codex"
         depends_on: ["R10.4", "R6.7"]
         active_scope: "2026-10-15 initial marine world/observations: tank/reef/harbor/cave/wreck water-surface and bathymetry/collision semantics, actual body/IMU/camera observations with explicit measurement-source labels. DVL/sonar, independent estimation, saved underwater SLAM and volumetric navigation remain pending; do not enable fake GPS/flat Nav2."
-        implementation_state: "Five installed collision/water worlds with submerged spawns; actual pose/IMU/RGB-D/joint-state bridges and explicitly ideal pose-derived pressure implemented. Independent marine estimation/SLAM/navigation pending"
-        validation_state: "Tank body/depth observation measured; other four worlds, independent sensor rates, contacts and saved-map missions unqualified"
-        evidence: ["docs/status/marine-2026-10-15.md", "docs/status/marine-receipt-2026-10-15.json"]
+        implementation_state: "Five installed water/collision worlds, static scene derivatives with non-colliding visual water, separate ROV/AUV actual body/joint/IMU and supported camera bridges, explicitly ideal pose-derived pressure implemented. Independent marine estimation/SLAM/navigation pending"
+        validation_state: "ROV/tank and AUV/reef body/depth/joint observations measured; remaining vehicle/map cells, independent sensor rates, contacts and saved-map missions unqualified"
+        evidence: ["docs/status/marine-2026-10-15.md", "docs/status/marine-receipt-2026-10-15.json", "docs/status/auv-2026-10-15.md", "docs/status/auv-receipt-2026-10-15.json"]
         acceptance_ref: "ROADMAP.md R10.5"
       R10.6:
         title: "Six-legged hexapod and eight-legged octopod robots"
@@ -1657,7 +1658,7 @@ tasks:
         depends_on: ["R10.1", "R10.2", "R10.3", "R10.4", "R10.5", "R10.6", "R10.7"]
         active_scope: "Native Fleet & Swarm and Marine controls: shared map/member editor, commands/presets/default compatible water maps, latched per-instance/group or ROV Drive, real Nav2 or depth/heading actions and measured state. Gait ownership/Drive/source-stance preview controls are also implemented; experiment adapters remain."
         implementation_state: "Fleet & Swarm tab, Marine/Gait control columns, compatible robot/map/backend/mode autofill, source-stance previews and live controls implemented; shared-world/marine/gait workloads pending"
-        validation_state: "Actual normal GUI diagnostics on two bases/nav_empty/Gazebo, one ROV/tank/Gazebo and three multi-leg models/nav_empty/MuJoCo, with exact per-run source hashes; physical joystick and remaining configurations pending"
+        validation_state: "Actual normal GUI diagnostics on two bases/nav_empty/Gazebo, one ROV/tank/Gazebo, one AUV/reef/Gazebo and three multi-leg models/nav_empty/MuJoCo, with exact per-run source hashes; physical joystick and remaining configurations pending"
         evidence: ["docs/tutorials/fleet-and-swarm.md", "docs/status/fleet-2026-10-15.md", "docs/tutorials/marine-rov.md", "docs/status/marine-2026-10-15.md", "docs/tutorials/multi-leg-gaits.md", "docs/status/gaits-2026-10-15.md"]
         acceptance_ref: "ROADMAP.md R10.8"
 
@@ -1703,11 +1704,11 @@ risks:
       - "R3.5"
     description: "Tests may launch/reset/record; isolate middleware/simulator instances and own processes."
 handoff:
-  next_task: "R10.4"
+  next_task: "R10.2"
   parallel_ready_after_R0:
     - "R1.1"
     - "R1.2"
-  next_action: "R10 first: preserve shared-world fleet, physical ROV/Marine and complete six/eight/many-legged Gait workflows with their exact diagnostic scopes. Continue complete AUV and independent marine measurement/volumetric features, then fleet queues/Open-RMF/coverage/multi-FCU and remaining shared adapters/robot forms. Initial implementation precedes broad qualification. Keep higher legged modes gated until real estimation/SLAM/navigation integration. Resume older R3–R9 after this extension. Read fleet-and-swarm.md, marine-rov.md and multi-leg-gaits.md for source contracts and retained failures."
+  next_action: "R10 first: preserve fleet, ROV/AUV and six/eight/many-legged workflows with exact physical/source scopes. Continue fleet real task queues/Open-RMF/coverage/multi-FCU, then independent marine measurements/volumetric routes and remaining shared adapters/robot forms. Initial implementation precedes broad qualification. Read fleet-and-swarm.md, marine-rov.md, tethys-auv.md and multi-leg-gaits.md; keep higher-mode/backend gates truthful. Resume older R3–R9 after this extension."
   protocol: "docs/AGENT_HANDOFF.md"
   plan: "ROADMAP.md"
   audit: "docs/status/audit-2026-10-02.md"
@@ -1756,7 +1757,7 @@ implementation_first:
   - title: R10 shared worlds, fleet/swarm, marine and additional robot forms first
     tasks: [R10.1, R10.2, R10.3, R10.4, R10.5, R10.6, R10.7, R10.8]
     outcome: Implement complete usable workflows for the new extension before resuming the older queue; reuse source controllers/plugins and provision complete models/maps into the native GUI.
-    implemented: Experimental one-world Gazebo Bumperbot/Labbot, native Fleet & Swarm tab/autofill, real per-instance Nav2 dispatch/allocation, four ground kernels, Stop/heartbeat and scoped reset. First ROV/five water worlds/native Marine and three complete multi-leg models/native Gait/Drive/source-stance previews are also implemented. AUV/independent marine features, queues/Open-RMF/coverage, multi-FCU and additional shared backends/missions remain.
+    implemented: Experimental one-world Gazebo Bumperbot/Labbot, native Fleet & Swarm tab/autofill, real per-instance Nav2 dispatch/allocation, four ground kernels, Stop/heartbeat and scoped reset. First ROV/five water worlds/native Marine and three complete multi-leg models/native Gait/Drive/source-stance previews are also implemented. Native Tethys propeller/fins/trim/cruise guidance and corrected marine mass convention are now implemented. Independent marine features, queues/Open-RMF/coverage, multi-FCU and additional shared backends/missions remain.
     validation: "Scoped fleet/nav_empty, ROV/tank and multi-leg/nav_empty actual GUI diagnostics with per-run source hashes recorded; broader runtime acceptance remains pending"
   - title: Reusable model-matched motion controllers and policies
     tasks:

@@ -44,6 +44,13 @@ def test_mass_volume_and_weight_compensation_come_from_source(model):
     assert abs(model.gravity_trim-(model.mass-model.density*model.displacement)*9.81)<1e-12
 
 
+def test_native_added_mass_opposes_acceleration_on_fortress_618(model):
+    description=load_description(ROOT/'src/robot_lab_robots/lab_rov/urdf/lab_rov.urdf.xacro')
+    hydro=next(p for p in ET.fromstring(description).findall('gazebo/plugin') if p.get('name').endswith('::Hydrodynamics'))
+    assert all(float(hydro.findtext(key))>0. for key in ('xDotU','yDotV','zDotW','kDotP','mDotQ','nDotR'))
+    assert all(float(hydro.findtext(key))<0. for key in ('xU','yV','zW'))
+
+
 def test_water_is_a_density_boundary_not_a_solid_collision_box():
     for name in ('marine_tank','marine_reef','marine_harbor','marine_cave','marine_wreck'):
         world=ET.parse(ROOT/'src/robot_lab_maps/maps'/name/'worlds'/(name+'.world')).getroot().find('world')

@@ -62,6 +62,17 @@ published checkpoint, and the [workflow](WORKFLOW.md) for commands.
 
 ## Current continuation
 
+**October 15 native AUV continuation from `815e54e`:** complete pinned Fuel-v3
+CC-BY Tethys, native propeller/fins and explicit internal trim are installed in
+the normal registry/Marine workflow. Read [the guide](tutorials/tethys-auv.md)
+and [scope/receipt](status/auv-2026-10-15.md). Fortress 6.18 applies −Ma ×
+acceleration: preserve positive added-mass diagonals in both marine plants,
+negative drag, and the unchanged original example/earlier failed runs. Added
+mass/Coriolis remain enabled. Reef depth/turn and corrected ROV/tank are actual
+diagnostics; independent underwater estimation/SLAM/routes remain open.
+Keep AUV flow/fin constraints and coasting Stop distinct from hovering ROV
+controls. Continue remaining R10 fleet/marine features before the older queue.
+
 **October 15 multi-leg continuation from `8ede6f2`:** source hexapod plus
 authored octopod and six-segment/twelve-leg centipede now have MuJoCo Gait,
 native Gait/Drive controls/defaults and source-stance previews. Read

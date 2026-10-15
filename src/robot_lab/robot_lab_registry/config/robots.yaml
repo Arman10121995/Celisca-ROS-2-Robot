@@ -2,6 +2,25 @@
 # Version 0.1.0
 # This file catalogs all robots available in the platform
 
+- id: tethys_auv
+  version: "0.1.0"
+  name: MBARI Tethys AUV
+  ros_package: robot_lab_robots
+  status: available
+  robot_class: aquatic
+  maturity: prototype
+  supported_simulators: [gazebo]
+  supported_modes: [display, marine]
+  locomotion: {type: propeller_and_fins, dof: 3, max_velocity: 0.7}
+  capabilities: [control]
+  command_interfaces: [geometry_msgs/Twist]
+  state_interfaces: [nav_msgs/Odometry, sensor_msgs/Imu, sensor_msgs/JointState]
+  sensors:
+  - {type: imu, name: auv_imu, frame: base_link, topic: /marine/imu, message_type: sensor_msgs/Imu}
+  frames: [map, base_link, horizontal_fins, vertical_fins, propeller]
+  assets: {urdf: robot_lab_robots/tethys_auv/urdf/tethys_auv.urdf, sdf: robot_lab_robots/tethys_auv/model.sdf}
+  source: {repository: "https://fuel.gazebosim.org/1.0/accurrent/models/MBARI%20Tethys%20LRAUV", revision: "3", license: CC-BY-4.0, author: Mabel Zhang}
+  tags: [extension, underwater, auv, complete_robot, source_geometry, native_marine_dynamics, explicit_trim_ballast, experimental_cruise_guidance]
 - id: hexapod_ros2
   version: "0.1.0"
   name: Source hexapod

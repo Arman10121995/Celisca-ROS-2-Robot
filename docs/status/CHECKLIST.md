@@ -10,8 +10,11 @@ October 15: R10 extension implementation comes first. Each parent remains partia
 - [x] Complete source hexapod, authored octopod and segmented twelve-leg robot,
   MuJoCo Gait/Drive, source IK/PD, actual contact/tilt feedback and previews;
   short forward/Stop diagnostics recorded.
-- [ ] Complete AUV, independent underwater sensing/estimation, saved 3D marine
-  SLAM and volumetric routes; other backend force adapters.
+- [x] Complete native Tethys AUV, bounded propeller/fins, explicit trim and
+  experimental cruise guidance; actual reef depth/turn/Stop recorded. Both
+  marine plants use the corrected Fortress 6.18 added-mass convention.
+- [ ] Independent underwater sensing/estimation, saved 3D marine SLAM and
+  volumetric routes; other backend force adapters and broad qualification.
 - [ ] Remaining fleet queues/Open-RMF/traffic, cooperative coverage, multi-FCU
   aerial swarms and additional shared-world adapters.
 - [ ] Legged terrain/recovery, independent estimates, saved SLAM/navigation,

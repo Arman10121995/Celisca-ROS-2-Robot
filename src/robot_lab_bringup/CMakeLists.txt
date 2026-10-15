@@ -47,6 +47,7 @@ if(BUILD_TESTING)
   ament_add_pytest_test(fleet_contract test/test_fleet_contract.py TIMEOUT 60 ENV PYTEST_DISABLE_PLUGIN_AUTOLOAD=1)
   ament_add_pytest_test(marine_contract test/test_marine_contract.py TIMEOUT 60 ENV PYTEST_DISABLE_PLUGIN_AUTOLOAD=1)
   ament_add_pytest_test(gait_contract test/test_gait_contract.py TIMEOUT 60 ENV PYTEST_DISABLE_PLUGIN_AUTOLOAD=1)
+  ament_add_pytest_test(auv_contract test/test_auv_contract.py TIMEOUT 60 ENV PYTEST_DISABLE_PLUGIN_AUTOLOAD=1)
 endif()
 
 ament_package()

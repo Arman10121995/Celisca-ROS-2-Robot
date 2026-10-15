@@ -177,7 +177,7 @@ MODE_LABELS = {
     "3d_slam": "3D SLAM",
     "nav": "Navigation",
     "flight": "PX4 Flight",
-    "marine": "Marine ROV",
+    "marine": "Marine",
     "gait": "Multi-leg gait",
 }
 

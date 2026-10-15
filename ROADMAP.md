@@ -1434,10 +1434,19 @@ advertised class/backend; pose animation is not swarm control.
 
 ### R10.4 — Underwater robots and controllers
 
+Later October 15: complete CC-BY Fuel-v3 native Tethys propeller/fin AUV,
+explicit trim and bounded cruise guidance are installed in the normal Marine
+workflow. Native positive added-mass convention is corrected for Fortress
+6.18 in both marine vehicles, with original sources/failures retained. AUV
+reef depth/turn and corrected ROV/tank are measured. [AUV guide](docs/tutorials/tethys-auv.md),
+[exact scope/receipt](docs/status/auv-2026-10-15.md). Zero-flow hover/strafe/
+pivot is unavailable for the AUV; independent estimation/SLAM/routes and broad
+loss/contact/reset/current/backend acceptance remain open.
+
 October 15: complete first-party eight-thruster Laboratory ROV, actual Fortress
 water forces, source-derived allocation, bounded manual/depth/heading controls
 and zero-thrust Stop/watchdog are implemented. Normal GUI tank surge and depth
-Down/Up are measured; AUV, all-axis/current/loss/contact campaigns, independent
+Down/Up are measured; all-axis/current/loss/contact campaigns, independent
 estimation and other backend adapters remain. [Guide](docs/tutorials/marine-rov.md),
 [scope/receipt](docs/status/marine-2026-10-15.md).
 
@@ -1448,6 +1457,12 @@ and loss with actual body/water-force/effort evidence. Visual import stays
 Display-only until the marine force adapter exists.
 
 ### R10.5 — Underwater worlds, sensing, SLAM and navigation
+
+Later October 15: native AUV real body/joint/IMU bridges, distinct ROV/AUV
+normal GUI depth diagnostics and static marine MJCF scene derivatives are
+implemented. Visual water remains non-colliding in those derivatives; geometry
+does not provide water-force support to another backend. Independent marine
+sensor/filter and saved 3D-map/route integration remains pending.
 
 October 15: five installed complete tank/reef/harbor/cave/wreck water worlds,
 explicit submerged spawns, native IMU/RGB-D and rotor joint-state bridges, actual

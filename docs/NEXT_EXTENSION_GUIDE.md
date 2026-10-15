@@ -1,5 +1,12 @@
 # Next extension: fleets, swarms, marine and multi-legged robotics
 
+October 15 native AUV continuation: [Tethys propeller/fin controls](tutorials/tethys-auv.md)
+and [actual reef depth/turn + corrected ROV diagnostic](status/auv-2026-10-15.md)
+are implemented. Preserve the installed Fortress 6.18 mass-sign convention,
+explicit trim, source notices, forward-flow constraints and coasting Stop.
+Independent marine sensing/SLAM/routes, fleet queues/RMF/coverage/multi-FCU
+and remaining forms still precede the old roadmap; broad validation is separate.
+
 Requested October 14, 2026. The latest user instruction puts this extension
 first, then resumes the previous initial implementation work. R3–R9 and their remaining acceptance stay open.
 R10 defines the additional scope; a researched source or planned GUI panel is
@@ -16,15 +23,15 @@ Do not replace these with catalog counts or broaden the one nav_empty result.
 
 October 15 also implements the [first ROV/Marine workflow](tutorials/marine-rov.md)
 and five actual water/collision worlds. [The actual tank diagnostic](status/marine-2026-10-15.md)
-measures surge/depth/Stop with a simulator-pose observer. Complete AUV,
-independent marine sensing/estimation and volumetric missions remain separate;
+measures surge/depth/Stop with a simulator-pose observer. Native Tethys AUV is
+also installed; independent marine sensing/estimation and volumetric missions remain separate;
 do not treat a water scene or ideal pressure emulation as underwater SLAM.
 
 October 15 also implements [six/eight/many-legged Gait controls](tutorials/multi-leg-gaits.md):
 a pinned MIT source hexapod and separate authored octopod/centipede models,
 source IK, bounded physical PD and measured contact/tilt guards. Normal GUI
 nav_empty forward/Stop diagnostics exist for each. [Receipt and gaps](status/gaits-2026-10-15.md).
-Remaining AUV/marine and fleet/swarm features precede the older roadmap;
+Remaining marine and fleet/swarm features precede the older roadmap;
 terrain/recovery, independent legged estimation/SLAM/navigation and other
 backends remain separate initial integrations/qualification.
 
