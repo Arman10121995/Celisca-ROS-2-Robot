@@ -39,15 +39,26 @@ def board_points(pattern, square):
 
 
 def find_board(gray, pattern):
-    """Sub-pixel inner corners (N x 2) of the chessboard, or None."""
+    """Sub-pixel inner corners (N x 2) of the chessboard, or None.
+
+    The classic detector first (refined with cornerSubPix); when it misses,
+    OpenCV's sector-based detector, which finds small and tilted boards in
+    low-resolution frames that the classic one rejects (a 320 x 240 Gazebo
+    camera, 2026-10-15).
+    """
     import cv2
-    flags = cv2.CALIB_CB_ADAPTIVE_THRESH | cv2.CALIB_CB_NORMALIZE_IMAGE | cv2.CALIB_CB_FAST_CHECK
+    flags = cv2.CALIB_CB_ADAPTIVE_THRESH | cv2.CALIB_CB_NORMALIZE_IMAGE
     found, corners = cv2.findChessboardCorners(gray, pattern, flags=flags)
-    if not found:
-        return None
-    criteria = (cv2.TERM_CRITERIA_EPS + cv2.TERM_CRITERIA_MAX_ITER, 50, 0.001)
-    corners = cv2.cornerSubPix(gray, corners, (5, 5), (-1, -1), criteria)
-    return corners.reshape(-1, 2)
+    if found:
+        criteria = (cv2.TERM_CRITERIA_EPS + cv2.TERM_CRITERIA_MAX_ITER, 50, 0.001)
+        corners = cv2.cornerSubPix(gray, corners, (5, 5), (-1, -1), criteria)
+        return corners.reshape(-1, 2)
+    if hasattr(cv2, 'findChessboardCornersSB'):
+        found, corners = cv2.findChessboardCornersSB(gray, pattern,
+                                                     flags=cv2.CALIB_CB_EXHAUSTIVE | cv2.CALIB_CB_ACCURACY)
+        if found:
+            return corners.reshape(-1, 2)
+    return None
 
 
 def view_signature(corners, pattern, image_size):

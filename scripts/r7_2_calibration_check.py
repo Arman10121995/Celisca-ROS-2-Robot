@@ -93,9 +93,9 @@ def rotation(axis, angle):
 
 def board_pose_in_camera(rng, fx, fy, cx, cy, width, height):
     """Board pose in the camera's optical frame: its visible +x face toward
-    the camera, 0.6-1.0 m away, its centre on a random pixel of the middle
+    the camera, 0.45-0.85 m away, its centre on a random pixel of the middle
     60% of the image, tilted up to 30 deg."""
-    distance = rng.uniform(0.6, 1.0)
+    distance = rng.uniform(0.45, 0.85)
     u = rng.uniform(0.2, 0.8) * width
     v = rng.uniform(0.2, 0.8) * height
     centre = np.array([(u - cx) * distance / fx, (v - cy) * distance / fy, distance])
@@ -198,8 +198,18 @@ def main():
     outcomes = []
     k_info = list(info.k)
     misses = 0
+    half = squares_x * args.square / 2.0
+    corners = np.array([[0, sy * half, sz * half, 1.0] for sy in (-1, 1) for sz in (-1, 1)]).T
+    report['rejected_below_floor'] = 0
     for _ in range(args.poses):
-        pose = world_from_camera @ board_pose_in_camera(rng, k_info[0], k_info[4], k_info[2], k_info[5], width, height)
+        # The camera is about 0.2 m up: resample boards that would reach
+        # into the floor (the second check cut off their lower rows).
+        for _ in range(200):
+            pose = world_from_camera @ board_pose_in_camera(rng, k_info[0], k_info[4], k_info[2], k_info[5],
+                                                            width, height)
+            if (pose @ corners)[2].min() >= 0.03:
+                break
+            report['rejected_below_floor'] += 1
         x, y, z = pose[:3, 3]
         qx, qy, qz, qw = matrix_quaternion(pose[:3, :3])
         request = ('name: "calibration_board", position: {x: %.5f, y: %.5f, z: %.5f}, '
