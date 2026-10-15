@@ -1,0 +1,55 @@
+{
+ "depth_topic": "/oakd/depth/image_raw",
+ "topic": "/perception/depth_points",
+ "reference": "/oakd/points",
+ "depth_images": 3177,
+ "clouds": 2861,
+ "reference_clouds": 2636,
+ "cloud_frames": [
+  "oakd_rgb_camera_optical_frame"
+ ],
+ "images_without_cloud": 316,
+ "points_per_cloud": {
+  "median": 55116.0,
+  "p95": 65426.0,
+  "max": 65426.0
+ },
+ "latency_ms": {
+  "median": 6.6,
+  "p95": 10.3,
+  "max": 127.3
+ },
+ "agreement": {
+  "pairs": 85,
+  "nearest_reference_median_m": {
+   "median": 0.003685,
+   "p95": 0.004407,
+   "max": 0.004827
+  },
+  "nearest_reference_p95_m": {
+   "median": 0.016196,
+   "p95": 0.020036,
+   "max": 0.020507
+  },
+  "nearest_reference_max_m": {
+   "median": 0.026846,
+   "p95": 0.031662,
+   "max": 0.031884
+  },
+  "reference_coverage_1cm": {
+   "median": 0.8629,
+   "p95": 0.987,
+   "max": 1.0
+  },
+  "node_points": {
+   "median": 54831.0,
+   "p95": 63733.0,
+   "max": 65426.0
+  },
+  "reference_points_in_range": {
+   "median": 54831.0,
+   "p95": 63733.0,
+   "max": 65426.0
+  }
+ }
+}

@@ -1,0 +1,23 @@
+{
+ "depth_topic": "/oakd/depth/image_raw",
+ "topic": "/perception/depth_points",
+ "reference": null,
+ "depth_images": 523,
+ "clouds": 522,
+ "reference_clouds": 0,
+ "cloud_frames": [
+  "oakd_rgb_camera_optical_frame"
+ ],
+ "images_without_cloud": 1,
+ "points_per_cloud": {
+  "median": 13566.0,
+  "p95": 15935.0,
+  "max": 16054.0
+ },
+ "latency_ms": {
+  "median": 4.4,
+  "p95": 7.5,
+  "max": 20.4
+ },
+ "agreement": null
+}

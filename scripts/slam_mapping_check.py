@@ -5,7 +5,9 @@ Runs against a launched ``mode:=slam`` stack.  The robot is driven along an
 A* route through the world's reference occupancy map (inflated by
 ``--radius``), visiting ``--waypoints`` and returning to the start.  Only
 the drive harness looks at simulator truth (/odom/ground_truth); slam_toolbox
-sees the robot's own scan and odometry as in any slam run.
+sees the robot's own scan and odometry as in any slam run.  The drive steers
+with forward speed and turn rate; with ``--holonomic`` a mecanum or crab /
+in-phase steered base instead translates toward the route at a fixed heading.
 
 Scores, all against simulator truth and the reference map:
 
@@ -208,6 +210,9 @@ def main():
                         help='slowest forward command the gait walks at')
     parser.add_argument('--turn-in-place', action='store_true',
                         help='rotate on the spot when the heading error exceeds 60 deg')
+    parser.add_argument('--holonomic', action='store_true',
+                        help='translate toward the route without turning (mecanum strafe, 4WS crab or '
+                             'in_phase): the velocity points at the carrot and the start heading is held')
     parser.add_argument('--base', default='base_footprint')
     parser.add_argument('--timeout', type=float, default=900.0, help='wall seconds for the whole drive')
     parser.add_argument('--warmup', type=float, default=10.0)
@@ -257,7 +262,7 @@ def main():
         while time.monotonic() < end:
             rclpy.spin_once(node, timeout_sec=0.05)
 
-    report = {'world': args.map, 'base': args.base}
+    report = {'world': args.map, 'base': args.base, 'holonomic': args.holonomic}
     deadline = time.monotonic() + 300
     while time.monotonic() < deadline and (state['truth'] is None or slam_pose() is None):
         rclpy.spin_once(node, timeout_sec=0.2)
@@ -300,7 +305,12 @@ def main():
                 stuck_here += 1
                 report['backoffs'] += 1
                 back = Twist()
-                back.linear.x = -0.2
+                if args.holonomic:
+                    carrot = route[index]
+                    away = wrap(math.atan2(carrot[1] - pose[1], carrot[0] - pose[0]) - pose[2] + math.pi)
+                    back.linear.x, back.linear.y = 0.2 * math.cos(away), 0.2 * math.sin(away)
+                else:
+                    back.linear.x = -0.2
                 for _ in range(40):
                     cmd.publish(back)
                     spin(0.05)
@@ -323,7 +333,11 @@ def main():
         bearing = math.atan2(target[1] - pose[1], target[0] - pose[0])
         error = wrap(bearing - pose[2])
         twist = Twist()
-        if args.turn_in_place and abs(error) > math.radians(60):
+        if args.holonomic:
+            twist.linear.x = args.speed * math.cos(error)
+            twist.linear.y = args.speed * math.sin(error)
+            twist.angular.z = max(-0.3, min(0.3, wrap(start_truth[2] - pose[2])))
+        elif args.turn_in_place and abs(error) > math.radians(60):
             twist.angular.z = math.copysign(0.8, error)
         else:
             twist.linear.x = max(args.min_speed, args.speed * max(0.0, math.cos(error)))

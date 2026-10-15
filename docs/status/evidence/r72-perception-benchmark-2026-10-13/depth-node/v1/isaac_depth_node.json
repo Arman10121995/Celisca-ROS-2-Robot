@@ -1,0 +1,45 @@
+{
+ "map": "nav_obstacle",
+ "topic": "/perception/depth_points",
+ "reference_objects": 13,
+ "samples": 52,
+ "points_scored": 347406,
+ "ground_points": 221812,
+ "obstacle_points": 125594,
+ "other_points": 2358,
+ "ground_z_median_m": 0.0015,
+ "ground_removal": {
+  "pointcloud_segmenter (height 0.1 m)": {
+   "precision": 0.9744,
+   "recall": 0.9984,
+   "ms_p50": 2.1
+  },
+  "ransac_ground_removal": {
+   "precision": 0.9837,
+   "recall": 1.0,
+   "ms_p50": 50.5
+  },
+  "pointcloud_segmenter (height 0.1 m) [optical frame, before the fix]": {
+   "precision": null,
+   "recall": 0.0,
+   "ms_p50": 1.3
+  },
+  "ransac_ground_removal [optical frame, before the fix]": {
+   "precision": 0.0879,
+   "recall": 0.0181,
+   "ms_p50": 25.2
+  }
+ },
+ "clustering": {
+  "euclidean_clusterer": {
+   "objects_found": "103/129",
+   "clusters_per_cloud": 3.3462,
+   "ms_p50": 37.0
+  },
+  "dbscan_clusterer": {
+   "objects_found": "85/129",
+   "clusters_per_cloud": 3.1731,
+   "ms_p50": 42.6
+  }
+ }
+}
