@@ -112,19 +112,65 @@ and the difference in the table is the gain.
 - **GNSS bounds the position.** On this mildly nonlinear model the UKF
   matches the EKF and costs three times the compute (0.23 ms vs 0.07 ms).
 
+## On simulator data ([live/](live/report.md))
+
+Two Gazebo drives around the 26 m nav_obstacle loop were recorded on
+2026-10-13 (`scripts/slam_mapping_check.sh` with
+`EXTRA_BAG_TOPICS="/imu/out /robot_lab_controller/odom"`):
+
+- Bumperbot on wheels, with its 100 Hz IMU (gyro and accelerometer noise
+  2e-4);
+- the Go2 walking, with its 200 Hz trunk IMU.
+
+`scripts/r7_5_live_replay.py` runs the filters over them offline, at their
+node defaults, from the true start, and scores them against
+`/odom/ground_truth`.
+
+**Attitude** (roll and pitch error after 5 s):
+
+| Filter | Bumperbot: tilt RMS / max | Go2 walking: tilt RMS / max |
+|---|---|---|
+| Complementary (tau 4 s) | **0.17° / 0.41°** | **0.25° / 1.14°** |
+| Mahony (kp 0.25) | 0.24° / 0.48° | 0.32° / 1.21° |
+| Madgwick (beta 0.02) | 0.26° / 1.26° | 0.53° / 1.30° |
+| ESKF (linear_accel_std 2.0) | 0.20° / 0.69° | 0.78° / 2.76° |
+
+The truth tilt was 0.6° and constant for Bumperbot. For the walking Go2 it
+was 2.9° RMS (6.2° max).
+
+**Planar pose, Bumperbot** (25.4 m):
+
+| Filter | Position RMSE | Final | Heading RMSE |
+|---|---|---|---|
+| Wheel + gyro EKF | **1.3 cm** | 2.3 cm | **0.10°** |
+| Wheel + gyro UKF | 4.7 cm | 1.3 cm | 0.10° |
+| Wheel dead reckoning | 9.8 cm | 4.3 cm | 1.05° |
+
+- On real IMU data, **the complementary filter is the most accurate on a
+  walking trunk**, and the ESKF the least: the reverse of the modelled
+  benchmark. The ESKF's accelerometer weighting (linear_accel_std 2.0) was
+  chosen on modelled data with slow 2 m/s² pushes; a gait's quick trunk
+  accelerations are a different regime, likely the reason. It was not
+  retuned here.
+- **The gyro still fixes the wheel heading.** On Gazebo's flat floor the
+  wheel odometry is good, and the EKF cuts its heading error tenfold and
+  its position error from 9.8 to 1.3 cm.
+- One drive per robot, one world; gains as shipped.
+
 ## Limits
 
 - The sensors are modelled, not simulated: constant biases, white noise and
   no vibration or magnetometer.
 - Gains are tuned on the tuning seed of the same scenario.
-- The pose filters need a wheel odometry topic. Only Gazebo publishes one
-  (`/robot_lab_controller/odom`). In MuJoCo, PyBullet and Isaac they need
-  a wheel odometry source first.
+- The pose filters need a wheel odometry topic: Gazebo publishes
+  `/robot_lab_controller/odom`, and the other backends do with
+  `odometry_source:=wheels` (wheel_odometry node).
 
 ## Reproduce
 
 ```bash
 python3 scripts/r7_5_fusion_benchmark.py --out <dir>
 scripts/r7_5_attitude_replay.sh <dir>/ros_replay.json
+python3 scripts/r7_5_live_replay.py --out <dir>/live <recorded run>.tf.bag ...
 PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 python3 -m pytest -q src/robot_lab_algorithms/test/test_fusion_filters.py
 ```

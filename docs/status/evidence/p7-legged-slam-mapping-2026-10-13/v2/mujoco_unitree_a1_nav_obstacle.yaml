@@ -1,0 +1,14 @@
+free_thresh: 0.196
+image: mujoco_unitree_a1_nav_obstacle.pgm
+mode: trinary
+negate: 0
+occupied_thresh: 0.65
+origin:
+- -1.6331750601792936
+- -1.5194778122588883
+- 0.0
+resolution: 0.05000000074505806
+world_from_map:
+- -6.965472635328793
+- -7.005998343183357
+- -0.006428910189884451

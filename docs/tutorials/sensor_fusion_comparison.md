@@ -98,14 +98,28 @@ Over ROS, with each node at its default gain:
 - **The UKF matches the EKF here.** The unicycle model is mildly nonlinear
   at these rates, and the UKF costs three times the compute.
 
+## On Gazebo's IMU
+
+Replayed over recorded Gazebo drives
+([evidence](../status/evidence/r75-fusion-benchmark-2026-10-13/README.md)):
+
+- **Bumperbot:** the wheel+gyro EKF holds 1.3 cm over 25 m, where wheel
+  dead reckoning reaches 9.8 cm. Every attitude filter stays within 0.3°
+  RMS.
+- **Walking Go2:** the trunk rolls and pitches 2.9° RMS. The
+  complementary filter tracks it best (0.25° RMS) and the ESKF worst
+  (0.78°). On real gait accelerations, the modelled benchmark's ranking
+  turns around.
+
 ## Limits
 
-- Modelled sensors: constant biases, white noise, no vibration and no
-  magnetometer. Simulator IMUs are a separate step. The MuJoCo and Isaac
-  bridges publish a perfect orientation and a constant accelerometer, so
-  they cannot test attitude filters; Gazebo's IMU sensor can.
-- The pose filters need wheel odometry. Only Gazebo publishes it
-  (`/robot_lab_controller/odom`).
+- The ranked tables above use modelled sensors: constant biases, white
+  noise, no vibration and no magnetometer. The Gazebo replay is one drive
+  per robot. The MuJoCo and Isaac bridges publish a perfect orientation and
+  a constant accelerometer, so they cannot test attitude filters; Gazebo's
+  IMU sensor can.
+- The pose filters need wheel odometry: Gazebo publishes it, and the
+  other backends do with `odometry_source:=wheels`.
 
 ## Related tutorials
 

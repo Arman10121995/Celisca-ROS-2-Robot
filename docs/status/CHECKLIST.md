@@ -275,7 +275,11 @@ code delivery, not a passed mission or universal support.
   Earlier passing screens are not a rerun of every final configuration.
   The obstacle mission (detour, cancel, resume, second goal) now passes in
   all 20 pattern/backend cells, one seed each
-  ([evidence](evidence/r56-4ws-missions-2026-10-13/README.md)).
+  ([evidence](evidence/r56-4ws-missions-2026-10-13/README.md)). Slam
+  mapping on wheel odometry holds 1.1-2.5 cm for the mecanum car in all four
+  backends and the 4WS ackermann/pivot patterns in MuJoCo and Gazebo
+  ([evidence](evidence/p7-legged-slam-mapping-2026-10-13/README.md));
+  crab/in_phase mapping remains.
 - [ ] **R5.2:** Resolve Go2 stair/terrain traversal and roll-axis recovery;
   existing failed get-up trials remain negative evidence. Qualify robust
   walking/turning and sensor/goal missions before broader mode enablement.
@@ -354,10 +358,10 @@ code delivery, not a passed mission or universal support.
   ([perception](../tutorials/perception_comparison.md),
   [localization](../tutorials/localization_comparison.md),
   [state estimation](../tutorials/state_estimation_comparison.md)).
-  Localization is also measured on recorded Gazebo and MuJoCo scans
-  against the AMCL that ran with them; perception and state estimation on
-  simulator data remain. Numerical kernels or generated scores do not
-  count.
+  Localization, perception (scans), state estimation (AMCL fixes) and
+  sensor fusion (Gazebo IMU and wheel odometry) are also measured on
+  recorded simulator data; perception on simulator depth clouds remains.
+  Numerical kernels or generated scores do not count.
 - [ ] **R8.1/R8.2/R8.3:** Complete the backend mission matrix and real isolated
   concurrent experiments with resource limits, cleanup and repeatable results.
 - [ ] **R9.1/R9.2:**

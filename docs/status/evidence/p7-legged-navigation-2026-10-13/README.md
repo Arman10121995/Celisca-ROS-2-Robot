@@ -156,12 +156,54 @@ walking speeds): 3 of 4 pass.
 - Next for this cell: no spin recovery for robots that cannot turn in
   place, and a less cramped start.
 
+**Round 6** (`v6/`, 17:58, `4e93bcc`): Gazebo Go2 with the back-up recovery
+tree (`a9c6587`).
 
+- The first goal again aborted beside the start block, and the resumed
+  detour was aborted 3.8 m short.
+- The **near-obstacle goal succeeded (0.09 m)**: the first goal the Go2
+  has reached in Gazebo.
+
+## Repeats (`repeats/`, seeds 2 and 3, 17:28-17:58)
+
+The mission with two more goal seeds for every cell that had passed seed
+1:
+
+| Robot | MuJoCo, seeds 1 / 2 / 3 | Isaac, seeds 1 / 2 / 3 |
+|---|---|---|
+| A1 | pass / pass / pass | pass / pass / pass |
+| G1 | pass / pass / pass | pass (round 4) / pass / fail |
+| Go2 | pass / fail / fail | pass (round 2) / pass / fail |
+| B2 | pass (round 4) / fail / fail | not run |
+
+The A1 passed all six runs, and the G1 five of six. Every failure but one
+began at the start, a 0.5 m gap below the corner of a 2.5 m block:
+
+- **Go2** (MuJoCo seed 2, Isaac seed 3): RPP arced it toward the block
+  ("collision ahead"). It cannot turn on the spot in MuJoCo, and the
+  0.15 m/s back-up is inside its reverse dead zone. The first goal aborted,
+  and later goals failed the same way.
+- **B2** (both seeds): turning on the spot, its 1.1 m footprint would hit
+  the block, so the first goal aborted. Both later goals then succeeded
+  (0.13-0.31 m; 0.309 m is just over the 0.30 m limit).
+- **G1 Isaac seed 3:** the planner found the start "in lethal space" on the
+  first goal, though the start is 0.65 m from any wall. Both later goals
+  succeeded. Not explained.
+- **Go2 MuJoCo seed 3** got past the start and reached the detour goal,
+  then arced into an obstacle on the near-obstacle goal.
+
+This led to the forward-arc motion model (`7a8a3cf`): Go2 (MuJoCo,
+Gazebo) and B2 (MuJoCo) now plan forward-only Hybrid-A* curves with their
+footprint, and never spin or back up.
+
+## Files
 
 - `v1/`: round 1 missions and leg odometry screens.
 - `v2/`: round 2.
 - `v3/`: round 3 missions.
 - `v4/`: round 4 missions.
+- `v5/`, `v6/`: Gazebo Go2 rounds 5 and 6.
+- `repeats/`: seeds 2 and 3.
 - `diagnosis/`: the MuJoCo Go2 walk and mission that exposed the slow
   leg odometry, before the velocity gate.
 
@@ -170,10 +212,11 @@ The `/tf` bags, traces and launch logs stay on the SSD under
 
 ## Limits
 
-- One seed per cell, on one map (nav_obstacle), flat ground.
+- Three seeds per cell at most, on one map (nav_obstacle), flat ground.
 - Leg odometry drifts a few percent of the distance walked; AMCL
   corrects it against the map. Mapping (slam mode) with leg odometry is
-  not measured yet.
+  measured separately
+  ([p7-legged-slam-mapping-2026-10-13](../p7-legged-slam-mapping-2026-10-13/README.md)).
 - Isaac B2 overshoots and drifts after stop (2026-10-12) and is not run.
 - Go2 himloco cannot turn in place in MuJoCo or Gazebo; it turns while
   walking.

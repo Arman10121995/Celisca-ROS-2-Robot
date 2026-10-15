@@ -1,0 +1,9 @@
+mujoco mecanum_car mujoco_mecanum_nav_obstacle.json exit=0
+pybullet mecanum_car pybullet_mecanum_nav_obstacle.json exit=0
+gazebo mecanum_car gazebo_mecanum_nav_obstacle.json exit=0
+isaac mecanum_car isaac_mecanum_nav_obstacle.json exit=0
+mujoco four_wheel_steer_car mujoco_4ws_ackermann_nav_obstacle.json exit=0
+mujoco four_wheel_steer_car mujoco_4ws_pivot_nav_obstacle.json exit=0
+gazebo four_wheel_steer_car gazebo_4ws_ackermann_nav_obstacle.json exit=0
+gazebo four_wheel_steer_car gazebo_4ws_pivot_nav_obstacle.json exit=0
+ALLDONE

@@ -102,6 +102,10 @@ October 13: implemented on master, experimental.
   - On modelled sensors, the ESKF holds tilt to 0.46° RMS. The gyro-heading
     EKF keeps position to 0.42 m over 300 s, where wheel dead reckoning
     drifts 18 m.
+  - On recorded Gazebo IMU data (2026-10-15), the wheel+gyro EKF holds
+    Bumperbot to 1.3 cm over 25 m (wheels alone 9.8 cm). On a walking Go2
+    trunk the complementary filter tracks tilt best (0.25° RMS) and the
+    ESKF worst (0.78°), the reverse of the modelled ranking.
   - [Evidence](evidence/r75-fusion-benchmark-2026-10-13/README.md),
     [tutorial](../tutorials/sensor_fusion_comparison.md).
 - **Perception, localization, state estimation (R7.2-R7.4).** The ids now
@@ -139,7 +143,8 @@ October 13: implemented on master, experimental.
   - Walking robots also map: in slam mode on leg odometry, slam_toolbox
     held every walking robot within 4.5-7.1 cm RMSE of truth over a 26 m
     loop (MuJoCo, Isaac, Gazebo), and the MuJoCo/Isaac maps place every
-    wall cell on a real wall
+    wall cell on a real wall. The mecanum and 4WS cars map the same loop on
+    their wheel odometry to 1.1-2.5 cm in every backend
     ([evidence](evidence/p7-legged-slam-mapping-2026-10-13/README.md)).
   - Gazebo Go2 now starts standing, and with its physics step capped at
     2 ms (the worlds' 10 ms had run its 500 Hz PD loop at 100 Hz) it walks
@@ -150,7 +155,8 @@ October 13: implemented on master, experimental.
 - **Planner reruns.** With a clearance margin, RRT/RRT\* reach 14/15 goals
   (were 8 and 9) and Voronoi 15/15. MPPI capped at 0.3 m/s still reaches
   7/15: it gets within 0.05-0.19 m but does not settle into Bumperbot's
-  tight arrival window.
+  tight arrival window. Stronger goal critics made it worse (6/15) and were
+  reverted.
 - **Missions.**
   - Workflow/reset screens pass 8/8 for Labbot and Bumperbot in all four
     backends ([evidence](evidence/r61-workflow-reset-2026-10-13/README.md)).

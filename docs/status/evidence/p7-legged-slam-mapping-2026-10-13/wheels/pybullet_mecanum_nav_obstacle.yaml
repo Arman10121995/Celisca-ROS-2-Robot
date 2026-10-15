@@ -1,0 +1,14 @@
+free_thresh: 0.196
+image: pybullet_mecanum_nav_obstacle.pgm
+mode: trinary
+negate: 0
+occupied_thresh: 0.65
+origin:
+- -1.5256869336566148
+- -1.573174028334096
+- 0.0
+resolution: 0.05000000074505806
+world_from_map:
+- -6.998866211261615
+- -7.001116536645915
+- 0.0006337555343676193

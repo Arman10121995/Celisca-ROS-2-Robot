@@ -1,0 +1,101 @@
+{
+ "revision": "815e54e5bfb051968949a34e0ea69ab847e4fa49",
+ "host": "molar1 aarch64",
+ "runs": {
+  "gazebo_bumperbot_nav_obstacle.json.tf.bag": {
+   "meta": {
+    "truth_tilt_rms_deg": 0.593,
+    "truth_tilt_max_deg": 0.604,
+    "imu_rate_hz": 100.0
+   },
+   "attitude": {
+    "complementary": {
+     "samples": 10008,
+     "tilt_rms_deg": 0.167,
+     "tilt_max_deg": 0.408,
+     "roll_bias_deg": -0.039,
+     "pitch_bias_deg": -0.047
+    },
+    "mahony": {
+     "samples": 10008,
+     "tilt_rms_deg": 0.236,
+     "tilt_max_deg": 0.476,
+     "roll_bias_deg": -0.06,
+     "pitch_bias_deg": 0.001
+    },
+    "madgwick": {
+     "samples": 10008,
+     "tilt_rms_deg": 0.258,
+     "tilt_max_deg": 1.257,
+     "roll_bias_deg": -0.048,
+     "pitch_bias_deg": -0.022
+    },
+    "eskf": {
+     "samples": 10008,
+     "tilt_rms_deg": 0.204,
+     "tilt_max_deg": 0.69,
+     "roll_bias_deg": -0.057,
+     "pitch_bias_deg": -0.017
+    }
+   },
+   "pose": {
+    "travelled_m": 25.43,
+    "wheel_imu_ekf": {
+     "position_rmse_m": 0.013,
+     "final_error_m": 0.023,
+     "heading_rmse_deg": 0.1,
+     "gyro_bias_estimate": -1e-05
+    },
+    "wheel_imu_ukf": {
+     "position_rmse_m": 0.047,
+     "final_error_m": 0.013,
+     "heading_rmse_deg": 0.1,
+     "gyro_bias_estimate": -1e-05
+    },
+    "wheel_dead_reckoning": {
+     "position_rmse_m": 0.098,
+     "final_error_m": 0.043,
+     "heading_rmse_deg": 1.055
+    }
+   }
+  },
+  "gazebo_unitree_go2_nav_obstacle.json.tf.bag": {
+   "meta": {
+    "truth_tilt_rms_deg": 2.905,
+    "truth_tilt_max_deg": 6.233,
+    "imu_rate_hz": 200.0
+   },
+   "attitude": {
+    "complementary": {
+     "samples": 16680,
+     "tilt_rms_deg": 0.254,
+     "tilt_max_deg": 1.14,
+     "roll_bias_deg": -0.07,
+     "pitch_bias_deg": -0.064
+    },
+    "mahony": {
+     "samples": 16680,
+     "tilt_rms_deg": 0.323,
+     "tilt_max_deg": 1.214,
+     "roll_bias_deg": -0.08,
+     "pitch_bias_deg": -0.069
+    },
+    "madgwick": {
+     "samples": 16680,
+     "tilt_rms_deg": 0.531,
+     "tilt_max_deg": 1.298,
+     "roll_bias_deg": -0.007,
+     "pitch_bias_deg": -0.335
+    },
+    "eskf": {
+     "samples": 16680,
+     "tilt_rms_deg": 0.777,
+     "tilt_max_deg": 2.763,
+     "roll_bias_deg": -0.144,
+     "pitch_bias_deg": -0.134
+    }
+   },
+   "pose": null
+  }
+ }
+}

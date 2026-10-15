@@ -1,0 +1,47 @@
+{
+ "world": "nav_obstacle",
+ "base": "base",
+ "waypoints": [
+  [
+   -3.2,
+   -3.8
+  ],
+  [
+   3.43,
+   -3.72
+  ],
+  [
+   -6.98,
+   -7.01
+  ]
+ ],
+ "route_points": 132,
+ "route_m": 26.76,
+ "backoffs": 0,
+ "skipped_points": 0,
+ "completed_route": true,
+ "drive_wall_s": 82.5,
+ "trajectory": {
+  "samples": 159,
+  "driven_m": 25.34,
+  "rmse_m": 0.047,
+  "max_m": 0.078,
+  "final_m": 0.056,
+  "heading_rmse_deg": 0.63
+ },
+ "world_from_map": [
+  -6.9655,
+  -7.006,
+  -0.0064
+ ],
+ "map": {
+  "slam_occupied_cells": 2028,
+  "precision_0p10": 1.0,
+  "mean_surface_distance_m": 0.055,
+  "p95_surface_distance_m": 0.12,
+  "reference_walls_near_path": 1443,
+  "recall_0p10": 0.65,
+  "slam_free_cells": 55893,
+  "resolution_m": 0.05
+ }
+}

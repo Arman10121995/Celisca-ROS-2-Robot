@@ -1,0 +1,75 @@
+{
+ "planners": {
+  "mppi_controller": {
+   "seeds": [
+    11,
+    23,
+    37,
+    41,
+    53
+   ],
+   "trial_errors": [],
+   "goals": 15,
+   "succeeded": 6,
+   "success_rate": 0.4,
+   "outcomes": {
+    "succeeded": 6,
+    "aborted": 9
+   },
+   "duration_sim_s": {
+    "n": 6,
+    "median": 84.78,
+    "mean": 80.45,
+    "std": 14.502,
+    "min": 57.96,
+    "max": 94.64
+   },
+   "path_length_m": {
+    "n": 6,
+    "median": 7.509,
+    "mean": 7.134,
+    "std": 1.65,
+    "min": 3.703,
+    "max": 8.652
+   },
+   "mean_speed_mps": {
+    "n": 6,
+    "median": 0.08,
+    "mean": 0.093,
+    "std": 0.034,
+    "min": 0.049,
+    "max": 0.146
+   },
+   "final_error_truth_m": {
+    "n": 6,
+    "median": 0.085,
+    "mean": 0.074,
+    "std": 0.033,
+    "min": 0.009,
+    "max": 0.106
+   },
+   "min_footprint_clearance_m": {
+    "n": 15,
+    "median": 0.372,
+    "mean": 0.375,
+    "std": 0.046,
+    "min": 0.28,
+    "max": 0.45
+   }
+  }
+ },
+ "paired": {},
+ "manifest": {
+  "simulator": "gazebo",
+  "robot": "bumperbot",
+  "map": "nav_maze",
+  "category": "local_planning",
+  "planners": "mppi_controller",
+  "seeds": "11 23 37 41 53",
+  "launch_args": "global_planning:=a_star_planner",
+  "goals_per_seed": "3",
+  "sequence_start": "-7.0 -7.0",
+  "revision": "4e93bcc5be6497b944e3f5c689459059399c8117",
+  "started": "2026-10-13T18:31:03+02:00"
+ }
+}

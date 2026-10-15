@@ -1,0 +1,4 @@
+{"simulator": "gazebo", "robot": "bumperbot", "map": "nav_maze", "category": "local_planning",
+ "planners": "mppi_controller", "seeds": "11 23 37 41 53", "launch_args": "global_planning:=a_star_planner",
+ "goals_per_seed": "3", "sequence_start": "-7.0 -7.0", "revision": "4e93bcc5be6497b944e3f5c689459059399c8117",
+ "started": "2026-10-13T18:31:03+02:00"}

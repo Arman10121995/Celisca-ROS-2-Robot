@@ -1,0 +1,14 @@
+free_thresh: 0.196
+image: gazebo_mecanum_nav_obstacle.pgm
+mode: trinary
+negate: 0
+occupied_thresh: 0.65
+origin:
+- -1.5552995560528156
+- -1.6332714857936284
+- 0.0
+resolution: 0.05000000074505806
+world_from_map:
+- -6.999992344226848
+- -7.000005832696872
+- 5.217333511886579e-06

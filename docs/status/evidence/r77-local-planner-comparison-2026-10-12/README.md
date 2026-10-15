@@ -51,5 +51,18 @@ Same protocol and goals, with MPPI's sampler capped at Bumperbot's
   the 0.07 m / 0.03 rad arrival window before the progress checker aborts.
 - The first run's failures look the same, apart from the frozen seed 41.
 
+## MPPI with arrival tuning (2026-10-13, revision `4e93bcc`, negative)
+
+Same protocol (vx_max 0.3), with stronger goal critics: GoalCritic weight
+10, GoalAngleCritic weight 8, both at power 1, and narrower sampling
+(vx_std 0.1, wz_std 0.3). Results in [mppi_arrival/report.md](mppi_arrival/report.md).
+
+- Result: **6/15**, with a median of 85 s per goal instead of about 40 s.
+  There was no stale-transform signature.
+- Eight of the nine failures again ended 0.09-0.31 m from the goal; one
+  (seed 41, first goal) ended 3.5 m away.
+- The tuning was reverted (`7a8a3cf`). Settling into a 0.07 m / 0.03 rad
+  window is not a matter of these two critics.
+
 Cross-track error from the latest plan for all five first-run planners is
 in [tracking.md](tracking.md).

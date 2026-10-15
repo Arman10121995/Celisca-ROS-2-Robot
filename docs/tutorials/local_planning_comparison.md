@@ -100,8 +100,10 @@ second's):
   In both runs almost every failed goal ended 0.05-0.23 m from the goal
   and within 5° of its heading. MPPI brings the robot close but does not
   settle into Bumperbot's arrival window (0.07 m, 0.03 rad) before the
-  progress checker aborts. Its critics were not tuned for this robot or
-  this window.
+  progress checker aborts. Stronger goal critics with narrower sampling
+  did not help: 6 of 15, twice as slow
+  ([evidence](../status/evidence/r77-local-planner-comparison-2026-10-12/README.md));
+  the change was reverted.
 
 **Path tracking.** Cross-track error from Gazebo truth to the latest
 global plan (`scripts/path_tracking_error.py` on the trial bags;

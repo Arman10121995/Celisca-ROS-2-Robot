@@ -1,0 +1,15 @@
+mujoco unitree_go2 seed2 exit=1
+mujoco unitree_a1 seed2 exit=0
+mujoco unitree_b2 seed2 exit=1
+mujoco unitree_g1_29dof seed2 exit=0
+isaac unitree_go2 seed2 exit=0
+isaac unitree_a1 seed2 exit=0
+isaac unitree_g1_29dof seed2 exit=0
+mujoco unitree_go2 seed3 exit=1
+mujoco unitree_a1 seed3 exit=0
+mujoco unitree_b2 seed3 exit=1
+mujoco unitree_g1_29dof seed3 exit=0
+isaac unitree_go2 seed3 exit=1
+isaac unitree_a1 seed3 exit=0
+isaac unitree_g1_29dof seed3 exit=1
+ALLDONE
