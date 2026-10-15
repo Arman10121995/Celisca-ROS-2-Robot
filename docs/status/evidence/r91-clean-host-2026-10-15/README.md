@@ -32,7 +32,22 @@ SSD wheels.
 
 One manifest key, `urdf_parser_py` (robot_lab_utils), had no rosdep
 definition; its package came in through another dependency. The key is now
-`urdfdom_py`.
+`urdfdom_py` (resolved in the rerun below).
+
+## Rerun with a golden comparison (`d99c5ea`, 00:31-00:55, [rerun-d99c5ea/](rerun-d99c5ea/))
+
+The script now also runs the seeded R7.2 perception benchmark
+(`scripts/r7_2_perception_benchmark.py`) twice from the same archive: in
+the container, and on the host with the runtime's `/usr/bin/python3`. It
+then compares every accuracy figure, leaving out timings.
+
+| Step | Result |
+|---|---|
+| Dependencies | every rosdep key resolved: `urdfdom_py` now replaces `urdf_parser_py` |
+| Build | 25 packages finished in 1 min 12 s |
+| Fast test tier | 1036 passed, 26 skipped |
+| Mission | passed: 0.085 m and 0.095 m from truth, stopped 0.14 s after the cancel |
+| Golden comparison | **all 25 accuracy figures identical** between container and host ([golden_comparison.json](rerun-d99c5ea/golden_comparison.json)): laser obstacle detection, ground removal and clustering |
 
 ## Earlier attempts, kept as recorded
 
