@@ -45,6 +45,11 @@ class Nav2Workload(Node):
         self.state, self.reason = 'startup', ''
         self.interrupted, self.pending, self.complete = False, False, False
         self.started, self.phase_started, self.settled_since = time.monotonic(), time.monotonic(), None
+        # bt_navigator's action server exists before the stack is active and
+        # rejects goals until then: the first goal is retried every 2 s
+        # within the startup deadline (2026-10-15, every queued workload
+        # was rejected 1.5 s of sim time after readiness).
+        self.retry_at, self.startup_rejections, self.ever_accepted = 0., 0, False
         self.measured_goals = []
         self.record(kind='workload_start', specification=specification,
             ros_domain_id=int(os.environ['ROS_DOMAIN_ID']), run_id=os.environ['ROBOT_LAB_EXPERIMENT_ID'])
@@ -115,8 +120,15 @@ class Nav2Workload(Node):
         try:
             handle = future.result()
             if not handle.accepted:
+                if not self.ever_accepted and time.monotonic()-self.started < 180:
+                    self.startup_rejections += 1
+                    self.state, self.phase_started = 'startup', self.started
+                    self.retry_at = time.monotonic()+2.
+                    self.record(kind='goal_rejected_before_nav2_active', rejections=self.startup_rejections)
+                    return
                 self.fail('Nav2 rejected the requested goal.')
                 return
+            self.ever_accepted = True
             self.goal_handle = handle
             self.record(kind='goal_accepted', goal_uuid=list(handle.goal_id.uuid))
             handle.get_result_async().add_done_callback(self.result)
@@ -150,7 +162,7 @@ class Nav2Workload(Node):
             self.fail('Workload/startup/goal wall-clock deadline exceeded.')
             return
         if self.state == 'startup':
-            if self.fresh() and self.client.server_is_ready():
+            if self.fresh() and self.client.server_is_ready() and now >= self.retry_at and not self.pending:
                 self.send_goal()
             return
         if not self.fresh():
@@ -196,6 +208,7 @@ class Nav2Workload(Node):
             success=self.state == 'measured_goals_reached', goals=self.measured_goals,
             goal_contract=dict(position_m=.15, heading_rad=math.radians(5), settle_sim_s=1.),
             physical_path_length_m=self.distance, truth_samples=self.truth_count, clock_samples=self.clock_count,
+            goal_rejections_before_nav2_active=self.startup_rejections,
             nav2_terminal=not self.pending and self.goal_handle is None, wall_duration_s=time.monotonic()-self.started,
             contacts=None, swept_footprint_clearance_m=None,
             scope='Actual Nav2 terminal statuses and selected-world independent body endpoints/settling only; full mission/contact qualification separate',
