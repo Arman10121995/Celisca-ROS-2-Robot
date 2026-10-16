@@ -243,6 +243,8 @@ def _walk_model(model, frame, base_dir, resolve, shapes, skipped,
             shape = _shape(geometry, compose(link_frame, frame_of(source)),
                            base_dir, resolve, model_name, skipped)
             if shape is not None:
+                # Which SDF element the shape came from (visual/collision).
+                shape["element"] = _tag(source)
                 if prefer_visual:
                     material = _child(source, 'material')
                     diffuse = _text(material, 'diffuse') or _text(material, 'ambient')

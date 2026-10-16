@@ -70,7 +70,11 @@ def _resolve_mesh_source(uri, pkg_map, base_dir=""):
 
 # Bump when the converter's output changes, so meshes staged by an older
 # version are not reused from the content-addressed cache.
-_CONVERTER_VERSION = "3"
+# "4" (2026-10-16): 42 of 175 cached world surfaces on the reference host
+# were in Collada centimetres, staged before the <unit> scaling applied, and
+# the unchanged key kept serving them: MuJoCo's small_house floor spanned
+# 1926 m instead of 19 m, so the house did not match its map.
+_CONVERTER_VERSION = "4"
 
 
 def _node_matrix(node, q):

@@ -545,7 +545,159 @@ def _exclude_rest_pose_self_contacts(mjcf_text, logger=None):
     return ET.tostring(root, encoding="unicode")
 
 
-def _stage_world_meshes(mjcf_text, logger=None):
+# The two lights of a generated world shine from above, which leaves walls
+# facing a robot camera almost unlit (grey standard deviation 18 against
+# 52-63 in the other simulators, R7.2).  A headlight lights what the camera
+# sees; it changes rendering only.
+_WORLD_HEADLIGHT = {"ambient": "0.35 0.35 0.35", "diffuse": "0.45 0.45 0.45",
+                    "specular": "0.05 0.05 0.05"}
+
+
+def _add_headlight(root):
+    visual = root.find("visual")
+    if visual is None:
+        visual = ET.SubElement(root, "visual")
+    headlight = visual.find("headlight")
+    if headlight is None:
+        headlight = ET.SubElement(visual, "headlight")
+    for key, value in _WORLD_HEADLIGHT.items():
+        headlight.attrib.setdefault(key, value)
+
+
+def _world_sdf_for(world_mjcf):
+    """The SDF world a generated MJCF came from (gen_mjcf_worlds.py layout:
+    <share>/mjcf/<name>.xml from <share>/maps/<name>/worlds/<name>.world)."""
+    name = os.path.splitext(os.path.basename(world_mjcf))[0]
+    share = os.path.dirname(os.path.dirname(os.path.abspath(world_mjcf)))
+    path = os.path.join(share, "maps", name, "worlds", name + ".world")
+    return path if os.path.isfile(path) else None
+
+
+def _add_world_visuals(root, sdf_world, logger=None):
+    """Draw world models from their Collada visual meshes (R7.2, 2026-10-16).
+
+    A generated world carries the SDF collision geometry only, in one grey.
+    For every model whose visuals are Collada meshes this adds ``visual_*``
+    geoms (drawn, never collided or ranged) and moves the model's collision
+    geoms out of the rendered groups: meshes to group 4 (their ray proxies
+    hold the triangles), primitives to group 3 (range sensors see it).  The
+    generated geoms follow the SDF shape order (gen_mjcf_worlds.py), after
+    an optional fallback plane; a world that does not match is left as is.
+    Returns the number of visual geoms added.
+    """
+    from robot_lab_utils.sdf_world import extract_static_shapes, uri_resolver
+    from robot_lab_mujoco.world_collision import VISUAL_PREFIX, WORLD_HIDDEN_GROUP, WORLD_RAY_GROUP
+    from ament_index_python.packages import get_package_share_directory
+    model_dirs = []
+    try:
+        model_dirs.append(os.path.join(get_package_share_directory("robot_lab_models"), "models"))
+    except Exception:
+        pass
+    resolve = uri_resolver(model_dirs, get_package_share_directory)
+    collision, _ = extract_static_shapes(sdf_world, resolve)
+    visuals, _ = extract_static_shapes(sdf_world, resolve, prefer_visual=True)
+    visuals = [shape for shape in visuals if shape.get("element") == "visual"
+               and shape["type"] == "mesh" and shape["mesh"].lower().endswith(".dae")]
+    worldbody = root.find("worldbody")
+    if not visuals or worldbody is None:
+        return 0
+    geoms = worldbody.findall("geom")
+    offset = len(geoms) - len(collision)
+    if offset not in (0, 1):
+        _emit_log(logger, "warn", "World MJCF has %d geoms for %d SDF shapes; textured "
+                  "visuals not added." % (len(geoms), len(collision)))
+        return 0
+    if offset == 1 and geoms[0].get("type") == "plane" and geoms[0].get("contype") == "0":
+        # The generator's visual-only fallback plane lies at z = 0, coplanar
+        # with a floor model's visual (small_house's wood floor drew grey).
+        x, y, z = (float(v) for v in (geoms[0].get("pos") or "0 0 0").split())
+        geoms[0].set("pos", "%g %g %g" % (x, y, z - 0.005))
+    textured_models = {shape["model"] for shape in visuals}
+    for index, (shape, geom) in enumerate(zip(collision, geoms[offset:])):
+        if shape.get("model") in textured_models and geom.get("contype") != "0":
+            geom.set("name", "hide_%d" % index)
+            geom.set("group", str(WORLD_HIDDEN_GROUP if geom.get("type") == "mesh" else WORLD_RAY_GROUP))
+    asset = root.find("asset")
+    if asset is None:
+        asset = ET.Element("asset")
+        root.insert(list(root).index(worldbody), asset)
+    names = {}
+    for index, shape in enumerate(visuals):
+        scale = " ".join("%.6g" % value for value in shape["scale"])
+        key = (shape["mesh"], scale)
+        if key not in names:
+            names[key] = "%smesh_%d" % (VISUAL_PREFIX, len(names))
+            ET.SubElement(asset, "mesh", name=names[key], file=shape["mesh"], scale=scale)
+        ET.SubElement(worldbody, "geom", {
+            "name": "%s%d" % (VISUAL_PREFIX, index), "type": "mesh", "mesh": names[key],
+            "pos": "%.6g %.6g %.6g" % tuple(shape["position"]),
+            "quat": "%.6g %.6g %.6g %.6g" % tuple(shape["orientation"]),
+            "contype": "0", "conaffinity": "0", "group": "2"})
+    return len(visuals)
+
+
+def _stage_textured_visuals(root, logger=None):
+    """Replace each ``visual_*`` world mesh with its textured parts.
+
+    Each becomes one geom per material, with an OBJ part, a texture and a
+    material (robot_lab_utils.textured_mesh).  Returns the names of the
+    mesh assets replaced; any other visual mesh is staged untextured by the
+    caller.
+    """
+    from robot_lab_mujoco.world_collision import VISUAL_PREFIX
+    from robot_lab_utils.textured_mesh import content_key, stage_textured_parts
+    asset_root, worldbody = root.find("asset"), root.find("worldbody")
+    if asset_root is None or worldbody is None:
+        return set()
+    parts_of, textures = {}, set()
+    for mesh in list(asset_root.findall("mesh")):
+        name = mesh.get("name") or ""
+        if not name.startswith(VISUAL_PREFIX) or not mesh.get("file"):
+            continue
+        try:
+            scale = [float(v) for v in (mesh.get("scale") or "1 1 1").split()]
+            parts = stage_textured_parts(mesh.get("file"), scale)
+        except Exception as exc:
+            _emit_log(logger, "warn", "Textured mesh %s not staged (%s); drawn untextured."
+                      % (mesh.get("file"), exc))
+            parts = []
+        if not parts:
+            continue
+        parts_of[name] = parts
+        asset_root.remove(mesh)
+        for number, part in enumerate(parts):
+            part_name = "%s_p%d" % (name, number)
+            ET.SubElement(asset_root, "mesh", name=part_name, file=part["obj"],
+                          inertia="shell", maxhullvert="4")
+            material = {"name": part_name + "_mat",
+                        "rgba": " ".join("%.4g" % v for v in part["rgba"])}
+            if part["texture"]:
+                texture = "vtex_" + content_key(part["texture"])
+                if texture not in textures:
+                    textures.add(texture)
+                    ET.SubElement(asset_root, "texture", name=texture, type="2d",
+                                  file=part["texture"])
+                material["texture"] = texture
+            ET.SubElement(asset_root, "material", **material)
+    for geom in list(worldbody.findall("geom")):
+        parts = parts_of.get(geom.get("mesh"))
+        if not parts:
+            continue
+        position = list(worldbody).index(geom)
+        worldbody.remove(geom)
+        for number in range(len(parts)):
+            attributes = {key: value for key, value in geom.attrib.items() if key != "rgba"}
+            attributes.update(name="%s_p%d" % (geom.get("name"), number),
+                              mesh="%s_p%d" % (geom.get("mesh"), number),
+                              material="%s_p%d_mat" % (geom.get("mesh"), number))
+            worldbody.insert(position + number, ET.Element("geom", attributes))
+    if parts_of:
+        _emit_log(logger, "info", "MuJoCo textured visuals: %d mesh(es), %d part(s), %d texture(s)."
+                  % (len(parts_of), sum(len(p) for p in parts_of.values()), len(textures)))
+    return set(parts_of)
+
+
+def _stage_world_meshes(mjcf_text, logger=None, sdf_world=None):
     """Convert a world MJCF's mesh assets into formats MuJoCo can load.
 
     Generated world MJCF (robot_lab_maps/mjcf/*.xml) points straight at the
@@ -564,12 +716,24 @@ def _stage_world_meshes(mjcf_text, logger=None):
     except ET.ParseError:
         return mjcf_text
 
+    _add_headlight(root)
+    if sdf_world:
+        try:
+            added = _add_world_visuals(root, sdf_world, logger)
+        except Exception as exc:
+            added = 0
+            _emit_log(logger, "warn", "World visuals not added (%s)." % exc)
+        if added:
+            _emit_log(logger, "info", "MuJoCo world visuals: %d Collada visual geom(s)." % added)
     assets = [mesh for mesh in root.iter("mesh") if mesh.get("file")]
     if not assets:
-        return mjcf_text
+        return ET.tostring(root, encoding="unicode")
 
     from robot_lab_utils.mesh_assets import stage_world_mesh
+    textured = _stage_textured_visuals(root, logger)
     for mesh in assets:
+        if mesh.get("name") in textured:
+            continue
         source = mesh.get("file") or ""
         mesh.set("file", stage_world_mesh(source, mujoco_format=True))
         # These are visual/raycast triangles; rigid flex below owns contact.
@@ -1702,7 +1866,8 @@ class MuJoCoSpawner(Node):
         world_text = MuJoCoSpawner._absolutize_asset_paths(
             world_text, os.path.dirname(os.path.abspath(world_path))
         )
-        world_text = _stage_world_meshes(world_text, logger=logger)
+        world_text = _stage_world_meshes(world_text, logger=logger,
+                                         sdf_world=_world_sdf_for(world_path))
 
         try:
             world_root = ET.fromstring(world_text)

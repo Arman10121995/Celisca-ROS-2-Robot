@@ -106,9 +106,15 @@ def add_static_mesh_collisions(root):
 # rigid collision flexes and the ray proxies, which range sensors include.
 WORLD_VISUAL_GROUP = 2
 WORLD_RAY_GROUP = 3
+# Collision meshes of a model drawn from its textured visuals
+# (gen_mjcf_worlds.py): not rendered, and not ranged either, because their
+# triangles are in the group-3 proxies.
+WORLD_HIDDEN_GROUP = 4
+VISUAL_PREFIX = 'visual_'
 # Ray mask for range sensors: everything except the world's visual meshes
-# (their exact triangles are in the group-3 proxies).
-RANGE_SENSOR_GEOMGROUP = (1, 1, 0, 1, 1, 1)
+# and hidden collision meshes (their exact triangles are in the group-3
+# proxies).
+RANGE_SENSOR_GEOMGROUP = (1, 1, 0, 1, 0, 1)
 _RAY_PROXY_FACES = 200
 
 
@@ -131,6 +137,8 @@ def add_ray_proxies(root, size=_RAY_PROXY_FACES):
     for geom in list(worldbody.findall('geom')):
         if geom.get('type') != 'mesh' or geom.get('mesh') not in assets:
             continue
+        if (geom.get('name') or '').startswith(VISUAL_PREFIX):
+            continue   # textured visual parts: drawn only, never ranged
         mesh = assets[geom.get('mesh')]
         if not mesh.get('file'):
             continue
@@ -141,7 +149,8 @@ def add_ray_proxies(root, size=_RAY_PROXY_FACES):
         if not len(faces):
             continue
         vertices = vertices * np.fromstring(mesh.get('scale', '1 1 1'), sep=' ')
-        geom.set('group', str(WORLD_VISUAL_GROUP))
+        if geom.get('group') != str(WORLD_HIDDEN_GROUP):
+            geom.set('group', str(WORLD_VISUAL_GROUP))
         for piece_vertices, piece_faces in _spatial_chunks(vertices, faces, size):
             name = 'world_ray_%d' % count
             ET.SubElement(asset_root, 'mesh', name=name, inertia='shell', maxhullvert='4',
