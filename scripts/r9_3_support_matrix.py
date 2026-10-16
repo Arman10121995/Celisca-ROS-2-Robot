@@ -334,6 +334,35 @@ def measured_result(report,kind):
                     return False
                 passed = passed and lo<b[2]-a[2]<hi and math.dist(b,c)<.2
         return bool(passed)
+    if kind == 'course_screen':
+        # scripts/sim_car_course.py: every slalom gate and the parking bay
+        # reached within their truth tolerances (parking also in heading),
+        # with the footprint clear of every cone and box throughout.
+        steps = report.get('steps', {})
+        sections = [steps.get(name, {}) for name in ('slalom', 'parking')]
+        return bool(not report.get('error') and report.get('passed') is True
+                    and all(section.get('passed') is True and finite(section.get('min_footprint_clearance_m'))
+                            and section['min_footprint_clearance_m'] > 0 for section in sections))
+    if kind == 'calibration_screen':
+        # scripts/r7_2_calibration_room_check.py / r7_2_calibration_check.py:
+        # the chessboard pinhole fit agrees with the published camera model
+        # (fx within 3 %, principal point within 1.5 px, RMS under 1 px).
+        fit, info = report.get('script_calibration_pinhole', {}), report.get('camera_info', {})
+        values = [fit.get(k) for k in ('fx', 'cx', 'cy', 'rms_px')] + [info.get(k) for k in ('fx', 'cx', 'cy')]
+        if report.get('error') or not all(finite(v) for v in values):
+            return False
+        return bool(abs(fit['fx'] - info['fx']) <= .03 * info['fx']
+                    and abs(fit['cx'] - info['cx']) <= 1.5 and abs(fit['cy'] - info['cy']) <= 1.5
+                    and fit['rms_px'] < 1.0)
+    if kind == 'command_loss_screen':
+        # scripts/sim_drive_check.py --command-loss: the base drove, then came
+        # to rest within a bounded coast after its commands stopped.
+        loss = report.get('publisher_loss') or {}
+        phases = report.get('phases', [])
+        values = [loss.get(k) for k in ('coast_distance_m', 'tail_vx_mps', 'tail_wz_rps')]
+        return bool(not report.get('error') and phases and all(p.get('measured') for p in phases)
+                    and all(finite(v) for v in values) and 0 <= loss['coast_distance_m'] <= .35
+                    and abs(loss['tail_vx_mps']) <= .02 and abs(loss['tail_wz_rps']) <= .05)
     raise ValueError(f'Unrecognized measured report kind: {kind}')
 
 

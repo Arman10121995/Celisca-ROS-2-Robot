@@ -266,3 +266,47 @@ def test_drive_screen_needs_forward_motion_and_a_stop():
     assert not module.measured_result(drifting, 'drive_screen')
     assert not module.measured_result({'error': 'no odometry on /odom/ground_truth', 'phases': []},
                                       'drive_screen')
+
+
+def test_car_course_screen_needs_both_sections_and_clearance():
+    report = {'passed': True, 'steps': {
+        'slalom': {'passed': True, 'min_footprint_clearance_m': .12},
+        'parking': {'passed': True, 'min_footprint_clearance_m': .05}}}
+    assert module.measured_result(report, 'course_screen')
+    report['steps']['parking']['min_footprint_clearance_m'] = -.001
+    assert not module.measured_result(report, 'course_screen')
+    report['steps']['parking'] = {'passed': False, 'note': 'not attempted after the slalom failed'}
+    assert not module.measured_result(report, 'course_screen')
+
+
+def test_calibration_screen_compares_the_fit_with_the_published_camera():
+    report = {'camera_info': {'fx': 221.77, 'cx': 159.5, 'cy': 119.5},
+              'script_calibration_pinhole': {'fx': 220.6, 'cx': 159.36, 'cy': 118.97, 'rms_px': .43}}
+    assert module.measured_result(report, 'calibration_screen')
+    report['script_calibration_pinhole']['cx'] = 157.5
+    assert not module.measured_result(report, 'calibration_screen')
+    assert not module.measured_result({'error': 'no camera image'}, 'calibration_screen')
+
+
+def test_command_loss_screen_requires_a_bounded_coast_and_rest():
+    report = {'phases': [{'phase': 'straight', 'measured': {'vx': .4}}],
+              'publisher_loss': {'coast_distance_m': .155, 'tail_vx_mps': 0.0, 'tail_wz_rps': 0.0}}
+    assert module.measured_result(report, 'command_loss_screen')
+    report['publisher_loss']['tail_vx_mps'] = .1
+    assert not module.measured_result(report, 'command_loss_screen')
+
+
+def test_indexer_identities_and_report_shapes_of_the_new_screens():
+    spec = importlib.util.spec_from_file_location('index_missions', path.with_name('r9_3_index_missions.py'))
+    indexer = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(indexer)
+    robot_ids = indexer.robots()
+    assert indexer.identity('isaac_anti_ackermann_car_car_course.json', robot_ids, False) == (
+        'anti_ackermann_car', 'car_course', 'isaac', '')
+    assert indexer.identity('gazebo_bumperbot_calibration_room.json', robot_ids, False) == (
+        'bumperbot', 'calibration_room', 'gazebo', '')
+    assert indexer.SHAPES['course_screen']({'steps': {}, 'error': 'no map after 600 s'})
+    assert indexer.SHAPES['calibration_screen']({'pattern': '8x6', 'error': 'no camera image, camera info or truth'})
+    assert not indexer.SHAPES['calibration_screen']({'error': 'checker produced no output'})
+    assert indexer.SHAPES['command_loss_screen']({'phases': []})
+    assert not indexer.SHAPES['mission_screen']({'samples': []})

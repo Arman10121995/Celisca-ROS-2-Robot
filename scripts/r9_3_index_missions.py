@@ -9,14 +9,15 @@ every group the script writes a source-hash manifest beside the reports
 stores it at that commit) and appends one record per report, in the
 batch's order, so the latest round controls a cell in the matrix.
 
-Only sim_nav_mission reports (a 'steps' object) are indexed, unless the
-group says ``report_kind: drive_screen`` (sim_drive_check.py reports, a
-'phases' list) with an explicit ``identity: {robot_id, environment_id,
-simulator, task_type}``.  Report
-identity comes from the file name: <simulator>_<robot>[_seedN]_<map>.json,
-or, for the 4WS rounds, <simulator>_<pattern>[_seedN]_<map>.json (pattern mecanum
-means the mecanum car).  Records already indexed (same report path) are
-skipped.
+A group's ``report_kind`` (default mission_screen) names the matrix
+screen and the report shape indexed (see SHAPES); other files matched by
+its globs, such as traces, are skipped.  Report identity comes from the
+file name: <simulator>_<robot>[_seedN]_<map>.json, or, for the 4WS rounds,
+<simulator>_<pattern>[_seedN]_<map>.json (pattern mecanum means the mecanum
+car), unless the group gives an explicit ``identity: {robot_id,
+environment_id, simulator, task_type}``.  A group's ``identity`` may also
+give only the task_type (default navigation_mission).  Records already
+indexed (same report path) are skipped.
 
   python3 scripts/r9_3_index_missions.py batch.yaml
 """
@@ -33,6 +34,16 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 INDEX = os.path.join(ROOT, 'docs', 'status', 'runtime-evidence-index.yaml')
 SIMULATORS = ('gazebo', 'mujoco', 'pybullet', 'isaac')
 PATTERNS = ('ackermann', 'in_phase', 'crab', 'pivot', 'mecanum')
+# The report each kind's screen reads: sim_nav_mission.py and
+# sim_car_course.py report a 'steps' object, sim_drive_check.py a 'phases'
+# list, r7_2_calibration_room_check.py its chessboard pattern and fits.
+SHAPES = {
+    'mission_screen': lambda content: isinstance(content.get('steps'), dict),
+    'course_screen': lambda content: isinstance(content.get('steps'), dict),
+    'drive_screen': lambda content: isinstance(content.get('phases'), list),
+    'command_loss_screen': lambda content: isinstance(content.get('phases'), list),
+    'calibration_screen': lambda content: 'pattern' in content,
+}
 
 
 def robots():
@@ -101,20 +112,18 @@ def main():
                 continue
             content = json.load(open(report))
             kind = group.get('report_kind', 'mission_screen')
-            if kind == 'drive_screen':
-                if not (isinstance(content, dict) and isinstance(content.get('phases'), list)):
-                    continue
-                fixed = group['identity']
+            if not (isinstance(content, dict) and SHAPES[kind](content)):
+                continue   # leg-odometry traces and other side files are not reports of this kind
+            fixed = group.get('identity', {})
+            if 'robot_id' in fixed:
                 robot, environment, simulator, steering = (fixed['robot_id'], fixed['environment_id'],
                                                            fixed['simulator'], fixed.get('steering_mode', ''))
-            elif not (isinstance(content, dict) and isinstance(content.get('steps'), dict)):
-                continue   # leg-odometry traces and other side files are not missions
             else:
                 robot, environment, simulator, steering = identity(group.get('name_override', report), robot_ids,
                                                                    group.get('four_wheel', False))
             new_records.append({
                 'robot_id': robot, 'environment_id': environment, 'simulator': simulator,
-                'task_type': group.get('identity', {}).get('task_type', 'navigation_mission'),
+                'task_type': fixed.get('task_type', 'navigation_mission'),
                 'steering_mode': steering, 'date': group['date'],
                 'revision': group['revision'], 'report': relative,
                 'sha256': hashlib.sha256(open(report, 'rb').read()).hexdigest(),
