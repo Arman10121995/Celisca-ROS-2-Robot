@@ -11,6 +11,8 @@
 #   rosdep-install.log, pip-freeze.txt, colcon-build.log   copied from the image
 #   fast_tier.log        scripts/test_tiers.sh fast inside the container
 #   mission/             scripts/sim_nav_mission.sh mujoco bumperbot nav_obstacle
+#   gazebo/, isaac/      the same mission in Gazebo and Isaac (CLEAN_HOST_SIMS,
+#                        default "gazebo isaac"; empty skips them)
 #   golden_comparison.json  the seeded R7.2 perception benchmark, container vs host
 #   result.json          exit codes and timings
 set -u
@@ -39,7 +41,7 @@ built=$(date +%s)
   docker image inspect "$IMAGE" --format 'image {{.Id}} platform {{.Os}}/{{.Architecture}} created {{.Created}}' 2>&1
   docker image inspect ros:humble-ros-base-jammy --format 'base {{index .RepoDigests 0}}' 2>&1
 } > "$OUT/image.txt"
-TESTS=-1; MISSION=-1; GOLDEN=-1
+TESTS=-1; MISSION=-1; GOLDEN=-1; GAZEBO=-1; ISAAC=-1
 if [ $BUILD -eq 0 ]; then
   for f in rosdep-install.log pip-freeze.txt colcon-build.log; do
     docker run --rm "$IMAGE" cat "/$f" > "$OUT/$f" 2>/dev/null
@@ -60,6 +62,34 @@ if [ $BUILD -eq 0 ]; then
      timeout 1800 scripts/sim_nav_mission.sh mujoco bumperbot nav_obstacle /workspace/mission/mujoco_bumperbot_nav_obstacle.json odometry_source:=wheels' \
     > "$OUT/mission.log" 2>&1
   MISSION=$?
+  # Gazebo and Isaac render on the GPU: the container gets it through the
+  # NVIDIA runtime.  Gazebo comes with the image (rosdep: ros_gz_sim ->
+  # Ignition Fortress).  Isaac Sim is not a ROS package; the host's Isaac Sim
+  # build is mounted read-only as an external simulator, like the GPU driver,
+  # and everything else still comes from the image.
+  SIMS=${CLEAN_HOST_SIMS-gazebo isaac}
+  GPU="--runtime nvidia -e NVIDIA_VISIBLE_DEVICES=all -e NVIDIA_DRIVER_CAPABILITIES=all"
+  if [[ " $SIMS " == *" gazebo "* ]]; then
+    mkdir -p "$OUT/workspace/gazebo"
+    docker run --rm --init $GPU -v "$OUT/workspace:/workspace" -e ROS_DOMAIN_ID=42 "$IMAGE" bash -c \
+      'Xvfb :99 -screen 0 1280x1024x24 -nolisten tcp > /dev/null 2>&1 & export DISPLAY=:99; sleep 2; cd /ws &&
+       timeout 1800 scripts/sim_nav_mission.sh gazebo bumperbot nav_obstacle /workspace/gazebo/gazebo_bumperbot_nav_obstacle.json' \
+      > "$OUT/gazebo.log" 2>&1
+    GAZEBO=$?
+  fi
+  # The host's Isaac Sim build (its python.sh), mounted at the same path.
+  ISAAC_PYTHON_HOST=${ISAAC_PYTHON_HOST:-$(PYTHONPATH="$REPO/src/robot_lab_utils" /usr/bin/python3 -c \
+    'from robot_lab_utils.isaac_env import find_isaac_python; print(find_isaac_python())' 2>/dev/null)}
+  ISAAC_ROOT=$(cd "$(dirname "${ISAAC_PYTHON_HOST:-/nonexistent}")/../../.." 2>/dev/null && pwd)
+  if [[ " $SIMS " == *" isaac "* ]] && [ -x "${ISAAC_PYTHON_HOST:-}" ] && [ -n "$ISAAC_ROOT" ]; then
+    mkdir -p "$OUT/workspace/isaac"
+    docker run --rm --init $GPU -v "$OUT/workspace:/workspace" -v "$ISAAC_ROOT:$ISAAC_ROOT:ro" \
+      -e ISAAC_PYTHON="$ISAAC_PYTHON_HOST" -e OMNI_KIT_ACCEPT_EULA=YES -e ACCEPT_EULA=Y \
+      -e ROS_DOMAIN_ID=43 "$IMAGE" bash -c \
+      'cd /ws && timeout 2400 scripts/sim_nav_mission.sh isaac bumperbot nav_obstacle /workspace/isaac/isaac_bumperbot_nav_obstacle.json' \
+      > "$OUT/isaac.log" 2>&1
+    ISAAC=$?
+  fi
   # Golden comparison: the seeded R7.2 perception benchmark in the container
   # and on this host from the same archive; their accuracy figures must
   # agree (timings may not).
@@ -69,7 +99,7 @@ if [ $BUILD -eq 0 ]; then
   (cd "$CTX/ws" && /usr/bin/python3 scripts/r7_2_perception_benchmark.py --out "$OUT/golden_host") > "$OUT/golden_host.log" 2>&1
   # The container ran as root: hand the bind-mounted outputs back.
   docker run --rm -v "$OUT/workspace:/workspace" "$IMAGE" chown -R "$(id -u):$(id -g)" /workspace
-  cp -r "$OUT/workspace/mission" "$OUT/" 2>/dev/null
+  cp -r "$OUT/workspace/mission" "$OUT/workspace/gazebo" "$OUT/workspace/isaac" "$OUT/" 2>/dev/null
   python3 - "$OUT/workspace/golden/container/results.json" "$OUT/golden_host/results.json" "$OUT/golden_comparison.json" <<'PY'
 import json, sys
 def accuracy(node, path=''):
@@ -90,7 +120,8 @@ fi
 finished=$(date +%s)
 cat > "$OUT/result.json" <<EOF
 {"revision": "$REV", "image": "$IMAGE", "build_exit": $BUILD, "fast_tier_exit": $TESTS,
- "mission_exit": $MISSION, "golden_comparison_exit": $GOLDEN, "build_s": $((built - started)), "tests_s": $(( ${tested:-$built} - built )),
+ "mission_exit": $MISSION, "gazebo_mission_exit": $GAZEBO, "isaac_mission_exit": $ISAAC,
+ "golden_comparison_exit": $GOLDEN, "build_s": $((built - started)), "tests_s": $(( ${tested:-$built} - built )),
  "total_s": $((finished - started))}
 EOF
 cat "$OUT/result.json"
