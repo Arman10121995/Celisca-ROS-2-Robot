@@ -1,5 +1,5 @@
 {
-  "generated_utc": "2026-10-15T22:30:30.837872+00:00",
+  "generated_utc": "2026-10-16T00:12:07.105642+00:00",
   "task": "R9.3",
   "status": "partial",
   "qualification": "Exact hashed screens only; artifact validation does not rerun a mission",
@@ -5320,20 +5320,20 @@
       "environment_id": "nav_obstacle",
       "simulator": "gazebo",
       "task_type": "navigation_mission",
-      "support_level": "experimental",
+      "support_level": "partially_supported",
       "evidence_level": "runtime_evidence",
-      "last_tested": "2026-10-15",
-      "revision": "371f724 (round 35, from 21:53; later commits changed no drive, Nav2 or mission file)",
-      "test_result": "failed_screen",
+      "last_tested": "2026-10-16",
+      "revision": "ae2989c (rounds 40-41, 01:23-02:11, omni_parallel samples vx from -0.3 to 0.3)",
+      "test_result": "passed_screen",
       "artifacts": [
-        "docs/status/evidence/wheeled-repeats-2026-10-15/gazebo_crab_seed3_nav_obstacle.json",
-        "docs/status/evidence/wheeled-repeats-2026-10-15/source-hashes-371f724.json"
+        "docs/status/evidence/wheeled-repeats-2026-10-15/crab-backward-sampling/gazebo_crab_seed3_nav_obstacle.json",
+        "docs/status/evidence/wheeled-repeats-2026-10-15/crab-backward-sampling/source-hashes-ae2989c.json"
       ],
       "limitations": [
-        "Goal seeds 2 and 3; seed 1 is the October 13 round",
+        "Goal seeds 1-3, one world",
         "Screen evidence; full ROADMAP mission acceptance remains separate"
       ],
-      "notes": "nav_obstacle mission per 4WS steering pattern and for the mecanum car, goal seeds 2 and 3; truth-measured final poses and the measured drive configuration. Details in docs/status/evidence/wheeled-repeats-2026-10-15.",
+      "notes": "nav_obstacle mission for the 4WS crab and in_phase patterns with DWB sampling backward translation, goal seeds 1-3; truth-measured final poses and the measured drive configuration.",
       "steering_mode": "crab"
     },
     {
@@ -5341,20 +5341,20 @@
       "environment_id": "nav_obstacle",
       "simulator": "gazebo",
       "task_type": "navigation_mission",
-      "support_level": "experimental",
+      "support_level": "partially_supported",
       "evidence_level": "runtime_evidence",
-      "last_tested": "2026-10-15",
-      "revision": "371f724 (round 35, from 21:53; later commits changed no drive, Nav2 or mission file)",
-      "test_result": "failed_screen",
+      "last_tested": "2026-10-16",
+      "revision": "ae2989c (rounds 40-41, 01:23-02:11, omni_parallel samples vx from -0.3 to 0.3)",
+      "test_result": "passed_screen",
       "artifacts": [
-        "docs/status/evidence/wheeled-repeats-2026-10-15/gazebo_in_phase_seed3_nav_obstacle.json",
-        "docs/status/evidence/wheeled-repeats-2026-10-15/source-hashes-371f724.json"
+        "docs/status/evidence/wheeled-repeats-2026-10-15/crab-backward-sampling/gazebo_in_phase_seed3_nav_obstacle.json",
+        "docs/status/evidence/wheeled-repeats-2026-10-15/crab-backward-sampling/source-hashes-ae2989c.json"
       ],
       "limitations": [
-        "Goal seeds 2 and 3; seed 1 is the October 13 round",
+        "Goal seeds 1-3, one world",
         "Screen evidence; full ROADMAP mission acceptance remains separate"
       ],
-      "notes": "nav_obstacle mission per 4WS steering pattern and for the mecanum car, goal seeds 2 and 3; truth-measured final poses and the measured drive configuration. Details in docs/status/evidence/wheeled-repeats-2026-10-15.",
+      "notes": "nav_obstacle mission for the 4WS crab and in_phase patterns with DWB sampling backward translation, goal seeds 1-3; truth-measured final poses and the measured drive configuration.",
       "steering_mode": "in_phase"
     },
     {
@@ -5425,20 +5425,20 @@
       "environment_id": "nav_obstacle",
       "simulator": "isaac",
       "task_type": "navigation_mission",
-      "support_level": "experimental",
+      "support_level": "partially_supported",
       "evidence_level": "runtime_evidence",
-      "last_tested": "2026-10-15",
-      "revision": "371f724 (round 35, from 21:53; later commits changed no drive, Nav2 or mission file)",
-      "test_result": "failed_screen",
+      "last_tested": "2026-10-16",
+      "revision": "ae2989c (rounds 40-41, 01:23-02:11, omni_parallel samples vx from -0.3 to 0.3)",
+      "test_result": "passed_screen",
       "artifacts": [
-        "docs/status/evidence/wheeled-repeats-2026-10-15/isaac_crab_seed3_nav_obstacle.json",
-        "docs/status/evidence/wheeled-repeats-2026-10-15/source-hashes-371f724.json"
+        "docs/status/evidence/wheeled-repeats-2026-10-15/crab-backward-sampling/isaac_crab_seed3_nav_obstacle.json",
+        "docs/status/evidence/wheeled-repeats-2026-10-15/crab-backward-sampling/source-hashes-ae2989c.json"
       ],
       "limitations": [
-        "Goal seeds 2 and 3; seed 1 is the October 13 round",
+        "Goal seeds 1-3, one world",
         "Screen evidence; full ROADMAP mission acceptance remains separate"
       ],
-      "notes": "nav_obstacle mission per 4WS steering pattern and for the mecanum car, goal seeds 2 and 3; truth-measured final poses and the measured drive configuration. Details in docs/status/evidence/wheeled-repeats-2026-10-15.",
+      "notes": "nav_obstacle mission for the 4WS crab and in_phase patterns with DWB sampling backward translation, goal seeds 1-3; truth-measured final poses and the measured drive configuration.",
       "steering_mode": "crab"
     },
     {
@@ -5446,20 +5446,20 @@
       "environment_id": "nav_obstacle",
       "simulator": "isaac",
       "task_type": "navigation_mission",
-      "support_level": "experimental",
+      "support_level": "partially_supported",
       "evidence_level": "runtime_evidence",
-      "last_tested": "2026-10-15",
-      "revision": "371f724 (round 35, from 21:53; later commits changed no drive, Nav2 or mission file)",
-      "test_result": "failed_screen",
+      "last_tested": "2026-10-16",
+      "revision": "ae2989c (rounds 40-41, 01:23-02:11, omni_parallel samples vx from -0.3 to 0.3)",
+      "test_result": "passed_screen",
       "artifacts": [
-        "docs/status/evidence/wheeled-repeats-2026-10-15/isaac_in_phase_seed3_nav_obstacle.json",
-        "docs/status/evidence/wheeled-repeats-2026-10-15/source-hashes-371f724.json"
+        "docs/status/evidence/wheeled-repeats-2026-10-15/crab-backward-sampling/isaac_in_phase_seed3_nav_obstacle.json",
+        "docs/status/evidence/wheeled-repeats-2026-10-15/crab-backward-sampling/source-hashes-ae2989c.json"
       ],
       "limitations": [
-        "Goal seeds 2 and 3; seed 1 is the October 13 round",
+        "Goal seeds 1-3, one world",
         "Screen evidence; full ROADMAP mission acceptance remains separate"
       ],
-      "notes": "nav_obstacle mission per 4WS steering pattern and for the mecanum car, goal seeds 2 and 3; truth-measured final poses and the measured drive configuration. Details in docs/status/evidence/wheeled-repeats-2026-10-15.",
+      "notes": "nav_obstacle mission for the 4WS crab and in_phase patterns with DWB sampling backward translation, goal seeds 1-3; truth-measured final poses and the measured drive configuration.",
       "steering_mode": "in_phase"
     },
     {
@@ -5530,20 +5530,20 @@
       "environment_id": "nav_obstacle",
       "simulator": "mujoco",
       "task_type": "navigation_mission",
-      "support_level": "experimental",
+      "support_level": "partially_supported",
       "evidence_level": "runtime_evidence",
-      "last_tested": "2026-10-15",
-      "revision": "371f724 (round 35, from 21:53; later commits changed no drive, Nav2 or mission file)",
-      "test_result": "failed_screen",
+      "last_tested": "2026-10-16",
+      "revision": "ae2989c (rounds 40-41, 01:23-02:11, omni_parallel samples vx from -0.3 to 0.3)",
+      "test_result": "passed_screen",
       "artifacts": [
-        "docs/status/evidence/wheeled-repeats-2026-10-15/mujoco_crab_seed3_nav_obstacle.json",
-        "docs/status/evidence/wheeled-repeats-2026-10-15/source-hashes-371f724.json"
+        "docs/status/evidence/wheeled-repeats-2026-10-15/crab-backward-sampling/mujoco_crab_seed3_nav_obstacle.json",
+        "docs/status/evidence/wheeled-repeats-2026-10-15/crab-backward-sampling/source-hashes-ae2989c.json"
       ],
       "limitations": [
-        "Goal seeds 2 and 3; seed 1 is the October 13 round",
+        "Goal seeds 1-3, one world",
         "Screen evidence; full ROADMAP mission acceptance remains separate"
       ],
-      "notes": "nav_obstacle mission per 4WS steering pattern and for the mecanum car, goal seeds 2 and 3; truth-measured final poses and the measured drive configuration. Details in docs/status/evidence/wheeled-repeats-2026-10-15.",
+      "notes": "nav_obstacle mission for the 4WS crab and in_phase patterns with DWB sampling backward translation, goal seeds 1-3; truth-measured final poses and the measured drive configuration.",
       "steering_mode": "crab"
     },
     {
@@ -5551,20 +5551,20 @@
       "environment_id": "nav_obstacle",
       "simulator": "mujoco",
       "task_type": "navigation_mission",
-      "support_level": "experimental",
+      "support_level": "partially_supported",
       "evidence_level": "runtime_evidence",
-      "last_tested": "2026-10-15",
-      "revision": "371f724 (round 35, from 21:53; later commits changed no drive, Nav2 or mission file)",
-      "test_result": "failed_screen",
+      "last_tested": "2026-10-16",
+      "revision": "ae2989c (rounds 40-41, 01:23-02:11, omni_parallel samples vx from -0.3 to 0.3)",
+      "test_result": "passed_screen",
       "artifacts": [
-        "docs/status/evidence/wheeled-repeats-2026-10-15/mujoco_in_phase_seed3_nav_obstacle.json",
-        "docs/status/evidence/wheeled-repeats-2026-10-15/source-hashes-371f724.json"
+        "docs/status/evidence/wheeled-repeats-2026-10-15/crab-backward-sampling/mujoco_in_phase_seed3_nav_obstacle.json",
+        "docs/status/evidence/wheeled-repeats-2026-10-15/crab-backward-sampling/source-hashes-ae2989c.json"
       ],
       "limitations": [
-        "Goal seeds 2 and 3; seed 1 is the October 13 round",
+        "Goal seeds 1-3, one world",
         "Screen evidence; full ROADMAP mission acceptance remains separate"
       ],
-      "notes": "nav_obstacle mission per 4WS steering pattern and for the mecanum car, goal seeds 2 and 3; truth-measured final poses and the measured drive configuration. Details in docs/status/evidence/wheeled-repeats-2026-10-15.",
+      "notes": "nav_obstacle mission for the 4WS crab and in_phase patterns with DWB sampling backward translation, goal seeds 1-3; truth-measured final poses and the measured drive configuration.",
       "steering_mode": "in_phase"
     },
     {
@@ -5635,20 +5635,20 @@
       "environment_id": "nav_obstacle",
       "simulator": "pybullet",
       "task_type": "navigation_mission",
-      "support_level": "experimental",
+      "support_level": "partially_supported",
       "evidence_level": "runtime_evidence",
-      "last_tested": "2026-10-15",
-      "revision": "371f724 (round 35, from 21:53; later commits changed no drive, Nav2 or mission file)",
-      "test_result": "failed_screen",
+      "last_tested": "2026-10-16",
+      "revision": "ae2989c (rounds 40-41, 01:23-02:11, omni_parallel samples vx from -0.3 to 0.3)",
+      "test_result": "passed_screen",
       "artifacts": [
-        "docs/status/evidence/wheeled-repeats-2026-10-15/pybullet_crab_seed3_nav_obstacle.json",
-        "docs/status/evidence/wheeled-repeats-2026-10-15/source-hashes-371f724.json"
+        "docs/status/evidence/wheeled-repeats-2026-10-15/crab-backward-sampling/pybullet_crab_seed3_nav_obstacle.json",
+        "docs/status/evidence/wheeled-repeats-2026-10-15/crab-backward-sampling/source-hashes-ae2989c.json"
       ],
       "limitations": [
-        "Goal seeds 2 and 3; seed 1 is the October 13 round",
+        "Goal seeds 1-3, one world",
         "Screen evidence; full ROADMAP mission acceptance remains separate"
       ],
-      "notes": "nav_obstacle mission per 4WS steering pattern and for the mecanum car, goal seeds 2 and 3; truth-measured final poses and the measured drive configuration. Details in docs/status/evidence/wheeled-repeats-2026-10-15.",
+      "notes": "nav_obstacle mission for the 4WS crab and in_phase patterns with DWB sampling backward translation, goal seeds 1-3; truth-measured final poses and the measured drive configuration.",
       "steering_mode": "crab"
     },
     {
@@ -5656,20 +5656,20 @@
       "environment_id": "nav_obstacle",
       "simulator": "pybullet",
       "task_type": "navigation_mission",
-      "support_level": "experimental",
+      "support_level": "partially_supported",
       "evidence_level": "runtime_evidence",
-      "last_tested": "2026-10-15",
-      "revision": "371f724 (round 35, from 21:53; later commits changed no drive, Nav2 or mission file)",
-      "test_result": "failed_screen",
+      "last_tested": "2026-10-16",
+      "revision": "ae2989c (rounds 40-41, 01:23-02:11, omni_parallel samples vx from -0.3 to 0.3)",
+      "test_result": "passed_screen",
       "artifacts": [
-        "docs/status/evidence/wheeled-repeats-2026-10-15/pybullet_in_phase_seed3_nav_obstacle.json",
-        "docs/status/evidence/wheeled-repeats-2026-10-15/source-hashes-371f724.json"
+        "docs/status/evidence/wheeled-repeats-2026-10-15/crab-backward-sampling/pybullet_in_phase_seed3_nav_obstacle.json",
+        "docs/status/evidence/wheeled-repeats-2026-10-15/crab-backward-sampling/source-hashes-ae2989c.json"
       ],
       "limitations": [
-        "Goal seeds 2 and 3; seed 1 is the October 13 round",
+        "Goal seeds 1-3, one world",
         "Screen evidence; full ROADMAP mission acceptance remains separate"
       ],
-      "notes": "nav_obstacle mission per 4WS steering pattern and for the mecanum car, goal seeds 2 and 3; truth-measured final poses and the measured drive configuration. Details in docs/status/evidence/wheeled-repeats-2026-10-15.",
+      "notes": "nav_obstacle mission for the 4WS crab and in_phase patterns with DWB sampling backward translation, goal seeds 1-3; truth-measured final poses and the measured drive configuration.",
       "steering_mode": "in_phase"
     },
     {

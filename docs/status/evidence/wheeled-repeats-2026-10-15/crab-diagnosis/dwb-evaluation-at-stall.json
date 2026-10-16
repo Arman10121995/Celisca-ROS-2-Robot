@@ -1,0 +1,11 @@
+{
+ "run": "MuJoCo four_wheel_steer_car crab, goal seed 2, round 39 at 9ece93c (before the fix)",
+ "source": "/evaluation (dwb_msgs/LocalPlanEvaluation) recorded with EXTRA_BAG_TOPICS; one evaluation at 80% of the run, during the stall before goal B",
+ "trajectories": 2939,
+ "illegal": {"robot_lab_controller::ParallelSteeringCritic (translate and turn at once)": 2760},
+ "legal": {"translation only": 138, "pivot only": 40, "standing still": 1},
+ "velocity_samples": {"vx": "0.0 to 0.3 (20 samples, forward only)", "vy": "-0.3 to 0.3 (9)", "theta": "-1.0 to 1.0 (21)"},
+ "best": {"velocity": [0.0, 0.0, 0.0], "total": 20.07, "critics": {"GoalDist": 18.0, "PathDist": 0.8, "ObstacleFootprint": 1.26}},
+ "best_pivot": {"velocity": [0.0, 0.0, 0.16], "total": 20.15, "critics": {"ParallelSteeringCritic": 0.32, "GoalDist": 18.0, "PathDist": 0.8, "ObstacleFootprint": 1.03}},
+ "best_translation": {"velocity": [0.0, 0.075, 0.0], "total": 20.59, "critics": {"GoalDist": 18.0, "PathDist": 1.6, "ObstacleFootprint": 0.99}}
+}

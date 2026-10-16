@@ -283,9 +283,11 @@ code delivery, not a passed mission or universal support.
   backends and the 4WS ackermann/pivot patterns in MuJoCo and Gazebo
   ([evidence](evidence/p7-legged-slam-mapping-2026-10-13/README.md)).
   Over goal seeds 2 and 3 (2026-10-15), 4WS ackermann, pivot and the
-  mecanum car pass 24/24, but crab and in_phase abort goal B in all 16 runs
-  and the cars pass 13/24, missing goal B by 0.26-0.36 m
-  ([evidence](evidence/wheeled-repeats-2026-10-15/README.md)).
+  mecanum car pass 24/24 and the cars 13/24, missing goal B by 0.26-0.36 m.
+  Crab and in_phase aborted goal B in all 16 runs: DWB sampled only forward
+  translation, and standing still scored best. With backward sampling
+  (`ae2989c`, 2026-10-16) they pass 24/24 over seeds 1-3 in all four
+  backends ([evidence](evidence/wheeled-repeats-2026-10-15/README.md)).
   Driven sideways at a fixed heading (`--holonomic`), the 4WS crab and
   in_phase patterns hold 0.9-1.7 cm in MuJoCo and Gazebo. The strafing
   mecanum car holds 2.4 cm in MuJoCo and 11 cm in Gazebo, where its rollers
@@ -408,7 +410,9 @@ code delivery, not a passed mission or universal support.
 - [ ] **R9.3:** Regenerate the release matrix as those tasks pass. The current
   matrix intentionally remains partial with full-release gates blocked.
   Regenerated 2026-10-15 with the October 13-15 missions and the wheeled
-  seed 2/3 repeats: 251 measured cells (227 passed, 23 failed screens)
+  seed 2/3 repeats: 251 measured cells (227 passed, 23 failed screens).
+  On 2026-10-16, with the G1 inflation reruns and the fixed crab/in_phase
+  missions: 474 records, 235 passed and 15 failed screens
   ([evidence](evidence/support-matrix-2026-10-15/README.md)).
 - [ ] **R9.4, optional hardware:** Arrange the actual robot, supervised setup
   and explicit hardware-operation authorization. Simulation work is separate.

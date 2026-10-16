@@ -8665,3 +8665,387 @@ records:
     policy with leg kinematic odometry and the wider global inflation; truth-measured final poses.
   limitations:
   - One goal seed per report (seeds 1-3)
+- robot_id: four_wheel_steer_car
+  environment_id: nav_obstacle
+  simulator: gazebo
+  task_type: navigation_mission
+  steering_mode: crab
+  date: '2026-10-16'
+  revision: ae2989c (rounds 40-41, 01:23-02:11, omni_parallel samples vx from -0.3 to 0.3)
+  report: docs/status/evidence/wheeled-repeats-2026-10-15/crab-backward-sampling/gazebo_crab_seed1_nav_obstacle.json
+  sha256: 74954e6c7fbc0732062ad56d56217630996c632ace5e3aa88932f00d923c053c
+  source_hashes: docs/status/evidence/wheeled-repeats-2026-10-15/crab-backward-sampling/source-hashes-ae2989c.json
+  source_hashes_sha256: f5099da0f0ef4ea49601c9e4424eb317ce5c5a9ca9a235ab63e49e22613beed9
+  report_kind: mission_screen
+  scope: nav_obstacle mission for the 4WS crab and in_phase patterns with DWB sampling backward translation, goal
+    seeds 1-3; truth-measured final poses and the measured drive configuration.
+  limitations:
+  - Goal seeds 1-3, one world
+- robot_id: four_wheel_steer_car
+  environment_id: nav_obstacle
+  simulator: gazebo
+  task_type: navigation_mission
+  steering_mode: crab
+  date: '2026-10-16'
+  revision: ae2989c (rounds 40-41, 01:23-02:11, omni_parallel samples vx from -0.3 to 0.3)
+  report: docs/status/evidence/wheeled-repeats-2026-10-15/crab-backward-sampling/gazebo_crab_seed2_nav_obstacle.json
+  sha256: 4e793bb15cc662cc904fbab18cea8709ecba0165f151de2f79946122bda450d3
+  source_hashes: docs/status/evidence/wheeled-repeats-2026-10-15/crab-backward-sampling/source-hashes-ae2989c.json
+  source_hashes_sha256: f5099da0f0ef4ea49601c9e4424eb317ce5c5a9ca9a235ab63e49e22613beed9
+  report_kind: mission_screen
+  scope: nav_obstacle mission for the 4WS crab and in_phase patterns with DWB sampling backward translation, goal
+    seeds 1-3; truth-measured final poses and the measured drive configuration.
+  limitations:
+  - Goal seeds 1-3, one world
+- robot_id: four_wheel_steer_car
+  environment_id: nav_obstacle
+  simulator: gazebo
+  task_type: navigation_mission
+  steering_mode: crab
+  date: '2026-10-16'
+  revision: ae2989c (rounds 40-41, 01:23-02:11, omni_parallel samples vx from -0.3 to 0.3)
+  report: docs/status/evidence/wheeled-repeats-2026-10-15/crab-backward-sampling/gazebo_crab_seed3_nav_obstacle.json
+  sha256: 7cabc78400ebb3a0789a9436421ad7891c357cb71e37b1779ed2fc756b4847e1
+  source_hashes: docs/status/evidence/wheeled-repeats-2026-10-15/crab-backward-sampling/source-hashes-ae2989c.json
+  source_hashes_sha256: f5099da0f0ef4ea49601c9e4424eb317ce5c5a9ca9a235ab63e49e22613beed9
+  report_kind: mission_screen
+  scope: nav_obstacle mission for the 4WS crab and in_phase patterns with DWB sampling backward translation, goal
+    seeds 1-3; truth-measured final poses and the measured drive configuration.
+  limitations:
+  - Goal seeds 1-3, one world
+- robot_id: four_wheel_steer_car
+  environment_id: nav_obstacle
+  simulator: gazebo
+  task_type: navigation_mission
+  steering_mode: in_phase
+  date: '2026-10-16'
+  revision: ae2989c (rounds 40-41, 01:23-02:11, omni_parallel samples vx from -0.3 to 0.3)
+  report: docs/status/evidence/wheeled-repeats-2026-10-15/crab-backward-sampling/gazebo_in_phase_seed1_nav_obstacle.json
+  sha256: b9e3d71cbbafbb00f961362811fdf7755efa4087ceb21b8d804b86afc4634464
+  source_hashes: docs/status/evidence/wheeled-repeats-2026-10-15/crab-backward-sampling/source-hashes-ae2989c.json
+  source_hashes_sha256: f5099da0f0ef4ea49601c9e4424eb317ce5c5a9ca9a235ab63e49e22613beed9
+  report_kind: mission_screen
+  scope: nav_obstacle mission for the 4WS crab and in_phase patterns with DWB sampling backward translation, goal
+    seeds 1-3; truth-measured final poses and the measured drive configuration.
+  limitations:
+  - Goal seeds 1-3, one world
+- robot_id: four_wheel_steer_car
+  environment_id: nav_obstacle
+  simulator: gazebo
+  task_type: navigation_mission
+  steering_mode: in_phase
+  date: '2026-10-16'
+  revision: ae2989c (rounds 40-41, 01:23-02:11, omni_parallel samples vx from -0.3 to 0.3)
+  report: docs/status/evidence/wheeled-repeats-2026-10-15/crab-backward-sampling/gazebo_in_phase_seed2_nav_obstacle.json
+  sha256: f0d19de356cfd6705962ef8d5d25ca24ffba763f6e78f0c5404c26a7831c3a59
+  source_hashes: docs/status/evidence/wheeled-repeats-2026-10-15/crab-backward-sampling/source-hashes-ae2989c.json
+  source_hashes_sha256: f5099da0f0ef4ea49601c9e4424eb317ce5c5a9ca9a235ab63e49e22613beed9
+  report_kind: mission_screen
+  scope: nav_obstacle mission for the 4WS crab and in_phase patterns with DWB sampling backward translation, goal
+    seeds 1-3; truth-measured final poses and the measured drive configuration.
+  limitations:
+  - Goal seeds 1-3, one world
+- robot_id: four_wheel_steer_car
+  environment_id: nav_obstacle
+  simulator: gazebo
+  task_type: navigation_mission
+  steering_mode: in_phase
+  date: '2026-10-16'
+  revision: ae2989c (rounds 40-41, 01:23-02:11, omni_parallel samples vx from -0.3 to 0.3)
+  report: docs/status/evidence/wheeled-repeats-2026-10-15/crab-backward-sampling/gazebo_in_phase_seed3_nav_obstacle.json
+  sha256: a4176001ec6e3700e2ed0a0ecf54e34f44c79e873159890246ea0ce1872d683a
+  source_hashes: docs/status/evidence/wheeled-repeats-2026-10-15/crab-backward-sampling/source-hashes-ae2989c.json
+  source_hashes_sha256: f5099da0f0ef4ea49601c9e4424eb317ce5c5a9ca9a235ab63e49e22613beed9
+  report_kind: mission_screen
+  scope: nav_obstacle mission for the 4WS crab and in_phase patterns with DWB sampling backward translation, goal
+    seeds 1-3; truth-measured final poses and the measured drive configuration.
+  limitations:
+  - Goal seeds 1-3, one world
+- robot_id: four_wheel_steer_car
+  environment_id: nav_obstacle
+  simulator: isaac
+  task_type: navigation_mission
+  steering_mode: crab
+  date: '2026-10-16'
+  revision: ae2989c (rounds 40-41, 01:23-02:11, omni_parallel samples vx from -0.3 to 0.3)
+  report: docs/status/evidence/wheeled-repeats-2026-10-15/crab-backward-sampling/isaac_crab_seed1_nav_obstacle.json
+  sha256: 193965f352b1a744b263660c717f6d41cdfa062fd799da2dc6a92f8e520cc9de
+  source_hashes: docs/status/evidence/wheeled-repeats-2026-10-15/crab-backward-sampling/source-hashes-ae2989c.json
+  source_hashes_sha256: f5099da0f0ef4ea49601c9e4424eb317ce5c5a9ca9a235ab63e49e22613beed9
+  report_kind: mission_screen
+  scope: nav_obstacle mission for the 4WS crab and in_phase patterns with DWB sampling backward translation, goal
+    seeds 1-3; truth-measured final poses and the measured drive configuration.
+  limitations:
+  - Goal seeds 1-3, one world
+- robot_id: four_wheel_steer_car
+  environment_id: nav_obstacle
+  simulator: isaac
+  task_type: navigation_mission
+  steering_mode: crab
+  date: '2026-10-16'
+  revision: ae2989c (rounds 40-41, 01:23-02:11, omni_parallel samples vx from -0.3 to 0.3)
+  report: docs/status/evidence/wheeled-repeats-2026-10-15/crab-backward-sampling/isaac_crab_seed2_nav_obstacle.json
+  sha256: 5e2775a09b604cbb9b1e45b06ca31dfc69326b5c0a82febfe5839d01735cb3e0
+  source_hashes: docs/status/evidence/wheeled-repeats-2026-10-15/crab-backward-sampling/source-hashes-ae2989c.json
+  source_hashes_sha256: f5099da0f0ef4ea49601c9e4424eb317ce5c5a9ca9a235ab63e49e22613beed9
+  report_kind: mission_screen
+  scope: nav_obstacle mission for the 4WS crab and in_phase patterns with DWB sampling backward translation, goal
+    seeds 1-3; truth-measured final poses and the measured drive configuration.
+  limitations:
+  - Goal seeds 1-3, one world
+- robot_id: four_wheel_steer_car
+  environment_id: nav_obstacle
+  simulator: isaac
+  task_type: navigation_mission
+  steering_mode: crab
+  date: '2026-10-16'
+  revision: ae2989c (rounds 40-41, 01:23-02:11, omni_parallel samples vx from -0.3 to 0.3)
+  report: docs/status/evidence/wheeled-repeats-2026-10-15/crab-backward-sampling/isaac_crab_seed3_nav_obstacle.json
+  sha256: 51aa0c5e773075bdff2aa520ab9f26cb816fd9a900577a58d9bc9667a1cc817e
+  source_hashes: docs/status/evidence/wheeled-repeats-2026-10-15/crab-backward-sampling/source-hashes-ae2989c.json
+  source_hashes_sha256: f5099da0f0ef4ea49601c9e4424eb317ce5c5a9ca9a235ab63e49e22613beed9
+  report_kind: mission_screen
+  scope: nav_obstacle mission for the 4WS crab and in_phase patterns with DWB sampling backward translation, goal
+    seeds 1-3; truth-measured final poses and the measured drive configuration.
+  limitations:
+  - Goal seeds 1-3, one world
+- robot_id: four_wheel_steer_car
+  environment_id: nav_obstacle
+  simulator: isaac
+  task_type: navigation_mission
+  steering_mode: in_phase
+  date: '2026-10-16'
+  revision: ae2989c (rounds 40-41, 01:23-02:11, omni_parallel samples vx from -0.3 to 0.3)
+  report: docs/status/evidence/wheeled-repeats-2026-10-15/crab-backward-sampling/isaac_in_phase_seed1_nav_obstacle.json
+  sha256: 891d1f3b44ad668c8b069b1829afc68fbe27e09b1478ce315bf152650cbff7d0
+  source_hashes: docs/status/evidence/wheeled-repeats-2026-10-15/crab-backward-sampling/source-hashes-ae2989c.json
+  source_hashes_sha256: f5099da0f0ef4ea49601c9e4424eb317ce5c5a9ca9a235ab63e49e22613beed9
+  report_kind: mission_screen
+  scope: nav_obstacle mission for the 4WS crab and in_phase patterns with DWB sampling backward translation, goal
+    seeds 1-3; truth-measured final poses and the measured drive configuration.
+  limitations:
+  - Goal seeds 1-3, one world
+- robot_id: four_wheel_steer_car
+  environment_id: nav_obstacle
+  simulator: isaac
+  task_type: navigation_mission
+  steering_mode: in_phase
+  date: '2026-10-16'
+  revision: ae2989c (rounds 40-41, 01:23-02:11, omni_parallel samples vx from -0.3 to 0.3)
+  report: docs/status/evidence/wheeled-repeats-2026-10-15/crab-backward-sampling/isaac_in_phase_seed2_nav_obstacle.json
+  sha256: 85bac6e7858124232e56d8ca3c0e27cb4847994f2a964839256cabe75d6cd5c7
+  source_hashes: docs/status/evidence/wheeled-repeats-2026-10-15/crab-backward-sampling/source-hashes-ae2989c.json
+  source_hashes_sha256: f5099da0f0ef4ea49601c9e4424eb317ce5c5a9ca9a235ab63e49e22613beed9
+  report_kind: mission_screen
+  scope: nav_obstacle mission for the 4WS crab and in_phase patterns with DWB sampling backward translation, goal
+    seeds 1-3; truth-measured final poses and the measured drive configuration.
+  limitations:
+  - Goal seeds 1-3, one world
+- robot_id: four_wheel_steer_car
+  environment_id: nav_obstacle
+  simulator: isaac
+  task_type: navigation_mission
+  steering_mode: in_phase
+  date: '2026-10-16'
+  revision: ae2989c (rounds 40-41, 01:23-02:11, omni_parallel samples vx from -0.3 to 0.3)
+  report: docs/status/evidence/wheeled-repeats-2026-10-15/crab-backward-sampling/isaac_in_phase_seed3_nav_obstacle.json
+  sha256: b852ecbdff65871dea470c282bcead62f57a67c8962d250cf13ef4b46d5041b5
+  source_hashes: docs/status/evidence/wheeled-repeats-2026-10-15/crab-backward-sampling/source-hashes-ae2989c.json
+  source_hashes_sha256: f5099da0f0ef4ea49601c9e4424eb317ce5c5a9ca9a235ab63e49e22613beed9
+  report_kind: mission_screen
+  scope: nav_obstacle mission for the 4WS crab and in_phase patterns with DWB sampling backward translation, goal
+    seeds 1-3; truth-measured final poses and the measured drive configuration.
+  limitations:
+  - Goal seeds 1-3, one world
+- robot_id: four_wheel_steer_car
+  environment_id: nav_obstacle
+  simulator: mujoco
+  task_type: navigation_mission
+  steering_mode: crab
+  date: '2026-10-16'
+  revision: ae2989c (rounds 40-41, 01:23-02:11, omni_parallel samples vx from -0.3 to 0.3)
+  report: docs/status/evidence/wheeled-repeats-2026-10-15/crab-backward-sampling/mujoco_crab_seed1_nav_obstacle.json
+  sha256: 111032f5ce1f6a9641b53f5d1bf40e4ce071dc8a3ac0f860ee79fb9af10e60cf
+  source_hashes: docs/status/evidence/wheeled-repeats-2026-10-15/crab-backward-sampling/source-hashes-ae2989c.json
+  source_hashes_sha256: f5099da0f0ef4ea49601c9e4424eb317ce5c5a9ca9a235ab63e49e22613beed9
+  report_kind: mission_screen
+  scope: nav_obstacle mission for the 4WS crab and in_phase patterns with DWB sampling backward translation, goal
+    seeds 1-3; truth-measured final poses and the measured drive configuration.
+  limitations:
+  - Goal seeds 1-3, one world
+- robot_id: four_wheel_steer_car
+  environment_id: nav_obstacle
+  simulator: mujoco
+  task_type: navigation_mission
+  steering_mode: crab
+  date: '2026-10-16'
+  revision: ae2989c (rounds 40-41, 01:23-02:11, omni_parallel samples vx from -0.3 to 0.3)
+  report: docs/status/evidence/wheeled-repeats-2026-10-15/crab-backward-sampling/mujoco_crab_seed2_nav_obstacle.json
+  sha256: 16a677422ae3e5bdc0b42b3b6ed3a017d1da9d62a1823f9ce62cef6b9479dbee
+  source_hashes: docs/status/evidence/wheeled-repeats-2026-10-15/crab-backward-sampling/source-hashes-ae2989c.json
+  source_hashes_sha256: f5099da0f0ef4ea49601c9e4424eb317ce5c5a9ca9a235ab63e49e22613beed9
+  report_kind: mission_screen
+  scope: nav_obstacle mission for the 4WS crab and in_phase patterns with DWB sampling backward translation, goal
+    seeds 1-3; truth-measured final poses and the measured drive configuration.
+  limitations:
+  - Goal seeds 1-3, one world
+- robot_id: four_wheel_steer_car
+  environment_id: nav_obstacle
+  simulator: mujoco
+  task_type: navigation_mission
+  steering_mode: crab
+  date: '2026-10-16'
+  revision: ae2989c (rounds 40-41, 01:23-02:11, omni_parallel samples vx from -0.3 to 0.3)
+  report: docs/status/evidence/wheeled-repeats-2026-10-15/crab-backward-sampling/mujoco_crab_seed3_nav_obstacle.json
+  sha256: 922a2e15695b8d55db9f38771870a62b105a4fb7d769518eef7e1df4c30537dd
+  source_hashes: docs/status/evidence/wheeled-repeats-2026-10-15/crab-backward-sampling/source-hashes-ae2989c.json
+  source_hashes_sha256: f5099da0f0ef4ea49601c9e4424eb317ce5c5a9ca9a235ab63e49e22613beed9
+  report_kind: mission_screen
+  scope: nav_obstacle mission for the 4WS crab and in_phase patterns with DWB sampling backward translation, goal
+    seeds 1-3; truth-measured final poses and the measured drive configuration.
+  limitations:
+  - Goal seeds 1-3, one world
+- robot_id: four_wheel_steer_car
+  environment_id: nav_obstacle
+  simulator: mujoco
+  task_type: navigation_mission
+  steering_mode: in_phase
+  date: '2026-10-16'
+  revision: ae2989c (rounds 40-41, 01:23-02:11, omni_parallel samples vx from -0.3 to 0.3)
+  report: docs/status/evidence/wheeled-repeats-2026-10-15/crab-backward-sampling/mujoco_in_phase_seed1_nav_obstacle.json
+  sha256: 4f37e3e48f38298e742ae370769e0c4d3f35aa3fc144de00f72ed1aeb4c7b8b6
+  source_hashes: docs/status/evidence/wheeled-repeats-2026-10-15/crab-backward-sampling/source-hashes-ae2989c.json
+  source_hashes_sha256: f5099da0f0ef4ea49601c9e4424eb317ce5c5a9ca9a235ab63e49e22613beed9
+  report_kind: mission_screen
+  scope: nav_obstacle mission for the 4WS crab and in_phase patterns with DWB sampling backward translation, goal
+    seeds 1-3; truth-measured final poses and the measured drive configuration.
+  limitations:
+  - Goal seeds 1-3, one world
+- robot_id: four_wheel_steer_car
+  environment_id: nav_obstacle
+  simulator: mujoco
+  task_type: navigation_mission
+  steering_mode: in_phase
+  date: '2026-10-16'
+  revision: ae2989c (rounds 40-41, 01:23-02:11, omni_parallel samples vx from -0.3 to 0.3)
+  report: docs/status/evidence/wheeled-repeats-2026-10-15/crab-backward-sampling/mujoco_in_phase_seed2_nav_obstacle.json
+  sha256: 73ae3f58483974327e11bc81ca89d2c784795024e0e76e9d267008439387b600
+  source_hashes: docs/status/evidence/wheeled-repeats-2026-10-15/crab-backward-sampling/source-hashes-ae2989c.json
+  source_hashes_sha256: f5099da0f0ef4ea49601c9e4424eb317ce5c5a9ca9a235ab63e49e22613beed9
+  report_kind: mission_screen
+  scope: nav_obstacle mission for the 4WS crab and in_phase patterns with DWB sampling backward translation, goal
+    seeds 1-3; truth-measured final poses and the measured drive configuration.
+  limitations:
+  - Goal seeds 1-3, one world
+- robot_id: four_wheel_steer_car
+  environment_id: nav_obstacle
+  simulator: mujoco
+  task_type: navigation_mission
+  steering_mode: in_phase
+  date: '2026-10-16'
+  revision: ae2989c (rounds 40-41, 01:23-02:11, omni_parallel samples vx from -0.3 to 0.3)
+  report: docs/status/evidence/wheeled-repeats-2026-10-15/crab-backward-sampling/mujoco_in_phase_seed3_nav_obstacle.json
+  sha256: f803f23c5353212a87c9d6a59c3894685c5ef9af0c531d873915311b7a6e2b70
+  source_hashes: docs/status/evidence/wheeled-repeats-2026-10-15/crab-backward-sampling/source-hashes-ae2989c.json
+  source_hashes_sha256: f5099da0f0ef4ea49601c9e4424eb317ce5c5a9ca9a235ab63e49e22613beed9
+  report_kind: mission_screen
+  scope: nav_obstacle mission for the 4WS crab and in_phase patterns with DWB sampling backward translation, goal
+    seeds 1-3; truth-measured final poses and the measured drive configuration.
+  limitations:
+  - Goal seeds 1-3, one world
+- robot_id: four_wheel_steer_car
+  environment_id: nav_obstacle
+  simulator: pybullet
+  task_type: navigation_mission
+  steering_mode: crab
+  date: '2026-10-16'
+  revision: ae2989c (rounds 40-41, 01:23-02:11, omni_parallel samples vx from -0.3 to 0.3)
+  report: docs/status/evidence/wheeled-repeats-2026-10-15/crab-backward-sampling/pybullet_crab_seed1_nav_obstacle.json
+  sha256: d22425d5ac33f98fcb87faab1fd79136dc2dbabd2c5071ad3427be4b02e9cca7
+  source_hashes: docs/status/evidence/wheeled-repeats-2026-10-15/crab-backward-sampling/source-hashes-ae2989c.json
+  source_hashes_sha256: f5099da0f0ef4ea49601c9e4424eb317ce5c5a9ca9a235ab63e49e22613beed9
+  report_kind: mission_screen
+  scope: nav_obstacle mission for the 4WS crab and in_phase patterns with DWB sampling backward translation, goal
+    seeds 1-3; truth-measured final poses and the measured drive configuration.
+  limitations:
+  - Goal seeds 1-3, one world
+- robot_id: four_wheel_steer_car
+  environment_id: nav_obstacle
+  simulator: pybullet
+  task_type: navigation_mission
+  steering_mode: crab
+  date: '2026-10-16'
+  revision: ae2989c (rounds 40-41, 01:23-02:11, omni_parallel samples vx from -0.3 to 0.3)
+  report: docs/status/evidence/wheeled-repeats-2026-10-15/crab-backward-sampling/pybullet_crab_seed2_nav_obstacle.json
+  sha256: bf9c3168888ec780d99b6919ed4ca7e9485134d5363e2bd6af9b7a529b3bbf31
+  source_hashes: docs/status/evidence/wheeled-repeats-2026-10-15/crab-backward-sampling/source-hashes-ae2989c.json
+  source_hashes_sha256: f5099da0f0ef4ea49601c9e4424eb317ce5c5a9ca9a235ab63e49e22613beed9
+  report_kind: mission_screen
+  scope: nav_obstacle mission for the 4WS crab and in_phase patterns with DWB sampling backward translation, goal
+    seeds 1-3; truth-measured final poses and the measured drive configuration.
+  limitations:
+  - Goal seeds 1-3, one world
+- robot_id: four_wheel_steer_car
+  environment_id: nav_obstacle
+  simulator: pybullet
+  task_type: navigation_mission
+  steering_mode: crab
+  date: '2026-10-16'
+  revision: ae2989c (rounds 40-41, 01:23-02:11, omni_parallel samples vx from -0.3 to 0.3)
+  report: docs/status/evidence/wheeled-repeats-2026-10-15/crab-backward-sampling/pybullet_crab_seed3_nav_obstacle.json
+  sha256: cbdc5b756df18e9a25794cbdf89d444392a20c1fcf57e42620318c098a47ae84
+  source_hashes: docs/status/evidence/wheeled-repeats-2026-10-15/crab-backward-sampling/source-hashes-ae2989c.json
+  source_hashes_sha256: f5099da0f0ef4ea49601c9e4424eb317ce5c5a9ca9a235ab63e49e22613beed9
+  report_kind: mission_screen
+  scope: nav_obstacle mission for the 4WS crab and in_phase patterns with DWB sampling backward translation, goal
+    seeds 1-3; truth-measured final poses and the measured drive configuration.
+  limitations:
+  - Goal seeds 1-3, one world
+- robot_id: four_wheel_steer_car
+  environment_id: nav_obstacle
+  simulator: pybullet
+  task_type: navigation_mission
+  steering_mode: in_phase
+  date: '2026-10-16'
+  revision: ae2989c (rounds 40-41, 01:23-02:11, omni_parallel samples vx from -0.3 to 0.3)
+  report: docs/status/evidence/wheeled-repeats-2026-10-15/crab-backward-sampling/pybullet_in_phase_seed1_nav_obstacle.json
+  sha256: 2878ab0207d7de595bf48bacd2582b590fb25106cf848af329db0aa13fc5aa37
+  source_hashes: docs/status/evidence/wheeled-repeats-2026-10-15/crab-backward-sampling/source-hashes-ae2989c.json
+  source_hashes_sha256: f5099da0f0ef4ea49601c9e4424eb317ce5c5a9ca9a235ab63e49e22613beed9
+  report_kind: mission_screen
+  scope: nav_obstacle mission for the 4WS crab and in_phase patterns with DWB sampling backward translation, goal
+    seeds 1-3; truth-measured final poses and the measured drive configuration.
+  limitations:
+  - Goal seeds 1-3, one world
+- robot_id: four_wheel_steer_car
+  environment_id: nav_obstacle
+  simulator: pybullet
+  task_type: navigation_mission
+  steering_mode: in_phase
+  date: '2026-10-16'
+  revision: ae2989c (rounds 40-41, 01:23-02:11, omni_parallel samples vx from -0.3 to 0.3)
+  report: docs/status/evidence/wheeled-repeats-2026-10-15/crab-backward-sampling/pybullet_in_phase_seed2_nav_obstacle.json
+  sha256: 90237cd724223d5218d17fd3f333f2274a01034cd5e82db6afaeacd1819d1190
+  source_hashes: docs/status/evidence/wheeled-repeats-2026-10-15/crab-backward-sampling/source-hashes-ae2989c.json
+  source_hashes_sha256: f5099da0f0ef4ea49601c9e4424eb317ce5c5a9ca9a235ab63e49e22613beed9
+  report_kind: mission_screen
+  scope: nav_obstacle mission for the 4WS crab and in_phase patterns with DWB sampling backward translation, goal
+    seeds 1-3; truth-measured final poses and the measured drive configuration.
+  limitations:
+  - Goal seeds 1-3, one world
+- robot_id: four_wheel_steer_car
+  environment_id: nav_obstacle
+  simulator: pybullet
+  task_type: navigation_mission
+  steering_mode: in_phase
+  date: '2026-10-16'
+  revision: ae2989c (rounds 40-41, 01:23-02:11, omni_parallel samples vx from -0.3 to 0.3)
+  report: docs/status/evidence/wheeled-repeats-2026-10-15/crab-backward-sampling/pybullet_in_phase_seed3_nav_obstacle.json
+  sha256: 7b8cdc6459cf50b6a825ec4a89e809b8545734c45411f950cac1bb7c74e13eca
+  source_hashes: docs/status/evidence/wheeled-repeats-2026-10-15/crab-backward-sampling/source-hashes-ae2989c.json
+  source_hashes_sha256: f5099da0f0ef4ea49601c9e4424eb317ce5c5a9ca9a235ab63e49e22613beed9
+  report_kind: mission_screen
+  scope: nav_obstacle mission for the 4WS crab and in_phase patterns with DWB sampling backward translation, goal
+    seeds 1-3; truth-measured final poses and the measured drive configuration.
+  limitations:
+  - Goal seeds 1-3, one world

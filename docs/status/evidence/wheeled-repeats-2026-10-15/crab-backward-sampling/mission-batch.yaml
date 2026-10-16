@@ -1,0 +1,29 @@
+# Crab and in_phase seeds 1-3 with backward DWB sampling (rounds 40-41),
+# indexed after round 35 so they control their cells.
+date: '2026-10-16'
+scope: "Exact hashed named simulation screens through October 16; unlisted cells remain untested."
+source_files:
+  - scripts/sim_nav_mission.py
+  - scripts/sim_nav_mission.sh
+  - src/robot_lab_bringup/launch/simulated_robot.launch.py
+  - src/robot_lab_navigation/launch/navigation.launch.py
+  - src/robot_lab_navigation/config/controller_server.yaml
+  - src/robot_lab_navigation/config/robots/four_wheel_steer_car.yaml
+  - src/robot_lab_controller/src/parallel_steering_critic.cpp
+  - src/robot_lab_utils/robot_lab_utils/drive_kinematics.py
+  - src/robot_lab_robots/config/robots.yaml
+groups:
+  - reports:
+      - docs/status/evidence/wheeled-repeats-2026-10-15/crab-backward-sampling/*_seed1_nav_obstacle.json
+      - docs/status/evidence/wheeled-repeats-2026-10-15/crab-backward-sampling/*_seed2_nav_obstacle.json
+      - docs/status/evidence/wheeled-repeats-2026-10-15/crab-backward-sampling/*_seed3_nav_obstacle.json
+    four_wheel: true
+    date: '2026-10-16'
+    revision: "ae2989c (rounds 40-41, 01:23-02:11, omni_parallel samples vx from -0.3 to 0.3)"
+    hash_revision: ae2989c
+    scope: >-
+      nav_obstacle mission for the 4WS crab and in_phase patterns with DWB
+      sampling backward translation, goal seeds 1-3; truth-measured final poses
+      and the measured drive configuration.
+    limitations:
+      - Goal seeds 1-3, one world

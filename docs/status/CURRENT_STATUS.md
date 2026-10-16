@@ -216,11 +216,14 @@ October 13: implemented on master, experimental.
     mecanum car passed seed 1 in every backend
     ([evidence](evidence/r56-4ws-missions-2026-10-13/README.md)).
   - Over goal seeds 2 and 3 (2026-10-15), 4WS ackermann, pivot and the
-    mecanum car pass 24/24, but **crab and in_phase abort the near-obstacle
-    goal in all 16 runs**: the drive stops in the open with zero controller
-    commands until Nav2 gives up. The cars pass 13/24, missing that goal by
-    0.26-0.36 m against the 0.30 m limit
+    mecanum car pass 24/24. The cars pass 13/24, missing the near-obstacle
+    goal by 0.26-0.36 m against the 0.30 m limit
     ([evidence](evidence/wheeled-repeats-2026-10-15/README.md)).
+  - Crab and in_phase first aborted that goal in all 16 runs. A recording
+    of DWB's scores showed why: it sampled only forward translation, the
+    goal lay behind the base, and standing still scored best. **With
+    backward sampling (`ae2989c`, 2026-10-16) they pass 24/24** over seeds
+    1-3 in all four backends, 0.006-0.159 m from truth.
   - Car obstacle missions (Ackermann, rear-steer, anti-Ackermann): **10 of
     12** pass. MuJoCo rear-steer hit the tf2 freeze; Gazebo Ackermann
     aborted its detour after repeated collision-ahead stops

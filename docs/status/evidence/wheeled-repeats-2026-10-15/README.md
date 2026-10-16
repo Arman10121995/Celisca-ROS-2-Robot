@@ -19,7 +19,7 @@ within 0.30 m.
 Per-cell results: [report.md](report.md) and [report.json](report.json).
 Raw reports: `<sim>_<cell>_seed<N>_nav_obstacle.json`.
 
-## Results: 37 of 64 pass
+## Results: 37 of 64 pass (round 35; crab and in_phase since fixed, see below)
 
 | Cell | MuJoCo s2 / s3 | PyBullet s2 / s3 | Gazebo s2 / s3 | Isaac s2 / s3 | Passed |
 |---|---|---|---|---|---|
@@ -48,10 +48,8 @@ succeeded (0.01-0.09 m). On the way to B:
 Pivot and ackermann reach the same goals from the same A. Seed 1's goal B
 was east of A, and crab and in_phase passed it on October 13.
 
-The cause is not established. DWB scores trajectories that combine
-translation and rotation; crab steering cannot follow them, and the stop
-appears where the route to B needs a change of heading. So the October 13
-summary "every 4WS pattern passes in every backend" holds for seed 1 only.
+So the October 13 summary "every 4WS pattern passes in every backend" held
+for seed 1 only. The cause and fix follow below.
 
 **The cars miss goal B by a few centimetres.** Their near-obstacle errors
 are 0.26-0.36 m in every backend, straddling the 0.30 m limit.
@@ -66,8 +64,48 @@ are 0.26-0.36 m in every backend, straddling the 0.30 m limit.
 The support matrix accepts at most 0.25 m, so every car cell fails its
 screen (see [support-matrix-2026-10-15](../support-matrix-2026-10-15/README.md)).
 
+## Crab and in_phase: cause and fix (rounds 38-41, 2026-10-16)
+
+**A suspected cause that was not it (round 38, `2445af7`,
+[crab-resteer-only/](crab-resteer-only/)).** Reversing a sideways command
+swung every wheel through 180° with the wheels stopped, which was suspected
+to cause the stall.
+
+- Fixed in `d99c5ea`: the drive keeps the equivalent wheel angle and
+  reverses the spin instead, with a test.
+- The four MuJoCo reruns and the first Gazebo rerun still aborted goal B,
+  1.66-3.98 m short. The queue was stopped there.
+
+**The cause (round 39, [crab-diagnosis/](crab-diagnosis/)).** MuJoCo crab,
+seed 2, ran again with DWB's per-cycle evaluations recorded
+(`EXTRA_BAG_TOPICS="/evaluation ..."`, now accepted by
+`scripts/sim_nav_mission.sh`). During the stall
+([summary](crab-diagnosis/dwb-evaluation-at-stall.json)):
+
+- DWB scored 2939 trajectories. The parallel-steering critic made 2760
+  illegal, because they translate and turn at once.
+- The 138 legal translations all moved forward or sideways: DWB sampled
+  `vx` from 0 to 0.3 m/s only. Goal B lay behind the base.
+- The 40 legal pivots were penalised by the parallel-steering critic, and
+  none shortened the goal distance within the 1.7 s horizon.
+- Standing still scored best (20.07 against 20.15 and 20.59), every cycle,
+  until the progress checker aborted.
+- Seed 1's goal B lay in front of the base, so forward translation was
+  enough there.
+
+**The fix (`ae2989c`).** Parallel wheels can drive backwards, so the
+`omni_parallel` motion model (crab, in_phase) now samples `vx` from
+-0.3 to 0.3 m/s, with a launch test.
+
+**Result (rounds 40-41, `ae2989c`,
+[crab-backward-sampling/](crab-backward-sampling/)): 24 of 24 pass.** That
+covers crab and in_phase, seeds 1-3, in MuJoCo, PyBullet, Gazebo and Isaac.
+Goal A ends 0.006-0.106 m and goal B 0.056-0.159 m from truth.
+
 ## Limits
 
-- Two seeds per cell, one world.
-- The crab/in_phase stop is described from its trace and log. DWB's
-  internal scores were not recorded.
+- Two seeds per cell in round 35, one world; three seeds for crab and
+  in_phase since the fix.
+- DWB's scores were recorded for one stalled run (MuJoCo crab, seed 2).
+  The other 15 round-35 stops are attributed to the same cause from their
+  identical traces, not from their own recordings.

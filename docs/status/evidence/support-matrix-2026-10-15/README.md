@@ -73,3 +73,28 @@ now controls each wheeled cell:
 
 The 4WS ackermann and pivot cells and the mecanum car still pass in every
 backend.
+
+## Update: the G1 inflation and the crab/in_phase fix (2026-10-16)
+
+Two batches were indexed after round 35:
+
+- **G1 with a wider inflation** (6 records,
+  [batch](../p7-legged-navigation-2026-10-13/g1-clearance/mission-batch.yaml),
+  `80b52f0`). All six missions pass `sim_nav_mission.py`, but the Isaac
+  seed-3 goal ends 0.256 m from truth. Its cell still fails the 0.25 m
+  screen; MuJoCo still passes.
+- **4WS crab and in_phase with backward DWB sampling** (24 records,
+  [batch](../wheeled-repeats-2026-10-15/crab-backward-sampling/mission-batch.yaml),
+  `ae2989c`). Seeds 1-3 pass in all four backends, and seed 3 now controls
+  each cell. All eight cells flip to passed
+  ([cause and fix](../wheeled-repeats-2026-10-15/README.md#crab-and-in_phase-cause-and-fix-rounds-38-41-2026-10-16)).
+
+The index holds 474 records, still 251 cells: **235 passed and 15 failed
+screens**, 1 unverified. The failures:
+
+- the twelve car cells (near-obstacle errors 0.26-0.36 m, or an aborted
+  goal);
+- the G1 and Go2 Isaac nav_obstacle missions;
+- the B2 Isaac policy drive.
+
+Full-release gates stay blocked.
