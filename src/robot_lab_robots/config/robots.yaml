@@ -563,6 +563,15 @@ robots:
     # (2026-10-13).  In MuJoCo it plans forward curves instead.
     no_spin_in_place: [mujoco]
     forward_arc_radius: 0.5
+    # Isaac (2026-10-16): with implicit PhysX drives B2 ran 0.65-0.68 m/s for
+    # a 0.4 m/s command and drifted 0.07-0.18 m/s after the stop (armature
+    # and a friction-1 floor alone did not fix it).  Its policy's gains and
+    # limits match Isaac Lab's DC motor (torque falling to zero at the joint
+    # velocity limit); with that actuator and the training floor (friction
+    # 1, no restitution) it walks 0.29 m/s straight and stops dead, as in
+    # MuJoCo (0.26).
+    isaac_pd_actuator: dc_motor
+    isaac_ground_material: {static_friction: 1.0, dynamic_friction: 1.0, restitution: 0.0}
 
   unitree_b2_mujoco:
     package: robot_lab_robots

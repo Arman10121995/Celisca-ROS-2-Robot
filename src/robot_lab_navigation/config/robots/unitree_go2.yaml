@@ -11,8 +11,13 @@ global_costmap:
   global_costmap:
     ros__parameters:
       footprint: "[[0.36, 0.18], [0.36, -0.18], [-0.33, -0.18], [-0.33, 0.18]]"
+      # 0.7 m at cost scaling 2.0 (2026-10-16): with 0.45 m at the default
+      # 3.0, barely past the 0.40 m circumscribed radius, the Isaac seed-3
+      # route to goal B ran beside the block until Regulated Pure Pursuit
+      # stopped on "collision ahead" and the goal aborted (as the cars did).
       inflation_layer:
-        inflation_radius: 0.45
+        inflation_radius: 0.7
+        cost_scaling_factor: 2.0
 local_costmap:
   local_costmap:
     ros__parameters:
