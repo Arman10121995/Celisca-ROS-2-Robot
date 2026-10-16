@@ -1,6 +1,8 @@
 """Source-contract checks only; these do not qualify a simulator mission."""
 from copy import deepcopy
 import json
+import math
+import time
 import xml.etree.ElementTree as ET
 
 import pytest
@@ -43,6 +45,7 @@ def test_initial_target_is_actual_and_commands_require_heartbeat_and_identity(co
     assert not controller.command({'plant_id': controller.plant_id, 'targets': {'conveyor_lift_joint': .4}}, now=1.)
     controller.heartbeat(1.)
     assert not controller.command({'plant_id': 'old', 'targets': {'conveyor_lift_joint': .4}}, now=1.)
+    controller.heartbeat(1.)  # rejection Stop revokes the old heartbeat
     assert controller.command({'plant_id': controller.plant_id, 'targets': {'conveyor_lift_joint': .4}}, now=1.)
     result = controller.step(position, velocity, .01, now=1.)
     assert result['position']['conveyor_lift_joint'] == pytest.approx(.20035)
@@ -54,6 +57,7 @@ def test_coupled_stage_is_bounded_and_not_independent(controller):
     controller.step(position, velocity, .01, now=1.)
     controller.heartbeat(1.)
     assert not controller.command({'plant_id': controller.plant_id, 'targets': {'telescope_stage2_joint': .1}}, now=1.)
+    controller.heartbeat(1.)  # rejection Stop starts a new control generation
     assert controller.command({'plant_id': controller.plant_id, 'targets': {'telescope_stage1_joint': .14}}, now=1.)
     result = controller.step(position, velocity, .02, now=1.)
     assert result['position']['telescope_stage1_joint'] == result['position']['telescope_stage2_joint'] == .002
@@ -111,3 +115,105 @@ def test_source_bounds_and_actuator_limits_are_preserved(controller, tmp_path):
     config['joints']['conveyor_lift_joint']['effort'] = 2001
     with pytest.raises(ValueError, match='exceeds source'):
         URDFArticulation(config, URDF, controller.model_path)
+
+
+def test_start_and_stop_clamp_only_targets_not_measured_limit_epsilon(controller):
+    position, velocity = measurement(controller, lift=-1e-6, slide=-1e-6)
+    result = controller.step(position, velocity, .01, now=1.)
+    assert controller.measured['conveyor_lift_joint'] == -1e-6
+    assert all(value == 0. for value in result['position'].values())
+    position['conveyor_lift_joint'] = .680001
+    position['telescope_stage1_joint'] = position['telescope_stage2_joint'] = .140001
+    controller.step(position, velocity, .01, now=1.1)
+    controller.stop()
+    result = controller.step(position, velocity, .01, now=1.2)
+    assert result['position']['conveyor_lift_joint'] == .68
+    assert result['position']['telescope_stage1_joint'] == .14
+    for channel in controller.state()['channels']:
+        assert channel['limits'][0] <= channel['target'] <= channel['limits'][1]
+    assert controller.measured['conveyor_lift_joint'] == .680001
+
+
+def test_stop_and_watchdog_hold_each_measured_stage_without_recoupling(controller):
+    position, velocity = measurement(controller, slide=.05)
+    position['telescope_stage2_joint'] = .02
+    result = controller.step(position, velocity, .01, now=1.)
+    assert result['position']['telescope_stage1_joint'] == .05
+    assert result['position']['telescope_stage2_joint'] == .02
+    assert controller.base_inhibited and not controller.fault
+    assert controller.state()['coupling_inhibited']
+    controller.heartbeat(1.)
+    assert controller.command({'plant_id': controller.plant_id, 'targets': {'telescope_stage1_joint': .1}}, now=1.)
+    result = controller.step(position, velocity, .01, now=1.)
+    assert result['position']['telescope_stage2_joint'] == pytest.approx(.021)
+    result = controller.step(position, velocity, .01, now=1.6)
+    assert result['position']['telescope_stage2_joint'] == .02
+    result = controller.step(position, velocity, .01, now=1.7)
+    assert result['position']['telescope_stage2_joint'] == .02
+    position['telescope_stage2_joint'] = .045
+    controller.step(position, velocity, .01, now=1.8)
+    controller.stop()
+    result = controller.step(position, velocity, .01, now=1.9)
+    assert result['position']['telescope_stage2_joint'] == .045
+    assert not controller.fault
+    assert not controller.state()['coupling_inhibited']
+
+
+def test_coupled_reference_slews_both_forward_and_backward(controller):
+    position, velocity = measurement(controller, slide=.05)
+    position['telescope_stage2_joint'] = .1
+    controller.step(position, velocity, .01, now=1.)
+    controller.heartbeat(1.)
+    assert controller.command({'plant_id': controller.plant_id, 'targets': {'telescope_stage1_joint': .1}}, now=1.)
+    result = controller.step(position, velocity, .02, now=1.)
+    assert result['position']['telescope_stage1_joint'] == pytest.approx(.052)
+    assert result['position']['telescope_stage2_joint'] == pytest.approx(.098)
+    assert controller.targets['telescope_stage2_joint'] == .1
+    assert controller.measured['telescope_stage2_joint'] == .1
+
+
+def test_stop_revokes_heartbeat_and_rejects_delayed_prior_generation(controller):
+    position, velocity = measurement(controller)
+    controller.step(position, velocity, .01, now=1.)
+    controller.heartbeat(1.)
+    command = {'plant_id': controller.plant_id, 'targets': {'conveyor_lift_joint': .5}}
+    assert controller.command(command, now=1.)
+    previous_id = controller.plant_id
+    controller.stop()
+    assert controller.plant_id != previous_id
+    assert controller.heartbeat_at == -math.inf
+    # A fresh heartbeat alone cannot make a queued old command current again.
+    controller.heartbeat(1.1)
+    assert not controller.command(command, now=1.1)
+    assert controller.targets['conveyor_lift_joint'] == .2
+    controller.heartbeat(1.2)
+    assert controller.command({'plant_id': controller.plant_id, 'targets': {'conveyor_lift_joint': .5}}, now=1.2)
+
+
+def test_watchdog_stop_changes_generation_once_and_state_has_capture_time(controller):
+    position, velocity = measurement(controller)
+    controller.step(position, velocity, .01, now=1.)
+    controller.heartbeat(1.)
+    assert controller.command({'plant_id': controller.plant_id, 'targets': {'conveyor_lift_joint': .5}}, now=1.)
+    previous_id = controller.plant_id
+    controller.step(position, velocity, .01, now=1.6)
+    stopped_id = controller.plant_id
+    assert stopped_id != previous_id and controller.holding
+    for now in (1.7, 1.8, 2., 3.):
+        controller.step(position, velocity, .01, now=now)
+        assert controller.plant_id == stopped_id
+    before = time.monotonic()
+    state = controller.state()
+    assert before <= state['state_monotonic'] <= time.monotonic()
+
+
+def test_either_held_stage_extension_blocks_drive_even_with_small_coupling_error(controller):
+    position, velocity = measurement(controller, slide=.003)
+    position['telescope_stage2_joint'] = .007
+    controller.step(position, velocity, .01, now=1.)
+    assert controller.holding and not controller.active
+    assert not controller.state()['coupling_inhibited']
+    assert controller.base_inhibited
+    position['telescope_stage2_joint'] = .005
+    controller.step(position, velocity, .01, now=1.1)
+    assert not controller.base_inhibited

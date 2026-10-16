@@ -661,12 +661,20 @@ class PyBulletSpawner(Node):
         if time.monotonic() - getattr(self, "_last_mux_cmd_time", 0.0) < 1.0:
             return
         with self._twist_lock:
+            if self._articulation is not None and self._articulation.base_inhibited:
+                self._twist = Twist()
+                self._last_cmd_time = -math.inf
+                return
             self._twist = msg
             self._last_cmd_time = time.monotonic()
 
     def _on_mux_cmd(self, msg):
         self._last_mux_cmd_time = time.monotonic()
         with self._twist_lock:
+            if self._articulation is not None and self._articulation.base_inhibited:
+                self._twist = Twist()
+                self._last_cmd_time = -math.inf
+                return
             self._twist = msg
             self._last_cmd_time = self._last_mux_cmd_time
 
@@ -1056,13 +1064,26 @@ class PyBulletSpawner(Node):
                 for kind, values in articulation_targets.items():
                     for name, target in values.items():
                         spec = self._articulation.contract.joints[name]
-                        q, qd = states[name][:2]
-                        effort = (spec['kp']*(target-q)-spec['kd']*qd if kind == 'position'
-                                  else spec['kd']*(target-qd))
-                        effort = max(-spec['effort'], min(spec['effort'], effort))
+                        if kind == 'velocity':
+                            # The light roller's explicit torque PD is unstable at
+                            # Bullet's step size (alternating +/-100 rad/s). Use
+                            # its native implicit velocity motor, still bounded
+                            # by the source effort limit; never reset joint state.
+                            p.setJointMotorControl2(self._robot_id, self._joint_idx[name],
+                                p.VELOCITY_CONTROL, targetVelocity=target,
+                                force=spec['effort'], velocityGain=1.)
+                            continue
+                        # Implicit prismatic motor avoids explicit-PD stop chatter.
+                        # Finite source effort and velocity limits still apply.
+                        # These gains are solver parameters, not hardware PID.
                         p.setJointMotorControl2(self._robot_id, self._joint_idx[name],
-                                               p.TORQUE_CONTROL, force=effort)
+                            p.POSITION_CONTROL, targetPosition=target,
+                            force=spec['effort'], maxVelocity=spec['max_velocity'],
+                            positionGain=.1, velocityGain=1.)
                 if self._articulation.base_inhibited:
+                    with self._twist_lock:
+                        self._twist = Twist()
+                        self._last_cmd_time = -math.inf
                     t = Twist()
                     self._drive.reset()
             targets = self._drive.targets(

@@ -477,6 +477,8 @@ class IsaacSpawner(Node):
                 articulation_targets = {kind: {name: value for name, value in self._articulation.contract.references.items()
                     if self._articulation.contract.joints[name]['mode'] == kind} for kind in ('position','velocity')}
             if self._articulation.base_inhibited or not measured or now-feedback_wall > .5:
+                self._twist = Twist()
+                self._last_cmd_time = -math.inf
                 twist = Twist()
                 self._drive.reset()
         if self._drive.kind in ("diff", "skid_steer"):
@@ -543,6 +545,10 @@ class IsaacSpawner(Node):
         self._accept_cmd(msg)
 
     def _accept_cmd(self, msg):
+        if self._articulation is not None and self._articulation.base_inhibited:
+            self._twist = Twist()
+            self._last_cmd_time = -math.inf
+            return
         self._twist = msg
         self._last_cmd_time = time.monotonic()
 
@@ -629,6 +635,17 @@ class IsaacSpawner(Node):
         gui = self.get_parameter("gui").value
         if isinstance(gui, str):
             gui = gui.lower() in ("true", "1", "yes")
+        # Importer default position drives must not pin MOLAR's passive casters.
+        # Retain only their authored dissipative bearing damping/effort limits.
+        passive_casters = {}
+        if self._articulation is not None:
+            import xml.etree.ElementTree as ET
+            for joint in ET.fromstring(self._urdf_text).findall('joint'):
+                name = joint.get('name', '')
+                if name.startswith('caster_') and joint.get('type') in ('continuous', 'revolute'):
+                    dynamics, limit = joint.find('dynamics'), joint.find('limit')
+                    passive_casters[name] = dict(damping=float(dynamics.get('damping', 0.)) if dynamics is not None else 0.,
+                                                effort=float(limit.get('effort')))
         cfg = {
             "world_stage": str(self.get_parameter("world_stage").value or ""),
             "world_path": str(self.get_parameter("world_path").value or ""),
@@ -644,6 +661,7 @@ class IsaacSpawner(Node):
             "physics_rate": float(self.get_parameter("physics_rate").value),
             "joint_pd": self._policy_targets.config if self._policy_targets else None,
             "articulation_joints": self._articulation.contract.joints if self._articulation else {},
+            "passive_casters": passive_casters,
             "pd_joint_armature": float(self.get_parameter("pd_joint_armature").value),
             "ground_material": (json.loads(self.get_parameter("ground_material").value)
                                 if self.get_parameter("ground_material").value else None),

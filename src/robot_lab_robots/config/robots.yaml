@@ -64,6 +64,7 @@ robots:
       max_angular_accel: 0.5
       mujoco_wheel_velocity_gain: 20.0
       mujoco_wheel_armature: 0.1
+      wheel_force_limit: 30.0
     notes: 'Experimental simulation-only CAD derivative: differential drive, passive
       casters, lift, coupled telescope and roller. Estimated dynamics. Display/Drive
       controls; sensors, SLAM/Nav2 and cross-backend missions not qualified.'
@@ -103,6 +104,7 @@ robots:
       max_angular_accel: 0.5
       mujoco_wheel_velocity_gain: 20.0
       mujoco_wheel_armature: 0.1
+      wheel_force_limit: 30.0
     notes: 'Experimental simulation-only CAD derivative: differential drive, passive
       casters, lift, coupled telescope and roller. Estimated dynamics. Display/Drive
       controls; sensors, SLAM/Nav2 and cross-backend missions not qualified.'

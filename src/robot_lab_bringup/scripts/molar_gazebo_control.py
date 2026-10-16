@@ -36,6 +36,8 @@ class MolarGazeboControl(Node):
         self.drive_pub = self.create_publisher(Twist, '/molar_base_controller/cmd_vel_unstamped', 1)
         self.create_subscription(JointState, '/joint_states', self.feedback, 10)
         self.create_subscription(Twist, '/robot_lab_controller/cmd_vel_unstamped', self.drive, 1)
+        from std_srvs.srv import Trigger
+        self.create_service(Trigger, '/robot_lab/control_reset', self.reset_control)
         # Wall-clock watchdog must still fire if the simulator clock pauses.
         from rclpy.clock import Clock, ClockType
         self.create_timer(.02, self.tick, clock=Clock(clock_type=ClockType.STEADY_TIME))
@@ -90,6 +92,16 @@ class MolarGazeboControl(Node):
         self.roller_pub.publish(Float64MultiArray(data=[0.]))
         if all(name in self.positions for name in self.pos_names):
             self.position_pub.publish(Float64MultiArray(data=[self.positions[name] for name in self.pos_names]))
+
+    def reset_control(self, _request, response):
+        self.stop_outputs()
+        self.command, self.command_at = Twist(), -math.inf
+        self.articulation.reset()
+        self.positions, self.velocities = {}, {}
+        self.feedback_at, self.last_sim = -math.inf, None
+        response.success = True
+        response.message = 'MOLAR plant identity revoked; waiting for fresh measured hold'
+        return response
 
 
 def main():

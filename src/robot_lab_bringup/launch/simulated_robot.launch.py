@@ -1140,14 +1140,12 @@ def _build_simulation_actions(context):
                 launch_arguments=display_args.items(),
             )
         )
-        # Owned articulation (lift/telescope/roller + base inhibit) for every
-        # backend, not only Gazebo: the GUI subscribes to /molar/articulation/state.
-        if not robot_free and robot_config.get('articulation'):
-            actions.append(Node(package='robot_lab_bringup', executable='molar_gazebo_control.py',
-                parameters=[{'use_sim_time': _as_bool(use_sim_time, True),
-                             'model_path': model_path,
-                             'articulation_config': json.dumps(robot_config['articulation'], sort_keys=True)}],
-                output='screen'))
+        # Owned articulation for Gazebo only (line ~1046, provisioned): Gazebo has
+        # no spawner-side plant loop, so molar_gazebo_control.py relays controller
+        # commands. PyBullet/MuJoCo/Isaac spawners receive articulation_config via
+        # drive_args and host their own ArticulationROS; a second node here would
+        # duplicate /molar/articulation/state publishers and make the GUI's
+        # single-publisher identity check fail (gid=None -> ready never True).
         if planning == 'native_moveit':
             if not native_planning_model:
                 raise ValueError('Native planning requires an installed compatible native arm')

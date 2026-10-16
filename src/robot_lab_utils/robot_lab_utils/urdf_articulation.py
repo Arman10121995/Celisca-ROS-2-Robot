@@ -101,9 +101,15 @@ class URDFArticulation:
 
     def stop(self, reason='stopped; holding measured positions'):
         with self.lock:
+            # A delayed pre-Stop command must not revive the prior motion.
+            # The operator must observe this generation and re-arm heartbeat.
+            self.plant_id = uuid.uuid4().hex
+            self.heartbeat_at = -math.inf
             if self.initialized:
                 for name, spec in self.joints.items():
-                    value = self.measured[name] if spec['mode'] == 'position' else 0.
+                    # Physics joint limits permit tiny penetration. Retain
+                    # measured truth, but never publish an illegal hold target.
+                    value = max(spec['lower'], min(spec['upper'], self.measured[name])) if spec['mode'] == 'position' else 0.
                     self.targets[name] = self.references[name] = value
             self.status = reason
             self.holding = True
@@ -166,21 +172,38 @@ class URDFArticulation:
                     self.references[name] = self.targets[name]
                 result[spec['mode']][name] = self.references[name]
             for name, coupling in self.couplings.items():
-                value = self.references[coupling['joint']]*coupling['multiplier']+coupling['offset']
-                self.references[name] = self.targets[name] = value
-                result['position'][name] = value
+                spec = self.joints[name]
+                if not self.holding:
+                    # Stop preserves each actual stage independently. When
+                    # movement is explicitly requested again, recouple through
+                    # the follower's own bounded reference rate, not a jump.
+                    master = coupling['joint']
+                    goal = self.targets[master]*coupling['multiplier']+coupling['offset']
+                    self.targets[name] = max(spec['lower'], min(spec['upper'], goal))
+                    reference = self.references[master]*coupling['multiplier']+coupling['offset']
+                    reference = max(spec['lower'], min(spec['upper'], reference))
+                    previous = self.references[name]
+                    delta = max(-spec['max_velocity']*dt, min(spec['max_velocity']*dt, reference-previous))
+                    self.references[name] = max(spec['lower'], min(spec['upper'], previous+delta))
+                result['position'][name] = self.references[name]
             self.active = any((not self.holding and abs(self.targets[name]-self.measured[name]) > .002) or abs(self.velocities[name]) > .01 if spec['mode'] == 'position' else abs(self.references[name]) > .001 or abs(self.velocities[name]) > .05 for name, spec in self.joints.items())
-            self.base_inhibited = bool(self.fault or self.active or self.measured.get('telescope_stage1_joint', 0.) > .005)
+            coupling_errors = [self.measured[name]-(self.measured[c['joint']]*c['multiplier']+c['offset']) for name,c in self.couplings.items()]
+            self.base_inhibited = bool(self.fault or self.active
+                                       or any(self.measured.get(name, 0.) > .005 for name in ('telescope_stage1_joint', 'telescope_stage2_joint'))
+                                       or any(abs(error) > .01+1e-9 for error in coupling_errors))
             return result
 
     def state(self):
         with self.lock:
+            coupling_error = {name: self.measured.get(name, 0.)-(self.measured.get(c['joint'], 0.)*c['multiplier']+c['offset']) for name,c in self.couplings.items()}
+            coupling_inhibited = any(abs(error) > .01+1e-9 for error in coupling_error.values())
             return dict(schema=self.config['schema'], plant_id=self.plant_id,
+                state_monotonic=time.monotonic(),
                 model_path=self.model_path, model_sha256=self.model_sha256, urdf_sha256=self.urdf_sha256,
-                initialized=self.initialized, status=self.status, fault=self.fault,
+                initialized=self.initialized, status=self.status+('; coupling deviation inhibits base' if coupling_inhibited else ''), fault=self.fault,
                 base_inhibited=self.base_inhibited, active=self.active,
                 qualification='implemented adapter; runtime validation pending',
-                coupling_error={name: self.measured.get(name, 0.)-(self.measured.get(c['joint'], 0.)*c['multiplier']+c['offset']) for name,c in self.couplings.items()},
+                coupling_error=coupling_error, coupling_inhibited=coupling_inhibited,
                 channels=[dict(name=name, mode=spec['mode'], units=('m' if spec['type']=='prismatic' else 'rad')+('/s' if spec['mode']=='velocity' else ''), measured=self.measured.get(name), target=self.targets.get(name), reference=self.references.get(name), measured_velocity=self.velocities.get(name), limits=[spec['lower'],spec['upper']], max_velocity=spec['max_velocity'], coupled=name in self.couplings) for name,spec in self.joints.items()])
 
 

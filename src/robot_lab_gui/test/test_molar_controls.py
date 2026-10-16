@@ -42,7 +42,7 @@ def feedback(path, plant='plant-one'):
                              target=.5 if name == ROLLER else measured, measured_velocity=.5 if name == ROLLER else 0.,
                              limits=list(LIMITS[name]), max_velocity=8. if name == ROLLER else .05,
                              coupled=name == COUPLED))
-    return dict(schema=SCHEMA, plant_id=plant, model_path=str(path),
+    return dict(schema=SCHEMA, plant_id=plant, model_path=str(path), state_monotonic=time.monotonic(),
                 model_sha256=hashlib.sha256(path.read_bytes()).hexdigest(), urdf_sha256='a' * 64,
                 initialized=True, fault='', status='Holding measured articulation', active=False,
                 base_inhibited=True, coupling_error={COUPLED: 0.}, channels=channels)
@@ -78,6 +78,27 @@ def test_feedback_requires_exact_source_bytes_and_independent_coupled_channels(m
         validate_feedback(state, model)
 
 
+@pytest.mark.parametrize('variant', ['molar_hri', 'probot_l'])
+def test_actual_contract_neutral_hold_keeps_strict_targets_with_solver_roundoff(variant):
+    # Exercise the real shared contract, not a hand-authored ideal state. The
+    # plant may measure a tiny negative position at the zero hard stop.
+    root = Path(__file__).resolve().parents[3]
+    sys.path.insert(0, str(root / 'src/robot_lab_utils'))
+    from robot_lab_utils.urdf_articulation import URDFArticulation
+    folder = root / 'src/robot_lab_robots' / variant
+    source = folder / 'urdf' / (variant + '.urdf.xacro')
+    config = json.loads((folder / 'config/articulation.json').read_text())
+    contract = URDFArticulation(config, source.read_text(), str(source))
+    positions = {name: 0. for name in contract.joints}
+    positions[LIFT] = -1e-8
+    contract.step(positions, {name: 0. for name in contract.joints}, .01)
+    state = contract.state()
+    channels = validate_feedback(state, source)
+    assert not state['fault'] and state['initialized']
+    assert channels[LIFT]['measured'] == -1e-8
+    assert channels[LIFT]['target'] == 0.
+
+
 @pytest.mark.parametrize('mutate', [
     lambda s: s.update(schema='other'),
     lambda s: s.update(plant_id=''),
@@ -85,6 +106,12 @@ def test_feedback_requires_exact_source_bytes_and_independent_coupled_channels(m
     lambda s: s.update(model_path='/other/model.urdf'),
     lambda s: s.update(urdf_sha256=''),
     lambda s: s.update(base_inhibited='false'),
+    lambda s: s.update(state_monotonic=time.monotonic() - 10.),
+    lambda s: s.update(state_monotonic=time.monotonic() + 1.),
+    lambda s: s.update(state_monotonic=math.nan),
+    lambda s: s.update(state_monotonic=True),
+    lambda s: s.update(state_monotonic=None),
+    lambda s: s.pop('state_monotonic'),
     lambda s: s['channels'].pop(),
     lambda s: s['channels'][1].update(name=LIFT),
     lambda s: s['channels'][1].update(limits=[0., .28]),
@@ -193,6 +220,25 @@ def test_real_tk_selection_dragging_and_measured_reset_never_publish_targets(pan
     panel.pub.publish.assert_not_called()
 
 
+@pytest.mark.parametrize('lift,slide,roller,expected', [
+    (-1e-8, .14000001, 8.00001, (0., .14, 8.)),
+    (.68000001, -1e-8, -8.00001, (.68, 0., -8.)),
+])
+def test_use_measured_clamps_editable_targets_without_changing_feedback_or_publishing(
+        panel, model, lift, slide, roller, expected):
+    activate(panel, model)
+    channels = panel.channels()
+    channels[LIFT]['measured'] = lift
+    channels[STAGE]['measured'] = slide
+    channels[ROLLER]['measured_velocity'] = roller
+    panel.use_measured()
+    assert tuple(panel.target_vars[name].get() for name in (LIFT, STAGE, ROLLER)) == expected
+    assert channels[LIFT]['measured'] == lift
+    assert channels[STAGE]['measured'] == slide
+    assert channels[ROLLER]['measured_velocity'] == roller
+    panel.pub.publish.assert_not_called()
+
+
 def test_explicit_apply_jog_limits_and_plant_reset(panel, model):
     activate(panel, model)
     tick(panel)
@@ -251,6 +297,44 @@ def test_delayed_dds_state_and_wrong_source_gid_are_rejected(panel, model):
     panel.receive(SimpleNamespace(data=json.dumps(feedback(model))),
                   SimpleNamespace(source_timestamp=time.time_ns(), publisher_gid=b'other'))
     assert panel.state is None
+    assert not panel.apply(LIFT)
+    panel.pub.publish.assert_not_called()
+
+
+@pytest.mark.parametrize('age', [0., 10.])
+def test_real_contract_one_argument_callback_requires_actual_publication_time(panel, model, age):
+    root = Path(__file__).resolve().parents[3]
+    sys.path.insert(0, str(root / 'src/robot_lab_utils'))
+    from robot_lab_utils.urdf_articulation import URDFArticulation
+    folder = root / 'src/robot_lab_robots/molar_hri'
+    source = folder / 'urdf/molar_hri.urdf.xacro'
+    config = json.loads((folder / 'config/articulation.json').read_text())
+    contract = URDFArticulation(config, source.read_text(), str(source))
+    positions = {name: 0. for name in contract.joints}
+    contract.step(positions, {name: 0. for name in contract.joints}, .01)
+    state = contract.state()
+    state['state_monotonic'] -= age
+    activate(panel, model)
+    panel.app._resolve_robot_path = lambda: str(source)
+    panel.receive(SimpleNamespace(data=json.dumps(state)))
+    assert panel.ready() is (age == 0.)
+    if age:
+        assert panel.state is None
+        assert not panel.apply(LIFT)
+        panel.pub.publish.assert_not_called()
+        panel.heartbeat.publish.assert_not_called()
+    else:
+        panel.target_vars[LIFT].set(.1)
+        assert panel.apply(LIFT)
+        sent = json.loads(panel.pub.publish.call_args.args[0].data)
+        assert sent['plant_id'] == state['plant_id']
+
+
+def test_ready_expires_at_publication_age_even_after_delayed_delivery(panel, model):
+    activate(panel, model)
+    panel.state['state_monotonic'] = time.monotonic() - .501
+    panel.received = time.monotonic()
+    assert not panel.ready()
     assert not panel.apply(LIFT)
     panel.pub.publish.assert_not_called()
 

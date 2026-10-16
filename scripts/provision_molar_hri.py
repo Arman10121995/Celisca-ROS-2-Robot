@@ -110,7 +110,7 @@ for variant in ('probot_l', 'molar_hri'):
         features=['velocity_base', 'articulated_conveyor'], articulation=articulation,
         drive=dict(type='diff', left_wheel_joint='drive_left_joint', right_wheel_joint='drive_right_joint', wheel_radius=.09,
                    wheel_separation=.573, max_speed=.25, max_accel=.3, max_angular_speed=.5, max_angular_accel=.5,
-                   mujoco_wheel_velocity_gain=20., mujoco_wheel_armature=.1),
+                   mujoco_wheel_velocity_gain=20., mujoco_wheel_armature=.1, wheel_force_limit=30.),
         notes='Experimental simulation-only CAD derivative: differential drive, passive casters, lift, coupled telescope and roller. Estimated dynamics. Display/Drive controls; sensors, SLAM/Nav2 and cross-backend missions not qualified.')
     registry.append(dict(id=variant, version='0.1.0', name='MOLAR HRI' if variant == 'molar_hri' else 'ASTI ProBOT-L',
         ros_package='robot_lab_robots', status='available', robot_class='mobile', maturity='prototype',

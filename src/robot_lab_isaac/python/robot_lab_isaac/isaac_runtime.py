@@ -379,6 +379,28 @@ def _author_wheel_velocity_drives(stage, joint_names,
     return sorted(driven)
 
 
+def _author_passive_caster_drives(stage, specifications):
+    """No centering motors: only source bearing damping at zero velocity."""
+    from pxr import Usd, UsdPhysics
+    found = set()
+    for prim in stage.Traverse(Usd.TraverseInstanceProxies()):
+        name = prim.GetName()
+        if name not in specifications or prim.IsInstanceProxy() or not prim.IsA(UsdPhysics.RevoluteJoint):
+            continue
+        spec = specifications[name]
+        drive = UsdPhysics.DriveAPI.Apply(prim, 'angular')
+        (drive.GetTypeAttr() or drive.CreateTypeAttr()).Set('force')
+        (drive.GetStiffnessAttr() or drive.CreateStiffnessAttr()).Set(0.)
+        (drive.GetDampingAttr() or drive.CreateDampingAttr()).Set(float(spec['damping'])*math.pi/180.)
+        (drive.GetMaxForceAttr() or drive.CreateMaxForceAttr()).Set(float(spec['effort']))
+        (drive.GetTargetVelocityAttr() or drive.CreateTargetVelocityAttr()).Set(0.)
+        (drive.GetTargetPositionAttr() or drive.CreateTargetPositionAttr()).Set(0.)
+        found.add(name)
+    if found != set(specifications):
+        raise ValueError('Passive caster joints missing: '+str(sorted(set(specifications)-found)))
+    return sorted(found)
+
+
 def _relax_roller_drives(stage, damping_per_rad=1e-5):
     """Free the passive mecanum/omni rollers from the importer's default drives.
 
@@ -1214,6 +1236,8 @@ def _run_stage(app, reader, cfg, state):
         articulation_joints = cfg.get('articulation_joints', {})
         if articulation_joints:
             _author_articulation_drives(stage_obj, articulation_joints)
+            passive = _author_passive_caster_drives(stage_obj, cfg.get('passive_casters', {}))
+            _emit({'event': 'log', 'msg': 'Passive caster bearing joints: '+str(passive)})
         if joint_pd:
             armature = float(cfg.get("pd_joint_armature") or 0.0)
             explicit = str(cfg.get("pd_actuator") or "implicit") == "dc_motor"

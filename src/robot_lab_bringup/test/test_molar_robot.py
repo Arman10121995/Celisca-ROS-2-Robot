@@ -53,5 +53,6 @@ def test_scoped_profile_and_control_limits(variant):
     assert profile['drive']['wheel_radius'] == .09
     assert profile['drive']['wheel_separation'] == .573
     assert profile['drive']['max_speed'] <= .25
+    assert profile['drive']['wheel_force_limit'] == 30.
     assert profile['articulation']['joints']['transfer_roller_joint']['max_velocity'] <= 8.
     assert 'molar_position_controller' in profile['controllers']

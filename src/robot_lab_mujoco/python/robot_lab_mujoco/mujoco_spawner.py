@@ -1464,12 +1464,20 @@ class MuJoCoSpawner(Node):
         if time.monotonic() - getattr(self, "_last_mux_cmd_time", 0.0) < 1.0:
             return
         with self._twist_lock:
+            if self._articulation is not None and self._articulation.base_inhibited:
+                self._twist = Twist()
+                self._last_cmd_time = -math.inf
+                return
             self._twist = msg
             self._last_cmd_time = time.monotonic()
 
     def _on_mux_cmd(self, msg):
         self._last_mux_cmd_time = time.monotonic()
         with self._twist_lock:
+            if self._articulation is not None and self._articulation.base_inhibited:
+                self._twist = Twist()
+                self._last_cmd_time = -math.inf
+                return
             self._twist = msg
             self._last_cmd_time = self._last_mux_cmd_time
 
@@ -2178,6 +2186,9 @@ class MuJoCoSpawner(Node):
                 for name, value in values.items():
                     self._set_actuator(name, '_articulation', value)
             if self._articulation.base_inhibited:
+                with self._twist_lock:
+                    self._twist = Twist()
+                    self._last_cmd_time = -math.inf
                 command = Twist()
                 self._drive.reset()
         if self._model.nu > 0 and not getattr(self, "_robot_free", False):

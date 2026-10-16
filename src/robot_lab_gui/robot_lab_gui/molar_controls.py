@@ -55,6 +55,9 @@ def validate_feedback(state, model_path):
     """Bind actual feedback to the exact selected source, without trusting names."""
     if not isinstance(state, dict) or state.get('schema') != SCHEMA:
         raise ValueError('Waiting for the MOLAR articulation state schema.')
+    published = finite(state.get('state_monotonic'))
+    if not -.05 <= time.monotonic() - published < FRESH_SECONDS:
+        raise ValueError('Waiting for fresh articulation feedback from the running plant.')
     expected = Path(model_path).resolve(strict=True)
     if (not isinstance(state.get('plant_id'), str) or not state['plant_id']
             or len(state['plant_id']) > 128
@@ -231,17 +234,16 @@ class MolarControls(ScrollPanel):
                 return
             gid = self.graph_gid()
             if info is not None:
-                # Composition test path: explicit message info carries source
-                # timestamp and publisher gid for strict freshness/identity checks.
+                # Additional DDS check when the executor preserves metadata.
                 age = (time.time_ns() - info.source_timestamp) / 1e9
                 publisher_ok = gid is not None and gid == bytes(info.publisher_gid)
             else:
-                # Plain rclpy subscription callback carries only the message;
-                # treat a just-arrived message as fresh and require a known
-                # publisher on the state topic instead of per-message identity.
-                age = 0.0
+                # Humble calls subscriptions with only the message. Its actual
+                # publication time is checked from the payload below, never
+                # inferred from callback delivery time.
+                age = None
                 publisher_ok = gid is not None
-            if gid is None or not publisher_ok or not -.5 <= age < FRESH_SECONDS:
+            if gid is None or not publisher_ok or (age is not None and not -.5 <= age < FRESH_SECONDS):
                 raise ValueError('Waiting for fresh, unambiguous articulation feedback.')
             state = json.loads(message.data)
             validate_feedback(state, self.app._resolve_robot_path())
@@ -258,6 +260,7 @@ class MolarControls(ScrollPanel):
     def ready(self):
         return bool(self.owned() and self.state and self.bound_process is self.app.process
                     and time.monotonic() - self.received < FRESH_SECONDS
+                    and -.05 <= time.monotonic() - self.state['state_monotonic'] < FRESH_SECONDS
                     and self.state.get('initialized') and not self.state.get('fault')
                     and self.publisher_gid == self.graph_gid())
 
@@ -269,8 +272,10 @@ class MolarControls(ScrollPanel):
             return
         for name, variable in self.target_vars.items():
             channel = self.channels()[name]
-            variable.set(channel['measured_velocity'] if name == ROLLER else channel['measured'])
-            self.scales[name].configure(from_=channel['limits'][0], to=channel['limits'][1])
+            low, high = channel['limits']
+            measured = channel['measured_velocity'] if name == ROLLER else channel['measured']
+            variable.set(max(low, min(high, measured)))
+            self.scales[name].configure(from_=low, to=high)
 
     def send(self, targets):
         if not self.ready():

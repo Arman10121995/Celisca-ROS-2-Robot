@@ -36,7 +36,7 @@ def main():
     app.update()
     rclpy.init()
     node = rclpy.create_node('molar_simulation_acceptance_observer')
-    body, joints = [], []
+    body, joints, commands, articulation_states = [], [], [], []
     report = dict(robot=args.robot, backend=args.backend, map=args.map, mode='display', passed=False,
                   phases={}, scope='Bounded actual GUI differential-drive/lift/two-stage telescope/roller/Stop/watchdog; not navigation or physical robot acceptance',
                   domain=os.environ.get('ROS_DOMAIN_ID'))
@@ -54,6 +54,9 @@ def main():
 
     node.create_subscription(Odometry, '/odom/ground_truth', body_state, qos_profile_sensor_data)
     node.create_subscription(JointState, '/joint_states', joint_state, 30)
+    node.create_subscription(Twist, '/key_vel', lambda m: commands.append(dict(wall=time.monotonic(), vx=m.linear.x, wz=m.angular.z)), 30)
+    from std_msgs.msg import String
+    node.create_subscription(String, '/molar/articulation/state', lambda m: articulation_states.append(json.loads(m.data)), 10)
 
     def pump():
         app.update()
@@ -84,6 +87,7 @@ def main():
                       yaw_change=sum(math.atan2(math.sin(y['yaw']-x['yaw']), math.cos(y['yaw']-x['yaw'])) for x,y in zip(samples,samples[1:])),
                       max_tilt=max(x['tilt'] for x in samples), sim_seconds=b['sim']-a['sim'])
         report['phases'][label] = result
+        (out/'progress.json').write_text(json.dumps(report, indent=2)+'\n')
         return result
 
     def key(value, down=True):
@@ -117,6 +121,11 @@ def main():
         app.control_notebook.select(app.molar_controls)
         wait_for(app.molar_controls.ready, 20.)
         report['initial_articulation_state'] = app.molar_controls.state
+        try:
+            from PIL import ImageGrab
+            ImageGrab.grab().save(out/'molar-controls.png')
+        except (ImportError, OSError) as exc:
+            report['screenshot_unavailable'] = str(exc)
         assert phase('neutral_start', 1.5)['displacement'] < .04
         app.control_notebook.select(app.drive_page)
         app.update()
@@ -181,6 +190,13 @@ def main():
         report['passed'] = True
     except BaseException as exc:
         report['exception'] = repr(exc)
+        report['panel_diagnostic'] = dict(status=app.molar_controls.status.get(),
+                                         state=app.molar_controls.state,
+                                         owned=app.molar_controls.owned(),
+                                         graph_gid=bool(app.molar_controls.graph_gid()))
+        report['last_articulation_state'] = articulation_states[-1] if articulation_states else None
+        report['drive_gui_diagnostic'] = dict(enabled=app.drive_input_enabled.get(), latched=app.drive_stop_latched,
+                                             keys=list(app.drive_keys), status=app.drive_status_var.get(), command_count=len(commands))
         raise
     finally:
         app._stop_drive()
@@ -195,7 +211,7 @@ def main():
             report['passed'] = False
         report['body_samples'], report['joint_samples'] = len(body), len(joints)
         (out/'report.json').write_text(json.dumps(report, indent=2)+'\n')
-        (out/'trace.json').write_text(json.dumps(dict(body=body,joints=joints)))
+        (out/'trace.json').write_text(json.dumps(dict(body=body,joints=joints,commands=commands,articulation_states=articulation_states)))
         (out/'gui-output.log').write_text(app.output.get('1.0','end'))
         node.destroy_node()
         app._on_close()
