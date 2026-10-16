@@ -29,6 +29,19 @@ def test_car_goal_checker_does_not_stop_at_the_default_circle(robot):
     assert 0 < params['general_goal_checker']['xy_goal_tolerance'] <= 0.1
 
 
+@pytest.mark.parametrize('robot', ['ackermann_car', 'rear_steer_car', 'anti_ackermann_car'])
+def test_car_planner_inflation_covers_the_swinging_body(robot):
+    # Below the circumscribed radius, Hybrid-A* routed the cars within a
+    # cell of the nav_obstacle block and the swinging body end touched it.
+    src = Path(__file__).resolve().parents[2]
+    params = yaml.safe_load((src/'robot_lab_navigation/config/robots'/
+                             (robot+'.yaml')).read_text())['global_costmap']['global_costmap']['ros__parameters']
+    footprint = yaml.safe_load(params['footprint'])
+    circumscribed = max((x*x + y*y) ** 0.5 for x, y in footprint)
+    assert params['inflation_layer']['inflation_radius'] > circumscribed
+    assert params['inflation_layer']['cost_scaling_factor'] <= 2.0
+
+
 @pytest.mark.parametrize('key,value', [
     ('outcome', 'aborted'), ('final_error_truth_m', 0.25),
     ('final_yaw_error_truth_deg', -14.0), ('truth_age_wall_s', 3.0),

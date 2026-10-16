@@ -15,8 +15,15 @@ global_costmap:
     ros__parameters:
       robot_base_frame: base_footprint
       footprint: "[[0.42, 0.17], [0.42, -0.17], [-0.10, -0.17], [-0.10, 0.17]]"
+      # 2026-10-16: with 0.35 m at the default 3.0 falloff, less than the
+      # 0.45 m circumscribed radius, Hybrid-A* routed the seed-3 detour
+      # within a cell of the nav_obstacle block, where the swinging body end
+      # touched lethal cells and the next replan aborted.  Wider and flatter
+      # keeps the route off the block while the near-obstacle goal (0.55 m
+      # clearance) stays reachable.
       inflation_layer:
-        inflation_radius: 0.35
+        inflation_radius: 0.6
+        cost_scaling_factor: 2.0
 local_costmap:
   local_costmap:
     ros__parameters:
