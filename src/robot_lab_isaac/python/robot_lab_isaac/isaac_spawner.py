@@ -310,6 +310,7 @@ class IsaacSpawner(Node):
         self.declare_parameter("articulation_config", "")
         self._articulation = None
         self._articulation_loads = {}
+        self._base_history = []
         self._articulation_sim_time = None
         self._articulation_feedback_wall = -math.inf
         # URDF import: use the description's own <collision> geometry, as
@@ -470,7 +471,7 @@ class IsaacSpawner(Node):
                 if art_dt > 0 or not self._articulation.contract.initialized:
                     articulation_targets = self._articulation.step(
                         dict(zip(names, measured['jpos'])), dict(zip(names, measured['jvel'])), art_dt,
-                        base_moving=math.hypot(*measured['lin'][:2]) > .025 or abs(measured['ang'][2]) > .05)
+                        base_moving=self._base_moving(measured))
                 else:
                     articulation_targets = {kind: {name: value for name, value in self._articulation.contract.references.items()
                         if self._articulation.contract.joints[name]['mode'] == kind} for kind in ('position','velocity')}
@@ -540,6 +541,30 @@ class IsaacSpawner(Node):
             proc.stdin.flush()
         except Exception:
             pass
+
+    def _base_moving(self, measured):
+        """Base motion from the pose change over the last 0.25 s of sim time.
+
+        Isaac's reported body velocities jitter at rest: the standing MOLAR
+        base read over 0.025 m/s often enough that every articulation command
+        was held as if the base were driving (2026-10-16).  The reported
+        velocity decides until 0.1 s of poses exist.
+        """
+        stamp, (x, y) = float(measured['t']), measured['pos'][:2]
+        qx, qy, qz, qw = measured['orn']
+        yaw = math.atan2(2*(qw*qz+qx*qy), 1-2*(qy*qy+qz*qz))
+        history = self._base_history
+        if history and stamp < history[-1][0]:
+            history.clear()   # a reset rewound the pose
+        history.append((stamp, x, y, yaw))
+        while len(history) > 2 and history[1][0] <= stamp-.25:
+            history.pop(0)
+        start, x0, y0, yaw0 = history[0]
+        span = stamp-start
+        if span < .1:
+            return math.hypot(*measured['lin'][:2]) > .025 or abs(measured['ang'][2]) > .05
+        turned = math.atan2(math.sin(yaw-yaw0), math.cos(yaw-yaw0))
+        return math.hypot(x-x0, y-y0)/span > .025 or abs(turned)/span > .05
 
     def _on_policy_targets(self, msg):
         with self._lock:
