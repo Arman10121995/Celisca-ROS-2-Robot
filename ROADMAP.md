@@ -781,7 +781,11 @@ Dependencies: `R5.1`, `R3.3`.
   stamps (sim time): arrival-time velocities under-reported by this host's
   real-time factor (0.281 m/s for a true 0.400 m/s). The clearance is pinned by an
   expanded-URDF test. See [car wheel-well evidence](docs/status/evidence/r55-car-wheelwell-2026-10-01/README.md).
-- Remaining R5.5 items: slalom/parking/obstacle missions with curvature and swept-
+- 2026-10-16: the obstacle mission passes 35 of 36 runs over goal seeds 1-3
+  in all four backends after a 0.1 m goal tolerance and a 0.6 m planner
+  inflation; one MuJoCo anti-Ackermann goal stalled 0.15 m out. See
+  [car missions](docs/status/evidence/car-missions-2026-10-16/README.md).
+- Remaining R5.5 items: slalom/parking missions with curvature and swept-
   footprint checks, publisher-loss and final-heading repeats on Gazebo and Isaac
   (Gazebo evidence still uses controller odometry), and the rear-steer versus
   anti-Ackermann wording in the GUI/tutorials.

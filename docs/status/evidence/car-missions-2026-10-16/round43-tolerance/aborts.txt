@@ -1,0 +1,78 @@
+== gazebo_ackermann_car_seed1
+      1 [controller_server-19] [WARN] [1792112238.966583242] [controller_server]: RegulatedPurePursuitController detected collision ahead!
+      1 [controller_server-19] [WARN] [1792112239.016250893] [controller_server]: RegulatedPurePursuitController detected collision ahead!
+      1 [controller_server-19] [WARN] [1792112239.066237733] [controller_server]: RegulatedPurePursuitController detected collision ahead!
+      1 [controller_server-19] [WARN] [1792112239.116383127] [controller_server]: RegulatedPurePursuitController detected collision ahead!
+      1 [controller_server-19] [WARN] [1792112239.166347472] [controller_server]: RegulatedPurePursuitController detected collision ahead!
+      1 [controller_server-19] [WARN] [1792112239.216409765] [controller_server]: RegulatedPurePursuitController detected collision ahead!
+      1 [controller_server-19] [WARN] [1792112239.266285953] [controller_server]: RegulatedPurePursuitController detected collision ahead!
+      1 [behavior_server-23] [INFO] [1792112239.285714996] [behavior_server]: Running backup
+      1 [behavior_server-23] [INFO] [1792112241.386289994] [behavior_server]: backup completed successfully
+      1 [planner_server-20] [WARN] [1792112249.666709053] [planner_server]: GridBased: failed to create plan, invalid use: Starting point in lethal space! Cannot create feasible plan..
+      1 [bt_navigator-22] [ERROR] [1792112249.727347479] [bt_navigator]: Goal failed
+      1 [bt_navigator-22] [INFO] [1792112267.734983837] [bt_navigator]: Goal succeeded
+== gazebo_rear_steer_car_seed3
+      1 [bt_navigator-22] [INFO] [1792112871.257887671] [bt_navigator]: Goal succeeded
+      1 [planner_server-20] [WARN] [1792112883.584800969] [planner_server]: GridBased: failed to create plan, invalid use: Starting point in lethal space! Cannot create feasible plan..
+      1 [behavior_server-23] [INFO] [1792112883.625877013] [behavior_server]: Running backup
+      1 [behavior_server-23] [INFO] [1792112886.527873961] [behavior_server]: backup completed successfully
+      1 [planner_server-20] [WARN] [1792112888.618664118] [planner_server]: GridBased: failed to create plan, invalid use: Starting point in lethal space! Cannot create feasible plan..
+      1 [bt_navigator-22] [ERROR] [1792112888.659286863] [bt_navigator]: Goal failed
+== isaac_rear_steer_car_seed3
+      1 [bt_navigator-20] [INFO] [1792113915.394469254] [bt_navigator]: Goal succeeded
+      1 [planner_server-18] [WARN] [1792113935.083854270] [planner_server]: GridBased: failed to create plan, invalid use: Starting point in lethal space! Cannot create feasible plan..
+      1 [behavior_server-21] [INFO] [1792113935.114218884] [behavior_server]: Running backup
+      1 [behavior_server-21] [INFO] [1792113938.414896889] [behavior_server]: backup completed successfully
+      1 [planner_server-18] [WARN] [1792113939.672885394] [planner_server]: GridBased: failed to create plan, invalid use: Starting point in lethal space! Cannot create feasible plan..
+      1 [bt_navigator-20] [ERROR] [1792113939.701710865] [bt_navigator]: Goal failed
+== pybullet_anti_ackermann_car_seed3
+      1 [bt_navigator-19] [INFO] [1792112154.866308180] [bt_navigator]: Goal succeeded
+      1 [controller_server-16] [WARN] [1792112174.315413247] [controller_server]: RegulatedPurePursuitController detected collision ahead!
+      1 [controller_server-16] [WARN] [1792112174.365255042] [controller_server]: RegulatedPurePursuitController detected collision ahead!
+      1 [controller_server-16] [WARN] [1792112174.415269348] [controller_server]: RegulatedPurePursuitController detected collision ahead!
+      1 [controller_server-16] [WARN] [1792112174.465276645] [controller_server]: RegulatedPurePursuitController detected collision ahead!
+      1 [controller_server-16] [WARN] [1792112174.515311207] [controller_server]: RegulatedPurePursuitController detected collision ahead!
+      1 [controller_server-16] [WARN] [1792112174.565314729] [controller_server]: RegulatedPurePursuitController detected collision ahead!
+      1 [planner_server-17] [WARN] [1792112177.335570346] [planner_server]: GridBased: failed to create plan, invalid use: Starting point in lethal space! Cannot create feasible plan..
+      1 [behavior_server-20] [INFO] [1792112177.367086065] [behavior_server]: Running backup
+      1 [behavior_server-20] [INFO] [1792112182.167991856] [behavior_server]: backup completed successfully
+      1 [planner_server-17] [WARN] [1792112184.025728131] [planner_server]: GridBased: failed to create plan, invalid use: Starting point in lethal space! Cannot create feasible plan..
+      1 [bt_navigator-19] [ERROR] [1792112184.053748393] [bt_navigator]: Goal failed
+
+== Footprint clearance to map obstacles along each trace (scratch tool, 0.05 m map cells)
+gazebo_ackermann_car_seed1_nav_obstacle.json            min footprint clearance 0.071 m at t=39.6 (-6.94,-4.51); final 0.300 m; B=succeeded
+gazebo_ackermann_car_seed2_nav_obstacle.json            min footprint clearance 0.112 m at t=28.8 (-4.29,-6.74); final 0.300 m; B=succeeded
+gazebo_ackermann_car_seed3_nav_obstacle.json            min footprint clearance 0.141 m at t=28.8 (-4.26,-6.77); final 0.200 m; B=succeeded
+gazebo_anti_ackermann_car_seed1_nav_obstacle.json       min footprint clearance 0.100 m at t=31.0 (-7.07,-6.77); final 0.304 m; B=succeeded
+gazebo_anti_ackermann_car_seed2_nav_obstacle.json       min footprint clearance 0.050 m at t=44.6 (-3.09,-3.00); final 0.350 m; B=succeeded
+gazebo_anti_ackermann_car_seed3_nav_obstacle.json       min footprint clearance 0.050 m at t=50.4 (-1.80,-4.12); final 0.250 m; B=succeeded
+gazebo_rear_steer_car_seed1_nav_obstacle.json           min footprint clearance 0.050 m at t=28.5 (-6.92,-6.52); final 0.250 m; B=succeeded
+gazebo_rear_steer_car_seed2_nav_obstacle.json           min footprint clearance 0.158 m at t=28.9 (-4.19,-6.74); final 0.350 m; B=succeeded
+gazebo_rear_steer_car_seed3_nav_obstacle.json           min footprint clearance 0.050 m at t=54.0 (-1.88,-6.26); final 0.050 m; B=aborted
+isaac_ackermann_car_seed1_nav_obstacle.json             min footprint clearance 0.100 m at t=24.4 (-7.05,-6.81); final 0.300 m; B=succeeded
+isaac_ackermann_car_seed2_nav_obstacle.json             min footprint clearance 0.050 m at t=56.1 (-6.83,-4.35); final 0.350 m; B=succeeded
+isaac_ackermann_car_seed3_nav_obstacle.json             min footprint clearance 0.112 m at t=29.0 (-4.29,-6.74); final 0.250 m; B=succeeded
+isaac_anti_ackermann_car_seed1_nav_obstacle.json        min footprint clearance 0.000 m at t=28.0 (-7.03,-6.74); final 0.300 m; B=succeeded
+isaac_anti_ackermann_car_seed2_nav_obstacle.json        min footprint clearance 0.050 m at t=53.1 (-6.66,-4.22); final 0.400 m; B=succeeded
+isaac_anti_ackermann_car_seed3_nav_obstacle.json        min footprint clearance 0.100 m at t=49.4 (-1.92,-4.16); final 0.250 m; B=succeeded
+isaac_rear_steer_car_seed1_nav_obstacle.json            min footprint clearance 0.050 m at t=34.7 (-7.00,-6.20); final 0.400 m; B=succeeded
+isaac_rear_steer_car_seed2_nav_obstacle.json            min footprint clearance 0.071 m at t=56.5 (-6.87,-4.43); final 0.400 m; B=succeeded
+isaac_rear_steer_car_seed3_nav_obstacle.json            min footprint clearance 0.050 m at t=57.6 (-1.87,-6.23); final 0.100 m; B=aborted
+mujoco_ackermann_car_seed1_nav_obstacle.json            min footprint clearance 0.050 m at t=30.1 (-7.02,-6.78); final 0.292 m; B=succeeded
+mujoco_ackermann_car_seed2_nav_obstacle.json            min footprint clearance 0.112 m at t=29.6 (-4.28,-6.74); final 0.400 m; B=succeeded
+mujoco_ackermann_car_seed3_nav_obstacle.json            min footprint clearance 0.050 m at t=52.0 (-1.91,-4.15); final 0.250 m; B=succeeded
+mujoco_anti_ackermann_car_seed1_nav_obstacle.json       min footprint clearance 0.050 m at t=28.8 (-7.05,-6.75); final 0.300 m; B=succeeded
+mujoco_anti_ackermann_car_seed2_nav_obstacle.json       min footprint clearance 0.000 m at t=45.3 (-3.05,-2.97); final 0.350 m; B=succeeded
+mujoco_anti_ackermann_car_seed3_nav_obstacle.json       min footprint clearance 0.100 m at t=29.6 (-4.23,-6.70); final 0.200 m; B=succeeded
+mujoco_rear_steer_car_seed1_nav_obstacle.json           min footprint clearance 0.000 m at t=56.7 (2.02,-3.22); final 0.050 m; B=succeeded
+mujoco_rear_steer_car_seed2_nav_obstacle.json           min footprint clearance 0.050 m at t=28.8 (-6.99,-6.09); final 0.350 m; B=succeeded
+mujoco_rear_steer_car_seed3_nav_obstacle.json           min footprint clearance 0.050 m at t=27.7 (-6.97,-6.49); final 0.600 m; B=succeeded
+pybullet_ackermann_car_seed1_nav_obstacle.json          min footprint clearance 0.100 m at t=24.2 (-7.09,-6.76); final 0.300 m; B=succeeded
+pybullet_ackermann_car_seed2_nav_obstacle.json          min footprint clearance 0.112 m at t=23.5 (-4.32,-6.76); final 0.300 m; B=succeeded
+pybullet_ackermann_car_seed3_nav_obstacle.json          min footprint clearance 0.100 m at t=49.6 (-1.92,-4.13); final 0.200 m; B=succeeded
+pybullet_anti_ackermann_car_seed1_nav_obstacle.json     min footprint clearance 0.000 m at t=24.5 (-7.01,-6.77); final 0.269 m; B=succeeded
+pybullet_anti_ackermann_car_seed2_nav_obstacle.json     min footprint clearance 0.112 m at t=24.0 (-4.17,-6.70); final 0.300 m; B=succeeded
+pybullet_anti_ackermann_car_seed3_nav_obstacle.json     min footprint clearance 0.000 m at t=46.8 (-1.90,-4.21); final 0.050 m; B=aborted
+pybullet_rear_steer_car_seed1_nav_obstacle.json         min footprint clearance 0.050 m at t=23.7 (-4.21,-6.65); final 0.492 m; B=succeeded
+pybullet_rear_steer_car_seed2_nav_obstacle.json         min footprint clearance 0.050 m at t=26.9 (-6.95,-6.50); final 0.350 m; B=succeeded
+pybullet_rear_steer_car_seed3_nav_obstacle.json         min footprint clearance 0.050 m at t=24.5 (-4.16,-6.62); final 0.550 m; B=succeeded

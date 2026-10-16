@@ -284,6 +284,9 @@ code delivery, not a passed mission or universal support.
   ([evidence](evidence/p7-legged-slam-mapping-2026-10-13/README.md)).
   Over goal seeds 2 and 3 (2026-10-15), 4WS ackermann, pivot and the
   mecanum car pass 24/24 and the cars 13/24, missing goal B by 0.26-0.36 m.
+  With a 0.1 m goal tolerance and a 0.6 m planner inflation (`32c9cf1`,
+  2026-10-16) the cars pass 35/36 over seeds 1-3 in all four backends
+  ([evidence](evidence/car-missions-2026-10-16/README.md)).
   Crab and in_phase aborted goal B in all 16 runs: DWB sampled only forward
   translation, and standing still scored best. With backward sampling
   (`ae2989c`, 2026-10-16) they pass 24/24 over seeds 1-3 in all four
@@ -412,7 +415,8 @@ code delivery, not a passed mission or universal support.
   Regenerated 2026-10-15 with the October 13-15 missions and the wheeled
   seed 2/3 repeats: 251 measured cells (227 passed, 23 failed screens).
   On 2026-10-16, with the G1 inflation reruns and the fixed crab/in_phase
-  missions: 474 records, 235 passed and 15 failed screens
+  missions: 474 records, 235 passed and 15 failed screens. With the two
+  car rounds: 546 records, 247 passed and 3 failed screens
   ([evidence](evidence/support-matrix-2026-10-15/README.md)).
 - [ ] **R9.4, optional hardware:** Arrange the actual robot, supervised setup
   and explicit hardware-operation authorization. Simulation work is separate.

@@ -1,0 +1,49 @@
+# The three cars, goal seeds 1-3, after the 0.1 m goal tolerance (round 43)
+# and the 0.6 m / 2.0 planner inflation (round 45), indexed in that order.
+# The single-cell trials are not indexed.
+date: '2026-10-16'
+scope: "Exact hashed named simulation screens through October 16; unlisted cells remain untested."
+source_files:
+  - scripts/sim_nav_mission.py
+  - scripts/sim_nav_mission.sh
+  - scripts/gazebo_isolation.sh
+  - src/robot_lab_bringup/launch/simulated_robot.launch.py
+  - src/robot_lab_bringup/config/sim_maps.yaml
+  - src/robot_lab_navigation/launch/navigation.launch.py
+  - src/robot_lab_navigation/config/controller_server.yaml
+  - src/robot_lab_navigation/config/planner_server.yaml
+  - src/robot_lab_navigation/behavior_tree/car_navigation_w_replanning_and_recovery.xml
+  - src/robot_lab_navigation/config/robots/ackermann_car.yaml
+  - src/robot_lab_navigation/config/robots/rear_steer_car.yaml
+  - src/robot_lab_navigation/config/robots/anti_ackermann_car.yaml
+  - src/robot_lab_robots/config/robots.yaml
+  - src/robot_lab_mujoco/python/robot_lab_mujoco/mujoco_spawner.py
+  - src/robot_lab_pybullet/python/robot_lab_pybullet/pybullet_spawner.py
+  - src/robot_lab_isaac/python/robot_lab_isaac/isaac_runtime.py
+  - src/robot_lab_isaac/python/robot_lab_isaac/isaac_spawner.py
+  - src/robot_lab_utils/robot_lab_utils/drive_kinematics.py
+groups:
+  - reports:
+      - docs/status/evidence/car-missions-2026-10-16/round43-tolerance/*_nav_obstacle.json
+    date: '2026-10-16'
+    revision: "ac71687 (round 43, 02:22-03:28, 0.1 m goal tolerance)"
+    hash_revision: ac71687
+    scope: >-
+      nav_obstacle car mission (detour, cancel, resume, near-obstacle goal)
+      with a 0.1 m goal tolerance, goal seeds 1-3; truth-measured final
+      poses. Details in docs/status/evidence/car-missions-2026-10-16.
+    limitations:
+      - Goal seeds 1-3, one world; heading not checked
+  - reports:
+      - docs/status/evidence/car-missions-2026-10-16/round45-inflation/*_nav_obstacle.json
+    date: '2026-10-16'
+    revision: "32c9cf1 (round 45, 03:40-04:44, 0.1 m goal tolerance and 0.6 m / 2.0 planner inflation)"
+    hash_revision: 32c9cf1
+    scope: >-
+      nav_obstacle car mission (detour, cancel, resume, near-obstacle goal)
+      with a 0.1 m goal tolerance and a 0.6 m planner inflation, goal seeds
+      1-3; truth-measured final poses. Details in
+      docs/status/evidence/car-missions-2026-10-16.
+    limitations:
+      - Goal seeds 1-3, one world; heading not checked
+      - MuJoCo anti-Ackermann seed 2 aborted goal B; seed 3 controls that cell

@@ -19,7 +19,7 @@ within 0.30 m.
 Per-cell results: [report.md](report.md) and [report.json](report.json).
 Raw reports: `<sim>_<cell>_seed<N>_nav_obstacle.json`.
 
-## Results: 37 of 64 pass (round 35; crab and in_phase since fixed, see below)
+## Results: 37 of 64 pass (round 35; crab, in_phase and the cars since fixed)
 
 | Cell | MuJoCo s2 / s3 | PyBullet s2 / s3 | Gazebo s2 / s3 | Isaac s2 / s3 | Passed |
 |---|---|---|---|---|---|
@@ -63,6 +63,10 @@ are 0.26-0.36 m in every backend, straddling the 0.30 m limit.
 
 The support matrix accepts at most 0.25 m, so every car cell fails its
 screen (see [support-matrix-2026-10-15](../support-matrix-2026-10-15/README.md)).
+
+Since fixed: the cars had kept Nav2's 0.25 m goal tolerance. With 0.1 m
+and a wider planner inflation they pass 35 of 36 over seeds 1-3
+([car-missions-2026-10-16](../car-missions-2026-10-16/README.md)).
 
 ## Crab and in_phase: cause and fix (rounds 38-41, 2026-10-16)
 

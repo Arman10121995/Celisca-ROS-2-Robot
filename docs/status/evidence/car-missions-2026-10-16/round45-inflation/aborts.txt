@@ -1,0 +1,46 @@
+== mujoco_anti_ackermann_car_seed2 (goal B aborted 0.153 m from truth)
+[controller_server-16] [INFO] [1792115373.243066959] [controller_server]: Reached the goal!
+[bt_navigator-19] [INFO] [1792115373.281409498] [bt_navigator]: Goal succeeded
+[controller_server-16] [ERROR] [1792115431.442978091] [controller_server]: Failed to make progress
+[behavior_server-20] [INFO] [1792115431.462593055] [behavior_server]: Running backup
+[behavior_server-20] [INFO] [1792115433.863512439] [behavior_server]: backup completed successfully
+[controller_server-16] [ERROR] [1792115464.642677017] [controller_server]: Failed to make progress
+[bt_navigator-19] [ERROR] [1792115464.671466237] [bt_navigator]: Goal failed
+
+== Footprint clearance to map obstacles along each trace (0.05 m map cells)
+gazebo_ackermann_car_seed1_nav_obstacle.json            min footprint clearance 0.150 m at t=24.5 (-7.16,-6.76); final 0.300 m; B=succeeded
+gazebo_ackermann_car_seed2_nav_obstacle.json            min footprint clearance 0.292 m at t=42.4 (-3.35,-3.23); final 0.300 m; B=succeeded
+gazebo_ackermann_car_seed3_nav_obstacle.json            min footprint clearance 0.150 m at t=57.7 (-2.05,-6.17); final 0.250 m; B=succeeded
+gazebo_anti_ackermann_car_seed1_nav_obstacle.json       min footprint clearance 0.200 m at t=24.8 (-7.22,-6.76); final 0.250 m; B=succeeded
+gazebo_anti_ackermann_car_seed2_nav_obstacle.json       min footprint clearance 0.300 m at t=52.9 (-2.15,-5.14); final 0.350 m; B=succeeded
+gazebo_anti_ackermann_car_seed3_nav_obstacle.json       min footprint clearance 0.150 m at t=53.1 (-2.04,-6.09); final 0.250 m; B=succeeded
+gazebo_rear_steer_car_seed1_nav_obstacle.json           min footprint clearance 0.200 m at t=25.4 (-7.12,-6.49); final 0.250 m; B=succeeded
+gazebo_rear_steer_car_seed2_nav_obstacle.json           min footprint clearance 0.300 m at t=54.3 (-2.13,-5.74); final 0.300 m; B=succeeded
+gazebo_rear_steer_car_seed3_nav_obstacle.json           min footprint clearance 0.150 m at t=55.0 (-1.99,-6.39); final 0.550 m; B=succeeded
+isaac_ackermann_car_seed1_nav_obstacle.json             min footprint clearance 0.250 m at t=24.5 (-7.22,-6.77); final 0.250 m; B=succeeded
+isaac_ackermann_car_seed2_nav_obstacle.json             min footprint clearance 0.112 m at t=57.4 (-6.99,-4.47); final 0.400 m; B=succeeded
+isaac_ackermann_car_seed3_nav_obstacle.json             min footprint clearance 0.250 m at t=62.6 (-2.12,-7.76); final 0.250 m; B=succeeded
+isaac_anti_ackermann_car_seed1_nav_obstacle.json        min footprint clearance 0.158 m at t=27.0 (-7.17,-6.79); final 0.300 m; B=succeeded
+isaac_anti_ackermann_car_seed2_nav_obstacle.json        min footprint clearance 0.180 m at t=56.9 (-7.02,-4.39); final 0.450 m; B=succeeded
+isaac_anti_ackermann_car_seed3_nav_obstacle.json        min footprint clearance 0.304 m at t=50.8 (-2.17,-4.11); final 0.350 m; B=succeeded
+isaac_rear_steer_car_seed1_nav_obstacle.json            min footprint clearance 0.200 m at t=26.8 (-7.16,-6.16); final 0.450 m; B=succeeded
+isaac_rear_steer_car_seed2_nav_obstacle.json            min footprint clearance 0.112 m at t=55.9 (-6.96,-4.44); final 0.400 m; B=succeeded
+isaac_rear_steer_car_seed3_nav_obstacle.json            min footprint clearance 0.250 m at t=57.5 (-2.08,-6.28); final 0.600 m; B=succeeded
+mujoco_ackermann_car_seed1_nav_obstacle.json            min footprint clearance 0.100 m at t=25.1 (-7.12,-6.76); final 0.300 m; B=succeeded
+mujoco_ackermann_car_seed2_nav_obstacle.json            min footprint clearance 0.100 m at t=48.1 (-3.09,-3.08); final 0.250 m; B=succeeded
+mujoco_ackermann_car_seed3_nav_obstacle.json            min footprint clearance 0.150 m at t=56.5 (-2.04,-6.17); final 0.250 m; B=succeeded
+mujoco_anti_ackermann_car_seed1_nav_obstacle.json       min footprint clearance 0.200 m at t=30.0 (-7.17,-6.78); final 0.250 m; B=succeeded
+mujoco_anti_ackermann_car_seed2_nav_obstacle.json       min footprint clearance 0.050 m at t=46.5 (-3.14,-3.04); final 0.400 m; B=aborted
+mujoco_anti_ackermann_car_seed3_nav_obstacle.json       min footprint clearance 0.200 m at t=58.9 (-2.02,-6.53); final 0.200 m; B=succeeded
+mujoco_rear_steer_car_seed1_nav_obstacle.json           min footprint clearance 0.000 m at t=63.8 (3.25,-3.26); final 0.050 m; B=succeeded
+mujoco_rear_steer_car_seed2_nav_obstacle.json           min footprint clearance 0.141 m at t=56.6 (-6.99,-4.42); final 0.250 m; B=succeeded
+mujoco_rear_steer_car_seed3_nav_obstacle.json           min footprint clearance 0.100 m at t=56.5 (-4.05,-6.71); final 0.550 m; B=succeeded
+pybullet_ackermann_car_seed1_nav_obstacle.json          min footprint clearance 0.071 m at t=20.3 (-7.08,-6.79); final 0.269 m; B=succeeded
+pybullet_ackermann_car_seed2_nav_obstacle.json          min footprint clearance 0.300 m at t=45.9 (-2.15,-4.97); final 0.350 m; B=succeeded
+pybullet_ackermann_car_seed3_nav_obstacle.json          min footprint clearance 0.141 m at t=51.6 (-2.00,-6.21); final 0.250 m; B=succeeded
+pybullet_anti_ackermann_car_seed1_nav_obstacle.json     min footprint clearance 0.100 m at t=21.5 (-7.12,-6.74); final 0.335 m; B=succeeded
+pybullet_anti_ackermann_car_seed2_nav_obstacle.json     min footprint clearance 0.250 m at t=53.8 (-2.10,-6.03); final 0.250 m; B=succeeded
+pybullet_anti_ackermann_car_seed3_nav_obstacle.json     min footprint clearance 0.150 m at t=50.8 (-2.03,-6.10); final 0.250 m; B=succeeded
+pybullet_rear_steer_car_seed1_nav_obstacle.json         min footprint clearance 0.250 m at t=42.7 (-2.87,-3.05); final 0.461 m; B=succeeded
+pybullet_rear_steer_car_seed2_nav_obstacle.json         min footprint clearance 0.250 m at t=20.9 (-7.11,-6.64); final 0.350 m; B=succeeded
+pybullet_rear_steer_car_seed3_nav_obstacle.json         min footprint clearance 0.224 m at t=30.0 (-3.81,-4.59); final 0.550 m; B=succeeded

@@ -1,5 +1,5 @@
 {
-  "generated_utc": "2026-10-16T00:12:07.105642+00:00",
+  "generated_utc": "2026-10-16T02:47:22.522401+00:00",
   "task": "R9.3",
   "status": "partial",
   "qualification": "Exact hashed screens only; artifact validation does not rerun a mission",
@@ -5047,20 +5047,21 @@
       "environment_id": "nav_obstacle",
       "simulator": "gazebo",
       "task_type": "navigation_mission",
-      "support_level": "experimental",
+      "support_level": "partially_supported",
       "evidence_level": "runtime_evidence",
-      "last_tested": "2026-10-15",
-      "revision": "371f724 (round 35, from 21:53; later commits changed no drive, Nav2 or mission file)",
-      "test_result": "failed_screen",
+      "last_tested": "2026-10-16",
+      "revision": "32c9cf1 (round 45, 03:40-04:44, 0.1 m goal tolerance and 0.6 m / 2.0 planner inflation)",
+      "test_result": "passed_screen",
       "artifacts": [
-        "docs/status/evidence/wheeled-repeats-2026-10-15/gazebo_ackermann_car_seed3_nav_obstacle.json",
-        "docs/status/evidence/wheeled-repeats-2026-10-15/source-hashes-371f724-d2ed68a7.json"
+        "docs/status/evidence/car-missions-2026-10-16/round45-inflation/gazebo_ackermann_car_seed3_nav_obstacle.json",
+        "docs/status/evidence/car-missions-2026-10-16/round45-inflation/source-hashes-32c9cf1.json"
       ],
       "limitations": [
-        "Goal seeds 2 and 3; seed 1 is the October 13 round",
+        "Goal seeds 1-3, one world; heading not checked",
+        "MuJoCo anti-Ackermann seed 2 aborted goal B; seed 3 controls that cell",
         "Screen evidence; full ROADMAP mission acceptance remains separate"
       ],
-      "notes": "nav_obstacle car mission (detour, cancel, resume, near-obstacle goal), goal seeds 2 and 3; truth-measured final poses. Details in docs/status/evidence/wheeled-repeats-2026-10-15.",
+      "notes": "nav_obstacle car mission (detour, cancel, resume, near-obstacle goal) with a 0.1 m goal tolerance and a 0.6 m planner inflation, goal seeds 1-3; truth-measured final poses. Details in docs/status/evidence/car-missions-2026-10-16.",
       "steering_mode": ""
     },
     {
@@ -5068,20 +5069,21 @@
       "environment_id": "nav_obstacle",
       "simulator": "gazebo",
       "task_type": "navigation_mission",
-      "support_level": "experimental",
+      "support_level": "partially_supported",
       "evidence_level": "runtime_evidence",
-      "last_tested": "2026-10-15",
-      "revision": "371f724 (round 35, from 21:53; later commits changed no drive, Nav2 or mission file)",
-      "test_result": "failed_screen",
+      "last_tested": "2026-10-16",
+      "revision": "32c9cf1 (round 45, 03:40-04:44, 0.1 m goal tolerance and 0.6 m / 2.0 planner inflation)",
+      "test_result": "passed_screen",
       "artifacts": [
-        "docs/status/evidence/wheeled-repeats-2026-10-15/gazebo_anti_ackermann_car_seed3_nav_obstacle.json",
-        "docs/status/evidence/wheeled-repeats-2026-10-15/source-hashes-371f724-d2ed68a7.json"
+        "docs/status/evidence/car-missions-2026-10-16/round45-inflation/gazebo_anti_ackermann_car_seed3_nav_obstacle.json",
+        "docs/status/evidence/car-missions-2026-10-16/round45-inflation/source-hashes-32c9cf1.json"
       ],
       "limitations": [
-        "Goal seeds 2 and 3; seed 1 is the October 13 round",
+        "Goal seeds 1-3, one world; heading not checked",
+        "MuJoCo anti-Ackermann seed 2 aborted goal B; seed 3 controls that cell",
         "Screen evidence; full ROADMAP mission acceptance remains separate"
       ],
-      "notes": "nav_obstacle car mission (detour, cancel, resume, near-obstacle goal), goal seeds 2 and 3; truth-measured final poses. Details in docs/status/evidence/wheeled-repeats-2026-10-15.",
+      "notes": "nav_obstacle car mission (detour, cancel, resume, near-obstacle goal) with a 0.1 m goal tolerance and a 0.6 m planner inflation, goal seeds 1-3; truth-measured final poses. Details in docs/status/evidence/car-missions-2026-10-16.",
       "steering_mode": ""
     },
     {
@@ -5089,20 +5091,21 @@
       "environment_id": "nav_obstacle",
       "simulator": "gazebo",
       "task_type": "navigation_mission",
-      "support_level": "experimental",
+      "support_level": "partially_supported",
       "evidence_level": "runtime_evidence",
-      "last_tested": "2026-10-15",
-      "revision": "371f724 (round 35, from 21:53; later commits changed no drive, Nav2 or mission file)",
-      "test_result": "failed_screen",
+      "last_tested": "2026-10-16",
+      "revision": "32c9cf1 (round 45, 03:40-04:44, 0.1 m goal tolerance and 0.6 m / 2.0 planner inflation)",
+      "test_result": "passed_screen",
       "artifacts": [
-        "docs/status/evidence/wheeled-repeats-2026-10-15/gazebo_rear_steer_car_seed3_nav_obstacle.json",
-        "docs/status/evidence/wheeled-repeats-2026-10-15/source-hashes-371f724-d2ed68a7.json"
+        "docs/status/evidence/car-missions-2026-10-16/round45-inflation/gazebo_rear_steer_car_seed3_nav_obstacle.json",
+        "docs/status/evidence/car-missions-2026-10-16/round45-inflation/source-hashes-32c9cf1.json"
       ],
       "limitations": [
-        "Goal seeds 2 and 3; seed 1 is the October 13 round",
+        "Goal seeds 1-3, one world; heading not checked",
+        "MuJoCo anti-Ackermann seed 2 aborted goal B; seed 3 controls that cell",
         "Screen evidence; full ROADMAP mission acceptance remains separate"
       ],
-      "notes": "nav_obstacle car mission (detour, cancel, resume, near-obstacle goal), goal seeds 2 and 3; truth-measured final poses. Details in docs/status/evidence/wheeled-repeats-2026-10-15.",
+      "notes": "nav_obstacle car mission (detour, cancel, resume, near-obstacle goal) with a 0.1 m goal tolerance and a 0.6 m planner inflation, goal seeds 1-3; truth-measured final poses. Details in docs/status/evidence/car-missions-2026-10-16.",
       "steering_mode": ""
     },
     {
@@ -5110,20 +5113,21 @@
       "environment_id": "nav_obstacle",
       "simulator": "isaac",
       "task_type": "navigation_mission",
-      "support_level": "experimental",
+      "support_level": "partially_supported",
       "evidence_level": "runtime_evidence",
-      "last_tested": "2026-10-15",
-      "revision": "371f724 (round 35, from 21:53; later commits changed no drive, Nav2 or mission file)",
-      "test_result": "failed_screen",
+      "last_tested": "2026-10-16",
+      "revision": "32c9cf1 (round 45, 03:40-04:44, 0.1 m goal tolerance and 0.6 m / 2.0 planner inflation)",
+      "test_result": "passed_screen",
       "artifacts": [
-        "docs/status/evidence/wheeled-repeats-2026-10-15/isaac_ackermann_car_seed3_nav_obstacle.json",
-        "docs/status/evidence/wheeled-repeats-2026-10-15/source-hashes-371f724-d2ed68a7.json"
+        "docs/status/evidence/car-missions-2026-10-16/round45-inflation/isaac_ackermann_car_seed3_nav_obstacle.json",
+        "docs/status/evidence/car-missions-2026-10-16/round45-inflation/source-hashes-32c9cf1.json"
       ],
       "limitations": [
-        "Goal seeds 2 and 3; seed 1 is the October 13 round",
+        "Goal seeds 1-3, one world; heading not checked",
+        "MuJoCo anti-Ackermann seed 2 aborted goal B; seed 3 controls that cell",
         "Screen evidence; full ROADMAP mission acceptance remains separate"
       ],
-      "notes": "nav_obstacle car mission (detour, cancel, resume, near-obstacle goal), goal seeds 2 and 3; truth-measured final poses. Details in docs/status/evidence/wheeled-repeats-2026-10-15.",
+      "notes": "nav_obstacle car mission (detour, cancel, resume, near-obstacle goal) with a 0.1 m goal tolerance and a 0.6 m planner inflation, goal seeds 1-3; truth-measured final poses. Details in docs/status/evidence/car-missions-2026-10-16.",
       "steering_mode": ""
     },
     {
@@ -5131,20 +5135,21 @@
       "environment_id": "nav_obstacle",
       "simulator": "isaac",
       "task_type": "navigation_mission",
-      "support_level": "experimental",
+      "support_level": "partially_supported",
       "evidence_level": "runtime_evidence",
-      "last_tested": "2026-10-15",
-      "revision": "371f724 (round 35, from 21:53; later commits changed no drive, Nav2 or mission file)",
-      "test_result": "failed_screen",
+      "last_tested": "2026-10-16",
+      "revision": "32c9cf1 (round 45, 03:40-04:44, 0.1 m goal tolerance and 0.6 m / 2.0 planner inflation)",
+      "test_result": "passed_screen",
       "artifacts": [
-        "docs/status/evidence/wheeled-repeats-2026-10-15/isaac_anti_ackermann_car_seed3_nav_obstacle.json",
-        "docs/status/evidence/wheeled-repeats-2026-10-15/source-hashes-371f724-d2ed68a7.json"
+        "docs/status/evidence/car-missions-2026-10-16/round45-inflation/isaac_anti_ackermann_car_seed3_nav_obstacle.json",
+        "docs/status/evidence/car-missions-2026-10-16/round45-inflation/source-hashes-32c9cf1.json"
       ],
       "limitations": [
-        "Goal seeds 2 and 3; seed 1 is the October 13 round",
+        "Goal seeds 1-3, one world; heading not checked",
+        "MuJoCo anti-Ackermann seed 2 aborted goal B; seed 3 controls that cell",
         "Screen evidence; full ROADMAP mission acceptance remains separate"
       ],
-      "notes": "nav_obstacle car mission (detour, cancel, resume, near-obstacle goal), goal seeds 2 and 3; truth-measured final poses. Details in docs/status/evidence/wheeled-repeats-2026-10-15.",
+      "notes": "nav_obstacle car mission (detour, cancel, resume, near-obstacle goal) with a 0.1 m goal tolerance and a 0.6 m planner inflation, goal seeds 1-3; truth-measured final poses. Details in docs/status/evidence/car-missions-2026-10-16.",
       "steering_mode": ""
     },
     {
@@ -5152,20 +5157,21 @@
       "environment_id": "nav_obstacle",
       "simulator": "isaac",
       "task_type": "navigation_mission",
-      "support_level": "experimental",
+      "support_level": "partially_supported",
       "evidence_level": "runtime_evidence",
-      "last_tested": "2026-10-15",
-      "revision": "371f724 (round 35, from 21:53; later commits changed no drive, Nav2 or mission file)",
-      "test_result": "failed_screen",
+      "last_tested": "2026-10-16",
+      "revision": "32c9cf1 (round 45, 03:40-04:44, 0.1 m goal tolerance and 0.6 m / 2.0 planner inflation)",
+      "test_result": "passed_screen",
       "artifacts": [
-        "docs/status/evidence/wheeled-repeats-2026-10-15/isaac_rear_steer_car_seed3_nav_obstacle.json",
-        "docs/status/evidence/wheeled-repeats-2026-10-15/source-hashes-371f724-d2ed68a7.json"
+        "docs/status/evidence/car-missions-2026-10-16/round45-inflation/isaac_rear_steer_car_seed3_nav_obstacle.json",
+        "docs/status/evidence/car-missions-2026-10-16/round45-inflation/source-hashes-32c9cf1.json"
       ],
       "limitations": [
-        "Goal seeds 2 and 3; seed 1 is the October 13 round",
+        "Goal seeds 1-3, one world; heading not checked",
+        "MuJoCo anti-Ackermann seed 2 aborted goal B; seed 3 controls that cell",
         "Screen evidence; full ROADMAP mission acceptance remains separate"
       ],
-      "notes": "nav_obstacle car mission (detour, cancel, resume, near-obstacle goal), goal seeds 2 and 3; truth-measured final poses. Details in docs/status/evidence/wheeled-repeats-2026-10-15.",
+      "notes": "nav_obstacle car mission (detour, cancel, resume, near-obstacle goal) with a 0.1 m goal tolerance and a 0.6 m planner inflation, goal seeds 1-3; truth-measured final poses. Details in docs/status/evidence/car-missions-2026-10-16.",
       "steering_mode": ""
     },
     {
@@ -5173,20 +5179,21 @@
       "environment_id": "nav_obstacle",
       "simulator": "mujoco",
       "task_type": "navigation_mission",
-      "support_level": "experimental",
+      "support_level": "partially_supported",
       "evidence_level": "runtime_evidence",
-      "last_tested": "2026-10-15",
-      "revision": "371f724 (round 35, from 21:53; later commits changed no drive, Nav2 or mission file)",
-      "test_result": "failed_screen",
+      "last_tested": "2026-10-16",
+      "revision": "32c9cf1 (round 45, 03:40-04:44, 0.1 m goal tolerance and 0.6 m / 2.0 planner inflation)",
+      "test_result": "passed_screen",
       "artifacts": [
-        "docs/status/evidence/wheeled-repeats-2026-10-15/mujoco_ackermann_car_seed3_nav_obstacle.json",
-        "docs/status/evidence/wheeled-repeats-2026-10-15/source-hashes-371f724-d2ed68a7.json"
+        "docs/status/evidence/car-missions-2026-10-16/round45-inflation/mujoco_ackermann_car_seed3_nav_obstacle.json",
+        "docs/status/evidence/car-missions-2026-10-16/round45-inflation/source-hashes-32c9cf1.json"
       ],
       "limitations": [
-        "Goal seeds 2 and 3; seed 1 is the October 13 round",
+        "Goal seeds 1-3, one world; heading not checked",
+        "MuJoCo anti-Ackermann seed 2 aborted goal B; seed 3 controls that cell",
         "Screen evidence; full ROADMAP mission acceptance remains separate"
       ],
-      "notes": "nav_obstacle car mission (detour, cancel, resume, near-obstacle goal), goal seeds 2 and 3; truth-measured final poses. Details in docs/status/evidence/wheeled-repeats-2026-10-15.",
+      "notes": "nav_obstacle car mission (detour, cancel, resume, near-obstacle goal) with a 0.1 m goal tolerance and a 0.6 m planner inflation, goal seeds 1-3; truth-measured final poses. Details in docs/status/evidence/car-missions-2026-10-16.",
       "steering_mode": ""
     },
     {
@@ -5194,20 +5201,21 @@
       "environment_id": "nav_obstacle",
       "simulator": "mujoco",
       "task_type": "navigation_mission",
-      "support_level": "experimental",
+      "support_level": "partially_supported",
       "evidence_level": "runtime_evidence",
-      "last_tested": "2026-10-15",
-      "revision": "371f724 (round 35, from 21:53; later commits changed no drive, Nav2 or mission file)",
-      "test_result": "failed_screen",
+      "last_tested": "2026-10-16",
+      "revision": "32c9cf1 (round 45, 03:40-04:44, 0.1 m goal tolerance and 0.6 m / 2.0 planner inflation)",
+      "test_result": "passed_screen",
       "artifacts": [
-        "docs/status/evidence/wheeled-repeats-2026-10-15/mujoco_anti_ackermann_car_seed3_nav_obstacle.json",
-        "docs/status/evidence/wheeled-repeats-2026-10-15/source-hashes-371f724-d2ed68a7.json"
+        "docs/status/evidence/car-missions-2026-10-16/round45-inflation/mujoco_anti_ackermann_car_seed3_nav_obstacle.json",
+        "docs/status/evidence/car-missions-2026-10-16/round45-inflation/source-hashes-32c9cf1.json"
       ],
       "limitations": [
-        "Goal seeds 2 and 3; seed 1 is the October 13 round",
+        "Goal seeds 1-3, one world; heading not checked",
+        "MuJoCo anti-Ackermann seed 2 aborted goal B; seed 3 controls that cell",
         "Screen evidence; full ROADMAP mission acceptance remains separate"
       ],
-      "notes": "nav_obstacle car mission (detour, cancel, resume, near-obstacle goal), goal seeds 2 and 3; truth-measured final poses. Details in docs/status/evidence/wheeled-repeats-2026-10-15.",
+      "notes": "nav_obstacle car mission (detour, cancel, resume, near-obstacle goal) with a 0.1 m goal tolerance and a 0.6 m planner inflation, goal seeds 1-3; truth-measured final poses. Details in docs/status/evidence/car-missions-2026-10-16.",
       "steering_mode": ""
     },
     {
@@ -5215,20 +5223,21 @@
       "environment_id": "nav_obstacle",
       "simulator": "mujoco",
       "task_type": "navigation_mission",
-      "support_level": "experimental",
+      "support_level": "partially_supported",
       "evidence_level": "runtime_evidence",
-      "last_tested": "2026-10-15",
-      "revision": "371f724 (round 35, from 21:53; later commits changed no drive, Nav2 or mission file)",
-      "test_result": "failed_screen",
+      "last_tested": "2026-10-16",
+      "revision": "32c9cf1 (round 45, 03:40-04:44, 0.1 m goal tolerance and 0.6 m / 2.0 planner inflation)",
+      "test_result": "passed_screen",
       "artifacts": [
-        "docs/status/evidence/wheeled-repeats-2026-10-15/mujoco_rear_steer_car_seed3_nav_obstacle.json",
-        "docs/status/evidence/wheeled-repeats-2026-10-15/source-hashes-371f724-d2ed68a7.json"
+        "docs/status/evidence/car-missions-2026-10-16/round45-inflation/mujoco_rear_steer_car_seed3_nav_obstacle.json",
+        "docs/status/evidence/car-missions-2026-10-16/round45-inflation/source-hashes-32c9cf1.json"
       ],
       "limitations": [
-        "Goal seeds 2 and 3; seed 1 is the October 13 round",
+        "Goal seeds 1-3, one world; heading not checked",
+        "MuJoCo anti-Ackermann seed 2 aborted goal B; seed 3 controls that cell",
         "Screen evidence; full ROADMAP mission acceptance remains separate"
       ],
-      "notes": "nav_obstacle car mission (detour, cancel, resume, near-obstacle goal), goal seeds 2 and 3; truth-measured final poses. Details in docs/status/evidence/wheeled-repeats-2026-10-15.",
+      "notes": "nav_obstacle car mission (detour, cancel, resume, near-obstacle goal) with a 0.1 m goal tolerance and a 0.6 m planner inflation, goal seeds 1-3; truth-measured final poses. Details in docs/status/evidence/car-missions-2026-10-16.",
       "steering_mode": ""
     },
     {
@@ -5236,20 +5245,21 @@
       "environment_id": "nav_obstacle",
       "simulator": "pybullet",
       "task_type": "navigation_mission",
-      "support_level": "experimental",
+      "support_level": "partially_supported",
       "evidence_level": "runtime_evidence",
-      "last_tested": "2026-10-15",
-      "revision": "371f724 (round 35, from 21:53; later commits changed no drive, Nav2 or mission file)",
-      "test_result": "failed_screen",
+      "last_tested": "2026-10-16",
+      "revision": "32c9cf1 (round 45, 03:40-04:44, 0.1 m goal tolerance and 0.6 m / 2.0 planner inflation)",
+      "test_result": "passed_screen",
       "artifacts": [
-        "docs/status/evidence/wheeled-repeats-2026-10-15/pybullet_ackermann_car_seed3_nav_obstacle.json",
-        "docs/status/evidence/wheeled-repeats-2026-10-15/source-hashes-371f724-d2ed68a7.json"
+        "docs/status/evidence/car-missions-2026-10-16/round45-inflation/pybullet_ackermann_car_seed3_nav_obstacle.json",
+        "docs/status/evidence/car-missions-2026-10-16/round45-inflation/source-hashes-32c9cf1.json"
       ],
       "limitations": [
-        "Goal seeds 2 and 3; seed 1 is the October 13 round",
+        "Goal seeds 1-3, one world; heading not checked",
+        "MuJoCo anti-Ackermann seed 2 aborted goal B; seed 3 controls that cell",
         "Screen evidence; full ROADMAP mission acceptance remains separate"
       ],
-      "notes": "nav_obstacle car mission (detour, cancel, resume, near-obstacle goal), goal seeds 2 and 3; truth-measured final poses. Details in docs/status/evidence/wheeled-repeats-2026-10-15.",
+      "notes": "nav_obstacle car mission (detour, cancel, resume, near-obstacle goal) with a 0.1 m goal tolerance and a 0.6 m planner inflation, goal seeds 1-3; truth-measured final poses. Details in docs/status/evidence/car-missions-2026-10-16.",
       "steering_mode": ""
     },
     {
@@ -5257,20 +5267,21 @@
       "environment_id": "nav_obstacle",
       "simulator": "pybullet",
       "task_type": "navigation_mission",
-      "support_level": "experimental",
+      "support_level": "partially_supported",
       "evidence_level": "runtime_evidence",
-      "last_tested": "2026-10-15",
-      "revision": "371f724 (round 35, from 21:53; later commits changed no drive, Nav2 or mission file)",
-      "test_result": "failed_screen",
+      "last_tested": "2026-10-16",
+      "revision": "32c9cf1 (round 45, 03:40-04:44, 0.1 m goal tolerance and 0.6 m / 2.0 planner inflation)",
+      "test_result": "passed_screen",
       "artifacts": [
-        "docs/status/evidence/wheeled-repeats-2026-10-15/pybullet_anti_ackermann_car_seed3_nav_obstacle.json",
-        "docs/status/evidence/wheeled-repeats-2026-10-15/source-hashes-371f724-d2ed68a7.json"
+        "docs/status/evidence/car-missions-2026-10-16/round45-inflation/pybullet_anti_ackermann_car_seed3_nav_obstacle.json",
+        "docs/status/evidence/car-missions-2026-10-16/round45-inflation/source-hashes-32c9cf1.json"
       ],
       "limitations": [
-        "Goal seeds 2 and 3; seed 1 is the October 13 round",
+        "Goal seeds 1-3, one world; heading not checked",
+        "MuJoCo anti-Ackermann seed 2 aborted goal B; seed 3 controls that cell",
         "Screen evidence; full ROADMAP mission acceptance remains separate"
       ],
-      "notes": "nav_obstacle car mission (detour, cancel, resume, near-obstacle goal), goal seeds 2 and 3; truth-measured final poses. Details in docs/status/evidence/wheeled-repeats-2026-10-15.",
+      "notes": "nav_obstacle car mission (detour, cancel, resume, near-obstacle goal) with a 0.1 m goal tolerance and a 0.6 m planner inflation, goal seeds 1-3; truth-measured final poses. Details in docs/status/evidence/car-missions-2026-10-16.",
       "steering_mode": ""
     },
     {
@@ -5278,20 +5289,21 @@
       "environment_id": "nav_obstacle",
       "simulator": "pybullet",
       "task_type": "navigation_mission",
-      "support_level": "experimental",
+      "support_level": "partially_supported",
       "evidence_level": "runtime_evidence",
-      "last_tested": "2026-10-15",
-      "revision": "371f724 (round 35, from 21:53; later commits changed no drive, Nav2 or mission file)",
-      "test_result": "failed_screen",
+      "last_tested": "2026-10-16",
+      "revision": "32c9cf1 (round 45, 03:40-04:44, 0.1 m goal tolerance and 0.6 m / 2.0 planner inflation)",
+      "test_result": "passed_screen",
       "artifacts": [
-        "docs/status/evidence/wheeled-repeats-2026-10-15/pybullet_rear_steer_car_seed3_nav_obstacle.json",
-        "docs/status/evidence/wheeled-repeats-2026-10-15/source-hashes-371f724-d2ed68a7.json"
+        "docs/status/evidence/car-missions-2026-10-16/round45-inflation/pybullet_rear_steer_car_seed3_nav_obstacle.json",
+        "docs/status/evidence/car-missions-2026-10-16/round45-inflation/source-hashes-32c9cf1.json"
       ],
       "limitations": [
-        "Goal seeds 2 and 3; seed 1 is the October 13 round",
+        "Goal seeds 1-3, one world; heading not checked",
+        "MuJoCo anti-Ackermann seed 2 aborted goal B; seed 3 controls that cell",
         "Screen evidence; full ROADMAP mission acceptance remains separate"
       ],
-      "notes": "nav_obstacle car mission (detour, cancel, resume, near-obstacle goal), goal seeds 2 and 3; truth-measured final poses. Details in docs/status/evidence/wheeled-repeats-2026-10-15.",
+      "notes": "nav_obstacle car mission (detour, cancel, resume, near-obstacle goal) with a 0.1 m goal tolerance and a 0.6 m planner inflation, goal seeds 1-3; truth-measured final poses. Details in docs/status/evidence/car-missions-2026-10-16.",
       "steering_mode": ""
     },
     {

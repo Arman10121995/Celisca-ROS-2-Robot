@@ -9049,3 +9049,1191 @@ records:
     seeds 1-3; truth-measured final poses and the measured drive configuration.
   limitations:
   - Goal seeds 1-3, one world
+- robot_id: ackermann_car
+  environment_id: nav_obstacle
+  simulator: gazebo
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-10-16'
+  revision: ac71687 (round 43, 02:22-03:28, 0.1 m goal tolerance)
+  report: docs/status/evidence/car-missions-2026-10-16/round43-tolerance/gazebo_ackermann_car_seed1_nav_obstacle.json
+  sha256: 6ee0ecec4dab040d95ae4bd65f0a5dcf727f9d30842870f444c890ab28c395a0
+  source_hashes: docs/status/evidence/car-missions-2026-10-16/round43-tolerance/source-hashes-ac71687.json
+  source_hashes_sha256: 694150f8aee6efabae1bedb227d03934201b0b6df1b90ef85356f79c909d8563
+  report_kind: mission_screen
+  scope: nav_obstacle car mission (detour, cancel, resume, near-obstacle goal) with a 0.1 m goal tolerance, goal
+    seeds 1-3; truth-measured final poses. Details in docs/status/evidence/car-missions-2026-10-16.
+  limitations:
+  - Goal seeds 1-3, one world; heading not checked
+- robot_id: ackermann_car
+  environment_id: nav_obstacle
+  simulator: gazebo
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-10-16'
+  revision: ac71687 (round 43, 02:22-03:28, 0.1 m goal tolerance)
+  report: docs/status/evidence/car-missions-2026-10-16/round43-tolerance/gazebo_ackermann_car_seed2_nav_obstacle.json
+  sha256: 63ba86de43d6765edb4a31167ba58515ef8c889214d7b8bff52bb02b7efe6b3d
+  source_hashes: docs/status/evidence/car-missions-2026-10-16/round43-tolerance/source-hashes-ac71687.json
+  source_hashes_sha256: 694150f8aee6efabae1bedb227d03934201b0b6df1b90ef85356f79c909d8563
+  report_kind: mission_screen
+  scope: nav_obstacle car mission (detour, cancel, resume, near-obstacle goal) with a 0.1 m goal tolerance, goal
+    seeds 1-3; truth-measured final poses. Details in docs/status/evidence/car-missions-2026-10-16.
+  limitations:
+  - Goal seeds 1-3, one world; heading not checked
+- robot_id: ackermann_car
+  environment_id: nav_obstacle
+  simulator: gazebo
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-10-16'
+  revision: ac71687 (round 43, 02:22-03:28, 0.1 m goal tolerance)
+  report: docs/status/evidence/car-missions-2026-10-16/round43-tolerance/gazebo_ackermann_car_seed3_nav_obstacle.json
+  sha256: fa390df45dcea38b3571f0423cf1e409b91b9a5e859b9d06fbd0e0d6d8468f96
+  source_hashes: docs/status/evidence/car-missions-2026-10-16/round43-tolerance/source-hashes-ac71687.json
+  source_hashes_sha256: 694150f8aee6efabae1bedb227d03934201b0b6df1b90ef85356f79c909d8563
+  report_kind: mission_screen
+  scope: nav_obstacle car mission (detour, cancel, resume, near-obstacle goal) with a 0.1 m goal tolerance, goal
+    seeds 1-3; truth-measured final poses. Details in docs/status/evidence/car-missions-2026-10-16.
+  limitations:
+  - Goal seeds 1-3, one world; heading not checked
+- robot_id: anti_ackermann_car
+  environment_id: nav_obstacle
+  simulator: gazebo
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-10-16'
+  revision: ac71687 (round 43, 02:22-03:28, 0.1 m goal tolerance)
+  report: docs/status/evidence/car-missions-2026-10-16/round43-tolerance/gazebo_anti_ackermann_car_seed1_nav_obstacle.json
+  sha256: 4c55e26b350d74eb5268642b87549b19e7245a9983ce97956d07cecef9a99bb1
+  source_hashes: docs/status/evidence/car-missions-2026-10-16/round43-tolerance/source-hashes-ac71687.json
+  source_hashes_sha256: 694150f8aee6efabae1bedb227d03934201b0b6df1b90ef85356f79c909d8563
+  report_kind: mission_screen
+  scope: nav_obstacle car mission (detour, cancel, resume, near-obstacle goal) with a 0.1 m goal tolerance, goal
+    seeds 1-3; truth-measured final poses. Details in docs/status/evidence/car-missions-2026-10-16.
+  limitations:
+  - Goal seeds 1-3, one world; heading not checked
+- robot_id: anti_ackermann_car
+  environment_id: nav_obstacle
+  simulator: gazebo
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-10-16'
+  revision: ac71687 (round 43, 02:22-03:28, 0.1 m goal tolerance)
+  report: docs/status/evidence/car-missions-2026-10-16/round43-tolerance/gazebo_anti_ackermann_car_seed2_nav_obstacle.json
+  sha256: fb9421ef7e92ad316ec1787015a96a6a9e77d1f4193ba0f8ae0cc9fa465b893d
+  source_hashes: docs/status/evidence/car-missions-2026-10-16/round43-tolerance/source-hashes-ac71687.json
+  source_hashes_sha256: 694150f8aee6efabae1bedb227d03934201b0b6df1b90ef85356f79c909d8563
+  report_kind: mission_screen
+  scope: nav_obstacle car mission (detour, cancel, resume, near-obstacle goal) with a 0.1 m goal tolerance, goal
+    seeds 1-3; truth-measured final poses. Details in docs/status/evidence/car-missions-2026-10-16.
+  limitations:
+  - Goal seeds 1-3, one world; heading not checked
+- robot_id: anti_ackermann_car
+  environment_id: nav_obstacle
+  simulator: gazebo
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-10-16'
+  revision: ac71687 (round 43, 02:22-03:28, 0.1 m goal tolerance)
+  report: docs/status/evidence/car-missions-2026-10-16/round43-tolerance/gazebo_anti_ackermann_car_seed3_nav_obstacle.json
+  sha256: 112c06802b4a6cbe8aaf6759fa74ed8412ef7ea24733eba2f7ed663a7a1f31db
+  source_hashes: docs/status/evidence/car-missions-2026-10-16/round43-tolerance/source-hashes-ac71687.json
+  source_hashes_sha256: 694150f8aee6efabae1bedb227d03934201b0b6df1b90ef85356f79c909d8563
+  report_kind: mission_screen
+  scope: nav_obstacle car mission (detour, cancel, resume, near-obstacle goal) with a 0.1 m goal tolerance, goal
+    seeds 1-3; truth-measured final poses. Details in docs/status/evidence/car-missions-2026-10-16.
+  limitations:
+  - Goal seeds 1-3, one world; heading not checked
+- robot_id: rear_steer_car
+  environment_id: nav_obstacle
+  simulator: gazebo
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-10-16'
+  revision: ac71687 (round 43, 02:22-03:28, 0.1 m goal tolerance)
+  report: docs/status/evidence/car-missions-2026-10-16/round43-tolerance/gazebo_rear_steer_car_seed1_nav_obstacle.json
+  sha256: 270954d0690ca7003c03a8d8ae0af0160e167ef973cc5efbca8357c5618ea0bf
+  source_hashes: docs/status/evidence/car-missions-2026-10-16/round43-tolerance/source-hashes-ac71687.json
+  source_hashes_sha256: 694150f8aee6efabae1bedb227d03934201b0b6df1b90ef85356f79c909d8563
+  report_kind: mission_screen
+  scope: nav_obstacle car mission (detour, cancel, resume, near-obstacle goal) with a 0.1 m goal tolerance, goal
+    seeds 1-3; truth-measured final poses. Details in docs/status/evidence/car-missions-2026-10-16.
+  limitations:
+  - Goal seeds 1-3, one world; heading not checked
+- robot_id: rear_steer_car
+  environment_id: nav_obstacle
+  simulator: gazebo
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-10-16'
+  revision: ac71687 (round 43, 02:22-03:28, 0.1 m goal tolerance)
+  report: docs/status/evidence/car-missions-2026-10-16/round43-tolerance/gazebo_rear_steer_car_seed2_nav_obstacle.json
+  sha256: 1f2f6ddc04126942931bc29a6672cb5a8aef1141999c0f967927d970619de1d2
+  source_hashes: docs/status/evidence/car-missions-2026-10-16/round43-tolerance/source-hashes-ac71687.json
+  source_hashes_sha256: 694150f8aee6efabae1bedb227d03934201b0b6df1b90ef85356f79c909d8563
+  report_kind: mission_screen
+  scope: nav_obstacle car mission (detour, cancel, resume, near-obstacle goal) with a 0.1 m goal tolerance, goal
+    seeds 1-3; truth-measured final poses. Details in docs/status/evidence/car-missions-2026-10-16.
+  limitations:
+  - Goal seeds 1-3, one world; heading not checked
+- robot_id: rear_steer_car
+  environment_id: nav_obstacle
+  simulator: gazebo
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-10-16'
+  revision: ac71687 (round 43, 02:22-03:28, 0.1 m goal tolerance)
+  report: docs/status/evidence/car-missions-2026-10-16/round43-tolerance/gazebo_rear_steer_car_seed3_nav_obstacle.json
+  sha256: f5b2a8b66dabb797bd00cf5d3c57bd2cae5db6bcf0fd14a82b6bf018053e9558
+  source_hashes: docs/status/evidence/car-missions-2026-10-16/round43-tolerance/source-hashes-ac71687.json
+  source_hashes_sha256: 694150f8aee6efabae1bedb227d03934201b0b6df1b90ef85356f79c909d8563
+  report_kind: mission_screen
+  scope: nav_obstacle car mission (detour, cancel, resume, near-obstacle goal) with a 0.1 m goal tolerance, goal
+    seeds 1-3; truth-measured final poses. Details in docs/status/evidence/car-missions-2026-10-16.
+  limitations:
+  - Goal seeds 1-3, one world; heading not checked
+- robot_id: ackermann_car
+  environment_id: nav_obstacle
+  simulator: isaac
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-10-16'
+  revision: ac71687 (round 43, 02:22-03:28, 0.1 m goal tolerance)
+  report: docs/status/evidence/car-missions-2026-10-16/round43-tolerance/isaac_ackermann_car_seed1_nav_obstacle.json
+  sha256: 4e4f39cffcc5bf4c1541a011a761785703d2525b1442114d2b58528a767e8441
+  source_hashes: docs/status/evidence/car-missions-2026-10-16/round43-tolerance/source-hashes-ac71687.json
+  source_hashes_sha256: 694150f8aee6efabae1bedb227d03934201b0b6df1b90ef85356f79c909d8563
+  report_kind: mission_screen
+  scope: nav_obstacle car mission (detour, cancel, resume, near-obstacle goal) with a 0.1 m goal tolerance, goal
+    seeds 1-3; truth-measured final poses. Details in docs/status/evidence/car-missions-2026-10-16.
+  limitations:
+  - Goal seeds 1-3, one world; heading not checked
+- robot_id: ackermann_car
+  environment_id: nav_obstacle
+  simulator: isaac
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-10-16'
+  revision: ac71687 (round 43, 02:22-03:28, 0.1 m goal tolerance)
+  report: docs/status/evidence/car-missions-2026-10-16/round43-tolerance/isaac_ackermann_car_seed2_nav_obstacle.json
+  sha256: 2b301c881a757941990ada6902544d59f0289ac39eb2865c4298226312781cb0
+  source_hashes: docs/status/evidence/car-missions-2026-10-16/round43-tolerance/source-hashes-ac71687.json
+  source_hashes_sha256: 694150f8aee6efabae1bedb227d03934201b0b6df1b90ef85356f79c909d8563
+  report_kind: mission_screen
+  scope: nav_obstacle car mission (detour, cancel, resume, near-obstacle goal) with a 0.1 m goal tolerance, goal
+    seeds 1-3; truth-measured final poses. Details in docs/status/evidence/car-missions-2026-10-16.
+  limitations:
+  - Goal seeds 1-3, one world; heading not checked
+- robot_id: ackermann_car
+  environment_id: nav_obstacle
+  simulator: isaac
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-10-16'
+  revision: ac71687 (round 43, 02:22-03:28, 0.1 m goal tolerance)
+  report: docs/status/evidence/car-missions-2026-10-16/round43-tolerance/isaac_ackermann_car_seed3_nav_obstacle.json
+  sha256: 3db2beff8fc256844707281d7321668671a00a14f2c7a7183b37c170164b809d
+  source_hashes: docs/status/evidence/car-missions-2026-10-16/round43-tolerance/source-hashes-ac71687.json
+  source_hashes_sha256: 694150f8aee6efabae1bedb227d03934201b0b6df1b90ef85356f79c909d8563
+  report_kind: mission_screen
+  scope: nav_obstacle car mission (detour, cancel, resume, near-obstacle goal) with a 0.1 m goal tolerance, goal
+    seeds 1-3; truth-measured final poses. Details in docs/status/evidence/car-missions-2026-10-16.
+  limitations:
+  - Goal seeds 1-3, one world; heading not checked
+- robot_id: anti_ackermann_car
+  environment_id: nav_obstacle
+  simulator: isaac
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-10-16'
+  revision: ac71687 (round 43, 02:22-03:28, 0.1 m goal tolerance)
+  report: docs/status/evidence/car-missions-2026-10-16/round43-tolerance/isaac_anti_ackermann_car_seed1_nav_obstacle.json
+  sha256: ca785111c9bd721cfec55af64c26b52bc82cf91a317c5199ebcf1cf733503992
+  source_hashes: docs/status/evidence/car-missions-2026-10-16/round43-tolerance/source-hashes-ac71687.json
+  source_hashes_sha256: 694150f8aee6efabae1bedb227d03934201b0b6df1b90ef85356f79c909d8563
+  report_kind: mission_screen
+  scope: nav_obstacle car mission (detour, cancel, resume, near-obstacle goal) with a 0.1 m goal tolerance, goal
+    seeds 1-3; truth-measured final poses. Details in docs/status/evidence/car-missions-2026-10-16.
+  limitations:
+  - Goal seeds 1-3, one world; heading not checked
+- robot_id: anti_ackermann_car
+  environment_id: nav_obstacle
+  simulator: isaac
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-10-16'
+  revision: ac71687 (round 43, 02:22-03:28, 0.1 m goal tolerance)
+  report: docs/status/evidence/car-missions-2026-10-16/round43-tolerance/isaac_anti_ackermann_car_seed2_nav_obstacle.json
+  sha256: 786efd2c3684cef73bd8de3a441bed38e469ec2e5c1874aaf91ae1de6a62587a
+  source_hashes: docs/status/evidence/car-missions-2026-10-16/round43-tolerance/source-hashes-ac71687.json
+  source_hashes_sha256: 694150f8aee6efabae1bedb227d03934201b0b6df1b90ef85356f79c909d8563
+  report_kind: mission_screen
+  scope: nav_obstacle car mission (detour, cancel, resume, near-obstacle goal) with a 0.1 m goal tolerance, goal
+    seeds 1-3; truth-measured final poses. Details in docs/status/evidence/car-missions-2026-10-16.
+  limitations:
+  - Goal seeds 1-3, one world; heading not checked
+- robot_id: anti_ackermann_car
+  environment_id: nav_obstacle
+  simulator: isaac
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-10-16'
+  revision: ac71687 (round 43, 02:22-03:28, 0.1 m goal tolerance)
+  report: docs/status/evidence/car-missions-2026-10-16/round43-tolerance/isaac_anti_ackermann_car_seed3_nav_obstacle.json
+  sha256: 2a98f7fa2f060f7a82f8af0633647f571ebc0c1de9c7a803b890f4b60e06b8fc
+  source_hashes: docs/status/evidence/car-missions-2026-10-16/round43-tolerance/source-hashes-ac71687.json
+  source_hashes_sha256: 694150f8aee6efabae1bedb227d03934201b0b6df1b90ef85356f79c909d8563
+  report_kind: mission_screen
+  scope: nav_obstacle car mission (detour, cancel, resume, near-obstacle goal) with a 0.1 m goal tolerance, goal
+    seeds 1-3; truth-measured final poses. Details in docs/status/evidence/car-missions-2026-10-16.
+  limitations:
+  - Goal seeds 1-3, one world; heading not checked
+- robot_id: rear_steer_car
+  environment_id: nav_obstacle
+  simulator: isaac
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-10-16'
+  revision: ac71687 (round 43, 02:22-03:28, 0.1 m goal tolerance)
+  report: docs/status/evidence/car-missions-2026-10-16/round43-tolerance/isaac_rear_steer_car_seed1_nav_obstacle.json
+  sha256: 310b08e99b6180e23b895899205b187d97dc5c8503eb75a781efa01be7e11327
+  source_hashes: docs/status/evidence/car-missions-2026-10-16/round43-tolerance/source-hashes-ac71687.json
+  source_hashes_sha256: 694150f8aee6efabae1bedb227d03934201b0b6df1b90ef85356f79c909d8563
+  report_kind: mission_screen
+  scope: nav_obstacle car mission (detour, cancel, resume, near-obstacle goal) with a 0.1 m goal tolerance, goal
+    seeds 1-3; truth-measured final poses. Details in docs/status/evidence/car-missions-2026-10-16.
+  limitations:
+  - Goal seeds 1-3, one world; heading not checked
+- robot_id: rear_steer_car
+  environment_id: nav_obstacle
+  simulator: isaac
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-10-16'
+  revision: ac71687 (round 43, 02:22-03:28, 0.1 m goal tolerance)
+  report: docs/status/evidence/car-missions-2026-10-16/round43-tolerance/isaac_rear_steer_car_seed2_nav_obstacle.json
+  sha256: 381f8481fac9d35f6d5c74bb9f71354e17b18b7f735cf7ea8f86a25fbdee0a14
+  source_hashes: docs/status/evidence/car-missions-2026-10-16/round43-tolerance/source-hashes-ac71687.json
+  source_hashes_sha256: 694150f8aee6efabae1bedb227d03934201b0b6df1b90ef85356f79c909d8563
+  report_kind: mission_screen
+  scope: nav_obstacle car mission (detour, cancel, resume, near-obstacle goal) with a 0.1 m goal tolerance, goal
+    seeds 1-3; truth-measured final poses. Details in docs/status/evidence/car-missions-2026-10-16.
+  limitations:
+  - Goal seeds 1-3, one world; heading not checked
+- robot_id: rear_steer_car
+  environment_id: nav_obstacle
+  simulator: isaac
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-10-16'
+  revision: ac71687 (round 43, 02:22-03:28, 0.1 m goal tolerance)
+  report: docs/status/evidence/car-missions-2026-10-16/round43-tolerance/isaac_rear_steer_car_seed3_nav_obstacle.json
+  sha256: 8150dbc254fb8938f9a7196e80e25ea79ddf15a76cef5b9e67a8cca857401f21
+  source_hashes: docs/status/evidence/car-missions-2026-10-16/round43-tolerance/source-hashes-ac71687.json
+  source_hashes_sha256: 694150f8aee6efabae1bedb227d03934201b0b6df1b90ef85356f79c909d8563
+  report_kind: mission_screen
+  scope: nav_obstacle car mission (detour, cancel, resume, near-obstacle goal) with a 0.1 m goal tolerance, goal
+    seeds 1-3; truth-measured final poses. Details in docs/status/evidence/car-missions-2026-10-16.
+  limitations:
+  - Goal seeds 1-3, one world; heading not checked
+- robot_id: ackermann_car
+  environment_id: nav_obstacle
+  simulator: mujoco
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-10-16'
+  revision: ac71687 (round 43, 02:22-03:28, 0.1 m goal tolerance)
+  report: docs/status/evidence/car-missions-2026-10-16/round43-tolerance/mujoco_ackermann_car_seed1_nav_obstacle.json
+  sha256: c47498631c9a1c1862783ecac240945751643b44340981166ec32daa776f757f
+  source_hashes: docs/status/evidence/car-missions-2026-10-16/round43-tolerance/source-hashes-ac71687.json
+  source_hashes_sha256: 694150f8aee6efabae1bedb227d03934201b0b6df1b90ef85356f79c909d8563
+  report_kind: mission_screen
+  scope: nav_obstacle car mission (detour, cancel, resume, near-obstacle goal) with a 0.1 m goal tolerance, goal
+    seeds 1-3; truth-measured final poses. Details in docs/status/evidence/car-missions-2026-10-16.
+  limitations:
+  - Goal seeds 1-3, one world; heading not checked
+- robot_id: ackermann_car
+  environment_id: nav_obstacle
+  simulator: mujoco
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-10-16'
+  revision: ac71687 (round 43, 02:22-03:28, 0.1 m goal tolerance)
+  report: docs/status/evidence/car-missions-2026-10-16/round43-tolerance/mujoco_ackermann_car_seed2_nav_obstacle.json
+  sha256: 10aaf81b34b61b7917a3675eedaffd1ee42891e2c0eb55383a9bbd388f7244c1
+  source_hashes: docs/status/evidence/car-missions-2026-10-16/round43-tolerance/source-hashes-ac71687.json
+  source_hashes_sha256: 694150f8aee6efabae1bedb227d03934201b0b6df1b90ef85356f79c909d8563
+  report_kind: mission_screen
+  scope: nav_obstacle car mission (detour, cancel, resume, near-obstacle goal) with a 0.1 m goal tolerance, goal
+    seeds 1-3; truth-measured final poses. Details in docs/status/evidence/car-missions-2026-10-16.
+  limitations:
+  - Goal seeds 1-3, one world; heading not checked
+- robot_id: ackermann_car
+  environment_id: nav_obstacle
+  simulator: mujoco
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-10-16'
+  revision: ac71687 (round 43, 02:22-03:28, 0.1 m goal tolerance)
+  report: docs/status/evidence/car-missions-2026-10-16/round43-tolerance/mujoco_ackermann_car_seed3_nav_obstacle.json
+  sha256: 248be4e342ffc4a1944c8ba04838b36d32d61a86f88cb035dd10503c69a2ece6
+  source_hashes: docs/status/evidence/car-missions-2026-10-16/round43-tolerance/source-hashes-ac71687.json
+  source_hashes_sha256: 694150f8aee6efabae1bedb227d03934201b0b6df1b90ef85356f79c909d8563
+  report_kind: mission_screen
+  scope: nav_obstacle car mission (detour, cancel, resume, near-obstacle goal) with a 0.1 m goal tolerance, goal
+    seeds 1-3; truth-measured final poses. Details in docs/status/evidence/car-missions-2026-10-16.
+  limitations:
+  - Goal seeds 1-3, one world; heading not checked
+- robot_id: anti_ackermann_car
+  environment_id: nav_obstacle
+  simulator: mujoco
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-10-16'
+  revision: ac71687 (round 43, 02:22-03:28, 0.1 m goal tolerance)
+  report: docs/status/evidence/car-missions-2026-10-16/round43-tolerance/mujoco_anti_ackermann_car_seed1_nav_obstacle.json
+  sha256: 88b8803e020715a834a3c968b0a072be2319e5b14c060f720923d37da1738da5
+  source_hashes: docs/status/evidence/car-missions-2026-10-16/round43-tolerance/source-hashes-ac71687.json
+  source_hashes_sha256: 694150f8aee6efabae1bedb227d03934201b0b6df1b90ef85356f79c909d8563
+  report_kind: mission_screen
+  scope: nav_obstacle car mission (detour, cancel, resume, near-obstacle goal) with a 0.1 m goal tolerance, goal
+    seeds 1-3; truth-measured final poses. Details in docs/status/evidence/car-missions-2026-10-16.
+  limitations:
+  - Goal seeds 1-3, one world; heading not checked
+- robot_id: anti_ackermann_car
+  environment_id: nav_obstacle
+  simulator: mujoco
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-10-16'
+  revision: ac71687 (round 43, 02:22-03:28, 0.1 m goal tolerance)
+  report: docs/status/evidence/car-missions-2026-10-16/round43-tolerance/mujoco_anti_ackermann_car_seed2_nav_obstacle.json
+  sha256: e0a4bc2a83ddd2702814ad2c208e360d89802987cb153894ac401538b208ab1b
+  source_hashes: docs/status/evidence/car-missions-2026-10-16/round43-tolerance/source-hashes-ac71687.json
+  source_hashes_sha256: 694150f8aee6efabae1bedb227d03934201b0b6df1b90ef85356f79c909d8563
+  report_kind: mission_screen
+  scope: nav_obstacle car mission (detour, cancel, resume, near-obstacle goal) with a 0.1 m goal tolerance, goal
+    seeds 1-3; truth-measured final poses. Details in docs/status/evidence/car-missions-2026-10-16.
+  limitations:
+  - Goal seeds 1-3, one world; heading not checked
+- robot_id: anti_ackermann_car
+  environment_id: nav_obstacle
+  simulator: mujoco
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-10-16'
+  revision: ac71687 (round 43, 02:22-03:28, 0.1 m goal tolerance)
+  report: docs/status/evidence/car-missions-2026-10-16/round43-tolerance/mujoco_anti_ackermann_car_seed3_nav_obstacle.json
+  sha256: 1d9e3a04cf05846536881238a7d02b829649ac760ad6664689d70749f975ea8e
+  source_hashes: docs/status/evidence/car-missions-2026-10-16/round43-tolerance/source-hashes-ac71687.json
+  source_hashes_sha256: 694150f8aee6efabae1bedb227d03934201b0b6df1b90ef85356f79c909d8563
+  report_kind: mission_screen
+  scope: nav_obstacle car mission (detour, cancel, resume, near-obstacle goal) with a 0.1 m goal tolerance, goal
+    seeds 1-3; truth-measured final poses. Details in docs/status/evidence/car-missions-2026-10-16.
+  limitations:
+  - Goal seeds 1-3, one world; heading not checked
+- robot_id: rear_steer_car
+  environment_id: nav_obstacle
+  simulator: mujoco
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-10-16'
+  revision: ac71687 (round 43, 02:22-03:28, 0.1 m goal tolerance)
+  report: docs/status/evidence/car-missions-2026-10-16/round43-tolerance/mujoco_rear_steer_car_seed1_nav_obstacle.json
+  sha256: 2b22df00a7a963064a76ff9fec643490e239c405a5286bdd2c62330ced1e77ed
+  source_hashes: docs/status/evidence/car-missions-2026-10-16/round43-tolerance/source-hashes-ac71687.json
+  source_hashes_sha256: 694150f8aee6efabae1bedb227d03934201b0b6df1b90ef85356f79c909d8563
+  report_kind: mission_screen
+  scope: nav_obstacle car mission (detour, cancel, resume, near-obstacle goal) with a 0.1 m goal tolerance, goal
+    seeds 1-3; truth-measured final poses. Details in docs/status/evidence/car-missions-2026-10-16.
+  limitations:
+  - Goal seeds 1-3, one world; heading not checked
+- robot_id: rear_steer_car
+  environment_id: nav_obstacle
+  simulator: mujoco
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-10-16'
+  revision: ac71687 (round 43, 02:22-03:28, 0.1 m goal tolerance)
+  report: docs/status/evidence/car-missions-2026-10-16/round43-tolerance/mujoco_rear_steer_car_seed2_nav_obstacle.json
+  sha256: 3b590233e19b3cf99ac3b9f0aac1250f10186a5e8937c5a3dc8ac83016666c30
+  source_hashes: docs/status/evidence/car-missions-2026-10-16/round43-tolerance/source-hashes-ac71687.json
+  source_hashes_sha256: 694150f8aee6efabae1bedb227d03934201b0b6df1b90ef85356f79c909d8563
+  report_kind: mission_screen
+  scope: nav_obstacle car mission (detour, cancel, resume, near-obstacle goal) with a 0.1 m goal tolerance, goal
+    seeds 1-3; truth-measured final poses. Details in docs/status/evidence/car-missions-2026-10-16.
+  limitations:
+  - Goal seeds 1-3, one world; heading not checked
+- robot_id: rear_steer_car
+  environment_id: nav_obstacle
+  simulator: mujoco
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-10-16'
+  revision: ac71687 (round 43, 02:22-03:28, 0.1 m goal tolerance)
+  report: docs/status/evidence/car-missions-2026-10-16/round43-tolerance/mujoco_rear_steer_car_seed3_nav_obstacle.json
+  sha256: 599ea206daff1bff847d1d05018fb02c55c35697c025abcfe9de1b91c6244d47
+  source_hashes: docs/status/evidence/car-missions-2026-10-16/round43-tolerance/source-hashes-ac71687.json
+  source_hashes_sha256: 694150f8aee6efabae1bedb227d03934201b0b6df1b90ef85356f79c909d8563
+  report_kind: mission_screen
+  scope: nav_obstacle car mission (detour, cancel, resume, near-obstacle goal) with a 0.1 m goal tolerance, goal
+    seeds 1-3; truth-measured final poses. Details in docs/status/evidence/car-missions-2026-10-16.
+  limitations:
+  - Goal seeds 1-3, one world; heading not checked
+- robot_id: ackermann_car
+  environment_id: nav_obstacle
+  simulator: pybullet
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-10-16'
+  revision: ac71687 (round 43, 02:22-03:28, 0.1 m goal tolerance)
+  report: docs/status/evidence/car-missions-2026-10-16/round43-tolerance/pybullet_ackermann_car_seed1_nav_obstacle.json
+  sha256: a295b42a443ce179d432321a4c93912c27c608d5bcc7478661bf5cd2ad5d6e86
+  source_hashes: docs/status/evidence/car-missions-2026-10-16/round43-tolerance/source-hashes-ac71687.json
+  source_hashes_sha256: 694150f8aee6efabae1bedb227d03934201b0b6df1b90ef85356f79c909d8563
+  report_kind: mission_screen
+  scope: nav_obstacle car mission (detour, cancel, resume, near-obstacle goal) with a 0.1 m goal tolerance, goal
+    seeds 1-3; truth-measured final poses. Details in docs/status/evidence/car-missions-2026-10-16.
+  limitations:
+  - Goal seeds 1-3, one world; heading not checked
+- robot_id: ackermann_car
+  environment_id: nav_obstacle
+  simulator: pybullet
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-10-16'
+  revision: ac71687 (round 43, 02:22-03:28, 0.1 m goal tolerance)
+  report: docs/status/evidence/car-missions-2026-10-16/round43-tolerance/pybullet_ackermann_car_seed2_nav_obstacle.json
+  sha256: 7ed93632b24c84daa609fbba0db19cc1e86f8ec83f80ed5751b650998b04a0ed
+  source_hashes: docs/status/evidence/car-missions-2026-10-16/round43-tolerance/source-hashes-ac71687.json
+  source_hashes_sha256: 694150f8aee6efabae1bedb227d03934201b0b6df1b90ef85356f79c909d8563
+  report_kind: mission_screen
+  scope: nav_obstacle car mission (detour, cancel, resume, near-obstacle goal) with a 0.1 m goal tolerance, goal
+    seeds 1-3; truth-measured final poses. Details in docs/status/evidence/car-missions-2026-10-16.
+  limitations:
+  - Goal seeds 1-3, one world; heading not checked
+- robot_id: ackermann_car
+  environment_id: nav_obstacle
+  simulator: pybullet
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-10-16'
+  revision: ac71687 (round 43, 02:22-03:28, 0.1 m goal tolerance)
+  report: docs/status/evidence/car-missions-2026-10-16/round43-tolerance/pybullet_ackermann_car_seed3_nav_obstacle.json
+  sha256: db96b3af9ef145c8c64b7f96216499b79d892394daae07c357e3a84eda3b2135
+  source_hashes: docs/status/evidence/car-missions-2026-10-16/round43-tolerance/source-hashes-ac71687.json
+  source_hashes_sha256: 694150f8aee6efabae1bedb227d03934201b0b6df1b90ef85356f79c909d8563
+  report_kind: mission_screen
+  scope: nav_obstacle car mission (detour, cancel, resume, near-obstacle goal) with a 0.1 m goal tolerance, goal
+    seeds 1-3; truth-measured final poses. Details in docs/status/evidence/car-missions-2026-10-16.
+  limitations:
+  - Goal seeds 1-3, one world; heading not checked
+- robot_id: anti_ackermann_car
+  environment_id: nav_obstacle
+  simulator: pybullet
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-10-16'
+  revision: ac71687 (round 43, 02:22-03:28, 0.1 m goal tolerance)
+  report: docs/status/evidence/car-missions-2026-10-16/round43-tolerance/pybullet_anti_ackermann_car_seed1_nav_obstacle.json
+  sha256: 95a880c3072567e0d98bbafc2685d497fbd510ee1754410f14ab36534444d217
+  source_hashes: docs/status/evidence/car-missions-2026-10-16/round43-tolerance/source-hashes-ac71687.json
+  source_hashes_sha256: 694150f8aee6efabae1bedb227d03934201b0b6df1b90ef85356f79c909d8563
+  report_kind: mission_screen
+  scope: nav_obstacle car mission (detour, cancel, resume, near-obstacle goal) with a 0.1 m goal tolerance, goal
+    seeds 1-3; truth-measured final poses. Details in docs/status/evidence/car-missions-2026-10-16.
+  limitations:
+  - Goal seeds 1-3, one world; heading not checked
+- robot_id: anti_ackermann_car
+  environment_id: nav_obstacle
+  simulator: pybullet
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-10-16'
+  revision: ac71687 (round 43, 02:22-03:28, 0.1 m goal tolerance)
+  report: docs/status/evidence/car-missions-2026-10-16/round43-tolerance/pybullet_anti_ackermann_car_seed2_nav_obstacle.json
+  sha256: a3d32884b644bbcccd6bcee6c40fda7a1dbbeae0ae898862f75520cb1e6ebdd2
+  source_hashes: docs/status/evidence/car-missions-2026-10-16/round43-tolerance/source-hashes-ac71687.json
+  source_hashes_sha256: 694150f8aee6efabae1bedb227d03934201b0b6df1b90ef85356f79c909d8563
+  report_kind: mission_screen
+  scope: nav_obstacle car mission (detour, cancel, resume, near-obstacle goal) with a 0.1 m goal tolerance, goal
+    seeds 1-3; truth-measured final poses. Details in docs/status/evidence/car-missions-2026-10-16.
+  limitations:
+  - Goal seeds 1-3, one world; heading not checked
+- robot_id: anti_ackermann_car
+  environment_id: nav_obstacle
+  simulator: pybullet
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-10-16'
+  revision: ac71687 (round 43, 02:22-03:28, 0.1 m goal tolerance)
+  report: docs/status/evidence/car-missions-2026-10-16/round43-tolerance/pybullet_anti_ackermann_car_seed3_nav_obstacle.json
+  sha256: 4ce3b4cbda4b93786d3840ee96a673592c14268c09eed1db6f300aba090b8693
+  source_hashes: docs/status/evidence/car-missions-2026-10-16/round43-tolerance/source-hashes-ac71687.json
+  source_hashes_sha256: 694150f8aee6efabae1bedb227d03934201b0b6df1b90ef85356f79c909d8563
+  report_kind: mission_screen
+  scope: nav_obstacle car mission (detour, cancel, resume, near-obstacle goal) with a 0.1 m goal tolerance, goal
+    seeds 1-3; truth-measured final poses. Details in docs/status/evidence/car-missions-2026-10-16.
+  limitations:
+  - Goal seeds 1-3, one world; heading not checked
+- robot_id: rear_steer_car
+  environment_id: nav_obstacle
+  simulator: pybullet
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-10-16'
+  revision: ac71687 (round 43, 02:22-03:28, 0.1 m goal tolerance)
+  report: docs/status/evidence/car-missions-2026-10-16/round43-tolerance/pybullet_rear_steer_car_seed1_nav_obstacle.json
+  sha256: 3ab06a1fc53e136ddcc8d3f72954965c78584190628997dd476f9fa99ecf4eeb
+  source_hashes: docs/status/evidence/car-missions-2026-10-16/round43-tolerance/source-hashes-ac71687.json
+  source_hashes_sha256: 694150f8aee6efabae1bedb227d03934201b0b6df1b90ef85356f79c909d8563
+  report_kind: mission_screen
+  scope: nav_obstacle car mission (detour, cancel, resume, near-obstacle goal) with a 0.1 m goal tolerance, goal
+    seeds 1-3; truth-measured final poses. Details in docs/status/evidence/car-missions-2026-10-16.
+  limitations:
+  - Goal seeds 1-3, one world; heading not checked
+- robot_id: rear_steer_car
+  environment_id: nav_obstacle
+  simulator: pybullet
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-10-16'
+  revision: ac71687 (round 43, 02:22-03:28, 0.1 m goal tolerance)
+  report: docs/status/evidence/car-missions-2026-10-16/round43-tolerance/pybullet_rear_steer_car_seed2_nav_obstacle.json
+  sha256: 77c853da4403a5d855eb3bafd6db5c40617878c59b973c93e9ed82c6686f19f2
+  source_hashes: docs/status/evidence/car-missions-2026-10-16/round43-tolerance/source-hashes-ac71687.json
+  source_hashes_sha256: 694150f8aee6efabae1bedb227d03934201b0b6df1b90ef85356f79c909d8563
+  report_kind: mission_screen
+  scope: nav_obstacle car mission (detour, cancel, resume, near-obstacle goal) with a 0.1 m goal tolerance, goal
+    seeds 1-3; truth-measured final poses. Details in docs/status/evidence/car-missions-2026-10-16.
+  limitations:
+  - Goal seeds 1-3, one world; heading not checked
+- robot_id: rear_steer_car
+  environment_id: nav_obstacle
+  simulator: pybullet
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-10-16'
+  revision: ac71687 (round 43, 02:22-03:28, 0.1 m goal tolerance)
+  report: docs/status/evidence/car-missions-2026-10-16/round43-tolerance/pybullet_rear_steer_car_seed3_nav_obstacle.json
+  sha256: 5e56b489538d836bad6232388e2fc88ae283849275dd13b89d96832485e413b7
+  source_hashes: docs/status/evidence/car-missions-2026-10-16/round43-tolerance/source-hashes-ac71687.json
+  source_hashes_sha256: 694150f8aee6efabae1bedb227d03934201b0b6df1b90ef85356f79c909d8563
+  report_kind: mission_screen
+  scope: nav_obstacle car mission (detour, cancel, resume, near-obstacle goal) with a 0.1 m goal tolerance, goal
+    seeds 1-3; truth-measured final poses. Details in docs/status/evidence/car-missions-2026-10-16.
+  limitations:
+  - Goal seeds 1-3, one world; heading not checked
+- robot_id: ackermann_car
+  environment_id: nav_obstacle
+  simulator: gazebo
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-10-16'
+  revision: 32c9cf1 (round 45, 03:40-04:44, 0.1 m goal tolerance and 0.6 m / 2.0 planner inflation)
+  report: docs/status/evidence/car-missions-2026-10-16/round45-inflation/gazebo_ackermann_car_seed1_nav_obstacle.json
+  sha256: 364b3f362dd9faf8e74e39f2f859889f16ae8c6c3cfd2397be69a92cda13df59
+  source_hashes: docs/status/evidence/car-missions-2026-10-16/round45-inflation/source-hashes-32c9cf1.json
+  source_hashes_sha256: 8d37b75bcfdde777c4d5fe45ade6675f5157572424296e0ce351d0873b9d208c
+  report_kind: mission_screen
+  scope: nav_obstacle car mission (detour, cancel, resume, near-obstacle goal) with a 0.1 m goal tolerance and a
+    0.6 m planner inflation, goal seeds 1-3; truth-measured final poses. Details in docs/status/evidence/car-missions-2026-10-16.
+  limitations:
+  - Goal seeds 1-3, one world; heading not checked
+  - MuJoCo anti-Ackermann seed 2 aborted goal B; seed 3 controls that cell
+- robot_id: ackermann_car
+  environment_id: nav_obstacle
+  simulator: gazebo
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-10-16'
+  revision: 32c9cf1 (round 45, 03:40-04:44, 0.1 m goal tolerance and 0.6 m / 2.0 planner inflation)
+  report: docs/status/evidence/car-missions-2026-10-16/round45-inflation/gazebo_ackermann_car_seed2_nav_obstacle.json
+  sha256: 5931c8f0727a8864fc952a1465553b54cafde89e74848faf465b8d4dc97b4071
+  source_hashes: docs/status/evidence/car-missions-2026-10-16/round45-inflation/source-hashes-32c9cf1.json
+  source_hashes_sha256: 8d37b75bcfdde777c4d5fe45ade6675f5157572424296e0ce351d0873b9d208c
+  report_kind: mission_screen
+  scope: nav_obstacle car mission (detour, cancel, resume, near-obstacle goal) with a 0.1 m goal tolerance and a
+    0.6 m planner inflation, goal seeds 1-3; truth-measured final poses. Details in docs/status/evidence/car-missions-2026-10-16.
+  limitations:
+  - Goal seeds 1-3, one world; heading not checked
+  - MuJoCo anti-Ackermann seed 2 aborted goal B; seed 3 controls that cell
+- robot_id: ackermann_car
+  environment_id: nav_obstacle
+  simulator: gazebo
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-10-16'
+  revision: 32c9cf1 (round 45, 03:40-04:44, 0.1 m goal tolerance and 0.6 m / 2.0 planner inflation)
+  report: docs/status/evidence/car-missions-2026-10-16/round45-inflation/gazebo_ackermann_car_seed3_nav_obstacle.json
+  sha256: 835ce9473901cbdb42b044548133c82463b65e14809bbb4fdc97fd0ba3b68c3c
+  source_hashes: docs/status/evidence/car-missions-2026-10-16/round45-inflation/source-hashes-32c9cf1.json
+  source_hashes_sha256: 8d37b75bcfdde777c4d5fe45ade6675f5157572424296e0ce351d0873b9d208c
+  report_kind: mission_screen
+  scope: nav_obstacle car mission (detour, cancel, resume, near-obstacle goal) with a 0.1 m goal tolerance and a
+    0.6 m planner inflation, goal seeds 1-3; truth-measured final poses. Details in docs/status/evidence/car-missions-2026-10-16.
+  limitations:
+  - Goal seeds 1-3, one world; heading not checked
+  - MuJoCo anti-Ackermann seed 2 aborted goal B; seed 3 controls that cell
+- robot_id: anti_ackermann_car
+  environment_id: nav_obstacle
+  simulator: gazebo
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-10-16'
+  revision: 32c9cf1 (round 45, 03:40-04:44, 0.1 m goal tolerance and 0.6 m / 2.0 planner inflation)
+  report: docs/status/evidence/car-missions-2026-10-16/round45-inflation/gazebo_anti_ackermann_car_seed1_nav_obstacle.json
+  sha256: e232f6f5f1ba3290e2d3a20ba82c3524b466bb6ac63a029c9f2ce21caa5cd8cb
+  source_hashes: docs/status/evidence/car-missions-2026-10-16/round45-inflation/source-hashes-32c9cf1.json
+  source_hashes_sha256: 8d37b75bcfdde777c4d5fe45ade6675f5157572424296e0ce351d0873b9d208c
+  report_kind: mission_screen
+  scope: nav_obstacle car mission (detour, cancel, resume, near-obstacle goal) with a 0.1 m goal tolerance and a
+    0.6 m planner inflation, goal seeds 1-3; truth-measured final poses. Details in docs/status/evidence/car-missions-2026-10-16.
+  limitations:
+  - Goal seeds 1-3, one world; heading not checked
+  - MuJoCo anti-Ackermann seed 2 aborted goal B; seed 3 controls that cell
+- robot_id: anti_ackermann_car
+  environment_id: nav_obstacle
+  simulator: gazebo
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-10-16'
+  revision: 32c9cf1 (round 45, 03:40-04:44, 0.1 m goal tolerance and 0.6 m / 2.0 planner inflation)
+  report: docs/status/evidence/car-missions-2026-10-16/round45-inflation/gazebo_anti_ackermann_car_seed2_nav_obstacle.json
+  sha256: 3b529b0d3ea30d14faef812ccb849449bc61afd167a33563f7db01f95bff00d5
+  source_hashes: docs/status/evidence/car-missions-2026-10-16/round45-inflation/source-hashes-32c9cf1.json
+  source_hashes_sha256: 8d37b75bcfdde777c4d5fe45ade6675f5157572424296e0ce351d0873b9d208c
+  report_kind: mission_screen
+  scope: nav_obstacle car mission (detour, cancel, resume, near-obstacle goal) with a 0.1 m goal tolerance and a
+    0.6 m planner inflation, goal seeds 1-3; truth-measured final poses. Details in docs/status/evidence/car-missions-2026-10-16.
+  limitations:
+  - Goal seeds 1-3, one world; heading not checked
+  - MuJoCo anti-Ackermann seed 2 aborted goal B; seed 3 controls that cell
+- robot_id: anti_ackermann_car
+  environment_id: nav_obstacle
+  simulator: gazebo
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-10-16'
+  revision: 32c9cf1 (round 45, 03:40-04:44, 0.1 m goal tolerance and 0.6 m / 2.0 planner inflation)
+  report: docs/status/evidence/car-missions-2026-10-16/round45-inflation/gazebo_anti_ackermann_car_seed3_nav_obstacle.json
+  sha256: 769d3a16d55b2ef899a3db07a17aa9e51d70a221ce915a1567f4b65727e124aa
+  source_hashes: docs/status/evidence/car-missions-2026-10-16/round45-inflation/source-hashes-32c9cf1.json
+  source_hashes_sha256: 8d37b75bcfdde777c4d5fe45ade6675f5157572424296e0ce351d0873b9d208c
+  report_kind: mission_screen
+  scope: nav_obstacle car mission (detour, cancel, resume, near-obstacle goal) with a 0.1 m goal tolerance and a
+    0.6 m planner inflation, goal seeds 1-3; truth-measured final poses. Details in docs/status/evidence/car-missions-2026-10-16.
+  limitations:
+  - Goal seeds 1-3, one world; heading not checked
+  - MuJoCo anti-Ackermann seed 2 aborted goal B; seed 3 controls that cell
+- robot_id: rear_steer_car
+  environment_id: nav_obstacle
+  simulator: gazebo
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-10-16'
+  revision: 32c9cf1 (round 45, 03:40-04:44, 0.1 m goal tolerance and 0.6 m / 2.0 planner inflation)
+  report: docs/status/evidence/car-missions-2026-10-16/round45-inflation/gazebo_rear_steer_car_seed1_nav_obstacle.json
+  sha256: 37fe74a54105ce7736f4da1acd381960c34392c98473a9620f957ee226641e5e
+  source_hashes: docs/status/evidence/car-missions-2026-10-16/round45-inflation/source-hashes-32c9cf1.json
+  source_hashes_sha256: 8d37b75bcfdde777c4d5fe45ade6675f5157572424296e0ce351d0873b9d208c
+  report_kind: mission_screen
+  scope: nav_obstacle car mission (detour, cancel, resume, near-obstacle goal) with a 0.1 m goal tolerance and a
+    0.6 m planner inflation, goal seeds 1-3; truth-measured final poses. Details in docs/status/evidence/car-missions-2026-10-16.
+  limitations:
+  - Goal seeds 1-3, one world; heading not checked
+  - MuJoCo anti-Ackermann seed 2 aborted goal B; seed 3 controls that cell
+- robot_id: rear_steer_car
+  environment_id: nav_obstacle
+  simulator: gazebo
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-10-16'
+  revision: 32c9cf1 (round 45, 03:40-04:44, 0.1 m goal tolerance and 0.6 m / 2.0 planner inflation)
+  report: docs/status/evidence/car-missions-2026-10-16/round45-inflation/gazebo_rear_steer_car_seed2_nav_obstacle.json
+  sha256: 41e37719bb7d147c390cafef6f6edf1d4bd6a4157d011bd844dcd7c1d341a9a1
+  source_hashes: docs/status/evidence/car-missions-2026-10-16/round45-inflation/source-hashes-32c9cf1.json
+  source_hashes_sha256: 8d37b75bcfdde777c4d5fe45ade6675f5157572424296e0ce351d0873b9d208c
+  report_kind: mission_screen
+  scope: nav_obstacle car mission (detour, cancel, resume, near-obstacle goal) with a 0.1 m goal tolerance and a
+    0.6 m planner inflation, goal seeds 1-3; truth-measured final poses. Details in docs/status/evidence/car-missions-2026-10-16.
+  limitations:
+  - Goal seeds 1-3, one world; heading not checked
+  - MuJoCo anti-Ackermann seed 2 aborted goal B; seed 3 controls that cell
+- robot_id: rear_steer_car
+  environment_id: nav_obstacle
+  simulator: gazebo
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-10-16'
+  revision: 32c9cf1 (round 45, 03:40-04:44, 0.1 m goal tolerance and 0.6 m / 2.0 planner inflation)
+  report: docs/status/evidence/car-missions-2026-10-16/round45-inflation/gazebo_rear_steer_car_seed3_nav_obstacle.json
+  sha256: f08ae5e24d048d6d92c391334daffbe4261c0b75f39e2acecbdd39a6b6b6886a
+  source_hashes: docs/status/evidence/car-missions-2026-10-16/round45-inflation/source-hashes-32c9cf1.json
+  source_hashes_sha256: 8d37b75bcfdde777c4d5fe45ade6675f5157572424296e0ce351d0873b9d208c
+  report_kind: mission_screen
+  scope: nav_obstacle car mission (detour, cancel, resume, near-obstacle goal) with a 0.1 m goal tolerance and a
+    0.6 m planner inflation, goal seeds 1-3; truth-measured final poses. Details in docs/status/evidence/car-missions-2026-10-16.
+  limitations:
+  - Goal seeds 1-3, one world; heading not checked
+  - MuJoCo anti-Ackermann seed 2 aborted goal B; seed 3 controls that cell
+- robot_id: ackermann_car
+  environment_id: nav_obstacle
+  simulator: isaac
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-10-16'
+  revision: 32c9cf1 (round 45, 03:40-04:44, 0.1 m goal tolerance and 0.6 m / 2.0 planner inflation)
+  report: docs/status/evidence/car-missions-2026-10-16/round45-inflation/isaac_ackermann_car_seed1_nav_obstacle.json
+  sha256: 1dd4072b5a066aa436f77733754c0bc0789f03cbc301256eaba112184da76aa9
+  source_hashes: docs/status/evidence/car-missions-2026-10-16/round45-inflation/source-hashes-32c9cf1.json
+  source_hashes_sha256: 8d37b75bcfdde777c4d5fe45ade6675f5157572424296e0ce351d0873b9d208c
+  report_kind: mission_screen
+  scope: nav_obstacle car mission (detour, cancel, resume, near-obstacle goal) with a 0.1 m goal tolerance and a
+    0.6 m planner inflation, goal seeds 1-3; truth-measured final poses. Details in docs/status/evidence/car-missions-2026-10-16.
+  limitations:
+  - Goal seeds 1-3, one world; heading not checked
+  - MuJoCo anti-Ackermann seed 2 aborted goal B; seed 3 controls that cell
+- robot_id: ackermann_car
+  environment_id: nav_obstacle
+  simulator: isaac
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-10-16'
+  revision: 32c9cf1 (round 45, 03:40-04:44, 0.1 m goal tolerance and 0.6 m / 2.0 planner inflation)
+  report: docs/status/evidence/car-missions-2026-10-16/round45-inflation/isaac_ackermann_car_seed2_nav_obstacle.json
+  sha256: b7cde537f2506c5c9e5dc722dd3938f27ca2a1a2553686dfd698be0ab12a54a9
+  source_hashes: docs/status/evidence/car-missions-2026-10-16/round45-inflation/source-hashes-32c9cf1.json
+  source_hashes_sha256: 8d37b75bcfdde777c4d5fe45ade6675f5157572424296e0ce351d0873b9d208c
+  report_kind: mission_screen
+  scope: nav_obstacle car mission (detour, cancel, resume, near-obstacle goal) with a 0.1 m goal tolerance and a
+    0.6 m planner inflation, goal seeds 1-3; truth-measured final poses. Details in docs/status/evidence/car-missions-2026-10-16.
+  limitations:
+  - Goal seeds 1-3, one world; heading not checked
+  - MuJoCo anti-Ackermann seed 2 aborted goal B; seed 3 controls that cell
+- robot_id: ackermann_car
+  environment_id: nav_obstacle
+  simulator: isaac
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-10-16'
+  revision: 32c9cf1 (round 45, 03:40-04:44, 0.1 m goal tolerance and 0.6 m / 2.0 planner inflation)
+  report: docs/status/evidence/car-missions-2026-10-16/round45-inflation/isaac_ackermann_car_seed3_nav_obstacle.json
+  sha256: 936a4d969e17717ac65df3fea243537e2aefe44c24857fe181836fcb634e0364
+  source_hashes: docs/status/evidence/car-missions-2026-10-16/round45-inflation/source-hashes-32c9cf1.json
+  source_hashes_sha256: 8d37b75bcfdde777c4d5fe45ade6675f5157572424296e0ce351d0873b9d208c
+  report_kind: mission_screen
+  scope: nav_obstacle car mission (detour, cancel, resume, near-obstacle goal) with a 0.1 m goal tolerance and a
+    0.6 m planner inflation, goal seeds 1-3; truth-measured final poses. Details in docs/status/evidence/car-missions-2026-10-16.
+  limitations:
+  - Goal seeds 1-3, one world; heading not checked
+  - MuJoCo anti-Ackermann seed 2 aborted goal B; seed 3 controls that cell
+- robot_id: anti_ackermann_car
+  environment_id: nav_obstacle
+  simulator: isaac
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-10-16'
+  revision: 32c9cf1 (round 45, 03:40-04:44, 0.1 m goal tolerance and 0.6 m / 2.0 planner inflation)
+  report: docs/status/evidence/car-missions-2026-10-16/round45-inflation/isaac_anti_ackermann_car_seed1_nav_obstacle.json
+  sha256: b63268316779cce6024b7581bce37d378b0d3f5c3558ee676528d33f21c44bc6
+  source_hashes: docs/status/evidence/car-missions-2026-10-16/round45-inflation/source-hashes-32c9cf1.json
+  source_hashes_sha256: 8d37b75bcfdde777c4d5fe45ade6675f5157572424296e0ce351d0873b9d208c
+  report_kind: mission_screen
+  scope: nav_obstacle car mission (detour, cancel, resume, near-obstacle goal) with a 0.1 m goal tolerance and a
+    0.6 m planner inflation, goal seeds 1-3; truth-measured final poses. Details in docs/status/evidence/car-missions-2026-10-16.
+  limitations:
+  - Goal seeds 1-3, one world; heading not checked
+  - MuJoCo anti-Ackermann seed 2 aborted goal B; seed 3 controls that cell
+- robot_id: anti_ackermann_car
+  environment_id: nav_obstacle
+  simulator: isaac
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-10-16'
+  revision: 32c9cf1 (round 45, 03:40-04:44, 0.1 m goal tolerance and 0.6 m / 2.0 planner inflation)
+  report: docs/status/evidence/car-missions-2026-10-16/round45-inflation/isaac_anti_ackermann_car_seed2_nav_obstacle.json
+  sha256: 362906ac6adf4c5381e44a7d94669468f1cb64252083c38080100cf9c5300894
+  source_hashes: docs/status/evidence/car-missions-2026-10-16/round45-inflation/source-hashes-32c9cf1.json
+  source_hashes_sha256: 8d37b75bcfdde777c4d5fe45ade6675f5157572424296e0ce351d0873b9d208c
+  report_kind: mission_screen
+  scope: nav_obstacle car mission (detour, cancel, resume, near-obstacle goal) with a 0.1 m goal tolerance and a
+    0.6 m planner inflation, goal seeds 1-3; truth-measured final poses. Details in docs/status/evidence/car-missions-2026-10-16.
+  limitations:
+  - Goal seeds 1-3, one world; heading not checked
+  - MuJoCo anti-Ackermann seed 2 aborted goal B; seed 3 controls that cell
+- robot_id: anti_ackermann_car
+  environment_id: nav_obstacle
+  simulator: isaac
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-10-16'
+  revision: 32c9cf1 (round 45, 03:40-04:44, 0.1 m goal tolerance and 0.6 m / 2.0 planner inflation)
+  report: docs/status/evidence/car-missions-2026-10-16/round45-inflation/isaac_anti_ackermann_car_seed3_nav_obstacle.json
+  sha256: cc14c86ffdff352c13719dfaa1a54d43394afe24f7c3c410c297daa578d3a2d3
+  source_hashes: docs/status/evidence/car-missions-2026-10-16/round45-inflation/source-hashes-32c9cf1.json
+  source_hashes_sha256: 8d37b75bcfdde777c4d5fe45ade6675f5157572424296e0ce351d0873b9d208c
+  report_kind: mission_screen
+  scope: nav_obstacle car mission (detour, cancel, resume, near-obstacle goal) with a 0.1 m goal tolerance and a
+    0.6 m planner inflation, goal seeds 1-3; truth-measured final poses. Details in docs/status/evidence/car-missions-2026-10-16.
+  limitations:
+  - Goal seeds 1-3, one world; heading not checked
+  - MuJoCo anti-Ackermann seed 2 aborted goal B; seed 3 controls that cell
+- robot_id: rear_steer_car
+  environment_id: nav_obstacle
+  simulator: isaac
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-10-16'
+  revision: 32c9cf1 (round 45, 03:40-04:44, 0.1 m goal tolerance and 0.6 m / 2.0 planner inflation)
+  report: docs/status/evidence/car-missions-2026-10-16/round45-inflation/isaac_rear_steer_car_seed1_nav_obstacle.json
+  sha256: 1ac6447e1d10e3db07c21b34d8764177b14e848e87a6d9d69809f380a7949aea
+  source_hashes: docs/status/evidence/car-missions-2026-10-16/round45-inflation/source-hashes-32c9cf1.json
+  source_hashes_sha256: 8d37b75bcfdde777c4d5fe45ade6675f5157572424296e0ce351d0873b9d208c
+  report_kind: mission_screen
+  scope: nav_obstacle car mission (detour, cancel, resume, near-obstacle goal) with a 0.1 m goal tolerance and a
+    0.6 m planner inflation, goal seeds 1-3; truth-measured final poses. Details in docs/status/evidence/car-missions-2026-10-16.
+  limitations:
+  - Goal seeds 1-3, one world; heading not checked
+  - MuJoCo anti-Ackermann seed 2 aborted goal B; seed 3 controls that cell
+- robot_id: rear_steer_car
+  environment_id: nav_obstacle
+  simulator: isaac
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-10-16'
+  revision: 32c9cf1 (round 45, 03:40-04:44, 0.1 m goal tolerance and 0.6 m / 2.0 planner inflation)
+  report: docs/status/evidence/car-missions-2026-10-16/round45-inflation/isaac_rear_steer_car_seed2_nav_obstacle.json
+  sha256: 5a32cb1a0305c21ddff2a4106b6a3c16d4cebf2a4326a6c765588bdf98548434
+  source_hashes: docs/status/evidence/car-missions-2026-10-16/round45-inflation/source-hashes-32c9cf1.json
+  source_hashes_sha256: 8d37b75bcfdde777c4d5fe45ade6675f5157572424296e0ce351d0873b9d208c
+  report_kind: mission_screen
+  scope: nav_obstacle car mission (detour, cancel, resume, near-obstacle goal) with a 0.1 m goal tolerance and a
+    0.6 m planner inflation, goal seeds 1-3; truth-measured final poses. Details in docs/status/evidence/car-missions-2026-10-16.
+  limitations:
+  - Goal seeds 1-3, one world; heading not checked
+  - MuJoCo anti-Ackermann seed 2 aborted goal B; seed 3 controls that cell
+- robot_id: rear_steer_car
+  environment_id: nav_obstacle
+  simulator: isaac
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-10-16'
+  revision: 32c9cf1 (round 45, 03:40-04:44, 0.1 m goal tolerance and 0.6 m / 2.0 planner inflation)
+  report: docs/status/evidence/car-missions-2026-10-16/round45-inflation/isaac_rear_steer_car_seed3_nav_obstacle.json
+  sha256: 9d0617abe981a0473fb7b6eeebfce0e6463a4c87819be3faa04fbb0538aa2d3b
+  source_hashes: docs/status/evidence/car-missions-2026-10-16/round45-inflation/source-hashes-32c9cf1.json
+  source_hashes_sha256: 8d37b75bcfdde777c4d5fe45ade6675f5157572424296e0ce351d0873b9d208c
+  report_kind: mission_screen
+  scope: nav_obstacle car mission (detour, cancel, resume, near-obstacle goal) with a 0.1 m goal tolerance and a
+    0.6 m planner inflation, goal seeds 1-3; truth-measured final poses. Details in docs/status/evidence/car-missions-2026-10-16.
+  limitations:
+  - Goal seeds 1-3, one world; heading not checked
+  - MuJoCo anti-Ackermann seed 2 aborted goal B; seed 3 controls that cell
+- robot_id: ackermann_car
+  environment_id: nav_obstacle
+  simulator: mujoco
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-10-16'
+  revision: 32c9cf1 (round 45, 03:40-04:44, 0.1 m goal tolerance and 0.6 m / 2.0 planner inflation)
+  report: docs/status/evidence/car-missions-2026-10-16/round45-inflation/mujoco_ackermann_car_seed1_nav_obstacle.json
+  sha256: 3be4bafdc09d81fafdd796b98f6c4d7ad49c4b9d00191e63d6c793fdf6e9654f
+  source_hashes: docs/status/evidence/car-missions-2026-10-16/round45-inflation/source-hashes-32c9cf1.json
+  source_hashes_sha256: 8d37b75bcfdde777c4d5fe45ade6675f5157572424296e0ce351d0873b9d208c
+  report_kind: mission_screen
+  scope: nav_obstacle car mission (detour, cancel, resume, near-obstacle goal) with a 0.1 m goal tolerance and a
+    0.6 m planner inflation, goal seeds 1-3; truth-measured final poses. Details in docs/status/evidence/car-missions-2026-10-16.
+  limitations:
+  - Goal seeds 1-3, one world; heading not checked
+  - MuJoCo anti-Ackermann seed 2 aborted goal B; seed 3 controls that cell
+- robot_id: ackermann_car
+  environment_id: nav_obstacle
+  simulator: mujoco
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-10-16'
+  revision: 32c9cf1 (round 45, 03:40-04:44, 0.1 m goal tolerance and 0.6 m / 2.0 planner inflation)
+  report: docs/status/evidence/car-missions-2026-10-16/round45-inflation/mujoco_ackermann_car_seed2_nav_obstacle.json
+  sha256: f5d77c3acc94f714152501a2820b46101da721cfd6b270e6025afc9e5d9815f8
+  source_hashes: docs/status/evidence/car-missions-2026-10-16/round45-inflation/source-hashes-32c9cf1.json
+  source_hashes_sha256: 8d37b75bcfdde777c4d5fe45ade6675f5157572424296e0ce351d0873b9d208c
+  report_kind: mission_screen
+  scope: nav_obstacle car mission (detour, cancel, resume, near-obstacle goal) with a 0.1 m goal tolerance and a
+    0.6 m planner inflation, goal seeds 1-3; truth-measured final poses. Details in docs/status/evidence/car-missions-2026-10-16.
+  limitations:
+  - Goal seeds 1-3, one world; heading not checked
+  - MuJoCo anti-Ackermann seed 2 aborted goal B; seed 3 controls that cell
+- robot_id: ackermann_car
+  environment_id: nav_obstacle
+  simulator: mujoco
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-10-16'
+  revision: 32c9cf1 (round 45, 03:40-04:44, 0.1 m goal tolerance and 0.6 m / 2.0 planner inflation)
+  report: docs/status/evidence/car-missions-2026-10-16/round45-inflation/mujoco_ackermann_car_seed3_nav_obstacle.json
+  sha256: 4132a351888f00f410bbe6593fdbcdbcb8c178cceeaf0c21f154df7343e462ef
+  source_hashes: docs/status/evidence/car-missions-2026-10-16/round45-inflation/source-hashes-32c9cf1.json
+  source_hashes_sha256: 8d37b75bcfdde777c4d5fe45ade6675f5157572424296e0ce351d0873b9d208c
+  report_kind: mission_screen
+  scope: nav_obstacle car mission (detour, cancel, resume, near-obstacle goal) with a 0.1 m goal tolerance and a
+    0.6 m planner inflation, goal seeds 1-3; truth-measured final poses. Details in docs/status/evidence/car-missions-2026-10-16.
+  limitations:
+  - Goal seeds 1-3, one world; heading not checked
+  - MuJoCo anti-Ackermann seed 2 aborted goal B; seed 3 controls that cell
+- robot_id: anti_ackermann_car
+  environment_id: nav_obstacle
+  simulator: mujoco
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-10-16'
+  revision: 32c9cf1 (round 45, 03:40-04:44, 0.1 m goal tolerance and 0.6 m / 2.0 planner inflation)
+  report: docs/status/evidence/car-missions-2026-10-16/round45-inflation/mujoco_anti_ackermann_car_seed1_nav_obstacle.json
+  sha256: 88d2db13ff5460243ca5bacf382c71ddfba162af861ed4e09a88029be1ba59ef
+  source_hashes: docs/status/evidence/car-missions-2026-10-16/round45-inflation/source-hashes-32c9cf1.json
+  source_hashes_sha256: 8d37b75bcfdde777c4d5fe45ade6675f5157572424296e0ce351d0873b9d208c
+  report_kind: mission_screen
+  scope: nav_obstacle car mission (detour, cancel, resume, near-obstacle goal) with a 0.1 m goal tolerance and a
+    0.6 m planner inflation, goal seeds 1-3; truth-measured final poses. Details in docs/status/evidence/car-missions-2026-10-16.
+  limitations:
+  - Goal seeds 1-3, one world; heading not checked
+  - MuJoCo anti-Ackermann seed 2 aborted goal B; seed 3 controls that cell
+- robot_id: anti_ackermann_car
+  environment_id: nav_obstacle
+  simulator: mujoco
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-10-16'
+  revision: 32c9cf1 (round 45, 03:40-04:44, 0.1 m goal tolerance and 0.6 m / 2.0 planner inflation)
+  report: docs/status/evidence/car-missions-2026-10-16/round45-inflation/mujoco_anti_ackermann_car_seed2_nav_obstacle.json
+  sha256: f8d965cff4069d0d6796cf8e7b3ea4941c677dfaa81640eeb985957fb8c1bc2c
+  source_hashes: docs/status/evidence/car-missions-2026-10-16/round45-inflation/source-hashes-32c9cf1.json
+  source_hashes_sha256: 8d37b75bcfdde777c4d5fe45ade6675f5157572424296e0ce351d0873b9d208c
+  report_kind: mission_screen
+  scope: nav_obstacle car mission (detour, cancel, resume, near-obstacle goal) with a 0.1 m goal tolerance and a
+    0.6 m planner inflation, goal seeds 1-3; truth-measured final poses. Details in docs/status/evidence/car-missions-2026-10-16.
+  limitations:
+  - Goal seeds 1-3, one world; heading not checked
+  - MuJoCo anti-Ackermann seed 2 aborted goal B; seed 3 controls that cell
+- robot_id: anti_ackermann_car
+  environment_id: nav_obstacle
+  simulator: mujoco
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-10-16'
+  revision: 32c9cf1 (round 45, 03:40-04:44, 0.1 m goal tolerance and 0.6 m / 2.0 planner inflation)
+  report: docs/status/evidence/car-missions-2026-10-16/round45-inflation/mujoco_anti_ackermann_car_seed3_nav_obstacle.json
+  sha256: 1423fc7bcce6eb116e5faf66ed3564d68a8cc929b36353945b952c65a98584d1
+  source_hashes: docs/status/evidence/car-missions-2026-10-16/round45-inflation/source-hashes-32c9cf1.json
+  source_hashes_sha256: 8d37b75bcfdde777c4d5fe45ade6675f5157572424296e0ce351d0873b9d208c
+  report_kind: mission_screen
+  scope: nav_obstacle car mission (detour, cancel, resume, near-obstacle goal) with a 0.1 m goal tolerance and a
+    0.6 m planner inflation, goal seeds 1-3; truth-measured final poses. Details in docs/status/evidence/car-missions-2026-10-16.
+  limitations:
+  - Goal seeds 1-3, one world; heading not checked
+  - MuJoCo anti-Ackermann seed 2 aborted goal B; seed 3 controls that cell
+- robot_id: rear_steer_car
+  environment_id: nav_obstacle
+  simulator: mujoco
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-10-16'
+  revision: 32c9cf1 (round 45, 03:40-04:44, 0.1 m goal tolerance and 0.6 m / 2.0 planner inflation)
+  report: docs/status/evidence/car-missions-2026-10-16/round45-inflation/mujoco_rear_steer_car_seed1_nav_obstacle.json
+  sha256: ca17d317481d8e40c2885320cffd51c42374e8631da380fba49c39eafd207e0e
+  source_hashes: docs/status/evidence/car-missions-2026-10-16/round45-inflation/source-hashes-32c9cf1.json
+  source_hashes_sha256: 8d37b75bcfdde777c4d5fe45ade6675f5157572424296e0ce351d0873b9d208c
+  report_kind: mission_screen
+  scope: nav_obstacle car mission (detour, cancel, resume, near-obstacle goal) with a 0.1 m goal tolerance and a
+    0.6 m planner inflation, goal seeds 1-3; truth-measured final poses. Details in docs/status/evidence/car-missions-2026-10-16.
+  limitations:
+  - Goal seeds 1-3, one world; heading not checked
+  - MuJoCo anti-Ackermann seed 2 aborted goal B; seed 3 controls that cell
+- robot_id: rear_steer_car
+  environment_id: nav_obstacle
+  simulator: mujoco
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-10-16'
+  revision: 32c9cf1 (round 45, 03:40-04:44, 0.1 m goal tolerance and 0.6 m / 2.0 planner inflation)
+  report: docs/status/evidence/car-missions-2026-10-16/round45-inflation/mujoco_rear_steer_car_seed2_nav_obstacle.json
+  sha256: 9455e690d31e5271731be3a650d961420bfdb4e4e6e971f9a6ba6dd659c71065
+  source_hashes: docs/status/evidence/car-missions-2026-10-16/round45-inflation/source-hashes-32c9cf1.json
+  source_hashes_sha256: 8d37b75bcfdde777c4d5fe45ade6675f5157572424296e0ce351d0873b9d208c
+  report_kind: mission_screen
+  scope: nav_obstacle car mission (detour, cancel, resume, near-obstacle goal) with a 0.1 m goal tolerance and a
+    0.6 m planner inflation, goal seeds 1-3; truth-measured final poses. Details in docs/status/evidence/car-missions-2026-10-16.
+  limitations:
+  - Goal seeds 1-3, one world; heading not checked
+  - MuJoCo anti-Ackermann seed 2 aborted goal B; seed 3 controls that cell
+- robot_id: rear_steer_car
+  environment_id: nav_obstacle
+  simulator: mujoco
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-10-16'
+  revision: 32c9cf1 (round 45, 03:40-04:44, 0.1 m goal tolerance and 0.6 m / 2.0 planner inflation)
+  report: docs/status/evidence/car-missions-2026-10-16/round45-inflation/mujoco_rear_steer_car_seed3_nav_obstacle.json
+  sha256: 588991e494d45e11707e91f9865968920c7788978bc04d302ce5ba5338c0a2f9
+  source_hashes: docs/status/evidence/car-missions-2026-10-16/round45-inflation/source-hashes-32c9cf1.json
+  source_hashes_sha256: 8d37b75bcfdde777c4d5fe45ade6675f5157572424296e0ce351d0873b9d208c
+  report_kind: mission_screen
+  scope: nav_obstacle car mission (detour, cancel, resume, near-obstacle goal) with a 0.1 m goal tolerance and a
+    0.6 m planner inflation, goal seeds 1-3; truth-measured final poses. Details in docs/status/evidence/car-missions-2026-10-16.
+  limitations:
+  - Goal seeds 1-3, one world; heading not checked
+  - MuJoCo anti-Ackermann seed 2 aborted goal B; seed 3 controls that cell
+- robot_id: ackermann_car
+  environment_id: nav_obstacle
+  simulator: pybullet
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-10-16'
+  revision: 32c9cf1 (round 45, 03:40-04:44, 0.1 m goal tolerance and 0.6 m / 2.0 planner inflation)
+  report: docs/status/evidence/car-missions-2026-10-16/round45-inflation/pybullet_ackermann_car_seed1_nav_obstacle.json
+  sha256: cfc9c2ad488770a61545d95aa767fca9e5fdc2ebb46b8a94c558ff9c9c4dec5c
+  source_hashes: docs/status/evidence/car-missions-2026-10-16/round45-inflation/source-hashes-32c9cf1.json
+  source_hashes_sha256: 8d37b75bcfdde777c4d5fe45ade6675f5157572424296e0ce351d0873b9d208c
+  report_kind: mission_screen
+  scope: nav_obstacle car mission (detour, cancel, resume, near-obstacle goal) with a 0.1 m goal tolerance and a
+    0.6 m planner inflation, goal seeds 1-3; truth-measured final poses. Details in docs/status/evidence/car-missions-2026-10-16.
+  limitations:
+  - Goal seeds 1-3, one world; heading not checked
+  - MuJoCo anti-Ackermann seed 2 aborted goal B; seed 3 controls that cell
+- robot_id: ackermann_car
+  environment_id: nav_obstacle
+  simulator: pybullet
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-10-16'
+  revision: 32c9cf1 (round 45, 03:40-04:44, 0.1 m goal tolerance and 0.6 m / 2.0 planner inflation)
+  report: docs/status/evidence/car-missions-2026-10-16/round45-inflation/pybullet_ackermann_car_seed2_nav_obstacle.json
+  sha256: 839df830bfe89f0243d9532b44cb29ad7e658d8b472be5b797f299a281f516c0
+  source_hashes: docs/status/evidence/car-missions-2026-10-16/round45-inflation/source-hashes-32c9cf1.json
+  source_hashes_sha256: 8d37b75bcfdde777c4d5fe45ade6675f5157572424296e0ce351d0873b9d208c
+  report_kind: mission_screen
+  scope: nav_obstacle car mission (detour, cancel, resume, near-obstacle goal) with a 0.1 m goal tolerance and a
+    0.6 m planner inflation, goal seeds 1-3; truth-measured final poses. Details in docs/status/evidence/car-missions-2026-10-16.
+  limitations:
+  - Goal seeds 1-3, one world; heading not checked
+  - MuJoCo anti-Ackermann seed 2 aborted goal B; seed 3 controls that cell
+- robot_id: ackermann_car
+  environment_id: nav_obstacle
+  simulator: pybullet
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-10-16'
+  revision: 32c9cf1 (round 45, 03:40-04:44, 0.1 m goal tolerance and 0.6 m / 2.0 planner inflation)
+  report: docs/status/evidence/car-missions-2026-10-16/round45-inflation/pybullet_ackermann_car_seed3_nav_obstacle.json
+  sha256: 9d24bf01307497da679ab5633ed5e13cdad52e3ed9bee53bf01b732f15dea8f7
+  source_hashes: docs/status/evidence/car-missions-2026-10-16/round45-inflation/source-hashes-32c9cf1.json
+  source_hashes_sha256: 8d37b75bcfdde777c4d5fe45ade6675f5157572424296e0ce351d0873b9d208c
+  report_kind: mission_screen
+  scope: nav_obstacle car mission (detour, cancel, resume, near-obstacle goal) with a 0.1 m goal tolerance and a
+    0.6 m planner inflation, goal seeds 1-3; truth-measured final poses. Details in docs/status/evidence/car-missions-2026-10-16.
+  limitations:
+  - Goal seeds 1-3, one world; heading not checked
+  - MuJoCo anti-Ackermann seed 2 aborted goal B; seed 3 controls that cell
+- robot_id: anti_ackermann_car
+  environment_id: nav_obstacle
+  simulator: pybullet
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-10-16'
+  revision: 32c9cf1 (round 45, 03:40-04:44, 0.1 m goal tolerance and 0.6 m / 2.0 planner inflation)
+  report: docs/status/evidence/car-missions-2026-10-16/round45-inflation/pybullet_anti_ackermann_car_seed1_nav_obstacle.json
+  sha256: a4887c825c7af970ff58fa6c8c1116ce679348cadd2ca33f422660ef9336aff7
+  source_hashes: docs/status/evidence/car-missions-2026-10-16/round45-inflation/source-hashes-32c9cf1.json
+  source_hashes_sha256: 8d37b75bcfdde777c4d5fe45ade6675f5157572424296e0ce351d0873b9d208c
+  report_kind: mission_screen
+  scope: nav_obstacle car mission (detour, cancel, resume, near-obstacle goal) with a 0.1 m goal tolerance and a
+    0.6 m planner inflation, goal seeds 1-3; truth-measured final poses. Details in docs/status/evidence/car-missions-2026-10-16.
+  limitations:
+  - Goal seeds 1-3, one world; heading not checked
+  - MuJoCo anti-Ackermann seed 2 aborted goal B; seed 3 controls that cell
+- robot_id: anti_ackermann_car
+  environment_id: nav_obstacle
+  simulator: pybullet
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-10-16'
+  revision: 32c9cf1 (round 45, 03:40-04:44, 0.1 m goal tolerance and 0.6 m / 2.0 planner inflation)
+  report: docs/status/evidence/car-missions-2026-10-16/round45-inflation/pybullet_anti_ackermann_car_seed2_nav_obstacle.json
+  sha256: 50e7e67bfcca34b0fd020cbba4d83de15791403ac4718b0e6f4dc5350b90c2e6
+  source_hashes: docs/status/evidence/car-missions-2026-10-16/round45-inflation/source-hashes-32c9cf1.json
+  source_hashes_sha256: 8d37b75bcfdde777c4d5fe45ade6675f5157572424296e0ce351d0873b9d208c
+  report_kind: mission_screen
+  scope: nav_obstacle car mission (detour, cancel, resume, near-obstacle goal) with a 0.1 m goal tolerance and a
+    0.6 m planner inflation, goal seeds 1-3; truth-measured final poses. Details in docs/status/evidence/car-missions-2026-10-16.
+  limitations:
+  - Goal seeds 1-3, one world; heading not checked
+  - MuJoCo anti-Ackermann seed 2 aborted goal B; seed 3 controls that cell
+- robot_id: anti_ackermann_car
+  environment_id: nav_obstacle
+  simulator: pybullet
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-10-16'
+  revision: 32c9cf1 (round 45, 03:40-04:44, 0.1 m goal tolerance and 0.6 m / 2.0 planner inflation)
+  report: docs/status/evidence/car-missions-2026-10-16/round45-inflation/pybullet_anti_ackermann_car_seed3_nav_obstacle.json
+  sha256: b1cfbdfc22233ad8d8c6ac8100ba5e82ff2b92682db885d25a88955be90ab28f
+  source_hashes: docs/status/evidence/car-missions-2026-10-16/round45-inflation/source-hashes-32c9cf1.json
+  source_hashes_sha256: 8d37b75bcfdde777c4d5fe45ade6675f5157572424296e0ce351d0873b9d208c
+  report_kind: mission_screen
+  scope: nav_obstacle car mission (detour, cancel, resume, near-obstacle goal) with a 0.1 m goal tolerance and a
+    0.6 m planner inflation, goal seeds 1-3; truth-measured final poses. Details in docs/status/evidence/car-missions-2026-10-16.
+  limitations:
+  - Goal seeds 1-3, one world; heading not checked
+  - MuJoCo anti-Ackermann seed 2 aborted goal B; seed 3 controls that cell
+- robot_id: rear_steer_car
+  environment_id: nav_obstacle
+  simulator: pybullet
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-10-16'
+  revision: 32c9cf1 (round 45, 03:40-04:44, 0.1 m goal tolerance and 0.6 m / 2.0 planner inflation)
+  report: docs/status/evidence/car-missions-2026-10-16/round45-inflation/pybullet_rear_steer_car_seed1_nav_obstacle.json
+  sha256: 0dede80f37524a79136e5c07c95b24bd7cf76641eca2b043ba8001c9bcff8da8
+  source_hashes: docs/status/evidence/car-missions-2026-10-16/round45-inflation/source-hashes-32c9cf1.json
+  source_hashes_sha256: 8d37b75bcfdde777c4d5fe45ade6675f5157572424296e0ce351d0873b9d208c
+  report_kind: mission_screen
+  scope: nav_obstacle car mission (detour, cancel, resume, near-obstacle goal) with a 0.1 m goal tolerance and a
+    0.6 m planner inflation, goal seeds 1-3; truth-measured final poses. Details in docs/status/evidence/car-missions-2026-10-16.
+  limitations:
+  - Goal seeds 1-3, one world; heading not checked
+  - MuJoCo anti-Ackermann seed 2 aborted goal B; seed 3 controls that cell
+- robot_id: rear_steer_car
+  environment_id: nav_obstacle
+  simulator: pybullet
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-10-16'
+  revision: 32c9cf1 (round 45, 03:40-04:44, 0.1 m goal tolerance and 0.6 m / 2.0 planner inflation)
+  report: docs/status/evidence/car-missions-2026-10-16/round45-inflation/pybullet_rear_steer_car_seed2_nav_obstacle.json
+  sha256: 862cbe5660837e7f1fbeec68f9e77203e5a41ef11d47a43385afe2a387c9da9d
+  source_hashes: docs/status/evidence/car-missions-2026-10-16/round45-inflation/source-hashes-32c9cf1.json
+  source_hashes_sha256: 8d37b75bcfdde777c4d5fe45ade6675f5157572424296e0ce351d0873b9d208c
+  report_kind: mission_screen
+  scope: nav_obstacle car mission (detour, cancel, resume, near-obstacle goal) with a 0.1 m goal tolerance and a
+    0.6 m planner inflation, goal seeds 1-3; truth-measured final poses. Details in docs/status/evidence/car-missions-2026-10-16.
+  limitations:
+  - Goal seeds 1-3, one world; heading not checked
+  - MuJoCo anti-Ackermann seed 2 aborted goal B; seed 3 controls that cell
+- robot_id: rear_steer_car
+  environment_id: nav_obstacle
+  simulator: pybullet
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-10-16'
+  revision: 32c9cf1 (round 45, 03:40-04:44, 0.1 m goal tolerance and 0.6 m / 2.0 planner inflation)
+  report: docs/status/evidence/car-missions-2026-10-16/round45-inflation/pybullet_rear_steer_car_seed3_nav_obstacle.json
+  sha256: 7b48400cf978481f3624e58849ecf9437ebc2004cf2c4132b1ae0e09cf3cd6ab
+  source_hashes: docs/status/evidence/car-missions-2026-10-16/round45-inflation/source-hashes-32c9cf1.json
+  source_hashes_sha256: 8d37b75bcfdde777c4d5fe45ade6675f5157572424296e0ce351d0873b9d208c
+  report_kind: mission_screen
+  scope: nav_obstacle car mission (detour, cancel, resume, near-obstacle goal) with a 0.1 m goal tolerance and a
+    0.6 m planner inflation, goal seeds 1-3; truth-measured final poses. Details in docs/status/evidence/car-missions-2026-10-16.
+  limitations:
+  - Goal seeds 1-3, one world; heading not checked
+  - MuJoCo anti-Ackermann seed 2 aborted goal B; seed 3 controls that cell

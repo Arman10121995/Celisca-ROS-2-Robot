@@ -98,3 +98,26 @@ screens**, 1 unverified. The failures:
 - the B2 Isaac policy drive.
 
 Full-release gates stay blocked.
+
+## Update: the cars (2026-10-16)
+
+Two car rounds were indexed
+([batch](../car-missions-2026-10-16/mission-batch.yaml)), 36 records each:
+
+- round 43 at `ac71687`, with a 0.1 m goal tolerance: 32 of 36 pass;
+- round 45 at `32c9cf1`, which adds a 0.6 m planner inflation: 35 of 36
+  pass.
+
+Round 45's seed 3 now controls each car cell, and all twelve pass the
+0.25 m screen (worst goal 0.224 m). The cell does not show one abort:
+MuJoCo anti-Ackermann, seed 2, stalled 0.153 m from goal B
+([details](../car-missions-2026-10-16/README.md)).
+
+The index holds 546 records, still 251 cells: **247 passed and 3 failed
+screens**, 1 unverified. The failures:
+
+- the G1 Isaac nav_obstacle mission (0.256 m);
+- the Go2 Isaac nav_obstacle mission;
+- the B2 Isaac policy drive.
+
+Full-release gates stay blocked.

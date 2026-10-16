@@ -216,7 +216,7 @@ October 13: implemented on master, experimental.
     mecanum car passed seed 1 in every backend
     ([evidence](evidence/r56-4ws-missions-2026-10-13/README.md)).
   - Over goal seeds 2 and 3 (2026-10-15), 4WS ackermann, pivot and the
-    mecanum car pass 24/24. The cars pass 13/24, missing the near-obstacle
+    mecanum car pass 24/24. The cars passed 13/24, missing the near-obstacle
     goal by 0.26-0.36 m against the 0.30 m limit
     ([evidence](evidence/wheeled-repeats-2026-10-15/README.md)).
   - Crab and in_phase first aborted that goal in all 16 runs. A recording
@@ -228,6 +228,17 @@ October 13: implemented on master, experimental.
     12** pass. MuJoCo rear-steer hit the tf2 freeze; Gazebo Ackermann
     aborted its detour after repeated collision-ahead stops
     ([evidence](evidence/r55-car-missions-2026-10-13/README.md)).
+  - **Cars, 2026-10-16: 35 of 36 pass** over seeds 1-3 in all four
+    backends, both goals 0.002-0.224 m from truth
+    ([evidence](evidence/car-missions-2026-10-16/README.md)). Two
+    configuration fixes got there:
+    - The cars had kept Nav2's 0.25 m goal tolerance and stopped at its
+      edge; they now use 0.1 m (`ac71687`, 32 of 36).
+    - Their planner inflation was below their swept radius, so in four
+      runs the body touched the block beside the route and the replan
+      aborted. A 0.6 m inflation fixed those (`32c9cf1`).
+    - One MuJoCo anti-Ackermann goal stalled 0.15 m out, unable to settle
+      inside 0.1 m without turning on the spot.
 - **Two simulations at once (R8.3, 2026-10-15).** The concurrent
   coordinator's Nav2 workload had never run; three bugs stopped it and are
   fixed.
