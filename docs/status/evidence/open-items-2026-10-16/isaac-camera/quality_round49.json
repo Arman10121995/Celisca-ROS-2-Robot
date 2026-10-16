@@ -1,0 +1,52 @@
+[
+ {
+  "bag": "/workspace/molar/robot_lab_runtime/claude-v49/camera/isaac_base",
+  "frames": 346,
+  "depth_frames": 346,
+  "still_pairs": 185,
+  "edge_correlation": 0.161,
+  "temporal_noise": 32.178,
+  "orb_repeat": 0.232,
+  "gray_std": 89.774
+ },
+ {
+  "bag": "/workspace/molar/robot_lab_runtime/claude-v49/camera/isaac_sub8",
+  "frames": 63,
+  "depth_frames": 63,
+  "still_pairs": 33,
+  "edge_correlation": 0.13,
+  "temporal_noise": 30.763,
+  "orb_repeat": 0.255,
+  "gray_std": 89.854
+ },
+ {
+  "bag": "/workspace/molar/robot_lab_runtime/claude-v49/camera/isaac_rt",
+  "frames": 341,
+  "depth_frames": 341,
+  "still_pairs": 181,
+  "edge_correlation": 0.161,
+  "temporal_noise": 32.178,
+  "orb_repeat": 0.231,
+  "gray_std": 89.773
+ },
+ {
+  "bag": "/workspace/molar/robot_lab_runtime/claude-v49/camera/isaac_rt_sub8",
+  "frames": 64,
+  "depth_frames": 64,
+  "still_pairs": 34,
+  "edge_correlation": 0.128,
+  "temporal_noise": 30.764,
+  "orb_repeat": 0.252,
+  "gray_std": 89.853
+ },
+ {
+  "bag": "/workspace/molar/robot_lab_runtime/claude-v49/camera/isaac_quiet",
+  "frames": 351,
+  "depth_frames": 351,
+  "still_pairs": 187,
+  "edge_correlation": 0.161,
+  "temporal_noise": 32.151,
+  "orb_repeat": 0.232,
+  "gray_std": 89.773
+ }
+]

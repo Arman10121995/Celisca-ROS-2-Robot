@@ -150,6 +150,43 @@ friction-1, no-restitution floor for unitree_b2 (robots.yaml). Isaac
 Lab trains on that floor. On PhysX's default floor the DC motor alone
 barely walks.
 
+**Measured with these defaults** (round 49, `cdd1e09`):
+- Drive ([b2-isaac/isaac_unitree_b2_defaults.json](b2-isaac/isaac_unitree_b2_defaults.json)):
+  0.305 m/s straight, 0.288/0.245 m/s on the arcs, spin 0.938 rad/s and
+  a dead stop (vx -0.008 m/s).
+- nav_obstacle seeds 1-3 ([b2-isaac/missions/](b2-isaac/missions/)):
+  **3 of 3 pass**. Goal A ends 0.096-0.157 m and goal B 0.131-0.21 m
+  from truth, B in 58-85 s.
+
+## Go2 planner inflation and turning on the spot (P7)
+
+**Cause.** Isaac seed 3 aborted goal B after "collision ahead" beside the
+nav_obstacle block (round 47b, 0.45 m inflation): the route ran just past
+the 0.40 m circumscribed radius.
+
+**Change 1** (`26b961e`). Global inflation 0.7 m at cost scaling 2.0.
+
+**Measured** ([go2-inflation/](go2-inflation/), round 49, `cdd1e09`):
+
+| Backend | Seed 1 (A / B from truth) | Seed 2 | Seed 3 |
+|---|---|---|---|
+| MuJoCo | 0.075 / 0.139 m | 0.010 / 0.230 m | 0.034 / 0.220 m |
+| Gazebo | 0.033 / 0.067 m | 0.093 / 0.142 m | 0.127 / 0.156 m |
+| Isaac | 0.188 / **0.283 m** | 0.051 / 0.148 m | 0.164 m / **aborted** |
+
+MuJoCo and Gazebo pass 3 of 3. In Isaac seed 1 passes the mission's own
+check, but its goal B is over the matrix's 0.25 m screen. Seed 3 still
+aborts: goal A leaves the Go2 facing a wall 0.5 m away, and the arc toward
+goal B runs into it.
+
+**Change 2, reverted.** Rotating in place toward the path first
+(`56d3edc`, `use_rotate_to_heading`) failed all three Isaac seeds
+([go2-rotate/](go2-rotate/), round 49c). Held at 0.8 rad/s with no
+forward speed, the Go2 turned 8-28 deg in 1-2 s and then stood still (body
+up 4-6 cm, 20 deg in 20 s). The progress checker and the 1.57 rad spin
+recovery then timed out. Seed 3 stalled the same way at its start. The
+overlay is back to forward arcs; turning on the spot in Isaac stays open.
+
 ## Bumperbot slam in Gazebo (P7)
 
 **Findings** (`scripts/scan_geometry_check.py` on recorded drives):
@@ -165,7 +202,41 @@ Its source is the diff-drive controller's twist, averaged over 10
 updates (0.1 s).
 
 **Change** (`5a995e3`). `velocity_rolling_window_size: 1` for the
-Bumperbot/Labbot diff-drive controller. Result pending (round 49).
+Bumperbot/Labbot diff-drive controller.
+
+**Measured** (round 49, `cdd1e09`):
+- The same slam drive ends **6.4 cm RMSE** (max 11.5 cm, final 0.8 cm)
+  against 10.2-10.5 cm
+  ([window1](slam-gazebo-bumperbot/gazebo_bumperbot_window1.json)).
+  The cars' 1-2.5 cm is not reached.
+- The nav_obstacle mission still passes (seed 1: goal A 0.127 m, goal B
+  0.040 m from truth; [bumperbot-gazebo/](bumperbot-gazebo/)).
+
+## Isaac camera noise (R7.2)
+
+**Finding.** Isaac's colour image is per-pixel noise on every surface:
+temporal noise 32 grey levels between still frames and an edge
+correlation with depth of 0.16 (Gazebo: 0.0 and 0.46). Isaac Sim 6.0's
+SimulationApp defaults to RealTimePathTracing with DLSS anti-aliasing.
+
+**Tested** (`scripts/r7_2_image_quality.py`,
+[quality_round49.json](isaac-camera/quality_round49.json),
+[quality_round49bd.json](isaac-camera/quality_round49bd.json); still
+frames in small_house):
+
+| Renderer setting | Temporal noise | Edge correlation | ORB repeat |
+|---|---|---|---|
+| Default, 8 render subframes, carb RTX settings (round 49) | 30.8-32.2 | 0.13-0.16 | 0.23-0.26 |
+| Anti-aliasing off / TAA / FXAA (`isaac_app_settings`) | 32.0 | 0.16 | 0.23 |
+| RaytracedLighting, with and without anti-aliasing | 32.0-32.1 | 0.16 | 0.22-0.23 |
+| PathTracing, 64 spp | Kit crashed before the first frame | | |
+| MinimalRendering, textured diffuse | **0.001** | 0.09 | **1.00** |
+
+[Frames](isaac-camera/aa0_rtl_min2_frames.jpg) (anti-aliasing off,
+RaytracedLighting, MinimalRendering): the first two are the same speckle.
+MinimalRendering is deterministic, but it draws only textured surfaces
+lit, so untextured walls are black and edges hardly follow depth.
+None of these is a fix, and the default is unchanged.
 
 ## Pending
 
