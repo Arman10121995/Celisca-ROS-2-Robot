@@ -270,7 +270,12 @@ code delivery, not a passed mission or universal support.
   slalom, mapping, localization and navigation qualification. Retain each
   drive model's turning constraints and independent body/contact evidence.
   The obstacle mission passes in 10 of 12 car/backend cells
-  ([evidence](evidence/r55-car-missions-2026-10-13/README.md)).
+  ([evidence](evidence/r55-car-missions-2026-10-13/README.md)), and 35 of
+  36 over seeds 1-3 after the 2026-10-16 tolerance and inflation fixes. The
+  car tree now retries three times; the three weakest cells then pass
+  ([evidence](evidence/open-items-2026-10-16/README.md)). The cone
+  slalom / parking course with footprint, curvature and heading checks
+  is implemented (`scripts/sim_car_course.sh`); its runs are pending.
 - [ ] **R5.6/P5/P6:** Repeat current 4WS Ackermann, in-phase/crab and pivot,
   plus mecanum, across all four backends and required maps/modes. Include
   strict final position/heading, measured contacts, repeated obstacle routes,
@@ -309,6 +314,11 @@ code delivery, not a passed mission or universal support.
   Over three goal seeds: Go2 3/3 in MuJoCo and Gazebo (forward-arc
   navigation) and 2/3 in Isaac, A1 3/3 in both, G1 3/3 in both (Isaac
   after the wider inflation of 2026-10-16), B2 2/3 in MuJoCo. Other maps, terrain and B2 in Isaac remain.
+  2026-10-16: G1 passes 3/3 in Isaac at a 0.12 m goal (0.015-0.141 m
+  from truth); B2 walks in Isaac with a DC-motor actuator on the friction-1
+  floor (0.29 m/s, overshoot gone); Go2's Isaac seed-3 abort beside the
+  block led to a 0.7 m inflation, rerun pending
+  ([evidence](evidence/open-items-2026-10-16/README.md)).
 - [ ] **R5.3/P7:** Resolve BHL held-turn/low-speed stalls and qualify robust
   balance/walk/turn. Audit and adapt model-specific policies for the remaining
   humanoids/quadrupeds, including joint/action/observation contracts and live
@@ -382,7 +392,11 @@ code delivery, not a passed mission or universal support.
   (2026-10-15): depth images to clouds, feature-based visual odometry
   (2.9% drift in Gazebo's textured house; it fails without texture) and
   chessboard calibration (Gazebo only). Numerical kernels or generated
-  scores do not count.
+  scores do not count. 2026-10-16: MuJoCo, PyBullet and Isaac draw the
+  worlds' textured visuals, MuJoCo's small_house mesh-cache scale bug and
+  the MuJoCo/PyBullet floor lift (renderer optical centres) are fixed, and
+  a calibration room brings calibration to every simulator (runs pending)
+  ([evidence](evidence/open-items-2026-10-16/README.md)).
 - [ ] **R8.1/R8.2/R8.3:** Complete the backend mission matrix and real isolated
   concurrent experiments with resource limits, cleanup and repeatable results.
   First campaign (2026-10-15): MuJoCo and PyBullet Bumperbot Nav2 jobs pass

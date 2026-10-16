@@ -1,5 +1,22 @@
 # Current Robot Lab status
 
+October 16: **the open items were worked through**, with each cause found
+before the fix ([evidence](evidence/open-items-2026-10-16/README.md)).
+- MPPI with an RPP arrival assist reaches 15/15 goals (7/15 before).
+- The MuJoCo/PyBullet floor lift was the renderers' optical centre
+  (MuJoCo's multisampled depth, TinyRenderer's axis); it now reads 0 mm.
+- MuJoCo's small_house was 100x too large through a stale mesh cache; it
+  now matches its map and draws Gazebo's textures, as PyBullet and Isaac
+  do.
+- B2 walks in Isaac with a DC-motor actuator on the training floor
+  (0.68 m/s overshoot before).
+- G1 passes 3/3 in Isaac at a 0.12 m goal (0.256 m before).
+- The cars retry their approach; the course, calibration room, publisher
+  loss and clean-host Gazebo/Isaac steps are implemented and being
+  measured.
+- Another agent's uncommitted MOLAR HRI work stays uncommitted in the
+  tree.
+
 October 15 AUV continuation: **native Tethys propeller/fins, explicit trim
 and experimental Marine cruise guidance** are installed. One actual GUI reef
 run reaches 1.68886 m for a 1.70 m target and 1.70029 m during the following
@@ -138,9 +155,22 @@ October 13: implemented on master, experimental.
     flat-shaded worlds, on MuJoCo's untextured renders and on Isaac's
     noisy RGB
     ([evidence](evidence/r72-perception-benchmark-2026-10-13/feature-odometry/README.md)).
+    Since 2026-10-16 MuJoCo, PyBullet and Isaac draw the worlds' textured
+    Collada visuals. MuJoCo's small_house scores like Gazebo's (edge
+    correlation 0.47 against 0.46, grey contrast 60 against 54, 18
+    before). The rerun drives and the Isaac noise fix are being measured
+    ([evidence](evidence/open-items-2026-10-16/README.md)).
+  - The remaining MuJoCo/PyBullet floor lift (1.5-2 mm per metre) was
+    the renderers' own optical centre. MuJoCo read depth from one sample
+    of a 4x multisampled buffer, 3/8 px off; PyBullet's TinyRenderer has
+    its axis at (w/2, h/2 - 1). Depth now renders single-sample and
+    PyBullet's camera info says (160, 119); a controlled floor reads 0 mm.
   - `camera_calibration` calibrates from chessboard views; a Gazebo board
     run gives the principal point within 0.13 px and fx 0.7% short
     ([evidence](evidence/r72-perception-benchmark-2026-10-13/calibration/README.md)).
+    A calibration room with 14 fixed boards
+    (`scripts/r7_2_calibration_room_check.sh`) extends this to MuJoCo,
+    PyBullet and Isaac; its runs are pending.
   - Perception: KD-tree clustering, adaptive scan breakpoints and a refined
     RANSAC. RANSAC finds all of a 2° floor where a height threshold finds
     43%. On a live Gazebo RGB-D stream the cloud nodes turned out to
@@ -170,9 +200,14 @@ October 13: implemented on master, experimental.
   and slam/nav modes select each robot's policy. Over three goal seeds
   (2026-10-15):
   - A1 passes 3/3 in MuJoCo and Isaac; G1 3/3 in both, Isaac after its
-    inflation was widened (2026-10-16; 2/3 before).
-  - Go2 passes 3/3 in MuJoCo and **3/3 in Gazebo**, and 2/3 in Isaac.
-  - B2 passes 2/3 in MuJoCo; the miss is 4 mm over the 0.30 m test.
+    inflation was widened (2026-10-16; 2/3 before). With a 0.12 m goal
+    the G1 ends 0.015-0.171 m from truth in both (0.256 m before), inside
+    the matrix's 0.25 m screen.
+  - Go2 passes 3/3 in MuJoCo and **3/3 in Gazebo**, and 2/3 in Isaac:
+    seed 3 stopped on "collision ahead" beside the block. Go2's planner
+    inflation is now 0.7 m (`26b961e`); its rerun in all three is pending.
+  - B2 passes 2/3 in MuJoCo; the miss is 4 mm over the 0.30 m test. In
+    Isaac B2 now walks (below); its first Isaac missions are running.
 
   Robots that cannot turn on the spot there (Go2 in MuJoCo/Gazebo) or are
   too long to (B2) use the new forward_arc navigation: forward-only
@@ -196,7 +231,13 @@ October 13: implemented on master, experimental.
     slip leaves its odometry 1.02 m off.
   - Bumperbot is the exception in Gazebo: slam_toolbox ends 9.6 cm from
     truth, while the EKF odometry it is given holds 2.7 cm. Its heading
-    slips about 0.9° at the first 90° turn; the cause is open.
+    slips about 0.9° at the first 90° turn.
+    - The EKF is not the cause: wheel odometry gives 10.2 cm, the EKF
+      10.5 cm (2026-10-16).
+    - Bumperbot's odometry TF trails truth by 20 ms (the cars: 0-5 ms).
+      Its diff-drive controller averaged the twist over 0.1 s; it now
+      reports the latest sample (`5a995e3`).
+    - The rerun is pending.
   - Gazebo Go2 now starts standing, and with its physics step capped at
     2 ms (the worlds' 10 ms had run its 500 Hz PD loop at 100 Hz) it walks
     the whole mapping loop and passes the mission
@@ -206,7 +247,9 @@ October 13: implemented on master, experimental.
   (were 8 and 9) and Voronoi 15/15. MPPI capped at 0.3 m/s still reaches
   7/15: it gets within 0.05-0.19 m but does not settle into Bumperbot's
   tight arrival window. Stronger goal critics made it worse (6/15) and were
-  reverted.
+  reverted. With an RPP `Arrival` controller that finishes a failed MPPI
+  approach on the same path (`99e2e78`), MPPI reaches **15/15**,
+  0.028-0.148 m from truth (2026-10-16; MPPI plus the assist).
 - **Missions.**
   - Workflow/reset screens pass 8/8 for Labbot and Bumperbot in all four
     backends ([evidence](evidence/r61-workflow-reset-2026-10-13/README.md)).
@@ -238,7 +281,12 @@ October 13: implemented on master, experimental.
       runs the body touched the block beside the route and the replan
       aborted. A 0.6 m inflation fixed those (`32c9cf1`).
     - One MuJoCo anti-Ackermann goal stalled 0.15 m out, unable to settle
-      inside 0.1 m without turning on the spot.
+      inside 0.1 m without turning on the spot. The car tree now backs up
+      and retries three times (`51c7543`): that cell and the two other
+      weakest pass (0.062-0.139 m, 2026-10-16).
+  - A car course (cone slalom and nose-in parking bay, with footprint
+    clearance, curvature and final heading checks; `scripts/sim_car_course.sh`)
+    is implemented; its runs are pending.
 - **Two simulations at once (R8.3, 2026-10-15).** The concurrent
   coordinator's Nav2 workload had never run; three bugs stopped it and are
   fixed.
@@ -292,8 +340,11 @@ October 12 (later): measured on master.
   [Evidence](evidence/p7-rl-sar-mujoco-walk-2026-10-12/README.md),
   [tutorial](../tutorials/legged-policies.md).
   - MuJoCo: Go2, A1, B2, Go2W and the Unitree G1 29-DoF humanoid.
-  - Isaac (PhysX drives at 200 Hz): Go2, A1, Go2W and G1. B2 overshoots
-    and drifts there.
+  - Isaac (PhysX drives at 200 Hz): Go2, A1, Go2W and G1. B2 overshot
+    there (0.68 m/s for 0.4) and drifted after the stop. With Isaac Lab's
+    DC-motor actuator, which its gains and limits match, and the
+    friction-1 training floor, it walks 0.29 m/s and stops dead, as in
+    MuJoCo (2026-10-16, now its Isaac default).
   - Gazebo (effort trajectory controller with the policy gains): Go2.
   - G1 is the first humanoid walking here from a downloaded policy: a
     recurrent LSTM actor, exported with its state as explicit inputs.
@@ -439,8 +490,9 @@ retains those exact complete logs separately from the final runtime checks. Loca
 separate source stages and skip/failure records. A clean container now
 builds the workspace, passes the fast tier and passes a MuJoCo Bumperbot
 mission from rosdep and pinned pip dependencies alone
-([R9.1 evidence](evidence/r91-clean-host-2026-10-15/README.md)), and two
-simulations have run side by side with budgets, cancel and cleanup
+([R9.1 evidence](evidence/r91-clean-host-2026-10-15/README.md)); a Gazebo
+and an Isaac mission through the NVIDIA runtime are added and pending.
+Two simulations have run side by side with budgets, cancel and cleanup
 ([R8.3 evidence](evidence/r83-concurrency-2026-10-15/README.md)). Other
 hardware, physical joystick/hardware checks and broader concurrent
 qualification remain open.

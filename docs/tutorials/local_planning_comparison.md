@@ -105,6 +105,19 @@ second's):
   ([evidence](../status/evidence/r77-local-planner-comparison-2026-10-12/README.md));
   the change was reverted.
 
+  **Arrival assist (2026-10-16).** MPPI on a differential base now runs
+  with an `Arrival` controller beside it: Regulated Pure Pursuit with the
+  robot's own speeds. When an MPPI approach ends at the progress checker,
+  the tree finishes it with `Arrival` on the same path.
+  - On the same 15 goals it reaches **15 of 15**, 0.028-0.148 m from truth,
+    in a median 33 s.
+  - Nine approaches ended at the progress checker and were finished by
+    the assist; three goals also needed the spin/back-up recovery
+    ([evidence](../status/evidence/open-items-2026-10-16/README.md)).
+  - That is MPPI plus an assist, not MPPI alone, so the comparison table
+    above keeps MPPI's own 7 of 15. `arrival_controller:=false` runs MPPI
+    alone.
+
 **Path tracking.** Cross-track error from Gazebo truth to the latest
 global plan (`scripts/path_tracking_error.py` on the trial bags;
 [table](../status/evidence/r77-local-planner-comparison-2026-10-12/tracking.md)):
