@@ -257,3 +257,17 @@ def test_gravity_feedforward_holds_each_slide_subtree(tmp_path):
     assert pitched['conveyor_lift_joint'] == pytest.approx(14.2*9.81*math.cos(.2))
     assert gravity_feedforward(loads, (0., 0., 0., 1.), dict(efforts, conveyor_lift_joint=50.))[
         'conveyor_lift_joint'] == 50.
+
+
+def test_activity_follows_measured_motion_not_a_biased_velocity_report(controller):
+    position, velocity = measurement(controller)
+    velocity['conveyor_lift_joint'] = -.044   # Isaac's report for the resting lift
+    velocity['transfer_roller_joint'] = .1
+    for _ in range(40):
+        controller.step(position, velocity, .01, now=1.)
+    assert not controller.active and not controller.base_inhibited
+    position = dict(position)
+    for _ in range(40):
+        position['conveyor_lift_joint'] += .0003   # an actual 0.03 m/s
+        controller.step(position, velocity, .01, now=1.)
+    assert controller.active and controller.base_inhibited

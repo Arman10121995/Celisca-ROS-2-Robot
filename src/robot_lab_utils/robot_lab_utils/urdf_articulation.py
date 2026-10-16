@@ -12,6 +12,9 @@ import time
 import uuid
 import xml.etree.ElementTree as ET
 
+# Seconds of measured positions behind each joint's activity rate.
+RATE_WINDOW = .25
+
 
 class URDFArticulation:
     """Measured-position hold, bounded targets and one explicit coupling tree."""
@@ -94,6 +97,9 @@ class URDFArticulation:
             self.holding = True
             self.fault, self.status = '', 'waiting for measured articulation'
             self.base_inhibited = True
+            # Simulated time and recent measured positions, for motion rates
+            # taken from position change (see _rate).
+            self.clock, self.history = 0., {}
 
     def heartbeat(self, now=None):
         with self.lock:
@@ -161,6 +167,12 @@ class URDFArticulation:
             if (self.fault or base_moving or now-self.heartbeat_at > .5) and not self.holding:
                 self.stop('fault/ownership/watchdog hold' if self.fault or base_moving else 'heartbeat absent; holding measured articulation')
             dt = max(0., min(.05, float(dt))) if math.isfinite(dt) else 0.
+            self.clock += dt
+            for name, value in self.measured.items():
+                samples = self.history.setdefault(name, [])
+                samples.append((self.clock, value))
+                while len(samples) > 2 and samples[1][0] <= self.clock-RATE_WINDOW:
+                    samples.pop(0)
             result = {'position': {}, 'velocity': {}}
             for name in self.masters:
                 spec = self.joints[name]
@@ -186,12 +198,27 @@ class URDFArticulation:
                     delta = max(-spec['max_velocity']*dt, min(spec['max_velocity']*dt, reference-previous))
                     self.references[name] = max(spec['lower'], min(spec['upper'], previous+delta))
                 result['position'][name] = self.references[name]
-            self.active = any((not self.holding and abs(self.targets[name]-self.measured[name]) > .002) or abs(self.velocities[name]) > .01 if spec['mode'] == 'position' else abs(self.references[name]) > .001 or abs(self.velocities[name]) > .05 for name, spec in self.joints.items())
+            self.active = any((not self.holding and abs(self.targets[name]-self.measured[name]) > .002) or abs(self._rate(name)) > .01 if spec['mode'] == 'position' else abs(self.references[name]) > .001 or abs(self._rate(name)) > .05 for name, spec in self.joints.items())
             coupling_errors = [self.measured[name]-(self.measured[c['joint']]*c['multiplier']+c['offset']) for name,c in self.couplings.items()]
             self.base_inhibited = bool(self.fault or self.active
                                        or any(self.measured.get(name, 0.) > .005 for name in ('telescope_stage1_joint', 'telescope_stage2_joint'))
                                        or any(abs(error) > .01+1e-9 for error in coupling_errors))
             return result
+
+    def _rate(self, name):
+        """Measured motion: position change over the last RATE_WINDOW s.
+
+        Reported joint velocities are not used for activity: Isaac reported
+        the resting MOLAR lift at -0.044 m/s (std 0.018) with its position
+        unchanged within 1.5 mm, and its wheels and roller jittered at
+        0.3 and 0.05 rad/s, which held the base inhibited (2026-10-16).
+        Until RATE_WINDOW/2 of samples exist the reported velocity is used.
+        """
+        samples = self.history.get(name) or []
+        if len(samples) < 2 or samples[-1][0]-samples[0][0] < RATE_WINDOW/2:
+            return self.velocities[name]
+        (start, first), (end, last) = samples[0], samples[-1]
+        return (last-first)/(end-start)
 
     def state(self):
         with self.lock:
