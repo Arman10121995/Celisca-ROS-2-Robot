@@ -443,15 +443,60 @@ class PyBulletSpawner(Node):
         except Exception as exc:
             self.get_logger().warn(f"SDF world parse error: {exc}")
             return
+        # Models drawn from their textured Collada visuals keep their
+        # collision shapes for contacts and rays, without drawing them
+        # (R7.2, 2026-10-16; the cameras saw one grey before).
+        visuals = []
+        try:
+            visuals, _ = extract_static_shapes(
+                world_path, uri_resolver(model_dirs, get_package_share_directory),
+                prefer_visual=True)
+        except Exception as exc:
+            self.get_logger().warn(f"SDF visual parse error: {exc}")
+        visuals = [shape for shape in visuals if shape.get("element") == "visual"
+                   and shape["type"] == "mesh" and shape["mesh"].lower().endswith(".dae")]
+        drawn = self._create_textured_visuals(visuals, client)
         created = 0
         for shape in shapes:
-            if self._create_shape(shape, client=client):
+            if self._create_shape(shape, client=client, hidden=shape.get("model") in drawn):
                 created += 1
             else:
                 skipped.append("%s shape not created" % shape.get("type"))
         self.get_logger().info(
-            "SDF world '%s': %d static shape(s) created, %d skipped"
-            % (os.path.basename(world_path), created, len(skipped)))
+            "SDF world '%s': %d static shape(s) created, %d skipped, %d model(s) "
+            "drawn from textured visuals"
+            % (os.path.basename(world_path), created, len(skipped), len(drawn)))
+
+    def _create_textured_visuals(self, visuals, client=0):
+        """Visual-only bodies for textured Collada visuals; returns the models drawn."""
+        try:
+            from robot_lab_utils.textured_mesh import stage_textured_parts
+        except ImportError:
+            return set()
+        drawn, textures = set(), {}
+        for shape in visuals:
+            try:
+                parts = stage_textured_parts(shape["mesh"], shape.get("scale") or (1.0, 1.0, 1.0))
+            except Exception as exc:
+                self.get_logger().warn("Textured mesh %s not staged: %s" % (shape["mesh"], exc))
+                continue
+            for part in parts:
+                visual = p.createVisualShape(
+                    p.GEOM_MESH, fileName=part["obj"], meshScale=[1.0, 1.0, 1.0],
+                    rgbaColor=part["rgba"], physicsClientId=client)
+                body = p.createMultiBody(
+                    baseMass=0, baseCollisionShapeIndex=-1, baseVisualShapeIndex=visual,
+                    basePosition=[float(v) for v in shape.get("position", [0, 0, 0])],
+                    baseOrientation=_xyzw(shape.get("orientation", [1, 0, 0, 0])),
+                    physicsClientId=client)
+                if part["texture"]:
+                    if part["texture"] not in textures:
+                        textures[part["texture"]] = p.loadTexture(part["texture"], physicsClientId=client)
+                    p.changeVisualShape(body, -1, textureUniqueId=textures[part["texture"]],
+                                        physicsClientId=client)
+            if parts:
+                drawn.add(shape["model"])
+        return drawn
 
     def _stage_mesh(self, path):
         """Return a loadable mesh path, converted and face-capped if needed.
@@ -532,8 +577,11 @@ class PyBulletSpawner(Node):
             % (os.path.basename(shape["heightmap"]), len(faces)))
         return target
 
-    def _create_shape(self, shape, client: int = 0):
-        """Create one static PyBullet body from a shared shape record."""
+    def _create_shape(self, shape, client: int = 0, hidden=False):
+        """Create one static PyBullet body from a shared shape record.
+
+        ``hidden``: collide and reflect rays, but draw nothing (the model is
+        drawn from its textured visuals)."""
         kind = shape.get("type")
         size = [float(v) for v in (shape.get("size") or [])]
         colour = [0.55, 0.57, 0.6, 1.0]
@@ -597,7 +645,7 @@ class PyBulletSpawner(Node):
         p.createMultiBody(
             baseMass=0,
             baseCollisionShapeIndex=collision,
-            baseVisualShapeIndex=visual,
+            baseVisualShapeIndex=-1 if hidden else visual,
             basePosition=[float(v) for v in shape.get("position", [0, 0, 0])],
             baseOrientation=_xyzw(shape.get("orientation", [1, 0, 0, 0])),
             physicsClientId=client,

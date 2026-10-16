@@ -758,10 +758,15 @@ class IsaacSpawner(Node):
                 get_package_share_directory("robot_lab_models"), "models"))
         except Exception:
             pass
-        shapes, skipped = extract_static_shapes(
-            world_path, uri_resolver(model_dirs, get_package_share_directory))
-        loadable = []
+        resolve = uri_resolver(model_dirs, get_package_share_directory)
+        shapes, skipped = extract_static_shapes(world_path, resolve)
+        # Textured Collada visuals (R7.2, 2026-10-16): a model with them is
+        # drawn from its staged OBJ parts; its collision shapes stay for
+        # contacts and rays but are not drawn.
+        loadable, drawn = self._textured_visual_records(world_path, resolve)
         for shape in shapes:
+            if shape.get("model") in drawn:
+                shape = dict(shape, hidden=True)
             if shape["type"] == "mesh":
                 # Map meshes are simplified to the world facet budget: the
                 # USD triangle mesh and its PhysX collision cook are what
@@ -794,6 +799,34 @@ class IsaacSpawner(Node):
             % (os.path.basename(world_path), len(loadable), len(skipped),
                (" (%s)" % "; ".join(skipped[:3])) if skipped else ""))
         return loadable
+
+    def _textured_visual_records(self, world_path, resolve):
+        """(records, models): one ``textured_mesh`` record per staged part of
+        each Collada visual, and the models they draw."""
+        try:
+            from robot_lab_utils.sdf_world import extract_static_shapes
+            from robot_lab_utils.textured_mesh import stage_textured_parts
+            visuals, _ = extract_static_shapes(world_path, resolve, prefer_visual=True)
+        except Exception as exc:
+            self.get_logger().warn("Textured visuals unavailable: %s" % exc)
+            return [], set()
+        records, drawn = [], set()
+        for shape in visuals:
+            if shape.get("element") != "visual" or shape["type"] != "mesh" \
+                    or not shape["mesh"].lower().endswith(".dae"):
+                continue
+            try:
+                parts = stage_textured_parts(shape["mesh"], shape.get("scale") or (1.0, 1.0, 1.0))
+            except Exception as exc:
+                self.get_logger().warn("Textured mesh %s not staged: %s" % (shape["mesh"], exc))
+                continue
+            for part in parts:
+                records.append({"type": "textured_mesh", "model": shape["model"],
+                                "obj": part["obj"], "texture": part["texture"], "rgba": part["rgba"],
+                                "position": shape["position"], "orientation": shape["orientation"]})
+            if parts:
+                drawn.add(shape["model"])
+        return records, drawn
 
     def _stage_heightfield(self, shape):
         """Heightmap -> cached STL, the only mesh format the runtime reads."""

@@ -879,6 +879,59 @@ def _apply_ground_material(stage, material):
     return bound
 
 
+def _read_textured_obj(path):
+    """(points, uv) of a staged textured part (robot_lab_utils.textured_mesh:
+    unindexed corners, ``v``/``vt`` lines, faces ``f i/i j/j k/k``)."""
+    points, uv = [], []
+    with open(path) as stream:
+        for line in stream:
+            if line.startswith("v "):
+                points.append([float(v) for v in line.split()[1:4]])
+            elif line.startswith("vt "):
+                uv.append([float(v) for v in line.split()[1:3]])
+    return points, uv
+
+
+def _textured_mesh_prim(stage, path, shape):
+    """A drawn-only USD mesh with a UsdPreviewSurface (texture or colour)."""
+    from pxr import Gf, Sdf, UsdGeom, UsdShade
+    points, uv = _read_textured_obj(shape.get("obj", ""))
+    if len(points) < 3:
+        return None
+    mesh = UsdGeom.Mesh.Define(stage, path)
+    mesh.CreateDoubleSidedAttr(True)
+    mesh.CreatePointsAttr([Gf.Vec3f(*p) for p in points])
+    mesh.CreateFaceVertexCountsAttr([3] * (len(points) // 3))
+    mesh.CreateFaceVertexIndicesAttr(list(range(len(points) // 3 * 3)))
+    rgba = (list(shape.get("rgba") or [0.8, 0.8, 0.8, 1.0]) + [1.0])[:4]
+    material = UsdShade.Material.Define(stage, path + "_mat")
+    surface = UsdShade.Shader.Define(stage, path + "_mat/surface")
+    surface.CreateIdAttr("UsdPreviewSurface")
+    surface.CreateInput("roughness", Sdf.ValueTypeNames.Float).Set(0.8)
+    texture = shape.get("texture")
+    if texture and len(uv) == len(points):
+        st = UsdGeom.PrimvarsAPI(mesh).CreatePrimvar(
+            "st", Sdf.ValueTypeNames.TexCoord2fArray, UsdGeom.Tokens.vertex)
+        st.Set([Gf.Vec2f(*t) for t in uv])
+        reader = UsdShade.Shader.Define(stage, path + "_mat/st")
+        reader.CreateIdAttr("UsdPrimvarReader_float2")
+        reader.CreateInput("varname", Sdf.ValueTypeNames.Token).Set("st")
+        image = UsdShade.Shader.Define(stage, path + "_mat/image")
+        image.CreateIdAttr("UsdUVTexture")
+        image.CreateInput("file", Sdf.ValueTypeNames.Asset).Set(texture)
+        image.CreateInput("wrapS", Sdf.ValueTypeNames.Token).Set("repeat")
+        image.CreateInput("wrapT", Sdf.ValueTypeNames.Token).Set("repeat")
+        image.CreateInput("st", Sdf.ValueTypeNames.Float2).ConnectToSource(
+            reader.ConnectableAPI(), "result")
+        surface.CreateInput("diffuseColor", Sdf.ValueTypeNames.Color3f).ConnectToSource(
+            image.ConnectableAPI(), "rgb")
+    else:
+        surface.CreateInput("diffuseColor", Sdf.ValueTypeNames.Color3f).Set(Gf.Vec3f(*rgba[:3]))
+    material.CreateSurfaceOutput().ConnectToSource(surface.ConnectableAPI(), "surface")
+    UsdShade.MaterialBindingAPI.Apply(mesh.GetPrim()).Bind(material)
+    return mesh
+
+
 def _add_world_shapes(stage, shapes):
     """Create static collision prims from the spawner's world shapes.
 
@@ -916,6 +969,10 @@ def _add_world_shapes(stage, shapes):
             prim.CreateRadiusAttr(radius)
             prim.CreateHeightAttr(height)
             prim.CreateAxisAttr("Z")
+        elif kind == "textured_mesh":
+            prim = _textured_mesh_prim(stage, path, shape)
+            if prim is None:
+                continue
         elif kind == "mesh":
             verts, tris = _load_stl(shape.get("mesh", ""))
             if not verts:
@@ -937,6 +994,12 @@ def _add_world_shapes(stage, shapes):
         prim.AddTranslateOp().Set(Gf.Vec3d(*position))
         prim.AddOrientOp().Set(Gf.Quatf(w, Gf.Vec3f(x, y, z)))
         prim.AddScaleOp().Set(scale)
+        if kind == "textured_mesh":
+            counts[kind] = counts.get(kind, 0) + 1
+            continue   # drawn only
+        if shape.get("hidden"):
+            # Collides and reflects the lidar's rays; drawn by its visuals.
+            UsdGeom.Imageable(prim.GetPrim()).MakeInvisible()
         UsdPhysics.CollisionAPI.Apply(prim.GetPrim())
         if kind == "mesh":
             UsdPhysics.MeshCollisionAPI.Apply(prim.GetPrim()).CreateApproximationAttr("none")
