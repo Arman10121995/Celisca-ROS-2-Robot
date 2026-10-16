@@ -25,6 +25,7 @@ import os
 import struct
 import sys
 import threading
+import time
 
 # Upper bound on SimulationApp.close() before the runtime exits hard.
 _CLOSE_TIMEOUT_S = 5.0
