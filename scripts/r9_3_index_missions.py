@@ -9,7 +9,10 @@ every group the script writes a source-hash manifest beside the reports
 stores it at that commit) and appends one record per report, in the
 batch's order, so the latest round controls a cell in the matrix.
 
-Only sim_nav_mission reports (a 'steps' object) are indexed.  Report
+Only sim_nav_mission reports (a 'steps' object) are indexed, unless the
+group says ``report_kind: drive_screen`` (sim_drive_check.py reports, a
+'phases' list) with an explicit ``identity: {robot_id, environment_id,
+simulator, task_type}``.  Report
 identity comes from the file name: <simulator>_<robot>[_seedN]_<map>.json,
 or, for the 4WS rounds, <simulator>_<pattern>[_seedN]_<map>.json (pattern mecanum
 means the mecanum car).  Records already indexed (same report path) are
@@ -82,7 +85,8 @@ def main():
         manifest = os.path.join(folder, 'source-hashes-%s.json' % group['hash_revision'])
         files = sorted(set(batch['source_files'] + group.get('source_files', [])))
         content = {'revision': group['hash_revision'],
-                   'derived': 'sha256 of each file as git stores it at this revision, computed 2026-10-15 after the '
+                   'derived': 'sha256 of each file as git stores it at this revision, computed %s after the '
+                              % batch.get('date', 'the batch date') +
                               'run; uncommitted working-tree changes at run time are not captured',
                    'files': {f: git_sha256(group['hash_revision'], f) for f in files}}
         text = json.dumps(content, indent=1) + '\n'
@@ -96,18 +100,27 @@ def main():
             if relative in known:
                 continue
             content = json.load(open(report))
-            if not (isinstance(content, dict) and isinstance(content.get('steps'), dict)):
+            kind = group.get('report_kind', 'mission_screen')
+            if kind == 'drive_screen':
+                if not (isinstance(content, dict) and isinstance(content.get('phases'), list)):
+                    continue
+                fixed = group['identity']
+                robot, environment, simulator, steering = (fixed['robot_id'], fixed['environment_id'],
+                                                           fixed['simulator'], fixed.get('steering_mode', ''))
+            elif not (isinstance(content, dict) and isinstance(content.get('steps'), dict)):
                 continue   # leg-odometry traces and other side files are not missions
-            robot, environment, simulator, steering = identity(group.get('name_override', report), robot_ids,
-                                                               group.get('four_wheel', False))
+            else:
+                robot, environment, simulator, steering = identity(group.get('name_override', report), robot_ids,
+                                                                   group.get('four_wheel', False))
             new_records.append({
                 'robot_id': robot, 'environment_id': environment, 'simulator': simulator,
-                'task_type': 'navigation_mission', 'steering_mode': steering, 'date': group['date'],
+                'task_type': group.get('identity', {}).get('task_type', 'navigation_mission'),
+                'steering_mode': steering, 'date': group['date'],
                 'revision': group['revision'], 'report': relative,
                 'sha256': hashlib.sha256(open(report, 'rb').read()).hexdigest(),
                 'source_hashes': os.path.relpath(manifest, ROOT),
                 'source_hashes_sha256': hashlib.sha256(text.encode()).hexdigest(),
-                'report_kind': 'mission_screen', 'scope': group['scope'],
+                'report_kind': kind, 'scope': group['scope'],
                 'limitations': list(group['limitations'])})
             known.add(relative)
             added += 1
