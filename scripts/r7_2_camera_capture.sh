@@ -17,7 +17,14 @@ ros2 launch robot_lab_bringup simulated_robot.launch.py mode:=loc \
   start_rviz:=false "$@" > "$BAG.launch.log" 2>&1 &
 LAUNCH=$!
 # Wait for the first colour image (Isaac takes a minute or two to start).
-timeout "${READY_S:-400}" ros2 topic echo --once /oakd/rgb/image_raw --field header > /dev/null 2>&1
+# ros2 topic echo returns at once while the topic does not exist yet, so
+# retry until an image arrives (round 47b's Isaac captures recorded only
+# the first 37 s because of that).
+deadline=$((SECONDS + ${READY_S:-400}))
+until timeout 15 ros2 topic echo --once /oakd/rgb/image_raw > /dev/null 2>&1; do
+  [ $SECONDS -ge $deadline ] && break
+  sleep 3
+done
 sleep "${WARMUP:-5}"
 ros2 bag record -o "$BAG" /oakd/rgb/image_raw /oakd/depth/image_raw /oakd/rgb/camera_info \
   /odom/ground_truth /tf_static > "$BAG.record.log" 2>&1 &
