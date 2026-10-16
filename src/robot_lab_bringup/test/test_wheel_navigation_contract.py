@@ -19,6 +19,16 @@ def test_rotation_window_does_not_stop_translation_before_position_goal(robot):
     assert goal['yaw_goal_tolerance'] < 0.1
 
 
+@pytest.mark.parametrize('robot', ['ackermann_car', 'rear_steer_car', 'anti_ackermann_car'])
+def test_car_goal_checker_does_not_stop_at_the_default_circle(robot):
+    # The stateful checker ends a goal when the estimate first enters the
+    # circle; at the 0.25 m default the cars finished 0.26-0.36 m from truth.
+    src = Path(__file__).resolve().parents[2]
+    params = yaml.safe_load((src/'robot_lab_navigation/config/robots'/
+                             (robot+'.yaml')).read_text())['controller_server']['ros__parameters']
+    assert 0 < params['general_goal_checker']['xy_goal_tolerance'] <= 0.1
+
+
 @pytest.mark.parametrize('key,value', [
     ('outcome', 'aborted'), ('final_error_truth_m', 0.25),
     ('final_yaw_error_truth_deg', -14.0), ('truth_age_wall_s', 3.0),
