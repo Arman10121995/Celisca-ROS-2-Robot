@@ -299,6 +299,7 @@ class PyBulletSpawner(Node):
         # The robot's whole drive block as JSON (drive_kinematics); empty
         # for the differential-drive parameters above.
         self.declare_parameter("drive_config", "")
+        self.declare_parameter("articulation_config", "")
         self.get_logger().info("Parameters declared")
         self.declare_parameter("gui", True)
         self.declare_parameter("physics_rate", 240.0)
@@ -336,6 +337,7 @@ class PyBulletSpawner(Node):
         self._base_inertial_offset = None
         self._joint_idx = {}
         self._joint_names = []
+        self._articulation = None
         self._lw = -1
         self._rw = -1
         self._twist = Twist()
@@ -935,6 +937,13 @@ class PyBulletSpawner(Node):
         # has no drive joints configured (the map-free display case);
         # 'true' always holds; 'false' keeps full physics.
         hold_mode = str(self.get_parameter("hold_position").value or "auto").lower()
+        articulation_config = self.get_parameter('articulation_config').value
+        if articulation_config:
+            from robot_lab_utils.urdf_articulation import ArticulationROS
+            self._articulation = ArticulationROS(self, articulation_config, urdf, str(model))
+            if set(self._articulation.contract.joints) & set(self._drive.wheel_joints):
+                raise ValueError('Articulation cannot own drive wheels')
+            hold_mode = 'false'  # configured servos hold only lift/slides; casters remain passive
         has_drive = (self._lw >= 0 or self._rw >= 0
                      or any(j in self._joint_idx for j in self._drive.wheel_joints))
         self._hold_joints = (hold_mode == "true") or (hold_mode == "auto" and not has_drive)
@@ -1035,6 +1044,26 @@ class PyBulletSpawner(Node):
             if stale:
                 t = Twist()
                 if self._drive.kind == "diff":
+                    self._drive.reset()
+            if self._articulation is not None:
+                states = {name: p.getJointState(self._robot_id, self._joint_idx[name])
+                          for name in self._articulation.contract.joints}
+                base_linear, base_angular = p.getBaseVelocity(self._robot_id)
+                articulation_targets = self._articulation.step(
+                    {name: value[0] for name, value in states.items()},
+                    {name: value[1] for name, value in states.items()}, self._dt,
+                    base_moving=math.hypot(*base_linear[:2]) > .025 or abs(base_angular[2]) > .05)
+                for kind, values in articulation_targets.items():
+                    for name, target in values.items():
+                        spec = self._articulation.contract.joints[name]
+                        q, qd = states[name][:2]
+                        effort = (spec['kp']*(target-q)-spec['kd']*qd if kind == 'position'
+                                  else spec['kd']*(target-qd))
+                        effort = max(-spec['effort'], min(spec['effort'], effort))
+                        p.setJointMotorControl2(self._robot_id, self._joint_idx[name],
+                                               p.TORQUE_CONTROL, force=effort)
+                if self._articulation.base_inhibited:
+                    t = Twist()
                     self._drive.reset()
             targets = self._drive.targets(
                 t.linear.x, t.angular.z, dt=self._dt,
@@ -1231,6 +1260,8 @@ class PyBulletSpawner(Node):
                 with self._twist_lock:
                     self._twist = Twist()
                     self._last_cmd_time = 0.0
+                if self._articulation is not None:
+                    self._articulation.reset()
                 # Keep ROS/sensor time monotonic when resetting physical state.
                 # Rewinding invalidates TF caches and estimator timer state.
                 self._reset_notifications.notify()

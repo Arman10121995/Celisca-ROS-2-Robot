@@ -75,6 +75,8 @@ def _build_pybullet_actions(context):
     # The whole drive block as JSON (a car's steering joints and limits).
     spawner_params["drive_config"] = ParameterValue(
         LaunchConfiguration("drive_config"), value_type=str)
+    spawner_params['articulation_config'] = ParameterValue(
+        LaunchConfiguration('articulation_config'), value_type=str)
     from robot_lab_utils.sensor_config import sensor_parameters
     spawner_params.update(sensor_parameters(
         LaunchConfiguration('sensor_config').perform(context),
@@ -104,6 +106,7 @@ def generate_launch_description():
         DeclareLaunchArgument("wheel_radius", default_value="0.033"),
         DeclareLaunchArgument("wheel_separation", default_value="0.17"),
         DeclareLaunchArgument("drive_config", default_value=""),
+        DeclareLaunchArgument('articulation_config', default_value=''),
         DeclareLaunchArgument('sensor_config', default_value=''),
         DeclareLaunchArgument("world_name", default_value="empty"),
         DeclareLaunchArgument("world_package", default_value="robot_lab_maps"),

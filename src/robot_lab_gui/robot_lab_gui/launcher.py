@@ -1278,7 +1278,9 @@ class SimulationLauncherGui(tk.Tk):
             ' · Controls require a compatible controller and an owned running simulation.')
         if robot != getattr(self, '_control_robot', None):
             self._control_robot = robot
-            if self._gait_selectable() and hasattr(self, 'gait_controls'):
+            if self._molar_selectable() and hasattr(self, 'molar_controls'):
+                self.control_notebook.select(self.molar_controls)
+            elif self._gait_selectable() and hasattr(self, 'gait_controls'):
                 self.control_notebook.select(self.gait_controls)
             elif self._marine_selectable() and hasattr(self, 'marine_controls'):
                 self.control_notebook.select(self.marine_controls)
@@ -1296,7 +1298,7 @@ class SimulationLauncherGui(tk.Tk):
 
     def _stop_all_motion(self):
         self._stop_drive()
-        for name in ('arm_tab', 'hand_tab', 'marine_controls', 'gait_controls'):
+        for name in ('arm_tab', 'hand_tab', 'marine_controls', 'gait_controls', 'molar_controls'):
             control = getattr(self, name, None)
             if control is not None:
                 control.stop()
@@ -2194,6 +2196,11 @@ class SimulationLauncherGui(tk.Tk):
                 and self.simulator_var.get() == 'mujoco'
                 and self.mode_var.get() == 'display'
                 and self.launch_kind_var.get() == 'simulation')
+
+    def _molar_selectable(self):
+        from .molar_controls import selectable
+        return selectable(self.robot_var.get(), self.simulator_var.get(), self.mode_var.get(),
+                          self.launch_kind_var.get(), self._robot_config())
 
     def _native_arm_planning_selectable(self):
         return self._native_articulation_selectable() and bool(self._robot_config().get('native_arm_planning'))
@@ -3358,6 +3365,8 @@ class SimulationLauncherGui(tk.Tk):
             self.drive_repeat_job = self.after(100, self._repeat_drive)
 
     def _stop_drive(self, keep_input_enabled=False):
+        if hasattr(self, 'molar_controls'):
+            self.molar_controls.stop()
         if hasattr(self, 'gait_controls'):
             self.gait_controls.stop()
         if self.drive_repeat_job is not None:
@@ -3538,7 +3547,7 @@ class SimulationLauncherGui(tk.Tk):
     # ---- Control-center APIs used by the lab tabs ----
     def show_tab(self, title):
         """Raise a workspace or a page in the Launch control column."""
-        controls = {'Drive': 'Drive & limits', 'Arm': 'Arm', 'Hand': 'Hand', 'Drone': 'Drone & limits'}
+        controls = {'Drive': 'Drive & limits', 'Arm': 'Arm', 'Hand': 'Hand', 'Drone': 'Drone & limits', 'MOLAR': 'MOLAR'}
         if title in controls:
             self.notebook.select(self.launch_tab)
             for page in self.control_notebook.tabs():
@@ -3636,6 +3645,8 @@ class SimulationLauncherGui(tk.Tk):
             self.stop_bg_process(key)
 
     def _on_close(self):
+        if hasattr(self, 'molar_controls'):
+            self.molar_controls.close()
         if hasattr(self, 'gait_controls'):
             self.gait_controls.close()
         if hasattr(self, 'marine_controls'):

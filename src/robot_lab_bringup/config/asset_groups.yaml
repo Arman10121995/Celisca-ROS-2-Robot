@@ -2,6 +2,12 @@
 # A variant is not an alias for its parent's controllers or measured missions.
 schema_version: 1
 robots:
+  - id: molar_family
+    name: MOLAR / ProBOT-L
+    preferred: molar_hri
+    members:
+      - {id: molar_hri, label: Complete MOLAR HRI assembly}
+      - {id: probot_l, label: Complete ProBOT-L carrier}
   - id: tethys_auv
     name: MBARI Tethys AUV
     members: [{id: tethys_auv, label: Complete source propeller-and-fin vehicle}]
@@ -203,12 +209,14 @@ maps:
       - {id: celisca_floor_1, label: Building shell}
       - {id: celisca_floor_1_furniture, label: With furniture}
       - {id: celisca_f1_actor, label: With actors}
+      - {id: celisca_floor_1_detailed, label: Detailed metre-scale F1 / building floor 2}
   - id: celisca_floor_2
     name: Celisca Floor 2
     members:
       - {id: celisca_floor_2, label: Building shell}
       - {id: celisca_floor_2_furniture, label: With furniture}
       - {id: celisca_f2_actor, label: With actors}
+      - {id: celisca_floor_2_detailed, label: Detailed metre-scale F2 / building floor 3}
   - id: dataset_room2
     name: Dataset Room 2
     members:

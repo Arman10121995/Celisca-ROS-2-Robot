@@ -1217,12 +1217,15 @@ def create_tabs(notebook, app):
     app.marine_controls = MarineControls(app.control_notebook, app)
     from .gait_controls import GaitControls
     app.gait_controls = GaitControls(app.control_notebook, app)
+    from .molar_controls import MolarControls
+    app.molar_controls = MolarControls(app.control_notebook, app)
     tabs = [
         app.arm_tab,
         app.hand_tab,
         app.fleet_tab,
         app.marine_controls,
         app.gait_controls,
+        app.molar_controls,
         RegistryTab(notebook, app),
         WorldsTab(notebook, app),
         AssetsTab(notebook, app),

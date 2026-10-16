@@ -1,6 +1,10 @@
 # Structural catalog tags, never a runtime/controller qualification.
 schema_version: 1
 classes:
+  - category: Mobile manipulators
+    subtype: Differential-drive conveyor
+    tags: [Lift, Coupled telescope, Passive casters, Estimated dynamics]
+    members: [molar_family, molar_hri, probot_l]
   - category: Underwater robots
     subtype: AUV
     tags: [Propeller and fins, Native source dynamics, Cruise guidance, Experimental control]

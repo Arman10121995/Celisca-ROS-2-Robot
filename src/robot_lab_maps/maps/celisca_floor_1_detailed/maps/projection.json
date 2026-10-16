@@ -1,0 +1,38 @@
+{
+  "recipe": "collision-supported-height-band-v1",
+  "engine": "offline triangle clipping + raster; no Gazebo/plugin execution",
+  "resolution_m": 0.05,
+  "origin": [
+    -30.450000000000003,
+    -14.55,
+    0.0
+  ],
+  "shape": [
+    580,
+    1219
+  ],
+  "obstacle_height_band_m": [
+    0.06,
+    2.3
+  ],
+  "support_surface_tolerance_m": 0.025,
+  "floor_faces": 4696,
+  "obstacle_faces": 3204,
+  "counts": {
+    "occupied": 141956,
+    "free": 148075,
+    "unknown": 416989
+  },
+  "collision_sha256": "e6ef8e50907fb7abe93f4b349a4480ab659f33d0d026b8c5bddfe3724a80adac",
+  "map_sha256": "cea8efd1ce9a2e2fc94ff0c613bcb654605f90473bbdfab1bcbe2289893f43f2",
+  "spawn": {
+    "x": 0.9749999999999979,
+    "y": 0.4250000000000007,
+    "z": 0.1,
+    "yaw": 0.0
+  },
+  "spawn_floor_z_m": 0.0,
+  "spawn_mask_clearance_m": 0.9,
+  "spawn_independent_horizontal_ray_clearance_m": 0.9505353999999979,
+  "limit": "Single local floor, conservative 0.06-2.3 m obstacle band, source-supported seed component only; disconnected/unsupported cells unknown. No Nav2/runtime qualification."
+}

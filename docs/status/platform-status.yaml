@@ -1,3 +1,14 @@
+molar_hri_integration_20261016:
+  task_id: R11_molar_hri
+  owner: codex-root
+  state: active
+  requested: '2026-10-16'
+  priority: Latest user request; detailed MOLAR maps and differential-drive/telescope robot in native Robot Lab
+  scope_paths: ['src/robot_lab_robots/', 'src/robot_lab_maps/', 'src/robot_lab_bringup/', 'src/robot_lab_gui/', 'src/robot_lab_utils/', 'src/robot_lab_mujoco/', 'src/robot_lab_pybullet/', 'src/robot_lab_isaac/', 'src/robot_lab/robot_lab_registry/', 'scripts/', 'docs/', 'ROADMAP.md', '.gitattributes']
+  delegated_map_owner: codex-robotlab_celisca_integration
+  acceptance: Normal native GUI selection; actual differential drive and bounded lift/telescope control with Stop/watchdog; exact per-backend measured evidence, never inferred parity
+  safety: Simulation only; no physical robot, FMS, AIC, door, lift or PLC commands; preserve other task owners and existing models
+  implementation_state: Inspecting native interfaces; no runtime qualification claimed
 # Task ledger schema v2. See ROADMAP.md and docs/AGENT_HANDOFF.md.
 # Counts are audited observations, not targets or proof of runtime qualification.
 schema_version: 2

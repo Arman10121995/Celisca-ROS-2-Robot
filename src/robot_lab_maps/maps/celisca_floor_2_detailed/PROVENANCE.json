@@ -1,0 +1,392 @@
+{
+  "schema_version": 1,
+  "map_id": "celisca_floor_2_detailed",
+  "source_root": "/workspace/molar_voice_super_gui_redesign/simulation/celisca",
+  "building_floor": 3,
+  "alias": "F2",
+  "source_manifest": {
+    "schemaVersion": 1,
+    "alias": 2,
+    "buildingLevel": "3.OBERGESCHOSS",
+    "fmsFloor": 3,
+    "source": "map/Celisca_F2_SeperateMap.glb",
+    "sourceSha256": "17eabdc19d88d59dad2284d376d7292eec800cf69ee778c06375a4887d2b7319",
+    "glbFrame": "raw_gltf_y_up_m",
+    "simulatorFrame": "x,-z,y; Z-up metres; det +1",
+    "detailSpecSha256": "07c92cad37a1b8552e21cb13a633d21dce6e55d089f9e637166f0d3716364dce",
+    "yUpToZUp": [
+      [
+        1.0,
+        0.0,
+        0.0
+      ],
+      [
+        0.0,
+        0.0,
+        -1.0
+      ],
+      [
+        0.0,
+        1.0,
+        0.0
+      ]
+    ],
+    "sourceGeometryAndTransformsUnchanged": true,
+    "originalBinaryPrefixBytes": 59651656,
+    "glbVerification": {
+      "originalBinaryPrefixUnchanged": true,
+      "originalGeometryNodesAndTransformsUnchanged": true,
+      "originalSceneRootsUnchanged": true,
+      "selfContained": true
+    },
+    "detailParts": 96,
+    "sanitaryFixtures": 11,
+    "sanitaryPartitions": 4,
+    "structuralTriangles": 6530,
+    "simulatorFurnitureBoxes": 60,
+    "mujocoConvexPrisms": 7428,
+    "staticOnly": true,
+    "simulationVisualLOD": "original structural surfaces + conservative existing-furniture boxes + new detailed fixtures",
+    "collisionApproximation": "original structural surfaces; furniture and fixtures bounded boxes; MuJoCo local 12mm triangle prisms",
+    "measuredFixtureDimensions": false,
+    "engineRuntimeAcceptance": "not run by exporter; see validation report",
+    "files": {
+      "Celisca_floor_2_detailed.glb": {
+        "sha256": "01d18338a90a41b4823e88d5f7b6a4e34a5f65653ecf0f2d5ac6e3c675ef90cc",
+        "bytes": 63098844
+      },
+      "celisca_floor_2/floor.urdf": {
+        "sha256": "21fb138b978a004513e777681c3b19bcceac3c3562d8c3f78415a80e4ea9f803",
+        "bytes": 5330
+      },
+      "celisca_floor_2/floor.usda": {
+        "sha256": "495bc007b07c03b9723b09f4e65f1651e359c56daffa2e88afd71e43215606b9",
+        "bytes": 944048
+      },
+      "celisca_floor_2/floor.xml": {
+        "sha256": "8b693916e904877fd618d81ab260d6436482df4572c5289bce521ad1c974e4e8",
+        "bytes": 2795222
+      },
+      "celisca_floor_2/meshes/collision.mtl": {
+        "sha256": "60e28811373164c5630402dd24f914698de0b336bf00c77cfc1fd27fbe42940f",
+        "bytes": 5670
+      },
+      "celisca_floor_2/meshes/collision.obj": {
+        "sha256": "3a63912bed8bf00ee73b7b30759b5d31db4e7cde98def6d59ec8fc4b88237ac5",
+        "bytes": 304351
+      },
+      "celisca_floor_2/meshes/visual.dae": {
+        "sha256": "ce994fc12962074cf66f921793b696e1c8c43149fc708328bfdf73f9d030e18f",
+        "bytes": 554797
+      },
+      "celisca_floor_2/meshes/visual.mtl": {
+        "sha256": "5d675941307c091c835c21488931531ff484a13c39e50c669e7536cee3587d70",
+        "bytes": 10790
+      },
+      "celisca_floor_2/meshes/visual.obj": {
+        "sha256": "226e4d811cf6729b5260f07e76f5d4ea197686659784137b2eabe51913c8d368",
+        "bytes": 492545
+      },
+      "celisca_floor_2/meshes/visual_material_000.mtl": {
+        "sha256": "2adee87cd87fc7d65ec6a3576eef75db9b24e2ac9ddda05420faef56765ca358",
+        "bytes": 61
+      },
+      "celisca_floor_2/meshes/visual_material_000.obj": {
+        "sha256": "41a4293762ad622cf6e711d9248460e730ebdad43eea4fd674bde3518e047a26",
+        "bytes": 135070
+      },
+      "celisca_floor_2/meshes/visual_material_001.mtl": {
+        "sha256": "74d71ba146c2489fdb625b1a80afed7e43b305cc2fbdebea4e4078fb2acd3b07",
+        "bytes": 63
+      },
+      "celisca_floor_2/meshes/visual_material_001.obj": {
+        "sha256": "9a4997f712cabc41dfd91260c8f905f720de61580eebb1909aa73e905159581d",
+        "bytes": 9009
+      },
+      "celisca_floor_2/meshes/visual_material_002.mtl": {
+        "sha256": "7c6e6b6834926cead9456f04c77116206b0d789bb1cbe448299dcec14cb7fbe5",
+        "bytes": 62
+      },
+      "celisca_floor_2/meshes/visual_material_002.obj": {
+        "sha256": "d75c5ee95b4bcf311bb4bff7bc225b78a7b890bffcc50d8bb37d446b4ae0d782",
+        "bytes": 354
+      },
+      "celisca_floor_2/meshes/visual_material_003.mtl": {
+        "sha256": "b9419ed71b09e4c9f6a29ce2cf6161aeaf63548bc0670278cea92835067f7d9d",
+        "bytes": 58
+      },
+      "celisca_floor_2/meshes/visual_material_003.obj": {
+        "sha256": "9f2a5b29fb23e2fdbd93a4af37fc4f15f0ec33e45ae9e1021d32643834774e4d",
+        "bytes": 58941
+      },
+      "celisca_floor_2/meshes/visual_material_004.mtl": {
+        "sha256": "1c4b6d1982d75462c7792e29befed955f61fcf7b3c75d7c77ffb4ca35fec77a1",
+        "bytes": 65
+      },
+      "celisca_floor_2/meshes/visual_material_004.obj": {
+        "sha256": "216cf7865c641f09cae8b0065217178a93d33ee02931e4d18af3d3531ca0555b",
+        "bytes": 17549
+      },
+      "celisca_floor_2/meshes/visual_material_005.mtl": {
+        "sha256": "18dd3bf6a4f289885beea9e1674072ef269a413a9eb117c57a3c50878bad56a6",
+        "bytes": 64
+      },
+      "celisca_floor_2/meshes/visual_material_005.obj": {
+        "sha256": "d6d2f918ce56d0f0120653b88d4589e6db4e15441c49b4ba54c3cec307082992",
+        "bytes": 3880
+      },
+      "celisca_floor_2/meshes/visual_material_006.mtl": {
+        "sha256": "c41a46ba9fd13ae660ef73447311b7d30a714e43e6c4d6bb6959485abb1a151d",
+        "bytes": 59
+      },
+      "celisca_floor_2/meshes/visual_material_006.obj": {
+        "sha256": "9021ecbfeb58ba264681a21e1dbbe5b93d906ef39d8632fa3be64a993d7ade8a",
+        "bytes": 2766
+      },
+      "celisca_floor_2/meshes/visual_material_007.mtl": {
+        "sha256": "30c13bf673cee681b419d3d14f91db7802905a4427c95298a56d181d65830f18",
+        "bytes": 60
+      },
+      "celisca_floor_2/meshes/visual_material_007.obj": {
+        "sha256": "8d54e2f3bfa5cb56a7dfc670317aeec4242383dd4cead7f3095ff569ff5111fb",
+        "bytes": 4855
+      },
+      "celisca_floor_2/meshes/visual_material_008.mtl": {
+        "sha256": "623357104a583512cca52dc1bde495b92577bdc063e7d5bd0ea4882b6fd23ca5",
+        "bytes": 58
+      },
+      "celisca_floor_2/meshes/visual_material_008.obj": {
+        "sha256": "3d2458862f14e04fea49353acfd43bf8132ef48e0e4f30a5197814b4165d474f",
+        "bytes": 23362
+      },
+      "celisca_floor_2/meshes/visual_material_009.mtl": {
+        "sha256": "1dfd10c11aad512347dd31c8c369624c7de4f05c66c1692dff1942a15d99e556",
+        "bytes": 60
+      },
+      "celisca_floor_2/meshes/visual_material_009.obj": {
+        "sha256": "2631c50de0ec78e8c37d8fcbe3879c28b5076c55d04ac04a99fde8e15bf48a8f",
+        "bytes": 73328
+      },
+      "celisca_floor_2/meshes/visual_material_010.mtl": {
+        "sha256": "2ccbc44a72ab3e0a2a63c35fe6ba9b12a72d2816122c3917b91a4c7fa715976b",
+        "bytes": 61
+      },
+      "celisca_floor_2/meshes/visual_material_010.obj": {
+        "sha256": "bf5c11617f0dd4ae1cb867874c8af821f316d40e9a0e39e2628e86aae04ff445",
+        "bytes": 23502
+      },
+      "celisca_floor_2/meshes/visual_material_011.mtl": {
+        "sha256": "bd1daf56cab0046ee2422341736c8c505d658fab5e73afe0aa2d5c59650684a6",
+        "bytes": 61
+      },
+      "celisca_floor_2/meshes/visual_material_011.obj": {
+        "sha256": "721fefe6d8484666561ef081b58e4db492eb418fe20b10612ae203068ebb495f",
+        "bytes": 33409
+      },
+      "celisca_floor_2/meshes/visual_material_012.mtl": {
+        "sha256": "0b47e655f685f0b5c362dc4bb63e24789e497f43bcdb8b5413393cd19d19dcb3",
+        "bytes": 61
+      },
+      "celisca_floor_2/meshes/visual_material_012.obj": {
+        "sha256": "3f0a79648d9ecfb223326261b8cc3ac2e11735ddb0aa161527e14ed9d41f9356",
+        "bytes": 11400
+      },
+      "celisca_floor_2/meshes/visual_material_013.mtl": {
+        "sha256": "cdd4b88e2e2dbefe123e669503673ec3f3991193a8733aae8e67d9a910ec1918",
+        "bytes": 62
+      },
+      "celisca_floor_2/meshes/visual_material_013.obj": {
+        "sha256": "30c3a73a58127d5144e123d6fa374d08f0e54a1eec63169506a0f9e5c32fe5ea",
+        "bytes": 4034
+      },
+      "celisca_floor_2/meshes/visual_material_014.mtl": {
+        "sha256": "031c43b5fe4a14b15a789622166b72e869af57b7a04fd8a9b6e9557e65f2e9e4",
+        "bytes": 63
+      },
+      "celisca_floor_2/meshes/visual_material_014.obj": {
+        "sha256": "545af75664eed8ee2a0ba66ed29a57df75cce3ab3782e70ce6176ecad9f8523a",
+        "bytes": 1378
+      },
+      "celisca_floor_2/meshes/visual_material_015.mtl": {
+        "sha256": "0b9c3cf429f8bcdccb1bd3575f907acb67fd89788dd359ef0380da5f5ad1f967",
+        "bytes": 59
+      },
+      "celisca_floor_2/meshes/visual_material_015.obj": {
+        "sha256": "16db74981145626e6303f7f422f89ab3727e1d88ad3234c3e9925445881fce77",
+        "bytes": 1404
+      },
+      "celisca_floor_2/meshes/visual_material_016.mtl": {
+        "sha256": "c8166f45e616b01a28b1a2c212099a3316b4547295605fb72a0a19871ed252d5",
+        "bytes": 61
+      },
+      "celisca_floor_2/meshes/visual_material_016.obj": {
+        "sha256": "f81011d3add64ee9db921907b33d59673f67fc678d34ba27ea195040032655e9",
+        "bytes": 364
+      },
+      "celisca_floor_2/meshes/visual_material_017.mtl": {
+        "sha256": "666bbeb4ef115c0a2a5cce1a393ffd471acf559f19c8e800c8185dc2832ae36c",
+        "bytes": 65
+      },
+      "celisca_floor_2/meshes/visual_material_017.obj": {
+        "sha256": "d29c0c324ebc67ff4cbe63836eada6aaacb8e083250314955fa6dfded416de38",
+        "bytes": 2719
+      },
+      "celisca_floor_2/meshes/visual_material_018.mtl": {
+        "sha256": "85f7021d29d50fe58d4ab1185b0d330451575bc00085111b7f82616b52df50be",
+        "bytes": 62
+      },
+      "celisca_floor_2/meshes/visual_material_018.obj": {
+        "sha256": "9e4d6c93e8d2f20eb9ede651f4125d0ac11a6a310393338b76687095510614a7",
+        "bytes": 150
+      },
+      "celisca_floor_2/meshes/visual_material_019.mtl": {
+        "sha256": "bfb4421527fda917c1ee44c1988922d423037bdc31d3446161d2aad56bbb252e",
+        "bytes": 63
+      },
+      "celisca_floor_2/meshes/visual_material_019.obj": {
+        "sha256": "6b3fc270cf43995e2923cb45fa8551fd50ad7aed86a824a470a656338c4ab662",
+        "bytes": 8788
+      },
+      "celisca_floor_2/model.config": {
+        "sha256": "20bfeeb98b0efc6b651f73390a150c449aa0e86daaa8032fe80e4a49505c7889",
+        "bytes": 262
+      },
+      "celisca_floor_2/model.sdf": {
+        "sha256": "6166672a3b2ef1083d895f45a007aba10de55e023cbe7ba832da15977a6d6d9b",
+        "bytes": 503
+      },
+      "celisca_floor_2/world.sdf": {
+        "sha256": "efa8c727787b54a5423d0adfe311cc88de0648876f0f57770f7e4bb3d086f509",
+        "bytes": 614
+      }
+    }
+  },
+  "source_manifest_sha256": "522299ca9649ded29d5970be5516f509e76f36fcd460ed27f9d2411a20686a9e",
+  "copied_adapter_sha256": {
+    "adapters/floor.urdf": "21fb138b978a004513e777681c3b19bcceac3c3562d8c3f78415a80e4ea9f803",
+    "adapters/floor.usda": "495bc007b07c03b9723b09f4e65f1651e359c56daffa2e88afd71e43215606b9",
+    "adapters/floor.xml": "8b693916e904877fd618d81ab260d6436482df4572c5289bce521ad1c974e4e8",
+    "adapters/meshes/collision.mtl": "60e28811373164c5630402dd24f914698de0b336bf00c77cfc1fd27fbe42940f",
+    "adapters/meshes/collision.obj": "3a63912bed8bf00ee73b7b30759b5d31db4e7cde98def6d59ec8fc4b88237ac5",
+    "adapters/meshes/visual.dae": "ce994fc12962074cf66f921793b696e1c8c43149fc708328bfdf73f9d030e18f",
+    "adapters/meshes/visual.mtl": "5d675941307c091c835c21488931531ff484a13c39e50c669e7536cee3587d70",
+    "adapters/meshes/visual.obj": "226e4d811cf6729b5260f07e76f5d4ea197686659784137b2eabe51913c8d368",
+    "adapters/meshes/visual_material_000.mtl": "2adee87cd87fc7d65ec6a3576eef75db9b24e2ac9ddda05420faef56765ca358",
+    "adapters/meshes/visual_material_000.obj": "41a4293762ad622cf6e711d9248460e730ebdad43eea4fd674bde3518e047a26",
+    "adapters/meshes/visual_material_001.mtl": "74d71ba146c2489fdb625b1a80afed7e43b305cc2fbdebea4e4078fb2acd3b07",
+    "adapters/meshes/visual_material_001.obj": "9a4997f712cabc41dfd91260c8f905f720de61580eebb1909aa73e905159581d",
+    "adapters/meshes/visual_material_002.mtl": "7c6e6b6834926cead9456f04c77116206b0d789bb1cbe448299dcec14cb7fbe5",
+    "adapters/meshes/visual_material_002.obj": "d75c5ee95b4bcf311bb4bff7bc225b78a7b890bffcc50d8bb37d446b4ae0d782",
+    "adapters/meshes/visual_material_003.mtl": "b9419ed71b09e4c9f6a29ce2cf6161aeaf63548bc0670278cea92835067f7d9d",
+    "adapters/meshes/visual_material_003.obj": "9f2a5b29fb23e2fdbd93a4af37fc4f15f0ec33e45ae9e1021d32643834774e4d",
+    "adapters/meshes/visual_material_004.mtl": "1c4b6d1982d75462c7792e29befed955f61fcf7b3c75d7c77ffb4ca35fec77a1",
+    "adapters/meshes/visual_material_004.obj": "216cf7865c641f09cae8b0065217178a93d33ee02931e4d18af3d3531ca0555b",
+    "adapters/meshes/visual_material_005.mtl": "18dd3bf6a4f289885beea9e1674072ef269a413a9eb117c57a3c50878bad56a6",
+    "adapters/meshes/visual_material_005.obj": "d6d2f918ce56d0f0120653b88d4589e6db4e15441c49b4ba54c3cec307082992",
+    "adapters/meshes/visual_material_006.mtl": "c41a46ba9fd13ae660ef73447311b7d30a714e43e6c4d6bb6959485abb1a151d",
+    "adapters/meshes/visual_material_006.obj": "9021ecbfeb58ba264681a21e1dbbe5b93d906ef39d8632fa3be64a993d7ade8a",
+    "adapters/meshes/visual_material_007.mtl": "30c13bf673cee681b419d3d14f91db7802905a4427c95298a56d181d65830f18",
+    "adapters/meshes/visual_material_007.obj": "8d54e2f3bfa5cb56a7dfc670317aeec4242383dd4cead7f3095ff569ff5111fb",
+    "adapters/meshes/visual_material_008.mtl": "623357104a583512cca52dc1bde495b92577bdc063e7d5bd0ea4882b6fd23ca5",
+    "adapters/meshes/visual_material_008.obj": "3d2458862f14e04fea49353acfd43bf8132ef48e0e4f30a5197814b4165d474f",
+    "adapters/meshes/visual_material_009.mtl": "1dfd10c11aad512347dd31c8c369624c7de4f05c66c1692dff1942a15d99e556",
+    "adapters/meshes/visual_material_009.obj": "2631c50de0ec78e8c37d8fcbe3879c28b5076c55d04ac04a99fde8e15bf48a8f",
+    "adapters/meshes/visual_material_010.mtl": "2ccbc44a72ab3e0a2a63c35fe6ba9b12a72d2816122c3917b91a4c7fa715976b",
+    "adapters/meshes/visual_material_010.obj": "bf5c11617f0dd4ae1cb867874c8af821f316d40e9a0e39e2628e86aae04ff445",
+    "adapters/meshes/visual_material_011.mtl": "bd1daf56cab0046ee2422341736c8c505d658fab5e73afe0aa2d5c59650684a6",
+    "adapters/meshes/visual_material_011.obj": "721fefe6d8484666561ef081b58e4db492eb418fe20b10612ae203068ebb495f",
+    "adapters/meshes/visual_material_012.mtl": "0b47e655f685f0b5c362dc4bb63e24789e497f43bcdb8b5413393cd19d19dcb3",
+    "adapters/meshes/visual_material_012.obj": "3f0a79648d9ecfb223326261b8cc3ac2e11735ddb0aa161527e14ed9d41f9356",
+    "adapters/meshes/visual_material_013.mtl": "cdd4b88e2e2dbefe123e669503673ec3f3991193a8733aae8e67d9a910ec1918",
+    "adapters/meshes/visual_material_013.obj": "30c3a73a58127d5144e123d6fa374d08f0e54a1eec63169506a0f9e5c32fe5ea",
+    "adapters/meshes/visual_material_014.mtl": "031c43b5fe4a14b15a789622166b72e869af57b7a04fd8a9b6e9557e65f2e9e4",
+    "adapters/meshes/visual_material_014.obj": "545af75664eed8ee2a0ba66ed29a57df75cce3ab3782e70ce6176ecad9f8523a",
+    "adapters/meshes/visual_material_015.mtl": "0b9c3cf429f8bcdccb1bd3575f907acb67fd89788dd359ef0380da5f5ad1f967",
+    "adapters/meshes/visual_material_015.obj": "16db74981145626e6303f7f422f89ab3727e1d88ad3234c3e9925445881fce77",
+    "adapters/meshes/visual_material_016.mtl": "c8166f45e616b01a28b1a2c212099a3316b4547295605fb72a0a19871ed252d5",
+    "adapters/meshes/visual_material_016.obj": "f81011d3add64ee9db921907b33d59673f67fc678d34ba27ea195040032655e9",
+    "adapters/meshes/visual_material_017.mtl": "666bbeb4ef115c0a2a5cce1a393ffd471acf559f19c8e800c8185dc2832ae36c",
+    "adapters/meshes/visual_material_017.obj": "d29c0c324ebc67ff4cbe63836eada6aaacb8e083250314955fa6dfded416de38",
+    "adapters/meshes/visual_material_018.mtl": "85f7021d29d50fe58d4ab1185b0d330451575bc00085111b7f82616b52df50be",
+    "adapters/meshes/visual_material_018.obj": "9e4d6c93e8d2f20eb9ede651f4125d0ac11a6a310393338b76687095510614a7",
+    "adapters/meshes/visual_material_019.mtl": "bfb4421527fda917c1ee44c1988922d423037bdc31d3446161d2aad56bbb252e",
+    "adapters/meshes/visual_material_019.obj": "6b3fc270cf43995e2923cb45fa8551fd50ad7aed86a824a470a656338c4ab662",
+    "adapters/model.config": "20bfeeb98b0efc6b651f73390a150c449aa0e86daaa8032fe80e4a49505c7889",
+    "adapters/model.sdf": "6166672a3b2ef1083d895f45a007aba10de55e023cbe7ba832da15977a6d6d9b",
+    "adapters/world.sdf": "efa8c727787b54a5423d0adfe311cc88de0648876f0f57770f7e4bb3d086f509"
+  },
+  "full_glb": {
+    "path": "/workspace/molar/robot_lab_runtime/external_assets/celisca_detailed/01d18338a90a41b4823e88d5f7b6a4e34a5f65653ecf0f2d5ac6e3c675ef90cc/Celisca_floor_2_detailed.glb",
+    "sha256": "01d18338a90a41b4823e88d5f7b6a4e34a5f65653ecf0f2d5ac6e3c675ef90cc"
+  },
+  "visual": {
+    "path": "/workspace/molar/robot_lab_runtime/external_assets/celisca_detailed/01d18338a90a41b4823e88d5f7b6a4e34a5f65653ecf0f2d5ac6e3c675ef90cc/z_up_visual_v1/visual_full.dae",
+    "sha256": "c87e2ae3c1f6df826717616343914932a16bd1804100d786a025804bae4fb98b",
+    "bytes": 319727955,
+    "bounds_m": [
+      [
+        -31.12936019897461,
+        -8.407835960388184,
+        -0.3596850633621216
+      ],
+      [
+        28.007339477539062,
+        17.861520767211914,
+        3.000001907348633
+      ]
+    ],
+    "triangles": 3349012,
+    "source_primitives": 4516,
+    "material_batches": 39,
+    "embedded_images_extracted": 4,
+    "frame": "metric Z-up; (x,-z,y); no centering, scaling or elevation offset",
+    "geometry": "all enhanced GLB triangle primitives; exact composed node transforms and handedness",
+    "material_limit": "PBR base-color factors (linear-RGB baked texture PNGs), UVs and vertex colors retained; Phong shading approximates metallic/roughness/normal/occlusion and renderer alpha behavior"
+  },
+  "projection": {
+    "recipe": "collision-supported-height-band-v1",
+    "engine": "offline triangle clipping + raster; no Gazebo/plugin execution",
+    "resolution_m": 0.05,
+    "origin": [
+      -32.15,
+      -9.450000000000001,
+      0.0
+    ],
+    "shape": [
+      567,
+      1224
+    ],
+    "obstacle_height_band_m": [
+      0.06,
+      2.3
+    ],
+    "support_surface_tolerance_m": 0.025,
+    "floor_faces": 3996,
+    "obstacle_faces": 2878,
+    "counts": {
+      "occupied": 109597,
+      "free": 179640,
+      "unknown": 404771
+    },
+    "collision_sha256": "3a63912bed8bf00ee73b7b30759b5d31db4e7cde98def6d59ec8fc4b88237ac5",
+    "map_sha256": "1a4f64f722018c42b5544c66ee8498d5065ad0f1cab88adabce0cbe650250d84",
+    "spawn": {
+      "x": 2.1750000000000043,
+      "y": 1.674999999999999,
+      "z": 0.1,
+      "yaw": 0.0
+    },
+    "spawn_floor_z_m": 0.0,
+    "spawn_mask_clearance_m": 0.9013878188659974,
+    "spawn_independent_horizontal_ray_clearance_m": 0.9457083622518452,
+    "limit": "Single local floor, conservative 0.06-2.3 m obstacle band, source-supported seed component only; disconnected/unsupported cells unknown. No Nav2/runtime qualification."
+  },
+  "licensing": "Rights unresolved for original and derivative assets; no redistribution or safety compliance claim.",
+  "limits": [
+    "Approximate bathroom geometry, not a building survey",
+    "Furniture collision uses source per-object boxes",
+    "Decorative tile/grout excluded from collision",
+    "Static doors and lifts; no physical/network clients",
+    "No new simulator, route, sensor or contact acceptance claimed by this provisioner"
+  ]
+}

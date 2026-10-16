@@ -1867,3 +1867,83 @@
       date: "2026-10-02"
   created: "2026-10-02"
   updated: "2026-10-02"
+- id: probot_l
+  version: 0.1.0
+  name: ASTI ProBOT-L
+  ros_package: robot_lab_robots
+  status: available
+  robot_class: mobile_manipulator
+  maturity: prototype
+  supported_simulators:
+  - gazebo
+  - mujoco
+  - pybullet
+  - isaac
+  supported_modes:
+  - display
+  locomotion:
+    type: differential
+    dof: 2
+    max_velocity: 0.25
+  capabilities:
+  - control
+  command_interfaces:
+  - geometry_msgs/Twist
+  - std_msgs/String
+  state_interfaces:
+  - sensor_msgs/JointState
+  - nav_msgs/Odometry
+  frames:
+  - odom
+  - base_link
+  - conveyor_carriage
+  - telescope_stage1
+  - telescope_stage2
+  assets:
+    urdf: robot_lab_robots/probot_l/urdf/probot_l.urdf.xacro
+  tags:
+  - complete_robot
+  - differential_drive
+  - articulated_conveyor
+  - estimated_dynamics
+  - experimental_control
+- id: molar_hri
+  version: 0.1.0
+  name: MOLAR HRI
+  ros_package: robot_lab_robots
+  status: available
+  robot_class: mobile_manipulator
+  maturity: prototype
+  supported_simulators:
+  - gazebo
+  - mujoco
+  - pybullet
+  - isaac
+  supported_modes:
+  - display
+  locomotion:
+    type: differential
+    dof: 2
+    max_velocity: 0.25
+  capabilities:
+  - control
+  command_interfaces:
+  - geometry_msgs/Twist
+  - std_msgs/String
+  state_interfaces:
+  - sensor_msgs/JointState
+  - nav_msgs/Odometry
+  frames:
+  - odom
+  - base_link
+  - conveyor_carriage
+  - telescope_stage1
+  - telescope_stage2
+  assets:
+    urdf: robot_lab_robots/molar_hri/urdf/molar_hri.urdf.xacro
+  tags:
+  - complete_robot
+  - differential_drive
+  - articulated_conveyor
+  - estimated_dynamics
+  - experimental_control

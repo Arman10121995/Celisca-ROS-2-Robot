@@ -1,0 +1,174 @@
+<?xml version='1.0' encoding='utf-8'?>
+<robot name="celisca_floor_1">
+  <link name="floor" concave="yes">
+    <inertial>
+      <mass value="0" />
+      <inertia ixx="0" ixy="0" ixz="0" iyy="0" iyz="0" izz="0" />
+    </inertial>
+    <visual name="visual_0">
+      <geometry>
+        <mesh filename="meshes/visual_material_000.obj" scale="1 1 1" />
+      </geometry>
+      <material name="material_0">
+        <color rgba="0.36 0.37 0.38 1" />
+      </material>
+    </visual>
+    <visual name="visual_1">
+      <geometry>
+        <mesh filename="meshes/visual_material_001.obj" scale="1 1 1" />
+      </geometry>
+      <material name="material_1">
+        <color rgba="0.45 0.45 0.43 1" />
+      </material>
+    </visual>
+    <visual name="visual_2">
+      <geometry>
+        <mesh filename="meshes/visual_material_002.obj" scale="1 1 1" />
+      </geometry>
+      <material name="material_2">
+        <color rgba="0.02 0.02 0.022 1" />
+      </material>
+    </visual>
+    <visual name="visual_3">
+      <geometry>
+        <mesh filename="meshes/visual_material_003.obj" scale="1 1 1" />
+      </geometry>
+      <material name="material_3">
+        <color rgba="0.62 0.62 0.6 1" />
+      </material>
+    </visual>
+    <visual name="visual_4">
+      <geometry>
+        <mesh filename="meshes/visual_material_004.obj" scale="1 1 1" />
+      </geometry>
+      <material name="material_4">
+        <color rgba="0.03 0.032 0.036 1" />
+      </material>
+    </visual>
+    <visual name="visual_5">
+      <geometry>
+        <mesh filename="meshes/visual_material_005.obj" scale="1 1 1" />
+      </geometry>
+      <material name="material_5">
+        <color rgba="0.55 0.75 0.88 0.3" />
+      </material>
+    </visual>
+    <visual name="visual_6">
+      <geometry>
+        <mesh filename="meshes/visual_material_006.obj" scale="1 1 1" />
+      </geometry>
+      <material name="material_6">
+        <color rgba="0.32 0.2 0.11 1" />
+      </material>
+    </visual>
+    <visual name="visual_7">
+      <geometry>
+        <mesh filename="meshes/visual_material_007.obj" scale="1 1 1" />
+      </geometry>
+      <material name="material_7">
+        <color rgba="0.1 0.11 0.12 1" />
+      </material>
+    </visual>
+    <visual name="visual_8">
+      <geometry>
+        <mesh filename="meshes/visual_material_008.obj" scale="1 1 1" />
+      </geometry>
+      <material name="material_8">
+        <color rgba="0.52 0.56 0.6 1" />
+      </material>
+    </visual>
+    <visual name="visual_9">
+      <geometry>
+        <mesh filename="meshes/visual_material_009.obj" scale="1 1 1" />
+      </geometry>
+      <material name="material_9">
+        <color rgba="0.91 0.92 0.9 1" />
+      </material>
+    </visual>
+    <visual name="visual_10">
+      <geometry>
+        <mesh filename="meshes/visual_material_010.obj" scale="1 1 1" />
+      </geometry>
+      <material name="material_10">
+        <color rgba="0.98 0.98 0.97 1" />
+      </material>
+    </visual>
+    <visual name="visual_11">
+      <geometry>
+        <mesh filename="meshes/visual_material_011.obj" scale="1 1 1" />
+      </geometry>
+      <material name="material_11">
+        <color rgba="0.23 0.3 0.33 1" />
+      </material>
+    </visual>
+    <visual name="visual_12">
+      <geometry>
+        <mesh filename="meshes/visual_material_012.obj" scale="1 1 1" />
+      </geometry>
+      <material name="material_12">
+        <color rgba="0.54 0.59 0.62 1" />
+      </material>
+    </visual>
+    <visual name="visual_13">
+      <geometry>
+        <mesh filename="meshes/visual_material_013.obj" scale="1 1 1" />
+      </geometry>
+      <material name="material_13">
+        <color rgba="0.97 0.98 0.97 1" />
+      </material>
+    </visual>
+    <visual name="visual_14">
+      <geometry>
+        <mesh filename="meshes/visual_material_014.obj" scale="1 1 1" />
+      </geometry>
+      <material name="material_14">
+        <color rgba="0.63 0.77 0.83 1" />
+      </material>
+    </visual>
+    <visual name="visual_15">
+      <geometry>
+        <mesh filename="meshes/visual_material_015.obj" scale="1 1 1" />
+      </geometry>
+      <material name="material_15">
+        <color rgba="0.6 0.72 0.75 1" />
+      </material>
+    </visual>
+    <visual name="visual_16">
+      <geometry>
+        <mesh filename="meshes/visual_material_016.obj" scale="1 1 1" />
+      </geometry>
+      <material name="material_16">
+        <color rgba="0.03 0.38 0.16 1" />
+      </material>
+    </visual>
+    <visual name="visual_17">
+      <geometry>
+        <mesh filename="meshes/visual_material_017.obj" scale="1 1 1" />
+      </geometry>
+      <material name="material_17">
+        <color rgba="0.7 0.045 0.035 1" />
+      </material>
+    </visual>
+    <visual name="visual_18">
+      <geometry>
+        <mesh filename="meshes/visual_material_018.obj" scale="1 1 1" />
+      </geometry>
+      <material name="material_18">
+        <color rgba="0.77 0.82 0.83 1" />
+      </material>
+    </visual>
+    <visual name="visual_19">
+      <geometry>
+        <mesh filename="meshes/visual_material_019.obj" scale="1 1 1" />
+      </geometry>
+      <material name="material_19">
+        <color rgba="0.43 0.49 0.51 1" />
+      </material>
+    </visual>
+    <collision concave="yes">
+      <geometry>
+        <mesh filename="meshes/collision.obj" scale="1 1 1" />
+      </geometry>
+    </collision>
+  </link>
+</robot>

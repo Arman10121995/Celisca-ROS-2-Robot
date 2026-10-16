@@ -836,6 +836,10 @@ def _build_simulation_actions(context):
     drive_args = {key: str(value) for key, value in drive_config.items()
                   if key in _DIFF_DRIVE_KEYS}
     drive_args["drive_config"] = json.dumps(drive_config, sort_keys=True)
+    # Empty for robots without an articulation: the spawners treat any
+    # non-empty string, even "{}", as a configuration to load.
+    drive_args["articulation_config"] = (json.dumps(robot_config["articulation"], sort_keys=True)
+                                         if robot_config.get("articulation") else "")
     # Explicit imported sensors carry their actual mounting frame and source
     # calibration into each physics bridge. Empty retains existing defaults.
     drive_args['sensor_config'] = json.dumps(robot_config.get('sensor_config', {}), sort_keys=True)
@@ -1038,6 +1042,12 @@ def _build_simulation_actions(context):
             # display-skipped, so without this the bringup reaches
             # controller_manager but never activates a controller.
             display_controllers = robot_config.get("controllers", [])
+            if robot_config.get('articulation'):
+                actions.append(Node(package='robot_lab_bringup', executable='molar_gazebo_control.py',
+                    parameters=[{'use_sim_time': _as_bool(use_sim_time, True),
+                                 'model_path': model_path,
+                                 'articulation_config': json.dumps(robot_config['articulation'], sort_keys=True)}],
+                    output='screen'))
             # Decided by the description itself: a profile can list the
             # ros2_control feature for a model that carries no
             # <ros2_control> block, and a spawner for it only waits and fails.

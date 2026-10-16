@@ -1657,3 +1657,111 @@
     - x: 7.0
       y: 7.0
       yaw: 0.0
+
+- id: celisca_floor_1_detailed
+  version: 0.1.0
+  name: CELISCA F1 detailed (building floor 2)
+  description: Original metre-scale local F1 / 2.OG floor with full furniture visuals
+    and approximate bathroom additions; static doors/lifts; runtime qualification
+    pending.
+  status: available
+  dimension: 3D
+  simulator: gazebo
+  simulators:
+  - gazebo
+  - mujoco
+  - pybullet
+  - isaac
+  ros_package: robot_lab_maps
+  world_file: robot_lab_maps/maps/celisca_floor_1_detailed/worlds/celisca_floor_1_detailed.world
+  occupancy_map: robot_lab_maps/maps/celisca_floor_1_detailed/maps/map.pgm
+  ground_truth_available: true
+  dynamics:
+    static_obstacles: true
+    dynamic_obstacles: false
+    max_dynamic_count: 0
+  supported_robot_classes:
+  - mobile
+  - legged
+  - humanoid
+  - aerial
+  spawn_zones:
+  - id: source_checked
+    pose:
+      x: 0.9749999999999979
+      y: 0.4250000000000007
+      z: 0.1
+    size:
+      x: 1.6
+      y: 1.6
+      z: 2.3
+  size:
+    x: 58.913747787475586
+    y: 26.93347454071045
+    z: 3.0375588660705968
+  source:
+    repository: /workspace/molar_voice_super_gui_redesign/simulation/celisca
+    license: Unresolved; original and derived rights not established
+  tags:
+  - celisca
+  - detailed
+  - metric
+  - static
+  - experimental
+  - building_floor_2
+  created: '2026-10-16'
+  updated: '2026-10-16'
+
+- id: celisca_floor_2_detailed
+  version: 0.1.0
+  name: CELISCA F2 detailed (building floor 3)
+  description: Original metre-scale local F2 / 3.OG floor with full furniture visuals
+    and approximate bathroom additions; static doors/lifts; runtime qualification
+    pending.
+  status: available
+  dimension: 3D
+  simulator: gazebo
+  simulators:
+  - gazebo
+  - mujoco
+  - pybullet
+  - isaac
+  ros_package: robot_lab_maps
+  world_file: robot_lab_maps/maps/celisca_floor_2_detailed/worlds/celisca_floor_2_detailed.world
+  occupancy_map: robot_lab_maps/maps/celisca_floor_2_detailed/maps/map.pgm
+  ground_truth_available: true
+  dynamics:
+    static_obstacles: true
+    dynamic_obstacles: false
+    max_dynamic_count: 0
+  supported_robot_classes:
+  - mobile
+  - legged
+  - humanoid
+  - aerial
+  spawn_zones:
+  - id: source_checked
+    pose:
+      x: 2.1750000000000043
+      y: 1.674999999999999
+      z: 0.1
+    size:
+      x: 1.6
+      y: 1.6
+      z: 2.3
+  size:
+    x: 59.13669967651367
+    y: 26.269356727600098
+    z: 3.3596869707107544
+  source:
+    repository: /workspace/molar_voice_super_gui_redesign/simulation/celisca
+    license: Unresolved; original and derived rights not established
+  tags:
+  - celisca
+  - detailed
+  - metric
+  - static
+  - experimental
+  - building_floor_3
+  created: '2026-10-16'
+  updated: '2026-10-16'

@@ -1273,6 +1273,7 @@ class MuJoCoSpawner(Node):
         # The robot's whole drive block as JSON (drive_kinematics); empty
         # for the differential-drive parameters above.
         self.declare_parameter("drive_config", "")
+        self.declare_parameter("articulation_config", "")
         # 'auto' disables MuJoCo's collision midphase for large static
         # flex worlds (world_collision.configure_world_midphase); 'on'
         # keeps it, 'off' always disables it.
@@ -1334,6 +1335,7 @@ class MuJoCoSpawner(Node):
         self._effort_command = None
         self._effort_actuators = []
         self._pd_command = None
+        self._articulation = None
         self._pd_actuators = []
         self._go2_foot_ids = []
         self._go2_trunk_ids = []
@@ -1525,6 +1527,7 @@ class MuJoCoSpawner(Node):
 
         self._robot_free = not model or str(model).strip().lower() == "none"
         urdf = ''
+        articulation_contract = None
         use_fallback = False
         self._model_source = "fallback"
         if model and os.path.isfile(str(model)):
@@ -1615,6 +1618,15 @@ class MuJoCoSpawner(Node):
                     velocity_gain=wheel_config.get('mujoco_wheel_velocity_gain', 1.))
                 robot_mjcf = _add_steer_position_actuators(
                     robot_mjcf, self._drive.steer_joints)
+                articulation_config = self.get_parameter('articulation_config').value
+                if articulation_config:
+                    if self._pd_command is not None or self._effort_command is not None:
+                        raise ValueError('Articulation cannot share joint ownership with policy/effort input')
+                    from robot_lab_utils.urdf_articulation import URDFArticulation, add_mujoco_articulation_actuators
+                    articulation_contract = URDFArticulation(articulation_config, urdf, str(model))
+                    if set(articulation_contract.joints) & set(self._drive.wheel_joints):
+                        raise ValueError('Articulation cannot own drive wheels')
+                    robot_mjcf = add_mujoco_articulation_actuators(robot_mjcf, articulation_contract)
                 camera_offset = offset_from_root(
                     urdf, self.get_parameter("camera_link_name").value)
                 if camera_offset is not None \
@@ -1734,6 +1746,9 @@ class MuJoCoSpawner(Node):
 
         # Spawn and reset use the same pose and initial physics state.
         self._reset_physics()
+        if articulation_contract is not None:
+            from robot_lab_utils.urdf_articulation import ArticulationROS
+            self._articulation = ArticulationROS(self, articulation_contract, urdf, str(model))
 
         # Display-mode hold: joints keep their spawn pose through physics,
         # not by freezing the state.  Each held joint gets a passive
@@ -1759,7 +1774,7 @@ class MuJoCoSpawner(Node):
                 "Joint PD input: %s (%d joints, in-step PD, implicitfast)"
                 % (self._pd_command.topic, len(self._pd_actuators)))
         hold_mode = str(self.get_parameter("hold_position").value or "auto").lower()
-        if self._pd_command is not None:
+        if self._pd_command is not None or self._articulation is not None:
             hold_mode = "false"  # the PD actuators own every listed joint
         has_drive = (getattr(self, "_lw_qpos_adr", -1) >= 0
                      or getattr(self, "_rw_qpos_adr", -1) >= 0
@@ -2153,6 +2168,18 @@ class MuJoCoSpawner(Node):
             command = Twist()
             if self._drive.kind == "diff" and not getattr(self, '_ramp_watchdog_stop', False):
                 self._drive.reset()
+        if self._articulation is not None:
+            names = self._articulation.contract.joints
+            positions = {name: float(self._data.qpos[self._joint_name2id[name]]) for name in names}
+            velocities = {name: float(self._data.qvel[self._joint_name2dofadr[name]]) for name in names}
+            targets = self._articulation.step(positions, velocities, self._dt,
+                base_moving=math.hypot(*self._blin[:2]) > .025 or abs(self._bang[2]) > .05)
+            for values in targets.values():
+                for name, value in values.items():
+                    self._set_actuator(name, '_articulation', value)
+            if self._articulation.base_inhibited:
+                command = Twist()
+                self._drive.reset()
         if self._model.nu > 0 and not getattr(self, "_robot_free", False):
             targets = self._drive.targets(
                 command.linear.x, command.angular.z, dt=self._dt,
@@ -2236,6 +2263,8 @@ class MuJoCoSpawner(Node):
                 self._effort_command.clear()
             if self._pd_command is not None:
                 self._pd_command.clear()
+            if self._articulation is not None:
+                self._articulation.reset()
         self._sim_step = 0
         # Physics episode time restarts; ROS time continues from the offset.
         # Discard accumulated wall debt from the previous physical episode.

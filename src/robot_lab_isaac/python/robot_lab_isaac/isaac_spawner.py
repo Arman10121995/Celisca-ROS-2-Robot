@@ -305,6 +305,10 @@ class IsaacSpawner(Node):
         # wheel and steering targets are computed here, where
         # robot_lab_utils is importable, and sent to the runtime by joint.
         self.declare_parameter("drive_config", "")
+        self.declare_parameter("articulation_config", "")
+        self._articulation = None
+        self._articulation_sim_time = None
+        self._articulation_feedback_wall = -math.inf
         # URDF import: use the description's own <collision> geometry, as
         # Gazebo, PyBullet and MuJoCo do.  Colliders built from the visual
         # meshes gave Bumperbot faceted convex-hull wheels and casters that
@@ -450,6 +454,31 @@ class IsaacSpawner(Node):
         self._last_drive_time = now
         twist = self._twist
         stale = now - self._last_cmd_time > 0.5
+        articulation_targets = {'position': {}, 'velocity': {}}
+        if self._articulation is not None:
+            with self._lock:
+                measured = dict(self._state or {})
+                names = list(self._dofs)
+                feedback_wall = self._articulation_feedback_wall
+            if measured and now-feedback_wall <= .5:
+                stamp = float(measured['t'])
+                art_dt = 0. if self._articulation_sim_time is None else max(0., stamp-self._articulation_sim_time)
+                self._articulation_sim_time = stamp
+                if art_dt > 0 or not self._articulation.contract.initialized:
+                    articulation_targets = self._articulation.step(
+                        dict(zip(names, measured['jpos'])), dict(zip(names, measured['jvel'])), art_dt,
+                        base_moving=math.hypot(*measured['lin'][:2]) > .025 or abs(measured['ang'][2]) > .05)
+                else:
+                    articulation_targets = {kind: {name: value for name, value in self._articulation.contract.references.items()
+                        if self._articulation.contract.joints[name]['mode'] == kind} for kind in ('position','velocity')}
+            else:
+                if not self._articulation.contract.holding:
+                    self._articulation.contract.stop('waiting for fresh simulator feedback')
+                articulation_targets = {kind: {name: value for name, value in self._articulation.contract.references.items()
+                    if self._articulation.contract.joints[name]['mode'] == kind} for kind in ('position','velocity')}
+            if self._articulation.base_inhibited or not measured or now-feedback_wall > .5:
+                twist = Twist()
+                self._drive.reset()
         if self._drive.kind in ("diff", "skid_steer"):
             # SDK physics can be much slower than wall time. Advancing a
             # 0.5 m/s^2 limiter on every wall tick accelerated the tall T4
@@ -487,6 +516,10 @@ class IsaacSpawner(Node):
             **({"vy": twist.linear.y}
                if self._drive.kind in ("mecanum", "four_wheel_steer") else skid_feedback))
         try:
+            for name, value in articulation_targets['velocity'].items():
+                targets.velocity[name] = value
+            for name, value in articulation_targets['position'].items():
+                targets.position[name] = value
             proc.stdin.write(json.dumps({"joint_targets": {
                 "velocity": targets.velocity,
                 "position": targets.position}}) + "\n")
@@ -568,6 +601,14 @@ class IsaacSpawner(Node):
                 pkg_map[rp] = get_package_share_directory(rp)
             urdf, springs = _portable_description(urdf_text, pkg_map)
             self._urdf_text = urdf
+            articulation_config = self.get_parameter('articulation_config').value
+            if articulation_config:
+                if self._policy_targets is not None:
+                    raise ValueError('Articulation cannot share ownership with a learned policy')
+                from robot_lab_utils.urdf_articulation import ArticulationROS
+                self._articulation = ArticulationROS(self, articulation_config, urdf, str(model))
+                if set(self._articulation.contract.joints) & set(self._drive.wheel_joints):
+                    raise ValueError('Articulation cannot own drive wheels')
             # Odometry child frame: the description's root link (was fixed to
             # base_footprint, which most non-wheeled robots do not have).
             self._base_frame = urdf_link_frames(urdf)[1] or "base_footprint"
@@ -602,6 +643,7 @@ class IsaacSpawner(Node):
             "gui": bool(gui and os.environ.get("DISPLAY")),
             "physics_rate": float(self.get_parameter("physics_rate").value),
             "joint_pd": self._policy_targets.config if self._policy_targets else None,
+            "articulation_joints": self._articulation.contract.joints if self._articulation else {},
             "pd_joint_armature": float(self.get_parameter("pd_joint_armature").value),
             "ground_material": (json.loads(self.get_parameter("ground_material").value)
                                 if self.get_parameter("ground_material").value else None),
@@ -897,6 +939,9 @@ class IsaacSpawner(Node):
                         if self._reset_error is None:
                             with self._lock:
                                 self._state = None
+                                if self._articulation is not None:
+                                    self._articulation.reset()
+                                    self._articulation_sim_time = None
                                 self._pose_twist.reset()
                                 if self._drive.kind == "skid_steer":
                                     self._skid_pose_twist.reset()
@@ -904,6 +949,7 @@ class IsaacSpawner(Node):
                     elif ev == "state":
                         with self._lock:
                             self._state = msg
+                            self._articulation_feedback_wall = time.monotonic()
                     elif ev == "scan":
                         self._publish_scan(msg)
                     elif ev == "rgbd":

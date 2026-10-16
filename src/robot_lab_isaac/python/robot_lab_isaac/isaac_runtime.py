@@ -673,6 +673,40 @@ def _load_stl(path):
     return verts, tris
 
 
+def _author_articulation_drives(stage, joints):
+    """Optional bounded linear/angular drives; preserve passive caster joints."""
+    from pxr import Usd, UsdPhysics
+    found = set()
+    for prim in stage.Traverse(Usd.TraverseInstanceProxies()):
+        name = prim.GetName()
+        if name not in joints or prim.IsInstanceProxy():
+            continue
+        spec = joints[name]
+        linear = spec['type'] == 'prismatic'
+        if not prim.IsA(UsdPhysics.PrismaticJoint if linear else UsdPhysics.RevoluteJoint):
+            raise ValueError('Imported articulation joint has wrong native type: '+name)
+        scale = 1. if linear else math.pi/180.
+        drive = UsdPhysics.DriveAPI.Apply(prim, 'linear' if linear else 'angular')
+        position = spec['mode'] == 'position'
+        (drive.GetTypeAttr() or drive.CreateTypeAttr()).Set('force')
+        (drive.GetStiffnessAttr() or drive.CreateStiffnessAttr()).Set(spec['kp']*scale if position else 0.)
+        (drive.GetDampingAttr() or drive.CreateDampingAttr()).Set(spec['kd']*scale)
+        (drive.GetMaxForceAttr() or drive.CreateMaxForceAttr()).Set(spec['effort'])
+        (drive.GetTargetPositionAttr() or drive.CreateTargetPositionAttr()).Set(0.)
+        (drive.GetTargetVelocityAttr() or drive.CreateTargetVelocityAttr()).Set(0.)
+        found.add(name)
+    if set(joints)-found:
+        raise ValueError('Imported articulation joints missing: '+str(sorted(set(joints)-found)))
+    return found
+
+
+def _measured_articulation_hold(robot, dof_names, joints):
+    positions = dict(zip(dof_names, [float(value) for value in robot.get_joint_positions()]))
+    return {kind: {name: positions[name] if kind == 'position' else 0.
+                  for name,spec in joints.items() if spec['mode'] == kind}
+            for kind in ('position','velocity')}
+
+
 class _StdinReader(threading.Thread):
     """Reads JSON commands from stdin; sets stop on EOF."""
 
@@ -682,6 +716,7 @@ class _StdinReader(threading.Thread):
         super().__init__()
         self.cmd = [0.0, 0.0]
         self.joint_targets = None  # {"velocity": {joint: rad/s}, "position": {joint: rad}}
+        self.targets_received_at = -float('inf')
         self.stop = False
         self.reset_requested = False
 
@@ -699,6 +734,7 @@ class _StdinReader(threading.Thread):
                     self.cmd = list(msg["cmd_vel"])[:2]
                 elif "joint_targets" in msg:
                     self.joint_targets = msg["joint_targets"]
+                    self.targets_received_at = time.monotonic()
                 elif msg.get("reset"):
                     # Sent by the spawner's /robot_lab/reset service, which
                     # used to report success while this reader ignored it.
@@ -1175,6 +1211,9 @@ def _run_stage(app, reader, cfg, state):
             _emit({"event": "log", "msg": "Roller contacts: %d collision prims at a 2 mm "
                    "contact offset; solver iterations %s" % (tuned, iterations)})
         joint_pd = cfg.get("joint_pd") or None
+        articulation_joints = cfg.get('articulation_joints', {})
+        if articulation_joints:
+            _author_articulation_drives(stage_obj, articulation_joints)
         if joint_pd:
             armature = float(cfg.get("pd_joint_armature") or 0.0)
             explicit = str(cfg.get("pd_actuator") or "implicit") == "dc_motor"
@@ -1221,8 +1260,12 @@ def _run_stage(app, reader, cfg, state):
         if joint_pd:
             _place_joint_pd_defaults(robot, dof_names, joint_pd)
             reader.joint_targets = joint_pd_targets(joint_pd)
+        if articulation_joints:
+            reader.joint_targets = _measured_articulation_hold(robot, dof_names, articulation_joints)
+            reader.targets_received_at = time.monotonic()
     else:
         joint_pd = None
+        articulation_joints = {}
         # Robot-free display: still step the world so the map renders; there
         # is simply no articulation to drive or report joints for.
         world.reset()
@@ -1278,6 +1321,9 @@ def _run_stage(app, reader, cfg, state):
             dc_motor = _dc_motor_joints(stage_utils.get_current_stage(), joint_pd, dof_names)
             _emit({"event": "log", "msg": "DC motor PD on %d joints (velocity limits %s rad/s)"
                    % (len(dc_motor), sorted({round(j[5], 2) for j in dc_motor}))})
+    if articulation_joints:
+        hold_joints = False  # articulated servos hold selected joints; casters stay free
+    articulation_watchdog_hold = None
     hold_pose = None
     if hold_joints and not robot_free and robot is not None:
         try:
@@ -1298,6 +1344,7 @@ def _run_stage(app, reader, cfg, state):
                 _emit({'event': 'reset_done', 'error': str(exc)})
             else:
                 reader.cmd = (0.0, 0.0)
+                articulation_watchdog_hold = None
                 if joint_pd and robot is not None:
                     # Back to the policy's standing pose, not zero angles.
                     _place_joint_pd_defaults(robot, dof_names, joint_pd)
@@ -1305,6 +1352,9 @@ def _run_stage(app, reader, cfg, state):
                 elif reader.joint_targets is not None:
                     reader.joint_targets = {kind: {name: 0.0 for name in values}
                         for kind, values in reader.joint_targets.items()}
+                if articulation_joints and robot is not None:
+                    reader.joint_targets = _measured_articulation_hold(robot, dof_names, articulation_joints)
+                    reader.targets_received_at = time.monotonic()
                 # The step counter keeps running so /clock never goes back.
                 _emit({"event": "log",
                        "msg": "Reset applied: world returned to its initial state"})
@@ -1322,6 +1372,16 @@ def _run_stage(app, reader, cfg, state):
             except Exception:
                 pass
         targets = reader.joint_targets
+        if articulation_joints and robot is not None:
+            if time.monotonic()-reader.targets_received_at > .5:
+                if articulation_watchdog_hold is None:
+                    articulation_watchdog_hold = _measured_articulation_hold(robot, dof_names, articulation_joints)
+                # Stop every wheel and the roller while holding measured lift/slide.
+                targets = {'position': dict(articulation_watchdog_hold['position']),
+                           'velocity': {name: 0. for name in cfg.get('drive_wheel_joints', [])}}
+                targets['velocity'].update(articulation_watchdog_hold['velocity'])
+            else:
+                articulation_watchdog_hold = None
         if dc_motor and targets is not None and robot is not None:
             # Explicit PD through the motors' torque-speed limits, every
             # physics step; the position targets stop at this torque.

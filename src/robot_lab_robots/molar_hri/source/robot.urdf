@@ -1,0 +1,1316 @@
+<?xml version='1.0' encoding='utf-8'?>
+<robot name="molar_hri">
+  <!--Metres / Z-up / +X forward. Estimated inertials and collisions; no hardware controller.-->
+  <link name="base_link">
+    <inertial>
+      <origin xyz="0 0 0.42" rpy="0 0 0" />
+      <mass value="137.2" />
+      <inertia ixx="23.8602233" iyy="25.5325656" izz="10.7481222" ixy="0" ixz="0" iyz="0" />
+    </inertial>
+    <visual name="Audio_Amp_Standoffs">
+      <geometry>
+        <mesh filename="meshes/molar_hri/Audio_Amp_Standoffs.stl" scale="1 1 1" />
+      </geometry>
+      <material name="Audio_Amp_Standoffs_material">
+        <color rgba="0.282353 0.356863 0.321569 1" />
+      </material>
+    </visual>
+    <visual name="Audio_Amplifier">
+      <geometry>
+        <mesh filename="meshes/molar_hri/Audio_Amplifier.stl" scale="1 1 1" />
+      </geometry>
+      <material name="Audio_Amplifier_material">
+        <color rgba="0.156863 0.486275 0.290196 1" />
+      </material>
+    </visual>
+    <visual name="Cable_Route_W1">
+      <geometry>
+        <mesh filename="meshes/molar_hri/Cable_Route_W1.stl" scale="1 1 1" />
+      </geometry>
+      <material name="Cable_Route_W1_material">
+        <color rgba="0.933333 0.360784 0.164706 1" />
+      </material>
+    </visual>
+    <visual name="Cable_Route_W10">
+      <geometry>
+        <mesh filename="meshes/molar_hri/Cable_Route_W10.stl" scale="1 1 1" />
+      </geometry>
+      <material name="Cable_Route_W10_material">
+        <color rgba="0.301961 0.623529 0.921569 1" />
+      </material>
+    </visual>
+    <visual name="Cable_Route_W11">
+      <geometry>
+        <mesh filename="meshes/molar_hri/Cable_Route_W11.stl" scale="1 1 1" />
+      </geometry>
+      <material name="Cable_Route_W11_material">
+        <color rgba="0.368627 0.682353 0.933333 1" />
+      </material>
+    </visual>
+    <visual name="Cable_Route_W12">
+      <geometry>
+        <mesh filename="meshes/molar_hri/Cable_Route_W12.stl" scale="1 1 1" />
+      </geometry>
+      <material name="Cable_Route_W12_material">
+        <color rgba="0.168627 0.384314 0.745098 1" />
+      </material>
+    </visual>
+    <visual name="Cable_Route_W13">
+      <geometry>
+        <mesh filename="meshes/molar_hri/Cable_Route_W13.stl" scale="1 1 1" />
+      </geometry>
+      <material name="Cable_Route_W13_material">
+        <color rgba="0.556863 0.321569 0.768627 1" />
+      </material>
+    </visual>
+    <visual name="Cable_Route_W14">
+      <geometry>
+        <mesh filename="meshes/molar_hri/Cable_Route_W14.stl" scale="1 1 1" />
+      </geometry>
+      <material name="Cable_Route_W14_material">
+        <color rgba="0.14902 0.65098 0.356863 1" />
+      </material>
+    </visual>
+    <visual name="Cable_Route_W2">
+      <geometry>
+        <mesh filename="meshes/molar_hri/Cable_Route_W2.stl" scale="1 1 1" />
+      </geometry>
+      <material name="Cable_Route_W2_material">
+        <color rgba="0.964706 0.690196 0.176471 1" />
+      </material>
+    </visual>
+    <visual name="Cable_Route_W3">
+      <geometry>
+        <mesh filename="meshes/molar_hri/Cable_Route_W3.stl" scale="1 1 1" />
+      </geometry>
+      <material name="Cable_Route_W3_material">
+        <color rgba="0.968627 0.756863 0.25098 1" />
+      </material>
+    </visual>
+    <visual name="Cable_Route_W4">
+      <geometry>
+        <mesh filename="meshes/molar_hri/Cable_Route_W4.stl" scale="1 1 1" />
+      </geometry>
+      <material name="Cable_Route_W4_material">
+        <color rgba="0.94902 0.556863 0.168627 1" />
+      </material>
+    </visual>
+    <visual name="Cable_Route_W5">
+      <geometry>
+        <mesh filename="meshes/molar_hri/Cable_Route_W5.stl" scale="1 1 1" />
+      </geometry>
+      <material name="Cable_Route_W5_material">
+        <color rgba="0.886275 0.439216 0.14902 1" />
+      </material>
+    </visual>
+    <visual name="Cable_Route_W6">
+      <geometry>
+        <mesh filename="meshes/molar_hri/Cable_Route_W6.stl" scale="1 1 1" />
+      </geometry>
+      <material name="Cable_Route_W6_material">
+        <color rgba="0.745098 0.454902 0.211765 1" />
+      </material>
+    </visual>
+    <visual name="Cable_Route_W7">
+      <geometry>
+        <mesh filename="meshes/molar_hri/Cable_Route_W7.stl" scale="1 1 1" />
+      </geometry>
+      <material name="Cable_Route_W7_material">
+        <color rgba="0.12549 0.505882 0.854902 1" />
+      </material>
+    </visual>
+    <visual name="Cable_Route_W8">
+      <geometry>
+        <mesh filename="meshes/molar_hri/Cable_Route_W8.stl" scale="1 1 1" />
+      </geometry>
+      <material name="Cable_Route_W8_material">
+        <color rgba="0 0.666667 1 1" />
+      </material>
+    </visual>
+    <visual name="Cable_Route_W9">
+      <geometry>
+        <mesh filename="meshes/molar_hri/Cable_Route_W9.stl" scale="1 1 1" />
+      </geometry>
+      <material name="Cable_Route_W9_material">
+        <color rgba="0.215686 0.564706 0.901961 1" />
+      </material>
+    </visual>
+    <visual name="Collar_Friction_Pad_Front_Left">
+      <geometry>
+        <mesh filename="meshes/molar_hri/Collar_Friction_Pad_Front_Left.stl" scale="1 1 1" />
+      </geometry>
+      <material name="Collar_Friction_Pad_Front_Left_material">
+        <color rgba="0.776471 0.329412 0.101961 1" />
+      </material>
+    </visual>
+    <visual name="Collar_Friction_Pad_Front_Right">
+      <geometry>
+        <mesh filename="meshes/molar_hri/Collar_Friction_Pad_Front_Right.stl" scale="1 1 1" />
+      </geometry>
+      <material name="Collar_Friction_Pad_Front_Right_material">
+        <color rgba="0.776471 0.329412 0.101961 1" />
+      </material>
+    </visual>
+    <visual name="Collar_Friction_Pad_Rear_Left">
+      <geometry>
+        <mesh filename="meshes/molar_hri/Collar_Friction_Pad_Rear_Left.stl" scale="1 1 1" />
+      </geometry>
+      <material name="Collar_Friction_Pad_Rear_Left_material">
+        <color rgba="0.776471 0.329412 0.101961 1" />
+      </material>
+    </visual>
+    <visual name="Collar_Friction_Pad_Rear_Right">
+      <geometry>
+        <mesh filename="meshes/molar_hri/Collar_Friction_Pad_Rear_Right.stl" scale="1 1 1" />
+      </geometry>
+      <material name="Collar_Friction_Pad_Rear_Right_material">
+        <color rgba="0.776471 0.329412 0.101961 1" />
+      </material>
+    </visual>
+    <visual name="DC_12V_Converter">
+      <geometry>
+        <mesh filename="meshes/molar_hri/DC_12V_Converter.stl" scale="1 1 1" />
+      </geometry>
+      <material name="DC_12V_Converter_material">
+        <color rgba="0.188235 0.521569 0.305882 1" />
+      </material>
+    </visual>
+    <visual name="DC_Jetson_Converter">
+      <geometry>
+        <mesh filename="meshes/molar_hri/DC_Jetson_Converter.stl" scale="1 1 1" />
+      </geometry>
+      <material name="DC_Jetson_Converter_material">
+        <color rgba="0.188235 0.521569 0.305882 1" />
+      </material>
+    </visual>
+    <visual name="DP_HDMI_Adapter">
+      <geometry>
+        <mesh filename="meshes/molar_hri/DP_HDMI_Adapter.stl" scale="1 1 1" />
+      </geometry>
+      <material name="DP_HDMI_Adapter_material">
+        <color rgba="0.27451 0.321569 0.352941 1" />
+      </material>
+    </visual>
+    <visual name="Display_Retainer">
+      <geometry>
+        <mesh filename="meshes/molar_hri/Display_Retainer.stl" scale="1 1 1" />
+      </geometry>
+      <material name="Display_Retainer_material">
+        <color rgba="0.282353 0.356863 0.321569 1" />
+      </material>
+    </visual>
+    <visual name="EMC_Filter_PSZ1040">
+      <geometry>
+        <mesh filename="meshes/molar_hri/EMC_Filter_PSZ1040.stl" scale="1 1 1" />
+      </geometry>
+      <material name="EMC_Filter_PSZ1040_material">
+        <color rgba="0.188235 0.521569 0.305882 1" />
+      </material>
+    </visual>
+    <visual name="Electronics_Tray">
+      <geometry>
+        <mesh filename="meshes/molar_hri/Electronics_Tray.stl" scale="1 1 1" />
+      </geometry>
+      <material name="Electronics_Tray_material">
+        <color rgba="0.203922 0.239216 0.266667 1" />
+      </material>
+    </visual>
+    <visual name="Ferrite_Clamp">
+      <geometry>
+        <mesh filename="meshes/molar_hri/Ferrite_Clamp.stl" scale="1 1 1" />
+      </geometry>
+      <material name="Ferrite_Clamp_material">
+        <color rgba="0.376471 0.415686 0.462745 1" />
+      </material>
+    </visual>
+    <visual name="Fingerprint_Reader">
+      <geometry>
+        <mesh filename="meshes/molar_hri/Fingerprint_Reader.stl" scale="1 1 1" />
+      </geometry>
+      <material name="Fingerprint_Reader_material">
+        <color rgba="0.07451 0.109804 0.133333 1" />
+      </material>
+    </visual>
+    <visual name="Fingerprint_Shelf">
+      <geometry>
+        <mesh filename="meshes/molar_hri/Fingerprint_Shelf.stl" scale="1 1 1" />
+      </geometry>
+      <material name="Fingerprint_Shelf_material">
+        <color rgba="0.282353 0.356863 0.321569 1" />
+      </material>
+    </visual>
+    <visual name="Front_Bezel">
+      <geometry>
+        <mesh filename="meshes/molar_hri/Front_Bezel.stl" scale="1 1 1" />
+      </geometry>
+      <material name="Front_Bezel_material">
+        <color rgba="0.184314 0.219608 0.247059 1" />
+      </material>
+    </visual>
+    <visual name="Ground_Loop_Isolator">
+      <geometry>
+        <mesh filename="meshes/molar_hri/Ground_Loop_Isolator.stl" scale="1 1 1" />
+      </geometry>
+      <material name="Ground_Loop_Isolator_material">
+        <color rgba="0.27451 0.321569 0.352941 1" />
+      </material>
+    </visual>
+    <visual name="Head_Base_Mount_Plate">
+      <geometry>
+        <mesh filename="meshes/molar_hri/Head_Base_Mount_Plate.stl" scale="1 1 1" />
+      </geometry>
+      <material name="Head_Base_Mount_Plate_material">
+        <color rgba="0.376471 0.415686 0.462745 1" />
+      </material>
+    </visual>
+    <visual name="Inline_Fuse">
+      <geometry>
+        <mesh filename="meshes/molar_hri/Inline_Fuse.stl" scale="1 1 1" />
+      </geometry>
+      <material name="Inline_Fuse_material">
+        <color rgba="0.282353 0.356863 0.321569 1" />
+      </material>
+    </visual>
+    <visual name="Jetson_AGX_Orin">
+      <geometry>
+        <mesh filename="meshes/molar_hri/Jetson_AGX_Orin.stl" scale="1 1 1" />
+      </geometry>
+      <material name="Jetson_AGX_Orin_material">
+        <color rgba="0.188235 0.356863 0.223529 1" />
+      </material>
+    </visual>
+    <visual name="Jetson_Clamp_Cradle">
+      <geometry>
+        <mesh filename="meshes/molar_hri/Jetson_Clamp_Cradle.stl" scale="1 1 1" />
+      </geometry>
+      <material name="Jetson_Clamp_Cradle_material">
+        <color rgba="0.376471 0.415686 0.462745 1" />
+      </material>
+    </visual>
+    <visual name="Main_Shell">
+      <geometry>
+        <mesh filename="meshes/molar_hri/Main_Shell.stl" scale="1 1 1" />
+      </geometry>
+      <material name="Main_Shell_material">
+        <color rgba="0.223529 0.258824 0.286275 1" />
+      </material>
+    </visual>
+    <visual name="Mast_Clamp_Bracket_Left">
+      <geometry>
+        <mesh filename="meshes/molar_hri/Mast_Clamp_Bracket_Left.stl" scale="1 1 1" />
+      </geometry>
+      <material name="Mast_Clamp_Bracket_Left_material">
+        <color rgba="0.407843 0.447059 0.494118 1" />
+      </material>
+    </visual>
+    <visual name="Mast_Clamp_Bracket_Right">
+      <geometry>
+        <mesh filename="meshes/molar_hri/Mast_Clamp_Bracket_Right.stl" scale="1 1 1" />
+      </geometry>
+      <material name="Mast_Clamp_Bracket_Right_material">
+        <color rgba="0.407843 0.447059 0.494118 1" />
+      </material>
+    </visual>
+    <visual name="Mast_Clamp_Strap_Left">
+      <geometry>
+        <mesh filename="meshes/molar_hri/Mast_Clamp_Strap_Left.stl" scale="1 1 1" />
+      </geometry>
+      <material name="Mast_Clamp_Strap_Left_material">
+        <color rgba="0.305882 0.337255 0.376471 1" />
+      </material>
+    </visual>
+    <visual name="Mast_Clamp_Strap_Right">
+      <geometry>
+        <mesh filename="meshes/molar_hri/Mast_Clamp_Strap_Right.stl" scale="1 1 1" />
+      </geometry>
+      <material name="Mast_Clamp_Strap_Right_material">
+        <color rgba="0.305882 0.337255 0.376471 1" />
+      </material>
+    </visual>
+    <visual name="Microphone_Pod_Base">
+      <geometry>
+        <mesh filename="meshes/molar_hri/Microphone_Pod_Base.stl" scale="1 1 1" />
+      </geometry>
+      <material name="Microphone_Pod_Base_material">
+        <color rgba="0.203922 0.239216 0.266667 1" />
+      </material>
+    </visual>
+    <visual name="Microphone_Pod_Grille">
+      <geometry>
+        <mesh filename="meshes/molar_hri/Microphone_Pod_Grille.stl" scale="1 1 1" />
+      </geometry>
+      <material name="Microphone_Pod_Grille_material">
+        <color rgba="0.109804 0.141176 0.156863 1" />
+      </material>
+    </visual>
+    <visual name="Microphone_TPU_Gasket">
+      <geometry>
+        <mesh filename="meshes/molar_hri/Microphone_TPU_Gasket.stl" scale="1 1 1" />
+      </geometry>
+      <material name="Microphone_TPU_Gasket_material">
+        <color rgba="0.133333 0.607843 0.698039 1" />
+      </material>
+    </visual>
+    <visual name="Platform_Segment_Centre">
+      <geometry>
+        <mesh filename="meshes/molar_hri/Platform_Segment_Centre.stl" scale="1 1 1" />
+      </geometry>
+      <material name="Platform_Segment_Centre_material">
+        <color rgba="0.368627 0.407843 0.454902 1" />
+      </material>
+    </visual>
+    <visual name="Platform_Segment_Left">
+      <geometry>
+        <mesh filename="meshes/molar_hri/Platform_Segment_Left.stl" scale="1 1 1" />
+      </geometry>
+      <material name="Platform_Segment_Left_material">
+        <color rgba="0.337255 0.376471 0.423529 1" />
+      </material>
+    </visual>
+    <visual name="Platform_Segment_Right">
+      <geometry>
+        <mesh filename="meshes/molar_hri/Platform_Segment_Right.stl" scale="1 1 1" />
+      </geometry>
+      <material name="Platform_Segment_Right_material">
+        <color rgba="0.337255 0.376471 0.423529 1" />
+      </material>
+    </visual>
+    <visual name="Rail_Front">
+      <geometry>
+        <mesh filename="meshes/molar_hri/Rail_Front.stl" scale="1 1 1" />
+      </geometry>
+      <material name="Rail_Front_material">
+        <color rgba="0.690196 0.705882 0.729412 1" />
+      </material>
+    </visual>
+    <visual name="Rail_Rear">
+      <geometry>
+        <mesh filename="meshes/molar_hri/Rail_Rear.stl" scale="1 1 1" />
+      </geometry>
+      <material name="Rail_Rear_material">
+        <color rgba="0.690196 0.705882 0.729412 1" />
+      </material>
+    </visual>
+    <visual name="Rail_Seat_Arm_Left">
+      <geometry>
+        <mesh filename="meshes/molar_hri/Rail_Seat_Arm_Left.stl" scale="1 1 1" />
+      </geometry>
+      <material name="Rail_Seat_Arm_Left_material">
+        <color rgba="0.439216 0.478431 0.52549 1" />
+      </material>
+    </visual>
+    <visual name="Rail_Seat_Arm_Right">
+      <geometry>
+        <mesh filename="meshes/molar_hri/Rail_Seat_Arm_Right.stl" scale="1 1 1" />
+      </geometry>
+      <material name="Rail_Seat_Arm_Right_material">
+        <color rgba="0.439216 0.478431 0.52549 1" />
+      </material>
+    </visual>
+    <visual name="ReSpeaker_Top_Array">
+      <geometry>
+        <mesh filename="meshes/molar_hri/ReSpeaker_Top_Array.stl" scale="1 1 1" />
+      </geometry>
+      <material name="ReSpeaker_Top_Array_material">
+        <color rgba="0.137255 0.466667 0.329412 1" />
+      </material>
+    </visual>
+    <visual name="RealSense_D456">
+      <geometry>
+        <mesh filename="meshes/molar_hri/RealSense_D456.stl" scale="1 1 1" />
+      </geometry>
+      <material name="RealSense_D456_material">
+        <color rgba="0.184314 0.211765 0.231373 1" />
+      </material>
+    </visual>
+    <visual name="Rear_IO_Prototype">
+      <geometry>
+        <mesh filename="meshes/molar_hri/Rear_IO_Prototype.stl" scale="1 1 1" />
+      </geometry>
+      <material name="Rear_IO_Prototype_material">
+        <color rgba="0.27451 0.321569 0.352941 1" />
+      </material>
+    </visual>
+    <visual name="Rear_Service_Panel">
+      <geometry>
+        <mesh filename="meshes/molar_hri/Rear_Service_Panel.stl" scale="1 1 1" />
+      </geometry>
+      <material name="Rear_Service_Panel_material">
+        <color rgba="0.239216 0.278431 0.305882 1" />
+      </material>
+    </visual>
+    <visual name="Robot_Antenna_Left">
+      <geometry>
+        <mesh filename="meshes/molar_hri/Robot_Antenna_Left.stl" scale="1 1 1" />
+      </geometry>
+      <material name="Robot_Antenna_Left_material">
+        <color rgba="0.176471 0.188235 0.203922 1" />
+      </material>
+    </visual>
+    <visual name="Robot_Antenna_Right">
+      <geometry>
+        <mesh filename="meshes/molar_hri/Robot_Antenna_Right.stl" scale="1 1 1" />
+      </geometry>
+      <material name="Robot_Antenna_Right_material">
+        <color rgba="0.176471 0.188235 0.203922 1" />
+      </material>
+    </visual>
+    <visual name="Robot_Battery_Hatch">
+      <geometry>
+        <mesh filename="meshes/molar_hri/Robot_Battery_Hatch.stl" scale="1 1 1" />
+      </geometry>
+      <material name="Robot_Battery_Hatch_material">
+        <color rgba="0.784314 0.792157 0.803922 1" />
+      </material>
+    </visual>
+    <visual name="Robot_Beacon_Left">
+      <geometry>
+        <mesh filename="meshes/molar_hri/Robot_Beacon_Left.stl" scale="1 1 1" />
+      </geometry>
+      <material name="Robot_Beacon_Left_material">
+        <color rgba="0.941176 0.745098 0.117647 1" />
+      </material>
+    </visual>
+    <visual name="Robot_Beacon_Right">
+      <geometry>
+        <mesh filename="meshes/molar_hri/Robot_Beacon_Right.stl" scale="1 1 1" />
+      </geometry>
+      <material name="Robot_Beacon_Right_material">
+        <color rgba="0.941176 0.745098 0.117647 1" />
+      </material>
+    </visual>
+    <visual name="Robot_Bluespot">
+      <geometry>
+        <mesh filename="meshes/molar_hri/Robot_Bluespot.stl" scale="1 1 1" />
+      </geometry>
+      <material name="Robot_Bluespot_material">
+        <color rgba="0.117647 0.313725 0.627451 1" />
+      </material>
+    </visual>
+    <visual name="Robot_Charge_Contact">
+      <geometry>
+        <mesh filename="meshes/molar_hri/Robot_Charge_Contact.stl" scale="1 1 1" />
+      </geometry>
+      <material name="Robot_Charge_Contact_material">
+        <color rgba="0.588235 0.607843 0.627451 1" />
+      </material>
+    </visual>
+    <visual name="Robot_Chassis_Body">
+      <geometry>
+        <mesh filename="meshes/molar_hri/Robot_Chassis_Body.stl" scale="1 1 1" />
+      </geometry>
+      <material name="Robot_Chassis_Body_material">
+        <color rgba="0.94902 0.956863 0.964706 1" />
+      </material>
+    </visual>
+    <visual name="Robot_Chassis_Skirt">
+      <geometry>
+        <mesh filename="meshes/molar_hri/Robot_Chassis_Skirt.stl" scale="1 1 1" />
+      </geometry>
+      <material name="Robot_Chassis_Skirt_material">
+        <color rgba="0.086275 0.094118 0.109804 1" />
+      </material>
+    </visual>
+    <visual name="Robot_Control_Left">
+      <geometry>
+        <mesh filename="meshes/molar_hri/Robot_Control_Left.stl" scale="1 1 1" />
+      </geometry>
+      <material name="Robot_Control_Left_material">
+        <color rgba="0.176471 0.196078 0.227451 1" />
+      </material>
+    </visual>
+    <visual name="Robot_Control_Panel">
+      <geometry>
+        <mesh filename="meshes/molar_hri/Robot_Control_Panel.stl" scale="1 1 1" />
+      </geometry>
+      <material name="Robot_Control_Panel_material">
+        <color rgba="0.156863 0.164706 0.180392 1" />
+      </material>
+    </visual>
+    <visual name="Robot_Control_Right">
+      <geometry>
+        <mesh filename="meshes/molar_hri/Robot_Control_Right.stl" scale="1 1 1" />
+      </geometry>
+      <material name="Robot_Control_Right_material">
+        <color rgba="0.176471 0.196078 0.227451 1" />
+      </material>
+    </visual>
+    <visual name="Robot_Cross_Brace">
+      <geometry>
+        <mesh filename="meshes/molar_hri/Robot_Cross_Brace.stl" scale="1 1 1" />
+      </geometry>
+      <material name="Robot_Cross_Brace_material">
+        <color rgba="0.627451 0.647059 0.666667 1" />
+      </material>
+    </visual>
+    <visual name="Robot_Drive_Gas_Springs">
+      <geometry>
+        <mesh filename="meshes/molar_hri/Robot_Drive_Gas_Springs.stl" scale="1 1 1" />
+      </geometry>
+      <material name="Robot_Drive_Gas_Springs_material">
+        <color rgba="0.392157 0.411765 0.439216 1" />
+      </material>
+    </visual>
+    <visual name="Robot_Estop_Left">
+      <geometry>
+        <mesh filename="meshes/molar_hri/Robot_Estop_Left.stl" scale="1 1 1" />
+      </geometry>
+      <material name="Robot_Estop_Left_material">
+        <color rgba="0.784314 0.098039 0.098039 1" />
+      </material>
+    </visual>
+    <visual name="Robot_Estop_Right">
+      <geometry>
+        <mesh filename="meshes/molar_hri/Robot_Estop_Right.stl" scale="1 1 1" />
+      </geometry>
+      <material name="Robot_Estop_Right_material">
+        <color rgba="0.784314 0.098039 0.098039 1" />
+      </material>
+    </visual>
+    <visual name="Robot_IO_Panel">
+      <geometry>
+        <mesh filename="meshes/molar_hri/Robot_IO_Panel.stl" scale="1 1 1" />
+      </geometry>
+      <material name="Robot_IO_Panel_material">
+        <color rgba="0.156863 0.172549 0.196078 1" />
+      </material>
+    </visual>
+    <visual name="Robot_Indicator_Lamps">
+      <geometry>
+        <mesh filename="meshes/molar_hri/Robot_Indicator_Lamps.stl" scale="1 1 1" />
+      </geometry>
+      <material name="Robot_Indicator_Lamps_material">
+        <color rgba="0.941176 0.72549 0.078431 1" />
+      </material>
+    </visual>
+    <visual name="Robot_Label_L35TC">
+      <geometry>
+        <mesh filename="meshes/molar_hri/Robot_Label_L35TC.stl" scale="1 1 1" />
+      </geometry>
+      <material name="Robot_Label_L35TC_material">
+        <color rgba="0.188235 0.215686 0.243137 1" />
+      </material>
+    </visual>
+    <visual name="Robot_Lift_Spindle">
+      <geometry>
+        <mesh filename="meshes/molar_hri/Robot_Lift_Spindle.stl" scale="1 1 1" />
+      </geometry>
+      <material name="Robot_Lift_Spindle_material">
+        <color rgba="0.588235 0.607843 0.635294 1" />
+      </material>
+    </visual>
+    <visual name="Robot_Logo_ASTI">
+      <geometry>
+        <mesh filename="meshes/molar_hri/Robot_Logo_ASTI.stl" scale="1 1 1" />
+      </geometry>
+      <material name="Robot_Logo_ASTI_material">
+        <color rgba="0.109804 0.12549 0.14902 1" />
+      </material>
+    </visual>
+    <visual name="Robot_Mast_Drive_Strip_Left">
+      <geometry>
+        <mesh filename="meshes/molar_hri/Robot_Mast_Drive_Strip_Left.stl" scale="1 1 1" />
+      </geometry>
+      <material name="Robot_Mast_Drive_Strip_Left_material">
+        <color rgba="0.882353 0.890196 0.862745 1" />
+      </material>
+    </visual>
+    <visual name="Robot_Mast_Drive_Strip_Right">
+      <geometry>
+        <mesh filename="meshes/molar_hri/Robot_Mast_Drive_Strip_Right.stl" scale="1 1 1" />
+      </geometry>
+      <material name="Robot_Mast_Drive_Strip_Right_material">
+        <color rgba="0.882353 0.890196 0.862745 1" />
+      </material>
+    </visual>
+    <visual name="Robot_Mast_Inner_Panel_Left">
+      <geometry>
+        <mesh filename="meshes/molar_hri/Robot_Mast_Inner_Panel_Left.stl" scale="1 1 1" />
+      </geometry>
+      <material name="Robot_Mast_Inner_Panel_Left_material">
+        <color rgba="0.101961 0.113725 0.133333 1" />
+      </material>
+    </visual>
+    <visual name="Robot_Mast_Inner_Panel_Right">
+      <geometry>
+        <mesh filename="meshes/molar_hri/Robot_Mast_Inner_Panel_Right.stl" scale="1 1 1" />
+      </geometry>
+      <material name="Robot_Mast_Inner_Panel_Right_material">
+        <color rgba="0.101961 0.113725 0.133333 1" />
+      </material>
+    </visual>
+    <visual name="Robot_Mast_Left">
+      <geometry>
+        <mesh filename="meshes/molar_hri/Robot_Mast_Left.stl" scale="1 1 1" />
+      </geometry>
+      <material name="Robot_Mast_Left_material">
+        <color rgba="0.972549 0.976471 0.980392 1" />
+      </material>
+    </visual>
+    <visual name="Robot_Mast_Right">
+      <geometry>
+        <mesh filename="meshes/molar_hri/Robot_Mast_Right.stl" scale="1 1 1" />
+      </geometry>
+      <material name="Robot_Mast_Right_material">
+        <color rgba="0.972549 0.976471 0.980392 1" />
+      </material>
+    </visual>
+    <visual name="Robot_Nameplate_proANT">
+      <geometry>
+        <mesh filename="meshes/molar_hri/Robot_Nameplate_proANT.stl" scale="1 1 1" />
+      </geometry>
+      <material name="Robot_Nameplate_proANT_material">
+        <color rgba="0.137255 0.156863 0.188235 1" />
+      </material>
+    </visual>
+    <visual name="Robot_Rating_Plate">
+      <geometry>
+        <mesh filename="meshes/molar_hri/Robot_Rating_Plate.stl" scale="1 1 1" />
+      </geometry>
+      <material name="Robot_Rating_Plate_material">
+        <color rgba="0.862745 0.870588 0.882353 1" />
+      </material>
+    </visual>
+    <visual name="Robot_Reverse_Scanner">
+      <geometry>
+        <mesh filename="meshes/molar_hri/Robot_Reverse_Scanner.stl" scale="1 1 1" />
+      </geometry>
+      <material name="Robot_Reverse_Scanner_material">
+        <color rgba="0.156863 0.172549 0.196078 1" />
+      </material>
+    </visual>
+    <visual name="Robot_Safety_Scanner">
+      <geometry>
+        <mesh filename="meshes/molar_hri/Robot_Safety_Scanner.stl" scale="1 1 1" />
+      </geometry>
+      <material name="Robot_Safety_Scanner_material">
+        <color rgba="0.172549 0.184314 0.2 1" />
+      </material>
+    </visual>
+    <visual name="Robot_Side_Scanners">
+      <geometry>
+        <mesh filename="meshes/molar_hri/Robot_Side_Scanners.stl" scale="1 1 1" />
+      </geometry>
+      <material name="Robot_Side_Scanners_material">
+        <color rgba="0.196078 0.215686 0.243137 1" />
+      </material>
+    </visual>
+    <visual name="Robot_Speakers">
+      <geometry>
+        <mesh filename="meshes/molar_hri/Robot_Speakers.stl" scale="1 1 1" />
+      </geometry>
+      <material name="Robot_Speakers_material">
+        <color rgba="0.196078 0.203922 0.219608 1" />
+      </material>
+    </visual>
+    <visual name="Robot_Tower_Lamp_Left">
+      <geometry>
+        <mesh filename="meshes/molar_hri/Robot_Tower_Lamp_Left.stl" scale="1 1 1" />
+      </geometry>
+      <material name="Robot_Tower_Lamp_Left_material">
+        <color rgba="1 0.784314 0.156863 1" />
+      </material>
+    </visual>
+    <visual name="Robot_Tower_Lamp_Right">
+      <geometry>
+        <mesh filename="meshes/molar_hri/Robot_Tower_Lamp_Right.stl" scale="1 1 1" />
+      </geometry>
+      <material name="Robot_Tower_Lamp_Right_material">
+        <color rgba="1 0.784314 0.156863 1" />
+      </material>
+    </visual>
+    <visual name="Robot_Unit_ID">
+      <geometry>
+        <mesh filename="meshes/molar_hri/Robot_Unit_ID.stl" scale="1 1 1" />
+      </geometry>
+      <material name="Robot_Unit_ID_material">
+        <color rgba="0.980392 0.980392 0.988235 1" />
+      </material>
+    </visual>
+    <visual name="Robot_Wheel_Fixed_Mounts">
+      <geometry>
+        <mesh filename="meshes/molar_hri/Robot_Wheel_Fixed_Mounts.stl" scale="1 1 1" />
+      </geometry>
+      <material name="Robot_Wheel_Fixed_Mounts_material">
+        <color rgba="0.12549 0.133333 0.141176 1" />
+      </material>
+    </visual>
+    <visual name="Speaker">
+      <geometry>
+        <mesh filename="meshes/molar_hri/Speaker.stl" scale="1 1 1" />
+      </geometry>
+      <material name="Speaker_material">
+        <color rgba="0.215686 0.227451 0.239216 1" />
+      </material>
+    </visual>
+    <visual name="Speaker_Chamber">
+      <geometry>
+        <mesh filename="meshes/molar_hri/Speaker_Chamber.stl" scale="1 1 1" />
+      </geometry>
+      <material name="Speaker_Chamber_material">
+        <color rgba="0.203922 0.239216 0.266667 1" />
+      </material>
+    </visual>
+    <visual name="Speaker_Grille">
+      <geometry>
+        <mesh filename="meshes/molar_hri/Speaker_Grille.stl" scale="1 1 1" />
+      </geometry>
+      <material name="Speaker_Grille_material">
+        <color rgba="0.094118 0.121569 0.141176 1" />
+      </material>
+    </visual>
+    <visual name="Status_Light_Pipe">
+      <geometry>
+        <mesh filename="meshes/molar_hri/Status_Light_Pipe.stl" scale="1 1 1" />
+      </geometry>
+      <material name="Status_Light_Pipe_material">
+        <color rgba="0 0.666667 1 1" />
+      </material>
+    </visual>
+    <visual name="Thermal_Plenum">
+      <geometry>
+        <mesh filename="meshes/molar_hri/Thermal_Plenum.stl" scale="1 1 1" />
+      </geometry>
+      <material name="Thermal_Plenum_material">
+        <color rgba="0.203922 0.239216 0.266667 1" />
+      </material>
+    </visual>
+    <visual name="Thermal_Vent_Grille">
+      <geometry>
+        <mesh filename="meshes/molar_hri/Thermal_Vent_Grille.stl" scale="1 1 1" />
+      </geometry>
+      <material name="Thermal_Vent_Grille_material">
+        <color rgba="0.117647 0.14902 0.168627 1" />
+      </material>
+    </visual>
+    <visual name="Touch_Display">
+      <geometry>
+        <mesh filename="meshes/molar_hri/Touch_Display.stl" scale="1 1 1" />
+      </geometry>
+      <material name="Touch_Display_material">
+        <color rgba="0.058824 0.098039 0.12549 1" />
+      </material>
+    </visual>
+    <visual name="USB_Hub">
+      <geometry>
+        <mesh filename="meshes/molar_hri/USB_Hub.stl" scale="1 1 1" />
+      </geometry>
+      <material name="USB_Hub_material">
+        <color rgba="0.282353 0.356863 0.321569 1" />
+      </material>
+    </visual>
+    <visual name="USB_Hub_Bracket">
+      <geometry>
+        <mesh filename="meshes/molar_hri/USB_Hub_Bracket.stl" scale="1 1 1" />
+      </geometry>
+      <material name="USB_Hub_Bracket_material">
+        <color rgba="0.282353 0.356863 0.321569 1" />
+      </material>
+    </visual>
+    <collision name="base_link_collision_0">
+      <origin xyz="0.025 0 0.228" rpy="0 0 0" />
+      <geometry>
+        <box size="0.7 0.5 0.195" />
+      </geometry>
+    </collision>
+    <collision name="base_link_collision_1">
+      <origin xyz="0.0005 -0.28 0.852" rpy="0 0 0" />
+      <geometry>
+        <box size="0.2 0.06 1.04" />
+      </geometry>
+    </collision>
+    <collision name="base_link_collision_2">
+      <origin xyz="0.0005 0.28 0.852" rpy="0 0 0" />
+      <geometry>
+        <box size="0.2 0.06 1.04" />
+      </geometry>
+    </collision>
+  </link>
+  <link name="conveyor_carriage">
+    <inertial>
+      <origin xyz="-0.04 0 -0.032" rpy="0 0 0" />
+      <mass value="10" />
+      <inertia ixx="0.204" iyy="0.322083333" izz="0.502083333" ixy="0" ixz="0" iyz="0" />
+    </inertial>
+    <visual name="Robot_Barcode_Scanner">
+      <geometry>
+        <mesh filename="meshes/molar_hri/Robot_Barcode_Scanner.stl" scale="1 1 1" />
+      </geometry>
+      <material name="Robot_Barcode_Scanner_material">
+        <color rgba="0.137255 0.156863 0.188235 1" />
+      </material>
+    </visual>
+    <visual name="Robot_Carriage_Motor">
+      <geometry>
+        <mesh filename="meshes/molar_hri/Robot_Carriage_Motor.stl" scale="1 1 1" />
+      </geometry>
+      <material name="Robot_Carriage_Motor_material">
+        <color rgba="0.12549 0.141176 0.164706 1" />
+      </material>
+    </visual>
+    <visual name="Robot_Carriage_RearGuards">
+      <geometry>
+        <mesh filename="meshes/molar_hri/Robot_Carriage_RearGuards.stl" scale="1 1 1" />
+      </geometry>
+      <material name="Robot_Carriage_RearGuards_material">
+        <color rgba="1 0.470588 0.078431 1" />
+      </material>
+    </visual>
+    <visual name="Robot_Carriage_TransferPlate">
+      <geometry>
+        <mesh filename="meshes/molar_hri/Robot_Carriage_TransferPlate.stl" scale="1 1 1" />
+      </geometry>
+      <material name="Robot_Carriage_TransferPlate_material">
+        <color rgba="0.745098 0.764706 0.784314 1" />
+      </material>
+    </visual>
+    <visual name="Robot_Counterweight">
+      <geometry>
+        <mesh filename="meshes/molar_hri/Robot_Counterweight.stl" scale="1 1 1" />
+      </geometry>
+      <material name="Robot_Counterweight_material">
+        <color rgba="0.27451 0.290196 0.321569 1" />
+      </material>
+    </visual>
+    <visual name="Robot_Lift_Carriage">
+      <geometry>
+        <mesh filename="meshes/molar_hri/Robot_Lift_Carriage.stl" scale="1 1 1" />
+      </geometry>
+      <material name="Robot_Lift_Carriage_material">
+        <color rgba="0.619608 0.639216 0.658824 1" />
+      </material>
+    </visual>
+    <visual name="Robot_Load_Wings">
+      <geometry>
+        <mesh filename="meshes/molar_hri/Robot_Load_Wings.stl" scale="1 1 1" />
+      </geometry>
+      <material name="Robot_Load_Wings_material">
+        <color rgba="0.156863 0.470588 0.745098 1" />
+      </material>
+    </visual>
+    <collision name="conveyor_carriage_collision_0">
+      <origin xyz="0 -0.231 -0.047" rpy="0 0 0" />
+      <geometry>
+        <box size="0.61 0.016 0.022" />
+      </geometry>
+    </collision>
+    <collision name="conveyor_carriage_collision_1">
+      <origin xyz="0 0.231 -0.047" rpy="0 0 0" />
+      <geometry>
+        <box size="0.61 0.016 0.022" />
+      </geometry>
+    </collision>
+    <collision name="conveyor_carriage_collision_2">
+      <origin xyz="0 0 -0.002" rpy="0 0 0" />
+      <geometry>
+        <box size="0.574 0.33 0.004" />
+      </geometry>
+    </collision>
+  </link>
+  <link name="telescope_stage1">
+    <inertial>
+      <origin xyz="-0.013 0 -0.019" rpy="0 0 0" />
+      <mass value="2" />
+      <inertia ixx="0.029454" iyy="0.0468706667" izz="0.0762166667" ixy="0" ixz="0" iyz="0" />
+    </inertial>
+    <visual name="Robot_Telescope_Stage1">
+      <geometry>
+        <mesh filename="meshes/molar_hri/Robot_Telescope_Stage1.stl" scale="1 1 1" />
+      </geometry>
+      <material name="Robot_Telescope_Stage1_material">
+        <color rgba="0.568627 0.588235 0.619608 1" />
+      </material>
+    </visual>
+    <collision name="telescope_stage1_collision_0">
+      <origin xyz="-0.013 -0.201 -0.019" rpy="0 0 0" />
+      <geometry>
+        <box size="0.526 0.016 0.016" />
+      </geometry>
+    </collision>
+    <collision name="telescope_stage1_collision_1">
+      <origin xyz="-0.013 0.201 -0.019" rpy="0 0 0" />
+      <geometry>
+        <box size="0.526 0.016 0.016" />
+      </geometry>
+    </collision>
+  </link>
+  <link name="telescope_stage2">
+    <inertial>
+      <origin xyz="-0.018 0 -0.015" rpy="0 0 0" />
+      <mass value="2" />
+      <inertia ixx="0.0230208333" iyy="0.0179168333" izz="0.0405293333" ixy="0" ixz="0" iyz="0" />
+    </inertial>
+    <visual name="Robot_Safety_Orange">
+      <geometry>
+        <mesh filename="meshes/molar_hri/Robot_Safety_Orange.stl" scale="1 1 1" />
+      </geometry>
+      <material name="Robot_Safety_Orange_material">
+        <color rgba="1 0.470588 0.078431 1" />
+      </material>
+    </visual>
+    <visual name="Robot_Telescope_Stage2">
+      <geometry>
+        <mesh filename="meshes/molar_hri/Robot_Telescope_Stage2.stl" scale="1 1 1" />
+      </geometry>
+      <material name="Robot_Telescope_Stage2_material">
+        <color rgba="0.509804 0.533333 0.568627 1" />
+      </material>
+    </visual>
+    <visual name="Robot_Telescope_Tip_Sensor">
+      <geometry>
+        <mesh filename="meshes/molar_hri/Robot_Telescope_Tip_Sensor.stl" scale="1 1 1" />
+      </geometry>
+      <material name="Robot_Telescope_Tip_Sensor_material">
+        <color rgba="0 0.392157 0.784314 1" />
+      </material>
+    </visual>
+    <collision name="telescope_stage2_collision_0">
+      <origin xyz="-0.018 -0.1575 -0.015" rpy="0 0 0" />
+      <geometry>
+        <box size="0.304 0.053 0.012" />
+      </geometry>
+    </collision>
+    <collision name="telescope_stage2_collision_1">
+      <origin xyz="-0.018 0.1575 -0.015" rpy="0 0 0" />
+      <geometry>
+        <box size="0.304 0.053 0.012" />
+      </geometry>
+    </collision>
+  </link>
+  <link name="transfer_roller">
+    <inertial>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <mass value="0.2" />
+      <inertia ixx="0.0025422" iyy="1.44e-05" izz="0.0025422" ixy="0" ixz="0" iyz="0" />
+    </inertial>
+    <visual name="Robot_Carriage_Roller">
+      <geometry>
+        <mesh filename="meshes/molar_hri/Robot_Carriage_Roller.stl" scale="1 1 1" />
+      </geometry>
+      <material name="Robot_Carriage_Roller_material">
+        <color rgba="0.568627 0.588235 0.611765 1" />
+      </material>
+    </visual>
+    <collision name="transfer_roller_collision_0">
+      <origin xyz="0 0 0" rpy="1.57079633 0 0" />
+      <geometry>
+        <cylinder radius="0.012" length="0.39" />
+      </geometry>
+    </collision>
+  </link>
+  <link name="drive_left_wheel">
+    <inertial>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <mass value="2" />
+      <inertia ixx="0.00457266667" iyy="0.0081" izz="0.00457266667" ixy="0" ixz="0" iyz="0" />
+    </inertial>
+    <visual name="drive_left_tyre">
+      <geometry>
+        <mesh filename="meshes/molar_hri/drive_left_tyre.stl" scale="1 1 1" />
+      </geometry>
+      <material name="drive_left_tyre_material">
+        <color rgba="0.13 0.14 0.15 1" />
+      </material>
+    </visual>
+    <visual name="drive_left_hub">
+      <geometry>
+        <mesh filename="meshes/molar_hri/drive_left_hub.stl" scale="1 1 1" />
+      </geometry>
+      <material name="drive_left_hub_material">
+        <color rgba="0.62 0.65 0.67 1" />
+      </material>
+    </visual>
+    <collision name="drive_left_wheel_collision_0">
+      <origin xyz="0 0 0" rpy="1.57079633 0 0" />
+      <geometry>
+        <cylinder radius="0.09" length="0.056" />
+      </geometry>
+    </collision>
+  </link>
+  <link name="drive_right_wheel">
+    <inertial>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <mass value="2" />
+      <inertia ixx="0.00457266667" iyy="0.0081" izz="0.00457266667" ixy="0" ixz="0" iyz="0" />
+    </inertial>
+    <visual name="drive_right_tyre">
+      <geometry>
+        <mesh filename="meshes/molar_hri/drive_right_tyre.stl" scale="1 1 1" />
+      </geometry>
+      <material name="drive_right_tyre_material">
+        <color rgba="0.13 0.14 0.15 1" />
+      </material>
+    </visual>
+    <visual name="drive_right_hub">
+      <geometry>
+        <mesh filename="meshes/molar_hri/drive_right_hub.stl" scale="1 1 1" />
+      </geometry>
+      <material name="drive_right_hub_material">
+        <color rgba="0.62 0.65 0.67 1" />
+      </material>
+    </visual>
+    <collision name="drive_right_wheel_collision_0">
+      <origin xyz="0 0 0" rpy="1.57079633 0 0" />
+      <geometry>
+        <cylinder radius="0.09" length="0.056" />
+      </geometry>
+    </collision>
+  </link>
+  <link name="caster_front_left_fork">
+    <inertial>
+      <origin xyz="-0.02 0 0" rpy="0 0 0" />
+      <mass value="0.15" />
+      <inertia ixx="2.74e-05" iyy="3.445e-05" izz="5.545e-05" ixy="0" ixz="0" iyz="0" />
+    </inertial>
+    <visual name="caster_front_left_bracket">
+      <geometry>
+        <mesh filename="meshes/molar_hri/caster_front_left_bracket.stl" scale="1 1 1" />
+      </geometry>
+      <material name="caster_front_left_bracket_material">
+        <color rgba="0.35 0.37 0.39 1" />
+      </material>
+    </visual>
+  </link>
+  <link name="caster_front_left_wheel">
+    <inertial>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <mass value="0.5" />
+      <inertia ixx="0.0003665" iyy="0.000625" izz="0.0003665" ixy="0" ixz="0" iyz="0" />
+    </inertial>
+    <visual name="caster_front_left_tyre">
+      <geometry>
+        <mesh filename="meshes/molar_hri/caster_front_left_tyre.stl" scale="1 1 1" />
+      </geometry>
+      <material name="caster_front_left_tyre_material">
+        <color rgba="0.13 0.14 0.15 1" />
+      </material>
+    </visual>
+    <collision name="caster_front_left_wheel_collision_0">
+      <origin xyz="0 0 0" rpy="1.57079633 0 0" />
+      <geometry>
+        <cylinder radius="0.05" length="0.036" />
+      </geometry>
+    </collision>
+  </link>
+  <link name="caster_front_right_fork">
+    <inertial>
+      <origin xyz="-0.02 0 0" rpy="0 0 0" />
+      <mass value="0.15" />
+      <inertia ixx="2.74e-05" iyy="3.445e-05" izz="5.545e-05" ixy="0" ixz="0" iyz="0" />
+    </inertial>
+    <visual name="caster_front_right_bracket">
+      <geometry>
+        <mesh filename="meshes/molar_hri/caster_front_right_bracket.stl" scale="1 1 1" />
+      </geometry>
+      <material name="caster_front_right_bracket_material">
+        <color rgba="0.35 0.37 0.39 1" />
+      </material>
+    </visual>
+  </link>
+  <link name="caster_front_right_wheel">
+    <inertial>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <mass value="0.5" />
+      <inertia ixx="0.0003665" iyy="0.000625" izz="0.0003665" ixy="0" ixz="0" iyz="0" />
+    </inertial>
+    <visual name="caster_front_right_tyre">
+      <geometry>
+        <mesh filename="meshes/molar_hri/caster_front_right_tyre.stl" scale="1 1 1" />
+      </geometry>
+      <material name="caster_front_right_tyre_material">
+        <color rgba="0.13 0.14 0.15 1" />
+      </material>
+    </visual>
+    <collision name="caster_front_right_wheel_collision_0">
+      <origin xyz="0 0 0" rpy="1.57079633 0 0" />
+      <geometry>
+        <cylinder radius="0.05" length="0.036" />
+      </geometry>
+    </collision>
+  </link>
+  <link name="caster_rear_left_fork">
+    <inertial>
+      <origin xyz="-0.02 0 0" rpy="0 0 0" />
+      <mass value="0.15" />
+      <inertia ixx="2.74e-05" iyy="3.445e-05" izz="5.545e-05" ixy="0" ixz="0" iyz="0" />
+    </inertial>
+    <visual name="caster_rear_left_bracket">
+      <geometry>
+        <mesh filename="meshes/molar_hri/caster_rear_left_bracket.stl" scale="1 1 1" />
+      </geometry>
+      <material name="caster_rear_left_bracket_material">
+        <color rgba="0.35 0.37 0.39 1" />
+      </material>
+    </visual>
+  </link>
+  <link name="caster_rear_left_wheel">
+    <inertial>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <mass value="0.5" />
+      <inertia ixx="0.0003665" iyy="0.000625" izz="0.0003665" ixy="0" ixz="0" iyz="0" />
+    </inertial>
+    <visual name="caster_rear_left_tyre">
+      <geometry>
+        <mesh filename="meshes/molar_hri/caster_rear_left_tyre.stl" scale="1 1 1" />
+      </geometry>
+      <material name="caster_rear_left_tyre_material">
+        <color rgba="0.13 0.14 0.15 1" />
+      </material>
+    </visual>
+    <collision name="caster_rear_left_wheel_collision_0">
+      <origin xyz="0 0 0" rpy="1.57079633 0 0" />
+      <geometry>
+        <cylinder radius="0.05" length="0.036" />
+      </geometry>
+    </collision>
+  </link>
+  <link name="caster_rear_right_fork">
+    <inertial>
+      <origin xyz="-0.02 0 0" rpy="0 0 0" />
+      <mass value="0.15" />
+      <inertia ixx="2.74e-05" iyy="3.445e-05" izz="5.545e-05" ixy="0" ixz="0" iyz="0" />
+    </inertial>
+    <visual name="caster_rear_right_bracket">
+      <geometry>
+        <mesh filename="meshes/molar_hri/caster_rear_right_bracket.stl" scale="1 1 1" />
+      </geometry>
+      <material name="caster_rear_right_bracket_material">
+        <color rgba="0.35 0.37 0.39 1" />
+      </material>
+    </visual>
+  </link>
+  <link name="caster_rear_right_wheel">
+    <inertial>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <mass value="0.5" />
+      <inertia ixx="0.0003665" iyy="0.000625" izz="0.0003665" ixy="0" ixz="0" iyz="0" />
+    </inertial>
+    <visual name="caster_rear_right_tyre">
+      <geometry>
+        <mesh filename="meshes/molar_hri/caster_rear_right_tyre.stl" scale="1 1 1" />
+      </geometry>
+      <material name="caster_rear_right_tyre_material">
+        <color rgba="0.13 0.14 0.15 1" />
+      </material>
+    </visual>
+    <collision name="caster_rear_right_wheel_collision_0">
+      <origin xyz="0 0 0" rpy="1.57079633 0 0" />
+      <geometry>
+        <cylinder radius="0.05" length="0.036" />
+      </geometry>
+    </collision>
+  </link>
+  <joint name="conveyor_lift_joint" type="prismatic">
+    <parent link="base_link" />
+    <child link="conveyor_carriage" />
+    <origin xyz="0.0005 0 0.42" rpy="0 0 0" />
+    <axis xyz="0 0 1" />
+    <limit effort="2000" velocity="0.035" lower="0" upper="0.68" />
+    <dynamics damping="30" friction="0" />
+  </joint>
+  <joint name="telescope_stage1_joint" type="prismatic">
+    <parent link="conveyor_carriage" />
+    <child link="telescope_stage1" />
+    <origin xyz="0 0 0" rpy="0 0 0" />
+    <axis xyz="1 0 0" />
+    <limit effort="250" velocity="0.1" lower="0" upper="0.14" />
+    <dynamics damping="8" friction="0" />
+  </joint>
+  <joint name="telescope_stage2_joint" type="prismatic">
+    <parent link="telescope_stage1" />
+    <child link="telescope_stage2" />
+    <origin xyz="0 0 0" rpy="0 0 0" />
+    <axis xyz="1 0 0" />
+    <limit effort="250" velocity="0.1" lower="0" upper="0.14" />
+    <dynamics damping="8" friction="0" />
+    <mimic joint="telescope_stage1_joint" multiplier="1" offset="0" />
+  </joint>
+  <joint name="transfer_roller_joint" type="continuous">
+    <parent link="conveyor_carriage" />
+    <child link="transfer_roller" />
+    <origin xyz="-0.2785 0 -0.02" rpy="0 0 0" />
+    <axis xyz="0 1 0" />
+    <limit effort="2" velocity="30" />
+    <dynamics damping="0.01" friction="0" />
+  </joint>
+  <joint name="drive_left_joint" type="continuous">
+    <parent link="base_link" />
+    <child link="drive_left_wheel" />
+    <origin xyz="0 0.2865 0.09" rpy="0 0 0" />
+    <axis xyz="0 1 0" />
+    <limit effort="30" velocity="15" />
+    <dynamics damping="0.15" friction="0" />
+  </joint>
+  <joint name="drive_right_joint" type="continuous">
+    <parent link="base_link" />
+    <child link="drive_right_wheel" />
+    <origin xyz="0 -0.2865 0.09" rpy="0 0 0" />
+    <axis xyz="0 1 0" />
+    <limit effort="30" velocity="15" />
+    <dynamics damping="0.15" friction="0" />
+  </joint>
+  <joint name="caster_front_left_swivel_joint" type="continuous">
+    <parent link="base_link" />
+    <child link="caster_front_left_fork" />
+    <origin xyz="0.292 0.191 0.08" rpy="0 0 0" />
+    <axis xyz="0 0 1" />
+    <limit effort="1" velocity="15" />
+    <dynamics damping="0.03" friction="0" />
+  </joint>
+  <joint name="caster_front_left_spin_joint" type="continuous">
+    <parent link="caster_front_left_fork" />
+    <child link="caster_front_left_wheel" />
+    <origin xyz="-0.02 0 -0.03" rpy="0 0 0" />
+    <axis xyz="0 1 0" />
+    <limit effort="1" velocity="15" />
+    <dynamics damping="0.01" friction="0" />
+  </joint>
+  <joint name="caster_front_right_swivel_joint" type="continuous">
+    <parent link="base_link" />
+    <child link="caster_front_right_fork" />
+    <origin xyz="0.292 -0.191 0.08" rpy="0 0 0" />
+    <axis xyz="0 0 1" />
+    <limit effort="1" velocity="15" />
+    <dynamics damping="0.03" friction="0" />
+  </joint>
+  <joint name="caster_front_right_spin_joint" type="continuous">
+    <parent link="caster_front_right_fork" />
+    <child link="caster_front_right_wheel" />
+    <origin xyz="-0.02 0 -0.03" rpy="0 0 0" />
+    <axis xyz="0 1 0" />
+    <limit effort="1" velocity="15" />
+    <dynamics damping="0.01" friction="0" />
+  </joint>
+  <joint name="caster_rear_left_swivel_joint" type="continuous">
+    <parent link="base_link" />
+    <child link="caster_rear_left_fork" />
+    <origin xyz="-0.202 0.191 0.08" rpy="0 0 0" />
+    <axis xyz="0 0 1" />
+    <limit effort="1" velocity="15" />
+    <dynamics damping="0.03" friction="0" />
+  </joint>
+  <joint name="caster_rear_left_spin_joint" type="continuous">
+    <parent link="caster_rear_left_fork" />
+    <child link="caster_rear_left_wheel" />
+    <origin xyz="-0.02 0 -0.03" rpy="0 0 0" />
+    <axis xyz="0 1 0" />
+    <limit effort="1" velocity="15" />
+    <dynamics damping="0.01" friction="0" />
+  </joint>
+  <joint name="caster_rear_right_swivel_joint" type="continuous">
+    <parent link="base_link" />
+    <child link="caster_rear_right_fork" />
+    <origin xyz="-0.202 -0.191 0.08" rpy="0 0 0" />
+    <axis xyz="0 0 1" />
+    <limit effort="1" velocity="15" />
+    <dynamics damping="0.03" friction="0" />
+  </joint>
+  <joint name="caster_rear_right_spin_joint" type="continuous">
+    <parent link="caster_rear_right_fork" />
+    <child link="caster_rear_right_wheel" />
+    <origin xyz="-0.02 0 -0.03" rpy="0 0 0" />
+    <axis xyz="0 1 0" />
+    <limit effort="1" velocity="15" />
+    <dynamics damping="0.01" friction="0" />
+  </joint>
+</robot>
