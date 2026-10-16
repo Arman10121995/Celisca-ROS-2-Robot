@@ -293,6 +293,8 @@ class IsaacSpawner(Node):
         # "dc_motor" explicit PD through Isaac Lab's torque-speed limits.
         self.declare_parameter("pd_actuator", "implicit")
         self.declare_parameter("rtx_settings", "")
+        # SimulationApp start-up settings as JSON ({"anti_aliasing": 2, ...}).
+        self.declare_parameter("app_settings", "")
         self.declare_parameter("publish_rate", 50.0)
         self.declare_parameter("isaac_python", _DEFAULT_ISAAC_PY)
         self.declare_parameter("left_wheel_joint", "wheel_left_joint")
@@ -667,6 +669,8 @@ class IsaacSpawner(Node):
                                 if self.get_parameter("ground_material").value else None),
             "render_subframes": int(self.get_parameter("render_subframes").value),
             "pd_actuator": str(self.get_parameter("pd_actuator").value or "implicit"),
+            "app_settings": (json.loads(self.get_parameter("app_settings").value)
+                             if self.get_parameter("app_settings").value else None),
             "rtx_settings": (json.loads(self.get_parameter("rtx_settings").value)
                              if self.get_parameter("rtx_settings").value else None),
             # Display hold forwarded to the runtime: freeze joints at spawn.

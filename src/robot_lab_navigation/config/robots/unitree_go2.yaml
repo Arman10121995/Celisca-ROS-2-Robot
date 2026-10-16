@@ -35,7 +35,12 @@ controller_server:
     FollowPath:
       desired_linear_vel: 0.4
       vx_max: 0.4
-      use_rotate_to_heading: false
+      # Rotate in place toward a path that leaves more than 45 deg off the
+      # heading (2026-10-16): in Isaac, where the Go2 turns on the spot at
+      # 0.93 rad/s, seed 3 reached goal A facing a wall 0.5 m away, walked
+      # into it toward goal B and stopped on "collision ahead".  MuJoCo and
+      # Gazebo plan forward arcs (forward_arc), which turn this off.
+      use_rotate_to_heading: true
       rotate_to_heading_angular_vel: 0.8
       regulated_linear_scaling_min_speed: 0.25
       regulated_linear_scaling_min_radius: 0.5

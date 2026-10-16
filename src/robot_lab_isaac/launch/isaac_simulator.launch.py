@@ -166,6 +166,8 @@ def _build_isaac_actions(context):
         LaunchConfiguration("render_subframes"), value_type=int)
     spawner_params["rtx_settings"] = ParameterValue(
         LaunchConfiguration("rtx_settings"), value_type=str)
+    spawner_params["app_settings"] = ParameterValue(
+        LaunchConfiguration("app_settings"), value_type=str)
     # Start the Isaac Sim core (carb/kit-based).  When isaacsim is not
     # installed the node exits gracefully with a clear log message.
     actions.append(
@@ -243,6 +245,10 @@ def generate_launch_description():
         DeclareLaunchArgument(
             "render_subframes", default_value="1",
             description="Renders per camera frame (more let RTX accumulate the pose).",
+        ),
+        DeclareLaunchArgument(
+            "app_settings", default_value="",
+            description="SimulationApp start-up settings as JSON; empty: Isaac's defaults.",
         ),
         DeclareLaunchArgument(
             "rtx_settings", default_value="",

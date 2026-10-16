@@ -878,6 +878,9 @@ def run(cfg):
         "height": 720,
         "window_width": 1280,
         "window_height": 720,
+        # Renderer choices Kit takes only at start-up (renderer,
+        # anti_aliasing, denoiser, samples_per_pixel_per_frame, ...).
+        **dict(cfg.get("app_settings") or {}),
     })
     reader = _StdinReader()
     reader.start()

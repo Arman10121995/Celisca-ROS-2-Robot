@@ -1487,7 +1487,8 @@ def _build_simulation_actions(context):
                                 if robot_config.get("isaac_ground_material") else ""))}
                        if legged_active and simulator == "isaac" else {}),
                     **({"render_subframes": _launch_value(context, "isaac_render_subframes"),
-                        "rtx_settings": _launch_value(context, "isaac_rtx_settings")}
+                        "rtx_settings": _launch_value(context, "isaac_rtx_settings"),
+                        "app_settings": _launch_value(context, "isaac_app_settings")}
                        if simulator == "isaac" else {}),
                     **({"physics_timestep": "0.001"}
                        if go2_controller_active else {}),
@@ -1946,6 +1947,9 @@ def generate_launch_description():
         DeclareLaunchArgument(
             "isaac_render_subframes", default_value="1",
             description="Isaac: renders per camera frame (RTX accumulation)."),
+        DeclareLaunchArgument(
+            "isaac_app_settings", default_value="",
+            description="Isaac: SimulationApp start-up settings as JSON (renderer, anti_aliasing, denoiser)."),
         DeclareLaunchArgument(
             "isaac_rtx_settings", default_value="",
             description="Isaac: RTX renderer settings as JSON."),
