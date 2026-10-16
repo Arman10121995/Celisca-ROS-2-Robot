@@ -158,6 +158,10 @@ def _build_isaac_actions(context):
         LaunchConfiguration("isaac_pd_joint_armature"), value_type=float)
     spawner_params["ground_material"] = ParameterValue(
         LaunchConfiguration("ground_material"), value_type=str)
+    spawner_params["render_subframes"] = ParameterValue(
+        LaunchConfiguration("render_subframes"), value_type=int)
+    spawner_params["rtx_settings"] = ParameterValue(
+        LaunchConfiguration("rtx_settings"), value_type=str)
     # Start the Isaac Sim core (carb/kit-based).  When isaacsim is not
     # installed the node exits gracefully with a clear log message.
     actions.append(
@@ -226,6 +230,14 @@ def generate_launch_description():
         DeclareLaunchArgument(
             "isaac_pd_joint_armature", default_value="0.0",
             description="Rotor inertia for the policy PD joints that have none.",
+        ),
+        DeclareLaunchArgument(
+            "render_subframes", default_value="1",
+            description="Renders per camera frame (more let RTX accumulate the pose).",
+        ),
+        DeclareLaunchArgument(
+            "rtx_settings", default_value="",
+            description="RTX renderer settings as JSON; empty: Isaac's defaults.",
         ),
         DeclareLaunchArgument(
             "ground_material", default_value="",

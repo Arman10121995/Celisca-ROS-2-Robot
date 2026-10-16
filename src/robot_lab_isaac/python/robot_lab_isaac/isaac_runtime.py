@@ -782,6 +782,14 @@ def run(cfg):
     })
     reader = _StdinReader()
     reader.start()
+    if cfg.get("rtx_settings"):
+        # Renderer settings for the camera (e.g. the anti-aliasing mode);
+        # values are applied as given.
+        import carb.settings
+        settings = carb.settings.get_settings()
+        for key, value in dict(cfg["rtx_settings"]).items():
+            settings.set(str(key), value)
+        _emit({"event": "log", "msg": "RTX settings: %s" % cfg["rtx_settings"]})
 
     state = {"running": True}
     failed = False
@@ -1144,6 +1152,9 @@ def _run_stage(app, reader, cfg, state):
     sim_step = 0
     headless = not bool(cfg.get('gui', False)) or not os.environ.get('DISPLAY')
     render_every = camera['every'] if camera is not None else max(1, int(round(.1/dt)))
+    render_subframes = max(1, int(cfg.get('render_subframes') or 1)) if camera is not None else 1
+    if render_subframes > 1:
+        _emit({'event': 'log', 'msg': 'Camera frames rendered %d times each' % render_subframes})
     if headless:
         _emit({'event': 'log', 'msg': 'Headless rendering every %d physics steps; '
                'physics dt remains %.6f s' % (render_every, dt)})
@@ -1252,9 +1263,13 @@ def _run_stage(app, reader, cfg, state):
             # sample is due (or periodically to service Kit without a camera).
             # render() disables Kit physics advancement, so this remains one
             # physical dt per loop, including loops with an image.
+            # render_subframes > 1 renders the same pose again, so RTX's
+            # temporal accumulation and anti-aliasing see more than one
+            # sample of it before the annotators are read.
             world.step(render=False)
             if (sim_step + 1) % render_every == 0:
-                world.render()
+                for _ in range(render_subframes):
+                    world.render()
         else:
             world.step(render=True)
         sim_step += 1

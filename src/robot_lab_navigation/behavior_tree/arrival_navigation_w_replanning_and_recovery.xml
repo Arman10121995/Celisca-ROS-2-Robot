@@ -1,0 +1,26 @@
+<root main_tree_to_execute="MainTree">
+    <BehaviorTree ID="MainTree">
+        <RecoveryNode number_of_retries="1" name="NavigateRecovery">
+            <PipelineSequence name="NavigateWithReplanning">
+                <RateController hz="1.0">
+                    <ComputePathToPose goal="{goal}" path="{path}" planner_id="GridBased"/>
+                </RateController>
+                <!-- MPPI came within 0.05-0.19 m of 8 of 15 Bumperbot goals
+                     and did not settle into the 0.07 m / 0.03 rad window
+                     before the progress checker aborted (R7.7).  When its
+                     attempt fails, the Arrival controller (Regulated Pure
+                     Pursuit) follows the same path to the goal; the retried
+                     MPPI goal then ends at once at the goal checker. -->
+                <RecoveryNode number_of_retries="1" name="FollowWithArrival">
+                    <FollowPath path="{path}" controller_id="FollowPath"/>
+                    <FollowPath path="{path}" controller_id="Arrival"/>
+                </RecoveryNode>
+            </PipelineSequence>
+            <Sequence>
+                <Spin spin_dist="1.57"/>
+                <Wait wait_duration="5.0"/>
+                <BackUp backup_dist="0.30" backup_speed="0.15"/>
+            </Sequence>
+        </RecoveryNode>
+    </BehaviorTree>
+</root>

@@ -192,6 +192,40 @@ def test_parallel_steering_samples_backward_translation():
     assert follow['FollowPath.min_vel_x'] < 0 < follow['FollowPath.max_vel_y']
     assert 'robot_lab_controller::ParallelSteeringCritic' in follow['FollowPath.critics']
 
+def test_mppi_on_a_differential_base_gets_the_arrival_controller():
+    """MPPI came within 0.05-0.19 m of 8 of 15 goals without settling (R7.7):
+    a Regulated Pure Pursuit 'Arrival' controller finishes its approach."""
+    import importlib.util
+    path = os.path.join(os.path.dirname(__file__), '..', '..', 'robot_lab_navigation', 'launch',
+                        'navigation.launch.py')
+    spec = importlib.util.spec_from_file_location('robot_lab_navigation_launch_arrival', path)
+    navigation = importlib.util.module_from_spec(spec)
+    try:
+        spec.loader.exec_module(navigation)
+    except Exception as exc:  # pragma: no cover - workspace not installed
+        pytest.skip('navigation launch needs ROS: %s' % exc)
+    mppi = navigation.MPPI_PLUGIN
+    assert navigation._uses_arrival_controller(mppi, 'diff', '', 'auto')
+    assert not navigation._uses_arrival_controller(mppi, 'diff', '', 'false')
+    assert not navigation._uses_arrival_controller(mppi, 'omni', '', 'auto')
+    assert not navigation._uses_arrival_controller(navigation.RPP_PLUGIN, 'diff', '', 'auto')
+    assert not navigation._uses_arrival_controller(mppi, 'diff', '/robot_lab_follow_path', 'auto')
+    config = os.path.join(os.path.dirname(path), '..', 'config')
+    params = navigation._arrival_controller_parameters(
+        os.path.join(config, 'controller_server.yaml'), os.path.join(config, 'robots', 'bumperbot.yaml'))
+    assert params['controller_plugins'] == ['FollowPath', 'Arrival']
+    assert params['Arrival.plugin'] == navigation.RPP_PLUGIN
+    assert params['Arrival.use_rotate_to_heading'] is True
+    # The robot's own speeds win over the base defaults.
+    assert params['Arrival.desired_linear_vel'] == 0.3
+    assert params['Arrival.rotate_to_heading_angular_vel'] == 0.15
+    tree = os.path.join(os.path.dirname(path), '..', 'behavior_tree',
+                        'arrival_navigation_w_replanning_and_recovery.xml')
+    import xml.etree.ElementTree as ET
+    follow = [node.get('controller_id') for node in ET.parse(tree).iter('FollowPath')]
+    assert follow == ['FollowPath', 'Arrival']
+
+
 @pytest.mark.integration
 def test_forward_arc_robots_default_to_a_curvature_aware_planner():
     from launch.actions import IncludeLaunchDescription

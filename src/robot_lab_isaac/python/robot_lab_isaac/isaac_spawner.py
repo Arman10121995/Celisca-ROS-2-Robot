@@ -286,6 +286,10 @@ class IsaacSpawner(Node):
         # Contact material for the floor (JSON: static_friction,
         # dynamic_friction, restitution); empty keeps PhysX's defaults.
         self.declare_parameter("ground_material", "")
+        # Camera rendering: renders per camera frame, and RTX settings as
+        # JSON ({"/rtx/post/aa/op": 2, ...}); 1 and empty keep the defaults.
+        self.declare_parameter("render_subframes", 1)
+        self.declare_parameter("rtx_settings", "")
         self.declare_parameter("publish_rate", 50.0)
         self.declare_parameter("isaac_python", _DEFAULT_ISAAC_PY)
         self.declare_parameter("left_wheel_joint", "wheel_left_joint")
@@ -598,6 +602,9 @@ class IsaacSpawner(Node):
             "pd_joint_armature": float(self.get_parameter("pd_joint_armature").value),
             "ground_material": (json.loads(self.get_parameter("ground_material").value)
                                 if self.get_parameter("ground_material").value else None),
+            "render_subframes": int(self.get_parameter("render_subframes").value),
+            "rtx_settings": (json.loads(self.get_parameter("rtx_settings").value)
+                             if self.get_parameter("rtx_settings").value else None),
             # Display hold forwarded to the runtime: freeze joints at spawn.
             "hold_position": str(self.get_parameter("hold_position").value or "auto"),
             "left_wheel_joint": self.get_parameter("left_wheel_joint").value,

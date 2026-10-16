@@ -5,6 +5,7 @@ config/robots/<robot_model>.yaml so frames/footprint/velocity match any robot pr
 """
 import os
 
+import yaml
 from ament_index_python.packages import get_package_share_directory
 from launch import LaunchDescription
 from launch.actions import DeclareLaunchArgument, OpaqueFunction
@@ -285,6 +286,43 @@ def _motion_model_overrides(exec_name, motion_model, global_planner_plugin, turn
     return [overrides] if overrides else []
 
 
+MPPI_PLUGIN = "nav2_mppi_controller::MPPIController"
+RPP_PLUGIN = "nav2_regulated_pure_pursuit_controller::RegulatedPurePursuitController"
+
+
+def _uses_arrival_controller(local_planner_plugin, motion_model, follow_path_server, requested):
+    """Whether MPPI gets the Regulated Pure Pursuit arrival assist.
+
+    MPPI came within 0.05-0.19 m of 8 of 15 Bumperbot goals and then did not
+    settle into the 0.07 m / 0.03 rad window before the progress checker
+    aborted (R7.7, twice); stronger goal critics made it worse.  With the
+    assist, the controller server also hosts an ``Arrival`` RPP controller
+    that finishes the approach on the same path when MPPI's attempt fails.
+    """
+    if requested in ("false", "0", "no", "off"):
+        return False
+    return (local_planner_plugin == MPPI_PLUGIN and motion_model == "diff"
+            and not follow_path_server)
+
+
+def _arrival_controller_parameters(base_config, overlay_config):
+    """``Arrival.*`` parameters: the base RPP settings, then the robot's own
+    FollowPath settings (speeds, rotate-to-heading rate) from its overlay."""
+    def follow_path(path):
+        try:
+            data = yaml.safe_load(open(path)) or {}
+        except (OSError, yaml.YAMLError):
+            return {}
+        params = (data.get("controller_server") or {}).get("ros__parameters") or {}
+        return dict(params.get("FollowPath") or {})
+    params = follow_path(base_config)
+    params.update(follow_path(overlay_config) if overlay_config else {})
+    params["plugin"] = RPP_PLUGIN
+    return {"controller_plugins": ["FollowPath", "Arrival"],
+            **{"Arrival.%s" % key: value for key, value in params.items()
+               if not isinstance(value, dict)}}
+
+
 def _planner_parameter_overrides(exec_name, global_planner_plugin, local_planner_plugin):
     """
     Parameter overrides that switch the active planner plugins.
@@ -366,6 +404,9 @@ def _setup(context, *args, **kwargs):
 
     overlay = os.path.join(pkg, "config", "robots", f"{robot_model}.yaml")
     overlay_params = [_with_base_frame(overlay, base_frame)] if os.path.exists(overlay) else []
+    arrival = _uses_arrival_controller(
+        local_planner_plugin, motion_model, follow_path_server,
+        LaunchConfiguration("arrival_controller").perform(context).strip().lower())
 
     def server(exec_name, name, config_file):
         parameters = [_with_base_frame(os.path.join(pkg, "config", config_file), base_frame)]
@@ -380,6 +421,10 @@ def _setup(context, *args, **kwargs):
             exec_name, motion_model, global_planner_plugin, turning_radius))
         if exec_name == 'planner_server' and car_search_model != 'auto':
             parameters.append({'GridBased.motion_model_for_search': car_search_model})
+        if exec_name in _CONTROLLER_SERVERS and arrival:
+            parameters.append(_arrival_controller_parameters(
+                os.path.join(pkg, "config", config_file),
+                overlay if os.path.exists(overlay) else None))
         if exec_name == "bt_navigator":
             # Resolve the default behavior tree from the installed package
             # share (portable) instead of an absolute source path.
@@ -389,10 +434,14 @@ def _setup(context, *args, **kwargs):
             # nav_obstacle start corner (Gazebo, 2026-10-13).
             # A forward-arc robot neither spins nor backs up slowly: it
             # clears its local costmap, waits and replans.
+            # MPPI with the arrival assist: its tree finishes a failed
+            # MPPI approach with the Arrival controller on the same path.
             tree_name = ("forward_navigation_w_replanning_and_recovery.xml"
                          if motion_model == "forward_arc" else
                          "car_navigation_w_replanning_and_recovery.xml"
                          if motion_model == "ackermann" or not spin_recovery else
+                         "arrival_navigation_w_replanning_and_recovery.xml"
+                         if arrival else
                          "simple_navigation_w_replanning_and_recovery.xml")
             bt_xml = os.path.join(
                 pkg, "behavior_tree", tree_name)
@@ -489,6 +538,10 @@ def generate_launch_description():
             "spin_recovery", default_value="true",
             description="'false': the recovery tree backs up instead of spinning "
                         "(for robots that cannot turn on the spot)"),
+        DeclareLaunchArgument(
+            "arrival_controller", default_value="auto",
+            description="auto: MPPI on a differential base gets a Regulated Pure "
+                        "Pursuit controller that finishes failed approaches; false: off"),
         DeclareLaunchArgument('car_search_model', default_value='auto',
             description='auto retains current car planning; DUBIN supplies forward-only bicycle-controller paths'),
         DeclareLaunchArgument(

@@ -1467,6 +1467,9 @@ def _build_simulation_actions(context):
                             or (json.dumps(robot_config["isaac_ground_material"])
                                 if robot_config.get("isaac_ground_material") else ""))}
                        if legged_active and simulator == "isaac" else {}),
+                    **({"render_subframes": _launch_value(context, "isaac_render_subframes"),
+                        "rtx_settings": _launch_value(context, "isaac_rtx_settings")}
+                       if simulator == "isaac" else {}),
                     **({"physics_timestep": "0.001"}
                        if go2_controller_active else {}),
                     **({"effort_joint_armature": "0.01"}
@@ -1917,6 +1920,12 @@ def generate_launch_description():
             "isaac_legged_pd_armature", default_value="",
             description="Isaac: armature for the legged policy's PD joints; "
                         "empty uses robots.yaml isaac_pd_joint_armature (default 0)."),
+        DeclareLaunchArgument(
+            "isaac_render_subframes", default_value="1",
+            description="Isaac: renders per camera frame (RTX accumulation)."),
+        DeclareLaunchArgument(
+            "isaac_rtx_settings", default_value="",
+            description="Isaac: RTX renderer settings as JSON."),
         DeclareLaunchArgument(
             "isaac_ground_material", default_value="",
             description="Isaac: floor material JSON for a legged policy robot; "
