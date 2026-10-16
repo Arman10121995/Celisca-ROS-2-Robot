@@ -458,6 +458,14 @@ class CameraModelTests(unittest.TestCase):
         vertical = self.cm.vertical_fov(1.25, 320, 240)
         self.assertAlmostEqual(120.0, math.tan(vertical / 2.0) * fy)
 
+    def test_tiny_renderer_axis_is_half_a_pixel_right_and_down(self):
+        # PyBullet's TinyRenderer: measured (160.0, 119.0) for 320 x 240.
+        fx, fy, cx, cy = self.cm.intrinsics(320, 240, 1.25, self.cm.TINY_RENDERER)
+        self.assertEqual((160.0, 119.0), (cx, cy))
+        self.assertEqual(self.cm.intrinsics(320, 240, 1.25)[0], fx)
+        with self.assertRaises(ValueError):
+            self.cm.intrinsics(320, 240, 1.25, 'other')
+
     def test_opengl_camera_looks_along_the_link_x_axis(self):
         rotation = self.cm.LINK_TO_OPENGL_CAMERA
         forward = sim_frames.rotate((0.0, 0.0, -1.0), rotation)

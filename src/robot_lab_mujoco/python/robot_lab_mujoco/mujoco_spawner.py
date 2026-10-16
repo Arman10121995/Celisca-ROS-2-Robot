@@ -2476,6 +2476,11 @@ class MuJoCoSpawner(Node):
             try:
                 camera["renderer"] = mujoco.Renderer(
                     self._model, camera["height"], camera["width"])
+                # Depth without multisampling: a multisampled depth image
+                # is 3/8 px off the pixel centres (camera_render.py).
+                from robot_lab_mujoco.camera_render import single_sample_renderer
+                camera["depth_renderer"] = single_sample_renderer(
+                    mujoco, self._model, camera["height"], camera["width"])
             except Exception as exc:
                 self.get_logger().warn(
                     "RGB-D camera disabled: MuJoCo could not create an "
@@ -2486,10 +2491,10 @@ class MuJoCoSpawner(Node):
         renderer = camera["renderer"]
         renderer.update_scene(self._data, camera=_CAMERA_NAME)
         rgb = renderer.render()
-        renderer.enable_depth_rendering()
-        renderer.update_scene(self._data, camera=_CAMERA_NAME)
-        depth = renderer.render().astype(np.float32)
-        renderer.disable_depth_rendering()
+        depth_renderer = camera["depth_renderer"]
+        depth_renderer.enable_depth_rendering()
+        depth_renderer.update_scene(self._data, camera=_CAMERA_NAME)
+        depth = depth_renderer.render().astype(np.float32)
         depth[depth >= camera["far"] * (1.0 - 1e-6)] = np.inf
         stamp = self._stamp()
         self._rgb_pub.publish(image_msg(stamp, camera["frame"], rgb, "rgb8"))

@@ -122,13 +122,15 @@ class NativeMobileSensors:
 
     def rgbd(self, stamp):
         if self.renderer is None:
+            from robot_lab_mujoco.camera_render import single_sample_renderer
             self.renderer = self.mj.Renderer(self.model, height=self.height, width=self.width)
-        self.renderer.disable_depth_rendering()
+            # Depth without multisampling, centred on the pixels (camera_render.py).
+            self.depth_renderer = single_sample_renderer(self.mj, self.model, self.height, self.width)
+            self.depth_renderer.enable_depth_rendering()
         self.renderer.update_scene(self.data, camera=self.camera)
         rgb = self.renderer.render().copy()
-        self.renderer.enable_depth_rendering()
-        depth = self.renderer.render().astype(np.float32)
-        self.renderer.disable_depth_rendering()
+        self.depth_renderer.update_scene(self.data, camera=self.camera)
+        depth = self.depth_renderer.render().astype(np.float32)
         depth[~np.isfinite(depth) | (depth <= 0.) | (depth > 30.)] = np.nan
         fov = 2*math.atan(math.tan(math.radians(float(self.model.cam_fovy[self.camera]))/2)*self.width/self.height)
         frame = 'native_camera_optical_frame'

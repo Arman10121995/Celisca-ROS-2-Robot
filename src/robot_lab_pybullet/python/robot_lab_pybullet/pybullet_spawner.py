@@ -1387,9 +1387,10 @@ class PyBulletSpawner(Node):
                     image_msg(stamp, camera["frame"], rgb, "rgb8"))
                 self._depth_pub.publish(
                     image_msg(stamp, camera["frame"], depth, "32FC1"))
+                # TinyRenderer's optical axis is at (w / 2, h / 2 - 1).
                 self._camera_info_pub.publish(camera_info_msg(
                     stamp, camera["frame"], camera["width"], camera["height"],
-                    camera["horizontal_fov"]))
+                    camera["horizontal_fov"], camera_model.TINY_RENDERER))
             except Exception:
                 # Shutting down: the physics client may already be gone.
                 if not rclpy.ok() or not self._running:

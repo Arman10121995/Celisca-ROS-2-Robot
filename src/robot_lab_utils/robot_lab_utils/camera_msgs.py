@@ -28,8 +28,9 @@ def image_msg(stamp, frame_id, array, encoding):
     return msg
 
 
-def camera_info_msg(stamp, frame_id, width, height, horizontal_fov):
-    fields = camera_model.camera_info_fields(width, height, horizontal_fov)
+def camera_info_msg(stamp, frame_id, width, height, horizontal_fov,
+                    convention=camera_model.PIXEL_CENTRES):
+    fields = camera_model.camera_info_fields(width, height, horizontal_fov, convention)
     msg = CameraInfo()
     msg.header.stamp = stamp
     msg.header.frame_id = frame_id

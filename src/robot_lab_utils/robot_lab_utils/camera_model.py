@@ -38,7 +38,17 @@ def vertical_fov(horizontal_fov, width, height):
     return 2.0 * math.atan(math.tan(horizontal_fov / 2.0) * height / float(width))
 
 
-def intrinsics(width, height, horizontal_fov):
+# Where a renderer puts the optical axis, in ROS/OpenCV pixel coordinates.
+# OpenGL renderers (Gazebo, Isaac, MuJoCo's single-sample depth) centre each
+# pixel at u + 0.5: the axis crosses ((w - 1) / 2, (h - 1) / 2).  PyBullet's
+# TinyRenderer samples at integer pixel coordinates and flips rows, which
+# puts it at (w / 2, h / 2 - 1) - measured on rendered planes, 2026-10-16
+# (scripts/depth_render_check.py): (160.0, 119.0) for 320 x 240.
+PIXEL_CENTRES = "pixel_centres"
+TINY_RENDERER = "tiny_renderer"
+
+
+def intrinsics(width, height, horizontal_fov, convention=PIXEL_CENTRES):
     """``(fx, fy, cx, cy)`` of an ideal pinhole with square pixels.
 
     Renderers put pixel centres at u + 0.5, so the optical axis crosses
@@ -49,12 +59,16 @@ def intrinsics(width, height, horizontal_fov):
     r72-perception-benchmark-2026-10-13/depth-node).
     """
     fx = (width / 2.0) / math.tan(horizontal_fov / 2.0)
+    if convention == TINY_RENDERER:
+        return fx, fx, width / 2.0, height / 2.0 - 1.0
+    if convention != PIXEL_CENTRES:
+        raise ValueError("unknown principal-point convention %r" % convention)
     return fx, fx, (width - 1) / 2.0, (height - 1) / 2.0
 
 
-def camera_info_fields(width, height, horizontal_fov):
+def camera_info_fields(width, height, horizontal_fov, convention=PIXEL_CENTRES):
     """sensor_msgs/CameraInfo fields for an undistorted pinhole camera."""
-    fx, fy, cx, cy = intrinsics(width, height, horizontal_fov)
+    fx, fy, cx, cy = intrinsics(width, height, horizontal_fov, convention)
     return {
         "width": int(width),
         "height": int(height),
