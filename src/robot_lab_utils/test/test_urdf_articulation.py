@@ -7,7 +7,9 @@ import xml.etree.ElementTree as ET
 
 import pytest
 
-from robot_lab_utils.urdf_articulation import URDFArticulation, add_mujoco_articulation_actuators
+from robot_lab_utils.urdf_articulation import (
+    URDFArticulation, add_mujoco_articulation_actuators, gravity_feedforward, gravity_loads,
+)
 
 
 URDF = '''<robot name="fixture"><link name="base"/>
@@ -217,3 +219,41 @@ def test_either_held_stage_extension_blocks_drive_even_with_small_coupling_error
     position['telescope_stage2_joint'] = .005
     controller.step(position, velocity, .01, now=1.1)
     assert not controller.base_inhibited
+
+
+CHAIN = '''<robot name="chain">
+<link name="base"><inertial><mass value="100"/></inertial></link>
+<link name="carriage"><inertial><mass value="10"/></inertial></link>
+<link name="stage1"><inertial><mass value="2"/></inertial></link>
+<link name="stage2"><inertial><mass value="2"/></inertial></link>
+<link name="roller"><inertial><mass value=".2"/></inertial></link>
+<joint name="conveyor_lift_joint" type="prismatic"><parent link="base"/><child link="carriage"/>
+<axis xyz="0 0 1"/><limit lower="0" upper="0.68" velocity="0.035" effort="2000"/></joint>
+<joint name="telescope_stage1_joint" type="prismatic"><parent link="carriage"/><child link="stage1"/>
+<axis xyz="1 0 0"/><limit lower="0" upper="0.14" velocity="0.1" effort="250"/></joint>
+<joint name="telescope_stage2_joint" type="prismatic"><parent link="stage1"/><child link="stage2"/>
+<axis xyz="1 0 0"/><limit lower="0" upper="0.14" velocity="0.1" effort="250"/><mimic joint="telescope_stage1_joint"/></joint>
+<joint name="transfer_roller_joint" type="continuous"><parent link="carriage"/><child link="roller"/>
+<axis xyz="0 1 0"/><limit velocity="30" effort="2"/></joint></robot>'''
+
+
+def test_gravity_feedforward_holds_each_slide_subtree(tmp_path):
+    model = tmp_path/'chain.urdf'
+    model.write_text(CHAIN)
+    contract = URDFArticulation(deepcopy(CONFIG), CHAIN, model)
+    loads = gravity_loads(CHAIN, contract)
+    assert loads['conveyor_lift_joint'][0] == pytest.approx(14.2)
+    assert loads['conveyor_lift_joint'][1] == pytest.approx((0., 0., 1.))
+    assert loads['telescope_stage1_joint'][0] == pytest.approx(4.)
+    assert loads['telescope_stage2_joint'][0] == pytest.approx(2.)
+    assert 'transfer_roller_joint' not in loads
+    efforts = {name: spec['effort'] for name, spec in contract.joints.items()}
+    level = gravity_feedforward(loads, (0., 0., 0., 1.), efforts)
+    assert level['conveyor_lift_joint'] == pytest.approx(14.2*9.81)
+    assert level['telescope_stage1_joint'] == pytest.approx(0.)
+    # Pitched 0.2 rad about y: the slides point down, so they are held back.
+    pitched = gravity_feedforward(loads, (0., math.sin(.1), 0., math.cos(.1)), efforts)
+    assert pitched['telescope_stage1_joint'] == pytest.approx(-4.*9.81*math.sin(.2))
+    assert pitched['conveyor_lift_joint'] == pytest.approx(14.2*9.81*math.cos(.2))
+    assert gravity_feedforward(loads, (0., 0., 0., 1.), dict(efforts, conveyor_lift_joint=50.))[
+        'conveyor_lift_joint'] == 50.

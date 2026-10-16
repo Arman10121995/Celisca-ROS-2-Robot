@@ -1442,6 +1442,15 @@ def _run_stage(app, reader, cfg, state):
                     else:
                         robot.apply_action(ArticulationAction(
                             joint_positions=values, joint_indices=idx))
+                # Feedforward joint forces on top of the drives (an
+                # articulation's gravity load); they persist until replaced.
+                pairs = [(dof_names.index(name), float(value))
+                         for name, value in (targets.get("effort") or {}).items()
+                         if name in dof_names]
+                if pairs:
+                    import numpy as np
+                    robot.set_joint_efforts(np.array([v for _, v in pairs]),
+                                            joint_indices=np.array([i for i, _ in pairs]))
             except Exception as exc:
                 if not action_error_reported:
                     action_error_reported = True

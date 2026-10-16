@@ -36,13 +36,16 @@ SIMULATORS = ('gazebo', 'mujoco', 'pybullet', 'isaac')
 PATTERNS = ('ackermann', 'in_phase', 'crab', 'pivot', 'mecanum')
 # The report each kind's screen reads: sim_nav_mission.py and
 # sim_car_course.py report a 'steps' object, sim_drive_check.py a 'phases'
-# list, r7_2_calibration_room_check.py its chessboard pattern and fits.
+# list, r7_2_calibration_room_check.py its chessboard pattern and fits,
+# qualify_molar_hri_gui.py its GUI phases.
 SHAPES = {
     'mission_screen': lambda content: isinstance(content.get('steps'), dict),
     'course_screen': lambda content: isinstance(content.get('steps'), dict),
     'drive_screen': lambda content: isinstance(content.get('phases'), list),
     'command_loss_screen': lambda content: isinstance(content.get('phases'), list),
     'calibration_screen': lambda content: 'pattern' in content,
+    # scripts/qualify_molar_hri_gui.py report.json
+    'articulation_screen': lambda content: isinstance(content.get('phases'), dict) and 'backend' in content,
 }
 
 

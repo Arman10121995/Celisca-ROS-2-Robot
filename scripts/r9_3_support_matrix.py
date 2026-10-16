@@ -363,6 +363,20 @@ def measured_result(report,kind):
         return bool(not report.get('error') and phases and all(p.get('measured') for p in phases)
                     and all(finite(v) for v in values) and 0 <= loss['coast_distance_m'] <= .35
                     and abs(loss['tail_vx_mps']) <= .02 and abs(loss['tail_wz_rps']) <= .05)
+    if kind == 'articulation_screen':
+        # scripts/qualify_molar_hri_gui.py: normal-GUI differential drive, the
+        # lift and both coupled telescope stages to their source limits,
+        # roller, Stop hold and the heartbeat watchdog, from actual joints.
+        phases = report.get('phases', {})
+        moved = [phases.get(name, {}).get('displacement') for name in ('forward', 'base_stop', 'extended_base_inhibit')]
+        full, hold = report.get('full_range') or {}, report.get('stop_hold') or {}
+        values = moved + [full.get(k) for k in ('lift', 'total_tip', 'coupling_error')] + [report.get('watchdog_roller_velocity')]
+        return bool(report.get('passed') is True and report.get('launch_returncode') == 0
+                    and all(finite(v) for v in values) and moved[0] > .15 and moved[1] < .03 and moved[2] < .03
+                    and .64 < full['lift'] <= .69 and .26 < full['total_tip'] <= .30
+                    and abs(full['coupling_error']) < .012
+                    and hold and all(finite(v) and abs(v) < .015 for v in hold.values())
+                    and abs(report['watchdog_roller_velocity']) < .1)
     raise ValueError(f'Unrecognized measured report kind: {kind}')
 
 

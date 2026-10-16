@@ -38,7 +38,7 @@ def main():
     node = rclpy.create_node('molar_simulation_acceptance_observer')
     body, joints, commands, articulation_states = [], [], [], []
     report = dict(robot=args.robot, backend=args.backend, map=args.map, mode='display', passed=False,
-                  phases={}, scope='Bounded actual GUI differential-drive/lift/two-stage telescope/roller/Stop/watchdog; not navigation or physical robot acceptance',
+                  phases={}, scope='Bounded actual GUI differential drive, lift and two-stage telescope to their source limits, roller, Stop and watchdog; not navigation or physical robot acceptance',
                   domain=os.environ.get('ROS_DOMAIN_ID'))
 
     def body_state(msg):
@@ -160,6 +160,17 @@ def main():
         key('w', False)
         app._stop_drive()
 
+        # Full source range: the lift to its 0.68 m top, then both telescope
+        # stages to 0.14 m (0.28 m tip extension), within limits and coupled.
+        command(lift, .68)
+        interval(20.)
+        command(stage, .14)
+        interval(2.)
+        report['full_range'] = dict(lift=q(lift), stage1=q(stage), stage2=q(child),
+                                    total_tip=q(stage)+q(child), coupling_error=q(child)-q(stage))
+        assert (.64 < q(lift) <= .69 and .13 < q(stage) <= .15 and .13 < q(child) <= .15
+                and abs(q(child)-q(stage)) < .012), report['full_range']
+
         command(roller, 2.)
         interval(1.5)
         velocity = joints[-1]['velocity'].get(roller, 0.)
@@ -181,9 +192,9 @@ def main():
         assert abs(report['watchdog_roller_velocity']) < .1
         assert q(lift) > .02 and q(stage) > .03
         command(stage, 0.)
-        interval(2.)
-        command(lift, 0.)
         interval(3.)
+        command(lift, 0.)
+        interval(22.)
         assert abs(q(stage)) < .01 and abs(q(child)) < .01 and q(lift) < .015
         assert all(math.isfinite(v) for item in body for v in (item['x'],item['y'],item['z'],item['tilt']))
         assert max(item['tilt'] for item in body) < .3

@@ -2191,6 +2191,15 @@ class MuJoCoSpawner(Node):
             for values in targets.values():
                 for name, value in values.items():
                     self._set_actuator(name, '_articulation', value)
+            # Gravity feedforward on the position servos, as a geared motor
+            # carries its load: the PD alone (kp 20000 N/m) held the 14 kg
+            # MOLAR carriage 7 mm low, and each Stop, which holds the
+            # measured position, lowered it another 7 mm (2026-10-16).
+            for name, spec in self._articulation.contract.joints.items():
+                if spec['mode'] == 'position':
+                    dof = self._joint_name2dofadr[name]
+                    self._data.qfrc_applied[dof] = max(-spec['effort'], min(
+                        spec['effort'], float(self._data.qfrc_bias[dof])))
             if self._articulation.base_inhibited:
                 with self._twist_lock:
                     self._twist = Twist()

@@ -309,6 +309,7 @@ class IsaacSpawner(Node):
         self.declare_parameter("drive_config", "")
         self.declare_parameter("articulation_config", "")
         self._articulation = None
+        self._articulation_loads = {}
         self._articulation_sim_time = None
         self._articulation_feedback_wall = -math.inf
         # URDF import: use the description's own <collision> geometry, as
@@ -519,14 +520,23 @@ class IsaacSpawner(Node):
             twist.linear.x, twist.angular.z, dt=dt,
             **({"vy": twist.linear.y}
                if self._drive.kind in ("mecanum", "four_wheel_steer") else skid_feedback))
+        efforts = {}
+        if self._articulation_loads and measured.get('orn'):
+            # Gravity feedforward on the lift/slide drives, as a geared motor
+            # carries its load: the drive alone (stiffness 20000 N/m) would
+            # hold the 14 kg MOLAR carriage 7 mm low, and every Stop would
+            # hold that lower position (MuJoCo, 2026-10-16).
+            from robot_lab_utils.urdf_articulation import gravity_feedforward
+            efforts = gravity_feedforward(self._articulation_loads, measured['orn'], {
+                name: spec['effort'] for name, spec in self._articulation.contract.joints.items()})
         try:
             for name, value in articulation_targets['velocity'].items():
                 targets.velocity[name] = value
             for name, value in articulation_targets['position'].items():
                 targets.position[name] = value
-            proc.stdin.write(json.dumps({"joint_targets": {
+            proc.stdin.write(json.dumps({"joint_targets": dict({
                 "velocity": targets.velocity,
-                "position": targets.position}}) + "\n")
+                "position": targets.position}, **({"effort": efforts} if efforts else {}))}) + "\n")
             proc.stdin.flush()
         except Exception:
             pass
@@ -613,10 +623,11 @@ class IsaacSpawner(Node):
             if articulation_config:
                 if self._policy_targets is not None:
                     raise ValueError('Articulation cannot share ownership with a learned policy')
-                from robot_lab_utils.urdf_articulation import ArticulationROS
+                from robot_lab_utils.urdf_articulation import ArticulationROS, gravity_loads
                 self._articulation = ArticulationROS(self, articulation_config, urdf, str(model))
                 if set(self._articulation.contract.joints) & set(self._drive.wheel_joints):
                     raise ValueError('Articulation cannot own drive wheels')
+                self._articulation_loads = gravity_loads(urdf, self._articulation.contract)
             # Odometry child frame: the description's root link (was fixed to
             # base_footprint, which most non-wheeled robots do not have).
             self._base_frame = urdf_link_frames(urdf)[1] or "base_footprint"

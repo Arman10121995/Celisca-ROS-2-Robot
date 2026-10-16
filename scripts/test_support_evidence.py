@@ -310,3 +310,20 @@ def test_indexer_identities_and_report_shapes_of_the_new_screens():
     assert not indexer.SHAPES['calibration_screen']({'error': 'checker produced no output'})
     assert indexer.SHAPES['command_loss_screen']({'phases': []})
     assert not indexer.SHAPES['mission_screen']({'samples': []})
+
+
+def test_articulation_screen_needs_full_range_coupling_hold_and_watchdog():
+    report = {'passed': True, 'launch_returncode': 0, 'backend': 'mujoco',
+              'phases': {'forward': {'displacement': .52}, 'base_stop': {'displacement': 0.},
+                         'extended_base_inhibit': {'displacement': 0.}},
+              'full_range': {'lift': .673, 'stage1': .14, 'stage2': .14, 'total_tip': .28, 'coupling_error': 0.},
+              'stop_hold': {'conveyor_lift_joint': -.007, 'telescope_stage1_joint': 0., 'telescope_stage2_joint': 0.},
+              'watchdog_roller_velocity': 0.}
+    assert module.measured_result(report, 'articulation_screen')
+    report['full_range']['coupling_error'] = .02
+    assert not module.measured_result(report, 'articulation_screen')
+    report['full_range']['coupling_error'] = 0.
+    report['phases']['extended_base_inhibit']['displacement'] = .1
+    assert not module.measured_result(report, 'articulation_screen')
+    del report['full_range']
+    assert not module.measured_result(report, 'articulation_screen')

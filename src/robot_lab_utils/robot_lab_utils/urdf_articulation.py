@@ -242,6 +242,78 @@ class ArticulationROS:
         return targets
 
 
+def _rpy_matrix(text):
+    roll, pitch, yaw = (float(value) for value in (text or '0 0 0').split())
+    cr, sr, cp, sp, cy, sy = (math.cos(roll), math.sin(roll), math.cos(pitch), math.sin(pitch),
+                              math.cos(yaw), math.sin(yaw))
+    return ((cy*cp, cy*sp*sr-sy*cr, cy*sp*cr+sy*sr),
+            (sy*cp, sy*sp*sr+cy*cr, sy*sp*cr-cy*sr),
+            (-sp, cp*sr, cp*cr))
+
+
+def _matmul(a, b):
+    return tuple(tuple(sum(a[i][k]*b[k][j] for k in range(3)) for j in range(3)) for i in range(3))
+
+
+def gravity_loads(urdf, contract):
+    """Subtree mass and root-frame axis of each position-mode slide.
+
+    A plant adds mass * g * (axis . up) to the slide's servo force, as a
+    geared motor carries its load; a pure PD sags by load / kp instead.
+    Slides with a revolute joint between them and the root are left out:
+    their axis would depend on the pose.
+    """
+    root = ET.fromstring(urdf)
+    joints = {joint.get('name'): joint for joint in root.findall('joint')}
+    by_child = {joint.find('child').get('link'): joint for joint in joints.values()}
+    children = {}
+    for joint in joints.values():
+        children.setdefault(joint.find('parent').get('link'), []).append(joint.find('child').get('link'))
+    masses = {}
+    for link in root.findall('link'):
+        mass = link.find('inertial/mass')
+        masses[link.get('name')] = float(mass.get('value')) if mass is not None else 0.
+
+    def origin_rpy(joint):
+        origin = joint.find('origin')
+        return _rpy_matrix(origin.get('rpy') if origin is not None else None)
+
+    loads = {}
+    for name, spec in contract.joints.items():
+        joint = joints[name]
+        if spec['mode'] != 'position' or joint.get('type') != 'prismatic':
+            continue
+        rotation, link, fixed_axis = origin_rpy(joint), joint.find('parent').get('link'), True
+        while link in by_child:
+            parent = by_child[link]
+            if parent.get('type') not in ('fixed', 'prismatic'):
+                fixed_axis = False
+                break
+            rotation = _matmul(origin_rpy(parent), rotation)
+            link = parent.find('parent').get('link')
+        if not fixed_axis:
+            continue
+        axis = [float(value) for value in (joint.find('axis').get('xyz') if joint.find('axis') is not None
+                                           else '1 0 0').split()]
+        norm = math.sqrt(sum(value*value for value in axis))
+        axis = tuple(sum(rotation[i][k]*axis[k] for k in range(3))/norm for i in range(3))
+        total, stack = 0., [joint.find('child').get('link')]
+        while stack:
+            link = stack.pop()
+            total += masses.get(link, 0.)
+            stack.extend(children.get(link, []))
+        loads[name] = (total, axis)
+    return loads
+
+
+def gravity_feedforward(loads, orientation_xyzw, efforts, gravity=9.81):
+    """Joint force holding each slide's subtree up, within its effort limit."""
+    x, y, z, w = (float(value) for value in orientation_xyzw)
+    up = (2*(x*z-w*y), 2*(y*z+w*x), 1-2*(x*x+y*y))   # world z of a root-frame vector
+    return {name: max(-efforts[name], min(efforts[name], mass*gravity*sum(u*a for u, a in zip(up, axis))))
+            for name, (mass, axis) in loads.items()}
+
+
 def add_mujoco_articulation_actuators(mjcf, contract):
     """Physical finite-force servos on the configured hinges/slides only."""
     root = ET.fromstring(mjcf)
