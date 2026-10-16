@@ -1,0 +1,143 @@
+{
+ "odom": "/odom/ground_truth",
+ "cmd_topic": "/cmd_vel",
+ "phase_clock": "sim",
+ "phases": [
+  {
+   "phase": "straight",
+   "command": [
+    0.4,
+    0.0
+   ],
+   "lateral_command": 0.0,
+   "measured": {
+    "vx": 0.679,
+    "vy": 0.018,
+    "wz": 0.059,
+    "distance": 2.037,
+    "measured_sim_s": 3.0,
+    "wall_s": 14.883,
+    "steering_positions_rad": {}
+   }
+  },
+  {
+   "phase": "left_arc",
+   "command": [
+    0.4,
+    0.5
+   ],
+   "lateral_command": 0.0,
+   "measured": {
+    "vx": 0.491,
+    "vy": -0.007,
+    "wz": 0.563,
+    "distance": 1.964,
+    "measured_sim_s": 4.0,
+    "wall_s": 17.728,
+    "steering_positions_rad": {}
+   }
+  },
+  {
+   "phase": "right_arc",
+   "command": [
+    0.4,
+    -0.5
+   ],
+   "lateral_command": 0.0,
+   "measured": {
+    "vx": 0.599,
+    "vy": -0.02,
+    "wz": -0.395,
+    "distance": 2.396,
+    "measured_sim_s": 3.995,
+    "wall_s": 17.814,
+    "steering_positions_rad": {}
+   }
+  },
+  {
+   "phase": "reverse_left",
+   "command": [
+    -0.3,
+    0.3
+   ],
+   "lateral_command": 0.0,
+   "measured": {
+    "vx": -0.224,
+    "vy": -0.012,
+    "wz": 0.302,
+    "distance": 0.674,
+    "measured_sim_s": 3.0,
+    "wall_s": 14.289,
+    "steering_positions_rad": {}
+   }
+  },
+  {
+   "phase": "tight_left",
+   "command": [
+    0.3,
+    1.5
+   ],
+   "lateral_command": 0.0,
+   "measured": {
+    "vx": 0.298,
+    "vy": 0.004,
+    "wz": 1.08,
+    "distance": 0.895,
+    "measured_sim_s": 3.0,
+    "wall_s": 14.39,
+    "steering_positions_rad": {}
+   }
+  },
+  {
+   "phase": "spin_in_place",
+   "command": [
+    0.0,
+    1.0
+   ],
+   "lateral_command": 0.0,
+   "measured": {
+    "vx": 0.133,
+    "vy": 0.0,
+    "wz": 1.052,
+    "distance": 0.266,
+    "measured_sim_s": 2.0,
+    "wall_s": 11.164,
+    "steering_positions_rad": {}
+   }
+  },
+  {
+   "phase": "strafe",
+   "command": [
+    0.0,
+    0.0
+   ],
+   "lateral_command": 0.3,
+   "measured": {
+    "vx": 0.105,
+    "vy": 0.233,
+    "wz": 0.131,
+    "distance": 1.021,
+    "measured_sim_s": 3.995,
+    "wall_s": 18.424,
+    "steering_positions_rad": {}
+   }
+  },
+  {
+   "phase": "stop",
+   "command": [
+    0.0,
+    0.0
+   ],
+   "lateral_command": 0.0,
+   "measured": {
+    "vx": 0.178,
+    "vy": -0.064,
+    "wz": -0.057,
+    "distance": 0.188,
+    "measured_sim_s": 0.995,
+    "wall_s": 7.45,
+    "steering_positions_rad": {}
+   }
+  }
+ ]
+}
