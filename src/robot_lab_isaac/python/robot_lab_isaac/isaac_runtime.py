@@ -530,7 +530,7 @@ def _author_steer_position_drives(stage, joint_names, stiffness=5.0,
     return sorted(driven)
 
 
-def _author_joint_pd_drives(stage, joint_pd):
+def _author_joint_pd_drives(stage, joint_pd, armature=0.0):
     """PhysX drives with a learned policy's own PD law on its joints.
 
     ``joint_pd`` is the bridge config the MuJoCo spawner also takes
@@ -543,6 +543,8 @@ def _author_joint_pd_drives(stage, joint_pd):
     * velocity joints (wheels): stiffness 0, damping kd, target velocity 0.
 
     USD angular gains are per degree, so radian gains are scaled by pi/180.
+    ``armature`` adds rotor inertia to joints that have none, as the MuJoCo
+    bridge does (``pd_joint_armature``).
     Returns the driven joint names; a configured joint missing from the
     stage is an error rather than a robot that silently collapses.
     """
@@ -566,7 +568,9 @@ def _author_joint_pd_drives(stage, joint_pd):
         (drive.GetTargetPositionAttr() or drive.CreateTargetPositionAttr()).Set(
             math.degrees(float(joint_pd['default'][i])) if position else 0.0)
         (drive.GetTargetVelocityAttr() or drive.CreateTargetVelocityAttr()).Set(0.0)
-        PhysxSchema.PhysxJointAPI.Apply(prim)
+        joint_api = PhysxSchema.PhysxJointAPI.Apply(prim)
+        if armature > 0 and not (joint_api.GetArmatureAttr() and joint_api.GetArmatureAttr().Get()):
+            (joint_api.GetArmatureAttr() or joint_api.CreateArmatureAttr()).Set(float(armature))
         driven.add(name)
     missing = set(config) - driven
     if missing:
@@ -834,6 +838,39 @@ def _ensure_lighting(stage):
     return [str(dome.GetPath()), str(sun.GetPath())]
 
 
+def _apply_ground_material(stage, material):
+    """Bind a physics material to the floor prims: the World ground plane and
+    the world's plane shapes (thin boxes named ``*_plane_*``).
+
+    Learned locomotion policies train on floors with friction 1 and no
+    restitution (Isaac Lab, legged_gym).  The floor material's combine modes
+    (friction ``max``, restitution ``min``) make its values the contact's,
+    whatever the feet carry.  Returns the number of prims bound.
+    """
+    from pxr import PhysxSchema, Usd, UsdPhysics, UsdShade
+
+    path = "/World/PhysicsMaterials/ground"
+    shade = UsdShade.Material.Define(stage, path)
+    api = UsdPhysics.MaterialAPI.Apply(shade.GetPrim())
+    api.CreateStaticFrictionAttr(float(material.get("static_friction", 1.0)))
+    api.CreateDynamicFrictionAttr(float(material.get("dynamic_friction", 1.0)))
+    api.CreateRestitutionAttr(float(material.get("restitution", 0.0)))
+    physx = PhysxSchema.PhysxMaterialAPI.Apply(shade.GetPrim())
+    physx.CreateFrictionCombineModeAttr("max")
+    physx.CreateRestitutionCombineModeAttr("min")
+    bound = 0
+    for prim in stage.Traverse(Usd.TraverseInstanceProxies()):
+        name = prim.GetName()
+        floor = ("_plane_" in name and str(prim.GetPath()).startswith("/World/map/")) \
+            or "groundplane" in str(prim.GetPath()).lower()
+        if not floor or prim.IsInstanceProxy() or not prim.HasAPI(UsdPhysics.CollisionAPI):
+            continue
+        UsdShade.MaterialBindingAPI.Apply(prim).Bind(
+            shade, UsdShade.Tokens.weakerThanDescendants, "physics")
+        bound += 1
+    return bound
+
+
 def _add_world_shapes(stage, shapes):
     """Create static collision prims from the spawner's world shapes.
 
@@ -931,6 +968,10 @@ def _run_stage(app, reader, cfg, state):
         world.scene.add_ground_plane()
     except Exception:
         pass
+    if cfg.get("ground_material"):
+        floors = _apply_ground_material(stage_utils.get_current_stage(), cfg["ground_material"])
+        _emit({"event": "log", "msg": "Ground material %s on %d floor prims"
+               % (cfg["ground_material"], floors)})
     try:
         lights = _ensure_lighting(stage_utils.get_current_stage())
         if lights:
@@ -1023,9 +1064,10 @@ def _run_stage(app, reader, cfg, state):
                    "contact offset; solver iterations %s" % (tuned, iterations)})
         joint_pd = cfg.get("joint_pd") or None
         if joint_pd:
-            pd_joints = _author_joint_pd_drives(stage_obj, joint_pd)
-            _emit({"event": "log", "msg": "Policy PD drives (physics %.0f Hz): %s"
-                   % (1.0 / dt, pd_joints)})
+            armature = float(cfg.get("pd_joint_armature") or 0.0)
+            pd_joints = _author_joint_pd_drives(stage_obj, joint_pd, armature)
+            _emit({"event": "log", "msg": "Policy PD drives (physics %.0f Hz, armature %g): %s"
+                   % (1.0 / dt, armature, pd_joints)})
 
         from isaacsim.core.api.robots import Robot
         syaw = float(cfg.get("spawn_yaw", 0.0))

@@ -280,6 +280,12 @@ class IsaacSpawner(Node):
         # their training physics rate rather than the wheeled 60 Hz.
         self.declare_parameter("joint_pd_config", "")
         self.declare_parameter("physics_rate", 60.0)
+        # Rotor inertia for the policy's PD joints that have none (the MuJoCo
+        # bridge adds 0.01); 0 keeps PhysX's massless drives.
+        self.declare_parameter("pd_joint_armature", 0.0)
+        # Contact material for the floor (JSON: static_friction,
+        # dynamic_friction, restitution); empty keeps PhysX's defaults.
+        self.declare_parameter("ground_material", "")
         self.declare_parameter("publish_rate", 50.0)
         self.declare_parameter("isaac_python", _DEFAULT_ISAAC_PY)
         self.declare_parameter("left_wheel_joint", "wheel_left_joint")
@@ -589,6 +595,9 @@ class IsaacSpawner(Node):
             "gui": bool(gui and os.environ.get("DISPLAY")),
             "physics_rate": float(self.get_parameter("physics_rate").value),
             "joint_pd": self._policy_targets.config if self._policy_targets else None,
+            "pd_joint_armature": float(self.get_parameter("pd_joint_armature").value),
+            "ground_material": (json.loads(self.get_parameter("ground_material").value)
+                                if self.get_parameter("ground_material").value else None),
             # Display hold forwarded to the runtime: freeze joints at spawn.
             "hold_position": str(self.get_parameter("hold_position").value or "auto"),
             "left_wheel_joint": self.get_parameter("left_wheel_joint").value,

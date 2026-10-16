@@ -154,6 +154,10 @@ def _build_isaac_actions(context):
         LaunchConfiguration("joint_pd_config"), value_type=str)
     spawner_params["physics_rate"] = ParameterValue(
         LaunchConfiguration("physics_rate"), value_type=float)
+    spawner_params["pd_joint_armature"] = ParameterValue(
+        LaunchConfiguration("isaac_pd_joint_armature"), value_type=float)
+    spawner_params["ground_material"] = ParameterValue(
+        LaunchConfiguration("ground_material"), value_type=str)
     # Start the Isaac Sim core (carb/kit-based).  When isaacsim is not
     # installed the node exits gracefully with a clear log message.
     actions.append(
@@ -218,6 +222,15 @@ def generate_launch_description():
         DeclareLaunchArgument(
             "physics_rate", default_value="60.0",
             description="Isaac physics rate in Hz (legged policies use their training rate).",
+        ),
+        DeclareLaunchArgument(
+            "isaac_pd_joint_armature", default_value="0.0",
+            description="Rotor inertia for the policy PD joints that have none.",
+        ),
+        DeclareLaunchArgument(
+            "ground_material", default_value="",
+            description="Floor contact material as JSON (static_friction, "
+                        "dynamic_friction, restitution); empty: PhysX defaults.",
         ),
         OpaqueFunction(function=_build_isaac_actions),
     ])

@@ -27,7 +27,10 @@ controller_server:
       required_movement_radius: 0.2
       movement_time_allowance: 20.0
     general_goal_checker:
-      xy_goal_tolerance: 0.2
+      # 0.12 m (2026-10-16): with 0.2 m the stateful checker stopped the
+      # G1 at that circle's edge; leg odometry and AMCL then add 0.1-0.15 m,
+      # and Isaac seed 3 ended goal B 0.256 m from truth.
+      xy_goal_tolerance: 0.12
       yaw_goal_tolerance: 0.35
     FollowPath:
       desired_linear_vel: 0.35

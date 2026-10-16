@@ -115,6 +115,19 @@ def test_isaac_localization_selects_the_robots_policy_and_its_physics_rate():
 
 
 @pytest.mark.integration
+def test_isaac_contact_settings_default_to_physx_and_can_be_set():
+    context, actions = _launch_actions()
+    arguments = _simulator_arguments(context, actions)
+    assert float(arguments['isaac_pd_joint_armature']) == 0.0
+    assert arguments['ground_material'] == ''
+    material = '{"static_friction": 1.0, "dynamic_friction": 1.0, "restitution": 0.0}'
+    context, actions = _launch_actions(isaac_legged_pd_armature='0.01', isaac_ground_material=material)
+    arguments = _simulator_arguments(context, actions)
+    assert float(arguments['isaac_pd_joint_armature']) == pytest.approx(0.01)
+    assert json.loads(arguments['ground_material'])['static_friction'] == 1.0
+
+
+@pytest.mark.integration
 def test_isaac_policy_can_be_turned_off():
     context, actions = _launch_actions(legged_policy='none')
     arguments = _simulator_arguments(context, actions)

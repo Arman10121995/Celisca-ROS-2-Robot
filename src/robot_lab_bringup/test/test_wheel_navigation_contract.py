@@ -77,3 +77,14 @@ def test_selected_urdf_root_reaches_nav2_servers_and_nested_costmaps():
             assert loaded['ros__parameters']['robot_base_frame'] == 'base_link'
         finally:
             rewritten.unlink()
+
+
+def test_car_tree_backs_up_and_retries_more_than_once():
+    # A car that stalls 0.1-0.2 m from a 0.1 m goal circle needs a fresh
+    # approach; one retry left MuJoCo anti-Ackermann seed 2 0.15 m short.
+    import xml.etree.ElementTree as ET
+    src = Path(__file__).resolve().parents[2]
+    tree = ET.parse(src/'robot_lab_navigation/behavior_tree/car_navigation_w_replanning_and_recovery.xml')
+    recovery = tree.getroot().find('BehaviorTree/RecoveryNode')
+    assert int(recovery.get('number_of_retries')) >= 3
+    assert recovery.find('Sequence/BackUp') is not None

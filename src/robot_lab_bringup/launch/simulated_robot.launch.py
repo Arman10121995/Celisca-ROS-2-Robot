@@ -1456,6 +1456,17 @@ def _build_simulation_actions(context):
                        if legged_active else {}),
                     **({"physics_rate": legged_physics_rate}
                        if legged_active and simulator == "isaac" else {}),
+                    # Per-robot Isaac contact/actuator settings (robots.yaml
+                    # isaac_pd_joint_armature / isaac_ground_material), which
+                    # the launch arguments override.
+                    **({"isaac_pd_joint_armature": (
+                            _launch_value(context, "isaac_legged_pd_armature")
+                            or str(robot_config.get("isaac_pd_joint_armature", 0.0))),
+                        "ground_material": (
+                            _launch_value(context, "isaac_ground_material")
+                            or (json.dumps(robot_config["isaac_ground_material"])
+                                if robot_config.get("isaac_ground_material") else ""))}
+                       if legged_active and simulator == "isaac" else {}),
                     **({"physics_timestep": "0.001"}
                        if go2_controller_active else {}),
                     **({"effort_joint_armature": "0.01"}
@@ -1902,6 +1913,14 @@ def generate_launch_description():
             "legged_policy_pd_armature", default_value="0.01",
             description="Joint armature added for the legged policy's PD "
                         "joints that have none in the model."),
+        DeclareLaunchArgument(
+            "isaac_legged_pd_armature", default_value="",
+            description="Isaac: armature for the legged policy's PD joints; "
+                        "empty uses robots.yaml isaac_pd_joint_armature (default 0)."),
+        DeclareLaunchArgument(
+            "isaac_ground_material", default_value="",
+            description="Isaac: floor material JSON for a legged policy robot; "
+                        "empty uses robots.yaml isaac_ground_material (default: PhysX's)."),
         DeclareLaunchArgument('arm_control', default_value='auto',
                               description='Native arm controller: auto, none or panda'),
         DeclareLaunchArgument('px4_vehicle', default_value='x500',
