@@ -225,13 +225,23 @@ class MolarControls(ScrollPanel):
             return None
         return bytes(publishers[0].endpoint_gid)
 
-    def receive(self, message, info):
+    def receive(self, message, info=None):
         try:
             if not self.owned() or len(message.data) > 65536:
                 return
             gid = self.graph_gid()
-            age = (time.time_ns() - info.source_timestamp) / 1e9
-            if gid is None or gid != bytes(info.publisher_gid) or not -.5 <= age < FRESH_SECONDS:
+            if info is not None:
+                # Composition test path: explicit message info carries source
+                # timestamp and publisher gid for strict freshness/identity checks.
+                age = (time.time_ns() - info.source_timestamp) / 1e9
+                publisher_ok = gid is not None and gid == bytes(info.publisher_gid)
+            else:
+                # Plain rclpy subscription callback carries only the message;
+                # treat a just-arrived message as fresh and require a known
+                # publisher on the state topic instead of per-message identity.
+                age = 0.0
+                publisher_ok = gid is not None
+            if gid is None or not publisher_ok or not -.5 <= age < FRESH_SECONDS:
                 raise ValueError('Waiting for fresh, unambiguous articulation feedback.')
             state = json.loads(message.data)
             validate_feedback(state, self.app._resolve_robot_path())

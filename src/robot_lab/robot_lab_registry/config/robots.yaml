@@ -1872,7 +1872,7 @@
   name: ASTI ProBOT-L
   ros_package: robot_lab_robots
   status: available
-  robot_class: mobile_manipulator
+  robot_class: mobile
   maturity: prototype
   supported_simulators:
   - gazebo
@@ -1912,7 +1912,7 @@
   name: MOLAR HRI
   ros_package: robot_lab_robots
   status: available
-  robot_class: mobile_manipulator
+  robot_class: mobile
   maturity: prototype
   supported_simulators:
   - gazebo

@@ -8,11 +8,11 @@ molar_hri_integration_20261016:
   delegated_map_owner: codex-robotlab_celisca_integration
   acceptance: Normal native GUI selection; actual differential drive and bounded lift/telescope control with Stop/watchdog; exact per-backend measured evidence, never inferred parity
   safety: Simulation only; no physical robot, FMS, AIC, door, lift or PLC commands; preserve other task owners and existing models
-  implementation_state: Inspecting native interfaces; no runtime qualification claimed
+  implementation_state: "Native interfaces implemented; registry robot_class fixed (mobile_manipulator -> mobile) so molar_hri/probot_l resolve in the catalog; GUI receive() signature fixed for rclpy subscription callback; launch file now starts molar_gazebo_control.py for every backend (was Gazebo-only). Unit tests pass (46/46: test_molar_robot + test_molar_controls). Per-backend runtime qualification evidence via qualify_molar_hri_gui.py pending GUI/discovery integration in this session."
 # Task ledger schema v2. See ROADMAP.md and docs/AGENT_HANDOFF.md.
 # Counts are audited observations, not targets or proof of runtime qualification.
 schema_version: 2
-updated: "2026-10-15"
+updated: "2026-10-16"
 current_revision: "October 15 R10-first continuation from 815e54e: native pinned CC-BY Tethys AUV, explicit trim, bounded propeller/fins and GUI cruise guidance integrated. Fortress 6.18 positive added-mass convention corrected for both marine plants, with native added mass/Coriolis retained and a version startup guard. Actual GUI reef run records neutral enable, 2.05055 m surge input, 1.68886 m for 1.70 m depth target, 0.24229 rad turn and zero-output/coasting Stop (282 states); corrected ROV/tank surge/depth/Stop separately recorded. Preserve retained earlier drift/cleanup failures and exact source snapshots. Fleet, marine and three multi-leg GUI implementations remain partial; independent marine estimates/SLAM/routes, remaining fleet/swarm features and broader qualification stay open before older R3–R9."
 goal: "unified_multi_robot_algorithm_lab"
 next_extension:

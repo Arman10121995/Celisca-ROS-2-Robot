@@ -113,7 +113,7 @@ for variant in ('probot_l', 'molar_hri'):
                    mujoco_wheel_velocity_gain=20., mujoco_wheel_armature=.1),
         notes='Experimental simulation-only CAD derivative: differential drive, passive casters, lift, coupled telescope and roller. Estimated dynamics. Display/Drive controls; sensors, SLAM/Nav2 and cross-backend missions not qualified.')
     registry.append(dict(id=variant, version='0.1.0', name='MOLAR HRI' if variant == 'molar_hri' else 'ASTI ProBOT-L',
-        ros_package='robot_lab_robots', status='available', robot_class='mobile_manipulator', maturity='prototype',
+        ros_package='robot_lab_robots', status='available', robot_class='mobile', maturity='prototype',
         supported_simulators=['gazebo', 'mujoco', 'pybullet', 'isaac'], supported_modes=['display'],
         locomotion=dict(type='differential', dof=2, max_velocity=.25), capabilities=['control'],
         command_interfaces=['geometry_msgs/Twist', 'std_msgs/String'], state_interfaces=['sensor_msgs/JointState', 'nav_msgs/Odometry'],
