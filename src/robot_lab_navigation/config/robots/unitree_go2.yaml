@@ -35,12 +35,12 @@ controller_server:
     FollowPath:
       desired_linear_vel: 0.4
       vx_max: 0.4
-      # Rotate in place toward a path that leaves more than 45 deg off the
-      # heading (2026-10-16): in Isaac, where the Go2 turns on the spot at
-      # 0.93 rad/s, seed 3 reached goal A facing a wall 0.5 m away, walked
-      # into it toward goal B and stopped on "collision ahead".  MuJoCo and
-      # Gazebo plan forward arcs (forward_arc), which turn this off.
-      use_rotate_to_heading: true
+      # Rotating in place first (tried 2026-10-16, 56d3edc) failed all three
+      # Isaac seeds: held at 0.8 rad/s with no forward speed, the Go2 turned
+      # 8-28 deg in 1-2 s and then stood (20 deg in 20 s), so the progress
+      # checker and the spin recovery both timed out.  Forward arcs keep it
+      # stepping.
+      use_rotate_to_heading: false
       rotate_to_heading_angular_vel: 0.8
       regulated_linear_scaling_min_speed: 0.25
       regulated_linear_scaling_min_radius: 0.5

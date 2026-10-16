@@ -1755,6 +1755,12 @@ class MuJoCoSpawner(Node):
         # Spawn and reset use the same pose and initial physics state.
         self._reset_physics()
         if articulation_contract is not None:
+            # The articulation servos' velocity terms need implicit
+            # integration: under explicit Euler the MOLAR transfer roller
+            # (1.4e-5 kg m^2 against kd 0.2) read -82 rad/s at a fixed angle
+            # and its motion kept the base inhibited (2026-10-16).  The
+            # robot MJCF's <option> is not carried into a merged world.
+            self._model.opt.integrator = int(mujoco.mjtIntegrator.mjINT_IMPLICITFAST)
             from robot_lab_utils.urdf_articulation import ArticulationROS
             self._articulation = ArticulationROS(self, articulation_contract, urdf, str(model))
 

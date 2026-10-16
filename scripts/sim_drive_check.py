@@ -178,6 +178,9 @@ def main():
                         help="Seconds to measure motion after publisher loss")
     parser.add_argument("--strafe", action="store_true",
                         help="Also command 0.3 m/s lateral velocity")
+    parser.add_argument("--hold-spin", type=float, default=0.0, metavar="SECONDS",
+                        help="Drive straight, then hold a 0.8 rad/s turn on the spot this "
+                             "long, measured in 5 s windows (in-place turns that stall)")
     parser.add_argument("--phase-clock", choices=("sim", "wall"), default="sim",
                         help="Phase durations and settling use simulation time by default")
     parser.add_argument("--timeout", type=float, default=240.0)
@@ -196,6 +199,10 @@ def main():
             phases = PHASES[:-2] if args.command_loss else PHASES
         if args.strafe:
             phases.insert(-1, ("strafe", 0.0, 0.0, 5.0, 0.3))
+        if args.hold_spin > 0:
+            windows = int(math.ceil(args.hold_spin / 5.0))
+            phases = [PHASES[0]] + [("spin_hold_%d" % (5 * i), 0.0, 0.8, 5.0)
+                                    for i in range(windows)] + [PHASES[-1]]
         for phase in phases:
             name, vx, wz, duration = phase[:4]
             vy = phase[4] if len(phase) > 4 else 0.0
