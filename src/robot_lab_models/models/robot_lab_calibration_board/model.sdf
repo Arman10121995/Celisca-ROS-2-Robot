@@ -1,0 +1,15 @@
+<?xml version="1.0" ?>
+<sdf version="1.6">
+  <model name="robot_lab_calibration_board">
+    <static>true</static>
+    <link name="link">
+      <collision name="collision">
+        <pose>-0.003 0 0 0 0 0</pose>
+        <geometry><box><size>0.005 0.4400 0.4400</size></box></geometry>
+      </collision>
+      <visual name="visual">
+        <geometry><mesh><uri>model://robot_lab_calibration_board/meshes/board.dae</uri></mesh></geometry>
+      </visual>
+    </link>
+  </model>
+</sdf>
