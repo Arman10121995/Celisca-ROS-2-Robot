@@ -1462,6 +1462,9 @@ def _build_simulation_actions(context):
                     **({"isaac_pd_joint_armature": (
                             _launch_value(context, "isaac_legged_pd_armature")
                             or str(robot_config.get("isaac_pd_joint_armature", 0.0))),
+                        "isaac_pd_actuator": (
+                            _launch_value(context, "isaac_legged_pd_actuator")
+                            or str(robot_config.get("isaac_pd_actuator", "implicit"))),
                         "ground_material": (
                             _launch_value(context, "isaac_ground_material")
                             or (json.dumps(robot_config["isaac_ground_material"])
@@ -1920,6 +1923,10 @@ def generate_launch_description():
             "isaac_legged_pd_armature", default_value="",
             description="Isaac: armature for the legged policy's PD joints; "
                         "empty uses robots.yaml isaac_pd_joint_armature (default 0)."),
+        DeclareLaunchArgument(
+            "isaac_legged_pd_actuator", default_value="",
+            description="Isaac: legged policy actuator (implicit or dc_motor); empty uses "
+                        "robots.yaml isaac_pd_actuator (default implicit)."),
         DeclareLaunchArgument(
             "isaac_render_subframes", default_value="1",
             description="Isaac: renders per camera frame (RTX accumulation)."),

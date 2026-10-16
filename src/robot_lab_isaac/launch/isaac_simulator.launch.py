@@ -158,6 +158,8 @@ def _build_isaac_actions(context):
         LaunchConfiguration("isaac_pd_joint_armature"), value_type=float)
     spawner_params["ground_material"] = ParameterValue(
         LaunchConfiguration("ground_material"), value_type=str)
+    spawner_params["pd_actuator"] = ParameterValue(
+        LaunchConfiguration("isaac_pd_actuator"), value_type=str)
     spawner_params["render_subframes"] = ParameterValue(
         LaunchConfiguration("render_subframes"), value_type=int)
     spawner_params["rtx_settings"] = ParameterValue(
@@ -230,6 +232,10 @@ def generate_launch_description():
         DeclareLaunchArgument(
             "isaac_pd_joint_armature", default_value="0.0",
             description="Rotor inertia for the policy PD joints that have none.",
+        ),
+        DeclareLaunchArgument(
+            "isaac_pd_actuator", default_value="implicit",
+            description="Legged policy actuator: implicit PhysX drives or dc_motor.",
         ),
         DeclareLaunchArgument(
             "render_subframes", default_value="1",

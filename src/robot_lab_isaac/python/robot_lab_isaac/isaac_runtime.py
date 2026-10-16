@@ -531,7 +531,7 @@ def _author_steer_position_drives(stage, joint_names, stiffness=5.0,
     return sorted(driven)
 
 
-def _author_joint_pd_drives(stage, joint_pd, armature=0.0):
+def _author_joint_pd_drives(stage, joint_pd, armature=0.0, explicit=False):
     """PhysX drives with a learned policy's own PD law on its joints.
 
     ``joint_pd`` is the bridge config the MuJoCo spawner also takes
@@ -545,7 +545,9 @@ def _author_joint_pd_drives(stage, joint_pd, armature=0.0):
 
     USD angular gains are per degree, so radian gains are scaled by pi/180.
     ``armature`` adds rotor inertia to joints that have none, as the MuJoCo
-    bridge does (``pd_joint_armature``).
+    bridge does (``pd_joint_armature``).  ``explicit`` leaves the position
+    joints' drives without gains: the runtime applies the PD torque itself
+    (``dc_motor_effort``).
     Returns the driven joint names; a configured joint missing from the
     stage is an error rather than a robot that silently collapses.
     """
@@ -563,8 +565,9 @@ def _author_joint_pd_drives(stage, joint_pd, armature=0.0):
         (drive.GetTypeAttr() or drive.CreateTypeAttr()).Set('force')
         per_degree = math.pi / 180.0
         (drive.GetStiffnessAttr() or drive.CreateStiffnessAttr()).Set(
-            float(joint_pd['kp'][i]) * per_degree if position else 0.0)
-        (drive.GetDampingAttr() or drive.CreateDampingAttr()).Set(float(joint_pd['kd'][i]) * per_degree)
+            float(joint_pd['kp'][i]) * per_degree if position and not explicit else 0.0)
+        (drive.GetDampingAttr() or drive.CreateDampingAttr()).Set(
+            0.0 if position and explicit else float(joint_pd['kd'][i]) * per_degree)
         (drive.GetMaxForceAttr() or drive.CreateMaxForceAttr()).Set(float(joint_pd['torque_limit'][i]))
         (drive.GetTargetPositionAttr() or drive.CreateTargetPositionAttr()).Set(
             math.degrees(float(joint_pd['default'][i])) if position else 0.0)
@@ -577,6 +580,43 @@ def _author_joint_pd_drives(stage, joint_pd, armature=0.0):
     if missing:
         raise ValueError('Policy PD joints missing from the imported robot: %s' % sorted(missing))
     return sorted(driven)
+
+
+def dc_motor_effort(kp, kd, limit, velocity_limit, target, position, velocity):
+    """Explicit PD torque through a DC motor's torque-speed limits.
+
+    Isaac Lab's DCMotorCfg, which the robot_lab policies train with: the
+    torque available in the direction of motion falls linearly from
+    ``limit`` at rest to zero at ``velocity_limit``.  PhysX drives apply
+    the same PD law implicitly with a constant ``maxForce``, which leaves a
+    fast-moving leg stronger than in training.
+    """
+    tau = kp * (target - position) - kd * velocity
+    ratio = velocity / velocity_limit if velocity_limit > 0 else 0.0
+    high = min(limit, limit * (1.0 - ratio))
+    low = max(-limit, limit * (-1.0 - ratio))
+    return min(max(tau, low), high)
+
+
+def _dc_motor_joints(stage, joint_pd, dof_names):
+    """(name, dof index, kp, kd, limit, velocity limit rad/s, default) for the
+    policy's position joints; the velocity limit is the imported joint's
+    maxJointVelocity (the URDF <limit velocity>)."""
+    from pxr import PhysxSchema, Usd, UsdPhysics
+    limits = {}
+    for prim in stage.Traverse(Usd.TraverseInstanceProxies()):
+        if prim.IsA(UsdPhysics.RevoluteJoint) and not prim.IsInstanceProxy():
+            attr = PhysxSchema.PhysxJointAPI(prim).GetMaxJointVelocityAttr()
+            value = attr.Get() if attr else None
+            if value:
+                limits[prim.GetName()] = math.radians(float(value))
+    joints = []
+    for i, name in enumerate(joint_pd['joints']):
+        if joint_pd['mode'][i] != 'position' or name not in dof_names:
+            continue
+        joints.append((name, dof_names.index(name), float(joint_pd['kp'][i]), float(joint_pd['kd'][i]),
+                       float(joint_pd['torque_limit'][i]), limits.get(name, 0.0), float(joint_pd['default'][i])))
+    return joints
 
 
 def joint_pd_targets(joint_pd, values=None):
@@ -1137,9 +1177,10 @@ def _run_stage(app, reader, cfg, state):
         joint_pd = cfg.get("joint_pd") or None
         if joint_pd:
             armature = float(cfg.get("pd_joint_armature") or 0.0)
-            pd_joints = _author_joint_pd_drives(stage_obj, joint_pd, armature)
-            _emit({"event": "log", "msg": "Policy PD drives (physics %.0f Hz, armature %g): %s"
-                   % (1.0 / dt, armature, pd_joints)})
+            explicit = str(cfg.get("pd_actuator") or "implicit") == "dc_motor"
+            pd_joints = _author_joint_pd_drives(stage_obj, joint_pd, armature, explicit)
+            _emit({"event": "log", "msg": "Policy PD drives (physics %.0f Hz, armature %g, %s): %s"
+                   % (1.0 / dt, armature, "explicit DC motor" if explicit else "implicit", pd_joints)})
 
         from isaacsim.core.api.robots import Robot
         syaw = float(cfg.get("spawn_yaw", 0.0))
@@ -1228,10 +1269,15 @@ def _run_stage(app, reader, cfg, state):
     # holds only when there are no drive joints (the display case).
     hold_mode = str(cfg.get("hold_position", "auto") or "auto").lower()
     hold_joints = (hold_mode == "true") or (hold_mode == "auto" and lw_idx < 0 and rw_idx < 0)
+    dc_motor = None
     if joint_pd:
         # The policy's PD drives hold the stance; a pose hold would override
         # every target it sends.
         hold_joints = False
+        if str(cfg.get("pd_actuator") or "implicit") == "dc_motor" and robot is not None:
+            dc_motor = _dc_motor_joints(stage_utils.get_current_stage(), joint_pd, dof_names)
+            _emit({"event": "log", "msg": "DC motor PD on %d joints (velocity limits %s rad/s)"
+                   % (len(dc_motor), sorted({round(j[5], 2) for j in dc_motor}))})
     hold_pose = None
     if hold_joints and not robot_free and robot is not None:
         try:
@@ -1276,6 +1322,20 @@ def _run_stage(app, reader, cfg, state):
             except Exception:
                 pass
         targets = reader.joint_targets
+        if dc_motor and targets is not None and robot is not None:
+            # Explicit PD through the motors' torque-speed limits, every
+            # physics step; the position targets stop at this torque.
+            import numpy as np
+            positions = robot.get_joint_positions()
+            velocities = robot.get_joint_velocities()
+            wanted = targets.get("position") or {}
+            robot.set_joint_efforts(
+                np.array([dc_motor_effort(kp, kd, limit, vlim, float(wanted.get(name, default)),
+                                          float(positions[i]), float(velocities[i]))
+                          for name, i, kp, kd, limit, vlim, default in dc_motor]),
+                joint_indices=np.array([joint[1] for joint in dc_motor]))
+            targets = dict(targets, position={name: value for name, value in wanted.items()
+                                              if name not in {joint[0] for joint in dc_motor}})
         if targets is not None and robot is not None and not robot_free:
             # A car: per-joint wheel rates and steering angles computed on
             # the ROS side (robot_lab_utils.drive_kinematics).

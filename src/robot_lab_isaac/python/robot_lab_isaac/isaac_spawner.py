@@ -289,6 +289,9 @@ class IsaacSpawner(Node):
         # Camera rendering: renders per camera frame, and RTX settings as
         # JSON ({"/rtx/post/aa/op": 2, ...}); 1 and empty keep the defaults.
         self.declare_parameter("render_subframes", 1)
+        # Legged policy actuator model: "implicit" PhysX drives, or
+        # "dc_motor" explicit PD through Isaac Lab's torque-speed limits.
+        self.declare_parameter("pd_actuator", "implicit")
         self.declare_parameter("rtx_settings", "")
         self.declare_parameter("publish_rate", 50.0)
         self.declare_parameter("isaac_python", _DEFAULT_ISAAC_PY)
@@ -603,6 +606,7 @@ class IsaacSpawner(Node):
             "ground_material": (json.loads(self.get_parameter("ground_material").value)
                                 if self.get_parameter("ground_material").value else None),
             "render_subframes": int(self.get_parameter("render_subframes").value),
+            "pd_actuator": str(self.get_parameter("pd_actuator").value or "implicit"),
             "rtx_settings": (json.loads(self.get_parameter("rtx_settings").value)
                              if self.get_parameter("rtx_settings").value else None),
             # Display hold forwarded to the runtime: freeze joints at spawn.

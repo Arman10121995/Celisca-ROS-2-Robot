@@ -55,6 +55,28 @@ def test_runtime_targets_split_position_and_velocity_joints():
     assert joint_pd_targets(CONFIG, [0.0, 0.0, 2.0])['velocity'] == {'wheel': 2.0}
 
 
+def test_dc_motor_torque_falls_with_speed_in_the_direction_of_motion():
+    sys.path.insert(0, os.path.join(_SRC, 'robot_lab_isaac', 'python'))
+    from robot_lab_isaac.isaac_runtime import dc_motor_effort
+    # At rest: the PD law, capped at the limit.
+    assert dc_motor_effort(160.0, 5.0, 320.0, 14.0, 0.5, 0.0, 0.0) == 80.0
+    assert dc_motor_effort(160.0, 5.0, 320.0, 14.0, 5.0, 0.0, 0.0) == 320.0
+    # Moving at half the velocity limit: half the torque in that direction,
+    # the full limit against it.
+    assert dc_motor_effort(160.0, 0.0, 320.0, 14.0, 5.0, 0.0, 7.0) == 160.0
+    assert dc_motor_effort(160.0, 0.0, 320.0, 14.0, -5.0, 0.0, 7.0) == -320.0
+    # At the velocity limit nothing pushes it faster.
+    assert dc_motor_effort(160.0, 0.0, 320.0, 14.0, 5.0, 0.0, 14.0) == 0.0
+
+
+@pytest.mark.integration
+def test_isaac_policy_actuator_defaults_to_implicit_drives():
+    context, actions = _launch_actions()
+    assert _simulator_arguments(context, actions)['isaac_pd_actuator'] == 'implicit'
+    context, actions = _launch_actions(isaac_legged_pd_actuator='dc_motor')
+    assert _simulator_arguments(context, actions)['isaac_pd_actuator'] == 'dc_motor'
+
+
 def _launch_actions(**overrides):
     import importlib.util
     try:
