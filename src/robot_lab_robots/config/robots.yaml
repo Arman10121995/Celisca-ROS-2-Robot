@@ -640,11 +640,15 @@ robots:
     # 0.6-0.7 m/s on a 0.4 m/s command and lost localization, while it walks
     # cleanly in nav_empty (2 ms).  Coarser worlds launch as a capped copy.
     gazebo_max_physics_step_s: 0.002
-    # go2_himloco turns on the spot in Isaac (0.43 rad/s) but not in MuJoCo
-    # (0.014) or Gazebo (0.020).  There Nav2 plans forward-only curves of at
-    # least this radius (motion_model forward_arc; it turns at about 0.3 m
-    # at 0.25 m/s and 0.8 rad/s) and never spins or backs it up.
-    no_spin_in_place: [mujoco, gazebo]
+    # go2_himloco does not turn on the spot in MuJoCo (0.014 rad/s) or
+    # Gazebo (0.020), nor in Isaac once it has to hold the turn: a 2 s
+    # window read 0.43 rad/s, but held at 0.8 rad/s it turned 0.3 rad/s for
+    # the first 4 s and then 0 (also on a friction-1 floor or with the DC
+    # motor, 2026-10-19), which failed Isaac missions in the spin recovery.
+    # So Nav2 plans forward-only curves of at least this radius (motion_model
+    # forward_arc; it turns at about 0.3 m at 0.25 m/s and 0.8 rad/s) and
+    # never spins or backs it up.
+    no_spin_in_place: [mujoco, gazebo, isaac]
     forward_arc_radius: 0.4
 
   unitree_go2w:
