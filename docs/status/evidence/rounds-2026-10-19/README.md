@@ -33,7 +33,17 @@ in Isaac; [go2-forward-arcs/](go2-forward-arcs/)):
 **Change** (`1ab2b48`). `unitree_go2` lists Isaac in `no_spin_in_place`, so
 Nav2 plans forward arcs there too. Seeds 1-3 again: round 53, below.
 
-PENDING_ROUND53
+**Measured with forward arcs in Isaac** (round 53, `361c2c3`,
+[go2-isaac-arcs/](go2-isaac-arcs/)): **3 of 3 pass**.
+
+| Seed | Goal A from truth | Goal B from truth | Stop after cancel |
+|---|---|---|---|
+| 1 | 0.112 m | 0.113 m | 0.27 s |
+| 2 | 0.050 m | 0.123 m | 0.28 s |
+| 3 | 0.136 m | 0.180 m | 0.32 s |
+
+The Go2 now passes nav_obstacle seeds 1-3 in MuJoCo, Gazebo and Isaac,
+all within the matrix's 0.25 m screen.
 
 ## Camera calibration in four simulators (R7.2)
 
