@@ -1,0 +1,32 @@
+[
+ {
+  "bag": "/workspace/molar/robot_lab_runtime/claude-v48/camera/pybullet_textured",
+  "frames": 96,
+  "depth_frames": 96,
+  "still_pairs": 48,
+  "edge_correlation": 0.173,
+  "temporal_noise": 0.768,
+  "orb_repeat": 0.916,
+  "gray_std": 52.341
+ },
+ {
+  "bag": "/workspace/molar/robot_lab_runtime/claude-v48/camera/isaac_textured",
+  "frames": 349,
+  "depth_frames": 349,
+  "still_pairs": 187,
+  "edge_correlation": 0.162,
+  "temporal_noise": 32.074,
+  "orb_repeat": 0.232,
+  "gray_std": 89.784
+ },
+ {
+  "bag": "/workspace/molar/robot_lab_runtime/claude-v49d/min1",
+  "frames": 252,
+  "depth_frames": 252,
+  "still_pairs": 229,
+  "edge_correlation": 0.157,
+  "temporal_noise": 0.0,
+  "orb_repeat": 1.0,
+  "gray_std": 91.779
+ }
+]

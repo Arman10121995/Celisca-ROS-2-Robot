@@ -103,7 +103,41 @@ All six stop within the 0.35 m coast screen (the tight-left phase at about
 
 ## Textured small_house captures and drives (R7.2)
 
-PENDING_HOUSE
+**Slam drives** (round 51, [small-house/](small-house/)): the round-25
+small_house loop again, now on the true-scale, textured worlds. The
+Bumperbot follows a routed 32.6 m loop through the house's waypoints
+(-6,3), (6,3) and (6,-3) on wheel odometry while slam_toolbox maps. The
+RGB-D stream is recorded too.
+
+| Backend | Route | Driven | Slam RMSE vs truth | Map precision / recall at 0.10 m |
+|---|---|---|---|---|
+| PyBullet | completed in 358 s | 28.3 m | **1.9 cm** (heading 5.3°) | 0.97 / 0.79 |
+| Isaac | completed in 112 s | 28.1 m | **1.3 cm** (heading 0.8°) | 0.97 / 0.78 |
+| MuJoCo | 67 back-offs, 137 points skipped | 5.4 m | 1.49 m (heading 113°) | 0.12 / 0.16 |
+
+In MuJoCo the Bumperbot crawled at about 5 mm/s. Its truth height was
+−8.5 mm, so it sat below the floor mesh's top at z = 0; the October 16
+still capture shows the same −8.5 mm. The house floor collides through
+MuJoCo's triangle flex there. Before the cache fix the house was 100 times
+too large, so this was never seen. Open.
+
+**Camera captures** (round 51): textured small_house, 30 s standing and
+30 s turning, scored with `scripts/r7_2_image_quality.py`
+([quality_round51.json](camera/quality_round51.json)):
+
+| Capture | Edge correlation with depth | Temporal noise | ORB repeat | Grey std |
+|---|---|---|---|---|
+| PyBullet, textured | 0.173 | 0.77 | 0.92 | 52.3 |
+| Isaac, textured (default renderer) | 0.162 | 32.1 | 0.23 | 89.8 |
+| Isaac, MinimalRendering mode 1 (round 49f) | 0.157 | 0.0 | 1.00 | 91.8 |
+| Gazebo / MuJoCo textured (October 16) | 0.458 / 0.470 | 0.0 / 0.03 | 1.00 / 0.995 | 53.6 / 59.9 |
+
+[Frames](camera/min1_pybullet_isaac.jpg), left to right: Isaac
+MinimalRendering mode 1, PyBullet textured and Isaac default.
+- MinimalRendering mode 1 is noise-free like mode 2. It draws the floor
+  flat grey and the walls black, so neither mode is a usable default.
+- PyBullet draws the textured floor, but its walls come out untextured
+  grey, hence the low edge correlation.
 
 ## Clean host (R9.1)
 
