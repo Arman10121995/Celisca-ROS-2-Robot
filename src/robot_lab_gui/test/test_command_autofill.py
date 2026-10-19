@@ -1047,13 +1047,23 @@ def test_px4_rgbd_camera_and_aerial_mapping_autofill(app, tmp_path):
 
 
 def test_px4_preserves_every_installed_world_and_autofills_flight(app):
+    import yaml
     app.robot_var.set('px4_x500')
     app.mode_var.set('flight')
     app.simulator_var.set('gazebo')
+    # Worlds the registry restricts to other robot classes (the R10.4
+    # underwater worlds are aquatic-only) are refused, never re-routed.
+    environments = yaml.safe_load(open(SRC/'robot_lab'/'robot_lab_registry'/'config'/'environments.yaml'))
+    restricted = {entry['id'] for entry in environments
+                  if 'supported_robot_classes' in entry and 'aerial' not in entry['supported_robot_classes']}
+    assert {'marine_cave', 'marine_wreck'} <= restricted
     for world in sorted(app.map_profiles):
         app.map_var.set(world)
         app._update_from_selection()
         assert app.map_var.get()==world
+        if world in restricted:
+            assert app.command_var.get() == '' and "does not support robot class 'aerial'" in app.validation_var.get()
+            continue
         # The resolver canonicalizes aliases such as outdoor_terrain to the
         # installed terrain_rough world, while keeping the operator selection.
         canonical=app.map_profiles[world]['gazebo'].get('world_name',world)
