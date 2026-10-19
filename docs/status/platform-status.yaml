@@ -892,6 +892,7 @@ tasks:
           - "src/robot_lab/robot_lab_registry/"
           - "src/robot_lab_gui/"
         acceptance_ref: "ROADMAP.md"
+        implementation_state: "Round 57 (2026-10-19, claude): rear-steer car nav course on small_house launched and ran cleanly via normal launch on all four backends — MuJoCo (spawn ground clearance raised 0.002 m, ackermann drive + rear steering, mujoco_spawner 90s), Gazebo (ackermann_controller rear steering, min turning radius 0.49 m, all ros_gz_bridge bridges, 90s), Isaac (193 static shapes, 6-DoF policy PD drives, Isaac runtime ready, 90s), PyBullet (PyBullet connected client_id=0, physics configured, threads running, 60s). Zero errors on any backend; Nav2 pure-pursuit + SMAC Hybrid + behavior stack active in each."
         evidence:
           - "docs/status/evidence/r61-car-turn-reverse-2026-09-30/: all three car profiles passed Gazebo turn/reverse goals and a nav_obstacle route; Ackermann has narrower PyBullet/MuJoCo/Isaac turn/reverse evidence. Robustness and full map/mode matrix remain open."
           - "docs/status/evidence/r55-car-watchdog-2026-10-01/: PyBullet ground-truth publisher-loss for Ackermann/rear-steer/anti-Ackermann coasted 0.101/0.109/0.111 m; Gazebo controller-odom runs for all three coasted 0.155 m and settled; MuJoCo ground-truth Ackermann coasted 0.017 m and settled but arc tracking was weak. PyBullet and Gazebo steering traces show distinct steering geometries. Gazebo uses controller odometry, not independent truth; these are single runs, not full qualification."
