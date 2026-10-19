@@ -1223,6 +1223,11 @@ def _spawn_attitude_quaternion(yaw: float, pitch: float, roll: float) -> list:
     ]
 
 
+# Seconds over which the articulation gravity feedforward ramps in after a
+# (re)spawn; see MuJoCoSpawner._apply_articulation_gravity.
+_ARTICULATION_FEEDFORWARD_RAMP_S = 1.0
+
+
 class MuJoCoSpawner(Node):
     """Spawn a robot into a MuJoCo world, open the GUI viewer, and
     publish joint_states, TF, odom, scan, imu, and clock."""
@@ -2326,12 +2331,20 @@ class MuJoCoSpawner(Node):
         self._read_physics_state()
 
     def _apply_articulation_gravity(self):
-        """Reserve the gravity force from the same source-bounded servo budget."""
+        """Reserve the gravity force from the same source-bounded servo budget.
+
+        The feedforward ramps in over the first second after a (re)spawn:
+        qfrc_bias holds the slides against gravity, not against the base's
+        own acceleration, so during the spawn drop it raised the falling lift
+        10 mm and the landing then drove it 9-11 mm below 0, past the
+        contract's measurement allowance (2026-10-19).
+        """
+        ramp = max(0., min(1., float(self._data.time)/_ARTICULATION_FEEDFORWARD_RAMP_S))
         for name, spec in self._articulation.contract.joints.items():
             if spec['mode'] != 'position':
                 continue
             dof = self._joint_name2dofadr[name]
-            feedforward, reserve = effort_budget(float(self._data.qfrc_bias[dof]), spec['effort'])
+            feedforward, reserve = effort_budget(ramp*float(self._data.qfrc_bias[dof]), spec['effort'])
             actuator = self._actuator_ids[name+'_articulation']
             if actuator < 0:
                 raise ValueError('Missing articulation actuator: '+name)

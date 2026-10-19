@@ -377,10 +377,16 @@ def add_mujoco_articulation_actuators(mjcf, contract):
     if actuator is None:
         actuator = ET.SubElement(root, 'actuator')
     existing = {child.get('joint') for child in actuator}
+    joints = {joint.get('name'): joint for joint in root.iter('joint')}
     for name, spec in contract.joints.items():
         if name in existing:
             raise ValueError('Articulation joint already controlled: '+name)
         position = spec['mode'] == 'position'
+        if position and name in joints:
+            # A stiff hard stop (MuJoCo's default limit time constant is
+            # 20 ms): the spawn landing otherwise pushed the loaded MOLAR
+            # lift several mm past its stop (2026-10-19).
+            joints[name].set('solreflimit', '0.005 1')
         gain = spec['kp'] if position else spec['kd']
         bias = '0 %g %g' % (-spec['kp'], -spec['kd']) if position else '0 0 %g' % -spec['kd']
         ET.SubElement(actuator, 'general', name=name+'_articulation', joint=name,
