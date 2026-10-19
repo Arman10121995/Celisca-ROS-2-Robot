@@ -76,7 +76,8 @@ def trainer_pid(run_dir):
         cmdline = Path('/proc/%d/cmdline' % pid).read_bytes().replace(b'\0', b' ').decode(errors='replace')
     except (OSError, ValueError, TypeError):
         return 0
-    return pid if 'legged_train' in cmdline and str(Path(run_dir)) in cmdline else 0
+    trainer = 'legged_train' in cmdline or 'legged-train' in cmdline
+    return pid if trainer and str(Path(run_dir)) in cmdline else 0
 
 
 def trainer_command(robot, task, envs, iterations, steps, learning_rate, seed, out, resume=''):
@@ -114,7 +115,7 @@ class TrainingTab(ttk.Frame):
         setup.grid(row=0, column=0, sticky='ew')
         for column in (1, 3):
             setup.columnconfigure(column, weight=1)
-        self.robot_var = tk.StringVar(value=robots[0] if robots else '')
+        self.robot_var = tk.StringVar(value='unitree_go2' if 'unitree_go2' in robots else (robots[0] if robots else ''))
         self.task_var = tk.StringVar(value='walk')
         self.envs_var = tk.IntVar(value=512)
         self.iterations_var = tk.IntVar(value=1500)
@@ -410,6 +411,8 @@ class TrainingTab(ttk.Frame):
             for x, y in points:
                 coords += [8 + (width - 16) * (x - x0) / span_x, height - 18 - (height - 36) * (y - y0) / span_y]
             canvas.create_line(*coords, fill=colour, width=2)
+            canvas.create_text(width - 10, height - 8, anchor='e', fill='#8a94a6',
+                               text='iteration %d … %d' % (x0, x1))
             canvas.create_text(10, 10 if key == 'mean_return' else 24, anchor='w', fill=colour,
                                text='%s %.2f … %.2f' % ('return' if key == 'mean_return' else 'episode s', y0, y1))
 

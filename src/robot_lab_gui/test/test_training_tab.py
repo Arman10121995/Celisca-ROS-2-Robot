@@ -37,6 +37,20 @@ def test_helpers_build_the_trainer_command_and_summaries(tmp_path):
     assert command[1:4] == ['-m', 'robot_lab_adapter.legged_train', 'train']
     assert command[command.index('--envs') + 1] == '64' and command[command.index('--task') + 1] == 'stand'
     assert '--resume' not in command
+    # A live trainer started elsewhere (ros2 run ... legged-train) is found by its run.json PID.
+    import subprocess
+    import sys
+    child = subprocess.Popen([sys.executable, '-c', 'import time; time.sleep(30)', 'legged-train', 'train',
+                              '--out', str(run)])
+    try:
+        info = json.loads((run / 'run.json').read_text())
+        (run / 'run.json').write_text(json.dumps(dict(info, pid=child.pid)))
+        assert trainer_pid(run) == child.pid
+        assert trainer_pid(run.parent / 'other') == 0
+    finally:
+        child.kill()
+        child.wait()
+    assert trainer_pid(run) == 0
 
 
 def test_tab_lists_runs_plots_progress_and_hands_the_policy_to_launch(app, tmp_path, monkeypatch):
