@@ -141,4 +141,26 @@ MinimalRendering mode 1, PyBullet textured and Isaac default.
 
 ## Clean host (R9.1)
 
-PENDING_CLEAN
+`scripts/clean_host_reproduction.sh` at `90650c2` (round 50,
+[clean-host/](clean-host/)). The revision is built in a fresh
+`ros:humble-ros-base-jammy` container, then tested and run there:
+
+| Step | Result |
+|---|---|
+| Image build (rosdep, pip, colcon) | passes in 484 s |
+| Fast test tier | 1063 passed, **1 failed**, 26 skipped |
+| MuJoCo nav_obstacle mission | passes (A 0.077 m, B 0.105 m, stop 0.14 s) |
+| Gazebo mission (NVIDIA runtime) | passes (A 0.107 m, B 0.086 m, stop 0.44 s) |
+| Isaac mission (host build mounted) | **failed**: Kit never started, no odometry in 783 s |
+| Golden comparison (seeded R7.2 benchmark) | 25 figures, no differences |
+
+**Changes** (`e73f9bd`):
+- The failed test expected CELISCA floor 2's world variants without the
+  R11 detailed floor; it now includes it.
+- The Isaac build links its Kit kernel and extension cache from outside
+  its tree (the packman cache and `~/.local/share/ov`). The container now
+  mounts each link's directory at its own path.
+
+Round 56 runs the clean host again at HEAD.
+
+PENDING_CLEAN56
