@@ -1,0 +1,82 @@
+{
+ "pattern": "8x6",
+ "square_m": 0.04,
+ "rate_rad_s": 0.15,
+ "turns": 2.0,
+ "turned_rad": 12.61,
+ "wall_s": 115.7,
+ "frames": 345,
+ "images_received": 453,
+ "outcomes": {
+  "kept": 58,
+  "no board": 181,
+  "similar": 106
+ },
+ "camera_info": {
+  "fx": 221.76500407999384,
+  "fy": 221.76500407999384,
+  "cx": 159.5,
+  "cy": 119.5,
+  "width": 320,
+  "height": 240
+ },
+ "pixel_centres": {
+  "cx": 159.5,
+  "cy": 119.5
+ },
+ "script_calibration_plumb_bob": {
+  "views": 58,
+  "rms_px": 1.6565,
+  "fx": 220.566,
+  "fy": 218.793,
+  "cx": 156.24,
+  "cy": 114.57,
+  "distortion": [
+   -0.02063,
+   0.03282,
+   -0.00926,
+   -0.00281,
+   -0.04092
+  ],
+  "coverage": [
+   0.57,
+   0.22,
+   0.17,
+   0.46
+  ]
+ },
+ "script_calibration_pinhole": {
+  "views": 58,
+  "rms_px": 1.6578,
+  "fx": 222.306,
+  "fy": 220.809,
+  "cx": 158.518,
+  "cy": 120.221,
+  "distortion": [
+   0.0,
+   0.0,
+   0.0,
+   0.0,
+   0.0
+  ],
+  "coverage": [
+   0.57,
+   0.22,
+   0.17,
+   0.46
+  ]
+ },
+ "node_calibration": {
+  "fx": 219.766,
+  "fy": 215.234,
+  "cx": 142.001,
+  "cy": 115.507,
+  "distortion": [
+   -0.10961,
+   0.30454,
+   -0.00532,
+   -0.02327,
+   -0.24579
+  ]
+ }
+}
