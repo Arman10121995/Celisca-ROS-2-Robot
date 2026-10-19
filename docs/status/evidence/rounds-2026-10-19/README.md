@@ -41,15 +41,65 @@ PENDING_ROUND53
 in the calibration room (14 chessboards); `ChessboardCalibrator` fits a
 pinhole that is compared with the published camera info.
 
-PENDING_CALIBRATION
+Round 51 ([calibration/](calibration/)): pinhole fit against the camera
+info, which has fx 221.77 and is centred at (159.5, 119.5), or at
+(160, 119) in PyBullet:
+
+| Backend | Views | fx | cx | cy | RMS (px) | Matrix screen (fx ±3 %, centre ±1.5 px, RMS < 1) |
+|---|---|---|---|---|---|---|
+| PyBullet | 52 | 222.59 (+0.4 %) | 160.25 | 118.43 | 0.83 | passes |
+| Isaac | 58 | 222.31 (+0.2 %) | 158.52 | 120.22 | 1.66 | fails on RMS (the camera noise) |
+| Gazebo | — | | | | | crashed: Ogre aborted loading the board mesh |
+| MuJoCo | 0 of 428 frames saw a board | | | | | fails |
+
+**Change** (`b563a31`). The board Collada had no normals and its triangles
+faced away from the robot (−x). It now has a +x normal and +x winding.
+Gazebo and MuJoCo run again in round 54, below.
+
+PENDING_CAL54
 
 ## Car course (R5.5)
 
-PENDING_COURSE
+`scripts/sim_car_course.sh` (round 51, [car-course/](car-course/)).
+Course: a cone slalom (four gates 0.5 m either side of a cone line, 1.5 m
+apart) and a parking bay (0.8 m gap, nose in). The car must reach each
+gate within 0.15 m of truth and the bay within 0.15 m and 10°, with its
+footprint clear of every cone and box throughout:
+
+| Backend | Ackermann | Rear-steer | Anti-Ackermann |
+|---|---|---|---|
+| Gazebo | **passes** (park 0.117 m, −9.7°) | gate 1 aborted | **passes** (park 0.139 m, −8.4°) |
+| PyBullet | slalom; park −23.0° | slalom; park −11.7° | slalom; park −14.4° |
+| Isaac | slalom; park −19.6° | slalom; park −10.9° | slalom; park aborted (0.50 m, −26.8°) |
+| MuJoCo | report lost (see below) | gate 1 aborted | report lost |
+
+- The slalom passes in 8 of 10 runs, with the footprint 0.057-0.114 m
+  from the nearest cone.
+- In MuJoCo and Gazebo the rear-steer car aborted gate 1: it starts on
+  the cone line and its swinging tail reached cone 0's lethal cells
+  ("starting point in lethal space").
+- Parking reaches the position (0.10-0.14 m) but not the 10° heading. The
+  car goal checker ignores heading, so Nav2 stops at the position whatever
+  the yaw.
+- `sim_car_course.py` could not print two MuJoCo reports (a numpy bool;
+  fixed in `3f826e1`); round 55 runs them again.
+
+PENDING_COURSE55
 
 ## Car publisher loss (R5.5)
 
-PENDING_LOSS
+`sim_drive_check.py --command-loss` (round 51,
+[command-loss/](command-loss/)): five drive phases, then the publisher stops
+and the base is watched for 3 s against simulator truth. Gazebo ran in slam
+mode, Isaac in loc mode.
+
+| Backend | Ackermann | Rear-steer | Anti-Ackermann |
+|---|---|---|---|
+| Gazebo | 0.157 m coast, at rest | 0.157 m, at rest | 0.155 m, at rest |
+| Isaac | 0.151 m, at rest | 0.173 m, at rest | 0.153 m, at rest |
+
+All six stop within the 0.35 m coast screen (the tight-left phase at about
+0.26 m/s) and end with zero tail velocity.
 
 ## Textured small_house captures and drives (R7.2)
 

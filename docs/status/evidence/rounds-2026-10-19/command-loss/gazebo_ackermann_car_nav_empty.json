@@ -1,0 +1,114 @@
+{
+ "odom": "/odom/ground_truth",
+ "cmd_topic": "/cmd_vel",
+ "phase_clock": "sim",
+ "phases": [
+  {
+   "phase": "straight",
+   "command": [
+    0.4,
+    0.0
+   ],
+   "lateral_command": 0.0,
+   "measured": {
+    "vx": 0.4,
+    "vy": 0.0,
+    "wz": -0.0,
+    "distance": 1.2,
+    "measured_sim_s": 3.0,
+    "wall_s": 4.123,
+    "steering_positions_rad": {
+     "front_left_steer_joint": 0.0,
+     "front_right_steer_joint": 0.0
+    }
+   }
+  },
+  {
+   "phase": "left_arc",
+   "command": [
+    0.4,
+    0.5
+   ],
+   "lateral_command": 0.0,
+   "measured": {
+    "vx": 0.338,
+    "vy": -0.001,
+    "wz": 0.5,
+    "distance": 1.35,
+    "measured_sim_s": 4.0,
+    "wall_s": 5.134,
+    "steering_positions_rad": {
+     "front_left_steer_joint": 0.4515,
+     "front_right_steer_joint": 0.3281
+    }
+   }
+  },
+  {
+   "phase": "right_arc",
+   "command": [
+    0.4,
+    -0.5
+   ],
+   "lateral_command": 0.0,
+   "measured": {
+    "vx": 0.335,
+    "vy": 0.0,
+    "wz": -0.501,
+    "distance": 1.342,
+    "measured_sim_s": 4.0,
+    "wall_s": 5.132,
+    "steering_positions_rad": {
+     "front_left_steer_joint": -0.3281,
+     "front_right_steer_joint": -0.4515
+    }
+   }
+  },
+  {
+   "phase": "reverse_left",
+   "command": [
+    -0.3,
+    0.3
+   ],
+   "lateral_command": 0.0,
+   "measured": {
+    "vx": -0.291,
+    "vy": 0.001,
+    "wz": 0.3,
+    "distance": 0.872,
+    "measured_sim_s": 3.0,
+    "wall_s": 4.124,
+    "steering_positions_rad": {
+     "front_left_steer_joint": -0.2737,
+     "front_right_steer_joint": -0.3562
+    }
+   }
+  },
+  {
+   "phase": "tight_left",
+   "command": [
+    0.3,
+    1.5
+   ],
+   "lateral_command": 0.0,
+   "measured": {
+    "vx": 0.259,
+    "vy": -0.002,
+    "wz": 0.616,
+    "distance": 0.778,
+    "measured_sim_s": 3.0,
+    "wall_s": 4.124,
+    "steering_positions_rad": {
+     "front_left_steer_joint": 0.7429,
+     "front_right_steer_joint": 0.471
+    }
+   }
+  }
+ ],
+ "publisher_loss": {
+  "duration_s": 2.94,
+  "coast_distance_m": 0.157,
+  "coast_yaw_change_rad": 0.315,
+  "tail_vx_mps": -0.0,
+  "tail_wz_rps": 0.0
+ }
+}
