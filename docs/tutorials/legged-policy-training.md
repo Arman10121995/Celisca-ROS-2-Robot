@@ -38,9 +38,20 @@ Tasks (`robot_lab_adapter/legged_training.py`, `TASKS`):
 | `push_recovery` | none, a 0.6 m/s push every 4 s | as `stand` |
 
 Every task adds the same legged_gym-style regularisers: vertical velocity,
-roll/pitch rate, tilt, torque, joint acceleration, action rate, and −200
-when the robot falls. A fall is a tilt past 60° or the base below 40 % of
-its standing height.
+roll/pitch rate, tilt, torque, joint acceleration and action rate. As in
+legged_gym (`only_positive_rewards`), each step's sum is clipped at zero,
+so ending an episode early never pays; a fall then costs −10 once. A fall
+is a tilt past 60° or the base below 40 % of its standing height above the
+ground under it. `stand` and `push_recovery` earn a constant alive term.
+
+Options (checkboxes on the page, flags on the command line), all off by
+default:
+
+| Option | Flag | What changes |
+|---|---|---|
+| Randomise friction, mass, motors | `--randomize` | Each episode runs one of 16 model variants: floor and foot friction 0.5-1.25, base mass −1 to +2 kg, kp and kd ×0.9-1.1 |
+| Rough terrain | `--terrain rough` (`--roughness 0.03`) | A smooth random heightfield of ±3 cm bumps (0.3-1.2 m wavelengths), flat within 1 m of the spawn |
+| Observation noise | `--obs-noise 1` | legged_gym's uniform noise on angular velocity, gravity, joint positions and velocities |
 
 ## How it works
 
@@ -123,9 +134,10 @@ ros2 launch robot_lab_bringup simulated_robot.launch.py mode:=loc simulator:=muj
 
 - Training is CPU-only on this host: torch's CUDA build does not run on the
   Orin. A useful walk needs hours; `stand` needs minutes.
-- Flat floor only: no terrain curriculum, no domain randomisation of mass,
-  friction or motor strength, and no latency model. A policy may fit the
-  MuJoCo plant and fail in Gazebo or Isaac.
+- Randomisation, rough terrain and noise are optional and untested in
+  training so far. There is no terrain curriculum (stairs, slopes) and no
+  latency model. A policy may fit the MuJoCo plant and fail in Gazebo or
+  Isaac.
 - The launch checks that a policy belongs to its robot, but not that it
   works. Measure a trained policy (`sim_drive_check.py`, the mission
   screens) before relying on it. The Stop, command-loss and neutral paths
