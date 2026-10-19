@@ -76,6 +76,13 @@ for variant in ('probot_l', 'molar_hri'):
     for link in robot.findall('link'):
         settings = ET.SubElement(robot, 'gazebo', reference=link.get('name'))
         ET.SubElement(settings, 'selfCollide').text = 'false'
+        if link.get('name').startswith('caster_') and link.get('name').endswith('_wheel'):
+            # Fortress/DART never swivelled the casters at the default
+            # friction of 1: they held the base straight (0.004 rad in 4 s
+            # for 0.4 rad/s). At 0.1, as the Bumperbot casters, they swivel
+            # and the base turns (2026-10-19). An estimate, Gazebo only.
+            for tag in ('mu1', 'mu2'):
+                ET.SubElement(settings, tag).text = '0.1'
     ET.indent(robot, space='  ')
     save(dest / ('urdf/' + variant + '.urdf.xacro'), '<?xml version="1.0"?>\n' + ET.tostring(robot, encoding='unicode') + '\n')
     controllers = {

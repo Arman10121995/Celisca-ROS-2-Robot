@@ -1430,23 +1430,31 @@
   </gazebo>
   <gazebo reference="caster_front_left_wheel">
     <selfCollide>false</selfCollide>
+    <mu1>0.1</mu1>
+    <mu2>0.1</mu2>
   </gazebo>
   <gazebo reference="caster_front_right_fork">
     <selfCollide>false</selfCollide>
   </gazebo>
   <gazebo reference="caster_front_right_wheel">
     <selfCollide>false</selfCollide>
+    <mu1>0.1</mu1>
+    <mu2>0.1</mu2>
   </gazebo>
   <gazebo reference="caster_rear_left_fork">
     <selfCollide>false</selfCollide>
   </gazebo>
   <gazebo reference="caster_rear_left_wheel">
     <selfCollide>false</selfCollide>
+    <mu1>0.1</mu1>
+    <mu2>0.1</mu2>
   </gazebo>
   <gazebo reference="caster_rear_right_fork">
     <selfCollide>false</selfCollide>
   </gazebo>
   <gazebo reference="caster_rear_right_wheel">
     <selfCollide>false</selfCollide>
+    <mu1>0.1</mu1>
+    <mu2>0.1</mu2>
   </gazebo>
 </robot>

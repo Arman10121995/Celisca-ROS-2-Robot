@@ -1058,6 +1058,27 @@ def _textured_mesh_prim(stage, path, shape):
     return mesh
 
 
+def _off_ground_plane(verts, tris, shape, tolerance=0.005):
+    """Drop a world mesh's horizontal triangles lying on the z = 0 ground plane.
+
+    The runtime always adds a ground plane at z = 0, so these triangles are
+    a coincident second floor.  The detailed CELISCA floors are long
+    duplicated slivers there (12 m by 4 cm): the MOLAR base, settling on
+    them, was thrown 0.3-1.6 m and tilted up to 0.38 rad within its first
+    second, while it stood still with only the plane (2026-10-19).
+    Returns the kept triangles and the number dropped.
+    """
+    import numpy as np
+    points = np.asarray(verts, dtype=float) * np.asarray(
+        [float(v) for v in (shape.get("scale") or [1.0, 1.0, 1.0])[:3]])
+    w, x, y, z = [float(v) for v in (shape.get("orientation") or [1, 0, 0, 0])[:4]]
+    row = np.array([2*(x*z-w*y), 2*(y*z+w*x), 1-2*(x*x+y*y)])   # world z of a local vector
+    height = points @ row + float((shape.get("position") or [0, 0, 0])[2])
+    corners = np.asarray(tris, dtype=int)
+    on_plane = np.all(np.abs(height[corners]) < tolerance, axis=1)
+    return [tri for tri, flat in zip(tris, on_plane) if not flat], int(on_plane.sum())
+
+
 def _add_world_shapes(stage, shapes):
     """Create static collision prims from the spawner's world shapes.
 
@@ -1104,6 +1125,12 @@ def _add_world_shapes(stage, shapes):
             if not verts:
                 _emit({"event": "log",
                        "msg": "World mesh has no vertices: %s" % shape.get("mesh")})
+                continue
+            tris, dropped = _off_ground_plane(verts, tris, shape)
+            if dropped:
+                _emit({"event": "log", "msg": "World mesh %s: %d floor triangle(s) on z=0 left "
+                       "to the ground plane" % (os.path.basename(shape.get("mesh", "")), dropped)})
+            if not tris:
                 continue
             prim = UsdGeom.Mesh.Define(stage, path)
             prim.CreateDoubleSidedAttr(True)
