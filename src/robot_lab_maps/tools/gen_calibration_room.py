@@ -52,7 +52,11 @@ def board_png(path):
 
 
 def board_dae(size):
-    """A square facing +x in the y-z plane, texture u along -y, v along +z."""
+    """A square facing +x in the y-z plane, texture u along -y, v along +z.
+
+    Wound and with a normal toward +x. Fortress's Ogre2 aborted loading the
+    first version (no normals, wound toward -x) in its camera sensor
+    (2026-10-19)."""
     h = size / 2.0
     return f"""<?xml version="1.0" encoding="utf-8"?>
 <COLLADA xmlns="http://www.collada.org/2005/11/COLLADASchema" version="1.4.1">
@@ -74,11 +78,15 @@ def board_dae(size):
     <source id="board-uv"><float_array id="board-uv-array" count="8">0 0 1 0 1 1 0 1</float_array>
       <technique_common><accessor source="#board-uv-array" count="4" stride="2">
         <param name="S" type="float"/><param name="T" type="float"/></accessor></technique_common></source>
+    <source id="board-normals"><float_array id="board-normals-array" count="3">1 0 0</float_array>
+      <technique_common><accessor source="#board-normals-array" count="1" stride="3">
+        <param name="X" type="float"/><param name="Y" type="float"/><param name="Z" type="float"/></accessor></technique_common></source>
     <vertices id="board-vertices"><input semantic="POSITION" source="#board-positions"/></vertices>
     <triangles material="board-material" count="2">
       <input semantic="VERTEX" source="#board-vertices" offset="0"/>
       <input semantic="TEXCOORD" source="#board-uv" offset="1" set="0"/>
-      <p>0 0 1 1 2 2 0 0 2 2 3 3</p>
+      <input semantic="NORMAL" source="#board-normals" offset="2"/>
+      <p>0 0 0 2 2 0 1 1 0 0 0 0 3 3 0 2 2 0</p>
     </triangles>
   </mesh></geometry></library_geometries>
   <library_visual_scenes><visual_scene id="scene"><node id="board-node">
