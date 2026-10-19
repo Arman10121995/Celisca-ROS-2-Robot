@@ -27,8 +27,13 @@ def _fake_run(root, name='unitree_go2_walk_unit', robot='unitree_go2', with_poli
 
 
 def test_helpers_build_the_trainer_command_and_summaries(tmp_path):
-    from robot_lab_gui.training_tab import run_summary, trainer_command, trainer_pid
+    from robot_lab_gui.training_tab import evaluation_summary, run_summary, trainer_command, trainer_pid
     run = _fake_run(tmp_path)
+    (run / 'evaluation.json').write_text(json.dumps(dict(phases=[
+        dict(command=[0.5, 0, 0], measured=[0.431, 0.012, -0.02], fallen=False),
+        dict(command=[0, 0, 0.8], measured=[0.0, 0.0, 0.2], fallen=True)])))
+    line = evaluation_summary(run / 'evaluation.json')
+    assert '(0.5, 0, 0) → (0.43, 0.01, -0.02)' in line and '(0, 0, 0.8) → (0.00, 0.00, 0.20) FELL' in line
     summary = run_summary(run)
     assert summary['iteration'] == 3 and summary['planned'] == 10 and summary['policy']
     assert summary['mean_return'] == -2.0 and not summary['finished']
@@ -87,6 +92,11 @@ def test_tab_lists_runs_plots_progress_and_hands_the_policy_to_launch(app, tmp_p
         app.update()
         select(app, app.robot_combo, 'unitree_go2')
         assert 'legged_policy:=go2_himloco' in displayed_command(app)
+        # Results of export/evaluate threads reach the page on the Tk thread.
+        tab.tool_results.append((0, lambda: 'Exported somewhere'))
+        tab.tool_results.append((2, lambda: 'never shown'))
+        tab._poll()
+        assert tab.note.get() == 'Failed (exit 2): see the console.' and not tab.tool_results
         # A selected run without a policy cannot be evaluated or used.
         tab.tree.selection_set(str(tmp_path / 'training' / 'unitree_a1_walk_other'))
         tab._select_run()

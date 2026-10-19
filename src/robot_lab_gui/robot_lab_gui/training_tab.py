@@ -69,6 +69,17 @@ def run_summary(run_dir):
                 policy=(run_dir / 'policy' / 'policy.onnx').exists(), path=str(run_dir))
 
 
+def evaluation_summary(path):
+    """One line per evaluated command from ``legged-train evaluate --out``."""
+    report = json.loads(Path(path).read_text())
+    parts = []
+    for phase in report['phases']:
+        command = ', '.join('%g' % v for v in phase['command'])
+        measured = ', '.join('%.2f' % v for v in phase['measured'])
+        parts.append('(%s) → (%s)%s' % (command, measured, ' FELL' if phase['fallen'] else ''))
+    return 'Evaluation, commanded → measured vx, vy, wz: ' + '; '.join(parts)
+
+
 def trainer_pid(run_dir):
     """PID of the live trainer writing ``run_dir`` (0 when none)."""
     try:
@@ -97,6 +108,7 @@ class TrainingTab(ttk.Frame):
         notebook.add(self, text='Training')
         self.process = None
         self.run_dir = None
+        self.tool_results = []      # (exit code, message function) from worker threads
         self.columnconfigure(0, weight=1)
         self.rowconfigure(2, weight=1)
         self._build()
@@ -168,6 +180,10 @@ class TrainingTab(ttk.Frame):
                                          self.evaluate_button, self.use_button)):
             buttons.columnconfigure(column, weight=1)
             button.grid(row=0, column=column, sticky='ew', padx=2)
+        # Export/evaluate results (the progress line is redrawn every poll).
+        self.note = tk.StringVar(value='')
+        ttk.Label(buttons, textvariable=self.note, style='Muted.TLabel', wraplength=900,
+                  justify='left').grid(row=1, column=0, columnspan=5, sticky='w', pady=(4, 0))
         body = ttk.Panedwindow(self, orient='horizontal')
         body.grid(row=2, column=0, sticky='nsew')
         progress = ttk.LabelFrame(body, text='Progress', padding=6)
@@ -270,7 +286,7 @@ class TrainingTab(ttk.Frame):
             messagebox.showinfo('Export', 'Select a run with a checkpoint.')
             return
         self._run_tool(['export', '--checkpoint', str(checkpoint), '--out', str(Path(run, 'policy'))],
-                       'Exported %s' % Path(run, 'policy'))
+                       lambda: 'Exported %s' % Path(run, 'policy'))
 
     def evaluate(self):
         run = self._selected_dir()
@@ -281,9 +297,10 @@ class TrainingTab(ttk.Frame):
         task = self._run_info(run).get('task', 'walk')
         commands = {'walk': '0.5,0,0;0,0.3,0;0,0,0.8;0,0,0', 'turn_in_place': '0,0,0.6;0,0,-0.6;0,0,1.0'}.get(
             task, '0,0,0')
+        self.note.set('Evaluating %s ...' % policy)
         self._run_tool(['evaluate', '--policy-dir', str(policy), '--task', task, '--commands', commands,
-                        '--out', str(Path(run, 'evaluation.json'))], 'Evaluation written to %s'
-                       % Path(run, 'evaluation.json'))
+                        '--out', str(Path(run, 'evaluation.json'))],
+                       lambda: evaluation_summary(Path(run, 'evaluation.json')))
 
     def use_in_launch(self):
         run = self._selected_dir()
@@ -303,7 +320,8 @@ class TrainingTab(ttk.Frame):
         self.app.set_status('Trained policy selected for ' + robot)
         self.app.show_tab('Launch')
 
-    def _run_tool(self, arguments, done_message):
+    def _run_tool(self, arguments, done):
+        """Run a legged-train subcommand off the Tk thread; _poll shows done() or the failure."""
         command = [sys.executable, '-m', 'robot_lab_adapter.legged_train', *arguments]
         self.app.log('[training] %s\n' % ' '.join(command))
 
@@ -311,8 +329,7 @@ class TrainingTab(ttk.Frame):
             result = subprocess.run(command, capture_output=True, text=True, env=subprocess_env())
             text = (result.stdout or '') + (result.stderr or '')
             self.app.log(text + ('\n' if text and not text.endswith('\n') else ''))
-            self.after(0, lambda: (self.status.set(done_message if result.returncode == 0
-                                                   else 'Failed: see the console.'), self.refresh_runs()))
+            self.tool_results.append((result.returncode, done))
         threading.Thread(target=worker, daemon=True).start()
 
     def _browse_resume(self):
@@ -360,6 +377,13 @@ class TrainingTab(ttk.Frame):
             return {}
 
     def _poll(self):
+        while self.tool_results:
+            code, done = self.tool_results.pop(0)
+            try:
+                self.note.set(done() if code == 0 else 'Failed (exit %d): see the console.' % code)
+            except (OSError, ValueError, KeyError) as exc:
+                self.note.set('Finished, but the result could not be read: %s' % exc)
+            self.refresh_runs()
         if self.process is not None and self.process.poll() is not None:
             code = self.process.returncode
             self.process = None
