@@ -36,6 +36,7 @@ COMPONENTS = {5120: '<i1', 5121: '<u1', 5122: '<i2', 5123: '<u2', 5125: '<u4', 5
 WIDTHS = {'SCALAR': 1, 'VEC2': 2, 'VEC3': 3, 'VEC4': 4, 'MAT4': 16}
 NS = 'http://www.collada.org/2005/11/COLLADASchema'
 ET.register_namespace('', NS)
+NATIVE_COLLISION = 'native/meshes/collision_normals_v1.stl'
 
 
 def digest(path):
@@ -74,6 +75,78 @@ def copy_verified(source, target, expected):
         shutil.copy2(source, target)
     if digest(target) != expected:
         raise ValueError(f'Copy verification failed: {target}')
+
+
+def source_collision_triangles(path):
+    """Read the reviewed triangular OBJ without welding or changing winding."""
+    vertices, faces = [], []
+    for line in Path(path).read_text().splitlines():
+        fields = line.split('#', 1)[0].split()
+        if not fields:
+            continue
+        if fields[0] == 'v':
+            if len(fields) != 4:
+                raise ValueError('Collision OBJ requires ordinary three-coordinate vertices')
+            vertices.append([float(value) for value in fields[1:]])
+        elif fields[0] == 'f':
+            if len(fields) != 4:
+                raise ValueError('Collision OBJ contains a non-triangle face')
+            indices = [int(value.split('/', 1)[0]) for value in fields[1:]]
+            indices = [value - 1 if value > 0 else len(vertices) + value for value in indices]
+            if any(value < 0 or value >= len(vertices) for value in indices):
+                raise ValueError('Collision OBJ face index is outside the vertex array')
+            faces.append(indices)
+    vertices = np.asarray(vertices, dtype=np.float64)
+    if not len(vertices) or not len(faces) or not np.isfinite(vertices).all():
+        raise ValueError('Collision OBJ must contain finite vertices and triangles')
+    return vertices[np.asarray(faces, dtype=np.int64)], len(vertices)
+
+
+def collision_stl(source):
+    """Lossless ASCII STL derivative with explicit source-winding face normals.
+
+    Fortress/DART ignores the source OBJ submeshes because they have no normals.
+    ASCII with 17 significant digits preserves the parsed float64 coordinates;
+    binary STL would round them to float32. No face is dropped, reordered,
+    welded, reflected or reoriented, including downward-facing source surfaces.
+    """
+    triangles, source_vertices = source_collision_triangles(source)
+    normals = np.cross(triangles[:, 1] - triangles[:, 0], triangles[:, 2] - triangles[:, 0])
+    lengths = np.linalg.norm(normals, axis=1)
+    if not np.isfinite(lengths).all() or np.any(lengths == 0):
+        raise ValueError('Collision OBJ contains a degenerate/non-finite triangle')
+    normals /= lengths[:, None]
+    lines = ['solid celisca_source_collision']
+    for normal, triangle in zip(normals, triangles):
+        lines.append('  facet normal ' + ' '.join(format(float(value), '.17g') for value in normal))
+        lines.append('    outer loop')
+        for vertex in triangle:
+            lines.append('      vertex ' + ' '.join(format(float(value), '.17g') for value in vertex))
+        lines.extend(('    endloop', '  endfacet'))
+    lines.append('endsolid celisca_source_collision')
+    content = ('\n'.join(lines) + '\n').encode('ascii')
+    record = {'recipe': 'source-triangles-explicit-normals-ascii-stl-v1',
+              'path': NATIVE_COLLISION, 'source_path': 'adapters/meshes/collision.obj',
+              'source_sha256': digest(source), 'sha256': hashlib.sha256(content).hexdigest(),
+              'bytes': len(content), 'triangles': len(triangles), 'source_vertices': source_vertices,
+              'triangle_vertices': 3 * len(triangles),
+              'ordered_float64_triangles_sha256': hashlib.sha256(np.asarray(triangles, dtype='<f8').tobytes()).hexdigest(),
+              'bounds_m': [triangles.min(axis=(0, 1)).tolist(), triangles.max(axis=(0, 1)).tolist()],
+              'normal_policy': 'unit cross(v1-v0,v2-v0); original triangle order and winding retained',
+              'coordinate_policy': 'ASCII 17 significant digits; exact float64 coordinate round trip; no geometry changes',
+              'qualification': 'format/geometry derivative only; native import, contact and rendering require runtime evidence'}
+    return content, record
+
+
+def checked_upgrade(path, previous, current):
+    """Upgrade only an exact known generated predecessor (or retain new bytes)."""
+    path = Path(path)
+    actual = path.read_text()
+    if actual == current:
+        return
+    if actual != previous:
+        raise ValueError(f'Refusing to replace edited generated asset: {path}')
+    path.write_text(current)
 
 
 def read_glb(path):
@@ -424,6 +497,78 @@ def native_world(map_id, collision_path, full_dae):
     return ET.tostring(root, encoding='unicode', xml_declaration=True) + '\n'
 
 
+COLLISION_README_NOTE = '''Native collision uses `native/meshes/collision_normals_v1.stl`, an ASCII STL
+with explicit face normals and exact float64 coordinates from the immutable
+source OBJ. Ordered triangles and winding are unchanged. The original OBJ,
+occupancy projection and full visual cache remain checksum-identical. This
+format repair requires separate native import/contact qualification.
+
+'''
+
+
+def upgrade_collision_normals(repo):
+    """Guarded format-only migration; do not regenerate full visual DAEs/maps."""
+    sys.path.insert(0, str(repo / 'src/robot_lab_maps/tools'))
+    import gen_mjcf_worlds
+    plans = []
+    for floor in (1, 2):
+        map_id = f'celisca_floor_{floor}_detailed'
+        target = repo / 'src/robot_lab_maps/maps' / map_id
+        provenance = target / 'PROVENANCE.json'
+        previous_record = provenance.read_text()
+        record = json.loads(previous_record)
+        source = target / 'adapters/meshes/collision.obj'
+        source_pin = record['source_manifest']['files'][f'celisca_floor_{floor}/meshes/collision.obj']['sha256']
+        if (record['map_id'] != map_id or record['building_floor'] != floor + 1
+                or record['full_glb']['sha256'] != PINS[floor]['detailed']
+                or record['source_manifest']['sourceSha256'] != PINS[floor]['source']
+                or record['copied_adapter_sha256']['adapters/meshes/collision.obj'] != source_pin
+                or digest(source) != source_pin):
+            raise ValueError(f'Detailed collision source/provenance pin differs: {map_id}')
+        content, collision = collision_stl(source)
+        if 'native_collision' in record and record['native_collision'] != collision:
+            raise ValueError(f'Existing collision derivative record differs: {map_id}')
+        destination = target / NATIVE_COLLISION
+        if destination.exists() and destination.read_bytes() != content:
+            raise ValueError(f'Collision derivative differs; preserve edits: {destination}')
+        record['native_collision'] = collision
+        world_path = target / 'worlds' / f'{map_id}.world'
+        previous_world = native_world(map_id, f'maps/{map_id}/adapters/meshes/collision.obj', Path(record['visual']['path']))
+        current_world = native_world(map_id, f'maps/{map_id}/{NATIVE_COLLISION}', Path(record['visual']['path']))
+        if world_path.read_text() not in (previous_world, current_world):
+            raise ValueError(f'Detailed world differs; preserve edits: {world_path}')
+        mjcf_path = repo / 'src/robot_lab_maps/mjcf' / f'{map_id}.xml'
+        previous_mjcf, notes = gen_mjcf_worlds.convert_world(str(world_path), map_id)
+        if notes or mjcf_path.read_text() != previous_mjcf:
+            raise ValueError(f'Detailed MJCF differs; preserve edits: {mjcf_path}')
+        readme_path = target / 'README.md'
+        previous_readme = readme_path.read_text()
+        anchor = 'Native collision references the original structural triangles and conservative\n'
+        if COLLISION_README_NOTE in previous_readme:
+            current_readme = previous_readme
+        elif previous_readme.count(anchor) == 1:
+            current_readme = previous_readme.replace(anchor, COLLISION_README_NOTE + anchor, 1)
+        else:
+            raise ValueError(f'Detailed README collision anchor differs: {map_id}')
+        plans.append((target, content, record, previous_record, previous_world, current_world,
+                      mjcf_path, previous_mjcf, readme_path, previous_readme, current_readme))
+    # Check both floors before changing either. Every replacement additionally
+    # checks exact predecessor bytes to avoid overwriting a concurrent edit.
+    for (target, content, record, previous_record, previous_world, current_world,
+         mjcf_path, previous_mjcf, readme_path, previous_readme, current_readme) in plans:
+        map_id = record['map_id']
+        checked_write(target / NATIVE_COLLISION, content)
+        world_path = target / 'worlds' / f'{map_id}.world'
+        checked_upgrade(world_path, previous_world, current_world)
+        current_mjcf, notes = gen_mjcf_worlds.convert_world(str(world_path), map_id)
+        if notes:
+            raise ValueError(notes)
+        checked_upgrade(mjcf_path, previous_mjcf, current_mjcf)
+        checked_upgrade(readme_path, previous_readme, current_readme)
+        checked_upgrade(target / 'PROVENANCE.json', previous_record, json.dumps(record, indent=2) + '\n')
+        print(json.dumps({'id': map_id, 'native_collision': record['native_collision']}), flush=True)
+
+
 def append_configs(repo, records):
     config = repo / 'src/robot_lab_bringup/config/sim_maps.yaml'
     current = config.read_text(); parsed = yaml.safe_load(current)
@@ -481,10 +626,15 @@ def main():
     parser.add_argument('--source', type=Path, default=Path('/workspace/molar_voice_super_gui_redesign/simulation/celisca'))
     parser.add_argument('--runtime-root', type=Path, default=Path('/workspace/molar/robot_lab_runtime'))
     parser.add_argument('--skip-register', action='store_true')
+    parser.add_argument('--upgrade-collision-normals', action='store_true',
+                        help='Guarded existing-map collision format migration only; preserve visual/grid caches')
     args = parser.parse_args()
     repo, source, runtime = args.repo.resolve(), args.source.resolve(), args.runtime_root.resolve()
     if not str(repo).startswith('/workspace/') or not str(runtime).startswith('/workspace/'):
         raise ValueError('Native provisioning and assets must stay on /workspace SSD')
+    if args.upgrade_collision_normals:
+        upgrade_collision_normals(repo)
+        return
     records = {}
     for floor in (1, 2):
         map_id = f'celisca_floor_{floor}_detailed'
@@ -510,7 +660,9 @@ def main():
         source_glb = cache / glb_name
         copy_verified(exports / glb_name, source_glb, PINS[floor]['detailed'])
         visual = full_visual(source_glb, cache / 'z_up_visual_v1')
-        collision_rel = f'maps/{map_id}/adapters/meshes/collision.obj'
+        collision_content, collision = collision_stl(target / 'adapters/meshes/collision.obj')
+        checked_write(target / NATIVE_COLLISION, collision_content)
+        collision_rel = f'maps/{map_id}/{NATIVE_COLLISION}'
         projection = occupancy_and_spawn(target / 'adapters/meshes/collision.obj', target / 'maps')
         checked_write(target / 'worlds' / f'{map_id}.world', native_world(map_id, collision_rel, Path(visual['path'])))
         record = {'schema_version': 1, 'map_id': map_id, 'source_root': str(source),
@@ -521,7 +673,8 @@ def main():
                   'licensing': 'Rights unresolved for original and derivative assets; no redistribution or safety compliance claim.',
                   'limits': ['Approximate bathroom geometry, not a building survey', 'Furniture collision uses source per-object boxes',
                              'Decorative tile/grout excluded from collision', 'Static doors and lifts; no physical/network clients',
-                             'No new simulator, route, sensor or contact acceptance claimed by this provisioner']}
+                             'No new simulator, route, sensor or contact acceptance claimed by this provisioner'],
+                  'native_collision': collision}
         checked_write(target / 'PROVENANCE.json', json.dumps(record, indent=2) + '\n')
         checked_write(target / 'README.md', f'''# CELISCA F{floor} detailed / building floor {floor + 1}
 
@@ -537,7 +690,7 @@ GLB and extracted textures are in `{cache}`. PBR-to-Phong shading is approximate
 lighter visual LOD. Their standalone world is a source artifact, not the native
 Robot Lab entry; use `worlds/{map_id}.world` through the normal map selector.
 
-Native collision references the original structural triangles and conservative
+{COLLISION_README_NOTE}Native collision references the original structural triangles and conservative
 per-object furniture/fixture boxes. No full-building convex hull or added floor
 slab is used. MuJoCo's normal staging supplies rigid triangle-flex contacts;
 PyBullet/Isaac/Gazebo use their existing static triangle-world pathways.

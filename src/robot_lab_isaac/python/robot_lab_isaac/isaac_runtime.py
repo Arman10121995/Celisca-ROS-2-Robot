@@ -729,6 +729,30 @@ def _measured_articulation_hold(robot, dof_names, joints):
             for kind in ('position','velocity')}
 
 
+def _apply_articulation_effort_budget(robot, dof_names, joints, efforts):
+    """Cap native drive + feedforward together on configured position joints.
+
+    This SDK process has no ROS utility package. Keep the small numerical
+    allocation identical to urdf_articulation.effort_budget (source-tested).
+    The controller API updates live PhysX max forces without a USD traversal.
+    """
+    import numpy as np
+    names = [name for name, spec in joints.items() if spec['mode'] == 'position']
+    if not names:
+        return
+    feedforward, limits = [], []
+    for name in names:
+        limit, value = float(joints[name]['effort']), float(efforts.get(name, 0.))
+        if not math.isfinite(value) or not math.isfinite(limit) or limit <= 0:
+            raise ValueError('Articulation force budget must be finite with a positive limit')
+        value = max(-limit, min(limit, value))
+        feedforward.append(value)
+        limits.append(max(0., limit-abs(value)))
+    indices = np.array([dof_names.index(name) for name in names])
+    robot.get_articulation_controller().set_max_efforts(np.array(limits), joint_indices=indices)
+    robot.set_joint_efforts(np.array(feedforward), joint_indices=indices)
+
+
 class _StdinReader(threading.Thread):
     """Reads JSON commands from stdin; sets stop on EOF."""
 
@@ -1405,7 +1429,8 @@ def _run_stage(app, reader, cfg, state):
                     articulation_watchdog_hold = _measured_articulation_hold(robot, dof_names, articulation_joints)
                 # Stop every wheel and the roller while holding measured lift/slide.
                 targets = {'position': dict(articulation_watchdog_hold['position']),
-                           'velocity': {name: 0. for name in cfg.get('drive_wheel_joints', [])}}
+                           'velocity': {name: 0. for name in cfg.get('drive_wheel_joints', [])},
+                           'effort': dict((reader.joint_targets or {}).get('effort') or {})}
                 targets['velocity'].update(articulation_watchdog_hold['velocity'])
             else:
                 articulation_watchdog_hold = None
@@ -1428,6 +1453,9 @@ def _run_stage(app, reader, cfg, state):
             # the ROS side (robot_lab_utils.drive_kinematics).
             try:
                 from isaacsim.core.utils.types import ArticulationAction
+                if articulation_joints:
+                    _apply_articulation_effort_budget(
+                        robot, dof_names, articulation_joints, targets.get('effort') or {})
                 for kind in ("velocity", "position"):
                     pairs = [(dof_names.index(name), float(value))
                              for name, value in (targets.get(kind) or {}).items()
@@ -1446,7 +1474,7 @@ def _run_stage(app, reader, cfg, state):
                 # articulation's gravity load); they persist until replaced.
                 pairs = [(dof_names.index(name), float(value))
                          for name, value in (targets.get("effort") or {}).items()
-                         if name in dof_names]
+                         if name in dof_names and not articulation_joints]
                 if pairs:
                     import numpy as np
                     robot.set_joint_efforts(np.array([v for _, v in pairs]),

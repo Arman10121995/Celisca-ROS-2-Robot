@@ -1,5 +1,6 @@
 """Detailed floor geometry/registration guards; no runtime qualification."""
 import importlib.util
+import hashlib
 import json
 from pathlib import Path
 import xml.etree.ElementTree as ET
@@ -56,13 +57,68 @@ def test_detailed_worlds_keep_unit_source_collision_and_no_added_slab(floor):
     assert not root.findall('.//box') and not root.findall('.//plane')
     assert root.find('.//model/static').text == 'true'
     assert root.find('.//collision/geometry/mesh/scale').text == '1 1 1'
-    assert root.find('.//collision/geometry/mesh/uri').text.endswith('/adapters/meshes/collision.obj')
+    assert root.find('.//collision/geometry/mesh/uri').text.endswith('/' + provision.NATIVE_COLLISION)
     assert root.find('.//visual/geometry/mesh/uri').text.endswith('/z_up_visual_v1/visual_full.dae')
     for relative, digest in record['copied_adapter_sha256'].items():
         assert provision.digest(target / relative) == digest
     assert record['source_manifest']['detailParts'] == 96
     assert record['source_manifest']['sanitaryFixtures'] == 11
     assert record['visual']['triangles'] > 2_000_000
+
+
+@pytest.mark.parametrize('floor', [1, 2])
+def test_native_collision_normals_preserve_every_source_triangle_and_winding(floor):
+    target = MAPS / f'celisca_floor_{floor}_detailed'
+    source = target / 'adapters/meshes/collision.obj'
+    record = json.loads((target / 'PROVENANCE.json').read_text())['native_collision']
+    native = target / record['path']
+    # Read the STL independently: no mesh loader may weld, sort or repair faces.
+    rows = [line.split() for line in native.read_text().splitlines()]
+    triangles = np.array([[float(value) for value in row[1:]]
+                          for row in rows if row[0] == 'vertex']).reshape(-1, 3, 3)
+    normals = np.array([[float(value) for value in row[2:]]
+                        for row in rows if row[0] == 'facet'])
+    original, source_vertices = provision.source_collision_triangles(source)
+    np.testing.assert_array_equal(triangles, original)
+    assert hashlib.sha256(np.asarray(triangles, dtype='<f8').tobytes()).hexdigest() == record['ordered_float64_triangles_sha256']
+    expected = np.cross(original[:, 1] - original[:, 0], original[:, 2] - original[:, 0])
+    expected /= np.linalg.norm(expected, axis=1, keepdims=True)
+    np.testing.assert_allclose(normals, expected, rtol=0, atol=2e-15)
+    np.testing.assert_allclose(np.linalg.norm(normals, axis=1), 1., rtol=0, atol=2e-15)
+    np.testing.assert_array_equal(record['bounds_m'], [original.min(axis=(0, 1)), original.max(axis=(0, 1))])
+    assert len(triangles) == record['triangles']
+    assert source_vertices == record['source_vertices']
+    assert record['triangle_vertices'] == 3 * len(triangles)
+    assert provision.digest(source) == record['source_sha256']
+    assert provision.digest(native) == record['sha256']
+    content, generated = provision.collision_stl(source)
+    assert content == native.read_bytes() and generated == record
+
+
+def test_native_collision_stl_keeps_negative_indices_and_source_winding(tmp_path):
+    source = tmp_path / 'source.obj'
+    source.write_text('v -0 0 0\nv 1.1234567890123457 0 0\nv 0 1 0\nf -1 -2 -3\n')
+    content, record = provision.collision_stl(source)
+    normal = next(line.split()[2:] for line in content.decode('ascii').splitlines()
+                  if line.strip().startswith('facet normal '))
+    np.testing.assert_array_equal([float(value) for value in normal], [0., 0., -1.])
+    assert b'vertex 1.1234567890123457 0 0' in content
+    assert b'vertex -0 0 0' in content
+    assert record['triangles'] == 1
+    source.write_text('v 0 0 0\nv 1 0 0\nv 2 0 0\nf 1 2 3\n')
+    with pytest.raises(ValueError, match='degenerate'):
+        provision.collision_stl(source)
+
+
+def test_collision_upgrade_refuses_manual_generated_edits(tmp_path):
+    target = tmp_path / 'world'
+    target.write_text('original')
+    provision.checked_upgrade(target, 'original', 'derived')
+    provision.checked_upgrade(target, 'original', 'derived')
+    target.write_text('manual edit')
+    with pytest.raises(ValueError, match='edited generated asset'):
+        provision.checked_upgrade(target, 'original', 'derived')
+    assert target.read_text() == 'manual edit'
 
 
 @pytest.mark.parametrize('floor', [1, 2])

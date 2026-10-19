@@ -388,5 +388,32 @@
     "Decorative tile/grout excluded from collision",
     "Static doors and lifts; no physical/network clients",
     "No new simulator, route, sensor or contact acceptance claimed by this provisioner"
-  ]
+  ],
+  "native_collision": {
+    "recipe": "source-triangles-explicit-normals-ascii-stl-v1",
+    "path": "native/meshes/collision_normals_v1.stl",
+    "source_path": "adapters/meshes/collision.obj",
+    "source_sha256": "e6ef8e50907fb7abe93f4b349a4480ab659f33d0d026b8c5bddfe3724a80adac",
+    "sha256": "40e99c8b5b6c20b7e91f8f8b7e6d5431ccca7ac6c573eae3add12107a8ff7569",
+    "bytes": 1882632,
+    "triangles": 8448,
+    "source_vertices": 10970,
+    "triangle_vertices": 25344,
+    "ordered_float64_triangles_sha256": "40d1763ac8296c18e59d5942faaf7f517d1857cb2a9276807f9403a57653b1db",
+    "bounds_m": [
+      [
+        -29.42442,
+        -13.52521,
+        -0.0375574
+      ],
+      [
+        29.48933,
+        13.40827,
+        3.0
+      ]
+    ],
+    "normal_policy": "unit cross(v1-v0,v2-v0); original triangle order and winding retained",
+    "coordinate_policy": "ASCII 17 significant digits; exact float64 coordinate round trip; no geometry changes",
+    "qualification": "format/geometry derivative only; native import, contact and rendering require runtime evidence"
+  }
 }

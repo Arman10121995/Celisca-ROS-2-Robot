@@ -14,6 +14,35 @@ import xml.etree.ElementTree as ET
 
 # Seconds of measured positions behind each joint's activity rate.
 RATE_WINDOW = .25
+MOTION_EXCURSION = .004
+
+
+def measured_motion_rate(samples, fallback=0., excursion_floor=MOTION_EXCURSION):
+    """Position-derived activity, including motion returning to its start.
+
+    Retain the endpoint derivative for slow monotone motion. Once an excursion
+    clears the noise floor, its range also counts: opposite movements must not
+    cancel in the ownership interlock. The 4 mm floor exceeds the observed
+    settled Isaac lift spans (0.24-0.58 mm); it is a simulator noise allowance,
+    not a physical sensor specification. Angular channels use radians.
+    """
+    if len(samples) < 2 or samples[-1][0]-samples[0][0] < RATE_WINDOW/2:
+        return fallback
+    span = samples[-1][0]-samples[0][0]
+    rate = (samples[-1][1]-samples[0][1])/span
+    values = [sample[1] for sample in samples]
+    excursion = max(values)-min(values)
+    if excursion > excursion_floor:
+        return max(abs(rate), excursion/span)
+    return rate
+
+
+def effort_budget(feedforward, limit):
+    """Finite feedforward and symmetric servo budget within one source limit."""
+    if not math.isfinite(feedforward) or not math.isfinite(limit) or limit <= 0:
+        raise ValueError('Articulation force budget must be finite with a positive limit')
+    feedforward = max(-limit, min(limit, feedforward))
+    return feedforward, max(0., limit-abs(feedforward))
 
 
 class URDFArticulation:
@@ -214,11 +243,7 @@ class URDFArticulation:
         0.3 and 0.05 rad/s, which held the base inhibited (2026-10-16).
         Until RATE_WINDOW/2 of samples exist the reported velocity is used.
         """
-        samples = self.history.get(name) or []
-        if len(samples) < 2 or samples[-1][0]-samples[0][0] < RATE_WINDOW/2:
-            return self.velocities[name]
-        (start, first), (end, last) = samples[0], samples[-1]
-        return (last-first)/(end-start)
+        return measured_motion_rate(self.history.get(name) or [], self.velocities[name])
 
     def state(self):
         with self.lock:

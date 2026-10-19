@@ -564,7 +564,22 @@ class IsaacSpawner(Node):
         if span < .1:
             return math.hypot(*measured['lin'][:2]) > .025 or abs(measured['ang'][2]) > .05
         turned = math.atan2(math.sin(yaw-yaw0), math.cos(yaw-yaw0))
-        return math.hypot(x-x0, y-y0)/span > .025 or abs(turned)/span > .05
+        # Keep the original net-motion predicate, and also detect a reversal
+        # returning to the window's first pose. The excursion floors exceed
+        # the recorded settled Isaac noise (<0.3 mm / <0.00012 rad), and are
+        # simulator allowances rather than physical sensor specifications.
+        from robot_lab_utils.urdf_articulation import measured_motion_rate
+        x_rate = measured_motion_rate([(t, px) for t, px, _, _ in history])
+        y_rate = measured_motion_rate([(t, py) for t, _, py, _ in history])
+        yaw_samples = [(start, yaw0)]
+        previous, unwrapped = yaw0, yaw0
+        for t, _, _, angle in history[1:]:
+            unwrapped += math.atan2(math.sin(angle-previous), math.cos(angle-previous))
+            yaw_samples.append((t, unwrapped))
+            previous = angle
+        yaw_rate = measured_motion_rate(yaw_samples, excursion_floor=.01)
+        return (math.hypot(x-x0, y-y0)/span > .025 or abs(turned)/span > .05
+                or math.hypot(x_rate, y_rate) > .025 or abs(yaw_rate) > .05)
 
     def _on_policy_targets(self, msg):
         with self._lock:

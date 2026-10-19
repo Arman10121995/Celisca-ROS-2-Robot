@@ -22,7 +22,7 @@
         <collision name="source_static_triangles">
           <geometry>
             <mesh>
-              <uri>package://robot_lab_maps/maps/celisca_floor_1_detailed/adapters/meshes/collision.obj</uri>
+              <uri>package://robot_lab_maps/maps/celisca_floor_1_detailed/native/meshes/collision_normals_v1.stl</uri>
               <scale>1 1 1</scale>
             </mesh>
           </geometry>

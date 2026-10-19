@@ -12,6 +12,12 @@ GLB and extracted textures are in `/workspace/molar/robot_lab_runtime/external_a
 lighter visual LOD. Their standalone world is a source artifact, not the native
 Robot Lab entry; use `worlds/celisca_floor_1_detailed.world` through the normal map selector.
 
+Native collision uses `native/meshes/collision_normals_v1.stl`, an ASCII STL
+with explicit face normals and exact float64 coordinates from the immutable
+source OBJ. Ordered triangles and winding are unchanged. The original OBJ,
+occupancy projection and full visual cache remain checksum-identical. This
+format repair requires separate native import/contact qualification.
+
 Native collision references the original structural triangles and conservative
 per-object furniture/fixture boxes. No full-building convex hull or added floor
 slab is used. MuJoCo's normal staging supplies rigid triangle-flex contacts;

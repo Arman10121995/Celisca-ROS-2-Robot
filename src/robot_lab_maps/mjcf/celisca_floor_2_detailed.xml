@@ -4,11 +4,11 @@
   <option gravity="0 0 -9.81" />
   <compiler angle="radian" />
   <asset>
-    <mesh name="collision" file="/workspace/molar/ros_ws/bumperbot_ws/src/robot_lab_maps/maps/celisca_floor_2_detailed/adapters/meshes/collision.obj" scale="1 1 1" />
+    <mesh name="collision_normals_v1" file="/workspace/molar/ros_ws/bumperbot_ws/src/robot_lab_maps/maps/celisca_floor_2_detailed/native/meshes/collision_normals_v1.stl" scale="1 1 1" />
   </asset>
   <worldbody>
     <geom type="plane" size="22 13.75 0.1" contype="0" conaffinity="0" rgba="0.35 0.37 0.4 1" />
-    <geom pos="0 0 0" quat="1 0 0 0" rgba="0.55 0.57 0.6 1" type="mesh" mesh="collision" />
+    <geom pos="0 0 0" quat="1 0 0 0" rgba="0.55 0.57 0.6 1" type="mesh" mesh="collision_normals_v1" />
     <light diffuse="0.8 0.8 0.8" pos="0 0 10" dir="0 0 -1" castshadow="true" />
     <light diffuse="0.3 0.3 0.3" pos="0 -6 6" dir="0 1 -1" />
   </worldbody>

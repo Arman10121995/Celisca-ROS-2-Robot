@@ -8,7 +8,8 @@ import xml.etree.ElementTree as ET
 import pytest
 
 from robot_lab_utils.urdf_articulation import (
-    URDFArticulation, add_mujoco_articulation_actuators, gravity_feedforward, gravity_loads,
+    URDFArticulation, add_mujoco_articulation_actuators, effort_budget,
+    gravity_feedforward, gravity_loads, measured_motion_rate,
 )
 
 
@@ -271,3 +272,51 @@ def test_activity_follows_measured_motion_not_a_biased_velocity_report(controlle
         position['conveyor_lift_joint'] += .0003   # an actual 0.03 m/s
         controller.step(position, velocity, .01, now=1.)
     assert controller.active and controller.base_inhibited
+
+
+@pytest.mark.parametrize('name,amplitude', (
+    ('conveyor_lift_joint', .003), ('transfer_roller_joint', .03)))
+def test_returning_oscillation_still_inhibits_base(controller, name, amplitude):
+    position, velocity = measurement(controller)
+    origin = position[name]
+    for index in range(64):
+        phase = 2*math.pi*((index+1)/32)/.25
+        position[name] = origin+amplitude*math.sin(phase)
+        velocity[name] = amplitude*2*math.pi/.25*math.cos(phase)
+        controller.step(position, velocity, 1/32, now=1.)
+    # The endpoints of the 0.25 s window coincide despite real motion inside.
+    samples = controller.history[name]
+    assert samples[-1][1] == pytest.approx(samples[0][1])
+    assert controller.active and controller.base_inhibited
+
+
+def test_excursion_noise_allowance_keeps_biased_rest_available(controller):
+    position, velocity = measurement(controller)
+    velocity['conveyor_lift_joint'] = -.044
+    velocity['transfer_roller_joint'] = .1
+    for index in range(64):
+        position['conveyor_lift_joint'] = .2+.00075*math.sin(index*1.7)
+        controller.step(position, velocity, 1/32, now=1.)
+    assert not controller.active and not controller.base_inhibited
+
+
+def test_motion_rate_retains_slow_net_motion_and_startup_fallback():
+    assert measured_motion_rate([(0., 0.)], fallback=.044) == .044
+    assert measured_motion_rate([(0., 0.), (.25, -.003)]) == pytest.approx(-.012)
+
+
+@pytest.mark.parametrize('wanted,limit', ((139.302, 2000.), (-139.302, 2000.),
+                                         (3000., 2000.), (-3000., 2000.), (0., 250.)))
+def test_feedforward_and_servo_share_one_source_effort_limit(wanted, limit):
+    feedforward, servo_limit = effort_budget(wanted, limit)
+    assert abs(feedforward) <= limit
+    assert servo_limit >= 0.
+    for servo in (-servo_limit, 0., servo_limit):
+        assert abs(feedforward+servo) <= limit+1e-9
+
+
+@pytest.mark.parametrize('wanted,limit', ((math.nan, 2000.), (math.inf, 2000.),
+                                         (0., math.inf), (0., 0.), (0., -1.)))
+def test_invalid_effort_budget_is_rejected(wanted, limit):
+    with pytest.raises(ValueError, match='force budget'):
+        effort_budget(wanted, limit)

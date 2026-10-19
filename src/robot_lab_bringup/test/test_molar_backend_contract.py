@@ -18,6 +18,7 @@ SPAWNERS = {
     backend: SRC/('robot_lab_'+backend)/'python'/('robot_lab_'+backend)/(backend+'_spawner.py')
     for backend in ('mujoco', 'pybullet', 'isaac')}
 RUNTIME = SRC/'robot_lab_isaac/python/robot_lab_isaac/isaac_runtime.py'
+ARTICULATION = SRC/'robot_lab_utils/robot_lab_utils/urdf_articulation.py'
 
 
 def source_function(path, name):
@@ -209,3 +210,105 @@ def test_bullet_roller_uses_native_velocity_motor_with_source_force_cap():
     scope['apply_roller'](SimpleNamespace(_robot_id=3, _joint_idx={'transfer_roller_joint': 4}))
     assert calls == [((3, 4, bullet.VELOCITY_CONTROL),
         dict(targetVelocity=8., force=2., velocityGain=1.))]
+
+
+@pytest.mark.parametrize('force', (139.302, -139.302, 3000., -3000., 0.))
+def test_mujoco_servo_and_gravity_sum_respects_source_effort(force):
+    import numpy as np
+    scope = load_nodes([source_function(ARTICULATION, 'effort_budget'),
+        source_function(SPAWNERS['mujoco'], '_apply_articulation_gravity')], dict(math=math))
+    joint = 'conveyor_lift_joint'
+    ranges = np.array([[-2000., 2000.], [-2., 2.], [-30., 30.]])
+    applied = np.array([0., 7., 8.])
+    subject = SimpleNamespace(
+        _articulation=SimpleNamespace(contract=SimpleNamespace(joints={
+            joint: dict(mode='position', effort=2000.),
+            'transfer_roller_joint': dict(mode='velocity', effort=2.)})),
+        _joint_name2dofadr={joint: 0, 'transfer_roller_joint': 1},
+        _actuator_ids={joint+'_articulation': 0},
+        _model=SimpleNamespace(actuator_forcerange=ranges),
+        _data=SimpleNamespace(qfrc_applied=applied, qfrc_bias=np.array([force, 0., 0.])))
+    scope['_apply_articulation_gravity'](subject)
+    ff, cap = scope['effort_budget'](force, 2000.)
+    assert applied[0] == ff and ranges[0] == pytest.approx((-cap, cap))
+    assert max(abs(ff+servo) for servo in ranges[0]) <= 2000.+1e-9
+    assert applied[1:] == pytest.approx((7., 8.))
+    assert ranges[1:] == pytest.approx(np.array([[-2., 2.], [-30., 30.]]))
+
+
+@pytest.mark.parametrize('force', (139.302, -139.302, 3000., -3000., 0.))
+def test_isaac_live_drive_budget_precedes_feedforward_and_preserves_other_joints(force):
+    scope = load_nodes([source_function(ARTICULATION, 'effort_budget'),
+        source_function(RUNTIME, '_apply_articulation_effort_budget')], dict(math=math))
+    calls = []
+    controller = SimpleNamespace(set_max_efforts=lambda values, joint_indices:
+        calls.append(('limit', values.tolist(), joint_indices.tolist())))
+    robot = SimpleNamespace(get_articulation_controller=lambda: controller,
+        set_joint_efforts=lambda values, joint_indices:
+            calls.append(('force', values.tolist(), joint_indices.tolist())))
+    joints = {'conveyor_lift_joint': dict(mode='position', effort=2000.),
+              'transfer_roller_joint': dict(mode='velocity', effort=2.)}
+    names = ['drive_left_joint', 'transfer_roller_joint', 'conveyor_lift_joint', 'caster_spin_joint']
+    scope['_apply_articulation_effort_budget'](robot, names, joints,
+        {'conveyor_lift_joint': force, 'drive_left_joint': 100000.})
+    ff, cap = scope['effort_budget'](force, 2000.)
+    assert calls == [('limit', [cap], [2]), ('force', [ff], [2])]
+
+
+def test_isaac_missing_feedforward_clears_force_and_restores_budget():
+    scope = load_nodes([source_function(RUNTIME, '_apply_articulation_effort_budget')], dict(math=math))
+    calls = []
+    controller = SimpleNamespace(set_max_efforts=lambda values, joint_indices:
+        calls.append(('limit', values.tolist())))
+    robot = SimpleNamespace(get_articulation_controller=lambda: controller,
+        set_joint_efforts=lambda values, joint_indices: calls.append(('force', values.tolist())))
+    scope['_apply_articulation_effort_budget'](robot, ['lift'],
+        {'lift': dict(mode='position', effort=2000.)}, {})
+    assert calls == [('limit', [2000.]), ('force', [0.])]
+
+
+def test_isaac_watchdog_hold_retains_gravity_budget():
+    tree = ast.parse(RUNTIME.read_text())
+    holds = [node for node in ast.walk(tree) if isinstance(node, ast.If)
+             and any(isinstance(part, ast.Name) and part.id == 'articulation_watchdog_hold'
+                     for part in ast.walk(node.test))]
+    # Execute the actual stale-target branch with an already captured hold.
+    branch = next(node for node in holds if isinstance(node.test, ast.Compare)
+                  and any(isinstance(part, ast.Constant) and part.value is None
+                          for part in ast.walk(node.test)))
+    parent = next(node for node in ast.walk(tree) if isinstance(node, ast.If) and branch in node.body)
+    wrapper = ast.parse('def watchdog(articulation_watchdog_hold, cfg, reader):\n    pass').body[0]
+    wrapper.body = parent.body
+    wrapper.body.append(ast.Return(value=ast.Name(id='targets', ctx=ast.Load())))
+    scope = load_nodes([wrapper], {})
+    result = scope['watchdog']({'position': {'lift': .2}, 'velocity': {'roller': 0.}},
+        {'drive_wheel_joints': ['wheel']},
+        SimpleNamespace(joint_targets={'effort': {'lift': 139.302}}))
+    assert result['effort'] == {'lift': 139.302}
+    assert result['velocity'] == {'wheel': 0., 'roller': 0.}
+
+
+@pytest.mark.parametrize('motion', ('x', 'yaw'))
+def test_isaac_reversing_base_motion_still_blocks_articulation(motion):
+    scope = load_nodes([source_function(SPAWNERS['isaac'], '_base_moving')], dict(math=math))
+    subject = SimpleNamespace(_base_history=[])
+    for index in range(17):
+        t = index/32
+        wave = .01*math.sin(2*math.pi*t/.25)
+        yaw = wave*3 if motion == 'yaw' else 0.
+        measured = dict(t=t, pos=[wave if motion == 'x' else 0., 0., 0.],
+            orn=[0., 0., math.sin(yaw/2), math.cos(yaw/2)], lin=[0., 0., 0.], ang=[0., 0., 0.])
+        moving = scope['_base_moving'](subject, measured)
+    assert moving
+
+
+def test_isaac_rest_noise_and_yaw_wrap_do_not_report_a_reversal():
+    scope = load_nodes([source_function(SPAWNERS['isaac'], '_base_moving')], dict(math=math))
+    subject = SimpleNamespace(_base_history=[])
+    for index in range(33):
+        wave = .0001*math.sin(index*1.7)
+        yaw = math.pi+wave
+        measured = dict(t=index/32, pos=[wave, -wave, 0.],
+            orn=[0., 0., math.sin(yaw/2), math.cos(yaw/2)], lin=[.03, 0., 0.], ang=[0., 0., .06])
+        moving = scope['_base_moving'](subject, measured)
+    assert not moving

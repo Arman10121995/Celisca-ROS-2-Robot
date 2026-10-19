@@ -53,6 +53,7 @@ from robot_lab_mujoco.joint_effort import JointEffortCommand, mjcf_joint_dynamic
 from robot_lab_utils.camera_msgs import camera_info_msg, image_msg
 from robot_lab_utils.ros_frames import publish_fallback_scan_frame
 from robot_lab_utils.urdf_joints import driven_assembly_joints
+from robot_lab_utils.urdf_articulation import effort_budget
 from robot_lab_utils.sim_frames import (
     urdf_link_frames,
     compose, mounted_pose, offset_from_root, wxyz_from_xyzw, xyzw_from_wxyz,
@@ -2195,11 +2196,7 @@ class MuJoCoSpawner(Node):
             # carries its load: the PD alone (kp 20000 N/m) held the 14 kg
             # MOLAR carriage 7 mm low, and each Stop, which holds the
             # measured position, lowered it another 7 mm (2026-10-16).
-            for name, spec in self._articulation.contract.joints.items():
-                if spec['mode'] == 'position':
-                    dof = self._joint_name2dofadr[name]
-                    self._data.qfrc_applied[dof] = max(-spec['effort'], min(
-                        spec['effort'], float(self._data.qfrc_bias[dof])))
+            self._apply_articulation_gravity()
             if self._articulation.base_inhibited:
                 with self._twist_lock:
                     self._twist = Twist()
@@ -2327,6 +2324,19 @@ class MuJoCoSpawner(Node):
                 self.get_logger().info("Spawn ground clearance: raised root by %.4f m" % lift)
             mujoco.mj_forward(self._model, self._data)
         self._read_physics_state()
+
+    def _apply_articulation_gravity(self):
+        """Reserve the gravity force from the same source-bounded servo budget."""
+        for name, spec in self._articulation.contract.joints.items():
+            if spec['mode'] != 'position':
+                continue
+            dof = self._joint_name2dofadr[name]
+            feedforward, reserve = effort_budget(float(self._data.qfrc_bias[dof]), spec['effort'])
+            actuator = self._actuator_ids[name+'_articulation']
+            if actuator < 0:
+                raise ValueError('Missing articulation actuator: '+name)
+            self._model.actuator_forcerange[actuator] = (-reserve, reserve)
+            self._data.qfrc_applied[dof] = feedforward
 
     def _set_actuator(self, joint_name, suffix, value):
         """Set the control of the actuator the bridge added for a drive joint."""

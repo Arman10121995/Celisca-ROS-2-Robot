@@ -27,6 +27,7 @@ class MolarGazeboControl(Node):
         self.articulation = ArticulationROS(self, config, text, str(model))
         self.positions, self.velocities = {}, {}
         self.feedback_at = -math.inf
+        self.feedback_stale = True
         self.command_at = -math.inf
         self.command = Twist()
         self.last_sim = None
@@ -44,12 +45,16 @@ class MolarGazeboControl(Node):
 
     def feedback(self, msg):
         values = dict(zip(msg.name, msg.position))
-        if not all(name in values and math.isfinite(values[name]) for name in self.pos_names):
+        rates = dict(zip(msg.name, msg.velocity))
+        required = set(self.articulation.contract.joints) | {'drive_left_joint', 'drive_right_joint'}
+        if (len(set(msg.name)) != len(msg.name)
+                or len(msg.position) != len(msg.name) or len(msg.velocity) != len(msg.name)
+                or not required <= set(values) or not required <= set(rates)
+                or not all(math.isfinite(value) for value in [*values.values(), *rates.values()])):
+            # Invalid samples never replace the last finite hold pose.
+            self.feedback_at = -math.inf
             return
-        self.positions = values
-        self.velocities = dict(zip(msg.name, msg.velocity))
-        if not all(math.isfinite(v) for v in self.velocities.values()):
-            return
+        self.positions, self.velocities = values, rates
         self.feedback_at = time.monotonic()
 
     def drive(self, msg):
@@ -75,12 +80,22 @@ class MolarGazeboControl(Node):
         self.last_sim = sim
         fresh = now-self.feedback_at < .3
         if fresh:
+            self.feedback_stale = False
             moving = any(abs(self.velocities.get(name, 0.)) > .05 for name in ('drive_left_joint', 'drive_right_joint'))
             target = self.articulation.step(self.positions, self.velocities, dt, base_moving=moving)
             if all(name in target['position'] for name in self.pos_names):
                 self.position_pub.publish(Float64MultiArray(data=[target['position'][name] for name in self.pos_names]))
             self.roller_pub.publish(Float64MultiArray(data=[target['velocity'].get('transfer_roller_joint', 0.)]))
         else:
+            # A forward position controller otherwise keeps its last distant
+            # goal after feedback loss. Revoke it once and send the last finite,
+            # source-bounded measured hold; never keep executing the old goal.
+            if not self.feedback_stale:
+                self.articulation.contract.stop('feedback lost; last finite measured hold')
+                self.feedback_stale = True
+            holds = self.articulation.contract.references
+            if all(name in holds for name in self.pos_names):
+                self.position_pub.publish(Float64MultiArray(data=[holds[name] for name in self.pos_names]))
             self.roller_pub.publish(Float64MultiArray(data=[0.]))
         allowed = fresh and not self.articulation.base_inhibited and now-self.command_at < .3
         self.drive_pub.publish(self.command if allowed else Twist())
@@ -99,6 +114,7 @@ class MolarGazeboControl(Node):
         self.articulation.reset()
         self.positions, self.velocities = {}, {}
         self.feedback_at, self.last_sim = -math.inf, None
+        self.feedback_stale = True
         response.success = True
         response.message = 'MOLAR plant identity revoked; waiting for fresh measured hold'
         return response
