@@ -1623,7 +1623,7 @@ tasks:
         owner: "codex"
         depends_on: ["R10.1"]
         active_scope: "Implement bounded real per-instance Nav2 dispatch, nearest-idle allocation, pause/resume/cancel and measured status/SSD journals. Open-RMF traffic/resource integration remains a separate pending source-compatible adapter."
-        implementation_state: "Actual namespaced Nav2 dispatch/allocation and generation/cancel barriers implemented; queues/Open-RMF/traffic/resources pending"
+        implementation_state: "Actual namespaced Nav2 dispatch/allocation and generation/cancel barriers implemented; per-member goal queue auto-dispatches when a member becomes idle (busy goals are queued instead of rejected) in fleet_controller.py; Open-RMF/traffic/resource adapters pending"
         validation_state: "One actual alpha/Bumperbot Nav2 result in shared nav_empty at 0.06218 m physical error; settled physical arrival and allocation/pause/resume/cancel campaigns pending"
         evidence: ["docs/status/fleet-2026-10-15.md", "docs/status/evidence/r101-fleet-2026-10-15/events.jsonl"]
         acceptance_ref: "ROADMAP.md R10.2"

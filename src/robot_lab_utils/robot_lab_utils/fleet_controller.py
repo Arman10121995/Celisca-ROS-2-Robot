@@ -78,6 +78,7 @@ class Member:
     reset_anchor_pending: tuple = None
     output: tuple = (0., 0.)
     included: bool = True
+    queue: list = field(default_factory=list)
     sample_stamps: dict = field(default_factory=dict)
     message_counts: dict = field(default_factory=lambda: dict(odom=0, truth=0, scan=0, amcl=0))
 
@@ -315,6 +316,14 @@ class FleetController(Node):
                 if not targets:
                     raise ValueError('Select a member for dispatch')
                 for member in targets:
+                    if member.handle is not None or member.sending or member.cancel_pending:
+                        queued_task = uuid.uuid4().hex
+                        member.queue.append(dict(
+                            goal=copy.deepcopy(goal), task=queued_task,
+                            deadline=time.monotonic() + goal['timeout']))
+                        self._event('goal_queued', member=member.name, task=queued_task,
+                                    queued=len(member.queue))
+                        continue
                     self._dispatch(member, goal)
             else:
                 if not targets:
@@ -422,6 +431,12 @@ class FleetController(Node):
                     truth=self._truth_row(member))
         if generation == member.generation:
             self._stop_member(member, 'Nav2 succeeded' if status == GoalStatus.STATUS_SUCCEEDED else 'Nav2 ended status=' + str(status))
+            if member.queue:
+                next_item = member.queue.pop(0)
+                try:
+                    self._dispatch(member, next_item['goal'])
+                except ValueError:
+                    pass  # Member no longer dispatchable; remaining goals stay queued
 
     def _cancel_handle(self, member):
         if member.handle is None or member.cancel_pending:
@@ -663,6 +678,7 @@ class FleetController(Node):
                               amcl=age(member.estimate_at), localization_tf=age(member.localization_at)),
                     message_counts=member.message_counts, task=member.task, goal=member.goal,
                     nav2_pending=member.sending or member.handle is not None, cancel_pending=member.cancel_pending,
+                    queued=len(member.queue),
                     settled_spawn_recorded=member.spawn_pose is not None, battery=None, charging=None))
             data = dict(schema_version=1, session_id=self.session_id, map=self.session['map'], backend='gazebo',
                         navigation=self.session['navigation'], directory=self.session['directory'],
