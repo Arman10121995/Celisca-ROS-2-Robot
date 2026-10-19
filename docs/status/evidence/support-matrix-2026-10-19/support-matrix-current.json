@@ -1,5 +1,5 @@
 {
-  "generated_utc": "2026-10-19T09:47:51.144047+00:00",
+  "generated_utc": "2026-10-19T13:40:07.309056+00:00",
   "task": "R9.3",
   "status": "partial",
   "qualification": "Exact hashed screens only; artifact validation does not rerun a mission",
@@ -4888,20 +4888,21 @@
       "environment_id": "nav_obstacle",
       "simulator": "isaac",
       "task_type": "navigation_mission",
-      "support_level": "experimental",
+      "support_level": "partially_supported",
       "evidence_level": "runtime_evidence",
-      "last_tested": "2026-10-16",
-      "revision": "56d3edc (round 49c, 14:18-14:33)",
-      "test_result": "failed_screen",
+      "last_tested": "2026-10-19",
+      "revision": "361c2c3 (round 53, 14:31-14:41)",
+      "test_result": "passed_screen",
       "artifacts": [
-        "docs/status/evidence/open-items-2026-10-16/go2-rotate/isaac_unitree_go2_seed3_nav_obstacle.json",
-        "docs/status/evidence/open-items-2026-10-16/go2-rotate/source-hashes-56d3edc.json"
+        "docs/status/evidence/rounds-2026-10-19/go2-isaac-arcs/isaac_unitree_go2_seed3_nav_obstacle.json",
+        "docs/status/evidence/rounds-2026-10-19/go2-isaac-arcs/source-hashes-361c2c3.json"
       ],
       "limitations": [
-        "Goal seeds 1-3, one world; heading not checked",
+        "One run per seed; flat floor, no terrain",
+        "The policy does not hold a turn on the spot in Isaac (round 52)",
         "Screen evidence; full ROADMAP mission acceptance remains separate"
       ],
-      "notes": "nav_obstacle mission for the Go2 in Isaac with rotate-to-heading (reverted after this round); truth-measured final poses.",
+      "notes": "Go2 rl_sar policy in Isaac with forward-arc planning (no turn in place), nav_obstacle seeds 1-3: two goals judged from simulator truth, then a cancel and stop.",
       "steering_mode": ""
     },
     {
@@ -6109,6 +6110,490 @@
         "Screen evidence; full ROADMAP mission acceptance remains separate"
       ],
       "notes": "Normal GUI under Xvfb in Display mode: W and W+A drive, Stop, lift to 0.06 and 0.68 m, both coupled telescope stages to 0.06 and 0.14 m, drive inhibited with the telescope out, roller at 2 rad/s, Stop hold and heartbeat-loss roller stop, judged from simulator truth and measured joints.",
+      "steering_mode": ""
+    },
+    {
+      "robot_id": "bumperbot",
+      "environment_id": "calibration_room",
+      "simulator": "isaac",
+      "task_type": "camera_calibration",
+      "support_level": "experimental",
+      "evidence_level": "runtime_evidence",
+      "last_tested": "2026-10-19",
+      "revision": "0961445 (round 51, 12:12-14:30)",
+      "test_result": "failed_screen",
+      "artifacts": [
+        "docs/status/evidence/rounds-2026-10-19/calibration/isaac_bumperbot_calibration_room.json",
+        "docs/status/evidence/rounds-2026-10-19/calibration/source-hashes-0961445.json"
+      ],
+      "limitations": [
+        "One run per backend; a simulated pinhole camera, no lens distortion model",
+        "Says nothing about depth alignment or physical cameras",
+        "Screen evidence; full ROADMAP mission acceptance remains separate"
+      ],
+      "notes": "Bumperbot turns twice on the spot among 14 chessboards; a pinhole fit of the RGB stream is compared with the published camera info (fx within 3 %, principal point within 1.5 px, RMS under 1 px).",
+      "steering_mode": ""
+    },
+    {
+      "robot_id": "bumperbot",
+      "environment_id": "calibration_room",
+      "simulator": "pybullet",
+      "task_type": "camera_calibration",
+      "support_level": "partially_supported",
+      "evidence_level": "runtime_evidence",
+      "last_tested": "2026-10-19",
+      "revision": "0961445 (round 51, 12:12-14:30)",
+      "test_result": "passed_screen",
+      "artifacts": [
+        "docs/status/evidence/rounds-2026-10-19/calibration/pybullet_bumperbot_calibration_room.json",
+        "docs/status/evidence/rounds-2026-10-19/calibration/source-hashes-0961445.json"
+      ],
+      "limitations": [
+        "One run per backend; a simulated pinhole camera, no lens distortion model",
+        "Says nothing about depth alignment or physical cameras",
+        "Screen evidence; full ROADMAP mission acceptance remains separate"
+      ],
+      "notes": "Bumperbot turns twice on the spot among 14 chessboards; a pinhole fit of the RGB stream is compared with the published camera info (fx within 3 %, principal point within 1.5 px, RMS under 1 px).",
+      "steering_mode": ""
+    },
+    {
+      "robot_id": "bumperbot",
+      "environment_id": "calibration_room",
+      "simulator": "gazebo",
+      "task_type": "camera_calibration",
+      "support_level": "experimental",
+      "evidence_level": "runtime_evidence",
+      "last_tested": "2026-10-19",
+      "revision": "9c9660a (round 54, 14:42-14:49; board normals from b563a31)",
+      "test_result": "failed_screen",
+      "artifacts": [
+        "docs/status/evidence/rounds-2026-10-19/calibration/gazebo_bumperbot_calibration_room.json",
+        "docs/status/evidence/rounds-2026-10-19/calibration/source-hashes-9c9660a.json"
+      ],
+      "limitations": [
+        "One run per backend; a simulated pinhole camera, no lens distortion model",
+        "Says nothing about depth alignment or physical cameras",
+        "Screen evidence; full ROADMAP mission acceptance remains separate"
+      ],
+      "notes": "Bumperbot turns twice on the spot among 14 chessboards; a pinhole fit of the RGB stream is compared with the published camera info (fx within 3 %, principal point within 1.5 px, RMS under 1 px).",
+      "steering_mode": ""
+    },
+    {
+      "robot_id": "bumperbot",
+      "environment_id": "calibration_room",
+      "simulator": "mujoco",
+      "task_type": "camera_calibration",
+      "support_level": "partially_supported",
+      "evidence_level": "runtime_evidence",
+      "last_tested": "2026-10-19",
+      "revision": "9c9660a (round 54, 14:42-14:49; board normals from b563a31)",
+      "test_result": "passed_screen",
+      "artifacts": [
+        "docs/status/evidence/rounds-2026-10-19/calibration/mujoco_bumperbot_calibration_room.json",
+        "docs/status/evidence/rounds-2026-10-19/calibration/source-hashes-9c9660a.json"
+      ],
+      "limitations": [
+        "One run per backend; a simulated pinhole camera, no lens distortion model",
+        "Says nothing about depth alignment or physical cameras",
+        "Screen evidence; full ROADMAP mission acceptance remains separate"
+      ],
+      "notes": "Bumperbot turns twice on the spot among 14 chessboards; a pinhole fit of the RGB stream is compared with the published camera info (fx within 3 %, principal point within 1.5 px, RMS under 1 px).",
+      "steering_mode": ""
+    },
+    {
+      "robot_id": "ackermann_car",
+      "environment_id": "car_course",
+      "simulator": "gazebo",
+      "task_type": "car_course",
+      "support_level": "partially_supported",
+      "evidence_level": "runtime_evidence",
+      "last_tested": "2026-10-19",
+      "revision": "0961445 (round 51, 12:12-14:30)",
+      "test_result": "passed_screen",
+      "artifacts": [
+        "docs/status/evidence/rounds-2026-10-19/car-course/gazebo_ackermann_car_car_course.json",
+        "docs/status/evidence/rounds-2026-10-19/car-course/source-hashes-0961445.json"
+      ],
+      "limitations": [
+        "One run per cell; the car goal checker ignores heading",
+        "Flat floor, scripted course, no traffic",
+        "Screen evidence; full ROADMAP mission acceptance remains separate"
+      ],
+      "notes": "Nav2 drives the car through a four-gate cone slalom and nose-in into a 0.8 m parking bay; gates and bay within 0.15 m of truth, the bay also within 10 degrees, the footprint clear of every cone and box.",
+      "steering_mode": ""
+    },
+    {
+      "robot_id": "anti_ackermann_car",
+      "environment_id": "car_course",
+      "simulator": "gazebo",
+      "task_type": "car_course",
+      "support_level": "partially_supported",
+      "evidence_level": "runtime_evidence",
+      "last_tested": "2026-10-19",
+      "revision": "0961445 (round 51, 12:12-14:30)",
+      "test_result": "passed_screen",
+      "artifacts": [
+        "docs/status/evidence/rounds-2026-10-19/car-course/gazebo_anti_ackermann_car_car_course.json",
+        "docs/status/evidence/rounds-2026-10-19/car-course/source-hashes-0961445.json"
+      ],
+      "limitations": [
+        "One run per cell; the car goal checker ignores heading",
+        "Flat floor, scripted course, no traffic",
+        "Screen evidence; full ROADMAP mission acceptance remains separate"
+      ],
+      "notes": "Nav2 drives the car through a four-gate cone slalom and nose-in into a 0.8 m parking bay; gates and bay within 0.15 m of truth, the bay also within 10 degrees, the footprint clear of every cone and box.",
+      "steering_mode": ""
+    },
+    {
+      "robot_id": "rear_steer_car",
+      "environment_id": "car_course",
+      "simulator": "gazebo",
+      "task_type": "car_course",
+      "support_level": "experimental",
+      "evidence_level": "runtime_evidence",
+      "last_tested": "2026-10-19",
+      "revision": "0961445 (round 51, 12:12-14:30)",
+      "test_result": "failed_screen",
+      "artifacts": [
+        "docs/status/evidence/rounds-2026-10-19/car-course/gazebo_rear_steer_car_car_course.json",
+        "docs/status/evidence/rounds-2026-10-19/car-course/source-hashes-0961445.json"
+      ],
+      "limitations": [
+        "One run per cell; the car goal checker ignores heading",
+        "Flat floor, scripted course, no traffic",
+        "Screen evidence; full ROADMAP mission acceptance remains separate"
+      ],
+      "notes": "Nav2 drives the car through a four-gate cone slalom and nose-in into a 0.8 m parking bay; gates and bay within 0.15 m of truth, the bay also within 10 degrees, the footprint clear of every cone and box.",
+      "steering_mode": ""
+    },
+    {
+      "robot_id": "ackermann_car",
+      "environment_id": "car_course",
+      "simulator": "isaac",
+      "task_type": "car_course",
+      "support_level": "experimental",
+      "evidence_level": "runtime_evidence",
+      "last_tested": "2026-10-19",
+      "revision": "0961445 (round 51, 12:12-14:30)",
+      "test_result": "failed_screen",
+      "artifacts": [
+        "docs/status/evidence/rounds-2026-10-19/car-course/isaac_ackermann_car_car_course.json",
+        "docs/status/evidence/rounds-2026-10-19/car-course/source-hashes-0961445.json"
+      ],
+      "limitations": [
+        "One run per cell; the car goal checker ignores heading",
+        "Flat floor, scripted course, no traffic",
+        "Screen evidence; full ROADMAP mission acceptance remains separate"
+      ],
+      "notes": "Nav2 drives the car through a four-gate cone slalom and nose-in into a 0.8 m parking bay; gates and bay within 0.15 m of truth, the bay also within 10 degrees, the footprint clear of every cone and box.",
+      "steering_mode": ""
+    },
+    {
+      "robot_id": "anti_ackermann_car",
+      "environment_id": "car_course",
+      "simulator": "isaac",
+      "task_type": "car_course",
+      "support_level": "experimental",
+      "evidence_level": "runtime_evidence",
+      "last_tested": "2026-10-19",
+      "revision": "0961445 (round 51, 12:12-14:30)",
+      "test_result": "failed_screen",
+      "artifacts": [
+        "docs/status/evidence/rounds-2026-10-19/car-course/isaac_anti_ackermann_car_car_course.json",
+        "docs/status/evidence/rounds-2026-10-19/car-course/source-hashes-0961445.json"
+      ],
+      "limitations": [
+        "One run per cell; the car goal checker ignores heading",
+        "Flat floor, scripted course, no traffic",
+        "Screen evidence; full ROADMAP mission acceptance remains separate"
+      ],
+      "notes": "Nav2 drives the car through a four-gate cone slalom and nose-in into a 0.8 m parking bay; gates and bay within 0.15 m of truth, the bay also within 10 degrees, the footprint clear of every cone and box.",
+      "steering_mode": ""
+    },
+    {
+      "robot_id": "rear_steer_car",
+      "environment_id": "car_course",
+      "simulator": "isaac",
+      "task_type": "car_course",
+      "support_level": "experimental",
+      "evidence_level": "runtime_evidence",
+      "last_tested": "2026-10-19",
+      "revision": "0961445 (round 51, 12:12-14:30)",
+      "test_result": "failed_screen",
+      "artifacts": [
+        "docs/status/evidence/rounds-2026-10-19/car-course/isaac_rear_steer_car_car_course.json",
+        "docs/status/evidence/rounds-2026-10-19/car-course/source-hashes-0961445.json"
+      ],
+      "limitations": [
+        "One run per cell; the car goal checker ignores heading",
+        "Flat floor, scripted course, no traffic",
+        "Screen evidence; full ROADMAP mission acceptance remains separate"
+      ],
+      "notes": "Nav2 drives the car through a four-gate cone slalom and nose-in into a 0.8 m parking bay; gates and bay within 0.15 m of truth, the bay also within 10 degrees, the footprint clear of every cone and box.",
+      "steering_mode": ""
+    },
+    {
+      "robot_id": "rear_steer_car",
+      "environment_id": "car_course",
+      "simulator": "mujoco",
+      "task_type": "car_course",
+      "support_level": "experimental",
+      "evidence_level": "runtime_evidence",
+      "last_tested": "2026-10-19",
+      "revision": "0961445 (round 51, 12:12-14:30)",
+      "test_result": "failed_screen",
+      "artifacts": [
+        "docs/status/evidence/rounds-2026-10-19/car-course/mujoco_rear_steer_car_car_course.json",
+        "docs/status/evidence/rounds-2026-10-19/car-course/source-hashes-0961445.json"
+      ],
+      "limitations": [
+        "One run per cell; the car goal checker ignores heading",
+        "Flat floor, scripted course, no traffic",
+        "Screen evidence; full ROADMAP mission acceptance remains separate"
+      ],
+      "notes": "Nav2 drives the car through a four-gate cone slalom and nose-in into a 0.8 m parking bay; gates and bay within 0.15 m of truth, the bay also within 10 degrees, the footprint clear of every cone and box.",
+      "steering_mode": ""
+    },
+    {
+      "robot_id": "ackermann_car",
+      "environment_id": "car_course",
+      "simulator": "pybullet",
+      "task_type": "car_course",
+      "support_level": "experimental",
+      "evidence_level": "runtime_evidence",
+      "last_tested": "2026-10-19",
+      "revision": "0961445 (round 51, 12:12-14:30)",
+      "test_result": "failed_screen",
+      "artifacts": [
+        "docs/status/evidence/rounds-2026-10-19/car-course/pybullet_ackermann_car_car_course.json",
+        "docs/status/evidence/rounds-2026-10-19/car-course/source-hashes-0961445.json"
+      ],
+      "limitations": [
+        "One run per cell; the car goal checker ignores heading",
+        "Flat floor, scripted course, no traffic",
+        "Screen evidence; full ROADMAP mission acceptance remains separate"
+      ],
+      "notes": "Nav2 drives the car through a four-gate cone slalom and nose-in into a 0.8 m parking bay; gates and bay within 0.15 m of truth, the bay also within 10 degrees, the footprint clear of every cone and box.",
+      "steering_mode": ""
+    },
+    {
+      "robot_id": "anti_ackermann_car",
+      "environment_id": "car_course",
+      "simulator": "pybullet",
+      "task_type": "car_course",
+      "support_level": "experimental",
+      "evidence_level": "runtime_evidence",
+      "last_tested": "2026-10-19",
+      "revision": "0961445 (round 51, 12:12-14:30)",
+      "test_result": "failed_screen",
+      "artifacts": [
+        "docs/status/evidence/rounds-2026-10-19/car-course/pybullet_anti_ackermann_car_car_course.json",
+        "docs/status/evidence/rounds-2026-10-19/car-course/source-hashes-0961445.json"
+      ],
+      "limitations": [
+        "One run per cell; the car goal checker ignores heading",
+        "Flat floor, scripted course, no traffic",
+        "Screen evidence; full ROADMAP mission acceptance remains separate"
+      ],
+      "notes": "Nav2 drives the car through a four-gate cone slalom and nose-in into a 0.8 m parking bay; gates and bay within 0.15 m of truth, the bay also within 10 degrees, the footprint clear of every cone and box.",
+      "steering_mode": ""
+    },
+    {
+      "robot_id": "rear_steer_car",
+      "environment_id": "car_course",
+      "simulator": "pybullet",
+      "task_type": "car_course",
+      "support_level": "experimental",
+      "evidence_level": "runtime_evidence",
+      "last_tested": "2026-10-19",
+      "revision": "0961445 (round 51, 12:12-14:30)",
+      "test_result": "failed_screen",
+      "artifacts": [
+        "docs/status/evidence/rounds-2026-10-19/car-course/pybullet_rear_steer_car_car_course.json",
+        "docs/status/evidence/rounds-2026-10-19/car-course/source-hashes-0961445.json"
+      ],
+      "limitations": [
+        "One run per cell; the car goal checker ignores heading",
+        "Flat floor, scripted course, no traffic",
+        "Screen evidence; full ROADMAP mission acceptance remains separate"
+      ],
+      "notes": "Nav2 drives the car through a four-gate cone slalom and nose-in into a 0.8 m parking bay; gates and bay within 0.15 m of truth, the bay also within 10 degrees, the footprint clear of every cone and box.",
+      "steering_mode": ""
+    },
+    {
+      "robot_id": "ackermann_car",
+      "environment_id": "car_course",
+      "simulator": "mujoco",
+      "task_type": "car_course",
+      "support_level": "experimental",
+      "evidence_level": "runtime_evidence",
+      "last_tested": "2026-10-19",
+      "revision": "e3821b8 (round 55, 14:50-14:58; JSON fix 3f826e1)",
+      "test_result": "failed_screen",
+      "artifacts": [
+        "docs/status/evidence/rounds-2026-10-19/car-course/mujoco_ackermann_car_car_course.json",
+        "docs/status/evidence/rounds-2026-10-19/car-course/source-hashes-e3821b8.json"
+      ],
+      "limitations": [
+        "One run per cell; the car goal checker ignores heading",
+        "Flat floor, scripted course, no traffic",
+        "Screen evidence; full ROADMAP mission acceptance remains separate"
+      ],
+      "notes": "Nav2 drives the car through a four-gate cone slalom and nose-in into a 0.8 m parking bay; gates and bay within 0.15 m of truth, the bay also within 10 degrees, the footprint clear of every cone and box.",
+      "steering_mode": ""
+    },
+    {
+      "robot_id": "anti_ackermann_car",
+      "environment_id": "car_course",
+      "simulator": "mujoco",
+      "task_type": "car_course",
+      "support_level": "experimental",
+      "evidence_level": "runtime_evidence",
+      "last_tested": "2026-10-19",
+      "revision": "e3821b8 (round 55, 14:50-14:58; JSON fix 3f826e1)",
+      "test_result": "failed_screen",
+      "artifacts": [
+        "docs/status/evidence/rounds-2026-10-19/car-course/mujoco_anti_ackermann_car_car_course.json",
+        "docs/status/evidence/rounds-2026-10-19/car-course/source-hashes-e3821b8.json"
+      ],
+      "limitations": [
+        "One run per cell; the car goal checker ignores heading",
+        "Flat floor, scripted course, no traffic",
+        "Screen evidence; full ROADMAP mission acceptance remains separate"
+      ],
+      "notes": "Nav2 drives the car through a four-gate cone slalom and nose-in into a 0.8 m parking bay; gates and bay within 0.15 m of truth, the bay also within 10 degrees, the footprint clear of every cone and box.",
+      "steering_mode": ""
+    },
+    {
+      "robot_id": "ackermann_car",
+      "environment_id": "nav_empty",
+      "simulator": "gazebo",
+      "task_type": "command_loss",
+      "support_level": "partially_supported",
+      "evidence_level": "runtime_evidence",
+      "last_tested": "2026-10-19",
+      "revision": "0961445 (round 51, 12:12-14:30)",
+      "test_result": "passed_screen",
+      "artifacts": [
+        "docs/status/evidence/rounds-2026-10-19/command-loss/gazebo_ackermann_car_nav_empty.json",
+        "docs/status/evidence/rounds-2026-10-19/command-loss/source-hashes-0961445.json"
+      ],
+      "limitations": [
+        "One run per cell; Gazebo in slam mode, Isaac in loc mode",
+        "A publisher stop, not a network partition or controller crash",
+        "Screen evidence; full ROADMAP mission acceptance remains separate"
+      ],
+      "notes": "Five drive phases on nav_empty, then the command publisher stops; the base must come to rest within 0.35 m of coast with no tail velocity, judged from simulator truth.",
+      "steering_mode": ""
+    },
+    {
+      "robot_id": "anti_ackermann_car",
+      "environment_id": "nav_empty",
+      "simulator": "gazebo",
+      "task_type": "command_loss",
+      "support_level": "partially_supported",
+      "evidence_level": "runtime_evidence",
+      "last_tested": "2026-10-19",
+      "revision": "0961445 (round 51, 12:12-14:30)",
+      "test_result": "passed_screen",
+      "artifacts": [
+        "docs/status/evidence/rounds-2026-10-19/command-loss/gazebo_anti_ackermann_car_nav_empty.json",
+        "docs/status/evidence/rounds-2026-10-19/command-loss/source-hashes-0961445.json"
+      ],
+      "limitations": [
+        "One run per cell; Gazebo in slam mode, Isaac in loc mode",
+        "A publisher stop, not a network partition or controller crash",
+        "Screen evidence; full ROADMAP mission acceptance remains separate"
+      ],
+      "notes": "Five drive phases on nav_empty, then the command publisher stops; the base must come to rest within 0.35 m of coast with no tail velocity, judged from simulator truth.",
+      "steering_mode": ""
+    },
+    {
+      "robot_id": "rear_steer_car",
+      "environment_id": "nav_empty",
+      "simulator": "gazebo",
+      "task_type": "command_loss",
+      "support_level": "partially_supported",
+      "evidence_level": "runtime_evidence",
+      "last_tested": "2026-10-19",
+      "revision": "0961445 (round 51, 12:12-14:30)",
+      "test_result": "passed_screen",
+      "artifacts": [
+        "docs/status/evidence/rounds-2026-10-19/command-loss/gazebo_rear_steer_car_nav_empty.json",
+        "docs/status/evidence/rounds-2026-10-19/command-loss/source-hashes-0961445.json"
+      ],
+      "limitations": [
+        "One run per cell; Gazebo in slam mode, Isaac in loc mode",
+        "A publisher stop, not a network partition or controller crash",
+        "Screen evidence; full ROADMAP mission acceptance remains separate"
+      ],
+      "notes": "Five drive phases on nav_empty, then the command publisher stops; the base must come to rest within 0.35 m of coast with no tail velocity, judged from simulator truth.",
+      "steering_mode": ""
+    },
+    {
+      "robot_id": "ackermann_car",
+      "environment_id": "nav_empty",
+      "simulator": "isaac",
+      "task_type": "command_loss",
+      "support_level": "partially_supported",
+      "evidence_level": "runtime_evidence",
+      "last_tested": "2026-10-19",
+      "revision": "0961445 (round 51, 12:12-14:30)",
+      "test_result": "passed_screen",
+      "artifacts": [
+        "docs/status/evidence/rounds-2026-10-19/command-loss/isaac_ackermann_car_nav_empty.json",
+        "docs/status/evidence/rounds-2026-10-19/command-loss/source-hashes-0961445.json"
+      ],
+      "limitations": [
+        "One run per cell; Gazebo in slam mode, Isaac in loc mode",
+        "A publisher stop, not a network partition or controller crash",
+        "Screen evidence; full ROADMAP mission acceptance remains separate"
+      ],
+      "notes": "Five drive phases on nav_empty, then the command publisher stops; the base must come to rest within 0.35 m of coast with no tail velocity, judged from simulator truth.",
+      "steering_mode": ""
+    },
+    {
+      "robot_id": "anti_ackermann_car",
+      "environment_id": "nav_empty",
+      "simulator": "isaac",
+      "task_type": "command_loss",
+      "support_level": "partially_supported",
+      "evidence_level": "runtime_evidence",
+      "last_tested": "2026-10-19",
+      "revision": "0961445 (round 51, 12:12-14:30)",
+      "test_result": "passed_screen",
+      "artifacts": [
+        "docs/status/evidence/rounds-2026-10-19/command-loss/isaac_anti_ackermann_car_nav_empty.json",
+        "docs/status/evidence/rounds-2026-10-19/command-loss/source-hashes-0961445.json"
+      ],
+      "limitations": [
+        "One run per cell; Gazebo in slam mode, Isaac in loc mode",
+        "A publisher stop, not a network partition or controller crash",
+        "Screen evidence; full ROADMAP mission acceptance remains separate"
+      ],
+      "notes": "Five drive phases on nav_empty, then the command publisher stops; the base must come to rest within 0.35 m of coast with no tail velocity, judged from simulator truth.",
+      "steering_mode": ""
+    },
+    {
+      "robot_id": "rear_steer_car",
+      "environment_id": "nav_empty",
+      "simulator": "isaac",
+      "task_type": "command_loss",
+      "support_level": "partially_supported",
+      "evidence_level": "runtime_evidence",
+      "last_tested": "2026-10-19",
+      "revision": "0961445 (round 51, 12:12-14:30)",
+      "test_result": "passed_screen",
+      "artifacts": [
+        "docs/status/evidence/rounds-2026-10-19/command-loss/isaac_rear_steer_car_nav_empty.json",
+        "docs/status/evidence/rounds-2026-10-19/command-loss/source-hashes-0961445.json"
+      ],
+      "limitations": [
+        "One run per cell; Gazebo in slam mode, Isaac in loc mode",
+        "A publisher stop, not a network partition or controller crash",
+        "Screen evidence; full ROADMAP mission acceptance remains separate"
+      ],
+      "notes": "Five drive phases on nav_empty, then the command publisher stops; the base must come to rest within 0.35 m of coast with no tail velocity, judged from simulator truth.",
       "steering_mode": ""
     }
   ],

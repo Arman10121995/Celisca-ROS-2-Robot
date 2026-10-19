@@ -47,6 +47,7 @@ pure numerical examples. For workspace setup, follow the current root
 | Sensor Fusion | [Complementary tilt filter](sensor_fusion.md) | The current filter's numerical response and axis-convention caveat |
 | Locomotion policy | [Go2 flat-ground policy](go2.md) | Opt-in MuJoCo stance, command-loss stop, forward/turn and reverse dead-zone evidence; not terrain/navigation qualification |
 | Locomotion policy | [Model-matched legged policies (rl_sar)](legged-policies.md) | Exact-model rl_sar checkpoints on Go2/Go2W/A1/B2 and the G1 humanoid; measured walks on /cmd_vel in MuJoCo, Isaac and (Go2) Gazebo, 2026-10-12 |
+| Locomotion policy | [Training legged policies](legged-policy-training.md) | The GUI Training page and `legged-train`: PPO in batched MuJoCo for Go2/A1/B2 in their rl_sar contracts, export to a launchable policy directory; experimental, no trained policy qualified |
 
 [Global planning](global_planning_comparison.md) (eight planners) and
 [local planning](local_planning_comparison.md) (five controllers) are

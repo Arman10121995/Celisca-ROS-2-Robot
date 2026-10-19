@@ -1,5 +1,31 @@
 # Current Robot Lab status
 
+October 19 (later): **a Training page trains legged policies**
+([guide](../tutorials/legged-policy-training.md)).
+- EXPERIMENTS → Policy training, or `ros2 run robot_lab_adapter
+  legged-train`. PPO trains Go2, A1 or B2 to walk, turn in place, stand
+  or recover from pushes, in batched MuJoCo built from the bridge's own
+  model and PD actuators, in the contract of each robot's rl_sar policy.
+- The page follows a run live, stops it with a checkpoint and export,
+  evaluates the exported ONNX through the deployment code and hands it to
+  Launch as `legged_policy:=<directory>`, for its own robot only.
+- Implemented and experimental. A smoke run trains, exports and evaluates
+  end to end; no trained policy is qualified yet.
+
+Rounds 51-56 ([evidence](evidence/rounds-2026-10-19/README.md)):
+- Go2 passes nav_obstacle seeds 1-3 in Isaac with forward arcs (no turn in
+  place, which the policy does not hold there). It now passes in all three
+  of MuJoCo, Gazebo and Isaac.
+- Car publisher loss passes in all six cells. The car course passes in 2
+  of 12 cells: the slalom mostly passes, but parking misses the 10°
+  heading because the car goal checker ignores heading.
+- Camera calibration passes in MuJoCo and PyBullet. Isaac fails on RMS
+  (its camera noise) and Gazebo on a 5 px principal point.
+- Clean host at `e3821b8`: every step passes, Isaac included (its build's
+  external links are now mounted).
+- Matrix: 619 reports, 291 cells, 278 passed and 12 failed screens
+  ([what changed](evidence/support-matrix-2026-10-19/README.md)).
+
 October 19: **the MOLAR family runs in all four simulators on the detailed
 CELISCA floors** ([evidence](evidence/molar-hri-2026-10-16/README.md),
 [guide](../tutorials/molar-hri-simulation.md)).

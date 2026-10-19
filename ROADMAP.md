@@ -1561,6 +1561,35 @@ evidence. Open:
 - multi-floor, door or building-lift operation;
 - repeats and identified dynamics.
 
+## R12 — Legged policy training
+
+Requested 2026-10-19: a GUI page that trains policies for legged robots to
+do tasks. Implemented and experimental:
+
+- `robot_lab_adapter/legged_training.py`: batched MuJoCo environments for
+  Go2, A1 and B2, built from the bridge's own model import and PD
+  actuators. They train in the observation/action/PD contract of each
+  robot's provisioned rl_sar policy, with four tasks: `walk`,
+  `turn_in_place`, `stand` and `push_recovery`.
+- `robot_lab_adapter/ppo.py`: PPO on torch, with an ONNX export that folds
+  the normalisation in. `legged_train.py` (`legged-train`) trains,
+  exports and evaluates.
+- The GUI Training page starts, follows, stops, exports and evaluates runs
+  and hands an exported policy to Launch (`legged_policy:=<directory>`,
+  bound to its robot).
+
+[Guide](docs/tutorials/legged-policy-training.md).
+
+Acceptance: a policy trained here walks (or performs its task) in measured
+runs on the lab's backends, judged by the existing drive and mission
+screens. Open:
+
+- a trained policy with measured walks;
+- terrain curriculum and domain randomisation;
+- GPU training;
+- Go2W (wheels) and humanoids;
+- transfer to Gazebo and Isaac.
+
 ## Common implementation and evidence contract
 
 Every task requires scoped code/config/assets, dependencies and provenance,

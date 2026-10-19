@@ -47,3 +47,36 @@ Changes, latest record per cell:
   queued.
 
 All full-release gates stay blocked: R5-R9 tasks remain partial.
+
+## Rounds 51-55 (later on October 19)
+
+[rounds-2026-10-19/rounds-batch.yaml](../rounds-2026-10-19/rounds-batch.yaml)
+added 28 records (index now 619). Three screen kinds that had no records
+before now hold measurements: `course_screen`, `calibration_screen` and
+`command_loss_screen`. The generator was run again into this folder.
+
+| | Before (591 reports) | After (619 reports) |
+|---|---|---|
+| Measured cells | 269 | **291** |
+| Passed screens | 267 | **278** |
+| Failed screens | 1 | 12 |
+| Unverified | 1 | 1 |
+
+Changes, latest record per cell:
+
+- Failed → passed: Go2 on nav_obstacle in Isaac, seeds 1-3, with forward
+  arcs (round 53).
+- New, passed:
+  - car publisher loss, all six cells (three cars × Gazebo and Isaac);
+  - camera calibration in MuJoCo and PyBullet;
+  - the car course for the Ackermann and anti-Ackermann cars in Gazebo.
+- New, failed:
+  - the car course in the other ten cells. The slalom passes in eight of
+    them, but parking misses the 10° heading or a gate aborts;
+  - camera calibration in Isaac (RMS 1.66 px) and in Gazebo (cy 5 px off,
+    RMS 1.11 px).
+
+Not indexed, because no matrix screen exists for them: the small_house
+slam drives, the Go2 spin checks and the camera scores (all in the
+[rounds README](../rounds-2026-10-19/README.md)). The round 56 clean host
+passed every step, recorded under R9.1 rather than as matrix cells.

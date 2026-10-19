@@ -10980,3 +10980,479 @@ records:
   limitations:
   - One run per cell; no payload, sensors, SLAM/Nav2 or physical robot
   - Masses, gains, caster friction and floor collision are estimates
+- robot_id: unitree_go2
+  environment_id: nav_obstacle
+  simulator: isaac
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-10-19'
+  revision: 0961445 (round 51, 12:12-14:30)
+  report: docs/status/evidence/rounds-2026-10-19/go2-forward-arcs/isaac_unitree_go2_seed1_nav_obstacle.json
+  sha256: 1f4ec4f08cba718201b4f0d1f4d3f6bb308f7ba48bf9347a53332acfe8231e33
+  source_hashes: docs/status/evidence/rounds-2026-10-19/go2-forward-arcs/source-hashes-0961445.json
+  source_hashes_sha256: 4c9fe4e38287b07b41826b2b0cdf9cbe937a60da8deb1fb9faebaef228342a00
+  report_kind: mission_screen
+  scope: 'Go2 rl_sar policy in Isaac, Nav2 with in-place rotation (diff planning), nav_obstacle seeds 1-3: two goals
+    judged from simulator truth, then a cancel and stop.'
+  limitations:
+  - One run per seed; flat floor, no terrain
+  - Superseded by round 53 (forward arcs) for these cells
+- robot_id: unitree_go2
+  environment_id: nav_obstacle
+  simulator: isaac
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-10-19'
+  revision: 0961445 (round 51, 12:12-14:30)
+  report: docs/status/evidence/rounds-2026-10-19/go2-forward-arcs/isaac_unitree_go2_seed2_nav_obstacle.json
+  sha256: 57f139a494ffee7dfe0970f843f351d8a3c150709cdbab45e3d1b426d6dddf3f
+  source_hashes: docs/status/evidence/rounds-2026-10-19/go2-forward-arcs/source-hashes-0961445.json
+  source_hashes_sha256: 4c9fe4e38287b07b41826b2b0cdf9cbe937a60da8deb1fb9faebaef228342a00
+  report_kind: mission_screen
+  scope: 'Go2 rl_sar policy in Isaac, Nav2 with in-place rotation (diff planning), nav_obstacle seeds 1-3: two goals
+    judged from simulator truth, then a cancel and stop.'
+  limitations:
+  - One run per seed; flat floor, no terrain
+  - Superseded by round 53 (forward arcs) for these cells
+- robot_id: unitree_go2
+  environment_id: nav_obstacle
+  simulator: isaac
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-10-19'
+  revision: 0961445 (round 51, 12:12-14:30)
+  report: docs/status/evidence/rounds-2026-10-19/go2-forward-arcs/isaac_unitree_go2_seed3_nav_obstacle.json
+  sha256: 6f1e0bf6f8a31c5633fb0360b382804bc1194d7050e69b387c61823087d7184d
+  source_hashes: docs/status/evidence/rounds-2026-10-19/go2-forward-arcs/source-hashes-0961445.json
+  source_hashes_sha256: 4c9fe4e38287b07b41826b2b0cdf9cbe937a60da8deb1fb9faebaef228342a00
+  report_kind: mission_screen
+  scope: 'Go2 rl_sar policy in Isaac, Nav2 with in-place rotation (diff planning), nav_obstacle seeds 1-3: two goals
+    judged from simulator truth, then a cancel and stop.'
+  limitations:
+  - One run per seed; flat floor, no terrain
+  - Superseded by round 53 (forward arcs) for these cells
+- robot_id: unitree_go2
+  environment_id: nav_obstacle
+  simulator: isaac
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-10-19'
+  revision: 361c2c3 (round 53, 14:31-14:41)
+  report: docs/status/evidence/rounds-2026-10-19/go2-isaac-arcs/isaac_unitree_go2_seed1_nav_obstacle.json
+  sha256: 2a022c77c1b497b8fa3d6b63c96a9022ca475da66baa7eef7240bb9c6d5b885f
+  source_hashes: docs/status/evidence/rounds-2026-10-19/go2-isaac-arcs/source-hashes-361c2c3.json
+  source_hashes_sha256: 116bd6077fffb2a438f3134a5b32e3079e332eadeef4a8c3353ad8da3a71ca0f
+  report_kind: mission_screen
+  scope: 'Go2 rl_sar policy in Isaac with forward-arc planning (no turn in place), nav_obstacle seeds 1-3: two goals
+    judged from simulator truth, then a cancel and stop.'
+  limitations:
+  - One run per seed; flat floor, no terrain
+  - The policy does not hold a turn on the spot in Isaac (round 52)
+- robot_id: unitree_go2
+  environment_id: nav_obstacle
+  simulator: isaac
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-10-19'
+  revision: 361c2c3 (round 53, 14:31-14:41)
+  report: docs/status/evidence/rounds-2026-10-19/go2-isaac-arcs/isaac_unitree_go2_seed2_nav_obstacle.json
+  sha256: 628dccc484cff4027845b9218d4e48d5aee131d4e8de8383b8eb236c911cd7a5
+  source_hashes: docs/status/evidence/rounds-2026-10-19/go2-isaac-arcs/source-hashes-361c2c3.json
+  source_hashes_sha256: 116bd6077fffb2a438f3134a5b32e3079e332eadeef4a8c3353ad8da3a71ca0f
+  report_kind: mission_screen
+  scope: 'Go2 rl_sar policy in Isaac with forward-arc planning (no turn in place), nav_obstacle seeds 1-3: two goals
+    judged from simulator truth, then a cancel and stop.'
+  limitations:
+  - One run per seed; flat floor, no terrain
+  - The policy does not hold a turn on the spot in Isaac (round 52)
+- robot_id: unitree_go2
+  environment_id: nav_obstacle
+  simulator: isaac
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-10-19'
+  revision: 361c2c3 (round 53, 14:31-14:41)
+  report: docs/status/evidence/rounds-2026-10-19/go2-isaac-arcs/isaac_unitree_go2_seed3_nav_obstacle.json
+  sha256: 6345327984875032724cd27c352d2a9722dec5c67e56b1c2a1f671c118f46a50
+  source_hashes: docs/status/evidence/rounds-2026-10-19/go2-isaac-arcs/source-hashes-361c2c3.json
+  source_hashes_sha256: 116bd6077fffb2a438f3134a5b32e3079e332eadeef4a8c3353ad8da3a71ca0f
+  report_kind: mission_screen
+  scope: 'Go2 rl_sar policy in Isaac with forward-arc planning (no turn in place), nav_obstacle seeds 1-3: two goals
+    judged from simulator truth, then a cancel and stop.'
+  limitations:
+  - One run per seed; flat floor, no terrain
+  - The policy does not hold a turn on the spot in Isaac (round 52)
+- robot_id: bumperbot
+  environment_id: calibration_room
+  simulator: isaac
+  task_type: camera_calibration
+  steering_mode: ''
+  date: '2026-10-19'
+  revision: 0961445 (round 51, 12:12-14:30)
+  report: docs/status/evidence/rounds-2026-10-19/calibration/isaac_bumperbot_calibration_room.json
+  sha256: ae22f1faef53354c32c6fcc43143cf938c34cf26be6c673d6250d7b229fba3b9
+  source_hashes: docs/status/evidence/rounds-2026-10-19/calibration/source-hashes-0961445.json
+  source_hashes_sha256: eb78406259e41f83944e1cb822a07ec48c4734b83c4ac51726fe948c4c361942
+  report_kind: calibration_screen
+  scope: Bumperbot turns twice on the spot among 14 chessboards; a pinhole fit of the RGB stream is compared with
+    the published camera info (fx within 3 %, principal point within 1.5 px, RMS under 1 px).
+  limitations:
+  - One run per backend; a simulated pinhole camera, no lens distortion model
+  - Says nothing about depth alignment or physical cameras
+- robot_id: bumperbot
+  environment_id: calibration_room
+  simulator: pybullet
+  task_type: camera_calibration
+  steering_mode: ''
+  date: '2026-10-19'
+  revision: 0961445 (round 51, 12:12-14:30)
+  report: docs/status/evidence/rounds-2026-10-19/calibration/pybullet_bumperbot_calibration_room.json
+  sha256: 204a46a66c82ebe020161a56c1f64246c65456623639df791a07a8c53663f944
+  source_hashes: docs/status/evidence/rounds-2026-10-19/calibration/source-hashes-0961445.json
+  source_hashes_sha256: eb78406259e41f83944e1cb822a07ec48c4734b83c4ac51726fe948c4c361942
+  report_kind: calibration_screen
+  scope: Bumperbot turns twice on the spot among 14 chessboards; a pinhole fit of the RGB stream is compared with
+    the published camera info (fx within 3 %, principal point within 1.5 px, RMS under 1 px).
+  limitations:
+  - One run per backend; a simulated pinhole camera, no lens distortion model
+  - Says nothing about depth alignment or physical cameras
+- robot_id: bumperbot
+  environment_id: calibration_room
+  simulator: gazebo
+  task_type: camera_calibration
+  steering_mode: ''
+  date: '2026-10-19'
+  revision: 9c9660a (round 54, 14:42-14:49; board normals from b563a31)
+  report: docs/status/evidence/rounds-2026-10-19/calibration/gazebo_bumperbot_calibration_room.json
+  sha256: e0272f98acbf09459168fd4d770938f249867c2cbacdcc8a3b44551d46178c82
+  source_hashes: docs/status/evidence/rounds-2026-10-19/calibration/source-hashes-9c9660a.json
+  source_hashes_sha256: 8e9083fc6611ca86a9f51e417a8e2efa08b9f7e1243fb51999632c77168ad724
+  report_kind: calibration_screen
+  scope: Bumperbot turns twice on the spot among 14 chessboards; a pinhole fit of the RGB stream is compared with
+    the published camera info (fx within 3 %, principal point within 1.5 px, RMS under 1 px).
+  limitations:
+  - One run per backend; a simulated pinhole camera, no lens distortion model
+  - Says nothing about depth alignment or physical cameras
+- robot_id: bumperbot
+  environment_id: calibration_room
+  simulator: mujoco
+  task_type: camera_calibration
+  steering_mode: ''
+  date: '2026-10-19'
+  revision: 9c9660a (round 54, 14:42-14:49; board normals from b563a31)
+  report: docs/status/evidence/rounds-2026-10-19/calibration/mujoco_bumperbot_calibration_room.json
+  sha256: 17df6bd9cb447956ec8b8d6a2733470125cee82c9133a233aca847fb0990c9ab
+  source_hashes: docs/status/evidence/rounds-2026-10-19/calibration/source-hashes-9c9660a.json
+  source_hashes_sha256: 8e9083fc6611ca86a9f51e417a8e2efa08b9f7e1243fb51999632c77168ad724
+  report_kind: calibration_screen
+  scope: Bumperbot turns twice on the spot among 14 chessboards; a pinhole fit of the RGB stream is compared with
+    the published camera info (fx within 3 %, principal point within 1.5 px, RMS under 1 px).
+  limitations:
+  - One run per backend; a simulated pinhole camera, no lens distortion model
+  - Says nothing about depth alignment or physical cameras
+- robot_id: ackermann_car
+  environment_id: car_course
+  simulator: gazebo
+  task_type: car_course
+  steering_mode: ''
+  date: '2026-10-19'
+  revision: 0961445 (round 51, 12:12-14:30)
+  report: docs/status/evidence/rounds-2026-10-19/car-course/gazebo_ackermann_car_car_course.json
+  sha256: 1803d9cf4c695b4a2ed09e06a80b46c3930f68ea9148d948777b3b345e5e55f9
+  source_hashes: docs/status/evidence/rounds-2026-10-19/car-course/source-hashes-0961445.json
+  source_hashes_sha256: eae923fe092cc9dd4b15253688b3f22cc85be55b08dc385b42b2997dbfff2cec
+  report_kind: course_screen
+  scope: Nav2 drives the car through a four-gate cone slalom and nose-in into a 0.8 m parking bay; gates and bay
+    within 0.15 m of truth, the bay also within 10 degrees, the footprint clear of every cone and box.
+  limitations:
+  - One run per cell; the car goal checker ignores heading
+  - Flat floor, scripted course, no traffic
+- robot_id: anti_ackermann_car
+  environment_id: car_course
+  simulator: gazebo
+  task_type: car_course
+  steering_mode: ''
+  date: '2026-10-19'
+  revision: 0961445 (round 51, 12:12-14:30)
+  report: docs/status/evidence/rounds-2026-10-19/car-course/gazebo_anti_ackermann_car_car_course.json
+  sha256: 3c6c342aea367043122469a8e4845d77778f3376e1b459242e9e612baf9baffe
+  source_hashes: docs/status/evidence/rounds-2026-10-19/car-course/source-hashes-0961445.json
+  source_hashes_sha256: eae923fe092cc9dd4b15253688b3f22cc85be55b08dc385b42b2997dbfff2cec
+  report_kind: course_screen
+  scope: Nav2 drives the car through a four-gate cone slalom and nose-in into a 0.8 m parking bay; gates and bay
+    within 0.15 m of truth, the bay also within 10 degrees, the footprint clear of every cone and box.
+  limitations:
+  - One run per cell; the car goal checker ignores heading
+  - Flat floor, scripted course, no traffic
+- robot_id: rear_steer_car
+  environment_id: car_course
+  simulator: gazebo
+  task_type: car_course
+  steering_mode: ''
+  date: '2026-10-19'
+  revision: 0961445 (round 51, 12:12-14:30)
+  report: docs/status/evidence/rounds-2026-10-19/car-course/gazebo_rear_steer_car_car_course.json
+  sha256: 8ca31236189ca2b3f1277c9b8155e1b22f3d30b3d3b44bdc43f94e9942178dfa
+  source_hashes: docs/status/evidence/rounds-2026-10-19/car-course/source-hashes-0961445.json
+  source_hashes_sha256: eae923fe092cc9dd4b15253688b3f22cc85be55b08dc385b42b2997dbfff2cec
+  report_kind: course_screen
+  scope: Nav2 drives the car through a four-gate cone slalom and nose-in into a 0.8 m parking bay; gates and bay
+    within 0.15 m of truth, the bay also within 10 degrees, the footprint clear of every cone and box.
+  limitations:
+  - One run per cell; the car goal checker ignores heading
+  - Flat floor, scripted course, no traffic
+- robot_id: ackermann_car
+  environment_id: car_course
+  simulator: isaac
+  task_type: car_course
+  steering_mode: ''
+  date: '2026-10-19'
+  revision: 0961445 (round 51, 12:12-14:30)
+  report: docs/status/evidence/rounds-2026-10-19/car-course/isaac_ackermann_car_car_course.json
+  sha256: bbd891743cd8eec130c69c90ef76e5d2467d52c8d47ad44c05c57137984fbad2
+  source_hashes: docs/status/evidence/rounds-2026-10-19/car-course/source-hashes-0961445.json
+  source_hashes_sha256: eae923fe092cc9dd4b15253688b3f22cc85be55b08dc385b42b2997dbfff2cec
+  report_kind: course_screen
+  scope: Nav2 drives the car through a four-gate cone slalom and nose-in into a 0.8 m parking bay; gates and bay
+    within 0.15 m of truth, the bay also within 10 degrees, the footprint clear of every cone and box.
+  limitations:
+  - One run per cell; the car goal checker ignores heading
+  - Flat floor, scripted course, no traffic
+- robot_id: anti_ackermann_car
+  environment_id: car_course
+  simulator: isaac
+  task_type: car_course
+  steering_mode: ''
+  date: '2026-10-19'
+  revision: 0961445 (round 51, 12:12-14:30)
+  report: docs/status/evidence/rounds-2026-10-19/car-course/isaac_anti_ackermann_car_car_course.json
+  sha256: a5defecf1d2f0cf3654e22e38346e4feabe35bcb8b1e6010e1343a790d36e043
+  source_hashes: docs/status/evidence/rounds-2026-10-19/car-course/source-hashes-0961445.json
+  source_hashes_sha256: eae923fe092cc9dd4b15253688b3f22cc85be55b08dc385b42b2997dbfff2cec
+  report_kind: course_screen
+  scope: Nav2 drives the car through a four-gate cone slalom and nose-in into a 0.8 m parking bay; gates and bay
+    within 0.15 m of truth, the bay also within 10 degrees, the footprint clear of every cone and box.
+  limitations:
+  - One run per cell; the car goal checker ignores heading
+  - Flat floor, scripted course, no traffic
+- robot_id: rear_steer_car
+  environment_id: car_course
+  simulator: isaac
+  task_type: car_course
+  steering_mode: ''
+  date: '2026-10-19'
+  revision: 0961445 (round 51, 12:12-14:30)
+  report: docs/status/evidence/rounds-2026-10-19/car-course/isaac_rear_steer_car_car_course.json
+  sha256: efd12f9aaf56f9ccc9b5abc268aa3f8300d6d8267343c8e041e6699c2c05ec84
+  source_hashes: docs/status/evidence/rounds-2026-10-19/car-course/source-hashes-0961445.json
+  source_hashes_sha256: eae923fe092cc9dd4b15253688b3f22cc85be55b08dc385b42b2997dbfff2cec
+  report_kind: course_screen
+  scope: Nav2 drives the car through a four-gate cone slalom and nose-in into a 0.8 m parking bay; gates and bay
+    within 0.15 m of truth, the bay also within 10 degrees, the footprint clear of every cone and box.
+  limitations:
+  - One run per cell; the car goal checker ignores heading
+  - Flat floor, scripted course, no traffic
+- robot_id: rear_steer_car
+  environment_id: car_course
+  simulator: mujoco
+  task_type: car_course
+  steering_mode: ''
+  date: '2026-10-19'
+  revision: 0961445 (round 51, 12:12-14:30)
+  report: docs/status/evidence/rounds-2026-10-19/car-course/mujoco_rear_steer_car_car_course.json
+  sha256: 2deb4f1aff0a7923b9cf01d6a0b4af57182dc0f07791c0f5af9263cbbcbb2cd8
+  source_hashes: docs/status/evidence/rounds-2026-10-19/car-course/source-hashes-0961445.json
+  source_hashes_sha256: eae923fe092cc9dd4b15253688b3f22cc85be55b08dc385b42b2997dbfff2cec
+  report_kind: course_screen
+  scope: Nav2 drives the car through a four-gate cone slalom and nose-in into a 0.8 m parking bay; gates and bay
+    within 0.15 m of truth, the bay also within 10 degrees, the footprint clear of every cone and box.
+  limitations:
+  - One run per cell; the car goal checker ignores heading
+  - Flat floor, scripted course, no traffic
+- robot_id: ackermann_car
+  environment_id: car_course
+  simulator: pybullet
+  task_type: car_course
+  steering_mode: ''
+  date: '2026-10-19'
+  revision: 0961445 (round 51, 12:12-14:30)
+  report: docs/status/evidence/rounds-2026-10-19/car-course/pybullet_ackermann_car_car_course.json
+  sha256: 81d82d88066bb53d000c5c114fc2de061d41442536d38384028b6a1295319dfd
+  source_hashes: docs/status/evidence/rounds-2026-10-19/car-course/source-hashes-0961445.json
+  source_hashes_sha256: eae923fe092cc9dd4b15253688b3f22cc85be55b08dc385b42b2997dbfff2cec
+  report_kind: course_screen
+  scope: Nav2 drives the car through a four-gate cone slalom and nose-in into a 0.8 m parking bay; gates and bay
+    within 0.15 m of truth, the bay also within 10 degrees, the footprint clear of every cone and box.
+  limitations:
+  - One run per cell; the car goal checker ignores heading
+  - Flat floor, scripted course, no traffic
+- robot_id: anti_ackermann_car
+  environment_id: car_course
+  simulator: pybullet
+  task_type: car_course
+  steering_mode: ''
+  date: '2026-10-19'
+  revision: 0961445 (round 51, 12:12-14:30)
+  report: docs/status/evidence/rounds-2026-10-19/car-course/pybullet_anti_ackermann_car_car_course.json
+  sha256: d3eb6b97fc4db4fd5cc132b54cabdb1a7248fa04d850e2a4aadd30012aed0258
+  source_hashes: docs/status/evidence/rounds-2026-10-19/car-course/source-hashes-0961445.json
+  source_hashes_sha256: eae923fe092cc9dd4b15253688b3f22cc85be55b08dc385b42b2997dbfff2cec
+  report_kind: course_screen
+  scope: Nav2 drives the car through a four-gate cone slalom and nose-in into a 0.8 m parking bay; gates and bay
+    within 0.15 m of truth, the bay also within 10 degrees, the footprint clear of every cone and box.
+  limitations:
+  - One run per cell; the car goal checker ignores heading
+  - Flat floor, scripted course, no traffic
+- robot_id: rear_steer_car
+  environment_id: car_course
+  simulator: pybullet
+  task_type: car_course
+  steering_mode: ''
+  date: '2026-10-19'
+  revision: 0961445 (round 51, 12:12-14:30)
+  report: docs/status/evidence/rounds-2026-10-19/car-course/pybullet_rear_steer_car_car_course.json
+  sha256: a161cd76d7e3b55bfb008a74fb1af1d486a5b4969eb48a2880e4db1eb0581cdf
+  source_hashes: docs/status/evidence/rounds-2026-10-19/car-course/source-hashes-0961445.json
+  source_hashes_sha256: eae923fe092cc9dd4b15253688b3f22cc85be55b08dc385b42b2997dbfff2cec
+  report_kind: course_screen
+  scope: Nav2 drives the car through a four-gate cone slalom and nose-in into a 0.8 m parking bay; gates and bay
+    within 0.15 m of truth, the bay also within 10 degrees, the footprint clear of every cone and box.
+  limitations:
+  - One run per cell; the car goal checker ignores heading
+  - Flat floor, scripted course, no traffic
+- robot_id: ackermann_car
+  environment_id: car_course
+  simulator: mujoco
+  task_type: car_course
+  steering_mode: ''
+  date: '2026-10-19'
+  revision: e3821b8 (round 55, 14:50-14:58; JSON fix 3f826e1)
+  report: docs/status/evidence/rounds-2026-10-19/car-course/mujoco_ackermann_car_car_course.json
+  sha256: d098e51140f66b951e9444166a18591b4f7f238ce6fa78e3c735f63e9d2aac68
+  source_hashes: docs/status/evidence/rounds-2026-10-19/car-course/source-hashes-e3821b8.json
+  source_hashes_sha256: 8825df91885c00936472e1dbe956cf69af569bc8289da4e578fd350eb510ae35
+  report_kind: course_screen
+  scope: Nav2 drives the car through a four-gate cone slalom and nose-in into a 0.8 m parking bay; gates and bay
+    within 0.15 m of truth, the bay also within 10 degrees, the footprint clear of every cone and box.
+  limitations:
+  - One run per cell; the car goal checker ignores heading
+  - Flat floor, scripted course, no traffic
+- robot_id: anti_ackermann_car
+  environment_id: car_course
+  simulator: mujoco
+  task_type: car_course
+  steering_mode: ''
+  date: '2026-10-19'
+  revision: e3821b8 (round 55, 14:50-14:58; JSON fix 3f826e1)
+  report: docs/status/evidence/rounds-2026-10-19/car-course/mujoco_anti_ackermann_car_car_course.json
+  sha256: 6a28d8696bd9e5aea1bf55be986c4fa9abf8854c3cfdc7fa209af7ba0c64aa7f
+  source_hashes: docs/status/evidence/rounds-2026-10-19/car-course/source-hashes-e3821b8.json
+  source_hashes_sha256: 8825df91885c00936472e1dbe956cf69af569bc8289da4e578fd350eb510ae35
+  report_kind: course_screen
+  scope: Nav2 drives the car through a four-gate cone slalom and nose-in into a 0.8 m parking bay; gates and bay
+    within 0.15 m of truth, the bay also within 10 degrees, the footprint clear of every cone and box.
+  limitations:
+  - One run per cell; the car goal checker ignores heading
+  - Flat floor, scripted course, no traffic
+- robot_id: ackermann_car
+  environment_id: nav_empty
+  simulator: gazebo
+  task_type: command_loss
+  steering_mode: ''
+  date: '2026-10-19'
+  revision: 0961445 (round 51, 12:12-14:30)
+  report: docs/status/evidence/rounds-2026-10-19/command-loss/gazebo_ackermann_car_nav_empty.json
+  sha256: ee7dd17a03b14add4c62f94df275117d41e182299af4e513bf3da1984391125d
+  source_hashes: docs/status/evidence/rounds-2026-10-19/command-loss/source-hashes-0961445.json
+  source_hashes_sha256: 78077513ffd69e79c8b35767934e88f232f7835d57e9e2a1b684c58833f3c4df
+  report_kind: command_loss_screen
+  scope: Five drive phases on nav_empty, then the command publisher stops; the base must come to rest within 0.35
+    m of coast with no tail velocity, judged from simulator truth.
+  limitations:
+  - One run per cell; Gazebo in slam mode, Isaac in loc mode
+  - A publisher stop, not a network partition or controller crash
+- robot_id: anti_ackermann_car
+  environment_id: nav_empty
+  simulator: gazebo
+  task_type: command_loss
+  steering_mode: ''
+  date: '2026-10-19'
+  revision: 0961445 (round 51, 12:12-14:30)
+  report: docs/status/evidence/rounds-2026-10-19/command-loss/gazebo_anti_ackermann_car_nav_empty.json
+  sha256: cee573a203bd8108c758dacd014cfc360dfa846658abd7cfe5bba57b02d9373a
+  source_hashes: docs/status/evidence/rounds-2026-10-19/command-loss/source-hashes-0961445.json
+  source_hashes_sha256: 78077513ffd69e79c8b35767934e88f232f7835d57e9e2a1b684c58833f3c4df
+  report_kind: command_loss_screen
+  scope: Five drive phases on nav_empty, then the command publisher stops; the base must come to rest within 0.35
+    m of coast with no tail velocity, judged from simulator truth.
+  limitations:
+  - One run per cell; Gazebo in slam mode, Isaac in loc mode
+  - A publisher stop, not a network partition or controller crash
+- robot_id: rear_steer_car
+  environment_id: nav_empty
+  simulator: gazebo
+  task_type: command_loss
+  steering_mode: ''
+  date: '2026-10-19'
+  revision: 0961445 (round 51, 12:12-14:30)
+  report: docs/status/evidence/rounds-2026-10-19/command-loss/gazebo_rear_steer_car_nav_empty.json
+  sha256: 9405e8c03c99a399a196cb6b081e4e327c7e31a4b0a2448b9f98ff7e2b55bf5f
+  source_hashes: docs/status/evidence/rounds-2026-10-19/command-loss/source-hashes-0961445.json
+  source_hashes_sha256: 78077513ffd69e79c8b35767934e88f232f7835d57e9e2a1b684c58833f3c4df
+  report_kind: command_loss_screen
+  scope: Five drive phases on nav_empty, then the command publisher stops; the base must come to rest within 0.35
+    m of coast with no tail velocity, judged from simulator truth.
+  limitations:
+  - One run per cell; Gazebo in slam mode, Isaac in loc mode
+  - A publisher stop, not a network partition or controller crash
+- robot_id: ackermann_car
+  environment_id: nav_empty
+  simulator: isaac
+  task_type: command_loss
+  steering_mode: ''
+  date: '2026-10-19'
+  revision: 0961445 (round 51, 12:12-14:30)
+  report: docs/status/evidence/rounds-2026-10-19/command-loss/isaac_ackermann_car_nav_empty.json
+  sha256: b2c6b6c786d194f4137ad913ea2a5e73ce90645f9840f2c9469271d58c97bcbd
+  source_hashes: docs/status/evidence/rounds-2026-10-19/command-loss/source-hashes-0961445.json
+  source_hashes_sha256: 78077513ffd69e79c8b35767934e88f232f7835d57e9e2a1b684c58833f3c4df
+  report_kind: command_loss_screen
+  scope: Five drive phases on nav_empty, then the command publisher stops; the base must come to rest within 0.35
+    m of coast with no tail velocity, judged from simulator truth.
+  limitations:
+  - One run per cell; Gazebo in slam mode, Isaac in loc mode
+  - A publisher stop, not a network partition or controller crash
+- robot_id: anti_ackermann_car
+  environment_id: nav_empty
+  simulator: isaac
+  task_type: command_loss
+  steering_mode: ''
+  date: '2026-10-19'
+  revision: 0961445 (round 51, 12:12-14:30)
+  report: docs/status/evidence/rounds-2026-10-19/command-loss/isaac_anti_ackermann_car_nav_empty.json
+  sha256: 81810423f8db1115bdccaae335b8e778cfeb76118b17a6601d1951872498724b
+  source_hashes: docs/status/evidence/rounds-2026-10-19/command-loss/source-hashes-0961445.json
+  source_hashes_sha256: 78077513ffd69e79c8b35767934e88f232f7835d57e9e2a1b684c58833f3c4df
+  report_kind: command_loss_screen
+  scope: Five drive phases on nav_empty, then the command publisher stops; the base must come to rest within 0.35
+    m of coast with no tail velocity, judged from simulator truth.
+  limitations:
+  - One run per cell; Gazebo in slam mode, Isaac in loc mode
+  - A publisher stop, not a network partition or controller crash
+- robot_id: rear_steer_car
+  environment_id: nav_empty
+  simulator: isaac
+  task_type: command_loss
+  steering_mode: ''
+  date: '2026-10-19'
+  revision: 0961445 (round 51, 12:12-14:30)
+  report: docs/status/evidence/rounds-2026-10-19/command-loss/isaac_rear_steer_car_nav_empty.json
+  sha256: a9c12e08294a472e8f5e06b7849c35a9f047f00f80aabc57038442bb95a74960
+  source_hashes: docs/status/evidence/rounds-2026-10-19/command-loss/source-hashes-0961445.json
+  source_hashes_sha256: 78077513ffd69e79c8b35767934e88f232f7835d57e9e2a1b684c58833f3c4df
+  report_kind: command_loss_screen
+  scope: Five drive phases on nav_empty, then the command publisher stops; the base must come to rest within 0.35
+    m of coast with no tail velocity, judged from simulator truth.
+  limitations:
+  - One run per cell; Gazebo in slam mode, Isaac in loc mode
+  - A publisher stop, not a network partition or controller crash

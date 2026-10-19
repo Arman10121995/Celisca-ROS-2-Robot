@@ -1,3 +1,15 @@
+legged_policy_training_20261019:
+  task_id: R12_legged_policy_training
+  owner: claude
+  state: partial
+  requested: '2026-10-19'
+  priority: Latest user request; a GUI tab that trains policies for legged robots to do tasks
+  scope_paths: ['src/robot_lab_adapter/', 'src/robot_lab_gui/', 'scripts/test_tiers.sh', 'docs/', 'ROADMAP.md']
+  acceptance: A policy trained here performs its task in measured runs on the lab backends, judged by the existing drive and mission screens; exported policies stay bound to their robot
+  safety: Simulation only; trained policies run through legged-policy-controller with its Stop, command-loss and neutral paths
+  implementation_state: "2026-10-19 (claude): implemented and experimental. legged_training.py trains Go2, A1 and B2 in batched MuJoCo (mujoco.rollout) built from the bridge's own URDF import and PD actuators, in the contract of each robot's rl_sar policy (no history, no linear velocity); tasks walk, turn_in_place, stand, push_recovery with legged_gym-style terms. ppo.py: PPO with GAE, KL-adaptive learning rate and an ONNX export that folds the normalisation in. legged-train trains/exports/evaluates. GUI Training page: start, live plot, Stop with checkpoint and export, resume, evaluate, Use in Launch (legged_policy:=<directory>, trained robot only). 10 unit tests and 3 GUI tests pass. Smoke run (Go2 stand, 64 envs, 4 iterations) trains, exports and evaluates end to end; 512 envs run at 1.8-2.3 s per iteration on the 12-core Orin."
+  evidence: ["docs/tutorials/legged-policy-training.md"]
+  open: "A trained policy with measured walks; terrain curriculum and domain randomisation; GPU training (torch's CUDA build does not run on this Orin); Go2W and humanoids; transfer to Gazebo and Isaac."
 molar_hri_integration_20261016:
   task_id: R11_molar_hri
   owner: claude

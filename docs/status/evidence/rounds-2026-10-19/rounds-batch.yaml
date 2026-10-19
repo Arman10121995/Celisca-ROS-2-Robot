@@ -1,0 +1,131 @@
+# Rounds 51-55 (2026-10-19), indexed by scripts/r9_3_index_missions.py.
+# Groups are in run order, so the latest round controls each cell.  The
+# small_house slam drives, the Go2 spin checks and the camera scores have
+# no matrix screen and stay in the README only.
+date: '2026-10-19'
+scope: "Exact hashed named simulation screens through October 19; unlisted cells remain untested."
+source_files:
+  - src/robot_lab_bringup/launch/simulated_robot.launch.py
+  - src/robot_lab_robots/config/robots.yaml
+groups:
+  - reports:
+      - docs/status/evidence/rounds-2026-10-19/go2-forward-arcs/isaac_unitree_go2_seed*_nav_obstacle.json
+    date: '2026-10-19'
+    revision: "0961445 (round 51, 12:12-14:30)"
+    hash_revision: 0961445
+    source_files:
+      - scripts/sim_nav_mission.py
+      - src/robot_lab_navigation/config/robots/unitree_go2.yaml
+      - src/robot_lab_adapter/robot_lab_adapter/legged_policy.py
+      - src/robot_lab_adapter/robot_lab_adapter/legged_policy_controller.py
+      - src/robot_lab_isaac/python/robot_lab_isaac/isaac_spawner.py
+      - src/robot_lab_isaac/python/robot_lab_isaac/isaac_runtime.py
+    scope: >-
+      Go2 rl_sar policy in Isaac, Nav2 with in-place rotation (diff
+      planning), nav_obstacle seeds 1-3: two goals judged from simulator
+      truth, then a cancel and stop.
+    limitations:
+      - One run per seed; flat floor, no terrain
+      - Superseded by round 53 (forward arcs) for these cells
+  - reports:
+      - docs/status/evidence/rounds-2026-10-19/go2-isaac-arcs/isaac_unitree_go2_seed*_nav_obstacle.json
+    date: '2026-10-19'
+    revision: "361c2c3 (round 53, 14:31-14:41)"
+    hash_revision: 361c2c3
+    source_files:
+      - scripts/sim_nav_mission.py
+      - src/robot_lab_navigation/config/robots/unitree_go2.yaml
+      - src/robot_lab_adapter/robot_lab_adapter/legged_policy.py
+      - src/robot_lab_adapter/robot_lab_adapter/legged_policy_controller.py
+      - src/robot_lab_isaac/python/robot_lab_isaac/isaac_spawner.py
+      - src/robot_lab_isaac/python/robot_lab_isaac/isaac_runtime.py
+    scope: >-
+      Go2 rl_sar policy in Isaac with forward-arc planning (no turn in
+      place), nav_obstacle seeds 1-3: two goals judged from simulator truth,
+      then a cancel and stop.
+    limitations:
+      - One run per seed; flat floor, no terrain
+      - The policy does not hold a turn on the spot in Isaac (round 52)
+  - reports:
+      - docs/status/evidence/rounds-2026-10-19/calibration/pybullet_bumperbot_calibration_room.json
+      - docs/status/evidence/rounds-2026-10-19/calibration/isaac_bumperbot_calibration_room.json
+    report_kind: calibration_screen
+    identity: {task_type: camera_calibration}
+    date: '2026-10-19'
+    revision: "0961445 (round 51, 12:12-14:30)"
+    hash_revision: 0961445
+    source_files: &calibration_files
+      - scripts/r7_2_calibration_room_check.sh
+      - scripts/r7_2_calibration_room_check.py
+      - src/robot_lab_maps/tools/gen_calibration_room.py
+      - src/robot_lab_maps/maps/calibration_room/worlds/calibration_room.world
+      - src/robot_lab_maps/mjcf/calibration_room.xml
+      - src/robot_lab_models/models/robot_lab_calibration_board/meshes/board.dae
+    scope: &calibration_scope >-
+      Bumperbot turns twice on the spot among 14 chessboards; a pinhole fit
+      of the RGB stream is compared with the published camera info (fx
+      within 3 %, principal point within 1.5 px, RMS under 1 px).
+    limitations: &calibration_limits
+      - One run per backend; a simulated pinhole camera, no lens distortion model
+      - Says nothing about depth alignment or physical cameras
+  - reports:
+      - docs/status/evidence/rounds-2026-10-19/calibration/gazebo_bumperbot_calibration_room.json
+      - docs/status/evidence/rounds-2026-10-19/calibration/mujoco_bumperbot_calibration_room.json
+    report_kind: calibration_screen
+    identity: {task_type: camera_calibration}
+    date: '2026-10-19'
+    revision: "9c9660a (round 54, 14:42-14:49; board normals from b563a31)"
+    hash_revision: 9c9660a
+    source_files: *calibration_files
+    scope: *calibration_scope
+    limitations: *calibration_limits
+  - reports:
+      - docs/status/evidence/rounds-2026-10-19/car-course/gazebo_*_car_course.json
+      - docs/status/evidence/rounds-2026-10-19/car-course/pybullet_*_car_course.json
+      - docs/status/evidence/rounds-2026-10-19/car-course/isaac_*_car_course.json
+      - docs/status/evidence/rounds-2026-10-19/car-course/mujoco_rear_steer_car_car_course.json
+    report_kind: course_screen
+    identity: {task_type: car_course}
+    date: '2026-10-19'
+    revision: "0961445 (round 51, 12:12-14:30)"
+    hash_revision: 0961445
+    source_files: &course_files
+      - scripts/sim_car_course.py
+      - scripts/sim_car_course.sh
+      - src/robot_lab_navigation/config/robots/ackermann_car.yaml
+      - src/robot_lab_navigation/config/robots/rear_steer_car.yaml
+      - src/robot_lab_navigation/config/robots/anti_ackermann_car.yaml
+    scope: &course_scope >-
+      Nav2 drives the car through a four-gate cone slalom and nose-in into a
+      0.8 m parking bay; gates and bay within 0.15 m of truth, the bay also
+      within 10 degrees, the footprint clear of every cone and box.
+    limitations: &course_limits
+      - One run per cell; the car goal checker ignores heading
+      - Flat floor, scripted course, no traffic
+  - reports:
+      - docs/status/evidence/rounds-2026-10-19/car-course/mujoco_ackermann_car_car_course.json
+      - docs/status/evidence/rounds-2026-10-19/car-course/mujoco_anti_ackermann_car_car_course.json
+    report_kind: course_screen
+    identity: {task_type: car_course}
+    date: '2026-10-19'
+    revision: "e3821b8 (round 55, 14:50-14:58; JSON fix 3f826e1)"
+    hash_revision: e3821b8
+    source_files: *course_files
+    scope: *course_scope
+    limitations: *course_limits
+  - reports:
+      - docs/status/evidence/rounds-2026-10-19/command-loss/*_nav_empty.json
+    report_kind: command_loss_screen
+    identity: {task_type: command_loss}
+    date: '2026-10-19'
+    revision: "0961445 (round 51, 12:12-14:30)"
+    hash_revision: 0961445
+    source_files:
+      - scripts/sim_drive_check.py
+    scope: >-
+      Five drive phases on nav_empty, then the command publisher stops; the
+      base must come to rest within 0.35 m of coast with no tail velocity,
+      judged from simulator truth.
+    limitations:
+      - One run per cell; Gazebo in slam mode, Isaac in loc mode
+      - A publisher stop, not a network partition or controller crash

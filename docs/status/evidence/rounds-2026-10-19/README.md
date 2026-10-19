@@ -1,9 +1,11 @@
-# Rounds 51-54, 2026-10-19
+# Rounds 51-56, 2026-10-19
 
 The steps that were implemented on October 16 and left queued, run after the
 host restart, one simulation at a time. Large outputs stay on the SSD under
 `/workspace/molar/robot_lab_runtime/claude-v48` (round 51), `claude-v49g`,
-`claude-v52-spin`, `claude-v53-go2` and `claude-v54`.
+`claude-v52-spin`, `claude-v53-go2`, `claude-v54` and
+`clean_host/e3821b8` (round 56). The matrix screens are indexed from
+[rounds-batch.yaml](rounds-batch.yaml).
 
 ## Go2 in Isaac: forward arcs (P7)
 
@@ -66,7 +68,7 @@ info, which has fx 221.77 and is centred at (159.5, 119.5), or at
 faced away from the robot (−x). It now has a +x normal and +x winding.
 Gazebo and MuJoCo run again in round 54, below.
 
-**With the fixed board** (round 54, `e3821b8`): Gazebo and MuJoCo again.
+**With the fixed board** (round 54, `9c9660a`): Gazebo and MuJoCo again.
 
 | Backend | Views | fx | cx | cy | RMS (px) | Matrix screen |
 |---|---|---|---|---|---|---|
@@ -190,4 +192,19 @@ MinimalRendering mode 1, PyBullet textured and Isaac default.
 
 Round 56 runs the clean host again at HEAD.
 
-PENDING_CLEAN56
+**Round 56** at `e3821b8` ([clean-host-r56/](clean-host-r56/)): every
+step passes, in 1756 s.
+
+| Step | Result |
+|---|---|
+| Image build | passes in 492 s |
+| Fast test tier | 1064 passed, 26 skipped |
+| MuJoCo nav_obstacle mission | passes (A 0.094 m, B 0.114 m, stop 0.14 s) |
+| Gazebo mission | passes (A 0.103 m, B 0.120 m, stop 0.44 s) |
+| Isaac mission (host build mounted) | **passes** (A 0.081 m, B 0.062 m, stop 0.18 s; stack ready after 304 s) |
+| Golden comparison | 25 figures, no differences |
+
+A fresh container now builds the revision and runs the Bumperbot
+nav_obstacle mission in MuJoCo, Gazebo and Isaac. Isaac still uses the
+host's Isaac Sim build (mounted read-only); it is not installed in the
+image.

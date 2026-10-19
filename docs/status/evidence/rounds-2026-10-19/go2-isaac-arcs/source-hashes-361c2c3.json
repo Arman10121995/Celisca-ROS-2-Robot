@@ -1,0 +1,14 @@
+{
+ "revision": "361c2c3",
+ "derived": "sha256 of each file as git stores it at this revision, computed 2026-10-19 after the run; uncommitted working-tree changes at run time are not captured",
+ "files": {
+  "scripts/sim_nav_mission.py": "b859965f84c391066b2ad0ccad45755b97bd10439d14a3c849d9610943bea3ed",
+  "src/robot_lab_adapter/robot_lab_adapter/legged_policy.py": "2277ab59eb447900641797a71c71595d6859dd0640ac5f883c6cc41194a83cc7",
+  "src/robot_lab_adapter/robot_lab_adapter/legged_policy_controller.py": "142047dd5d1a8a24011ee9d3a67b6e2afd9df27f1dd766292dd1bef47d527418",
+  "src/robot_lab_bringup/launch/simulated_robot.launch.py": "7b89afc981f79b5a07789724251941862ef64390ac56064d4b1e5bc1be66100a",
+  "src/robot_lab_isaac/python/robot_lab_isaac/isaac_runtime.py": "2772557c5baeb175086baa1cd7f0e0d1306b5bddfc14db6dea1b8d4397fd6af3",
+  "src/robot_lab_isaac/python/robot_lab_isaac/isaac_spawner.py": "61b94797193f094db545e53b6ffff1877946f1038d71f43bbb9fb2fc9b2773ee",
+  "src/robot_lab_navigation/config/robots/unitree_go2.yaml": "4bb55004ebf614e7454975e69cf80440b471126e61be682e731a105378f1f4a2",
+  "src/robot_lab_robots/config/robots.yaml": "dac3b360c9175f3c480470b79dea2190bed007721c9c3e0ff58367c50b4cf1cb"
+ }
+}

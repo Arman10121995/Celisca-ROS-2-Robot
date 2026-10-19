@@ -218,7 +218,7 @@ Unlisted combinations are untested. No row establishes full mission support.
 | unitree_b2 | nav_empty | isaac | legged_policy_drive /  | passed_screen |
 | unitree_go2w | nav_empty | isaac | legged_policy_drive /  | passed_screen |
 | unitree_go2 | nav_obstacle | gazebo | navigation_mission /  | passed_screen |
-| unitree_go2 | nav_obstacle | isaac | navigation_mission /  | failed_screen |
+| unitree_go2 | nav_obstacle | isaac | navigation_mission /  | passed_screen |
 | unitree_a1 | nav_obstacle | mujoco | navigation_mission /  | passed_screen |
 | unitree_g1_29dof | nav_obstacle | mujoco | navigation_mission /  | passed_screen |
 | unitree_go2 | nav_obstacle | mujoco | navigation_mission /  | passed_screen |
@@ -275,6 +275,28 @@ Unlisted combinations are untested. No row establishes full mission support.
 | molar_hri | celisca_floor_2_detailed | pybullet | gui_articulation /  | passed_screen |
 | molar_hri | nav_empty | pybullet | gui_articulation /  | passed_screen |
 | probot_l | nav_empty | pybullet | gui_articulation /  | passed_screen |
+| bumperbot | calibration_room | isaac | camera_calibration /  | failed_screen |
+| bumperbot | calibration_room | pybullet | camera_calibration /  | passed_screen |
+| bumperbot | calibration_room | gazebo | camera_calibration /  | failed_screen |
+| bumperbot | calibration_room | mujoco | camera_calibration /  | passed_screen |
+| ackermann_car | car_course | gazebo | car_course /  | passed_screen |
+| anti_ackermann_car | car_course | gazebo | car_course /  | passed_screen |
+| rear_steer_car | car_course | gazebo | car_course /  | failed_screen |
+| ackermann_car | car_course | isaac | car_course /  | failed_screen |
+| anti_ackermann_car | car_course | isaac | car_course /  | failed_screen |
+| rear_steer_car | car_course | isaac | car_course /  | failed_screen |
+| rear_steer_car | car_course | mujoco | car_course /  | failed_screen |
+| ackermann_car | car_course | pybullet | car_course /  | failed_screen |
+| anti_ackermann_car | car_course | pybullet | car_course /  | failed_screen |
+| rear_steer_car | car_course | pybullet | car_course /  | failed_screen |
+| ackermann_car | car_course | mujoco | car_course /  | failed_screen |
+| anti_ackermann_car | car_course | mujoco | car_course /  | failed_screen |
+| ackermann_car | nav_empty | gazebo | command_loss /  | passed_screen |
+| anti_ackermann_car | nav_empty | gazebo | command_loss /  | passed_screen |
+| rear_steer_car | nav_empty | gazebo | command_loss /  | passed_screen |
+| ackermann_car | nav_empty | isaac | command_loss /  | passed_screen |
+| anti_ackermann_car | nav_empty | isaac | command_loss /  | passed_screen |
+| rear_steer_car | nav_empty | isaac | command_loss /  | passed_screen |
 
 Full release blockers:
 

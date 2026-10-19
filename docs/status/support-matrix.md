@@ -13,12 +13,19 @@ owns task states and the [roadmap](../../ROADMAP.md) defines acceptance.
 
 The [generated measured matrix](evidence/support-matrix-2026-10-19/support-matrix-current.md)
 and [JSON report](evidence/support-matrix-2026-10-19/support-matrix-current.json)
-validate **591 indexed reports / 269 distinct measured cells**: 267 passed
-screens and 1 failed screen (Go2 nav_obstacle in Isaac)
+validate **619 indexed reports / 291 distinct measured cells**: 278 passed
+screens and 12 failed screens
 ([what changed](evidence/support-matrix-2026-10-19/README.md)). October 19
-adds the October 16 open-item missions and 16 MOLAR normal-GUI articulation
-cells (`molar_hri` in four backends on `nav_empty` and both detailed CELISCA
-floors, `probot_l` on `nav_empty`). The
+adds:
+
+- the October 16 open-item missions;
+- 16 MOLAR normal-GUI articulation cells (`molar_hri` in four backends on
+  `nav_empty` and both detailed CELISCA floors, `probot_l` on `nav_empty`);
+- rounds 51-55: Go2 nav_obstacle in Isaac (now passes), car publisher
+  loss (6 pass), camera calibration (MuJoCo and PyBullet pass; Isaac and
+  Gazebo fail) and the car course (2 of 12 pass).
+
+The
 [October 15 matrix](evidence/support-matrix-2026-10-15/support-matrix-current.md)
 (251 cells), the
 [October 12 matrix](evidence/support-matrix-2026-10-12/support-matrix-current.md)

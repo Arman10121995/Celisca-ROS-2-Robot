@@ -1,5 +1,30 @@
 # Robot Lab done and remaining checklist
 
+October 19: R12 legged policy training ([guide](../tutorials/legged-policy-training.md)).
+
+- [x] GUI Training page (EXPERIMENTS → Policy training) and
+  `legged-train`: PPO in batched MuJoCo for Go2, A1 and B2 in their rl_sar
+  policy contracts; tasks walk, turn in place, stand and push recovery.
+- [x] Live progress, Stop with checkpoint and export, resume, evaluation
+  through the deployment code, and hand-off to Launch as
+  `legged_policy:=<directory>` for the trained robot only.
+- [ ] A trained policy with measured walks; terrain curriculum and domain
+  randomisation; GPU training; Go2W and humanoids; transfer to Gazebo and
+  Isaac.
+
+October 19: rounds 51-56 ([evidence](evidence/rounds-2026-10-19/README.md)).
+
+- [x] Go2 passes nav_obstacle seeds 1-3 in Isaac with forward arcs, so it
+  now passes in MuJoCo, Gazebo and Isaac.
+- [x] Car publisher loss: all six cells stop within the coast screen.
+- [x] Clean host at `e3821b8`: build, fast tier, MuJoCo, Gazebo and Isaac
+  missions and the golden comparison all pass.
+- [x] Matrix re-indexed: 619 reports, 291 cells, 278 passed, 12 failed.
+- [ ] Car course parking heading (2 of 12 cells pass the full course);
+  rear-steer gate 1 in MuJoCo and Gazebo.
+- [ ] Camera calibration in Isaac (RMS) and Gazebo (cy 5 px); MuJoCo
+  small_house Bumperbot sinking 8.5 mm.
+
 October 19: R11 MOLAR family on the detailed CELISCA floors.
 
 - [x] `molar_hri` and `probot_l` in the normal GUI with Display-mode
