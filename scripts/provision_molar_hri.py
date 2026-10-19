@@ -53,6 +53,12 @@ for variant in ('probot_l', 'molar_hri'):
         mimic = joint.find('mimic')
         if mimic is not None:
             joint.remove(mimic)
+        if joint.get('name') in ('conveyor_lift_joint', 'telescope_stage1_joint', 'telescope_stage2_joint'):
+            # Hard stops 5 mm below the controlled range (articulation lower
+            # 0): Fortress/DART's velocity servo cannot leave a position
+            # limit the joint rests on, and the lift, spawned on its stop
+            # under gravity, never rose (2026-10-19).
+            joint.find('limit').set('lower', '-0.005')
     control = ET.SubElement(robot, 'ros2_control', name='MolarSimulation', type='system')
     hw = ET.SubElement(control, 'hardware')
     ET.SubElement(hw, 'plugin').text = 'ign_ros2_control/IgnitionSystem'

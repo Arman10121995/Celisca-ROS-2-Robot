@@ -1204,7 +1204,7 @@
     <child link="conveyor_carriage" />
     <origin xyz="0.0005 0 0.42" rpy="0 0 0" />
     <axis xyz="0 0 1" />
-    <limit effort="2000" velocity="0.035" lower="0" upper="0.68" />
+    <limit effort="2000" velocity="0.035" lower="-0.005" upper="0.68" />
     <dynamics damping="30" friction="0" />
   </joint>
   <joint name="telescope_stage1_joint" type="prismatic">
@@ -1212,7 +1212,7 @@
     <child link="telescope_stage1" />
     <origin xyz="0 0 0" rpy="0 0 0" />
     <axis xyz="1 0 0" />
-    <limit effort="250" velocity="0.1" lower="0" upper="0.14" />
+    <limit effort="250" velocity="0.1" lower="-0.005" upper="0.14" />
     <dynamics damping="8" friction="0" />
   </joint>
   <joint name="telescope_stage2_joint" type="prismatic">
@@ -1220,7 +1220,7 @@
     <child link="telescope_stage2" />
     <origin xyz="0 0 0" rpy="0 0 0" />
     <axis xyz="1 0 0" />
-    <limit effort="250" velocity="0.1" lower="0" upper="0.14" />
+    <limit effort="250" velocity="0.1" lower="-0.005" upper="0.14" />
     <dynamics damping="8" friction="0" />
   </joint>
   <joint name="transfer_roller_joint" type="continuous">
