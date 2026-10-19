@@ -1528,6 +1528,39 @@ autofill, guides and real workload/result adapters. Acceptance: actual GUI
 commands exercise the claimed runtime with exact-source measured artifacts.
 Queued features remain visible as queued, without nonfunctional launch entries.
 
+## R11 — MOLAR / ProBOT-L family on the detailed CELISCA floors
+
+Requested 2026-10-16. Two simulation-only variants, `molar_hri` (complete HRI
+assembly) and `probot_l` (carrier). Each has differential drive, passive
+casters, a conveyor lift, a two-stage coupled telescope and a transfer
+roller. Both are selected in the normal GUI and run in Display mode on
+`nav_empty` and on the detailed CELISCA floors 1 and 2. Gazebo, MuJoCo,
+PyBullet and Isaac share one articulation contract
+(`robot_lab_utils.urdf_articulation`):
+
+- bounded references and coupling;
+- Stop, heartbeat watchdog and control generations;
+- base inhibit while the telescope is out or the articulation is active.
+
+The GUI's MOLAR page applies, jogs, holds and shows the measured
+channels. [Guide](docs/tutorials/molar-hri-simulation.md).
+
+October 19: the normal-GUI check (`scripts/qualify_molar_hri_gui.py`)
+covers drive, lift and telescope to their limits, roller, Stop and
+heartbeat loss. It passes for `molar_hri` in every backend on all three
+maps, and for `probot_l` on `nav_empty`
+([evidence](docs/status/evidence/molar-hri-2026-10-16/README.md)). Getting
+there took nine backend fixes, listed there with their causes.
+
+Acceptance: actual differential drive and bounded lift/telescope control
+with Stop/watchdog in the normal GUI, with exact per-backend measured
+evidence. Open:
+
+- sensors, SLAM/Nav2 and routes on the floors;
+- payload transfer;
+- multi-floor, door or building-lift operation;
+- repeats and identified dynamics.
+
 ## Common implementation and evidence contract
 
 Every task requires scoped code/config/assets, dependencies and provenance,

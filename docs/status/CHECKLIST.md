@@ -1,5 +1,18 @@
 # Robot Lab done and remaining checklist
 
+October 19: R11 MOLAR family on the detailed CELISCA floors.
+
+- [x] `molar_hri` and `probot_l` in the normal GUI with Display-mode
+  differential drive, conveyor lift, coupled two-stage telescope and
+  roller. Stop, heartbeat watchdog and base inhibit work in Gazebo, MuJoCo,
+  PyBullet and Isaac.
+- [x] Normal-GUI check with lift and telescope to their limits: passes for
+  `molar_hri` in every backend on `nav_empty` and both detailed floors, and
+  for `probot_l` on `nav_empty`
+  ([evidence](evidence/molar-hri-2026-10-16/README.md)).
+- [ ] Sensors, SLAM/Nav2 and routes on the floors; payload transfer;
+  multi-floor operation; repeats and identified dynamics.
+
 October 15: R10 extension implementation comes first. Each parent remains partial.
 
 - [x] Source research, detailed agent guide and truthful GUI Health status.

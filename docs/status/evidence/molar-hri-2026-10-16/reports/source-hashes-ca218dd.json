@@ -1,0 +1,23 @@
+{
+ "revision": "ca218dd",
+ "derived": "sha256 of each file as git stores it at this revision, computed 2026-10-19 after the run; uncommitted working-tree changes at run time are not captured",
+ "files": {
+  "scripts/qualify_molar_hri_gui.py": "5d0822668eae91017f201d036a41f11949ff2d5eab4146932cc1200228b63e9e",
+  "src/robot_lab_bringup/config/sim_maps.yaml": "1731c9b33764dd734f7bb0f9a856dbcf7e69ec8b6dc2478b2ce8c744e38cb1d2",
+  "src/robot_lab_bringup/launch/simulated_robot.launch.py": "7b89afc981f79b5a07789724251941862ef64390ac56064d4b1e5bc1be66100a",
+  "src/robot_lab_bringup/scripts/molar_gazebo_control.py": "b993c9b464482ba409654a5507b8497f2181bcf8a8018d975ceb9005d479fb3d",
+  "src/robot_lab_gui/robot_lab_gui/molar_controls.py": "c4b32c2fc6500285615d7d164e9c8ad0df98531bb89372e4523eba7d14f486b9",
+  "src/robot_lab_isaac/python/robot_lab_isaac/isaac_runtime.py": "2772557c5baeb175086baa1cd7f0e0d1306b5bddfc14db6dea1b8d4397fd6af3",
+  "src/robot_lab_isaac/python/robot_lab_isaac/isaac_spawner.py": "61b94797193f094db545e53b6ffff1877946f1038d71f43bbb9fb2fc9b2773ee",
+  "src/robot_lab_maps/maps/celisca_floor_1_detailed/native/meshes/collision_normals_v1.stl": "ae7fad7ebd071005ed4fe7f87f87173397818f5284fafc48635da94ece23e57b",
+  "src/robot_lab_maps/maps/celisca_floor_1_detailed/worlds/celisca_floor_1_detailed.world": "73ef9ebc658226b3386ffa704900164df033835abd5ecfd5888bf970cff5b22f",
+  "src/robot_lab_maps/maps/celisca_floor_2_detailed/native/meshes/collision_normals_v1.stl": "37ff7c0f9c4898d6b158dce7f34a9f1b598f9260373a0bb307a3f7e0900eb730",
+  "src/robot_lab_maps/maps/celisca_floor_2_detailed/worlds/celisca_floor_2_detailed.world": "c83d921dff7c57976fb6b99186be10db20284686f315c19323279d2c25061c7f",
+  "src/robot_lab_mujoco/python/robot_lab_mujoco/mujoco_spawner.py": "01ab2117379eaeba80613e6ed49cd296522c284c66e27e6d5f7512bb6dca7d66",
+  "src/robot_lab_pybullet/python/robot_lab_pybullet/pybullet_spawner.py": "19c930c5d0f3939a7ca7a679afaa62077df9e4e836151095663234a581ec7a34",
+  "src/robot_lab_robots/config/robots.yaml": "c84b5ce1484d507295ae0d459efdd7ff9903adcb92095870344f71c8cfda596d",
+  "src/robot_lab_robots/molar_hri/urdf/molar_hri.urdf.xacro": "8c43662850a5121eefa442b80ae823af1795240a9c876a5c9823d7b8f656d32c",
+  "src/robot_lab_robots/probot_l/urdf/probot_l.urdf.xacro": "27de42b38031dcd3554009743f59dc13195d0dfbc32f8331def5595b681accbf",
+  "src/robot_lab_utils/robot_lab_utils/urdf_articulation.py": "895449889d7d68875bd8e38df25aafa4d39ca8c12ffe9b9b090645759397500b"
+ }
+}

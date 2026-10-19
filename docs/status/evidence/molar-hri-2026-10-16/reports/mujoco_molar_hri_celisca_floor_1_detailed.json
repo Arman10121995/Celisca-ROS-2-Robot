@@ -1,0 +1,149 @@
+{
+  "robot": "molar_hri",
+  "backend": "mujoco",
+  "map": "celisca_floor_1_detailed",
+  "mode": "display",
+  "passed": true,
+  "phases": {
+    "neutral_start": {
+      "displacement": 3.82007572405222e-05,
+      "yaw_change": 6.723859348863959e-05,
+      "max_tilt": 6.748943017469438e-06,
+      "sim_seconds": 1.519999999
+    },
+    "forward": {
+      "displacement": 0.5753051731341086,
+      "yaw_change": 0.0005561882699593936,
+      "max_tilt": 8.773165428092754e-06,
+      "sim_seconds": 3.02
+    },
+    "simultaneous_forward_turn": {
+      "displacement": 0.48605937414386685,
+      "yaw_change": 0.6047544521723988,
+      "max_tilt": 0.00012268751514766827,
+      "sim_seconds": 2.0
+    },
+    "base_stop": {
+      "displacement": 3.7025117240161134e-05,
+      "yaw_change": -7.83495470909612e-05,
+      "max_tilt": 1.7007115091057193e-05,
+      "sim_seconds": 1.0
+    },
+    "extended_base_inhibit": {
+      "displacement": 3.7149137441242158e-06,
+      "yaw_change": -4.964229890114247e-05,
+      "max_tilt": 1.6843230132927395e-05,
+      "sim_seconds": 1.5000000000000018
+    }
+  },
+  "scope": "Bounded actual GUI differential drive, lift and two-stage telescope to their source limits, roller, Stop and watchdog; not navigation or physical robot acceptance",
+  "domain": "78",
+  "command": "ros2 launch robot_lab_bringup simulated_robot.launch.py robot_model:=molar_hri simulator:=mujoco use_sim_time:=true map_name:=celisca_floor_1_detailed world_package:=robot_lab_maps world_name:=celisca_floor_1_detailed world_path:=maps/celisca_floor_1_detailed/worlds/celisca_floor_1_detailed.world map_yaml:=maps/celisca_floor_1_detailed/maps/map.yaml mode:=display gui:=false perception:=none",
+  "source_revision": "ca218ddeaaa1882e7b02fd82f242f51c0ea4b3b9",
+  "initial_articulation_state": {
+    "schema": "robot_lab.urdf_articulation.v1",
+    "plant_id": "f258295a90504ab9902455a7e0f5b90e",
+    "state_monotonic": 6601.545764748,
+    "model_path": "/workspace/molar/ros_ws/bumperbot_ws/src/robot_lab_robots/molar_hri/urdf/molar_hri.urdf.xacro",
+    "model_sha256": "8c43662850a5121eefa442b80ae823af1795240a9c876a5c9823d7b8f656d32c",
+    "urdf_sha256": "be070d678587b3b013c5595f3ad8b8971374a3d2b74aa648e563b8ff430db387",
+    "initialized": true,
+    "status": "neutral; holding initial measured articulation",
+    "fault": "",
+    "base_inhibited": false,
+    "active": false,
+    "qualification": "implemented adapter; runtime validation pending",
+    "coupling_error": {
+      "telescope_stage2_joint": -1.012521900644881e-06
+    },
+    "coupling_inhibited": false,
+    "channels": [
+      {
+        "name": "conveyor_lift_joint",
+        "mode": "position",
+        "units": "m",
+        "measured": -0.003276933371701651,
+        "target": 0.0,
+        "reference": 0.0,
+        "measured_velocity": 0.007766329134353888,
+        "limits": [
+          0.0,
+          0.68
+        ],
+        "max_velocity": 0.035,
+        "coupled": false
+      },
+      {
+        "name": "telescope_stage1_joint",
+        "mode": "position",
+        "units": "m",
+        "measured": 2.674533343479599e-06,
+        "target": 0.0,
+        "reference": 0.0,
+        "measured_velocity": -2.158006835960862e-05,
+        "limits": [
+          0.0,
+          0.14
+        ],
+        "max_velocity": 0.1,
+        "coupled": false
+      },
+      {
+        "name": "transfer_roller_joint",
+        "mode": "velocity",
+        "units": "rad/s",
+        "measured": 1.9940995051380234e-11,
+        "target": 0.0,
+        "reference": 0.0,
+        "measured_velocity": 1.5506665029731506e-10,
+        "limits": [
+          -8.0,
+          8.0
+        ],
+        "max_velocity": 8.0,
+        "coupled": false
+      },
+      {
+        "name": "telescope_stage2_joint",
+        "mode": "position",
+        "units": "m",
+        "measured": 1.6620114428347179e-06,
+        "target": 0.0,
+        "reference": 0.0,
+        "measured_velocity": -1.3619067135007719e-05,
+        "limits": [
+          0.0,
+          0.14
+        ],
+        "max_velocity": 0.1,
+        "coupled": true
+      }
+    ]
+  },
+  "lift": {
+    "before": 9.88843015804494e-09,
+    "after": 0.059999978275331545
+  },
+  "telescope": {
+    "stage1": 0.059999973554340565,
+    "stage2": 0.059999983643859535,
+    "total_tip": 0.1199999571982001
+  },
+  "full_range": {
+    "lift": 0.6800000000908922,
+    "stage1": 0.1399999910624576,
+    "stage2": 0.13999999698024135,
+    "total_tip": 0.279999988042699,
+    "coupling_error": 5.917783735265303e-09
+  },
+  "roller_velocity": 1.9047619045533182,
+  "stop_hold": {
+    "conveyor_lift_joint": -6.673710084559303e-08,
+    "telescope_stage1_joint": -6.693106155142292e-07,
+    "telescope_stage2_joint": -2.765691967665518e-07
+  },
+  "watchdog_roller_velocity": 2.107167927755853e-12,
+  "launch_returncode": 0,
+  "body_samples": 3458,
+  "joint_samples": 3458
+}

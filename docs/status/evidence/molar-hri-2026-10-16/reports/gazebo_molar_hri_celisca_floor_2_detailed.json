@@ -1,0 +1,149 @@
+{
+  "robot": "molar_hri",
+  "backend": "gazebo",
+  "map": "celisca_floor_2_detailed",
+  "mode": "display",
+  "passed": true,
+  "phases": {
+    "neutral_start": {
+      "displacement": 1.4006591278898101e-12,
+      "yaw_change": 1.1362754927102537e-14,
+      "max_tilt": 0.0,
+      "sim_seconds": 1.5
+    },
+    "forward": {
+      "displacement": 0.5337799123873965,
+      "yaw_change": 9.198195988484416e-08,
+      "max_tilt": 0.0,
+      "sim_seconds": 3.0
+    },
+    "simultaneous_forward_turn": {
+      "displacement": 0.48994821763164553,
+      "yaw_change": 0.6014970032300492,
+      "max_tilt": 0.0,
+      "sim_seconds": 2.0
+    },
+    "base_stop": {
+      "displacement": 0.0,
+      "yaw_change": 0.0,
+      "max_tilt": 0.0,
+      "sim_seconds": 1.0
+    },
+    "extended_base_inhibit": {
+      "displacement": 0.0,
+      "yaw_change": 0.0,
+      "max_tilt": 0.0,
+      "sim_seconds": 1.5
+    }
+  },
+  "scope": "Bounded actual GUI differential drive, lift and two-stage telescope to their source limits, roller, Stop and watchdog; not navigation or physical robot acceptance",
+  "domain": "78",
+  "command": "ros2 launch robot_lab_bringup simulated_robot.launch.py robot_model:=molar_hri simulator:=gazebo use_sim_time:=true map_name:=celisca_floor_2_detailed world_package:=robot_lab_maps world_name:=celisca_floor_2_detailed world_path:=maps/celisca_floor_2_detailed/worlds/celisca_floor_2_detailed.world map_yaml:=maps/celisca_floor_2_detailed/maps/map.yaml mode:=display gui:=false perception:=none",
+  "source_revision": "ca218ddeaaa1882e7b02fd82f242f51c0ea4b3b9",
+  "initial_articulation_state": {
+    "schema": "robot_lab.urdf_articulation.v1",
+    "plant_id": "2b617593a5454b2b9df523703e11b518",
+    "state_monotonic": 5540.034131706,
+    "model_path": "/workspace/molar/ros_ws/bumperbot_ws/src/robot_lab_robots/molar_hri/urdf/molar_hri.urdf.xacro",
+    "model_sha256": "8c43662850a5121eefa442b80ae823af1795240a9c876a5c9823d7b8f656d32c",
+    "urdf_sha256": "3933134ba172159f6a9be4e0357b9cf69f1f14f15ccd7a4b0ee7a288e8107052",
+    "initialized": true,
+    "status": "neutral; holding initial measured articulation",
+    "fault": "",
+    "base_inhibited": false,
+    "active": false,
+    "qualification": "implemented adapter; runtime validation pending",
+    "coupling_error": {
+      "telescope_stage2_joint": 4.5285605121299465e-21
+    },
+    "coupling_inhibited": false,
+    "channels": [
+      {
+        "name": "conveyor_lift_joint",
+        "mode": "position",
+        "units": "m",
+        "measured": -4.989500905557064e-05,
+        "target": 0.0,
+        "reference": 0.0,
+        "measured_velocity": 0.0005543889775216605,
+        "limits": [
+          0.0,
+          0.68
+        ],
+        "max_velocity": 0.035,
+        "coupled": false
+      },
+      {
+        "name": "telescope_stage1_joint",
+        "mode": "position",
+        "units": "m",
+        "measured": -6.466973496643103e-21,
+        "target": 0.0,
+        "reference": 0.0,
+        "measured_velocity": -2.506839799600825e-19,
+        "limits": [
+          0.0,
+          0.14
+        ],
+        "max_velocity": 0.1,
+        "coupled": false
+      },
+      {
+        "name": "transfer_roller_joint",
+        "mode": "velocity",
+        "units": "rad/s",
+        "measured": -1.3205197863298673e-18,
+        "target": 0.0,
+        "reference": 0.0,
+        "measured_velocity": 9.358592410249397e-18,
+        "limits": [
+          -8.0,
+          8.0
+        ],
+        "max_velocity": 8.0,
+        "coupled": false
+      },
+      {
+        "name": "telescope_stage2_joint",
+        "mode": "position",
+        "units": "m",
+        "measured": -1.9384129845131564e-21,
+        "target": 0.0,
+        "reference": 0.0,
+        "measured_velocity": -9.154058872303436e-21,
+        "limits": [
+          0.0,
+          0.14
+        ],
+        "max_velocity": 0.1,
+        "coupled": true
+      }
+    ]
+  },
+  "lift": {
+    "before": -1.0785657478588586e-12,
+    "after": 0.05999999488342685
+  },
+  "telescope": {
+    "stage1": 0.059999995009432906,
+    "stage2": 0.059999995009432934,
+    "total_tip": 0.11999999001886584
+  },
+  "full_range": {
+    "lift": 0.6799999999984995,
+    "stage1": 0.13999995892097433,
+    "stage2": 0.1399999589209744,
+    "total_tip": 0.2799999178419487,
+    "coupling_error": 5.551115123125783e-17
+  },
+  "roller_velocity": 1.9999999991803277,
+  "stop_hold": {
+    "conveyor_lift_joint": -9.36806188178707e-13,
+    "telescope_stage1_joint": 1.2490009027033011e-15,
+    "telescope_stage2_joint": 1.1934897514720433e-15
+  },
+  "watchdog_roller_velocity": 8.073355348775061e-19,
+  "launch_returncode": 0,
+  "body_samples": 3450,
+  "joint_samples": 7399
+}

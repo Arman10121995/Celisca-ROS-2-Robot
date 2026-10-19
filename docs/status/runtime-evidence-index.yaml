@@ -1,6 +1,6 @@
 schema_version: 1
-date: '2026-10-16'
-scope: "Exact hashed named simulation screens through October 16; unlisted cells remain untested."
+date: '2026-10-19'
+scope: "Exact hashed named simulation screens through October 19; unlisted cells remain untested."
 raw_artifact_root: /workspace/molar/robot_lab_runtime/r56-qualification-2026-10-05
 records:
 - robot_id: four_wheel_steer_car
@@ -10237,3 +10237,746 @@ records:
   limitations:
   - Goal seeds 1-3, one world; heading not checked
   - MuJoCo anti-Ackermann seed 2 aborted goal B; seed 3 controls that cell
+- robot_id: anti_ackermann_car
+  environment_id: nav_obstacle
+  simulator: mujoco
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-10-16'
+  revision: 38486f4 (round 47, from 08:15; installs also held another agent's gated-off articulation work)
+  report: docs/status/evidence/open-items-2026-10-16/cars-settling/mujoco_anti_ackermann_car_seed2_nav_obstacle.json
+  sha256: 1629467fbd82d8eb03cfe9452d24777d2101803cb6364427b7e597e2029c9f9b
+  source_hashes: docs/status/evidence/open-items-2026-10-16/cars-settling/source-hashes-38486f4.json
+  source_hashes_sha256: 96d32b9fc60beb6c8fa3ed1d695e96a44bb26beebc7940857781d314bb68735d
+  report_kind: mission_screen
+  scope: nav_obstacle car mission with the three-retry car tree; truth-measured final poses. Details in docs/status/evidence/open-items-2026-10-16.
+  limitations:
+  - The three weakest cells of round 45 only; one seed each
+- robot_id: rear_steer_car
+  environment_id: nav_obstacle
+  simulator: mujoco
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-10-16'
+  revision: 38486f4 (round 47, from 08:15; installs also held another agent's gated-off articulation work)
+  report: docs/status/evidence/open-items-2026-10-16/cars-settling/mujoco_rear_steer_car_seed1_nav_obstacle.json
+  sha256: 048dfc75c1da089158260f9b0ecc0dced626e332d4e097aefe8ff13efda981ad
+  source_hashes: docs/status/evidence/open-items-2026-10-16/cars-settling/source-hashes-38486f4.json
+  source_hashes_sha256: 96d32b9fc60beb6c8fa3ed1d695e96a44bb26beebc7940857781d314bb68735d
+  report_kind: mission_screen
+  scope: nav_obstacle car mission with the three-retry car tree; truth-measured final poses. Details in docs/status/evidence/open-items-2026-10-16.
+  limitations:
+  - The three weakest cells of round 45 only; one seed each
+- robot_id: anti_ackermann_car
+  environment_id: nav_obstacle
+  simulator: pybullet
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-10-16'
+  revision: 38486f4 (round 47, from 08:15; installs also held another agent's gated-off articulation work)
+  report: docs/status/evidence/open-items-2026-10-16/cars-settling/pybullet_anti_ackermann_car_seed2_nav_obstacle.json
+  sha256: f299b7b861ed7037c60011d63b521bb2ed0a7686320f93622a15f4ea0d6f4100
+  source_hashes: docs/status/evidence/open-items-2026-10-16/cars-settling/source-hashes-38486f4.json
+  source_hashes_sha256: 96d32b9fc60beb6c8fa3ed1d695e96a44bb26beebc7940857781d314bb68735d
+  report_kind: mission_screen
+  scope: nav_obstacle car mission with the three-retry car tree; truth-measured final poses. Details in docs/status/evidence/open-items-2026-10-16.
+  limitations:
+  - The three weakest cells of round 45 only; one seed each
+- robot_id: unitree_g1_29dof
+  environment_id: nav_obstacle
+  simulator: mujoco
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-10-16'
+  revision: 38486f4 (round 47)
+  report: docs/status/evidence/open-items-2026-10-16/g1-goal/mujoco_unitree_g1_29dof_seed1_nav_obstacle.json
+  sha256: 395cc8d561eeb5590f80fc30cb932878d928da2343ae2d2db95df724404868aa
+  source_hashes: docs/status/evidence/open-items-2026-10-16/g1-goal/source-hashes-38486f4.json
+  source_hashes_sha256: 697a37f1515abe510ae567bc9bb3ef113f849867dd228a65f0386d7d77788724
+  report_kind: mission_screen
+  scope: nav_obstacle mission for the G1 on its rl_sar policy and leg odometry with a 0.12 m goal; truth-measured
+    final poses.
+  limitations:
+  - Goal seeds 1-3, one world; heading not checked
+- robot_id: unitree_g1_29dof
+  environment_id: nav_obstacle
+  simulator: mujoco
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-10-16'
+  revision: 38486f4 (round 47)
+  report: docs/status/evidence/open-items-2026-10-16/g1-goal/mujoco_unitree_g1_29dof_seed2_nav_obstacle.json
+  sha256: 4d462cba9ddea67537ac8b739eef7ea8efabc8afa20cda7b3adad324a0b7a25c
+  source_hashes: docs/status/evidence/open-items-2026-10-16/g1-goal/source-hashes-38486f4.json
+  source_hashes_sha256: 697a37f1515abe510ae567bc9bb3ef113f849867dd228a65f0386d7d77788724
+  report_kind: mission_screen
+  scope: nav_obstacle mission for the G1 on its rl_sar policy and leg odometry with a 0.12 m goal; truth-measured
+    final poses.
+  limitations:
+  - Goal seeds 1-3, one world; heading not checked
+- robot_id: unitree_g1_29dof
+  environment_id: nav_obstacle
+  simulator: mujoco
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-10-16'
+  revision: 38486f4 (round 47)
+  report: docs/status/evidence/open-items-2026-10-16/g1-goal/mujoco_unitree_g1_29dof_seed3_nav_obstacle.json
+  sha256: 8ea3376f827fb8981cd84a893213b1706e13a7f9e4d22502a23edd5b7c99df0a
+  source_hashes: docs/status/evidence/open-items-2026-10-16/g1-goal/source-hashes-38486f4.json
+  source_hashes_sha256: 697a37f1515abe510ae567bc9bb3ef113f849867dd228a65f0386d7d77788724
+  report_kind: mission_screen
+  scope: nav_obstacle mission for the G1 on its rl_sar policy and leg odometry with a 0.12 m goal; truth-measured
+    final poses.
+  limitations:
+  - Goal seeds 1-3, one world; heading not checked
+- robot_id: unitree_g1_29dof
+  environment_id: nav_obstacle
+  simulator: isaac
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-10-16'
+  revision: 7332e8a (round 47b, 10:38-11:25)
+  report: docs/status/evidence/open-items-2026-10-16/legged-isaac/isaac_unitree_g1_29dof_seed1_nav_obstacle.json
+  sha256: 040955d1f29c0faef80edb8e5db02e8aaf9e6ce5a194cf8a4c76e7c6943eacbc
+  source_hashes: docs/status/evidence/open-items-2026-10-16/legged-isaac/source-hashes-7332e8a.json
+  source_hashes_sha256: 6fb0434daf19e5f6edadcd52815684820de028baef085bebbabd79c7c4f10986
+  report_kind: mission_screen
+  scope: nav_obstacle mission for walking robots in Isaac (G1 with a 0.12 m goal); truth-measured final poses.
+  limitations:
+  - Goal seeds 1-3, one world; heading not checked
+- robot_id: unitree_g1_29dof
+  environment_id: nav_obstacle
+  simulator: isaac
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-10-16'
+  revision: 7332e8a (round 47b, 10:38-11:25)
+  report: docs/status/evidence/open-items-2026-10-16/legged-isaac/isaac_unitree_g1_29dof_seed2_nav_obstacle.json
+  sha256: 087c7e261ab6a08cd6bd0ee664541318e7f18a357347d749ddee4deb3c461123
+  source_hashes: docs/status/evidence/open-items-2026-10-16/legged-isaac/source-hashes-7332e8a.json
+  source_hashes_sha256: 6fb0434daf19e5f6edadcd52815684820de028baef085bebbabd79c7c4f10986
+  report_kind: mission_screen
+  scope: nav_obstacle mission for walking robots in Isaac (G1 with a 0.12 m goal); truth-measured final poses.
+  limitations:
+  - Goal seeds 1-3, one world; heading not checked
+- robot_id: unitree_g1_29dof
+  environment_id: nav_obstacle
+  simulator: isaac
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-10-16'
+  revision: 7332e8a (round 47b, 10:38-11:25)
+  report: docs/status/evidence/open-items-2026-10-16/legged-isaac/isaac_unitree_g1_29dof_seed3_nav_obstacle.json
+  sha256: affac4c1df854730c4fe8a1f571737e04cd7d024897157d9cd1c63e2e5431406
+  source_hashes: docs/status/evidence/open-items-2026-10-16/legged-isaac/source-hashes-7332e8a.json
+  source_hashes_sha256: 6fb0434daf19e5f6edadcd52815684820de028baef085bebbabd79c7c4f10986
+  report_kind: mission_screen
+  scope: nav_obstacle mission for walking robots in Isaac (G1 with a 0.12 m goal); truth-measured final poses.
+  limitations:
+  - Goal seeds 1-3, one world; heading not checked
+- robot_id: unitree_go2
+  environment_id: nav_obstacle
+  simulator: isaac
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-10-16'
+  revision: 7332e8a (round 47b, 10:38-11:25)
+  report: docs/status/evidence/open-items-2026-10-16/legged-isaac/isaac_unitree_go2_seed1_nav_obstacle.json
+  sha256: 159f623acf557f47e2660fb1690d74f589cb9d5e9d3a55456a904add960db137
+  source_hashes: docs/status/evidence/open-items-2026-10-16/legged-isaac/source-hashes-7332e8a.json
+  source_hashes_sha256: 6fb0434daf19e5f6edadcd52815684820de028baef085bebbabd79c7c4f10986
+  report_kind: mission_screen
+  scope: nav_obstacle mission for walking robots in Isaac (G1 with a 0.12 m goal); truth-measured final poses.
+  limitations:
+  - Goal seeds 1-3, one world; heading not checked
+- robot_id: unitree_go2
+  environment_id: nav_obstacle
+  simulator: isaac
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-10-16'
+  revision: 7332e8a (round 47b, 10:38-11:25)
+  report: docs/status/evidence/open-items-2026-10-16/legged-isaac/isaac_unitree_go2_seed2_nav_obstacle.json
+  sha256: ad5e5b423b8ad3168a974ea160f991b1418f13a6b0a9f7e7c5f2b3ed0416d474
+  source_hashes: docs/status/evidence/open-items-2026-10-16/legged-isaac/source-hashes-7332e8a.json
+  source_hashes_sha256: 6fb0434daf19e5f6edadcd52815684820de028baef085bebbabd79c7c4f10986
+  report_kind: mission_screen
+  scope: nav_obstacle mission for walking robots in Isaac (G1 with a 0.12 m goal); truth-measured final poses.
+  limitations:
+  - Goal seeds 1-3, one world; heading not checked
+- robot_id: unitree_go2
+  environment_id: nav_obstacle
+  simulator: isaac
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-10-16'
+  revision: 7332e8a (round 47b, 10:38-11:25)
+  report: docs/status/evidence/open-items-2026-10-16/legged-isaac/isaac_unitree_go2_seed3_nav_obstacle.json
+  sha256: ea8fa65fcdf336eabeeb96b73140627f43fb9a76ec6f2b8b606d515e6c8c6dea
+  source_hashes: docs/status/evidence/open-items-2026-10-16/legged-isaac/source-hashes-7332e8a.json
+  source_hashes_sha256: 6fb0434daf19e5f6edadcd52815684820de028baef085bebbabd79c7c4f10986
+  report_kind: mission_screen
+  scope: nav_obstacle mission for walking robots in Isaac (G1 with a 0.12 m goal); truth-measured final poses.
+  limitations:
+  - Goal seeds 1-3, one world; heading not checked
+- robot_id: unitree_b2
+  environment_id: nav_obstacle
+  simulator: isaac
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-10-16'
+  revision: cdd1e09 (round 49, 13:09-14:02)
+  report: docs/status/evidence/open-items-2026-10-16/b2-isaac/missions/isaac_unitree_b2_seed1_nav_obstacle.json
+  sha256: 75041aa5aa0bd71ba443b3cc98305a5da3d4c39edd667fb89c6d984f5a39054e
+  source_hashes: docs/status/evidence/open-items-2026-10-16/b2-isaac/missions/source-hashes-cdd1e09.json
+  source_hashes_sha256: 8d69b1aa67d4c816617ebd59f4346620602f30c90d574ce9495406a8e886eff5
+  report_kind: mission_screen
+  scope: 'nav_obstacle mission: B2 in Isaac with the DC-motor actuator and the friction-1 floor, Go2 with a 0.7
+    m planner inflation, Bumperbot in Gazebo with the one-sample twist window; truth-measured final poses.'
+  limitations:
+  - Goal seeds 1-3 (Bumperbot seed 1), one world; heading not checked
+- robot_id: unitree_b2
+  environment_id: nav_obstacle
+  simulator: isaac
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-10-16'
+  revision: cdd1e09 (round 49, 13:09-14:02)
+  report: docs/status/evidence/open-items-2026-10-16/b2-isaac/missions/isaac_unitree_b2_seed2_nav_obstacle.json
+  sha256: 6340ce76b3652fdf76a4b6fc6dbd794cdaccd2c87dd07065e6ff006b26a649d5
+  source_hashes: docs/status/evidence/open-items-2026-10-16/b2-isaac/missions/source-hashes-cdd1e09.json
+  source_hashes_sha256: 8d69b1aa67d4c816617ebd59f4346620602f30c90d574ce9495406a8e886eff5
+  report_kind: mission_screen
+  scope: 'nav_obstacle mission: B2 in Isaac with the DC-motor actuator and the friction-1 floor, Go2 with a 0.7
+    m planner inflation, Bumperbot in Gazebo with the one-sample twist window; truth-measured final poses.'
+  limitations:
+  - Goal seeds 1-3 (Bumperbot seed 1), one world; heading not checked
+- robot_id: unitree_b2
+  environment_id: nav_obstacle
+  simulator: isaac
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-10-16'
+  revision: cdd1e09 (round 49, 13:09-14:02)
+  report: docs/status/evidence/open-items-2026-10-16/b2-isaac/missions/isaac_unitree_b2_seed3_nav_obstacle.json
+  sha256: 07cf38b1ccade1a1f7ea45bea52e5841f3e5c614cd4b5ce135dbac0d36c49767
+  source_hashes: docs/status/evidence/open-items-2026-10-16/b2-isaac/missions/source-hashes-cdd1e09.json
+  source_hashes_sha256: 8d69b1aa67d4c816617ebd59f4346620602f30c90d574ce9495406a8e886eff5
+  report_kind: mission_screen
+  scope: 'nav_obstacle mission: B2 in Isaac with the DC-motor actuator and the friction-1 floor, Go2 with a 0.7
+    m planner inflation, Bumperbot in Gazebo with the one-sample twist window; truth-measured final poses.'
+  limitations:
+  - Goal seeds 1-3 (Bumperbot seed 1), one world; heading not checked
+- robot_id: bumperbot
+  environment_id: nav_obstacle
+  simulator: gazebo
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-10-16'
+  revision: cdd1e09 (round 49, 13:09-14:02)
+  report: docs/status/evidence/open-items-2026-10-16/bumperbot-gazebo/gazebo_bumperbot_seed1_nav_obstacle.json
+  sha256: 0ddf6072aef0c3b193c76077edeed850dde3fc2322839d1aae553761d40366c5
+  source_hashes: docs/status/evidence/open-items-2026-10-16/b2-isaac/missions/source-hashes-cdd1e09.json
+  source_hashes_sha256: 8d69b1aa67d4c816617ebd59f4346620602f30c90d574ce9495406a8e886eff5
+  report_kind: mission_screen
+  scope: 'nav_obstacle mission: B2 in Isaac with the DC-motor actuator and the friction-1 floor, Go2 with a 0.7
+    m planner inflation, Bumperbot in Gazebo with the one-sample twist window; truth-measured final poses.'
+  limitations:
+  - Goal seeds 1-3 (Bumperbot seed 1), one world; heading not checked
+- robot_id: unitree_go2
+  environment_id: nav_obstacle
+  simulator: gazebo
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-10-16'
+  revision: cdd1e09 (round 49, 13:09-14:02)
+  report: docs/status/evidence/open-items-2026-10-16/go2-inflation/gazebo_unitree_go2_seed1_nav_obstacle.json
+  sha256: 2511eafe44e0df1d59087f02fa4ea9503e1655337fb7e06e14dff9f7f07b9b44
+  source_hashes: docs/status/evidence/open-items-2026-10-16/b2-isaac/missions/source-hashes-cdd1e09.json
+  source_hashes_sha256: 8d69b1aa67d4c816617ebd59f4346620602f30c90d574ce9495406a8e886eff5
+  report_kind: mission_screen
+  scope: 'nav_obstacle mission: B2 in Isaac with the DC-motor actuator and the friction-1 floor, Go2 with a 0.7
+    m planner inflation, Bumperbot in Gazebo with the one-sample twist window; truth-measured final poses.'
+  limitations:
+  - Goal seeds 1-3 (Bumperbot seed 1), one world; heading not checked
+- robot_id: unitree_go2
+  environment_id: nav_obstacle
+  simulator: gazebo
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-10-16'
+  revision: cdd1e09 (round 49, 13:09-14:02)
+  report: docs/status/evidence/open-items-2026-10-16/go2-inflation/gazebo_unitree_go2_seed2_nav_obstacle.json
+  sha256: 8033d31029673d4dfff5e149b12f9cd116a549da03b159af8a8ed1f17892c234
+  source_hashes: docs/status/evidence/open-items-2026-10-16/b2-isaac/missions/source-hashes-cdd1e09.json
+  source_hashes_sha256: 8d69b1aa67d4c816617ebd59f4346620602f30c90d574ce9495406a8e886eff5
+  report_kind: mission_screen
+  scope: 'nav_obstacle mission: B2 in Isaac with the DC-motor actuator and the friction-1 floor, Go2 with a 0.7
+    m planner inflation, Bumperbot in Gazebo with the one-sample twist window; truth-measured final poses.'
+  limitations:
+  - Goal seeds 1-3 (Bumperbot seed 1), one world; heading not checked
+- robot_id: unitree_go2
+  environment_id: nav_obstacle
+  simulator: gazebo
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-10-16'
+  revision: cdd1e09 (round 49, 13:09-14:02)
+  report: docs/status/evidence/open-items-2026-10-16/go2-inflation/gazebo_unitree_go2_seed3_nav_obstacle.json
+  sha256: 6537eeafb16355ccbfb304c62895b42cabe2ce418616c44e9a1f53e5546f71b0
+  source_hashes: docs/status/evidence/open-items-2026-10-16/b2-isaac/missions/source-hashes-cdd1e09.json
+  source_hashes_sha256: 8d69b1aa67d4c816617ebd59f4346620602f30c90d574ce9495406a8e886eff5
+  report_kind: mission_screen
+  scope: 'nav_obstacle mission: B2 in Isaac with the DC-motor actuator and the friction-1 floor, Go2 with a 0.7
+    m planner inflation, Bumperbot in Gazebo with the one-sample twist window; truth-measured final poses.'
+  limitations:
+  - Goal seeds 1-3 (Bumperbot seed 1), one world; heading not checked
+- robot_id: unitree_go2
+  environment_id: nav_obstacle
+  simulator: isaac
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-10-16'
+  revision: cdd1e09 (round 49, 13:09-14:02)
+  report: docs/status/evidence/open-items-2026-10-16/go2-inflation/isaac_unitree_go2_seed1_nav_obstacle.json
+  sha256: b999d8a59cdd1ce2591e6073b6b9d13cf73ed424819232d6b47a393a4839937c
+  source_hashes: docs/status/evidence/open-items-2026-10-16/b2-isaac/missions/source-hashes-cdd1e09.json
+  source_hashes_sha256: 8d69b1aa67d4c816617ebd59f4346620602f30c90d574ce9495406a8e886eff5
+  report_kind: mission_screen
+  scope: 'nav_obstacle mission: B2 in Isaac with the DC-motor actuator and the friction-1 floor, Go2 with a 0.7
+    m planner inflation, Bumperbot in Gazebo with the one-sample twist window; truth-measured final poses.'
+  limitations:
+  - Goal seeds 1-3 (Bumperbot seed 1), one world; heading not checked
+- robot_id: unitree_go2
+  environment_id: nav_obstacle
+  simulator: isaac
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-10-16'
+  revision: cdd1e09 (round 49, 13:09-14:02)
+  report: docs/status/evidence/open-items-2026-10-16/go2-inflation/isaac_unitree_go2_seed2_nav_obstacle.json
+  sha256: ece8f067566d6a3b3633512b441304abc937eb42f11b5c7c21b4911296df0813
+  source_hashes: docs/status/evidence/open-items-2026-10-16/b2-isaac/missions/source-hashes-cdd1e09.json
+  source_hashes_sha256: 8d69b1aa67d4c816617ebd59f4346620602f30c90d574ce9495406a8e886eff5
+  report_kind: mission_screen
+  scope: 'nav_obstacle mission: B2 in Isaac with the DC-motor actuator and the friction-1 floor, Go2 with a 0.7
+    m planner inflation, Bumperbot in Gazebo with the one-sample twist window; truth-measured final poses.'
+  limitations:
+  - Goal seeds 1-3 (Bumperbot seed 1), one world; heading not checked
+- robot_id: unitree_go2
+  environment_id: nav_obstacle
+  simulator: isaac
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-10-16'
+  revision: cdd1e09 (round 49, 13:09-14:02)
+  report: docs/status/evidence/open-items-2026-10-16/go2-inflation/isaac_unitree_go2_seed3_nav_obstacle.json
+  sha256: 219a9ae588af806a0795680b28d94fe315dad79445f05f40dc39b4c3fd60c8f9
+  source_hashes: docs/status/evidence/open-items-2026-10-16/b2-isaac/missions/source-hashes-cdd1e09.json
+  source_hashes_sha256: 8d69b1aa67d4c816617ebd59f4346620602f30c90d574ce9495406a8e886eff5
+  report_kind: mission_screen
+  scope: 'nav_obstacle mission: B2 in Isaac with the DC-motor actuator and the friction-1 floor, Go2 with a 0.7
+    m planner inflation, Bumperbot in Gazebo with the one-sample twist window; truth-measured final poses.'
+  limitations:
+  - Goal seeds 1-3 (Bumperbot seed 1), one world; heading not checked
+- robot_id: unitree_go2
+  environment_id: nav_obstacle
+  simulator: mujoco
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-10-16'
+  revision: cdd1e09 (round 49, 13:09-14:02)
+  report: docs/status/evidence/open-items-2026-10-16/go2-inflation/mujoco_unitree_go2_seed1_nav_obstacle.json
+  sha256: d5f4b3b5665c3ade7cf4d2c1804954e818b1bce4351f02011e6a001d01aa2288
+  source_hashes: docs/status/evidence/open-items-2026-10-16/b2-isaac/missions/source-hashes-cdd1e09.json
+  source_hashes_sha256: 8d69b1aa67d4c816617ebd59f4346620602f30c90d574ce9495406a8e886eff5
+  report_kind: mission_screen
+  scope: 'nav_obstacle mission: B2 in Isaac with the DC-motor actuator and the friction-1 floor, Go2 with a 0.7
+    m planner inflation, Bumperbot in Gazebo with the one-sample twist window; truth-measured final poses.'
+  limitations:
+  - Goal seeds 1-3 (Bumperbot seed 1), one world; heading not checked
+- robot_id: unitree_go2
+  environment_id: nav_obstacle
+  simulator: mujoco
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-10-16'
+  revision: cdd1e09 (round 49, 13:09-14:02)
+  report: docs/status/evidence/open-items-2026-10-16/go2-inflation/mujoco_unitree_go2_seed2_nav_obstacle.json
+  sha256: 3f7df60f477abbaf97fbf1d5286bd21c3722be6955a6fa7356ea7d20ffeb5892
+  source_hashes: docs/status/evidence/open-items-2026-10-16/b2-isaac/missions/source-hashes-cdd1e09.json
+  source_hashes_sha256: 8d69b1aa67d4c816617ebd59f4346620602f30c90d574ce9495406a8e886eff5
+  report_kind: mission_screen
+  scope: 'nav_obstacle mission: B2 in Isaac with the DC-motor actuator and the friction-1 floor, Go2 with a 0.7
+    m planner inflation, Bumperbot in Gazebo with the one-sample twist window; truth-measured final poses.'
+  limitations:
+  - Goal seeds 1-3 (Bumperbot seed 1), one world; heading not checked
+- robot_id: unitree_go2
+  environment_id: nav_obstacle
+  simulator: mujoco
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-10-16'
+  revision: cdd1e09 (round 49, 13:09-14:02)
+  report: docs/status/evidence/open-items-2026-10-16/go2-inflation/mujoco_unitree_go2_seed3_nav_obstacle.json
+  sha256: 48c575278deca4174b97da4ca83f6565a8b36ff3d2fc6583d043a7f9171b69d6
+  source_hashes: docs/status/evidence/open-items-2026-10-16/b2-isaac/missions/source-hashes-cdd1e09.json
+  source_hashes_sha256: 8d69b1aa67d4c816617ebd59f4346620602f30c90d574ce9495406a8e886eff5
+  report_kind: mission_screen
+  scope: 'nav_obstacle mission: B2 in Isaac with the DC-motor actuator and the friction-1 floor, Go2 with a 0.7
+    m planner inflation, Bumperbot in Gazebo with the one-sample twist window; truth-measured final poses.'
+  limitations:
+  - Goal seeds 1-3 (Bumperbot seed 1), one world; heading not checked
+- robot_id: unitree_b2
+  environment_id: nav_empty
+  simulator: isaac
+  task_type: legged_policy_drive
+  steering_mode: ''
+  date: '2026-10-16'
+  revision: cdd1e09 (round 49)
+  report: docs/status/evidence/open-items-2026-10-16/b2-isaac/isaac_unitree_b2_defaults.json
+  sha256: 0613c4074f56ed4589103301b1ff3a996ce3aabd69488920584bbdfff902e25f
+  source_hashes: docs/status/evidence/open-items-2026-10-16/b2-isaac/source-hashes-cdd1e09.json
+  source_hashes_sha256: ce187df61f1bedfcd5fe2ee697b1a6be407c4dfbe5f77c664d5148d91b4f21d4
+  report_kind: drive_screen
+  scope: Model-matched rl_sar policy in Isaac with the DC-motor actuator and the friction-1 floor (B2 defaults),
+    loc mode on nav_empty; truth-measured /cmd_vel phases.
+  limitations:
+  - Flat-map velocity screen; no terrain, push or mission
+- robot_id: unitree_go2
+  environment_id: nav_obstacle
+  simulator: isaac
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-10-16'
+  revision: 56d3edc (round 49c, 14:18-14:33)
+  report: docs/status/evidence/open-items-2026-10-16/go2-rotate/isaac_unitree_go2_seed1_nav_obstacle.json
+  sha256: 96d32e6b820775f42441d76a63dbfcf8eda83f2dbd4b1c56315336cd249a6654
+  source_hashes: docs/status/evidence/open-items-2026-10-16/go2-rotate/source-hashes-56d3edc.json
+  source_hashes_sha256: d9512fb060a08a22eaa37a19db5158d0f0ccaf64dff637a1f689d27830b46081
+  report_kind: mission_screen
+  scope: nav_obstacle mission for the Go2 in Isaac with rotate-to-heading (reverted after this round); truth-measured
+    final poses.
+  limitations:
+  - Goal seeds 1-3, one world; heading not checked
+- robot_id: unitree_go2
+  environment_id: nav_obstacle
+  simulator: isaac
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-10-16'
+  revision: 56d3edc (round 49c, 14:18-14:33)
+  report: docs/status/evidence/open-items-2026-10-16/go2-rotate/isaac_unitree_go2_seed2_nav_obstacle.json
+  sha256: 28ea9c260d604dc2130b6358935878dd74e38d51b2cb92c8833a2a9121d5c5ca
+  source_hashes: docs/status/evidence/open-items-2026-10-16/go2-rotate/source-hashes-56d3edc.json
+  source_hashes_sha256: d9512fb060a08a22eaa37a19db5158d0f0ccaf64dff637a1f689d27830b46081
+  report_kind: mission_screen
+  scope: nav_obstacle mission for the Go2 in Isaac with rotate-to-heading (reverted after this round); truth-measured
+    final poses.
+  limitations:
+  - Goal seeds 1-3, one world; heading not checked
+- robot_id: unitree_go2
+  environment_id: nav_obstacle
+  simulator: isaac
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-10-16'
+  revision: 56d3edc (round 49c, 14:18-14:33)
+  report: docs/status/evidence/open-items-2026-10-16/go2-rotate/isaac_unitree_go2_seed3_nav_obstacle.json
+  sha256: 4d7e7cdee55d8fc67513aaf2f55352ef3979e7dd45b6b964547df7935084b286
+  source_hashes: docs/status/evidence/open-items-2026-10-16/go2-rotate/source-hashes-56d3edc.json
+  source_hashes_sha256: d9512fb060a08a22eaa37a19db5158d0f0ccaf64dff637a1f689d27830b46081
+  report_kind: mission_screen
+  scope: nav_obstacle mission for the Go2 in Isaac with rotate-to-heading (reverted after this round); truth-measured
+    final poses.
+  limitations:
+  - Goal seeds 1-3, one world; heading not checked
+- robot_id: molar_hri
+  environment_id: celisca_floor_1_detailed
+  simulator: gazebo
+  task_type: gui_articulation
+  steering_mode: ''
+  date: '2026-10-19'
+  revision: ca218dd (round M3b, 10:58-11:47)
+  report: docs/status/evidence/molar-hri-2026-10-16/reports/gazebo_molar_hri_celisca_floor_1_detailed.json
+  sha256: 09d825d8d9138549483e1e850d84ded0edd97a6362c908bb71e6c687f3d36e5b
+  source_hashes: docs/status/evidence/molar-hri-2026-10-16/reports/source-hashes-ca218dd.json
+  source_hashes_sha256: 18e2ed665fe28b1c994546835e945541e7bca5834b9dca84288ad2086ec34aa6
+  report_kind: articulation_screen
+  scope: 'Normal GUI under Xvfb in Display mode: W and W+A drive, Stop, lift to 0.06 and 0.68 m, both coupled telescope
+    stages to 0.06 and 0.14 m, drive inhibited with the telescope out, roller at 2 rad/s, Stop hold and heartbeat-loss
+    roller stop, judged from simulator truth and measured joints.'
+  limitations:
+  - One run per cell; no payload, sensors, SLAM/Nav2 or physical robot
+  - Masses, gains, caster friction and floor collision are estimates
+- robot_id: molar_hri
+  environment_id: celisca_floor_2_detailed
+  simulator: gazebo
+  task_type: gui_articulation
+  steering_mode: ''
+  date: '2026-10-19'
+  revision: ca218dd (round M3b, 10:58-11:47)
+  report: docs/status/evidence/molar-hri-2026-10-16/reports/gazebo_molar_hri_celisca_floor_2_detailed.json
+  sha256: 11a4ff963535067b8e37b2bf8bbae80370eeb5a1a698d69eee0b04d71cf46d44
+  source_hashes: docs/status/evidence/molar-hri-2026-10-16/reports/source-hashes-ca218dd.json
+  source_hashes_sha256: 18e2ed665fe28b1c994546835e945541e7bca5834b9dca84288ad2086ec34aa6
+  report_kind: articulation_screen
+  scope: 'Normal GUI under Xvfb in Display mode: W and W+A drive, Stop, lift to 0.06 and 0.68 m, both coupled telescope
+    stages to 0.06 and 0.14 m, drive inhibited with the telescope out, roller at 2 rad/s, Stop hold and heartbeat-loss
+    roller stop, judged from simulator truth and measured joints.'
+  limitations:
+  - One run per cell; no payload, sensors, SLAM/Nav2 or physical robot
+  - Masses, gains, caster friction and floor collision are estimates
+- robot_id: molar_hri
+  environment_id: nav_empty
+  simulator: gazebo
+  task_type: gui_articulation
+  steering_mode: ''
+  date: '2026-10-19'
+  revision: ca218dd (round M3b, 10:58-11:47)
+  report: docs/status/evidence/molar-hri-2026-10-16/reports/gazebo_molar_hri_nav_empty.json
+  sha256: adf93c7f5e26c01c32e2809276f8aca179e6113e758e679d46e08c74dc996f48
+  source_hashes: docs/status/evidence/molar-hri-2026-10-16/reports/source-hashes-ca218dd.json
+  source_hashes_sha256: 18e2ed665fe28b1c994546835e945541e7bca5834b9dca84288ad2086ec34aa6
+  report_kind: articulation_screen
+  scope: 'Normal GUI under Xvfb in Display mode: W and W+A drive, Stop, lift to 0.06 and 0.68 m, both coupled telescope
+    stages to 0.06 and 0.14 m, drive inhibited with the telescope out, roller at 2 rad/s, Stop hold and heartbeat-loss
+    roller stop, judged from simulator truth and measured joints.'
+  limitations:
+  - One run per cell; no payload, sensors, SLAM/Nav2 or physical robot
+  - Masses, gains, caster friction and floor collision are estimates
+- robot_id: probot_l
+  environment_id: nav_empty
+  simulator: gazebo
+  task_type: gui_articulation
+  steering_mode: ''
+  date: '2026-10-19'
+  revision: ca218dd (round M3b, 10:58-11:47)
+  report: docs/status/evidence/molar-hri-2026-10-16/reports/gazebo_probot_l_nav_empty.json
+  sha256: d6862d75398452d0eaa9ea413f5569c3643ee6a41a1264a522f008336f7bb28e
+  source_hashes: docs/status/evidence/molar-hri-2026-10-16/reports/source-hashes-ca218dd.json
+  source_hashes_sha256: 18e2ed665fe28b1c994546835e945541e7bca5834b9dca84288ad2086ec34aa6
+  report_kind: articulation_screen
+  scope: 'Normal GUI under Xvfb in Display mode: W and W+A drive, Stop, lift to 0.06 and 0.68 m, both coupled telescope
+    stages to 0.06 and 0.14 m, drive inhibited with the telescope out, roller at 2 rad/s, Stop hold and heartbeat-loss
+    roller stop, judged from simulator truth and measured joints.'
+  limitations:
+  - One run per cell; no payload, sensors, SLAM/Nav2 or physical robot
+  - Masses, gains, caster friction and floor collision are estimates
+- robot_id: molar_hri
+  environment_id: celisca_floor_1_detailed
+  simulator: isaac
+  task_type: gui_articulation
+  steering_mode: ''
+  date: '2026-10-19'
+  revision: ca218dd (round M3b, 10:58-11:47)
+  report: docs/status/evidence/molar-hri-2026-10-16/reports/isaac_molar_hri_celisca_floor_1_detailed.json
+  sha256: 69591e71399dc9706914983545b5e4f378834cdcca151eac37f7045b3c2eb069
+  source_hashes: docs/status/evidence/molar-hri-2026-10-16/reports/source-hashes-ca218dd.json
+  source_hashes_sha256: 18e2ed665fe28b1c994546835e945541e7bca5834b9dca84288ad2086ec34aa6
+  report_kind: articulation_screen
+  scope: 'Normal GUI under Xvfb in Display mode: W and W+A drive, Stop, lift to 0.06 and 0.68 m, both coupled telescope
+    stages to 0.06 and 0.14 m, drive inhibited with the telescope out, roller at 2 rad/s, Stop hold and heartbeat-loss
+    roller stop, judged from simulator truth and measured joints.'
+  limitations:
+  - One run per cell; no payload, sensors, SLAM/Nav2 or physical robot
+  - Masses, gains, caster friction and floor collision are estimates
+- robot_id: molar_hri
+  environment_id: celisca_floor_2_detailed
+  simulator: isaac
+  task_type: gui_articulation
+  steering_mode: ''
+  date: '2026-10-19'
+  revision: ca218dd (round M3b, 10:58-11:47)
+  report: docs/status/evidence/molar-hri-2026-10-16/reports/isaac_molar_hri_celisca_floor_2_detailed.json
+  sha256: dbc337efbfe1ffcf9d8b3dec75ef4eb333e56729936580c74edf23fe8fbc6035
+  source_hashes: docs/status/evidence/molar-hri-2026-10-16/reports/source-hashes-ca218dd.json
+  source_hashes_sha256: 18e2ed665fe28b1c994546835e945541e7bca5834b9dca84288ad2086ec34aa6
+  report_kind: articulation_screen
+  scope: 'Normal GUI under Xvfb in Display mode: W and W+A drive, Stop, lift to 0.06 and 0.68 m, both coupled telescope
+    stages to 0.06 and 0.14 m, drive inhibited with the telescope out, roller at 2 rad/s, Stop hold and heartbeat-loss
+    roller stop, judged from simulator truth and measured joints.'
+  limitations:
+  - One run per cell; no payload, sensors, SLAM/Nav2 or physical robot
+  - Masses, gains, caster friction and floor collision are estimates
+- robot_id: molar_hri
+  environment_id: nav_empty
+  simulator: isaac
+  task_type: gui_articulation
+  steering_mode: ''
+  date: '2026-10-19'
+  revision: ca218dd (round M3b, 10:58-11:47)
+  report: docs/status/evidence/molar-hri-2026-10-16/reports/isaac_molar_hri_nav_empty.json
+  sha256: 5051ab72f18770060847664c8b95b201f1c416c6ee7a4a13289e21e4ece094b2
+  source_hashes: docs/status/evidence/molar-hri-2026-10-16/reports/source-hashes-ca218dd.json
+  source_hashes_sha256: 18e2ed665fe28b1c994546835e945541e7bca5834b9dca84288ad2086ec34aa6
+  report_kind: articulation_screen
+  scope: 'Normal GUI under Xvfb in Display mode: W and W+A drive, Stop, lift to 0.06 and 0.68 m, both coupled telescope
+    stages to 0.06 and 0.14 m, drive inhibited with the telescope out, roller at 2 rad/s, Stop hold and heartbeat-loss
+    roller stop, judged from simulator truth and measured joints.'
+  limitations:
+  - One run per cell; no payload, sensors, SLAM/Nav2 or physical robot
+  - Masses, gains, caster friction and floor collision are estimates
+- robot_id: probot_l
+  environment_id: nav_empty
+  simulator: isaac
+  task_type: gui_articulation
+  steering_mode: ''
+  date: '2026-10-19'
+  revision: ca218dd (round M3b, 10:58-11:47)
+  report: docs/status/evidence/molar-hri-2026-10-16/reports/isaac_probot_l_nav_empty.json
+  sha256: 5d61a7096d4c53bbcb06f7313f82d32b37b7ed753ad4e8331d24814907ef6be0
+  source_hashes: docs/status/evidence/molar-hri-2026-10-16/reports/source-hashes-ca218dd.json
+  source_hashes_sha256: 18e2ed665fe28b1c994546835e945541e7bca5834b9dca84288ad2086ec34aa6
+  report_kind: articulation_screen
+  scope: 'Normal GUI under Xvfb in Display mode: W and W+A drive, Stop, lift to 0.06 and 0.68 m, both coupled telescope
+    stages to 0.06 and 0.14 m, drive inhibited with the telescope out, roller at 2 rad/s, Stop hold and heartbeat-loss
+    roller stop, judged from simulator truth and measured joints.'
+  limitations:
+  - One run per cell; no payload, sensors, SLAM/Nav2 or physical robot
+  - Masses, gains, caster friction and floor collision are estimates
+- robot_id: molar_hri
+  environment_id: celisca_floor_1_detailed
+  simulator: mujoco
+  task_type: gui_articulation
+  steering_mode: ''
+  date: '2026-10-19'
+  revision: ca218dd (round M3b, 10:58-11:47)
+  report: docs/status/evidence/molar-hri-2026-10-16/reports/mujoco_molar_hri_celisca_floor_1_detailed.json
+  sha256: a4482b7a89a03624aa2588a43d97d229d7115e9410d2fb7287281bf6e5ae8e6f
+  source_hashes: docs/status/evidence/molar-hri-2026-10-16/reports/source-hashes-ca218dd.json
+  source_hashes_sha256: 18e2ed665fe28b1c994546835e945541e7bca5834b9dca84288ad2086ec34aa6
+  report_kind: articulation_screen
+  scope: 'Normal GUI under Xvfb in Display mode: W and W+A drive, Stop, lift to 0.06 and 0.68 m, both coupled telescope
+    stages to 0.06 and 0.14 m, drive inhibited with the telescope out, roller at 2 rad/s, Stop hold and heartbeat-loss
+    roller stop, judged from simulator truth and measured joints.'
+  limitations:
+  - One run per cell; no payload, sensors, SLAM/Nav2 or physical robot
+  - Masses, gains, caster friction and floor collision are estimates
+- robot_id: molar_hri
+  environment_id: celisca_floor_2_detailed
+  simulator: mujoco
+  task_type: gui_articulation
+  steering_mode: ''
+  date: '2026-10-19'
+  revision: ca218dd (round M3b, 10:58-11:47)
+  report: docs/status/evidence/molar-hri-2026-10-16/reports/mujoco_molar_hri_celisca_floor_2_detailed.json
+  sha256: 8b059a2327d418da1325c7f642f21309a7b721ab7352acb5c1a01d6eb6bb6c5d
+  source_hashes: docs/status/evidence/molar-hri-2026-10-16/reports/source-hashes-ca218dd.json
+  source_hashes_sha256: 18e2ed665fe28b1c994546835e945541e7bca5834b9dca84288ad2086ec34aa6
+  report_kind: articulation_screen
+  scope: 'Normal GUI under Xvfb in Display mode: W and W+A drive, Stop, lift to 0.06 and 0.68 m, both coupled telescope
+    stages to 0.06 and 0.14 m, drive inhibited with the telescope out, roller at 2 rad/s, Stop hold and heartbeat-loss
+    roller stop, judged from simulator truth and measured joints.'
+  limitations:
+  - One run per cell; no payload, sensors, SLAM/Nav2 or physical robot
+  - Masses, gains, caster friction and floor collision are estimates
+- robot_id: molar_hri
+  environment_id: nav_empty
+  simulator: mujoco
+  task_type: gui_articulation
+  steering_mode: ''
+  date: '2026-10-19'
+  revision: ca218dd (round M3b, 10:58-11:47)
+  report: docs/status/evidence/molar-hri-2026-10-16/reports/mujoco_molar_hri_nav_empty.json
+  sha256: 195e520b163130c6bbbb3eb1bef809880ba47dd1e5feae9a2fa8106d47db64b4
+  source_hashes: docs/status/evidence/molar-hri-2026-10-16/reports/source-hashes-ca218dd.json
+  source_hashes_sha256: 18e2ed665fe28b1c994546835e945541e7bca5834b9dca84288ad2086ec34aa6
+  report_kind: articulation_screen
+  scope: 'Normal GUI under Xvfb in Display mode: W and W+A drive, Stop, lift to 0.06 and 0.68 m, both coupled telescope
+    stages to 0.06 and 0.14 m, drive inhibited with the telescope out, roller at 2 rad/s, Stop hold and heartbeat-loss
+    roller stop, judged from simulator truth and measured joints.'
+  limitations:
+  - One run per cell; no payload, sensors, SLAM/Nav2 or physical robot
+  - Masses, gains, caster friction and floor collision are estimates
+- robot_id: probot_l
+  environment_id: nav_empty
+  simulator: mujoco
+  task_type: gui_articulation
+  steering_mode: ''
+  date: '2026-10-19'
+  revision: ca218dd (round M3b, 10:58-11:47)
+  report: docs/status/evidence/molar-hri-2026-10-16/reports/mujoco_probot_l_nav_empty.json
+  sha256: 94d8c200e212d75fc956b831cb133a21b016ea6d79fca971d7645aa553bd527a
+  source_hashes: docs/status/evidence/molar-hri-2026-10-16/reports/source-hashes-ca218dd.json
+  source_hashes_sha256: 18e2ed665fe28b1c994546835e945541e7bca5834b9dca84288ad2086ec34aa6
+  report_kind: articulation_screen
+  scope: 'Normal GUI under Xvfb in Display mode: W and W+A drive, Stop, lift to 0.06 and 0.68 m, both coupled telescope
+    stages to 0.06 and 0.14 m, drive inhibited with the telescope out, roller at 2 rad/s, Stop hold and heartbeat-loss
+    roller stop, judged from simulator truth and measured joints.'
+  limitations:
+  - One run per cell; no payload, sensors, SLAM/Nav2 or physical robot
+  - Masses, gains, caster friction and floor collision are estimates
+- robot_id: molar_hri
+  environment_id: celisca_floor_1_detailed
+  simulator: pybullet
+  task_type: gui_articulation
+  steering_mode: ''
+  date: '2026-10-19'
+  revision: ca218dd (round M3b, 10:58-11:47)
+  report: docs/status/evidence/molar-hri-2026-10-16/reports/pybullet_molar_hri_celisca_floor_1_detailed.json
+  sha256: 2bd888083ff9da5f3429bd8b9c97d5b662cb631d6a956cdcf5c8fc8612216bbf
+  source_hashes: docs/status/evidence/molar-hri-2026-10-16/reports/source-hashes-ca218dd.json
+  source_hashes_sha256: 18e2ed665fe28b1c994546835e945541e7bca5834b9dca84288ad2086ec34aa6
+  report_kind: articulation_screen
+  scope: 'Normal GUI under Xvfb in Display mode: W and W+A drive, Stop, lift to 0.06 and 0.68 m, both coupled telescope
+    stages to 0.06 and 0.14 m, drive inhibited with the telescope out, roller at 2 rad/s, Stop hold and heartbeat-loss
+    roller stop, judged from simulator truth and measured joints.'
+  limitations:
+  - One run per cell; no payload, sensors, SLAM/Nav2 or physical robot
+  - Masses, gains, caster friction and floor collision are estimates
+- robot_id: molar_hri
+  environment_id: celisca_floor_2_detailed
+  simulator: pybullet
+  task_type: gui_articulation
+  steering_mode: ''
+  date: '2026-10-19'
+  revision: ca218dd (round M3b, 10:58-11:47)
+  report: docs/status/evidence/molar-hri-2026-10-16/reports/pybullet_molar_hri_celisca_floor_2_detailed.json
+  sha256: 5b8c2e42f2d2dd3163610787edff42f4781982df6ac010b88155d5abfa6c1a1e
+  source_hashes: docs/status/evidence/molar-hri-2026-10-16/reports/source-hashes-ca218dd.json
+  source_hashes_sha256: 18e2ed665fe28b1c994546835e945541e7bca5834b9dca84288ad2086ec34aa6
+  report_kind: articulation_screen
+  scope: 'Normal GUI under Xvfb in Display mode: W and W+A drive, Stop, lift to 0.06 and 0.68 m, both coupled telescope
+    stages to 0.06 and 0.14 m, drive inhibited with the telescope out, roller at 2 rad/s, Stop hold and heartbeat-loss
+    roller stop, judged from simulator truth and measured joints.'
+  limitations:
+  - One run per cell; no payload, sensors, SLAM/Nav2 or physical robot
+  - Masses, gains, caster friction and floor collision are estimates
+- robot_id: molar_hri
+  environment_id: nav_empty
+  simulator: pybullet
+  task_type: gui_articulation
+  steering_mode: ''
+  date: '2026-10-19'
+  revision: ca218dd (round M3b, 10:58-11:47)
+  report: docs/status/evidence/molar-hri-2026-10-16/reports/pybullet_molar_hri_nav_empty.json
+  sha256: b7ceba9a21030b3b599d59368d12a7e6175156762a0411f2b39813772fd4456c
+  source_hashes: docs/status/evidence/molar-hri-2026-10-16/reports/source-hashes-ca218dd.json
+  source_hashes_sha256: 18e2ed665fe28b1c994546835e945541e7bca5834b9dca84288ad2086ec34aa6
+  report_kind: articulation_screen
+  scope: 'Normal GUI under Xvfb in Display mode: W and W+A drive, Stop, lift to 0.06 and 0.68 m, both coupled telescope
+    stages to 0.06 and 0.14 m, drive inhibited with the telescope out, roller at 2 rad/s, Stop hold and heartbeat-loss
+    roller stop, judged from simulator truth and measured joints.'
+  limitations:
+  - One run per cell; no payload, sensors, SLAM/Nav2 or physical robot
+  - Masses, gains, caster friction and floor collision are estimates
+- robot_id: probot_l
+  environment_id: nav_empty
+  simulator: pybullet
+  task_type: gui_articulation
+  steering_mode: ''
+  date: '2026-10-19'
+  revision: ca218dd (round M3b, 10:58-11:47)
+  report: docs/status/evidence/molar-hri-2026-10-16/reports/pybullet_probot_l_nav_empty.json
+  sha256: 29668b2d9f42e0e035cca1c603c8322ffa4ddbca196b2171354fd02fa1b815f6
+  source_hashes: docs/status/evidence/molar-hri-2026-10-16/reports/source-hashes-ca218dd.json
+  source_hashes_sha256: 18e2ed665fe28b1c994546835e945541e7bca5834b9dca84288ad2086ec34aa6
+  report_kind: articulation_screen
+  scope: 'Normal GUI under Xvfb in Display mode: W and W+A drive, Stop, lift to 0.06 and 0.68 m, both coupled telescope
+    stages to 0.06 and 0.14 m, drive inhibited with the telescope out, roller at 2 rad/s, Stop hold and heartbeat-loss
+    roller stop, judged from simulator truth and measured joints.'
+  limitations:
+  - One run per cell; no payload, sensors, SLAM/Nav2 or physical robot
+  - Masses, gains, caster friction and floor collision are estimates

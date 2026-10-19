@@ -11,14 +11,16 @@ owns task states and the [roadmap](../../ROADMAP.md) defines acceptance.
 
 ## Read support by exact composition
 
-The [generated measured matrix](evidence/support-matrix-2026-10-15/support-matrix-current.md)
-and [JSON report](evidence/support-matrix-2026-10-15/support-matrix-current.json)
-validate **546 indexed reports / 251 distinct measured cells**. October 15
-adds 40 cells: the walking robots, cars and 4WS/mecanum patterns on the
-nav_obstacle mission, then the wheeled seed 2 and 3 repeats. October 16
-adds the G1 inflation reruns, the fixed 4WS crab/in_phase missions and two
-car rounds. 247 cells are passed screens and 3 failed screens
-([what changed](evidence/support-matrix-2026-10-15/README.md)). The
+The [generated measured matrix](evidence/support-matrix-2026-10-19/support-matrix-current.md)
+and [JSON report](evidence/support-matrix-2026-10-19/support-matrix-current.json)
+validate **591 indexed reports / 269 distinct measured cells**: 267 passed
+screens and 1 failed screen (Go2 nav_obstacle in Isaac)
+([what changed](evidence/support-matrix-2026-10-19/README.md)). October 19
+adds the October 16 open-item missions and 16 MOLAR normal-GUI articulation
+cells (`molar_hri` in four backends on `nav_empty` and both detailed CELISCA
+floors, `probot_l` on `nav_empty`). The
+[October 15 matrix](evidence/support-matrix-2026-10-15/support-matrix-current.md)
+(251 cells), the
 [October 12 matrix](evidence/support-matrix-2026-10-12/support-matrix-current.md)
 (211 cells) and the
 [October 8 matrix](evidence/extensions-finish-2026-10-08/support-matrix-current.md)

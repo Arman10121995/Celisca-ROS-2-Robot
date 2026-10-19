@@ -4,9 +4,13 @@ This integration adds two complete robot variants and two separate detailed
 CELISCA floors to the normal Robot Lab GUI. The workflow provides differential
 Drive, conveyor lift, coupled telescope and transfer-roller controls in
 **Display** mode. These are implemented simulator adapters with estimated
-dynamics. A selectable backend is a candidate, not a qualification result.
-Per-backend runtime acceptance remains pending the coordinator's measured
-results; this guide makes no new runtime success claim.
+dynamics. The normal-GUI check (`scripts/qualify_molar_hri_gui.py`) covers
+drive, lift and telescope to their limits, roller, Stop and heartbeat loss.
+It passes for `molar_hri` in Gazebo, MuJoCo, PyBullet and Isaac on
+`nav_empty` and on both detailed floors, and for `probot_l` on `nav_empty`
+([evidence](../status/evidence/molar-hri-2026-10-16/README.md)). Each pass
+covers that exact robot/backend/map cell only. Payload handling,
+sensors, SLAM/Nav2 and physical behaviour are not qualified.
 
 Use the [task ledger](../status/platform-status.yaml) for current ownership,
 acceptance and evidence. Follow [Storage](../STORAGE.md) and keep sources,
@@ -160,6 +164,25 @@ PyBullet's earlier explicit roller PD trial was unstable; the current candidate
 uses its native implicit motor. Gains, damping and other backend solver settings
 remain estimates requiring actual per-backend measurement.
 
+Backend settings found by the October 16-19 runs:
+
+- MuJoCo integrates a robot with an articulation implicitly (`implicitfast`).
+  Under explicit Euler the light roller misread and kept the base inhibited.
+- MuJoCo and Isaac add a gravity feedforward to the lift and telescope
+  servos. The servo and the feedforward share the joint's source effort
+  limit. Without it, a pure PD held the 14.2 kg carriage 7 mm low, and each
+  Stop lowered it further. MuJoCo ramps the feedforward in over the first
+  second after a spawn and gives the slides stiff stops (5 ms), so the spawn
+  landing stays inside the contract's measurement allowance.
+- "Articulation active" and Isaac's "base moving" are judged from the
+  position change over 0.25 s of simulated time. Isaac's reported joint and
+  body velocities jitter at rest.
+- In Gazebo (Fortress/DART) the caster tyres have friction 0.1, so they
+  swivel. The lift and telescope hard stops sit 5 mm below the controlled
+  range, because DART's velocity servo cannot leave a stop it rests on.
+- Isaac leaves a world mesh's triangles lying on its z = 0 ground plane to the
+  plane: the detailed floors' long duplicated floor slivers threw the base.
+
 ### ROS debugging interfaces
 
 The normal GUI is the operator entry point. Diagnostic interfaces are:
@@ -192,7 +215,10 @@ PBR-to-Phong appearance is approximate. Bathroom dimensions and unsurveyed
 fixtures are research illustrations, not a measured building survey.
 
 Collision retains original structural triangles and conservative per-object
-furniture/fixture boxes. Decorative tile/grout has no collision. Doors and lifts
+furniture/fixture boxes. Gazebo and MuJoCo read them from
+`native/meshes/collision_normals_v1.stl`, which has explicit normals and the
+source OBJ's exact float64 triangles, because Fortress/DART ignored the OBJ's
+normal-less submeshes. Decorative tile/grout has no collision. Doors and lifts
 are static. Full visual detail is not full geometric collision fidelity.
 The occupancy map is an **offline** 0.06–2.3 m collision-height-band projection
 at 0.05 m/cell; only the source-supported spawn component is free. Disconnected
@@ -257,16 +283,18 @@ despite a symlink-install build.
 
 ## Verification and continuation
 
-The latest focused implementation checks reported **55 GUI, 15 shared-contract,
-18 backend-contract, 4 robot-profile and 5 detailed-map tests**. These exercise
-source/interface contracts and actual Tk input behavior; they do not establish
-robot travel, load handling, physics stability, all-map compatibility or a broad
-release gate. Counts belong to their recorded source stage.
+On October 19 the shared-contract, backend-contract, Gazebo-watchdog,
+robot-profile and detailed-map suites passed together: 81 tests at `ca218dd`.
+The GUI suite (55 tests) passed on October 16; `molar_controls.py` has not
+changed since. These suites exercise source/interface contracts and actual
+Tk input behaviour. Travel, load handling and stability come from the
+runtime checks below, not from the tests.
 
 Relevant source suites are `src/robot_lab_gui/test/test_molar_controls.py`,
 `src/robot_lab_utils/test/test_urdf_articulation.py`,
 `src/robot_lab_bringup/test/test_molar_backend_contract.py`,
-`src/robot_lab_bringup/test/test_molar_robot.py` and
+`src/robot_lab_bringup/test/test_molar_robot.py`,
+`src/robot_lab_bringup/test/test_molar_gazebo_watchdog.py` and
 `src/robot_lab_maps/test/test_celisca_detailed.py`. Use the repository's focused
 test instructions and Xvfb for Tk. No runtime result is inferred from those tests.
 
@@ -280,6 +308,21 @@ acceptance. Verify actual forward/reverse/combined turn, lift, both slides,
 roller, Stop, heartbeat loss, selection/launch loss, reset and limits before
 claiming that exact cell; detailed-floor contacts and import/visual fidelity need
 their own checks. Missing/unrun backends stay pending.
+
+Measured on October 19 (round M3b, `ca218dd`): the producer passes for
+`molar_hri` in Gazebo, MuJoCo, PyBullet and Isaac on `nav_empty`,
+`celisca_floor_1_detailed` and `celisca_floor_2_detailed`, and for
+`probot_l` on `nav_empty`. Per cell:
+
+- the lift holds 0.0600 m and reaches 0.6800 m;
+- both stages reach 0.14 m (0.28 m tip), coupled within 0.21 mm;
+- Stop drift stays under 0.4 mm;
+- the roller stops on heartbeat loss (|ω| < 0.09 rad/s);
+- with the telescope out the base stays within 1.4 mm.
+
+The [evidence README](../status/evidence/molar-hri-2026-10-16/README.md) has
+the table, the reports and the nine fixes. Selection loss, reset and
+reverse driving are not in the producer yet.
 
 Masses, inertias, caster parameters, servo gains, friction, joint travel and HRI
 load allocation include estimates. Internal conveyor mechanics, payload transfer,

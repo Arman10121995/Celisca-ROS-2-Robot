@@ -1,14 +1,16 @@
 molar_hri_integration_20261016:
   task_id: R11_molar_hri
-  owner: codex-root
-  state: active
+  owner: claude
+  state: done
   requested: '2026-10-16'
   priority: Latest user request; detailed MOLAR maps and differential-drive/telescope robot in native Robot Lab
   scope_paths: ['src/robot_lab_robots/', 'src/robot_lab_maps/', 'src/robot_lab_bringup/', 'src/robot_lab_gui/', 'src/robot_lab_utils/', 'src/robot_lab_mujoco/', 'src/robot_lab_pybullet/', 'src/robot_lab_isaac/', 'src/robot_lab/robot_lab_registry/', 'scripts/', 'docs/', 'ROADMAP.md', '.gitattributes']
   delegated_map_owner: codex-robotlab_celisca_integration
   acceptance: Normal native GUI selection; actual differential drive and bounded lift/telescope control with Stop/watchdog; exact per-backend measured evidence, never inferred parity
   safety: Simulation only; no physical robot, FMS, AIC, door, lift or PLC commands; preserve other task owners and existing models
-  implementation_state: "Native interfaces implemented; registry robot_class fixed (mobile_manipulator -> mobile) so molar_hri/probot_l resolve in the catalog; GUI receive() signature fixed for rclpy subscription callback; launch file now starts molar_gazebo_control.py for every backend (was Gazebo-only). Unit tests pass (46/46: test_molar_robot + test_molar_controls). Per-backend runtime qualification evidence via qualify_molar_hri_gui.py pending GUI/discovery integration in this session."
+  implementation_state: "2026-10-19 (claude, continuing codex-root): normal-GUI check scripts/qualify_molar_hri_gui.py (W/W+A drive, Stop, lift to 0.06 and 0.68 m, both coupled telescope stages to 0.06 and 0.14 m, inhibited drive with the telescope out, roller 2 rad/s, Stop hold, heartbeat-loss roller stop) passes for molar_hri in Gazebo, MuJoCo, PyBullet and Isaac on nav_empty, celisca_floor_1_detailed and celisca_floor_2_detailed and for probot_l on nav_empty (round M3b, ca218dd). Nine backend fixes from failing runs: MuJoCo implicitfast with an articulation; slide gravity feedforward in MuJoCo/Isaac within one effort budget, ramped in after a MuJoCo spawn with 5 ms stops; activity and Isaac base motion from position change; STL floor collision with normals (codex); Gazebo caster friction 0.1; hard stops 5 mm below the controlled range for DART; Isaac leaves z=0 sliver floor triangles to its ground plane. The Gazebo adapter runs only for Gazebo; the other backends host the endpoint."
+  evidence: ["docs/status/evidence/molar-hri-2026-10-16/README.md", "docs/tutorials/molar-hri-simulation.md"]
+  open: "Sensors, SLAM/Nav2 and routes on the floors; payload transfer; multi-floor, door or building-lift operation; repeats and identified dynamics; probot_l on the detailed floors."
 # Task ledger schema v2. See ROADMAP.md and docs/AGENT_HANDOFF.md.
 # Counts are audited observations, not targets or proof of runtime qualification.
 schema_version: 2

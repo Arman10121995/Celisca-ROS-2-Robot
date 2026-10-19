@@ -1,5 +1,23 @@
 # Current Robot Lab status
 
+October 19: **the MOLAR family runs in all four simulators on the detailed
+CELISCA floors** ([evidence](evidence/molar-hri-2026-10-16/README.md),
+[guide](../tutorials/molar-hri-simulation.md)).
+- The normal-GUI check covers drive, W+A turn, lift to 0.68 m, both
+  coupled telescope stages to 0.14 m (0.28 m tip), roller, Stop and
+  heartbeat loss. It passes for `molar_hri` in Gazebo, MuJoCo, PyBullet and
+  Isaac on `nav_empty` and both detailed floors, and for `probot_l` on
+  `nav_empty`. An earlier agent's MuJoCo run never moved; Gazebo and Isaac
+  had no runs.
+- Nine backend fixes got there. Among them: implicit integration and a
+  gravity feedforward for the slides; activity and base motion from
+  position change (Isaac's velocities jitter); Gazebo caster friction and
+  hard stops below the controlled range (DART); and Isaac leaving the
+  floors' coincident sliver triangles to its ground plane.
+- The other agent's hardening of October 19 is committed (`b5ae10d`): a
+  shared effort budget, excursion-aware activity, Gazebo feedback
+  validation and STL floor collision.
+
 October 16: **the open items were worked through**, with each cause found
 before the fix ([evidence](evidence/open-items-2026-10-16/README.md)).
 - MPPI with an RPP arrival assist reaches 15/15 goals (7/15 before).
@@ -8,14 +26,21 @@ before the fix ([evidence](evidence/open-items-2026-10-16/README.md)).
 - MuJoCo's small_house was 100x too large through a stale mesh cache; it
   now matches its map and draws Gazebo's textures, as PyBullet and Isaac
   do.
-- B2 walks in Isaac with a DC-motor actuator on the training floor
-  (0.68 m/s overshoot before).
+- B2 walks in Isaac with a DC-motor actuator on the training floor (0.68
+  m/s overshoot before) and passes its three Isaac obstacle missions.
 - G1 passes 3/3 in Isaac at a 0.12 m goal (0.256 m before).
-- The cars retry their approach; the course, calibration room, publisher
-  loss and clean-host Gazebo/Isaac steps are implemented and being
-  measured.
-- Another agent's uncommitted MOLAR HRI work stays uncommitted in the
-  tree.
+- Go2 with a wider planner inflation passes 3/3 in MuJoCo and Gazebo. In
+  Isaac, seed 1 ends 0.283 m out (over the 0.25 m screen) and seed 3 still
+  aborts. Rotating in place first failed all three Isaac seeds and was
+  reverted: the Go2 stops turning on the spot after 1-2 s there.
+- Bumperbot's Gazebo slam drive went from 10.2-10.5 cm to 6.4 cm RMSE
+  with a one-sample twist window; the cars reach 1-2.5 cm.
+- Isaac's camera stays noisy. No anti-aliasing mode or RaytracedLighting
+  changed it, PathTracing crashed Kit, and MinimalRendering is noise-free
+  but loses the untextured scene.
+- The cars retry their approach. The car course, calibration room,
+  publisher loss and clean-host Gazebo/Isaac steps are implemented and
+  queued for measurement.
 
 October 15 AUV continuation: **native Tethys propeller/fins, explicit trim
 and experimental Marine cruise guidance** are installed. One actual GUI reef

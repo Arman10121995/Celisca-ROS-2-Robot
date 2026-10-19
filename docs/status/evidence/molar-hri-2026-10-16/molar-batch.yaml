@@ -1,0 +1,39 @@
+# MOLAR / ProBOT-L normal-GUI articulation screens (round M3), indexed by
+# scripts/r9_3_index_missions.py.
+date: '2026-10-19'
+scope: "Exact hashed named simulation screens through October 19; unlisted cells remain untested."
+source_files:
+  - scripts/qualify_molar_hri_gui.py
+  - src/robot_lab_gui/robot_lab_gui/molar_controls.py
+  - src/robot_lab_utils/robot_lab_utils/urdf_articulation.py
+  - src/robot_lab_bringup/launch/simulated_robot.launch.py
+  - src/robot_lab_bringup/scripts/molar_gazebo_control.py
+  - src/robot_lab_mujoco/python/robot_lab_mujoco/mujoco_spawner.py
+  - src/robot_lab_pybullet/python/robot_lab_pybullet/pybullet_spawner.py
+  - src/robot_lab_isaac/python/robot_lab_isaac/isaac_spawner.py
+  - src/robot_lab_isaac/python/robot_lab_isaac/isaac_runtime.py
+  - src/robot_lab_robots/config/robots.yaml
+  - src/robot_lab_robots/molar_hri/urdf/molar_hri.urdf.xacro
+  - src/robot_lab_robots/probot_l/urdf/probot_l.urdf.xacro
+  - src/robot_lab_bringup/config/sim_maps.yaml
+  - src/robot_lab_maps/maps/celisca_floor_1_detailed/worlds/celisca_floor_1_detailed.world
+  - src/robot_lab_maps/maps/celisca_floor_1_detailed/native/meshes/collision_normals_v1.stl
+  - src/robot_lab_maps/maps/celisca_floor_2_detailed/worlds/celisca_floor_2_detailed.world
+  - src/robot_lab_maps/maps/celisca_floor_2_detailed/native/meshes/collision_normals_v1.stl
+groups:
+  - reports:
+      - docs/status/evidence/molar-hri-2026-10-16/reports/*.json
+    report_kind: articulation_screen
+    identity: {task_type: gui_articulation}
+    date: '2026-10-19'
+    revision: "ca218dd (round M3b, 10:58-11:47)"
+    hash_revision: ca218dd
+    scope: >-
+      Normal GUI under Xvfb in Display mode: W and W+A drive, Stop, lift to
+      0.06 and 0.68 m, both coupled telescope stages to 0.06 and 0.14 m,
+      drive inhibited with the telescope out, roller at 2 rad/s, Stop hold
+      and heartbeat-loss roller stop, judged from simulator truth and
+      measured joints.
+    limitations:
+      - One run per cell; no payload, sensors, SLAM/Nav2 or physical robot
+      - Masses, gains, caster friction and floor collision are estimates
