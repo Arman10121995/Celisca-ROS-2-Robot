@@ -18,6 +18,12 @@ legged_gym: ``walk`` (velocity tracking), ``turn_in_place`` (yaw rate with
 the base held in place), ``stand`` (hold the default pose upright) and
 ``push_recovery`` (stand while being pushed).
 
+Options for transfer beyond the nominal plant (all off by default):
+``Randomization`` (floor friction, added base mass and motor strength, one
+of K model variants per episode), ``terrain='rough'`` (a smooth random
+heightfield, flat around the spawn) and ``obs_noise`` (legged_gym's
+per-term observation noise).
+
 This is a training tool, not an evaluation of any robot: a trained policy
 needs its own measured runs before any claim.
 """
@@ -84,6 +90,44 @@ TASKS = {
 }
 
 
+@dataclass
+class Randomization:
+    """Per-episode physics variation (legged_gym's domain randomisation)."""
+    friction: tuple = (0.5, 1.25)          # floor and robot geoms (MuJoCo takes the larger)
+    added_mass_kg: tuple = (-1.0, 2.0)     # on the floating base body
+    motor_strength: tuple = (0.9, 1.1)     # scales the PD actuators' kp and kd
+    variants: int = 16                     # model copies; each episode draws one
+
+
+# legged_gym's noise_scales, multiplied by the contract's observation scales.
+OBS_NOISE = dict(ang_vel=0.2, gravity_vec=0.05, dof_pos=0.01, dof_vel=1.5)
+
+TERRAIN_HALF_SIZE_M = 25.0
+TERRAIN_RESOLUTION_M = 0.1
+TERRAIN_FLAT_RADIUS_M = 1.0
+
+
+def rough_terrain_heights(seed, roughness=0.03, half_size=TERRAIN_HALF_SIZE_M,
+                          resolution=TERRAIN_RESOLUTION_M, flat_radius=TERRAIN_FLAT_RADIUS_M):
+    """Square grid of heights (m): smoothed noise within +-roughness, flat (0) near the origin."""
+    rng = np.random.default_rng(seed)
+    cells = int(round(2 * half_size / resolution)) + 1
+    heights = np.zeros((cells, cells))
+    # Bumps at 0.3-1.2 m wavelengths (bilinear upsampling of coarse noise).
+    for wavelength, weight in ((1.2, 0.6), (0.6, 0.3), (0.3, 0.1)):
+        coarse = int(np.ceil(2 * half_size / wavelength)) + 2
+        noise = rng.uniform(-1.0, 1.0, (coarse, coarse))
+        axis = np.linspace(0, coarse - 1.001, cells)
+        i0, f = np.floor(axis).astype(int), axis - np.floor(axis)
+        rows = noise[i0] * (1 - f)[:, None] + noise[i0 + 1] * f[:, None]
+        heights += weight * (rows[:, i0] * (1 - f)[None, :] + rows[:, i0 + 1] * f[None, :])
+    heights *= roughness / max(1e-9, np.abs(heights).max())
+    axis = np.linspace(-half_size, half_size, cells)
+    radius = np.hypot(axis[:, None], axis[None, :])
+    heights *= np.clip((radius - flat_radius) / flat_radius, 0.0, 1.0)
+    return heights
+
+
 def _package_map(urdf):
     from ament_index_python.packages import get_package_share_directory
     names = set(re.findall(r"package://([^/]+)/", urdf)) | set(re.findall(r"\$\(find\s+([^)]+)\)", urdf))
@@ -106,8 +150,11 @@ def template_directory(robot):
     return os.path.join(get_package_share_directory('robot_lab_adapter'), 'policies', 'rl_sar', name)
 
 
-def build_model_xml(robot, contract, armature=0.01):
-    """MJCF of *robot* on a flat floor with the contract's in-step PD actuators.
+def build_model_xml(robot, contract, armature=0.01, terrain='flat', roughness=0.03):
+    """MJCF of *robot* on a floor with the contract's in-step PD actuators.
+
+    ``terrain='rough'`` replaces the plane by a heightfield whose heights the
+    environment writes after compiling (rough_terrain_heights).
 
     The URDF import, mesh staging and PD actuators are the MuJoCo bridge's
     own (robot_lab_mujoco.mujoco_spawner / joint_pd); foot touch sensors are
@@ -132,8 +179,21 @@ def build_model_xml(robot, contract, armature=0.01):
     option.set('timestep', '%g' % contract.dt)
     option.set('integrator', 'implicitfast')
     worldbody = root.find('worldbody')
-    ET.SubElement(worldbody, 'geom', name='training_floor', type='plane', size='100 100 0.1',
-                  friction='1 0.005 0.0001')
+    if terrain == 'rough':
+        asset = root.find('asset')
+        if asset is None:
+            asset = ET.SubElement(root, 'asset')
+        cells = int(round(2 * TERRAIN_HALF_SIZE_M / TERRAIN_RESOLUTION_M)) + 1
+        # Data in [0, 1] spans 2 * roughness, centred on z = 0.
+        ET.SubElement(asset, 'hfield', name='training_terrain', nrow=str(cells), ncol=str(cells),
+                      size='%g %g %g 0.1' % (TERRAIN_HALF_SIZE_M, TERRAIN_HALF_SIZE_M, 2 * roughness))
+        ET.SubElement(worldbody, 'geom', name='training_floor', type='hfield', hfield='training_terrain',
+                      pos='0 0 %g' % -roughness, friction='1 0.005 0.0001')
+    elif terrain == 'flat':
+        ET.SubElement(worldbody, 'geom', name='training_floor', type='plane', size='100 100 0.1',
+                      friction='1 0.005 0.0001')
+    else:
+        raise ValueError('terrain must be flat or rough, not %r' % terrain)
     return ET.tostring(root, encoding='unicode')
 
 
@@ -189,19 +249,26 @@ class LeggedTrainingEnv:
     """Batched MuJoCo environment: ``reset() -> obs``, ``step(actions) -> obs, reward, done, info``."""
 
     def __init__(self, robot, task='walk', num_envs=256, seed=0, threads=None, episode_s=20.0,
-                 model_xml=None):
+                 model_xml=None, randomization: Optional[Randomization] = None, terrain='flat',
+                 roughness=0.03, obs_noise=0.0):
         import mujoco
         self.mujoco = mujoco
         self.robot = robot
         self.task = TASKS[task]
         self.template = template_directory(robot)
         self.contract = PolicyContract.load(self.template)
-        xml = model_xml or build_model_xml(robot, self.contract)
+        self.terrain, self.roughness, self.obs_noise = terrain, float(roughness), float(obs_noise)
+        xml = model_xml or build_model_xml(robot, self.contract, terrain=terrain, roughness=roughness)
         xml, self.num_feet = add_foot_sensors(xml)
         self.model_xml = xml
         self.model = mujoco.MjModel.from_xml_string(xml)
         self.num_envs = int(num_envs)
         self.rng = np.random.default_rng(seed)
+        self.heights = None
+        if terrain == 'rough':
+            self.heights = rough_terrain_heights(seed, self.roughness)
+            # MuJoCo's hfield rows run along y, columns along x.
+            self.model.hfield_data[:] = ((self.heights.T + self.roughness) / (2 * self.roughness)).ravel()
         c = self.contract
         self.dt = c.dt * c.decimation
         self.max_steps = int(round(episode_s / self.dt))
@@ -244,7 +311,36 @@ class LeggedTrainingEnv:
         self.home = np.zeros((n, 2))
         self.episode_return = np.zeros(n)
         self.term_sums = {name: np.zeros(n) for name in self.task.rewards}
+        self.randomization = randomization
+        self.models = [self.model]
+        self.variant = np.zeros(n, dtype=np.int64)
+        if randomization is not None:
+            self.models = [self._variant_model(randomization) for _ in range(max(1, int(randomization.variants)))]
         self.reset_all()
+
+    def _variant_model(self, r):
+        """A copy of the model with drawn friction, base mass and motor strength."""
+        import copy
+        mujoco, model = self.mujoco, copy.deepcopy(self.model)
+        friction = self.rng.uniform(*r.friction)
+        colliding = (model.geom_contype != 0) | (model.geom_conaffinity != 0)
+        model.geom_friction[colliding, 0] = friction
+        base = int(model.jnt_bodyid[list(model.jnt_type).index(mujoco.mjtJoint.mjJNT_FREE)])
+        model.body_mass[base] = max(0.1, model.body_mass[base] + self.rng.uniform(*r.added_mass_kg))
+        strength = self.rng.uniform(*r.motor_strength)
+        model.actuator_gainprm[self.actuator_index, 0] *= strength
+        model.actuator_biasprm[self.actuator_index, 1:3] *= strength
+        mujoco.mj_setConst(model, mujoco.MjData(model))
+        return model
+
+    def terrain_height(self, xy):
+        """Floor height (m) under (N, 2) world points."""
+        if self.heights is None:
+            return np.zeros(len(xy))
+        cells = self.heights.shape[0]
+        index = np.clip(np.rint((np.asarray(xy) + TERRAIN_HALF_SIZE_M) / TERRAIN_RESOLUTION_M).astype(int),
+                        0, cells - 1)
+        return self.heights[index[:, 0], index[:, 1]]
 
     # --- state -------------------------------------------------------------
     def _reset_state(self, count):
@@ -294,6 +390,8 @@ class LeggedTrainingEnv:
         if not len(index):
             return
         self.state[index] = self._reset_state(len(index))
+        if len(self.models) > 1:
+            self.variant[index] = self.rng.integers(len(self.models), size=len(index))
         qpos, _ = self._split(self.state[index])
         self.home[index] = qpos[:, 0:2]
         self.actions[index] = 0.0
@@ -315,8 +413,14 @@ class LeggedTrainingEnv:
         ang_vel = qvel[:, 3:6]       # free-joint angular velocity is in the body frame
         dof_pos = qpos[:, self.qpos_index] - c.default_dof_pos
         dof_vel = qvel[:, self.qvel_index]
-        obs = np.concatenate([ang_vel * c.ang_vel_scale, gravity, self.commands * c.commands_scale,
-                              dof_pos * c.dof_pos_scale, dof_vel * c.dof_vel_scale, self.actions], axis=1)
+        terms = [ang_vel * c.ang_vel_scale, gravity, self.commands * c.commands_scale,
+                 dof_pos * c.dof_pos_scale, dof_vel * c.dof_vel_scale, self.actions]
+        if self.obs_noise > 0:
+            scales = (OBS_NOISE['ang_vel'] * c.ang_vel_scale, OBS_NOISE['gravity_vec'], 0.0,
+                      OBS_NOISE['dof_pos'] * c.dof_pos_scale, OBS_NOISE['dof_vel'] * c.dof_vel_scale, 0.0)
+            terms = [term + self.obs_noise * scale * self.rng.uniform(-1.0, 1.0, term.shape)
+                     for term, scale in zip(terms, scales)]
+        obs = np.concatenate(terms, axis=1)
         return np.clip(obs, -c.clip_obs, c.clip_obs).astype(np.float32)
 
     # --- step ---------------------------------------------------------------
@@ -335,13 +439,18 @@ class LeggedTrainingEnv:
             if np.any(push):
                 qpos, qvel = self._split(self.state)
                 qvel[push, 0:2] += self.rng.uniform(-1, 1, (int(push.sum()), 2)) * self.task.push_velocity
-        states, sensors = rollout.rollout(model, self.threads, self.state, control,
+        models = model if len(self.models) == 1 else [self.models[v] for v in self.variant]
+        states, sensors = rollout.rollout(models, self.threads, self.state, control,
                                           persistent_pool=True)
         self.state = states[:, -1, :].copy()
         touch = sensors[:, -1, :][:, self.sensor_touch] if self.num_feet else np.zeros((self.num_envs, 0))
         self.episode_step += 1
         reward, terms, fallen = self._rewards(touch)
         timeout = self.episode_step >= self.max_steps
+        if self.heights is not None:
+            # Leaving the heightfield ends the episode as a time-out, not a fall.
+            qpos, _ = self._split(self.state)
+            timeout |= np.abs(qpos[:, 0:2]).max(axis=1) > TERRAIN_HALF_SIZE_M - 2.0
         done = fallen | timeout
         self.episode_return += reward
         info = dict(terms=terms, fallen=fallen, timeout=timeout,
@@ -362,7 +471,7 @@ class LeggedTrainingEnv:
         dof_vel = qvel[:, self.qvel_index]
         dof_pos = qpos[:, self.qpos_index]
         torque = self._torques(dof_pos, dof_vel)
-        height = qpos[:, 2]
+        height = qpos[:, 2] - self.terrain_height(qpos[:, 0:2])
         fallen = (gravity[:, 2] > -0.5) | (height < 0.4 * self.stand_height)
         cmd = self.commands
         contact = touch > 1.0

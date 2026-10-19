@@ -177,7 +177,7 @@ class PPO:
             self.model.norm.update(obs)
         self.step = 0
         stats = {k: v / max(1, updates) for k, v in stats.items()}
-        stats.update(learning_rate=self.lr, action_std=float(self.model.log_std.exp().mean()))
+        stats.update(learning_rate=self.lr, action_std=float(self.model.log_std.detach().exp().mean()))
         return stats
 
     def save(self, path, **extra):

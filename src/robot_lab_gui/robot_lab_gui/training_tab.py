@@ -91,11 +91,18 @@ def trainer_pid(run_dir):
     return pid if trainer and str(Path(run_dir)) in cmdline else 0
 
 
-def trainer_command(robot, task, envs, iterations, steps, learning_rate, seed, out, resume=''):
+def trainer_command(robot, task, envs, iterations, steps, learning_rate, seed, out, resume='',
+                    randomize=False, rough=False, obs_noise=False):
     command = [sys.executable, '-m', 'robot_lab_adapter.legged_train', 'train', '--robot', robot,
                '--task', task, '--envs', str(int(envs)), '--iterations', str(int(iterations)),
                '--steps', str(int(steps)), '--learning-rate', repr(float(learning_rate)),
                '--seed', str(int(seed)), '--out', str(out)]
+    if randomize:
+        command.append('--randomize')
+    if rough:
+        command += ['--terrain', 'rough']
+    if obs_noise:
+        command += ['--obs-noise', '1']
     if resume:
         command += ['--resume', str(resume)]
     return command
@@ -163,6 +170,14 @@ class TrainingTab(ttk.Frame):
         resume.columnconfigure(0, weight=1)
         ttk.Entry(resume, textvariable=self.resume_var).grid(row=0, column=0, sticky='ew')
         ttk.Button(resume, text='Browse', command=self._browse_resume).grid(row=0, column=1, padx=(4, 0))
+        self.randomize_var = tk.BooleanVar(value=False)
+        self.rough_var = tk.BooleanVar(value=False)
+        self.noise_var = tk.BooleanVar(value=False)
+        options = ttk.Frame(setup)
+        options.grid(row=4, column=2, columnspan=2, sticky='w', padx=(12, 0))
+        for text, variable in (('Randomise friction, mass, motors', self.randomize_var),
+                               ('Rough terrain', self.rough_var), ('Observation noise', self.noise_var)):
+            ttk.Checkbutton(options, text=text, variable=variable).pack(side='left', padx=(0, 10))
         ttk.Label(setup, text='Run folder').grid(row=6, column=0, sticky='w')
         ttk.Entry(setup, textvariable=self.out_var).grid(row=6, column=1, columnspan=3, sticky='ew', pady=2)
         ttk.Label(setup, text='Empty: a new folder under ' + str(training_root()) + '. Training runs on the '
@@ -249,7 +264,8 @@ class TrainingTab(ttk.Frame):
         try:
             command = trainer_command(robot, task, self.envs_var.get(), self.iterations_var.get(),
                                       self.steps_var.get(), self.lr_var.get(), self.seed_var.get(), out,
-                                      self.resume_var.get().strip())
+                                      self.resume_var.get().strip(), self.randomize_var.get(),
+                                      self.rough_var.get(), self.noise_var.get())
         except (tk.TclError, ValueError) as exc:
             messagebox.showerror('Training settings', str(exc))
             return
@@ -298,8 +314,9 @@ class TrainingTab(ttk.Frame):
         commands = {'walk': '0.5,0,0;0,0.3,0;0,0,0.8;0,0,0', 'turn_in_place': '0,0,0.6;0,0,-0.6;0,0,1.0'}.get(
             task, '0,0,0')
         self.note.set('Evaluating %s ...' % policy)
+        terrain = self._run_info(run).get('terrain', 'flat')
         self._run_tool(['evaluate', '--policy-dir', str(policy), '--task', task, '--commands', commands,
-                        '--out', str(Path(run, 'evaluation.json'))],
+                        '--terrain', terrain, '--out', str(Path(run, 'evaluation.json'))],
                        lambda: evaluation_summary(Path(run, 'evaluation.json')))
 
     def use_in_launch(self):
@@ -414,8 +431,11 @@ class TrainingTab(ttk.Frame):
         done = last['iteration'] - (lines[0]['iteration'] - 1)
         rate = done / max(1e-6, last.get('wall_s', 0.0))
         remaining = max(0, planned - done) / rate if rate > 0 else math.nan
-        self.status.set('%s · %s / %s · iteration %d of %s · %.2f M steps · %s steps/s · %.0f s elapsed%s' % (
-            Path(run).name, info.get('robot', ''), info.get('task', ''), last['iteration'],
+        options = [label for key, label in (('randomize', 'randomised'), ('obs_noise', 'noisy observations'))
+                   if info.get(key)] + (['rough terrain'] if info.get('terrain') == 'rough' else [])
+        self.status.set('%s · %s / %s%s · iteration %d of %s · %.2f M steps · %s steps/s · %.0f s elapsed%s' % (
+            Path(run).name, info.get('robot', ''), info.get('task', ''),
+            ''.join(' · ' + option for option in options), last['iteration'],
             planned or '?', last['environment_steps'] / 1e6, last.get('steps_per_s', '?'), last.get('wall_s', 0),
             '' if not self.running() or math.isnan(remaining) else ' · about %.0f min left' % (remaining / 60)))
         terms = last.get('terms', {})

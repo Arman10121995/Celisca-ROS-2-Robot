@@ -5,6 +5,9 @@
   legged-train export --checkpoint RUN/checkpoints/latest.pt --out RUN/policy
   legged-train evaluate --policy-dir RUN/policy --task walk
 
+``train --randomize --terrain rough --obs-noise 1`` adds legged_gym-style
+domain randomisation, a rough heightfield and observation noise.
+
 ``train`` writes into RUN: ``run.json`` (settings), ``progress.jsonl`` (one
 line per iteration), ``checkpoints/`` and, when it finishes, is interrupted
 (SIGINT/SIGTERM) or finds a ``STOP`` file, the deployable policy directory
@@ -75,7 +78,7 @@ def export_policy(checkpoint, out_dir):
 
 def train(args):
     import torch
-    from .legged_training import LeggedTrainingEnv
+    from .legged_training import LeggedTrainingEnv, Randomization
     from .ppo import PPO
     torch.set_num_threads(args.torch_threads or max(1, (os.cpu_count() or 2) - 2))
     torch.manual_seed(args.seed)
@@ -83,13 +86,16 @@ def train(args):
     (out / 'checkpoints').mkdir(parents=True, exist_ok=True)
     name = out.name.replace(' ', '_')
     env = LeggedTrainingEnv(args.robot, args.task, args.envs, seed=args.seed, threads=args.threads,
-                            episode_s=args.episode_s)
+                            episode_s=args.episode_s,
+                            randomization=Randomization() if args.randomize else None,
+                            terrain=args.terrain, roughness=args.roughness, obs_noise=args.obs_noise)
     hidden = (512, 256, 128)
     agent = PPO(env.obs_dim, env.act_dim, args.envs, args.steps, device=args.device,
                 learning_rate=args.learning_rate, hidden=hidden, entropy=args.entropy)
     run = dict(robot=args.robot, task=args.task, envs=args.envs, steps=args.steps,
                iterations=args.iterations, learning_rate=args.learning_rate, seed=args.seed,
-               episode_s=args.episode_s, obs_dim=env.obs_dim, act_dim=env.act_dim, hidden=list(hidden),
+               episode_s=args.episode_s, randomize=bool(args.randomize), terrain=args.terrain,
+               roughness=args.roughness, obs_noise=args.obs_noise, obs_dim=env.obs_dim, act_dim=env.act_dim, hidden=list(hidden),
                name=name, revision=_revision(), template=env.template, policy_period_s=env.dt,
                stand_height_m=env.stand_height, feet=env.num_feet, started=time.strftime('%Y-%m-%dT%H:%M:%S'),
                pid=os.getpid())
@@ -156,7 +162,8 @@ def evaluate(args):
     contract = PolicyContract.load(directory)
     robot = contract.source['profile']
     policy = LeggedPolicy(contract, model_path=str(directory / 'policy.onnx'))
-    env = LeggedTrainingEnv(robot, args.task, 1, seed=args.seed, threads=1, episode_s=1e9)
+    env = LeggedTrainingEnv(robot, args.task, 1, seed=args.seed, threads=1, episode_s=1e9,
+                            terrain=args.terrain, roughness=args.roughness)
     commands = [tuple(float(v) for v in item.split(',')) for item in args.commands.split(';') if item.strip()]
     phases = []
     for command in commands:
@@ -185,7 +192,7 @@ def evaluate(args):
         mean = np.mean(measured, axis=0) if measured else [math.nan] * 3
         phases.append(dict(command=list(command), measured=[round(float(v), 3) for v in mean],
                            seconds=round(len(measured) * env.dt, 2), fallen=fallen))
-    report = dict(policy=str(directory), robot=robot, task=args.task, phases=phases,
+    report = dict(policy=str(directory), robot=robot, task=args.task, phases=phases, terrain=args.terrain,
                   simulator='mujoco (training environment)', deployment_code='legged_policy.LeggedPolicy')
     print(json.dumps(report, indent=1))
     if args.out:
@@ -209,6 +216,11 @@ def main(argv=None):
     t.add_argument('--threads', type=int, default=0, help='MuJoCo rollout threads (0: CPUs - 2)')
     t.add_argument('--torch-threads', type=int, default=0, help='torch threads for the update (0: CPUs - 2)')
     t.add_argument('--device', default='cpu')
+    t.add_argument('--randomize', action='store_true',
+                   help='per-episode friction, added base mass and motor strength')
+    t.add_argument('--terrain', choices=('flat', 'rough'), default='flat')
+    t.add_argument('--roughness', type=float, default=0.03, help='rough terrain height range (+- m)')
+    t.add_argument('--obs-noise', type=float, default=0.0, help='observation noise level (1: legged_gym)')
     t.add_argument('--checkpoint-every', type=int, default=50)
     t.add_argument('--resume', default='')
     t.add_argument('--out', required=True)
@@ -221,6 +233,8 @@ def main(argv=None):
     v.add_argument('--commands', default='0.5,0,0;0,0,0.8;0,0,0')
     v.add_argument('--seconds', type=float, default=6.0)
     v.add_argument('--seed', type=int, default=3)
+    v.add_argument('--terrain', choices=('flat', 'rough'), default='flat')
+    v.add_argument('--roughness', type=float, default=0.03)
     v.add_argument('--out', default='')
     args = parser.parse_args(argv)
     if args.command == 'train':

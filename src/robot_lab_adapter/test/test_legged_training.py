@@ -186,3 +186,61 @@ def test_episodes_time_out_and_reset(go2_env):
     assert finished == 2
     assert np.all(env.episode_step == 0)
     assert len(info['finished_returns']) == 2 and np.all(info['timeout'])
+
+
+def test_rough_terrain_is_smooth_bounded_and_flat_at_the_spawn():
+    from robot_lab_adapter.legged_training import TERRAIN_RESOLUTION_M, rough_terrain_heights
+    heights = rough_terrain_heights(seed=4, roughness=0.03)
+    assert np.abs(heights).max() == pytest.approx(0.03, rel=1e-6)
+    axis = (np.arange(heights.shape[0]) - heights.shape[0] // 2) * TERRAIN_RESOLUTION_M
+    within_1m = np.hypot(axis[:, None], axis[None, :]) <= 0.99
+    assert np.all(heights[within_1m] == 0.0) and np.any(heights[~within_1m] != 0.0)
+    # Neighbouring cells 0.1 m apart differ by far less than the full range.
+    assert np.abs(np.diff(heights, axis=0)).max() < 0.03 * TERRAIN_RESOLUTION_M / 0.1 * 0.6
+    assert not np.array_equal(heights, rough_terrain_heights(seed=5, roughness=0.03))
+
+
+@pytest.fixture(scope='module')
+def go2_rough_env():
+    pytest.importorskip('mujoco')
+    try:
+        from ament_index_python.packages import get_package_share_directory
+        get_package_share_directory('robot_lab_robots')
+    except Exception:  # noqa: BLE001
+        pytest.skip('installed robot_lab packages are needed for the MuJoCo model')
+    from robot_lab_adapter.legged_training import LeggedTrainingEnv, Randomization
+    return LeggedTrainingEnv('unitree_go2', 'walk', num_envs=4, seed=0, threads=1, episode_s=2.0,
+                             randomization=Randomization(variants=3), terrain='rough', obs_noise=1.0)
+
+
+def test_randomised_variants_differ_and_the_heightfield_matches_the_lookup(go2_rough_env):
+    import mujoco
+    env = go2_rough_env
+    assert len(env.models) == 3
+    colliding = env.model.geom_contype != 0
+    frictions = {round(float(m.geom_friction[colliding][0, 0]), 6) for m in env.models}
+    gains = {round(float(m.actuator_gainprm[env.actuator_index[0], 0]), 6) for m in env.models}
+    assert len(frictions) == 3 and len(gains) == 3
+    for model in env.models:
+        assert 0.5 <= model.geom_friction[colliding][0, 0] <= 1.25
+    data = mujoco.MjData(env.model)
+    mujoco.mj_forward(env.model, data)
+    floor = mujoco.mj_name2id(env.model, mujoco.mjtObj.mjOBJ_GEOM, 'training_floor')
+    for x, y in ((3.0, 1.0), (-7.3, 4.2), (12.0, -9.0)):
+        geom = np.zeros(1, np.int32)
+        distance = mujoco.mj_ray(env.model, data, np.array([x, y, 1.0]), np.array([0, 0, -1.0]),
+                                 None, 1, -1, geom)
+        assert geom[0] == floor
+        assert 1.0 - distance == pytest.approx(env.terrain_height(np.array([[x, y]]))[0], abs=0.004)
+
+
+def test_randomised_rough_env_stands_and_observations_are_noisy(go2_rough_env):
+    env = go2_rough_env
+    env.reset_all()
+    first, second = env.observations(), env.observations()
+    assert not np.array_equal(first[:, :3], second[:, :3]), 'ang_vel carries noise'
+    assert np.array_equal(first[:, 6:9], second[:, 6:9]), 'commands carry none'
+    for _ in range(int(round(1.0 / env.dt))):
+        obs, reward, done, info = env.step(np.zeros((4, 12)))
+        assert np.all(np.isfinite(obs)) and np.all(np.isfinite(reward))
+        assert not np.any(info['fallen'])
