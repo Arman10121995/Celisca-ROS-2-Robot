@@ -1219,6 +1219,8 @@ def create_tabs(notebook, app):
     app.gait_controls = GaitControls(app.control_notebook, app)
     from .molar_controls import MolarControls
     app.molar_controls = MolarControls(app.control_notebook, app)
+    from .training_tab import TrainingTab
+    app.training_tab = TrainingTab(notebook, app)
     tabs = [
         app.arm_tab,
         app.hand_tab,
@@ -1231,6 +1233,7 @@ def create_tabs(notebook, app):
         AssetsTab(notebook, app),
         VacuumTab(notebook, app),
         BenchmarkTab(notebook, app),
+        app.training_tab,
         TestsTab(notebook, app),
         HealthTab(notebook, app),
     ]

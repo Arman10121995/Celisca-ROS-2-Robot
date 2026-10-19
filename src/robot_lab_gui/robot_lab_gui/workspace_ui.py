@@ -147,7 +147,7 @@ def build_workspace(app):
 def build_navigation(app):
     groups = [('WORKSPACE', [('Launch', 'Launch & control'), ('Live Monitor', 'Live telemetry')]),
               ('ASSETS', [('Registry', 'Registry · 3D'), ('Worlds', 'Worlds & maps'), ('Installed Extensions', 'Installed assets')]),
-              ('EXPERIMENTS', [('Vacuum', 'Vacuum missions'), ('Benchmark', 'Benchmarks'), ('Tests', 'Test suites')]),
+              ('EXPERIMENTS', [('Vacuum', 'Vacuum missions'), ('Benchmark', 'Benchmarks'), ('Training', 'Policy training'), ('Tests', 'Test suites')]),
               ('PROJECT', [('Health', 'Health & roadmap')])]
     titles = {app.notebook.tab(tab, 'text') for tab in app.notebook.tabs()}
     app.nav_buttons = {}

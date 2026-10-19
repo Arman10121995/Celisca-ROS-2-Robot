@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 
+import json
 import os
 from pathlib import Path
 import queue
@@ -510,6 +511,9 @@ class SimulationLauncherGui(tk.Tk):
         self.drive_input_enabled = tk.BooleanVar(value=False)
         self.go2_policy_var = tk.BooleanVar(value=False)
         self.legged_policy_var = tk.BooleanVar(value=False)
+        # Exported directory from the Training tab; used instead of the
+        # rl_sar policy when its source.json names the selected robot.
+        self.trained_policy_var = tk.StringVar(value="")
         self.wheel_odometry_var = tk.BooleanVar(value=False)
         self.bhl_policy_var = tk.BooleanVar(value=True)
         self.native_policy_var = tk.BooleanVar(value=False)
@@ -991,6 +995,14 @@ class SimulationLauncherGui(tk.Tk):
             command=self._update_validation_and_command,
         )
         self.legged_policy_checkbox.grid(row=33, column=0, sticky="w", pady=(10, 0))
+        trained = ttk.Frame(advanced)
+        trained.grid(row=34, column=0, sticky="ew", pady=(2, 0))
+        trained.columnconfigure(0, weight=1)
+        self.trained_policy_label = ttk.Label(trained, text="", style="Muted.TLabel", wraplength=340)
+        self.trained_policy_label.grid(row=0, column=0, sticky="w")
+        self.trained_policy_clear = ttk.Button(
+            trained, text="Clear", command=lambda: self.trained_policy_var.set(""))
+        self.trained_policy_var.trace_add("write", lambda *_: self._update_from_selection())
         # EKF on wheel odometry from joint states instead of simulator truth
         # (MuJoCo/PyBullet/Isaac; Gazebo always uses its controllers' odometry).
         self.wheel_odometry_checkbox = ttk.Checkbutton(
@@ -2152,6 +2164,19 @@ class SimulationLauncherGui(tk.Tk):
                 and self.mode_var.get() == "loc"
                 and self.launch_kind_var.get() == "simulation")
 
+    def _trained_policy_for(self, robot):
+        """The Training tab's exported policy directory when it was trained
+        for ``robot`` (its source.json profile), else ''."""
+        directory = self.trained_policy_var.get().strip()
+        if not directory:
+            return ""
+        try:
+            with open(os.path.join(directory, "source.json")) as stream:
+                profile = json.load(stream).get("profile", "")
+        except (OSError, ValueError):
+            return ""
+        return directory if profile == robot and os.path.exists(os.path.join(directory, "policy.onnx")) else ""
+
     def _legged_policy_required(self):
         """The policy is the robot's only stance (Isaac/Gazebo loc) or its
         only way to walk for mapping and navigation (MuJoCo/Isaac/Gazebo)."""
@@ -2331,7 +2356,9 @@ class SimulationLauncherGui(tk.Tk):
                         or self._legged_policy_required()):
             command = [part for part in command
                        if not part.startswith("legged_policy:=")]
-            command.append("legged_policy:=" + LEGGED_POLICY_PROFILES[self.robot_var.get()])
+            robot = self.robot_var.get()
+            command.append("legged_policy:=" + (self._trained_policy_for(robot)
+                                                or LEGGED_POLICY_PROFILES[robot]))
         if command and self.wheel_odometry_var.get() and self._wheel_odometry_selectable():
             command = [part for part in command if not part.startswith("odometry_source:=")]
             command.append("odometry_source:=wheels")
@@ -2467,6 +2494,16 @@ class SimulationLauncherGui(tk.Tk):
             ["!disabled"] if self._go2_policy_selectable() else ["disabled"])
         self.legged_policy_checkbox.state(
             ["!disabled"] if self._legged_policy_selectable() else ["disabled"])
+        trained = self.trained_policy_var.get().strip()
+        if trained:
+            active = self._trained_policy_for(self.robot_var.get())
+            self.trained_policy_label.configure(
+                text=("Trained policy: " if active else "Trained policy (not for this robot): ")
+                + os.path.basename(os.path.dirname(trained.rstrip("/"))))
+            self.trained_policy_clear.grid(row=0, column=1, padx=(4, 0))
+        else:
+            self.trained_policy_label.configure(text="")
+            self.trained_policy_clear.grid_remove()
         self.wheel_odometry_checkbox.state(
             ["!disabled"] if self._wheel_odometry_selectable() else ["disabled"])
         self.bhl_policy_checkbox.state(
@@ -3653,6 +3690,8 @@ class SimulationLauncherGui(tk.Tk):
             self.marine_controls.close()
         if hasattr(self, 'fleet_tab'):
             self.fleet_tab.close()
+        if hasattr(self, 'training_tab'):
+            self.training_tab.close()
         preview = getattr(self, 'registry_preview', None)
         if preview is not None:
             preview.close()

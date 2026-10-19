@@ -55,6 +55,7 @@ FAST_TESTS=(
   "$ADP_TEST/test_r5_2_go2_entry_phase.py"
   "$ADP_TEST/test_r5_2_go2_support_attribution.py"
   "$ADP_TEST/test_r5_2_legged_policy.py"
+  "$ADP_TEST/test_legged_training.py"
   "$BRG_TEST/test_sim_profiles.py"
   "$BRG_TEST/test_installed_extensions.py"
   "$BRG_TEST/test_asset_groups.py"
@@ -82,6 +83,7 @@ FAST_TESTS=(
 INTEGRATION_TESTS=(
   "$GUI_TEST/test_registry_preview.py"
   "$GUI_TEST/test_workspace_layout.py"
+  "$GUI_TEST/test_training_tab.py"
   "$BRG_TEST/test_urdf_springs.py::test_isaac_extracts_passive_physics_before_stripping_import_extensions"
   "$BRG_TEST/test_urdf_springs.py::test_isaac_does_not_discard_malformed_physics_with_plugins"
   "$BRG_TEST/test_wheel_navigation_contract.py::test_selected_urdf_root_reaches_nav2_servers_and_nested_costmaps"
