@@ -90,6 +90,13 @@ class Course:
         return best
 
 
+def _plain(value):
+    """numpy scalars (the clearance test yields a numpy bool) as plain JSON."""
+    if hasattr(value, 'item'):
+        return value.item()
+    raise TypeError('Not JSON serializable: %r' % type(value))
+
+
 def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--robot', required=True)
@@ -118,7 +125,7 @@ def main(argv=None):
                         ('truth', lambda: node.truth is not None)):
         if not node.spin_until(ready, args.timeout):
             report['error'] = 'no %s after %.0f s' % (name, time.monotonic() - started)
-            print(json.dumps(report))
+            print(json.dumps(report, default=_plain))
             return 1
     report['stack_ready_wall_s'] = round(time.monotonic() - started, 1)
     node.spin_until(lambda: False, 5.0)
@@ -178,7 +185,7 @@ def main(argv=None):
     if args.trace_out:
         Path(args.trace_out).write_text(json.dumps(dict(samples=node.trace, commands=node.command_trace)) + '\n')
         report['trace'] = args.trace_out
-    print(json.dumps(report))
+    print(json.dumps(report, default=_plain))
     node.destroy_node()
     rclpy.shutdown()
     return 0 if report['passed'] else 1
