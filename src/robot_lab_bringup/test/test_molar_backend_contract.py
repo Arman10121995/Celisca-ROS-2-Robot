@@ -216,7 +216,8 @@ def test_bullet_roller_uses_native_velocity_motor_with_source_force_cap():
 def test_mujoco_servo_and_gravity_sum_respects_source_effort(force):
     import numpy as np
     scope = load_nodes([source_function(ARTICULATION, 'effort_budget'),
-        source_function(SPAWNERS['mujoco'], '_apply_articulation_gravity')], dict(math=math))
+        source_function(SPAWNERS['mujoco'], '_apply_articulation_gravity')],
+        dict(math=math, _ARTICULATION_FEEDFORWARD_RAMP_S=1.))
     joint = 'conveyor_lift_joint'
     ranges = np.array([[-2000., 2000.], [-2., 2.], [-30., 30.]])
     applied = np.array([0., 7., 8.])
@@ -227,7 +228,11 @@ def test_mujoco_servo_and_gravity_sum_respects_source_effort(force):
         _joint_name2dofadr={joint: 0, 'transfer_roller_joint': 1},
         _actuator_ids={joint+'_articulation': 0},
         _model=SimpleNamespace(actuator_forcerange=ranges),
-        _data=SimpleNamespace(qfrc_applied=applied, qfrc_bias=np.array([force, 0., 0.])))
+        _data=SimpleNamespace(qfrc_applied=applied, qfrc_bias=np.array([force, 0., 0.]), time=.25))
+    # A quarter of the way through the post-spawn ramp, then fully in.
+    scope['_apply_articulation_gravity'](subject)
+    assert applied[0] == scope['effort_budget'](.25*force, 2000.)[0]
+    subject._data.time = 5.
     scope['_apply_articulation_gravity'](subject)
     ff, cap = scope['effort_budget'](force, 2000.)
     assert applied[0] == ff and ranges[0] == pytest.approx((-cap, cap))
