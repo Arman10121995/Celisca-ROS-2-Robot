@@ -83,7 +83,20 @@ if [ $BUILD -eq 0 ]; then
   ISAAC_ROOT=$(cd "$(dirname "${ISAAC_PYTHON_HOST:-/nonexistent}")/../../.." 2>/dev/null && pwd)
   if [[ " $SIMS " == *" isaac "* ]] && [ -x "${ISAAC_PYTHON_HOST:-}" ] && [ -n "$ISAAC_ROOT" ]; then
     mkdir -p "$OUT/workspace/isaac"
-    docker run --rm --init $GPU -v "$OUT/workspace:/workspace" -v "$ISAAC_ROOT:$ISAAC_ROOT:ro" \
+    # The build links its Kit kernel and extension cache from outside its
+    # tree (packman cache, ~/.local/share/ov); without them Kit never
+    # started in the container (2026-10-19). Mount each link's directory at
+    # its own path, read-only except the Kit kernel, which writes its logs.
+    ISAAC_MOUNTS=()
+    while read -r dir; do
+      [ -d "$dir" ] || continue
+      case "$dir" in
+        */kit-kernel) ISAAC_MOUNTS+=(-v "$dir:$dir") ;;
+        *) ISAAC_MOUNTS+=(-v "$dir:$dir:ro") ;;
+      esac
+    done < <(find "$ISAAC_ROOT/_build" -maxdepth 4 -type l -lname '/*' -printf '%l\n' 2>/dev/null \
+             | grep -v "^$ISAAC_ROOT/" | xargs -r -n1 dirname | sort -u)
+    docker run --rm --init $GPU -v "$OUT/workspace:/workspace" -v "$ISAAC_ROOT:$ISAAC_ROOT:ro" "${ISAAC_MOUNTS[@]}" \
       -e ISAAC_PYTHON="$ISAAC_PYTHON_HOST" -e OMNI_KIT_ACCEPT_EULA=YES -e ACCEPT_EULA=Y \
       -e ROS_DOMAIN_ID=43 "$IMAGE" bash -c \
       'cd /ws && timeout 2400 scripts/sim_nav_mission.sh isaac bumperbot nav_obstacle /workspace/isaac/isaac_bumperbot_nav_obstacle.json' \

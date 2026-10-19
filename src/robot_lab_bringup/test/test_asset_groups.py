@@ -71,7 +71,10 @@ def test_checked_in_groups_cover_reviewed_fragments_and_preserve_celisca_variant
     assert 'asset_r2_description_r2_left_gripper' not in groups.members('nasa_r2', selectable=True)
     maps = {item['id']: {} for group in definitions['maps'] for item in group['members']}
     worlds = AssetGroups('maps', maps, definitions)
-    assert worlds.members('celisca_floor_2', selectable=True) == ['celisca_floor_2', 'celisca_floor_2_furniture', 'celisca_f2_actor']
+    # The detailed CELISCA floor (R11, 2026-10-16) joins its floor's variants.
+    assert worlds.members('celisca_floor_2', selectable=True) == [
+        'celisca_floor_2', 'celisca_floor_2_furniture', 'celisca_f2_actor', 'celisca_floor_2_detailed']
+    assert 'celisca_floor_1_detailed' in worlds.members('celisca_floor_1', selectable=True)
 
 
 def test_dataset_static_and_dynamic_sources_share_the_installed_room_identity():
