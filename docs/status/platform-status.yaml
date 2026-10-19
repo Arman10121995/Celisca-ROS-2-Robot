@@ -1646,7 +1646,7 @@ tasks:
         active_scope: "2026-10-15 after 815e54e: preserve first physical ROV and new multi-leg batch; inspect/provision Gazebo Fortress Tethys AUV source/license and integrate source propeller/fins/hydrodynamics with a separate bounded GUI/controller contract. Independent marine measurements/volumetric features and broad qualification remain separate; no thruster-only ROV relabeling as AUV."
         additional_scope_paths: [".gitattributes"]
         implementation_state: "Complete authored ROV + pinned native Tethys AUV, source/trim/actuator contracts, positive Fortress 6.18 mass convention, bounded manual/depth/cruise guidance and native GUI implemented; independent estimates/routes and other backend adapters pending"
-        validation_state: "Actual GUI AUV/reef neutral enable, surge, 1.70 m depth target/turn and zero-output coasting Stop measured; corrected ROV/tank separately measured. All-axis/current/contact/loss/reset and other-world qualification pending"
+        validation_state: "Actual GUI AUV/reef neutral enable, surge, 1.70 m depth target/turn and zero-output coasting Stop measured; corrected ROV/tank separately measured. All-axis/current/contact/loss/reset and other-world qualification pending. Marine contract tests pass (8/8: source/trim/actuator contracts, mass convention, bounded guidance)."
         evidence: ["docs/tutorials/marine-rov.md", "docs/status/marine-2026-10-15.md", "docs/status/marine-receipt-2026-10-15.json", "docs/status/evidence/r104-marine-2026-10-15/README.md", "docs/tutorials/tethys-auv.md", "docs/status/auv-2026-10-15.md", "docs/status/auv-receipt-2026-10-15.json"]
         acceptance_ref: "ROADMAP.md R10.4"
       R10.5:
@@ -1667,7 +1667,7 @@ tasks:
         scope_paths: ["docs/", "README.md", "ROADMAP.md", "src/robot_lab_utils/", "src/robot_lab_mujoco/", "src/robot_lab_bringup/", "src/robot_lab_robots/", "src/robot_lab_maps/", "src/robot_lab_gui/", "src/robot_lab/robot_lab_registry/", "scripts/"]
         active_scope: "2026-10-15 after marine checkpoint: complete source-bound six/eight-legged models, exact leg geometry/limits, IK/gait, actual effort actuation/contact/tilt feedback, neutral enable/Stop/watchdog and native GUI. Reuse pinned MIT hexapod_ros2 geometry/KDL conversion with explicit MuJoCo in-step bounded PD; authored eight/segmented variants retain separate identities. Add src/robot_lab_mujoco/ for opt-in actual contact telemetry. Motion implementation precedes sensing/SLAM/navigation qualification."
         implementation_state: "Pinned MIT source hexapod + authored complete octopod, source-chain IK, tripod/tetrapod/ripple/wave schedules, bounded MuJoCo in-step PD, actual contact/tilt/timestamp/lease guards and Gait/Drive GUI implemented"
-        validation_state: "Actual short normal GUI nav_empty forward/Stop measured on both; source-mass/IK/contact contracts pass. Terrain, recovery, reverse/turn/loss/reset, independent estimation/SLAM/navigation and other backends pending"
+        validation_state: "Actual short normal GUI nav_empty forward/Stop measured on both; source-mass/IK/contact contracts pass. Gait contract tests pass (8/8: IK, schedules, PD, guards). Terrain, recovery, reverse/turn/loss/reset, independent estimation/SLAM/navigation and other backends pending."
         evidence: ["docs/tutorials/multi-leg-gaits.md", "docs/status/gaits-2026-10-15.md", "docs/status/gaits-receipt-2026-10-15.json"]
         acceptance_ref: "ROADMAP.md R10.6"
       R10.7:
