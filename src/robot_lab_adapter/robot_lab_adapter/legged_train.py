@@ -77,7 +77,7 @@ def train(args):
     import torch
     from .legged_training import LeggedTrainingEnv
     from .ppo import PPO
-    torch.set_num_threads(max(1, args.torch_threads))
+    torch.set_num_threads(args.torch_threads or max(1, (os.cpu_count() or 2) - 2))
     torch.manual_seed(args.seed)
     out = Path(args.out)
     (out / 'checkpoints').mkdir(parents=True, exist_ok=True)
@@ -207,7 +207,7 @@ def main(argv=None):
     t.add_argument('--seed', type=int, default=1)
     t.add_argument('--episode-s', type=float, default=20.0)
     t.add_argument('--threads', type=int, default=0, help='MuJoCo rollout threads (0: CPUs - 2)')
-    t.add_argument('--torch-threads', type=int, default=2)
+    t.add_argument('--torch-threads', type=int, default=0, help='torch threads for the update (0: CPUs - 2)')
     t.add_argument('--device', default='cpu')
     t.add_argument('--checkpoint-every', type=int, default=50)
     t.add_argument('--resume', default='')

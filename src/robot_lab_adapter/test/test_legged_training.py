@@ -42,7 +42,7 @@ def test_trainable_robots_are_position_controlled_quadrupeds():
         assert contract.num_dofs == 12 and not list(contract.wheel_indices)
     assert set(TASKS) == {'walk', 'turn_in_place', 'stand', 'push_recovery'}
     for task in TASKS.values():
-        assert task.rewards['termination'] < 0 and task.description
+        assert task.rewards['termination'] < 0 and task.description and task.only_positive
 
 
 def test_onnx_export_matches_the_actor_with_normalisation_folded_in(tmp_path):
@@ -169,6 +169,8 @@ def test_go2_environment_shapes_feet_and_a_held_default_stance(go2_env):
         obs, reward, done, info = env.step(np.zeros((2, 12)))
         assert np.all(np.isfinite(obs)) and np.all(np.isfinite(reward))
         assert not np.any(info['fallen'])
+        # Clipped at zero until a fall: ending early never pays.
+        assert np.all(reward >= 0.0)
     qpos, _ = env._split(env.state)
     assert np.all(qpos[:, 2] > 0.7 * env.stand_height)
     assert set(info['terms']) >= set(TASKS['stand'].rewards)

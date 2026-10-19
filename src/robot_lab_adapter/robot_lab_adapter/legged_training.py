@@ -56,10 +56,14 @@ class Task:
     push_interval_s: float = 0.0
     push_velocity: float = 0.0
     rewards: Dict[str, float] = field(default_factory=dict)
+    # legged_gym's only_positive_rewards: the per-step sum of every term but
+    # termination is clipped at zero, so ending an episode early never pays.
+    only_positive: bool = True
 
 
+# termination is applied once, when the robot falls (not per second).
 _REGULARIZE = dict(lin_vel_z=-2.0, ang_vel_xy=-0.05, orientation=-1.0, torques=-2e-4,
-                   dof_acc=-2.5e-7, action_rate=-0.01, termination=-200.0)
+                   dof_acc=-2.5e-7, action_rate=-0.01, termination=-10.0)
 
 TASKS = {
     'walk': Task('walk', 'Track commanded forward, lateral and yaw velocity.',
@@ -71,11 +75,11 @@ TASKS = {
                           rewards=dict(tracking_ang_vel=1.5, hold_position=-1.0, feet_air_time=0.5,
                                        **_REGULARIZE)),
     'stand': Task('stand', 'Stand still and upright in the default pose.',
-                  rewards=dict(stand_still=-1.0, hold_position=-1.0, base_height=-20.0,
+                  rewards=dict(alive=1.0, stand_still=-1.0, hold_position=-1.0, base_height=-20.0,
                                **_REGULARIZE)),
     'push_recovery': Task('push_recovery', 'Stand, and recover from random pushes.',
                           push_interval_s=4.0, push_velocity=0.6,
-                          rewards=dict(stand_still=-0.5, hold_position=-0.5, base_height=-20.0,
+                          rewards=dict(alive=1.0, stand_still=-0.5, hold_position=-0.5, base_height=-20.0,
                                        **_REGULARIZE)),
 }
 
@@ -380,15 +384,25 @@ class LeggedTrainingEnv:
             hold_position=np.sum(lin_vel[:, :2] ** 2, axis=1),
             stand_still=np.sum(np.abs(dof_pos - c.default_dof_pos), axis=1),
             base_height=(height - self.stand_height) ** 2,
+            alive=np.ones(self.num_envs),
             termination=fallen.astype(np.float64))
         self.last_dof_vel = dof_vel
         reward = np.zeros(self.num_envs)
         terms = {}
         for name, weight in task.rewards.items():
-            value = weight * values[name] * (1.0 if name == 'termination' else dt)
+            if name == 'termination':
+                continue
+            value = weight * values[name] * dt
             reward += value
             self.term_sums[name] += value
             terms[name] = float(np.mean(value))
+        if task.only_positive:
+            reward = np.maximum(reward, 0.0)
+        if 'termination' in task.rewards:
+            value = task.rewards['termination'] * values['termination']
+            reward += value
+            self.term_sums['termination'] += value
+            terms['termination'] = float(np.mean(value))
         terms['lin_vel_error'] = float(np.mean(np.linalg.norm(cmd[:, :2] - lin_vel[:, :2], axis=1)))
         terms['ang_vel_error'] = float(np.mean(np.abs(cmd[:, 2] - ang_vel[:, 2])))
         return reward, terms, fallen
