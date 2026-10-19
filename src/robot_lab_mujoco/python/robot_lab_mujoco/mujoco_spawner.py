@@ -1196,6 +1196,33 @@ def _scan_ranges(model, data, origin, angles, robot_root, range_min, range_max):
     return np.where(valid, np.maximum(range_min, distances), np.inf)
 
 
+def _geom_bottom_z(model, data, geom_id):
+    """Lowest world z of a collision geom at the current pose.
+
+    Meshes use their vertices: MuJoCo keeps a mesh in its principal-axis
+    frame, and the box around it there can reach far below the surface
+    (the Bumperbot base: 6.8 cm), which spawned robots that high and
+    dropped them through 1 mm world flex floors (small_house, 2026-10-19).
+    Spheres and capsules are exact; other primitives use their box.
+    """
+    import mujoco
+    position = data.geom_xpos[geom_id]
+    rotation = data.geom_xmat[geom_id].reshape(3, 3)
+    kind = int(model.geom_type[geom_id])
+    size = model.geom_size[geom_id]
+    if kind == mujoco.mjtGeom.mjGEOM_MESH and model.geom_dataid[geom_id] >= 0:
+        mesh = int(model.geom_dataid[geom_id])
+        start = int(model.mesh_vertadr[mesh])
+        vertices = model.mesh_vert[start:start + int(model.mesh_vertnum[mesh])]
+        return float(position[2] + (vertices @ rotation[2]).min())
+    if kind == mujoco.mjtGeom.mjGEOM_SPHERE:
+        return float(position[2] - size[0])
+    if kind == mujoco.mjtGeom.mjGEOM_CAPSULE:
+        return float(position[2] - abs(rotation[2, 2]) * size[1] - size[0])
+    bounds = model.geom_aabb[geom_id]
+    return float(position[2] + rotation[2] @ bounds[:3] - abs(rotation[2]) @ bounds[3:])
+
+
 def _spawn_attitude_quaternion(yaw: float, pitch: float, roll: float) -> list:
     """Free-joint ``(w, x, y, z)`` for a ZYX spawn attitude.
 
@@ -1667,6 +1694,13 @@ class MuJoCoSpawner(Node):
             world_mjcf = robot_mjcf
 
         # --- build model ---
+        # Diagnostics: the exact scene this bridge compiles, for offline
+        # experiments with plain MuJoCo.
+        dump = os.environ.get("ROBOT_LAB_MUJOCO_DUMP_XML")
+        if dump:
+            with open(dump, "w") as handle:
+                handle.write(world_mjcf)
+            self.get_logger().info("MuJoCo scene written to " + dump)
         self._model = mujoco.MjModel.from_xml_string(world_mjcf)
         from robot_lab_utils.urdf_springs import joint_springs
         for name, spring in joint_springs(urdf).items():
@@ -2319,10 +2353,7 @@ class MuJoCoSpawner(Node):
                 if body_id != self._body_id or not (
                         self._model.geom_contype[geom_id] or self._model.geom_conaffinity[geom_id]):
                     continue
-                bounds = self._model.geom_aabb[geom_id]
-                z_row = self._data.geom_xmat[geom_id].reshape(3, 3)[2]
-                z_min = self._data.geom_xpos[geom_id, 2] + z_row @ bounds[:3] - abs(z_row) @ bounds[3:]
-                bottom = min(bottom, float(z_min))
+                bottom = min(bottom, _geom_bottom_z(self._model, self._data, geom_id))
             lift = max(0.0, .002 - bottom)
             self._data.qpos[adr + 2] += lift
             if lift > .001:
