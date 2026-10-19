@@ -1,5 +1,22 @@
 # Robot Lab — Multi-Robot Simulation and Algorithm Laboratory
 
+October 19 adds a **Training page** (EXPERIMENTS → Policy training). It
+trains Go2, A1 and B2 policies with PPO in batched MuJoCo, built from the
+same model and joint controllers as the normal MuJoCo launch. Tasks are walk,
+turn in place, stand and push recovery. The page exports a policy that Launch
+runs as `legged_policy:=<directory>`. The first Go2 walk policy is training
+now; no trained policy is qualified yet.
+[Training guide](docs/tutorials/legged-policy-training.md).
+
+October 19 also completes the **MOLAR / ProBOT-L** controls on the detailed
+CELISCA floors: drive, lift, coupled telescope and roller with Stop and a
+heartbeat watchdog pass a normal-GUI check in all four simulators
+([guide](docs/tutorials/molar-hri-simulation.md)). Rounds 51-56:
+- Go2 now navigates nav_obstacle in Isaac as well;
+- car publisher loss passes everywhere;
+- a clean container reproduces the build and missions, Isaac included.
+[What is ongoing and what remains](ROADMAP.md#october-19-progress-ongoing-work-and-what-remains).
+
 October 15 adds the **native MBARI Tethys AUV** with a real propeller, fins,
 explicit trim ballast and experimental cruise guidance in the Marine panel.
 A GUI reef run reaches 1.689 m for a 1.70 m depth target and turns while

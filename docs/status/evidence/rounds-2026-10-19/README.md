@@ -208,3 +208,26 @@ A fresh container now builds the revision and runs the Bumperbot
 nav_obstacle mission in MuJoCo, Gazebo and Isaac. Isaac still uses the
 host's Isaac Sim build (mounted read-only); it is not installed in the
 image.
+
+## While the first Go2 policy trains (after round 56)
+
+Two causes found and fixed. Their measurement is queued as round 57, after
+the training run and its drive checks.
+
+**MuJoCo small_house crawl.** A diagnostic in display mode (not evidence)
+reproduced it: the Bumperbot rested at −8.5 mm and drove at 0.015 m/s for a
+0.4 m/s command; on `nav_empty` it rested at −0.5 mm and drove at 0.397 m/s.
+The scene compiled by the bridge (`ROBOT_LAB_MUJOCO_DUMP_XML`) settles at
++0.5 mm when started at rest. Dropped from the bridge's spawn height
+(raised by 6.14 cm) it sinks, and a caster contact flips its normal. The
+lift came from the base mesh's box in its principal-axis frame, 6.8 cm
+below the mesh's real bottom. The spawn now uses mesh vertices
+(`873753f`): it raises the robot by 2 mm, the robot rests at +0.5 mm and
+drives at 0.397 m/s in small_house. The slam drive will be run again.
+
+**Rear-steer gate 1** (MuJoCo, Gazebo). The traces show the car passing
+0.06 m from cone 0 on its way to gate 1. RPP stopped it ("collision ahead"),
+and every replan failed with "Starting point in lethal space". The analytic
+Reeds-Shepp shot (3 m) is collision-checked but not cost-weighted. The
+rear-steer overlay now limits it to 1 m and raises the cost penalty to 3.0
+(`84422df`). The course runs again in all four backends.

@@ -13,7 +13,7 @@ The new `R7.8.bicycle` lane adds three source-profile car controllers and GUI
 dispatch; physical comparisons remain pending. Preserve Claude's live trials
 and their source-scoped measurements.
 
-Updated: 2026-10-14. See [current measured and implemented status](docs/status/CURRENT_STATUS.md) and [the historical extension checkpoint](docs/status/continuation-2026-10-08.md)
+Updated: 2026-10-19 (see the October 19 section below). See [current measured and implemented status](docs/status/CURRENT_STATUS.md) and [the historical extension checkpoint](docs/status/continuation-2026-10-08.md)
 for exact physical source stages and publication checks. The
 [completion audit](docs/status/audit-2026-10-02.md) reopens unsupported
 R6/R7/R8/R9 claims: demonstration frameworks and metadata are retained,
@@ -31,6 +31,71 @@ Use the [done / remaining checklist](docs/status/CHECKLIST.md) for a compact
 view of implemented features and remaining acceptance. The
 [current status overview](docs/status/CURRENT_STATUS.md) links the published
 GUI, installed inventory, measured robot scopes and exact successful CI.
+
+## October 19: progress, ongoing work and what remains
+
+Snapshot at 16:15 on 2026-10-19 (`8b0b965`). Each item links its section
+below; [current status](docs/status/CURRENT_STATUS.md) has the numbers.
+
+### Done since October 16
+
+- **R11 MOLAR family:** the normal-GUI check (drive, lift and both
+  telescope stages to their limits, roller, Stop, heartbeat loss) passes
+  for `molar_hri` in Gazebo, MuJoCo, PyBullet and Isaac on `nav_empty` and
+  both detailed CELISCA floors, and for `probot_l` on `nav_empty`.
+- **R5.2 Go2:** nav_obstacle seeds 1-3 pass in Isaac with forward-arc
+  planning, so Go2 passes in MuJoCo, Gazebo and Isaac.
+- **R5.5 cars:** publisher loss passes in all six Gazebo/Isaac cells; the
+  car course passes in 2 of 12 cells (see below).
+- **R7.2 camera calibration room:** passes in MuJoCo and PyBullet.
+- **R9.1 clean host:** at `e3821b8` a fresh container builds, passes the
+  fast tier and runs the Bumperbot mission in MuJoCo, Gazebo and Isaac
+  (the host's Isaac build mounted), and reproduces the golden comparison.
+- **R9.3 matrix:** 619 reports, 291 cells, 278 passed and 12 failed screens.
+- **R12 training (new):** a GUI Training page and `legged-train` train
+  Go2/A1/B2 policies with PPO in batched MuJoCo, export them as launchable
+  policy directories and hand them to Launch. Optional domain
+  randomisation, rough terrain and observation noise.
+- **Fixes:** the MuJoCo spawn placed robots by a loose mesh bounding box
+  and dropped them through thin flex floors (the small_house crawl); a
+  stale PX4 world test and a manifest crash before the Hand page existed.
+
+### Ongoing now
+
+- **Go2 walk training** (`go2_walk_r1`: 512 environments, 2000 iterations,
+  started 15:50). At iteration 999 (12.3 M steps) the training-environment
+  tracking error is 0.09 m/s and 0.10 rad/s, with almost no falls. About
+  35 minutes remain. Nothing about it is qualified yet.
+- **Queued after it, one simulation at a time:**
+  - evaluation of the exported policy in the training environment;
+  - drive checks through the normal launch (`legged_policy:=<run>/policy`)
+    in MuJoCo, Gazebo and Isaac;
+  - round 57: the MuJoCo small_house slam drive with the spawn fix, and
+    the rear-steer car course in all four backends with its new planner
+    settings.
+
+### Remaining, in order
+
+1. **R12 training:** record `go2_walk_r1` and its transfer to Gazebo and
+   Isaac; train with randomisation, rough terrain and noise and compare;
+   a Go2 turn-in-place policy (the rl_sar policy does not hold a turn on
+   the spot in MuJoCo, Gazebo or Isaac); A1/B2 runs; Go2W and humanoid contracts; GPU training.
+2. **R5.5 cars:** final parking heading (the car goal checker ignores yaw
+   and pure pursuit aims at the goal point, so the car arrives 8-23° off);
+   rear-steer gate 1 in MuJoCo and Gazebo (candidate fix queued); repeats.
+3. **R7.2 perception:** Isaac camera noise (calibration RMS 1.66 px; no
+   renderer setting fixed it); Gazebo calibration cy 5 px off (needs a
+   dedicated principal-point check); re-measure the MuJoCo small_house
+   drive and map after the spawn fix.
+4. **R11 MOLAR:** sensors (needs the real robot's sensor layout), SLAM/Nav2
+   and routes on the floors, payload transfer, multi-floor operation,
+   repeats and identified dynamics, `probot_l` on the detailed floors.
+5. **Older roadmap, unchanged:** R5.2 Go2 terrain and roll recovery; R5.3
+   BHL turning; R5.6 4WS/mecanum repeats; R5.7-R5.9 arms, hands and mobile
+   manipulation; R5.10 PX4 world matrix; R6.2-R6.6 worlds (R6.7 terrain is
+   separately owned); R7 algorithm breadth; R8 backend matrix and
+   concurrency; R9.2 tutorials; R9.3 release gate; P2 physical joystick
+   trial; R9.4 optional hardware.
 
 ## October 9 implementation-first priority
 
@@ -623,6 +688,12 @@ Dependencies: `R5.1`.
   Note for future runs: this host's CycloneDDS port range caps usable
   `ROS_DOMAIN_ID` at about 232. See the [Go2 tutorial](docs/tutorials/go2.md)
   and [workflow](docs/WORKFLOW.md).
+- 2026-10-19 (round 53): with the rl_sar `go2_himloco` policy and
+  forward-arc planning (`no_spin_in_place` now includes Isaac), Go2 passes
+  nav_obstacle seeds 1-3 in Isaac, as in MuJoCo and Gazebo. The policy turns
+  on the spot for only 1-2 s in Isaac (round 52) and not at all in MuJoCo or
+  Gazebo; a trained turn-in-place policy is an R12 item. Terrain and
+  recovery above remain open.
 
 ### R5.3 — Qualify Berkeley Humanoid Lite balance and walking
 
@@ -785,8 +856,16 @@ Dependencies: `R5.1`, `R3.3`.
   in all four backends after a 0.1 m goal tolerance and a 0.6 m planner
   inflation; one MuJoCo anti-Ackermann goal stalled 0.15 m out. See
   [car missions](docs/status/evidence/car-missions-2026-10-16/README.md).
-- Remaining R5.5 items: slalom/parking missions with curvature and swept-
-  footprint checks, publisher-loss and final-heading repeats on Gazebo and Isaac
+- 2026-10-19 (rounds 51 and 55): the car course (four-gate cone slalom,
+  then nose-in parking, footprint checked against every cone and box) passes
+  in Gazebo for the Ackermann and anti-Ackermann cars; the slalom passes in 9
+  of 12 cells, but parking misses the 10° heading. The rear-steer car aborts
+  gate 1 in MuJoCo and Gazebo; a planner change (shorter analytic shots,
+  cost penalty 3.0) is queued for measurement. Publisher loss passes in all
+  six Gazebo/Isaac cells. See
+  [rounds 51-56](docs/status/evidence/rounds-2026-10-19/README.md).
+- Remaining R5.5 items: final parking heading, slalom/parking repeats,
+  publisher-loss and final-heading repeats on Gazebo and Isaac
   (Gazebo evidence still uses controller odometry), and the rear-steer versus
   anti-Ackermann wording in the GUI/tutorials.
 - Follow-up steering-joint traces on PyBullet measured zero angle when straight,
@@ -1060,6 +1139,12 @@ Dependencies: `R7.1`.
 - Files: `src/robot_lab_algorithms/`, `src/robot_lab/robot_lab_registry/config/`, `docs/tutorials/perception.md`.
 - Implement: Implement the five candidates or documented equivalents in the breadth specification below; give each a method subrecord, equations/source, ROS adapter, labels/input stratum and benchmark experiment.
 - Acceptance: Five substantive pipelines integrated and benchmarked within fair input strata; conversion utilities do not count; precision/recall, IoU where applicable, occlusion robustness and latency measured.
+- 2026-10-19 camera inputs (rounds 51-55): the calibration-room pinhole
+  fit passes in MuJoCo and PyBullet; Isaac fails on RMS (renderer noise,
+  1.66 px) and Gazebo on cy (5 px). Textured small_house captures are
+  scored per backend. The MuJoCo small_house Bumperbot crawl was a spawn
+  drop through the flex floor, fixed in `873753f`; its slam drive is queued
+  again. See [rounds 51-56](docs/status/evidence/rounds-2026-10-19/README.md).
 
 ### R7.3 — Five localization methods
 
@@ -1303,6 +1388,11 @@ Dependencies: `R4.3`, `R1.3`.
 - Files: `LICENSES/third-party-notices.md`, `scripts/`, `docs/`, `src/robot_lab/robot_lab_registry/config/`.
 - Implement: Pin external revisions/dependencies; verify actual upstream licenses and replace placeholder source URLs. Document storage/download/runtime requirements; top-level MIT does not relicense third-party assets.
 - Acceptance: Fresh documented host/container builds and reruns golden comparison without developer directories; provenance and redistribution decisions recorded; optional dependencies explicit.
+- 2026-10-19 (round 56, `e3821b8`): the clean-host container build, fast
+  tier, MuJoCo/Gazebo/Isaac Bumperbot missions and golden comparison all
+  pass. Isaac runs from the host's build, mounted read-only with its
+  external links; installing Isaac in the image, provenance decisions and
+  the legged-training dependency (torch) remain open.
 
 ### R9.2 — Seven real comparison tutorials
 
@@ -1578,17 +1668,26 @@ do tasks. Implemented and experimental:
   and hands an exported policy to Launch (`legged_policy:=<directory>`,
   bound to its robot).
 
+- Options: per-episode domain randomisation (friction, base mass, motor
+  strength), a rough heightfield and observation noise, all off by default.
+
 [Guide](docs/tutorials/legged-policy-training.md).
+
+**Ongoing (2026-10-19):** the first real run, `go2_walk_r1` (Go2 `walk`,
+512 environments, 2000 iterations, flat floor, no options). At iteration
+999 the training-environment tracking error is 0.09 m/s and 0.10 rad/s.
+Its evaluation and drive checks in MuJoCo, Gazebo and Isaac are queued.
 
 Acceptance: a policy trained here walks (or performs its task) in measured
 runs on the lab's backends, judged by the existing drive and mission
 screens. Open:
 
-- a trained policy with measured walks;
-- terrain curriculum and domain randomisation;
+- measured walks of a trained policy, and its transfer to Gazebo and Isaac;
+- training with the randomisation, terrain and noise options;
+- a Go2 turn-in-place policy;
+- terrain curriculum (slopes, stairs) and a latency model;
 - GPU training;
-- Go2W (wheels) and humanoids;
-- transfer to Gazebo and Isaac.
+- Go2W (wheels) and humanoids.
 
 ## Common implementation and evidence contract
 

@@ -7,9 +7,10 @@ legged_policy_training_20261019:
   scope_paths: ['src/robot_lab_adapter/', 'src/robot_lab_gui/', 'scripts/test_tiers.sh', 'docs/', 'ROADMAP.md']
   acceptance: A policy trained here performs its task in measured runs on the lab backends, judged by the existing drive and mission screens; exported policies stay bound to their robot
   safety: Simulation only; trained policies run through legged-policy-controller with its Stop, command-loss and neutral paths
-  implementation_state: "2026-10-19 (claude): implemented and experimental. legged_training.py trains Go2, A1 and B2 in batched MuJoCo (mujoco.rollout) built from the bridge's own URDF import and PD actuators, in the contract of each robot's rl_sar policy (no history, no linear velocity); tasks walk, turn_in_place, stand, push_recovery with legged_gym-style terms. ppo.py: PPO with GAE, KL-adaptive learning rate and an ONNX export that folds the normalisation in. legged-train trains/exports/evaluates. GUI Training page: start, live plot, Stop with checkpoint and export, resume, evaluate, Use in Launch (legged_policy:=<directory>, trained robot only). 10 unit tests and 3 GUI tests pass. Smoke run (Go2 stand, 64 envs, 4 iterations) trains, exports and evaluates end to end; 512 envs run at 1.8-2.3 s per iteration on the 12-core Orin."
+  implementation_state: "2026-10-19 (claude): implemented and experimental. legged_training.py trains Go2, A1 and B2 in batched MuJoCo (mujoco.rollout) built from the bridge's own URDF import and PD actuators, in the contract of each robot's rl_sar policy (no history, no linear velocity); tasks walk, turn_in_place, stand, push_recovery with legged_gym-style terms. ppo.py: PPO with GAE, KL-adaptive learning rate and an ONNX export that folds the normalisation in. legged-train trains/exports/evaluates. GUI Training page: start, live plot, Stop with checkpoint and export, resume, evaluate, Use in Launch (legged_policy:=<directory>, trained robot only). 3 GUI tests pass. Smoke run (Go2 stand, 64 envs, 4 iterations) trains, exports and evaluates end to end; 512 envs run at 1.8-2.3 s per iteration on the 12-core Orin. Later: only-positive step rewards with a one-off fall penalty; optional domain randomisation, rough terrain and observation noise (13 unit tests)."
+  ongoing: "2026-10-19 16:15: go2_walk_r1 (Go2 walk, 512 envs, 2000 iterations, flat, no options) at iteration 999, 12.3 M steps, tracking error 0.09 m/s and 0.10 rad/s in the training environment; evaluation and MuJoCo/Gazebo/Isaac drive checks queued after it."
   evidence: ["docs/tutorials/legged-policy-training.md"]
-  open: "A trained policy with measured walks; terrain curriculum and domain randomisation; GPU training (torch's CUDA build does not run on this Orin); Go2W and humanoids; transfer to Gazebo and Isaac."
+  open: "Measured walks of a trained policy and its transfer to Gazebo and Isaac; a run with the randomisation options; a Go2 turn-in-place policy; terrain curriculum; GPU training (torch's CUDA build does not run on this Orin); Go2W and humanoids."
 molar_hri_integration_20261016:
   task_id: R11_molar_hri
   owner: claude
@@ -26,8 +27,8 @@ molar_hri_integration_20261016:
 # Task ledger schema v2. See ROADMAP.md and docs/AGENT_HANDOFF.md.
 # Counts are audited observations, not targets or proof of runtime qualification.
 schema_version: 2
-updated: "2026-10-16"
-current_revision: "October 15 R10-first continuation from 815e54e: native pinned CC-BY Tethys AUV, explicit trim, bounded propeller/fins and GUI cruise guidance integrated. Fortress 6.18 positive added-mass convention corrected for both marine plants, with native added mass/Coriolis retained and a version startup guard. Actual GUI reef run records neutral enable, 2.05055 m surge input, 1.68886 m for 1.70 m depth target, 0.24229 rad turn and zero-output/coasting Stop (282 states); corrected ROV/tank surge/depth/Stop separately recorded. Preserve retained earlier drift/cleanup failures and exact source snapshots. Fleet, marine and three multi-leg GUI implementations remain partial; independent marine estimates/SLAM/routes, remaining fleet/swarm features and broader qualification stay open before older R3–R9."
+updated: "2026-10-19"
+current_revision: "October 19 (claude, 8b0b965): R11 MOLAR family passes its normal-GUI check in all four backends on nav_empty and both detailed CELISCA floors; rounds 51-56 indexed (619 reports, 291 cells, 278 passed, 12 failed screens; clean host passes every step at e3821b8, Isaac included); R12 legged policy training page implemented (PPO in batched MuJoCo for Go2/A1/B2, export to launchable policies, optional randomisation/terrain/noise). Ongoing: go2_walk_r1 training, then its evaluation and MuJoCo/Gazebo/Isaac drive checks, then round 57 (MuJoCo small_house after the spawn fix, rear-steer car course). Earlier October 15 R10 marine/fleet/multi-leg states unchanged."
 goal: "unified_multi_robot_algorithm_lab"
 next_extension:
   requested: "2026-10-14"
@@ -36,7 +37,7 @@ next_extension:
   scope: "Shared-world fleets, fleet management, ground/aerial swarms, underwater ROV/AUV/maps, six/eight-legged and centipede/segmented robots, additional snake/tracked/surface/amphibious forms"
   guide: "docs/NEXT_EXTENSION_GUIDE.md"
 overall_state: "partial"
-assessment: "Partial multi-robot lab with scoped real flight, wheeled navigation/mapping/reset, occupancy exports, initial shared-world fleet/swarm, first physical ROV/Marine and six/eight/many-legged Gait implementations. Latest instruction: implement R10 extensions first, then resume existing work; initial feature delivery precedes broad validation. Motion -> SLAM -> navigation remains the feature dependency order. Historical measurements stay source/task scoped and full release remains blocked."
+assessment: "Partial multi-robot lab with scoped real flight, wheeled navigation/mapping/reset, occupancy exports, initial shared-world fleet/swarm, first physical ROV/Marine and six/eight/many-legged Gait implementations. Latest instruction: implement R10 extensions first, then resume existing work; initial feature delivery precedes broad validation. Motion -> SLAM -> navigation remains the feature dependency order. Historical measurements stay source/task scoped and full release remains blocked. October 19: R11 MOLAR family and R12 legged policy training added; a first trained Go2 walk policy is in training and unqualified."
 audit_revision: "dff388f"
 documentation_only_revision: false
 priority_patches:
@@ -116,6 +117,9 @@ supported_baseline:
     mujoco: "Selected headless physics/import tests pass; ROS clock/data/control integration needs repair. 2026-09-11: 17/17 robots import with assets and a floating base; MJCF generated for all 26 worlds."
     isaac: "Qualified 2026-09-16 on a named host (Jetson AGX Orin, Isaac Sim 6.0.1, PhysX on the CPU). 2026-09-14: boots with the bundled libnvJitLink preloaded; through ros2 launch reaches ready (245 s cold, 30 s warm), publishes joint_states/odom/clock, builds SDF worlds as USD collision prims (26/26 offline, nav_maze live) and stops cleanly in 2 s with no Kit left running. 2026-09-16: the committed /scan and RGB-D publishers are verified live against the map ray-cast (360/360 rays within 5 cm, centre depth 7.340 vs 7.338 m), odometry is re-expressed at the URDF root, reset returns to 0.000 m with a monotonic clock, the wheel-drive instability is fixed (physxJoint armature 0.005 plus the description's own collision geometry: 0.298 m/s for 0.3 commanded, yaw 0.587 rad/s for 0.6), and five evaluation seeds complete a live R4 point-to-point mission in nav_empty (5/5 success, 1.3507 +/- 0.0004 m, mean 5.44 s sim, mean real-time factor 0.131)."
 current_verification:
+  october_19_status: "Snapshot 16:15 at 8b0b965: go2_walk_r1 training ongoing (iteration 999/2000); queued: its evaluation and drive checks, then round 57 (MuJoCo small_house after the spawn fix 873753f; rear-steer car course after 84422df). See ROADMAP.md 'October 19: progress, ongoing work and what remains'."
+  clean_host_round56: "2026-10-19 at e3821b8: container build 492 s, fast tier 1064 passed/26 skipped, MuJoCo/Gazebo/Isaac Bumperbot nav_obstacle missions pass, golden comparison 25 figures without differences (docs/status/evidence/rounds-2026-10-19/clean-host-r56)."
+  matrix_2026_10_19: "619 indexed reports, 291 measured cells: 278 passed and 12 failed screens (car course 10, camera calibration 2); docs/status/evidence/support-matrix-2026-10-19/README.md."
   aerial_obstacles: "October 14 after 0049ee2: four packages build (9.42s); 23 geometry/control/SDK checks pass in the actual SSD PX4 venv. A real ROS transport/TF diagnostic with explicitly synthetic depth/cloud/intrinsics confirms conversion, new obstruction and message-loss rejection; actual Tk selection confirms dependency/autofill/exclusions. No FCU, drone or simulator launched for this batch; flight/map/clearance/source-certificate qualification pending. See docs/status/aerial-obstacles-2026-10-14.md and receipt."
   native_arm_extension: "October 13–14 from master f3df4fe plus recorded working tree: 13 compiled native arm descriptions match independent URDF FK at three configurations (maximum matrix error <1.5e-11); 22 source checks pass; 13 actual installed Tk command selections and three exclusions pass; four packages build. Actual GUI/native-actuator/independent-TF UR5e +20mm Z reach: 0.489mm endpoint error, 19.83mm travel; SO101 position-only +10mm X reach: 0.147mm error, 9.90mm travel, both MuJoCo/nav_empty. One-shot diagnostics only; full interruption/object/backend/other-arm qualification remains pending. See docs/status/native-arm-planning-2026-10-14.md and receipt."
   bicycle_october_13: "R7.8.bicycle initial implementation installed: five-package build 12.9 s; final algorithm rebuild 4.69 s; ten numerical checks, nine actual installed Tk selections and three ROS server constructors on isolated domains. Installed modules/launches match source. Initial two MPC lateral-recovery failures retained and corrected by extending prediction timing. No new physical car mission or CI result; see docs/status/bicycle-implementation-receipt-2026-10-13.json."
@@ -1687,6 +1691,26 @@ tasks:
         evidence: ["docs/tutorials/fleet-and-swarm.md", "docs/status/fleet-2026-10-15.md", "docs/tutorials/marine-rov.md", "docs/status/marine-2026-10-15.md", "docs/tutorials/multi-leg-gaits.md", "docs/status/gaits-2026-10-15.md"]
         acceptance_ref: "ROADMAP.md R10.8"
 
+  R11:
+    title: "MOLAR / ProBOT-L family on the detailed CELISCA floors"
+    state: partial
+    owner: claude
+    depends_on: []
+    scope_paths: ["src/robot_lab_robots/", "src/robot_lab_maps/", "src/robot_lab_bringup/", "src/robot_lab_gui/", "src/robot_lab_utils/", "src/robot_lab_mujoco/", "src/robot_lab_pybullet/", "src/robot_lab_isaac/", "docs/"]
+    acceptance_ref: "ROADMAP.md R11"
+    implementation_summary: "molar_hri and probot_l in the normal GUI: Display-mode differential drive, conveyor lift, coupled two-stage telescope and roller with Stop, heartbeat watchdog and base inhibit in Gazebo, MuJoCo, PyBullet and Isaac."
+    implementation_validation: "Normal-GUI check (drive, lift and both stages to their limits, roller, Stop, heartbeat loss) passes for molar_hri in every backend on nav_empty and both detailed floors and for probot_l on nav_empty (16 cells, ca218dd). Open: sensors, SLAM/Nav2 and routes, payload transfer, multi-floor, repeats, probot_l on the floors."
+    evidence: ["docs/status/evidence/molar-hri-2026-10-16/README.md", "docs/tutorials/molar-hri-simulation.md"]
+  R12:
+    title: "Legged policy training (GUI Training page)"
+    state: active
+    owner: claude
+    depends_on: ["R5.2"]
+    scope_paths: ["src/robot_lab_adapter/", "src/robot_lab_gui/", "docs/"]
+    acceptance_ref: "ROADMAP.md R12"
+    implementation_summary: "Training page and legged-train: PPO in batched MuJoCo (the bridge's own model and PD actuators) for Go2, A1 and B2 in their rl_sar contracts; tasks walk, turn_in_place, stand, push_recovery; live progress, Stop with export, resume, evaluation through LeggedPolicy, Use in Launch (legged_policy:=<directory>, trained robot only); optional domain randomisation, rough terrain and observation noise."
+    implementation_validation: "Ongoing: go2_walk_r1 (Go2 walk, 512 envs, 2000 iterations) is training; at iteration 999 the training-environment tracking error is 0.09 m/s and 0.10 rad/s. Its evaluation and MuJoCo/Gazebo/Isaac drive checks are queued. 13 unit and 3 GUI tests pass. No trained policy is qualified."
+    evidence: ["docs/tutorials/legged-policy-training.md"]
 known_blockers:
   -
     id: "hardware_hil"
@@ -1733,7 +1757,7 @@ handoff:
   parallel_ready_after_R0:
     - "R1.1"
     - "R1.2"
-  next_action: "R10 first: preserve fleet, ROV/AUV and six/eight/many-legged workflows with exact physical/source scopes. Continue fleet real task queues/Open-RMF/coverage/multi-FCU, then independent marine measurements/volumetric routes and remaining shared adapters/robot forms. Initial implementation precedes broad qualification. Read fleet-and-swarm.md, marine-rov.md, tethys-auv.md and multi-leg-gaits.md; keep higher-mode/backend gates truthful. Resume older R3–R9 after this extension."
+  next_action: "October 19 (claude): finish R12 after go2_walk_r1 (record its evaluation and drive checks), record round 57, then follow ROADMAP.md 'October 19: progress, ongoing work and what remains'. R10 first: preserve fleet, ROV/AUV and six/eight/many-legged workflows with exact physical/source scopes. Continue fleet real task queues/Open-RMF/coverage/multi-FCU, then independent marine measurements/volumetric routes and remaining shared adapters/robot forms. Initial implementation precedes broad qualification. Read fleet-and-swarm.md, marine-rov.md, tethys-auv.md and multi-leg-gaits.md; keep higher-mode/backend gates truthful. Resume older R3–R9 after this extension."
   protocol: "docs/AGENT_HANDOFF.md"
   plan: "ROADMAP.md"
   audit: "docs/status/audit-2026-10-02.md"
@@ -1779,6 +1803,16 @@ implementation_first:
   essential_checks: "Initial implementation first; defer test campaigns and physical validation until the initial feature batches are in place. Necessary syntax/build diagnostics are implementation work. Stop, limits and command-loss handling belong in the implementation. Do not substitute repeated tests, catalog counts or documentation for missing functional code."
   status_boundary: "Record feature implementation separately from measured runtime qualification. Existing partial/active task states and release gates remain; implemented-but-unvalidated is not a passed robot mission. Missing controllers stay unavailable and candidate workflows remain explicitly experimental."
   queue:
+  - title: "R12 legged policy training (latest user request, ongoing)"
+    tasks: [R12]
+    outcome: "A GUI page that trains legged-robot policies for tasks, exports them as launchable policy directories and measures them on the lab backends."
+    implemented: "Training page and legged-train for Go2/A1/B2 (walk, turn in place, stand, push recovery), export, evaluation, Use in Launch, optional randomisation/terrain/noise."
+    validation: "In progress: go2_walk_r1 training (iteration 999 of 2000 at 16:15 on 2026-10-19), then its evaluation and MuJoCo/Gazebo/Isaac drive checks."
+  - title: "R11 MOLAR / ProBOT-L on the detailed CELISCA floors"
+    tasks: [R11]
+    outcome: "Complete MOLAR variants with drive, lift, telescope and roller controls in the normal GUI on the detailed floors."
+    implemented: "Both variants in all four backends with Stop, watchdog and base inhibit."
+    validation: "16 normal-GUI cells pass; sensors, SLAM/Nav2, payload and multi-floor remain."
   - title: R10 shared worlds, fleet/swarm, marine and additional robot forms first
     tasks: [R10.1, R10.2, R10.3, R10.4, R10.5, R10.6, R10.7, R10.8]
     outcome: Implement complete usable workflows for the new extension before resuming the older queue; reuse source controllers/plugins and provision complete models/maps into the native GUI.

@@ -126,6 +126,13 @@ ros2 launch robot_lab_bringup simulated_robot.launch.py mode:=loc simulator:=muj
 - **Pipeline smoke run** (Go2, `stand`, 64 environments, 4 iterations):
   it trains, writes checkpoints, exports a policy directory that loads as
   an ordinary policy, and evaluates through `LeggedPolicy` without falling.
+- **First real run, in progress** (`go2_walk_r1`: Go2 `walk`, 512
+  environments, 2000 iterations, flat floor, no options). At iteration 999
+  (12.3 M steps, 34 minutes) the training environment's velocity-tracking
+  error has fallen from 0.52 to 0.09 m/s and from 0.68 to 0.10 rad/s, with
+  almost no falls. The exported policy's evaluation and drive checks in
+  MuJoCo, Gazebo and Isaac are queued after it. Until those are recorded,
+  it is not known to walk anywhere outside training.
 - **Speed** on the 12-core Orin: 512 environments × 24 steps take 1.8-2.3 s
   per iteration (about 0.7 s of physics at 17-23 k steps/s, the rest the
   PPO update). That is about 20 M environment steps an hour.

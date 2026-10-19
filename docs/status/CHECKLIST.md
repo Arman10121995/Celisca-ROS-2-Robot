@@ -1,5 +1,13 @@
 # Robot Lab done and remaining checklist
 
+**Ongoing (October 19, 16:15):**
+
+- [ ] `go2_walk_r1` training: 999 of 2000 iterations, tracking error 0.09 m/s
+  and 0.10 rad/s in the training environment.
+- [ ] Queued after it: its evaluation and MuJoCo/Gazebo/Isaac drive checks.
+- [ ] Round 57: the MuJoCo small_house slam drive after the spawn fix, and
+  the rear-steer car course in four backends after its planner change.
+
 October 19: R12 legged policy training ([guide](../tutorials/legged-policy-training.md)).
 
 - [x] GUI Training page (EXPERIMENTS → Policy training) and
@@ -8,9 +16,11 @@ October 19: R12 legged policy training ([guide](../tutorials/legged-policy-train
 - [x] Live progress, Stop with checkpoint and export, resume, evaluation
   through the deployment code, and hand-off to Launch as
   `legged_policy:=<directory>` for the trained robot only.
-- [ ] A trained policy with measured walks; terrain curriculum and domain
-  randomisation; GPU training; Go2W and humanoids; transfer to Gazebo and
-  Isaac.
+- [x] Optional domain randomisation (friction, base mass, motor strength),
+  rough terrain and observation noise, as GUI checkboxes and CLI flags.
+- [ ] A trained policy with measured walks and its transfer to Gazebo and
+  Isaac; a run with the randomisation options; a Go2 turn-in-place policy;
+  terrain curriculum; GPU training; Go2W and humanoids.
 
 October 19: rounds 51-56 ([evidence](evidence/rounds-2026-10-19/README.md)).
 
@@ -20,10 +30,13 @@ October 19: rounds 51-56 ([evidence](evidence/rounds-2026-10-19/README.md)).
 - [x] Clean host at `e3821b8`: build, fast tier, MuJoCo, Gazebo and Isaac
   missions and the golden comparison all pass.
 - [x] Matrix re-indexed: 619 reports, 291 cells, 278 passed, 12 failed.
-- [ ] Car course parking heading (2 of 12 cells pass the full course);
-  rear-steer gate 1 in MuJoCo and Gazebo.
-- [ ] Camera calibration in Isaac (RMS) and Gazebo (cy 5 px); MuJoCo
-  small_house Bumperbot sinking 8.5 mm.
+- [x] MuJoCo small_house Bumperbot crawl: the cause was a spawn drop
+  through the 1 mm flex floor from a loose mesh box (`873753f`); a
+  diagnostic drive reaches 0.397 m/s. The slam drive is queued again.
+- [ ] Car course parking heading (2 of 12 cells pass the full course).
+- [ ] Rear-steer gate 1 in MuJoCo and Gazebo: planner change committed
+  (`84422df`), measurement queued.
+- [ ] Camera calibration in Isaac (RMS) and Gazebo (cy 5 px).
 
 October 19: R11 MOLAR family on the detailed CELISCA floors.
 
