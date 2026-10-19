@@ -66,7 +66,17 @@ info, which has fx 221.77 and is centred at (159.5, 119.5), or at
 faced away from the robot (−x). It now has a +x normal and +x winding.
 Gazebo and MuJoCo run again in round 54, below.
 
-PENDING_CAL54
+**With the fixed board** (round 54, `e3821b8`): Gazebo and MuJoCo again.
+
+| Backend | Views | fx | cx | cy | RMS (px) | Matrix screen |
+|---|---|---|---|---|---|---|
+| MuJoCo | 38 | 221.92 (+0.1 %) | 159.80 | 119.32 | 0.60 | passes |
+| Gazebo (camera info at 160, 120) | 43 | 227.75 (+2.7 %) | 159.93 | 124.96 | 1.11 | fails: cy 5 px off, RMS over 1 |
+
+The Gazebo fit is the least certain: its plumb-bob fit drifts to fx 236
+and cy 132, so the views constrain it poorly. Whether Gazebo's principal
+point really sits 5 px low needs a dedicated check; its depth check
+reads the floor at 0 mm, which argues against it.
 
 ## Car course (R5.5)
 
@@ -81,7 +91,7 @@ footprint clear of every cone and box throughout:
 | Gazebo | **passes** (park 0.117 m, −9.7°) | gate 1 aborted | **passes** (park 0.139 m, −8.4°) |
 | PyBullet | slalom; park −23.0° | slalom; park −11.7° | slalom; park −14.4° |
 | Isaac | slalom; park −19.6° | slalom; park −10.9° | slalom; park aborted (0.50 m, −26.8°) |
-| MuJoCo | report lost (see below) | gate 1 aborted | report lost |
+| MuJoCo | slalom; park −10.4° (round 55) | gate 1 aborted | gate 4 aborted (round 55) |
 
 - The slalom passes in 8 of 10 runs, with the footprint 0.057-0.114 m
   from the nearest cone.
@@ -94,7 +104,14 @@ footprint clear of every cone and box throughout:
 - `sim_car_course.py` could not print two MuJoCo reports (a numpy bool;
   fixed in `3f826e1`); round 55 runs them again.
 
-PENDING_COURSE55
+**MuJoCo again** (round 55, `e3821b8`):
+- **Ackermann:** passes the slalom (footprint 0.068 m from a cone) and
+  reaches the bay at 0.113 m, but at −10.4°, just over 10°.
+- **Anti-Ackermann:** clears gates 1-3, then aborts gate 4, 1.63 m short.
+
+Car course over the 12 cells: the slalom passes in 9, the full course in
+2 (Gazebo Ackermann and anti-Ackermann). Parking heading is the main gap:
+a precise final-heading approach for cars is open work.
 
 ## Car publisher loss (R5.5)
 

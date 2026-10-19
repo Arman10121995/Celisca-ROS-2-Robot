@@ -1,0 +1,69 @@
+{
+ "pattern": "8x6",
+ "square_m": 0.04,
+ "rate_rad_s": 0.15,
+ "turns": 2.0,
+ "turned_rad": 12.567,
+ "wall_s": 99.1,
+ "frames": 397,
+ "images_received": 446,
+ "outcomes": {
+  "kept": 38,
+  "no board": 194,
+  "similar": 165
+ },
+ "camera_info": {
+  "fx": 221.76500407999384,
+  "fy": 221.76500407999384,
+  "cx": 159.5,
+  "cy": 119.5,
+  "width": 320,
+  "height": 240
+ },
+ "pixel_centres": {
+  "cx": 159.5,
+  "cy": 119.5
+ },
+ "script_calibration_plumb_bob": {
+  "views": 38,
+  "rms_px": 0.6008,
+  "fx": 220.978,
+  "fy": 221.016,
+  "cx": 159.031,
+  "cy": 117.494,
+  "distortion": [
+   0.01337,
+   -0.05484,
+   -0.00274,
+   -0.0007,
+   0.0494
+  ],
+  "coverage": [
+   0.59,
+   0.2,
+   0.17,
+   0.35
+  ]
+ },
+ "script_calibration_pinhole": {
+  "views": 38,
+  "rms_px": 0.6014,
+  "fx": 221.923,
+  "fy": 222.041,
+  "cx": 159.8,
+  "cy": 119.318,
+  "distortion": [
+   0.0,
+   0.0,
+   0.0,
+   0.0,
+   0.0
+  ],
+  "coverage": [
+   0.59,
+   0.2,
+   0.17,
+   0.35
+  ]
+ }
+}
