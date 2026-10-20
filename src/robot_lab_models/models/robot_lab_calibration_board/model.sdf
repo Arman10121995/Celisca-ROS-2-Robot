@@ -9,6 +9,13 @@
       </collision>
       <visual name="visual">
         <geometry><mesh><uri>model://robot_lab_calibration_board/meshes/board.dae</uri></mesh></geometry>
+        <material>
+          <ambient>0 0 0 1</ambient><diffuse>0 0 0 1</diffuse><specular>0 0 0 1</specular>
+          <pbr><metal>
+            <emissive_map>model://robot_lab_calibration_board/materials/textures/board.png</emissive_map>
+            <roughness>1.0</roughness><metalness>0.0</metalness>
+          </metal></pbr>
+        </material>
       </visual>
     </link>
   </model>
