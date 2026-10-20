@@ -1,3 +1,11 @@
+extension_completion_20261020:
+  owner: codex
+  state: active
+  requested: '2026-10-20'
+  baseline_revision: b8ea60e
+  priority: Reconcile current documentation, then finish missing usable extension workflows before the older roadmap.
+  scope: R10 fleet queues/traffic/coverage, marine sensor-based estimation and routes, additional robot workflows, native GUI and reproducible workloads; preserve R11/R12 source evidence and all existing robot contracts.
+  status_boundary: Initial implementation and targeted checks are separate from broad physical mission qualification; no universal robot/map/backend support claim.
 legged_policy_training_20261019:
   task_id: R12_legged_policy_training
   owner: claude
@@ -27,8 +35,8 @@ molar_hri_integration_20261016:
 # Task ledger schema v2. See ROADMAP.md and docs/AGENT_HANDOFF.md.
 # Counts are audited observations, not targets or proof of runtime qualification.
 schema_version: 2
-updated: "2026-10-19"
-current_revision: "October 19 (claude, 8b0b965): R11 MOLAR family passes its normal-GUI check in all four backends on nav_empty and both detailed CELISCA floors; rounds 51-56 indexed (619 reports, 291 cells, 278 passed, 12 failed screens; clean host passes every step at e3821b8, Isaac included); R12 legged policy training page implemented (PPO in batched MuJoCo for Go2/A1/B2, export to launchable policies, optional randomisation/terrain/noise). Ongoing: go2_walk_r1 training, then its evaluation and MuJoCo/Gazebo/Isaac drive checks, then round 57 (MuJoCo small_house after the spawn fix, rear-steer car course). Earlier October 15 R10 marine/fleet/multi-leg states unchanged."
+updated: "2026-10-20"
+current_revision: "October 20 Codex extension continuation from b8ea60e: documentation/inventory reconciled; Go2 training/export is complete (deployment launch diagnostics are not measured transfer). Robust fleet queue/settled arrival/traffic/coverage and actual optional Open-RMF adapter implemented; sensor-only marine odometry, real RGB-D RTAB-Map integration and estimated 3D route workflow implemented; contact-kinematic gait odometry and explicit higher-task candidates implemented. Multi-FCU initial integration is active. Exact scoped diagnostics and remaining qualification are in docs/status/extension-2026-10-20.md."
 goal: "unified_multi_robot_algorithm_lab"
 next_extension:
   requested: "2026-10-14"
@@ -37,7 +45,7 @@ next_extension:
   scope: "Shared-world fleets, fleet management, ground/aerial swarms, underwater ROV/AUV/maps, six/eight-legged and centipede/segmented robots, additional snake/tracked/surface/amphibious forms"
   guide: "docs/NEXT_EXTENSION_GUIDE.md"
 overall_state: "partial"
-assessment: "Partial multi-robot lab with scoped real flight, wheeled navigation/mapping/reset, occupancy exports, initial shared-world fleet/swarm, first physical ROV/Marine and six/eight/many-legged Gait implementations. Latest instruction: implement R10 extensions first, then resume existing work; initial feature delivery precedes broad validation. Motion -> SLAM -> navigation remains the feature dependency order. Historical measurements stay source/task scoped and full release remains blocked. October 19: R11 MOLAR family and R12 legged policy training added; a first trained Go2 walk policy is in training and unqualified."
+assessment: "Partial multi-robot lab with scoped real flight, wheeled navigation/mapping/reset, occupancy exports, initial shared-world fleet/swarm, first physical ROV/Marine and six/eight/many-legged Gait implementations. Latest instruction: implement R10 extensions first, then resume existing work; initial feature delivery precedes broad validation. Motion -> SLAM -> navigation remains the feature dependency order. Historical measurements stay source/task scoped and full release remains blocked. October 19: R11 MOLAR family and R12 legged policy training added; the first Go2 walk run finished/exported, with measured deployment qualification still open."
 audit_revision: "dff388f"
 documentation_only_revision: false
 priority_patches:
@@ -1624,7 +1632,7 @@ tasks:
         owner: "codex"
         depends_on: ["R10.1"]
         active_scope: "Implement bounded real per-instance Nav2 dispatch, nearest-idle allocation, pause/resume/cancel and measured status/SSD journals. Open-RMF traffic/resource integration remains a separate pending source-compatible adapter."
-        implementation_state: "Actual namespaced Nav2 dispatch/allocation and generation/cancel barriers implemented; per-member goal queue auto-dispatches when a member becomes idle (busy goals are queued instead of rejected) in fleet_controller.py; Open-RMF/traffic/resource adapters pending"
+        implementation_state: Bounded per-member routes/queues, explicit pause/resume/cancel/reset, lifecycle activation gate, actual Nav2 plus measured-settling task results, serial traffic and optional official Humble Open-RMF adapter implemented; infrastructure and broad mission qualification pending
         validation_state: "One actual alpha/Bumperbot Nav2 result in shared nav_empty at 0.06218 m physical error; settled physical arrival and allocation/pause/resume/cancel campaigns pending"
         evidence: ["docs/status/fleet-2026-10-15.md", "docs/status/evidence/r101-fleet-2026-10-15/events.jsonl"]
         acceptance_ref: "ROADMAP.md R10.2"
@@ -1634,7 +1642,7 @@ tasks:
         owner: "codex"
         depends_on: ["R10.1", "R5.10"]
         active_scope: "Initial ground formation/rendezvous/dispersion/flocking velocity kernels with fresh wheel/AMCL estimates, obstacle/separation guards, operator heartbeat and group Stop in one shared Gazebo plant. Multi-FCU and broader source algorithms remain pending."
-        implementation_state: "Four educational centralized ground kernels, freshness/scan/separation guards and group/loss ownership implemented; coverage/distributed protocols/aerial swarms pending"
+        implementation_state: Four centralized ground kernels plus clearance-aware cooperative sweep allocation implemented; actual multi-FCU/aerial initial integration active; distributed protocols and broad physical qualification pending
         validation_state: "Six-second actual two-body formation motion and heartbeat-loss Stop measured; convergence, other behaviors, contacts and broader missions pending"
         evidence: ["docs/status/fleet-2026-10-15.md", "docs/status/fleet-receipt-2026-10-15.json"]
         acceptance_ref: "ROADMAP.md R10.3"
@@ -1656,7 +1664,7 @@ tasks:
         owner: "codex"
         depends_on: ["R10.4", "R6.7"]
         active_scope: "2026-10-15 initial marine world/observations: tank/reef/harbor/cave/wreck water-surface and bathymetry/collision semantics, actual body/IMU/camera observations with explicit measurement-source labels. DVL/sonar, independent estimation, saved underwater SLAM and volumetric navigation remain pending; do not enable fake GPS/flat Nav2."
-        implementation_state: "Five installed water/collision worlds, static scene derivatives with non-colliding visual water, separate ROV/AUV actual body/joint/IMU and supported camera bridges, explicitly ideal pose-derived pressure implemented. Independent marine estimation/SLAM/navigation pending"
+        implementation_state: Five water/collision worlds; native IMU plus explicit noisy bottom-lock Janus-DVL/pressure simulation, separate sensor-only odometry, estimated 3D Plan/Execute, real ROV RGB-D RTAB-Map and database/cloud save/reload implementation; qualification and additional sensor/backend adapters pending
         validation_state: "ROV/tank and AUV/reef body/depth/joint observations measured; remaining vehicle/map cells, independent sensor rates, contacts and saved-map missions unqualified"
         evidence: ["docs/status/marine-2026-10-15.md", "docs/status/marine-receipt-2026-10-15.json", "docs/status/auv-2026-10-15.md", "docs/status/auv-receipt-2026-10-15.json"]
         acceptance_ref: "ROADMAP.md R10.5"
@@ -1667,7 +1675,7 @@ tasks:
         depends_on: []
         scope_paths: ["docs/", "README.md", "ROADMAP.md", "src/robot_lab_utils/", "src/robot_lab_mujoco/", "src/robot_lab_bringup/", "src/robot_lab_robots/", "src/robot_lab_maps/", "src/robot_lab_gui/", "src/robot_lab/robot_lab_registry/", "scripts/"]
         active_scope: "2026-10-15 after marine checkpoint: complete source-bound six/eight-legged models, exact leg geometry/limits, IK/gait, actual effort actuation/contact/tilt feedback, neutral enable/Stop/watchdog and native GUI. Reuse pinned MIT hexapod_ros2 geometry/KDL conversion with explicit MuJoCo in-step bounded PD; authored eight/segmented variants retain separate identities. Add src/robot_lab_mujoco/ for opt-in actual contact telemetry. Motion implementation precedes sensing/SLAM/navigation qualification."
-        implementation_state: "Pinned MIT source hexapod + authored complete octopod, source-chain IK, tripod/tetrapod/ripple/wave schedules, bounded MuJoCo in-step PD, actual contact/tilt/timestamp/lease guards and Gait/Drive GUI implemented"
+        implementation_state: Complete source hexapod and authored octopod; source gait/PD plus contact-kinematic odometry, explicit lab sensor frames and experimental localization/2D/3D SLAM/Nav2 task composition implemented; physical higher-mode, terrain and other-backend qualification pending
         validation_state: "Actual short normal GUI nav_empty forward/Stop measured on both; source-mass/IK/contact contracts pass. Gait contract tests pass (8/8: IK, schedules, PD, guards). Terrain, recovery, reverse/turn/loss/reset, independent estimation/SLAM/navigation and other backends pending."
         evidence: ["docs/tutorials/multi-leg-gaits.md", "docs/status/gaits-2026-10-15.md", "docs/status/gaits-receipt-2026-10-15.json"]
         acceptance_ref: "ROADMAP.md R10.6"
@@ -1677,7 +1685,7 @@ tasks:
         owner: "codex"
         depends_on: ["R10.6"]
         active_scope: "2026-10-15: first complete authored segmented many-legged variant with real spine/leg joints, body-wave coupling and bounded gait/effort actuation. Individual segments stay nested under the complete family; additional snake/tracked/surface/amphibious forms remain separate."
-        implementation_state: "Complete authored six-body/twelve-leg/five-spine model, local leg IK, wave/ripple and bounded spine curvature, actual physical contacts/tilt and native GUI implemented"
+        implementation_state: Complete articulated twelve-leg centipede with source gait and contact-odometry/higher-task candidate pipeline; further snake/tracked/surface/amphibious families and physical mission acceptance pending
         validation_state: "Actual short GUI nav_empty forward/Stop measured, with a repeat after timestamp/reset guards; terrain/tail-clearance/recovery/independent estimates/missions and additional robot forms pending"
         evidence: ["docs/tutorials/multi-leg-gaits.md", "docs/status/gaits-2026-10-15.md", "docs/status/gaits-receipt-2026-10-15.json"]
         acceptance_ref: "ROADMAP.md R10.7"
@@ -1687,7 +1695,7 @@ tasks:
         owner: "codex"
         depends_on: ["R10.1", "R10.2", "R10.3", "R10.4", "R10.5", "R10.6", "R10.7"]
         active_scope: "Native Fleet & Swarm and Marine controls: shared map/member editor, commands/presets/default compatible water maps, latched per-instance/group or ROV Drive, real Nav2 or depth/heading actions and measured state. Gait ownership/Drive/source-stance preview controls are also implemented; experiment adapters remain."
-        implementation_state: "Fleet & Swarm tab, Marine/Gait control columns, compatible robot/map/backend/mode autofill, source-stance previews and live controls implemented; shared-world/marine/gait workloads pending"
+        implementation_state: Native Fleet & Swarm queues/coverage/RMF controls, Marine missions/SLAM/database controls and Gait higher-task selector/autofill implemented; aerial group/workload initial integration active and broad GUI/mission acceptance pending
         validation_state: "Actual normal GUI diagnostics on two bases/nav_empty/Gazebo, one ROV/tank/Gazebo, one AUV/reef/Gazebo and three multi-leg models/nav_empty/MuJoCo, with exact per-run source hashes; physical joystick and remaining configurations pending"
         evidence: ["docs/tutorials/fleet-and-swarm.md", "docs/status/fleet-2026-10-15.md", "docs/tutorials/marine-rov.md", "docs/status/marine-2026-10-15.md", "docs/tutorials/multi-leg-gaits.md", "docs/status/gaits-2026-10-15.md"]
         acceptance_ref: "ROADMAP.md R10.8"
@@ -1808,7 +1816,7 @@ implementation_first:
     tasks: [R12]
     outcome: "A GUI page that trains legged-robot policies for tasks, exports them as launchable policy directories and measures them on the lab backends."
     implemented: "Training page and legged-train for Go2/A1/B2 (walk, turn in place, stand, push recovery), export, evaluation, Use in Launch, optional randomisation/terrain/noise."
-    validation: "In progress: go2_walk_r1 training (iteration 999 of 2000 at 16:15 on 2026-10-19), then its evaluation and MuJoCo/Gazebo/Isaac drive checks."
+    validation: "Completed/exported at 2000 iterations / 24.58M steps; training-domain evaluation and deployment launch diagnostics recorded; independent measured policy-transfer missions remain open."
   - title: "R11 MOLAR / ProBOT-L on the detailed CELISCA floors"
     tasks: [R11]
     outcome: "Complete MOLAR variants with drive, lift, telescope and roller controls in the normal GUI on the detailed floors."

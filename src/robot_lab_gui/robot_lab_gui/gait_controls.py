@@ -3,6 +3,10 @@ import json
 import math
 import time
 import uuid
+from pathlib import Path
+import os
+import sqlite3
+import threading
 import tkinter as tk
 from tkinter import ttk
 try:
@@ -33,8 +37,16 @@ class GaitControls(ttk.Frame):
         ttk.Label(self,textvariable=self.feedback,wraplength=310,justify='left').grid(row=8,column=0,sticky='ew',pady=6)
         ttk.Label(self,text='Connect and Arm start without travel. Use Drive for latching, ramps, WASD/joystick and Space.\n'
                   'Stop/loss halts gait phases and holds bounded joint targets; bodies remain free in physics.\n'
-                  'Measured contacts are separate from planned stance. Independent estimation, SLAM/navigation and other backends remain pending.',
+                  'Measured contacts are separate from planned stance. Experimental contact odometry and mapping/navigation can be selected below; terrain and backend qualification remain pending.',
                   wraplength=310).grid(row=9,column=0,sticky='ew')
+        tasks=ttk.LabelFrame(self,text='Experimental sensor task · applied on next Run',padding=5)
+        tasks.grid(row=10,column=0,sticky='ew',pady=5)
+        task_combo=ttk.Combobox(tasks,textvariable=app.gait_task_var,values=('gait','loc','slam','3d_slam','nav'),state='readonly')
+        task_combo.grid(row=0,column=0,sticky='ew');tasks.columnconfigure(0,weight=1)
+        task_combo.bind('<<ComboboxSelected>>',lambda _e:app._update_validation_and_command())
+        ttk.Button(tasks,text='Save acquired map',command=self.save_map).grid(row=1,column=0,sticky='ew',pady=3)
+        self.odometry_feedback=tk.StringVar(value='Sensors/SLAM/Nav2 are experimental candidates, not qualified higher modes.')
+        ttk.Label(self,textvariable=self.odometry_feedback,wraplength=310).grid(row=11,column=0,sticky='ew')
         app.bind('<FocusOut>',lambda _e:self.after_idle(self.focus_check),add='+');self.job=self.after(50,self.tick)
 
     def selected(self):return self.app._gait_selectable()
@@ -46,6 +58,7 @@ class GaitControls(ttk.Frame):
         self.node=rclpy.create_node('gait_gui_'+self.operator[-12:]);self.executor=SingleThreadedExecutor();self.executor.add_node(self.node)
         self.command_pub=self.node.create_publisher(String,'/gait/command',10);self.hb_pub=self.node.create_publisher(String,'/gait/operator_heartbeat',10)
         self.node.create_subscription(String,'/gait/state',self.observe,10)
+        self.node.create_subscription(String,'/gait/odometry_state',self.observe_odometry,10)
         self.status.set('Connected neutral; wait for actual support, then Arm walking');return True
 
     def observe(self,msg):
@@ -84,6 +97,33 @@ class GaitControls(ttk.Frame):
 
     def stop(self):
         if self.node and self.runtime:self.send('stop')
+
+    def observe_odometry(self,msg):
+        try:
+            data=json.loads(msg.data)
+            self.odometry_feedback.set(f"Contact odometry: {data['samples']} samples · XY {data['position']}\n"
+                f"Support spread {data['velocity_scatter_m_s']:.3f} m/s · {data['source']}")
+        except (ValueError,KeyError,TypeError):pass
+
+    def save_map(self):
+        if not self.runtime:return
+        task=self.runtime.get('task')
+        directory=Path(os.environ.get('ROBOT_LAB_RUNTIME_ROOT','/workspace/molar/robot_lab_runtime'))/'maps'
+        directory.mkdir(exist_ok=True)
+        target=directory/('gait-'+self.runtime['robot_id']+'-'+time.strftime('%Y%m%d-%H%M%S'))
+        if task=='slam':
+            request=json.dumps(dict(map_topic='/gait/map',map_url=str(target),image_format='pgm',map_mode='trinary',free_thresh=.25,occupied_thresh=.65))
+            command=['timeout','15','ros2','service','call','/gait/map_saver/save_map','nav2_msgs/srv/SaveMap',request]
+            threading.Thread(target=self.app._run_aux_command,args=(command,'Gait map save'),daemon=True).start()
+        elif task=='3d_slam' and self.runtime.get('directory'):
+            source=Path(self.runtime['directory'])/'gait-rtabmap.db'
+            if not source.is_file():self.status.set('No acquired RTAB-Map database yet');return
+            try:
+                with sqlite3.connect('file:'+str(source)+'?mode=ro',uri=True,timeout=2.) as old:
+                    with sqlite3.connect(str(target)+'.db') as new:old.backup(new)
+                self.status.set('Saved actual RTAB-Map database: '+str(target)+'.db')
+            except sqlite3.Error as exc:self.status.set('Map backup failed: '+str(exc))
+        else:self.status.set('Run experimental slam or 3d_slam and acquire measurements first')
 
     def focus_check(self):
         if not self.closed and self.focus_get() is None:self.app._stop_drive(keep_input_enabled=True)

@@ -25,6 +25,11 @@ def setup(context):
     profiles=yaml.safe_load((robots/'config/robots.yaml').read_text())['robots']
     name=value('robot_model');profile=profiles[name]
     config=robots/profile['gait_model'];urdf=load_description(robots/profile['xacro']);model=GaitModel(urdf,config)
+    task=value('task')
+    if task not in ('gait','loc','slam','3d_slam','nav'):raise ValueError('Choose gait/loc/slam/3d_slam/nav for the experimental gait workflow')
+    if task!='gait':
+        from robot_lab_utils.gait_pipeline import sensor_description
+        urdf=sensor_description(urdf,model.config['forward_yaw'])
     maps=merge_installed_profiles(yaml.safe_load((bringup/'config/sim_maps.yaml').read_text()),'maps')['maps']
     selected=value('map_name');selected='empty' if selected.lower() in ('','none','no map') else selected
     world=maps[selected]
@@ -59,21 +64,44 @@ def setup(context):
               initial_joint_positions=json.dumps(dict(zip(model.names,model.initial.tolist()))),
               gait_contact_config=json.dumps(contacts),gait_floor_reference=floor_reference,physics_timestep='.001',max_catch_up_ticks='0',
               **{'spawn_'+key:str(item) for key,item in pose.items() if key in ('x','y','z','yaw')})
+    if task!='gait':
+        args['sensor_config']=json.dumps(dict(laser_link_name='gait_laser_link',camera_link_name='gait_camera_link',
+            camera_optical_frame='gait_camera_optical_frame',scan_samples=360,scan_rate=10.,scan_range_min=.05,
+            scan_range_max=8.,camera_width=320,camera_height=240,camera_rate=5.,camera_horizontal_fov=1.25,
+            camera_near=.1,camera_far=8.))
     manifest=dict(robot=name,map=selected,backend='MuJoCo',world_xml=explicit_mjcf,spawn=pose,
+                  task=task,sensor_kit=task!='gait',
                   description=str(description),config=str(config),pd=model.pd_config(),contacts=contacts,
                   scope='Experimental exact-geometry gait with actual contact/tilt guards; independent estimation/SLAM/navigation pending')
     (folder/'session.json').write_text(json.dumps(manifest,indent=2)+'\n');print('[robot_lab gait] '+str(folder/'session.json'))
     controller=Node(package='robot_lab_utils',executable='gait_controller.py',parameters=[{
-        'use_sim_time':True,'description_file':str(description),'gait_config':str(config),'control_allowed':value('control')=='true'}],output='screen')
+        'use_sim_time':True,'description_file':str(description),'gait_config':str(config),'control_allowed':value('control')=='true',
+        'navigation_enabled':task=='nav','task':task,'session_directory':str(folder)}],output='screen')
     actions=[IncludeLaunchDescription(PythonLaunchDescriptionSource(str(Path(share('robot_lab_mujoco'))/'launch/mujoco_simulator.launch.py')),launch_arguments=args.items()),
              controller,RegisterEventHandler(OnProcessExit(target_action=controller,on_exit=[EmitEvent(event=Shutdown(reason='Gait controller exited'))]))]
+    if task!='gait':
+        from robot_lab_utils.gait_pipeline import pipeline
+        actions+=pipeline(task,description,config,pose,world,folder,model)
     if value('rviz')=='true':
-        actions.append(Node(package='rviz2',executable='rviz2',arguments=['-d',str(Path(share('robot_lab_description'))/'rviz/display.rviz'),'-f','odom'],parameters=[{'use_sim_time':True}],output='screen'))
+        rviz=Path(share('robot_lab_description'))/'rviz/display.rviz'
+        frame='odom'
+        if task!='gait':
+            frame='map';rviz=folder/'gait.rviz'
+            rviz.write_text(yaml.safe_dump({'Visualization Manager':{'Global Options':{'Fixed Frame':'map'},'Displays':[
+                {'Class':'rviz_default_plugins/RobotModel','Name':'Actual joint model','Enabled':True,'Description Source':'Topic','Description Topic':'/robot_description'},
+                {'Class':'rviz_default_plugins/Map','Name':'Gait map','Enabled':True,'Topic':{'Value':'/gait/map','Durability Policy':'Transient Local'}},
+                {'Class':'rviz_default_plugins/LaserScan','Name':'Actual estimated-frame scan','Enabled':True,'Topic':{'Value':'/gait/scan','Reliability Policy':'Best Effort'}},
+                {'Class':'rviz_default_plugins/TF','Name':'Truth visualization and independent estimated frames','Enabled':True}],
+                'Tools':[{'Class':'rviz_default_plugins/Interact'},{'Class':'rviz_default_plugins/MoveCamera'},
+                         {'Class':'rviz_default_plugins/SetInitialPose','Topic':'/gait/initialpose'},
+                         {'Class':'rviz_default_plugins/SetGoal','Topic':'/gait/goal_pose'}]}}))
+        actions.append(Node(package='rviz2',executable='rviz2',arguments=['-d',str(rviz),'-f',frame],parameters=[{'use_sim_time':True}],output='screen'))
     return actions
 
 
 def generate_launch_description():
     return LaunchDescription([DeclareLaunchArgument('robot_model',default_value='hexapod_ros2'),
+        DeclareLaunchArgument('task',default_value='gait'),
         DeclareLaunchArgument('map_name',default_value='nav_empty'),DeclareLaunchArgument('control',default_value='true'),
         DeclareLaunchArgument('gui',default_value='true'),DeclareLaunchArgument('rviz',default_value='true'),
         *[DeclareLaunchArgument('spawn_'+axis,default_value='') for axis in ('x','y','z','yaw')],OpaqueFunction(function=setup)])

@@ -36,6 +36,7 @@ class AuvController(MarineController):
         self.surface=float(self.get_parameter('surface_z').value);self.maximum_depth=float(self.get_parameter('maximum_depth').value)
         self.robot_id='tethys_auv';self.session_id=uuid.uuid4().hex
         self.enabled=False;self.manual_seen=False;self.reason='AUV disarmed; passive water forces remain physical'
+        self.input_owner='manual'
         self.operator='';self.hb_at=self.pose_at=self.cmd_at=self.clock_at=self.joints_at=-math.inf
         self.clock_value=self.pose=self.velocity=self.rates=self.orientation=None
         self.target_depth=self.target_heading=None;self.command=(0.,0.,0.,0.)
@@ -47,7 +48,8 @@ class AuvController(MarineController):
         self.pressure_pub=self.create_publisher(FluidPressure,'/marine/pressure_ideal',10);self.tf=TransformBroadcaster(self)
         self.create_subscription(Odometry,'/marine/odometry',self._pose,10)
         self.create_subscription(JointState,'/joint_states',self.observe_joints,10)
-        self.create_subscription(Twist,'/marine/key_vel',self._drive,10)
+        self.create_subscription(Twist,'/marine/key_vel',self._manual_input,10)
+        self.create_subscription(Twist,'/marine/mission_vel',self._mission_input,10)
         self.create_subscription(String,'/marine/command',self._command,10)
         self.create_subscription(String,'/marine/operator_heartbeat',self._heartbeat,10)
         self.create_subscription(ClockMessage,'/clock',self._observe_clock,qos_profile_sensor_data)
@@ -79,6 +81,7 @@ class AuvController(MarineController):
         if self.target_depth is not None:self.target_depth=max(.6,min(self.maximum_depth,self.target_depth))
 
     def stop(self,reason):
+        self.input_owner='manual'
         self.enabled=False;self.command=(0.,0.,0.,0.);self.cmd_at=-math.inf
         self.target_depth=self.target_heading=None;self.reason=reason;self.forces=np.zeros(1)
         self.pub[0].publish(Float64(data=0.))
@@ -88,6 +91,7 @@ class AuvController(MarineController):
     def _tick(self):
         now=time.monotonic();fresh=self._fresh()
         if self.enabled and (not fresh or now-self.hb_at>.8):self.stop('AUV feedback/operator loss; propulsion zero, fins neutral')
+        if self.enabled and self.input_owner=='mission' and now-self.cmd_at>.5:self.stop('AUV mission input lost; propulsion zero, fins neutral')
         dt=0. if self.last_sim is None or self.clock_value is None else max(0.,min(.05,self.clock_value-self.last_sim))
         self.last_sim=self.clock_value;surge=0.;guidance=False
         if self.orientation is not None and self.velocity is not None:
@@ -120,6 +124,7 @@ class AuvController(MarineController):
             self.last_state=now;p=self.pose.pose.pose.position if self.pose else None
             state=dict(schema_version=1,session_id=self.session_id,robot_id=self.robot_id,enabled=self.enabled,ready=fresh,
                 control_allowed=self.get_parameter('control_allowed').value,reason=self.reason,
+                input_owner=self.input_owner,
                 operator_id=self.operator,operator_fresh=now-self.hb_at<.8,
                 depth=self.surface-p.z if p else None,target_depth=self.target_depth,
                 position=dict(x=p.x,y=p.y,z=p.z) if p else None,rpy=list(self.orientation) if self.orientation else None,

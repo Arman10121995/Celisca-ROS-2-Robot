@@ -15,6 +15,7 @@ from geometry_msgs.msg import TransformStamped,Twist
 from nav_msgs.msg import Odometry
 from rosgraph_msgs.msg import Clock as ClockMessage
 from sensor_msgs.msg import JointState
+from action_msgs.srv import CancelGoal
 from std_msgs.msg import Float64MultiArray,String
 from tf2_ros import TransformBroadcaster
 from robot_lab_utils.gait_model import GaitModel
@@ -23,10 +24,12 @@ from robot_lab_utils.gait_model import GaitModel
 class GaitController(Node):
     def __init__(self):
         super().__init__('source_gait_controller')
-        for key,value in dict(description_file='',gait_config='',control_allowed=True).items():self.declare_parameter(key,value)
+        for key,value in dict(description_file='',gait_config='',control_allowed=True,navigation_enabled=False,
+                              session_directory='',task='gait').items():self.declare_parameter(key,value)
         self.model=GaitModel(Path(self.get_parameter('description_file').value).read_text(),self.get_parameter('gait_config').value)
         self.cfg=self.model.config;self.robot_id=self.model.robot_id;self.session_id=uuid.uuid4().hex
         self.enabled=False;self.stand_requested=False;self.reason='Source stance held; walking disarmed'
+        self.input_owner='manual'
         self.operator='';self.hb_at=self.joints_at=self.pose_at=self.contacts_at=self.clock_at=self.cmd_at=-math.inf
         self.sim_time=self.last_sim=None;self.joints=None;self.pose=None;self.contacts=None
         self.joint_stamp=self.body_stamp=self.contact_stamp=self.engine_stamp=None
@@ -39,7 +42,9 @@ class GaitController(Node):
         self.create_subscription(Odometry,'/odom/ground_truth',self.observe_body,10)
         self.create_subscription(String,'/gait/contacts',self.observe_contacts,10)
         self.create_subscription(ClockMessage,'/clock',self.observe_clock,qos_profile_sensor_data)
-        self.create_subscription(Twist,'/key_vel',self.drive,10)
+        self.create_subscription(Twist,'/key_vel',self.manual_drive,10)
+        self.create_subscription(Twist,'/gait/cmd_vel',self.nav_drive,10)
+        self.nav_cancel=self.create_client(CancelGoal,'/gait/navigate_to_pose/_action/cancel_goal')
         self.create_subscription(String,'/gait/command',self.operation,10)
         self.create_subscription(String,'/gait/operator_heartbeat',self.heartbeat,10)
         self.steady=Clock(clock_type=ClockType.STEADY_TIME)
@@ -111,9 +116,13 @@ class GaitController(Node):
         except (ValueError,KeyError,TypeError):return
 
     def stop(self,reason):
+        was_active=self.enabled or self.input_owner=='navigation'
         self.enabled=False;self.command[:]=0.;self.filtered[:]=0.;self.cmd_at=-math.inf
         self.stand_requested=False
         self.reason=reason
+        self.input_owner='manual'
+        if (was_active or reason.startswith('Operator')) and self.get_parameter('navigation_enabled').value and self.nav_cancel.service_is_ready():
+            self.nav_cancel.call_async(CancelGoal.Request())
         # Hold the last valid motor targets: never teleport feet to home or
         # advance another gait phase on Stop/loss. Physics remains free.
 
@@ -125,6 +134,16 @@ class GaitController(Node):
         self.command=np.clip(values,[-self.cfg['max_speed'],-self.cfg['max_speed'],-self.cfg['max_yaw']],
                              [self.cfg['max_speed'],self.cfg['max_speed'],self.cfg['max_yaw']])
         self.cmd_at=time.monotonic()
+
+    def manual_drive(self,msg):
+        if self.input_owner=='navigation':
+            if all(math.isfinite(v) and abs(v)<1e-9 for v in (msg.linear.x,msg.linear.y,msg.linear.z,msg.angular.x,msg.angular.y,msg.angular.z)):
+                return  # Neutral GUI input never steals an autonomous lease; explicit Stop does.
+            self.stop('Manual input canceled gait navigation; re-arm before walking')
+        self.drive(msg)
+
+    def nav_drive(self,msg):
+        if self.input_owner=='navigation':self.drive(msg)
 
     def operation(self,msg):
         try:
@@ -143,6 +162,7 @@ class GaitController(Node):
                 supports=sum(self.contacts['normal_forces_N'][leg['id']]>.2 for leg in self.model.legs)
                 if supports<len(self.model.legs)//2:raise ValueError('Insufficient measured foot support')
                 self.enabled=True;self.command[:]=0.;self.filtered[:]=0.;self.cmd_at=-math.inf
+                self.input_owner='navigation' if self.get_parameter('navigation_enabled').value else 'manual'
                 self.reason='Walking armed; no travel until Drive input'
             elif op=='gait':
                 allowed={'ripple','wave',self.cfg['default_gait']}
@@ -185,6 +205,8 @@ class GaitController(Node):
             self.last_state=now;p=self.pose.pose.pose.position if self.pose else None
             state=dict(schema_version=1,session_id=self.session_id,robot_id=self.robot_id,enabled=self.enabled,ready=ready,
                        control_allowed=self.get_parameter('control_allowed').value,reason=self.reason,gait=self.gait,
+                       input_owner=self.input_owner,
+                       task=self.get_parameter('task').value,directory=self.get_parameter('session_directory').value,
                        operator_id=self.operator,operator_fresh=now-self.hb_at<.8,physical_legs=len(self.model.legs),
                        actuated_joints=len(self.model.names),joint_samples=self.samples,sim_time=self.sim_time,
                        position=dict(x=p.x,y=p.y,z=p.z) if p else None,tilt_rad=tilt,

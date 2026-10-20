@@ -27,6 +27,7 @@ class GaitModel:
                 if item.tag in ('visual','collision'):link.remove(item)
         robot=URDF.from_xml_string(ET.tostring(root,encoding='unicode'))
         tree=urdf_to_kdl_tree(robot)
+        self.tree=tree
         self.legs=self.config['legs']
         self.names=[];self.initial=[];self.lower=[];self.upper=[];self.torque=[];self.velocity=[]
         self.chains={};self.fk={};self.jac={};self.indices={};self.home={}

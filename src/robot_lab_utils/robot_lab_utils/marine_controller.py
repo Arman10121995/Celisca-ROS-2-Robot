@@ -46,6 +46,7 @@ class MarineController(Node):
         self.robot_id=str(self.get_parameter('robot_id').value)
         self.session_id=uuid.uuid4().hex
         self.enabled=False
+        self.input_owner='manual'
         self.reason='Disarmed; native water forces remain physical'
         self.operator=''
         self.hb_at=self.pose_at=self.cmd_at=self.clock_at=-math.inf
@@ -66,7 +67,8 @@ class MarineController(Node):
         self.pressure_pub=self.create_publisher(FluidPressure,'/marine/pressure_ideal',10)
         self.tf=TransformBroadcaster(self)
         self.create_subscription(Odometry,'/marine/odometry',self._pose,10)
-        self.create_subscription(Twist,'/marine/key_vel',self._drive,10)
+        self.create_subscription(Twist,'/marine/key_vel',self._manual_input,10)
+        self.create_subscription(Twist,'/marine/mission_vel',self._mission_input,10)
         self.create_subscription(String,'/marine/command',self._command,10)
         self.create_subscription(String,'/marine/operator_heartbeat',self._heartbeat,10)
         self.create_subscription(ClockMessage,'/clock',self._observe_clock,qos_profile_sensor_data)
@@ -134,6 +136,14 @@ class MarineController(Node):
         self.command=tuple(max(-limit,min(limit,value)) for value,limit in zip(values[:4],(.35,.25,.2,.35)))
         self.cmd_at=time.monotonic()
 
+    def _manual_input(self,msg):
+        if self.input_owner=='mission':
+            self.stop('Manual input interrupted marine mission; rearm explicitly')
+        self._drive(msg)
+
+    def _mission_input(self,msg):
+        if self.input_owner=='mission':self._drive(msg)
+
     def _command(self,msg):
         try:
             if len(msg.data)>4096:raise ValueError('Marine command too long')
@@ -147,9 +157,18 @@ class MarineController(Node):
             if not self._fresh():raise ValueError('Fresh actual body feedback and clock required')
             depth=self.surface-self.pose.pose.pose.position.z
             if op=='arm':
+                self.input_owner='manual'
                 self.enabled=True;self.command=(0.,0.,0.,0.);self.cmd_at=-math.inf
                 self.target_depth=max(.35,min(self.maximum_depth,depth));self.target_heading=self.orientation[2]
                 self.reason='Depth/heading hold armed; planar commands neutral'
+            elif op=='mission_claim':
+                if not self.enabled:raise ValueError('Arm marine control before executing a mission')
+                self.input_owner='mission';self.command=(0.,0.,0.,0.);self.cmd_at=time.monotonic()
+                self.reason='Estimated-pose mission owns velocity input; manual input interrupts'
+            elif op=='mission_release':
+                if self.input_owner!='mission':raise ValueError('No marine mission owns velocity input')
+                self.input_owner='manual';self.command=(0.,0.,0.,0.);self.cmd_at=-math.inf
+                self.reason='Marine mission released; neutral depth/heading hold'
             elif op in ('hold','depth_up','depth_down','set_depth','surface'):
                 if not self.enabled:raise ValueError('Arm marine control first')
                 if op=='hold':
@@ -170,6 +189,7 @@ class MarineController(Node):
             self.get_logger().warning(self.reason)
 
     def stop(self,reason):
+        self.input_owner='manual'
         self.enabled=False;self.command=(0.,0.,0.,0.);self.cmd_at=-math.inf
         self.target_depth=self.target_heading=None
         self.reason=reason
@@ -181,6 +201,8 @@ class MarineController(Node):
         fresh=self._fresh()
         if self.enabled and (not fresh or now-self.hb_at>.8):
             self.stop('Observer/clock/operator loss; thruster forces zero')
+        if self.enabled and self.input_owner=='mission' and now-self.cmd_at>.5:
+            self.stop('Marine mission input lost; thruster forces zero')
         dt=0. if self.last_sim is None or self.clock_value is None else max(0.,min(.05,self.clock_value-self.last_sim))
         self.last_sim=self.clock_value
         scale=1.
@@ -207,6 +229,7 @@ class MarineController(Node):
             position=self.pose.pose.pose.position if self.pose else None
             state=dict(schema_version=1,session_id=self.session_id,robot_id=self.robot_id,enabled=self.enabled,ready=fresh,
                        control_allowed=self.get_parameter('control_allowed').value,
+                       input_owner=self.input_owner,
                        reason=self.reason,operator_id=self.operator,operator_fresh=now-self.hb_at<.8,
                        depth=self.surface-position.z if position else None,target_depth=self.target_depth,
                        position=dict(x=position.x,y=position.y,z=position.z) if position else None,

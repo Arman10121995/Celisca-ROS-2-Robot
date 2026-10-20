@@ -99,6 +99,9 @@ def _setup(context):
             'surface_z':float(water['surface_z']),'maximum_depth':5.4,'control_allowed':False}],output='screen')
     actions += [controller,RegisterEventHandler(OnProcessExit(target_action=controller,
                 on_exit=[EmitEvent(event=Shutdown(reason='Marine actuator/observer owner exited'))]))]
+    from robot_lab_utils.marine_pipeline import pipeline
+    actions += pipeline(world, description, spawn, water, 'lab_rov', folder, control=enabled('control'),
+                        slam=enabled('slam'), database=value('database'), localization=enabled('localization'))
     if enabled('rviz'):
         rviz=folder/'marine.rviz'
         rviz.write_text(yaml.safe_dump({'Visualization Manager':{'Global Options':{'Fixed Frame':'map'},'Displays':[
@@ -113,5 +116,7 @@ def generate_launch_description():
     return LaunchDescription([
         DeclareLaunchArgument('map_name',default_value='marine_tank'),DeclareLaunchArgument('control',default_value='true'),
         DeclareLaunchArgument('gui',default_value='true'),DeclareLaunchArgument('rviz',default_value='true'),
+        DeclareLaunchArgument('slam',default_value='false'),DeclareLaunchArgument('database',default_value=''),
+        DeclareLaunchArgument('localization',default_value='false'),
         *[DeclareLaunchArgument('spawn_'+axis,default_value='') for axis in ('x','y','z','yaw')],
         OpaqueFunction(function=_setup)])

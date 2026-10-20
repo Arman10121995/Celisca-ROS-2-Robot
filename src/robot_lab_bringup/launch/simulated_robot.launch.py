@@ -753,6 +753,7 @@ def _build_simulation_actions(context):
             if _launch_value(context, 'simulator') != 'mujoco' or mode_name not in ('display', 'gait'):
                 raise RuntimeError('Source multi-leg gait currently supports MuJoCo Display/Gait only')
             gait_args = dict(robot_model=robot_model, map_name='empty' if map_free else map_name,
+                task=_config_value(context, 'gait_task', 'gait'),
                 control='true' if mode_name == 'gait' else 'false', gui=_config_value(context, 'gui', 'true'),
                 rviz='true' if _auto_bool(context, 'start_rviz', True) else 'false')
             if _is_auto(gait_args['gui']):
@@ -769,6 +770,8 @@ def _build_simulation_actions(context):
             if not map_configs['maps'].get(selected_map, {}).get('marine'):
                 raise RuntimeError('Choose a marine water world for the laboratory ROV')
             marine_args = dict(map_name=selected_map, control='true' if mode_name == 'marine' else 'false',
+                slam=_config_value(context, 'marine_slam', 'false'), database=_config_value(context, 'marine_database', ''),
+                localization=_config_value(context, 'marine_localization', 'false'),
                 gui=_config_value(context, 'gui', 'true'), rviz='true' if _auto_bool(context, 'start_rviz', True) else 'false')
             if _is_auto(marine_args['gui']):
                 marine_args['gui'] = 'true' if os.environ.get('DISPLAY') else 'false'
@@ -1812,6 +1815,10 @@ def generate_launch_description():
     bringup_share = get_package_share_directory("robot_lab_bringup")
 
     return LaunchDescription([
+        DeclareLaunchArgument('marine_slam', default_value='false', description='Experimental real RGB-D RTAB-Map with sensor-only marine odometry'),
+        DeclareLaunchArgument('gait_task', default_value='gait', description='Experimental source gait workflow: gait/loc/slam/3d_slam/nav; physical qualification separate'),
+        DeclareLaunchArgument('marine_database', default_value='', description='SSD RTAB-Map database to copy into this marine session'),
+        DeclareLaunchArgument('marine_localization', default_value='false', description='Localize in the selected saved marine database'),
         DeclareLaunchArgument('enable_joystick', default_value='true',
             description='Start the mode joystick node. Disable for isolated automated experiments.'),
         DeclareLaunchArgument('enable_native_locomotion', default_value='false',

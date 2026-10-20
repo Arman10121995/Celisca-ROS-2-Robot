@@ -20,6 +20,7 @@ from action_msgs.msg import GoalStatus
 from geometry_msgs.msg import PoseWithCovarianceStamped, TransformStamped, Twist
 from nav2_msgs.action import NavigateToPose
 from nav_msgs.msg import Odometry
+from lifecycle_msgs.srv import GetState
 from rclpy.action import ActionClient
 from rclpy.clock import Clock, ClockType
 from rclpy.executors import ExternalShutdownException
@@ -34,6 +35,7 @@ from tf2_ros import Buffer, StaticTransformBroadcaster, TransformException, Tran
 
 from robot_lab_utils.fleet_motion import Neighbor, angle, scan_guard, separation_guard, swarm_velocities
 from robot_lab_utils.fleet_session import finite, ID_PATTERN, MEMBER_MODELS
+from robot_lab_utils.fleet_missions import MissionHistory, coverage_plan, enqueue, mission, settled
 
 
 def yaw(q):
@@ -79,6 +81,15 @@ class Member:
     output: tuple = (0., 0.)
     included: bool = True
     queue: list = field(default_factory=list)
+    active_item: dict = None
+    queue_paused: bool = False
+    arrival_at: float = 0.
+    arrival_deadline: float = 0.
+    lifecycle_client: object = None
+    lifecycle_future: object = None
+    lifecycle_active: bool = False
+    lifecycle_at: float = -math.inf
+    lifecycle_probe_at: float = -math.inf
     sample_stamps: dict = field(default_factory=dict)
     message_counts: dict = field(default_factory=lambda: dict(odom=0, truth=0, scan=0, amcl=0))
 
@@ -100,6 +111,8 @@ class FleetController(Node):
         self.last_clock = None
         self.swarm = None
         self.last_status = 0.
+        self.history = MissionHistory()
+        self.serial_traffic = True
         self._state_pub = self.create_publisher(String, '/fleet/state', 10)
         self._set_pose = self.create_client(SetEntityPose, '/world/' + self.session['world_name'] + '/set_pose')
         self._anchors = StaticTransformBroadcaster(self)
@@ -118,6 +131,7 @@ class FleetController(Node):
             member.publisher = self.create_publisher(Twist, '/' + name + '/robot_lab_controller/cmd_vel_unstamped', 10)
             member.initial_pub = self.create_publisher(PoseWithCovarianceStamped, '/' + name + '/initialpose', 10)
             member.action = ActionClient(self, NavigateToPose, '/' + name + '/navigate_to_pose')
+            member.lifecycle_client = self.create_client(GetState, '/' + name + '/bt_navigator/get_state')
             def subscribe(kind, topic, callback, qos=10):
                 self.create_subscription(kind, '/' + name + topic, lambda msg, m=member: callback(m, msg), qos)
             subscribe(Twist, '/key_vel', self._manual)
@@ -315,16 +329,41 @@ class FleetController(Node):
                     targets = [min(candidates, key=lambda m: math.hypot(self._neighbor(m).x - goal['x'], self._neighbor(m).y - goal['y']))]
                 if not targets:
                     raise ValueError('Select a member for dispatch')
+                if len(targets) != 1:
+                    raise ValueError('Dispatch one member; use coverage for a coordinated group mission')
                 for member in targets:
-                    if member.handle is not None or member.sending or member.cancel_pending:
-                        queued_task = uuid.uuid4().hex
-                        member.queue.append(dict(
-                            goal=copy.deepcopy(goal), task=queued_task,
-                            deadline=time.monotonic() + goal['timeout']))
-                        self._event('goal_queued', member=member.name, task=queued_task,
-                                    queued=len(member.queue))
-                        continue
-                    self._dispatch(member, goal)
+                    if member.mode not in ('idle', 'navigation', 'dispatching', 'settling', 'waiting', 'paused'):
+                        raise ValueError('Stop manual/swarm/reset ownership before queuing navigation')
+                    item = mission(goal)
+                    enqueue(member.queue, item)
+                    if member.mode == 'idle' and not member.queue_paused:
+                        member.mode = 'waiting'
+                    self._event('goal_queued', member=member.name, task=item['task'], queued=len(member.queue))
+            elif op == 'coverage':
+                self._coverage(data, targets)
+            elif op == 'route':
+                if len(targets) != 1:
+                    raise ValueError('A route must target exactly one member')
+                route = data.get('goals')
+                tag = data.get('request_id', '')
+                if not isinstance(tag, str) or not 1 <= len(tag) <= 80:
+                    raise ValueError('Route requires a bounded request identity')
+                if not isinstance(route, list) or not 1 <= len(route) <= 64:
+                    raise ValueError('A route requires 1–64 goals')
+                items = [mission(self._goal(g), 'route:' + tag) for g in route]
+                member = targets[0]
+                if member.mode in ('manual', 'swarm', 'resetting'):
+                    raise ValueError('Stop manual/group/reset ownership before accepting an external route')
+                self._stop_member(member, 'Explicit external route replacement')
+                member.queue.extend(items)
+                member.mode = 'waiting'
+                self._event('route_queued', member=member.name, request_id=tag, tasks=[i['task'] for i in items])
+            elif op == 'traffic':
+                if type(data.get('serial')) is not bool:
+                    raise ValueError('Traffic mode requires a boolean serial value')
+                if any(m.mode not in ('idle', 'waiting') or m.handle or m.sending for m in self.members.values()):
+                    raise ValueError('Stop all active control before changing traffic mode')
+                self.serial_traffic = data['serial']
             else:
                 if not targets:
                     raise ValueError('Select at least one member')
@@ -341,12 +380,24 @@ class FleetController(Node):
                         self._stop_member(member, 'Operator stop')
                     elif op == 'pause':
                         goal = copy.deepcopy(member.goal)
-                        self._stop_member(member, 'Paused by operator')
+                        self._stop_member(member, 'Paused by operator', clear_queue=False, preserve_active=True)
+                        member.queue_paused = True
                         member.mode, member.goal = 'paused', goal
                     elif op == 'resume':
-                        if member.mode != 'paused' or member.goal is None:
-                            raise ValueError('No paused Nav2 goal for ' + member.name)
-                        self._dispatch(member, member.goal)
+                        if member.mode != 'paused' or member.handle or member.sending or member.cancel_pending:
+                            raise ValueError('Wait for the paused Nav2 action terminal result: ' + member.name)
+                        if member.active_item is not None:
+                            member.queue.insert(0, member.active_item)
+                            member.active_item = None
+                        member.goal = None
+                        member.queue_paused, member.mode = False, 'waiting' if member.queue else 'idle'
+                    elif op == 'clear_queue':
+                        self._clear_queue(member, 'Operator cleared queued tasks')
+                    elif op == 'queue_resume':
+                        if member.mode not in ('idle', 'waiting'):
+                            raise ValueError('Resume the active paused task or stop it first')
+                        member.queue_paused = False
+                        member.mode = 'waiting' if member.queue else 'idle'
                     elif op == 'reset':
                         self._request_reset(member)
                     elif op == 'leave':
@@ -373,6 +424,10 @@ class FleetController(Node):
         if not 5 <= timeout <= 600:
             raise ValueError('Goal timeout must be between 5 and 600 wall seconds')
         goal['timeout'] = timeout
+        not_before = finite(data.get('not_before', 0.), 'route departure time')
+        if not 0 <= not_before <= (self.last_clock or 0.) + 600.:
+            raise ValueError('Route departure must be within the next 600 simulation seconds')
+        goal['not_before'] = not_before
         # A robot cannot be allocated to an unknown/occupied map cell.
         from robot_lab_utils.fleet_session import SpawnGrid
         if not hasattr(self, '_grid'):
@@ -381,13 +436,14 @@ class FleetController(Node):
             raise ValueError('Goal is not inside known free occupancy with body clearance')
         return goal
 
-    def _dispatch(self, member, goal):
+    def _dispatch(self, member, goal, item=None):
         if member.handle is not None or member.sending or member.cancel_pending:
             raise ValueError('Wait for the previous Nav2 action to finish/cancel: ' + member.name)
-        if not self._fresh(member, time.monotonic()) or not member.action.server_is_ready():
+        if not self._fresh(member, time.monotonic()) or not self._nav_ready(member, time.monotonic()):
             raise ValueError('Fresh localization/sensors and actual Nav2 server required: ' + member.name)
-        self._stop_member(member, 'Sending actual Nav2 goal')
-        member.goal, member.task = copy.deepcopy(goal), uuid.uuid4().hex
+        self._stop_member(member, 'Sending actual Nav2 goal', clear_queue=False)
+        member.active_item = item or mission(goal)
+        member.goal, member.task = copy.deepcopy(goal), member.active_item['task']
         generation = member.generation
         member.sending = True
         member.mode = 'dispatching'
@@ -396,7 +452,13 @@ class FleetController(Node):
         request.pose.header.frame_id, request.pose.header.stamp = 'map', self.get_clock().now().to_msg()
         request.pose.pose.position.x, request.pose.pose.position.y = goal['x'], goal['y']
         request.pose.pose.orientation.z, request.pose.pose.orientation.w = math.sin(goal['yaw'] / 2), math.cos(goal['yaw'] / 2)
-        future = member.action.send_goal_async(request)
+        try:
+            future = member.action.send_goal_async(request)
+        except Exception as exc:
+            member.sending = False
+            member.active_item, member.goal, member.task = None, None, ''
+            member.mode = 'waiting'
+            raise ValueError('Nav2 action submission failed: ' + str(exc)) from exc
         future.add_done_callback(lambda done, m=member, g=generation: self._goal_sent(m, g, done))
         self._event('nav2_goal_sent', member=member.name, task=member.task, goal=goal, generation=generation)
 
@@ -406,11 +468,11 @@ class FleetController(Node):
             handle = future.result()
         except Exception as exc:
             if generation == member.generation:
-                self._stop_member(member, 'Nav2 send failed: ' + str(exc))
+                self._finish_task(member, 'failed', 'Nav2 send failed: ' + str(exc))
             return
         if not handle.accepted:
             if generation == member.generation:
-                self._stop_member(member, 'Nav2 rejected the goal')
+                self._finish_task(member, 'failed', 'Nav2 rejected the goal')
             return
         member.handle = handle
         handle.get_result_async().add_done_callback(lambda done, m=member, g=generation, h=handle: self._goal_finished(m, g, h, done))
@@ -430,13 +492,13 @@ class FleetController(Node):
         self._event('nav2_result', member=member.name, generation=generation, status=status, task=member.task,
                     truth=self._truth_row(member))
         if generation == member.generation:
-            self._stop_member(member, 'Nav2 succeeded' if status == GoalStatus.STATUS_SUCCEEDED else 'Nav2 ended status=' + str(status))
-            if member.queue:
-                next_item = member.queue.pop(0)
-                try:
-                    self._dispatch(member, next_item['goal'])
-                except ValueError:
-                    pass  # Member no longer dispatchable; remaining goals stay queued
+            if status == GoalStatus.STATUS_SUCCEEDED:
+                member.mode, member.reason = 'settling', 'Nav2 succeeded; waiting for measured arrival and physical stop'
+                member.arrival_at, member.arrival_deadline = 0., time.monotonic() + 12.
+                member.nav, member.output = (0., 0.), (0., 0.)
+                member.publisher.publish(Twist())
+            else:
+                self._finish_task(member, 'failed', 'Nav2 ended status=' + str(status))
 
     def _cancel_handle(self, member):
         if member.handle is None or member.cancel_pending:
@@ -456,15 +518,111 @@ class FleetController(Node):
             accepted = False
         self._event('nav2_cancel_ack', member=member.name, accepted=accepted)
 
-    def _stop_member(self, member, reason):
+    def _clear_queue(self, member, reason):
+        for item in member.queue:
+            self._event('task_finished', member=member.name,
+                        **self.history.finish(item, 'canceled', reason))
+        member.queue.clear()
+
+    def _finish_task(self, member, state, reason):
+        if member.active_item is not None:
+            self._event('task_finished', member=member.name,
+                        **self.history.finish(member.active_item, state, reason, self._truth_row(member)))
+            member.active_item = None
+        self._stop_member(member, reason, clear_queue=False)
+        member.queue_paused = state != 'succeeded'
+        if member.queue and not member.queue_paused:
+            member.mode = 'waiting'
+
+    def _stop_member(self, member, reason, clear_queue=True, preserve_active=False):
+        if clear_queue:
+            self._clear_queue(member, reason)
+            member.queue_paused = False
+        if member.active_item is not None and not preserve_active:
+            self._event('task_finished', member=member.name,
+                        **self.history.finish(member.active_item, 'canceled', reason, self._truth_row(member)))
+            member.active_item = None
         member.generation += 1
         member.mode, member.reason = 'idle', reason
         member.manual = member.nav = (0., 0.)
         member.manual_at = member.nav_at = -math.inf
         member.goal = None
+        if not preserve_active:
+            member.task = ''
         member.output = (0., 0.)
         member.publisher.publish(Twist())
         self._cancel_handle(member)
+
+    def _coverage(self, data, targets):
+        if not self.session['navigation']:
+            raise ValueError('Coverage requires per-instance AMCL/Nav2')
+        if not targets or any(m.mode != 'idle' or m.queue or m.active_item or m.handle or m.sending
+                              or not m.included or not self._fresh(m, time.monotonic()) for m in targets):
+            raise ValueError('Coverage requires fresh included idle members with empty queues')
+        from robot_lab_utils.fleet_session import SpawnGrid
+        grid = SpawnGrid(self.session['map_yaml'])
+        members = [dict(id=m.name, x=self._neighbor(m).x, y=self._neighbor(m).y,
+                        radius=m.config['radius']) for m in targets]
+        plan = coverage_plan(grid, members, (data['x'], data['y']), data['width'], data['height'], data['spacing'])
+        # Validate the complete plan before changing any member's ownership.
+        checked = {name: [mission(self._goal(goal), 'coverage') for goal in goals] for name, goals in plan.items()}
+        for member in targets:
+            member.queue.extend(checked[member.name])
+            member.queue_paused = False
+            member.mode = 'waiting' if member.queue else 'idle'
+        self._event('coverage_planned', targets=plan, scope='Clearance-aware sweep waypoints; actual completion is reported per task')
+
+    def _schedule(self, now, fresh):
+        busy = any(m.mode in ('navigation', 'dispatching', 'settling', 'manual', 'swarm', 'resetting')
+                   or m.handle or m.sending or m.cancel_pending for m in self.members.values())
+        if self.serial_traffic and busy:
+            return
+        candidates = [m for m in self.members.values() if m.mode in ('idle', 'waiting') and m.included
+                      and m.queue and not m.queue_paused and fresh[m.name]
+                      and self.last_clock is not None and self.last_clock >= m.queue[0]['goal'].get('not_before', 0.)
+                      and not m.handle and not m.sending and not m.cancel_pending and self._nav_ready(m, now)]
+        candidates.sort(key=lambda m: (m.queue[0]['admitted'], m.name))
+        for member in candidates[:1] if self.serial_traffic else candidates:
+            item = member.queue[0]
+            try:
+                self._dispatch(member, item['goal'], item)
+                member.queue.pop(0)  # Only remove after successful action submission.
+            except (ValueError, RuntimeError) as exc:
+                member.reason = 'Queued task waiting: ' + str(exc)
+
+    def _nav_ready(self, member, now):
+        return member.lifecycle_active and now - member.lifecycle_at < 2. and member.action.server_is_ready()
+
+    def _probe_navigation(self, member, now):
+        future = member.lifecycle_future
+        if future is not None:
+            if future.done():
+                try:
+                    member.lifecycle_active = future.result().current_state.id == 3
+                except Exception:
+                    member.lifecycle_active = False
+                member.lifecycle_at = now
+                member.lifecycle_future = None
+            elif now - member.lifecycle_probe_at > 2.:
+                member.lifecycle_active = False
+                future.cancel()
+                member.lifecycle_future = None
+        if member.lifecycle_future is None and now - member.lifecycle_probe_at > .5 and member.lifecycle_client.service_is_ready():
+            member.lifecycle_probe_at = now
+            member.lifecycle_future = member.lifecycle_client.call_async(GetState.Request())
+
+    def _arrival_tick(self, member, now, fresh):
+        truth = self._truth_row(member)
+        observed = ((truth['x'], truth['y'], truth['yaw']) if truth else None)
+        if fresh and truth and settled(member.goal, observed, truth['linear'], truth['angular']):
+            member.arrival_at = member.arrival_at or now
+            if now - member.arrival_at >= .4:
+                self._finish_task(member, 'succeeded', 'Actual Nav2 success and measured settled arrival')
+                return
+        else:
+            member.arrival_at = 0.
+        if now > member.arrival_deadline:
+            self._finish_task(member, 'failed', 'Nav2 returned success but measured arrival/settling did not pass')
 
     def _stop_swarm(self, reason):
         if self.swarm:
@@ -601,6 +759,9 @@ class FleetController(Node):
 
     def _tick(self):
         now = time.monotonic()
+        if self.session['navigation']:
+            for member in self.members.values():
+                self._probe_navigation(member, now)
         if self.session['navigation'] and self.last_clock is not None:
             for member in self.members.values():
                 try:
@@ -619,10 +780,12 @@ class FleetController(Node):
                     pass
         if now - self.heartbeat_at > .8:
             for member in self.members.values():
-                if member.mode in ('manual', 'swarm'):
+                if member.mode in ('manual', 'swarm', 'navigation', 'dispatching', 'settling', 'waiting', 'paused') or member.queue:
                     self._stop_member(member, 'Operator heartbeat lost; explicit new ownership required')
             self.swarm = None
         fresh = {m.name: self._fresh(m, now) for m in self.members.values()}
+        if now - self.heartbeat_at <= .8:
+            self._schedule(now, fresh)
         neighbors = [self._neighbor(m) for m in self.members.values() if fresh[m.name]]
         swarm_commands = {}
         if self.swarm:
@@ -636,8 +799,10 @@ class FleetController(Node):
             linear = angular = 0.
             if member.mode == 'resetting':
                 self._reset_tick(member, now)
+            elif member.mode == 'settling':
+                self._arrival_tick(member, now, fresh[member.name])
             elif member.mode in ('navigation', 'dispatching') and now > member.deadline:
-                self._stop_member(member, 'Nav2 wall-time goal budget expired')
+                self._finish_task(member, 'failed', 'Nav2 wall-time goal budget expired')
             elif member.mode in ('manual', 'navigation', 'swarm'):
                 if not fresh[member.name]:
                     self._stop_member(member, 'Measured clock/odometry/truth/scan/localization stale')
@@ -669,6 +834,7 @@ class FleetController(Node):
                     return round(now - stamp, 3) if math.isfinite(stamp) else None
                 rows.append(dict(id=member.name, model=member.config['model'], mode=member.mode, reason=member.reason,
                     included=member.included, ready=fresh[member.name], limits=dict(linear=member.config['max_linear'], angular=member.config['max_angular']),
+                    navigation_ready=self.session['navigation'] and self._nav_ready(member, now),
                     estimate=dict(x=estimate.x, y=estimate.y, yaw=estimate.yaw) if estimate else None,
                     estimate_source=('AMCL transform + wheel feedback' if math.isfinite(member.localization_at) else 'waiting for AMCL; wheel feedback + spawn anchor')
                         if self.session['navigation'] else 'wheel feedback + spawn/reset anchor',
@@ -679,12 +845,16 @@ class FleetController(Node):
                     message_counts=member.message_counts, task=member.task, goal=member.goal,
                     nav2_pending=member.sending or member.handle is not None, cancel_pending=member.cancel_pending,
                     queued=len(member.queue),
+                    queued_tasks=[dict(task=item['task'], goal=item['goal'], source=item['source']) for item in member.queue],
+                    queue_paused=member.queue_paused,
                     settled_spawn_recorded=member.spawn_pose is not None, battery=None, charging=None))
             data = dict(schema_version=1, session_id=self.session_id, map=self.session['map'], backend='gazebo',
                         navigation=self.session['navigation'], directory=self.session['directory'],
                         sim_time=self.last_clock, clock_age=round(now - self.clock_at, 3) if math.isfinite(self.clock_at) else None,
                         operator_id=self.operator, operator_fresh=now - self.heartbeat_at < .8, swarm=self.swarm, members=rows,
                         last_rejection=self.last_rejection,
+                        traffic=dict(serial=self.serial_traffic, policy='One autonomous route at a time; queued work waits for measured settling' if self.serial_traffic else 'Concurrent routes with local scan/separation guards'),
+                        task_history=list(self.history.rows),
                         scope='Experimental shared-world runtime; contact and mission qualification pending')
             self._state_pub.publish(String(data=json.dumps(data, allow_nan=False)))
 

@@ -1,11 +1,17 @@
 # Robot Lab — Multi-Robot Simulation and Algorithm Laboratory
 
+October 20: [the current extension checkpoint](docs/status/extension-2026-10-20.md)
+reconciles the installed inventory, completed training/export and actual remaining
+implementation. The extension is being completed before the older roadmap;
+feature delivery and physical mission qualification remain separate.
+
 October 19 adds a **Training page** (EXPERIMENTS → Policy training). It
 trains Go2, A1 and B2 policies with PPO in batched MuJoCo, built from the
 same model and joint controllers as the normal MuJoCo launch. Tasks are walk,
 turn in place, stand and push recovery. The page exports a policy that Launch
-runs as `legged_policy:=<directory>`. The first Go2 walk policy is training
-now; no trained policy is qualified yet.
+runs as `legged_policy:=<directory>`. The first Go2 walk run finished 2,000 iterations / 24.58 million steps and
+exported its policy. Three backend launch diagnostics are recorded; measured
+transfer/mission qualification remains separate.
 [Training guide](docs/tutorials/legged-policy-training.md).
 
 October 19 also completes the **MOLAR / ProBOT-L** controls on the detailed
@@ -92,7 +98,7 @@ Robot Lab aims to make robots, simulators, maps and algorithms independently sel
 
 **Current state: partial research platform with measured mobile, flight and native Panda workflows.** The GUI, simulator adapters, installed assets and algorithm framework support the named experiments below. Full robot/map/mode/backend qualification, controller breadth and reproducible algorithm comparisons remain open.
 
-Status updated on **2026-10-15**. The October 8 extension checkpoint has exact
+Status updated on **2026-10-20**. The October 8 extension checkpoint has exact
 physical source manifests; its publication and software checks are recorded in
 [October 8 evidence](docs/status/evidence/extensions-finish-2026-10-08/README.md). [Current status](docs/status/CURRENT_STATUS.md)
 collects verified work, limits and the next tasks. The [completion audit](docs/status/audit-2026-10-02.md)
@@ -154,8 +160,8 @@ and [actual rendering/live-plant checks](docs/status/evidence/registry-3d-2026-1
 **Worlds** generates real occupancy PGM/YAML files. **Installed Extensions**
 opens downloaded assets in the normal Launch selectors with commands filled
 in automatically; it has no download buttons. On this SSD installation there
-are **113 installed robot profiles** (59 native Menagerie MJCF models, 48 robot-assets
-URDF variants/fragments, and six official TurtleBot3/Husky/TurtleBot4 descriptions), **14 imported dataset worlds**, and three packaged
+are **116 installed external robot profiles**, including source variants and
+inspection components, **14 imported dataset worlds**, and three packaged
 Gazebo environment examples. Their source, dependency and import checks are
 recorded separately from robot missions. See the
 [installation evidence](docs/status/evidence/extensions-integrated-2026-10-05/README.md).
@@ -212,13 +218,13 @@ planned payload/grasp setups and mobile-manipulator control remain in the [roadm
 
 ## What exists, and what that means
 
-| Source/installed inventory on this Jetson, October 7 | Meaning |
+| Source/installed inventory on this Jetson, October 20 | Meaning |
 |---|---|
 | 26 discoverable ROS packages | Current CI builds 25; optional `orbslam3` is excluded |
-| 24 core + 113 installed extension launch profiles | 137 raw profiles, including components/source variants; availability depends on installed SSD assets |
-| 72 complete robot families / 112 selectable variants | Consolidated Launch choices; 25 inspection profiles stay nested/out of standalone Launch |
-| 26 core + 17 installed world profiles | 43 raw profiles under 33 map families |
-| 139 robot records / 48 algorithms / 23 scenarios / 21 experiments | Merged registry inventory; entries and labels are separate from mission qualification |
+| 31 core + 116 installed external robot profiles | 147 raw profiles, including components/source variants; installed SSD resources checked |
+| 78 selectable robot families | Reviewed family grouping; components remain nested and many imports are Display-only |
+| 33 core + 17 installed world profiles | 50 profiles under 38 selectable map families, including five marine and two detailed CELISCA worlds |
+| Registry and algorithm catalogs | Inventory and labels are separate from controller integration and measured mission qualification |
 | Four simulator routes | Gazebo, PyBullet, MuJoCo and Isaac; support is robot/task/backend-specific |
 
 ### Verification snapshot
@@ -339,7 +345,7 @@ Paths below are relative to `src/`; only the registry and benchmark packages liv
 - **Legacy quadrotor_sitl:** retained display fixture; the retired MAVROS example does not provide a working flight mission.
 - **Other cataloged robots:** imported descriptions span legged, humanoid and manipulator models. Asset availability is not locomotion/control support.
 
-The 26 core environments include legacy/general worlds, five navigation arenas, terrain, aerial and dynamic/occlusion entries. Seventeen installed extensions add fourteen dataset worlds and three Gazebo examples, consolidated under map families. Arena generators and occupancy-map consistency checks are useful foundations. The rough-terrain registry ID is `outdoor_terrain`, not `terrain_rough`. `nav_sensor_degraded` supplies occluding geometry, not a general noise/dropout framework.
+The 33 core environments include legacy/general worlds, five navigation arenas, terrain, aerial and dynamic/occlusion entries, five marine worlds and two detailed CELISCA floors. Seventeen installed extensions add fourteen dataset worlds and three Gazebo examples, consolidated under map families. Arena generators and occupancy-map consistency checks are useful foundations. The rough-terrain registry ID is `outdoor_terrain`, not `terrain_rough`. `nav_sensor_degraded` supplies occluding geometry, not a general noise/dropout framework.
 
 ### Algorithms and benchmarking
 

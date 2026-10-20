@@ -28,11 +28,15 @@ class PX4Controller(Node):
                            ('takeoff_alt', 3.0), ('origin_x', 0.0), ('origin_y', 0.0),
                            ('origin_z', 0.24)]:
             self.declare_parameter(key, value)
+        self.declare_parameter('frame_prefix', '')
+        self.declare_parameter('expected_system_id', 0)
+        self.base_frame = str(self.get_parameter('frame_prefix').value) + 'base_link'
         self.enabled = self.get_parameter('flight_enabled').value
         self.origin = [self.get_parameter('origin_'+key).value for key in 'xyz']
         self.ground_z = self.origin[2]
         self.flight = Flight(mavutil.mavlink_connection(
-            self.get_parameter('port').value, source_system=255, source_component=190))
+            self.get_parameter('port').value, source_system=255, source_component=190),
+            expected_system=int(self.get_parameter('expected_system_id').value) or None)
         self.phase = 'waiting_for_fcu'
         self.target = None
         self.target_yaw = 0.0
@@ -281,7 +285,7 @@ class PX4Controller(Node):
         p = self.position()
         msg = Odometry()
         msg.header.stamp = self.get_clock().now().to_msg()
-        msg.header.frame_id, msg.child_frame_id = 'map', 'base_link'
+        msg.header.frame_id, msg.child_frame_id = 'map', self.base_frame
         msg.pose.pose.position.x, msg.pose.pose.position.y, msg.pose.pose.position.z = p
         if f.attitude:
             q = attitude_enu_flu(f.attitude.roll, f.attitude.pitch, f.attitude.yaw)

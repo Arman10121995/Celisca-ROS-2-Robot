@@ -15,11 +15,12 @@ OFFBOARD_CUSTOM_MODE = 6
 
 
 class Flight:
-    def __init__(self, master, rate_hz=20.0):
+    def __init__(self, master, rate_hz=20.0, expected_system=None):
         self.master = master
         self.period = 1.0 / rate_hz
         self.state = self.position = self.vfr = self.ext_sys = self.local_position = self.attitude = None
         self.last_position_time = 0.0
+        self.expected_system = expected_system
 
     def poll(self, limit=200):
         """Drain available telemetry without blocking the ROS setpoint timer."""
@@ -38,6 +39,12 @@ class Flight:
             self._absorb(msg)
 
     def _absorb(self, msg):
+        if self.expected_system is not None:
+            if msg.get_srcSystem() != self.expected_system:
+                return
+            if msg.get_type() == 'HEARTBEAT':
+                self.master.target_system = self.expected_system
+                self.master.target_component = msg.get_srcComponent()
         kind = msg.get_type()
         if kind == "HEARTBEAT":
             self.state = msg

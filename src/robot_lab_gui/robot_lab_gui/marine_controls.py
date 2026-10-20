@@ -4,7 +4,7 @@ import math
 import time
 import uuid
 import tkinter as tk
-from tkinter import ttk
+from tkinter import ttk,filedialog
 from .drive_control import LinuxJoystick,RampDrive
 
 try:
@@ -23,6 +23,7 @@ class MarineControls(ttk.Frame):
         notebook.add(self,text='Marine')
         self.columnconfigure(0,weight=1)
         self.node=self.executor=self.command_pub=self.hb_pub=self.drive_pub=None
+        self.mission_pub=None
         self.runtime=None;self.runtime_at=-math.inf
         self.operator='marine-gui-'+uuid.uuid4().hex
         self.last_hb=self.last_drive=0.
@@ -67,11 +68,12 @@ class MarineControls(ttk.Frame):
         ttk.Label(self,text='Click to latch; click again to brake. Connect/keyboard starts neutral.\n'
                   'Stop removes propulsion; physical drift/coasting can continue.\n'
                   'AUV fins need forward flow; no hover, strafe or pivot.\n'
-                  'Observer uses simulator poses. Independent marine SLAM/navigation, sonar/DVL and other backends remain pending.',
+                  'Manual inner control uses simulator poses. Marine missions adds noisy pressure/DVL odometry and optional real RGB-D SLAM; physical qualification remains pending.',
                   wraplength=300).grid(row=8,column=0,sticky='ew')
         app.bind('<KeyPress>',self.key_press,add='+');app.bind('<KeyRelease>',self.key_release,add='+')
         app.bind('<FocusOut>',lambda _e:self.after_idle(self._focus_check),add='+')
         self.job=self.after(50,self.tick)
+        self.missions=MarineMissions(notebook,app,self)
 
     def selected(self):
         return self.app._marine_selectable()
@@ -85,7 +87,9 @@ class MarineControls(ttk.Frame):
         self.command_pub=self.node.create_publisher(String,'/marine/command',10)
         self.hb_pub=self.node.create_publisher(String,'/marine/operator_heartbeat',10)
         self.drive_pub=self.node.create_publisher(Twist,'/marine/key_vel',10)
+        self.mission_pub=self.node.create_publisher(String,'/marine/mission/command',10)
         self.node.create_subscription(String,'/marine/state',self.observe,10)
+        self.node.create_subscription(String,'/marine/mission/state',self.missions.observe,10)
         self.status.set('Connected; no movement input sent. Wait for actual state, then Arm.')
         return True
 
@@ -141,6 +145,7 @@ class MarineControls(ttk.Frame):
     def stop(self):
         self.clear()
         if self.node and self.runtime:self.send('stop')
+        if self.mission_pub and self.runtime:self.missions.send('cancel')
 
     def latch(self,direction):
         if not self.runtime or not self.runtime.get('enabled') or not self.selected():
@@ -212,3 +217,80 @@ class MarineControls(ttk.Frame):
         if self.executor:self.executor.shutdown(timeout_sec=.1)
         if self.node:self.node.destroy_node()
         self.node=self.executor=None
+
+
+class MarineMissions(ttk.Frame):
+    """Native mission/map page sharing the Marine operator and Stop lease."""
+    def __init__(self,notebook,app,marine):
+        super().__init__(notebook,padding=8)
+        self.app,self.marine=app,marine
+        notebook.add(self,text='Marine missions')
+        self.columnconfigure(0,weight=1)
+        self.runtime=None
+        self.goal={k:tk.DoubleVar(value=v) for k,v in [('x',1.),('y',0.),('z',-1.)]}
+        self.feedback=tk.StringVar(value='Sensor odometry starts with the marine launch. Connect Marine to see estimates.')
+        ttk.Label(self,text='Estimated-pose 3D missions',font=('',11,'bold')).grid(row=0,column=0,sticky='w')
+        ttk.Button(self,text='Connect Marine telemetry',command=marine.connect).grid(row=1,column=0,sticky='ew',pady=5)
+        coords=ttk.LabelFrame(self,text='World target (metres; underwater Z is negative)',padding=5)
+        coords.grid(row=2,column=0,sticky='ew')
+        for col,(key,var) in enumerate(self.goal.items()):
+            ttk.Label(coords,text=key.upper()).grid(row=0,column=col)
+            ttk.Entry(coords,textvariable=var,width=8).grid(row=1,column=col,sticky='ew',padx=2)
+            coords.columnconfigure(col,weight=1)
+        ttk.Button(coords,text='Use estimated position',command=self.use_position).grid(row=2,column=0,columnspan=3,sticky='ew',pady=4)
+        buttons=ttk.Frame(self);buttons.grid(row=3,column=0,sticky='ew',pady=6)
+        for label,op in [('Plan','plan'),('Execute','execute'),('Cancel / Stop','cancel')]:
+            ttk.Button(buttons,text=label,command=lambda operation=op:self.send(operation)).pack(side='left',expand=True,fill='x')
+        mapping=ttk.LabelFrame(self,text='ROV RGB-D mapping / saved localization',padding=5)
+        mapping.grid(row=4,column=0,sticky='ew')
+        ttk.Checkbutton(mapping,text='Enable RTAB-Map on next Run',variable=app.marine_slam_var,
+                        command=app._update_validation_and_command).grid(row=0,column=0,columnspan=2,sticky='w')
+        ttk.Checkbutton(mapping,text='Localize in selected saved database',variable=app.marine_localization_var,
+                        command=app._update_validation_and_command).grid(row=1,column=0,columnspan=2,sticky='w')
+        ttk.Entry(mapping,textvariable=app.marine_database_var,width=26).grid(row=2,column=0,sticky='ew')
+        ttk.Button(mapping,text='Choose DB',command=self.choose_database).grid(row=2,column=1)
+        ttk.Button(mapping,text='Save acquired 3D map',command=lambda:self.send('save_map')).grid(row=3,column=0,columnspan=2,sticky='ew',pady=4)
+        mapping.columnconfigure(0,weight=1)
+        ttk.Label(self,textvariable=self.feedback,wraplength=310,justify='left').grid(row=5,column=0,sticky='ew',pady=8)
+        ttk.Label(self,text='Pressure and Janus-DVL are explicit noisy simulator sensor models; native IMU supplies attitude.\n'
+                  'ROV can follow checked 3D routes. Source AUV supports forward-aligned cruise transects with a clear coasting corridor.\n'
+                  'Arm on Marine before Execute. Manual input interrupts missions. Stop/heartbeat or sensor loss closes the actuator gate.\n'
+                  'Saved SLAM, sensor accuracy and navigation remain experimental until physical missions are recorded.',
+                  wraplength=310).grid(row=6,column=0,sticky='ew')
+
+    def choose_database(self):
+        path=filedialog.askopenfilename(parent=self,title='Select saved marine RTAB-Map database',filetypes=[('RTAB-Map database','*.db'),('All files','*')])
+        if path:
+            self.app.marine_database_var.set(path)
+            self.app.marine_slam_var.set(True)
+            self.app._update_validation_and_command()
+
+    def use_position(self):
+        if self.runtime and self.runtime.get('position'):
+            for key,value in zip('xyz',self.runtime['position']):self.goal[key].set(value)
+
+    def observe(self,msg):
+        try:
+            data=json.loads(msg.data)
+            if data['robot_id']!=self.app.robot_var.get():return
+            self.runtime=data
+            text=data['status']+' · '+data['reason']
+            if data.get('position'):
+                text+='\nEstimated XYZ: '+', '.join(f'{v:.3f}' for v in data['position'])
+            text+=f"\nObserved occupied cells: {data.get('observed_cells',0)}\nArtifacts: {data.get('directory','')}"
+            self.feedback.set(text)
+        except (ValueError,KeyError,TypeError):return
+
+    def send(self,op):
+        parent=self.marine
+        if not parent.node:
+            parent.connect();return
+        if not parent.runtime or time.monotonic()-parent.runtime_at>1.:
+            self.feedback.set('Wait for fresh Marine telemetry');return
+        try:
+            extra={key:var.get() for key,var in self.goal.items()} if op=='plan' else {}
+            if op in ('plan','execute'):parent.clear()
+            parent.mission_pub.publish(String(data=json.dumps(dict(session_id=parent.runtime['session_id'],
+                operator_id=parent.operator,op=op,**extra),allow_nan=False)))
+            self.feedback.set('Requested '+op+'; waiting for actual mission status')
+        except (ValueError,tk.TclError) as exc:self.feedback.set(str(exc))

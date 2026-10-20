@@ -1,5 +1,10 @@
 # Worlds, robot assets and manipulation: continuation guide
 
+October 20 continuation: read [the current extension checkpoint](status/extension-2026-10-20.md).
+Codex owns R10 completion; the completed Go2 export, basic fleet queues and
+round 57 results supersede older "ongoing/queued" summaries. Keep imported
+profiles, initial implementation and physical qualification distinct.
+
 The October 14 next extension adds fleet/swarm, underwater ROV/AUV/worlds and
 six/eight/many-legged robot families after current initial implementation.
 [R10 agent guide](NEXT_EXTENSION_GUIDE.md) records sources and concrete

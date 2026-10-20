@@ -9,7 +9,7 @@ import uuid
 
 from ament_index_python.packages import get_package_share_directory as share
 from launch import LaunchDescription
-from launch.actions import DeclareLaunchArgument, EmitEvent, IncludeLaunchDescription, OpaqueFunction, RegisterEventHandler, SetEnvironmentVariable, TimerAction
+from launch.actions import DeclareLaunchArgument, EmitEvent, ExecuteProcess, IncludeLaunchDescription, OpaqueFunction, RegisterEventHandler, SetEnvironmentVariable, TimerAction
 from launch.event_handlers import OnProcessExit
 from launch.events import Shutdown
 from launch.launch_description_sources import PythonLaunchDescriptionSource
@@ -28,6 +28,12 @@ def _setup(context):
     if value('simulator') != 'gazebo':
         raise ValueError('Shared-world adapters currently support Gazebo only; other backends are pending')
     session = prepare_session(value('session'), value('map_name'), enabled('navigation'))
+    if enabled('rmf'):
+        import importlib.util
+        if not session['navigation']:
+            raise ValueError('Open-RMF requires navigation:=true')
+        if importlib.util.find_spec('rmf_adapter') is None:
+            raise ValueError('Open-RMF runtime missing; provision scripts/provision_rmf_runtime.py on SSD and source scripts/rmf_env.sh')
     print('[robot_lab fleet] Resolved shared-world session: ' + session['resolved_file'])
     actions = []
     partition = os.environ.get('GZ_PARTITION') or os.environ.get('IGN_PARTITION') or 'robot_lab_fleet_' + uuid.uuid4().hex[:12]
@@ -45,11 +51,11 @@ def _setup(context):
     for key, item in environments.items():
         os.environ[key] = item  # ros_gz_sim's OpaqueFunction also reads the environment.
         actions.append(SetEnvironmentVariable(key, item))
-    headless = '' if enabled('gui') else '-s --headless-rendering'
-    actions.append(IncludeLaunchDescription(PythonLaunchDescriptionSource(
-        str(Path(share('ros_gz_sim')) / 'launch/gz_sim.launch.py')),
-        launch_arguments={'gz_args': '-r -v 2 ' + headless + ' ' + session['world'],
-                          'on_exit_shutdown': 'True'}.items()))
+    server = ExecuteProcess(cmd=['ign', 'gazebo', '-r', '-v', '2',
+        *([] if enabled('gui') else ['-s', '--headless-rendering']), session['world'], '--force-version', '6'],
+        sigterm_timeout='12', sigkill_timeout='3', output='screen')
+    actions += [server, RegisterEventHandler(OnProcessExit(target_action=server,
+        on_exit=[EmitEvent(event=Shutdown(reason='Shared-world Fortress server exited'))]))]
     actions.append(Node(package='ros_gz_bridge', executable='parameter_bridge', name='fleet_sensor_bridge',
                         parameters=[{'config_file': session['bridge_file'], 'use_sim_time': True}], output='screen'))
     actions.append(Node(package='ros_gz_bridge', executable='parameter_bridge', name='fleet_pose_service_bridge',
@@ -113,6 +119,11 @@ def _setup(context):
     actions.append(RegisterEventHandler(OnProcessExit(target_action=fleet_controller,
         on_exit=[EmitEvent(event=Shutdown(reason='Shared-world command owner exited'))])))
     actions.append(TimerAction(period=3., actions=[controller_spawners[0]]))
+    if enabled('rmf'):
+        actions.append(Node(package='rmf_traffic_ros2', executable='rmf_traffic_schedule',
+                            name='robot_lab_rmf_schedule', parameters=[{'use_sim_time': True}], output='screen'))
+        actions.append(TimerAction(period=5., actions=[Node(package='robot_lab_utils', executable='fleet_rmf_adapter.py',
+            arguments=['--session', session['resolved_file']], output='screen')]))
     if enabled('rviz'):
         rviz = Path(session['directory']) / 'fleet.rviz'
         rviz.write_text(yaml.safe_dump({'Visualization Manager': {
@@ -131,6 +142,7 @@ def generate_launch_description():
         DeclareLaunchArgument('map_name', default_value='', description='Registered map; empty uses session map'),
         DeclareLaunchArgument('simulator', default_value='gazebo'),
         DeclareLaunchArgument('navigation', default_value='false', description='One AMCL/Nav2 stack per instance, one shared map'),
+        DeclareLaunchArgument('rmf', default_value='false', description='Actual optional Open-RMF schedule and fleet adapter'),
         DeclareLaunchArgument('gui', default_value='true'),
         DeclareLaunchArgument('rviz', default_value='true'),
         OpaqueFunction(function=_setup),

@@ -525,6 +525,10 @@ class SimulationLauncherGui(tk.Tk):
         self.aerial_mapping_var = tk.BooleanVar(value=False)
         self.aerial_obstacles_var = tk.BooleanVar(value=False)
         self.aerial_map_database_var = tk.StringVar(value='')
+        self.marine_slam_var = tk.BooleanVar(value=False)
+        self.marine_database_var = tk.StringVar(value='')
+        self.marine_localization_var = tk.BooleanVar(value=False)
+        self.gait_task_var = tk.StringVar(value='gait')
         self.steering_mode_var = tk.StringVar(value="")
         self.drive_status_var = tk.StringVar(value="Keyboard/joystick off")
         self.gui_var = tk.StringVar(value="auto")
@@ -2358,6 +2362,18 @@ class SimulationLauncherGui(tk.Tk):
                 argument = 'spawn_'+axis+':='
                 if not any(part.startswith(argument) for part in command):
                     command.append(argument+str(value))
+        if command and self._robot_config().get('marine_model'):
+            command = [part for part in command if not part.startswith(('marine_slam:=', 'marine_database:=', 'marine_localization:='))]
+            slam = self.robot_var.get() == 'lab_rov' and self.marine_slam_var.get()
+            command.append('marine_slam:=' + str(bool(slam)).lower())
+            if slam:
+                command.append('marine_localization:=' + str(self.marine_localization_var.get()).lower())
+                database = self.marine_database_var.get().strip()
+                if database:
+                    command.append('marine_database:=' + database)
+        if command and self._robot_config().get('gait_model'):
+            command = [part for part in command if not part.startswith('gait_task:=')]
+            command.append('gait_task:=' + (self.gait_task_var.get() if self._gait_selectable() else 'gait'))
         if command and self.go2_policy_var.get() and self._go2_policy_selectable():
             command = [part for part in command
                        if not part.startswith("go2_policy_path:=")]
@@ -2807,6 +2823,10 @@ class SimulationLauncherGui(tk.Tk):
                         'px4_camera': bool(self.px4_camera_var.get()),
                         'aerial_mapping': bool(self.aerial_mapping_var.get()),
                         'aerial_obstacles': bool(self.aerial_obstacles_var.get()),
+                        'marine_slam': bool(self.marine_slam_var.get()),
+                        'gait_task': self.gait_task_var.get(),
+                        'marine_database': self.marine_database_var.get(),
+                        'marine_localization': bool(self.marine_localization_var.get()),
                         'aerial_map_database': self.aerial_map_database_var.get()}
                     save_manifest(name, manifest)
                     self.status_var.set(f"Profile '{name}' saved (manifest)")
@@ -2831,6 +2851,10 @@ class SimulationLauncherGui(tk.Tk):
             'px4_camera': bool(self.px4_camera_var.get()),
             'aerial_mapping': bool(self.aerial_mapping_var.get()),
             'aerial_obstacles': bool(self.aerial_obstacles_var.get()),
+            'marine_slam': bool(self.marine_slam_var.get()),
+            'gait_task': self.gait_task_var.get(),
+            'marine_database': self.marine_database_var.get(),
+            'marine_localization': bool(self.marine_localization_var.get()),
             'aerial_map_database': self.aerial_map_database_var.get(),
         }
         save_profile(name, config)
@@ -2861,6 +2885,10 @@ class SimulationLauncherGui(tk.Tk):
         self.aerial_mapping_var.set(bool(options.get('aerial_mapping', False)))
         self.aerial_obstacles_var.set(bool(options.get('aerial_obstacles', False)))
         self.aerial_map_database_var.set(options.get('aerial_map_database', ''))
+        self.marine_slam_var.set(bool(options.get('marine_slam', False)))
+        self.gait_task_var.set(options.get('gait_task', 'gait'))
+        self.marine_database_var.set(options.get('marine_database', ''))
+        self.marine_localization_var.set(bool(options.get('marine_localization', False)))
         mode = resolved_from.get("mode") or manifest.get("mode")
         if mode and mode in self.mode_profiles:
             self.mode_var.set(mode)

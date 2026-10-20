@@ -30,9 +30,15 @@ install(TARGETS
 install(PROGRAMS
   ${PROJECT_NAME}/safety_stop.py
   ${PROJECT_NAME}/fleet_controller.py
+  ${PROJECT_NAME}/fleet_rmf_adapter.py
   ${PROJECT_NAME}/marine_controller.py
   ${PROJECT_NAME}/auv_controller.py
+  ${PROJECT_NAME}/marine_sensors.py
+  ${PROJECT_NAME}/marine_navigation.py
+  ${PROJECT_NAME}/marine_camera_relay.py
   ${PROJECT_NAME}/gait_controller.py
+  ${PROJECT_NAME}/gait_odometry.py
+  ${PROJECT_NAME}/gait_sensor_relay.py
   DESTINATION lib/${PROJECT_NAME}
 )
 

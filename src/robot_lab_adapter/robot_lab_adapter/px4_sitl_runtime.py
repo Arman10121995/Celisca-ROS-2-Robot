@@ -294,12 +294,14 @@ class NativeStateRelay(Node):
     Harmonic transport is read directly; the Humble/Fortress bridge is not
     reused across incompatible transport versions. Stamp in ROS wall time.
     """
-    def __init__(self, environment):
+    def __init__(self, environment, namespace='', native_prefix='/px4', frame_prefix=''):
         super().__init__('px4_gazebo_state')
-        self.truth_pub = self.create_publisher(Odometry, '/px4/odometry_truth', 10)
-        self.joint_pub = self.create_publisher(JointState, '/joint_states', 10)
+        prefix='/' + namespace.strip('/') if namespace else ''
+        self.base_frame=frame_prefix+'base_link'
+        self.truth_pub = self.create_publisher(Odometry, prefix+'/px4/odometry_truth', 10)
+        self.joint_pub = self.create_publisher(JointState, prefix+'/joint_states', 10)
         self.readers, self.queues = [], []
-        for topic in ('/px4/odometry_truth_native', '/px4/joint_states_native'):
+        for topic in (native_prefix+'/odometry_truth_native', native_prefix+'/joint_states_native'):
             queue = deque(maxlen=1)
             process = subprocess.Popen(['gz', 'topic', '-e', '-t', topic, '--json-output'],
                 env=environment, stdout=subprocess.PIPE, stderr=subprocess.DEVNULL, text=True)
@@ -320,7 +322,7 @@ class NativeStateRelay(Node):
             p = raw.get('pose', {})
             msg = Odometry()
             msg.header.stamp = self.get_clock().now().to_msg()
-            msg.header.frame_id, msg.child_frame_id = 'map', 'base_link'
+            msg.header.frame_id, msg.child_frame_id = 'map', self.base_frame
             for key in 'xyz':
                 setattr(msg.pose.pose.position, key, float(p.get('position', {}).get(key, 0.0)))
             for key in 'xyzw':

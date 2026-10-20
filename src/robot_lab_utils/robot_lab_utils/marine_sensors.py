@@ -1,0 +1,187 @@
+#!/usr/bin/env python3
+"""Explicit pressure/Janus-DVL simulator and separate sensor-only odometry.
+
+The DVL/pressure model derives noisy measurements from physical simulator
+poses and static bottom-lock geometry. It is authored sensor emulation, not
+a native calibrated DVL. The estimator subscribes to neither pose truth nor
+the controller's ideal-pressure topic. Native IMU supplies attitude.
+"""
+import json
+import copy
+import math
+from pathlib import Path
+import time
+
+import numpy as np
+import rclpy
+from rclpy.executors import ExternalShutdownException
+from rclpy.node import Node
+from rclpy.qos import qos_profile_sensor_data
+from geometry_msgs.msg import TwistWithCovarianceStamped, TransformStamped
+from nav_msgs.msg import Odometry
+from sensor_msgs.msg import FluidPressure, Imu
+from std_msgs.msg import String
+from tf2_ros import TransformBroadcaster
+
+from robot_lab_utils.aerial_planning import StaticScene
+from robot_lab_utils.marine_controller import rpy
+from robot_lab_utils.marine_model import rotation
+from robot_lab_utils.marine_navigation_model import MarineOdometry, bottom_ranges, dvl_velocity
+
+
+def stamp(msg):
+    return msg.header.stamp.sec + msg.header.stamp.nanosec * 1e-9
+
+
+class MarineSensors(Node):
+    def __init__(self):
+        super().__init__('marine_sensor_simulator')
+        for key, value in dict(world_file='', density=1025., surface_z=0., seed=41).items():
+            self.declare_parameter(key, value)
+        self.scene = StaticScene(self.get_parameter('world_file').value)
+        self.density = float(self.get_parameter('density').value)
+        self.surface = float(self.get_parameter('surface_z').value)
+        self.seed = int(self.get_parameter('seed').value)
+        self.rng = np.random.default_rng(self.seed)
+        self.bias = self.rng.normal(0., .002, 3)
+        self.previous = None
+        self.last_output = -math.inf
+        self.velocity_pub = self.create_publisher(TwistWithCovarianceStamped, '/marine/sensors/dvl', 10)
+        self.pressure_pub = self.create_publisher(FluidPressure, '/marine/sensors/pressure', 10)
+        self.state_pub = self.create_publisher(String, '/marine/sensors/state', 10)
+        self.create_subscription(Odometry, '/marine/odometry', self.observe, 10)
+
+    def observe(self, msg):
+        p, q = msg.pose.pose.position, msg.pose.pose.orientation
+        current = stamp(msg)
+        if msg.header.frame_id != 'map' or not np.isfinite([p.x, p.y, p.z, q.x, q.y, q.z, q.w, current]).all():
+            return
+        if abs(q.x*q.x + q.y*q.y + q.z*q.z + q.w*q.w - 1.) > .05:
+            return
+        if self.previous is not None and current <= stamp(self.previous):
+            self.previous, self.last_output = None, -math.inf
+            return
+        if current - self.last_output < .095:
+            return
+        previous, self.previous = self.previous, msg
+        self.last_output = current
+        pressure = FluidPressure()
+        pressure.header = copy.copy(msg.header)
+        pressure.header.frame_id = 'base_link'
+        pressure.fluid_pressure = 101325. + self.density * 9.81 * max(0., self.surface - p.z) + float(self.rng.normal(0., 75.))
+        pressure.variance = 75. ** 2
+        self.pressure_pub.publish(pressure)
+        if previous is None or not 0 < current - stamp(previous) < .5:
+            return
+        dt = current - stamp(previous)
+        old = previous.pose.pose.position
+        world_velocity = np.array([(p.x-old.x)/dt, (p.y-old.y)/dt, (p.z-old.z)/dt])
+        orientation = rpy(q)
+        ranges = bottom_ranges(self.scene, (p.x, p.y, p.z), orientation)
+        locked = all(math.isfinite(v) and .1 < v <= 10. for v in ranges)
+        if locked:
+            value, covariance, beams = dvl_velocity(rotation(orientation).T @ world_velocity + self.bias, self.rng)
+            output = TwistWithCovarianceStamped()
+            output.header = pressure.header
+            for i, key in enumerate('xyz'):
+                setattr(output.twist.twist.linear, key, float(value[i]))
+                for j in range(3):
+                    output.twist.covariance[i*6+j] = float(covariance[i, j] + (.002 ** 2 if i == j else 0.))
+            self.velocity_pub.publish(output)
+        self.state_pub.publish(String(data=json.dumps(dict(bottom_lock=locked,
+            beam_ranges_m=[v if math.isfinite(v) else None for v in ranges], seed=self.seed,
+            pressure_noise_Pa=75., beam_velocity_noise_m_s=.005, velocity_bias_std_m_s=.002,
+            source='Authored noisy hydrostatic/Janus-DVL simulator using actual plant motion and static world bottom intersections',
+            native_sensor=False, dynamic_bottom_lock=False), allow_nan=False)))
+
+
+class MarineEstimator(Node):
+    def __init__(self):
+        super().__init__('marine_sensor_odometry')
+        for key, value in dict(initial_x=0., initial_y=0., initial_z=-1., density=1025., surface_z=0.).items():
+            self.declare_parameter(key, value)
+        self.filter = MarineOdometry([self.get_parameter('initial_'+k).value for k in 'xyz'],
+                                     self.get_parameter('density').value)
+        self.surface = float(self.get_parameter('surface_z').value)
+        self.imu = self.pressure = None
+        self.count = 0
+        self.odom_pub = self.create_publisher(Odometry, '/marine/estimated_odometry', 10)
+        self.state_pub = self.create_publisher(String, '/marine/estimator/state', 10)
+        self.tf = TransformBroadcaster(self)
+        self.create_subscription(Imu, '/marine/imu', self.observe_imu, qos_profile_sensor_data)
+        self.create_subscription(FluidPressure, '/marine/sensors/pressure', self.observe_pressure, 10)
+        self.create_subscription(TwistWithCovarianceStamped, '/marine/sensors/dvl', self.observe_velocity, 10)
+
+    def observe_imu(self, msg):
+        q = msg.orientation
+        if (msg.header.frame_id == 'base_link' and msg.orientation_covariance[0] != -1
+                and np.isfinite([q.x, q.y, q.z, q.w]).all()
+                and abs(q.x*q.x + q.y*q.y + q.z*q.z + q.w*q.w - 1.) < .05):
+            self.imu = msg
+
+    def observe_pressure(self, msg):
+        if (msg.header.frame_id == 'base_link' and math.isfinite(msg.fluid_pressure)
+                and math.isfinite(msg.variance) and msg.variance > 0):
+            self.pressure = msg
+
+    def observe_velocity(self, msg):
+        if self.imu is None or self.pressure is None or msg.header.frame_id != 'base_link':
+            return
+        current = stamp(msg)
+        if abs(current - stamp(self.imu)) > .2 or abs(current - stamp(self.pressure)) > .2:
+            return
+        velocity = [getattr(msg.twist.twist.linear, k) for k in 'xyz']
+        covariance = np.asarray(msg.twist.covariance).reshape(6, 6)[:3, :3]
+        try:
+            position = self.filter.update(current, velocity, covariance, rpy(self.imu.orientation),
+                self.pressure.fluid_pressure, self.pressure.variance, self.surface)
+        except ValueError as exc:
+            self.get_logger().warning('Marine odometry refused sample: ' + str(exc))
+            return
+        self.count += 1
+        odom = Odometry()
+        odom.header = copy.copy(msg.header)
+        odom.header.frame_id = 'marine_sensor_odom'
+        odom.child_frame_id = 'marine_estimated_base_link'
+        for i, key in enumerate('xyz'):
+            setattr(odom.pose.pose.position, key, float(position[i]))
+            setattr(odom.twist.twist.linear, key, float(velocity[i]))
+            for j in range(3):
+                odom.pose.covariance[i*6+j] = float(self.filter.covariance[i, j])
+        odom.pose.pose.orientation = self.imu.orientation
+        odom.pose.covariance[21] = odom.pose.covariance[28] = odom.pose.covariance[35] = .005 ** 2
+        odom.twist.covariance = msg.twist.covariance
+        self.odom_pub.publish(odom)
+        transform = TransformStamped()
+        transform.header, transform.child_frame_id = odom.header, odom.child_frame_id
+        for key in 'xyz':
+            setattr(transform.transform.translation, key, getattr(odom.pose.pose.position, key))
+        transform.transform.rotation = odom.pose.pose.orientation
+        self.tf.sendTransform(transform)
+        self.state_pub.publish(String(data=json.dumps(dict(samples=self.count, sim_time=current,
+            position=position.tolist(), covariance=self.filter.covariance.tolist(),
+            source='Sensor-only DVL integration + native IMU attitude + noisy pressure depth; configured spawn prior; no pose correction',
+            qualification='Experimental emulated sensors and drifting odometry, not calibrated DVL or SLAM'), allow_nan=False)))
+
+
+def main(args=None):
+    import sys
+    from robot_lab_utils.process_lifetime import exit_with_parent
+    exit_with_parent()
+    kind = sys.argv[1] if len(sys.argv) > 1 and sys.argv[1] in ('simulate', 'estimate') else 'simulate'
+    if len(sys.argv) > 1 and sys.argv[1] in ('simulate', 'estimate'):
+        del sys.argv[1]
+    rclpy.init(args=args)
+    node = MarineSensors() if kind == 'simulate' else MarineEstimator()
+    try:
+        rclpy.spin(node)
+    except (KeyboardInterrupt, ExternalShutdownException):
+        pass
+    finally:
+        node.destroy_node()
+        if rclpy.ok():
+            rclpy.shutdown()
+
+
+if __name__ == '__main__':
+    main()

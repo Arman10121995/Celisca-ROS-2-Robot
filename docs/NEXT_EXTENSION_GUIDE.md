@@ -1,5 +1,10 @@
 # Next extension: fleets, swarms, marine and multi-legged robotics
 
+October 20 continuation: read [the current extension checkpoint](status/extension-2026-10-20.md).
+Codex owns R10 completion; the completed Go2 export, basic fleet queues and
+round 57 results supersede older "ongoing/queued" summaries. Keep imported
+profiles, initial implementation and physical qualification distinct.
+
 October 15 native AUV continuation: [Tethys propeller/fin controls](tutorials/tethys-auv.md)
 and [actual reef depth/turn + corrected ROV diagnostic](status/auv-2026-10-15.md)
 are implemented. Preserve the installed Fortress 6.18 mass-sign convention,

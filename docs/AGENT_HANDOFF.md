@@ -1,5 +1,10 @@
 # Agent Handoff Protocol
 
+October 20 continuation: read [the current extension checkpoint](status/extension-2026-10-20.md).
+Codex owns R10 completion; the completed Go2 export, basic fleet queues and
+round 57 results supersede older "ongoing/queued" summaries. Keep imported
+profiles, initial implementation and physical qualification distinct.
+
 These are the repository's current operating rules. The dated
 [2026-09-07 audit](status/audit-2026-09-07.md) is historical evidence, not the
 current source snapshot; use [`platform-status.yaml`](status/platform-status.yaml)

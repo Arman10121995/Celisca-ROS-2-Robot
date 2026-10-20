@@ -1,5 +1,10 @@
 # Stabilization and remaining work: agent execution guide
 
+October 20 continuation: read [the current extension checkpoint](status/extension-2026-10-20.md).
+Codex owns R10 completion; the completed Go2 export, basic fleet queues and
+round 57 results supersede older "ongoing/queued" summaries. Keep imported
+profiles, initial implementation and physical qualification distinct.
+
 October 15: [native Tethys AUV](tutorials/tethys-auv.md) and corrected marine
 added-mass conversion now have real scoped GUI depth/turn/Stop artifacts.
 Read [the receipt](status/auv-2026-10-15.md); preserve source originals and

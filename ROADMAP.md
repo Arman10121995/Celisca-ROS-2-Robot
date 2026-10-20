@@ -32,6 +32,21 @@ view of implemented features and remaining acceptance. The
 [current status overview](docs/status/CURRENT_STATUS.md) links the published
 GUI, installed inventory, measured robot scopes and exact successful CI.
 
+## October 20: extension completion and reconciled status
+
+The user requests updated documentation and completion of extension implementation
+before the older roadmap. Codex owns the active R10 continuation. See
+[the current checkpoint](docs/status/extension-2026-10-20.md) for the installed
+147 robot / 50 world profiles, implemented operator workflows and remaining
+source/backend/mission boundaries. These counts do not establish robot readiness.
+
+Go2 training/export completed; basic fleet goal queues and round 57 car results
+are newer than the October 19 16:15 snapshot below. Preserve its historical
+measurements, but do not use its "training ongoing" or queued-round statements
+as live status. R10 completion requires usable queue/traffic/coverage, marine
+sensor/mission and additional robot workflows, GUI wiring and reproducible
+workloads; full acceptance still requires their actual physical evidence.
+
 ## October 19: progress, ongoing work and what remains
 
 Snapshot at 16:15 on 2026-10-19 (`8b0b965`). Each item links its section

@@ -1,24 +1,26 @@
 # Current Robot Lab status
 
-**Now (October 19, 16:15, `8b0b965`).**
-- **Ongoing:** the first Go2 walk policy is training (`go2_walk_r1`, 512
-  environments, 2000 iterations, flat floor). At iteration 999 (12.3 M
-  steps) its training-environment tracking error is 0.09 m/s and
-  0.10 rad/s, with almost no falls. About 35 minutes remain.
-- **Queued after it, one simulation at a time:**
-  - the trained policy's evaluation;
-  - its drive checks in MuJoCo, Gazebo and Isaac;
-  - round 57: the MuJoCo small_house slam drive with the spawn fix, and
-    the rear-steer car course in all four backends.
-- **Fixed today, measurement pending:**
-  - MuJoCo spawned robots by a loose mesh box and dropped them through
-    thin flex floors. That was the small_house crawl (0.015 of 0.4 m/s,
-    8.5 mm low). A diagnostic drive now reaches 0.397 m/s.
-  - The rear-steer car's planner keeps its path off the first cone.
-- **Implemented, not yet used in training:** randomised friction, mass and
-  motors, rough terrain and observation noise for training.
-- **Remaining work, in order:** the
-  [roadmap's October 19 section](../../ROADMAP.md#october-19-progress-ongoing-work-and-what-remains).
+**Current checkpoint: October 20, 2026; baseline `b8ea60e`.**
+
+- The extension completion lane is active under Codex. Read the
+  [current implementation and remaining-work checkpoint](extension-2026-10-20.md).
+- Installed inventory: 147 robot profiles in 78 selectable families; 50 world
+  profiles in 38 map families. Availability is not mission qualification.
+- The first Go2 training run **finished** 2,000 iterations / 24.58 million steps
+  and exported its policy. The ledger records evaluation and three backend
+  launch diagnostics. No-crash launches alone do not establish measured walking
+  or policy transfer; broader runtime qualification remains open.
+- Fleet goal queues were added October 19. Robust queue lifecycle, coordinated
+  traffic/coverage and optional Open-RMF integration are the current extension
+  implementation work; marine and multi-leg mission gaps follow.
+- Round 57 records a MuJoCo slalom pass with parking yaw still outside tolerance,
+  a Gazebo obstacle abort, and an inconclusive Isaac course startup. These do not
+  supersede the existing car limitations or qualify every map/backend.
+- Remaining camera calibration, terrain/recovery, manipulation, aerial mapping,
+  backend/repeatability and release work stays open after the extension.
+
+The entries below retain their dated measurement scopes; an older entry's
+"queued" or "ongoing" statement is historical when superseded above.
 
 October 19 (later): **a Training page trains legged policies**
 ([guide](../tutorials/legged-policy-training.md)).

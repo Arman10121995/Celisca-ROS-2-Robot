@@ -1,12 +1,20 @@
 # Robot Lab done and remaining checklist
 
-**Ongoing (October 19, 16:15):**
+**Current checkpoint: October 20, 2026.**
 
-- [ ] `go2_walk_r1` training: 999 of 2000 iterations, tracking error 0.09 m/s
-  and 0.10 rad/s in the training environment.
-- [ ] Queued after it: its evaluation and MuJoCo/Gazebo/Isaac drive checks.
-- [ ] Round 57: the MuJoCo small_house slam drive after the spawn fix, and
-  the rear-steer car course in four backends after its planner change.
+- [x] Reconciled installed inventory: 147 robot profiles / 78 families and
+  50 world profiles / 38 families; components remain grouped.
+- [x] `go2_walk_r1` finished and exported at 2,000 iterations / 24.58 M steps.
+- [x] Basic per-member fleet goal queues added; launches/evaluation recorded
+  separately from measured policy-transfer acceptance.
+- [x] Round 57 results recorded: MuJoCo slalom clears, parking heading remains;
+  Gazebo abort and inconclusive Isaac startup retained.
+- [ ] Complete remaining R10 operator workflows and initial integrations;
+  [current scope and exact remaining work](extension-2026-10-20.md).
+- [ ] Broad physical qualification, other backend adapters and release gates.
+
+Historical unchecked lines below define remaining acceptance unless the current
+checkpoint explicitly supersedes their implementation status.
 
 October 19: R12 legged policy training ([guide](../tutorials/legged-policy-training.md)).
 

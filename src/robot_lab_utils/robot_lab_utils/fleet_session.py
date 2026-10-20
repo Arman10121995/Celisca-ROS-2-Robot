@@ -328,6 +328,8 @@ def prepare_session(session_file, map_override='', navigation=False, runtime_roo
     if map_name not in maps:
         raise ValueError('Unknown installed map: ' + map_name)
     map_profile = maps[map_name]
+    if map_profile.get('marine'):
+        raise ValueError('Ground fleet members require a terrestrial world; choose Marine controls for water worlds')
     gz = map_profile['gazebo']
     def resolve(package, path):
         return str(Path(path) if Path(path).is_absolute() else Path(share(package)) / path)

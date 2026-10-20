@@ -1,5 +1,10 @@
 # Training legged policies (Training tab)
 
+Updated October 20, 2026. `go2_walk_r1` completed and exported at 2,000 iterations
+and 24.58 million steps. The ledger records training-domain evaluation and
+three backend launch diagnostics; launch stability does not qualify walking
+or policy transfer.
+
 Documentation added October 19, 2026. This is an **experimental** training
 tool. It is implemented and smoke-tested, but no policy trained with it has
 qualified walking yet. Read [current status](../status/CURRENT_STATUS.md)

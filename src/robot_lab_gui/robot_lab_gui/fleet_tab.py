@@ -23,11 +23,11 @@ except ImportError:
     rclpy = None
 
 
-def session_command(path, map_name, navigation=False, gui=True, rviz=True):
+def session_command(path, map_name, navigation=False, gui=True, rviz=True, rmf=False):
     return ['ros2', 'launch', 'robot_lab_bringup', 'shared_world.launch.py',
             'session:=' + str(path), 'map_name:=' + map_name, 'simulator:=gazebo',
             'navigation:=' + str(bool(navigation)).lower(), 'gui:=' + str(bool(gui)).lower(),
-            'rviz:=' + str(bool(rviz)).lower()]
+            'rviz:=' + str(bool(rviz)).lower()] + (['rmf:=true'] if rmf else [])
 
 
 class FleetTab(ttk.Frame):
@@ -41,6 +41,8 @@ class FleetTab(ttk.Frame):
         self.operator_id = 'gui-' + uuid.uuid4().hex
         self.node = self.executor = self.command_pub = self.heartbeat_pub = None
         self.publishers = {}
+        self.rmf_pub = None
+        self.rmf_owned = False
         self.runtime = None
         self.runtime_at = -math.inf
         self.last_heartbeat = self.last_drive = 0.
@@ -53,32 +55,35 @@ class FleetTab(ttk.Frame):
         base = Path(os.environ.get('ROBOT_LAB_RUNTIME_ROOT', '/workspace/molar/robot_lab_runtime')) / 'gui_profiles'
         base.mkdir(parents=True, exist_ok=True)
         self.session_file = base / ('fleet-' + self.operator_id + '.yaml')
+        self.allowed_maps=[key for key,profile in app.map_profiles.items() if not profile.get('marine')]
         selected = app.map_var.get()
-        self.map_var = tk.StringVar(value=selected if selected in app.map_profiles else 'nav_empty')
+        self.map_var = tk.StringVar(value=selected if selected in self.allowed_maps else 'nav_empty')
         self.map_family = tk.StringVar(value=app.map_groups.family(self.map_var.get()))
         self.navigation, self.gui, self.rviz = tk.BooleanVar(value=False), tk.BooleanVar(value=True), tk.BooleanVar(value=True)
+        self.rmf = tk.BooleanVar(value=False)
         self.status = tk.StringVar(value='Experimental Gazebo Bumperbot/Labbot shared-world control. Connect starts neutral.')
         ttk.Label(self, text='Shared world · one simulation · separate robot instances', font=('', 12, 'bold')).grid(
             row=0, column=0, columnspan=2, sticky='w')
-        ttk.Label(self, text='Gazebo adapter implemented. Other backends, Open-RMF traffic, aerial swarms, marine and gait extensions remain pending.',
+        ttk.Label(self, text='Shared Gazebo bases: queued missions, conservative traffic and cooperative sweep. Marine and Gait controls are on Launch. Aerial fleets and other shared backends remain separate.',
                   wraplength=980).grid(row=1, column=0, columnspan=2, sticky='ew', pady=(3, 8))
         left = ttk.LabelFrame(self, text='Session members and map', padding=8)
         left.grid(row=2, column=0, sticky='nsew', padx=(0, 8))
         left.columnconfigure(1, weight=1)
         left.rowconfigure(3, weight=1)
         ttk.Label(left, text='Map family').grid(row=0, column=0, sticky='w')
-        families = ttk.Combobox(left, textvariable=self.map_family, values=app.map_groups.choices(), state='readonly')
+        families = ttk.Combobox(left, textvariable=self.map_family, values=app.map_groups.choices(allowed=self.allowed_maps), state='readonly')
         families.grid(row=0, column=1, sticky='ew')
         families.bind('<<ComboboxSelected>>', self._map_family_selected)
         ttk.Label(left, text='Map variant').grid(row=1, column=0, sticky='w')
         self.map_combo = ttk.Combobox(left, textvariable=self.map_var,
-            values=app.map_groups.members(self.map_family.get(), selectable=True), state='readonly')
+            values=app.map_groups.members(self.map_family.get(), selectable=True,allowed=self.allowed_maps), state='readonly')
         self.map_combo.grid(row=1, column=1, sticky='ew', pady=3)
         options = ttk.Frame(left)
         options.grid(row=2, column=0, columnspan=2, sticky='w')
         ttk.Checkbutton(options, text='Per-robot AMCL + Nav2', variable=self.navigation, command=self._refresh_command).pack(side='left')
         ttk.Checkbutton(options, text='Gazebo window', variable=self.gui, command=self._refresh_command).pack(side='left')
         ttk.Checkbutton(options, text='RViz', variable=self.rviz, command=self._refresh_command).pack(side='left')
+        ttk.Checkbutton(options, text='Open-RMF', variable=self.rmf, command=self._refresh_command).pack(side='left')
         self.tree = ttk.Treeview(left, columns=('model', 'x', 'y', 'z', 'yaw'), height=6)
         self.tree.heading('#0', text='Instance id')
         self.tree.column('#0', width=110, stretch=False)
@@ -120,8 +125,8 @@ class FleetTab(ttk.Frame):
         control_pages = ttk.Notebook(right)
         control_pages.grid(row=3, column=0, columnspan=2, sticky='nsew', pady=5)
         right.rowconfigure(3, weight=1)
-        drive_page, task_page, swarm_page = [ttk.Frame(control_pages, padding=5) for _ in range(3)]
-        for page, label in ((drive_page, 'Drive'), (task_page, 'Tasks'), (swarm_page, 'Swarm')):
+        drive_page, task_page, swarm_page, coverage_page = [ttk.Frame(control_pages, padding=5) for _ in range(4)]
+        for page, label in ((drive_page, 'Drive'), (task_page, 'Tasks'), (swarm_page, 'Swarm'), (coverage_page, 'Coverage')):
             control_pages.add(page, text=label)
             page.columnconfigure(0, weight=1)
         pad = ttk.Frame(drive_page)
@@ -160,8 +165,26 @@ class FleetTab(ttk.Frame):
         for label, operation in [('Dispatch', 'dispatch'), ('Nearest idle', 'allocate'), ('Pause', 'pause'), ('Resume', 'resume'), ('Reset', 'reset')]:
             ttk.Button(goal_buttons, text=label, command=lambda op=operation: self._operation(op)).pack(side='left', expand=True, fill='x')
         ttk.Label(task_page, text='Dispatch selects one member. Nearest idle uses measured state.\n'
-                  'Pause/cancel waits for the actual Nav2 result before replacement.\n'
+                  'Busy members queue goals; success waits for measured settling.\n'
+                  'Stop cancels active and queued work. Pause preserves the queue.\n'
                   'Reset restores only that entity; wheel odometry and world time continue.', wraplength=370).grid(row=2, column=0, sticky='w', pady=5)
+        queue_buttons = ttk.Frame(task_page)
+        queue_buttons.grid(row=3, column=0, sticky='ew')
+        for label, operation in [('Clear waiting', 'clear_queue'), ('Resume queue', 'queue_resume'), ('Cancel tasks', 'stop')]:
+            ttk.Button(queue_buttons, text=label, command=lambda op=operation: self._operation(op)).pack(side='left', expand=True, fill='x')
+        self.serial_traffic = tk.BooleanVar(value=True)
+        ttk.Checkbutton(task_page, text='Reserve one autonomous route at a time', variable=self.serial_traffic,
+                        command=lambda: self._send('traffic', [], serial=self.serial_traffic.get())).grid(row=4, column=0, sticky='w', pady=4)
+        rmf_frame = ttk.LabelFrame(task_page, text='Open-RMF · optional shared schedule', padding=4)
+        rmf_frame.grid(row=5, column=0, sticky='ew')
+        self.rmf_waypoint = tk.StringVar()
+        self.rmf_waypoint_combo = ttk.Combobox(rmf_frame, textvariable=self.rmf_waypoint, state='readonly', width=12)
+        self.rmf_waypoint_combo.grid(row=0, column=0, sticky='ew')
+        ttk.Button(rmf_frame, text='RMF patrol goal', command=self._rmf_patrol).grid(row=0, column=1, sticky='ew')
+        ttk.Button(rmf_frame, text='Give RMF control', command=lambda: self._rmf_control(True)).grid(row=1, column=0, sticky='ew')
+        ttk.Button(rmf_frame, text='Take GUI control', command=lambda: self._rmf_control(False)).grid(row=1, column=1, sticky='ew')
+        rmf_frame.columnconfigure(0, weight=1)
+        rmf_frame.columnconfigure(1, weight=1)
         swarm_frame = ttk.LabelFrame(swarm_page, text='Ground swarm · experimental', padding=5)
         swarm_frame.grid(row=0, column=0, sticky='ew')
         self.swarm_mode, self.spacing = tk.StringVar(value='formation'), tk.DoubleVar(value=1.)
@@ -180,6 +203,22 @@ class FleetTab(ttk.Frame):
         ttk.Label(swarm_page, text='The physical robot stays in the shared world when it leaves.\n'
                   'Fresh state/scan and a live operator heartbeat are required.\n'
                   'These bounded ground kernels do not provide Open-RMF traffic scheduling.', wraplength=370).grid(row=2, column=0, sticky='w', pady=5)
+        self.coverage = {key: tk.DoubleVar(value=value) for key, value in
+                         [('width', 4.), ('height', 3.), ('spacing', 1.2)]}
+        ttk.Label(coverage_page, text='Sweep known free cells around the Tasks goal XY.\n'
+                  'Lanes are divided among all included idle members; Nav2 plans\n'
+                  'each connection. Obstacles, unknown cells and body clearance\n'
+                  'are respected. This does not claim complete sensor coverage.', wraplength=370).grid(row=0, column=0, sticky='w', pady=5)
+        dimensions = ttk.Frame(coverage_page)
+        dimensions.grid(row=1, column=0, sticky='ew')
+        for col, (key, variable) in enumerate(self.coverage.items()):
+            ttk.Label(dimensions, text=key.title() + ' m').grid(row=0, column=col)
+            ttk.Entry(dimensions, textvariable=variable, width=8).grid(row=1, column=col, padx=3)
+        ttk.Button(coverage_page, text='Plan and queue cooperative sweep', command=self._coverage).grid(
+            row=2, column=0, sticky='ew', pady=8)
+        ttk.Label(coverage_page, text='Enable AMCL + Nav2 before Run. Begin with a small region.\n'
+                  'Keep this operator connected; heartbeat loss cancels the mission.\n'
+                  'Stop clears queues. Failed tasks hold the remaining queue.', wraplength=370).grid(row=3, column=0, sticky='w')
         self.live = scrolledtext.ScrolledText(self, height=7, wrap='word', state='disabled')
         self.live.grid(row=3, column=0, columnspan=2, sticky='ew', pady=(8, 3))
         ttk.Label(self, textvariable=self.status, wraplength=1000).grid(row=4, column=0, columnspan=2, sticky='ew')
@@ -201,7 +240,7 @@ class FleetTab(ttk.Frame):
         self._job = self.after(50, self._tick)
 
     def _map_family_selected(self, _event=None):
-        choices = self.app.map_groups.members(self.map_family.get(), selectable=True)
+        choices = self.app.map_groups.members(self.map_family.get(), selectable=True,allowed=self.allowed_maps)
         self.map_combo.configure(values=choices)
         if choices:
             self.map_var.set(choices[0])
@@ -286,7 +325,9 @@ class FleetTab(ttk.Frame):
             data = validate_session(dict(schema_version=1, map=self.map_var.get(), members=self.members))
             data['members'] = [{key: value for key, value in member.items() if value is not None} for member in data['members']]
             self.session_file.write_text(yaml.safe_dump(data, sort_keys=False))
-            self.command = session_command(self.session_file, self.map_var.get(), self.navigation.get(), self.gui.get(), self.rviz.get())
+            if self.rmf.get():
+                self.navigation.set(True)
+            self.command = session_command(self.session_file, self.map_var.get(), self.navigation.get(), self.gui.get(), self.rviz.get(), self.rmf.get())
             self.command_text.configure(state='normal')
             self.command_text.delete('1.0', 'end')
             self.command_text.insert('1.0', shlex.join(self.command))
@@ -324,7 +365,9 @@ class FleetTab(ttk.Frame):
             self.executor.add_node(self.node)
             self.command_pub = self.node.create_publisher(String, '/fleet/command', 10)
             self.heartbeat_pub = self.node.create_publisher(String, '/fleet/operator_heartbeat', 10)
+            self.rmf_pub = self.node.create_publisher(String, '/fleet/rmf/control', 10)
             self.node.create_subscription(String, '/fleet/state', self._observe, 10)
+            self.node.create_subscription(String, '/fleet/rmf/state', self._observe_rmf, 10)
             self.status.set('Connected; awaiting /fleet/state. No movement command sent.')
             return True
         except Exception as exc:
@@ -343,6 +386,7 @@ class FleetTab(ttk.Frame):
                 self._clear_inputs()
                 self.armed = []
                 self.publishers.clear()
+                self.rmf_owned = False
             self.runtime, self.runtime_at = data, time.monotonic()
             choices = [m['id'] for m in data['members']] + ['All included']
             self.target_combo.configure(values=choices)
@@ -356,7 +400,13 @@ class FleetTab(ttk.Frame):
                 measured = f"truth ({truth['x']:.2f}, {truth['y']:.2f})" if truth else 'truth waiting'
                 command = member['command']
                 lines.append(f"{member['id']} [{member['model']}] {member['mode']} · {position} · {measured} · "
-                             f"v={command['linear']:.2f}, ω={command['angular']:.2f}\n  {member['reason']}")
+                             f"v={command['linear']:.2f}, ω={command['angular']:.2f} · queued {member.get('queued', 0)}\n  {member['reason']}")
+            if 'traffic' in data:
+                self.serial_traffic.set(data['traffic']['serial'])
+                lines.append('Traffic: ' + data['traffic']['policy'])
+            if data.get('task_history'):
+                last = data['task_history'][-1]
+                lines.append('Last task: ' + last['state'] + ' · ' + last['reason'])
             if data.get('last_rejection'):
                 lines.append('Last rejected command: ' + data['last_rejection'])
             self.live.configure(state='normal')
@@ -404,6 +454,9 @@ class FleetTab(ttk.Frame):
         self._send('all_stop', [])
 
     def _arm(self):
+        if self.rmf_owned:
+            self.status.set('Take GUI control before arming manual Drive')
+            return
         self.stop_manual()
         ids = self._ids()
         if ids and self._send('manual', ids):
@@ -448,6 +501,44 @@ class FleetTab(ttk.Frame):
         except (ValueError, tk.TclError) as exc:
             self.status.set(str(exc))
 
+    def _coverage(self):
+        self.stop_manual()
+        try:
+            values = {key: variable.get() for key, variable in self.coverage.items()}
+            self._send('coverage', self._ids(all_members=True), x=self.goal['x'].get(), y=self.goal['y'].get(), **values)
+        except (ValueError, tk.TclError) as exc:
+            self.status.set(str(exc))
+
+    def _observe_rmf(self, msg):
+        try:
+            data = json.loads(msg.data)
+            if not self.runtime or data['session_id'] != self.runtime['session_id']:
+                return
+            choices = [f"{v['name']} ({v['x']:.1f}, {v['y']:.1f})" for v in data.get('waypoints', [])]
+            self.rmf_waypoint_combo.configure(values=choices)
+            if self.rmf_waypoint.get() not in choices and choices:
+                self.rmf_waypoint.set(choices[0])
+        except (ValueError, KeyError, TypeError):
+            return
+
+    def _rmf_control(self, enabled):
+        if not self.runtime or not self.rmf_pub:
+            self.status.set('Connect to a session launched with Open-RMF enabled')
+            return
+        self.all_stop()
+        self.rmf_owned = enabled
+        self.rmf_pub.publish(String(data=json.dumps(dict(session_id=self.runtime['session_id'],
+                                                        op='enable' if enabled else 'disable'))))
+        self.status.set('RMF ownership requested; wait for lease handover' if enabled else 'GUI ownership requested; wait for RMF lease expiry')
+
+    def _rmf_patrol(self):
+        ids = self._ids()
+        if not self.rmf_owned or len(ids) != 1:
+            self.status.set('Give RMF control, then select one member and a graph waypoint')
+            return
+        self.rmf_pub.publish(String(data=json.dumps(dict(session_id=self.runtime['session_id'],
+            op='patrol', robot=ids[0], waypoint=self.rmf_waypoint.get().split(' ')[0]))))
+
     def _can_keys(self):
         return (self.keyboard.get() and self.notebook.select() == str(self) and self.armed
                 and not isinstance(self.focus_get(), (tk.Entry, ttk.Entry, tk.Text, ttk.Combobox)))
@@ -484,7 +575,7 @@ class FleetTab(ttk.Frame):
         if self.executor is not None and rclpy.ok():
             self.executor.spin_once(timeout_sec=0.)
         if self.runtime and now - self.runtime_at <= 1.:
-            if now - self.last_heartbeat >= .2:
+            if not self.rmf_owned and now - self.last_heartbeat >= .2:
                 self.last_heartbeat = now
                 self.heartbeat_pub.publish(String(data=json.dumps(dict(session_id=self.runtime['session_id'], operator_id=self.operator_id))))
             if self.armed and now - self.last_drive >= .1:

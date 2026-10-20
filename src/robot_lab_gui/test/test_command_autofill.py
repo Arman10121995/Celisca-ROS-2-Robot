@@ -42,6 +42,39 @@ def test_named_map_spawn_is_visible_in_command_and_does_not_leak_to_other_map(ap
     assert not any(v.startswith(('spawn_x:=', 'spawn_y:=')) for v in arguments)
 
 
+def test_marine_mission_settings_reach_command_without_enabling_camera_on_auv(app):
+    app.robot_var.set('lab_rov'); app.simulator_var.set('gazebo')
+    app.map_var.set('marine_tank'); app.mode_var.set('marine'); app._update_from_selection()
+    app.marine_slam_var.set(True)
+    app.marine_database_var.set('/workspace/molar/robot_lab_runtime/maps/example.db')
+    app.marine_localization_var.set(True)
+    app._update_validation_and_command()
+    command = shlex.split(app.command_var.get())
+    assert 'marine_slam:=true' in command
+    assert 'marine_localization:=true' in command
+    assert 'marine_database:=/workspace/molar/robot_lab_runtime/maps/example.db' in command
+    assert not any(v.startswith('map_yaml:=') for v in command)
+    app.robot_var.set('tethys_auv'); app._update_from_selection()
+    command = shlex.split(app.command_var.get())
+    assert 'marine_slam:=false' in command
+    assert not any(v.startswith('marine_database:=') for v in command)
+
+
+def test_fleet_rmf_selects_navigation_and_keeps_selected_map(app):
+    from robot_lab_gui.fleet_tab import FleetTab
+    tab = FleetTab(app.notebook, app)
+    try:
+        tab.map_var.set('nav_obstacle')
+        tab.rmf.set(True)
+        tab._refresh_command()
+        assert 'navigation:=true' in tab.command
+        assert 'rmf:=true' in tab.command
+        assert 'map_name:=nav_obstacle' in tab.command
+        assert not tab.rmf_owned  # Preparing a command never transfers control.
+    finally:
+        tab.close()
+
+
 @pytest.fixture
 def app():
     registry = get_registry(str(SRC / "robot_lab" / "robot_lab_registry" / "config"))

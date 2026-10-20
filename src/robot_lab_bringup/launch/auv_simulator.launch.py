@@ -82,6 +82,9 @@ def setup(context):
     controller=Node(package='robot_lab_utils',executable='auv_controller.py',parameters=[{'use_sim_time':True,'calibration_file':str(assets/'calibration.json'),
         'surface_z':float(water['surface_z']),'maximum_depth':float(water['surface_z'])-float(water['bottom_z'])-.6,'control_allowed':value('control')=='true'}],output='screen')
     actions += [controller,RegisterEventHandler(OnProcessExit(target_action=controller,on_exit=[EmitEvent(event=Shutdown(reason='AUV controller owner exited'))]))]
+    from robot_lab_utils.marine_pipeline import pipeline
+    actions += pipeline(world_file, description_file, pose, water, 'tethys_auv', folder, control=value('control')=='true',
+                        slam=value('slam')=='true', database=value('database'), localization=value('localization')=='true')
     if value('rviz')=='true':actions.append(Node(package='rviz2',executable='rviz2',arguments=['-d',str(Path(share('robot_lab_description'))/'rviz/display.rviz'),'-f','map'],parameters=[{'use_sim_time':True}],output='screen'))
     return actions
 
@@ -89,4 +92,6 @@ def setup(context):
 def generate_launch_description():
     return LaunchDescription([DeclareLaunchArgument('map_name',default_value='marine_tank'),DeclareLaunchArgument('control',default_value='true'),
         DeclareLaunchArgument('gui',default_value='true'),DeclareLaunchArgument('rviz',default_value='true'),
+        DeclareLaunchArgument('slam',default_value='false'),DeclareLaunchArgument('database',default_value=''),
+        DeclareLaunchArgument('localization',default_value='false'),
         *[DeclareLaunchArgument('spawn_'+axis,default_value='') for axis in ('x','y','z','yaw')],OpaqueFunction(function=setup)])
