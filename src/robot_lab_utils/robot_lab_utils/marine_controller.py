@@ -71,6 +71,7 @@ class MarineController(Node):
         self.create_subscription(Twist,'/marine/mission_vel',self._mission_input,10)
         self.create_subscription(String,'/marine/command',self._command,10)
         self.create_subscription(String,'/marine/operator_heartbeat',self._heartbeat,10)
+        self.create_subscription(Odometry,'/marine/current',self._current,10)
         self.create_subscription(ClockMessage,'/clock',self._observe_clock,qos_profile_sensor_data)
         self.steady=Clock(clock_type=ClockType.STEADY_TIME)
         self.create_timer(.02,self._tick,clock=self.steady)
@@ -98,6 +99,13 @@ class MarineController(Node):
             if dt<=0:return
             self.velocity=np.array([(getattr(msg.pose.pose.position,k)-getattr(previous.pose.pose.position,k))/dt for k in 'xyz'])
             self.rates=np.array([angle(a-b)/dt for a,b in zip(orientation,self.orientation)])
+
+    def _current(self,msg):
+        """Receive Gazebo current vector [x, y, z] in world frame."""
+        values=[msg.pose.position.x, msg.pose.position.y, msg.pose.position.z]
+        if not all(math.isfinite(v) for v in values):return
+        self.current=np.array(values)
+        self.current_stamp=msg.header.stamp.sec+msg.header.stamp.nanosec*1e-9
         self.pose,self.orientation,self.pose_at=msg,orientation,time.monotonic()
         self.count+=1
         transform=TransformStamped()
@@ -218,7 +226,9 @@ class MarineController(Node):
                 desired_z=max(-.2,min(.2,.8*(self.surface-self.target_depth-self.pose.pose.pose.position.z)))
                 desired_world=rotation((0.,0.,heading))@np.array([vx,vy,0.])
                 desired_world[2]=desired_z
-                force=np.array([14.,18.,28.])*(desired_world-self.velocity)
+                # Apply current compensation: subtract current velocity from desired
+                current_vel=np.zeros(3) if self.current is None else self.current[:3]
+                force=np.array([14.,18.,28.])*(desired_world-self.velocity-current_vel)
                 force[2]+=self.model.gravity_trim
                 desired_yaw=max(-.35,min(.35,wz+.8*angle(self.target_heading-heading)))
                 torque=np.array([-3.*roll-.8*self.rates[0],-3.*pitch-.8*self.rates[1],1.2*(desired_yaw-self.rates[2])])
@@ -234,7 +244,8 @@ class MarineController(Node):
                        depth=self.surface-position.z if position else None,target_depth=self.target_depth,
                        position=dict(x=position.x,y=position.y,z=position.z) if position else None,
                        rpy=list(self.orientation) if self.orientation else None,velocity_world=self.velocity.tolist() if self.velocity is not None else None,
-                       commanded_thruster_forces_N=self.forces.tolist(),force_allocation_scale=scale,
+                       current_world=self.current.tolist() if self.current is not None else None,
+                        commanded_thruster_forces_N=self.forces.tolist(),force_allocation_scale=scale,
                        mass_kg=self.model.mass,displaced_volume_m3=self.model.displacement,gravity_trim_N=self.model.gravity_trim,
                        body_samples=self.count,sim_time=self.clock_value,
                        observer='Actual simulator pose finite difference; ideal pressure is emulated from that pose. Independent estimation/SLAM unimplemented.',

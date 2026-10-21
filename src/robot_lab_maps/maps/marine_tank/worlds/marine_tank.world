@@ -13,15 +13,16 @@
       <render_engine>ogre2</render_engine>
     </plugin>
     <plugin filename="ignition-gazebo-imu-system" name="ignition::gazebo::systems::Imu" />
-    <plugin filename="ignition-gazebo-buoyancy-system" name="ignition::gazebo::systems::Buoyancy">
-      <graded_buoyancy>
-        <default_density>1025</default_density>
-        <density_change>
-          <above_depth>0</above_depth>
-          <density>1.225</density>
-        </density_change>
-      </graded_buoyancy>
-      <enable>lab_rov</enable>
+    <plugin filename="ignition-gazebo-current-system" name="marine_current">
+      <velocity>0.1 0.0 0.0</velocity>
+      <reference_frame>world</reference_frame>
+    </plugin>
+    <plugin filename="ignition-gazebo-light-system" name="marine_light">
+      <surface_intensity>1.0</surface_intensity>
+      <attenuation_constant>1.0</attenuation_constant>
+      <attenuation_linear>0.1</attenuation_linear>
+      <attenuation_quadratic>0.01</attenuation_quadratic>
+      <reference_frame>world</reference_frame>
     </plugin>
     <scene>
       <ambient>.3 .55 .6 1</ambient>
