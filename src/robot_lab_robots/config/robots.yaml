@@ -214,12 +214,24 @@ robots:
       local_planning: pure_pursuit
     drive_in_display: true
     drive:
-      # Lab MuJoCo velocity servo: small DWB heading commands must overcome
-      # caster/contact resistance on imported triangle floors. Torque stays capped.
+      # Differential drive base.
+      type: diff
+      # Wheel joints as spawned in the URDF.
+      left_wheel_joint: wheel_left_joint
+      right_wheel_joint: wheel_right_joint
+      # Wheel physical parameters.
+      wheel_radius: 0.033
+      wheel_separation: 0.17
+      # MuJoCo velocity servo gains; also used as default when no backend-
+      # specific gains are configured.
       mujoco_wheel_velocity_gain: 10.0
       # Match this stronger servo with reflected rotor inertia at the 2 ms
       # physics step (kv*dt/armature <= 1); keep the original 5 Nm force cap.
       mujoco_wheel_armature: 0.02
+      # Gazebo default velocity scaling when MuJoCo gains are not applied.
+      gazebo_wheel_velocity_gain: 1.0
+      # Gazebo rotor inertia counterpart; scaled to match the MuJoCo servo.
+      gazebo_wheel_armature: 0.02
       max_speed: 1.0
       max_accel: 2.0
       max_angular_speed: 2.0

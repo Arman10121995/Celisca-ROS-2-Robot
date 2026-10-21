@@ -34,9 +34,11 @@ def point_velocity(robot, target, max_linear, max_angular, tolerance=.08):
     return linear, max(-max_angular, min(max_angular, 1.4 * heading))
 
 
-def swarm_velocities(mode, neighbors, max_linear, max_angular, spacing=1., anchor=None, heading=0.):
-    if mode not in ('formation', 'rendezvous', 'dispersion', 'flocking'):
-        raise ValueError('Unknown ground swarm controller')
+SWARM_MODES = ('formation', 'rendezvous', 'flocking', 'clearance')
+
+def swarm_velocities(mode, neighbors, max_linear, max_angular, spacing=1., anchor=None, heading=0., clearance_radius=None):
+    if mode not in SWARM_MODES:
+        raise ValueError(f'Unknown ground swarm controller. Mode must be one of: {SWARM_MODES}')
     if not .6 <= spacing <= 3 or not all(math.isfinite(v) for v in (spacing, heading)):
         raise ValueError('Swarm spacing must be finite and between 0.6 and 3 m')
     robots = sorted(neighbors, key=lambda r: r.name)
@@ -45,6 +47,10 @@ def swarm_velocities(mode, neighbors, max_linear, max_angular, spacing=1., ancho
     centre = anchor or (sum(r.x for r in robots) / len(robots), sum(r.y for r in robots) / len(robots))
     if not all(math.isfinite(v) for v in centre):
         raise ValueError('Swarm anchor must be finite')
+    # Build a radius map for clearance-aware coordination
+    robot_radii = {r.name: r.radius for r in robots}
+    if clearance_radius is None:
+        clearance_radius = max(robot_radii.values()) * 1.5 if robot_radii else 0.1
     commands = {}
     for index, robot in enumerate(robots):
         if mode == 'formation':
@@ -55,28 +61,39 @@ def swarm_velocities(mode, neighbors, max_linear, max_angular, spacing=1., ancho
             phase = 2 * math.pi * index / len(robots)
             radius = 0. if len(robots) == 1 else max(spacing / 2, spacing / (2 * math.sin(math.pi / len(robots))))
             target = (centre[0] + radius * math.cos(phase), centre[1] + radius * math.sin(phase))
-        else:
+        elif mode == 'flocking':
+            # Cohesion, circular heading alignment and separation with an
+            # explicit operator heading bias. No hidden leader pose writes.
+            hx = sum(math.cos(r.yaw) for r in robots) / len(robots)
+            hy = sum(math.sin(r.yaw) for r in robots) / len(robots)
+            rx = .15 * (centre[0] - robot.x) + .35 * hx + .5 * math.cos(heading)
+            ry = .15 * (centre[1] - robot.y) + .35 * hy + .5 * math.sin(heading)
+            length = math.hypot(rx, ry)
+            scale = 1. / max(1., length)
+            target = (robot.x + rx * scale, robot.y + ry * scale)
+        elif mode == 'clearance':
+            # Clearance-aware cooperative sweep allocation.
+            # Each robot sweeps while maintaining minimum separation from neighbors.
             rx = ry = 0.
             for other in robots:
                 if robot.name == other.name:
                     continue
                 dx, dy = robot.x - other.x, robot.y - other.y
                 distance = math.hypot(dx, dy)
-                if distance < 1e-6:
-                    # Deterministic separating direction, including coincident estimates.
-                    dx = -1. if robot.name < other.name else 1.
-                    dy, distance = 0., 1e-3
-                if distance < spacing:
-                    weight = (spacing - distance) / max(distance, .05)
+                min_distance = robot.radius + other.radius + clearance_radius
+                if distance < min_distance:
+                    # Push apart to maintain clearance
+                    weight = (min_distance - distance) / max(distance, 0.05)
                     rx += weight * dx / distance
                     ry += weight * dy / distance
-            if mode == 'flocking':
-                # Cohesion, circular heading alignment and separation with an
-                # explicit operator heading bias. No hidden leader pose writes.
-                hx = sum(math.cos(r.yaw) for r in robots) / len(robots)
-                hy = sum(math.sin(r.yaw) for r in robots) / len(robots)
-                rx += .15 * (centre[0] - robot.x) + .35 * hx + .5 * math.cos(heading)
-                ry += .15 * (centre[1] - robot.y) + .35 * hy + .5 * math.sin(heading)
+            # Add cohesion toward centre with heading bias
+            rx += .2 * (centre[0] - robot.x)
+            ry += .2 * (centre[1] - robot.y)
+            # Add heading alignment bias
+            hx = sum(math.cos(r.yaw) for r in robots) / len(robots)
+            hy = sum(math.sin(r.yaw) for r in robots) / len(robots)
+            rx += .3 * hx + .5 * math.cos(heading)
+            ry += .3 * hy + .5 * math.sin(heading)
             length = math.hypot(rx, ry)
             scale = 1. / max(1., length)
             target = (robot.x + rx * scale, robot.y + ry * scale)
