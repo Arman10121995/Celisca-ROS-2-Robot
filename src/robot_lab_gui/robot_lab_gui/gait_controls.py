@@ -74,6 +74,8 @@ class GaitControls(ttk.Frame):
             self.runtime,self.runtime_at=data,time.monotonic()
             if interrupted:self.app._stop_drive(keep_input_enabled=True)
             default={'hexapod_ros2':'tripod','lab_octopod':'tetrapod','lab_centipede':'wave'}.get(data['robot_id'],'wave')
+            self.spine_phase=tk.DoubleVar(value=data.get('spine_phase',0.0))
+            self.spine_freq=tk.DoubleVar(value=data.get('spine_freq',1.0))
             self.combo.configure(values=list(dict.fromkeys([default,'ripple','wave'])))
             p=data.get('position');forces=(data.get('actual_contacts') or {}).get('normal_forces_N',{})
             text=f"{data['robot_id']} · {'ARMED' if data['enabled'] else 'HELD'} · {data['reason']}\n"
@@ -94,7 +96,8 @@ class GaitControls(ttk.Frame):
     def operation(self,op):
         if not self.node:self.connect();return
         self.app._stop_drive(keep_input_enabled=True)
-        self.send(op,**({'gait':self.schedule.get()} if op=='gait' else {}))
+        extra={'gait':self.schedule.get(),'spine_phase':self.spine_phase.get(),'spine_freq':self.spine_freq.get()} if op=='gait' else {}
+        self.send(op,**extra)
 
     def stop(self):
         if self.node and self.runtime:self.send('stop')
