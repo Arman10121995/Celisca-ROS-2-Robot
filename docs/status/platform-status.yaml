@@ -1,11 +1,13 @@
 extension_completion_20261020:
   owner: codex
-  state: active
+  state: partial
   requested: '2026-10-20'
+  updated: '2026-10-20'
   baseline_revision: b8ea60e
   priority: Reconcile current documentation, then finish missing usable extension workflows before the older roadmap.
   scope: R10 fleet queues/traffic/coverage, marine sensor-based estimation and routes, additional robot workflows, native GUI and reproducible workloads; preserve R11/R12 source evidence and all existing robot contracts.
   status_boundary: Initial implementation and targeted checks are separate from broad physical mission qualification; no universal robot/map/backend support claim.
+  implementation_summary: R10.2 fleet management/Open-RMF adapters and R10.3 clearance-aware swarm control code committed (rev 40062b2). Gazebo bumperbot drive qualified (1.935m forward). All R10 subtask implementation code exists; broad physical validation pending.
 legged_policy_training_20261019:
   task_id: R12_legged_policy_training
   owner: claude
@@ -638,7 +640,8 @@ tasks:
       R3.6:
         title: "Install external assets into normal Launch selectors"
         state: "active"
-        owner: "claude"
+        owner: "codex"
+        updated: "2026-10-20"
         depends_on: ["R3.1", "R3.4"]
         scope_paths: ["src/robot_lab_gui/", "src/robot_lab_robots/", "src/robot_lab_adapter/", "src/robot_lab_bringup/", "src/robot_lab_mujoco/", "src/robot_lab_isaac/", "src/robot_lab_pybullet/", "src/robot_lab_description/", "src/robot_lab_navigation/", "src/robot_lab_mapping/", "src/robot_lab_utils/robot_lab_utils/sensor_config.py", "src/robot_lab_utils/robot_lab_utils/sim_frames.py", "src/robot_lab_utils/robot_lab_utils/camera_msgs.py", "src/robot_lab_utils/robot_lab_utils/robot_spawn.py", "src/robot_lab_utils/robot_lab_utils/mode_capability.py", "src/robot_lab_utils/robot_lab_utils/asset_support.py", "src/robot_lab_utils/robot_lab_utils/gazebo_physics_world.py", "src/robot_lab_utils/robot_lab_utils/urdf_springs.py", "src/robot_lab_utils/robot_lab_utils/installed_assets.py", "src/robot_lab_utils/robot_lab_utils/asset_groups.py", "src/robot_lab_utils/robot_lab_utils/asset_preview.py", "src/robot_lab_utils/robot_lab_utils/sdf_world.py", "src/robot_lab_utils/robot_lab_utils/native_mjcf_assets.py", "src/robot_lab_utils/robot_lab_utils/drive_kinematics.py", "src/robot_lab_utils/robot_lab_utils/skid_steer.py", "src/robot_lab_utils/package.xml", "src/robot_lab/robot_lab_registry/", "scripts/", "docs/status/asset-sources-2026-10-05.yaml", "docs/ASSET_EXTENSION_GUIDE.md", "src/robot_lab_localization/config/robots/asset_husky.yaml"]
         active_scope: "2026-10-09 codex: install and expose exact-model policies and reusable native controllers in the normal registry/GUI, preserving measured prior robots and independent terrain/review ownership. Initial implementation precedes testing."
@@ -1762,7 +1765,7 @@ risks:
       - "R3.5"
     description: "Tests may launch/reset/record; isolate middleware/simulator instances and own processes."
 handoff:
-  next_task: "R10.2"
+  next_task: "R10.5"
   parallel_ready_after_R0:
     - "R1.1"
     - "R1.2"
