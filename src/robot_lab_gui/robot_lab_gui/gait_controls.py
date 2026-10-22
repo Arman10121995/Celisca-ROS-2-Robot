@@ -35,7 +35,7 @@ class GaitControls(ttk.Frame):
         combo=ttk.Frame(self);combo.grid(row=7,column=0,sticky='ew',pady=6)
         ttk.Label(combo,text='Schedule').pack(side='left')
         self.combo=ttk.Combobox(combo,textvariable=self.schedule,state='readonly',values=['wave','ripple','tripod'],width=12)
-        self.combo.pack(side='left',padx=5);ttk.Button(combo,text='Apply',command=lambda:self.operation('gait')).pack(side='left');ttk.Label(combo,text='Phase').pack(side='left',padx=(10,0));ttk.Scale(combo,from_=0.0,to=1.0,resolution=0.1,variable=self.phase,orient='horizontal',length=50).pack(side='left',fill='x',expand=True,padx=2)
+        self.combo.pack(side='left',padx=5);ttk.Button(combo,text='Apply',command=lambda:self.operation('gait')).pack(side='left');ttk.Label(combo,text='Phase').pack(side='left',padx=(10,0));ttk.Scale(combo,from_=0.0,to=1.0,variable=self.phase,orient='horizontal',length=50).pack(side='left',fill='x',expand=True,padx=2)
         ttk.Label(self,textvariable=self.feedback,wraplength=310,justify='left').grid(row=8,column=0,sticky='ew',pady=6)
         ttk.Label(self,text='Connect and Arm start without travel. Use Drive for latching, ramps, WASD/joystick and Space.\n'
                   'Stop/loss halts gait phases and holds bounded joint targets; bodies remain free in physics.\n'
