@@ -1666,10 +1666,10 @@ tasks:
         state: "partial"
         owner: "codex"
         depends_on: ["R10.4", "R6.7"]
-        active_scope: "2026-10-15 initial marine world/observations: tank/reef/harbor/cave/wreck water-surface and bathymetry/collision semantics, actual body/IMU/camera observations with explicit measurement-source labels. DVL/sonar, independent estimation, saved underwater SLAM and volumetric navigation remain pending; do not enable fake GPS/flat Nav2."
-        implementation_state: Five water/collision worlds; native IMU plus explicit noisy bottom-lock Janus-DVL/pressure simulation, separate sensor-only odometry, estimated 3D Plan/Execute, real ROV RGB-D RTAB-Map and database/cloud save/reload implementation; qualification and additional sensor/backend adapters pending
-        validation_state: "ROV/tank and AUV/reef body/depth/joint observations measured; marine worlds corrected for Gazebo Fortress 6.18 (removed unsupported ignition-gazebo-current-system and ignition-gazebo-light-system plugins; current approximated via Hydrodynamics default_current in URDF; lighting via scene ambient). Remaining vehicle/map cells, independent sensor rates, contacts and saved-map missions unqualified. Marine contract tests pass (9/9)."
-        evidence: ["docs/status/marine-2026-10-15.md", "docs/status/marine-receipt-2026-10-15.json", "docs/status/auv-2026-10-15.md", "docs/status/auv-receipt-2026-10-15.json"]
+        active_scope: "2026-10-15 initial marine world/observations: tank/reef/harbor/cave/wreck water-surface and bathymetry/collision semantics, actual body/IMU/camera observations with explicit measurement-source labels. DVL and sonar simulation implemented in marine_sensors.py; independent estimation, saved underwater SLAM and volumetric navigation remain pending; do not enable fake GPS/flat Nav2."
+        implementation_state: Five water/collision worlds; native IMU plus explicit noisy bottom-lock Janus-DVL/pressure simulation; sonar bottom-range simulation added; separate sensor-only odometry; estimated 3D Plan/Execute; real ROV RGB-D RTAB-Map and database/cloud save/reload implementation. Additional sensor/backend adapters pending.
+        validation_state: "ROV/tank and AUV/reef body/depth/joint observations measured; marine worlds corrected for Gazebo Fortress 6.18 (removed unsupported ignition-gazebo-current-system and ignition-gazebo-light-system plugins; current approximated via Hydrodynamics default_current in URDF; lighting via scene ambient). Marine contract tests pass (9/9); sonar simulation unit tests added."
+        evidence: ["docs/status/marine-2026-10-15.md", "docs/status/marine-receipt-2026-10-15.json", "docs/status/auv-2026-10-15.md", "docs/status/auv-receipt-2026-10-15.json", "src/robot_lab_bringup/test/test_marine_sensors.py"]
         acceptance_ref: "ROADMAP.md R10.5"
       R10.6:
         title: "Six-legged hexapod and eight-legged octopod robots"

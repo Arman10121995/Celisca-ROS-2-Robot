@@ -44,12 +44,57 @@ class MarineSensors(Node):
         self.seed = int(self.get_parameter('seed').value)
         self.rng = np.random.default_rng(self.seed)
         self.bias = self.rng.normal(0., .002, 3)
-        self.previous = None
-        self.last_output = -math.inf
+        self.sonar_previous = None
+        self.sonar_last_output = -math.inf
         self.velocity_pub = self.create_publisher(TwistWithCovarianceStamped, '/marine/sensors/dvl', 10)
         self.pressure_pub = self.create_publisher(FluidPressure, '/marine/sensors/pressure', 10)
-        self.state_pub = self.create_publisher(String, '/marine/sensors/state', 10)
-        self.create_subscription(Odometry, '/marine/odometry', self.observe, 10)
+        self.sonar_pub = self.create_publisher(Range, '/marine/sensors/sonar', 10)
+        self.sonar_subscriber = self.create_subscription(Odometry, '/marine/odometry', self.sonar_observe, 10)
+
+    def sonar_observe(self, msg):
+        p = msg.pose.pose.position
+        current = stamp(msg)
+        if msg.header.frame_id != 'map' or not np.isfinite([p.x, p.y, p.z]).all():
+            return
+        if self.sonar_previous is not None and current <= stamp(self.sonar_previous):
+            self.sonar_previous = None
+            return
+        if self.sonar_previous is not None and current - stamp(self.sonar_previous) < .095:
+            return
+        self.sonar_previous = msg
+        depth = max(0., self.surface - p.z)
+        if depth > 0.:
+            clearance = self.scene.clearance((p.x, p.y, p.z))
+            range_to_seabed = max(0.1, clearance)
+        else:
+            range_to_seabed = float('inf')
+        sonar = Range()
+        sonar.header = copy.copy(msg.header)
+        sonar.header.frame_id = 'base_link'
+        sonar.radiation_type = Range.SONAR
+        sonar.field_of_view = .5
+        sonar.min_range = .1
+        sonar.max_range = min(10., max(depth, .1))
+        sonar.range = float(np.clip(range_to_seabed, sonar.min_range, sonar.max_range))
+        if math.isfinite(sonar.range):
+            sonar.variance = 0.3 ** 2
+        else:
+            sonar.variance = 10. ** 2
+        self.sonar_pub.publish(sonar)
+        output = TwistWithCovarianceStamped()
+        output.header = sonar.header
+        output.twist.twist.linear.x = 0.
+        output.twist.twist.linear.y = 0.
+        output.twist.twist.linear.z = 0.
+        output.twist.covariance = np.eye(6) * sonar.variance.tolist()
+        self.velocity_pub.publish(output)
+        pressure = FluidPressure()
+        pressure.header = copy.copy(msg.header)
+        pressure.header.frame_id = 'base_link'
+        pressure.fluid_pressure = 101325. + self.density * 9.81 * depth + float(self.rng.normal(0., 75.))
+        pressure.variance = 75. ** 2
+        self.pressure_pub.publish(pressure)
+
 
     def observe(self, msg):
         p, q = msg.pose.pose.position, msg.pose.pose.orientation
