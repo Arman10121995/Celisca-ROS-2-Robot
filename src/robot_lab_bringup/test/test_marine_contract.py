@@ -70,3 +70,32 @@ def test_water_is_a_density_boundary_not_a_solid_collision_box():
         assert float(buoyancy.findtext('graded_buoyancy/density_change/above_depth'))==0.
         assert float(buoyancy.findtext('graded_buoyancy/density_change/density'))<2.
         assert buoyancy.findtext('enable')=='lab_rov'
+
+
+def test_every_marine_world_enables_the_native_dvl_system():
+    for name in ('marine_tank','marine_reef','marine_harbor','marine_cave','marine_wreck'):
+        world=ET.parse(ROOT/'src/robot_lab_maps/maps'/name/'worlds'/(name+'.world')).getroot().find('world')
+        dvl=[p for p in world.findall('plugin') if p.get('name','').endswith('DopplerVelocityLogSystem')]
+        assert len(dvl)==1, name
+        assert dvl[0].get('filename')=='gz-sim-dvl-system', name
+
+
+def test_rov_declares_a_native_dvl_sensor_on_base_link():
+    description=load_description(ROOT/'src/robot_lab_robots/lab_rov/urdf/lab_rov.urdf.xacro')
+    root=ET.fromstring(description)
+    sensors=[s for g in root.findall('gazebo') if g.get('reference')=='base_link'
+             for s in g.findall('sensor') if s.get('name')=='marine_dvl']
+    assert len(sensors)==1
+    sensor=sensors[0]
+    assert sensor.get('type')=='dvl'
+    assert sensor.findtext('always_on')=='true'
+    assert float(sensor.findtext('update_rate'))>0.
+    assert sensor.findtext('gz_frame_id')=='base_link'
+
+
+def test_marine_launch_bridges_the_dvl_twist_to_ros():
+    launch=(ROOT/'src/robot_lab_bringup/launch/marine_simulator.launch.py').read_text()
+    assert "'/marine/dvl'" in launch
+    assert 'geometry_msgs/msg/TwistStamped' in launch
+    assert 'gz.msgs.Twist' in launch
+    assert 'marine_dvl' in launch
