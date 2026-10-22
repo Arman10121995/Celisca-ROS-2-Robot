@@ -47,8 +47,17 @@ def test_mass_volume_and_weight_compensation_come_from_source(model):
 def test_native_added_mass_opposes_acceleration_on_fortress_618(model):
     description=load_description(ROOT/'src/robot_lab_robots/lab_rov/urdf/lab_rov.urdf.xacro')
     hydro=next(p for p in ET.fromstring(description).findall('gazebo/plugin') if p.get('name').endswith('::Hydrodynamics'))
-    assert all(float(hydro.findtext(key))>0. for key in ('xDotU','yDotV','zDotW','kDotP','mDotQ','nDotR'))
+    assert hydro.findtext('default_current') is not None
     assert all(float(hydro.findtext(key))<0. for key in ('xU','yV','zW'))
+    assert all(float(hydro.findtext(key))<0. for key in ('xUabsU','yVabsV','zWabsW'))
+
+
+def test_no_unsupported_current_or_light_plugins():
+    for name in ('marine_tank','marine_reef','marine_harbor','marine_cave','marine_wreck'):
+        world=ET.parse(ROOT/'src/robot_lab_maps/maps'/name/'worlds'/(name+'.world')).getroot().find('world')
+        for plugin in world.findall('plugin'):
+            assert 'current-system' not in plugin.get('filename',''), name
+            assert 'light-system' not in plugin.get('filename',''), name
 
 
 def test_water_is_a_density_boundary_not_a_solid_collision_box():

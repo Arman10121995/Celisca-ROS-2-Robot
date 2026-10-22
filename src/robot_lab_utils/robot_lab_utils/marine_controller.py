@@ -17,7 +17,7 @@ from rclpy.clock import Clock,ClockType
 from rclpy.executors import ExternalShutdownException
 from rclpy.node import Node
 from rclpy.qos import qos_profile_sensor_data
-from geometry_msgs.msg import TransformStamped,Twist
+from geometry_msgs.msg import TransformStamped,Twist,Vector3
 from nav_msgs.msg import Odometry
 from rosgraph_msgs.msg import Clock as ClockMessage
 from sensor_msgs.msg import FluidPressure
@@ -71,7 +71,7 @@ class MarineController(Node):
         self.create_subscription(Twist,'/marine/mission_vel',self._mission_input,10)
         self.create_subscription(String,'/marine/command',self._command,10)
         self.create_subscription(String,'/marine/operator_heartbeat',self._heartbeat,10)
-        self.create_subscription(Odometry,'/marine/current',self._current,10)
+        self.create_subscription(Vector3,'/marine/current',self._current,10)
         self.create_subscription(ClockMessage,'/clock',self._observe_clock,qos_profile_sensor_data)
         self.steady=Clock(clock_type=ClockType.STEADY_TIME)
         self.create_timer(.02,self._tick,clock=self.steady)
@@ -101,25 +101,12 @@ class MarineController(Node):
             self.rates=np.array([angle(a-b)/dt for a,b in zip(orientation,self.orientation)])
 
     def _current(self,msg):
-        """Receive Gazebo current vector [x, y, z] in world frame."""
-        values=[msg.pose.position.x, msg.pose.position.y, msg.pose.position.z]
+        """Receive current vector [x, y, z] in world frame as geometry_msgs/Vector3."""
+        values=[msg.x,msg.y,msg.z]
         if not all(math.isfinite(v) for v in values):return
         self.current=np.array(values)
-        self.current_stamp=msg.header.stamp.sec+msg.header.stamp.nanosec*1e-9
-        self.pose,self.orientation,self.pose_at=msg,orientation,time.monotonic()
+        self.current_stamp=time.monotonic()
         self.count+=1
-        transform=TransformStamped()
-        transform.header=msg.header
-        transform.child_frame_id='base_link'
-        for key in 'xyz':setattr(transform.transform.translation,key,getattr(msg.pose.pose.position,key))
-        transform.transform.rotation=msg.pose.pose.orientation
-        self.tf.sendTransform(transform)
-        pressure=FluidPressure()
-        pressure.header.stamp=msg.header.stamp
-        pressure.header.frame_id='base_link'
-        pressure.fluid_pressure=101325.+self.model.density*9.81*max(0.,self.surface-msg.pose.pose.position.z)
-        pressure.variance=0.
-        self.pressure_pub.publish(pressure)
 
     def _fresh(self):
         now=time.monotonic()

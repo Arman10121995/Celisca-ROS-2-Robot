@@ -297,6 +297,7 @@
   <gazebo>
     <plugin filename="ignition-gazebo-hydrodynamics-system" name="ignition::gazebo::systems::Hydrodynamics">
       <link_name>base_link</link_name>
+      <default_current>0.1 0.0 0.0</default_current>
       <xDotU>3</xDotU>
       <yDotV>5</yDotV>
       <zDotW>7</zDotW>

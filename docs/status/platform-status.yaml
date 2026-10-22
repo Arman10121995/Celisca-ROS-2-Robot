@@ -1668,7 +1668,7 @@ tasks:
         depends_on: ["R10.4", "R6.7"]
         active_scope: "2026-10-15 initial marine world/observations: tank/reef/harbor/cave/wreck water-surface and bathymetry/collision semantics, actual body/IMU/camera observations with explicit measurement-source labels. DVL/sonar, independent estimation, saved underwater SLAM and volumetric navigation remain pending; do not enable fake GPS/flat Nav2."
         implementation_state: Five water/collision worlds; native IMU plus explicit noisy bottom-lock Janus-DVL/pressure simulation, separate sensor-only odometry, estimated 3D Plan/Execute, real ROV RGB-D RTAB-Map and database/cloud save/reload implementation; qualification and additional sensor/backend adapters pending
-        validation_state: "ROV/tank and AUV/reef body/depth/joint observations measured; remaining vehicle/map cells, independent sensor rates, contacts and saved-map missions unqualified"
+        validation_state: "ROV/tank and AUV/reef body/depth/joint observations measured; marine worlds corrected for Gazebo Fortress 6.18 (removed unsupported ignition-gazebo-current-system and ignition-gazebo-light-system plugins; current approximated via Hydrodynamics default_current in URDF; lighting via scene ambient). Remaining vehicle/map cells, independent sensor rates, contacts and saved-map missions unqualified. Marine contract tests pass (9/9)."
         evidence: ["docs/status/marine-2026-10-15.md", "docs/status/marine-receipt-2026-10-15.json", "docs/status/auv-2026-10-15.md", "docs/status/auv-receipt-2026-10-15.json"]
         acceptance_ref: "ROADMAP.md R10.5"
       R10.6:
@@ -1679,7 +1679,7 @@ tasks:
         scope_paths: ["docs/", "README.md", "ROADMAP.md", "src/robot_lab_utils/", "src/robot_lab_mujoco/", "src/robot_lab_bringup/", "src/robot_lab_robots/", "src/robot_lab_maps/", "src/robot_lab_gui/", "src/robot_lab/robot_lab_registry/", "scripts/"]
         active_scope: "2026-10-15 after marine checkpoint: complete source-bound six/eight-legged models, exact leg geometry/limits, IK/gait, actual effort actuation/contact/tilt feedback, neutral enable/Stop/watchdog and native GUI. Reuse pinned MIT hexapod_ros2 geometry/KDL conversion with explicit MuJoCo in-step bounded PD; authored eight/segmented variants retain separate identities. Add src/robot_lab_mujoco/ for opt-in actual contact telemetry. Motion implementation precedes sensing/SLAM/navigation qualification."
         implementation_state: Complete source hexapod and authored octopod; source gait/PD plus contact-kinematic odometry, explicit lab sensor frames and experimental localization/2D/3D SLAM/Nav2 task composition implemented; physical higher-mode, terrain and other-backend qualification pending
-        validation_state: "Actual short normal GUI nav_empty forward/Stop measured on both; source-mass/IK/contact contracts pass. Gait contract tests pass (8/8: IK, schedules, PD, guards). Terrain, recovery, reverse/turn/loss/reset, independent estimation/SLAM/navigation and other backends pending."
+        validation_state: "Actual short normal GUI nav_empty forward/Stop measured on both; source-mass/IK/contact contracts pass. Gait contract tests pass (8/8: IK, schedules, PD, guards). GUI gait combobox filtered to supported schedules (wave/ripple/tripod); spine phase/freq initialized and published with gait commands. Terrain, recovery, reverse/turn/loss/reset, independent estimation/SLAM/navigation and other backends pending."
         evidence: ["docs/tutorials/multi-leg-gaits.md", "docs/status/gaits-2026-10-15.md", "docs/status/gaits-receipt-2026-10-15.json"]
         acceptance_ref: "ROADMAP.md R10.6"
       R10.7:
@@ -1689,7 +1689,7 @@ tasks:
         depends_on: ["R10.6"]
         active_scope: "2026-10-15: first complete authored segmented many-legged variant with real spine/leg joints, body-wave coupling and bounded gait/effort actuation. Individual segments stay nested under the complete family; additional snake/tracked/surface/amphibious forms remain separate."
         implementation_state: Complete articulated twelve-leg centipede with source gait and contact-odometry/higher-task candidate pipeline; further snake/tracked/surface/amphibious families and physical mission acceptance pending
-        validation_state: "Actual short GUI nav_empty forward/Stop measured, with a repeat after timestamp/reset guards; terrain/tail-clearance/recovery/independent estimates/missions and additional robot forms pending"
+        validation_state: "Actual short GUI nav_empty forward/Stop measured, with a repeat after timestamp/reset guards; spine phase/freq initialized in GUI and published with gait commands for centipede body-wave coupling; terrain/tail-clearance/recovery/independent estimates/missions and additional robot forms pending"
         evidence: ["docs/tutorials/multi-leg-gaits.md", "docs/status/gaits-2026-10-15.md", "docs/status/gaits-receipt-2026-10-15.json"]
         acceptance_ref: "ROADMAP.md R10.7"
       R10.8:

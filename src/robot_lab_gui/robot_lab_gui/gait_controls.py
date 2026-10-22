@@ -25,6 +25,7 @@ class GaitControls(ttk.Frame):
         self.feedback=tk.StringVar(value='Awaiting actual body, joints and foot forces')
         self.phase=tk.DoubleVar(value=0.0)
         self.schedule=tk.StringVar(value='wave');self.columnconfigure(0,weight=1)
+        self.spine_phase=tk.DoubleVar(value=0.0);self.spine_freq=tk.DoubleVar(value=1.0)
         ttk.Label(self,text='Source gait · joint physics',font=('',11,'bold')).grid(row=0,column=0,sticky='w')
         ttk.Label(self,textvariable=self.status,wraplength=310).grid(row=1,column=0,sticky='ew',pady=7)
         for row,label,command in [(2,'Connect (neutral)',self.connect),(3,'Arm walking',lambda:self.operation('arm')),
@@ -33,7 +34,7 @@ class GaitControls(ttk.Frame):
             ttk.Button(self,text=label,command=command).grid(row=row,column=0,sticky='ew',pady=2)
         combo=ttk.Frame(self);combo.grid(row=7,column=0,sticky='ew',pady=6)
         ttk.Label(combo,text='Schedule').pack(side='left')
-        self.combo=ttk.Combobox(combo,textvariable=self.schedule,state='readonly',values=['wave','ripple','tripod','bound','pace','icc'],width=12)
+        self.combo=ttk.Combobox(combo,textvariable=self.schedule,state='readonly',values=['wave','ripple','tripod'],width=12)
         self.combo.pack(side='left',padx=5);ttk.Button(combo,text='Apply',command=lambda:self.operation('gait')).pack(side='left');ttk.Label(combo,text='Phase').pack(side='left',padx=(10,0));ttk.Scale(combo,from_=0.0,to=1.0,resolution=0.1,variable=self.phase,orient='horizontal',length=50).pack(side='left',fill='x',expand=True,padx=2)
         ttk.Label(self,textvariable=self.feedback,wraplength=310,justify='left').grid(row=8,column=0,sticky='ew',pady=6)
         ttk.Label(self,text='Connect and Arm start without travel. Use Drive for latching, ramps, WASD/joystick and Space.\n'
