@@ -34,7 +34,7 @@ def point_velocity(robot, target, max_linear, max_angular, tolerance=.08):
     return linear, max(-max_angular, min(max_angular, 1.4 * heading))
 
 
-SWARM_MODES = ('formation', 'rendezvous', 'flocking', 'clearance')
+SWARM_MODES = ('formation', 'rendezvous', 'flocking', 'clearance', 'dispersion')
 
 def swarm_velocities(mode, neighbors, max_linear, max_angular, spacing=1., anchor=None, heading=0., clearance_radius=None):
     if mode not in SWARM_MODES:
@@ -71,7 +71,7 @@ def swarm_velocities(mode, neighbors, max_linear, max_angular, spacing=1., ancho
             length = math.hypot(rx, ry)
             scale = 1. / max(1., length)
             target = (robot.x + rx * scale, robot.y + ry * scale)
-        elif mode == 'clearance':
+        elif mode in ('clearance', 'dispersion'):
             # Clearance-aware cooperative sweep allocation.
             # Each robot sweeps while maintaining minimum separation from neighbors.
             rx = ry = 0.
