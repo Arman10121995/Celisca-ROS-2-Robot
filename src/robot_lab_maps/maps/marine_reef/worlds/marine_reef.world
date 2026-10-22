@@ -23,6 +23,7 @@
       </graded_buoyancy>
       <enable>lab_rov</enable>
     </plugin>
+    <plugin filename="gz-sim-dvl-system" name="gz::sim::systems::DopplerVelocityLogSystem" />
     <scene>
       <ambient>.3 .55 .6 1</ambient>
       <background>.05 .18 .25 1</background>
