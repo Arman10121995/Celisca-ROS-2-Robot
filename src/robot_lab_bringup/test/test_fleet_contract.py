@@ -85,7 +85,7 @@ def test_group_controller_equilibrium_and_real_twist_only():
     shifted = swarm_velocities('formation', robots, .25,.6, spacing=1., anchor=(1.,0.))
     assert all(command == (.25,0.) for command in shifted.values())
     assert robots[0].x == robots[1].x == 0.  # kernel never mutates physical/estimated poses
-    for mode in ('rendezvous','dispersion','flocking'):
+    for mode in ('rendezvous','clearance','flocking'):
         values = swarm_velocities(mode, robots, .25,.6)
         assert all(0 <= v <= .25 and abs(w) <= .6 for v,w in values.values())
 
