@@ -19,7 +19,7 @@ from rclpy.node import Node
 from rclpy.qos import qos_profile_sensor_data
 from geometry_msgs.msg import TwistWithCovarianceStamped, TransformStamped
 from nav_msgs.msg import Odometry
-from sensor_msgs.msg import FluidPressure, Imu
+from sensor_msgs.msg import FluidPressure, Imu, Range
 from std_msgs.msg import String
 from tf2_ros import TransformBroadcaster
 
@@ -38,7 +38,7 @@ class MarineSensors(Node):
         super().__init__('marine_sensor_simulator')
         for key, value in dict(world_file='', density=1025., surface_z=0., seed=41).items():
             self.declare_parameter(key, value)
-        self.scene = StaticScene(self.get_parameter('world_file').value)
+        self.scene = StaticScene(self.get_parameter('world_file').value) if self.get_parameter('world_file').value else None
         self.density = float(self.get_parameter('density').value)
         self.surface = float(self.get_parameter('surface_z').value)
         self.seed = int(self.get_parameter('seed').value)
@@ -71,22 +71,23 @@ class MarineSensors(Node):
         sonar = Range()
         sonar.header = copy.copy(msg.header)
         sonar.header.frame_id = 'base_link'
-        sonar.radiation_type = Range.SONAR
+        sonar.radiation_type = Range.ULTRASOUND
         sonar.field_of_view = .5
         sonar.min_range = .1
-        sonar.max_range = min(10., max(depth, .1))
-        sonar.range = float(np.clip(range_to_seabed, sonar.min_range, sonar.max_range))
-        if math.isfinite(sonar.range):
-            sonar.variance = 0.3 ** 2
+        sonar.max_range = 10.
+        if depth <= 0. or not math.isfinite(range_to_seabed):
+            sonar.range = float('inf')
+            variance = 0.
         else:
-            sonar.variance = 10. ** 2
+            sonar.range = float(np.clip(range_to_seabed, sonar.min_range, sonar.max_range))
+            variance = 0.3 ** 2
         self.sonar_pub.publish(sonar)
         output = TwistWithCovarianceStamped()
         output.header = sonar.header
         output.twist.twist.linear.x = 0.
         output.twist.twist.linear.y = 0.
         output.twist.twist.linear.z = 0.
-        output.twist.covariance = np.eye(6) * sonar.variance.tolist()
+        output.twist.covariance = (np.eye(6) * variance).flatten().tolist()
         self.velocity_pub.publish(output)
         pressure = FluidPressure()
         pressure.header = copy.copy(msg.header)
