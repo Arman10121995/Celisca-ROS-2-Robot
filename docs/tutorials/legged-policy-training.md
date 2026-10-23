@@ -16,6 +16,24 @@ locomotion policy for a quadruped and hands the result to Launch. The same
 steps run from the command line through
 `ros2 run robot_lab_adapter legged-train`.
 
+## Run
+
+1. Open the GUI's **Training** page (EXPERIMENTS → Policy training).
+2. Select a robot (`unitree_go2`, `unitree_a1`, `unitree_b2`) and task (`walk`, `turn_in_place`, `stand`, `push_recovery`).
+3. Set parallel environments, iterations and seed. A run folder is created under `$ROBOT_LAB_RUNTIME_ROOT/training/` unless you name one.
+4. Click **Start training**. The page plots mean return and episode length.
+5. Click **Stop and export** to write a checkpoint and export `policy/` before the trainer exits. Finished runs export automatically.
+6. Click **Evaluate policy** to run the exported ONNX through the deployment code and report measured body velocities in `evaluation.json`.
+7. Click **Use policy in Launch** to select the robot and `loc` mode with `legged_policy:=<run>/policy`.
+
+Or from the command line:
+
+```bash
+RUN=$ROBOT_LAB_RUNTIME_ROOT/training/go2_walk_1
+ros2 run robot_lab_adapter legged-train train --robot unitree_go2 --task walk --envs 512 --iterations 1500 --out $RUN
+ros2 run robot_lab_adapter legged-train evaluate --policy-dir $RUN/policy --task walk --commands "0.5,0,0;0,0,0.8;0,0,0"
+```
+
 ## What it trains
 
 | Robot | Contract of | Joints | Policy input |

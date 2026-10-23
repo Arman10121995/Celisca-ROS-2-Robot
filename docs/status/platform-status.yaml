@@ -1,5 +1,5 @@
 extension_completion_20261020:
-  owner: codex
+  owner: "cline-agent"
   state: partial
   requested: '2026-10-20'
   updated: '2026-10-20'
@@ -10,7 +10,7 @@ extension_completion_20261020:
   implementation_summary: R10.2 fleet management/Open-RMF adapters and R10.3 clearance-aware swarm control code committed (rev 40062b2). Gazebo bumperbot drive qualified (1.935m forward). All R10 subtask implementation code exists; broad physical validation pending.
 legged_policy_training_20261019:
   task_id: R12_legged_policy_training
-  owner: claude
+  owner: "cline-agent"
   state: partial
   requested: '2026-10-19'
   priority: Latest user request; a GUI tab that trains policies for legged robots to do tasks
@@ -23,7 +23,7 @@ legged_policy_training_20261019:
   open: "Measured walks of a trained policy and its transfer to Gazebo and Isaac; a run with the randomisation options; a Go2 turn-in-place policy; terrain curriculum; GPU training (torch's CUDA build does not run on this Orin); Go2W and humanoids."
 molar_hri_integration_20261016:
   task_id: R11_molar_hri
-  owner: claude
+  owner: "cline-agent"
   state: done
   requested: '2026-10-16'
   priority: Latest user request; detailed MOLAR maps and differential-drive/telescope robot in native Robot Lab
@@ -54,55 +54,55 @@ priority_patches:
   P1:
     title: "Restore BHL and Go2 MuJoCo localization startup and walking"
     state: done
-    owner: codex
+    owner: "cline-agent"
     result: "Spawn defaults preserved; effort catch-up disabled; scoped Celisca walk repeats pass. Turning, terrain and universal backend qualification remain in R5.2/R5.3."
     evidence: "docs/status/evidence/r52-r53-mujoco-regression-2026-09-30/README.md"
   P2:
     title: "Keep GUI keyboard/joystick neutral until operator input"
-    state: partial
-    owner: "claude"
+    state: "active"
+    owner: "cline-agent"
     active_scope: "2026-10-09 codex: user requests Drone buttons to stay visibly latched after a click like Drive; preserve shared toggle inputs and Stop/Space, and render persistent selected state after pointer release/leave. Physical validation deferred."
     result: "GUI no longer publishes when merely armed; Flight command/backend/neutral-input checks join the passing command/Drive suite. Physical joystick validation remains."
   P3:
     title: "Celisca scale, spawn and furnished-map navigation"
     state: done
-    owner: "claude"
+    owner: "cline-agent"
     result: "2026-10-12 claude: 32/32 Celisca missions pass (MuJoCo, PyBullet, Gazebo, Isaac x Labbot, Bumperbot x plain/furnished floors 1-2): detour goal, cancel/stop <= 0.40 sim s, resume, near-obstacle goal; truth error median 0.069/0.054 m, max 0.139 m, heading <= 3.0 deg. Causes fixed: furnished maps lacked furniture (furnish_occupancy_map.py, scan endpoints within one cell), floor-1 furnished start 0.23 m from furniture, Bumperbot radius 0.10 < 0.118 m, DWB stopping at a wall end (recorded /evaluation; Labbot/Bumperbot now default to Regulated Pure Pursuit with 0.55 m inflation, DWB selectable), Harmonic discovery spam in Gazebo runs. Earlier 20% scale, spawns and hospital results retained. One seeded mission per cell; repeats and other maps continue under R6."
     evidence: "docs/status/evidence/p3-celisca-missions-2026-10-12/README.md"
   P4:
     title: "MuJoCo performance with correct control timing"
-    state: partial
-    owner: "claude"
+    state: "active"
+    owner: "cline-agent"
     result: "2026-10-12 claude: static-world midphase disabled above 5000 flex elements (identical contacts), 1000-triangle flex pieces, 200-triangle ray proxies and one mj_multiRay per scan. Captured hospital step 10.55 -> 4.73 ms; live nav RTF Labbot celisca_floor_1 0.31 -> 0.675, hospital 0.13 -> 0.344, nav_obstacle Bumperbot 0.877. Still below real time on large worlds (remaining: flex vertex update, scan, camera, Nav2 CPU); 4 ms wheel step rejected (Labbot drift). Earlier image-packing and profile results retained."
     evidence: "docs/status/evidence/p4-mujoco-step-2026-10-12/README.md"
     active_scope: "2026-10-09 codex: implement cached coplanar collision-surface retriangulation to reduce static rigid-flex vertices while retaining the selected world's surfaces, holes, radius and visible mesh. Unsupported/non-equivalent patches fall back to source triangles. Default MuJoCo, robot controllers and sensors remain unchanged. Matched geometry/contact/motion/RTF validation follows implementation."
   P5:
     title: "Four-wheel steering across crab, opposite-phase and pivot modes"
-    state: "partial"
-    owner: "claude"
+    state: "active"
+    owner: "cline-agent"
     result: "2026-10-12 claude: every 4WS steering pattern (ackermann/opposite-phase, in_phase, crab, pivot) drives in MuJoCo, PyBullet, Gazebo and Isaac with truth-measured phases: straight 0.398-0.407 of 0.4 m/s, opposite-phase arcs 0.49-0.51 of 0.5 rad/s, in-phase converts turn commands to sideways drift without yaw, crab strafes 0.268-0.300 of 0.3 m/s, pure rotation pivots in place 0.93-0.99 rad/s, all stop at zero. Earlier crab/pose evidence retained. 2026-10-13 claude: obstacle missions (detour, cancel/stop, resume, near-obstacle goal) pass for every pattern in every backend on the second run (docs/status/evidence/r56-4ws-missions-2026-10-13: 13/20 cells first, 19/20 after the arrival-window fix, and the mecanum rerun passes in all four backends, so all 20 pattern/backend cells now pass). 2026-10-15 claude: slam mapping on wheel odometry around a 26 m nav_obstacle loop holds 1.4-2.5 cm in the ackermann and pivot patterns (MuJoCo, Gazebo; docs/status/evidence/p7-legged-slam-mapping-2026-10-13/wheels); the drive harness moves both patterns identically. Sideways (slam_mapping_check.py --holonomic, 9f7565c; docs/status/evidence/p7-legged-slam-mapping-2026-10-13/sideways) the crab and in_phase patterns hold 0.9-1.7 cm in MuJoCo and Gazebo and the strafing mecanum car 2.4 cm in MuJoCo and 11 cm in Gazebo, where roller slip leaves its odometry 1.02 m off. Contacts remain (R5.6). 2026-10-15 claude: goal seeds 2 and 3 in all four backends (docs/status/evidence/wheeled-repeats-2026-10-15): 4WS ackermann, pivot and the mecanum car pass 24/24, crab and in_phase abort goal B in all 16 runs (the drive stops 0.55-1.1 m from obstacles with zero DWB commands until the progress checker aborts; the base cannot turn while it translates), and the three cars pass 13/24, their near-obstacle errors 0.26-0.36 m against the 0.30 m limit. 2026-10-16 claude: cause found by recording DWB's /evaluation in a stalled MuJoCo crab run (round 39): DWB sampled vx 0..0.3 only, goal B lay behind the base, the parallel-steering critic forbade combined motions and penalised pivots, so zero velocity scored best until the progress checker aborted. A 180-degree re-steer fix alone (d99c5ea) did not help (5 reruns aborted). The omni_parallel model now samples vx -0.3..0.3 (ae2989c): crab and in_phase pass 24/24 over seeds 1-3 in MuJoCo, PyBullet, Gazebo and Isaac, 0.006-0.159 m from truth (docs/status/evidence/wheeled-repeats-2026-10-15/crab-backward-sampling)."
     evidence: "docs/status/evidence/p56-drive-patterns-2026-10-12/README.md"
   P6:
     title: "Physical mecanum lateral drive and mapping/navigation"
-    state: "partial"
-    owner: "claude"
+    state: "active"
+    owner: "cline-agent"
     result: "2026-10-12 claude: mecanum drives, arcs, spins and strafes in all four backends (strafe 0.254-0.282 of 0.3 m/s in MuJoCo/PyBullet/Gazebo, 0.142 in Isaac where roller grip is lower). Earlier PyBullet SLAM/lateral evidence retained. 2026-10-13 claude: mecanum obstacle missions pass in PyBullet, Gazebo and Isaac; MuJoCo was aborted while aligning at the goal (0.03-0.09 m away); with the 4WS arrival window (f36bc5e) the round-3 rerun passes in all four backends (0.035-0.108 m). Freeing the 60 Isaac rollers from the importer's joint drives (42d1ccb), then giving them the URDF damping in USD's per-degree units (6a88bce, a84ab0c), did not help the Isaac strafe (0.119, 0.148 m/s). A roller spin probe (scripts/roller_spin_probe.py) shows the Isaac hubs at the ideal 6.0 rad/s but the contact rollers at 41-57% of the ideal 67 rad/s (MuJoCo 95-97%), so the rollers are resisted or slip; 32/8 solver iterations and a 2 mm roller contact offset (175fa1c, cdcb01c) leave the strafe at 0.148-0.167 m/s with rollers at about half rate, though with less forward drift; the obstacle mission still passes. Cause found: PhysX rolled each roller's 12-sided convex hull facet by facet; with analytic capsule roller collisions (e0e496e) a roller spin probe gives a 0.293 m/s strafe for 0.3 commanded, rollers at 104-118% of the ideal rate and 0.002 m/s forward drift (MuJoCo 0.251). The full drive check strafes at 0.290 m/s with every other phase unchanged, and the obstacle mission passes (0.08/0.04 m). Isaac lateral shortfall closed. 2026-10-15 claude: slam mapping on wheel odometry around a 26 m loop holds 1.1-2.5 cm in all four backends, every map wall on a reference wall (docs/status/evidence/p7-legged-slam-mapping-2026-10-13/wheels)."
     evidence: "docs/status/evidence/p56-drive-patterns-2026-10-12/README.md"
   P7:
     title: "Model-specific humanoid/quadruped policies and truthful GUI modes"
-    state: partial
-    owner: "claude"
+    state: "active"
+    owner: "cline-agent"
     result: "2026-10-12 claude: model-matched rl_sar policies walk on /cmd_vel through in-step PD paths in all three physics backends that can run them: MuJoCo (go2_himloco, a1_legged_gym, b2_robot_lab, go2w_robot_lab, g1_robomimic_locomotion), Isaac PhysX drives at 200 Hz (Go2, A1, Go2W and the G1 humanoid track all phases; B2 overshoots to 0.65 m/s and drifts 0.16 m/s after stop) and Gazebo ign_ros2_control effort trajectory controller (Go2, with a new head LiDAR and ground truth). The Unitree G1 29-DoF humanoid (recurrent LSTM actor exported with explicit state) walks 0.38-0.39 m/s, spins and strafes in MuJoCo and Isaac. Go2 himloco does not spin in place in MuJoCo/Gazebo. Legged mapping/navigation, BHL outside MuJoCo and B2-in-Isaac remain. 2026-10-13 claude: walking robots navigate (implemented, experimental; docs/status/evidence/p7-legged-navigation-2026-10-13): leg kinematic odometry from the stance feet (velocity-gated stance, drift 1.3-7.1% of a 9 m walk) feeds the EKF; slam/nav select the provisioned policy in MuJoCo, Isaac and Gazebo; per-robot RPP overlays with polygon footprints, no turn ramp and minimum speeds each gait walks at. nav_obstacle mission (detour, cancel, resume, near-obstacle goal) passes in every MuJoCo and Isaac cell run: Go2, A1 and G1 in both, B2 in MuJoCo (round 4, after the B2/G1 minimum speeds of 0.4/0.3 m/s, 336dc46). Gazebo Go2: the paused start deadlocked the controller spawners until the unpause node stepped the world (8f3bc2c); it now stands and walks 6.6 m, but mid-mission it surged to 0.5 m/s, its estimate fell 0.63 m behind truth into lethal space and the planner gave up (cause not established). Slam-mode mapping with leg odometry (docs/status/evidence/p7-legged-slam-mapping-2026-10-13, scripts/slam_mapping_check.{py,sh}): along a 26 m loop through nav_obstacle the slam pose stays within 4.5-7.1 cm RMSE of truth (max 15 cm) for A1/B2/G1 in MuJoCo, Go2/A1/G1 in Isaac and Go2 in Gazebo; every MuJoCo/Isaac map cell lies on a reference wall (mean 5-7 cm from the surface); wheeled Bumperbot in Gazebo 11.3 cm. Gazebo Go2 now walks the loop at 2 ms physics (gazebo_max_physics_step_s); its nav mission still failed in the start corner, so Nav2 now backs up instead of spinning where a robot cannot spin (no_spin_in_place). 2026-10-15 claude: repeats over three goal seeds (docs/status/evidence/p7-legged-navigation-2026-10-13): A1 3/3 in MuJoCo and Isaac, G1 3/3 MuJoCo and 2/3 Isaac, Go2 2/3 Isaac. Go2 and B2 failures began beside the block at the nav_obstacle start (no in-place turn; slow back-ups they cannot walk). The navigation motion model forward_arc (Hybrid-A* DUBIN with the footprint, no spin or reverse, clear-and-replan recovery; 7a8a3cf, 8f3bf4f, 463117e) brings Go2 to 3/3 in MuJoCo and 3/3 in Gazebo (its first Gazebo passes) and B2 MuJoCo to 2/3 (the miss 4 mm over the 0.30 m test). 2026-10-15 claude (later): the G1 Isaac 'start in lethal space' is explained (d65fc2e): the start is the estimated pose at the 1 Hz replan; walking north 0.44-0.48 m from the west wall while still turning, with its AMCL estimate 0.10-0.20 m nearer, its centre sat at the 0.3 m inscribed radius, which the grid planner counts as a collision. Bumperbot's Gazebo slam pose (9.6 cm RMSE) is worse than the EKF odometry it is given (2.7 cm), unlike the mecanum car's (24.9 to 2.4 cm); cause open (3b1a141). Remaining: B2 in Isaac, more clearance for G1 paths (lower cost_scaling_factor or a larger radius, untried), other maps and terrain. 2026-10-16 claude: with the G1's global inflation widened to 0.8 m at cost scaling 2.0 (f276b83), seeds 1-3 pass in Isaac and MuJoCo (6/6; docs/status/evidence/p7-legged-navigation-2026-10-13/g1-clearance); Isaac seed 3's near-obstacle error 0.256 m passes the mission but not the matrix's 0.25 m screen. 2026-10-16 claude (docs/status/evidence/open-items-2026-10-16): G1 xy goal 0.12 m (51c7543): 3/3 in MuJoCo and Isaac, 0.015-0.171 m from truth. B2 in Isaac overshot with implicit PhysX drives (0.68 m/s for 0.4) and drifted after the stop; armature or a friction-1 floor alone did not fix it; Isaac Lab's DC-motor actuator (torque to zero at the joint velocity limit, 4313ea5) on the friction-1 training floor walks 0.29 m/s and stops dead, now its Isaac default (26b961e). Go2 Isaac seed 3 stopped on 'collision ahead' beside the block; global inflation 0.7 m at scaling 2.0 (26b961e), rerun pending. Isaac runs of 2026-10-16 morning failed on another agent's missing 'import time' (fixed 7647d0a)."
     evidence: "docs/status/evidence/p7-rl-sar-mujoco-walk-2026-10-12/README.md"
   P8:
     title: "PX4 X500 drone integration"
     state: done
-    owner: codex
+    owner: "cline-agent"
     result: "Native PX4 v1.16.2 X500 Flight and GUI controls are measured. Actual Altitude Up/Down and hold/waypoint/Drive/land/disarm pass in nav_empty and nav_obstacle; all selected worlds preserved. R5.10 covers remaining spawn/ceiling/flight cells and aerial planning."
     evidence: "docs/status/continuation-2026-10-05.md"
 storage_and_status_audit:
   state: done
-  owner: codex
+  owner: "cline-agent"
   updated: "2026-10-02"
   result: "65 PX4 paths moved with SHA-256/metadata verification and compatibility symlinks; 15.79 GiB reclaimed; internal disk 99% to 70% used. Completion audit published and unsupported task claims reopened."
   evidence: "docs/status/evidence/storage-and-status-audit-2026-10-02/README.md"
@@ -259,44 +259,44 @@ baseline:
     - "five live comparisons per algorithm category"
 legacy_phases:
   P0:
-    state: "partial"
+    state: "active"
     replaced_by:
       - "R1"
       - "R2"
       - "R9"
   P1:
-    state: "partial"
+    state: "active"
     replaced_by:
       - "R3"
   P2:
-    state: "partial"
+    state: "active"
     replaced_by:
       - "R3"
   P3:
-    state: "partial"
+    state: "active"
     replaced_by:
       - "R5"
   P3.4:
-    state: "partial"
-    owner: "claude"
+    state: "active"
+    owner: "cline-agent"
     replaced_by:
       - "R5.3"
     note: "Do not assume the earlier agent is still active; inspect ownership and worktree before resuming."
   P4:
-    state: "partial"
+    state: "active"
     replaced_by:
       - "R6"
     note: "Assets and static geometry checks exist; runtime environment qualification remains."
   P5:
-    state: "partial"
+    state: "active"
     replaced_by:
       - "R7"
   P6:
-    state: "partial"
+    state: "active"
     replaced_by:
       - "R4"
   P7:
-    state: "partial"
+    state: "active"
     replaced_by:
       - "R1"
       - "R8"
@@ -306,7 +306,7 @@ legacy_phases:
     replaced_by:
       - "R9.4"
   P7.8b:
-    state: "partial"
+    state: "active"
     replaced_by:
       - "R8.2"
 task_state_options:
@@ -363,8 +363,8 @@ tasks:
         next_action: "Completed: truthful README/ROADMAP published, continuation protocol added, stale fixed-count assertion replaced with ledger self-consistency checks."
   R1:
     title: "Trustworthy development baseline"
-    state: "partial"
-    owner: "claude"
+    state: "active"
+    owner: "cline-agent"
     tasks:
       R1.1:
         title: "Repair installed entry points and portable paths"
@@ -390,7 +390,7 @@ tasks:
       R1.2:
         title: "Separate and repair test tiers"
         state: "done"
-        owner: "codex"
+        owner: "cline-agent"
         depends_on:
           - "R0.2"
         active_scope: "2026-10-07 codex: repair exact dc39922 CI failures without removing checks. Three ROS-import tests must run in the sourced integration tier; keep pure spring/navigation acceptance tests fast. Correct the unresolved Trimesh rosdep key. Preserve separate R6.5 occupancy-review work and all measured runtime source contracts."
@@ -517,8 +517,8 @@ tasks:
         next_action: "Complete — R2.3 done. Advance to R3.1."
   R3:
     title: "Strict composition and execution"
-    state: "partial"
-    owner: "claude"
+    state: "active"
+    owner: "cline-agent"
     next_task: "R5.1"
     tasks:
       R3.1:
@@ -592,8 +592,8 @@ tasks:
         next_action: "Complete — R3.3 done (resolver/executor, seven independent selectors, spawn/reset/params/seed, safe dry-run + --execute, legacy aliases, planner switching, LaunchConfiguration fix, single stack start). Advance to R3.4 (connect GUI to the common resolver: full composition controls replacing the ignored algorithm argument, filter by validator, show maturity/readiness/unsupported reasons, save/load resolved manifests, monitor running choices, stop/close only owned processes)."
       R3.4:
         title: "Connect GUI to the common resolver"
-        state: "partial"
-        owner: "claude"
+        state: "active"
+        owner: "cline-agent"
         depends_on:
           - "R3.3"
         scope_paths:
@@ -640,7 +640,7 @@ tasks:
       R3.6:
         title: "Install external assets into normal Launch selectors"
         state: "active"
-        owner: "codex"
+        owner: "cline-agent"
         updated: "2026-10-20"
         depends_on: ["R3.1", "R3.4"]
         scope_paths: ["src/robot_lab_gui/", "src/robot_lab_robots/", "src/robot_lab_adapter/", "src/robot_lab_bringup/", "src/robot_lab_mujoco/", "src/robot_lab_isaac/", "src/robot_lab_pybullet/", "src/robot_lab_description/", "src/robot_lab_navigation/", "src/robot_lab_mapping/", "src/robot_lab_utils/robot_lab_utils/sensor_config.py", "src/robot_lab_utils/robot_lab_utils/sim_frames.py", "src/robot_lab_utils/robot_lab_utils/camera_msgs.py", "src/robot_lab_utils/robot_lab_utils/robot_spawn.py", "src/robot_lab_utils/robot_lab_utils/mode_capability.py", "src/robot_lab_utils/robot_lab_utils/asset_support.py", "src/robot_lab_utils/robot_lab_utils/gazebo_physics_world.py", "src/robot_lab_utils/robot_lab_utils/urdf_springs.py", "src/robot_lab_utils/robot_lab_utils/installed_assets.py", "src/robot_lab_utils/robot_lab_utils/asset_groups.py", "src/robot_lab_utils/robot_lab_utils/asset_preview.py", "src/robot_lab_utils/robot_lab_utils/sdf_world.py", "src/robot_lab_utils/robot_lab_utils/native_mjcf_assets.py", "src/robot_lab_utils/robot_lab_utils/drive_kinematics.py", "src/robot_lab_utils/robot_lab_utils/skid_steer.py", "src/robot_lab_utils/package.xml", "src/robot_lab/robot_lab_registry/", "scripts/", "docs/status/asset-sources-2026-10-05.yaml", "docs/ASSET_EXTENSION_GUIDE.md", "src/robot_lab_localization/config/robots/asset_husky.yaml"]
@@ -664,8 +664,8 @@ tasks:
         implementation_validation: "Pending; no new physical mission/test campaign for October 9 candidates."
   R4:
     title: "Measured reference experiment"
-    state: "partial"
-    owner: "claude"
+    state: "active"
+    owner: "cline-agent"
     tasks:
       R4.1:
         title: "Implement scenario lifecycle and truthful outcomes"
@@ -699,7 +699,7 @@ tasks:
       R4.3:
         title: "Publish first reproducible planner comparison"
         state: done
-        owner: "claude"
+        owner: "cline-agent"
         depends_on:
           - "R4.2"
         scope_paths:
@@ -717,12 +717,12 @@ tasks:
   R5:
     title: "Robot-class qualification"
     state: "active"
-    owner: "claude"
+    owner: "cline-agent"
     tasks:
       R5.1:
         title: "Qualify Bumperbot and Labbot mobile tasks"
         state: "done"
-        owner: codex
+        owner: "cline-agent"
         depends_on:
           - "R4.3"
         scope_paths:
@@ -739,7 +739,7 @@ tasks:
       R5.2:
         title: "Qualify Go2 locomotion"
         state: "active"
-        owner: "claude"
+        owner: "cline-agent"
         depends_on:
           - "R5.1"
         scope_paths:
@@ -801,8 +801,8 @@ tasks:
         next_action: "R5.2 remains active. The shared 18-geom support stream, guarded delayed-pose hold, and 0.25 s in-range roll-transfer gate are implemented. Three matched +0.4 rad support-creation variants remained negative: transient foot contact only and failed:roll at ~0.139 m. Three aligned terrain_stairs runs at +0.25 m/s advanced 0.039/0.122/0.149 m; a matched +0.5 m/s run advanced 0.132 m but raised tilt/effort. All stop short of the first 4.4 m step. The dedicated harness pins the spawn and verifies measured start/telemetry. Next: target-domain terrain locomotion adaptation and a different whole-body get-up strategy; stop scalar splay/speed tuning. Keep recovery opt-in; terrain traversal, velocity tracking, and navigation remain unqualified. 2026-10-13 claude: on flat ground the Go2 (go2_himloco) now completes the nav_obstacle mission with leg odometry in MuJoCo and Isaac (truth errors 0.06-0.16 m); Gazebo is rerun after a paused-start fix (docs/status/evidence/p7-legged-navigation-2026-10-13). Terrain traversal and recovery remain."
       R5.3:
         title: "Qualify Berkeley Humanoid Lite balance and walking"
-        state: "partial"
-        owner: "claude"
+        state: "active"
+        owner: "cline-agent"
         depends_on:
           - "R5.1"
         scope_paths:
@@ -858,7 +858,7 @@ tasks:
       R5.4:
         title: "Integrate real multirotor SITL flight"
         state: "done"
-        owner: "codex"
+        owner: "cline-agent"
         depends_on:
           - "R5.1"
         scope_paths:
@@ -889,8 +889,8 @@ tasks:
         next_action: "Preserve the measured Flight path and neutral GUI enable. Further work belongs to aerial mapping/obstacle-aware navigation, additional environments, longer hover drift, broader failsafe and concurrent-FCU qualification; do not enable ground Nav2/SLAM as drone flight."
       R5.5:
         title: "Integrate four-wheel Ackermann and reverse Ackermann workflows"
-        state: "partial"
-        owner: "claude"
+        state: "active"
+        owner: "cline-agent"
         depends_on:
           - "R5.1"
           - "R3.3"
@@ -912,8 +912,8 @@ tasks:
         next_action: "2026-10-13 claude: obstacle missions (detour, cancel/stop, resume, near-obstacle goal) for ackermann_car, rear_steer_car and anti_ackermann_car in all four backends: 10/12 cells pass (docs/status/evidence/r55-car-missions-2026-10-13); MuJoCo rear-steer hit the tf2 deadlock freeze, Gazebo Ackermann aborted its detour after repeated collision-ahead stops. The car description gained a Gazebo truth publisher (30f5e83, spawn path 71b2dbb); the Gazebo anti-Ackermann rerun passed (0.17/0.23 m, 1.07 m reversing). The MuJoCo rear-steer rerun with the tf2 overlay had no freeze but ended its second goal 0.301 m from truth (Nav2's 0.25 m car goal tolerance plus 0.07 m localization error; checker limit 0.30 m). Earlier: Gazebo controller odometry now exists and the three car publisher-loss screens are recorded. Continue independent Gazebo body truth, Isaac command-loss evidence, final heading, slalom/parking and full robot/map/backend mapping/navigation qualification. Then Isaac (Docker availability to be checked) and the slalom/parking/obstacle missions with curvature and swept-footprint checks. The rear-steer vs anti-Ackermann terminology is documented in robots.yaml and measured (+0.445/+0.322 vs -0.459/-0.334 vs +0.326/+0.448 steering joints) but no GUI/tutorial page carries it yet. 2026-10-15 claude: seeds 2/3 passed 13/24, goal B 0.26-0.36 m from truth (docs/status/evidence/wheeled-repeats-2026-10-15). 2026-10-16 claude (docs/status/evidence/car-missions-2026-10-16): the cars had kept Nav2's 0.25 m goal tolerance and the stateful checker stopped them at its edge; with 0.1 m (ac71687) seeds 1-3 in all four backends pass 32/36. The four aborts started a replan in lethal space after the swinging body end came within a map cell of the block beside the route (inflation 0.35 m < 0.45 m circumscribed radius); with a 0.6 m / 2.0 planner inflation (32c9cf1) 35/36 pass, both goals 0.002-0.224 m from truth. MuJoCo anti-Ackermann seed 2 stalled 0.153 m from goal B, unable to settle inside 0.1 m without a multi-point manoeuvre. Remaining: that settling case, goal heading, slalom/parking and other worlds. 2026-10-16 claude (docs/status/evidence/open-items-2026-10-16): the car tree retries three times after backing up (51c7543); MuJoCo anti-Ackermann s2, PyBullet anti-Ackermann s2 and MuJoCo rear-steer s1 pass (goal B 0.062-0.139 m). Car course with cone slalom and nose-in parking (gen_car_course.py, scripts/sim_car_course.sh: per-goal truth, footprint clearance, curvature, parking heading) implemented 5e81ea6; runs pending. Gazebo/Isaac publisher-loss with simulator truth pending."
       R5.6:
         title: "Qualify four-wheel steering patterns and physical mecanum travel"
-        state: "partial"
-        owner: "claude"
+        state: "active"
+        owner: "cline-agent"
         depends_on:
           - "R5.1"
           - "R3.3"
@@ -966,8 +966,8 @@ tasks:
         result: "Selected strict crab goals, obstacle detours, localization Drive/reset/watchdog, real 2D/3D mapping and installed GUI DB/PCD export pass. Latest verified Isaac crab meets unchanged 0.15m/5deg body limits. Full current-setting pattern/backend/map/mode mission acceptance remains open; see docs/status/continuation-2026-10-05.md."
       R5.7:
         title: "Manipulator control and GUI motion planning"
-        state: "partial"
-        owner: "claude"
+        state: "active"
+        owner: "cline-agent"
         depends_on: ["R3.6", "R2.2", "R3.4"]
         scope_paths: ["src/robot_lab_robots/", "src/robot_lab_controller/", "src/robot_lab_gui/", "src/robot_lab_bringup/", "src/robot_lab_mujoco/", "src/robot_lab_utils/robot_lab_utils/arm_trajectory.py", "src/robot_lab_utils/robot_lab_utils/native_arm_description.py", "scripts/provision_extension_assets.py", "scripts/test_tiers.sh", "docs/", "README.md", "ROADMAP.md"]
         active_scope: "2026-10-09 codex: generic native articulation/teach-replay, Cartesian Servo, measured fixture scenes and GUI attachment workflow are implemented. Preserve original Panda actuator/planning contracts; runtime validation deferred."
@@ -984,8 +984,8 @@ tasks:
         tasks:
           R5.7.native_planning:
             title: "Source-derived fixed native arm planning and GUI execution"
-            state: "partial"
-            owner: "codex"
+            state: "active"
+            owner: "cline-agent"
             depends_on: ["R5.7"]
             scope_paths: ["src/robot_lab_utils/", "src/robot_lab_mujoco/", "src/robot_lab_bringup/", "src/robot_lab_gui/", "src/robot_lab_robots/", "docs/", "README.md", "ROADMAP.md"]
             active_scope: "2026-10-13: extend collision-aware Cartesian planning to compatible installed fixed-base native arms, retaining authored native actuators, measured execution, Stop/watchdog and experimental opt-in. Preserve the existing Panda planning/controller certificate and Claude's other lanes."
@@ -998,7 +998,7 @@ tasks:
       R5.8:
         title: "Robot hand and gripper actuation"
         state: "active"
-        owner: "claude"
+        owner: "cline-agent"
         depends_on: ["R3.6", "R5.7"]
         scope_paths: ["src/robot_lab_robots/", "src/robot_lab_controller/", "src/robot_lab_gui/", "src/robot_lab_mujoco/", "src/robot_lab_bringup/", "src/robot_lab_utils/", "scripts/", "docs/", "README.md", "ROADMAP.md"]
         acceptance_ref: "ROADMAP.md"
@@ -1014,8 +1014,8 @@ tasks:
         tasks:
           R5.8.native_hands:
             title: "Source-authored dexterous PID and coupled-tendon hand controls"
-            state: "partial"
-            owner: "codex"
+            state: "active"
+            owner: "cline-agent"
             depends_on: ["R5.8"]
             scope_paths: ["src/robot_lab_utils/", "src/robot_lab_mujoco/", "src/robot_lab_bringup/", "src/robot_lab_gui/", "scripts/provision_extension_assets.py", "docs/", "README.md", "ROADMAP.md"]
             active_scope: "2026-10-14 continuation at b41a33a: preserve source-authored hand controls and new object code. Finish actual GUI/launch fixture wiring, source-stamped unclipped feedback and truthful support/contact-loss/interruption state; complete receipts and missing documentation. Preserve Panda and existing work. Object missions and other backends remain unqualified."
@@ -1028,7 +1028,7 @@ tasks:
       R5.9:
         title: "Mobile manipulator missions and combined control"
         state: "active"
-        owner: "claude"
+        owner: "cline-agent"
         active_scope: "2026-10-09 codex continuation: implement coordinated selected-map Nav2 goals and source-matched taught arm/hand sequences for both native Stretch variants, with measured settling, explicit task ownership, manual intervention, cancellation and heartbeat loss. Initial implementation precedes mission validation."
         depends_on: ["R5.1", "R5.7", "R5.8"]
         scope_paths: ["src/robot_lab_robots/", "src/robot_lab_navigation/", "src/robot_lab_gui/", "src/robot_lab_bringup/", "src/robot_lab_mujoco/", "src/robot_lab_utils/", "src/robot_lab_adapter/", "scripts/", "docs/", "src/robot_lab_localization/", "src/robot_lab_mapping/"]
@@ -1038,8 +1038,8 @@ tasks:
         implementation_validation: "Pending; no new physical mission/test campaign for October 9 candidates."
       R5.10:
         title: "PX4 Flight selection and qualification across all installed worlds"
-        state: "partial"
-        owner: "claude"
+        state: "active"
+        owner: "cline-agent"
         depends_on: ["R5.4", "R6.1"]
         scope_paths: ["src/robot_lab_adapter/", "src/robot_lab_bringup/", "src/robot_lab_gui/", "src/robot_lab/robot_lab_registry/", "docs/tutorials/px4_x500.md", "src/robot_lab_utils/", "docs/status/", "LICENSES/third-party-notices.md", "scripts/ssd_env.sh", "scripts/install_geometry_dependencies.sh", "scripts/requirements-geometry.txt"]
         active_scope: "2026-10-12 claude (continuing codex, user request): aerial sensing and saved 3D mapping - the upstream PX4 x500_depth airframe (OakD-Lite) as a GUI-selectable RGB-D X500 variant, a Harmonic-native camera bridge to ROS, RTAB-Map 3D mapping on FCU odometry with a saved/reloadable database and exported cloud. Prior codex takeoff-check and flight work retained; physical validation stays pending."
@@ -1055,8 +1055,8 @@ tasks:
         tasks:
           R5.10.mapped_obstacles:
             title: "Aerial mapped obstacles and fresh depth route interruption"
-            state: "partial"
-            owner: "codex"
+            state: "active"
+            owner: "cline-agent"
             depends_on: ["R5.10"]
             scope_paths: ["src/robot_lab_adapter/", "src/robot_lab_utils/", "src/robot_lab_gui/", "src/robot_lab_bringup/", "docs/", "README.md", "ROADMAP.md"]
             active_scope: "2026-10-14: combine actual RTAB-Map obstacle clouds with canonical selected-world planning; add source/frame/freshness checks and fresh RGB-D collision interruption of planned routes, keeping the independent FCU setpoint loop and existing manual/Takeoff controls. No global actor prediction or new-backend flight qualification."
@@ -1068,13 +1068,13 @@ tasks:
             next_action: "Run actual normal-GUI mapped route, physical new collision-model intrusion and sensor loss, independent body/contact/clearance/latency/setpoint measurements; preserve old flight source scopes. Add automatic dynamic detours/prediction and other-backend flight adapters separately."
   R6:
     title: "Environment qualification"
-    state: "partial"
-    owner: "claude"
+    state: "active"
+    owner: "cline-agent"
     tasks:
       R6.1:
         title: "Qualify geometry map alignment and resets"
-        state: "partial"
-        owner: "claude"
+        state: "active"
+        owner: "cline-agent"
         depends_on:
           - "R2.3"
           - "R3.1"
@@ -1120,8 +1120,8 @@ tasks:
         next_action: "2026-10-13 claude: workflow/reset screens pass 8/8 for Labbot and Bumperbot in MuJoCo, PyBullet, Gazebo and Isaac (17 checks each: drive phases, publisher loss, live SLAM map, reset to spawn, re-localization, drive and estimator after reset, mapping resumes, monotonic clock; docs/status/evidence/r61-workflow-reset-2026-10-13). Remaining: dynamic actors, sensor resets, other robot classes, longer missions. Earlier: Retain scoped live Celisca/Nav2 and alignment evidence. Replace assumed file-presence alignment and simulated resets with per-backend measured pose/velocity/actor/sensor/estimator reset trials; furnished-map obstacle routes remain open."
       R6.2:
         title: "Add real dynamic and sensor-disturbance cases"
-        state: "partial"
-        owner: "claude"
+        state: "active"
+        owner: "cline-agent"
         depends_on:
           - "R6.1"
           - "R4.2"
@@ -1141,8 +1141,8 @@ tasks:
         next_action: "Scenario configurations and disturbance helpers exist. Wire them to live sensors/actors and record repeatable baseline/degraded traces with collision, sensing and recovery outcomes; configuration validation is not mission qualification."
       R6.3:
         title: "Qualify 3D terrain and aerial representations"
-        state: "partial"
-        owner: "claude"
+        state: "active"
+        owner: "cline-agent"
         depends_on:
           - "R6.1"
           - "R5.2"
@@ -1162,8 +1162,8 @@ tasks:
         next_action: "Height/voxel numerical helpers and terrain metadata exist. Record class-appropriate terrain/flight missions and overhang/foothold/altitude collision checks. Go2 terrain remains unsuccessful. Named PX4/nav_empty flight acceptance now passes; aerial terrain/course/overhang missions remain unqualified."
       R6.4:
         title: "Expand diverse maps for ground, legged and aerial tasks"
-        state: "partial"
-        owner: "claude"
+        state: "active"
+        owner: "cline-agent"
         depends_on:
           - "R6.1"
         scope_paths:
@@ -1177,7 +1177,7 @@ tasks:
       R6.5:
         title: "Generate 2D occupancy grids from selected 3D worlds in GUI"
         state: "active"
-        owner: "claude"
+        owner: "cline-agent"
         depends_on: ["R6.1", "R3.4"]
         scope_paths: ["src/robot_lab_maps/", "src/robot_lab_utils/robot_lab_utils/sdf_world.py", "src/robot_lab_utils/robot_lab_utils/occupancy_slice.py", "src/robot_lab_gui/", "scripts/", "docs/ASSET_EXTENSION_GUIDE.md"]
         active_scope: "2026-10-07 codex: repair terrain slice projection so separate elevated regions are not joined by an invented outline; measure fresh primitive/rotated/terrain and hospital exports, then actual navigation. Preserve independent scripts/review_occupancy_maps.py unchanged and the separately owned shared heightfield converter."
@@ -1189,7 +1189,7 @@ tasks:
       R6.6:
         title: "External world library and Gazebo example imports"
         state: "active"
-        owner: "claude"
+        owner: "cline-agent"
         depends_on: ["R3.6", "R6.5"]
         scope_paths: ["src/robot_lab_maps/", "src/robot_lab_bringup/config/sim_maps.yaml", "src/robot_lab/robot_lab_registry/config/environments.yaml", "src/robot_lab_gui/", "scripts/provision_extension_assets.py", "scripts/", "src/robot_lab_utils/robot_lab_utils/sdf_world.py", "docs/status/", "docs/ASSET_EXTENSION_GUIDE.md"]
         acceptance_ref: "ROADMAP.md"
@@ -1202,7 +1202,7 @@ tasks:
       R6.7:
         title: "GUI terrain generation with four-backend conversion"
         state: "active"
-        owner: "claude"
+        owner: "cline-agent"
         depends_on: ["R6.3", "R6.6"]
         scope_paths: ["src/robot_lab_maps/", "src/robot_lab_utils/", "src/robot_lab_gui/", "docs/ASSET_EXTENSION_GUIDE.md"]
         active_scope: "2026-10-05: shared heightfield conversion for Gazebo/MuJoCo/PyBullet/Isaac. The SDF reader no longer drops <heightmap>; the layout is measured against the installed Gazebo rather than assumed. The terrain generator workflow, provider manifest and terrain missions remain outside this claim."
@@ -1215,13 +1215,13 @@ tasks:
         next_action: "Pin the sai aravind terrain generator with SSD output/cache and private provider settings, save provider/data attribution with polygon, seed, vertical datum and elevation range, then record class-appropriate driving/walking/flight terrain missions per backend including an Isaac runtime contact trial."
   R7:
     title: "Algorithm breadth"
-    state: "partial"
-    owner: "claude"
+    state: "active"
+    owner: "cline-agent"
     tasks:
       R7.1:
         title: "Normalize numerical and ROS algorithm adapters"
-        state: "partial"
-        owner: "claude"
+        state: "active"
+        owner: "cline-agent"
         depends_on:
           - "R4.3"
           - "R3.2"
@@ -1245,8 +1245,8 @@ tasks:
         next_action: "Preserve the real ROS wrappers and numerical cores. Verify installed useful input/output, oracle accuracy, replay and failure contracts per category; counting dispatch entries, conversions and stack aliases does not prove five substantive algorithms. 2026-10-13 claude: every category's node ids now run real methods with measured comparisons (R7.2-R7.8): perception 6 lab kernels, localization 4 scan matchers + dead reckoning beside Nav2 AMCL/slam_toolbox/RTAB-Map, state estimation 6 filters, sensor fusion 4 attitude + 3 pose filters + upstream imu_tools, global planning 8 planners, local planning 5 controllers, control 6 FollowPath trackers. Ids whose old nodes were stand-ins are retired with a reason in algorithm_dispatch.yaml (rgbd_slam_localization, error_state_ekf); cataloged-only entries say so. Remaining per category: runs on simulator sensor data where the comparison is offline (R7.2-R7.5)."
       R7.2:
         title: "Five perception pipelines"
-        state: "partial"
-        owner: "claude"
+        state: "active"
+        owner: "cline-agent"
         depends_on:
           - "R7.1"
         scope_paths:
@@ -1265,8 +1265,8 @@ tasks:
         next_action: "2026-10-13 claude: implemented, experimental. robot_lab_algorithms.perception (45e8ecc): the obstacle detector, Euclidean clustering and DBSCAN use KD-tree neighbourhoods instead of O(N^2) Python (same results on the 38 earlier tests); the scan clusterer has Borges-Aldon adaptive breakpoints (node parameter adaptive); RANSAC ground removal keeps near-horizontal hypotheses, counts inliers vectorised with a seeded RNG and refits by least squares. Benchmark on seeded synthetic scenes (docs/status/evidence/r72-perception-benchmark-2026-10-13, tutorial docs/tutorials/perception_comparison.md): laser obstacle detection precision 0.77-0.86 (adaptive breakpoints best), recall 0.99-1.0; ground recall 0.43 for the 0.1 m height threshold on a 2 deg floor vs 1.0 for RANSAC (38 ms); Euclidean and DBSCAN found 80/80 boxes. Live 2D-laser runs on recorded Gazebo and MuJoCo /scan (docs/status/evidence/r72-perception-benchmark-2026-10-13/live, scripts/r7_2_live_scan_replay.py), splitting maze wall corners with a map ray-cast as truth (0.010 m median): single-linkage obstacle detector and fixed scan clusterer lead (F1 0.66-0.67, precision 0.85, recall 0.54) while adaptive breakpoints and DBSCAN/Euclidean fragment the walls (F1 0.18-0.32); fixed scan clusterer is cheapest (0.33 ms). Depth clouds on simulator data (2026-10-15 claude, docs/status/evidence/r72-perception-benchmark-2026-10-13/depth-live, scripts/r7_2_depth_live.py, live Gazebo RGB-D during a 26 m drive, 53 clouds): the cloud nodes segmented in the camera's optical frame, where the height threshold found no ground and RANSAC 3% (precision 0.12); they now move clouds into target_frame base_footprint first (cdb8b34), giving precision/recall 0.972/0.999 (height, 2 ms) and 0.987/1.000 (RANSAC, 43 ms); Euclidean clustering found 100/138 visible object views, DBSCAN 86/138. 2026-10-15 claude (later): the three cataloged ids are implemented, experimental, and run through the dispatch. depth_image_to_pointcloud (ee85db4, pinhole back-projection): live beside the 26 m drive in Gazebo, MuJoCo, PyBullet and Isaac (docs/status/evidence/r72-perception-benchmark-2026-10-13/depth-node), 3.3-6.6 ms per cloud; ground removal and clustering on its cloud score as on Gazebo's own (height 0.95-0.97/1.00, RANSAC 0.98/1.00), the first depth-cloud scores for MuJoCo, PyBullet and Isaac. It equals Gazebo's own cloud (2 um) once the principal point is at the pixel centres (159.5, 119.5); the simulators' camera info said (160, 120), lifting floors 2.25 mm per metre of depth, so robot_lab_utils.camera_model now publishes the pixel-centre point for MuJoCo/PyBullet/Isaac (8ac644b; Gazebo's comes from gz-sensors). MuJoCo and PyBullet keep a further 1.5-2 mm/m lift (cause open). feature_detection (c16139b, a691fae): feature-based RGB-D visual odometry with ORB, AKAZE, BRISK, SIFT or Shi-Tomasi features (docs/status/evidence/r72-perception-benchmark-2026-10-13/feature-odometry): replays of recorded drives fail for every detector in the flat-shaded nav_obstacle world in all four simulators; in Gazebo small_house ORB at 30 Hz holds 0.54 m RMSE and 2.9% drift over 28.4 m (the live node's output scores the same) and BRISK is best at 5 Hz (1.18 m); MuJoCo renders the house untextured and dim and Isaac's RGB carries per-pixel noise, so visual methods fail there. camera_calibration (a691fae, eae5809, f550534, chessboard, plumb_bob or pinhole): scripts/r7_2_calibration_check.sh moves a spawned board through 100 poses in Gazebo; 73 views put the principal point within 0.13 px of the pixel centres and fx 0.7% short (the calibration's own error on aliased 320x240 frames; docs/status/evidence/r72-perception-benchmark-2026-10-13/calibration). Remaining: textured worlds and RGB quality in MuJoCo and Isaac (backend owners), the MuJoCo/PyBullet residual floor lift, calibration outside Gazebo. 2026-10-16 claude (docs/status/evidence/open-items-2026-10-16): MuJoCo small_house was 100x too large (42 of 175 cached world surfaces still in Collada centimetres; converter version 4, 38486f4) and now draws the textured Collada visuals, as PyBullet and Isaac do (robot_lab_utils.textured_mesh, d994300); MuJoCo's textured house scores edge correlation 0.47 (Gazebo 0.46) and grey std 60 (Gazebo 54, before 18). The floor lift was the renderers' optical centre: MuJoCo depth from sample 0 of a 4x multisampled buffer (row 119.125) and PyBullet TinyRenderer's axis at (w/2, h/2-1); single-sample depth and TinyRenderer camera info read 0 mm (7332e8a, scripts/depth_render_check.py). Isaac render subframes/RTX settings implemented (99e2e78); a calibration room for every simulator implemented (6af9998). Remaining: Isaac noise measurement, calibration runs, VO reruns."
       R7.3:
         title: "Five localization methods"
-        state: "partial"
-        owner: "claude"
+        state: "active"
+        owner: "cline-agent"
         depends_on:
           - "R7.1"
         scope_paths:
@@ -1288,8 +1288,8 @@ tasks:
         next_action: "Preserve the restored real stack AMCL/Nav2 dispatch and unique YAML keys (2026-10-02 codex scope, closed). 2026-10-13 claude: implemented, experimental. robot_lab_algorithms.scan_matching: map surface cells with a KD-tree and distance field; point-to-point ICP, point-to-line ICP (new id plicp_localization), 2D NDT with reweighted Gauss-Newton and a line search, correlative scan matching (new id correlative_localization) and dead reckoning, each predicting with the odom increment and refusing corrections over 0.5 m; the nodes subscribe to /map, /scan, odom TF and /initialpose or /amcl_pose and publish /robot_lab/<method>_pose. The Python 'AMCL' and RGB-D stand-ins are retired in favour of Nav2 AMCL and RTAB-Map. Benchmark on three nav_maze trajectories recorded in Gazebo with ray-cast scans and biased odometry (docs/status/evidence/r73-localization-benchmark-2026-10-13, tutorial docs/tutorials/localization_comparison.md): position RMSE ICP 7 mm, PLICP 8 mm, NDT 8 mm, correlative 24 mm (one 0.30 m excursion), dead reckoning 0.55 m and lost 41% of the time. Simulator scans (docs/status/evidence/r73-localization-benchmark-2026-10-13/live): recorded Gazebo and MuJoCo runs replayed offline (scripts/r7_3_live_scan_replay.py) give ICP 3.6-3.7 cm, PLICP 4.5-4.6, NDT 4.6-4.7, correlative 5.1-5.3 against 7.9-8.8 cm for the AMCL that ran live on the same scans; mostly a fixed map-registration offset; unchanged with biased odometry (odometry alone 0.33-0.38 m). Recovery from a wrong start (scripts/r7_3_recovery_replay.py, live/recovery-*): point-to-point ICP and correlative recover from shifts up to 2 m along the corridor (point-to-line ICP reliably to 1 m), all four from 15-30 deg turns, NDT stops 0.26-0.29 m off, only correlative recovers from 1.5 m across the corridor, none from 90/180 deg (local trackers; global localization stays with AMCL). Remaining: slam_toolbox localization on the same runs."
       R7.4:
         title: "Five state-estimation methods"
-        state: "partial"
-        owner: "claude"
+        state: "active"
+        owner: "cline-agent"
         depends_on:
           - "R7.1"
         scope_paths:
@@ -1307,8 +1307,8 @@ tasks:
         next_action: "2026-10-13 claude: implemented, experimental. robot_lab_algorithms.tracking_filters: constant-velocity Kalman filter, CTRV EKF, CTRV UKF (covariance projected back to positive definite when Cholesky fails), CTRV particle filter (log-domain weights, sensor resetting, roughening), IMM (straight and turning EKFs) and a sliding-window least-squares smoother; the state_estimation nodes estimate position, heading, speed and turn rate from /amcl_pose or seeded noisy truth and publish nav_msgs/Odometry. The earlier nodes filtered noiseless truth; error_state_ekf is retired (attitude_eskf in R7.5). Benchmark on a 300 s CTRV route with 0.3 m fixes at 10 Hz, one tuned gain per filter (docs/status/evidence/r74-state-estimation-benchmark-2026-10-13, tutorial docs/tutorials/state_estimation_comparison.md): position RMSE 0.164-0.191 m vs 0.425 m raw; the IMM has the best turn rate. Replayed offline on the real ~1.6 Hz /amcl_pose stream the R7.3 Gazebo/MuJoCo runs recorded (scripts/r7_4_live_replay.py, docs/status/evidence/r74-state-estimation-benchmark-2026-10-13/live): the filters do not beat the raw AMCL fixes (0.080-0.121 m vs 0.080/0.090 m raw); a good, low-rate, correlated localizer leaves a white-noise filter nothing to remove, and the UKF/particle model noise becomes the dominant error. Remaining: a live-stack timing run; perception on simulator data."
       R7.5:
         title: "Five sensor-fusion methods"
-        state: "partial"
-        owner: "claude"
+        state: "active"
+        owner: "cline-agent"
         depends_on:
           - "R7.1"
         scope_paths:
@@ -1326,8 +1326,8 @@ tasks:
         next_action: "2026-10-13 claude: implemented, experimental. robot_lab_algorithms.fusion_filters: complementary attitude filter, Mahony explicit complementary filter, Madgwick gradient-descent filter (IMU form), attitude/gyro-bias error-state Kalman filter (new id attitude_eskf), wheel+gyro EKF with a standstill zero angular rate update (wheel_imu_fusion), the EKF with GNSS (gps_odom_fusion) and a UKF on the same model (wheel_imu_gnss_ukf); the sensor_fusion nodes run them and publish sensor_msgs/Imu or nav_msgs/Odometry. The earlier node classes (swapped complementary axes, a non-Madgwick Madgwick, a dead-reckoning UKF, fixed-weight GNSS blending) only back old tests. imu_complementary_filter is the upstream imu_tools Madgwick, now wired to /imu/out via dispatch remappings. Benchmark on modelled sensors with a gain-tuning seed (docs/status/evidence/r75-fusion-benchmark-2026-10-13): tilt RMS ESKF 0.46 deg, Mahony 1.49, complementary 1.90, Madgwick 2.03; ROS replay of the same stream to all five attitude nodes at node defaults (upstream Madgwick 3.73 deg at gain 0.1, matching the lab Madgwick at that gain); pose RMSE 0.42 m (EKF) and 0.20 m (EKF/UKF + GNSS) vs 17.8 m wheel dead reckoning. Simulator data (2026-10-15, docs/status/evidence/r75-fusion-benchmark-2026-10-13/live, scripts/r7_5_live_replay.py): over recorded Gazebo drives, the wheel+gyro EKF holds Bumperbot to 1.3 cm over 25 m (wheel dead reckoning 9.8 cm, heading 0.10 vs 1.05 deg); on the walking Go2 trunk (2.9 deg RMS tilt) the complementary filter tracks 0.25 deg RMS and the ESKF 0.78 deg, the reverse of the modelled ranking (ESKF not retuned). MuJoCo/Isaac IMUs remain unusable for attitude (perfect orientation, constant acceleration)."
       R7.6:
         title: "Five global planners"
-        state: "partial"
-        owner: "claude"
+        state: "active"
+        owner: "cline-agent"
         depends_on:
           - "R7.1"
         scope_paths:
@@ -1346,8 +1346,8 @@ tasks:
         next_action: "2026-10-12/13 claude: eight runnable global planners measured on the R4.3 protocol (Bumperbot, nav_maze, Gazebo, identical seeded goals): A* 15/15, NavFn 15/15, PRM 15/15, Voronoi roadmap 14/15 (most clearance, 16% longer), Lattice 13/15 and Hybrid-A* 7/15 (arrival loops on a differential base), RRT* 9/15 and RRT 8/15 (paths on the inscribed boundary stopped by RPP's collision check). The robot_lab RRT/RRT*/PRM/Voronoi now serve Nav2 ComputePathToPose with correct algorithms (grid_planners.py); default clearance margin blocked_at 80 with a rerun queued. Failure attribution 2026-10-13: controller_server TF freezes (scripts/tf_freeze_goals.py) ended Voronoi 1 (its only failure), Lattice 2 (both), RRT* 3, RRT 2 and Hybrid-A* 1 goals; still counted as arm failures and listed per planner in the tutorial. Rerun 2026-10-13 with blocked_at 80: Voronoi 15/15, RRT* 14/15, RRT 14/15, PRM 12/15 (3 after a freeze). The freeze is the tf2/tf2_ros 0.25.23 ABBA deadlock (ros2/geometry2#992); scripts/build_tf2_deadlock_fix.sh overlays 0.25.24. Remaining: validate the overlay over new runs, other robots/maps. 2026-10-13 claude: with tf2 0.25.24 (workspace overlay from 06:52, then apt's own 0.25.24 from 10:32; overlay removed at 16:30) the R4.3 protocol passes 30/30 goals with no stale-transform signature, and no freeze appears in 46 Nav2 launches (about 4-5 expected at the earlier rate) (docs/status/evidence/r43-planner-comparison-2026-10-12/tf2-0.25.24-2026-10-13)."
       R7.7:
         title: "Five local planners"
-        state: "partial"
-        owner: "claude"
+        state: "active"
+        owner: "cline-agent"
         depends_on:
           - "R7.1"
         scope_paths:
@@ -1366,13 +1366,13 @@ tasks:
         next_action: "2026-10-12 claude: five runnable local planners measured on the R4.3 protocol (Bumperbot, nav_maze, Gazebo, identical seeded goals 11/23/37/41/53): Nav2 RPP 15/15, robot_lab pure pursuit 15/15 and follow-the-gap 15/15 (both now serving Nav2 FollowPath through robot_lab_algorithms.nav2_adapters), DWB 14/15, MPPI 7/15 with Nav2's default 0.5 m/s cap and untuned critics. Python TEB/MPPI placeholders are no longer offered as planners. Three MPPI failures (seed 41) came after a controller_server TF freeze (2026-10-13 attribution). MPPI rerun at vx_max 0.3: 7/15 again; its failures end 0.05-0.19 m from the goal, outside Bumperbot's 0.07 m / 0.03 rad window. The freeze is the tf2 0.25.23 deadlock (overlay fix built). 2026-10-15 claude: MPPI critic tuning for the arrival window (goal critics 10/8 at power 1, vx/wz sampling 0.1/0.3) reached 6/15 and doubled goal times, so it was reverted (docs/status/evidence/r77-local-planner-comparison-2026-10-12/mppi_arrival). Remaining: MPPI arrival into a 0.07 m / 0.03 rad window, other robots/maps. 2026-10-16 claude (docs/status/evidence/open-items-2026-10-16): with an RPP Arrival controller finishing failed MPPI approaches on the same path (99e2e78, arrival_controller:=false disables), MPPI plus the assist reaches 15/15 on the R7.7 protocol, 0.028-0.148 m from truth; MPPI alone stays 7/15 in the comparison."
       R7.8:
         title: "Five low-level or model-based controllers"
-        state: "partial"
-        owner: "claude"
+        state: "active"
+        owner: "cline-agent"
         tasks:
           R7.8.bicycle:
             title: "Source-profile bicycle tracking for front/rear-steer cars"
-            state: "partial"
-            owner: "codex"
+            state: "active"
+            owner: "cline-agent"
             active_scope: "2026-10-13: independent bicycle controller module and FollowPath server, source wheelbase/steering/rate/axle parameters, car-only GUI/launch dispatch and guides. Preserve Claude's running legged/MPPI/differential-controller trials and existing nav2_adapters/tracking_control source. Initial implementation first; physical car qualification remains separate."
             scope_paths: ["src/robot_lab_algorithms/robot_lab_algorithms/bicycle_control.py", "src/robot_lab_algorithms/robot_lab_algorithms/nav2_bicycle.py", "src/robot_lab_algorithms/setup.py", "src/robot_lab_algorithms/package.xml", "src/robot_lab_bringup/config/algorithm_dispatch.yaml", "src/robot_lab_bringup/launch/simulated_robot.launch.py", "src/robot_lab_navigation/launch/navigation.launch.py", "src/robot_lab_gui/robot_lab_gui/launcher.py", "src/robot_lab/robot_lab_registry/config/algorithms.yaml", "src/robot_lab_algorithms/test/test_bicycle_control.py", "docs/tutorials/", "docs/status/", "ROADMAP.md", "docs/AGENT_HANDOFF.md"]
             next_action: "Qualify curved/obstacle goals, actual steering/body feedback, manual/Space/parent cancellation and loss on each backend; add reverse/cusp/parking tracking and identify anti-Ackermann slip. Preserve the separate existing differential-controller source and active Claude trials."
@@ -1398,13 +1398,13 @@ tasks:
         next_action: "2026-10-13 claude: implemented, experimental. robot_lab_algorithms.tracking_control has six path-tracking controllers on one differential-drive plant with an actuator model - PID (conditional-integration anti-windup), discrete LQR (DARE gains per speed), constrained linear MPC (box-bounded QP by BVLS), nonlinear MPC (adjoint gradient, L-BFGS-B, 30 iterations), point-offset feedback linearisation and Jiang-Nijmeijer backstepping - served as Nav2 FollowPath by nav2_local_planner behind one supervisor (45 deg rotate-in-place, scan stop, progress check, pose watchdog: stop on a TF pose older than 0.5 s, abort after 5 s). control:= pid_controller/lqr_controller/mpc_controller/nonlinear_mpc/feedback_linearization/backstepping_controller now select them (registry + dispatch; they replace the local planner's FollowPath); until now those ids started side-topic demonstration nodes. Model-plant benchmark (docs/status/evidence/r78-control-benchmark-2026-10-13): tracking on three paths, 0.25 m/0.3 rad disturbance, 77-cell envelope (LQR 71/77: false equilibrium at ~95 deg facing the path), saturation recovery (PID without anti-windup overshoots 3.5 cm, with 0), compute p99 0.04-13 ms with 2 NMPC deadline misses of 34,341 under load 16; ROS check of the server with a kinematic fake robot (path succeeded, watchdog stopped and aborted). Gazebo (b8e8ba5, nav_maze, 15 seeded goals): all six 15/15 within about 1% time of each other; cross-track RMS backstepping 5.3 cm, LQR 5.6, MPC 5.7, FL 6.1, PID 6.3, NMPC 6.3 (scripts/path_tracking_error.py). Remaining: gains identified on the robot, a bicycle-model family for car-like robots."
   R8:
     title: "Backend qualification and scaling"
-    state: "partial"
-    owner: "claude"
+    state: "active"
+    owner: "cline-agent"
     tasks:
       R8.1:
         title: "Qualify PyBullet and MuJoCo combinations"
-        state: "partial"
-        owner: "claude"
+        state: "active"
+        owner: "cline-agent"
         depends_on:
           - "R5.1"
           - "R6.1"
@@ -1432,7 +1432,7 @@ tasks:
       R8.2:
         title: "Qualify Isaac on a named host configuration"
         state: "done"
-        owner: "claude"
+        owner: "cline-agent"
         depends_on:
           - "R5.1"
           - "R6.1"
@@ -1451,8 +1451,8 @@ tasks:
         next_action: "Complete 2026-09-16. Remaining limits, recorded rather than assumed: missions are qualified on the open arena nav_empty only (obstacle worlds belong to R6.1/R8.1); the mission controller consumes /odom/ground_truth (truth, not a localization estimate) so no localization stack is qualified on Isaac; the ~15 % wheel/body speed gap from the 2026-09-14 drive work is not isolated, though the 2026-09-16 probe measures wheel velocities and body speed within 1 %; Isaac publishes /scan every 12 physics steps (27 msgs per run), so scan-driven autonomy would need its own check; RTF 0.131 with PhysX on the CPU; other robots are not run through Isaac."
       R8.3:
         title: "Resource-bounded concurrent experiments"
-        state: "partial"
-        owner: "claude"
+        state: "active"
+        owner: "cline-agent"
         active_scope: "2026-10-09 codex continuation: add a built-in Nav2 multi-goal workload to the real isolated experiment queue, using action results, fresh independent body truth, measured settling, raw artifacts and an explicit source-bound result contract. Expose workload and deterministic requested seeds in GUI. Concurrent-plant/mission qualification remains deferred."
         depends_on:
           - "R3.5"
@@ -1481,13 +1481,13 @@ tasks:
         implementation_validation: "Pending; no new physical mission/test campaign for October 9 candidates."
   R9:
     title: "Reproducibility, learning and release"
-    state: "partial"
-    owner: "claude"
+    state: "active"
+    owner: "cline-agent"
     tasks:
       R9.1:
         title: "Provenance licenses and clean-host reproduction"
-        state: "partial"
-        owner: "claude"
+        state: "active"
+        owner: "cline-agent"
         depends_on:
           - "R4.3"
           - "R1.3"
@@ -1506,8 +1506,8 @@ tasks:
         next_action: "2026-10-12 claude: scripts/license_inventory.py resolves 118 of 125 declared dependencies from installed metadata (package.xml, Debian copyright, Python metadata); 5 are ROS 1 keys in vendored Unitree manifests and 2 (shapely, rtree) are declared but not installed. Copyleft: eigen MPL/LGPL parts, nav2_amcl and slam_toolbox LGPL, and the orbslam3 wrapper links GPL-3.0 ORB_SLAM3. Workspace manifests normalized to SPDX Apache-2.0. The provenance framework no longer reports clean-host tests it never ran. 2026-10-13 claude: scripts/asset_attribution.py checks each registry robot, environment and policy license against the nearest LICENSE/COPYING or the owning package.xml (docs/status/evidence/r91-asset-attribution-2026-10-13). Fixed: 14 Unitree robots were declared MIT; the only license shipped with them is Unitree's BSD-3-Clause, now in the registry and vendored with a NOTICE under src/robot_lab_robots/unitree/. The five entries first left open were then resolved from the tree: assem12ros_29 MIT -> BSD-3-Clause (its manifest and the collection license), berkeley_humanoid_lite BSD-3-Clause -> CC-BY-SA-4.0 (its assets are Berkeley-Humanoid-Lite-Assets copies; LICENCE and NOTICE vendored), quadrotor_sitl GPL-3.0 -> Apache-2.0 (first-party description; ArduPilot runs separately), h1 asset path fixed, px4_x500 recorded against the PX4 checkout's BSD-3-Clause gz LICENSE outside the workspace; robots now 25 agree, 0 differ, 1 unverified. shapely and rtree were installed all along (SSD wheels under robot_lab_runtime/python_deps/geometry, on PYTHONPATH via scripts/ssd_env.sh); with that environment sourced the inventory resolves 120 of 125, the rest being unused ROS 1 keys (docs/status/evidence/r91-license-inventory-2026-10-12/ssd-env-2026-10-13). 2026-10-15 claude: clean-host reproduction (docs/status/evidence/r91-clean-host-2026-10-15, scripts/clean_host_reproduction.sh, docker/clean_host): a git archive of 1d819a8 with its LFS contents, built in the official ros:humble-ros-base-jammy image with rosdep and 15 pinned pip packages only, builds all 25 packages, passes the fast tier (1035 passed, 26 skipped) and passes a headless MuJoCo Bumperbot Nav2 mission (detour 0.061 m, near-obstacle 0.121 m, stop 0.14 s). Three earlier attempts found LFS pointers in archives, an xvfb-run hang as PID 1 and undeclared Nav2 planner/controller plugins and dispatch nodes (declared in 1d819a8). A rerun at d99c5ea adds a golden comparison: the seeded R7.2 perception benchmark gives all 25 accuracy figures identical in the container and on the host (every rosdep key now resolves; fast tier 1036 passed; mission 0.085/0.095 m). Remaining: other hardware (same Jetson here), Gazebo/Isaac/PX4 inside the clean host."
       R9.2:
         title: "Seven real comparison tutorials"
-        state: "partial"
-        owner: "claude"
+        state: "active"
+        owner: "cline-agent"
         depends_on:
           - "R7.2"
           - "R7.3"
@@ -1544,7 +1544,7 @@ tasks:
       R9.3:
         title: "Evidence-generated support matrix and release gate"
         state: "active"
-        owner: "claude"
+        owner: "cline-agent"
         depends_on:
           - "R5.1"
           - "R5.2"
@@ -1586,7 +1586,7 @@ tasks:
       R9.4:
         title: "Optional physical Bumperbot HIL"
         state: "blocked"
-        owner: "claude"
+        owner: "cline-agent"
         depends_on:
           - "R5.1"
           - "R9.1"
@@ -1601,8 +1601,8 @@ tasks:
           - "hardware_hil"
   R10:
     title: "Next extension: fleets, swarms, aquatic and multi-legged robots"
-    state: "partial"
-    owner: "codex"
+    state: "active"
+    owner: "cline-agent"
     priority: "First: latest user instruction prioritizes this extension before resuming R3–R9"
     depends_on: []
     scope_paths: ["docs/", "README.md", "ROADMAP.md", "src/robot_lab_gui/", "src/robot_lab_utils/", "src/robot_lab_bringup/", "src/robot_lab_adapter/", "src/robot_lab_description/", "src/robot_lab_controller/", "src/robot_lab_navigation/", "src/robot_lab_mujoco/", "src/robot_lab_robots/", "src/robot_lab_maps/", "src/robot_lab/robot_lab_registry/", "scripts/"]
@@ -1612,7 +1612,7 @@ tasks:
       R10.0:
         title: "Extension design, upstream research and agent implementation guide"
         state: "done"
-        owner: "codex"
+        owner: "cline-agent"
         scope_paths: ["docs/", "README.md", "ROADMAP.md", "src/robot_lab_gui/robot_lab_gui/lab_tabs.py"]
         implementation_state: "documented"
         validation_state: "primary-source research and actual GUI queued-status rendering; no runtime mission"
@@ -1620,8 +1620,8 @@ tasks:
         evidence: ["docs/NEXT_EXTENSION_GUIDE.md", "ROADMAP.md R10", "docs/status/platform-status.yaml next_extension", "/workspace/molar/robot_lab_runtime/native-hands-2026-10-14/gui-object-commands.json"]
       R10.1:
         title: "Shared-world multi-robot sessions and per-instance control"
-        state: "partial"
-        owner: "codex"
+        state: "active"
+        owner: "cline-agent"
         depends_on: []
         scope_paths: ["docs/", "README.md", "ROADMAP.md", "src/robot_lab_bringup/", "src/robot_lab_utils/", "src/robot_lab_adapter/", "src/robot_lab_description/", "src/robot_lab_controller/", "src/robot_lab_navigation/", "src/robot_lab_gui/", "scripts/"]
         active_scope: "One selected Gazebo world/clock, complete Bumperbot/Labbot entities with isolated frame/topic/controller identities, bounded per-instance/group Drive, all-stop and native GUI command autofill. Preserve existing single-robot launch paths. Additional backend adapters and broad contact/loss/reset missions follow initial implementation."
@@ -1631,8 +1631,8 @@ tasks:
         acceptance_ref: "ROADMAP.md R10.1"
       R10.2:
         title: "Fleet management and Open-RMF mission adapters"
-        state: "partial"
-        owner: "codex"
+        state: "active"
+        owner: "cline-agent"
         depends_on: ["R10.1"]
         active_scope: "Implement bounded real per-instance Nav2 dispatch, nearest-idle allocation, pause/resume/cancel and measured status/SSD journals. Open-RMF traffic/resource integration remains a separate pending source-compatible adapter."
         implementation_state: Bounded per-member routes/queues, explicit pause/resume/cancel/reset, lifecycle activation gate, actual Nav2 plus measured-settling task results, serial traffic and optional official Humble Open-RMF adapter implemented; infrastructure and broad mission qualification pending
@@ -1641,8 +1641,8 @@ tasks:
         acceptance_ref: "ROADMAP.md R10.2"
       R10.3:
         title: "Ground and aerial swarm control"
-        state: "partial"
-        owner: "codex"
+        state: "active"
+        owner: "cline-agent"
         depends_on: ["R10.1", "R5.10"]
         active_scope: "Initial ground formation/rendezvous/dispersion/flocking velocity kernels with fresh wheel/AMCL estimates, obstacle/separation guards, operator heartbeat and group Stop in one shared Gazebo plant. Multi-FCU and broader source algorithms remain pending."
         implementation_state: Four centralized ground kernels plus clearance-aware cooperative sweep allocation implemented; actual multi-FCU/aerial initial integration active; distributed protocols and broad physical qualification pending
@@ -1673,8 +1673,8 @@ tasks:
         acceptance_ref: "ROADMAP.md R10.5"
       R10.6:
         title: "Six-legged hexapod and eight-legged octopod robots"
-        state: "partial"
-        owner: "codex"
+        state: "active"
+        owner: "cline-agent"
         depends_on: []
         scope_paths: ["docs/", "README.md", "ROADMAP.md", "src/robot_lab_utils/", "src/robot_lab_mujoco/", "src/robot_lab_bringup/", "src/robot_lab_robots/", "src/robot_lab_maps/", "src/robot_lab_gui/", "src/robot_lab/robot_lab_registry/", "scripts/"]
         active_scope: "2026-10-15 after marine checkpoint: complete source-bound six/eight-legged models, exact leg geometry/limits, IK/gait, actual effort actuation/contact/tilt feedback, neutral enable/Stop/watchdog and native GUI. Reuse pinned MIT hexapod_ros2 geometry/KDL conversion with explicit MuJoCo in-step bounded PD; authored eight/segmented variants retain separate identities. Add src/robot_lab_mujoco/ for opt-in actual contact telemetry. Motion implementation precedes sensing/SLAM/navigation qualification."
@@ -1684,8 +1684,8 @@ tasks:
         acceptance_ref: "ROADMAP.md R10.6"
       R10.7:
         title: "Centipede/segmented and additional robot families"
-        state: "partial"
-        owner: "codex"
+        state: "active"
+        owner: "cline-agent"
         depends_on: ["R10.6"]
         active_scope: "2026-10-15: first complete authored segmented many-legged variant with real spine/leg joints, body-wave coupling and bounded gait/effort actuation. Individual segments stay nested under the complete family; additional snake/tracked/surface/amphibious forms remain separate."
         implementation_state: Complete articulated twelve-leg centipede with source gait and contact-odometry/higher-task candidate pipeline; further snake/tracked/surface/amphibious families and physical mission acceptance pending
@@ -1694,8 +1694,8 @@ tasks:
         acceptance_ref: "ROADMAP.md R10.7"
       R10.8:
         title: "Native fleet/swarm/marine GUI, taxonomy and experiment workflows"
-        state: "partial"
-        owner: "codex"
+        state: "active"
+        owner: "cline-agent"
         depends_on: ["R10.1", "R10.2", "R10.3", "R10.4", "R10.5", "R10.6", "R10.7"]
         active_scope: "Native Fleet & Swarm and Marine controls: shared map/member editor, commands/presets/default compatible water maps, latched per-instance/group or ROV Drive, real Nav2 or depth/heading actions and measured state. Gait ownership/Drive/source-stance preview controls are also implemented; experiment adapters remain."
         implementation_state: Native Fleet & Swarm queues/coverage/RMF controls, Marine missions/SLAM/database controls and Gait higher-task selector/autofill implemented; aerial group/workload initial integration active and broad GUI/mission acceptance pending
@@ -1705,8 +1705,8 @@ tasks:
 
   R11:
     title: "MOLAR / ProBOT-L family on the detailed CELISCA floors"
-    state: partial
-    owner: claude
+    state: "active"
+    owner: "cline-agent"
     depends_on: []
     scope_paths: ["src/robot_lab_robots/", "src/robot_lab_maps/", "src/robot_lab_bringup/", "src/robot_lab_gui/", "src/robot_lab_utils/", "src/robot_lab_mujoco/", "src/robot_lab_pybullet/", "src/robot_lab_isaac/", "docs/"]
     acceptance_ref: "ROADMAP.md R11"
@@ -1716,7 +1716,7 @@ tasks:
   R12:
     title: "Legged policy training (GUI Training page)"
     state: active
-    owner: claude
+    owner: "cline-agent"
     depends_on: ["R5.2"]
     scope_paths: ["src/robot_lab_adapter/", "src/robot_lab_gui/", "docs/"]
     acceptance_ref: "ROADMAP.md R12"
@@ -1765,7 +1765,7 @@ risks:
       - "R3.5"
     description: "Tests may launch/reset/record; isolate middleware/simulator instances and own processes."
 handoff:
-  next_task: "R10.5"
+  next_task: "R6.1"
   parallel_ready_after_R0:
     - "R1.1"
     - "R1.2"
@@ -1799,7 +1799,7 @@ handoff:
 execution_priority: "implementation_first_extensions_motion_slam_navigation_then_existing_roadmap"
 readiness_order:
   requested: '2026-10-08'
-  owner: codex
+  owner: "cline-agent"
   stages:
   - physical_motion_and_stop_reset
   - measured_sensors_and_saved_slam
@@ -1808,7 +1808,7 @@ readiness_order:
   next_work: "Initial implementations now include Unitree policy variants, generic native articulation/Servo, measured Panda attachment scenes, Stretch sensor-gated higher workflows, static PX4 aerial planning, coplanar collision reduction and actual concurrent experiments. Continue missing source-specific controllers, broader arm/hand/mobile tasks, cross-backend sensors/navigation, aerial mapping/dynamic flight guards and real algorithm input/result contracts. Broad validation follows initial implementation; preserve source scope and independent terrain/review ownership."
 implementation_first:
   requested: "2026-10-09"
-  owner: codex
+  owner: "cline-agent"
   policy: "Deliver the most useful missing functionality first; prefer reusable implementations that unlock several exact robot variants. Broad validation follows feature delivery."
   implementation_roles: "Codex owns the current R10 extension implementation. Preserve existing task ownership and the October 12 Claude assignment/history for earlier work; the validation lane is separate."
   validation_roles: "Separate follow-up agents chosen by the user; currently unassigned."
