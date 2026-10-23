@@ -1651,11 +1651,11 @@ tasks:
         acceptance_ref: "ROADMAP.md R10.3"
       R10.4:
         title: "Complete underwater ROV/AUV models and controllers"
-        state: "partial"
-        owner: "codex"
+        state: "active"
+        owner: "cline-agent"
         depends_on: []
         scope_paths: ["docs/", "README.md", "ROADMAP.md", "src/robot_lab_utils/", "src/robot_lab_bringup/", "src/robot_lab_adapter/", "src/robot_lab_robots/", "src/robot_lab_maps/", "src/robot_lab_gui/", "src/robot_lab/robot_lab_registry/", "scripts/"]
-        active_scope: "2026-10-15 after 815e54e: preserve first physical ROV and new multi-leg batch; inspect/provision Gazebo Fortress Tethys AUV source/license and integrate source propeller/fins/hydrodynamics with a separate bounded GUI/controller contract. Independent marine measurements/volumetric features and broad qualification remain separate; no thruster-only ROV relabeling as AUV."
+        active_scope: "CLAIMED 2026-10-22 by cline-agent from codex to unblock R10.5. ROV/AUV models, controllers, native GUI and Fortress 6.18 mass convention are implemented; Marine contract tests pass (8/8). Remaining validation: all-axis/current/contact/loss/reset qualification across tank/reef/harbor/cave/wreck worlds. No fake GPS or flat occupancy; physical frame/depth/collision alignment only."
         additional_scope_paths: [".gitattributes"]
         implementation_state: "Complete authored ROV + pinned native Tethys AUV, source/trim/actuator contracts, positive Fortress 6.18 mass convention, bounded manual/depth/cruise guidance and native GUI implemented; independent estimates/routes and other backend adapters pending"
         validation_state: "Actual GUI AUV/reef neutral enable, surge, 1.70 m depth target/turn and zero-output coasting Stop measured; corrected ROV/tank separately measured. All-axis/current/contact/loss/reset and other-world qualification pending. Marine contract tests pass (8/8: source/trim/actuator contracts, mass convention, bounded guidance)."
@@ -1663,10 +1663,10 @@ tasks:
         acceptance_ref: "ROADMAP.md R10.4"
       R10.5:
         title: "Underwater maps, sensors, estimation, SLAM and navigation"
-        state: "partial"
-        owner: "codex"
+        state: "active"
+        owner: "cline-agent"
         depends_on: ["R10.4", "R6.7"]
-        active_scope: "2026-10-15 initial marine world/observations: tank/reef/harbor/cave/wreck water-surface and bathymetry/collision semantics, actual body/IMU/camera observations with explicit measurement-source labels. DVL and sonar simulation implemented in marine_sensors.py; independent estimation, saved underwater SLAM and volumetric navigation remain pending; do not enable fake GPS/flat Nav2."
+        active_scope: "2026-10-15 initial marine world/observations: tank/reef/harbor/cave/wreck water-surface and bathymetry/collision semantics, actual body/IMU/camera observations with explicit measurement-source labels. DVL and sonar simulation implemented in marine_sensors.py; independent estimation, saved underwater SLAM and volumetric navigation remain pending; do not enable fake GPS/flat Nav2. CLAIMED 2026-10-22 by cline-agent from codex. BLOCKED on prerequisites: R10.4 Complete underwater ROV/AUV models and controllers (partial, owner codex) and R6.7 GUI terrain generation with four-backend conversion (active, owner claude); unblock action is completion of/coordination with those owners before estimation/SLAM/route integration can proceed. Unblocked prep work: review marine_sensors.py DVL/sonar implementation and test_marine_sensors.py; preserve existing marine contract tests."
         implementation_state: Five water/collision worlds; native IMU plus explicit noisy bottom-lock Janus-DVL/pressure simulation; sonar bottom-range simulation added; separate sensor-only odometry; estimated 3D Plan/Execute; real ROV RGB-D RTAB-Map and database/cloud save/reload implementation. Additional sensor/backend adapters pending.
         validation_state: "ROV/tank and AUV/reef body/depth/joint observations measured; marine worlds corrected for Gazebo Fortress 6.18 (removed unsupported ignition-gazebo-current-system and ignition-gazebo-light-system plugins; current approximated via Hydrodynamics default_current in URDF; lighting via scene ambient). Marine contract tests pass (9/9); sonar simulation unit tests added."
         evidence: ["docs/status/marine-2026-10-15.md", "docs/status/marine-receipt-2026-10-15.json", "docs/status/auv-2026-10-15.md", "docs/status/auv-receipt-2026-10-15.json", "src/robot_lab_bringup/test/test_marine_sensors.py"]
