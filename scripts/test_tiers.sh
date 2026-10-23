@@ -97,6 +97,7 @@ INTEGRATION_TESTS=(
   "$ADP_TEST/test_r3_3_launch_contracts.py"
   "$REG_TEST"/test_go2_qualification.py
   "$BRG_TEST/test_marine_sensors.py"
+  "$BRG_TEST/test_marine_controller_validation.py"
   "$REG_TEST"/test_labbot_qualification.py
   "$REG_TEST"/test_bhl_qualification.py
   "$REG_TEST"/test_quadrotor_sitl_qualification.py
