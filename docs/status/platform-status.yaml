@@ -301,15 +301,9 @@ extension_completion_20261020:
 goal: unified_multi_robot_algorithm_lab
 handoff:
   audit: docs/status/audit-2026-10-02.md
-  next_action: 'October 19 (claude): finish R12 after go2_walk_r1 (record its evaluation
-    and drive checks), record round 57, then follow ROADMAP.md ''October 19: progress,
-    ongoing work and what remains''. R10 first: preserve fleet, ROV/AUV and six/eight/many-legged
-    workflows with exact physical/source scopes. Continue fleet real task queues/Open-RMF/coverage/multi-FCU,
-    then independent marine measurements/volumetric routes and remaining shared adapters/robot
-    forms. Initial implementation precedes broad qualification. Read fleet-and-swarm.md,
-    marine-rov.md, tethys-auv.md and multi-leg-gaits.md; keep higher-mode/backend
-    gates truthful. Resume older R3–R9 after this extension.'
-  next_task: R6.1
+  next_action: R10.5 underwater estimation/SLAM - hardware-dependent features skipped,
+    software complete
+  next_task: R10.5
   no_runtime_repairs_completed_by_this_revision: false
   parallel_ready_after_R0:
   - R1.1
