@@ -1,146 +1,153 @@
-- id: marine_tank
-  version: "0.1.0"
+- dimension: 3D
+  dynamics:
+    dynamic_obstacles: false
+    static_obstacles: true
+  ground_truth_available: true
+  id: marine_tank
   name: Marine tank
-  status: available
-  dimension: 3D
-  simulator: gazebo
-  simulators: [gazebo]
   ros_package: robot_lab_maps
+  simulator: gazebo
+  simulators:
+  - gazebo
+  source:
+    license: Apache-2.0
+    repository: internal
+  status: available
+  supported_robot_classes:
+  - aquatic
+  tags:
+  - underwater
+  - water_surface
+  - physical_buoyancy
+  - tank
+  - experimental
+  version: 0.1.0
   world_file: robot_lab_maps/maps/marine_tank/worlds/marine_tank.world
-  supported_robot_classes: [aquatic]
+- dimension: 3D
+  dynamics:
+    dynamic_obstacles: false
+    static_obstacles: true
   ground_truth_available: true
-  dynamics: {static_obstacles: true, dynamic_obstacles: false}
-  source: {repository: internal, license: Apache-2.0}
-  tags: [underwater, water_surface, physical_buoyancy, tank, experimental]
-- id: marine_reef
-  version: "0.1.0"
+  id: marine_reef
   name: Reef and seabed
-  status: available
-  dimension: 3D
-  simulator: gazebo
-  simulators: [gazebo]
   ros_package: robot_lab_maps
+  simulator: gazebo
+  simulators:
+  - gazebo
+  source:
+    license: Apache-2.0
+    repository: internal
+  status: available
+  supported_robot_classes:
+  - aquatic
+  tags:
+  - underwater
+  - water_surface
+  - bathymetry
+  - reef
+  - experimental
+  version: 0.1.0
   world_file: robot_lab_maps/maps/marine_reef/worlds/marine_reef.world
-  supported_robot_classes: [aquatic]
+- dimension: 3D
+  dynamics:
+    dynamic_obstacles: false
+    static_obstacles: true
   ground_truth_available: true
-  dynamics: {static_obstacles: true, dynamic_obstacles: false}
-  source: {repository: internal, license: Apache-2.0}
-  tags: [underwater, water_surface, bathymetry, reef, experimental]
-- id: marine_harbor
-  version: "0.1.0"
+  id: marine_harbor
   name: Harbor pilings
-  status: available
-  dimension: 3D
-  simulator: gazebo
-  simulators: [gazebo]
   ros_package: robot_lab_maps
+  simulator: gazebo
+  simulators:
+  - gazebo
+  source:
+    license: Apache-2.0
+    repository: internal
+  status: available
+  supported_robot_classes:
+  - aquatic
+  tags:
+  - underwater
+  - water_surface
+  - harbor
+  - pilings
+  - experimental
+  version: 0.1.0
   world_file: robot_lab_maps/maps/marine_harbor/worlds/marine_harbor.world
-  supported_robot_classes: [aquatic]
+- dimension: 3D
+  dynamics:
+    dynamic_obstacles: false
+    static_obstacles: true
   ground_truth_available: true
-  dynamics: {static_obstacles: true, dynamic_obstacles: false}
-  source: {repository: internal, license: Apache-2.0}
-  tags: [underwater, water_surface, harbor, pilings, experimental]
-- id: marine_cave
-  version: "0.1.0"
+  id: marine_cave
   name: Underwater cave and tunnel
-  status: available
-  dimension: 3D
-  simulator: gazebo
-  simulators: [gazebo]
   ros_package: robot_lab_maps
+  simulator: gazebo
+  simulators:
+  - gazebo
+  source:
+    license: Apache-2.0
+    repository: internal
+  status: available
+  supported_robot_classes:
+  - aquatic
+  tags:
+  - underwater
+  - water_surface
+  - cave
+  - tunnel
+  - experimental
+  version: 0.1.0
   world_file: robot_lab_maps/maps/marine_cave/worlds/marine_cave.world
-  supported_robot_classes: [aquatic]
+- dimension: 3D
+  dynamics:
+    dynamic_obstacles: false
+    static_obstacles: true
   ground_truth_available: true
-  dynamics: {static_obstacles: true, dynamic_obstacles: false}
-  source: {repository: internal, license: Apache-2.0}
-  tags: [underwater, water_surface, cave, tunnel, experimental]
-- id: marine_wreck
-  version: "0.1.0"
+  id: marine_wreck
   name: Wreck inspection
-  status: available
-  dimension: 3D
+  ros_package: robot_lab_maps
   simulator: gazebo
-  simulators: [gazebo]
-  ros_package: robot_lab_maps
+  simulators:
+  - gazebo
+  source:
+    license: Apache-2.0
+    repository: internal
+  status: available
+  supported_robot_classes:
+  - aquatic
+  tags:
+  - underwater
+  - water_surface
+  - wreck
+  - inspection
+  - experimental
+  version: 0.1.0
   world_file: robot_lab_maps/maps/marine_wreck/worlds/marine_wreck.world
-  supported_robot_classes: [aquatic]
-  ground_truth_available: true
-  dynamics: {static_obstacles: true, dynamic_obstacles: false}
-  source: {repository: internal, license: Apache-2.0}
-  tags: [underwater, water_surface, wreck, inspection, experimental]
-- id: small_office
-  version: 1.0.0
-  name: Simple Office
-  ros_package: robot_lab_maps
+- created: '2026-01-01'
   description: Small office environment with furniture and obstacles
-  status: integrated
   dimension: 2D
+  dynamics:
+    dynamic_obstacles: false
+    max_dynamic_count: 0
+    static_obstacles: true
+  ground_truth_available: true
+  id: small_office
+  name: Simple Office
+  occupancy_map: robot_lab_maps/maps/simple_office/maps/map.pgm
+  ros_package: robot_lab_maps
   simulator: gazebo
   simulators:
   - gazebo
   - isaac
   - pybullet
   - mujoco
-  world_file: robot_lab_maps/maps/simple_office/worlds/simple_office.world
-  occupancy_map: robot_lab_maps/maps/simple_office/maps/map.pgm
-  ground_truth_available: true
-  dynamics:
-    static_obstacles: true
-    dynamic_obstacles: false
-    max_dynamic_count: 0
-  supported_robot_classes:
-  - mobile
-  - legged
-  - humanoid
-  - aerial
-  spawn_zones:
-  - id: default
-    pose:
-      x: 0.0
-      y: 0.0
-      z: 0.0
-    size:
-      x: 2.0
-      y: 2.0
-      z: 1.0
   size:
     x: 15.0
     y: 12.0
     z: 3.0
   source:
-    repository: internal
     license: Apache-2.0
-  tags:
-  - office
-  - indoor
-  - 2D
-  - navigation
-  created: '2026-01-01'
-  updated: '2026-08-31'
-- id: small_house
-  version: 1.0.0
-  name: Small House
-  description: Residential house environment with rooms and corridors
-  status: integrated
-  dimension: 2D
-  simulator: gazebo
-  simulators:
-  - gazebo
-  - isaac
-  - pybullet
-  - mujoco
-  world_file: robot_lab_maps/maps/small_house/worlds/small_house.world
-  occupancy_map: robot_lab_maps/maps/small_house/maps/map.pgm
-  ground_truth_available: true
-  dynamics:
-    static_obstacles: true
-    dynamic_obstacles: false
-    max_dynamic_count: 0
-  supported_robot_classes:
-  - mobile
-  - legged
-  - humanoid
-  - aerial
+    repository: internal
   spawn_zones:
   - id: default
     pose:
@@ -151,44 +158,92 @@
       x: 2.0
       y: 2.0
       z: 1.0
-  size:
-    x: 20.0
-    y: 15.0
-    z: 3.0
-  source:
-    repository: internal
-    license: Apache-2.0
+  status: integrated
+  supported_robot_classes:
+  - mobile
+  - legged
+  - humanoid
+  - aerial
   tags:
-  - residential
+  - office
   - indoor
   - 2D
   - navigation
-  created: '2026-01-01'
   updated: '2026-08-31'
-- id: small_warehouse
   version: 1.0.0
-  name: Small Warehouse
-  description: Warehouse environment with shelves and open spaces
-  status: integrated
+  world_file: robot_lab_maps/maps/simple_office/worlds/simple_office.world
+- created: '2026-01-01'
+  description: Residential house environment with rooms and corridors
   dimension: 2D
+  dynamics:
+    dynamic_obstacles: false
+    max_dynamic_count: 0
+    static_obstacles: true
+  ground_truth_available: true
+  id: small_house
+  name: Small House
+  occupancy_map: robot_lab_maps/maps/small_house/maps/map.pgm
   simulator: gazebo
   simulators:
   - gazebo
   - isaac
   - pybullet
   - mujoco
-  world_file: robot_lab_maps/maps/small_warehouse/worlds/small_warehouse.world
-  occupancy_map: robot_lab_maps/maps/small_warehouse/maps/map.pgm
-  ground_truth_available: true
-  dynamics:
-    static_obstacles: true
-    dynamic_obstacles: false
-    max_dynamic_count: 0
+  size:
+    x: 20.0
+    y: 15.0
+    z: 3.0
+  source:
+    license: Apache-2.0
+    repository: internal
+  spawn_zones:
+  - id: default
+    pose:
+      x: 0.0
+      y: 0.0
+      z: 0.0
+    size:
+      x: 2.0
+      y: 2.0
+      z: 1.0
+  status: integrated
   supported_robot_classes:
   - mobile
   - legged
   - humanoid
   - aerial
+  tags:
+  - residential
+  - indoor
+  - 2D
+  - navigation
+  updated: '2026-08-31'
+  version: 1.0.0
+  world_file: robot_lab_maps/maps/small_house/worlds/small_house.world
+- created: '2026-01-01'
+  description: Warehouse environment with shelves and open spaces
+  dimension: 2D
+  dynamics:
+    dynamic_obstacles: false
+    max_dynamic_count: 0
+    static_obstacles: true
+  ground_truth_available: true
+  id: small_warehouse
+  name: Small Warehouse
+  occupancy_map: robot_lab_maps/maps/small_warehouse/maps/map.pgm
+  simulator: gazebo
+  simulators:
+  - gazebo
+  - isaac
+  - pybullet
+  - mujoco
+  size:
+    x: 25.0
+    y: 20.0
+    z: 5.0
+  source:
+    license: Apache-2.0
+    repository: internal
   spawn_zones:
   - id: default
     pose:
@@ -208,44 +263,44 @@
       x: 2.0
       y: 2.0
       z: 1.0
-  size:
-    x: 25.0
-    y: 20.0
-    z: 5.0
-  source:
-    repository: internal
-    license: Apache-2.0
+  status: integrated
+  supported_robot_classes:
+  - mobile
+  - legged
+  - humanoid
+  - aerial
   tags:
   - warehouse
   - industrial
   - 2D
   - navigation
-  created: '2026-01-01'
   updated: '2026-08-31'
-- id: warehouse_demo
   version: 1.0.0
-  name: Warehouse Demo
+  world_file: robot_lab_maps/maps/small_warehouse/worlds/small_warehouse.world
+- created: '2026-08-31'
   description: Demonstration warehouse with structured obstacles
-  status: integrated
   dimension: 2D
+  dynamics:
+    dynamic_obstacles: false
+    max_dynamic_count: 0
+    static_obstacles: true
+  ground_truth_available: true
+  id: warehouse_demo
+  name: Warehouse Demo
+  occupancy_map: robot_lab_maps/maps/warehouse_demo/maps/map.pgm
   simulator: gazebo
   simulators:
   - gazebo
   - isaac
   - pybullet
   - mujoco
-  world_file: robot_lab_maps/maps/warehouse_demo/worlds/warehouse_demo.world
-  occupancy_map: robot_lab_maps/maps/warehouse_demo/maps/map.pgm
-  ground_truth_available: true
-  dynamics:
-    static_obstacles: true
-    dynamic_obstacles: false
-    max_dynamic_count: 0
-  supported_robot_classes:
-  - mobile
-  - legged
-  - humanoid
-  - aerial
+  size:
+    x: 30.0
+    y: 20.0
+    z: 5.0
+  source:
+    license: Apache-2.0
+    repository: internal
   spawn_zones:
   - id: default
     pose:
@@ -256,43 +311,43 @@
       x: 2.0
       y: 2.0
       z: 1.0
-  size:
-    x: 30.0
-    y: 20.0
-    z: 5.0
-  source:
-    repository: internal
-    license: Apache-2.0
+  status: integrated
+  supported_robot_classes:
+  - mobile
+  - legged
+  - humanoid
+  - aerial
   tags:
   - warehouse
   - demo
   - 2D
-  created: '2026-08-31'
   updated: '2026-08-31'
-- id: celisca_floor_1
   version: 1.0.0
-  name: Celisca Floor 1
+  world_file: robot_lab_maps/maps/warehouse_demo/worlds/warehouse_demo.world
+- created: '2026-08-31'
   description: First floor of Celisca building
-  status: integrated
   dimension: 2D
+  dynamics:
+    dynamic_obstacles: false
+    max_dynamic_count: 0
+    static_obstacles: true
+  ground_truth_available: true
+  id: celisca_floor_1
+  name: Celisca Floor 1
+  occupancy_map: robot_lab_maps/maps/celisca_floor_1/maps/map.pgm
   simulator: gazebo
   simulators:
   - gazebo
   - isaac
   - pybullet
   - mujoco
-  world_file: robot_lab_maps/maps/celisca_floor_1/worlds/celisca_floor_1.world
-  occupancy_map: robot_lab_maps/maps/celisca_floor_1/maps/map.pgm
-  ground_truth_available: true
-  dynamics:
-    static_obstacles: true
-    dynamic_obstacles: false
-    max_dynamic_count: 0
-  supported_robot_classes:
-  - mobile
-  - legged
-  - humanoid
-  - aerial
+  size:
+    x: 40.0
+    y: 30.0
+    z: 3.5
+  source:
+    license: Apache-2.0
+    repository: internal
   spawn_zones:
   - id: entrance
     pose:
@@ -303,43 +358,43 @@
       x: 2.0
       y: 2.0
       z: 1.0
-  size:
-    x: 40.0
-    y: 30.0
-    z: 3.5
-  source:
-    repository: internal
-    license: Apache-2.0
+  status: integrated
+  supported_robot_classes:
+  - mobile
+  - legged
+  - humanoid
+  - aerial
   tags:
   - office
   - floor
   - multi_floor
-  created: '2026-08-31'
   updated: '2026-08-31'
-- id: celisca_floor_2
   version: 1.0.0
-  name: Celisca Floor 2
+  world_file: robot_lab_maps/maps/celisca_floor_1/worlds/celisca_floor_1.world
+- created: '2026-08-31'
   description: Second floor of Celisca building
-  status: integrated
   dimension: 2D
+  dynamics:
+    dynamic_obstacles: false
+    max_dynamic_count: 0
+    static_obstacles: true
+  ground_truth_available: true
+  id: celisca_floor_2
+  name: Celisca Floor 2
+  occupancy_map: robot_lab_maps/maps/celisca_floor_2/maps/map.pgm
   simulator: gazebo
   simulators:
   - gazebo
   - isaac
   - pybullet
   - mujoco
-  world_file: robot_lab_maps/maps/celisca_floor_2/worlds/celisca_floor_2.world
-  occupancy_map: robot_lab_maps/maps/celisca_floor_2/maps/map.pgm
-  ground_truth_available: true
-  dynamics:
-    static_obstacles: true
-    dynamic_obstacles: false
-    max_dynamic_count: 0
-  supported_robot_classes:
-  - mobile
-  - legged
-  - humanoid
-  - aerial
+  size:
+    x: 40.0
+    y: 30.0
+    z: 3.5
+  source:
+    license: Apache-2.0
+    repository: internal
   spawn_zones:
   - id: stairs_top
     pose:
@@ -350,43 +405,43 @@
       x: 2.0
       y: 2.0
       z: 1.0
-  size:
-    x: 40.0
-    y: 30.0
-    z: 3.5
-  source:
-    repository: internal
-    license: Apache-2.0
+  status: integrated
+  supported_robot_classes:
+  - mobile
+  - legged
+  - humanoid
+  - aerial
   tags:
   - office
   - floor
   - multi_floor
-  created: '2026-08-31'
   updated: '2026-08-31'
-- id: celisca_floor_2_furniture
   version: 1.0.0
-  name: Celisca Floor 2 with Furniture
+  world_file: robot_lab_maps/maps/celisca_floor_2/worlds/celisca_floor_2.world
+- created: '2026-08-31'
   description: Second floor with furniture and more detailed layout
-  status: integrated
   dimension: 2D
+  dynamics:
+    dynamic_obstacles: false
+    max_dynamic_count: 0
+    static_obstacles: true
+  ground_truth_available: true
+  id: celisca_floor_2_furniture
+  name: Celisca Floor 2 with Furniture
+  occupancy_map: robot_lab_maps/maps/celisca_floor_2_furniture/maps/map.pgm
   simulator: gazebo
   simulators:
   - gazebo
   - isaac
   - pybullet
   - mujoco
-  world_file: robot_lab_maps/maps/celisca_floor_2_furniture/worlds/celisca_floor_2_furniture.world
-  occupancy_map: robot_lab_maps/maps/celisca_floor_2_furniture/maps/map.pgm
-  ground_truth_available: true
-  dynamics:
-    static_obstacles: true
-    dynamic_obstacles: false
-    max_dynamic_count: 0
-  supported_robot_classes:
-  - mobile
-  - legged
-  - humanoid
-  - aerial
+  size:
+    x: 40.0
+    y: 30.0
+    z: 3.5
+  source:
+    license: Apache-2.0
+    repository: internal
   spawn_zones:
   - id: default
     pose:
@@ -397,43 +452,43 @@
       x: 2.0
       y: 2.0
       z: 1.0
-  size:
-    x: 40.0
-    y: 30.0
-    z: 3.5
-  source:
-    repository: internal
-    license: Apache-2.0
+  status: integrated
+  supported_robot_classes:
+  - mobile
+  - legged
+  - humanoid
+  - aerial
   tags:
   - office
   - furniture
   - detailed
-  created: '2026-08-31'
   updated: '2026-08-31'
-- id: celisca_floor_1_furniture
   version: 1.0.0
-  name: Celisca Floor 1 with Furniture
+  world_file: robot_lab_maps/maps/celisca_floor_2_furniture/worlds/celisca_floor_2_furniture.world
+- created: '2026-09-05'
   description: First floor of Celisca building with furniture and detailed layout
-  status: integrated
   dimension: 2D
+  dynamics:
+    dynamic_obstacles: false
+    max_dynamic_count: 0
+    static_obstacles: true
+  ground_truth_available: true
+  id: celisca_floor_1_furniture
+  name: Celisca Floor 1 with Furniture
+  occupancy_map: robot_lab_maps/maps/celisca_floor_1_furniture/maps/map.pgm
   simulator: gazebo
   simulators:
   - gazebo
   - isaac
   - pybullet
   - mujoco
-  world_file: robot_lab_maps/maps/celisca_floor_1_furniture/worlds/celisca_floor_1_furniture.world
-  occupancy_map: robot_lab_maps/maps/celisca_floor_1_furniture/maps/map.pgm
-  ground_truth_available: true
-  dynamics:
-    static_obstacles: true
-    dynamic_obstacles: false
-    max_dynamic_count: 0
-  supported_robot_classes:
-  - mobile
-  - legged
-  - humanoid
-  - aerial
+  size:
+    x: 40.0
+    y: 30.0
+    z: 3.5
+  source:
+    license: Apache-2.0
+    repository: internal
   spawn_zones:
   - id: default
     pose:
@@ -444,44 +499,44 @@
       x: 2.0
       y: 2.0
       z: 1.0
-  size:
-    x: 40.0
-    y: 30.0
-    z: 3.5
-  source:
-    repository: internal
-    license: Apache-2.0
+  status: integrated
+  supported_robot_classes:
+  - mobile
+  - legged
+  - humanoid
+  - aerial
   tags:
   - office
   - furniture
   - detailed
   - indoor
-  created: '2026-09-05'
   updated: '2026-09-05'
-- id: celisca_f1_actor
   version: 1.0.0
-  name: Celisca F1 with Actors
+  world_file: robot_lab_maps/maps/celisca_floor_1_furniture/worlds/celisca_floor_1_furniture.world
+- created: '2026-08-31'
   description: First floor with actor entities for simulation
-  status: integrated
   dimension: 2D
+  dynamics:
+    dynamic_obstacles: true
+    max_dynamic_count: 10
+    static_obstacles: true
+  ground_truth_available: true
+  id: celisca_f1_actor
+  name: Celisca F1 with Actors
+  occupancy_map: robot_lab_maps/maps/celisca_f1_actor/maps/map.pgm
   simulator: gazebo
   simulators:
   - gazebo
   - isaac
   - pybullet
   - mujoco
-  world_file: robot_lab_maps/maps/celisca_f1_actor/worlds/celisca_f1_actor.world
-  occupancy_map: robot_lab_maps/maps/celisca_f1_actor/maps/map.pgm
-  ground_truth_available: true
-  dynamics:
-    static_obstacles: true
-    dynamic_obstacles: true
-    max_dynamic_count: 10
-  supported_robot_classes:
-  - mobile
-  - legged
-  - humanoid
-  - aerial
+  size:
+    x: 40.0
+    y: 30.0
+    z: 3.5
+  source:
+    license: Apache-2.0
+    repository: internal
   spawn_zones:
   - id: default
     pose:
@@ -492,43 +547,43 @@
       x: 2.0
       y: 2.0
       z: 1.0
-  size:
-    x: 40.0
-    y: 30.0
-    z: 3.5
-  source:
-    repository: internal
-    license: Apache-2.0
+  status: integrated
+  supported_robot_classes:
+  - mobile
+  - legged
+  - humanoid
+  - aerial
   tags:
   - actors
   - dynamic
   - simulation
-  created: '2026-08-31'
   updated: '2026-08-31'
-- id: celisca_f2_actor
   version: 1.0.0
-  name: Celisca F2 with Actors
+  world_file: robot_lab_maps/maps/celisca_f1_actor/worlds/celisca_f1_actor.world
+- created: '2026-08-31'
   description: Second floor with actor entities
-  status: integrated
   dimension: 2D
+  dynamics:
+    dynamic_obstacles: true
+    max_dynamic_count: 10
+    static_obstacles: true
+  ground_truth_available: true
+  id: celisca_f2_actor
+  name: Celisca F2 with Actors
+  occupancy_map: robot_lab_maps/maps/celisca_f2_actor/maps/map.pgm
   simulator: gazebo
   simulators:
   - gazebo
   - isaac
   - pybullet
   - mujoco
-  world_file: robot_lab_maps/maps/celisca_f2_actor/worlds/celisca_f2_actor.world
-  occupancy_map: robot_lab_maps/maps/celisca_f2_actor/maps/map.pgm
-  ground_truth_available: true
-  dynamics:
-    static_obstacles: true
-    dynamic_obstacles: true
-    max_dynamic_count: 10
-  supported_robot_classes:
-  - mobile
-  - legged
-  - humanoid
-  - aerial
+  size:
+    x: 40.0
+    y: 30.0
+    z: 3.5
+  source:
+    license: Apache-2.0
+    repository: internal
   spawn_zones:
   - id: default
     pose:
@@ -539,75 +594,36 @@
       x: 2.0
       y: 2.0
       z: 1.0
-  size:
-    x: 40.0
-    y: 30.0
-    z: 3.5
-  source:
-    repository: internal
-    license: Apache-2.0
-  tags:
-  - actors
-  - dynamic
-  created: '2026-08-31'
-  updated: '2026-08-31'
-- id: outdoor_terrain
-  version: 1.0.0
-  name: Outdoor Terrain
-  description: Outdoor rough-terrain arena (terrain_rough) with scattered low-height
-    raised platforms for legged/humanoid testing (P4.3)
   status: integrated
-  dimension: 3D
-  simulator: gazebo
-  simulators:
-  - gazebo
-  - isaac
-  - pybullet
-  - mujoco
-  ros_package: robot_lab_maps
-  world_file: robot_lab_maps/maps/terrain_rough/worlds/terrain_rough.world
-  occupancy_map: robot_lab_maps/maps/terrain_rough/maps/map.pgm
-  ground_truth_available: true
-  dynamics:
-    static_obstacles: true
-    dynamic_obstacles: false
-    max_dynamic_count: 0
   supported_robot_classes:
+  - mobile
   - legged
   - humanoid
   - aerial
-  spawn_zones:
-  - id: ground_level
-    pose:
-      x: -9.0
-      y: -9.0
-      z: 0.0
-    size:
-      x: 5.0
-      y: 5.0
-      z: 1.0
-  size:
-    x: 20.0
-    y: 20.0
-    z: 3.0
-  source:
-    repository: internal
-    license: Apache-2.0
   tags:
-  - outdoor
-  - rough_terrain
-  - 3D
-  - legged
-  created: '2026-08-31'
-  updated: '2026-09-05'
-  seed: 6
-  reset_service: /robot_lab/reset
+  - actors
+  - dynamic
+  updated: '2026-08-31'
+  version: 1.0.0
+  world_file: robot_lab_maps/maps/celisca_f2_actor/worlds/celisca_f2_actor.world
+- created: '2026-08-31'
+  description: Outdoor rough-terrain arena (terrain_rough) with scattered low-height
+    raised platforms for legged/humanoid testing (P4.3)
+  dimension: 3D
+  dynamics:
+    dynamic_obstacles: false
+    max_dynamic_count: 0
+    static_obstacles: true
   goals:
   - id: far_corner
     pose:
       x: 9.0
       y: 9.0
       yaw: 0.0
+  ground_truth_available: true
+  id: outdoor_terrain
+  name: Outdoor Terrain
+  occupancy_map: robot_lab_maps/maps/terrain_rough/maps/map.pgm
   reference_paths:
   - id: spawn_to_far_corner
     waypoints:
@@ -623,63 +639,63 @@
     - x: 9.0
       y: 9.0
       yaw: 0.0
-- id: terrain_stairs
-  version: 1.0.0
-  name: Staircase Terrain
-  description: 3D arena with an ascending staircase and a descending ramp for climb/recovery
-    testing (P4.3)
-  status: integrated
-  dimension: 3D
+  reset_service: /robot_lab/reset
+  ros_package: robot_lab_maps
+  seed: 6
   simulator: gazebo
   simulators:
   - gazebo
   - isaac
   - pybullet
   - mujoco
-  ros_package: robot_lab_maps
-  world_file: robot_lab_maps/maps/terrain_stairs/worlds/terrain_stairs.world
-  occupancy_map: robot_lab_maps/maps/terrain_stairs/maps/map.pgm
-  ground_truth_available: true
-  dynamics:
-    static_obstacles: true
-    dynamic_obstacles: false
-    max_dynamic_count: 0
+  size:
+    x: 20.0
+    y: 20.0
+    z: 3.0
+  source:
+    license: Apache-2.0
+    repository: internal
+  spawn_zones:
+  - id: ground_level
+    pose:
+      x: -9.0
+      y: -9.0
+      z: 0.0
+    size:
+      x: 5.0
+      y: 5.0
+      z: 1.0
+  status: integrated
   supported_robot_classes:
   - legged
   - humanoid
   - aerial
-  spawn_zones:
-  - id: default
-    pose:
-      x: -7.0
-      y: -5.0
-      z: 0.0
-    size:
-      x: 2.0
-      y: 2.0
-      z: 1.0
-  size:
-    x: 16.0
-    y: 16.0
-    z: 3.0
-  source:
-    repository: internal
-    license: Apache-2.0
   tags:
-  - stairs
+  - outdoor
+  - rough_terrain
   - 3D
   - legged
-  - terrain
-  created: '2026-09-05'
   updated: '2026-09-05'
-  seed: 7
-  reset_service: /robot_lab/reset
+  version: 1.0.0
+  world_file: robot_lab_maps/maps/terrain_rough/worlds/terrain_rough.world
+- created: '2026-09-05'
+  description: 3D arena with an ascending staircase and a descending ramp for climb/recovery
+    testing (P4.3)
+  dimension: 3D
+  dynamics:
+    dynamic_obstacles: false
+    max_dynamic_count: 0
+    static_obstacles: true
   goals:
   - id: east_ramp
     pose:
       x: 7.0
       y: 5.0
       yaw: 0.0
+  ground_truth_available: true
+  id: terrain_stairs
+  name: Staircase Terrain
+  occupancy_map: robot_lab_maps/maps/terrain_stairs/maps/map.pgm
   reference_paths:
   - id: spawn_to_east
     waypoints:
@@ -695,63 +711,63 @@
     - x: 7.0
       y: 5.0
       yaw: 0.0
-- id: terrain_stepping_stones
-  version: 1.0.0
-  name: Stepping-Stone Terrain
-  description: 3D arena with a serpentine path of raised stepping-stone platforms
-    and pits for footfall testing (P4.3)
-  status: integrated
-  dimension: 3D
+  reset_service: /robot_lab/reset
+  ros_package: robot_lab_maps
+  seed: 7
   simulator: gazebo
   simulators:
   - gazebo
   - isaac
   - pybullet
   - mujoco
-  ros_package: robot_lab_maps
-  world_file: robot_lab_maps/maps/terrain_stepping_stones/worlds/terrain_stepping_stones.world
-  occupancy_map: robot_lab_maps/maps/terrain_stepping_stones/maps/map.pgm
-  ground_truth_available: true
-  dynamics:
-    static_obstacles: true
-    dynamic_obstacles: false
-    max_dynamic_count: 0
-  supported_robot_classes:
-  - legged
-  - humanoid
-  - aerial
+  size:
+    x: 16.0
+    y: 16.0
+    z: 3.0
+  source:
+    license: Apache-2.0
+    repository: internal
   spawn_zones:
   - id: default
     pose:
-      x: -8.0
-      y: -6.0
+      x: -7.0
+      y: -5.0
       z: 0.0
     size:
       x: 2.0
       y: 2.0
       z: 1.0
-  size:
-    x: 18.0
-    y: 14.0
-    z: 3.0
-  source:
-    repository: internal
-    license: Apache-2.0
+  status: integrated
+  supported_robot_classes:
+  - legged
+  - humanoid
+  - aerial
   tags:
-  - stepping_stones
+  - stairs
   - 3D
   - legged
   - terrain
-  created: '2026-09-05'
   updated: '2026-09-05'
-  seed: 8
-  reset_service: /robot_lab/reset
+  version: 1.0.0
+  world_file: robot_lab_maps/maps/terrain_stairs/worlds/terrain_stairs.world
+- created: '2026-09-05'
+  description: 3D arena with a serpentine path of raised stepping-stone platforms
+    and pits for footfall testing (P4.3)
+  dimension: 3D
+  dynamics:
+    dynamic_obstacles: false
+    max_dynamic_count: 0
+    static_obstacles: true
   goals:
   - id: east
     pose:
       x: 8.0
       y: 6.0
       yaw: 0.0
+  ground_truth_available: true
+  id: terrain_stepping_stones
+  name: Stepping-Stone Terrain
+  occupancy_map: robot_lab_maps/maps/terrain_stepping_stones/maps/map.pgm
   reference_paths:
   - id: spawn_to_east
     waypoints:
@@ -779,60 +795,63 @@
     - x: 8.0
       y: 6.0
       yaw: 0.0
-- id: aerial_course
-  version: 1.0.0
-  name: Aerial Navigation Course
-  description: Outdoor 3D slalom course with gate pylons and a gantry for aerial robot
-    navigation (P4.4)
-  status: integrated
-  dimension: 3D
+  reset_service: /robot_lab/reset
+  ros_package: robot_lab_maps
+  seed: 8
   simulator: gazebo
   simulators:
   - gazebo
   - isaac
   - pybullet
   - mujoco
-  ros_package: robot_lab_maps
-  world_file: robot_lab_maps/maps/aerial_course/worlds/aerial_course.world
-  occupancy_map: robot_lab_maps/maps/aerial_course/maps/map.pgm
-  ground_truth_available: true
+  size:
+    x: 18.0
+    y: 14.0
+    z: 3.0
+  source:
+    license: Apache-2.0
+    repository: internal
+  spawn_zones:
+  - id: default
+    pose:
+      x: -8.0
+      y: -6.0
+      z: 0.0
+    size:
+      x: 2.0
+      y: 2.0
+      z: 1.0
+  status: integrated
+  supported_robot_classes:
+  - legged
+  - humanoid
+  - aerial
+  tags:
+  - stepping_stones
+  - 3D
+  - legged
+  - terrain
+  updated: '2026-09-05'
+  version: 1.0.0
+  world_file: robot_lab_maps/maps/terrain_stepping_stones/worlds/terrain_stepping_stones.world
+- created: '2026-08-31'
+  description: Outdoor 3D slalom course with gate pylons and a gantry for aerial robot
+    navigation (P4.4)
+  dimension: 3D
   dynamics:
-    static_obstacles: true
     dynamic_obstacles: false
     max_dynamic_count: 0
-  supported_robot_classes:
-  - aerial
-  spawn_zones:
-  - id: takeoff_zone
-    pose:
-      x: -40.0
-      y: -40.0
-      z: 0.5
-    size:
-      x: 3.0
-      y: 3.0
-      z: 2.0
-  size:
-    x: 100.0
-    y: 100.0
-    z: 20.0
-  source:
-    repository: internal
-    license: Apache-2.0
-  tags:
-  - aerial
-  - 3D
-  - navigation
-  created: '2026-08-31'
-  updated: '2026-09-05'
-  seed: 9
-  reset_service: /robot_lab/reset
+    static_obstacles: true
   goals:
   - id: far_corner
     pose:
       x: 40.0
       y: 40.0
       yaw: 0.0
+  ground_truth_available: true
+  id: aerial_course
+  name: Aerial Navigation Course
+  occupancy_map: robot_lab_maps/maps/aerial_course/maps/map.pgm
   reference_paths:
   - id: slalom
     waypoints:
@@ -848,61 +867,60 @@
     - x: 40.0
       y: 40.0
       yaw: 0.0
-- id: aerial_indoor
-  version: 1.0.0
-  name: Aerial Indoor Course
-  description: Indoor multi-level 3D course with a raised deck, mezzanine plates,
-    and vertical pylons for aerial navigation (P4.4)
-  status: integrated
-  dimension: 3D
+  reset_service: /robot_lab/reset
+  ros_package: robot_lab_maps
+  seed: 9
   simulator: gazebo
   simulators:
   - gazebo
   - isaac
   - pybullet
   - mujoco
-  ros_package: robot_lab_maps
-  world_file: robot_lab_maps/maps/aerial_indoor/worlds/aerial_indoor.world
-  occupancy_map: robot_lab_maps/maps/aerial_indoor/maps/map.pgm
-  ground_truth_available: true
-  dynamics:
-    static_obstacles: true
-    dynamic_obstacles: false
-    max_dynamic_count: 0
-  supported_robot_classes:
-  - aerial
+  size:
+    x: 100.0
+    y: 100.0
+    z: 20.0
+  source:
+    license: Apache-2.0
+    repository: internal
   spawn_zones:
-  - id: default
+  - id: takeoff_zone
     pose:
-      x: -18.0
-      y: -18.0
+      x: -40.0
+      y: -40.0
       z: 0.5
     size:
       x: 3.0
       y: 3.0
       z: 2.0
-  size:
-    x: 40.0
-    y: 40.0
-    z: 10.0
-  source:
-    repository: internal
-    license: Apache-2.0
+  status: integrated
+  supported_robot_classes:
+  - aerial
   tags:
   - aerial
-  - indoor
   - 3D
-  - multi_level
-  created: '2026-09-05'
+  - navigation
   updated: '2026-09-05'
-  seed: 10
-  reset_service: /robot_lab/reset
+  version: 1.0.0
+  world_file: robot_lab_maps/maps/aerial_course/worlds/aerial_course.world
+- created: '2026-09-05'
+  description: Indoor multi-level 3D course with a raised deck, mezzanine plates,
+    and vertical pylons for aerial navigation (P4.4)
+  dimension: 3D
+  dynamics:
+    dynamic_obstacles: false
+    max_dynamic_count: 0
+    static_obstacles: true
   goals:
   - id: far_corner
     pose:
       x: 18.0
       y: 18.0
       yaw: 0.0
+  ground_truth_available: true
+  id: aerial_indoor
+  name: Aerial Indoor Course
+  occupancy_map: robot_lab_maps/maps/aerial_indoor/maps/map.pgm
   reference_paths:
   - id: multilevel
     waypoints:
@@ -927,30 +945,67 @@
     - x: 18.0
       y: 18.0
       yaw: 0.0
-- id: bigger_warehouse
-  version: 1.0.0
-  name: Bigger Warehouse
-  description: Larger warehouse environment with more complex layout
-  status: integrated
-  dimension: 2D
+  reset_service: /robot_lab/reset
+  ros_package: robot_lab_maps
+  seed: 10
   simulator: gazebo
   simulators:
   - gazebo
   - isaac
   - pybullet
   - mujoco
-  world_file: robot_lab_maps/maps/bigger_warehouse/worlds/bigger_warehouse.world
-  occupancy_map: robot_lab_maps/maps/bigger_warehouse/maps/map.pgm
-  ground_truth_available: true
+  size:
+    x: 40.0
+    y: 40.0
+    z: 10.0
+  source:
+    license: Apache-2.0
+    repository: internal
+  spawn_zones:
+  - id: default
+    pose:
+      x: -18.0
+      y: -18.0
+      z: 0.5
+    size:
+      x: 3.0
+      y: 3.0
+      z: 2.0
+  status: integrated
+  supported_robot_classes:
+  - aerial
+  tags:
+  - aerial
+  - indoor
+  - 3D
+  - multi_level
+  updated: '2026-09-05'
+  version: 1.0.0
+  world_file: robot_lab_maps/maps/aerial_indoor/worlds/aerial_indoor.world
+- created: '2026-08-31'
+  description: Larger warehouse environment with more complex layout
+  dimension: 2D
   dynamics:
-    static_obstacles: true
     dynamic_obstacles: false
     max_dynamic_count: 0
-  supported_robot_classes:
-  - mobile
-  - legged
-  - humanoid
-  - aerial
+    static_obstacles: true
+  ground_truth_available: true
+  id: bigger_warehouse
+  name: Bigger Warehouse
+  occupancy_map: robot_lab_maps/maps/bigger_warehouse/maps/map.pgm
+  simulator: gazebo
+  simulators:
+  - gazebo
+  - isaac
+  - pybullet
+  - mujoco
+  size:
+    x: 40.0
+    y: 30.0
+    z: 5.0
+  source:
+    license: Apache-2.0
+    repository: internal
   spawn_zones:
   - id: default
     pose:
@@ -961,45 +1016,45 @@
       x: 2.0
       y: 2.0
       z: 1.0
-  size:
-    x: 40.0
-    y: 30.0
-    z: 5.0
-  source:
-    repository: internal
-    license: Apache-2.0
+  status: integrated
+  supported_robot_classes:
+  - mobile
+  - legged
+  - humanoid
+  - aerial
   tags:
   - warehouse
   - industrial
   - 2D
   - large
-  created: '2026-08-31'
   updated: '2026-08-31'
-- id: empty
   version: 1.0.0
-  name: Empty World
+  world_file: robot_lab_maps/maps/bigger_warehouse/worlds/bigger_warehouse.world
+- created: '2026-08-31'
   description: Empty environment for testing basic functionality
-  status: integrated
   dimension: 2D
+  dynamics:
+    dynamic_obstacles: false
+    max_dynamic_count: 0
+    static_obstacles: false
+  ground_truth_available: true
+  id: empty
+  name: Empty World
+  occupancy_map: ''
+  ros_package: robot_lab_maps
   simulator: gazebo
   simulators:
   - gazebo
   - isaac
   - pybullet
   - mujoco
-  ros_package: robot_lab_maps
-  world_file: robot_lab_maps/maps/empty/worlds/empty.world
-  occupancy_map: ''
-  ground_truth_available: true
-  dynamics:
-    static_obstacles: false
-    dynamic_obstacles: false
-    max_dynamic_count: 0
-  supported_robot_classes:
-  - mobile
-  - legged
-  - humanoid
-  - aerial
+  size:
+    x: 100.0
+    y: 100.0
+    z: 10.0
+  source:
+    license: Apache-2.0
+    repository: internal
   spawn_zones:
   - id: default
     pose:
@@ -1010,91 +1065,43 @@
       x: 5.0
       y: 5.0
       z: 1.0
-  size:
-    x: 100.0
-    y: 100.0
-    z: 10.0
-  source:
-    repository: internal
-    license: Apache-2.0
+  status: integrated
+  supported_robot_classes:
+  - mobile
+  - legged
+  - humanoid
+  - aerial
   tags:
   - empty
   - testing
   - 2D
-  created: '2026-08-31'
   updated: '2026-08-31'
-- id: residential_demo
   version: 1.0.0
-  name: Residential Demo
+  world_file: robot_lab_maps/maps/empty/worlds/empty.world
+- created: '2026-08-31'
   description: Residential home demonstration environment
-  status: integrated
   dimension: 2D
+  dynamics:
+    dynamic_obstacles: false
+    max_dynamic_count: 0
+    static_obstacles: true
+  ground_truth_available: true
+  id: residential_demo
+  name: Residential Demo
+  occupancy_map: robot_lab_maps/maps/residential_demo/maps/map.pgm
   simulator: gazebo
   simulators:
   - gazebo
   - isaac
   - pybullet
   - mujoco
-  world_file: robot_lab_maps/maps/residential_demo/worlds/residential_demo.world
-  occupancy_map: robot_lab_maps/maps/residential_demo/maps/map.pgm
-  ground_truth_available: true
-  dynamics:
-    static_obstacles: true
-    dynamic_obstacles: false
-    max_dynamic_count: 0
-  supported_robot_classes:
-  - mobile
-  - legged
-  - humanoid
-  - aerial
-  spawn_zones:
-  - id: default
-    pose:
-      x: 0.0
-      y: 0.0
-      z: 0.0
-    size:
-      x: 2.0
-      y: 2.0
-      z: 1.0
   size:
     x: 25.0
     y: 20.0
     z: 3.5
   source:
-    repository: internal
     license: Apache-2.0
-  tags:
-  - residential
-  - home
-  - demo
-  - 2D
-  created: '2026-08-31'
-  updated: '2026-08-31'
-- id: simple_box
-  version: 1.0.0
-  name: Simple Box
-  description: Minimal box environment for basic testing
-  status: integrated
-  dimension: 2D
-  simulator: gazebo
-  simulators:
-  - gazebo
-  - isaac
-  - pybullet
-  - mujoco
-  world_file: robot_lab_maps/maps/simple_box/worlds/simple_box.world
-  occupancy_map: robot_lab_maps/maps/simple_box/maps/map.pgm
-  ground_truth_available: true
-  dynamics:
-    static_obstacles: true
-    dynamic_obstacles: false
-    max_dynamic_count: 0
-  supported_robot_classes:
-  - mobile
-  - legged
-  - humanoid
-  - aerial
+    repository: internal
   spawn_zones:
   - id: default
     pose:
@@ -1105,46 +1112,111 @@
       x: 2.0
       y: 2.0
       z: 1.0
-  size:
-    x: 10.0
-    y: 10.0
-    z: 3.0
-  source:
-    repository: internal
-    license: Apache-2.0
-  tags:
-  - simple
-  - box
-  - testing
-  - 2D
-  created: '2026-08-31'
-  updated: '2026-08-31'
-- id: nav_empty
-  version: 1.0.0
-  name: Nav Empty Arena
-  description: Deterministic large open navigation arena (12x12m) with boundary fence
-    and slim reference posts for straight-line path planning
   status: integrated
+  supported_robot_classes:
+  - mobile
+  - legged
+  - humanoid
+  - aerial
+  tags:
+  - residential
+  - home
+  - demo
+  - 2D
+  updated: '2026-08-31'
+  version: 1.0.0
+  world_file: robot_lab_maps/maps/residential_demo/worlds/residential_demo.world
+- created: '2026-08-31'
+  description: Minimal box environment for basic testing
   dimension: 2D
+  dynamics:
+    dynamic_obstacles: false
+    max_dynamic_count: 0
+    static_obstacles: true
+  ground_truth_available: true
+  id: simple_box
+  name: Simple Box
+  occupancy_map: robot_lab_maps/maps/simple_box/maps/map.pgm
   simulator: gazebo
   simulators:
   - gazebo
   - isaac
   - pybullet
   - mujoco
-  ros_package: robot_lab_maps
-  world_file: robot_lab_maps/maps/nav_empty/worlds/nav_empty.world
-  occupancy_map: robot_lab_maps/maps/nav_empty/maps/map.pgm
-  ground_truth_available: true
-  dynamics:
-    static_obstacles: true
-    dynamic_obstacles: false
-    max_dynamic_count: 0
+  size:
+    x: 10.0
+    y: 10.0
+    z: 3.0
+  source:
+    license: Apache-2.0
+    repository: internal
+  spawn_zones:
+  - id: default
+    pose:
+      x: 0.0
+      y: 0.0
+      z: 0.0
+    size:
+      x: 2.0
+      y: 2.0
+      z: 1.0
+  status: integrated
   supported_robot_classes:
   - mobile
   - legged
   - humanoid
   - aerial
+  tags:
+  - simple
+  - box
+  - testing
+  - 2D
+  updated: '2026-08-31'
+  version: 1.0.0
+  world_file: robot_lab_maps/maps/simple_box/worlds/simple_box.world
+- created: '2026-09-05'
+  description: Deterministic large open navigation arena (12x12m) with boundary fence
+    and slim reference posts for straight-line path planning
+  dimension: 2D
+  dynamics:
+    dynamic_obstacles: false
+    max_dynamic_count: 0
+    static_obstacles: true
+  goals:
+  - id: center
+    pose:
+      x: 0.0
+      y: 0.0
+      yaw: 0.0
+  ground_truth_available: true
+  id: nav_empty
+  name: Nav Empty Arena
+  occupancy_map: robot_lab_maps/maps/nav_empty/maps/map.pgm
+  reference_paths:
+  - id: spawn_to_center
+    waypoints:
+    - x: -0.5
+      y: -0.5
+      yaw: 0.0
+    - x: 0.0
+      y: 0.0
+      yaw: 0.0
+  reset_service: /robot_lab/reset
+  ros_package: robot_lab_maps
+  seed: 1
+  simulator: gazebo
+  simulators:
+  - gazebo
+  - isaac
+  - pybullet
+  - mujoco
+  size:
+    x: 12.0
+    y: 12.0
+    z: 2.0
+  source:
+    license: Apache-2.0
+    repository: internal
   spawn_zones:
   - id: default
     pose:
@@ -1155,97 +1227,39 @@
       x: 1.0
       y: 1.0
       z: 1.0
-  size:
-    x: 12.0
-    y: 12.0
-    z: 2.0
-  source:
-    repository: internal
-    license: Apache-2.0
+  status: integrated
+  supported_robot_classes:
+  - mobile
+  - legged
+  - humanoid
+  - aerial
   tags:
   - navigation
   - empty
   - arena
   - 2D
   - deterministic
-  created: '2026-09-05'
   updated: '2026-09-05'
-  seed: 1
-  reset_service: /robot_lab/reset
-  goals:
-  - id: center
-    pose:
-      x: 0.0
-      y: 0.0
-      yaw: 0.0
-  reference_paths:
-  - id: spawn_to_center
-    waypoints:
-    - x: -0.5
-      y: -0.5
-      yaw: 0.0
-    - x: 0.0
-      y: 0.0
-      yaw: 0.0
-- id: nav_obstacle
   version: 1.0.0
-  name: Nav Obstacle Field
+  world_file: robot_lab_maps/maps/nav_empty/worlds/nav_empty.world
+- created: '2026-09-05'
   description: Deterministic 17x17m field of scattered box obstacles of varied size
     for multi-waypoint avoidance planning
-  status: integrated
   dimension: 2D
-  simulator: gazebo
-  simulators:
-  - gazebo
-  - isaac
-  - pybullet
-  - mujoco
-  ros_package: robot_lab_maps
-  world_file: robot_lab_maps/maps/nav_obstacle/worlds/nav_obstacle.world
-  occupancy_map: robot_lab_maps/maps/nav_obstacle/maps/map.pgm
-  ground_truth_available: true
   dynamics:
-    static_obstacles: true
     dynamic_obstacles: false
     max_dynamic_count: 0
-  supported_robot_classes:
-  - mobile
-  - legged
-  - humanoid
-  - aerial
-  spawn_zones:
-  - id: default
-    pose:
-      x: -7.0
-      y: -7.0
-      z: 0.0
-    size:
-      x: 1.0
-      y: 1.0
-      z: 1.0
-  size:
-    x: 17.0
-    y: 17.0
-    z: 2.0
-  source:
-    repository: internal
-    license: Apache-2.0
-  tags:
-  - navigation
-  - obstacle
-  - arena
-  - 2D
-  - deterministic
-  created: '2026-09-05'
-  updated: '2026-09-05'
-  seed: 2
-  reset_service: /robot_lab/reset
+    static_obstacles: true
   goals:
   - id: far_corner
     pose:
       x: 7.0
       y: 7.0
       yaw: 0.0
+  ground_truth_available: true
+  id: nav_obstacle
+  name: Nav Obstacle Field
+  occupancy_map: robot_lab_maps/maps/nav_obstacle/maps/map.pgm
   reference_paths:
   - id: spawn_to_far_corner
     waypoints:
@@ -1264,32 +1278,22 @@
     - x: 7.0
       y: 7.0
       yaw: 0.0
-- id: nav_maze
-  version: 1.0.0
-  name: Nav Maze Arena
-  description: Deterministic 16x16m maze with outer wall and winding corridors, entrance
-    at west and goal at east
-  status: integrated
-  dimension: 2D
+  reset_service: /robot_lab/reset
+  ros_package: robot_lab_maps
+  seed: 2
   simulator: gazebo
   simulators:
   - gazebo
   - isaac
   - pybullet
   - mujoco
-  ros_package: robot_lab_maps
-  world_file: robot_lab_maps/maps/nav_maze/worlds/nav_maze.world
-  occupancy_map: robot_lab_maps/maps/nav_maze/maps/map.pgm
-  ground_truth_available: true
-  dynamics:
-    static_obstacles: true
-    dynamic_obstacles: false
-    max_dynamic_count: 0
-  supported_robot_classes:
-  - mobile
-  - legged
-  - humanoid
-  - aerial
+  size:
+    x: 17.0
+    y: 17.0
+    z: 2.0
+  source:
+    license: Apache-2.0
+    repository: internal
   spawn_zones:
   - id: default
     pose:
@@ -1300,29 +1304,39 @@
       x: 1.0
       y: 1.0
       z: 1.0
-  size:
-    x: 16.0
-    y: 16.0
-    z: 2.0
-  source:
-    repository: internal
-    license: Apache-2.0
+  status: integrated
+  supported_robot_classes:
+  - mobile
+  - legged
+  - humanoid
+  - aerial
   tags:
   - navigation
-  - maze
+  - obstacle
   - arena
   - 2D
   - deterministic
-  created: '2026-09-05'
   updated: '2026-09-05'
-  seed: 3
-  reset_service: /robot_lab/reset
+  version: 1.0.0
+  world_file: robot_lab_maps/maps/nav_obstacle/worlds/nav_obstacle.world
+- created: '2026-09-05'
+  description: Deterministic 16x16m maze with outer wall and winding corridors, entrance
+    at west and goal at east
+  dimension: 2D
+  dynamics:
+    dynamic_obstacles: false
+    max_dynamic_count: 0
+    static_obstacles: true
   goals:
   - id: exit_east
     pose:
       x: 7.0
       y: 7.0
       yaw: 0.0
+  ground_truth_available: true
+  id: nav_maze
+  name: Nav Maze Arena
+  occupancy_map: robot_lab_maps/maps/nav_maze/maps/map.pgm
   reference_paths:
   - id: spawn_to_exit
     waypoints:
@@ -1353,66 +1367,65 @@
     - x: 7.0
       y: 7.0
       yaw: 0.0
-- id: nav_narrow_passage
-  version: 1.0.0
-  name: Nav Narrow Passage Arena
-  description: Deterministic 14x14m floor with successive offset-gap barriers forcing
-    zigzag navigation through narrow passages
-  status: integrated
-  dimension: 2D
+  reset_service: /robot_lab/reset
+  ros_package: robot_lab_maps
+  seed: 3
   simulator: gazebo
   simulators:
   - gazebo
   - isaac
   - pybullet
   - mujoco
-  ros_package: robot_lab_maps
-  world_file: robot_lab_maps/maps/nav_narrow_passage/worlds/nav_narrow_passage.world
-  occupancy_map: robot_lab_maps/maps/nav_narrow_passage/maps/map.pgm
-  ground_truth_available: true
-  dynamics:
-    static_obstacles: true
-    dynamic_obstacles: false
-    max_dynamic_count: 0
-  supported_robot_classes:
-  - mobile
-  - legged
-  - humanoid
-  - aerial
+  size:
+    x: 16.0
+    y: 16.0
+    z: 2.0
+  source:
+    license: Apache-2.0
+    repository: internal
   spawn_zones:
   - id: default
     pose:
-      x: -6.0
-      y: -6.0
+      x: -7.0
+      y: -7.0
       z: 0.0
     size:
       x: 1.0
       y: 1.0
       z: 1.0
-  size:
-    x: 14.0
-    y: 14.0
-    z: 2.0
-  source:
-    repository: internal
-    license: Apache-2.0
+  status: integrated
+  supported_robot_classes:
+  - mobile
+  - legged
+  - humanoid
+  - aerial
   tags:
   - navigation
-  - narrow
-  - passage
+  - maze
   - arena
   - 2D
   - deterministic
-  created: '2026-09-05'
   updated: '2026-09-05'
-  seed: 4
-  reset_service: /robot_lab/reset
+  version: 1.0.0
+  world_file: robot_lab_maps/maps/nav_maze/worlds/nav_maze.world
+- created: '2026-09-05'
+  description: Deterministic 14x14m floor with successive offset-gap barriers forcing
+    zigzag navigation through narrow passages
+  dimension: 2D
+  dynamics:
+    dynamic_obstacles: false
+    max_dynamic_count: 0
+    static_obstacles: true
   goals:
   - id: exit
     pose:
       x: 6.0
       y: 6.0
       yaw: 0.0
+  ground_truth_available: true
+  id: nav_narrow_passage
+  name: Nav Narrow Passage Arena
+  occupancy_map: robot_lab_maps/maps/nav_narrow_passage/maps/map.pgm
   reference_paths:
   - id: spawn_to_exit
     waypoints:
@@ -1428,65 +1441,66 @@
     - x: 6.0
       y: 6.0
       yaw: 0.0
-- id: nav_warehouse
-  version: 1.0.0
-  name: Nav Warehouse Arena
-  description: Deterministic 18x18m warehouse with parallel shelf rows and driving
-    aisles plus pallet boxes
-  status: integrated
-  dimension: 2D
+  reset_service: /robot_lab/reset
+  ros_package: robot_lab_maps
+  seed: 4
   simulator: gazebo
   simulators:
   - gazebo
   - isaac
   - pybullet
   - mujoco
-  ros_package: robot_lab_maps
-  world_file: robot_lab_maps/maps/nav_warehouse/worlds/nav_warehouse.world
-  occupancy_map: robot_lab_maps/maps/nav_warehouse/maps/map.pgm
-  ground_truth_available: true
-  dynamics:
-    static_obstacles: true
-    dynamic_obstacles: false
-    max_dynamic_count: 0
-  supported_robot_classes:
-  - mobile
-  - legged
-  - humanoid
-  - aerial
+  size:
+    x: 14.0
+    y: 14.0
+    z: 2.0
+  source:
+    license: Apache-2.0
+    repository: internal
   spawn_zones:
   - id: default
     pose:
-      x: -8.0
-      y: -8.0
+      x: -6.0
+      y: -6.0
       z: 0.0
     size:
       x: 1.0
       y: 1.0
       z: 1.0
-  size:
-    x: 18.0
-    y: 18.0
-    z: 2.0
-  source:
-    repository: internal
-    license: Apache-2.0
+  status: integrated
+  supported_robot_classes:
+  - mobile
+  - legged
+  - humanoid
+  - aerial
   tags:
   - navigation
-  - warehouse
+  - narrow
+  - passage
   - arena
   - 2D
   - deterministic
-  created: '2026-09-05'
   updated: '2026-09-05'
-  seed: 5
-  reset_service: /robot_lab/reset
+  version: 1.0.0
+  world_file: robot_lab_maps/maps/nav_narrow_passage/worlds/nav_narrow_passage.world
+- created: '2026-09-05'
+  description: Deterministic 18x18m warehouse with parallel shelf rows and driving
+    aisles plus pallet boxes
+  dimension: 2D
+  dynamics:
+    dynamic_obstacles: false
+    max_dynamic_count: 0
+    static_obstacles: true
   goals:
   - id: far_corner
     pose:
       x: 8.0
       y: 8.0
       yaw: 0.0
+  ground_truth_available: true
+  id: nav_warehouse
+  name: Nav Warehouse Arena
+  occupancy_map: robot_lab_maps/maps/nav_warehouse/maps/map.pgm
   reference_paths:
   - id: spawn_to_far_corner
     waypoints:
@@ -1505,64 +1519,65 @@
     - x: 8.0
       y: 8.0
       yaw: 0.0
-- id: nav_dynamic
-  version: 1.0.0
-  name: Dynamic Obstacle Arena
-  description: 16m x 16m grid arena with scripted moving-obstacle actors for dynamic-obstacle
-    navigation testing (P4.5)
-  status: integrated
-  dimension: 2D
+  reset_service: /robot_lab/reset
+  ros_package: robot_lab_maps
+  seed: 5
   simulator: gazebo
   simulators:
   - gazebo
   - isaac
   - pybullet
   - mujoco
-  ros_package: robot_lab_maps
-  world_file: robot_lab_maps/maps/nav_dynamic/worlds/nav_dynamic.world
-  occupancy_map: robot_lab_maps/maps/nav_dynamic/maps/map.pgm
-  ground_truth_available: true
-  dynamics:
-    static_obstacles: true
-    dynamic_obstacles: true
-    max_dynamic_count: 2
+  size:
+    x: 18.0
+    y: 18.0
+    z: 2.0
+  source:
+    license: Apache-2.0
+    repository: internal
+  spawn_zones:
+  - id: default
+    pose:
+      x: -8.0
+      y: -8.0
+      z: 0.0
+    size:
+      x: 1.0
+      y: 1.0
+      z: 1.0
+  status: integrated
   supported_robot_classes:
   - mobile
   - legged
   - humanoid
   - aerial
-  spawn_zones:
-  - id: default
-    pose:
-      x: -7.0
-      y: -7.0
-      z: 0.0
-    size:
-      x: 2.0
-      y: 2.0
-      z: 1.0
-  size:
-    x: 16.0
-    y: 16.0
-    z: 3.0
-  source:
-    repository: internal
-    license: Apache-2.0
   tags:
-  - dynamic
-  - obstacles
+  - navigation
+  - warehouse
+  - arena
   - 2D
-  - moving
-  created: '2026-09-05'
+  - deterministic
   updated: '2026-09-05'
-  seed: 11
-  reset_service: /robot_lab/reset
+  version: 1.0.0
+  world_file: robot_lab_maps/maps/nav_warehouse/worlds/nav_warehouse.world
+- created: '2026-09-05'
+  description: 16m x 16m grid arena with scripted moving-obstacle actors for dynamic-obstacle
+    navigation testing (P4.5)
+  dimension: 2D
+  dynamics:
+    dynamic_obstacles: true
+    max_dynamic_count: 2
+    static_obstacles: true
   goals:
   - id: far_corner
     pose:
       x: 7.0
       y: 7.0
       yaw: 0.0
+  ground_truth_available: true
+  id: nav_dynamic
+  name: Dynamic Obstacle Arena
+  occupancy_map: robot_lab_maps/maps/nav_dynamic/maps/map.pgm
   reference_paths:
   - id: spawn_to_far_corner
     waypoints:
@@ -1581,32 +1596,22 @@
     - x: 7.0
       y: 7.0
       yaw: 0.0
-- id: nav_sensor_degraded
-  version: 1.0.0
-  name: Sensor-Degraded Arena
-  description: 16m x 16m arena with tall blind-corner walls that deliberately occlude
-    a 2D LIDAR for sensor-degradation testing (P4.5)
-  status: integrated
-  dimension: 2D
+  reset_service: /robot_lab/reset
+  ros_package: robot_lab_maps
+  seed: 11
   simulator: gazebo
   simulators:
   - gazebo
   - isaac
   - pybullet
   - mujoco
-  ros_package: robot_lab_maps
-  world_file: robot_lab_maps/maps/nav_sensor_degraded/worlds/nav_sensor_degraded.world
-  occupancy_map: robot_lab_maps/maps/nav_sensor_degraded/maps/map.pgm
-  ground_truth_available: true
-  dynamics:
-    static_obstacles: true
-    dynamic_obstacles: false
-    max_dynamic_count: 0
-  supported_robot_classes:
-  - mobile
-  - legged
-  - humanoid
-  - aerial
+  size:
+    x: 16.0
+    y: 16.0
+    z: 3.0
+  source:
+    license: Apache-2.0
+    repository: internal
   spawn_zones:
   - id: default
     pose:
@@ -1617,28 +1622,38 @@
       x: 2.0
       y: 2.0
       z: 1.0
-  size:
-    x: 16.0
-    y: 16.0
-    z: 3.0
-  source:
-    repository: internal
-    license: Apache-2.0
+  status: integrated
+  supported_robot_classes:
+  - mobile
+  - legged
+  - humanoid
+  - aerial
   tags:
-  - sensor_degradation
-  - blind_corner
+  - dynamic
+  - obstacles
   - 2D
-  - occluded
-  created: '2026-09-05'
+  - moving
   updated: '2026-09-05'
-  seed: 12
-  reset_service: /robot_lab/reset
+  version: 1.0.0
+  world_file: robot_lab_maps/maps/nav_dynamic/worlds/nav_dynamic.world
+- created: '2026-09-05'
+  description: 16m x 16m arena with tall blind-corner walls that deliberately occlude
+    a 2D LIDAR for sensor-degradation testing (P4.5)
+  dimension: 2D
+  dynamics:
+    dynamic_obstacles: false
+    max_dynamic_count: 0
+    static_obstacles: true
   goals:
   - id: far_corner
     pose:
       x: 7.0
       y: 7.0
       yaw: 0.0
+  ground_truth_available: true
+  id: nav_sensor_degraded
+  name: Sensor-Degraded Arena
+  occupancy_map: robot_lab_maps/maps/nav_sensor_degraded/maps/map.pgm
   reference_paths:
   - id: spawn_to_far_corner
     waypoints:
@@ -1657,34 +1672,73 @@
     - x: 7.0
       y: 7.0
       yaw: 0.0
-
-- id: celisca_floor_1_detailed
-  version: 0.1.0
-  name: CELISCA F1 detailed (building floor 2)
+  reset_service: /robot_lab/reset
+  ros_package: robot_lab_maps
+  seed: 12
+  simulator: gazebo
+  simulators:
+  - gazebo
+  - isaac
+  - pybullet
+  - mujoco
+  size:
+    x: 16.0
+    y: 16.0
+    z: 3.0
+  source:
+    license: Apache-2.0
+    repository: internal
+  spawn_zones:
+  - id: default
+    pose:
+      x: -7.0
+      y: -7.0
+      z: 0.0
+    size:
+      x: 2.0
+      y: 2.0
+      z: 1.0
+  status: integrated
+  supported_robot_classes:
+  - mobile
+  - legged
+  - humanoid
+  - aerial
+  tags:
+  - sensor_degradation
+  - blind_corner
+  - 2D
+  - occluded
+  updated: '2026-09-05'
+  version: 1.0.0
+  world_file: robot_lab_maps/maps/nav_sensor_degraded/worlds/nav_sensor_degraded.world
+- created: '2026-10-16'
   description: Original metre-scale local F1 / 2.OG floor with full furniture visuals
     and approximate bathroom additions; static doors/lifts; runtime qualification
     pending.
-  status: available
   dimension: 3D
+  dynamics:
+    dynamic_obstacles: false
+    max_dynamic_count: 0
+    static_obstacles: true
+  ground_truth_available: true
+  id: celisca_floor_1_detailed
+  name: CELISCA F1 detailed (building floor 2)
+  occupancy_map: robot_lab_maps/maps/celisca_floor_1_detailed/maps/map.pgm
+  ros_package: robot_lab_maps
   simulator: gazebo
   simulators:
   - gazebo
   - mujoco
   - pybullet
   - isaac
-  ros_package: robot_lab_maps
-  world_file: robot_lab_maps/maps/celisca_floor_1_detailed/worlds/celisca_floor_1_detailed.world
-  occupancy_map: robot_lab_maps/maps/celisca_floor_1_detailed/maps/map.pgm
-  ground_truth_available: true
-  dynamics:
-    static_obstacles: true
-    dynamic_obstacles: false
-    max_dynamic_count: 0
-  supported_robot_classes:
-  - mobile
-  - legged
-  - humanoid
-  - aerial
+  size:
+    x: 58.913747787475586
+    y: 26.93347454071045
+    z: 3.0375588660705968
+  source:
+    license: Unresolved; original and derived rights not established
+    repository: /workspace/molar_voice_super_gui_redesign/simulation/celisca
   spawn_zones:
   - id: source_checked
     pose:
@@ -1695,13 +1749,12 @@
       x: 1.6
       y: 1.6
       z: 2.3
-  size:
-    x: 58.913747787475586
-    y: 26.93347454071045
-    z: 3.0375588660705968
-  source:
-    repository: /workspace/molar_voice_super_gui_redesign/simulation/celisca
-    license: Unresolved; original and derived rights not established
+  status: available
+  supported_robot_classes:
+  - mobile
+  - legged
+  - humanoid
+  - aerial
   tags:
   - celisca
   - detailed
@@ -1709,36 +1762,36 @@
   - static
   - experimental
   - building_floor_2
-  created: '2026-10-16'
   updated: '2026-10-16'
-
-- id: celisca_floor_2_detailed
   version: 0.1.0
-  name: CELISCA F2 detailed (building floor 3)
+  world_file: robot_lab_maps/maps/celisca_floor_1_detailed/worlds/celisca_floor_1_detailed.world
+- created: '2026-10-16'
   description: Original metre-scale local F2 / 3.OG floor with full furniture visuals
     and approximate bathroom additions; static doors/lifts; runtime qualification
     pending.
-  status: available
   dimension: 3D
+  dynamics:
+    dynamic_obstacles: false
+    max_dynamic_count: 0
+    static_obstacles: true
+  ground_truth_available: true
+  id: celisca_floor_2_detailed
+  name: CELISCA F2 detailed (building floor 3)
+  occupancy_map: robot_lab_maps/maps/celisca_floor_2_detailed/maps/map.pgm
+  ros_package: robot_lab_maps
   simulator: gazebo
   simulators:
   - gazebo
   - mujoco
   - pybullet
   - isaac
-  ros_package: robot_lab_maps
-  world_file: robot_lab_maps/maps/celisca_floor_2_detailed/worlds/celisca_floor_2_detailed.world
-  occupancy_map: robot_lab_maps/maps/celisca_floor_2_detailed/maps/map.pgm
-  ground_truth_available: true
-  dynamics:
-    static_obstacles: true
-    dynamic_obstacles: false
-    max_dynamic_count: 0
-  supported_robot_classes:
-  - mobile
-  - legged
-  - humanoid
-  - aerial
+  size:
+    x: 59.13669967651367
+    y: 26.269356727600098
+    z: 3.3596869707107544
+  source:
+    license: Unresolved; original and derived rights not established
+    repository: /workspace/molar_voice_super_gui_redesign/simulation/celisca
   spawn_zones:
   - id: source_checked
     pose:
@@ -1749,13 +1802,12 @@
       x: 1.6
       y: 1.6
       z: 2.3
-  size:
-    x: 59.13669967651367
-    y: 26.269356727600098
-    z: 3.3596869707107544
-  source:
-    repository: /workspace/molar_voice_super_gui_redesign/simulation/celisca
-    license: Unresolved; original and derived rights not established
+  status: available
+  supported_robot_classes:
+  - mobile
+  - legged
+  - humanoid
+  - aerial
   tags:
   - celisca
   - detailed
@@ -1763,5 +1815,106 @@
   - static
   - experimental
   - building_floor_3
-  created: '2026-10-16'
   updated: '2026-10-16'
+  version: 0.1.0
+  world_file: robot_lab_maps/maps/celisca_floor_2_detailed/worlds/celisca_floor_2_detailed.world
+- created: '2026-10-01'
+  description: 3D arena with heightmap terrain (generated by gen_heightfield_arena.py)
+  dimension: 3D
+  dynamics:
+    dynamic_obstacles: false
+    max_dynamic_count: 0
+    static_obstacles: true
+  ground_truth_available: true
+  id: terrain_heightfield
+  name: Terrain Heightfield
+  occupancy_map: robot_lab_maps/maps/terrain_heightfield/maps/map.yaml
+  reset_service: /robot_lab/reset
+  ros_package: robot_lab_maps
+  seed: 7
+  simulator: gazebo
+  simulators:
+  - gazebo
+  - mujoco
+  - pybullet
+  - isaac
+  size:
+    x: 20.0
+    y: 20.0
+    z: 3.0
+  source:
+    license: Apache-2.0
+    repository: internal
+  spawn_zones:
+  - id: default
+    pose:
+      x: -6.0
+      y: -6.0
+      z: 0.02
+    size:
+      x: 2.0
+      y: 2.0
+      z: 1.0
+  status: integrated
+  supported_robot_classes:
+  - legged
+  - humanoid
+  - aerial
+  tags:
+  - terrain
+  - 3D
+  - heightfield
+  - generated
+  updated: '2026-10-20'
+  version: 1.0.0
+  world_file: robot_lab_maps/maps/terrain_heightfield/worlds/terrain_heightfield.world
+- created: '2026-10-01'
+  description: 3D arena with rough terrain platforms and obstacles
+  dimension: 3D
+  dynamics:
+    dynamic_obstacles: false
+    max_dynamic_count: 0
+    static_obstacles: true
+  ground_truth_available: true
+  id: terrain_rough
+  name: Rough Terrain
+  occupancy_map: robot_lab_maps/maps/terrain_rough/maps/map.yaml
+  reset_service: /robot_lab/reset
+  ros_package: robot_lab_maps
+  seed: 7
+  simulator: gazebo
+  simulators:
+  - gazebo
+  - isaac
+  - pybullet
+  - mujoco
+  size:
+    x: 20.0
+    y: 20.0
+    z: 1.0
+  source:
+    license: Apache-2.0
+    repository: internal
+  spawn_zones:
+  - id: default
+    pose:
+      x: -6.0
+      y: -6.0
+      z: 0.2
+    size:
+      x: 2.0
+      y: 2.0
+      z: 1.0
+  status: integrated
+  supported_robot_classes:
+  - legged
+  - humanoid
+  - aerial
+  tags:
+  - terrain
+  - 3D
+  - rough
+  - generated
+  updated: '2026-10-20'
+  version: 1.0.0
+  world_file: robot_lab_maps/maps/terrain_rough/worlds/terrain_rough.world

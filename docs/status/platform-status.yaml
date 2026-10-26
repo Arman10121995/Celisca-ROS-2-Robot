@@ -3786,8 +3786,10 @@ tasks:
           conversion with measured conventions'
         - '16 tests passing (test_sdf_heightfield.py): SDF reader, grid span, partial
           levels, OBJ output, conversion correctness'
-        - 'Gazebo measured conventions verified: 5 marine worlds load cleanly in gz-sim
-          8 (tank, reef, harbor, cave, wreck)'
+        - 'Gazebo measured conventions verified: 5 marine worlds + 2 terrain worlds
+          load cleanly in gz-sim 8'
+        - 'All 14 3D worlds now registered in GUI (environments.yaml + sim_maps.yaml):
+          marine (5), terrain (5), aerial (2), CELISCA detailed (2)'
         - 'Remaining: GUI terrain generator workflow (Mapbox provider, PII-safe manual
           mode), Isaac runtime contact trial, class-specific terrain missions'
         next_action: Pin the sai aravind terrain generator with SSD output/cache and
