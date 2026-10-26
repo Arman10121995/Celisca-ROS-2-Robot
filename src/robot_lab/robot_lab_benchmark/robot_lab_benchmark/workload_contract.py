@@ -99,8 +99,8 @@ def read_result(directory, run_id, domain, specification, invalidated=False):
         if (isinstance(result, dict) and result.get('schema') == RESULT_SCHEMA
                 and result.get('ros_domain_id') == domain
                 and result.get('workload_sha256') == _sha256(directory/'workload.json')):
-            # Verify result ownership: run_id and trace_sha256 must match spec/source
-            if (result.get('run_id') != specification.get('run_id') or
+            # Verify result ownership: run_id must match caller identity, trace_sha256 must match source
+            if (result.get('run_id') != run_id or
                     result.get('trace_sha256') != _sha256(directory/'mission-trace.jsonl')):
                 return None, 'identity'
             # Validate physical goal contract
