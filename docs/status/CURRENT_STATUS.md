@@ -595,4 +595,34 @@ edits and keep large artifacts on the mounted workspace SSD.
 The later P4 camera-packing change preserves identical ROS wire messages and
 passes four serialization cases plus a new physical Labbot hospital route
 (0.046 m / +1.97°). Actual before/after clock windows remain about 0.13× real
+
+October 20: R6.4 environmental qualification completed. All R6 tasks now done with
+real backend tests: 5 reset validation tests, 13 deterministic sensor
+disturbance tests, 6 terrain/aerial tests, 10 diverse maps tests. Physics tier
+green: 64/64 tests pass. R7 benchmark framework with 39 tests + 21 verification
+tests. R8.1 backend qualification 18/18 checks (9 PyBullet + 9 MuJoCo) verified.
+
+October 20: R10.4 marine completion. Native Tethys AUV + ROV/Labrov controllers,
+marine sensors (DVL/sonar), marine_navigation_model, and marine_pipeline
+implemented. All 36 marine contract/sensor/controller/validation tests pass.
+Gazebo confirmed working for all 5 marine worlds (tank, reef, harbor, cave,
+wreck) - load and run stably in gz-sim 8. Marine controllers functional in
+simulation. Hardware-dependent features SKIPPED: physical water environment,
+real DVL/sonar sensor data (simulated only).
+
+Remaining open items:
+- R10.5: Underwater maps, sensors, estimation, SLAM and navigation. Sensors and
+  GUI workflows implemented in simulation. Hardware-dependent features skipped:
+  real DVL/sonar, independent EKF/particle filter estimation, saved underwater
+  SLAM, volumetric 3D navigation. Unblock needed: R10.4 fully complete +
+  R6.7 GUI terrain generator workflow complete, then re-enable hardware features
+- R10.1-R10.3, R10.6-R10.8: Fleet/swarm integration, ground controller kernels
+  and multi-leg/centipede mission acceptance pending
+- R11: MOLAR/ProBOT-L - sensors, SLAM/Nav2, multi-floor routes pending
+- R12: Legged policy training - go2_walk_r1 in progress (2000/2000 iterations),
+  transfer and evaluation pending
+- R9.4: Physical Bumperbot HIL - blocked, requires hardware
+- R6.7: GUI terrain generator workflow (Mapbox provider, PII-safe manual mode),
+  Isaac runtime contact trial, class-specific terrain missions
+
 time; large-map physics optimization remains open. See [the measured timing stages](evidence/extensions-finish-2026-10-08/mujoco-hospital-performance/README.md).
