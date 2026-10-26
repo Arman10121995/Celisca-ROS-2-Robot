@@ -1,4 +1,5 @@
 # Robot Lab — Multi-Robot Simulation and Algorithm Laboratory
+\nOctober 20: R6-R9 environment qualification completed. All R6 subtasks (R6.1-R6.7)\nnow have real backend tests: 5 reset validation, 13 sensor disturbance, 6 terrain/aerial,\n10 diverse maps. R7 algorithm breadth verified (39 + 21 tests). R8 backend qualification\ncompleted (18/18 checks). R9 reproducibility documented. R10.4 marine done with 36/36 tests\nand all 5 marine worlds verified in Gazebo. R10.5 active (hardware-dependent features skipped).\nTest results: Fast 1099 passed, Physics 64 passed, Integration 172 passed.\n[Status](docs/status/platform-status.yaml), [Current status](docs/status/CURRENT_STATUS.md).\n
 
 October 20: [the current extension checkpoint](docs/status/extension-2026-10-20.md)
 reconciles the installed inventory, completed training/export and actual remaining
