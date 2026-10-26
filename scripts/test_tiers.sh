@@ -28,12 +28,14 @@ PYTEST=(python3 -m pytest -q -p no:anyio)
 REG_TEST="src/robot_lab/robot_lab_registry/test"
 ADP_TEST="src/robot_lab_adapter/test"
 BRG_TEST="src/robot_lab_bringup/test"
+MAP_TEST="src/robot_lab_maps/test"
 GUI_TEST="src/robot_lab_gui/test"
 
 FAST_TESTS=(
   "scripts/test_asset_staging.py"
   "scripts/test_support_evidence.py"
   "$REG_TEST/test_p5_algorithm_breadth.py"
+  "src/robot_lab_algorithms/test/test_r7_simple_verification.py"
   "$REG_TEST/test_p6_benchmarking.py"
   "$REG_TEST/test_registry.py"
   "$REG_TEST/test_p3_6_safety_limits.py"
@@ -110,6 +112,10 @@ PHYSICS_TESTS=(
   "src/robot_lab_mujoco/test/test_native_gripper_control.py"
   "src/robot_lab_mujoco/test/test_native_arm_bias.py"
   "$BRG_TEST/test_mujoco_world_collision.py"
+  "$MAP_TEST/test_r6_1_reset_validation.py"
+  "$MAP_TEST/test_r6_2_sensor_disturbance.py"
+  "$MAP_TEST/test_r6_3_terrain_aerial.py"
+  "$MAP_TEST/test_r6_4_diverse_maps.py"
 )
 
 run_tier() {
