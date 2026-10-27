@@ -124,7 +124,16 @@ def velocities(mode, positions, spacing=3., anchor=None, maximum=.4):
             target=anchor+np.array([0.,(index-(len(names)-1)/2)*spacing,0.])
             v=.5*(target-p[index])
         elif mode=='rendezvous':v=.3*(centre-p[index])
-        elif mode=='dispersion':v=np.zeros(3)
+        elif mode=='dispersion':
+            # Repel from every other member and from the group centre so the
+            # swarm opens up to a bounded separation instead of collapsing.
+            v=np.zeros(3)
+            for other in range(len(names)):
+                if other==index:continue
+                delta=p[index]-p[other];distance=float(np.linalg.norm(delta))
+                if distance>1e-6:v+=(spacing-distance)*delta/distance*.5
+            delta=p[index]-centre;distance=float(np.linalg.norm(delta))
+            if distance>1e-6:v+=(spacing-distance)*delta/distance*.25
         else:v=.15*(centre-p[index])+np.array([.2,0.,0.])
         for other in range(len(names)):
             if other==index:continue

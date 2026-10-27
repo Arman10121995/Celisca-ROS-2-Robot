@@ -1372,6 +1372,9 @@ tasks:
         acceptance_ref: ROADMAP.md R10.3
         active_scope: Native ground kernels/coverage and multi-FCU aerial launch/editor/latched controls,
           identity/lease/seal barriers, FCU-clock integration, 20-second FCU settling and owned cleanup implemented.
+          Dispersion kernel repaired to actively repel members. Inter-member communication loss detected and
+          logged with member_returned recovery. Formation/altitude accuracy RMS tracked per session with
+          session_summary on close. All 20 aerial unit tests pass.
         depends_on:
         - R10.1
         - R5.10
@@ -1380,11 +1383,19 @@ tasks:
         - docs/status/workflows-2026-10-27.md
         implementation_state: Native ground kernels/coverage and multi-FCU aerial launch/editor/latched controls,
           identity/lease/seal barriers, FCU-clock integration, 20-second FCU settling and owned cleanup implemented.
+          Dispersion kernel repaired to actively repel members. Inter-member communication loss detected and
+          logged with member_returned recovery. Formation/altitude accuracy RMS tracked per session with
+          session_summary on close. All 20 aerial unit tests pass.
         owner: codex
+        scope_paths:
+        - src/robot_lab_adapter/robot_lab_adapter/aerial_swarm_model.py
+        - src/robot_lab_adapter/robot_lab_adapter/aerial_swarm_controller.py
         state: active
         title: Ground and aerial swarm control
         validation_state: Two actual PX4s take off, move manually/in formation and land/disarm. Settling reduces
           height drift; altitude/formation/convergence, loss/world/larger-group acceptance remains open.
+          Code now logs formation_rms_m, altitude_rms_m, member_loss and session_summary for measured
+          qualification; actual flight measurement missions remain to be flown.
         qualification_review: '2026-10-27 documentation review: retain the implemented code, tests and named
           mission certificates. Full declared roadmap acceptance is still open; test counts, metadata and
           scene loads do not qualify remaining robot/map/backend missions. See docs/REMAINING_WORK_GUIDE.md.'

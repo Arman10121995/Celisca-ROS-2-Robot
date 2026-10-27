@@ -21,9 +21,11 @@ class AerialSwarmController(Node):
         self.operator='';self.hb_at=-math.inf;self.mode='idle';self.targets=[];self.command=(0.,0.,0.,0.)
         self.command_at=-math.inf;self.anchor=None;self.spacing=3.;self.reason='Connected neutral; explicit checks and Takeoff required'
         self.members={}
+        self.member_lost={};self.member_lost_at={}
         self.last_status=0.;self.last_output={};self.pending=[]
         self.generation=0
         self.takeoff_targets=[]
+        self.formation_errors=[];self.altitude_errors=[]
         self.pub=self.create_publisher(String,'/aerial_swarm/state',10)
         self.lease=self.create_publisher(String,'/aerial_swarm/vehicle_lease',10)
         self.create_subscription(String,'/aerial_swarm/command',self.operation,10)
@@ -174,8 +176,24 @@ class AerialSwarmController(Node):
                 self.event('service_result',member=request['member'],**row)
         if self.mode!='idle':
             members=[self.members[n] for n in self.targets]
-            if any(not self.fresh(m) or m['status']['phase']!='flying' for m in members):self.hold('Member feedback/airborne state lost')
+            lost=[m for m in members if not self.fresh(m) or m['status']['phase']!='flying']
+            if lost:
+                for m in lost:
+                    if not self.member_lost.get(m['id']):
+                        self.member_lost[m['id']]=True;self.member_lost_at[m['id']]=now
+                        self.event('member_lost',member=m['id'],namespace=m['namespace'],
+                            phase=m['status'].get('phase') if m['status'] else None,
+                            pose_age=now-m['pose_at'] if m['pose_at']>-math.inf else None,
+                            status_age=now-m['status_at'] if m['status_at']>-math.inf else None)
+                        self.reason='Member loss: '+m['id']+' feedback/airborne state lost'
+                self.hold('Member feedback/airborne state lost')
             else:
+                # Clear previously logged member-loss when all members return fresh.
+                newly_back=[m for m in members if self.member_lost.get(m['id'])]
+                for m in newly_back:
+                    self.member_lost[m['id']]=False
+                    self.event('member_returned',member=m['id'],namespace=m['namespace'],
+                        recovered_at=now-lost_at if (lost_at:=self.member_lost_at.get(m['id']))>-math.inf else None)
                 commands=None
                 if self.mode!='manual':
                     try:commands=velocities(self.mode,{m['id']:m['pose'] for m in members},self.spacing,self.anchor,maximum=.2)
@@ -208,18 +226,52 @@ class AerialSwarmController(Node):
                         output.linear.y=float(-world[0]*math.sin(yaw)+world[1]*math.cos(yaw))
                         output.linear.z=float(world[2])
                         member['velocity_pub'].publish(output)
+                        if commands is not None and member['pose'] is not None:
+                            commanded=np.asarray(commands[member['id']],dtype=float)
+                            actual=np.asarray(member['pose'],dtype=float)
+                            commanded_target=np.asarray(member['pose'])+np.clip(commanded*.5,-.25,.25)
+                            formation_error=float(np.linalg.norm(actual-commanded_target))
+                            altitude_error=float(abs(actual[2]-commanded_target[2]))
+                            self.formation_errors.append((now,member['id'],formation_error))
+                            self.altitude_errors.append((now,member['id'],altitude_error))
+                            if len(self.formation_errors)>2000:self.formation_errors.pop(0)
+                            if len(self.altitude_errors)>2000:self.altitude_errors.pop(0)
+                            self.event('formation_sample',member=member['id'],mode=self.mode,
+                                formation_error_m=round(formation_error,4),
+                                altitude_error_m=round(altitude_error,4),
+                                commanded_z=round(float(commanded_target[2]),4),
+                                actual_z=round(float(actual[2]),4))
         if now-self.last_status>.2:
             self.last_status=now
             rows=[dict(id=m['id'],instance=m['instance'],system_id=m['system_id'],port=m['port'],namespace=m['namespace'],
                 ready=self.fresh(m),status=m['status'],position=m['pose'],truth=m['truth'],last_service=m['result']) for m in self.members.values()]
+            if self.formation_errors:
+                recent=[e for e in self.formation_errors if now-e[0]<10.]
+                alt_recent=[e for e in self.altitude_errors if now-e[0]<10.]
+                formation_rms=math.sqrt(sum(e[2]**2 for e in recent)/len(recent)) if recent else 0.
+                altitude_rms=math.sqrt(sum(e[2]**2 for e in alt_recent)/len(alt_recent)) if alt_recent else 0.
+            else:
+                formation_rms=0.;altitude_rms=0.
             self.pub.publish(String(data=json.dumps(dict(schema_version=1,session_id=self.session['session_id'],
                 map=self.session['map'],backend='Gazebo Harmonic / native PX4',directory=self.session['directory'],
                 operator_id=self.operator,operator_fresh=operator_fresh,mode=self.mode,reason=self.reason,members=rows,
                 active_targets=list(self.targets),anchor=self.anchor,spacing=self.spacing,
                 estimator=self.session.get('estimator',{}),
                 position_reference='Known landed spawn prior until first accepted Takeoff; committed FCU odometry thereafter; simulator truth is separate',
-                scope='Experimental actual shared-world multi-FCU controls; flight/swarm/clearance/loss qualification pending'),allow_nan=False)))
+                scope='Experimental actual shared-world multi-FCU controls; flight/swarm/clearance/loss qualification pending',
+                formation_rms_m=round(formation_rms,4),altitude_rms_m=round(altitude_rms,4),
+                formation_samples=len(recent) if recent else 0,member_loss=dict(self.member_lost)),allow_nan=False)))
 
     def close(self):
         if self.context.ok():self.hold('Aerial shared session closing')
+        if self.formation_errors:
+            all_errors=[e[2] for e in self.formation_errors]
+            all_alt=[e[2] for e in self.altitude_errors]
+            self.event('session_summary',mode=self.mode,
+                formation_rms_m=round(math.sqrt(sum(e*e for e in all_errors)/len(all_errors)),4),
+                formation_max_m=round(max(all_errors),4),
+                altitude_rms_m=round(math.sqrt(sum(e*e for e in all_alt)/len(all_alt)),4),
+                altitude_max_m=round(max(all_alt),4),
+                samples=len(all_errors),
+                member_loss={m:bool(v) for m,v in self.member_lost.items()})
         self.events.close()
