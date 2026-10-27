@@ -13,6 +13,7 @@ from pathlib import Path
 import time
 
 import numpy as np
+from scipy.spatial.transform import Rotation
 import rclpy
 from rclpy.executors import ExternalShutdownException
 from rclpy.node import Node
@@ -136,11 +137,13 @@ class MarineSensors(Node):
 class MarineEstimator(Node):
     def __init__(self):
         super().__init__('marine_sensor_odometry')
-        for key, value in dict(initial_x=0., initial_y=0., initial_z=-1., density=1025., surface_z=0.).items():
+        for key, value in dict(initial_x=0., initial_y=0., initial_z=-1.,initial_yaw=0., density=1025., surface_z=0.).items():
             self.declare_parameter(key, value)
         self.filter = MarineOdometry([self.get_parameter('initial_'+k).value for k in 'xyz'],
                                      self.get_parameter('density').value)
         self.surface = float(self.get_parameter('surface_z').value)
+        self.initial_yaw=float(self.get_parameter('initial_yaw').value)
+        self.imu_yaw_offset=None
         self.imu = self.pressure = None
         self.count = 0
         self.odom_pub = self.create_publisher(Odometry, '/marine/estimated_odometry', 10)
@@ -155,7 +158,16 @@ class MarineEstimator(Node):
         if (msg.header.frame_id == 'base_link' and msg.orientation_covariance[0] != -1
                 and np.isfinite([q.x, q.y, q.z, q.w]).all()
                 and abs(q.x*q.x + q.y*q.y + q.z*q.z + q.w*q.w - 1.) < .05):
-            self.imu = msg
+            # Fortress IMU heading starts at zero at spawn, including a hull
+            # spawned at pi radians. Align it once to the configured prior;
+            # subsequent changes remain native sensor observations. Without
+            # this, AUV DVL travel and camera clouds were rotated by pi.
+            if self.imu_yaw_offset is None:
+                self.imu_yaw_offset=Rotation.from_euler('z',self.initial_yaw-rpy(q)[2])
+            aligned=copy.deepcopy(msg)
+            values=(self.imu_yaw_offset*Rotation.from_quat([q.x,q.y,q.z,q.w])).as_quat()
+            for key,value in zip('xyzw',values):setattr(aligned.orientation,key,float(value))
+            self.imu=aligned
 
     def observe_pressure(self, msg):
         if (msg.header.frame_id == 'base_link' and math.isfinite(msg.fluid_pressure)
@@ -198,7 +210,7 @@ class MarineEstimator(Node):
         self.tf.sendTransform(transform)
         self.state_pub.publish(String(data=json.dumps(dict(samples=self.count, sim_time=current,
             position=position.tolist(), covariance=self.filter.covariance.tolist(),
-            source='Sensor-only DVL integration + native IMU attitude + noisy pressure depth; configured spawn prior; no pose correction',
+            source='DVL + native IMU with one-time configured spawn-heading alignment + noisy pressure; no simulator pose correction',
             qualification='Experimental emulated sensors and drifting odometry, not calibrated DVL or SLAM'), allow_nan=False)))
 
 

@@ -1,5 +1,26 @@
 """Authored sensor-source simulation contracts for pressure, DVL and sonar."""
 
+
+def test_native_imu_heading_is_aligned_once_to_the_configured_spawn():
+    import math
+    import numpy as np
+    from sensor_msgs.msg import Imu
+    from scipy.spatial.transform import Rotation
+    from robot_lab_utils.marine_sensors import MarineEstimator
+    node=MarineEstimator.__new__(MarineEstimator)
+    node.initial_yaw=-math.pi
+    node.imu_yaw_offset=None
+    original=Imu();original.header.frame_id='base_link';original.orientation.w=1.
+    node.observe_imu(original)
+    assert original.orientation.w==1.  # The incoming sensor message stays raw.
+    q=node.imu.orientation
+    matrix=Rotation.from_quat([q.x,q.y,q.z,q.w])
+    assert matrix.apply([1.,0.,0.])==pytest.approx([-1.,0.,0.],abs=1e-8)
+    changed=Imu();changed.header.frame_id='base_link'
+    for k,v in zip('xyzw',Rotation.from_euler('z',.2).as_quat()):setattr(changed.orientation,k,float(v))
+    node.observe_imu(changed);q=node.imu.orientation
+    assert Rotation.from_quat([q.x,q.y,q.z,q.w]).apply([1.,0.,0.])==pytest.approx([-np.cos(.2),-np.sin(.2),0.],abs=1e-8)
+
 import math
 from pathlib import Path
 from types import SimpleNamespace

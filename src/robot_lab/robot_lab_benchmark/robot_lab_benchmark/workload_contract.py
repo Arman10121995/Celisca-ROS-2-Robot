@@ -3,6 +3,7 @@
 import hashlib
 import json
 import math
+import re
 from pathlib import Path
 
 
@@ -10,6 +11,8 @@ WORKLOAD_SCHEMA = 'robot_lab.nav2_workload.v1'
 FLEET_WORKLOAD_SCHEMA = 'robot_lab.fleet_workload.v1'
 RESULT_SCHEMA = 'robot_lab.measured_nav2_result.v1'
 FLEET_RESULT_SCHEMA = 'robot_lab.measured_fleet_result.v1'
+FLEET_GOAL_CONTRACT = dict(position_m=.25, heading_rad=.2, linear_m_s=.03,
+                           angular_rad_s=.05, settle_sim_s=1.)
 
 
 def validate_workload(document):
@@ -36,20 +39,30 @@ def validate_workload(document):
             validated.append(values)
         return dict(document, goals=validated)
     elif schema == FLEET_WORKLOAD_SCHEMA:
-        # Fleet/swarm experiment workload validation
+        if document.get('truth_coordinates') != 'selected_world':
+            raise ValueError('Fleet independent truth must use selected_world coordinates.')
         fleet_goals = document.get('fleet_goals')
-        if not isinstance(fleet_goals, list):
-            raise ValueError('Fleet workload requires fleet_goals list.')
+        if not isinstance(fleet_goals, list) or not 1 <= len(fleet_goals) <= 32:
+            raise ValueError('Fleet workload requires 1–32 real member goals.')
+        validated = []
         for i, goal in enumerate(fleet_goals):
             if not isinstance(goal, dict):
                 raise ValueError(f'Fleet goal {i} must be a dict with id, x, y, yaw.')
             if 'id' not in goal or 'x' not in goal or 'y' not in goal or 'yaw' not in goal:
                 raise ValueError(f'Fleet goal {i} must contain id, x, y, yaw fields.')
-            if not isinstance(goal['x'], (int, float)) or not isinstance(goal['y'], (int, float)):
-                raise ValueError(f'Fleet goal {i} x and y must be numeric.')
-            if not -math.pi <= goal.get('yaw', 0) <= math.pi:
-                raise ValueError(f'Fleet goal {i} yaw must be within [-pi, pi].')
-        return dict(document, fleet_goals=fleet_goals)
+            if not isinstance(goal['id'], str) or not re.fullmatch('[a-z][a-z0-9_]{0,31}', goal['id']):
+                raise ValueError('Fleet goals require actual named session member IDs.')
+            values = [float(goal[key]) for key in ('x', 'y', 'yaw')]
+            if not all(map(math.isfinite, values)) or max(map(abs, values[:2])) > 10000:
+                raise ValueError('Fleet goal coordinates must be finite and bounded.')
+            values[2] = math.atan2(math.sin(values[2]), math.cos(values[2]))
+            validated.append(dict(id=goal['id'], **dict(zip(('x', 'y', 'yaw'), values))))
+        timeout = float(document.get('timeout_s', 360.))
+        if not math.isfinite(timeout) or not 30 <= timeout <= 900:
+            raise ValueError('Fleet timeout must be 30–900 seconds.')
+        if 'fleet_id' in document and (not isinstance(document['fleet_id'],str) or not 1 <= len(document['fleet_id']) <= 80):
+            raise ValueError('Expected fleet session identity must be a bounded string.')
+        return dict(document, fleet_goals=validated, timeout_s=timeout)
     else:
         raise ValueError(f'Unknown workload schema: {schema}. Supported: {WORKLOAD_SCHEMA}, {FLEET_WORKLOAD_SCHEMA}')
 
@@ -87,7 +100,7 @@ def read_result(directory, run_id, domain, specification, invalidated=False):
         'seeds': {},
         'member_count': 0,
         'fleet_id': None,
-        'communication_loss': False,
+        'communication_loss': None,
         'resource_budget': None,
         'owned_cleanup': False,
     }
@@ -131,55 +144,51 @@ def read_result(directory, run_id, domain, specification, invalidated=False):
             evidence['seeds'] = result.get('seeds', {})
             return dict(result, _evidence=evidence), None
     
-    # Try fleet result
     fleet_path = directory/'fleet-mission-result.json'
     if fleet_path.is_file():
-        # Validate fleet result schema and source identity
         result = json.loads(fleet_path.read_text())
-        # Check required fields exist
-        has_schema = result.get('schema') == FLEET_RESULT_SCHEMA
-        has_run_id = result.get('run_id') == run_id
-        has_domain = result.get('ros_domain_id') == domain
-        has_fleet_id = 'fleet_id' in result
-        has_member_results = isinstance(result.get('member_results'), list)
-        
-        # Validate member results fields
-        member_fields_ok = True
-        if has_member_results:
-            for mr in result['member_results']:
-                if not isinstance(mr, dict):
-                    member_fields_ok = False
-                    break
-                if 'member_id' not in mr:
-                    member_fields_ok = False
-                    break
-                if 'success' not in mr:
-                    member_fields_ok = False
-                    break
-                if 'physical_pose' not in mr or not isinstance(mr['physical_pose'], list) or len(mr['physical_pose']) != 3:
-                    member_fields_ok = False
-                    break
-                if not all(map(math.isfinite, mr['physical_pose'])):
-                    member_fields_ok = False
-                    break
-        
-        if (has_schema and has_run_id and has_domain and has_fleet_id and has_member_results and member_fields_ok):
-            # Validate result
-            if invalidated:
-                return None, 'A reset was requested during this workload; its result is invalidated.'
-            if not isinstance(result.get('success'), bool):
-                return None, 'Fleet result must have success field.'
-            # Attach comprehensive evidence metadata (R10.8 evidence contract)
-            evidence['revisions'] = result.get('revisions', {})
-            evidence['seeds'] = result.get('seeds', {})
-            evidence['member_count'] = len(result.get('member_results', []))
-            evidence['fleet_id'] = result.get('fleet_id')
-            # Fleet-specific evidence fields
-            evidence['communication_loss'] = result.get('communication_loss', False)
-            evidence['resource_budget'] = result.get('resource_budget')
-            evidence['owned_cleanup'] = result.get('owned_cleanup', False)
-            # Return result with evidence attached
-            result_with_evidence = dict(result, _evidence=evidence)
-            return result_with_evidence, None
-    
+        if (not isinstance(result, dict) or result.get('schema') != FLEET_RESULT_SCHEMA
+                or result.get('run_id') != run_id or result.get('ros_domain_id') != domain
+                or result.get('workload_sha256') != _sha256(directory/'workload.json')
+                or result.get('trace_sha256') != _sha256(directory/'fleet-trace.jsonl')
+                or result.get('producer_sha256') != _sha256(Path(__file__).with_name('fleet_workload.py'))):
+            return None, 'Fleet result lacks source/trace/workload identity.'
+        if invalidated:
+            return None, 'A reset was requested during this fleet workload; its result is invalidated.'
+        if (type(result.get('success')) is not bool or result.get('goal_contract') != FLEET_GOAL_CONTRACT
+                or not isinstance(result.get('fleet_id'),str) or not result['fleet_id']):
+            return None, 'Fleet result lacks an actual session and physical goal contract.'
+        if specification.get('fleet_id',result['fleet_id']) != result['fleet_id']:
+            return None, 'Fleet result belongs to another actual session.'
+        rows = result.get('member_results')
+        if not isinstance(rows,list) or any(not isinstance(row,dict) or not isinstance(row.get('member_id'),str) for row in rows):
+            return None, 'Fleet result lacks measured member endpoints.'
+        if result['success']:
+            goals = specification.get('fleet_goals',[])
+            counts = result.get('truth_samples',{})
+            if not goals or len(rows) != len(goals) or result.get('owned_cleanup') is not True:
+                return None, 'Successful fleet result lacks every endpoint and owned cleanup.'
+            for index,(goal,row) in enumerate(zip(goals,rows)):
+                if (not isinstance(row,dict) or row.get('member_id') != goal['id']
+                        or row.get('index') != index or row.get('requested') != goal
+                        or row.get('nav2_terminal') is not True or row.get('success') is not True
+                        or not row.get('task') or not row.get('source','').startswith('route:')
+                        or not isinstance(counts,dict) or counts.get(goal['id'],0) < 3):
+                    return None, 'Fleet endpoint lacks owned task identity and independent truth.'
+                pose = row.get('physical_pose')
+                values = [row.get(k) for k in ('linear_m_s','angular_rad_s','settled_sim_s')]
+                if (not isinstance(pose,list) or len(pose)!=3
+                        or not all(isinstance(v,(int,float)) and math.isfinite(v) for v in pose+values)):
+                    return None, 'Fleet endpoint lacks finite physical measurements.'
+                error = math.atan2(math.sin(pose[2]-goal['yaw']),math.cos(pose[2]-goal['yaw']))
+                if (math.hypot(pose[0]-goal['x'],pose[1]-goal['y']) > FLEET_GOAL_CONTRACT['position_m']
+                        or abs(error) > FLEET_GOAL_CONTRACT['heading_rad']
+                        or not 0 <= values[0] <= FLEET_GOAL_CONTRACT['linear_m_s']
+                        or abs(values[1]) > FLEET_GOAL_CONTRACT['angular_rad_s']
+                        or values[2] < FLEET_GOAL_CONTRACT['settle_sim_s']):
+                    return None, 'Fleet endpoint is outside the declared physical tolerance.'
+        evidence.update(member_count=len({r['member_id'] for r in rows}),fleet_id=result['fleet_id'],
+                        owned_cleanup=result.get('owned_cleanup',False))
+        return dict(result,_evidence=evidence), None
+
     return None, 'No measured workload result was produced.'

@@ -30,6 +30,14 @@ class PX4Controller(Node):
             self.declare_parameter(key, value)
         self.declare_parameter('frame_prefix', '')
         self.declare_parameter('expected_system_id', 0)
+        self.declare_parameter('control_fcu_clock', False)
+        self.declare_parameter('preflight_fcu_seconds', 0.)
+        self.control_fcu_clock=bool(self.get_parameter('control_fcu_clock').value)
+        self.preflight_fcu_seconds=float(self.get_parameter('preflight_fcu_seconds').value)
+        if not math.isfinite(self.preflight_fcu_seconds) or not 0<=self.preflight_fcu_seconds<=60.:
+            raise ValueError('Preflight FCU settling must be 0–60 simulation seconds')
+        self.first_ready_fcu_ms=None
+        self.last_fcu_boot_ms=None
         self.base_frame = str(self.get_parameter('frame_prefix').value) + 'base_link'
         self.enabled = self.get_parameter('flight_enabled').value
         self.origin = [self.get_parameter('origin_'+key).value for key in 'xyz']
@@ -67,7 +75,11 @@ class PX4Controller(Node):
         return [a+b for a, b in zip(ned_to_enu(p.x, p.y, p.z), self.origin)]
 
     def ready(self):
-        return self.flight.state is not None and self.flight.position_ok() and time.monotonic()-self.flight.last_position_time < 1.0
+        valid=self.flight.state is not None and self.flight.position_ok() and time.monotonic()-self.flight.last_position_time < 1.0
+        if not valid or not self.preflight_fcu_seconds:return valid
+        boot_ms=self.flight.local_position.time_boot_ms
+        if self.first_ready_fcu_ms is None:self.first_ready_fcu_ms=boot_ms
+        return (boot_ms-self.first_ready_fcu_ms)*.001>=self.preflight_fcu_seconds
 
     def transition(self, phase):
         if phase != 'flying':
@@ -217,6 +229,18 @@ class PX4Controller(Node):
         f.heartbeat()
         now = time.monotonic()
         dt, self.last_tick = min(0.1, now-self.last_tick), now
+        if self.control_fcu_clock:
+            boot_ms=int(f.local_position.time_boot_ms) if f.local_position is not None else None
+            previous,self.last_fcu_boot_ms=self.last_fcu_boot_ms,boot_ms
+            if boot_ms is not None and previous is not None and boot_ms<previous:
+                self.clear_path('FCU clock regressed; new flight session required')
+                if f.armed():self.command_mode(4,6)
+                self.transition('telemetry_lost')
+                return
+            # SI velocity integration follows the actual FCU simulation clock.
+            # Wall time still owns command/lease/telemetry watchdogs. A slow
+            # shared simulator must not multiply commanded flight velocity.
+            dt=min(.1,max(0.,(boot_ms-previous)*.001)) if boot_ms is not None and previous is not None else 0.
         if not self.ready():
             self.clear_path('FCU telemetry lost')
             # Do not keep flying on stale state. Stop setpoints; FCU Land.
@@ -304,10 +328,14 @@ class PX4Controller(Node):
         self.tf.sendTransform(tf)
 
     def status(self):
+        elapsed=((self.flight.local_position.time_boot_ms-self.first_ready_fcu_ms)*.001
+                 if self.first_ready_fcu_ms is not None and self.flight.local_position is not None else 0.)
         self.status_pub.publish(String(data=json.dumps({
             'phase': self.phase, 'armed': self.flight.armed(), 'position_ready': self.ready(),
             'flight_enabled': self.enabled, 'position_enu': self.position(), 'target_enu': self.target,
             'takeoff_ready': self.takeoff_ready(), 'takeoff_target_z': self.takeoff_z,
+            'control_clock':'FCU' if self.control_fcu_clock else 'wall',
+            'preflight_remaining_fcu_s':max(0.,self.preflight_fcu_seconds-elapsed),
             'route_waypoints_remaining': len(self.route), 'route_status': self.route_status})))
 
 

@@ -59,11 +59,14 @@ def pipeline(task, description_file, config, pose, map_profile, folder, model,
         def rewrite(value):
             if isinstance(value,dict):return {k:rewrite(v) for k,v in value.items()}
             if isinstance(value,list):return [rewrite(v) for v in value]
+            if value=='/map':return '/gait/map'
             return '/gait/odometry' if value=='/gait/robot_lab_controller/odom' else value
         params=rewrite(params)
         follow=params['controller_server']['ros__parameters']['FollowPath']
         follow.update(desired_linear_vel=float(model.config['max_speed']),min_approach_linear_velocity=.005,
-                      regulated_linear_scaling_min_speed=.005,rotate_to_heading_angular_vel=float(model.config['max_yaw']))
+                      regulated_linear_scaling_min_speed=.005,rotate_to_heading_angular_vel=float(model.config['max_yaw']),
+                      lookahead_dist=.2,min_lookahead_dist=.1,max_lookahead_dist=.4)
+        params['controller_server']['ros__parameters']['general_goal_checker'].update(xy_goal_tolerance=.1,yaw_goal_tolerance=.15)
         params['controller_server']['ros__parameters']['progress_checker'].update(required_movement_radius=.025,movement_time_allowance=45.)
         params['amcl']['ros__parameters']['initial_pose']['yaw']=initial['yaw']+model.config['forward_yaw']
         params['amcl']['ros__parameters'].update(update_min_d=.01,update_min_a=.02)

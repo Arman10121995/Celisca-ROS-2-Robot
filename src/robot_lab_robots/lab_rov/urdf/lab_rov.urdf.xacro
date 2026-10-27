@@ -27,7 +27,7 @@
       </geometry>
     </collision>
   </link>
-  <xacro:oakd name="oakd" parent_link="base_link" model="pro" mesh_visual="false">
+  <xacro:oakd name="oakd" parent_link="base_link" model="pro" mesh_visual="false" rate="5">
     <origin xyz=".21 0 .06" rpy="0 0 0" />
   </xacro:oakd>
   <gazebo reference="base_link">

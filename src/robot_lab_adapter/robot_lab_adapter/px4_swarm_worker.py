@@ -28,6 +28,7 @@ def main():
     ros=['--ros-args','-r','__ns:='+prefix]
     for topic in remaps:ros+=['-r',topic+':='+prefix+topic]
     ros+=['-p','port:=udpout:127.0.0.1:'+str(item['port']),'-p','expected_system_id:='+str(item['system_id']),
+          '-p','control_fcu_clock:=true','-p','preflight_fcu_seconds:=20.0',
           '-p','frame_prefix:='+prefix.strip('/')+'/',
           *sum((['-p','origin_'+axis+':='+str(value)] for axis,value in zip('xyz',item['origin'])),[])]
     rclpy.init(args=ros);controller=PX4Controller();relay=NativeStateRelay(dict(os.environ),prefix,prefix+'/px4',prefix.strip('/')+'/')

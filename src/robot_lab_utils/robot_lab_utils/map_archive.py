@@ -36,12 +36,15 @@ def snapshot_database(source, destination, timeout=10.):
         temporary.unlink(missing_ok=True)
 
 
-def load_database_copy(database, destination, world_file=None):
+def load_database_copy(database, destination, world_file=None,expected_estimator_contract=None):
     """Copy a saved database read-only; reject known world provenance mismatch."""
     source = Path(database).expanduser().resolve()
     if not source.is_file() or not str(source).startswith('/workspace/'):
         raise ValueError('Select an existing saved database on the workspace SSD')
     manifest = source.parent/'manifest.json'
+    if expected_estimator_contract:
+        if not manifest.is_file() or json.loads(manifest.read_text()).get('estimator_contract')!=expected_estimator_contract:
+            raise ValueError('Saved map uses an older/incompatible sensor reference; acquire a new map with the current estimator')
     if world_file and manifest.is_file():
         previous = json.loads(manifest.read_text())
         expected = previous.get('world_sha256')
@@ -89,7 +92,7 @@ class RtabmapArchive:
     The upstream backup service flushes working memory before making .back.
     Both old Humble and newer node-private service names are supported.
     """
-    def __init__(self, node, database, namespace, prefix, directory, world_file, robot, on_result=None):
+    def __init__(self, node, database, namespace, prefix, directory, world_file, robot, on_result=None,estimator_contract=''):
         from rclpy.clock import Clock, ClockType
         from sensor_msgs.msg import PointCloud2
         from std_msgs.msg import String
@@ -97,6 +100,7 @@ class RtabmapArchive:
         self.node, self.database = node, str(database)
         self.directory, self.world_file, self.robot = Path(directory), str(world_file), robot
         self.on_result = on_result
+        self.estimator_contract=estimator_contract
         self.points = None
         self.cloud_stamp = None
         self.cloud_at = -math.inf
@@ -165,6 +169,7 @@ class RtabmapArchive:
                 database = snapshot_database(source, folder/'rtabmap.db')
                 np.savez_compressed(folder/'occupied.npz', points=self.request_points, voxel=.2)
                 manifest = dict(kind='acquired_rtabmap', robot=self.robot, frame='map', directory=str(folder),
+                    estimator_contract=self.estimator_contract,
                     source_world=self.world_file, world_sha256=hashlib.sha256(Path(self.world_file).read_bytes()).hexdigest(),
                     source_database=self.database, database=str(folder/'rtabmap.db'), database_observation=database,
                     points=len(self.request_points), cloud_stamp=self.request_stamp,

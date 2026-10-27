@@ -80,12 +80,13 @@ def pipeline(world, description, spawn, water, robot, folder, control=True,
     active = Path(folder) / 'marine-rtabmap.db'
     if source.is_file() and source != active:
         from .map_archive import load_database_copy
-        load_database_copy(source, active, world)
+        load_database_copy(source, active, world,
+            expected_estimator_contract='marine_spawn_imu_v1' if robot=='tethys_auv' else None)
     params = dict(use_sim_time=True, density=float(water['density']), surface_z=float(water['surface_z']))
     nodes = [Node(package='robot_lab_utils', executable='marine_sensors.py', arguments=['simulate'],
         parameters=[dict(params, world_file=str(world), seed=41)], output='screen'),
         Node(package='robot_lab_utils', executable='marine_sensors.py', arguments=['estimate'],
-        parameters=[dict(params, **{'initial_'+k:float(spawn[k]) for k in 'xyz'})], output='screen'),
+        parameters=[dict(params,initial_yaw=float(spawn['yaw']), **{'initial_'+k:float(spawn[k]) for k in 'xyz'})], output='screen'),
         Node(package='robot_lab_utils', executable='marine_navigation.py', parameters=[dict(use_sim_time=True,
             world_file=str(world), robot_id=robot, surface_z=float(water['surface_z']), bottom_z=float(water['bottom_z']),
             radius=1.3 if robot=='tethys_auv' else .55, database_path=str(active) if slam else '',

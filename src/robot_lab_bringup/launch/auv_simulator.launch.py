@@ -37,6 +37,13 @@ def setup(context):
     # only the world buoyancy inclusion identity, not source geometry.
     for enabled in buoyancy.findall('enable'):buoyancy.remove(enabled)
     ET.SubElement(buoyancy,'enable').text='tethys_auv'
+    # This world is copied to an SSD session. Preserve source-relative mesh
+    # and texture paths rather than resolving them against the new directory.
+    for item in world.iter():
+        if item.tag in ('uri','albedo_map','normal_map','metalness_map','roughness_map') and item.text:
+            resource=Path(item.text.strip())
+            if not resource.is_absolute() and '://' not in item.text:
+                item.text=str((source_world.parent/resource).resolve())
     runtime=Path(os.environ.get('ROBOT_LAB_RUNTIME_ROOT','/workspace/molar/robot_lab_runtime'))/'marine_sessions';runtime.mkdir(parents=True,exist_ok=True)
     folder=Path(tempfile.mkdtemp(prefix='tethys-',dir=runtime));world_file=folder/'world.sdf';world_file.write_bytes(ET.tostring(root,encoding='utf-8',xml_declaration=True))
     native=ET.parse(assets/'model.sdf');model=native.getroot().find('model')

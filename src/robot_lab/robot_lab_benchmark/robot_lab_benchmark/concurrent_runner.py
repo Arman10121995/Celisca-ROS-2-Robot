@@ -48,7 +48,10 @@ class RunSpec:
             self.workload = validate_workload(self.workload)
             if self.task_command:
                 raise ValueError('Choose the built-in Nav2 workload or an external task command.')
-            if not any(flag in self.command for flag in ('mode:=nav', 'native_task:=nav')):
+            if self.workload['schema']=='robot_lab.fleet_workload.v1':
+                if 'shared_world.launch.py' not in self.command or 'navigation:=true' not in self.command:
+                    raise ValueError('Fleet workloads require the actual shared-world navigation launch.')
+            elif not any(flag in self.command for flag in ('mode:=nav', 'native_task:=nav')):
                 raise ValueError('The built-in Nav2 workload requires the actual navigation launch workflow.')
         if self.readiness_topic not in ('/clock', '/px4/odometry'):
             raise ValueError('Readiness uses actual /clock or PX4 FCU /px4/odometry messages')
@@ -71,7 +74,7 @@ def source_provenance():
     here = Path(__file__).resolve()
     record = dict(module_sha256={str(path): hashlib.sha256(path.read_bytes()).hexdigest()
         for path in (here, here.with_name('telemetry_recorder.py'), here.with_name('nav2_workload.py'),
-                     here.with_name('workload_contract.py'))}, scope='Coordinator, recorder and built-in Nav2 workload; external workload sources remain separate')
+                     here.with_name('fleet_workload.py'),here.with_name('workload_contract.py'))}, scope='Coordinator, recorder and built-in actual Nav2/fleet workloads; external workload sources remain separate')
     repository = next((parent for parent in here.parents if (parent/'.git').exists()), None)
     if repository:
         try:
@@ -118,6 +121,8 @@ class ConcurrentRunner:
             job = self.jobs.get(job_id)
             if not job or not job.get('ready') or job['cancel'].is_set():
                 raise ValueError('Reset requires a ready owned run')
+            if job.get('workload_schema')=='robot_lab.fleet_workload.v1':
+                raise ValueError('Cancel and relaunch a measured fleet batch. Live per-member Reset is available in Ground Fleet; batch-wide physical reset is not implemented.')
             environment = job['environment'].copy()
             directory = job['directory']
             job['workload_invalidated'] = True
@@ -187,7 +192,8 @@ class ConcurrentRunner:
                 max_cpu_percent=specification.max_cpu_percent, max_artifact_mb=specification.max_log_mb),
             seed_scope='Recorded and exposed to workload; simulator seed application needs its explicit contract',
             mission_result=None, output=str(directory), qualification='implementation; validation pending')
-        job = dict(cancel=cancel, environment=environment, directory=directory, ready=False)
+        job = dict(cancel=cancel, environment=environment, directory=directory, ready=False,
+                   workload_schema=specification.workload.get('schema'))
         with self.lock:
             self.jobs[identifier] = job
         resources = (directory/'resources.jsonl').open('w', buffering=1)
@@ -258,7 +264,9 @@ class ConcurrentRunner:
                     if specification.task_command:
                         task = launch(specification.task_command, 'task')
                     elif specification.workload:
-                        workload_command = [sys.executable, '-m', 'robot_lab_benchmark.nav2_workload',
+                        module = ('robot_lab_benchmark.fleet_workload' if specification.workload.get('schema') == 'robot_lab.fleet_workload.v1'
+                                  else 'robot_lab_benchmark.nav2_workload')
+                        workload_command = [sys.executable, '-m', module,
                             '--spec', str(directory/'workload.json')]
                         result['executed_task_command'] = workload_command
                         task = launch(workload_command, 'task')

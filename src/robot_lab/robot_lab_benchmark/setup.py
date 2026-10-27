@@ -23,6 +23,7 @@ setup(
             'robot-lab-concurrent = robot_lab_benchmark.concurrent_runner:main',
             'robot-lab-telemetry-recorder = robot_lab_benchmark.telemetry_recorder:main',
             'robot-lab-nav2-workload = robot_lab_benchmark.nav2_workload:main',
+            'robot-lab-fleet-workload = robot_lab_benchmark.fleet_workload:main',
         ],
     },
 )

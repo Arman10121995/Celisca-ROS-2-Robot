@@ -1,10 +1,12 @@
 """Queue exact Launch selections for isolated, bounded subprocess execution."""
 import json
 import math
+import os
 import queue
 import shlex
 import threading
 import time
+import uuid
 import tkinter as tk
 from tkinter import ttk
 from pathlib import Path
@@ -40,11 +42,11 @@ class ExperimentQueue(ttk.LabelFrame):
         ttk.Label(self, text='Requested seed').grid(row=1, column=5, sticky='w', pady=(6, 0))
         ttk.Spinbox(self, textvariable=self.seed, from_=0, to=2147483647, width=10).grid(row=2, column=5, sticky='w')
         self.workload_combo = ttk.Combobox(self, textvariable=self.workload, state='readonly',
-            values=('Capture only', 'Nav2 point goals', 'External task'), width=20)
+            values=('Capture only', 'Nav2 point goals', 'Fleet point goals', 'External task'), width=20)
         self.workload_combo.grid(row=3, column=0, columnspan=2, sticky='w', pady=6)
         self.workload_combo.bind('<<ComboboxSelected>>', self.workload_changed)
         ttk.Entry(self, textvariable=self.goals).grid(row=3, column=2, columnspan=4, sticky='ew')
-        ttk.Label(self, text='Nav2 goals: X Y heading_deg; X Y heading_deg. Independent truth must use selected-world coordinates. '
+        ttk.Label(self, text='Nav2: X Y heading_deg; Fleet: member_id X Y heading_deg. Separate goals with semicolons. Fleet uses the Ground Fleet editor. Independent truth uses selected-world coordinates. '
             'Seeds are requested; simulator application and contacts remain unassessed.', wraplength=800).grid(
             row=4, column=0, columnspan=6, sticky='w')
         ttk.Label(self, text='External task command (literal arguments; runs after clock/FCU readiness)').grid(
@@ -62,12 +64,12 @@ class ExperimentQueue(ttk.LabelFrame):
         self.bind('<Destroy>', lambda event: self.cancel() if event.widget is self else None, add='+')
 
     def workload_changed(self, _event=None):
-        if self.workload.get() == 'Nav2 point goals':
+        if self.workload.get() in ('Nav2 point goals','Fleet point goals'):
             try:
                 self.duration.set(max(600., float(self.duration.get())))
             except (ValueError, tk.TclError):
                 self.duration.set(600.)
-            self.status.set('Choose Navigation in Launch and enter selected-map goals. Capture budget raised to 600 s for stack startup and motion.')
+            self.status.set('Enter selected-map goals. Fleet uses its own saved session; Nav2 uses Navigation in Launch. Capture budget raised to 600 s.')
 
     def goal_workload(self):
         from robot_lab_benchmark.workload_contract import WORKLOAD_SCHEMA, validate_workload
@@ -82,9 +84,41 @@ class ExperimentQueue(ttk.LabelFrame):
             goals.append(values)
         return validate_workload(dict(schema=WORKLOAD_SCHEMA, goals=goals, truth_coordinates='selected_world'))
 
+    def fleet_workload(self):
+        from robot_lab_benchmark.workload_contract import FLEET_WORKLOAD_SCHEMA, validate_workload
+        goals=[]
+        for group in self.goals.get().split(';'):
+            if not group.strip():continue
+            fields=group.replace(',',' ').split()
+            if len(fields)!=4:raise ValueError('Fleet goal: member_id X Y heading_deg; separate goals with semicolons.')
+            goals.append(dict(id=fields[0],x=float(fields[1]),y=float(fields[2]),yaw=math.radians(float(fields[3]))))
+        return validate_workload(dict(schema=FLEET_WORKLOAD_SCHEMA,fleet_goals=goals,truth_coordinates='selected_world'))
+
     def add(self):
         try:
             from robot_lab_benchmark.concurrent_runner import RunSpec
+            if self.workload.get()=='Fleet point goals':
+                from robot_lab_utils.fleet_session import validate_session
+                from .fleet_tab import session_command
+                fleet=self.app.fleet_tab
+                data=validate_session(dict(schema_version=1,map=fleet.map_var.get(),members=fleet.members))
+                workload=self.fleet_workload()
+                if not {g['id'] for g in workload['fleet_goals']}<={m['id'] for m in data['members']}:
+                    raise ValueError('Fleet goal IDs must match the actual Ground Fleet editor members.')
+                folder=Path(os.environ.get('ROBOT_LAB_RUNTIME_ROOT','/workspace/molar/robot_lab_runtime'))/'experiment_presets'
+                folder.mkdir(parents=True,exist_ok=True)
+                if folder.stat().st_dev==Path('/').stat().st_dev:raise ValueError('Fleet presets must stay on the mounted workspace SSD.')
+                import yaml
+                preset=folder/('fleet-'+uuid.uuid4().hex+'.yaml')
+                preset.write_text(yaml.safe_dump(data))
+                command=session_command(preset,fleet.map_var.get(),navigation=True,gui=False,rviz=False,rmf=False)
+                selection=dict(robot='fleet',map=fleet.map_var.get(),backend='gazebo',mode='fleet',workload=self.workload.get())
+                specification=RunSpec(command=command,duration_s=float(self.duration.get()),max_rss_mb=float(self.rss.get()),
+                    max_cpu_percent=float(self.cpu.get()),max_log_mb=float(self.log_mb.get()),seed=int(self.seed.get()),
+                    workload=workload,selection=selection)
+                specification.validate();self.specifications.append(specification)
+                self.tree.insert('','end',values=('fleet',selection['map'],'gazebo',self.workload.get(),'queued'))
+                self.status.set('Queued independent fleet session: '+shlex.join(command));return
             command = shlex.split(self.app.command_var.get())
             if not command or command[:2] != ['ros2', 'launch']:
                 raise ValueError('Select a simulation in Launch and generate its run command first.')

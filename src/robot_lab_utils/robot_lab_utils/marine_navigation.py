@@ -84,7 +84,8 @@ class MarineNavigation(Node):
         self.event_bytes = 0
         from robot_lab_utils.map_archive import RtabmapArchive
         self.archive = RtabmapArchive(self, self.database, '/marine/slam', '/marine/mapping',
-            self.directory, self.get_parameter('world_file').value, self.robot, self.map_result)
+            self.directory, self.get_parameter('world_file').value, self.robot, self.map_result,
+            estimator_contract='marine_spawn_imu_v1')
         saved = str(self.get_parameter('saved_map_source').value)
         if self.localization and saved:
             cloud = Path(saved).parent/'occupied.npz'
@@ -314,6 +315,7 @@ class MarineNavigation(Node):
                         self.drive_pub.publish(output)
         data = dict(status=self.status, reason=self.reason, robot_id=self.robot, session_id=self.native['session_id'] if self.native else None,
             ready=self.fresh(), position=self.position.tolist() if self.position is not None else None,
+            estimated_yaw=float(self.orientation[2]) if self.orientation is not None else None,
             route=self.route, waypoint=self.index, position_std_m=self.pose_std if math.isfinite(self.pose_std) else None,
             observed_cells=self.observed.cell_count if self.observed else 0, directory=str(self.directory),
             localization_mode=self.localization, localized=self.localization and now-self.localized_at < 3.,

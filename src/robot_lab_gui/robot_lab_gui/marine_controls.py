@@ -227,8 +227,10 @@ class MarineMissions(ttk.Frame):
         notebook.add(self,text='Marine missions')
         self.columnconfigure(0,weight=1)
         self.runtime=None
+        self.mission_runtime_at=-math.inf
         self.last_saved_database=None
         self.goal={k:tk.DoubleVar(value=v) for k,v in [('x',1.),('y',0.),('z',-1.)]}
+        self.ahead_distance=tk.DoubleVar(value=3.)
         self.feedback=tk.StringVar(value='Sensor odometry starts with the marine launch. Connect Marine to see estimates.')
         ttk.Label(self,text='Estimated-pose 3D missions',font=('',11,'bold')).grid(row=0,column=0,sticky='w')
         ttk.Button(self,text='Connect Marine telemetry',command=marine.connect).grid(row=1,column=0,sticky='ew',pady=5)
@@ -239,6 +241,8 @@ class MarineMissions(ttk.Frame):
             ttk.Entry(coords,textvariable=var,width=8).grid(row=1,column=col,sticky='ew',padx=2)
             coords.columnconfigure(col,weight=1)
         ttk.Button(coords,text='Use estimated position',command=self.use_position).grid(row=2,column=0,columnspan=3,sticky='ew',pady=4)
+        ttk.Button(coords,text='Waypoint ahead · metres',command=self.ahead).grid(row=3,column=0,columnspan=2,sticky='ew')
+        ttk.Entry(coords,textvariable=self.ahead_distance,width=6).grid(row=3,column=2,sticky='ew',padx=2)
         buttons=ttk.Frame(self);buttons.grid(row=3,column=0,sticky='ew',pady=6)
         for label,op in [('Plan','plan'),('Execute','execute'),('Cancel / Stop','cancel')]:
             ttk.Button(buttons,text=label,command=lambda operation=op:self.send(operation)).pack(side='left',expand=True,fill='x')
@@ -270,11 +274,28 @@ class MarineMissions(ttk.Frame):
         if self.runtime and self.runtime.get('position'):
             for key,value in zip('xyz',self.runtime['position']):self.goal[key].set(value)
 
+    def ahead(self):
+        try:
+            if (not self.runtime or time.monotonic()-self.mission_runtime_at>1.
+                    or not self.runtime.get('ready') or self.runtime.get('estimated_yaw') is None):
+                raise ValueError('Wait for a fresh estimated marine pose')
+            distance=float(self.ahead_distance.get())
+            auv=self.runtime['robot_id']=='tethys_auv'
+            if not math.isfinite(distance) or not (2. if auv else .1)<=distance<=20.:
+                raise ValueError('Ahead distance must be 2–20 m for the cruise AUV, or 0.1–20 m for the ROV')
+            heading=self.runtime['estimated_yaw']+(math.pi if auv else 0.)
+            p=self.runtime['position']
+            for key,value in zip('xyz',[p[0]+distance*math.cos(heading),p[1]+distance*math.sin(heading),p[2]]):
+                self.goal[key].set(value)
+            self.feedback.set('Ahead waypoint filled from estimated heading. Plan checks source/observed clearance; Execute remains explicit.')
+        except (ValueError,TypeError,tk.TclError) as exc:self.feedback.set(str(exc))
+
     def observe(self,msg):
         try:
             data=json.loads(msg.data)
             if data['robot_id']!=self.app.robot_var.get():return
             self.runtime=data
+            self.mission_runtime_at=time.monotonic()
             saved=data.get('saved_map') or {}
             if data.get('mapping_status')=='saved' and saved.get('database') and saved['database']!=self.last_saved_database:
                 self.last_saved_database=saved['database']

@@ -270,6 +270,7 @@ class AerialSwarmTab(ttk.Frame):
             for member in data['members']:
                 status = member.get('status') or {}
                 lines.append(f"{member['id']}: {status.get('phase', 'waiting')} · ready={member['ready']} "
+                    f"· FCU settling remaining={status.get('preflight_remaining_fcu_s', 0):.1f}s "
                     f"· FCU={member['system_id']} port={member['port']} · estimated={member['position']} "
                     f"· truth={member['truth']} · reply={member.get('last_service')}")
             self.live.configure(state='normal')

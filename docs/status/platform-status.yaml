@@ -2184,8 +2184,7 @@ tasks:
         previous_owner: cline-agent
         claimed: '2026-10-27'
         current_run: /workspace/molar/robot_lab_runtime/extension-completion-20261027-au5q8yp7
-        current_scope: Restore seven missing registrations from cached exact-model sources, preserve qualified
-          metadata and prevent destructive manifest omission.
+        current_scope: 'Catalog restoration completed: the seven missing historical robot registrations (asset_turtlebot3_burger, asset_turtlebot3_waffle, asset_turtlebot3_waffle_pi, asset_turtlebot4_standard, asset_turtlebot4_lite, asset_husky, menagerie_franka_emika_panda) are restored via source-scoped --kind robots --source <source_id> --no-download repairs on cached SSD sources. All seven now resolve to existing xacro paths in installed/robots.yaml and registry_robots.yaml. Preservation merge in provision() verified by test_asset_provision_preservation.py. Missing controller qualification remains visible; no runtime mission qualification claimed.'
     title: Strict composition and execution
   R4:
     owner: cline-agent

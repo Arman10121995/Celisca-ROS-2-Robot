@@ -176,7 +176,7 @@ class AerialSwarmController(Node):
             else:
                 commands=None
                 if self.mode!='manual':
-                    try:commands=velocities(self.mode,{m['id']:m['pose'] for m in members},self.spacing,self.anchor)
+                    try:commands=velocities(self.mode,{m['id']:m['pose'] for m in members},self.spacing,self.anchor,maximum=.2)
                     except ValueError as exc:self.hold(str(exc))
                 for member in members if self.mode!='idle' else []:
                     if self.mode=='manual':

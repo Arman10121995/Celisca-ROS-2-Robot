@@ -78,3 +78,53 @@ def test_reset_invalidates_and_missing_result_is_reported(tmp_path):
     _write(tmp_path)
     result, error = contract.read_result(tmp_path, 'run', 7, _spec(), invalidated=True)
     assert result is None and 'reset' in error
+
+
+def _fleet_spec():
+    return contract.validate_workload(dict(schema=contract.FLEET_WORKLOAD_SCHEMA,
+        truth_coordinates='selected_world',fleet_goals=[dict(id='alpha',x=1.,y=0.,yaw=0.)]))
+
+
+def _write_fleet(directory, **changes):
+    (directory/'workload.json').write_text(json.dumps(_fleet_spec()))
+    (directory/'fleet-trace.jsonl').write_text('{"kind":"software_contract_fixture"}\n')
+    result=dict(schema=contract.FLEET_RESULT_SCHEMA,run_id='run',ros_domain_id=7,
+        fleet_id='actual-session',success=True,goal_contract=contract.FLEET_GOAL_CONTRACT,
+        owned_cleanup=True,truth_samples=dict(alpha=10),
+        member_results=[dict(member_id='alpha',index=0,requested=_fleet_spec()['fleet_goals'][0],
+            physical_pose=[1.,0.,0.],linear_m_s=.01,angular_rad_s=.01,settled_sim_s=1.2,
+            task='owned-task',source='route:request-id',nav2_terminal=True,success=True)],
+        producer_sha256=hashlib.sha256(Path(contract.__file__).with_name('fleet_workload.py').read_bytes()).hexdigest(),
+        workload_sha256=hashlib.sha256((directory/'workload.json').read_bytes()).hexdigest(),
+        trace_sha256=hashlib.sha256((directory/'fleet-trace.jsonl').read_bytes()).hexdigest())
+    result.update(changes)
+    (directory/'fleet-mission-result.json').write_text(json.dumps(result))
+    return result
+
+
+def test_fleet_requires_named_real_members_finite_goals_and_selected_world():
+    _fleet_spec()
+    for goals in ([],[dict(id=0,x=0,y=0,yaw=0)],[dict(id='alpha',x=float('nan'),y=0,yaw=0)],
+                  [dict(id='alpha',x=0,y=0,yaw=float('inf'))]):
+        with pytest.raises(ValueError):
+            contract.validate_workload(dict(schema=contract.FLEET_WORKLOAD_SCHEMA,
+                truth_coordinates='selected_world',fleet_goals=goals))
+
+
+def test_fleet_result_rejects_old_simulated_and_unbound_completion(tmp_path):
+    _write_fleet(tmp_path,producer_sha256=None,trace_sha256=None)
+    result,error=contract.read_result(tmp_path,'run',7,_fleet_spec())
+    assert result is None and 'identity' in error
+
+
+def test_fleet_result_requires_physical_settling_and_terminal_cleanup(tmp_path):
+    _write_fleet(tmp_path)
+    result,error=contract.read_result(tmp_path,'run',7,_fleet_spec())
+    assert error is None and result['success']
+    row=_write_fleet(tmp_path)['member_results'][0]
+    for change in (dict(physical_pose=[1.5,0.,0.]),dict(linear_m_s=.1),dict(settled_sim_s=0.),
+                   dict(nav2_terminal=False),dict(requested=dict(id='beta',x=1.,y=0.,yaw=0.))):
+        _write_fleet(tmp_path,member_results=[dict(row,**change)])
+        assert contract.read_result(tmp_path,'run',7,_fleet_spec())[0] is None
+    _write_fleet(tmp_path,owned_cleanup=False)
+    assert contract.read_result(tmp_path,'run',7,_fleet_spec())[0] is None
