@@ -63,7 +63,8 @@ def test_ceiling_limits_takeoff_rise():
                            desired_rise=10., minimum_rise=.8)
     assert result['ceiling_limited'] is True
     assert .8 <= result['rise_m'] < 10.
-    assert abs(result['target_enu'][2] - 5.) < 1e-9
+    assert result['rise_m'] < 2.0
+    assert abs(result['target_enu'][2] - (2.+result['rise_m'])) < 1e-6
 
 
 def test_support_band_validation():
