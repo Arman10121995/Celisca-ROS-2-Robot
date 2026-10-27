@@ -207,8 +207,9 @@ Finish terrain-provider/manual workflows, attribution and height conventions;
 Isaac contact tests are simulator work. Add class-specific actor, multi-floor,
 terrain and aerial missions. Metadata-only diverse-map tests do not create worlds.
 
-For R10.8/R4/R8.3, connect real fleet/marine/gait/aerial workload producers to
-`robot_lab_benchmark/workload_contract.py`, experiment execution and GUI status.
+For R10.8/R4/R8.3, preserve the delivered real fleet workload/GUI queue and add
+automatic marine/gait/aerial producers through `robot_lab_benchmark/workload_contract.py`,
+experiment execution and GUI status.
 Reuse process isolation/resource accounting, source identities and raw traces.
 Cancel/reset must invalidate actual work. No randomized metrics or preset PASS.
 
