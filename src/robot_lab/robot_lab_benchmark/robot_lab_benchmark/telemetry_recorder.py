@@ -70,6 +70,9 @@ def main(args=None):
                   if math.isfinite(value) and message.range_min <= value <= message.range_max]
         record('/scan', dict(finite_returns=len(values), nearest_range=min(values) if values else None))
 
+    from std_msgs.msg import String
+    node.create_subscription(String, '/aerial_swarm/state',
+        lambda message: record('/aerial_swarm/state', dict(state=json.loads(message.data))), 10)
     node.create_subscription(Clock, '/clock', clock, 10)
     node.create_subscription(Odometry, '/odom/ground_truth', truth, qos_profile_sensor_data)
     for topic in ('/px4/odometry_truth', '/px4/odometry'):

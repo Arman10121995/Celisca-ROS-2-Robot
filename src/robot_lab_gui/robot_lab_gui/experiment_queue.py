@@ -42,11 +42,11 @@ class ExperimentQueue(ttk.LabelFrame):
         ttk.Label(self, text='Requested seed').grid(row=1, column=5, sticky='w', pady=(6, 0))
         ttk.Spinbox(self, textvariable=self.seed, from_=0, to=2147483647, width=10).grid(row=2, column=5, sticky='w')
         self.workload_combo = ttk.Combobox(self, textvariable=self.workload, state='readonly',
-            values=('Capture only', 'Nav2 point goals', 'Fleet point goals', 'External task'), width=20)
+            values=('Capture only', 'Nav2 point goals', 'Fleet point goals', 'Marine route', 'Marine map acquisition', 'Gait navigation', 'Gait map acquisition', 'Aerial swarm formation', 'External task'), width=20)
         self.workload_combo.grid(row=3, column=0, columnspan=2, sticky='w', pady=6)
         self.workload_combo.bind('<<ComboboxSelected>>', self.workload_changed)
         ttk.Entry(self, textvariable=self.goals).grid(row=3, column=2, columnspan=4, sticky='ew')
-        ttk.Label(self, text='Nav2: X Y heading_deg; Fleet: member_id X Y heading_deg. Separate goals with semicolons. Fleet uses the Ground Fleet editor. Independent truth uses selected-world coordinates. '
+        ttk.Label(self, text='Nav2: X Y heading_deg; Fleet: member_id X Y heading_deg. Separate goals with semicolons. Marine: X Y Z; gait: X Y heading_deg; acquisition: travel distance in metres (default .2). Fleet and aerial use their editors. Independent truth uses selected-world coordinates. '
             'Seeds are requested; simulator application and contacts remain unassessed.', wraplength=800).grid(
             row=4, column=0, columnspan=6, sticky='w')
         ttk.Label(self, text='External task command (literal arguments; runs after clock/FCU readiness)').grid(
@@ -64,7 +64,7 @@ class ExperimentQueue(ttk.LabelFrame):
         self.bind('<Destroy>', lambda event: self.cancel() if event.widget is self else None, add='+')
 
     def workload_changed(self, _event=None):
-        if self.workload.get() in ('Nav2 point goals','Fleet point goals'):
+        if self.workload.get() not in ('Capture only','External task'):
             try:
                 self.duration.set(max(600., float(self.duration.get())))
             except (ValueError, tk.TclError):
@@ -119,6 +119,25 @@ class ExperimentQueue(ttk.LabelFrame):
                 specification.validate();self.specifications.append(specification)
                 self.tree.insert('','end',values=('fleet',selection['map'],'gazebo',self.workload.get(),'queued'))
                 self.status.set('Queued independent fleet session: '+shlex.join(command));return
+            if self.workload.get()=='Aerial swarm formation':
+                from .aerial_swarm_tab import session_command
+                import yaml
+                aerial=self.app.aerial_swarm_tab
+                data=aerial.configuration()
+                folder=Path(os.environ.get('ROBOT_LAB_RUNTIME_ROOT','/workspace/molar/robot_lab_runtime'))/'experiment_presets'
+                folder.mkdir(parents=True,exist_ok=True)
+                if folder.stat().st_dev==Path('/').stat().st_dev:raise ValueError('Aerial presets must stay on SSD.')
+                preset=folder/('aerial-'+uuid.uuid4().hex+'.yaml');preset.write_text(yaml.safe_dump(data))
+                from robot_lab_benchmark.workload_contract import validate_workload
+                workload=validate_workload(dict(schema='robot_lab.extension_workload.v1',workflow='aerial_swarm',task='formation',truth_coordinates='selected_world'))
+                command=session_command(preset,data['map'],gui=False)
+                selection=dict(robot='aerial_swarm',map=data['map'],backend='gazebo_harmonic',mode='swarm',workload=self.workload.get())
+                specification=RunSpec(command=command,duration_s=float(self.duration.get()),max_rss_mb=float(self.rss.get()),
+                    max_cpu_percent=float(self.cpu.get()),max_log_mb=float(self.log_mb.get()),seed=int(self.seed.get()),
+                    workload=workload,selection=selection,readiness_topic='/aerial_swarm/state')
+                specification.validate();self.specifications.append(specification)
+                self.tree.insert('','end',values=('aerial_swarm',selection['map'],'gazebo_harmonic',self.workload.get(),'queued'))
+                self.status.set('Queued native aerial session: '+shlex.join(command));return
             command = shlex.split(self.app.command_var.get())
             if not command or command[:2] != ['ros2', 'launch']:
                 raise ValueError('Select a simulation in Launch and generate its run command first.')
@@ -130,6 +149,30 @@ class ExperimentQueue(ttk.LabelFrame):
             selection = dict(robot=self.app.robot_var.get(), map=self.app.map_var.get(),
                 backend=self.app.simulator_var.get(), mode=self.app.mode_var.get(), workload=self.workload.get())
             workload = self.goal_workload() if self.workload.get() == 'Nav2 point goals' else {}
+            if self.workload.get().startswith(('Marine ', 'Gait ')):
+                from robot_lab_benchmark.workload_contract import validate_workload
+                workflow='marine' if self.workload.get().startswith('Marine ') else 'gait'
+                task='mapping' if self.workload.get().endswith('acquisition') else 'navigation'
+                if selection['mode']!=('marine' if workflow=='marine' else 'gait'):
+                    raise ValueError('Choose native '+workflow+' mode and robot in Launch first.')
+                document=dict(schema='robot_lab.extension_workload.v1',workflow=workflow,task=task,truth_coordinates='selected_world')
+                if task=='mapping':
+                    document['distance_m']=float(self.goals.get().strip() or '.2')
+                    if workflow=='marine':
+                        command=[arg for arg in command if not arg.startswith('marine_slam:=')]+['marine_slam:=true']
+                    elif not any(arg in command for arg in ('gait_task:=slam','gait_task:=3d_slam')):
+                        command=[arg for arg in command if not arg.startswith('gait_task:=')]+['gait_task:=slam']
+                else:
+                    goals=[]
+                    for group in self.goals.get().split(';'):
+                        if not group.strip():continue
+                        values=list(map(float,group.replace(',',' ').split()))
+                        if len(values)!=3:raise ValueError('Marine goal: X Y Z; gait goal: X Y heading_deg.')
+                        if workflow=='gait':values[2]=math.radians(values[2])
+                        goals.append(values)
+                    document['goals']=goals
+                    if workflow=='gait':command=[arg for arg in command if not arg.startswith('gait_task:=')]+['gait_task:=nav']
+                workload=validate_workload(document)
             specification = RunSpec(command=command, duration_s=float(self.duration.get()),
                 max_rss_mb=float(self.rss.get()), max_cpu_percent=float(self.cpu.get()),
                 max_log_mb=float(self.log_mb.get()), seed=int(self.seed.get()), workload=workload,

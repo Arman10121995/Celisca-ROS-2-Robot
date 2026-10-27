@@ -51,9 +51,19 @@ class RunSpec:
             if self.workload['schema']=='robot_lab.fleet_workload.v1':
                 if 'shared_world.launch.py' not in self.command or 'navigation:=true' not in self.command:
                     raise ValueError('Fleet workloads require the actual shared-world navigation launch.')
+            elif self.workload['schema']=='robot_lab.extension_workload.v1':
+                workflow=self.workload['workflow']; task=self.workload['task']
+                if workflow=='aerial_swarm' and 'aerial_swarm.launch.py' not in self.command:
+                    raise ValueError('Aerial workload requires the actual shared multi-FCU launch.')
+                if workflow=='gait' and 'gait_simulator.launch.py' not in self.command and 'mode:=gait' not in self.command:
+                    raise ValueError('Gait workload requires its native simulator launch.')
+                if workflow=='marine' and not any(flag in self.command for flag in ('mode:=marine','marine_simulator.launch.py','auv_simulator.launch.py')):
+                    raise ValueError('Marine workload requires native marine navigation.')
+                if workflow=='gait' and not any(flag in self.command for flag in (('task:=nav','gait_task:=nav') if task=='navigation' else ('task:=slam','gait_task:=slam','task:=3d_slam','gait_task:=3d_slam'))):
+                    raise ValueError('Gait launch task must match navigation or map acquisition.')
             elif not any(flag in self.command for flag in ('mode:=nav', 'native_task:=nav')):
                 raise ValueError('The built-in Nav2 workload requires the actual navigation launch workflow.')
-        if self.readiness_topic not in ('/clock', '/px4/odometry'):
+        if self.readiness_topic not in ('/clock', '/px4/odometry', '/aerial_swarm/state'):
             raise ValueError('Readiness uses actual /clock or PX4 FCU /px4/odometry messages')
         for name in ('duration_s', 'startup_timeout_s', 'max_rss_mb', 'max_cpu_percent', 'max_log_mb'):
             value = float(getattr(self, name))
@@ -74,7 +84,8 @@ def source_provenance():
     here = Path(__file__).resolve()
     record = dict(module_sha256={str(path): hashlib.sha256(path.read_bytes()).hexdigest()
         for path in (here, here.with_name('telemetry_recorder.py'), here.with_name('nav2_workload.py'),
-                     here.with_name('fleet_workload.py'),here.with_name('workload_contract.py'))}, scope='Coordinator, recorder and built-in actual Nav2/fleet workloads; external workload sources remain separate')
+                     here.with_name('fleet_workload.py'),here.with_name('extension_workload.py'),
+                     here.with_name('extension_contract.py'),here.with_name('extension_result.py'),here.with_name('workload_contract.py'))}, scope='Coordinator, recorder and built-in actual Nav2/fleet workloads; external workload sources remain separate')
     repository = next((parent for parent in here.parents if (parent/'.git').exists()), None)
     if repository:
         try:
@@ -121,16 +132,25 @@ class ConcurrentRunner:
             job = self.jobs.get(job_id)
             if not job or not job.get('ready') or job['cancel'].is_set():
                 raise ValueError('Reset requires a ready owned run')
-            if job.get('workload_schema')=='robot_lab.fleet_workload.v1':
-                raise ValueError('Cancel and relaunch a measured fleet batch. Live per-member Reset is available in Ground Fleet; batch-wide physical reset is not implemented.')
+            fleet_reset=job.get('workload_schema')=='robot_lab.fleet_workload.v1'
+            if job.get('resetting'):raise ValueError('A reset is already running')
+            job['resetting']=True
+            task=job.get('task')
             environment = job['environment'].copy()
             directory = job['directory']
             job['workload_invalidated'] = True
-        process = subprocess.Popen(['ros2', 'service', 'call', '/robot_lab/reset',
-            'std_srvs/srv/Trigger', '{}'], env=environment, stdout=subprocess.PIPE,
+        if task is not None and task.poll() is None:
+            try:os.killpg(task.pid,signal.SIGINT);task.wait(timeout=12.)
+            except (ProcessLookupError,subprocess.TimeoutExpired):
+                job['resetting']=False
+                raise ValueError('Workload must release control before resetting the plant')
+        reset_path=directory/('reset-'+str(time.time_ns())+'.json')
+        command=([sys.executable,'-m','robot_lab_benchmark.fleet_reset','--output',str(reset_path)] if fleet_reset else
+            ['ros2','service','call','/robot_lab/reset','std_srvs/srv/Trigger','{}'])
+        process = subprocess.Popen(command, env=environment, stdout=subprocess.PIPE,
             stderr=subprocess.PIPE, text=True, start_new_session=True)
         try:
-            stdout, stderr = process.communicate(timeout=30)
+            stdout, stderr = process.communicate(timeout=40 if fleet_reset else 30)
         except subprocess.TimeoutExpired:
             try:
                 os.killpg(process.pid, signal.SIGKILL)
@@ -140,7 +160,9 @@ class ConcurrentRunner:
             stderr += '\nReset response timed out.'
         response = dict(returncode=process.returncode, stdout=stdout, stderr=stderr,
                         scope='Real domain-scoped service response; caller must inspect success acknowledgement')
-        write_json(directory/('reset-'+str(time.time_ns())+'.json'), response)
+        if fleet_reset and reset_path.is_file():response['physical_reset']=json.loads(reset_path.read_text())
+        write_json(directory/('reset-response-'+str(time.time_ns())+'.json'), response)
+        job['resetting']=False
         return response
 
     def domain_lease(self):
@@ -265,11 +287,13 @@ class ConcurrentRunner:
                         task = launch(specification.task_command, 'task')
                     elif specification.workload:
                         module = ('robot_lab_benchmark.fleet_workload' if specification.workload.get('schema') == 'robot_lab.fleet_workload.v1'
+                                  else 'robot_lab_benchmark.extension_workload' if specification.workload.get('schema') == 'robot_lab.extension_workload.v1'
                                   else 'robot_lab_benchmark.nav2_workload')
                         workload_command = [sys.executable, '-m', module,
                             '--spec', str(directory/'workload.json')]
                         result['executed_task_command'] = workload_command
                         task = launch(workload_command, 'task')
+                    with self.lock:job['task']=task
                     write_json(directory/'run.json', result)
                     self.notify(dict(result))
                 if cancel.is_set() or self.cancel_all.is_set():
@@ -291,7 +315,7 @@ class ConcurrentRunner:
                 if ready_at is not None and now-ready_at >= specification.duration_s:
                     result['state'] = 'capture_completed'
                     break
-                if task is not None and task.poll() is not None:
+                if task is not None and task.poll() is not None and not job.get('resetting'):
                     result['state'] = 'task_process_completed'
                     result['task_returncode'] = task.returncode
                     break

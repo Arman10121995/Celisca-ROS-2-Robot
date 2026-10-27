@@ -1,3 +1,46 @@
+- id: lab_tracked
+  version: 0.1.0
+  name: Gazebo tracked vehicle with flippers
+  status: available
+  robot_class: mobile
+  maturity: prototype
+  supported_simulators:
+  - gazebo
+  supported_modes:
+  - display
+  - loc
+  - slam
+  - 3d_slam
+  - nav
+  locomotion:
+    type: tracked
+    max_velocity: 0.3
+  capabilities:
+  - control
+  command_interfaces:
+  - geometry_msgs/Twist
+  state_interfaces:
+  - sensor_msgs/JointState
+  - nav_msgs/Odometry
+  frames:
+  - odom
+  - base_footprint
+  - base_link
+  - laser_link
+  - camera_optical_frame
+  assets:
+    urdf: robot_lab_robots/lab_tracked/robot.urdf
+    sdf: robot_lab_robots/lab_tracked/model.sdf
+  source:
+    repository: https://github.com/gazebosim/gz-sim
+    revision: installed Fortress 6.18 example; source hash in SOURCE.json
+    license: Apache-2.0
+  tags:
+  - extension
+  - complete_robot
+  - tracked
+  - flippers
+  - experimental_native_control
 # Robot Lab Registry - Robot Catalog
 # Version 0.1.0
 # This file catalogs all robots available in the platform

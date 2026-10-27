@@ -4,6 +4,7 @@ See https://mavlink.io/en/messages/common.html#POSITION_TARGET_TYPEMASK.
 This module is shared by the flight probe and the ROS 2 bridge.
 """
 import time
+import struct
 from pymavlink import mavutil
 
 # MAVLink POSITION_TARGET_TYPEMASK: keep XYZ and yaw, ignore velocity,
@@ -21,6 +22,7 @@ class Flight:
         self.state = self.position = self.vfr = self.ext_sys = self.local_position = self.attitude = None
         self.last_position_time = 0.0
         self.expected_system = expected_system
+        self.parameters = {}
 
     def poll(self, limit=200):
         """Drain available telemetry without blocking the ROS setpoint timer."""
@@ -59,6 +61,18 @@ class Flight:
             self.vfr = msg
         elif kind == "EXTENDED_SYS_STATE":
             self.ext_sys = msg
+        elif kind == 'PARAM_VALUE':
+            name=msg.param_id
+            name=(name.decode(errors='replace') if isinstance(name,bytes) else str(name)).split('\x00')[0]
+            # PX4 transmits integer parameters as the bytewise union defined
+            # by MAVLink PARAM_ENCODE_BYTEWISE, not a numeric float cast.
+            formats={1:'B',2:'b',3:'H',4:'h',5:'I',6:'i'}
+            form=formats.get(getattr(msg,'param_type',9))
+            value=msg.param_value
+            if form:
+                raw=struct.pack('<f',value)
+                value=struct.unpack('<'+form,raw[:struct.calcsize(form)])[0]
+            self.parameters[name]=float(value)
 
     def heartbeat(self):
         self.master.mav.heartbeat_send(
@@ -104,11 +118,21 @@ class Flight:
         else:
             self.stream(*hold, seconds=0.8)
 
+    @staticmethod
+    def encode_parameter(value, ptype):
+        """PX4's MAVLink bytewise parameter union (integer bits in float)."""
+        formats={1:'B',2:'b',3:'H',4:'h',5:'I',6:'i'}
+        form=formats.get(ptype)
+        if form:
+            raw=struct.pack('<'+form,int(value)).ljust(4,b'\x00')
+            return struct.unpack('<f',raw)[0]
+        return float(value)
+
     def set_param(self, name, value, ptype=6):
         """PARAM_SET: MAV_PARAM_TYPE_INT32=6, REAL32=9."""
         self.master.mav.param_set_send(
             self.master.target_system, self.master.target_component,
-            name.encode() + b"\x00" * (16 - len(name)), float(value), ptype)
+            name.encode() + b"\x00" * (16 - len(name)), self.encode_parameter(value,ptype), ptype)
         self.pump(0.4)
 
     def param_value(self, name):
@@ -125,7 +149,8 @@ class Flight:
                 label = (raw.split(b"\x00")[0].decode(errors="ignore")
                          if isinstance(raw, bytes) else str(raw).split("\x00")[0])
                 if label == name:
-                    found = msg.param_value
+                    self._absorb(msg)
+                    found = self.parameters.get(name)
             if found is not None:
                 break
         return found

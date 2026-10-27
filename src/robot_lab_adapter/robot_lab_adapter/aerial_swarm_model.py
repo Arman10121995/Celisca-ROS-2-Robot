@@ -24,6 +24,10 @@ def prepare_session(session_file, map_override='', runtime_root=None, px4_root=N
     from robot_lab_utils.aerial_planning import StaticScene
     from robot_lab_utils.aerial_takeoff import check_takeoff, x500_envelope
     requested = yaml.safe_load(Path(session_file).read_text()) or {}
+    estimator=requested.get('estimator') or {}
+    reference=estimator.get('height_reference','barometer')
+    if reference not in ('barometer','gnss'):
+        raise ValueError('Aerial height reference must be barometer or gnss')
     raw_members = requested.get('members')
     if not isinstance(raw_members, list):
         raise ValueError('Aerial session needs 2–4 member records')
@@ -97,6 +101,8 @@ def prepare_session(session_file, map_override='', runtime_root=None, px4_root=N
     session = dict(schema_version=1, session_id=folder.name, directory=str(folder), map=selected,
         source_world=str(world), world_sha256=hashlib.sha256(world.read_bytes()).hexdigest(),
         members=members, spacing=spacing, source_session=str(Path(session_file).resolve()),
+        estimator=dict(height_reference=reference,px4_height_reference=0 if reference=='barometer' else 1,
+                       source='Native PX4 EKF2 sensor fusion; GNSS/barometer noise is preserved'),
         scope='Implemented experimental native X500 multi-FCU session; actual flight qualification is separate')
     session['resolved_file'] = str(folder/'session.json')
     Path(session['resolved_file']).write_text(json.dumps(session, indent=2)+'\n')

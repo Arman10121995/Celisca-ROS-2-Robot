@@ -36,6 +36,7 @@ install(PROGRAMS
   ${PROJECT_NAME}/marine_sensors.py
   ${PROJECT_NAME}/marine_navigation.py
   ${PROJECT_NAME}/marine_camera_relay.py
+  ${PROJECT_NAME}/tracked_control.py
   ${PROJECT_NAME}/gait_controller.py
   ${PROJECT_NAME}/gait_odometry.py
   ${PROJECT_NAME}/gait_sensor_relay.py

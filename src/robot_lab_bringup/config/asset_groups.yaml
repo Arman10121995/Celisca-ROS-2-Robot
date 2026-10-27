@@ -2,6 +2,9 @@
 # A variant is not an alias for its parent's controllers or measured missions.
 schema_version: 1
 robots:
+  - id: lab_tracked
+    name: Tracked vehicle with flippers
+    members: [{id: lab_tracked, label: Complete native track source}]
   - id: molar_family
     name: MOLAR / ProBOT-L
     preferred: molar_hri

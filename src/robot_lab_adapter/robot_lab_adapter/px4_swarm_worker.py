@@ -41,6 +41,7 @@ def main():
     checks=[]
     stable_positions=deque(maxlen=12)
     alignment={'committed':False}
+    parameter_at=[-math.inf]
     measured_position=controller.position
     def position():
         # While still disarmed at the known, settled spawn, the FCU's
@@ -107,6 +108,12 @@ def main():
     planner.consume_takeoff=consume
     def watchdog():
         now=time.monotonic()
+        expected_reference=session.get('estimator',{}).get('px4_height_reference',0)
+        if controller.flight.state is not None and now-parameter_at[0]>2.:
+            parameter_at[0]=now
+            for name in ('EKF2_HGT_REF','EKF2_GPS_CTRL','EKF2_BARO_CTRL'):
+                controller.flight.master.mav.param_request_read_send(
+                    controller.flight.master.target_system,controller.flight.master.target_component,name.encode(),-1)
         # Gate calibration on measured velocity while landed and level. Raw
         # barometric-position drift during EKF startup is precisely the origin
         # error being calibrated, so it is recorded rather than treated as
@@ -120,7 +127,9 @@ def main():
             and max(speed for _,_,speed in stable_positions)<=.08)
         for request in list(checks):
             invalid=(request['generation']!=lease['generation'] or now-lease['at']>.8)
-            if request['stage']=='stabilizing' and stable and not invalid:
+            configured=(controller.flight.parameters.get('EKF2_HGT_REF')==expected_reference
+                and controller.flight.parameters.get('EKF2_GPS_CTRL')==(5 if expected_reference==0 else 7))
+            if request['stage']=='stabilizing' and stable and configured and not invalid:
                 response=planner.check_takeoff(Trigger.Request(),Trigger.Response())
                 if response.success:
                     request['stage']='checking';request['attempts']+=1
@@ -134,9 +143,14 @@ def main():
                 checks.remove(request)
                 accepted=not invalid and request['stage']=='checking' and state.get('state')=='clear' and planner.takeoff_plan is not None
                 message=('Actual selected-world takeoff corridor checked; fresh single-use result ready' if accepted
-                    else request.get('error') or state.get('error') or 'Landed estimate did not stabilize or the check timed out')
+                    else request.get('error') or state.get('error') or ('Actual FCU height-reference parameter not confirmed' if not configured
+                        else 'Landed estimate did not stabilize or the check timed out'))
                 reply.publish(String(data=json.dumps(dict(request_id=request['request_id'],generation=request['generation'],
-                    accepted=accepted,message=message,check_position=state.get('start_enu') if accepted else None))))
+                    accepted=accepted,message=message,check_position=state.get('start_enu') if accepted else None,
+                    landed_estimate_samples=len(stable_positions),
+                    maximum_estimated_speed_m_s=max((speed for _,_,speed in stable_positions),default=None),
+                    expected_height_reference=expected_reference,
+                    applied_height_reference=controller.flight.parameters.get('EKF2_HGT_REF')))))
         if controller.flight.armed() and (time.monotonic()-lease['at']>1. or controller.phase in ('idle','waiting_for_fcu','telemetry_lost')):
             controller.command_mode(4,6);controller.transition('landing')
     controller.create_timer(.2,watchdog)

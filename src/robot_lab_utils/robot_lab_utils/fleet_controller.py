@@ -921,7 +921,9 @@ class FleetController(Node):
                     queued=len(member.queue),
                     queued_tasks=[dict(task=item['task'], goal=item['goal'], source=item['source']) for item in member.queue],
                     queue_paused=member.queue_paused,
-                    settled_spawn_recorded=member.spawn_pose is not None, battery=None, charging=None))
+                    settled_spawn_recorded=member.spawn_pose is not None,
+                    reset_pose=[member.spawn_pose.position.x,member.spawn_pose.position.y,yaw(member.spawn_pose.orientation)] if member.spawn_pose else None,
+                    radius_m=member.config['radius'],battery=None,charging=None))
             data = dict(schema_version=1, session_id=self.session_id, map=self.session['map'], backend='gazebo',
                         navigation=self.session['navigation'], directory=self.session['directory'],
                         sim_time=self.last_clock, clock_age=round(now - self.clock_at, 3) if math.isfinite(self.clock_at) else None,

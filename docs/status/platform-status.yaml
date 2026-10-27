@@ -1371,31 +1371,28 @@ tasks:
       R10.3:
         acceptance_ref: ROADMAP.md R10.3
         active_scope: Native ground kernels/coverage and multi-FCU aerial launch/editor/latched controls,
-          identity/lease/seal barriers, FCU-clock integration, 20-second FCU settling and owned cleanup
-          implemented.
+          identity/lease/seal barriers, FCU-clock integration, 20-second FCU settling and owned cleanup implemented.
         depends_on:
         - R10.1
         - R5.10
         evidence:
         - docs/status/evidence/workflows-2026-10-27/README.md
         - docs/status/workflows-2026-10-27.md
-        implementation_state: Native ground kernels/coverage and multi-FCU aerial launch/editor/latched
-          controls, identity/lease/seal barriers, FCU-clock integration, 20-second FCU settling and owned
-          cleanup implemented.
+        implementation_state: Native ground kernels/coverage and multi-FCU aerial launch/editor/latched controls,
+          identity/lease/seal barriers, FCU-clock integration, 20-second FCU settling and owned cleanup implemented.
         owner: codex
-        state: partial
+        state: active
         title: Ground and aerial swarm control
-        validation_state: Two actual PX4s take off, move manually/in formation and land/disarm. Settling
-          reduces height drift; altitude/formation/convergence, loss/world/larger-group acceptance remains
-          open.
-        qualification_review: '2026-10-27 documentation review: retain the implemented code, tests and
-          named mission certificates. Full declared roadmap acceptance is still open; test counts, metadata
-          and scene loads do not qualify remaining robot/map/backend missions. See docs/REMAINING_WORK_GUIDE.md.'
+        validation_state: Two actual PX4s take off, move manually/in formation and land/disarm. Settling reduces
+          height drift; altitude/formation/convergence, loss/world/larger-group acceptance remains open.
+        qualification_review: '2026-10-27 documentation review: retain the implemented code, tests and named
+          mission certificates. Full declared roadmap acceptance is still open; test counts, metadata and
+          scene loads do not qualify remaining robot/map/backend missions. See docs/REMAINING_WORK_GUIDE.md.'
         previous_owner: cline-agent
         claimed: '2026-10-27'
-        current_run: /workspace/molar/robot_lab_runtime/extension-completion-20261027-au5q8yp7
-        current_scope: Complete fleet coordination and the separate multi-FCU aerial launch, GUI and flight
-          ownership workflow.
+        current_run: /workspace/molar/robot_lab_runtime/project-completion-20261027-vne3n358
+        current_scope: Finish aerial altitude/formation accuracy and actual bounded swarm/loss missions before
+          the remaining completion queue.
         historical_unqualified_notes:
         - Implementation complete with contract tests and GUI diagnostics passing
         - Fleet contract (8 tests), fleet missions, gait contract (all pass), molar backend contract (all
@@ -1568,7 +1565,7 @@ tasks:
           and actual spine phase/frequency controls implemented. Additional forms remain separate source/controller
           work.
         owner: codex
-        state: partial
+        state: active
         title: Centipede/segmented and additional robot families
         validation_state: Actual centipede nav_empty walking/contact odometry and occupancy map export
           measured, alongside prior source walking. Terrain/navigation/backend matrices and additional
@@ -1578,8 +1575,8 @@ tasks:
           and scene loads do not qualify remaining robot/map/backend missions. See docs/REMAINING_WORK_GUIDE.md.'
         previous_owner: cline-agent
         claimed: '2026-10-27'
-        current_run: /workspace/molar/robot_lab_runtime/extension-completion-20261027-au5q8yp7
-        current_scope: Complete existing segmented centipede higher-task workflow; further additional-form
+        current_run: /workspace/molar/robot_lab_runtime/project-completion-20261027-vne3n358
+        current_scope: Complete native tracked family and source-appropriate additional forms. Previous scope: Complete existing segmented centipede higher-task workflow; further additional-form
           families remain a separate queue.
         historical_unqualified_notes:
         - Implementation complete with contract tests and GUI diagnostics passing
@@ -1611,7 +1608,7 @@ tasks:
           gait save/goal/spine controls and exact command persistence implemented. Real source/trace-bound
           fleet producer replaces simulated completions and appears in experiment queue.
         owner: codex
-        state: partial
+        state: active
         title: Native fleet/swarm/marine GUI, taxonomy and experiment workflows
         validation_state: Actual native GUI/default-command checks plus real fleet resource/endpoint/cleanup
           batch, marine and gait diagnostics recorded. Automatic aerial/marine/gait producers, batch-wide
@@ -1621,9 +1618,8 @@ tasks:
           and scene loads do not qualify remaining robot/map/backend missions. See docs/REMAINING_WORK_GUIDE.md.'
         previous_owner: cline-agent
         claimed: '2026-10-27'
-        current_run: /workspace/molar/robot_lab_runtime/extension-completion-20261027-au5q8yp7
-        current_scope: Wire finished fleet/aerial/marine/gait sessions, defaults, commands, controls and
-          truthful status in native GUI.
+        current_run: /workspace/molar/robot_lab_runtime/project-completion-20261027-vne3n358
+        current_scope: Implement real aerial/marine/gait workload producers, queue snapshots and physical result contracts.
         historical_unqualified_notes:
         - Implementation complete with contract tests and GUI diagnostics passing
         - Fleet contract (8 tests), fleet missions, gait contract (all pass), molar backend contract (all
@@ -4735,3 +4731,26 @@ runtime_completion_20261027:
   remaining: Aerial accuracy/convergence/loss; further marine/per-model terrain/infrastructure/map/backend
     acceptance, additional forms and automatic extension producers. No universal mission qualification.
   first_checkpoint_revision: 8e411cb5ee60faf378ffb7b171ba97779053ea24
+
+project_completion_20261027:
+  owner: codex
+  state: active
+  requested: '2026-10-27'
+  baseline_revision: 9664c37a820cb54a6c6d1eecfb0ff580ede6f3af
+  run_directory: /workspace/molar/robot_lab_runtime/project-completion-20261027-vne3n358
+  scope_paths:
+  - src/
+  - scripts/
+  - docs/
+  - README.md
+  - ROADMAP.md
+  - .github/
+  order:
+  - aerial accuracy and measured swarm missions
+  - fleet infrastructure and mission/reset workflows
+  - additional robot forms and native controls
+  - actual aerial/marine/gait workload adapters
+  - remaining maps and existing roadmap implementation
+  - scoped qualification and reproducible release
+  status_boundary: Close tasks only against their declared actual acceptance. Preserve exact historical
+    certificates, source limits and failures. Optional physical HIL remains a separate hardware prerequisite.

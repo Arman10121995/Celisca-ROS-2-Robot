@@ -752,6 +752,16 @@ def _build_simulation_actions(context):
             _as_bool(_launch_value(context, 'allow_experimental_assets')))
         _validate_robot_for_mode(robot_model, robot_config, mode_name, mode_config,
                                  _launch_value(context, "simulator"))
+        if robot_config.get('tracked_model'):
+            if _launch_value(context,'simulator')!='gazebo':raise RuntimeError('Native contact-surface tracks require Gazebo Fortress')
+            tracked_args=dict(task=mode_name,map_name='empty' if map_free else map_name,
+                gui=_config_value(context,'gui','true'),rviz='true' if _auto_bool(context,'start_rviz',True) else 'false')
+            if _is_auto(tracked_args['gui']):tracked_args['gui']='true' if os.environ.get('DISPLAY') else 'false'
+            for axis in ('x','y','z','yaw'):
+                supplied=_launch_value(context,'spawn_'+axis)
+                if not _is_auto(supplied):tracked_args['spawn_'+axis]=supplied
+            return _run_id_actions()+[IncludeLaunchDescription(PythonLaunchDescriptionSource(
+                _launch_file(bringup_share,'tracked_simulator.launch.py')),launch_arguments=tracked_args.items())]
         if robot_config.get('gait_model'):
             if _launch_value(context, 'simulator') != 'mujoco' or mode_name not in ('display', 'gait'):
                 raise RuntimeError('Source multi-leg gait currently supports MuJoCo Display/Gait only')

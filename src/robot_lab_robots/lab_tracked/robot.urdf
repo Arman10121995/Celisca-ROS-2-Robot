@@ -1,0 +1,500 @@
+<?xml version='1.0' encoding='utf-8'?>
+<robot name="lab_tracked">
+  <link name="base_footprint" />
+  <joint name="footprint_fixed" type="fixed">
+    <parent link="base_footprint" />
+    <child link="base_link" />
+  </joint>
+  <link name="base_link">
+    <inertial>
+      <origin xyz="-0.122 0.0 0.118" rpy="1.5708 0.0 0.0" />
+      <mass value="13.14" />
+      <inertia ixx="0.10019" ixy="0" ixz="0" iyy="0.345043" iyz="0" izz="0.302044" />
+    </inertial>
+    <visual name="base_link_visual">
+      <origin xyz="-0.122 0.0 0.118" rpy="0.0 0.0 0.0" />
+      <geometry>
+        <box size="0.50017 0.24093 0.139" />
+      </geometry>
+      <material name="base_link_visual_color">
+        <color rgba=".25 .35 .45 1" />
+      </material>
+    </visual>
+    <collision name="base_link_collision">
+      <origin xyz="-0.122 0.0 0.118" rpy="0.0 0.0 0.0" />
+      <geometry>
+        <box size="0.50017 0.24093 0.139" />
+      </geometry>
+    </collision>
+  </link>
+  <link name="left_track">
+    <inertial>
+      <origin xyz="0.0 0.0 0.0141" rpy="0.0 0.0 0.0" />
+      <mass value="6.06" />
+      <inertia ixx="0.002731" ixy="0" ixz="0" iyy="0.032554" iyz="1.5e-05" izz="0.031391" />
+    </inertial>
+    <visual name="left_track_visual">
+      <origin xyz="0.0 0.0 0.01855" rpy="1.5708 2.220446049250313e-16 1.5708" />
+      <geometry>
+        <box size="0.09728 0.18094 0.5" />
+      </geometry>
+      <material name="left_track_visual_color">
+        <color rgba=".25 .35 .45 1" />
+      </material>
+    </visual>
+    <visual name="left_track_visual_1">
+      <origin xyz="0.25 0.0 0.01855" rpy="1.5708 0.0 0.0" />
+      <geometry>
+        <cylinder radius="0.09047" length="0.09728" />
+      </geometry>
+      <material name="left_track_visual_1_color">
+        <color rgba=".25 .35 .45 1" />
+      </material>
+    </visual>
+    <visual name="left_track_visual_2">
+      <origin xyz="-0.25 0.0 0.01855" rpy="1.5708 0.0 0.0" />
+      <geometry>
+        <cylinder radius="0.09047" length="0.09728" />
+      </geometry>
+      <material name="left_track_visual_2_color">
+        <color rgba=".25 .35 .45 1" />
+      </material>
+    </visual>
+    <collision name="left_track_collision">
+      <origin xyz="0.0 0.0 0.01855" rpy="1.5708 2.220446049250313e-16 1.5708" />
+      <geometry>
+        <box size="0.09728 0.18094 0.5" />
+      </geometry>
+    </collision>
+    <collision name="left_track_collision_1">
+      <origin xyz="0.25 0.0 0.01855" rpy="1.5708 0.0 0.0" />
+      <geometry>
+        <cylinder radius="0.09047" length="0.09728" />
+      </geometry>
+    </collision>
+    <collision name="left_track_collision_2">
+      <origin xyz="-0.25 0.0 0.01855" rpy="1.5708 0.0 0.0" />
+      <geometry>
+        <cylinder radius="0.09047" length="0.09728" />
+      </geometry>
+    </collision>
+  </link>
+  <link name="right_track">
+    <inertial>
+      <origin xyz="0.0 0.0 0.0141" rpy="0.0 0.0 0.0" />
+      <mass value="6.06" />
+      <inertia ixx="0.002731" ixy="0" ixz="0" iyy="0.032554" iyz="1.5e-05" izz="0.031391" />
+    </inertial>
+    <visual name="right_track_visual">
+      <origin xyz="0.0 0.0 0.01855" rpy="1.5708 2.220446049250313e-16 1.5708" />
+      <geometry>
+        <box size="0.09728 0.18094 0.5" />
+      </geometry>
+      <material name="right_track_visual_color">
+        <color rgba=".25 .35 .45 1" />
+      </material>
+    </visual>
+    <visual name="right_track_visual_1">
+      <origin xyz="0.25 0.0 0.01855" rpy="1.5708 0.0 0.0" />
+      <geometry>
+        <cylinder radius="0.09047" length="0.09728" />
+      </geometry>
+      <material name="right_track_visual_1_color">
+        <color rgba=".25 .35 .45 1" />
+      </material>
+    </visual>
+    <visual name="right_track_visual_2">
+      <origin xyz="-0.25 0.0 0.01855" rpy="1.5708 0.0 0.0" />
+      <geometry>
+        <cylinder radius="0.09047" length="0.09728" />
+      </geometry>
+      <material name="right_track_visual_2_color">
+        <color rgba=".25 .35 .45 1" />
+      </material>
+    </visual>
+    <collision name="right_track_collision">
+      <origin xyz="0.0 0.0 0.01855" rpy="1.5708 2.220446049250313e-16 1.5708" />
+      <geometry>
+        <box size="0.09728 0.18094 0.5" />
+      </geometry>
+    </collision>
+    <collision name="right_track_collision_1">
+      <origin xyz="0.25 0.0 0.01855" rpy="1.5708 0.0 0.0" />
+      <geometry>
+        <cylinder radius="0.09047" length="0.09728" />
+      </geometry>
+    </collision>
+    <collision name="right_track_collision_2">
+      <origin xyz="-0.25 0.0 0.01855" rpy="1.5708 0.0 0.0" />
+      <geometry>
+        <cylinder radius="0.09047" length="0.09728" />
+      </geometry>
+    </collision>
+  </link>
+  <link name="front_left_flipper">
+    <inertial>
+      <origin xyz="0.08 0.0 0.0" rpy="0.0 0.0 0.0" />
+      <mass value="0.75" />
+      <inertia ixx="0.0017491" ixy="2.8512e-07" ixz="0.0018277" iyy="0.012277" iyz="-3.6288e-07" izz="0.010941" />
+    </inertial>
+    <visual name="front_left_flipper_visual_large_wheel_visual">
+      <origin xyz="0.0 0.0 0.0" rpy="1.5708 0.0 0.0" />
+      <geometry>
+        <cylinder radius="0.089" length="0.04981" />
+      </geometry>
+      <material name="front_left_flipper_visual_large_wheel_visual_color">
+        <color rgba=".25 .35 .45 1" />
+      </material>
+    </visual>
+    <visual name="front_left_flipper_visual_small_wheel_visual_1">
+      <origin xyz="0.33 0.0 0.0" rpy="1.5708 0.0 0.0" />
+      <geometry>
+        <cylinder radius="0.029" length="0.04981" />
+      </geometry>
+      <material name="front_left_flipper_visual_small_wheel_visual_1_color">
+        <color rgba=".25 .35 .45 1" />
+      </material>
+    </visual>
+    <visual name="front_left_flipper_visual_top_bar_visual_2">
+      <origin xyz="0.165 0.0 0.0325" rpy="0.0 0.18416199999999994 0.0" />
+      <geometry>
+        <box size="0.33 0.04981 0.055" />
+      </geometry>
+      <material name="front_left_flipper_visual_top_bar_visual_2_color">
+        <color rgba=".25 .35 .45 1" />
+      </material>
+    </visual>
+    <visual name="front_left_flipper_visual_bottom_bar_visual_3">
+      <origin xyz="0.165 0.0 -0.0325" rpy="0.0 -0.18416199999999994 0.0" />
+      <geometry>
+        <box size="0.33 0.04981 0.055" />
+      </geometry>
+      <material name="front_left_flipper_visual_bottom_bar_visual_3_color">
+        <color rgba=".25 .35 .45 1" />
+      </material>
+    </visual>
+    <visual name="front_left_flipper_visual_middle_bar_visual_4">
+      <origin xyz="0.166 0.0 0.004" rpy="0.0 -0.020000000000000018 0.0" />
+      <geometry>
+        <box size="0.2 0.04981 0.07" />
+      </geometry>
+      <material name="front_left_flipper_visual_middle_bar_visual_4_color">
+        <color rgba=".25 .35 .45 1" />
+      </material>
+    </visual>
+    <collision name="front_left_flipper_collision_large_wheel_collision">
+      <origin xyz="0.0 0.0 0.0" rpy="1.5708 0.0 0.0" />
+      <geometry>
+        <cylinder radius="0.089" length="0.04981" />
+      </geometry>
+    </collision>
+    <collision name="front_left_flipper_collision_small_wheel_collision_1">
+      <origin xyz="0.33 0.0 0.0" rpy="1.5708 0.0 0.0" />
+      <geometry>
+        <cylinder radius="0.029" length="0.04981" />
+      </geometry>
+    </collision>
+    <collision name="front_left_flipper_collision_top_bar_collision_2">
+      <origin xyz="0.165 0.0 0.0325" rpy="0.0 0.18416199999999994 0.0" />
+      <geometry>
+        <box size="0.33 0.04981 0.055" />
+      </geometry>
+    </collision>
+    <collision name="front_left_flipper_collision_bottom_bar_collision_3">
+      <origin xyz="0.165 0.0 -0.0325" rpy="0.0 -0.18416199999999994 0.0" />
+      <geometry>
+        <box size="0.33 0.04981 0.055" />
+      </geometry>
+    </collision>
+    <collision name="front_left_flipper_collision_middle_bar_collision_4">
+      <origin xyz="0.166 0.0 0.004" rpy="0.0 -0.020000000000000018 0.0" />
+      <geometry>
+        <box size="0.2 0.04981 0.07" />
+      </geometry>
+    </collision>
+  </link>
+  <link name="rear_left_flipper">
+    <inertial>
+      <origin xyz="0.08 0.0 0.0" rpy="0.0 0.0 0.0" />
+      <mass value="0.75" />
+      <inertia ixx="0.0017491" ixy="2.8512e-07" ixz="0.0018277" iyy="0.012277" iyz="-3.6288e-07" izz="0.010941" />
+    </inertial>
+    <visual name="rear_left_flipper_visual_large_wheel_visual">
+      <origin xyz="0.0 0.0 0.0" rpy="1.5708 0.0 0.0" />
+      <geometry>
+        <cylinder radius="0.089" length="0.04981" />
+      </geometry>
+      <material name="rear_left_flipper_visual_large_wheel_visual_color">
+        <color rgba=".25 .35 .45 1" />
+      </material>
+    </visual>
+    <visual name="rear_left_flipper_visual_small_wheel_visual_1">
+      <origin xyz="0.33 0.0 0.0" rpy="1.5708 0.0 0.0" />
+      <geometry>
+        <cylinder radius="0.029" length="0.04981" />
+      </geometry>
+      <material name="rear_left_flipper_visual_small_wheel_visual_1_color">
+        <color rgba=".25 .35 .45 1" />
+      </material>
+    </visual>
+    <visual name="rear_left_flipper_visual_top_bar_visual_2">
+      <origin xyz="0.165 0.0 0.0325" rpy="0.0 0.18416199999999994 0.0" />
+      <geometry>
+        <box size="0.33 0.04981 0.055" />
+      </geometry>
+      <material name="rear_left_flipper_visual_top_bar_visual_2_color">
+        <color rgba=".25 .35 .45 1" />
+      </material>
+    </visual>
+    <visual name="rear_left_flipper_visual_bottom_bar_visual_3">
+      <origin xyz="0.165 0.0 -0.0325" rpy="0.0 -0.18416199999999994 0.0" />
+      <geometry>
+        <box size="0.33 0.04981 0.055" />
+      </geometry>
+      <material name="rear_left_flipper_visual_bottom_bar_visual_3_color">
+        <color rgba=".25 .35 .45 1" />
+      </material>
+    </visual>
+    <visual name="rear_left_flipper_visual_middle_bar_visual_4">
+      <origin xyz="0.166 0.0 0.004" rpy="0.0 -0.020000000000000018 0.0" />
+      <geometry>
+        <box size="0.2 0.04981 0.07" />
+      </geometry>
+      <material name="rear_left_flipper_visual_middle_bar_visual_4_color">
+        <color rgba=".25 .35 .45 1" />
+      </material>
+    </visual>
+    <collision name="rear_left_flipper_collision_large_wheel_collision">
+      <origin xyz="0.0 0.0 0.0" rpy="1.5708 0.0 0.0" />
+      <geometry>
+        <cylinder radius="0.089" length="0.04981" />
+      </geometry>
+    </collision>
+    <collision name="rear_left_flipper_collision_small_wheel_collision_1">
+      <origin xyz="0.33 0.0 0.0" rpy="1.5708 0.0 0.0" />
+      <geometry>
+        <cylinder radius="0.029" length="0.04981" />
+      </geometry>
+    </collision>
+    <collision name="rear_left_flipper_collision_top_bar_collision_2">
+      <origin xyz="0.165 0.0 0.0325" rpy="0.0 0.18416199999999994 0.0" />
+      <geometry>
+        <box size="0.33 0.04981 0.055" />
+      </geometry>
+    </collision>
+    <collision name="rear_left_flipper_collision_bottom_bar_collision_3">
+      <origin xyz="0.165 0.0 -0.0325" rpy="0.0 -0.18416199999999994 0.0" />
+      <geometry>
+        <box size="0.33 0.04981 0.055" />
+      </geometry>
+    </collision>
+    <collision name="rear_left_flipper_collision_middle_bar_collision_4">
+      <origin xyz="0.166 0.0 0.004" rpy="0.0 -0.020000000000000018 0.0" />
+      <geometry>
+        <box size="0.2 0.04981 0.07" />
+      </geometry>
+    </collision>
+  </link>
+  <link name="front_right_flipper">
+    <inertial>
+      <origin xyz="-0.08 0.0 0.0" rpy="0.0 0.0 0.0" />
+      <mass value="0.75" />
+      <inertia ixx="0.0017491" ixy="2.8512e-07" ixz="0.0018277" iyy="0.012277" iyz="-3.6288e-07" izz="0.010941" />
+    </inertial>
+    <visual name="front_right_flipper_visual_large_wheel_visual">
+      <origin xyz="0.0 0.0 0.0" rpy="1.5708 0.0 0.0" />
+      <geometry>
+        <cylinder radius="0.089" length="0.04981" />
+      </geometry>
+      <material name="front_right_flipper_visual_large_wheel_visual_color">
+        <color rgba=".25 .35 .45 1" />
+      </material>
+    </visual>
+    <visual name="front_right_flipper_visual_small_wheel_visual_1">
+      <origin xyz="-0.33 0.0 0.0" rpy="1.5708 0.0 0.0" />
+      <geometry>
+        <cylinder radius="0.029" length="0.04981" />
+      </geometry>
+      <material name="front_right_flipper_visual_small_wheel_visual_1_color">
+        <color rgba=".25 .35 .45 1" />
+      </material>
+    </visual>
+    <visual name="front_right_flipper_visual_top_bar_visual_2">
+      <origin xyz="-0.165 0.0 0.0325" rpy="0.0 0.18416200000000016 -3.1415899999999994" />
+      <geometry>
+        <box size="0.33 0.04981 0.055" />
+      </geometry>
+      <material name="front_right_flipper_visual_top_bar_visual_2_color">
+        <color rgba=".25 .35 .45 1" />
+      </material>
+    </visual>
+    <visual name="front_right_flipper_visual_bottom_bar_visual_3">
+      <origin xyz="-0.165 0.0 -0.0325" rpy="0.0 -0.18416199999999994 -3.1415899999999994" />
+      <geometry>
+        <box size="0.33 0.04981 0.055" />
+      </geometry>
+      <material name="front_right_flipper_visual_bottom_bar_visual_3_color">
+        <color rgba=".25 .35 .45 1" />
+      </material>
+    </visual>
+    <visual name="front_right_flipper_visual_middle_bar_visual_4">
+      <origin xyz="-0.166 0.0 0.004" rpy="0.0 -0.019999999999999796 -3.1415899999999994" />
+      <geometry>
+        <box size="0.2 0.04981 0.07" />
+      </geometry>
+      <material name="front_right_flipper_visual_middle_bar_visual_4_color">
+        <color rgba=".25 .35 .45 1" />
+      </material>
+    </visual>
+    <collision name="front_right_flipper_collision_large_wheel_collision">
+      <origin xyz="0.0 0.0 0.0" rpy="1.5708 0.0 0.0" />
+      <geometry>
+        <cylinder radius="0.089" length="0.04981" />
+      </geometry>
+    </collision>
+    <collision name="front_right_flipper_collision_small_wheel_collision_1">
+      <origin xyz="-0.33 0.0 0.0" rpy="1.5708 0.0 0.0" />
+      <geometry>
+        <cylinder radius="0.029" length="0.04981" />
+      </geometry>
+    </collision>
+    <collision name="front_right_flipper_collision_top_bar_collision_2">
+      <origin xyz="-0.165 0.0 0.0325" rpy="0.0 0.18416200000000016 -3.1415899999999994" />
+      <geometry>
+        <box size="0.33 0.04981 0.055" />
+      </geometry>
+    </collision>
+    <collision name="front_right_flipper_collision_bottom_bar_collision_3">
+      <origin xyz="-0.165 0.0 -0.0325" rpy="0.0 -0.18416199999999994 -3.1415899999999994" />
+      <geometry>
+        <box size="0.33 0.04981 0.055" />
+      </geometry>
+    </collision>
+    <collision name="front_right_flipper_collision_middle_bar_collision_4">
+      <origin xyz="-0.166 0.0 0.004" rpy="0.0 -0.019999999999999796 -3.1415899999999994" />
+      <geometry>
+        <box size="0.2 0.04981 0.07" />
+      </geometry>
+    </collision>
+  </link>
+  <link name="rear_right_flipper">
+    <inertial>
+      <origin xyz="-0.08 0.0 0.0" rpy="0.0 0.0 0.0" />
+      <mass value="0.75" />
+      <inertia ixx="0.0017491" ixy="2.8512e-07" ixz="0.0018277" iyy="0.012277" iyz="-3.6288e-07" izz="0.010941" />
+    </inertial>
+    <visual name="rear_right_flipper_visual_large_wheel_visual">
+      <origin xyz="0.0 0.0 0.0" rpy="1.5708 0.0 0.0" />
+      <geometry>
+        <cylinder radius="0.089" length="0.04981" />
+      </geometry>
+      <material name="rear_right_flipper_visual_large_wheel_visual_color">
+        <color rgba=".25 .35 .45 1" />
+      </material>
+    </visual>
+    <visual name="rear_right_flipper_visual_small_wheel_visual_1">
+      <origin xyz="-0.33 0.0 0.0" rpy="1.5708 0.0 0.0" />
+      <geometry>
+        <cylinder radius="0.029" length="0.04981" />
+      </geometry>
+      <material name="rear_right_flipper_visual_small_wheel_visual_1_color">
+        <color rgba=".25 .35 .45 1" />
+      </material>
+    </visual>
+    <visual name="rear_right_flipper_visual_top_bar_visual_2">
+      <origin xyz="-0.165 0.0 0.0325" rpy="0.0 0.18416200000000016 -3.1415899999999994" />
+      <geometry>
+        <box size="0.33 0.04981 0.055" />
+      </geometry>
+      <material name="rear_right_flipper_visual_top_bar_visual_2_color">
+        <color rgba=".25 .35 .45 1" />
+      </material>
+    </visual>
+    <visual name="rear_right_flipper_visual_bottom_bar_visual_3">
+      <origin xyz="-0.165 0.0 -0.0325" rpy="0.0 -0.18416199999999994 -3.1415899999999994" />
+      <geometry>
+        <box size="0.33 0.04981 0.055" />
+      </geometry>
+      <material name="rear_right_flipper_visual_bottom_bar_visual_3_color">
+        <color rgba=".25 .35 .45 1" />
+      </material>
+    </visual>
+    <visual name="rear_right_flipper_visual_middle_bar_visual_4">
+      <origin xyz="-0.166 0.0 0.004" rpy="0.0 -0.019999999999999796 -3.1415899999999994" />
+      <geometry>
+        <box size="0.2 0.04981 0.07" />
+      </geometry>
+      <material name="rear_right_flipper_visual_middle_bar_visual_4_color">
+        <color rgba=".25 .35 .45 1" />
+      </material>
+    </visual>
+    <collision name="rear_right_flipper_collision_large_wheel_collision">
+      <origin xyz="0.0 0.0 0.0" rpy="1.5708 0.0 0.0" />
+      <geometry>
+        <cylinder radius="0.089" length="0.04981" />
+      </geometry>
+    </collision>
+    <collision name="rear_right_flipper_collision_small_wheel_collision_1">
+      <origin xyz="-0.33 0.0 0.0" rpy="1.5708 0.0 0.0" />
+      <geometry>
+        <cylinder radius="0.029" length="0.04981" />
+      </geometry>
+    </collision>
+    <collision name="rear_right_flipper_collision_top_bar_collision_2">
+      <origin xyz="-0.165 0.0 0.0325" rpy="0.0 0.18416200000000016 -3.1415899999999994" />
+      <geometry>
+        <box size="0.33 0.04981 0.055" />
+      </geometry>
+    </collision>
+    <collision name="rear_right_flipper_collision_bottom_bar_collision_3">
+      <origin xyz="-0.165 0.0 -0.0325" rpy="0.0 -0.18416199999999994 -3.1415899999999994" />
+      <geometry>
+        <box size="0.33 0.04981 0.055" />
+      </geometry>
+    </collision>
+    <collision name="rear_right_flipper_collision_middle_bar_collision_4">
+      <origin xyz="-0.166 0.0 0.004" rpy="0.0 -0.019999999999999796 -3.1415899999999994" />
+      <geometry>
+        <box size="0.2 0.04981 0.07" />
+      </geometry>
+    </collision>
+  </link>
+  <joint name="left_track_j" type="fixed">
+    <parent link="base_link" />
+    <child link="left_track" />
+    <origin xyz="0.0 0.1985 0.0" rpy="0.0 0.0 0.0" />
+  </joint>
+  <joint name="right_track_j" type="fixed">
+    <parent link="base_link" />
+    <child link="right_track" />
+    <origin xyz="0.0 -0.1985 0.0" rpy="0.0 0.0 0.0" />
+  </joint>
+  <joint name="front_left_flipper_j" type="revolute">
+    <parent link="left_track" />
+    <child link="front_left_flipper" />
+    <origin xyz="0.25 0.07350000000000001 0.0195" rpy="0.0 -0.5 0.0" />
+    <axis xyz="0 1 0" />
+    <limit lower="0" upper="0" effort="25" velocity="1" />
+  </joint>
+  <joint name="rear_left_flipper_j" type="revolute">
+    <parent link="left_track" />
+    <child link="rear_left_flipper" />
+    <origin xyz="-0.25 0.07350000000000001 0.0195" rpy="3.14159 -0.5 3.14159" />
+    <axis xyz="0 1 0" />
+    <limit lower="0" upper="0" effort="25" velocity="1" />
+  </joint>
+  <joint name="front_right_flipper_j" type="revolute">
+    <parent link="right_track" />
+    <child link="front_right_flipper" />
+    <origin xyz="0.25 -0.07350000000000001 0.0195" rpy="3.14159 0.5 3.14159" />
+    <axis xyz="0 1 0" />
+    <limit lower="0" upper="0" effort="25" velocity="1" />
+  </joint>
+  <joint name="rear_right_flipper_j" type="revolute">
+    <parent link="right_track" />
+    <child link="rear_right_flipper" />
+    <origin xyz="-0.25 -0.07350000000000001 0.0195" rpy="0.0 0.5 0.0" />
+    <axis xyz="0 1 0" />
+    <limit lower="0" upper="0" effort="25" velocity="1" />
+  </joint>
+</robot>

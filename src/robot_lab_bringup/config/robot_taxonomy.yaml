@@ -1,6 +1,10 @@
 # Structural catalog tags, never a runtime/controller qualification.
 schema_version: 1
 classes:
+  - category: Mobile robots
+    subtype: Tracked vehicle
+    tags: [Native belts, Four flippers, Source geometry, Experimental control]
+    members: [lab_tracked]
   - category: Mobile manipulators
     subtype: Differential-drive conveyor
     tags: [Lift, Coupled telescope, Passive casters, Estimated dynamics]

@@ -50,6 +50,7 @@ class AerialSwarmTab(ttk.Frame):
         self.family_var = tk.StringVar(value=app.map_groups.family(self.map_var.get()))
         self.count = tk.IntVar(value=2)
         self.spacing = tk.DoubleVar(value=3.)
+        self.height_reference=tk.StringVar(value='barometer')
         self.gui = tk.BooleanVar(value=True)
         self.keyboard = tk.BooleanVar(value=False)
         self.target = tk.StringVar(value='All vehicles')
@@ -87,6 +88,9 @@ class AerialSwarmTab(ttk.Frame):
         space.pack(side='left', padx=5)
         space.bind('<FocusOut>', lambda _: self.refresh_command())
         ttk.Checkbutton(options, text='Gazebo window', variable=self.gui, command=self.refresh_command).pack(side='left')
+        references=ttk.Combobox(options,textvariable=self.height_reference,values=('barometer','gnss'),state='readonly',width=11)
+        references.pack(side='left',padx=4)
+        references.bind('<<ComboboxSelected>>',lambda _:self.refresh_command())
         grid = ttk.Frame(editor)
         grid.grid(row=3, column=0, columnspan=2, sticky='ew')
         for col, title in enumerate(('Vehicle / FCU / port', 'World X', 'World Y', 'Model Z')):
@@ -174,6 +178,8 @@ class AerialSwarmTab(ttk.Frame):
         self.refresh_command()
 
     def configuration(self):
+        if self.height_reference.get() not in ('barometer','gnss'):
+            raise ValueError('Choose barometer or gnss height reference')
         count, spacing = self.count.get(), self.spacing.get()
         if count not in (2, 3, 4) or not math.isfinite(spacing) or not 3. <= spacing <= 8.:
             raise ValueError('Choose 2–4 vehicles and spawn spacing 3–8 m')
@@ -183,7 +189,8 @@ class AerialSwarmTab(ttk.Frame):
             if not all(math.isfinite(v) for v in spawn.values()) or ('x' in spawn) != ('y' in spawn):
                 raise ValueError('Enter finite X and Y together, or leave both automatic')
             members.append(dict(id='air'+str(index+1), spawn=spawn))
-        return dict(schema_version=1, map=self.map_var.get(), spacing=spacing, members=members)
+        return dict(schema_version=1, map=self.map_var.get(), spacing=spacing, members=members,
+                    estimator=dict(height_reference=self.height_reference.get()))
 
     def refresh_command(self):
         try:
@@ -230,6 +237,7 @@ class AerialSwarmTab(ttk.Frame):
             self.map_var.set(data['map'])
             self.family_var.set(self.app.map_groups.family(data['map']))
             self.spacing.set(data.get('spacing', 3.))
+            self.height_reference.set((data.get('estimator') or {}).get('height_reference','barometer'))
             for index, fields in enumerate(self.spawns):
                 spawn = data['members'][index].get('spawn', {}) if index < len(data['members']) else {}
                 for key, var in fields.items():

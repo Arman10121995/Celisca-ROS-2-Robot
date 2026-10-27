@@ -113,7 +113,9 @@ def main():
             time.sleep(.4)
             item['origin']=actual_origin(item['namespace']+'/px4/odometry_truth_native',env)
             rootfs=folder/('fcu-'+item['id']);rootfs.mkdir()
-            vehicle_env=dict(env,PX4_GZ_MODEL_NAME=item['entity'])
+            vehicle_env=dict(env,PX4_GZ_MODEL_NAME=item['entity'],
+                PX4_PARAM_EKF2_HGT_REF=str(session.get('estimator',{}).get('px4_height_reference',0)),
+                PX4_PARAM_EKF2_GPS_CTRL='5' if session.get('estimator',{}).get('px4_height_reference',0)==0 else '7')
             start([str(build/'bin/px4'),'-d','-i',str(item['instance']),str(build/'etc'),'-w',str(rootfs)],
                   item['id']+'-px4',vehicle_env,pass_fds=(leases[item['instance']].fileno(),))
             config=folder/(item['id']+'-description.yaml');config.write_text(yaml.safe_dump({'/**':{'ros__parameters':dict(robot_description=description,

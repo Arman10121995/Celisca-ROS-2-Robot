@@ -63,6 +63,9 @@ def validate_workload(document):
         if 'fleet_id' in document and (not isinstance(document['fleet_id'],str) or not 1 <= len(document['fleet_id']) <= 80):
             raise ValueError('Expected fleet session identity must be a bounded string.')
         return dict(document, fleet_goals=validated, timeout_s=timeout)
+    elif schema == 'robot_lab.extension_workload.v1':
+        from .extension_contract import validate
+        return validate(document)
     else:
         raise ValueError(f'Unknown workload schema: {schema}. Supported: {WORKLOAD_SCHEMA}, {FLEET_WORKLOAD_SCHEMA}')
 
@@ -191,4 +194,7 @@ def read_result(directory, run_id, domain, specification, invalidated=False):
                         owned_cleanup=result.get('owned_cleanup',False))
         return dict(result,_evidence=evidence), None
 
+    if specification.get('schema') == 'robot_lab.extension_workload.v1':
+        from .extension_result import read
+        return read(directory, run_id, domain, specification, invalidated)
     return None, 'No measured workload result was produced.'

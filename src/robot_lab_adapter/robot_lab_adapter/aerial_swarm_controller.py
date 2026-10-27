@@ -94,6 +94,8 @@ class AerialSwarmController(Node):
             self.pending.remove(request)
             if data['generation']!=self.generation:return
             member['result']=dict(operation=request['op'],accepted=bool(data['accepted']),message=data['message'])
+            for key in ('landed_estimate_samples','maximum_estimated_speed_m_s','expected_height_reference','applied_height_reference'):
+                if key in data:member['result'][key]=data[key]
             if request['op']=='check' and data['accepted']:
                 member['result'].update(check_position=data.get('check_position'),checked_at=time.monotonic())
             self.event('service_result',member=member['id'],**member['result'])
@@ -213,6 +215,8 @@ class AerialSwarmController(Node):
             self.pub.publish(String(data=json.dumps(dict(schema_version=1,session_id=self.session['session_id'],
                 map=self.session['map'],backend='Gazebo Harmonic / native PX4',directory=self.session['directory'],
                 operator_id=self.operator,operator_fresh=operator_fresh,mode=self.mode,reason=self.reason,members=rows,
+                active_targets=list(self.targets),anchor=self.anchor,spacing=self.spacing,
+                estimator=self.session.get('estimator',{}),
                 position_reference='Known landed spawn prior until first accepted Takeoff; committed FCU odometry thereafter; simulator truth is separate',
                 scope='Experimental actual shared-world multi-FCU controls; flight/swarm/clearance/loss qualification pending'),allow_nan=False)))
 

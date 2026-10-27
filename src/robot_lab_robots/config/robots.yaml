@@ -1,4 +1,21 @@
 robots:
+  lab_tracked:
+    package: robot_lab_robots
+    xacro: lab_tracked/robot.urdf
+    name: lab_tracked
+    type: mobile
+    tracked_model: true
+    drive: {type: tracked, max_speed: 0.3, max_accel: 0.4, max_angular_speed: 0.5, max_angular_accel: 0.4}
+    supported_modes: [display, loc, slam, 3d_slam, nav]
+    default_mode: display
+    default_map: nav_empty
+    supported_simulators: [gazebo]
+    drive_in_display: true
+    controllers: []
+    features: [native_tracks, lidar, rgbd_camera, imu]
+    implementation_state: experimental
+    validation_state: pending
+    notes: "Complete Gazebo tracked/flipper source, native contact-surface belts and bounded controls. Native track dead reckoning, sensors and mapping/navigation composition implemented; physical missions pending. Other backends require source-appropriate tracks."
   probot_l:
     package: robot_lab_robots
     xacro: probot_l/urdf/probot_l.urdf.xacro

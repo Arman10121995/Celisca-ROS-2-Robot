@@ -257,7 +257,7 @@ class PX4Controller(Node):
                                        ('MPC_Z_VEL_MAX_UP', 1.0, 9), ('MPC_Z_VEL_MAX_DN', 1.0, 9),
                                        ('MPC_ACC_HOR', 1.0, 9)]:
                 f.master.mav.param_set_send(f.master.target_system, f.master.target_component,
-                                          name.encode(), value, ptype)
+                                          name.encode(), f.encode_parameter(value,ptype), ptype)
             self.configured = True
             self.transition('idle')
         if self.phase == 'landing':
@@ -335,6 +335,9 @@ class PX4Controller(Node):
             'flight_enabled': self.enabled, 'position_enu': self.position(), 'target_enu': self.target,
             'takeoff_ready': self.takeoff_ready(), 'takeoff_target_z': self.takeoff_z,
             'control_clock':'FCU' if self.control_fcu_clock else 'wall',
+            'estimator_parameters':dict(self.flight.parameters),
+            'global_altitude_m':self.flight.position.alt*.001 if self.flight.position is not None else None,
+            'relative_altitude_m':self.flight.position.relative_alt*.001 if self.flight.position is not None else None,
             'preflight_remaining_fcu_s':max(0.,self.preflight_fcu_seconds-elapsed),
             'route_waypoints_remaining': len(self.route), 'route_status': self.route_status})))
 

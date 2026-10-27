@@ -1,0 +1,13 @@
+{
+  "upstream": "https://github.com/gazebosim/gz-sim/blob/ign-gazebo6/examples/worlds/tracked_vehicle_simple.sdf",
+  "installed_source": "/usr/share/ignition/ignition-gazebo6/worlds/tracked_vehicle_simple.sdf",
+  "source_sha256": "2a43b9a579e386a2efd47f573a8b1bc969fcafcd5c49df4c8c28bf6063dbfd43",
+  "license": "Apache-2.0",
+  "adaptations": [
+    "demo keyboard publishers removed",
+    "explicit bounded topics/frames",
+    "track_height spelling corrected",
+    "RViz URDF export"
+  ],
+  "scope": "Complete source tracked model; native runtime qualification separate"
+}
