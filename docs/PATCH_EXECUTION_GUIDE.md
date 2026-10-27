@@ -1,12 +1,15 @@
 # Stabilization and remaining work: agent execution guide
 
-October 27 current handoff: read [the remaining-work execution guide](REMAINING_WORK_GUIDE.md).
-The README/roadmap/ledger now reopen unmet acceptance while retaining successful
-named measurements. Restore seven missing historical robot registrations first,
-then remaining R10 workflows, maps and the older queue. Use live ledger owners;
-older owner/next-task paragraphs below are historical. Simulator SLAM/navigation
-and Isaac contact do not wait for physical hardware. Implement before broad
-validation and keep all artifacts on SSD.
+October 27 workflow delivery: the seven missing registrations are restored.
+Read [the current delivery](status/workflows-2026-10-27.md) and
+[remaining-work execution guide](REMAINING_WORK_GUIDE.md). Ground Fleet,
+Aerial Swarm, real fleet batches, marine save/reload/estimated routes and
+multi-leg acquired-map/goal controls are implemented. Scoped actual missions
+are recorded; full R10/platform acceptance remains partial. Continue the named
+aerial/AUV/terrain/infrastructure gaps and additional forms/workloads before
+the older roadmap. Preserve historical certificates, claim current ownership,
+work on master and keep artifacts on SSD. Simulation does not require physical
+robot access. Earlier dated owner/next-task paragraphs below are historical.
 
 October 20 continuation: read [the current extension checkpoint](status/extension-2026-10-20.md).
 Codex owns R10 completion; the completed Go2 export, basic fleet queues and

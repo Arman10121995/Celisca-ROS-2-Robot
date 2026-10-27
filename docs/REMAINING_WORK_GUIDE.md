@@ -1,25 +1,22 @@
 # Remaining work: agent execution guide
 
-Updated October 27, 2026, from `f75dc60`. This is a documentation/source and
-recorded-artifact reconciliation; it introduces no new runtime qualification.
-Read this guide after [AGENT_HANDOFF](AGENT_HANDOFF.md) and the
-[task ledger](status/platform-status.yaml). The [roadmap](../ROADMAP.md) owns
-acceptance. Earlier receipts retain their exact source and mission scope.
+Updated October 27, 2026 after initial workflow delivery on `master`.
+Read [the current delivery](status/workflows-2026-10-27.md),
+[actual receipt](status/evidence/workflows-2026-10-27/README.md),
+[handoff](AGENT_HANDOFF.md) and [ledger](status/platform-status.yaml).
+The roadmap owns full acceptance. Earlier certificates retain their exact
+source/model/map/backend/mission scope; initial implementation is separate.
 
-The platform and R10 extension are **partial**. October 26 completion labels
-based on tests, metadata and world loading are superseded by this reconciliation.
-The existing controllers, tests and successful named missions remain useful.
-Simulator estimation, saved SLAM, volumetric routes, fleet traffic and Isaac
-contact trials can proceed without physical robot hardware. Physical Bumperbot
-HIL, real sensor calibration and a physical joystick trial are separate work.
+The seven missing registrations are restored. Do not repeat the completed
+catalog repair or rebuild the native aerial launch, fleet queue, map export,
+marine sensor or gait navigation integrations. Preserve their current code
+and real scoped measurements. Full R10/platform acceptance remains partial.
 
 ## Working rules and first commands
 
-Work directly on `master` in this repository. Claim one concrete task with
-`owner`, `state: active`, scope and next action before editing runtime code.
-Existing runtime ownership remains in the ledger; this documentation change
-does not take over another agent's runtime assignment. Preserve source assets,
-old failed runs, calibration contracts and valid scoped certificates.
+Work on the existing `master`, claim a concrete ledger scope before changes,
+and preserve other owners' work. No extra branch/worktree without a user request.
+Keep all generated assets, checkouts, caches, logs, builds and bags on SSD.
 
 ```bash
 cd /workspace/molar/ros_ws/bumperbot_ws
@@ -31,195 +28,173 @@ git rev-parse HEAD
 run_dir=$(mktemp -d "$ROBOT_LAB_RUNTIME_ROOT/remaining-work-20261027-XXXXXX")
 ```
 
-Keep checkouts, caches, generated assets, logs, bags and build output on the
-mounted SSD. Read [STORAGE](STORAGE.md); the PX4 relocation is already complete.
-Use PX4 `-d` unattended, bound trials and log sizes, and clean up only owned
-processes. Ground/marine Humble plugins use **Fortress 6.18**; native PX4 uses
-**Harmonic 8**. A scene loading in one version does not qualify another ABI's
-controller or hydrodynamics.
+Read STORAGE.md. The PX4 relocation is complete: do not repeat it. Use native
+PX4 `-d`, bound trials/logs and clean up every owned descendant even if the
+launch root already exited. Ground/marine use **Fortress 6.18**; PX4 uses
+**Harmonic 8**. Keep ROS domains and Gazebo partitions separate between live
+sessions/diagnostics. Do not mix plugin ABIs or share `/clock` accidentally.
 
-The user's order remains **implementation first**, followed by broad validation.
-Finish missing controllers, dependencies, launch and native GUI paths before
-running large matrices. Build/syntax checks and a bounded diagnostic that finds
-an integration defect are implementation work. Limits, neutral enablement,
-Stop, ownership and watchdogs belong in every initial implementation.
+Implement first; broad validation follows. Build changed packages and use
+bounded diagnostics to resolve concrete integration faults. Limits, neutral
+enablement, Stop, watchdogs, ownership and actual terminal handling belong in
+the initial code. Tests, counts and received messages never establish a mission.
 
-Module names below are relative to their Python package directories:
+## Delivered baseline to preserve
 
-| Area | Source directory |
-|---|---|
-| Shared fleet, marine, gait and asset utilities | `src/robot_lab_utils/robot_lab_utils/` |
-| Native aerial/PX4 adapters | `src/robot_lab_adapter/robot_lab_adapter/` |
-| GUI panels and session wiring | `src/robot_lab_gui/robot_lab_gui/` |
-| MuJoCo contact/actuation hooks | `src/robot_lab_mujoco/python/robot_lab_mujoco/` |
-| Benchmark workload contract | `src/robot_lab/robot_lab_benchmark/robot_lab_benchmark/` |
-| Launch entry points and shared configuration | `src/robot_lab_bringup/{launch,config}/` |
+- **147 robot profiles / 78 selectable families**, **51 worlds / 39 families**.
+  Seven historical vendor/Panda IDs are back; stale code certificates expose
+  explicit experimental candidates, while geometry/control mismatches cannot.
+- **Fleet:** actual shared-world queues, traffic yielding/resumption, coverage,
+  optional Humble RMF adapter and native controls. A position-swap mission and
+  a source-bound isolated two-goal batch have measured physical results.
+- **Aerial:** native multi-FCU launch/GUI, two to four separate identities,
+  frames/ports/leases, fresh takeoff seals, latched inputs, FCU time integration,
+  startup settling and owned cleanup. Actual two-vehicle flight/landing exists;
+  altitude and formation accuracy retain a named qualification gap.
+- **Marine:** native ROV/AUV forces; real motion-derived DVL plus separate
+  sonar/pressure, spawn-heading-aligned IMU estimation, RGB-D/depth registration,
+  actual flushed map export/protected reload/localization and bounded missions.
+  The ROV's saved-map route has an independent body trace. AUV maps created
+  before the heading-reference fix cannot be reused as corrected maps.
+- **Multi-leg:** retained KDL chains and continuous support, native source PD,
+  2D/3D sensing/mapping/export/reload, AMCL/Nav2 and native goal/spine controls.
+  Hexapod saved-map Nav2 returns success with body motion; octopod exports a
+  real populated 3D database. These are scoped diagnostics, not terrain passes.
+- **Experiments:** the fleet producer dispatches real routes and independently
+  measures body endpoints, speed and settling. The GUI snapshots a fleet preset
+  into an isolated queue. Random patterns/simulated completion are removed;
+  results require producer/specification/trace identity and actual cleanup.
 
-## Baseline to preserve
+## Ordered next work
 
-- Shared Gazebo Bumperbot/Labbot sessions, per-member Drive/Nav2, bounded queues,
-  sweep allocation, initial ground kernels and an optional Open-RMF adapter exist.
-  October 20 traces contain two completed queued goals and an RMF traffic stall.
-- Complete ROV and Tethys AUV have native propulsion and five marine worlds.
-  Simulated pressure/DVL/sonar, sensor odometry, real RGB-D RTAB-Map integration
-  and estimated 3D Plan/Execute are implemented. A bounded ROV route completed;
-  the retained marine map-save trials failed and require a successful follow-up.
-- Complete hexapod, octopod and centipede have source gait/PD, measured contacts,
-  contact-kinematic odometry and explicit experimental higher-task composition.
-  Gait-panel task options do not establish saved-map or navigation acceptance.
-- Native single-X500 flight, selected wheeled SLAM/navigation, Panda manipulation,
-  MOLAR articulation and the first exported Go2 training run have separate
-  historical evidence. Keep each claim attached to its named revision/cell.
+| Order | Task IDs | Concrete next result |
+|---|---|---|
+| 1 | R10.3 | Resolve remaining PX4 altitude/formation accuracy; measure convergence and command/member loss with independent body traces |
+| 2 | R10.4–R10.5 | Complete AUV transects/saved localization and marine obstacle/current/loss missions without accepting degenerate registration |
+| 3 | R10.1–R10.3 | Complete RMF conflicting/infrastructure routes, coverage, larger fleets and physical contact/loss screens |
+| 4 | R10.6–R10.7 | Per-model saved-map goals, terrain/slip/recovery and source-appropriate backend implementations |
+| 5 | R10.7 | Complete physical snake/tracked/surface/amphibious families; no display-only promotion |
+| 6 | R10.8 / R4 / R8.3 | Add automatic aerial/marine/gait workload producers and explicit batch-wide reset; retain actual source/trace-bound outcomes |
+| 7 | R6 and older queue | Remaining reviewed maps, car/perception/manipulation/policy-transfer/comparison/release work below |
 
-Current host inventory: **140 robot profiles / 75 selectable families** and
-**51 world profiles / 39 families**. These are availability counts, not counts
-of working robot missions. The last map-registration commit added only
-`terrain_heightfield`; the fourteen registered 3D entries were not fourteen
-new worlds. Recompute counts after repairing the installed manifest.
+## 1. Preserve catalog restoration
 
-## Ordered implementation queue
+Relevant code: `scripts/provision_extension_assets.py`, utilities
+`asset_support.py` and `installed_assets.py`, GUI `launcher.py`,
+`test_asset_provision_preservation.py`.
 
-| Order | Task IDs | Deliverable | Required completion evidence |
-|---|---|---|---|
-| 1 | R3.6 | Restore missing official mobile/Panda profiles and prevent provisioning losses | Preserved existing IDs, valid resources, normal GUI families and exact commands |
-| 2 | R10.1–R10.3 | Resolve fleet/RMF traffic and complete coverage/lifecycle behavior | Actual conflicting routes, queue outcomes, separation, loss and scoped reset |
-| 3 | R10.3 / R10.8 | Connect multi-FCU runtime to Launch and native GUI | Distinct vehicles/FCUs/ports/frames; explicit actual flight and loss outcomes |
-| 4 | R10.4–R10.5 | Complete underwater saved mapping, reload and bounded routes | Acquired map, independent estimator inputs, saved/reloaded mission and body/depth/contact traces |
-| 5 | R10.6–R10.7 | Complete multi-leg motion-to-mapping-to-navigation workflows | Real gait, sensor/odometry data, map save/reload and obstacle goals |
-| 6 | R10.7 | Complete additional snake/tracked/surface/amphibious families | Source-matched physical actuation and class-appropriate missions |
-| 7 | R10.8 / R4 / R8.3 | Finish extension GUI defaults and real experiment workloads | Normal GUI commands, real execution/cancel/reset and measured result artifacts |
-| 8 | R6 | Complete world imports, occupancy, actors and terrain workflows | Installed geometry/resources plus class-specific simulator routes |
-| 9 | R5 / R7–R9 / R11–R12 | Resume remaining original platform work | Exact criteria and measured comparisons below; release remains partial |
+The repaired IDs are `asset_turtlebot3_burger`, `asset_turtlebot3_waffle`,
+`asset_turtlebot3_waffle_pi`, `asset_turtlebot4_standard`,
+`asset_turtlebot4_lite`, `asset_husky`, and `menagerie_franka_emika_panda`.
+Provisioning merges existing profiles/registry entities and report siblings
+on full as well as source/entry-scoped runs. Use cached source pins; do not
+run a full import just to repair one profile. Single-model repair supports
+`--kind robots --source mujoco_menagerie --entry franka_emika_panda --no-download`.
 
-## 1. Restore the installed catalog before adding more assets
+Do not rewrite historical qualification hashes. Code-only mismatches can expose
+candidate workflows through `allow_experimental_assets:=true`; changed geometry
+or control resources cannot. The GUI's experimental toggle, default algorithms,
+mode gates and exact command must agree. New runtime acceptance needs new
+source-qualified measurements on each claimed robot/backend/task.
 
-Inspect `scripts/provision_extension_assets.py`,
-`robot_lab_utils/installed_assets.py`, `asset_groups.py`,
-`src/robot_lab_bringup/config/asset_groups.yaml` and the SSD
-`external_assets/installed/{robots,registry_robots}.yaml` manifests.
+## 2. Fleet and real experiment completion
 
-The six absent official profiles are `asset_turtlebot3_burger`,
-`asset_turtlebot3_waffle`, `asset_turtlebot3_waffle_pi`,
-`asset_turtlebot4_standard`, `asset_turtlebot4_lite` and `asset_husky`.
-Their asset directories remain on the SSD. The historical Panda profile
-`menagerie_franka_emika_panda` is also absent. Compare the October 5 installed
-snapshot and later vendor/Panda qualification records before restoring metadata;
-do not overwrite newer actuator, sensor, family or support fields.
+Relevant utilities: `fleet_session.py`, `fleet_controller.py`, `fleet_motion.py`,
+`fleet_missions.py`, `fleet_rmf_adapter.py`; GUI `fleet_tab.py` and
+`experiment_queue.py`; benchmark `fleet_workload.py`, `workload_contract.py`
+and `concurrent_runner.py`.
 
-Back up all installed manifests and the integration report on SSD. Prefer
-source-scoped `--kind robots --source <source_id> --no-download` repairs using
-the existing cached source and current provisioner. Review the result before
-publication. Source IDs are `turtlebot3_vendor`, `turtlebot4_vendor`,
-`husky_vendor` and `mujoco_menagerie`. Unscoped provisioning currently rewrites
-the final manifest from that run's successful imports; implement a preservation
-or explicit-removal policy so a failed/omitted import cannot erase working IDs.
-Do not assume a backup predates every later vendor integration.
+Preserve unique real spawn/home vertices, timed RMF departures, scoped task
+identities and route progress, lifecycle readiness, fresh physical peers, scan/
+separation bounds, checked retreat poses and bounded yield retries. Yielding
+suspends/resumes the original task; it does not manufacture success or cancel.
+Already-separated bodies may retreat from the soft buffer; overlap/closing
+commands remain stopped. Do not remove physical obstacles when a member leaves
+swarm participation.
 
-Compare before/after IDs and resource paths, refresh the normal GUI and verify
-family/variant selection, backend/mode filtering, algorithm defaults and command
-autofill. Missing controller qualification remains visible. Do not add download
-buttons or count component URDFs as complete independent robots.
+Reproduce remaining RMF conflicts with actual two-body missions before adding
+larger fleets. Add doors/lifts/battery infrastructure only with real adapters;
+energy stays unknown otherwise. Coverage produces source-clear sweep waypoints,
+not measured sensor coverage completeness. Record real member/task outcomes,
+contacts, raw source poses, loss and scoped reset without fabricated metrics.
 
-## 2. Finish fleet traffic and cooperative missions
+Real batches use `robot-lab-fleet-workload --spec ...` through the isolated
+runner. Fleet goals name actual IDs and world coordinates. Results bind the
+producer/spec/trace, actual tasks and independent settled endpoints. Batch-wide
+reset is explicitly not implemented; cancel/relaunch a batch or use live
+per-member Reset. Add it with owned task cancellation and observed physical
+reset completion, not a generic `/robot_lab/reset` call against a fleet.
 
-Continue in `robot_lab_utils/{fleet_controller,fleet_missions,fleet_motion,
-fleet_session,fleet_rmf_adapter}.py`,
-`src/robot_lab_bringup/launch/shared_world.launch.py` and
-`robot_lab_gui/fleet_tab.py`. Read [the fleet tutorial](tutorials/fleet-and-swarm.md).
-Reuse the installed official Open-RMF runtime and existing Nav2 actions.
+## 3. Aerial continuation
 
-Preserve lifecycle activation checks, task identities, bounded queues,
-terminal-result cancellation barriers, physical arrival/settling checks and
-operator-generation guards. Stop/reset clears owned work; pause preserves
-explicitly resumable work. A rejected or failed task must remain visible.
+Relevant adapter files: `aerial_swarm_model.py`, `aerial_swarm_runtime.py`,
+`aerial_swarm_controller.py`, `px4_swarm_worker.py`, `px4_ros_controller.py`;
+bringup `aerial_swarm.launch.py`; GUI `aerial_swarm_tab.py`.
+Read [the operator guide](tutorials/aerial-swarm.md).
 
-Resolve the measured RMF separation/traffic stall. Review interaction between
-the conservative serial route gate, RMF's coordinated member motion and timed
-departures. Implement conflict recovery and starvation/deadlock handling while
-preserving scan and peer clearance. Respect the installed Humble API: system
-NumPy 1.x (`/usr/bin/python3 -s`) and a one-argument patrol callback returning
-`Confirmation`. A logical RMF graph anchor is not physical charging equipment;
-battery, charging, doors and lifts remain unknown/unavailable without adapters.
+Native multi-FCU launch/GUI is implemented. Preserve per-instance locks,
+`-d`, IDs/ports/namespaces/frames, actual settled spawn priors, model envelope,
+single-use geometry seals, operator generations and group-takeoff rejection.
+Settling/integration use FCU simulation time; command and telemetry watchdogs
+use wall time. Startup alignment freezes at first accepted Takeoff and never
+corrects flight from truth. Cleanup must survive ROS node destruction errors.
 
-Deliver an actual two-member conflict mission, queue pause/resume/cancel,
-member loss/rejoin, coverage completion and isolated reset. Record both
-estimated and simulator-body trajectories, contact/separation observations,
-real action results and task journals. Extend to 3–8 members and further maps
-only after the initial workflow works. Review other backend/model adapters
-against R10.1 acceptance; do not infer them from ROS namespaces.
+Continue from the actual source/trajectory receipt, including earlier failed
+checks and altitude drift. Compare FCU height/targets and independent Gazebo
+body height through takeoff, hold and group movement. Keep altitude/formation
+accuracy distinct from flight/arming. Resolve estimator/control defects before
+claiming convergence, then add bounded loss/world/larger-group screens. Aerial
+and ground sessions remain separate simulator plugin ABIs.
 
-## 3. Wire aerial swarms into normal operation
+## 4. Marine continuation
 
-Runtime candidates exist in `robot_lab_adapter/{aerial_swarm_runtime,
-aerial_swarm_controller,aerial_swarm_model,px4_swarm_worker}.py`. Audit their
-unfinished integration before running them. Add the missing bringup launch
-entry and native GUI session/control page; integrate with `lab_tabs.py`, the
-normal map selector, exact command preview and session shutdown.
+Relevant utilities: `marine_sensors.py`, `marine_navigation_model.py`,
+`marine_pipeline.py`, `marine_navigation.py`, `map_archive.py`, native ROV/AUV
+controllers; bringup `marine_simulator.launch.py`, `auv_simulator.launch.py`;
+GUI `marine_controls.py`.
 
-Each vehicle needs its own entity binding, FCU instance/system ID, MAVLink
-port, frame/topic prefix, rootfs/log directory and lease. Share one Harmonic
-world and retain the single-X500 instance-0 exclusion. Check source geometry,
-actual supported spawn heights and resource budgets; missing occupancy or an
-unsafe takeoff corridor gets a specific capability/error explanation.
+Preserve sensor-only estimation with configured initial position/heading. The
+native Fortress IMU starts with a spawn-relative heading: align that heading
+once to the configured physical hull yaw, including Tethys' CAD forward -X.
+Do not feed simulator pose corrections into estimation. DVL motion samples
+must not be replaced by sonar-callback zeros. Sonar remains a directional ray.
+No native DVL plugin exists in the installed Fortress build; use the explicit
+emulation rather than declaring a missing plugin operational.
 
-Provide neutral Connect, selected/group controls, seven familiar latched
-directions, altitude up/down, reduced yaw increments, clearance check,
-explicit Takeoff, Hold and Land. Reject stale generations and late queued
-takeoff requests. Implement loss handling and collision-aware formation/group
-commands without body pose writes. Record actual independent takeoff, hover,
-relative movement, Hold/landing and loss; multiple armed FCUs do not establish
-flight. Reuse [native X500](tutorials/px4_x500.md) contracts and upstream pins.
+Preserve positive native added-mass coefficients, source propulsion/fin bounds,
+explicit trim and AUV cruise/coasting limits. Ahead waypoints use estimated
+heading and the source forward axis. AUV planning requires a forward transect
+and clear coasting corridor; arbitrary stop-and-pivot paths remain unsupported.
+The AUV camera kit is massless and keeps source collision/force geometry.
+Copied worlds must retain source-relative mesh/texture resources.
 
-## 4. Complete marine sensing, saved maps and navigation
+ROV visual/ICP and AUV conservative geometry registration consume actual depth.
+Reject ambiguous/degenerate correspondences instead of permitting false map
+corrections. Save uses actual RTAB-Map backup/SQLite nodes and occupied points;
+reload uses a protected copy with source-world/estimator contracts. Uncertain
+or stale localization does not authorize navigation. Continue actual AUV and
+obstacle/current/loss missions, retaining every failed plan/body trace.
 
-Continue in `robot_lab_utils/{marine_sensors,marine_navigation_model,
-marine_navigation,marine_pipeline,marine_camera_relay,marine_controller,
-auv_controller}.py`, the marine/AUV launches and `marine_controls.py`.
-Read [ROV](tutorials/marine-rov.md) and [AUV](tutorials/tethys-auv.md) guides.
-The existing five worlds are sufficient to implement this workflow; it does
-not wait for terrain-provider credentials, a physical pool or real sonar.
+## 5. Multi-leg and additional forms
 
-Preserve Fortress 6.18 mass/drag conventions, source propeller/fin/thruster
-bounds and the distinction between hovering ROV control and flow-dependent
-AUV cruise/coasting. Label authored noisy DVL/pressure/sonar as simulated
-sensors. Keep estimator inputs and simulator-truth diagnostics separate;
-measure drift and covariance against independent body observations.
+Relevant utilities: `gait_model.py`, `gait_controller.py`, `gait_odometry.py`,
+`gait_sensor_relay.py`, `gait_pipeline.py`, `map_archive.py`; native MuJoCo
+`joint_pd.py`/`gait_contacts.py`; GUI `gait_controls.py`.
 
-Complete the actual RGB-D -> RTAB-Map -> occupied cloud/database path, map
-save, read-only source backup, reload/localization and obstacle route. Preserve
-source-fixed estimated-camera frames and capture timestamps; using the truth
-body TF in the estimator/SLAM path leaks pose information. Retain the ROS-core
-library environment helper and padded-cloud `read_points_numpy` repair. Older
-failures include a missing RealSense-linked `/usr/local` library and a padded
-XYZ/RGB conversion crash. Confirm installed executables have execute permission.
+Preserve the complete source chains and their KDL lifetimes. Newly landing
+swing feet cannot become continuous stance samples. Actual IMU/contact/joints
+produce odometry; truth is visualization/tilt/independent measurement only.
+Keep scan/camera fixed extrinsics, map-to-odom corrections and saved initial
+poses separate from source body spawning. SLAM map and navigation costmap
+subscriptions must both use `/gait/map`.
 
-Use existing bounded 3D planning and source/observed collision checks. Make
-unsupported AUV turns, depth/clearance envelopes, stale sensing and interrupted
-ownership explicit. Demonstrate save/reload/route/Stop/loss first on a named
-ROV world, then applicable AUV and reef/harbor/cave/wreck missions. Other
-simulators need real water-force/sensor adapters; static scene conversion
-alone leaves those modes unavailable.
-
-## 5. Complete multi-leg higher modes and additional forms
-
-Continue in `robot_lab_utils/{gait_model,gait_controller,gait_odometry,
-gait_pipeline,gait_sensor_relay}.py`, MuJoCo `gait_contacts.py`, the gait
-launch and `gait_controls.py`. Preserve source masses, CAD axes, actual leg
-counts, joint/effort limits, massive roots, contact guards and reset barriers.
-
-For each complete hexapod/octopod/centipede: finish forward/reverse/turn/Stop,
-then measure contact-kinematic odometry and mounted lidar/RGB-D. Correct slip,
-timestamp/reset, frame and velocity issues before saved 2D/3D SLAM and Nav2.
-An experimental Gait task selector remains a candidate until its actual mission
-works. Verify source-matched schedules and consumption of GUI phase/spine
-settings. Apply realistic footprints, speed/progress limits and foothold/terrain
-constraints. Preserve simulator-pose visualization as a separate branch.
-
-Add complete source-pinned or authored snake, tracked, surface-vessel and
-amphibious families with their actual joint, contact, buoyancy or track laws.
-Keep complete variants/components nested. A tracked robot needs a real track
-contact implementation; a visual belt around driven wheels does not establish
-that contract. Port only compatible controllers to additional backends.
+Source gait schedules, force/velocity/joint limits, physical leg count, massive
+roots, terrain spawn rays and reset/ownership barriers remain unchanged. Phase
+and spine controls apply to actual targets and require re-arm. Extend actual
+saved-map goals to every model, then terrain/slip/recovery and source-appropriate
+backend forces/controllers. The centipede is complete; snake/tracked/surface/
+amphibious forms remain additional source/controller work, not aliases for
+that segmented model.
 
 ## 6. Finish maps, extension workloads and the older queue
 

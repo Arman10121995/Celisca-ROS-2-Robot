@@ -250,7 +250,7 @@ class MarineNavigation(Node):
             self.event('rejected', reason=str(exc))
 
     def save_map(self):
-        if self.status in ('planning', 'executing', 'coasting'):
+        if self.status in ('planning', 'executing', 'braking', 'coasting'):
             raise ValueError('Cancel/finish the active marine route before flushing its SLAM map')
         self.archive.request()
         self.reason = self.archive.message
@@ -268,9 +268,25 @@ class MarineNavigation(Node):
                 self.status, self.reason = 'idle', 'Planning failed: ' + str(exc)
                 self.event('plan_failed', reason=str(exc))
             self.future = None
-        if self.status in ('executing', 'coasting'):
+        if self.status in ('executing', 'braking', 'coasting'):
             if not self.fresh() or not self.native.get('operator_fresh') or now > self.deadline:
                 self.cancel('Marine mission sensor/operator/time budget lost')
+            elif self.status == 'braking':
+                if not self.native.get('enabled') or self.native.get('input_owner')!='mission':
+                    self.cancel('AUV braking ownership/control lost; propulsion stopped')
+                else:
+                    # Zero desired surge while still armed uses the existing
+                    # signed propeller velocity feedback to brake. A user Stop
+                    # remains zero thrust and passive coast; it is distinct
+                    # from a controlled autonomous arrival.
+                    self.drive_pub.publish(Twist())
+                    if np.linalg.norm(self.velocity)<.05:
+                        if math.dist(self.position,self.route[-1])>.6:
+                            self.cancel('AUV braking settled outside the estimated goal envelope')
+                        else:
+                            self.control('stop')
+                            self.status,self.reason='completed','AUV signed-thrust braking settled; propulsion stopped'
+                            self.event('estimated_arrival',route=self.route,arrival='signed-thrust braking',physical_qualification=False)
             elif self.status == 'coasting':
                 if np.linalg.norm(self.velocity) < .05:
                     if math.dist(self.position, self.route[-1]) > .6:
@@ -294,13 +310,14 @@ class MarineNavigation(Node):
                         self.cancel('Current source/observed segment blocked; replan required')
                     else:
                         command, distance = waypoint_command(self.position, self.orientation, self.velocity, target, self.auv)
-                        if distance < (.35 if self.auv else .15):
+                        arrival=(max(.35,min(1.2,2.5*float(np.linalg.norm(self.velocity))+.1)) if self.auv else .15)
+                        if distance < arrival:
                             if self.index < len(self.route)-1:
                                 self.index += 1
                                 self.arrival_at = 0.
                             elif self.auv:
-                                self.control('stop')
-                                self.status, self.reason = 'coasting', 'Propulsion stopped; waiting for measured estimated coast'
+                                self.status, self.reason = 'braking', 'Zero desired surge; signed-thrust braking before propulsion Stop'
+                                self.event('auv_braking',speed_m_s=float(np.linalg.norm(self.velocity)),remaining_m=distance)
                             elif np.linalg.norm(self.velocity) < .04:
                                 self.arrival_at = self.arrival_at or now
                                 if now - self.arrival_at > .5:

@@ -1,0 +1,871 @@
+{
+  "date": "2026-10-27",
+  "branch": "master",
+  "baseline_revision": "f75dc6008003c0461a0592c7ebfdfe1f3b5629fc",
+  "checkpoint_revision": "a224a853d362a90796a43a0d5ab95e3848a10f91",
+  "raw_root": "/workspace/molar/robot_lab_runtime/extension-completion-20261027-au5q8yp7",
+  "claim_boundary": "Actual scoped diagnostics and implemented workflows; not universal map/backend/mission qualification",
+  "native_gui": {
+    "restored_ids_present": true,
+    "inventory": {
+      "robot_profiles": 147,
+      "robot_families": 78,
+      "maps": 51,
+      "map_families": 39
+    },
+    "candidate_commands": {
+      "asset_turtlebot3_burger": "ros2 launch robot_lab_bringup simulated_robot.launch.py mode:=nav map_name:=nav_empty robot_model:=asset_turtlebot3_burger simulator:=mujoco gui:=auto global_planning:=a_star_planner local_planning:=pure_pursuit control:=simple_controller localization:=amcl state_estimation:=ekf_localization_node sensor_fusion:=wheel_imu_fusion allow_experimental_assets:=true spawn_x:=-4.0 spawn_y:=-4.0 spawn_yaw:=0.0",
+      "asset_turtlebot3_waffle": "ros2 launch robot_lab_bringup simulated_robot.launch.py mode:=nav map_name:=nav_empty robot_model:=asset_turtlebot3_waffle simulator:=mujoco gui:=auto global_planning:=a_star_planner local_planning:=pure_pursuit control:=simple_controller localization:=amcl state_estimation:=ekf_localization_node sensor_fusion:=wheel_imu_fusion allow_experimental_assets:=true spawn_x:=-4.0 spawn_y:=-4.0 spawn_yaw:=0.0",
+      "asset_turtlebot3_waffle_pi": "ros2 launch robot_lab_bringup simulated_robot.launch.py mode:=nav map_name:=nav_empty robot_model:=asset_turtlebot3_waffle_pi simulator:=mujoco gui:=auto global_planning:=a_star_planner local_planning:=pure_pursuit control:=simple_controller localization:=amcl state_estimation:=ekf_localization_node sensor_fusion:=wheel_imu_fusion allow_experimental_assets:=true spawn_x:=-4.0 spawn_y:=-4.0 spawn_yaw:=0.0",
+      "asset_turtlebot4_standard": "ros2 launch robot_lab_bringup simulated_robot.launch.py mode:=nav map_name:=nav_empty robot_model:=asset_turtlebot4_standard simulator:=mujoco gui:=auto global_planning:=a_star_planner local_planning:=pure_pursuit control:=simple_controller localization:=amcl state_estimation:=ekf_localization_node sensor_fusion:=wheel_imu_fusion allow_experimental_assets:=true",
+      "asset_turtlebot4_lite": "ros2 launch robot_lab_bringup simulated_robot.launch.py mode:=nav map_name:=nav_empty robot_model:=asset_turtlebot4_lite simulator:=mujoco gui:=auto global_planning:=a_star_planner local_planning:=pure_pursuit control:=simple_controller localization:=amcl state_estimation:=ekf_localization_node sensor_fusion:=wheel_imu_fusion allow_experimental_assets:=true",
+      "asset_husky": "ros2 launch robot_lab_bringup simulated_robot.launch.py mode:=nav map_name:=nav_empty robot_model:=asset_husky simulator:=mujoco gui:=auto global_planning:=a_star_planner local_planning:=pure_pursuit control:=simple_controller localization:=amcl state_estimation:=ekf_localization_node sensor_fusion:=wheel_imu_fusion allow_experimental_assets:=true"
+    },
+    "auv_ahead_xyz": {
+      "x": 0.0,
+      "y": 0.0,
+      "z": -2.0
+    },
+    "rov_ahead_xyz": {
+      "x": 1.0,
+      "y": 2.5,
+      "z": -1.0
+    },
+    "fleet_workload": {
+      "schema": "robot_lab.fleet_workload.v1",
+      "fleet_goals": [
+        {
+          "id": "alpha",
+          "x": 0.3,
+          "y": -0.5,
+          "yaw": 0.0
+        },
+        {
+          "id": "beta",
+          "x": 0.3,
+          "y": -1.5,
+          "yaw": 0.0
+        }
+      ],
+      "truth_coordinates": "selected_world",
+      "timeout_s": 360.0
+    },
+    "aerial_command": [
+      "ros2",
+      "launch",
+      "robot_lab_bringup",
+      "aerial_swarm.launch.py",
+      "session:=/workspace/molar/robot_lab_runtime/gui_profiles/air-gui-5ab5c80f7d6c4605bd22a8c2c5f7b2e8.yaml",
+      "map_name:=celisca_floor_1",
+      "gui:=true"
+    ],
+    "native_control_pages": [
+      "Drive & limits",
+      "Arm",
+      "Hand",
+      "Drone & limits",
+      "Marine",
+      "Marine missions",
+      "Gait",
+      "MOLAR"
+    ],
+    "native_main_pages": [
+      "Launch",
+      "Fleet & Swarm",
+      "Aerial Swarm",
+      "Registry",
+      "Worlds",
+      "Installed Extensions",
+      "Vacuum",
+      "Benchmark",
+      "Training",
+      "Tests",
+      "Health",
+      "Live Monitor"
+    ]
+  },
+  "fleet_batch": {
+    "result": {
+      "path": "/workspace/molar/robot_lab_runtime/extension-completion-20261027-au5q8yp7/fleet-workload-110841/8cb98a89e9f7450db982f4b2e630b1b8/fleet-mission-result.json",
+      "bytes": 2069,
+      "sha256": "df19bdfd49e3f4429226fdf3eba9d1b379b05608df2266acfac64705cbb4a167"
+    },
+    "trace": {
+      "path": "/workspace/molar/robot_lab_runtime/extension-completion-20261027-au5q8yp7/fleet-workload-110841/8cb98a89e9f7450db982f4b2e630b1b8/fleet-trace.jsonl",
+      "bytes": 2290569,
+      "sha256": "451feee5eb5f5fe6711b477bba79426bacd539b367c62fe41c01e95e5809e050"
+    },
+    "resources": {
+      "path": "/workspace/molar/robot_lab_runtime/extension-completion-20261027-au5q8yp7/fleet-workload-110841/8cb98a89e9f7450db982f4b2e630b1b8/resources.jsonl",
+      "bytes": 108240,
+      "sha256": "2a1aac97750f364e879d07a1d337dd32b6438f9e7ee41aaecebb1842440555d6"
+    },
+    "producer_success": true,
+    "goal_contract": {
+      "position_m": 0.25,
+      "heading_rad": 0.2,
+      "linear_m_s": 0.03,
+      "angular_rad_s": 0.05,
+      "settle_sim_s": 1.0
+    },
+    "measurements": [
+      {
+        "member_id": "alpha",
+        "index": 0,
+        "requested": {
+          "id": "alpha",
+          "x": 0.3,
+          "y": -0.5,
+          "yaw": 0.0
+        },
+        "physical_pose": [
+          0.19047214350844888,
+          -0.523048765984421,
+          0.003911010451678243
+        ],
+        "linear_m_s": 0.0,
+        "angular_rad_s": 0.0,
+        "settled_sim_s": 1.0,
+        "task": "65ede81c4f93434fbf81eb568467219f",
+        "source": "route:03ed75c681824613ad13d832bd53421d-0",
+        "nav2_terminal": true,
+        "success": true
+      },
+      {
+        "member_id": "beta",
+        "index": 1,
+        "requested": {
+          "id": "beta",
+          "x": 0.3,
+          "y": -1.5,
+          "yaw": 0.0
+        },
+        "physical_pose": [
+          0.31934318654588006,
+          -1.441124011594502,
+          -0.010418078420481989
+        ],
+        "linear_m_s": 0.0,
+        "angular_rad_s": 0.0,
+        "settled_sim_s": 1.0,
+        "task": "661b87ac0f9243848c1dd778a0a5a8a1",
+        "source": "route:03ed75c681824613ad13d832bd53421d-1",
+        "nav2_terminal": true,
+        "success": true
+      }
+    ],
+    "truth_samples": {
+      "alpha": 2737,
+      "beta": 2737
+    },
+    "owned_cleanup": true,
+    "observed_surviving_pids": [],
+    "scope": "Actual task terminals and independent body endpoints/settling; full mission/contact qualification separate"
+  },
+  "fleet_conflict": {
+    "directory": "/workspace/molar/robot_lab_runtime/extension-completion-20261027-au5q8yp7/fleet-conflict-061825",
+    "artifacts": {
+      "sources.json": {
+        "path": "/workspace/molar/robot_lab_runtime/extension-completion-20261027-au5q8yp7/fleet-conflict-061825/sources.json",
+        "bytes": 639,
+        "sha256": "4f1f69cb9afe9363a8c38684c01db74ff3f0498c10258d936f7ee5850b743295"
+      },
+      "states.json": {
+        "path": "/workspace/molar/robot_lab_runtime/extension-completion-20261027-au5q8yp7/fleet-conflict-061825/states.json",
+        "bytes": 1931658,
+        "sha256": "75987d6a39dadd072e55456f42c760f522703f91a8b8c017959e5ea70ae71c22"
+      },
+      "report.json": {
+        "path": "/workspace/molar/robot_lab_runtime/extension-completion-20261027-au5q8yp7/fleet-conflict-061825/report.json",
+        "bytes": 7503,
+        "sha256": "08470a5ab146390a419f771025d4e41a2066a669f37bf727219fe9de9a24c254"
+      },
+      "launch.log": {
+        "path": "/workspace/molar/robot_lab_runtime/extension-completion-20261027-au5q8yp7/fleet-conflict-061825/launch.log",
+        "bytes": 101892,
+        "sha256": "ca367697edb8033f00a13ef714b33d77539f2307048244fb7e1faff63f9ded6e"
+      },
+      "command.json": {
+        "path": "/workspace/molar/robot_lab_runtime/extension-completion-20261027-au5q8yp7/fleet-conflict-061825/command.json",
+        "bytes": 151,
+        "sha256": "af8a8cb09c26772e7515ad211707795a1828dfe2e7dd4bb4e36c7832d000a00a"
+      }
+    }
+  },
+  "fleet_rmf_progress": {
+    "directory": "/workspace/molar/robot_lab_runtime/extension-completion-20261027-au5q8yp7/fleet-native-061035",
+    "artifacts": {
+      "sources.json": {
+        "path": "/workspace/molar/robot_lab_runtime/extension-completion-20261027-au5q8yp7/fleet-native-061035/sources.json",
+        "bytes": 639,
+        "sha256": "4f1f69cb9afe9363a8c38684c01db74ff3f0498c10258d936f7ee5850b743295"
+      },
+      "states.json": {
+        "path": "/workspace/molar/robot_lab_runtime/extension-completion-20261027-au5q8yp7/fleet-native-061035/states.json",
+        "bytes": 820461,
+        "sha256": "dc9756f5efe59d46605a531fa0432f4647405fae9e5b2ddb55dfbc64c2e1a4b6"
+      },
+      "report.json": {
+        "path": "/workspace/molar/robot_lab_runtime/extension-completion-20261027-au5q8yp7/fleet-native-061035/report.json",
+        "bytes": 19343,
+        "sha256": "d744b86d6ef54efcdb85fd3b73a4378721b3788a6bd2b55c6b77e4192075e359"
+      },
+      "launch.log": {
+        "path": "/workspace/molar/robot_lab_runtime/extension-completion-20261027-au5q8yp7/fleet-native-061035/launch.log",
+        "bytes": 114221,
+        "sha256": "16006373c6c040753c89fe156b6a68c6f7e68f98bcb28b56a5d2e33dcf0e6962"
+      },
+      "command.json": {
+        "path": "/workspace/molar/robot_lab_runtime/extension-completion-20261027-au5q8yp7/fleet-native-061035/command.json",
+        "bytes": 150,
+        "sha256": "50f692920f4b8f49ae8b5bede3f59ac7eae9986bd5f05915d57d9c89c7a918f3"
+      }
+    }
+  },
+  "aerial": {
+    "directory": "/workspace/molar/robot_lab_runtime/extension-completion-20261027-au5q8yp7/aerial-native-113233",
+    "artifacts": {
+      "sources.json": {
+        "path": "/workspace/molar/robot_lab_runtime/extension-completion-20261027-au5q8yp7/aerial-native-113233/sources.json",
+        "bytes": 547,
+        "sha256": "cbdbf59a83699c32869ad868b559b1a632ba881de2b200fbd4c0837e4d1d07b1"
+      },
+      "states.json": {
+        "path": "/workspace/molar/robot_lab_runtime/extension-completion-20261027-au5q8yp7/aerial-native-113233/states.json",
+        "bytes": 877480,
+        "sha256": "6d2fb1cd8b28c5dad648916209eeeb90e4e0be218ca3bafa752e5e0fe3bbdd08"
+      },
+      "report.json": {
+        "path": "/workspace/molar/robot_lab_runtime/extension-completion-20261027-au5q8yp7/aerial-native-113233/report.json",
+        "bytes": 3212,
+        "sha256": "489e0e27737284996e59c31a733799278f9fa90393a04b70387377fe306dd5df"
+      },
+      "launch.log": {
+        "path": "/workspace/molar/robot_lab_runtime/extension-completion-20261027-au5q8yp7/aerial-native-113233/launch.log",
+        "bytes": 536,
+        "sha256": "be41708f4522cf560788971a6fb44b1d9348b2873627e9f168690ef5ad353f6e"
+      },
+      "command.json": {
+        "path": "/workspace/molar/robot_lab_runtime/extension-completion-20261027-au5q8yp7/aerial-native-113233/command.json",
+        "bytes": 102,
+        "sha256": "a3d337f43c30d5fe312fa34dd66d1d26f30f78ea2d0bfe3eca123eeb24ba43f9"
+      }
+    },
+    "terminal_phase": "landed",
+    "samples": 486,
+    "identities": [
+      {
+        "id": "air1",
+        "instance": 0,
+        "system_id": 1,
+        "port": 14580,
+        "namespace": "/swarm/air1"
+      },
+      {
+        "id": "air2",
+        "instance": 1,
+        "system_id": 2,
+        "port": 14581,
+        "namespace": "/swarm/air2"
+      }
+    ],
+    "landed_disarmed": [
+      true,
+      true
+    ],
+    "minimum_measured_centre_distance_m": 2.414916443329644,
+    "formation_height_bounds_m": {
+      "air1": [
+        2.833958181573921,
+        3.119520574740866
+      ],
+      "air2": [
+        3.7191870202967197,
+        4.343911717448338
+      ]
+    },
+    "formation_max_fcu_truth_height_difference_m": {
+      "air1": 0.26051397760609163,
+      "air2": 0.4734581564885789
+    },
+    "qualification": "Measured takeoff/manual/group motion/landing; formation/altitude accuracy, contacts and loss acceptance remain separate"
+  },
+  "rov_reload": {
+    "directory": "/workspace/molar/robot_lab_runtime/extension-completion-20261027-au5q8yp7/marine-reload-111205",
+    "artifacts": {
+      "motion.json": {
+        "path": "/workspace/molar/robot_lab_runtime/extension-completion-20261027-au5q8yp7/marine-reload-111205/motion.json",
+        "bytes": 194177,
+        "sha256": "4b4986f0f9cf432a2647a336f2ae913dc266fb345a6ed4804052df381f7f6ebc"
+      },
+      "sources.json": {
+        "path": "/workspace/molar/robot_lab_runtime/extension-completion-20261027-au5q8yp7/marine-reload-111205/sources.json",
+        "bytes": 1161,
+        "sha256": "8061fb26ec713656631882ce7926f705409a38c2722b0e7129e8f8a1ba954cf0"
+      },
+      "states.json": {
+        "path": "/workspace/molar/robot_lab_runtime/extension-completion-20261027-au5q8yp7/marine-reload-111205/states.json",
+        "bytes": 422846,
+        "sha256": "e32d68286ad9f22ebd43dc25d59719fc7b1a252dc6d9e64d64fcf76e24b2e3b7"
+      },
+      "report.json": {
+        "path": "/workspace/molar/robot_lab_runtime/extension-completion-20261027-au5q8yp7/marine-reload-111205/report.json",
+        "bytes": 3065,
+        "sha256": "3be6bde04082f7e6c68abcd1f7e7a103f214a54c6121104594d7ae9ef14c93b7"
+      },
+      "launch.log": {
+        "path": "/workspace/molar/robot_lab_runtime/extension-completion-20261027-au5q8yp7/marine-reload-111205/launch.log",
+        "bytes": 62080,
+        "sha256": "1f675a21320d0f7db0e34e145b78c4f9c3d718c1525256a19b675401489c264d"
+      },
+      "command.json": {
+        "path": "/workspace/molar/robot_lab_runtime/extension-completion-20261027-au5q8yp7/marine-reload-111205/command.json",
+        "bytes": 395,
+        "sha256": "0f874954d8974f065f03373a3ef61c4f58d6c38c9f932e4ebb600d86856076a3"
+      }
+    },
+    "mission_status": "completed",
+    "reason": "Estimated goal and velocity settled; native depth hold retained",
+    "target": [
+      2.1054278365252452,
+      0.08973653474013646,
+      -1.022980669132127
+    ],
+    "estimated_endpoint": [
+      2.124630996541443,
+      0.027778112267852206,
+      -1.0109747294296643
+    ],
+    "measured_body_endpoint": {
+      "stamp": 24.32,
+      "wall": 1793095984.6731083,
+      "position": [
+        2.147511213797008,
+        0.022173756516651336,
+        -0.9929363583212842
+      ]
+    },
+    "source_world_coordinate_endpoint_difference_m": 0.08507878851965316,
+    "source_database_unchanged": true,
+    "localization_samples": 23,
+    "rgb_frames": null,
+    "cloud_frames": null,
+    "scope": "Actual sensor-pose mission and independent body trace; source-world coordinate difference is diagnostic, not a universal localization/contact certificate"
+  },
+  "auv_transect": {
+    "directory": "/workspace/molar/robot_lab_runtime/extension-completion-20261027-au5q8yp7/marine-auv-115308",
+    "artifacts": {
+      "motion.json": {
+        "path": "/workspace/molar/robot_lab_runtime/extension-completion-20261027-au5q8yp7/marine-auv-115308/motion.json",
+        "bytes": 85376,
+        "sha256": "d4789daebec1185f4d50d293c371dc07f9e9ef97cb12fec3f83234dea1d08a6a"
+      },
+      "sources.json": {
+        "path": "/workspace/molar/robot_lab_runtime/extension-completion-20261027-au5q8yp7/marine-auv-115308/sources.json",
+        "bytes": 1161,
+        "sha256": "aef4f4fb58ec3ba50dc528a627f18a807682933b7aaf317f14d81f65fc0d5fff"
+      },
+      "states.json": {
+        "path": "/workspace/molar/robot_lab_runtime/extension-completion-20261027-au5q8yp7/marine-auv-115308/states.json",
+        "bytes": 127216,
+        "sha256": "fea444c8736bba52df0d289032941f75721c1a36ed749ae6ff114c40e6c9a399"
+      },
+      "report.json": {
+        "path": "/workspace/molar/robot_lab_runtime/extension-completion-20261027-au5q8yp7/marine-auv-115308/report.json",
+        "bytes": 4457,
+        "sha256": "c2ac24e619376fffb288dd3c4e1c40105aa14930fc2ad41ec1146f106aac5fd6"
+      },
+      "launch.log": {
+        "path": "/workspace/molar/robot_lab_runtime/extension-completion-20261027-au5q8yp7/marine-auv-115308/launch.log",
+        "bytes": 33498,
+        "sha256": "29d6ff851c5db5436c07137c853f6a10ec580c51abea6cb45c1392586ae22696"
+      },
+      "command.json": {
+        "path": "/workspace/molar/robot_lab_runtime/extension-completion-20261027-au5q8yp7/marine-auv-115308/command.json",
+        "bytes": 337,
+        "sha256": "d441a2d541bdc07afc8f2e7fab4da77c97cccac4d5c6427cb6130274bae396c8"
+      }
+    },
+    "mission_status": "completed",
+    "reason": "AUV signed-thrust braking settled; propulsion stopped",
+    "target": [
+      -0.6982169730437282,
+      0.0009740448133411493,
+      -1.9969181379290977
+    ],
+    "estimated_endpoint": [
+      -1.0554456223248894,
+      -0.02035684964705867,
+      -2.0899597554875364
+    ],
+    "measured_body_endpoint": {
+      "stamp": 11.4,
+      "wall": 1793098406.8791385,
+      "position": [
+        -1.0878261203852786,
+        -0.015987787734161978,
+        -2.0913300693381056
+      ]
+    },
+    "source_world_coordinate_endpoint_difference_m": 0.40124382144521387,
+    "source_database_unchanged": null,
+    "localization_samples": 10,
+    "rgb_frames": 56,
+    "cloud_frames": 9,
+    "scope": "Actual sensor-pose mission and independent body trace; source-world coordinate difference is diagnostic, not a universal localization/contact certificate"
+  },
+  "rov_acquisition": {
+    "directory": "/workspace/molar/robot_lab_runtime/extension-completion-20261027-au5q8yp7/marine-slam-105919",
+    "artifacts": {
+      "sources.json": {
+        "path": "/workspace/molar/robot_lab_runtime/extension-completion-20261027-au5q8yp7/marine-slam-105919/sources.json",
+        "bytes": 1161,
+        "sha256": "8061fb26ec713656631882ce7926f705409a38c2722b0e7129e8f8a1ba954cf0"
+      },
+      "states.json": {
+        "path": "/workspace/molar/robot_lab_runtime/extension-completion-20261027-au5q8yp7/marine-slam-105919/states.json",
+        "bytes": 194243,
+        "sha256": "3182e08f676d0f926f194a892d6582ef66b5ca0c4f4fce15aa191ef565576591"
+      },
+      "report.json": {
+        "path": "/workspace/molar/robot_lab_runtime/extension-completion-20261027-au5q8yp7/marine-slam-105919/report.json",
+        "bytes": 3951,
+        "sha256": "c3d1a8dae1b1055af06ca0e294aa754109d47e554cb59258d840bd163939927b"
+      },
+      "launch.log": {
+        "path": "/workspace/molar/robot_lab_runtime/extension-completion-20261027-au5q8yp7/marine-slam-105919/launch.log",
+        "bytes": 37499,
+        "sha256": "f5a6cf6d3d41145694b9003d331e558de651c3392117181662d837fb52f268db"
+      },
+      "command.json": {
+        "path": "/workspace/molar/robot_lab_runtime/extension-completion-20261027-au5q8yp7/marine-slam-105919/command.json",
+        "bytes": 236,
+        "sha256": "4698b07ac6e05fcd0759ffbeb22aa08ba9350eabe3599d50e7dfd59979eebfbb"
+      }
+    }
+  },
+  "hexapod_mapping": {
+    "directory": "/workspace/molar/robot_lab_runtime/extension-completion-20261027-au5q8yp7/gait-slam-073808",
+    "artifacts": {
+      "motion.json": {
+        "path": "/workspace/molar/robot_lab_runtime/extension-completion-20261027-au5q8yp7/gait-slam-073808/motion.json",
+        "bytes": 94089,
+        "sha256": "50eec20293a53d19bc1fa5c46af46c7e27554d7fe1b05a1678755dc0b32f47bf"
+      },
+      "sources.json": {
+        "path": "/workspace/molar/robot_lab_runtime/extension-completion-20261027-au5q8yp7/gait-slam-073808/sources.json",
+        "bytes": 759,
+        "sha256": "ee6fd2dc261aa806397b7f1a23408ff28433177ca445653e675eaa8da96ddaad"
+      },
+      "states.json": {
+        "path": "/workspace/molar/robot_lab_runtime/extension-completion-20261027-au5q8yp7/gait-slam-073808/states.json",
+        "bytes": 270822,
+        "sha256": "e5c098b4a09c00abae795a87a1175a6b06340bb93f36def0a81cb46d375485ad"
+      },
+      "report.json": {
+        "path": "/workspace/molar/robot_lab_runtime/extension-completion-20261027-au5q8yp7/gait-slam-073808/report.json",
+        "bytes": 4865,
+        "sha256": "a4ac8aac0c08bf28d9c8b144ba11cd07de1a8e59ba69748e76fd047bbcbc55df"
+      },
+      "launch.log": {
+        "path": "/workspace/molar/robot_lab_runtime/extension-completion-20261027-au5q8yp7/gait-slam-073808/launch.log",
+        "bytes": 15839,
+        "sha256": "209212913f3cd450f2577187ca4f4aeec5cf060bebdd761334bbde898c4f292f"
+      },
+      "command.json": {
+        "path": "/workspace/molar/robot_lab_runtime/extension-completion-20261027-au5q8yp7/gait-slam-073808/command.json",
+        "bytes": 235,
+        "sha256": "a7df04b4f9a2bfe3b4c5e0eb5a8f5568e2c88dd015293a39edf58a563246c615"
+      }
+    },
+    "phase": "saved",
+    "mapping": {
+      "status": "saved",
+      "result": {
+        "kind": "acquired_occupancy",
+        "robot": "hexapod_ros2",
+        "frame": "map",
+        "known_cells": 26611,
+        "occupied_cells": 507,
+        "source_world": "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_maps/share/robot_lab_maps/maps/nav_empty/worlds/nav_empty.world",
+        "world_sha256": "0ba78b1173d9353ab4eb92b042f3860211b3f5ef95fb6933f1518484940a776d",
+        "map_yaml": "/workspace/molar/robot_lab_runtime/gait_sessions/hexapod_ros2-_582h4he/saved_maps/map-98fa28f278/map.yaml",
+        "initial_pose_in_map": [
+          -0.01999679605776343,
+          0.00016204751242980179,
+          7.892979664888475e-17
+        ],
+        "scope": "Actual acquired grid; saved-map localization/navigation qualification is separate"
+      }
+    },
+    "saved": {
+      "success": true,
+      "message": "/workspace/molar/robot_lab_runtime/gait_sessions/hexapod_ros2-_582h4he/saved_maps/map-98fa28f278/map.yaml"
+    },
+    "body_first_last": [
+      {
+        "stamp": 0.004,
+        "position": [
+          -0.5,
+          -0.5,
+          0.14945977533464402
+        ]
+      },
+      {
+        "stamp": 10.263999999,
+        "position": [
+          -0.32642636068620384,
+          -0.49857721561850893,
+          0.13739248358189077
+        ]
+      }
+    ],
+    "estimated_first_last": [
+      {
+        "stamp": 0.084,
+        "position": [
+          0.00021590951609906571,
+          8.063171358337566e-06,
+          0.0
+        ]
+      },
+      {
+        "stamp": 10.243999999,
+        "position": [
+          0.17251166130660664,
+          -0.0013356390320199256,
+          0.0
+        ]
+      }
+    ],
+    "acquired_map_last_observation": {
+      "stamp": 9,
+      "width": 241,
+      "height": 241,
+      "known": 26611
+    }
+  },
+  "centipede_mapping": {
+    "directory": "/workspace/molar/robot_lab_runtime/extension-completion-20261027-au5q8yp7/gait-centipede-115443",
+    "artifacts": {
+      "motion.json": {
+        "path": "/workspace/molar/robot_lab_runtime/extension-completion-20261027-au5q8yp7/gait-centipede-115443/motion.json",
+        "bytes": 94757,
+        "sha256": "00802d9600f61db2bd0274d91cfa0717c7c09247a1d1873abee77051944ea017"
+      },
+      "sources.json": {
+        "path": "/workspace/molar/robot_lab_runtime/extension-completion-20261027-au5q8yp7/gait-centipede-115443/sources.json",
+        "bytes": 759,
+        "sha256": "87973eb735b55489b398d6b0a77ec5c7a91ccf6e2c4ecf7c076a9fc86c650e6e"
+      },
+      "states.json": {
+        "path": "/workspace/molar/robot_lab_runtime/extension-completion-20261027-au5q8yp7/gait-centipede-115443/states.json",
+        "bytes": 321361,
+        "sha256": "3bc95b4b4b5db370721027ca5fbd654c77c9247604708ab22726b9a55dee3769"
+      },
+      "report.json": {
+        "path": "/workspace/molar/robot_lab_runtime/extension-completion-20261027-au5q8yp7/gait-centipede-115443/report.json",
+        "bytes": 5758,
+        "sha256": "22d8c24051318c956bde93052cd768583d7bca9eb032e765e145ec620f0c3053"
+      },
+      "launch.log": {
+        "path": "/workspace/molar/robot_lab_runtime/extension-completion-20261027-au5q8yp7/gait-centipede-115443/launch.log",
+        "bytes": 21508,
+        "sha256": "62ee6c7195f12eed2b09daffc417fe6913bba5388e860206012020bec981ebaa"
+      },
+      "command.json": {
+        "path": "/workspace/molar/robot_lab_runtime/extension-completion-20261027-au5q8yp7/gait-centipede-115443/command.json",
+        "bytes": 236,
+        "sha256": "02839d3e69192e3a047e31ff5fe547c77b7b7062c067ff73b4c4963462dec73c"
+      }
+    },
+    "phase": "saved",
+    "mapping": {
+      "status": "saved",
+      "result": {
+        "kind": "acquired_occupancy",
+        "robot": "lab_centipede",
+        "frame": "map",
+        "known_cells": 32787,
+        "occupied_cells": 475,
+        "source_world": "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_maps/share/robot_lab_maps/maps/nav_empty/worlds/nav_empty.world",
+        "world_sha256": "0ba78b1173d9353ab4eb92b042f3860211b3f5ef95fb6933f1518484940a776d",
+        "map_yaml": "/workspace/molar/robot_lab_runtime/gait_sessions/lab_centipede-mipfukg6/saved_maps/map-f4b23ca739/map.yaml",
+        "initial_pose_in_map": [
+          -0.019973761557658076,
+          0.009506473833779098,
+          0.0034900000000001098
+        ],
+        "scope": "Actual acquired grid; saved-map localization/navigation qualification is separate"
+      }
+    },
+    "saved": {
+      "success": true,
+      "message": "/workspace/molar/robot_lab_runtime/gait_sessions/lab_centipede-mipfukg6/saved_maps/map-f4b23ca739/map.yaml"
+    },
+    "body_first_last": [
+      {
+        "stamp": 0.004,
+        "position": [
+          -0.5,
+          -0.5,
+          0.19089799489735096
+        ]
+      },
+      {
+        "stamp": 10.383999999,
+        "position": [
+          -0.30472704638702836,
+          -0.48576582916927324,
+          0.18474969583910164
+        ]
+      }
+    ],
+    "estimated_first_last": [
+      {
+        "stamp": 0.084,
+        "position": [
+          -2.836896611104591e-06,
+          1.910949193477594e-19,
+          0.0
+        ]
+      },
+      {
+        "stamp": 10.383999999,
+        "position": [
+          0.19594789256619072,
+          0.008806315008027955,
+          0.0
+        ]
+      }
+    ],
+    "acquired_map_last_observation": {
+      "stamp": 9,
+      "width": 241,
+      "height": 241,
+      "known": 32787
+    }
+  },
+  "octopod_3d": {
+    "directory": "/workspace/molar/robot_lab_runtime/extension-completion-20261027-au5q8yp7/gait-3d-111321",
+    "artifacts": {
+      "motion.json": {
+        "path": "/workspace/molar/robot_lab_runtime/extension-completion-20261027-au5q8yp7/gait-3d-111321/motion.json",
+        "bytes": 105841,
+        "sha256": "a4f8d197b8fbceba5649550a459ce62208a4855fdd5ecc16190c70ab8e5fb33a"
+      },
+      "sources.json": {
+        "path": "/workspace/molar/robot_lab_runtime/extension-completion-20261027-au5q8yp7/gait-3d-111321/sources.json",
+        "bytes": 759,
+        "sha256": "b8d24ee803fc3db7744f1ad72b59c91931e5f4666be214b905182ebc1b88f6f4"
+      },
+      "states.json": {
+        "path": "/workspace/molar/robot_lab_runtime/extension-completion-20261027-au5q8yp7/gait-3d-111321/states.json",
+        "bytes": 317938,
+        "sha256": "36d5886c5cb9fc572f896dc7798dbb9c476a9337bbee49da3cea3b4e48b6615c"
+      },
+      "report.json": {
+        "path": "/workspace/molar/robot_lab_runtime/extension-completion-20261027-au5q8yp7/gait-3d-111321/report.json",
+        "bytes": 4819,
+        "sha256": "37d8eb67d6207b6bbc26ffadbe8de69feb2b100a40d2a78d92268ba2dd3b865e"
+      },
+      "launch.log": {
+        "path": "/workspace/molar/robot_lab_runtime/extension-completion-20261027-au5q8yp7/gait-3d-111321/launch.log",
+        "bytes": 36881,
+        "sha256": "43d5561b31dbe287d82b7dd380b4ee8f554c41970125166e79cf3b17792815c1"
+      },
+      "command.json": {
+        "path": "/workspace/molar/robot_lab_runtime/extension-completion-20261027-au5q8yp7/gait-3d-111321/command.json",
+        "bytes": 237,
+        "sha256": "e514e9540b3ccb28111c4077c4268eb38eda56733d67e6eee96483d65b96df2e"
+      }
+    },
+    "phase": "saved",
+    "mapping": {
+      "status": "saved",
+      "reason": "Saved actual database and occupied cloud: /workspace/molar/robot_lab_runtime/gait_sessions/lab_octopod-3bs0pdit/saved_maps/map-cfcda3e005",
+      "result": {
+        "kind": "acquired_rtabmap",
+        "robot": "lab_octopod",
+        "frame": "map",
+        "directory": "/workspace/molar/robot_lab_runtime/gait_sessions/lab_octopod-3bs0pdit/saved_maps/map-cfcda3e005",
+        "source_world": "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_maps/share/robot_lab_maps/maps/nav_empty/worlds/nav_empty.world",
+        "world_sha256": "0ba78b1173d9353ab4eb92b042f3860211b3f5ef95fb6933f1518484940a776d",
+        "source_database": "/workspace/molar/robot_lab_runtime/gait_sessions/lab_octopod-3bs0pdit/gait-rtabmap.db",
+        "database": "/workspace/molar/robot_lab_runtime/gait_sessions/lab_octopod-3bs0pdit/saved_maps/map-cfcda3e005/rtabmap.db",
+        "database_observation": {
+          "nodes": 9,
+          "bytes": 704512,
+          "sha256": "9d1a29cd425cf75e063d09e69ecd88a3ba7288aeef29f05911f8779648a30e37"
+        },
+        "points": 340,
+        "cloud_stamp": {
+          "sec": 8,
+          "nanosec": 804000000
+        },
+        "scope": "Acquired RGB-D SLAM database/cloud; physical reload/mission qualification is separate"
+      },
+      "acquired_points": 417
+    },
+    "saved": {
+      "success": true,
+      "message": "Save requested; wait for mapping state to report saved or failed"
+    },
+    "body_first_last": [
+      {
+        "stamp": 0.004,
+        "position": [
+          -0.5,
+          -0.5,
+          0.19089799489735096
+        ]
+      },
+      {
+        "stamp": 11.543999999,
+        "position": [
+          -0.31322273083920965,
+          -0.5000263328000057,
+          0.18339340928412137
+        ]
+      }
+    ],
+    "estimated_first_last": [
+      {
+        "stamp": 0.084,
+        "position": [
+          0.0,
+          -6.928774901132434e-20,
+          0.0
+        ]
+      },
+      {
+        "stamp": 11.543999999,
+        "position": [
+          0.18674978428584776,
+          0.00047018617661246493,
+          0.0
+        ]
+      }
+    ],
+    "acquired_map_last_observation": {
+      "stamp": 11,
+      "width": 417,
+      "height": 1,
+      "frame": "map"
+    }
+  },
+  "hexapod_navigation": {
+    "directory": "/workspace/molar/robot_lab_runtime/extension-completion-20261027-au5q8yp7/gait-nav-110409",
+    "artifacts": {
+      "motion.json": {
+        "path": "/workspace/molar/robot_lab_runtime/extension-completion-20261027-au5q8yp7/gait-nav-110409/motion.json",
+        "bytes": 558534,
+        "sha256": "748f3dfd7315b7eff050ef301d78104c5f812e489ca15a46aaa2541cf1fa4414"
+      },
+      "sources.json": {
+        "path": "/workspace/molar/robot_lab_runtime/extension-completion-20261027-au5q8yp7/gait-nav-110409/sources.json",
+        "bytes": 635,
+        "sha256": "8e1a242900e926ec14de32e8324999bd51e036f1baf997ca166a42b91e7eaf58"
+      },
+      "states.json": {
+        "path": "/workspace/molar/robot_lab_runtime/extension-completion-20261027-au5q8yp7/gait-nav-110409/states.json",
+        "bytes": 1371530,
+        "sha256": "dd866608cdfd1a86cc9f44c204f925a72aca74a57dcc78117a7a0c161ee177a8"
+      },
+      "report.json": {
+        "path": "/workspace/molar/robot_lab_runtime/extension-completion-20261027-au5q8yp7/gait-nav-110409/report.json",
+        "bytes": 2936,
+        "sha256": "dca9792220a333a3aea5ae6039e65d783c45a36eb7bda715be82a050de65937a"
+      },
+      "launch.log": {
+        "path": "/workspace/molar/robot_lab_runtime/extension-completion-20261027-au5q8yp7/gait-nav-110409/launch.log",
+        "bytes": 46005,
+        "sha256": "89a77bb47f449d65add359b54fca2afdb48422b458e0c5d3c9525b8d2560d52c"
+      },
+      "command.json": {
+        "path": "/workspace/molar/robot_lab_runtime/extension-completion-20261027-au5q8yp7/gait-nav-110409/command.json",
+        "bytes": 358,
+        "sha256": "085791a789605452fecbe5b49a981fe99f6635817d38b300fb783fa86e6d4ff4"
+      }
+    },
+    "nav2_result": {
+      "status": 4
+    },
+    "map_source_unchanged": true,
+    "body_first_last": [
+      {
+        "stamp": 0.004,
+        "position": [
+          -0.5,
+          -0.5,
+          0.14945977533464402
+        ]
+      },
+      {
+        "stamp": 60.223999999,
+        "position": [
+          -0.19391360349407188,
+          -0.4936925780730781,
+          0.14066401548037624
+        ]
+      }
+    ],
+    "estimated_first_last": [
+      {
+        "stamp": 0.084,
+        "position": [
+          0.00021590951609906571,
+          8.063171358337566e-06,
+          0.0
+        ]
+      },
+      {
+        "stamp": 60.223999999,
+        "position": [
+          0.32339553835918744,
+          0.005701386447791706,
+          0.0
+        ]
+      }
+    ],
+    "last_amcl": [
+      {
+        "x": 0.2877090741885201,
+        "y": -0.0003828873050450373
+      }
+    ],
+    "scope": "Actual Nav2 terminal and independent body motion; full physical arrival/terrain qualification separate"
+  },
+  "source_boundary": "Each raw run retains its captured source subset and command; later metadata or functional publication changes do not refresh a historical source certificate. Final source inventory below is a publication snapshot, not a claim that all runs executed those exact final bytes.",
+  "trial_archive_including_failures": [
+    "/workspace/molar/robot_lab_runtime/extension-completion-20261027-au5q8yp7/aerial-native-062250",
+    "/workspace/molar/robot_lab_runtime/extension-completion-20261027-au5q8yp7/aerial-native-063744",
+    "/workspace/molar/robot_lab_runtime/extension-completion-20261027-au5q8yp7/aerial-native-064913",
+    "/workspace/molar/robot_lab_runtime/extension-completion-20261027-au5q8yp7/aerial-native-065359",
+    "/workspace/molar/robot_lab_runtime/extension-completion-20261027-au5q8yp7/aerial-native-071105",
+    "/workspace/molar/robot_lab_runtime/extension-completion-20261027-au5q8yp7/aerial-native-072325",
+    "/workspace/molar/robot_lab_runtime/extension-completion-20261027-au5q8yp7/aerial-native-072635",
+    "/workspace/molar/robot_lab_runtime/extension-completion-20261027-au5q8yp7/aerial-native-073329",
+    "/workspace/molar/robot_lab_runtime/extension-completion-20261027-au5q8yp7/aerial-native-111730",
+    "/workspace/molar/robot_lab_runtime/extension-completion-20261027-au5q8yp7/aerial-native-113233",
+    "/workspace/molar/robot_lab_runtime/extension-completion-20261027-au5q8yp7/marine-reload-072819",
+    "/workspace/molar/robot_lab_runtime/extension-completion-20261027-au5q8yp7/marine-reload-073709",
+    "/workspace/molar/robot_lab_runtime/extension-completion-20261027-au5q8yp7/marine-reload-073807",
+    "/workspace/molar/robot_lab_runtime/extension-completion-20261027-au5q8yp7/marine-reload-110249",
+    "/workspace/molar/robot_lab_runtime/extension-completion-20261027-au5q8yp7/marine-reload-111205",
+    "/workspace/molar/robot_lab_runtime/extension-completion-20261027-au5q8yp7/marine-slam-065849",
+    "/workspace/molar/robot_lab_runtime/extension-completion-20261027-au5q8yp7/marine-slam-072214",
+    "/workspace/molar/robot_lab_runtime/extension-completion-20261027-au5q8yp7/marine-slam-072507",
+    "/workspace/molar/robot_lab_runtime/extension-completion-20261027-au5q8yp7/marine-slam-073615",
+    "/workspace/molar/robot_lab_runtime/extension-completion-20261027-au5q8yp7/marine-slam-074303",
+    "/workspace/molar/robot_lab_runtime/extension-completion-20261027-au5q8yp7/marine-slam-105919",
+    "/workspace/molar/robot_lab_runtime/extension-completion-20261027-au5q8yp7/marine-auv-111925",
+    "/workspace/molar/robot_lab_runtime/extension-completion-20261027-au5q8yp7/marine-auv-113216",
+    "/workspace/molar/robot_lab_runtime/extension-completion-20261027-au5q8yp7/marine-auv-113753",
+    "/workspace/molar/robot_lab_runtime/extension-completion-20261027-au5q8yp7/marine-auv-114651",
+    "/workspace/molar/robot_lab_runtime/extension-completion-20261027-au5q8yp7/marine-auv-115308",
+    "/workspace/molar/robot_lab_runtime/extension-completion-20261027-au5q8yp7/gait-nav-110047",
+    "/workspace/molar/robot_lab_runtime/extension-completion-20261027-au5q8yp7/gait-nav-110409"
+  ],
+  "final_source_manifest": "source-manifest.json"
+}

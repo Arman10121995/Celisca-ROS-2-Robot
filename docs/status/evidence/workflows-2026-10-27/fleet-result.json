@@ -1,0 +1,73 @@
+{
+  "schema": "robot_lab.measured_fleet_result.v1",
+  "run_id": "8cb98a89e9f7450db982f4b2e630b1b8",
+  "ros_domain_id": 20,
+  "fleet_id": "session-76f3xs6z",
+  "success": true,
+  "reason": "All owned actual routes reached independently measured settled endpoints",
+  "member_results": [
+    {
+      "member_id": "alpha",
+      "index": 0,
+      "requested": {
+        "id": "alpha",
+        "x": 0.3,
+        "y": -0.5,
+        "yaw": 0.0
+      },
+      "physical_pose": [
+        0.19047214350844888,
+        -0.523048765984421,
+        0.003911010451678243
+      ],
+      "linear_m_s": 0.0,
+      "angular_rad_s": 0.0,
+      "settled_sim_s": 1.0,
+      "task": "65ede81c4f93434fbf81eb568467219f",
+      "source": "route:03ed75c681824613ad13d832bd53421d-0",
+      "nav2_terminal": true,
+      "success": true
+    },
+    {
+      "member_id": "beta",
+      "index": 1,
+      "requested": {
+        "id": "beta",
+        "x": 0.3,
+        "y": -1.5,
+        "yaw": 0.0
+      },
+      "physical_pose": [
+        0.31934318654588006,
+        -1.441124011594502,
+        -0.010418078420481989
+      ],
+      "linear_m_s": 0.0,
+      "angular_rad_s": 0.0,
+      "settled_sim_s": 1.0,
+      "task": "661b87ac0f9243848c1dd778a0a5a8a1",
+      "source": "route:03ed75c681824613ad13d832bd53421d-1",
+      "nav2_terminal": true,
+      "success": true
+    }
+  ],
+  "goal_contract": {
+    "position_m": 0.25,
+    "heading_rad": 0.2,
+    "linear_m_s": 0.03,
+    "angular_rad_s": 0.05,
+    "settle_sim_s": 1.0
+  },
+  "truth_samples": {
+    "alpha": 2737,
+    "beta": 2737
+  },
+  "owned_cleanup": true,
+  "contacts": null,
+  "minimum_swept_clearance_m": null,
+  "wall_duration_s": 124.80271301799803,
+  "producer_sha256": "4e4d4060a6118eeecb7766835b821aa6150314421ed6bef8761bc48356bf8a31",
+  "workload_sha256": "fa4b2e6a36c47afe86e5f6e20fdb362369444b4cd84b80c3cd3ff0bbf4c5cd9f",
+  "trace_sha256": "451feee5eb5f5fe6711b477bba79426bacd539b367c62fe41c01e95e5809e050",
+  "scope": "Actual task terminals and independent body endpoints/settling; full mission/contact qualification separate"
+}

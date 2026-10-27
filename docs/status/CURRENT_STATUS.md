@@ -1,26 +1,25 @@
 # Current Robot Lab status
 
-**Current checkpoint: October 27, 2026; source baseline `f75dc60`.**
+**Current checkpoint: October 27, 2026; master, initial baseline `f75dc60`,
+first implementation checkpoint `8e411cb`. Platform and full extension partial.**
 
-The project and R10 extension are **partial**. Read the
-[remaining-work agent guide](../REMAINING_WORK_GUIDE.md) and
-[current roadmap queue](../../ROADMAP.md#current-agent-queue--october-27-2026).
-October 26 completion claims based on tests, metadata and world loading are
-superseded; valid named robot/host/cell measurements remain unchanged.
+[Current workflow delivery and limits](workflows-2026-10-27.md),
+[actual receipts](evidence/workflows-2026-10-27/README.md),
+[remaining-work guide](../REMAINING_WORK_GUIDE.md).
 
-| Area | Delivered scope | Remaining work |
+| Area | Delivered / measured | Remaining |
 |---|---|---|
-| Installed catalog | 140 robot profiles / 75 selectable families; 51 worlds / 39 families | Restore six official TurtleBot3/TurtleBot4/Husky registrations and historical Panda metadata; prevent omission during provisioning |
-| Fleet/swarm | Shared-world base controls, queues/settling, coverage and an optional Open-RMF adapter; two queued goals measured | Resolve RMF traffic stalls, complete coordinated/loss missions, additional adapters |
-| Aerial swarm | Distinct-FCU runtime/controller/worker candidates | Missing Launch/native GUI integration and actual multi-vehicle flight/loss missions |
-| Marine | Native ROV/AUV, five worlds, simulated DVL/pressure/sonar, sensor odometry, RGB-D RTAB-Map and 3D route controls; one bounded ROV route measured | Successful map save/reload/localization and applicable obstacle missions; broader force/sensor/backend qualification |
-| Multi-leg | Complete hexapod/octopod/centipede, gait/PD and experimental contact-odometry/higher-task pipeline | Saved mapping/navigation, terrain/recovery, additional forms and backends |
-| Existing platform | Scoped wheeled, Panda, flight, MOLAR controls and Go2 training/export results | Car heading, perception, manipulation, MOLAR higher tasks, policy transfer, fair comparisons and release gates |
+| Catalog | Seven registrations restored; 147 profiles / 78 selectable families, 51 worlds / 39 families | Changed-source qualification and additional reviewed imports |
+| Fleet | Native shared sessions/queues/traffic/RMF/coverage; two-body conflict and independently settled real batches | Broader RMF/infrastructure/contact/loss/maps/backends |
+| Aerial swarm | Native multi-FCU launch/editor/controls and actual two-vehicle flight/landing | Altitude/formation accuracy and broader behavior/loss acceptance |
+| Marine | Actual sensor-based map acquisition/export/protected reload/localization and completed ROV route; AUV forward-transect/braking with actual body trace | Further AUV/localization/obstacle/current/loss missions |
+| Multi-leg | Correct source FK/contact odometry, map export/reload/Nav2; hexapod navigation result and octopod real 3D database | Per-model terrain/recovery/higher-mode/backend qualification |
+| Experiments | Real fleet producer/native queue, independent endpoints/settling and cleanup | Automatic aerial/marine/gait producers and batch-wide reset |
+| Original roadmap | Existing wheeled/Panda/flight/MOLAR/training certificates retained | Detailed remaining car, perception, manipulation, policy transfer/comparison/release work |
 
-Only `terrain_heightfield` was newly added to map IDs by `f75dc60`; the fourteen
-registered 3D entries are not fourteen new worlds. Cached missing robot assets
-remain on SSD. Restore source-matched control/support metadata before using
-historical vendor/Panda certificates in the current GUI.
+Earlier October 26 completion claims from tests/metadata/world loading remain
+superseded. Historical failed artifacts and successful exact-cell results are
+preserved; the new receipt never relabels them.
 
 Simulator estimation, SLAM, volumetric routes, fleet traffic and Isaac contact
 are software/simulator work. They do not wait for physical robot hardware or

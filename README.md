@@ -7,20 +7,24 @@ requirements. Start with the [ordered roadmap queue](ROADMAP.md#current-agent-qu
 Earlier claims that all hardware-independent work was complete are superseded.
 Unit tests, asset registration and scene loading retain their stated scope.
 
-The immediate queue is to restore missing TurtleBot3/TurtleBot4/Husky and Panda
-registrations, finish fleet/RMF traffic and drone-swarm Launch/GUI wiring,
-complete marine map save/reload/navigation and multi-leg higher modes, then
-additional robot forms and real extension workloads. Maps, manipulation,
-training, algorithm comparisons and broader backend missions remain in the
-roadmap. Implement missing workflows first; broad validation follows.
+The seven missing robot registrations are restored. The native GUI now includes
+Ground Fleet and Aerial Swarm sessions, real fleet point-goal experiments,
+marine map save/reload and ahead waypoints, and multi-leg saved-map/goal controls.
+Actual measurements include fleet conflict recovery and settled batch goals,
+two-FCU flight/landing, a saved/localized ROV route, hexapod saved-map navigation
+and octopod 3D map export. [Current delivery and measured limits](docs/status/workflows-2026-10-27.md).
 
-Simulator SLAM, 3D navigation, fleet traffic and Isaac contact trials do not
-require physical robot hardware. Real hardware calibration and optional HIL
-remain separate. Current local inventory is **140 robot profiles / 75 families**
-and **51 world profiles / 39 families**; these are availability counts.
-Six official mobile profiles and the historical Panda profile are missing
-from the active installed manifest; preserve their SSD assets and restore
-source-matched metadata before relying on the archived vendor/Panda results.
+Current availability is **147 robot profiles / 78 selectable families** and
+**51 world profiles / 39 selectable families**. Restored vendor/Panda profiles
+whose historical source certificates no longer match remain explicit experimental
+candidates; enable **experimental robot workflows** to expose their candidate
+modes and autofilled command. This does not grant new mission qualification.
+
+Remaining work includes aerial altitude/formation accuracy, AUV and per-model
+obstacle/terrain missions, RMF infrastructure/larger fleets, additional robot
+forms, automatic extension experiment producers and the older roadmap. Broad
+backend/map acceptance and real hardware/HIL stay separate. Implement missing
+functionality before broad validation; preserve every named successful scope.
 
 The dated milestones below preserve earlier implementation and measurement
 scopes. Use the current guide, roadmap and corrected ledger for live task state.

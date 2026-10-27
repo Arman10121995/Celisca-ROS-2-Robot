@@ -1,5 +1,40 @@
 # Six-, eight- and many-legged controls
 
+## October 27 saved maps and goals
+
+The source hexapod, octopod and centipede now share native Gait controls for
+Drive, SLAM, 3D SLAM, localization and navigation. Contact/FK odometry keeps its
+KDL chains alive and uses continuous supporting feet. Real map export/reload,
+source phase/spine settings and explicit Nav2 goals are implemented.
+[Current scoped measurements](../status/workflows-2026-10-27.md) include a
+hexapod saved-map Nav2 result and an octopod 3D database; per-model terrain/
+recovery/mission/backend acceptance remains open.
+
+Select the **Gait task** in the control column. Connect and Arm before using
+Drive or sending a navigation goal. Acquire a map in SLAM/3D SLAM, Save it,
+and wait for the actual save result. Pick the saved occupancy YAML for 2D
+localization/navigation, or the saved RTAB-Map database plus 3D localization
+for a 3D reload. Paths and task choices fill the launch command automatically.
+The goal panel can copy the estimated map pose and submits a real Nav2 action.
+
+```bash
+ros2 launch robot_lab_bringup simulated_robot.launch.py \
+  robot_model:=hexapod_ros2 simulator:=mujoco mode:=gait \
+  map_name:=nav_empty gait_task:=slam
+# After acquiring and saving a real grid:
+ros2 launch robot_lab_bringup simulated_robot.launch.py \
+  robot_model:=hexapod_ros2 simulator:=mujoco mode:=gait \
+  map_name:=nav_empty gait_task:=nav gait_map_yaml:=/workspace/.../map.yaml
+```
+
+3D mapping uses `gait_task:=3d_slam`; reload adds
+`gait_database:=/workspace/.../rtabmap.db gait_localization:=true`.
+Map and costmap subscriptions use `/gait/map`; map/odom transforms and source
+spawn geometry remain separate. Gait or spine changes stop motion and require
+re-arm. Simulator pose remains visualization/tilt/independent measurement only.
+
+The original October 15 motion-only description below is historical.
+
 The initial extension adds three complete, separately configured robots in
 the normal GUI and registry. They use **MuJoCo Display/Gait**, bounded physical
 joint PD and source FK/IK. Their bodies stay free in physics. No learned policy,

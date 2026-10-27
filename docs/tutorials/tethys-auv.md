@@ -1,5 +1,31 @@
 # Native Tethys AUV
 
+## October 27 sensor and mission integration
+
+Tethys now has an authored fixed RGB-D kit when `marine_slam:=true`, sensor-only
+pressure/DVL/IMU odometry, real map export/protected reload and forward-transect
+Plan/Execute. Source hull mass/collisions/propeller/fins/trim are preserved.
+**Waypoint ahead** uses estimated heading plus Tethys' CAD forward -X; it fills
+XYZ without inventing a reachable turn. Select a clear cruise/coasting corridor
+and sufficient depth, then Plan and explicit Execute. Arbitrary stop-and-pivot
+paths remain unsupported.
+
+Fortress IMU yaw is aligned once to the configured physical hull spawn yaw,
+which includes the drive-heading/CAD conversion. Earlier maps without that
+sensor contract must be reacquired. Ambiguous planar geometry/visual matching
+cannot create a trustworthy localization result: the AUV uses conservative
+geometry registration and retains sensor odometry when the surface is
+unobservable. Copied worlds retain source-relative texture/mesh paths.
+
+Autonomous arrival keeps the source propeller velocity controller armed long
+enough to apply bounded signed-thrust braking, then removes propulsion after
+measured settling. The operator's **Stop** still removes thrust immediately
+and the vehicle coasts; it does not anchor the AUV in water. Larger routes,
+obstacle/current/loss missions and saved localization remain scoped acceptance
+work. [Current delivery and failures](../status/workflows-2026-10-27.md).
+
+The original October 15 source/depth/turn description below is historical.
+
 The complete **MBARI Tethys AUV** is installed in the normal robot registry
 with its retained source/CC-BY attribution. Its single native propeller and
 two source fins provide a different control plant from the eight-thruster

@@ -285,6 +285,7 @@ class MarineMissions(ttk.Frame):
                 raise ValueError('Ahead distance must be 2–20 m for the cruise AUV, or 0.1–20 m for the ROV')
             heading=self.runtime['estimated_yaw']+(math.pi if auv else 0.)
             p=self.runtime['position']
+            if not all(math.isfinite(v) for v in [*p,heading]):raise ValueError('Finite estimated marine position/heading required')
             for key,value in zip('xyz',[p[0]+distance*math.cos(heading),p[1]+distance*math.sin(heading),p[2]]):
                 self.goal[key].set(value)
             self.feedback.set('Ahead waypoint filled from estimated heading. Plan checks source/observed clearance; Execute remains explicit.')

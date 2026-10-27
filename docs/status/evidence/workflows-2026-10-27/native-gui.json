@@ -1,0 +1,79 @@
+{
+  "restored_ids_present": true,
+  "inventory": {
+    "robot_profiles": 147,
+    "robot_families": 78,
+    "maps": 51,
+    "map_families": 39
+  },
+  "candidate_commands": {
+    "asset_turtlebot3_burger": "ros2 launch robot_lab_bringup simulated_robot.launch.py mode:=nav map_name:=nav_empty robot_model:=asset_turtlebot3_burger simulator:=mujoco gui:=auto global_planning:=a_star_planner local_planning:=pure_pursuit control:=simple_controller localization:=amcl state_estimation:=ekf_localization_node sensor_fusion:=wheel_imu_fusion allow_experimental_assets:=true spawn_x:=-4.0 spawn_y:=-4.0 spawn_yaw:=0.0",
+    "asset_turtlebot3_waffle": "ros2 launch robot_lab_bringup simulated_robot.launch.py mode:=nav map_name:=nav_empty robot_model:=asset_turtlebot3_waffle simulator:=mujoco gui:=auto global_planning:=a_star_planner local_planning:=pure_pursuit control:=simple_controller localization:=amcl state_estimation:=ekf_localization_node sensor_fusion:=wheel_imu_fusion allow_experimental_assets:=true spawn_x:=-4.0 spawn_y:=-4.0 spawn_yaw:=0.0",
+    "asset_turtlebot3_waffle_pi": "ros2 launch robot_lab_bringup simulated_robot.launch.py mode:=nav map_name:=nav_empty robot_model:=asset_turtlebot3_waffle_pi simulator:=mujoco gui:=auto global_planning:=a_star_planner local_planning:=pure_pursuit control:=simple_controller localization:=amcl state_estimation:=ekf_localization_node sensor_fusion:=wheel_imu_fusion allow_experimental_assets:=true spawn_x:=-4.0 spawn_y:=-4.0 spawn_yaw:=0.0",
+    "asset_turtlebot4_standard": "ros2 launch robot_lab_bringup simulated_robot.launch.py mode:=nav map_name:=nav_empty robot_model:=asset_turtlebot4_standard simulator:=mujoco gui:=auto global_planning:=a_star_planner local_planning:=pure_pursuit control:=simple_controller localization:=amcl state_estimation:=ekf_localization_node sensor_fusion:=wheel_imu_fusion allow_experimental_assets:=true",
+    "asset_turtlebot4_lite": "ros2 launch robot_lab_bringup simulated_robot.launch.py mode:=nav map_name:=nav_empty robot_model:=asset_turtlebot4_lite simulator:=mujoco gui:=auto global_planning:=a_star_planner local_planning:=pure_pursuit control:=simple_controller localization:=amcl state_estimation:=ekf_localization_node sensor_fusion:=wheel_imu_fusion allow_experimental_assets:=true",
+    "asset_husky": "ros2 launch robot_lab_bringup simulated_robot.launch.py mode:=nav map_name:=nav_empty robot_model:=asset_husky simulator:=mujoco gui:=auto global_planning:=a_star_planner local_planning:=pure_pursuit control:=simple_controller localization:=amcl state_estimation:=ekf_localization_node sensor_fusion:=wheel_imu_fusion allow_experimental_assets:=true"
+  },
+  "auv_ahead_xyz": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": -2.0
+  },
+  "rov_ahead_xyz": {
+    "x": 1.0,
+    "y": 2.5,
+    "z": -1.0
+  },
+  "fleet_workload": {
+    "schema": "robot_lab.fleet_workload.v1",
+    "fleet_goals": [
+      {
+        "id": "alpha",
+        "x": 0.3,
+        "y": -0.5,
+        "yaw": 0.0
+      },
+      {
+        "id": "beta",
+        "x": 0.3,
+        "y": -1.5,
+        "yaw": 0.0
+      }
+    ],
+    "truth_coordinates": "selected_world",
+    "timeout_s": 360.0
+  },
+  "aerial_command": [
+    "ros2",
+    "launch",
+    "robot_lab_bringup",
+    "aerial_swarm.launch.py",
+    "session:=/workspace/molar/robot_lab_runtime/gui_profiles/air-gui-5ab5c80f7d6c4605bd22a8c2c5f7b2e8.yaml",
+    "map_name:=celisca_floor_1",
+    "gui:=true"
+  ],
+  "native_control_pages": [
+    "Drive & limits",
+    "Arm",
+    "Hand",
+    "Drone & limits",
+    "Marine",
+    "Marine missions",
+    "Gait",
+    "MOLAR"
+  ],
+  "native_main_pages": [
+    "Launch",
+    "Fleet & Swarm",
+    "Aerial Swarm",
+    "Registry",
+    "Worlds",
+    "Installed Extensions",
+    "Vacuum",
+    "Benchmark",
+    "Training",
+    "Tests",
+    "Health",
+    "Live Monitor"
+  ]
+}

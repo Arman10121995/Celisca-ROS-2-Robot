@@ -27,6 +27,13 @@ from robot_lab_utils.marine_controller import MarineController,angle
 from robot_lab_utils.marine_model import rotation
 
 
+def surge_thrust(target,speed,active=True):
+    """Signed native propeller force; armed zero velocity provides braking."""
+    if not all(math.isfinite(v) for v in (target,speed)):
+        raise ValueError('Finite measured/commanded surge required')
+    return max(-35.,min(35.,-(80.*(target-speed)+6.2282*target*abs(target)))) if active else 0.
+
+
 class AuvController(MarineController):
     def __init__(self):
         Node.__init__(self,'tethys_auv_controller')
@@ -107,7 +114,7 @@ class AuvController(MarineController):
                 self.target_heading=angle(self.target_heading+wz*dt)
                 # Source front is -X. Native thrust is a signed force on +X.
                 forward=rotation((0.,0.,heading))@np.array([-1.,0.,0.]);surge=float(forward@self.velocity)
-                self.forces[0]=max(-35.,min(35.,-(80.*(vx-surge)+6.2282*vx*abs(vx)))) if self.manual_seen else 0.
+                self.forces[0]=surge_thrust(vx,surge,self.manual_seen)
                 desired=np.zeros(2);guidance=surge>.15 and vx>.05
                 if guidance:
                     desired_down=max(-.1,min(.1,.6*(self.target_depth-depth)+.7*self.velocity[2]))
@@ -133,7 +140,7 @@ class AuvController(MarineController):
                 measured_forward_surge_m_s=surge,cruise_guidance_active=guidance,body_samples=self.count,joint_samples=self.joint_count,
                 sim_time=self.clock_value,limits=dict(surge=.7,sway=0.,yaw=.15),
                 propulsion_kind='propeller_fins',calibration=self.calibration,
-                observer='Actual simulator pose finite difference and joint observations; pressure is explicitly ideal pose-derived emulation. Independent estimation/SLAM unimplemented.',
+                observer='Native simulator pose/joints for inner guidance and diagnostics; independent sensor odometry and RGB-D/depth mapping use separate topics.',
                 scope='Pinned native Tethys AUV + declared trim ballast and authored bounded cruise guidance; no hover/strafe/pivot/depth hold at zero flow or mission qualification')
             self.state_pub.publish(String(data=json.dumps(state,allow_nan=False)))
 

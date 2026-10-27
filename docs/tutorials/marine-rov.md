@@ -1,5 +1,33 @@
 # Laboratory ROV and underwater worlds
 
+## October 27 mapping and missions
+
+The Marine and Marine missions controls now include actual sensor odometry,
+RGB-D/depth registration, map Save, protected database reload/localization,
+and **Waypoint ahead**. The ROV tank save/reload/localization/route sequence
+has an independent body trace; other worlds/obstacles/loss remain separate
+acceptance. [Current delivery and receipt](../status/workflows-2026-10-27.md).
+
+1. Select `lab_rov`, Gazebo, Marine and an installed water world. Enable RGB-D
+   mapping for the next Run, then Run and Connect Marine.
+2. Arm, drive to acquire real depth views, then stop moving and **Save acquired
+   map**. Wait for the actual saved state. The database path fills automatically.
+3. Stop/relaunch with that database and localization enabled. The original
+   database stays read-only; uncertain/stale localization cannot authorize a goal.
+4. Use estimated XYZ or **Waypoint ahead** (metres), then Plan and explicit
+   Execute. Cancel/Stop removes mission ownership. Follow actual estimated
+   state and the separate native body/depth report.
+
+CLI mapping adds `marine_slam:=true`; reload adds
+`marine_database:=/workspace/.../rtabmap.db marine_localization:=true`.
+Native Fortress lacks the previously named DVL plugin: the explicit sensor
+model derives DVL from actual motion and keeps sonar as a separate range ray.
+The estimator consumes those measurements and a one-time configured spawn
+heading prior, without simulator pose corrections. The ROV camera is 5 Hz;
+other OAK-D users keep their original 30 Hz default.
+
+The original October 15 observer-only description below is historical.
+
 The later [native Tethys AUV workflow](tethys-auv.md) is also installed. Both
 marine plants now use positive added-mass diagonals for Fortress 6.18's
 **−Ma × acceleration** convention; signed damping stays negative. Read the

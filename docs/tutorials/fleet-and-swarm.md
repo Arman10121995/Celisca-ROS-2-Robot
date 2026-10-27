@@ -1,5 +1,26 @@
 # Shared-world fleet and ground swarm controls
 
+## October 27 workflow
+
+Ground Fleet is available in the sidebar. Queues, cooperative sweep waypoints,
+optional Humble Open-RMF and bounded traffic yielding/resumption now have native
+controls. A real opposing-route mission and an isolated two-goal workload have
+measured body results; full traffic/contact/infrastructure coverage remains open.
+See [current delivery](../status/workflows-2026-10-27.md).
+
+Use **Experiments → Fleet point goals** to queue an independent copy of the
+Ground Fleet editor. Enter `alpha 0.3 -0.5 0; beta 0.3 -1.5 0` (member ID,
+world X/Y and heading degrees). The producer dispatches actual owned routes,
+measures each body independently and waits for the fixed endpoint/speed/settling
+contract. It records resources and owned cleanup. Cancel/relaunch a batch;
+live per-member Reset remains on Ground Fleet. No random/completion-only
+benchmark result counts as a mission.
+
+Aerial vehicles have their own [native Aerial Swarm page](aerial-swarm.md),
+shared Harmonic world and separate PX4 FCUs. Ground/marine use Fortress.
+The original October 15 description below retains its historical scope;
+use the current delivery/receipt for implemented features and remaining work.
+
 The native **Fleet & Swarm** tab starts several complete Bumperbot/Labbot
 instances in one selected Gazebo world. Their physics, obstacles and clock
 are shared. Each instance has separate controllers, sensors, joint states,

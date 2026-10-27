@@ -18,7 +18,8 @@ missions and remaining coverage.
 3. **Connect · neutral** acquires operator ownership and displays actual FCU
    readiness and simulator truth separately. Connecting or enabling keyboard/
    joystick input does not request takeoff or motion.
-4. Select one vehicle or **All vehicles**, then **Check clearance**. Wait for
+4. Wait for 20 seconds of FCU simulation-time settling after valid position
+   first appears; the live panel shows the remaining time. Select one vehicle or **All vehicles**, then **Check clearance**. Wait for
    each selected worker's actual clear reply. **Takeoff** consumes each fresh,
    single-use check. A rejected peer aborts the group takeoff. Do not infer
    flight from an accepted request or an armed FCU; watch actual height and
@@ -37,6 +38,9 @@ missions and remaining coverage.
    actual landed/disarmed state before closing. Loss of operator ownership,
    vehicle telemetry or session feedback clears GUI inputs; worker lease loss
    requests native Land.
+
+Velocity/altitude ramps integrate FCU simulation time, so a slow shared world
+does not multiply commanded velocity. Leases/telemetry watchdogs use wall time.
 
 The startup map transform uses the known settled spawn as a prior while the
 vehicle remains disarmed, landed and level. Calibration waits for stable raw

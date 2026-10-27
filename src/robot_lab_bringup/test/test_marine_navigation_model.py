@@ -90,3 +90,12 @@ def test_authored_auv_camera_keeps_source_masses_collisions_and_actuators():
     assert np.allclose(transform[:3,3],[-1.17,0.,.06])
     # Optical +Z points along the source AUV's -X cruising direction.
     assert np.allclose(transform[:3,:3] @ [0.,0.,1.],[-1.,0.,0.],atol=1e-9)
+
+
+def test_auv_zero_velocity_brakes_with_signed_thrust_but_inactive_propulsion_is_zero():
+    from robot_lab_utils.auv_controller import surge_thrust
+    assert surge_thrust(.3,0.)<0.  # Native source forward is -X.
+    assert surge_thrust(0.,.3)>0.  # Positive force opposes forward travel.
+    assert surge_thrust(0.,.3,False)==0.
+    assert abs(surge_thrust(-.7,.7))<=35.
+    with pytest.raises(ValueError):surge_thrust(float('nan'),0.)

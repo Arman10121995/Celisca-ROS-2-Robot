@@ -6,19 +6,25 @@ Use [the detailed agent execution guide](../REMAINING_WORK_GUIDE.md). These
 checks describe delivered initial features; a full roadmap task closes only
 when its stated mission acceptance is met.
 
-- [x] Grouped catalogs, native registry previews and automatic run commands.
-- [x] Fleet queues/coverage/RMF, marine sensor/SLAM/route and multi-leg
-  higher-task candidate code; scoped historical diagnostics retained.
-- [x] Go2 first training run completed and exported.
-- [x] Current snapshot: 140 robot profiles / 75 families and 51 worlds / 39 families.
-- [ ] Restore six official mobile profiles and historical Panda registration;
-  preserve all other installed IDs and current source control contracts.
-- [ ] Resolve RMF traffic and complete conflicting/coverage/loss/reset missions.
-- [ ] Connect aerial multi-FCU runtime to Launch/native GUI and actual flight.
-- [ ] Complete marine acquired-map save/reload/localization and 3D missions.
-- [ ] Complete per-model multi-leg higher modes/terrain and additional robot forms.
-- [ ] Finish real extension workloads, further reviewed maps and the older queue.
-- [ ] Broad robot/map/backend validation, fair comparisons and release acceptance.
+- [x] Restore seven missing vendor/Panda registrations and preserve installed IDs during provisioning.
+- [x] Native grouped selectors/defaults/autofill with explicit source-recheck candidates.
+- [x] Fleet queues/traffic recovery/RMF/coverage and real independently measured batch producer in GUI.
+- [x] Native aerial multi-FCU launch/session editor/latched controls; actual two-vehicle takeoff/movement/landing.
+- [x] Marine sensor pipeline, actual database flush/save/protected reload/localization and completed ROV route.
+- [x] Native marine ahead waypoint and authored AUV RGB-D/heading-reference integration.
+- [x] Multi-leg contact/FK odometry, 2D/3D map export/reload and native goal controls.
+- [x] Actual hexapod saved-map Nav2 result, octopod 3D database and centipede occupancy export.
+- [x] Current availability: 147 robot profiles / 78 selectable families; 51 worlds / 39 families.
+- [ ] Aerial altitude/formation accuracy, convergence and loss/other-world/large-group missions.
+- [x] Initial AUV forward transect with source-bounded signed-thrust braking and actual body trace.
+- [ ] Further AUV saved localization and remaining marine obstacle/current/loss missions.
+- [ ] Per-model multi-leg terrain/recovery/SLAM/navigation acceptance and additional backends.
+- [ ] Full RMF infrastructure/conflict/coverage/contact/loss and larger-fleet acceptance.
+- [ ] Additional snake/tracked/surface/amphibious forms and automatic aerial/marine/gait workloads.
+- [ ] Further reviewed worlds, the older roadmap, broad comparisons and release acceptance.
+
+[Current measured delivery](workflows-2026-10-27.md) and
+[agent continuation steps](../REMAINING_WORK_GUIDE.md).
 
 Simulation SLAM/navigation, traffic and Isaac contact do not require physical
 robot access. Real sensor calibration, physical joystick and optional HIL are

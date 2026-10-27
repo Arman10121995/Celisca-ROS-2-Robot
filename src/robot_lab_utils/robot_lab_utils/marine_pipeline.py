@@ -41,14 +41,21 @@ def ros_core_environment(package='rtabmap_slam'):
     return dict(LD_LIBRARY_PATH=os.pathsep.join(paths+[os.environ.get('LD_LIBRARY_PATH','')]))
 
 
-def depth_registration_parameters(planar=False):
+def depth_registration_parameters(planar=False,geometry_only=False):
     """Use real depth geometry in scenes with few visual texture features."""
-    return dict(subscribe_scan_cloud=True,qos_scan=2,
+    values=dict(subscribe_scan_cloud=True,qos_scan=2,
         **{'Reg/Strategy':'2','Reg/Force3DoF':'true' if planar else 'false',
            'RGBD/ProximityBySpace':'true','RGBD/ProximityPathMaxNeighbors':'1',
            'RGBD/NeighborLinkRefining':'true','Icp/VoxelSize':'0.1',
            'Icp/PointToPlane':'true','Icp/MaxCorrespondenceDistance':'0.5',
            'Icp/CorrespondenceRatio':'0.2'})
+    if geometry_only:
+        # Repeating inspection panels/featureless walls must not pull a
+        # cruising AUV sideways through ambiguous visual correspondences.
+        # Reject unobservable planar ICP; preserve real odometry in that case.
+        values.update({'Reg/Strategy':'1','Kp/MaxFeatures':'-1',
+                       'Icp/PointToPlaneLowComplexityStrategy':'0'})
+    return values
 
 
 def depth_cloud_node(prefix):
@@ -102,7 +109,7 @@ def pipeline(world, description, spawn, water, robot, folder, control=True,
                     odom_frame_id='marine_sensor_odom', map_frame_id='map', database_path=str(active),
                     subscribe_depth=True, subscribe_rgb=True, subscribe_odom_info=False, approx_sync=True,
                     approx_sync_max_interval=.15, wait_for_transform=.3, qos_image=2, qos_camera_info=2,
-                    **depth_registration_parameters(),
+                    **depth_registration_parameters(geometry_only=robot=='tethys_auv'),
                     **{'Mem/IncrementalMemory':'false' if localization else 'true', 'Mem/InitWMWithAllNodes':'true' if localization else 'false',
                        'Grid/3D':'true', 'Grid/Sensor':'1', 'Grid/RangeMax':'8.0',
                        'RGBD/LinearUpdate':'0.05', 'RGBD/AngularUpdate':'0.05'} )],

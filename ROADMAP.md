@@ -41,23 +41,27 @@ ownership before runtime edits, preserve existing source certificates and keep
 large outputs on SSD. Complete initial functionality before broad validation;
 neutral enablement, bounds, Stop and command-loss behavior are implementation.
 
-| Priority | Task | Concrete next result | Completion boundary |
-|---|---|---|---|
-| 1 | R3.6 catalog restoration | Restore six official mobile profiles and historical Panda metadata; preserve all other IDs during provisioning | Verified resources, complete grouped GUI variants, defaults/autofill and retained source control contracts |
-| 2 | R10.1–R10.3 fleet | Resolve RMF traffic stalls and complete queues, coverage, loss and conflict handling | Actual conflicting multi-robot routes and task outcomes agree with measured bodies; no clock/peer reset leakage |
-| 3 | R10.3 / R10.8 aerial swarm | Add missing shared-world multi-FCU launch and native GUI control workflow | Distinct IDs/ports/leases/frames, explicit actual takeoff/relative motion/Hold/land and loss evidence |
-| 4 | R10.4–R10.5 marine | Finish real map acquisition/save/reload and bounded estimated-pose missions | Saved sensor-derived 3D map and successful applicable ROV/AUV obstacle missions with depth/contact/loss traces |
-| 5 | R10.6–R10.7 multi-leg | Finish contact odometry, sensing, saved 2D/3D mapping and navigation per model | Actual motion and higher-mode missions; preserve leg count, source limits, footprint and terrain constraints |
-| 6 | R10.7 additional forms | Add complete snake/tracked/surface/amphibious sources and controllers | Physical class-appropriate locomotion/sensors/missions; no partial-limb or visual-only support claims |
-| 7 | R10.8 / R4 / R8.3 workloads | Finish native defaults/commands and real extension experiment producers | Actual run/cancel/reset/resource traces with source identity and measured outcomes |
-| 8 | R6 / R3.6 maps | Complete reviewed world imports, occupancy, actors, multi-floor and terrain generation | Real geometry/resources and class-specific routes on each advertised backend |
-| 9 | R5 / R7–R9 / R11–R12 original queue | Finish remaining car, perception, manipulation, training, comparison and release tasks | Existing detailed criteria below; preserve scoped successes and unresolved failures |
+[The October 27 workflow delivery](docs/status/workflows-2026-10-27.md) records
+implemented controls and actual scoped results. Catalog restoration is complete;
+its historical source qualification is preserved separately. Do not rebuild
+working launch/GUI/map export features from scratch.
 
-Current host inventory is 140 robot profiles in 75 families and 51 world
-profiles in 39 families. Seven historical robot registrations are missing;
-`terrain_heightfield` is the only additional map ID in `f75dc60`. Installed
-resources, GUI choices, implemented controllers and passed missions are
-separate milestones. Recompute this snapshot after catalog repairs.
+| Priority | Task | Current implementation | Next acceptance/work |
+|---|---|---|---|
+| Delivered | R3.6 catalog restoration | Seven profiles restored, merge preservation, native families/defaults/autofill and explicit source-recheck candidates | New source-qualified controller missions; remaining imports |
+| 1 | R10.1–R10.3 fleet | Real queues/traffic retreat, optional RMF, coverage, native session editor; conflicting routes and independent settled batch goals measured | Full RMF conflict/infrastructure, coverage/contact/loss and larger-fleet missions |
+| 2 | R10.3 / R10.8 aerial swarm | Multi-FCU launch/native GUI, latched controls, clearance, FCU-clock integration/settling and owned cleanup; actual flight/landing measured | Altitude-estimate/formation accuracy, behavior convergence, loss, further worlds and larger groups |
+| 3 | R10.4–R10.5 marine | Sensor estimation, source-heading alignment, real map flush/export/protected reload, native estimated missions/ahead waypoint; ROV route measured | AUV transects and saved localization, obstacles/current/contact/loss across installed water worlds |
+| 4 | R10.6–R10.7 multi-leg | Source FK/contact odometry, saved 2D/3D maps, localization/Nav2 and native controls; hexapod Nav2 result and octopod 3D export measured | Per-model higher-mode endpoints, terrain/slip/recovery and additional backends |
+| 5 | R10.7 additional forms | Complete existing segmented centipede retained | Add physical snake/tracked/surface/amphibious sources and class-appropriate controllers |
+| 6 | R10.8 / R4 / R8.3 workloads | Real fleet producer/native queue with owned terminals, source-bound results and independent physical settling | Automatic aerial/marine/gait workloads, batch-wide reset and loss/contact/resource campaigns |
+| 7 | R6 / R3.6 maps | Existing imports, terrain and occupancy tooling retained; tank reference board/source resources repaired | Remaining reviewed imports, actors, multi-floor/terrain and backend missions |
+| 8 | R5 / R7–R9 / R11–R12 original queue | Existing exact-cell certificates retained | Detailed original task criteria below; no completion from frameworks/test counts |
+
+Current inventory is **147 robot profiles / 78 selectable families**, and
+**51 world profiles / 39 selectable families**. Internal component-only group
+records are not selectable complete families. Availability and implementation
+are distinct from measured mission qualification.
 
 ### Agent completion and handoff rules
 
