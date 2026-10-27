@@ -1603,7 +1603,8 @@ tasks:
         acceptance_ref: ROADMAP.md R10.8
         active_scope: Native Ground Fleet/Aerial Swarm sidebar, marine ahead/map controls, scrollable
           gait save/goal/spine controls and exact command persistence implemented. Real source/trace-bound
-          fleet producer replaces simulated completions and appears in experiment queue.
+          fleet producer replaces simulated completions and appears in experiment queue. Extension result
+          contract validation (extension_result.py) covered by 16 unit tests.
         depends_on:
         - R10.1
         - R10.2
@@ -1617,13 +1618,17 @@ tasks:
         - docs/status/workflows-2026-10-27.md
         implementation_state: Native Ground Fleet/Aerial Swarm sidebar, marine ahead/map controls, scrollable
           gait save/goal/spine controls and exact command persistence implemented. Real source/trace-bound
-          fleet producer replaces simulated completions and appears in experiment queue.
+          fleet producer replaces simulated completions and appears in experiment queue. Extension result
+          contract validation (extension_result.py) covered by 16 unit tests.
         owner: codex
+        scope_paths:
+        - src/robot_lab/robot_lab_benchmark/robot_lab_benchmark/extension_result.py
+        - src/robot_lab/robot_lab_benchmark/test/test_extension_result.py
         state: active
         title: Native fleet/swarm/marine GUI, taxonomy and experiment workflows
         validation_state: Actual native GUI/default-command checks plus real fleet resource/endpoint/cleanup
           batch, marine and gait diagnostics recorded. Automatic aerial/marine/gait producers, batch-wide
-          reset and broader matrices remain open.
+          reset and broader matrices remain open. Extension result validation tests pass.
         qualification_review: '2026-10-27 documentation review: retain the implemented code, tests and
           named mission certificates. Full declared roadmap acceptance is still open; test counts, metadata
           and scene loads do not qualify remaining robot/map/backend missions. See docs/REMAINING_WORK_GUIDE.md.'
