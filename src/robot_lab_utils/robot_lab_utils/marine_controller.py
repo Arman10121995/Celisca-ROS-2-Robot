@@ -54,6 +54,8 @@ class MarineController(Node):
         self.pose=None
         self.velocity=None
         self.rates=None
+        self.current=None
+        self.current_stamp=-math.inf
         self.orientation=None
         self.target_depth=None
         self.target_heading=None
@@ -99,6 +101,9 @@ class MarineController(Node):
             if dt<=0:return
             self.velocity=np.array([(getattr(msg.pose.pose.position,k)-getattr(previous.pose.pose.position,k))/dt for k in 'xyz'])
             self.rates=np.array([angle(a-b)/dt for a,b in zip(orientation,self.orientation)])
+        self.pose,self.orientation=msg,orientation
+        self.pose_at=time.monotonic()
+        self.count+=1
 
     def _current(self,msg):
         """Receive current vector [x, y, z] in world frame as geometry_msgs/Vector3."""
@@ -106,7 +111,6 @@ class MarineController(Node):
         if not all(math.isfinite(v) for v in values):return
         self.current=np.array(values)
         self.current_stamp=time.monotonic()
-        self.count+=1
 
     def _fresh(self):
         now=time.monotonic()
@@ -235,7 +239,7 @@ class MarineController(Node):
                         commanded_thruster_forces_N=self.forces.tolist(),force_allocation_scale=scale,
                        mass_kg=self.model.mass,displaced_volume_m3=self.model.displacement,gravity_trim_N=self.model.gravity_trim,
                        body_samples=self.count,sim_time=self.clock_value,
-                       observer='Actual simulator pose finite difference; ideal pressure is emulated from that pose. Independent estimation/SLAM unimplemented.',
+                       observer='Actual simulator pose finite difference for physical control/diagnostics; ideal pressure is separate. Sensor-only odometry and optional SLAM use their own topics.',
                        scope='Authored laboratory ROV + native Gazebo marine forces; hardware calibration and mission qualification pending')
             self.state_pub.publish(String(data=json.dumps(state,allow_nan=False)))
 

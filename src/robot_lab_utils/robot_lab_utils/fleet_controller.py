@@ -35,7 +35,7 @@ from tf2_ros import Buffer, StaticTransformBroadcaster, TransformException, Tran
 
 from robot_lab_utils.fleet_motion import Neighbor, angle, scan_guard, separation_guard, swarm_velocities
 from robot_lab_utils.fleet_session import finite, ID_PATTERN, MEMBER_MODELS
-from robot_lab_utils.fleet_missions import MissionHistory, coverage_plan, enqueue, mission, settled
+from robot_lab_utils.fleet_missions import MissionHistory, coverage_plan, enqueue, mission, settled, traffic_yield_goal
 
 
 def yaw(q):
@@ -90,6 +90,8 @@ class Member:
     lifecycle_active: bool = False
     lifecycle_at: float = -math.inf
     lifecycle_probe_at: float = -math.inf
+    blocked_at: float = 0.
+    recovery_checked_at: float = -math.inf
     sample_stamps: dict = field(default_factory=dict)
     message_counts: dict = field(default_factory=lambda: dict(odom=0, truth=0, scan=0, amcl=0))
 
@@ -573,6 +575,8 @@ class FleetController(Node):
         self._event('coverage_planned', targets=plan, scope='Clearance-aware sweep waypoints; actual completion is reported per task')
 
     def _schedule(self, now, fresh):
+        if not all(fresh.values()):
+            return  # Every physical peer must be observable before dispatch.
         busy = any(m.mode in ('navigation', 'dispatching', 'settling', 'manual', 'swarm', 'resetting')
                    or m.handle or m.sending or m.cancel_pending for m in self.members.values())
         if self.serial_traffic and busy:
@@ -584,11 +588,75 @@ class FleetController(Node):
         candidates.sort(key=lambda m: (m.queue[0]['admitted'], m.name))
         for member in candidates[:1] if self.serial_traffic else candidates:
             item = member.queue[0]
+            waiting_for = item.get('traffic_wait_for')
+            if waiting_for:
+                peer = self.members.get(waiting_for['member'])
+                peer_items = ([peer.active_item] if peer and peer.active_item else []) + (peer.queue if peer else [])
+                if any(p['task'] == waiting_for['task'] for p in peer_items):
+                    if now - waiting_for['since'] > item['goal']['timeout']:
+                        member.queue.pop(0)
+                        self._event('task_finished', member=member.name,
+                            **self.history.finish(item, 'failed', 'Traffic wait budget expired; queue held for operator'))
+                        member.queue_paused = True
+                    member.reason = 'Yielded; waiting for priority task on '+waiting_for['member']
+                    continue
             try:
                 self._dispatch(member, item['goal'], item)
                 member.queue.pop(0)  # Only remove after successful action submission.
             except (ValueError, RuntimeError) as exc:
                 member.reason = 'Queued task waiting: ' + str(exc)
+
+    def _traffic_recovery_tick(self, now, fresh):
+        """Bounded measured-peer recovery; retain the interrupted task identity."""
+        for member in sorted(self.members.values(), key=lambda m: (
+                (m.active_item or {}).get('admitted', 0.), m.name), reverse=True):
+            blocked = (member.mode == 'navigation' and member.active_item and fresh[member.name]
+                       and member.reason.startswith(('predicted member separation', 'member footprint proximity',
+                                                     'scan stopping corridor', 'scan footprint proximity')))
+            if not blocked:
+                member.blocked_at = 0.
+                continue
+            member.blocked_at = member.blocked_at or now
+            if now-member.blocked_at < 2. or now-member.recovery_checked_at < 1.:
+                continue
+            member.recovery_checked_at = now
+            robot = self._neighbor(member)
+            peers = [(other, self._neighbor(other)) for other in self.members.values()
+                     if other is not member and fresh[other.name]]
+            close = [(m, p) for m, p in peers if math.hypot(robot.x-p.x, robot.y-p.y) < 1.2]
+            if not close:
+                continue  # A wall is not a fleet deadlock.
+            peer, _ = min(close, key=lambda item: math.hypot(robot.x-item[1].x, robot.y-item[1].y))
+            original = member.active_item
+            # Older work wins ties. Never interrupt a peer's existing yield.
+            if peer.active_item and (peer.active_item.get('source') == 'traffic_yield' or
+                    (peer.active_item['admitted'], peer.name) > (original['admitted'], member.name)):
+                continue
+            if original.get('traffic_retries', 0) >= 3:
+                self._finish_task(member, 'failed', 'Traffic recovery limit reached; remaining queue held')
+                continue
+            try:
+                if not hasattr(self, '_grid'):
+                    from robot_lab_utils.fleet_session import SpawnGrid
+                    self._grid = SpawnGrid(self.session['map_yaml'])
+                target = traffic_yield_goal(self._grid, robot, [p for _, p in peers])
+                if len(member.queue) > 62:
+                    raise ValueError('No queue capacity for a bounded traffic recovery')
+            except ValueError as exc:
+                if now-member.blocked_at > 12.:
+                    self._finish_task(member, 'failed', str(exc))
+                continue
+            member.active_item = None  # It is suspended, not canceled or succeeded.
+            self._stop_member(member, 'Yielding to measured blocking peer', clear_queue=False)
+            original['traffic_retries'] = original.get('traffic_retries', 0)+1
+            if peer.active_item:
+                original['traffic_wait_for'] = dict(member=peer.name, task=peer.active_item['task'], since=now)
+            member.queue[:0] = [mission(target, 'traffic_yield'), original]
+            member.queue_paused, member.mode = False, 'waiting'
+            member.blocked_at = 0.
+            self._event('traffic_yield_planned', member=member.name, peer=peer.name,
+                        suspended_task=original['task'], target=target, attempt=original['traffic_retries'])
+            break
 
     def _nav_ready(self, member, now):
         return member.lifecycle_active and now - member.lifecycle_at < 2. and member.action.server_is_ready()
@@ -784,9 +852,15 @@ class FleetController(Node):
                     self._stop_member(member, 'Operator heartbeat lost; explicit new ownership required')
             self.swarm = None
         fresh = {m.name: self._fresh(m, now) for m in self.members.values()}
+        if not all(fresh.values()) and any(m.mode in ('manual','navigation','dispatching','settling','swarm')
+                                           for m in self.members.values()):
+            missing=', '.join(name for name,ready in fresh.items() if not ready)
+            self._stop_all('Physical peer feedback lost: '+missing+'; new commands required after rejoin')
         if now - self.heartbeat_at <= .8:
             self._schedule(now, fresh)
         neighbors = [self._neighbor(m) for m in self.members.values() if fresh[m.name]]
+        if self.session['navigation'] and now-self.heartbeat_at <= .8:
+            self._traffic_recovery_tick(now, fresh)
         swarm_commands = {}
         if self.swarm:
             ids = self.swarm['targets']

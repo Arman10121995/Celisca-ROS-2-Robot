@@ -115,3 +115,45 @@ def test_failed_goal_holds_remaining_queue_for_explicit_operator_decision():
     node._goal_finished(member, member.generation, None, future)
     assert node.history.rows[-1]['state'] == 'failed'
     assert member.queue_paused and len(member.queue) == 1
+
+
+def test_soft_peer_buffer_allows_retreat_but_never_closing_or_overlap():
+    from robot_lab_utils.fleet_motion import Neighbor, separation_guard
+    a = Neighbor('a', 0., 0., 0., 0., .18)
+    b = Neighbor('b', .43, 0., 0., 0., .18)
+    assert separation_guard(a, [b], -.08, 0.)[:2] == (-.08, 0.)
+    assert separation_guard(a, [b], .08, 0.)[:2] == (0., 0.)
+    touching = Neighbor('b', .37, 0., 0., 0., .18)
+    assert separation_guard(a, [touching], -.08, 0.)[:2] == (0., 0.)
+
+
+def test_traffic_yield_retains_original_task_and_waits_for_older_peer():
+    from robot_lab_utils.fleet_controller import FleetController, Member
+    from robot_lab_utils.fleet_motion import Neighbor
+    node, member = harness()
+    member.config['radius'] = .118
+    member.reason = 'predicted member separation: beta'
+    member.active_item['admitted'] = 2.
+    original = member.active_item
+    beta = Member(config=dict(id='beta', radius=.18), mode='navigation')
+    beta.active_item = mission(member.goal, now=1.)
+    node.members['beta'] = beta
+    positions = dict(alpha=Neighbor('alpha', -.44, 0., math.pi, 0., .118),
+                     beta=Neighbor('beta', 0., 0., 0., 0., .18))
+    node._neighbor = lambda m: positions[m.name]
+    node._grid = SimpleNamespace(resolution=.1, clear=lambda *args: True)
+    FleetController._traffic_recovery_tick(node, 10., dict(alpha=True, beta=True))
+    FleetController._traffic_recovery_tick(node, 13., dict(alpha=True, beta=True))
+    assert member.active_item is None and member.mode == 'waiting'
+    assert member.queue[0]['source'] == 'traffic_yield'
+    assert member.queue[1] is original
+    assert original['traffic_wait_for']['task'] == beta.active_item['task']
+    assert not node.history.rows  # Suspension is neither success nor cancel.
+
+
+def test_coincident_swarm_samples_produce_finite_bounded_commands():
+    from robot_lab_utils.fleet_motion import Neighbor, swarm_velocities
+    robots = [Neighbor(name, 0., 0., 0., 0., .18) for name in ('a', 'b')]
+    commands = swarm_velocities('clearance', robots, .25, .6)
+    assert all(math.isfinite(v) for row in commands.values() for v in row)
+    assert all(abs(linear) <= .25 and abs(angular) <= .6 for linear, angular in commands.values())

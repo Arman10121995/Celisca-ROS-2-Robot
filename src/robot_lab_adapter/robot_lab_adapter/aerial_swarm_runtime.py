@@ -1,5 +1,6 @@
 """One Harmonic world with distinct, leased PX4 X500 FCUs and ROS workers."""
 import argparse
+from contextlib import suppress
 import fcntl
 import json
 import math
@@ -16,6 +17,20 @@ import xml.etree.ElementTree as ET
 import rclpy
 from .aerial_swarm_model import identities
 from .px4_sitl_runtime import prepare_world,prepare_model,x500_urdf,HARMONIC_DISCOVERY_PORTS,stop_group
+
+
+def close_owned(processes):
+    """Bounded cleanup of every owned group, even if a ROS destructor fails."""
+    for signum,budget in ((signal.SIGINT,3.),(signal.SIGTERM,2.),(signal.SIGKILL,1.)):
+        for process in reversed(processes):
+            with suppress(ProcessLookupError):os.killpg(process.pid,signum)
+        deadline=time.monotonic()+budget
+        for process in reversed(processes):
+            with suppress(subprocess.TimeoutExpired):
+                process.wait(timeout=max(.01,deadline-time.monotonic()))
+    # Parent exit is not proof that its Gazebo/transport descendants exited.
+    for process in processes:
+        with suppress(ProcessLookupError):os.killpg(process.pid,signal.SIGKILL)
 
 
 def actual_origin(topic,env):
@@ -58,7 +73,7 @@ def main():
             lease=lock.open('a');fcntl.flock(lease,fcntl.LOCK_EX|fcntl.LOCK_NB);leases.append(lease)
         (folder/'models').mkdir();(folder/'worlds').mkdir()
         world=folder/'worlds/robot_lab_flight.sdf';prepare_world(session['source_world'],world,upstream)
-        env=dict(os.environ,**HARMONIC_DISCOVERY_PORTS)
+        env=dict(os.environ,PYTHONUNBUFFERED='1',**HARMONIC_DISCOVERY_PORTS)
         env.update(PX4_GZ_WORLD='robot_lab_flight',PX4_GZ_STANDALONE='1',PX4_SIM_MODEL='gz_x500',PX4_SYS_AUTOSTART='4001',
             PX4_GZ_MODELS=str(folder/'models'),PX4_GZ_WORLDS=str(folder/'worlds'),
             PX4_GZ_PLUGINS=str(build/'src/modules/simulation/gz_plugins'),
@@ -114,14 +129,30 @@ def main():
             if any(Path(stream.name).stat().st_size>128*1024**2 for stream in logs):raise RuntimeError('Aerial session log budget exceeded')
     except KeyboardInterrupt:pass
     finally:
-        if node:
-            node.close();node.destroy_node()
-        # Workers request Land while still connected; each process owns only
-        # its declared vehicle/port. Then stop the FCUs and shared plant.
-        for proc in reversed(processes):stop_group(proc)
-        for stream in logs:stream.close()
-        for lease in leases:lease.close()
-        if rclpy.ok():rclpy.shutdown()
+        # rclpy can shut its context down before Node.destroy_node() on SIGINT.
+        # Cleanup exceptions must never strand FCUs holding the port leases.
+        signal.signal(signal.SIGINT,signal.SIG_IGN)
+        signal.signal(signal.SIGTERM,signal.SIG_IGN)
+        try:
+            if node and rclpy.ok():
+                # Keep the actual FCUs/plant alive for bounded landing cleanup.
+                # Worker lease loss also requests Land; no pose/disarm shortcut.
+                node.mode='idle'
+                for member in node.members.values():
+                    if member.get('status') and member['status'].get('armed'):
+                        try:node.service(member,'land')
+                        except ValueError:pass
+                deadline=time.monotonic()+12.
+                while time.monotonic()<deadline and any(m.get('status') and m['status'].get('armed') for m in node.members.values()):
+                    rclpy.spin_once(node,timeout_sec=.05)
+            if node:
+                with suppress(Exception):node.close()
+                with suppress(Exception):node.destroy_node()
+        finally:
+            close_owned(processes)
+            for stream in logs:stream.close()
+            for lease in leases:lease.close()
+            if rclpy.ok():rclpy.shutdown()
 
 
 if __name__=='__main__':main()

@@ -1,20 +1,30 @@
 # Robot Lab done and remaining checklist
 
-**Current checkpoint: October 20, 2026.**
+**Current checkpoint: October 27, 2026; platform/extension partial.**
 
-- [x] Reconciled installed inventory: 147 robot profiles / 78 families and
-  50 world profiles / 38 families; components remain grouped.
-- [x] `go2_walk_r1` finished and exported at 2,000 iterations / 24.58 M steps.
-- [x] Basic per-member fleet goal queues added; launches/evaluation recorded
-  separately from measured policy-transfer acceptance.
-- [x] Round 57 results recorded: MuJoCo slalom clears, parking heading remains;
-  Gazebo abort and inconclusive Isaac startup retained.
-- [ ] Complete remaining R10 operator workflows and initial integrations;
-  [current scope and exact remaining work](extension-2026-10-20.md).
-- [ ] Broad physical qualification, other backend adapters and release gates.
+Use [the detailed agent execution guide](../REMAINING_WORK_GUIDE.md). These
+checks describe delivered initial features; a full roadmap task closes only
+when its stated mission acceptance is met.
 
-Historical unchecked lines below define remaining acceptance unless the current
-checkpoint explicitly supersedes their implementation status.
+- [x] Grouped catalogs, native registry previews and automatic run commands.
+- [x] Fleet queues/coverage/RMF, marine sensor/SLAM/route and multi-leg
+  higher-task candidate code; scoped historical diagnostics retained.
+- [x] Go2 first training run completed and exported.
+- [x] Current snapshot: 140 robot profiles / 75 families and 51 worlds / 39 families.
+- [ ] Restore six official mobile profiles and historical Panda registration;
+  preserve all other installed IDs and current source control contracts.
+- [ ] Resolve RMF traffic and complete conflicting/coverage/loss/reset missions.
+- [ ] Connect aerial multi-FCU runtime to Launch/native GUI and actual flight.
+- [ ] Complete marine acquired-map save/reload/localization and 3D missions.
+- [ ] Complete per-model multi-leg higher modes/terrain and additional robot forms.
+- [ ] Finish real extension workloads, further reviewed maps and the older queue.
+- [ ] Broad robot/map/backend validation, fair comparisons and release acceptance.
+
+Simulation SLAM/navigation, traffic and Isaac contact do not require physical
+robot access. Real sensor calibration, physical joystick and optional HIL are
+separate. Earlier "all hardware-independent tasks complete" labels are
+superseded; preserve tests and named measured certificates within their scope.
+Historical checklist entries below remain useful for their dated task details.
 
 October 19: R12 legged policy training ([guide](../tutorials/legged-policy-training.md)).
 

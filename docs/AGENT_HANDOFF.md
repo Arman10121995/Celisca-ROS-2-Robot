@@ -1,5 +1,13 @@
 # Agent Handoff Protocol
 
+October 27 current handoff: read [the remaining-work execution guide](REMAINING_WORK_GUIDE.md).
+The README/roadmap/ledger now reopen unmet acceptance while retaining successful
+named measurements. Restore seven missing historical robot registrations first,
+then remaining R10 workflows, maps and the older queue. Use live ledger owners;
+older owner/next-task paragraphs below are historical. Simulator SLAM/navigation
+and Isaac contact do not wait for physical hardware. Implement before broad
+validation and keep all artifacts on SSD.
+
 October 20 continuation: read [the current extension checkpoint](status/extension-2026-10-20.md).
 Codex owns R10 completion; the completed Go2 export, basic fleet queues and
 round 57 results supersede older "ongoing/queued" summaries. Keep imported

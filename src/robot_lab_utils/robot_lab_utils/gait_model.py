@@ -91,9 +91,10 @@ class GaitModel:
         if gait=='wave':return ((pair+(.5 if side=='r' else 0.))/(len(self.legs)/2))%1.,.85
         raise ValueError('Unsupported gait schedule')
 
-    def targets(self,phase,command,previous,gait):
+    def targets(self,phase,command,previous,gait,spine_phase=0.,spine_freq=1.):
         vx,vy,wz=map(float,command)
-        if not all(math.isfinite(v) for v in (vx,vy,wz,phase)):raise ValueError('Finite gait inputs required')
+        if not all(math.isfinite(v) for v in (vx,vy,wz,phase,spine_phase,spine_freq)):raise ValueError('Finite gait inputs required')
+        if not 0<=spine_phase<=1 or not .1<=spine_freq<=3:raise ValueError('Spine phase must be 0–1 and frequency 0.1–3')
         result=np.array(previous,dtype=float).copy();errors=[];planned={}
         yaw=self.config['forward_yaw'];c,s=math.cos(yaw),math.sin(yaw)
         body_velocity=np.array([c*vx-s*vy,s*vx+c*vy])
@@ -118,5 +119,5 @@ class GaitModel:
         for spine in self.config.get('spines',[]):
             index=self.names.index(spine['joint'])
             # Authored limited curvature plus a small propagated body wave.
-            result[index]=max(-.12,min(.12,-.5*wz+.015*math.sin(2*math.pi*phase-spine['index']*.6)))
+            result[index]=max(-.12,min(.12,-.5*wz+.015*math.sin(2*math.pi*(phase*spine_freq+spine_phase)-spine['index']*.6)))
         return result,max(errors),planned

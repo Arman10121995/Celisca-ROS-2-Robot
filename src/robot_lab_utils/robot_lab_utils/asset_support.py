@@ -8,6 +8,65 @@ import json
 import math
 from pathlib import Path
 
+
+def apply_support_or_candidate(apply, profile, source_revision, support, repository):
+    """Keep a usable model when an old certificate no longer matches code.
+
+    Strict certificate validation stays in the original functions. Candidate
+    workflows require a separate explicit opt-in, never a refreshed hash or a
+    copied runtime PASS. A changed model/control contract gets no candidate.
+    """
+    try:
+        return apply(profile, source_revision, support, repository)
+    except (ValueError, OSError) as exc:
+        result = dict(profile)
+        stale = list(result.get('qualification_recheck', []))
+        stale.append(dict(adapter=apply.__name__, reason=str(exc),
+                          source_revision=(support or {}).get('source_revision'),
+                          reference='docs/status/asset-runtime-support.yaml'))
+        result['qualification_recheck'] = stale
+        result['qualification_state'] = 'source_changed'
+        # Code changes can invalidate a certificate without removing the
+        # implemented controller. Geometry/control changes must be reviewed.
+        code_only = any(token in str(exc) for token in (
+            'runtime configuration differs:', 'controller differs from the measured source:',
+            'planning configuration differs from measured source:'))
+        if not code_only or not support or support.get('source_revision') != source_revision:
+            return result
+        if apply.__name__ == 'apply_recorded_modes' and profile.get('drive_in_display'):
+            matrix = {backend: ['display'] for backend in profile['supported_simulators']}
+            for cell in support.get('screens', []):
+                if cell['backend'] in matrix and cell['mode'] not in matrix[cell['backend']]:
+                    matrix[cell['backend']].append(cell['mode'])
+            result['experimental_modes_by_simulator'] = matrix
+            result['supported_modes_by_simulator'] = {backend: ['display'] for backend in matrix}
+            result['default_algorithms'] = dict(result.get('default_algorithms', {}),
+                global_planning='a_star_planner', local_planning='pure_pursuit')
+        elif profile.get('arm_control') == 'panda':
+            options = dict(result.get('experimental_asset_options', {}))
+            options['hand_control' if apply.__name__ == 'apply_recorded_panda_hand'
+                    else 'arm_planning'] = 'panda' if apply.__name__ == 'apply_recorded_panda_hand' else 'moveit'
+            result['experimental_asset_options'] = options
+        return result
+
+
+def experimental_asset_profile(profile, enabled=False):
+    """Apply explicit candidate availability without changing qualification."""
+    result = dict(profile or {})
+    if not enabled:
+        return result
+    candidate = result.get('experimental_modes_by_simulator', {})
+    if candidate:
+        matrix = {backend: list(modes) for backend, modes in
+                  result.get('supported_modes_by_simulator', {}).items()}
+        for backend, modes in candidate.items():
+            matrix[backend] = list(dict.fromkeys([*matrix.get(backend, []), *modes]))
+        result['supported_modes_by_simulator'] = matrix
+        result['supported_modes'] = list(dict.fromkeys([
+            *result.get('supported_modes', []), *(mode for modes in matrix.values() for mode in modes)]))
+    result.update(result.get('experimental_asset_options', {}))
+    return result
+
 from .qualification import navigation_acceptance
 
 

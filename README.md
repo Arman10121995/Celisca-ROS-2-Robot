@@ -1,5 +1,29 @@
 # Robot Lab — Multi-Robot Simulation and Algorithm Laboratory
-\nOctober 20: R6-R9 environment qualification completed. All R6 subtasks (R6.1-R6.7)\nnow have real backend tests: 5 reset validation, 13 sensor disturbance, 6 terrain/aerial,\n10 diverse maps. R7 algorithm breadth verified (39 + 21 tests). R8 backend qualification\ncompleted (18/18 checks). R9 reproducibility documented. R10.4 marine done with 36/36 tests\nand all 5 marine worlds verified in Gazebo. R10.5 active (hardware-dependent features skipped).\nTest results: Fast 1099 passed, Physics 64 passed, Integration 172 passed.\n[Status](docs/status/platform-status.yaml), [Current status](docs/status/CURRENT_STATUS.md).\n
+
+**Current status — October 27, 2026: the platform and extension are partial.**
+[Agent instructions for the remaining work](docs/REMAINING_WORK_GUIDE.md) give
+code locations, dependencies, implementation steps, acceptance and evidence
+requirements. Start with the [ordered roadmap queue](ROADMAP.md#current-agent-queue--october-27-2026).
+Earlier claims that all hardware-independent work was complete are superseded.
+Unit tests, asset registration and scene loading retain their stated scope.
+
+The immediate queue is to restore missing TurtleBot3/TurtleBot4/Husky and Panda
+registrations, finish fleet/RMF traffic and drone-swarm Launch/GUI wiring,
+complete marine map save/reload/navigation and multi-leg higher modes, then
+additional robot forms and real extension workloads. Maps, manipulation,
+training, algorithm comparisons and broader backend missions remain in the
+roadmap. Implement missing workflows first; broad validation follows.
+
+Simulator SLAM, 3D navigation, fleet traffic and Isaac contact trials do not
+require physical robot hardware. Real hardware calibration and optional HIL
+remain separate. Current local inventory is **140 robot profiles / 75 families**
+and **51 world profiles / 39 families**; these are availability counts.
+Six official mobile profiles and the historical Panda profile are missing
+from the active installed manifest; preserve their SSD assets and restore
+source-matched metadata before relying on the archived vendor/Panda results.
+
+The dated milestones below preserve earlier implementation and measurement
+scopes. Use the current guide, roadmap and corrected ledger for live task state.
 
 October 20: [the current extension checkpoint](docs/status/extension-2026-10-20.md)
 reconciles the installed inventory, completed training/export and actual remaining
@@ -99,7 +123,7 @@ Robot Lab aims to make robots, simulators, maps and algorithms independently sel
 
 **Current state: partial research platform with measured mobile, flight and native Panda workflows.** The GUI, simulator adapters, installed assets and algorithm framework support the named experiments below. Full robot/map/mode/backend qualification, controller breadth and reproducible algorithm comparisons remain open.
 
-Status updated on **2026-10-20**. The October 8 extension checkpoint has exact
+Status updated on **2026-10-27**. The October 8 extension checkpoint has exact
 physical source manifests; its publication and software checks are recorded in
 [October 8 evidence](docs/status/evidence/extensions-finish-2026-10-08/README.md). [Current status](docs/status/CURRENT_STATUS.md)
 collects verified work, limits and the next tasks. The [completion audit](docs/status/audit-2026-10-02.md)
@@ -161,7 +185,7 @@ and [actual rendering/live-plant checks](docs/status/evidence/registry-3d-2026-1
 **Worlds** generates real occupancy PGM/YAML files. **Installed Extensions**
 opens downloaded assets in the normal Launch selectors with commands filled
 in automatically; it has no download buttons. On this SSD installation there
-are **116 installed external robot profiles**, including source variants and
+are **109 installed external robot profiles**, including source variants and
 inspection components, **14 imported dataset worlds**, and three packaged
 Gazebo environment examples. Their source, dependency and import checks are
 recorded separately from robot missions. See the
@@ -206,6 +230,7 @@ planned payload/grasp setups and mobile-manipulator control remain in the [roadm
 
 ## Start here
 
+- [Remaining work for agents](docs/REMAINING_WORK_GUIDE.md): ordered implementation, source paths, catalog restoration, measured acceptance and handoff requirements.
 - [Current status](docs/status/CURRENT_STATUS.md): published source, available GUI workflows, measured robot scopes and remaining work.
 - [Completion audit](docs/status/audit-2026-10-02.md): corrected claims and evidence boundaries; earlier audits remain historical.
 - [Implementation roadmap](ROADMAP.md): ordered work, dependencies and acceptance criteria toward the full platform.
@@ -219,12 +244,12 @@ planned payload/grasp setups and mobile-manipulator control remain in the [roadm
 
 ## What exists, and what that means
 
-| Source/installed inventory on this Jetson, October 20 | Meaning |
+| Source/installed inventory on this Jetson, October 27 | Meaning |
 |---|---|
 | 26 discoverable ROS packages | Current CI builds 25; optional `orbslam3` is excluded |
-| 31 core + 116 installed external robot profiles | 147 raw profiles, including components/source variants; installed SSD resources checked |
-| 78 selectable robot families | Reviewed family grouping; components remain nested and many imports are Display-only |
-| 33 core + 17 installed world profiles | 50 profiles under 38 selectable map families, including five marine and two detailed CELISCA worlds |
+| 31 core + 109 installed external robot profiles | 140 raw profiles; seven historical registrations need restoration |
+| 75 selectable robot families | Grouped current Launch choices; components remain nested and many imports are Display-only |
+| 34 core + 17 installed world profiles | 51 profiles under 39 map families; terrain_heightfield newly registered; five marine worlds retained |
 | Registry and algorithm catalogs | Inventory and labels are separate from controller integration and measured mission qualification |
 | Four simulator routes | Gazebo, PyBullet, MuJoCo and Isaac; support is robot/task/backend-specific |
 
@@ -346,7 +371,7 @@ Paths below are relative to `src/`; only the registry and benchmark packages liv
 - **Legacy quadrotor_sitl:** retained display fixture; the retired MAVROS example does not provide a working flight mission.
 - **Other cataloged robots:** imported descriptions span legged, humanoid and manipulator models. Asset availability is not locomotion/control support.
 
-The 33 core environments include legacy/general worlds, five navigation arenas, terrain, aerial and dynamic/occlusion entries, five marine worlds and two detailed CELISCA floors. Seventeen installed extensions add fourteen dataset worlds and three Gazebo examples, consolidated under map families. Arena generators and occupancy-map consistency checks are useful foundations. The rough-terrain registry ID is `outdoor_terrain`, not `terrain_rough`. `nav_sensor_degraded` supplies occluding geometry, not a general noise/dropout framework.
+The 34 core environments include legacy/general worlds, five navigation arenas, terrain, aerial and dynamic/occlusion entries, five marine worlds, two detailed CELISCA floors and the registered terrain_heightfield. Seventeen installed extensions add fourteen dataset worlds and three Gazebo examples, consolidated under map families. Arena generators and occupancy-map consistency checks are useful foundations. The rough-terrain registry ID is `outdoor_terrain`, not `terrain_rough`. `nav_sensor_degraded` supplies occluding geometry, not a general noise/dropout framework.
 
 ### Algorithms and benchmarking
 
@@ -431,7 +456,7 @@ R9.1. Review host bootstrap commands separately from ordinary GUI operation.
 
 ## Path to the intended platform
 
-The [roadmap](ROADMAP.md) and [agent handoff](docs/AGENT_HANDOFF.md) are the implementation authority. The current user priority is the new extensions: R3.6/R6.5–R6.7, R5.10 and R5.7–R5.9, while preserving completed fixes and exact task owners. Then resume the original wheeled/legged mission matrix, algorithm comparisons, concurrency and clean-host reproduction.
+The [roadmap](ROADMAP.md), [remaining-work guide](docs/REMAINING_WORK_GUIDE.md) and [agent handoff](docs/AGENT_HANDOFF.md) define the implementation order. Restore missing catalog entries, complete R10 fleet/swarm/marine/multi-leg workflows and native GUI/experiment integration, then resume maps and the older robot, algorithm and reproducibility work. Preserve completed fixes and exact runtime task owners.
 
 Success means selectable mobile, legged, humanoid and aerial robots; 2D/3D environments; at least five genuinely distinct supported alternatives in each requested algorithm category; and reproducible comparisons with measured outcomes. Each supported combination needs explicit dependencies, contracts, launch configuration, numerical tests where applicable, a runtime smoke test, and evidence-backed maturity. A numerical kernel, a catalog row, a GUI selector and a completed mission are different milestones.
 

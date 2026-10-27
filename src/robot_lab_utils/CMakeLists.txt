@@ -39,6 +39,7 @@ install(PROGRAMS
   ${PROJECT_NAME}/gait_controller.py
   ${PROJECT_NAME}/gait_odometry.py
   ${PROJECT_NAME}/gait_sensor_relay.py
+  ${PROJECT_NAME}/map_archive.py
   DESTINATION lib/${PROJECT_NAME}
 )
 

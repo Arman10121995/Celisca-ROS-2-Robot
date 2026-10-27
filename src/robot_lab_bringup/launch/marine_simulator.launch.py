@@ -42,7 +42,6 @@ def _setup(context):
     description=folder/'lab_rov.urdf';description.write_text(urdf)
     mappings=[('/clock','/clock','rosgraph_msgs/msg/Clock','gz.msgs.Clock'),
               ('/marine/odometry','/marine/odometry','nav_msgs/msg/Odometry','gz.msgs.Odometry'),
-              ('/marine/dvl','/model/lab_rov/link/base_link/sensor/marine_dvl/twist','geometry_msgs/msg/TwistStamped','gz.msgs.Twist',),
               ('/joint_states','/marine/joint_states','sensor_msgs/msg/JointState','gz.msgs.Model'),
               ('/marine/imu','/marine/imu','sensor_msgs/msg/Imu','gz.msgs.IMU')]
     camera='/world/'+world_name+'/model/lab_rov/link/oakd_rgb_camera_frame/sensor/rgbd_camera'

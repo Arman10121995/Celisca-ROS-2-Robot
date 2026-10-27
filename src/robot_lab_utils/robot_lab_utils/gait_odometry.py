@@ -48,7 +48,10 @@ class GaitOdometry(Node):
             chain=self.model.tree.getChain('base_link',leg['foot'])
             names=[chain.getSegment(i).getJoint().getName() for i in range(chain.getNrOfSegments())
                    if chain.getSegment(i).getJoint().getType()!=kdl.Joint.Fixed]
-            self.chains[leg['id']]=(names,kdl.ChainFkSolverPos_recursive(chain))
+            # KDL's solver retains a reference to its chain. Keep that chain
+            # alive as well; a discarded temporary produced identity FK and
+            # zero odometry while the physical robot was walking.
+            self.chains[leg['id']]=(chain,names,kdl.ChainFkSolverPos_recursive(chain))
         self.reference=Rotation.from_euler('z',float(self.get_parameter('initial_drive_yaw').value))
         self.forward=Rotation.from_euler('z',float(self.model.config['forward_yaw']))
         self.imu=self.contacts=None
@@ -97,16 +100,23 @@ class GaitOdometry(Node):
             return
         joints=dict(zip(msg.name,msg.position))
         current={}
-        for name,(names,solver) in self.chains.items():
+        for name,(_chain,names,solver) in self.chains.items():
             if any(key not in joints or not math.isfinite(joints[key]) for key in names):return
-            frame=kdl.Frame();solver.JntToCart(self.model.array([joints[key] for key in names]),frame)
+            frame=kdl.Frame()
+            if solver.JntToCart(self.model.array([joints[key] for key in names]),frame)<0:
+                self.state.publish(String(data=json.dumps(dict(reason='Source-chain FK failed; odometry suspended'))))
+                return
             current[name]=np.array([frame.p.x(),frame.p.y(),frame.p.z()])
         q=self.imu.orientation
         body=self.reference.inv()*Rotation.from_quat([q.x,q.y,q.z,q.w])
         supports=[name for name in current if self.contacts['normal_forces_N'].get(name,0.)>.2]
-        previous,self.previous=self.previous,(current,body)
+        previous,self.previous=self.previous,(current,body,set(supports))
         old_stamp,self.last_stamp=self.last_stamp,stamp
-        if previous is None or len(supports)<max(2,len(current)//3):return
+        if previous is None:return
+        # A newly landed foot was swinging in the previous sample. Its large
+        # FK difference is not body travel; use continuous measured support.
+        supports=[name for name in supports if name in previous[2]]
+        if len(supports)<max(2,len(current)//3):return
         dt=stamp-old_stamp
         if dt>.15:
             self.covariance+=np.eye(2)*(.1*dt)**2

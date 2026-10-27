@@ -18,6 +18,7 @@ from ament_index_python.packages import get_package_share_directory
 from .process_control import stop_group, stop_owned_launch
 from .drive_control import LinuxJoystick, RampDrive, limits_from_drive
 from robot_lab_utils.installed_assets import merge_installed_profiles
+from robot_lab_utils.asset_support import experimental_asset_profile
 from robot_lab_utils.asset_groups import AssetGroups
 from robot_lab_utils.robot_taxonomy import RobotTaxonomy, ALL_CATEGORIES, ALL_TYPES, CATEGORIES
 
@@ -520,6 +521,7 @@ class SimulationLauncherGui(tk.Tk):
         self.native_articulation_var = tk.BooleanVar(value=False)
         self.native_arm_planning_var = tk.BooleanVar(value=False)
         self.native_mobile_var = tk.BooleanVar(value=False)
+        self.experimental_assets_var = tk.BooleanVar(value=False)
         self.native_task_var = tk.StringVar(value='display')
         self.px4_camera_var = tk.BooleanVar(value=False)
         self.aerial_mapping_var = tk.BooleanVar(value=False)
@@ -529,6 +531,9 @@ class SimulationLauncherGui(tk.Tk):
         self.marine_database_var = tk.StringVar(value='')
         self.marine_localization_var = tk.BooleanVar(value=False)
         self.gait_task_var = tk.StringVar(value='gait')
+        self.gait_map_yaml_var = tk.StringVar(value='')
+        self.gait_database_var = tk.StringVar(value='')
+        self.gait_localization_var = tk.BooleanVar(value=False)
         self.steering_mode_var = tk.StringVar(value="")
         self.drive_status_var = tk.StringVar(value="Keyboard/joystick off")
         self.gui_var = tk.StringVar(value="auto")
@@ -900,6 +905,14 @@ class SimulationLauncherGui(tk.Tk):
             command=self._update_validation_and_command,
         )
         self.go2_policy_checkbox.grid(row=23, column=0, sticky="w", pady=(6, 0))
+        self.experimental_assets_checkbox = ttk.Checkbutton(advanced,
+            text='Enable experimental robot workflows',
+            variable=self.experimental_assets_var, command=self._update_from_selection)
+        self.experimental_assets_checkbox.grid(row=42, column=0, sticky='w', pady=(8, 0))
+        add_tooltip(self.experimental_assets_checkbox,
+            'Explicitly enables existing controller/mapping candidates whose historical '
+            'source certificate no longer matches. No qualification is transferred. '
+            'The run command records this option; enabling it causes no motion.')
         add_tooltip(self.go2_policy_checkbox,
                     "MuJoCo localization only. Forward and turn were measured; "
                     "slow reverse and stairs still fail qualification.")
@@ -1314,6 +1327,10 @@ class SimulationLauncherGui(tk.Tk):
 
     def _stop_all_motion(self):
         self._stop_drive()
+        for name in ('fleet_tab', 'aerial_swarm_tab'):
+            control = getattr(self, name, None)
+            if control is not None:
+                control.all_stop()
         for name in ('arm_tab', 'hand_tab', 'marine_controls', 'gait_controls', 'molar_controls'):
             control = getattr(self, name, None)
             if control is not None:
@@ -1401,8 +1418,16 @@ class SimulationLauncherGui(tk.Tk):
         except (OSError, ValueError) as exc:
             messagebox.showerror('Preview 3D', str(exc))
 
+    def _experimental_assets_enabled(self):
+        option = getattr(self, 'experimental_assets_var', None)
+        profile = self.robot_profiles.get(self.robot_var.get(), {})
+        return bool(option and option.get() and (profile.get('experimental_modes_by_simulator')
+                                                or profile.get('experimental_asset_options')))
+
     def _robot_config(self):
-        return self.robot_profiles.get(self.robot_var.get(), {})
+        option = getattr(self, 'experimental_assets_var', None)
+        return experimental_asset_profile(self.robot_profiles.get(self.robot_var.get(), {}),
+                                           bool(option and option.get()))
 
     def _mode_config(self):
         return self.mode_profiles.get(self.mode_var.get(), {})
@@ -1854,13 +1879,13 @@ class SimulationLauncherGui(tk.Tk):
         back to the full category list if the registry is unavailable.
         """
         cache_key = (self.robot_var.get(), self.map_var.get(),
-                     self.simulator_var.get(), slot)
+                     self.simulator_var.get(), slot, self._experimental_assets_enabled())
         cached = self._compat_cache.get(cache_key)
         if cached is not None:
             return cached
         compatible = []
         if not COMPOSITION_AVAILABLE or self.composition_registry is None \
-                or self._robot_free() or self._map_free():
+                or self._robot_free() or self._map_free() or self._experimental_assets_enabled():
             # Without a registry (or without both a robot and an
             # environment to validate against) the full category is offered
             # rather than an empty list that would look like a broken slot.
@@ -2105,6 +2130,12 @@ class SimulationLauncherGui(tk.Tk):
     def _update_validation_and_command(self):
         """Run the shared validator and refresh command + validation text."""
         self._update_reset_button()
+        if self._experimental_assets_enabled():
+            reason = self._mode_reasons().get(self.mode_var.get(), '')
+            self.validation_var.set(('Unavailable: '+reason) if reason else
+                'Experimental workflow: historical source certificate requires recheck')
+            self._set_command([] if reason else self._legacy_command())
+            return
         if not COMPOSITION_AVAILABLE or self.composition_registry is None:
             self.validation_var.set(
                 "Composition resolver unavailable; direct launch used.")
@@ -2356,6 +2387,9 @@ class SimulationLauncherGui(tk.Tk):
 
     def _set_command(self, command):
         """Keep the preview, clipboard text and executable arguments in sync."""
+        if command and self._experimental_assets_enabled():
+            command = [part for part in command if not part.startswith('allow_experimental_assets:=')]
+            command.append('allow_experimental_assets:=true')
         if command:
             from robot_lab_utils.robot_spawn import map_spawn_override
             for axis, value in map_spawn_override(self._robot_config(), self.map_var.get()).items():
@@ -2364,7 +2398,7 @@ class SimulationLauncherGui(tk.Tk):
                     command.append(argument+str(value))
         if command and self._robot_config().get('marine_model'):
             command = [part for part in command if not part.startswith(('marine_slam:=', 'marine_database:=', 'marine_localization:='))]
-            slam = self.robot_var.get() == 'lab_rov' and self.marine_slam_var.get()
+            slam = self.robot_var.get() in ('lab_rov','tethys_auv') and self.marine_slam_var.get()
             command.append('marine_slam:=' + str(bool(slam)).lower())
             if slam:
                 command.append('marine_localization:=' + str(self.marine_localization_var.get()).lower())
@@ -2372,8 +2406,12 @@ class SimulationLauncherGui(tk.Tk):
                 if database:
                     command.append('marine_database:=' + database)
         if command and self._robot_config().get('gait_model'):
-            command = [part for part in command if not part.startswith('gait_task:=')]
+            command = [part for part in command if not part.startswith(('gait_task:=','gait_map_yaml:=','gait_database:=','gait_localization:='))]
             command.append('gait_task:=' + (self.gait_task_var.get() if self._gait_selectable() else 'gait'))
+            for argument, variable in [('gait_map_yaml',self.gait_map_yaml_var),('gait_database',self.gait_database_var)]:
+                if variable.get().strip():
+                    command.append(argument+':='+variable.get().strip())
+            command.append('gait_localization:='+str(self.gait_localization_var.get()).lower())
         if command and self.go2_policy_var.get() and self._go2_policy_selectable():
             command = [part for part in command
                        if not part.startswith("go2_policy_path:=")]
@@ -2466,6 +2504,11 @@ class SimulationLauncherGui(tk.Tk):
             self.status_var.set("Command copied")
 
     def _update_from_selection(self):
+        raw = self.robot_profiles.get(self.robot_var.get(), {})
+        candidates = bool(raw.get('experimental_modes_by_simulator') or raw.get('experimental_asset_options'))
+        if hasattr(self, 'experimental_assets_checkbox'):
+            self.experimental_assets_checkbox.state(['!disabled'] if candidates else ['disabled'])
+            if not candidates:self.experimental_assets_var.set(False)
         # 1. Maps: every map stays selectable in display mode (a map can be
         # visualized in any backend, with or without a robot); the
         # map-dependent modes keep only environments that have a real 2D
@@ -2613,6 +2656,10 @@ class SimulationLauncherGui(tk.Tk):
             f"Modes: {', '.join(MODE_LABELS.get(m, m) for m in supported_modes) or 'none'}",
             f"Cleaning missions: {'yes' if supports_vacuum else 'no'}",
         ]
+        if config.get('qualification_recheck'):
+            lines.append('Historical source qualification needs recheck. Display/Drive remain available; '
+                'use the explicit implemented-workflow option to test higher modes or Panda controls.')
+            lines.extend(item['reason'] for item in config['qualification_recheck'])
         if (self.robot_var.get() == "berkeley_humanoid_lite_sim"
                 and self.simulator_var.get() == "mujoco"):
             lines.append(
@@ -2816,6 +2863,7 @@ class SimulationLauncherGui(tk.Tk):
                     manifest['gui_options'] = {
                         'enable_native_locomotion': bool(self.native_policy_var.get()),
                         'enable_native_mobile': bool(self.native_mobile_var.get()),
+                        'allow_experimental_assets': bool(self.experimental_assets_var.get()),
                         'native_task': self.native_task_var.get(),
                         'enable_native_articulation': bool(self.native_articulation_var.get()),
                         'native_arm_planning': bool(self.native_arm_planning_var.get()),
@@ -2825,6 +2873,12 @@ class SimulationLauncherGui(tk.Tk):
                         'aerial_obstacles': bool(self.aerial_obstacles_var.get()),
                         'marine_slam': bool(self.marine_slam_var.get()),
                         'gait_task': self.gait_task_var.get(),
+            'gait_map_yaml': self.gait_map_yaml_var.get(),
+            'gait_database': self.gait_database_var.get(),
+            'gait_localization': bool(self.gait_localization_var.get()),
+                        'gait_map_yaml': self.gait_map_yaml_var.get(),
+                        'gait_database': self.gait_database_var.get(),
+                        'gait_localization': bool(self.gait_localization_var.get()),
                         'marine_database': self.marine_database_var.get(),
                         'marine_localization': bool(self.marine_localization_var.get()),
                         'aerial_map_database': self.aerial_map_database_var.get()}
@@ -2844,6 +2898,7 @@ class SimulationLauncherGui(tk.Tk):
             "algorithm": self._primary_algorithm_id(),
             'enable_native_locomotion': bool(self.native_policy_var.get()),
             'enable_native_mobile': bool(self.native_mobile_var.get()),
+            'allow_experimental_assets': bool(self.experimental_assets_var.get()),
             'native_task': self.native_task_var.get(),
             'enable_native_articulation': bool(self.native_articulation_var.get()),
             'native_arm_planning': bool(self.native_arm_planning_var.get()),
@@ -2877,6 +2932,7 @@ class SimulationLauncherGui(tk.Tk):
         options = manifest.get('gui_options', {})
         self.native_policy_var.set(bool(options.get('enable_native_locomotion', False)))
         self.native_mobile_var.set(bool(options.get('enable_native_mobile', False)))
+        self.experimental_assets_var.set(bool(options.get('allow_experimental_assets', False)))
         self.native_task_var.set(options.get('native_task', 'display'))
         self.native_articulation_var.set(bool(options.get('enable_native_articulation', False)))
         self.native_arm_planning_var.set(bool(options.get('native_arm_planning', False)))
@@ -2887,6 +2943,9 @@ class SimulationLauncherGui(tk.Tk):
         self.aerial_map_database_var.set(options.get('aerial_map_database', ''))
         self.marine_slam_var.set(bool(options.get('marine_slam', False)))
         self.gait_task_var.set(options.get('gait_task', 'gait'))
+        self.gait_map_yaml_var.set(options.get('gait_map_yaml', ''))
+        self.gait_database_var.set(options.get('gait_database', ''))
+        self.gait_localization_var.set(bool(options.get('gait_localization', False)))
         self.marine_database_var.set(options.get('marine_database', ''))
         self.marine_localization_var.set(bool(options.get('marine_localization', False)))
         mode = resolved_from.get("mode") or manifest.get("mode")
@@ -2936,7 +2995,12 @@ class SimulationLauncherGui(tk.Tk):
             self.simulator_var.set(selection.simulator or self.simulator_var.get())
             self.native_policy_var.set(bool(cfg.get('enable_native_locomotion', False)))
             self.native_mobile_var.set(bool(cfg.get('enable_native_mobile', False)))
+            self.experimental_assets_var.set(bool(cfg.get('allow_experimental_assets', False)))
             self.native_task_var.set(cfg.get('native_task', 'display'))
+            self.gait_task_var.set(cfg.get('gait_task', 'gait'))
+            self.gait_map_yaml_var.set(cfg.get('gait_map_yaml', ''))
+            self.gait_database_var.set(cfg.get('gait_database', ''))
+            self.gait_localization_var.set(bool(cfg.get('gait_localization', False)))
             self.native_articulation_var.set(bool(cfg.get('enable_native_articulation', False)))
             self.native_arm_planning_var.set(bool(cfg.get('native_arm_planning', False)))
             self._set_hand_fixture(cfg.get('native_hand_fixture', False))
@@ -3608,6 +3672,8 @@ class SimulationLauncherGui(tk.Tk):
             self.marine_controls.stop()
         if hasattr(self, 'fleet_tab'):
             self.fleet_tab.all_stop()
+        if hasattr(self, 'aerial_swarm_tab'):
+            self.aerial_swarm_tab.all_stop()
         self._stop_aux_commands()
         if not self.process or not self._launch_running:
             return
@@ -3728,6 +3794,8 @@ class SimulationLauncherGui(tk.Tk):
             self.marine_controls.close()
         if hasattr(self, 'fleet_tab'):
             self.fleet_tab.close()
+        if hasattr(self, 'aerial_swarm_tab'):
+            self.aerial_swarm_tab.close()
         if hasattr(self, 'training_tab'):
             self.training_tab.close()
         preview = getattr(self, 'registry_preview', None)

@@ -23,6 +23,7 @@ class AerialSwarmController(Node):
         self.members={}
         self.last_status=0.;self.last_output={};self.pending=[]
         self.generation=0
+        self.takeoff_targets=[]
         self.pub=self.create_publisher(String,'/aerial_swarm/state',10)
         self.lease=self.create_publisher(String,'/aerial_swarm/vehicle_lease',10)
         self.create_subscription(String,'/aerial_swarm/command',self.operation,10)
@@ -93,11 +94,19 @@ class AerialSwarmController(Node):
             self.pending.remove(request)
             if data['generation']!=self.generation:return
             member['result']=dict(operation=request['op'],accepted=bool(data['accepted']),message=data['message'])
+            if request['op']=='check' and data['accepted']:
+                member['result'].update(check_position=data.get('check_position'),checked_at=time.monotonic())
             self.event('service_result',member=member['id'],**member['result'])
+            if request['op']=='takeoff' and not data['accepted']:
+                targets=list(self.takeoff_targets)
+                self.hold('Group takeoff rejected; accepted peers aborted/landed: '+data['message'])
+                for name in targets:self.service(self.members[name],'land')
         except (ValueError,KeyError,TypeError):pass
 
     def hold(self,reason,invalidate=True):
-        if invalidate:self.generation+=1
+        if invalidate:
+            self.generation+=1
+            self.pending.clear()
         self.mode='idle';self.command=(0.,0.,0.,0.);self.reason=reason
         for member in self.members.values():
             member['velocity_pub'].publish(Twist())
@@ -118,6 +127,15 @@ class AerialSwarmController(Node):
             if not names or len(set(names))!=len(names) or any(n not in self.members for n in names):raise ValueError('Choose distinct actual FCU member ids')
             members=[self.members[name] for name in names]
             if op in ('check','takeoff','land','hold'):
+                if op=='takeoff':
+                    for member in members:
+                        checked=member.get('result') or {}
+                        if (not self.fresh(member) or not member['status'].get('takeoff_ready')
+                                or checked.get('operation')!='check' or not checked.get('accepted')
+                                or not checked.get('check_position') or time.monotonic()-checked.get('checked_at',-math.inf)>30.
+                                or math.dist(member['pose'],checked['check_position'])>.04):
+                            raise ValueError('Every selected FCU needs a fresh clear result at its current stable landed pose; check again')
+                    self.takeoff_targets=names
                 if op!='check':self.hold('Explicit '+op+' requested',invalidate=op!='takeoff')
                 if op=='takeoff' and any(not self.fresh(m) for m in members):raise ValueError('Fresh member FCU position required')
                 for member in members:self.service(member,op)
@@ -128,6 +146,8 @@ class AerialSwarmController(Node):
                 self.mode=op;self.targets=names;self.command_at=-math.inf
                 self.spacing=float(data.get('spacing',3.))
                 self.anchor=[float(data[k]) for k in ('x','y','z')] if all(k in data for k in ('x','y','z')) else None
+                if op=='formation' and self.anchor is None:
+                    self.anchor=np.mean([m['pose'] for m in members],axis=0).tolist()
                 if op!='manual':velocities(op,{m['id']:m['pose'] for m in members},self.spacing,self.anchor)
                 self.reason=op+' active; physical separation/mission qualification pending'
             else:raise ValueError('Unsupported aerial group operation')
@@ -146,7 +166,7 @@ class AerialSwarmController(Node):
             self.lease.publish(String(data=json.dumps(dict(session_id=self.session['session_id'],operator_id=self.operator,generation=self.generation))))
         elif self.mode!='idle':self.hold('Aerial operator heartbeat lost; workers request Land')
         for request in list(self.pending):
-            if now-request['started']>10.:
+            if now-request['started']>(25. if request['op']=='check' else 10.):
                 row=dict(operation=request['op'],accepted=False,message='Actual worker reply timed out')
                 self.members[request['member']]['result']=row;self.pending.remove(request)
                 self.event('service_result',member=request['member'],**row)
@@ -178,10 +198,14 @@ class AerialSwarmController(Node):
                         output=Twist();output.linear.x=vx;output.linear.y=vy;output.linear.z=vz;output.angular.z=wz
                         member['velocity_pub'].publish(output)
                     else:
-                        output=PoseStamped();output.header.frame_id='map';output.header.stamp=self.get_clock().now().to_msg()
-                        output.pose.position.x,output.pose.position.y,output.pose.position.z=map(float,target)
-                        output.pose.orientation.z=math.sin(member['yaw']/2);output.pose.orientation.w=math.cos(member['yaw']/2)
-                        member['goal_pub'].publish(output)
+                        # Preserve PX4's integrated position hold. Replacing
+                        # its target with a measured-pose lookahead each tick
+                        # discarded accumulated error and caused altitude droop.
+                        yaw=member['yaw'];output=Twist()
+                        output.linear.x=float(world[0]*math.cos(yaw)+world[1]*math.sin(yaw))
+                        output.linear.y=float(-world[0]*math.sin(yaw)+world[1]*math.cos(yaw))
+                        output.linear.z=float(world[2])
+                        member['velocity_pub'].publish(output)
         if now-self.last_status>.2:
             self.last_status=now
             rows=[dict(id=m['id'],instance=m['instance'],system_id=m['system_id'],port=m['port'],namespace=m['namespace'],
@@ -189,6 +213,7 @@ class AerialSwarmController(Node):
             self.pub.publish(String(data=json.dumps(dict(schema_version=1,session_id=self.session['session_id'],
                 map=self.session['map'],backend='Gazebo Harmonic / native PX4',directory=self.session['directory'],
                 operator_id=self.operator,operator_fresh=operator_fresh,mode=self.mode,reason=self.reason,members=rows,
+                position_reference='Known landed spawn prior until first accepted Takeoff; committed FCU odometry thereafter; simulator truth is separate',
                 scope='Experimental actual shared-world multi-FCU controls; flight/swarm/clearance/loss qualification pending'),allow_nan=False)))
 
     def close(self):

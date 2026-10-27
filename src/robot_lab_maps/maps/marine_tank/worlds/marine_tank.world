@@ -23,7 +23,6 @@
       </graded_buoyancy>
       <enable>lab_rov</enable>
     </plugin>
-    <plugin filename="gz-sim-dvl-system" name="gz::sim::systems::DopplerVelocityLogSystem" />
     <scene>
       <ambient>.3 .55 .6 1</ambient>
       <background>.05 .18 .25 1</background>
@@ -168,6 +167,31 @@
             </box>
           </geometry>
         </collision>
+      </link>
+    </model>
+    <model name="visual_reference_board">
+      <static>true</static>
+      <pose>5.84 0 -2.75 0 0 0</pose>
+      <link name="board">
+        <visual name="reference">
+          <geometry>
+            <plane>
+              <normal>-1 0 0</normal>
+              <size>8 4</size>
+            </plane>
+          </geometry>
+          <material>
+            <ambient>.8 .8 .8 1</ambient>
+            <diffuse>1 1 1 1</diffuse>
+            <pbr>
+              <metal>
+                <albedo_map>../materials/textures/tank_reference.png</albedo_map>
+                <metalness>0</metalness>
+                <roughness>1</roughness>
+              </metal>
+            </pbr>
+          </material>
+        </visual>
       </link>
     </model>
   </world>

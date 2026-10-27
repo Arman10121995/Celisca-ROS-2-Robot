@@ -30,6 +30,7 @@ class GaitController(Node):
         self.cfg=self.model.config;self.robot_id=self.model.robot_id;self.session_id=uuid.uuid4().hex
         self.enabled=False;self.stand_requested=False;self.reason='Source stance held; walking disarmed'
         self.input_owner='manual'
+        self.spine_phase,self.spine_freq=0.,1.
         self.operator='';self.hb_at=self.joints_at=self.pose_at=self.contacts_at=self.clock_at=self.cmd_at=-math.inf
         self.sim_time=self.last_sim=None;self.joints=None;self.pose=None;self.contacts=None
         self.joint_stamp=self.body_stamp=self.contact_stamp=self.engine_stamp=None
@@ -167,7 +168,12 @@ class GaitController(Node):
             elif op=='gait':
                 allowed={'ripple','wave',self.cfg['default_gait']}
                 if data['gait'] not in allowed:raise ValueError('This source has no matching schedule')
+                phase,spine_phase,spine_freq=[float(data.get(key,default)) for key,default in
+                    [('phase',self.phase),('spine_phase',self.spine_phase),('spine_freq',self.spine_freq)]]
+                if not all(math.isfinite(v) for v in (phase,spine_phase,spine_freq)) or not 0<=phase<=1 or not 0<=spine_phase<=1 or not .1<=spine_freq<=3:
+                    raise ValueError('Cycle/spine phase must be 0–1; spine frequency multiplier 0.1–3')
                 self.stop('Gait changed; re-arm explicitly');self.gait=data['gait']
+                self.phase,self.spine_phase,self.spine_freq=phase,spine_phase,spine_freq
             elif op=='stand':
                 self.stop('Source stance requested; bounded joint motion')
                 self.stand_requested=True
@@ -194,7 +200,8 @@ class GaitController(Node):
             self.filtered+=np.clip(wanted-self.filtered,-np.array([.06,.06,.25])*dt,np.array([.06,.06,.25])*dt)
             if np.linalg.norm(self.filtered)>.001 and dt>0:
                 self.phase=(self.phase+dt/self.cfg['cycle_s'])%1.
-                candidate,error,self.planned=self.model.targets(self.phase,self.filtered,self.targets,self.gait)
+                candidate,error,self.planned=self.model.targets(self.phase,self.filtered,self.targets,self.gait,
+                    spine_phase=self.spine_phase,spine_freq=self.spine_freq)
                 self.max_ik_error=error
                 if error>.003:self.stop('Foot IK error exceeds 3 mm; gait halted')
                 else:
@@ -212,7 +219,8 @@ class GaitController(Node):
                        position=dict(x=p.x,y=p.y,z=p.z) if p else None,tilt_rad=tilt,
                        actual_contacts=self.contacts,planned_stance=self.planned,max_ik_error_m=self.max_ik_error,
                        commanded_body_velocity=self.filtered.tolist(),joint_targets=self.targets.tolist(),
-                       observer='Actual simulator body pose for visualization/tilt only; independent legged estimation/SLAM/navigation pending',
+                       phase=self.phase,spine_phase=self.spine_phase,spine_freq=self.spine_freq,
+                       observer='Simulator body pose for visualization/tilt only; legged odometry uses independent IMU, measured contacts and joints',
                        scope='Experimental authored gait and bounded in-step PD on exact configured geometry; physical missions pending')
             self.state_pub.publish(String(data=json.dumps(state,allow_nan=False)))
 

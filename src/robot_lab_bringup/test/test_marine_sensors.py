@@ -78,7 +78,7 @@ def test_sonar_publishes_bottom_range():
     msg = SimpleNamespace(header=None, pose=None)
     msg.header = Header(frame_id='map', stamp=rclpy.time.Time(seconds=0).to_msg())
     msg.pose = SimpleNamespace(pose=None)
-    msg.pose.pose = SimpleNamespace(position=SimpleNamespace(x=0., y=0., z=-1.), orientation=None)
+    msg.pose.pose = SimpleNamespace(position=SimpleNamespace(x=0., y=0., z=-1.), orientation=SimpleNamespace(x=0.,y=0.,z=0.,w=1.))
 
     node.sonar_observe(msg)
 
@@ -102,7 +102,7 @@ def test_sonar_calculates_range_to_seabed():
     msg = SimpleNamespace(header=None, pose=None)
     msg.header = Header(frame_id='map', stamp=rclpy.time.Time(seconds=0).to_msg())
     msg.pose = SimpleNamespace(pose=None)
-    msg.pose.pose = SimpleNamespace(position=SimpleNamespace(x=0., y=0., z=-1.), orientation=None)
+    msg.pose.pose = SimpleNamespace(position=SimpleNamespace(x=0., y=0., z=-1.), orientation=SimpleNamespace(x=0.,y=0.,z=0.,w=1.))
 
     node.sonar_observe(msg)
 
@@ -125,7 +125,7 @@ def test_sonar_empty_when_beyond_surface():
     msg = SimpleNamespace(header=None, pose=None)
     msg.header = Header(frame_id='map', stamp=rclpy.time.Time(seconds=0).to_msg())
     msg.pose = SimpleNamespace(pose=None)
-    msg.pose.pose = SimpleNamespace(position=SimpleNamespace(x=0., y=0., z=1.), orientation=None)
+    msg.pose.pose = SimpleNamespace(position=SimpleNamespace(x=0., y=0., z=1.), orientation=SimpleNamespace(x=0.,y=0.,z=0.,w=1.))
 
     node.sonar_observe(msg)
 
@@ -148,3 +148,29 @@ def test_range_has_ultrasound_constant():
     """Range message has the ULTRASOUND radiation_type constant."""
     assert hasattr(Range, 'ULTRASOUND')
     assert Range.ULTRASOUND == 0
+
+
+def test_sonar_does_not_replace_motion_dvl_or_duplicate_pressure():
+    from nav_msgs.msg import Odometry
+    node=MarineSensors()
+    node.scene=SimpleNamespace(clearance=lambda p: p[2]+6.)
+    node.velocity_pub=_SpyPublisher(node.velocity_pub)
+    node.pressure_pub=_SpyPublisher(node.pressure_pub)
+    try:
+        for stamp,x in [(0.,0.),(.1,.02)]:
+            msg=Odometry();msg.header.frame_id='map'
+            msg.header.stamp=rclpy.time.Time(seconds=stamp).to_msg()
+            msg.pose.pose.position.x=x;msg.pose.pose.position.z=-1.
+            msg.pose.pose.orientation.w=1.
+            node.observe(msg)
+        assert node.velocity_pub.count==1 and node.pressure_pub.count==2
+        assert node.velocity_pub.published_message.twist.twist.linear.x==pytest.approx(.2,abs=.03)
+        node.sonar_observe(msg)
+        assert node.velocity_pub.count==1 and node.pressure_pub.count==2
+    finally:node.destroy_node()
+
+
+def test_sonar_traces_downward_instead_of_reporting_nearest_side_wall():
+    from robot_lab_utils.marine_navigation_model import sonar_range
+    scene=SimpleNamespace(clearance=lambda p: min(abs(p[0]-1.),p[2]+6.))
+    assert sonar_range(scene,[0.,0.,-1.],[0.,0.,0.])==pytest.approx(5.,abs=.01)

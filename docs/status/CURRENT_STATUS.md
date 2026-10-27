@@ -1,26 +1,40 @@
 # Current Robot Lab status
 
-**Current checkpoint: October 20, 2026; baseline `b8ea60e`.**
+**Current checkpoint: October 27, 2026; source baseline `f75dc60`.**
 
-- The extension completion lane is active under Codex. Read the
-  [current implementation and remaining-work checkpoint](extension-2026-10-20.md).
-- Installed inventory: 147 robot profiles in 78 selectable families; 50 world
-  profiles in 38 map families. Availability is not mission qualification.
-- The first Go2 training run **finished** 2,000 iterations / 24.58 million steps
-  and exported its policy. The ledger records evaluation and three backend
-  launch diagnostics. No-crash launches alone do not establish measured walking
-  or policy transfer; broader runtime qualification remains open.
-- Fleet goal queues were added October 19. Robust queue lifecycle, coordinated
-  traffic/coverage and optional Open-RMF integration are the current extension
-  implementation work; marine and multi-leg mission gaps follow.
-- Round 57 records a MuJoCo slalom pass with parking yaw still outside tolerance,
-  a Gazebo obstacle abort, and an inconclusive Isaac course startup. These do not
-  supersede the existing car limitations or qualify every map/backend.
-- Remaining camera calibration, terrain/recovery, manipulation, aerial mapping,
-  backend/repeatability and release work stays open after the extension.
+The project and R10 extension are **partial**. Read the
+[remaining-work agent guide](../REMAINING_WORK_GUIDE.md) and
+[current roadmap queue](../../ROADMAP.md#current-agent-queue--october-27-2026).
+October 26 completion claims based on tests, metadata and world loading are
+superseded; valid named robot/host/cell measurements remain unchanged.
 
-The entries below retain their dated measurement scopes; an older entry's
-"queued" or "ongoing" statement is historical when superseded above.
+| Area | Delivered scope | Remaining work |
+|---|---|---|
+| Installed catalog | 140 robot profiles / 75 selectable families; 51 worlds / 39 families | Restore six official TurtleBot3/TurtleBot4/Husky registrations and historical Panda metadata; prevent omission during provisioning |
+| Fleet/swarm | Shared-world base controls, queues/settling, coverage and an optional Open-RMF adapter; two queued goals measured | Resolve RMF traffic stalls, complete coordinated/loss missions, additional adapters |
+| Aerial swarm | Distinct-FCU runtime/controller/worker candidates | Missing Launch/native GUI integration and actual multi-vehicle flight/loss missions |
+| Marine | Native ROV/AUV, five worlds, simulated DVL/pressure/sonar, sensor odometry, RGB-D RTAB-Map and 3D route controls; one bounded ROV route measured | Successful map save/reload/localization and applicable obstacle missions; broader force/sensor/backend qualification |
+| Multi-leg | Complete hexapod/octopod/centipede, gait/PD and experimental contact-odometry/higher-task pipeline | Saved mapping/navigation, terrain/recovery, additional forms and backends |
+| Existing platform | Scoped wheeled, Panda, flight, MOLAR controls and Go2 training/export results | Car heading, perception, manipulation, MOLAR higher tasks, policy transfer, fair comparisons and release gates |
+
+Only `terrain_heightfield` was newly added to map IDs by `f75dc60`; the fourteen
+registered 3D entries are not fourteen new worlds. Cached missing robot assets
+remain on SSD. Restore source-matched control/support metadata before using
+historical vendor/Panda certificates in the current GUI.
+
+Simulator estimation, SLAM, volumetric routes, fleet traffic and Isaac contact
+are software/simulator work. They do not wait for physical robot hardware or
+terrain-provider setup for the five already installed water worlds. Real sensor
+calibration, physical joystick and optional Bumperbot HIL remain separate.
+
+Go2's first run is finished/exported at 2,000 iterations / 24.58 M steps.
+Recorded training-domain evaluation and three backend launch diagnostics do
+not establish broad measured deployment. Earlier marine map-save failures and
+RMF stalls are retained; corrected code needs its own successful mission receipt.
+
+This documentation revision performs no new runtime qualification. The dated
+entries below preserve earlier source and measurement scopes; their old
+"ongoing/queued" summaries do not override the current guide and ledger.
 
 October 19 (later): **a Training page trains legged policies**
 ([guide](../tutorials/legged-policy-training.md)).
@@ -595,34 +609,4 @@ edits and keep large artifacts on the mounted workspace SSD.
 The later P4 camera-packing change preserves identical ROS wire messages and
 passes four serialization cases plus a new physical Labbot hospital route
 (0.046 m / +1.97°). Actual before/after clock windows remain about 0.13× real
-
-October 20: R6.4 environmental qualification completed. All R6 tasks now done with
-real backend tests: 5 reset validation tests, 13 deterministic sensor
-disturbance tests, 6 terrain/aerial tests, 10 diverse maps tests. Physics tier
-green: 64/64 tests pass. R7 benchmark framework with 39 tests + 21 verification
-tests. R8.1 backend qualification 18/18 checks (9 PyBullet + 9 MuJoCo) verified.
-
-October 20: R10.4 marine completion. Native Tethys AUV + ROV/Labrov controllers,
-marine sensors (DVL/sonar), marine_navigation_model, and marine_pipeline
-implemented. All 36 marine contract/sensor/controller/validation tests pass.
-Gazebo confirmed working for all 5 marine worlds (tank, reef, harbor, cave,
-wreck) - load and run stably in gz-sim 8. Marine controllers functional in
-simulation. Hardware-dependent features SKIPPED: physical water environment,
-real DVL/sonar sensor data (simulated only).
-
-Remaining open items:
-- R10.5: Underwater maps, sensors, estimation, SLAM and navigation. Sensors and
-  GUI workflows implemented in simulation. Hardware-dependent features skipped:
-  real DVL/sonar, independent EKF/particle filter estimation, saved underwater
-  SLAM, volumetric 3D navigation. Unblock needed: R10.4 fully complete +
-  R6.7 GUI terrain generator workflow complete, then re-enable hardware features
-- R10.1-R10.3, R10.6-R10.8: Fleet/swarm integration, ground controller kernels
-  and multi-leg/centipede mission acceptance pending
-- R11: MOLAR/ProBOT-L - sensors, SLAM/Nav2, multi-floor routes pending
-- R12: Legged policy training - go2_walk_r1 in progress (2000/2000 iterations),
-  transfer and evaluation pending
-- R9.4: Physical Bumperbot HIL - blocked, requires hardware
-- R6.7: GUI terrain generator workflow (Mapbox provider, PII-safe manual mode),
-  Isaac runtime contact trial, class-specific terrain missions
-
 time; large-map physics optimization remains open. See [the measured timing stages](evidence/extensions-finish-2026-10-08/mujoco-hospital-performance/README.md).

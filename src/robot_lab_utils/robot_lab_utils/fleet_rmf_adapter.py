@@ -44,6 +44,8 @@ class Robot(adpt.RobotCommandHandle):
 
     def follow_new_path(self, waypoints, next_arrival_estimator, path_finished_callback):
         with self.lock:
+            if not self.owner.enabled:
+                return  # A late negotiation cannot reacquire disabled ownership.
             self.sequence += 1
             if not 1 <= len(waypoints) <= 64:
                 if self.update:
@@ -53,7 +55,8 @@ class Robot(adpt.RobotCommandHandle):
             request_id = 'rmf-' + uuid.uuid4().hex
             self.request = dict(id=request_id, positions=positions, arrived=set(),
                 estimator=next_arrival_estimator, finished=path_finished_callback, sequence=self.sequence,
-                acknowledged=False, failed=False, sent=False, accepted_at=time.monotonic())
+                acknowledged=False, failed=False, sent=False, accepted_at=time.monotonic(),
+                departures=[max(0.,waypoints[max(0,index-1)].time.timestamp()) for index in range(len(positions))])
             self.owner.pending.put((self.name, self.sequence, dict(op='route', targets=[self.name],
                 request_id=request_id, goals=[dict(x=p[0], y=p[1], yaw=p[2], timeout=180.,
                     not_before=max(0.,waypoints[max(0,index-1)].time.timestamp())) for index,p in enumerate(positions)])))
@@ -75,12 +78,15 @@ class Robot(adpt.RobotCommandHandle):
         if not self.update or not row.get('ready') or not position:
             return
         p = [position[k] for k in ('x', 'y', 'yaw')]
+        # Humble's update_position binding takes Start sets. Use tight merge
+        # bounds and retain actual XY on lanes; a one-metre waypoint snap can
+        # place two distinct bodies on the same holding node.
         starts = plan.compute_plan_starts(self.owner.graph, self.owner.session['map'], p,
-                                         self.owner.adapter.now(), 1.0, .5)
+                                         self.owner.adapter.now(), .15, .35)
         if starts:
             self.update.update_position(starts)
         else:
-            self.update.update_lost_position(self.owner.session['map'], p)
+            self.update.update_lost_position(self.owner.session['map'], np.array(p), .15, .35)
         with self.lock:
             request = self.request
             if request is None or request['failed']:
@@ -89,6 +95,11 @@ class Robot(adpt.RobotCommandHandle):
             matching = [o for o in outcomes if o['source'] == source]
             waiting = [o for o in row.get('queued_tasks', []) if o['source'] == source]
             request['acknowledged'] |= bool(matching or waiting)
+            if waiting and row.get('queue_paused'):
+                request['failed'] = True
+                self.update.log_error('Fleet recovery paused the route; requesting a new RMF plan from actual position')
+                self.update.replan()
+                return
             for outcome in matching:
                 if outcome['state'] != 'succeeded':
                     request['failed'] = True
@@ -103,7 +114,8 @@ class Robot(adpt.RobotCommandHandle):
                 callback()  # Only after every real Nav2 + measured-settle result.
             elif request['acknowledged']:
                 target = request['positions'][index]
-                request['estimator'](index, timedelta(seconds=math.hypot(p[0] - target[0], p[1] - target[1]) / .15))
+                wait = max(0.,request['departures'][index]-self.owner.adapter.now().timestamp())
+                request['estimator'](index, timedelta(seconds=wait+math.hypot(p[0] - target[0], p[1] - target[1]) / .15))
             elif request['sent'] and time.monotonic() - request['accepted_at'] > 10.:
                 request['failed'] = True
                 self.update.log_error('No actual fleet acknowledgement for the RMF route')
@@ -169,7 +181,7 @@ class RmfBridge(Node):
             for row in state['members']:
                 if row['id'] not in self.robots and row.get('ready') and row.get('estimate'):
                     p = [row['estimate'][k] for k in ('x', 'y', 'yaw')]
-                    starts = plan.compute_plan_starts(self.graph, self.session['map'], p, self.adapter.now(), 1.0, .5)
+                    starts = plan.compute_plan_starts(self.graph, self.session['map'], p, self.adapter.now(), .15, .35)
                     if not starts:
                         continue
                     robot = Robot(self, row['id'])
@@ -206,9 +218,16 @@ class RmfBridge(Node):
                         if robot.request:
                             robot.request['sent'] = True
                             robot.request['accepted_at'] = time.monotonic()
+        routes = {}
+        for name, robot in self.robots.items():
+            with robot.lock:
+                request = robot.request
+                routes[name] = (dict(id=request['id'], acknowledged=request['acknowledged'],
+                    failed=request['failed'], arrived=len(request['arrived']),
+                    total=len(request['positions']), positions=request['positions']) if request else None)
         self.status.publish(String(data=json.dumps(dict(enabled=self.enabled,
             session_id=Path(self.session['directory']).name, operator_id=self.operator,
-            robots=list(self.robots), waypoints=self.vertices, battery=None,
+            robots=list(self.robots), waypoints=self.vertices, routes=routes, battery=None,
             scope='Actual Open-RMF adapter; energy accounting disabled; no doors/lifts/docking or mission qualification'), allow_nan=False)))
 
 

@@ -72,30 +72,31 @@ def test_water_is_a_density_boundary_not_a_solid_collision_box():
         assert buoyancy.findtext('enable')=='lab_rov'
 
 
-def test_every_marine_world_enables_the_native_dvl_system():
+def test_fortress_worlds_do_not_require_the_unavailable_harmonic_dvl_plugin():
     for name in ('marine_tank','marine_reef','marine_harbor','marine_cave','marine_wreck'):
         world=ET.parse(ROOT/'src/robot_lab_maps/maps'/name/'worlds'/(name+'.world')).getroot().find('world')
         dvl=[p for p in world.findall('plugin') if p.get('name','').endswith('DopplerVelocityLogSystem')]
-        assert len(dvl)==1, name
-        assert dvl[0].get('filename')=='gz-sim-dvl-system', name
+        assert not dvl, name
+        assert any(p.get('name','').endswith('::Buoyancy') for p in world.findall('plugin'))
 
 
-def test_rov_declares_a_native_dvl_sensor_on_base_link():
+def test_rov_keeps_native_imu_and_uses_separate_emulated_dvl():
     description=load_description(ROOT/'src/robot_lab_robots/lab_rov/urdf/lab_rov.urdf.xacro')
     root=ET.fromstring(description)
     sensors=[s for g in root.findall('gazebo') if g.get('reference')=='base_link'
-             for s in g.findall('sensor') if s.get('name')=='marine_dvl']
+             for s in g.findall('sensor') if s.get('name')=='marine_imu']
     assert len(sensors)==1
     sensor=sensors[0]
-    assert sensor.get('type')=='dvl'
+    assert sensor.get('type')=='imu'
     assert sensor.findtext('always_on')=='true'
     assert float(sensor.findtext('update_rate'))>0.
     assert sensor.findtext('gz_frame_id')=='base_link'
 
 
-def test_marine_launch_bridges_the_dvl_twist_to_ros():
+def test_marine_launch_uses_the_explicit_sensor_pipeline_instead_of_a_missing_native_bridge():
     launch=(ROOT/'src/robot_lab_bringup/launch/marine_simulator.launch.py').read_text()
-    assert "'/marine/dvl'" in launch
-    assert 'geometry_msgs/msg/TwistStamped' in launch
-    assert 'gz.msgs.Twist' in launch
-    assert 'marine_dvl' in launch
+    assert "'/marine/dvl'" not in launch
+    assert 'actions += pipeline(' in launch
+    pipeline=(ROOT/'src/robot_lab_utils/robot_lab_utils/marine_pipeline.py').read_text()
+    assert "executable='marine_sensors.py'" in pipeline
+    assert "arguments=['simulate']" in pipeline and "arguments=['estimate']" in pipeline

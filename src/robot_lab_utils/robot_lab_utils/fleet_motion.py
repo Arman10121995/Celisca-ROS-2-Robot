@@ -82,6 +82,11 @@ def swarm_velocities(mode, neighbors, max_linear, max_angular, spacing=1., ancho
                 distance = math.hypot(dx, dy)
                 min_distance = robot.radius + other.radius + clearance_radius
                 if distance < min_distance:
+                    if distance < 1e-6:
+                        # Deterministic opposite directions; never divide by
+                        # zero or inject random movement into a control loop.
+                        dx, dy = (.05 if robot.name > other.name else -.05), 0.
+                        distance = .05
                     # Push apart to maintain clearance
                     weight = (min_distance - distance) / max(distance, 0.05)
                     rx += weight * dx / distance
@@ -119,7 +124,12 @@ def scan_guard(linear, angular, ranges, angle_min, angle_increment, radius, acce
         if abs(bearing) < .65:
             ahead = min(ahead, value)
     if nearest < radius + .03:
-        return 0., 0., 'scan footprint proximity'
+        # A soft buffer must not prevent a retreat into an observed clear
+        # corridor. Keep the actual circular footprint/contact margin.
+        if nearest < radius + .005:
+            return 0., 0., 'scan footprint proximity'
+        if linear and ahead < radius + .12:
+            return 0., angular, 'scan footprint proximity; translation held'
     stopping = radius + .12 + abs(linear) * .25 + linear * linear / (2 * acceleration)
     if linear and ahead < stopping:
         return 0., 0., 'scan stopping corridor'
@@ -132,14 +142,20 @@ def separation_guard(robot, others, linear, angular, horizon=.7):
         if robot.name == other.name:
             continue
         threshold = robot.radius + other.radius + .12
-        if math.hypot(robot.x - other.x, robot.y - other.y) < threshold:
+        initial = math.hypot(robot.x - other.x, robot.y - other.y)
+        hard = robot.radius + other.radius + .02
+        if initial < hard:
             return 0., 0., 'member footprint proximity: ' + other.name
+        last = initial
         for tick in range(1, 8):
             t = horizon * tick / 7
             yaw = robot.yaw + angular * t / 2
             x, y = robot.x + linear * t * math.cos(yaw), robot.y + linear * t * math.sin(yaw)
             ox = other.x + other.speed * t * math.cos(other.yaw)
             oy = other.y + other.speed * t * math.sin(other.yaw)
-            if math.hypot(x - ox, y - oy) < threshold:
+            distance = math.hypot(x - ox, y - oy)
+            retreat = initial < threshold and distance >= last - 1e-5
+            if distance < hard or (distance < threshold and not retreat):
                 return 0., 0., 'predicted member separation: ' + other.name
+            last = distance
     return linear, angular, ''

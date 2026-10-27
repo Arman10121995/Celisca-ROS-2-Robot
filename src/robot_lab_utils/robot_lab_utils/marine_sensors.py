@@ -26,7 +26,7 @@ from tf2_ros import TransformBroadcaster
 from robot_lab_utils.aerial_planning import StaticScene
 from robot_lab_utils.marine_controller import rpy
 from robot_lab_utils.marine_model import rotation
-from robot_lab_utils.marine_navigation_model import MarineOdometry, bottom_ranges, dvl_velocity
+from robot_lab_utils.marine_navigation_model import MarineOdometry, bottom_ranges, dvl_velocity, sonar_range
 
 
 def stamp(msg):
@@ -44,6 +44,10 @@ class MarineSensors(Node):
         self.seed = int(self.get_parameter('seed').value)
         self.rng = np.random.default_rng(self.seed)
         self.bias = self.rng.normal(0., .002, 3)
+        self.previous,self.last_output=None,-math.inf
+        self.state_pub=self.create_publisher(String,'/marine/sensors/state',10)
+        self.motion_subscriber=self.create_subscription(Odometry,'/marine/odometry',self.observe,10)
+        self.sonar_rng=np.random.default_rng(self.seed+1)
         self.sonar_previous = None
         self.sonar_last_output = -math.inf
         self.velocity_pub = self.create_publisher(TwistWithCovarianceStamped, '/marine/sensors/dvl', 10)
@@ -63,9 +67,11 @@ class MarineSensors(Node):
             return
         self.sonar_previous = msg
         depth = max(0., self.surface - p.z)
+        q=msg.pose.pose.orientation
+        if q is None or not np.isfinite([q.x,q.y,q.z,q.w]).all() or abs(q.x*q.x+q.y*q.y+q.z*q.z+q.w*q.w-1)>.05:
+            return
         if depth > 0.:
-            clearance = self.scene.clearance((p.x, p.y, p.z))
-            range_to_seabed = max(0.1, clearance)
+            range_to_seabed = sonar_range(self.scene,(p.x,p.y,p.z),rpy(q))
         else:
             range_to_seabed = float('inf')
         sonar = Range()
@@ -77,24 +83,9 @@ class MarineSensors(Node):
         sonar.max_range = 10.
         if depth <= 0. or not math.isfinite(range_to_seabed):
             sonar.range = float('inf')
-            variance = 0.
         else:
-            sonar.range = float(np.clip(range_to_seabed, sonar.min_range, sonar.max_range))
-            variance = 0.3 ** 2
+            sonar.range = float(np.clip(range_to_seabed+self.sonar_rng.normal(0.,.01), sonar.min_range, sonar.max_range))
         self.sonar_pub.publish(sonar)
-        output = TwistWithCovarianceStamped()
-        output.header = sonar.header
-        output.twist.twist.linear.x = 0.
-        output.twist.twist.linear.y = 0.
-        output.twist.twist.linear.z = 0.
-        output.twist.covariance = (np.eye(6) * variance).flatten().tolist()
-        self.velocity_pub.publish(output)
-        pressure = FluidPressure()
-        pressure.header = copy.copy(msg.header)
-        pressure.header.frame_id = 'base_link'
-        pressure.fluid_pressure = 101325. + self.density * 9.81 * depth + float(self.rng.normal(0., 75.))
-        pressure.variance = 75. ** 2
-        self.pressure_pub.publish(pressure)
 
 
     def observe(self, msg):
@@ -123,7 +114,7 @@ class MarineSensors(Node):
         old = previous.pose.pose.position
         world_velocity = np.array([(p.x-old.x)/dt, (p.y-old.y)/dt, (p.z-old.z)/dt])
         orientation = rpy(q)
-        ranges = bottom_ranges(self.scene, (p.x, p.y, p.z), orientation)
+        ranges = bottom_ranges(self.scene, (p.x, p.y, p.z), orientation) if self.scene is not None else [math.inf]*4
         locked = all(math.isfinite(v) and .1 < v <= 10. for v in ranges)
         if locked:
             value, covariance, beams = dvl_velocity(rotation(orientation).T @ world_velocity + self.bias, self.rng)
@@ -137,6 +128,7 @@ class MarineSensors(Node):
         self.state_pub.publish(String(data=json.dumps(dict(bottom_lock=locked,
             beam_ranges_m=[v if math.isfinite(v) else None for v in ranges], seed=self.seed,
             pressure_noise_Pa=75., beam_velocity_noise_m_s=.005, velocity_bias_std_m_s=.002,
+            sonar_noise_m=.01,sonar_model='Body-down ray against selected static collision world; separate from DVL and pressure',
             source='Authored noisy hydrostatic/Janus-DVL simulator using actual plant motion and static world bottom intersections',
             native_sensor=False, dynamic_bottom_lock=False), allow_nan=False)))
 

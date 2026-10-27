@@ -747,6 +747,9 @@ def _build_simulation_actions(context):
             robot_model,
             _launch_value(context, "robot_xacro"),
         )
+        from robot_lab_utils.asset_support import experimental_asset_profile
+        robot_config = experimental_asset_profile(robot_config,
+            _as_bool(_launch_value(context, 'allow_experimental_assets')))
         _validate_robot_for_mode(robot_model, robot_config, mode_name, mode_config,
                                  _launch_value(context, "simulator"))
         if robot_config.get('gait_model'):
@@ -754,6 +757,9 @@ def _build_simulation_actions(context):
                 raise RuntimeError('Source multi-leg gait currently supports MuJoCo Display/Gait only')
             gait_args = dict(robot_model=robot_model, map_name='empty' if map_free else map_name,
                 task=_config_value(context, 'gait_task', 'gait'),
+                map_yaml=_config_value(context, 'gait_map_yaml', ''),
+                database=_config_value(context, 'gait_database', ''),
+                localization=_config_value(context, 'gait_localization', 'false'),
                 control='true' if mode_name == 'gait' else 'false', gui=_config_value(context, 'gui', 'true'),
                 rviz='true' if _auto_bool(context, 'start_rviz', True) else 'false')
             if _is_auto(gait_args['gui']):
@@ -1817,6 +1823,9 @@ def generate_launch_description():
     return LaunchDescription([
         DeclareLaunchArgument('marine_slam', default_value='false', description='Experimental real RGB-D RTAB-Map with sensor-only marine odometry'),
         DeclareLaunchArgument('gait_task', default_value='gait', description='Experimental source gait workflow: gait/loc/slam/3d_slam/nav; physical qualification separate'),
+        DeclareLaunchArgument('gait_map_yaml', default_value='', description='Saved gait occupancy grid for localization/navigation'),
+        DeclareLaunchArgument('gait_database', default_value='', description='Saved gait RTAB-Map database; copied into the new session'),
+        DeclareLaunchArgument('gait_localization', default_value='false', description='Localize in the selected gait 3D database'),
         DeclareLaunchArgument('marine_database', default_value='', description='SSD RTAB-Map database to copy into this marine session'),
         DeclareLaunchArgument('marine_localization', default_value='false', description='Localize in the selected saved marine database'),
         DeclareLaunchArgument('enable_joystick', default_value='true',
@@ -1825,6 +1834,8 @@ def generate_launch_description():
             description='Explicitly enable an installed exact-model experimental native policy in MuJoCo Display; default passive display remains.'),
         DeclareLaunchArgument('enable_native_articulation', default_value='false',
             description='Explicitly enable bounded authored native position actuators in MuJoCo Display.'),
+        DeclareLaunchArgument('allow_experimental_assets', default_value='false',
+                              description='Opt into implemented imported-asset workflows awaiting source requalification'),
         DeclareLaunchArgument('enable_native_mobile', default_value='false',
             description='Explicitly enable native Stretch base and articulation controls in MuJoCo Display.'),
         DeclareLaunchArgument('native_task', default_value='display',

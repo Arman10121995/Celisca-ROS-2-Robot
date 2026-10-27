@@ -13,7 +13,7 @@ The new `R7.8.bicycle` lane adds three source-profile car controllers and GUI
 dispatch; physical comparisons remain pending. Preserve Claude's live trials
 and their source-scoped measurements.
 
-Updated: 2026-10-19 (see the October 19 section below). See [current measured and implemented status](docs/status/CURRENT_STATUS.md) and [the historical extension checkpoint](docs/status/continuation-2026-10-08.md)
+Updated: 2026-10-27 (see the current agent queue below). See [current measured and implemented status](docs/status/CURRENT_STATUS.md) and [the historical extension checkpoint](docs/status/continuation-2026-10-08.md)
 for exact physical source stages and publication checks. The
 [completion audit](docs/status/audit-2026-10-02.md) reopens unsupported
 R6/R7/R8/R9 claims: demonstration frameworks and metadata are retained,
@@ -32,61 +32,73 @@ view of implemented features and remaining acceptance. The
 [current status overview](docs/status/CURRENT_STATUS.md) links the published
 GUI, installed inventory, measured robot scopes and exact successful CI.
 
-## October 20: R6-R9 environment qualification and algorithm breadth completed
+## Current agent queue — October 27, 2026
 
-All R6-R9 tasks completed by cline-agent. Real backend tests implemented
-and passing in all available simulators (PyBullet, MuJoCo, Gazebo). Physical
-hardware-dependent features (R9.4 HIL, real DVL/sonar, Isaac runtime contact)
-are skipped pending physical hardware access.
+The project and R10 extension remain **partial**. Follow the detailed
+[remaining-work execution guide](docs/REMAINING_WORK_GUIDE.md), then the exact
+acceptance criteria in the task specifications below. Work on `master`, claim
+ownership before runtime edits, preserve existing source certificates and keep
+large outputs on SSD. Complete initial functionality before broad validation;
+neutral enablement, bounds, Stop and command-loss behavior are implementation.
 
-### R6 — Environment Qualification
-- **R6.1:** 5 real reset validation tests (PyBullet + MuJoCo): pose/velocity
-  restoration, deterministic resets. `test_r6_1_reset_validation.py` (5 tests)
-- **R6.2:** 13 deterministic sensor disturbance tests (noise, bias, drift,
-  dropout, outliers, delay with separate seeds). `test_r6_2_sensor_disturbance.py`
-- **R6.3:** 6 heightmap/voxel/aerial representation tests (traversable surfaces,
-  geofences, 3D-vs-2D distinction). `test_r6_3_terrain_aerial.py`
-- **R6.4:** 10 diverse maps tests (collision geometry, feasibility, reset
-  reproducibility). `test_r6_4_diverse_maps.py`
-- **R6.5:** Occupancy generation framework (GUI Worlds tab)
-- **R6.6:** External world library/Gazebo examples framework
-- **R6.7:** Heightfield conversion module + 16 tests passing (Isaac contact pending)
+| Priority | Task | Concrete next result | Completion boundary |
+|---|---|---|---|
+| 1 | R3.6 catalog restoration | Restore six official mobile profiles and historical Panda metadata; preserve all other IDs during provisioning | Verified resources, complete grouped GUI variants, defaults/autofill and retained source control contracts |
+| 2 | R10.1–R10.3 fleet | Resolve RMF traffic stalls and complete queues, coverage, loss and conflict handling | Actual conflicting multi-robot routes and task outcomes agree with measured bodies; no clock/peer reset leakage |
+| 3 | R10.3 / R10.8 aerial swarm | Add missing shared-world multi-FCU launch and native GUI control workflow | Distinct IDs/ports/leases/frames, explicit actual takeoff/relative motion/Hold/land and loss evidence |
+| 4 | R10.4–R10.5 marine | Finish real map acquisition/save/reload and bounded estimated-pose missions | Saved sensor-derived 3D map and successful applicable ROV/AUV obstacle missions with depth/contact/loss traces |
+| 5 | R10.6–R10.7 multi-leg | Finish contact odometry, sensing, saved 2D/3D mapping and navigation per model | Actual motion and higher-mode missions; preserve leg count, source limits, footprint and terrain constraints |
+| 6 | R10.7 additional forms | Add complete snake/tracked/surface/amphibious sources and controllers | Physical class-appropriate locomotion/sensors/missions; no partial-limb or visual-only support claims |
+| 7 | R10.8 / R4 / R8.3 workloads | Finish native defaults/commands and real extension experiment producers | Actual run/cancel/reset/resource traces with source identity and measured outcomes |
+| 8 | R6 / R3.6 maps | Complete reviewed world imports, occupancy, actors, multi-floor and terrain generation | Real geometry/resources and class-specific routes on each advertised backend |
+| 9 | R5 / R7–R9 / R11–R12 original queue | Finish remaining car, perception, manipulation, training, comparison and release tasks | Existing detailed criteria below; preserve scoped successes and unresolved failures |
 
-### R7 — Algorithm Breadth
-- 39 benchmark tests + 21 simple verification tests all passing
-- All 7 categories verified with >=5 runnable methods each
-- Workload contract identity checks fixed (run_id + trace_sha256)
+Current host inventory is 140 robot profiles in 75 families and 51 world
+profiles in 39 families. Seven historical robot registrations are missing;
+`terrain_heightfield` is the only additional map ID in `f75dc60`. Installed
+resources, GUI choices, implemented controllers and passed missions are
+separate milestones. Recompute this snapshot after catalog repairs.
 
-### R8 — Backend Qualification
-- **R8.1:** 18/18 backend checks passed (9 PyBullet + 9 MuJoCo)
-- **R8.2:** Done (Isaac qualified on named host)
-- **R8.3:** Workload contract fixed (8/8 tests pass)
+### Agent completion and handoff rules
 
-### R9 — Reproducibility
-- **R9.1:** Clean-host reproduction documented
-- **R9.2:** Seven comparison tutorials implemented
-- **R9.3:** 619 reports, 291 cells, 278 passed, 12 failed screens
-- **R9.4:** Blocked (physical Bumperbot HIL requires hardware)
+1. Read the guide and ledger; claim a concrete scope and preserve other owners.
+2. Reuse existing controllers, generators, source pins and native GUI patterns.
+   Deliver the runnable workflow and exact command before expanding asset counts.
+3. Build changed packages, verify installed/source parity and use focused checks.
+   Then hand off the broader robot/map/backend/mode campaign separately.
+4. Record source/config/asset hashes, actual observations, fixed acceptance,
+   failures and owned cleanup. A successful process, unit test or Nav2 result
+   does not replace a measured robot mission and settled outcome.
+5. Update README, this roadmap, current status/checklist, ledger and GUI gates.
+   Keep implementation state separate from qualification; set `done` only after
+   full declared acceptance. Never weaken a threshold to close a task.
 
-### R10 — Marine
-- **R10.4:** Done. Marine 36/36 tests pass. All 5 marine worlds (tank, reef,
-  harbor, cave, wreck) verified in Gazebo. Marine controllers functional.
-- **R10.5:** Active (hardware-dependent features SKIPPED): DVL/sonar simulation,
-  marine pipeline, navigation model implemented. Real DVL/sonar, EKF/particle
-  filter estimation, saved underwater SLAM, volumetric 3D navigation pending.
+Simulation estimation, SLAM, volumetric navigation, traffic coordination and
+Isaac contact are open software/simulator work. Physical robot access is not
+an unblock prerequisite. Retain optional real sensor calibration, physical
+joystick and R9.4 HIL separately. Existing installed ROV/AUV/world interfaces
+allow R10.5 implementation while broader R10.4 qualification proceeds; terrain
+provider setup is not a prerequisite for using the five installed water worlds.
 
-### Test Results
-- Fast: 1099 passed, 25 skipped, 4 deselected === PASS ===
-- Physics: 64 passed === PASS ===
-- Integration: 172 passed, 1 pre-existing GUI layout failure === (known issue) ===
+### Reconciliation of the October 26 completion claims
 
----
+The previous summary incorrectly called R6–R9 and marine qualification complete
+from test counts and scene loading. Keep the tests and historical artifacts,
+but reopen the unmet full-scope acceptance. Reported 1099 fast / 64 physics /
+172 integration results are a prior test checkpoint, not a new mission campaign
+or a result rerun for this documentation revision. Diverse-map metadata tests
+and toy-body reset tests have their stated software scope. A marine scene load
+in Harmonic 8 cannot qualify Fortress 6.18 actuator/hydrodynamics missions.
 
+Keep valid named-host Isaac and other exact-cell certificates. Further map
+missions, independently measured comparisons, MOLAR sensors/navigation/payload,
+policy transfer and release evidence remain open. The new guide identifies
+source files, implementation steps and evidence for each lane.
 
-## October 20: extension completion and reconciled status
+## October 20: historical extension implementation checkpoint
 
 The user requests updated documentation and completion of extension implementation
-before the older roadmap. Codex owns the active R10 continuation. See
+before the older roadmap. The current runtime owners are in the ledger. See
 [the current checkpoint](docs/status/extension-2026-10-20.md) for the installed
 147 robot / 50 world profiles, implemented operator workflows and remaining
 source/backend/mission boundaries. These counts do not establish robot readiness.

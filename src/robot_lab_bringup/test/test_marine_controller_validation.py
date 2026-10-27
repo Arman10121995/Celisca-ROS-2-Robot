@@ -13,6 +13,7 @@ import json
 import rclpy
 import pytest
 from geometry_msgs.msg import Vector3
+from nav_msgs.msg import Odometry
 from rclpy.time import Time
 from rosgraph_msgs.msg import Clock as ClockMessage
 from std_msgs.msg import String
@@ -73,6 +74,31 @@ def test_current_rejects_nonfinite_values():
     msg = Vector3(); msg.x = float('nan'); msg.y = 0.0; msg.z = 0.0
     node._current(msg)
     assert node.current is None
+
+
+def test_body_observations_enable_real_motion_feedback_without_current():
+    node = _make_controller()
+    node.clock_value = 5.
+    first = Odometry()
+    first.header.frame_id = 'map'
+    first.header.stamp = Time(seconds=5.).to_msg()
+    first.pose.pose.orientation.w = 1.
+    node._pose(first)
+    assert node.count == 1 and node.pose is first
+    assert not node._fresh()  # One pose cannot establish measured velocity.
+    second = Odometry()
+    second.header.frame_id = 'map'
+    second.header.stamp = Time(seconds=5.1).to_msg()
+    second.pose.pose.position.x = .02
+    second.pose.pose.orientation.w = 1.
+    node.clock_value = 5.1
+    import time
+    node.clock_at = time.monotonic()
+    node._pose(second)
+    assert node._fresh()
+    assert node.count == 2 and abs(node.velocity[0] - .2) < 1e-8
+    node._current(Vector3(x=.1))
+    assert node.count == 2  # Body samples are not ocean-current messages.
 
 
 def test_heartbeat_operator_change_triggers_stop():

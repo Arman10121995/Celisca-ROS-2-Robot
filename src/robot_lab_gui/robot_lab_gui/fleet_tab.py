@@ -64,7 +64,7 @@ class FleetTab(ttk.Frame):
         self.status = tk.StringVar(value='Experimental Gazebo Bumperbot/Labbot shared-world control. Connect starts neutral.')
         ttk.Label(self, text='Shared world · one simulation · separate robot instances', font=('', 12, 'bold')).grid(
             row=0, column=0, columnspan=2, sticky='w')
-        ttk.Label(self, text='Shared Gazebo bases: queued missions, conservative traffic and cooperative sweep. Marine and Gait controls are on Launch. Aerial fleets and other shared backends remain separate.',
+        ttk.Label(self, text='Shared Gazebo bases: queued missions, traffic recovery and cooperative sweep. Aerial Swarm has its own shared PX4 session page. Marine and Gait controls are on Launch.',
                   wraplength=980).grid(row=1, column=0, columnspan=2, sticky='ew', pady=(3, 8))
         left = ttk.LabelFrame(self, text='Session members and map', padding=8)
         left.grid(row=2, column=0, sticky='nsew', padx=(0, 8))

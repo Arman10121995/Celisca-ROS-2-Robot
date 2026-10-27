@@ -42,7 +42,7 @@ def test_named_map_spawn_is_visible_in_command_and_does_not_leak_to_other_map(ap
     assert not any(v.startswith(('spawn_x:=', 'spawn_y:=')) for v in arguments)
 
 
-def test_marine_mission_settings_reach_command_without_enabling_camera_on_auv(app):
+def test_marine_saved_map_settings_reach_rov_and_authored_auv_camera_kit(app):
     app.robot_var.set('lab_rov'); app.simulator_var.set('gazebo')
     app.map_var.set('marine_tank'); app.mode_var.set('marine'); app._update_from_selection()
     app.marine_slam_var.set(True)
@@ -56,8 +56,42 @@ def test_marine_mission_settings_reach_command_without_enabling_camera_on_auv(ap
     assert not any(v.startswith('map_yaml:=') for v in command)
     app.robot_var.set('tethys_auv'); app._update_from_selection()
     command = shlex.split(app.command_var.get())
-    assert 'marine_slam:=false' in command
-    assert not any(v.startswith('marine_database:=') for v in command)
+    assert 'marine_slam:=true' in command
+    assert 'marine_localization:=true' in command
+    assert 'marine_database:=/workspace/molar/robot_lab_runtime/maps/example.db' in command
+
+
+def test_aerial_session_command_and_latches_are_neutral_until_manual_arm(app):
+    from robot_lab_gui.aerial_swarm_tab import AerialSwarmTab
+    tab=AerialSwarmTab(app.notebook,app)
+    try:
+        tab.count.set(4);tab.map_var.set('nav_obstacle');tab.refresh_command()
+        assert 'map_name:=nav_obstacle' in tab.command
+        assert len(tab.configuration()['members'])==4
+        assert tab.node is None and not tab.armed and not tab.latches
+        tab.latch((1,0,0));assert not tab.latches
+        tab.armed=True;tab.latch((1,0,0));assert (1,0,0) in tab.latches
+        tab.latch((1,0,0));assert not tab.latches
+        tab.latch((0,0,1));assert tab.buttons[(0,0,1)].instate(['pressed'])
+        tab.keyboard.set(True);tab.input_changed()
+        assert not tab.latches and tab.ramp.linear==0 and tab.vertical==0
+    finally:
+        tab.close();tab.destroy()
+
+
+def test_gait_saved_map_and_localization_choices_are_in_actual_command(app):
+    app.robot_var.set('hexapod_ros2');app.simulator_var.set('mujoco')
+    app.map_var.set('nav_empty');app.mode_var.set('gait');app._update_from_selection()
+    app.gait_task_var.set('nav');app.gait_map_yaml_var.set('/workspace/molar/robot_lab_runtime/maps/actual/map.yaml')
+    app._update_validation_and_command()
+    command=shlex.split(app.command_var.get())
+    assert 'gait_task:=nav' in command
+    assert 'gait_map_yaml:=/workspace/molar/robot_lab_runtime/maps/actual/map.yaml' in command
+    app.gait_task_var.set('3d_slam');app.gait_database_var.set('/workspace/molar/robot_lab_runtime/maps/actual/rtabmap.db')
+    app.gait_localization_var.set(True);app._update_validation_and_command()
+    command=shlex.split(app.command_var.get())
+    assert 'gait_database:=/workspace/molar/robot_lab_runtime/maps/actual/rtabmap.db' in command
+    assert 'gait_localization:=true' in command
 
 
 def test_fleet_rmf_selects_navigation_and_keeps_selected_map(app):

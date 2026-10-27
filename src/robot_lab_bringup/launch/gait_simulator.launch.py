@@ -67,7 +67,7 @@ def setup(context):
     if task!='gait':
         args['sensor_config']=json.dumps(dict(laser_link_name='gait_laser_link',camera_link_name='gait_camera_link',
             camera_optical_frame='gait_camera_optical_frame',scan_samples=360,scan_rate=10.,scan_range_min=.05,
-            scan_range_max=8.,camera_width=320,camera_height=240,camera_rate=5.,camera_horizontal_fov=1.25,
+            scan_range_max=8.,camera_width=320,camera_height=240,camera_rate=5. if task=='3d_slam' else 0.,camera_horizontal_fov=1.25,
             camera_near=.1,camera_far=8.))
     manifest=dict(robot=name,map=selected,backend='MuJoCo',world_xml=explicit_mjcf,spawn=pose,
                   task=task,sensor_kit=task!='gait',
@@ -81,7 +81,9 @@ def setup(context):
              controller,RegisterEventHandler(OnProcessExit(target_action=controller,on_exit=[EmitEvent(event=Shutdown(reason='Gait controller exited'))]))]
     if task!='gait':
         from robot_lab_utils.gait_pipeline import pipeline
-        actions+=pipeline(task,description,config,pose,world,folder,model)
+        actions+=pipeline(task,description,config,pose,world,folder,model,
+            map_yaml=value('map_yaml'),database=value('database'),localization=value('localization')=='true',
+            world_file=source_world)
     if value('rviz')=='true':
         rviz=Path(share('robot_lab_description'))/'rviz/display.rviz'
         frame='odom'
@@ -102,6 +104,9 @@ def setup(context):
 def generate_launch_description():
     return LaunchDescription([DeclareLaunchArgument('robot_model',default_value='hexapod_ros2'),
         DeclareLaunchArgument('task',default_value='gait'),
+        DeclareLaunchArgument('map_yaml',default_value='',description='Acquired gait occupancy map for localization/navigation'),
+        DeclareLaunchArgument('database',default_value='',description='Saved acquired RTAB-Map database; copied read-only'),
+        DeclareLaunchArgument('localization',default_value='false',description='Localize in the selected saved 3D database'),
         DeclareLaunchArgument('map_name',default_value='nav_empty'),DeclareLaunchArgument('control',default_value='true'),
         DeclareLaunchArgument('gui',default_value='true'),DeclareLaunchArgument('rviz',default_value='true'),
         *[DeclareLaunchArgument('spawn_'+axis,default_value='') for axis in ('x','y','z','yaw')],OpaqueFunction(function=setup)])

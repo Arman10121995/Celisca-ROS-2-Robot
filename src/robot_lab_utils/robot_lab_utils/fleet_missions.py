@@ -131,6 +131,53 @@ def rmf_navigation_graph(grid, members, extent=12., spacing=1.2):
             if all(grid.clear(a['x'] + t * (b['x'] - a['x']), a['y'] + t * (b['y'] - a['y']), radius)
                    for t in np.linspace(0., 1., samples)):
                 lanes.append([first, second])
+    # Every distinct spawn is a real holding vertex. Snapping a second member
+    # up to a metre onto its peer's graph node corrupts RMF's traffic picture.
+    for member in members:
+        px, py = member['spawn']['x'], member['spawn']['y']
+        if any(math.hypot(v['x']-px, v['y']-py) < .10 for v in vertices):
+            continue
+        first = len(vertices)
+        connected = []
+        for second in sorted(range(len(vertices)), key=lambda i: math.hypot(vertices[i]['x']-px, vertices[i]['y']-py)):
+            b = vertices[second]
+            distance = math.hypot(b['x']-px, b['y']-py)
+            if distance > spacing*1.6:
+                break
+            steps = max(2, math.ceil(distance / (grid.resolution/2)))
+            if all(grid.clear(px+t*(b['x']-px), py+t*(b['y']-py), radius)
+                   for t in np.linspace(0., 1., steps)):
+                connected.append([first, second])
+                if len(connected) == 3:
+                    break
+        if not connected:
+            raise ValueError('No clearance-valid RMF graph connection for '+member['id'])
+        vertices.append(dict(name='home_'+member['id'], x=px, y=py))
+        lanes.extend(connected)
     if not vertices or not lanes:
         raise ValueError('No connected RMF lanes fit the selected occupancy/body clearance')
     return dict(vertices=vertices, lanes=lanes, scope='Local occupancy-derived graph; no door/lift/charging infrastructure')
+
+
+def traffic_yield_goal(grid, robot, peers):
+    """Find a nearby static-clear holding pose with a peer-clear retreat path."""
+    if not peers:
+        raise ValueError('A measured blocking peer is required')
+    nearest = min(peers, key=lambda p: math.hypot(robot.x-p.x, robot.y-p.y))
+    away = math.atan2(robot.y-nearest.y, robot.x-nearest.x)
+    for distance in (.65, 1., 1.5):
+        for offset in (0., .65, -.65, 1.2, -1.2):
+            heading = away+offset
+            x, y = robot.x+distance*math.cos(heading), robot.y+distance*math.sin(heading)
+            if not grid.clear(x, y, robot.radius+.12):
+                continue
+            safe = True
+            for t in np.linspace(0., 1., max(3, math.ceil(distance/(grid.resolution/2)))):
+                tx, ty = robot.x+t*(x-robot.x), robot.y+t*(y-robot.y)
+                if not grid.clear(tx, ty, robot.radius+.03) or any(
+                        math.hypot(tx-p.x, ty-p.y) < robot.radius+p.radius+.04 for p in peers):
+                    safe = False
+                    break
+            if safe:
+                return dict(x=x, y=y, yaw=heading, timeout=45., not_before=0.)
+    raise ValueError('No observed peer-clear retreat to a free holding pose; operator intervention required')

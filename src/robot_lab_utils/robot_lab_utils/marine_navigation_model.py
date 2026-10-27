@@ -13,6 +13,23 @@ JANUS = np.array([[.5, 0., -math.sqrt(.75)], [-.5, 0., -math.sqrt(.75)],
                   [0., .5, -math.sqrt(.75)], [0., -.5, -math.sqrt(.75)]])
 
 
+def sonar_range(scene, position, orientation, maximum=10.):
+    """Trace the authored body-down sonar ray against actual static geometry."""
+    if scene is None:
+        return math.inf
+    origin=np.asarray(position,dtype=float)
+    direction=rotation(orientation) @ np.array([0.,0.,-1.])
+    distance=.1
+    for _ in range(512):
+        clearance=scene.clearance(origin+distance*direction)
+        if clearance<=.005:
+            return distance
+        distance+=max(.002,min(.5,.8*clearance))
+        if distance>maximum:
+            return math.inf
+    return math.inf
+
+
 def bottom_ranges(scene, position, orientation, maximum=10.):
     """Trace four bottom-lock beams against selected-world collision surfaces."""
     origin = np.asarray(position, dtype=float) + rotation(orientation) @ np.array([0., 0., -.2])

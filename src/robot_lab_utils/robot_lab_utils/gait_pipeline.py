@@ -22,34 +22,39 @@ def sensor_description(description, forward_yaw):
     return ET.tostring(root,encoding='unicode')
 
 
-def pipeline(task, description_file, config, pose, map_profile, folder, model):
+def pipeline(task, description_file, config, pose, map_profile, folder, model,
+             map_yaml='', database='', localization=False, world_file=''):
     from ament_index_python.packages import get_package_share_directory as share
     from launch.actions import TimerAction
     from launch_ros.actions import Node
     from .fleet_session import navigation_parameters
-    from .marine_pipeline import ros_core_environment
+    from .marine_pipeline import ros_core_environment, depth_registration_parameters, depth_cloud_node
+    from .map_archive import load_database_copy
     if task not in ('loc','slam','3d_slam','nav'):raise ValueError('Unknown experimental gait task')
     radius=max(np.linalg.norm(model.home[leg['id']][:2]+np.asarray(leg.get('body_offset',[0.,0.]))) for leg in model.legs)+.15
     nodes=[Node(package='robot_lab_utils',executable='gait_odometry.py',parameters=[dict(use_sim_time=True,
         description_file=str(description_file),gait_config=str(config),initial_drive_yaw=float(pose['yaw'])+model.config['forward_yaw'])],output='screen'),
         Node(package='robot_lab_utils',executable='gait_sensor_relay.py',parameters=[dict(use_sim_time=True,
-            description_file=str(description_file))],output='screen')]
-    # A known spawn-prior transform keeps the original truth-based RobotModel
-    # visible. This separate `odom` branch is never used by contact odometry,
-    # sensor relays, SLAM or navigation (`gait/odom` and `gait/base_*`).
-    yaw=pose['yaw']+model.config['forward_yaw']
-    tx=ty=heading=0.
-    if task in ('slam','3d_slam'):
-        tx=-math.cos(yaw)*pose['x']-math.sin(yaw)*pose['y']
-        ty=math.sin(yaw)*pose['x']-math.cos(yaw)*pose['y'];heading=-yaw
-    nodes.append(Node(package='tf2_ros',executable='static_transform_publisher',name='gait_truth_visualization_prior',
-        arguments=['--x',str(tx),'--y',str(ty),'--z','0','--yaw',str(heading),'--pitch','0','--roll','0',
-                   '--frame-id','map','--child-frame-id','odom'],output='screen'))
+            description_file=str(description_file),visual_spawn_x=float(pose['x']),visual_spawn_y=float(pose['y']),
+            visual_spawn_yaw=float(pose['yaw'])+model.config['forward_yaw'])],output='screen')]
     if task in ('loc','nav'):
         data=map_profile.get('map',{})
-        if not data.get('has_2d_map'):raise ValueError('Experimental legged localization/navigation needs a reviewed 2D map or a saved SLAM map')
-        map_yaml=str(Path(share(data.get('package','robot_lab_maps')))/data['path'])
-        member=dict(id='gait',model='labbot',spawn=pose,max_linear=float(model.config['max_speed']),max_angular=float(model.config['max_yaw']),radius=float(radius))
+        saved_map=bool(map_yaml)
+        if not saved_map and not data.get('has_2d_map'):raise ValueError('Legged localization/navigation needs a reviewed 2D map or gait_map_yaml:=<saved map>')
+        map_yaml=str(Path(map_yaml).expanduser().resolve()) if saved_map else str(Path(share(data.get('package','robot_lab_maps')))/data['path'])
+        if not Path(map_yaml).is_file():raise ValueError('Saved occupancy YAML is unavailable: '+map_yaml)
+        from .fleet_session import SpawnGrid
+        SpawnGrid(map_yaml)  # Validate actual image, resolution and occupancy.
+        initial=dict(pose)
+        if saved_map:
+            import hashlib,json
+            metadata=Path(map_yaml).parent/'manifest.json'
+            recorded=json.loads(metadata.read_text()) if metadata.is_file() else {}
+            if recorded.get('world_sha256') and world_file and recorded['world_sha256']!=hashlib.sha256(Path(world_file).read_bytes()).hexdigest():
+                raise ValueError('Saved gait map belongs to different source world geometry')
+            x,y,heading=recorded.get('initial_pose_in_map') or [0.,0.,0.]
+            initial.update(x=x,y=y,yaw=heading-model.config['forward_yaw'])
+        member=dict(id='gait',model='labbot',spawn=initial,max_linear=float(model.config['max_speed']),max_angular=float(model.config['max_yaw']),radius=float(radius))
         params=navigation_parameters(Path(share('robot_lab_navigation'))/'config',Path(share('robot_lab_localization'))/'config',member,map_yaml)['/gait']
         def rewrite(value):
             if isinstance(value,dict):return {k:rewrite(v) for k,v in value.items()}
@@ -60,7 +65,7 @@ def pipeline(task, description_file, config, pose, map_profile, folder, model):
         follow.update(desired_linear_vel=float(model.config['max_speed']),min_approach_linear_velocity=.005,
                       regulated_linear_scaling_min_speed=.005,rotate_to_heading_angular_vel=float(model.config['max_yaw']))
         params['controller_server']['ros__parameters']['progress_checker'].update(required_movement_radius=.025,movement_time_allowance=45.)
-        params['amcl']['ros__parameters']['initial_pose']['yaw']=pose['yaw']+model.config['forward_yaw']
+        params['amcl']['ros__parameters']['initial_pose']['yaw']=initial['yaw']+model.config['forward_yaw']
         params['amcl']['ros__parameters'].update(update_min_d=.01,update_min_a=.02)
         for costmap in ('local_costmap','global_costmap'):
             params[costmap][costmap]['ros__parameters']['inflation_layer']['inflation_radius']=float(radius+.15)
@@ -81,20 +86,34 @@ def pipeline(task, description_file, config, pose, map_profile, folder, model):
         params.update(odom_frame='gait/odom',base_frame='gait/base_footprint',scan_topic='/gait/scan',
                       minimum_travel_distance=.025,minimum_travel_heading=.025)
         nodes.append(Node(package='slam_toolbox',executable='async_slam_toolbox_node',name='slam_toolbox',namespace='gait',
-            parameters=[params],output='screen'))
-        nodes += [Node(package='nav2_map_server',executable='map_saver_server',namespace='gait',
+            parameters=[params],remappings=[('/map','/gait/map'),('/map_metadata','/gait/map_metadata')],output='screen'))
+        nodes += [Node(package='nav2_map_server',executable='map_saver_server',name='map_saver',namespace='gait',
             parameters=[dict(use_sim_time=True,save_map_timeout=5.)],output='screen'),
-            Node(package='nav2_lifecycle_manager',executable='lifecycle_manager',namespace='gait',
-                 parameters=[dict(use_sim_time=True,autostart=True,node_names=['map_saver_server'])],output='screen')]
+            Node(package='nav2_lifecycle_manager',executable='lifecycle_manager',name='map_saver_lifecycle',namespace='gait',
+                 parameters=[dict(use_sim_time=True,autostart=True,node_names=['map_saver'])],output='screen')]
     else:
+        active=Path(folder)/'gait-rtabmap.db'
+        if localization and (not database or not Path(database).is_file()):
+            raise ValueError('Gait 3D localization requires a saved acquired RTAB-Map database')
+        if database:
+            load_database_copy(database,active,world_file)
         nodes += [Node(package='robot_lab_utils',executable='marine_camera_relay.py',parameters=[dict(use_sim_time=True,
             description_file=str(description_file),source_camera_frame='gait_camera_optical_frame',
             estimated_base_frame='gait/base_link',target_camera_frame='gait/camera_optical_frame',output_prefix='/gait/camera')],output='screen'),
+            depth_cloud_node('/gait/camera'),
             Node(package='rtabmap_slam',executable='rtabmap',namespace='gait/slam',parameters=[dict(use_sim_time=True,
                 frame_id='gait/base_footprint',odom_frame_id='gait/odom',map_frame_id='map',
-                database_path=str(Path(folder)/'gait-rtabmap.db'),subscribe_depth=True,subscribe_odom_info=False,
+                database_path=str(active),subscribe_depth=True,subscribe_rgb=True,subscribe_odom_info=False,
                 approx_sync=True,approx_sync_max_interval=.15,qos_image=2,qos_camera_info=2,
-                **{'RGBD/LinearUpdate':'0.025','RGBD/AngularUpdate':'0.025','Grid/3D':'true'})],
+                **depth_registration_parameters(planar=True),
+                **{'RGBD/LinearUpdate':'0.025','RGBD/AngularUpdate':'0.025','Grid/3D':'true',
+                   'Mem/IncrementalMemory':'false' if localization else 'true',
+                   'Mem/InitWMWithAllNodes':'true' if localization else 'false'})],
                 remappings=[('rgb/image','/gait/camera/rgb'),('depth/image','/gait/camera/depth'),
-                    ('rgb/camera_info','/gait/camera/info'),('odom','/gait/odometry')],additional_env=ros_core_environment(),output='screen')]
+                    ('rgb/camera_info','/gait/camera/info'),('scan_cloud','/gait/camera/points'),
+                    ('odom','/gait/odometry')],additional_env=ros_core_environment(),output='screen')]
+    if task in ('slam','3d_slam'):
+        nodes.append(Node(package='robot_lab_utils',executable='map_archive.py',parameters=[dict(use_sim_time=True,
+            task=task,robot_id=model.config.get('robot_id',''),world_file=str(world_file),
+            session_directory=str(folder),database_path=str(Path(folder)/'gait-rtabmap.db'))],output='screen'))
     return nodes

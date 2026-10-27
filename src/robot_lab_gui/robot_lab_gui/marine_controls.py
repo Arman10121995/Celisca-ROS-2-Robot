@@ -227,6 +227,7 @@ class MarineMissions(ttk.Frame):
         notebook.add(self,text='Marine missions')
         self.columnconfigure(0,weight=1)
         self.runtime=None
+        self.last_saved_database=None
         self.goal={k:tk.DoubleVar(value=v) for k,v in [('x',1.),('y',0.),('z',-1.)]}
         self.feedback=tk.StringVar(value='Sensor odometry starts with the marine launch. Connect Marine to see estimates.')
         ttk.Label(self,text='Estimated-pose 3D missions',font=('',11,'bold')).grid(row=0,column=0,sticky='w')
@@ -241,7 +242,7 @@ class MarineMissions(ttk.Frame):
         buttons=ttk.Frame(self);buttons.grid(row=3,column=0,sticky='ew',pady=6)
         for label,op in [('Plan','plan'),('Execute','execute'),('Cancel / Stop','cancel')]:
             ttk.Button(buttons,text=label,command=lambda operation=op:self.send(operation)).pack(side='left',expand=True,fill='x')
-        mapping=ttk.LabelFrame(self,text='ROV RGB-D mapping / saved localization',padding=5)
+        mapping=ttk.LabelFrame(self,text='RGB-D mapping · ROV / authored AUV kit',padding=5)
         mapping.grid(row=4,column=0,sticky='ew')
         ttk.Checkbutton(mapping,text='Enable RTAB-Map on next Run',variable=app.marine_slam_var,
                         command=app._update_validation_and_command).grid(row=0,column=0,columnspan=2,sticky='w')
@@ -274,6 +275,11 @@ class MarineMissions(ttk.Frame):
             data=json.loads(msg.data)
             if data['robot_id']!=self.app.robot_var.get():return
             self.runtime=data
+            saved=data.get('saved_map') or {}
+            if data.get('mapping_status')=='saved' and saved.get('database') and saved['database']!=self.last_saved_database:
+                self.last_saved_database=saved['database']
+                self.app.marine_database_var.set(saved['database'])
+                self.app._update_validation_and_command()
             text=data['status']+' · '+data['reason']
             if data.get('position'):
                 text+='\nEstimated XYZ: '+', '.join(f'{v:.3f}' for v in data['position'])

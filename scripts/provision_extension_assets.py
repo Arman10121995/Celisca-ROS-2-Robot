@@ -515,7 +515,7 @@ def install_unitree_policies(store, download):
     return profiles, entities, records
 
 
-def install_robots(store, download, selected_source=None):
+def install_robots(store, download, selected_source=None, selected_entry=None):
     from robot_lab_utils.native_mjcf_assets import export_display_urdf
     import mujoco
     profiles, entities, records = {}, [], []
@@ -544,6 +544,8 @@ def install_robots(store, download, selected_source=None):
         if source['id'] == 'turtlebot3_vendor':
             dependency_roots.append(source_checkout(load_source('turtlebot3_simulation_vendor'), store, download))
         for entry in source['entries']:
+            if selected_entry is not None and entry != selected_entry:
+                continue
             record = {'source_id': source['id'], 'revision': source['revision'], 'entry': entry, 'profiles': []}
             evidence = store/'installed'/'checks'/(source['id']+'-'+hashlib.sha256(entry.encode()).hexdigest()[:16]+'.json')
             try:
@@ -625,12 +627,12 @@ def install_robots(store, download, selected_source=None):
                     source_id=source['id'], source_entry=entry,
                     notes='Installed source-pinned model for Display. Joint control, walking, localization, SLAM and navigation require separate controller integration and qualification.')
                 if profile.get('arm_control') == 'panda':
-                    from robot_lab_utils.asset_support import apply_recorded_panda_hand, apply_recorded_panda_planning
+                    from robot_lab_utils.asset_support import apply_recorded_panda_hand, apply_recorded_panda_planning, apply_support_or_candidate
                     support_path = ROOT/'docs/status/asset-runtime-support.yaml'
                     support = yaml.safe_load(support_path.read_text()) if support_path.is_file() else {}
-                    profile = apply_recorded_panda_hand(profile, source['revision'],
+                    profile = apply_support_or_candidate(apply_recorded_panda_hand, profile, source['revision'],
                         (support or {}).get('hands', {}).get(name), ROOT)
-                    profile = apply_recorded_panda_planning(profile, source['revision'],
+                    profile = apply_support_or_candidate(apply_recorded_panda_planning, profile, source['revision'],
                         (support or {}).get('arm_planning', {}).get(name), ROOT)
                     profile['notes'] = ('Native Panda joint/Home/Stop controls in the Arm tab on MuJoCo. '
                                         'Position trajectories use actual actuators. Cartesian planning and other backends remain pending.')
@@ -665,10 +667,10 @@ def install_robots(store, download, selected_source=None):
                     from robot_lab_utils.gazebo_physics_world import COMPLIANT_STEP_BOUNDS
                     if name in COMPLIANT_STEP_BOUNDS:
                         profile['gazebo_max_physics_step_s'] = COMPLIANT_STEP_BOUNDS[name]
-                    from robot_lab_utils.asset_support import apply_recorded_modes
+                    from robot_lab_utils.asset_support import apply_recorded_modes, apply_support_or_candidate
                     support_path = ROOT/'docs/status/asset-runtime-support.yaml'
                     support = yaml.safe_load(support_path.read_text()) if support_path.is_file() else {}
-                    profile = apply_recorded_modes(profile, source['revision'],
+                    profile = apply_support_or_candidate(apply_recorded_modes, profile, source['revision'],
                         (support or {}).get('robots', {}).get(name), ROOT)
                     if profile.get('runtime_screens'):
                         profile['notes'] = ('Original TurtleBot4/Create3 wheels, suspension, RPLidar and OAK-D frames; '
@@ -695,10 +697,10 @@ def install_robots(store, download, selected_source=None):
                         'need measured qualification. Vendor firmware is not used.')
                     check.update(drive_urdf=str(controlled),drive_urdf_sha256=digest(controlled),
                         drive_controllers_sha256=digest(controllers),control_source=control_source)
-                    from robot_lab_utils.asset_support import apply_recorded_modes
+                    from robot_lab_utils.asset_support import apply_recorded_modes, apply_support_or_candidate
                     support_path = ROOT/'docs/status/asset-runtime-support.yaml'
                     support = yaml.safe_load(support_path.read_text()) if support_path.is_file() else {}
-                    profile = apply_recorded_modes(profile, source['revision'],
+                    profile = apply_support_or_candidate(apply_recorded_modes, profile, source['revision'],
                         (support or {}).get('robots', {}).get(name), ROOT)
                     if profile.get('runtime_screens'):
                         profile['notes'] = ('Original Husky geometry/inertia and separate physical four-wheel '
@@ -723,10 +725,10 @@ def install_robots(store, download, selected_source=None):
                     check.update(drive_urdf=str(controlled), drive_urdf_sha256=digest(controlled),
                                  drive_controllers_sha256=digest(controllers), control_source=control_source,
                                  source_sdf_sha256=digest(Path(control_source['source_sdf'])))
-                    from robot_lab_utils.asset_support import apply_recorded_modes
+                    from robot_lab_utils.asset_support import apply_recorded_modes, apply_support_or_candidate
                     support_path = ROOT/'docs/status/asset-runtime-support.yaml'
                     support = yaml.safe_load(support_path.read_text()) if support_path.is_file() else {}
-                    profile = apply_recorded_modes(profile, source['revision'],
+                    profile = apply_support_or_candidate(apply_recorded_modes, profile, source['revision'],
                         (support or {}).get('robots', {}).get(name), ROOT)
                     if profile.get('runtime_screens'):
                         profile['notes'] += ' Named localization/mapping/Nav2 screens are available in Robot status; other maps are experiments.'
@@ -762,9 +764,14 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--kind', choices=['robots', 'maps', 'all'], default='all')
     parser.add_argument('--source')
+    parser.add_argument('--entry', help='Repair one exact robot entry from --source without reimporting its siblings')
     parser.add_argument('--no-download', action='store_true')
     parser.add_argument('--store', type=Path, default=Path(os.environ.get('ROBOT_LAB_RUNTIME_ROOT', '/workspace/molar/robot_lab_runtime'))/'external_assets')
     args = parser.parse_args()
+    if args.entry and (not args.source or args.kind != 'robots'):
+        parser.error('--entry requires --kind robots and --source')
+    if args.entry and args.entry not in load_source(args.source)['entries']:
+        parser.error('--entry must match an entry in the pinned source catalog')
     store = args.store.resolve(); store.mkdir(parents=True, exist_ok=True)
     if store.stat().st_dev == Path('/').stat().st_dev:
         parser.error('Assets must remain on the mounted workspace SSD')
@@ -781,7 +788,8 @@ def provision(args, store, installed, report_path):
         if args.kind not in (kind, 'all'):
             continue
         if kind == 'robots':
-            profiles, entities, entries = install_robots(store, not args.no_download, args.source)
+            profiles, entities, entries = install_robots(store, not args.no_download, args.source,
+                                                       getattr(args, 'entry', None))
         else:
             from integrate_external_worlds import install_worlds
             profiles, entities, entries = {}, [], []
@@ -789,22 +797,27 @@ def provision(args, store, installed, report_path):
                 if args.source and args.source != source_id: continue
                 imported, catalog, records = install_worlds(store, not args.no_download, source_id)
                 profiles.update(imported); entities.extend(catalog); entries.extend(records)
-        if args.source:
-            old = yaml.safe_load((installed/(kind+'.yaml')).read_text()) if (installed/(kind+'.yaml')).is_file() else {kind: {}}
-            # A failed new import must not remove previously installed assets.
-            # Successful IDs replace their own record; omission is not removal.
-            old[kind].update(profiles); profiles = old[kind]
-            old_entities = yaml.safe_load((installed/('registry_'+kind+'.yaml')).read_text()) if (installed/('registry_'+kind+'.yaml')).is_file() else []
-            replacements = {e['id']: e for e in entities}
-            retained = {e['id']: e for e in old_entities}
-            retained.update(replacements)
-            entities = list(retained.values())
+        # Apply the same preservation rule to full and source/entry-scoped runs.
+        # A source can fail, disappear from a batch, or be deliberately skipped;
+        # none of those operations explicitly uninstall its working profiles.
+        old_path = installed/(kind+'.yaml')
+        old = (yaml.safe_load(old_path.read_text()) or {}) if old_path.is_file() else {}
+        retained_profiles = dict(old.get(kind, {}))
+        retained_profiles.update(profiles)
+        profiles = retained_profiles
+        old_path = installed/('registry_'+kind+'.yaml')
+        old_entities = (yaml.safe_load(old_path.read_text()) or []) if old_path.is_file() else []
+        retained = {e['id']: e for e in old_entities}
+        retained.update({e['id']: e for e in entities})
+        entities = list(retained.values())
         write_yaml(installed/(kind+'.yaml'), {kind: profiles})
         write_yaml(installed/('registry_'+kind+'.yaml'), entities)
         report = json.loads(report_path.read_text()) if report_path.exists() else {'entries': []}
-        sources = {e['source_id'] for e in entries}
-        report['entries'] = [e for e in report['entries'] if e['source_id'] not in sources] + entries
+        retained_entries = {(e['source_id'], e['entry']): e for e in report['entries']}
+        retained_entries.update({(e['source_id'], e['entry']): e for e in entries})
+        report['entries'] = list(retained_entries.values())
         report.update(updated_utc=time.strftime('%Y-%m-%dT%H:%M:%SZ', time.gmtime()),
+                      preservation_policy='Omitted or failed imports do not uninstall existing IDs; successful IDs replace their own records',
                       scope='Installed display/model and world/map assets; catalog size is not mission qualification')
         write_json(report_path, report)
     return 0

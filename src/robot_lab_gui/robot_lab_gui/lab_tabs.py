@@ -1219,6 +1219,8 @@ def create_tabs(notebook, app):
     app.hand_tab = HandTab(app.control_notebook, app)
     from .fleet_tab import FleetTab
     app.fleet_tab = FleetTab(notebook, app)
+    from .aerial_swarm_tab import AerialSwarmTab
+    app.aerial_swarm_tab = AerialSwarmTab(notebook, app)
     from .marine_controls import MarineControls
     app.marine_controls = MarineControls(app.control_notebook, app)
     from .gait_controls import GaitControls
@@ -1229,6 +1231,7 @@ def create_tabs(notebook, app):
         app.arm_tab,
         app.hand_tab,
         app.fleet_tab,
+        app.aerial_swarm_tab,
         app.marine_controls,
         app.gait_controls,
         app.molar_controls,

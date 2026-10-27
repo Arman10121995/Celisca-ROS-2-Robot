@@ -45,7 +45,12 @@ def setup(context):
             resource=Path(item.text.strip())
             if not resource.is_absolute() and '://' not in item.text:item.text=str((assets/'source'/resource).resolve())
     model_file=folder/'model.sdf';native.write(model_file,encoding='utf-8',xml_declaration=True)
-    description=load_description(assets/'urdf/tethys_auv.urdf');description_file=folder/'robot.urdf';description_file.write_text(description)
+    description=load_description(assets/'urdf/tethys_auv.urdf')
+    if value('slam')=='true':
+        from robot_lab_utils.marine_pipeline import auv_camera_kit
+        description=auv_camera_kit(model,description)
+        native.write(model_file,encoding='utf-8',xml_declaration=True)
+    description_file=folder/'robot.urdf';description_file.write_text(description)
     pose={axis:finite(profile['spawn'].get(axis,0.),'marine spawn '+axis) for axis in ('x','y','z','yaw')}
     robot_profile=yaml.safe_load((robots/'config/robots.yaml').read_text())['robots']['tethys_auv']
     pose.update(map_spawn_override(robot_profile,name))
@@ -62,9 +67,15 @@ def setup(context):
         ('/marine/current','/ocean_current','geometry_msgs/msg/Vector3','gz.msgs.Vector3d','ROS_TO_GZ')]
     for axis in ('horizontal','vertical'):
         mappings.append(('/marine/auv/'+axis+'_fin','/model/tethys_auv/joint/'+axis+'_fins_joint/0/cmd_pos','std_msgs/msg/Float64','gz.msgs.Double','ROS_TO_GZ'))
+    if value('slam')=='true':
+        for suffix,topic,ros_type,gz_type in [('image','/oakd/rgb/image_raw','sensor_msgs/msg/Image','gz.msgs.Image'),
+                ('camera_info','/oakd/rgb/camera_info','sensor_msgs/msg/CameraInfo','gz.msgs.CameraInfo'),
+                ('depth_image','/oakd/depth/image_raw','sensor_msgs/msg/Image','gz.msgs.Image')]:
+            mappings.append((topic,'/marine/auv/rgbd/'+suffix,ros_type,gz_type,'GZ_TO_ROS'))
     bridge_file=folder/'bridge.yaml';bridge_file.write_text(yaml.safe_dump([dict(ros_topic_name=r,gz_topic_name=g,ros_type_name=rt,gz_type_name=gt,direction=d) for r,g,rt,gt,d in mappings]))
     (folder/'session.json').write_text(json.dumps(dict(robot='tethys_auv',map=name,backend='Gazebo Fortress 6',source_world=str(source_world),
         world=str(world_file),model=str(model_file),description=str(description_file),bridge=str(bridge_file),spawn=pose,calibration=calibration,
+        sensor_kit='Authored ideal forward RGB-D kit; no source hull/mass/force changes' if value('slam')=='true' else None,
         scope='Pinned source AUV/native propeller/fins + explicit trim; experimental cruise guidance, independent underwater estimation/SLAM/navigation pending'),indent=2)+'\n')
     print('[robot_lab AUV] '+str(folder/'session.json'))
     partition=os.environ.get('IGN_PARTITION') or os.environ.get('GZ_PARTITION') or 'robot_lab_auv_'+uuid.uuid4().hex[:12]

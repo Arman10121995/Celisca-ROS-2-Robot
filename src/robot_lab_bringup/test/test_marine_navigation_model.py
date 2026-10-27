@@ -72,3 +72,21 @@ def test_actual_rtabmap_padded_cloud_layout_is_consumed_without_a_node():
     receiver=SimpleNamespace(cloud_at=-math.inf,observed=None,reason='')
     MarineNavigation.observe_cloud(receiver,message)
     assert receiver.observed.cell_count==4
+
+
+def test_authored_auv_camera_keeps_source_masses_collisions_and_actuators():
+    import xml.etree.ElementTree as ET
+    from robot_lab_utils.marine_pipeline import auv_camera_kit
+    from robot_lab_utils.marine_camera_relay import fixed_extrinsic
+    folder=ROOT/'src/robot_lab_robots/tethys_auv'
+    native=ET.parse(folder/'model.sdf').getroot().find('model')
+    physical=lambda model:[ET.tostring(x) for x in model.iter() if x.tag in ('inertial','collision','joint','plugin')]
+    before=physical(native)
+    description=auv_camera_kit(native,(folder/'urdf/tethys_auv.urdf').read_text())
+    assert physical(native)==before
+    camera=native.find("link[@name='base_link']/sensor[@name='lab_rgbd']")
+    assert camera.get('type')=='rgbd_camera'
+    transform=fixed_extrinsic(description,'oakd_rgb_camera_optical_frame')
+    assert np.allclose(transform[:3,3],[-1.17,0.,.06])
+    # Optical +Z points along the source AUV's -X cruising direction.
+    assert np.allclose(transform[:3,:3] @ [0.,0.,1.],[-1.,0.,0.],atol=1e-9)

@@ -61,7 +61,7 @@ class HandTab(ttk.Frame):
 
     def selected(self):
         return (self.app.arm_tab.selected()
-                and self.app.robot_profiles.get(self.app.robot_var.get(), {}).get('hand_control') == 'panda')
+                and self.app._robot_config().get('hand_control') == 'panda')
 
     def owned(self):
         return self.selected() and self.app.arm_tab.owned()
@@ -76,7 +76,7 @@ class HandTab(ttk.Frame):
             button.state(['disabled'])
         self.fixture_button.state(['!disabled'] if self.selected() and not self.app._launch_running else ['disabled'])
         if not self.selected():
-            self.status_var.set('Select the native Panda, MuJoCo, Display with a qualified hand controller.')
+            self.status_var.set('Select native Panda, MuJoCo, Display; enable its implemented workflow if a source recheck is pending.')
 
     def connect(self):
         if self.node:

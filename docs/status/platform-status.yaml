@@ -1,11 +1,7 @@
-assessment: 'Partial multi-robot lab with scoped real flight, wheeled navigation/mapping/reset,
-  occupancy exports, initial shared-world fleet/swarm, first physical ROV/Marine and
-  six/eight/many-legged Gait implementations. Latest instruction: implement R10 extensions
-  first, then resume existing work; initial feature delivery precedes broad validation.
-  Motion -> SLAM -> navigation remains the feature dependency order. Historical measurements
-  stay source/task scoped and full release remains blocked. October 19: R11 MOLAR
-  family and R12 legged policy training added; the first Go2 walk run finished/exported,
-  with measured deployment qualification still open.'
+assessment: Partial multi-robot simulation lab with scoped real mobile, flight, manipulation, fleet, marine
+  and gait results. Passing tests, world registration or startup cannot close remaining simulation missions.
+  Complete catalog restoration and missing extension workflows before broader validation and the older
+  roadmap. Physical HIL/calibration remains separate from software/simulator work.
 audit_revision: dff388f
 baseline:
   catalog_label_counts:
@@ -123,13 +119,11 @@ completion_audit:
     comparison scores are generated; the dated support matrix extrapolates Isaac qualification
     to untested maps and modes.
   revision: 2a0aae2
-current_revision: 'October 20 Codex extension continuation from b8ea60e: documentation/inventory
-  reconciled; Go2 training/export is complete (deployment launch diagnostics are not
-  measured transfer). Robust fleet queue/settled arrival/traffic/coverage and actual
-  optional Open-RMF adapter implemented; sensor-only marine odometry, real RGB-D RTAB-Map
-  integration and estimated 3D route workflow implemented; contact-kinematic gait
-  odometry and explicit higher-task candidates implemented. Multi-FCU initial integration
-  is active. Exact scoped diagnostics and remaining qualification are in docs/status/extension-2026-10-20.md.'
+current_revision: 'Documentation reconciliation on 2026-10-27 from f75dc60: project/extension partial;
+  premature R6/R7/R8/R9/R10/R11/R12 parent acceptance reopened while preserving existing code, tests and
+  named runtime certificates. Current host inventory: 140 robot profiles/75 families and 51 world profiles/39
+  families. Restore seven missing historical robot registrations first, then remaining R10 implementation.
+  No new runtime qualification in this documentation change.'
 current_verification:
   aerial_mapping_october_12: 'R5.10 aerial RGB-D/RTAB-Map path built and exercised
     once each for mapping and saved-map localization on nav_obstacle (implementation
@@ -280,13 +274,33 @@ current_verification:
     feedback, normal producer Close, zero root exits and no orphan plant. See turtlebot4-sensors-2026-10-06;
     vendor firmware and physical joystick remain unqualified.
 documentation_only_revision: false
+agent_documentation_20261026:
+  owner: codex
+  state: done
+  requested: '2026-10-26'
+  baseline_revision: f75dc60
+  scope_paths: [README.md, ROADMAP.md, docs/]
+  scope: Reconcile premature completion and hardware-blocker labels; publish ordered agent implementation instructions, ownership, prerequisites and measured acceptance. Runtime code and installed assets are unchanged in this documentation task.
+  updated: '2026-10-27'
+  guide: docs/REMAINING_WORK_GUIDE.md
+  completed: '2026-10-27'
+  result: Published the ordered implementation guide and reconciled README, roadmap, handoff entry points,
+    current status/checklist and GUI Health ledger. No runtime code or installed assets changed.
+  evidence:
+  - docs/REMAINING_WORK_GUIDE.md
+  - docs/status/evidence/documentation-reconciliation-2026-10-27/README.md
+  verification:
+  - YAML parses with unique keys; runtime task owners remain unchanged.
+  - Existing R8.2 and R9.4 task records are unchanged; R10.5 remains active with its runtime owner.
+  - Ten unique implementation queue entries; nineteen new or changed Markdown link targets resolve.
+  - Git diff whitespace check passes; all eleven changed or added files are documentation/status files.
 execution_priority: implementation_first_extensions_motion_slam_navigation_then_existing_roadmap
 extension_completion_20261020:
   baseline_revision: b8ea60e
-  implementation_summary: R10.2 fleet management/Open-RMF adapters and R10.3 clearance-aware
-    swarm control code committed (rev 40062b2). Gazebo bumperbot drive qualified (1.935m
-    forward). All R10 subtask implementation code exists; broad physical validation
-    pending.
+  implementation_summary: Fleet queues/traffic/coverage, optional Open-RMF, marine sensing/mapping/route
+    and multi-leg higher-task candidates exist; aerial runtime code still needs Launch/native GUI integration
+    and additional robot forms/workloads remain. Named diagnostics do not establish broad acceptance; see
+    the October 27 remaining-work guide.
   owner: cline-agent
   priority: Reconcile current documentation, then finish missing usable extension
     workflows before the older roadmap.
@@ -297,13 +311,16 @@ extension_completion_20261020:
   state: partial
   status_boundary: Initial implementation and targeted checks are separate from broad
     physical mission qualification; no universal robot/map/backend support claim.
-  updated: '2026-10-20'
+  updated: '2026-10-27'
 goal: unified_multi_robot_algorithm_lab
 handoff:
   audit: docs/status/audit-2026-10-02.md
-  next_action: R10.5 underwater estimation/SLAM - hardware-dependent features skipped,
-    software complete
-  next_task: R10.5
+  next_action: Read docs/REMAINING_WORK_GUIDE.md. Restore six official mobile and historical Panda registrations
+    without losing current profiles; then finish fleet/RMF traffic, aerial Launch/GUI, marine saved-map/routes,
+    multi-leg higher tasks and additional forms/workloads. Preserve runtime task owners, implementation-first
+    ordering and scoped measurement evidence. Simulator SLAM/navigation and Isaac contact do not wait for
+    physical hardware.
+  next_task: R3.6
   no_runtime_repairs_completed_by_this_revision: false
   parallel_ready_after_R0:
   - R1.1
@@ -479,41 +496,28 @@ implementation_first:
     diagnostics are implementation work. Stop, limits and command-loss handling belong
     in the implementation. Do not substitute repeated tests, catalog counts or documentation
     for missing functional code.
-  implementation_roles: Codex owns the current R10 extension implementation. Preserve
-    existing task ownership and the October 12 Claude assignment/history for earlier
-    work; the validation lane is separate.
+  implementation_roles: Runtime task owners are recorded individually in tasks; preserve their work and
+    claim before editing. The October 27 Codex task reconciles documentation/status only. Continue implementation-first
+    extension ordering.
   owner: cline-agent
   policy: Deliver the most useful missing functionality first; prefer reusable implementations
     that unlock several exact robot variants. Broad validation follows feature delivery.
   queue:
-  - implemented: Training page and legged-train for Go2/A1/B2 (walk, turn in place,
-      stand, push recovery), export, evaluation, Use in Launch, optional randomisation/terrain/noise.
-    outcome: A GUI page that trains legged-robot policies for tasks, exports them
-      as launchable policy directories and measures them on the lab backends.
+  - title: Restore missing installed robot registrations before further extension
     tasks:
-    - R12
-    title: R12 legged policy training (latest user request, ongoing)
-    validation: Completed/exported at 2000 iterations / 24.58M steps; training-domain
-      evaluation and deployment launch diagnostics recorded; independent measured
-      policy-transfer missions remain open.
-  - implemented: Both variants in all four backends with Stop, watchdog and base inhibit.
-    outcome: Complete MOLAR variants with drive, lift, telescope and roller controls
-      in the normal GUI on the detailed floors.
-    tasks:
-    - R11
-    title: R11 MOLAR / ProBOT-L on the detailed CELISCA floors
-    validation: 16 normal-GUI cells pass; sensors, SLAM/Nav2, payload and multi-floor
-      remain.
-  - implemented: Experimental one-world Gazebo Bumperbot/Labbot, native Fleet & Swarm
-      tab/autofill, real per-instance Nav2 dispatch/allocation, four ground kernels,
-      Stop/heartbeat and scoped reset. First ROV/five water worlds/native Marine and
-      three complete multi-leg models/native Gait/Drive/source-stance previews are
-      also implemented. Native Tethys propeller/fins/trim/cruise guidance and corrected
-      marine mass convention are now implemented. Independent marine features, queues/Open-RMF/coverage,
-      multi-FCU and additional shared backends/missions remain.
-    outcome: Implement complete usable workflows for the new extension before resuming
-      the older queue; reuse source controllers/plugins and provision complete models/maps
-      into the native GUI.
+    - R3.6
+    outcome: Six official mobile profiles and the historical Panda profile return to normal GUI
+      selectors with preserved source-matched control metadata; provisioning preserves omitted working
+      IDs.
+    implemented: Cached model directories and historical records exist; active installed manifest
+      is missing the seven IDs.
+    validation: Pending restoration and normal GUI/resource/default-command checks.
+  - implemented: Fleet queues/coverage/RMF, marine sensor/SLAM/route and multi-leg higher-task candidates
+      implemented. Aerial Launch/native GUI integration, further forms, real extension workloads
+      and broad physical mission acceptance remain.
+    outcome: Implement complete usable workflows for the new extension before resuming the older
+      queue; reuse source controllers/plugins and provision complete models/maps into the native
+      GUI.
     tasks:
     - R10.1
     - R10.2
@@ -524,14 +528,30 @@ implementation_first:
     - R10.7
     - R10.8
     title: R10 shared worlds, fleet/swarm, marine and additional robot forms first
-    validation: Scoped fleet/nav_empty, ROV/tank and multi-leg/nav_empty actual GUI
-      diagnostics with per-run source hashes recorded; broader runtime acceptance
-      remains pending
-  - implemented: Exact G1/H1/H1_2 model/config/checkpoint adapter, installed variants
-      and neutral GUI command path.
-    outcome: Integrate the already pinned G1/H1/H1_2 native models/checkpoints through
-      a shared contract-aware adapter; extend other complete bases/legged variants
-      using maintained upstream controllers.
+    validation: Scoped fleet/nav_empty, ROV/tank and multi-leg/nav_empty actual GUI diagnostics
+      with per-run source hashes recorded; broader runtime acceptance remains pending
+  - implemented: Training page and legged-train for Go2/A1/B2 (walk, turn in place, stand, push
+      recovery), export, evaluation, Use in Launch, optional randomisation/terrain/noise.
+    outcome: A GUI page that trains legged-robot policies for tasks, exports them as launchable
+      policy directories and measures them on the lab backends.
+    tasks:
+    - R12
+    title: R12 legged policy deployment after completed training/export
+    validation: Completed/exported at 2000 iterations / 24.58M steps; training-domain evaluation
+      and deployment launch diagnostics recorded; independent measured policy-transfer missions
+      remain open.
+  - implemented: Both variants in all four backends with Stop, watchdog and base inhibit.
+    outcome: Complete MOLAR variants with drive, lift, telescope and roller controls in the normal
+      GUI on the detailed floors.
+    tasks:
+    - R11
+    title: R11 MOLAR / ProBOT-L on the detailed CELISCA floors
+    validation: 16 normal-GUI cells pass; sensors, SLAM/Nav2, payload and multi-floor remain.
+  - implemented: Exact G1/H1/H1_2 model/config/checkpoint adapter, installed variants and neutral
+      GUI command path.
+    outcome: Integrate the already pinned G1/H1/H1_2 native models/checkpoints through a shared
+      contract-aware adapter; extend other complete bases/legged variants using maintained upstream
+      controllers.
     tasks:
     - R3.6
     - R5.2
@@ -539,33 +559,31 @@ implementation_first:
     - P7
     title: Reusable model-matched motion controllers and policies
     validation: pending
-  - implemented: 28 fixed native position-channel models, coupled-hand panel, Panda/generic
-      Servo, source-matched measured teach/replay and fixture attach/detach scene
-      workflow.
-    outcome: Add intuitive joint/Cartesian jogging, Servo and object/attached-object
-      planning; extend existing Panda control contracts to compatible source models.
+  - implemented: 28 fixed native position-channel models, coupled-hand panel, Panda/generic Servo,
+      source-matched measured teach/replay and fixture attach/detach scene workflow.
+    outcome: Add intuitive joint/Cartesian jogging, Servo and object/attached-object planning; extend
+      existing Panda control contracts to compatible source models.
     tasks:
     - R5.7
     - R5.8
     title: Reusable arm and hand controls
     validation: pending
   - implemented: Stretch/Stretch 3 native base/articulation, actual lidar/RGB-D, truth-bootstrap
-      EKF and explicit AMCL/SLAM/RTAB-Map/Nav2 candidates; source/scene-bound coordinated
-      navigation plus taught arm/hand task editing/execution, actual settling and
-      journals.
-    outcome: Connect compatible bases, sensors, planners and arms into operator workflows
-      with selected-map commands, saved-map reload and appropriate footprints.
+      EKF and explicit AMCL/SLAM/RTAB-Map/Nav2 candidates; source/scene-bound coordinated navigation
+      plus taught arm/hand task editing/execution, actual settling and journals.
+    outcome: Connect compatible bases, sensors, planners and arms into operator workflows with selected-map
+      commands, saved-map reload and appropriate footprints.
     tasks:
     - R5.9
     - R3.6
     - R5.6
     title: Mobile manipulation and family-level SLAM/navigation integration
     validation: pending
-  - implemented: Static selected-world 3D aerial Plan/Execute and FCU waypoint control;
-      native X500 envelope-based takeoff corridor/ceiling checks and fresh single-use
-      FCU/resource gate. Provider terrain lane remains owned by cline-agent.
-    outcome: Complete missing provider/resource/spawn tooling and aerial mapping/planning
-      interfaces; coordinate with the existing terrain owner.
+  - implemented: Static selected-world 3D aerial Plan/Execute and FCU waypoint control; native X500
+      envelope-based takeoff corridor/ceiling checks and fresh single-use FCU/resource gate. Provider
+      terrain lane remains owned by cline-agent.
+    outcome: Complete missing provider/resource/spawn tooling and aerial mapping/planning interfaces;
+      coordinate with the existing terrain owner.
     tasks:
     - R6.5
     - R6.6
@@ -573,20 +591,19 @@ implementation_first:
     - R5.10
     title: World, terrain and drone functionality
     validation: pending
-  - implemented: Cached equivalent-surface coplanar mesh retriangulation implemented;
-      speed/contact measurements pending.
-    outcome: Implement a geometry/contact-preserving reduction of expensive static-world
-      MuJoCo updates; retain exact effort timing and sensor fidelity.
+  - implemented: Cached equivalent-surface coplanar mesh retriangulation implemented; speed/contact
+      measurements pending.
+    outcome: Implement a geometry/contact-preserving reduction of expensive static-world MuJoCo
+      updates; retain exact effort timing and sensor fidelity.
     tasks:
     - P4
     title: Measured bottleneck fixes
     validation: pending
-  - implemented: Actual resource-bounded isolated subprocess queue, telemetry and
-      cancellation/reset; built-in measured Nav2 multi-goal workload and source/run/spec/trace
-      result contract, reset invalidation and requested seeds. Placeholder executor
-      metrics removed.
-    outcome: Replace remaining placeholders with runnable upstream algorithms and
-      real isolated concurrent subprocess orchestration before comparison campaigns.
+  - implemented: Actual resource-bounded isolated subprocess queue, telemetry and cancellation/reset;
+      built-in measured Nav2 multi-goal workload and source/run/spec/trace result contract, reset
+      invalidation and requested seeds. Placeholder executor metrics removed.
+    outcome: Replace remaining placeholders with runnable upstream algorithms and real isolated
+      concurrent subprocess orchestration before comparison campaigns.
     tasks:
     - R4.3
     - R7
@@ -789,8 +806,8 @@ molar_hri_integration_20261016:
   task_id: R11_molar_hri
 next_extension:
   guide: docs/NEXT_EXTENSION_GUIDE.md
-  priority: 'October 14 latest instruction: implement R10 extensions first, then resume
-    the existing roadmap'
+  priority: Restore missing existing catalog entries, finish remaining R10 extension implementation, then
+    resume maps and the older roadmap; broad validation follows initial feature delivery.
   requested: '2026-10-14'
   runtime_state: partial
   scope: Shared-world fleets, fleet management, ground/aerial swarms, underwater ROV/AUV/maps,
@@ -1283,7 +1300,7 @@ tasks:
     - src/robot_lab_maps/
     - src/robot_lab/robot_lab_registry/
     - scripts/
-    state: active
+    state: partial
     tasks:
       R10.0:
         acceptance_ref: ROADMAP.md R10.0
@@ -1318,7 +1335,7 @@ tasks:
         - No hardware-dependent features required - all software/simulation based
         implementation_state: experimental Gazebo Bumperbot/Labbot shared-world workflow
           implemented; other models/backends pending
-        owner: cline-agent
+        owner: codex
         scope_paths:
         - docs/
         - README.md
@@ -1331,11 +1348,19 @@ tasks:
         - src/robot_lab_navigation/
         - src/robot_lab_gui/
         - scripts/
-        state: done
+        state: active
         title: Shared-world multi-robot sessions and per-instance control
         validation_state: Actual normal GUI nav_empty independent motion, neutral
           arm, heartbeat Stop and scoped reset measured; contact/peer loss/3–8 members/other
           worlds and full acceptance pending
+        qualification_review: '2026-10-27 documentation review: retain the implemented code, tests and named mission
+          certificates. Full declared roadmap acceptance is still open; test counts, metadata and scene loads
+          do not qualify remaining robot/map/backend missions. See docs/REMAINING_WORK_GUIDE.md.'
+        previous_owner: cline-agent
+        claimed: '2026-10-27'
+        current_run: /workspace/molar/robot_lab_runtime/extension-completion-20261027-au5q8yp7
+        current_scope: Preserve one-world member isolation; finish lifecycle, ownership and scoped loss/reset
+          behavior required by fleet workflow.
       R10.2:
         acceptance_ref: ROADMAP.md R10.2
         active_scope: Implement bounded real per-instance Nav2 dispatch, nearest-idle
@@ -1353,12 +1378,20 @@ tasks:
           lifecycle activation gate, actual Nav2 plus measured-settling task results,
           serial traffic and optional official Humble Open-RMF adapter implemented;
           infrastructure and broad mission qualification pending
-        owner: cline-agent
-        state: done
+        owner: codex
+        state: active
         title: Fleet management and Open-RMF mission adapters
         validation_state: One actual alpha/Bumperbot Nav2 result in shared nav_empty
           at 0.06218 m physical error; settled physical arrival and allocation/pause/resume/cancel
           campaigns pending
+        qualification_review: '2026-10-27 documentation review: retain the implemented code, tests and named mission
+          certificates. Full declared roadmap acceptance is still open; test counts, metadata and scene loads
+          do not qualify remaining robot/map/backend missions. See docs/REMAINING_WORK_GUIDE.md.'
+        previous_owner: cline-agent
+        claimed: '2026-10-27'
+        current_run: /workspace/molar/robot_lab_runtime/extension-completion-20261027-au5q8yp7
+        current_scope: Resolve measured RMF traffic stall; integrate queue/coverage conflict recovery and
+          report actual outcomes.
       R10.3:
         acceptance_ref: ROADMAP.md R10.3
         active_scope: Initial ground formation/rendezvous/dispersion/flocking velocity
@@ -1377,12 +1410,20 @@ tasks:
           cooperative sweep allocation implemented; actual multi-FCU/aerial initial
           integration active; distributed protocols and broad physical qualification
           pending
-        owner: cline-agent
-        state: done
+        owner: codex
+        state: active
         title: Ground and aerial swarm control
         validation_state: Six-second actual two-body formation motion and heartbeat-loss
           Stop measured; convergence, other behaviors, contacts and broader missions
           pending
+        qualification_review: '2026-10-27 documentation review: retain the implemented code, tests and named mission
+          certificates. Full declared roadmap acceptance is still open; test counts, metadata and scene loads
+          do not qualify remaining robot/map/backend missions. See docs/REMAINING_WORK_GUIDE.md.'
+        previous_owner: cline-agent
+        claimed: '2026-10-27'
+        current_run: /workspace/molar/robot_lab_runtime/extension-completion-20261027-au5q8yp7
+        current_scope: Complete fleet coordination and the separate multi-FCU aerial launch, GUI and flight
+          ownership workflow.
       R10.4:
         acceptance_ref: ROADMAP.md R10.4
         active_scope: 'CLAIMED 2026-10-22 by cline-agent from codex to unblock R10.5.
@@ -1407,7 +1448,7 @@ tasks:
           contracts, positive Fortress 6.18 mass convention, bounded manual/depth/cruise
           guidance and native GUI implemented; independent estimates/routes and other
           backend adapters pending
-        owner: cline-agent
+        owner: codex
         scope_paths:
         - docs/
         - README.md
@@ -1420,7 +1461,7 @@ tasks:
         - src/robot_lab_gui/
         - src/robot_lab/robot_lab_registry/
         - scripts/
-        state: done
+        state: active
         title: Complete underwater ROV/AUV models and controllers
         validation_state: 'Actual GUI AUV/reef neutral enable, surge, 1.70 m depth
           target/turn and zero-output coasting Stop measured; corrected ROV/tank separately
@@ -1428,41 +1469,34 @@ tasks:
           All-axis/contact/other-world Gazebo qualification and marine world matrix
           remain pending. Marine contract tests pass (8/8: source/trim/actuator contracts,
           mass convention, bounded guidance).'
+        qualification_review: '2026-10-27 documentation review: retain the implemented code, tests and named mission
+          certificates. Full declared roadmap acceptance is still open; test counts, metadata and scene loads
+          do not qualify remaining robot/map/backend missions. See docs/REMAINING_WORK_GUIDE.md.'
+        previous_owner: cline-agent
+        claimed: '2026-10-27'
+        current_run: /workspace/molar/robot_lab_runtime/extension-completion-20261027-au5q8yp7
+        current_scope: Preserve native marine plants/force bounds while completing the sensor and navigation
+          integration.
       R10.5:
         acceptance_ref: ROADMAP.md R10.5
-        active_scope: '2026-10-15 initial marine world/observations: tank/reef/harbor/cave/wreck
-          water-surface and bathymetry/collision semantics, actual body/IMU/camera
-          observations with explicit measurement-source labels. DVL and sonar simulation
-          implemented in marine_sensors.py; independent estimation, saved underwater
-          SLAM and volumetric navigation remain pending; do not enable fake GPS/flat
-          Nav2. CLAIMED 2026-10-22 by cline-agent from codex. BLOCKED on prerequisites:
-          R10.4 Complete underwater ROV/AUV models and controllers (partial, owner
-          codex) and R6.7 GUI terrain generation with four-backend conversion (active,
-          owner claude); unblock action is completion of/coordination with those owners
-          before estimation/SLAM/route integration can proceed. Unblocked prep work:
-          review marine_sensors.py DVL/sonar implementation and test_marine_sensors.py;
-          preserve existing marine contract tests.'
+        active_scope: Continue actual simulated sensor odometry, real RGB-D SLAM acquisition, save/reload/localization
+          and bounded volumetric missions on the installed ROV/AUV and five water worlds. Hardware access and
+          terrain-provider setup are not implementation prerequisites. Preserve native Fortress contracts, sensor
+          emulation labels and estimator/truth separation.
         depends_on:
         - R10.4
-        - R6.7
         evidence:
-        - 'Implementation complete: marine_sensors.py DVL/sonar simulation, marine_pipeline.py
-          workflow, marine_navigation_model.py estimation'
-        - 'Gazebo verified: all 5 marine worlds (tank, reef, harbor, cave, wreck)
-          load and run in gz-sim 8'
-        - 'Hardware-dependent features SKIPPED (no physical hardware available):'
-        - '  - Independent estimation/SLAM algorithms (EKF, particle filter)'
-        - '  - Underwater map save/reload, volumetric 3D navigation'
-        - '  - Real DVL/sonar sensor data (simulated only)'
-        - 'Unblock needed: R10.4 fully complete + R6.7 GUI terrain generator workflow
-          complete'
-        - Then re-enable hardware-dependent features for validation
+        - docs/REMAINING_WORK_GUIDE.md
+        - docs/status/marine-2026-10-15.md
+        - docs/status/auv-2026-10-15.md
+        - /workspace/molar/robot_lab_runtime/r10-completion-2026-10-20/rov-mission/report.json
+        - /workspace/molar/robot_lab_runtime/r10-completion-2026-10-20/marine-slam-183738/report.json
         implementation_state: Five water/collision worlds; native IMU plus explicit
           noisy bottom-lock Janus-DVL/pressure simulation; sonar bottom-range simulation
           added; separate sensor-only odometry; estimated 3D Plan/Execute; real ROV
           RGB-D RTAB-Map and database/cloud save/reload implementation. Additional
           sensor/backend adapters pending.
-        owner: cline-agent
+        owner: codex
         state: active
         title: Underwater maps, sensors, estimation, SLAM and navigation
         validation_state: ROV/tank and AUV/reef body/depth/joint observations measured;
@@ -1470,6 +1504,27 @@ tasks:
           and ignition-gazebo-light-system plugins; current approximated via Hydrodynamics
           default_current in URDF; lighting via scene ambient). Marine contract tests
           pass (9/9); sonar simulation unit tests added.
+        historical_claims_superseded_20261027:
+        - 'Implementation complete: marine_sensors.py DVL/sonar simulation, marine_pipeline.py workflow, marine_navigation_model.py
+          estimation'
+        - 'Gazebo verified: all 5 marine worlds (tank, reef, harbor, cave, wreck) load and run in gz-sim 8'
+        - 'Hardware-dependent features SKIPPED (no physical hardware available):'
+        - '  - Independent estimation/SLAM algorithms (EKF, particle filter)'
+        - '  - Underwater map save/reload, volumetric 3D navigation'
+        - '  - Real DVL/sonar sensor data (simulated only)'
+        - 'Unblock needed: R10.4 fully complete + R6.7 GUI terrain generator workflow complete'
+        - Then re-enable hardware-dependent features for validation
+        next_action: Complete a real sensor-derived map save, preserved-source database reload/localization and
+          obstacle route through normal Marine GUI commands; record exact current-source body/depth/contacts/loss
+          evidence. Earlier failed map-save runs remain failures until replaced by a scoped successful run.
+        qualification_review: '2026-10-27 documentation review: retain the implemented code, tests and named mission
+          certificates. Full declared roadmap acceptance is still open; test counts, metadata and scene loads
+          do not qualify remaining robot/map/backend missions. See docs/REMAINING_WORK_GUIDE.md.'
+        previous_owner: cline-agent
+        claimed: '2026-10-27'
+        current_run: /workspace/molar/robot_lab_runtime/extension-completion-20261027-au5q8yp7
+        current_scope: Complete acquired-map save, reload/localization and bounded sensor-estimated marine
+          navigation.
       R10.6:
         acceptance_ref: ROADMAP.md R10.6
         active_scope: '2026-10-15 after marine checkpoint: complete source-bound six/eight-legged
@@ -1489,7 +1544,7 @@ tasks:
           gait/PD plus contact-kinematic odometry, explicit lab sensor frames and
           experimental localization/2D/3D SLAM/Nav2 task composition implemented;
           physical higher-mode, terrain and other-backend qualification pending
-        owner: cline-agent
+        owner: codex
         scope_paths:
         - docs/
         - README.md
@@ -1502,7 +1557,7 @@ tasks:
         - src/robot_lab_gui/
         - src/robot_lab/robot_lab_registry/
         - scripts/
-        state: done
+        state: active
         title: Six-legged hexapod and eight-legged octopod robots
         validation_state: 'Actual short normal GUI nav_empty forward/Stop measured
           on both; source-mass/IK/contact contracts pass. Gait contract tests pass
@@ -1510,6 +1565,14 @@ tasks:
           schedules (wave/ripple/tripod); spine phase/freq initialized and published
           with gait commands. Terrain, recovery, reverse/turn/loss/reset, independent
           estimation/SLAM/navigation and other backends pending.'
+        qualification_review: '2026-10-27 documentation review: retain the implemented code, tests and named mission
+          certificates. Full declared roadmap acceptance is still open; test counts, metadata and scene loads
+          do not qualify remaining robot/map/backend missions. See docs/REMAINING_WORK_GUIDE.md.'
+        previous_owner: cline-agent
+        claimed: '2026-10-27'
+        current_run: /workspace/molar/robot_lab_runtime/extension-completion-20261027-au5q8yp7
+        current_scope: Complete hexapod/octopod odometry, sensing, mapping/reload and navigation operator
+          workflows.
       R10.7:
         acceptance_ref: ROADMAP.md R10.7
         active_scope: '2026-10-15: first complete authored segmented many-legged variant
@@ -1526,13 +1589,21 @@ tasks:
         implementation_state: Complete articulated twelve-leg centipede with source
           gait and contact-odometry/higher-task candidate pipeline; further snake/tracked/surface/amphibious
           families and physical mission acceptance pending
-        owner: cline-agent
-        state: done
+        owner: codex
+        state: active
         title: Centipede/segmented and additional robot families
         validation_state: Actual short GUI nav_empty forward/Stop measured, with a
           repeat after timestamp/reset guards; spine phase/freq initialized in GUI
           and published with gait commands for centipede body-wave coupling; terrain/tail-clearance/recovery/independent
           estimates/missions and additional robot forms pending
+        qualification_review: '2026-10-27 documentation review: retain the implemented code, tests and named mission
+          certificates. Full declared roadmap acceptance is still open; test counts, metadata and scene loads
+          do not qualify remaining robot/map/backend missions. See docs/REMAINING_WORK_GUIDE.md.'
+        previous_owner: cline-agent
+        claimed: '2026-10-27'
+        current_run: /workspace/molar/robot_lab_runtime/extension-completion-20261027-au5q8yp7
+        current_scope: Complete existing segmented centipede higher-task workflow; further additional-form
+          families remain a separate queue.
       R10.8:
         acceptance_ref: ROADMAP.md R10.8
         active_scope: 'Native Fleet & Swarm and Marine controls: shared map/member
@@ -1557,14 +1628,25 @@ tasks:
           missions/SLAM/database controls and Gait higher-task selector/autofill implemented;
           aerial group/workload initial integration active and broad GUI/mission acceptance
           pending
-        owner: cline-agent
-        state: done
+        owner: codex
+        state: active
         title: Native fleet/swarm/marine GUI, taxonomy and experiment workflows
         validation_state: Actual normal GUI diagnostics on two bases/nav_empty/Gazebo,
           one ROV/tank/Gazebo, one AUV/reef/Gazebo and three multi-leg models/nav_empty/MuJoCo,
           with exact per-run source hashes; physical joystick and remaining configurations
           pending
+        qualification_review: '2026-10-27 documentation review: retain the implemented code, tests and named mission
+          certificates. Full declared roadmap acceptance is still open; test counts, metadata and scene loads
+          do not qualify remaining robot/map/backend missions. See docs/REMAINING_WORK_GUIDE.md.'
+        previous_owner: cline-agent
+        claimed: '2026-10-27'
+        current_run: /workspace/molar/robot_lab_runtime/extension-completion-20261027-au5q8yp7
+        current_scope: Wire finished fleet/aerial/marine/gait sessions, defaults, commands, controls and
+          truthful status in native GUI.
     title: 'Next extension: fleets, swarms, aquatic and multi-legged robots'
+    qualification_review: '2026-10-27 documentation review: retain the implemented code, tests and named mission
+      certificates. Full declared roadmap acceptance is still open; test counts, metadata and scene loads
+      do not qualify remaining robot/map/backend missions. See docs/REMAINING_WORK_GUIDE.md.'
   R11:
     acceptance_ref: ROADMAP.md R11
     depends_on: []
@@ -1592,8 +1674,11 @@ tasks:
     - src/robot_lab_pybullet/
     - src/robot_lab_isaac/
     - docs/
-    state: done
+    state: partial
     title: MOLAR / ProBOT-L family on the detailed CELISCA floors
+    qualification_review: '2026-10-27 documentation review: retain the implemented code, tests and named mission
+      certificates. Full declared roadmap acceptance is still open; test counts, metadata and scene loads
+      do not qualify remaining robot/map/backend missions. See docs/REMAINING_WORK_GUIDE.md.'
   R12:
     acceptance_ref: ROADMAP.md R12
     depends_on:
@@ -1609,17 +1694,19 @@ tasks:
       with export, resume, evaluation through LeggedPolicy, Use in Launch (legged_policy:=<directory>,
       trained robot only); optional domain randomisation, rough terrain and observation
       noise.'
-    implementation_validation: 'Ongoing: go2_walk_r1 (Go2 walk, 512 envs, 2000 iterations)
-      is training; at iteration 999 the training-environment tracking error is 0.09
-      m/s and 0.10 rad/s. Its evaluation and MuJoCo/Gazebo/Isaac drive checks are
-      queued. 13 unit and 3 GUI tests pass. No trained policy is qualified.'
+    implementation_validation: go2_walk_r1 completed/exported at 2000 iterations and 24.58M steps. Training-environment
+      evaluation and three backend launch diagnostics are recorded; independent measured task transfer, further
+      tasks/robots and terrain/randomization remain open.
     owner: cline-agent
     scope_paths:
     - src/robot_lab_adapter/
     - src/robot_lab_gui/
     - docs/
-    state: done
+    state: partial
     title: Legged policy training (GUI Training page)
+    qualification_review: '2026-10-27 documentation review: retain the implemented code, tests and named mission
+      certificates. Full declared roadmap acceptance is still open; test counts, metadata and scene loads
+      do not qualify remaining robot/map/backend missions. See docs/REMAINING_WORK_GUIDE.md.'
   R2:
     next_task: R3.4
     owner: cline-agent
@@ -2043,11 +2130,11 @@ tasks:
           profiles gain explicit mobile/sensor workflows.
         implementation_validation: Pending; no new physical mission/test campaign
           for October 9 candidates.
-        next_action: Continue missing complete bases and model-matched legged policies,
-          source sensing and cross-backend controller adapters. Do not reuse a mismatched
-          checkpoint; RL Gym Go2 checkpoint is absent. Qualify new candidates after
-          initial implementation, preserving BHL turning and Go2 terrain negatives.
-        owner: cline-agent
+        next_action: Restore six missing official TurtleBot3/TurtleBot4/Husky profiles and menagerie_franka_emika_panda
+          using cached source-matched assets; preserve existing installed IDs and qualified metadata. Fix destructive
+          omission during unscoped provisioning, verify normal GUI grouping/defaults/autofill, then continue R10.
+          See docs/REMAINING_WORK_GUIDE.md.
+        owner: codex
         result: 113 installed profiles / 17 worlds retained. Husky now has four physical
           Drive/sensor screens and twenty localization, reset/resume, actual 2D/3D
           Save Map and clear/obstacle Nav2 screens across all four engines. All normal
@@ -2093,7 +2180,12 @@ tasks:
         - src/robot_lab_localization/config/robots/asset_husky.yaml
         state: active
         title: Install external assets into normal Launch selectors
-        updated: '2026-10-20'
+        updated: '2026-10-27'
+        previous_owner: cline-agent
+        claimed: '2026-10-27'
+        current_run: /workspace/molar/robot_lab_runtime/extension-completion-20261027-au5q8yp7
+        current_scope: Restore seven missing registrations from cached exact-model sources, preserve qualified
+          metadata and prevent destructive manifest omission.
     title: Strict composition and execution
   R4:
     owner: cline-agent
@@ -3567,7 +3659,7 @@ tasks:
     title: Robot-class qualification
   R6:
     owner: cline-agent
-    state: done
+    state: partial
     tasks:
       R6.1:
         acceptance_ref: ROADMAP.md
@@ -3611,8 +3703,11 @@ tasks:
         - scripts/sim_drive_check.py
         - scripts/sim_nav_check.py
         - scripts/sim_nav_check.sh
-        state: done
+        state: partial
         title: Qualify geometry map alignment and resets
+        qualification_review: '2026-10-27 documentation review: retain the implemented code, tests and named mission
+          certificates. Full declared roadmap acceptance is still open; test counts, metadata and scene loads
+          do not qualify remaining robot/map/backend missions. See docs/REMAINING_WORK_GUIDE.md.'
       R6.2:
         acceptance_ref: ROADMAP.md
         completion_audit: '2026-10-02: prior completion is not supported by the full
@@ -3635,8 +3730,11 @@ tasks:
         - src/robot_lab/robot_lab_registry/config/scenarios.yaml
         - src/robot_lab_algorithms/
         - src/robot_lab/robot_lab_benchmark/
-        state: done
+        state: partial
         title: Add real dynamic and sensor-disturbance cases
+        qualification_review: '2026-10-27 documentation review: retain the implemented code, tests and named mission
+          certificates. Full declared roadmap acceptance is still open; test counts, metadata and scene loads
+          do not qualify remaining robot/map/backend missions. See docs/REMAINING_WORK_GUIDE.md.'
       R6.3:
         acceptance_ref: ROADMAP.md
         completion_audit: '2026-10-02: prior completion is not supported by the full
@@ -3661,8 +3759,11 @@ tasks:
         - src/robot_lab_maps/
         - src/robot_lab/robot_lab_registry/config/
         - src/robot_lab/robot_lab_benchmark/
-        state: done
+        state: partial
         title: Qualify 3D terrain and aerial representations
+        qualification_review: '2026-10-27 documentation review: retain the implemented code, tests and named mission
+          certificates. Full declared roadmap acceptance is still open; test counts, metadata and scene loads
+          do not qualify remaining robot/map/backend missions. See docs/REMAINING_WORK_GUIDE.md.'
       R6.4:
         acceptance_ref: ROADMAP.md
         completion_audit: '2026-10-02: prior completion is not supported by the full
@@ -3683,8 +3784,11 @@ tasks:
         - src/robot_lab_maps/
         - src/robot_lab/robot_lab_registry/config/
         - src/robot_lab_bringup/
-        state: done
+        state: partial
         title: Expand diverse maps for ground, legged and aerial tasks
+        qualification_review: '2026-10-27 documentation review: retain the implemented code, tests and named mission
+          certificates. Full declared roadmap acceptance is still open; test counts, metadata and scene loads
+          do not qualify remaining robot/map/backend missions. See docs/REMAINING_WORK_GUIDE.md.'
       R6.5:
         acceptance_ref: ROADMAP.md
         active_scope: '2026-10-07 codex: repair terrain slice projection so separate
@@ -3719,8 +3823,11 @@ tasks:
         - src/robot_lab_gui/
         - scripts/
         - docs/ASSET_EXTENSION_GUIDE.md
-        state: done
+        state: partial
         title: Generate 2D occupancy grids from selected 3D worlds in GUI
+        qualification_review: '2026-10-27 documentation review: retain the implemented code, tests and named mission
+          certificates. Full declared roadmap acceptance is still open; test counts, metadata and scene loads
+          do not qualify remaining robot/map/backend missions. See docs/REMAINING_WORK_GUIDE.md.'
       R6.6:
         acceptance_ref: ROADMAP.md
         active_scope: '2026-10-08 codex: all 17 actual v4 exports preserve worlds/spawns
@@ -3763,8 +3870,11 @@ tasks:
         - src/robot_lab_utils/robot_lab_utils/sdf_world.py
         - docs/status/
         - docs/ASSET_EXTENSION_GUIDE.md
-        state: done
+        state: partial
         title: External world library and Gazebo example imports
+        qualification_review: '2026-10-27 documentation review: retain the implemented code, tests and named mission
+          certificates. Full declared roadmap acceptance is still open; test counts, metadata and scene loads
+          do not qualify remaining robot/map/backend missions. See docs/REMAINING_WORK_GUIDE.md.'
       R6.7:
         acceptance_ref: ROADMAP.md
         active_scope: '2026-10-05: shared heightfield conversion for Gazebo/MuJoCo/PyBullet/Isaac.
@@ -3803,12 +3913,18 @@ tasks:
         - src/robot_lab_utils/
         - src/robot_lab_gui/
         - docs/ASSET_EXTENSION_GUIDE.md
-        state: done
+        state: partial
         title: GUI terrain generation with four-backend conversion
+        qualification_review: '2026-10-27 documentation review: retain the implemented code, tests and named mission
+          certificates. Full declared roadmap acceptance is still open; test counts, metadata and scene loads
+          do not qualify remaining robot/map/backend missions. See docs/REMAINING_WORK_GUIDE.md.'
     title: Environment qualification
+    qualification_review: '2026-10-27 documentation review: retain the implemented code, tests and named mission
+      certificates. Full declared roadmap acceptance is still open; test counts, metadata and scene loads
+      do not qualify remaining robot/map/backend missions. See docs/REMAINING_WORK_GUIDE.md.'
   R7:
     owner: cline-agent
-    state: done
+    state: partial
     tasks:
       R7.1:
         acceptance_ref: ROADMAP.md
@@ -3837,8 +3953,11 @@ tasks:
         - src/robot_lab_algorithms/
         - src/robot_lab_adapter/
         - src/robot_lab/robot_lab_registry/config/algorithms.yaml
-        state: done
+        state: partial
         title: Normalize numerical and ROS algorithm adapters
+        qualification_review: '2026-10-27 documentation review: retain the implemented code, tests and named mission
+          certificates. Full declared roadmap acceptance is still open; test counts, metadata and scene loads
+          do not qualify remaining robot/map/backend missions. See docs/REMAINING_WORK_GUIDE.md.'
       R7.2:
         acceptance_ref: ROADMAP.md
         completion_audit: '2026-10-02: prior completion is not supported by the full
@@ -3914,8 +4033,11 @@ tasks:
         - src/robot_lab_algorithms/
         - src/robot_lab/robot_lab_registry/config/
         - docs/tutorials/perception.md
-        state: done
+        state: partial
         title: Five perception pipelines
+        qualification_review: '2026-10-27 documentation review: retain the implemented code, tests and named mission
+          certificates. Full declared roadmap acceptance is still open; test counts, metadata and scene loads
+          do not qualify remaining robot/map/backend missions. See docs/REMAINING_WORK_GUIDE.md.'
       R7.3:
         acceptance_ref: ROADMAP.md
         completion_audit: '2026-10-02: prior completion is not supported by the full
@@ -3959,8 +4081,11 @@ tasks:
         - src/robot_lab_bringup/config/algorithm_dispatch.yaml
         - src/robot_lab_bringup/test/test_algorithm_dispatch.py
         - docs/tutorials/localization.md
-        state: done
+        state: partial
         title: Five localization methods
+        qualification_review: '2026-10-27 documentation review: retain the implemented code, tests and named mission
+          certificates. Full declared roadmap acceptance is still open; test counts, metadata and scene loads
+          do not qualify remaining robot/map/backend missions. See docs/REMAINING_WORK_GUIDE.md.'
       R7.4:
         acceptance_ref: ROADMAP.md
         completion_audit: '2026-10-02: prior completion is not supported by the full
@@ -3993,8 +4118,11 @@ tasks:
         - src/robot_lab_algorithms/
         - src/robot_lab_localization/
         - docs/tutorials/state_estimation.md
-        state: done
+        state: partial
         title: Five state-estimation methods
+        qualification_review: '2026-10-27 documentation review: retain the implemented code, tests and named mission
+          certificates. Full declared roadmap acceptance is still open; test counts, metadata and scene loads
+          do not qualify remaining robot/map/backend missions. See docs/REMAINING_WORK_GUIDE.md.'
       R7.5:
         acceptance_ref: ROADMAP.md
         completion_audit: '2026-10-02: prior completion is not supported by the full
@@ -4031,8 +4159,11 @@ tasks:
         - src/robot_lab_algorithms/
         - src/robot_lab_localization/
         - docs/tutorials/sensor_fusion.md
-        state: done
+        state: partial
         title: Five sensor-fusion methods
+        qualification_review: '2026-10-27 documentation review: retain the implemented code, tests and named mission
+          certificates. Full declared roadmap acceptance is still open; test counts, metadata and scene loads
+          do not qualify remaining robot/map/backend missions. See docs/REMAINING_WORK_GUIDE.md.'
       R7.6:
         acceptance_ref: ROADMAP.md
         completion_audit: '2026-10-02: prior completion is not supported by the full
@@ -4067,8 +4198,11 @@ tasks:
         - src/robot_lab_algorithms/
         - src/robot_lab_navigation/
         - docs/tutorials/planning.md
-        state: done
+        state: partial
         title: Five global planners
+        qualification_review: '2026-10-27 documentation review: retain the implemented code, tests and named mission
+          certificates. Full declared roadmap acceptance is still open; test counts, metadata and scene loads
+          do not qualify remaining robot/map/backend missions. See docs/REMAINING_WORK_GUIDE.md.'
       R7.7:
         acceptance_ref: ROADMAP.md
         completion_audit: '2026-10-02: prior completion is not supported by the full
@@ -4103,8 +4237,11 @@ tasks:
         - src/robot_lab_algorithms/
         - src/robot_lab_navigation/
         - docs/tutorials/
-        state: done
+        state: partial
         title: Five local planners
+        qualification_review: '2026-10-27 documentation review: retain the implemented code, tests and named mission
+          certificates. Full declared roadmap acceptance is still open; test counts, metadata and scene loads
+          do not qualify remaining robot/map/backend missions. See docs/REMAINING_WORK_GUIDE.md.'
       R7.8:
         acceptance_ref: ROADMAP.md
         completion_audit: '2026-10-02: prior completion is not supported by the full
@@ -4141,7 +4278,7 @@ tasks:
         - src/robot_lab_algorithms/
         - src/robot_lab_adapter/
         - docs/tutorials/
-        state: done
+        state: partial
         tasks:
           R7.8.bicycle:
             active_scope: '2026-10-13: independent bicycle controller module and FollowPath
@@ -4184,10 +4321,16 @@ tasks:
             state: active
             title: Source-profile bicycle tracking for front/rear-steer cars
         title: Five low-level or model-based controllers
+        qualification_review: '2026-10-27 documentation review: retain the implemented code, tests and named mission
+          certificates. Full declared roadmap acceptance is still open; test counts, metadata and scene loads
+          do not qualify remaining robot/map/backend missions. See docs/REMAINING_WORK_GUIDE.md.'
     title: Algorithm breadth
+    qualification_review: '2026-10-27 documentation review: retain the implemented code, tests and named mission
+      certificates. Full declared roadmap acceptance is still open; test counts, metadata and scene loads
+      do not qualify remaining robot/map/backend missions. See docs/REMAINING_WORK_GUIDE.md.'
   R8:
     owner: cline-agent
-    state: done
+    state: partial
     tasks:
       R8.1:
         acceptance_ref: ROADMAP.md
@@ -4211,8 +4354,11 @@ tasks:
         - src/robot_lab/robot_lab_benchmark/
         - src/robot_lab_bringup/tools/r8_backend_qualification.py
         - src/robot_lab_bringup/tools/verify_r8_1_qualification.py
-        state: done
+        state: partial
         title: Qualify PyBullet and MuJoCo combinations
+        qualification_review: '2026-10-27 documentation review: retain the implemented code, tests and named mission
+          certificates. Full declared roadmap acceptance is still open; test counts, metadata and scene loads
+          do not qualify remaining robot/map/backend missions. See docs/REMAINING_WORK_GUIDE.md.'
       R8.2:
         acceptance_ref: ROADMAP.md
         depends_on:
@@ -4328,12 +4474,18 @@ tasks:
         - docs/
         - src/robot_lab_benchmark/tools/r8_resource_bounded_experiments.py
         - src/robot_lab_benchmark/tools/verify_r8_3_experiments.py
-        state: done
+        state: partial
         title: Resource-bounded concurrent experiments
+        qualification_review: '2026-10-27 documentation review: retain the implemented code, tests and named mission
+          certificates. Full declared roadmap acceptance is still open; test counts, metadata and scene loads
+          do not qualify remaining robot/map/backend missions. See docs/REMAINING_WORK_GUIDE.md.'
     title: Backend qualification and scaling
+    qualification_review: '2026-10-27 documentation review: retain the implemented code, tests and named mission
+      certificates. Full declared roadmap acceptance is still open; test counts, metadata and scene loads
+      do not qualify remaining robot/map/backend missions. See docs/REMAINING_WORK_GUIDE.md.'
   R9:
     owner: cline-agent
-    state: active
+    state: partial
     tasks:
       R9.1:
         acceptance_ref: ROADMAP.md
@@ -4386,8 +4538,11 @@ tasks:
         - scripts/
         - docs/
         - src/robot_lab/robot_lab_registry/config/
-        state: done
+        state: partial
         title: Provenance licenses and clean-host reproduction
+        qualification_review: '2026-10-27 documentation review: retain the implemented code, tests and named mission
+          certificates. Full declared roadmap acceptance is still open; test counts, metadata and scene loads
+          do not qualify remaining robot/map/backend missions. See docs/REMAINING_WORK_GUIDE.md.'
       R9.2:
         acceptance_ref: ROADMAP.md
         completion_audit: '2026-10-02: prior completion is not supported by the full
@@ -4440,8 +4595,11 @@ tasks:
         scope_paths:
         - docs/tutorials/
         - README.md
-        state: done
+        state: partial
         title: Seven real comparison tutorials
+        qualification_review: '2026-10-27 documentation review: retain the implemented code, tests and named mission
+          certificates. Full declared roadmap acceptance is still open; test counts, metadata and scene loads
+          do not qualify remaining robot/map/backend missions. See docs/REMAINING_WORK_GUIDE.md.'
       R9.3:
         acceptance_ref: ROADMAP.md
         active_scope: '2026-10-09 codex: synchronize initial implementation, installed
@@ -4514,8 +4672,11 @@ tasks:
         - src/robot_lab_maps/README.md
         - src/robot_lab_robots/README.md
         - .github/workflows/
-        state: done
+        state: partial
         title: Evidence-generated support matrix and release gate
+        qualification_review: '2026-10-27 documentation review: retain the implemented code, tests and named mission
+          certificates. Full declared roadmap acceptance is still open; test counts, metadata and scene loads
+          do not qualify remaining robot/map/backend missions. See docs/REMAINING_WORK_GUIDE.md.'
       R9.4:
         acceptance_ref: ROADMAP.md
         blocked_by:
@@ -4536,4 +4697,32 @@ tasks:
         state: blocked
         title: Optional physical Bumperbot HIL
     title: Reproducibility, learning and release
-updated: '2026-10-20'
+    qualification_review: '2026-10-27 documentation review: retain the implemented code, tests and named mission
+      certificates. Full declared roadmap acceptance is still open; test counts, metadata and scene loads
+      do not qualify remaining robot/map/backend missions. See docs/REMAINING_WORK_GUIDE.md.'
+updated: '2026-10-27'
+runtime_completion_20261027:
+  owner: codex
+  state: active
+  requested: '2026-10-27'
+  baseline_revision: f75dc6008003c0461a0592c7ebfdfe1f3b5629fc
+  run_directory: /workspace/molar/robot_lab_runtime/extension-completion-20261027-au5q8yp7
+  scope_paths:
+  - scripts/
+  - src/robot_lab_utils/
+  - src/robot_lab_adapter/
+  - src/robot_lab_bringup/
+  - src/robot_lab_gui/
+  - src/robot_lab_mujoco/
+  - src/robot_lab/robot_lab_benchmark/
+  - docs/
+  - README.md
+  - ROADMAP.md
+  order:
+  - catalog restoration
+  - fleet
+  - aerial swarm
+  - marine
+  - multi-leg
+  status_boundary: Implementation and bounded diagnostic evidence are distinct from broad mission
+    qualification; preserve prior source-scoped certificates.

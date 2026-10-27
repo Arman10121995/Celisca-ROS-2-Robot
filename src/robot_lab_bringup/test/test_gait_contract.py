@@ -34,6 +34,56 @@ def test_complete_leg_chains_and_initial_ik(source):
         assert (q<=model.upper[model.indices[leg['id']]]).all()
 
 
+def test_contact_odometry_retains_kdl_chains_and_measures_joint_motion(source, monkeypatch, tmp_path):
+    """Actual source FK must survive constructor return and Python collection."""
+    import gc
+    import time
+    from types import SimpleNamespace
+    from sensor_msgs.msg import Imu, JointState
+    from std_msgs.msg import String
+    from rclpy.node import Node
+    from robot_lab_utils import gait_odometry as module
+    name, description, model = source
+    description_file=tmp_path/'robot.urdf';description_file.write_text(description)
+    parameters=dict(description_file=str(description_file),gait_config=model.config,initial_drive_yaw=0.)
+    monkeypatch.setattr(Node,'__init__',lambda *_a,**_k:None)
+    monkeypatch.setattr(module.GaitOdometry,'declare_parameter',lambda *_a:None)
+    monkeypatch.setattr(module.GaitOdometry,'get_parameter',lambda _self,key:SimpleNamespace(value=parameters[key]))
+    messages=[]
+    monkeypatch.setattr(module.GaitOdometry,'create_publisher',lambda *_a:SimpleNamespace(publish=messages.append))
+    monkeypatch.setattr(module.GaitOdometry,'create_subscription',lambda *_a:None)
+    monkeypatch.setattr(module,'TransformBroadcaster',lambda _node:SimpleNamespace(sendTransform=lambda _m:None))
+    node=module.GaitOdometry();gc.collect()
+    for leg in node.model.legs:
+        chain,names,solver=node.chains[leg['id']]
+        import PyKDL as kdl
+        frame=kdl.Frame()
+        values=dict(zip(model.names,model.initial))
+        assert chain.getNrOfJoints()==len(names)
+        assert solver.JntToCart(model.array([values[n] for n in names]),frame)==0
+        assert np.linalg.norm([frame.p.x(),frame.p.y(),frame.p.z()])>.03
+    if name!='hexapod_ros2':
+        return  # The hexapod's chains use the same trunk axes for this replay.
+    imu=Imu();imu.orientation.w=1.;imu.header.stamp.sec=1
+    node.observe_imu(imu)
+    forces={leg['id']:10. for leg in model.legs};forces['body']=0.
+    node.observe_contacts(String(data=json.dumps(dict(normal_forces_N=forces,sim_time=1.,clock_time=1.))))
+    joints=JointState();joints.header.stamp.sec=1;joints.name=model.names;joints.position=model.initial.tolist()
+    node.observe_joints(joints)
+    advanced=model.initial.copy()
+    for leg in model.legs:
+        solution,error=model.solve(leg['id'],model.home[leg['id']]+np.array([-.0004,0.,0.]),leg['initial'])
+        assert error<.00002
+        advanced[model.indices[leg['id']]]=solution
+    joints.header.stamp.nanosec=20_000_000;joints.position=advanced.tolist()
+    node.imu_at=node.contact_at=time.monotonic()
+    node.observe_joints(joints)
+    odometry=[m for m in messages if hasattr(m,'pose')]
+    assert odometry and .0002<odometry[-1].pose.pose.position.x<.0006
+    twist=odometry[-1].twist.twist.linear
+    assert .01<np.hypot(twist.x,twist.y)<.03  # Twist is in the source drive frame.
+
+
 def test_compiled_plant_preserves_source_link_masses(source):
     import mujoco
     from robot_lab_mujoco.mujoco_spawner import _build_mjcf_from_urdf,_FALLBACK_MJCF

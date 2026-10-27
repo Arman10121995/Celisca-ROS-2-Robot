@@ -37,12 +37,7 @@
       <topic>/marine/imu</topic>
       <gz_frame_id>base_link</gz_frame_id>
     </sensor>
-    <sensor name="marine_dvl" type="dvl">
-      <always_on>true</always_on>
-      <update_rate>10</update_rate>
-      <topic>/marine/dvl</topic>
-      <gz_frame_id>base_link</gz_frame_id>
-    </sensor>
+    <!-- Fortress DVL/pressure/sonar emulation runs in marine_sensors.py. -->
   </gazebo>
   <link name="thruster_0_link">
     <inertial>

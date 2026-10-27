@@ -18,7 +18,7 @@ import numpy as np
 import rclpy
 from rclpy.clock import Clock, ClockType
 from rclpy.node import Node
-from geometry_msgs.msg import Twist
+from geometry_msgs.msg import PoseWithCovarianceStamped, Twist
 from nav_msgs.msg import Odometry
 from sensor_msgs.msg import PointCloud2
 from sensor_msgs_py import point_cloud2
@@ -36,7 +36,8 @@ class MarineNavigation(Node):
     def __init__(self):
         super().__init__('marine_mission_controller')
         for key, value in dict(world_file='', robot_id='lab_rov', surface_z=0., bottom_z=-6.,
-                               radius=.55, database_path='', control_allowed=True).items():
+                               radius=.55, database_path='', control_allowed=True, localization_mode=False,
+                               saved_map_source='').items():
             self.declare_parameter(key, value)
         self.robot = self.get_parameter('robot_id').value
         self.auv = self.robot == 'tethys_auv'
@@ -44,6 +45,9 @@ class MarineNavigation(Node):
         self.bottom = float(self.get_parameter('bottom_z').value)
         self.radius = float(self.get_parameter('radius').value)
         self.database = str(self.get_parameter('database_path').value)
+        self.localization = bool(self.get_parameter('localization_mode').value)
+        self.localized_at = -math.inf
+        self.localized_stamp = -math.inf
         self.scene = StaticScene(str(self.get_parameter('world_file').value))
         self.observed = None
         self.cloud_at = -math.inf
@@ -69,6 +73,7 @@ class MarineNavigation(Node):
         self.create_subscription(String, '/marine/state', self.observe_native, 10)
         self.create_subscription(Odometry, '/marine/estimated_odometry', self.observe_pose, 10)
         self.create_subscription(PointCloud2, '/marine/slam/cloud_map', self.observe_cloud, 10)
+        self.create_subscription(PoseWithCovarianceStamped, '/marine/slam/localization_pose', self.observe_localization, 10)
         self.create_subscription(String, '/marine/mission/command', self.command, 10)
         self.steady = Clock(clock_type=ClockType.STEADY_TIME)
         self.create_timer(.1, self.tick, clock=self.steady)
@@ -77,6 +82,31 @@ class MarineNavigation(Node):
         self.directory.mkdir(parents=True)
         self.events = (self.directory / 'events.jsonl').open('a', buffering=1)
         self.event_bytes = 0
+        from robot_lab_utils.map_archive import RtabmapArchive
+        self.archive = RtabmapArchive(self, self.database, '/marine/slam', '/marine/mapping',
+            self.directory, self.get_parameter('world_file').value, self.robot, self.map_result)
+        saved = str(self.get_parameter('saved_map_source').value)
+        if self.localization and saved:
+            cloud = Path(saved).parent/'occupied.npz'
+            if cloud.is_file():
+                with np.load(cloud, allow_pickle=False) as stored:
+                    self.observed = VoxelObstacles(stored['points'], voxel=.2)
+
+    def observe_localization(self, msg):
+        p, q = msg.pose.pose.position, msg.pose.pose.orientation
+        stamp=msg.header.stamp.sec+msg.header.stamp.nanosec*1e-9
+        age=self.get_clock().now().nanoseconds*1e-9-stamp
+        covariance=np.asarray(msg.pose.covariance)
+        if (msg.header.frame_id == 'map' and np.isfinite([p.x,p.y,p.z,q.x,q.y,q.z,q.w]).all()
+                and abs(q.x*q.x+q.y*q.y+q.z*q.z+q.w*q.w-1.)<.01
+                and np.isfinite(covariance).all() and min(covariance[[0,7,14]])>=0.
+                and max(covariance[[0,7,14]])<=.25 and -.2<=age<=3.
+                and stamp>self.localized_stamp):
+            self.localized_at,self.localized_stamp=time.monotonic(),stamp
+
+    def map_result(self, phase, reason, result):
+        self.reason = reason
+        self.event('map_saved' if phase == 'saved' else 'map_save_failed', result=result, reason=reason)
 
     def event(self, name, **data):
         row = json.dumps(dict(event=name, wall=time.time(), position=self.position.tolist() if self.position is not None else None,
@@ -136,7 +166,8 @@ class MarineNavigation(Node):
     def fresh(self):
         now = time.monotonic()
         return (now - self.pose_at < .6 and now - self.native_at < .6 and self.native is not None
-                and self.native.get('ready') and self.pose_std < .25)
+                and self.native.get('ready') and self.pose_std < .25
+                and (not self.localization or now-self.localized_at < 3.))
 
     def control(self, op, **extra):
         if self.native:
@@ -218,21 +249,10 @@ class MarineNavigation(Node):
             self.event('rejected', reason=str(exc))
 
     def save_map(self):
-        source = Path(self.database)
-        if not self.database or not source.is_file() or not self.observed:
-            raise ValueError('Start RGB-D SLAM and acquire a real 3D cloud before saving')
-        output = self.directory / ('map-' + uuid.uuid4().hex[:8])
-        output.mkdir()
-        with sqlite3.connect('file:' + str(source) + '?mode=ro', uri=True, timeout=2.) as src:
-            with sqlite3.connect(output / 'rtabmap.db') as dst:
-                src.backup(dst, pages=256)
-        np.savez_compressed(output / 'occupied.npz', points=self.observed.centres, voxel=.2)
-        (output / 'manifest.json').write_text(json.dumps(dict(robot=self.robot,
-            source_world=self.get_parameter('world_file').value, source_database=str(source),
-            points=len(self.observed.centres), observer='DVL/pressure emulation + native IMU + actual RGB-D RTAB-Map',
-            scope='Saved actual SLAM database/cloud; reload/navigation qualification pending'), indent=2)+'\n')
-        self.reason = 'Saved actual database and occupied cloud: ' + str(output)
-        self.event('map_saved', directory=str(output), points=len(self.observed.centres))
+        if self.status in ('planning', 'executing', 'coasting'):
+            raise ValueError('Cancel/finish the active marine route before flushing its SLAM map')
+        self.archive.request()
+        self.reason = self.archive.message
 
     def tick(self):
         now = time.monotonic()
@@ -296,6 +316,8 @@ class MarineNavigation(Node):
             ready=self.fresh(), position=self.position.tolist() if self.position is not None else None,
             route=self.route, waypoint=self.index, position_std_m=self.pose_std if math.isfinite(self.pose_std) else None,
             observed_cells=self.observed.cell_count if self.observed else 0, directory=str(self.directory),
+            localization_mode=self.localization, localized=self.localization and now-self.localized_at < 3.,
+            mapping_status=self.archive.phase, saved_map=self.archive.result,
             estimator='Pressure/DVL simulation + native IMU; optional real RGB-D SLAM map transform',
             scope='Experimental estimated-pose mission; no independent physical navigation qualification')
         self.state_pub.publish(String(data=json.dumps(data, allow_nan=False)))
