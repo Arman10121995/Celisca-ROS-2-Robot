@@ -12,6 +12,8 @@ def rotation(rpy):
 
 
 class MarineModel:
+    thruster_count = 8
+    controlled_axes = (0, 1, 2, 3, 4, 5)
     def __init__(self, description, density=1025.):
         root=ET.fromstring(description)
         self.mass=0.
@@ -51,9 +53,11 @@ class MarineModel:
                 raise ValueError('Marine thrusters require finite signed force limits')
             self.bounds.append(limits)
         self.matrix=np.array(columns).T
-        if self.matrix.shape!=(6,8) or np.linalg.matrix_rank(self.matrix)!=6:
-            raise ValueError('The complete ROV source must provide eight thrusters with six-axis allocation')
-        self.inverse=np.linalg.pinv(self.matrix)
+        axes=list(self.controlled_axes)
+        if self.matrix.shape!=(6,self.thruster_count) or np.linalg.matrix_rank(self.matrix[axes])!=len(axes):
+            raise ValueError('Marine source thrusters do not span the declared controlled axes')
+        self.inverse=np.zeros((self.thruster_count,6))
+        self.inverse[:,axes]=np.linalg.pinv(self.matrix[axes])
         self.bounds=np.asarray(self.bounds)
         self.gravity_trim=(self.mass-self.displacement*self.density)*9.81
 
@@ -67,3 +71,9 @@ class MarineModel:
             if force>high:scale=min(scale,high/force)
             if force<low:scale=min(scale,low/force)
         return forces*scale,scale
+
+
+class SurfaceModel(MarineModel):
+    """Two physical propellers control surge and yaw; buoyancy supplies heave."""
+    thruster_count = 2
+    controlled_axes = (0, 5)

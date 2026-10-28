@@ -1,0 +1,387 @@
+{
+  "rov_acquisition": {
+    "raw_directory": "/workspace/molar/robot_lab_runtime/project-completion-20261027-vne3n358/automatic-marine/eb0e11894dbf4300ab82f87b1ab747c4",
+    "result": "rov_acquisition.json",
+    "run": "rov_acquisition-run.json",
+    "cleanup_complete": true,
+    "measurements": [
+      {
+        "map_artifact": {
+          "kind": "acquired_rtabmap",
+          "robot": "lab_rov",
+          "frame": "map",
+          "directory": "/workspace/molar/robot_lab_runtime/marine_missions/3ae9b1c76fc24ff7a2dd9698e0be016e/map-a5656c81b4",
+          "estimator_contract": "marine_spawn_imu_v1",
+          "source_world": "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_maps/share/robot_lab_maps/maps/marine_tank/worlds/marine_tank.world",
+          "world_sha256": "39f98763ad843dc6f73049e4ce8be70e05bb79428a7d69a3a68447b9b0326164",
+          "source_database": "/workspace/molar/robot_lab_runtime/marine_sessions/rov-r9w98mjb/marine-rtabmap.db",
+          "database": "/workspace/molar/robot_lab_runtime/marine_missions/3ae9b1c76fc24ff7a2dd9698e0be016e/map-a5656c81b4/rtabmap.db",
+          "database_observation": {
+            "nodes": 5,
+            "bytes": 770048,
+            "sha256": "cd8daf06683ce63908259a9e40e65f55b5946ae9dedbf4e2b519144724b62139"
+          },
+          "points": 11297,
+          "cloud_stamp": {
+            "sec": 4,
+            "nanosec": 800000000
+          },
+          "scope": "Acquired RGB-D SLAM database/cloud; physical reload/mission qualification is separate"
+        },
+        "observation": {
+          "kind": "database",
+          "nodes": 5,
+          "sha256": "cd8daf06683ce63908259a9e40e65f55b5946ae9dedbf4e2b519144724b62139"
+        },
+        "physical_start": [
+          0.061686764492489714,
+          -5.145544319637959e-09,
+          -1.0651669695067651
+        ],
+        "physical_pose": [
+          0.4590152395585335,
+          1.4045435809037208e-05,
+          -1.1078549264804813
+        ],
+        "distance_m": 0.39732847531447657
+      }
+    ]
+  },
+  "hexapod_acquisition": {
+    "raw_directory": "/workspace/molar/robot_lab_runtime/project-completion-20261027-vne3n358/automatic-gait/c9d558a2561f43e1b18ec33045ecab97",
+    "result": "hexapod_acquisition.json",
+    "run": "hexapod_acquisition-run.json",
+    "cleanup_complete": true,
+    "measurements": [
+      {
+        "map_artifact": {
+          "kind": "acquired_occupancy",
+          "robot": "hexapod_ros2",
+          "frame": "map",
+          "known_cells": 26212,
+          "occupied_cells": 425,
+          "source_world": "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_maps/share/robot_lab_maps/maps/nav_empty/worlds/nav_empty.world",
+          "world_sha256": "0ba78b1173d9353ab4eb92b042f3860211b3f5ef95fb6933f1518484940a776d",
+          "map_yaml": "/workspace/molar/robot_lab_runtime/gait_sessions/hexapod_ros2-xn5c7t6w/saved_maps/map-b7479af1ee/map.yaml",
+          "initial_pose_in_map": [
+            -0.019995314967658415,
+            -0.000504432769857369,
+            0.0034900000000000755
+          ],
+          "scope": "Actual acquired grid; saved-map localization/navigation qualification is separate"
+        },
+        "observation": {
+          "kind": "occupancy",
+          "known_cells": 26212,
+          "yaml_sha256": "0ac7fb2311aa7f6a7c6c31bc3ba085b2443d84b4a4c1cc651235e79985ef6b37",
+          "image_sha256": "118cd33114f251e5938e1f9233d3f659bcd6a44f10b027ef2f8999cbf3ff4340"
+        },
+        "physical_start": [
+          -0.4999171499497168,
+          -0.49996489105417946,
+          1.5708118192345732
+        ],
+        "physical_pose": [
+          -0.345553352313675,
+          -0.4973832950601467,
+          1.5785757826573836
+        ],
+        "distance_m": 0.15438538356495174
+      }
+    ]
+  },
+  "hexapod_navigation": {
+    "raw_directory": "/workspace/molar/robot_lab_runtime/project-completion-20261027-vne3n358/navigation-gait/a19e7f6f303e4b8ead9a7643f03fed65",
+    "result": "hexapod_navigation.json",
+    "run": "hexapod_navigation-run.json",
+    "cleanup_complete": true,
+    "measurements": [
+      {
+        "requested": [
+          0.0,
+          -0.5,
+          0.0
+        ],
+        "physical_pose": [
+          -0.14714309022565034,
+          -0.5154274024757944,
+          -0.039271864944141484
+        ],
+        "linear_m_s": 0.0001835968766800807,
+        "angular_rad_s": 0.00012720522996024808,
+        "settled_sim_s": 1.0,
+        "member_id": "body",
+        "index": 0,
+        "native_terminal": true,
+        "nav2_status": 4
+      }
+    ]
+  },
+  "aerial_formation": {
+    "raw_directory": "/workspace/molar/robot_lab_runtime/project-completion-20261027-vne3n358/automatic-aerial-rangefinder-formation/bd3698fb58e44bd8b4fb8d52b77b328b",
+    "result": "aerial_formation.json",
+    "run": "aerial_formation-run.json",
+    "cleanup_complete": true,
+    "measurements": [
+      {
+        "requested": [
+          -2.016589551232755,
+          -2.0054224682971835,
+          3.221602517929124
+        ],
+        "physical_pose": [
+          -2.0586101685939346,
+          -1.9640080153447488,
+          3.1320257450940803
+        ],
+        "linear_m_s": 0.04025280464384819,
+        "angular_rad_s": -0.00024595793040643754,
+        "settled_sim_s": 2.0,
+        "member_id": "air1"
+      },
+      {
+        "requested": [
+          -2.016589551232755,
+          0.9945775317028165,
+          3.221602517929124
+        ],
+        "physical_pose": [
+          -1.9547497435188668,
+          0.9479852160846908,
+          3.053515515275657
+        ],
+        "linear_m_s": 0.0641421831043693,
+        "angular_rad_s": -0.0033684620562298754,
+        "settled_sim_s": 2.1000000000000014,
+        "member_id": "air2"
+      }
+    ]
+  },
+  "aerial_operator_loss": {
+    "raw_directory": "/workspace/molar/robot_lab_runtime/project-completion-20261027-vne3n358/automatic-aerial-rangefinder-operator_loss/79c5039ffb294de7ad0c6c1bb07348cf",
+    "result": "aerial_operator_loss.json",
+    "run": "aerial_operator_loss-run.json",
+    "cleanup_complete": true,
+    "measurements": [
+      {
+        "member_id": "air1",
+        "physical_initial": [
+          -0.5,
+          -0.5,
+          0.22699921262738113
+        ],
+        "physical_airborne": [
+          -0.49475075418571335,
+          -0.5488893326398356,
+          3.049034155580422
+        ],
+        "physical_pose": [
+          -0.469783357289153,
+          -0.4665963791889727,
+          0.22699975603109768
+        ],
+        "linear_m_s": 0.0,
+        "settled_sim_s": 1.2999999999999972,
+        "observed_landing": true,
+        "landed_state": 1,
+        "disarmed": true,
+        "heartbeat_silence_wall_s": 14.81537809700012
+      },
+      {
+        "member_id": "air2",
+        "physical_initial": [
+          -3.5,
+          -0.5,
+          0.22699921262738113
+        ],
+        "physical_airborne": [
+          -3.460984999397202,
+          -0.5102372901358437,
+          2.9201140065497304
+        ],
+        "physical_pose": [
+          -3.4488271104072488,
+          -0.4499957989148709,
+          0.22699961057349322
+        ],
+        "linear_m_s": 0.0,
+        "settled_sim_s": 1.0,
+        "observed_landing": true,
+        "landed_state": 1,
+        "disarmed": true,
+        "heartbeat_silence_wall_s": 14.815385105000132
+      }
+    ]
+  },
+  "tracked_navigation": {
+    "raw_directory": "/workspace/molar/robot_lab_runtime/project-completion-20261027-vne3n358/tracked-navigation-1793116602953157861/09972a23ed34484a89a013a7f82ecbe1",
+    "result": "tracked_navigation.json",
+    "run": "tracked_navigation-run.json",
+    "cleanup_complete": true,
+    "measurements": [
+      {
+        "requested": [
+          0.5,
+          -0.5,
+          0.0
+        ],
+        "physical_pose": [
+          0.36420970785833545,
+          -0.5232229978548703,
+          -0.03203255790119189
+        ],
+        "position_error_m": 0.13776179103541705,
+        "heading_error_rad": 0.032032557901191895,
+        "settled_sim_s": 1.0199999999999996,
+        "nav2_status": 4,
+        "truth_samples": 504,
+        "sim_time": 18.36
+      }
+    ]
+  },
+  "fleet_reset": {
+    "raw_directory": "/workspace/molar/robot_lab_runtime/project-completion-20261027-vne3n358/fleet-reset-165644",
+    "result": "fleet-reset.json",
+    "clock_samples": 13,
+    "clock_before": 6.5120000000000005,
+    "clock_after": 8.08,
+    "world_clock_reset": false,
+    "settled_sim_s": 1.0360000000000005
+  },
+  "tracked_controller_loss": {
+    "raw_directory": "/workspace/molar/robot_lab_runtime/project-completion-20261027-vne3n358/tracked-1793114192545537361",
+    "paused_controller_pid": 12922,
+    "controller_last_command": [
+      0.1,
+      0.0
+    ],
+    "observed_motion_m": 0.7254524696035978,
+    "last_two_sim_seconds_displacement_m": 0.0,
+    "clock_before": 11.832,
+    "clock_after": 13.804,
+    "scope": "Actual SIGSTOP of owned ROS command owner; native watchdog stopped physical body; later navigation changes retain original raw evidence"
+  },
+  "auv_acquisition": {
+    "raw_directory": "/workspace/molar/robot_lab_runtime/project-completion-20261027-vne3n358/automatic-auv-acquisition/e56d05d1a376495a852d5343234e6c30",
+    "result": "auv_acquisition.json",
+    "run": "auv_acquisition-run.json",
+    "cleanup_complete": true,
+    "measurements": [
+      {
+        "map_artifact": {
+          "kind": "acquired_rtabmap",
+          "robot": "tethys_auv",
+          "frame": "map",
+          "directory": "/workspace/molar/robot_lab_runtime/marine_missions/5c75b64c4a4a4958839a1c03c25ab49b/map-993c82e4a7",
+          "estimator_contract": "marine_spawn_imu_v1",
+          "source_world": "/workspace/molar/robot_lab_runtime/marine_sessions/tethys-cvqq_suq/world.sdf",
+          "world_sha256": "8020ea0341779d52e5f1db7c2d0c5c6caf9411a2280cd5bdf3dfb5420ffa34f0",
+          "source_database": "/workspace/molar/robot_lab_runtime/marine_sessions/tethys-cvqq_suq/marine-rtabmap.db",
+          "database": "/workspace/molar/robot_lab_runtime/marine_missions/5c75b64c4a4a4958839a1c03c25ab49b/map-993c82e4a7/rtabmap.db",
+          "database_observation": {
+            "nodes": 14,
+            "bytes": 2392064,
+            "sha256": "aed2f7a1051bb197c8fe211079eb66b889d00cf1c75160530e82665e7d07a925"
+          },
+          "points": 19515,
+          "cloud_stamp": {
+            "sec": 13,
+            "nanosec": 800000000
+          },
+          "scope": "Acquired RGB-D SLAM database/cloud; physical reload/mission qualification is separate"
+        },
+        "observation": {
+          "kind": "database",
+          "nodes": 14,
+          "sha256": "aed2f7a1051bb197c8fe211079eb66b889d00cf1c75160530e82665e7d07a925"
+        },
+        "physical_start": [
+          -3.0,
+          3.7303455848929983e-28,
+          -2.0
+        ],
+        "physical_pose": [
+          -0.16689216916157862,
+          -0.023769027725273683,
+          -1.9954199125046668
+        ],
+        "distance_m": 2.8332075370217744,
+        "route_endpoint": {
+          "requested": [
+            0.10178302695627206,
+            0.0009740448133411493,
+            -1.9969181379290977
+          ],
+          "physical_pose": [
+            -0.22901807060639745,
+            -0.016608390738735414,
+            -2.018366296310167
+          ],
+          "linear_m_s": 0.0421545596546781,
+          "angular_rad_s": 0.005414357298816457,
+          "settled_sim_s": 1.0,
+          "member_id": "body",
+          "index": 0,
+          "native_terminal": true,
+          "nav2_status": null
+        }
+      }
+    ]
+  },
+  "aerial_operator_loss_current_contract": {
+    "raw_directory": "/workspace/molar/robot_lab_runtime/project-completion-20261027-vne3n358/automatic-aerial-rangefinder-operator_loss/46bbaa1e4f2b4e888bff81c2b9fb384e",
+    "result": "aerial_operator_loss_current_contract.json",
+    "run": "aerial_operator_loss_current_contract-run.json",
+    "cleanup_complete": true,
+    "measurements": [
+      {
+        "member_id": "air1",
+        "physical_initial": [
+          -0.5,
+          -0.5,
+          0.22699921262738113
+        ],
+        "physical_airborne": [
+          -0.5510657184515101,
+          -0.5391949603514438,
+          3.316291716640662
+        ],
+        "physical_pose": [
+          -0.48416181925753626,
+          -0.5103557230294721,
+          0.22699996109564277
+        ],
+        "linear_m_s": 0.0,
+        "settled_sim_s": 1.0,
+        "observed_landing": true,
+        "landed_state": 1,
+        "disarmed": true,
+        "heartbeat_silence_wall_s": 16.617116950999844
+      },
+      {
+        "member_id": "air2",
+        "physical_initial": [
+          -3.5,
+          -0.5,
+          0.22699921262738113
+        ],
+        "physical_airborne": [
+          -3.5151852929718235,
+          -0.4832665232083127,
+          2.7173681372955762
+        ],
+        "physical_pose": [
+          -3.527226589423594,
+          -0.4212411135720127,
+          0.22699968366798792
+        ],
+        "linear_m_s": 0.0,
+        "settled_sim_s": 2.950000000000003,
+        "observed_landing": true,
+        "landed_state": 1,
+        "disarmed": true,
+        "heartbeat_silence_wall_s": 16.61712626299959
+      }
+    ]
+  }
+}

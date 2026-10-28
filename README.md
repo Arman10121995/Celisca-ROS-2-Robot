@@ -7,6 +7,13 @@ requirements. Start with the [ordered roadmap queue](ROADMAP.md#current-agent-qu
 Earlier claims that all hardware-independent work was complete are superseded.
 Unit tests, asset registration and scene loading retain their stated scope.
 
+The native continuation adds actual marine/gait acquisition and navigation
+workloads, a measured two-X500 range-reference formation and operator-loss
+landing, measured fleet batch reset, and the complete native tracked family.
+Use **Aerial Swarm → Measured two-drone reference** and the new Experiments
+choices. [Current continuation and limits](docs/status/native-workflows-2026-10-27.md),
+[tracked guide](docs/tutorials/tracked-vehicle.md).
+
 The seven missing robot registrations are restored. The native GUI now includes
 Ground Fleet and Aerial Swarm sessions, real fleet point-goal experiments,
 marine map save/reload and ahead waypoints, and multi-leg saved-map/goal controls.
@@ -14,15 +21,15 @@ Actual measurements include fleet conflict recovery and settled batch goals,
 two-FCU flight/landing, a saved/localized ROV route, hexapod saved-map navigation
 and octopod 3D map export. [Current delivery and measured limits](docs/status/workflows-2026-10-27.md).
 
-Current availability is **147 robot profiles / 78 selectable families** and
+Current availability is **148 robot profiles / 79 selectable families** and
 **51 world profiles / 39 selectable families**. Restored vendor/Panda profiles
 whose historical source certificates no longer match remain explicit experimental
 candidates; enable **experimental robot workflows** to expose their candidate
 modes and autofilled command. This does not grant new mission qualification.
 
-Remaining work includes aerial altitude/formation accuracy, AUV and per-model
-obstacle/terrain missions, RMF infrastructure/larger fleets, additional robot
-forms, automatic extension experiment producers and the older roadmap. Broad
+Remaining work includes larger aerial groups/other maps and behaviors, AUV and
+per-model obstacle/terrain missions, RMF infrastructure/larger fleets, physical
+snake/surface/amphibious families, further automatic cases and the older roadmap. Broad
 backend/map acceptance and real hardware/HIL stay separate. Implement missing
 functionality before broad validation; preserve every named successful scope.
 

@@ -1,5 +1,7 @@
 # Stabilization and remaining work: agent execution guide
 
+Latest continuation: [native workflows](status/native-workflows-2026-10-27.md), [receipts](status/evidence/native-workflows-2026-10-27/README.md) and [tracked guide](tutorials/tracked-vehicle.md). Preserve the implemented native producers, actual range-reference flight, measured fleet reset, tracked private physics/IMU/QoS/turn fixes and gait source-frame/lifecycle guards. Full project acceptance remains partial.
+
 October 27 workflow delivery: the seven missing registrations are restored.
 Read [the current delivery](status/workflows-2026-10-27.md) and
 [remaining-work execution guide](REMAINING_WORK_GUIDE.md). Ground Fleet,

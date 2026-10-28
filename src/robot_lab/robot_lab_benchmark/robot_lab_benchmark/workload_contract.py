@@ -15,10 +15,22 @@ FLEET_GOAL_CONTRACT = dict(position_m=.25, heading_rad=.2, linear_m_s=.03,
                            angular_rad_s=.05, settle_sim_s=1.)
 
 
+def verify_producer(specification, actual_sha256):
+    """Reject an installation changed between queue launch and module startup."""
+    expected = specification.get('expected_producer_sha256')
+    if expected is not None and expected != actual_sha256:
+        raise ValueError('Workload producer changed after this run was prepared; relaunch the run.')
+    return actual_sha256
+
+
 def validate_workload(document):
     """Validate a workload document (Nav2 or fleet schema)."""
     if not isinstance(document, dict):
         raise ValueError('Workload document must be a dictionary.')
+    if ('expected_producer_sha256' in document
+            and (not isinstance(document['expected_producer_sha256'], str)
+                 or re.fullmatch('[0-9a-f]{64}', document['expected_producer_sha256']) is None)):
+        raise ValueError('Expected workload producer must be a SHA256 digest.')
     schema = document.get('schema')
     if schema == WORKLOAD_SCHEMA:
         # Nav2 workload validation
@@ -117,8 +129,12 @@ def read_result(directory, run_id, domain, specification, invalidated=False):
                 and result.get('workload_sha256') == _sha256(directory/'workload.json')):
             # Verify result ownership: run_id must match caller identity, trace_sha256 must match source
             if (result.get('run_id') != run_id or
+                    result.get('producer_sha256') != _sha256(Path(__file__).with_name('nav2_workload.py')) or
                     result.get('trace_sha256') != _sha256(directory/'mission-trace.jsonl')):
                 return None, 'identity'
+            bound=json.loads((directory/'workload.json').read_text()).get('expected_producer_sha256')
+            if bound is not None and result['producer_sha256'] != bound:
+                return None, 'Producer does not match the run startup identity.'
             # Validate physical goal contract
             if invalidated:
                 return None, 'A reset was requested during this workload; its result is invalidated.'
@@ -158,6 +174,9 @@ def read_result(directory, run_id, domain, specification, invalidated=False):
             return None, 'Fleet result lacks source/trace/workload identity.'
         if invalidated:
             return None, 'A reset was requested during this fleet workload; its result is invalidated.'
+        bound=json.loads((directory/'workload.json').read_text()).get('expected_producer_sha256')
+        if bound is not None and result['producer_sha256'] != bound:
+            return None, 'Fleet producer does not match the run startup identity.'
         if (type(result.get('success')) is not bool or result.get('goal_contract') != FLEET_GOAL_CONTRACT
                 or not isinstance(result.get('fleet_id'),str) or not result['fleet_id']):
             return None, 'Fleet result lacks an actual session and physical goal contract.'

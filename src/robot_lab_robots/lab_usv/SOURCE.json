@@ -1,0 +1,8 @@
+{
+  "author": "Robot Lab contributors",
+  "license": "Apache-2.0",
+  "plant": "First-party 70 kg catamaran, two 35 N propellers, authored drag/inertia",
+  "native_systems": "Gazebo Fortress 6.18 graded buoyancy, thruster and hydrodynamics",
+  "reference": "https://github.com/gazebosim/gz-sim/blob/ignition-gazebo6_6.18.0/examples/worlds/graded_buoyancy.sdf",
+  "scope": "Uncalibrated research simulator; actual native physics, no hardware performance claim"
+}

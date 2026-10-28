@@ -1,0 +1,8 @@
+{
+  "author": "Robot Lab contributors",
+  "license": "Apache-2.0",
+  "model": "First-party ten-segment wheeled snake, nine yaw motors and twenty unpowered wheels",
+  "calibration": "Authored mass, inertia, gains and wave parameters; no hardware calibration",
+  "locomotion": "Native joint torque/contact physics; no body-pose or velocity writes",
+  "estimator": "Contact-checked passive-wheel FK/encoders + native IMU; no body-truth input"
+}

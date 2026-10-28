@@ -22,13 +22,16 @@ from rclpy.time import Time
 from geometry_msgs.msg import Twist
 from nav_msgs.msg import Odometry
 from nav2_msgs.action import NavigateToPose
+from lifecycle_msgs.srv import GetState
 from rosgraph_msgs.msg import Clock
 from std_msgs.msg import String
 from std_srvs.srv import Trigger
 from tf2_ros import Buffer, TransformListener, TransformException
 
-from .extension_contract import SCHEMA, RESULT_SCHEMA, CONTRACTS, endpoint_ok
-from .workload_contract import validate_workload
+from .extension_contract import SCHEMA, RESULT_SCHEMA, CONTRACTS, LOSS_CONTRACT, endpoint_ok
+from .workload_contract import validate_workload, verify_producer
+
+PRODUCER_SHA256 = hashlib.sha256(Path(__file__).read_bytes()).hexdigest()
 
 
 def digest(path):
@@ -37,6 +40,8 @@ def digest(path):
 
 class ExtensionWorkload(Node):
     def __init__(self, specification, directory):
+        self.producer_sha256=verify_producer(specification,PRODUCER_SHA256)
+        self.workload_sha256=digest(Path(directory)/'workload.json')
         super().__init__('robot_lab_measured_extension_workload',parameter_overrides=[Parameter('use_sim_time',value=True)])
         self.spec, self.directory = specification, Path(directory)
         self.workflow, self.task = specification['workflow'], specification['task']
@@ -51,11 +56,14 @@ class ExtensionWorkload(Node):
         self.complete = self.interrupted = self.owned = self.succeeded = False
         self.truth, self.counts, self.body_subscriptions = {}, {}, []
         self.rows, self.settled, self.initial = [], {}, {}
+        self.airborne={};self.landing_observed=set();self.loss_started=None
+        self.forward_yaw=0.
+        self.is_auv=False;self.goals=specification.get('goals',[]);self.mapping_endpoint=None
         self.goal_index = 0
         self.goal_handle = self.goal_future = self.result_future = None
         self.nav_status = None
         self.map_future = None
-        self.contract = CONTRACTS[self.workflow]
+        self.contract = LOSS_CONTRACT if self.task=='operator_loss' else CONTRACTS[self.workflow]
         prefix = '/'+self.workflow
         self.command = self.create_publisher(String, prefix+'/command', 10)
         self.heartbeat = self.create_publisher(String, prefix+'/operator_heartbeat', 10)
@@ -67,6 +75,8 @@ class ExtensionWorkload(Node):
             self.create_subscription(String, '/marine/mission/state', self.observe_aux, 10)
         if self.workflow == 'gait':
             self.navigation = ActionClient(self, NavigateToPose, '/gait/navigate_to_pose')
+            self.lifecycle=self.create_client(GetState,'/gait/bt_navigator/get_state')
+            self.lifecycle_future=None;self.lifecycle_at=-math.inf;self.navigation_active=False
             self.map_service = self.create_client(Trigger, '/gait/mapping/save')
             self.create_subscription(String, '/gait/mapping/state', self.observe_mapping, 10)
             self.tf = Buffer(); self.listener = TransformListener(self.tf, self)
@@ -106,15 +116,19 @@ class ExtensionWorkload(Node):
                 raise ValueError('Native session identity changed')
             if self.session is None:
                 self.session = data['session_id']
+                if self.workflow=='gait':
+                    self.forward_yaw=float(data['drive_forward_yaw_rad'])
+                    if not math.isfinite(self.forward_yaw):raise ValueError('Source gait drive-frame yaw is invalid')
                 if self.workflow == 'aerial_swarm':
                     topics = {m['id']:m['namespace']+'/px4/odometry_truth' for m in data['members']}
                     if not 2 <= len(topics) <= 4: raise ValueError('Actual 2–4 member aerial session required')
                 else:
                     topics = {'body':'/marine/odometry' if self.workflow == 'marine' else '/odom/ground_truth'}
                     if self.workflow == 'marine' and 'auv' in data['robot_id']:
-                        self.contract = CONTRACTS['auv']
-                        if self.task == 'mapping':
-                            raise ValueError('AUV acquisition requires a forward planned transect; use Marine navigation with SLAM enabled, then Save acquired map')
+                        self.contract = CONTRACTS['auv'];self.is_auv=True
+                        if self.task=='mapping' and self.spec['distance_m']<2.:
+                            raise ValueError('AUV acquired-map transects require at least 2 m of physical forward travel')
+                    if self.workflow=='marine' and data['robot_id']=='lab_usv':self.contract=CONTRACTS['surface']
                 for name, topic in topics.items():
                     self.counts[name] = 0
                     self.body_subscriptions.append(self.create_subscription(Odometry, topic,
@@ -134,6 +148,7 @@ class ExtensionWorkload(Node):
         if not all(map(math.isfinite,values)) or abs(sum(v*v for v in values[3:])-1)>.01:
             self.fail('Invalid independent physical body pose'); return
         yaw = math.atan2(2*(q.w*q.z+q.x*q.y),1-2*(q.y*q.y+q.z*q.z))
+        if self.workflow=='gait':yaw=math.atan2(math.sin(yaw+self.forward_yaw),math.cos(yaw+self.forward_yaw))
         pose = [p.x,p.y,yaw] if self.workflow == 'gait' else [p.x,p.y,p.z]
         previous = self.truth.get(name)
         if previous and stamp < previous['stamp']:
@@ -167,12 +182,18 @@ class ExtensionWorkload(Node):
                     angular_rad_s=body['yaw_rate'], settled_sim_s=duration, member_id=name)
 
     def start_goal(self):
-        target = self.spec['goals'][self.goal_index]
+        target = self.goals[self.goal_index]
         self.settled.clear()
         if self.workflow == 'marine':
             self.send('plan',mission=True,**dict(zip('xyz',target)))
         else:
-            if not self.navigation.server_is_ready(): return False
+            now=time.monotonic()
+            if self.lifecycle_future is not None and self.lifecycle_future.done():
+                self.navigation_active=self.lifecycle_future.result().current_state.id==3
+                self.lifecycle_future=None
+            if self.lifecycle_future is None and now-self.lifecycle_at>1. and self.lifecycle.service_is_ready():
+                self.lifecycle_at=now;self.lifecycle_future=self.lifecycle.call_async(GetState.Request())
+            if not self.navigation_active or not self.navigation.server_is_ready(): return False
             try:
                 # 'odom' is the existing selected-world visualization frame.
                 # This transform contains the known spawn prior and estimator
@@ -212,14 +233,33 @@ class ExtensionWorkload(Node):
                 if self.nav_status != 4: self.fail('Native Nav2 terminal status '+str(self.nav_status));return
             terminal=self.nav_status==4
         if terminal:
-            row=self.stable_endpoint('body',self.spec['goals'][self.goal_index])
+            row=self.stable_endpoint('body',self.goals[self.goal_index])
             if row:
                 row.update(index=self.goal_index,native_terminal=True,nav2_status=self.nav_status)
-                self.rows.append(row);self.record(kind='endpoint',measurement=row);self.goal_index+=1
-                if self.goal_index==len(self.spec['goals']): self.succeeded=self.complete=True;self.reason='Every native goal physically settled'
-                else: self.transition('armed')
+                self.record(kind='endpoint',measurement=row);self.goal_index+=1
+                if self.task=='mapping':
+                    self.mapping_endpoint=row
+                    self.send('stop');self.send('save_map',mission=True);self.transition('saving')
+                else:
+                    self.rows.append(row)
+                    if self.goal_index==len(self.goals): self.succeeded=self.complete=True;self.reason='Every native goal physically settled'
+                    else: self.transition('armed')
 
     def mapping_tick(self):
+        if self.is_auv:
+            if self.phase=='armed':
+                if not self.aux or not self.aux['ready'] or time.monotonic()-self.aux_at>1.:return
+                # Route generation uses sensor-estimated map pose, never the
+                # independent body observer. Include the fixed arrival envelope
+                # in the requested forward length; physical travel is verified.
+                start=list(self.aux['position']);heading=self.aux['estimated_yaw']+math.pi
+                distance=self.spec['distance_m']+self.contract['position_m']+.2
+                self.goals=[[start[0]+distance*math.cos(heading),start[1]+distance*math.sin(heading),start[2]]]
+                self.initial=self.truth['body']['pose'][:]
+                self.start_goal();return
+            if self.phase in ('planning','executing'):
+                self.navigation_tick();return
+            if self.phase!='saving':return
         if self.phase=='armed':
             self.initial=self.truth['body']['pose'][:];self.transition('acquiring')
         body=self.truth['body']
@@ -248,8 +288,11 @@ class ExtensionWorkload(Node):
             if status=='saved' and artifact:
                 from .extension_result import inspect_map
                 observation=inspect_map(artifact)
+                traveled=math.dist(body['pose'][:2],self.initial[:2])
+                if traveled<self.spec['distance_m']:
+                    self.fail('Actual acquisition did not reach the requested physical travel');return
                 self.rows.append(dict(map_artifact=artifact,observation=observation,
-                    physical_start=self.initial,physical_pose=body['pose'],distance_m=math.dist(body['pose'][:2],self.initial[:2])))
+                    physical_start=self.initial,physical_pose=body['pose'],distance_m=traveled,route_endpoint=self.mapping_endpoint))
                 self.succeeded=self.complete=True;self.reason='Actual travel and nonempty acquired map archived'
 
     def aerial_tick(self):
@@ -261,10 +304,16 @@ class ExtensionWorkload(Node):
                 if not all(r['accepted'] for r in replies): self.fail('Native takeoff clearance rejected: '+str(replies));return
                 self.send('takeoff');self.transition('ascending')
         elif self.phase=='ascending':
+            if time.monotonic()-self.phase_at>12. and any((m.get('status') or {}).get('phase') in ('idle','telemetry_lost') for m in members):
+                self.fail('Native FCU did not arm or lost readiness; inspect owned PX4 health logs');return
             if any((m.get('last_service') or {}).get('operation')=='takeoff' and not m['last_service']['accepted'] for m in members):
                 self.fail('Native takeoff rejected');return
             if all((m.get('status') or {}).get('phase')=='flying' for m in members):
-                self.send('formation');self.transition('formation')
+                if self.task=='operator_loss':
+                    if not all(m['id'] in self.initial and self.truth[m['id']]['pose'][2]-self.initial[m['id']][2]>self.contract['airborne_gain_m'] for m in members):return
+                    self.airborne={m['id']:self.truth[m['id']]['pose'][:] for m in members}
+                    self.loss_started=time.monotonic();self.settled.clear();self.transition('operator_loss')
+                else:self.send('formation');self.transition('formation')
         elif self.phase=='formation':
             anchor=self.runtime.get('anchor')
             if not anchor:return
@@ -275,6 +324,23 @@ class ExtensionWorkload(Node):
                 if row is not None: rows.append(row)
             if len(rows)==len(members):
                 self.rows=rows;self.send('land');self.transition('landing')
+        elif self.phase=='operator_loss':
+            rows=[]
+            for m in members:
+                name=m['id'];status=m.get('status') or {};body=self.truth[name]
+                if status.get('phase')=='landing':self.landing_observed.add(name)
+                settled=(not status.get('armed',True) and status.get('landed_state')==1
+                    and abs(body['pose'][2]-self.initial[name][2])<=self.contract['landed_height_m']
+                    and body['speed'] is not None and body['speed']<=self.contract['linear_m_s'])
+                if not settled:self.settled.pop(name,None);continue
+                start=self.settled.setdefault(name,body['stamp'])
+                if body['stamp']-start>=self.contract['settle_sim_s'] and name in self.landing_observed:
+                    rows.append(dict(member_id=name,physical_initial=self.initial[name],physical_airborne=self.airborne[name],
+                        physical_pose=body['pose'],linear_m_s=body['speed'],settled_sim_s=body['stamp']-start,
+                        observed_landing=name in self.landing_observed,landed_state=status['landed_state'],disarmed=not status['armed'],
+                        heartbeat_silence_wall_s=time.monotonic()-self.loss_started))
+            if len(rows)==len(members):
+                self.rows=rows;self.succeeded=self.complete=True;self.reason='Operator lease loss caused actual native landing/disarm for every airborne member'
         elif self.phase=='landing' and all(not (m.get('status') or {}).get('armed',True) for m in members):
             self.succeeded=self.complete=True;self.reason='Actual formation settled and every FCU landed/disarmed'
 
@@ -287,12 +353,14 @@ class ExtensionWorkload(Node):
             if now-self.started>60:self.fail('No native session within startup deadline')
             return
         if now-self.state_at>1.:self.fail('Native session feedback lost');return
-        if now-self.hb_at>.15:
+        if self.phase!='operator_loss' and now-self.hb_at>.15:
             self.hb_at=now;self.heartbeat.publish(String(data=json.dumps(dict(session_id=self.session,operator_id=self.operator))))
         if self.runtime['operator_id']!=self.operator:
             if self.owned:self.fail('Native operator lease lost')
             return
         self.owned=True
+        if self.workflow=='aerial_swarm' and self.phase=='waiting':
+            for name,body in self.truth.items():self.initial.setdefault(name,body['pose'][:])
         if not self.counts or any(n<3 for n in self.counts.values()):return
         if any(now-v['at']>1. for v in self.truth.values()):
             if self.phase!='waiting':self.fail('Independent physical observer lost')
@@ -327,7 +395,7 @@ class ExtensionWorkload(Node):
             success=bool(self.succeeded and released),reason=self.reason,measurements=self.rows,
             goal_contract=self.contract,truth_samples=self.counts,control_released=released,
             wall_duration_s=time.monotonic()-self.started,contacts=None,minimum_swept_clearance_m=None,
-            producer_sha256=digest(__file__),workload_sha256=digest(specification_path),
+            producer_sha256=self.producer_sha256,workload_sha256=self.workload_sha256,
             trace_sha256=digest(self.directory/'extension-trace.jsonl'),
             scope='Actual native task and independent physical measurements; parent runner owns process cleanup')
         path=self.directory/'extension-mission-result.json';temporary=path.with_suffix('.new')

@@ -50,7 +50,7 @@ class AerialSwarmTab(ttk.Frame):
         self.family_var = tk.StringVar(value=app.map_groups.family(self.map_var.get()))
         self.count = tk.IntVar(value=2)
         self.spacing = tk.DoubleVar(value=3.)
-        self.height_reference=tk.StringVar(value='barometer')
+        self.height_reference=tk.StringVar(value='gnss')
         self.gui = tk.BooleanVar(value=True)
         self.keyboard = tk.BooleanVar(value=False)
         self.target = tk.StringVar(value='All vehicles')
@@ -88,7 +88,7 @@ class AerialSwarmTab(ttk.Frame):
         space.pack(side='left', padx=5)
         space.bind('<FocusOut>', lambda _: self.refresh_command())
         ttk.Checkbutton(options, text='Gazebo window', variable=self.gui, command=self.refresh_command).pack(side='left')
-        references=ttk.Combobox(options,textvariable=self.height_reference,values=('barometer','gnss'),state='readonly',width=11)
+        references=ttk.Combobox(options,textvariable=self.height_reference,values=('barometer','gnss','rangefinder'),state='readonly',width=11)
         references.pack(side='left',padx=4)
         references.bind('<<ComboboxSelected>>',lambda _:self.refresh_command())
         grid = ttk.Frame(editor)
@@ -112,6 +112,7 @@ class AerialSwarmTab(ttk.Frame):
                 row=4, column=0, columnspan=2, sticky='w', pady=8)
         files = ttk.Frame(editor)
         files.grid(row=5, column=0, columnspan=2, sticky='ew')
+        ttk.Button(files, text='Measured two-drone reference', command=self.measured_reference).pack(side='left',padx=3)
         ttk.Button(files, text='Load session', command=self.load_session).pack(side='left')
         ttk.Button(files, text='Save session', command=self.save_session).pack(side='left', padx=5)
         control = ttk.LabelFrame(self, text='Live per-vehicle / group controls', padding=8)
@@ -177,9 +178,18 @@ class AerialSwarmTab(ttk.Frame):
             self.map_var.set(values[0])
         self.refresh_command()
 
+    def measured_reference(self):
+        self.map_var.set('nav_empty');self.family_var.set(self.app.map_groups.family('nav_empty'))
+        self.map_combo.configure(values=self.app.map_groups.members(self.family_var.get(),selectable=True))
+        self.count.set(2);self.spacing.set(3.);self.height_reference.set('rangefinder')
+        for fields in self.spawns:
+            for variable in fields.values():variable.set('')
+        self.refresh_command()
+        self.status.set('Loaded measured nav_empty two-X500 range-sensor reference. Run starts a neutral session; Check clearance and Takeoff remain explicit.')
+
     def configuration(self):
-        if self.height_reference.get() not in ('barometer','gnss'):
-            raise ValueError('Choose barometer or gnss height reference')
+        if self.height_reference.get() not in ('barometer','gnss','rangefinder'):
+            raise ValueError('Choose barometer, gnss or rangefinder height reference')
         count, spacing = self.count.get(), self.spacing.get()
         if count not in (2, 3, 4) or not math.isfinite(spacing) or not 3. <= spacing <= 8.:
             raise ValueError('Choose 2–4 vehicles and spawn spacing 3–8 m')
@@ -237,7 +247,7 @@ class AerialSwarmTab(ttk.Frame):
             self.map_var.set(data['map'])
             self.family_var.set(self.app.map_groups.family(data['map']))
             self.spacing.set(data.get('spacing', 3.))
-            self.height_reference.set((data.get('estimator') or {}).get('height_reference','barometer'))
+            self.height_reference.set((data.get('estimator') or {}).get('height_reference','gnss'))
             for index, fields in enumerate(self.spawns):
                 spawn = data['members'][index].get('spawn', {}) if index < len(data['members']) else {}
                 for key, var in fields.items():

@@ -31,9 +31,17 @@ def main():
           '-p','control_fcu_clock:=true','-p','preflight_fcu_seconds:=20.0',
           '-p','frame_prefix:='+prefix.strip('/')+'/',
           *sum((['-p','origin_'+axis+':='+str(value)] for axis,value in zip('xyz',item['origin'])),[])]
-    rclpy.init(args=ros);controller=PX4Controller();relay=NativeStateRelay(dict(os.environ),prefix,prefix+'/px4',prefix.strip('/')+'/')
+    rclpy.init(args=ros);controller=PX4Controller();relay=NativeStateRelay(dict(os.environ),prefix,prefix+'/px4',prefix.strip('/')+'/',native_truth_clock=True)
+    range_sensor=None
+    if item.get('range_topic'):
+        from .px4_range_sensor import RangeSensor
+        range_sensor=RangeSensor(controller,item['range_topic'],dict(os.environ))
     upstream=Path(session['px4_root'])/'Tools/simulation/gz'
-    envelope=x500_envelope(upstream/'models',model_file=Path(item['model_file']))
+    approved={}
+    if item.get('range_topic'):
+        from .px4_range_sensor import verified_sensor_links
+        approved=verified_sensor_links(item['model_file'],item['range_topic'])
+    envelope=x500_envelope(upstream/'models',model_file=Path(item['model_file']),sensor_link_hashes=approved)
     planner=PX4Planning(controller,session['source_world'],envelope)
     executor=SingleThreadedExecutor()
     for node in (controller,relay,planner):executor.add_node(node)
@@ -111,24 +119,30 @@ def main():
         expected_reference=session.get('estimator',{}).get('px4_height_reference',0)
         if controller.flight.state is not None and now-parameter_at[0]>2.:
             parameter_at[0]=now
-            for name in ('EKF2_HGT_REF','EKF2_GPS_CTRL','EKF2_BARO_CTRL'):
+            for name in ('EKF2_HGT_REF','EKF2_GPS_CTRL','EKF2_BARO_CTRL','EKF2_RNG_CTRL','EKF2_RNG_POS_Z'):
                 controller.flight.master.mav.param_request_read_send(
                     controller.flight.master.target_system,controller.flight.master.target_component,name.encode(),-1)
-        # Gate calibration on measured velocity while landed and level. Raw
+        # Require sustained native landed/level detection and measured angular
+        # stillness after the FCU settling period. Noisy GNSS-derived velocity
+        # at the known disarmed spawn is recorded, not treated as body motion. Raw
         # barometric-position drift during EKF startup is precisely the origin
         # error being calibrated, so it is recorded rather than treated as
         # physical body travel. Never use the fixed prior as a motion sample.
         if controller.takeoff_ready():
             raw=controller.flight.local_position
             stable_positions.append((now,list(ned_to_enu(raw.x,raw.y,raw.z)),
-                                     math.sqrt(raw.vx**2+raw.vy**2+raw.vz**2)))
+                                     math.sqrt(raw.vx**2+raw.vy**2+raw.vz**2),
+                                     max(abs(getattr(controller.flight.attitude,key,math.inf)) for key in ('rollspeed','pitchspeed','yawspeed'))))
         else:stable_positions.clear()
         stable=(len(stable_positions)>=6 and now-stable_positions[0][0]>=1.
-            and max(speed for _,_,speed in stable_positions)<=.08)
+            and max(rate for _,_,_,rate in stable_positions)<=.05)
         for request in list(checks):
             invalid=(request['generation']!=lease['generation'] or now-lease['at']>.8)
             configured=(controller.flight.parameters.get('EKF2_HGT_REF')==expected_reference
-                and controller.flight.parameters.get('EKF2_GPS_CTRL')==(5 if expected_reference==0 else 7))
+                and controller.flight.parameters.get('EKF2_GPS_CTRL')==(7 if expected_reference==1 else 5))
+            if expected_reference==2:
+                observed=getattr(controller,'range_observation',None) or {}
+                configured=configured and controller.flight.parameters.get('EKF2_RNG_CTRL')==2 and now-observed.get('received_monotonic',-math.inf)<.3
             if request['stage']=='stabilizing' and stable and configured and not invalid:
                 response=planner.check_takeoff(Trigger.Request(),Trigger.Response())
                 if response.success:
@@ -148,7 +162,7 @@ def main():
                 reply.publish(String(data=json.dumps(dict(request_id=request['request_id'],generation=request['generation'],
                     accepted=accepted,message=message,check_position=state.get('start_enu') if accepted else None,
                     landed_estimate_samples=len(stable_positions),
-                    maximum_estimated_speed_m_s=max((speed for _,_,speed in stable_positions),default=None),
+                    maximum_estimated_speed_m_s=max((speed for _,_,speed,_ in stable_positions),default=None),
                     expected_height_reference=expected_reference,
                     applied_height_reference=controller.flight.parameters.get('EKF2_HGT_REF')))))
         if controller.flight.armed() and (time.monotonic()-lease['at']>1. or controller.phase in ('idle','waiting_for_fcu','telemetry_lost')):
@@ -161,6 +175,7 @@ def main():
         if controller.flight.armed():
             try:controller.command_mode(4,6)
             except Exception:pass
+        if range_sensor:range_sensor.close()
         relay.close();planner.close()
         for node in (planner,relay,controller):node.destroy_node()
         controller.flight.master.close()

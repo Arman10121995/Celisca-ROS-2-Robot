@@ -1052,31 +1052,43 @@
       <link>left_track</link>
       <min_velocity>-1.0</min_velocity>
       <max_velocity>1.0</max_velocity>
+      <track_orientation>0 0 3.141592653589793</track_orientation>
+      <max_command_age>.4</max_command_age>
     </plugin>
     <plugin name="gz::sim::systems::TrackController" filename="libignition-gazebo-track-controller-system.so">
       <link>right_track</link>
       <min_velocity>-1.0</min_velocity>
       <max_velocity>1.0</max_velocity>
+      <track_orientation>0 0 3.141592653589793</track_orientation>
+      <max_command_age>.4</max_command_age>
     </plugin>
     <plugin name="gz::sim::systems::TrackController" filename="libignition-gazebo-track-controller-system.so">
       <link>front_left_flipper</link>
       <min_velocity>-1.0</min_velocity>
       <max_velocity>1.0</max_velocity>
+      <track_orientation>0 0 3.141592653589793</track_orientation>
+      <max_command_age>.4</max_command_age>
     </plugin>
     <plugin name="gz::sim::systems::TrackController" filename="libignition-gazebo-track-controller-system.so">
       <link>rear_left_flipper</link>
       <min_velocity>-1.0</min_velocity>
       <max_velocity>1.0</max_velocity>
+      <track_orientation>0 0 3.141592653589793</track_orientation>
+      <max_command_age>.4</max_command_age>
     </plugin>
     <plugin name="gz::sim::systems::TrackController" filename="libignition-gazebo-track-controller-system.so">
       <link>front_right_flipper</link>
       <min_velocity>-1.0</min_velocity>
       <max_velocity>1.0</max_velocity>
+      <track_orientation>0 0 3.141592653589793</track_orientation>
+      <max_command_age>.4</max_command_age>
     </plugin>
     <plugin name="gz::sim::systems::TrackController" filename="libignition-gazebo-track-controller-system.so">
       <link>rear_right_flipper</link>
       <min_velocity>-1.0</min_velocity>
       <max_velocity>1.0</max_velocity>
+      <track_orientation>0 0 3.141592653589793</track_orientation>
+      <max_command_age>.4</max_command_age>
     </plugin>
   </model>
 </sdf>

@@ -1,0 +1,875 @@
+<?xml version='1.0' encoding='utf-8'?>
+<robot name="lab_snake">
+  <link name="base_link">
+    <inertial>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <mass value=".24" />
+      <inertia ixx=".00018" iyy=".00056" izz=".00064" ixy="0" ixz="0" iyz="0" />
+    </inertial>
+    <visual name="base_link_visual">
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <box size=".14 .072 .045" />
+      </geometry>
+      <material name="segment_paint_0">
+        <color rgba=".9 .55 .08 1" />
+      </material>
+    </visual>
+    <collision name="base_link_collision">
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <box size=".14 .072 .045" />
+      </geometry>
+    </collision>
+  </link>
+  <link name="wheel_0_left">
+    <inertial>
+      <mass value=".015" />
+      <inertia ixx=".0000049" iyy=".0000092" izz=".0000049" ixy="0" ixz="0" iyz="0" />
+    </inertial>
+    <visual name="wheel_0_left_visual">
+      <origin xyz="0 0 0" rpy="1.57079632679 0 0" />
+      <geometry>
+        <cylinder radius=".035" length=".018" />
+      </geometry>
+      <material name="wheel_paint_0left">
+        <color rgba=".08 .08 .08 1" />
+      </material>
+    </visual>
+    <collision name="wheel_0_left_collision">
+      <origin xyz="0 0 0" rpy="1.57079632679 0 0" />
+      <geometry>
+        <cylinder radius=".035" length=".018" />
+      </geometry>
+    </collision>
+  </link>
+  <joint name="wheel_0_left_joint" type="continuous">
+    <parent link="base_link" />
+    <child link="wheel_0_left" />
+    <origin xyz="0.0 0.05 -.02" rpy="0 0 0" />
+    <axis xyz="0 1 0" />
+    <limit effort=".01" velocity="80" />
+    <dynamics damping=".0003" friction="0" />
+  </joint>
+  <link name="wheel_0_right">
+    <inertial>
+      <mass value=".015" />
+      <inertia ixx=".0000049" iyy=".0000092" izz=".0000049" ixy="0" ixz="0" iyz="0" />
+    </inertial>
+    <visual name="wheel_0_right_visual">
+      <origin xyz="0 0 0" rpy="1.57079632679 0 0" />
+      <geometry>
+        <cylinder radius=".035" length=".018" />
+      </geometry>
+      <material name="wheel_paint_0right">
+        <color rgba=".08 .08 .08 1" />
+      </material>
+    </visual>
+    <collision name="wheel_0_right_collision">
+      <origin xyz="0 0 0" rpy="1.57079632679 0 0" />
+      <geometry>
+        <cylinder radius=".035" length=".018" />
+      </geometry>
+    </collision>
+  </link>
+  <joint name="wheel_0_right_joint" type="continuous">
+    <parent link="base_link" />
+    <child link="wheel_0_right" />
+    <origin xyz="0.0 -0.05 -.02" rpy="0 0 0" />
+    <axis xyz="0 1 0" />
+    <limit effort=".01" velocity="80" />
+    <dynamics damping=".0003" friction="0" />
+  </joint>
+  <link name="segment_1">
+    <inertial>
+      <origin xyz="-.08 0 0" rpy="0 0 0" />
+      <mass value=".24" />
+      <inertia ixx=".00018" iyy=".00056" izz=".00064" ixy="0" ixz="0" iyz="0" />
+    </inertial>
+    <visual name="segment_1_visual">
+      <origin xyz="-.08 0 0" rpy="0 0 0" />
+      <geometry>
+        <box size=".14 .072 .045" />
+      </geometry>
+      <material name="segment_paint_1">
+        <color rgba=".15 .22 .28 1" />
+      </material>
+    </visual>
+    <collision name="segment_1_collision">
+      <origin xyz="-.08 0 0" rpy="0 0 0" />
+      <geometry>
+        <box size=".14 .072 .045" />
+      </geometry>
+    </collision>
+  </link>
+  <joint name="spine_1" type="revolute">
+    <parent link="base_link" />
+    <child link="segment_1" />
+    <origin xyz="-.08 0 0" rpy="0 0 0" />
+    <axis xyz="0 0 1" />
+    <limit lower="-.8" upper=".8" effort=".8" velocity="2" />
+    <dynamics damping=".025" friction=".001" />
+  </joint>
+  <link name="wheel_1_left">
+    <inertial>
+      <mass value=".015" />
+      <inertia ixx=".0000049" iyy=".0000092" izz=".0000049" ixy="0" ixz="0" iyz="0" />
+    </inertial>
+    <visual name="wheel_1_left_visual">
+      <origin xyz="0 0 0" rpy="1.57079632679 0 0" />
+      <geometry>
+        <cylinder radius=".035" length=".018" />
+      </geometry>
+      <material name="wheel_paint_1left">
+        <color rgba=".08 .08 .08 1" />
+      </material>
+    </visual>
+    <collision name="wheel_1_left_collision">
+      <origin xyz="0 0 0" rpy="1.57079632679 0 0" />
+      <geometry>
+        <cylinder radius=".035" length=".018" />
+      </geometry>
+    </collision>
+  </link>
+  <joint name="wheel_1_left_joint" type="continuous">
+    <parent link="segment_1" />
+    <child link="wheel_1_left" />
+    <origin xyz="-0.08 0.05 -.02" rpy="0 0 0" />
+    <axis xyz="0 1 0" />
+    <limit effort=".01" velocity="80" />
+    <dynamics damping=".0003" friction="0" />
+  </joint>
+  <link name="wheel_1_right">
+    <inertial>
+      <mass value=".015" />
+      <inertia ixx=".0000049" iyy=".0000092" izz=".0000049" ixy="0" ixz="0" iyz="0" />
+    </inertial>
+    <visual name="wheel_1_right_visual">
+      <origin xyz="0 0 0" rpy="1.57079632679 0 0" />
+      <geometry>
+        <cylinder radius=".035" length=".018" />
+      </geometry>
+      <material name="wheel_paint_1right">
+        <color rgba=".08 .08 .08 1" />
+      </material>
+    </visual>
+    <collision name="wheel_1_right_collision">
+      <origin xyz="0 0 0" rpy="1.57079632679 0 0" />
+      <geometry>
+        <cylinder radius=".035" length=".018" />
+      </geometry>
+    </collision>
+  </link>
+  <joint name="wheel_1_right_joint" type="continuous">
+    <parent link="segment_1" />
+    <child link="wheel_1_right" />
+    <origin xyz="-0.08 -0.05 -.02" rpy="0 0 0" />
+    <axis xyz="0 1 0" />
+    <limit effort=".01" velocity="80" />
+    <dynamics damping=".0003" friction="0" />
+  </joint>
+  <link name="segment_2">
+    <inertial>
+      <origin xyz="-.08 0 0" rpy="0 0 0" />
+      <mass value=".24" />
+      <inertia ixx=".00018" iyy=".00056" izz=".00064" ixy="0" ixz="0" iyz="0" />
+    </inertial>
+    <visual name="segment_2_visual">
+      <origin xyz="-.08 0 0" rpy="0 0 0" />
+      <geometry>
+        <box size=".14 .072 .045" />
+      </geometry>
+      <material name="segment_paint_2">
+        <color rgba=".9 .55 .08 1" />
+      </material>
+    </visual>
+    <collision name="segment_2_collision">
+      <origin xyz="-.08 0 0" rpy="0 0 0" />
+      <geometry>
+        <box size=".14 .072 .045" />
+      </geometry>
+    </collision>
+  </link>
+  <joint name="spine_2" type="revolute">
+    <parent link="segment_1" />
+    <child link="segment_2" />
+    <origin xyz="-.16 0 0" rpy="0 0 0" />
+    <axis xyz="0 0 1" />
+    <limit lower="-.8" upper=".8" effort=".8" velocity="2" />
+    <dynamics damping=".025" friction=".001" />
+  </joint>
+  <link name="wheel_2_left">
+    <inertial>
+      <mass value=".015" />
+      <inertia ixx=".0000049" iyy=".0000092" izz=".0000049" ixy="0" ixz="0" iyz="0" />
+    </inertial>
+    <visual name="wheel_2_left_visual">
+      <origin xyz="0 0 0" rpy="1.57079632679 0 0" />
+      <geometry>
+        <cylinder radius=".035" length=".018" />
+      </geometry>
+      <material name="wheel_paint_2left">
+        <color rgba=".08 .08 .08 1" />
+      </material>
+    </visual>
+    <collision name="wheel_2_left_collision">
+      <origin xyz="0 0 0" rpy="1.57079632679 0 0" />
+      <geometry>
+        <cylinder radius=".035" length=".018" />
+      </geometry>
+    </collision>
+  </link>
+  <joint name="wheel_2_left_joint" type="continuous">
+    <parent link="segment_2" />
+    <child link="wheel_2_left" />
+    <origin xyz="-0.08 0.05 -.02" rpy="0 0 0" />
+    <axis xyz="0 1 0" />
+    <limit effort=".01" velocity="80" />
+    <dynamics damping=".0003" friction="0" />
+  </joint>
+  <link name="wheel_2_right">
+    <inertial>
+      <mass value=".015" />
+      <inertia ixx=".0000049" iyy=".0000092" izz=".0000049" ixy="0" ixz="0" iyz="0" />
+    </inertial>
+    <visual name="wheel_2_right_visual">
+      <origin xyz="0 0 0" rpy="1.57079632679 0 0" />
+      <geometry>
+        <cylinder radius=".035" length=".018" />
+      </geometry>
+      <material name="wheel_paint_2right">
+        <color rgba=".08 .08 .08 1" />
+      </material>
+    </visual>
+    <collision name="wheel_2_right_collision">
+      <origin xyz="0 0 0" rpy="1.57079632679 0 0" />
+      <geometry>
+        <cylinder radius=".035" length=".018" />
+      </geometry>
+    </collision>
+  </link>
+  <joint name="wheel_2_right_joint" type="continuous">
+    <parent link="segment_2" />
+    <child link="wheel_2_right" />
+    <origin xyz="-0.08 -0.05 -.02" rpy="0 0 0" />
+    <axis xyz="0 1 0" />
+    <limit effort=".01" velocity="80" />
+    <dynamics damping=".0003" friction="0" />
+  </joint>
+  <link name="segment_3">
+    <inertial>
+      <origin xyz="-.08 0 0" rpy="0 0 0" />
+      <mass value=".24" />
+      <inertia ixx=".00018" iyy=".00056" izz=".00064" ixy="0" ixz="0" iyz="0" />
+    </inertial>
+    <visual name="segment_3_visual">
+      <origin xyz="-.08 0 0" rpy="0 0 0" />
+      <geometry>
+        <box size=".14 .072 .045" />
+      </geometry>
+      <material name="segment_paint_3">
+        <color rgba=".15 .22 .28 1" />
+      </material>
+    </visual>
+    <collision name="segment_3_collision">
+      <origin xyz="-.08 0 0" rpy="0 0 0" />
+      <geometry>
+        <box size=".14 .072 .045" />
+      </geometry>
+    </collision>
+  </link>
+  <joint name="spine_3" type="revolute">
+    <parent link="segment_2" />
+    <child link="segment_3" />
+    <origin xyz="-.16 0 0" rpy="0 0 0" />
+    <axis xyz="0 0 1" />
+    <limit lower="-.8" upper=".8" effort=".8" velocity="2" />
+    <dynamics damping=".025" friction=".001" />
+  </joint>
+  <link name="wheel_3_left">
+    <inertial>
+      <mass value=".015" />
+      <inertia ixx=".0000049" iyy=".0000092" izz=".0000049" ixy="0" ixz="0" iyz="0" />
+    </inertial>
+    <visual name="wheel_3_left_visual">
+      <origin xyz="0 0 0" rpy="1.57079632679 0 0" />
+      <geometry>
+        <cylinder radius=".035" length=".018" />
+      </geometry>
+      <material name="wheel_paint_3left">
+        <color rgba=".08 .08 .08 1" />
+      </material>
+    </visual>
+    <collision name="wheel_3_left_collision">
+      <origin xyz="0 0 0" rpy="1.57079632679 0 0" />
+      <geometry>
+        <cylinder radius=".035" length=".018" />
+      </geometry>
+    </collision>
+  </link>
+  <joint name="wheel_3_left_joint" type="continuous">
+    <parent link="segment_3" />
+    <child link="wheel_3_left" />
+    <origin xyz="-0.08 0.05 -.02" rpy="0 0 0" />
+    <axis xyz="0 1 0" />
+    <limit effort=".01" velocity="80" />
+    <dynamics damping=".0003" friction="0" />
+  </joint>
+  <link name="wheel_3_right">
+    <inertial>
+      <mass value=".015" />
+      <inertia ixx=".0000049" iyy=".0000092" izz=".0000049" ixy="0" ixz="0" iyz="0" />
+    </inertial>
+    <visual name="wheel_3_right_visual">
+      <origin xyz="0 0 0" rpy="1.57079632679 0 0" />
+      <geometry>
+        <cylinder radius=".035" length=".018" />
+      </geometry>
+      <material name="wheel_paint_3right">
+        <color rgba=".08 .08 .08 1" />
+      </material>
+    </visual>
+    <collision name="wheel_3_right_collision">
+      <origin xyz="0 0 0" rpy="1.57079632679 0 0" />
+      <geometry>
+        <cylinder radius=".035" length=".018" />
+      </geometry>
+    </collision>
+  </link>
+  <joint name="wheel_3_right_joint" type="continuous">
+    <parent link="segment_3" />
+    <child link="wheel_3_right" />
+    <origin xyz="-0.08 -0.05 -.02" rpy="0 0 0" />
+    <axis xyz="0 1 0" />
+    <limit effort=".01" velocity="80" />
+    <dynamics damping=".0003" friction="0" />
+  </joint>
+  <link name="segment_4">
+    <inertial>
+      <origin xyz="-.08 0 0" rpy="0 0 0" />
+      <mass value=".24" />
+      <inertia ixx=".00018" iyy=".00056" izz=".00064" ixy="0" ixz="0" iyz="0" />
+    </inertial>
+    <visual name="segment_4_visual">
+      <origin xyz="-.08 0 0" rpy="0 0 0" />
+      <geometry>
+        <box size=".14 .072 .045" />
+      </geometry>
+      <material name="segment_paint_4">
+        <color rgba=".9 .55 .08 1" />
+      </material>
+    </visual>
+    <collision name="segment_4_collision">
+      <origin xyz="-.08 0 0" rpy="0 0 0" />
+      <geometry>
+        <box size=".14 .072 .045" />
+      </geometry>
+    </collision>
+  </link>
+  <joint name="spine_4" type="revolute">
+    <parent link="segment_3" />
+    <child link="segment_4" />
+    <origin xyz="-.16 0 0" rpy="0 0 0" />
+    <axis xyz="0 0 1" />
+    <limit lower="-.8" upper=".8" effort=".8" velocity="2" />
+    <dynamics damping=".025" friction=".001" />
+  </joint>
+  <link name="wheel_4_left">
+    <inertial>
+      <mass value=".015" />
+      <inertia ixx=".0000049" iyy=".0000092" izz=".0000049" ixy="0" ixz="0" iyz="0" />
+    </inertial>
+    <visual name="wheel_4_left_visual">
+      <origin xyz="0 0 0" rpy="1.57079632679 0 0" />
+      <geometry>
+        <cylinder radius=".035" length=".018" />
+      </geometry>
+      <material name="wheel_paint_4left">
+        <color rgba=".08 .08 .08 1" />
+      </material>
+    </visual>
+    <collision name="wheel_4_left_collision">
+      <origin xyz="0 0 0" rpy="1.57079632679 0 0" />
+      <geometry>
+        <cylinder radius=".035" length=".018" />
+      </geometry>
+    </collision>
+  </link>
+  <joint name="wheel_4_left_joint" type="continuous">
+    <parent link="segment_4" />
+    <child link="wheel_4_left" />
+    <origin xyz="-0.08 0.05 -.02" rpy="0 0 0" />
+    <axis xyz="0 1 0" />
+    <limit effort=".01" velocity="80" />
+    <dynamics damping=".0003" friction="0" />
+  </joint>
+  <link name="wheel_4_right">
+    <inertial>
+      <mass value=".015" />
+      <inertia ixx=".0000049" iyy=".0000092" izz=".0000049" ixy="0" ixz="0" iyz="0" />
+    </inertial>
+    <visual name="wheel_4_right_visual">
+      <origin xyz="0 0 0" rpy="1.57079632679 0 0" />
+      <geometry>
+        <cylinder radius=".035" length=".018" />
+      </geometry>
+      <material name="wheel_paint_4right">
+        <color rgba=".08 .08 .08 1" />
+      </material>
+    </visual>
+    <collision name="wheel_4_right_collision">
+      <origin xyz="0 0 0" rpy="1.57079632679 0 0" />
+      <geometry>
+        <cylinder radius=".035" length=".018" />
+      </geometry>
+    </collision>
+  </link>
+  <joint name="wheel_4_right_joint" type="continuous">
+    <parent link="segment_4" />
+    <child link="wheel_4_right" />
+    <origin xyz="-0.08 -0.05 -.02" rpy="0 0 0" />
+    <axis xyz="0 1 0" />
+    <limit effort=".01" velocity="80" />
+    <dynamics damping=".0003" friction="0" />
+  </joint>
+  <link name="segment_5">
+    <inertial>
+      <origin xyz="-.08 0 0" rpy="0 0 0" />
+      <mass value=".24" />
+      <inertia ixx=".00018" iyy=".00056" izz=".00064" ixy="0" ixz="0" iyz="0" />
+    </inertial>
+    <visual name="segment_5_visual">
+      <origin xyz="-.08 0 0" rpy="0 0 0" />
+      <geometry>
+        <box size=".14 .072 .045" />
+      </geometry>
+      <material name="segment_paint_5">
+        <color rgba=".15 .22 .28 1" />
+      </material>
+    </visual>
+    <collision name="segment_5_collision">
+      <origin xyz="-.08 0 0" rpy="0 0 0" />
+      <geometry>
+        <box size=".14 .072 .045" />
+      </geometry>
+    </collision>
+  </link>
+  <joint name="spine_5" type="revolute">
+    <parent link="segment_4" />
+    <child link="segment_5" />
+    <origin xyz="-.16 0 0" rpy="0 0 0" />
+    <axis xyz="0 0 1" />
+    <limit lower="-.8" upper=".8" effort=".8" velocity="2" />
+    <dynamics damping=".025" friction=".001" />
+  </joint>
+  <link name="wheel_5_left">
+    <inertial>
+      <mass value=".015" />
+      <inertia ixx=".0000049" iyy=".0000092" izz=".0000049" ixy="0" ixz="0" iyz="0" />
+    </inertial>
+    <visual name="wheel_5_left_visual">
+      <origin xyz="0 0 0" rpy="1.57079632679 0 0" />
+      <geometry>
+        <cylinder radius=".035" length=".018" />
+      </geometry>
+      <material name="wheel_paint_5left">
+        <color rgba=".08 .08 .08 1" />
+      </material>
+    </visual>
+    <collision name="wheel_5_left_collision">
+      <origin xyz="0 0 0" rpy="1.57079632679 0 0" />
+      <geometry>
+        <cylinder radius=".035" length=".018" />
+      </geometry>
+    </collision>
+  </link>
+  <joint name="wheel_5_left_joint" type="continuous">
+    <parent link="segment_5" />
+    <child link="wheel_5_left" />
+    <origin xyz="-0.08 0.05 -.02" rpy="0 0 0" />
+    <axis xyz="0 1 0" />
+    <limit effort=".01" velocity="80" />
+    <dynamics damping=".0003" friction="0" />
+  </joint>
+  <link name="wheel_5_right">
+    <inertial>
+      <mass value=".015" />
+      <inertia ixx=".0000049" iyy=".0000092" izz=".0000049" ixy="0" ixz="0" iyz="0" />
+    </inertial>
+    <visual name="wheel_5_right_visual">
+      <origin xyz="0 0 0" rpy="1.57079632679 0 0" />
+      <geometry>
+        <cylinder radius=".035" length=".018" />
+      </geometry>
+      <material name="wheel_paint_5right">
+        <color rgba=".08 .08 .08 1" />
+      </material>
+    </visual>
+    <collision name="wheel_5_right_collision">
+      <origin xyz="0 0 0" rpy="1.57079632679 0 0" />
+      <geometry>
+        <cylinder radius=".035" length=".018" />
+      </geometry>
+    </collision>
+  </link>
+  <joint name="wheel_5_right_joint" type="continuous">
+    <parent link="segment_5" />
+    <child link="wheel_5_right" />
+    <origin xyz="-0.08 -0.05 -.02" rpy="0 0 0" />
+    <axis xyz="0 1 0" />
+    <limit effort=".01" velocity="80" />
+    <dynamics damping=".0003" friction="0" />
+  </joint>
+  <link name="segment_6">
+    <inertial>
+      <origin xyz="-.08 0 0" rpy="0 0 0" />
+      <mass value=".24" />
+      <inertia ixx=".00018" iyy=".00056" izz=".00064" ixy="0" ixz="0" iyz="0" />
+    </inertial>
+    <visual name="segment_6_visual">
+      <origin xyz="-.08 0 0" rpy="0 0 0" />
+      <geometry>
+        <box size=".14 .072 .045" />
+      </geometry>
+      <material name="segment_paint_6">
+        <color rgba=".9 .55 .08 1" />
+      </material>
+    </visual>
+    <collision name="segment_6_collision">
+      <origin xyz="-.08 0 0" rpy="0 0 0" />
+      <geometry>
+        <box size=".14 .072 .045" />
+      </geometry>
+    </collision>
+  </link>
+  <joint name="spine_6" type="revolute">
+    <parent link="segment_5" />
+    <child link="segment_6" />
+    <origin xyz="-.16 0 0" rpy="0 0 0" />
+    <axis xyz="0 0 1" />
+    <limit lower="-.8" upper=".8" effort=".8" velocity="2" />
+    <dynamics damping=".025" friction=".001" />
+  </joint>
+  <link name="wheel_6_left">
+    <inertial>
+      <mass value=".015" />
+      <inertia ixx=".0000049" iyy=".0000092" izz=".0000049" ixy="0" ixz="0" iyz="0" />
+    </inertial>
+    <visual name="wheel_6_left_visual">
+      <origin xyz="0 0 0" rpy="1.57079632679 0 0" />
+      <geometry>
+        <cylinder radius=".035" length=".018" />
+      </geometry>
+      <material name="wheel_paint_6left">
+        <color rgba=".08 .08 .08 1" />
+      </material>
+    </visual>
+    <collision name="wheel_6_left_collision">
+      <origin xyz="0 0 0" rpy="1.57079632679 0 0" />
+      <geometry>
+        <cylinder radius=".035" length=".018" />
+      </geometry>
+    </collision>
+  </link>
+  <joint name="wheel_6_left_joint" type="continuous">
+    <parent link="segment_6" />
+    <child link="wheel_6_left" />
+    <origin xyz="-0.08 0.05 -.02" rpy="0 0 0" />
+    <axis xyz="0 1 0" />
+    <limit effort=".01" velocity="80" />
+    <dynamics damping=".0003" friction="0" />
+  </joint>
+  <link name="wheel_6_right">
+    <inertial>
+      <mass value=".015" />
+      <inertia ixx=".0000049" iyy=".0000092" izz=".0000049" ixy="0" ixz="0" iyz="0" />
+    </inertial>
+    <visual name="wheel_6_right_visual">
+      <origin xyz="0 0 0" rpy="1.57079632679 0 0" />
+      <geometry>
+        <cylinder radius=".035" length=".018" />
+      </geometry>
+      <material name="wheel_paint_6right">
+        <color rgba=".08 .08 .08 1" />
+      </material>
+    </visual>
+    <collision name="wheel_6_right_collision">
+      <origin xyz="0 0 0" rpy="1.57079632679 0 0" />
+      <geometry>
+        <cylinder radius=".035" length=".018" />
+      </geometry>
+    </collision>
+  </link>
+  <joint name="wheel_6_right_joint" type="continuous">
+    <parent link="segment_6" />
+    <child link="wheel_6_right" />
+    <origin xyz="-0.08 -0.05 -.02" rpy="0 0 0" />
+    <axis xyz="0 1 0" />
+    <limit effort=".01" velocity="80" />
+    <dynamics damping=".0003" friction="0" />
+  </joint>
+  <link name="segment_7">
+    <inertial>
+      <origin xyz="-.08 0 0" rpy="0 0 0" />
+      <mass value=".24" />
+      <inertia ixx=".00018" iyy=".00056" izz=".00064" ixy="0" ixz="0" iyz="0" />
+    </inertial>
+    <visual name="segment_7_visual">
+      <origin xyz="-.08 0 0" rpy="0 0 0" />
+      <geometry>
+        <box size=".14 .072 .045" />
+      </geometry>
+      <material name="segment_paint_7">
+        <color rgba=".15 .22 .28 1" />
+      </material>
+    </visual>
+    <collision name="segment_7_collision">
+      <origin xyz="-.08 0 0" rpy="0 0 0" />
+      <geometry>
+        <box size=".14 .072 .045" />
+      </geometry>
+    </collision>
+  </link>
+  <joint name="spine_7" type="revolute">
+    <parent link="segment_6" />
+    <child link="segment_7" />
+    <origin xyz="-.16 0 0" rpy="0 0 0" />
+    <axis xyz="0 0 1" />
+    <limit lower="-.8" upper=".8" effort=".8" velocity="2" />
+    <dynamics damping=".025" friction=".001" />
+  </joint>
+  <link name="wheel_7_left">
+    <inertial>
+      <mass value=".015" />
+      <inertia ixx=".0000049" iyy=".0000092" izz=".0000049" ixy="0" ixz="0" iyz="0" />
+    </inertial>
+    <visual name="wheel_7_left_visual">
+      <origin xyz="0 0 0" rpy="1.57079632679 0 0" />
+      <geometry>
+        <cylinder radius=".035" length=".018" />
+      </geometry>
+      <material name="wheel_paint_7left">
+        <color rgba=".08 .08 .08 1" />
+      </material>
+    </visual>
+    <collision name="wheel_7_left_collision">
+      <origin xyz="0 0 0" rpy="1.57079632679 0 0" />
+      <geometry>
+        <cylinder radius=".035" length=".018" />
+      </geometry>
+    </collision>
+  </link>
+  <joint name="wheel_7_left_joint" type="continuous">
+    <parent link="segment_7" />
+    <child link="wheel_7_left" />
+    <origin xyz="-0.08 0.05 -.02" rpy="0 0 0" />
+    <axis xyz="0 1 0" />
+    <limit effort=".01" velocity="80" />
+    <dynamics damping=".0003" friction="0" />
+  </joint>
+  <link name="wheel_7_right">
+    <inertial>
+      <mass value=".015" />
+      <inertia ixx=".0000049" iyy=".0000092" izz=".0000049" ixy="0" ixz="0" iyz="0" />
+    </inertial>
+    <visual name="wheel_7_right_visual">
+      <origin xyz="0 0 0" rpy="1.57079632679 0 0" />
+      <geometry>
+        <cylinder radius=".035" length=".018" />
+      </geometry>
+      <material name="wheel_paint_7right">
+        <color rgba=".08 .08 .08 1" />
+      </material>
+    </visual>
+    <collision name="wheel_7_right_collision">
+      <origin xyz="0 0 0" rpy="1.57079632679 0 0" />
+      <geometry>
+        <cylinder radius=".035" length=".018" />
+      </geometry>
+    </collision>
+  </link>
+  <joint name="wheel_7_right_joint" type="continuous">
+    <parent link="segment_7" />
+    <child link="wheel_7_right" />
+    <origin xyz="-0.08 -0.05 -.02" rpy="0 0 0" />
+    <axis xyz="0 1 0" />
+    <limit effort=".01" velocity="80" />
+    <dynamics damping=".0003" friction="0" />
+  </joint>
+  <link name="segment_8">
+    <inertial>
+      <origin xyz="-.08 0 0" rpy="0 0 0" />
+      <mass value=".24" />
+      <inertia ixx=".00018" iyy=".00056" izz=".00064" ixy="0" ixz="0" iyz="0" />
+    </inertial>
+    <visual name="segment_8_visual">
+      <origin xyz="-.08 0 0" rpy="0 0 0" />
+      <geometry>
+        <box size=".14 .072 .045" />
+      </geometry>
+      <material name="segment_paint_8">
+        <color rgba=".9 .55 .08 1" />
+      </material>
+    </visual>
+    <collision name="segment_8_collision">
+      <origin xyz="-.08 0 0" rpy="0 0 0" />
+      <geometry>
+        <box size=".14 .072 .045" />
+      </geometry>
+    </collision>
+  </link>
+  <joint name="spine_8" type="revolute">
+    <parent link="segment_7" />
+    <child link="segment_8" />
+    <origin xyz="-.16 0 0" rpy="0 0 0" />
+    <axis xyz="0 0 1" />
+    <limit lower="-.8" upper=".8" effort=".8" velocity="2" />
+    <dynamics damping=".025" friction=".001" />
+  </joint>
+  <link name="wheel_8_left">
+    <inertial>
+      <mass value=".015" />
+      <inertia ixx=".0000049" iyy=".0000092" izz=".0000049" ixy="0" ixz="0" iyz="0" />
+    </inertial>
+    <visual name="wheel_8_left_visual">
+      <origin xyz="0 0 0" rpy="1.57079632679 0 0" />
+      <geometry>
+        <cylinder radius=".035" length=".018" />
+      </geometry>
+      <material name="wheel_paint_8left">
+        <color rgba=".08 .08 .08 1" />
+      </material>
+    </visual>
+    <collision name="wheel_8_left_collision">
+      <origin xyz="0 0 0" rpy="1.57079632679 0 0" />
+      <geometry>
+        <cylinder radius=".035" length=".018" />
+      </geometry>
+    </collision>
+  </link>
+  <joint name="wheel_8_left_joint" type="continuous">
+    <parent link="segment_8" />
+    <child link="wheel_8_left" />
+    <origin xyz="-0.08 0.05 -.02" rpy="0 0 0" />
+    <axis xyz="0 1 0" />
+    <limit effort=".01" velocity="80" />
+    <dynamics damping=".0003" friction="0" />
+  </joint>
+  <link name="wheel_8_right">
+    <inertial>
+      <mass value=".015" />
+      <inertia ixx=".0000049" iyy=".0000092" izz=".0000049" ixy="0" ixz="0" iyz="0" />
+    </inertial>
+    <visual name="wheel_8_right_visual">
+      <origin xyz="0 0 0" rpy="1.57079632679 0 0" />
+      <geometry>
+        <cylinder radius=".035" length=".018" />
+      </geometry>
+      <material name="wheel_paint_8right">
+        <color rgba=".08 .08 .08 1" />
+      </material>
+    </visual>
+    <collision name="wheel_8_right_collision">
+      <origin xyz="0 0 0" rpy="1.57079632679 0 0" />
+      <geometry>
+        <cylinder radius=".035" length=".018" />
+      </geometry>
+    </collision>
+  </link>
+  <joint name="wheel_8_right_joint" type="continuous">
+    <parent link="segment_8" />
+    <child link="wheel_8_right" />
+    <origin xyz="-0.08 -0.05 -.02" rpy="0 0 0" />
+    <axis xyz="0 1 0" />
+    <limit effort=".01" velocity="80" />
+    <dynamics damping=".0003" friction="0" />
+  </joint>
+  <link name="segment_9">
+    <inertial>
+      <origin xyz="-.08 0 0" rpy="0 0 0" />
+      <mass value=".24" />
+      <inertia ixx=".00018" iyy=".00056" izz=".00064" ixy="0" ixz="0" iyz="0" />
+    </inertial>
+    <visual name="segment_9_visual">
+      <origin xyz="-.08 0 0" rpy="0 0 0" />
+      <geometry>
+        <box size=".14 .072 .045" />
+      </geometry>
+      <material name="segment_paint_9">
+        <color rgba=".15 .22 .28 1" />
+      </material>
+    </visual>
+    <collision name="segment_9_collision">
+      <origin xyz="-.08 0 0" rpy="0 0 0" />
+      <geometry>
+        <box size=".14 .072 .045" />
+      </geometry>
+    </collision>
+  </link>
+  <joint name="spine_9" type="revolute">
+    <parent link="segment_8" />
+    <child link="segment_9" />
+    <origin xyz="-.16 0 0" rpy="0 0 0" />
+    <axis xyz="0 0 1" />
+    <limit lower="-.8" upper=".8" effort=".8" velocity="2" />
+    <dynamics damping=".025" friction=".001" />
+  </joint>
+  <link name="wheel_9_left">
+    <inertial>
+      <mass value=".015" />
+      <inertia ixx=".0000049" iyy=".0000092" izz=".0000049" ixy="0" ixz="0" iyz="0" />
+    </inertial>
+    <visual name="wheel_9_left_visual">
+      <origin xyz="0 0 0" rpy="1.57079632679 0 0" />
+      <geometry>
+        <cylinder radius=".035" length=".018" />
+      </geometry>
+      <material name="wheel_paint_9left">
+        <color rgba=".08 .08 .08 1" />
+      </material>
+    </visual>
+    <collision name="wheel_9_left_collision">
+      <origin xyz="0 0 0" rpy="1.57079632679 0 0" />
+      <geometry>
+        <cylinder radius=".035" length=".018" />
+      </geometry>
+    </collision>
+  </link>
+  <joint name="wheel_9_left_joint" type="continuous">
+    <parent link="segment_9" />
+    <child link="wheel_9_left" />
+    <origin xyz="-0.08 0.05 -.02" rpy="0 0 0" />
+    <axis xyz="0 1 0" />
+    <limit effort=".01" velocity="80" />
+    <dynamics damping=".0003" friction="0" />
+  </joint>
+  <link name="wheel_9_right">
+    <inertial>
+      <mass value=".015" />
+      <inertia ixx=".0000049" iyy=".0000092" izz=".0000049" ixy="0" ixz="0" iyz="0" />
+    </inertial>
+    <visual name="wheel_9_right_visual">
+      <origin xyz="0 0 0" rpy="1.57079632679 0 0" />
+      <geometry>
+        <cylinder radius=".035" length=".018" />
+      </geometry>
+      <material name="wheel_paint_9right">
+        <color rgba=".08 .08 .08 1" />
+      </material>
+    </visual>
+    <collision name="wheel_9_right_collision">
+      <origin xyz="0 0 0" rpy="1.57079632679 0 0" />
+      <geometry>
+        <cylinder radius=".035" length=".018" />
+      </geometry>
+    </collision>
+  </link>
+  <joint name="wheel_9_right_joint" type="continuous">
+    <parent link="segment_9" />
+    <child link="wheel_9_right" />
+    <origin xyz="-0.08 -0.05 -.02" rpy="0 0 0" />
+    <axis xyz="0 1 0" />
+    <limit effort=".01" velocity="80" />
+    <dynamics damping=".0003" friction="0" />
+  </joint>
+</robot>

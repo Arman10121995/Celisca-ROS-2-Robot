@@ -33,7 +33,7 @@ class MarineControls(ttk.Frame):
         self.keyboard=tk.BooleanVar(value=False)
         self.linear_delta=tk.DoubleVar(value=.01);self.angular_delta=tk.DoubleVar(value=.025)
         self.depth=tk.DoubleVar(value=1.)
-        self.status=tk.StringVar(value='Choose ROV or AUV + marine world + Marine mode. Experimental native water forces.')
+        self.status=tk.StringVar(value='Choose ROV, AUV or surface vessel + water world + Marine mode.')
         self.feedback=tk.StringVar(value='Awaiting actual body/force feedback')
         ttk.Label(self,text='Marine · physical propulsion',font=('',11,'bold')).grid(row=0,column=0,sticky='w')
         ttk.Label(self,textvariable=self.status,wraplength=300).grid(row=1,column=0,sticky='ew',pady=5)
@@ -58,6 +58,7 @@ class MarineControls(ttk.Frame):
         ttk.Label(increments,text='Δ linear / yaw per 0.1 s').pack(side='left')
         for var in (self.linear_delta,self.angular_delta):ttk.Entry(increments,textvariable=var,width=6).pack(side='left',padx=3)
         depth=ttk.LabelFrame(self,text='Depth below water surface (m)',padding=5);depth.grid(row=6,column=0,sticky='ew',pady=7)
+        self.depth_controls=depth
         for col,(label,op) in enumerate([('Depth −','depth_up'),('Hold','hold'),('Depth +','depth_down')]):
             ttk.Button(depth,text=label,command=lambda o=op:self.operation(o)).grid(row=0,column=col,sticky='ew',padx=2)
             depth.columnconfigure(col,weight=1)
@@ -179,9 +180,12 @@ class MarineControls(ttk.Frame):
         if self.closed:return
         now=time.monotonic()
         auv=self.app._robot_config().get('marine_propulsion')=='propeller_fins'
-        self.arm_label.set('Arm AUV cruise guidance' if auv else 'Arm depth/heading hold')
+        surface=self.app._robot_config().get('marine_propulsion')=='surface_twin_thrusters'
+        self.arm_label.set('Arm surface thrust' if surface else 'Arm AUV cruise guidance' if auv else 'Arm depth/heading hold')
+        for widget in self.depth_controls.winfo_children():
+            if isinstance(widget,(ttk.Button,ttk.Entry)):widget.state(['disabled'] if surface else ['!disabled'])
         for direction,button in self.buttons.items():
-            if direction[2]:button.state(['disabled'] if auv else ['!disabled'])
+            if direction[2]:button.state(['disabled'] if auv or surface else ['!disabled'])
         if self.executor and rclpy.ok():self.executor.spin_once(timeout_sec=0.)
         state=self.runtime
         if state and now-self.runtime_at<1. and self.selected() and state['robot_id']==self.app.robot_var.get():

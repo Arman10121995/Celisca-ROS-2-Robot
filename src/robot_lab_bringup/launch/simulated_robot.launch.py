@@ -571,6 +571,10 @@ def _resolve_algorithm_selection(context, mode_config, dispatch, robot_config=No
                 "current mode does not run that category. Mode categories: %s"
                 % (requested, category, mode_categories or "(none)")
             )
+        rules=(robot_config or {}).get('algorithm_allowlist_by_mode') or {}
+        allow=rules.get(_launch_value(context,'mode'),{}) if rules else {}
+        if category in allow and requested not in allow[category]:
+            raise RuntimeError('Native robot workflow does not implement '+category+'='+requested)
         entry = (dispatch.get(category) or {}).get(requested)
         if entry is None:
             known = sorted((dispatch.get(category) or {}).keys())
@@ -754,8 +758,14 @@ def _build_simulation_actions(context):
                                  _launch_value(context, "simulator"))
         if robot_config.get('tracked_model'):
             if _launch_value(context,'simulator')!='gazebo':raise RuntimeError('Native contact-surface tracks require Gazebo Fortress')
+            selected,plugins,nodes,notes=_resolve_algorithm_selection(context,mode_config,_load_algorithm_dispatch(bringup_share),robot_config)
+            if nodes:raise RuntimeError('Tracked workflow only implements its declared native stacks and Nav2 plugins')
             tracked_args=dict(task=mode_name,map_name='empty' if map_free else map_name,
                 gui=_config_value(context,'gui','true'),rviz='true' if _auto_bool(context,'start_rviz',True) else 'false')
+            for category,key in (('global_planning','global_planner_plugin'),('local_planning','local_planner_plugin')):
+                configured=_launch_value(context,key)
+                tracked_args[key]=plugins.get(category,'auto') if _is_auto(configured) else configured
+            for note in notes:print('[robot_lab tracked] '+note)
             if _is_auto(tracked_args['gui']):tracked_args['gui']='true' if os.environ.get('DISPLAY') else 'false'
             for axis in ('x','y','z','yaw'):
                 supplied=_launch_value(context,'spawn_'+axis)
@@ -789,6 +799,7 @@ def _build_simulation_actions(context):
                 slam=_config_value(context, 'marine_slam', 'false'), database=_config_value(context, 'marine_database', ''),
                 localization=_config_value(context, 'marine_localization', 'false'),
                 gui=_config_value(context, 'gui', 'true'), rviz='true' if _auto_bool(context, 'start_rviz', True) else 'false')
+            if robot_model != 'tethys_auv':marine_args['robot_model']=robot_model
             if _is_auto(marine_args['gui']):
                 marine_args['gui'] = 'true' if os.environ.get('DISPLAY') else 'false'
             for axis in ('x', 'y', 'z', 'yaw'):

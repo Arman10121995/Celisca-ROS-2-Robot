@@ -21,7 +21,18 @@ if(ignition-gazebo6_FOUND)
     ignition-gazebo6::ignition-gazebo6 ignition-plugin1::ignition-plugin1
     ignition-transport11::ignition-transport11 ignition-msgs8::ignition-msgs8)
   install(TARGETS robot_lab_2dmap_system LIBRARY DESTINATION lib)
+  add_library(robot_lab_command_watchdog SHARED systems/command_watchdog.cc)
+  target_compile_features(robot_lab_command_watchdog PRIVATE cxx_std_17)
+  target_link_libraries(robot_lab_command_watchdog ignition-gazebo6::ignition-gazebo6
+    ignition-plugin1::ignition-plugin1 ignition-transport11::ignition-transport11 ignition-msgs8::ignition-msgs8)
+  install(TARGETS robot_lab_command_watchdog LIBRARY DESTINATION lib)
+  add_library(robot_lab_tracked_vehicle SHARED vendor/native_tracks/TrackedVehicle.cc)
+  target_compile_features(robot_lab_tracked_vehicle PRIVATE cxx_std_17)
+  target_link_libraries(robot_lab_tracked_vehicle ignition-gazebo6::ignition-gazebo6
+    ignition-plugin1::ignition-plugin1 ignition-transport11::ignition-transport11 ignition-msgs8::ignition-msgs8)
+  install(TARGETS robot_lab_tracked_vehicle LIBRARY DESTINATION lib)
 endif()
+install(DIRECTORY vendor/native_tracks/ DESTINATION share/${PROJECT_NAME}/vendor/native_tracks)
 install(DIRECTORY vendor/gazebo_2dmap/ DESTINATION share/${PROJECT_NAME}/vendor/gazebo_2dmap)
 install(PROGRAMS tools/generate_occupancy_map.py DESTINATION lib/${PROJECT_NAME})
 

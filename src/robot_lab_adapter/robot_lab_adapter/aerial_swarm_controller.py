@@ -226,32 +226,33 @@ class AerialSwarmController(Node):
                         output.linear.y=float(-world[0]*math.sin(yaw)+world[1]*math.cos(yaw))
                         output.linear.z=float(world[2])
                         member['velocity_pub'].publish(output)
-                        if commands is not None and member['pose'] is not None:
-                            commanded=np.asarray(commands[member['id']],dtype=float)
-                            actual=np.asarray(member['pose'],dtype=float)
-                            commanded_target=np.asarray(member['pose'])+np.clip(commanded*.5,-.25,.25)
-                            formation_error=float(np.linalg.norm(actual-commanded_target))
-                            altitude_error=float(abs(actual[2]-commanded_target[2]))
+                        if self.mode=='formation' and self.anchor is not None and member['truth'] is not None and now-member['truth_at']<.6:
+                            names=sorted(self.targets)
+                            index=names.index(member['id'])
+                            target=np.asarray(self.anchor)+np.array([0.,(index-(len(names)-1)/2)*self.spacing,0.])
+                            actual=np.asarray(member['truth'],dtype=float)
+                            formation_error=float(np.linalg.norm(actual-target))
+                            altitude_error=float(abs(actual[2]-target[2]))
                             self.formation_errors.append((now,member['id'],formation_error))
                             self.altitude_errors.append((now,member['id'],altitude_error))
                             if len(self.formation_errors)>2000:self.formation_errors.pop(0)
                             if len(self.altitude_errors)>2000:self.altitude_errors.pop(0)
                             self.event('formation_sample',member=member['id'],mode=self.mode,
-                                formation_error_m=round(formation_error,4),
-                                altitude_error_m=round(altitude_error,4),
-                                commanded_z=round(float(commanded_target[2]),4),
-                                actual_z=round(float(actual[2]),4))
+                                formation_error_m=formation_error,altitude_error_m=altitude_error,
+                                target_world=target.tolist(),actual_world=actual.tolist(),
+                                observer='Independent Gazebo body pose; absolute world formation slot')
         if now-self.last_status>.2:
             self.last_status=now
             rows=[dict(id=m['id'],instance=m['instance'],system_id=m['system_id'],port=m['port'],namespace=m['namespace'],
                 ready=self.fresh(m),status=m['status'],position=m['pose'],truth=m['truth'],last_service=m['result']) for m in self.members.values()]
+            recent=[];alt_recent=[]
             if self.formation_errors:
                 recent=[e for e in self.formation_errors if now-e[0]<10.]
                 alt_recent=[e for e in self.altitude_errors if now-e[0]<10.]
-                formation_rms=math.sqrt(sum(e[2]**2 for e in recent)/len(recent)) if recent else 0.
-                altitude_rms=math.sqrt(sum(e[2]**2 for e in alt_recent)/len(alt_recent)) if alt_recent else 0.
+                formation_rms=math.sqrt(sum(e[2]**2 for e in recent)/len(recent)) if recent else None
+                altitude_rms=math.sqrt(sum(e[2]**2 for e in alt_recent)/len(alt_recent)) if alt_recent else None
             else:
-                formation_rms=0.;altitude_rms=0.
+                formation_rms=None;altitude_rms=None;
             self.pub.publish(String(data=json.dumps(dict(schema_version=1,session_id=self.session['session_id'],
                 map=self.session['map'],backend='Gazebo Harmonic / native PX4',directory=self.session['directory'],
                 operator_id=self.operator,operator_fresh=operator_fresh,mode=self.mode,reason=self.reason,members=rows,
@@ -259,7 +260,8 @@ class AerialSwarmController(Node):
                 estimator=self.session.get('estimator',{}),
                 position_reference='Known landed spawn prior until first accepted Takeoff; committed FCU odometry thereafter; simulator truth is separate',
                 scope='Experimental actual shared-world multi-FCU controls; flight/swarm/clearance/loss qualification pending',
-                formation_rms_m=round(formation_rms,4),altitude_rms_m=round(altitude_rms,4),
+                formation_rms_m=round(formation_rms,4) if formation_rms is not None else None,
+                altitude_rms_m=round(altitude_rms,4) if altitude_rms is not None else None,
                 formation_samples=len(recent) if recent else 0,member_loss=dict(self.member_lost)),allow_nan=False)))
 
     def close(self):

@@ -332,10 +332,12 @@ class PX4Controller(Node):
                  if self.first_ready_fcu_ms is not None and self.flight.local_position is not None else 0.)
         self.status_pub.publish(String(data=json.dumps({
             'phase': self.phase, 'armed': self.flight.armed(), 'position_ready': self.ready(),
+            'landed_state':self.flight.ext_sys.landed_state if self.flight.ext_sys else None,
             'flight_enabled': self.enabled, 'position_enu': self.position(), 'target_enu': self.target,
             'takeoff_ready': self.takeoff_ready(), 'takeoff_target_z': self.takeoff_z,
             'control_clock':'FCU' if self.control_fcu_clock else 'wall',
             'estimator_parameters':dict(self.flight.parameters),
+            'range_sensor':getattr(self,'range_observation',None),
             'global_altitude_m':self.flight.position.alt*.001 if self.flight.position is not None else None,
             'relative_altitude_m':self.flight.position.relative_alt*.001 if self.flight.position is not None else None,
             'preflight_remaining_fcu_s':max(0.,self.preflight_fcu_seconds-elapsed),

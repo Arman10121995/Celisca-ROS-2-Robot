@@ -41,6 +41,7 @@ class MarineNavigation(Node):
             self.declare_parameter(key, value)
         self.robot = self.get_parameter('robot_id').value
         self.auv = self.robot == 'tethys_auv'
+        self.surface_vessel = self.robot == 'lab_usv'
         self.surface = float(self.get_parameter('surface_z').value)
         self.bottom = float(self.get_parameter('bottom_z').value)
         self.radius = float(self.get_parameter('radius').value)
@@ -52,6 +53,7 @@ class MarineNavigation(Node):
         self.observed = None
         self.cloud_at = -math.inf
         self.native = self.position = self.orientation = self.velocity = None
+        self.angular_velocity = math.nan
         self.pose_at = self.native_at = -math.inf
         self.pose_std = math.inf
         self.status = 'idle'
@@ -142,6 +144,7 @@ class MarineNavigation(Node):
             self.orientation = combined.as_euler('xyz')
             body = [getattr(msg.twist.twist.linear, k) for k in 'xyz']
             self.velocity = combined.apply(body)
+            self.angular_velocity = float(msg.twist.twist.angular.z)
             self.pose_std = math.sqrt(max(0., msg.pose.covariance[0], msg.pose.covariance[7], msg.pose.covariance[14]))
             self.pose_at = time.monotonic()
         except (TransformException, ValueError):
@@ -213,13 +216,17 @@ class MarineNavigation(Node):
                 self.stop_token = threading.Event()
                 self.status = 'planning'
                 start, orientation = self.position.copy(), self.orientation.copy()
+                if self.surface_vessel and abs(target[2]-start[2])>.1:
+                    raise ValueError('Surface vessel goals must keep the estimated draft; use Waypoint ahead or the estimated Z')
                 scene = ObservedScene(self.scene, self.observed) if self.observed else self.scene
                 radius = self.radius + 3 * self.pose_std
                 token, generation = self.stop_token, self.generation
                 def compute():
                     route, info = plan(scene, start, target, radius=radius, resolution=.4, timeout=15.,
                         canceled=token.is_set, min_altitude=self.bottom + radius + .1,
-                        max_altitude=self.surface - radius - .1)
+                        max_altitude=self.surface - radius - .1) if not self.surface_vessel else plan(
+                            scene,start,target,radius=radius,resolution=.4,timeout=15.,canceled=token.is_set,
+                            min_altitude=float(start[2])-.1,max_altitude=float(start[2])+.1)
                     if self.auv:
                         # This controller has no stop-and-pivot capability. Only
                         # source-clear, forward-aligned cruise transects qualify
@@ -310,6 +317,12 @@ class MarineNavigation(Node):
                         self.cancel('Current source/observed segment blocked; replan required')
                     else:
                         command, distance = waypoint_command(self.position, self.orientation, self.velocity, target, self.auv)
+                        if self.surface_vessel:
+                            dx,dy=target[0]-self.position[0],target[1]-self.position[1]
+                            distance=math.hypot(dx,dy)
+                            error=math.atan2(math.sin(math.atan2(dy,dx)-self.orientation[2]),math.cos(math.atan2(dy,dx)-self.orientation[2]))
+                            command=(min(.25,.5*distance)*max(0.,math.cos(error)) if abs(error)<1. else 0.,
+                                     0.,0.,max(-.3,min(.3,.9*error)))
                         arrival=(max(.35,min(1.2,2.5*float(np.linalg.norm(self.velocity))+.1)) if self.auv else .15)
                         if distance < arrival:
                             if self.index < len(self.route)-1:
@@ -318,7 +331,7 @@ class MarineNavigation(Node):
                             elif self.auv:
                                 self.status, self.reason = 'braking', 'Zero desired surge; signed-thrust braking before propulsion Stop'
                                 self.event('auv_braking',speed_m_s=float(np.linalg.norm(self.velocity)),remaining_m=distance)
-                            elif np.linalg.norm(self.velocity) < .04:
+                            elif np.linalg.norm(self.velocity) < .04 and (not self.surface_vessel or abs(self.angular_velocity)<.04):
                                 self.arrival_at = self.arrival_at or now
                                 if now - self.arrival_at > .5:
                                     self.control('mission_release')

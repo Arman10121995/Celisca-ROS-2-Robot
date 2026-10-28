@@ -25,11 +25,15 @@ from rclpy.parameter import Parameter
 from rclpy.qos import qos_profile_sensor_data
 from rosgraph_msgs.msg import Clock
 
-from .workload_contract import RESULT_SCHEMA, validate_workload
+from .workload_contract import RESULT_SCHEMA, validate_workload, verify_producer
+
+PRODUCER_SHA256 = hashlib.sha256(Path(__file__).read_bytes()).hexdigest()
 
 
 class Nav2Workload(Node):
     def __init__(self, specification, directory):
+        self.producer_sha256 = verify_producer(specification, PRODUCER_SHA256)
+        self.workload_sha256 = hashlib.sha256((directory/'workload.json').read_bytes()).hexdigest()
         super().__init__('robot_lab_nav2_workload', parameter_overrides=[Parameter('use_sim_time', value=True)])
         self.specification, self.directory = specification, directory
         self.trace = (directory/'mission-trace.jsonl').open('w', buffering=1)
@@ -214,8 +218,8 @@ class Nav2Workload(Node):
             contacts=None, swept_footprint_clearance_m=None,
             scope='Actual Nav2 terminal statuses and selected-world independent body endpoints/settling only; full mission/contact qualification separate',
             seed_requested=os.environ.get('ROBOT_LAB_EXPERIMENT_SEED'), simulator_seed_applied=None,
-            producer_sha256=hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
-            workload_sha256=hashlib.sha256(specification_path.read_bytes()).hexdigest(),
+            producer_sha256=self.producer_sha256,
+            workload_sha256=self.workload_sha256,
             trace_sha256=hashlib.sha256((self.directory/'mission-trace.jsonl').read_bytes()).hexdigest())
         temporary = self.directory/'mission-result.new'
         temporary.write_text(json.dumps(result, indent=2, allow_nan=False)+'\n')

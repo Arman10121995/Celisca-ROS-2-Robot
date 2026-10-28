@@ -41,7 +41,8 @@ ownership before runtime edits, preserve existing source certificates and keep
 large outputs on SSD. Complete initial functionality before broad validation;
 neutral enablement, bounds, Stop and command-loss behavior are implementation.
 
-[The October 27 workflow delivery](docs/status/workflows-2026-10-27.md) records
+[The latest October 27 continuation](docs/status/native-workflows-2026-10-27.md) adds real native workload producers, range-reference formation/operator-loss landing, measured fleet batch reset and tracked controls/navigation.
+[The earlier workflow delivery](docs/status/workflows-2026-10-27.md) records
 implemented controls and actual scoped results. Catalog restoration is complete;
 its historical source qualification is preserved separately. Do not rebuild
 working launch/GUI/map export features from scratch.
@@ -50,11 +51,11 @@ working launch/GUI/map export features from scratch.
 |---|---|---|---|
 | Delivered | R3.6 catalog restoration | Seven profiles restored, merge preservation, native families/defaults/autofill and explicit source-recheck candidates | New source-qualified controller missions; remaining imports |
 | 1 | R10.1–R10.3 fleet | Real queues/traffic retreat, optional RMF, coverage, native session editor; conflicting routes and independent settled batch goals measured | Full RMF conflict/infrastructure, coverage/contact/loss and larger-fleet missions |
-| 2 | R10.3 / R10.8 aerial swarm | Multi-FCU launch/native GUI, latched controls, clearance, FCU-clock integration/settling and owned cleanup; actual flight/landing measured | Altitude-estimate/formation accuracy, behavior convergence, loss, further worlds and larger groups |
+| 2 | R10.3 / R10.8 aerial swarm | Native multi-FCU controls and workloads; actual two-X500 range-reference formation and operator-loss landing on nav_empty | Other maps, larger groups, other behaviors and member-loss/contact missions |
 | 3 | R10.4–R10.5 marine | Sensor estimation, source-heading alignment, real map flush/export/protected reload, native estimated missions/ahead waypoint; ROV route measured | AUV transects and saved localization, obstacles/current/contact/loss across installed water worlds |
 | 4 | R10.6–R10.7 multi-leg | Source FK/contact odometry, saved 2D/3D maps, localization/Nav2 and native controls; hexapod Nav2 result and octopod 3D export measured | Per-model higher-mode endpoints, terrain/slip/recovery and additional backends |
-| 5 | R10.7 additional forms | Complete existing segmented centipede retained | Add physical snake/tracked/surface/amphibious sources and class-appropriate controllers |
-| 6 | R10.8 / R4 / R8.3 workloads | Real fleet producer/native queue with owned terminals, source-bound results and independent physical settling | Automatic aerial/marine/gait workloads, batch-wide reset and loss/contact/resource campaigns |
+| 5 | R10.7 additional forms | Complete segmented centipede and native tracked family; tracked forward/loss/Nav2 reference measured | Physical snake/surface/amphibious families; tracked flipper actuation, terrain and further backends |
+| 6 | R10.8 / R4 / R8.3 workloads | Actual Nav2/fleet/marine/gait/aerial producers, editor snapshots, measured endpoints/acquired artifacts, fleet batch reset and owned cleanup | Further AUV/map/behavior cases, applied seeds, contact/clearance and larger resource campaigns |
 | 7 | R6 / R3.6 maps | Existing imports, terrain and occupancy tooling retained; tank reference board/source resources repaired | Remaining reviewed imports, actors, multi-floor/terrain and backend missions |
 | 8 | R5 / R7–R9 / R11–R12 original queue | Existing exact-cell certificates retained | Detailed original task criteria below; no completion from frameworks/test counts |
 
@@ -1595,6 +1596,8 @@ charger, door or lift simulation stays unknown/unavailable.
 
 ### R10.3 — Swarm robotics
 
+October 27 continuation: two actual X500s on `nav_empty` pass the unchanged physical formation contract using an explicit noisy collision-range sensor and native PX4 EKF range reference, then land/disarm. A separate actual operator-loss workload observes landing/disarm/settling. Native GUI reference/preset and experiment workflows are implemented. Other cases retain their open acceptance. [Receipt](docs/status/evidence/native-workflows-2026-10-27/README.md).
+
 October 15: four educational centralized ground kernels plus sensor freshness,
 scan/separation guards, leave/rejoin and heartbeat Stop are implemented. Actual
 two-body formation motion and heartbeat-loss Stop are measured; convergence,
@@ -1671,6 +1674,8 @@ physical legs; six- and eight-legged controllers require separate contracts.
 
 ### R10.7 — Segmented/centipede and additional families
 
+October 27 continuation: `lab_tracked` is one complete source family, with private native DART track physics, actual joint feedback, bounded native watchdog, IMU-based yaw estimation and explicit algorithm/autofill support. Forward motion, a suspended-controller stop and one physical Nav2 endpoint are measured. Snake/surface/amphibious families and further tracked modes/terrain/backends remain. [Guide](docs/tutorials/tracked-vehicle.md).
+
 October 15: complete authored six-body/twelve-leg/five-spine centipede and
 bounded wave/ripple/curvature gait are implemented with the same native GUI
 workflow. A physical GUI nav_empty input/Stop is measured, including a repeat
@@ -1685,6 +1690,8 @@ physical locomotion, body/terrain/obstacle clearance and class-specific sensor/
 map missions. Catalog pieces and animated wave poses do not qualify a robot.
 
 ### R10.8 — GUI and experiment integration
+
+October 27 continuation: real marine/gait navigation and acquisition, aerial formation/operator-loss workloads, editor snapshots and source/trace-bound result readers are implemented in the GUI queue. Actual ROV acquisition, hexapod acquisition/navigation, two-FCU aerial cases and fleet batch reset have receipts. AUV automatic acquisition and broader cases remain. [Current delivery](docs/status/native-workflows-2026-10-27.md).
 
 October 15: native Fleet & Swarm editor/presets/autofill, live instance/group
 controls, actual Nav2 goals, leave/rejoin and scoped reset are implemented and

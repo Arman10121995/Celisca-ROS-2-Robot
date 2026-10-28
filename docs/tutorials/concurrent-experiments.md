@@ -1,5 +1,9 @@
 # Real queued and concurrent experiments
 
+The October 27 native continuation adds **Marine route**, **Marine map acquisition**, **Gait navigation**, **Gait map acquisition**, **Aerial swarm formation** and **Aerial swarm operator loss**. Marine goals are world XYZ; gait goals are world XY/heading degrees. Acquisition takes a requested physical travel distance. Choose the corresponding native Marine/Gait launch; aerial/fleet jobs snapshot their editor. Actual controllers, acquired artifacts and independently settled endpoints drive the results. AUV acquisition still uses its explicit forward-route/SLAM/native Save workflow; automatic AUV acquisition remains open. [Measured cases](../status/native-workflows-2026-10-27.md).
+
+Fleet Reset stops and invalidates the owned task, then measures actual fleet reset/localization/settling and world-clock continuity. Occupied destinations are refused. Native FCU/contact/map sessions use cancel/relaunch to preserve estimator consistency.
+
 October 9 adds an implemented subprocess coordinator. Physical concurrency,
 overload and mission qualification follow the initial feature implementation.
 Historical generated R8 demonstration reports are separate.

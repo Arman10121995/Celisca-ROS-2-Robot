@@ -199,8 +199,12 @@ class MarineEstimator(Node):
             for j in range(3):
                 odom.pose.covariance[i*6+j] = float(self.filter.covariance[i, j])
         odom.pose.pose.orientation = self.imu.orientation
+        if not all(math.isfinite(getattr(self.imu.angular_velocity,key)) for key in 'xyz'):return
+        odom.twist.twist.angular = self.imu.angular_velocity
         odom.pose.covariance[21] = odom.pose.covariance[28] = odom.pose.covariance[35] = .005 ** 2
         odom.twist.covariance = msg.twist.covariance
+        for i in range(3):
+            for j in range(3):odom.twist.covariance[(i+3)*6+j+3]=self.imu.angular_velocity_covariance[i*3+j]
         self.odom_pub.publish(odom)
         transform = TransformStamped()
         transform.header, transform.child_frame_id = odom.header, odom.child_frame_id

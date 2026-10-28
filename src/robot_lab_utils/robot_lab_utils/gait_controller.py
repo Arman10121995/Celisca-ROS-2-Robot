@@ -18,7 +18,7 @@ from sensor_msgs.msg import JointState
 from action_msgs.srv import CancelGoal
 from std_msgs.msg import Float64MultiArray,String
 from tf2_ros import TransformBroadcaster
-from robot_lab_utils.gait_model import GaitModel
+from robot_lab_utils.gait_model import load_model
 
 
 class GaitController(Node):
@@ -26,7 +26,7 @@ class GaitController(Node):
         super().__init__('source_gait_controller')
         for key,value in dict(description_file='',gait_config='',control_allowed=True,navigation_enabled=False,
                               session_directory='',task='gait').items():self.declare_parameter(key,value)
-        self.model=GaitModel(Path(self.get_parameter('description_file').value).read_text(),self.get_parameter('gait_config').value)
+        self.model=load_model(Path(self.get_parameter('description_file').value).read_text(),self.get_parameter('gait_config').value)
         self.cfg=self.model.config;self.robot_id=self.model.robot_id;self.session_id=uuid.uuid4().hex
         self.enabled=False;self.stand_requested=False;self.reason='Source stance held; walking disarmed'
         self.input_owner='manual'
@@ -166,7 +166,7 @@ class GaitController(Node):
                 self.input_owner='navigation' if self.get_parameter('navigation_enabled').value else 'manual'
                 self.reason='Walking armed; no travel until Drive input'
             elif op=='gait':
-                allowed={'ripple','wave',self.cfg['default_gait']}
+                allowed={'serpenoid'} if self.cfg.get('kind')=='serpentine' else {'ripple','wave',self.cfg['default_gait']}
                 if data['gait'] not in allowed:raise ValueError('This source has no matching schedule')
                 phase,spine_phase,spine_freq=[float(data.get(key,default)) for key,default in
                     [('phase',self.phase),('spine_phase',self.spine_phase),('spine_freq',self.spine_freq)]]
@@ -199,11 +199,11 @@ class GaitController(Node):
             wanted=self.command if now-self.cmd_at<.35 else np.zeros(3)
             self.filtered+=np.clip(wanted-self.filtered,-np.array([.06,.06,.25])*dt,np.array([.06,.06,.25])*dt)
             if np.linalg.norm(self.filtered)>.001 and dt>0:
-                self.phase=(self.phase+dt/self.cfg['cycle_s'])%1.
+                self.phase=(self.phase+dt/self.cfg['cycle_s']*(self.spine_freq if self.cfg.get('kind')=='serpentine' else 1.))%1.
                 candidate,error,self.planned=self.model.targets(self.phase,self.filtered,self.targets,self.gait,
                     spine_phase=self.spine_phase,spine_freq=self.spine_freq)
                 self.max_ik_error=error
-                if error>.003:self.stop('Foot IK error exceeds 3 mm; gait halted')
+                if error is not None and error>.003:self.stop('Foot IK error exceeds 3 mm; gait halted')
                 else:
                     step=self.model.velocity*dt
                     self.targets=np.clip(self.targets+np.clip(candidate-self.targets,-step,step),self.model.lower,self.model.upper)
@@ -214,8 +214,10 @@ class GaitController(Node):
                        control_allowed=self.get_parameter('control_allowed').value,reason=self.reason,gait=self.gait,
                        input_owner=self.input_owner,
                        task=self.get_parameter('task').value,directory=self.get_parameter('session_directory').value,
-                       operator_id=self.operator,operator_fresh=now-self.hb_at<.8,physical_legs=len(self.model.legs),
+                       operator_id=self.operator,operator_fresh=now-self.hb_at<.8,physical_legs=self.cfg.get('physical_leg_count',len(self.model.legs)),
+                       motion_kind=self.cfg.get('kind','multi_leg'),available_schedules=['serpenoid'] if self.cfg.get('kind')=='serpentine' else list(dict.fromkeys([self.cfg['default_gait'],'ripple','wave'])),
                        actuated_joints=len(self.model.names),joint_samples=self.samples,sim_time=self.sim_time,
+                       drive_forward_yaw_rad=float(self.cfg['forward_yaw']),
                        position=dict(x=p.x,y=p.y,z=p.z) if p else None,tilt_rad=tilt,
                        actual_contacts=self.contacts,planned_stance=self.planned,max_ik_error_m=self.max_ik_error,
                        commanded_body_velocity=self.filtered.tolist(),joint_targets=self.targets.tolist(),

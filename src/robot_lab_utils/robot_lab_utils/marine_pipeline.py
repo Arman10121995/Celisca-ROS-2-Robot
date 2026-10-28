@@ -96,7 +96,7 @@ def pipeline(world, description, spawn, water, robot, folder, control=True,
         parameters=[dict(params,initial_yaw=float(spawn['yaw']), **{'initial_'+k:float(spawn[k]) for k in 'xyz'})], output='screen'),
         Node(package='robot_lab_utils', executable='marine_navigation.py', parameters=[dict(use_sim_time=True,
             world_file=str(world), robot_id=robot, surface_z=float(water['surface_z']), bottom_z=float(water['bottom_z']),
-            radius=1.3 if robot=='tethys_auv' else .55, database_path=str(active) if slam else '',
+            radius=1.3 if robot=='tethys_auv' else .9 if robot=='lab_usv' else .55, database_path=str(active) if slam else '',
             control_allowed=bool(control), localization_mode=bool(localization),
             saved_map_source=str(source) if localization else '')], output='screen')]
     if slam:

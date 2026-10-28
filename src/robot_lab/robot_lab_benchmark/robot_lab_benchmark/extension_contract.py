@@ -3,9 +3,11 @@ import math
 
 SCHEMA = 'robot_lab.extension_workload.v1'
 RESULT_SCHEMA = 'robot_lab.measured_extension_result.v1'
+LOSS_CONTRACT=dict(airborne_gain_m=.8,landed_height_m=.15,linear_m_s=.05,settle_sim_s=1.,heartbeat_silence_wall_s=1.)
 CONTRACTS = {
     'marine': dict(position_m=.2, linear_m_s=.05, settle_sim_s=1.),
     'auv': dict(position_m=.6, linear_m_s=.05, settle_sim_s=1.),
+    'surface': dict(position_m=.2, linear_m_s=.05, angular_rad_s=.05, settle_sim_s=1.),
     'gait': dict(position_m=.15, heading_rad=.15, linear_m_s=.03, angular_rad_s=.05, settle_sim_s=1.),
     'aerial_swarm': dict(position_m=.35, linear_m_s=.15, settle_sim_s=2.),
 }
@@ -15,7 +17,7 @@ def validate(document):
     workflow, task = document.get('workflow'), document.get('task')
     if workflow not in ('marine', 'gait', 'aerial_swarm'):
         raise ValueError('Choose native marine, gait or aerial_swarm workflow.')
-    if task not in ({'formation'} if workflow == 'aerial_swarm' else {'navigation', 'mapping'}):
+    if task not in ({'formation', 'operator_loss'} if workflow == 'aerial_swarm' else {'navigation', 'mapping'}):
         raise ValueError('Choose formation, navigation or mapping for this workflow.')
     if document.get('truth_coordinates') != 'selected_world':
         raise ValueError('Extension truth must explicitly use selected_world coordinates.')
@@ -50,6 +52,8 @@ def endpoint_ok(pose, target, speed, yaw_rate, contract):
         return False
     values = [*pose, *target, speed]
     if not all(map(math.isfinite, values)) or speed < 0 or speed > contract['linear_m_s']:
+        return False
+    if 'angular_rad_s' in contract and (yaw_rate is None or not math.isfinite(yaw_rate) or abs(yaw_rate)>contract['angular_rad_s']):
         return False
     if 'heading_rad' in contract:
         error = abs(math.atan2(math.sin(pose[2]-target[2]), math.cos(pose[2]-target[2])))

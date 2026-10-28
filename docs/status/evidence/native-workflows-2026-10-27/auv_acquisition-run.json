@@ -1,0 +1,183 @@
+{
+  "id": "e56d05d1a376495a852d5343234e6c30",
+  "state": "task_process_completed",
+  "ros_domain_id": 20,
+  "partition": "robot_lab_e56d05d1a376495a852d5343234e6c30",
+  "command": [
+    "ros2",
+    "launch",
+    "robot_lab_bringup",
+    "auv_simulator.launch.py",
+    "map_name:=marine_tank",
+    "gui:=false",
+    "rviz:=false",
+    "slam:=true",
+    "spawn_x:=-3",
+    "spawn_y:=0",
+    "spawn_z:=-2",
+    "spawn_yaw:=0"
+  ],
+  "task_command": [],
+  "workload": {
+    "schema": "robot_lab.extension_workload.v1",
+    "workflow": "marine",
+    "task": "mapping",
+    "truth_coordinates": "selected_world",
+    "distance_m": 2.3,
+    "timeout_s": 210.0
+  },
+  "selection": {},
+  "seed_requested": 42,
+  "readiness_topic": "/clock",
+  "source": {
+    "module_sha256": {
+      "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_benchmark/lib/python3.10/site-packages/robot_lab_benchmark/concurrent_runner.py": "e7494bf68bc6926a289a60df2402c96ecc21daa310162c13d50735b31056d8c8",
+      "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_benchmark/lib/python3.10/site-packages/robot_lab_benchmark/telemetry_recorder.py": "363dd4dc94b96fd1eae04d75933565e3e7a8453afacb2c19af1008c5a3cb1e08",
+      "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_benchmark/lib/python3.10/site-packages/robot_lab_benchmark/nav2_workload.py": "f9ca5415d6c475aab1e7c57fdcf56a7a55ddadef3ee75ab33f958d550e23de80",
+      "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_benchmark/lib/python3.10/site-packages/robot_lab_benchmark/fleet_workload.py": "5d0f97d6f9e04a08242dc3d1f94154c34d5002a8d629a65a13bda30d35af1d92",
+      "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_benchmark/lib/python3.10/site-packages/robot_lab_benchmark/fleet_reset.py": "af15788fbcfbbd800707c794278fa8ca09718377e8daa3a294970ee6ed40144a",
+      "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_benchmark/lib/python3.10/site-packages/robot_lab_benchmark/extension_workload.py": "e1bdbde028d0856b1c067c5b4f2a887ba7b6e0976850c696f3ebcecb28b08f37",
+      "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_benchmark/lib/python3.10/site-packages/robot_lab_benchmark/extension_contract.py": "0c672ef2000341acef796df598df029c535271970122e8a70d452d0f3fb0327d",
+      "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_benchmark/lib/python3.10/site-packages/robot_lab_benchmark/extension_result.py": "1675a7a80dae94f8f867fc8b113459149eb75238615ceca43a782afb899f3fff",
+      "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_benchmark/lib/python3.10/site-packages/robot_lab_benchmark/workload_contract.py": "6117ea42781da0663c87e64d0a18f91e1116369ea5cda02ba566eb1212dd1493"
+    },
+    "scope": "Coordinator, recorder, scoped reset and actual Nav2/fleet/native-extension workloads; external task sources remain separate",
+    "repository": "/workspace/molar/ros_ws/bumperbot_ws",
+    "base_revision": "1f95fa73af3c4b9a00a7037f3e3b1a3d72a0ffc5",
+    "working_tree_status": " M README.md\n M ROADMAP.md\n M docs/AGENT_HANDOFF.md\n M docs/PATCH_EXECUTION_GUIDE.md\n M docs/REMAINING_WORK_GUIDE.md\n M docs/status/CURRENT_STATUS.md\n M docs/status/platform-status.yaml\n M docs/tutorials/aerial-swarm.md\n M docs/tutorials/concurrent-experiments.md\n M docs/tutorials/multi-leg-gaits.md\n M scripts/generate_tracked_assets.py\n M src/robot_lab/robot_lab_benchmark/package.xml\n M src/robot_lab/robot_lab_benchmark/robot_lab_benchmark/concurrent_runner.py\n M src/robot_lab/robot_lab_benchmark/robot_lab_benchmark/extension_contract.py\n M src/robot_lab/robot_lab_benchmark/robot_lab_benchmark/extension_result.py\n M src/robot_lab/robot_lab_benchmark/robot_lab_benchmark/extension_workload.py\n M src/robot_lab/robot_lab_benchmark/robot_lab_benchmark/fleet_reset.py\n M src/robot_lab/robot_lab_benchmark/robot_lab_benchmark/fleet_workload.py\n M src/robot_lab/robot_lab_benchmark/robot_lab_benchmark/nav2_workload.py\n M src/robot_lab/robot_lab_benchmark/robot_lab_benchmark/workload_contract.py\n M src/robot_lab/robot_lab_benchmark/test/test_nav2_workload_node.py\n M src/robot_lab/robot_lab_benchmark/test/test_workload_contract.py\n M src/robot_lab/robot_lab_registry/config/algorithms.yaml\n M src/robot_lab/robot_lab_registry/config/robots.yaml\n M src/robot_lab_adapter/robot_lab_adapter/aerial_swarm_controller.py\n M src/robot_lab_adapter/robot_lab_adapter/aerial_swarm_model.py\n M src/robot_lab_adapter/robot_lab_adapter/aerial_swarm_runtime.py\n M src/robot_lab_adapter/robot_lab_adapter/px4_ros_controller.py\n M src/robot_lab_adapter/robot_lab_adapter/px4_sitl_runtime.py\n M src/robot_lab_adapter/robot_lab_adapter/px4_swarm_worker.py\n M src/robot_lab_bringup/config/algorithm_dispatch.yaml\n M src/robot_lab_bringup/launch/simulated_robot.launch.py\n M src/robot_lab_bringup/launch/tracked_simulator.launch.py\n M src/robot_lab_gui/robot_lab_gui/aerial_swarm_tab.py\n M src/robot_lab_gui/robot_lab_gui/experiment_queue.py\n M src/robot_lab_gui/robot_lab_gui/launcher.py\n M src/robot_lab_maps/CMakeLists.txt\n M src/robot_lab_navigation/config/robots/lab_tracked.yaml\n M src/robot_lab_robots/config/robots.yaml\n M src/robot_lab_robots/lab_tracked/SOURCE.json\n M src/robot_lab_robots/lab_tracked/model.sdf\n M src/robot_lab_robots/lab_tracked/robot.urdf\n M src/robot_lab_utils/robot_lab_utils/aerial_takeoff.py\n M src/robot_lab_utils/robot_lab_utils/gait_controller.py\n M src/robot_lab_utils/robot_lab_utils/tracked_control.py\n?? docs/status/evidence/native-workflows-2026-10-27/\n?? docs/status/native-workflows-2026-10-27.md\n?? docs/tutorials/tracked-vehicle.md\n?? scripts/provision_tracked_physics.py\n?? src/robot_lab_adapter/robot_lab_adapter/px4_range_sensor.py\n?? src/robot_lab_adapter/test/test_px4_parameter_union.py\n?? src/robot_lab_localization/config/robots/lab_tracked.yaml\n?? src/robot_lab_maps/systems/\n?? src/robot_lab_maps/vendor/native_tracks/\n?? src/robot_lab_utils/test/test_aerial_sensor_extension.py\n",
+    "tracked_diff_sha256": "abe844fd2f86bea5f45729b319291f1f83538d46f821db71e01eb6495dd7e63d"
+  },
+  "requested_budgets": {
+    "duration_s": 300.0,
+    "startup_timeout_s": 300.0,
+    "max_rss_mb": 8000.0,
+    "max_cpu_percent": 1800.0,
+    "max_artifact_mb": 384.0
+  },
+  "seed_scope": "Recorded and exposed to workload; simulator seed application needs its explicit contract",
+  "mission_result": {
+    "schema": "robot_lab.measured_extension_result.v1",
+    "workflow": "marine",
+    "task": "mapping",
+    "session_id": "84df6bd17cb24afe946f37fae05671c5",
+    "run_id": "e56d05d1a376495a852d5343234e6c30",
+    "ros_domain_id": 20,
+    "success": true,
+    "reason": "Actual travel and nonempty acquired map archived",
+    "measurements": [
+      {
+        "map_artifact": {
+          "kind": "acquired_rtabmap",
+          "robot": "tethys_auv",
+          "frame": "map",
+          "directory": "/workspace/molar/robot_lab_runtime/marine_missions/5c75b64c4a4a4958839a1c03c25ab49b/map-993c82e4a7",
+          "estimator_contract": "marine_spawn_imu_v1",
+          "source_world": "/workspace/molar/robot_lab_runtime/marine_sessions/tethys-cvqq_suq/world.sdf",
+          "world_sha256": "8020ea0341779d52e5f1db7c2d0c5c6caf9411a2280cd5bdf3dfb5420ffa34f0",
+          "source_database": "/workspace/molar/robot_lab_runtime/marine_sessions/tethys-cvqq_suq/marine-rtabmap.db",
+          "database": "/workspace/molar/robot_lab_runtime/marine_missions/5c75b64c4a4a4958839a1c03c25ab49b/map-993c82e4a7/rtabmap.db",
+          "database_observation": {
+            "nodes": 14,
+            "bytes": 2392064,
+            "sha256": "aed2f7a1051bb197c8fe211079eb66b889d00cf1c75160530e82665e7d07a925"
+          },
+          "points": 19515,
+          "cloud_stamp": {
+            "sec": 13,
+            "nanosec": 800000000
+          },
+          "scope": "Acquired RGB-D SLAM database/cloud; physical reload/mission qualification is separate"
+        },
+        "observation": {
+          "kind": "database",
+          "nodes": 14,
+          "sha256": "aed2f7a1051bb197c8fe211079eb66b889d00cf1c75160530e82665e7d07a925"
+        },
+        "physical_start": [
+          -3.0,
+          3.7303455848929983e-28,
+          -2.0
+        ],
+        "physical_pose": [
+          -0.16689216916157862,
+          -0.023769027725273683,
+          -1.9954199125046668
+        ],
+        "distance_m": 2.8332075370217744,
+        "route_endpoint": {
+          "requested": [
+            0.10178302695627206,
+            0.0009740448133411493,
+            -1.9969181379290977
+          ],
+          "physical_pose": [
+            -0.22901807060639745,
+            -0.016608390738735414,
+            -2.018366296310167
+          ],
+          "linear_m_s": 0.0421545596546781,
+          "angular_rad_s": 0.005414357298816457,
+          "settled_sim_s": 1.0,
+          "member_id": "body",
+          "index": 0,
+          "native_terminal": true,
+          "nav2_status": null
+        }
+      }
+    ],
+    "goal_contract": {
+      "position_m": 0.6,
+      "linear_m_s": 0.05,
+      "settle_sim_s": 1.0
+    },
+    "truth_samples": {
+      "body": 832
+    },
+    "control_released": true,
+    "wall_duration_s": 17.24368697600039,
+    "contacts": null,
+    "minimum_swept_clearance_m": null,
+    "producer_sha256": "e1bdbde028d0856b1c067c5b4f2a887ba7b6e0976850c696f3ebcecb28b08f37",
+    "workload_sha256": "35496a23bccb88dcdd469b00108b250a2b2e114d372171bea104a07dfcef83a6",
+    "trace_sha256": "333efdc3f79a7101a6643c949e13fd24824b563bd6bce37bbf2ebf09eaa8b42e",
+    "scope": "Actual native task and independent physical measurements; parent runner owns process cleanup"
+  },
+  "output": "/workspace/molar/robot_lab_runtime/project-completion-20261027-vne3n358/automatic-auv-acquisition/e56d05d1a376495a852d5343234e6c30",
+  "qualification": "implementation; validation pending",
+  "workload_producer_sha256": "e1bdbde028d0856b1c067c5b4f2a887ba7b6e0976850c696f3ebcecb28b08f37",
+  "executed_task_command": [
+    "/usr/bin/python3",
+    "-m",
+    "robot_lab_benchmark.extension_workload",
+    "--spec",
+    "/workspace/molar/robot_lab_runtime/project-completion-20261027-vne3n358/automatic-auv-acquisition/e56d05d1a376495a852d5343234e6c30/workload.json"
+  ],
+  "task_returncode": 0,
+  "process_returncodes": [
+    0,
+    0,
+    0
+  ],
+  "wall_duration_s": 27.458225205999952,
+  "telemetry": {
+    "topic_counts": {
+      "/clock": 17305,
+      "/joint_states": 17190
+    },
+    "last_clock_monotonic": 5636.60777497,
+    "last_topic_monotonic": {
+      "/clock": 5636.60778201,
+      "/joint_states": 5636.60739738
+    },
+    "real_time_factor": 0.8986241777926534,
+    "truth_distance_3d_m": null,
+    "topic_trace_distance_3d_m": {},
+    "contact_events": null,
+    "footprint_clearance_m": null,
+    "mission_result": null,
+    "scope": "Actual topic capture only; scan range is not footprint clearance; no inferred mission success"
+  },
+  "observed_surviving_pids": [],
+  "cleanup_complete": true,
+  "mission_result_error": null
+}

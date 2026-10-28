@@ -120,12 +120,14 @@ class GaitControls(ScrollPanel):
             self.runtime,self.runtime_at=data,time.monotonic()
             if interrupted:self.app._stop_drive(keep_input_enabled=True)
             default={'hexapod_ros2':'tripod','lab_octopod':'tetrapod','lab_centipede':'wave'}.get(data['robot_id'],'wave')
-            self.combo.configure(values=list(dict.fromkeys([default,'ripple','wave'])))
+            self.combo.configure(values=data.get('available_schedules',list(dict.fromkeys([default,'ripple','wave']))))
             p=data.get('position');forces=(data.get('actual_contacts') or {}).get('normal_forces_N',{})
             text=f"{data['robot_id']} · {'ARMED' if data['enabled'] else 'HELD'} · {data['reason']}\n"
             text+=f"{data['physical_legs']} physical legs / {data['actuated_joints']} joints · {data['gait']}\n"
             if p:text+=f"Actual body ({p['x']:.3f}, {p['y']:.3f}, {p['z']:.3f}) m\n"
-            if data.get('tilt_rad') is not None:text+=f"Tilt {data['tilt_rad']:.3f} rad · IK error {data['max_ik_error_m']*1000:.2f} mm\n"
+            if data.get('tilt_rad') is not None:text+=f"Tilt {data['tilt_rad']:.3f} rad\n"
+            if data.get('max_ik_error_m') is not None:text+=f"IK error {data['max_ik_error_m']*1000:.2f} mm\n"
+            if data.get('motion_kind')=='serpentine':text+='Passive-wheel snake · source-limited spine wave; no foot IK\n'
             self.feedback.set(text+'Measured normal forces N:\n'+', '.join(f'{k}: {v:.1f}' for k,v in forces.items()))
         except (ValueError,KeyError,TypeError):return
 

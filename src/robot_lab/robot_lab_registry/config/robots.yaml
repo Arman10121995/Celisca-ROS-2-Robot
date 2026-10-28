@@ -1,3 +1,23 @@
+- id: lab_usv
+  version: 0.1.0
+  name: Laboratory surface vessel
+  ros_package: robot_lab_robots
+  status: available
+  robot_class: aquatic
+  maturity: prototype
+  supported_simulators: [gazebo]
+  supported_modes: [display, marine]
+  locomotion: {type: differential_thrust, dof: 2, max_velocity: 0.4}
+  capabilities: [control, perception, mapping, localization, navigation]
+  command_interfaces: [geometry_msgs/Twist]
+  state_interfaces: [nav_msgs/Odometry, sensor_msgs/Imu, sensor_msgs/JointState]
+  sensors:
+  - {type: imu, name: marine_imu, frame: base_link, topic: /marine/imu, message_type: sensor_msgs/Imu}
+  - {type: rgbd_camera, name: oakd, frame: oakd_rgb_camera_optical_frame, topic: /oakd/depth/image_raw, message_type: sensor_msgs/Image}
+  frames: [map, base_link, marine_sensor_odom, marine_estimated_base_link, oakd_rgb_camera_optical_frame]
+  assets: {urdf: robot_lab_robots/lab_usv/urdf/lab_usv.urdf.xacro}
+  source: {repository: internal, license: Apache-2.0, maintainer: Robot Lab Team}
+  tags: [surface_vessel, usv, two_propellers, catamaran, complete_robot, first_party, experimental_control]
 - id: lab_tracked
   version: 0.1.0
   name: Gazebo tracked vehicle with flippers
@@ -17,6 +37,14 @@
     max_velocity: 0.3
   capabilities:
   - control
+  - navigation
+  - localization
+  - mapping
+  - state_estimation
+  - sensor_fusion
+  - global_planning
+  - local_planning
+  - costmap
   command_interfaces:
   - geometry_msgs/Twist
   state_interfaces:
@@ -41,10 +69,27 @@
   - tracked
   - flippers
   - experimental_native_control
-# Robot Lab Registry - Robot Catalog
-# Version 0.1.0
-# This file catalogs all robots available in the platform
-
+  sensors:
+  - type: lidar
+    name: laser
+    frame: laser_link
+    topic: /scan
+    message_type: sensor_msgs/LaserScan
+  - type: imu
+    name: imu
+    frame: imu_link
+    topic: /imu/out
+    message_type: sensor_msgs/Imu
+  - type: rgbd
+    name: camera
+    frame: camera_optical_frame
+    topic: /camera/color/image_raw
+    message_type: sensor_msgs/Image
+  - type: odometry
+    name: track_dead_reckoning
+    frame: odom
+    topic: /robot_lab_controller/odom
+    message_type: nav_msgs/Odometry
 - id: tethys_auv
   version: "0.1.0"
   name: MBARI Tethys AUV

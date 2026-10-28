@@ -2,6 +2,9 @@
 # A variant is not an alias for its parent's controllers or measured missions.
 schema_version: 1
 robots:
+  - id: lab_usv
+    name: Laboratory surface vessel
+    members: [{id: lab_usv, label: Complete twin-hull two-propeller vessel}]
   - id: lab_tracked
     name: Tracked vehicle with flippers
     members: [{id: lab_tracked, label: Complete native track source}]
@@ -206,6 +209,9 @@ robots:
       - {id: menagerie_ms_human_700, label: Human musculoskeletal reference, role: reference}
       - {id: menagerie_flybody, label: Fruit fly reference, role: reference}
 maps:
+  - id: surface_harbor
+    name: Surface harbor
+    members: [{id: surface_harbor, label: Docks, pilings and surface markers}]
   - id: celisca_floor_1
     name: Celisca Floor 1
     members:

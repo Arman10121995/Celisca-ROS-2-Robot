@@ -17,10 +17,15 @@ from std_msgs.msg import String
 
 def reset(output, timeout=35.):
     node=Node('robot_lab_measured_fleet_reset')
+    clocks=[];regressions=[]
     state={};operator='batch-reset-'+uuid.uuid4().hex
     received=[-math.inf]
     def observe(msg):
         state.clear();state.update(json.loads(msg.data));received[0]=time.monotonic()
+        stamp=state.get('sim_time')
+        if isinstance(stamp,(int,float)) and math.isfinite(stamp) and (not clocks or stamp!=clocks[-1]):
+            if clocks and stamp<clocks[-1]:regressions.append(dict(before=clocks[-1],after=stamp))
+            clocks.append(stamp)
     subscription=node.create_subscription(String,'/fleet/state',observe,10)
     heartbeat=node.create_publisher(String,'/fleet/operator_heartbeat',10)
     command=node.create_publisher(String,'/fleet/command',10)
@@ -32,6 +37,8 @@ def reset(output, timeout=35.):
             if not state:continue
             if session is not None and session!=state['session_id']:raise ValueError('Fleet session changed during reset')
             session=state['session_id']
+            if regressions:raise ValueError('Actual world clock regressed during batch reset')
+            if not 1<=len(state.get('members',[]))<=12:raise ValueError('Actual bounded fleet members required')
             if time.monotonic()-received[0]>1.:raise ValueError('Actual reset feedback lost')
             common=dict(session_id=session,operator_id=operator)
             heartbeat.publish(String(data=json.dumps(common)))
@@ -66,7 +73,7 @@ def reset(output, timeout=35.):
                         and (not state['navigation'] or m['navigation_ready']))
                 if valid:
                     if stable is None:stable=state['sim_time']
-                    if state['sim_time']-stable>=1.:
+                    if state['sim_time']-stable>=1. and len(clocks)>=2:
                         result=dict(success=True,reason='Every native member physically reset, localized and settled',
                             session_id=session,sim_time=state['sim_time'],settled_sim_s=state['sim_time']-stable);break
                 else:stable=None
@@ -77,7 +84,9 @@ def reset(output, timeout=35.):
         if session and state.get('operator_id')==operator:
             command.publish(String(data=json.dumps(dict(session_id=session,operator_id=operator,op='stop',targets=[m['id'] for m in state['members']]))))
         node.destroy_node()
-    result.update(schema='robot_lab.measured_fleet_reset.v1',world_clock_reset=False,trace=trace,
+    result.update(schema='robot_lab.measured_fleet_reset.v1',world_clock_reset=bool(regressions) if len(clocks)>=2 else None,
+                  clock_before=clocks[0] if clocks else None,clock_after=clocks[-1] if clocks else None,
+                  clock_samples=len(clocks),clock_regressions=regressions,trace=trace,
                   wall_duration_s=time.monotonic()-started)
     Path(output).write_text(json.dumps(result,indent=2,allow_nan=False)+'\n')
     return result

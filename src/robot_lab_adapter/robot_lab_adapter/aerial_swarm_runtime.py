@@ -90,6 +90,10 @@ def main():
             item['spawn']=requested['spawn'];model=folder/'models'/item['entity'];prepare_model(model,upstream)
             tree=ET.parse(model/'model.sdf')
             tree.getroot().find('model').set('name',item['entity'])
+            if session.get('estimator',{}).get('px4_height_reference')==2:
+                from .px4_range_sensor import add_sensor
+                item['range_topic']=item['namespace']+'/range_native'
+                add_sensor(tree.getroot().find('model'),item['range_topic'])
             for plugin in tree.getroot().findall('model/plugin'):
                 for key in ('odom_topic','tf_topic','topic'):
                     entry=plugin.find(key)
@@ -115,7 +119,9 @@ def main():
             rootfs=folder/('fcu-'+item['id']);rootfs.mkdir()
             vehicle_env=dict(env,PX4_GZ_MODEL_NAME=item['entity'],
                 PX4_PARAM_EKF2_HGT_REF=str(session.get('estimator',{}).get('px4_height_reference',0)),
-                PX4_PARAM_EKF2_GPS_CTRL='5' if session.get('estimator',{}).get('px4_height_reference',0)==0 else '7')
+                PX4_PARAM_EKF2_GPS_CTRL='7' if session.get('estimator',{}).get('px4_height_reference',1)==1 else '5')
+            if session.get('estimator',{}).get('px4_height_reference')==2:
+                vehicle_env.update(PX4_PARAM_EKF2_RNG_CTRL='2',PX4_PARAM_EKF2_RNG_POS_Z='.05')
             start([str(build/'bin/px4'),'-d','-i',str(item['instance']),str(build/'etc'),'-w',str(rootfs)],
                   item['id']+'-px4',vehicle_env,pass_fds=(leases[item['instance']].fileno(),))
             config=folder/(item['id']+'-description.yaml');config.write_text(yaml.safe_dump({'/**':{'ros__parameters':dict(robot_description=description,

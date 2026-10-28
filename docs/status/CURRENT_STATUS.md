@@ -1,5 +1,7 @@
 # Current Robot Lab status
 
+[Latest native continuation](native-workflows-2026-10-27.md): real native workload/queue delivery, measured aerial range-reference formation and operator-loss landing, fleet batch reset and complete tracked controls/Nav2. Catalog is 148 profiles / 79 selectable families. Older dated entries below retain their historical scope.
+
 **Current checkpoint: October 27, 2026; master, initial baseline `f75dc60`,
 first implementation checkpoint `8e411cb`. Platform and full extension partial.**
 
@@ -9,12 +11,12 @@ first implementation checkpoint `8e411cb`. Platform and full extension partial.*
 
 | Area | Delivered / measured | Remaining |
 |---|---|---|
-| Catalog | Seven registrations restored; 147 profiles / 78 selectable families, 51 worlds / 39 families | Changed-source qualification and additional reviewed imports |
+| Catalog | Seven registrations restored; 148 profiles / 79 selectable families, 51 worlds / 39 families | Changed-source qualification and additional reviewed imports |
 | Fleet | Native shared sessions/queues/traffic/RMF/coverage; two-body conflict and independently settled real batches | Broader RMF/infrastructure/contact/loss/maps/backends |
-| Aerial swarm | Native multi-FCU launch/editor/controls and actual two-vehicle flight/landing | Altitude/formation accuracy and broader behavior/loss acceptance |
+| Aerial swarm | Native multi-FCU controls/workloads; actual nav_empty two-drone range-reference formation and operator-loss landing | Larger groups, other maps/behaviors and member-loss/contact cases |
 | Marine | Actual sensor-based map acquisition/export/protected reload/localization and completed ROV route; AUV forward-transect/braking with actual body trace | Further AUV/localization/obstacle/current/loss missions |
 | Multi-leg | Correct source FK/contact odometry, map export/reload/Nav2; hexapod navigation result and octopod real 3D database | Per-model terrain/recovery/higher-mode/backend qualification |
-| Experiments | Real fleet producer/native queue, independent endpoints/settling and cleanup | Automatic aerial/marine/gait producers and batch-wide reset |
+| Experiments | Actual Nav2/fleet/marine/gait/aerial producers, artifacts/endpoints, fleet batch reset and cleanup | More cases, AUV acquisition, applied seeds and contacts/clearance |
 | Original roadmap | Existing wheeled/Panda/flight/MOLAR/training certificates retained | Detailed remaining car, perception, manipulation, policy transfer/comparison/release work |
 
 Earlier October 26 completion claims from tests/metadata/world loading remain
@@ -31,7 +33,7 @@ Recorded training-domain evaluation and three backend launch diagnostics do
 not establish broad measured deployment. Earlier marine map-save failures and
 RMF stalls are retained; corrected code needs its own successful mission receipt.
 
-This documentation revision performs no new runtime qualification. The dated
+The earlier documentation-only checkpoint performed no new runtime qualification; the latest native receipt records its own continuation measurements. The dated
 entries below preserve earlier source and measurement scopes; their old
 "ongoing/queued" summaries do not override the current guide and ledger.
 

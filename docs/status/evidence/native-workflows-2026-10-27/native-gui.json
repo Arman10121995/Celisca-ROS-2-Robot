@@ -1,0 +1,26 @@
+{
+  "tracked_command": "ros2 launch robot_lab_bringup simulated_robot.launch.py robot_model:=lab_tracked simulator:=gazebo use_sim_time:=true map_name:=nav_empty world_package:=robot_lab_maps world_name:=nav_empty world_path:=maps/nav_empty/worlds/nav_empty.world map_yaml:=maps/nav_empty/maps/map.yaml global_planner_plugin:=nav2_smac_planner/SmacPlanner2D local_planner_plugin:=nav2_regulated_pure_pursuit_controller::RegulatedPurePursuitController mode:=nav gui:=auto global_planning:=a_star_planner local_planning:=pure_pursuit control:=native_tracked_controller localization:=amcl state_estimation:=ekf_localization_node sensor_fusion:=wheel_imu_fusion",
+  "mode": "nav",
+  "aerial_reference": {
+    "schema_version": 1,
+    "map": "nav_empty",
+    "spacing": 3.0,
+    "members": [
+      {
+        "id": "air1",
+        "spawn": {}
+      },
+      {
+        "id": "air2",
+        "spawn": {}
+      }
+    ],
+    "estimator": {
+      "height_reference": "rangefinder"
+    }
+  },
+  "inventory": {
+    "robots": 148,
+    "families": 79
+  }
+}

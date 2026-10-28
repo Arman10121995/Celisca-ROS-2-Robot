@@ -177,6 +177,9 @@ algorithms:
       unavailable: "placeholder - it scores random velocities by a constant goal distance, with no horizon rollout or obstacle cost; use mppi_controller (Nav2 MPPI)"
 
   control:
+    native_tracked_controller:
+      stack: native_tracked
+      required_features: [native_tracks]
     bicycle_pure_pursuit:
       node: {package: robot_lab_algorithms, executable: nav2_bicycle, parameters: {planner: bicycle_pure_pursuit}}
       serves: {follow_path: /robot_lab/bicycle_follow_path}

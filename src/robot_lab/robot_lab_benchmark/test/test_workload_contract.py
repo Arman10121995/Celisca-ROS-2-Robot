@@ -58,6 +58,7 @@ def test_a_bound_successful_result_is_accepted(tmp_path):
 @pytest.mark.parametrize('change, message', [
     (dict(run_id='other'), 'identity'),
     (dict(trace_sha256='0'*64), 'identity'),
+    (dict(producer_sha256='0'*64), 'identity'),
     (dict(goal_contract=dict(position_m=.3, heading_rad=1, settle_sim_s=0)), 'goal contract'),
     (dict(truth_samples=1), 'independent truth'),
 ])
@@ -78,6 +79,24 @@ def test_reset_invalidates_and_missing_result_is_reported(tmp_path):
     _write(tmp_path)
     result, error = contract.read_result(tmp_path, 'run', 7, _spec(), invalidated=True)
     assert result is None and 'reset' in error
+
+
+def test_producer_is_bound_before_actuation_and_retained_in_result(tmp_path):
+    producer = hashlib.sha256(Path(contract.__file__).with_name('nav2_workload.py').read_bytes()).hexdigest()
+    specification = dict(_spec(), expected_producer_sha256=producer)
+    assert contract.verify_producer(specification, producer) == producer
+    with pytest.raises(ValueError, match='changed'):
+        contract.verify_producer(specification, '0'*64)
+    with pytest.raises(ValueError, match='SHA256'):
+        contract.validate_workload(dict(_spec(), expected_producer_sha256='wrong'))
+    _write(tmp_path)
+    # Rebind a document to another startup producer, even with a matching
+    # workload file digest: a late file read cannot bless different code.
+    (tmp_path/'workload.json').write_text(json.dumps(dict(_spec(), expected_producer_sha256='0'*64)))
+    path=tmp_path/'mission-result.json';result=json.loads(path.read_text())
+    result['workload_sha256']=hashlib.sha256((tmp_path/'workload.json').read_bytes()).hexdigest()
+    path.write_text(json.dumps(result))
+    assert 'startup identity' in contract.read_result(tmp_path,'run',7,_spec())[1]
 
 
 def _fleet_spec():

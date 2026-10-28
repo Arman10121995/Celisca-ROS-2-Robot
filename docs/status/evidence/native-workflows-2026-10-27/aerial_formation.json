@@ -1,0 +1,61 @@
+{
+  "schema": "robot_lab.measured_extension_result.v1",
+  "workflow": "aerial_swarm",
+  "task": "formation",
+  "session_id": "swarm-hflp6xei",
+  "run_id": "bd3698fb58e44bd8b4fb8d52b77b328b",
+  "ros_domain_id": 20,
+  "success": true,
+  "reason": "Actual formation settled and every FCU landed/disarmed",
+  "measurements": [
+    {
+      "requested": [
+        -2.016589551232755,
+        -2.0054224682971835,
+        3.221602517929124
+      ],
+      "physical_pose": [
+        -2.0586101685939346,
+        -1.9640080153447488,
+        3.1320257450940803
+      ],
+      "linear_m_s": 0.04025280464384819,
+      "angular_rad_s": -0.00024595793040643754,
+      "settled_sim_s": 2.0,
+      "member_id": "air1"
+    },
+    {
+      "requested": [
+        -2.016589551232755,
+        0.9945775317028165,
+        3.221602517929124
+      ],
+      "physical_pose": [
+        -1.9547497435188668,
+        0.9479852160846908,
+        3.053515515275657
+      ],
+      "linear_m_s": 0.0641421831043693,
+      "angular_rad_s": -0.0033684620562298754,
+      "settled_sim_s": 2.1000000000000014,
+      "member_id": "air2"
+    }
+  ],
+  "goal_contract": {
+    "position_m": 0.35,
+    "linear_m_s": 0.15,
+    "settle_sim_s": 2.0
+  },
+  "truth_samples": {
+    "air1": 1366,
+    "air2": 1363
+  },
+  "control_released": true,
+  "wall_duration_s": 72.68906505300015,
+  "contacts": null,
+  "minimum_swept_clearance_m": null,
+  "producer_sha256": "e1d46518aa8b625384bbe869a1d3f3a9738818f92e8606ee1849c270bada9d66",
+  "workload_sha256": "a7796d3cccb11cad805764f6136ef8e215357e4072afd4af59d9c542fee266f6",
+  "trace_sha256": "6f80d842ce8551e14646c25644b7d2ffea7562d5ce08bc168816af826cd40b13",
+  "scope": "Actual native task and independent physical measurements; parent runner owns process cleanup"
+}

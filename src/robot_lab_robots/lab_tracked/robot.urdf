@@ -4,6 +4,7 @@
   <joint name="footprint_fixed" type="fixed">
     <parent link="base_footprint" />
     <child link="base_link" />
+    <origin xyz="0 0 .07192" rpy="0 0 0" />
   </joint>
   <link name="base_link">
     <inertial>

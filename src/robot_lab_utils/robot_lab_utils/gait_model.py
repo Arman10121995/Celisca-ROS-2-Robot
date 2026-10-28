@@ -13,6 +13,15 @@ import yaml
 from .vendor.hexapod_kinematics import urdf_to_kdl_tree
 
 
+def load_model(description, config):
+    """Keep leg IK and passive-wheel serpentine kinematics distinct."""
+    from pathlib import Path
+    if yaml.safe_load(Path(config).read_text()).get('kind')=='serpentine':
+        from .serpentine_model import SerpentineModel
+        return SerpentineModel(description, config)
+    return GaitModel(description, config)
+
+
 class GaitModel:
     def __init__(self,description,config):
         self.config=yaml.safe_load(Path(config).read_text()) if isinstance(config,(str,Path)) else dict(config)

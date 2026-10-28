@@ -1,3 +1,17 @@
+- id: surface_harbor
+  name: Surface harbor
+  dimension: 3D
+  dynamics: {dynamic_obstacles: false, static_obstacles: true}
+  ground_truth_available: true
+  ros_package: robot_lab_maps
+  simulator: gazebo
+  simulators: [gazebo]
+  source: {license: Apache-2.0, repository: internal}
+  status: available
+  supported_robot_classes: [aquatic]
+  tags: [surface_vessel, water_surface, harbor, docks, pilings, experimental]
+  version: 0.1.0
+  world_file: robot_lab_maps/maps/surface_harbor/worlds/surface_harbor.world
 - dimension: 3D
   dynamics:
     dynamic_obstacles: false

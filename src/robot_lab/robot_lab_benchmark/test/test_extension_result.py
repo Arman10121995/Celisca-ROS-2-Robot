@@ -113,13 +113,13 @@ def test_success_requires_control_release_and_observations(tmp_path):
 def test_mapping_requires_actual_travel_and_map_artifact(tmp_path):
     spec = _make_spec(task='mapping', distance_m=2.0)
     tmp_path, result_dict = _base_result(tmp_path, spec, success=True)
-    result_dict['measurements'] = [dict(distance_m=1.0, map_artifact={},
+    result_dict['measurements'] = [dict(distance_m=1.0, physical_start=[0.,0.,-2.], physical_pose=[1.,0.,-2.], map_artifact={},
         observation=dict(kind='database', nodes=5, sha256='abc'))]
     (tmp_path / 'extension-mission-result.json').write_text(json.dumps(result_dict))
     result, error = read_result(tmp_path, 'run-123', 20, spec, False)
     assert result is None and 'travel' in error
 
-    result_dict['measurements'] = [dict(distance_m=2.5, map_artifact={'database': '/tmp/no.db'},
+    result_dict['measurements'] = [dict(distance_m=2.5, physical_start=[0.,0.,-2.], physical_pose=[2.5,0.,-2.], map_artifact={'database': '/tmp/no.db'},
         observation=dict(kind='database', nodes=5, sha256='abc'))]
     (tmp_path / 'extension-mission-result.json').write_text(json.dumps(result_dict))
     result, error = read_result(tmp_path, 'run-123', 20, spec, False)

@@ -20,20 +20,20 @@ class TrackedControl(Node):
         super().__init__('tracked_command_owner')
         self.declare_parameter('navigation',False)
         self.command=[0.,0.];self.actual=[0.,0.]
-        self.input_at=self.odom_at=self.clock_at=-math.inf
-        self.manual_at=-math.inf;self.clock=None;self.tilt=0.;self.owner='idle'
+        self.input_at=self.odom_at=self.clock_at=self.imu_at=-math.inf
+        self.manual_at=-math.inf;self.clock=None;self.tilt=None;self.owner='idle'
         self.publisher=self.create_publisher(Twist,'/tracked/cmd_vel',10)
         self.state=self.create_publisher(String,'/tracked/state',10)
         self.create_subscription(Twist,'/key_vel',lambda m:self.input(m,False),10)
         self.create_subscription(Twist,'/cmd_vel',lambda m:self.input(m,True),10)
-        self.create_subscription(Odometry,'/odometry/filtered',self.odometry,10)
+        self.create_subscription(Odometry,'/robot_lab_controller/odom',self.odometry,10)
         self.create_subscription(ClockMessage,'/clock',self.observe_clock,qos_profile_sensor_data)
-        self.create_subscription(Imu,'/imu',self.imu,qos_profile_sensor_data)
+        self.create_subscription(Imu,'/imu/out',self.imu,qos_profile_sensor_data)
         self.sensor_handles=[]
-        for kind,topic,frame in ((LaserScan,'/scan','laser_link'),(Imu,'/imu','imu_link'),
+        for kind,topic,frame in ((LaserScan,'/scan','laser_link'),(Imu,'/imu/out','imu_link'),
                 (Image,'/camera/color/image_raw','camera_optical_frame'),(Image,'/camera/depth/image_raw','camera_optical_frame'),
                 (CameraInfo,'/camera/color/camera_info','camera_optical_frame')):
-            publisher=self.create_publisher(kind,topic,qos_profile_sensor_data)
+            publisher=self.create_publisher(kind,topic,10)
             def relay(msg,publisher=publisher,frame=frame):
                 output=copy.copy(msg);output.header=copy.copy(msg.header);output.header.frame_id=frame;publisher.publish(output)
             self.sensor_handles.append(self.create_subscription(kind,'/tracked/raw'+topic,relay,qos_profile_sensor_data))
@@ -61,11 +61,12 @@ class TrackedControl(Node):
     def imu(self,msg):
         q=msg.orientation
         if all(map(math.isfinite,[q.x,q.y,q.z,q.w])):
+            self.imu_at=time.monotonic()
             self.tilt=math.acos(max(-1.,min(1.,1-2*(q.x*q.x+q.y*q.y))))
 
     def tick(self):
         now=time.monotonic();dt=min(.05,now-self.last);self.last=now
-        ready=now-self.odom_at<.6 and now-self.clock_at<.6 and self.tilt<.6
+        ready=now-self.odom_at<.6 and now-self.clock_at<.6 and now-self.imu_at<.6 and self.tilt is not None and self.tilt<.6
         fresh=ready and now-self.input_at<.35
         target=self.command if fresh else [0.,0.]
         for i in range(2):self.actual[i]+=max(-.4*dt,min(.4*dt,target[i]-self.actual[i]))
@@ -83,7 +84,8 @@ def main(args=None):
     try:rclpy.spin(node)
     except KeyboardInterrupt:pass
     finally:
-        node.publisher.publish(Twist());node.destroy_node()
+        if rclpy.ok():node.publisher.publish(Twist())
+        node.destroy_node()
         if rclpy.ok():rclpy.shutdown()
 
 

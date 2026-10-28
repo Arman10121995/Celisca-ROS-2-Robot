@@ -1,5 +1,7 @@
 # Agent Handoff Protocol
 
+Latest October 27 continuation: read [native workflows](status/native-workflows-2026-10-27.md) and [actual receipts](status/evidence/native-workflows-2026-10-27/README.md). Automatic native workloads, fleet batch reset, the explicit two-drone range reference and complete tracked family are delivered with named physical cases. Catalog is 148 profiles / 79 selectable families. Preserve native truth clocks, bytewise MAVLink parameters, exact sensor-kit envelope approval, tracked IMU/QoS/low-turn fixes and the private SSD DART prefix. Full platform/extension acceptance remains partial; continue the named additional forms/infrastructure/matrices without rerunning catalog repair or storage relocation.
+
 October 27 workflow delivery: the seven missing registrations are restored.
 Read [the current delivery](status/workflows-2026-10-27.md) and
 [remaining-work execution guide](REMAINING_WORK_GUIDE.md). Ground Fleet,

@@ -1,0 +1,162 @@
+{
+  "id": "eb0e11894dbf4300ab82f87b1ab747c4",
+  "state": "task_process_completed",
+  "ros_domain_id": 20,
+  "partition": "robot_lab_eb0e11894dbf4300ab82f87b1ab747c4",
+  "command": [
+    "ros2",
+    "launch",
+    "robot_lab_bringup",
+    "simulated_robot.launch.py",
+    "robot_model:=lab_rov",
+    "mode:=marine",
+    "simulator:=gazebo",
+    "map_name:=marine_tank",
+    "gui:=false",
+    "start_rviz:=false",
+    "enable_joystick:=false",
+    "marine_slam:=true"
+  ],
+  "task_command": [],
+  "workload": {
+    "schema": "robot_lab.extension_workload.v1",
+    "workflow": "marine",
+    "task": "mapping",
+    "truth_coordinates": "selected_world",
+    "distance_m": 0.2,
+    "timeout_s": 150.0
+  },
+  "selection": {},
+  "seed_requested": 42,
+  "readiness_topic": "/clock",
+  "source": {
+    "module_sha256": {
+      "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_benchmark/lib/python3.10/site-packages/robot_lab_benchmark/concurrent_runner.py": "5368c3a8d3e052da5b52717977329c49fc483a5aeb4c6310fb0dbeeb9e7c9494",
+      "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_benchmark/lib/python3.10/site-packages/robot_lab_benchmark/telemetry_recorder.py": "363dd4dc94b96fd1eae04d75933565e3e7a8453afacb2c19af1008c5a3cb1e08",
+      "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_benchmark/lib/python3.10/site-packages/robot_lab_benchmark/nav2_workload.py": "002fa9c70f1a97f6d26a70279679b57cd12c05ea5cce4f8e3a08aa312a81d3f9",
+      "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_benchmark/lib/python3.10/site-packages/robot_lab_benchmark/fleet_workload.py": "4e4d4060a6118eeecb7766835b821aa6150314421ed6bef8761bc48356bf8a31",
+      "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_benchmark/lib/python3.10/site-packages/robot_lab_benchmark/extension_workload.py": "136ebb0572f7715e7080597da128070e0620c85f0e16dfe8f1fbdd9a95892301",
+      "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_benchmark/lib/python3.10/site-packages/robot_lab_benchmark/extension_contract.py": "c49f64e9576e43e5305c49b1fa1b19d264b7d431e20c0a340aa709c303f23f2f",
+      "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_benchmark/lib/python3.10/site-packages/robot_lab_benchmark/extension_result.py": "c7ecaef0adf25c9d1fc1f77178fb832a1eba499ee104d2dd0640c0359ff58828",
+      "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_benchmark/lib/python3.10/site-packages/robot_lab_benchmark/workload_contract.py": "380d5190e931f1063add689a50c5a3e7644e17af672b1abe921705cddd21aec6"
+    },
+    "scope": "Coordinator, recorder and built-in actual Nav2/fleet workloads; external workload sources remain separate",
+    "repository": "/workspace/molar/ros_ws/bumperbot_ws",
+    "base_revision": "9664c37a820cb54a6c6d1eecfb0ff580ede6f3af",
+    "working_tree_status": " M docs/status/platform-status.yaml\n M src/robot_lab/robot_lab_benchmark/robot_lab_benchmark/concurrent_runner.py\n M src/robot_lab/robot_lab_benchmark/robot_lab_benchmark/telemetry_recorder.py\n M src/robot_lab/robot_lab_benchmark/robot_lab_benchmark/workload_contract.py\n M src/robot_lab/robot_lab_benchmark/setup.py\n M src/robot_lab_adapter/robot_lab_adapter/aerial_swarm_controller.py\n M src/robot_lab_adapter/robot_lab_adapter/aerial_swarm_model.py\n M src/robot_lab_adapter/robot_lab_adapter/aerial_swarm_runtime.py\n M src/robot_lab_adapter/robot_lab_adapter/px4_mavlink.py\n M src/robot_lab_adapter/robot_lab_adapter/px4_ros_controller.py\n M src/robot_lab_adapter/robot_lab_adapter/px4_swarm_worker.py\n M src/robot_lab_gui/robot_lab_gui/aerial_swarm_tab.py\n M src/robot_lab_gui/robot_lab_gui/experiment_queue.py\n?? src/robot_lab/robot_lab_benchmark/robot_lab_benchmark/extension_contract.py\n?? src/robot_lab/robot_lab_benchmark/robot_lab_benchmark/extension_result.py\n?? src/robot_lab/robot_lab_benchmark/robot_lab_benchmark/extension_workload.py\n?? src/robot_lab/robot_lab_benchmark/test/test_extension_workload.py\n",
+    "tracked_diff_sha256": "128e2fd77e987836e412599a0fa2e074c2fb0feef711296c849886279ce122f4"
+  },
+  "requested_budgets": {
+    "duration_s": 200.0,
+    "startup_timeout_s": 300.0,
+    "max_rss_mb": 9000.0,
+    "max_cpu_percent": 2000.0,
+    "max_artifact_mb": 512.0
+  },
+  "seed_scope": "Recorded and exposed to workload; simulator seed application needs its explicit contract",
+  "mission_result": {
+    "schema": "robot_lab.measured_extension_result.v1",
+    "workflow": "marine",
+    "task": "mapping",
+    "session_id": "af7068b212ab431db50dc4a35c706479",
+    "run_id": "eb0e11894dbf4300ab82f87b1ab747c4",
+    "ros_domain_id": 20,
+    "success": true,
+    "reason": "Actual travel and nonempty acquired map archived",
+    "measurements": [
+      {
+        "map_artifact": {
+          "kind": "acquired_rtabmap",
+          "robot": "lab_rov",
+          "frame": "map",
+          "directory": "/workspace/molar/robot_lab_runtime/marine_missions/3ae9b1c76fc24ff7a2dd9698e0be016e/map-a5656c81b4",
+          "estimator_contract": "marine_spawn_imu_v1",
+          "source_world": "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_maps/share/robot_lab_maps/maps/marine_tank/worlds/marine_tank.world",
+          "world_sha256": "39f98763ad843dc6f73049e4ce8be70e05bb79428a7d69a3a68447b9b0326164",
+          "source_database": "/workspace/molar/robot_lab_runtime/marine_sessions/rov-r9w98mjb/marine-rtabmap.db",
+          "database": "/workspace/molar/robot_lab_runtime/marine_missions/3ae9b1c76fc24ff7a2dd9698e0be016e/map-a5656c81b4/rtabmap.db",
+          "database_observation": {
+            "nodes": 5,
+            "bytes": 770048,
+            "sha256": "cd8daf06683ce63908259a9e40e65f55b5946ae9dedbf4e2b519144724b62139"
+          },
+          "points": 11297,
+          "cloud_stamp": {
+            "sec": 4,
+            "nanosec": 800000000
+          },
+          "scope": "Acquired RGB-D SLAM database/cloud; physical reload/mission qualification is separate"
+        },
+        "observation": {
+          "kind": "database",
+          "nodes": 5,
+          "sha256": "cd8daf06683ce63908259a9e40e65f55b5946ae9dedbf4e2b519144724b62139"
+        },
+        "physical_start": [
+          0.061686764492489714,
+          -5.145544319637959e-09,
+          -1.0651669695067651
+        ],
+        "physical_pose": [
+          0.4590152395585335,
+          1.4045435809037208e-05,
+          -1.1078549264804813
+        ],
+        "distance_m": 0.39732847531447657
+      }
+    ],
+    "goal_contract": {
+      "position_m": 0.2,
+      "linear_m_s": 0.05,
+      "settle_sim_s": 1.0
+    },
+    "truth_samples": {
+      "body": 330
+    },
+    "control_released": true,
+    "wall_duration_s": 9.03620656899875,
+    "contacts": null,
+    "minimum_swept_clearance_m": null,
+    "producer_sha256": "136ebb0572f7715e7080597da128070e0620c85f0e16dfe8f1fbdd9a95892301",
+    "workload_sha256": "530212b573627ee9b43495f777099a4c431d5ac42ab96e48e05180d7d804a83d",
+    "trace_sha256": "ed122fe8f016293e6c9a4ac23177b17213d7a459b57715fa152bd0c419006b0e",
+    "scope": "Actual native task and independent physical measurements; parent runner owns process cleanup"
+  },
+  "output": "/workspace/molar/robot_lab_runtime/project-completion-20261027-vne3n358/automatic-marine/eb0e11894dbf4300ab82f87b1ab747c4",
+  "qualification": "implementation; validation pending",
+  "executed_task_command": [
+    "/usr/bin/python3",
+    "-m",
+    "robot_lab_benchmark.extension_workload",
+    "--spec",
+    "/workspace/molar/robot_lab_runtime/project-completion-20261027-vne3n358/automatic-marine/eb0e11894dbf4300ab82f87b1ab747c4/workload.json"
+  ],
+  "task_returncode": 0,
+  "process_returncodes": [
+    -15,
+    0,
+    0
+  ],
+  "wall_duration_s": 24.31879017299798,
+  "telemetry": {
+    "topic_counts": {
+      "/clock": 7660,
+      "/joint_states": 7444
+    },
+    "last_clock_monotonic": 93800.129385872,
+    "last_topic_monotonic": {
+      "/clock": 93800.129394064,
+      "/joint_states": 93800.131486917
+    },
+    "real_time_factor": 0.7135197685180699,
+    "truth_distance_3d_m": null,
+    "topic_trace_distance_3d_m": {},
+    "contact_events": null,
+    "footprint_clearance_m": null,
+    "mission_result": null,
+    "scope": "Actual topic capture only; scan range is not footprint clearance; no inferred mission success"
+  },
+  "observed_surviving_pids": [],
+  "cleanup_complete": true,
+  "mission_result_error": null
+}

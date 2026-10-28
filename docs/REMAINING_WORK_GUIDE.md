@@ -1,6 +1,6 @@
 # Remaining work: agent execution guide
 
-Updated October 27, 2026 after initial workflow delivery on `master`.
+Updated October 27, 2026 after [the native continuation](status/native-workflows-2026-10-27.md) on `master`.
 Read [the current delivery](status/workflows-2026-10-27.md),
 [actual receipt](status/evidence/workflows-2026-10-27/README.md),
 [handoff](AGENT_HANDOFF.md) and [ledger](status/platform-status.yaml).
@@ -41,7 +41,7 @@ the initial code. Tests, counts and received messages never establish a mission.
 
 ## Delivered baseline to preserve
 
-- **147 robot profiles / 78 selectable families**, **51 worlds / 39 families**.
+- **148 robot profiles / 79 selectable families**, **51 worlds / 39 families**.
   Seven historical vendor/Panda IDs are back; stale code certificates expose
   explicit experimental candidates, while geometry/control mismatches cannot.
 - **Fleet:** actual shared-world queues, traffic yielding/resumption, coverage,
@@ -50,7 +50,7 @@ the initial code. Tests, counts and received messages never establish a mission.
 - **Aerial:** native multi-FCU launch/GUI, two to four separate identities,
   frames/ports/leases, fresh takeoff seals, latched inputs, FCU time integration,
   startup settling and owned cleanup. Actual two-vehicle flight/landing exists;
-  altitude and formation accuracy retain a named qualification gap.
+  the nav_empty two-drone range-reference formation/operator-loss case now passes. Other maps/groups/behaviors remain open.
 - **Marine:** native ROV/AUV forces; real motion-derived DVL plus separate
   sonar/pressure, spawn-heading-aligned IMU estimation, RGB-D/depth registration,
   actual flushed map export/protected reload/localization and bounded missions.
@@ -65,16 +65,18 @@ the initial code. Tests, counts and received messages never establish a mission.
   into an isolated queue. Random patterns/simulated completion are removed;
   results require producer/specification/trace identity and actual cleanup.
 
+The new native producer implementation is in `extension_workload.py`, `extension_contract.py` and `extension_result.py`; fleet reset is `fleet_reset.py`. Use `provision_tracked_physics.py` only to provision/reproduce the private SSD tracked engine, and keep it scoped to that launch. Source truth-clock and native range measurements must stay separate from FCU estimates. Gait independent body headings include the configured CAD-to-drive offset, and goals wait for active Nav2 lifecycle. Do not replace these with synthetic passes.
+
 ## Ordered next work
 
 | Order | Task IDs | Concrete next result |
 |---|---|---|
-| 1 | R10.3 | Resolve remaining PX4 altitude/formation accuracy; measure convergence and command/member loss with independent body traces |
+| 1 | R10.3 | Preserve the measured nav_empty two-drone range-reference formation/operator-loss case; extend other behaviors/maps, 3–4 members and member loss |
 | 2 | R10.4–R10.5 | Complete AUV transects/saved localization and marine obstacle/current/loss missions without accepting degenerate registration |
 | 3 | R10.1–R10.3 | Complete RMF conflicting/infrastructure routes, coverage, larger fleets and physical contact/loss screens |
 | 4 | R10.6–R10.7 | Per-model saved-map goals, terrain/slip/recovery and source-appropriate backend implementations |
-| 5 | R10.7 | Complete physical snake/tracked/surface/amphibious families; no display-only promotion |
-| 6 | R10.8 / R4 / R8.3 | Add automatic aerial/marine/gait workload producers and explicit batch-wide reset; retain actual source/trace-bound outcomes |
+| 5 | R10.7 | Preserve native tracked forward/loss/Nav2; finish flipper actuation, snake/surface/amphibious families and source-appropriate backends |
+| 6 | R10.8 / R4 / R8.3 | Preserve delivered real native producers and measured fleet batch reset; extend AUV acquisition, seeds, contacts/clearance and wider matrices |
 | 7 | R6 and older queue | Remaining reviewed maps, car/perception/manipulation/policy-transfer/comparison/release work below |
 
 ## 1. Preserve catalog restoration
@@ -121,9 +123,10 @@ contacts, raw source poses, loss and scoped reset without fabricated metrics.
 Real batches use `robot-lab-fleet-workload --spec ...` through the isolated
 runner. Fleet goals name actual IDs and world coordinates. Results bind the
 producer/spec/trace, actual tasks and independent settled endpoints. Batch-wide
-reset is explicitly not implemented; cancel/relaunch a batch or use live
-per-member Reset. Add it with owned task cancellation and observed physical
-reset completion, not a generic `/robot_lab/reset` call against a fleet.
+reset now stops/invalidate its workload and uses `fleet_reset.py` to observe
+actual member pose/localization/settling and clock continuity. Preserve occupied
+destination refusal and owned cancellation. Do not replace it with a generic
+`/robot_lab/reset` call against a fleet.
 
 ## 3. Aerial continuation
 
@@ -142,8 +145,9 @@ corrects flight from truth. Cleanup must survive ROS node destruction errors.
 Continue from the actual source/trajectory receipt, including earlier failed
 checks and altitude drift. Compare FCU height/targets and independent Gazebo
 body height through takeoff, hold and group movement. Keep altitude/formation
-accuracy distinct from flight/arming. Resolve estimator/control defects before
-claiming convergence, then add bounded loss/world/larger-group screens. Aerial
+accuracy distinct from flight/arming. Preserve the measured range-reference
+case and actual collision/noise sensor input; extend other behaviors, member
+loss, worlds and larger groups without treating GNSS/barometer cases as qualified. Aerial
 and ground sessions remain separate simulator plugin ABIs.
 
 ## 4. Marine continuation
@@ -207,9 +211,9 @@ Finish terrain-provider/manual workflows, attribution and height conventions;
 Isaac contact tests are simulator work. Add class-specific actor, multi-floor,
 terrain and aerial missions. Metadata-only diverse-map tests do not create worlds.
 
-For R10.8/R4/R8.3, preserve the delivered real fleet workload/GUI queue and add
-automatic marine/gait/aerial producers through `robot_lab_benchmark/workload_contract.py`,
-experiment execution and GUI status.
+For R10.8/R4/R8.3, preserve the delivered Nav2/fleet/native-extension producers,
+queue snapshots and result contracts. Extend further cases and AUV acquisition
+through `robot_lab_benchmark/workload_contract.py`, execution and GUI status.
 Reuse process isolation/resource accounting, source identities and raw traces.
 Cancel/reset must invalidate actual work. No randomized metrics or preset PASS.
 

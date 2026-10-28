@@ -1,0 +1,13 @@
+{
+  "repository": "https://github.com/gazebosim/gz-sim",
+  "revision": "ignition-gazebo6_6.18.0",
+  "files": {
+    "TrackedVehicle_cc": "0fb36873db0c018cdc4cdd17f22a83b33f3c1ad79abe755b4c16616fecc8cb4b",
+    "TrackedVehicle_hh": "310850f8a921961d88722bb86ca1e27b3522f8162aa2189bec548922b58f1f4a"
+  },
+  "license": "Apache-2.0",
+  "adaptations": [
+    "Angular and linear straight/pivot thresholds 0.1 -> 1e-6 to retain small commands",
+    "Explicit Robot Lab plugin alias"
+  ]
+}

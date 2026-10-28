@@ -84,8 +84,8 @@ def source_provenance():
     here = Path(__file__).resolve()
     record = dict(module_sha256={str(path): hashlib.sha256(path.read_bytes()).hexdigest()
         for path in (here, here.with_name('telemetry_recorder.py'), here.with_name('nav2_workload.py'),
-                     here.with_name('fleet_workload.py'),here.with_name('extension_workload.py'),
-                     here.with_name('extension_contract.py'),here.with_name('extension_result.py'),here.with_name('workload_contract.py'))}, scope='Coordinator, recorder and built-in actual Nav2/fleet workloads; external workload sources remain separate')
+                     here.with_name('fleet_workload.py'),here.with_name('fleet_reset.py'),here.with_name('extension_workload.py'),
+                     here.with_name('extension_contract.py'),here.with_name('extension_result.py'),here.with_name('workload_contract.py'))}, scope='Coordinator, recorder, scoped reset and actual Nav2/fleet/native-extension workloads; external task sources remain separate')
     repository = next((parent for parent in here.parents if (parent/'.git').exists()), None)
     if repository:
         try:
@@ -132,38 +132,42 @@ class ConcurrentRunner:
             job = self.jobs.get(job_id)
             if not job or not job.get('ready') or job['cancel'].is_set():
                 raise ValueError('Reset requires a ready owned run')
-            fleet_reset=job.get('workload_schema')=='robot_lab.fleet_workload.v1'
+            if job.get('workload_schema')=='robot_lab.extension_workload.v1':
+                raise ValueError('Cancel and relaunch native extension sessions; a physical teleport would invalidate their FCU/contact/map estimators.')
+            fleet_reset=job.get('reset_kind')=='fleet' or job.get('workload_schema')=='robot_lab.fleet_workload.v1'
             if job.get('resetting'):raise ValueError('A reset is already running')
             job['resetting']=True
             task=job.get('task')
             environment = job['environment'].copy()
             directory = job['directory']
             job['workload_invalidated'] = True
-        if task is not None and task.poll() is None:
-            try:os.killpg(task.pid,signal.SIGINT);task.wait(timeout=12.)
-            except (ProcessLookupError,subprocess.TimeoutExpired):
-                job['resetting']=False
-                raise ValueError('Workload must release control before resetting the plant')
-        reset_path=directory/('reset-'+str(time.time_ns())+'.json')
-        command=([sys.executable,'-m','robot_lab_benchmark.fleet_reset','--output',str(reset_path)] if fleet_reset else
-            ['ros2','service','call','/robot_lab/reset','std_srvs/srv/Trigger','{}'])
-        process = subprocess.Popen(command, env=environment, stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE, text=True, start_new_session=True)
         try:
-            stdout, stderr = process.communicate(timeout=40 if fleet_reset else 30)
-        except subprocess.TimeoutExpired:
+            if task is not None and task.poll() is None:
+                try:os.killpg(task.pid,signal.SIGINT);task.wait(timeout=12.)
+                except ProcessLookupError:pass
+                except subprocess.TimeoutExpired:
+                    raise ValueError('Workload must release control before resetting the plant')
+            reset_path=directory/('reset-'+str(time.time_ns())+'.json')
+            command=([sys.executable,'-m','robot_lab_benchmark.fleet_reset','--output',str(reset_path)] if fleet_reset else
+                ['ros2','service','call','/robot_lab/reset','std_srvs/srv/Trigger','{}'])
+            process = subprocess.Popen(command, env=environment, stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE, text=True, start_new_session=True)
             try:
-                os.killpg(process.pid, signal.SIGKILL)
-            except ProcessLookupError:
-                pass
-            stdout, stderr = process.communicate()
-            stderr += '\nReset response timed out.'
-        response = dict(returncode=process.returncode, stdout=stdout, stderr=stderr,
-                        scope='Real domain-scoped service response; caller must inspect success acknowledgement')
-        if fleet_reset and reset_path.is_file():response['physical_reset']=json.loads(reset_path.read_text())
-        write_json(directory/('reset-response-'+str(time.time_ns())+'.json'), response)
-        job['resetting']=False
-        return response
+                stdout, stderr = process.communicate(timeout=40 if fleet_reset else 30)
+            except subprocess.TimeoutExpired:
+                try:
+                    os.killpg(process.pid, signal.SIGKILL)
+                except ProcessLookupError:
+                    pass
+                stdout, stderr = process.communicate()
+                stderr += '\nReset response timed out.'
+            response = dict(returncode=process.returncode, stdout=stdout, stderr=stderr,
+                            scope='Real domain-scoped service response; caller must inspect success acknowledgement')
+            if fleet_reset and reset_path.is_file():response['physical_reset']=json.loads(reset_path.read_text())
+            write_json(directory/('reset-response-'+str(time.time_ns())+'.json'), response)
+            return response
+        finally:
+            with self.lock:job['resetting']=False
 
     def domain_lease(self):
         for domain in range(20, 120):
@@ -215,7 +219,8 @@ class ConcurrentRunner:
             seed_scope='Recorded and exposed to workload; simulator seed application needs its explicit contract',
             mission_result=None, output=str(directory), qualification='implementation; validation pending')
         job = dict(cancel=cancel, environment=environment, directory=directory, ready=False,
-                   workload_schema=specification.workload.get('schema'))
+                   workload_schema=specification.workload.get('schema'),
+                   reset_kind='fleet' if 'shared_world.launch.py' in specification.command else 'single')
         with self.lock:
             self.jobs[identifier] = job
         resources = (directory/'resources.jsonl').open('w', buffering=1)
@@ -240,8 +245,16 @@ class ConcurrentRunner:
         try:
             write_json(directory/'run.json', result)
             if specification.workload:
+                producer_name = ('fleet_workload' if specification.workload['schema'] == 'robot_lab.fleet_workload.v1'
+                                 else 'extension_workload' if specification.workload['schema'] == 'robot_lab.extension_workload.v1'
+                                 else 'nav2_workload')
+                producer_source = Path(__file__).with_name(producer_name+'.py').read_bytes()
+                producer_hash = hashlib.sha256(producer_source).hexdigest()
+                (directory/'workload-producer.py').write_bytes(producer_source)
+                result['workload_producer_sha256'] = producer_hash
                 write_json(directory/'workload.json', dict(specification.workload,
-                    selection=specification.selection, launch_command=specification.command))
+                    selection=specification.selection, launch_command=specification.command,
+                    expected_producer_sha256=producer_hash))
             if self.cancel_all.is_set():
                 result['state'] = 'canceled'
                 return result
@@ -286,9 +299,7 @@ class ConcurrentRunner:
                     if specification.task_command:
                         task = launch(specification.task_command, 'task')
                     elif specification.workload:
-                        module = ('robot_lab_benchmark.fleet_workload' if specification.workload.get('schema') == 'robot_lab.fleet_workload.v1'
-                                  else 'robot_lab_benchmark.extension_workload' if specification.workload.get('schema') == 'robot_lab.extension_workload.v1'
-                                  else 'robot_lab_benchmark.nav2_workload')
+                        module = 'robot_lab_benchmark.'+producer_name
                         workload_command = [sys.executable, '-m', module,
                             '--spec', str(directory/'workload.json')]
                         result['executed_task_command'] = workload_command

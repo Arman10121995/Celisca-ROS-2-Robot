@@ -16,7 +16,7 @@ from launch_ros.actions import Node
 
 
 def setup(context):
-    from robot_lab_utils.gait_model import GaitModel
+    from robot_lab_utils.gait_model import load_model
     from robot_lab_utils.robot_description import load_description
     from robot_lab_utils.installed_assets import merge_installed_profiles
     from robot_lab_utils.fleet_session import finite
@@ -24,7 +24,7 @@ def setup(context):
     robots=Path(share('robot_lab_robots'));bringup=Path(share('robot_lab_bringup'))
     profiles=yaml.safe_load((robots/'config/robots.yaml').read_text())['robots']
     name=value('robot_model');profile=profiles[name]
-    config=robots/profile['gait_model'];urdf=load_description(robots/profile['xacro']);model=GaitModel(urdf,config)
+    config=robots/profile['gait_model'];urdf=load_description(robots/profile['xacro']);model=load_model(urdf,config)
     task=value('task')
     if task not in ('gait','loc','slam','3d_slam','nav'):raise ValueError('Choose gait/loc/slam/3d_slam/nav for the experimental gait workflow')
     if task!='gait':
@@ -57,7 +57,7 @@ def setup(context):
     # complete plant at spawn; preserve source link/joint axes and geometry.
     pose['yaw']-=float(model.config['forward_yaw'])
     contacts={leg['id']:leg['contact_geoms'] for leg in model.legs}
-    contacts['body']=['base_link_contact_0'] if name=='hexapod_ros2' else ['base_link_collision']+['segment_'+str(i)+'_collision' for i in range(1,len(model.config.get('spines',[]))+1)]
+    contacts['body']=model.body_geoms if model.config.get('kind')=='serpentine' else ['base_link_contact_0'] if name=='hexapod_ros2' else ['base_link_collision']+['segment_'+str(i)+'_collision' for i in range(1,len(model.config.get('spines',[]))+1)]
     args=dict(model=str(description),robot_name=name,robot_package='robot_lab_robots',robot_xacro=profile['xacro'],
               world_name=Path(explicit_mjcf).stem,world_path=source_world,gui=value('gui'),use_sim_time='true',
               hold_position='false',joint_pd_config=json.dumps(model.pd_config()),pd_joint_armature='.01',

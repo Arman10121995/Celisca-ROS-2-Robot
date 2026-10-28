@@ -1,0 +1,68 @@
+{
+  "schema": "robot_lab.measured_extension_result.v1",
+  "workflow": "marine",
+  "task": "mapping",
+  "session_id": "af7068b212ab431db50dc4a35c706479",
+  "run_id": "eb0e11894dbf4300ab82f87b1ab747c4",
+  "ros_domain_id": 20,
+  "success": true,
+  "reason": "Actual travel and nonempty acquired map archived",
+  "measurements": [
+    {
+      "map_artifact": {
+        "kind": "acquired_rtabmap",
+        "robot": "lab_rov",
+        "frame": "map",
+        "directory": "/workspace/molar/robot_lab_runtime/marine_missions/3ae9b1c76fc24ff7a2dd9698e0be016e/map-a5656c81b4",
+        "estimator_contract": "marine_spawn_imu_v1",
+        "source_world": "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_maps/share/robot_lab_maps/maps/marine_tank/worlds/marine_tank.world",
+        "world_sha256": "39f98763ad843dc6f73049e4ce8be70e05bb79428a7d69a3a68447b9b0326164",
+        "source_database": "/workspace/molar/robot_lab_runtime/marine_sessions/rov-r9w98mjb/marine-rtabmap.db",
+        "database": "/workspace/molar/robot_lab_runtime/marine_missions/3ae9b1c76fc24ff7a2dd9698e0be016e/map-a5656c81b4/rtabmap.db",
+        "database_observation": {
+          "nodes": 5,
+          "bytes": 770048,
+          "sha256": "cd8daf06683ce63908259a9e40e65f55b5946ae9dedbf4e2b519144724b62139"
+        },
+        "points": 11297,
+        "cloud_stamp": {
+          "sec": 4,
+          "nanosec": 800000000
+        },
+        "scope": "Acquired RGB-D SLAM database/cloud; physical reload/mission qualification is separate"
+      },
+      "observation": {
+        "kind": "database",
+        "nodes": 5,
+        "sha256": "cd8daf06683ce63908259a9e40e65f55b5946ae9dedbf4e2b519144724b62139"
+      },
+      "physical_start": [
+        0.061686764492489714,
+        -5.145544319637959e-09,
+        -1.0651669695067651
+      ],
+      "physical_pose": [
+        0.4590152395585335,
+        1.4045435809037208e-05,
+        -1.1078549264804813
+      ],
+      "distance_m": 0.39732847531447657
+    }
+  ],
+  "goal_contract": {
+    "position_m": 0.2,
+    "linear_m_s": 0.05,
+    "settle_sim_s": 1.0
+  },
+  "truth_samples": {
+    "body": 330
+  },
+  "control_released": true,
+  "wall_duration_s": 9.03620656899875,
+  "contacts": null,
+  "minimum_swept_clearance_m": null,
+  "producer_sha256": "136ebb0572f7715e7080597da128070e0620c85f0e16dfe8f1fbdd9a95892301",
+  "workload_sha256": "530212b573627ee9b43495f777099a4c431d5ac42ab96e48e05180d7d804a83d",
+  "trace_sha256": "ed122fe8f016293e6c9a4ac23177b17213d7a459b57715fa152bd0c419006b0e",
+  "scope": "Actual native task and independent physical measurements; parent runner owns process cleanup"
+}

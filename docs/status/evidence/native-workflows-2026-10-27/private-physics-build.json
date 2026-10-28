@@ -1,0 +1,24 @@
+{
+  "schema_version": 1,
+  "source_revision": "a6c11b5be5267d3e1ac21f8a1eae6f9735cc2871",
+  "dart_version": "6.13.2+ds1-1~osrf2~jammy",
+  "engine": "/workspace/molar/robot_lab_runtime/native_tracks/build/lib/libignition-physics5-dartsim-plugin.so.5.4.0",
+  "engine_sha256": "9e75fec2db54e9d8a55a23949f6f36d9207fa31fe7669f42b3de51b06a914445",
+  "library_paths": [
+    "/workspace/molar/robot_lab_runtime/native_tracks/build/lib",
+    "/workspace/molar/robot_lab_runtime/native_tracks/dependencies/usr/lib/aarch64-linux-gnu"
+  ],
+  "packages": {
+    "libdart6.13-external-odelcpsolver-dev_6.13.2+ds1-1~osrf2~jammy_arm64.deb": "1e6bee326b02f7026902fb37c40d4e3cc251e1a0bdcfc1359fc8588d5f6a5076",
+    "libdart6.13-dev_6.13.2+ds1-1~osrf2~jammy_arm64.deb": "1501c7db12cbed656fcb3d670731362a627287872bef60c99f6e96168a155064",
+    "libdart-core+collisions+odelcpsolver6.13_6.13.2+ds1-1~osrf2~jammy_arm64.deb": "6ee5fd76b242171fdf98e8a9fb13eb7bd5b7240d520c08d636d1bc61556697f1",
+    "libdart-utils6.13_6.13.2+ds1-1~osrf2~jammy_arm64.deb": "a886934b86c25415e04aed704fcd5bde06c77cee91f99a46b62a27fdda7e74c8",
+    "libdart6.13-utils-urdf-dev_6.13.2+ds1-1~osrf2~jammy_arm64.deb": "85b7498cc6a857f8e197e2080c07cd66d46cbb375eaa6a5586d555158ae8c429",
+    "libdart6.13-external-convhull-3d-dev_6.13.2+ds1-1~osrf2~jammy_arm64.deb": "8a55b15f4256141d1f64d82e14d5f273c410aae1918468fb3187617349ab2f57",
+    "libdart-utils-urdf6.13_6.13.2+ds1-1~osrf2~jammy_arm64.deb": "0933a44cc2641ad209298f4665fe9053bbb0d8f6476a30203983e2869e673861",
+    "libdart6.13-collision-bullet-dev_6.13.2+ds1-1~osrf2~jammy_arm64.deb": "71cf386f90515f09fd92c007cfbdab4165b6c0c4f74efbf0e5a4721b5cdb5956",
+    "libdart6.13-collision-ode-dev_6.13.2+ds1-1~osrf2~jammy_arm64.deb": "07f8f9bed9099c847a321f73288f183803b60ed5f77abc0350a0b6b6c0dc66e3",
+    "libdart6.13-utils-dev_6.13.2+ds1-1~osrf2~jammy_arm64.deb": "6e58d1ec672cce3177c2b4d16c06745dbe422c1d3e150d0f5ccc93c776e14317"
+  },
+  "scope": "Private native contact-surface implementation; robot mission acceptance requires physical traces"
+}

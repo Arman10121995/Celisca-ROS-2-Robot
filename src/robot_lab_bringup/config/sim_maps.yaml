@@ -1,4 +1,10 @@
 maps:
+  surface_harbor:
+    gazebo: {world_name: surface_harbor, world_package: robot_lab_maps, world_path: maps/surface_harbor/worlds/surface_harbor.world}
+    map: {has_2d_map: false}
+    marine: {bottom_z: -6.0, density: 1025.0, surface_z: 0.0}
+    spawn: {x: -3.0, y: -2.0, z: -1.0, yaw: 0.0}
+    notes: "Authored collision harbor with above-water walls, dock, pilings and markers. Native marine dynamics; hydrographic/hardware calibration unassessed."
   aerial_course:
     gazebo:
       world_name: aerial_course

@@ -19,7 +19,9 @@ from rclpy.qos import qos_profile_sensor_data
 from nav_msgs.msg import Odometry
 from rosgraph_msgs.msg import Clock
 from std_msgs.msg import String
-from .workload_contract import FLEET_WORKLOAD_SCHEMA, FLEET_RESULT_SCHEMA, FLEET_GOAL_CONTRACT, validate_workload
+from .workload_contract import FLEET_WORKLOAD_SCHEMA, FLEET_RESULT_SCHEMA, FLEET_GOAL_CONTRACT, validate_workload, verify_producer
+
+PRODUCER_SHA256 = hashlib.sha256(Path(__file__).read_bytes()).hexdigest()
 
 
 def endpoint_ok(goal, pose, speed, yaw_rate):
@@ -34,6 +36,8 @@ def endpoint_ok(goal, pose, speed, yaw_rate):
 
 class FleetWorkload(Node):
     def __init__(self, specification, directory):
+        self.producer_sha256 = verify_producer(specification, PRODUCER_SHA256)
+        self.workload_sha256 = hashlib.sha256((Path(directory)/'workload.json').read_bytes()).hexdigest()
         super().__init__('robot_lab_measured_fleet_workload')
         self.specification,self.directory=specification,Path(directory)
         self.operator='fleet-workload-'+uuid.uuid4().hex
@@ -175,8 +179,8 @@ class FleetWorkload(Node):
             reason=self.reason,member_results=sorted(self.measurements,key=lambda m:m['index']),
             goal_contract=FLEET_GOAL_CONTRACT,truth_samples=self.truth_count,owned_cleanup=cleanup,
             contacts=None,minimum_swept_clearance_m=None,wall_duration_s=time.monotonic()-self.started,
-            producer_sha256=hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
-            workload_sha256=hashlib.sha256(Path(specification_path).read_bytes()).hexdigest(),
+            producer_sha256=self.producer_sha256,
+            workload_sha256=self.workload_sha256,
             trace_sha256=hashlib.sha256((self.directory/'fleet-trace.jsonl').read_bytes()).hexdigest(),
             scope='Actual task terminals and independent body endpoints/settling; full mission/contact qualification separate')
         temporary=self.directory/'fleet-mission-result.new'

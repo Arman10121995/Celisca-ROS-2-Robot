@@ -1,0 +1,77 @@
+{
+  "schema": "robot_lab.measured_extension_result.v1",
+  "workflow": "aerial_swarm",
+  "task": "operator_loss",
+  "session_id": "swarm-erng3i3w",
+  "run_id": "79c5039ffb294de7ad0c6c1bb07348cf",
+  "ros_domain_id": 20,
+  "success": true,
+  "reason": "Operator lease loss caused actual native landing/disarm for every airborne member",
+  "measurements": [
+    {
+      "member_id": "air1",
+      "physical_initial": [
+        -0.5,
+        -0.5,
+        0.22699921262738113
+      ],
+      "physical_airborne": [
+        -0.49475075418571335,
+        -0.5488893326398356,
+        3.049034155580422
+      ],
+      "physical_pose": [
+        -0.469783357289153,
+        -0.4665963791889727,
+        0.22699975603109768
+      ],
+      "linear_m_s": 0.0,
+      "settled_sim_s": 1.2999999999999972,
+      "observed_landing": true,
+      "landed_state": 1,
+      "disarmed": true,
+      "heartbeat_silence_wall_s": 14.81537809700012
+    },
+    {
+      "member_id": "air2",
+      "physical_initial": [
+        -3.5,
+        -0.5,
+        0.22699921262738113
+      ],
+      "physical_airborne": [
+        -3.460984999397202,
+        -0.5102372901358437,
+        2.9201140065497304
+      ],
+      "physical_pose": [
+        -3.4488271104072488,
+        -0.4499957989148709,
+        0.22699961057349322
+      ],
+      "linear_m_s": 0.0,
+      "settled_sim_s": 1.0,
+      "observed_landing": true,
+      "landed_state": 1,
+      "disarmed": true,
+      "heartbeat_silence_wall_s": 14.815385105000132
+    }
+  ],
+  "goal_contract": {
+    "position_m": 0.35,
+    "linear_m_s": 0.15,
+    "settle_sim_s": 2.0
+  },
+  "truth_samples": {
+    "air1": 1105,
+    "air2": 1105
+  },
+  "control_released": true,
+  "wall_duration_s": 58.94674616599991,
+  "contacts": null,
+  "minimum_swept_clearance_m": null,
+  "producer_sha256": "e1d46518aa8b625384bbe869a1d3f3a9738818f92e8606ee1849c270bada9d66",
+  "workload_sha256": "6a10c6b3e829e38b1a5f00fcab12004ac04b218741e4154ae1e779033a1a232f",
+  "trace_sha256": "5166b3ea6a367ce042ccd9641443d8277059ab055b5e8efa86a742d59a77d85a",
+  "scope": "Actual native task and independent physical measurements; parent runner owns process cleanup"
+}

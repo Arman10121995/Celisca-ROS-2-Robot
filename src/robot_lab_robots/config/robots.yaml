@@ -1,10 +1,85 @@
 robots:
+  lab_usv:
+    package: robot_lab_robots
+    xacro: lab_usv/urdf/lab_usv.urdf.xacro
+    name: lab_usv
+    type: aquatic
+    marine_model: true
+    marine_propulsion: surface_twin_thrusters
+    spawn_by_map:
+      surface_harbor: {z: 0.0}
+      marine_tank: {z: 0.0}
+      marine_reef: {z: 0.0}
+      marine_harbor: {z: 0.0}
+      marine_cave: {z: 0.0}
+      marine_wreck: {z: 0.0}
+    supported_modes: [display, marine]
+    default_mode: marine
+    default_map: surface_harbor
+    supported_simulators: [gazebo]
+    features: [marine_dynamics, surface_vessel, native_buoyancy, differential_thrust, rgbd_camera, imu]
+    drive: {type: marine, max_speed: 0.4, max_accel: 0.4, max_angular_speed: 0.3, max_angular_accel: 0.4}
+    implementation_state: experimental
+    validation_state: pending
+    notes: "Complete first-party catamaran with two physical propellers and free graded buoyancy/hydrodynamics. Marine Drive, sensor odometry, planar missions and optional RGB-D mapping/reload; no strafe/depth control. Native force watchdog covers stale ROS output. Wave/hardware and broad mission qualification pending."
   lab_tracked:
     package: robot_lab_robots
     xacro: lab_tracked/robot.urdf
     name: lab_tracked
     type: mobile
     tracked_model: true
+    default_algorithms:
+      control: native_tracked_controller
+      local_planning: pure_pursuit
+      global_planning: a_star_planner
+      perception: none
+      state_estimation: ekf_localization_node
+      sensor_fusion: imu_republisher
+    algorithm_allowlist_by_mode:
+      loc:
+        localization:
+        - amcl
+        state_estimation:
+        - ekf_localization_node
+        sensor_fusion:
+        - imu_republisher
+        perception: []
+      slam:
+        localization:
+        - slam_toolbox
+        state_estimation:
+        - ekf_localization_node
+        sensor_fusion:
+        - imu_republisher
+        perception: []
+      3d_slam:
+        localization:
+        - rtabmap_localization
+        state_estimation:
+        - ekf_localization_node
+        sensor_fusion:
+        - imu_republisher
+        perception: []
+      nav:
+        localization:
+        - amcl
+        state_estimation:
+        - ekf_localization_node
+        sensor_fusion:
+        - imu_republisher
+        perception: []
+        control:
+        - native_tracked_controller
+        global_planning:
+        - a_star_planner
+        - navfn_planner
+        - dijkstra_planner
+        - hybrid_a_star_planner
+        - state_lattice_planner
+        local_planning:
+        - pure_pursuit
+        - dwb_local_planner
+        - mppi_controller
     drive: {type: tracked, max_speed: 0.3, max_accel: 0.4, max_angular_speed: 0.5, max_angular_accel: 0.4}
     supported_modes: [display, loc, slam, 3d_slam, nav]
     default_mode: display
@@ -12,7 +87,7 @@ robots:
     supported_simulators: [gazebo]
     drive_in_display: true
     controllers: []
-    features: [native_tracks, lidar, rgbd_camera, imu]
+    features: [native_tracks, lidar_2d, rgbd_camera, imu, velocity_base]
     implementation_state: experimental
     validation_state: pending
     notes: "Complete Gazebo tracked/flipper source, native contact-surface belts and bounded controls. Native track dead reckoning, sensors and mapping/navigation composition implemented; physical missions pending. Other backends require source-appropriate tracks."
@@ -135,6 +210,7 @@ robots:
     spawn_by_map:
       marine_tank: {x: -4.0, y: -3.0, z: -1.5, yaw: 0.5}
       marine_reef: {x: -5.0, y: -3.0, z: -1.5, yaw: 0.5}
+      surface_harbor: {x: -4.0, y: -3.0, z: -2.0, yaw: 0.0}
     supported_modes: [display, marine]
     default_mode: marine
     default_map: marine_tank

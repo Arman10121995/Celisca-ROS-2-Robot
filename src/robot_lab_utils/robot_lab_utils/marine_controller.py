@@ -36,11 +36,14 @@ def rpy(q):
 
 
 class MarineController(Node):
+    def load_model(self, description, density):
+        return MarineModel(description, density)
+
     def __init__(self):
         super().__init__('marine_controller')
         for key,value in dict(description_file='',surface_z=0.,maximum_depth=5.4,density=1025.,robot_id='lab_rov',control_allowed=True).items():
             self.declare_parameter(key,value)
-        self.model=MarineModel(Path(self.get_parameter('description_file').value).read_text(),self.get_parameter('density').value)
+        self.model=self.load_model(Path(self.get_parameter('description_file').value).read_text(),self.get_parameter('density').value)
         self.surface=float(self.get_parameter('surface_z').value)
         self.maximum_depth=float(self.get_parameter('maximum_depth').value)
         self.robot_id=str(self.get_parameter('robot_id').value)
@@ -60,7 +63,7 @@ class MarineController(Node):
         self.target_depth=None
         self.target_heading=None
         self.command=(0.,0.,0.,0.)
-        self.forces=np.zeros(8)
+        self.forces=np.zeros(len(self.model.joints))
         self.last_sim=None
         self.last_state=0.
         self.count=0
@@ -192,7 +195,7 @@ class MarineController(Node):
         self.enabled=False;self.command=(0.,0.,0.,0.);self.cmd_at=-math.inf
         self.target_depth=self.target_heading=None
         self.reason=reason
-        self.forces=np.zeros(8)
+        self.forces=np.zeros(len(self.pub))
         for pub in self.pub:pub.publish(Float64(data=0.))
 
     def _tick(self):

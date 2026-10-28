@@ -20,3 +20,7 @@ controller_server:
     progress_checker:
       required_movement_radius: 0.1
       movement_time_allowance: 40.0
+    general_goal_checker:
+      xy_goal_tolerance: 0.07
+      yaw_goal_tolerance: 0.03
+      stateful: true

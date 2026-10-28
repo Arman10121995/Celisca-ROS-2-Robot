@@ -1,0 +1,169 @@
+<?xml version='1.0' encoding='utf-8'?>
+<robot xmlns:xacro="http://ros.org/wiki/xacro" name="lab_usv">
+  <xacro:arg name="model_name" default="lab_usv" />
+  <xacro:arg name="is_ignition" default="true" />
+  <xacro:include filename="$(find robot_lab_robots)/description_common/urdf/oakd_camera.xacro" />
+  <link name="base_link">
+    <inertial>
+      <origin xyz="0 0 -.1" rpy="0 0 0" />
+      <mass value="70" />
+      <inertia ixx="13.1" iyy="11.8" izz="24.2" ixy="0" ixz="0" iyz="0" />
+    </inertial>
+    <collision name="port_hull_collision">
+      <origin xyz="0 .42 0" rpy="0 0 0" />
+      <geometry>
+        <box size="1.4 .2 .24" />
+      </geometry>
+    </collision>
+    <visual name="port_hull_visual">
+      <origin xyz="0 .42 0" rpy="0 0 0" />
+      <geometry>
+        <box size="1.4 .2 .24" />
+      </geometry>
+      <material name="port_hull_paint">
+        <color rgba=".12 .25 .42 1" />
+      </material>
+    </visual>
+    <collision name="starboard_hull_collision">
+      <origin xyz="0 -.42 0" rpy="0 0 0" />
+      <geometry>
+        <box size="1.4 .2 .24" />
+      </geometry>
+    </collision>
+    <visual name="starboard_hull_visual">
+      <origin xyz="0 -.42 0" rpy="0 0 0" />
+      <geometry>
+        <box size="1.4 .2 .24" />
+      </geometry>
+      <material name="starboard_hull_paint">
+        <color rgba=".12 .25 .42 1" />
+      </material>
+    </visual>
+    <collision name="deck_collision">
+      <origin xyz="0 0 .19" rpy="0 0 0" />
+      <geometry>
+        <box size=".95 .85 .08" />
+      </geometry>
+    </collision>
+    <visual name="deck_visual">
+      <origin xyz="0 0 .19" rpy="0 0 0" />
+      <geometry>
+        <box size=".95 .85 .08" />
+      </geometry>
+      <material name="deck_paint">
+        <color rgba=".95 .68 .08 1" />
+      </material>
+    </visual>
+  </link>
+  <xacro:oakd name="oakd" parent_link="base_link" model="pro" mesh_visual="false" rate="5">
+    <origin xyz=".48 0 .43" rpy="0 0 0" />
+  </xacro:oakd>
+  <gazebo reference="base_link">
+    <sensor name="marine_imu" type="imu">
+      <always_on>true</always_on>
+      <update_rate>50</update_rate>
+      <topic>/marine/imu</topic>
+      <gz_frame_id>base_link</gz_frame_id>
+    </sensor>
+  </gazebo>
+  <link name="port_propeller_link">
+    <inertial>
+      <mass value=".05" />
+      <inertia ixx=".0001" iyy=".0001" izz=".0001" ixy="0" ixz="0" iyz="0" />
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 1.57079632679 0" />
+      <geometry>
+        <cylinder radius=".065" length=".02" />
+      </geometry>
+    </visual>
+  </link>
+  <joint name="port_propeller_joint" type="continuous">
+    <parent link="base_link" />
+    <child link="port_propeller_link" />
+    <origin xyz="-.68 0.42 -.1" rpy="0 0 0" />
+    <axis xyz="1 0 0" />
+    <limit effort="5" velocity="400" />
+  </joint>
+  <gazebo>
+    <plugin filename="ignition-gazebo-thruster-system" name="ignition::gazebo::systems::Thruster">
+      <namespace>$(arg model_name)</namespace>
+      <joint_name>port_propeller_joint</joint_name>
+      <thrust_coefficient>.0044</thrust_coefficient>
+      <fluid_density>1025</fluid_density>
+      <propeller_diameter>.13</propeller_diameter>
+      <min_thrust_cmd>-35</min_thrust_cmd>
+      <max_thrust_cmd>35</max_thrust_cmd>
+      <velocity_control>true</velocity_control>
+    </plugin>
+  </gazebo>
+  <link name="starboard_propeller_link">
+    <inertial>
+      <mass value=".05" />
+      <inertia ixx=".0001" iyy=".0001" izz=".0001" ixy="0" ixz="0" iyz="0" />
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 1.57079632679 0" />
+      <geometry>
+        <cylinder radius=".065" length=".02" />
+      </geometry>
+    </visual>
+  </link>
+  <joint name="starboard_propeller_joint" type="continuous">
+    <parent link="base_link" />
+    <child link="starboard_propeller_link" />
+    <origin xyz="-.68 -0.42 -.1" rpy="0 0 0" />
+    <axis xyz="1 0 0" />
+    <limit effort="5" velocity="400" />
+  </joint>
+  <gazebo>
+    <plugin filename="ignition-gazebo-thruster-system" name="ignition::gazebo::systems::Thruster">
+      <namespace>$(arg model_name)</namespace>
+      <joint_name>starboard_propeller_joint</joint_name>
+      <thrust_coefficient>.0044</thrust_coefficient>
+      <fluid_density>1025</fluid_density>
+      <propeller_diameter>.13</propeller_diameter>
+      <min_thrust_cmd>-35</min_thrust_cmd>
+      <max_thrust_cmd>35</max_thrust_cmd>
+      <velocity_control>true</velocity_control>
+    </plugin>
+  </gazebo>
+  <gazebo>
+    <plugin filename="ignition-gazebo-hydrodynamics-system" name="ignition::gazebo::systems::Hydrodynamics">
+      <link_name>base_link</link_name>
+      <xDotU>5</xDotU>
+      <yDotV>12</yDotV>
+      <zDotW>18</zDotW>
+      <kDotP>0.4</kDotP>
+      <mDotQ>0.7</mDotQ>
+      <nDotR>1.0</nDotR>
+      <xU>-18</xU>
+      <yV>-40</yV>
+      <zW>-100</zW>
+      <kP>-6</kP>
+      <mQ>-8</mQ>
+      <nR>-6</nR>
+      <xUabsU>-22</xUabsU>
+      <yVabsV>-65</yVabsV>
+      <zWabsW>-120</zWabsW>
+      <kPabsP>-5</kPabsP>
+      <mQabsQ>-6</mQabsQ>
+      <nRabsR>-9</nRabsR>
+    </plugin>
+  </gazebo>
+  <gazebo>
+    <plugin filename="ignition-gazebo-odometry-publisher-system" name="ignition::gazebo::systems::OdometryPublisher">
+      <odom_frame>map</odom_frame>
+      <robot_base_frame>base_link</robot_base_frame>
+      <odom_topic>/marine/odometry</odom_topic>
+      <tf_topic>/marine/truth_pose</tf_topic>
+      <odom_publish_frequency>50</odom_publish_frequency>
+      <dimensions>3</dimensions>
+    </plugin>
+  </gazebo>
+  <gazebo>
+    <plugin filename="ignition-gazebo-joint-state-publisher-system" name="ignition::gazebo::systems::JointStatePublisher">
+      <topic>/marine/joint_states</topic>
+    </plugin>
+  </gazebo>
+</robot>

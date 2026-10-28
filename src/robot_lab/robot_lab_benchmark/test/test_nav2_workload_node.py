@@ -2,6 +2,7 @@
 its goal handle shadowed rclpy.Node.handle, so every queued Nav2 workload
 died at start-up with "handle cannot be modified after node creation")."""
 import os
+import json
 import tempfile
 from pathlib import Path
 
@@ -21,6 +22,7 @@ def test_workload_node_constructs_and_records_its_start(monkeypatch):
     rclpy.init()
     try:
         with tempfile.TemporaryDirectory() as folder:
+            (Path(folder)/'workload.json').write_text(json.dumps(specification))
             node = Nav2Workload(specification, Path(folder))
             assert node.goal_handle is None
             node.trace.close()
@@ -44,6 +46,7 @@ def test_an_accepted_goal_is_recorded(monkeypatch):
     rclpy.init()
     try:
         with tempfile.TemporaryDirectory() as folder:
+            (Path(folder)/'workload.json').write_text(json.dumps(specification))
             node = Nav2Workload(specification, Path(folder))
             result_future = SimpleNamespace(add_done_callback=lambda callback: None)
             handle = SimpleNamespace(accepted=True, goal_id=SimpleNamespace(uuid=np.arange(16, dtype=np.uint8)),

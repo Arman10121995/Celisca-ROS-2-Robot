@@ -1,6 +1,10 @@
 # Structural catalog tags, never a runtime/controller qualification.
 schema_version: 1
 classes:
+  - category: Surface vessels
+    subtype: Twin-hull USV
+    tags: [Catamaran, Two propellers, Native buoyancy, Surface navigation, Experimental control]
+    members: [lab_usv]
   - category: Mobile robots
     subtype: Tracked vehicle
     tags: [Native belts, Four flippers, Source geometry, Experimental control]

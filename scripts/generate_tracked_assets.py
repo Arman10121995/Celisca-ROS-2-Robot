@@ -37,6 +37,10 @@ def generate(source=Path('/usr/share/ignition/ignition-gazebo6/worlds/tracked_ve
     model=copy.deepcopy(model);model.set('name','lab_tracked');model.find('pose').text='0 0 .1 0 0 0'
     for plugin in list(model.findall('plugin')):
         if plugin.get('name','').endswith('TriggeredPublisher'):model.remove(plugin)
+    for track in model.findall('plugin'):
+        if track.get('name','').endswith('TrackController'):
+            ET.SubElement(track,'track_orientation').text='0 0 3.141592653589793'
+            ET.SubElement(track,'max_command_age').text='.4'
     control=next(p for p in model.findall('plugin') if p.get('name','').endswith('TrackedVehicle'))
     for key,value in dict(topic='/tracked/cmd_vel',odom_topic='/tracked/odometry',tf_topic='/tracked/odom_tf',
         frame_id='odom',child_frame_id='base_footprint').items():ET.SubElement(control,key).text=value
@@ -50,6 +54,9 @@ def generate(source=Path('/usr/share/ignition/ignition-gazebo6/worlds/tracked_ve
     urdf=ET.Element('robot',name='lab_tracked');ET.SubElement(urdf,'link',name='base_footprint')
     joint=ET.SubElement(urdf,'joint',name='footprint_fixed',type='fixed')
     ET.SubElement(joint,'parent',link='base_footprint');ET.SubElement(joint,'child',link='base_link')
+    # Main-track radius .09047 minus collider centre Z .01855. The
+    # footprint is at ground level; this changes only the exported TF tree.
+    ET.SubElement(joint,'origin',xyz='0 0 .07192',rpy='0 0 0')
     links={l.get('name'):matrix(l.findtext('pose')) for l in model.findall('link')}
     for source_link in model.findall('link'):
         link=ET.SubElement(urdf,'link',name=source_link.get('name'))
@@ -83,7 +90,7 @@ def generate(source=Path('/usr/share/ignition/ignition-gazebo6/worlds/tracked_ve
         ET.indent(tree);path.write_bytes(ET.tostring(tree,encoding='utf-8',xml_declaration=True))
     (folder/'SOURCE.json').write_text(json.dumps(dict(upstream='https://github.com/gazebosim/gz-sim/blob/ign-gazebo6/examples/worlds/tracked_vehicle_simple.sdf',
         installed_source=str(source),source_sha256=hashlib.sha256(raw).hexdigest(),license='Apache-2.0',
-        adaptations=['demo keyboard publishers removed','explicit bounded topics/frames','track_height spelling corrected','RViz URDF export'],
+        adaptations=['demo keyboard publishers removed','explicit bounded topics/frames','track_height spelling corrected','contact-surface track orientation aligned to positive chassis X','RViz URDF export'],
         scope='Complete source tracked model; native runtime qualification separate'),indent=2)+'\n')
 
 

@@ -42,7 +42,7 @@ class ExperimentQueue(ttk.LabelFrame):
         ttk.Label(self, text='Requested seed').grid(row=1, column=5, sticky='w', pady=(6, 0))
         ttk.Spinbox(self, textvariable=self.seed, from_=0, to=2147483647, width=10).grid(row=2, column=5, sticky='w')
         self.workload_combo = ttk.Combobox(self, textvariable=self.workload, state='readonly',
-            values=('Capture only', 'Nav2 point goals', 'Fleet point goals', 'Marine route', 'Marine map acquisition', 'Gait navigation', 'Gait map acquisition', 'Aerial swarm formation', 'External task'), width=20)
+            values=('Capture only', 'Nav2 point goals', 'Fleet point goals', 'Marine route', 'Marine map acquisition', 'Gait navigation', 'Gait map acquisition', 'Aerial swarm formation', 'Aerial swarm operator loss', 'External task'), width=20)
         self.workload_combo.grid(row=3, column=0, columnspan=2, sticky='w', pady=6)
         self.workload_combo.bind('<<ComboboxSelected>>', self.workload_changed)
         ttk.Entry(self, textvariable=self.goals).grid(row=3, column=2, columnspan=4, sticky='ew')
@@ -119,7 +119,7 @@ class ExperimentQueue(ttk.LabelFrame):
                 specification.validate();self.specifications.append(specification)
                 self.tree.insert('','end',values=('fleet',selection['map'],'gazebo',self.workload.get(),'queued'))
                 self.status.set('Queued independent fleet session: '+shlex.join(command));return
-            if self.workload.get()=='Aerial swarm formation':
+            if self.workload.get().startswith('Aerial swarm '):
                 from .aerial_swarm_tab import session_command
                 import yaml
                 aerial=self.app.aerial_swarm_tab
@@ -129,7 +129,7 @@ class ExperimentQueue(ttk.LabelFrame):
                 if folder.stat().st_dev==Path('/').stat().st_dev:raise ValueError('Aerial presets must stay on SSD.')
                 preset=folder/('aerial-'+uuid.uuid4().hex+'.yaml');preset.write_text(yaml.safe_dump(data))
                 from robot_lab_benchmark.workload_contract import validate_workload
-                workload=validate_workload(dict(schema='robot_lab.extension_workload.v1',workflow='aerial_swarm',task='formation',truth_coordinates='selected_world'))
+                workload=validate_workload(dict(schema='robot_lab.extension_workload.v1',workflow='aerial_swarm',task='operator_loss' if self.workload.get().endswith('operator loss') else 'formation',truth_coordinates='selected_world'))
                 command=session_command(preset,data['map'],gui=False)
                 selection=dict(robot='aerial_swarm',map=data['map'],backend='gazebo_harmonic',mode='swarm',workload=self.workload.get())
                 specification=RunSpec(command=command,duration_s=float(self.duration.get()),max_rss_mb=float(self.rss.get()),
@@ -157,7 +157,9 @@ class ExperimentQueue(ttk.LabelFrame):
                     raise ValueError('Choose native '+workflow+' mode and robot in Launch first.')
                 document=dict(schema='robot_lab.extension_workload.v1',workflow=workflow,task=task,truth_coordinates='selected_world')
                 if task=='mapping':
-                    document['distance_m']=float(self.goals.get().strip() or '.2')
+                    document['distance_m']=float(self.goals.get().strip() or ('2.3' if workflow=='marine' and 'auv' in selection['robot'] else '.2'))
+                    if workflow=='marine' and 'auv' in selection['robot'] and document['distance_m']<2.:
+                        raise ValueError('AUV acquisition needs at least 2 m of physical forward travel; a clear braking/coasting corridor is checked by its native planner.')
                     if workflow=='marine':
                         command=[arg for arg in command if not arg.startswith('marine_slam:=')]+['marine_slam:=true']
                     elif not any(arg in command for arg in ('gait_task:=slam','gait_task:=3d_slam')):

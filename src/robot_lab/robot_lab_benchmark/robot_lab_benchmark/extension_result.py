@@ -1,10 +1,11 @@
 """Read actual acquired artifacts and verify extension result identities."""
 import hashlib
 import json
+import math
 from pathlib import Path
 import sqlite3
 
-from .extension_contract import RESULT_SCHEMA, CONTRACTS, endpoint_ok
+from .extension_contract import RESULT_SCHEMA, CONTRACTS, LOSS_CONTRACT, endpoint_ok
 
 
 def digest(path):
@@ -46,11 +47,14 @@ def read(directory, run_id, domain, specification, invalidated):
                 or result.get('trace_sha256')!=digest(directory/'extension-trace.jsonl')
                 or result.get('producer_sha256')!=digest(Path(__file__).with_name('extension_workload.py'))):
             raise ValueError('Extension result lacks source/trace/workload/session identity')
+        bound=json.loads((directory/'workload.json').read_text()).get('expected_producer_sha256')
+        if bound is not None and result['producer_sha256']!=bound:
+            raise ValueError('Extension producer does not match the run startup identity')
         if invalidated:raise ValueError('Reset invalidated this measured workload')
         if type(result.get('success')) is not bool:raise ValueError('Measured outcome is missing')
         contract=result.get('goal_contract')
-        allowed=[CONTRACTS[specification['workflow']]]
-        if specification['workflow']=='marine':allowed.append(CONTRACTS['auv'])
+        allowed=[LOSS_CONTRACT] if specification['task']=='operator_loss' else [CONTRACTS[specification['workflow']]]
+        if specification['workflow']=='marine':allowed.extend([CONTRACTS['auv'],CONTRACTS['surface']])
         if contract not in allowed:raise ValueError('Physical goal contract changed')
         rows=result.get('measurements');counts=result.get('truth_samples',{})
         if not isinstance(rows,list):raise ValueError('Measured endpoints missing')
@@ -58,10 +62,30 @@ def read(directory, run_id, domain, specification, invalidated):
             if result.get('control_released') is not True or not counts or min(counts.values())<3:
                 raise ValueError('Native control release and independent observations required')
             if specification['task']=='mapping':
-                if len(rows)!=1 or rows[0]['distance_m']<specification['distance_m']:
+                if len(rows)!=1:raise ValueError('One actual acquired map measurement required')
+                start,pose=rows[0].get('physical_start'),rows[0].get('physical_pose')
+                if any(not isinstance(p,list) or len(p)!=3 or not all(map(math.isfinite,p)) for p in (start,pose)):
+                    raise ValueError('Finite acquired-map body observations required')
+                distance=math.dist(start[:2],pose[:2])
+                if distance<specification['distance_m'] or not math.isclose(distance,rows[0]['distance_m'],abs_tol=1e-6):
                     raise ValueError('Acquisition lacks actual physical travel')
                 if inspect_map(rows[0]['map_artifact'])!=rows[0]['observation']:
                     raise ValueError('Acquired map changed since measurement')
+            elif specification['task']=='operator_loss':
+                if len(rows)!=len(counts) or {r['member_id'] for r in rows}!=set(counts):
+                    raise ValueError('Every airborne member needs measured loss/landing evidence')
+                for row in rows:
+                    poses=[row.get(key) for key in ('physical_initial','physical_airborne','physical_pose')]
+                    if any(not isinstance(pose,list) or len(pose)!=3 or not all(map(math.isfinite,pose)) for pose in poses):
+                        raise ValueError('Finite actual physical loss/landing poses required')
+                    if (row.get('observed_landing') is not True or row.get('disarmed') is not True
+                            or row.get('landed_state')!=1 or not math.isfinite(row.get('heartbeat_silence_wall_s',float('nan')))
+                            or row.get('heartbeat_silence_wall_s',0)<contract['heartbeat_silence_wall_s']
+                            or not math.isfinite(row.get('settled_sim_s',float('nan')))
+                            or row.get('settled_sim_s',0)<contract['settle_sim_s'] or not 0<=row.get('linear_m_s',float('inf'))<=contract['linear_m_s']
+                            or row['physical_airborne'][2]-row['physical_initial'][2]<=contract['airborne_gain_m']
+                            or abs(row['physical_pose'][2]-row['physical_initial'][2])>contract['landed_height_m']):
+                        raise ValueError('Native loss result lacks actual airborne/landing/settling observations')
             else:
                 if specification['task']=='navigation' and len(rows)!=len(specification['goals']):
                     raise ValueError('Every requested goal requires a measurement')

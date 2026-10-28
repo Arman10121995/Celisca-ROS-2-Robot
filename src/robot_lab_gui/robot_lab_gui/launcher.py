@@ -169,7 +169,7 @@ MODE_TOOLTIPS = {
     "3d_slam": "3D SLAM: build a 3D map (RGB-D sensor required).",
     "nav": "Navigation: plan and follow paths (2D map required).",
     "flight": "PX4 X500: takeoff, manual flight and experimental static-world 3D Plan/Execute. Moving obstacles remain unsupported.",
-    "marine": "Experimental ROV native thrusters, depth/heading hold and actual water forces. Independent underwater localization/SLAM/navigation remain pending.",
+    "marine": "Native ROV, AUV and surface-vessel propulsion, sensor odometry and optional RGB-D mapping/missions. Availability and measured scope vary by robot.",
     "gait": "Experimental source-bound six/eight/many-legged IK and physical joint control. Measured contacts/tilt guard motion; independent SLAM/navigation remain pending.",
 }
 MODE_LABELS = {
@@ -600,6 +600,11 @@ class SimulationLauncherGui(tk.Tk):
         profile's features (e.g. DWB turns a robot on the spot, which a car
         with ``car_steering`` cannot do); the launch refuses the same pairs.
         """
+        config={} if self._robot_free() else (self._robot_config() or {})
+        rules=config.get('algorithm_allowlist_by_mode') or {}
+        allowed=rules.get(self.mode_var.get(),{}) if rules else {}
+        if category in allowed and algorithm_id not in allowed[category]:
+            return 'This native robot workflow uses its declared sensor/controller stacks.'
         if category == 'local_planning' and self._four_wheel_steer_selectable() \
                 and self.steering_mode_var.get() in ('crab', 'in_phase') \
                 and algorithm_id != 'dwb_local_planner':
@@ -2398,7 +2403,7 @@ class SimulationLauncherGui(tk.Tk):
                     command.append(argument+str(value))
         if command and self._robot_config().get('marine_model'):
             command = [part for part in command if not part.startswith(('marine_slam:=', 'marine_database:=', 'marine_localization:='))]
-            slam = self.robot_var.get() in ('lab_rov','tethys_auv') and self.marine_slam_var.get()
+            slam = self.robot_var.get() in ('lab_rov','tethys_auv','lab_usv') and self.marine_slam_var.get()
             command.append('marine_slam:=' + str(bool(slam)).lower())
             if slam:
                 command.append('marine_localization:=' + str(self.marine_localization_var.get()).lower())

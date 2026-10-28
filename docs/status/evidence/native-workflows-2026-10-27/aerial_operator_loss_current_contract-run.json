@@ -1,0 +1,166 @@
+{
+  "id": "46bbaa1e4f2b4e888bff81c2b9fb384e",
+  "state": "task_process_completed",
+  "ros_domain_id": 20,
+  "partition": "robot_lab_46bbaa1e4f2b4e888bff81c2b9fb384e",
+  "command": [
+    "ros2",
+    "launch",
+    "robot_lab_bringup",
+    "aerial_swarm.launch.py",
+    "map_name:=nav_empty",
+    "gui:=false",
+    "session:=/workspace/molar/robot_lab_runtime/project-completion-20261027-vne3n358/aerial-rangefinder.yaml"
+  ],
+  "task_command": [],
+  "workload": {
+    "schema": "robot_lab.extension_workload.v1",
+    "workflow": "aerial_swarm",
+    "task": "operator_loss",
+    "truth_coordinates": "selected_world",
+    "timeout_s": 220.0
+  },
+  "selection": {},
+  "seed_requested": 42,
+  "readiness_topic": "/aerial_swarm/state",
+  "source": {
+    "module_sha256": {
+      "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_benchmark/lib/python3.10/site-packages/robot_lab_benchmark/concurrent_runner.py": "bfd407fcf0974dd6ddc63d7f265dae20032db5954c9bca78caa30597c0542ff3",
+      "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_benchmark/lib/python3.10/site-packages/robot_lab_benchmark/telemetry_recorder.py": "363dd4dc94b96fd1eae04d75933565e3e7a8453afacb2c19af1008c5a3cb1e08",
+      "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_benchmark/lib/python3.10/site-packages/robot_lab_benchmark/nav2_workload.py": "002fa9c70f1a97f6d26a70279679b57cd12c05ea5cce4f8e3a08aa312a81d3f9",
+      "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_benchmark/lib/python3.10/site-packages/robot_lab_benchmark/fleet_workload.py": "4e4d4060a6118eeecb7766835b821aa6150314421ed6bef8761bc48356bf8a31",
+      "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_benchmark/lib/python3.10/site-packages/robot_lab_benchmark/fleet_reset.py": "af15788fbcfbbd800707c794278fa8ca09718377e8daa3a294970ee6ed40144a",
+      "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_benchmark/lib/python3.10/site-packages/robot_lab_benchmark/extension_workload.py": "bd994a5ddfa580b5cd699f2ae686b1d9c46a54b772255d337c5381058842b7ce",
+      "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_benchmark/lib/python3.10/site-packages/robot_lab_benchmark/extension_contract.py": "0c672ef2000341acef796df598df029c535271970122e8a70d452d0f3fb0327d",
+      "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_benchmark/lib/python3.10/site-packages/robot_lab_benchmark/extension_result.py": "f516692fa114ed563f07c154bc4dbd9797901e29caef1cee882c24c7dba037a9",
+      "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_benchmark/lib/python3.10/site-packages/robot_lab_benchmark/workload_contract.py": "380d5190e931f1063add689a50c5a3e7644e17af672b1abe921705cddd21aec6"
+    },
+    "scope": "Coordinator, recorder, scoped reset and actual Nav2/fleet/native-extension workloads; external task sources remain separate",
+    "repository": "/workspace/molar/ros_ws/bumperbot_ws",
+    "base_revision": "1f95fa73af3c4b9a00a7037f3e3b1a3d72a0ffc5",
+    "working_tree_status": " M README.md\n M ROADMAP.md\n M docs/AGENT_HANDOFF.md\n M docs/PATCH_EXECUTION_GUIDE.md\n M docs/REMAINING_WORK_GUIDE.md\n M docs/status/CURRENT_STATUS.md\n M docs/status/platform-status.yaml\n M docs/tutorials/aerial-swarm.md\n M docs/tutorials/concurrent-experiments.md\n M docs/tutorials/multi-leg-gaits.md\n M scripts/generate_tracked_assets.py\n M src/robot_lab/robot_lab_benchmark/package.xml\n M src/robot_lab/robot_lab_benchmark/robot_lab_benchmark/concurrent_runner.py\n M src/robot_lab/robot_lab_benchmark/robot_lab_benchmark/extension_contract.py\n M src/robot_lab/robot_lab_benchmark/robot_lab_benchmark/extension_result.py\n M src/robot_lab/robot_lab_benchmark/robot_lab_benchmark/extension_workload.py\n M src/robot_lab/robot_lab_benchmark/robot_lab_benchmark/fleet_reset.py\n M src/robot_lab/robot_lab_registry/config/algorithms.yaml\n M src/robot_lab/robot_lab_registry/config/robots.yaml\n M src/robot_lab_adapter/robot_lab_adapter/aerial_swarm_controller.py\n M src/robot_lab_adapter/robot_lab_adapter/aerial_swarm_model.py\n M src/robot_lab_adapter/robot_lab_adapter/aerial_swarm_runtime.py\n M src/robot_lab_adapter/robot_lab_adapter/px4_ros_controller.py\n M src/robot_lab_adapter/robot_lab_adapter/px4_sitl_runtime.py\n M src/robot_lab_adapter/robot_lab_adapter/px4_swarm_worker.py\n M src/robot_lab_bringup/config/algorithm_dispatch.yaml\n M src/robot_lab_bringup/launch/simulated_robot.launch.py\n M src/robot_lab_bringup/launch/tracked_simulator.launch.py\n M src/robot_lab_gui/robot_lab_gui/aerial_swarm_tab.py\n M src/robot_lab_gui/robot_lab_gui/experiment_queue.py\n M src/robot_lab_gui/robot_lab_gui/launcher.py\n M src/robot_lab_maps/CMakeLists.txt\n M src/robot_lab_navigation/config/robots/lab_tracked.yaml\n M src/robot_lab_robots/config/robots.yaml\n M src/robot_lab_robots/lab_tracked/SOURCE.json\n M src/robot_lab_robots/lab_tracked/model.sdf\n M src/robot_lab_robots/lab_tracked/robot.urdf\n M src/robot_lab_utils/robot_lab_utils/aerial_takeoff.py\n M src/robot_lab_utils/robot_lab_utils/gait_controller.py\n M src/robot_lab_utils/robot_lab_utils/tracked_control.py\n?? docs/status/evidence/native-workflows-2026-10-27/\n?? docs/status/native-workflows-2026-10-27.md\n?? docs/tutorials/tracked-vehicle.md\n?? scripts/provision_tracked_physics.py\n?? src/robot_lab_adapter/robot_lab_adapter/px4_range_sensor.py\n?? src/robot_lab_adapter/test/test_px4_parameter_union.py\n?? src/robot_lab_localization/config/robots/lab_tracked.yaml\n?? src/robot_lab_maps/systems/\n?? src/robot_lab_maps/vendor/native_tracks/\n?? src/robot_lab_utils/test/test_aerial_sensor_extension.py\n",
+    "tracked_diff_sha256": "56b704f744de60823d39a0b25f7870477a1c950219c8e3ddf852ad5c3478b241"
+  },
+  "requested_budgets": {
+    "duration_s": 340.0,
+    "startup_timeout_s": 300.0,
+    "max_rss_mb": 9000.0,
+    "max_cpu_percent": 2000.0,
+    "max_artifact_mb": 512.0
+  },
+  "seed_scope": "Recorded and exposed to workload; simulator seed application needs its explicit contract",
+  "mission_result": {
+    "schema": "robot_lab.measured_extension_result.v1",
+    "workflow": "aerial_swarm",
+    "task": "operator_loss",
+    "session_id": "swarm-19oi553j",
+    "run_id": "46bbaa1e4f2b4e888bff81c2b9fb384e",
+    "ros_domain_id": 20,
+    "success": true,
+    "reason": "Operator lease loss caused actual native landing/disarm for every airborne member",
+    "measurements": [
+      {
+        "member_id": "air1",
+        "physical_initial": [
+          -0.5,
+          -0.5,
+          0.22699921262738113
+        ],
+        "physical_airborne": [
+          -0.5510657184515101,
+          -0.5391949603514438,
+          3.316291716640662
+        ],
+        "physical_pose": [
+          -0.48416181925753626,
+          -0.5103557230294721,
+          0.22699996109564277
+        ],
+        "linear_m_s": 0.0,
+        "settled_sim_s": 1.0,
+        "observed_landing": true,
+        "landed_state": 1,
+        "disarmed": true,
+        "heartbeat_silence_wall_s": 16.617116950999844
+      },
+      {
+        "member_id": "air2",
+        "physical_initial": [
+          -3.5,
+          -0.5,
+          0.22699921262738113
+        ],
+        "physical_airborne": [
+          -3.5151852929718235,
+          -0.4832665232083127,
+          2.7173681372955762
+        ],
+        "physical_pose": [
+          -3.527226589423594,
+          -0.4212411135720127,
+          0.22699968366798792
+        ],
+        "linear_m_s": 0.0,
+        "settled_sim_s": 2.950000000000003,
+        "observed_landing": true,
+        "landed_state": 1,
+        "disarmed": true,
+        "heartbeat_silence_wall_s": 16.61712626299959
+      }
+    ],
+    "goal_contract": {
+      "airborne_gain_m": 0.8,
+      "landed_height_m": 0.15,
+      "linear_m_s": 0.05,
+      "settle_sim_s": 1.0,
+      "heartbeat_silence_wall_s": 1.0
+    },
+    "truth_samples": {
+      "air1": 1138,
+      "air2": 1135
+    },
+    "control_released": true,
+    "wall_duration_s": 61.114373634,
+    "contacts": null,
+    "minimum_swept_clearance_m": null,
+    "producer_sha256": "bd994a5ddfa580b5cd699f2ae686b1d9c46a54b772255d337c5381058842b7ce",
+    "workload_sha256": "6a10c6b3e829e38b1a5f00fcab12004ac04b218741e4154ae1e779033a1a232f",
+    "trace_sha256": "41551893b97210a15d4331b0e0896efd4d595221c931047bd66be37384b03157",
+    "scope": "Actual native task and independent physical measurements; parent runner owns process cleanup"
+  },
+  "output": "/workspace/molar/robot_lab_runtime/project-completion-20261027-vne3n358/automatic-aerial-rangefinder-operator_loss/46bbaa1e4f2b4e888bff81c2b9fb384e",
+  "qualification": "implementation; validation pending",
+  "executed_task_command": [
+    "/usr/bin/python3",
+    "-m",
+    "robot_lab_benchmark.extension_workload",
+    "--spec",
+    "/workspace/molar/robot_lab_runtime/project-completion-20261027-vne3n358/automatic-aerial-rangefinder-operator_loss/46bbaa1e4f2b4e888bff81c2b9fb384e/workload.json"
+  ],
+  "task_returncode": 0,
+  "process_returncodes": [
+    0,
+    0,
+    0
+  ],
+  "wall_duration_s": 72.28121872599968,
+  "telemetry": {
+    "topic_counts": {
+      "/aerial_swarm/state": 248
+    },
+    "last_clock_monotonic": null,
+    "last_topic_monotonic": {
+      "/aerial_swarm/state": 5099.046120019
+    },
+    "real_time_factor": null,
+    "truth_distance_3d_m": null,
+    "topic_trace_distance_3d_m": {},
+    "contact_events": null,
+    "footprint_clearance_m": null,
+    "mission_result": null,
+    "scope": "Actual topic capture only; scan range is not footprint clearance; no inferred mission success"
+  },
+  "observed_surviving_pids": [],
+  "cleanup_complete": true,
+  "mission_result_error": null
+}

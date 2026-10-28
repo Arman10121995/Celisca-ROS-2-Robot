@@ -32,6 +32,7 @@ install(PROGRAMS
   ${PROJECT_NAME}/fleet_controller.py
   ${PROJECT_NAME}/fleet_rmf_adapter.py
   ${PROJECT_NAME}/marine_controller.py
+  ${PROJECT_NAME}/surface_controller.py
   ${PROJECT_NAME}/auv_controller.py
   ${PROJECT_NAME}/marine_sensors.py
   ${PROJECT_NAME}/marine_navigation.py
@@ -39,6 +40,7 @@ install(PROGRAMS
   ${PROJECT_NAME}/tracked_control.py
   ${PROJECT_NAME}/gait_controller.py
   ${PROJECT_NAME}/gait_odometry.py
+  ${PROJECT_NAME}/serpentine_odometry.py
   ${PROJECT_NAME}/gait_sensor_relay.py
   ${PROJECT_NAME}/map_archive.py
   DESTINATION lib/${PROJECT_NAME}

@@ -1,5 +1,7 @@
 # Shared-world aerial swarm
 
+Use **Measured two-drone reference** to load the measured `nav_empty` range-sensor setup. It changes only the editor; Run, Connect, Check clearance and Takeoff remain explicit. The optional noisy downward collision lidar feeds native PX4 range fusion. GNSS/barometer references stay selectable. Experiments has actual **Aerial swarm formation** and **Aerial swarm operator loss** workloads, which snapshot this editor into their own sessions. Close a live PX4 session before starting another that needs the same instance locks. [Current scope and receipts](../status/native-workflows-2026-10-27.md).
+
 Robot Lab has a native **Aerial Swarm** page for two to four X500 vehicles in
 one Gazebo Harmonic world. Each vehicle runs its own native PX4 SITL binary,
 FCU identity, UDP port, ROS namespace, frame tree and command worker. Ground

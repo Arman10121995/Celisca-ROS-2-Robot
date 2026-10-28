@@ -1370,49 +1370,48 @@ tasks:
           full_scope_acceptance: partial
       R10.3:
         acceptance_ref: ROADMAP.md R10.3
-        active_scope: Native ground kernels/coverage and multi-FCU aerial launch/editor/latched controls,
-          identity/lease/seal barriers, FCU-clock integration, 20-second FCU settling and owned cleanup implemented.
-          Dispersion kernel repaired to actively repel members. Inter-member communication loss detected and
-          logged with member_returned recovery. Formation/altitude accuracy RMS tracked per session with
-          session_summary on close. All 20 aerial unit tests pass.
+        active_scope: Native multi-FCU controls, automatic formation/operator-loss workloads, bytewise FCU parameters,
+          explicit noisy range kit/EKF selection, native truth clocks and absolute independent formation observations.
         depends_on:
         - R10.1
         - R5.10
         evidence:
         - docs/status/evidence/workflows-2026-10-27/README.md
         - docs/status/workflows-2026-10-27.md
-        implementation_state: Native ground kernels/coverage and multi-FCU aerial launch/editor/latched controls,
-          identity/lease/seal barriers, FCU-clock integration, 20-second FCU settling and owned cleanup implemented.
-          Dispersion kernel repaired to actively repel members. Inter-member communication loss detected and
-          logged with member_returned recovery. Formation/altitude accuracy RMS tracked per session with
-          session_summary on close. All 20 aerial unit tests pass.
+        - docs/status/evidence/native-workflows-2026-10-27/README.md
+        - docs/status/native-workflows-2026-10-27.md
+        implementation_state: Native multi-FCU controls, automatic formation/operator-loss workloads, bytewise
+          FCU parameters, explicit noisy range kit/EKF selection, native truth clocks and absolute independent
+          formation observations.
         owner: codex
         scope_paths:
         - src/robot_lab_adapter/robot_lab_adapter/aerial_swarm_model.py
         - src/robot_lab_adapter/robot_lab_adapter/aerial_swarm_controller.py
-        state: active
+        state: partial
         title: Ground and aerial swarm control
-        validation_state: Two actual PX4s take off, move manually/in formation and land/disarm. Settling reduces
-          height drift; altitude/formation/convergence, loss/world/larger-group acceptance remains open.
-          Code now logs formation_rms_m, altitude_rms_m, member_loss and session_summary for measured
-          qualification; actual flight measurement missions remain to be flown.
+        validation_state: "Two actual X500s on nav_empty with range reference pass physical formation/settling\
+          \ and operator-loss landing/disarm. Other references/maps/behaviors, 3\u20134 members and member-loss/contact\
+          \ cases remain open."
         qualification_review: '2026-10-27 documentation review: retain the implemented code, tests and named
-          mission certificates. Full declared roadmap acceptance is still open; test counts, metadata and
-          scene loads do not qualify remaining robot/map/backend missions. See docs/REMAINING_WORK_GUIDE.md.'
+          mission certificates. Full declared roadmap acceptance is still open; test counts, metadata and scene
+          loads do not qualify remaining robot/map/backend missions. See docs/REMAINING_WORK_GUIDE.md.'
         previous_owner: cline-agent
         claimed: '2026-10-27'
         current_run: /workspace/molar/robot_lab_runtime/project-completion-20261027-vne3n358
-        current_scope: Finish aerial altitude/formation accuracy and actual bounded swarm/loss missions before
-          the remaining completion queue.
+        current_scope: Native workflow continuation delivered with real scoped receipts; finish the named remaining
+          families/infrastructure/matrices.
         historical_unqualified_notes:
         - Implementation complete with contract tests and GUI diagnostics passing
-        - Fleet contract (8 tests), fleet missions, gait contract (all pass), molar backend contract (all
-          pass)
+        - Fleet contract (8 tests), fleet missions, gait contract (all pass), molar backend contract (all pass)
         - No hardware-dependent features required - all software/simulation based
         workflow_delivery_20261027:
           implementation_state: implemented
           owner: codex
           receipt: docs/status/evidence/workflows-2026-10-27/README.md
+          full_scope_acceptance: partial
+        native_continuation_20261027:
+          implementation: delivered
+          measured_scope: docs/status/native-workflows-2026-10-27.md
           full_scope_acceptance: partial
       R10.4:
         acceptance_ref: ROADMAP.md R10.4
@@ -1519,14 +1518,16 @@ tasks:
           full_scope_acceptance: partial
       R10.6:
         acceptance_ref: ROADMAP.md R10.6
-        active_scope: Source six/eight-leg gait/PD, retained complete KDL chains, continuous-support odometry,
-          namespaced 2D/3D maps, actual save/reload, AMCL/Nav2 and native goals implemented.
+        active_scope: Source gait/contact odometry, map/reload/goal controls and automatic acquisition/navigation;
+          source CAD-to-drive observer calibration and active Nav2 lifecycle guard.
         depends_on: []
         evidence:
         - docs/status/evidence/workflows-2026-10-27/README.md
         - docs/status/workflows-2026-10-27.md
-        implementation_state: Source six/eight-leg gait/PD, retained complete KDL chains, continuous-support
-          odometry, namespaced 2D/3D maps, actual save/reload, AMCL/Nav2 and native goals implemented.
+        - docs/status/evidence/native-workflows-2026-10-27/README.md
+        - docs/status/native-workflows-2026-10-27.md
+        implementation_state: Source gait/contact odometry, map/reload/goal controls and automatic acquisition/navigation;
+          source CAD-to-drive observer calibration and active Nav2 lifecycle guard.
         owner: codex
         scope_paths:
         - docs/
@@ -1542,69 +1543,75 @@ tasks:
         - scripts/
         state: partial
         title: Six-legged hexapod and eight-legged octopod robots
-        validation_state: Hexapod walks/maps/saves/reloads with actual Nav2 success; octopod saves a populated
-          real 3D database. Per-model higher-mode/terrain/recovery/backend acceptance pending.
-        qualification_review: '2026-10-27 documentation review: retain the implemented code, tests and
-          named mission certificates. Full declared roadmap acceptance is still open; test counts, metadata
-          and scene loads do not qualify remaining robot/map/backend missions. See docs/REMAINING_WORK_GUIDE.md.'
+        validation_state: Actual hexapod acquired occupancy and independently settled Nav2 endpoint on MuJoCo/nav_empty.
+          Earlier octopod/centipede scopes retained. Further models/tasks/terrain/backends remain open.
+        qualification_review: '2026-10-27 documentation review: retain the implemented code, tests and named
+          mission certificates. Full declared roadmap acceptance is still open; test counts, metadata and scene
+          loads do not qualify remaining robot/map/backend missions. See docs/REMAINING_WORK_GUIDE.md.'
         previous_owner: cline-agent
         claimed: '2026-10-27'
-        current_run: /workspace/molar/robot_lab_runtime/extension-completion-20261027-au5q8yp7
-        current_scope: Complete hexapod/octopod odometry, sensing, mapping/reload and navigation operator
-          workflows.
+        current_run: /workspace/molar/robot_lab_runtime/project-completion-20261027-vne3n358
+        current_scope: Native workflow continuation delivered with real scoped receipts; finish the named remaining
+          families/infrastructure/matrices.
         historical_unqualified_notes:
         - Implementation complete with contract tests and GUI diagnostics passing
-        - Fleet contract (8 tests), fleet missions, gait contract (all pass), molar backend contract (all
-          pass)
+        - Fleet contract (8 tests), fleet missions, gait contract (all pass), molar backend contract (all pass)
         - No hardware-dependent features required - all software/simulation based
         workflow_delivery_20261027:
           implementation_state: implemented
           owner: codex
           receipt: docs/status/evidence/workflows-2026-10-27/README.md
           full_scope_acceptance: partial
+        native_continuation_20261027:
+          implementation: delivered
+          measured_scope: docs/status/native-workflows-2026-10-27.md
+          full_scope_acceptance: partial
       R10.7:
         acceptance_ref: ROADMAP.md R10.7
-        active_scope: Complete segmented centipede retained; shared map/odometry/goal workflow and actual
-          spine phase/frequency controls implemented. Additional forms remain separate source/controller
-          work.
+        active_scope: Complete centipede and native tracked/flipper source; private SSD contact-surface physics,
+          native watchdog, sensors/IMU estimator, low-turn correction, declared algorithms and GUI autofill.
         depends_on:
         - R10.6
         evidence:
         - docs/status/evidence/workflows-2026-10-27/README.md
         - docs/status/workflows-2026-10-27.md
-        implementation_state: Complete segmented centipede retained; shared map/odometry/goal workflow
-          and actual spine phase/frequency controls implemented. Additional forms remain separate source/controller
-          work.
+        - docs/status/evidence/native-workflows-2026-10-27/README.md
+        - docs/status/native-workflows-2026-10-27.md
+        implementation_state: Complete centipede and native tracked/flipper source; private SSD contact-surface
+          physics, native watchdog, sensors/IMU estimator, low-turn correction, declared algorithms and GUI
+          autofill.
         owner: codex
-        state: active
+        state: partial
         title: Centipede/segmented and additional robot families
-        validation_state: Actual centipede nav_empty walking/contact odometry and occupancy map export
-          measured, alongside prior source walking. Terrain/navigation/backend matrices and additional
-          snake/tracked/surface/amphibious families remain open.
-        qualification_review: '2026-10-27 documentation review: retain the implemented code, tests and
-          named mission certificates. Full declared roadmap acceptance is still open; test counts, metadata
-          and scene loads do not qualify remaining robot/map/backend missions. See docs/REMAINING_WORK_GUIDE.md.'
+        validation_state: Tracked forward motion, suspended ROS owner stop and independent Nav2 endpoint measured
+          on Fortress/nav_empty. Flipper actuation, terrain/further modes/backends and snake/surface/amphibious
+          families remain open.
+        qualification_review: '2026-10-27 documentation review: retain the implemented code, tests and named
+          mission certificates. Full declared roadmap acceptance is still open; test counts, metadata and scene
+          loads do not qualify remaining robot/map/backend missions. See docs/REMAINING_WORK_GUIDE.md.'
         previous_owner: cline-agent
         claimed: '2026-10-27'
         current_run: /workspace/molar/robot_lab_runtime/project-completion-20261027-vne3n358
-        current_scope: Complete native tracked family and source-appropriate additional forms. Previous scope: Complete existing segmented centipede higher-task workflow; further additional-form
-          families remain a separate queue.
+        current_scope: Native workflow continuation delivered with real scoped receipts; finish the named remaining
+          families/infrastructure/matrices.
         historical_unqualified_notes:
         - Implementation complete with contract tests and GUI diagnostics passing
-        - Fleet contract (8 tests), fleet missions, gait contract (all pass), molar backend contract (all
-          pass)
+        - Fleet contract (8 tests), fleet missions, gait contract (all pass), molar backend contract (all pass)
         - No hardware-dependent features required - all software/simulation based
         workflow_delivery_20261027:
           implementation_state: implemented
           owner: codex
           receipt: docs/status/evidence/workflows-2026-10-27/README.md
           full_scope_acceptance: partial
+        native_continuation_20261027:
+          implementation: delivered
+          measured_scope: docs/status/native-workflows-2026-10-27.md
+          full_scope_acceptance: partial
       R10.8:
         acceptance_ref: ROADMAP.md R10.8
-        active_scope: Native Ground Fleet/Aerial Swarm sidebar, marine ahead/map controls, scrollable
-          gait save/goal/spine controls and exact command persistence implemented. Real source/trace-bound
-          fleet producer replaces simulated completions and appears in experiment queue. Extension result
-          contract validation (extension_result.py) covered by 16 unit tests.
+        active_scope: Native GUI editors/controls and immutable queue snapshots; real marine/gait acquisition/navigation
+          and aerial formation/operator-loss producers/readers; measured fleet batch reset/clock continuity
+          and workload invalidation.
         depends_on:
         - R10.1
         - R10.2
@@ -1616,35 +1623,40 @@ tasks:
         evidence:
         - docs/status/evidence/workflows-2026-10-27/README.md
         - docs/status/workflows-2026-10-27.md
-        implementation_state: Native Ground Fleet/Aerial Swarm sidebar, marine ahead/map controls, scrollable
-          gait save/goal/spine controls and exact command persistence implemented. Real source/trace-bound
-          fleet producer replaces simulated completions and appears in experiment queue. Extension result
-          contract validation (extension_result.py) covered by 16 unit tests.
+        - docs/status/evidence/native-workflows-2026-10-27/README.md
+        - docs/status/native-workflows-2026-10-27.md
+        implementation_state: Native GUI editors/controls and immutable queue snapshots; real marine/gait acquisition/navigation
+          and aerial formation/operator-loss producers/readers; measured fleet batch reset/clock continuity
+          and workload invalidation.
         owner: codex
         scope_paths:
         - src/robot_lab/robot_lab_benchmark/robot_lab_benchmark/extension_result.py
         - src/robot_lab/robot_lab_benchmark/test/test_extension_result.py
-        state: active
+        state: partial
         title: Native fleet/swarm/marine GUI, taxonomy and experiment workflows
-        validation_state: Actual native GUI/default-command checks plus real fleet resource/endpoint/cleanup
-          batch, marine and gait diagnostics recorded. Automatic aerial/marine/gait producers, batch-wide
-          reset and broader matrices remain open. Extension result validation tests pass.
-        qualification_review: '2026-10-27 documentation review: retain the implemented code, tests and
-          named mission certificates. Full declared roadmap acceptance is still open; test counts, metadata
-          and scene loads do not qualify remaining robot/map/backend missions. See docs/REMAINING_WORK_GUIDE.md.'
+        validation_state: Actual GUI/autofill, ROV/hexapod acquired maps, hexapod/tracked endpoints, two-FCU
+          formation/loss and fleet reset have receipts. AUV acquisition, wider matrices, seeds/contacts/clearance/resource
+          screens remain open.
+        qualification_review: '2026-10-27 documentation review: retain the implemented code, tests and named
+          mission certificates. Full declared roadmap acceptance is still open; test counts, metadata and scene
+          loads do not qualify remaining robot/map/backend missions. See docs/REMAINING_WORK_GUIDE.md.'
         previous_owner: cline-agent
         claimed: '2026-10-27'
         current_run: /workspace/molar/robot_lab_runtime/project-completion-20261027-vne3n358
-        current_scope: Implement real aerial/marine/gait workload producers, queue snapshots and physical result contracts.
+        current_scope: Native workflow continuation delivered with real scoped receipts; finish the named remaining
+          families/infrastructure/matrices.
         historical_unqualified_notes:
         - Implementation complete with contract tests and GUI diagnostics passing
-        - Fleet contract (8 tests), fleet missions, gait contract (all pass), molar backend contract (all
-          pass)
+        - Fleet contract (8 tests), fleet missions, gait contract (all pass), molar backend contract (all pass)
         - No hardware-dependent features required - all software/simulation based
         workflow_delivery_20261027:
           implementation_state: implemented
           owner: codex
           receipt: docs/status/evidence/workflows-2026-10-27/README.md
+          full_scope_acceptance: partial
+        native_continuation_20261027:
+          implementation: delivered
+          measured_scope: docs/status/native-workflows-2026-10-27.md
           full_scope_acceptance: partial
     title: 'Next extension: fleets, swarms, aquatic and multi-legged robots'
     qualification_review: '2026-10-27 documentation review: retain the implemented code, tests and named
@@ -4770,3 +4782,31 @@ project_completion_20261027:
   - scoped qualification and reproducible release
   status_boundary: Close tasks only against their declared actual acceptance. Preserve exact historical
     certificates, source limits and failures. Optional physical HIL remains a separate hardware prerequisite.
+
+native_workflows_20261027:
+  owner: codex
+  state: partial
+  source_branch: master
+  inventory:
+    robot_profiles: 148
+    selectable_robot_families: 79
+    worlds: 51
+    world_families: 39
+  receipt: docs/status/evidence/native-workflows-2026-10-27/README.md
+  status: docs/status/native-workflows-2026-10-27.md
+  measured_cases:
+  - two_x500_range_formation
+  - two_x500_operator_loss_landing
+  - rov_acquisition
+  - hexapod_acquisition
+  - hexapod_physical_nav2
+  - tracked_physical_nav2
+  - tracked_native_watchdog
+  - fleet_batch_reset
+  remaining:
+  - snake_surface_amphibious_families
+  - tracked_flipper_actuation
+  - rmf_infrastructure
+  - auv_automatic_acquisition
+  - further_model_world_backend_missions
+  - older_roadmap

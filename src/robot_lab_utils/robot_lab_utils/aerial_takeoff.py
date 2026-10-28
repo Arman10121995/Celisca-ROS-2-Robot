@@ -22,7 +22,7 @@ def rpy_matrix(values):
         [sy*cp, sy*sp*sr+cy*cr, sy*sp*cr-cy*sr], [-sp, cp*sr, cp*cr]])
 
 
-def x500_envelope(models, model_file=None):
+def x500_envelope(models, model_file=None, sensor_link_hashes=None):
     """Derive bounds from the pinned X500 boxes, including rotor sweep.
 
     Reject changed/unknown model semantics instead of reusing guessed bounds.
@@ -33,8 +33,16 @@ def x500_envelope(models, model_file=None):
     base = models/'x500_base/model.sdf'
     root_model, base_model = ET.parse(root).getroot().find('model'), ET.parse(base).getroot().find('model')
     includes = root_model.findall('include')
+    extra_links=root_model.findall('link')
+    approved=sensor_link_hashes or {}
+    for link in extra_links:
+        # A caller may explicitly verify one authored non-colliding sensor
+        # kit. Names alone never approve extra geometry or change the bounds.
+        if (link.get('name') not in approved or link.findall('.//collision') or link.findall('.//visual')
+                or hashlib.sha256(ET.tostring(link)).hexdigest()!=approved[link.get('name')]):
+            raise ValueError('Unknown or colliding X500 sensor extension; derive a new physical envelope.')
     if (len(includes) != 1 or includes[0].findtext('uri') != 'model://x500_base'
-            or root_model.findall('link') or includes[0].find('pose') is not None):
+            or includes[0].find('pose') is not None):
         raise ValueError('Takeoff checker requires the installed, unmodified X500/base include contract.')
     points = []
     for link in base_model.findall('link'):

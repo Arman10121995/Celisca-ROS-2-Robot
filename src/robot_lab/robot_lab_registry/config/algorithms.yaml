@@ -1,3 +1,33 @@
+- id: native_tracked_controller
+  version: 0.1.0
+  name: Native tracked command owner
+  description: Bounded manual/Nav2 command gate and native Gazebo belt contact controller;
+    experimental
+  status: integrated
+  category: control
+  family: bounded_teleoperation
+  implementation:
+    package: robot_lab_utils
+    executable: tracked_control.py
+    language: python
+  input_contract:
+    required_topics:
+    - /key_vel
+    - /cmd_vel
+    - /robot_lab_controller/odom
+  output_contract:
+    provided_topics:
+    - /tracked/cmd_vel
+  required_capabilities: []
+  supported_robot_classes:
+  - mobile
+  source:
+    repository: internal; Gazebo TrackController
+    license: Apache-2.0
+  tags:
+  - tracked
+  - native
+  - experimental
 - id: bicycle_pure_pursuit
   version: 1.0.0
   name: Bicycle Pure Pursuit (experimental)

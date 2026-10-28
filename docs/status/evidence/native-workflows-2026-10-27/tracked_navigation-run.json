@@ -1,0 +1,164 @@
+{
+  "id": "09972a23ed34484a89a013a7f82ecbe1",
+  "state": "task_process_completed",
+  "ros_domain_id": 21,
+  "partition": "robot_lab_09972a23ed34484a89a013a7f82ecbe1",
+  "command": [
+    "ros2",
+    "launch",
+    "robot_lab_bringup",
+    "simulated_robot.launch.py",
+    "robot_model:=lab_tracked",
+    "mode:=nav",
+    "map_name:=nav_empty",
+    "simulator:=gazebo",
+    "gui:=false",
+    "start_rviz:=false",
+    "enable_joystick:=false"
+  ],
+  "task_command": [],
+  "workload": {
+    "schema": "robot_lab.nav2_workload.v1",
+    "truth_coordinates": "selected_world",
+    "goals": [
+      [
+        0.5,
+        -0.5,
+        0.0
+      ]
+    ]
+  },
+  "selection": {
+    "robot": "lab_tracked",
+    "map": "nav_empty",
+    "backend": "gazebo",
+    "mode": "nav"
+  },
+  "seed_requested": 42,
+  "readiness_topic": "/clock",
+  "source": {
+    "module_sha256": {
+      "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_benchmark/lib/python3.10/site-packages/robot_lab_benchmark/concurrent_runner.py": "bfd407fcf0974dd6ddc63d7f265dae20032db5954c9bca78caa30597c0542ff3",
+      "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_benchmark/lib/python3.10/site-packages/robot_lab_benchmark/telemetry_recorder.py": "363dd4dc94b96fd1eae04d75933565e3e7a8453afacb2c19af1008c5a3cb1e08",
+      "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_benchmark/lib/python3.10/site-packages/robot_lab_benchmark/nav2_workload.py": "002fa9c70f1a97f6d26a70279679b57cd12c05ea5cce4f8e3a08aa312a81d3f9",
+      "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_benchmark/lib/python3.10/site-packages/robot_lab_benchmark/fleet_workload.py": "4e4d4060a6118eeecb7766835b821aa6150314421ed6bef8761bc48356bf8a31",
+      "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_benchmark/lib/python3.10/site-packages/robot_lab_benchmark/fleet_reset.py": "af15788fbcfbbd800707c794278fa8ca09718377e8daa3a294970ee6ed40144a",
+      "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_benchmark/lib/python3.10/site-packages/robot_lab_benchmark/extension_workload.py": "0541ae25cfbeaf4e170c1ec4346dde7a2be1672913704fdece0a64e55b8fff7c",
+      "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_benchmark/lib/python3.10/site-packages/robot_lab_benchmark/extension_contract.py": "a2ab06ec67a2cb7bf3354e0cf3db26c159e5a8278b10c91a97c4f21f8caba5cd",
+      "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_benchmark/lib/python3.10/site-packages/robot_lab_benchmark/extension_result.py": "6fe7c74c92607e5adbab3ab6f443eb47100499334cdcaaff10c5ce2f3347c86a",
+      "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_benchmark/lib/python3.10/site-packages/robot_lab_benchmark/workload_contract.py": "380d5190e931f1063add689a50c5a3e7644e17af672b1abe921705cddd21aec6"
+    },
+    "scope": "Coordinator, recorder, scoped reset and actual Nav2/fleet/native-extension workloads; external task sources remain separate",
+    "repository": "/workspace/molar/ros_ws/bumperbot_ws",
+    "base_revision": "1f95fa73af3c4b9a00a7037f3e3b1a3d72a0ffc5",
+    "working_tree_status": " M scripts/generate_tracked_assets.py\n M src/robot_lab/robot_lab_benchmark/package.xml\n M src/robot_lab/robot_lab_benchmark/robot_lab_benchmark/concurrent_runner.py\n M src/robot_lab/robot_lab_benchmark/robot_lab_benchmark/extension_contract.py\n M src/robot_lab/robot_lab_benchmark/robot_lab_benchmark/extension_result.py\n M src/robot_lab/robot_lab_benchmark/robot_lab_benchmark/extension_workload.py\n M src/robot_lab/robot_lab_benchmark/robot_lab_benchmark/fleet_reset.py\n M src/robot_lab/robot_lab_registry/config/algorithms.yaml\n M src/robot_lab/robot_lab_registry/config/robots.yaml\n M src/robot_lab_adapter/robot_lab_adapter/aerial_swarm_controller.py\n M src/robot_lab_adapter/robot_lab_adapter/aerial_swarm_model.py\n M src/robot_lab_adapter/robot_lab_adapter/aerial_swarm_runtime.py\n M src/robot_lab_adapter/robot_lab_adapter/px4_ros_controller.py\n M src/robot_lab_adapter/robot_lab_adapter/px4_sitl_runtime.py\n M src/robot_lab_adapter/robot_lab_adapter/px4_swarm_worker.py\n M src/robot_lab_bringup/config/algorithm_dispatch.yaml\n M src/robot_lab_bringup/launch/simulated_robot.launch.py\n M src/robot_lab_bringup/launch/tracked_simulator.launch.py\n M src/robot_lab_gui/robot_lab_gui/aerial_swarm_tab.py\n M src/robot_lab_gui/robot_lab_gui/experiment_queue.py\n M src/robot_lab_gui/robot_lab_gui/launcher.py\n M src/robot_lab_maps/CMakeLists.txt\n M src/robot_lab_navigation/config/robots/lab_tracked.yaml\n M src/robot_lab_robots/config/robots.yaml\n M src/robot_lab_robots/lab_tracked/SOURCE.json\n M src/robot_lab_robots/lab_tracked/model.sdf\n M src/robot_lab_utils/robot_lab_utils/aerial_takeoff.py\n M src/robot_lab_utils/robot_lab_utils/gait_controller.py\n M src/robot_lab_utils/robot_lab_utils/tracked_control.py\n?? scripts/provision_tracked_physics.py\n?? src/robot_lab_adapter/robot_lab_adapter/px4_range_sensor.py\n?? src/robot_lab_adapter/test/test_px4_parameter_union.py\n?? src/robot_lab_localization/config/robots/lab_tracked.yaml\n?? src/robot_lab_maps/systems/\n?? src/robot_lab_maps/vendor/native_tracks/\n?? src/robot_lab_utils/test/test_aerial_sensor_extension.py\n",
+    "tracked_diff_sha256": "4d3cd0ed7e5765a6542ff5e1cc37a1a80db9fc525e860932f921482a6f814076"
+  },
+  "requested_budgets": {
+    "duration_s": 150.0,
+    "startup_timeout_s": 300.0,
+    "max_rss_mb": 8000.0,
+    "max_cpu_percent": 1600.0,
+    "max_artifact_mb": 256.0
+  },
+  "seed_scope": "Recorded and exposed to workload; simulator seed application needs its explicit contract",
+  "mission_result": {
+    "schema": "robot_lab.measured_nav2_result.v1",
+    "run_id": "09972a23ed34484a89a013a7f82ecbe1",
+    "ros_domain_id": 21,
+    "state": "measured_goals_reached",
+    "reason": "",
+    "success": true,
+    "goals": [
+      {
+        "requested": [
+          0.5,
+          -0.5,
+          0.0
+        ],
+        "physical_pose": [
+          0.36420970785833545,
+          -0.5232229978548703,
+          -0.03203255790119189
+        ],
+        "position_error_m": 0.13776179103541705,
+        "heading_error_rad": 0.032032557901191895,
+        "settled_sim_s": 1.0199999999999996,
+        "nav2_status": 4,
+        "truth_samples": 504,
+        "sim_time": 18.36
+      }
+    ],
+    "goal_contract": {
+      "position_m": 0.15,
+      "heading_rad": 0.08726646259971647,
+      "settle_sim_s": 1.0
+    },
+    "physical_path_length_m": 0.8645556301669004,
+    "truth_samples": 504,
+    "clock_samples": 7896,
+    "goal_rejections_before_nav2_active": 2,
+    "nav2_terminal": true,
+    "wall_duration_s": 22.624711671000114,
+    "contacts": null,
+    "swept_footprint_clearance_m": null,
+    "scope": "Actual Nav2 terminal statuses and selected-world independent body endpoints/settling only; full mission/contact qualification separate",
+    "seed_requested": "42",
+    "simulator_seed_applied": null,
+    "producer_sha256": "002fa9c70f1a97f6d26a70279679b57cd12c05ea5cce4f8e3a08aa312a81d3f9",
+    "workload_sha256": "81d7e2ac67bc9770bed6f98cebdf04b5f75b9c7e52aa89d18d4b3546a7249a5f",
+    "trace_sha256": "cebf2feb94b6ccc045ea4cee5af88a0afb3a9fcdeeac4240240c443172d22284",
+    "_evidence": {
+      "revisions": {},
+      "seeds": {},
+      "member_count": 0,
+      "fleet_id": null,
+      "communication_loss": null,
+      "resource_budget": null,
+      "owned_cleanup": false
+    }
+  },
+  "output": "/workspace/molar/robot_lab_runtime/project-completion-20261027-vne3n358/tracked-navigation-1793116602953157861/09972a23ed34484a89a013a7f82ecbe1",
+  "qualification": "implementation; validation pending",
+  "executed_task_command": [
+    "/usr/bin/python3",
+    "-m",
+    "robot_lab_benchmark.nav2_workload",
+    "--spec",
+    "/workspace/molar/robot_lab_runtime/project-completion-20261027-vne3n358/tracked-navigation-1793116602953157861/09972a23ed34484a89a013a7f82ecbe1/workload.json"
+  ],
+  "task_returncode": 0,
+  "process_returncodes": [
+    0,
+    0,
+    0
+  ],
+  "wall_duration_s": 32.18494928700011,
+  "telemetry": {
+    "topic_counts": {
+      "/joint_states": 8743,
+      "/clock": 9065,
+      "/scan": 188,
+      "/odom/ground_truth": 551
+    },
+    "last_clock_monotonic": 3318.66297376,
+    "last_topic_monotonic": {
+      "/joint_states": 3318.663241506,
+      "/clock": 3318.662982272,
+      "/scan": 3318.637097015,
+      "/odom/ground_truth": 3318.662383514
+    },
+    "real_time_factor": 0.7525601752761676,
+    "truth_distance_3d_m": 0.8885201234287416,
+    "topic_trace_distance_3d_m": {
+      "/odom/ground_truth": 0.8885201234287416
+    },
+    "contact_events": null,
+    "footprint_clearance_m": null,
+    "mission_result": null,
+    "scope": "Actual topic capture only; scan range is not footprint clearance; no inferred mission success"
+  },
+  "observed_surviving_pids": [],
+  "cleanup_complete": true,
+  "mission_result_error": null
+}

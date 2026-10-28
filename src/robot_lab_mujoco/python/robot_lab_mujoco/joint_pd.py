@@ -35,6 +35,9 @@ class JointPDCommand:
             config = json.loads(config)
         self.topic = str(config.get('topic', '/legged_policy/joint_targets'))
         self.timeout = float(config.get('timeout_s', 0.5))
+        self.stale_mode = config.get('stale_mode','default')
+        if self.stale_mode not in ('default','hold'):
+            raise ValueError('PD stale_mode must be default or hold')
         self.names = tuple(config['joints'])
         count = len(self.names)
         if not count or len(set(self.names)) != count:
@@ -74,7 +77,7 @@ class JointPDCommand:
 
     def command(self, now):
         """Targets for this physics step: the latest command, else the default."""
-        if self.received_at is None or now - self.received_at > self.timeout:
+        if self.received_at is None or (now - self.received_at > self.timeout and self.stale_mode != 'hold'):
             return self.default.copy()
         return self.values.copy()
 

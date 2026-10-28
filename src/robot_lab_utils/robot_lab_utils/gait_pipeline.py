@@ -31,8 +31,9 @@ def pipeline(task, description_file, config, pose, map_profile, folder, model,
     from .marine_pipeline import ros_core_environment, depth_registration_parameters, depth_cloud_node
     from .map_archive import load_database_copy
     if task not in ('loc','slam','3d_slam','nav'):raise ValueError('Unknown experimental gait task')
-    radius=max(np.linalg.norm(model.home[leg['id']][:2]+np.asarray(leg.get('body_offset',[0.,0.]))) for leg in model.legs)+.15
-    nodes=[Node(package='robot_lab_utils',executable='gait_odometry.py',parameters=[dict(use_sim_time=True,
+    serpentine=model.config.get('kind')=='serpentine'
+    radius=model.footprint_radius if serpentine else max(np.linalg.norm(model.home[leg['id']][:2]+np.asarray(leg.get('body_offset',[0.,0.]))) for leg in model.legs)+.15
+    nodes=[Node(package='robot_lab_utils',executable='serpentine_odometry.py' if serpentine else 'gait_odometry.py',parameters=[dict(use_sim_time=True,
         description_file=str(description_file),gait_config=str(config),initial_drive_yaw=float(pose['yaw'])+model.config['forward_yaw'])],output='screen'),
         Node(package='robot_lab_utils',executable='gait_sensor_relay.py',parameters=[dict(use_sim_time=True,
             description_file=str(description_file),visual_spawn_x=float(pose['x']),visual_spawn_y=float(pose['y']),
@@ -68,6 +69,14 @@ def pipeline(task, description_file, config, pose, map_profile, folder, model,
                       lookahead_dist=.2,min_lookahead_dist=.1,max_lookahead_dist=.4)
         params['controller_server']['ros__parameters']['general_goal_checker'].update(xy_goal_tolerance=.1,yaw_goal_tolerance=.15)
         params['controller_server']['ros__parameters']['progress_checker'].update(required_movement_radius=.025,movement_time_allowance=45.)
+        if serpentine:
+            # A passive-wheel articulated body cannot pivot like a differential
+            # base. Plan curvature-bounded paths and keep the local controller
+            # from requesting stationary heading rotations.
+            params['planner_server']['ros__parameters']['GridBased'].update(
+                plugin='nav2_smac_planner/SmacPlannerHybrid',motion_model_for_search='REEDS_SHEPP',
+                minimum_turning_radius=2.,angle_quantization_bins=72,allow_unknown=False)
+            follow.update(use_rotate_to_heading=False,allow_reversing=True,lookahead_dist=.6,min_lookahead_dist=.4,max_lookahead_dist=1.)
         params['amcl']['ros__parameters']['initial_pose']['yaw']=initial['yaw']+model.config['forward_yaw']
         params['amcl']['ros__parameters'].update(update_min_d=.01,update_min_a=.02)
         for costmap in ('local_costmap','global_costmap'):

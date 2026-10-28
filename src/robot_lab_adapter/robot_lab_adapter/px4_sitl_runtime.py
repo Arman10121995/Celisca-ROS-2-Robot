@@ -292,12 +292,14 @@ class NativeStateRelay(Node):
     """Relay independent Gazebo pose and measured rotor states to ROS 2.
 
     Harmonic transport is read directly; the Humble/Fortress bridge is not
-    reused across incompatible transport versions. Stamp in ROS wall time.
+    reused across incompatible transport versions. Joint feedback uses ROS wall
+    time for visualization; swarm truth can retain native simulation stamps.
     """
-    def __init__(self, environment, namespace='', native_prefix='/px4', frame_prefix=''):
+    def __init__(self, environment, namespace='', native_prefix='/px4', frame_prefix='',native_truth_clock=False):
         super().__init__('px4_gazebo_state')
         prefix='/' + namespace.strip('/') if namespace else ''
         self.base_frame=frame_prefix+'base_link'
+        self.native_truth_clock=native_truth_clock
         self.truth_pub = self.create_publisher(Odometry, prefix+'/px4/odometry_truth', 10)
         self.joint_pub = self.create_publisher(JointState, prefix+'/joint_states', 10)
         self.readers, self.queues = [], []
@@ -322,6 +324,10 @@ class NativeStateRelay(Node):
             p = raw.get('pose', {})
             msg = Odometry()
             msg.header.stamp = self.get_clock().now().to_msg()
+            if self.native_truth_clock:
+                stamp=raw.get('header',{}).get('stamp')
+                if not isinstance(stamp,dict):return
+                msg.header.stamp.sec=int(stamp.get('sec',0));msg.header.stamp.nanosec=int(stamp.get('nsec',0))
             msg.header.frame_id, msg.child_frame_id = 'map', self.base_frame
             for key in 'xyz':
                 setattr(msg.pose.pose.position, key, float(p.get('position', {}).get(key, 0.0)))

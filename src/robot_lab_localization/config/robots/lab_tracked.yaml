@@ -1,0 +1,6 @@
+# Native belts have no yaw encoder: estimate turn rate from the actual IMU.
+# Track odometry's commanded yaw is a model prediction, not a measurement.
+ekf_filter_node:
+  ros__parameters:
+    odom0_config: [false, false, false, false, false, false, true, true, false, false, false, false, false, false, false]
+    imu0_config: [false, false, false, false, false, false, false, false, false, false, false, true, false, false, false]

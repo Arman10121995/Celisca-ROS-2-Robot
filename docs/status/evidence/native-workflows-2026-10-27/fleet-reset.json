@@ -1,0 +1,2368 @@
+{
+  "returncode": 0,
+  "stdout": "{\"success\": true, \"reason\": \"Every native member physically reset, localized and settled\", \"session_id\": \"session-heroabu5\", \"sim_time\": 8.08, \"settled_sim_s\": 1.0360000000000005, \"schema\": \"robot_lab.measured_fleet_reset.v1\", \"world_clock_reset\": false, \"clock_before\": 6.5120000000000005, \"clock_after\": 8.08, \"clock_samples\": 13, \"clock_regressions\": [], \"wall_duration_s\": 3.219512644999668}\n",
+  "stderr": "",
+  "scope": "Real domain-scoped service response; caller must inspect success acknowledgement",
+  "physical_reset": {
+    "success": true,
+    "reason": "Every native member physically reset, localized and settled",
+    "session_id": "session-heroabu5",
+    "sim_time": 8.08,
+    "settled_sim_s": 1.0360000000000005,
+    "schema": "robot_lab.measured_fleet_reset.v1",
+    "world_clock_reset": false,
+    "clock_before": 6.5120000000000005,
+    "clock_after": 8.08,
+    "clock_samples": 13,
+    "clock_regressions": [],
+    "trace": [
+      {
+        "sim_time": 6.654,
+        "phase": "waiting",
+        "members": [
+          {
+            "id": "alpha",
+            "truth": {
+              "x": -0.31437622368203333,
+              "y": -0.5022763655760093,
+              "z": 1.6656741789600188e-06,
+              "yaw": -0.019586471172246205,
+              "linear": 0.0,
+              "angular": 0.0,
+              "velocity_source": "finite difference of measured stamped Gazebo poses",
+              "source_reported_twist": {
+                "linear": 0.0,
+                "angular": 0.0
+              }
+            },
+            "mode": "idle",
+            "reason": "Operator stop",
+            "nav2_pending": false,
+            "cancel_pending": false
+          },
+          {
+            "id": "beta",
+            "truth": {
+              "x": -0.500000000005604,
+              "y": 0.3500000000001359,
+              "z": -7.625645898754763e-07,
+              "yaw": 1.700329136036082e-11,
+              "linear": 0.0,
+              "angular": 0.0,
+              "velocity_source": "finite difference of measured stamped Gazebo poses",
+              "source_reported_twist": {
+                "linear": 0.0,
+                "angular": 0.0
+              }
+            },
+            "mode": "idle",
+            "reason": "Operator stop",
+            "nav2_pending": false,
+            "cancel_pending": false
+          }
+        ]
+      },
+      {
+        "sim_time": 6.654,
+        "phase": "stopping",
+        "members": [
+          {
+            "id": "alpha",
+            "truth": {
+              "x": -0.31437622368203333,
+              "y": -0.5022763655760093,
+              "z": 1.6656741789600188e-06,
+              "yaw": -0.019586471172246205,
+              "linear": 0.0,
+              "angular": 0.0,
+              "velocity_source": "finite difference of measured stamped Gazebo poses",
+              "source_reported_twist": {
+                "linear": 0.0,
+                "angular": 0.0
+              }
+            },
+            "mode": "idle",
+            "reason": "Operator stop",
+            "nav2_pending": false,
+            "cancel_pending": false
+          },
+          {
+            "id": "beta",
+            "truth": {
+              "x": -0.500000000005604,
+              "y": 0.3500000000001359,
+              "z": -7.625645898754763e-07,
+              "yaw": 1.700329136036082e-11,
+              "linear": 0.0,
+              "angular": 0.0,
+              "velocity_source": "finite difference of measured stamped Gazebo poses",
+              "source_reported_twist": {
+                "linear": 0.0,
+                "angular": 0.0
+              }
+            },
+            "mode": "idle",
+            "reason": "Operator stop",
+            "nav2_pending": false,
+            "cancel_pending": false
+          }
+        ]
+      },
+      {
+        "sim_time": 6.654,
+        "phase": "resetting",
+        "members": [
+          {
+            "id": "alpha",
+            "truth": {
+              "x": -0.31437622368203333,
+              "y": -0.5022763655760093,
+              "z": 1.6656741789600188e-06,
+              "yaw": -0.019586471172246205,
+              "linear": 0.0,
+              "angular": 0.0,
+              "velocity_source": "finite difference of measured stamped Gazebo poses",
+              "source_reported_twist": {
+                "linear": 0.0,
+                "angular": 0.0
+              }
+            },
+            "mode": "idle",
+            "reason": "Operator stop",
+            "nav2_pending": false,
+            "cancel_pending": false
+          },
+          {
+            "id": "beta",
+            "truth": {
+              "x": -0.500000000005604,
+              "y": 0.3500000000001359,
+              "z": -7.625645898754763e-07,
+              "yaw": 1.700329136036082e-11,
+              "linear": 0.0,
+              "angular": 0.0,
+              "velocity_source": "finite difference of measured stamped Gazebo poses",
+              "source_reported_twist": {
+                "linear": 0.0,
+                "angular": 0.0
+              }
+            },
+            "mode": "idle",
+            "reason": "Operator stop",
+            "nav2_pending": false,
+            "cancel_pending": false
+          }
+        ]
+      },
+      {
+        "sim_time": 6.654,
+        "phase": "resetting",
+        "members": [
+          {
+            "id": "alpha",
+            "truth": {
+              "x": -0.31437622368203333,
+              "y": -0.5022763655760093,
+              "z": 1.6656741789600188e-06,
+              "yaw": -0.019586471172246205,
+              "linear": 0.0,
+              "angular": 0.0,
+              "velocity_source": "finite difference of measured stamped Gazebo poses",
+              "source_reported_twist": {
+                "linear": 0.0,
+                "angular": 0.0
+              }
+            },
+            "mode": "idle",
+            "reason": "Operator stop",
+            "nav2_pending": false,
+            "cancel_pending": false
+          },
+          {
+            "id": "beta",
+            "truth": {
+              "x": -0.500000000005604,
+              "y": 0.3500000000001359,
+              "z": -7.625645898754763e-07,
+              "yaw": 1.700329136036082e-11,
+              "linear": 0.0,
+              "angular": 0.0,
+              "velocity_source": "finite difference of measured stamped Gazebo poses",
+              "source_reported_twist": {
+                "linear": 0.0,
+                "angular": 0.0
+              }
+            },
+            "mode": "idle",
+            "reason": "Operator stop",
+            "nav2_pending": false,
+            "cancel_pending": false
+          }
+        ]
+      },
+      {
+        "sim_time": 6.654,
+        "phase": "resetting",
+        "members": [
+          {
+            "id": "alpha",
+            "truth": {
+              "x": -0.31437622368203333,
+              "y": -0.5022763655760093,
+              "z": 1.6656741789600188e-06,
+              "yaw": -0.019586471172246205,
+              "linear": 0.0,
+              "angular": 0.0,
+              "velocity_source": "finite difference of measured stamped Gazebo poses",
+              "source_reported_twist": {
+                "linear": 0.0,
+                "angular": 0.0
+              }
+            },
+            "mode": "idle",
+            "reason": "Operator stop",
+            "nav2_pending": false,
+            "cancel_pending": false
+          },
+          {
+            "id": "beta",
+            "truth": {
+              "x": -0.500000000005604,
+              "y": 0.3500000000001359,
+              "z": -7.625645898754763e-07,
+              "yaw": 1.700329136036082e-11,
+              "linear": 0.0,
+              "angular": 0.0,
+              "velocity_source": "finite difference of measured stamped Gazebo poses",
+              "source_reported_twist": {
+                "linear": 0.0,
+                "angular": 0.0
+              }
+            },
+            "mode": "idle",
+            "reason": "Operator stop",
+            "nav2_pending": false,
+            "cancel_pending": false
+          }
+        ]
+      },
+      {
+        "sim_time": 6.86,
+        "phase": "resetting",
+        "members": [
+          {
+            "id": "alpha",
+            "truth": {
+              "x": -0.31437622368203333,
+              "y": -0.5022763655760093,
+              "z": 1.6656741789600188e-06,
+              "yaw": -0.019586471172246205,
+              "linear": 0.0,
+              "angular": 0.0,
+              "velocity_source": "finite difference of measured stamped Gazebo poses",
+              "source_reported_twist": {
+                "linear": 0.0,
+                "angular": 0.0
+              }
+            },
+            "mode": "resetting",
+            "reason": "Scoped reset: waiting for physical stop and Nav2 cancellation",
+            "nav2_pending": false,
+            "cancel_pending": false
+          },
+          {
+            "id": "beta",
+            "truth": {
+              "x": -0.500000000005604,
+              "y": 0.3500000000001359,
+              "z": -7.625645898754763e-07,
+              "yaw": 1.700329136036082e-11,
+              "linear": 0.0,
+              "angular": 0.0,
+              "velocity_source": "finite difference of measured stamped Gazebo poses",
+              "source_reported_twist": {
+                "linear": 0.0,
+                "angular": 0.0
+              }
+            },
+            "mode": "resetting",
+            "reason": "Scoped reset: waiting for physical stop and Nav2 cancellation",
+            "nav2_pending": false,
+            "cancel_pending": false
+          }
+        ]
+      },
+      {
+        "sim_time": 6.86,
+        "phase": "resetting",
+        "members": [
+          {
+            "id": "alpha",
+            "truth": {
+              "x": -0.31437622368203333,
+              "y": -0.5022763655760093,
+              "z": 1.6656741789600188e-06,
+              "yaw": -0.019586471172246205,
+              "linear": 0.0,
+              "angular": 0.0,
+              "velocity_source": "finite difference of measured stamped Gazebo poses",
+              "source_reported_twist": {
+                "linear": 0.0,
+                "angular": 0.0
+              }
+            },
+            "mode": "resetting",
+            "reason": "Scoped reset: waiting for physical stop and Nav2 cancellation",
+            "nav2_pending": false,
+            "cancel_pending": false
+          },
+          {
+            "id": "beta",
+            "truth": {
+              "x": -0.500000000005604,
+              "y": 0.3500000000001359,
+              "z": -7.625645898754763e-07,
+              "yaw": 1.700329136036082e-11,
+              "linear": 0.0,
+              "angular": 0.0,
+              "velocity_source": "finite difference of measured stamped Gazebo poses",
+              "source_reported_twist": {
+                "linear": 0.0,
+                "angular": 0.0
+              }
+            },
+            "mode": "resetting",
+            "reason": "Scoped reset: waiting for physical stop and Nav2 cancellation",
+            "nav2_pending": false,
+            "cancel_pending": false
+          }
+        ]
+      },
+      {
+        "sim_time": 6.86,
+        "phase": "resetting",
+        "members": [
+          {
+            "id": "alpha",
+            "truth": {
+              "x": -0.31437622368203333,
+              "y": -0.5022763655760093,
+              "z": 1.6656741789600188e-06,
+              "yaw": -0.019586471172246205,
+              "linear": 0.0,
+              "angular": 0.0,
+              "velocity_source": "finite difference of measured stamped Gazebo poses",
+              "source_reported_twist": {
+                "linear": 0.0,
+                "angular": 0.0
+              }
+            },
+            "mode": "resetting",
+            "reason": "Scoped reset: waiting for physical stop and Nav2 cancellation",
+            "nav2_pending": false,
+            "cancel_pending": false
+          },
+          {
+            "id": "beta",
+            "truth": {
+              "x": -0.500000000005604,
+              "y": 0.3500000000001359,
+              "z": -7.625645898754763e-07,
+              "yaw": 1.700329136036082e-11,
+              "linear": 0.0,
+              "angular": 0.0,
+              "velocity_source": "finite difference of measured stamped Gazebo poses",
+              "source_reported_twist": {
+                "linear": 0.0,
+                "angular": 0.0
+              }
+            },
+            "mode": "resetting",
+            "reason": "Scoped reset: waiting for physical stop and Nav2 cancellation",
+            "nav2_pending": false,
+            "cancel_pending": false
+          }
+        ]
+      },
+      {
+        "sim_time": 6.86,
+        "phase": "resetting",
+        "members": [
+          {
+            "id": "alpha",
+            "truth": {
+              "x": -0.31437622368203333,
+              "y": -0.5022763655760093,
+              "z": 1.6656741789600188e-06,
+              "yaw": -0.019586471172246205,
+              "linear": 0.0,
+              "angular": 0.0,
+              "velocity_source": "finite difference of measured stamped Gazebo poses",
+              "source_reported_twist": {
+                "linear": 0.0,
+                "angular": 0.0
+              }
+            },
+            "mode": "resetting",
+            "reason": "Scoped reset: waiting for physical stop and Nav2 cancellation",
+            "nav2_pending": false,
+            "cancel_pending": false
+          },
+          {
+            "id": "beta",
+            "truth": {
+              "x": -0.500000000005604,
+              "y": 0.3500000000001359,
+              "z": -7.625645898754763e-07,
+              "yaw": 1.700329136036082e-11,
+              "linear": 0.0,
+              "angular": 0.0,
+              "velocity_source": "finite difference of measured stamped Gazebo poses",
+              "source_reported_twist": {
+                "linear": 0.0,
+                "angular": 0.0
+              }
+            },
+            "mode": "resetting",
+            "reason": "Scoped reset: waiting for physical stop and Nav2 cancellation",
+            "nav2_pending": false,
+            "cancel_pending": false
+          }
+        ]
+      },
+      {
+        "sim_time": 6.86,
+        "phase": "resetting",
+        "members": [
+          {
+            "id": "alpha",
+            "truth": {
+              "x": -0.31437622368203333,
+              "y": -0.5022763655760093,
+              "z": 1.6656741789600188e-06,
+              "yaw": -0.019586471172246205,
+              "linear": 0.0,
+              "angular": 0.0,
+              "velocity_source": "finite difference of measured stamped Gazebo poses",
+              "source_reported_twist": {
+                "linear": 0.0,
+                "angular": 0.0
+              }
+            },
+            "mode": "resetting",
+            "reason": "Scoped reset: waiting for physical stop and Nav2 cancellation",
+            "nav2_pending": false,
+            "cancel_pending": false
+          },
+          {
+            "id": "beta",
+            "truth": {
+              "x": -0.500000000005604,
+              "y": 0.3500000000001359,
+              "z": -7.625645898754763e-07,
+              "yaw": 1.700329136036082e-11,
+              "linear": 0.0,
+              "angular": 0.0,
+              "velocity_source": "finite difference of measured stamped Gazebo poses",
+              "source_reported_twist": {
+                "linear": 0.0,
+                "angular": 0.0
+              }
+            },
+            "mode": "resetting",
+            "reason": "Scoped reset: waiting for physical stop and Nav2 cancellation",
+            "nav2_pending": false,
+            "cancel_pending": false
+          }
+        ]
+      },
+      {
+        "sim_time": 6.996,
+        "phase": "resetting",
+        "members": [
+          {
+            "id": "alpha",
+            "truth": {
+              "x": -0.31437622368203333,
+              "y": -0.5022763655760093,
+              "z": 1.6656741789600188e-06,
+              "yaw": -0.019586471172246205,
+              "linear": 0.0,
+              "angular": 0.0,
+              "velocity_source": "finite difference of measured stamped Gazebo poses",
+              "source_reported_twist": {
+                "linear": 0.0,
+                "angular": 0.0
+              }
+            },
+            "mode": "resetting",
+            "reason": "Setting this entity pose; peers and world clock unchanged",
+            "nav2_pending": false,
+            "cancel_pending": false
+          },
+          {
+            "id": "beta",
+            "truth": {
+              "x": -0.500000000005604,
+              "y": 0.3500000000001359,
+              "z": -7.625645898754763e-07,
+              "yaw": 1.700329136036082e-11,
+              "linear": 0.0,
+              "angular": 0.0,
+              "velocity_source": "finite difference of measured stamped Gazebo poses",
+              "source_reported_twist": {
+                "linear": 0.0,
+                "angular": 0.0
+              }
+            },
+            "mode": "resetting",
+            "reason": "Setting this entity pose; peers and world clock unchanged",
+            "nav2_pending": false,
+            "cancel_pending": false
+          }
+        ]
+      },
+      {
+        "sim_time": 6.996,
+        "phase": "resetting",
+        "members": [
+          {
+            "id": "alpha",
+            "truth": {
+              "x": -0.31437622368203333,
+              "y": -0.5022763655760093,
+              "z": 1.6656741789600188e-06,
+              "yaw": -0.019586471172246205,
+              "linear": 0.0,
+              "angular": 0.0,
+              "velocity_source": "finite difference of measured stamped Gazebo poses",
+              "source_reported_twist": {
+                "linear": 0.0,
+                "angular": 0.0
+              }
+            },
+            "mode": "resetting",
+            "reason": "Setting this entity pose; peers and world clock unchanged",
+            "nav2_pending": false,
+            "cancel_pending": false
+          },
+          {
+            "id": "beta",
+            "truth": {
+              "x": -0.500000000005604,
+              "y": 0.3500000000001359,
+              "z": -7.625645898754763e-07,
+              "yaw": 1.700329136036082e-11,
+              "linear": 0.0,
+              "angular": 0.0,
+              "velocity_source": "finite difference of measured stamped Gazebo poses",
+              "source_reported_twist": {
+                "linear": 0.0,
+                "angular": 0.0
+              }
+            },
+            "mode": "resetting",
+            "reason": "Setting this entity pose; peers and world clock unchanged",
+            "nav2_pending": false,
+            "cancel_pending": false
+          }
+        ]
+      },
+      {
+        "sim_time": 6.996,
+        "phase": "resetting",
+        "members": [
+          {
+            "id": "alpha",
+            "truth": {
+              "x": -0.31437622368203333,
+              "y": -0.5022763655760093,
+              "z": 1.6656741789600188e-06,
+              "yaw": -0.019586471172246205,
+              "linear": 0.0,
+              "angular": 0.0,
+              "velocity_source": "finite difference of measured stamped Gazebo poses",
+              "source_reported_twist": {
+                "linear": 0.0,
+                "angular": 0.0
+              }
+            },
+            "mode": "resetting",
+            "reason": "Setting this entity pose; peers and world clock unchanged",
+            "nav2_pending": false,
+            "cancel_pending": false
+          },
+          {
+            "id": "beta",
+            "truth": {
+              "x": -0.500000000005604,
+              "y": 0.3500000000001359,
+              "z": -7.625645898754763e-07,
+              "yaw": 1.700329136036082e-11,
+              "linear": 0.0,
+              "angular": 0.0,
+              "velocity_source": "finite difference of measured stamped Gazebo poses",
+              "source_reported_twist": {
+                "linear": 0.0,
+                "angular": 0.0
+              }
+            },
+            "mode": "resetting",
+            "reason": "Setting this entity pose; peers and world clock unchanged",
+            "nav2_pending": false,
+            "cancel_pending": false
+          }
+        ]
+      },
+      {
+        "sim_time": 6.996,
+        "phase": "resetting",
+        "members": [
+          {
+            "id": "alpha",
+            "truth": {
+              "x": -0.31437622368203333,
+              "y": -0.5022763655760093,
+              "z": 1.6656741789600188e-06,
+              "yaw": -0.019586471172246205,
+              "linear": 0.0,
+              "angular": 0.0,
+              "velocity_source": "finite difference of measured stamped Gazebo poses",
+              "source_reported_twist": {
+                "linear": 0.0,
+                "angular": 0.0
+              }
+            },
+            "mode": "resetting",
+            "reason": "Setting this entity pose; peers and world clock unchanged",
+            "nav2_pending": false,
+            "cancel_pending": false
+          },
+          {
+            "id": "beta",
+            "truth": {
+              "x": -0.500000000005604,
+              "y": 0.3500000000001359,
+              "z": -7.625645898754763e-07,
+              "yaw": 1.700329136036082e-11,
+              "linear": 0.0,
+              "angular": 0.0,
+              "velocity_source": "finite difference of measured stamped Gazebo poses",
+              "source_reported_twist": {
+                "linear": 0.0,
+                "angular": 0.0
+              }
+            },
+            "mode": "resetting",
+            "reason": "Setting this entity pose; peers and world clock unchanged",
+            "nav2_pending": false,
+            "cancel_pending": false
+          }
+        ]
+      },
+      {
+        "sim_time": 7.044,
+        "phase": "resetting",
+        "members": [
+          {
+            "id": "alpha",
+            "truth": {
+              "x": -0.4999632336305302,
+              "y": -0.4999996752562955,
+              "z": 1.7199405863324646e-06,
+              "yaw": -6.817478119257808e-06,
+              "linear": 0.0,
+              "angular": 0.0,
+              "velocity_source": "finite difference of measured stamped Gazebo poses",
+              "source_reported_twist": {
+                "linear": 0.0,
+                "angular": 0.0
+              }
+            },
+            "mode": "idle",
+            "reason": "Scoped entity pose reset acknowledged; commands neutral",
+            "nav2_pending": false,
+            "cancel_pending": false
+          },
+          {
+            "id": "beta",
+            "truth": {
+              "x": -0.500000000005604,
+              "y": 0.3500000000001359,
+              "z": -7.625645898754763e-07,
+              "yaw": 1.700329136036082e-11,
+              "linear": 0.0,
+              "angular": 0.0,
+              "velocity_source": "finite difference of measured stamped Gazebo poses",
+              "source_reported_twist": {
+                "linear": 0.0,
+                "angular": 0.0
+              }
+            },
+            "mode": "idle",
+            "reason": "Scoped entity pose reset acknowledged; commands neutral",
+            "nav2_pending": false,
+            "cancel_pending": false
+          }
+        ]
+      },
+      {
+        "sim_time": 7.044,
+        "phase": "resetting",
+        "members": [
+          {
+            "id": "alpha",
+            "truth": {
+              "x": -0.4999632336305302,
+              "y": -0.4999996752562955,
+              "z": 1.7199405863324646e-06,
+              "yaw": -6.817478119257808e-06,
+              "linear": 0.0,
+              "angular": 0.0,
+              "velocity_source": "finite difference of measured stamped Gazebo poses",
+              "source_reported_twist": {
+                "linear": 0.0,
+                "angular": 0.0
+              }
+            },
+            "mode": "idle",
+            "reason": "Scoped entity pose reset acknowledged; commands neutral",
+            "nav2_pending": false,
+            "cancel_pending": false
+          },
+          {
+            "id": "beta",
+            "truth": {
+              "x": -0.500000000005604,
+              "y": 0.3500000000001359,
+              "z": -7.625645898754763e-07,
+              "yaw": 1.700329136036082e-11,
+              "linear": 0.0,
+              "angular": 0.0,
+              "velocity_source": "finite difference of measured stamped Gazebo poses",
+              "source_reported_twist": {
+                "linear": 0.0,
+                "angular": 0.0
+              }
+            },
+            "mode": "idle",
+            "reason": "Scoped entity pose reset acknowledged; commands neutral",
+            "nav2_pending": false,
+            "cancel_pending": false
+          }
+        ]
+      },
+      {
+        "sim_time": 7.044,
+        "phase": "resetting",
+        "members": [
+          {
+            "id": "alpha",
+            "truth": {
+              "x": -0.4999632336305302,
+              "y": -0.4999996752562955,
+              "z": 1.7199405863324646e-06,
+              "yaw": -6.817478119257808e-06,
+              "linear": 0.0,
+              "angular": 0.0,
+              "velocity_source": "finite difference of measured stamped Gazebo poses",
+              "source_reported_twist": {
+                "linear": 0.0,
+                "angular": 0.0
+              }
+            },
+            "mode": "idle",
+            "reason": "Scoped entity pose reset acknowledged; commands neutral",
+            "nav2_pending": false,
+            "cancel_pending": false
+          },
+          {
+            "id": "beta",
+            "truth": {
+              "x": -0.500000000005604,
+              "y": 0.3500000000001359,
+              "z": -7.625645898754763e-07,
+              "yaw": 1.700329136036082e-11,
+              "linear": 0.0,
+              "angular": 0.0,
+              "velocity_source": "finite difference of measured stamped Gazebo poses",
+              "source_reported_twist": {
+                "linear": 0.0,
+                "angular": 0.0
+              }
+            },
+            "mode": "idle",
+            "reason": "Scoped entity pose reset acknowledged; commands neutral",
+            "nav2_pending": false,
+            "cancel_pending": false
+          }
+        ]
+      },
+      {
+        "sim_time": 7.044,
+        "phase": "resetting",
+        "members": [
+          {
+            "id": "alpha",
+            "truth": {
+              "x": -0.4999632336305302,
+              "y": -0.4999996752562955,
+              "z": 1.7199405863324646e-06,
+              "yaw": -6.817478119257808e-06,
+              "linear": 0.0,
+              "angular": 0.0,
+              "velocity_source": "finite difference of measured stamped Gazebo poses",
+              "source_reported_twist": {
+                "linear": 0.0,
+                "angular": 0.0
+              }
+            },
+            "mode": "idle",
+            "reason": "Scoped entity pose reset acknowledged; commands neutral",
+            "nav2_pending": false,
+            "cancel_pending": false
+          },
+          {
+            "id": "beta",
+            "truth": {
+              "x": -0.500000000005604,
+              "y": 0.3500000000001359,
+              "z": -7.625645898754763e-07,
+              "yaw": 1.700329136036082e-11,
+              "linear": 0.0,
+              "angular": 0.0,
+              "velocity_source": "finite difference of measured stamped Gazebo poses",
+              "source_reported_twist": {
+                "linear": 0.0,
+                "angular": 0.0
+              }
+            },
+            "mode": "idle",
+            "reason": "Scoped entity pose reset acknowledged; commands neutral",
+            "nav2_pending": false,
+            "cancel_pending": false
+          }
+        ]
+      },
+      {
+        "sim_time": 7.044,
+        "phase": "resetting",
+        "members": [
+          {
+            "id": "alpha",
+            "truth": {
+              "x": -0.4999632336305302,
+              "y": -0.4999996752562955,
+              "z": 1.7199405863324646e-06,
+              "yaw": -6.817478119257808e-06,
+              "linear": 0.0,
+              "angular": 0.0,
+              "velocity_source": "finite difference of measured stamped Gazebo poses",
+              "source_reported_twist": {
+                "linear": 0.0,
+                "angular": 0.0
+              }
+            },
+            "mode": "idle",
+            "reason": "Scoped entity pose reset acknowledged; commands neutral",
+            "nav2_pending": false,
+            "cancel_pending": false
+          },
+          {
+            "id": "beta",
+            "truth": {
+              "x": -0.500000000005604,
+              "y": 0.3500000000001359,
+              "z": -7.625645898754763e-07,
+              "yaw": 1.700329136036082e-11,
+              "linear": 0.0,
+              "angular": 0.0,
+              "velocity_source": "finite difference of measured stamped Gazebo poses",
+              "source_reported_twist": {
+                "linear": 0.0,
+                "angular": 0.0
+              }
+            },
+            "mode": "idle",
+            "reason": "Scoped entity pose reset acknowledged; commands neutral",
+            "nav2_pending": false,
+            "cancel_pending": false
+          }
+        ]
+      },
+      {
+        "sim_time": 7.202,
+        "phase": "resetting",
+        "members": [
+          {
+            "id": "alpha",
+            "truth": {
+              "x": -0.4999632336305302,
+              "y": -0.4999996752562955,
+              "z": 1.7199405863324646e-06,
+              "yaw": -6.817478119257808e-06,
+              "linear": 0.0,
+              "angular": 0.0,
+              "velocity_source": "finite difference of measured stamped Gazebo poses",
+              "source_reported_twist": {
+                "linear": 0.0,
+                "angular": 0.0
+              }
+            },
+            "mode": "idle",
+            "reason": "Scoped entity pose reset acknowledged; commands neutral",
+            "nav2_pending": false,
+            "cancel_pending": false
+          },
+          {
+            "id": "beta",
+            "truth": {
+              "x": -0.500000000005604,
+              "y": 0.3500000000001359,
+              "z": -7.625645898754763e-07,
+              "yaw": 1.700329136036082e-11,
+              "linear": 0.0,
+              "angular": 0.0,
+              "velocity_source": "finite difference of measured stamped Gazebo poses",
+              "source_reported_twist": {
+                "linear": 0.0,
+                "angular": 0.0
+              }
+            },
+            "mode": "idle",
+            "reason": "Scoped entity pose reset acknowledged; commands neutral",
+            "nav2_pending": false,
+            "cancel_pending": false
+          }
+        ]
+      },
+      {
+        "sim_time": 7.202,
+        "phase": "resetting",
+        "members": [
+          {
+            "id": "alpha",
+            "truth": {
+              "x": -0.4999632336305302,
+              "y": -0.4999996752562955,
+              "z": 1.7199405863324646e-06,
+              "yaw": -6.817478119257808e-06,
+              "linear": 0.0,
+              "angular": 0.0,
+              "velocity_source": "finite difference of measured stamped Gazebo poses",
+              "source_reported_twist": {
+                "linear": 0.0,
+                "angular": 0.0
+              }
+            },
+            "mode": "idle",
+            "reason": "Scoped entity pose reset acknowledged; commands neutral",
+            "nav2_pending": false,
+            "cancel_pending": false
+          },
+          {
+            "id": "beta",
+            "truth": {
+              "x": -0.500000000005604,
+              "y": 0.3500000000001359,
+              "z": -7.625645898754763e-07,
+              "yaw": 1.700329136036082e-11,
+              "linear": 0.0,
+              "angular": 0.0,
+              "velocity_source": "finite difference of measured stamped Gazebo poses",
+              "source_reported_twist": {
+                "linear": 0.0,
+                "angular": 0.0
+              }
+            },
+            "mode": "idle",
+            "reason": "Scoped entity pose reset acknowledged; commands neutral",
+            "nav2_pending": false,
+            "cancel_pending": false
+          }
+        ]
+      },
+      {
+        "sim_time": 7.202,
+        "phase": "resetting",
+        "members": [
+          {
+            "id": "alpha",
+            "truth": {
+              "x": -0.4999632336305302,
+              "y": -0.4999996752562955,
+              "z": 1.7199405863324646e-06,
+              "yaw": -6.817478119257808e-06,
+              "linear": 0.0,
+              "angular": 0.0,
+              "velocity_source": "finite difference of measured stamped Gazebo poses",
+              "source_reported_twist": {
+                "linear": 0.0,
+                "angular": 0.0
+              }
+            },
+            "mode": "idle",
+            "reason": "Scoped entity pose reset acknowledged; commands neutral",
+            "nav2_pending": false,
+            "cancel_pending": false
+          },
+          {
+            "id": "beta",
+            "truth": {
+              "x": -0.500000000005604,
+              "y": 0.3500000000001359,
+              "z": -7.625645898754763e-07,
+              "yaw": 1.700329136036082e-11,
+              "linear": 0.0,
+              "angular": 0.0,
+              "velocity_source": "finite difference of measured stamped Gazebo poses",
+              "source_reported_twist": {
+                "linear": 0.0,
+                "angular": 0.0
+              }
+            },
+            "mode": "idle",
+            "reason": "Scoped entity pose reset acknowledged; commands neutral",
+            "nav2_pending": false,
+            "cancel_pending": false
+          }
+        ]
+      },
+      {
+        "sim_time": 7.202,
+        "phase": "resetting",
+        "members": [
+          {
+            "id": "alpha",
+            "truth": {
+              "x": -0.4999632336305302,
+              "y": -0.4999996752562955,
+              "z": 1.7199405863324646e-06,
+              "yaw": -6.817478119257808e-06,
+              "linear": 0.0,
+              "angular": 0.0,
+              "velocity_source": "finite difference of measured stamped Gazebo poses",
+              "source_reported_twist": {
+                "linear": 0.0,
+                "angular": 0.0
+              }
+            },
+            "mode": "idle",
+            "reason": "Scoped entity pose reset acknowledged; commands neutral",
+            "nav2_pending": false,
+            "cancel_pending": false
+          },
+          {
+            "id": "beta",
+            "truth": {
+              "x": -0.500000000005604,
+              "y": 0.3500000000001359,
+              "z": -7.625645898754763e-07,
+              "yaw": 1.700329136036082e-11,
+              "linear": 0.0,
+              "angular": 0.0,
+              "velocity_source": "finite difference of measured stamped Gazebo poses",
+              "source_reported_twist": {
+                "linear": 0.0,
+                "angular": 0.0
+              }
+            },
+            "mode": "idle",
+            "reason": "Scoped entity pose reset acknowledged; commands neutral",
+            "nav2_pending": false,
+            "cancel_pending": false
+          }
+        ]
+      },
+      {
+        "sim_time": 7.202,
+        "phase": "resetting",
+        "members": [
+          {
+            "id": "alpha",
+            "truth": {
+              "x": -0.4999632336305302,
+              "y": -0.4999996752562955,
+              "z": 1.7199405863324646e-06,
+              "yaw": -6.817478119257808e-06,
+              "linear": 0.0,
+              "angular": 0.0,
+              "velocity_source": "finite difference of measured stamped Gazebo poses",
+              "source_reported_twist": {
+                "linear": 0.0,
+                "angular": 0.0
+              }
+            },
+            "mode": "idle",
+            "reason": "Scoped entity pose reset acknowledged; commands neutral",
+            "nav2_pending": false,
+            "cancel_pending": false
+          },
+          {
+            "id": "beta",
+            "truth": {
+              "x": -0.500000000005604,
+              "y": 0.3500000000001359,
+              "z": -7.625645898754763e-07,
+              "yaw": 1.700329136036082e-11,
+              "linear": 0.0,
+              "angular": 0.0,
+              "velocity_source": "finite difference of measured stamped Gazebo poses",
+              "source_reported_twist": {
+                "linear": 0.0,
+                "angular": 0.0
+              }
+            },
+            "mode": "idle",
+            "reason": "Scoped entity pose reset acknowledged; commands neutral",
+            "nav2_pending": false,
+            "cancel_pending": false
+          }
+        ]
+      },
+      {
+        "sim_time": 7.352,
+        "phase": "resetting",
+        "members": [
+          {
+            "id": "alpha",
+            "truth": {
+              "x": -0.4999632336305302,
+              "y": -0.4999996752562955,
+              "z": 1.7199405863324646e-06,
+              "yaw": -6.817478119257808e-06,
+              "linear": 0.0,
+              "angular": 0.0,
+              "velocity_source": "finite difference of measured stamped Gazebo poses",
+              "source_reported_twist": {
+                "linear": 0.0,
+                "angular": 0.0
+              }
+            },
+            "mode": "idle",
+            "reason": "Scoped entity pose reset acknowledged; commands neutral",
+            "nav2_pending": false,
+            "cancel_pending": false
+          },
+          {
+            "id": "beta",
+            "truth": {
+              "x": -0.500000000005604,
+              "y": 0.3500000000001359,
+              "z": -7.625645898754763e-07,
+              "yaw": 1.700329136036082e-11,
+              "linear": 0.0,
+              "angular": 0.0,
+              "velocity_source": "finite difference of measured stamped Gazebo poses",
+              "source_reported_twist": {
+                "linear": 0.0,
+                "angular": 0.0
+              }
+            },
+            "mode": "idle",
+            "reason": "Scoped entity pose reset acknowledged; commands neutral",
+            "nav2_pending": false,
+            "cancel_pending": false
+          }
+        ]
+      },
+      {
+        "sim_time": 7.352,
+        "phase": "resetting",
+        "members": [
+          {
+            "id": "alpha",
+            "truth": {
+              "x": -0.4999632336305302,
+              "y": -0.4999996752562955,
+              "z": 1.7199405863324646e-06,
+              "yaw": -6.817478119257808e-06,
+              "linear": 0.0,
+              "angular": 0.0,
+              "velocity_source": "finite difference of measured stamped Gazebo poses",
+              "source_reported_twist": {
+                "linear": 0.0,
+                "angular": 0.0
+              }
+            },
+            "mode": "idle",
+            "reason": "Scoped entity pose reset acknowledged; commands neutral",
+            "nav2_pending": false,
+            "cancel_pending": false
+          },
+          {
+            "id": "beta",
+            "truth": {
+              "x": -0.500000000005604,
+              "y": 0.3500000000001359,
+              "z": -7.625645898754763e-07,
+              "yaw": 1.700329136036082e-11,
+              "linear": 0.0,
+              "angular": 0.0,
+              "velocity_source": "finite difference of measured stamped Gazebo poses",
+              "source_reported_twist": {
+                "linear": 0.0,
+                "angular": 0.0
+              }
+            },
+            "mode": "idle",
+            "reason": "Scoped entity pose reset acknowledged; commands neutral",
+            "nav2_pending": false,
+            "cancel_pending": false
+          }
+        ]
+      },
+      {
+        "sim_time": 7.352,
+        "phase": "resetting",
+        "members": [
+          {
+            "id": "alpha",
+            "truth": {
+              "x": -0.4999632336305302,
+              "y": -0.4999996752562955,
+              "z": 1.7199405863324646e-06,
+              "yaw": -6.817478119257808e-06,
+              "linear": 0.0,
+              "angular": 0.0,
+              "velocity_source": "finite difference of measured stamped Gazebo poses",
+              "source_reported_twist": {
+                "linear": 0.0,
+                "angular": 0.0
+              }
+            },
+            "mode": "idle",
+            "reason": "Scoped entity pose reset acknowledged; commands neutral",
+            "nav2_pending": false,
+            "cancel_pending": false
+          },
+          {
+            "id": "beta",
+            "truth": {
+              "x": -0.500000000005604,
+              "y": 0.3500000000001359,
+              "z": -7.625645898754763e-07,
+              "yaw": 1.700329136036082e-11,
+              "linear": 0.0,
+              "angular": 0.0,
+              "velocity_source": "finite difference of measured stamped Gazebo poses",
+              "source_reported_twist": {
+                "linear": 0.0,
+                "angular": 0.0
+              }
+            },
+            "mode": "idle",
+            "reason": "Scoped entity pose reset acknowledged; commands neutral",
+            "nav2_pending": false,
+            "cancel_pending": false
+          }
+        ]
+      },
+      {
+        "sim_time": 7.352,
+        "phase": "resetting",
+        "members": [
+          {
+            "id": "alpha",
+            "truth": {
+              "x": -0.4999632336305302,
+              "y": -0.4999996752562955,
+              "z": 1.7199405863324646e-06,
+              "yaw": -6.817478119257808e-06,
+              "linear": 0.0,
+              "angular": 0.0,
+              "velocity_source": "finite difference of measured stamped Gazebo poses",
+              "source_reported_twist": {
+                "linear": 0.0,
+                "angular": 0.0
+              }
+            },
+            "mode": "idle",
+            "reason": "Scoped entity pose reset acknowledged; commands neutral",
+            "nav2_pending": false,
+            "cancel_pending": false
+          },
+          {
+            "id": "beta",
+            "truth": {
+              "x": -0.500000000005604,
+              "y": 0.3500000000001359,
+              "z": -7.625645898754763e-07,
+              "yaw": 1.700329136036082e-11,
+              "linear": 0.0,
+              "angular": 0.0,
+              "velocity_source": "finite difference of measured stamped Gazebo poses",
+              "source_reported_twist": {
+                "linear": 0.0,
+                "angular": 0.0
+              }
+            },
+            "mode": "idle",
+            "reason": "Scoped entity pose reset acknowledged; commands neutral",
+            "nav2_pending": false,
+            "cancel_pending": false
+          }
+        ]
+      },
+      {
+        "sim_time": 7.45,
+        "phase": "resetting",
+        "members": [
+          {
+            "id": "alpha",
+            "truth": {
+              "x": -0.4999632336305302,
+              "y": -0.4999996752562955,
+              "z": 1.7199405863324646e-06,
+              "yaw": -6.817478119257808e-06,
+              "linear": 0.0,
+              "angular": 0.0,
+              "velocity_source": "finite difference of measured stamped Gazebo poses",
+              "source_reported_twist": {
+                "linear": 0.0,
+                "angular": 0.0
+              }
+            },
+            "mode": "idle",
+            "reason": "Scoped entity pose reset acknowledged; commands neutral",
+            "nav2_pending": false,
+            "cancel_pending": false
+          },
+          {
+            "id": "beta",
+            "truth": {
+              "x": -0.500000000005604,
+              "y": 0.3500000000001359,
+              "z": -7.625645898754763e-07,
+              "yaw": 1.700329136036082e-11,
+              "linear": 0.0,
+              "angular": 0.0,
+              "velocity_source": "finite difference of measured stamped Gazebo poses",
+              "source_reported_twist": {
+                "linear": 0.0,
+                "angular": 0.0
+              }
+            },
+            "mode": "idle",
+            "reason": "Scoped entity pose reset acknowledged; commands neutral",
+            "nav2_pending": false,
+            "cancel_pending": false
+          }
+        ]
+      },
+      {
+        "sim_time": 7.45,
+        "phase": "resetting",
+        "members": [
+          {
+            "id": "alpha",
+            "truth": {
+              "x": -0.4999632336305302,
+              "y": -0.4999996752562955,
+              "z": 1.7199405863324646e-06,
+              "yaw": -6.817478119257808e-06,
+              "linear": 0.0,
+              "angular": 0.0,
+              "velocity_source": "finite difference of measured stamped Gazebo poses",
+              "source_reported_twist": {
+                "linear": 0.0,
+                "angular": 0.0
+              }
+            },
+            "mode": "idle",
+            "reason": "Scoped entity pose reset acknowledged; commands neutral",
+            "nav2_pending": false,
+            "cancel_pending": false
+          },
+          {
+            "id": "beta",
+            "truth": {
+              "x": -0.500000000005604,
+              "y": 0.3500000000001359,
+              "z": -7.625645898754763e-07,
+              "yaw": 1.700329136036082e-11,
+              "linear": 0.0,
+              "angular": 0.0,
+              "velocity_source": "finite difference of measured stamped Gazebo poses",
+              "source_reported_twist": {
+                "linear": 0.0,
+                "angular": 0.0
+              }
+            },
+            "mode": "idle",
+            "reason": "Scoped entity pose reset acknowledged; commands neutral",
+            "nav2_pending": false,
+            "cancel_pending": false
+          }
+        ]
+      },
+      {
+        "sim_time": 7.45,
+        "phase": "resetting",
+        "members": [
+          {
+            "id": "alpha",
+            "truth": {
+              "x": -0.4999632336305302,
+              "y": -0.4999996752562955,
+              "z": 1.7199405863324646e-06,
+              "yaw": -6.817478119257808e-06,
+              "linear": 0.0,
+              "angular": 0.0,
+              "velocity_source": "finite difference of measured stamped Gazebo poses",
+              "source_reported_twist": {
+                "linear": 0.0,
+                "angular": 0.0
+              }
+            },
+            "mode": "idle",
+            "reason": "Scoped entity pose reset acknowledged; commands neutral",
+            "nav2_pending": false,
+            "cancel_pending": false
+          },
+          {
+            "id": "beta",
+            "truth": {
+              "x": -0.500000000005604,
+              "y": 0.3500000000001359,
+              "z": -7.625645898754763e-07,
+              "yaw": 1.700329136036082e-11,
+              "linear": 0.0,
+              "angular": 0.0,
+              "velocity_source": "finite difference of measured stamped Gazebo poses",
+              "source_reported_twist": {
+                "linear": 0.0,
+                "angular": 0.0
+              }
+            },
+            "mode": "idle",
+            "reason": "Scoped entity pose reset acknowledged; commands neutral",
+            "nav2_pending": false,
+            "cancel_pending": false
+          }
+        ]
+      },
+      {
+        "sim_time": 7.45,
+        "phase": "resetting",
+        "members": [
+          {
+            "id": "alpha",
+            "truth": {
+              "x": -0.4999632336305302,
+              "y": -0.4999996752562955,
+              "z": 1.7199405863324646e-06,
+              "yaw": -6.817478119257808e-06,
+              "linear": 0.0,
+              "angular": 0.0,
+              "velocity_source": "finite difference of measured stamped Gazebo poses",
+              "source_reported_twist": {
+                "linear": 0.0,
+                "angular": 0.0
+              }
+            },
+            "mode": "idle",
+            "reason": "Scoped entity pose reset acknowledged; commands neutral",
+            "nav2_pending": false,
+            "cancel_pending": false
+          },
+          {
+            "id": "beta",
+            "truth": {
+              "x": -0.500000000005604,
+              "y": 0.3500000000001359,
+              "z": -7.625645898754763e-07,
+              "yaw": 1.700329136036082e-11,
+              "linear": 0.0,
+              "angular": 0.0,
+              "velocity_source": "finite difference of measured stamped Gazebo poses",
+              "source_reported_twist": {
+                "linear": 0.0,
+                "angular": 0.0
+              }
+            },
+            "mode": "idle",
+            "reason": "Scoped entity pose reset acknowledged; commands neutral",
+            "nav2_pending": false,
+            "cancel_pending": false
+          }
+        ]
+      },
+      {
+        "sim_time": 7.596,
+        "phase": "resetting",
+        "members": [
+          {
+            "id": "alpha",
+            "truth": {
+              "x": -0.4999632336305302,
+              "y": -0.4999996752562955,
+              "z": 1.7199405863324646e-06,
+              "yaw": -6.817478119257808e-06,
+              "linear": 0.0,
+              "angular": 0.0,
+              "velocity_source": "finite difference of measured stamped Gazebo poses",
+              "source_reported_twist": {
+                "linear": 0.0,
+                "angular": 0.0
+              }
+            },
+            "mode": "idle",
+            "reason": "Scoped entity pose reset acknowledged; commands neutral",
+            "nav2_pending": false,
+            "cancel_pending": false
+          },
+          {
+            "id": "beta",
+            "truth": {
+              "x": -0.500000000005604,
+              "y": 0.3500000000001359,
+              "z": -7.625645898754763e-07,
+              "yaw": 1.700329136036082e-11,
+              "linear": 0.0,
+              "angular": 0.0,
+              "velocity_source": "finite difference of measured stamped Gazebo poses",
+              "source_reported_twist": {
+                "linear": 0.0,
+                "angular": 0.0
+              }
+            },
+            "mode": "idle",
+            "reason": "Scoped entity pose reset acknowledged; commands neutral",
+            "nav2_pending": false,
+            "cancel_pending": false
+          }
+        ]
+      },
+      {
+        "sim_time": 7.596,
+        "phase": "resetting",
+        "members": [
+          {
+            "id": "alpha",
+            "truth": {
+              "x": -0.4999632336305302,
+              "y": -0.4999996752562955,
+              "z": 1.7199405863324646e-06,
+              "yaw": -6.817478119257808e-06,
+              "linear": 0.0,
+              "angular": 0.0,
+              "velocity_source": "finite difference of measured stamped Gazebo poses",
+              "source_reported_twist": {
+                "linear": 0.0,
+                "angular": 0.0
+              }
+            },
+            "mode": "idle",
+            "reason": "Scoped entity pose reset acknowledged; commands neutral",
+            "nav2_pending": false,
+            "cancel_pending": false
+          },
+          {
+            "id": "beta",
+            "truth": {
+              "x": -0.500000000005604,
+              "y": 0.3500000000001359,
+              "z": -7.625645898754763e-07,
+              "yaw": 1.700329136036082e-11,
+              "linear": 0.0,
+              "angular": 0.0,
+              "velocity_source": "finite difference of measured stamped Gazebo poses",
+              "source_reported_twist": {
+                "linear": 0.0,
+                "angular": 0.0
+              }
+            },
+            "mode": "idle",
+            "reason": "Scoped entity pose reset acknowledged; commands neutral",
+            "nav2_pending": false,
+            "cancel_pending": false
+          }
+        ]
+      },
+      {
+        "sim_time": 7.596,
+        "phase": "resetting",
+        "members": [
+          {
+            "id": "alpha",
+            "truth": {
+              "x": -0.4999632336305302,
+              "y": -0.4999996752562955,
+              "z": 1.7199405863324646e-06,
+              "yaw": -6.817478119257808e-06,
+              "linear": 0.0,
+              "angular": 0.0,
+              "velocity_source": "finite difference of measured stamped Gazebo poses",
+              "source_reported_twist": {
+                "linear": 0.0,
+                "angular": 0.0
+              }
+            },
+            "mode": "idle",
+            "reason": "Scoped entity pose reset acknowledged; commands neutral",
+            "nav2_pending": false,
+            "cancel_pending": false
+          },
+          {
+            "id": "beta",
+            "truth": {
+              "x": -0.500000000005604,
+              "y": 0.3500000000001359,
+              "z": -7.625645898754763e-07,
+              "yaw": 1.700329136036082e-11,
+              "linear": 0.0,
+              "angular": 0.0,
+              "velocity_source": "finite difference of measured stamped Gazebo poses",
+              "source_reported_twist": {
+                "linear": 0.0,
+                "angular": 0.0
+              }
+            },
+            "mode": "idle",
+            "reason": "Scoped entity pose reset acknowledged; commands neutral",
+            "nav2_pending": false,
+            "cancel_pending": false
+          }
+        ]
+      },
+      {
+        "sim_time": 7.596,
+        "phase": "resetting",
+        "members": [
+          {
+            "id": "alpha",
+            "truth": {
+              "x": -0.4999632336305302,
+              "y": -0.4999996752562955,
+              "z": 1.7199405863324646e-06,
+              "yaw": -6.817478119257808e-06,
+              "linear": 0.0,
+              "angular": 0.0,
+              "velocity_source": "finite difference of measured stamped Gazebo poses",
+              "source_reported_twist": {
+                "linear": 0.0,
+                "angular": 0.0
+              }
+            },
+            "mode": "idle",
+            "reason": "Scoped entity pose reset acknowledged; commands neutral",
+            "nav2_pending": false,
+            "cancel_pending": false
+          },
+          {
+            "id": "beta",
+            "truth": {
+              "x": -0.500000000005604,
+              "y": 0.3500000000001359,
+              "z": -7.625645898754763e-07,
+              "yaw": 1.700329136036082e-11,
+              "linear": 0.0,
+              "angular": 0.0,
+              "velocity_source": "finite difference of measured stamped Gazebo poses",
+              "source_reported_twist": {
+                "linear": 0.0,
+                "angular": 0.0
+              }
+            },
+            "mode": "idle",
+            "reason": "Scoped entity pose reset acknowledged; commands neutral",
+            "nav2_pending": false,
+            "cancel_pending": false
+          }
+        ]
+      },
+      {
+        "sim_time": 7.596,
+        "phase": "resetting",
+        "members": [
+          {
+            "id": "alpha",
+            "truth": {
+              "x": -0.4999632336305302,
+              "y": -0.4999996752562955,
+              "z": 1.7199405863324646e-06,
+              "yaw": -6.817478119257808e-06,
+              "linear": 0.0,
+              "angular": 0.0,
+              "velocity_source": "finite difference of measured stamped Gazebo poses",
+              "source_reported_twist": {
+                "linear": 0.0,
+                "angular": 0.0
+              }
+            },
+            "mode": "idle",
+            "reason": "Scoped entity pose reset acknowledged; commands neutral",
+            "nav2_pending": false,
+            "cancel_pending": false
+          },
+          {
+            "id": "beta",
+            "truth": {
+              "x": -0.500000000005604,
+              "y": 0.3500000000001359,
+              "z": -7.625645898754763e-07,
+              "yaw": 1.700329136036082e-11,
+              "linear": 0.0,
+              "angular": 0.0,
+              "velocity_source": "finite difference of measured stamped Gazebo poses",
+              "source_reported_twist": {
+                "linear": 0.0,
+                "angular": 0.0
+              }
+            },
+            "mode": "idle",
+            "reason": "Scoped entity pose reset acknowledged; commands neutral",
+            "nav2_pending": false,
+            "cancel_pending": false
+          }
+        ]
+      },
+      {
+        "sim_time": 7.724,
+        "phase": "resetting",
+        "members": [
+          {
+            "id": "alpha",
+            "truth": {
+              "x": -0.4999632336305302,
+              "y": -0.4999996752562955,
+              "z": 1.7199405863324646e-06,
+              "yaw": -6.817478119257808e-06,
+              "linear": 0.0,
+              "angular": 0.0,
+              "velocity_source": "finite difference of measured stamped Gazebo poses",
+              "source_reported_twist": {
+                "linear": 0.0,
+                "angular": 0.0
+              }
+            },
+            "mode": "idle",
+            "reason": "Scoped entity pose reset acknowledged; commands neutral",
+            "nav2_pending": false,
+            "cancel_pending": false
+          },
+          {
+            "id": "beta",
+            "truth": {
+              "x": -0.500000000005604,
+              "y": 0.3500000000001359,
+              "z": -7.625645898754763e-07,
+              "yaw": 1.700329136036082e-11,
+              "linear": 0.0,
+              "angular": 0.0,
+              "velocity_source": "finite difference of measured stamped Gazebo poses",
+              "source_reported_twist": {
+                "linear": 0.0,
+                "angular": 0.0
+              }
+            },
+            "mode": "idle",
+            "reason": "Scoped entity pose reset acknowledged; commands neutral",
+            "nav2_pending": false,
+            "cancel_pending": false
+          }
+        ]
+      },
+      {
+        "sim_time": 7.724,
+        "phase": "resetting",
+        "members": [
+          {
+            "id": "alpha",
+            "truth": {
+              "x": -0.4999632336305302,
+              "y": -0.4999996752562955,
+              "z": 1.7199405863324646e-06,
+              "yaw": -6.817478119257808e-06,
+              "linear": 0.0,
+              "angular": 0.0,
+              "velocity_source": "finite difference of measured stamped Gazebo poses",
+              "source_reported_twist": {
+                "linear": 0.0,
+                "angular": 0.0
+              }
+            },
+            "mode": "idle",
+            "reason": "Scoped entity pose reset acknowledged; commands neutral",
+            "nav2_pending": false,
+            "cancel_pending": false
+          },
+          {
+            "id": "beta",
+            "truth": {
+              "x": -0.500000000005604,
+              "y": 0.3500000000001359,
+              "z": -7.625645898754763e-07,
+              "yaw": 1.700329136036082e-11,
+              "linear": 0.0,
+              "angular": 0.0,
+              "velocity_source": "finite difference of measured stamped Gazebo poses",
+              "source_reported_twist": {
+                "linear": 0.0,
+                "angular": 0.0
+              }
+            },
+            "mode": "idle",
+            "reason": "Scoped entity pose reset acknowledged; commands neutral",
+            "nav2_pending": false,
+            "cancel_pending": false
+          }
+        ]
+      },
+      {
+        "sim_time": 7.724,
+        "phase": "resetting",
+        "members": [
+          {
+            "id": "alpha",
+            "truth": {
+              "x": -0.4999632336305302,
+              "y": -0.4999996752562955,
+              "z": 1.7199405863324646e-06,
+              "yaw": -6.817478119257808e-06,
+              "linear": 0.0,
+              "angular": 0.0,
+              "velocity_source": "finite difference of measured stamped Gazebo poses",
+              "source_reported_twist": {
+                "linear": 0.0,
+                "angular": 0.0
+              }
+            },
+            "mode": "idle",
+            "reason": "Scoped entity pose reset acknowledged; commands neutral",
+            "nav2_pending": false,
+            "cancel_pending": false
+          },
+          {
+            "id": "beta",
+            "truth": {
+              "x": -0.500000000005604,
+              "y": 0.3500000000001359,
+              "z": -7.625645898754763e-07,
+              "yaw": 1.700329136036082e-11,
+              "linear": 0.0,
+              "angular": 0.0,
+              "velocity_source": "finite difference of measured stamped Gazebo poses",
+              "source_reported_twist": {
+                "linear": 0.0,
+                "angular": 0.0
+              }
+            },
+            "mode": "idle",
+            "reason": "Scoped entity pose reset acknowledged; commands neutral",
+            "nav2_pending": false,
+            "cancel_pending": false
+          }
+        ]
+      },
+      {
+        "sim_time": 7.724,
+        "phase": "resetting",
+        "members": [
+          {
+            "id": "alpha",
+            "truth": {
+              "x": -0.4999632336305302,
+              "y": -0.4999996752562955,
+              "z": 1.7199405863324646e-06,
+              "yaw": -6.817478119257808e-06,
+              "linear": 0.0,
+              "angular": 0.0,
+              "velocity_source": "finite difference of measured stamped Gazebo poses",
+              "source_reported_twist": {
+                "linear": 0.0,
+                "angular": 0.0
+              }
+            },
+            "mode": "idle",
+            "reason": "Scoped entity pose reset acknowledged; commands neutral",
+            "nav2_pending": false,
+            "cancel_pending": false
+          },
+          {
+            "id": "beta",
+            "truth": {
+              "x": -0.500000000005604,
+              "y": 0.3500000000001359,
+              "z": -7.625645898754763e-07,
+              "yaw": 1.700329136036082e-11,
+              "linear": 0.0,
+              "angular": 0.0,
+              "velocity_source": "finite difference of measured stamped Gazebo poses",
+              "source_reported_twist": {
+                "linear": 0.0,
+                "angular": 0.0
+              }
+            },
+            "mode": "idle",
+            "reason": "Scoped entity pose reset acknowledged; commands neutral",
+            "nav2_pending": false,
+            "cancel_pending": false
+          }
+        ]
+      },
+      {
+        "sim_time": 7.84,
+        "phase": "resetting",
+        "members": [
+          {
+            "id": "alpha",
+            "truth": {
+              "x": -0.4999632336305302,
+              "y": -0.4999996752562955,
+              "z": 1.7199405863324646e-06,
+              "yaw": -6.817478119257808e-06,
+              "linear": 0.0,
+              "angular": 0.0,
+              "velocity_source": "finite difference of measured stamped Gazebo poses",
+              "source_reported_twist": {
+                "linear": 0.0,
+                "angular": 0.0
+              }
+            },
+            "mode": "idle",
+            "reason": "Scoped entity pose reset acknowledged; commands neutral",
+            "nav2_pending": false,
+            "cancel_pending": false
+          },
+          {
+            "id": "beta",
+            "truth": {
+              "x": -0.500000000005604,
+              "y": 0.3500000000001359,
+              "z": -7.625645898754763e-07,
+              "yaw": 1.700329136036082e-11,
+              "linear": 0.0,
+              "angular": 0.0,
+              "velocity_source": "finite difference of measured stamped Gazebo poses",
+              "source_reported_twist": {
+                "linear": 0.0,
+                "angular": 0.0
+              }
+            },
+            "mode": "idle",
+            "reason": "Scoped entity pose reset acknowledged; commands neutral",
+            "nav2_pending": false,
+            "cancel_pending": false
+          }
+        ]
+      },
+      {
+        "sim_time": 7.84,
+        "phase": "resetting",
+        "members": [
+          {
+            "id": "alpha",
+            "truth": {
+              "x": -0.4999632336305302,
+              "y": -0.4999996752562955,
+              "z": 1.7199405863324646e-06,
+              "yaw": -6.817478119257808e-06,
+              "linear": 0.0,
+              "angular": 0.0,
+              "velocity_source": "finite difference of measured stamped Gazebo poses",
+              "source_reported_twist": {
+                "linear": 0.0,
+                "angular": 0.0
+              }
+            },
+            "mode": "idle",
+            "reason": "Scoped entity pose reset acknowledged; commands neutral",
+            "nav2_pending": false,
+            "cancel_pending": false
+          },
+          {
+            "id": "beta",
+            "truth": {
+              "x": -0.500000000005604,
+              "y": 0.3500000000001359,
+              "z": -7.625645898754763e-07,
+              "yaw": 1.700329136036082e-11,
+              "linear": 0.0,
+              "angular": 0.0,
+              "velocity_source": "finite difference of measured stamped Gazebo poses",
+              "source_reported_twist": {
+                "linear": 0.0,
+                "angular": 0.0
+              }
+            },
+            "mode": "idle",
+            "reason": "Scoped entity pose reset acknowledged; commands neutral",
+            "nav2_pending": false,
+            "cancel_pending": false
+          }
+        ]
+      },
+      {
+        "sim_time": 7.84,
+        "phase": "resetting",
+        "members": [
+          {
+            "id": "alpha",
+            "truth": {
+              "x": -0.4999632336305302,
+              "y": -0.4999996752562955,
+              "z": 1.7199405863324646e-06,
+              "yaw": -6.817478119257808e-06,
+              "linear": 0.0,
+              "angular": 0.0,
+              "velocity_source": "finite difference of measured stamped Gazebo poses",
+              "source_reported_twist": {
+                "linear": 0.0,
+                "angular": 0.0
+              }
+            },
+            "mode": "idle",
+            "reason": "Scoped entity pose reset acknowledged; commands neutral",
+            "nav2_pending": false,
+            "cancel_pending": false
+          },
+          {
+            "id": "beta",
+            "truth": {
+              "x": -0.500000000005604,
+              "y": 0.3500000000001359,
+              "z": -7.625645898754763e-07,
+              "yaw": 1.700329136036082e-11,
+              "linear": 0.0,
+              "angular": 0.0,
+              "velocity_source": "finite difference of measured stamped Gazebo poses",
+              "source_reported_twist": {
+                "linear": 0.0,
+                "angular": 0.0
+              }
+            },
+            "mode": "idle",
+            "reason": "Scoped entity pose reset acknowledged; commands neutral",
+            "nav2_pending": false,
+            "cancel_pending": false
+          }
+        ]
+      },
+      {
+        "sim_time": 7.84,
+        "phase": "resetting",
+        "members": [
+          {
+            "id": "alpha",
+            "truth": {
+              "x": -0.4999632336305302,
+              "y": -0.4999996752562955,
+              "z": 1.7199405863324646e-06,
+              "yaw": -6.817478119257808e-06,
+              "linear": 0.0,
+              "angular": 0.0,
+              "velocity_source": "finite difference of measured stamped Gazebo poses",
+              "source_reported_twist": {
+                "linear": 0.0,
+                "angular": 0.0
+              }
+            },
+            "mode": "idle",
+            "reason": "Scoped entity pose reset acknowledged; commands neutral",
+            "nav2_pending": false,
+            "cancel_pending": false
+          },
+          {
+            "id": "beta",
+            "truth": {
+              "x": -0.500000000005604,
+              "y": 0.3500000000001359,
+              "z": -7.625645898754763e-07,
+              "yaw": 1.700329136036082e-11,
+              "linear": 0.0,
+              "angular": 0.0,
+              "velocity_source": "finite difference of measured stamped Gazebo poses",
+              "source_reported_twist": {
+                "linear": 0.0,
+                "angular": 0.0
+              }
+            },
+            "mode": "idle",
+            "reason": "Scoped entity pose reset acknowledged; commands neutral",
+            "nav2_pending": false,
+            "cancel_pending": false
+          }
+        ]
+      },
+      {
+        "sim_time": 7.84,
+        "phase": "resetting",
+        "members": [
+          {
+            "id": "alpha",
+            "truth": {
+              "x": -0.4999632336305302,
+              "y": -0.4999996752562955,
+              "z": 1.7199405863324646e-06,
+              "yaw": -6.817478119257808e-06,
+              "linear": 0.0,
+              "angular": 0.0,
+              "velocity_source": "finite difference of measured stamped Gazebo poses",
+              "source_reported_twist": {
+                "linear": 0.0,
+                "angular": 0.0
+              }
+            },
+            "mode": "idle",
+            "reason": "Scoped entity pose reset acknowledged; commands neutral",
+            "nav2_pending": false,
+            "cancel_pending": false
+          },
+          {
+            "id": "beta",
+            "truth": {
+              "x": -0.500000000005604,
+              "y": 0.3500000000001359,
+              "z": -7.625645898754763e-07,
+              "yaw": 1.700329136036082e-11,
+              "linear": 0.0,
+              "angular": 0.0,
+              "velocity_source": "finite difference of measured stamped Gazebo poses",
+              "source_reported_twist": {
+                "linear": 0.0,
+                "angular": 0.0
+              }
+            },
+            "mode": "idle",
+            "reason": "Scoped entity pose reset acknowledged; commands neutral",
+            "nav2_pending": false,
+            "cancel_pending": false
+          }
+        ]
+      },
+      {
+        "sim_time": 7.974,
+        "phase": "resetting",
+        "members": [
+          {
+            "id": "alpha",
+            "truth": {
+              "x": -0.4999632336305302,
+              "y": -0.4999996752562955,
+              "z": 1.7199405863324646e-06,
+              "yaw": -6.817478119257808e-06,
+              "linear": 0.0,
+              "angular": 0.0,
+              "velocity_source": "finite difference of measured stamped Gazebo poses",
+              "source_reported_twist": {
+                "linear": 0.0,
+                "angular": 0.0
+              }
+            },
+            "mode": "idle",
+            "reason": "Scoped entity pose reset acknowledged; commands neutral",
+            "nav2_pending": false,
+            "cancel_pending": false
+          },
+          {
+            "id": "beta",
+            "truth": {
+              "x": -0.500000000005604,
+              "y": 0.3500000000001359,
+              "z": -7.625645898754763e-07,
+              "yaw": 1.700329136036082e-11,
+              "linear": 0.0,
+              "angular": 0.0,
+              "velocity_source": "finite difference of measured stamped Gazebo poses",
+              "source_reported_twist": {
+                "linear": 0.0,
+                "angular": 0.0
+              }
+            },
+            "mode": "idle",
+            "reason": "Scoped entity pose reset acknowledged; commands neutral",
+            "nav2_pending": false,
+            "cancel_pending": false
+          }
+        ]
+      },
+      {
+        "sim_time": 7.974,
+        "phase": "resetting",
+        "members": [
+          {
+            "id": "alpha",
+            "truth": {
+              "x": -0.4999632336305302,
+              "y": -0.4999996752562955,
+              "z": 1.7199405863324646e-06,
+              "yaw": -6.817478119257808e-06,
+              "linear": 0.0,
+              "angular": 0.0,
+              "velocity_source": "finite difference of measured stamped Gazebo poses",
+              "source_reported_twist": {
+                "linear": 0.0,
+                "angular": 0.0
+              }
+            },
+            "mode": "idle",
+            "reason": "Scoped entity pose reset acknowledged; commands neutral",
+            "nav2_pending": false,
+            "cancel_pending": false
+          },
+          {
+            "id": "beta",
+            "truth": {
+              "x": -0.500000000005604,
+              "y": 0.3500000000001359,
+              "z": -7.625645898754763e-07,
+              "yaw": 1.700329136036082e-11,
+              "linear": 0.0,
+              "angular": 0.0,
+              "velocity_source": "finite difference of measured stamped Gazebo poses",
+              "source_reported_twist": {
+                "linear": 0.0,
+                "angular": 0.0
+              }
+            },
+            "mode": "idle",
+            "reason": "Scoped entity pose reset acknowledged; commands neutral",
+            "nav2_pending": false,
+            "cancel_pending": false
+          }
+        ]
+      },
+      {
+        "sim_time": 7.974,
+        "phase": "resetting",
+        "members": [
+          {
+            "id": "alpha",
+            "truth": {
+              "x": -0.4999632336305302,
+              "y": -0.4999996752562955,
+              "z": 1.7199405863324646e-06,
+              "yaw": -6.817478119257808e-06,
+              "linear": 0.0,
+              "angular": 0.0,
+              "velocity_source": "finite difference of measured stamped Gazebo poses",
+              "source_reported_twist": {
+                "linear": 0.0,
+                "angular": 0.0
+              }
+            },
+            "mode": "idle",
+            "reason": "Scoped entity pose reset acknowledged; commands neutral",
+            "nav2_pending": false,
+            "cancel_pending": false
+          },
+          {
+            "id": "beta",
+            "truth": {
+              "x": -0.500000000005604,
+              "y": 0.3500000000001359,
+              "z": -7.625645898754763e-07,
+              "yaw": 1.700329136036082e-11,
+              "linear": 0.0,
+              "angular": 0.0,
+              "velocity_source": "finite difference of measured stamped Gazebo poses",
+              "source_reported_twist": {
+                "linear": 0.0,
+                "angular": 0.0
+              }
+            },
+            "mode": "idle",
+            "reason": "Scoped entity pose reset acknowledged; commands neutral",
+            "nav2_pending": false,
+            "cancel_pending": false
+          }
+        ]
+      },
+      {
+        "sim_time": 7.974,
+        "phase": "resetting",
+        "members": [
+          {
+            "id": "alpha",
+            "truth": {
+              "x": -0.4999632336305302,
+              "y": -0.4999996752562955,
+              "z": 1.7199405863324646e-06,
+              "yaw": -6.817478119257808e-06,
+              "linear": 0.0,
+              "angular": 0.0,
+              "velocity_source": "finite difference of measured stamped Gazebo poses",
+              "source_reported_twist": {
+                "linear": 0.0,
+                "angular": 0.0
+              }
+            },
+            "mode": "idle",
+            "reason": "Scoped entity pose reset acknowledged; commands neutral",
+            "nav2_pending": false,
+            "cancel_pending": false
+          },
+          {
+            "id": "beta",
+            "truth": {
+              "x": -0.500000000005604,
+              "y": 0.3500000000001359,
+              "z": -7.625645898754763e-07,
+              "yaw": 1.700329136036082e-11,
+              "linear": 0.0,
+              "angular": 0.0,
+              "velocity_source": "finite difference of measured stamped Gazebo poses",
+              "source_reported_twist": {
+                "linear": 0.0,
+                "angular": 0.0
+              }
+            },
+            "mode": "idle",
+            "reason": "Scoped entity pose reset acknowledged; commands neutral",
+            "nav2_pending": false,
+            "cancel_pending": false
+          }
+        ]
+      },
+      {
+        "sim_time": 8.08,
+        "phase": "resetting",
+        "members": [
+          {
+            "id": "alpha",
+            "truth": {
+              "x": -0.4999632336305302,
+              "y": -0.4999996752562955,
+              "z": 1.7199405863324646e-06,
+              "yaw": -6.817478119257808e-06,
+              "linear": 0.0,
+              "angular": 0.0,
+              "velocity_source": "finite difference of measured stamped Gazebo poses",
+              "source_reported_twist": {
+                "linear": 0.0,
+                "angular": 0.0
+              }
+            },
+            "mode": "idle",
+            "reason": "Scoped entity pose reset acknowledged; commands neutral",
+            "nav2_pending": false,
+            "cancel_pending": false
+          },
+          {
+            "id": "beta",
+            "truth": {
+              "x": -0.500000000005604,
+              "y": 0.3500000000001359,
+              "z": -7.625645898754763e-07,
+              "yaw": 1.700329136036082e-11,
+              "linear": 0.0,
+              "angular": 0.0,
+              "velocity_source": "finite difference of measured stamped Gazebo poses",
+              "source_reported_twist": {
+                "linear": 0.0,
+                "angular": 0.0
+              }
+            },
+            "mode": "idle",
+            "reason": "Scoped entity pose reset acknowledged; commands neutral",
+            "nav2_pending": false,
+            "cancel_pending": false
+          }
+        ]
+      }
+    ],
+    "wall_duration_s": 3.219512644999668
+  }
+}
