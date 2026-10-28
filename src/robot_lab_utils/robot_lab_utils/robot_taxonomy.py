@@ -6,7 +6,7 @@ import yaml
 ALL_CATEGORIES = 'All categories'
 ALL_TYPES = 'All types'
 CATEGORIES = ('Mobile robots', 'Legged robots', 'Manipulators', 'Mobile manipulators', 'Underwater robots',
-              'Hands and components', 'Drones', 'Reference models', 'Unclassified')
+              'Surface vessels', 'Hands and components', 'Drones', 'Reference models', 'Unclassified')
 
 
 def load_taxonomy(path=None):
