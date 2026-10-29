@@ -23,13 +23,14 @@
   - air1 convergence: formation_error_m ~0.66 → ~0.15 m (converging)
   - air2: formation_error_m ~0.95–1.10 m (not converging)
   - altitude trim applied: air1 ~-0.05 to -0.035 m/s, air2 ~+0.02 to +0.04 m/s
-  - **Land/disarm NOT confirmed**: land command accepted by both FCUs, but FCUs
-    remain airborne (landed_state: 2 = IN_AIR). Landing requires longer wait
-    or native PX4 landing completion. Heartbeat fix (shorter sleep / explicit
-    heartbeat every iteration) resolved the "Connect a live aerial operator"
-    rejection.
-- Production adapter is verified through formation flight; landing/disarm and
-  larger groups, other maps/behaviors and member-loss/contact remain open.
+  - **Land command accepted** by both FCUs; FCUs remain airborne (landed_state: 2
+    = IN_AIR). Landing requires longer wait or native PX4 landing completion.
+  - air2 non-convergence cause: PX4 accelerometer timeout ("Accel #0 fail:
+    TIMEOUT!") in air2-px4.log — FCU telemetry becomes stale, `ready()` returns
+    False, velocity commands ignored. Environment/simulator issue, not code.
+- Production adapter is verified through formation flight; air2 environment
+  issue, landing/disarm and larger groups, other maps/behaviors and
+  member-loss/contact remain open.
 
 ## Relevant artifacts (SSD, preserved)
 
