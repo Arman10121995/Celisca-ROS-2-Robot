@@ -1,0 +1,109 @@
+{
+ "odom": "/odom/ground_truth",
+ "cmd_topic": "/cmd_vel",
+ "phase_clock": "sim",
+ "phases": [
+  {
+   "phase": "straight",
+   "command": [
+    0.4,
+    0.0
+   ],
+   "lateral_command": 0.0,
+   "measured": {
+    "vx": 0.222,
+    "vy": -0.004,
+    "wz": 0.009,
+    "distance": 0.664,
+    "measured_sim_s": 2.99,
+    "wall_s": 13.898,
+    "steering_positions_rad": {}
+   }
+  },
+  {
+   "phase": "spin_hold_0",
+   "command": [
+    0.0,
+    0.8
+   ],
+   "lateral_command": 0.0,
+   "measured": {
+    "vx": 0.0,
+    "vy": -0.018,
+    "wz": 0.568,
+    "distance": 0.071,
+    "measured_sim_s": 4.0,
+    "wall_s": 18.001,
+    "steering_positions_rad": {}
+   }
+  },
+  {
+   "phase": "spin_hold_5",
+   "command": [
+    0.0,
+    0.8
+   ],
+   "lateral_command": 0.0,
+   "measured": {
+    "vx": 0.021,
+    "vy": -0.027,
+    "wz": 0.565,
+    "distance": 0.137,
+    "measured_sim_s": 4.0,
+    "wall_s": 17.615,
+    "steering_positions_rad": {}
+   }
+  },
+  {
+   "phase": "spin_hold_10",
+   "command": [
+    0.0,
+    0.8
+   ],
+   "lateral_command": 0.0,
+   "measured": {
+    "vx": 0.015,
+    "vy": -0.027,
+    "wz": 0.552,
+    "distance": 0.124,
+    "measured_sim_s": 4.0,
+    "wall_s": 18.123,
+    "steering_positions_rad": {}
+   }
+  },
+  {
+   "phase": "spin_hold_15",
+   "command": [
+    0.0,
+    0.8
+   ],
+   "lateral_command": 0.0,
+   "measured": {
+    "vx": 0.017,
+    "vy": -0.028,
+    "wz": 0.556,
+    "distance": 0.132,
+    "measured_sim_s": 3.995,
+    "wall_s": 17.827,
+    "steering_positions_rad": {}
+   }
+  },
+  {
+   "phase": "stop",
+   "command": [
+    0.0,
+    0.0
+   ],
+   "lateral_command": 0.0,
+   "measured": {
+    "vx": 0.039,
+    "vy": 0.017,
+    "wz": -0.058,
+    "distance": 0.042,
+    "measured_sim_s": 0.995,
+    "wall_s": 7.046,
+    "steering_positions_rad": {}
+   }
+  }
+ ]
+}

@@ -96,10 +96,29 @@ Limits:
 - no terrain, pushes, navigation or long turns (the spin phase is 3 s);
 - the policy saw only MuJoCo on a flat floor.
 
-A turn held for 20 s and a run with the randomisation options follow in
-the [next rounds](#after-this-run).
+## Held turn on the spot (round T3, 2026-10-29, `4e1fd92`)
+
+`CHECK_ARGS="--hold-spin 20"`: a 0.4 m/s straight, then 0.8 rad/s on the
+spot for 20 s, measured in four 4 s windows
+([hold-spin/](hold-spin/)). Round 52 ran `go2_himloco` in Isaac the same
+way.
+
+| Window | Isaac go2_walk_r1 | Isaac go2_himloco (round 52) | MuJoCo go2_walk_r1 |
+|---|---|---|---|
+| 0-4 s | 0.568 | 0.296 | 0.779 |
+| 5-9 s | 0.565 | 0.000 | 0.780 |
+| 10-14 s | 0.552 | 0.000 | 0.781 |
+| 15-19 s | 0.556 | 0.000 | 0.780 |
+| drift while turning | 0.07-0.14 m | | 0.09-0.13 m |
+
+The trained policy holds the turn in both backends; the rl_sar policy stops
+after 1-2 s. Isaac turns at 0.70 of the command. Navigation with in-place
+rotation is therefore possible with this policy: the
+`spin_in_place:=true` launch override (`eb094b1`) lets Nav2 plan it. The
+nav_obstacle missions that test it are in round 58.
 
 ## After this run
 
-See the [rounds README](../rounds-2026-10-19/README.md) and the training guide
-for later runs.
+`go2_walk_r2` (same task, with domain randomisation and observation noise)
+and the navigation missions follow; see the
+[rounds README](../rounds-2026-10-19/README.md).
