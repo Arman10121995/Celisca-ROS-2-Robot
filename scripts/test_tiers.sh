@@ -72,6 +72,7 @@ FAST_TESTS=(
   "$BRG_TEST/test_urdf_springs.py"
   "$BRG_TEST/test_sensor_config.py"
   "$BRG_TEST/test_drive_kinematics.py"
+  "src/robot_lab_utils/test/test_car_alignment.py"
   "$BRG_TEST/test_driven_assembly_hold.py"
   "$BRG_TEST/test_px4_sitl_model.py"
   "$BRG_TEST/test_mode_capability.py"

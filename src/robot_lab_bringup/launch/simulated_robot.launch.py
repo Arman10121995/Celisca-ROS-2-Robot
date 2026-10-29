@@ -329,6 +329,22 @@ def _is_auto(value):
     return str(value).strip().lower() in ("", "auto")
 
 
+def _no_spin_in_place(context, robot_config):
+    """Whether navigation must treat the robot as unable to turn on the spot.
+
+    robots.yaml ``no_spin_in_place`` lists the backends where the robot's
+    default controller cannot (Go2 with the rl_sar go2_himloco policy).
+    ``spin_in_place:=true`` overrides it for a controller measured to turn
+    in place there (a trained policy, R12); ``false`` forces forward arcs.
+    """
+    choice = str(_launch_value(context, "spin_in_place") or "auto").strip().lower()
+    if choice not in ("auto", "true", "false"):
+        raise ValueError("spin_in_place must be auto, true or false, not %r" % choice)
+    if choice != "auto":
+        return choice == "false"
+    return _launch_value(context, "simulator") in ((robot_config or {}).get("no_spin_in_place") or [])
+
+
 def _config_value(context, launch_argument, default):
     value = _launch_value(context, launch_argument)
     if _is_auto(value):
@@ -543,7 +559,7 @@ def _resolve_algorithm_selection(context, mode_config, dispatch, robot_config=No
     # (no_spin_in_place + forward_arc_radius; navigation motion model
     # forward_arc) plans curvature-limited paths by default.
     if ((robot_config or {}).get("forward_arc_radius") and "global_planning" in defaults
-            and _launch_value(context, "simulator") in ((robot_config or {}).get("no_spin_in_place") or [])):
+            and _no_spin_in_place(context, robot_config)):
         defaults["global_planning"] = "hybrid_a_star_planner"
     selection, plugins, nodes, notes = {}, {}, [], []
 
@@ -1605,7 +1621,7 @@ def _build_simulation_actions(context):
 
     # A robot that cannot turn on the spot in this backend (and declares the
     # radius it turns at while walking) plans forward-only curves.
-    forward_arc = (_launch_value(context, "simulator") in (robot_config.get("no_spin_in_place") or [])
+    forward_arc = (_no_spin_in_place(context, robot_config)
                    and robot_config.get("forward_arc_radius"))
     motion_model = ("ackermann" if drive_type == "ackermann" else
                     "omni" if drive_type == "mecanum" else
@@ -1757,8 +1773,7 @@ def _build_simulation_actions(context):
             "motion_model": motion_model,
             # A robot that cannot turn on the spot in this backend backs up
             # instead of running Nav2's Spin recovery.
-            "spin_recovery": "false" if _launch_value(context, "simulator") in (
-                robot_config.get("no_spin_in_place") or []) else "true",
+            "spin_recovery": "false" if _no_spin_in_place(context, robot_config) else "true",
             "turning_radius": str(robot_config.get("forward_arc_radius") or 0.4),
         }
         # A node planner that serves a Nav2 action replaces the plugin
@@ -1967,6 +1982,13 @@ def generate_launch_description():
                         "it off. The policy must match robot_model; it "
                         "replaces the passive hold and any effort controller "
                         "on the same joints."),
+        DeclareLaunchArgument(
+            "spin_in_place", default_value="auto",
+            description="Navigation: 'auto' follows robots.yaml no_spin_in_place "
+                        "(backends where the default controller cannot turn on "
+                        "the spot); 'true' plans in-place rotations and Spin "
+                        "recovery anyway, for a controller measured to turn there "
+                        "(a trained legged policy); 'false' forces forward arcs."),
         DeclareLaunchArgument(
             "legged_policy_fall_tilt_rad", default_value="1.0",
             description="Trunk tilt [rad] beyond which the legged policy "

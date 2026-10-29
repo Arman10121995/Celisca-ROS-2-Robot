@@ -10,6 +10,10 @@ The course comes from robot_lab_maps/maps/car_course/course.json
 2. **Parking**: the bay goal, heading +y (nose in between two parked boxes
    0.8 m apart).  It passes on success within ``--parking-position-error``
    and ``--parking-yaw-error-deg`` of the goal, measured against truth.
+   With ``--align-heading`` a forward/reverse shuffle
+   (robot_lab_utils.car_alignment) corrects the heading after Nav2 reports
+   success, from the localization estimate; Nav2's own arrival and the
+   shuffle are both reported.
 
 Throughout, the robot's footprint polygon (its Nav2 overlay footprint,
 placed at the truth pose) is checked against the cones and boxes: the
@@ -27,6 +31,7 @@ from pathlib import Path
 
 import numpy as np
 import rclpy
+from geometry_msgs.msg import Twist
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from sim_nav_mission import Mission, run_goal  # noqa: E402
@@ -107,6 +112,9 @@ def main(argv=None):
     parser.add_argument('--parking-position-error', type=float, default=0.15)
     parser.add_argument('--parking-yaw-error-deg', type=float, default=10.0)
     parser.add_argument('--turning-radius', type=float, default=0.5)
+    parser.add_argument('--align-heading', action='store_true',
+                        help='shuffle forward/reverse after the parking goal to reach its heading')
+    parser.add_argument('--align-tolerance-deg', type=float, default=3.0)
     parser.add_argument('--trace-out')
     args = parser.parse_args(argv)
     if not args.course:
@@ -117,7 +125,8 @@ def main(argv=None):
 
     rclpy.init()
     node = Mission()
-    report = dict(steps={}, course=args.course, footprint=geometry.footprint.tolist())
+    report = dict(steps={}, course=args.course, footprint=geometry.footprint.tolist(),
+                  parking_alignment='shuffle' if args.align_heading else 'nav2 only')
     started = time.monotonic()
     for name, ready in (('map', lambda: node.map is not None),
                         ('localization_tf', lambda: node.pose(args.base) is not None),
@@ -153,11 +162,40 @@ def main(argv=None):
         if subscription.topic_name == '/odom/ground_truth':
             subscription.callback = on_truth
 
-    def section(name, goals, position_error, yaw_error_deg=0.0):
+    def estimate_pose():
+        try:
+            t = node.tf.lookup_transform('map', args.base, rclpy.time.Time()).transform
+        except Exception:  # noqa: BLE001 - no transform yet
+            return None
+        q = t.rotation
+        return (t.translation.x, t.translation.y,
+                math.atan2(2 * (q.w * q.z + q.x * q.y), 1 - 2 * (q.y * q.y + q.z * q.z)))
+
+    command = node.create_publisher(Twist, '/cmd_vel', 10)
+
+    def publish(vx, wz):
+        message = Twist()
+        message.linear.x, message.angular.z = float(vx), float(wz)
+        command.publish(message)
+
+    def align(step, goal):
+        from robot_lab_utils.car_alignment import HeadingShuffle
+        step['nav2_arrival'] = {k: step.get(k) for k in ('final_error_truth_m', 'final_yaw_error_truth_deg',
+                                                          'final_error_estimate_m', 'final_yaw_error_estimate_deg')}
+        shuffle = HeadingShuffle(estimate_pose, publish, lambda seconds: node.spin_until(lambda: False, seconds),
+                                 turning_radius=args.turning_radius,
+                                 tolerance=math.radians(args.align_tolerance_deg))
+        step['alignment'] = shuffle.run(goal['yaw'])
+        step.update(node.measured(goal, goal['yaw'], args.base))
+
+    def section(name, goals, position_error, yaw_error_deg=0.0, align_heading=False):
         watch.update(clearance=math.inf, obstacle=None, curvature=0.0)
         steps = []
         for goal in goals:
             step = run_goal(node, goal, goal['yaw'], args.timeout, args.base)
+            if (align_heading and step.get('outcome') == 'succeeded'
+                    and step.get('final_error_truth_m', math.inf) <= position_error):
+                align(step, goal)
             passed = (step.get('outcome') == 'succeeded' and step.get('settled_sim_second')
                       and step.get('final_error_truth_m', math.inf) <= position_error)
             if yaw_error_deg > 0:
@@ -177,7 +215,8 @@ def main(argv=None):
 
     section('slalom', course['slalom_goals'], args.max_position_error)
     if report['steps']['slalom']['passed']:
-        section('parking', [course['parking_goal']], args.parking_position_error, args.parking_yaw_error_deg)
+        section('parking', [course['parking_goal']], args.parking_position_error, args.parking_yaw_error_deg,
+                align_heading=args.align_heading)
     else:
         report['steps']['parking'] = dict(passed=False, note='not attempted after the slalom failed')
     report.update(node.motion_report())

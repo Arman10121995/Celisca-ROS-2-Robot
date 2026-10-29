@@ -121,13 +121,16 @@ def test_wheeled_robots_keep_their_odometry():
 
 
 @pytest.mark.integration
-@pytest.mark.parametrize('robot,simulator,spin', [
-    ('unitree_go2', 'mujoco', 'false'), ('unitree_go2', 'gazebo', 'false'),
-    ('unitree_go2', 'isaac', 'true'), ('bumperbot', 'mujoco', 'true')])
-def test_robots_that_cannot_spin_back_up_instead(robot, simulator, spin):
+@pytest.mark.parametrize('robot,simulator,spin,override', [
+    ('unitree_go2', 'mujoco', 'false', 'auto'), ('unitree_go2', 'gazebo', 'false', 'auto'),
+    # 2026-10-19 (1ab2b48): go2_himloco does not hold a turn on the spot in Isaac either.
+    ('unitree_go2', 'isaac', 'false', 'auto'), ('bumperbot', 'mujoco', 'true', 'auto'),
+    # A controller measured to turn in place (the trained go2_walk_r1, R12).
+    ('unitree_go2', 'isaac', 'true', 'true'), ('bumperbot', 'mujoco', 'false', 'false')])
+def test_robots_that_cannot_spin_back_up_instead(robot, simulator, spin, override):
     from launch.actions import IncludeLaunchDescription
     context, actions = _build(robot_model=robot, simulator=simulator, mode='nav',
-                              map_name='nav_obstacle')
+                              map_name='nav_obstacle', spin_in_place=override)
     navigation = [a for a in _walk(actions) if isinstance(a, IncludeLaunchDescription) and _text(
         context, a.launch_description_source._LaunchDescriptionSource__location).endswith(
             'navigation.launch.py')]
@@ -136,13 +139,15 @@ def test_robots_that_cannot_spin_back_up_instead(robot, simulator, spin):
 
 
 @pytest.mark.integration
-@pytest.mark.parametrize('robot,simulator,model,radius', [
-    ('unitree_go2', 'mujoco', 'forward_arc', '0.4'), ('unitree_go2', 'isaac', 'diff', None),
-    ('unitree_b2', 'mujoco', 'forward_arc', '0.5'), ('bumperbot', 'mujoco', 'diff', None)])
-def test_robots_that_cannot_turn_on_the_spot_plan_forward_arcs(robot, simulator, model, radius):
+@pytest.mark.parametrize('robot,simulator,model,radius,override', [
+    ('unitree_go2', 'mujoco', 'forward_arc', '0.4', 'auto'),
+    ('unitree_go2', 'isaac', 'forward_arc', '0.4', 'auto'),
+    ('unitree_b2', 'mujoco', 'forward_arc', '0.5', 'auto'), ('bumperbot', 'mujoco', 'diff', None, 'auto'),
+    ('unitree_go2', 'isaac', 'diff', None, 'true'), ('unitree_go2', 'mujoco', 'diff', None, 'true')])
+def test_robots_that_cannot_turn_on_the_spot_plan_forward_arcs(robot, simulator, model, radius, override):
     from launch.actions import IncludeLaunchDescription
     context, actions = _build(robot_model=robot, simulator=simulator, mode='nav',
-                              map_name='nav_obstacle')
+                              map_name='nav_obstacle', spin_in_place=override)
     navigation = [a for a in _walk(actions) if isinstance(a, IncludeLaunchDescription) and _text(
         context, a.launch_description_source._LaunchDescriptionSource__location).endswith(
             'navigation.launch.py')]
@@ -236,9 +241,11 @@ def test_forward_arc_robots_default_to_a_curvature_aware_planner():
             'navigation.launch.py')]
     arguments = {_text(context, k): _text(context, v) for k, v in navigation[0].launch_arguments}
     assert arguments['global_planner_plugin'] == 'nav2_smac_planner/SmacPlannerHybrid'
-    # Where the Go2 can spin (Isaac), the mode default grid planner stays.
+    # Where its controller can spin (a trained policy, spin_in_place:=true;
+    # go2_himloco cannot in any backend since 1ab2b48), the mode's default
+    # grid planner stays.
     context, actions = _build(robot_model='unitree_go2', simulator='isaac', mode='nav',
-                              map_name='nav_obstacle')
+                              map_name='nav_obstacle', spin_in_place='true')
     navigation = [a for a in _walk(actions) if isinstance(a, IncludeLaunchDescription) and _text(
         context, a.launch_description_source._LaunchDescriptionSource__location).endswith(
             'navigation.launch.py')]
