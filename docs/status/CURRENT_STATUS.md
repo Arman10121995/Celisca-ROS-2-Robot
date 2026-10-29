@@ -120,6 +120,14 @@ run reaches 1.68886 m for a 1.70 m target and 1.70029 m during the following
 turn. Both vehicles now use the installed Fortress added-mass sign convention;
 the corrected ROV has its own tank surge/depth/Stop diagnostic. AUV Stop
 zeros propulsion/fins and allows physical coasting. Independent underwater
+
+October 29: **Aerial R10.3 continuation is measured** on `nav_empty`: two X500s'
+takeoff corridor checks pass (check_position air1 [-0.5,-0.5,0.22726] m,
+air2 [-3.5,-0.5,0.22649] m); native PX4 EKF range reference applied
+(`EKF2_HGT_REF=2`); the adapter's formation-altitude trim is implemented and
+unit-tested; bounded flight trials recorded. Establishment of
+formation-error/altitude and landing/disarm metrics blocked on a
+driver-protocol fix. [Receipt](docs/status/evidence/aerial-r103-2026-10-29/README.md).
 estimation, saved SLAM/navigation, other backends and broader qualification
 remain open. [Guide](../tutorials/tethys-auv.md),
 [source/measurement scope](auv-2026-10-15.md).

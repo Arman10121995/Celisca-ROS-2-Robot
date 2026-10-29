@@ -13,6 +13,13 @@ The new `R7.8.bicycle` lane adds three source-profile car controllers and GUI
 dispatch; physical comparisons remain pending. Preserve Claude's live trials
 and their source-scoped measurements.
 
+
+Continuation (2026-10-09): the two-X500 range-reference formation geometry on
+`nav_empty` passed through actual takeoff corridor checks (check_position
+air1 [-0.5,-0.5,0.22726] m, air2 [-3.5,-0.5,0.22649] m); the adapter's
+formation-altitude trim is implemented and unit-tested; bounded flight trials
+recorded. Remaining: formation-error/altitude metrics and landing/disarm, then
+larger groups, other maps/behaviors and member-loss/contact cases.
 Updated: 2026-10-27 (see the current agent queue below). See [current measured and implemented status](docs/status/CURRENT_STATUS.md) and [the historical extension checkpoint](docs/status/continuation-2026-10-08.md)
 for exact physical source stages and publication checks. The
 [completion audit](docs/status/audit-2026-10-02.md) reopens unsupported

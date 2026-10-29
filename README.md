@@ -39,6 +39,13 @@ scopes. Use the current guide, roadmap and corrected ledger for live task state.
 October 20: [the current extension checkpoint](docs/status/extension-2026-10-20.md)
 reconciles the installed inventory, completed training/export and actual remaining
 implementation. The extension is being completed before the older roadmap;
+
+October 29: **Aerial R10.3 continuation is measured** on `nav_empty`: two X500s'
+takeoff corridor checks pass (check_position air1 [-0.5,-0.5,0.22726] m,
+air2 [-3.5,-0.5,0.22649] m) with native PX4 EKF range reference
+(`EKF2_HGT_REF=2`); the adapter's formation-altitude trim is implemented and
+unit-tested; bounded flight trials recorded. Formation-error/altitude and
+landing/disarm acceptance blocked on a driver-protocol fix. [Receipt](docs/status/evidence/aerial-r103-2026-10-29/README.md).
 feature delivery and physical mission qualification remain separate.
 
 October 19 adds a **Training page** (EXPERIMENTS → Policy training). It
