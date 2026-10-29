@@ -43,9 +43,10 @@ implementation. The extension is being completed before the older roadmap;
 October 29: **Aerial R10.3 continuation is measured** on `nav_empty`: two X500s'
 takeoff corridor checks pass (check_position air1 [-0.5,-0.5,0.22726] m,
 air2 [-3.5,-0.5,0.22649] m) with native PX4 EKF range reference
-(`EKF2_HGT_REF=2`); the adapter's formation-altitude trim is implemented and
-unit-tested; bounded flight trials recorded. Formation-error/altitude and
-landing/disarm acceptance blocked on a driver-protocol fix. [Receipt](docs/status/evidence/aerial-r103-2026-10-29/README.md).
+(`EKF2_HGT_REF=2`); formation flight MEASURED (formation_rms_m=0.7820 m,
+altitude_rms_m=0.4084 m, 362 samples over 18 s); air1 converging
+(~0.66→0.15 m), air2 not converging (~0.95–1.10 m). Altitude trim applied.
+Land command accepted but FCUs remain airborne. [Receipt](docs/status/evidence/aerial-r103-2026-10-29/README.md).
 feature delivery and physical mission qualification remain separate.
 
 October 19 adds a **Training page** (EXPERIMENTS → Policy training). It

@@ -84,16 +84,16 @@ earlier failures and successful scopes; do not rerun catalog restoration or the
 ## Continuation — 2026-10-09 (R10.3 measurement)
 
 The two-X500 range-reference formation case on `nav_empty` ran a bounded
-18 s formation mission (formation_samples: 200) using the native PX4 EKF
+18 s formation mission (formation_samples: 362) using the native PX4 EKF
 range reference (`EKF2_HGT_REF=2`). Measured outcomes:
-- formation_rms_m: 1.0976 m (last 10 s), range 1.0976–2.1946 m
-- altitude_rms_m: 0.8376 m (last 10 s), range 0.3577–0.8376 m
+- formation_rms_m: 0.7820 m (last 10 s), range 0.7820–2.1590 m
+- altitude_rms_m: 0.4084 m (last 10 s), range 0.3749–0.4683 m
 - air1 convergence: formation_error_m ~0.66 → ~0.15 m
 - air2: formation_error_m ~0.95–1.10 m (not converging)
 - altitude trim applied: air1 ~-0.05 to -0.035 m/s, air2 ~+0.02 to +0.04 m/s
-- Landing/disarm NOT confirmed (heartbeat stale during sampling).
+- Land command accepted but FCUs remain airborne (landed_state: 2 = IN_AIR).
 
 Driver-protocol fix (shorter sleep / explicit heartbeat every iteration) is
 the next task before landing metrics and larger groups. Full run: SSD session
-`swarm-5vvjltpb`, trial result `r10-20261029-ZwQRVw/trial/trial_result.json`.
+`swarm-ja5__fhx`, trial result `r10-20261029-ZwQRVw/trial/trial_result.json`.
 completed storage relocation.

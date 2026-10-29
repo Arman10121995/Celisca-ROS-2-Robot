@@ -16,17 +16,18 @@
 - Maximum estimated speed during stabilization: 0.088 m/s (air1), 0.065 m/s (air2)
 - Applied height reference: `2` (rangefinder) on both — `EKF2_HGT_REF=2`,
   `EKF2_RNG_CTRL=2` confirmed at the workers
-- **Formation flight MEASURED** (session swarm-5vvjltpb, bounded mission):
-  - mode: formation, 18 s of formation control (formation_samples: 200)
-  - formation_rms_m: 1.0976 m (last 10 s), range 1.0976–2.1946 m
-  - altitude_rms_m: 0.8376 m (last 10 s), range 0.3577–0.8376 m
+- **Formation flight MEASURED** (session swarm-ja5__fhx, bounded mission):
+  - mode: formation, 18 s of formation control (formation_samples: 362)
+  - formation_rms_m: 0.7820 m (last 10 s), range 0.7820–2.1590 m
+  - altitude_rms_m: 0.4084 m (last 10 s), range 0.3749–0.4683 m
   - air1 convergence: formation_error_m ~0.66 → ~0.15 m (converging)
   - air2: formation_error_m ~0.95–1.10 m (not converging)
   - altitude trim applied: air1 ~-0.05 to -0.035 m/s, air2 ~+0.02 to +0.04 m/s
-  - **Land/disarm NOT confirmed**: heartbeat went stale during the 18 s sampling
-    period (driver-protocol issue: `time.sleep(0.2)` blocks heartbeat timer).
-    FCUs remain armed. Landing requires driver fix (shorter sleep / explicit
-    heartbeat every iteration).
+  - **Land/disarm NOT confirmed**: land command accepted by both FCUs, but FCUs
+    remain airborne (landed_state: 2 = IN_AIR). Landing requires longer wait
+    or native PX4 landing completion. Heartbeat fix (shorter sleep / explicit
+    heartbeat every iteration) resolved the "Connect a live aerial operator"
+    rejection.
 - Production adapter is verified through formation flight; landing/disarm and
   larger groups, other maps/behaviors and member-loss/contact remain open.
 
