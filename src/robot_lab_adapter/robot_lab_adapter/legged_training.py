@@ -22,7 +22,9 @@ Options for transfer beyond the nominal plant (all off by default):
 ``Randomization`` (floor friction, added base mass and motor strength, one
 of K model variants per episode), ``terrain='rough'`` (a smooth random
 heightfield, flat around the spawn) and ``obs_noise`` (legged_gym's
-per-term observation noise).
+per-term observation noise) and ``latency_s`` (an actuation delay drawn
+per episode, 0 to ``latency_s``: the previous targets hold for that many
+physics substeps of each policy step, at most one policy step).
 
 This is a training tool, not an evaluation of any robot: a trained policy
 needs its own measured runs before any claim.
@@ -40,11 +42,17 @@ import numpy as np
 
 from .legged_policy import POLICY_PROFILES, PolicyContract, default_policy_for, mujoco_pd_config
 
-# Robots with a provisioned template policy that this trainer supports:
-# quadrupeds with position-controlled legs only (no wheels, no recurrent
-# humanoid contract yet).
+# Robots with a provisioned template policy that this trainer supports: the
+# quadrupeds, the wheel-legged Go2W (wheel joints take velocity targets, as
+# in deployment) and the G1 humanoid.  All five templates have the same
+# history-free observation layout; the recurrent humanoid contracts do not.
 TRAINABLE = {profile: name for name, profile in POLICY_PROFILES.items()
-             if name in ('a1_legged_gym', 'b2_robot_lab', 'go2_himloco')}
+             if name in ('a1_legged_gym', 'b2_robot_lab', 'go2_himloco', 'go2w_robot_lab',
+                         'g1_robomimic_locomotion')}
+
+# Leaf bodies with these names are the feet (the Go2W wheels, the G1 ankle
+# roll links); without any, the leaf bodies with a collision sphere are.
+FOOT_NAME = re.compile(r'foot$|ankle', re.IGNORECASE)
 
 OBSERVATIONS = ['ang_vel', 'gravity_vec', 'commands', 'dof_pos', 'dof_vel', 'actions']
 
@@ -198,20 +206,44 @@ def build_model_xml(robot, contract, armature=0.01, terrain='flat', roughness=0.
 
 
 def _feet(model):
-    """Lowest collision sphere of each leaf body below the free body: (body, geom)."""
+    """Feet and their contact regions: [(body, geoms, local centre, radius)].
+
+    Named feet (FOOT_NAME) use all their collision spheres, or their other
+    collision geoms when they have none (a wheel mesh).  Otherwise each leaf
+    body below the free body contributes its lowest collision sphere.  The
+    region is a sphere around the geoms: 1.6 sphere radii, or 1.1 bounding
+    radii for other shapes.
+    """
     import mujoco
     children = {}
     for body in range(1, model.nbody):
         children.setdefault(int(model.body_parentid[body]), []).append(body)
+
+    def colliding(body):
+        return [g for g in range(model.ngeom) if model.geom_bodyid[g] == body
+                and (model.geom_contype[g] or model.geom_conaffinity[g])]
+
+    def spheres(geoms):
+        return [g for g in geoms if model.geom_type[g] == mujoco.mjtGeom.mjGEOM_SPHERE]
+
+    leaves = [body for body in range(2, model.nbody) if not children.get(body) and colliding(body)]
+    named = [body for body in leaves
+             if FOOT_NAME.search(mujoco.mj_id2name(model, mujoco.mjtObj.mjOBJ_BODY, body) or '')]
     feet = []
-    for body in range(2, model.nbody):
-        if children.get(body):
-            continue
-        spheres = [g for g in range(model.ngeom) if model.geom_bodyid[g] == body
-                   and model.geom_type[g] == mujoco.mjtGeom.mjGEOM_SPHERE
-                   and (model.geom_contype[g] or model.geom_conaffinity[g])]
-        if spheres:
-            feet.append((body, min(spheres, key=lambda g: model.geom_pos[g][2])))
+    for body in named or leaves:
+        geoms = spheres(colliding(body))
+        if not named:
+            if not geoms:
+                continue
+            geoms = [min(geoms, key=lambda g: model.geom_pos[g][2])]
+        if geoms:
+            centre = np.mean([model.geom_pos[g] for g in geoms], axis=0)
+            radius = max(np.linalg.norm(model.geom_pos[g] - centre) + 1.6 * model.geom_size[g][0] for g in geoms)
+        else:
+            geoms = colliding(body)
+            centre = np.asarray(model.geom_pos[geoms[0]], dtype=float)
+            radius = 1.1 * max(np.linalg.norm(model.geom_pos[g] - centre) + model.geom_rbound[g] for g in geoms)
+        feet.append((body, geoms, centre, float(radius)))
     return feet
 
 
@@ -225,12 +257,11 @@ def add_foot_sensors(xml):
     sensor = root.find('sensor')
     if sensor is None:
         sensor = ET.SubElement(root, 'sensor')
-    for index, (body, geom) in enumerate(feet):
+    for index, (body, _, centre, radius) in enumerate(feet):
         name = mujoco.mj_id2name(model, mujoco.mjtObj.mjOBJ_BODY, body)
         site = 'training_foot_%d' % index
         ET.SubElement(bodies[name], 'site', name=site, type='sphere',
-                      pos='%g %g %g' % tuple(model.geom_pos[geom]),
-                      size='%g' % (1.6 * model.geom_size[geom][0]))
+                      pos='%g %g %g' % tuple(centre), size='%g' % radius)
         ET.SubElement(sensor, 'touch', name=site + '_touch', site=site)
     return ET.tostring(root, encoding='unicode'), len(feet)
 
@@ -250,7 +281,7 @@ class LeggedTrainingEnv:
 
     def __init__(self, robot, task='walk', num_envs=256, seed=0, threads=None, episode_s=20.0,
                  model_xml=None, randomization: Optional[Randomization] = None, terrain='flat',
-                 roughness=0.03, obs_noise=0.0):
+                 roughness=0.03, obs_noise=0.0, latency_s=0.0):
         import mujoco
         self.mujoco = mujoco
         self.robot = robot
@@ -271,6 +302,8 @@ class LeggedTrainingEnv:
             self.model.hfield_data[:] = ((self.heights.T + self.roughness) / (2 * self.roughness)).ravel()
         c = self.contract
         self.dt = c.dt * c.decimation
+        # Physics substeps of each policy step that still apply the previous targets.
+        self.max_latency_substeps = min(c.decimation, int(round(max(0.0, float(latency_s)) / c.dt)))
         self.max_steps = int(round(episode_s / self.dt))
         self.names = c.training_joint_names()
         joint = {name: mujoco.mj_name2id(self.model, mujoco.mjtObj.mjOBJ_JOINT, name) for name in self.names}
@@ -282,6 +315,9 @@ class LeggedTrainingEnv:
         if min(actuator) < 0:
             raise ValueError('PD actuators missing')
         self.actuator_index = np.array(actuator)
+        # Wheel joints: velocity targets, no default pose (as LeggedPolicy).
+        self.wheels = np.zeros(c.num_dofs, dtype=bool)
+        self.wheels[list(c.wheel_indices)] = True
         self.state_spec = mujoco.mjtState.mjSTATE_FULLPHYSICS
         self.state_size = mujoco.mj_stateSize(self.model, self.state_spec)
         self.threads = [mujoco.MjData(self.model) for _ in range(threads or max(1, (os.cpu_count() or 2) - 2))]
@@ -290,11 +326,13 @@ class LeggedTrainingEnv:
         self._scratch.qpos[:] = self.model.qpos0
         self._scratch.qpos[self.qpos_index] = c.default_dof_pos
         mujoco.mj_forward(self.model, self._scratch)
-        lowest = min(self._scratch.geom_xpos[g][2] - self.model.geom_rbound[g]
+        from robot_lab_mujoco.mujoco_spawner import _geom_bottom_z
+        lowest = min(_geom_bottom_z(self.model, self._scratch, g)
                      for g in range(self.model.ngeom)
                      if self.model.geom_bodyid[g] > 0 and (self.model.geom_contype[g] or self.model.geom_conaffinity[g]))
         feet = _feet(self.model)
-        foot_bottom = min((self._scratch.geom_xpos[g][2] - self.model.geom_size[g][0] for _, g in feet), default=lowest)
+        foot_bottom = min((_geom_bottom_z(self.model, self._scratch, g) for _, geoms, _, _ in feet for g in geoms),
+                          default=lowest)
         self.stand_height = float(self.model.qpos0[2] - foot_bottom)
         self.sensor_touch = np.array([self.model.sensor_adr[mujoco.mj_name2id(
             self.model, mujoco.mjtObj.mjOBJ_SENSOR, 'training_foot_%d_touch' % i)] for i in range(self.num_feet)])
@@ -306,6 +344,8 @@ class LeggedTrainingEnv:
         self.last_actions = np.zeros((n, c.num_dofs))
         self.last_dof_vel = np.zeros((n, c.num_dofs))
         self.commands = np.zeros((n, 3))
+        self.latency = np.zeros(n, dtype=np.int64)
+        self.last_targets = np.tile(np.where(self.wheels, 0.0, c.default_dof_pos), (n, 1))
         self.episode_step = np.zeros(n, dtype=np.int64)
         self.feet_air = np.zeros((n, self.num_feet))
         self.home = np.zeros((n, 2))
@@ -355,7 +395,7 @@ class LeggedTrainingEnv:
             data.qpos[3:7] = (math.cos(yaw / 2), 0.0, 0.0, math.sin(yaw / 2))
             data.qpos[self.qpos_index] = c.default_dof_pos + self.rng.uniform(-0.1, 0.1, c.num_dofs)
             data.qvel[0:6] = self.rng.uniform(-0.2, 0.2, 6)
-            data.ctrl[self.actuator_index] = c.default_dof_pos
+            data.ctrl[self.actuator_index] = np.where(self.wheels, 0.0, c.default_dof_pos)
             mujoco.mj_forward(model, data)
             mujoco.mj_getState(model, data, states[i], self.state_spec)
         return states
@@ -397,6 +437,9 @@ class LeggedTrainingEnv:
         self.actions[index] = 0.0
         self.last_actions[index] = 0.0
         self.last_dof_vel[index] = 0.0
+        self.last_targets[index] = np.where(self.wheels, 0.0, self.contract.default_dof_pos)
+        if self.max_latency_substeps:
+            self.latency[index] = self.rng.integers(0, self.max_latency_substeps + 1, size=len(index))
         self.episode_step[index] = 0
         self.feet_air[index] = 0.0
         self.episode_return[index] = 0.0
@@ -412,6 +455,7 @@ class LeggedTrainingEnv:
         gravity = _quat_rotate_inverse(quat, np.tile([0.0, 0.0, -1.0], (self.num_envs, 1)))
         ang_vel = qvel[:, 3:6]       # free-joint angular velocity is in the body frame
         dof_pos = qpos[:, self.qpos_index] - c.default_dof_pos
+        dof_pos[:, self.wheels] = 0.0
         dof_vel = qvel[:, self.qvel_index]
         terms = [ang_vel * c.ang_vel_scale, gravity, self.commands * c.commands_scale,
                  dof_pos * c.dof_pos_scale, dof_vel * c.dof_vel_scale, self.actions]
@@ -430,9 +474,13 @@ class LeggedTrainingEnv:
         self.last_actions = self.actions
         self.actions = np.clip(np.asarray(actions, dtype=np.float64),
                                c.clip_actions_lower, c.clip_actions_upper)
-        targets = c.default_dof_pos + self.actions * c.action_scale
         control = np.zeros((self.num_envs, c.decimation, model.nu))
+        targets = self._targets()
         control[:, :, self.actuator_index] = targets[:, None, :]
+        for substep in range(self.max_latency_substeps):
+            late = np.flatnonzero(self.latency > substep)
+            control[np.ix_(late, [substep], self.actuator_index)] = self.last_targets[late][:, None, :]
+        self.last_targets = targets
         if self.task.push_interval_s > 0:
             period = max(1, int(round(self.task.push_interval_s / self.dt)))
             push = (self.episode_step % period == period - 1)
@@ -491,7 +539,7 @@ class LeggedTrainingEnv:
             action_rate=np.sum((self.actions - self.last_actions) ** 2, axis=1),
             feet_air_time=air_time,
             hold_position=np.sum(lin_vel[:, :2] ** 2, axis=1),
-            stand_still=np.sum(np.abs(dof_pos - c.default_dof_pos), axis=1),
+            stand_still=np.sum(np.abs(dof_pos - c.default_dof_pos)[:, ~self.wheels], axis=1),
             base_height=(height - self.stand_height) ** 2,
             alive=np.ones(self.num_envs),
             termination=fallen.astype(np.float64))
@@ -516,10 +564,18 @@ class LeggedTrainingEnv:
         terms['ang_vel_error'] = float(np.mean(np.abs(cmd[:, 2] - ang_vel[:, 2])))
         return reward, terms, fallen
 
+    def _targets(self):
+        """Leg position targets (default + scaled action), wheel velocity targets (scaled action)."""
+        c = self.contract
+        scaled = self.actions * c.action_scale
+        return np.where(self.wheels, scaled, c.default_dof_pos + scaled)
+
     def _torques(self, dof_pos, dof_vel):
         c = self.contract
-        targets = c.default_dof_pos + self.actions * c.action_scale
-        return np.clip(c.rl_kp * (targets - dof_pos) - c.rl_kd * dof_vel, -c.torque_limits, c.torque_limits)
+        targets = self._targets()
+        torque = np.where(self.wheels, c.rl_kd * (targets - dof_vel),
+                          c.rl_kp * (targets - dof_pos) - c.rl_kd * dof_vel)
+        return np.clip(torque, -c.torque_limits, c.torque_limits)
 
 
 def policy_config(contract, robot_key, variant):

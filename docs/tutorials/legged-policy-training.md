@@ -38,6 +38,8 @@ ros2 run robot_lab_adapter legged-train evaluate --policy-dir $RUN/policy --task
 | `unitree_go2` | `go2_himloco` | 12 | 45 |
 | `unitree_a1` | `a1_legged_gym` | 12 | 45 |
 | `unitree_b2` | `b2_robot_lab` | 12 | 45 |
+| `unitree_go2w` | `go2w_robot_lab` | 12 legs + 4 wheels | 57 |
+| `unitree_g1_29dof` | `g1_robomimic_locomotion` | 29 | 96 |
 
 Each robot trains in the contract of its
 [provisioned rl_sar policy](legged-policies.md). The joint order, default
@@ -45,8 +47,17 @@ pose, action scale, kp/kd, torque limits, `dt` and decimation all come from
 that policy. The observation is
 `ang_vel, gravity_vec, commands, dof_pos, dof_vel, actions`. It has no
 history and no linear velocity, because a robot does not measure its own
-velocity. Go2W (wheels) and the G1 (a recurrent humanoid) are not trainable
-here yet.
+velocity.
+
+- **Go2W:** the four wheel joints take velocity targets (scaled action, kd
+  only), as `LeggedPolicy` runs them. Their position is zeroed in the
+  observation.
+- **Feet:** leaf bodies named `*foot` or `*ankle*` are the feet (the Go2W
+  wheels, the G1 ankle roll links); otherwise the leaf bodies with a
+  collision sphere are.
+- **Status:** Go2W and G1 training is implemented but has not been run
+  yet (2026-10-29). The rewards are the quadruped ones, so a humanoid may
+  need its own terms.
 
 Tasks (`robot_lab_adapter/legged_training.py`, `TASKS`):
 

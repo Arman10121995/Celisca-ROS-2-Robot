@@ -35,11 +35,19 @@ def _trained_model(obs_dim, act_dim, seed=0):
     return model
 
 
-def test_trainable_robots_are_position_controlled_quadrupeds():
-    assert set(TRAINABLE) == {'unitree_a1', 'unitree_b2', 'unitree_go2'}
-    for name in TRAINABLE.values():
+def test_trainable_robots_and_their_contracts():
+    assert set(TRAINABLE) == {'unitree_a1', 'unitree_b2', 'unitree_go2', 'unitree_go2w', 'unitree_g1_29dof'}
+    for robot, name in TRAINABLE.items():
         contract = PolicyContract.load(POLICY_ROOT / name)
-        assert contract.num_dofs == 12 and not list(contract.wheel_indices)
+        # The trainer's observation layout, without history.
+        assert contract.observations == OBSERVATIONS and not contract.history
+        assert contract.num_observations == 9 + 3 * contract.num_dofs
+        if robot == 'unitree_go2w':
+            assert contract.num_dofs == 16 and list(contract.wheel_indices) == [12, 13, 14, 15]
+        elif robot == 'unitree_g1_29dof':
+            assert contract.num_dofs == 29 and not list(contract.wheel_indices)
+        else:
+            assert contract.num_dofs == 12 and not list(contract.wheel_indices)
     assert set(TASKS) == {'walk', 'turn_in_place', 'stand', 'push_recovery'}
     for task in TASKS.values():
         assert task.rewards['termination'] < 0 and task.description and task.only_positive
@@ -89,11 +97,11 @@ def test_quat_rotate_inverse_matches_a_yawed_body():
     np.testing.assert_allclose(body, [np.cos(yaw), -np.sin(yaw), 0.0], atol=1e-12)
 
 
-def _export(tmp_path, robot, obs_dim):
+def _export(tmp_path, robot, obs_dim, act_dim=12):
     """A checkpoint shaped like legged_train writes, exported to a policy directory."""
     from robot_lab_adapter.legged_train import export_policy
-    model = _trained_model(obs_dim, 12)
-    run = dict(robot=robot, task='walk', obs_dim=obs_dim, act_dim=12, hidden=[32, 16], name='unit',
+    model = _trained_model(obs_dim, act_dim)
+    run = dict(robot=robot, task='walk', obs_dim=obs_dim, act_dim=act_dim, hidden=[32, 16], name='unit',
                revision='test')
     checkpoint = tmp_path / 'latest.pt'
     torch.save(dict(model=model.state_dict(), run=run, iteration=3, environment_steps=96), checkpoint)
@@ -107,7 +115,7 @@ def test_exported_directory_is_an_ordinary_policy_bound_to_its_robot(tmp_path, m
     monkeypatch.setattr(training, 'template_directory', lambda name: str(POLICY_ROOT / TRAINABLE[name]))
     template = PolicyContract.load(POLICY_ROOT / TRAINABLE[robot])
     obs_dim = 9 + 3 * template.num_dofs
-    model, directory = _export(tmp_path, robot, obs_dim)
+    model, directory = _export(tmp_path, robot, obs_dim, template.num_dofs)
     contract = PolicyContract.load(directory)
     source = json.loads((directory / 'source.json').read_text())
     assert source['profile'] == robot and source['trained_by'] == 'robot_lab_adapter.legged_train'
@@ -125,8 +133,10 @@ def test_exported_directory_is_an_ordinary_policy_bound_to_its_robot(tmp_path, m
     policy = LeggedPolicy(contract, model_path=str(directory / 'policy.onnx'))
     rng = np.random.default_rng(2)
     names = contract.training_joint_names()
-    state = LeggedState(dict(zip(names, contract.default_dof_pos + rng.uniform(-.1, .1, 12))),
-                        dict(zip(names, rng.uniform(-1, 1, 12))), (0.99, 0.05, -0.05, 0.1), (0.1, -0.2, 0.3))
+    dofs = contract.num_dofs
+    assert list(contract.wheel_indices) == list(template.wheel_indices)
+    state = LeggedState(dict(zip(names, contract.default_dof_pos + rng.uniform(-.1, .1, dofs))),
+                        dict(zip(names, rng.uniform(-1, 1, dofs))), (0.99, 0.05, -0.05, 0.1), (0.1, -0.2, 0.3))
     command = (0.4, 0.1, -0.2)
     observation = policy.observation(state, command).astype(np.float32)
     policy.reset()
@@ -247,3 +257,83 @@ def test_randomised_rough_env_stands_and_observations_are_noisy(go2_rough_env):
         obs, reward, done, info = env.step(np.zeros((4, 12)))
         assert np.all(np.isfinite(obs)) and np.all(np.isfinite(reward))
         assert not np.any(info['fallen'])
+
+
+def _env(robot, **kwargs):
+    pytest.importorskip('mujoco')
+    try:
+        from ament_index_python.packages import get_package_share_directory
+        get_package_share_directory('robot_lab_robots')
+        get_package_share_directory('robot_lab_adapter')
+    except Exception:  # noqa: BLE001
+        pytest.skip('installed robot_lab packages are needed for the MuJoCo model')
+    from robot_lab_adapter.legged_training import LeggedTrainingEnv
+    return LeggedTrainingEnv(robot, 'stand', num_envs=2, seed=0, threads=1, episode_s=2.0, **kwargs)
+
+
+def test_go2w_wheels_take_velocity_targets_and_the_wheels_are_its_feet():
+    env = _env('unitree_go2w')
+    assert env.obs_dim == 57 and env.act_dim == 16
+    assert list(np.flatnonzero(env.wheels)) == [12, 13, 14, 15]
+    assert env.num_feet == 4, 'the four wheels (FOOT_NAME), not the head sphere'
+    assert 0.2 < env.stand_height < 0.6
+    obs = env.reset_all()
+    # Wheel positions are not observed (LeggedPolicy zeroes them).
+    np.testing.assert_array_equal(obs[:, 9 + 12:9 + 16], 0.0)
+    actions = np.zeros((2, 16))
+    actions[:, 12:] = 1.0
+    env.actions = actions
+    targets = env._targets()
+    c = env.contract
+    np.testing.assert_allclose(targets[:, 12:], c.action_scale[12:] * np.ones((2, 4)))
+    np.testing.assert_allclose(targets[:, :12], c.default_dof_pos[:12] + c.action_scale[:12])
+    # Spinning wheels at rest: torque is kd * (target velocity - velocity) only.
+    torque = env._torques(np.tile(c.default_dof_pos, (2, 1)) + 5.0 * env.wheels, np.zeros((2, 16)))
+    np.testing.assert_allclose(torque[:, 12:], np.clip(c.rl_kd[12:] * targets[:, 12:], -c.torque_limits[12:],
+                                                       c.torque_limits[12:]))
+    env.reset_all()
+    for _ in range(int(round(1.0 / env.dt))):
+        obs, reward, done, info = env.step(np.zeros((2, 16)))
+        assert np.all(np.isfinite(obs)) and not np.any(info['fallen'])
+    _, qvel = env._split(env.state)
+    assert np.all(np.abs(qvel[:, env.qvel_index[12:]]) < 2.0), 'zero wheel action holds the wheels'
+
+
+def test_g1_humanoid_model_has_two_feet_and_its_contract_widths():
+    env = _env('unitree_g1_29dof')
+    assert env.obs_dim == 96 and env.act_dim == 29 and not env.wheels.any()
+    assert env.num_feet == 2, 'the two ankle roll links'
+    assert 0.5 < env.stand_height < 1.0
+    obs = env.reset_all()
+    assert obs.shape == (2, 96) and np.all(np.isfinite(obs))
+    obs, reward, done, info = env.step(np.zeros((2, 29)))
+    assert np.all(np.isfinite(obs)) and np.all(np.isfinite(reward))
+
+
+def test_actuation_delay_holds_the_previous_targets_for_its_substeps():
+    env = _env('unitree_go2', latency_s=0.010)
+    c = env.contract
+    assert env.max_latency_substeps == 2 == int(round(0.010 / c.dt))
+    env.reset_all()
+    assert set(np.unique(env.latency)) <= {0, 1, 2}
+    env.latency[:] = (0, 2)
+    captured = {}
+    from mujoco import rollout
+    original = rollout.rollout
+
+    def spy(models, data, state, control, **kwargs):
+        captured['control'] = control.copy()
+        return original(models, data, state, control, **kwargs)
+    rollout.rollout = spy
+    try:
+        actions = np.full((2, 12), 0.5)
+        env.step(actions)
+    finally:
+        rollout.rollout = original
+    control = captured['control'][:, :, env.actuator_index]
+    new = c.default_dof_pos + 0.5 * c.action_scale
+    np.testing.assert_allclose(control[0], np.tile(new, (c.decimation, 1)))
+    # The delayed copy applies the reset (default) targets for two substeps.
+    np.testing.assert_allclose(control[1, :2], np.tile(c.default_dof_pos, (2, 1)))
+    np.testing.assert_allclose(control[1, 2:], np.tile(new, (c.decimation - 2, 1)))
+    np.testing.assert_allclose(env.last_targets, np.tile(new, (2, 1)))

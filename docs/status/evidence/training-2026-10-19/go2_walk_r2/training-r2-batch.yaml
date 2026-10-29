@@ -1,0 +1,37 @@
+# The second trained Go2 walk policy (go2_walk_r2: domain randomisation and
+# observation noise) driven through the normal launch, indexed by
+# scripts/r9_3_index_missions.py.  Its own task_type keeps these cells apart
+# from go2_walk_r1 (trained_policy_drive) and the rl_sar go2_himloco cells
+# (legged_policy_drive), so neither policy's record replaces the other's.
+date: '2026-10-29'
+scope: "Exact hashed named simulation screens through October 29; unlisted cells remain untested."
+source_files:
+  - src/robot_lab_bringup/launch/simulated_robot.launch.py
+  - src/robot_lab_robots/config/robots.yaml
+  - scripts/sim_drive_check.py
+  - scripts/sim_drive_check.sh
+  - src/robot_lab_adapter/robot_lab_adapter/legged_training.py
+  - src/robot_lab_adapter/robot_lab_adapter/ppo.py
+  - src/robot_lab_adapter/robot_lab_adapter/legged_train.py
+  - src/robot_lab_adapter/robot_lab_adapter/legged_policy.py
+  - src/robot_lab_adapter/robot_lab_adapter/legged_policy_controller.py
+  - src/robot_lab_mujoco/python/robot_lab_mujoco/mujoco_spawner.py
+  - src/robot_lab_mujoco/python/robot_lab_mujoco/joint_pd.py
+  - src/robot_lab_isaac/python/robot_lab_isaac/isaac_spawner.py
+  - src/robot_lab_isaac/python/robot_lab_isaac/isaac_runtime.py
+groups:
+  - reports:
+      - docs/status/evidence/training-2026-10-19/go2_walk_r2/*_unitree_go2_nav_empty.json
+    report_kind: drive_screen
+    identity: {task_type: trained_policy_drive_go2_walk_r2}
+    date: '2026-10-29'
+    revision: "76a2fe2 (round T3, 11:41-11:46; policy go2_walk_r2 trained at 6e96113)"
+    hash_revision: 76a2fe2
+    scope: >-
+      Loc mode with legged_policy:=<go2_walk_r2/policy>: eight /cmd_vel
+      phases (straight, arcs, reverse, tight turn, spin in place, strafe,
+      stop) measured from simulator truth after a 10 s warm-up.
+    limitations:
+      - One run per backend on nav_empty; no terrain, pushes or navigation
+      - The policy trained only in MuJoCo on a flat floor, with friction, mass and motor-strength randomisation and observation noise
+      - Strafe falls to 0.061 m/s in Gazebo and 0.007 m/s in Isaac (the screen does not test strafe)

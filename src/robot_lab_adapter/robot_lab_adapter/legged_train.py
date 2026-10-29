@@ -5,8 +5,9 @@
   legged-train export --checkpoint RUN/checkpoints/latest.pt --out RUN/policy
   legged-train evaluate --policy-dir RUN/policy --task walk
 
-``train --randomize --terrain rough --obs-noise 1`` adds legged_gym-style
-domain randomisation, a rough heightfield and observation noise.
+``train --randomize --terrain rough --obs-noise 1 --latency-ms 20`` adds
+legged_gym-style domain randomisation, a rough heightfield, observation
+noise and a per-episode actuation delay (0 to 20 ms).
 
 ``train`` writes into RUN: ``run.json`` (settings), ``progress.jsonl`` (one
 line per iteration), ``checkpoints/`` and, when it finishes, is interrupted
@@ -93,14 +94,15 @@ def train(args):
     env = LeggedTrainingEnv(args.robot, args.task, args.envs, seed=args.seed, threads=args.threads,
                             episode_s=args.episode_s,
                             randomization=Randomization() if args.randomize else None,
-                            terrain=args.terrain, roughness=args.roughness, obs_noise=args.obs_noise)
+                            terrain=args.terrain, roughness=args.roughness, obs_noise=args.obs_noise,
+                            latency_s=args.latency_ms / 1000.0)
     hidden = (512, 256, 128)
     agent = PPO(env.obs_dim, env.act_dim, args.envs, args.steps, device=args.device,
                 learning_rate=args.learning_rate, hidden=hidden, entropy=args.entropy)
     run = dict(robot=args.robot, task=args.task, envs=args.envs, steps=args.steps,
                iterations=args.iterations, learning_rate=args.learning_rate, seed=args.seed,
                episode_s=args.episode_s, randomize=bool(args.randomize), terrain=args.terrain,
-               roughness=args.roughness, obs_noise=args.obs_noise, obs_dim=env.obs_dim, act_dim=env.act_dim, hidden=list(hidden),
+               roughness=args.roughness, obs_noise=args.obs_noise, latency_ms=args.latency_ms, obs_dim=env.obs_dim, act_dim=env.act_dim, hidden=list(hidden),
                name=name, revision=_revision(), template=env.template, policy_period_s=env.dt,
                stand_height_m=env.stand_height, feet=env.num_feet, started=time.strftime('%Y-%m-%dT%H:%M:%S'),
                pid=os.getpid())
@@ -226,6 +228,8 @@ def main(argv=None):
     t.add_argument('--terrain', choices=('flat', 'rough'), default='flat')
     t.add_argument('--roughness', type=float, default=0.03, help='rough terrain height range (+- m)')
     t.add_argument('--obs-noise', type=float, default=0.0, help='observation noise level (1: legged_gym)')
+    t.add_argument('--latency-ms', type=float, default=0.0,
+                   help='largest actuation delay, drawn per episode (at most one policy step)')
     t.add_argument('--checkpoint-every', type=int, default=50)
     t.add_argument('--resume', default='')
     t.add_argument('--out', required=True)

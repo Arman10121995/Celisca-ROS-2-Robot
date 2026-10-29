@@ -117,8 +117,70 @@ rotation is therefore possible with this policy: the
 `spin_in_place:=true` launch override (`eb094b1`) lets Nav2 plan it. The
 nav_obstacle missions that test it are in round 58.
 
-## After this run
+## Second policy: `go2_walk_r2`, randomised (round T3, 2026-10-29)
 
-`go2_walk_r2` (same task, with domain randomisation and observation noise)
-and the navigation missions follow; see the
+`legged-train train --robot unitree_go2 --task walk --envs 512 --iterations 2000 --seed 2 --randomize --obs-noise 1`
+at `6e96113`, 10:35-11:40 ([go2_walk_r2/](go2_walk_r2/)):
+
+- 16 model variants with friction 0.5-1.25, base mass −1 to +2 kg and
+  motor strength ×0.9-1.1;
+- observation noise at the legged_gym scales;
+- otherwise the r1 settings: same task, contract and network.
+
+Training took 65.2 min, against 73.4 min for r1; the PPO update now uses
+CPUs − 2 threads. The policy is `policy.onnx`, sha256 `c557dfcb…`, variant
+`lab_walk_go2_walk_r2`.
+
+| Iteration | Wall time | Mean return | Speed error (m/s) | Yaw-rate error (rad/s) | Action std |
+|---|---|---|---|---|---|
+| 100 | 3.5 min | 0.7 | 0.464 | 0.427 | 0.88 |
+| 500 | 16.0 min | 9.4 | 0.267 | 0.289 | 0.67 |
+| 1000 | 32.7 min | 20.4 | 0.124 | 0.159 | 0.44 |
+| 2000 | 65.2 min | 23.5 | 0.104 | 0.128 | 0.32 |
+
+These errors are measured on the randomised variants with noisy
+observations, so they are not directly comparable with r1's 0.077/0.078.
+In the clean training environment (`legged-train evaluate`) the exported
+policy holds every command within 0.04 and never falls: 0.485 of 0.5 m/s,
+0.964 of 1.0, −0.398 of −0.4, vy 0.291 of 0.3, wz 0.788 and −0.789 of ±0.8.
+
+The same drive check as r1 ran at `76a2fe2`. Launch logs show
+`Legged policy go2/lab_walk_go2_walk_r2 (robot_lab_adapter.legged_train, revision 6e96113)`.
+
+| Phase (command) | MuJoCo r1 → r2 | Gazebo r1 → r2 | Isaac r1 → r2 |
+|---|---|---|---|
+| straight vx (0.4) | 0.378 → 0.363 | 0.332 → **0.360** | 0.221 → **0.261** |
+| left arc vx, wz (0.4, 0.5) | 0.328, 0.494 → 0.325, 0.497 | 0.272, 0.458 → 0.321, 0.499 | 0.210, 0.439 → 0.272, 0.484 |
+| right arc vx, wz (0.4, −0.5) | 0.319, −0.491 → 0.320, −0.475 | 0.292, −0.450 → 0.313, −0.475 | 0.174, −0.404 → 0.264, −0.445 |
+| reverse left vx, wz (−0.3, 0.3) | −0.277, 0.291 → −0.258, 0.277 | −0.159, 0.326 → −0.266, 0.304 | −0.112, 0.300 → −0.234, 0.295 |
+| tight left wz (1.0 clamped) | 0.990 → 1.010 | 0.917 → 0.976 | 0.813 → 0.919 |
+| spin in place wz (1.0) | 0.981 → 0.991 | 0.833 → **0.944** | 0.641 → **0.846** |
+| strafe vy (0.3) | 0.285 → 0.287 | 0.224 → **0.061** | 0.131 → **0.007** |
+| stop vx, wz | 0.009, −0.013 → −0.011, −0.009 | 0.008, 0.027 → −0.006, −0.024 | −0.020, 0.018 → −0.007, −0.041 |
+
+What this shows:
+
+- **Randomisation narrows the gap for walking and turning.** In Isaac,
+  forward speed rises from 0.221 to 0.261 m/s, and the arcs from
+  0.17-0.21 m/s to 0.26-0.27 m/s. Reverse doubles, and turning on the spot
+  goes from 0.64 to 0.85 rad/s. In Gazebo every walking and turning phase
+  comes within 0.05 of MuJoCo.
+- **Strafe got worse outside MuJoCo.** Gazebo falls from 0.224 to
+  0.061 m/s and Isaac from 0.131 to 0.007 m/s, while MuJoCo is unchanged
+  (0.287). Each phase was measured once, so the cause is not established.
+  A sideways gait that depends on MuJoCo foot contact is one possibility.
+  Isaac forward speed is still 0.65 of the command.
+- **All three runs** stop on the stop phase and never fall. They pass the
+  drive screen and are indexed with their own task type,
+  `trained_policy_drive_go2_walk_r2`
+  ([training-r2-batch.yaml](go2_walk_r2/training-r2-batch.yaml)). The
+  `go2_walk_r1` cells stay as they were.
+
+Limits: one run per backend on `nav_empty`; no terrain, pushes,
+navigation or held turns with r2.
+
+## After these runs
+
+Round 58 runs `go2_walk_r1` on `nav_obstacle` with `spin_in_place:=true`
+in Isaac and MuJoCo; see the
 [rounds README](../rounds-2026-10-19/README.md).

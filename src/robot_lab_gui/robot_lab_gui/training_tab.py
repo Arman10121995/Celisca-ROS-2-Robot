@@ -25,7 +25,7 @@ from .launcher import subprocess_env
 
 # Mirrors robot_lab_adapter.legged_training (TRAINABLE, TASKS); the tab reads
 # the module when it is importable and falls back to this copy.
-TRAINABLE_ROBOTS = ('unitree_go2', 'unitree_a1', 'unitree_b2')
+TRAINABLE_ROBOTS = ('unitree_go2', 'unitree_a1', 'unitree_b2', 'unitree_go2w', 'unitree_g1_29dof')
 TASKS = {
     'walk': 'Track commanded forward, lateral and yaw velocity.',
     'turn_in_place': 'Turn on the spot at the commanded yaw rate.',
@@ -92,7 +92,7 @@ def trainer_pid(run_dir):
 
 
 def trainer_command(robot, task, envs, iterations, steps, learning_rate, seed, out, resume='',
-                    randomize=False, rough=False, obs_noise=False):
+                    randomize=False, rough=False, obs_noise=False, latency=False):
     command = [sys.executable, '-m', 'robot_lab_adapter.legged_train', 'train', '--robot', robot,
                '--task', task, '--envs', str(int(envs)), '--iterations', str(int(iterations)),
                '--steps', str(int(steps)), '--learning-rate', repr(float(learning_rate)),
@@ -103,6 +103,8 @@ def trainer_command(robot, task, envs, iterations, steps, learning_rate, seed, o
         command += ['--terrain', 'rough']
     if obs_noise:
         command += ['--obs-noise', '1']
+    if latency:
+        command += ['--latency-ms', '20']
     if resume:
         command += ['--resume', str(resume)]
     return command
@@ -173,10 +175,12 @@ class TrainingTab(ttk.Frame):
         self.randomize_var = tk.BooleanVar(value=False)
         self.rough_var = tk.BooleanVar(value=False)
         self.noise_var = tk.BooleanVar(value=False)
+        self.latency_var = tk.BooleanVar(value=False)
         options = ttk.Frame(setup)
         options.grid(row=4, column=2, columnspan=2, sticky='w', padx=(12, 0))
         for text, variable in (('Randomise friction, mass, motors', self.randomize_var),
-                               ('Rough terrain', self.rough_var), ('Observation noise', self.noise_var)):
+                               ('Rough terrain', self.rough_var), ('Observation noise', self.noise_var),
+                               ('Actuation delay (0-20 ms)', self.latency_var)):
             ttk.Checkbutton(options, text=text, variable=variable).pack(side='left', padx=(0, 10))
         ttk.Label(setup, text='Run folder').grid(row=6, column=0, sticky='w')
         ttk.Entry(setup, textvariable=self.out_var).grid(row=6, column=1, columnspan=3, sticky='ew', pady=2)
@@ -265,7 +269,7 @@ class TrainingTab(ttk.Frame):
             command = trainer_command(robot, task, self.envs_var.get(), self.iterations_var.get(),
                                       self.steps_var.get(), self.lr_var.get(), self.seed_var.get(), out,
                                       self.resume_var.get().strip(), self.randomize_var.get(),
-                                      self.rough_var.get(), self.noise_var.get())
+                                      self.rough_var.get(), self.noise_var.get(), self.latency_var.get())
         except (tk.TclError, ValueError) as exc:
             messagebox.showerror('Training settings', str(exc))
             return
@@ -431,7 +435,8 @@ class TrainingTab(ttk.Frame):
         done = last['iteration'] - (lines[0]['iteration'] - 1)
         rate = done / max(1e-6, last.get('wall_s', 0.0))
         remaining = max(0, planned - done) / rate if rate > 0 else math.nan
-        options = [label for key, label in (('randomize', 'randomised'), ('obs_noise', 'noisy observations'))
+        options = [label for key, label in (('randomize', 'randomised'), ('obs_noise', 'noisy observations'),
+                                            ('latency_ms', 'delayed actuation'))
                    if info.get(key)] + (['rough terrain'] if info.get('terrain') == 'rough' else [])
         self.status.set('%s · %s / %s%s · iteration %d of %s · %.2f M steps · %s steps/s · %.0f s elapsed%s' % (
             Path(run).name, info.get('robot', ''), info.get('task', ''),

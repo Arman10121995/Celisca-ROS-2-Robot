@@ -43,8 +43,9 @@ def test_helpers_build_the_trainer_command_and_summaries(tmp_path):
     assert command[command.index('--envs') + 1] == '64' and command[command.index('--task') + 1] == 'stand'
     assert '--resume' not in command and '--randomize' not in command and '--terrain' not in command
     command = trainer_command('unitree_go2', 'walk', 64, 20, 24, 1e-3, 4, run, resume='x.pt',
-                              randomize=True, rough=True, obs_noise=True)
+                              randomize=True, rough=True, obs_noise=True, latency=True)
     assert '--randomize' in command and command[command.index('--terrain') + 1] == 'rough'
+    assert command[command.index('--latency-ms') + 1] == '20'
     assert command[command.index('--obs-noise') + 1] == '1' and command[-2:] == ['--resume', 'x.pt']
     # A live trainer started elsewhere (ros2 run ... legged-train) is found by its run.json PID.
     import subprocess
