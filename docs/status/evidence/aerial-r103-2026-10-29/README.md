@@ -28,6 +28,15 @@
   - air2 non-convergence cause: PX4 accelerometer timeout ("Accel #0 fail:
     TIMEOUT!") in air2-px4.log — FCU telemetry becomes stale, `ready()` returns
     False, velocity commands ignored. Environment/simulator issue, not code.
+- **Second formation mission MEASURED** (session swarm-1iv3xfqo, bounded mission):
+  - mode: formation, 18 s of formation control (formation_samples: 362)
+  - formation_rms_m: 1.1664 m (last 10 s), range 1.1664–2.2434 m
+  - altitude_rms_m: 0.8780 m (last 10 s), range 0.6032–0.8780 m
+  - air1 convergence: formation_error_m ~0.66 → ~0.15 m (converging)
+  - air2: formation_error_m ~0.95–1.10 m (not converging)
+  - altitude trim applied: air1 ~-0.05 to -0.035 m/s, air2 ~+0.02 to +0.04 m/s
+  - **Land command accepted** by both FCUs; FCUs remain airborne (landed_state: 2
+    = IN_AIR). Landing requires longer wait or native PX4 landing completion.
 - Production adapter is verified through formation flight; air2 environment
   issue, landing/disarm and larger groups, other maps/behaviors and
   member-loss/contact remain open.

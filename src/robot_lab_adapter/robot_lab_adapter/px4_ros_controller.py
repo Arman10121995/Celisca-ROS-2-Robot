@@ -263,6 +263,8 @@ class PX4Controller(Node):
         if self.phase == 'landing':
             if not f.armed() and f.ext_sys.landed_state == 1:
                 self.transition('idle')
+            # Descend at 0.5 m/s toward ground level.
+            self.target[2] = max(self.ground_z + 0.1, self.target[2] - 0.5 * dt)
             self.publish_pose()
             return
         if self.phase in ('ascending', 'flying') and not f.armed():
