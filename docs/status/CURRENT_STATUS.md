@@ -28,9 +28,17 @@ are software/simulator work. They do not wait for physical robot hardware or
 terrain-provider setup for the five already installed water worlds. Real sensor
 calibration, physical joystick and optional Bumperbot HIL remain separate.
 
-Go2's first run is finished/exported at 2,000 iterations / 24.58 M steps.
-Recorded training-domain evaluation and three backend launch diagnostics do
-not establish broad measured deployment. Earlier marine map-save failures and
+Go2's first trained policy, `go2_walk_r1` (2,000 iterations, 24.58 M
+steps, 73 min on the CPU), was measured through the normal launch on
+`nav_empty` ([evidence](evidence/training-2026-10-19/README.md)). It walks,
+arcs, reverses, strafes, stops and turns on the spot in MuJoCo, Gazebo and
+Isaac (spin 0.98 / 0.83 / 0.64 of 1.0 rad/s; the rl_sar policy manages
+0.01 / 0.02 / 0.43). Isaac forward speed is only 0.22 of 0.4 m/s. These
+are one-run drive screens, not navigation or terrain qualification. Round
+57 measured the October 19 fixes: the MuJoCo small_house slam drive went
+from 1.49 m to 1.3 cm RMSE, and the rear-steer car now passes the slalom
+in four backends and the full course in MuJoCo. Matrix: 626 reports, 294
+cells, 282 passed and 11 failed. Earlier marine map-save failures and
 RMF stalls are retained; corrected code needs its own successful mission receipt.
 
 The earlier documentation-only checkpoint performed no new runtime qualification; the latest native receipt records its own continuation measurements. The dated

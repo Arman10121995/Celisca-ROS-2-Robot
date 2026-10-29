@@ -1,0 +1,25 @@
+{
+ "robot": "unitree_go2",
+ "task": "walk",
+ "envs": 512,
+ "steps": 24,
+ "iterations": 2000,
+ "learning_rate": 0.001,
+ "seed": 1,
+ "episode_s": 20.0,
+ "obs_dim": 45,
+ "act_dim": 12,
+ "hidden": [
+  512,
+  256,
+  128
+ ],
+ "name": "go2_walk_r1",
+ "revision": "eedec40",
+ "template": "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_adapter/share/robot_lab_adapter/policies/rl_sar/go2_himloco",
+ "policy_period_s": 0.02,
+ "stand_height_m": 0.3202205708102056,
+ "feet": 4,
+ "started": "2026-10-19T15:39:38",
+ "pid": 327251
+}

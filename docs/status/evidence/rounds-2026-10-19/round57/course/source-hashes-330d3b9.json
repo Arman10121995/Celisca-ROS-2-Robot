@@ -1,0 +1,13 @@
+{
+ "revision": "330d3b9",
+ "derived": "sha256 of each file as git stores it at this revision, computed 2026-10-29 after the run; uncommitted working-tree changes at run time are not captured",
+ "files": {
+  "scripts/sim_car_course.py": "f1dadbe8a87f79e9e12137f30525a1a98aa880641ce1bcfd81e9d37f062c4906",
+  "scripts/sim_car_course.sh": "515a7d50e9e9030eca5fd1bbddcd0ace2a3ef16fc8b4cc6273678dc33c2cb9e9",
+  "src/robot_lab_bringup/launch/simulated_robot.launch.py": "7b89afc981f79b5a07789724251941862ef64390ac56064d4b1e5bc1be66100a",
+  "src/robot_lab_mujoco/python/robot_lab_mujoco/mujoco_spawner.py": "3186f3da9d6fe08180abec938da3d1cf1420f8f4ebb317bdfc9ba650b5ed898e",
+  "src/robot_lab_navigation/config/robots/rear_steer_car.yaml": "7f2601b2bb10dfd5ae48e805a045e117b2cd8d6c8fdd8913b0c1f03932951084",
+  "src/robot_lab_navigation/launch/navigation.launch.py": "a1972460e8c636528397c79cea22d2133e324e0a46e89de48339be74d5565d04",
+  "src/robot_lab_robots/config/robots.yaml": "dac3b360c9175f3c480470b79dea2190bed007721c9c3e0ff58367c50b4cf1cb"
+ }
+}

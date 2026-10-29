@@ -1,0 +1,35 @@
+# The first trained Go2 walk policy (go2_walk_r1) driven through the normal
+# launch, indexed by scripts/r9_3_index_missions.py.  task_type
+# trained_policy_drive keeps these cells apart from the rl_sar go2_himloco
+# legged_policy_drive cells.
+date: '2026-10-29'
+scope: "Exact hashed named simulation screens through October 19; unlisted cells remain untested."
+source_files:
+  - src/robot_lab_bringup/launch/simulated_robot.launch.py
+  - src/robot_lab_robots/config/robots.yaml
+  - scripts/sim_drive_check.py
+  - scripts/sim_drive_check.sh
+  - src/robot_lab_adapter/robot_lab_adapter/legged_training.py
+  - src/robot_lab_adapter/robot_lab_adapter/ppo.py
+  - src/robot_lab_adapter/robot_lab_adapter/legged_train.py
+  - src/robot_lab_adapter/robot_lab_adapter/legged_policy.py
+  - src/robot_lab_adapter/robot_lab_adapter/legged_policy_controller.py
+  - src/robot_lab_mujoco/python/robot_lab_mujoco/mujoco_spawner.py
+  - src/robot_lab_mujoco/python/robot_lab_mujoco/joint_pd.py
+  - src/robot_lab_isaac/python/robot_lab_isaac/isaac_spawner.py
+  - src/robot_lab_isaac/python/robot_lab_isaac/isaac_runtime.py
+groups:
+  - reports:
+      - docs/status/evidence/training-2026-10-19/*_unitree_go2_nav_empty.json
+    report_kind: drive_screen
+    identity: {task_type: trained_policy_drive}
+    date: '2026-10-19'
+    revision: "330d3b9 (round T1, 16:53-16:59; policy go2_walk_r1 trained at eedec40)"
+    hash_revision: 330d3b9
+    scope: >-
+      Loc mode with legged_policy:=<go2_walk_r1/policy>: eight /cmd_vel
+      phases (straight, arcs, reverse, tight turn, spin in place, strafe,
+      stop) measured from simulator truth after a 10 s warm-up.
+    limitations:
+      - One run per backend on nav_empty; no terrain, pushes or navigation
+      - The policy trained only in MuJoCo on a flat floor without randomisation

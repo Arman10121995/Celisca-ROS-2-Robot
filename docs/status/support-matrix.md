@@ -11,12 +11,20 @@ owns task states and the [roadmap](../../ROADMAP.md) defines acceptance.
 
 ## Read support by exact composition
 
-The [generated measured matrix](evidence/support-matrix-2026-10-19/support-matrix-current.md)
-and [JSON report](evidence/support-matrix-2026-10-19/support-matrix-current.json)
-validate **619 indexed reports / 291 distinct measured cells**: 278 passed
-screens and 12 failed screens
-([what changed](evidence/support-matrix-2026-10-19/README.md)). October 19
+The [generated measured matrix](evidence/support-matrix-2026-10-29/support-matrix-current.md)
+and [JSON report](evidence/support-matrix-2026-10-29/support-matrix-current.json)
+validate **626 indexed reports / 294 distinct measured cells**: 282 passed
+screens and 11 failed screens
+([what changed](evidence/support-matrix-2026-10-29/README.md)). October 29
 adds:
+
+- round 57: the rear-steer car course in four backends; the full course
+  now passes in MuJoCo, and the slalom in all four;
+- the first trained Go2 policy (`go2_walk_r1`, task type
+  `trained_policy_drive`): drive screens pass in MuJoCo, Gazebo and Isaac.
+
+The [October 19 matrix](evidence/support-matrix-2026-10-19/support-matrix-current.md)
+(619 reports, 291 cells) added:
 
 - the October 16 open-item missions;
 - 16 MOLAR normal-GUI articulation cells (`molar_hri` in four backends on

@@ -1,5 +1,5 @@
 schema_version: 1
-date: '2026-10-19'
+date: '2026-10-29'
 scope: "Exact hashed named simulation screens through October 19; unlisted cells remain untested."
 raw_artifact_root: /workspace/molar/robot_lab_runtime/r56-qualification-2026-10-05
 records:
@@ -11456,3 +11456,122 @@ records:
   limitations:
   - One run per cell; Gazebo in slam mode, Isaac in loc mode
   - A publisher stop, not a network partition or controller crash
+- robot_id: rear_steer_car
+  environment_id: car_course
+  simulator: gazebo
+  task_type: car_course
+  steering_mode: ''
+  date: '2026-10-19'
+  revision: 330d3b9 (round 57, 17:00-17:20; rear-steer planner change 84422df)
+  report: docs/status/evidence/rounds-2026-10-19/round57/course/gazebo_rear_steer_car_car_course.json
+  sha256: 05a923c1b59571b634c933fcea37cc244957cddb08b12319e3dd9e4616cd35c6
+  source_hashes: docs/status/evidence/rounds-2026-10-19/round57/course/source-hashes-330d3b9.json
+  source_hashes_sha256: a87948426248def1c29d110648d30b6bdcb5c65f8262301df3d782b693e7c84b
+  report_kind: course_screen
+  scope: Nav2 drives the rear-steer car through a four-gate cone slalom and nose-in into a 0.8 m parking bay; gates
+    within 0.30 m of truth, the bay within 0.15 m and 10 degrees, the footprint clear of every cone and box.
+  limitations:
+  - One run per backend; the car goal checker ignores heading
+  - Flat floor, scripted course, no traffic
+- robot_id: rear_steer_car
+  environment_id: car_course
+  simulator: isaac
+  task_type: car_course
+  steering_mode: ''
+  date: '2026-10-19'
+  revision: 330d3b9 (round 57, 17:00-17:20; rear-steer planner change 84422df)
+  report: docs/status/evidence/rounds-2026-10-19/round57/course/isaac_rear_steer_car_car_course.json
+  sha256: fa87f657ca955d4d86f75d5f0298c90bb60d3eccc0f35f0996d2ac651f376816
+  source_hashes: docs/status/evidence/rounds-2026-10-19/round57/course/source-hashes-330d3b9.json
+  source_hashes_sha256: a87948426248def1c29d110648d30b6bdcb5c65f8262301df3d782b693e7c84b
+  report_kind: course_screen
+  scope: Nav2 drives the rear-steer car through a four-gate cone slalom and nose-in into a 0.8 m parking bay; gates
+    within 0.30 m of truth, the bay within 0.15 m and 10 degrees, the footprint clear of every cone and box.
+  limitations:
+  - One run per backend; the car goal checker ignores heading
+  - Flat floor, scripted course, no traffic
+- robot_id: rear_steer_car
+  environment_id: car_course
+  simulator: mujoco
+  task_type: car_course
+  steering_mode: ''
+  date: '2026-10-19'
+  revision: 330d3b9 (round 57, 17:00-17:20; rear-steer planner change 84422df)
+  report: docs/status/evidence/rounds-2026-10-19/round57/course/mujoco_rear_steer_car_car_course.json
+  sha256: d135abe31715c93b77b6544c00286df9ac340ebb89feaa7ada9f62d2b20649d7
+  source_hashes: docs/status/evidence/rounds-2026-10-19/round57/course/source-hashes-330d3b9.json
+  source_hashes_sha256: a87948426248def1c29d110648d30b6bdcb5c65f8262301df3d782b693e7c84b
+  report_kind: course_screen
+  scope: Nav2 drives the rear-steer car through a four-gate cone slalom and nose-in into a 0.8 m parking bay; gates
+    within 0.30 m of truth, the bay within 0.15 m and 10 degrees, the footprint clear of every cone and box.
+  limitations:
+  - One run per backend; the car goal checker ignores heading
+  - Flat floor, scripted course, no traffic
+- robot_id: rear_steer_car
+  environment_id: car_course
+  simulator: pybullet
+  task_type: car_course
+  steering_mode: ''
+  date: '2026-10-19'
+  revision: 330d3b9 (round 57, 17:00-17:20; rear-steer planner change 84422df)
+  report: docs/status/evidence/rounds-2026-10-19/round57/course/pybullet_rear_steer_car_car_course.json
+  sha256: c72f869a6dc4bdfc4c8da882913b0d86029352be6ca2ef85d58b571cc27f69dc
+  source_hashes: docs/status/evidence/rounds-2026-10-19/round57/course/source-hashes-330d3b9.json
+  source_hashes_sha256: a87948426248def1c29d110648d30b6bdcb5c65f8262301df3d782b693e7c84b
+  report_kind: course_screen
+  scope: Nav2 drives the rear-steer car through a four-gate cone slalom and nose-in into a 0.8 m parking bay; gates
+    within 0.30 m of truth, the bay within 0.15 m and 10 degrees, the footprint clear of every cone and box.
+  limitations:
+  - One run per backend; the car goal checker ignores heading
+  - Flat floor, scripted course, no traffic
+- robot_id: unitree_go2
+  environment_id: nav_empty
+  simulator: gazebo
+  task_type: trained_policy_drive
+  steering_mode: ''
+  date: '2026-10-19'
+  revision: 330d3b9 (round T1, 16:53-16:59; policy go2_walk_r1 trained at eedec40)
+  report: docs/status/evidence/training-2026-10-19/gazebo_unitree_go2_nav_empty.json
+  sha256: bb5544f6945f4332a5d50663799d07b25dd08939222f3faf54e805fa2864b607
+  source_hashes: docs/status/evidence/training-2026-10-19/source-hashes-330d3b9.json
+  source_hashes_sha256: 9e2405b4161b6fbf54002b917a877483e606ad4e68311d994b9f6c27a8caec3d
+  report_kind: drive_screen
+  scope: 'Loc mode with legged_policy:=<go2_walk_r1/policy>: eight /cmd_vel phases (straight, arcs, reverse, tight
+    turn, spin in place, strafe, stop) measured from simulator truth after a 10 s warm-up.'
+  limitations:
+  - One run per backend on nav_empty; no terrain, pushes or navigation
+  - The policy trained only in MuJoCo on a flat floor without randomisation
+- robot_id: unitree_go2
+  environment_id: nav_empty
+  simulator: isaac
+  task_type: trained_policy_drive
+  steering_mode: ''
+  date: '2026-10-19'
+  revision: 330d3b9 (round T1, 16:53-16:59; policy go2_walk_r1 trained at eedec40)
+  report: docs/status/evidence/training-2026-10-19/isaac_unitree_go2_nav_empty.json
+  sha256: 4d9842b99881cc6e81e36a0c883b54a6ce1082950d58bdc0daf3e1c3372ddc11
+  source_hashes: docs/status/evidence/training-2026-10-19/source-hashes-330d3b9.json
+  source_hashes_sha256: 9e2405b4161b6fbf54002b917a877483e606ad4e68311d994b9f6c27a8caec3d
+  report_kind: drive_screen
+  scope: 'Loc mode with legged_policy:=<go2_walk_r1/policy>: eight /cmd_vel phases (straight, arcs, reverse, tight
+    turn, spin in place, strafe, stop) measured from simulator truth after a 10 s warm-up.'
+  limitations:
+  - One run per backend on nav_empty; no terrain, pushes or navigation
+  - The policy trained only in MuJoCo on a flat floor without randomisation
+- robot_id: unitree_go2
+  environment_id: nav_empty
+  simulator: mujoco
+  task_type: trained_policy_drive
+  steering_mode: ''
+  date: '2026-10-19'
+  revision: 330d3b9 (round T1, 16:53-16:59; policy go2_walk_r1 trained at eedec40)
+  report: docs/status/evidence/training-2026-10-19/mujoco_unitree_go2_nav_empty.json
+  sha256: ed7b35151212ccd161de201a1b1e6d900575c8451b1abc1c84033500a8292ccf
+  source_hashes: docs/status/evidence/training-2026-10-19/source-hashes-330d3b9.json
+  source_hashes_sha256: 9e2405b4161b6fbf54002b917a877483e606ad4e68311d994b9f6c27a8caec3d
+  report_kind: drive_screen
+  scope: 'Loc mode with legged_policy:=<go2_walk_r1/policy>: eight /cmd_vel phases (straight, arcs, reverse, tight
+    turn, spin in place, strafe, stop) measured from simulator truth after a 10 s warm-up.'
+  limitations:
+  - One run per backend on nav_empty; no terrain, pushes or navigation
+  - The policy trained only in MuJoCo on a flat floor without randomisation

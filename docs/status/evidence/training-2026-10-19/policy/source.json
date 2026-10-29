@@ -1,0 +1,14 @@
+{
+ "robot": "go2",
+ "variant": "lab_walk_go2_walk_r1",
+ "profile": "unitree_go2",
+ "trained_by": "robot_lab_adapter.legged_train",
+ "template_policy": "go2_himloco",
+ "task": "walk",
+ "iteration": 2000,
+ "environment_steps": 24576000,
+ "source_revision": "eedec40",
+ "checkpoint": "/workspace/molar/robot_lab_runtime/training/go2_walk_r1/checkpoints/latest.pt",
+ "exported": "2026-10-19T16:53:04",
+ "qualification": "trained in the MuJoCo training environment; runtime evidence pending"
+}

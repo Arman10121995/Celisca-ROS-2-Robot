@@ -62,8 +62,13 @@ def export_policy(checkpoint, out_dir):
         '# Trained by robot_lab_adapter.legged_train in the contract of %s.\n' % Path(template).name
         + yaml.safe_dump(policy_config(contract, robot_key, variant), sort_keys=False))
     export_onnx(model, str(out / 'policy.onnx'))
+    import hashlib
+    onnx_sha256 = hashlib.sha256((out / 'policy.onnx').read_bytes()).hexdigest()
     (out / 'source.json').write_text(json.dumps(dict(
         robot=robot_key, variant=variant, profile=run['robot'],
+        # 'upstream'/'revision' are what legged-policy-controller logs.
+        upstream='robot_lab_adapter.legged_train', revision=run.get('revision', ''),
+        onnx_sha256=onnx_sha256, input_width=int(run['obs_dim']),
         trained_by='robot_lab_adapter.legged_train', template_policy=Path(template).name,
         task=run['task'], iteration=int(data.get('iteration', 0)),
         environment_steps=int(data.get('environment_steps', 0)),

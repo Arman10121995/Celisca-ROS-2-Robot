@@ -85,7 +85,7 @@ reads the floor at 0 mm, which argues against it.
 `scripts/sim_car_course.sh` (round 51, [car-course/](car-course/)).
 Course: a cone slalom (four gates 0.5 m either side of a cone line, 1.5 m
 apart) and a parking bay (0.8 m gap, nose in). The car must reach each
-gate within 0.15 m of truth and the bay within 0.15 m and 10°, with its
+gate within 0.30 m of truth (corrected October 29; first written as 0.15 m) and the bay within 0.15 m and 10°, with its
 footprint clear of every cone and box throughout:
 
 | Backend | Ackermann | Rear-steer | Anti-Ackermann |
@@ -231,3 +231,37 @@ and every replan failed with "Starting point in lethal space". The analytic
 Reeds-Shepp shot (3 m) is collision-checked but not cost-weighted. The
 rear-steer overlay now limits it to 1 m and raises the cost penalty to 3.0
 (`84422df`). The course runs again in all four backends.
+
+## Round 57 (17:00-17:20, `330d3b9`): both fixes measured
+
+Reports in [round57/](round57/); the course cells are indexed from
+[round57-batch.yaml](round57-batch.yaml).
+
+**MuJoCo small_house slam drive** (the round 51 loop: wheel odometry,
+slam_toolbox, waypoints (−6,3), (6,3), (6,−3)):
+
+| | Round 51 (before `873753f`) | Round 57 |
+|---|---|---|
+| Route | 67 back-offs, 137 points skipped | completed, no back-offs, 130 s |
+| Driven | 5.4 m | 28.1 m |
+| Slam RMSE vs truth | 1.49 m (heading 113°) | **1.3 cm** (heading 0.5°) |
+| Map precision / recall at 0.10 m | 0.12 / 0.16 | **0.97 / 0.79** |
+
+MuJoCo now matches PyBullet (1.9 cm, 0.97/0.79) and Isaac (1.3 cm,
+0.97/0.78) on the textured small_house.
+
+**Rear-steer car course** with the planner change:
+
+| Backend | Round 51 | Gates 1-4 from truth (m) | Min. clearance | Parking (m, heading) | Full course |
+|---|---|---|---|---|---|
+| MuJoCo | gate 1 aborted | 0.093, 0.065, 0.099, 0.134 | 0.060 m | 0.091, −3.4° | **passes** |
+| Gazebo | gate 1 aborted | 0.069, 0.141, 0.173, 0.081 | 0.104 m | 0.146, −14.3° | heading fails |
+| PyBullet | slalom; park −11.7° | 0.077, 0.083, 0.097, 0.046 | 0.055 m | 0.098, +11.6° | heading fails |
+| Isaac | slalom; park −10.9° | 0.091, 0.064, 0.084, 0.052 | 0.046 m | 0.120, −12.8° | heading fails |
+
+- Gates must be within 0.30 m of truth (`--max-position-error`), the bay
+  within 0.15 m and 10°.
+- The slalom now passes in all four backends.
+- Over the 12 car-course cells the full course passes in 3: Gazebo
+  Ackermann and anti-Ackermann, and MuJoCo rear-steer. Parking heading is
+  still the gap, as for the other cars.

@@ -112,6 +112,9 @@ def test_exported_directory_is_an_ordinary_policy_bound_to_its_robot(tmp_path, m
     source = json.loads((directory / 'source.json').read_text())
     assert source['profile'] == robot and source['trained_by'] == 'robot_lab_adapter.legged_train'
     assert source['template_policy'] == TRAINABLE[robot]
+    import hashlib
+    assert source['onnx_sha256'] == hashlib.sha256((directory / 'policy.onnx').read_bytes()).hexdigest()
+    assert source['upstream'] == 'robot_lab_adapter.legged_train' and source['revision'] == 'test'
     assert contract.observations == OBSERVATIONS and not contract.history
     assert contract.num_observations == obs_dim
     for field in ('default_dof_pos', 'action_scale', 'rl_kp', 'rl_kd', 'torque_limits'):

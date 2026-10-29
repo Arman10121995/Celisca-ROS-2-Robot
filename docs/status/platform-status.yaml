@@ -125,6 +125,12 @@ current_revision: 'Documentation reconciliation on 2026-10-27 from f75dc60: proj
   families. Restore seven missing historical robot registrations first, then remaining R10 implementation.
   No new runtime qualification in this documentation change.'
 current_verification:
+  round57_2026_10_19: 'Recorded 2026-10-29: MuJoCo small_house slam drive after the spawn fix 873753f completes
+    (28.1 m, RMSE 1.3 cm, map precision/recall 0.97/0.79; 1.49 m and 0.12/0.16 before); rear-steer car course after
+    84422df passes its slalom in all four backends and the full course in MuJoCo (parking 0.091 m, -3.4 deg); parking
+    heading fails in Gazebo/PyBullet/Isaac (11.6-14.3 deg). docs/status/evidence/rounds-2026-10-19/README.md.'
+  matrix_2026_10_29: '626 indexed reports, 294 measured cells: 282 passed and 11 failed screens; adds round 57 and
+    the go2_walk_r1 trained_policy_drive cells. docs/status/evidence/support-matrix-2026-10-29/README.md.'
   aerial_mapping_october_12: 'R5.10 aerial RGB-D/RTAB-Map path built and exercised
     once each for mapping and saved-map localization on nav_obstacle (implementation
     diagnostics, see docs/status/evidence/r510-aerial-mapping-2026-10-12/). Software
@@ -671,6 +677,7 @@ legged_policy_training_20261019:
     backends, judged by the existing drive and mission screens; exported policies
     stay bound to their robot
   evidence:
+  - docs/status/evidence/training-2026-10-19/README.md
   - docs/tutorials/legged-policy-training.md
   - /workspace/molar/eval_summary.txt
   - /workspace/molar/robot_lab_runtime/training/go2_walk_r1/progress.jsonl
@@ -691,17 +698,16 @@ legged_policy_training_20261019:
     source.json); evaluation passed in the training environment (forward 0.479/0.5
     m/s, turn 0.781/0.8 rad/s, no falls); MuJoCo drive check ran stably via normal
     launch with legged_policy:=<run>/policy for 77+s.'
-  ongoing: '2026-10-19 17:29: go2_walk_r1 finished (2000/2000 iterations, 24.58M env
-    steps, 73.4 min, final lin_vel_err 0.077 / ang_vel_err 0.078); evaluation PASSED
-    in the training environment (forward 0.479/0.5 m/s, turn 0.781/0.8 rad/s, zero-command
-    hold, no falls); cross-backend drive checks PASSED via normal launch with legged_policy:=<run>/policy
-    — MuJoCo (mujoco_spawner 77+s, 99% CPU), Gazebo (legged_pd_controller + Go2System
-    hardware, celisca_floor_1, 60s), Isaac (12-joint Policy PD drives at 200 Hz, amcl+map_server
-    active, 90s). No crashes on any backend.'
+  measured: '2026-10-19, recorded 2026-10-29 (claude) from the reports in docs/status/evidence/training-2026-10-19:
+    go2_walk_r1 trained 2000 iterations (24.58M steps, 73.4 min, final tracking error 0.077 m/s and 0.078 rad/s);
+    training-environment evaluation within 0.03 m/s and 0.03 rad/s on seven commands, no falls; normal-launch drive
+    screens on nav_empty (not celisca_floor_1) pass in MuJoCo, Gazebo and Isaac with spin in place 0.981/0.833/0.641
+    rad/s and straight 0.378/0.332/0.221 m/s for a 0.4 m/s command. The earlier ''ongoing'' text called these
+    launches stable runs of 60-90 s; the reports measure the phases above.'
   open: Measured walks of a trained policy and its transfer to Gazebo and Isaac; a
     run with the randomisation options; a Go2 turn-in-place policy; terrain curriculum;
     GPU training (torch's CUDA build does not run on this Orin); Go2W and humanoids.
-  owner: cline-agent
+  owner: claude
   priority: Latest user request; a GUI tab that trains policies for legged robots
     to do tasks
   requested: '2026-10-19'
@@ -1699,25 +1705,28 @@ tasks:
     depends_on:
     - R5.2
     evidence:
-    - go2_walk_r1 completed 2000/2000 iterations (24.58M steps, 73.4 min)
-    - 'Policy exported and evaluated: forward 0.479/0.5 m/s, turn 0.781/0.8 rad/s'
-    - MuJoCo/Gazebo/Isaac drive checks passed for 77+ seconds
-    - All legged training tests pass - no hardware required
+    - docs/status/evidence/training-2026-10-19/README.md
+    - docs/status/evidence/support-matrix-2026-10-29/README.md
+    - docs/tutorials/legged-policy-training.md
     implementation_summary: 'Training page and legged-train: PPO in batched MuJoCo
       (the bridge''s own model and PD actuators) for Go2, A1 and B2 in their rl_sar
       contracts; tasks walk, turn_in_place, stand, push_recovery; live progress, Stop
       with export, resume, evaluation through LeggedPolicy, Use in Launch (legged_policy:=<directory>,
       trained robot only); optional domain randomisation, rough terrain and observation
       noise.'
-    implementation_validation: go2_walk_r1 completed/exported at 2000 iterations and 24.58M steps. Training-environment
-      evaluation and three backend launch diagnostics are recorded; independent measured task transfer, further
-      tasks/robots and terrain/randomization remain open.
-    owner: cline-agent
+    implementation_validation: 'go2_walk_r1 (2000 iterations, 24.58M steps, 73 min) measured 2026-10-19 (corrected
+      2026-10-29 from the reports): training-environment tracking within 0.03 m/s and 0.03 rad/s; normal-launch
+      drive screens on nav_empty pass in MuJoCo (straight 0.378 of 0.4 m/s, spin 0.981 of 1.0 rad/s, strafe
+      0.285), Gazebo (0.332, 0.833, 0.224) and Isaac (0.221, 0.641, 0.131), indexed as trained_policy_drive.
+      Open: the Isaac speed gap, repeats, navigation with a trained policy, randomised/terrain runs, other robots.'
+    owner: claude
     scope_paths:
     - src/robot_lab_adapter/
     - src/robot_lab_gui/
     - docs/
     state: partial
+    active_scope: '2026-10-29 claude (continuing at the user''s request): 20 s held turns with go2_walk_r1 in Isaac
+      and MuJoCo, then go2_walk_r2 with randomisation and observation noise and its drive checks.'
     title: Legged policy training (GUI Training page)
     qualification_review: '2026-10-27 documentation review: retain the implemented code, tests and named mission
       certificates. Full declared roadmap acceptance is still open; test counts, metadata and scene loads

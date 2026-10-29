@@ -117,7 +117,10 @@ workloads; full acceptance still requires their actual physical evidence.
 
 ## October 19: progress, ongoing work and what remains
 
-Snapshot at 16:15 on 2026-10-19 (`8b0b965`). Each item links its section
+Snapshot at 16:15 on 2026-10-19 (`8b0b965`), kept as written. The training
+run and the queued rounds finished that evening; their results are in R12,
+R5.5 and R7.2 below and in
+[the training evidence](docs/status/evidence/training-2026-10-19/README.md). Each item links its section
 below; [current status](docs/status/CURRENT_STATUS.md) has the numbers.
 
 ### Done since October 16
@@ -943,10 +946,11 @@ Dependencies: `R5.1`, `R3.3`.
   then nose-in parking, footprint checked against every cone and box) passes
   in Gazebo for the Ackermann and anti-Ackermann cars; the slalom passes in 9
   of 12 cells, but parking misses the 10° heading. The rear-steer car aborts
-  gate 1 in MuJoCo and Gazebo; a planner change (shorter analytic shots,
-  cost penalty 3.0) is queued for measurement. Publisher loss passes in all
-  six Gazebo/Isaac cells. See
-  [rounds 51-56](docs/status/evidence/rounds-2026-10-19/README.md).
+  gate 1 in MuJoCo and Gazebo. With a planner change (shorter analytic
+  shots, cost penalty 3.0, `84422df`) round 57 passes its slalom in all four
+  backends and the full course in MuJoCo; parking ends 11.6-14.3° off in the
+  other three. Publisher loss passes in all six Gazebo/Isaac cells. See
+  [rounds 51-57](docs/status/evidence/rounds-2026-10-19/README.md).
 - Remaining R5.5 items: final parking heading, slalom/parking repeats,
   publisher-loss and final-heading repeats on Gazebo and Isaac
   (Gazebo evidence still uses controller odometry), and the rear-steer versus
@@ -1226,8 +1230,9 @@ Dependencies: `R7.1`.
   fit passes in MuJoCo and PyBullet; Isaac fails on RMS (renderer noise,
   1.66 px) and Gazebo on cy (5 px). Textured small_house captures are
   scored per backend. The MuJoCo small_house Bumperbot crawl was a spawn
-  drop through the flex floor, fixed in `873753f`; its slam drive is queued
-  again. See [rounds 51-56](docs/status/evidence/rounds-2026-10-19/README.md).
+  drop through the flex floor, fixed in `873753f`. Round 57: the slam drive
+  now completes with 1.3 cm RMSE and 0.97/0.79 map precision/recall, as in
+  PyBullet and Isaac. See [rounds 51-56](docs/status/evidence/rounds-2026-10-19/README.md).
 
 ### R7.3 — Five localization methods
 
@@ -1762,18 +1767,27 @@ do tasks. Implemented and experimental:
 
 [Guide](docs/tutorials/legged-policy-training.md).
 
-**Ongoing (2026-10-19):** the first real run, `go2_walk_r1` (Go2 `walk`,
-512 environments, 2000 iterations, flat floor, no options). At iteration
-999 the training-environment tracking error is 0.09 m/s and 0.10 rad/s.
-Its evaluation and drive checks in MuJoCo, Gazebo and Isaac are queued.
+**First trained policy (2026-10-19, measured):** `go2_walk_r1` (Go2 `walk`,
+512 environments, 2000 iterations, 24.6 M steps, 73 min on the CPU, flat
+floor, no options). In the training environment it tracks 0.5/1.0/−0.4 m/s,
+0.3 m/s sideways and ±0.8 rad/s within 0.03 m/s and 0.03 rad/s. Through the
+normal launch (`legged_policy:=<run>/policy`) its drive screens pass in
+MuJoCo, Gazebo and Isaac. It turns on the spot at 0.98 / 0.83 / 0.64 of
+1.0 rad/s, which the rl_sar `go2_himloco` policy does not. In Isaac its
+forward speed is 0.22 of 0.4 m/s
+([evidence](docs/status/evidence/training-2026-10-19/README.md)).
+
+**Ongoing (2026-10-29):** a 20 s held turn in Isaac and MuJoCo with
+`go2_walk_r1`, then `go2_walk_r2` (randomisation and observation noise) and
+its drive checks.
 
 Acceptance: a policy trained here walks (or performs its task) in measured
 runs on the lab's backends, judged by the existing drive and mission
 screens. Open:
 
-- measured walks of a trained policy, and its transfer to Gazebo and Isaac;
-- training with the randomisation, terrain and noise options;
-- a Go2 turn-in-place policy;
+- closing the Isaac speed gap (0.22 of 0.4 m/s) and repeats per backend;
+- training with the randomisation, terrain and noise options (r2 in progress);
+- navigation missions with a trained policy, including turning in place;
 - terrain curriculum (slopes, stairs) and a latency model;
 - GPU training;
 - Go2W (wheels) and humanoids.

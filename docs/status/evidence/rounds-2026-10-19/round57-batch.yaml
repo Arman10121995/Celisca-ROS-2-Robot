@@ -1,0 +1,29 @@
+# Round 57 (2026-10-19, after the Go2 training run), indexed by
+# scripts/r9_3_index_missions.py.  The MuJoCo small_house slam drive has no
+# matrix screen and stays in the README.
+date: '2026-10-29'
+scope: "Exact hashed named simulation screens through October 19; unlisted cells remain untested."
+source_files:
+  - src/robot_lab_bringup/launch/simulated_robot.launch.py
+  - src/robot_lab_robots/config/robots.yaml
+groups:
+  - reports:
+      - docs/status/evidence/rounds-2026-10-19/round57/course/*_rear_steer_car_car_course.json
+    report_kind: course_screen
+    identity: {task_type: car_course}
+    date: '2026-10-19'
+    revision: "330d3b9 (round 57, 17:00-17:20; rear-steer planner change 84422df)"
+    hash_revision: 330d3b9
+    source_files:
+      - scripts/sim_car_course.py
+      - scripts/sim_car_course.sh
+      - src/robot_lab_navigation/config/robots/rear_steer_car.yaml
+      - src/robot_lab_navigation/launch/navigation.launch.py
+      - src/robot_lab_mujoco/python/robot_lab_mujoco/mujoco_spawner.py
+    scope: >-
+      Nav2 drives the rear-steer car through a four-gate cone slalom and
+      nose-in into a 0.8 m parking bay; gates within 0.30 m of truth, the bay
+      within 0.15 m and 10 degrees, the footprint clear of every cone and box.
+    limitations:
+      - One run per backend; the car goal checker ignores heading
+      - Flat floor, scripted course, no traffic

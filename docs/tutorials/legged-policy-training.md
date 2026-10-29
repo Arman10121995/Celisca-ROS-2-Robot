@@ -1,13 +1,10 @@
 # Training legged policies (Training tab)
 
-Updated October 20, 2026. `go2_walk_r1` completed and exported at 2,000 iterations
-and 24.58 million steps. The ledger records training-domain evaluation and
-three backend launch diagnostics; launch stability does not qualify walking
-or policy transfer.
-
-Documentation added October 19, 2026. This is an **experimental** training
-tool. It is implemented and smoke-tested, but no policy trained with it has
-qualified walking yet. Read [current status](../status/CURRENT_STATUS.md)
+Updated October 29, 2026. This is an **experimental** training tool. Its
+first policy, `go2_walk_r1`, passes one-run drive screens through the
+normal launch in MuJoCo, Gazebo and Isaac
+([measured](#measured-so-far)). No trained policy is qualified for
+navigation, terrain or repeated missions. Read [current status](../status/CURRENT_STATUS.md)
 first. A trained policy is a candidate: it needs its own measured runs
 before any claim.
 
@@ -149,13 +146,24 @@ ros2 launch robot_lab_bringup simulated_robot.launch.py mode:=loc simulator:=muj
 - **Pipeline smoke run** (Go2, `stand`, 64 environments, 4 iterations):
   it trains, writes checkpoints, exports a policy directory that loads as
   an ordinary policy, and evaluates through `LeggedPolicy` without falling.
-- **First real run, in progress** (`go2_walk_r1`: Go2 `walk`, 512
-  environments, 2000 iterations, flat floor, no options). At iteration 999
-  (12.3 M steps, 34 minutes) the training environment's velocity-tracking
-  error has fallen from 0.52 to 0.09 m/s and from 0.68 to 0.10 rad/s, with
-  almost no falls. The exported policy's evaluation and drive checks in
-  MuJoCo, Gazebo and Isaac are queued after it. Until those are recorded,
-  it is not known to walk anywhere outside training.
+- **First trained policy, `go2_walk_r1`** (Go2 `walk`, 512 environments,
+  2000 iterations, 24.6 M steps in 73 minutes, flat floor, no options;
+  [evidence](../status/evidence/training-2026-10-19/README.md)):
+  - In the training environment it tracks every evaluated command within
+    0.03 m/s and 0.03 rad/s.
+  - Through the normal launch (`legged_policy:=<run>/policy`) on
+    `nav_empty` it walks, arcs, reverses, strafes and stops in MuJoCo,
+    Gazebo and Isaac.
+
+  | | MuJoCo | Gazebo | Isaac |
+  |---|---|---|---|
+  | straight, 0.4 m/s | 0.378 | 0.332 | 0.221 |
+  | spin in place, 1.0 rad/s | 0.981 | 0.833 | 0.641 |
+  | strafe, 0.3 m/s | 0.285 | 0.224 | 0.131 |
+
+  The provisioned `go2_himloco` policy turns on the spot at 0.01 / 0.02 /
+  0.43 rad/s in the same check. Isaac is the weakest transfer. These are
+  one-run drive screens, not navigation or terrain qualification.
 - **Speed** on the 12-core Orin: 512 environments × 24 steps take 1.8-2.3 s
   per iteration (about 0.7 s of physics at 17-23 k steps/s, the rest the
   PPO update). That is about 20 M environment steps an hour.
@@ -164,8 +172,8 @@ ros2 launch robot_lab_bringup simulated_robot.launch.py mode:=loc simulator:=muj
 
 - Training is CPU-only on this host: torch's CUDA build does not run on the
   Orin. A useful walk needs hours; `stand` needs minutes.
-- Randomisation, rough terrain and noise are optional and untested in
-  training so far. There is no terrain curriculum (stairs, slopes) and no
+- Randomisation, rough terrain and noise are optional; the first run with
+  randomisation and noise (`go2_walk_r2`) is in progress. There is no terrain curriculum (stairs, slopes) and no
   latency model. A policy may fit the MuJoCo plant and fail in Gazebo or
   Isaac.
 - The launch checks that a policy belongs to its robot, but not that it

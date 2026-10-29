@@ -42,24 +42,32 @@ October 19: R12 legged policy training ([guide](../tutorials/legged-policy-train
   `legged_policy:=<directory>` for the trained robot only.
 - [x] Optional domain randomisation (friction, base mass, motor strength),
   rough terrain and observation noise, as GUI checkboxes and CLI flags.
-- [ ] A trained policy with measured walks and its transfer to Gazebo and
-  Isaac; a run with the randomisation options; a Go2 turn-in-place policy;
-  terrain curriculum; GPU training; Go2W and humanoids.
+- [x] First trained policy, `go2_walk_r1` (Go2 walk, 24.6 M steps in 73 min,
+  CPU). Through the normal launch it walks, turns, strafes and stops in
+  MuJoCo, Gazebo and Isaac, and turns on the spot (0.98 / 0.83 / 0.64 of
+  1.0 rad/s), which the rl_sar policy does not
+  ([evidence](evidence/training-2026-10-19/README.md)).
+- [ ] Isaac transfer: forward speed is 0.22 of 0.4 m/s; a run with
+  randomisation and observation noise and a 20 s held turn are in progress.
+- [ ] Navigation missions with a trained policy; terrain curriculum; GPU
+  training; A1/B2 runs; Go2W and humanoids.
 
-October 19: rounds 51-56 ([evidence](evidence/rounds-2026-10-19/README.md)).
+October 19: rounds 51-57 ([evidence](evidence/rounds-2026-10-19/README.md)).
 
 - [x] Go2 passes nav_obstacle seeds 1-3 in Isaac with forward arcs, so it
   now passes in MuJoCo, Gazebo and Isaac.
 - [x] Car publisher loss: all six cells stop within the coast screen.
 - [x] Clean host at `e3821b8`: build, fast tier, MuJoCo, Gazebo and Isaac
   missions and the golden comparison all pass.
-- [x] Matrix re-indexed: 619 reports, 291 cells, 278 passed, 12 failed.
+- [x] Matrix re-indexed: 626 reports, 294 cells, 282 passed, 11 failed (October 29).
 - [x] MuJoCo small_house Bumperbot crawl: the cause was a spawn drop
-  through the 1 mm flex floor from a loose mesh box (`873753f`); a
-  diagnostic drive reaches 0.397 m/s. The slam drive is queued again.
-- [ ] Car course parking heading (2 of 12 cells pass the full course).
-- [ ] Rear-steer gate 1 in MuJoCo and Gazebo: planner change committed
-  (`84422df`), measurement queued.
+  through the 1 mm flex floor from a loose mesh box (`873753f`). Round 57:
+  the slam drive completes with 1.3 cm RMSE and 0.97/0.79 map precision and
+  recall (1.49 m and 0.12/0.16 before).
+- [x] Rear-steer gate 1 (`84422df`): round 57 passes the slalom in all four
+  backends and the full course in MuJoCo.
+- [ ] Car course parking heading: 3 of 12 cells pass the full course; the
+  others end 8-23° off the bay heading.
 - [ ] Camera calibration in Isaac (RMS) and Gazebo (cy 5 px).
 
 October 19: R11 MOLAR family on the detailed CELISCA floors.
