@@ -225,6 +225,18 @@ class AerialSwarmController(Node):
                         output.linear.x=float(world[0]*math.cos(yaw)+world[1]*math.sin(yaw))
                         output.linear.y=float(-world[0]*math.sin(yaw)+world[1]*math.cos(yaw))
                         output.linear.z=float(world[2])
+                        # Bounded altitude-drift trim: nudge the vertical velocity
+                        # toward the formation height from the FCU's own odometry
+                        # (never simulator truth). PX4's integrated hold stays
+                        # primary; this only trims persistent barometric
+                        # height-reference drift between ticks.
+                        if self.mode=='formation' and self.anchor is not None:
+                            target_z=float(self.anchor[2])
+                            z_err=target_z-float(member['pose'][2])
+                            if abs(z_err)>.05:
+                                trim=float(np.clip(.25*z_err,-.05,.05))
+                                output.linear.z=float(np.clip(output.linear.z+trim,-.25,.25))
+                                member['last_altitude_trim_m_s']=trim
                         member['velocity_pub'].publish(output)
                         if self.mode=='formation' and self.anchor is not None and member['truth'] is not None and now-member['truth_at']<.6:
                             names=sorted(self.targets)
@@ -239,6 +251,7 @@ class AerialSwarmController(Node):
                             if len(self.altitude_errors)>2000:self.altitude_errors.pop(0)
                             self.event('formation_sample',member=member['id'],mode=self.mode,
                                 formation_error_m=formation_error,altitude_error_m=altitude_error,
+                                altitude_trim_m_s=member.get('last_altitude_trim_m_s',0.),
                                 target_world=target.tolist(),actual_world=actual.tolist(),
                                 observer='Independent Gazebo body pose; absolute world formation slot')
         if now-self.last_status>.2:

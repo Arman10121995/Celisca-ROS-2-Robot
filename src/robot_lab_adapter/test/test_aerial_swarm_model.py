@@ -69,6 +69,30 @@ def test_velocities_flocking_include_forward_bias():
     assert result['a'][0] > 0 or result['b'][0] > 0
 
 
+def test_velocities_formation_holds_common_altitude():
+    # The formation anchor height is shared by every member; z corrections
+    # drive each member toward that common height independent of XY.
+    positions = {'a': [0., -3., 0.9], 'b': [0., 0., 1.0], 'c': [0., 3., 1.1]}
+    result = velocities('formation', positions, spacing=3., maximum=1.)
+    assert result['a'] == pytest.approx([0., 0., 0.05], abs=1e-6)
+    assert result['b'] == pytest.approx([0., 0., 0.], abs=1e-6)
+    assert result['c'] == pytest.approx([0., 0., -0.05], abs=1e-6)
+
+
+def test_velocities_formation_four_members_keep_altitude():
+    positions = {
+        'air1': [0., -4.5, 0.95], 'air2': [0., -1.5, 1.05],
+        'air3': [0., 1.5, 1.0], 'air4': [0., 4.5, 0.9],
+    }
+    result = velocities('formation', positions, spacing=3., maximum=1.)
+    for name, v in result.items():
+        assert v[0] == pytest.approx(0., abs=1e-6) and v[1] == pytest.approx(0., abs=1e-6)
+    assert result['air1'][2] == pytest.approx(0.0125, abs=1e-6)
+    assert result['air2'][2] == pytest.approx(-0.0375, abs=1e-6)
+    assert result['air3'][2] == pytest.approx(-0.0125, abs=1e-6)
+    assert result['air4'][2] == pytest.approx(0.0375, abs=1e-6)
+
+
 @pytest.mark.parametrize('mode', ['cooperative_coverage', 'merge', 'hold', 'hover'])
 def test_velocities_rejects_unsupported_kernel(mode):
     with pytest.raises(ValueError):

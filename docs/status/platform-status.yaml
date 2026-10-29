@@ -1389,7 +1389,8 @@ tasks:
         implementation_state: Native multi-FCU controls, automatic formation/operator-loss workloads, bytewise
           FCU parameters, explicit noisy range kit/EKF selection, native truth clocks and absolute independent
           formation observations.
-        owner: codex
+        owner: cline-agent
+        previous_owner: codex
         scope_paths:
         - src/robot_lab_adapter/robot_lab_adapter/aerial_swarm_model.py
         - src/robot_lab_adapter/robot_lab_adapter/aerial_swarm_controller.py
@@ -1401,7 +1402,6 @@ tasks:
         qualification_review: '2026-10-27 documentation review: retain the implemented code, tests and named
           mission certificates. Full declared roadmap acceptance is still open; test counts, metadata and scene
           loads do not qualify remaining robot/map/backend missions. See docs/REMAINING_WORK_GUIDE.md.'
-        previous_owner: cline-agent
         claimed: '2026-10-27'
         current_run: /workspace/molar/robot_lab_runtime/project-completion-20261027-vne3n358
         current_scope: Native workflow continuation delivered with real scoped receipts; finish the named remaining
