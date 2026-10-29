@@ -1396,14 +1396,14 @@ tasks:
         - src/robot_lab_adapter/robot_lab_adapter/aerial_swarm_controller.py
         state: partial
         title: Ground and aerial swarm control
-        validation_state: "Two actual X500s on nav_empty with range reference pass physical formation/settling and operator-loss landing/disarm; contact/member-loss, other references/maps and larger groups remain open. Continuation 2026-10-09: both FCU takeoff corridor checks ACCEPTED; check_position air1 [-0.5,-0.5,0.22726], air2 [-3.5,-0.5,0.226494]; EKF2 range-reference params (EKF2_HGT_REF=2, EKF2_RNG_CTRL=2) applied; altitude-drift trim + formation flight metrics pending driver-protocol fix."
+        validation_state: "Two actual X500s on nav_empty with range reference pass physical formation/settling and operator-loss landing/disarm; contact/member-loss, other references/maps and larger groups remain open. Continuation 2026-10-09: both FCU takeoff corridor checks ACCEPTED; check_position air1 [-0.5,-0.5,0.22726], air2 [-3.5,-0.5,0.226494]; EKF2 range-reference params (EKF2_HGT_REF=2, EKF2_RNG_CTRL=2) applied. Formation flight MEASURED (session swarm-5vvjltpb): formation_rms_m=1.0976 m, altitude_rms_m=0.8376 m, 200 samples over 18 s; air1 converging (~0.66->0.15 m), air2 not converging (~0.95-1.10 m). Altitude trim applied. Land/disarm NOT confirmed (heartbeat stale during sampling). Remaining: landing/disarm, larger groups, other maps/behaviors, member-loss/contact."
         qualification_review: '2026-10-27 documentation review: retain the implemented code, tests and named
           mission certificates. Full declared roadmap acceptance is still open; test counts, metadata and scene
           loads do not qualify remaining robot/map/backend missions. See docs/REMAINING_WORK_GUIDE.md.'
-        next_action: Driver-protocol fix -> bounded two-X500 formation mission -> formation/altitude error and landing metrics; then larger groups and member-loss/contact cases per ROADMAP R10.3.
+        next_action: Driver heartbeat fix -> land/disarm measurement on the existing formation case; then investigate air2 non-convergence (formation targets / velocity gains); then larger groups, other maps/behaviors and member-loss/contact cases per ROADMAP R10.3.
         claimed: '2026-10-27'
         current_run: /workspace/molar/robot_lab_runtime/project-completion-20261027-vne3n358
-        current_scope: "Continuity claimed 2026-10-09: close the named altitude-estimate drift / formation-accuracy gap on the measured two-X500 nav_empty range-reference case (proportional vertical trim on FCU odometry pose error, PX4 integrated hold primary). Measured through takeoff corridor checks; formation flight metrics, landing and larger groups remain open."
+        current_scope: "Continuation 2026-10-09: formation flight MEASURED on nav_empty (formation_rms_m=1.0976 m, altitude_rms_m=0.8376 m, 200 samples over 18 s); air1 converging (~0.66->0.15 m), air2 not converging (~0.95-1.10 m). Altitude trim applied. Land/disarm NOT confirmed (heartbeat stale). Larger groups, other maps/behaviors and member-loss/contact remain open."
         historical_unqualified_notes:
         - Implementation complete with contract tests and GUI diagnostics passing
         - Fleet contract (8 tests), fleet missions, gait contract (all pass), molar backend contract (all pass)

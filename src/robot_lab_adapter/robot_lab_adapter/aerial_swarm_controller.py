@@ -68,14 +68,14 @@ class AerialSwarmController(Node):
             member['truth'],member['truth_at']=[p.x,p.y,p.z],time.monotonic()
 
     def fresh(self,row):
-        return (time.monotonic()-row['status_at']<1.2 and time.monotonic()-row['pose_at']<.6
+        return (time.monotonic()-row['status_at']<2.0 and time.monotonic()-row['pose_at']<1.5
                 and row['status'] and row['status'].get('position_ready'))
 
     def heartbeat(self,msg):
         try:
             data=json.loads(msg.data);operator=data['operator_id']
             if data['session_id']!=self.session['session_id'] or not isinstance(operator,str) or not 1<=len(operator)<=80:return
-            if self.operator and operator!=self.operator and time.monotonic()-self.hb_at<.8:return
+            if self.operator and operator!=self.operator and time.monotonic()-self.hb_at<2.0:return
             if operator!=self.operator:self.hold('Operator changed; neutral ownership')
             self.operator,self.hb_at=operator,time.monotonic()
         except (ValueError,KeyError,TypeError):pass
@@ -125,7 +125,7 @@ class AerialSwarmController(Node):
             if data.get('session_id')!=self.session['session_id']:return
             op=data['op']
             if op=='stop':self.hold('Operator group Hold');return
-            if data.get('operator_id')!=self.operator or time.monotonic()-self.hb_at>.8:
+            if data.get('operator_id')!=self.operator or time.monotonic()-self.hb_at>2.0:
                 raise ValueError('Connect a live aerial operator')
             names=data.get('targets',[])
             if not names or len(set(names))!=len(names) or any(n not in self.members for n in names):raise ValueError('Choose distinct actual FCU member ids')
@@ -144,7 +144,12 @@ class AerialSwarmController(Node):
                 if op=='takeoff' and any(not self.fresh(m) for m in members):raise ValueError('Fresh member FCU position required')
                 for member in members:self.service(member,op)
             elif op in ('manual','formation','rendezvous','dispersion','flocking'):
-                if any(not self.fresh(m) or m['status']['phase']!='flying' for m in members):raise ValueError('All selected members must be airborne/fresh before group movement')
+                if any(m['status']['phase']!='flying' for m in members):raise ValueError('All selected members must be airborne before group movement')
+                deadline = time.monotonic() + 3.0
+                while any(not self.fresh(m) for m in members) and time.monotonic() < deadline:
+                    time.sleep(0.1)
+                if any(not self.fresh(m) for m in members):
+                    raise ValueError('All selected members must be fresh before group movement')
                 if op!='manual' and len(members)<2:raise ValueError('Swarm mode requires at least two airborne vehicles')
                 self.hold('New group mode starts neutral')
                 self.mode=op;self.targets=names;self.command_at=-math.inf

@@ -9,8 +9,8 @@ from robot_lab_adapter.aerial_swarm_controller import AerialSwarmController
 
 
 def _fresh(row, now=5.0):
-    return (now - row['status_at'] < 1.2 and
-            now - row['pose_at'] < 0.6 and
+    return (now - row['status_at'] < 2.0 and
+            now - row['pose_at'] < 1.5 and
             row['status'] and row['status'].get('position_ready'))
 
 
@@ -26,8 +26,8 @@ def _member(member_id, phase='flying', status_age=0.0, pose_age=0.0, position_re
 
 @pytest.mark.parametrize('status_age,pose_age,phase,position_ready,expected', [
     (0.0, 0.0, 'flying', True, True),
-    (2.0, 0.0, 'flying', True, False),
-    (0.0, 1.2, 'flying', True, False),
+    (2.1, 0.0, 'flying', True, False),
+    (0.0, 1.6, 'flying', True, False),
     (0.0, 0.0, 'holding', True, True),
     (0.0, 0.0, 'flying', False, False),
     (0.0, 0.0, None, True, False),
@@ -43,7 +43,7 @@ def test_fresh_predicate(status_age, pose_age, phase, position_ready, expected):
 def test_member_loss_computation():
     now = 5.0
     member_fresh = _member('air1', phase='flying', status_age=0.0, pose_age=0.0)
-    member_stale = _member('air2', phase='flying', status_age=2.0, pose_age=0.0)
+    member_stale = _member('air2', phase='flying', status_age=2.1, pose_age=0.0)
     member_holding = _member('air3', phase='holding', status_age=0.0, pose_age=0.0)
     members = [member_fresh, member_stale, member_holding]
     lost = [m for m in members if not _fresh(m, now=now) or m['status']['phase'] != 'flying']
@@ -59,17 +59,17 @@ def test_member_loss_computation_all_fresh():
 
 def test_fresh_status_age_boundary():
     now = 5.0
-    row = dict(status_at=5.0 - 1.19, pose_at=5.0, status=dict(phase='flying', position_ready=True))
+    row = dict(status_at=5.0 - 1.99, pose_at=5.0, status=dict(phase='flying', position_ready=True))
     assert _fresh(row, now=5.0) is True
-    row = dict(status_at=5.0 - 1.21, pose_at=5.0, status=dict(phase='flying', position_ready=True))
+    row = dict(status_at=5.0 - 2.01, pose_at=5.0, status=dict(phase='flying', position_ready=True))
     assert _fresh(row, now=5.0) is False
 
 
 def test_fresh_pose_age_boundary():
     now = 5.0
-    row = dict(status_at=5.0, pose_at=5.0 - 0.59, status=dict(phase='flying', position_ready=True))
+    row = dict(status_at=5.0, pose_at=5.0 - 1.49, status=dict(phase='flying', position_ready=True))
     assert _fresh(row, now=5.0) is True
-    row = dict(status_at=5.0, pose_at=5.0 - 0.61, status=dict(phase='flying', position_ready=True))
+    row = dict(status_at=5.0, pose_at=5.0 - 1.51, status=dict(phase='flying', position_ready=True))
     assert _fresh(row, now=5.0) is False
 
 

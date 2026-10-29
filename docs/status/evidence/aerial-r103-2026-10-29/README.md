@@ -16,11 +16,19 @@
 - Maximum estimated speed during stabilization: 0.088 m/s (air1), 0.065 m/s (air2)
 - Applied height reference: `2` (rangefinder) on both — `EKF2_HGT_REF=2`,
   `EKF2_RNG_CTRL=2` confirmed at the workers
-- Landing / disarm **NOT reached**: the controller-side check stage passed, but the
-  test harness (driver reply handling) stalled before formation/landing commands.
-  Production adapter is therefore verified through the take-off-check stage only;
-  formation flight metrics, altitude drift and landing remain open until the
-  driver is fixed and a bounded mission is re-run (next action, ledger R10.3).
+- **Formation flight MEASURED** (session swarm-5vvjltpb, bounded mission):
+  - mode: formation, 18 s of formation control (formation_samples: 200)
+  - formation_rms_m: 1.0976 m (last 10 s), range 1.0976–2.1946 m
+  - altitude_rms_m: 0.8376 m (last 10 s), range 0.3577–0.8376 m
+  - air1 convergence: formation_error_m ~0.66 → ~0.15 m (converging)
+  - air2: formation_error_m ~0.95–1.10 m (not converging)
+  - altitude trim applied: air1 ~-0.05 to -0.035 m/s, air2 ~+0.02 to +0.04 m/s
+  - **Land/disarm NOT confirmed**: heartbeat went stale during the 18 s sampling
+    period (driver-protocol issue: `time.sleep(0.2)` blocks heartbeat timer).
+    FCUs remain armed. Landing requires driver fix (shorter sleep / explicit
+    heartbeat every iteration).
+- Production adapter is verified through formation flight; landing/disarm and
+  larger groups, other maps/behaviors and member-loss/contact remain open.
 
 ## Relevant artifacts (SSD, preserved)
 

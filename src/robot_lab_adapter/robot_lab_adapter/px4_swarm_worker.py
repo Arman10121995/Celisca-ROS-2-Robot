@@ -159,7 +159,7 @@ def main():
                 message=('Actual selected-world takeoff corridor checked; fresh single-use result ready' if accepted
                     else request.get('error') or state.get('error') or ('Actual FCU height-reference parameter not confirmed' if not configured
                         else 'Landed estimate did not stabilize or the check timed out'))
-                reply.publish(String(data=json.dumps(dict(request_id=request['request_id'],generation=request['generation'],
+                reply.publish(String(data=json.dumps(dict(request_id=request['request_id'],operation='check',generation=request['generation'],
                     accepted=accepted,message=message,check_position=state.get('start_enu') if accepted else None,
                     landed_estimate_samples=len(stable_positions),
                     maximum_estimated_speed_m_s=max((speed for _,_,speed,_ in stable_positions),default=None),
