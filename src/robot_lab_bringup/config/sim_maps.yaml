@@ -15,8 +15,8 @@ maps:
       z: 0.1
       yaw: 0.0
     notes: Physical doors/lift, source-derived L0 occupancy, actual infrastructure feedback
-      and authored energy model. Upper-floor navigation/transport need separate maps
-      and acceptance.
+      and authored energy model. L1 occupancy map added; upper-floor navigation/transport
+      acceptance remains pending.
   amphibious_shore:
     gazebo:
       world_name: amphibious_shore

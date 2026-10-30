@@ -14,7 +14,7 @@ Platform and full extension partial.**
 | Area | Delivered / measured | Remaining |
 |---|---|---|
 | Catalog | Seven registrations restored; 152 profiles / 82 selectable families, 54 worlds / 42 families | Changed-source qualification and additional reviewed imports |
-| Fleet | Native sessions/queues/traffic/RMF/coverage, physical facility door/lift/dock; actual conflict, settled batch and facility cases | Power/charging, multi-floor RMF/map transitions and broader contact/loss/maps/backends |
+| Fleet | Native sessions/queues/traffic/RMF/coverage, physical facility door/lift/dock; actual conflict, settled batch and facility cases; robot lift transport and per-floor L0/L1 occupancy maps | Qualified backend motor-power/charging, multi-floor RMF map/TF transitions and broader contact/loss/maps/backends |
 | Aerial swarm | Native multi-FCU controls/workloads; actual nav_empty two-drone range-reference formation and operator-loss landing | Larger groups, other maps/behaviors and member-loss/contact cases |
 | Marine | Actual sensor-based map acquisition/export/protected reload/localization and completed ROV route; AUV automatic acquisition and surface-vessel mapping/two-goal arrival with actual body traces | Further AUV/localization/obstacle/current/loss missions |
 | Multi-leg | Correct source FK/contact odometry, map export/reload/Nav2; hexapod navigation result and octopod real 3D database | Per-model terrain/recovery/higher-mode/backend qualification |
