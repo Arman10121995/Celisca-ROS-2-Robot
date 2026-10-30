@@ -1,0 +1,35 @@
+{
+  "schema": "robot_lab.extension_workload.v1",
+  "workflow": "marine",
+  "task": "navigation",
+  "truth_coordinates": "selected_world",
+  "timeout_s": 180.0,
+  "goals": [
+    [
+      -2.0,
+      -2.0,
+      0.0
+    ],
+    [
+      -2.0,
+      -1.0,
+      0.0
+    ]
+  ],
+  "selection": {},
+  "launch_command": [
+    "ros2",
+    "launch",
+    "robot_lab_bringup",
+    "simulated_robot.launch.py",
+    "robot_model:=lab_usv",
+    "mode:=marine",
+    "simulator:=gazebo",
+    "map_name:=surface_harbor",
+    "gui:=false",
+    "start_rviz:=false",
+    "enable_joystick:=false",
+    "marine_slam:=false"
+  ],
+  "expected_producer_sha256": "f2d0b3f0ca4b43c1f88f5c3289662910b48634a8d80fb7089979f6101872ea5c"
+}

@@ -1,0 +1,218 @@
+{
+  "recorded": "2026-10-30",
+  "base_revision": "db14385a1feeabdb13ee35da51cd39fe67f3bef3",
+  "cases": {
+    "snake-2d-map": {
+      "raw_directory": "/workspace/molar/robot_lab_runtime/extension-completion-20261029-vsebubus/snake_mapping/c18897142523456f9016571273050d4f",
+      "run_id": "c18897142523456f9016571273050d4f",
+      "copied_sha256": {
+        "run.json": "7ece137bed4205a0faf0ebbe5d29601c79edead8269417f68c1b23a05525b55a",
+        "extension-mission-result.json": "ebcaa0845e4bfb05e48958096e0271ef58814b61246363058243c738f2a5ccb8",
+        "workload.json": "1fd215b894aab1c34c4df80ff0b460b76c7095ed653ff7d48da52fa5acf0f7be",
+        "workload-producer.py": "6b3f7bbd78521448882b2edff0850f2b2827c736d9080ac57d97647c83fe1647",
+        "telemetry-summary.json": "3703ed2a535758cb8b6f1854d9cd4e5348c72f9852e4727e29be404d0dc7e1e5"
+      },
+      "cleanup_complete": true,
+      "scope": "Native extension workload with separate physical observation; exact contract in result"
+    },
+    "snake-3d-map": {
+      "raw_directory": "/workspace/molar/robot_lab_runtime/extension-completion-20261029-vsebubus/snake_3d_mapping/ce1db91eba8d44c6ac4d0091715f3aac",
+      "run_id": "ce1db91eba8d44c6ac4d0091715f3aac",
+      "copied_sha256": {
+        "run.json": "6548a47190386f8b52ee74850f8cf5c2520f9f4a62c0bcb8dd94492694992216",
+        "extension-mission-result.json": "6a664b3f6287c684fa99e1c06f71bf1b37113d0b3e3b1d7d2906d556b417cbfd",
+        "workload.json": "e752eeb1cf793084116947ded6e3fafbcfea7cd1f67f77552461492698251f80",
+        "workload-producer.py": "6b3f7bbd78521448882b2edff0850f2b2827c736d9080ac57d97647c83fe1647",
+        "telemetry-summary.json": "9d94a6a474c339e38531c753e98b1e841a8faab8c49e82f2a4df5557e4122b30"
+      },
+      "cleanup_complete": true,
+      "scope": "Native extension workload with separate physical observation; exact contract in result"
+    },
+    "snake-installed-map-navigation": {
+      "raw_directory": "/workspace/molar/robot_lab_runtime/extension-completion-20261029-vsebubus/snake_navigation/7c8c9feaf47949739848be52e92ac48d",
+      "run_id": "7c8c9feaf47949739848be52e92ac48d",
+      "copied_sha256": {
+        "run.json": "84b0c74d622d1316b3cd1ad9438ec8a4f3d0f10a19a48b91e3036c6fa36ba472",
+        "extension-mission-result.json": "58c0269ba17ddf45631a6e4563571ab8e5e772b573be830f9b80f6e1b17b7d20",
+        "workload.json": "a780c55283ece85baac015008e9ffa0517b567ee65803a9c1801c5f4ed0e9555",
+        "workload-producer.py": "6b3f7bbd78521448882b2edff0850f2b2827c736d9080ac57d97647c83fe1647",
+        "telemetry-summary.json": "b5413c0be6661e677007ca4e5fb45125a70f9e65214bf55412ebcc6a1ea3c1bf"
+      },
+      "cleanup_complete": true,
+      "scope": "Native extension workload with separate physical observation; exact contract in result"
+    },
+    "snake-acquired-map-navigation": {
+      "raw_directory": "/workspace/molar/robot_lab_runtime/extension-completion-20261029-vsebubus/snake_navigation/1c97dcda2a604b1fb2134244f56ab641",
+      "run_id": "1c97dcda2a604b1fb2134244f56ab641",
+      "copied_sha256": {
+        "run.json": "f235df38975d9060234fbc97e0c634d6982e56f7d70f64172964f263f883049a",
+        "extension-mission-result.json": "4573baa3373ab02403d668f1961da8bf0658c6363a947a5e76674c26ef0e8c64",
+        "workload.json": "6209afdeb6dfc5528321e3a1b133c6a9acc40d4a3bb3f5bc6060df816f43e695",
+        "workload-producer.py": "6b3f7bbd78521448882b2edff0850f2b2827c736d9080ac57d97647c83fe1647",
+        "telemetry-summary.json": "f0e8c956cfbca75d1d9bbad427ed51539b752c98b031bdc4c89fc8b7bd21d426"
+      },
+      "cleanup_complete": true,
+      "scope": "Native extension workload with separate physical observation; exact contract in result"
+    },
+    "surface-navigation": {
+      "raw_directory": "/workspace/molar/robot_lab_runtime/extension-completion-20261029-vsebubus/surface_navigation/a0d039e09a544184b63c52d8db92dae9",
+      "run_id": "a0d039e09a544184b63c52d8db92dae9",
+      "copied_sha256": {
+        "run.json": "8e123aca7f6e8ca63a717e5d1b6c16a11ac943fa70fce8570d080a434d62bbb4",
+        "extension-mission-result.json": "7ac30662d936933cbc29e9a4dd71257848b95e09814661dc9dc432f6663b2e3e",
+        "workload.json": "04f76f08789977f0152e2eb49b5c1dc3bfe9e5562239fe9a84f4035b677c1628",
+        "workload-producer.py": "f2d0b3f0ca4b43c1f88f5c3289662910b48634a8d80fb7089979f6101872ea5c",
+        "telemetry-summary.json": "bd8fcc5c72244f4b7b5adae525b8e92a598b3610418a57b240d2d6dd736b0683"
+      },
+      "cleanup_complete": true,
+      "scope": "Native extension workload with separate physical observation; exact contract in result"
+    },
+    "surface-acquisition": {
+      "raw_directory": "/workspace/molar/robot_lab_runtime/project-completion-20261027-vne3n358/automatic-surface-acquisition/52b2a02f2d8b4316bd84839ff812f68d",
+      "run_id": "52b2a02f2d8b4316bd84839ff812f68d",
+      "copied_sha256": {
+        "run.json": "38a8699084a6417bbaa9160fd60e416912f6cc78d9d1b089fa2e59390fe00325",
+        "extension-mission-result.json": "8c2a5474407ab60c3227e8e84eb0a83461519a7a2a345d94258e9f85e977e1de",
+        "workload.json": "73a10b350268e1d185adeba29369c0230913cd14b829c2a537e0ce1993fb8654",
+        "workload-producer.py": "e1bdbde028d0856b1c067c5b4f2a887ba7b6e0976850c696f3ebcecb28b08f37",
+        "telemetry-summary.json": "17e52b07c7ab7ee77e0ceb6252f0c95b47980e28e830a65f6a3389e878b2ba92"
+      },
+      "cleanup_complete": true,
+      "scope": "Native extension workload with separate physical observation; exact contract in result"
+    },
+    "auv-acquisition": {
+      "raw_directory": "/workspace/molar/robot_lab_runtime/project-completion-20261027-vne3n358/automatic-auv-acquisition/e56d05d1a376495a852d5343234e6c30",
+      "run_id": "e56d05d1a376495a852d5343234e6c30",
+      "copied_sha256": {
+        "run.json": "29073de6b39c07cd827a50ee1e2ac5ab9288586b19c41215ac1edabca9517fbc",
+        "extension-mission-result.json": "e2d7b12c4c1c505b74454f0a47f237de0693e2dc66af846b3596df69485619b9",
+        "workload.json": "35496a23bccb88dcdd469b00108b250a2b2e114d372171bea104a07dfcef83a6",
+        "workload-producer.py": "e1bdbde028d0856b1c067c5b4f2a887ba7b6e0976850c696f3ebcecb28b08f37",
+        "telemetry-summary.json": "cc44a00201ad828b01eb02613ece5d380fd4e3a1a496b73fd18d5fa2663bae87"
+      },
+      "cleanup_complete": true,
+      "scope": "Native extension workload with separate physical observation; exact contract in result"
+    },
+    "tracked-flippers": {
+      "raw_directory": "/workspace/molar/robot_lab_runtime/extension-completion-20261029-vsebubus/tracked_flippers/9a5007e7ee6c4c2b966f6602a08950ad",
+      "run_id": "9a5007e7ee6c4c2b966f6602a08950ad",
+      "copied_sha256": {
+        "run.json": "1d2a916ea207075ba897bd1c4ac91fb6eb97c36858b59b172c0d2d20a2bcd2a2",
+        "flipper-result.json": "53c3212fdd3f5caf032041991844e84d84afe779530c9277d8fb54417db39116",
+        "telemetry-summary.json": "8a8d66f2bd0f975e202157f9072c16f0d5f449133875a3f1717a8f75f27588fc"
+      },
+      "cleanup_complete": true,
+      "scope": "External actual joint/flat-drive diagnostic; parent mission_result is null"
+    }
+  },
+  "post_run_source_sha256": {
+    "scripts/generate_articulated_tracks.py": "20b976ef195d20bf75c721f8f2b0280228c90f3dfb3a7852f213798c88701858",
+    "scripts/generate_serpentine_assets.py": "f0372959f924105d3cfca33191207999457cbb7fc4e1870e105d019ca01184ce",
+    "src/robot_lab/robot_lab_benchmark/robot_lab_benchmark/extension_workload.py": "6b3f7bbd78521448882b2edff0850f2b2827c736d9080ac57d97647c83fe1647",
+    "src/robot_lab/robot_lab_benchmark/robot_lab_benchmark/telemetry_recorder.py": "1afde2bca730610a0f16c99e1895c65c6bf7cb81399c65d91b188db0824351b4",
+    "src/robot_lab/robot_lab_registry/config/robots.yaml": "4adb477b13b61003e3f105b97e29cf7b4306d42ca1e4be3b90790f7104e0ff01",
+    "src/robot_lab_bringup/config/asset_groups.yaml": "b20d36d42246ca53b9fe94d71eacb5267a1aba6a5eb08f9f23417c8ef2b42494",
+    "src/robot_lab_bringup/config/robot_taxonomy.yaml": "e3eb363688d30211bebbf54eb4c934ae4437b3f59a7b651787ab8d1c6932cb72",
+    "src/robot_lab_bringup/launch/gait_simulator.launch.py": "d190ab4f963d4fc09aff6abd5eab7b14e9700902c838e5810f78c0b705f58272",
+    "src/robot_lab_bringup/launch/simulated_robot.launch.py": "7c07cca796b63e5fba900ad6ff77ad0b7d865275edeb3cecd52f991fa0c95f35",
+    "src/robot_lab_bringup/launch/tracked_simulator.launch.py": "435dc84814da2af9c2322ec31ee119fafa140c5d42e29ad23d0998ad4455d4e5",
+    "src/robot_lab_bringup/test/test_serpentine_contract.py": "7aa2f5b816ebd8ac649d4695ed6914a83087334f1bf69fddfa34a126c54f780a",
+    "src/robot_lab_bringup/test/test_tracked_control.py": "e2704af58c3e3b12abd9ec8aae1af9dc1ece7fa71129a9975de0665a58037c59",
+    "src/robot_lab_bringup/test/test_tracked_flippers.py": "ae2bc48bca69f661c26edbc07711bcc502362a1103be0f4fb5d1e19336b32d57",
+    "src/robot_lab_gui/robot_lab_gui/lab_tabs.py": "b12c6b279cddadcc89c26a415720bb6ead4f8d1a3b16a10bd07a4215342f3667",
+    "src/robot_lab_gui/robot_lab_gui/launcher.py": "8470e672f6d0f2051d53ff9d4f40e4202061435350cd85669b90a5400eec68d2",
+    "src/robot_lab_gui/robot_lab_gui/tracked_controls.py": "b6363fd2ac183f5a64176144887bd5fa7d8ad7393233a767047321a20929d464",
+    "src/robot_lab_maps/maps/surface_harbor/SOURCE.json": "7a24eed209b79f2570004250cf560ee8d6134971ea3abf5e19c751ef86cb41e8",
+    "src/robot_lab_maps/mjcf/surface_harbor.xml": "fe6a5d1084877a8722fa09e72132ce0d924b63fec61c6520483ef95d45b5c014",
+    "src/robot_lab_robots/config/robots.yaml": "9349dec34420c7ba41c7a5cd98d848d8b2cbcee8350ef835e1bdf40fbc2909a0",
+    "src/robot_lab_robots/lab_snake/config/gait.yaml": "b66b8dced65192f16fff58dea6bcfed6b491fbb19d8697b986fad50a9f679fa0",
+    "src/robot_lab_robots/lab_tracked_articulated/LICENSE": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30",
+    "src/robot_lab_robots/lab_tracked_articulated/SOURCE.json": "072eab7cb64372b4e6d4aed0529cd694ea011d4b34224107035006c6a202e700",
+    "src/robot_lab_robots/lab_tracked_articulated/model.sdf": "e1057828f2aa92dbec19c90501f673f6be71d06ef42e702f254a4753c2faf19d",
+    "src/robot_lab_robots/lab_tracked_articulated/robot.urdf": "314c78fd947aa96cd225ddc69f302a80fbe818d83d67f71b6c4bba59d216a733",
+    "src/robot_lab_utils/robot_lab_utils/gait_controller.py": "426e3c6bddc570355927983e3110bab990d1cfb1ed40d76752fdf097688e367e",
+    "src/robot_lab_utils/robot_lab_utils/gait_pipeline.py": "e184970bb8fb719a50406041680b1b8336a8dff3b8f78b856db0da5ca29e9f75",
+    "src/robot_lab_utils/robot_lab_utils/gait_sensor_relay.py": "389491c68e250a19dcb351f54e6372cf63d0b5acfcbe7c1651e172d82c3d2f9a",
+    "src/robot_lab_utils/robot_lab_utils/mode_capability.py": "4bce575fa2d8db2cc6abf456ff7b377cfc1608355f84250d420668b42a489b6a",
+    "src/robot_lab_utils/robot_lab_utils/robot_taxonomy.py": "ca3808292984d3a6cb462f43b96b1ac433803f3a65eff02e253c5d6ea4ad2376",
+    "src/robot_lab_utils/robot_lab_utils/serpentine_model.py": "c75639ed6ff901d962243fcdcfe10f2699e14a3e2e2ef78ebb53939e2988ab89",
+    "src/robot_lab_utils/robot_lab_utils/serpentine_odometry.py": "7e25f9033a874fc282d692e1d9cf5616ad5ea2b97aa40af064d37fb1cdcc4c2b",
+    "src/robot_lab_utils/robot_lab_utils/surface_controller.py": "b00d6c486b02c5161712186119639510c794fa46da98f51917a2528f981b1841",
+    "src/robot_lab_utils/robot_lab_utils/tracked_control.py": "920d66d77fd10f3fb7598a41e517bf38edeacf4920da4cbf3f0c443770928a45"
+  },
+  "source_boundary": "Post-run source manifest, not a frozen plant/build qualification. Runner stores startup workload producer hashes and frozen producer; raw generated sessions and trajectories remain on SSD. No whole-build immutable claim.",
+  "unmeasured": [
+    "contacts",
+    "minimum_swept_clearance",
+    "applied_random_seed",
+    "broad_model_world_backend_acceptance"
+  ],
+  "retained_failed_runs": [
+    {
+      "directory": "/workspace/molar/robot_lab_runtime/extension-completion-20261029-vsebubus/snake_navigation/135f67ad3c7846e5aec61d802b7bec16",
+      "reason": "Measured extension workload timed out"
+    },
+    {
+      "directory": "/workspace/molar/robot_lab_runtime/extension-completion-20261029-vsebubus/snake_navigation/200f9978ccd849eba7d9331dde5ea793",
+      "reason": "Native Nav2 terminal status 5"
+    },
+    {
+      "directory": "/workspace/molar/robot_lab_runtime/extension-completion-20261029-vsebubus/snake_navigation/45928ba3cb8040109e678805c2838f2a",
+      "reason": "Native Nav2 terminal status 6"
+    },
+    {
+      "directory": "/workspace/molar/robot_lab_runtime/extension-completion-20261029-vsebubus/snake_navigation/70d9ca4265c94944a64f944a9668ea43",
+      "reason": "Measured extension workload timed out"
+    },
+    {
+      "directory": "/workspace/molar/robot_lab_runtime/extension-completion-20261029-vsebubus/snake_navigation/74db1bab84dc440589d70b39d70e5bc9",
+      "reason": "Native Nav2 terminal status 6"
+    },
+    {
+      "directory": "/workspace/molar/robot_lab_runtime/extension-completion-20261029-vsebubus/snake_navigation/9db740ffdead41e1be3084a51dfbe86f",
+      "reason": "Native Nav2 terminal status 5"
+    },
+    {
+      "directory": "/workspace/molar/robot_lab_runtime/extension-completion-20261029-vsebubus/snake_navigation/bff9fa7f6e394788be7b49e592e0d9f0",
+      "reason": "Native Nav2 terminal status 5"
+    },
+    {
+      "directory": "/workspace/molar/robot_lab_runtime/extension-completion-20261029-vsebubus/snake_navigation/c000faa56cb5441597bdf1b759d30856",
+      "reason": "Native Nav2 terminal status 5"
+    },
+    {
+      "directory": "/workspace/molar/robot_lab_runtime/extension-completion-20261029-vsebubus/snake_navigation/dda66e8a64c54a60a5ebb63ccce42ccf",
+      "reason": "Native Nav2 terminal status 5"
+    },
+    {
+      "directory": "/workspace/molar/robot_lab_runtime/extension-completion-20261029-vsebubus/snake_navigation/e79df38fd64b4ff69f0bcfa1f69919c9",
+      "reason": "Measured extension workload timed out"
+    },
+    {
+      "directory": "/workspace/molar/robot_lab_runtime/extension-completion-20261029-vsebubus/snake_navigation/ec12952dbb3048a5b3dfb0061c7ed45b",
+      "reason": "Native Nav2 terminal status 5"
+    },
+    {
+      "directory": "/workspace/molar/robot_lab_runtime/extension-completion-20261029-vsebubus/snake_navigation/ed8e19f10d7d4b64a126654186358084",
+      "reason": "Native Nav2 terminal status 5"
+    },
+    {
+      "directory": "/workspace/molar/robot_lab_runtime/extension-completion-20261029-vsebubus/snake_navigation/f4e23be7b5a24346a0dc9d0de770bd72",
+      "reason": "Measured extension workload timed out"
+    },
+    {
+      "directory": "/workspace/molar/robot_lab_runtime/extension-completion-20261029-vsebubus/tracked_flippers/3107f5c9c9014c458d44778adcfe9356",
+      "reason": "Timed out"
+    },
+    {
+      "directory": "/workspace/molar/robot_lab_runtime/extension-completion-20261029-vsebubus/tracked_flippers/a1b445e4f027442484d43b87a7e77fcd",
+      "reason": "Timed out"
+    }
+  ],
+  "checks": {
+    "focused_tests": "94 passed in 7.24s; earlier missing-fixture-field failures retained",
+    "registry": "Validation passed",
+    "installed_gui": "Current inventory, exact command arguments, family grouping and Health current-delivery display checked",
+    "build": "Eight-package build plus final four-package installed rebuild"
+  }
+}

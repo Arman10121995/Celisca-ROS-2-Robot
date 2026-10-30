@@ -74,8 +74,21 @@ def setup(context):
                   description=str(description),config=str(config),pd=model.pd_config(),contacts=contacts,
                   scope='Experimental exact-geometry gait with actual contact/tilt guards; independent estimation/SLAM/navigation pending')
     (folder/'session.json').write_text(json.dumps(manifest,indent=2)+'\n');print('[robot_lab gait] '+str(folder/'session.json'))
+    # Reviewed installed occupancy maps use selected-world coordinates.
+    # Acquired maps retain a configured initial pose in their manifest; derive
+    # this fixed registration from those priors, never a moving display TF.
+    world_to_map=[0.,0.,0.]
+    if task in ('loc','nav') and value('map_yaml'):
+        metadata=Path(value('map_yaml')).expanduser().resolve().parent/'manifest.json'
+        recorded=json.loads(metadata.read_text()) if metadata.is_file() else {}
+        mx,my,heading=recorded.get('initial_pose_in_map') or [0.,0.,0.]
+        yaw=float(heading)-(float(pose['yaw'])+float(model.config['forward_yaw']))
+        import math
+        c,s=math.cos(yaw),math.sin(yaw)
+        world_to_map=[float(mx)-c*pose['x']+s*pose['y'],float(my)-s*pose['x']-c*pose['y'],yaw]
     controller=Node(package='robot_lab_utils',executable='gait_controller.py',parameters=[{
         'use_sim_time':True,'description_file':str(description),'gait_config':str(config),'control_allowed':value('control')=='true',
+        'goal_world_to_map':json.dumps(world_to_map),
         'navigation_enabled':task=='nav','task':task,'session_directory':str(folder)}],output='screen')
     actions=[IncludeLaunchDescription(PythonLaunchDescriptionSource(str(Path(share('robot_lab_mujoco'))/'launch/mujoco_simulator.launch.py')),launch_arguments=args.items()),
              controller,RegisterEventHandler(OnProcessExit(target_action=controller,on_exit=[EmitEvent(event=Shutdown(reason='Gait controller exited'))]))]

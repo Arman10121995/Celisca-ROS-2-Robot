@@ -20,7 +20,7 @@ air1 [-0.5,-0.5,0.22726] m, air2 [-3.5,-0.5,0.22649] m); the adapter's
 formation-altitude trim is implemented and unit-tested; bounded flight trials
 recorded. Remaining: formation-error/altitude metrics and landing/disarm, then
 larger groups, other maps/behaviors and member-loss/contact cases.
-Updated: 2026-10-27 (see the current agent queue below). See [current measured and implemented status](docs/status/CURRENT_STATUS.md) and [the historical extension checkpoint](docs/status/continuation-2026-10-08.md)
+Updated: 2026-10-30 (see the current agent queue below). See [current measured and implemented status](docs/status/CURRENT_STATUS.md) and [the historical extension checkpoint](docs/status/continuation-2026-10-08.md)
 for exact physical source stages and publication checks. The
 [completion audit](docs/status/audit-2026-10-02.md) reopens unsupported
 R6/R7/R8/R9 claims: demonstration frameworks and metadata are retained,
@@ -39,7 +39,9 @@ view of implemented features and remaining acceptance. The
 [current status overview](docs/status/CURRENT_STATUS.md) links the published
 GUI, installed inventory, measured robot scopes and exact successful CI.
 
-## Current agent queue — October 27, 2026
+<a id="current-agent-queue--october-27-2026"></a>
+
+## Current agent queue — October 30, 2026
 
 The project and R10 extension remain **partial**. Follow the detailed
 [remaining-work execution guide](docs/REMAINING_WORK_GUIDE.md), then the exact
@@ -48,7 +50,9 @@ ownership before runtime edits, preserve existing source certificates and keep
 large outputs on SSD. Complete initial functionality before broad validation;
 neutral enablement, bounds, Stop and command-loss behavior are implementation.
 
-[The latest October 27 continuation](docs/status/native-workflows-2026-10-27.md) adds real native workload producers, range-reference formation/operator-loss landing, measured fleet batch reset and tracked controls/navigation.
+[The October 30 native-form delivery](docs/status/native-forms-2026-10-30.md) adds actual snake mapping and acquired-map navigation, surface-vessel acquisition/two-goal arrival, AUV acquisition and bounded articulated flippers. The grouped GUI exposes their controls and command defaults.
+
+[The earlier October 27 continuation](docs/status/native-workflows-2026-10-27.md) adds real native workload producers, range-reference formation/operator-loss landing, measured fleet batch reset and tracked controls/navigation.
 [The earlier workflow delivery](docs/status/workflows-2026-10-27.md) records
 implemented controls and actual scoped results. Catalog restoration is complete;
 its historical source qualification is preserved separately. Do not rebuild
@@ -59,15 +63,15 @@ working launch/GUI/map export features from scratch.
 | Delivered | R3.6 catalog restoration | Seven profiles restored, merge preservation, native families/defaults/autofill and explicit source-recheck candidates | New source-qualified controller missions; remaining imports |
 | 1 | R10.1–R10.3 fleet | Real queues/traffic retreat, optional RMF, coverage, native session editor; conflicting routes and independent settled batch goals measured | Full RMF conflict/infrastructure, coverage/contact/loss and larger-fleet missions |
 | 2 | R10.3 / R10.8 aerial swarm | Native multi-FCU controls and workloads; actual two-X500 range-reference formation and operator-loss landing on nav_empty | Other maps, larger groups, other behaviors and member-loss/contact missions |
-| 3 | R10.4–R10.5 marine | Sensor estimation, source-heading alignment, real map flush/export/protected reload, native estimated missions/ahead waypoint; ROV route measured | AUV transects and saved localization, obstacles/current/contact/loss across installed water worlds |
+| 3 | R10.4–R10.5 marine | Sensor estimation, source-heading alignment, real map flush/export/protected reload, native estimated missions/ahead waypoint; ROV route and AUV acquisition measured; native surface vessel/harbor mapping and two-goal route delivered | AUV/surface saved-map routes, obstacles/current/contact/loss across installed water worlds |
 | 4 | R10.6–R10.7 multi-leg | Source FK/contact odometry, saved 2D/3D maps, localization/Nav2 and native controls; hexapod Nav2 result and octopod 3D export measured | Per-model higher-mode endpoints, terrain/slip/recovery and additional backends |
-| 5 | R10.7 additional forms | Complete segmented centipede and native tracked family; tracked forward/loss/Nav2 reference measured | Physical snake/surface/amphibious families; tracked flipper actuation, terrain and further backends |
-| 6 | R10.8 / R4 / R8.3 workloads | Actual Nav2/fleet/marine/gait/aerial producers, editor snapshots, measured endpoints/acquired artifacts, fleet batch reset and owned cleanup | Further AUV/map/behavior cases, applied seeds, contact/clearance and larger resource campaigns |
+| 5 | R10.7 additional forms | Complete centipede, snake, surface vessel and tracked family; snake 2D/3D acquisition/saved-map Nav2, surface route and actuated flipper/Drive cases measured | Amphibious model/controller; terrain/slip/recovery, flipper-aware navigation and further backends |
+| 6 | R10.8 / R4 / R8.3 workloads | Actual Nav2/fleet/marine/gait/aerial producers, editor snapshots, measured endpoints/acquired artifacts, fleet batch reset and owned cleanup | Further saved-map/behavior cases, applied seeds, contact/clearance and larger resource campaigns |
 | 7 | R6 / R3.6 maps | Existing imports, terrain and occupancy tooling retained; tank reference board/source resources repaired | Remaining reviewed imports, actors, multi-floor/terrain and backend missions |
 | 8 | R5 / R7–R9 / R11–R12 original queue | Existing exact-cell certificates retained | Detailed original task criteria below; no completion from frameworks/test counts |
 
-Current inventory is **147 robot profiles / 78 selectable families**, and
-**51 world profiles / 39 selectable families**. Internal component-only group
+Current inventory is **151 robot profiles / 81 selectable families**, and
+**52 world profiles / 40 selectable families**. Internal component-only group
 records are not selectable complete families. Availability and implementation
 are distinct from measured mission qualification.
 
@@ -1686,7 +1690,9 @@ physical legs; six- and eight-legged controllers require separate contracts.
 
 ### R10.7 — Segmented/centipede and additional families
 
-October 27 continuation: `lab_tracked` is one complete source family, with private native DART track physics, actual joint feedback, bounded native watchdog, IMU-based yaw estimation and explicit algorithm/autofill support. Forward motion, a suspended-controller stop and one physical Nav2 endpoint are measured. Snake/surface/amphibious families and further tracked modes/terrain/backends remain. [Guide](docs/tutorials/tracked-vehicle.md).
+October 30: complete `lab_snake` passive-wheel source and `lab_usv` catamaran have native controls, sensor pipelines and measured mapping/navigation cases. `lab_tracked_articulated` adds four bounded native force servos and a neutral Tracks GUI inside the original tracked family; actual angles and flat forward travel are measured. [Current delivery](docs/status/native-forms-2026-10-30.md). Amphibious, terrain/slip/recovery, articulated-track navigation and further backend scope remain open.
+
+October 27 historical continuation: `lab_tracked` is one complete source family, with private native DART track physics, actual joint feedback, bounded native watchdog, IMU-based yaw estimation and explicit algorithm/autofill support. Forward motion, a suspended-controller stop and one physical Nav2 endpoint are measured. Snake/surface/amphibious families and further tracked modes/terrain/backends remain. [Guide](docs/tutorials/tracked-vehicle.md).
 
 October 15: complete authored six-body/twelve-leg/five-spine centipede and
 bounded wave/ripple/curvature gait are implemented with the same native GUI
@@ -1702,6 +1708,8 @@ physical locomotion, body/terrain/obstacle clearance and class-specific sensor/
 map missions. Catalog pieces and animated wave poses do not qualify a robot.
 
 ### R10.8 — GUI and experiment integration
+
+October 30: current native controls/defaults/autofill and real snake/surface/AUV workloads are delivered with [source-scoped receipts](docs/status/evidence/native-forms-2026-10-30/README.md). The Tracks page exposes the explicit servo variant; producer identity is frozen at startup and joint/estimated-odometry/AMCL telemetry is retained. Wider missions, applied seeds and contact/clearance instrumentation remain open.
 
 October 27 continuation: real marine/gait navigation and acquisition, aerial formation/operator-loss workloads, editor snapshots and source/trace-bound result readers are implemented in the GUI queue. Actual ROV acquisition, hexapod acquisition/navigation, two-FCU aerial cases and fleet batch reset have receipts. AUV automatic acquisition and broader cases remain. [Current delivery](docs/status/native-workflows-2026-10-27.md).
 

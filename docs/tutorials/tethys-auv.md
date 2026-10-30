@@ -1,5 +1,11 @@
 # Native Tethys AUV
 
+October 30 status: automatic acquisition in `marine_tank` has a measured
+2.833 m physical transect and an archived 14-node / 19,515-point RGB-D map.
+[Actual receipt](../status/evidence/native-forms-2026-10-30/README.md).
+This completes the first automatic acquisition case; acquired-map mission,
+obstacle/current/loss and broader world acceptance remain open.
+
 ## October 27 sensor and mission integration
 
 Tethys now has an authored fixed RGB-D kit when `marine_slam:=true`, sensor-only

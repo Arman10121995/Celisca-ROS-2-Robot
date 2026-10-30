@@ -1,0 +1,42 @@
+{
+  "angles": {
+    "requested_rad": [
+      -0.3,
+      0.3,
+      -0.3,
+      0.3
+    ],
+    "measured_rad": [
+      -0.26986822529928434,
+      0.2698632168262297,
+      -0.269868271265378,
+      0.2698632627914275
+    ],
+    "measured_rates_rad_s": [
+      -0.00481020713878066,
+      0.004811004504470802,
+      -0.004810199807572797,
+      0.004810997173404492
+    ],
+    "settled_sim_s": 1.016
+  },
+  "drive": {
+    "initial": [
+      -0.5000001091488491,
+      -0.4999999994100335,
+      0.07191968741361932
+    ],
+    "final": [
+      -0.19950111347927227,
+      -0.4999999994018163,
+      0.07192051447832341
+    ],
+    "forward_m": 0.30049899566957683
+  },
+  "success": true,
+  "reason": "Actual four-joint settling and forward contact-track travel",
+  "run_id": "9a5007e7ee6c4c2b966f6602a08950ad",
+  "producer_sha256": "411e8d693cf05197608d547f09f68ea993828f6e204fb829ac9b9df3e77ca233",
+  "trace_sha256": "927f42ddee2083b4f64767b8b84bc017257a0afcb6888ee3d0e98886e95fa8fd",
+  "scope": "Native four-flipper angle settling and flat contact-track travel only; terrain/navigation/contact clearance separate"
+}

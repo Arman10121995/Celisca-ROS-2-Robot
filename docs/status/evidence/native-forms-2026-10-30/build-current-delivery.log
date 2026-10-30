@@ -1,0 +1,31 @@
+[1.199s] colcon.colcon_ros.prefix_path.ament WARNING The path '/workspace/molar/robot_lab_runtime/rmf/current/prefix/opt/ros/humble' in the environment variable AMENT_PREFIX_PATH doesn't contain any 'local_setup.*' files.
+[1.298s] colcon.colcon_core.package_selection WARNING Some selected packages are already built in one or more underlay workspaces:
+	'robot_lab_robots' is in: /home/molar1/bumperbot_ws/install/robot_lab_robots
+	'robot_lab_utils' is in: /home/molar1/bumperbot_ws/install/robot_lab_utils
+	'robot_lab_registry' is in: /home/molar1/bumperbot_ws/install/robot_lab_registry
+	'robot_lab_bringup' is in: /home/molar1/bumperbot_ws/install/robot_lab_bringup
+If a package in a merged underlay workspace is overridden and it installs headers, then all packages in the overlay must sort their include directories by workspace order. Failure to do so may result in build failures or undefined behavior at run time.
+If the overridden package is used by another package in any underlay, then the overriding package in the overlay must be API and ABI compatible or undefined behavior at run time may occur.
+
+If you understand the risks and want to override a package anyways, add the following to the command line:
+	--allow-overriding robot_lab_bringup robot_lab_registry robot_lab_robots robot_lab_utils
+
+This may be promoted to an error in a future release of colcon-override-check.
+Starting >>> robot_lab_utils
+Starting >>> robot_lab_robots
+Starting >>> robot_lab_benchmark
+Finished <<< robot_lab_robots [1.06s]
+Finished <<< robot_lab_utils [1.16s]
+Starting >>> robot_lab_maps
+Starting >>> robot_lab_registry
+Starting >>> robot_lab_mujoco
+Finished <<< robot_lab_maps [1.33s]
+Starting >>> robot_lab_bringup
+Finished <<< robot_lab_bringup [0.25s]
+Finished <<< robot_lab_benchmark [4.01s]
+Finished <<< robot_lab_registry [3.83s]
+Starting >>> robot_lab_gui
+Finished <<< robot_lab_mujoco [3.86s]
+Finished <<< robot_lab_gui [3.57s]
+
+Summary: 8 packages finished [9.69s]

@@ -5,7 +5,7 @@ import yaml
 
 ALL_CATEGORIES = 'All categories'
 ALL_TYPES = 'All types'
-CATEGORIES = ('Mobile robots', 'Legged robots', 'Manipulators', 'Mobile manipulators', 'Underwater robots',
+CATEGORIES = ('Mobile robots', 'Legged robots', 'Articulated robots', 'Manipulators', 'Mobile manipulators', 'Underwater robots',
               'Surface vessels', 'Hands and components', 'Drones', 'Reference models', 'Unclassified')
 
 

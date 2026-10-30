@@ -1314,6 +1314,8 @@ class SimulationLauncherGui(tk.Tk):
             self._control_robot = robot
             if self._molar_selectable() and hasattr(self, 'molar_controls'):
                 self.control_notebook.select(self.molar_controls)
+            elif self._robot_config().get('articulated_flippers') and hasattr(self,'tracked_controls'):
+                self.control_notebook.select(self.tracked_controls)
             elif self._gait_selectable() and hasattr(self, 'gait_controls'):
                 self.control_notebook.select(self.gait_controls)
             elif self._marine_selectable() and hasattr(self, 'marine_controls'):
@@ -1336,7 +1338,7 @@ class SimulationLauncherGui(tk.Tk):
             control = getattr(self, name, None)
             if control is not None:
                 control.all_stop()
-        for name in ('arm_tab', 'hand_tab', 'marine_controls', 'gait_controls', 'molar_controls'):
+        for name in ('arm_tab', 'hand_tab', 'marine_controls', 'gait_controls', 'molar_controls', 'tracked_controls'):
             control = getattr(self, name, None)
             if control is not None:
                 control.stop()
@@ -1692,7 +1694,7 @@ class SimulationLauncherGui(tk.Tk):
                 and self._robot_can_run(mode, sim)]
 
     def _map_ok_for_mode(self, map_id):
-        if self._robot_config().get('gait_model'):
+        if self._robot_config().get('gait_model') or self._robot_config().get('tracked_model'):
             return not self.map_profiles.get(map_id, {}).get('marine')
         if self.robot_profiles.get(self.robot_var.get(), {}).get("marine_model"):
             return bool(self.map_profiles.get(map_id, {}).get("marine"))
@@ -3693,7 +3695,8 @@ class SimulationLauncherGui(tk.Tk):
     # ---- Control-center APIs used by the lab tabs ----
     def show_tab(self, title):
         """Raise a workspace or a page in the Launch control column."""
-        controls = {'Drive': 'Drive & limits', 'Arm': 'Arm', 'Hand': 'Hand', 'Drone': 'Drone & limits', 'MOLAR': 'MOLAR'}
+        controls = {'Drive': 'Drive & limits', 'Arm': 'Arm', 'Hand': 'Hand', 'Drone': 'Drone & limits',
+                    'MOLAR': 'MOLAR', 'Tracks': 'Tracks', 'Gait': 'Gait', 'Marine': 'Marine'}
         if title in controls:
             self.notebook.select(self.launch_tab)
             for page in self.control_notebook.tabs():
@@ -3791,6 +3794,8 @@ class SimulationLauncherGui(tk.Tk):
             self.stop_bg_process(key)
 
     def _on_close(self):
+        if hasattr(self, 'tracked_controls'):
+            self.tracked_controls.close()
         if hasattr(self, 'molar_controls'):
             self.molar_controls.close()
         if hasattr(self, 'gait_controls'):

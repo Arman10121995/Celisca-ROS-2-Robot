@@ -1,5 +1,13 @@
 # Next extension: fleets, swarms, marine and multi-legged robotics
 
+October 30 current delivery: [complete snake/surface/actuated tracked workflows](status/native-forms-2026-10-30.md)
+are installed with native GUI controls and commands. Actual acquisition,
+acquired-map Nav2, surface arrival and four-flipper cases have receipts;
+AUV automatic acquisition is also measured. Continue amphibious source/control
+and real RMF doors/lifts/docking/energy implementation, then per-model terrain,
+saved-map/obstacle missions and the older queue. Preserve the current source
+controllers; historical dated remaining lists below do not reopen delivered code.
+
 October 27 workflow delivery: the seven missing registrations are restored.
 Read [the current delivery](status/workflows-2026-10-27.md) and
 [remaining-work execution guide](REMAINING_WORK_GUIDE.md). Ground Fleet,

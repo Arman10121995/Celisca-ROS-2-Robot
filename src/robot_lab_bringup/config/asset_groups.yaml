@@ -2,12 +2,18 @@
 # A variant is not an alias for its parent's controllers or measured missions.
 schema_version: 1
 robots:
+  - id: lab_snake
+    name: Laboratory wheeled snake
+    members: [{id: lab_snake, label: Complete ten-segment passive-wheel robot}]
   - id: lab_usv
     name: Laboratory surface vessel
     members: [{id: lab_usv, label: Complete twin-hull two-propeller vessel}]
   - id: lab_tracked
     name: Tracked vehicle with flippers
-    members: [{id: lab_tracked, label: Complete native track source}]
+    preferred: lab_tracked
+    members:
+      - {id: lab_tracked, label: Original complete source · fixed flippers}
+      - {id: lab_tracked_articulated, label: Derived four-motor articulated flippers}
   - id: molar_family
     name: MOLAR / ProBOT-L
     preferred: molar_hri

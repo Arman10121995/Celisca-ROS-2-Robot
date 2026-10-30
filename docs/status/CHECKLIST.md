@@ -1,6 +1,6 @@
 # Robot Lab done and remaining checklist
 
-**Current checkpoint: October 27, 2026; platform/extension partial.**
+**Current checkpoint: October 30, 2026; platform/extension partial.**
 
 Use [the detailed agent execution guide](../REMAINING_WORK_GUIDE.md). These
 checks describe delivered initial features; a full roadmap task closes only
@@ -14,16 +14,21 @@ when its stated mission acceptance is met.
 - [x] Native marine ahead waypoint and authored AUV RGB-D/heading-reference integration.
 - [x] Multi-leg contact/FK odometry, 2D/3D map export/reload and native goal controls.
 - [x] Actual hexapod saved-map Nav2 result, octopod 3D database and centipede occupancy export.
-- [x] Current availability: 147 robot profiles / 78 selectable families; 51 worlds / 39 families.
+- [x] Current availability: 151 robot profiles / 81 selectable families; 52 worlds / 40 families.
+- [x] Complete passive-wheel snake: bounded native Drive, actual rolling odometry, 2D/3D map acquisition and measured acquired-map Nav2 goal.
+- [x] Complete surface vessel and harbor: native force control, neutral latched Marine controls, map acquisition and measured two-goal settling.
+- [x] Articulated tracked variant nested under the original source family: four real force-PID flippers, Tracks GUI, actual angle settling and flat Drive.
+- [x] Automatic AUV acquisition: 2.833 m physical travel, 14 database nodes and 19,515 points.
 - [ ] Aerial altitude/formation accuracy, convergence and loss/other-world/large-group missions.
 - [x] Initial AUV forward transect with source-bounded signed-thrust braking and actual body trace.
 - [ ] Further AUV saved localization and remaining marine obstacle/current/loss missions.
 - [ ] Per-model multi-leg terrain/recovery/SLAM/navigation acceptance and additional backends.
 - [ ] Full RMF infrastructure/conflict/coverage/contact/loss and larger-fleet acceptance.
-- [ ] Additional snake/tracked/surface/amphibious forms and automatic aerial/marine/gait workloads.
+- [ ] Complete amphibious robot/shore transition workflow; flipper-aware terrain/navigation and source-appropriate additional backends.
+- [ ] Wider automatic saved-map/obstacle missions, applied seeds and real contact/clearance instrumentation.
 - [ ] Further reviewed worlds, the older roadmap, broad comparisons and release acceptance.
 
-[Current measured delivery](workflows-2026-10-27.md) and
+[Current measured delivery](native-forms-2026-10-30.md) and
 [agent continuation steps](../REMAINING_WORK_GUIDE.md).
 
 Simulation SLAM/navigation, traffic and Isaac contact do not require physical

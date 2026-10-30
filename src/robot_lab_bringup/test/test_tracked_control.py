@@ -15,6 +15,13 @@ from robot_lab_utils.tracked_control import TrackedControl
 def _make_controller(navigation=False):
     node = TrackedControl.__new__(TrackedControl)
     node.navigation = navigation
+    node.articulated = False
+    node.robot_id = 'lab_tracked'
+    node.session = 'test-session'
+    node.flipper_positions = None
+    node.flipper_output = [0.] * 4
+    node.flipper_requested = [0.] * 4
+    node.flipper_at = -math.inf
     node.command = [0., 0.]
     node.actual = [0., 0.]
     node.input_at = -math.inf

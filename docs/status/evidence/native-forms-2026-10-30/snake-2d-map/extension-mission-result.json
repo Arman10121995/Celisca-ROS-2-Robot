@@ -1,0 +1,66 @@
+{
+  "schema": "robot_lab.measured_extension_result.v1",
+  "workflow": "gait",
+  "task": "mapping",
+  "session_id": "54503866ccc642aa8c8e30b5406d17ac",
+  "run_id": "c18897142523456f9016571273050d4f",
+  "ros_domain_id": 20,
+  "success": true,
+  "reason": "Actual travel and nonempty acquired map archived",
+  "measurements": [
+    {
+      "map_artifact": {
+        "kind": "acquired_occupancy",
+        "robot": "lab_snake",
+        "frame": "map",
+        "known_cells": 47073,
+        "occupied_cells": 937,
+        "source_world": "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_maps/share/robot_lab_maps/maps/nav_empty/worlds/nav_empty.world",
+        "world_sha256": "0ba78b1173d9353ab4eb92b042f3860211b3f5ef95fb6933f1518484940a776d",
+        "map_yaml": "/workspace/molar/robot_lab_runtime/gait_sessions/lab_snake-vaw6669d/saved_maps/map-bc520972b9/map.yaml",
+        "initial_pose_in_map": [
+          0.0131264354331259,
+          0.05609848864683565,
+          -0.2163799999999996
+        ],
+        "scope": "Actual acquired grid; saved-map localization/navigation qualification is separate"
+      },
+      "observation": {
+        "kind": "occupancy",
+        "known_cells": 47073,
+        "yaml_sha256": "7532a12241f302d9cf1fac4c0de8d59edbdd98dc5d24775e093834084514bc61",
+        "image_sha256": "107ad7e623ebd6abf65743f8e77ecc0a3b29ba5f7f72da582d04787b142143a0"
+      },
+      "physical_start": [
+        -0.5045367513110327,
+        -0.500000097498332,
+        -9.214993545141892e-08
+      ],
+      "physical_pose": [
+        -0.2371937883698736,
+        -0.47836346828872545,
+        0.01852324371872599
+      ],
+      "distance_m": 0.26821708289688034,
+      "route_endpoint": null
+    }
+  ],
+  "goal_contract": {
+    "position_m": 0.15,
+    "heading_rad": 0.15,
+    "linear_m_s": 0.03,
+    "angular_rad_s": 0.05,
+    "settle_sim_s": 1.0
+  },
+  "truth_samples": {
+    "body": 212
+  },
+  "control_released": true,
+  "wall_duration_s": 5.606636830998468,
+  "contacts": null,
+  "minimum_swept_clearance_m": null,
+  "producer_sha256": "6b3f7bbd78521448882b2edff0850f2b2827c736d9080ac57d97647c83fe1647",
+  "workload_sha256": "1fd215b894aab1c34c4df80ff0b460b76c7095ed653ff7d48da52fa5acf0f7be",
+  "trace_sha256": "f433084a7fde4e8b7d963d958a0c8b5ca862a1120646cd3be7fc6498465fda82",
+  "scope": "Actual native task and independent physical measurements; parent runner owns process cleanup"
+}

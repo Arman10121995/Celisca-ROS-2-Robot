@@ -1,0 +1,8 @@
+{
+  "author": "Robot Lab contributors",
+  "license": "Apache-2.0",
+  "generator": "scripts/generate_surface_assets.py",
+  "source": "First-party marine_harbor plus bounded surface channel geometry",
+  "physics": "Gazebo Fortress graded buoyancy at z=0, water density 1025 kg/m3",
+  "other_backends": "Static geometry conversion/inspection only; native fluid physics not implemented there"
+}

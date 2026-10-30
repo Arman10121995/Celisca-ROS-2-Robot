@@ -1,0 +1,21 @@
+{
+  "schema": "robot_lab.extension_workload.v1",
+  "workflow": "gait",
+  "task": "mapping",
+  "truth_coordinates": "selected_world",
+  "timeout_s": 180.0,
+  "distance_m": 0.15,
+  "selection": {},
+  "launch_command": [
+    "ros2",
+    "launch",
+    "robot_lab_bringup",
+    "gait_simulator.launch.py",
+    "robot_model:=lab_snake",
+    "task:=slam",
+    "map_name:=nav_empty",
+    "gui:=false",
+    "rviz:=false"
+  ],
+  "expected_producer_sha256": "6b3f7bbd78521448882b2edff0850f2b2827c736d9080ac57d97647c83fe1647"
+}

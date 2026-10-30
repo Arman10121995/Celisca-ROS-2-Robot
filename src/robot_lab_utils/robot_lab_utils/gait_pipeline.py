@@ -36,6 +36,7 @@ def pipeline(task, description_file, config, pose, map_profile, folder, model,
     nodes=[Node(package='robot_lab_utils',executable='serpentine_odometry.py' if serpentine else 'gait_odometry.py',parameters=[dict(use_sim_time=True,
         description_file=str(description_file),gait_config=str(config),initial_drive_yaw=float(pose['yaw'])+model.config['forward_yaw'])],output='screen'),
         Node(package='robot_lab_utils',executable='gait_sensor_relay.py',parameters=[dict(use_sim_time=True,
+            virtual_drive_scan=serpentine,base_height=float(model.config['standing_height']),
             description_file=str(description_file),visual_spawn_x=float(pose['x']),visual_spawn_y=float(pose['y']),
             visual_spawn_yaw=float(pose['yaw'])+model.config['forward_yaw'])],output='screen')]
     if task in ('loc','nav'):
@@ -77,6 +78,18 @@ def pipeline(task, description_file, config, pose, map_profile, folder, model,
                 plugin='nav2_smac_planner/SmacPlannerHybrid',motion_model_for_search='REEDS_SHEPP',
                 minimum_turning_radius=2.,angle_quantization_bins=72,allow_unknown=False)
             follow.update(use_rotate_to_heading=False,allow_reversing=True,lookahead_dist=.6,min_lookahead_dist=.4,max_lookahead_dist=1.)
+            params['controller_server']['ros__parameters']['general_goal_checker'].update(xy_goal_tolerance=.04,yaw_goal_tolerance=.08)
+            local=params['local_costmap']['local_costmap']['ros__parameters']
+            # The complete head-centred envelope must fit inside its rolling
+            # window. The differential-base 3 m window clipped this 3.5 m
+            # diameter and made RPP reject every command as a collision.
+            extent=int(math.ceil(2*radius+2.))
+            local.update(width=max(extent,int(local['width'])),height=max(extent,int(local['height'])))
+            # The head has real lateral motion during a spine wave even
+            # though strafe is not an actuator command. A differential-drive
+            # particle motion model discarded that encoder component.
+            params['amcl']['ros__parameters'].update(robot_model_type='nav2_amcl::OmniMotionModel',
+                alpha1=.01,alpha2=.01,alpha3=.03,alpha4=.01,alpha5=.03)
         params['amcl']['ros__parameters']['initial_pose']['yaw']=initial['yaw']+model.config['forward_yaw']
         params['amcl']['ros__parameters'].update(update_min_d=.01,update_min_a=.02)
         for costmap in ('local_costmap','global_costmap'):
@@ -114,7 +127,7 @@ def pipeline(task, description_file, config, pose, map_profile, folder, model,
             estimated_base_frame='gait/base_link',target_camera_frame='gait/camera_optical_frame',output_prefix='/gait/camera')],output='screen'),
             depth_cloud_node('/gait/camera'),
             Node(package='rtabmap_slam',executable='rtabmap',namespace='gait/slam',parameters=[dict(use_sim_time=True,
-                frame_id='gait/base_footprint',odom_frame_id='gait/odom',map_frame_id='map',
+                frame_id='gait/base_link' if serpentine else 'gait/base_footprint',odom_frame_id='gait/odom',map_frame_id='map',
                 database_path=str(active),subscribe_depth=True,subscribe_rgb=True,subscribe_odom_info=False,
                 approx_sync=True,approx_sync_max_interval=.15,qos_image=2,qos_camera_info=2,
                 **depth_registration_parameters(planar=True),

@@ -43,8 +43,8 @@ def generate():
             child(joint,'dynamics',damping='.0003',friction='0')
     target=ROOT/'src/robot_lab_robots/lab_snake';write(root,target/'urdf/lab_snake.urdf')
     config=dict(kind='serpentine',robot_id='lab_snake',segments=count,segment_length=.16,wheel_radius=.035,wheel_half_track=.05,
-        standing_height=.055,forward_yaw=0.,physical_leg_count=0,default_gait='serpenoid',cycle_s=1.8,
-        max_speed=.08,max_yaw=.1,kp=4.,kd=.15,torque_limit=.8,wave_amplitude=.38,wave_cycles=1.2)
+        standing_height=.055,forward_yaw=0.,physical_leg_count=0,default_gait='serpenoid',cycle_s=2.4,
+        max_speed=.08,max_yaw=.1,kp=4.,kd=.15,torque_limit=.8,joint_velocity_limit=.8,wave_amplitude=.38,wave_cycles=1.2)
     (target/'config').mkdir(parents=True,exist_ok=True)
     (target/'config/gait.yaml').write_text(yaml.safe_dump(config))
     (target/'SOURCE.json').write_text(json.dumps(dict(author='Robot Lab contributors',license='Apache-2.0',

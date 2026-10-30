@@ -1,0 +1,21 @@
+{
+  "lab_snake": {
+    "command": "ros2 launch robot_lab_bringup simulated_robot.launch.py robot_model:=lab_snake simulator:=mujoco use_sim_time:=true map_name:=nav_empty world_package:=robot_lab_maps world_name:=nav_empty world_path:=maps/nav_empty/worlds/nav_empty.world map_yaml:=maps/nav_empty/maps/map.yaml mode:=gait gui:=auto gait_task:=slam gait_localization:=false",
+    "family": "lab_snake"
+  },
+  "lab_usv": {
+    "command": "ros2 launch robot_lab_bringup simulated_robot.launch.py robot_model:=lab_usv simulator:=gazebo use_sim_time:=true map_name:=surface_harbor world_package:=robot_lab_maps world_name:=surface_harbor world_path:=maps/surface_harbor/worlds/surface_harbor.world map_yaml:=maps/surface_harbor/maps/map.yaml mode:=marine gui:=auto spawn_z:=0.0 marine_slam:=true marine_localization:=false",
+    "family": "lab_usv"
+  },
+  "lab_tracked_articulated": {
+    "command": "ros2 launch robot_lab_bringup simulated_robot.launch.py robot_model:=lab_tracked_articulated simulator:=gazebo use_sim_time:=true map_name:=nav_empty world_package:=robot_lab_maps world_name:=nav_empty world_path:=maps/nav_empty/worlds/nav_empty.world map_yaml:=maps/nav_empty/maps/map.yaml global_planner_plugin:=nav2_smac_planner/SmacPlanner2D local_planner_plugin:=nav2_regulated_pure_pursuit_controller::RegulatedPurePursuitController mode:=nav gui:=auto global_planning:=a_star_planner local_planning:=pure_pursuit control:=native_tracked_controller localization:=amcl state_estimation:=ekf_localization_node sensor_fusion:=imu_republisher",
+    "family": "lab_tracked"
+  },
+  "health_current_delivery": true,
+  "inventory": {
+    "robot_profiles": 151,
+    "robot_families": 81,
+    "world_profiles": 52,
+    "world_families": 40
+  }
+}

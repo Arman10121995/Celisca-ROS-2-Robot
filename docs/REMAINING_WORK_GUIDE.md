@@ -1,6 +1,6 @@
 # Remaining work: agent execution guide
 
-Updated October 27, 2026 after [the native continuation](status/native-workflows-2026-10-27.md) on `master`.
+Updated October 30, 2026 after [the native-form delivery](status/native-forms-2026-10-30.md) on `master`.
 Read [the current delivery](status/workflows-2026-10-27.md),
 [actual receipt](status/evidence/workflows-2026-10-27/README.md),
 [handoff](AGENT_HANDOFF.md) and [ledger](status/platform-status.yaml).
@@ -41,7 +41,7 @@ the initial code. Tests, counts and received messages never establish a mission.
 
 ## Delivered baseline to preserve
 
-- **148 robot profiles / 79 selectable families**, **51 worlds / 39 families**.
+- **151 robot profiles / 81 selectable families**, **52 worlds / 40 families**.
   Seven historical vendor/Panda IDs are back; stale code certificates expose
   explicit experimental candidates, while geometry/control mismatches cannot.
 - **Fleet:** actual shared-world queues, traffic yielding/resumption, coverage,
@@ -67,16 +67,18 @@ the initial code. Tests, counts and received messages never establish a mission.
 
 The new native producer implementation is in `extension_workload.py`, `extension_contract.py` and `extension_result.py`; fleet reset is `fleet_reset.py`. Use `provision_tracked_physics.py` only to provision/reproduce the private SSD tracked engine, and keep it scoped to that launch. Source truth-clock and native range measurements must stay separate from FCU estimates. Gait independent body headings include the configured CAD-to-drive offset, and goals wait for active Nav2 lifecycle. Do not replace these with synthetic passes.
 
+Snake mapping/acquired-map Nav2, surface-vessel acquisition/two-goal arrival, AUV automatic acquisition and actuated flippers are delivered, with [actual receipts](status/evidence/native-forms-2026-10-30/README.md). Preserve the instant wheel Jacobian/current rolling-contact model, mean-segment frame/scan reprojection, fixed world/map prior and hold-shape arrival. Preserve separate fixed/actuated tracked variants and real force-PID/target bridges. These are named cases, not universal terrain/backend acceptance.
+
 ## Ordered next work
 
 | Order | Task IDs | Concrete next result |
 |---|---|---|
 | 1 | R10.3 | Preserve the measured nav_empty two-drone range-reference formation/operator-loss case; extend other behaviors/maps, 3–4 members and member loss |
-| 2 | R10.4–R10.5 | Complete AUV transects/saved localization and marine obstacle/current/loss missions without accepting degenerate registration |
+| 2 | R10.4–R10.5 | Preserve measured AUV acquisition and surface route; complete their saved localization and marine obstacle/current/loss missions without accepting degenerate registration |
 | 3 | R10.1–R10.3 | Complete RMF conflicting/infrastructure routes, coverage, larger fleets and physical contact/loss screens |
 | 4 | R10.6–R10.7 | Per-model saved-map goals, terrain/slip/recovery and source-appropriate backend implementations |
-| 5 | R10.7 | Preserve native tracked forward/loss/Nav2; finish flipper actuation, snake/surface/amphibious families and source-appropriate backends |
-| 6 | R10.8 / R4 / R8.3 | Preserve delivered real native producers and measured fleet batch reset; extend AUV acquisition, seeds, contacts/clearance and wider matrices |
+| 5 | R10.7 | Preserve snake/surface/tracked implementations; add a complete amphibious model/controller and transition workflow, then source-appropriate backends |
+| 6 | R10.8 / R4 / R8.3 | Preserve delivered real native producers and measured fleet batch reset; extend saved-map/obstacle cases, seeds, contacts/clearance and wider matrices |
 | 7 | R6 and older queue | Remaining reviewed maps, car/perception/manipulation/policy-transfer/comparison/release work below |
 
 ## 1. Preserve catalog restoration
@@ -196,9 +198,19 @@ Source gait schedules, force/velocity/joint limits, physical leg count, massive
 roots, terrain spawn rays and reset/ownership barriers remain unchanged. Phase
 and spine controls apply to actual targets and require re-arm. Extend actual
 saved-map goals to every model, then terrain/slip/recovery and source-appropriate
-backend forces/controllers. The centipede is complete; snake/tracked/surface/
-amphibious forms remain additional source/controller work, not aliases for
-that segmented model.
+backend forces/controllers. Centipede, wheeled snake, surface vessel and native tracked/actuated-flipper
+variants are complete sources with distinct controllers and grouped GUI controls.
+The amphibious model/controller remains initial implementation work. It must
+include real land propulsion, buoyancy/water propulsion, medium transitions,
+source bounds and a shore world; do not relabel the USV or tracked model.
+For snake work use `serpentine_model.py` / `serpentine_odometry.py`, not foot IK.
+Do not replace exact instantaneous wheel-centre kinematics with planted-foot
+constraints or reduce the wave amplitude at a terminal goal. MuJoCo IMU
+acceleration remains a gravity approximation and is not used by that estimator.
+For flippers use `generate_articulated_tracks.py`, `tracked_control.py` and
+GUI `tracked_controls.py`; preserve original source link geometry and force
+limits. Native target bridges are required. The flat angle/Drive case does
+not establish terrain or Nav2 for the articulated variant.
 
 ## 6. Finish maps, extension workloads and the older queue
 
@@ -212,7 +224,7 @@ Isaac contact tests are simulator work. Add class-specific actor, multi-floor,
 terrain and aerial missions. Metadata-only diverse-map tests do not create worlds.
 
 For R10.8/R4/R8.3, preserve the delivered Nav2/fleet/native-extension producers,
-queue snapshots and result contracts. Extend further cases and AUV acquisition
+queue snapshots and result contracts. Extend further saved-map/obstacle cases
 through `robot_lab_benchmark/workload_contract.py`, execution and GUI status.
 Reuse process isolation/resource accounting, source identities and raw traces.
 Cancel/reset must invalidate actual work. No randomized metrics or preset PASS.

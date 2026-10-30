@@ -1,0 +1,71 @@
+{
+  "schema": "robot_lab.measured_extension_result.v1",
+  "workflow": "gait",
+  "task": "mapping",
+  "session_id": "2c2d78b0adfc4410bfacdcff9ebde2b3",
+  "run_id": "ce1db91eba8d44c6ac4d0091715f3aac",
+  "ros_domain_id": 20,
+  "success": true,
+  "reason": "Actual travel and nonempty acquired map archived",
+  "measurements": [
+    {
+      "map_artifact": {
+        "kind": "acquired_rtabmap",
+        "robot": "lab_snake",
+        "frame": "map",
+        "directory": "/workspace/molar/robot_lab_runtime/gait_sessions/lab_snake-03ztgvj2/saved_maps/map-a8ab21ca29",
+        "estimator_contract": "",
+        "source_world": "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_maps/share/robot_lab_maps/maps/nav_empty/worlds/nav_empty.world",
+        "world_sha256": "0ba78b1173d9353ab4eb92b042f3860211b3f5ef95fb6933f1518484940a776d",
+        "source_database": "/workspace/molar/robot_lab_runtime/gait_sessions/lab_snake-03ztgvj2/gait-rtabmap.db",
+        "database": "/workspace/molar/robot_lab_runtime/gait_sessions/lab_snake-03ztgvj2/saved_maps/map-a8ab21ca29/rtabmap.db",
+        "database_observation": {
+          "nodes": 5,
+          "bytes": 499712,
+          "sha256": "d21271abdb5a7ad63a1a79cfe0ec77665ceb2607bf374673c1997ec50655a35a"
+        },
+        "points": 517,
+        "cloud_stamp": {
+          "sec": 4,
+          "nanosec": 603999999
+        },
+        "scope": "Acquired RGB-D SLAM database/cloud; physical reload/mission qualification is separate"
+      },
+      "observation": {
+        "kind": "database",
+        "nodes": 5,
+        "sha256": "d21271abdb5a7ad63a1a79cfe0ec77665ceb2607bf374673c1997ec50655a35a"
+      },
+      "physical_start": [
+        -0.5034552963764433,
+        -0.5000000910920632,
+        -7.884429906552124e-08
+      ],
+      "physical_pose": [
+        -0.2467425263755738,
+        -0.4623647741954239,
+        0.033040191884081666
+      ],
+      "distance_m": 0.2594568622322982,
+      "route_endpoint": null
+    }
+  ],
+  "goal_contract": {
+    "position_m": 0.15,
+    "heading_rad": 0.15,
+    "linear_m_s": 0.03,
+    "angular_rad_s": 0.05,
+    "settle_sim_s": 1.0
+  },
+  "truth_samples": {
+    "body": 277
+  },
+  "control_released": true,
+  "wall_duration_s": 7.10829738600296,
+  "contacts": null,
+  "minimum_swept_clearance_m": null,
+  "producer_sha256": "6b3f7bbd78521448882b2edff0850f2b2827c736d9080ac57d97647c83fe1647",
+  "workload_sha256": "e752eeb1cf793084116947ded6e3fafbcfea7cd1f67f77552461492698251f80",
+  "trace_sha256": "72b88f7f44ba0da51dede04222ddb93a78b0b8065fd74672adf73fd4b4affcb6",
+  "scope": "Actual native task and independent physical measurements; parent runner owns process cleanup"
+}

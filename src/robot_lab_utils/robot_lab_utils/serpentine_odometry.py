@@ -29,6 +29,7 @@ class SerpentineOdometry(Node):
         self.imu=self.contacts=self.previous=None;self.imu_at=self.contacts_at=-math.inf
         self.position=np.zeros(2);self.last_stamp=self.engine_stamp=None;self.invalidated=False;self.samples=0
         self.covariance=.0001
+        self.missing_travel_bound=0.
         self.pub=self.create_publisher(Odometry,'/gait/odometry',10)
         self.state=self.create_publisher(String,'/gait/odometry_state',10);self.tf=TransformBroadcaster(self)
         self.create_subscription(Imu,'/imu/out',self.observe_imu,qos_profile_sensor_data)
@@ -67,32 +68,45 @@ class SerpentineOdometry(Node):
         if tilt>.3 or self.contacts['normal_forces_N'].get('body',0.)>1.:return
         yaw=math.atan2(2*(q.w*q.z+q.x*q.y),1-2*(q.y*q.y+q.z*q.z))-self.reference
         yaw=math.atan2(math.sin(yaw),math.cos(yaw));angular=self.imu.angular_velocity.z
-        current=self.model.wheels(positions)
+        current,relative_velocities=self.model.wheel_kinematics(positions,rates)
+        relative_heading=self.model.drive_heading(positions)
+        drive_yaw=yaw+relative_heading
         supports={name for name in current if self.contacts['normal_forces_N'].get(name,0.)>.02}
-        previous,self.previous=self.previous,(current,supports)
+        previous,self.previous=self.previous,(current,supports,drive_yaw)
         old,self.last_stamp=self.last_stamp,stamp
         if previous is None:return
         dt=stamp-old
         try:
             velocity,scatter=encoder_velocity(previous[0],current,{name:rates[name+'_joint'] for name in current},
-                supports&previous[1],dt,angular,float(self.model.config['wheel_radius']))
-        except ValueError:return
+                supports,dt,angular,float(self.model.config['wheel_radius']),relative_velocities=relative_velocities)
+        except ValueError as exc:
+            if 0<dt<=.5:
+                self.covariance+=(.5*dt)**2;self.missing_travel_bound+=.5*dt
+            self.state.publish(String(data=json.dumps(dict(valid=False,measurement_valid=False,reason=str(exc),samples=self.samples,
+                pose_uncertainty_exceeded=self.covariance>.04 or self.missing_travel_bound>.1,
+                missing_travel_bound_m=self.missing_travel_bound,position_std_m=math.sqrt(self.covariance)))))
+            return
         c,s=math.cos(yaw),math.sin(yaw)
         self.position+=np.array([[c,-s],[s,c]])@velocity*dt
         self.covariance+=(.00002+scatter*scatter*.01)*dt
         output=Odometry();output.header.stamp=msg.header.stamp;output.header.frame_id='gait/odom';output.child_frame_id='gait/base_footprint'
         output.pose.pose.position.x,output.pose.pose.position.y=map(float,self.position)
-        output.pose.pose.orientation.z=math.sin(yaw/2);output.pose.pose.orientation.w=math.cos(yaw/2)
-        output.twist.twist.linear.x,output.twist.twist.linear.y=map(float,velocity);output.twist.twist.angular.z=float(angular)
+        output.pose.pose.orientation.z=math.sin(drive_yaw/2);output.pose.pose.orientation.w=math.cos(drive_yaw/2)
+        c,s=math.cos(relative_heading),math.sin(relative_heading)
+        output.twist.twist.linear.x,output.twist.twist.linear.y=map(float,np.array([[c,s],[-s,c]])@velocity)
+        output.twist.twist.angular.z=math.atan2(math.sin(drive_yaw-previous[2]),math.cos(drive_yaw-previous[2]))/dt
         output.pose.covariance[0]=output.pose.covariance[7]=self.covariance;output.pose.covariance[35]=.001
         self.pub.publish(output)
         transform=TransformStamped();transform.header=output.header;transform.child_frame_id='gait/base_footprint'
         transform.transform.translation.x,transform.transform.translation.y=map(float,self.position)
         transform.transform.rotation=output.pose.pose.orientation
         trunk=TransformStamped();trunk.header.stamp=msg.header.stamp;trunk.header.frame_id='gait/base_footprint';trunk.child_frame_id='gait/base_link'
-        trunk.transform.translation.z=float(self.model.config['standing_height']);trunk.transform.rotation.w=1.
+        trunk.transform.translation.z=float(self.model.config['standing_height'])
+        trunk.transform.rotation.z=math.sin(-relative_heading/2);trunk.transform.rotation.w=math.cos(-relative_heading/2)
         self.tf.sendTransform([transform,trunk]);self.samples+=1
-        if self.samples%10==0:self.state.publish(String(data=json.dumps(dict(samples=self.samples,supports=sorted(supports),
+        if self.samples%10==0:self.state.publish(String(data=json.dumps(dict(valid=self.covariance<=.04 and self.missing_travel_bound<=.1,measurement_valid=True,samples=self.samples,supports=sorted(supports),
+            pose_uncertainty_exceeded=self.covariance>.04 or self.missing_travel_bound>.1,missing_travel_bound_m=self.missing_travel_bound,
+            position_std_m=math.sqrt(self.covariance),
             position=self.position.tolist(),velocity_scatter_m_s=scatter,
             source='Actual unpowered wheel encoders + source spine FK + measured rolling contacts + native IMU; no body truth'),allow_nan=False)))
 

@@ -11,11 +11,12 @@ from rclpy.clock import Clock,ClockType
 from rclpy.executors import ExternalShutdownException
 from rclpy.node import Node
 from rclpy.qos import qos_profile_sensor_data
-from geometry_msgs.msg import TransformStamped,Twist
+from geometry_msgs.msg import TransformStamped,Twist,PoseWithCovarianceStamped
 from nav_msgs.msg import Odometry
 from rosgraph_msgs.msg import Clock as ClockMessage
 from sensor_msgs.msg import JointState
 from action_msgs.srv import CancelGoal
+from action_msgs.msg import GoalStatusArray
 from std_msgs.msg import Float64MultiArray,String
 from tf2_ros import TransformBroadcaster
 from robot_lab_utils.gait_model import load_model
@@ -25,7 +26,7 @@ class GaitController(Node):
     def __init__(self):
         super().__init__('source_gait_controller')
         for key,value in dict(description_file='',gait_config='',control_allowed=True,navigation_enabled=False,
-                              session_directory='',task='gait').items():self.declare_parameter(key,value)
+                              session_directory='',task='gait',goal_world_to_map='[0.0,0.0,0.0]').items():self.declare_parameter(key,value)
         self.model=load_model(Path(self.get_parameter('description_file').value).read_text(),self.get_parameter('gait_config').value)
         self.cfg=self.model.config;self.robot_id=self.model.robot_id;self.session_id=uuid.uuid4().hex
         self.enabled=False;self.stand_requested=False;self.reason='Source stance held; walking disarmed'
@@ -36,7 +37,15 @@ class GaitController(Node):
         self.joint_stamp=self.body_stamp=self.contact_stamp=self.engine_stamp=None
         self.reset_barrier=-math.inf
         self.targets=self.model.initial.copy();self.phase=0.;self.command=np.zeros(3);self.filtered=np.zeros(3)
-        self.gait=self.cfg['default_gait'];self.max_ik_error=0.;self.planned={};self.samples=0;self.last_state=0.
+        self.gait=self.cfg['default_gait'];self.max_ik_error=None if self.cfg.get('kind')=='serpentine' else 0.;self.planned={};self.samples=0;self.last_state=0.
+        self.rolling_valid=False;self.rolling_at=-math.inf
+        self.rolling_pose_uncertain=False;self.localization_at=-math.inf
+        self.rolling_missing_bound=0.;self.localization_missing_bound=0.;self.localization_sim_stamp=None
+        self.localization_debug=None
+        self.navigation_motion_active=self.cfg.get('kind')!='serpentine';self.navigation_goal=None;self.navigation_terminal=None
+        self.goal_world_to_map=json.loads(self.get_parameter('goal_world_to_map').value)
+        if len(self.goal_world_to_map)!=3 or not all(map(math.isfinite,self.goal_world_to_map)):
+            raise ValueError('Finite configured world-to-map pose required')
         self.target_pub=self.create_publisher(Float64MultiArray,'/gait/joint_targets',10)
         self.state_pub=self.create_publisher(String,'/gait/state',10);self.tf=TransformBroadcaster(self)
         self.create_subscription(JointState,'/joint_states',self.observe_joints,10)
@@ -48,8 +57,52 @@ class GaitController(Node):
         self.nav_cancel=self.create_client(CancelGoal,'/gait/navigate_to_pose/_action/cancel_goal')
         self.create_subscription(String,'/gait/command',self.operation,10)
         self.create_subscription(String,'/gait/operator_heartbeat',self.heartbeat,10)
+        if self.cfg.get('kind')=='serpentine':
+            self.create_subscription(String,'/gait/odometry_state',self.observe_rolling,10)
+            self.create_subscription(PoseWithCovarianceStamped,'/gait/amcl_pose',self.observe_localization,10)
+            self.create_subscription(GoalStatusArray,'/gait/navigate_to_pose/_action/status',self.observe_navigation_status,10)
         self.steady=Clock(clock_type=ClockType.STEADY_TIME)
         self.create_timer(.02,self.tick,clock=self.steady)
+
+    def observe_rolling(self,msg):
+        try:
+            data=json.loads(msg.data)
+            self.rolling_missing_bound=float(data.get('missing_travel_bound_m',0.))
+            if data.get('measurement_valid',data.get('valid')) is True:
+                self.rolling_valid=True;self.rolling_at=time.monotonic()
+            if data.get('reset_required'):
+                self.rolling_valid=False
+            self.rolling_pose_uncertain=bool(data.get('pose_uncertainty_exceeded'))
+            # A short dropped encoder sample does not reset the last actual
+            # good observation. Its age and cumulative missing-travel bound
+            # still stop navigation when pose becomes unknown.
+        except (ValueError,TypeError,AttributeError):self.rolling_valid=False
+
+    def observe_localization(self,msg):
+        stamp=msg.header.stamp.sec+msg.header.stamp.nanosec*1e-9
+        p,q=msg.pose.pose.position,msg.pose.pose.orientation
+        variance=[msg.pose.covariance[i] for i in (0,7,35)]
+        accepted=(msg.header.frame_id=='map' and self.sim_time is not None and abs(stamp-self.sim_time)<.5
+                and all(map(math.isfinite,[p.x,p.y,q.x,q.y,q.z,q.w,*variance]))
+                and abs(sum(v*v for v in (q.x,q.y,q.z,q.w))-1)<.01
+                and 0<=variance[0]<=.01 and 0<=variance[1]<=.01 and 0<=variance[2]<=.04)
+        self.localization_debug=dict(frame=msg.header.frame_id,stamp=stamp,sim_time=self.sim_time,
+            variances=[v if math.isfinite(v) else None for v in variance],accepted=bool(accepted))
+        if accepted:
+            self.localization_at=time.monotonic()
+            self.localization_sim_stamp=stamp;self.localization_missing_bound=self.rolling_missing_bound
+
+    def rolling_navigation_ready(self):
+        now=time.monotonic()
+        # A current exteroceptive AMCL correction can recover map pose after
+        # short encoder gaps. It never substitutes for fresh velocity/contact
+        # observations, and it never changes the relative odometry frame.
+        correction_current=(self.sim_time is not None and self.localization_sim_stamp is not None
+            and 0<=self.sim_time-self.localization_sim_stamp<=3.
+            and now-self.localization_at<5.
+            and -1e-9<=self.rolling_missing_bound-self.localization_missing_bound<=.05+1e-9)
+        return (self.rolling_valid and now-self.rolling_at<.6
+                and (not self.rolling_pose_uncertain or correction_current))
 
     def observe_clock(self,msg):
         value=msg.clock.sec+msg.clock.nanosec*1e-9
@@ -59,6 +112,20 @@ class GaitController(Node):
             self.reset_barrier=value
         if self.sim_time is None or value>self.sim_time:self.clock_at=time.monotonic()
         self.sim_time=value
+
+    def observe_navigation_status(self,msg):
+        if not msg.status_list:return
+        current=max(msg.status_list,key=lambda s:(s.goal_info.stamp.sec,s.goal_info.stamp.nanosec))
+        identity=bytes(current.goal_info.goal_id.uuid).hex()
+        if current.status in (1,2,3):
+            self.navigation_goal=identity;self.navigation_motion_active=current.status in (1,2)
+        elif current.status in (4,5,6) and self.navigation_terminal!=identity:
+            self.navigation_terminal=identity;self.navigation_motion_active=False
+            self.command[:]=0.;self.filtered[:]=0.;self.cmd_at=-math.inf
+            if self.enabled and self.input_owner=='navigation':self.reason='Native goal terminal; current snake shape held'
+            # A zero-rate goal must hold the wave's current shape. Shrinking
+            # its amplitude to zero would straighten the whole body and move
+            # its head after Nav2 had already reported arrival.
 
     def observe_joints(self,msg):
         stamp=msg.header.stamp.sec+msg.header.stamp.nanosec*1e-9
@@ -130,6 +197,8 @@ class GaitController(Node):
     def drive(self,msg):
         if not self.enabled:return
         values=np.array([msg.linear.x,msg.linear.y,msg.angular.z])
+        if self.cfg.get('kind')=='serpentine' and abs(msg.linear.y)>1e-9:
+            self.stop('The passive-wheel snake cannot strafe');return
         if not np.isfinite(values).all() or abs(msg.linear.z)+abs(msg.angular.x)+abs(msg.angular.y)>1e-9:
             self.stop('Invalid gait velocity');return
         self.command=np.clip(values,[-self.cfg['max_speed'],-self.cfg['max_speed'],-self.cfg['max_yaw']],
@@ -144,7 +213,7 @@ class GaitController(Node):
         self.drive(msg)
 
     def nav_drive(self,msg):
-        if self.input_owner=='navigation':self.drive(msg)
+        if self.input_owner=='navigation' and self.navigation_motion_active:self.drive(msg)
 
     def operation(self,msg):
         try:
@@ -159,6 +228,9 @@ class GaitController(Node):
             if data.get('operator_id')!=self.operator or time.monotonic()-self.hb_at>.8:raise ValueError('Live operator lease required')
             if not self.fresh():raise ValueError('Fresh actual joints, body, contacts and clock required')
             if op=='arm':
+                if (self.cfg.get('kind')=='serpentine' and self.get_parameter('navigation_enabled').value
+                        and not self.rolling_navigation_ready()):
+                    raise ValueError('Navigation needs fresh consistent rolling odometry; relaunch after lost pose uncertainty')
                 if self.contacts['normal_forces_N']['body']>2.:raise ValueError('Body is supported by an obstacle/floor; recover the stance first')
                 supports=sum(self.contacts['normal_forces_N'][leg['id']]>.2 for leg in self.model.legs)
                 if supports<len(self.model.legs)//2:raise ValueError('Insufficient measured foot support')
@@ -185,6 +257,9 @@ class GaitController(Node):
         dt=0. if self.last_sim is None or self.sim_time is None else max(0.,min(.04,self.sim_time-self.last_sim))
         self.last_sim=self.sim_time
         if self.enabled and (not ready or now-self.hb_at>.8):self.stop('Observation/clock/operator loss; gait halted')
+        if (self.enabled and self.input_owner=='navigation' and self.cfg.get('kind')=='serpentine'
+                and not self.rolling_navigation_ready()):
+            self.stop('Rolling odometry inconsistent/stale; navigation interrupted')
         tilt=None
         if self.pose:
             q=self.pose.pose.pose.orientation
@@ -197,7 +272,9 @@ class GaitController(Node):
             if np.max(np.abs(self.model.initial-self.targets))<1e-6:self.stand_requested=False
         if self.enabled:
             wanted=self.command if now-self.cmd_at<.35 else np.zeros(3)
-            self.filtered+=np.clip(wanted-self.filtered,-np.array([.06,.06,.25])*dt,np.array([.06,.06,.25])*dt)
+            if self.cfg.get('kind')=='serpentine' and np.linalg.norm(wanted)<1e-9:
+                self.filtered[:]=0.
+            else:self.filtered+=np.clip(wanted-self.filtered,-np.array([.06,.06,.25])*dt,np.array([.06,.06,.25])*dt)
             if np.linalg.norm(self.filtered)>.001 and dt>0:
                 self.phase=(self.phase+dt/self.cfg['cycle_s']*(self.spine_freq if self.cfg.get('kind')=='serpentine' else 1.))%1.
                 candidate,error,self.planned=self.model.targets(self.phase,self.filtered,self.targets,self.gait,
@@ -218,6 +295,9 @@ class GaitController(Node):
                        motion_kind=self.cfg.get('kind','multi_leg'),available_schedules=['serpenoid'] if self.cfg.get('kind')=='serpentine' else list(dict.fromkeys([self.cfg['default_gait'],'ripple','wave'])),
                        actuated_joints=len(self.model.names),joint_samples=self.samples,sim_time=self.sim_time,
                        drive_forward_yaw_rad=float(self.cfg['forward_yaw']),
+                       goal_world_to_map=self.goal_world_to_map,
+                       drive_orientation_joints=self.model.names if self.cfg.get('kind')=='serpentine' else [],
+                       rolling_localization_observation=self.localization_debug,
                        position=dict(x=p.x,y=p.y,z=p.z) if p else None,tilt_rad=tilt,
                        actual_contacts=self.contacts,planned_stance=self.planned,max_ik_error_m=self.max_ik_error,
                        commanded_body_velocity=self.filtered.tolist(),joint_targets=self.targets.tolist(),

@@ -1,13 +1,15 @@
 # Robot Lab — Multi-Robot Simulation and Algorithm Laboratory
 
-**Current status — October 27, 2026: the platform and extension are partial.**
+**Current status — October 30, 2026: the platform and extension are partial.**
 [Agent instructions for the remaining work](docs/REMAINING_WORK_GUIDE.md) give
 code locations, dependencies, implementation steps, acceptance and evidence
 requirements. Start with the [ordered roadmap queue](ROADMAP.md#current-agent-queue--october-27-2026).
 Earlier claims that all hardware-independent work was complete are superseded.
 Unit tests, asset registration and scene loading retain their stated scope.
 
-The native continuation adds actual marine/gait acquisition and navigation
+The latest continuation delivers [native snake, surface-vessel and articulated-track workflows](docs/status/native-forms-2026-10-30.md): measured snake 2D/3D mapping and saved-map navigation, two-goal surface-vessel navigation, AUV acquisition and four-flipper control. Select these robots in Launch; controls and commands fill automatically.
+
+The earlier native continuation adds actual marine/gait acquisition and navigation
 workloads, a measured two-X500 range-reference formation and operator-loss
 landing, measured fleet batch reset, and the complete native tracked family.
 Use **Aerial Swarm → Measured two-drone reference** and the new Experiments
@@ -21,17 +23,18 @@ Actual measurements include fleet conflict recovery and settled batch goals,
 two-FCU flight/landing, a saved/localized ROV route, hexapod saved-map navigation
 and octopod 3D map export. [Current delivery and measured limits](docs/status/workflows-2026-10-27.md).
 
-Current availability is **148 robot profiles / 79 selectable families** and
-**51 world profiles / 39 selectable families**. Restored vendor/Panda profiles
+Current availability is **151 robot profiles / 81 selectable families** and
+**52 world profiles / 40 selectable families**. Restored vendor/Panda profiles
 whose historical source certificates no longer match remain explicit experimental
 candidates; enable **experimental robot workflows** to expose their candidate
 modes and autofilled command. This does not grant new mission qualification.
 
-Remaining work includes larger aerial groups/other maps and behaviors, AUV and
-per-model obstacle/terrain missions, RMF infrastructure/larger fleets, physical
-snake/surface/amphibious families, further automatic cases and the older roadmap. Broad
-backend/map acceptance and real hardware/HIL stay separate. Implement missing
-functionality before broad validation; preserve every named successful scope.
+Remaining work includes larger aerial groups and further AUV/obstacle missions,
+an amphibious family, real RMF doors/lifts/docking/energy adapters, larger
+fleets, terrain/slip missions for snake and articulated tracks, further
+automatic cases and the older roadmap. Broad backend/map acceptance and real
+hardware/HIL stay separate. Implement missing functionality before broad
+validation; preserve every named successful scope.
 
 The dated milestones below preserve earlier implementation and measurement
 scopes. Use the current guide, roadmap and corrected ledger for live task state.
@@ -142,7 +145,7 @@ Robot Lab aims to make robots, simulators, maps and algorithms independently sel
 
 **Current state: partial research platform with measured mobile, flight and native Panda workflows.** The GUI, simulator adapters, installed assets and algorithm framework support the named experiments below. Full robot/map/mode/backend qualification, controller breadth and reproducible algorithm comparisons remain open.
 
-Status updated on **2026-10-27**. The October 8 extension checkpoint has exact
+Status updated on **2026-10-30**. The October 8 extension checkpoint has exact
 physical source manifests; its publication and software checks are recorded in
 [October 8 evidence](docs/status/evidence/extensions-finish-2026-10-08/README.md). [Current status](docs/status/CURRENT_STATUS.md)
 collects verified work, limits and the next tasks. The [completion audit](docs/status/audit-2026-10-02.md)
@@ -204,7 +207,7 @@ and [actual rendering/live-plant checks](docs/status/evidence/registry-3d-2026-1
 **Worlds** generates real occupancy PGM/YAML files. **Installed Extensions**
 opens downloaded assets in the normal Launch selectors with commands filled
 in automatically; it has no download buttons. On this SSD installation there
-are **109 installed external robot profiles**, including source variants and
+are **116 installed external robot profiles**, including source variants and
 inspection components, **14 imported dataset worlds**, and three packaged
 Gazebo environment examples. Their source, dependency and import checks are
 recorded separately from robot missions. See the
@@ -263,12 +266,12 @@ planned payload/grasp setups and mobile-manipulator control remain in the [roadm
 
 ## What exists, and what that means
 
-| Source/installed inventory on this Jetson, October 27 | Meaning |
+| Source/installed inventory on this Jetson, October 30 | Meaning |
 |---|---|
 | 26 discoverable ROS packages | Current CI builds 25; optional `orbslam3` is excluded |
-| 31 core + 109 installed external robot profiles | 140 raw profiles; seven historical registrations need restoration |
-| 75 selectable robot families | Grouped current Launch choices; components remain nested and many imports are Display-only |
-| 34 core + 17 installed world profiles | 51 profiles under 39 map families; terrain_heightfield newly registered; five marine worlds retained |
+| 35 core + 116 installed external robot profiles | 151 available profiles; seven historical registrations restored |
+| 81 selectable robot families | Grouped current Launch choices; components remain nested and many imports are Display-only |
+| 35 core + 17 installed world profiles | 52 profiles under 40 map families; six marine worlds including surface_harbor |
 | Registry and algorithm catalogs | Inventory and labels are separate from controller integration and measured mission qualification |
 | Four simulator routes | Gazebo, PyBullet, MuJoCo and Isaac; support is robot/task/backend-specific |
 

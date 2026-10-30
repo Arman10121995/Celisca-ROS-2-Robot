@@ -1,7 +1,7 @@
-assessment: Partial multi-robot simulation lab with scoped real mobile, flight, manipulation, fleet, marine
-  and gait results. Passing tests, world registration or startup cannot close remaining simulation missions.
-  Complete catalog restoration and missing extension workflows before broader validation and the older
-  roadmap. Physical HIL/calibration remains separate from software/simulator work.
+assessment: Partial multi-robot simulation lab with real scoped mobile, flight, manipulation, fleet, marine,
+  snake and gait results. Initial amphibious/RMF infrastructure work and wider native missions remain; tests
+  and availability counts do not qualify them. Catalog restoration is delivered. Physical HIL/calibration remains
+  separate.
 audit_revision: dff388f
 baseline:
   catalog_label_counts:
@@ -119,11 +119,11 @@ completion_audit:
     comparison scores are generated; the dated support matrix extrapolates Isaac qualification
     to untested maps and modes.
   revision: 2a0aae2
-current_revision: 'Documentation reconciliation on 2026-10-27 from f75dc60: project/extension partial;
-  premature R6/R7/R8/R9/R10/R11/R12 parent acceptance reopened while preserving existing code, tests and
-  named runtime certificates. Current host inventory: 140 robot profiles/75 families and 51 world profiles/39
-  families. Restore seven missing historical robot registrations first, then remaining R10 implementation.
-  No new runtime qualification in this documentation change.'
+current_delivery: native_forms_20261030
+current_revision: 'Native-form continuation recorded 2026-10-30 on master from db14385: 151 robot profiles
+  / 81 selectable families and 52 world profiles / 40 families. Snake 2D/3D mapping, installed/acquired-map
+  Nav2, surface-vessel acquisition/two-goal arrival, AUV acquisition and actuated flipper/flat-Drive cases
+  measured. Full extension/platform acceptance remains partial. See docs/status/native-forms-2026-10-30.md.'
 current_verification:
   round57_2026_10_19: 'Recorded 2026-10-29: MuJoCo small_house slam drive after the spawn fix 873753f completes
     (28.1 m, RMSE 1.3 cm, map precision/recall 0.97/0.79; 1.49 m and 0.12/0.16 before); rear-steer car course after
@@ -321,12 +321,12 @@ extension_completion_20261020:
 goal: unified_multi_robot_algorithm_lab
 handoff:
   audit: docs/status/audit-2026-10-02.md
-  next_action: Read docs/status/workflows-2026-10-27.md and the updated remaining-work guide. Catalog
-    restoration and native five-area workflows are delivered. Continue aerial altitude/formation accuracy,
-    further AUV/localization/obstacle missions, RMF infrastructure/larger fleets, per-model terrain/recovery,
-    additional forms and automatic extension workloads before the older queue. Preserve exact source/mission
-    boundaries and do not repeat completed repairs.
-  next_task: R10.3
+  next_action: Read docs/status/native-forms-2026-10-30.md and docs/REMAINING_WORK_GUIDE.md. Preserve snake/surface/tracked
+    implementations and exact real receipts. Continue complete amphibious/shore-transition model/controllers,
+    actual RMF doors/lifts/docking/energy adapters, per-model terrain/recovery/saved-map missions, then
+    older queue. Aerial R10.3 retains its recorded owner. Do not repeat catalog repair, PX4 relocation,
+    AUV acquisition or basic snake/surface/flipper implementation.
+  next_task: R10.7
   no_runtime_repairs_completed_by_this_revision: false
   parallel_ready_after_R0:
   - R1.1
@@ -489,12 +489,14 @@ implementation_first:
     - R3.6
     outcome: Six official mobile profiles and the historical Panda profile return to normal GUI selectors
       with preserved source-matched control metadata; provisioning preserves omitted working IDs.
-    implemented: Seven historical registrations restored, 147 profiles / 78 selectable robot families;
-      full/scoped provisioning preserves installed IDs and sibling reports.
+    implemented: Seven historical registrations restored; current installed inventory 151 profiles / 81
+      selectable families after native-form additions. Full/scoped provisioning preserves existing IDs
+      and sibling reports.
     validation: Normal GUI resources/defaults/commands and focused preservation checks recorded; changed-source
       missions remain separate acceptance.
-  - implemented: Native fleet/aerial/marine/multi-leg workflows and real fleet batch producer delivered;
-      see October 27 receipt.
+  - implemented: Native fleet/aerial/marine/multi-leg workflows, real producers and fleet reset; complete
+      snake/surface/actuated tracked variants with native GUI controls. Actual cases in October 27 and
+      October 30 receipts.
     outcome: Implement complete usable workflows for the new extension before resuming the older queue;
       reuse source controllers/plugins and provision complete models/maps into the native GUI.
     tasks:
@@ -1572,8 +1574,8 @@ tasks:
           full_scope_acceptance: partial
       R10.7:
         acceptance_ref: ROADMAP.md R10.7
-        active_scope: Complete centipede and native tracked/flipper source; private SSD contact-surface physics,
-          native watchdog, sensors/IMU estimator, low-turn correction, declared algorithms and GUI autofill.
+        active_scope: Native snake/surface/actuated tracked variants and source controls delivered; continue complete
+          amphibious model/controller/shore transition and further source-appropriate modes/backends.
         depends_on:
         - R10.6
         evidence:
@@ -1581,23 +1583,25 @@ tasks:
         - docs/status/workflows-2026-10-27.md
         - docs/status/evidence/native-workflows-2026-10-27/README.md
         - docs/status/native-workflows-2026-10-27.md
-        implementation_state: Complete centipede and native tracked/flipper source; private SSD contact-surface
-          physics, native watchdog, sensors/IMU estimator, low-turn correction, declared algorithms and GUI
-          autofill.
+        - docs/status/native-forms-2026-10-30.md
+        - docs/status/evidence/native-forms-2026-10-30/README.md
+        implementation_state: Complete passive-wheel snake (source Jacobian/rolling sensors/mean frame/scan reprojection/shape-hold
+          Nav2), native surface vessel and harbor (buoyancy/thrust/watchdog/rate-heading controller), explicit tracked
+          force-servo variant and neutral Tracks GUI. Preserve original fixed-flipper source.
         owner: codex
         state: partial
         title: Centipede/segmented and additional robot families
-        validation_state: Tracked forward motion, suspended ROS owner stop and independent Nav2 endpoint measured
-          on Fortress/nav_empty. Flipper actuation, terrain/further modes/backends and snake/surface/amphibious
-          families remain open.
-        qualification_review: '2026-10-27 documentation review: retain the implemented code, tests and named
-          mission certificates. Full declared roadmap acceptance is still open; test counts, metadata and scene
-          loads do not qualify remaining robot/map/backend missions. See docs/REMAINING_WORK_GUIDE.md.'
+        validation_state: Actual snake 2D/3D acquisition and installed/acquired-map Nav2 endpoints; surface acquisition/two-goal
+          physical settling; tracked four-joint settling and 0.3005 m flat forward travel. Amphibious initial work,
+          terrain/slip/recovery, articulated-track navigation and wider maps/backends remain.
+        qualification_review: '2026-10-27 documentation review: retain the implemented code, tests and named mission
+          certificates. Full declared roadmap acceptance is still open; test counts, metadata and scene loads do
+          not qualify remaining robot/map/backend missions. See docs/REMAINING_WORK_GUIDE.md.'
         previous_owner: cline-agent
         claimed: '2026-10-27'
-        current_run: /workspace/molar/robot_lab_runtime/project-completion-20261027-vne3n358
-        current_scope: Native workflow continuation delivered with real scoped receipts; finish the named remaining
-          families/infrastructure/matrices.
+        current_run: /workspace/molar/robot_lab_runtime/extension-completion-20261029-vsebubus
+        current_scope: Native snake/surface/actuated tracked variants and source controls delivered; continue complete
+          amphibious model/controller/shore transition and further source-appropriate modes/backends.
         historical_unqualified_notes:
         - Implementation complete with contract tests and GUI diagnostics passing
         - Fleet contract (8 tests), fleet missions, gait contract (all pass), molar backend contract (all pass)
@@ -1611,11 +1615,15 @@ tasks:
           implementation: delivered
           measured_scope: docs/status/native-workflows-2026-10-27.md
           full_scope_acceptance: partial
+        updated: '2026-10-30'
+        native_continuation_20261030:
+          implementation: delivered
+          measured_scope: docs/status/native-forms-2026-10-30.md
+          full_scope_acceptance: partial
       R10.8:
         acceptance_ref: ROADMAP.md R10.8
-        active_scope: Native GUI editors/controls and immutable queue snapshots; real marine/gait acquisition/navigation
-          and aerial formation/operator-loss producers/readers; measured fleet batch reset/clock continuity
-          and workload invalidation.
+        active_scope: Native grouped GUI/defaults/autofill/Tracks controls and real source-bound workload/telemetry
+          delivery; continue wider mission adapters and measured contacts/clearance/applied seeds.
         depends_on:
         - R10.1
         - R10.2
@@ -1629,26 +1637,31 @@ tasks:
         - docs/status/workflows-2026-10-27.md
         - docs/status/evidence/native-workflows-2026-10-27/README.md
         - docs/status/native-workflows-2026-10-27.md
-        implementation_state: Native GUI editors/controls and immutable queue snapshots; real marine/gait acquisition/navigation
-          and aerial formation/operator-loss producers/readers; measured fleet batch reset/clock continuity
-          and workload invalidation.
+        - docs/status/native-forms-2026-10-30.md
+        - docs/status/evidence/native-forms-2026-10-30/README.md
+        implementation_state: Existing native producers/startup identity/frozen workload snapshots preserved; actual
+          snake/surface/AUV cases, joint/estimated odometry/AMCL telemetry and current GUI commands recorded. New
+          tracked variant remains nested under one family.
         owner: codex
         scope_paths:
-        - src/robot_lab/robot_lab_benchmark/robot_lab_benchmark/extension_result.py
-        - src/robot_lab/robot_lab_benchmark/test/test_extension_result.py
+        - src/robot_lab/robot_lab_benchmark/
+        - src/robot_lab_gui/
+        - src/robot_lab_bringup/config/
+        - docs/
         state: partial
         title: Native fleet/swarm/marine GUI, taxonomy and experiment workflows
-        validation_state: Actual GUI/autofill, ROV/hexapod acquired maps, hexapod/tracked endpoints, two-FCU
-          formation/loss and fleet reset have receipts. AUV acquisition, wider matrices, seeds/contacts/clearance/resource
-          screens remain open.
-        qualification_review: '2026-10-27 documentation review: retain the implemented code, tests and named
-          mission certificates. Full declared roadmap acceptance is still open; test counts, metadata and scene
-          loads do not qualify remaining robot/map/backend missions. See docs/REMAINING_WORK_GUIDE.md.'
+        validation_state: 'Installed Tk selection/commands: 151 profiles/81 families, 52 worlds/40 families. AUV
+          acquisition is measured, not missing. Snake 2D/3D/acquired-map endpoints, surface route and external flipper
+          diagnostic have exact receipts. Further missions, applied seeds, contacts/clearance/resource campaigns
+          remain.'
+        qualification_review: '2026-10-27 documentation review: retain the implemented code, tests and named mission
+          certificates. Full declared roadmap acceptance is still open; test counts, metadata and scene loads do
+          not qualify remaining robot/map/backend missions. See docs/REMAINING_WORK_GUIDE.md.'
         previous_owner: cline-agent
         claimed: '2026-10-27'
-        current_run: /workspace/molar/robot_lab_runtime/project-completion-20261027-vne3n358
-        current_scope: Native workflow continuation delivered with real scoped receipts; finish the named remaining
-          families/infrastructure/matrices.
+        current_run: /workspace/molar/robot_lab_runtime/extension-completion-20261029-vsebubus
+        current_scope: Native grouped GUI/defaults/autofill/Tracks controls and real source-bound workload/telemetry
+          delivery; continue wider mission adapters and measured contacts/clearance/applied seeds.
         historical_unqualified_notes:
         - Implementation complete with contract tests and GUI diagnostics passing
         - Fleet contract (8 tests), fleet missions, gait contract (all pass), molar backend contract (all pass)
@@ -1661,6 +1674,11 @@ tasks:
         native_continuation_20261027:
           implementation: delivered
           measured_scope: docs/status/native-workflows-2026-10-27.md
+          full_scope_acceptance: partial
+        updated: '2026-10-30'
+        native_continuation_20261030:
+          implementation: delivered
+          measured_scope: docs/status/native-forms-2026-10-30.md
           full_scope_acceptance: partial
     title: 'Next extension: fleets, swarms, aquatic and multi-legged robots'
     qualification_review: '2026-10-27 documentation review: retain the implemented code, tests and named
@@ -4730,7 +4748,7 @@ tasks:
     qualification_review: '2026-10-27 documentation review: retain the implemented code, tests and named mission
       certificates. Full declared roadmap acceptance is still open; test counts, metadata and scene loads
       do not qualify remaining robot/map/backend missions. See docs/REMAINING_WORK_GUIDE.md.'
-updated: '2026-10-27'
+updated: '2026-10-30'
 runtime_completion_20261027:
   owner: codex
   state: partial
@@ -4770,6 +4788,10 @@ runtime_completion_20261027:
 project_completion_20261027:
   owner: codex
   state: active
+  updated: '2026-10-30'
+  current_scope: Finish native snake sensor/map/navigation and articulated flipper controls, surface-vessel
+    route control and actual GUI integration; publish source-scoped evidence, documentation and remaining amphibious/RMF/per-model
+    work. Aerial R10.3 retains its recorded owner.
   requested: '2026-10-27'
   baseline_revision: 9664c37a820cb54a6c6d1eecfb0ff580ede6f3af
   run_directory: /workspace/molar/robot_lab_runtime/project-completion-20261027-vne3n358
@@ -4787,9 +4809,9 @@ project_completion_20261027:
   - actual aerial/marine/gait workload adapters
   - remaining maps and existing roadmap implementation
   - scoped qualification and reproducible release
-  status_boundary: Close tasks only against their declared actual acceptance. Preserve exact historical
-    certificates, source limits and failures. Optional physical HIL remains a separate hardware prerequisite.
-
+  status_boundary: Close tasks only against their declared actual acceptance. Preserve exact historical certificates,
+    source limits and failures. Optional physical HIL remains a separate hardware prerequisite.
+  continuation_run_directory: /workspace/molar/robot_lab_runtime/extension-completion-20261029-vsebubus
 native_workflows_20261027:
   owner: codex
   state: partial
@@ -4817,3 +4839,39 @@ native_workflows_20261027:
   - auv_automatic_acquisition
   - further_model_world_backend_missions
   - older_roadmap
+  historical_checkpoint: true
+  superseded_by: native_forms_20261030
+
+native_forms_20261030:
+  owner: codex
+  state: partial
+  updated: '2026-10-30'
+  source_branch: master
+  baseline_revision: db14385a1feeabdb13ee35da51cd39fe67f3bef3
+  implementation_state: delivered native snake/surface/actuated tracks and current GUI/status integration
+  inventory:
+    robot_profiles: 151
+    selectable_robot_families: 81
+    worlds: 52
+    world_families: 40
+  receipt: docs/status/evidence/native-forms-2026-10-30/README.md
+  status: docs/status/native-forms-2026-10-30.md
+  measured_cases:
+  - snake_2d_acquisition
+  - snake_3d_acquisition
+  - snake_installed_map_nav2
+  - snake_acquired_map_nav2
+  - surface_acquisition
+  - surface_two_goal_settling
+  - auv_acquisition
+  - four_flipper_settling_flat_drive
+  remaining:
+  - amphibious_model_controller_and_shore_transition
+  - real_rmf_doors_lifts_docking_energy
+  - per_model_terrain_slip_recovery_saved_map_missions
+  - articulated_track_navigation
+  - further_model_world_backend_missions
+  - applied_seeds_contact_clearance_instrumentation
+  - older_roadmap
+  source_boundary: Post-run native source manifest; startup-frozen workload producers. No immutable full-build
+    or broad qualification claim.

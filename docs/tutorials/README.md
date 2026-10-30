@@ -1,5 +1,9 @@
 # Robot Lab tutorials
 
+October 30: [native-form delivery](../status/native-forms-2026-10-30.md)
+adds snake acquired-map navigation, a surface vessel and articulated flipper
+controls. The guides below distinguish runnable workflows from named missions.
+
 New: [native dexterous-hand and coupled-gripper controls](native-hand-controls.md)
 for four experimental MuJoCo profiles. Use measured contacts and source effort
 feedback; object-grasp qualification remains separate.
@@ -27,6 +31,9 @@ a guide, imported model or numerical example does not qualify every mission.
 | [Native fixed arm planning](native-arm-planning.md) | 13 experimental KDL/OMPL/native trajectory candidates; actual UR5e/SO101 reaches, authored frames and explicit pending qualification |
 | [Native controls and Stretch](native-controls.md) | Unitree exact-model policies; 28 fixed actuator candidates, Cartesian/teach-replay; Stretch base/sensors and explicit higher workflows |
 | [Concurrent experiments](concurrent-experiments.md) | Real bounded subprocess queue, actual telemetry and owned cancel/reset; mission qualification remains separate |
+| [Surface vessel](surface-vessel.md) | Complete native catamaran, latched Marine controls, harbor map acquisition and planar route/settling |
+| [Wheeled snake](wheeled-snake.md) | Complete passive-wheel snake, native Drive, actual 2D/3D acquisition and installed/acquired-map Nav2 endpoints; terrain/backends remain |
+| [Tracked vehicle](tracked-vehicle.md) | Native contact-surface belts and fixed/actuated flipper variants; Tracks controls, real joint settling/Drive and separate navigation scope |
 | [PX4 X500](px4_x500.md) | Gazebo Harmonic flight, manual Drive/altitude, hold/goals/land in named worlds; wider flight-world/planning matrix remains |
 | [Mapped drone routes](mapped-drone-planning.md) | RTAB-Map + registered depth supplements static planning; async execution rechecks, stale/blockage Hold, actual flight acceptance pending |
 | [Go2 policy](go2.md) | Bounded MuJoCo policy trials and their recorded failures; terrain/recovery/navigation remain unqualified |

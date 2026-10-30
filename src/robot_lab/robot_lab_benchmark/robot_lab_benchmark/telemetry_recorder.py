@@ -17,6 +17,7 @@ def main(args=None):
     from nav_msgs.msg import Odometry
     from rosgraph_msgs.msg import Clock
     from sensor_msgs.msg import JointState, LaserScan
+    from geometry_msgs.msg import PoseWithCovarianceStamped
 
     options.output.mkdir(parents=True, exist_ok=True)
     raw = (options.output/'telemetry.jsonl').open('w', buffering=1)
@@ -59,10 +60,15 @@ def main(args=None):
             trace.append([*values, 0.])
         q = message.pose.pose.orientation
         record(topic, dict(position=values, frame=message.header.frame_id,
+            sim_time=message.header.stamp.sec+message.header.stamp.nanosec*1e-9,
+            velocity=[v if math.isfinite(v) else None for v in (message.twist.twist.linear.x,message.twist.twist.linear.y,message.twist.twist.angular.z)],
+            position_covariance=[message.pose.covariance[i] if math.isfinite(message.pose.covariance[i]) else None for i in (0,7,14)],
             orientation_xyzw=[v if math.isfinite(v) else None for v in (q.x, q.y, q.z, q.w)]))
 
     def joints(message):
         record('/joint_states', dict(names=message.name,
+            velocities=[value if math.isfinite(value) else None for value in message.velocity],
+            efforts=[value if math.isfinite(value) else None for value in message.effort],
             positions=[value if math.isfinite(value) else None for value in message.position]))
 
     def scan(message):
@@ -71,11 +77,22 @@ def main(args=None):
         record('/scan', dict(finite_returns=len(values), nearest_range=min(values) if values else None))
 
     from std_msgs.msg import String
-    node.create_subscription(String, '/aerial_swarm/state',
-        lambda message: record('/aerial_swarm/state', dict(state=json.loads(message.data))), 10)
+    def state(message,topic):
+        try:
+            if len(message.data)>128*1024:return
+            record(topic,dict(state=json.loads(message.data)))
+        except (ValueError,TypeError):record(topic,dict(valid=False))
+    for topic in ('/aerial_swarm/state','/gait/odometry_state','/marine/mission/state'):
+        node.create_subscription(String,topic,lambda message,topic=topic:state(message,topic),10)
+    def localized(message):
+        p,q=message.pose.pose.position,message.pose.pose.orientation
+        values=[p.x,p.y,q.x,q.y,q.z,q.w,*[message.pose.covariance[i] for i in (0,7,35)]]
+        record('/gait/amcl_pose',dict(frame=message.header.frame_id,sim_time=message.header.stamp.sec+message.header.stamp.nanosec*1e-9,
+            pose_and_covariance=[v if math.isfinite(v) else None for v in values]))
+    node.create_subscription(PoseWithCovarianceStamped,'/gait/amcl_pose',localized,10)
     node.create_subscription(Clock, '/clock', clock, 10)
     node.create_subscription(Odometry, '/odom/ground_truth', truth, qos_profile_sensor_data)
-    for topic in ('/px4/odometry_truth', '/px4/odometry'):
+    for topic in ('/px4/odometry_truth', '/px4/odometry', '/gait/odometry', '/marine/odometry', '/marine/estimated_odometry'):
         node.create_subscription(Odometry, topic, lambda message, topic=topic: truth(message, topic), qos_profile_sensor_data)
     node.create_subscription(JointState, '/joint_states', joints, qos_profile_sensor_data)
     node.create_subscription(LaserScan, '/scan', scan, qos_profile_sensor_data)

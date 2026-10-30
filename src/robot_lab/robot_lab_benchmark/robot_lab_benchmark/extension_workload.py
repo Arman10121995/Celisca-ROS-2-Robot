@@ -18,15 +18,14 @@ from rclpy.action import ActionClient
 from rclpy.node import Node
 from rclpy.parameter import Parameter
 from rclpy.qos import qos_profile_sensor_data
-from rclpy.time import Time
 from geometry_msgs.msg import Twist
 from nav_msgs.msg import Odometry
 from nav2_msgs.action import NavigateToPose
 from lifecycle_msgs.srv import GetState
 from rosgraph_msgs.msg import Clock
 from std_msgs.msg import String
+from sensor_msgs.msg import JointState
 from std_srvs.srv import Trigger
-from tf2_ros import Buffer, TransformListener, TransformException
 
 from .extension_contract import SCHEMA, RESULT_SCHEMA, CONTRACTS, LOSS_CONTRACT, endpoint_ok
 from .workload_contract import validate_workload, verify_producer
@@ -58,6 +57,7 @@ class ExtensionWorkload(Node):
         self.rows, self.settled, self.initial = [], {}, {}
         self.airborne={};self.landing_observed=set();self.loss_started=None
         self.forward_yaw=0.
+        self.orientation_joints=[];self.orientation_samples=[]
         self.is_auv=False;self.goals=specification.get('goals',[]);self.mapping_endpoint=None
         self.goal_index = 0
         self.goal_handle = self.goal_future = self.result_future = None
@@ -74,12 +74,12 @@ class ExtensionWorkload(Node):
             self.mission = self.create_publisher(String, '/marine/mission/command', 10)
             self.create_subscription(String, '/marine/mission/state', self.observe_aux, 10)
         if self.workflow == 'gait':
+            self.create_subscription(JointState,'/joint_states',self.observe_orientation_joints,qos_profile_sensor_data)
             self.navigation = ActionClient(self, NavigateToPose, '/gait/navigate_to_pose')
             self.lifecycle=self.create_client(GetState,'/gait/bt_navigator/get_state')
             self.lifecycle_future=None;self.lifecycle_at=-math.inf;self.navigation_active=False
             self.map_service = self.create_client(Trigger, '/gait/mapping/save')
             self.create_subscription(String, '/gait/mapping/state', self.observe_mapping, 10)
-            self.tf = Buffer(); self.listener = TransformListener(self.tf, self)
         self.record(kind='start', specification=specification)
 
     def record(self, **values):
@@ -118,6 +118,7 @@ class ExtensionWorkload(Node):
                 self.session = data['session_id']
                 if self.workflow=='gait':
                     self.forward_yaw=float(data['drive_forward_yaw_rad'])
+                    self.orientation_joints=list(data.get('drive_orientation_joints',[]))
                     if not math.isfinite(self.forward_yaw):raise ValueError('Source gait drive-frame yaw is invalid')
                 if self.workflow == 'aerial_swarm':
                     topics = {m['id']:m['namespace']+'/px4/odometry_truth' for m in data['members']}
@@ -139,6 +140,16 @@ class ExtensionWorkload(Node):
         except (ValueError, KeyError, TypeError) as exc:
             self.fail(exc)
 
+    def observe_orientation_joints(self,msg):
+        if not self.orientation_joints:return
+        positions=dict(zip(msg.name,msg.position))
+        if not all(name in positions and math.isfinite(positions[name]) for name in self.orientation_joints):return
+        angles=[0.];heading=0.
+        for name in self.orientation_joints:heading+=positions[name];angles.append(heading)
+        offset=math.atan2(sum(map(math.sin,angles)),sum(map(math.cos,angles)))
+        stamp=msg.header.stamp.sec+msg.header.stamp.nanosec*1e-9
+        self.orientation_samples.append((stamp,offset));self.orientation_samples=self.orientation_samples[-8:]
+
     def observe_truth(self, name, msg):
         p, q = msg.pose.pose.position, msg.pose.pose.orientation
         stamp = msg.header.stamp.sec+msg.header.stamp.nanosec*1e-9
@@ -148,6 +159,11 @@ class ExtensionWorkload(Node):
         if not all(map(math.isfinite,values)) or abs(sum(v*v for v in values[3:])-1)>.01:
             self.fail('Invalid independent physical body pose'); return
         yaw = math.atan2(2*(q.w*q.z+q.x*q.y),1-2*(q.y*q.y+q.z*q.z))
+        if self.orientation_joints:
+            if not self.orientation_samples:return
+            nearest=min(self.orientation_samples,key=lambda sample:abs(sample[0]-stamp))
+            if abs(nearest[0]-stamp)>.04:return
+            yaw+=nearest[1]
         if self.workflow=='gait':yaw=math.atan2(math.sin(yaw+self.forward_yaw),math.cos(yaw+self.forward_yaw))
         pose = [p.x,p.y,yaw] if self.workflow == 'gait' else [p.x,p.y,p.z]
         previous = self.truth.get(name)
@@ -194,16 +210,12 @@ class ExtensionWorkload(Node):
             if self.lifecycle_future is None and now-self.lifecycle_at>1. and self.lifecycle.service_is_ready():
                 self.lifecycle_at=now;self.lifecycle_future=self.lifecycle.call_async(GetState.Request())
             if not self.navigation_active or not self.navigation.server_is_ready(): return False
-            try:
-                # 'odom' is the existing selected-world visualization frame.
-                # This transform contains the known spawn prior and estimator
-                # correction; no independent body measurement enters Nav2.
-                transform = self.tf.lookup_transform('map','odom',Time()).transform
-            except TransformException: return False
-            q,t=transform.rotation,transform.translation
-            heading=math.atan2(2*(q.w*q.z+q.x*q.y),1-2*(q.y*q.y+q.z*q.z))
+            registration=self.runtime.get('goal_world_to_map')
+            if not isinstance(registration,list) or len(registration)!=3 or not all(map(math.isfinite,registration)):
+                self.fail('Native gait session lacks its configured world-to-map registration');return False
+            x,y,heading=registration
             c,s=math.cos(heading),math.sin(heading)
-            converted=[t.x+c*target[0]-s*target[1],t.y+s*target[0]+c*target[1],target[2]+heading]
+            converted=[x+c*target[0]-s*target[1],y+s*target[0]+c*target[1],target[2]+heading]
             goal=NavigateToPose.Goal();goal.pose.header.frame_id='map'
             goal.pose.header.stamp=self.get_clock().now().to_msg()
             goal.pose.pose.position.x,goal.pose.pose.position.y=converted[:2]

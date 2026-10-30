@@ -1,5 +1,12 @@
 # Robot Lab GUI workspace
 
+October 30 additions: Launch's same control column now includes **Gait** for
+the passive-wheel snake, **Marine** for the surface vessel, and **Tracks** for
+the tracked family's articulated-flipper variant. Selecting a robot chooses
+its compatible defaults and fills the command. Tracks Connect is neutral;
+Use measured/Apply/Raise ends/Hold operate bounded native joint servos.
+[Current native workflows and measured limits](../status/native-forms-2026-10-30.md).
+
 Documentation reviewed October 9, 2026; current source stages are recorded in
 [extension evidence](../status/evidence/extensions-finish-2026-10-08/README.md).
 Read [current status](../status/CURRENT_STATUS.md) for available workflows and

@@ -26,8 +26,10 @@ class SurfaceController(MarineController):
         self.cmd_at=time.monotonic()
 
     def _command(self, msg):
+        data=None
         try:
             data=json.loads(msg.data)
+            if not isinstance(data,dict):return
             if data.get('session_id')==self.session_id and data.get('op') in ('depth_up','depth_down','set_depth','surface'):
                 self.reason='Surface draft is physical buoyancy; depth commands are unavailable'
                 return
@@ -52,9 +54,15 @@ class SurfaceController(MarineController):
                 self.stop('Surface attitude/draft envelope exceeded')
             else:
                 vx,_,_,wz=self.command if now-self.cmd_at<.35 else (0.,0.,0.,0.)
-                self.target_heading=angle(self.target_heading+wz*dt)
                 surge=float((rotation((0.,0.,heading)).T@self.velocity)[0])
-                desired_yaw=max(-.3,min(.3,wz+.8*angle(self.target_heading-heading)))
+                if abs(wz)>1e-4:
+                    # Turning commands are rates. Do not integrate an
+                    # unreachable heading while drag slows the free hull.
+                    self.target_heading=heading;self.turning=True;desired_yaw=wz
+                else:
+                    if getattr(self,'turning',False):self.target_heading=heading
+                    self.turning=False
+                    desired_yaw=max(-.3,min(.3,.8*angle(self.target_heading-heading)))
                 force=110.*(vx-surge)+18.*vx+22.*vx*abs(vx)
                 torque=12.*(desired_yaw-self.rates[2])
                 self.forces,scale=self.model.allocate([force,0.,0.,0.,0.,torque])

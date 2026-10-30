@@ -776,7 +776,7 @@ def _build_simulation_actions(context):
             if _launch_value(context,'simulator')!='gazebo':raise RuntimeError('Native contact-surface tracks require Gazebo Fortress')
             selected,plugins,nodes,notes=_resolve_algorithm_selection(context,mode_config,_load_algorithm_dispatch(bringup_share),robot_config)
             if nodes:raise RuntimeError('Tracked workflow only implements its declared native stacks and Nav2 plugins')
-            tracked_args=dict(task=mode_name,map_name='empty' if map_free else map_name,
+            tracked_args=dict(robot_model=robot_model,task=mode_name,map_name='empty' if map_free else map_name,
                 gui=_config_value(context,'gui','true'),rviz='true' if _auto_bool(context,'start_rviz',True) else 'false')
             for category,key in (('global_planning','global_planner_plugin'),('local_planning','local_planner_plugin')):
                 configured=_launch_value(context,key)

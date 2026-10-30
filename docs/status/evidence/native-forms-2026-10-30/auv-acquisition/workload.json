@@ -1,0 +1,24 @@
+{
+  "schema": "robot_lab.extension_workload.v1",
+  "workflow": "marine",
+  "task": "mapping",
+  "truth_coordinates": "selected_world",
+  "distance_m": 2.3,
+  "timeout_s": 210.0,
+  "selection": {},
+  "launch_command": [
+    "ros2",
+    "launch",
+    "robot_lab_bringup",
+    "auv_simulator.launch.py",
+    "map_name:=marine_tank",
+    "gui:=false",
+    "rviz:=false",
+    "slam:=true",
+    "spawn_x:=-3",
+    "spawn_y:=0",
+    "spawn_z:=-2",
+    "spawn_yaw:=0"
+  ],
+  "expected_producer_sha256": "e1bdbde028d0856b1c067c5b4f2a887ba7b6e0976850c696f3ebcecb28b08f37"
+}

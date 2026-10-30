@@ -1,0 +1,57 @@
+..................F...F................................................. [ 76%]
+......................                                                   [100%]
+=================================== FAILURES ===================================
+____________________ test_observe_clock_rewind_resets_input ____________________
+
+    def test_observe_clock_rewind_resets_input():
+        node = _make_controller()
+        node.clock = 10.0
+        node.command = [0.2, 0.3]
+        node.input_at = 5.0
+        from rosgraph_msgs.msg import Clock as ClockMessage
+        from rclpy.time import Time
+        msg = ClockMessage()
+        msg.clock = Time(seconds=5.0).to_msg()
+>       node.observe_clock(msg)
+
+src/robot_lab_bringup/test/test_tracked_control.py:111:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <robot_lab_utils.tracked_control.TrackedControl object at 0xffff43d5c820>
+msg = rosgraph_msgs.msg.Clock(clock=builtin_interfaces.msg.Time(sec=5, nanosec=0))
+
+    def observe_clock(self,msg):
+        value=msg.clock.sec+msg.clock.nanosec*1e-9
+        if self.clock is not None and value<self.clock:self.command=[0.,0.];self.input_at=-math.inf
+>       if self.clock is not None and value<self.clock and self.articulated:
+E       AttributeError: 'TrackedControl' object has no attribute 'articulated'
+
+src/robot_lab_utils/robot_lab_utils/tracked_control.py:93: AttributeError
+________________________ test_tick_zeros_when_not_ready ________________________
+
+    def test_tick_zeros_when_not_ready():
+        node = _make_controller()
+        node.last = time.monotonic() - 0.02
+>       node.tick()
+
+src/robot_lab_bringup/test/test_tracked_control.py:154:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <robot_lab_utils.tracked_control.TrackedControl object at 0xffff43bd7e50>
+
+    def tick(self):
+        now=time.monotonic();dt=min(.05,now-self.last);self.last=now
+        ready=now-self.odom_at<.6 and now-self.clock_at<.6 and now-self.imu_at<.6 and self.tilt is not None and self.tilt<.6
+        fresh=ready and now-self.input_at<.35
+        target=self.command if fresh else [0.,0.]
+        for i in range(2):self.actual[i]+=max(-.4*dt,min(.4*dt,target[i]-self.actual[i]))
+        if not ready:self.actual=[0.,0.]
+        msg=Twist();msg.linear.x,msg.angular.z=self.actual;self.publisher.publish(msg)
+>       if self.articulated:
+E       AttributeError: 'TrackedControl' object has no attribute 'articulated'
+
+src/robot_lab_utils/robot_lab_utils/tracked_control.py:111: AttributeError
+=========================== short test summary info ============================
+FAILED src/robot_lab_bringup/test/test_tracked_control.py::test_observe_clock_rewind_resets_input
+FAILED src/robot_lab_bringup/test/test_tracked_control.py::test_tick_zeros_when_not_ready
+2 failed, 92 passed in 7.27s

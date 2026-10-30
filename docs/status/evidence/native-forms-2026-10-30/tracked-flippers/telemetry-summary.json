@@ -1,0 +1,24 @@
+{
+  "topic_counts": {
+    "/clock": 4530,
+    "/joint_states": 4527,
+    "/scan": 91,
+    "/odom/ground_truth": 266
+  },
+  "last_clock_monotonic": 81645.216559095,
+  "last_topic_monotonic": {
+    "/clock": 81645.216568247,
+    "/joint_states": 81645.215383213,
+    "/scan": 81645.176687421,
+    "/odom/ground_truth": 81645.200148617
+  },
+  "real_time_factor": 0.9477708028300335,
+  "truth_distance_3d_m": 0.32446350511351574,
+  "topic_trace_distance_3d_m": {
+    "/odom/ground_truth": 0.32446350511351574
+  },
+  "contact_events": null,
+  "footprint_clearance_m": null,
+  "mission_result": null,
+  "scope": "Actual topic capture only; scan range is not footprint clearance; no inferred mission success"
+}

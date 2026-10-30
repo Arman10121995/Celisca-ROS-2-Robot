@@ -59,6 +59,17 @@ def format_platform_status(data):
     lines = [f"Platform Status — updated {data.get('updated', 'unknown')}",
              f"Overall: {data.get('overall_state', 'unknown')}",
              data.get('assessment', '')]
+    checkpoint = data.get(data.get('current_delivery', ''), {})
+    if checkpoint:
+        inventory = checkpoint.get('inventory', {})
+        lines.extend(['', 'Current native delivery',
+                      checkpoint.get('implementation_state', ''),
+                      f"Available: {inventory.get('robot_profiles', '?')} robot profiles / "
+                      f"{inventory.get('selectable_robot_families', '?')} families; "
+                      f"{inventory.get('worlds', '?')} worlds / {inventory.get('world_families', '?')} families",
+                      'Named measured cases: '+', '.join(checkpoint.get('measured_cases', [])),
+                      'Remaining: '+', '.join(checkpoint.get('remaining', [])),
+                      'Receipt: '+checkpoint.get('receipt', '')])
     delivery = data.get('implementation_first', {})
     if delivery:
         lines.extend(['', 'Implementation first', delivery.get('policy', ''),
@@ -104,9 +115,11 @@ def format_platform_status(data):
                 continue
             lines.append(f"{'  ' * depth}{task_id}: {task.get('state', '?')} — "
                          f"{task.get('title', '')}")
-            if task.get('implementation_summary'):
-                lines.append(f"{'  ' * (depth + 1)}Implementation: {task['implementation_summary']}")
-                lines.append(f"{'  ' * (depth + 1)}Validation: {task.get('implementation_validation', 'pending')}")
+            implementation = task.get('implementation_summary', task.get('implementation_state'))
+            if implementation:
+                lines.append(f"{'  ' * (depth + 1)}Implementation: {implementation}")
+                validation = task.get('implementation_validation', task.get('validation_state', 'pending'))
+                lines.append(f"{'  ' * (depth + 1)}Validation: {validation}")
             append_tasks(task.get('tasks', {}), depth + 1)
 
     append_tasks(data.get('tasks', {}))
@@ -1134,6 +1147,9 @@ class HealthTab(LabTab):
         ttk.Button(frame, text="Done / Remaining", command=lambda: self._show_document(
             WORKSPACE_ROOT / 'docs/status/CHECKLIST.md')).grid(
                 row=5, column=2, sticky='ew', padx=(4, 0), pady=2)
+        ttk.Button(frame, text='Latest native robot delivery', command=lambda: self._show_document(
+            WORKSPACE_ROOT / 'docs/status/native-forms-2026-10-30.md')).grid(
+                row=10, column=0, columnspan=3, sticky='ew', pady=2)
 
         self.summary = scrolledtext.ScrolledText(self, wrap="word", height=16)
         self.summary.grid(row=1, column=0, sticky="nsew", pady=(10, 0))
@@ -1225,6 +1241,8 @@ def create_tabs(notebook, app):
     app.marine_controls = MarineControls(app.control_notebook, app)
     from .gait_controls import GaitControls
     app.gait_controls = GaitControls(app.control_notebook, app)
+    from .tracked_controls import TrackedControls
+    app.tracked_controls = TrackedControls(app.control_notebook, app)
     from .molar_controls import MolarControls
     app.molar_controls = MolarControls(app.control_notebook, app)
     tabs = [
@@ -1234,6 +1252,7 @@ def create_tabs(notebook, app):
         app.aerial_swarm_tab,
         app.marine_controls,
         app.gait_controls,
+        app.tracked_controls,
         app.molar_controls,
         RegistryTab(notebook, app),
         WorldsTab(notebook, app),

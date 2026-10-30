@@ -1,0 +1,161 @@
+{
+  "id": "7c8c9feaf47949739848be52e92ac48d",
+  "state": "task_process_completed",
+  "ros_domain_id": 20,
+  "partition": "robot_lab_7c8c9feaf47949739848be52e92ac48d",
+  "command": [
+    "ros2",
+    "launch",
+    "robot_lab_bringup",
+    "gait_simulator.launch.py",
+    "robot_model:=lab_snake",
+    "task:=nav",
+    "map_name:=nav_empty",
+    "gui:=false",
+    "rviz:=false"
+  ],
+  "task_command": [],
+  "workload": {
+    "schema": "robot_lab.extension_workload.v1",
+    "workflow": "gait",
+    "task": "navigation",
+    "truth_coordinates": "selected_world",
+    "timeout_s": 180.0,
+    "goals": [
+      [
+        0.0,
+        -0.5,
+        0.0
+      ]
+    ]
+  },
+  "selection": {},
+  "seed_requested": 42,
+  "readiness_topic": "/clock",
+  "source": {
+    "module_sha256": {
+      "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_benchmark/lib/python3.10/site-packages/robot_lab_benchmark/concurrent_runner.py": "e7494bf68bc6926a289a60df2402c96ecc21daa310162c13d50735b31056d8c8",
+      "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_benchmark/lib/python3.10/site-packages/robot_lab_benchmark/telemetry_recorder.py": "1afde2bca730610a0f16c99e1895c65c6bf7cb81399c65d91b188db0824351b4",
+      "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_benchmark/lib/python3.10/site-packages/robot_lab_benchmark/nav2_workload.py": "f9ca5415d6c475aab1e7c57fdcf56a7a55ddadef3ee75ab33f958d550e23de80",
+      "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_benchmark/lib/python3.10/site-packages/robot_lab_benchmark/fleet_workload.py": "5d0f97d6f9e04a08242dc3d1f94154c34d5002a8d629a65a13bda30d35af1d92",
+      "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_benchmark/lib/python3.10/site-packages/robot_lab_benchmark/fleet_reset.py": "af15788fbcfbbd800707c794278fa8ca09718377e8daa3a294970ee6ed40144a",
+      "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_benchmark/lib/python3.10/site-packages/robot_lab_benchmark/extension_workload.py": "6b3f7bbd78521448882b2edff0850f2b2827c736d9080ac57d97647c83fe1647",
+      "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_benchmark/lib/python3.10/site-packages/robot_lab_benchmark/extension_contract.py": "2c09bc0200301481ebb8982fdae7512a34330d0370299a2a6bba1eef4284cdeb",
+      "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_benchmark/lib/python3.10/site-packages/robot_lab_benchmark/extension_result.py": "67a821fe3906324c78ee63044dc219c87ec3f85ce41633ff8b00e78ada548433",
+      "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_benchmark/lib/python3.10/site-packages/robot_lab_benchmark/workload_contract.py": "6117ea42781da0663c87e64d0a18f91e1116369ea5cda02ba566eb1212dd1493"
+    },
+    "scope": "Coordinator, recorder, scoped reset and actual Nav2/fleet/native-extension workloads; external task sources remain separate",
+    "repository": "/workspace/molar/ros_ws/bumperbot_ws",
+    "base_revision": "db14385a1feeabdb13ee35da51cd39fe67f3bef3",
+    "working_tree_status": " M docs/status/platform-status.yaml\n M docs/tutorials/README.md\n M scripts/generate_serpentine_assets.py\n M src/robot_lab/robot_lab_benchmark/robot_lab_benchmark/extension_workload.py\n M src/robot_lab/robot_lab_benchmark/robot_lab_benchmark/telemetry_recorder.py\n M src/robot_lab/robot_lab_registry/config/robots.yaml\n M src/robot_lab_bringup/config/asset_groups.yaml\n M src/robot_lab_bringup/config/robot_taxonomy.yaml\n M src/robot_lab_bringup/launch/gait_simulator.launch.py\n M src/robot_lab_bringup/launch/simulated_robot.launch.py\n M src/robot_lab_bringup/launch/tracked_simulator.launch.py\n M src/robot_lab_gui/robot_lab_gui/lab_tabs.py\n M src/robot_lab_gui/robot_lab_gui/launcher.py\n M src/robot_lab_robots/config/robots.yaml\n M src/robot_lab_robots/lab_snake/config/gait.yaml\n M src/robot_lab_utils/robot_lab_utils/gait_controller.py\n M src/robot_lab_utils/robot_lab_utils/gait_pipeline.py\n M src/robot_lab_utils/robot_lab_utils/gait_sensor_relay.py\n M src/robot_lab_utils/robot_lab_utils/mode_capability.py\n M src/robot_lab_utils/robot_lab_utils/robot_taxonomy.py\n M src/robot_lab_utils/robot_lab_utils/serpentine_model.py\n M src/robot_lab_utils/robot_lab_utils/serpentine_odometry.py\n M src/robot_lab_utils/robot_lab_utils/surface_controller.py\n M src/robot_lab_utils/robot_lab_utils/tracked_control.py\n?? docs/tutorials/surface-vessel.md\n?? docs/tutorials/wheeled-snake.md\n?? scripts/generate_articulated_tracks.py\n?? src/robot_lab_bringup/test/test_serpentine_contract.py\n?? src/robot_lab_bringup/test/test_tracked_flippers.py\n?? src/robot_lab_gui/robot_lab_gui/tracked_controls.py\n?? src/robot_lab_maps/maps/surface_harbor/SOURCE.json\n?? src/robot_lab_maps/mjcf/surface_harbor.xml\n?? src/robot_lab_robots/lab_tracked_articulated/\n",
+    "tracked_diff_sha256": "050ce3220afdd893b94c76545d37c1bd202d185d5d17d40f032596321b3db5dd"
+  },
+  "requested_budgets": {
+    "duration_s": 260.0,
+    "startup_timeout_s": 300.0,
+    "max_rss_mb": 8000.0,
+    "max_cpu_percent": 1800.0,
+    "max_artifact_mb": 384.0
+  },
+  "seed_scope": "Recorded and exposed to workload; simulator seed application needs its explicit contract",
+  "mission_result": {
+    "schema": "robot_lab.measured_extension_result.v1",
+    "workflow": "gait",
+    "task": "navigation",
+    "session_id": "b2101d65039f406fb0c14b87c3a94720",
+    "run_id": "7c8c9feaf47949739848be52e92ac48d",
+    "ros_domain_id": 20,
+    "success": true,
+    "reason": "Every native goal physically settled",
+    "measurements": [
+      {
+        "requested": [
+          0.0,
+          -0.5,
+          0.0
+        ],
+        "physical_pose": [
+          -0.11235227741641639,
+          -0.49410526848212405,
+          -0.018406804379012574
+        ],
+        "linear_m_s": 0.012899707667232608,
+        "angular_rad_s": -0.0006272320770565254,
+        "settled_sim_s": 1.0,
+        "member_id": "body",
+        "index": 0,
+        "native_terminal": true,
+        "nav2_status": 4
+      }
+    ],
+    "goal_contract": {
+      "position_m": 0.15,
+      "heading_rad": 0.15,
+      "linear_m_s": 0.03,
+      "angular_rad_s": 0.05,
+      "settle_sim_s": 1.0
+    },
+    "truth_samples": {
+      "body": 1614
+    },
+    "control_released": true,
+    "wall_duration_s": 40.32027644000482,
+    "contacts": null,
+    "minimum_swept_clearance_m": null,
+    "producer_sha256": "6b3f7bbd78521448882b2edff0850f2b2827c736d9080ac57d97647c83fe1647",
+    "workload_sha256": "a780c55283ece85baac015008e9ffa0517b567ee65803a9c1801c5f4ed0e9555",
+    "trace_sha256": "c77a7a63e00dd6d2941e4fab520b5c1ceb211f75265436527a516606c3a27945",
+    "scope": "Actual native task and independent physical measurements; parent runner owns process cleanup"
+  },
+  "output": "/workspace/molar/robot_lab_runtime/extension-completion-20261029-vsebubus/snake_navigation/7c8c9feaf47949739848be52e92ac48d",
+  "qualification": "implementation; validation pending",
+  "workload_producer_sha256": "6b3f7bbd78521448882b2edff0850f2b2827c736d9080ac57d97647c83fe1647",
+  "executed_task_command": [
+    "/usr/bin/python3",
+    "-m",
+    "robot_lab_benchmark.extension_workload",
+    "--spec",
+    "/workspace/molar/robot_lab_runtime/extension-completion-20261029-vsebubus/snake_navigation/7c8c9feaf47949739848be52e92ac48d/workload.json"
+  ],
+  "task_returncode": 0,
+  "process_returncodes": [
+    0,
+    0,
+    0
+  ],
+  "wall_duration_s": 46.939645164995454,
+  "telemetry": {
+    "topic_counts": {
+      "/joint_states": 1701,
+      "/clock": 1701,
+      "/odom/ground_truth": 1701,
+      "/scan": 341,
+      "/gait/odometry": 1694,
+      "/gait/odometry_state": 174,
+      "/gait/amcl_pose": 63
+    },
+    "last_clock_monotonic": 82959.847450668,
+    "last_topic_monotonic": {
+      "/joint_states": 82959.845037152,
+      "/clock": 82959.847461324,
+      "/odom/ground_truth": 82959.846740741,
+      "/scan": 82959.850748539,
+      "/gait/odometry": 82959.847908157,
+      "/gait/odometry_state": 82959.746240718,
+      "/gait/amcl_pose": 82959.855354556
+    },
+    "real_time_factor": 0.8010210523188053,
+    "truth_distance_3d_m": 1.3561745171573347,
+    "topic_trace_distance_3d_m": {
+      "/odom/ground_truth": 1.3561745171573347,
+      "/gait/odometry": 1.4690194522378455
+    },
+    "contact_events": null,
+    "footprint_clearance_m": null,
+    "mission_result": null,
+    "scope": "Actual topic capture only; scan range is not footprint clearance; no inferred mission success"
+  },
+  "observed_surviving_pids": [],
+  "cleanup_complete": true,
+  "mission_result_error": null
+}

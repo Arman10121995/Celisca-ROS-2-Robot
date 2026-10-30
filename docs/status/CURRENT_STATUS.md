@@ -1,9 +1,9 @@
 # Current Robot Lab status
 
-[Latest native continuation](native-workflows-2026-10-27.md): real native workload/queue delivery, measured aerial range-reference formation and operator-loss landing, fleet batch reset and complete tracked controls/Nav2. Catalog is 148 profiles / 79 selectable families. Older dated entries below retain their historical scope.
+[Latest native-form delivery](native-forms-2026-10-30.md): measured snake 2D/3D acquisition and saved-map navigation, surface-vessel mapping/two-goal route, AUV acquisition and real articulated flipper/Drive controls. Catalog is 151 profiles / 81 selectable families, with 52 worlds / 40 families. Older dated entries below retain their historical scope.
 
-**Current checkpoint: October 27, 2026; master, initial baseline `f75dc60`,
-first implementation checkpoint `8e411cb`. Platform and full extension partial.**
+**Current checkpoint: October 30, 2026; master, continuation from `db14385`.
+Platform and full extension partial.**
 
 [Current workflow delivery and limits](workflows-2026-10-27.md),
 [actual receipts](evidence/workflows-2026-10-27/README.md),
@@ -11,12 +11,13 @@ first implementation checkpoint `8e411cb`. Platform and full extension partial.*
 
 | Area | Delivered / measured | Remaining |
 |---|---|---|
-| Catalog | Seven registrations restored; 148 profiles / 79 selectable families, 51 worlds / 39 families | Changed-source qualification and additional reviewed imports |
+| Catalog | Seven registrations restored; 151 profiles / 81 selectable families, 52 worlds / 40 families | Changed-source qualification and additional reviewed imports |
 | Fleet | Native shared sessions/queues/traffic/RMF/coverage; two-body conflict and independently settled real batches | Broader RMF/infrastructure/contact/loss/maps/backends |
 | Aerial swarm | Native multi-FCU controls/workloads; actual nav_empty two-drone range-reference formation and operator-loss landing | Larger groups, other maps/behaviors and member-loss/contact cases |
-| Marine | Actual sensor-based map acquisition/export/protected reload/localization and completed ROV route; AUV forward-transect/braking with actual body trace | Further AUV/localization/obstacle/current/loss missions |
+| Marine | Actual sensor-based map acquisition/export/protected reload/localization and completed ROV route; AUV automatic acquisition and surface-vessel mapping/two-goal arrival with actual body traces | Further AUV/localization/obstacle/current/loss missions |
 | Multi-leg | Correct source FK/contact odometry, map export/reload/Nav2; hexapod navigation result and octopod real 3D database | Per-model terrain/recovery/higher-mode/backend qualification |
-| Experiments | Actual Nav2/fleet/marine/gait/aerial producers, artifacts/endpoints, fleet batch reset and cleanup | More cases, AUV acquisition, applied seeds and contacts/clearance |
+| Additional forms | Complete snake, surface vessel and fixed/actuated tracked sources; actual snake saved-map Nav2 and bounded four-flipper/flat-Drive case; grouped native GUI | Amphibious source/controller, terrain/slip/recovery, articulated-track navigation, other maps/backends |
+| Experiments | Actual Nav2/fleet/marine/gait/aerial producers, artifacts/endpoints, fleet batch reset and cleanup | More cases, applied seeds and contacts/clearance |
 | Original roadmap | Existing wheeled/Panda/flight/MOLAR/training certificates retained | Detailed remaining car, perception, manipulation, policy transfer/comparison/release work |
 
 Earlier October 26 completion claims from tests/metadata/world loading remain

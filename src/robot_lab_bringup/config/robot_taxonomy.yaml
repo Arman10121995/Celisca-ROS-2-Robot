@@ -1,6 +1,10 @@
 # Structural catalog tags, never a runtime/controller qualification.
 schema_version: 1
 classes:
+  - category: Articulated robots
+    subtype: Wheeled snake
+    tags: [Ten segments, Nine spine motors, Passive rolling wheels, Serpenoid gait, Experimental control]
+    members: [lab_snake]
   - category: Surface vessels
     subtype: Twin-hull USV
     tags: [Catamaran, Two propellers, Native buoyancy, Surface navigation, Experimental control]

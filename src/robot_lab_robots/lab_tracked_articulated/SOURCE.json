@@ -1,0 +1,11 @@
+{
+  "parent": "robot_lab_robots/lab_tracked",
+  "parent_sdf_sha256": "22746b57f3a865751e6679b143594e6edf15ea75d3bfdcb67730ec4dee266b90",
+  "license": "Apache-2.0",
+  "adaptations": [
+    "Four explicitly unlocked \u00b10.8 rad flipper joints",
+    "Native force PID capped at 4 Nm, never ideal joint velocity",
+    "ROS target slew limited to 0.2 rad/s; source geometry, masses and native belts retained"
+  ],
+  "scope": "Derived actuator variant; original zero-limit source remains separate; terrain acceptance pending"
+}

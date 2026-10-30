@@ -1,6 +1,7 @@
-cycle_s: 1.8
+cycle_s: 2.4
 default_gait: serpenoid
 forward_yaw: 0.0
+joint_velocity_limit: 0.8
 kd: 0.15
 kind: serpentine
 kp: 4.0

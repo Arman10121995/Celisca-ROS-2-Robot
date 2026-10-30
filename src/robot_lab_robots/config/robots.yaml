@@ -1,4 +1,20 @@
 robots:
+  lab_snake:
+    package: robot_lab_robots
+    xacro: lab_snake/urdf/lab_snake.urdf
+    name: lab_snake
+    type: serpentine
+    gait_model: lab_snake/config/gait.yaml
+    supported_modes: [display, gait]
+    default_mode: gait
+    default_map: nav_empty
+    supported_simulators: [mujoco]
+    features: [source_gait, passive_wheels, articulated_spine]
+    drive: {type: gait, max_speed: 0.08, max_accel: 0.06, max_angular_speed: 0.1, max_angular_accel: 0.25}
+    implementation_state: experimental
+    validation_state: scoped_measurements
+    validation_scope: "MuJoCo/nav_empty: 2D/3D acquisition and installed/acquired-map Nav2 endpoints; docs/status/native-forms-2026-10-30.md. Other routes/terrain/backends unqualified."
+    notes: "Complete ten-segment snake, nine torque-limited yaw motors and twenty unpowered wheels. Native serpenoid locomotion, rolling encoder/IMU odometry and curvature-constrained Nav2; named nav_empty mapping/goal cases measured. No strafe/pivot, foot IK or body-pose actuation. Terrain and other backends require separate acceptance."
   lab_usv:
     package: robot_lab_robots
     xacro: lab_usv/urdf/lab_usv.urdf.xacro
@@ -20,9 +36,10 @@ robots:
     features: [marine_dynamics, surface_vessel, native_buoyancy, differential_thrust, rgbd_camera, imu]
     drive: {type: marine, max_speed: 0.4, max_accel: 0.4, max_angular_speed: 0.3, max_angular_accel: 0.4}
     implementation_state: experimental
-    validation_state: pending
+    validation_state: scoped_measurements
+    validation_scope: "Fortress/surface_harbor: RGB-D acquisition and two-goal translation/yaw-rate settling; docs/status/native-forms-2026-10-30.md. Other worlds/routes unqualified."
     notes: "Complete first-party catamaran with two physical propellers and free graded buoyancy/hydrodynamics. Marine Drive, sensor odometry, planar missions and optional RGB-D mapping/reload; no strafe/depth control. Native force watchdog covers stale ROS output. Wave/hardware and broad mission qualification pending."
-  lab_tracked:
+  lab_tracked: &lab_tracked_profile
     package: robot_lab_robots
     xacro: lab_tracked/robot.urdf
     name: lab_tracked
@@ -89,8 +106,17 @@ robots:
     controllers: []
     features: [native_tracks, lidar_2d, rgbd_camera, imu, velocity_base]
     implementation_state: experimental
-    validation_state: pending
-    notes: "Complete Gazebo tracked/flipper source, native contact-surface belts and bounded controls. Native track dead reckoning, sensors and mapping/navigation composition implemented; physical missions pending. Other backends require source-appropriate tracks."
+    validation_state: scoped_measurements
+    validation_scope: "Fortress/nav_empty original fixed-flipper source: forward, command-owner loss stop and physical Nav2 endpoint; docs/status/native-workflows-2026-10-27.md. Terrain and broader modes/backends unqualified."
+    notes: "Complete Gazebo tracked/flipper source, native contact-surface belts and bounded controls. Native track dead reckoning, sensors and mapping/navigation composition; named nav_empty forward/loss/Nav2 cases measured. Other backends require source-appropriate tracks."
+  lab_tracked_articulated:
+    <<: *lab_tracked_profile
+    name: lab_tracked_articulated
+    xacro: lab_tracked_articulated/robot.urdf
+    tracked_sdf: lab_tracked_articulated/model.sdf
+    articulated_flippers: true
+    validation_scope: "Fortress/nav_empty articulated derivative: actual four-joint settling and flat forward travel; docs/status/native-forms-2026-10-30.md. Does not inherit the original variant's Nav2 receipt."
+    notes: "Explicit derivative of the retained tracked source: four unlocked ±0.8 rad flippers, native force PID capped at 4 Nm and 0.2 rad/s target slew. Same complete hull/belts/sensors; inspect actual joint feedback in Tracks. Separate terrain and higher-mode acceptance required."
   probot_l:
     package: robot_lab_robots
     xacro: probot_l/urdf/probot_l.urdf.xacro

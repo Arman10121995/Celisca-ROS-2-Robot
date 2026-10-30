@@ -30,6 +30,9 @@ def setup(context):
     profiles=merge_installed_profiles(yaml.safe_load((Path(share('robot_lab_bringup'))/'config/sim_maps.yaml').read_text()),'maps')['maps']
     name=value('map_name');name='empty' if name.lower() in ('','none','no map') else name
     profile=profiles[name]
+    robot_id=value('robot_model')
+    robot_profile=yaml.safe_load((Path(share('robot_lab_robots'))/'config/robots.yaml').read_text())['robots'][robot_id]
+    if not robot_profile.get('tracked_model'):raise ValueError('A declared native tracked model is required')
     engine_receipt=Path(os.environ.get('ROBOT_LAB_RUNTIME_ROOT','/workspace/molar/robot_lab_runtime'))/'native_tracks/receipt.json'
     if not engine_receipt.is_file():raise ValueError('Provision the private native track engine: python3 scripts/provision_tracked_physics.py')
     engine=json.loads(engine_receipt.read_text())
@@ -55,7 +58,7 @@ def setup(context):
         if key not in existing:
             p=plugin(element,key,file)
             if key=='Sensors':ET.SubElement(p,'render_engine').text='ogre2'
-    model=ET.parse(Path(share('robot_lab_robots'))/'lab_tracked/model.sdf').getroot().find('model')
+    model=ET.parse(Path(share('robot_lab_robots'))/robot_profile.get('tracked_sdf','lab_tracked/model.sdf')).getroot().find('model')
     pose={axis:finite(profile.get('spawn',{}).get(axis,default),'tracked spawn '+axis) for axis,default in (('x',0.),('y',0.),('z',.1),('yaw',0.))}
     for axis in pose:
         text=value('spawn_'+axis).strip()
@@ -85,7 +88,7 @@ def setup(context):
     for key,text in dict(odom_frame='map',robot_base_frame='base_link',odom_topic='/tracked/truth',dimensions='3',odom_publish_frequency='30').items():ET.SubElement(truth,key).text=text
     joints=plugin(model,'JointStatePublisher','joint-state-publisher');ET.SubElement(joints,'topic').text='/tracked/joint_states'
     element.append(model);world_file=folder/'world.sdf';ET.indent(world);world_file.write_bytes(ET.tostring(world))
-    urdf=ET.parse(Path(share('robot_lab_robots'))/'lab_tracked/robot.urdf').getroot()
+    urdf=ET.parse(Path(share('robot_lab_robots'))/robot_profile['xacro']).getroot()
     for child,parent,xyz,rpy in (('laser_link','base_link','0 0 .32','0 0 0'),('imu_link','base_link','0 0 0','0 0 0'),
         ('camera_link','base_link','.05 0 .34','0 0 0'),('camera_optical_frame','camera_link','0 0 0','-1.57079633 0 -1.57079633')):
         ET.SubElement(urdf,'link',name=child);joint=ET.SubElement(urdf,'joint',name=child+'_fixed',type='fixed')
@@ -98,6 +101,10 @@ def setup(context):
         bridges.append(row)
     bridge('/clock','/clock','rosgraph_msgs/msg/Clock','Clock')
     bridge('/tracked/cmd_vel','/tracked/cmd_vel','geometry_msgs/msg/Twist','Twist',direction='ROS_TO_GZ')
+    if robot_profile.get('articulated_flippers'):
+        for joint in ('front_left_flipper_j','rear_left_flipper_j','front_right_flipper_j','rear_right_flipper_j'):
+            topic='/tracked/flippers/'+joint+'/target'
+            bridge(topic,topic,'std_msgs/msg/Float64','Double',direction='ROS_TO_GZ')
     bridge('/robot_lab_controller/odom','/tracked/odometry','nav_msgs/msg/Odometry','Odometry')
     bridge('/odom/ground_truth','/tracked/truth','nav_msgs/msg/Odometry','Odometry')
     bridge('/joint_states','/tracked/joint_states','sensor_msgs/msg/JointState','Model')
@@ -113,7 +120,8 @@ def setup(context):
     actions.append(SetEnvironmentVariable('LD_LIBRARY_PATH',os.pathsep.join(engine['library_paths']+[os.environ.get('LD_LIBRARY_PATH','')])))
     resource=os.pathsep.join([os.environ.get('IGN_GAZEBO_RESOURCE_PATH',''),str(source.parent),str(Path(share('robot_lab_maps'))),str(Path(share('robot_lab_robots')))])
     actions.extend(SetEnvironmentVariable(key,resource) for key in ('IGN_GAZEBO_RESOURCE_PATH','GZ_SIM_RESOURCE_PATH'))
-    owner=Node(package='robot_lab_utils',executable='tracked_control.py',parameters=[dict(use_sim_time=True,navigation=task=='nav')])
+    owner=Node(package='robot_lab_utils',executable='tracked_control.py',parameters=[dict(use_sim_time=True,navigation=task=='nav',
+        robot_id=robot_id,articulated_flippers=bool(robot_profile.get('articulated_flippers')))])
     actions.append(RegisterEventHandler(OnProcessExit(target_action=owner,on_exit=[EmitEvent(event=Shutdown(reason='Native tracked command owner exited'))])))
     actions+=[include('ros_gz_sim','gz_sim.launch.py',dict(gz_args='-r -v 2 --physics-engine '+engine['engine']+' '+('' if value('gui')=='true' else '-s --headless-rendering ')+str(world_file),on_exit_shutdown='True')),
         Node(package='robot_state_publisher',executable='robot_state_publisher',parameters=[dict(use_sim_time=True,robot_description=ParameterValue(description,value_type=str))]),
@@ -133,14 +141,14 @@ def setup(context):
     if task=='nav':pipeline.append(include('robot_lab_navigation','navigation.launch.py',dict(common,global_planner_plugin=value('global_planner_plugin'),local_planner_plugin=value('local_planner_plugin'))))
     if pipeline:actions.append(TimerAction(period=7.,actions=pipeline))
     if value('rviz')=='true':actions.append(Node(package='rviz2',executable='rviz2',arguments=['-d',str(Path(share('robot_lab_description'))/'rviz/display.rviz'),'-f','map' if task!='display' else 'odom'],parameters=[dict(use_sim_time=True)]))
-    (folder/'session.json').write_text(json.dumps(dict(robot='lab_tracked',map=name,task=task,source_world=str(source),world=str(world_file),spawn=pose,
+    (folder/'session.json').write_text(json.dumps(dict(robot=robot_id,map=name,task=task,source_world=str(source),world=str(world_file),spawn=pose,
         odometry='Native track dead reckoning; independent truth remains /odom/ground_truth',physics_engine=engine,scope='Implemented experimental native tracks; runtime mission acceptance separate'),indent=2)+'\n')
     print('[robot_lab tracked] '+str(folder/'session.json'))
     return actions
 
 
 def generate_launch_description():
-    return LaunchDescription([DeclareLaunchArgument('map_name',default_value='nav_empty'),DeclareLaunchArgument('task',default_value='display'),
+    return LaunchDescription([DeclareLaunchArgument('robot_model',default_value='lab_tracked'),DeclareLaunchArgument('map_name',default_value='nav_empty'),DeclareLaunchArgument('task',default_value='display'),
         DeclareLaunchArgument('gui',default_value='true'),DeclareLaunchArgument('rviz',default_value='true'),
         DeclareLaunchArgument('global_planner_plugin',default_value='auto'),DeclareLaunchArgument('local_planner_plugin',default_value='auto'),
         *[DeclareLaunchArgument('spawn_'+axis,default_value='') for axis in ('x','y','z','yaw')],OpaqueFunction(function=setup)])

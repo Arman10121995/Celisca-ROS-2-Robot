@@ -1,0 +1,29 @@
+{
+  "topic_counts": {
+    "/joint_states": 309,
+    "/clock": 309,
+    "/odom/ground_truth": 309,
+    "/scan": 62,
+    "/gait/odometry": 306,
+    "/gait/odometry_state": 31
+  },
+  "last_clock_monotonic": 83406.387194641,
+  "last_topic_monotonic": {
+    "/joint_states": 83406.385370951,
+    "/clock": 83406.387201681,
+    "/odom/ground_truth": 83406.386682304,
+    "/scan": 83406.313422674,
+    "/gait/odometry": 83406.387816158,
+    "/gait/odometry_state": 83406.234664262
+  },
+  "real_time_factor": 0.77868462592896,
+  "truth_distance_3d_m": 0.34373461420831214,
+  "topic_trace_distance_3d_m": {
+    "/odom/ground_truth": 0.34373461420831214,
+    "/gait/odometry": 0.37815582140001763
+  },
+  "contact_events": null,
+  "footprint_clearance_m": null,
+  "mission_result": null,
+  "scope": "Actual topic capture only; scan range is not footprint clearance; no inferred mission success"
+}
