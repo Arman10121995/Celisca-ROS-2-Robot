@@ -47,6 +47,7 @@ def main():
     for node in (controller,relay,planner):executor.add_node(node)
     lease={'at':-float('inf'),'generation':None,'operator':''}
     checks=[]
+    lands=[]
     stable_positions=deque(maxlen=12)
     alignment={'committed':False}
     parameter_at=[-math.inf]
@@ -92,6 +93,15 @@ def main():
                 checks.append(dict(request_id=data['request_id'],generation=data['generation'],
                     started=time.monotonic(),stage='stabilizing',attempts=0))
                 return  # Wait for a stable landed estimate, then actual geometry.
+            if data['op']=='land':
+                response=callbacks[data['op']](Trigger.Request(),Trigger.Response())
+                if not response.success:
+                    reply.publish(String(data=json.dumps(dict(request_id=data['request_id'],generation=data['generation'],
+                        accepted=False,message=response.message))))
+                    return
+                lands.append(dict(request_id=data['request_id'],generation=data['generation'],
+                    started=time.monotonic(),accepted=True))
+                return  # Watchdog waits for landing confirmation, then replies.
             response=callbacks[data['op']](Trigger.Request(),Trigger.Response())
             reply.publish(String(data=json.dumps(dict(request_id=data['request_id'],generation=data['generation'],
                 accepted=response.success,message=response.message))))
@@ -155,6 +165,13 @@ def main():
                 request['stage']='stabilizing';stable_positions.clear();continue
             if invalid or finished or request['stage']=='failed' or now-request['started']>22.:
                 checks.remove(request)
+                # Landing confirmation: if a land request was issued and FCU confirms landed_state==1, record it
+                for land in list(lands):
+                    elapsed=time.monotonic()-land["started"]
+                    if elapsed>30.:lands.remove(land)  # timed out
+                    elif controller.land_complete(land["request_id"]):
+                        lands.remove(land)
+                    land["confirmed_at"]=time.monotonic()
                 accepted=not invalid and request['stage']=='checking' and state.get('state')=='clear' and planner.takeoff_plan is not None
                 message=('Actual selected-world takeoff corridor checked; fresh single-use result ready' if accepted
                     else request.get('error') or state.get('error') or ('Actual FCU height-reference parameter not confirmed' if not configured

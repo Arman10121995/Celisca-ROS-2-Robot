@@ -57,6 +57,7 @@ class PX4Controller(Node):
         self.command_generation = 0
         self.route_guard = None
         self.takeoff_guard = None
+        self.land_requested_at=None;self.landing_confirmed=False
         self.odom_pub = self.create_publisher(Odometry, '/px4/odometry', 10)
         self.status_pub = self.create_publisher(String, '/px4/status', 10)
         self.tf = TransformBroadcaster(self)
@@ -93,6 +94,14 @@ class PX4Controller(Node):
             and landed and landed.landed_state == 1 and attitude
             and abs(attitude.roll) <= .1 and abs(attitude.pitch) <= .1)
 
+    def land_complete(self):
+        """True once a requested landing has been confirmed: landed_state==1 and disarmed."""
+        if self.land_requested_at is None:
+            return False
+        f = self.flight
+        landed = f.ext_sys
+        return bool(landed and landed.landed_state == 1 and not f.armed())
+
     def takeoff(self, _request, response):
         if not self.takeoff_ready():
             response.success = False
@@ -108,6 +117,7 @@ class PX4Controller(Node):
         self.target = self.position()
         self.target_yaw = yaw_enu(self.flight.attitude.yaw) if self.flight.attitude else 0.0
         self.takeoff_z = takeoff_z
+        self.land_requested_at=None;self.landing_confirmed=False
         self.last_manual = -math.inf
         self.transition('priming')
         response.success, response.message = True, 'Takeoff requested; priming the Offboard stream.'
@@ -122,6 +132,7 @@ class PX4Controller(Node):
         response.success = self.enabled and self.ready() and self.flight.armed()
         response.message = 'Landing requested.' if response.success else 'No armed Flight vehicle with fresh telemetry.'
         if response.success:
+            self.land_requested_at=time.monotonic();self.landing_confirmed=False
             self.clear_path('landing')
             self.command_mode(4, 6)
             self.transition('landing')
@@ -262,7 +273,7 @@ class PX4Controller(Node):
             self.transition('idle')
         if self.phase == 'landing':
             if not f.armed() and f.ext_sys.landed_state == 1:
-                self.transition('idle')
+                self.landing_confirmed=True;self.transition('idle')
             # Descend at 0.5 m/s toward ground level.
             self.target[2] = max(self.ground_z + 0.1, self.target[2] - 0.5 * dt)
             self.publish_pose()
