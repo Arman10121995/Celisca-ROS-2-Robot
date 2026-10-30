@@ -34,6 +34,7 @@ class Infrastructure(Node):
         self.energy={m['id']:dict(joules=self.config['capacity_J'] if False else self.config['energy']['capacity_J']*self.config['energy']['initial_fraction'],last=None,power=None,at=-math.inf,valid=bool(self.config['energy'].get('effort_observation_verified')),floor='L0') for m in session['members']}
         self._effort_verified=bool(self.config['energy'].get('effort_observation_verified'))
         self._lift_prev=None;self._lift_prev_at=-math.inf
+        self.floor_maps=self.config.get('floor_maps',{});self.current_floor_map=''
         joints=[v['joint'] for v in self.config['doors'].values()]+[self.config['lift']['joint']]
         self.targets={name:self.create_publisher(Float64,'/facility/'+name+'/target',10) for name in joints}
         self.publisher=self.create_publisher(String,'/fleet/infrastructure/state',10);self.fleet_command=self.create_publisher(String,'/fleet/command',10)
@@ -198,6 +199,7 @@ class Infrastructure(Node):
                 item['observation']=dict(b) if good else None
         energy={name:dict(fraction=v['joules']/self.config['energy']['capacity_J'] if v['valid'] and now-v['at']<.6 else None,power_W=v['power'] if now-v['at']<.6 else None,source='Authored battery model + reported wheel effort/rate; not hardware battery telemetry') for name,v in self.energy.items()}
         current_floor=next((f for f,z in lift['floors'].items() if lift_position is not None and abs(z-lift_position)<.03),'')
+        if current_floor and abs(self.rates.get(lift['joint'],math.inf))<.01:self.current_floor_map=self.floor_maps.get(current_floor,'')
         if self.rmf:
             if not fresh:
                 from rmf_door_msgs.msg import DoorState
@@ -228,7 +230,7 @@ class Infrastructure(Node):
         moving=(lift_position is not None and (not current_floor or self.lift_request and abs(lift_position-lift['floors'][self.lift_request[0]])>.03))
         held=[name for name,b in self.bodies.items() if moving and 2.8<=b['xyz'][0]<=5.2 and -1.2<=b['xyz'][1]<=1.2]
         floors={name:self.energy[name]['floor'] for name in self.energy}
-        self.publisher.publish(String(data=json.dumps(dict(session_id=self.identity,ready=fresh,held_members=held,doors=door_rows,lift=dict(position_m=lift_position,current_floor=current_floor,destination=self.lift_request,floors=list(lift['floors'])),docks=self.config['docks'],docking=self.docking,energy=energy,robot_floors=floors,rmf_protocol=self.rmf,scope='Physical joint feedback and independently observed docking; lift transport tracks robots carried between L0/L1 floors; authored energy estimate'),allow_nan=False)))
+        self.publisher.publish(String(data=json.dumps(dict(session_id=self.identity,ready=fresh,held_members=held,doors=door_rows,lift=dict(position_m=lift_position,current_floor=current_floor,destination=self.lift_request,floors=list(lift['floors'])),docks=self.config['docks'],docking=self.docking,energy=energy,robot_floors=floors,floor_maps=self.floor_maps,current_floor_map=self.current_floor_map,rmf_protocol=self.rmf,scope='Physical joint feedback and independently observed docking; lift transport tracks robots carried between L0/L1 floors; per-floor occupancy maps and current floor map published; authored energy estimate'),allow_nan=False)))
 
 
 def main(args=None):

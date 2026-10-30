@@ -26,6 +26,9 @@ lift:
   floors:
     L0: 0.0
     L1: 3.0
+floor_maps:
+  L0: maps/fleet_facility/maps/map.yaml
+  L1: maps/fleet_facility/maps/map_L1.yaml
 docks:
   west_charger:
     x: -4.5

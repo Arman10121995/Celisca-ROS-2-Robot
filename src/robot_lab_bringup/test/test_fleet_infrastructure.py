@@ -33,6 +33,9 @@ lift:
   floors:
     L0: 0.0
     L1: 3.0
+floor_maps:
+  L0: maps/fleet_facility/maps/map.yaml
+  L1: maps/fleet_facility/maps/map_L1.yaml
 docks:
   west_charger:
     x: -4.5
@@ -99,6 +102,8 @@ def _make_node(session):
     node._effort_verified = bool(node.config['energy'].get('effort_observation_verified'))
     node._lift_prev = None
     node._lift_prev_at = -math.inf
+    node.floor_maps = node.config.get('floor_maps', {})
+    node.current_floor_map = ''
     return node
 
 
@@ -207,3 +212,24 @@ def test_robot_not_on_lift_is_not_transported(tmp_path):
     assert 'alpha' not in on_lift
     assert node.bodies['alpha']['xyz'][2] == 0.0
     assert node.energy['alpha']['floor'] == 'L0'
+
+
+def test_floor_maps_loaded_from_config(tmp_path):
+    session = _make_session(tmp_path)
+    node = _make_node(session)
+    assert node.floor_maps == {'L0': 'maps/fleet_facility/maps/map.yaml',
+                               'L1': 'maps/fleet_facility/maps/map_L1.yaml'}
+    assert node.current_floor_map == ''
+
+
+def test_current_floor_map_tracks_lift_arrival(tmp_path):
+    session = _make_session(tmp_path)
+    node = _make_node(session)
+    lift = node.config['lift']
+    node.positions[lift['joint']] = 3.0
+    node.rates[lift['joint']] = 0.0
+    current_floor = next((f for f, z in lift['floors'].items() if abs(3.0 - z) < .03), '')
+    if current_floor and abs(node.rates.get(lift['joint'], math.inf)) < .01:
+        node.current_floor_map = node.floor_maps.get(current_floor, '')
+    assert current_floor == 'L1'
+    assert node.current_floor_map == 'maps/fleet_facility/maps/map_L1.yaml'
