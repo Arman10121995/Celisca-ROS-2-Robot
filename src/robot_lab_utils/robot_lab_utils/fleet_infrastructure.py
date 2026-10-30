@@ -18,8 +18,10 @@ from rclpy.executors import ExternalShutdownException
 from sensor_msgs.msg import JointState
 from nav_msgs.msg import Odometry,Path as NavPath
 from std_msgs.msg import String,Float64
+from geometry_msgs.msg import TransformStamped
 from rosgraph_msgs.msg import Clock as ClockMessage
 import yaml
+import tf2_ros
 
 
 class Infrastructure(Node):
@@ -35,6 +37,8 @@ class Infrastructure(Node):
         self._effort_verified=bool(self.config['energy'].get('effort_observation_verified'))
         self._lift_prev=None;self._lift_prev_at=-math.inf
         self.floor_maps=self.config.get('floor_maps',{});self.current_floor_map=''
+        self.tf_broadcaster=tf2_ros.TransformBroadcaster(self)
+        self.floor_z={name:float(self.config['lift']['floors']['L0']) for m in session['members'] for name in [m['id']]}
         joints=[v['joint'] for v in self.config['doors'].values()]+[self.config['lift']['joint']]
         self.targets={name:self.create_publisher(Float64,'/facility/'+name+'/target',10) for name in joints}
         self.publisher=self.create_publisher(String,'/fleet/infrastructure/state',10);self.fleet_command=self.create_publisher(String,'/fleet/command',10)
@@ -230,7 +234,23 @@ class Infrastructure(Node):
         moving=(lift_position is not None and (not current_floor or self.lift_request and abs(lift_position-lift['floors'][self.lift_request[0]])>.03))
         held=[name for name,b in self.bodies.items() if moving and 2.8<=b['xyz'][0]<=5.2 and -1.2<=b['xyz'][1]<=1.2]
         floors={name:self.energy[name]['floor'] for name in self.energy}
-        self.publisher.publish(String(data=json.dumps(dict(session_id=self.identity,ready=fresh,held_members=held,doors=door_rows,lift=dict(position_m=lift_position,current_floor=current_floor,destination=self.lift_request,floors=list(lift['floors'])),docks=self.config['docks'],docking=self.docking,energy=energy,robot_floors=floors,floor_maps=self.floor_maps,current_floor_map=self.current_floor_map,rmf_protocol=self.rmf,scope='Physical joint feedback and independently observed docking; lift transport tracks robots carried between L0/L1 floors; per-floor occupancy maps and current floor map published; authored energy estimate'),allow_nan=False)))
+        floor_z={name:self.floor_z.get(name,0.0) for name in self.energy}
+        # Multi-floor TF: publish map->odom with the robot's current floor z-offset
+        # so Nav2/AMCL and downstream consumers see the correct level after a lift
+        # transition. Only publish for bodies with fresh ground-truth feedback.
+        now=time.monotonic()
+        for name,b in self.bodies.items():
+            if now-b['at']>.6:continue
+            target_z=float(self.config['lift']['floors'].get(self.energy[name]['floor'],0.0))
+            self.floor_z[name]=target_z
+            t=TransformStamped()
+            t.header.stamp=self.get_clock().now().to_msg()
+            t.header.frame_id='map';t.child_frame_id=name+'/odom'
+            t.transform.translation.x=float(b['xyz'][0]);t.transform.translation.y=float(b['xyz'][1]);t.transform.translation.z=target_z
+            yaw=b.get('yaw',0.0)
+            t.transform.rotation.z=math.sin(yaw/2.0);t.transform.rotation.w=math.cos(yaw/2.0)
+            self.tf_broadcaster.sendTransform(t)
+        self.publisher.publish(String(data=json.dumps(dict(session_id=self.identity,ready=fresh,held_members=held,doors=door_rows,lift=dict(position_m=lift_position,current_floor=current_floor,destination=self.lift_request,floors=list(lift['floors'])),docks=self.config['docks'],docking=self.docking,energy=energy,robot_floors=floors,floor_z=floor_z,floor_maps=self.floor_maps,current_floor_map=self.current_floor_map,rmf_protocol=self.rmf,scope='Physical joint feedback and independently observed docking; lift transport tracks robots carried between L0/L1 floors; per-floor occupancy maps and current floor map published; authored energy estimate'),allow_nan=False)))
 
 
 def main(args=None):

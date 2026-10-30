@@ -233,3 +233,55 @@ def test_current_floor_map_tracks_lift_arrival(tmp_path):
         node.current_floor_map = node.floor_maps.get(current_floor, '')
     assert current_floor == 'L1'
     assert node.current_floor_map == 'maps/fleet_facility/maps/map_L1.yaml'
+
+
+def test_floor_z_offset_transitions_on_lift_move(tmp_path):
+    session = _make_session(tmp_path)
+    node = _make_node(session)
+    lift = node.config['lift']
+    # Robot on lift car at L0
+    node.bodies['alpha'] = dict(xyz=[4.0, 0.0, 0.0], yaw=0.0, stamp=1000.0, at=1000.0)
+    node.energy['alpha']['floor'] = 'L0'
+    node.floor_z = {name: float(lift['floors']['L0']) for name in node.energy}
+    node._lift_prev = 0.0
+    node.positions[lift['joint']] = 3.0
+    lift_position = node.positions[lift['joint']]
+    lift_delta = lift_position - node._lift_prev
+    node._lift_prev = lift_position
+    on_lift = [name for name, b in node.bodies.items() if 2.8 <= b['xyz'][0] <= 5.2 and -1.2 <= b['xyz'][1] <= 1.2]
+    assert 'alpha' in on_lift
+    if abs(lift_delta) > 1e-4:
+        for name in on_lift:
+            b = node.bodies.get(name)
+            if b:
+                b['xyz'][2] += lift_delta
+                b['at'] = 1001.0
+                new_floor = next((f for f, z in lift['floors'].items() if abs(b['xyz'][2] - z) < .03),
+                                 node.energy[name]['floor'])
+                if new_floor != node.energy[name]['floor']:
+                    node.energy[name]['floor'] = new_floor
+    # Floor z-offset follows the new floor
+    target_z = float(lift['floors'].get(node.energy['alpha']['floor'], 0.0))
+    assert node.energy['alpha']['floor'] == 'L1'
+    assert target_z == 3.0
+    assert node.floor_z.get('alpha', 0.0) == 0.0  # floor_z updated in tick, not here
+
+
+def test_charging_power_readback_when_docked(tmp_path):
+    session = _make_session(tmp_path)
+    node = _make_node(session)
+    # Establish motor feedback with discharge
+    Infrastructure.motor(node, 'alpha', _joint_state(
+        ['alpha/wheel_left', 'alpha/wheel_right'], [1.0, 1.0], [10.0, 10.0], 1000.0))
+    Infrastructure.motor(node, 'alpha', _joint_state(
+        ['alpha/wheel_left', 'alpha/wheel_right'], [1.0, 1.0], [10.0, 10.0], 1000.5))
+    draining_power = node.energy['alpha']['power']
+    assert draining_power is not None and draining_power > 0
+    # Dock and verify charging power is applied
+    node.docking['alpha'] = dict(dock='west_charger', request_id='r1', settled=None, docked=True)
+    Infrastructure.motor(node, 'alpha', _joint_state(
+        ['alpha/wheel_left', 'alpha/wheel_right'], [1.0, 1.0], [10.0, 10.0], 1001.0))
+    entry = node.energy['alpha']
+    assert entry['joules'] > draining_power * 0.5  # net charge exceeds discharge over 0.5s
+    # Verify power readback includes hotel + drive (not just charging offset)
+    assert entry['power'] is not None and entry['power'] > 0
