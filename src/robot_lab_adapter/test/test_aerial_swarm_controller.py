@@ -161,3 +161,34 @@ def test_only_formation_mode_applies_altitude_trim():
     for member in ctrl.members.values():
         member['velocity_pub'].publish.assert_called_once()
         assert 'last_altitude_trim_m_s' not in member
+
+
+def _member3(member_id, phase='flying', status_age=0.0, pose_age=0.0):
+    now = 5.0
+    st = dict(phase=phase, position_ready=True)
+    return dict(id=member_id, namespace='/swarm/air' + member_id, status=st,
+                  status_at=now - status_age, pose_at=now - pose_age,
+                  pose=[0., 0., 0.], yaw=0., truth=None,
+                  truth_at=float('-inf'), result=None)
+
+
+def test_member_loss_computation_3fcu():
+    now = 5.0
+    member_fresh = _member3('air1', phase='flying', status_age=0.0, pose_age=0.0)
+    member_stale = _member3('air2', phase='flying', status_age=2.1, pose_age=0.0)
+    member_holding = _member3('air3', phase='holding', status_age=0.0, pose_age=0.0)
+    member_fresh4 = _member3('air4', phase='flying', status_age=0.0, pose_age=0.0)
+    members = [member_fresh, member_stale, member_holding, member_fresh4]
+    lost = [m for m in members if not _fresh(m, now=now) or m['status']['phase'] != 'flying']
+    # air2 stale, air3 holding (not flying), air4 is fresh flying
+    assert [m['id'] for m in lost] == ['air2', 'air3']
+
+
+def test_member_loss_all_4fcu():
+    now = 5.0
+    members = [_member3('air1', phase='flying', status_age=0.0, pose_age=0.0),
+               _member3('air2', phase='flying', status_age=0.0, pose_age=0.0),
+               _member3('air3', phase='flying', status_age=0.0, pose_age=0.0),
+               _member3('air4', phase='flying', status_age=0.0, pose_age=0.0)]
+    lost = [m for m in members if not _fresh(m, now=now) or m['status']['phase'] != 'flying']
+    assert lost == []
