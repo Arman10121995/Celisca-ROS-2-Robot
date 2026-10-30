@@ -1511,10 +1511,10 @@ class SimulationLauncherGui(tk.Tk):
             if mode not in self.mode_profiles:
                 reasons[mode] = "not defined in sim_modes.yaml"
                 continue
-            if mode == 'marine' and not self._map_config().get('marine'):
+            if mode == 'marine' and not self._map_config().get('marine') and not robot_config.get('amphibious_model'):
                 reasons[mode] = 'Choose a marine water world for ROV control'
                 continue
-            if mode == 'display' and robot_config.get('marine_model') and not map_free and not self._map_config().get('marine'):
+            if mode == 'display' and robot_config.get('marine_model') and not robot_config.get('amphibious_model') and not map_free and not self._map_config().get('marine'):
                 reasons[mode] = 'ROV Display needs a marine water world, or choose no map for the default tank'
                 continue
             # Robot-free / map-free runs only make sense for visualization.
@@ -1697,6 +1697,7 @@ class SimulationLauncherGui(tk.Tk):
         if self._robot_config().get('gait_model') or self._robot_config().get('tracked_model'):
             return not self.map_profiles.get(map_id, {}).get('marine')
         if self.robot_profiles.get(self.robot_var.get(), {}).get("marine_model"):
+            if self._robot_config().get('amphibious_model'):return True
             return bool(self.map_profiles.get(map_id, {}).get("marine"))
         if self._mode_requires_2d_map(self.mode_var.get()):
             return self._map_has_2d_map(map_id)
@@ -2405,7 +2406,7 @@ class SimulationLauncherGui(tk.Tk):
                     command.append(argument+str(value))
         if command and self._robot_config().get('marine_model'):
             command = [part for part in command if not part.startswith(('marine_slam:=', 'marine_database:=', 'marine_localization:='))]
-            slam = self.robot_var.get() in ('lab_rov','tethys_auv','lab_usv') and self.marine_slam_var.get()
+            slam = self.robot_var.get() in ('lab_rov','tethys_auv','lab_usv','lab_amphibious') and self.marine_slam_var.get()
             command.append('marine_slam:=' + str(bool(slam)).lower())
             if slam:
                 command.append('marine_localization:=' + str(self.marine_localization_var.get()).lower())

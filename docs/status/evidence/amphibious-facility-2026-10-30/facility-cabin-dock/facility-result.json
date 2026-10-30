@@ -1,0 +1,228 @@
+{
+  "success": true,
+  "reason": "Physical door open/close, lift L0-L1-L0 with car door and independently settled dock",
+  "phase": "dock",
+  "measurements": [
+    {
+      "phase": "neutral",
+      "actual": {
+        "main": {
+          "position_m": 0.0,
+          "target_m": 0.0,
+          "mode": 0,
+          "sweep_blocked": false
+        },
+        "lift": {
+          "position_m": 0.0,
+          "target_m": 0.0,
+          "mode": 0,
+          "sweep_blocked": false
+        }
+      }
+    },
+    {
+      "phase": "door_open",
+      "actual": {
+        "position_m": 1.7602508891634436,
+        "target_m": 1.8,
+        "mode": 2,
+        "sweep_blocked": false
+      }
+    },
+    {
+      "phase": "door_closed",
+      "actual": {
+        "position_m": 0.016626538989233136,
+        "target_m": 0.0,
+        "mode": 0,
+        "sweep_blocked": false
+      }
+    },
+    {
+      "phase": "lift_up",
+      "actual": {
+        "position_m": 2.98425875,
+        "current_floor": "L1",
+        "destination": [
+          "L1",
+          true
+        ],
+        "floors": [
+          "L0",
+          "L1"
+        ]
+      },
+      "door": {
+        "position_m": 2.164090640672584,
+        "target_m": 2.2,
+        "mode": 2,
+        "sweep_blocked": false
+      }
+    },
+    {
+      "phase": "lift_down",
+      "actual": {
+        "position_m": -1.7420177430784142e-10,
+        "current_floor": "L0",
+        "destination": [
+          "L0",
+          true
+        ],
+        "floors": [
+          "L0",
+          "L1"
+        ]
+      },
+      "door": {
+        "position_m": 2.1673119692159326,
+        "target_m": 2.2,
+        "mode": 2,
+        "sweep_blocked": false
+      }
+    },
+    {
+      "phase": "dock",
+      "actual": {
+        "dock": "west_charger",
+        "request_id": "actual-dock-1",
+        "settled": 85.482,
+        "docked": true,
+        "observation": {
+          "xyz": [
+            -4.4909214941758995,
+            -2.9772124212790563,
+            1.8120782372517864e-06
+          ],
+          "yaw": -0.012944822986966238,
+          "speed": 0.0,
+          "angular": 0.0,
+          "stamp": 86.56,
+          "at": 91448.286244036
+        }
+      },
+      "fleet": {
+        "schema_version": 1,
+        "session_id": "session-tx2bw8t7",
+        "map": "fleet_facility",
+        "backend": "gazebo",
+        "navigation": true,
+        "directory": "/workspace/molar/robot_lab_runtime/fleet_sessions/session-tx2bw8t7",
+        "sim_time": 86.44,
+        "clock_age": 0.003,
+        "operator_id": "actual-facility-trial",
+        "operator_fresh": true,
+        "swarm": null,
+        "members": [
+          {
+            "id": "alpha",
+            "model": "bumperbot",
+            "mode": "idle",
+            "reason": "Actual Nav2 success and measured settled arrival",
+            "included": true,
+            "ready": true,
+            "limits": {
+              "linear": 0.35,
+              "angular": 0.8
+            },
+            "navigation_ready": true,
+            "estimate": {
+              "x": -4.493621842710622,
+              "y": -3.011784682112984,
+              "yaw": -0.006370970906446787
+            },
+            "estimate_source": "AMCL transform + wheel feedback",
+            "truth": {
+              "x": -4.4909214941758995,
+              "y": -2.9772124212790563,
+              "z": 1.8120782372517864e-06,
+              "yaw": -0.012944822986966238,
+              "linear": 0.0,
+              "angular": 0.0,
+              "velocity_source": "finite difference of measured stamped Gazebo poses",
+              "source_reported_twist": {
+                "linear": 0.0,
+                "angular": 0.0
+              }
+            },
+            "command": {
+              "linear": 0.0,
+              "angular": 0.0
+            },
+            "wheel_twist": {
+              "linear": 0.0,
+              "angular": 0.0
+            },
+            "ages": {
+              "odom": 0.012,
+              "truth": 0.022,
+              "scan": 0.02,
+              "amcl": 1.261,
+              "localization_tf": 0.0
+            },
+            "message_counts": {
+              "odom": 4239,
+              "truth": 4239,
+              "scan": 424,
+              "amcl": 26
+            },
+            "task": "",
+            "goal": null,
+            "nav2_pending": false,
+            "cancel_pending": false,
+            "queued": 0,
+            "queued_tasks": [],
+            "queue_paused": false,
+            "settled_spawn_recorded": true,
+            "reset_pose": [
+              -4.499972724615504,
+              -1.9999997534212959,
+              -5.178245951959264e-06
+            ],
+            "radius_m": 0.118,
+            "battery": null,
+            "charging": null
+          }
+        ],
+        "last_rejection": "",
+        "traffic": {
+          "serial": true,
+          "policy": "One autonomous route at a time; queued work waits for measured settling"
+        },
+        "task_history": [
+          {
+            "task": "18a02ad9ed6944dab97aaafb5be82478",
+            "source": "operator",
+            "goal": {
+              "x": -4.5,
+              "y": -3.0,
+              "yaw": 0.0,
+              "timeout": 180.0,
+              "not_before": 0.0
+            },
+            "state": "succeeded",
+            "reason": "Actual Nav2 success and measured settled arrival",
+            "finished": 91447.618872869,
+            "observation": {
+              "x": -4.4909214941758995,
+              "y": -2.9772124212790563,
+              "z": 1.8120782372517864e-06,
+              "yaw": -0.012944822986966238,
+              "linear": 0.0,
+              "angular": 0.0,
+              "velocity_source": "finite difference of measured stamped Gazebo poses",
+              "source_reported_twist": {
+                "linear": 0.0,
+                "angular": 0.0
+              }
+            }
+          }
+        ],
+        "scope": "Experimental shared-world runtime; contact and mission qualification pending"
+      }
+    }
+  ],
+  "wall_s": 88.44402701599756,
+  "producer_startup_sha256": "485209b088e52fdb270a5e66b2d7e07722178ead30d8dd6b7a9ffe6ec4dbaa9f",
+  "trace_sha256": "cdf79236f96a72dd8a335be6c9b7ef88fe38f0cc1819cacaec7791d1a4c0eb10",
+  "scope": "Actual physical infrastructure joints and observed docking; no robot lift transport, RMF conflict/negotiation or verified motor-energy acceptance"
+}

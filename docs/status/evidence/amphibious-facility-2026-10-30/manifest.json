@@ -1,0 +1,76 @@
+{
+  "recorded": "2026-10-30",
+  "baseline_revision": "09034dc7fa0254e08d8b422b38e9a273c3215446",
+  "source_branch": "master",
+  "cases": {
+    "sprung-shore-roundtrip": {
+      "raw_directory": "/workspace/molar/robot_lab_runtime/amphibious-infrastructure-20261030-mcpiqquv/shore_roundtrip/4fdb6638730148a0874813efbeb20fa6",
+      "run_id": "4fdb6638730148a0874813efbeb20fa6",
+      "copied_sha256": {
+        "run.json": "1b31e4e7c51f50d360c8a4b415be27868ab478ad08af233984f4e2aaef5a6168",
+        "extension-mission-result.json": "08ce45d576b5a995b462f3bd1f1b8c94a02b9dacfd0a60eaeed3fa32b51c15fc",
+        "workload.json": "f6d5f6df6abd362d26017064ad75c24bc12a0f8f626043c60e8af6a16baa35ab",
+        "workload-producer.py": "6b3f7bbd78521448882b2edff0850f2b2827c736d9080ac57d97647c83fe1647",
+        "telemetry-summary.json": "c6ff578f1b98ad2662af3c0f70701a1c5d861d989e78d1186751ba7b118e9c41"
+      },
+      "cleanup_complete": true,
+      "scope": "Actual native task and independent physical measurements; parent runner owns process cleanup"
+    },
+    "sprung-rgbd-acquisition": {
+      "raw_directory": "/workspace/molar/robot_lab_runtime/amphibious-infrastructure-20261030-mcpiqquv/amphibious_mapping/974e1f6a689040319d74b9b612560a68",
+      "run_id": "974e1f6a689040319d74b9b612560a68",
+      "copied_sha256": {
+        "run.json": "4740e1c312531d74c57dae1caa397f1f2c8e0918c2b25490c14d77ce4413870e",
+        "extension-mission-result.json": "70c9e567d7d1e0d87a792c47785a1a184f3ff13704f307529951798d58415874",
+        "workload.json": "2b3e566b03bae62d3c4edd49d207ace36254faf39f6707549d6047c884c832bb",
+        "workload-producer.py": "6b3f7bbd78521448882b2edff0850f2b2827c736d9080ac57d97647c83fe1647",
+        "telemetry-summary.json": "bebe8a6003d502d346f8d113d1b51861208e1e720f5e1002480130638f101c0f"
+      },
+      "cleanup_complete": true,
+      "scope": "Actual native task and independent physical measurements; parent runner owns process cleanup"
+    },
+    "facility-cabin-dock": {
+      "raw_directory": "/workspace/molar/robot_lab_runtime/amphibious-infrastructure-20261030-mcpiqquv/facility_mission/3cc6fa28a4cc4d9695628a73e7dc2807",
+      "run_id": "3cc6fa28a4cc4d9695628a73e7dc2807",
+      "copied_sha256": {
+        "run.json": "a8337f1c37836d14a60c3241147eed0b30c744a67ab9e394076112d97767b024",
+        "facility-result.json": "c60701ec80ff0cf6c9db3a14785927d29f4059a7f4920c14912a7e3f1c4cb183",
+        "telemetry-summary.json": "914ed7e5f61ffeccadeb905db8c8335d589e92774c9c2af9f6f373e30fead3f1"
+      },
+      "cleanup_complete": true,
+      "scope": "Actual physical infrastructure joints and observed docking; no robot lift transport, RMF conflict/negotiation or verified motor-energy acceptance"
+    },
+    "historical-rigid-manual-transition": {
+      "raw_directory": "/workspace/molar/robot_lab_runtime/amphibious-infrastructure-20261030-mcpiqquv/physical_transition/004745b4c4484bfe851ac38c300379b2",
+      "run_id": "004745b4c4484bfe851ac38c300379b2",
+      "copied_sha256": {
+        "run.json": "15f8992e15ac42671bfe40453ff705905c4be5dbfc86740bd519e872d4572487",
+        "transition-result.json": "4a4247354ffe242123be3bef9e9c723855918cc434b003fa6c837f34d5dc35ee",
+        "telemetry-summary.json": "5f78bb279d570b402297c630d80fd9e3cbb6b7c0b9a9489dcf476740b7072789"
+      },
+      "cleanup_complete": true,
+      "scope": "Actual native amphibious travel/Stop only; no autonomy, clearance/contact, independent map or hardware acceptance"
+    }
+  },
+  "scope": "Named actual native cases; post-run source hashes, not an immutable whole plant/build qualification",
+  "rigid_source_archive": "/workspace/molar/robot_lab_runtime/amphibious-infrastructure-20261030-mcpiqquv/rigid-wheel-source/manifest.json",
+  "retained_negative_runs": [
+    {
+      "directory": "/workspace/molar/robot_lab_runtime/amphibious-infrastructure-20261030-mcpiqquv/shore_navigation/673a3e13541e4741a6188449f9ae21e6",
+      "reason": "Operator interrupted workload"
+    },
+    {
+      "directory": "/workspace/molar/robot_lab_runtime/amphibious-infrastructure-20261030-mcpiqquv/shore_navigation/a458a63122d147cc9832b5826faf662d",
+      "reason": "Operator interrupted workload"
+    },
+    {
+      "directory": "/workspace/molar/robot_lab_runtime/amphibious-infrastructure-20261030-mcpiqquv/shore_roundtrip/d3be398a5ab74fb58839d9aee04f4bb2",
+      "reason": "Native mission failed: Current source/observed segment blocked; replan required"
+    },
+    {
+      "directory": "/workspace/molar/robot_lab_runtime/amphibious-infrastructure-20261030-mcpiqquv/shore_roundtrip/f6f900b1bc5042d3bd863be73fe5d0c5",
+      "reason": "Native mission failed: Marine mission sensor/operator/time budget lost"
+    }
+  ],
+  "source_boundary": "Runtime descriptions/worlds/traces remain on SSD; the rigid source/plugin archive was copied after its trials and before suspension edits. Native source manifest recorded after runs. Frozen workload producer/spec identities remain in native results. External diagnostics record startup producer hashes."
+}

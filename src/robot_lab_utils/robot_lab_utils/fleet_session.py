@@ -376,16 +376,28 @@ def prepare_session(session_file, map_override='', navigation=False, runtime_roo
             if member['model'] == 'labbot' else [])
         if navigation:
             nav_file = folder / (name + '-navigation.yaml')
-            nav_file.write_text(yaml.safe_dump(navigation_parameters(
-                Path(share('robot_lab_navigation')) / 'config', Path(share('robot_lab_localization')) / 'config', member, map_yaml)))
+            parameters=navigation_parameters(Path(share('robot_lab_navigation')) / 'config',Path(share('robot_lab_localization')) / 'config',member,map_yaml)
+            if map_profile.get('fleet_infrastructure'):
+                params=parameters['/'+name]['controller_server']['ros__parameters']
+                params['general_goal_checker'].update(xy_goal_tolerance=.05,yaw_goal_tolerance=.08)
+            nav_file.write_text(yaml.safe_dump(parameters))
             member['navigation_file'] = str(nav_file)
     bridge_file = folder / 'bridge.yaml'
-    bridge_file.write_text(yaml.safe_dump(bridge_entries(members)))
+    bridges=bridge_entries(members)
+    infrastructure=map_profile.get('fleet_infrastructure','')
+    infrastructure_file=str(Path(share('robot_lab_maps'))/infrastructure) if infrastructure else ''
+    if infrastructure_file:
+        data=yaml.safe_load(Path(infrastructure_file).read_text())
+        bridges.append(dict(ros_topic_name='/facility/joint_states',gz_topic_name='/facility/joint_states',ros_type_name='sensor_msgs/msg/JointState',gz_type_name='gz.msgs.Model',direction='GZ_TO_ROS'))
+        for joint in [v['joint'] for v in data['doors'].values()]+[data['lift']['joint']]:
+            topic='/facility/'+joint+'/target'
+            bridges.append(dict(ros_topic_name=topic,gz_topic_name=topic,ros_type_name='std_msgs/msg/Float64',gz_type_name='gz.msgs.Double',direction='ROS_TO_GZ'))
+    bridge_file.write_text(yaml.safe_dump(bridges))
     result = dict(schema_version=1, map=map_name, backend='gazebo', navigation=navigation,
                   world=world, world_name=world_name, world_source=world_source,
                   world_source_sha256=hashlib.sha256(Path(world_source).read_bytes()).hexdigest(),
                   world_sha256=hashlib.sha256(Path(world).read_bytes()).hexdigest(),
-                  map_yaml=map_yaml, bridge_file=str(bridge_file), members=members,
+                  map_yaml=map_yaml, bridge_file=str(bridge_file), members=members,infrastructure_file=infrastructure_file,
                   session_source=str(Path(session_file).resolve()), directory=str(folder),
                   scope='Shared physical world; only Gazebo Bumperbot/Labbot adapters implemented')
     resolved_file = folder / 'session.json'

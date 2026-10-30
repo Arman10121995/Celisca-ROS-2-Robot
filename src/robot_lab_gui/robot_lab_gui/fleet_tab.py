@@ -129,6 +129,8 @@ class FleetTab(ttk.Frame):
         for page, label in ((drive_page, 'Drive'), (task_page, 'Tasks'), (swarm_page, 'Swarm'), (coverage_page, 'Coverage')):
             control_pages.add(page, text=label)
             page.columnconfigure(0, weight=1)
+        from .fleet_infrastructure_controls import InfrastructureControls
+        self.infrastructure_controls=InfrastructureControls(control_pages,self)
         pad = ttk.Frame(drive_page)
         pad.grid(row=0, column=0, pady=5, sticky='ew')
         self.pad_buttons = {}
@@ -368,6 +370,7 @@ class FleetTab(ttk.Frame):
             self.rmf_pub = self.node.create_publisher(String, '/fleet/rmf/control', 10)
             self.node.create_subscription(String, '/fleet/state', self._observe, 10)
             self.node.create_subscription(String, '/fleet/rmf/state', self._observe_rmf, 10)
+            self.infrastructure_controls.attach(self.node)
             self.status.set('Connected; awaiting /fleet/state. No movement command sent.')
             return True
         except Exception as exc:

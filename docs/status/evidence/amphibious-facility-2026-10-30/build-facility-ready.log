@@ -1,0 +1,36 @@
+[1.325s] colcon.colcon_ros.prefix_path.ament WARNING The path '/workspace/molar/robot_lab_runtime/rmf/current/prefix/opt/ros/humble' in the environment variable AMENT_PREFIX_PATH doesn't contain any 'local_setup.*' files.
+[1.430s] colcon.colcon_core.package_selection WARNING Some selected packages are already built in one or more underlay workspaces:
+	'robot_lab_bringup' is in: /home/molar1/bumperbot_ws/install/robot_lab_bringup
+	'robot_lab_registry' is in: /home/molar1/bumperbot_ws/install/robot_lab_registry
+	'robot_lab_utils' is in: /home/molar1/bumperbot_ws/install/robot_lab_utils
+If a package in a merged underlay workspace is overridden and it installs headers, then all packages in the overlay must sort their include directories by workspace order. Failure to do so may result in build failures or undefined behavior at run time.
+If the overridden package is used by another package in any underlay, then the overriding package in the overlay must be API and ABI compatible or undefined behavior at run time may occur.
+
+If you understand the risks and want to override a package anyways, add the following to the command line:
+	--allow-overriding robot_lab_bringup robot_lab_registry robot_lab_utils
+
+This may be promoted to an error in a future release of colcon-override-check.
+Starting >>> robot_lab_utils
+Finished <<< robot_lab_utils [1.26s]
+Starting >>> robot_lab_maps
+Starting >>> robot_lab_registry
+--- stderr: robot_lab_maps
+gmake[2]: *** No rule to make target '/usr/lib/aarch64-linux-gnu/libignition-physics5.so.5.4.0', needed by 'librobot_lab_amphibious_drive.so'.  Stop.
+gmake[2]: *** No rule to make target '/usr/lib/aarch64-linux-gnu/libignition-physics5.so.5.4.0', needed by 'librobot_lab_command_watchdog.so'.  Stop.
+gmake[1]: *** [CMakeFiles/Makefile2:195: CMakeFiles/robot_lab_amphibious_drive.dir/all] Error 2
+gmake[1]: *** Waiting for unfinished jobs....
+gmake[1]: *** [CMakeFiles/Makefile2:169: CMakeFiles/robot_lab_command_watchdog.dir/all] Error 2
+gmake[2]: *** No rule to make target '/usr/lib/aarch64-linux-gnu/libignition-physics5.so.5.4.0', needed by 'librobot_lab_tracked_vehicle.so'.  Stop.
+gmake[1]: *** [CMakeFiles/Makefile2:221: CMakeFiles/robot_lab_tracked_vehicle.dir/all] Error 2
+gmake[2]: *** No rule to make target '/usr/lib/aarch64-linux-gnu/libignition-physics5.so.5.4.0', needed by 'librobot_lab_2dmap_system.so'.  Stop.
+gmake[1]: *** [CMakeFiles/Makefile2:143: CMakeFiles/robot_lab_2dmap_system.dir/all] Error 2
+gmake: *** [Makefile:146: all] Error 2
+---
+Failed   <<< robot_lab_maps [0.64s, exited with code 2]
+Aborted  <<< robot_lab_registry [0.63s]
+
+Summary: 1 package finished [3.15s]
+  1 package failed: robot_lab_maps
+  1 package aborted: robot_lab_registry
+  1 package had stderr output: robot_lab_maps
+  2 packages not processed

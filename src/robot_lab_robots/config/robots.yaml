@@ -1,4 +1,44 @@
 robots:
+  lab_amphibious:
+    package: robot_lab_robots
+    xacro: lab_amphibious/urdf/lab_amphibious.urdf.xacro
+    name: lab_amphibious
+    type: mobile
+    marine_model: true
+    amphibious_model: true
+    marine_propulsion: wheels_propellers
+    supported_modes:
+    - display
+    - marine
+    default_mode: marine
+    default_map: amphibious_shore
+    supported_simulators:
+    - gazebo
+    features:
+    - marine_dynamics
+    - surface_vessel
+    - wheeled_base
+    - rgbd_camera
+    - imu
+    drive:
+      type: marine
+      max_speed: 0.4
+      max_accel: 0.3
+      max_angular_speed: 0.3
+      max_angular_accel: 0.3
+    spawn_by_map:
+      amphibious_shore:
+        x: -6.0
+        y: 0.0
+        z: 0.76
+        yaw: 0.0
+    implementation_state: experimental
+    validation_state: scoped_measurements
+    notes: Complete sealed hull, four 8 Nm wheel motors, passive suspension and two immersion-gated 35 N propellers.
+      Native force/lease bounds, neutral latched controls, hybrid sensor odometry, RGB-D mapping/reload and source-aware
+      shore Plan/Execute. Named shore/mapping cases measured; other-world and fluid-backend acceptance pending.
+    validation_scope: 'Fortress/amphibious_shore: sprung bank-water-bank autonomous goals and RGB-D acquisition.
+      docs/status/amphibious-facility-2026-10-30.md. Other maps/backends and saved-map missions remain separate.'
   lab_snake:
     package: robot_lab_robots
     xacro: lab_snake/urdf/lab_snake.urdf

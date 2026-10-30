@@ -71,7 +71,9 @@ def depth_cloud_node(prefix):
 def pipeline(world, description, spawn, water, robot, folder, control=True,
              slam=False, database='', localization=False):
     from launch_ros.actions import Node
-    from launch.actions import TimerAction
+    from launch.actions import TimerAction,RegisterEventHandler,EmitEvent
+    from launch.event_handlers import OnProcessExit
+    from launch.events import Shutdown
     if slam and 'oakd_rgb_camera_optical_frame' not in Path(description).read_text():
         raise ValueError('Marine SLAM requires the declared ROV camera or authored AUV RGB-D kit')
     if localization and (not slam or not database or not Path(database).is_file()):
@@ -88,17 +90,19 @@ def pipeline(world, description, spawn, water, robot, folder, control=True,
     if source.is_file() and source != active:
         from .map_archive import load_database_copy
         load_database_copy(source, active, world,
-            expected_estimator_contract='marine_spawn_imu_v1' if robot=='tethys_auv' else None)
-    params = dict(use_sim_time=True, density=float(water['density']), surface_z=float(water['surface_z']))
+            expected_estimator_contract='amphibious_downward_flow_range_v1' if robot=='lab_amphibious' else 'marine_spawn_imu_v1' if robot=='tethys_auv' else None)
+    params = dict(use_sim_time=True, density=float(water['density']), surface_z=float(water['surface_z']),hybrid_surface=robot=='lab_amphibious')
     nodes = [Node(package='robot_lab_utils', executable='marine_sensors.py', arguments=['simulate'],
         parameters=[dict(params, world_file=str(world), seed=41)], output='screen'),
         Node(package='robot_lab_utils', executable='marine_sensors.py', arguments=['estimate'],
-        parameters=[dict(params,initial_yaw=float(spawn['yaw']), **{'initial_'+k:float(spawn[k]) for k in 'xyz'})], output='screen'),
+        parameters=[dict(params,world_file=str(world),initial_yaw=float(spawn['yaw']), **{'initial_'+k:float(spawn[k]) for k in 'xyz'})], output='screen'),
         Node(package='robot_lab_utils', executable='marine_navigation.py', parameters=[dict(use_sim_time=True,
             world_file=str(world), robot_id=robot, surface_z=float(water['surface_z']), bottom_z=float(water['bottom_z']),
-            radius=1.3 if robot=='tethys_auv' else .9 if robot=='lab_usv' else .55, database_path=str(active) if slam else '',
+            radius=1.3 if robot=='tethys_auv' else .9 if robot in ('lab_usv','lab_amphibious') else .55, database_path=str(active) if slam else '',
             control_allowed=bool(control), localization_mode=bool(localization),
             saved_map_source=str(source) if localization else '')], output='screen')]
+    nodes.append(RegisterEventHandler(OnProcessExit(target_action=nodes[-1],
+        on_exit=[EmitEvent(event=Shutdown(reason='Marine mission/sensor workflow owner exited'))])))
     if slam:
         nodes += [Node(package='robot_lab_utils', executable='marine_camera_relay.py',
             parameters=[dict(use_sim_time=True, description_file=str(description))], output='screen'),

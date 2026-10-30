@@ -119,11 +119,11 @@ completion_audit:
     comparison scores are generated; the dated support matrix extrapolates Isaac qualification
     to untested maps and modes.
   revision: 2a0aae2
-current_delivery: native_forms_20261030
-current_revision: 'Native-form continuation recorded 2026-10-30 on master from db14385: 151 robot profiles
-  / 81 selectable families and 52 world profiles / 40 families. Snake 2D/3D mapping, installed/acquired-map
-  Nav2, surface-vessel acquisition/two-goal arrival, AUV acquisition and actuated flipper/flat-Drive cases
-  measured. Full extension/platform acceptance remains partial. See docs/status/native-forms-2026-10-30.md.'
+current_delivery: amphibious_infrastructure_20261030
+current_revision: 'Native amphibious/facility delivery on 2026-10-30 from 09034dc on master: 152 profiles /
+  82 robot families, 54 worlds / 42 families. Actual sprung bank-water-bank autonomous endpoints/RGB-D acquisition
+  and physical facility door/lift/dock cases recorded. Motor-power/charging, floor-map/RMF transport, wider
+  source-specific missions and older roadmap remain partial. See docs/status/amphibious-facility-2026-10-30.md.'
 current_verification:
   round57_2026_10_19: 'Recorded 2026-10-29: MuJoCo small_house slam drive after the spawn fix 873753f completes
     (28.1 m, RMSE 1.3 cm, map precision/recall 0.97/0.79; 1.49 m and 0.12/0.16 before); rear-steer car course after
@@ -321,12 +321,12 @@ extension_completion_20261020:
 goal: unified_multi_robot_algorithm_lab
 handoff:
   audit: docs/status/audit-2026-10-02.md
-  next_action: Read docs/status/native-forms-2026-10-30.md and docs/REMAINING_WORK_GUIDE.md. Preserve snake/surface/tracked
-    implementations and exact real receipts. Continue complete amphibious/shore-transition model/controllers,
-    actual RMF doors/lifts/docking/energy adapters, per-model terrain/recovery/saved-map missions, then
-    older queue. Aerial R10.3 retains its recorded owner. Do not repeat catalog repair, PX4 relocation,
-    AUV acquisition or basic snake/surface/flipper implementation.
-  next_task: R10.7
+  next_action: Read docs/status/amphibious-facility-2026-10-30.md and docs/REMAINING_WORK_GUIDE.md. Preserve
+    complete sprung amphibious shore routes/mapping and physical facility door/lift/dock controls. Continue
+    actual motor-power/charging, floor-map/RMF/TF transitions and robot transport, then remaining source-specific
+    adapters/missions and older queue. Aerial R10.3 keeps its recorded owner; do not repeat delivered catalog/storage/amphibious/map-export
+    repairs.
+  next_task: R10.2
   no_runtime_repairs_completed_by_this_revision: false
   parallel_ready_after_R0:
   - R1.1
@@ -1297,14 +1297,18 @@ tasks:
         validation_state: primary-source research and actual GUI queued-status rendering; no runtime mission
       R10.1:
         acceptance_ref: ROADMAP.md R10.1
-        active_scope: Shared-world member lifecycle, neutral ownership, physical-peer freshness, scoped
-          reset and actual Nav2 gates implemented.
+        active_scope: Physical fleet_facility doors/lift/car, typed RMF door/lift protocol, native force/position
+          feedback, neutral Facility GUI, peer/height/clock interlocks, unique independently observed docking and
+          explicit unknown unqualified energy.
         depends_on: []
         evidence:
         - docs/status/evidence/workflows-2026-10-27/README.md
         - docs/status/workflows-2026-10-27.md
-        implementation_state: Shared-world member lifecycle, neutral ownership, physical-peer freshness,
-          scoped reset and actual Nav2 gates implemented.
+        - docs/status/amphibious-facility-2026-10-30.md
+        - docs/status/evidence/amphibious-facility-2026-10-30/README.md
+        implementation_state: Physical fleet_facility doors/lift/car, typed RMF door/lift protocol, native force/position
+          feedback, neutral Facility GUI, peer/height/clock interlocks, unique independently observed docking and
+          explicit unknown unqualified energy.
         owner: codex
         scope_paths:
         - docs/
@@ -1320,62 +1324,66 @@ tasks:
         - scripts/
         state: partial
         title: Shared-world multi-robot sessions and per-instance control
-        validation_state: Actual two-body navigation/conflict and independent batch endpoints/cleanup
-          recorded; larger fleets, contacts/loss and backend ports pending.
-        qualification_review: '2026-10-27 documentation review: retain the implemented code, tests and
-          named mission certificates. Full declared roadmap acceptance is still open; test counts, metadata
-          and scene loads do not qualify remaining robot/map/backend missions. See docs/REMAINING_WORK_GUIDE.md.'
+        validation_state: Actual main-door open/close, car-door and L0-L1-L0 motion, neutral startup and Bumperbot
+          Nav2/settled dock measured. Robot lift transport, multi-floor RMF graph/maps/TF, qualified motor-power/charging
+          and larger conflict/loss missions remain.
+        qualification_review: '2026-10-27 documentation review: retain the implemented code, tests and named mission
+          certificates. Full declared roadmap acceptance is still open; test counts, metadata and scene loads do not
+          qualify remaining robot/map/backend missions. See docs/REMAINING_WORK_GUIDE.md.'
         previous_owner: cline-agent
         claimed: '2026-10-27'
-        current_run: /workspace/molar/robot_lab_runtime/extension-completion-20261027-au5q8yp7
-        current_scope: Preserve one-world member isolation; finish lifecycle, ownership and scoped loss/reset
-          behavior required by fleet workflow.
+        current_run: /workspace/molar/robot_lab_runtime/amphibious-infrastructure-20261030-mcpiqquv
+        current_scope: Preserve this delivered implementation and actual scopes; continue remaining motor energy/floor
+          transition/model-specific work.
         historical_unqualified_notes:
         - Implementation complete with contract tests and GUI diagnostics passing
-        - Fleet contract (8 tests), fleet missions, gait contract (all pass), molar backend contract (all
-          pass)
+        - Fleet contract (8 tests), fleet missions, gait contract (all pass), molar backend contract (all pass)
         - No hardware-dependent features required - all software/simulation based
         workflow_delivery_20261027:
           implementation_state: implemented
           owner: codex
           receipt: docs/status/evidence/workflows-2026-10-27/README.md
           full_scope_acceptance: partial
+        updated: '2026-10-30'
       R10.2:
         acceptance_ref: ROADMAP.md R10.2
-        active_scope: Actual queues/settling, bounded traffic retreat/resume, distinct RMF home vertices,
-          scheduled departures/progress/replanning, optional official Humble adapter and native real batches
-          implemented.
+        active_scope: Physical fleet_facility doors/lift/car, typed RMF door/lift protocol, native force/position
+          feedback, neutral Facility GUI, peer/height/clock interlocks, unique independently observed docking and
+          explicit unknown unqualified energy.
         depends_on:
         - R10.1
         evidence:
         - docs/status/evidence/workflows-2026-10-27/README.md
         - docs/status/workflows-2026-10-27.md
-        implementation_state: Actual queues/settling, bounded traffic retreat/resume, distinct RMF home
-          vertices, scheduled departures/progress/replanning, optional official Humble adapter and native
-          real batches implemented.
+        - docs/status/amphibious-facility-2026-10-30.md
+        - docs/status/evidence/amphibious-facility-2026-10-30/README.md
+        implementation_state: Physical fleet_facility doors/lift/car, typed RMF door/lift protocol, native force/position
+          feedback, neutral Facility GUI, peer/height/clock interlocks, unique independently observed docking and
+          explicit unknown unqualified energy.
         owner: codex
         state: partial
         title: Fleet management and Open-RMF mission adapters
-        validation_state: Opposing position swap and source-bound two-goal fleet batch succeed physically;
-          RMF waypoint progress retained, full RMF conflict/infrastructure acceptance pending.
-        qualification_review: '2026-10-27 documentation review: retain the implemented code, tests and
-          named mission certificates. Full declared roadmap acceptance is still open; test counts, metadata
-          and scene loads do not qualify remaining robot/map/backend missions. See docs/REMAINING_WORK_GUIDE.md.'
+        validation_state: Actual main-door open/close, car-door and L0-L1-L0 motion, neutral startup and Bumperbot
+          Nav2/settled dock measured. Robot lift transport, multi-floor RMF graph/maps/TF, qualified motor-power/charging
+          and larger conflict/loss missions remain.
+        qualification_review: '2026-10-27 documentation review: retain the implemented code, tests and named mission
+          certificates. Full declared roadmap acceptance is still open; test counts, metadata and scene loads do not
+          qualify remaining robot/map/backend missions. See docs/REMAINING_WORK_GUIDE.md.'
         previous_owner: cline-agent
         claimed: '2026-10-27'
-        current_run: /workspace/molar/robot_lab_runtime/extension-completion-20261027-au5q8yp7
-        current_scope: Resolve measured RMF traffic stall; integrate queue/coverage conflict recovery
-          and report actual outcomes.
+        current_run: /workspace/molar/robot_lab_runtime/amphibious-infrastructure-20261030-mcpiqquv
+        current_scope: Preserve this delivered implementation and actual scopes; continue remaining motor energy/floor
+          transition/model-specific work.
         historical_unqualified_notes:
         - Implementation complete with contract tests and GUI diagnostics passing
-        - Fleet contract (8 tests), fleet missions, gait contract (all pass), molar backend contract (all
-          pass)
+        - Fleet contract (8 tests), fleet missions, gait contract (all pass), molar backend contract (all pass)
         - No hardware-dependent features required - all software/simulation based
         workflow_delivery_20261027:
           implementation_state: implemented
           owner: codex
           receipt: docs/status/evidence/workflows-2026-10-27/README.md
           full_scope_acceptance: partial
+        updated: '2026-10-30'
       R10.3:
         acceptance_ref: ROADMAP.md R10.3
         active_scope: Native multi-FCU controls, automatic formation/operator-loss workloads, bytewise FCU parameters,
@@ -1574,8 +1582,9 @@ tasks:
           full_scope_acceptance: partial
       R10.7:
         acceptance_ref: ROADMAP.md R10.7
-        active_scope: Native snake/surface/actuated tracked variants and source controls delivered; continue complete
-          amphibious model/controller/shore transition and further source-appropriate modes/backends.
+        active_scope: Complete sprung amphibious wheel/propeller source, bank/ramp world, source bounds/leases, hybrid
+          flow/range emulation and IMU estimation, RGB-D export/reload and source-aware 2.5D shore Plan/Execute. Existing
+          snake/surface/tracked families preserved.
         depends_on:
         - R10.6
         evidence:
@@ -1585,23 +1594,25 @@ tasks:
         - docs/status/native-workflows-2026-10-27.md
         - docs/status/native-forms-2026-10-30.md
         - docs/status/evidence/native-forms-2026-10-30/README.md
-        implementation_state: Complete passive-wheel snake (source Jacobian/rolling sensors/mean frame/scan reprojection/shape-hold
-          Nav2), native surface vessel and harbor (buoyancy/thrust/watchdog/rate-heading controller), explicit tracked
-          force-servo variant and neutral Tracks GUI. Preserve original fixed-flipper source.
+        - docs/status/amphibious-facility-2026-10-30.md
+        - docs/status/evidence/amphibious-facility-2026-10-30/README.md
+        implementation_state: Complete sprung amphibious wheel/propeller source, bank/ramp world, source bounds/leases,
+          hybrid flow/range emulation and IMU estimation, RGB-D export/reload and source-aware 2.5D shore Plan/Execute.
+          Existing snake/surface/tracked families preserved.
         owner: codex
         state: partial
         title: Centipede/segmented and additional robot families
-        validation_state: Actual snake 2D/3D acquisition and installed/acquired-map Nav2 endpoints; surface acquisition/two-goal
-          physical settling; tracked four-joint settling and 0.3005 m flat forward travel. Amphibious initial work,
-          terrain/slip/recovery, articulated-track navigation and wider maps/backends remain.
+        validation_state: Sprung bank-water-bank goals physically settle at about 0.104/0.087 m error; real 6-node/1930-point
+          acquisition. Rigid traction/import/sensor-origin/recheck failures retained. Further terrain, maps, saved
+          localization and force backends remain.
         qualification_review: '2026-10-27 documentation review: retain the implemented code, tests and named mission
-          certificates. Full declared roadmap acceptance is still open; test counts, metadata and scene loads do
-          not qualify remaining robot/map/backend missions. See docs/REMAINING_WORK_GUIDE.md.'
+          certificates. Full declared roadmap acceptance is still open; test counts, metadata and scene loads do not
+          qualify remaining robot/map/backend missions. See docs/REMAINING_WORK_GUIDE.md.'
         previous_owner: cline-agent
         claimed: '2026-10-27'
-        current_run: /workspace/molar/robot_lab_runtime/extension-completion-20261029-vsebubus
-        current_scope: Native snake/surface/actuated tracked variants and source controls delivered; continue complete
-          amphibious model/controller/shore transition and further source-appropriate modes/backends.
+        current_run: /workspace/molar/robot_lab_runtime/amphibious-infrastructure-20261030-mcpiqquv
+        current_scope: Preserve this delivered implementation and actual scopes; continue remaining motor energy/floor
+          transition/model-specific work.
         historical_unqualified_notes:
         - Implementation complete with contract tests and GUI diagnostics passing
         - Fleet contract (8 tests), fleet missions, gait contract (all pass), molar backend contract (all pass)
@@ -1622,8 +1633,9 @@ tasks:
           full_scope_acceptance: partial
       R10.8:
         acceptance_ref: ROADMAP.md R10.8
-        active_scope: Native grouped GUI/defaults/autofill/Tracks controls and real source-bound workload/telemetry
-          delivery; continue wider mission adapters and measured contacts/clearance/applied seeds.
+        active_scope: Native GUI/defaults/autofill for the amphibious rover; Fleet Facility controls; real plant/mission
+          status, source-aware cloud classification, surface angular endpoint contract and actual receipts. Current
+          inventory 152/82 and 54/42.
         depends_on:
         - R10.1
         - R10.2
@@ -1639,9 +1651,11 @@ tasks:
         - docs/status/native-workflows-2026-10-27.md
         - docs/status/native-forms-2026-10-30.md
         - docs/status/evidence/native-forms-2026-10-30/README.md
-        implementation_state: Existing native producers/startup identity/frozen workload snapshots preserved; actual
-          snake/surface/AUV cases, joint/estimated odometry/AMCL telemetry and current GUI commands recorded. New
-          tracked variant remains nested under one family.
+        - docs/status/amphibious-facility-2026-10-30.md
+        - docs/status/evidence/amphibious-facility-2026-10-30/README.md
+        implementation_state: Native GUI/defaults/autofill for the amphibious rover; Fleet Facility controls; real
+          plant/mission status, source-aware cloud classification, surface angular endpoint contract and actual receipts.
+          Current inventory 152/82 and 54/42.
         owner: codex
         scope_paths:
         - src/robot_lab/robot_lab_benchmark/
@@ -1650,18 +1664,16 @@ tasks:
         - docs/
         state: partial
         title: Native fleet/swarm/marine GUI, taxonomy and experiment workflows
-        validation_state: 'Installed Tk selection/commands: 151 profiles/81 families, 52 worlds/40 families. AUV
-          acquisition is measured, not missing. Snake 2D/3D/acquired-map endpoints, surface route and external flipper
-          diagnostic have exact receipts. Further missions, applied seeds, contacts/clearance/resource campaigns
-          remain.'
+        validation_state: Actual Tk selection/commands and named physical shore/facility cases. Further source/controller/map/backend,
+          contacts/clearance/applied seed and full release acceptance remain.
         qualification_review: '2026-10-27 documentation review: retain the implemented code, tests and named mission
-          certificates. Full declared roadmap acceptance is still open; test counts, metadata and scene loads do
-          not qualify remaining robot/map/backend missions. See docs/REMAINING_WORK_GUIDE.md.'
+          certificates. Full declared roadmap acceptance is still open; test counts, metadata and scene loads do not
+          qualify remaining robot/map/backend missions. See docs/REMAINING_WORK_GUIDE.md.'
         previous_owner: cline-agent
         claimed: '2026-10-27'
-        current_run: /workspace/molar/robot_lab_runtime/extension-completion-20261029-vsebubus
-        current_scope: Native grouped GUI/defaults/autofill/Tracks controls and real source-bound workload/telemetry
-          delivery; continue wider mission adapters and measured contacts/clearance/applied seeds.
+        current_run: /workspace/molar/robot_lab_runtime/amphibious-infrastructure-20261030-mcpiqquv
+        current_scope: Preserve this delivered implementation and actual scopes; continue remaining motor energy/floor
+          transition/model-specific work.
         historical_unqualified_notes:
         - Implementation complete with contract tests and GUI diagnostics passing
         - Fleet contract (8 tests), fleet missions, gait contract (all pass), molar backend contract (all pass)
@@ -4789,9 +4801,9 @@ project_completion_20261027:
   owner: codex
   state: active
   updated: '2026-10-30'
-  current_scope: Finish native snake sensor/map/navigation and articulated flipper controls, surface-vessel
-    route control and actual GUI integration; publish source-scoped evidence, documentation and remaining amphibious/RMF/per-model
-    work. Aerial R10.3 retains its recorded owner.
+  current_scope: Continue actual motor-power/charging and multi-floor RMF/map/TF transport after delivered sprung
+    amphibious and physical fleet facility workflows, then remaining adapters/missions and older roadmap. Preserve
+    aerial R10.3 ownership.
   requested: '2026-10-27'
   baseline_revision: 9664c37a820cb54a6c6d1eecfb0ff580ede6f3af
   run_directory: /workspace/molar/robot_lab_runtime/project-completion-20261027-vne3n358
@@ -4811,7 +4823,7 @@ project_completion_20261027:
   - scoped qualification and reproducible release
   status_boundary: Close tasks only against their declared actual acceptance. Preserve exact historical certificates,
     source limits and failures. Optional physical HIL remains a separate hardware prerequisite.
-  continuation_run_directory: /workspace/molar/robot_lab_runtime/extension-completion-20261029-vsebubus
+  continuation_run_directory: /workspace/molar/robot_lab_runtime/amphibious-infrastructure-20261030-mcpiqquv
 native_workflows_20261027:
   owner: codex
   state: partial
@@ -4875,3 +4887,42 @@ native_forms_20261030:
   - older_roadmap
   source_boundary: Post-run native source manifest; startup-frozen workload producers. No immutable full-build
     or broad qualification claim.
+  historical_checkpoint: true
+  superseded_by: amphibious_infrastructure_20261030
+amphibious_infrastructure_20261030:
+  owner: codex
+  state: partial
+  baseline_revision: 09034dc
+  run_directory: /workspace/molar/robot_lab_runtime/amphibious-infrastructure-20261030-mcpiqquv
+  current_scope: Complete native amphibious source, shore map, physical land/water controls and GUI; then actual
+    fleet infrastructure adapters and remaining integrations. Preserve aerial ownership and prior native missions.
+  scope_paths:
+  - src/
+  - scripts/
+  - docs/
+  - README.md
+  - ROADMAP.md
+  updated: '2026-10-30'
+  source_branch: master
+  implementation_state: Delivered sprung amphibious controls/hybrid mapping/source-aware shore routes, physical
+    facility door/lift/dock adapters and native GUI; verified motor energy and floor-map/RMF transitions remain
+    initial work.
+  inventory:
+    robot_profiles: 152
+    selectable_robot_families: 82
+    worlds: 54
+    world_families: 42
+  receipt: docs/status/evidence/amphibious-facility-2026-10-30/README.md
+  status: docs/status/amphibious-facility-2026-10-30.md
+  measured_cases:
+  - sprung_shore_two_goal_roundtrip
+  - sprung_rgbd_acquisition
+  - physical_facility_neutral_doors_lift_dock
+  - surface_angular_endpoint_contract
+  remaining:
+  - actual_motor_power_and_charging
+  - multi_floor_rmf_graph_maps_tf_and_robot_transport
+  - further_terrain_saved_map_world_backend_missions
+  - remaining_original_roadmap
+  source_boundary: Actual named cases and frozen workload identities; post-run native source manifest, no immutable
+    whole-build or universal backend qualification.

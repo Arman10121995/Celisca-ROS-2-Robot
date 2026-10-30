@@ -1,5 +1,11 @@
 # Robot Lab GUI workspace
 
+Latest October 30: the amphibious rover uses Launch's Marine controls with
+wheel/thrust feedback and shore Plan/Execute. Fleet & Swarm has a compact
+**Facility** subpage for physical doors, lift and docking. Battery values stay
+unknown until backend motor-power readback is qualified.
+[Current workflows](../status/amphibious-facility-2026-10-30.md).
+
 October 30 additions: Launch's same control column now includes **Gait** for
 the passive-wheel snake, **Marine** for the surface vessel, and **Tracks** for
 the tracked family's articulated-flipper variant. Selecting a robot chooses

@@ -1,0 +1,23 @@
+{
+  "schema": "robot_lab.extension_workload.v1",
+  "workflow": "marine",
+  "task": "mapping",
+  "truth_coordinates": "selected_world",
+  "timeout_s": 95.0,
+  "distance_m": 0.4,
+  "selection": {},
+  "launch_command": [
+    "ros2",
+    "launch",
+    "robot_lab_bringup",
+    "simulated_robot.launch.py",
+    "robot_model:=lab_amphibious",
+    "simulator:=gazebo",
+    "mode:=marine",
+    "map_name:=amphibious_shore",
+    "gui:=false",
+    "start_rviz:=false",
+    "marine_slam:=true"
+  ],
+  "expected_producer_sha256": "6b3f7bbd78521448882b2edff0850f2b2827c736d9080ac57d97647c83fe1647"
+}

@@ -26,6 +26,11 @@ if(ignition-gazebo6_FOUND)
   target_link_libraries(robot_lab_command_watchdog ignition-gazebo6::ignition-gazebo6
     ignition-plugin1::ignition-plugin1 ignition-transport11::ignition-transport11 ignition-msgs8::ignition-msgs8)
   install(TARGETS robot_lab_command_watchdog LIBRARY DESTINATION lib)
+  add_library(robot_lab_amphibious_drive SHARED systems/amphibious_drive.cc)
+  target_compile_features(robot_lab_amphibious_drive PRIVATE cxx_std_17)
+  target_link_libraries(robot_lab_amphibious_drive ignition-gazebo6::ignition-gazebo6
+    ignition-plugin1::ignition-plugin1 ignition-transport11::ignition-transport11 ignition-msgs8::ignition-msgs8)
+  install(TARGETS robot_lab_amphibious_drive LIBRARY DESTINATION lib)
   add_library(robot_lab_tracked_vehicle SHARED vendor/native_tracks/TrackedVehicle.cc)
   target_compile_features(robot_lab_tracked_vehicle PRIVATE cxx_std_17)
   target_link_libraries(robot_lab_tracked_vehicle ignition-gazebo6::ignition-gazebo6

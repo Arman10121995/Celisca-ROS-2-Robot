@@ -30,9 +30,9 @@ def sonar_range(scene, position, orientation, maximum=10.):
     return math.inf
 
 
-def bottom_ranges(scene, position, orientation, maximum=10.):
+def bottom_ranges(scene, position, orientation, maximum=10., origin_offset=-.2):
     """Trace four bottom-lock beams against selected-world collision surfaces."""
-    origin = np.asarray(position, dtype=float) + rotation(orientation) @ np.array([0., 0., -.2])
+    origin = np.asarray(position, dtype=float) + rotation(orientation) @ np.array([0., 0., origin_offset])
     result = []
     for beam in JANUS @ rotation(orientation).T:
         distance = .1
@@ -70,7 +70,7 @@ class MarineOdometry:
         self.velocity = np.zeros(3)
         self.orientation = np.zeros(3)
 
-    def update(self, stamp, body_velocity, velocity_covariance, orientation, pressure, pressure_variance, surface=0.):
+    def update(self, stamp, body_velocity, velocity_covariance, orientation, pressure, pressure_variance, surface=0., use_pressure=True):
         velocity, covariance, orientation = np.asarray(body_velocity), np.asarray(velocity_covariance), np.asarray(orientation)
         if (velocity.shape != (3,) or covariance.shape != (3, 3) or orientation.shape != (3,)
                 or not np.isfinite([stamp, pressure, pressure_variance, surface]).all()
@@ -87,9 +87,10 @@ class MarineOdometry:
         self.covariance += world_rotation @ covariance @ world_rotation.T * dt ** 2 + np.eye(3) * .0001 * dt
         z = surface - (pressure - 101325.) / (self.density * 9.81)
         variance = pressure_variance / (self.density * 9.81) ** 2
-        gain = self.covariance[:, 2] / (self.covariance[2, 2] + variance)
-        self.position += gain * (z - self.position[2])
-        self.covariance -= np.outer(gain, self.covariance[2, :])
+        if use_pressure:
+            gain = self.covariance[:, 2] / (self.covariance[2, 2] + variance)
+            self.position += gain * (z - self.position[2])
+            self.covariance -= np.outer(gain, self.covariance[2, :])
         self.velocity, self.orientation, self.last_stamp = world_velocity, orientation.copy(), stamp
         return self.position.copy()
 

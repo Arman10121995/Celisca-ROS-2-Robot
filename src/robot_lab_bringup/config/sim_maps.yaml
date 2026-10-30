@@ -1,4 +1,40 @@
 maps:
+  fleet_facility:
+    gazebo:
+      world_name: fleet_facility
+      world_package: robot_lab_maps
+      world_path: maps/fleet_facility/worlds/fleet_facility.world
+    map:
+      has_2d_map: true
+      package: robot_lab_maps
+      path: maps/fleet_facility/maps/map.yaml
+    fleet_infrastructure: maps/fleet_facility/infrastructure.yaml
+    spawn:
+      x: -4.0
+      y: -2.0
+      z: 0.1
+      yaw: 0.0
+    notes: Physical doors/lift, source-derived L0 occupancy, actual infrastructure feedback
+      and authored energy model. Upper-floor navigation/transport need separate maps
+      and acceptance.
+  amphibious_shore:
+    gazebo:
+      world_name: amphibious_shore
+      world_package: robot_lab_maps
+      world_path: maps/amphibious_shore/worlds/amphibious_shore.world
+    map:
+      has_2d_map: false
+    marine:
+      bottom_z: -1.5
+      density: 1025.0
+      surface_z: 0.0
+    spawn:
+      x: 8.0
+      y: 0.0
+      z: -0.7
+      yaw: 0.0
+    notes: Complete authored bank, shore ramp, water/seabed and channel markers. Native
+      amphibious physics; 2D terrain navigation not yet qualified.
   surface_harbor:
     gazebo: {world_name: surface_harbor, world_package: robot_lab_maps, world_path: maps/surface_harbor/worlds/surface_harbor.world}
     map: {has_2d_map: false}

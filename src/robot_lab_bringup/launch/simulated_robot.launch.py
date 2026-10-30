@@ -808,8 +808,8 @@ def _build_simulation_actions(context):
         if robot_config.get('marine_model'):
             if _launch_value(context, 'simulator') != 'gazebo' or mode_name not in ('display', 'marine'):
                 raise RuntimeError('The laboratory ROV currently supports Gazebo Display/Marine only')
-            selected_map = 'marine_tank' if map_free else map_name
-            if not map_configs['maps'].get(selected_map, {}).get('marine'):
+            selected_map = ('amphibious_shore' if robot_model=='lab_amphibious' else 'marine_tank') if map_free else map_name
+            if not map_configs['maps'].get(selected_map, {}).get('marine') and robot_model!='lab_amphibious':
                 raise RuntimeError('Choose a marine water world for the laboratory ROV')
             marine_args = dict(map_name=selected_map, control='true' if mode_name == 'marine' else 'false',
                 slam=_config_value(context, 'marine_slam', 'false'), database=_config_value(context, 'marine_database', ''),

@@ -50,7 +50,9 @@ ownership before runtime edits, preserve existing source certificates and keep
 large outputs on SSD. Complete initial functionality before broad validation;
 neutral enablement, bounds, Stop and command-loss behavior are implementation.
 
-[The October 30 native-form delivery](docs/status/native-forms-2026-10-30.md) adds actual snake mapping and acquired-map navigation, surface-vessel acquisition/two-goal arrival, AUV acquisition and bounded articulated flippers. The grouped GUI exposes their controls and command defaults.
+[The later October 30 amphibious/facility delivery](docs/status/amphibious-facility-2026-10-30.md) adds a sprung native rover, actual shore round-trip/SLAM, physical door/lift/dock adapters and a Facility GUI. Motor-power/charging proof, floor-map/RMF transitions and broader missions remain.
+
+[The earlier October 30 native-form delivery](docs/status/native-forms-2026-10-30.md) adds actual snake mapping and acquired-map navigation, surface-vessel acquisition/two-goal arrival, AUV acquisition and bounded articulated flippers. The grouped GUI exposes their controls and command defaults.
 
 [The earlier October 27 continuation](docs/status/native-workflows-2026-10-27.md) adds real native workload producers, range-reference formation/operator-loss landing, measured fleet batch reset and tracked controls/navigation.
 [The earlier workflow delivery](docs/status/workflows-2026-10-27.md) records
@@ -61,17 +63,17 @@ working launch/GUI/map export features from scratch.
 | Priority | Task | Current implementation | Next acceptance/work |
 |---|---|---|---|
 | Delivered | R3.6 catalog restoration | Seven profiles restored, merge preservation, native families/defaults/autofill and explicit source-recheck candidates | New source-qualified controller missions; remaining imports |
-| 1 | R10.1–R10.3 fleet | Real queues/traffic retreat, optional RMF, coverage, native session editor; conflicting routes and independent settled batch goals measured | Full RMF conflict/infrastructure, coverage/contact/loss and larger-fleet missions |
+| 1 | R10.1–R10.3 fleet | Real queues/traffic retreat, optional RMF, coverage, native session editor; conflicting routes and independent settled batch goals measured | Physical facility door/lift/dock workflows delivered; motor-power/charging, floor-map/RMF transitions, coverage/contact/loss and larger-fleet missions |
 | 2 | R10.3 / R10.8 aerial swarm | Native multi-FCU controls and workloads; actual two-X500 range-reference formation and operator-loss landing on nav_empty | Other maps, larger groups, other behaviors and member-loss/contact missions |
 | 3 | R10.4–R10.5 marine | Sensor estimation, source-heading alignment, real map flush/export/protected reload, native estimated missions/ahead waypoint; ROV route and AUV acquisition measured; native surface vessel/harbor mapping and two-goal route delivered | AUV/surface saved-map routes, obstacles/current/contact/loss across installed water worlds |
 | 4 | R10.6–R10.7 multi-leg | Source FK/contact odometry, saved 2D/3D maps, localization/Nav2 and native controls; hexapod Nav2 result and octopod 3D export measured | Per-model higher-mode endpoints, terrain/slip/recovery and additional backends |
-| 5 | R10.7 additional forms | Complete centipede, snake, surface vessel and tracked family; snake 2D/3D acquisition/saved-map Nav2, surface route and actuated flipper/Drive cases measured | Amphibious model/controller; terrain/slip/recovery, flipper-aware navigation and further backends |
+| 5 | R10.7 additional forms | Complete centipede, snake, surface, sprung amphibious and tracked sources; shore round-trip/RGB-D, snake saved-map Nav2, surface route and flipper/Drive cases measured | Further terrain/slip/recovery, flipper-aware navigation and source-appropriate backends |
 | 6 | R10.8 / R4 / R8.3 workloads | Actual Nav2/fleet/marine/gait/aerial producers, editor snapshots, measured endpoints/acquired artifacts, fleet batch reset and owned cleanup | Further saved-map/behavior cases, applied seeds, contact/clearance and larger resource campaigns |
 | 7 | R6 / R3.6 maps | Existing imports, terrain and occupancy tooling retained; tank reference board/source resources repaired | Remaining reviewed imports, actors, multi-floor/terrain and backend missions |
 | 8 | R5 / R7–R9 / R11–R12 original queue | Existing exact-cell certificates retained | Detailed original task criteria below; no completion from frameworks/test counts |
 
-Current inventory is **151 robot profiles / 81 selectable families**, and
-**52 world profiles / 40 selectable families**. Internal component-only group
+Current inventory is **152 robot profiles / 82 selectable families**, and
+**54 world profiles / 42 selectable families**. Internal component-only group
 records are not selectable complete families. Availability and implementation
 are distinct from measured mission qualification.
 
@@ -1689,6 +1691,8 @@ tilt/effort/loss/reset and sensor missions on each advertised backend. Count
 physical legs; six- and eight-legged controllers require separate contracts.
 
 ### R10.7 — Segmented/centipede and additional families
+
+Later October 30: the complete first-party sprung amphibious rover is integrated through normal native controls/commands. Actual bank-water-bank autonomous endpoints and RGB-D acquisition pass; the rigid traction failure and sensor/recheck failures are preserved. [Delivery and exact limits](docs/status/amphibious-facility-2026-10-30.md). Remaining model-specific terrain, saved-map/obstacle routes and backend adapters retain their full scope.
 
 October 30: complete `lab_snake` passive-wheel source and `lab_usv` catamaran have native controls, sensor pipelines and measured mapping/navigation cases. `lab_tracked_articulated` adds four bounded native force servos and a neutral Tracks GUI inside the original tracked family; actual angles and flat forward travel are measured. [Current delivery](docs/status/native-forms-2026-10-30.md). Amphibious, terrain/slip/recovery, articulated-track navigation and further backend scope remain open.
 

@@ -1148,7 +1148,7 @@ class HealthTab(LabTab):
             WORKSPACE_ROOT / 'docs/status/CHECKLIST.md')).grid(
                 row=5, column=2, sticky='ew', padx=(4, 0), pady=2)
         ttk.Button(frame, text='Latest native robot delivery', command=lambda: self._show_document(
-            WORKSPACE_ROOT / 'docs/status/native-forms-2026-10-30.md')).grid(
+            WORKSPACE_ROOT / 'docs/status/amphibious-facility-2026-10-30.md')).grid(
                 row=10, column=0, columnspan=3, sticky='ew', pady=2)
 
         self.summary = scrolledtext.ScrolledText(self, wrap="word", height=16)

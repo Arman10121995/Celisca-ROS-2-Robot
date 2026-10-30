@@ -1,0 +1,503 @@
+<?xml version='1.0' encoding='utf-8'?>
+<sdf version="1.7">
+  <world name="fleet_facility">
+    <physics name="physics" type="ode">
+      <max_step_size>.002</max_step_size>
+      <real_time_factor>1</real_time_factor>
+    </physics>
+    <gravity>0 0 -9.81</gravity>
+    <plugin name="ignition::gazebo::systems::Physics" filename="ignition-gazebo-physics-system" />
+    <plugin name="ignition::gazebo::systems::UserCommands" filename="ignition-gazebo-user-commands-system" />
+    <plugin name="ignition::gazebo::systems::SceneBroadcaster" filename="ignition-gazebo-scene-broadcaster-system" />
+    <plugin name="ignition::gazebo::systems::Sensors" filename="ignition-gazebo-sensors-system">
+      <render_engine>ogre2</render_engine>
+    </plugin>
+    <plugin name="ignition::gazebo::systems::Imu" filename="ignition-gazebo-imu-system" />
+    <light name="sun" type="directional">
+      <pose>0 0 10 0 0 0</pose>
+      <diffuse>.9 .9 .9 1</diffuse>
+      <direction>-.3 .2 -1</direction>
+    </light>
+    <model name="west_floor">
+      <static>true</static>
+      <pose>-1.5 0 -0.15 0 0 0</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <box>
+              <size>9 10 0.3</size>
+            </box>
+          </geometry>
+          <material>
+            <ambient>.55 .55 .55 1</ambient>
+            <diffuse>.55 .55 .55 1</diffuse>
+          </material>
+        </visual>
+        <collision name="collision">
+          <geometry>
+            <box>
+              <size>9 10 0.3</size>
+            </box>
+          </geometry>
+        </collision>
+      </link>
+    </model>
+    <model name="east_floor">
+      <static>true</static>
+      <pose>5.5 0 -0.15 0 0 0</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <box>
+              <size>1 10 0.3</size>
+            </box>
+          </geometry>
+          <material>
+            <ambient>.55 .55 .55 1</ambient>
+            <diffuse>.55 .55 .55 1</diffuse>
+          </material>
+        </visual>
+        <collision name="collision">
+          <geometry>
+            <box>
+              <size>1 10 0.3</size>
+            </box>
+          </geometry>
+        </collision>
+      </link>
+    </model>
+    <model name="north_floor">
+      <static>true</static>
+      <pose>4 3 -0.15 0 0 0</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <box>
+              <size>2 4 0.3</size>
+            </box>
+          </geometry>
+          <material>
+            <ambient>.55 .55 .55 1</ambient>
+            <diffuse>.55 .55 .55 1</diffuse>
+          </material>
+        </visual>
+        <collision name="collision">
+          <geometry>
+            <box>
+              <size>2 4 0.3</size>
+            </box>
+          </geometry>
+        </collision>
+      </link>
+    </model>
+    <model name="south_floor">
+      <static>true</static>
+      <pose>4 -3 -0.15 0 0 0</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <box>
+              <size>2 4 0.3</size>
+            </box>
+          </geometry>
+          <material>
+            <ambient>.55 .55 .55 1</ambient>
+            <diffuse>.55 .55 .55 1</diffuse>
+          </material>
+        </visual>
+        <collision name="collision">
+          <geometry>
+            <box>
+              <size>2 4 0.3</size>
+            </box>
+          </geometry>
+        </collision>
+      </link>
+    </model>
+    <model name="wall_0">
+      <static>true</static>
+      <pose>-6 0 1.25 0 0 0</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <box>
+              <size>0.2 10 2.5</size>
+            </box>
+          </geometry>
+          <material>
+            <ambient>.65 .7 .75 1</ambient>
+            <diffuse>.65 .7 .75 1</diffuse>
+          </material>
+        </visual>
+        <collision name="collision">
+          <geometry>
+            <box>
+              <size>0.2 10 2.5</size>
+            </box>
+          </geometry>
+        </collision>
+      </link>
+    </model>
+    <model name="wall_1">
+      <static>true</static>
+      <pose>6 0 1.25 0 0 0</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <box>
+              <size>0.2 10 2.5</size>
+            </box>
+          </geometry>
+          <material>
+            <ambient>.65 .7 .75 1</ambient>
+            <diffuse>.65 .7 .75 1</diffuse>
+          </material>
+        </visual>
+        <collision name="collision">
+          <geometry>
+            <box>
+              <size>0.2 10 2.5</size>
+            </box>
+          </geometry>
+        </collision>
+      </link>
+    </model>
+    <model name="wall_2">
+      <static>true</static>
+      <pose>0 5 1.25 0 0 0</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <box>
+              <size>12 0.2 2.5</size>
+            </box>
+          </geometry>
+          <material>
+            <ambient>.65 .7 .75 1</ambient>
+            <diffuse>.65 .7 .75 1</diffuse>
+          </material>
+        </visual>
+        <collision name="collision">
+          <geometry>
+            <box>
+              <size>12 0.2 2.5</size>
+            </box>
+          </geometry>
+        </collision>
+      </link>
+    </model>
+    <model name="wall_3">
+      <static>true</static>
+      <pose>0 -5 1.25 0 0 0</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <box>
+              <size>12 0.2 2.5</size>
+            </box>
+          </geometry>
+          <material>
+            <ambient>.65 .7 .75 1</ambient>
+            <diffuse>.65 .7 .75 1</diffuse>
+          </material>
+        </visual>
+        <collision name="collision">
+          <geometry>
+            <box>
+              <size>12 0.2 2.5</size>
+            </box>
+          </geometry>
+        </collision>
+      </link>
+    </model>
+    <model name="wall_4">
+      <static>true</static>
+      <pose>0 -2.9 1.25 0 0 0</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <box>
+              <size>0.15 4.2 2.5</size>
+            </box>
+          </geometry>
+          <material>
+            <ambient>.65 .7 .75 1</ambient>
+            <diffuse>.65 .7 .75 1</diffuse>
+          </material>
+        </visual>
+        <collision name="collision">
+          <geometry>
+            <box>
+              <size>0.15 4.2 2.5</size>
+            </box>
+          </geometry>
+        </collision>
+      </link>
+    </model>
+    <model name="wall_5">
+      <static>true</static>
+      <pose>0 2.9 1.25 0 0 0</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <box>
+              <size>0.15 4.2 2.5</size>
+            </box>
+          </geometry>
+          <material>
+            <ambient>.65 .7 .75 1</ambient>
+            <diffuse>.65 .7 .75 1</diffuse>
+          </material>
+        </visual>
+        <collision name="collision">
+          <geometry>
+            <box>
+              <size>0.15 4.2 2.5</size>
+            </box>
+          </geometry>
+        </collision>
+      </link>
+    </model>
+    <model name="upper_landing">
+      <static>true</static>
+      <pose>2 0 2.85 0 0 0</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <box>
+              <size>2 3 0.3</size>
+            </box>
+          </geometry>
+          <material>
+            <ambient>.35 .6 .7 1</ambient>
+            <diffuse>.35 .6 .7 1</diffuse>
+          </material>
+        </visual>
+        <collision name="collision">
+          <geometry>
+            <box>
+              <size>2 3 0.3</size>
+            </box>
+          </geometry>
+        </collision>
+      </link>
+    </model>
+    <model name="facility">
+      <static>false</static>
+      <link name="anchor">
+        <inertial>
+          <mass>1</mass>
+          <inertia />
+        </inertial>
+      </link>
+      <joint name="anchor_fixed" type="fixed">
+        <parent>world</parent>
+        <child>anchor</child>
+      </joint>
+      <link name="main_door">
+        <pose>0.16 0 1.1 0 0 0</pose>
+        <inertial>
+          <mass>12.0</mass>
+          <inertia>
+            <ixx>7.400000000000001</ixx>
+            <iyy>4.846400000000001</iyy>
+            <izz>2.5664000000000007</izz>
+          </inertia>
+        </inertial>
+        <collision name="main_door_collision">
+          <geometry>
+            <box>
+              <size>0.08 1.6 2.2</size>
+            </box>
+          </geometry>
+        </collision>
+        <visual name="main_door_visual">
+          <geometry>
+            <box>
+              <size>0.08 1.6 2.2</size>
+            </box>
+          </geometry>
+        </visual>
+      </link>
+      <joint name="door_main" type="prismatic">
+        <parent>anchor</parent>
+        <child>main_door</child>
+        <axis>
+          <xyz>0 1 0</xyz>
+          <limit>
+            <lower>0</lower>
+            <upper>1.8</upper>
+            <effort>300.0</effort>
+            <velocity>0.25</velocity>
+          </limit>
+        </axis>
+      </joint>
+      <plugin name="ignition::gazebo::systems::JointPositionController" filename="ignition-gazebo-joint-position-controller-system">
+        <joint_name>door_main</joint_name>
+        <topic>/facility/door_main/target</topic>
+        <p_gain>300.0</p_gain>
+        <d_gain>80.0</d_gain>
+        <i_gain>20</i_gain>
+        <i_min>-8</i_min>
+        <i_max>8</i_max>
+        <cmd_min>-300.0</cmd_min>
+        <cmd_max>300.0</cmd_max>
+        <use_velocity_commands>false</use_velocity_commands>
+        <initial_position>0</initial_position>
+      </plugin>
+      <link name="lift_door">
+        <pose>3.08 0 1.1 0 0 0</pose>
+        <inertial>
+          <mass>15.0</mass>
+          <inertia>
+            <ixx>11.049999999999999</ixx>
+            <iyy>6.058000000000001</iyy>
+            <izz>5.008</izz>
+          </inertia>
+        </inertial>
+        <collision name="lift_door_collision">
+          <geometry>
+            <box>
+              <size>0.08 2.0 2.2</size>
+            </box>
+          </geometry>
+        </collision>
+        <visual name="lift_door_visual">
+          <geometry>
+            <box>
+              <size>0.08 2.0 2.2</size>
+            </box>
+          </geometry>
+        </visual>
+      </link>
+      <joint name="door_lift" type="prismatic">
+        <parent>lift_platform</parent>
+        <child>lift_door</child>
+        <axis>
+          <xyz>0 1 0</xyz>
+          <limit>
+            <lower>0</lower>
+            <upper>2.2</upper>
+            <effort>300.0</effort>
+            <velocity>0.25</velocity>
+          </limit>
+        </axis>
+      </joint>
+      <plugin name="ignition::gazebo::systems::JointPositionController" filename="ignition-gazebo-joint-position-controller-system">
+        <joint_name>door_lift</joint_name>
+        <topic>/facility/door_lift/target</topic>
+        <p_gain>300.0</p_gain>
+        <d_gain>80.0</d_gain>
+        <i_gain>20</i_gain>
+        <i_min>-8</i_min>
+        <i_max>8</i_max>
+        <cmd_min>-300.0</cmd_min>
+        <cmd_max>300.0</cmd_max>
+        <use_velocity_commands>false</use_velocity_commands>
+        <initial_position>0</initial_position>
+      </plugin>
+      <link name="lift_platform">
+        <pose>4 0 -0.05 0 0 0</pose>
+        <inertial>
+          <mass>50.0</mass>
+          <inertia>
+            <ixx>16.708333333333332</ixx>
+            <iyy>16.708333333333332</iyy>
+            <izz>33.333333333333336</izz>
+          </inertia>
+        </inertial>
+        <collision name="lift_platform_collision">
+          <geometry>
+            <box>
+              <size>2 2 0.1</size>
+            </box>
+          </geometry>
+        </collision>
+        <visual name="lift_platform_visual">
+          <geometry>
+            <box>
+              <size>2 2 0.1</size>
+            </box>
+          </geometry>
+        </visual>
+        <collision name="car_wall_0_collision">
+          <pose>0.95 0 1.15 0 0 0</pose>
+          <geometry>
+            <box>
+              <size>0.08 2.0 2.2</size>
+            </box>
+          </geometry>
+        </collision>
+        <visual name="car_wall_0_visual">
+          <pose>0.95 0 1.15 0 0 0</pose>
+          <geometry>
+            <box>
+              <size>0.08 2.0 2.2</size>
+            </box>
+          </geometry>
+        </visual>
+        <collision name="car_wall_1_collision">
+          <pose>0.1 0.95 1.15 0 0 0</pose>
+          <geometry>
+            <box>
+              <size>1.8 0.08 2.2</size>
+            </box>
+          </geometry>
+        </collision>
+        <visual name="car_wall_1_visual">
+          <pose>0.1 0.95 1.15 0 0 0</pose>
+          <geometry>
+            <box>
+              <size>1.8 0.08 2.2</size>
+            </box>
+          </geometry>
+        </visual>
+        <collision name="car_wall_2_collision">
+          <pose>0.1 -0.95 1.15 0 0 0</pose>
+          <geometry>
+            <box>
+              <size>1.8 0.08 2.2</size>
+            </box>
+          </geometry>
+        </collision>
+        <visual name="car_wall_2_visual">
+          <pose>0.1 -0.95 1.15 0 0 0</pose>
+          <geometry>
+            <box>
+              <size>1.8 0.08 2.2</size>
+            </box>
+          </geometry>
+        </visual>
+      </link>
+      <joint name="lift_car" type="prismatic">
+        <parent>anchor</parent>
+        <child>lift_platform</child>
+        <axis>
+          <xyz>0 0 1</xyz>
+          <limit>
+            <lower>0</lower>
+            <upper>3.0</upper>
+            <effort>1600.0</effort>
+            <velocity>0.25</velocity>
+          </limit>
+        </axis>
+      </joint>
+      <plugin name="ignition::gazebo::systems::JointPositionController" filename="ignition-gazebo-joint-position-controller-system">
+        <joint_name>lift_car</joint_name>
+        <topic>/facility/lift_car/target</topic>
+        <p_gain>40000.0</p_gain>
+        <d_gain>3000.0</d_gain>
+        <i_gain>100</i_gain>
+        <i_min>-8</i_min>
+        <i_max>8</i_max>
+        <cmd_min>-1600.0</cmd_min>
+        <cmd_max>1600.0</cmd_max>
+        <use_velocity_commands>false</use_velocity_commands>
+        <initial_position>0</initial_position>
+      </plugin>
+      <plugin name="ignition::gazebo::systems::JointStatePublisher" filename="ignition-gazebo-joint-state-publisher-system">
+        <topic>/facility/joint_states</topic>
+      </plugin>
+    </model>
+  </world>
+</sdf>

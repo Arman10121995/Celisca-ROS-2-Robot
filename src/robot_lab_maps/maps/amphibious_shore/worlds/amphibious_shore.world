@@ -1,0 +1,317 @@
+<?xml version='1.0' encoding='utf-8'?>
+<sdf version="1.7">
+  <world name="amphibious_shore">
+    <physics name="marine_physics" type="ode">
+      <max_step_size>0.001</max_step_size>
+      <real_time_factor>1</real_time_factor>
+    </physics>
+    <gravity>0 0 -9.81</gravity>
+    <plugin filename="ignition-gazebo-physics-system" name="ignition::gazebo::systems::Physics" />
+    <plugin filename="ignition-gazebo-user-commands-system" name="ignition::gazebo::systems::UserCommands" />
+    <plugin filename="ignition-gazebo-scene-broadcaster-system" name="ignition::gazebo::systems::SceneBroadcaster" />
+    <plugin filename="ignition-gazebo-sensors-system" name="ignition::gazebo::systems::Sensors">
+      <render_engine>ogre2</render_engine>
+    </plugin>
+    <plugin filename="ignition-gazebo-imu-system" name="ignition::gazebo::systems::Imu" />
+    <plugin filename="ignition-gazebo-buoyancy-system" name="ignition::gazebo::systems::Buoyancy">
+      <graded_buoyancy>
+        <default_density>1025</default_density>
+        <density_change>
+          <above_depth>0</above_depth>
+          <density>1.225</density>
+        </density_change>
+      </graded_buoyancy>
+      <enable>lab_amphibious</enable>
+    </plugin>
+    <scene>
+      <ambient>.3 .55 .6 1</ambient>
+      <background>.05 .18 .25 1</background>
+    </scene>
+    <light name="sun" type="directional">
+      <pose>0 0 10 0 0 0</pose>
+      <diffuse>.8 .9 1 1</diffuse>
+      <direction>-.3 .2 -1</direction>
+    </light>
+    <model name="seafloor">
+      <static>true</static>
+      <pose>0 0 -1.7 0 0 0</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <box>
+              <size>24 12 0.4</size>
+            </box>
+          </geometry>
+          <material>
+            <ambient>.35 .3 .2 1</ambient>
+            <diffuse>.35 .3 .2 1</diffuse>
+          </material>
+        </visual>
+        <collision name="collision">
+          <geometry>
+            <box>
+              <size>24 12 0.4</size>
+            </box>
+          </geometry>
+        </collision>
+      </link>
+    </model>
+    <model name="water_surface">
+      <static>true</static>
+      <pose>0 0 0 0 0 0</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <box>
+              <size>24 12 0.01</size>
+            </box>
+          </geometry>
+          <material>
+            <ambient>0 .4 .7 .2</ambient>
+            <diffuse>0 .4 .7 .2</diffuse>
+          </material>
+        </visual>
+      </link>
+    </model>
+    <model name="west_bank">
+      <static>true</static>
+      <pose>-7.5 0 -0.55 0 0 0</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <box>
+              <size>9 12 1.9</size>
+            </box>
+          </geometry>
+          <material>
+            <ambient>.45 .5 .25 1</ambient>
+            <diffuse>.45 .5 .25 1</diffuse>
+          </material>
+        </visual>
+        <collision name="collision">
+          <geometry>
+            <box>
+              <size>9 12 1.9</size>
+            </box>
+          </geometry>
+        </collision>
+      </link>
+    </model>
+    <model name="shore_ramp">
+      <static>true</static>
+      <pose>1 0 -.65 0 0.2331798006468164 0</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <box>
+              <size>8.25 12 0.2</size>
+            </box>
+          </geometry>
+          <material>
+            <ambient>.5 .48 .35 1</ambient>
+            <diffuse>.5 .48 .35 1</diffuse>
+          </material>
+        </visual>
+        <collision name="collision">
+          <geometry>
+            <box>
+              <size>8.25 12 0.2</size>
+            </box>
+          </geometry>
+        </collision>
+      </link>
+    </model>
+    <model name="marker_0">
+      <static>true</static>
+      <pose>8 -4 0.6 0 0 0</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <box>
+              <size>0.3 0.3 1.8</size>
+            </box>
+          </geometry>
+          <material>
+            <ambient>.8 .25 .1 1</ambient>
+            <diffuse>.8 .25 .1 1</diffuse>
+          </material>
+        </visual>
+        <collision name="collision">
+          <geometry>
+            <box>
+              <size>0.3 0.3 1.8</size>
+            </box>
+          </geometry>
+        </collision>
+      </link>
+    </model>
+    <model name="marker_1">
+      <static>true</static>
+      <pose>8 4 0.6 0 0 0</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <box>
+              <size>0.3 0.3 1.8</size>
+            </box>
+          </geometry>
+          <material>
+            <ambient>.8 .25 .1 1</ambient>
+            <diffuse>.8 .25 .1 1</diffuse>
+          </material>
+        </visual>
+        <collision name="collision">
+          <geometry>
+            <box>
+              <size>0.3 0.3 1.8</size>
+            </box>
+          </geometry>
+        </collision>
+      </link>
+    </model>
+    <model name="marker_2">
+      <static>true</static>
+      <pose>-8 -4 0.6 0 0 0</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <box>
+              <size>0.3 0.3 1.8</size>
+            </box>
+          </geometry>
+          <material>
+            <ambient>.8 .25 .1 1</ambient>
+            <diffuse>.8 .25 .1 1</diffuse>
+          </material>
+        </visual>
+        <collision name="collision">
+          <geometry>
+            <box>
+              <size>0.3 0.3 1.8</size>
+            </box>
+          </geometry>
+        </collision>
+      </link>
+    </model>
+    <model name="marker_3">
+      <static>true</static>
+      <pose>-8 4 0.6 0 0 0</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <box>
+              <size>0.3 0.3 1.8</size>
+            </box>
+          </geometry>
+          <material>
+            <ambient>.8 .25 .1 1</ambient>
+            <diffuse>.8 .25 .1 1</diffuse>
+          </material>
+        </visual>
+        <collision name="collision">
+          <geometry>
+            <box>
+              <size>0.3 0.3 1.8</size>
+            </box>
+          </geometry>
+        </collision>
+      </link>
+    </model>
+    <model name="boundary_0">
+      <static>true</static>
+      <pose>12 0 0 0 0 0</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <box>
+              <size>0.3 12 4</size>
+            </box>
+          </geometry>
+          <material>
+            <ambient>.6 .6 .6 1</ambient>
+            <diffuse>.6 .6 .6 1</diffuse>
+          </material>
+        </visual>
+        <collision name="collision">
+          <geometry>
+            <box>
+              <size>0.3 12 4</size>
+            </box>
+          </geometry>
+        </collision>
+      </link>
+    </model>
+    <model name="boundary_1">
+      <static>true</static>
+      <pose>-12 0 0 0 0 0</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <box>
+              <size>0.3 12 4</size>
+            </box>
+          </geometry>
+          <material>
+            <ambient>.6 .6 .6 1</ambient>
+            <diffuse>.6 .6 .6 1</diffuse>
+          </material>
+        </visual>
+        <collision name="collision">
+          <geometry>
+            <box>
+              <size>0.3 12 4</size>
+            </box>
+          </geometry>
+        </collision>
+      </link>
+    </model>
+    <model name="boundary_2">
+      <static>true</static>
+      <pose>0 6 0 0 0 0</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <box>
+              <size>24 0.3 4</size>
+            </box>
+          </geometry>
+          <material>
+            <ambient>.6 .6 .6 1</ambient>
+            <diffuse>.6 .6 .6 1</diffuse>
+          </material>
+        </visual>
+        <collision name="collision">
+          <geometry>
+            <box>
+              <size>24 0.3 4</size>
+            </box>
+          </geometry>
+        </collision>
+      </link>
+    </model>
+    <model name="boundary_3">
+      <static>true</static>
+      <pose>0 -6 0 0 0 0</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <box>
+              <size>24 0.3 4</size>
+            </box>
+          </geometry>
+          <material>
+            <ambient>.6 .6 .6 1</ambient>
+            <diffuse>.6 .6 .6 1</diffuse>
+          </material>
+        </visual>
+        <collision name="collision">
+          <geometry>
+            <box>
+              <size>24 0.3 4</size>
+            </box>
+          </geometry>
+        </collision>
+      </link>
+    </model>
+  </world>
+</sdf>

@@ -1,5 +1,7 @@
 # Next extension: fleets, swarms, marine and multi-legged robotics
 
+Latest October 30: [sprung amphibious and physical fleet facility](status/amphibious-facility-2026-10-30.md) adds actual shore round-trip/RGB-D acquisition and door/lift/dock cases, native controls and 152 profiles / 82 families, 54 worlds / 42 families. Preserve passive suspension/8 Nm bounds, the body-origin hybrid sensor, source support/cloud filtering, 1.5 m execution lookahead and explicit mission cancellation/owner exit. Preserve neutral facility startup, actual joint/pose interlocks, floor-height sweep guards, dock request identities and unknown energy when motor-power readback is unqualified. Continue motor-power/charging and multi-floor RMF/map integration, then remaining adapters/missions and the older queue. Aerial ownership remains unchanged. Earlier dated entries below retain their own source/measurement scope.
+
 October 30 current delivery: [complete snake/surface/actuated tracked workflows](status/native-forms-2026-10-30.md)
 are installed with native GUI controls and commands. Actual acquisition,
 acquired-map Nav2, surface arrival and four-flipper cases have receipts;

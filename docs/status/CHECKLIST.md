@@ -14,7 +14,7 @@ when its stated mission acceptance is met.
 - [x] Native marine ahead waypoint and authored AUV RGB-D/heading-reference integration.
 - [x] Multi-leg contact/FK odometry, 2D/3D map export/reload and native goal controls.
 - [x] Actual hexapod saved-map Nav2 result, octopod 3D database and centipede occupancy export.
-- [x] Current availability: 151 robot profiles / 81 selectable families; 52 worlds / 40 families.
+- [x] Current availability: 152 robot profiles / 82 selectable families; 54 worlds / 42 families.
 - [x] Complete passive-wheel snake: bounded native Drive, actual rolling odometry, 2D/3D map acquisition and measured acquired-map Nav2 goal.
 - [x] Complete surface vessel and harbor: native force control, neutral latched Marine controls, map acquisition and measured two-goal settling.
 - [x] Articulated tracked variant nested under the original source family: four real force-PID flippers, Tracks GUI, actual angle settling and flat Drive.
@@ -24,11 +24,14 @@ when its stated mission acceptance is met.
 - [ ] Further AUV saved localization and remaining marine obstacle/current/loss missions.
 - [ ] Per-model multi-leg terrain/recovery/SLAM/navigation acceptance and additional backends.
 - [ ] Full RMF infrastructure/conflict/coverage/contact/loss and larger-fleet acceptance.
-- [ ] Complete amphibious robot/shore transition workflow; flipper-aware terrain/navigation and source-appropriate additional backends.
+- [x] Complete sprung amphibious rover, actual shore round-trip goals, hybrid odometry, RGB-D acquisition and native GUI controls/autofill.
+- [x] Physical facility doors, lift/car door, independently observed dock, typed RMF interfaces and neutral Facility GUI.
+- [ ] Qualified backend motor-power/charging, full robot lift transport and multi-floor RMF/map transitions.
+- [ ] Further flipper-aware terrain/navigation and source-appropriate additional backends.
 - [ ] Wider automatic saved-map/obstacle missions, applied seeds and real contact/clearance instrumentation.
 - [ ] Further reviewed worlds, the older roadmap, broad comparisons and release acceptance.
 
-[Current measured delivery](native-forms-2026-10-30.md) and
+[Current measured delivery](amphibious-facility-2026-10-30.md) and
 [agent continuation steps](../REMAINING_WORK_GUIDE.md).
 
 Simulation SLAM/navigation, traffic and Isaac contact do not require physical

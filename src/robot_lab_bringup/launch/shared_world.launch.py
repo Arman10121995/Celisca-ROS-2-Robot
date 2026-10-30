@@ -58,6 +58,11 @@ def _setup(context):
         on_exit=[EmitEvent(event=Shutdown(reason='Shared-world Fortress server exited'))]))]
     actions.append(Node(package='ros_gz_bridge', executable='parameter_bridge', name='fleet_sensor_bridge',
                         parameters=[{'config_file': session['bridge_file'], 'use_sim_time': True}], output='screen'))
+    if session.get('infrastructure_file'):
+        infrastructure=Node(package='robot_lab_utils',executable='fleet_infrastructure.py',
+            arguments=['--session',session['resolved_file']],parameters=[dict(use_sim_time=True)],output='screen')
+        actions += [infrastructure,RegisterEventHandler(OnProcessExit(target_action=infrastructure,
+            on_exit=[EmitEvent(event=Shutdown(reason='Physical facility workflow owner exited'))]))]
     actions.append(Node(package='ros_gz_bridge', executable='parameter_bridge', name='fleet_pose_service_bridge',
                         arguments=['/world/' + session['world_name'] + '/set_pose@ros_gz_interfaces/srv/SetEntityPose'],
                         output='screen'))

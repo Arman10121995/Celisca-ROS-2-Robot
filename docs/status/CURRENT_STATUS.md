@@ -1,8 +1,10 @@
 # Current Robot Lab status
 
-[Latest native-form delivery](native-forms-2026-10-30.md): measured snake 2D/3D acquisition and saved-map navigation, surface-vessel mapping/two-goal route, AUV acquisition and real articulated flipper/Drive controls. Catalog is 151 profiles / 81 selectable families, with 52 worlds / 40 families. Older dated entries below retain their historical scope.
+[Earlier native-form delivery](native-forms-2026-10-30.md): measured snake 2D/3D acquisition and saved-map navigation, surface-vessel mapping/two-goal route, AUV acquisition and real articulated flipper/Drive controls. That checkpoint had 151 profiles / 81 selectable families, with 52 worlds / 40 families. Older dated entries below retain their historical scope.
 
-**Current checkpoint: October 30, 2026; master, continuation from `db14385`.
+[Latest amphibious/facility delivery](amphibious-facility-2026-10-30.md): actual sprung shore round-trip/RGB-D acquisition and physical door/lift/dock controls. Current installed GUI: 152 profiles / 82 robot families and 54 worlds / 42 families. Energy stays unknown until actual backend motor power is qualified.
+
+**Current checkpoint: October 30, 2026; master, continuation from `09034dc`.
 Platform and full extension partial.**
 
 [Current workflow delivery and limits](workflows-2026-10-27.md),
@@ -11,12 +13,12 @@ Platform and full extension partial.**
 
 | Area | Delivered / measured | Remaining |
 |---|---|---|
-| Catalog | Seven registrations restored; 151 profiles / 81 selectable families, 52 worlds / 40 families | Changed-source qualification and additional reviewed imports |
-| Fleet | Native shared sessions/queues/traffic/RMF/coverage; two-body conflict and independently settled real batches | Broader RMF/infrastructure/contact/loss/maps/backends |
+| Catalog | Seven registrations restored; 152 profiles / 82 selectable families, 54 worlds / 42 families | Changed-source qualification and additional reviewed imports |
+| Fleet | Native sessions/queues/traffic/RMF/coverage, physical facility door/lift/dock; actual conflict, settled batch and facility cases | Power/charging, multi-floor RMF/map transitions and broader contact/loss/maps/backends |
 | Aerial swarm | Native multi-FCU controls/workloads; actual nav_empty two-drone range-reference formation and operator-loss landing | Larger groups, other maps/behaviors and member-loss/contact cases |
 | Marine | Actual sensor-based map acquisition/export/protected reload/localization and completed ROV route; AUV automatic acquisition and surface-vessel mapping/two-goal arrival with actual body traces | Further AUV/localization/obstacle/current/loss missions |
 | Multi-leg | Correct source FK/contact odometry, map export/reload/Nav2; hexapod navigation result and octopod real 3D database | Per-model terrain/recovery/higher-mode/backend qualification |
-| Additional forms | Complete snake, surface vessel and fixed/actuated tracked sources; actual snake saved-map Nav2 and bounded four-flipper/flat-Drive case; grouped native GUI | Amphibious source/controller, terrain/slip/recovery, articulated-track navigation, other maps/backends |
+| Additional forms | Complete snake, surface, sprung amphibious and fixed/actuated tracked sources; actual shore round-trip/mapping, snake saved-map Nav2 and flipper/Drive cases | Further terrain/slip/recovery, articulated-track navigation, other maps/backends |
 | Experiments | Actual Nav2/fleet/marine/gait/aerial producers, artifacts/endpoints, fleet batch reset and cleanup | More cases, applied seeds and contacts/clearance |
 | Original roadmap | Existing wheeled/Panda/flight/MOLAR/training certificates retained | Detailed remaining car, perception, manipulation, policy transfer/comparison/release work |
 

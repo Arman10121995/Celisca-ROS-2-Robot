@@ -2,8 +2,8 @@
 """Humble Open-RMF RobotCommandHandle -> actual shared-world Nav2 missions.
 
 Uses the official Apache-2.0 Open-RMF Python API (fleet_adapter_template,
-humble). Battery telemetry, charging, doors and lifts are deliberately absent.
-The nominal RMF cost objects below are disabled, never measured energy data.
+humble). Declared facility sessions add physical door/lift feedback and docking;
+energy accounting stays disabled until actual motor-power observations qualify it.
 """
 import argparse
 from datetime import timedelta
@@ -40,6 +40,7 @@ class Robot(adpt.RobotCommandHandle):
         self.update = None
         self.lock = threading.RLock()
         self.request = None
+        self.dock_request = None
         self.sequence = 0
 
     def follow_new_path(self, waypoints, next_arrival_estimator, path_finished_callback):
@@ -47,6 +48,7 @@ class Robot(adpt.RobotCommandHandle):
             if not self.owner.enabled:
                 return  # A late negotiation cannot reacquire disabled ownership.
             self.sequence += 1
+            self.dock_request = None
             if not 1 <= len(waypoints) <= 64:
                 if self.update:
                     self.update.log_error('Robot Lab requires a path of 1–64 waypoints')
@@ -65,13 +67,18 @@ class Robot(adpt.RobotCommandHandle):
         with self.lock:
             self.sequence += 1
             self.request = None
+            self.dock_request = None
             self.owner.pending.put((self.name, self.sequence, dict(op='stop', targets=[self.name])))
 
     def dock(self, dock_name, docking_finished_callback):
         self.stop()
-        if self.update:
-            self.update.log_error('No physical docking adapter installed: ' + str(dock_name))
-        # Never report docking success without a physical adapter.
+        if not self.owner.session.get('infrastructure_file'):
+            if self.update:self.update.log_error('Selected world has no physical docking adapter: '+str(dock_name))
+            return
+        with self.lock:
+            identity=uuid.uuid4().hex
+            self.dock_request=dict(id=identity,dock=dock_name,finished=docking_finished_callback)
+            self.owner.pending.put((self.name,self.sequence,dict(op='infrastructure_dock',robot=self.name,dock=dock_name,request_id=identity)))
 
     def observe(self, row, outcomes):
         position = row.get('estimate')
@@ -137,9 +144,24 @@ class RmfBridge(Node):
         self.command = self.create_publisher(String, '/fleet/command', 10)
         self.heartbeat = self.create_publisher(String, '/fleet/operator_heartbeat', 10)
         self.status = self.create_publisher(String, '/fleet/rmf/state', 10)
+        self.infrastructure_command=self.create_publisher(String,'/fleet/infrastructure/command',10)
+        self.create_subscription(String,'/fleet/infrastructure/state',self.observe_infrastructure,10)
         self.create_subscription(String, '/fleet/state', self.observe, 10)
         self.create_subscription(String, '/fleet/rmf/control', self.control, 10)
         self.create_timer(.2, self.tick)
+
+    def observe_infrastructure(self,msg):
+        try:
+            state=json.loads(msg.data)
+            if state.get('session_id')!=Path(self.session['directory']).name or not state.get('ready'):return
+            for name,robot in self.robots.items():
+                callback=None
+                with robot.lock:
+                    request=robot.dock_request;actual=state.get('docking',{}).get(name,{})
+                    if request and actual.get('request_id')==request['id'] and actual.get('docked'):
+                        callback=request['finished'];robot.dock_request=None
+                if callback:callback() # Actual independent body settling, never a sent goal or nominal dock flag.
+        except (ValueError,KeyError,TypeError):return
 
     def send(self, command):
         self.command.publish(String(data=json.dumps(dict(session_id=Path(self.session['directory']).name,
@@ -214,7 +236,10 @@ class RmfBridge(Node):
                 robot = self.robots[name]
                 with robot.lock:
                     if sequence == robot.sequence:
-                        self.send(command)
+                        if command['op']=='infrastructure_dock':
+                            self.infrastructure_command.publish(String(data=json.dumps(dict(session_id=Path(self.session['directory']).name,
+                                operator_id=self.operator,**dict(command,op='dock')))))
+                        else:self.send(command)
                         if robot.request:
                             robot.request['sent'] = True
                             robot.request['accepted_at'] = time.monotonic()
@@ -228,7 +253,8 @@ class RmfBridge(Node):
         self.status.publish(String(data=json.dumps(dict(enabled=self.enabled,
             session_id=Path(self.session['directory']).name, operator_id=self.operator,
             robots=list(self.robots), waypoints=self.vertices, routes=routes, battery=None,
-            scope='Actual Open-RMF adapter; energy accounting disabled; no doors/lifts/docking or mission qualification'), allow_nan=False)))
+            infrastructure=bool(self.session.get('infrastructure_file')),
+            scope='Actual Open-RMF adapter; declared facility adds physical door/lift protocol and independently observed docking; energy accounting disabled; mission qualification separate'), allow_nan=False)))
 
 
 def main(args=None):

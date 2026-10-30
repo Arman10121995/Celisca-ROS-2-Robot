@@ -41,7 +41,7 @@ class MarineNavigation(Node):
             self.declare_parameter(key, value)
         self.robot = self.get_parameter('robot_id').value
         self.auv = self.robot == 'tethys_auv'
-        self.surface_vessel = self.robot == 'lab_usv'
+        self.surface_vessel = self.robot in ('lab_usv','lab_amphibious')
         self.surface = float(self.get_parameter('surface_z').value)
         self.bottom = float(self.get_parameter('bottom_z').value)
         self.radius = float(self.get_parameter('radius').value)
@@ -50,6 +50,11 @@ class MarineNavigation(Node):
         self.localized_at = -math.inf
         self.localized_stamp = -math.inf
         self.scene = StaticScene(str(self.get_parameter('world_file').value))
+        self.shore=None
+        if self.robot=='lab_amphibious':
+            from robot_lab_utils.amphibious_planning import ShoreScene
+            try:self.shore=ShoreScene(str(self.get_parameter('world_file').value),self.surface)
+            except ValueError:pass # Other worlds retain explicit surface-only routes.
         self.observed = None
         self.cloud_at = -math.inf
         self.native = self.position = self.orientation = self.velocity = None
@@ -87,13 +92,15 @@ class MarineNavigation(Node):
         from robot_lab_utils.map_archive import RtabmapArchive
         self.archive = RtabmapArchive(self, self.database, '/marine/slam', '/marine/mapping',
             self.directory, self.get_parameter('world_file').value, self.robot, self.map_result,
-            estimator_contract='marine_spawn_imu_v1')
+            estimator_contract='amphibious_downward_flow_range_v1' if self.robot=='lab_amphibious' else 'marine_spawn_imu_v1')
         saved = str(self.get_parameter('saved_map_source').value)
         if self.localization and saved:
             cloud = Path(saved).parent/'occupied.npz'
             if cloud.is_file():
                 with np.load(cloud, allow_pickle=False) as stored:
-                    self.observed = VoxelObstacles(stored['points'], voxel=.2)
+                    points=stored['points']
+                    if self.shore is not None:points=self.shore.above_support(points)
+                    self.observed = VoxelObstacles(points, voxel=.2)
 
     def observe_localization(self, msg):
         p, q = msg.pose.pose.position, msg.pose.pose.orientation
@@ -162,6 +169,7 @@ class MarineNavigation(Node):
             return
         if len(points):
             try:
+                if self.shore is not None:points=self.shore.above_support(points)
                 self.observed = VoxelObstacles(points, voxel=.2)
                 self.cloud_at = time.monotonic()
             except ValueError as exc:
@@ -182,7 +190,7 @@ class MarineNavigation(Node):
         self.stop_token.set()
         self.generation += 1
         self.route = None
-        self.status, self.reason = 'idle', reason
+        self.status, self.reason = ('canceled' if self.status in ('executing','planning','braking','coasting') else 'idle'), reason
         self.drive_pub.publish(Twist())
         if self.native and self.native.get('input_owner') == 'mission':
             self.control('stop')
@@ -207,6 +215,8 @@ class MarineNavigation(Node):
             if not self.fresh():
                 raise ValueError('Fresh pressure/DVL/IMU odometry and a valid map transform required')
             if data['op'] == 'plan':
+                if self.robot=='lab_amphibious' and self.shore is None and (not self.native.get('native_plant') or self.native['native_plant']['wet_fraction']<.1):
+                    raise ValueError('Amphibious autonomous routes currently require immersion; use manual Drive for the shore transition')
                 if self.future is not None:
                     raise ValueError('Wait for the current planner to stop')
                 self.cancel('New route requested')
@@ -216,13 +226,16 @@ class MarineNavigation(Node):
                 self.stop_token = threading.Event()
                 self.status = 'planning'
                 start, orientation = self.position.copy(), self.orientation.copy()
-                if self.surface_vessel and abs(target[2]-start[2])>.1:
+                if self.surface_vessel and self.shore is None and abs(target[2]-start[2])>.1:
                     raise ValueError('Surface vessel goals must keep the estimated draft; use Waypoint ahead or the estimated Z')
-                scene = ObservedScene(self.scene, self.observed) if self.observed else self.scene
+                scene = self.shore.with_observation(self.observed) if self.shore else ObservedScene(self.scene, self.observed) if self.observed else self.scene
                 radius = self.radius + 3 * self.pose_std
                 token, generation = self.stop_token, self.generation
+                observed=self.observed
                 def compute():
-                    route, info = plan(scene, start, target, radius=radius, resolution=.4, timeout=15.,
+                    if self.shore is not None:
+                        route,info=self.shore.route(start,target,radius,token.is_set,observation=observed)
+                    else:route, info = plan(scene, start, target, radius=radius, resolution=.4, timeout=15.,
                         canceled=token.is_set, min_altitude=self.bottom + radius + .1,
                         max_altitude=self.surface - radius - .1) if not self.surface_vessel else plan(
                             scene,start,target,radius=radius,resolution=.4,timeout=15.,canceled=token.is_set,
@@ -308,11 +321,19 @@ class MarineNavigation(Node):
             else:
                 if self.native.get('input_owner') == 'mission':
                     target = self.route[self.index]
-                    scene = ObservedScene(self.scene, self.observed) if self.observed else self.scene
+                    scene = self.shore.with_observation(self.observed) if self.shore else ObservedScene(self.scene, self.observed) if self.observed else self.scene
+                    checked_target=np.asarray(target)
+                    if self.shore:
+                        # The full static route was checked during planning.
+                        # Recheck the next 1.5 m against current observations;
+                        # tracing a 12 m route every tick exhausted the 50 ms
+                        # control budget under concurrent plant load.
+                        delta=checked_target-self.position;length=float(np.linalg.norm(delta))
+                        checked_target=self.position+delta*min(1.,1.5/max(length,1e-9))
                     try:
-                        clear = scene.segment(self.position, target, self.radius+3*self.pose_std, now+.05, lambda: False)
+                        clear = scene.segment(self.position, checked_target, self.radius+3*self.pose_std, now+.05, lambda: False)
                     except TimeoutError:
-                        clear = False
+                        self.cancel('Collision recheck deadline exceeded; explicit replan required');return
                     if not clear:
                         self.cancel('Current source/observed segment blocked; replan required')
                     else:
@@ -323,7 +344,7 @@ class MarineNavigation(Node):
                             error=math.atan2(math.sin(math.atan2(dy,dx)-self.orientation[2]),math.cos(math.atan2(dy,dx)-self.orientation[2]))
                             command=(min(.25,.5*distance)*max(0.,math.cos(error)) if abs(error)<1. else 0.,
                                      0.,0.,max(-.3,min(.3,.9*error)))
-                        arrival=(max(.35,min(1.2,2.5*float(np.linalg.norm(self.velocity))+.1)) if self.auv else .15)
+                        arrival=(max(.35,min(1.2,2.5*float(np.linalg.norm(self.velocity))+.1)) if self.auv else .08 if self.shore else .15)
                         if distance < arrival:
                             if self.index < len(self.route)-1:
                                 self.index += 1
@@ -350,7 +371,7 @@ class MarineNavigation(Node):
             observed_cells=self.observed.cell_count if self.observed else 0, directory=str(self.directory),
             localization_mode=self.localization, localized=self.localization and now-self.localized_at < 3.,
             mapping_status=self.archive.phase, saved_map=self.archive.result,
-            estimator='Pressure/DVL simulation + native IMU; optional real RGB-D SLAM map transform',
+            estimator=('Authored downward motion/range simulation + native IMU/source support map; no image matching' if self.robot=='lab_amphibious' else 'Pressure/DVL simulation + native IMU; optional real RGB-D SLAM map transform'),
             scope='Experimental estimated-pose mission; no independent physical navigation qualification')
         self.state_pub.publish(String(data=json.dumps(data, allow_nan=False)))
 

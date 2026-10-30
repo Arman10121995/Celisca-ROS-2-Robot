@@ -145,6 +145,9 @@ class FleetController(Node):
             self.create_service(Trigger, '/' + name + '/reset', lambda _q, response, m=member: self._reset_service(m, response))
         self.create_subscription(String, '/fleet/command', self._command, 10)
         self.create_subscription(String, '/fleet/operator_heartbeat', self._heartbeat, 10)
+        self.infrastructure_holds=set();self.infrastructure_at=-math.inf
+        if self.session.get('infrastructure_file'):
+            self.create_subscription(String,'/fleet/infrastructure/state',self._infrastructure,10)
         self.create_subscription(ClockMessage, '/clock', self._observe_clock, qos_profile_sensor_data)
         self.create_service(Trigger, '/fleet/stop', self._stop_service)
         self._steady = Clock(clock_type=ClockType.STEADY_TIME)
@@ -825,6 +828,13 @@ class FleetController(Node):
                     velocity_source='finite difference of measured stamped Gazebo poses',
                     source_reported_twist=dict(linear=twist.linear.x, angular=twist.angular.z))
 
+    def _infrastructure(self,msg):
+        try:
+            data=json.loads(msg.data)
+            if data.get('session_id')==self.session_id and data.get('ready'):
+                self.infrastructure_holds=set(data['held_members']);self.infrastructure_at=time.monotonic()
+        except (ValueError,KeyError,TypeError):return
+
     def _tick(self):
         now = time.monotonic()
         if self.session['navigation']:
@@ -897,6 +907,8 @@ class FleetController(Node):
                                                else member.mode + ' command active')
             message = Twist()
             message.linear.x, message.angular.z = float(linear), float(angular)
+            if self.session.get('infrastructure_file') and (now-self.infrastructure_at>.6 or member.name in self.infrastructure_holds):
+                message=Twist();linear=angular=0.;member.reason='Lift interlock / stale facility feedback; wheel input held neutral'
             member.publisher.publish(message)
             member.output = (linear, angular)
         if now - self.last_status >= .2:

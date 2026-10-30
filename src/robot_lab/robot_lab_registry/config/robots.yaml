@@ -1,3 +1,55 @@
+- id: lab_amphibious
+  version: 0.1.0
+  name: Laboratory amphibious rover
+  ros_package: robot_lab_robots
+  status: available
+  robot_class: mobile
+  maturity: prototype
+  supported_simulators:
+  - gazebo
+  supported_modes:
+  - display
+  - marine
+  locomotion:
+    type: amphibious_wheels_propellers
+    max_velocity: 0.4
+  capabilities:
+  - control
+  - mapping
+  - state_estimation
+  - perception
+  - navigation
+  command_interfaces:
+  - geometry_msgs/Twist
+  - std_msgs/String
+  state_interfaces:
+  - sensor_msgs/JointState
+  - nav_msgs/Odometry
+  - sensor_msgs/Imu
+  sensors:
+  - type: rgbd
+    name: camera
+    frame: oakd_rgb_camera_optical_frame
+    topic: /oakd/depth/image_raw
+    message_type: sensor_msgs/Image
+  frames:
+  - map
+  - base_link
+  - marine_sensor_odom
+  - marine_estimated_base_link
+  assets:
+    urdf: robot_lab_robots/lab_amphibious/urdf/lab_amphibious.urdf.xacro
+  source:
+    repository: internal
+    license: Apache-2.0
+    maintainer: Robot Lab contributors
+  tags:
+  - complete_robot
+  - amphibious
+  - four_wheels
+  - two_propellers
+  - first_party
+  - experimental_control
 - id: lab_tracked_articulated
   version: 0.1.0
   name: Tracked vehicle · actuated flippers

@@ -1,0 +1,74 @@
+{
+  "success": true,
+  "reason": "Physical bank-water-bank traversal and settled stops",
+  "measurements": [
+    {
+      "phase": "neutral",
+      "start": [
+        -5.999999868609032,
+        4.527871931444532e-19,
+        0.7399991371883825
+      ],
+      "end": [
+        -5.999999868609032,
+        4.527871931444532e-19,
+        0.7399991371883825
+      ],
+      "sim_s": 1.02
+    },
+    {
+      "phase": "outbound",
+      "position": [
+        6.301405729226959,
+        0.030593648383778878,
+        0.13415226655210769
+      ],
+      "wet_fraction": 0.358477,
+      "thrust": [
+        3.81184,
+        3.81946
+      ],
+      "sim_time": 44.92
+    },
+    {
+      "phase": "water_stop",
+      "position": [
+        6.772937181955729,
+        0.03301145292973056,
+        0.13415124987182636
+      ],
+      "speed_m_s": 0.024691048302838813,
+      "settled_sim_s": 1.0,
+      "wet_fraction": 0.358488
+    },
+    {
+      "phase": "inbound",
+      "position": [
+        -5.801476628513657,
+        0.04379643631707971,
+        0.7399999943658412
+      ],
+      "wet_fraction": 0,
+      "thrust": [
+        0,
+        0
+      ],
+      "sim_time": 103.9
+    },
+    {
+      "phase": "land_stop",
+      "position": [
+        -5.824382403676124,
+        0.04382485177370619,
+        0.7399999943658644
+      ],
+      "speed_m_s": 0.0,
+      "settled_sim_s": 1.0,
+      "wet_fraction": 0
+    }
+  ],
+  "wall_s": 108.46779034400242,
+  "producer_startup_sha256": "20b439001cb7372d745a1d794b147bd247e2f29d4405581bab333c2b549cc257",
+  "trace_sha256": "3d43900df450da41dff8ae774d450ebc8475f2b7e005f7939386a174bb5493e6",
+  "scope": "Actual native amphibious travel/Stop only; no autonomy, clearance/contact, independent map or hardware acceptance"
+}

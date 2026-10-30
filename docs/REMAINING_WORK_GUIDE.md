@@ -1,6 +1,6 @@
 # Remaining work: agent execution guide
 
-Updated October 30, 2026 after [the native-form delivery](status/native-forms-2026-10-30.md) on `master`.
+Updated October 30, 2026 after [the amphibious/facility delivery](status/amphibious-facility-2026-10-30.md) on `master`.
 Read [the current delivery](status/workflows-2026-10-27.md),
 [actual receipt](status/evidence/workflows-2026-10-27/README.md),
 [handoff](AGENT_HANDOFF.md) and [ledger](status/platform-status.yaml).
@@ -41,7 +41,7 @@ the initial code. Tests, counts and received messages never establish a mission.
 
 ## Delivered baseline to preserve
 
-- **151 robot profiles / 81 selectable families**, **52 worlds / 40 families**.
+- **152 robot profiles / 82 selectable families**, **54 worlds / 42 families**.
   Seven historical vendor/Panda IDs are back; stale code certificates expose
   explicit experimental candidates, while geometry/control mismatches cannot.
 - **Fleet:** actual shared-world queues, traffic yielding/resumption, coverage,
@@ -69,6 +69,8 @@ The new native producer implementation is in `extension_workload.py`, `extension
 
 Snake mapping/acquired-map Nav2, surface-vessel acquisition/two-goal arrival, AUV automatic acquisition and actuated flippers are delivered, with [actual receipts](status/evidence/native-forms-2026-10-30/README.md). Preserve the instant wheel Jacobian/current rolling-contact model, mean-segment frame/scan reprojection, fixed world/map prior and hold-shape arrival. Preserve separate fixed/actuated tracked variants and real force-PID/target bridges. These are named cases, not universal terrain/backend acceptance.
 
+The [facility guide](tutorials/fleet-infrastructure.md) names actual door/lift/dock interfaces and source constraints. Initial remaining infrastructure work is a verified actuator-power readback/charging model, per-level graph/maps and robot-in-car transport. These are software/simulator tasks. Do not enable the energy verification flag to obtain attractive percentages; missing physical motor observations remain unknown. Reuse the delivered source fixtures and unique dock results.
+
 ## Ordered next work
 
 | Order | Task IDs | Concrete next result |
@@ -77,7 +79,7 @@ Snake mapping/acquired-map Nav2, surface-vessel acquisition/two-goal arrival, AU
 | 2 | R10.4–R10.5 | Preserve measured AUV acquisition and surface route; complete their saved localization and marine obstacle/current/loss missions without accepting degenerate registration |
 | 3 | R10.1–R10.3 | Complete RMF conflicting/infrastructure routes, coverage, larger fleets and physical contact/loss screens |
 | 4 | R10.6–R10.7 | Per-model saved-map goals, terrain/slip/recovery and source-appropriate backend implementations |
-| 5 | R10.7 | Preserve snake/surface/tracked implementations; add a complete amphibious model/controller and transition workflow, then source-appropriate backends |
+| 5 | R10.7 | Preserve complete sprung amphibious/snake/surface/tracked implementations; extend source-appropriate terrain, force adapters and higher modes |
 | 6 | R10.8 / R4 / R8.3 | Preserve delivered real native producers and measured fleet batch reset; extend saved-map/obstacle cases, seeds, contacts/clearance and wider matrices |
 | 7 | R6 and older queue | Remaining reviewed maps, car/perception/manipulation/policy-transfer/comparison/release work below |
 
@@ -200,9 +202,13 @@ and spine controls apply to actual targets and require re-arm. Extend actual
 saved-map goals to every model, then terrain/slip/recovery and source-appropriate
 backend forces/controllers. Centipede, wheeled snake, surface vessel and native tracked/actuated-flipper
 variants are complete sources with distinct controllers and grouped GUI controls.
-The amphibious model/controller remains initial implementation work. It must
-include real land propulsion, buoyancy/water propulsion, medium transitions,
-source bounds and a shore world; do not relabel the USV or tracked model.
+The complete sprung amphibious source, native wheels/propellers, shore transition,
+hybrid sensing, RGB-D mapping and autonomous shore round trip are now delivered.
+Preserve `amphibious_controller.py`, `amphibious_planning.py` and native
+`amphibious_drive.cc`: no pose writes, higher motor limits or static body holds.
+The rigid version unloaded wheels after turning; retain its failure/source
+archive and use passive suspension. Other terrain/world/backend and acquired-map
+missions remain separate. Do not relabel the USV or tracked model.
 For snake work use `serpentine_model.py` / `serpentine_odometry.py`, not foot IK.
 Do not replace exact instantaneous wheel-centre kinematics with planted-foot
 constraints or reduce the wave amplitude at a terminal goal. MuJoCo IMU

@@ -1,0 +1,16 @@
+{
+  "author": "Robot Lab contributors",
+  "license": "Apache-2.0",
+  "plant": "Authored 54.5 kg sealed hull with four independently sprung torque-limited wheels and two native propellers",
+  "revision": "Passive suspension derivative; prior rigid-wheel source and failed return retained on SSD",
+  "suspension": "Four passive 10000 N/m springs, 200 Ns/m dampers, +/-0.04 m stroke and 600 N force bound",
+  "source_limits": {
+    "wheel_radius_m": 0.22,
+    "wheel_half_track_m": 0.49,
+    "wheel_motor_Nm": 8,
+    "wheel_rate_rad_s": 3,
+    "propeller_force_N": 35
+  },
+  "water": "Native graded buoyancy; immersion-gated thrust and authored passive drag; no wave/added-mass calibration",
+  "controller": "Native joint effort servo and wall-clock leases, ROS operator ownership; no pose or velocity writes"
+}

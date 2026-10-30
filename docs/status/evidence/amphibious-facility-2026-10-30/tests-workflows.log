@@ -1,0 +1,40 @@
+..........................................F...........                   [100%]
+=================================== FAILURES ===================================
+______ test_actual_rtabmap_padded_cloud_layout_is_consumed_without_a_node ______
+
+    def test_actual_rtabmap_padded_cloud_layout_is_consumed_without_a_node():
+        from types import SimpleNamespace
+        from sensor_msgs.msg import PointCloud2,PointField
+        from robot_lab_utils.marine_navigation import MarineNavigation
+        message=PointCloud2();message.header.frame_id='map';message.height=1;message.width=4
+        message.fields=[PointField(name=key,offset=i*4,datatype=PointField.FLOAT32,count=1) for i,key in enumerate('xyz')]
+        message.point_step=32;message.row_step=128;message.is_dense=True
+        array=np.zeros((4,8),dtype='<f4');array[:,:3]=[[1,2,3],[2,2,3],[3,2,3],[4,2,3]];message.data=array.tobytes()
+        receiver=SimpleNamespace(cloud_at=-math.inf,observed=None,reason='')
+>       MarineNavigation.observe_cloud(receiver,message)
+
+src/robot_lab_bringup/test/test_marine_navigation_model.py:73: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = namespace(cloud_at=-inf, observed=None, reason='')
+msg = sensor_msgs.msg.PointCloud2(header=std_msgs.msg.Header(stamp=builtin_interfaces.msg.Time(sec=0, nanosec=0), frame_id='..., 0, 0, 128, 64, 0, 0, 0, 64, 0, 0, 64, 64, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], is_dense=True)
+
+    def observe_cloud(self, msg):
+        if msg.header.frame_id != 'map' or msg.width * msg.height > 300000 or time.monotonic() - self.cloud_at < 1.:
+            return
+        # RTAB-Map uses padded XYZ/RGB records; structured numpy.void values
+        # cannot be cast directly to float (and crashed the first live run).
+        try:
+            points = point_cloud2.read_points_numpy(msg, field_names=['x','y','z'], skip_nans=True).astype(float)
+        except (ValueError,TypeError,AssertionError) as exc:
+            self.reason='Observed cloud conversion refused: '+str(exc)
+            return
+        if len(points):
+            try:
+>               if self.shore is not None:points=self.shore.above_support(points)
+E               AttributeError: 'types.SimpleNamespace' object has no attribute 'shore'
+
+src/robot_lab_utils/robot_lab_utils/marine_navigation.py:172: AttributeError
+=========================== short test summary info ============================
+FAILED src/robot_lab_bringup/test/test_marine_navigation_model.py::test_actual_rtabmap_padded_cloud_layout_is_consumed_without_a_node
+1 failed, 53 passed in 2.84s

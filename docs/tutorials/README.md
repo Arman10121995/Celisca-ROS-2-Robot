@@ -22,6 +22,8 @@ a guide, imported model or numerical example does not qualify every mission.
 
 | Guide | Working scope and limits |
 |---|---|
+| [Amphibious rover](amphibious-rover.md) | Sprung native wheels/propellers, actual shore round-trip goals, hybrid sensing/RGB-D mapping and source-aware Plan/Execute |
+| [Fleet facility](fleet-infrastructure.md) | Physical doors/lift, neutral Facility controls, actual docking and explicitly unknown unqualified battery energy; multi-floor transport remains |
 | [GUI workspace](gui-workspace.md) | Launch control column, categories/types, compatible defaults/autofill, limits and sidebar navigation |
 | [Registry 3D](registry-3d.md) | Native embedded source geometry, grouped variants/components and camera controls; static inspection |
 | [TurtleBot3](turtlebot3.md) | Three official models, measured four-backend Drive/localization/2D SLAM/export/navigation; RGB-only 3D SLAM remains unavailable |

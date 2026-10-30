@@ -1,6 +1,10 @@
 # Structural catalog tags, never a runtime/controller qualification.
 schema_version: 1
 classes:
+  - category: Mobile robots
+    subtype: Amphibious rover
+    tags: [Four wheel motors, Two propellers, Native buoyancy, Shore transitions, Experimental control]
+    members: [lab_amphibious]
   - category: Articulated robots
     subtype: Wheeled snake
     tags: [Ten segments, Nine spine motors, Passive rolling wheels, Serpenoid gait, Experimental control]

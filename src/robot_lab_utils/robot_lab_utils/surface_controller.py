@@ -15,6 +15,11 @@ class SurfaceController(MarineController):
     def load_model(self, description, density):
         return SurfaceModel(description, density)
 
+    def envelope_ok(self):
+        return max(abs(v) for v in self.orientation[:2])<=.5 and abs(self.pose.pose.pose.position.z-self.surface)<=.4
+
+    def extra_state(self):return {}
+
     def _drive(self, msg):
         if not self.enabled:
             return
@@ -50,7 +55,7 @@ class SurfaceController(MarineController):
         self.last_sim=self.clock_value;scale=1.
         if self.enabled:
             roll,pitch,heading=self.orientation
-            if max(abs(roll),abs(pitch))>.5 or abs(self.pose.pose.pose.position.z-self.surface)>.4:
+            if not self.envelope_ok():
                 self.stop('Surface attitude/draft envelope exceeded')
             else:
                 vx,_,_,wz=self.command if now-self.cmd_at<.35 else (0.,0.,0.,0.)
@@ -81,7 +86,8 @@ class SurfaceController(MarineController):
                 commanded_thruster_forces_N=self.forces.tolist(),force_allocation_scale=scale,
                 limits=dict(surge=.4,sway=0.,heave=0.,yaw=.3),body_samples=self.count,sim_time=self.clock_value,
                 observer='Actual body finite differences for inner thrust control; independent noisy marine odometry for missions',
-                scope='Authored catamaran and native graded buoyancy/hydrodynamics; wave and hardware calibration unassessed'),allow_nan=False)))
+                scope='Authored native surface/amphibious forces; wave and hardware calibration unassessed',
+                **self.extra_state()),allow_nan=False)))
 
 
 def main(args=None):

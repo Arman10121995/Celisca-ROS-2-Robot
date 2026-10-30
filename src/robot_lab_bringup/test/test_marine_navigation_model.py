@@ -69,7 +69,7 @@ def test_actual_rtabmap_padded_cloud_layout_is_consumed_without_a_node():
     message.fields=[PointField(name=key,offset=i*4,datatype=PointField.FLOAT32,count=1) for i,key in enumerate('xyz')]
     message.point_step=32;message.row_step=128;message.is_dense=True
     array=np.zeros((4,8),dtype='<f4');array[:,:3]=[[1,2,3],[2,2,3],[3,2,3],[4,2,3]];message.data=array.tobytes()
-    receiver=SimpleNamespace(cloud_at=-math.inf,observed=None,reason='')
+    receiver=SimpleNamespace(cloud_at=-math.inf,observed=None,reason='',shore=None)
     MarineNavigation.observe_cloud(receiver,message)
     assert receiver.observed.cell_count==4
 

@@ -42,6 +42,7 @@ class MarineSensors(Node):
         self.scene = StaticScene(self.get_parameter('world_file').value) if self.get_parameter('world_file').value else None
         self.density = float(self.get_parameter('density').value)
         self.surface = float(self.get_parameter('surface_z').value)
+        self.declare_parameter('hybrid_surface',False);self.hybrid=self.get_parameter('hybrid_surface').value
         self.seed = int(self.get_parameter('seed').value)
         self.rng = np.random.default_rng(self.seed)
         self.bias = self.rng.normal(0., .002, 3)
@@ -71,7 +72,7 @@ class MarineSensors(Node):
         q=msg.pose.pose.orientation
         if q is None or not np.isfinite([q.x,q.y,q.z,q.w]).all() or abs(q.x*q.x+q.y*q.y+q.z*q.z+q.w*q.w-1)>.05:
             return
-        if depth > 0.:
+        if depth > 0. or self.hybrid:
             range_to_seabed = sonar_range(self.scene,(p.x,p.y,p.z),rpy(q))
         else:
             range_to_seabed = float('inf')
@@ -82,7 +83,7 @@ class MarineSensors(Node):
         sonar.field_of_view = .5
         sonar.min_range = .1
         sonar.max_range = 10.
-        if depth <= 0. or not math.isfinite(range_to_seabed):
+        if (depth <= 0. and not self.hybrid) or not math.isfinite(range_to_seabed):
             sonar.range = float('inf')
         else:
             sonar.range = float(np.clip(range_to_seabed+self.sonar_rng.normal(0.,.01), sonar.min_range, sonar.max_range))
@@ -115,7 +116,7 @@ class MarineSensors(Node):
         old = previous.pose.pose.position
         world_velocity = np.array([(p.x-old.x)/dt, (p.y-old.y)/dt, (p.z-old.z)/dt])
         orientation = rpy(q)
-        ranges = bottom_ranges(self.scene, (p.x, p.y, p.z), orientation) if self.scene is not None else [math.inf]*4
+        ranges = bottom_ranges(self.scene, (p.x, p.y, p.z), orientation,origin_offset=0. if self.hybrid else -.2) if self.scene is not None else [math.inf]*4
         locked = all(math.isfinite(v) and .1 < v <= 10. for v in ranges)
         if locked:
             value, covariance, beams = dvl_velocity(rotation(orientation).T @ world_velocity + self.bias, self.rng)
@@ -131,7 +132,8 @@ class MarineSensors(Node):
             pressure_noise_Pa=75., beam_velocity_noise_m_s=.005, velocity_bias_std_m_s=.002,
             sonar_noise_m=.01,sonar_model='Body-down ray against selected static collision world; separate from DVL and pressure',
             source='Authored noisy hydrostatic/Janus-DVL simulator using actual plant motion and static world bottom intersections',
-            native_sensor=False, dynamic_bottom_lock=False), allow_nan=False)))
+            native_sensor=False, dynamic_bottom_lock=False,
+            dry_ground_motion_emulation=bool(self.hybrid)), allow_nan=False)))
 
 
 class MarineEstimator(Node):
@@ -142,6 +144,10 @@ class MarineEstimator(Node):
         self.filter = MarineOdometry([self.get_parameter('initial_'+k).value for k in 'xyz'],
                                      self.get_parameter('density').value)
         self.surface = float(self.get_parameter('surface_z').value)
+        self.declare_parameter('hybrid_surface',False);self.hybrid=self.get_parameter('hybrid_surface').value
+        self.declare_parameter('world_file','')
+        self.scene=StaticScene(self.get_parameter('world_file').value) if self.hybrid else None
+        self.altimeter=None
         self.initial_yaw=float(self.get_parameter('initial_yaw').value)
         self.imu_yaw_offset=None
         self.imu = self.pressure = None
@@ -152,6 +158,11 @@ class MarineEstimator(Node):
         self.create_subscription(Imu, '/marine/imu', self.observe_imu, qos_profile_sensor_data)
         self.create_subscription(FluidPressure, '/marine/sensors/pressure', self.observe_pressure, 10)
         self.create_subscription(TwistWithCovarianceStamped, '/marine/sensors/dvl', self.observe_velocity, 10)
+        if self.hybrid:self.create_subscription(Range,'/marine/sensors/sonar',self.observe_altimeter,10)
+
+    def observe_altimeter(self,msg):
+        if msg.header.frame_id=='base_link' and math.isfinite(msg.range) and msg.min_range<=msg.range<=msg.max_range:
+            self.altimeter=msg
 
     def observe_imu(self, msg):
         q = msg.orientation
@@ -184,7 +195,14 @@ class MarineEstimator(Node):
         covariance = np.asarray(msg.twist.covariance).reshape(6, 6)[:3, :3]
         try:
             position = self.filter.update(current, velocity, covariance, rpy(self.imu.orientation),
-                self.pressure.fluid_pressure, self.pressure.variance, self.surface)
+                self.pressure.fluid_pressure, self.pressure.variance, self.surface,use_pressure=not self.hybrid)
+            if self.hybrid and self.altimeter is not None and abs(current-stamp(self.altimeter))<=.2:
+                orientation=rpy(self.imu.orientation)
+                predicted=sonar_range(self.scene,position,orientation)
+                dz=(self.altimeter.range-predicted)*math.cos(orientation[0])*math.cos(orientation[1])
+                if math.isfinite(dz) and abs(dz)<.2:
+                    self.filter.position[2]+=.4*dz;position=self.filter.position.copy()
+                    self.filter.covariance[2,2]=max(.0001,.6*self.filter.covariance[2,2])
         except ValueError as exc:
             self.get_logger().warning('Marine odometry refused sample: ' + str(exc))
             return
@@ -214,7 +232,8 @@ class MarineEstimator(Node):
         self.tf.sendTransform(transform)
         self.state_pub.publish(String(data=json.dumps(dict(samples=self.count, sim_time=current,
             position=position.tolist(), covariance=self.filter.covariance.tolist(),
-            source='DVL + native IMU with one-time configured spawn-heading alignment + noisy pressure; no simulator pose correction',
+            source=('Authored downward motion/range emulation + native IMU + known static surface; no image matching or direct body-pose correction' if self.hybrid else
+                    'DVL + native IMU with one-time configured spawn-heading alignment + noisy pressure; no simulator pose correction'),
             qualification='Experimental emulated sensors and drifting odometry, not calibrated DVL or SLAM'), allow_nan=False)))
 
 

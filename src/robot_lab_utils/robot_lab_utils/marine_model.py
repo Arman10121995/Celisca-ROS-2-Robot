@@ -14,6 +14,7 @@ def rotation(rpy):
 class MarineModel:
     thruster_count = 8
     controlled_axes = (0, 1, 2, 3, 4, 5)
+    primitive_wheels = False
     def __init__(self, description, density=1025.):
         root=ET.fromstring(description)
         self.mass=0.
@@ -23,6 +24,10 @@ class MarineModel:
             self.mass+=float(mass.get('value')) if mass is not None else 0.
             for collision in link.findall('collision'):
                 box=collision.find('geometry/box')
+                cylinder=collision.find('geometry/cylinder')
+                if self.primitive_wheels and cylinder is not None:
+                    self.displacement+=math.pi*float(cylinder.get('radius'))**2*float(cylinder.get('length'))
+                    continue
                 if box is None:
                     raise ValueError('The authored ROV allocation currently requires box displacement geometry')
                 self.displacement+=float(np.prod([float(v) for v in box.get('size').split()]))
@@ -77,3 +82,8 @@ class SurfaceModel(MarineModel):
     """Two physical propellers control surge and yaw; buoyancy supplies heave."""
     thruster_count = 2
     controlled_axes = (0, 5)
+
+
+class AmphibiousModel(SurfaceModel):
+    """Same physical two-propeller allocation plus declared buoyant tires."""
+    primitive_wheels = True

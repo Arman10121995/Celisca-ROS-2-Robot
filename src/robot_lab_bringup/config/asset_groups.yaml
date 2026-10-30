@@ -2,6 +2,9 @@
 # A variant is not an alias for its parent's controllers or measured missions.
 schema_version: 1
 robots:
+  - id: lab_amphibious
+    name: Laboratory amphibious rover
+    members: [{id: lab_amphibious, label: Complete four-wheel / two-propeller craft}]
   - id: lab_snake
     name: Laboratory wheeled snake
     members: [{id: lab_snake, label: Complete ten-segment passive-wheel robot}]

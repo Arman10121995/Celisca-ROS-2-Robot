@@ -7,7 +7,9 @@ requirements. Start with the [ordered roadmap queue](ROADMAP.md#current-agent-qu
 Earlier claims that all hardware-independent work was complete are superseded.
 Unit tests, asset registration and scene loading retain their stated scope.
 
-The latest continuation delivers [native snake, surface-vessel and articulated-track workflows](docs/status/native-forms-2026-10-30.md): measured snake 2D/3D mapping and saved-map navigation, two-goal surface-vessel navigation, AUV acquisition and four-flipper control. Select these robots in Launch; controls and commands fill automatically.
+The latest continuation adds the [sprung amphibious rover and physical fleet facility](docs/status/amphibious-facility-2026-10-30.md): measured shore round-trip goals and RGB-D mapping; actual doors, lift and settled Bumperbot docking. Use Launch → Marine for the rover and Fleet & Swarm → Facility for infrastructure.
+
+The earlier continuation delivers [native snake, surface-vessel and articulated-track workflows](docs/status/native-forms-2026-10-30.md): measured snake 2D/3D mapping and saved-map navigation, two-goal surface-vessel navigation, AUV acquisition and four-flipper control. Select these robots in Launch; controls and commands fill automatically.
 
 The earlier native continuation adds actual marine/gait acquisition and navigation
 workloads, a measured two-X500 range-reference formation and operator-loss
@@ -23,14 +25,14 @@ Actual measurements include fleet conflict recovery and settled batch goals,
 two-FCU flight/landing, a saved/localized ROV route, hexapod saved-map navigation
 and octopod 3D map export. [Current delivery and measured limits](docs/status/workflows-2026-10-27.md).
 
-Current availability is **151 robot profiles / 81 selectable families** and
-**52 world profiles / 40 selectable families**. Restored vendor/Panda profiles
+Current availability is **152 robot profiles / 82 selectable families** and
+**54 world profiles / 42 selectable families**. Restored vendor/Panda profiles
 whose historical source certificates no longer match remain explicit experimental
 candidates; enable **experimental robot workflows** to expose their candidate
 modes and autofilled command. This does not grant new mission qualification.
 
 Remaining work includes larger aerial groups and further AUV/obstacle missions,
-an amphibious family, real RMF doors/lifts/docking/energy adapters, larger
+verified motor-power/charging integration, multi-floor RMF/map transitions, larger
 fleets, terrain/slip missions for snake and articulated tracks, further
 automatic cases and the older roadmap. Broad backend/map acceptance and real
 hardware/HIL stay separate. Implement missing functionality before broad
@@ -269,9 +271,9 @@ planned payload/grasp setups and mobile-manipulator control remain in the [roadm
 | Source/installed inventory on this Jetson, October 30 | Meaning |
 |---|---|
 | 26 discoverable ROS packages | Current CI builds 25; optional `orbslam3` is excluded |
-| 35 core + 116 installed external robot profiles | 151 available profiles; seven historical registrations restored |
-| 81 selectable robot families | Grouped current Launch choices; components remain nested and many imports are Display-only |
-| 35 core + 17 installed world profiles | 52 profiles under 40 map families; six marine worlds including surface_harbor |
+| 36 core + 116 installed external robot profiles | 152 available profiles; seven historical registrations restored |
+| 82 selectable robot families | Grouped current Launch choices; components remain nested and many imports are Display-only |
+| 37 core + 17 installed world profiles | 54 profiles under 42 map families; amphibious_shore and physical fleet_facility added |
 | Registry and algorithm catalogs | Inventory and labels are separate from controller integration and measured mission qualification |
 | Four simulator routes | Gazebo, PyBullet, MuJoCo and Isaac; support is robot/task/backend-specific |
 

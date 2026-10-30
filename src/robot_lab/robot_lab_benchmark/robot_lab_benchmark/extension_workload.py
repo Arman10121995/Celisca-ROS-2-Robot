@@ -129,7 +129,7 @@ class ExtensionWorkload(Node):
                         self.contract = CONTRACTS['auv'];self.is_auv=True
                         if self.task=='mapping' and self.spec['distance_m']<2.:
                             raise ValueError('AUV acquired-map transects require at least 2 m of physical forward travel')
-                    if self.workflow=='marine' and data['robot_id']=='lab_usv':self.contract=CONTRACTS['surface']
+                    if self.workflow=='marine' and data['robot_id'] in ('lab_usv','lab_amphibious'):self.contract=CONTRACTS['surface']
                 for name, topic in topics.items():
                     self.counts[name] = 0
                     self.body_subscriptions.append(self.create_subscription(Odometry, topic,

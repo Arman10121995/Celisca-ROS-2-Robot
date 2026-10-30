@@ -1,0 +1,11 @@
+{
+  "amphibious_command": "ros2 launch robot_lab_bringup simulated_robot.launch.py robot_model:=lab_amphibious simulator:=gazebo use_sim_time:=true map_name:=amphibious_shore world_package:=robot_lab_maps world_name:=amphibious_shore world_path:=maps/amphibious_shore/worlds/amphibious_shore.world map_yaml:=maps/amphibious_shore/maps/map.yaml mode:=marine gui:=auto spawn_x:=-6.0 spawn_y:=0.0 spawn_z:=0.76 spawn_yaw:=0.0 marine_slam:=true marine_localization:=false",
+  "terrestrial_map_selectable": true,
+  "fleet_infrastructure_page": true,
+  "inventory": {
+    "robot_profiles": 152,
+    "robot_families": 82,
+    "world_profiles": 54,
+    "world_families": 42
+  }
+}

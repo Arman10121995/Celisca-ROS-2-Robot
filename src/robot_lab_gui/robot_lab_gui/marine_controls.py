@@ -110,6 +110,9 @@ class MarineControls(ttk.Frame):
                 text+=f"Position ({p['x']:.2f}, {p['y']:.2f}, {p['z']:.2f}) m\n"
             if v:text+=f"Measured world velocity ({v[0]:.2f}, {v[1]:.2f}, {v[2]:.2f}) m/s\n"
             text+='Thrust N: '+', '.join(f'{f:.1f}' for f in data['commanded_thruster_forces_N'])
+            if data.get('propulsion_kind')=='wheels_propellers' and data.get('native_plant'):
+                plant=data['native_plant'];text+=f"\nNative wet fraction {plant['wet_fraction']:.2f} · wheel effort Nm: "+', '.join(f'{v:.1f}' for v in plant['wheel_efforts_Nm'])
+                text+='\nShore routes derive height from source terrain/water. Depth/strafe unavailable.'
             if data.get('propulsion_kind')=='propeller_fins':
                 text+='\nFin targets rad: '+', '.join(f'{v:.3f}' for v in data['fin_targets_rad'])
                 text+='\nMeasured fins rad: '+', '.join(f"{k}: {v:.3f}" for k,v in data.get('actual_joints_rad',{}).items() if k!='propeller_joint')
@@ -180,8 +183,9 @@ class MarineControls(ttk.Frame):
         if self.closed:return
         now=time.monotonic()
         auv=self.app._robot_config().get('marine_propulsion')=='propeller_fins'
-        surface=self.app._robot_config().get('marine_propulsion')=='surface_twin_thrusters'
-        self.arm_label.set('Arm surface thrust' if surface else 'Arm AUV cruise guidance' if auv else 'Arm depth/heading hold')
+        amphibious=bool(self.app._robot_config().get('amphibious_model'))
+        surface=self.app._robot_config().get('marine_propulsion') in ('surface_twin_thrusters','wheels_propellers')
+        self.arm_label.set('Arm wheels / wet propellers' if amphibious else 'Arm surface thrust' if surface else 'Arm AUV cruise guidance' if auv else 'Arm depth/heading hold')
         for widget in self.depth_controls.winfo_children():
             if isinstance(widget,(ttk.Button,ttk.Entry)):widget.state(['disabled'] if surface else ['!disabled'])
         for direction,button in self.buttons.items():
