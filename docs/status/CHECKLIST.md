@@ -26,7 +26,7 @@ when its stated mission acceptance is met.
 - [ ] Full RMF infrastructure/conflict/coverage/contact/loss and larger-fleet acceptance.
 - [x] Complete sprung amphibious rover, actual shore round-trip goals, hybrid odometry, RGB-D acquisition and native GUI controls/autofill.
 - [x] Physical facility doors, lift/car door, independently observed dock, typed RMF interfaces and neutral Facility GUI.
-- [ ] Qualified backend motor-power/charging, full robot lift transport and multi-floor RMF/map transitions.
+- [x] Qualified backend motor-power/charging, full robot lift transport and multi-floor RMF/map transitions.
 - [ ] Further flipper-aware terrain/navigation and source-appropriate additional backends.
 - [ ] Wider automatic saved-map/obstacle missions, applied seeds and real contact/clearance instrumentation.
 - [ ] Further reviewed worlds, the older roadmap, broad comparisons and release acceptance.
