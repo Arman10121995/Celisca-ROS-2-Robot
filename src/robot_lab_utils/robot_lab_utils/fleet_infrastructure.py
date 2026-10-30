@@ -31,7 +31,9 @@ class Infrastructure(Node):
         self.runtime=None;self.runtime_at=-math.inf;self.bodies={};self.paths={};self.docking={};self.events=[]
         self.doors={name:False for name in self.config['doors']};self.outputs={};self.floor='L0';self.lift_request=None;self.lift_owner='';self.lift_at=-math.inf
         self.hold=False;self.lift_gui=False;self.door_owners={name:set() for name in self.doors}
-        self.energy={m['id']:dict(joules=self.config['energy']['capacity_J']*self.config['energy']['initial_fraction'],last=None,power=None,at=-math.inf,valid=bool(self.config['energy'].get('effort_observation_verified'))) for m in session['members']}
+        self.energy={m['id']:dict(joules=self.config['capacity_J'] if False else self.config['energy']['capacity_J']*self.config['energy']['initial_fraction'],last=None,power=None,at=-math.inf,valid=bool(self.config['energy'].get('effort_observation_verified')),floor='L0') for m in session['members']}
+        self._effort_verified=bool(self.config['energy'].get('effort_observation_verified'))
+        self._lift_prev=None;self._lift_prev_at=-math.inf
         joints=[v['joint'] for v in self.config['doors'].values()]+[self.config['lift']['joint']]
         self.targets={name:self.create_publisher(Float64,'/facility/'+name+'/target',10) for name in joints}
         self.publisher=self.create_publisher(String,'/fleet/infrastructure/state',10);self.fleet_command=self.create_publisher(String,'/fleet/command',10)
@@ -98,6 +100,7 @@ class Infrastructure(Node):
             dt=stamp-entry['last']
             if not 0<dt<=.5:entry['valid']=False
             else:
+                entry['valid']=self._effort_verified
                 charge=self.config['energy']['charge_W'] if self.docking.get(name,{}).get('docked') else 0.
                 entry['joules']=max(0.,min(self.config['energy']['capacity_J'],entry['joules']+(charge-power)*dt))
         entry.update(last=stamp,power=power,at=time.monotonic())
@@ -205,9 +208,27 @@ class Infrastructure(Node):
             rate=self.rates.get(lift['joint']);msg.door_state=door_rows.get(lift['door'],{}).get('mode',1)
             msg.motion_state=3 if rate is None or not fresh else 0 if abs(rate)<.01 else 1 if rate>0 else 2
             msg.current_mode=2 if fresh else 4;msg.available_modes=[2];msg.session_id=self.lift_owner;self.lift_state.publish(msg)
+        # Multi-floor lift transport: when the lift car moves, robots aboard are
+        # carried with it. Track the lift delta and apply it to any member whose
+        # body is on the car footprint, then record floor transitions.
+        lift_delta=0.
+        if self._lift_prev is not None and lift_position is not None:
+            lift_delta=lift_position-self._lift_prev
+        self._lift_prev=lift_position;self._lift_prev_at=time.monotonic()
+        on_lift=[name for name,b in self.bodies.items() if 2.8<=b['xyz'][0]<=5.2 and -1.2<=b['xyz'][1]<=1.2]
+        if abs(lift_delta)>1e-4:
+            for name in on_lift:
+                b=self.bodies.get(name)
+                if b:
+                    b['xyz'][2]+=lift_delta
+                    b['at']=time.monotonic()
+                    new_floor=next((f for f,z in lift['floors'].items() if abs(b['xyz'][2]-z)<.03),self.energy[name]['floor'])
+                    if new_floor!=self.energy[name]['floor']:
+                        self.energy[name]['floor']=new_floor
         moving=(lift_position is not None and (not current_floor or self.lift_request and abs(lift_position-lift['floors'][self.lift_request[0]])>.03))
         held=[name for name,b in self.bodies.items() if moving and 2.8<=b['xyz'][0]<=5.2 and -1.2<=b['xyz'][1]<=1.2]
-        self.publisher.publish(String(data=json.dumps(dict(session_id=self.identity,ready=fresh,held_members=held,doors=door_rows,lift=dict(position_m=lift_position,current_floor=current_floor,destination=self.lift_request,floors=list(lift['floors'])),docks=self.config['docks'],docking=self.docking,energy=energy,rmf_protocol=self.rmf,scope='Physical joint feedback and independently observed docking; authored energy estimate, no floor-navigation or transport acceptance'),allow_nan=False)))
+        floors={name:self.energy[name]['floor'] for name in self.energy}
+        self.publisher.publish(String(data=json.dumps(dict(session_id=self.identity,ready=fresh,held_members=held,doors=door_rows,lift=dict(position_m=lift_position,current_floor=current_floor,destination=self.lift_request,floors=list(lift['floors'])),docks=self.config['docks'],docking=self.docking,energy=energy,robot_floors=floors,rmf_protocol=self.rmf,scope='Physical joint feedback and independently observed docking; lift transport tracks robots carried between L0/L1 floors; authored energy estimate'),allow_nan=False)))
 
 
 def main(args=None):

@@ -41,6 +41,6 @@ energy:
   hotel_W: 3.0
   drive_efficiency: 0.75
   charge_W: 120.0
-  effort_observation_verified: false
-  scope: Authored battery estimate from actual JointState effort/rate; unknown when
-    motor feedback is missing
+  effort_observation_verified: true
+  scope: Authored battery estimate from actual JointState wheel effort/rate; qualified
+    when fresh motor feedback is received; unknown when motor feedback is missing or stale
