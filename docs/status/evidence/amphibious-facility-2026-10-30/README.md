@@ -9,6 +9,7 @@ tree. [Delivery and limits](../../amphibious-facility-2026-10-30.md),
 | [Sprung shore round trip](sprung-shore-roundtrip/extension-mission-result.json) | `lab_amphibious` / `amphibious_shore` / Fortress 6.18 | Requests [6.3, 0, 0.134] and [−5.8, 0, 0.74]; actual [6.400351, −0.026534, 0.133078] and [−5.759569, −0.076106, 0.727807]. Both physically settled for 1 simulated second; final speeds 0.00235 / 0 m/s and yaw rates 0.00298 / 0 rad/s |
 | [Sprung RGB-D acquisition](sprung-rgbd-acquisition/extension-mission-result.json) | Same | Actual body travel with protected 6-node / 1,930-point acquired map; current hybrid estimator contract and database hash in result |
 | [Physical facility/cabin/dock](facility-cabin-dock/facility-result.json) | Bumperbot `alpha` / `fleet_facility` / Fortress 6.18 | Neutral startup; physical main-door open/close, moving lift/car door L0 → L1 → L0, then real Nav2 and independently observed dock settlement. Exact actual joint positions/body observation in result |
+| [Surface angular contract](surface-angular-contract/extension-mission-result.json) | Current sprung rover / shore bank / Fortress | Actual bank goal settles with position, translation, angular-rate and 1 s temporal guards; actual pose [−5.556552, 0, 0.727807] for [−5.5, 0, 0.74] |
 | [Historical rigid manual traversal](historical-rigid-manual-transition/transition-result.json) | Earlier rigid `lab_amphibious` / shore / Fortress | Actual neutral bank → water → bank Drive/Stop diagnostic. This is the rigid source, not current sprung-model qualification |
 
 The built-in navigation producer records requested XYZ and independent stamped
@@ -59,3 +60,9 @@ Native force implementation uses the documented
 and the installed SDK joint-effort interfaces. Fixture motion uses Gazebo's
 native force position controllers. Geometry, suspension, drag and energy
 parameters are authored research models, not hardware calibration.
+
+Final [78 checks](tests-final.log), [registry validation](registry-final.log),
+[installed build](build-published-candidate.log) and [Tk probe](gui-final.log)
+are retained. The copied initial failed-test text has trailing whitespace
+removed; raw bytes remain on SSD. Its old constructor-bypassing fixture needed
+the new explicit `shore=None` default. No test acceptance bound was relaxed.

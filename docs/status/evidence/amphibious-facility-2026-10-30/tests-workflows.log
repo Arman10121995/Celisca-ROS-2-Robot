@@ -13,8 +13,8 @@ ______ test_actual_rtabmap_padded_cloud_layout_is_consumed_without_a_node ______
         receiver=SimpleNamespace(cloud_at=-math.inf,observed=None,reason='')
 >       MarineNavigation.observe_cloud(receiver,message)
 
-src/robot_lab_bringup/test/test_marine_navigation_model.py:73: 
-_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+src/robot_lab_bringup/test/test_marine_navigation_model.py:73:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
 
 self = namespace(cloud_at=-inf, observed=None, reason='')
 msg = sensor_msgs.msg.PointCloud2(header=std_msgs.msg.Header(stamp=builtin_interfaces.msg.Time(sec=0, nanosec=0), frame_id='..., 0, 0, 128, 64, 0, 0, 0, 64, 0, 0, 64, 64, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], is_dense=True)

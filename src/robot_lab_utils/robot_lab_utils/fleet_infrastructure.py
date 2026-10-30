@@ -74,6 +74,7 @@ class Infrastructure(Node):
     def fleet_state(self,msg):
         try:
             row=json.loads(msg.data)
+            if not isinstance(row,dict):return
             if row['session_id']==self.identity:self.runtime=row;self.runtime_at=time.monotonic()
         except (ValueError,KeyError,TypeError):pass
 
@@ -128,6 +129,7 @@ class Infrastructure(Node):
         try:
             if len(msg.data)>4096:return
             data=json.loads(msg.data)
+            if not isinstance(data,dict):return
             if data.get('session_id')==self.identity and data.get('op')=='all_stop':
                 self.hold=True;self.outputs={n:self.positions[n] for n in self.targets if n in self.positions};self.lift_request=None;self.docking.clear()
         except (ValueError,KeyError,TypeError):pass
@@ -136,6 +138,7 @@ class Infrastructure(Node):
         try:
             if len(msg.data)>4096:return
             data=json.loads(msg.data)
+            if not isinstance(data,dict):return
             if not self.runtime or time.monotonic()-self.runtime_at>1 or data.get('session_id')!=self.identity:return
             if data.get('operator_id')!=self.runtime['operator_id'] or not self.runtime.get('operator_fresh'):return
             op=data['op']

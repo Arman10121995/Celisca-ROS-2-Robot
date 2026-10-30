@@ -1,0 +1,27 @@
+{
+  "topic_counts": {
+    "/marine/mission/state": 95,
+    "/clock": 7523,
+    "/joint_states": 7447,
+    "/marine/odometry": 378,
+    "/marine/estimated_odometry": 75
+  },
+  "last_clock_monotonic": 91731.115733803,
+  "last_topic_monotonic": {
+    "/marine/mission/state": 91731.109087066,
+    "/clock": 91731.115739819,
+    "/joint_states": 91731.115951464,
+    "/marine/odometry": 91731.11376365,
+    "/marine/estimated_odometry": 91731.082939505
+  },
+  "real_time_factor": 0.8941498160663355,
+  "truth_distance_3d_m": null,
+  "topic_trace_distance_3d_m": {
+    "/marine/odometry": 0.4957174479701186,
+    "/marine/estimated_odometry": 0.5969011720002788
+  },
+  "contact_events": null,
+  "footprint_clearance_m": null,
+  "mission_result": null,
+  "scope": "Actual topic capture only; scan range is not footprint clearance; no inferred mission success"
+}

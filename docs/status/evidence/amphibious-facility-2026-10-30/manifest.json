@@ -50,6 +50,19 @@
       },
       "cleanup_complete": true,
       "scope": "Actual native amphibious travel/Stop only; no autonomy, clearance/contact, independent map or hardware acceptance"
+    },
+    "surface-angular-contract": {
+      "raw_directory": "/workspace/molar/robot_lab_runtime/amphibious-infrastructure-20261030-mcpiqquv/amphibious_surface_contract/f16cdf2838d0465ea002444ebac051c8",
+      "run_id": "f16cdf2838d0465ea002444ebac051c8",
+      "copied_sha256": {
+        "run.json": "bbe2e987e17f589775964a8ab1ea27a92213ec2c1692a08157c202b272686a5c",
+        "extension-mission-result.json": "5aa66a99c89fd9f54ad214861122371c2d2c5a795914ae5c32602e318369ed1c",
+        "workload.json": "f3cd6e1d9824e68ade08033930e470e67df5a51957ab50c8fa7a3ced91ef9510",
+        "workload-producer.py": "95092cbbbca6e814c44a5cf5ad154cb814d49d8e60d8d0a090bac40c32277566",
+        "telemetry-summary.json": "3f9f7447f7be7652429929bf14e5f81137962e224a474d655f719aab99e048b8"
+      },
+      "cleanup_complete": true,
+      "scope": "Current surface contract including physical angular-rate/settling guard"
     }
   },
   "scope": "Named actual native cases; post-run source hashes, not an immutable whole plant/build qualification",
@@ -72,5 +85,12 @@
       "reason": "Native mission failed: Marine mission sensor/operator/time budget lost"
     }
   ],
-  "source_boundary": "Runtime descriptions/worlds/traces remain on SSD; the rigid source/plugin archive was copied after its trials and before suspension edits. Native source manifest recorded after runs. Frozen workload producer/spec identities remain in native results. External diagnostics record startup producer hashes."
+  "source_boundary": "Runtime descriptions/worlds/traces remain on SSD; the rigid source/plugin archive was copied after its trials and before suspension edits. Native source manifest recorded after runs. Frozen workload producer/spec identities remain in native results. External diagnostics record startup producer hashes.",
+  "post_run_source_sha256": {},
+  "checks": {
+    "tests": "78 passed in 2.62s",
+    "registry": "Validation passed",
+    "gui": "Actual Tk selection, source override/autofill and Facility subpage; inventory 152/82 robots and 54/42 worlds",
+    "build": "Changed packages and current native SDK build; logs retained"
+  }
 }
