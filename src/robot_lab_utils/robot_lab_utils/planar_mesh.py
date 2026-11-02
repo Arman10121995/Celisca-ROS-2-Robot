@@ -111,7 +111,12 @@ def cached_retriangulation(vertices, faces):
     except ImportError:
         return vertices, faces
     runtime = Path(os.environ.get('ROBOT_LAB_RUNTIME_ROOT', '/workspace/molar/robot_lab_runtime')).resolve()
-    if not str(runtime).startswith('/workspace/') or runtime.stat().st_dev == Path('/').stat().st_dev:
+    try:
+        if not str(runtime).startswith('/workspace/') or runtime.stat().st_dev == Path('/').stat().st_dev:
+            return vertices, faces
+    except OSError:
+        # Optional Jetson SSD cache: clean hosts and CI need no such mount.
+        # Keep original collision geometry; never create a fallback on eMMC.
         return vertices, faces
     digest = hashlib.sha256(VERSION+shapely.__version__.encode()+np.asarray(vertices).tobytes()+np.asarray(faces).tobytes()).hexdigest()
     directory = runtime/'cache/planar_collisions'

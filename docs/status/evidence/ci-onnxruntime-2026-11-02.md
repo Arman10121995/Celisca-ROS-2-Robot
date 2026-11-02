@@ -26,4 +26,11 @@ workflows now also pin NumPy 1.24.4. An isolated SSD environment exercised
 NumPy 1.24.4 + apt SciPy 1.8.0 + ORT 1.23.2 and cv_bridge imports, an actual
 compiled distance-transform call, the exact recurrent checkpoint and the
 failing collection modules. Host Python/ROS packages were not changed.
-The remote rerun remains a separate gate.
+Published `4468119e` then passed build and the entire fast tier: **1132 passed,
+40 skipped, 4 deselected in 78.97 seconds**, in
+[run 41470361223](https://github.com/Arman10121995/Celisca-ROS-2-Robot/actions/runs/41470361223),
+job `125362000772`. Physics exposed a separate optional-cache portability bug:
+four MuJoCo collision checks tried to stat the Jetson-only SSD runtime directory.
+The helper now retains exact original geometry when that optional mount is absent;
+it creates no fallback cache on internal storage. A missing-cache regression is
+retained. The next published revision still requires its own full workflow result.

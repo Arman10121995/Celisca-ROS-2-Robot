@@ -11,6 +11,19 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[2] / 'robot_lab_mujoco/p
 from robot_lab_mujoco.world_collision import add_static_mesh_collisions
 
 
+def test_missing_optional_ssd_cache_keeps_original_geometry(tmp_path, monkeypatch):
+    from robot_lab_utils.planar_mesh import cached_retriangulation
+    cache = Path('/workspace') / ('absent-cache-' + tmp_path.name)
+    assert not cache.exists()
+    monkeypatch.setenv('ROBOT_LAB_RUNTIME_ROOT', str(cache))
+    vertices = np.array([[0., 0., 0.], [1., 0., 0.], [0., 1., 0.]])
+    faces = np.array([[0, 1, 2]])
+    points, triangles = cached_retriangulation(vertices, faces)
+    np.testing.assert_array_equal(points, vertices)
+    np.testing.assert_array_equal(triangles, faces)
+    assert not cache.exists()
+
+
 def test_open_room_keeps_floor_and_wall_contacts(tmp_path):
     walls = trimesh.util.concatenate([
         trimesh.creation.box([.1, 4, 1], transform=trimesh.transformations.translation_matrix([x, 0, .5]))
