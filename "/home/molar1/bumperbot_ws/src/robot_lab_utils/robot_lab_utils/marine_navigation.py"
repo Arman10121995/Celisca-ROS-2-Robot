@@ -1,0 +1,15 @@
+    def _try_replan(self, reason):
+        """Attempt to replan the active route from the current estimated position.
+
+        Only replans if the last replan attempt was more than 5 s ago (to avoid
+        thrashing on persistent obstacles) and the route has a goal to reach.
+        Obstacle-aware replanning does not claim dynamic obstacle qualification;
+        it is a best-effort re-plan over the known static scene plus the latest
+        observed point cloud.
+        """
+        now = time.monotonic()
+        if now - self.replan_at < 5.:
+            return
+        if not self.route or self.index >= len(self.route) - 1:
+            return
+        goal = self.route[-1]

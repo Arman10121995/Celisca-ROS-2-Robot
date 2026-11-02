@@ -30,7 +30,7 @@ import rmf_adapter.plan as plan
 import rmf_adapter.vehicletraits as traits
 
 from robot_lab_utils.fleet_missions import rmf_navigation_graph
-from robot_lab_utils.fleet_facility_graph import facility_graph, install_lanes
+from robot_lab_utils.fleet_facility_graph import facility_graph, install_lanes, lift_session_graph
 from robot_lab_utils.fleet_session import SpawnGrid
 
 
@@ -270,8 +270,9 @@ def main(args=None):
     data = rmf_navigation_graph(occupancy, session['members'])
     if session.get('infrastructure_file'):
         import yaml
-        data = facility_graph(data, occupancy, session['members'],
-                              yaml.safe_load(Path(session['infrastructure_file']).read_text()))
+        infra_config = yaml.safe_load(Path(session['infrastructure_file']).read_text())
+        data = facility_graph(data, occupancy, session['members'], infra_config)
+        data = lift_session_graph(data, occupancy, session['members'], infra_config)
     (Path(session['directory']) / 'rmf-graph.json').write_text(json.dumps(data, indent=2) + '\n')
     adpt.init_rclcpp()
     adapter = adpt.Adapter.make('robot_lab_rmf_adapter')

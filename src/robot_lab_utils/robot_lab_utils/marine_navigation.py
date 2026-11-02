@@ -18,7 +18,7 @@ import numpy as np
 import rclpy
 from rclpy.clock import Clock, ClockType
 from rclpy.node import Node
-from geometry_msgs.msg import PoseWithCovarianceStamped, Twist
+from geometry_msgs.msg import PoseWithCovarianceStamped, Twist, Vector3
 from nav_msgs.msg import Odometry
 from sensor_msgs.msg import PointCloud2
 from sensor_msgs_py import point_cloud2
@@ -78,6 +78,15 @@ class MarineNavigation(Node):
         self.control_pub = self.create_publisher(String, '/marine/command', 10)
         self.state_pub = self.create_publisher(String, '/marine/mission/state', 10)
         self.create_subscription(String, '/marine/state', self.observe_native, 10)
+        # Obstacle-aware replanning: observed obstacles from sonar/point cloud.
+        self.obstacle_cloud = None
+        self.obstacle_at = -math.inf
+        self.replan_at = -math.inf
+        self.last_route_obstacle_free = True
+        # Current-aware planning: latest current observation.
+        self.current_vel = None
+        self.current_at = -math.inf
+        self.create_subscription(Vector3, '/marine/current', self.observe_current, 10)
         self.create_subscription(Odometry, '/marine/estimated_odometry', self.observe_pose, 10)
         self.create_subscription(PointCloud2, '/marine/slam/cloud_map', self.observe_cloud, 10)
         self.create_subscription(PoseWithCovarianceStamped, '/marine/slam/localization_pose', self.observe_localization, 10)
@@ -135,6 +144,11 @@ class MarineNavigation(Node):
             self.native, self.native_at = data, time.monotonic()
         except (ValueError, KeyError, TypeError):
             return
+
+    def observe_current(self, msg):
+        """Record the latest observed water current for current-aware planning."""
+        self.current_vel = (msg.x, msg.y, msg.z)
+        self.current_at = time.monotonic()
 
     def observe_pose(self, msg):
         try:
@@ -275,18 +289,65 @@ class MarineNavigation(Node):
         self.archive.request()
         self.reason = self.archive.message
 
+    def _try_replan(self, reason):
+        """Attempt to replan the active route from the current estimated position.
+
+        Only replans if the last replan attempt was more than 5 s ago (to avoid
+        thrashing on persistent obstacles) and the route has a goal to reach.
+        Obstacle-aware replanning does not claim dynamic obstacle qualification;
+        it is a best-effort re-plan over the known static scene plus the latest
+        observed point cloud.
+        """
+        if now := time.monotonic() - self.replan_at < 5.:
+            return
+        if not self.route or self.index >= len(self.route) - 1:
+            return
+        goal = self.route[-1]
+        scene = self.shore.with_observation(self.observed) if self.shore else ObservedScene(self.scene, self.observed) if self.observed else self.scene
+        radius = self.radius + 3 * self.pose_std
+        token = threading.Event()
+        self.replan_at = time.monotonic()
+        self.status, self.reason = 'replanning', reason
+        self.event('replan_started', goal=goal, reason=reason)
+
+        def compute():
+            start = self.position.copy()
+            orientation = self.orientation.copy()
+            route, info = plan(scene, start, np.asarray(goal), radius=radius, resolution=.4, timeout=15.,
+                canceled=token.is_set,
+                min_altitude=self.bottom + radius + .1,
+                max_altitude=self.surface - radius - .1) if not self.surface_vessel else plan(
+                    scene, start, np.asarray(goal), radius=radius, resolution=.4, timeout=15.,
+                    canceled=token.is_set,
+                    min_altitude=float(start[2]) - .1, max_altitude=float(start[2]) + .1)
+            return route, info, start.tolist()
+
+        self.future = self.worker.submit(compute)
+
     def tick(self):
         now = time.monotonic()
         if self.future is not None and self.future.done():
             try:
-                generation, route, info, start = self.future.result()
-                if generation == self.generation:
-                    self.route, self.status = route, 'planned'
-                    self.reason = 'Source collision route planned; explicit Execute required'
-                    self.event('planned', route=route, info=info)
+                result = self.future.result()
+                if len(result) == 4:
+                    generation, route, info, start = result
+                    if generation == self.generation:
+                        self.route, self.status = route, 'planned'
+                        self.reason = 'Source collision route planned; explicit Execute required'
+                        self.event('planned', route=route, info=info)
+                elif len(result) == 3:
+                    route, info, start = result
+                    self.route, self.status = route, 'executing'
+                    self.index = 1
+                    self.reason = 'Route replanned around observed obstacle; execution resumed'
+                    self.event('replan_completed', route=route, info=info)
             except Exception as exc:
-                self.status, self.reason = 'idle', 'Planning failed: ' + str(exc)
-                self.event('plan_failed', reason=str(exc))
+                if self.status == 'replanning':
+                    self.status, self.reason = 'idle', 'Replan failed: ' + str(exc)
+                    self.event('replan_failed', reason=str(exc))
+                else:
+                    self.status, self.reason = 'idle', 'Planning failed: ' + str(exc)
+                    self.event('plan_failed', reason=str(exc))
             self.future = None
         if self.status in ('executing', 'braking', 'coasting'):
             if not self.fresh() or not self.native.get('operator_fresh') or now > self.deadline:
@@ -335,7 +396,7 @@ class MarineNavigation(Node):
                     except TimeoutError:
                         self.cancel('Collision recheck deadline exceeded; explicit replan required');return
                     if not clear:
-                        self.cancel('Current source/observed segment blocked; replan required')
+                        self._try_replan('Observed segment blocked; replanning from current position')
                     else:
                         command, distance = waypoint_command(self.position, self.orientation, self.velocity, target, self.auv)
                         if self.surface_vessel:

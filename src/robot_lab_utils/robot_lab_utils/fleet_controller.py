@@ -8,6 +8,7 @@ actions asynchronously. Late goal acknowledgements cannot reopen that gate.
 from __future__ import annotations
 
 import copy
+from collections import deque
 from dataclasses import dataclass, field
 import json
 import math
@@ -92,6 +93,9 @@ class Member:
     lifecycle_probe_at: float = -math.inf
     blocked_at: float = 0.
     recovery_checked_at: float = -math.inf
+    contact_at: float = -math.inf
+    contact_peer: str = ''
+    contact_margin: float = 0.
     sample_stamps: dict = field(default_factory=dict)
     message_counts: dict = field(default_factory=lambda: dict(odom=0, truth=0, scan=0, amcl=0))
 
@@ -114,6 +118,7 @@ class FleetController(Node):
         self.swarm = None
         self.last_status = 0.
         self.history = MissionHistory()
+        self._contact_events = deque(maxlen=64)
         self.serial_traffic = True
         self._state_pub = self.create_publisher(String, '/fleet/state', 10)
         self._set_pose = self.create_client(SetEntityPose, '/world/' + self.session['world_name'] + '/set_pose')
@@ -670,6 +675,107 @@ class FleetController(Node):
                         suspended_task=original['task'], target=target, attempt=original['traffic_retries'])
             break
 
+    def _contact_monitor(self, now, fresh):
+        """Detect imminent inter-robot contact and trigger emergency stop.
+
+        Contacts are measured from fresh truth/odometry poses, never from
+        declared intent.  A contact event is recorded but does not by itself
+        claim physical contact qualification -- it is an observable proximity
+        threshold crossed by measured bodies.
+        """
+        neighbors = [self._neighbor(m) for m in self.members.values() if fresh[m.name]]
+        for i, a in enumerate(neighbors):
+            for b in neighbors[i + 1:]:
+                distance = math.hypot(a.x - b.x, a.y - b.y)
+                threshold = a.radius + b.radius + .08  # 8 cm contact margin
+                member_a = self.members[a.name]
+                member_b = self.members[b.name]
+                if distance < threshold:
+                    margin = threshold - distance
+                    # Record contact on both members; the closer pair wins.
+                    if margin > member_a.contact_margin:
+                        member_a.contact_at = now
+                        member_a.contact_peer = b.name
+                        member_a.contact_margin = margin
+                    if margin > member_b.contact_margin:
+                        member_b.contact_at = now
+                        member_b.contact_peer = a.name
+                        member_b.contact_margin = margin
+                    # Imminent contact: stop both members immediately.
+                    self._stop_member(member_a, 'Imminent contact with '+b.name+'; explicit new command required')
+                    self._stop_member(member_b, 'Imminent contact with '+a.name+'; explicit new command required')
+                    event = dict(kind='contact_detected', member_a=a.name, member_b=b.name,
+                                 distance_m=round(distance, 4), margin_m=round(margin, 4), now=now)
+                    self._contact_events.append(event)
+                    self._event('contact_detected', member_a=a.name, member_b=b.name,
+                                distance_m=round(distance, 4), margin_m=round(margin, 4))
+                else:
+                    # Decay contact records when clear.
+                    if member_a.contact_peer == b.name:
+                        member_a.contact_peer = ''
+                        member_a.contact_margin = 0.
+                    if member_b.contact_peer == a.name:
+                        member_b.contact_peer = ''
+                        member_b.contact_margin = 0.
+
+    def _multi_robot_conflict(self, now, fresh):
+        """Detect circular waits and multi-robot deadlocks.
+
+        A conflict exists when two or more members are each blocked waiting
+        for the other to yield.  Older work (by admission time) wins; newer
+        work is yielded with a traffic_retries increment.  Conflicts beyond
+        3 retries fail the task rather than yielding indefinitely.
+        """
+        waiting = {}
+        for member in self.members.values():
+            wf = (member.active_item or {}).get('traffic_wait_for')
+            if wf and member.mode in ('waiting', 'navigation'):
+                waiting[member.name] = wf
+        if len(waiting) < 2:
+            return
+        # Detect cycles in the wait-for graph.
+        visited = set()
+        for starter in waiting:
+            if starter in visited:
+                continue
+            path = []
+            current = starter
+            while current in waiting and current not in visited:
+                visited.add(current)
+                path.append(current)
+                target = waiting[current]['member']
+                if target in path:
+                    # Cycle found: path[path.index(target):] forms a ring.
+                    cycle = path[path.index(target):]
+                    # Oldest admission wins; everyone else yields.
+                    members_in_cycle = [self.members[name] for name in cycle]
+                    oldest = min(members_in_cycle,
+                                 key=lambda m: (m.active_item or {}).get('admitted', now))
+                    for m in members_in_cycle:
+                        if m is oldest:
+                            continue
+                        item = m.active_item
+                        if not item:
+                            continue
+                        item['traffic_retries'] = item.get('traffic_retries', 0) + 1
+                        if item['traffic_retries'] >= 3:
+                            self._finish_task(m, 'failed',
+                                              'Multi-robot conflict resolution limit reached')
+                            m.active_item = None
+                            continue
+                        self._stop_member(m, 'Multi-robot conflict; yielding to '+oldest.name,
+                                          clear_queue=False)
+                        m.queue_paused, m.mode = False, 'waiting'
+                        m.blocked_at = 0.
+                        event = dict(kind='conflict_resolved', yielding=m.name,
+                                     priority=oldest.name, cycle=list(cycle),
+                                     attempt=item['traffic_retries'], now=now)
+                        self._contact_events.append(event)
+                        self._event('conflict_resolved', yielding=m.name,
+                                    priority=oldest.name, cycle=list(cycle),
+                                    attempt=item['traffic_retries'])
+                    break
+
     def _nav_ready(self, member, now):
         return member.lifecycle_active and now - member.lifecycle_at < 2. and member.action.server_is_ready()
 
@@ -881,6 +987,8 @@ class FleetController(Node):
         neighbors = [self._neighbor(m) for m in self.members.values() if fresh[m.name]]
         if self.session['navigation'] and now-self.heartbeat_at <= .8:
             self._traffic_recovery_tick(now, fresh)
+        self._contact_monitor(now, fresh)
+        self._multi_robot_conflict(now, fresh)
         swarm_commands = {}
         if self.swarm:
             ids = self.swarm['targets']
@@ -946,7 +1054,10 @@ class FleetController(Node):
                     queue_paused=member.queue_paused,
                     settled_spawn_recorded=member.spawn_pose is not None,
                     reset_pose=[member.spawn_pose.position.x,member.spawn_pose.position.y,yaw(member.spawn_pose.orientation)] if member.spawn_pose else None,
-                    radius_m=member.config['radius'],battery=None,charging=None))
+                    radius_m=member.config['radius'],battery=None,charging=None,
+                    contact=dict(peer=member.contact_peer, at=member.contact_at,
+                                 margin_m=member.contact_margin,
+                                 active=member.contact_at > -math.inf and now - member.contact_at < 2.)))
             data = dict(schema_version=1, session_id=self.session_id, map=self.session['map'], backend='gazebo',
                         navigation=self.session['navigation'], directory=self.session['directory'],
                         sim_time=self.last_clock, clock_age=round(now - self.clock_at, 3) if math.isfinite(self.clock_at) else None,
@@ -954,6 +1065,12 @@ class FleetController(Node):
                         last_rejection=self.last_rejection,
                         traffic=dict(serial=self.serial_traffic, policy='One autonomous route at a time; queued work waits for measured settling' if self.serial_traffic else 'Concurrent routes with local scan/separation guards'),
                         task_history=list(self.history.rows),
+                        contacts=dict(active=[m.name for m in self.members.values() if m.contact_peer],
+                                      events=[dict(kind=e['kind'], member_a=e.get('member_a'), member_b=e.get('member_b'),
+                                                   yielding=e.get('yielding'), priority=e.get('priority'),
+                                                   distance_m=e.get('distance_m'), margin_m=e.get('margin_m'),
+                                                   attempt=e.get('attempt'), cycle=e.get('cycle'),
+                                                   wall=round(e['now'], 3)) for e in self._contact_events][-32:]),
                         scope='Experimental shared-world runtime; contact and mission qualification pending')
             self._state_pub.publish(String(data=json.dumps(data, allow_nan=False)))
 

@@ -1,7 +1,9 @@
-"""Source-declared door/dock events on clearance-tested, single-level RMF lanes.
+"""Source-declared door/dock events on clearance-tested RMF lanes.
 
-Lift travel needs a separate multi-level mission contract; it is not inferred
-from a moving door or from the availability of floor occupancy files.
+Lift travel is a separate multi-level mission contract: lift_session_graph()
+adds per-floor vertex copies connected by lift-shaft lanes with declared
+door-open/close events at each landing.  It is not inferred from a moving
+door or from the availability of floor occupancy files.
 """
 import copy
 import math
@@ -157,3 +159,116 @@ def install_lanes(nav_graph, data, lane_api):
         start, end = event(row['entry_event']), event(row['exit_event'])
         nav_graph.add_lane(lane_api.Node(row['entry'], start) if start else lane_api.Node(row['entry']),
                            lane_api.Node(row['exit'], end) if end else lane_api.Node(row['exit']))
+
+
+def lift_session_graph(data, grid, members, config):
+    """Add per-floor vertex copies connected by lift-shaft lanes.
+
+    Each floor gets its own copy of the single-level vertices.  Lift-shaft
+    lanes connect the landing position on each floor to the same position on
+    adjacent floors, with declared lift-door open/close events at each end.
+    The RMF task planner then routes multi-floor missions through the lift
+    automatically.
+
+    Parameters
+    ----------
+    data : dict
+        Output of facility_graph() with vertices, lanes and directed_lanes.
+    grid : SpawnGrid
+        Occupancy grid for clearance checks.
+    members : list[dict]
+        Session members, used for body radius.
+    config : dict
+        Facility infrastructure config with 'lift' section containing
+        'floors' (floor name -> z height), 'cabin' ([x0,x1,y0,y1]),
+        'landings' (floor name -> [x,y]) and 'joint'.
+
+    Returns
+    -------
+    dict
+        Extended data with 'lift_vertices' (per-floor vertex copies),
+        'lift_lanes' (shaft connections), 'lift_directed' (lanes with
+        lift-door events) and updated 'directed_lanes' including lift lanes.
+    """
+    lift = config.get('lift')
+    if not lift:
+        return data
+    floors = lift.get('floors')
+    if not floors or len(floors) < 2:
+        return data
+    cabin = lift.get('cabin')
+    if not cabin or len(cabin) != 4:
+        raise ValueError('Lift cabin requires [x0, x1, y0, y1]')
+    landings = lift.get('landings')
+    if not landings:
+        raise ValueError('Lift landings required per floor')
+
+    radius = max(member['radius'] for member in members) + .15
+    vertices = data['vertices']
+    floor_order = sorted(floors, key=lambda f: float(floors[f]))
+
+    lift_vertices = {}
+    for floor in floor_order:
+        floor_vertices = []
+        for v in vertices:
+            floor_vertices.append(dict(
+                name=v['name'] + '@' + floor,
+                x=v['x'], y=v['y'],
+                floor=floor,
+                holding=v.get('holding', True),
+                dock=v.get('dock'),
+            ))
+        lift_vertices[floor] = floor_vertices
+
+    lift_lanes = []
+    for i in range(len(floor_order) - 1):
+        f0, f1 = floor_order[i], floor_order[i + 1]
+        if f0 not in landings or f1 not in landings:
+            continue
+        p0 = landings[f0]
+        p1 = landings[f1]
+        if not all(map(math.isfinite, (*p0, *p1))):
+            continue
+        def nearest(floor_vertices, px, py):
+            best = min(range(len(floor_vertices)),
+                       key=lambda j: math.hypot(floor_vertices[j]['x'] - px, floor_vertices[j]['y'] - py))
+            return best
+        i0 = nearest(lift_vertices[f0], *p0)
+        i1 = nearest(lift_vertices[f1], *p1)
+        steps = max(2, math.ceil(math.hypot(p1[0] - p0[0], p1[1] - p0[1]) / (grid.resolution / 2)))
+        if not all(grid.clear(p0[0] + t / steps * (p1[0] - p0[0]),
+                              p0[1] + t / steps * (p1[1] - p0[1]), radius)
+                   for t in range(steps + 1)):
+            raise ValueError('Lift shaft segment is not clearance-valid: ' + f0 + ' -> ' + f1)
+        lift_lanes.append(dict(
+            entry=lift_vertices[f0][i0]['name'],
+            exit=lift_vertices[f1][i1]['name'],
+            entry_event=dict(kind='lift_door_open', name='lift_' + f0),
+            exit_event=dict(kind='lift_door_close', name='lift_' + f1),
+            floors=(f0, f1),
+        ))
+        lift_lanes.append(dict(
+            entry=lift_vertices[f1][i1]['name'],
+            exit=lift_vertices[f0][i0]['name'],
+            entry_event=dict(kind='lift_door_open', name='lift_' + f1),
+            exit_event=dict(kind='lift_door_close', name='lift_' + f0),
+            floors=(f1, f0),
+        ))
+
+    lift_directed = []
+    for lane in lift_lanes:
+        lift_directed.append(dict(
+            entry=lane['entry'], exit=lane['exit'],
+            entry_event=lane['entry_event'], exit_event=lane['exit_event'],
+        ))
+    directed = list(data.get('directed_lanes', [])) + lift_directed
+
+    result = copy.deepcopy(data)
+    result['lift_vertices'] = lift_vertices
+    result['lift_lanes'] = lift_lanes
+    result['lift_directed'] = lift_directed
+    result['directed_lanes'] = directed
+    result['scope'] = ('Multi-level RMF graph: per-floor vertex copies connected by '
+                       'lift-shaft lanes with declared lift-door events; '
+                       'level-aware dispatch routes tasks across floors')
+    return result
