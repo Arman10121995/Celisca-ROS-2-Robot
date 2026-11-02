@@ -1,5 +1,51 @@
 # Physical fleet infrastructure
 
+## Queued transport and explicit recovery
+
+In **Fleet & Swarm → Facility**, select idle Nav2 members and a different
+destination floor. **Queue selected members** admits a bounded FIFO itinerary;
+**Queue round trip** adds each selected member's outbound and return stops
+together. The physical car serves one stop at a time. Queue admission is atomic,
+and each stop must change that member's predicted floor. At most 32 stops wait.
+The status lists active/queued stops and the reason for any dispatch delay.
+The Facility subpage scrolls vertically; narrow columns stack paired buttons,
+so long live member/map status cannot hide the remaining controls.
+
+Waiting members are reserved against other fleet commands. The dispatcher
+requires fresh independent observations of every member, an empty car or its
+own passenger, idle active Nav2 and clear origin/destination landings. A parked
+peer can block a landing: use Drive to move it clear. The queue does not invent
+a parking maneuver. Success retains the existing actual Nav2 acknowledgement,
+observed floor/map/costmap and independently settled exit requirements.
+
+**Cancel transport queue** cancels pending stops and the active transport.
+ALL STOP, ownership loss or an active transport failure cancels dependent stops;
+feedback resumption does not rearm them. A live RMF lift session retains its
+identity until SessionEnd, Stop or lease loss, including when it stops sending
+repeated requests. A five-second idle request interval cannot transfer ownership.
+
+After a stopped ride, select a floor and press **Recover held lift to floor**.
+This is an explicit new request, not automatic recovery. It requires fresh
+joint/clock/all-member body feedback, a settled car, no competing requester,
+idle passenger controls, and the entire passenger footprint inside the cabin.
+The declared single-member car refuses multiple or straddling passengers.
+Clear landing/car gates must close before movement; only a leveled stopped
+car opens at the requested floor. Passenger/ownership loss or a 100-second
+deadline relatches measured hold. Recovery never assigns a robot pose.
+
+On completion, use manual Drive to leave the cabin or request a new floor
+transport. Recovery itself does not autonomously evacuate the passenger.
+[The new receipt](../status/evidence/workflow-continuation-2026-11-02/README.md)
+measures an **empty-car** mid-shaft Stop and return; occupied/concurrent missions
+remain separate. Non-Gazebo facility adapters remain static geometry.
+
+For agent integrations, `/fleet/infrastructure/command` accepts `transport_queue`
+with `requests: [{robot: alpha, floor: L1}, {robot: alpha, floor: L0}]`, plus the
+current session/operator IDs. `cancel_transports` cancels it; `recover_lift`
+requires `floor`. `/fleet/infrastructure/state` contains `transport_queue`,
+`reservations`, `lift_recovery` and `last_rejection`. Use actual fleet session
+IDs/leases, not copied examples from another run.
+
 ## Run
 
 Open **Fleet & Swarm**, choose **fleet_facility**, enable per-member AMCL/Nav2,

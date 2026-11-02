@@ -1,6 +1,8 @@
 # Stabilization and remaining work: agent execution guide
 
-The native **Learn & health** workspace now provides architecture lessons, source/tutorial links and actual opt-in ROS discovery. Follow [the guide](architecture/interactive-guide.md) when changing these modules; maintain valid component/view/tour/source links and private discovery cleanup. This documentation feature is separate from broader robot/extension acceptance.
+Newest November 2 continuation: preserve [facility queues/explicit recovery, marine interruption and aerial formation itineraries](status/workflow-continuation-2026-11-02.md). These are implemented candidates with scoped checks; empty-car recovery and one Bumperbot two-stop floor queue have new physical receipts. Complete the remaining AUV/terrain/source adapters before broad validation. Use the [current execution guide](REMAINING_WORK_GUIDE.md), not earlier demonstration completion strings.
+
+The native **Learn & diagnose** workspace now provides architecture lessons, source/tutorial links and actual opt-in ROS discovery. Follow [the guide](architecture/interactive-guide.md) when changing these modules; maintain valid component/view/tour/source links and private discovery cleanup. This documentation feature is separate from broader robot/extension acceptance.
 
 Latest November 2: [automatic native fleet lift transport](status/evidence/automatic-floor-transport-2026-11-02/README.md) completed one Bumperbot L0-L1-L0 with autonomous boarding, map/costmap transitions and settled exits. The GUI Facility request is implemented. A real native SDK L0-L1-L0 mission also passed in 359.063 wall seconds; actual SDK process-loss/resumption held the car and required explicit re-enablement. Broader multi-robot cases remain separate. Full platform acceptance remains partial.
 

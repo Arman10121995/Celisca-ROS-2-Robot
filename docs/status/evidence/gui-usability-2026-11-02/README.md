@@ -1,5 +1,7 @@
 # GUI usability and presentation — November 2, 2026
 
+Publication follow-up: commit `8b958e97` passed [GitHub CI run 41520955830](https://github.com/Arman10121995/Celisca-ROS-2-Robot/actions/runs/41520955830). The timed-out local fast invocation below remains an incomplete local run.
+
 Baseline `aed999ee`, existing `master` repository. This delivery refreshes the
 shared native interface and navigation; it does not qualify robot missions or
 refresh historical source certificates. [User quick tour](../../../tutorials/gui-quickstart.md).

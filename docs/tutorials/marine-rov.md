@@ -1,5 +1,21 @@
 # Laboratory ROV and underwater worlds
 
+## Blocked-route handling
+
+The mission controller immediately publishes neutral input when its current
+segment becomes blocked. ROV/surface/amphibious replanning runs in a bounded,
+cancelable worker while neutral mission input keeps the native input watchdog
+alive. Stop or sensor/operator/control loss invalidates the worker generation;
+a late result cannot resume it. Execution also rechecks start drift (0.25 m),
+ownership and the original mission deadline. Amphibious replans reuse the
+shore-support planner. A blocked AUV stops propulsion and needs an explicit
+forward-aligned replan; automatic cornering is not supported.
+
+`authored_current_m_s` reports the operator's finite current command, with its
+age. It is not a current sensor, and route costs do not optimize current energy.
+Physical obstacle/current/loss and additional saved-map cases remain open;
+[targeted software scope](../status/workflow-continuation-2026-11-02.md).
+
 ## October 27 mapping and missions
 
 The Marine and Marine missions controls now include actual sensor odometry,

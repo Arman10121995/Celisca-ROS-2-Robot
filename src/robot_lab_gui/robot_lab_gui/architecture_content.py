@@ -131,8 +131,9 @@ component('px4', 'PX4 flight controller', 'Aerial', 'The FCU controls a real sim
 component('swarm', 'Aerial swarm owner', 'Aerial', 'One selected world, multiple independently identified FCUs.',
     'The aerial session model assigns member IDs, PX4 instances, MAVLink ports and ROS namespaces. '
     'Formation/workload requests become per-vehicle setpoints while the runtime monitors member telemetry and operator ownership. '
+    'The native itinerary editor separates background source/swept-peer Plan from explicit Execute. Advancing FCU timestamps and low estimated speed gate each formation slot; Stop/loss invalidates the route generation. '
     'A two-drone measured case is not a larger-swarm certificate. Landing on loss differs from simply disarming in mid-air; source flight checks remain active.',
-    'src/robot_lab_bringup/launch/aerial_swarm.launch.py src/robot_lab_adapter/robot_lab_adapter/aerial_swarm_model.py src/robot_lab_adapter/robot_lab_adapter/aerial_swarm_runtime.py', 'docs/tutorials/aerial-swarm.md', 'Default session member ports 14580 + instance; distinct system IDs and namespaces.')
+    'src/robot_lab_bringup/launch/aerial_swarm.launch.py src/robot_lab_adapter/robot_lab_adapter/aerial_swarm_model.py src/robot_lab_adapter/robot_lab_adapter/aerial_swarm_runtime.py src/robot_lab_adapter/robot_lab_adapter/aerial_swarm_route.py', 'docs/tutorials/formation-routes.md', 'Default session member ports 14580 + instance; distinct system IDs and namespaces.')
 component('aerial_plan', 'Aerial scene planning', 'Aerial', 'Selected-world geometry and observed depth constrain explicit route execution.',
     'Takeoff checking binds a landed pose and source envelope to a proposed corridor. Static/observed 3D planning and live lookahead can interrupt stale or blocked execution. '
     'Direct manual/offboard paths have different guarantees from an explicitly checked plan. Actor prediction, unknown geometry and broader maps require their own implementation/evidence. '
@@ -151,8 +152,9 @@ component('rmf', 'Open-RMF traffic & tasks', 'Fleet', 'Optional native schedulin
 component('facility', 'Doors, lift & energy', 'Fleet', 'Physical interlocks, observed floors and source-bound modeled energy.',
     'Force-driven car/landing gates and lift position feedback guard boarding and travel. Body height selects each member floor; map load plus both costmap resets hold movement until acknowledged. '
     'AMCL retains XY/yaw ownership; floor placement adds only vertical translation. Car setpoints hold after request cessation. '
+    'A bounded FIFO reserves native floor itineraries and waits for clear peer landings. Live SDK session identity persists until release/loss. Recovery is explicit, with whole-passenger footprint and gate/level interlocks; only empty-car recovery has a new receipt. '
     'Power uses complete actual effort/rate samples and source/runtime certificates. Berth charging and SOC are authored models; missing coverage makes SOC unknown, not zero.',
-    'src/robot_lab_utils/robot_lab_utils/fleet_infrastructure.py src/robot_lab_utils/robot_lab_utils/fleet_transport.py src/robot_lab_utils/robot_lab_utils/fleet_energy.py', 'docs/tutorials/fleet-infrastructure.md', '/fleet/infrastructure/state : String JSON\nPhysical fixture targets /facility/<joint>/target : std_msgs/msg/Float64')
+    'src/robot_lab_utils/robot_lab_utils/fleet_infrastructure.py src/robot_lab_utils/robot_lab_utils/fleet_transport.py src/robot_lab_utils/robot_lab_utils/fleet_transport_queue.py src/robot_lab_utils/robot_lab_utils/fleet_lift_recovery.py src/robot_lab_utils/robot_lab_utils/fleet_energy.py', 'docs/tutorials/fleet-infrastructure.md', '/fleet/infrastructure/state : String JSON\nPhysical fixture targets /facility/<joint>/target : std_msgs/msg/Float64')
 component('marine', 'Marine force controller', 'Marine', 'ROV thrusters, AUV propulsion/fins and surface/amphibious control.',
     'Marine workflows use native buoyancy, hydrodynamics and force/fin allocation, not a ground-wheel controller. '
     'ROVs can actively trim/hold differently from forward-moving AUVs; neutral thrust may coast. Source heading, depth convention and pressure/vision assumptions must be explicit. '
@@ -161,6 +163,7 @@ component('marine', 'Marine force controller', 'Marine', 'ROV thrusters, AUV pro
 component('marine_map', 'Marine mapping & routes', 'Marine', 'Sensor-based acquisition, protected database reload and estimated missions.',
     'RGB-D acquisition exports a real database; saved localization reuses it with appropriate source frames and odometry. '
     'Ahead waypoints are interpreted by a marine mission controller rather than assuming planar Nav2 works underwater. '
+    'A blocked segment publishes neutral input before cancelable replanning. Generation, live ownership and start-position checks reject late results; AUVs cannot bypass their forward-transect restriction through replanning. Authored current commands are not current sensors or optimized route costs. '
     'Native body traces measure routes independently. The measured ROV/surface/AUV cases have different scope; currents, obstacles, loss and additional maps remain separate.',
     'src/robot_lab_mapping src/robot_lab_gui/robot_lab_gui/marine_controls.py', 'docs/tutorials/tethys-auv.md')
 component('queue', 'Experiments & workloads', 'Evidence', 'Snapshot selected workflows and execute owned, bounded trials.',

@@ -1,0 +1,28 @@
+{
+  "passed": true,
+  "reason": "Actual empty-car ascent, mid-shaft all-stop, settled hold, explicit L0 recovery and observed open car gate",
+  "wall_seconds": 35.94909358199948,
+  "held_samples": 116,
+  "final_lift": {
+    "position_m": -1.5502937509204342e-16,
+    "command_m": 0.0,
+    "current_floor": "L0",
+    "destination": [
+      "L0",
+      true
+    ],
+    "floors": [
+      "L0",
+      "L1"
+    ]
+  },
+  "recovery": {
+    "phase": "succeeded",
+    "floor": "L0",
+    "operator_id": "recovery-probe",
+    "passengers": [],
+    "started": 44796.751114442,
+    "reason": "Observed level car and open landing; use manual Drive to exit or request a new floor transport"
+  },
+  "raw_artifacts": "/workspace/molar/robot_lab_runtime/facility-queue-recovery-20261102"
+}

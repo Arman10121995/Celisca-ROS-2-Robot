@@ -1,5 +1,7 @@
 # Remaining work: agent execution guide
 
+Newest implementation: [facility queues/recovery, marine interruption and aerial formation routes](status/workflow-continuation-2026-11-02.md). Do not rebuild these workflows or infer their full acceptance from fixtures. Empty-car recovery and a single-member two-stop floor queue have real receipts; concurrent passenger missions, new aerial route flights, marine saved-map/obstacle/current/loss and terrain cases remain. Preserve exact source/runtime certificates and complete the remaining implementation before broad campaigns.
+
 Latest November 2: [automatic native fleet lift transport](status/evidence/automatic-floor-transport-2026-11-02/README.md) completed one Bumperbot L0-L1-L0 with autonomous boarding, map/costmap transitions and settled exits. The GUI Facility request is implemented. A real native SDK L0-L1-L0 mission also passed in 359.063 wall seconds; actual SDK process-loss/resumption held the car and required explicit re-enablement. Broader multi-robot cases remain separate. Full platform acceptance remains partial.
 
 Latest November 2 continuation: [observation-bound fleet energy, separate floor/AMCL frames and native RMF door/dock routes](status/fleet-continuation-2026-11-02.md). Preserve the source/runtime certificates, gap-to-unknown energy model, scoped upstream serializer correction and measured floor ride. Next: wider SDK conflict/loss, marine and terrain workflows; the automatic native and SDK lift round-trips now have their own receipts. Full platform acceptance remains partial.
@@ -17,6 +19,38 @@ marine sensor or gait navigation integrations. Preserve their current code
 and real scoped measurements. Full R10/platform acceptance remains partial.
 
 ## Working rules and first commands
+
+### Continue the latest implementation
+
+- **Facility:** reuse `fleet_transport_queue.py`, `fleet_transport.py` and
+  `fleet_lift_recovery.py`; do not bypass the controller's reservations to make
+  a queue move. A peer parked on an exit landing deliberately blocks dispatch.
+  Automated parking/evacuation is still a missing feature: implement an explicit
+  source-valid post-exit parking/evacuation task, with normal Nav2 acknowledgement
+  and independently settled body, before claiming unattended multi-member floors.
+  Preserve FIFO bounds, all-member observation freshness and loss-to-new-request
+  behavior. The single-member two-stop floor queue is now measured; keep concurrent cases separate.
+- **Aerial:** `aerial_swarm_route.py` and the native editor already implement
+  source-static Plan/Execute. Keep planner tokens/generations, fresh captured
+  starts, swept peer checks, FCU-time settling and owned worker cleanup. Do not
+  put sleeps in the coordinator executor to wait for its own subscriptions.
+  Next actual mission: short two-anchor two-FCU route, independent body endpoints,
+  Hold and Land/disarm; larger groups/observed obstacles are separate cases.
+- **Marine:** preserve `_try_replan`/`_poll_plan` cancellation generations and
+  neutral watchdog input. The next missing navigation implementation is a
+  curvature/flow-aware Tethys planner/controller rather than unrestricted A*
+  corners: retain source -X forward, minimum speed/fin authority, native thrust/
+  surface bounds, depth limits and an independently checked terminal braking
+  corridor. Until it exists, keep the direct forward-transect gate. Do not label
+  `/marine/current` as a sensor or claim current-optimized route costs.
+- **Terrain/additional forms:** extend the existing source gait/contact and
+  flipper controllers. Add measured support/slip confidence and conservative
+  terrain/step rejection to actual navigation inputs; no truth XY correction,
+  teleported recovery or generic controller on a source-incompatible body.
+- **Release:** preserve exact existing certificates, classify new software as
+  implemented/mission-pending, and retain all failed trials. The remaining
+  map/actor/backend, manipulation/perception/policy, applied-seed/concurrency,
+  comparison and clean-host tasks below are still required.
 
 Work on the existing `master`, claim a concrete ledger scope before changes,
 and preserve other owners' work. No extra branch/worktree without a user request.

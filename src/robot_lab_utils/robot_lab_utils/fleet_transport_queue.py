@@ -1,0 +1,62 @@
+"""Bounded FIFO facility itinerary; admission is separate from physical completion."""
+import uuid
+
+
+class TransportQueue:
+    def __init__(self, limit=32):
+        self.limit = limit
+        self.pending = []
+        self.history = []
+        self.active = None
+
+    def append(self, requests, operator, floors, destinations, now):
+        if not isinstance(requests, list) or not requests or len(self.pending) + len(requests) > self.limit:
+            raise ValueError('Provide 1–32 transport stops within the queue capacity')
+        predicted = dict(floors)
+        if self.active:
+            predicted[self.active['robot']] = self.active['floor']
+        for row in self.pending:
+            predicted[row['robot']] = row['floor']
+        staged = []
+        for request in requests:
+            if not isinstance(request, dict):
+                raise ValueError('Each transport stop needs robot and floor')
+            robot, floor = request.get('robot'), request.get('floor')
+            if not isinstance(robot, str) or robot not in predicted or not isinstance(floor, str) or floor not in destinations:
+                raise ValueError('Every transport stop must name a session member and configured floor')
+            if predicted[robot] == floor:
+                raise ValueError('Each itinerary stop must change that member’s predicted floor')
+            predicted[robot] = floor
+            staged.append(dict(id=uuid.uuid4().hex, robot=robot, floor=floor,
+                               operator_id=operator, enqueued_at=now, phase='queued',
+                               reason='Waiting for exclusive lift and clear landings'))
+        self.pending.extend(staged)  # Admission is atomic, including invalid later stops.
+        return staged
+
+    def take(self):
+        if self.active is not None or not self.pending:
+            return None
+        self.active = self.pending.pop(0)
+        self.active.update(phase='active', reason='Physical transport started')
+        return self.active
+
+    def finish(self, phase, reason):
+        if self.active is None:
+            return
+        self.active.update(phase=phase, reason=reason)
+        self.history.append(dict(self.active))
+        self.history = self.history[-64:]
+        self.active = None
+
+    def cancel(self, reason, targets=None):
+        retained = []
+        for row in self.pending:
+            if targets is None or row['robot'] in targets:
+                self.history.append(dict(row, phase='canceled', reason=reason))
+            else:
+                retained.append(row)
+        self.pending = retained
+        self.history = self.history[-64:]
+
+    def state(self):
+        return dict(active=self.active, pending=list(self.pending), history=list(self.history), capacity=self.limit)

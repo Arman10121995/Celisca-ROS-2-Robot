@@ -1,0 +1,42 @@
+{
+  "passed": true,
+  "reason": "One actual Bumperbot automatic two-stop queued L0-L1-L0 with independently observed settled endpoints/maps",
+  "wall_seconds": 324.25898280600086,
+  "landings": [
+    {
+      "floor": "L1",
+      "body": {
+        "x": 2.2187572430280533,
+        "y": 0.010914907081835278,
+        "z": 3.0000018120782532,
+        "yaw": 0.005270988060552225,
+        "linear": 0.0,
+        "angular": 0.0,
+        "velocity_source": "finite difference of measured stamped Gazebo poses",
+        "source_reported_twist": {
+          "linear": 0.0,
+          "angular": 0.0
+        }
+      },
+      "map": "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_maps/share/robot_lab_maps/maps/fleet_facility/maps/map_L1.yaml"
+    },
+    {
+      "floor": "L0",
+      "body": {
+        "x": 2.401653267874148,
+        "y": 0.007861949589870645,
+        "z": 1.8120887227343421e-06,
+        "yaw": 0.012566490656471342,
+        "linear": 0.0,
+        "angular": 0.0,
+        "velocity_source": "finite difference of measured stamped Gazebo poses",
+        "source_reported_twist": {
+          "linear": 0.0,
+          "angular": 0.0
+        }
+      },
+      "map": "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_maps/share/robot_lab_maps/maps/fleet_facility/maps/map.yaml"
+    }
+  ],
+  "raw_artifacts": "/workspace/molar/robot_lab_runtime/facility-queue-recovery-20261102/queued-roundtrip"
+}

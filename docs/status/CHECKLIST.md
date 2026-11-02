@@ -1,5 +1,13 @@
 # Robot Lab done and remaining checklist
 
+- [x] Native bounded lift itinerary/round-trip queue, reservations, cancellation and explicit interlocked recovery; persistent SDK session ownership.
+- [x] Actual empty-car ascent, mid-shaft Stop/hold and explicit L0 recovery. [Scoped receipt](evidence/workflow-continuation-2026-11-02/README.md).
+- [x] Actual single-command, two-stop Bumperbot floor queue L0-L1-L0, independently observed settled endpoints and floor maps, 324.259 s.
+- [x] Marine blocked-input neutral hold, cancelable generation-bound replanning and fresh control/start/deadline checks.
+- [x] Native aerial formation itinerary editor, source/swept-separation Plan, explicit Execute and FCU-epoch settling. [Guide](../tutorials/formation-routes.md).
+- [ ] Concurrent multi-member passenger transport, automatic parking/evacuation and occupied recovery, wider SDK conflicts/contact, calibrated energy scheduling.
+- [ ] Actual formation-route flight/landing, larger swarms/maps, marine saved-map/obstacle/current/loss, terrain/slip/recovery and remaining original roadmap criteria.
+
 - [x] Home, modern shared styling, purpose-based navigation, Ctrl+K search, responsive sidebar, contextual help, setup/review/control flow and unified native control-page selection. [Quick tour](../tutorials/gui-quickstart.md).
 
 - [x] Native architecture/tutorial learning workspace in Health: clickable source-linked diagrams, tours, glossary/library, networking lesson and bounded actual ROS graph/QoS inspection. [Guide](../architecture/interactive-guide.md), [scoped UI/discovery checks](evidence/architecture-explorer-2026-11-02/README.md).

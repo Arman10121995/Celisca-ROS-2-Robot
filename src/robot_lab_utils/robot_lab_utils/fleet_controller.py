@@ -128,6 +128,7 @@ class FleetController(Node):
         self._contact_events = deque(maxlen=64)
         self.serial_traffic = True
         self._state_pub = self.create_publisher(String, '/fleet/state', 10)
+        self._stop_pub = self.create_publisher(String, '/fleet/command', 10)
         self._set_pose = self.create_client(SetEntityPose, '/world/' + self.session['world_name'] + '/set_pose')
         self._anchors = StaticTransformBroadcaster(self)
         self._tf = Buffer(node=self)
@@ -832,7 +833,10 @@ class FleetController(Node):
 
     def _stop_service(self, _request, response):
         self._stop_all('Fleet stop service')
-        response.success, response.message = True, 'Motor gates latched neutral; owned Nav2 cancellation requested'
+        # The topic path also reaches physical facility ownership. Stopping
+        # only wheels here would otherwise leave an in-progress lift ride live.
+        self._stop_pub.publish(String(data=json.dumps(dict(session_id=self.session_id, op='all_stop'))))
+        response.success, response.message = True, 'Motor gates latched neutral; owned Nav2 and facility stop requested'
         return response
 
     def _start_swarm(self, data, targets):

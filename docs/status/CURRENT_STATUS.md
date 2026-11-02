@@ -1,8 +1,10 @@
 # Current Robot Lab status
 
+Latest workflow continuation from `8b958e97`: bounded multi-member lift queues/round trips, durable SDK lift ownership, explicit interlocked recovery, generation-safe marine replanning and native aerial formation itineraries. Actual empty-car Stop/recovery passed in 35.949 s and a one-command two-stop Bumperbot floor round-trip in 324.259 s. Occupied recovery, concurrent members and new route-flight qualification remain pending. [Delivery and limits](workflow-continuation-2026-11-02.md). Full platform acceptance remains partial.
+
 The [GUI usability refresh](../tutorials/gui-quickstart.md) adds Home, modern shared styling, purpose-based/searchable navigation, responsive sidebar, contextual help, clearer launch/Stop feedback and a selector for every control page. This is UI work; full robot/extension acceptance remains partial.
 
-[Native interactive architecture workspace](evidence/architecture-explorer-2026-11-02/README.md) is delivered inside the existing Health tab, labeled **Learn & health**: twelve diagram views, six tours, linked tutorials/source/package browsing, glossary, networking playground and opt-in actual ROS discovery/QoS. Installed UI and read-only diagnostics are checked; robot mission support remains unchanged.
+[Native interactive architecture workspace](evidence/architecture-explorer-2026-11-02/README.md) is delivered inside the existing Health tab, labeled **Learn & diagnose**: twelve diagram views, six tours, linked tutorials/source/package browsing, glossary, networking playground and opt-in actual ROS discovery/QoS. Installed UI and read-only diagnostics are checked; robot mission support remains unchanged.
 
 Latest November 2: [automatic native fleet lift transport](evidence/automatic-floor-transport-2026-11-02/README.md) completed one Bumperbot L0-L1-L0 with autonomous boarding, map/costmap transitions and settled exits. The GUI Facility request is implemented. A real native SDK L0-L1-L0 mission also passed in 359.063 wall seconds; actual SDK process-loss/resumption held the car and required explicit re-enablement. Broader multi-robot cases remain separate. Full platform acceptance remains partial.
 
@@ -14,7 +16,7 @@ Latest November 2: [automatic native fleet lift transport](evidence/automatic-fl
 
 [November 2 fleet continuation](evidence/fleet-floor-map-transition-2026-11-02/README.md): one Bumperbot physically rode L0-L1-L0 in `fleet_facility`; fresh body observations drove per-member floor classification and the `map.yaml` → `map_L1.yaml` → `map.yaml` Nav2 transitions. That earlier floor case left energy unknown; broader RMF/fleet acceptance is still open.
 
-**Current checkpoint: November 2, 2026; master, fleet continuation from `375143ff` plus this delivery.
+**Current checkpoint: November 2, 2026; master, workflow continuation from `8b958e97` plus this delivery.
 Platform and full extension partial.**
 
 [Current workflow delivery and limits](workflows-2026-10-27.md),

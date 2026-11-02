@@ -14,6 +14,8 @@ import xml.etree.ElementTree as ET
 
 from robot_lab_utils.fleet_energy import EnergyEstimate, qualified_source
 from robot_lab_utils.fleet_transport import LiftTransport
+from robot_lab_utils.fleet_transport_queue import TransportQueue
+from robot_lab_utils.fleet_lift_recovery import recovery_passengers
 import rclpy
 from rclpy.node import Node
 from rclpy.clock import Clock,ClockType
@@ -49,6 +51,8 @@ class Infrastructure(Node):
             verified = qualified_source(member, certificate)
             self.energy_models[member['id']] = EnergyEstimate(self.config['energy'], joints, verified)
         self.transports = {}
+        self.transport_queue = TransportQueue()
+        self.recovery = None
         self.last_rejection = ''
         self.floor_offsets={}
         self.floor_maps=session.get('floor_maps',self.config.get('floor_maps',{}));self.current_floor_map=''
@@ -103,6 +107,7 @@ class Infrastructure(Node):
             self.rmf_active = False
             self.doors={n:False for n in self.doors};self.outputs={n:self.positions[n] for n in self.targets if n in self.positions};self.lift_request=None;self.lift_owner='';self.bodies.clear();self.paths.clear();self.docking.clear()
             self._cancel_transports('Simulation clock reset')
+            self._stop_recovery('Simulation clock reset')
             self.hold=True;self.outputs={};self.positions={};self.joint_stamp=None;self.rates={};self.joint_at=-math.inf
             self.door_owners={name:set() for name in self.doors}
             for item in self.energy_models.values():item.invalidate('Simulation clock reset; energy coverage lost')
@@ -268,6 +273,8 @@ class Infrastructure(Node):
                     and abs(math.atan2(math.sin(body['yaw'] - dock['yaw']), math.cos(body['yaw'] - dock['yaw']))) < dock['yaw_tolerance'])
 
     def _cancel_transports(self, reason, targets=None):
+        if hasattr(self, 'transport_queue'):
+            self.transport_queue.cancel(reason, targets)
         for name, task in self.transports.items():
             if targets is None or name in targets:
                 self._transport_actions(task, task.cancel(reason))
@@ -309,7 +316,137 @@ class Infrastructure(Node):
                 history=(self.runtime or {}).get('task_history', []), car_floor=current_floor,
                 door_open=all(door_rows.get(name, {}).get('mode')==2 for name,door in self.config['doors'].items() if name==self.config['lift']['door'] or door.get('landing_floor')==current_floor),
                 map_ready=name not in self.map_transitions and self.map_status.get(name) == 'ready')
-            self._transport_actions(task, task.tick(context, now))
+            # Publish the new reservation before its first route command.
+            if now - task.started >= .35:
+                self._transport_actions(task, task.tick(context, now))
+        queue = self.transport_queue
+        if queue.active:
+            task = self.transports.get(queue.active['robot'])
+            if task and not task.active:
+                queue.finish(task.phase, task.reason)
+                if task.phase != 'succeeded':
+                    queue.cancel('Previous transport interrupted; explicit new itinerary required')
+        if queue.active or not queue.pending:
+            return
+        head = queue.pending[0]
+        operator = (self.runtime and now - self.runtime_at < 1. and self.runtime.get('operator_fresh')
+                    and self.runtime.get('operator_id') == head['operator_id'])
+        if not operator or not fresh:
+            queue.cancel('Facility/operator feedback lost; explicit new itinerary required')
+            return
+        if now - head['enqueued_at'] > 600.:
+            queue.cancel('Queue waiting deadline exceeded; explicit new itinerary required')
+            return
+        if self.hold or self.recovery and self.recovery['phase'] == 'recovering':
+            head['reason'] = 'Lift held; explicitly recover/cancel before dispatch'
+            return
+        if any(task.active for task in self.transports.values()) or self.lift_owner and self.lift_owner != head['operator_id']:
+            head['reason'] = 'Waiting for current lift session to release'
+            return
+        try:
+            task = self._prepare_transport(head['robot'], head['floor'], head['operator_id'], now)
+        except ValueError as error:
+            head['reason'] = str(error)
+            return
+        queue.take()
+        self.transports[task.robot] = task
+        self.lift_owner, self.lift_at = task.prefix, now
+        self.lift_request = None
+        self.lift_gui = False
+
+    def _prepare_transport(self, name, destination, operator, now):
+        row = next((item for item in self.runtime['members'] if item['id'] == name), {})
+        if not row.get('navigation_ready') or not row.get('included') or row.get('mode') != 'idle' or row.get('queued'):
+            raise ValueError('Waiting for fresh idle member Nav2')
+        task = LiftTransport(name, operator, self.energy[name]['floor'], destination, self.config['transport'], now)
+        if set(self.bodies) != set(self.energy) or any(now - body['at'] >= .6 for body in self.bodies.values()):
+            raise ValueError('Fresh independent observations of all fleet bodies required')
+        body = self.bodies[name]
+        lift = self.config['lift']
+        if task.in_cabin(body['xyz']):
+            if abs(self.positions.get(lift['joint'], -1000.) - lift['floors'][task.origin]) >= lift.get('level_tolerance_m', .03) or abs(self.rates.get(lift['joint'], math.inf)) >= .01:
+                raise ValueError('Explicitly recover the occupied lift to a settled floor first')
+        if any(peer != name and task.in_cabin(body['xyz']) for peer, body in self.bodies.items()):
+            raise ValueError('Waiting for another physical robot to leave the car')
+        radii = {member['id']: float(member.get('radius', .35)) for member in self.session['members']}
+        for peer, body in self.bodies.items():
+            if peer == name:
+                continue
+            for floor in (task.origin, task.destination):
+                landing = task.config['landings'][floor]
+                if (abs(body['xyz'][2] - lift['floors'][floor]) < .2 and
+                        math.hypot(body['xyz'][0] - landing['x'], body['xyz'][1] - landing['y']) < radii[name] + radii[peer] + .15):
+                    raise ValueError('Waiting for clear ' + floor + ' landing; move the parked peer away')
+        return task
+
+    def _stop_recovery(self, reason):
+        if not self.recovery or self.recovery['phase'] != 'recovering':
+            return
+        self.recovery.update(phase='failed', reason=reason)
+        self.hold = True
+        self.outputs = {joint: self.positions[joint] for joint in self.targets if joint in self.positions}
+        self.lift_request = None
+        self.lift_owner = ''
+        self.lift_gui = False
+
+    def _recovery_tick(self, now, fresh, door_rows):
+        task = self.recovery
+        if not task or task['phase'] != 'recovering':
+            return
+        operator = (self.runtime and now - self.runtime_at < 1. and self.runtime.get('operator_fresh')
+                    and self.runtime.get('operator_id') == task['operator_id'])
+        if not fresh or not operator or now - task['started'] > 100.:
+            self._stop_recovery('Recovery feedback/operator lost or deadline exceeded; explicit request required')
+            return
+        # During travel vertical body speeds are expected. Check identity and
+        # containment, rather than applying the stationary admission test.
+        height = self.positions[self.config['lift']['joint']]
+        x0, x1, y0, y1 = self.config['transport']['cabin']
+        radii = {member['id']: float(member.get('radius', .35)) for member in self.session['members']}
+        for name in self.energy:
+            body = self.bodies.get(name)
+            if not body or now - body['at'] >= .6:
+                self._stop_recovery('Recovery body observation lost')
+                return
+            x, y, z = body['xyz']
+            radius = radii[name]
+            if name in task['passengers']:
+                if not (x0 <= x - radius and x + radius <= x1 and y0 <= y - radius and y + radius <= y1 and abs(z - height) < .2):
+                    self._stop_recovery('Passenger left the observed safe cabin envelope')
+                    return
+            elif x0 - radius < x < x1 + radius and y0 - radius < y < y1 + radius and abs(z - height) < .2:
+                self._stop_recovery('Unexpected member overlaps the recovery cabin')
+                return
+        self.lift_at = now
+        lift = self.config['lift']
+        level = abs(height - lift['floors'][task['floor']]) < lift.get('level_tolerance_m', .03)
+        opened = all(door_rows.get(name, {}).get('mode') == 2 for name, door in self.config['doors'].items()
+                     if name == lift['door'] or door.get('landing_floor') == task['floor'])
+        if level and abs(self.rates.get(lift['joint'], math.inf)) < .01 and opened:
+            task.update(phase='succeeded', reason='Observed level car and open landing; use manual Drive to exit or request a new floor transport')
+            self.lift_owner = ''
+
+    def _admit_transports(self, requests, operator, now):
+        if 'transport' not in self.config or not self.session.get('navigation'):
+            raise ValueError('Automatic transport requires a declared facility and member Nav2')
+        if self.rmf_active or self.recovery and self.recovery['phase'] == 'recovering':
+            raise ValueError('Release SDK/recovery ownership before a native itinerary')
+        if self.hold:
+            raise ValueError('Lift is held; explicitly recover it before requesting transport')
+        members = {row['id']: row for row in self.runtime.get('members', [])}
+        queued_names = {row['robot'] for row in self.transport_queue.pending}
+        queued_names.update(name for name, task in self.transports.items() if task.active)
+        if not isinstance(requests, list):
+            raise ValueError('Transport itinerary must be a list')
+        for request in requests:
+            name = request.get('robot') if isinstance(request, dict) else None
+            row = members.get(name, {}) if isinstance(name, str) else {}
+            # A queue can wait for lifecycle readiness. Check actual active
+            # Nav2 again at dispatch, rather than racing two status subscribers
+            # during admission. No route can start through this admission gate.
+            if name not in queued_names and (not row.get('included') or row.get('mode') != 'idle' or row.get('queued')):
+                raise ValueError('Select included idle members, or append to an owned itinerary')
+        self.transport_queue.append(requests, operator, {name: row['floor'] for name, row in self.energy.items()}, self.config['lift']['floors'], now)
 
     def safe_sweep(self,door):
         now=time.monotonic();x0,x1,y0,y1=door['sweep']
@@ -340,7 +477,8 @@ class Infrastructure(Node):
             and now-self.clock_at<.6 and now-self.joint_at<.6)
 
     def _begin_rmf_control(self):
-        if not self.rmf_authorized() or any(task.active for task in self.transports.values()):
+        if (not self.rmf_authorized() or any(task.active for task in self.transports.values())
+                or self.transport_queue.pending or self.recovery and self.recovery['phase'] == 'recovering'):
             return False
         if not self.rmf_active:
             self.doors={name:False for name in self.doors}
@@ -368,13 +506,16 @@ class Infrastructure(Node):
         if msg.lift_name!=self.config['lift']['name']:return
         now=time.monotonic()
         if any(task.active and msg.session_id != task.prefix for task in self.transports.values()):return
-        if self.lift_owner and msg.session_id!=self.lift_owner and now-self.lift_at<5:return
+        # RMF may stop repeating requests once an event succeeds. A live
+        # session retains ownership until SessionEnd, Stop or lease loss.
+        if self.lift_owner and msg.session_id!=self.lift_owner:return False
         if msg.request_type==0:
             if msg.session_id==self.lift_owner:self.lift_owner='';self.lift_request=None
-            return
+            return True
         if msg.request_type!=1 or not msg.session_id or len(msg.session_id)>128 or msg.destination_floor not in self.config['lift']['floors'] or msg.door_state not in (0,2):return
         self.lift_owner=msg.session_id;self.lift_at=now;self.lift_request=(msg.destination_floor,msg.door_state==2)
         self.lift_gui=False;self.hold=False
+        return True
 
     def lift_target(self, position, door_rows, now):
         lift = self.config['lift']
@@ -402,10 +543,13 @@ class Infrastructure(Node):
                 self.door_owners={name:set() for name in self.doors}
                 self.lift_owner='';self.lift_gui=False
                 self._cancel_transports('Operator all-stop')
+                self._stop_recovery('Operator all-stop')
                 self.hold=True;self.outputs={n:self.positions[n] for n in self.targets if n in self.positions};self.lift_request=None;self.docking.clear()
             elif data.get('session_id') == self.identity and data.get('op') in ('stop', 'pause', 'reset', 'leave'):
                 if self.runtime and data.get('operator_id') == self.runtime.get('operator_id') and self.runtime.get('operator_fresh'):
                     self._cancel_transports('Operator interrupted lift transport', data.get('targets', []))
+                    if self.recovery and set(data.get('targets', [])) & set(self.recovery['passengers']):
+                        self._stop_recovery('Operator interrupted lift recovery')
         except (ValueError,KeyError,TypeError):pass
 
     def command(self,msg):
@@ -419,38 +563,46 @@ class Infrastructure(Node):
             self.last_rejection = ''
             if op=='door' and data['door'] in self.doors:
                 if type(data['open']) is not bool:return
+                if self.hold:
+                    raise ValueError('Explicitly recover the held lift before manual facility commands')
                 self.doors[data['door']]=data['open'] is True;self.hold=False
-            elif op == 'transport':
-                name, destination = data['robot'], data['floor']
-                if name not in self.energy or 'transport' not in self.config or not self.session.get('navigation'):
-                    raise ValueError('Automatic transport requires a declared facility and member Nav2')
-                if any(task.active for task in self.transports.values()):
-                    raise ValueError('The physical lift is already reserved')
-                row = next((item for item in self.runtime['members'] if item['id'] == name), {})
-                if not row.get('navigation_ready') or not row.get('included') or row.get('mode') != 'idle' or row.get('queued'):
-                    raise ValueError('Stop active control and wait for fresh idle Nav2 before transport')
-                task = LiftTransport(name, data['operator_id'], self.energy[name]['floor'], destination, self.config['transport'], time.monotonic())
-                body = self.bodies.get(name)
-                if not body or time.monotonic() - body['at'] >= .6:
-                    raise ValueError('Fresh independent body observation required')
-                if task.in_cabin(body['xyz']):
-                    lift = self.config['lift']
-                    if abs(self.positions.get(lift['joint'], -1000.) - lift['floors'][task.origin]) >= lift.get('level_tolerance_m', .03) or abs(self.rates.get(lift['joint'], math.inf)) >= .01:
-                        raise ValueError('Settle the occupied lift at a floor before a new transport')
-                if any(peer != name and task.in_cabin(body['xyz']) for peer, body in self.bodies.items()):
-                    raise ValueError('Another physical robot occupies the car')
-                if self.lift_owner and self.lift_owner != data['operator_id'] and time.monotonic() - self.lift_at < 5.:
-                    raise ValueError('Another live requester owns the lift')
-                self.transports[name] = task
-                self.lift_owner, self.lift_at = task.prefix, time.monotonic()
-                self.lift_request = None
+            elif op in ('transport', 'transport_queue'):
+                requests = [dict(robot=data['robot'], floor=data['floor'])] if op == 'transport' else data['requests']
+                self._admit_transports(requests, data['operator_id'], time.monotonic())
+            elif op == 'cancel_transports':
+                self._cancel_transports('Operator canceled facility itinerary')
+            elif op == 'recover_lift':
+                if not self.hold or self.rmf_active or self.lift_owner or any(task.active for task in self.transports.values()):
+                    raise ValueError('Recovery requires a held lift with no active requester')
+                if data['floor'] not in self.config['lift']['floors']:
+                    raise ValueError('Select a configured recovery floor')
+                now = time.monotonic()
+                if now - self.joint_at >= .6 or now - self.clock_at >= .6:
+                    raise ValueError('Recovery requires fresh joint and clock observations')
+                passengers = recovery_passengers(self.config, self.session['members'], self.bodies, self.positions, self.rates, now)
+                rows = {row['id']: row for row in self.runtime['members']}
+                if any(rows.get(name, {}).get('mode') != 'idle' or rows.get(name, {}).get('queued') for name in passengers):
+                    raise ValueError('Stop each passenger’s navigation/manual control before recovery')
+                self._cancel_transports('Explicit recovery replaces pending itinerary')
+                self.recovery = dict(phase='recovering', floor=data['floor'], operator_id=data['operator_id'],
+                    passengers=passengers, started=now, reason='Closing interlocked gates, then recovering to the selected floor')
+                self.lift_owner = 'recovery-' + uuid.uuid4().hex
+                self.lift_at = now
+                self.lift_request = (data['floor'], True)
                 self.lift_gui = False
                 self.hold = False
             elif op=='lift':
-                if any(task.active for task in self.transports.values()):
-                    raise ValueError('Cancel the active transport before manual lift movement')
+                if (self.transport_queue.pending or any(task.active for task in self.transports.values())
+                        or self.recovery and self.recovery['phase'] == 'recovering'):
+                    raise ValueError('Cancel active transport/recovery before manual lift movement')
+                if self.hold:
+                    raise ValueError('Use explicit Recover lift for a held car')
+                lift = self.config['lift']
+                if not any(abs(self.positions.get(lift['joint'], -1000.) - z) < lift.get('level_tolerance_m', .03) for z in lift['floors'].values()):
+                    raise ValueError('Use explicit Recover lift for a car between floors')
                 from types import SimpleNamespace
-                self.request_lift(SimpleNamespace(lift_name=self.config['lift']['name'],session_id=data['operator_id'],request_type=1,destination_floor=data['floor'],door_state=2))
+                if not self.request_lift(SimpleNamespace(lift_name=self.config['lift']['name'],session_id=data['operator_id'],request_type=1,destination_floor=data['floor'],door_state=2)):
+                    raise ValueError('Another requester retains lift-session ownership')
                 self.lift_gui=True
             elif op=='dock':
                 name,dock=data['robot'],data['dock'];target=self.config['docks'][dock]
@@ -464,6 +616,9 @@ class Infrastructure(Node):
 
     def tick(self):
         now=time.monotonic();fresh=now-self.joint_at<.6 and now-self.clock_at<.6
+        if self.lift_gui and (not self.runtime or now-self.runtime_at>=1. or not self.runtime.get('operator_fresh') or self.runtime.get('operator_id')!=self.lift_owner):
+            self.lift_gui=False;self.lift_owner='';self.lift_request=None;self.hold=True
+            self.outputs={joint:self.positions[joint] for joint in self.targets if joint in self.positions}
         if self.rmf_active and not self.rmf_authorized():
             self.rmf_stopped_at=now
             self.rmf_active=False
@@ -547,13 +702,20 @@ class Infrastructure(Node):
             t.transform.rotation.w = 1.0
             self.tf_broadcaster.sendTransform(t)
         self._transport_tick(now, fresh, current_floor if abs(self.rates.get(lift['joint'], math.inf)) < .01 else '', door_rows)
+        self._recovery_tick(now, fresh, door_rows)
+        if self.recovery and self.recovery['phase'] == 'recovering':
+            held = sorted(set(held) | set(self.recovery['passengers']))
+        reservations = {row['robot']: 'queue-' + row['id'] for row in reversed(self.transport_queue.pending)}
+        reservations.update({name: task.prefix for name, task in self.transports.items() if task.active})
+        if self.recovery and self.recovery['phase'] == 'recovering':
+            reservations.update({name: self.lift_owner for name in self.recovery['passengers']})
         floor_z={name:self.floor_z.get(name,0.0) for name in self.energy}
         state=dict(session_id=self.identity,ready=fresh,held_members=held,doors=door_rows,
                    lift=dict(position_m=lift_position,command_m=self.outputs.get(lift['joint'],lift_position),
                              current_floor=current_floor,destination=self.lift_request,floors=list(lift['floors'])),
                docks=self.config['docks'],docking=self.docking,energy=energy,robot_floors=floors,
                transports={name: task.state() for name, task in self.transports.items()},
-               reservations={name: task.prefix for name, task in self.transports.items() if task.active},
+               reservations=reservations, transport_queue=self.transport_queue.state(), lift_recovery=self.recovery,
                last_rejection=self.last_rejection,
                operator_id=(self.runtime or {}).get('operator_id',''),
                operator_fresh=bool(self.runtime and now-self.runtime_at<1. and self.runtime.get('operator_fresh')),

@@ -155,6 +155,22 @@ class AerialSwarmTab(ttk.Frame):
         ttk.Combobox(group, textvariable=self.controller, values=('formation', 'rendezvous', 'dispersion', 'flocking'),
             state='readonly', width=14).pack(side='left')
         ttk.Button(group, text='Start selected group', command=lambda: self.operation(self.controller.get())).pack(side='left', padx=5)
+        self.route_open=False
+        self.route_manual_widgets=[widget for row in range(3,8) for widget in control.grid_slaves(row=row)]
+        self.route_toggle=ttk.Button(control,text='Show formation itinerary',command=self.toggle_route_editor)
+        self.route_toggle.grid(row=9,column=0,sticky='ew',pady=4)
+        routes=ttk.LabelFrame(control,text='Formation itinerary · world XYZ anchors',padding=5)
+        routes.grid(row=10,column=0,sticky='ew',pady=5);routes.columnconfigure(0,weight=1)
+        self.route_frame=routes
+        self.route_editor=scrolledtext.ScrolledText(routes,height=3,wrap='none',undo=True)
+        self.route_editor.grid(row=0,column=0,sticky='ew')
+        route_actions=ttk.Frame(routes);route_actions.grid(row=1,column=0,sticky='ew',pady=3)
+        ttk.Button(route_actions,text='Add estimated centre',command=self.add_route_anchor).pack(side='left',expand=True,fill='x')
+        ttk.Button(route_actions,text='Plan route',command=lambda:self.operation('plan_route')).pack(side='left',expand=True,fill='x')
+        ttk.Button(route_actions,text='Execute route',command=lambda:self.operation('execute_route')).pack(side='left',expand=True,fill='x')
+        ttk.Label(routes,text='One X Y Z per line, up to 16. Plan holds the vehicles and checks source-static corridors. '
+            'Execute is separate; Hold/member loss cancels. Completion uses FCU estimates.',wraplength=470).grid(row=2,column=0,sticky='ew')
+        routes.grid_remove()
         self.live = scrolledtext.ScrolledText(self, height=7, state='disabled', wrap='word')
         self.live.grid(row=3, column=0, columnspan=2, sticky='ew', pady=5)
         ttk.Label(self, textvariable=self.status, wraplength=1000).grid(row=4, column=0, columnspan=2, sticky='ew')
@@ -285,12 +301,16 @@ class AerialSwarmTab(ttk.Frame):
             if self.target.get() not in ['All vehicles', *names]:
                 self.target.set('All vehicles')
             lines = [f"{data['session_id']} · {data['map']} · {data['mode']} · {data['reason']}"]
+            route=data.get('route',{})
+            if route.get('phase','idle')!='idle':
+                mission=route.get('mission') or {}
+                lines.append(f"Formation route: {route['phase']} · anchor {mission.get('waypoint','—')}/{mission.get('total','—')} · {mission.get('reason','Explicit Execute required after planning')}")
             for member in data['members']:
                 status = member.get('status') or {}
                 lines.append(f"{member['id']}: {status.get('phase', 'waiting')} · ready={member['ready']} "
                     f"· FCU settling remaining={status.get('preflight_remaining_fcu_s', 0):.1f}s "
                     f"· FCU={member['system_id']} port={member['port']} · estimated={member['position']} "
-                    f"· truth={member['truth']} · reply={member.get('last_service')}")
+                    f"· estimated speed={member.get('estimated_speed_m_s')} m/s · truth={member['truth']} · reply={member.get('last_service')}")
             self.live.configure(state='normal')
             self.live.delete('1.0', 'end')
             self.live.insert('end', '\n'.join(lines))
@@ -312,10 +332,37 @@ class AerialSwarmTab(ttk.Frame):
         try:
             data = dict(session_id=self.runtime['session_id'], operator_id=self.operator,
                         op=op, targets=self.targets(), spacing=self.spacing.get())
+            if op=='plan_route':
+                anchors=[]
+                for line in self.route_editor.get('1.0','end').splitlines():
+                    if not line.strip():continue
+                    values=[float(value) for value in line.replace(',',' ').split()]
+                    if len(values)!=3 or not all(math.isfinite(value) for value in values):
+                        raise ValueError('Each route line needs finite world X Y Z')
+                    anchors.append(values)
+                if not 1<=len(anchors)<=16:raise ValueError('Enter 1–16 formation anchors')
+                data['anchors']=anchors
             self.command_pub.publish(String(data=json.dumps(data, allow_nan=False)))
             self.status.set(op+' requested; actual worker replies appear above')
         except (ValueError, tk.TclError) as exc:
             self.status.set(str(exc))
+
+    def add_route_anchor(self):
+        if not self.runtime or time.monotonic()-self.runtime_at>1.:
+            self.status.set('Connect to fresh airborne estimates before adding an anchor');return
+        names=self.targets()
+        rows=[member for member in self.runtime['members'] if member['id'] in names]
+        if len(rows)<2 or any(not member.get('ready') or member.get('position') is None for member in rows):
+            self.status.set('Select 2–4 members with fresh estimated positions');return
+        centre=[sum(member['position'][i] for member in rows)/len(rows) for i in range(3)]
+        self.route_editor.insert('end',' '.join(f'{value:.3f}' for value in centre)+'\n')
+
+    def toggle_route_editor(self):
+        self.route_open=not self.route_open
+        for widget in self.route_manual_widgets:
+            widget.grid_remove() if self.route_open else widget.grid()
+        self.route_frame.grid() if self.route_open else self.route_frame.grid_remove()
+        self.route_toggle.configure(text='Show manual drive controls' if self.route_open else 'Show formation itinerary')
 
     def arm_manual(self):
         self.operation('manual')

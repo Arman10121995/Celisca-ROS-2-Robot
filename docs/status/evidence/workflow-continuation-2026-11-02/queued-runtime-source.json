@@ -1,0 +1,29 @@
+{
+  "boundary": "Post-start snapshot of unchanged loaded fleet sources; no immutable full-build claim",
+  "files": [
+    {
+      "path": "src/robot_lab_utils/robot_lab_utils/fleet_controller.py",
+      "sha256": "ac868ffb0ae494f1f973d4f75fa79ea593d6a02f4e1b16a18bb25506d9506b3f"
+    },
+    {
+      "path": "src/robot_lab_utils/robot_lab_utils/fleet_infrastructure.py",
+      "sha256": "fa14d08286b07863e4c85093e5fe2854c1e9ae5157084f31aa815b76d0fac4c5"
+    },
+    {
+      "path": "src/robot_lab_utils/robot_lab_utils/fleet_transport.py",
+      "sha256": "8a47a1f48c5251b9d9a06c16307423e8cca2aea7d1703a1220a451db8d8c37d7"
+    },
+    {
+      "path": "src/robot_lab_utils/robot_lab_utils/fleet_transport_queue.py",
+      "sha256": "7ecc768298aae39a188235532e916b6747af47d539fd9ca92cda9bedd58cc298"
+    },
+    {
+      "path": "src/robot_lab_utils/robot_lab_utils/fleet_lift_recovery.py",
+      "sha256": "35f2ad557080d1f807bbaf5fdaafdb520161c983e6936e2fb41124cc62a54e60"
+    },
+    {
+      "path": "src/robot_lab_utils/robot_lab_utils/fleet_session.py",
+      "sha256": "c4e1ae61509bebac0003120f99d902cf1eb8127178f0cb02a1fdb148dcc9c66d"
+    }
+  ]
+}

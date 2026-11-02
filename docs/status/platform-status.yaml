@@ -1,9 +1,10 @@
-assessment: Partial multi-robot lab with real scoped fleet, aerial, marine, gait, amphibious and original robot
-  missions. Observation-bound motor load/authored berth charging, distinct floor/AMCL frames and RMF door/dock
-  events and one autonomous native L0-L1-L0 transport are delivered. Native SDK multi-floor graph/control epochs
-  are implemented. One actual SDK round-trip and active ownership-loss hold pass; wider extension/original
-  roadmap acceptance remains;
-  tests/counts do not qualify missions.
+assessment: >-
+  Partial multi-robot lab with scoped fleet, aerial, marine, gait, amphibious and original robot missions.
+  Native/SDK floor transport, source-bound authored energy and independent frame ownership are retained.
+  New facility itineraries/recovery, marine interruption and aerial formation routes are implemented;
+  an actual empty-car recovery and a single-member two-stop floor queue are measured. Concurrent passengers,
+  occupied recovery, new route flights, further source adapters and full original roadmap acceptance remain.
+  Tests/counts do not qualify missions.
 audit_revision: dff388f
 baseline:
   catalog_label_counts:
@@ -121,11 +122,8 @@ completion_audit:
     comparison scores are generated; the dated support matrix extrapolates Isaac qualification
     to untested maps and modes.
   revision: 2a0aae2
-current_delivery: completion_continuation_20261102
-current_revision: 'Continuation on master from 375143ff: repaired invalid ledger; native Bumperbot/Labbot effort
-  readback and Bumperbot authored-energy/dock/loss diagnostics; distinct floor and AMCL transform ownership;
-  actual RMF door crossing and settled dock callback with scoped upstream serializer fix. Full platform and
-  R10 remain partial; see docs/status/fleet-continuation-2026-11-02.md.'
+current_delivery: workflow_continuation_20261102
+current_revision: 'Continuation on master from 8b958e97: bounded facility queues and durable SDK ownership; explicit interlocked recovery with an actual empty-car receipt; marine interruption fixes; native formation itinerary Plan/Execute. Platform and full R10 acceptance remain partial; docs/status/workflow-continuation-2026-11-02.md.'
 current_verification:
   round57_2026_10_19: 'Recorded 2026-10-29: MuJoCo small_house slam drive after the spawn fix 873753f completes
     (28.1 m, RMSE 1.3 cm, map precision/recall 0.97/0.79; 1.49 m and 0.12/0.16 before); rear-steer car course after
@@ -321,6 +319,55 @@ extension_completion_20261020:
     qualification; no universal robot/map/backend support claim.
   updated: '2026-10-27'
 goal: unified_multi_robot_algorithm_lab
+workflow_continuation_20261102:
+  owner: codex
+  state: partial
+  baseline_revision: 8b958e97
+  updated: '2026-11-02'
+  scope_paths: [src/robot_lab_utils/, src/robot_lab_adapter/, src/robot_lab_gui/, src/robot_lab_bringup/test/, scripts/test_tiers.sh, docs/, README.md, ROADMAP.md]
+  implementation_state: Facility itinerary/reservation/recovery, persistent SDK lift sessions, marine interruption/replanning and aerial formation itinerary Plan/Execute are implemented.
+  receipt: docs/status/evidence/workflow-continuation-2026-11-02/README.md
+  status: docs/status/workflow-continuation-2026-11-02.md
+  measured_cases: [actual_empty_car_ascent_midshaft_stop_hold_explicit_L0_recovery, actual_bumperbot_two_stop_queued_L0_L1_L0_324_259_seconds]
+  software_checks: 127 focused source checks and four native GUI checks; installed/source module hashes match. No universal runtime qualification.
+  remaining: [occupied_concurrent_passenger_missions, aerial_route_flight_and_landing, marine_curved_AUV_and_saved_map_missions, terrain_slip_recovery_and_backend_adapters, original_roadmap_and_release]
+facility_queue_recovery_20261102:
+  owner: codex
+  state: partial
+  baseline: 8b958e97
+  requested: '2026-11-02'
+  updated: '2026-11-02'
+  scope_paths: [src/robot_lab_utils/, src/robot_lab_gui/, src/robot_lab_bringup/test/, docs/, ROADMAP.md]
+  scope: Bounded multi-member native lift transport queue, durable SDK lift-session ownership, explicit interlocked recovery from a stopped ride, and native GUI mission controls. Preserve existing source limits, floor/map barriers and all historical receipts.
+  qualification: Implementation and focused diagnostics are distinct from broader fleet or platform mission acceptance.
+  implementation_state: implemented
+  implementation: Bounded atomic floor itineraries, reservations, round trips, persistent SDK ownership and explicit footprint/interlock recovery are implemented.
+  verification: Actual empty-car Stop/hold/L0 recovery in 35.949 s and one Bumperbot two-stop queued floor round-trip in 324.259 s; occupied recovery/concurrent multi-member qualification pending.
+  evidence: docs/status/evidence/workflow-continuation-2026-11-02/README.md
+marine_replanning_20261102:
+  owner: codex
+  state: partial
+  baseline: 8b958e97
+  updated: '2026-11-02'
+  scope_paths: [src/robot_lab_utils/, src/robot_lab_bringup/test/, docs/, ROADMAP.md]
+  scope: Complete bounded obstacle-replanning ownership/cancellation, neutral command hold, stale-result rejection and source-appropriate AUV refusal. Preserve sensor-only estimation and prior marine receipts.
+  qualification: Initial implementation and targeted checks; actual current/obstacle/saved-map campaigns remain separately measured work.
+  implementation_state: implemented
+  implementation: Generation-bound cancelable replanning, neutral blocked input, original ownership/deadline/start checks, shore reuse and AUV restriction are implemented.
+  verification: Targeted worker cancellation/stale-result and source sensing checks; physical obstacle/current/loss/saved-map missions remain separate.
+  evidence: docs/status/evidence/workflow-continuation-2026-11-02/README.md
+aerial_routes_20261102:
+  owner: codex
+  state: partial
+  baseline: 8b958e97
+  updated: '2026-11-02'
+  scope_paths: [src/robot_lab_adapter/, src/robot_lab_gui/, src/robot_lab_bringup/test/, scripts/test_tiers.sh, docs/, ROADMAP.md]
+  scope: Native explicit Plan/Execute formation itineraries, bounded source-collision planning, observed estimated settling and cancellation/loss controls. Reclaim stale aerial ownership per user's instruction that no other agent is working.
+  qualification: Initial software workflow; no new multi-FCU flight certificate or simulator-truth substitution.
+  implementation_state: implemented
+  implementation: Native formation itinerary editor, bounded background source/swept-peer Plan, separate Execute and FCU-epoch settling are implemented.
+  verification: Targeted geometry/generation/deadline checks and native GUI interactions; no new actual route flight certificate.
+  evidence: docs/status/evidence/workflow-continuation-2026-11-02/README.md
 gui_usability_20261102:
   owner: codex
   state: done
@@ -330,7 +377,7 @@ gui_usability_20261102:
   qualification: UI behavior and source checks; no transfer of robot mission certificates.
   updated: '2026-11-02'
   implementation: Neutral Home dashboard, thirteen workspaces grouped by purpose, Ctrl+K search with key containment, responsive sidebar, contextual help, setup/review/control layout, all nine control pages through one selector, model-note disclosure and shared theme/contrast updates.
-  verification: Eleven layout/learning/usability Tk checks passed; latest three search/control/Home checks passed; installed 1600/1024 px GUI stayed neutral and source/install hashes match. Full local fast suite hit its 300-second budget without completion; publication needs its own CI result.
+  verification: Eleven layout/learning/usability Tk checks passed; latest three search/control/Home checks passed; installed 1600/1024 px GUI stayed neutral and source/install hashes match. Full local fast suite hit its 300-second budget without completion; published 8b958e97 passed GitHub CI run 41520955830.
   evidence: docs/status/evidence/gui-usability-2026-11-02/README.md
   guide: docs/tutorials/gui-quickstart.md
 architecture_explorer_20261102:
@@ -347,11 +394,8 @@ architecture_explorer_20261102:
   guide: docs/architecture/interactive-guide.md
 handoff:
   audit: docs/status/audit-2026-10-02.md
-  next_action: Continue broader SDK multi-robot conflict/contact/loss and other robot/floor missions, then aerial/marine/terrain
-    and remaining marine/terrain workflows before the older roadmap. Preserve observed floor gates, exclusive
-    AMCL ownership, source-bound energy and pinned serializer correction. ROS imports and native fleet missions
-    work with the system Python/SSD environment; do not treat the old GLIBCXX report as a global blocker.
-  next_task: R10.2
+  next_action: Complete source-appropriate curved AUV routes, terrain/slip/recovery and source adapters, then the remaining original queue. Preserve new facility queues/recovery, marine worker generations and aerial itinerary Plan/Execute. New occupied/concurrent lift and aerial-route physical qualification remains separate.
+  next_task: R10.5
   no_runtime_repairs_completed_by_this_revision: false
   parallel_ready_after_R0:
   - R1.1
@@ -1407,10 +1451,10 @@ tasks:
         previous_owner: cline-agent
         claimed: '2026-10-27'
         current_run: /workspace/molar/robot_lab_runtime/completion-20261102-QUo52j/rmf-lift-hold
-        current_scope: Preserve measured native/SDK single-member floor transport, source-bound motor power,
+        historical_scope_pre_workflow_20261102: Preserve measured native/SDK single-member floor transport, source-bound motor power,
           authored charging and actual SDK process-loss hold; continue broader fleet/RMF acceptance.
         reclaimed: '2026-11-02'
-        next_action: Broader SDK conflict/loss/contact and
+        historical_next_action_pre_workflow_20261102: Broader SDK conflict/loss/contact and
           additional robot/floor/map/backend missions; calibrated energy/RMF scheduling separately.
         historical_unqualified_notes:
         - Implementation complete with contract tests and GUI diagnostics passing
@@ -1422,6 +1466,12 @@ tasks:
           receipt: docs/status/evidence/workflows-2026-10-27/README.md
           full_scope_acceptance: partial
         updated: '2026-11-02'
+        current_scope: Bounded facility itinerary queue, durable SDK session ownership and explicit interlocked recovery; measured empty-car Stop/hold/recovery and one Bumperbot two-stop queue. Prior native and SDK single-passenger floor/energy receipts retained.
+        next_action: Record occupied recovery and queued/concurrent passenger/other-base missions, wider SDK conflicts/contact/loss; calibrated energy scheduling remains separate implementation.
+        workflow_continuation_20261102:
+          implementation_state: implemented
+          full_scope_acceptance: partial
+          evidence: docs/status/evidence/workflow-continuation-2026-11-02/README.md
       R10.3:
         acceptance_ref: ROADMAP.md R10.3
         active_scope: Native multi-FCU controls, automatic formation/operator-loss workloads, bytewise FCU parameters,
@@ -1437,21 +1487,23 @@ tasks:
         implementation_state: Native multi-FCU controls, automatic formation/operator-loss workloads, bytewise
           FCU parameters, explicit noisy range kit/EKF selection, native truth clocks and absolute independent
           formation observations.
-        owner: cline-agent
-        previous_owner: codex
+        owner: codex
+        previous_owner: cline-agent
         scope_paths:
         - src/robot_lab_adapter/robot_lab_adapter/aerial_swarm_model.py
         - src/robot_lab_adapter/robot_lab_adapter/aerial_swarm_controller.py
+        - src/robot_lab_adapter/robot_lab_adapter/aerial_swarm_route.py
+        - src/robot_lab_gui/robot_lab_gui/aerial_swarm_tab.py
         state: partial
         title: Ground and aerial swarm control
         validation_state: "Two actual X500s on nav_empty with range reference pass physical formation/settling and operator-loss landing/disarm; contact/member-loss, other references/maps and larger groups remain open. Continuation 2026-10-09: both FCU takeoff corridor checks ACCEPTED; check_position air1 [-0.5,-0.5,0.22726], air2 [-3.5,-0.5,0.226494]; EKF2 range-reference params (EKF2_HGT_REF=2, EKF2_RNG_CTRL=2) applied. Formation flight MEASURED (session swarm-ja5__fhx): formation_rms_m=0.7820 m (range 0.7820-2.1590), altitude_rms_m=0.4084 m (range 0.3749-0.4683), 362 samples over 18 s; air1 converging (~0.66->0.15 m), air2 not converging (~0.95-1.10 m). Second formation mission MEASURED (session swarm-1iv3xfqo): formation_rms_m=1.1664 m (range 1.1664-2.2434), altitude_rms_m=0.8780 m (range 0.6032-0.8780), 362 samples over 18 s. Altitude trim applied. Land command accepted but FCUs remain airborne (landed_state: 2 = IN_AIR). air2 non-convergence cause: PX4 accelerometer timeout (Accel #0 fail: TIMEOUT!) in air2-px4.log — FCU telemetry stale, ready() returns False, velocity commands ignored. Environment/simulator issue, not code. Remaining: air2 environment issue, landing confirmation, larger groups, other maps/behaviors, member-loss/contact."
         qualification_review: '2026-10-27 documentation review: retain the implemented code, tests and named
           mission certificates. Full declared roadmap acceptance is still open; test counts, metadata and scene
           loads do not qualify remaining robot/map/backend missions. See docs/REMAINING_WORK_GUIDE.md.'
-        next_action: Investigate air2 accelerometer timeout (environment/simulator issue); land/disarm completion on the existing formation case; then larger groups, other maps/behaviors and member-loss/contact cases per ROADMAP R10.3.
+        historical_next_action_pre_workflow_20261102: Investigate air2 accelerometer timeout (environment/simulator issue); land/disarm completion on the existing formation case; then larger groups, other maps/behaviors and member-loss/contact cases per ROADMAP R10.3.
         claimed: '2026-10-27'
         current_run: /workspace/molar/robot_lab_runtime/project-completion-20261027-vne3n358
-        current_scope: "Continuation 2026-10-09: formation flight MEASURED on nav_empty (formation_rms_m=0.7820 m, altitude_rms_m=0.4084 m, 362 samples over 18 s); air1 converging (~0.66->0.15 m), air2 not converging (~0.95-1.10 m) due to PX4 accelerometer timeout (environment issue). Altitude trim applied. Land command accepted but FCUs remain airborne. Remaining: air2 environment issue, landing confirmation, larger groups, other maps/behaviors, member-loss/contact."
+        historical_scope_pre_workflow_20261102: "Continuation 2026-10-09: formation flight MEASURED on nav_empty (formation_rms_m=0.7820 m, altitude_rms_m=0.4084 m, 362 samples over 18 s); air1 converging (~0.66->0.15 m), air2 not converging (~0.95-1.10 m) due to PX4 accelerometer timeout (environment issue). Altitude trim applied. Land command accepted but FCUs remain airborne. Remaining: air2 environment issue, landing confirmation, larger groups, other maps/behaviors, member-loss/contact."
         historical_unqualified_notes:
         - Implementation complete with contract tests and GUI diagnostics passing
         - Fleet contract (8 tests), fleet missions, gait contract (all pass), molar backend contract (all pass)
@@ -1465,6 +1517,13 @@ tasks:
           implementation: delivered
           measured_scope: docs/status/native-workflows-2026-10-27.md
           full_scope_acceptance: partial
+        reclaimed: '2026-11-02'
+        current_scope: Reclaimed aerial ownership; native formation itinerary Plan/Execute, source/swept-peer checks and FCU-epoch settling. Prior two-X500 formation/operator-loss receipts remain exact-case evidence.
+        next_action: Record actual new two-anchor flight with independent body/settling/landing, then three/four members, additional worlds/behaviors and actual contact/member loss.
+        workflow_continuation_20261102:
+          implementation_state: implemented
+          full_scope_acceptance: partial
+          evidence: docs/status/evidence/workflow-continuation-2026-11-02/README.md
       R10.4:
         acceptance_ref: ROADMAP.md R10.4
         active_scope: Source ROV/AUV forces and native controls preserved. Motion observer and controller
@@ -1548,7 +1607,7 @@ tasks:
         - '  - Real DVL/sonar sensor data (simulated only)'
         - 'Unblock needed: R10.4 fully complete + R6.7 GUI terrain generator workflow complete'
         - Then re-enable hardware-dependent features for validation
-        next_action: Complete a real sensor-derived map save, preserved-source database reload/localization
+        historical_next_action_pre_workflow_20261102: Complete a real sensor-derived map save, preserved-source database reload/localization
           and obstacle route through normal Marine GUI commands; record exact current-source body/depth/contacts/loss
           evidence. Earlier failed map-save runs remain failures until replaced by a scoped successful
           run.
@@ -1558,7 +1617,7 @@ tasks:
         previous_owner: cline-agent
         claimed: '2026-10-27'
         current_run: /workspace/molar/robot_lab_runtime/extension-completion-20261027-au5q8yp7
-        current_scope: Complete acquired-map save, reload/localization and bounded sensor-estimated marine
+        historical_scope_pre_workflow_20261102: Complete acquired-map save, reload/localization and bounded sensor-estimated marine
           navigation.
         historical_unqualified_notes:
         - /workspace/molar/robot_lab_runtime/r10-completion-2026-10-20/rov-mission/report.json
@@ -1568,6 +1627,12 @@ tasks:
           owner: codex
           receipt: docs/status/evidence/workflows-2026-10-27/README.md
           full_scope_acceptance: partial
+        current_scope: Sensor-only marine navigation now holds neutral during cancelable generation-bound replanning; stale results cannot resume canceled control. AUV corner restriction and shore support are preserved.
+        next_action: Implement source-appropriate curved AUV paths, then acquire/reload independent AUV/surface maps and obstacle/current/contact/loss missions; preserve failed and earlier measured cases.
+        workflow_continuation_20261102:
+          implementation_state: implemented
+          full_scope_acceptance: partial
+          evidence: docs/status/evidence/workflow-continuation-2026-11-02/README.md
       R10.6:
         acceptance_ref: ROADMAP.md R10.6
         active_scope: Source gait/contact odometry, map/reload/goal controls and automatic acquisition/navigation;

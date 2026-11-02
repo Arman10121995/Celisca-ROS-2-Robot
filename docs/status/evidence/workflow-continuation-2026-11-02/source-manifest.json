@@ -1,0 +1,66 @@
+{
+  "baseline": "8b958e974f44258b58c2f144ac163c7e15def858",
+  "boundary": "Post-run current-tree module hashes; physical queued case has its own unchanged-source snapshot. No immutable full-build claim.",
+  "modules": [
+    {
+      "source": "src/robot_lab_utils/robot_lab_utils/fleet_infrastructure.py",
+      "installed": "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_utils/lib/python3.10/site-packages/robot_lab_utils/fleet_infrastructure.py",
+      "sha256": "fa14d08286b07863e4c85093e5fe2854c1e9ae5157084f31aa815b76d0fac4c5",
+      "equal": true
+    },
+    {
+      "source": "src/robot_lab_utils/robot_lab_utils/fleet_controller.py",
+      "installed": "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_utils/lib/python3.10/site-packages/robot_lab_utils/fleet_controller.py",
+      "sha256": "4a9a6a3a9c8cfd9378d58b1f7b8d5a48e66a750c337c2c05fe4f93f28028b3b1",
+      "equal": true
+    },
+    {
+      "source": "src/robot_lab_utils/robot_lab_utils/fleet_transport_queue.py",
+      "installed": "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_utils/lib/python3.10/site-packages/robot_lab_utils/fleet_transport_queue.py",
+      "sha256": "7ecc768298aae39a188235532e916b6747af47d539fd9ca92cda9bedd58cc298",
+      "equal": true
+    },
+    {
+      "source": "src/robot_lab_utils/robot_lab_utils/fleet_lift_recovery.py",
+      "installed": "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_utils/lib/python3.10/site-packages/robot_lab_utils/fleet_lift_recovery.py",
+      "sha256": "35f2ad557080d1f807bbaf5fdaafdb520161c983e6936e2fb41124cc62a54e60",
+      "equal": true
+    },
+    {
+      "source": "src/robot_lab_utils/robot_lab_utils/marine_navigation.py",
+      "installed": "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_utils/lib/python3.10/site-packages/robot_lab_utils/marine_navigation.py",
+      "sha256": "1fd0c0f1ea81a54c002a41169b34fb0d2998838a2e234fa54514ed8df2365d2f",
+      "equal": true
+    },
+    {
+      "source": "src/robot_lab_adapter/robot_lab_adapter/aerial_swarm_controller.py",
+      "installed": "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_adapter/lib/python3.10/site-packages/robot_lab_adapter/aerial_swarm_controller.py",
+      "sha256": "86cd340f131478638cb516db85b88211ec7edd74dd81ce28b490712636ee2395",
+      "equal": true
+    },
+    {
+      "source": "src/robot_lab_adapter/robot_lab_adapter/aerial_swarm_route.py",
+      "installed": "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_adapter/lib/python3.10/site-packages/robot_lab_adapter/aerial_swarm_route.py",
+      "sha256": "0be2eb54d804cc03149af704f6251c54740a8beed029fca16d364dfd2f825d2c",
+      "equal": true
+    },
+    {
+      "source": "src/robot_lab_gui/robot_lab_gui/aerial_swarm_tab.py",
+      "installed": "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_gui/lib/python3.10/site-packages/robot_lab_gui/aerial_swarm_tab.py",
+      "sha256": "b4fb059e603c4f5cf237d024bfd7b9127aed4892385317eae40f02be5eed61ee",
+      "equal": true
+    },
+    {
+      "source": "src/robot_lab_gui/robot_lab_gui/fleet_infrastructure_controls.py",
+      "installed": "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_gui/lib/python3.10/site-packages/robot_lab_gui/fleet_infrastructure_controls.py",
+      "sha256": "961bf0db4f598a6b298690d68a5a546127ed457098180b490cfaac0d52314f4a",
+      "equal": true
+    },
+    {
+      "source": "src/robot_lab_gui/robot_lab_gui/architecture_content.py",
+      "installed": "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_gui/lib/python3.10/site-packages/robot_lab_gui/architecture_content.py",
+      "sha256": "e92756299084308a0feb8c454d369779955dfc9bd1bd641a633b6a6de31d0c9d",
+      "equal": true
+    }
+  ]
+}

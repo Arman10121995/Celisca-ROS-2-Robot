@@ -71,6 +71,8 @@ class MarineNavigation(Node):
         self.generation = 0
         self.stop_token = threading.Event()
         self.future = None
+        self.future_generation = None
+        self.future_kind = None
         self.worker = ThreadPoolExecutor(max_workers=1, thread_name_prefix='marine-plan')
         self.tf = Buffer(node=self)
         self.listener = TransformListener(self.tf, self)
@@ -78,12 +80,9 @@ class MarineNavigation(Node):
         self.control_pub = self.create_publisher(String, '/marine/command', 10)
         self.state_pub = self.create_publisher(String, '/marine/mission/state', 10)
         self.create_subscription(String, '/marine/state', self.observe_native, 10)
-        # Obstacle-aware replanning: observed obstacles from sonar/point cloud.
-        self.obstacle_cloud = None
-        self.obstacle_at = -math.inf
         self.replan_at = -math.inf
-        self.last_route_obstacle_free = True
-        # Current-aware planning: latest current observation.
+        # This is an operator-authored world current, not a water-current
+        # sensor. Native force control consumes it; route costs do not.
         self.current_vel = None
         self.current_at = -math.inf
         self.create_subscription(Vector3, '/marine/current', self.observe_current, 10)
@@ -139,16 +138,18 @@ class MarineNavigation(Node):
             data = json.loads(msg.data)
             if data['robot_id'] != self.robot:
                 return
-            if self.native and data['session_id'] != self.native['session_id']:
-                self.cancel('Native marine session changed')
+            if self.native and (data['session_id'] != self.native['session_id'] or data.get('operator_id') != self.native.get('operator_id')):
+                self.cancel('Native marine session/operator changed')
             self.native, self.native_at = data, time.monotonic()
         except (ValueError, KeyError, TypeError):
             return
 
     def observe_current(self, msg):
-        """Record the latest observed water current for current-aware planning."""
-        self.current_vel = (msg.x, msg.y, msg.z)
-        self.current_at = time.monotonic()
+        """Record finite authored current commands without inventing a sensor."""
+        values = (msg.x, msg.y, msg.z)
+        if all(math.isfinite(value) for value in values):
+            self.current_vel = values
+            self.current_at = time.monotonic()
 
     def observe_pose(self, msg):
         try:
@@ -204,7 +205,7 @@ class MarineNavigation(Node):
         self.stop_token.set()
         self.generation += 1
         self.route = None
-        self.status, self.reason = ('canceled' if self.status in ('executing','planning','braking','coasting') else 'idle'), reason
+        self.status, self.reason = ('canceled' if self.status in ('executing','planning','replanning','braking','coasting') else 'idle'), reason
         self.drive_pub.publish(Twist())
         if self.native and self.native.get('input_owner') == 'mission':
             self.control('stop')
@@ -245,6 +246,7 @@ class MarineNavigation(Node):
                 scene = self.shore.with_observation(self.observed) if self.shore else ObservedScene(self.scene, self.observed) if self.observed else self.scene
                 radius = self.radius + 3 * self.pose_std
                 token, generation = self.stop_token, self.generation
+                self.future_generation, self.future_kind = generation, 'plan'
                 observed=self.observed
                 def compute():
                     if self.shore is not None:
@@ -284,7 +286,7 @@ class MarineNavigation(Node):
             self.event('rejected', reason=str(exc))
 
     def save_map(self):
-        if self.status in ('planning', 'executing', 'braking', 'coasting'):
+        if self.status in ('planning', 'replanning', 'executing', 'braking', 'coasting'):
             raise ValueError('Cancel/finish the active marine route before flushing its SLAM map')
         self.archive.request()
         self.reason = self.archive.message
@@ -298,57 +300,88 @@ class MarineNavigation(Node):
         it is a best-effort re-plan over the known static scene plus the latest
         observed point cloud.
         """
-        if now := time.monotonic() - self.replan_at < 5.:
+        # Never leave the previous positive velocity latched at a newly
+        # blocked segment, including while waiting out the retry cooldown.
+        self.drive_pub.publish(Twist())
+        if self.auv:
+            self.cancel('AUV transect blocked; propulsion stopped. Explicit forward-aligned replan required')
             return
-        if not self.route or self.index >= len(self.route) - 1:
+        now = time.monotonic()
+        self.reason = reason
+        if now - self.replan_at < 5. or self.future is not None:
             return
-        goal = self.route[-1]
+        if not self.route or len(self.route) < 2:
+            return
+        goal = np.asarray(self.route[-1]).copy()
+        start = self.position.copy()
         scene = self.shore.with_observation(self.observed) if self.shore else ObservedScene(self.scene, self.observed) if self.observed else self.scene
         radius = self.radius + 3 * self.pose_std
-        token = threading.Event()
-        self.replan_at = time.monotonic()
+        self.stop_token = token = threading.Event()
+        self.generation += 1
+        generation = self.generation
+        self.future_generation, self.future_kind = generation, 'replan'
+        observed = self.observed
+        self.replan_at = now
         self.status, self.reason = 'replanning', reason
         self.event('replan_started', goal=goal, reason=reason)
 
         def compute():
-            start = self.position.copy()
-            orientation = self.orientation.copy()
-            route, info = plan(scene, start, np.asarray(goal), radius=radius, resolution=.4, timeout=15.,
+            if self.shore is not None:
+                route, info = self.shore.route(start, goal, radius, token.is_set, observation=observed)
+            else:
+                route, info = plan(scene, start, goal, radius=radius, resolution=.4, timeout=15.,
                 canceled=token.is_set,
                 min_altitude=self.bottom + radius + .1,
                 max_altitude=self.surface - radius - .1) if not self.surface_vessel else plan(
                     scene, start, np.asarray(goal), radius=radius, resolution=.4, timeout=15.,
                     canceled=token.is_set,
                     min_altitude=float(start[2]) - .1, max_altitude=float(start[2]) + .1)
-            return route, info, start.tolist()
+            return generation, route, info, start.tolist()
 
         self.future = self.worker.submit(compute)
 
-    def tick(self):
-        now = time.monotonic()
+    def _poll_plan(self, now):
         if self.future is not None and self.future.done():
+            future, generation, kind = self.future, self.future_generation, self.future_kind
+            self.future = None
+            if generation != self.generation:
+                self.event('planner_result_discarded', reason='Canceled/replaced generation')
+                return
             try:
-                result = self.future.result()
-                if len(result) == 4:
-                    generation, route, info, start = result
-                    if generation == self.generation:
-                        self.route, self.status = route, 'planned'
-                        self.reason = 'Source collision route planned; explicit Execute required'
-                        self.event('planned', route=route, info=info)
-                elif len(result) == 3:
-                    route, info, start = result
+                result_generation, route, info, start = future.result()
+                if result_generation != self.generation or self.stop_token.is_set():
+                    return
+                if kind == 'replan':
+                    if (self.status != 'replanning' or not self.fresh() or not self.native.get('operator_fresh')
+                            or not self.native.get('enabled') or self.native.get('input_owner') != 'mission'
+                            or now > self.deadline or math.dist(self.position, start) > .25):
+                        self.cancel('Replan ownership, observation, start position or deadline changed; explicit Plan/Execute required')
+                        return
                     self.route, self.status = route, 'executing'
                     self.index = 1
                     self.reason = 'Route replanned around observed obstacle; execution resumed'
                     self.event('replan_completed', route=route, info=info)
+                elif self.status == 'planning':
+                    self.route, self.status = route, 'planned'
+                    self.reason = 'Source collision route planned; explicit Execute required'
+                    self.event('planned', route=route, info=info)
             except Exception as exc:
-                if self.status == 'replanning':
-                    self.status, self.reason = 'idle', 'Replan failed: ' + str(exc)
-                    self.event('replan_failed', reason=str(exc))
-                else:
-                    self.status, self.reason = 'idle', 'Planning failed: ' + str(exc)
-                    self.event('plan_failed', reason=str(exc))
-            self.future = None
+                reason = ('Replan failed: ' if kind == 'replan' else 'Planning failed: ') + str(exc)
+                self.cancel(reason)
+                self.event('replan_failed' if kind == 'replan' else 'plan_failed', reason=reason)
+
+    def tick(self):
+        now = time.monotonic()
+        if self.status in ('planning', 'planned', 'replanning'):
+            if not self.fresh() or not self.native.get('operator_fresh'):
+                self.cancel('Marine planner observation/operator lost; explicit Plan/Execute required')
+            elif self.status == 'replanning':
+                # Keep the native mission input watchdog alive with neutral
+                # input while retaining every other ownership/time barrier.
+                self.drive_pub.publish(Twist())
+                if not self.native.get('enabled') or self.native.get('input_owner') != 'mission' or now > self.deadline:
+                    self.cancel('Marine replanning control ownership/time budget lost')
+        self._poll_plan(now)
         if self.status in ('executing', 'braking', 'coasting'):
             if not self.fresh() or not self.native.get('operator_fresh') or now > self.deadline:
                 self.cancel('Marine mission sensor/operator/time budget lost')
@@ -430,6 +463,9 @@ class MarineNavigation(Node):
             estimated_yaw=float(self.orientation[2]) if self.orientation is not None else None,
             route=self.route, waypoint=self.index, position_std_m=self.pose_std if math.isfinite(self.pose_std) else None,
             observed_cells=self.observed.cell_count if self.observed else 0, directory=str(self.directory),
+            authored_current_m_s=list(self.current_vel) if self.current_vel is not None else None,
+            authored_current_age_s=now-self.current_at if math.isfinite(self.current_at) else None,
+            current_cost_planning=False,
             localization_mode=self.localization, localized=self.localization and now-self.localized_at < 3.,
             mapping_status=self.archive.phase, saved_map=self.archive.result,
             estimator=('Authored downward motion/range simulation + native IMU/source support map; no image matching' if self.robot=='lab_amphibious' else 'Pressure/DVL simulation + native IMU; optional real RGB-D SLAM map transform'),

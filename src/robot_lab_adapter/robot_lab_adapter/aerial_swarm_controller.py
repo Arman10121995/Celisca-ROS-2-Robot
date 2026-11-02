@@ -4,6 +4,8 @@ import math
 from pathlib import Path
 import time
 import uuid
+import threading
+from concurrent.futures import ThreadPoolExecutor
 import numpy as np
 from rclpy.node import Node
 from std_msgs.msg import String
@@ -12,6 +14,7 @@ from geometry_msgs.msg import PoseStamped,Twist
 from nav_msgs.msg import Odometry
 from robot_lab_utils.aerial_planning import StaticScene
 from .aerial_swarm_model import velocities
+from .aerial_swarm_route import FormationRoute, plan_route
 
 
 class AerialSwarmController(Node):
@@ -25,6 +28,9 @@ class AerialSwarmController(Node):
         self.last_status=0.;self.last_output={};self.pending=[]
         self.generation=0
         self.takeoff_targets=[]
+        self.route_plan=None;self.route_mission=None;self.route_job=None
+        self.route_phase='idle';self.route_token=threading.Event()
+        self.route_worker=ThreadPoolExecutor(max_workers=1,thread_name_prefix='aerial-route')
         self.formation_errors=[];self.altitude_errors=[]
         self.pub=self.create_publisher(String,'/aerial_swarm/state',10)
         self.lease=self.create_publisher(String,'/aerial_swarm/vehicle_lease',10)
@@ -32,7 +38,8 @@ class AerialSwarmController(Node):
         self.create_subscription(String,'/aerial_swarm/operator_heartbeat',self.heartbeat,10)
         self.create_subscription(Twist,'/aerial_swarm/key_vel',self.drive,10)
         for item in session['members']:
-            row=dict(item,status=None,status_at=-math.inf,pose=None,pose_at=-math.inf,truth=None,truth_at=-math.inf,result=None)
+            row=dict(item,status=None,status_at=-math.inf,pose=None,pose_at=-math.inf,pose_stamp=None,
+                     speed=None,truth=None,truth_at=-math.inf,result=None)
             prefix=item['namespace'];self.members[item['id']]=row
             row['velocity_pub']=self.create_publisher(Twist,prefix+'/key_vel',10)
             row['goal_pub']=self.create_publisher(PoseStamped,prefix+'/px4/goal',10)
@@ -59,6 +66,14 @@ class AerialSwarmController(Node):
         p=msg.pose.pose.position;q=msg.pose.pose.orientation
         values=[p.x,p.y,p.z,q.x,q.y,q.z,q.w]
         if not np.isfinite(values).all():return
+        stamp=msg.header.stamp.sec+msg.header.stamp.nanosec*1e-9
+        previous=member.get('pose_stamp')
+        if previous is not None and stamp<=previous:
+            return
+        member['speed']=(math.dist(member['pose'],values[:3])/(stamp-previous)
+                         if previous is not None and 0<stamp-previous<=.5 and member['pose'] is not None else None)
+        if member['speed'] is not None and not math.isfinite(member['speed']):member['speed']=None
+        member['pose_stamp']=stamp
         member['pose']=[p.x,p.y,p.z];member['yaw']=math.atan2(2*(q.w*q.z+q.x*q.y),1-2*(q.y*q.y+q.z*q.z))
         member['pose_at']=time.monotonic()
 
@@ -111,6 +126,10 @@ class AerialSwarmController(Node):
         if invalidate:
             self.generation+=1
             self.pending.clear()
+            if hasattr(self,'route_token'):self.route_token.set()
+            if getattr(self,'route_phase','idle') in ('planning','planned','executing'):
+                self.route_phase='canceled';self.route_plan=None
+            if getattr(self,'route_mission',None):self.route_mission.cancel(reason)
         self.mode='idle';self.command=(0.,0.,0.,0.);self.reason=reason
         for member in self.members.values():
             member['velocity_pub'].publish(Twist())
@@ -130,7 +149,32 @@ class AerialSwarmController(Node):
             names=data.get('targets',[])
             if not names or len(set(names))!=len(names) or any(n not in self.members for n in names):raise ValueError('Choose distinct actual FCU member ids')
             members=[self.members[name] for name in names]
-            if op in ('check','takeoff','land','hold'):
+            if op=='plan_route':
+                if any(not self.fresh(m) or m['status']['phase']!='flying' for m in members):
+                    raise ValueError('Plan a formation route with 2–4 fresh airborne members')
+                if self.route_job is not None:
+                    raise ValueError('Wait for the previous bounded route planner to stop')
+                self.hold('Planning formation route; vehicles Hold until explicit Execute')
+                self.route_mission=None
+                token=self.route_token=threading.Event()
+                generation=self.generation
+                positions={m['id']:list(m['pose']) for m in members}
+                origins={m['id']:list(m['origin']) for m in members}
+                anchors,spacing=data['anchors'],float(data.get('spacing',3.))
+                self.route_phase='planning'
+                future=self.route_worker.submit(plan_route,self.scene,positions,origins,anchors,spacing,token.is_set)
+                self.route_job=(future,generation,list(names))
+            elif op=='execute_route':
+                plan=self.route_plan
+                if self.route_phase!='planned' or plan is None or set(names)!=set(plan['targets']):
+                    raise ValueError('Plan a route for exactly these members before Execute')
+                if any(not self.fresh(m) or m['status']['phase']!='flying' or math.dist(m['pose'],plan['starts'][m['id']])>.25 for m in members):
+                    raise ValueError('Member feedback/airborne state/start changed; explicitly plan again')
+                self.hold('Explicit formation route execution')
+                self.route_plan=plan;self.route_phase='executing'
+                self.route_mission=FormationRoute(plan,time.monotonic())
+                self.mode='route';self.targets=plan['targets'];self.spacing=plan['spacing'];self.anchor=self.route_mission.anchor
+            elif op in ('check','takeoff','land','hold'):
                 if op=='takeoff':
                     for member in members:
                         checked=member.get('result') or {}
@@ -144,20 +188,16 @@ class AerialSwarmController(Node):
                 if op=='takeoff' and any(not self.fresh(m) for m in members):raise ValueError('Fresh member FCU position required')
                 for member in members:self.service(member,op)
             elif op in ('manual','formation','rendezvous','dispersion','flocking'):
-                if any(m['status']['phase']!='flying' for m in members):raise ValueError('All selected members must be airborne before group movement')
-                deadline = time.monotonic() + 3.0
-                while any(not self.fresh(m) for m in members) and time.monotonic() < deadline:
-                    time.sleep(0.1)
-                if any(not self.fresh(m) for m in members):
-                    raise ValueError('All selected members must be fresh before group movement')
+                if any(not self.fresh(m) or m['status']['phase']!='flying' for m in members):
+                    raise ValueError('All selected members must be fresh and airborne before group movement; retry after feedback returns')
                 if op!='manual' and len(members)<2:raise ValueError('Swarm mode requires at least two airborne vehicles')
+                spacing=float(data.get('spacing',3.))
+                anchor=[float(data[k]) for k in ('x','y','z')] if all(k in data for k in ('x','y','z')) else None
+                if op=='formation' and anchor is None:anchor=np.mean([m['pose'] for m in members],axis=0).tolist()
+                if op!='manual':velocities(op,{m['id']:m['pose'] for m in members},spacing,anchor)
                 self.hold('New group mode starts neutral')
                 self.mode=op;self.targets=names;self.command_at=-math.inf
-                self.spacing=float(data.get('spacing',3.))
-                self.anchor=[float(data[k]) for k in ('x','y','z')] if all(k in data for k in ('x','y','z')) else None
-                if op=='formation' and self.anchor is None:
-                    self.anchor=np.mean([m['pose'] for m in members],axis=0).tolist()
-                if op!='manual':velocities(op,{m['id']:m['pose'] for m in members},self.spacing,self.anchor)
+                self.spacing,self.anchor=spacing,anchor
                 self.reason=op+' active; physical separation/mission qualification pending'
             else:raise ValueError('Unsupported aerial group operation')
         except (ValueError,KeyError,TypeError) as exc:
@@ -171,6 +211,7 @@ class AerialSwarmController(Node):
 
     def tick(self):
         now=time.monotonic();operator_fresh=now-self.hb_at<.8
+        self._route_tick(now,operator_fresh)
         if operator_fresh:
             self.lease.publish(String(data=json.dumps(dict(session_id=self.session['session_id'],operator_id=self.operator,generation=self.generation))))
         elif self.mode!='idle':self.hold('Aerial operator heartbeat lost; workers request Land')
@@ -201,7 +242,7 @@ class AerialSwarmController(Node):
                         recovered_at=now-lost_at if (lost_at:=self.member_lost_at.get(m['id']))>-math.inf else None)
                 commands=None
                 if self.mode!='manual':
-                    try:commands=velocities(self.mode,{m['id']:m['pose'] for m in members},self.spacing,self.anchor,maximum=.2)
+                    try:commands=velocities('formation' if self.mode=='route' else self.mode,{m['id']:m['pose'] for m in members},self.spacing,self.anchor,maximum=.2)
                     except ValueError as exc:self.hold(str(exc))
                 for member in members if self.mode!='idle' else []:
                     if self.mode=='manual':
@@ -235,7 +276,7 @@ class AerialSwarmController(Node):
                         # (never simulator truth). PX4's integrated hold stays
                         # primary; this only trims persistent barometric
                         # height-reference drift between ticks.
-                        if self.mode=='formation' and self.anchor is not None:
+                        if self.mode in ('formation','route') and self.anchor is not None:
                             target_z=float(self.anchor[2])
                             z_err=target_z-float(member['pose'][2])
                             if abs(z_err)>.05:
@@ -262,7 +303,8 @@ class AerialSwarmController(Node):
         if now-self.last_status>.2:
             self.last_status=now
             rows=[dict(id=m['id'],instance=m['instance'],system_id=m['system_id'],port=m['port'],namespace=m['namespace'],
-                ready=self.fresh(m),status=m['status'],position=m['pose'],truth=m['truth'],last_service=m['result']) for m in self.members.values()]
+                ready=self.fresh(m),status=m['status'],position=m['pose'],truth=m['truth'],last_service=m['result'],
+                estimated_speed_m_s=m.get('speed'),estimate_stamp_s=m.get('pose_stamp')) for m in self.members.values()]
             recent=[];alt_recent=[]
             if self.formation_errors:
                 recent=[e for e in self.formation_errors if now-e[0]<10.]
@@ -280,10 +322,49 @@ class AerialSwarmController(Node):
                 scope='Experimental actual shared-world multi-FCU controls; flight/swarm/clearance/loss qualification pending',
                 formation_rms_m=round(formation_rms,4) if formation_rms is not None else None,
                 altitude_rms_m=round(altitude_rms,4) if altitude_rms is not None else None,
-                formation_samples=len(recent) if recent else 0,member_loss=dict(self.member_lost)),allow_nan=False)))
+                formation_samples=len(recent) if recent else 0,member_loss=dict(self.member_lost),
+                route=dict(phase=getattr(self,'route_phase','idle'),plan=getattr(self,'route_plan',None),
+                    mission=self.route_mission.state() if getattr(self,'route_mission',None) else None)),allow_nan=False)))
+
+    def _route_tick(self,now,operator_fresh):
+        job=getattr(self,'route_job',None)
+        if job:
+            future,generation,names=job
+            if generation==self.generation and self.route_phase=='planning' and (not operator_fresh or any(not self.fresh(self.members[name]) or self.members[name]['status']['phase']!='flying' for name in names)):
+                self.hold('Formation planner operator/member lost; explicit Plan required')
+            if future.done():
+                self.route_job=None
+                if generation==self.generation and self.route_phase=='planning':
+                    try:
+                        self.route_plan=future.result();self.route_phase='planned'
+                        self.reason='Formation route source-checked; explicit Execute required'
+                        self.event('route_planned',plan=self.route_plan)
+                    except Exception as exc:
+                        self.route_phase='failed';self.reason='Formation planning refused: '+str(exc)
+                        self.event('route_plan_failed',reason=str(exc))
+        mission=getattr(self,'route_mission',None)
+        if self.mode=='route' and mission and mission.phase=='executing':
+            names=mission.plan['targets']
+            if not operator_fresh:
+                self.hold('Formation route operator lost; explicit Plan/Execute required')
+            elif any(not self.fresh(self.members[name]) or self.members[name]['status']['phase']!='flying' for name in names):
+                # Let tick's common member-loss guard record identities/ages
+                # and cancel the route before any per-vehicle command.
+                return
+            else:
+                mission.tick({name:self.members[name]['pose'] for name in names},
+                             {name:self.members[name].get('speed') for name in names},
+                             {name:self.members[name].get('pose_stamp') for name in names},now)
+                self.anchor=mission.anchor
+                if mission.phase!='executing':
+                    self.route_phase=mission.phase
+                    self.event('route_finished',result=mission.state())
+                    self.hold(mission.reason)
 
     def close(self):
         if self.context.ok():self.hold('Aerial shared session closing')
+        if hasattr(self,'route_token'):self.route_token.set()
+        if hasattr(self,'route_worker'):self.route_worker.shutdown(wait=True,cancel_futures=True)
         if self.formation_errors:
             all_errors=[e[2] for e in self.formation_errors]
             all_alt=[e[2] for e in self.altitude_errors]
