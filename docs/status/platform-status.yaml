@@ -4902,7 +4902,7 @@ amphibious_infrastructure_20261030:
 
 completion_continuation_20261102:
   owner: codex
-  state: partial
+  state: active
   baseline_revision: 375143ff
   scope_paths:
   - src/robot_lab/robot_lab_registry/config/
@@ -4915,8 +4915,7 @@ completion_continuation_20261102:
   - docs/
   - README.md
   - ROADMAP.md
-  current_scope: Repair invalid status YAML, establish observation-bound fleet energy and charging, preserve
-    exclusive localization TF ownership, then continue remaining extension workflows.
+  current_scope: Implement native automatic lift approach, boarding, observed floor/map transition and exit with robot/lift reservations, neutral GUI request, Stop/loss and bounded actual feedback.
   qualification: Initial implementation and focused diagnostics; no universal mission acceptance.
   updated: '2026-11-02'
   implementation_state: Delivered observation-bound modeled energy, exclusive floor/AMCL transforms, clearance-tested

@@ -13,6 +13,7 @@ import uuid
 import xml.etree.ElementTree as ET
 
 from robot_lab_utils.fleet_energy import EnergyEstimate, qualified_source
+from robot_lab_utils.fleet_transport import LiftTransport
 import rclpy
 from rclpy.node import Node
 from rclpy.clock import Clock,ClockType
@@ -47,6 +48,7 @@ class Infrastructure(Node):
             certificate = sources.get(member['model'], {})
             verified = qualified_source(member, certificate)
             self.energy_models[member['id']] = EnergyEstimate(self.config['energy'], joints, verified)
+        self.transports = {}
         self.floor_offsets={}
         self.floor_maps=session.get('floor_maps',self.config.get('floor_maps',{}));self.current_floor_map=''
         self.tf_broadcaster=tf2_ros.TransformBroadcaster(self)
@@ -82,6 +84,7 @@ class Infrastructure(Node):
         value=msg.clock.sec+msg.clock.nanosec*1e-9
         if self.clock is not None and value<self.clock:
             self.doors={n:False for n in self.doors};self.outputs={n:self.positions[n] for n in self.targets if n in self.positions};self.lift_request=None;self.lift_owner='';self.bodies.clear();self.paths.clear();self.docking.clear()
+            self._cancel_transports('Simulation clock reset')
             self.hold=True;self.outputs={};self.positions={};self.joint_stamp=None;self.rates={};self.joint_at=-math.inf
             self.door_owners={name:set() for name in self.doors}
             for item in self.energy_models.values():item.invalidate('Simulation clock reset; energy coverage lost')
@@ -187,6 +190,50 @@ class Infrastructure(Node):
                     and abs(body['xyz'][2] - dock.get('z', 0.)) < dock.get('height_tolerance', .12)
                     and abs(math.atan2(math.sin(body['yaw'] - dock['yaw']), math.cos(body['yaw'] - dock['yaw']))) < dock['yaw_tolerance'])
 
+    def _cancel_transports(self, reason, targets=None):
+        for name, task in self.transports.items():
+            if targets is None or name in targets:
+                self._transport_actions(task, task.cancel(reason))
+
+    def _transport_actions(self, task, actions):
+        from types import SimpleNamespace
+        for action in actions:
+            if action['kind'] == 'route':
+                self.fleet_command.publish(String(data=json.dumps(dict(session_id=self.identity,
+                    operator_id=task.operator, op='route', targets=[task.robot],
+                    request_id=action['request_id'], goals=[action['goal']]))))
+            elif action['kind'] == 'lift':
+                self.request_lift(SimpleNamespace(lift_name=self.config['lift']['name'],
+                    session_id=task.prefix, request_type=1, destination_floor=action['floor'], door_state=2))
+            elif action['kind'] == 'stop':
+                self.fleet_command.publish(String(data=json.dumps(dict(session_id=self.identity,
+                    operator_id=task.operator, op='stop', targets=[task.robot]))))
+            elif action['kind'] == 'release' and self.lift_owner == task.prefix:
+                self.lift_request = None
+                self.lift_owner = ''
+                self.lift_gui = False
+                if action['hold']:
+                    self.hold = True
+                    self.outputs = {joint: self.positions[joint] for joint in self.targets if joint in self.positions}
+
+    def _transport_tick(self, now, fresh, current_floor, door_rows):
+        for name, task in self.transports.items():
+            if not task.active:
+                continue
+            body = self.bodies.get(name)
+            member = next((row for row in (self.runtime or {}).get('members', []) if row['id'] == name), {})
+            operator = (self.runtime and now - self.runtime_at < 1. and
+                        self.runtime.get('operator_fresh') and self.runtime.get('operator_id') == task.operator)
+            valid = fresh and body and now - body['at'] < .6 and bool(member)
+            if task.active and operator and valid and self.lift_owner == task.prefix:
+                self.lift_at = now
+            context = dict(fresh=bool(valid), operator_fresh=bool(operator), body=body, member=member,
+                floor=self.energy[name]['floor'], clock=self.clock,
+                history=(self.runtime or {}).get('task_history', []), car_floor=current_floor,
+                door_open=door_rows.get(self.config['lift']['door'], {}).get('mode') == 2,
+                map_ready=name not in self.map_transitions and self.map_status.get(name) == 'ready')
+            self._transport_actions(task, task.tick(context, now))
+
     def safe_sweep(self,door):
         now=time.monotonic();x0,x1,y0,y1=door['sweep']
         if set(self.bodies)!=set(self.energy) or any(now-b['at']>.6 for b in self.bodies.values()):return False
@@ -202,6 +249,7 @@ class Infrastructure(Node):
     def request_lift(self,msg):
         if msg.lift_name!=self.config['lift']['name']:return
         now=time.monotonic()
+        if any(task.active and msg.session_id != task.prefix for task in self.transports.values()):return
         if self.lift_owner and msg.session_id!=self.lift_owner and now-self.lift_at<5:return
         if msg.request_type==0:
             if msg.session_id==self.lift_owner:self.lift_owner='';self.lift_request=None
@@ -216,7 +264,11 @@ class Infrastructure(Node):
             data=json.loads(msg.data)
             if not isinstance(data,dict):return
             if data.get('session_id')==self.identity and data.get('op')=='all_stop':
+                self._cancel_transports('Operator all-stop')
                 self.hold=True;self.outputs={n:self.positions[n] for n in self.targets if n in self.positions};self.lift_request=None;self.docking.clear()
+            elif data.get('session_id') == self.identity and data.get('op') in ('stop', 'pause', 'reset', 'leave'):
+                if self.runtime and data.get('operator_id') == self.runtime.get('operator_id') and self.runtime.get('operator_fresh'):
+                    self._cancel_transports('Operator interrupted lift transport', data.get('targets', []))
         except (ValueError,KeyError,TypeError):pass
 
     def command(self,msg):
@@ -230,7 +282,28 @@ class Infrastructure(Node):
             if op=='door' and data['door'] in self.doors:
                 if type(data['open']) is not bool:return
                 self.doors[data['door']]=data['open'] is True;self.hold=False
+            elif op == 'transport':
+                name, destination = data['robot'], data['floor']
+                if name not in self.energy or 'transport' not in self.config or not self.session.get('navigation'):
+                    raise ValueError('Automatic transport requires a declared facility and member Nav2')
+                if any(task.active for task in self.transports.values()):
+                    raise ValueError('The physical lift is already reserved')
+                row = next((item for item in self.runtime['members'] if item['id'] == name), {})
+                if not row.get('navigation_ready') or row.get('mode') != 'idle' or row.get('queued'):
+                    raise ValueError('Stop active control and wait for fresh idle Nav2 before transport')
+                task = LiftTransport(name, data['operator_id'], self.energy[name]['floor'], destination, self.config['transport'], time.monotonic())
+                if any(peer != name and task.in_cabin(body['xyz']) for peer, body in self.bodies.items()):
+                    raise ValueError('Another physical robot occupies the car')
+                if self.lift_owner and self.lift_owner != data['operator_id'] and time.monotonic() - self.lift_at < 5.:
+                    raise ValueError('Another live requester owns the lift')
+                self.transports[name] = task
+                self.lift_owner, self.lift_at = task.prefix, time.monotonic()
+                self.lift_request = None
+                self.lift_gui = False
+                self.hold = False
             elif op=='lift':
+                if any(task.active for task in self.transports.values()):
+                    raise ValueError('Cancel the active transport before manual lift movement')
                 from types import SimpleNamespace
                 self.request_lift(SimpleNamespace(lift_name=self.config['lift']['name'],session_id=data['operator_id'],request_type=1,destination_floor=data['floor'],door_state=2))
                 self.lift_gui=True
@@ -240,7 +313,8 @@ class Infrastructure(Node):
                 self.docking[name]=dict(dock=dock,request_id=data.get('request_id',uuid.uuid4().hex),settled=None,docked=False)
                 command=dict(session_id=self.identity,operator_id=data['operator_id'],op='dispatch',targets=[name],x=target['x'],y=target['y'],yaw=target['yaw'],timeout=180.)
                 self.fleet_command.publish(String(data=json.dumps(command)))
-        except (ValueError,KeyError,TypeError):pass
+        except (ValueError,KeyError,TypeError) as error:
+            self.get_logger().warning('Facility command rejected: '+str(error))
 
     def tick(self):
         now=time.monotonic();fresh=now-self.joint_at<.6 and now-self.clock_at<.6
@@ -316,11 +390,14 @@ class Infrastructure(Node):
             t.transform.translation.z = target_z
             t.transform.rotation.w = 1.0
             self.tf_broadcaster.sendTransform(t)
+        self._transport_tick(now, fresh, current_floor if abs(self.rates.get(lift['joint'], math.inf)) < .01 else '', door_rows)
         floor_z={name:self.floor_z.get(name,0.0) for name in self.energy}
         state=dict(session_id=self.identity,ready=fresh,held_members=held,doors=door_rows,
                    lift=dict(position_m=lift_position,command_m=self.outputs.get(lift['joint'],lift_position),
                              current_floor=current_floor,destination=self.lift_request,floors=list(lift['floors'])),
                docks=self.config['docks'],docking=self.docking,energy=energy,robot_floors=floors,
+               transports={name: task.state() for name, task in self.transports.items()},
+               reservations={name: task.prefix for name, task in self.transports.items() if task.active},
                floor_z=floor_z,floor_maps=self.floor_maps,robot_floor_maps=robot_floor_maps,
                active_robot_maps=self.active_robot_maps,map_loading=sorted(self.map_transitions),
                    map_status=self.map_status,map_errors=self.map_errors,current_floor_map=self.current_floor_map,

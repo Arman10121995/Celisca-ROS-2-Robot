@@ -282,6 +282,78 @@
         </collision>
       </link>
     </model>
+    <model name="landing_west_rail">
+      <static>true</static>
+      <pose>1.04 0 4.1 0 0 0</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <box>
+              <size>0.08 2.0 2.2</size>
+            </box>
+          </geometry>
+          <material>
+            <ambient>.35 .6 .7 1</ambient>
+            <diffuse>.35 .6 .7 1</diffuse>
+          </material>
+        </visual>
+        <collision name="collision">
+          <geometry>
+            <box>
+              <size>0.08 2.0 2.2</size>
+            </box>
+          </geometry>
+        </collision>
+      </link>
+    </model>
+    <model name="landing_north_rail">
+      <static>true</static>
+      <pose>2 1.0 4.1 0 0 0</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <box>
+              <size>2.0 0.08 2.2</size>
+            </box>
+          </geometry>
+          <material>
+            <ambient>.35 .6 .7 1</ambient>
+            <diffuse>.35 .6 .7 1</diffuse>
+          </material>
+        </visual>
+        <collision name="collision">
+          <geometry>
+            <box>
+              <size>2.0 0.08 2.2</size>
+            </box>
+          </geometry>
+        </collision>
+      </link>
+    </model>
+    <model name="landing_south_rail">
+      <static>true</static>
+      <pose>2 -1.0 4.1 0 0 0</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <box>
+              <size>2.0 0.08 2.2</size>
+            </box>
+          </geometry>
+          <material>
+            <ambient>.35 .6 .7 1</ambient>
+            <diffuse>.35 .6 .7 1</diffuse>
+          </material>
+        </visual>
+        <collision name="collision">
+          <geometry>
+            <box>
+              <size>2.0 0.08 2.2</size>
+            </box>
+          </geometry>
+        </collision>
+      </link>
+    </model>
     <model name="facility">
       <static>false</static>
       <link name="anchor">

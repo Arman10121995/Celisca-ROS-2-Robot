@@ -42,6 +42,8 @@ def generate():
     for i,(pose,size) in enumerate(walls):model(w,'wall_'+str(i),pose,size,'.65 .7 .75 1')
     # Upper landing is physical; separate floor navigation maps remain required.
     model(w,'upper_landing',(2,0,2.85),(2,3,.3),'.35 .6 .7 1')
+    for name,pose,size in [('landing_west_rail',(1.04,0,4.1),(.08,2.,2.2)),('landing_north_rail',(2,1.0,4.1),(2.,.08,2.2)),('landing_south_rail',(2,-1.0,4.1),(2.,.08,2.2))]:
+        model(w,name,pose,size,'.35 .6 .7 1')
     hardware=child(w,'model',name='facility');child(hardware,'static','false')
     anchor=child(hardware,'link',name='anchor');inertial=child(anchor,'inertial');child(inertial,'mass','1');child(inertial,'inertia');
     fixed=child(hardware,'joint',name='anchor_fixed',type='fixed');child(fixed,'parent','world');child(fixed,'child','anchor')
@@ -77,6 +79,7 @@ def generate():
         docks={'west_charger':dict(x=-4.5,y=-3.,z=0.,yaw=0.,position_tolerance=.12,height_tolerance=.12,yaw_tolerance=.15)},
         energy=dict(capacity_J=180000.,initial_fraction=.8,hotel_W=3.,drive_efficiency=.75,charge_W=120.,effort_observation_verified=False,effort_sources={},
                     scope='Authored battery estimate from actual JointState effort/rate; unknown when motor feedback is missing'))
+    config['transport'] = dict(boarding=dict(x=3.65,y=0.,yaw=0.), landings=dict(L0=dict(x=2.3,y=0.,yaw=0.),L1=dict(x=2.2,y=0.,yaw=0.)),cabin=[3.4,4.6,-.6,.6])
     if (target/'infrastructure.yaml').exists():
         previous = yaml.safe_load((target/'infrastructure.yaml').read_text()) or {}
         config['energy']['effort_sources'] = previous.get('energy', {}).get('effort_sources', {})

@@ -19,7 +19,9 @@ class InfrastructureControls(ttk.Frame):
         for label,opened in [('Open door',True),('Close if clear',False)]:
             ttk.Button(controls,text=label,command=lambda o=opened:self.send('door',door=self.door.get(),open=o)).pack(side='left',expand=True,fill='x')
         self.floors=ttk.Combobox(self,textvariable=self.floor,values=['L0','L1'],state='readonly');self.floors.grid(row=3,column=0,sticky='ew',pady=4)
-        ttk.Button(self,text='Request lift floor',command=lambda:self.send('lift',floor=self.floor.get())).grid(row=4,column=0,sticky='ew')
+        lift_controls=ttk.Frame(self);lift_controls.grid(row=4,column=0,sticky='ew')
+        ttk.Button(lift_controls,text='Request empty lift',command=lambda:self.send('lift',floor=self.floor.get())).pack(side='left',expand=True,fill='x')
+        ttk.Button(lift_controls,text='Transport selected robot',command=self.transport_member).pack(side='left',expand=True,fill='x')
         self.docks=ttk.Combobox(self,textvariable=self.dock,values=['west_charger'],state='readonly');self.docks.grid(row=5,column=0,sticky='ew',pady=4)
         ttk.Button(self,text='Navigate selected member to dock',command=self.dock_member).grid(row=6,column=0,sticky='ew')
         ttk.Label(self,textvariable=self.feedback,wraplength=420,justify='left').grid(row=7,column=0,sticky='ew',pady=5)
@@ -55,6 +57,7 @@ class InfrastructureControls(ttk.Frame):
                 status='held/loading' if name in loading else statuses.get(name,'ready')
                 lines.append(f'{name} floor {floor}: map {desired}; active {active} ({status})')
             lines.extend(name+' map error: '+error for name,error in value.get('map_errors',{}).items())
+            lines += [name+' lift transport: '+task['phase']+' — '+task['reason'] for name,task in value.get('transports',{}).items()]
             lines += [n+' dock: '+('physically settled' if v['docked'] else 'not settled') for n,v in value['docking'].items()]
             self.feedback.set('\n'.join(lines))
         except (ValueError,KeyError,TypeError):return
@@ -72,3 +75,8 @@ class InfrastructureControls(ttk.Frame):
         ids=self.fleet._ids()
         if len(ids)!=1:self.status.set('Select one member to dock');return
         self.send('dock',robot=ids[0],dock=self.dock.get())
+
+    def transport_member(self):
+        ids=self.fleet._ids()
+        if len(ids)!=1:self.status.set('Select one idle Nav2 member for transport');return
+        self.send('transport',robot=ids[0],floor=self.floor.get())

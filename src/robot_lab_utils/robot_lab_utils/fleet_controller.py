@@ -146,6 +146,7 @@ class FleetController(Node):
         self.create_subscription(String, '/fleet/command', self._command, 10)
         self.create_subscription(String, '/fleet/operator_heartbeat', self._heartbeat, 10)
         self.infrastructure_holds=set();self.infrastructure_at=-math.inf
+        self.infrastructure_reservations = {}
         if self.session.get('infrastructure_file'):
             self.create_subscription(String,'/fleet/infrastructure/state',self._infrastructure,10)
         self.create_subscription(ClockMessage, '/clock', self._observe_clock, qos_profile_sensor_data)
@@ -323,6 +324,14 @@ class FleetController(Node):
             if not isinstance(ids, list) or len(set(ids)) != len(ids) or any(name not in self.members for name in ids):
                 raise ValueError('Select distinct session member ids')
             targets = [self.members[name] for name in ids]
+            reserved = getattr(self, 'infrastructure_reservations', {})
+            if op in ('allocate', 'coverage') and not ids and reserved:
+                raise ValueError('Lift transport reserves a fleet member; select other members explicitly')
+            for name in ids:
+                if name in reserved and op not in ('stop', 'pause', 'reset', 'leave'):
+                    tag = data.get('request_id', '')
+                    if op != 'route' or not isinstance(tag, str) or not tag.startswith(reserved[name] + '-'):
+                        raise ValueError('Member is reserved for lift transport; Stop cancels it')
             if op == 'swarm':
                 self._start_swarm(data, targets)
             elif op in ('dispatch', 'allocate'):
@@ -833,6 +842,7 @@ class FleetController(Node):
             data=json.loads(msg.data)
             if data.get('session_id')==self.session_id and data.get('ready'):
                 self.infrastructure_holds=set(data['held_members']);self.infrastructure_at=time.monotonic()
+                self.infrastructure_reservations = data.get('reservations', {})
         except (ValueError,KeyError,TypeError):return
 
     def _tick(self):
@@ -929,6 +939,7 @@ class FleetController(Node):
                     ages=dict(odom=age(member.odom_at), truth=age(member.truth_at), scan=age(member.scan_at),
                               amcl=age(member.estimate_at), localization_tf=age(member.localization_at)),
                     message_counts=member.message_counts, task=member.task, goal=member.goal,
+                    active_source=member.active_item['source'] if member.active_item else '',
                     nav2_pending=member.sending or member.handle is not None, cancel_pending=member.cancel_pending,
                     queued=len(member.queue),
                     queued_tasks=[dict(task=item['task'], goal=item['goal'], source=item['source']) for item in member.queue],

@@ -102,7 +102,7 @@ class Robot(adpt.RobotCommandHandle):
             source = 'route:' + request['id']
             matching = [o for o in outcomes if o['source'] == source]
             waiting = [o for o in row.get('queued_tasks', []) if o['source'] == source]
-            request['acknowledged'] |= bool(matching or waiting)
+            request['acknowledged'] |= bool(matching or waiting or row.get('active_source') == source)
             if waiting and row.get('queue_paused'):
                 request['failed'] = True
                 self.update.log_error('Fleet recovery paused the route; requesting a new RMF plan from actual position')
