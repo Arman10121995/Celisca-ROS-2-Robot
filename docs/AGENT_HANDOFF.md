@@ -1,5 +1,7 @@
 # Agent Handoff Protocol
 
+November 2 GUI usability: preserve Home, the shared purpose-based shell, Ctrl+K navigation-only search, responsive sidebar, contextual help and the unified control selector. Control notebook pages and legacy `show_tab` aliases remain; keep secondary pages such as Marine missions reachable. Search must contain movement/launch key presses while allowing key releases. [Guide](tutorials/gui-quickstart.md). This UI delivery does not refresh robot mission certificates.
+
 November 2 GUI learning delivery: preserve the existing Health workspace's **Learn & health** native explorer, tutorial/source reader and opt-in private ROS graph context. [Guide](architecture/interactive-guide.md), [UI/discovery receipt](status/evidence/architecture-explorer-2026-11-02/README.md). The architecture model is designed wiring; snapshots are advertised endpoints. Neither updates robot mission qualification. Source guards and prior controller certificates remain unchanged.
 
 Latest November 2: [automatic native fleet lift transport](status/evidence/automatic-floor-transport-2026-11-02/README.md) completed one Bumperbot L0-L1-L0 with autonomous boarding, map/costmap transitions and settled exits. The GUI Facility request is implemented. A real native SDK L0-L1-L0 mission also passed in 359.063 wall seconds; actual SDK process-loss/resumption held the car and required explicit re-enablement. Broader multi-robot cases remain separate. Full platform acceptance remains partial.

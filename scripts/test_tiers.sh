@@ -88,6 +88,7 @@ FAST_TESTS=(
 )
 
 INTEGRATION_TESTS=(
+  "$GUI_TEST/test_experience.py"
   "$GUI_TEST/test_architecture_explorer.py"
   "$BRG_TEST/test_fleet_infrastructure.py"
   "$GUI_TEST/test_registry_preview.py"

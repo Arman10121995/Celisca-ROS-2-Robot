@@ -1,5 +1,7 @@
 # Robot Lab done and remaining checklist
 
+- [x] Home, modern shared styling, purpose-based navigation, Ctrl+K search, responsive sidebar, contextual help, setup/review/control flow and unified native control-page selection. [Quick tour](../tutorials/gui-quickstart.md).
+
 - [x] Native architecture/tutorial learning workspace in Health: clickable source-linked diagrams, tours, glossary/library, networking lesson and bounded actual ROS graph/QoS inspection. [Guide](../architecture/interactive-guide.md), [scoped UI/discovery checks](evidence/architecture-explorer-2026-11-02/README.md).
 
 Latest November 2: [automatic native fleet lift transport](evidence/automatic-floor-transport-2026-11-02/README.md) completed one Bumperbot L0-L1-L0 with autonomous boarding, map/costmap transitions and settled exits. The GUI Facility request is implemented. A real native SDK L0-L1-L0 mission also passed in 359.063 wall seconds; actual SDK process-loss/resumption held the car and required explicit re-enablement. Broader multi-robot cases remain separate. Full platform acceptance remains partial.

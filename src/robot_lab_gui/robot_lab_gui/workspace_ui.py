@@ -7,7 +7,8 @@ class ScrollPanel(ttk.Frame):
     def __init__(self, parent, width=320):
         super().__init__(parent)
         self.columnconfigure(0, weight=1); self.rowconfigure(0, weight=1)
-        canvas = self.canvas = tk.Canvas(self, width=width, highlightthickness=0, background='#171d29')
+        from .themes.modern import BG_DARK
+        canvas = self.canvas = tk.Canvas(self, width=width, highlightthickness=0, background=BG_DARK)
         canvas.grid(row=0, column=0, sticky='nsew')
         bar = ttk.Scrollbar(self, orient='vertical', command=canvas.yview)
         bar.grid(row=0, column=1, sticky='ns'); canvas.configure(yscrollcommand=bar.set)
@@ -48,18 +49,41 @@ def build_workspace(app):
     """Create setup beside a dedicated control column and workspace navigation."""
     app.columnconfigure(0, weight=0); app.columnconfigure(1, weight=1)
     app.rowconfigure(0, weight=0); app.rowconfigure(1, weight=1)
-    header = ttk.Frame(app, padding=(16, 10))
+    from .experience import install_context, open_search, help_for_workspace
+    install_context(app)
+    header = ttk.Frame(app, padding=(14, 10))
     header.grid(row=0, column=0, columnspan=2, sticky='ew')
-    header.columnconfigure(1, weight=1)
-    ttk.Label(header, text='ROBOT LAB', style='Title.TLabel').grid(row=0, column=0, padx=(0, 22))
+    header.columnconfigure(2, weight=1)
+    app.navigation_toggle=ttk.Button(header,text='≡',width=3,style='Ghost.TButton',command=lambda:getattr(app,'toggle_navigation',lambda:None)())
+    app.navigation_toggle.grid(row=0,column=0,rowspan=2,padx=(0,8))
+    ttk.Button(header, text='ROBOT LAB', style='Brand.TButton',command=lambda:app.show_tab('Home')).grid(row=0, column=1,rowspan=2,padx=(0,20))
     app.workspace_title = tk.StringVar(value='Launch · configure, run and control')
-    ttk.Label(header, textvariable=app.workspace_title, style='Muted.TLabel').grid(row=0, column=1, sticky='w')
-    ttk.Button(header, text='Logs', command=app._toggle_console, style='Ghost.TButton').grid(row=0, column=2, padx=6)
-    ttk.Button(header, text='Stop motion', command=app._stop_all_motion, style='Danger.TButton').grid(row=0, column=3)
-    app.navigation = ttk.Frame(app, padding=(10, 6))
+    ttk.Label(header, textvariable=app.workspace_title, style='Context.TLabel').grid(row=0, column=2, sticky='w')
+    ttk.Label(header, textvariable=app.selection_context,style='Muted.TLabel',wraplength=650).grid(row=1,column=2,sticky='w')
+    ttk.Button(header,text='Find  Ctrl+K',command=lambda:open_search(app),style='Ghost.TButton').grid(row=0,column=3,rowspan=2,padx=5)
+    ttk.Button(header,text='Help',command=lambda:help_for_workspace(app),style='Ghost.TButton').grid(row=0,column=4,rowspan=2,padx=5)
+    ttk.Button(header, text='Logs', command=app._toggle_console, style='Ghost.TButton').grid(row=0, column=5,rowspan=2,padx=5)
+    ttk.Button(header, text='Stop motion', command=app._stop_all_motion, style='Danger.TButton').grid(row=0, column=6,rowspan=2,padx=(6,0))
+    app.bind('<Control-k>',lambda event:open_search(app,event))
+    def wrap_header(event):
+        if event.widget is header:
+            for child in header.winfo_children():
+                if isinstance(child,ttk.Label):child.configure(wraplength=max(150,event.width-560))
+    header.bind('<Configure>',wrap_header)
+    app.navigation = ScrollPanel(app, width=218)
+    app.navigation.body.configure(padding=(6,4))
     app.navigation.grid(row=1, column=0, sticky='ns')
-    app.notebook = ttk.Notebook(app, style='Workspace.TNotebook')
-    app.notebook.grid(row=1, column=1, sticky='nsew')
+    main=ttk.Frame(app,padding=(4,0,10,0));main.grid(row=1,column=1,sticky='nsew')
+    main.columnconfigure(0,weight=1);main.rowconfigure(1,weight=1)
+    app.page_heading=ttk.Frame(main,padding=(10,6,4,12));app.page_heading.grid(row=0,column=0,sticky='ew')
+    app.page_heading.columnconfigure(0,weight=1)
+    app.page_title=tk.StringVar(value='Run a robot');app.page_description=tk.StringVar(value='Configure, review and launch your experiment.')
+    ttk.Label(app.page_heading,textvariable=app.page_title,style='HeroSmall.TLabel').grid(row=0,column=0,sticky='w')
+    description=ttk.Label(app.page_heading,textvariable=app.page_description,style='Muted.TLabel',wraplength=850)
+    description.grid(row=1,column=0,sticky='ew',pady=(4,0))
+    app.page_heading.bind('<Configure>',lambda e:description.configure(wraplength=max(300,e.width-30)))
+    app.notebook = ttk.Notebook(main, style='Workspace.TNotebook')
+    app.notebook.grid(row=1, column=0, sticky='nsew')
     app.launch_tab = ttk.Frame(app.notebook, padding=(8, 6))
     app.notebook.add(app.launch_tab, text='Launch')
     app.launch_tab.columnconfigure(0, weight=1); app.launch_tab.rowconfigure(0, weight=1)
@@ -77,13 +101,18 @@ def build_workspace(app):
     app.setup_notebook.add(basic, text='Robot & world')
     app.setup_notebook.add(advanced, text='Options')
     app.session_frame = ttk.Frame(host, padding=(12, 0, 4, 0))
-    lower = ttk.LabelFrame(app.launch_split, text='2 · Robot controls and limits', padding=8)
-    lower.columnconfigure(0, weight=1); lower.rowconfigure(1, weight=1)
+    lower = ttk.LabelFrame(app.launch_split, text='3 · Control & observe', padding=8)
+    lower.columnconfigure(0, weight=1); lower.rowconfigure(2, weight=1)
     app.launch_split.add(lower, weight=1)
     app.control_context = tk.StringVar(value='Select a robot to see its control support.')
     ttk.Label(lower, textvariable=app.control_context, style='Muted.TLabel', wraplength=390).grid(row=0, column=0, sticky='w', pady=(0, 5))
-    app.control_notebook = ttk.Notebook(lower)
-    app.control_notebook.grid(row=1, column=0, sticky='nsew')
+    control_bar=ttk.Frame(lower);control_bar.grid(row=1,column=0,sticky='ew',pady=(0,8));control_bar.columnconfigure(0,weight=1)
+    app.control_page_var=tk.StringVar(value='Drive & limits')
+    app.control_page_combo=ttk.Combobox(control_bar,textvariable=app.control_page_var,state='readonly',width=18)
+    app.control_page_combo.grid(row=0,column=0,sticky='ew')
+    ttk.Button(control_bar,text='Telemetry',command=lambda:app.show_tab('Live Monitor'),style='Ghost.TButton').grid(row=0,column=1,padx=(5,0))
+    app.control_notebook = ttk.Notebook(lower,style='Control.TNotebook')
+    app.control_notebook.grid(row=2, column=0, sticky='nsew')
     app.drive_page = ScrollPanel(app.control_notebook, width=390)
     app.drone_page = ScrollPanel(app.control_notebook, width=390)
     app.control_notebook.add(app.drive_page, text='Drive & limits')
@@ -145,34 +174,83 @@ def build_workspace(app):
 
 
 def build_navigation(app):
-    groups = [('WORKSPACE', [('Launch', 'Launch & control'), ('Fleet & Swarm', 'Ground fleet & swarm'),
-                             ('Aerial Swarm', 'Aerial swarm'), ('Live Monitor', 'Live telemetry')]),
-              ('ASSETS', [('Registry', 'Registry · 3D'), ('Worlds', 'Worlds & maps'), ('Installed Extensions', 'Installed assets')]),
-              ('EXPERIMENTS', [('Vacuum', 'Vacuum missions'), ('Benchmark', 'Benchmarks'), ('Training', 'Policy training'), ('Tests', 'Test suites')]),
-              ('PROJECT', [('Health', 'Learn & health')])]
+    from .experience import WORKSPACES, HomeTab
+    from .themes.modern import tooltip
+    # Optional control-center tabs may be suppressed in lightweight launchers.
+    # Add the dashboard when the complete workspace is available.
+    if hasattr(app, 'health_tab'):
+        app.home_tab = HomeTab(app.notebook, app)
     titles = {app.notebook.tab(tab, 'text') for tab in app.notebook.tabs()}
-    app.nav_buttons = {}
-    row = 0
-    for heading, items in groups:
-        ttk.Label(app.navigation, text=heading, style='Muted.TLabel').grid(row=row, column=0, sticky='w', pady=(12, 5), padx=6)
-        row += 1
-        for title, label in items:
-            if title not in titles:
-                continue
-            button = ttk.Button(app.navigation, text=label, width=19, style='Nav.TButton', command=lambda value=title: app.show_tab(value))
-            button.grid(row=row, column=0, sticky='ew', pady=2)
-            app.nav_buttons[title] = button; row += 1
-    descriptions = dict(Launch='Configure an experiment, then run and control it',
-        Registry='Browse complete models and inspect source geometry in 3D',
-        Worlds='Inspect worlds and generate occupancy maps',
-        Health='Interactive architecture, tutorials, ROS graph and project status',
-        **{'Installed Extensions': 'Installed robot and world sources', 'Live Monitor': 'Measured robot telemetry',
-           'Fleet & Swarm': 'Shared-world ground missions and traffic',
-           'Aerial Swarm': 'Independent PX4 vehicles in one selected world'})
+    app.nav_buttons = {}; headings = []; rows = []
+    host = app.navigation.body
+    host.columnconfigure(0, weight=1)
+    group = None; index = 0
+    for title, label, section, icon, keywords in WORKSPACES:
+        if title not in titles:
+            continue
+        if section != group:
+            heading = ttk.Label(host, text=section.upper(), style='Muted.TLabel')
+            heading.grid(row=index, column=0, sticky='w', pady=(16, 6), padx=10)
+            headings.append(heading); index += 1; group = section
+        button = ttk.Button(host, text=label, width=23, style='Nav.TButton', command=lambda page=title: app.show_tab(page))
+        button.grid(row=index, column=0, sticky='ew', pady=2)
+        tooltip(button, label+' · '+keywords)
+        app.nav_buttons[title] = button; rows.append((button, label, icon)); index += 1
+    app.navigation_collapsed = False
+    app.navigation_override = None
+    def collapse(value):
+        app.navigation_collapsed = value
+        app.navigation.canvas.configure(width=72 if value else 218)
+        for button, label, icon in rows:
+            button.configure(text=icon if value else label, width=3 if value else 23)
+        for heading in headings:
+            heading.grid_remove() if value else heading.grid()
+        app.navigation_toggle.configure(text='»' if value else '≡')
+    def toggle():
+        app.navigation_override = not app.navigation_collapsed
+        collapse(app.navigation_override)
+    app.toggle_navigation = toggle
+    tooltip(app.navigation_toggle, 'Expand or collapse workspace navigation')
+    def responsive(event):
+        if event.widget is app and app.navigation_override is None:
+            desired = event.width < 1250
+            if desired != app.navigation_collapsed:
+                collapse(desired)
+    app.bind('<Configure>', responsive, add='+')
     def refresh(_event=None):
-        title = app.notebook.tab(app.notebook.select(), 'text')
-        app.workspace_title.set(title+' · '+descriptions.get(title, 'Robot Lab workspace'))
+        current = app.notebook.select()
+        if not current: return
+        title = app.notebook.tab(current, 'text')
+        label = next((label for key,label,group,icon,keywords in WORKSPACES if key==title), title)
+        app.workspace_title.set(label)
+        descriptions={'Launch':'Choose a robot, world and task. Review the command, then use the control column.',
+            'Registry':'Explore complete families, compare variants and inspect source geometry in 3D.',
+            'Worlds':'Create occupancy maps from installed worlds with explicit resolution and slice settings.',
+            'Fleet & Swarm':'Build a shared-world ground session. Connect and give control explicitly when ready.',
+            'Aerial Swarm':'Configure independently identified aircraft in one world. Flight requires explicit controls.',
+            'Live Monitor':'Connect deliberately to inspect actual robot measurements and simulation time.',
+            'Installed Extensions':'Installed source profiles use the same launch selectors and capability gates.',
+            'Benchmark':'Configure real workloads, inspect artifacts and compare scoped outcomes.',
+            'Training':'Train and export a model-specific policy, then evaluate it through the deployment workflow.',
+            'Tests':'Run focused source and integration checks. Tests do not replace robot mission evidence.',
+            'Health':'Learn the architecture, browse tutorials and source, or inspect diagnostics and status.',
+            'Vacuum':'Configure and monitor a compatible cleaning or coverage workflow.'}
+        app.page_title.set(label);app.page_description.set(descriptions.get(title,'Robot Lab workspace'))
+        app.page_heading.grid_remove() if title=='Home' else app.page_heading.grid()
         for name, button in app.nav_buttons.items():
             button.configure(style='NavActive.TButton' if name == title else 'Nav.TButton')
     app.notebook.bind('<<NotebookTabChanged>>', refresh, add='+')
+    def refresh_controls(_event=None):
+        values = [app.control_notebook.tab(page, 'text') for page in app.control_notebook.tabs()]
+        app.control_page_combo.configure(values=values)
+        selected = app.control_notebook.select()
+        if selected: app.control_page_var.set(app.control_notebook.tab(selected, 'text'))
+    def choose_control(_event=None):
+        for page in app.control_notebook.tabs():
+            if app.control_notebook.tab(page, 'text') == app.control_page_var.get():
+                app.control_notebook.select(page); break
+    app.control_page_combo.bind('<<ComboboxSelected>>', choose_control)
+    app.control_notebook.bind('<<NotebookTabChanged>>', refresh_controls, add='+')
+    refresh_controls()
+    if hasattr(app, 'home_tab'): app.notebook.select(app.home_tab)
     refresh()

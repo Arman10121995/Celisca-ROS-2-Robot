@@ -9,16 +9,16 @@ import tkinter as tk
 from tkinter import ttk
 
 # -- Color palette ----------------------------------------------------------
-BG_DARK = "#171d29"
-BG_CARD = "#202938"
-BG_CARD_LIGHT = "#2b3749"
-BG_HOVER = "#293548"
-BG_INPUT = "#111824"
-FG_PRIMARY = "#cdd6f4"
-FG_SECONDARY = "#a6adc8"
-FG_MUTED = "#7f849c"
+BG_DARK = "#101823"
+BG_CARD = "#182435"
+BG_CARD_LIGHT = "#25364b"
+BG_HOVER = "#223247"
+BG_INPUT = "#0d1520"
+FG_PRIMARY = "#e6edf7"
+FG_SECONDARY = "#b8c6da"
+FG_MUTED = "#96a9c2"
 FG_DISABLED = "#585b70"
-ACCENT = "#71c7ce"
+ACCENT = "#72ded0"
 ACCENT_HOVER = "#b4c7fb"
 ACCENT_ACTIVE = "#74a7f5"
 ACCENT_GREEN = "#a6e3a1"
@@ -28,7 +28,7 @@ ACCENT_RED_DIM = "#4d343d"
 ACCENT_YELLOW = "#f9e2af"
 ACCENT_YELLOW_DIM = "#4d4636"
 ACCENT_MAUVE = "#cba6f7"
-BORDER_COLOR = "#45475a"
+BORDER_COLOR = "#32465e"
 BORDER_FOCUS = ACCENT
 ENTRY_BG = BG_INPUT
 SELECT_BG = "#45475a"
@@ -97,6 +97,16 @@ def apply(root):
     # Frames
     style.configure("TFrame", background=BG_DARK)
     style.configure("Card.TFrame", background=BG_CARD)
+    style.configure('Surface.TFrame', background=BG_CARD, borderwidth=0)
+    style.configure('SurfaceBody.TLabel', background=BG_CARD, foreground=FG_SECONDARY, font=fonts['body'])
+    style.configure('Hero.TLabel', background=BG_CARD, foreground=FG_PRIMARY, font=(fonts['body'][0],26,'bold'))
+    style.configure('HeroSmall.TLabel', foreground=FG_PRIMARY, font=(fonts['body'][0],17,'bold'))
+    style.configure('Eyebrow.TLabel', background=BG_CARD, foreground=ACCENT, font=fonts['small_bold'])
+    style.configure('Metric.TLabel', background=BG_CARD, foreground=FG_PRIMARY, font=(fonts['body'][0],22,'bold'))
+    style.configure('Section.TLabel', foreground=FG_PRIMARY, font=fonts['heading'])
+    style.configure('CardHeading.TLabel', background=BG_CARD, foreground=FG_PRIMARY, font=fonts['subheading'])
+    style.configure('Context.TLabel', foreground=FG_SECONDARY, font=fonts['small'])
+    style.configure('Badge.TLabel', background=BG_CARD_LIGHT, foreground=FG_SECONDARY, padding=(10,5), font=fonts['small_bold'])
     style.configure('Nav.TButton', background=BG_DARK, foreground=FG_SECONDARY,
                     padding=(10, 8), anchor='w', borderwidth=0)
     style.configure('NavActive.TButton', background=BG_CARD_LIGHT, foreground=ACCENT,
@@ -167,6 +177,10 @@ def apply(root):
     style.map("Ghost.TButton",
               background=[("active", BG_CARD)], foreground=[("active", FG_PRIMARY)])
     style.configure("Small.TButton", padding=(6, 3), font=fonts["small"])
+    style.configure('Link.TButton', background=BG_CARD, foreground=ACCENT, borderwidth=0, padding=(0,6), anchor='w')
+    style.map('Link.TButton', background=[('active',BG_CARD_LIGHT)],foreground=[('active',FG_PRIMARY)])
+    style.configure('Brand.TButton',background=BG_DARK,foreground=ACCENT,borderwidth=0,padding=(4,6),font=(fonts['body'][0],13,'bold'))
+    style.map('Brand.TButton',background=[('active',BG_CARD)],foreground=[('active',FG_PRIMARY)])
 
     # Entry / Combobox
     style.configure("TEntry", fieldbackground=ENTRY_BG, foreground=FG_PRIMARY,
@@ -181,8 +195,8 @@ def apply(root):
     # clam applies its own readonly-state colors; override them so the
     # selected value stays readable on the dark field.
     style.map("TCombobox",
-              fieldbackground=[("readonly", ENTRY_BG), ("focus", BG_CARD)],
-              foreground=[("readonly", FG_PRIMARY), ("disabled", FG_DISABLED)],
+              fieldbackground=[("disabled", BG_CARD), ("readonly", ENTRY_BG), ("focus", BG_CARD)],
+              foreground=[("disabled", FG_DISABLED), ("readonly", FG_PRIMARY)],
               background=[("readonly", BG_HOVER), ("active", BG_HOVER)],
               bordercolor=[("focus", BORDER_FOCUS)],
               arrowcolor=[("disabled", FG_DISABLED), ("active", FG_PRIMARY)])
@@ -227,8 +241,10 @@ def apply(root):
     style.configure("TNotebook", background=BG_DARK, bordercolor=BORDER_COLOR)
     style.configure("TNotebook.Tab", background=BG_CARD, foreground=FG_SECONDARY,
                     padding=(14, 8), font=fonts["body"])
-    style.map("TNotebook.Tab", background=[("selected", ACCENT), ("active", BG_CARD_LIGHT)],
-              foreground=[("selected", BG_DARK), ("active", FG_PRIMARY)])
+    style.map("TNotebook.Tab", background=[("selected", BG_CARD_LIGHT), ("active", BG_HOVER)],
+              foreground=[("selected", ACCENT), ("active", FG_PRIMARY)])
+    style.configure('Control.TNotebook', borderwidth=0)
+    style.layout('Control.TNotebook.Tab', [])
 
     # Labelframe
     style.configure("TLabelframe", background=BG_DARK, foreground=FG_SECONDARY,

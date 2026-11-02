@@ -1,5 +1,7 @@
 # Current Robot Lab status
 
+The [GUI usability refresh](../tutorials/gui-quickstart.md) adds Home, modern shared styling, purpose-based/searchable navigation, responsive sidebar, contextual help, clearer launch/Stop feedback and a selector for every control page. This is UI work; full robot/extension acceptance remains partial.
+
 [Native interactive architecture workspace](evidence/architecture-explorer-2026-11-02/README.md) is delivered inside the existing Health tab, labeled **Learn & health**: twelve diagram views, six tours, linked tutorials/source/package browsing, glossary, networking playground and opt-in actual ROS discovery/QoS. Installed UI and read-only diagnostics are checked; robot mission support remains unchanged.
 
 Latest November 2: [automatic native fleet lift transport](evidence/automatic-floor-transport-2026-11-02/README.md) completed one Bumperbot L0-L1-L0 with autonomous boarding, map/costmap transitions and settled exits. The GUI Facility request is implemented. A real native SDK L0-L1-L0 mission also passed in 359.063 wall seconds; actual SDK process-loss/resumption held the car and required explicit re-enablement. Broader multi-robot cases remain separate. Full platform acceptance remains partial.

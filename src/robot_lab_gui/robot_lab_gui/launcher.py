@@ -675,7 +675,7 @@ class SimulationLauncherGui(tk.Tk):
         advanced.columnconfigure(0, weight=1)
         controls.columnconfigure(0, weight=1)
 
-        ttk.Label(controls, text="Robot").grid(row=0, column=0, sticky="w")
+        ttk.Label(controls, text="ROBOT", style='Section.TLabel').grid(row=0, column=0, sticky="w")
         robot_frame = ttk.Frame(controls)
         robot_frame.grid(row=1, column=0, sticky="ew", pady=(2, 12))
         robot_frame.columnconfigure(0, weight=1)
@@ -708,16 +708,25 @@ class SimulationLauncherGui(tk.Tk):
         self.robot_variant_combo.grid(row=3, column=0, sticky='ew')
         self.robot_variant_combo.bind('<<ComboboxSelected>>', self._on_selection_changed)
         self.robot_info_var = tk.StringVar(value="")
-        ttk.Label(
+        self.robot_notes_label = ttk.Label(
             robot_frame,
             textvariable=self.robot_info_var,
             foreground="#a6adc8" if THEME_AVAILABLE else "#555555",
             wraplength=295,
             justify="left",
-        ).grid(row=5, column=0, sticky="ew", pady=(4, 0))
+        )
+        self.robot_notes_label.grid(row=6, column=0, sticky="ew", pady=(4, 0))
+        self.robot_notes_label.grid_remove()
+        self.robot_notes_open = False
+        def toggle_robot_notes():
+            self.robot_notes_open = not self.robot_notes_open
+            self.robot_notes_label.grid() if self.robot_notes_open else self.robot_notes_label.grid_remove()
+            self.robot_notes_button.configure(text='Hide model details ↑' if self.robot_notes_open else 'Model details & support ↓')
+        self.robot_notes_button = ttk.Button(robot_frame,text='Model details & support ↓',style='Link.TButton',command=toggle_robot_notes)
+        self.robot_notes_button.grid(row=5,column=0,sticky='w',pady=(4,0))
 
         ttk.Label(robot_frame, textvariable=self.robot_tags_var, style='Tag.TLabel', wraplength=300).grid(row=4, column=0, sticky='w', pady=(6, 0))
-        ttk.Label(controls, text="Mode").grid(row=2, column=0, sticky="w")
+        ttk.Label(controls, text="TASK", style='Section.TLabel').grid(row=2, column=0, sticky="w")
         mode_frame = ttk.Frame(controls)
         mode_frame.grid(row=3, column=0, sticky="ew", pady=(2, 12))
         for index, mode in enumerate(MODE_ORDER):
@@ -732,7 +741,7 @@ class SimulationLauncherGui(tk.Tk):
             self.mode_buttons[mode] = button
             add_tooltip(button, MODE_TOOLTIPS.get(mode, ""))
 
-        ttk.Label(controls, text="Map").grid(row=4, column=0, sticky="w")
+        ttk.Label(controls, text="WORLD", style='Section.TLabel').grid(row=4, column=0, sticky="w")
         map_frame = ttk.Frame(controls)
         map_frame.grid(row=5, column=0, sticky='ew', pady=(2, 12))
         map_frame.columnconfigure(0, weight=1)
@@ -754,7 +763,7 @@ class SimulationLauncherGui(tk.Tk):
             "Environment to load. '%s' shows the robot with no world "
             "(display mode only)." % NONE_LABEL)
 
-        ttk.Label(controls, text="Simulator").grid(row=6, column=0, sticky="w")
+        ttk.Label(controls, text="SIMULATOR", style='Section.TLabel').grid(row=6, column=0, sticky="w")
         self.simulator_combo = ttk.Combobox(
             controls,
             textvariable=self.simulator_var,
@@ -821,7 +830,7 @@ class SimulationLauncherGui(tk.Tk):
         # --- Full composition controls (R3.4): dynamic algorithm slots ---
         # The slots are rebuilt when the mode changes (see _refresh_mode_steps).
         self.composition_frame = ttk.LabelFrame(
-            algorithm_controls, text="Composition - algorithm slots", padding=(8, 6))
+            algorithm_controls, text="Algorithms for this task", padding=(8, 6))
         self.composition_frame.grid(row=13, column=0, sticky="ew", pady=(12, 6))
         self.composition_frame.columnconfigure(1, weight=1)
         self._current_mode_steps = None  # Track when mode changes
@@ -1197,26 +1206,27 @@ class SimulationLauncherGui(tk.Tk):
             wraplength=305, style='Muted.TLabel').grid(row=6, column=0, columnspan=2, sticky='w', pady=10)
         command_header = ttk.Frame(output_frame)
         command_header.grid(row=0, column=0, sticky="ew", pady=(0, 4))
-        ttk.Label(command_header, text="Run the selected experiment").grid(
+        ttk.Label(command_header, text="2 · Review & launch",style='Section.TLabel').grid(
             row=0, column=0, columnspan=4, sticky="w", pady=(0, 6))
+        ttk.Label(command_header,textvariable=self.launch_hint,wraplength=350,style='Muted.TLabel').grid(row=1,column=0,columnspan=4,sticky='ew',pady=(0,8))
         self.copy_command_button = ttk.Button(
             command_header, text="Copy command", command=self._copy_command)
-        self.copy_command_button.grid(row=1, column=1, padx=4)
+        self.copy_command_button.grid(row=2, column=1, padx=4)
         self.start_button = ttk.Button(
-            command_header, text="Run Command", command=self._start_launch,
+            command_header, text="Launch session", command=self._start_launch,
             style="Accent.TButton")
-        self.start_button.grid(row=1, column=0, sticky='w', padx=(0, 4))
+        self.start_button.grid(row=2, column=0, sticky='w', padx=(0, 4))
         self.stop_button = ttk.Button(
-            command_header, text="Stop", command=self._stop_launch,
-            state="disabled", style="Danger.TButton", width=6)
-        self.stop_button.grid(row=1, column=2, padx=(4, 0))
+            command_header, text="End session", command=self._stop_launch,
+            state="disabled", style="Danger.TButton", width=11)
+        self.stop_button.grid(row=2, column=2, padx=(4, 0))
         def fit_command_actions(event):
-            if event.width < 340:
-                self.copy_command_button.grid(row=2, column=0, columnspan=3, sticky='w', pady=(4, 0))
-                self.stop_button.grid(row=1, column=1, padx=4)
+            if event.width < 400:
+                self.copy_command_button.grid(row=3, column=0, columnspan=3, sticky='w', pady=(4, 0))
+                self.stop_button.grid(row=2, column=1, padx=4)
             else:
-                self.copy_command_button.grid(row=1, column=1, columnspan=1, sticky='w', pady=0)
-                self.stop_button.grid(row=1, column=2, padx=(4, 0))
+                self.copy_command_button.grid(row=2, column=1, columnspan=1, sticky='w', pady=0)
+                self.stop_button.grid(row=2, column=2, padx=(4, 0))
         command_header.bind('<Configure>', fit_command_actions)
         self.command_preview = scrolledtext.ScrolledText(
             output_frame, wrap="word", height=4, width=1, state="disabled")
@@ -1270,9 +1280,11 @@ class SimulationLauncherGui(tk.Tk):
                   style=status_style).grid(
             row=0, column=5, sticky="w", padx=(0, 0))
 
-        ttk.Label(status_frame, text="Ctrl+Enter launch | Ctrl+R refresh | Esc stop",
-                  style=status_style).grid(
-            row=0, column=6, sticky="e", padx=(16, 8))
+        shortcuts=ttk.Label(status_frame, text="Ctrl+K find  ·  Ctrl+Enter launch  ·  Esc end session",style=status_style)
+        shortcuts.grid(row=0,column=6,sticky='e',padx=(16,8))
+        def fit_status(event):
+            shortcuts.grid_remove() if event.width<1150 else shortcuts.grid()
+        status_frame.bind('<Configure>',fit_status)
 
         status_frame.columnconfigure(5, weight=1)
 
@@ -3192,11 +3204,11 @@ class SimulationLauncherGui(tk.Tk):
             except Exception:
                 ros2_path = None
         if ros2_path:
-            self.ros_status_var.set("OK Available")
+            self.ros_status_var.set("Tools available")
             if THEME_AVAILABLE:
                 self._ros_status_dot.configure(fg=STATUS_OK)
         else:
-            self.ros_status_var.set("X Not found")
+            self.ros_status_var.set("Tools not found")
             if THEME_AVAILABLE:
                 self._ros_status_dot.configure(fg=STATUS_ERROR)
 
@@ -3698,12 +3710,11 @@ class SimulationLauncherGui(tk.Tk):
         """Raise a workspace or a page in the Launch control column."""
         controls = {'Drive': 'Drive & limits', 'Arm': 'Arm', 'Hand': 'Hand', 'Drone': 'Drone & limits',
                     'MOLAR': 'MOLAR', 'Tracks': 'Tracks', 'Gait': 'Gait', 'Marine': 'Marine'}
-        if title in controls:
-            self.notebook.select(self.launch_tab)
-            for page in self.control_notebook.tabs():
-                if self.control_notebook.tab(page, 'text') == controls[title]:
-                    self.control_notebook.select(page)
-                    return
+        for page in self.control_notebook.tabs():
+            if self.control_notebook.tab(page, 'text') == controls.get(title, title):
+                self.notebook.select(self.launch_tab)
+                self.control_notebook.select(page)
+                return
 
         for tab_id in self.notebook.tabs():
             if self.notebook.tab(tab_id, "text") == title:

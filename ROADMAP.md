@@ -1,5 +1,7 @@
 # Robot Lab: implementation roadmap and continuation plan
 
+The GUI usability refresh delivers Home/onboarding, searchable navigation, automatic/manual sidebar collapse, contextual workspace guidance, a control-page selector and clearer launch/Stop labels. Scope is presentation/navigation: existing control callbacks, capability gates and source certificates are retained. [User guide](docs/tutorials/gui-quickstart.md).
+
 ## Native architecture learning workspace — November 2, 2026
 
 The existing Health/documentation workspace now includes source-linked interactive diagrams, guided tours, an inline tutorial/package browser, a networking playground and opt-in read-only ROS discovery. [Guide](docs/architecture/interactive-guide.md). Acceptance: usable installed native UI, valid source links and lesson topology, no automatic ROS discovery/robot commands, owned discovery cleanup, explicit designed-versus-observed labels. This documentation feature does not close robot mission tasks.

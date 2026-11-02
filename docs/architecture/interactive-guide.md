@@ -9,7 +9,7 @@ source scripts/ssd_env.sh
 ros2 run robot_lab_gui robot_lab_gui
 ```
 
-Choose **Learn & health** in the sidebar. This is the existing **Health**
+Choose **Learn & diagnose** in the sidebar. This is the existing **Health**
 workspace, expanded with **Architecture & learning**, **Tutorials & source
 library** and **Diagnostics & roadmap**. No browser, downloaded diagram engine
 or running simulator is required for the architecture lessons.

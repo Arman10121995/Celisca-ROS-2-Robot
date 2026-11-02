@@ -1,6 +1,6 @@
 # Robot Lab architecture: implementation, boundaries and source map
 
-Updated November 2, 2026. Start in the native GUI at **Learn & health →
+Updated November 2, 2026. Start in the native GUI at **Learn & diagnose →
 Architecture & learning**, inside the existing Health workspace. The
 [interactive guide](interactive-guide.md) explains clickable diagrams, guided
 walkthroughs, the source/tutorial library, vector export, networking playground

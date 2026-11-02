@@ -1,5 +1,7 @@
 # Robot Lab tutorials
 
+Start with [the GUI quick tour](gui-quickstart.md): Home, Run a robot, workspace search, controls and Stop behavior.
+
 ## Learn the whole system
 
 Start with **Learn & health → Architecture & learning** in the main GUI. [Interactive architecture guide](../architecture/interactive-guide.md) covers diagrams, tours, source browsing and the live ROS graph; [networking](../architecture/networking.md) explains discovery, QoS, frames and transport boundaries.

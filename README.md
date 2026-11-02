@@ -1,5 +1,7 @@
 # Robot Lab — Multi-Robot Simulation and Algorithm Laboratory
 
+The GUI now starts on **Home**, with purpose-based navigation, **Ctrl+K** workspace search, contextual help and a consistent dark theme. **Run a robot** guides setup → review/launch → control; all control pages are reachable through one selector. [Quick tour](docs/tutorials/gui-quickstart.md).
+
 ## Interactive architecture inside the GUI
 
 Open **Learn & health → Architecture & learning** for twelve clickable system diagrams, guided tours, source/tutorial browsing, a networking playground and opt-in live ROS discovery. [Full interactive guide](docs/architecture/interactive-guide.md). Teaching diagrams and endpoint snapshots do not change robot support claims.

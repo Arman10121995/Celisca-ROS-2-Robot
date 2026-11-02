@@ -321,6 +321,18 @@ extension_completion_20261020:
     qualification; no universal robot/map/backend support claim.
   updated: '2026-10-27'
 goal: unified_multi_robot_algorithm_lab
+gui_usability_20261102:
+  owner: codex
+  state: done
+  scope_paths: [src/robot_lab_gui/, scripts/test_tiers.sh, docs/, README.md, ROADMAP.md]
+  requested: '2026-11-02'
+  scope: Modernize shared styling/navigation and the launch workflow; add a neutral home workspace, searchable navigation, contextual guidance and clear session feedback while preserving existing control callbacks and support gates.
+  qualification: UI behavior and source checks; no transfer of robot mission certificates.
+  updated: '2026-11-02'
+  implementation: Neutral Home dashboard, thirteen workspaces grouped by purpose, Ctrl+K search with key containment, responsive sidebar, contextual help, setup/review/control layout, all nine control pages through one selector, model-note disclosure and shared theme/contrast updates.
+  verification: Eleven layout/learning/usability Tk checks passed; latest three search/control/Home checks passed; installed 1600/1024 px GUI stayed neutral and source/install hashes match. Full local fast suite hit its 300-second budget without completion; publication needs its own CI result.
+  evidence: docs/status/evidence/gui-usability-2026-11-02/README.md
+  guide: docs/tutorials/gui-quickstart.md
 architecture_explorer_20261102:
   owner: codex
   state: done

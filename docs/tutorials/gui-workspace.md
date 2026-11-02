@@ -1,8 +1,10 @@
 # Robot Lab GUI workspace
 
+The November 2 interface refresh adds **Home**, purpose-based navigation, **Ctrl+K** search, contextual help and a unified control-page selector. Read the [quick tour](gui-quickstart.md) for the current UI. Launch is labeled **Run a robot**; Health is labeled **Learn & diagnose** in the sidebar. Native workspace names and control callbacks remain available.
+
 ## Architecture, tutorials and diagnostics
 
-The existing Health workspace is labeled **Learn & health** in the sidebar. It contains **Architecture & learning**, **Tutorials & source library** and **Diagnostics & roadmap**. The native explorer offers clickable diagrams, tours, networking examples, bounded read-only ROS discovery and SVG/JSON exports. [Detailed walkthrough](../architecture/interactive-guide.md). Opening it is neutral; discovery starts only when requested.
+The existing Health workspace is labeled **Learn & diagnose** in the sidebar. It contains **Architecture & learning**, **Tutorials & source library** and **Diagnostics & roadmap**. The native explorer offers clickable diagrams, tours, networking examples, bounded read-only ROS discovery and SVG/JSON exports. [Detailed walkthrough](../architecture/interactive-guide.md). Opening it is neutral; discovery starts only when requested.
 
 Latest October 30: the amphibious rover uses Launch's Marine controls with
 wheel/thrust feedback and shore Plan/Execute. Fleet & Swarm has a compact
@@ -34,8 +36,8 @@ ros2 run robot_lab_gui robot_lab_gui
 ```
 
 Launch uses columns. Set up the experiment on the left, review its command
-and algorithms in the middle, and use **Robot controls and limits** on the
-right. Drag the control-column divider to change its width. In smaller windows,
+and algorithms in the middle, and use **Control & observe** on the
+right. Choose a page from the control selector. Model/support details can be expanded on demand. Drag the control-column divider to change its width. In smaller windows,
 **Set up / Command & algorithms** switch the left content while controls stay
 visible on the right. Panels scroll to keep limits and options accessible.
 
@@ -54,7 +56,7 @@ visible on the right. Panels scroll to keep limits and options accessible.
    modes retain their explanation. **Options** contains viewer choices,
    saved profiles and experimental policy settings.
 4. Review **Algorithms & checks**. Compatible defaults and the command update
-   from the selection. **Run Command**, **Copy command** and the preview use
+   from the selection. **Launch session**, **Copy command** and the preview use
    the same resolved arguments. **Details** shows validation and paths;
    **Launch log** shows the owned launch output.
 5. Choose a control page in the right column:

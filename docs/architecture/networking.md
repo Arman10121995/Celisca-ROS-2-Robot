@@ -2,7 +2,7 @@
 
 ## Run
 
-Open **Learn & health → Architecture & learning → Networking playground** for
+Open **Learn & diagnose → Architecture & learning → Networking playground** for
 an interactive lesson. Open **Live ROS graph** for explicit endpoint discovery
 in the GUI's actual ROS domain. Neither view changes host networking or drives
 a robot. This guide describes the current source paths; backend/profile-specific

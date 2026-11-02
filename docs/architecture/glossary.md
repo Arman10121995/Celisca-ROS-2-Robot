@@ -1,7 +1,7 @@
 # Robot Lab glossary
 
 Read this alongside the [interactive architecture guide](interactive-guide.md).
-Search this page in **Learn & health → Tutorials & source library**. The
+Search this page in **Learn & diagnose → Tutorials & source library**. The
 **Glossary** button also opens it directly from System diagrams.
 
 ## The software pieces
