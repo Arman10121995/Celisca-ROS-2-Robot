@@ -3358,9 +3358,10 @@ tasks:
           map_yaml timing, not a car failure; Isaac small_house nav ran clean); total
           distance 14.7 m forward, 2.7 m reverse.'
         next_action: '2026-11-02: final parking heading fix implemented (scripts/sim_car_course.sh
-          now passes --align-heading to enable HeadingShuffle correction). Re-run car course
-          tests to verify parking now passes 10° heading tolerance in all backends. Continue
-          obstacle missions, slalom/parking repeats, publisher-loss and final-heading
+          now passes --align-heading to enable HeadingShuffle correction). HeadingShuffle
+          implementation verified working (generates 2-arc shuffle plans for 11.6-14.3° errors).
+          Full car course verification pending due to ROS library environment constraints.
+          Continue obstacle missions, slalom/parking repeats, publisher-loss and final-heading
           verification. Prior: 2026-10-13 claude obstacle missions passed 10/12 cells;
           2026-10-16 car missions passed 32/36 with 0.1 m tolerance and 0.6 m inflation;
           2026-10-19 round 57 showed parking heading failures of 11.6-14.3° in Gazebo/PyBullet/Isaac.'
