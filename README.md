@@ -1,9 +1,11 @@
 # Robot Lab — Multi-Robot Simulation and Algorithm Laboratory
 
+Latest November 2: [automatic native fleet lift transport](docs/status/evidence/automatic-floor-transport-2026-11-02/README.md) completed one Bumperbot L0-L1-L0 with autonomous boarding, map/costmap transitions and settled exits. The GUI Facility request is implemented. A real native SDK L0-L1-L0 mission also passed in 359.063 wall seconds; actual SDK process-loss/resumption held the car and required explicit re-enablement. Broader multi-robot cases remain separate. Full platform acceptance remains partial.
+
 **Current status — November 2, 2026: the platform and extension are partial.**
 [Agent instructions for the remaining work](docs/REMAINING_WORK_GUIDE.md) give
 code locations, dependencies, implementation steps, acceptance and evidence
-requirements. Start with the [ordered roadmap queue](ROADMAP.md#current-agent-queue--october-27-2026).
+requirements. Start with the [ordered roadmap queue](ROADMAP.md#current-agent-queue--november-2-2026).
 Earlier claims that all hardware-independent work was complete are superseded.
 Unit tests, asset registration and scene loading retain their stated scope.
 
@@ -34,7 +36,7 @@ candidates; enable **experimental robot workflows** to expose their candidate
 modes and autofilled command. This does not grant new mission qualification.
 
 Remaining work includes larger aerial groups and further AUV/obstacle missions,
-automatic RMF lift-session tasks, broader multi-robot/floor-map transitions and calibrated energy,
+broader native RMF conflict/loss and multi-robot/floor-map missions, calibrated energy,
 larger fleets, terrain/slip missions for snake and articulated tracks, further
 automatic cases and the older roadmap. Broad backend/map acceptance and real
 hardware/HIL stay separate. Implement missing functionality before broad

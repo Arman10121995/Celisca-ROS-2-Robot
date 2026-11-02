@@ -1,6 +1,8 @@
 # Current Robot Lab status
 
-[Latest fleet energy/RMF continuation](fleet-continuation-2026-11-02.md): actual source-bound Bumperbot/Labbot effort/rate readback, Bumperbot authored charge/departure/feedback-loss case, exclusive floor/AMCL frame ownership and an actual native RMF physical-door/settled-dock route. Automatic multi-floor RMF missions and broader qualification remain.
+Latest November 2: [automatic native fleet lift transport](evidence/automatic-floor-transport-2026-11-02/README.md) completed one Bumperbot L0-L1-L0 with autonomous boarding, map/costmap transitions and settled exits. The GUI Facility request is implemented. A real native SDK L0-L1-L0 mission also passed in 359.063 wall seconds; actual SDK process-loss/resumption held the car and required explicit re-enablement. Broader multi-robot cases remain separate. Full platform acceptance remains partial.
+
+[Latest fleet energy/RMF continuation](fleet-continuation-2026-11-02.md): actual source-bound Bumperbot/Labbot effort/rate readback, Bumperbot authored charge/departure/feedback-loss case, exclusive floor/AMCL frame ownership and an actual native RMF physical-door/settled-dock route. The later real SDK multi-floor round-trip is measured; broader qualification remains.
 
 [Earlier native-form delivery](native-forms-2026-10-30.md): measured snake 2D/3D acquisition and saved-map navigation, surface-vessel mapping/two-goal route, AUV acquisition and real articulated flipper/Drive controls. That checkpoint had 151 profiles / 81 selectable families, with 52 worlds / 40 families. Older dated entries below retain their historical scope.
 
@@ -18,7 +20,7 @@ Platform and full extension partial.**
 | Area | Delivered / measured | Remaining |
 |---|---|---|
 | Catalog | Seven registrations restored; 152 profiles / 82 selectable families, 54 worlds / 42 families | Changed-source qualification and additional reviewed imports |
-| Fleet | Native sessions/queues/traffic/RMF/coverage; physical facility door/lift/dock, source-bound actuator energy/authored charging and native RMF door/dock route; one measured Bumperbot L0-L1-L0 ride with observed per-member floor/map switching; actual conflict and settled batch cases | Automatic RMF lift-session tasks, calibrated energy/RMF scheduling, broader conflict/loss, other robot/floor/map/backend transport, contact and larger-fleet missions |
+| Fleet | Native sessions/queues/traffic/RMF/coverage; physical facility door/lift/dock, source-bound actuator energy/authored charging and native RMF door/dock route; one measured Bumperbot L0-L1-L0 ride with observed per-member floor/map switching; actual conflict and settled batch cases | Broader SDK conflict/loss, calibrated energy/RMF scheduling, broader conflict/loss, other robot/floor/map/backend transport, contact and larger-fleet missions |
 | Aerial swarm | Native multi-FCU controls/workloads; actual nav_empty two-drone range-reference formation and operator-loss landing | Larger groups, other maps/behaviors and member-loss/contact cases |
 | Marine | Actual sensor-based map acquisition/export/protected reload/localization and completed ROV route; AUV automatic acquisition and surface-vessel mapping/two-goal arrival with actual body traces | Further AUV/localization/obstacle/current/loss missions |
 | Multi-leg | Correct source FK/contact odometry, map export/reload/Nav2; hexapod navigation result and octopod real 3D database | Per-model terrain/recovery/higher-mode/backend qualification |

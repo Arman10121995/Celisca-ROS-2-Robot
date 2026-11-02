@@ -1,0 +1,51 @@
+{
+  "boundary": "Installed source readback during actual trial before later GUI multi-goal additions; no immutable whole-build claim",
+  "files": {
+    "install/robot_lab_utils/lib/python3.10/site-packages/robot_lab_utils/fleet_controller.py": {
+      "sha256": "ac868ffb0ae494f1f973d4f75fa79ea593d6a02f4e1b16a18bb25506d9506b3f",
+      "source_matches": true
+    },
+    "install/robot_lab_utils/lib/python3.10/site-packages/robot_lab_utils/fleet_infrastructure.py": {
+      "sha256": "feebb18c8eeece961ea636a843cf05625ec3e15733fbc6e640887175ab9dc018",
+      "source_matches": true
+    },
+    "install/robot_lab_utils/lib/python3.10/site-packages/robot_lab_utils/fleet_rmf_adapter.py": {
+      "sha256": "b48710206f9227814b17ddbaed815882e22380046aec253daacf68b57fede6ad",
+      "source_matches": true
+    },
+    "install/robot_lab_utils/lib/python3.10/site-packages/robot_lab_utils/fleet_building_graph.py": {
+      "sha256": "7b8b2d2a288ac4c4d9907ff3d98750a34e3c13c532b69e1e68cbfb17fde4acab",
+      "source_matches": true
+    },
+    "install/robot_lab_utils/lib/python3.10/site-packages/robot_lab_utils/fleet_session.py": {
+      "sha256": "c4e1ae61509bebac0003120f99d902cf1eb8127178f0cb02a1fdb148dcc9c66d",
+      "source_matches": true
+    },
+    "install/robot_lab_utils/lib/python3.10/site-packages/robot_lab_utils/fleet_transport.py": {
+      "sha256": "8a47a1f48c5251b9d9a06c16307423e8cca2aea7d1703a1220a451db8d8c37d7",
+      "source_matches": true
+    },
+    "install/robot_lab_utils/lib/python3.10/site-packages/robot_lab_utils/fleet_facility_graph.py": {
+      "sha256": "6089d9961fff46d90a9a8a1bb0aa38299ba3e3b583353c72708be4c6504f9c05",
+      "source_matches": true
+    },
+    "install/robot_lab_maps/share/robot_lab_maps/maps/fleet_facility/worlds/fleet_facility.world": {
+      "sha256": "3c9bae3f75bb136656acb7eb0bfcd76d18c06b468439009bfd29e95ef634ad70"
+    },
+    "install/robot_lab_maps/share/robot_lab_maps/maps/fleet_facility/infrastructure.yaml": {
+      "sha256": "383c5d8710121d15310c12ab4799b94f2c67974f5607637bf8bd420b5010159e"
+    },
+    "install/robot_lab_maps/share/robot_lab_maps/maps/fleet_facility/maps/map.yaml": {
+      "sha256": "9066fff6a11001685da559a7957946b24c6077c0328bf8a36771bcdfc8cb5e15"
+    },
+    "install/robot_lab_maps/share/robot_lab_maps/maps/fleet_facility/maps/map.pgm": {
+      "sha256": "a7b5bc596739bc201b7619e4ed05feb987bfe4e91498e384260447b1a5526b83"
+    },
+    "install/robot_lab_maps/share/robot_lab_maps/maps/fleet_facility/maps/map_L1.yaml": {
+      "sha256": "5126da6bf112c7a2a07dca70bcaaaf598b2496273d46d7533a48c06660f92970"
+    },
+    "install/robot_lab_maps/share/robot_lab_maps/maps/fleet_facility/maps/map_L1.pgm": {
+      "sha256": "fa8f3e6d8c5a626c7a8b12ac234f0f7d2fab750c7c2a56adbdd4a87e3056c9fc"
+    }
+  }
+}

@@ -29,8 +29,21 @@ calibration. Charging is an authored pose-berth model, not connector or physical
 battery telemetry. The old global verification flag cannot qualify sources.
 RMF nominal energy costs remain disabled.
 
-Next implementation: automatic RMF lift-session graph tasks and level-aware
-mission dispatch; additional fleet conflict/loss/contact workflows; remaining
+The [automatic transport receipt](evidence/automatic-floor-transport-2026-11-02/README.md)
+adds a complete native Bumperbot L0-L1-L0 mission in 319.913 wall seconds. Facility
+controls reserve the robot/lift and execute approach, boarding, map/costmap
+transition and independently settled exit. Fixed landing gates, 3 mm leveling,
+source-matched upper occupancy and planar scan gating correct the retained
+failed cases. The optional SDK now uses the official multi-floor building parser
+and explicit control epochs. A separate real SDK Bumperbot L0-L1-L0 passed in
+359.063 wall seconds; its failed predecessor and car-height hold correction
+are retained in the same receipt. The GUI includes level-tagged destinations,
+observed floor/lease status and a two-place floor round-trip request macro.
+
+Actual SDK process suspension/resumption also passed: mid-shaft measured-target
+hold and explicit re-enable requirement, without automatic recovery.
+
+Next implementation: broader SDK conflict/contact/member-loss and robot/floor missions; additional fleet conflict/loss/contact workflows; remaining
 marine saved-map/obstacle/current workflows and per-model terrain/recovery,
 then the original car/perception/manipulation/policy/comparison/release queue.
 The aerial R10.3 owner is unchanged. Broader robot/map/backend acceptance,

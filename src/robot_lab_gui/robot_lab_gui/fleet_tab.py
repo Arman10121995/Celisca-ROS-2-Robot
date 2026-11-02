@@ -43,6 +43,8 @@ class FleetTab(ttk.Frame):
         self.publishers = {}
         self.rmf_pub = None
         self.rmf_owned = False
+        self.rmf_runtime = None
+        self.rmf_at = -math.inf
         self.runtime = None
         self.runtime_at = -math.inf
         self.last_heartbeat = self.last_drive = 0.
@@ -185,6 +187,10 @@ class FleetTab(ttk.Frame):
         ttk.Button(rmf_frame, text='RMF patrol goal', command=self._rmf_patrol).grid(row=0, column=1, sticky='ew')
         ttk.Button(rmf_frame, text='Give RMF control', command=lambda: self._rmf_control(True)).grid(row=1, column=0, sticky='ew')
         ttk.Button(rmf_frame, text='Take GUI control', command=lambda: self._rmf_control(False)).grid(row=1, column=1, sticky='ew')
+        ttk.Button(rmf_frame, text='RMF floor round-trip', command=self._rmf_floor_roundtrip).grid(row=2, column=0, columnspan=2, sticky='ew')
+        self.rmf_feedback = tk.StringVar(value='SDK feedback unavailable; connect does not give RMF control.')
+        ttk.Label(rmf_frame, textvariable=self.rmf_feedback, wraplength=420,
+                  justify='left').grid(row=3, column=0, columnspan=2, sticky='ew', pady=3)
         rmf_frame.columnconfigure(0, weight=1)
         rmf_frame.columnconfigure(1, weight=1)
         swarm_frame = ttk.LabelFrame(swarm_page, text='Ground swarm · experimental', padding=5)
@@ -517,10 +523,16 @@ class FleetTab(ttk.Frame):
             data = json.loads(msg.data)
             if not self.runtime or data['session_id'] != self.runtime['session_id']:
                 return
-            choices = [f"{v['name']} ({v['x']:.1f}, {v['y']:.1f})" for v in data.get('waypoints', [])]
+            self.rmf_runtime, self.rmf_at = data, time.monotonic()
+            choices = [f"{v['name']} {v.get('floor', '')} ({v['x']:.1f}, {v['y']:.1f})" for v in data.get('waypoints', []) if v.get('selectable', True)]
             self.rmf_waypoint_combo.configure(values=choices)
             if self.rmf_waypoint.get() not in choices and choices:
                 self.rmf_waypoint.set(choices[0])
+            floors = ', '.join(name + ': ' + floor for name, floor in data.get('robot_floors', {}).items())
+            self.rmf_feedback.set(('SDK control enabled' if data.get('enabled') else
+                'SDK control disabled; give control explicitly to start a task') +
+                ('\nObserved floors — ' + floors if floors else '') +
+                '\nLift/session readiness is shown in Facility; Stop/loss requires re-enablement.')
         except (ValueError, KeyError, TypeError):
             return
 
@@ -541,6 +553,24 @@ class FleetTab(ttk.Frame):
             return
         self.rmf_pub.publish(String(data=json.dumps(dict(session_id=self.runtime['session_id'],
             op='patrol', robot=ids[0], waypoint=self.rmf_waypoint.get().split(' ')[0]))))
+
+    def _rmf_floor_roundtrip(self):
+        ids = self._ids()
+        state = self.rmf_runtime or {}
+        if (not self.runtime or not self.rmf_pub or not self.rmf_owned or len(ids) != 1
+                or time.monotonic() - self.rmf_at > 1. or not state.get('enabled')):
+            self.status.set('Give RMF control and select one member with fresh SDK feedback')
+            return
+        origin = state.get('robot_floors', {}).get(ids[0])
+        levels = state.get('levels', [])
+        names = {v['name'] for v in state.get('waypoints', []) if v.get('selectable', True)}
+        if origin not in levels or len(levels) != 2 or any(level + '_landing' not in names for level in levels):
+            self.status.set('Floor round-trip needs a declared two-floor lift graph and an observed origin floor')
+            return
+        destination = next(level for level in levels if level != origin)
+        self.rmf_pub.publish(String(data=json.dumps(dict(session_id=self.runtime['session_id'],
+            op='patrol', robot=ids[0], waypoints=[destination + '_landing', origin + '_landing']))))
+        self.status.set('SDK floor round-trip requested; watch Facility for physical progress')
 
     def _can_keys(self):
         return (self.keyboard.get() and self.notebook.select() == str(self) and self.armed

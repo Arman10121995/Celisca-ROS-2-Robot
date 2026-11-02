@@ -43,6 +43,13 @@ def yaw(q):
     return math.atan2(2 * (q.w * q.z + q.x * q.y), 1 - 2 * (q.y * q.y + q.z * q.z))
 
 
+def contact_state(member, now):
+    observed = math.isfinite(member.contact_at)
+    return dict(peer=member.contact_peer, at=member.contact_at if observed else None,
+                margin_m=member.contact_margin,
+                active=observed and now - member.contact_at < 2.)
+
+
 @dataclass
 class Member:
     config: dict
@@ -1055,9 +1062,7 @@ class FleetController(Node):
                     settled_spawn_recorded=member.spawn_pose is not None,
                     reset_pose=[member.spawn_pose.position.x,member.spawn_pose.position.y,yaw(member.spawn_pose.orientation)] if member.spawn_pose else None,
                     radius_m=member.config['radius'],battery=None,charging=None,
-                    contact=dict(peer=member.contact_peer, at=member.contact_at,
-                                 margin_m=member.contact_margin,
-                                 active=member.contact_at > -math.inf and now - member.contact_at < 2.)))
+                    contact=contact_state(member, now)))
             data = dict(schema_version=1, session_id=self.session_id, map=self.session['map'], backend='gazebo',
                         navigation=self.session['navigation'], directory=self.session['directory'],
                         sim_time=self.last_clock, clock_age=round(now - self.clock_at, 3) if math.isfinite(self.clock_at) else None,

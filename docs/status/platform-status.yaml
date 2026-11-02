@@ -1,6 +1,8 @@
 assessment: Partial multi-robot lab with real scoped fleet, aerial, marine, gait, amphibious and original robot
   missions. Observation-bound motor load/authored berth charging, distinct floor/AMCL frames and RMF door/dock
-  events are delivered. Automatic RMF lift missions and wider extension/original roadmap acceptance remain;
+  events and one autonomous native L0-L1-L0 transport are delivered. Native SDK multi-floor graph/control epochs
+  are implemented. One actual SDK round-trip and active ownership-loss hold pass; wider extension/original
+  roadmap acceptance remains;
   tests/counts do not qualify missions.
 audit_revision: dff388f
 baseline:
@@ -321,7 +323,7 @@ extension_completion_20261020:
 goal: unified_multi_robot_algorithm_lab
 handoff:
   audit: docs/status/audit-2026-10-02.md
-  next_action: Continue automatic RMF lift-session graphs and level-aware mission dispatch, fleet conflict/loss
+  next_action: Continue broader SDK multi-robot conflict/contact/loss and other robot/floor missions, then aerial/marine/terrain
     and remaining marine/terrain workflows before the older roadmap. Preserve observed floor gates, exclusive
     AMCL ownership, source-bound energy and pinned serializer correction. ROS imports and native fleet missions
     work with the system Python/SSD environment; do not treat the old GLIBCXX report as a global blocker.
@@ -1349,8 +1351,9 @@ tasks:
       R10.2:
         acceptance_ref: ROADMAP.md R10.2
         active_scope: Physical facility and observed floor-map transitions; source/runtime-bound energy; separate
-          floor/AMCL frames; actual main-door RMF crossing and independently settled docking. Automatic RMF lift-session
-          tasks remain.
+          floor/AMCL frames; actual main-door RMF crossing and independently settled docking. Native autonomous
+          L0-L1-L0 transport and a real SDK round-trip/active ownership-loss hold are measured; official SDK
+          multi-floor parser/control epochs and neutral GUI round-trip requests are implemented.
         depends_on:
         - R10.1
         evidence:
@@ -1361,25 +1364,29 @@ tasks:
         - docs/status/evidence/fleet-floor-map-transition-2026-11-02/README.md
         - docs/status/evidence/motor-power-implementation-2026-11-02.md
         - docs/status/evidence/fleet-energy-2026-11-02/README.md
+        - docs/status/evidence/automatic-floor-transport-2026-11-02/README.md
         implementation_state: Complete actuator joint validation, simulated-time energy integration, source/runtime
           certificates, loss-unknown SOC, fresh settled pose-berth charging; source-declared clearance-tested RMF
-          door/dock lanes and official door supervisor; scoped native serializer correction.
+          door/dock lanes and official supervisors; scoped native serializer correction; native automatic transport,
+          fixed landing gates, 3 mm leveling, floor-map costmap acknowledgments and AMCL scan gating. Official
+          SDK building parser supplies real multi-floor lift sessions; explicit epochs latch Stop/loss.
         owner: codex
         state: partial
         title: Fleet management and Open-RMF mission adapters
         validation_state: Native Bumperbot/Labbot readback with actual 0.232 m motion; Bumperbot authored charge/departure/discharge
-          and actual broadcaster loss/resumption; one native RMF door/dock case. Earlier L0-L1-L0 body/map result
-          retained. No calibrated charger/chemistry, complete multi-floor RMF or multi-robot acceptance.
+          and actual broadcaster loss/resumption; one native RMF door/dock case; autonomous native Bumperbot
+          L0-L1-L0 in 319.913 wall seconds and real SDK round-trip in 359.063 seconds with independently settled exits;
+          actual SDK suspension/resumption holds the car and stays disabled until explicit re-enable. Earlier body/map results retained. No calibrated charger/chemistry, broader multi-floor RMF or multi-robot acceptance.
         qualification_review: '2026-10-27 documentation review: retain the implemented code, tests and named mission
           certificates. Full declared roadmap acceptance is still open; test counts, metadata and scene loads do
           not qualify remaining robot/map/backend missions. See docs/REMAINING_WORK_GUIDE.md.'
         previous_owner: cline-agent
         claimed: '2026-10-27'
-        current_run: /workspace/molar/robot_lab_runtime/fleet-floor-map-live-oWr3d4/mission
-        current_scope: Preserve actual joint/body observations and the measured single-robot floor transition; continue
-          motor-power/charging and broader fleet/RMF acceptance.
+        current_run: /workspace/molar/robot_lab_runtime/completion-20261102-QUo52j/rmf-lift-hold
+        current_scope: Preserve measured native/SDK single-member floor transport, source-bound motor power,
+          authored charging and actual SDK process-loss hold; continue broader fleet/RMF acceptance.
         reclaimed: '2026-11-02'
-        next_action: Automatic lift-session graph tasks and floor-aware route dispatch; conflict/loss/contact and
+        next_action: Broader SDK conflict/loss/contact and
           additional robot/floor/map/backend missions; calibrated energy/RMF scheduling separately.
         historical_unqualified_notes:
         - Implementation complete with contract tests and GUI diagnostics passing
@@ -4774,9 +4781,9 @@ project_completion_20261027:
   owner: codex
   state: active
   updated: '2026-11-02'
-  current_scope: Preserve measured single-robot floor transport, source-bound authored energy and native RMF door/dock; continue
-    automatic RMF lift-session graphs, broader conflict/loss and additional robot/floor/backend missions, then
-    remaining adapters and the older roadmap. Preserve aerial R10.3 ownership.
+  current_scope: Preserve automatic native transport, real SDK floor round-trip/ownership-loss hold, source-bound
+    authored energy and native RMF door/dock; continue broader conflict/contact/loss and other robot/floor/backend
+    missions, then aerial/marine/terrain and the older roadmap. The user confirms no other agent is active.
   requested: '2026-10-27'
   baseline_revision: 9664c37a820cb54a6c6d1eecfb0ff580ede6f3af
   run_directory: /workspace/molar/robot_lab_runtime/project-completion-20261027-vne3n358
@@ -4902,7 +4909,7 @@ amphibious_infrastructure_20261030:
 
 completion_continuation_20261102:
   owner: codex
-  state: active
+  state: partial
   baseline_revision: 375143ff
   scope_paths:
   - .github/
@@ -4916,32 +4923,35 @@ completion_continuation_20261102:
   - docs/
   - README.md
   - ROADMAP.md
-  current_scope: Implement native automatic lift approach, boarding, observed floor/map transition and exit with robot/lift reservations, neutral GUI request, Stop/loss and bounded actual feedback.
+  current_scope: Native automatic transport, real SDK lift sessions and active ownership-loss handling are delivered with scoped measurements; continue broader robot/floor/conflict missions and remaining extension workflows.
   qualification: Initial implementation and focused diagnostics; no universal mission acceptance.
   updated: '2026-11-02'
   implementation_state: Delivered observation-bound modeled energy, exclusive floor/AMCL transforms, clearance-tested
-    RMF door/dock graph events and pinned process-scoped upstream graph serializer correction.
+    RMF door/dock events, pinned process-scoped serializer fix, automatic native transport, official SDK
+    multi-floor sessions, commanded-height hold, explicit lease epochs and GUI controls/status.
   inventory:
     robot_profiles: 152
     selectable_robot_families: 82
     worlds: 54
     world_families: 42
-  receipt: docs/status/evidence/fleet-energy-2026-11-02/README.md
+  receipt: docs/status/evidence/automatic-floor-transport-2026-11-02/README.md
   measured_cases:
   - bumperbot_labbot_actual_effort_and_body_motion
   - bumperbot_authored_charge_departure_and_feedback_loss
   - native_rmf_physical_door_and_settled_dock
   - repeated_l0_l1_l0_with_exclusive_floor_amcl_frames
+  - autonomous_native_bumperbot_l0_l1_l0_319_913_wall_seconds
+  - real_sdk_bumperbot_l0_l1_l0_359_063_wall_seconds
+  - actual_sdk_process_loss_resume_holds_car_requires_explicit_reenable
   remaining:
-  - automatic_rmf_lift_session_graph_tasks
   - multi_robot_conflict_loss_contact_and_other_floor_missions
   - remaining_aerial_marine_terrain_and_old_roadmap_acceptance
 
 ci_onnxruntime_20261102:
   owner: codex
-  state: partial
-  source_revision: 61ddab2cd1162528a03ba2b45fda294a4823d159
+  state: done
+  source_revision: d064eecef72d9a66bb8b033b2a288be3c03ea5f1
   scope_paths: [.github/workflows/, src/robot_lab_adapter/test/test_r5_2_legged_policy.py, docs/status/]
   implementation: Both CI workflows pin onnxruntime 1.23.2 and NumPy 1.24.4, preserving the Humble apt extension ABI; original tests and gates remain.
-  verification: Published 4468119e passes build and fast tier (1132 passed, 40 skipped, 4 deselected); physics exposes missing optional Jetson cache path. Source fix preserves original geometry on a missing mount; next publication needs its own complete result.
+  verification: Published d064eece passes required CI run 41479322708, including build, fast (1132 passed, 40 skipped, 4 deselected), physics (65 passed), integration (177 passed, 16 skipped) and registry validation. Later source needs its own remote result.
   evidence: docs/status/evidence/ci-onnxruntime-2026-11-02.md

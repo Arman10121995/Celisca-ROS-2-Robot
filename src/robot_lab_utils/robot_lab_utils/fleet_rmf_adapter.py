@@ -30,7 +30,8 @@ import rmf_adapter.plan as plan
 import rmf_adapter.vehicletraits as traits
 
 from robot_lab_utils.fleet_missions import rmf_navigation_graph
-from robot_lab_utils.fleet_facility_graph import facility_graph, install_lanes, lift_session_graph
+from robot_lab_utils.fleet_facility_graph import facility_graph, install_lanes
+from robot_lab_utils.fleet_building_graph import building_graph
 from robot_lab_utils.fleet_session import SpawnGrid
 
 
@@ -89,12 +90,15 @@ class Robot(adpt.RobotCommandHandle):
         # Humble's update_position binding takes Start sets. Use tight merge
         # bounds and retain actual XY on lanes; a one-metre waypoint snap can
         # place two distinct bodies on the same holding node.
-        starts = plan.compute_plan_starts(self.owner.graph, self.owner.session['map'], p,
+        current_map = self.owner.map_for(self.name)
+        if current_map is None:
+            return
+        starts = plan.compute_plan_starts(self.owner.graph, current_map, p,
                                          self.owner.adapter.now(), .15, .35)
         if starts:
             self.update.update_position(starts)
         else:
-            self.update.update_lost_position(self.owner.session['map'], np.array(p), .15, .35)
+            self.update.update_lost_position(current_map, np.array(p), .15, .35)
         with self.lock:
             request = self.request
             if request is None or request['failed']:
@@ -135,6 +139,11 @@ class RmfBridge(Node):
         super().__init__('robot_lab_rmf_bridge')
         self.session, self.adapter, self.graph, self.fleet = session, adapter, nav_graph, fleet
         self.vertices = vertices
+        self.level_graph = any('floor' in vertex for vertex in vertices)
+        self.robot_floors = {}
+        self.floor_at = -math.inf
+        self.authorization_epoch = ''
+        self.enabled_at = 0.
         self.operator = 'rmf-' + uuid.uuid4().hex
         self.enabled = False
         self.traffic_requested = False
@@ -148,13 +157,23 @@ class RmfBridge(Node):
         self.infrastructure_command=self.create_publisher(String,'/fleet/infrastructure/command',10)
         self.create_subscription(String,'/fleet/infrastructure/state',self.observe_infrastructure,10)
         self.create_subscription(String, '/fleet/state', self.observe, 10)
+        self.create_subscription(String, '/fleet/command', self.stop_notice, 10)
         self.create_subscription(String, '/fleet/rmf/control', self.control, 10)
         self.create_timer(.2, self.tick)
 
     def observe_infrastructure(self,msg):
         try:
             state=json.loads(msg.data)
+            if not isinstance(state, dict):return
             if state.get('session_id')!=Path(self.session['directory']).name or not state.get('ready'):return
+            stopped_at=state.get('rmf_stopped_at')
+            if self.enabled and isinstance(stopped_at,(int,float)) and self.enabled_at<=stopped_at:
+                self.send(dict(op='all_stop',targets=[]))
+                self.enabled=False
+                for robot in self.robots.values():robot.stop()
+                self.get_logger().warning('Facility Stop/loss invalidated RMF ownership; explicit Give RMF control is required')
+            self.robot_floors = state.get('robot_floors', {})
+            self.floor_at = time.monotonic()
             for name,robot in self.robots.items():
                 callback=None
                 with robot.lock:
@@ -164,6 +183,24 @@ class RmfBridge(Node):
                 if callback:callback() # Actual independent body settling, never a sent goal or nominal dock flag.
         except (ValueError,KeyError,TypeError):return
 
+    def map_for(self, name):
+        if not self.level_graph:
+            return self.session['map']
+        if time.monotonic() - self.floor_at > 1.:
+            return None
+        floor = self.robot_floors.get(name)
+        return floor if floor in {v['floor'] for v in self.vertices} else None
+
+    def stop_notice(self, msg):
+        try:
+            data=json.loads(msg.data)
+            if not isinstance(data, dict):return
+            if data.get('session_id') == Path(self.session['directory']).name and data.get('op') == 'all_stop':
+                self.enabled = False
+                for robot in self.robots.values():
+                    robot.stop()
+        except (ValueError, KeyError, TypeError):pass
+
     def send(self, command):
         self.command.publish(String(data=json.dumps(dict(session_id=Path(self.session['directory']).name,
             operator_id=self.operator, **command), allow_nan=False)))
@@ -171,10 +208,13 @@ class RmfBridge(Node):
     def control(self, msg):
         try:
             data = json.loads(msg.data)
+            if not isinstance(data, dict):return
             if data.get('session_id') != Path(self.session['directory']).name:
                 return
             if data['op'] == 'enable':
                 self.enabled = True
+                self.authorization_epoch = uuid.uuid4().hex
+                self.enabled_at = time.monotonic()
                 self.traffic_requested = False
             elif data['op'] == 'disable':
                 self.send(dict(op='all_stop', targets=[]))
@@ -184,13 +224,15 @@ class RmfBridge(Node):
             elif data['op'] == 'patrol':
                 if not self.enabled or data['robot'] not in self.robots:
                     raise ValueError('Enable RMF and select an initialized robot')
-                target = data['waypoint']
-                if target not in {v['name'] for v in self.vertices}:
-                    raise ValueError('Choose a waypoint from the actual generated graph')
+                targets = data['waypoints'] if 'waypoints' in data else [data['waypoint']]
+                selectable = {v['name'] for v in self.vertices if v.get('selectable', True)}
+                if (not isinstance(targets, list) or not 1 <= len(targets) <= 16
+                        or any(not isinstance(target, str) or target not in selectable for target in targets)):
+                    raise ValueError('Choose 1–16 destinations from the actual generated graph')
                 robot = self.robots[data['robot']]
                 if not robot.update:
                     raise ValueError('Robot RMF update handle is not ready')
-                robot.update.submit_direct_request(dict(category='patrol', description=dict(places=[target], rounds=1)),
+                robot.update.submit_direct_request(dict(category='patrol', description=dict(places=targets, rounds=1)),
                     'gui-' + uuid.uuid4().hex, lambda response: self.get_logger().info('RMF task response: ' + json.dumps(response)))
         except (ValueError, KeyError, TypeError) as exc:
             self.get_logger().warning('RMF request rejected: ' + str(exc))
@@ -204,7 +246,10 @@ class RmfBridge(Node):
             for row in state['members']:
                 if row['id'] not in self.robots and row.get('ready') and row.get('estimate'):
                     p = [row['estimate'][k] for k in ('x', 'y', 'yaw')]
-                    starts = plan.compute_plan_starts(self.graph, self.session['map'], p, self.adapter.now(), .15, .35)
+                    current_map = self.map_for(row['id'])
+                    if current_map is None:
+                        continue
+                    starts = plan.compute_plan_starts(self.graph, current_map, p, self.adapter.now(), .15, .35)
                     if not starts:
                         continue
                     robot = Robot(self, row['id'])
@@ -255,6 +300,8 @@ class RmfBridge(Node):
             session_id=Path(self.session['directory']).name, operator_id=self.operator,
             robots=list(self.robots), waypoints=self.vertices, routes=routes, battery=None,
             infrastructure=bool(self.session.get('infrastructure_file')),
+            robot_floors=self.robot_floors, levels=sorted({v['floor'] for v in self.vertices if 'floor' in v}),
+            authorization_epoch=self.authorization_epoch, enabled_at=self.enabled_at,
             scope='Actual Open-RMF adapter; declared facility adds physical door/lift protocol and independently observed docking; energy accounting disabled; mission qualification separate'), allow_nan=False)))
 
 
@@ -266,34 +313,42 @@ def main(args=None):
     parser.add_argument('--session', required=True)
     options = parser.parse_args(rclpy.utilities.remove_ros_args()[1:])
     session = json.loads(Path(options.session).read_text())
+    radius = max(m['radius'] for m in session['members'])
+    profile = traits.Profile(geometry.make_final_convex_circle(radius), geometry.make_final_convex_circle(radius + .15))
+    vehicle = traits.VehicleTraits(traits.Limits(.25, .3), traits.Limits(.6, .8), profile)
     occupancy = SpawnGrid(session['map_yaml'])
-    data = rmf_navigation_graph(occupancy, session['members'])
-    if session.get('infrastructure_file'):
-        import yaml
-        infra_config = yaml.safe_load(Path(session['infrastructure_file']).read_text())
-        data = facility_graph(data, occupancy, session['members'], infra_config)
-        data = lift_session_graph(data, occupancy, session['members'], infra_config)
+    import yaml
+    infra_config = yaml.safe_load(Path(session['infrastructure_file']).read_text()) if session.get('infrastructure_file') else {}
+    building = None
+    if session.get('floor_maps') and infra_config.get('transport'):
+        building, vertices = building_graph(session, infra_config)
+        building_file = Path(session['directory']) / 'rmf-building.yaml'
+        building_file.write_text(yaml.safe_dump(building, sort_keys=False))
+        data = dict(vertices=vertices, levels=building['levels'], native_parser=True,
+                    scope='Clearance-derived native RMF building graph with real lift-session events; mission scope is separate')
+    else:
+        data = rmf_navigation_graph(occupancy, session['members'])
+        if infra_config:
+            data = facility_graph(data, occupancy, session['members'], infra_config)
     (Path(session['directory']) / 'rmf-graph.json').write_text(json.dumps(data, indent=2) + '\n')
     adpt.init_rclcpp()
     adapter = adpt.Adapter.make('robot_lab_rmf_adapter')
     if not adapter:
         raise RuntimeError('Open-RMF schedule must be running before the fleet adapter')
     adapter.node.use_sim_time()
-    graph_value = graph.Graph()
-    for v in data['vertices']:
-        wp = graph_value.add_waypoint(session['map'], np.array([v['x'], v['y']]))
-        wp.holding_point = v.get('holding', True)
-        # Humble requires a charger graph anchor even with energy accounting
-        # disabled. This is a LOGICAL API holding anchor, not a charger or a
-        # claim of charging physics. Declared docks use actual callback events;
-        # RMF automatic charge scheduling stays disabled.
-        if v.get('dock') or (not any(x.get('dock') for x in data['vertices']) and v['name'] == 'p0'):
-            wp.charger = True
-        graph_value.add_key(v['name'], wp.index)
-    install_lanes(graph_value, data, graph.lane)
-    radius = max(m['radius'] for m in session['members'])
-    profile = traits.Profile(geometry.make_final_convex_circle(radius), geometry.make_final_convex_circle(radius + .15))
-    vehicle = traits.VehicleTraits(traits.Limits(.25, .3), traits.Limits(.6, .8), profile)
+    if building is not None:
+        graph_value = graph.parse_graph(str(building_file), vehicle)
+        for vertex in data['vertices']:
+            vertex['graph_index'] = graph_value.find_waypoint(vertex['name']).index
+    else:
+        graph_value = graph.Graph()
+        for v in data['vertices']:
+            wp = graph_value.add_waypoint(session['map'], np.array([v['x'], v['y']]))
+            wp.holding_point = v.get('holding', True)
+            if v.get('dock') or (not any(x.get('dock') for x in data['vertices']) and v['name'] == 'p0'):
+                wp.charger = True
+            graph_value.add_key(v['name'], wp.index)
+        install_lanes(graph_value, data, graph.lane)
     adapter.start()
     fleet = adapter.add_fleet('robot_lab', vehicle, graph_value)
     # Required RMF API cost objects are nominal and explicitly unused for

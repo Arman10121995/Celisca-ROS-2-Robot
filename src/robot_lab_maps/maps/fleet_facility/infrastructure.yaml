@@ -24,6 +24,28 @@ doors:
     - -1.3
     - 3.5
     z_joint: lift_car
+  landing_L0:
+    joint: landing_L0
+    closed: 0.0
+    opened: 2.15
+    sweep:
+    - 2.6
+    - 3.1
+    - -1.3
+    - 3.5
+    base_z: 0.0
+    landing_floor: L0
+  landing_L1:
+    joint: landing_L1
+    closed: 0.0
+    opened: 2.15
+    sweep:
+    - 2.6
+    - 3.1
+    - -1.3
+    - 3.5
+    base_z: 3.0
+    landing_floor: L1
 lift:
   name: facility_lift
   joint: lift_car
@@ -50,7 +72,7 @@ energy:
   hotel_W: 3.0
   drive_efficiency: 0.75
   charge_W: 120.0
-  effort_observation_verified: true
+  effort_observation_verified: false
   effort_sources:
     bumperbot:
       source_description_sha256: 721fe2146a80864e5f7e39108117aeb409cc926668997551a92e12276a8324a5

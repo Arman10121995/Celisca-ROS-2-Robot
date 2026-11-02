@@ -19,7 +19,7 @@ from rclpy.node import Node
 from rclpy.clock import Clock,ClockType
 from rclpy.qos import qos_profile_sensor_data
 from rclpy.executors import ExternalShutdownException
-from sensor_msgs.msg import JointState
+from sensor_msgs.msg import JointState, LaserScan
 from nav_msgs.msg import Odometry,Path as NavPath
 from std_msgs.msg import String,Float64
 from geometry_msgs.msg import TransformStamped
@@ -66,6 +66,13 @@ class Infrastructure(Node):
             name=m['id'];self.create_subscription(Odometry,'/'+name+'/odom/ground_truth',lambda msg,n=name:self.body(n,msg),qos_profile_sensor_data)
             self.create_subscription(JointState,'/'+name+'/joint_states',lambda msg,n=name:self.motor(n,msg),10)
             self.create_subscription(NavPath,'/'+name+'/plan',lambda msg,n=name:self.path(n,msg),10)
+        self.localization_scans = {}
+        self.localization_scan_after = {}
+        for member in session['members']:
+            if member.get('localization_scan'):
+                name = member['id']
+                self.localization_scans[name] = self.create_publisher(LaserScan, member['localization_scan'], 10)
+                self.create_subscription(LaserScan, '/' + name + '/scan', lambda msg,n=name:self._relay_scan(n,msg), qos_profile_sensor_data)
         self.robot_floor_maps={m['id']:m.get('floor_maps',self.floor_maps) for m in session['members']}
         self.active_robot_maps={m['id']:m.get('map_yaml','') for m in session['members']}
         self.map_clients={m['id']:self.create_client(LoadMap,'/'+m['id']+'/map_server/load_map')
@@ -74,19 +81,26 @@ class Infrastructure(Node):
         self.map_clear_wait = {}
         self.map_clear_futures = {}
         self.map_futures={};self.map_transitions=set();self.map_errors={};self.map_status={};self.map_attempt_at={}
+        self.rmf_control = {}
+        self.rmf_control_at = -math.inf
+        self.rmf_stopped_at = -math.inf
+        self.rmf_active = False
+        self.create_subscription(String, '/fleet/rmf/state', self.observe_rmf_control, 10)
         self.rmf=False
         try:
             from rmf_door_msgs.msg import DoorRequest,DoorState
             from rmf_lift_msgs.msg import LiftRequest,LiftState
             self.door_state=self.create_publisher(DoorState,'/door_states',10);self.lift_state=self.create_publisher(LiftState,'/lift_states',10)
-            self.create_subscription(DoorRequest,'/door_requests',self.door_request,10)
-            self.create_subscription(LiftRequest,'/lift_requests',self.request_lift,10);self.rmf=True
+            self.create_subscription(DoorRequest,'/door_requests',self.rmf_door_request,10)
+            self.create_subscription(LiftRequest,'/lift_requests',self.rmf_lift_request,10);self.rmf=True
         except ImportError:pass
         self.create_timer(.1,self.tick,clock=Clock(clock_type=ClockType.STEADY_TIME))
 
     def observe_clock(self,msg):
         value=msg.clock.sec+msg.clock.nanosec*1e-9
         if self.clock is not None and value<self.clock:
+            self.rmf_stopped_at = time.monotonic()
+            self.rmf_active = False
             self.doors={n:False for n in self.doors};self.outputs={n:self.positions[n] for n in self.targets if n in self.positions};self.lift_request=None;self.lift_owner='';self.bodies.clear();self.paths.clear();self.docking.clear()
             self._cancel_transports('Simulation clock reset')
             self.hold=True;self.outputs={};self.positions={};self.joint_stamp=None;self.rates={};self.joint_at=-math.inf
@@ -135,6 +149,34 @@ class Infrastructure(Node):
             if position is None or abs(rate)>=.01 or abs(position-floors[floor])>=self.config['lift'].get('level_tolerance_m',.03):return
         self.energy[name]['floor']=floor
 
+    def localization_scan_enabled(self, name):
+        now = time.monotonic()
+        body = self.bodies.get(name)
+        if not body or now - body['at'] >= .6 or now - self.clock_at >= .6:
+            return False
+        floor = self.energy[name]['floor']
+        if name in self.map_transitions or self.active_robot_maps.get(name) != self.robot_floor_maps[name].get(floor):
+            return False
+        # A planar map observation model is invalid while the physical sensor
+        # traverses floors. Keep the existing AMCL/wheel XY prior; never replace
+        # it with body truth. Raw obstacle/Drive scans remain on the original topic.
+        x, y, _ = body['xyz']
+        if 2.8 <= x <= 5.2 and -1.2 <= y <= 1.2:
+            lift = self.config['lift']
+            position = self.positions.get(lift['joint'])
+            if (position is None or abs(self.rates.get(lift['joint'], math.inf)) >= .01
+                    or abs(position - lift['floors'][floor]) >= lift.get('level_tolerance_m', .03)
+                    or self.lift_request and self.lift_request[0] != floor):
+                return False
+        return True
+
+    def _relay_scan(self, name, msg):
+        stamp = msg.header.stamp.sec + msg.header.stamp.nanosec * 1e-9
+        if (msg.header.frame_id == name + '/laser_link' and self.clock is not None
+                and -1.5 <= stamp - self.clock <= .2
+                and stamp >= self.localization_scan_after.get(name, -math.inf) and self.localization_scan_enabled(name)):
+            self.localization_scans[name].publish(msg)
+
     def _request_robot_map(self,name,floor,now):
         target=self.robot_floor_maps.get(name,{}).get(floor,'')
         if not target or name not in self.map_clients:return
@@ -143,6 +185,8 @@ class Infrastructure(Node):
             self._clear_costmaps(name)
             return
         if self.active_robot_maps.get(name)==target:
+            if name in self.map_transitions:
+                self.localization_scan_after[name] = self.clock if self.clock is not None else 0.
             self.map_transitions.discard(name);self.map_errors.pop(name,None);self.map_status[name]='ready'
             return
         self.map_transitions.add(name)
@@ -263,15 +307,56 @@ class Infrastructure(Node):
             context = dict(fresh=bool(valid), operator_fresh=bool(operator), body=body, member=member,
                 floor=self.energy[name]['floor'], clock=self.clock,
                 history=(self.runtime or {}).get('task_history', []), car_floor=current_floor,
-                door_open=door_rows.get(self.config['lift']['door'], {}).get('mode') == 2,
+                door_open=all(door_rows.get(name, {}).get('mode')==2 for name,door in self.config['doors'].items() if name==self.config['lift']['door'] or door.get('landing_floor')==current_floor),
                 map_ready=name not in self.map_transitions and self.map_status.get(name) == 'ready')
             self._transport_actions(task, task.tick(context, now))
 
     def safe_sweep(self,door):
         now=time.monotonic();x0,x1,y0,y1=door['sweep']
         if set(self.bodies)!=set(self.energy) or any(now-b['at']>.6 for b in self.bodies.values()):return False
-        base=self.positions.get(door.get('z_joint'),0.)
+        base=self.positions.get(door.get('z_joint'),door.get('base_z',0.))
         return not any(x0<=b['xyz'][0]<=x1 and y0<=b['xyz'][1]<=y1 and base-.2<=b['xyz'][2]<base+2.5 for b in self.bodies.values())
+
+    def observe_rmf_control(self, msg):
+        try:
+            data=json.loads(msg.data)
+            if isinstance(data,dict) and data.get('session_id')==self.identity:
+                self.rmf_control=data
+                self.rmf_control_at=time.monotonic()
+        except (ValueError,KeyError,TypeError):pass
+
+    def rmf_authorized(self):
+        now=time.monotonic()
+        state=getattr(self,'rmf_control',{})
+        enabled_at=state.get('enabled_at')
+        epoch=state.get('authorization_epoch')
+        return bool(self.runtime and state.get('enabled') is True
+            and isinstance(enabled_at,(int,float)) and math.isfinite(enabled_at)
+            and getattr(self,'rmf_stopped_at',-math.inf)<enabled_at<=now
+            and isinstance(epoch,str) and 1<=len(epoch)<=80
+            and now-getattr(self,'rmf_control_at',-math.inf)<1.
+            and now-self.runtime_at<1. and self.runtime.get('operator_fresh') is True
+            and state.get('operator_id')==self.runtime.get('operator_id')
+            and now-self.clock_at<.6 and now-self.joint_at<.6)
+
+    def _begin_rmf_control(self):
+        if not self.rmf_authorized() or any(task.active for task in self.transports.values()):
+            return False
+        if not self.rmf_active:
+            self.doors={name:False for name in self.doors}
+            self.door_owners={name:set() for name in self.doors}
+            self.lift_request=None;self.lift_owner='';self.lift_gui=False
+            self.docking.clear()
+        self.rmf_active=True
+        return True
+
+    def rmf_door_request(self,msg):
+        if self._begin_rmf_control():
+            self.door_request(msg)
+
+    def rmf_lift_request(self,msg):
+        if self._begin_rmf_control():
+            self.request_lift(msg)
 
     def door_request(self,msg):
         if msg.door_name in self.doors and msg.requested_mode.value in (0,2):
@@ -291,12 +376,31 @@ class Infrastructure(Node):
         self.lift_owner=msg.session_id;self.lift_at=now;self.lift_request=(msg.destination_floor,msg.door_state==2)
         self.lift_gui=False;self.hold=False
 
+    def lift_target(self, position, door_rows, now):
+        lift = self.config['lift']
+        # A completed session still leaves a force-driven car at its last
+        # commanded height. Following measured position here ratchets contact
+        # disturbances into a new setpoint and lets the car drift during exit.
+        target = self.outputs.get(lift['joint'], position)
+        owned = now - self.lift_at < 5 or self.rmf_active and self.rmf_authorized()
+        if self.lift_request and owned:
+            floor, _ = self.lift_request
+            closed = all(row['mode'] == 0 for name, row in door_rows.items()
+                         if name == lift['door'] or self.config['doors'][name].get('landing_floor'))
+            if closed or abs(position - lift['floors'][floor]) < lift.get('level_tolerance_m', .03):
+                target = lift['floors'][floor]
+        return target
+
     def stop_command(self,msg):
         try:
             if len(msg.data)>4096:return
             data=json.loads(msg.data)
             if not isinstance(data,dict):return
             if data.get('session_id')==self.identity and data.get('op')=='all_stop':
+                self.rmf_stopped_at=time.monotonic();self.rmf_active=False
+                self.doors={name:False for name in self.doors}
+                self.door_owners={name:set() for name in self.doors}
+                self.lift_owner='';self.lift_gui=False
                 self._cancel_transports('Operator all-stop')
                 self.hold=True;self.outputs={n:self.positions[n] for n in self.targets if n in self.positions};self.lift_request=None;self.docking.clear()
             elif data.get('session_id') == self.identity and data.get('op') in ('stop', 'pause', 'reset', 'leave'):
@@ -360,6 +464,13 @@ class Infrastructure(Node):
 
     def tick(self):
         now=time.monotonic();fresh=now-self.joint_at<.6 and now-self.clock_at<.6
+        if self.rmf_active and not self.rmf_authorized():
+            self.rmf_stopped_at=now
+            self.rmf_active=False
+            self.door_owners={name:set() for name in self.doors}
+            self.lift_request=None;self.lift_owner='';self.lift_gui=False
+            self.hold=True
+            self.outputs={joint:self.positions[joint] for joint in self.targets if joint in self.positions}
         if self.lift_gui and self.runtime and self.runtime.get('operator_id')==self.lift_owner and self.runtime.get('operator_fresh') and now-self.runtime_at<1:self.lift_at=now
         lift=self.config['lift'];lift_position=self.positions.get(lift['joint']);door_rows={}
         if fresh:
@@ -371,6 +482,11 @@ class Infrastructure(Node):
                 if name==lift['door'] and self.lift_request:
                     floor,opened=self.lift_request;needed=opened and abs(lift_position-lift['floors'][floor])<lift.get('level_tolerance_m',.03) and abs(self.rates.get(lift['joint'],math.inf))<.01
                 if name==lift['door'] and not any(abs(lift_position-z)<lift.get('level_tolerance_m',.03) for z in lift['floors'].values()):needed=False
+                if door.get('landing_floor'):
+                    level=door['landing_floor']
+                    needed=bool(self.lift_request and self.lift_request[0]==level and self.lift_request[1]
+                        and abs(lift_position-lift['floors'][level])<lift.get('level_tolerance_m',.03)
+                        and abs(self.rates.get(lift['joint'],math.inf))<.01)
                 position=self.positions[door['joint']];target=door['opened'] if needed else door['closed']
                 blocked=not needed and not self.safe_sweep(door)
                 if blocked:target=position
@@ -382,10 +498,7 @@ class Infrastructure(Node):
                 if self.rmf:
                     from rmf_door_msgs.msg import DoorState
                     msg=DoorState();msg.door_name=name;msg.door_time=self.get_clock().now().to_msg();msg.current_mode.value=mode;self.door_state.publish(msg)
-            target=lift_position
-            if self.lift_request and now-self.lift_at<5:
-                floor,_=self.lift_request
-                if door_rows[lift['door']]['mode']==0 or abs(lift_position-lift['floors'][floor])<lift.get('level_tolerance_m',.03):target=lift['floors'][floor]
+            target=self.lift_target(lift_position,door_rows,now)
             previous=self.outputs.get(lift['joint'],lift_position)
             if not self.hold:self.outputs[lift['joint']]=max(previous-.02,min(previous+.02,target))
             for joint,value in self.outputs.items():self.targets[joint].publish(Float64(data=float(value)))
@@ -405,7 +518,8 @@ class Infrastructure(Node):
                     door=DoorState();door.door_name=name;door.door_time=self.get_clock().now().to_msg();door.current_mode.value=3;self.door_state.publish(door)
             from rmf_lift_msgs.msg import LiftState
             msg=LiftState();msg.lift_name=lift['name'];msg.lift_time=self.get_clock().now().to_msg();msg.available_floors=list(lift['floors']);msg.current_floor=current_floor;msg.destination_floor=self.lift_request[0] if self.lift_request else current_floor
-            rate=self.rates.get(lift['joint']);msg.door_state=door_rows.get(lift['door'],{}).get('mode',1)
+            rate=self.rates.get(lift['joint']);relevant=[row['mode'] for name,row in door_rows.items() if name==lift['door'] or self.config['doors'][name].get('landing_floor')==current_floor]
+            msg.door_state=2 if relevant and all(mode==2 for mode in relevant) else 0 if relevant and all(mode==0 for mode in relevant) else 1
             msg.motion_state=3 if rate is None or not fresh else 0 if abs(rate)<.01 else 1 if rate>0 else 2
             msg.current_mode=2 if fresh else 4;msg.available_modes=[2];msg.session_id=self.lift_owner;self.lift_state.publish(msg)
         moving=(lift_position is not None and (not current_floor or self.lift_request and abs(lift_position-lift['floors'][self.lift_request[0]])>lift.get('level_tolerance_m',.03)))
@@ -441,11 +555,15 @@ class Infrastructure(Node):
                transports={name: task.state() for name, task in self.transports.items()},
                reservations={name: task.prefix for name, task in self.transports.items() if task.active},
                last_rejection=self.last_rejection,
+               operator_id=(self.runtime or {}).get('operator_id',''),
+               operator_fresh=bool(self.runtime and now-self.runtime_at<1. and self.runtime.get('operator_fresh')),
+               localization_scan_enabled={name:self.localization_scan_enabled(name) for name in self.localization_scans},
                floor_z=floor_z,floor_maps=self.floor_maps,robot_floor_maps=robot_floor_maps,
                active_robot_maps=self.active_robot_maps,map_loading=sorted(self.map_transitions),
                    map_status=self.map_status,map_errors=self.map_errors,current_floor_map=self.current_floor_map,
                    operator_hold=self.hold,
-               rmf_protocol=self.rmf,
+               rmf_protocol=self.rmf, rmf_control_ready=self.rmf_authorized(),
+               rmf_stopped_at=self.rmf_stopped_at if math.isfinite(self.rmf_stopped_at) else None,
                scope='Fresh observed body poses determine robot floors; member Nav2 maps load per observed floor and commands remain held until loading succeeds; authored energy estimate')
         self.publisher.publish(String(data=json.dumps(state,allow_nan=False)))
 

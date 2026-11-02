@@ -114,6 +114,7 @@ def _make_node(session):
     node.transports = {}
     node.map_clear_clients = {}
     node.map_clear_wait = {}
+    node.localization_scan_after = {}
     node.map_clear_futures = {}
     node._clear_costmaps = lambda name: Infrastructure._clear_costmaps(node, name)
     node._costmap_cleared = lambda name, kind, future: Infrastructure._costmap_cleared(node, name, kind, future)
@@ -313,3 +314,75 @@ def test_charging_stops_on_departure_and_feedback_loss(tmp_path):
     for stamp in (3., 3.5):
         model.observe(['left', 'right'], [0., 0.], [0., 0.], stamp, stamp, stamp, True)
     assert model.state(3.5)['fraction'] is None  # Unobserved energy cannot be recovered.
+
+
+def test_unobserved_contact_telemetry_is_valid_strict_json():
+    import json
+    from robot_lab_utils.fleet_controller import contact_state
+    member = SimpleNamespace(contact_at=-math.inf, contact_peer='', contact_margin=0.)
+    row = contact_state(member, 10.)
+    assert row['at'] is None and row['active'] is False
+    json.dumps(row, allow_nan=False)
+    member.contact_at = 9.5
+    assert contact_state(member, 10.)['active'] is True
+
+
+def test_planar_localization_scans_wait_for_a_settled_matching_floor(tmp_path, monkeypatch):
+    node = _make_node(_make_session(tmp_path))
+    monkeypatch.setattr('robot_lab_utils.fleet_infrastructure.time.monotonic', lambda: 10.)
+    node.clock_at = 10.
+    node.bodies['alpha'] = dict(xyz=[3.65, 0., 0.], at=10.)
+    joint = node.config['lift']['joint']
+    node.positions[joint] = 0.
+    node.rates[joint] = 0.
+    assert Infrastructure.localization_scan_enabled(node, 'alpha')
+    node.lift_request = ('L1', True)
+    assert not Infrastructure.localization_scan_enabled(node, 'alpha')
+    node.lift_request = None
+    node.positions[joint] = 1.5
+    assert not Infrastructure.localization_scan_enabled(node, 'alpha')
+    node.positions[joint] = 3.
+    node.energy['alpha']['floor'] = 'L1'
+    assert not Infrastructure.localization_scan_enabled(node, 'alpha')
+    node.active_robot_maps['alpha'] = node.floor_maps['L1']
+    node.map_transitions.add('alpha')
+    assert not Infrastructure.localization_scan_enabled(node, 'alpha')
+    node.map_transitions.clear()
+    assert Infrastructure.localization_scan_enabled(node, 'alpha')
+
+
+def test_rmf_actuation_needs_fresh_ownership_and_a_new_enable_after_stop(tmp_path, monkeypatch):
+    node = _make_node(_make_session(tmp_path))
+    monkeypatch.setattr('robot_lab_utils.fleet_infrastructure.time.monotonic', lambda: 10.)
+    node.runtime = dict(operator_id='rmf-test', operator_fresh=True)
+    node.runtime_at = node.clock_at = node.joint_at = node.rmf_control_at = 10.
+    node.rmf_stopped_at = 8.
+    node.rmf_control = dict(enabled=True, enabled_at=9., authorization_epoch='epoch-1', operator_id='rmf-test')
+    assert Infrastructure.rmf_authorized(node)
+    node.rmf_stopped_at = 9.5
+    assert not Infrastructure.rmf_authorized(node)
+    node.rmf_control.update(enabled_at=9.9, authorization_epoch='epoch-2')
+    assert Infrastructure.rmf_authorized(node)
+    node.runtime['operator_id'] = 'gui-test'
+    assert not Infrastructure.rmf_authorized(node)
+
+
+def test_lift_keeps_its_commanded_height_after_session_requests_stop(tmp_path):
+    node = _make_node(_make_session(tmp_path))
+    joint = node.config['lift']['joint']
+    node.outputs[joint] = 0.
+    node.rmf_active = False
+    node.lift_at = 1.
+    # No new request must not ratchet a physical contact disturbance into the target.
+    assert Infrastructure.lift_target(node, .02, {}, 10.) == 0.
+    node.lift_request = ('L0', True)
+    assert Infrastructure.lift_target(node, .02, {'lift': {'mode': 2}}, 10.) == 0.
+    # The SDK may stop repeating the open request after the event succeeds;
+    # a fresh control lease retains the floor target and all door interlocks.
+    node.rmf_active = True
+    node.rmf_authorized = lambda: True
+    node.outputs[joint] = .002
+    assert Infrastructure.lift_target(node, .002, {'lift': {'mode': 2}}, 10.) == 0.
+    node.lift_request = ('L1', True)
+    assert Infrastructure.lift_target(node, .002, {'lift': {'mode': 2}}, 10.) == .002
+    assert Infrastructure.lift_target(node, .002, {'lift': {'mode': 0}}, 10.) == 3.

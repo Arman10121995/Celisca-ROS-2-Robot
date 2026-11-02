@@ -1,6 +1,8 @@
 # Remaining work: agent execution guide
 
-Latest November 2 continuation: [observation-bound fleet energy, separate floor/AMCL frames and native RMF door/dock routes](status/fleet-continuation-2026-11-02.md). Preserve the source/runtime certificates, gap-to-unknown energy model, scoped upstream serializer correction and measured floor ride. Next: automatic RMF lift-session graphs/level-aware dispatch and wider conflict/loss, marine and terrain workflows. Full platform acceptance remains partial.
+Latest November 2: [automatic native fleet lift transport](status/evidence/automatic-floor-transport-2026-11-02/README.md) completed one Bumperbot L0-L1-L0 with autonomous boarding, map/costmap transitions and settled exits. The GUI Facility request is implemented. A real native SDK L0-L1-L0 mission also passed in 359.063 wall seconds; actual SDK process-loss/resumption held the car and required explicit re-enablement. Broader multi-robot cases remain separate. Full platform acceptance remains partial.
+
+Latest November 2 continuation: [observation-bound fleet energy, separate floor/AMCL frames and native RMF door/dock routes](status/fleet-continuation-2026-11-02.md). Preserve the source/runtime certificates, gap-to-unknown energy model, scoped upstream serializer correction and measured floor ride. Next: wider SDK conflict/loss, marine and terrain workflows; the automatic native and SDK lift round-trips now have their own receipts. Full platform acceptance remains partial.
 
 Updated November 2, 2026 after [the measured fleet floor transition](status/evidence/fleet-floor-map-transition-2026-11-02/README.md) on `master`.
 Read [the current delivery](status/workflows-2026-10-27.md),
@@ -71,29 +73,32 @@ The new native producer implementation is in `extension_workload.py`, `extension
 
 Snake mapping/acquired-map Nav2, surface-vessel acquisition/two-goal arrival, AUV automatic acquisition and actuated flippers are delivered, with [actual receipts](status/evidence/native-forms-2026-10-30/README.md). Preserve the instant wheel Jacobian/current rolling-contact model, mean-segment frame/scan reprojection, fixed world/map prior and hold-shape arrival. Preserve separate fixed/actuated tracked variants and real force-PID/target bridges. These are named cases, not universal terrain/backend acceptance.
 
-The [facility guide](tutorials/fleet-infrastructure.md) names actual door/lift/dock interfaces and source constraints. Source-bound actuator readback/authored charging and one observed robot-in-car/floor-map case are delivered. Initial remaining infrastructure work is automatic RMF lift-session graph tasks and level-aware route dispatch. These are software/simulator tasks. Do not use a global energy flag to qualify sources; preserve exact description/runtime certificates, and leave missing observation coverage unknown. Reuse the delivered source fixtures and unique dock results.
+The [facility guide](tutorials/fleet-infrastructure.md) names actual door/lift/dock interfaces and source constraints. Source-bound actuator readback/authored charging, automatic native transport, real SDK L0-L1-L0 and active SDK process-loss/resumption hold are delivered with named single-member receipts. Broader concurrent/other-base/floor missions and calibrated energy remain. These are software/simulator tasks. Do not use a global energy flag to qualify sources; preserve exact description/runtime certificates, and leave missing observation coverage unknown. Reuse the delivered source fixtures and unique dock results.
 
 ## Immediate continuation after the November 2 fleet delivery
 
-1. Extend `fleet_facility_graph.py` beyond its explicitly single-level door/dock
-   lanes. Add reviewed L0/L1 graph vertices and real RMF lift-session events;
-   launch the official lift supervisor alongside the existing door supervisor.
-   Check the installed Humble factories rather than copying a newer API.
-2. Make `fleet_rmf_adapter.py` plan starts and dispatch follow-new-path segments
-   on each robot's observed floor. It currently uses the session map name.
-   Preserve graph indices/floor identity through `fleet_missions.py` and
-   `fleet_controller.py`; a path request may not overwrite an active lift ride.
-3. Reuse `fleet_infrastructure.py` actual body-floor gate, closed-door and settled
-   lift interlocks, per-member LoadMap holds and exclusive floor/AMCL frames.
-   Add automatic approach/board/ride/exit control with source-clearance checks,
-   fresh ownership and bounded cancellation/loss. Finish only after independently
-   observed robot transport and settled arrival, not lift joint motion alone.
-4. Use the native door/dock receipt and `floor_map_trial.py` as diagnostics. Its
-   boarding is a bounded manual command, so the existing ride is not an automatic
-   RMF lift task. Add a separate actual automatic mission before promoting it.
-5. Preserve the energy source/runtime certificates and gap-to-unknown behavior.
-   Calibration, connector sensing and RMF automatic energy scheduling remain
-   separate work; do not use the old global flag or nominal RMF cost objects.
+1. Preserve `fleet_building_graph.py` and the official native `graph.parse_graph`
+   path. It generates actual L0/L1 lift sessions; both official supervisors are
+   launched. Do not revive the unexecuted legacy `lift_session_graph` metadata
+   prototype or use an unavailable `lift_door_open_make` Python factory.
+2. Preserve observed-floor SDK plan starts, exclusive floor/AMCL transforms,
+   guarded car-only graph lanes and hidden internal destinations. Native Facility
+   transport and real SDK round-trips have distinct source/mission receipts in
+   [the automatic transport evidence](status/evidence/automatic-floor-transport-2026-11-02/README.md).
+3. Retain fixed landing gates, 3 mm leveling, source-matched upper walls/unknown
+   space, scan gating and both costmap acknowledgments. Keep the car's last
+   commanded target after requests cease: following measured height caused the
+   retained return-trip failure. Stop/loss deliberately holds measured targets.
+4. Extend to Labbot and concurrent conflicting floor/dock requests, peer occupancy,
+   member/contact loss and recovery. The measured SDK process-loss case holds
+   mid-shaft and stays disabled after resumption; it does not recover to a floor.
+   Any recovery must require explicit ownership and observed safe interlocks.
+   The GUI two-place round-trip macro is implemented; the measured SDK case used
+   two separate patrol requests, so keep that qualification boundary.
+5. Preserve source/runtime-bound energy and gap-to-unknown behavior. Calibration,
+   connector sensing and RMF automatic energy scheduling remain separate work;
+   do not use the old global flag or nominal RMF costs to qualify them. Continue
+   the aerial/marine/terrain queue after the remaining concrete fleet features.
 
 ## Ordered next work
 

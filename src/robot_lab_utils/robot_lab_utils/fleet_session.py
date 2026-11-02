@@ -251,7 +251,7 @@ def navigation_parameters(config_dir, localization_dir, member, map_yaml):
         return replacements.get(value, value) if isinstance(value, str) else value
     data = rewrite(data)
     amcl = data['amcl']['ros__parameters']
-    amcl.update(scan_topic='/' + member['id'] + '/scan',
+    amcl.update(scan_topic=member.get('localization_scan', '/' + member['id'] + '/scan'),
                 initial_pose={axis: member['spawn'].get(axis, 0.) for axis in ('x', 'y', 'z', 'yaw')})
     amcl['initial_pose']['z'] = 0.
     follow = data['controller_server']['ros__parameters']['FollowPath']
@@ -359,6 +359,8 @@ def prepare_session(session_file, map_override='', navigation=False, runtime_roo
     for member in members:
         member['floor_maps'] = floor_maps
         member['map_frame'] = member['id'] + '/map' if floor_maps else 'map'
+        if floor_maps:
+            member['localization_scan'] = '/' + member['id'] + '/localization_scan'
         member['map_yaml'] = floor_maps.get('L0', map_yaml)
     base = Path(runtime_root or os.environ.get('ROBOT_LAB_RUNTIME_ROOT', '/workspace/molar/robot_lab_runtime')) / 'fleet_sessions'
     base.mkdir(parents=True, exist_ok=True)
@@ -391,7 +393,10 @@ def prepare_session(session_file, map_override='', navigation=False, runtime_roo
             parameters=navigation_parameters(Path(share('robot_lab_navigation')) / 'config',Path(share('robot_lab_localization')) / 'config',member,map_yaml)
             if map_profile.get('fleet_infrastructure'):
                 params=parameters['/'+name]['controller_server']['ros__parameters']
-                params['general_goal_checker'].update(xy_goal_tolerance=.05,yaw_goal_tolerance=.08)
+                params['general_goal_checker'].update(xy_goal_tolerance=.02,yaw_goal_tolerance=.05)
+                parameters['/'+name]['planner_server']['ros__parameters']['GridBased']['allow_unknown']=False
+                amcl=parameters['/'+name]['amcl']['ros__parameters']
+                amcl.update(update_min_d=.03,update_min_a=.03,sigma_hit=.08,laser_likelihood_max_dist=1.,min_particles=1000,max_particles=3000)
             nav_file.write_text(yaml.safe_dump(parameters))
             member['navigation_file'] = str(nav_file)
     bridge_file = folder / 'bridge.yaml'

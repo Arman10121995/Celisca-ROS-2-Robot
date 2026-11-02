@@ -1,5 +1,7 @@
 # Robot Lab done and remaining checklist
 
+Latest November 2: [automatic native fleet lift transport](evidence/automatic-floor-transport-2026-11-02/README.md) completed one Bumperbot L0-L1-L0 with autonomous boarding, map/costmap transitions and settled exits. The GUI Facility request is implemented. A real native SDK L0-L1-L0 mission also passed in 359.063 wall seconds; actual SDK process-loss/resumption held the car and required explicit re-enablement. Broader multi-robot cases remain separate. Full platform acceptance remains partial.
+
 **Current checkpoint: November 2, 2026; platform/extension partial.**
 
 Use [the detailed agent execution guide](../REMAINING_WORK_GUIDE.md). These
@@ -29,7 +31,10 @@ when its stated mission acceptance is met.
 - [x] One actual Bumperbot L0-L1-L0 ride with observed per-member Nav2 floor-map switching; see [the measured receipt](evidence/fleet-floor-map-transition-2026-11-02/README.md).
 - [x] Source/runtime-bound Bumperbot/Labbot effort readback, Bumperbot authored berth charging/departure and actual feedback-loss/resumption; [scoped receipt](evidence/fleet-energy-2026-11-02/README.md).
 - [x] Exclusive floor/AMCL transforms and actual native RMF physical-door/settled-dock route with a scoped upstream serializer fix.
-- [ ] Automatic RMF lift-session graph tasks, broader conflict/loss, calibrated energy/RMF scheduling and other robot/floor/map transport missions.
+- [x] Automatic native Facility transport, fixed landing gates and measured autonomous Bumperbot L0-L1-L0.
+- [x] Official SDK multi-floor graph and fresh explicit control epochs (mission qualification separate).
+- [x] Real SDK Bumperbot L0-L1-L0 with native lift-session events and independently settled exits.
+- [ ] Broader conflict/loss, calibrated energy/RMF scheduling and other robot/floor/map transport missions.
 - [ ] Further flipper-aware terrain/navigation and source-appropriate additional backends.
 - [ ] Wider automatic saved-map/obstacle missions, applied seeds and real contact/clearance instrumentation.
 - [ ] Further reviewed worlds, the older roadmap, broad comparisons and release acceptance.

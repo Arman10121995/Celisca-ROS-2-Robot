@@ -1,9 +1,7 @@
-"""Source-declared door/dock events on clearance-tested RMF lanes.
+"""Source-declared single-level door/dock event helpers.
 
-Lift travel is a separate multi-level mission contract: lift_session_graph()
-adds per-floor vertex copies connected by lift-shaft lanes with declared
-door-open/close events at each landing.  It is not inferred from a moving
-door or from the availability of floor occupancy files.
+Operational multi-floor routing uses fleet_building_graph and the official
+native parser. The retained lift_session_graph is legacy, unexecuted metadata.
 """
 import copy
 import math
@@ -31,7 +29,7 @@ def facility_graph(data, grid, members, config):
     # A coarse lattice can miss a narrow portal entirely. Add explicit source
     # approaches and check every connecting segment with the same body erosion.
     for name, door in config.get('doors', {}).items():
-        if door.get('z_joint') or not door.get('approach'):
+        if door.get('z_joint') or door.get('landing_floor') or not door.get('approach'):
             continue
         approaches = door['approach']
         if len(approaches) != 2:
@@ -104,7 +102,7 @@ def facility_graph(data, grid, members, config):
             lanes.extend(connections)
         docks[index] = name
         vertices[index]['dock'] = name
-    doors = {name: value for name, value in config.get('doors', {}).items() if not value.get('z_joint')}
+    doors = {name: value for name, value in config.get('doors', {}).items() if not value.get('z_joint') and not value.get('landing_floor')}
     directed = []
     for first, second in lanes:
         for entry, exit_ in ((first, second), (second, first)):
@@ -162,7 +160,13 @@ def install_lanes(nav_graph, data, lane_api):
 
 
 def lift_session_graph(data, grid, members, config):
-    """Add per-floor vertex copies connected by lift-shaft lanes.
+    """Legacy metadata prototype; not an executable RMF graph.
+
+    Operational routing uses fleet_building_graph.building_graph and native
+    graph.parse_graph. The prototype event dictionaries below are retained
+    for historical callers only and are unsupported by install_lanes.
+
+    Add per-floor vertex copies connected by lift-shaft lanes.
 
     Each floor gets its own copy of the single-level vertices.  Lift-shaft
     lanes connect the landing position on each floor to the same position on

@@ -1,390 +1,109 @@
-# Validation Plan - November 2, 2026
-
-November 2 update: the system Python/SSD environment ran actual Gazebo fleet missions; ENV-1 is not a reproduced global blocker. [Current measured energy/RMF cases](evidence/fleet-energy-2026-11-02/README.md) supersede the earlier missing-readback summary. Preserve the separate aerial issue and wider validation tasks.
-
-This document outlines the step-by-step validation plan for all remaining Robot Lab tasks, organized by priority and execution order.
-
----
-
-## Priority Legend
-
-- **P0** (Critical): Blocks multiple other tasks
-- **P1** (High): Primary focus, unblocked
-- **P2** (Medium): Can run in parallel with P1
-- **P3** (Low): Can wait for P0-P2 completion
-
----
-
-## Execution Order
-
-### Phase 1: Environment Fix (P0) - BLOCKING
-
-**Must complete before any simulation-based validation can proceed**
-
-| Task | Description | Owner | Estimated Time | Status |
-|------|-------------|-------|----------------|--------|
-| ENV-1 | System Python/SSD ROS imports and native fleet missions work; no library replacement needed | Platform | Measured November 2 | Resolved for this environment |
-| ENV-2 | Verify PX4 SITL environment on Jetson | Platform | 1 hour | ❌ Pending |
-
-**Dependencies**: All Phase 2+ tasks depend on ENV-1 and ENV-2
-
----
-
-### Phase 2: R5 Car Validation (P1)
-
-**Priority**: Highest once environment is fixed
-**Task**: R5.5 - Verify car parking heading fix
-
-| Task | Description | Command | Success Criteria | Status |
-|------|-------------|---------|------------------|--------|
-| R5.5-A | Run car course test in Gazebo | `scripts/sim_car_course.sh gazebo rear_steer_car output.json` | Parking yaw error < 10° | ❌ Pending |
-| R5.5-B | Run car course test in PyBullet | `scripts/sim_car_course.sh pybullet rear_steer_car output.json` | Parking yaw error < 10° | ❌ Pending |
-| R5.5-C | Run car course test in Isaac | `scripts/sim_car_course.sh isaac rear_steer_car output.json` | Parking yaw error < 10° | ❌ Pending |
-| R5.5-D | Run car course test for all car types | `scripts/sim_car_course.sh <sim> <car_type> output.json` for all combinations | All pass 10° tolerance | ❌ Pending |
-
-**Dependencies**: ENV-1 (GLIBCXX fix)
-
-**Evidence to Create**:
-- `docs/status/evidence/r55-validation-results-2026-11-XX.md`
-
----
-
-### Phase 3: R10.2 Fleet Motor-Power/Charging Validation (P1)
-
-**Priority**: High - Recently implemented
-**Task**: R10.2 - Verify fleet motor-power/charging implementation
-
-| Task | Description | Command | Success Criteria | Status |
-|------|-------------|---------|------------------|--------|
-| R10.2-A | Run fleet facility simulation | `ros2 launch robot_lab_bringup fleet_facility.launch.py` | Facility loads without errors | ❌ Pending |
-| R10.2-B | Verify effort state interfaces | Check `/bumperbot/effort_state` and `/labbot/effort_state` topics | Topics publishing effort data | ❌ Pending |
-| R10.2-C | Verify infrastructure verification flag | Check `infrastructure.yaml` config | `effort_observation_verified: true` | ✅ Done (code) |
-| R10.2-D | Test multi-floor transitions | Run L0→L1→L0 floor transition test | Bumperbot successfully transitions floors | ❌ Pending |
-| R10.2-E | Measure energy consumption | Run extended mission, check energy estimates | Energy estimation updates correctly | ❌ Pending |
-| R10.2-F | Test charging scenario | Simulate battery drain and charging | Charging state reflected in infrastructure | ❌ Pending |
-
-**Dependencies**: ENV-1 (GLIBCXX fix)
-
-**Evidence to Create**:
-- `docs/status/evidence/r102-validation-results-2026-11-XX.md`
-
----
-
-### Phase 4: R10.3 Aerial Swarm Formation Validation (P1)
-
-**Priority**: High - First R10 priority
-**Task**: R10.3 - Extend formation behaviors/maps, 3-4 members, member loss
-
-| Task | Description | Command | Success Criteria | Status |
-|------|-------------|---------|------------------|--------|
-| R10.3-A | Fix PX4 SITL accelerometer timeout | Investigate upstream PX4 issue | air2 FCU telemetry stable | ❌ Pending |
-| R10.3-B | Run 2-member formation flight | `ros2 launch robot_lab_bringup aerial_swarm.launch.py members:=2` | Both FCUs converge to formation | ❌ Pending |
-| R10.3-C | Run 3-member formation flight | `ros2 launch robot_lab_bringup aerial_swarm.launch.py members:=3` | All 3 FCUs converge to formation | ❌ Pending |
-| R10.3-D | Run 4-member formation flight | `ros2 launch robot_lab_bringup aerial_swarm.launch.py members:=4` | All 4 FCUs converge to formation | ❌ Pending |
-| R10.3-E | Test member loss detection | Manually stop one FCU during flight | Remaining members detect loss, trigger landing | ❌ Pending |
-| R10.3-F | Test automatic recovery | Stop/Restart FCU during mission | System detects and recovers | ❌ Pending |
-| R10.3-G | Test other behaviors/maps | Run formation in different maps | Formation works in all maps | ❌ Pending |
-
-**Dependencies**: ENV-1, ENV-2, R10.3-A (PX4 SITL fix)
-
-**Evidence to Create**:
-- `docs/status/evidence/r103-validation-results-2026-11-XX.md`
-- `docs/status/evidence/aerial-formation-3member-2026-11-XX/`
-- `docs/status/evidence/aerial-formation-4member-2026-11-XX/`
-- `docs/status/evidence/aerial-member-loss-2026-11-XX/`
-
-**Existing Evidence**:
-- `docs/status/evidence/aerial-r103-2026-10-29/README.md` (baseline)
-
----
-
-### Phase 5: R10.4-R10.5 Marine Validation (P2)
-
-**Priority**: Medium - Can run in parallel with R10.3
-**Task**: R10.4-R10.5 - Marine saved-map routes, obstacle/current/loss missions
-
-#### R10.4 Marine ROV/AUV
-
-| Task | Description | Command | Success Criteria | Status |
-|------|-------------|---------|------------------|--------|
-| R10.4-A | Run ROV simulation in marine_tank | `ros2 launch robot_lab_bringup marine.launch.py robot:=lab_rov world:=marine_tank` | ROV loads and responds to commands | ❌ Pending |
-| R10.4-B | Test ROV depth hold | Set target depth, verify ROV holds depth | Depth error < 0.1m | ❌ Pending |
-| R10.4-C | Test ROV heading hold | Set target heading, verify ROV holds heading | Heading error < 5° | ❌ Pending |
-| R10.4-D | Test ROV current compensation | Add current, verify ROV maintains position | Position drift < 0.2m | ❌ Pending |
-| R10.4-E | Run AUV simulation | `ros2 launch robot_lab_bringup marine.launch.py robot:=tethys_auv world:=marine_cave` | AUV loads and responds to commands | ❌ Pending |
-| R10.4-F | Test AUV depth control | Set depth, verify AUV reaches depth | Depth error < 0.1m | ❌ Pending |
-| R10.4-G | Test AUV fin-turn | Set heading, verify AUV turns | Heading error < 5° | ❌ Pending |
-
-#### R10.5 Marine Missions
-
-| Task | Description | Command | Success Criteria | Status |
-|------|-------------|---------|------------------|--------|
-| R10.5-A | Test ROV waypoint navigation | Set waypoints, verify ROV navigates | All waypoints reached | ❌ Pending |
-| R10.5-B | Test ROV obstacle avoidance | Place obstacles, verify ROV avoids | No collisions, all waypoints reached | ❌ Pending |
-| R10.5-C | Test ROV saved-map routes | Load saved map, run mission | Mission completes successfully | ❌ Pending |
-| R10.5-D | Test AUV waypoint navigation | Set waypoints, verify AUV navigates | All waypoints reached | ❌ Pending |
-| R10.5-E | Test marine loss scenarios | Stop/sensor failure during mission | System detects and handles loss | ❌ Pending |
-| R10.5-F | Test surface vessel | `ros2 launch robot_lab_bringup marine.launch.py robot:=surface_vessel world:=marine_harbor` | Vessel loads and operates | ❌ Pending |
-
-**Dependencies**: ENV-1
-
-**Evidence to Create**:
-- `docs/status/evidence/r104-validation-results-2026-11-XX.md`
-- `docs/status/evidence/r105-validation-results-2026-11-XX.md`
-
-**Existing Evidence**:
-- `docs/status/evidence/r104-marine-2026-10-15/README.md`
-- `docs/status/evidence/r104-auv-2026-10-15/README.md`
-
----
-
-### Phase 6: R10.1-R10.3 Fleet/RMF Validation (P2)
-
-**Priority**: Medium - Can run in parallel with R10.3
-**Task**: R10.1-R10.3 - RMF conflicts/loss, coverage, larger fleets
-
-| Task | Description | Command | Success Criteria | Status |
-|------|-------------|---------|------------------|--------|
-| R10.1-A | Test RMF fleet coordination | `ros2 launch robot_lab_bringup fleet_rmf.launch.py` | Multiple robots coordinate via RMF | ❌ Pending |
-| R10.1-B | Test RMF conflict resolution | Create conflicting paths | RMF resolves conflicts, no collisions | ❌ Pending |
-| R10.1-C | Test RMF loss scenarios | Stop robot during RMF mission | RMF detects loss, reassigns tasks | ❌ Pending |
-| R10.1-D | Test coverage planning | Run coverage mission | Full area coverage achieved | ❌ Pending |
-| R10.1-E | Test larger fleet (5+ robots) | Launch with multiple robots | All robots coordinate, complete mission | ❌ Pending |
-| R10.3-A | Test fleet member loss | Kill robot process during mission | Fleet detects loss, remaining robots continue | ❌ Pending |
-
-**Dependencies**: ENV-1
-
-**Evidence to Create**:
-- `docs/status/evidence/r101-validation-results-2026-11-XX.md`
-- `docs/status/evidence/rmf-conflict-resolution-2026-11-XX/`
-- `docs/status/evidence/fleet-coverage-2026-11-XX/`
-
-**Existing Evidence**:
-- `docs/status/evidence/workflows-2026-10-27/README.md`
-- `docs/status/evidence/fleet-floor-map-transition-2026-11-02/README.md`
-- `docs/status/evidence/amphibious-facility-2026-10-30/README.md`
-
----
-
-### Phase 7: R10.6-R10.7 Multi-Leg Validation (P2)
-
-**Priority**: Medium - Can run in parallel
-**Task**: R10.6-R10.7 - Multi-leg saved-map goals, terrain/slip/recovery
-
-| Task | Description | Command | Success Criteria | Status |
-|------|-------------|---------|------------------|--------|
-| R10.6-A | Test Hexapod gait | `ros2 launch robot_lab_bringup hexapod.launch.py` | Hexapod walks with correct gait | ❌ Pending |
-| R10.6-B | Test Hexapod saved-map navigation | Load saved map, run mission | Hexapod navigates to goal | ❌ Pending |
-| R10.6-C | Test Octopod gait | `ros2 launch robot_lab_bringup octopod.launch.py` | Octopod walks with correct gait | ❌ Pending |
-| R10.6-D | Test Centipede gait | `ros2 launch robot_lab_bringup centipede.launch.py` | Centipede moves correctly | ❌ Pending |
-| R10.6-E | Test Snake gait | `ros2 launch robot_lab_bringup snake.launch.py` | Snake moves correctly | ❌ Pending |
-| R10.7-A | Test terrain adaptation | Run on various terrain types | Gait adapts to terrain | ❌ Pending |
-| R10.7-B | Test slip recovery | Create slippery surface | System detects and recovers from slip | ❌ Pending |
-| R10.7-C | Test multi-leg saved-map goals | Load saved maps for each leg type | All leg types navigate successfully | ❌ Pending |
-| R10.7-D | Test amphibious MOLAR | `ros2 launch robot_lab_bringup molar.launch.py` | MOLAR operates on land and water | ❌ Pending |
-
-**Dependencies**: ENV-1
-
-**Evidence to Create**:
-- `docs/status/evidence/r106-validation-results-2026-11-XX.md`
-- `docs/status/evidence/r107-validation-results-2026-11-XX.md`
-
-**Existing Evidence**:
-- `docs/status/evidence/native-forms-2026-10-30/README.md`
-
----
-
-### Phase 8: R10.8/R4/R8.3 Workload Validation (P3)
-
-**Priority**: Low - Can wait for higher priority items
-**Task**: R10.8/R4/R8.3 - Native producers, fleet batch reset, wider matrices
-
-| Task | Description | Command | Success Criteria | Status |
-|------|-------------|---------|------------------|--------|
-| R10.8-A | Test fleet workload producers | Run fleet producer workloads | All producers generate correct data | ❌ Pending |
-| R10.8-B | Test fleet batch reset | Run batch reset | Fleet resets correctly | ❌ Pending |
-| R10.8-C | Test wider matrices | Run with various matrix sizes | All matrices complete | ❌ Pending |
-| R4-A | Verify R4.1-R4.3 | Re-run R4 tests | All R4 scenarios pass | ❌ Pending |
-| R8.3-A | Test resource-bounded experiments | Run resource-bounded tests | Experiments complete within resource limits | ❌ Pending |
-
-**Dependencies**: ENV-1
-
-**Evidence to Create**:
-- `docs/status/evidence/r108-validation-results-2026-11-XX.md`
-- `docs/status/evidence/r4-validation-2026-11-XX.md`
-- `docs/status/evidence/r83-validation-2026-11-XX.md`
-
-**Existing Evidence**:
-- `docs/status/evidence/workflows-2026-10-27/README.md`
-
----
-
-### Phase 9: R6 and Older Queue (P3)
-
-**Priority**: Low - Final cleanup
-**Task**: R6 and older queue - Remaining maps, car perception, manipulation
-
-| Task | Description | Command | Success Criteria | Status |
-|------|-------------|---------|------------------|--------|
-| R5.6-A | Test four-wheel steering patterns | Run steering tests | All patterns work correctly | ❌ Pending |
-| R5.6-B | Test physical mecanum | Run mecanum tests | Mecanum drive works correctly | ❌ Pending |
-| R5.7-A | Test native arm planning | Run arm planning tests | Arm plans and executes correctly | ❌ Pending |
-| R5.8-A | Test native hands | Run hand tests | Hands operate correctly | ❌ Pending |
-| R6-A | Complete remaining map imports | Import remaining maps | All maps import without errors | ❌ Pending |
-| R6-B | Test car perception | Run perception tests | Car perception works correctly | ❌ Pending |
-| R6-C | Test manipulation | Run manipulation tests | Manipulation works correctly | ❌ Pending |
-
-**Dependencies**: ENV-1
-
-**Evidence to Create**:
-- Various evidence files as tests complete
-
----
-
-## Parallel Execution Plan
-
-Once environment is fixed, tasks can be executed in parallel:
-
-### Track A: Aerial (High Priority)
-- ENV-2 → R10.3-A → R10.3-B,C,D → R10.3-E,F,G
-
-### Track B: Fleet/RMF (High Priority)
-- ENV-1 → R5.5-A,B,C,D → R10.2-A,B,C,D,E,F → R10.1-A,B,C,D,E → R10.3-A
-
-### Track C: Marine (Medium Priority)
-- ENV-1 → R10.4-A,B,C,D,E,F,G → R10.5-A,B,C,D,E,F
-
-### Track D: Multi-Leg (Medium Priority)
-- ENV-1 → R10.6-A,B,C,D,E → R10.7-A,B,C,D
-
-### Track E: Workloads (Low Priority)
-- ENV-1 → R10.8-A,B,C → R4-A → R8.3-A
-
-### Track F: Older Queue (Low Priority)
-- ENV-1 → R5.6-A,B → R5.7-A → R5.8-A → R6-A,B,C
-
----
-
-## Daily Execution Plan
-
-### Day 1: Environment Fix
-- Fix GLIBCXX_3.4.29 (ENV-1)
-- Verify PX4 SITL (ENV-2)
-
-### Day 2: High Priority Validation
-- Track A: Start R10.3 aerial tests
-- Track B: Start R5.5 car tests
-- Track B: Start R10.2 fleet tests
-
-### Day 3: High Priority Validation
-- Continue Track A: R10.3 2-4 member formation
-- Continue Track B: R10.1-R10.3 fleet/RMF
-- Start Track C: R10.4-R10.5 marine
-
-### Day 4: Medium Priority Validation
-- Track C: Continue marine tests
-- Track D: Start multi-leg tests
-- Track A: Complete aerial tests
-
-### Day 5: Medium/Low Priority Validation
-- Track C: Complete marine tests
-- Track D: Continue multi-leg tests
-- Track E: Start workload tests
-
-### Day 6: Low Priority Validation
-- Track D: Complete multi-leg tests
-- Track E: Continue workload tests
-- Track F: Start older queue tests
-
-### Day 7: Wrap-up
-- Complete all validation
-- Create final evidence reports
-- Update ledger
-
----
-
-## Success Criteria
-
-**Phase 1 (Environment)**:
-- ✅ ROS imports work without GLIBCXX errors
-- ✅ PX4 SITL runs without accelerometer timeout
-
-**Phase 2 (R5.5)**:
-- ✅ All car course tests pass with < 10° yaw error
-
-**Phase 3 (R10.2)**:
-- ✅ Effort state interfaces publishing
-- ✅ Infrastructure verification flag working
-- ✅ Multi-floor transitions work
-- ✅ Energy estimation updates correctly
-
-**Phase 4 (R10.3)**:
-- ✅ 2-member formation flight successful
-- ✅ 3-member formation flight successful
-- ✅ 4-member formation flight successful
-- ✅ Member loss detection and recovery works
-
-**Phase 5 (R10.4-R10.5)**:
-- ✅ ROV depth/heading hold works
-- ✅ ROV current compensation works
-- ✅ AUV depth/fins control works
-- ✅ Marine waypoint navigation works
-- ✅ Marine obstacle avoidance works
-- ✅ Marine saved-map routes work
-
-**Phase 6 (R10.1-R10.3)**:
-- ✅ RMF fleet coordination works
-- ✅ RMF conflict resolution works
-- ✅ RMF loss handling works
-- ✅ Coverage planning works
-- ✅ Larger fleet (5+) works
-- ✅ Fleet member loss handling works
-
-**Phase 7 (R10.6-R10.7)**:
-- ✅ All multi-leg robots move with correct gaits
-- ✅ All multi-leg robots navigate saved maps
-- ✅ Terrain adaptation works
-- ✅ Slip recovery works
-- ✅ Amphibious MOLAR works
-
-**Phase 8 (R10.8/R4/R8.3)**:
-- ✅ Fleet producers work
-- ✅ Fleet batch reset works
-- ✅ Wider matrices work
-- ✅ R4 scenarios pass
-- ✅ Resource-bounded experiments work
-
-**Phase 9 (R6 and older)**:
-- ✅ Four-wheel steering patterns work
-- ✅ Physical mecanum works
-- ✅ Native arm planning works
-- ✅ Native hands work
-- ✅ Remaining maps import without errors
-- ✅ Car perception works
-- ✅ Manipulation works
-
----
-
-## Ledger Updates
-
-Each validation task should update:
-1. `docs/status/platform-status.yaml` - ledger with completion status
-2. `docs/status/evidence/` - directory with test results
-3. Task-specific documentation files
-
----
-
-## Notes
-
-1. All tasks assume the environment fixes (ENV-1, ENV-2) are complete
-2. Estimated times are rough and may vary based on issues discovered
-3. Parallel execution can significantly reduce total validation time
-4. Blockers discovered during validation should be documented and escalated
-5. Test results should be recorded even if tests fail - include error details for debugging
-
----
-
-## Version History
-
-- **2026-11-02**: Initial version created
-- Next update: After ENV-1 and ENV-2 are resolved
+# Remaining implementation and validation plan — November 2, 2026
+
+The platform and full extension remain **partial**. Follow the user's order:
+finish usable extension workflows first, then the older roadmap. Implement
+missing behavior before broad validation. Neutral enablement, bounds, Stop,
+watchdogs and truthful terminal results belong in the implementation.
+[The roadmap](../../ROADMAP.md) owns acceptance; [the ledger](platform-status.yaml)
+owns current task state and ownership. The [agent guide](../REMAINING_WORK_GUIDE.md)
+provides code locations and continuation steps.
+
+This plan supersedes the earlier checklist that displayed unmeasured goals as
+checkmarked success, named nonexistent launch files and treated PX4 as a
+prerequisite for ground/marine work. Historical receipts retain their exact scope.
+No full mission is established by a verification flag, catalog count or unit test.
+
+## Environment and reproducibility
+
+System Python/SSD ROS imports and actual Fortress fleet missions work. The old
+GLIBCXX report is not a reproduced global blocker; do not replace system
+libraries as a default remedy. Diagnose each backend's actual failure. PX4
+issues affect its own aerial lane, not every simulator workflow.
+
+```bash
+source /opt/ros/humble/setup.bash
+source install/setup.bash
+source scripts/ssd_env.sh
+git status --short --branch
+ros2 launch robot_lab_bringup shared_world.launch.py --show-args
+ros2 launch robot_lab_bringup aerial_swarm.launch.py --show-args
+ros2 launch robot_lab_bringup marine_simulator.launch.py --show-args
+```
+
+Work on `master`, claim scope before edits, keep artifacts on SSD and use isolated
+ROS domains/transport partitions. Ground/marine use Fortress; native PX4 uses
+Harmonic. Follow [STORAGE](../STORAGE.md), including PX4 `-d`, bounded logs and
+owned process cleanup. The one-off relocation is complete.
+
+## Current measured fleet baseline
+
+| Scope | Actual result | Receipt |
+|---|---|---|
+| Native Bumperbot/Labbot effort and rate | Complete source/runtime-bound samples while moving about 0.232 m | [Energy/readback](evidence/fleet-energy-2026-11-02/README.md) |
+| Bumperbot authored berth charging | Increase while independently settled; departure/discharge and actual broadcaster loss/resumption; SOC remains unknown after coverage loss | Same receipt; authored model, not battery/connector telemetry |
+| Native RMF physical door/dock | Actual SDK route, physical door crossing and independently settled dock callback | Same receipt; earlier single-level graph |
+| Bumperbot floor placement/map switches | Actual L0-L1-L0 and exclusive floor/AMCL frame tree | [Earlier ride](evidence/fleet-floor-map-transition-2026-11-02/README.md) |
+| Automatic native Facility transport | Real approach, boarding, ride, member map/costmap changes and settled exits L0-L1-L0 in 319.913 wall seconds | [Automatic transport](evidence/automatic-floor-transport-2026-11-02/README.md) |
+
+Wheel power comes from each member's actual `/<member>/joint_states` complete
+actuator effort/rate samples and named source/runtime certificates. The global
+`effort_observation_verified` flag is not qualification. Nominal RMF energy
+cost objects remain disabled. The new official SDK multi-floor graph and explicit
+lease epochs now have a separate actual SDK L0-L1-L0 and active process-loss/
+resumption receipt in the automatic transport evidence. These remain single-member cases.
+
+## Ordered remaining work
+
+| Order | Lane | Next implementation / focused case | Broader acceptance still required |
+|---|---|---|---|
+| 1 | R10.2 fleet/RMF | Preserve measured SDK L0-L1-L0, commanded-height hold and actual ownership-loss latch; extend to other bases/concurrent conflicts | Other base/floors, concurrent conflicts/passengers, coverage/contact/larger fleets; calibrated energy/RMF energy scheduling |
+| 2 | R10.3 aerial | Preserve measured two-X500 formation/loss landing; resolve the exact current FCU issue and implement remaining multi-member/map behaviors | Formation/altitude convergence, member-loss/contact and larger groups on additional maps |
+| 3 | R10.4–R10.5 marine | Continue AUV/surface saved-map routes and obstacle/current/loss handling using the existing sensors/map export/estimation | Per-plant/world acquisition, reload, settled routes, contacts and loss outcomes |
+| 4 | R10.6–R10.7 multi-leg | Complete per-model higher-mode endpoints and terrain/slip/recovery behavior | Hexapod/octopod/centipede terrain, localization/SLAM/navigation and source-appropriate backends |
+| 5 | R10.7 additional forms | Continue flipper-aware navigation and snake/amphibious terrain/slip handling | Articulated tracks, snake and shore missions across additional maps/backends |
+| 6 | R10.8 / R4 / R8.3 | Extend existing real workload producers, applied seeds and contact/clearance observations | Larger resource campaigns and source-matched repeated trials |
+| 7 | R6 / R3.6 maps | Finish reviewed imports, actor/multi-floor/terrain adapters | Real selected-world, occupancy and robot missions per backend |
+| 8 | Older R5 / R7–R9 / R11–R12 | Continue car/perception/manipulation/policy/comparison/release gaps named in the ledger | Exact task acceptance; physical joystick and optional HIL remain separate |
+
+Use the existing GUI workflows and their autofilled commands. For launch
+arguments inspect `--show-args` or copy the current GUI command; do not invent
+`fleet_facility.launch.py`, `fleet_rmf.launch.py`, `marine.launch.py`, per-gait
+launch files or a `members:=N` aerial API.
+
+Reproduction guides: [fleet](../tutorials/fleet-and-swarm.md),
+[facility](../tutorials/fleet-infrastructure.md),
+[aerial](../tutorials/aerial-swarm.md), [ROV](../tutorials/marine-rov.md),
+[AUV](../tutorials/tethys-auv.md), [multi-leg](../tutorials/multi-leg-gaits.md),
+[snake](../tutorials/wheeled-snake.md), [amphibious](../tutorials/amphibious-rover.md),
+[tracks](../tutorials/tracked-vehicle.md), [cars](../tutorials/bicycle-control.md).
+
+## Required receipt for each mission
+
+Record the exact robot/profile, world/floor, simulator, mode, algorithm and
+source/config/asset/runtime hashes; command, domain/partition, seed and SSD
+artifact paths; actual independent body/sensor/actuator observations; fixed
+acceptance and retained failures; terminal position/heading/rates, Stop/loss
+outcomes and owned cleanup. Keep the estimated pose separate from truth used
+for measurement. Do not write truth poses or synthetic PASS metrics into the
+plant/estimator to make a task complete.
+
+A unit test is a source regression. A native graph parse verifies SDK structure.
+A Nav2 success is an action result. A mission requires the named independent
+measured endpoint and applicable contact/loss criteria. Wider acceptance needs
+its own cases; historical certificates cannot be refreshed by changed-source
+metadata or the October 1 demonstration reports.
+
+## Build and publication checks
+
+Build changed packages and run focused checks that address the implementation.
+After a coherent delivery, use `scripts/test_tiers.sh fast`, `physics` and
+`integration`, plus registry validation, in the documented ROS environment.
+Preserve explicit unavailable-engine skips and actual failures. Inspect the
+GitHub Actions logs on the exact published revision; a green earlier revision
+does not establish the current one. Current CI dependency/cache repair evidence:
+[November 2 CI receipt](evidence/ci-onnxruntime-2026-11-02.md).
+
+Update README, roadmap, live ledger, current status/checklist, tutorials and GUI
+status in the same delivery. Keep unrelated work and all named failed/successful
+receipts. Broad campaigns can follow initial implementation; there is no
+fabricated seven-day completion schedule or prechecked all-project success.

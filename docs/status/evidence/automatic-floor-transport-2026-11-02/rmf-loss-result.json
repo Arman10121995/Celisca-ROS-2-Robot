@@ -1,0 +1,1493 @@
+{
+  "passed": true,
+  "reason": "Actual SDK process suspension holds the car; resumption remains disabled until explicit re-enable",
+  "phase": "resumed",
+  "wall_seconds": 130.73356056299963,
+  "held_observations": [
+    {
+      "position": 0.5638618666223775,
+      "command": 0.5638041138809199
+    },
+    {
+      "position": 0.5638618666223775,
+      "command": 0.5638041138809199
+    },
+    {
+      "position": 0.5638618454794365,
+      "command": 0.5638041138809199
+    },
+    {
+      "position": 0.5638618454794365,
+      "command": 0.5638041138809199
+    },
+    {
+      "position": 0.5638618454794365,
+      "command": 0.5638041138809199
+    },
+    {
+      "position": 0.5638618499174428,
+      "command": 0.5638041138809199
+    },
+    {
+      "position": 0.5638618499174428,
+      "command": 0.5638041138809199
+    },
+    {
+      "position": 0.5638618264970179,
+      "command": 0.5638041138809199
+    },
+    {
+      "position": 0.5638618264970179,
+      "command": 0.5638041138809199
+    },
+    {
+      "position": 0.5638618264970179,
+      "command": 0.5638041138809199
+    },
+    {
+      "position": 0.5638618169605428,
+      "command": 0.5638041138809199
+    },
+    {
+      "position": 0.5638618169605428,
+      "command": 0.5638041138809199
+    },
+    {
+      "position": 0.5638618146239136,
+      "command": 0.5638041138809199
+    },
+    {
+      "position": 0.5638618146239136,
+      "command": 0.5638041138809199
+    },
+    {
+      "position": 0.5638618151710961,
+      "command": 0.5638041138809199
+    },
+    {
+      "position": 0.5638618151710961,
+      "command": 0.5638041138809199
+    },
+    {
+      "position": 0.5638618151710961,
+      "command": 0.5638041138809199
+    },
+    {
+      "position": 0.5638617905116068,
+      "command": 0.5638041138809199
+    },
+    {
+      "position": 0.5638617905116068,
+      "command": 0.5638041138809199
+    },
+    {
+      "position": 0.5638617983173518,
+      "command": 0.5638041138809199
+    },
+    {
+      "position": 0.5638617983173518,
+      "command": 0.5638041138809199
+    },
+    {
+      "position": 0.5638617983173518,
+      "command": 0.5638041138809199
+    },
+    {
+      "position": 0.5638617794880075,
+      "command": 0.5638041138809199
+    },
+    {
+      "position": 0.5638617794880075,
+      "command": 0.5638041138809199
+    },
+    {
+      "position": 0.5638617811958856,
+      "command": 0.5638041138809199
+    },
+    {
+      "position": 0.5638617811958856,
+      "command": 0.5638041138809199
+    },
+    {
+      "position": 0.5638617669488343,
+      "command": 0.5638041138809199
+    },
+    {
+      "position": 0.5638617669488343,
+      "command": 0.5638041138809199
+    },
+    {
+      "position": 0.5638617669488343,
+      "command": 0.5638041138809199
+    },
+    {
+      "position": 0.5638617486096844,
+      "command": 0.5638041138809199
+    },
+    {
+      "position": 0.5638617486096844,
+      "command": 0.5638041138809199
+    },
+    {
+      "position": 0.5638617558576771,
+      "command": 0.5638041138809199
+    },
+    {
+      "position": 0.5638617558576771,
+      "command": 0.5638041138809199
+    },
+    {
+      "position": 0.5638617558576771,
+      "command": 0.5638041138809199
+    },
+    {
+      "position": 0.563861721081246,
+      "command": 0.5638041138809199
+    },
+    {
+      "position": 0.563861721081246,
+      "command": 0.5638041138809199
+    },
+    {
+      "position": 0.5638617307861691,
+      "command": 0.5638041138809199
+    },
+    {
+      "position": 0.5638617307861691,
+      "command": 0.5638041138809199
+    },
+    {
+      "position": 0.5638617307861691,
+      "command": 0.5638041138809199
+    },
+    {
+      "position": 0.5638617136450637,
+      "command": 0.5638041138809199
+    },
+    {
+      "position": 0.5638617136450637,
+      "command": 0.5638041138809199
+    },
+    {
+      "position": 0.5638617136450637,
+      "command": 0.5638041138809199
+    },
+    {
+      "position": 0.563861709387377,
+      "command": 0.5638041138809199
+    },
+    {
+      "position": 0.563861709387377,
+      "command": 0.5638041138809199
+    },
+    {
+      "position": 0.563861709387377,
+      "command": 0.5638041138809199
+    },
+    {
+      "position": 0.563861687341844,
+      "command": 0.5638041138809199
+    },
+    {
+      "position": 0.563861687341844,
+      "command": 0.5638041138809199
+    },
+    {
+      "position": 0.563861687341844,
+      "command": 0.5638041138809199
+    },
+    {
+      "position": 0.5638616802818853,
+      "command": 0.5638041138809199
+    },
+    {
+      "position": 0.5638616802818853,
+      "command": 0.5638041138809199
+    },
+    {
+      "position": 0.5638616806298077,
+      "command": 0.5638041138809199
+    },
+    {
+      "position": 0.5638616806298077,
+      "command": 0.5638041138809199
+    },
+    {
+      "position": 0.5638616806298077,
+      "command": 0.5638041138809199
+    },
+    {
+      "position": 0.5638616601769079,
+      "command": 0.5638041138809199
+    },
+    {
+      "position": 0.5638616601769079,
+      "command": 0.5638041138809199
+    },
+    {
+      "position": 0.5638616638932074,
+      "command": 0.5638041138809199
+    },
+    {
+      "position": 0.5638616638932074,
+      "command": 0.5638041138809199
+    },
+    {
+      "position": 0.5638616638932074,
+      "command": 0.5638041138809199
+    },
+    {
+      "position": 0.5638616638932074,
+      "command": 0.5638041138809199
+    },
+    {
+      "position": 0.5638616697596495,
+      "command": 0.5638041138809199
+    },
+    {
+      "position": 0.5638616697596495,
+      "command": 0.5638041138809199
+    },
+    {
+      "position": 0.5638616697596495,
+      "command": 0.5638041138809199
+    },
+    {
+      "position": 0.5638616352444394,
+      "command": 0.5638041138809199
+    },
+    {
+      "position": 0.5638616352444394,
+      "command": 0.5638041138809199
+    },
+    {
+      "position": 0.5638616387022941,
+      "command": 0.5638041138809199
+    },
+    {
+      "position": 0.5638616387022941,
+      "command": 0.5638041138809199
+    },
+    {
+      "position": 0.5638616195431403,
+      "command": 0.5638041138809199
+    },
+    {
+      "position": 0.5638616195431403,
+      "command": 0.5638041138809199
+    },
+    {
+      "position": 0.5638616195431403,
+      "command": 0.5638041138809199
+    },
+    {
+      "position": 0.5638616176427831,
+      "command": 0.5638041138809199
+    },
+    {
+      "position": 0.5638616176427831,
+      "command": 0.5638041138809199
+    },
+    {
+      "position": 0.5638616236901646,
+      "command": 0.5638041138809199
+    },
+    {
+      "position": 0.5638616236901646,
+      "command": 0.5638041138809199
+    },
+    {
+      "position": 0.5638616236901646,
+      "command": 0.5638041138809199
+    },
+    {
+      "position": 0.5638616101744635,
+      "command": 0.5638041138809199
+    },
+    {
+      "position": 0.5638616101744635,
+      "command": 0.5638041138809199
+    },
+    {
+      "position": 0.5638615917548171,
+      "command": 0.5638041138809199
+    }
+  ],
+  "fleet": {
+    "schema_version": 1,
+    "session_id": "session-0oxi9yhh",
+    "map": "fleet_facility",
+    "backend": "gazebo",
+    "navigation": true,
+    "directory": "/workspace/molar/robot_lab_runtime/fleet_sessions/session-0oxi9yhh",
+    "sim_time": 251.42,
+    "clock_age": 0.012,
+    "operator_id": "rmf-ee2e85d054cf4c16a0d7bf3d0ed97023",
+    "operator_fresh": false,
+    "swarm": null,
+    "members": [
+      {
+        "id": "alpha",
+        "model": "bumperbot",
+        "mode": "idle",
+        "reason": "Lift interlock / stale facility feedback; wheel input held neutral",
+        "included": true,
+        "ready": false,
+        "limits": {
+          "linear": 0.35,
+          "angular": 0.8
+        },
+        "navigation_ready": true,
+        "estimate": {
+          "x": 3.610146051462914,
+          "y": -0.025504946050154992,
+          "yaw": 0.02382970508770737
+        },
+        "estimate_source": "AMCL transform + wheel feedback",
+        "truth": {
+          "x": 3.717938110122844,
+          "y": 0.023945508141171093,
+          "z": 0.5639187730087342,
+          "yaw": 0.021231630861715665,
+          "linear": -7.189247131994735e-09,
+          "angular": 3.4730013604572507e-07,
+          "velocity_source": "finite difference of measured stamped Gazebo poses",
+          "source_reported_twist": {
+            "linear": -2.7738654919052185e-07,
+            "angular": 3.473001386478103e-07
+          }
+        },
+        "command": {
+          "linear": 0.0,
+          "angular": 0.0
+        },
+        "wheel_twist": {
+          "linear": -8.89199824883589e-10,
+          "angular": 1.0438186263061729e-08
+        },
+        "ages": {
+          "odom": 0.001,
+          "truth": 0.076,
+          "scan": 0.031,
+          "amcl": 36.039,
+          "localization_tf": 29.203
+        },
+        "message_counts": {
+          "odom": 12507,
+          "truth": 12506,
+          "scan": 1251,
+          "amcl": 452
+        },
+        "task": "",
+        "goal": null,
+        "active_source": "",
+        "nav2_pending": false,
+        "cancel_pending": false,
+        "queued": 0,
+        "queued_tasks": [],
+        "queue_paused": false,
+        "settled_spawn_recorded": true,
+        "reset_pose": [
+          2.5000272753778976,
+          2.4657868559411084e-07,
+          -5.178112884421082e-06
+        ],
+        "radius_m": 0.118,
+        "battery": null,
+        "charging": null,
+        "contact": {
+          "peer": "",
+          "at": null,
+          "margin_m": 0.0,
+          "active": false
+        }
+      }
+    ],
+    "last_rejection": "Connect a live operator before commanding the fleet",
+    "traffic": {
+      "serial": false,
+      "policy": "Concurrent routes with local scan/separation guards"
+    },
+    "task_history": [
+      {
+        "task": "8a9b817090f749b39e4d2482165bd2b2",
+        "source": "route:rmf-aacc0453721f44fa83ecc13c24a70c20",
+        "goal": {
+          "x": 2.5,
+          "y": 0.0,
+          "yaw": -2.191210316391521e-20,
+          "timeout": 180.0,
+          "not_before": 4.396
+        },
+        "state": "succeeded",
+        "reason": "Actual Nav2 success and measured settled arrival",
+        "finished": 27614.033593391,
+        "observation": {
+          "x": 2.5000272753844976,
+          "y": 2.465787063658545e-07,
+          "z": 1.7326781267856358e-06,
+          "yaw": -5.178245951958335e-06,
+          "linear": 0.0,
+          "angular": 0.0,
+          "velocity_source": "finite difference of measured stamped Gazebo poses",
+          "source_reported_twist": {
+            "linear": 0.0,
+            "angular": 0.0
+          }
+        }
+      },
+      {
+        "task": "11eb2d80e3954ff180221154e6343cb0",
+        "source": "route:rmf-aacc0453721f44fa83ecc13c24a70c20",
+        "goal": {
+          "x": 2.3,
+          "y": 0.0,
+          "yaw": 0.0,
+          "timeout": 180.0,
+          "not_before": 4.396
+        },
+        "state": "succeeded",
+        "reason": "Actual Nav2 success and measured settled arrival",
+        "finished": 27641.63258987,
+        "observation": {
+          "x": 2.342088705409792,
+          "y": 0.0045338180975521,
+          "z": 1.8120887134146792e-06,
+          "yaw": 0.013034349540455984,
+          "linear": 0.0,
+          "angular": 0.0,
+          "velocity_source": "finite difference of measured stamped Gazebo poses",
+          "source_reported_twist": {
+            "linear": 0.0,
+            "angular": 0.0
+          }
+        }
+      },
+      {
+        "task": "7284a7d7200a4ccd8699336a0a407b75",
+        "source": "route:rmf-d650907a87c84368a5be11a094c78f98",
+        "goal": {
+          "x": 2.3,
+          "y": 0.0,
+          "yaw": 0.0,
+          "timeout": 180.0,
+          "not_before": 6.028993
+        },
+        "state": "succeeded",
+        "reason": "Actual Nav2 success and measured settled arrival",
+        "finished": 27662.283782289,
+        "observation": {
+          "x": 2.355107469972374,
+          "y": 0.0046961444897742335,
+          "z": 1.4115268605579518e-06,
+          "yaw": 0.013018833165909842,
+          "linear": 0.0,
+          "angular": 0.0,
+          "velocity_source": "finite difference of measured stamped Gazebo poses",
+          "source_reported_twist": {
+            "linear": 0.0,
+            "angular": 0.0
+          }
+        }
+      },
+      {
+        "task": "b5bf75eb0e6c4a45b9650b0b5516cafc",
+        "source": "route:rmf-d650907a87c84368a5be11a094c78f98",
+        "goal": {
+          "x": 3.65,
+          "y": 0.0,
+          "yaw": 0.0,
+          "timeout": 180.0,
+          "not_before": 6.028993
+        },
+        "state": "succeeded",
+        "reason": "Actual Nav2 success and measured settled arrival",
+        "finished": 27691.782902999,
+        "observation": {
+          "x": 3.7098018810693767,
+          "y": 0.024495735325293887,
+          "z": -2.561095512755055e-07,
+          "yaw": 0.03133153783894676,
+          "linear": -7.262361555628896e-09,
+          "angular": 1.1305833200192514e-06,
+          "velocity_source": "finite difference of measured stamped Gazebo poses",
+          "source_reported_twist": {
+            "linear": -2.960885853511563e-07,
+            "angular": 1.1305833158559153e-06
+          }
+        }
+      },
+      {
+        "task": "0d6784288c0d4f74ac75b0d647969620",
+        "source": "route:rmf-7a22781ed29b4e22bb4cb20caeb3927b",
+        "goal": {
+          "x": 3.65,
+          "y": 0.0,
+          "yaw": 3.141592653589793,
+          "timeout": 180.0,
+          "not_before": 23.248314
+        },
+        "state": "succeeded",
+        "reason": "Actual Nav2 success and measured settled arrival",
+        "finished": 27762.883237038,
+        "observation": {
+          "x": 3.650723065656245,
+          "y": 0.019841452887604305,
+          "z": 3.000000282137184,
+          "yaw": -3.1377447574757333,
+          "linear": -4.3633123200250585e-09,
+          "angular": -6.047904843597962e-07,
+          "velocity_source": "finite difference of measured stamped Gazebo poses",
+          "source_reported_twist": {
+            "linear": -1.7996683201113445e-07,
+            "angular": -6.047904843597962e-07
+          }
+        }
+      },
+      {
+        "task": "76677c7db6ba4ba5b7891b4b9d297187",
+        "source": "route:rmf-7a22781ed29b4e22bb4cb20caeb3927b",
+        "goal": {
+          "x": 2.2,
+          "y": 0.0,
+          "yaw": 3.141592653589793,
+          "timeout": 180.0,
+          "not_before": 23.248314
+        },
+        "state": "succeeded",
+        "reason": "Actual Nav2 success and measured settled arrival",
+        "finished": 27783.775971453,
+        "observation": {
+          "x": 2.2088138717526893,
+          "y": -0.0009153134856480034,
+          "z": 3.0000018125623575,
+          "yaw": -3.127997269311713,
+          "linear": -0.0,
+          "angular": 0.0,
+          "velocity_source": "finite difference of measured stamped Gazebo poses",
+          "source_reported_twist": {
+            "linear": 0.0,
+            "angular": 0.0
+          }
+        }
+      },
+      {
+        "task": "c3acfd0bc887400bad42dad920b09383",
+        "source": "route:rmf-87eb50f21b504b45844e29202a0ed9f5",
+        "goal": {
+          "x": 2.2,
+          "y": 0.0,
+          "yaw": -3.131120526036606,
+          "timeout": 180.0,
+          "not_before": 89.234
+        },
+        "state": "succeeded",
+        "reason": "Actual Nav2 success and measured settled arrival",
+        "finished": 27784.634893557,
+        "observation": {
+          "x": 2.208813867515274,
+          "y": -0.0009150588407851431,
+          "z": 3.0000018121110896,
+          "yaw": -3.12726561187382,
+          "linear": -0.0,
+          "angular": 0.0,
+          "velocity_source": "finite difference of measured stamped Gazebo poses",
+          "source_reported_twist": {
+            "linear": 0.0,
+            "angular": 0.0
+          }
+        }
+      },
+      {
+        "task": "9bd396ad55464cc18c5c8a03ae9a3bf4",
+        "source": "route:rmf-87eb50f21b504b45844e29202a0ed9f5",
+        "goal": {
+          "x": 2.2,
+          "y": 0.0,
+          "yaw": -3.131120526036606,
+          "timeout": 180.0,
+          "not_before": 89.234
+        },
+        "state": "succeeded",
+        "reason": "Actual Nav2 success and measured settled arrival",
+        "finished": 27785.176054445,
+        "observation": {
+          "x": 2.208813867515274,
+          "y": -0.0009150588407851431,
+          "z": 3.0000018121110896,
+          "yaw": -3.12726561187382,
+          "linear": -0.0,
+          "angular": 0.0,
+          "velocity_source": "finite difference of measured stamped Gazebo poses",
+          "source_reported_twist": {
+            "linear": 0.0,
+            "angular": 0.0
+          }
+        }
+      },
+      {
+        "task": "2d8b43afd0f5462b90992a6ff8a37168",
+        "source": "route:rmf-afbf6288fc444c438b2cb76d2d18c573",
+        "goal": {
+          "x": 2.2,
+          "y": 0.0,
+          "yaw": -3.131727858335985,
+          "timeout": 180.0,
+          "not_before": 92.046
+        },
+        "state": "succeeded",
+        "reason": "Actual Nav2 success and measured settled arrival",
+        "finished": 27788.832777475,
+        "observation": {
+          "x": 2.208813867515274,
+          "y": -0.0009150588407851431,
+          "z": 3.0000018121110896,
+          "yaw": -3.12726561187382,
+          "linear": -0.0,
+          "angular": 0.0,
+          "velocity_source": "finite difference of measured stamped Gazebo poses",
+          "source_reported_twist": {
+            "linear": 0.0,
+            "angular": 0.0
+          }
+        }
+      },
+      {
+        "task": "551bb55bd6f041f2b902ba8a9f2bef53",
+        "source": "route:rmf-afbf6288fc444c438b2cb76d2d18c573",
+        "goal": {
+          "x": 2.2,
+          "y": 0.0,
+          "yaw": 0.0,
+          "timeout": 180.0,
+          "not_before": 92.046
+        },
+        "state": "succeeded",
+        "reason": "Actual Nav2 success and measured settled arrival",
+        "finished": 27800.037338579,
+        "observation": {
+          "x": 2.208117771102788,
+          "y": -0.0009159024637819831,
+          "z": 3.000001812078235,
+          "yaw": -0.010908932877188037,
+          "linear": 0.0,
+          "angular": 0.0,
+          "velocity_source": "finite difference of measured stamped Gazebo poses",
+          "source_reported_twist": {
+            "linear": 0.0,
+            "angular": 0.0
+          }
+        }
+      },
+      {
+        "task": "a3eafa788ab24b76a69023957cc06411",
+        "source": "route:rmf-7ee224094a7d4a6d9dcbeaca621dab26",
+        "goal": {
+          "x": 2.2,
+          "y": 0.0,
+          "yaw": 0.0,
+          "timeout": 180.0,
+          "not_before": 98.015546
+        },
+        "state": "succeeded",
+        "reason": "Actual Nav2 success and measured settled arrival",
+        "finished": 27814.375774109,
+        "observation": {
+          "x": 2.2081177555883165,
+          "y": -0.0009174666463126901,
+          "z": 3.0000018120734238,
+          "yaw": -0.006414774052529943,
+          "linear": 0.0,
+          "angular": 0.0,
+          "velocity_source": "finite difference of measured stamped Gazebo poses",
+          "source_reported_twist": {
+            "linear": 0.0,
+            "angular": 0.0
+          }
+        }
+      },
+      {
+        "task": "5d5f95e4297742e999e336f60701cfeb",
+        "source": "route:rmf-7ee224094a7d4a6d9dcbeaca621dab26",
+        "goal": {
+          "x": 3.65,
+          "y": 0.0,
+          "yaw": 0.0,
+          "timeout": 180.0,
+          "not_before": 98.015546
+        },
+        "state": "succeeded",
+        "reason": "Actual Nav2 success and measured settled arrival",
+        "finished": 27835.028649186,
+        "observation": {
+          "x": 3.6256464886666477,
+          "y": -0.0004447333625135673,
+          "z": 2.999999633682312,
+          "yaw": -0.01366975232670081,
+          "linear": -9.503720092972186e-07,
+          "angular": 2.7707366686245682e-05,
+          "velocity_source": "finite difference of measured stamped Gazebo poses",
+          "source_reported_twist": {
+            "linear": 5.008950732718942e-08,
+            "angular": 2.7707366356821694e-05
+          }
+        }
+      },
+      {
+        "task": "3bfd0ae95df64d0a8971fff99d58eb01",
+        "source": "route:rmf-519aa9b2b2b040289f6def76df2929cc",
+        "goal": {
+          "x": 3.65,
+          "y": 0.0,
+          "yaw": 3.141592653589793,
+          "timeout": 180.0,
+          "not_before": 115.634867
+        },
+        "state": "succeeded",
+        "reason": "Actual Nav2 success and measured settled arrival",
+        "finished": 27925.375534754,
+        "observation": {
+          "x": 3.7154936078246825,
+          "y": -0.031054950257388955,
+          "z": 4.973272919206205e-07,
+          "yaw": -3.1331431772683427,
+          "linear": -6.357860310230005e-09,
+          "angular": 2.80845235955951e-07,
+          "velocity_source": "finite difference of measured stamped Gazebo poses",
+          "source_reported_twist": {
+            "linear": -2.285621114600022e-07,
+            "angular": 2.80845235955951e-07
+          }
+        }
+      },
+      {
+        "task": "51c9c02fa79c4fadb18d8c1877fd910a",
+        "source": "route:rmf-519aa9b2b2b040289f6def76df2929cc",
+        "goal": {
+          "x": 2.3,
+          "y": 0.0,
+          "yaw": 3.141592653589793,
+          "timeout": 180.0,
+          "not_before": 115.634867
+        },
+        "state": "succeeded",
+        "reason": "Actual Nav2 success and measured settled arrival",
+        "finished": 27955.122122036,
+        "observation": {
+          "x": 2.3993713333321236,
+          "y": 0.011130884946081982,
+          "z": 1.8124523445354776e-06,
+          "yaw": 3.126495857363951,
+          "linear": 0.0,
+          "angular": 0.0,
+          "velocity_source": "finite difference of measured stamped Gazebo poses",
+          "source_reported_twist": {
+            "linear": 0.0,
+            "angular": 0.0
+          }
+        }
+      },
+      {
+        "task": "f0e621582757440bbb1916cdca9d902b",
+        "source": "route:rmf-cbc8982ea694450caaa4af6fb0c02b96",
+        "goal": {
+          "x": 2.3,
+          "y": 0.0,
+          "yaw": 3.123904010006216,
+          "timeout": 180.0,
+          "not_before": 175.434
+        },
+        "state": "succeeded",
+        "reason": "Actual Nav2 success and measured settled arrival",
+        "finished": 27955.77700499,
+        "observation": {
+          "x": 2.3993713333321236,
+          "y": 0.011130884946081982,
+          "z": 1.8124523445354776e-06,
+          "yaw": 3.126495857363951,
+          "linear": 0.0,
+          "angular": 0.0,
+          "velocity_source": "finite difference of measured stamped Gazebo poses",
+          "source_reported_twist": {
+            "linear": 0.0,
+            "angular": 0.0
+          }
+        }
+      },
+      {
+        "task": "5d775ece46a54286835b9f7cffcee231",
+        "source": "route:rmf-cbc8982ea694450caaa4af6fb0c02b96",
+        "goal": {
+          "x": 2.3,
+          "y": 0.0,
+          "yaw": 3.123904010006216,
+          "timeout": 180.0,
+          "not_before": 175.434
+        },
+        "state": "succeeded",
+        "reason": "Actual Nav2 success and measured settled arrival",
+        "finished": 27956.32255794,
+        "observation": {
+          "x": 2.3993713333321236,
+          "y": 0.011130884946081982,
+          "z": 1.8124523445354776e-06,
+          "yaw": 3.126495857363951,
+          "linear": 0.0,
+          "angular": 0.0,
+          "velocity_source": "finite difference of measured stamped Gazebo poses",
+          "source_reported_twist": {
+            "linear": 0.0,
+            "angular": 0.0
+          }
+        }
+      },
+      {
+        "task": "9fbada5dced94a79a383d4f397127f8f",
+        "source": "route:rmf-61368847c4f1417b8df2571f49801254",
+        "goal": {
+          "x": 2.3,
+          "y": 0.0,
+          "yaw": 3.1201691270552145,
+          "timeout": 180.0,
+          "not_before": 194.536
+        },
+        "state": "succeeded",
+        "reason": "Actual Nav2 success and measured settled arrival",
+        "finished": 28000.77343256,
+        "observation": {
+          "x": 2.3993713333321236,
+          "y": 0.011130884946081982,
+          "z": 1.8124523445354776e-06,
+          "yaw": 3.126495857363951,
+          "linear": 0.0,
+          "angular": 0.0,
+          "velocity_source": "finite difference of measured stamped Gazebo poses",
+          "source_reported_twist": {
+            "linear": 0.0,
+            "angular": 0.0
+          }
+        }
+      },
+      {
+        "task": "7eecdb3d8061453fba24ee32a5b6205d",
+        "source": "route:rmf-61368847c4f1417b8df2571f49801254",
+        "goal": {
+          "x": 2.3,
+          "y": 0.0,
+          "yaw": 0.0,
+          "timeout": 180.0,
+          "not_before": 194.536
+        },
+        "state": "succeeded",
+        "reason": "Actual Nav2 success and measured settled arrival",
+        "finished": 28034.519740942,
+        "observation": {
+          "x": 2.396299888412291,
+          "y": 0.014447334254750466,
+          "z": 1.8120887123227815e-06,
+          "yaw": 0.0071696351208239955,
+          "linear": 0.0,
+          "angular": 0.0,
+          "velocity_source": "finite difference of measured stamped Gazebo poses",
+          "source_reported_twist": {
+            "linear": 0.0,
+            "angular": 0.0
+          }
+        }
+      },
+      {
+        "task": "212aae1bce0a4cc5b3e8de097bfbda28",
+        "source": "route:rmf-7ede8bc2a14640c4aed3df90f382c420",
+        "goal": {
+          "x": 2.3,
+          "y": 0.0,
+          "yaw": 0.0,
+          "timeout": 180.0,
+          "not_before": 200.486281
+        },
+        "state": "succeeded",
+        "reason": "Actual Nav2 success and measured settled arrival",
+        "finished": 28065.519639374,
+        "observation": {
+          "x": 2.3962995794315556,
+          "y": 0.014451441943893717,
+          "z": 1.8120782344508714e-06,
+          "yaw": -0.004115824823721343,
+          "linear": 0.0,
+          "angular": 0.0,
+          "velocity_source": "finite difference of measured stamped Gazebo poses",
+          "source_reported_twist": {
+            "linear": 0.0,
+            "angular": 0.0
+          }
+        }
+      },
+      {
+        "task": "8fac0eae900b434b9b4b6c344841e2ff",
+        "source": "route:rmf-7ede8bc2a14640c4aed3df90f382c420",
+        "goal": {
+          "x": 3.65,
+          "y": 0.0,
+          "yaw": 0.0,
+          "timeout": 180.0,
+          "not_before": 200.486281
+        },
+        "state": "succeeded",
+        "reason": "Actual Nav2 success and measured settled arrival",
+        "finished": 28095.519698186,
+        "observation": {
+          "x": 3.718022457409099,
+          "y": 0.023945961176997047,
+          "z": 2.670886704759046e-07,
+          "yaw": 0.020991177467893966,
+          "linear": -6.348695172976718e-09,
+          "angular": 2.2055599915860036e-07,
+          "velocity_source": "finite difference of measured stamped Gazebo poses",
+          "source_reported_twist": {
+            "linear": -2.3993149194766206e-07,
+            "angular": 2.205559956891534e-07
+          }
+        }
+      }
+    ],
+    "contacts": {
+      "active": [],
+      "events": []
+    },
+    "scope": "Experimental shared-world runtime; contact and mission qualification pending"
+  },
+  "facility": {
+    "session_id": "session-0oxi9yhh",
+    "ready": true,
+    "held_members": [
+      "alpha"
+    ],
+    "doors": {
+      "main": {
+        "position_m": 0.0,
+        "command_m": 0.0,
+        "target_m": 0.0,
+        "mode": 0,
+        "sweep_blocked": false
+      },
+      "lift": {
+        "position_m": -9.196625810396623e-12,
+        "command_m": -6.698492222384525e-12,
+        "target_m": 0.0,
+        "mode": 0,
+        "sweep_blocked": false
+      },
+      "landing_L0": {
+        "position_m": -9.224421166178759e-12,
+        "command_m": -6.726287577299281e-12,
+        "target_m": 0.0,
+        "mode": 0,
+        "sweep_blocked": false
+      },
+      "landing_L1": {
+        "position_m": -1.3070308824650954e-10,
+        "command_m": -1.282049546823363e-10,
+        "target_m": 0.0,
+        "mode": 0,
+        "sweep_blocked": false
+      }
+    },
+    "lift": {
+      "position_m": 0.5639187368355538,
+      "command_m": 0.563861591507535,
+      "current_floor": "",
+      "destination": null,
+      "floors": [
+        "L0",
+        "L1"
+      ]
+    },
+    "docks": {
+      "west_charger": {
+        "x": -4.5,
+        "y": -3.0,
+        "z": 0.0,
+        "yaw": 0.0,
+        "position_tolerance": 0.12,
+        "height_tolerance": 0.12,
+        "yaw_tolerance": 0.15
+      }
+    },
+    "docking": {},
+    "energy": {
+      "alpha": {
+        "fraction": 0.7958010937791266,
+        "power_W": 3.0,
+        "charging_W": 0.0,
+        "source_verified": true,
+        "coverage_complete": true,
+        "reason": "Observed simulation actuator power",
+        "source": "Authored battery model + sampled wheel effort/rate; no regeneration or hardware battery telemetry"
+      }
+    },
+    "robot_floors": {
+      "alpha": "L0"
+    },
+    "transports": {},
+    "reservations": {},
+    "last_rejection": "",
+    "operator_id": "rmf-ee2e85d054cf4c16a0d7bf3d0ed97023",
+    "operator_fresh": false,
+    "localization_scan_enabled": {
+      "alpha": false
+    },
+    "floor_z": {
+      "alpha": 0.0
+    },
+    "floor_maps": {
+      "L0": "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_maps/share/robot_lab_maps/maps/fleet_facility/maps/map.yaml",
+      "L1": "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_maps/share/robot_lab_maps/maps/fleet_facility/maps/map_L1.yaml"
+    },
+    "robot_floor_maps": {
+      "alpha": "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_maps/share/robot_lab_maps/maps/fleet_facility/maps/map.yaml"
+    },
+    "active_robot_maps": {
+      "alpha": "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_maps/share/robot_lab_maps/maps/fleet_facility/maps/map.yaml"
+    },
+    "map_loading": [],
+    "map_status": {
+      "alpha": "ready"
+    },
+    "map_errors": {},
+    "current_floor_map": "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_maps/share/robot_lab_maps/maps/fleet_facility/maps/map.yaml",
+    "operator_hold": true,
+    "rmf_protocol": true,
+    "rmf_control_ready": false,
+    "rmf_stopped_at": 28126.365196064,
+    "scope": "Fresh observed body poses determine robot floors; member Nav2 maps load per observed floor and commands remain held until loading succeeds; authored energy estimate"
+  },
+  "rmf": {
+    "enabled": false,
+    "session_id": "session-0oxi9yhh",
+    "operator_id": "rmf-ee2e85d054cf4c16a0d7bf3d0ed97023",
+    "robots": [
+      "alpha"
+    ],
+    "waypoints": [
+      {
+        "name": "p0",
+        "x": -4.699999999999999,
+        "y": -3.5999999999999996,
+        "floor": "L0",
+        "graph_index": 0
+      },
+      {
+        "name": "p1",
+        "x": -3.5,
+        "y": -3.5999999999999996,
+        "floor": "L0",
+        "graph_index": 1
+      },
+      {
+        "name": "p2",
+        "x": -2.3,
+        "y": -3.5999999999999996,
+        "floor": "L0",
+        "graph_index": 2
+      },
+      {
+        "name": "p3",
+        "x": -1.0999999999999996,
+        "y": -3.5999999999999996,
+        "floor": "L0",
+        "graph_index": 3
+      },
+      {
+        "name": "p4",
+        "x": 1.3,
+        "y": -3.5999999999999996,
+        "floor": "L0",
+        "graph_index": 4
+      },
+      {
+        "name": "p5",
+        "x": 2.5,
+        "y": -3.5999999999999996,
+        "floor": "L0",
+        "graph_index": 5
+      },
+      {
+        "name": "p6",
+        "x": 3.7,
+        "y": -3.5999999999999996,
+        "floor": "L0",
+        "graph_index": 6
+      },
+      {
+        "name": "p7",
+        "x": 4.9,
+        "y": -3.5999999999999996,
+        "floor": "L0",
+        "graph_index": 7
+      },
+      {
+        "name": "p8",
+        "x": -4.699999999999999,
+        "y": -2.4,
+        "floor": "L0",
+        "graph_index": 8
+      },
+      {
+        "name": "p9",
+        "x": -3.5,
+        "y": -2.4,
+        "floor": "L0",
+        "graph_index": 9
+      },
+      {
+        "name": "p10",
+        "x": -2.3,
+        "y": -2.4,
+        "floor": "L0",
+        "graph_index": 10
+      },
+      {
+        "name": "p11",
+        "x": -1.0999999999999996,
+        "y": -2.4,
+        "floor": "L0",
+        "graph_index": 11
+      },
+      {
+        "name": "p12",
+        "x": 1.3,
+        "y": -2.4,
+        "floor": "L0",
+        "graph_index": 12
+      },
+      {
+        "name": "p13",
+        "x": 2.5,
+        "y": -2.4,
+        "floor": "L0",
+        "graph_index": 13
+      },
+      {
+        "name": "p14",
+        "x": 3.7,
+        "y": -2.4,
+        "floor": "L0",
+        "graph_index": 14
+      },
+      {
+        "name": "p15",
+        "x": 4.9,
+        "y": -2.4,
+        "floor": "L0",
+        "graph_index": 15
+      },
+      {
+        "name": "p16",
+        "x": -4.699999999999999,
+        "y": -1.2,
+        "floor": "L0",
+        "graph_index": 16
+      },
+      {
+        "name": "p17",
+        "x": -3.5,
+        "y": -1.2,
+        "floor": "L0",
+        "graph_index": 17
+      },
+      {
+        "name": "p18",
+        "x": -2.3,
+        "y": -1.2,
+        "floor": "L0",
+        "graph_index": 18
+      },
+      {
+        "name": "p19",
+        "x": -1.0999999999999996,
+        "y": -1.2,
+        "floor": "L0",
+        "graph_index": 19
+      },
+      {
+        "name": "p20",
+        "x": 1.3,
+        "y": -1.2,
+        "floor": "L0",
+        "graph_index": 20
+      },
+      {
+        "name": "p21",
+        "x": 2.5,
+        "y": -1.2,
+        "floor": "L0",
+        "graph_index": 21
+      },
+      {
+        "name": "p24",
+        "x": -4.699999999999999,
+        "y": 0.0,
+        "floor": "L0",
+        "graph_index": 22
+      },
+      {
+        "name": "p25",
+        "x": -3.5,
+        "y": 0.0,
+        "floor": "L0",
+        "graph_index": 23
+      },
+      {
+        "name": "p26",
+        "x": -2.3,
+        "y": 0.0,
+        "floor": "L0",
+        "graph_index": 24
+      },
+      {
+        "name": "p27",
+        "x": -1.0999999999999996,
+        "y": 0.0,
+        "floor": "L0",
+        "graph_index": 25
+      },
+      {
+        "name": "p29",
+        "x": 1.3,
+        "y": 0.0,
+        "floor": "L0",
+        "graph_index": 26
+      },
+      {
+        "name": "p30",
+        "x": 2.5,
+        "y": 0.0,
+        "floor": "L0",
+        "graph_index": 27
+      },
+      {
+        "name": "p33",
+        "x": -4.699999999999999,
+        "y": 1.2,
+        "floor": "L0",
+        "graph_index": 28
+      },
+      {
+        "name": "p34",
+        "x": -3.5,
+        "y": 1.2,
+        "floor": "L0",
+        "graph_index": 29
+      },
+      {
+        "name": "p35",
+        "x": -2.3,
+        "y": 1.2,
+        "floor": "L0",
+        "graph_index": 30
+      },
+      {
+        "name": "p36",
+        "x": -1.0999999999999996,
+        "y": 1.2,
+        "floor": "L0",
+        "graph_index": 31
+      },
+      {
+        "name": "p37",
+        "x": 1.3,
+        "y": 1.2,
+        "floor": "L0",
+        "graph_index": 32
+      },
+      {
+        "name": "p38",
+        "x": 2.5,
+        "y": 1.2,
+        "floor": "L0",
+        "graph_index": 33
+      },
+      {
+        "name": "p41",
+        "x": -4.699999999999999,
+        "y": 2.4,
+        "floor": "L0",
+        "graph_index": 34
+      },
+      {
+        "name": "p42",
+        "x": -3.5,
+        "y": 2.4,
+        "floor": "L0",
+        "graph_index": 35
+      },
+      {
+        "name": "p43",
+        "x": -2.3,
+        "y": 2.4,
+        "floor": "L0",
+        "graph_index": 36
+      },
+      {
+        "name": "p44",
+        "x": -1.0999999999999996,
+        "y": 2.4,
+        "floor": "L0",
+        "graph_index": 37
+      },
+      {
+        "name": "p45",
+        "x": 1.3,
+        "y": 2.4,
+        "floor": "L0",
+        "graph_index": 38
+      },
+      {
+        "name": "p46",
+        "x": 2.5,
+        "y": 2.4,
+        "floor": "L0",
+        "graph_index": 39
+      },
+      {
+        "name": "p47",
+        "x": 3.7,
+        "y": 2.4,
+        "floor": "L0",
+        "graph_index": 40
+      },
+      {
+        "name": "p48",
+        "x": 4.9,
+        "y": 2.4,
+        "floor": "L0",
+        "graph_index": 41
+      },
+      {
+        "name": "p49",
+        "x": -4.699999999999999,
+        "y": 3.5999999999999996,
+        "floor": "L0",
+        "graph_index": 42
+      },
+      {
+        "name": "p50",
+        "x": -3.5,
+        "y": 3.5999999999999996,
+        "floor": "L0",
+        "graph_index": 43
+      },
+      {
+        "name": "p51",
+        "x": -2.3,
+        "y": 3.5999999999999996,
+        "floor": "L0",
+        "graph_index": 44
+      },
+      {
+        "name": "p52",
+        "x": -1.0999999999999996,
+        "y": 3.5999999999999996,
+        "floor": "L0",
+        "graph_index": 45
+      },
+      {
+        "name": "p53",
+        "x": 1.3,
+        "y": 3.5999999999999996,
+        "floor": "L0",
+        "graph_index": 46
+      },
+      {
+        "name": "p54",
+        "x": 2.5,
+        "y": 3.5999999999999996,
+        "floor": "L0",
+        "graph_index": 47
+      },
+      {
+        "name": "p55",
+        "x": 3.7,
+        "y": 3.5999999999999996,
+        "floor": "L0",
+        "graph_index": 48
+      },
+      {
+        "name": "p56",
+        "x": 4.9,
+        "y": 3.5999999999999996,
+        "floor": "L0",
+        "graph_index": 49
+      },
+      {
+        "name": "door_main_0",
+        "x": -1.2,
+        "y": 0.0,
+        "floor": "L0",
+        "graph_index": 50
+      },
+      {
+        "name": "door_main_1",
+        "x": 1.2,
+        "y": 0.0,
+        "floor": "L0",
+        "graph_index": 51
+      },
+      {
+        "name": "L0_landing",
+        "x": 2.3,
+        "y": 0.0,
+        "floor": "L0",
+        "graph_index": 52
+      },
+      {
+        "name": "lift_L0_inside",
+        "floor": "L0",
+        "x": 3.65,
+        "y": 0.0,
+        "lift": "facility_lift",
+        "selectable": false,
+        "graph_index": 53
+      },
+      {
+        "name": "west_charger",
+        "x": -4.5,
+        "y": -3.0,
+        "floor": "L0",
+        "dock": "west_charger",
+        "graph_index": 54
+      },
+      {
+        "name": "L1_landing",
+        "x": 2.2,
+        "y": 0.0,
+        "floor": "L1",
+        "graph_index": 55
+      },
+      {
+        "name": "lift_L1_inside",
+        "floor": "L1",
+        "x": 3.65,
+        "y": 0.0,
+        "lift": "facility_lift",
+        "selectable": false,
+        "graph_index": 56
+      }
+    ],
+    "routes": {
+      "alpha": null
+    },
+    "battery": null,
+    "infrastructure": true,
+    "robot_floors": {
+      "alpha": "L0"
+    },
+    "levels": [
+      "L0",
+      "L1"
+    ],
+    "authorization_epoch": "8bad47ca64d242aea0432d110418608f",
+    "enabled_at": 27999.67972465,
+    "scope": "Actual Open-RMF adapter; declared facility adds physical door/lift protocol and independently observed docking; energy accounting disabled; mission qualification separate"
+  }
+}

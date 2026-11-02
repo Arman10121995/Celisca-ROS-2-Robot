@@ -308,12 +308,12 @@
     </model>
     <model name="landing_north_rail">
       <static>true</static>
-      <pose>2 1.0 4.1 0 0 0</pose>
+      <pose>1.875 1.0 4.1 0 0 0</pose>
       <link name="link">
         <visual name="visual">
           <geometry>
             <box>
-              <size>2.0 0.08 2.2</size>
+              <size>1.75 0.08 2.2</size>
             </box>
           </geometry>
           <material>
@@ -324,7 +324,7 @@
         <collision name="collision">
           <geometry>
             <box>
-              <size>2.0 0.08 2.2</size>
+              <size>1.75 0.08 2.2</size>
             </box>
           </geometry>
         </collision>
@@ -332,12 +332,12 @@
     </model>
     <model name="landing_south_rail">
       <static>true</static>
-      <pose>2 -1.0 4.1 0 0 0</pose>
+      <pose>1.875 -1.0 4.1 0 0 0</pose>
       <link name="link">
         <visual name="visual">
           <geometry>
             <box>
-              <size>2.0 0.08 2.2</size>
+              <size>1.75 0.08 2.2</size>
             </box>
           </geometry>
           <material>
@@ -348,7 +348,7 @@
         <collision name="collision">
           <geometry>
             <box>
-              <size>2.0 0.08 2.2</size>
+              <size>1.75 0.08 2.2</size>
             </box>
           </geometry>
         </collision>
@@ -459,6 +459,110 @@
       <plugin name="ignition::gazebo::systems::JointPositionController" filename="ignition-gazebo-joint-position-controller-system">
         <joint_name>door_lift</joint_name>
         <topic>/facility/door_lift/target</topic>
+        <p_gain>1200.0</p_gain>
+        <d_gain>80.0</d_gain>
+        <i_gain>20</i_gain>
+        <i_min>-8</i_min>
+        <i_max>8</i_max>
+        <cmd_offset>0.0</cmd_offset>
+        <cmd_min>-300.0</cmd_min>
+        <cmd_max>300.0</cmd_max>
+        <use_velocity_commands>false</use_velocity_commands>
+        <initial_position>0</initial_position>
+      </plugin>
+      <link name="lower_gate">
+        <pose>2.85 0 1.1 0 0 0</pose>
+        <inertial>
+          <mass>15.0</mass>
+          <inertia>
+            <ixx>9.6625</ixx>
+            <iyy>6.058000000000001</iyy>
+            <izz>3.6205</izz>
+          </inertia>
+        </inertial>
+        <collision name="lower_gate_collision">
+          <geometry>
+            <box>
+              <size>0.08 1.7 2.2</size>
+            </box>
+          </geometry>
+        </collision>
+        <visual name="lower_gate_visual">
+          <geometry>
+            <box>
+              <size>0.08 1.7 2.2</size>
+            </box>
+          </geometry>
+        </visual>
+      </link>
+      <joint name="landing_L0" type="prismatic">
+        <parent>anchor</parent>
+        <child>lower_gate</child>
+        <axis>
+          <xyz>0 1 0</xyz>
+          <limit>
+            <lower>0</lower>
+            <upper>2.2</upper>
+            <effort>300.0</effort>
+            <velocity>0.25</velocity>
+          </limit>
+        </axis>
+      </joint>
+      <plugin name="ignition::gazebo::systems::JointPositionController" filename="ignition-gazebo-joint-position-controller-system">
+        <joint_name>landing_L0</joint_name>
+        <topic>/facility/landing_L0/target</topic>
+        <p_gain>1200.0</p_gain>
+        <d_gain>80.0</d_gain>
+        <i_gain>20</i_gain>
+        <i_min>-8</i_min>
+        <i_max>8</i_max>
+        <cmd_offset>0.0</cmd_offset>
+        <cmd_min>-300.0</cmd_min>
+        <cmd_max>300.0</cmd_max>
+        <use_velocity_commands>false</use_velocity_commands>
+        <initial_position>0</initial_position>
+      </plugin>
+      <link name="upper_gate">
+        <pose>2.85 0 4.1 0 0 0</pose>
+        <inertial>
+          <mass>15.0</mass>
+          <inertia>
+            <ixx>9.6625</ixx>
+            <iyy>6.058000000000001</iyy>
+            <izz>3.6205</izz>
+          </inertia>
+        </inertial>
+        <collision name="upper_gate_collision">
+          <geometry>
+            <box>
+              <size>0.08 1.7 2.2</size>
+            </box>
+          </geometry>
+        </collision>
+        <visual name="upper_gate_visual">
+          <geometry>
+            <box>
+              <size>0.08 1.7 2.2</size>
+            </box>
+          </geometry>
+        </visual>
+      </link>
+      <joint name="landing_L1" type="prismatic">
+        <parent>anchor</parent>
+        <child>upper_gate</child>
+        <axis>
+          <xyz>0 1 0</xyz>
+          <limit>
+            <lower>0</lower>
+            <upper>2.2</upper>
+            <effort>300.0</effort>
+            <velocity>0.25</velocity>
+          </limit>
+        </axis>
+      </joint>
+      <plugin name="ignition::gazebo::systems::JointPositionController" filename="ignition-gazebo-joint-position-controller-system">
+        <joint_name>landing_L1</joint_name>
+        <topic>/facility/landing_L1/target</topic>
         <p_gain>1200.0</p_gain>
         <d_gain>80.0</d_gain>
         <i_gain>20</i_gain>

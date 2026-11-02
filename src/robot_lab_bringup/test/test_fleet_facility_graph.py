@@ -39,3 +39,27 @@ def test_invalid_dock_does_not_create_an_unreachable_success_anchor():
     config = dict(docks={'bad': dict(x=0., y=0., yaw=0.)})
     with pytest.raises(ValueError, match='clearance'):
         facility_graph(dict(vertices=[], lanes=[]), Grid(), [dict(radius=.1)], config)
+
+
+def test_building_graph_restricts_each_car_to_gated_landing_lanes():
+    from robot_lab_utils.fleet_building_graph import building_graph
+    directory = ROOT / 'src/robot_lab_maps/maps/fleet_facility'
+    config = yaml.safe_load((directory / 'infrastructure.yaml').read_text())
+    session = dict(map='fleet_facility', members=[dict(radius=.18, id='alpha', spawn=dict(x=2.5, y=0.))],
+                   floor_maps={floor: str(directory / 'maps' / filename)
+                               for floor, filename in [('L0', 'map.yaml'), ('L1', 'map_L1.yaml')]})
+    building, metadata = building_graph(session, config)
+    assert set(building['levels']) == {'L0', 'L1'}
+    assert len({v['name'] for v in metadata}) == len(metadata)
+    for floor, level in building['levels'].items():
+        vertices, lanes = level['vertices'], level['lanes']
+        inside = next(i for i, v in enumerate(vertices) if v[2].get('lift'))
+        landing = next(i for i, v in enumerate(vertices) if v[2]['name'] == floor + '_landing')
+        assert {(a, b) for a, b, props in lanes if inside in (a, b)} == {(landing, inside), (inside, landing)}
+        assert all(props.get('orientation_constraint') == 'forward' for a, b, props in lanes if inside in (a, b))
+        assert not next(v for v in metadata if v['name'] == vertices[inside][2]['name'])['selectable']
+        assert vertices[inside][2]['lift'] == config['lift']['name']
+        for a, b, props in lanes:
+            if props.get('door_name'):
+                assert floor == 'L0' and props['door_name'] == 'main'
+                assert abs(vertices[a][0]) >= 1.19 and abs(vertices[b][0]) >= 1.19

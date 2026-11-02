@@ -123,8 +123,11 @@ def _setup(context):
     actions.append(TimerAction(period=3., actions=[controller_spawners[0]]))
     if enabled('rmf'):
         if session.get('infrastructure_file'):
-            actions.append(Node(package='rmf_fleet_adapter', executable='door_supervisor',
-                name='facility_door_supervisor', parameters=[{'use_sim_time': True}], output='screen'))
+            for executable in ('door_supervisor', 'lift_supervisor'):
+                supervisor = Node(package='rmf_fleet_adapter', executable=executable,
+                    name='facility_' + executable, parameters=[{'use_sim_time': True}], output='screen')
+                actions += [supervisor, RegisterEventHandler(OnProcessExit(target_action=supervisor,
+                    on_exit=[EmitEvent(event=Shutdown(reason='RMF facility supervisor exited'))]))]
         actions.append(Node(package='rmf_traffic_ros2', executable='rmf_traffic_schedule',
                             name='robot_lab_rmf_schedule', parameters=[{'use_sim_time': True}], cwd=session['directory'], output='screen'))
         adapter_env = {}

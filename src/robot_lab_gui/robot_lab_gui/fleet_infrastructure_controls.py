@@ -26,7 +26,7 @@ class InfrastructureControls(ttk.Frame):
         ttk.Button(self,text='Navigate selected member to dock',command=self.dock_member).grid(row=6,column=0,sticky='ew')
         ttk.Label(self,textvariable=self.feedback,wraplength=420,justify='left').grid(row=7,column=0,sticky='ew',pady=5)
         ttk.Label(self,text='Door/lift states come from native joint positions. Close waits for fresh, clear fleet-body sweeps. '
-            'Lift movement is interlocked; each robot changes floor maps only after an observed settled transition. '
+            'Transport selected robot approaches, boards, rides, changes maps and exits; Stop cancels it. Lift movement is interlocked. '
             'Docking requires an independently observed settled body. Energy is an authored model, never a fabricated hardware battery reading.',wraplength=420).grid(row=8,column=0,sticky='ew')
 
     def attach(self,node):
@@ -43,6 +43,9 @@ class InfrastructureControls(ttk.Frame):
             lines=[f"Door {n}: {v['position_m']:.2f}/{v['command_m']:.2f} m, mode {v['mode']}"
                    for n,v in value['doors'].items()]
             lines.append(f"Lift: {value['lift']} (operator hold: {value.get('operator_hold', False)})")
+            if value.get('rmf_protocol'):
+                lines.append('SDK facility lease: '+('ready' if value.get('rmf_control_ready') else
+                    'inactive; explicitly give RMF control for SDK tasks'))
             for name,energy in value['energy'].items():
                 lines.append(name+' modeled battery: '+('unknown: '+energy.get('reason', 'motor feedback unqualified') if energy['fraction'] is None else f"{100*energy['fraction']:.1f}%"))
                 if energy.get('power_W') is not None:
@@ -57,6 +60,7 @@ class InfrastructureControls(ttk.Frame):
                 status='held/loading' if name in loading else statuses.get(name,'ready')
                 lines.append(f'{name} floor {floor}: map {desired}; active {active} ({status})')
             lines.extend(name+' map error: '+error for name,error in value.get('map_errors',{}).items())
+            lines += [name+' planar localization: '+('live scan' if enabled else 'paused for lift/map transition') for name,enabled in value.get('localization_scan_enabled',{}).items()]
             lines += [name+' lift transport: '+task['phase']+' — '+task['reason'] for name,task in value.get('transports',{}).items()]
             lines += [n+' dock: '+('physically settled' if v['docked'] else 'not settled') for n,v in value['docking'].items()]
             self.feedback.set('\n'.join(lines))
@@ -67,7 +71,8 @@ class InfrastructureControls(ttk.Frame):
         if not self.publisher or not self.runtime or time.monotonic()-self.at>1.:
             self.status.set('Run a facility session and Connect to fresh feedback first');return
         state=self.fleet.runtime
-        if not state or state.get('operator_id')!=self.fleet.operator_id or not state.get('operator_fresh'):
+        if (not state or state.get('operator_id')!=self.fleet.operator_id or not state.get('operator_fresh')
+                or self.runtime.get('operator_id')!=self.fleet.operator_id or not self.runtime.get('operator_fresh')):
             self.status.set('Wait for the GUI operator lease; disable RMF ownership for manual facility requests');return
         self.publisher.publish(String(data=json.dumps(dict(session_id=self.runtime['session_id'],operator_id=self.fleet.operator_id,op=op,**extra))))
 

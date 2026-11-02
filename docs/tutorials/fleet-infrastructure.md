@@ -4,27 +4,32 @@
 
 Open **Fleet & Swarm**, choose **fleet_facility**, enable per-member AMCL/Nav2,
 review members and Run. Connect is neutral. Use the **Facility** subpage for
-physical doors, lift requests, selected-member docking, observed power and
+physical doors, lift-only requests, automatic selected-member transport, docking, observed power and
 modeled battery status. Manual requests require the GUI operator lease; disable
 RMF ownership before taking manual control.
 
 The source contains force-driven sliding doors, a three-metre lift/car door,
 a shaft/upper landing, L0/L1 occupancy and a pose-berthing dock. Native PIDs
 retain authored travel, force and speed limits. Close waits for fresh, clear
-fleet-body sweeps. The car door closes before lift motion and opens only at a
-settled source floor. Wheels are held in a transitioning car, during floor-map
+fleet-body sweeps. The car door and both fixed landing gates close before lift motion. A landing
+opens only with the car stopped within 3 mm of that floor. Wheels are held in a transitioning car, during floor-map
 loading, and when declared infrastructure feedback is stale. ALL STOP cancels
 fixture intent/docking and holds measured joint targets.
 
 Each robot's fresh body observation classifies its floor; lift position alone
 cannot move a robot or change its floor. Its namespaced Nav2 map server loads
-`map.yaml` or `map_L1.yaml`, with commands held until success. The frame tree is
+`map.yaml` or `map_L1.yaml`, with commands held until map load and both costmap
+resets acknowledge completion. AMCL scans pause during vertical movement and
+map transitions; raw obstacle scans remain live. The upper grid contains actual
+landing/car walls and unknown space outside physical support. The frame tree is
 `map -> <member>/map -> <member>/odom -> <member>/base_footprint`:
 infrastructure places the floor frame vertically; **AMCL alone** supplies the
 planar localization transform. Truth XY/yaw never replace AMCL. Existing worlds
 without declared floors keep their original `map -> <member>/odom` tree.
-One Bumperbot L0-L1-L0 ride is recorded separately; automatic multi-level RMF
-lift tasks, other robots and multi-robot transport remain acceptance work.
+**Transport selected robot** reserves one idle Nav2 member and the lift,
+approaches, boards, rides, changes maps and exits. Stop cancels the task.
+A full automatic Bumperbot L0-L1-L0 is [measured](../status/evidence/automatic-floor-transport-2026-11-02/README.md);
+other robots and concurrent transport remain separate acceptance.
 
 **Navigate selected member to dock** sends actual Nav2 and requires independent
 position/heading and low linear/angular velocity for one simulated second.
@@ -33,9 +38,15 @@ This is pose berthing. There is no connector/contact sensor or hardware battery.
 
 With the optional Humble RMF SDK, source-declared main-door approaches and
 clearance-tested dock connections become native RMF lane events. The official
-door supervisor aggregates requests. Choose `door_main_1` or `west_charger` in
-the normal RMF waypoint selector. Lift-session graph events remain separate
-from the delivered per-member map switching. Graphs reject blocked approaches;
+door and lift supervisors aggregate requests. The official native building
+graph parser creates LiftSessionBegin/Move/DoorOpen/SessionEnd events between
+L0 and L1; inside-car vertices are hidden from operator destinations. Choose
+`L1_landing`, `L0_landing`, `door_main_1` or `west_charger` from the generated
+RMF waypoint selector. Give RMF control explicitly; ALL STOP or feedback/lease
+loss invalidates its epoch, requiring explicit re-enablement. Multi-floor SDK
+mission qualification is recorded separately from native transport; one real
+Bumperbot SDK L0-L1-L0 is measured. **RMF floor round-trip** requests the other
+landing and return in one SDK patrol (the macro has no separate mission receipt). Graphs reject blocked approaches;
 no door/lift mission is inferred from asset presence.
 
 Provisioning includes a process-scoped correction for Humble's upstream graph
@@ -68,7 +79,9 @@ of that session: later samples cannot recover unobserved energy. Restart gives
 a fresh, explicitly authored initial estimate. Current observed load can still
 be displayed. Charging also needs fresh, settled body/dock feedback. RMF's
 nominal energy cost objects remain disabled; these are not battery chemistry
-or real charging measurements.
+or real charging measurements. The car retains its last commanded height
+after requests/session completion; measured position is used as a new hold
+target only on explicit Stop/loss.
 
 Reproduce source assets with `scripts/generate_fleet_facility.py`; it preserves
 source certificates, whose runtime/source hashes are checked on every session.
