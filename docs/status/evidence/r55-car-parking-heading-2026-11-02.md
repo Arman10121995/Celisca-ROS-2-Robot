@@ -62,6 +62,8 @@ scripts/sim_car_course.sh <simulator> <robot> <output.json>
 
 Expected: parking section should now show `passed: true` with final yaw error within 10°.
 
+**Note**: Full end-to-end verification was not possible in the current environment due to ROS library compatibility issues (GLIBCXX_3.4.29 requirement). However, the code change is correct and enables the existing HeadingShuffle implementation in sim_car_course.py.
+
 ## References
 
 - ROADMAP.md R5.5 acceptance criteria
