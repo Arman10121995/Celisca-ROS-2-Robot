@@ -18,3 +18,12 @@ must be inspected separately; no successful CI rerun is claimed here.
 Raw excerpt: `/workspace/molar/robot_lab_runtime/completion-20261102-QUo52j/ci-61dd-failure.log`.
 Local check: `test-ci-inference.log` in the same SSD directory. This correction
 does not broaden any policy/model/map/backend motion certificate.
+
+The first correction (`3a51d427`) then exposed an ABI conflict in both required
+and scheduled CI: ORT's NumPy requirement upgraded Humble's apt 1.21.5 to
+NumPy 2, while the apt SciPy/cv_bridge extensions use the NumPy 1 ABI. Both
+workflows now also pin NumPy 1.24.4. An isolated SSD environment exercised
+NumPy 1.24.4 + apt SciPy 1.8.0 + ORT 1.23.2 and cv_bridge imports, an actual
+compiled distance-transform call, the exact recurrent checkpoint and the
+failing collection modules. Host Python/ROS packages were not changed.
+The remote rerun remains a separate gate.

@@ -4942,6 +4942,6 @@ ci_onnxruntime_20261102:
   state: partial
   source_revision: 61ddab2cd1162528a03ba2b45fda294a4823d159
   scope_paths: [.github/workflows/, src/robot_lab_adapter/test/test_r5_2_legged_policy.py, docs/status/]
-  implementation: Both CI workflows install the actual recurrent-policy inference dependency onnxruntime 1.23.2; the original test and gates remain.
+  implementation: Both CI workflows pin onnxruntime 1.23.2 and NumPy 1.24.4, preserving the Humble apt extension ABI; original tests and gates remain.
   verification: Exact failing G1 test passes locally; published correction needs its own remote workflow result.
   evidence: docs/status/evidence/ci-onnxruntime-2026-11-02.md
