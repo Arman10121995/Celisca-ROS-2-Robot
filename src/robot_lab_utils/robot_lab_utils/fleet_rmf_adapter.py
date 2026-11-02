@@ -30,6 +30,7 @@ import rmf_adapter.plan as plan
 import rmf_adapter.vehicletraits as traits
 
 from robot_lab_utils.fleet_missions import rmf_navigation_graph
+from robot_lab_utils.fleet_facility_graph import facility_graph, install_lanes
 from robot_lab_utils.fleet_session import SpawnGrid
 
 
@@ -265,7 +266,12 @@ def main(args=None):
     parser.add_argument('--session', required=True)
     options = parser.parse_args(rclpy.utilities.remove_ros_args()[1:])
     session = json.loads(Path(options.session).read_text())
-    data = rmf_navigation_graph(SpawnGrid(session['map_yaml']), session['members'])
+    occupancy = SpawnGrid(session['map_yaml'])
+    data = rmf_navigation_graph(occupancy, session['members'])
+    if session.get('infrastructure_file'):
+        import yaml
+        data = facility_graph(data, occupancy, session['members'],
+                              yaml.safe_load(Path(session['infrastructure_file']).read_text()))
     (Path(session['directory']) / 'rmf-graph.json').write_text(json.dumps(data, indent=2) + '\n')
     adpt.init_rclcpp()
     adapter = adpt.Adapter.make('robot_lab_rmf_adapter')
@@ -275,15 +281,15 @@ def main(args=None):
     graph_value = graph.Graph()
     for v in data['vertices']:
         wp = graph_value.add_waypoint(session['map'], np.array([v['x'], v['y']]))
-        wp.holding_point = True
+        wp.holding_point = v.get('holding', True)
         # Humble requires a charger graph anchor even with energy accounting
         # disabled. This is a LOGICAL API holding anchor, not a charger or a
-        # claim of battery/docking physics. Charge/dock tasks are unsupported.
-        if v['name'] == 'p0':
+        # claim of charging physics. Declared docks use actual callback events;
+        # RMF automatic charge scheduling stays disabled.
+        if v.get('dock') or (not any(x.get('dock') for x in data['vertices']) and v['name'] == 'p0'):
             wp.charger = True
         graph_value.add_key(v['name'], wp.index)
-    for first, second in data['lanes']:
-        graph_value.add_bidir_lane(first, second)
+    install_lanes(graph_value, data, graph.lane)
     radius = max(m['radius'] for m in session['members'])
     profile = traits.Profile(geometry.make_final_convex_circle(radius), geometry.make_final_convex_circle(radius + .15))
     vehicle = traits.VehicleTraits(traits.Limits(.25, .3), traits.Limits(.6, .8), profile)

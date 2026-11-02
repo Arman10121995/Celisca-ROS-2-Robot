@@ -1,0 +1,14 @@
+{
+  "repository": "https://github.com/open-rmf/rmf_ros2",
+  "commit": "58ca5211f20891bcb81a619974ee327d85cd12ba",
+  "source_path": "rmf_traffic_ros2/src/rmf_traffic_ros2/convert_Graph.cpp",
+  "license": "Apache-2.0",
+  "source_sha256": "0c45974d83899461d5b54a7b974c4f3767b7fb534d4d6674037bb398c04857d6",
+  "changes": [
+    "Extract graph-to-message serializer only",
+    "Use exit_event for exit serialization",
+    "Use lane.exit for exit orientation lookup",
+    "Rename internal serializer helper"
+  ],
+  "scope": "Scoped LD_PRELOAD for the native Humble Python fleet adapter; leaves SDK/system libraries intact"
+}

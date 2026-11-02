@@ -70,13 +70,16 @@ def generate():
         joints.append(name)
     p=child(hardware,'plugin',name='ignition::gazebo::systems::JointStatePublisher',filename='ignition-gazebo-joint-state-publisher-system');child(p,'topic','/facility/joint_states')
     target=ROOT/'src/robot_lab_maps/maps/fleet_facility';write(doc,target/'worlds/fleet_facility.world')
-    config=dict(schema_version=1,doors={'main':dict(joint='door_main',closed=0.,opened=1.8,sweep=[-.5,.5,-1.1,3.1]),
+    config=dict(schema_version=1,doors={'main':dict(joint='door_main',closed=0.,opened=1.8,sweep=[-.5,.5,-1.1,3.1],approach=[[-1.2,0.],[1.2,0.]]),
         'lift':dict(joint='door_lift',closed=0.,opened=2.15,sweep=[2.6,3.4,-1.3,3.5],z_joint='lift_car')},
         lift=dict(name='facility_lift',joint='lift_car',door='lift',floors={'L0':0.,'L1':3.}),
         floor_maps=dict(L0='maps/fleet_facility/maps/map.yaml',L1='maps/fleet_facility/maps/map_L1.yaml'),
         docks={'west_charger':dict(x=-4.5,y=-3.,z=0.,yaw=0.,position_tolerance=.12,height_tolerance=.12,yaw_tolerance=.15)},
-        energy=dict(capacity_J=180000.,initial_fraction=.8,hotel_W=3.,drive_efficiency=.75,charge_W=120.,effort_observation_verified=False,
+        energy=dict(capacity_J=180000.,initial_fraction=.8,hotel_W=3.,drive_efficiency=.75,charge_W=120.,effort_observation_verified=False,effort_sources={},
                     scope='Authored battery estimate from actual JointState effort/rate; unknown when motor feedback is missing'))
+    if (target/'infrastructure.yaml').exists():
+        previous = yaml.safe_load((target/'infrastructure.yaml').read_text()) or {}
+        config['energy']['effort_sources'] = previous.get('energy', {}).get('effort_sources', {})
     (target/'infrastructure.yaml').write_text(yaml.safe_dump(config,sort_keys=False))
     (target/'SOURCE.json').write_text(json.dumps(dict(author='Robot Lab contributors',license='Apache-2.0',
         assets='Physical sliding doors, 50 kg force-driven 3 m lift car with moving walls/door, floor/shaft geometry and authored dock',

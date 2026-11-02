@@ -1,5 +1,7 @@
 # Amphibious rover
 
+## Run
+
 Select **Mobile robots → Amphibious rover → lab_amphibious**, **Gazebo**,
 **Marine**, and **amphibious_shore**. Launch chooses the source spawn on the
 bank and fills the command. Connect Marine telemetry, wait for real feedback,

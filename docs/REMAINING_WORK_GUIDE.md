@@ -1,5 +1,7 @@
 # Remaining work: agent execution guide
 
+Latest November 2 continuation: [observation-bound fleet energy, separate floor/AMCL frames and native RMF door/dock routes](status/fleet-continuation-2026-11-02.md). Preserve the source/runtime certificates, gap-to-unknown energy model, scoped upstream serializer correction and measured floor ride. Next: automatic RMF lift-session graphs/level-aware dispatch and wider conflict/loss, marine and terrain workflows. Full platform acceptance remains partial.
+
 Updated November 2, 2026 after [the measured fleet floor transition](status/evidence/fleet-floor-map-transition-2026-11-02/README.md) on `master`.
 Read [the current delivery](status/workflows-2026-10-27.md),
 [actual receipt](status/evidence/workflows-2026-10-27/README.md),
@@ -69,7 +71,29 @@ The new native producer implementation is in `extension_workload.py`, `extension
 
 Snake mapping/acquired-map Nav2, surface-vessel acquisition/two-goal arrival, AUV automatic acquisition and actuated flippers are delivered, with [actual receipts](status/evidence/native-forms-2026-10-30/README.md). Preserve the instant wheel Jacobian/current rolling-contact model, mean-segment frame/scan reprojection, fixed world/map prior and hold-shape arrival. Preserve separate fixed/actuated tracked variants and real force-PID/target bridges. These are named cases, not universal terrain/backend acceptance.
 
-The [facility guide](tutorials/fleet-infrastructure.md) names actual door/lift/dock interfaces and source constraints. Initial remaining infrastructure work is a verified actuator-power readback/charging model, per-level graph/maps and robot-in-car transport. These are software/simulator tasks. Do not enable the energy verification flag to obtain attractive percentages; missing physical motor observations remain unknown. Reuse the delivered source fixtures and unique dock results.
+The [facility guide](tutorials/fleet-infrastructure.md) names actual door/lift/dock interfaces and source constraints. Source-bound actuator readback/authored charging and one observed robot-in-car/floor-map case are delivered. Initial remaining infrastructure work is automatic RMF lift-session graph tasks and level-aware route dispatch. These are software/simulator tasks. Do not use a global energy flag to qualify sources; preserve exact description/runtime certificates, and leave missing observation coverage unknown. Reuse the delivered source fixtures and unique dock results.
+
+## Immediate continuation after the November 2 fleet delivery
+
+1. Extend `fleet_facility_graph.py` beyond its explicitly single-level door/dock
+   lanes. Add reviewed L0/L1 graph vertices and real RMF lift-session events;
+   launch the official lift supervisor alongside the existing door supervisor.
+   Check the installed Humble factories rather than copying a newer API.
+2. Make `fleet_rmf_adapter.py` plan starts and dispatch follow-new-path segments
+   on each robot's observed floor. It currently uses the session map name.
+   Preserve graph indices/floor identity through `fleet_missions.py` and
+   `fleet_controller.py`; a path request may not overwrite an active lift ride.
+3. Reuse `fleet_infrastructure.py` actual body-floor gate, closed-door and settled
+   lift interlocks, per-member LoadMap holds and exclusive floor/AMCL frames.
+   Add automatic approach/board/ride/exit control with source-clearance checks,
+   fresh ownership and bounded cancellation/loss. Finish only after independently
+   observed robot transport and settled arrival, not lift joint motion alone.
+4. Use the native door/dock receipt and `floor_map_trial.py` as diagnostics. Its
+   boarding is a bounded manual command, so the existing ride is not an automatic
+   RMF lift task. Add a separate actual automatic mission before promoting it.
+5. Preserve the energy source/runtime certificates and gap-to-unknown behavior.
+   Calibration, connector sensing and RMF automatic energy scheduling remain
+   separate work; do not use the old global flag or nominal RMF cost objects.
 
 ## Ordered next work
 

@@ -1894,7 +1894,7 @@
   ground_truth_available: true
   id: terrain_heightfield
   name: Terrain Heightfield
-  occupancy_map: robot_lab_maps/maps/terrain_heightfield/maps/map.yaml
+  occupancy_map: robot_lab_maps/maps/terrain_heightfield/maps/map.pgm
   reset_service: /robot_lab/reset
   ros_package: robot_lab_maps
   seed: 7
@@ -1944,7 +1944,7 @@
   ground_truth_available: true
   id: terrain_rough
   name: Rough Terrain
-  occupancy_map: robot_lab_maps/maps/terrain_rough/maps/map.yaml
+  occupancy_map: robot_lab_maps/maps/terrain_rough/maps/map.pgm
   reset_service: /robot_lab/reset
   ros_package: robot_lab_maps
   seed: 7

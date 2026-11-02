@@ -1,12 +1,14 @@
 # Current Robot Lab status
 
+[Latest fleet energy/RMF continuation](fleet-continuation-2026-11-02.md): actual source-bound Bumperbot/Labbot effort/rate readback, Bumperbot authored charge/departure/feedback-loss case, exclusive floor/AMCL frame ownership and an actual native RMF physical-door/settled-dock route. Automatic multi-floor RMF missions and broader qualification remain.
+
 [Earlier native-form delivery](native-forms-2026-10-30.md): measured snake 2D/3D acquisition and saved-map navigation, surface-vessel mapping/two-goal route, AUV acquisition and real articulated flipper/Drive controls. That checkpoint had 151 profiles / 81 selectable families, with 52 worlds / 40 families. Older dated entries below retain their historical scope.
 
-[Latest amphibious/facility delivery](amphibious-facility-2026-10-30.md): actual sprung shore round-trip/RGB-D acquisition and physical door/lift/dock controls. Current installed GUI: 152 profiles / 82 robot families and 54 worlds / 42 families. Energy stays unknown until actual backend motor power is qualified.
+[October 30 amphibious/facility delivery](amphibious-facility-2026-10-30.md): actual sprung shore round-trip/RGB-D acquisition and physical door/lift/dock controls. Current installed GUI: 152 profiles / 82 robot families and 54 worlds / 42 families. That checkpoint left energy unknown; the later named November 2 source-readback/model cases supersede that energy scope.
 
-[November 2 fleet continuation](evidence/fleet-floor-map-transition-2026-11-02/README.md): one Bumperbot physically rode L0-L1-L0 in `fleet_facility`; fresh body observations drove per-member floor classification and the `map.yaml` → `map_L1.yaml` → `map.yaml` Nav2 transitions. Battery energy remains unknown, and broader RMF/fleet acceptance is still open.
+[November 2 fleet continuation](evidence/fleet-floor-map-transition-2026-11-02/README.md): one Bumperbot physically rode L0-L1-L0 in `fleet_facility`; fresh body observations drove per-member floor classification and the `map.yaml` → `map_L1.yaml` → `map.yaml` Nav2 transitions. That earlier floor case left energy unknown; broader RMF/fleet acceptance is still open.
 
-**Current checkpoint: November 2, 2026; master, continuation from `b9bd4ca` plus the current working tree.
+**Current checkpoint: November 2, 2026; master, fleet continuation from `375143ff` plus this delivery.
 Platform and full extension partial.**
 
 [Current workflow delivery and limits](workflows-2026-10-27.md),
@@ -16,7 +18,7 @@ Platform and full extension partial.**
 | Area | Delivered / measured | Remaining |
 |---|---|---|
 | Catalog | Seven registrations restored; 152 profiles / 82 selectable families, 54 worlds / 42 families | Changed-source qualification and additional reviewed imports |
-| Fleet | Native sessions/queues/traffic/RMF/coverage; physical facility door/lift/dock; one measured Bumperbot L0-L1-L0 ride with observed per-member floor/map switching; actual conflict and settled batch cases | Verified motor-power/charging; broader RMF conflict/loss, other robot/floor/map/backend transport, contact and larger-fleet missions |
+| Fleet | Native sessions/queues/traffic/RMF/coverage; physical facility door/lift/dock, source-bound actuator energy/authored charging and native RMF door/dock route; one measured Bumperbot L0-L1-L0 ride with observed per-member floor/map switching; actual conflict and settled batch cases | Automatic RMF lift-session tasks, calibrated energy/RMF scheduling, broader conflict/loss, other robot/floor/map/backend transport, contact and larger-fleet missions |
 | Aerial swarm | Native multi-FCU controls/workloads; actual nav_empty two-drone range-reference formation and operator-loss landing | Larger groups, other maps/behaviors and member-loss/contact cases |
 | Marine | Actual sensor-based map acquisition/export/protected reload/localization and completed ROV route; AUV automatic acquisition and surface-vessel mapping/two-goal arrival with actual body traces | Further AUV/localization/obstacle/current/loss missions |
 | Multi-leg | Correct source FK/contact odometry, map export/reload/Nav2; hexapod navigation result and octopod real 3D database | Per-model terrain/recovery/higher-mode/backend qualification |

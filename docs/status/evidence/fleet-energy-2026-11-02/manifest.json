@@ -1,0 +1,43 @@
+{
+  "baseline_revision": "375143ff",
+  "source_boundary": "Post-run source manifest; named source descriptions/readback runtime certificates are bound separately. No immutable whole-build or universal mission claim.",
+  "raw_root": "/workspace/molar/robot_lab_runtime/completion-20261102-QUo52j",
+  "source_sha256": {
+    "src/robot_lab_utils/robot_lab_utils/fleet_energy.py": "5bc417b4ec580bfa1b8cc6f97ab7af37c09e080778adda045fe12b5cbe29b0a8",
+    "src/robot_lab_utils/robot_lab_utils/fleet_facility_graph.py": "09dec421864d7b66dea48e7b51122fcc3fd01bc7f75542d6afb39d812f77668d",
+    "src/robot_lab_utils/robot_lab_utils/fleet_infrastructure.py": "63fb12cf04cbd324d379321448bb736130f3c5839d186832a09acec2bd5b2e4d",
+    "src/robot_lab_utils/robot_lab_utils/fleet_session.py": "534a497cd467f9449a6b21747f9e8d6f14665a668d4681492198a3ab4baa60b3",
+    "src/robot_lab_utils/robot_lab_utils/fleet_controller.py": "b81d0d0903d45f285765cec0956a974ad3eb50ba7983b5efd93a9fa69a67b0c0",
+    "src/robot_lab_utils/robot_lab_utils/fleet_rmf_adapter.py": "540369696a874c7992dd55920dcc4144ab90f96bcb64238ed53af945b7d37767",
+    "src/robot_lab_bringup/launch/shared_world.launch.py": "d4a05c3b51f1fb0eb5d2925122cda82c53c78802aee02c8f429ad76524589dc8",
+    "src/robot_lab_maps/maps/fleet_facility/infrastructure.yaml": "087f37ecb8e732552aec292b99654e064cfdfb3113bef07a91bd9420f5e90ffc",
+    "src/robot_lab_utils/vendor/rmf_graph/convert_graph_fix.cpp": "4376829a46cfc209a06a6e8386ad2411957c6af05bd4bbdfe67dd21abcab9749"
+  },
+  "case_scripts_sha256": {
+    "power_probe.py": "dcb7d01ec1dda915f12f6e2f5cc6d878a07e12a94df359fddf0f8f91b994eff0",
+    "energy_trial.py": "11e971fb89af962929a3e3b4b567c28147ad54fc95baaffbfb7976b6b4a4c3e4",
+    "rmf_trial.py": "65b55749bec8e2df9870b9e2fedc29f4c037c3799f47d8937ae19df8df9f5665"
+  },
+  "copied_artifacts_sha256": {
+    "power-session.yaml": "0f9bc642d407e6a94741d26ff9e7673530c03859b91a237a7b0c5f8908af121c",
+    "fast-interrupted.log": "999f8b0769735954968985801a917b699b852a7e0eeef468a83892fc5a5494d1",
+    "floor-transition-result.json": "27ba8e96e99dd57f70dc3d8dbe61e5273a0a7490abc0c7c14512f9b521701193",
+    "gui-status.log": "b1980f6aea8b8cd391898fa64237f3469782063f8446b4882baa5d4d0ef4f5d3",
+    "rmf-session.yaml": "48ea9017e169da7f32b31f73b5395f94286fd35ee7f2664255f333d423a4e1c6",
+    "build-published-candidate.log": "70556d9120ffaa5341f80446593a98970bfbebd830000ba8b22b2aae0c5a2c4f",
+    "rmf_trial.py": "65b55749bec8e2df9870b9e2fedc29f4c037c3799f47d8937ae19df8df9f5665",
+    "energy_trial.py": "11e971fb89af962929a3e3b4b567c28147ad54fc95baaffbfb7976b6b4a4c3e4",
+    "build-all-changed.log": "aa4d8155dfb1e4f4995beb4c88bc63083eb39b7d488120cfba3a1e82eab74c67",
+    "registry-default-python.log": "e18292a58a3479edd685312fcbd1ba633069be537efd54ea61788bbdf780c016",
+    "energy-dock-result.json": "abdbe6227720fecee5e071978d503d6dca37f02af56e30fb65e5ef95bca2d612",
+    "tests-fast-defects-fixed.log": "2e1b505a422cff0db5e600f1397f19843d467a79b2a8357cb04866715d9e4625",
+    "tests-published-candidate.log": "df51cf0a4b4c5652b18118965ab6a8e733b3445e2b6ee3fa86deb5ab1679243d",
+    "README.md": "c0f6abcb3eecfc704804207bde5198494568c3b7e7b1d3c31cf492e11648e4c0",
+    "rmf-door-dock-result.json": "6ffeb4708ee2eabc8a754741ff0b5769e22da961a2f1145b862cc7507c443602",
+    "tests-final.log": "1b1edbaad819a80f4635a200394c7105a696b213b56750f6c4f8c27490acaa55",
+    "power_probe.py": "dcb7d01ec1dda915f12f6e2f5cc6d878a07e12a94df359fddf0f8f91b994eff0",
+    "registry-cross-references.log": "e18292a58a3479edd685312fcbd1ba633069be537efd54ea61788bbdf780c016",
+    "source-power-result.json": "32e64663d9d58c8616600f67d5f69b189963d1b709c4bb6dbfe83223c763a24f"
+  },
+  "owned_workflow_cleanup": "No shared_world/fleet infrastructure/controller/RMF descendants remain; no entity-pose intervention used for mission outcomes."
+}

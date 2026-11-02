@@ -1,0 +1,87 @@
+=== Module compilation check ===
+All modules compile.
+
+=== Fast unit tests (fast tier) ===
+=== Tier: fast (54 test files) ===
+........................................................................ [  6%]
+........................................................................ [ 12%]
+........F........................................FF..................... [ 18%]
+.......................................................................s [ 24%]
+...........................
+=================================== FAILURES ===================================
+________ TutorialDocumentationTests.test_each_tutorial_has_run_section _________
+
+self = <test_p6_benchmarking.TutorialDocumentationTests testMethod=test_each_tutorial_has_run_section>
+
+    def test_each_tutorial_has_run_section(self):
+        tutorials_dir = Path(__file__).resolve().parents[4] / "docs" / "tutorials"
+        for tutorial in tutorials_dir.glob("*.md"):
+            if tutorial.name == "index.md":
+                continue
+            content = tutorial.read_text()
+>           self.assertIn("## Run", content, f"{tutorial.name} missing Run section")
+E           AssertionError: '## Run' not found in "# Native surface vessel\n\n`lab_usv` is a complete first-party catamaran with two independent propellers,\nRGB-D camera and IMU. Gazebo Fortress supplies free-body motion, graded\nbuoyancy, hydrodynamics and actual bounded thrust. Its 70 kg hull, low ballast\ncentre, drag and thrust curve are authored laboratory parameters. There are no\nattitude locks or body-pose/velocity writes. Waves and hardware calibration\nare outside the current model.\n\nIn Launch select **Surface vessels → Twin-hull USV → lab_usv**, **Gazebo**,\n**Marine**, and **surface_harbor**. The command and surface-height spawn fill\nautomatically. The harbor includes above-water walls, a dock, pilings and\nchannel markers. Other installed water worlds remain selectable; their\nmissions need their own acceptance.\n\n```bash\nsource scripts/ssd_env.sh\nsource /opt/ros/humble/setup.bash\nsource install/setup.bash\nros2 launch robot_lab_bringup simulated_robot.launch.py \\\n  robot_model:=lab_usv simulator:=gazebo mode:=marine \\\n  map_name:=surface_harbor marine_slam:=true\n```\n\nIn the Marine control column, Connect, wait for fresh body feedback, then\n**Arm surface thrust**. Enable WASD/joystick or click the latched direction\nbuttons. These actions begin neutral. Forward/reverse and yaw use differential\npropeller forces; strafe and depth controls are disabled. Stop/Space removes\nthrust; the free hull can coast. Turning is a rate command, followed by heading\nhold when released. A native 0.4 s force watchdog removes stale ROS requests,\nincluding a stalled command owner.\n\nMarine Missions uses the separate noisy pressure/DVL simulation and native\nIMU orientation/rates. Use **Waypoint ahead**, or enter XY and retain the\nestimated draft Z, then **Plan** and explicit **Execute**. Routes stay in a\nsurface-height slab and reject diving goals. Source/observed obstacle checks\nremain active. Arrival checks both translational speed and IMU yaw rate.\n\nEnable RGB-D mapping before Run to acquire a map, save the actual database,\nand select a protected saved copy for localization. Experiments → **Marine\nmap acquisition** or **Marine route** runs the same plant in an isolated\nsession, with independent body observations. The harbor acquisition and\ntwo-goal arrival cases have measured receipts; this is not acceptance for\nevery water world, currents, docking, waves or loss scenario.\n\nSource/model generation: `scripts/generate_surface_assets.py`. Preserve the\nnative force watchdog and explicit source-water boundary. The first high-CG\ntrial tipped under Fortress's graded-surface approximation; that failed run\nis retained. The declared low ballast centre stabilizes the physical plant\nwithout holding its body in place.\n" : surface-vessel.md missing Run section
+
+src/robot_lab/robot_lab_registry/test/test_p6_benchmarking.py:692: AssertionError
+____ OccupancyMapProvenanceTests.test_occupancy_map_has_companion_map_yaml _____
+
+self = <test_p4_1_environment_qualification.OccupancyMapProvenanceTests testMethod=test_occupancy_map_has_companion_map_yaml>
+
+    def test_occupancy_map_has_companion_map_yaml(self):
+        """Each occupancy PGM must have a ROS nav2 map.yaml companion."""
+        for env in self.integrated:
+            occ = env.get("occupancy_map", "")
+            if env["id"] in WORLDS_WITHOUT_OCCUPANCY or not occ:
+                continue
+            map_yaml = Path(str(self.src_root / occ).replace(".pgm", ".yaml"))
+            self.assertTrue(
+                map_yaml.is_file(),
+                f"missing map.yaml companion for '{env['id']}': {map_yaml}",
+            )
+            # A companion map YAML must reference the same PGM image.
+            content = map_yaml.read_text()
+>           self.assertIn(
+                occ.rsplit("/", 1)[-1], content,
+                f"map.yaml for '{env['id']}' must reference the PGM image",
+            )
+E           AssertionError: 'map.yaml' not found in 'image: map.pgm\nmode: trinary\nresolution: 0.050\norigin: [-11.000, -11.000, 0.000000]\nnegate: 0\noccupied_thresh: 0.65\nfree_thresh: 0.196\n' : map.yaml for 'terrain_heightfield' must reference the PGM image
+
+src/robot_lab/robot_lab_registry/test/test_p4_1_environment_qualification.py:171: AssertionError
+_______ OccupancyMapProvenanceTests.test_occupancy_map_resolves_on_disk ________
+
+self = <test_p4_1_environment_qualification.OccupancyMapProvenanceTests testMethod=test_occupancy_map_resolves_on_disk>
+
+    def test_occupancy_map_resolves_on_disk(self):
+        """Every declared occupancy_map must point at a real PGM file."""
+        for env in self.integrated:
+            occ = env.get("occupancy_map", "")
+            if env["id"] in WORLDS_WITHOUT_OCCUPANCY:
+                # No map expected for these.
+                self.assertEqual(occ, "", f"'{env['id']}' should have no occupancy map")
+                continue
+>           self.assertTrue(
+                occ.endswith(".pgm"),
+                f"'{env['id']}' occupancy_map must be a .pgm, got '{occ}'",
+            )
+E           AssertionError: False is not true : 'terrain_heightfield' occupancy_map must be a .pgm, got 'robot_lab_maps/maps/terrain_heightfield/maps/map.yaml'
+
+src/robot_lab/robot_lab_registry/test/test_p4_1_environment_qualification.py:148: AssertionError
+=============================== warnings summary ===============================
+scripts/test_asset_staging.py::test_failed_source_refresh_preserves_previously_installed_robot
+  /usr/lib/python3/dist-packages/_pytest/monkeypatch.py:308: UserWarning: pkg_resources is deprecated as an API. See https://setuptools.pypa.io/en/latest/pkg_resources.html. The pkg_resources package is slated for removal as early as 2025-11-30. Refrain from using this package or pin to Setuptools<81.
+    from pkg_resources import fixup_namespace_packages
+
+scripts/test_asset_staging.py::test_failed_source_refresh_preserves_previously_installed_robot
+  /home/molar1/.local/lib/python3.10/site-packages/pkg_resources/__init__.py:3148: DeprecationWarning: Deprecated call to `pkg_resources.declare_namespace('mpl_toolkits')`.
+  Implementing implicit namespace packages (as specified in PEP 420) is preferred to `pkg_resources.declare_namespace`. See https://setuptools.pypa.io/en/latest/references/keywords.html#keyword-namespace-packages
+    declare_namespace(pkg)
+
+-- Docs: https://docs.pytest.org/en/stable/warnings.html
+=========================== short test summary info ============================
+FAILED src/robot_lab/robot_lab_registry/test/test_p6_benchmarking.py::TutorialDocumentationTests::test_each_tutorial_has_run_section
+FAILED src/robot_lab/robot_lab_registry/test/test_p4_1_environment_qualification.py::OccupancyMapProvenanceTests::test_occupancy_map_has_companion_map_yaml
+FAILED src/robot_lab/robot_lab_registry/test/test_p4_1_environment_qualification.py::OccupancyMapProvenanceTests::test_occupancy_map_resolves_on_disk
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! KeyboardInterrupt !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+/usr/lib/python3/dist-packages/yaml/constructor.py:263: KeyboardInterrupt
+(to show a full traceback on KeyboardInterrupt use --full-trace)
+3 failed, 311 passed, 1 skipped, 4 deselected, 2 warnings in 214.12s (0:03:34)

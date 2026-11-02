@@ -1,5 +1,7 @@
 # Native tracked vehicle
 
+## Run
+
 Select **Mobile robots → Tracked vehicle → lab_tracked** in the GUI, choose
 Gazebo and a terrestrial map, then Display, Localization, SLAM, 3D SLAM or
 Navigation. Drive uses the normal control column. The initial `nav_empty`

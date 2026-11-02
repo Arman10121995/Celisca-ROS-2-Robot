@@ -7,6 +7,8 @@ centre, drag and thrust curve are authored laboratory parameters. There are no
 attitude locks or body-pose/velocity writes. Waves and hardware calibration
 are outside the current model.
 
+## Run
+
 In Launch select **Surface vessels → Twin-hull USV → lab_usv**, **Gazebo**,
 **Marine**, and **surface_harbor**. The command and surface-height spawn fill
 automatically. The harbor includes above-water walls, a dock, pilings and

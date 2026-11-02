@@ -1,0 +1,1060 @@
+{
+  "passed": true,
+  "reason": "Actual RMF patrol crossed native door, then invoked native independently settled dock event",
+  "phase": "dock",
+  "crossed": {
+    "x": 1.0277016221880446,
+    "y": -0.015961656258035452,
+    "z": 1.812116695041967e-06,
+    "yaw": 0.007359477536951976,
+    "linear": 0.04999992764548174,
+    "angular": 0.010790657420444664,
+    "velocity_source": "finite difference of measured stamped Gazebo poses",
+    "source_reported_twist": {
+      "linear": 0.049997147391052044,
+      "angular": 0.010790657142933924
+    }
+  },
+  "wall_seconds": 155.24118002899922,
+  "final": {
+    "schema_version": 1,
+    "session_id": "session-jcm4sme_",
+    "map": "fleet_facility",
+    "backend": "gazebo",
+    "navigation": true,
+    "directory": "/workspace/molar/robot_lab_runtime/fleet_sessions/session-jcm4sme_",
+    "sim_time": 176.53,
+    "clock_age": 0.003,
+    "operator_id": "rmf-bab5194c5600453b83ca5b0198b0d2c3",
+    "operator_fresh": true,
+    "swarm": null,
+    "members": [
+      {
+        "id": "alpha",
+        "model": "bumperbot",
+        "mode": "idle",
+        "reason": "Actual Nav2 success and measured settled arrival",
+        "included": true,
+        "ready": true,
+        "limits": {
+          "linear": 0.35,
+          "angular": 0.8
+        },
+        "navigation_ready": true,
+        "estimate": {
+          "x": -4.535342289996436,
+          "y": -2.9962840728495945,
+          "yaw": -0.011039310592162736
+        },
+        "estimate_source": "AMCL transform + wheel feedback",
+        "truth": {
+          "x": -4.522016028180278,
+          "y": -2.965461709365336,
+          "z": 1.8120782432404082e-06,
+          "yaw": -0.009903271825900947,
+          "linear": 0.0,
+          "angular": 0.0,
+          "velocity_source": "finite difference of measured stamped Gazebo poses",
+          "source_reported_twist": {
+            "linear": 0.0,
+            "angular": 0.0
+          }
+        },
+        "command": {
+          "linear": 0.0,
+          "angular": 0.0
+        },
+        "wheel_twist": {
+          "linear": 0.0,
+          "angular": 0.0
+        },
+        "ages": {
+          "odom": 0.011,
+          "truth": 0.01,
+          "scan": 0.12,
+          "amcl": 1.115,
+          "localization_tf": 0.0
+        },
+        "message_counts": {
+          "odom": 8742,
+          "truth": 8742,
+          "scan": 874,
+          "amcl": 163
+        },
+        "task": "",
+        "goal": null,
+        "nav2_pending": false,
+        "cancel_pending": false,
+        "queued": 0,
+        "queued_tasks": [],
+        "queue_paused": false,
+        "settled_spawn_recorded": true,
+        "reset_pose": [
+          -1.1999727246155059,
+          2.465787063659271e-07,
+          -5.1782459519589965e-06
+        ],
+        "radius_m": 0.118,
+        "battery": null,
+        "charging": null
+      }
+    ],
+    "last_rejection": "",
+    "traffic": {
+      "serial": false,
+      "policy": "Concurrent routes with local scan/separation guards"
+    },
+    "task_history": [
+      {
+        "task": "473cb8c8345943098e72cbb723690eaf",
+        "source": "route:rmf-f68b9f2f61bf4dc99988b021e0b78b0b",
+        "goal": {
+          "x": -1.2,
+          "y": 0.0,
+          "yaw": -1.7710010353482304e-18,
+          "timeout": 180.0,
+          "not_before": 28.156
+        },
+        "state": "succeeded",
+        "reason": "Actual Nav2 success and measured settled arrival",
+        "finished": 16494.20220059,
+        "observation": {
+          "x": -1.1999727246155059,
+          "y": 2.465787063659271e-07,
+          "z": 1.732678126785545e-06,
+          "yaw": -5.1782459519589965e-06,
+          "linear": 0.0,
+          "angular": 0.0,
+          "velocity_source": "finite difference of measured stamped Gazebo poses",
+          "source_reported_twist": {
+            "linear": 0.0,
+            "angular": 0.0
+          }
+        }
+      },
+      {
+        "task": "461823b07b8546578eb4a5d96e75e17b",
+        "source": "route:rmf-f68b9f2f61bf4dc99988b021e0b78b0b",
+        "goal": {
+          "x": -1.2,
+          "y": 0.0,
+          "yaw": -1.7710010353482304e-18,
+          "timeout": 180.0,
+          "not_before": 28.156
+        },
+        "state": "succeeded",
+        "reason": "Actual Nav2 success and measured settled arrival",
+        "finished": 16494.801683758,
+        "observation": {
+          "x": -1.1999727246155059,
+          "y": 2.465787063659271e-07,
+          "z": 1.732678126785545e-06,
+          "yaw": -5.1782459519589965e-06,
+          "linear": 0.0,
+          "angular": 0.0,
+          "velocity_source": "finite difference of measured stamped Gazebo poses",
+          "source_reported_twist": {
+            "linear": 0.0,
+            "angular": 0.0
+          }
+        }
+      },
+      {
+        "task": "8a0be9f48125400dac58836d2e555d78",
+        "source": "route:rmf-a5b5d900c75d4278962057d35ec0b37d",
+        "goal": {
+          "x": -1.2,
+          "y": 0.0,
+          "yaw": -1.7710010353482304e-18,
+          "timeout": 180.0,
+          "not_before": 28.156
+        },
+        "state": "succeeded",
+        "reason": "Actual Nav2 success and measured settled arrival",
+        "finished": 16501.751329763,
+        "observation": {
+          "x": -1.1999727246155059,
+          "y": 2.465787063659271e-07,
+          "z": 1.732678126785545e-06,
+          "yaw": -5.1782459519589965e-06,
+          "linear": 0.0,
+          "angular": 0.0,
+          "velocity_source": "finite difference of measured stamped Gazebo poses",
+          "source_reported_twist": {
+            "linear": 0.0,
+            "angular": 0.0
+          }
+        }
+      },
+      {
+        "task": "694ee40f98e942d5b7cb6e9a1bed0a22",
+        "source": "route:rmf-a5b5d900c75d4278962057d35ec0b37d",
+        "goal": {
+          "x": 1.2,
+          "y": 0.0,
+          "yaw": 0.0,
+          "timeout": 180.0,
+          "not_before": 28.156
+        },
+        "state": "succeeded",
+        "reason": "Actual Nav2 success and measured settled arrival",
+        "finished": 16518.599039095,
+        "observation": {
+          "x": 1.1832105802973092,
+          "y": -0.012966532585870924,
+          "z": 1.8130290151798492e-06,
+          "yaw": 0.0203630326312364,
+          "linear": 0.0,
+          "angular": 0.0,
+          "velocity_source": "finite difference of measured stamped Gazebo poses",
+          "source_reported_twist": {
+            "linear": 0.0,
+            "angular": 0.0
+          }
+        }
+      },
+      {
+        "task": "c64362d5e4224bfbb8a54ca3a7a25b60",
+        "source": "route:rmf-a51d2939d36f4078bc2504a1c862ea25",
+        "goal": {
+          "x": 1.2,
+          "y": 0.0,
+          "yaw": 0.0,
+          "timeout": 180.0,
+          "not_before": 58.589333
+        },
+        "state": "succeeded",
+        "reason": "Actual Nav2 success and measured settled arrival",
+        "finished": 16525.348480414,
+        "observation": {
+          "x": 1.1883114500225085,
+          "y": -0.012843707434555053,
+          "z": 1.1555874661364302e-06,
+          "yaw": 0.02920324238980922,
+          "linear": 0.0,
+          "angular": 0.0,
+          "velocity_source": "finite difference of measured stamped Gazebo poses",
+          "source_reported_twist": {
+            "linear": 0.0,
+            "angular": 0.0
+          }
+        }
+      },
+      {
+        "task": "8c2eadf852cb4f28986d2dd5625cdc10",
+        "source": "route:rmf-a51d2939d36f4078bc2504a1c862ea25",
+        "goal": {
+          "x": 1.2,
+          "y": 0.0,
+          "yaw": 0.0,
+          "timeout": 180.0,
+          "not_before": 58.589333
+        },
+        "state": "succeeded",
+        "reason": "Actual Nav2 success and measured settled arrival",
+        "finished": 16525.947991566,
+        "observation": {
+          "x": 1.1883114500166807,
+          "y": -0.012843707437992779,
+          "z": 1.764428518956154e-06,
+          "yaw": 0.02920326595628783,
+          "linear": 0.0,
+          "angular": 0.0,
+          "velocity_source": "finite difference of measured stamped Gazebo poses",
+          "source_reported_twist": {
+            "linear": 0.0,
+            "angular": 0.0
+          }
+        }
+      },
+      {
+        "task": "a5cc793ea24a460e835d41f543da4562",
+        "source": "route:rmf-281946c3ad1b4b09832b11d59bd6319b",
+        "goal": {
+          "x": 1.2,
+          "y": 0.0,
+          "yaw": 0.03609911309779746,
+          "timeout": 180.0,
+          "not_before": 59.98
+        },
+        "state": "succeeded",
+        "reason": "Actual Nav2 success and measured settled arrival",
+        "finished": 16527.198031226,
+        "observation": {
+          "x": 1.1883114500166807,
+          "y": -0.012843707437992779,
+          "z": 1.764428518956154e-06,
+          "yaw": 0.02920326595628783,
+          "linear": 0.0,
+          "angular": 0.0,
+          "velocity_source": "finite difference of measured stamped Gazebo poses",
+          "source_reported_twist": {
+            "linear": 0.0,
+            "angular": 0.0
+          }
+        }
+      },
+      {
+        "task": "4d47285259834a39b4a6d20836cf47e9",
+        "source": "route:rmf-281946c3ad1b4b09832b11d59bd6319b",
+        "goal": {
+          "x": 1.2,
+          "y": 0.0,
+          "yaw": 0.0,
+          "timeout": 180.0,
+          "not_before": 59.98
+        },
+        "state": "succeeded",
+        "reason": "Actual Nav2 success and measured settled arrival",
+        "finished": 16527.748336929,
+        "observation": {
+          "x": 1.1883114500166807,
+          "y": -0.012843707437992779,
+          "z": 1.764428518956154e-06,
+          "yaw": 0.02920326595628783,
+          "linear": 0.0,
+          "angular": 0.0,
+          "velocity_source": "finite difference of measured stamped Gazebo poses",
+          "source_reported_twist": {
+            "linear": 0.0,
+            "angular": 0.0
+          }
+        }
+      },
+      {
+        "task": "73567ad0c4cb462eb5038946cb863448",
+        "source": "route:rmf-53369d6de7524901852db1bf17c90081",
+        "goal": {
+          "x": 1.2,
+          "y": 0.0,
+          "yaw": 0.0,
+          "timeout": 180.0,
+          "not_before": 60.404847
+        },
+        "state": "succeeded",
+        "reason": "Actual Nav2 success and measured settled arrival",
+        "finished": 16531.947461072,
+        "observation": {
+          "x": 1.1883114500166807,
+          "y": -0.012843707437992779,
+          "z": 1.764428518956154e-06,
+          "yaw": 0.02920326595628783,
+          "linear": 0.0,
+          "angular": 0.0,
+          "velocity_source": "finite difference of measured stamped Gazebo poses",
+          "source_reported_twist": {
+            "linear": 0.0,
+            "angular": 0.0
+          }
+        }
+      },
+      {
+        "task": "8bfa5fc4d6d340078097938d30924f65",
+        "source": "route:rmf-53369d6de7524901852db1bf17c90081",
+        "goal": {
+          "x": -1.2,
+          "y": 0.0,
+          "yaw": 0.0,
+          "timeout": 180.0,
+          "not_before": 60.404847
+        },
+        "state": "succeeded",
+        "reason": "Actual Nav2 success and measured settled arrival",
+        "finished": 16562.294307703,
+        "observation": {
+          "x": -1.2112944446354073,
+          "y": 0.019188979180303635,
+          "z": 1.812078243302996e-06,
+          "yaw": -0.03797783942761953,
+          "linear": 0.0,
+          "angular": 0.0,
+          "velocity_source": "finite difference of measured stamped Gazebo poses",
+          "source_reported_twist": {
+            "linear": 0.0,
+            "angular": 0.0
+          }
+        }
+      },
+      {
+        "task": "7b1b5ba6ab42419e87949ce971fe4a92",
+        "source": "route:rmf-41ee1828dfef41ee8e8c6f95a49b8562",
+        "goal": {
+          "x": -1.2,
+          "y": 0.0,
+          "yaw": 0.0,
+          "timeout": 180.0,
+          "not_before": 90.838181
+        },
+        "state": "succeeded",
+        "reason": "Actual Nav2 success and measured settled arrival",
+        "finished": 16562.993949551,
+        "observation": {
+          "x": -1.2112944446354073,
+          "y": 0.019188979180303635,
+          "z": 1.812078243302996e-06,
+          "yaw": -0.03797783942761953,
+          "linear": 0.0,
+          "angular": 0.0,
+          "velocity_source": "finite difference of measured stamped Gazebo poses",
+          "source_reported_twist": {
+            "linear": 0.0,
+            "angular": 0.0
+          }
+        }
+      },
+      {
+        "task": "62efd5a0e3b343ccb7992de0d1215308",
+        "source": "route:rmf-41ee1828dfef41ee8e8c6f95a49b8562",
+        "goal": {
+          "x": -1.2,
+          "y": 0.0,
+          "yaw": 0.0,
+          "timeout": 180.0,
+          "not_before": 90.838181
+        },
+        "state": "succeeded",
+        "reason": "Actual Nav2 success and measured settled arrival",
+        "finished": 16563.54434096,
+        "observation": {
+          "x": -1.2112944446354073,
+          "y": 0.019188979180303635,
+          "z": 1.812078243302996e-06,
+          "yaw": -0.03797783942761953,
+          "linear": 0.0,
+          "angular": 0.0,
+          "velocity_source": "finite difference of measured stamped Gazebo poses",
+          "source_reported_twist": {
+            "linear": 0.0,
+            "angular": 0.0
+          }
+        }
+      },
+      {
+        "task": "a3748c0d461d4a68b4a0f897a239dc6c",
+        "source": "route:rmf-41ee1828dfef41ee8e8c6f95a49b8562",
+        "goal": {
+          "x": -4.8,
+          "y": 0.0,
+          "yaw": 0.0,
+          "timeout": 180.0,
+          "not_before": 110.838181
+        },
+        "state": "succeeded",
+        "reason": "Actual Nav2 success and measured settled arrival",
+        "finished": 16612.48907343,
+        "observation": {
+          "x": -4.793248307903423,
+          "y": 0.013107816269610623,
+          "z": 1.8120887212345528e-06,
+          "yaw": 0.04468829146523344,
+          "linear": 0.0,
+          "angular": 0.0,
+          "velocity_source": "finite difference of measured stamped Gazebo poses",
+          "source_reported_twist": {
+            "linear": 0.0,
+            "angular": 0.0
+          }
+        }
+      },
+      {
+        "task": "afbaefc66db24a099df00ccb4b7b087f",
+        "source": "route:rmf-41ee1828dfef41ee8e8c6f95a49b8562",
+        "goal": {
+          "x": -4.8,
+          "y": 0.0,
+          "yaw": -1.5707963267948966,
+          "timeout": 180.0,
+          "not_before": 126.071514
+        },
+        "state": "succeeded",
+        "reason": "Actual Nav2 success and measured settled arrival",
+        "finished": 16616.588589068,
+        "observation": {
+          "x": -4.7929070835586,
+          "y": 0.013471550822247944,
+          "z": 1.8120887106868803e-06,
+          "yaw": -1.5526392435711116,
+          "linear": 0.0,
+          "angular": 0.0,
+          "velocity_source": "finite difference of measured stamped Gazebo poses",
+          "source_reported_twist": {
+            "linear": 0.0,
+            "angular": 0.0
+          }
+        }
+      },
+      {
+        "task": "bfb253d238c24b4588fae2d04a2103fa",
+        "source": "route:rmf-41ee1828dfef41ee8e8c6f95a49b8562",
+        "goal": {
+          "x": -4.8,
+          "y": -2.4,
+          "yaw": -1.5707963267948966,
+          "timeout": 180.0,
+          "not_before": 129.439508
+        },
+        "state": "succeeded",
+        "reason": "Actual Nav2 success and measured settled arrival",
+        "finished": 16632.887142716,
+        "observation": {
+          "x": -4.799392332179185,
+          "y": -2.3502287935773287,
+          "z": 1.8124700722957423e-06,
+          "yaw": -1.6255426183923534,
+          "linear": -0.0,
+          "angular": 0.0,
+          "velocity_source": "finite difference of measured stamped Gazebo poses",
+          "source_reported_twist": {
+            "linear": 0.0,
+            "angular": 0.0
+          }
+        }
+      },
+      {
+        "task": "56d4be68d1c04362965aa2fa19b88194",
+        "source": "route:rmf-41ee1828dfef41ee8e8c6f95a49b8562",
+        "goal": {
+          "x": -4.8,
+          "y": -2.4,
+          "yaw": -1.1071487177940909,
+          "timeout": 180.0,
+          "not_before": 139.872841
+        },
+        "state": "succeeded",
+        "reason": "Actual Nav2 success and measured settled arrival",
+        "finished": 16634.587578215,
+        "observation": {
+          "x": -4.799553543773108,
+          "y": -2.350258567290388,
+          "z": 1.8120782661829245e-06,
+          "yaw": -1.150059587754571,
+          "linear": 0.0,
+          "angular": 0.0,
+          "velocity_source": "finite difference of measured stamped Gazebo poses",
+          "source_reported_twist": {
+            "linear": 0.0,
+            "angular": 0.0
+          }
+        }
+      },
+      {
+        "task": "64815aac561043f88e810f86a1e41194",
+        "source": "route:rmf-41ee1828dfef41ee8e8c6f95a49b8562",
+        "goal": {
+          "x": -4.5,
+          "y": -3.0,
+          "yaw": -1.1071487177940909,
+          "timeout": 180.0,
+          "not_before": 141.395587
+        },
+        "state": "succeeded",
+        "reason": "Actual Nav2 success and measured settled arrival",
+        "finished": 16644.035932948,
+        "observation": {
+          "x": -4.521804789202943,
+          "y": -2.9651452913522203,
+          "z": 1.8130294736702012e-06,
+          "yaw": -1.1663028029632414,
+          "linear": 0.0,
+          "angular": 0.0,
+          "velocity_source": "finite difference of measured stamped Gazebo poses",
+          "source_reported_twist": {
+            "linear": 0.0,
+            "angular": 0.0
+          }
+        }
+      },
+      {
+        "task": "4c660bcb5e2044cab25cd7656e0327cd",
+        "source": "operator",
+        "goal": {
+          "x": -4.5,
+          "y": -3.0,
+          "yaw": 0.0,
+          "timeout": 180.0,
+          "not_before": 0.0
+        },
+        "state": "succeeded",
+        "reason": "Actual Nav2 success and measured settled arrival",
+        "finished": 16647.436044286,
+        "observation": {
+          "x": -4.522016028180278,
+          "y": -2.965461709365336,
+          "z": 1.8120782432404082e-06,
+          "yaw": -0.009903271825900947,
+          "linear": 0.0,
+          "angular": 0.0,
+          "velocity_source": "finite difference of measured stamped Gazebo poses",
+          "source_reported_twist": {
+            "linear": 0.0,
+            "angular": 0.0
+          }
+        }
+      }
+    ],
+    "scope": "Experimental shared-world runtime; contact and mission qualification pending"
+  },
+  "rmf": {
+    "enabled": true,
+    "session_id": "session-jcm4sme_",
+    "operator_id": "rmf-bab5194c5600453b83ca5b0198b0d2c3",
+    "robots": [
+      "alpha"
+    ],
+    "waypoints": [
+      {
+        "name": "p0",
+        "x": -4.8,
+        "y": -3.5999999999999996,
+        "holding": true
+      },
+      {
+        "name": "p1",
+        "x": -3.5999999999999996,
+        "y": -3.5999999999999996,
+        "holding": true
+      },
+      {
+        "name": "p2",
+        "x": -2.4,
+        "y": -3.5999999999999996,
+        "holding": true
+      },
+      {
+        "name": "p3",
+        "x": -1.2,
+        "y": -3.5999999999999996,
+        "holding": true
+      },
+      {
+        "name": "p4",
+        "x": 1.2,
+        "y": -3.5999999999999996,
+        "holding": true
+      },
+      {
+        "name": "p5",
+        "x": 2.3999999999999995,
+        "y": -3.5999999999999996,
+        "holding": true
+      },
+      {
+        "name": "p6",
+        "x": 3.5999999999999996,
+        "y": -3.5999999999999996,
+        "holding": true
+      },
+      {
+        "name": "p7",
+        "x": 4.8,
+        "y": -3.5999999999999996,
+        "holding": true
+      },
+      {
+        "name": "p8",
+        "x": -4.8,
+        "y": -2.4,
+        "holding": true
+      },
+      {
+        "name": "p9",
+        "x": -3.5999999999999996,
+        "y": -2.4,
+        "holding": true
+      },
+      {
+        "name": "p10",
+        "x": -2.4,
+        "y": -2.4,
+        "holding": true
+      },
+      {
+        "name": "p11",
+        "x": -1.2,
+        "y": -2.4,
+        "holding": true
+      },
+      {
+        "name": "p12",
+        "x": 1.2,
+        "y": -2.4,
+        "holding": true
+      },
+      {
+        "name": "p13",
+        "x": 2.3999999999999995,
+        "y": -2.4,
+        "holding": true
+      },
+      {
+        "name": "p14",
+        "x": 3.5999999999999996,
+        "y": -2.4,
+        "holding": true
+      },
+      {
+        "name": "p15",
+        "x": 4.8,
+        "y": -2.4,
+        "holding": true
+      },
+      {
+        "name": "p16",
+        "x": -4.8,
+        "y": -1.2,
+        "holding": true
+      },
+      {
+        "name": "p17",
+        "x": -3.5999999999999996,
+        "y": -1.2,
+        "holding": true
+      },
+      {
+        "name": "p18",
+        "x": -2.4,
+        "y": -1.2,
+        "holding": true
+      },
+      {
+        "name": "p19",
+        "x": -1.2,
+        "y": -1.2,
+        "holding": true
+      },
+      {
+        "name": "p20",
+        "x": 1.2,
+        "y": -1.2,
+        "holding": true
+      },
+      {
+        "name": "p21",
+        "x": 2.3999999999999995,
+        "y": -1.2,
+        "holding": true
+      },
+      {
+        "name": "p22",
+        "x": 3.5999999999999996,
+        "y": -1.2,
+        "holding": true
+      },
+      {
+        "name": "p23",
+        "x": 4.8,
+        "y": -1.2,
+        "holding": true
+      },
+      {
+        "name": "p24",
+        "x": -4.8,
+        "y": 0.0,
+        "holding": true
+      },
+      {
+        "name": "p25",
+        "x": -3.5999999999999996,
+        "y": 0.0,
+        "holding": true
+      },
+      {
+        "name": "p26",
+        "x": -2.4,
+        "y": 0.0,
+        "holding": true
+      },
+      {
+        "name": "door_main_0",
+        "x": -1.2,
+        "y": 0.0,
+        "holding": true
+      },
+      {
+        "name": "p28",
+        "x": 0.0,
+        "y": 0.0,
+        "holding": false
+      },
+      {
+        "name": "door_main_1",
+        "x": 1.2,
+        "y": 0.0,
+        "holding": true
+      },
+      {
+        "name": "p30",
+        "x": 2.3999999999999995,
+        "y": 0.0,
+        "holding": true
+      },
+      {
+        "name": "p31",
+        "x": 3.5999999999999996,
+        "y": 0.0,
+        "holding": true
+      },
+      {
+        "name": "p32",
+        "x": 4.8,
+        "y": 0.0,
+        "holding": true
+      },
+      {
+        "name": "p33",
+        "x": -4.8,
+        "y": 1.2,
+        "holding": true
+      },
+      {
+        "name": "p34",
+        "x": -3.5999999999999996,
+        "y": 1.2,
+        "holding": true
+      },
+      {
+        "name": "p35",
+        "x": -2.4,
+        "y": 1.2,
+        "holding": true
+      },
+      {
+        "name": "p36",
+        "x": -1.2,
+        "y": 1.2,
+        "holding": true
+      },
+      {
+        "name": "p37",
+        "x": 1.2,
+        "y": 1.2,
+        "holding": true
+      },
+      {
+        "name": "p38",
+        "x": 2.3999999999999995,
+        "y": 1.2,
+        "holding": true
+      },
+      {
+        "name": "p39",
+        "x": 3.5999999999999996,
+        "y": 1.2,
+        "holding": true
+      },
+      {
+        "name": "p40",
+        "x": 4.8,
+        "y": 1.2,
+        "holding": true
+      },
+      {
+        "name": "p41",
+        "x": -4.8,
+        "y": 2.4,
+        "holding": true
+      },
+      {
+        "name": "p42",
+        "x": -3.5999999999999996,
+        "y": 2.4,
+        "holding": true
+      },
+      {
+        "name": "p43",
+        "x": -2.4,
+        "y": 2.4,
+        "holding": true
+      },
+      {
+        "name": "p44",
+        "x": -1.2,
+        "y": 2.4,
+        "holding": true
+      },
+      {
+        "name": "p45",
+        "x": 1.2,
+        "y": 2.4,
+        "holding": true
+      },
+      {
+        "name": "p46",
+        "x": 2.3999999999999995,
+        "y": 2.4,
+        "holding": true
+      },
+      {
+        "name": "p47",
+        "x": 3.5999999999999996,
+        "y": 2.4,
+        "holding": true
+      },
+      {
+        "name": "p48",
+        "x": 4.8,
+        "y": 2.4,
+        "holding": true
+      },
+      {
+        "name": "p49",
+        "x": -4.8,
+        "y": 3.5999999999999996,
+        "holding": true
+      },
+      {
+        "name": "p50",
+        "x": -3.5999999999999996,
+        "y": 3.5999999999999996,
+        "holding": true
+      },
+      {
+        "name": "p51",
+        "x": -2.4,
+        "y": 3.5999999999999996,
+        "holding": true
+      },
+      {
+        "name": "p52",
+        "x": -1.2,
+        "y": 3.5999999999999996,
+        "holding": true
+      },
+      {
+        "name": "p53",
+        "x": 1.2,
+        "y": 3.5999999999999996,
+        "holding": true
+      },
+      {
+        "name": "p54",
+        "x": 2.3999999999999995,
+        "y": 3.5999999999999996,
+        "holding": true
+      },
+      {
+        "name": "p55",
+        "x": 3.5999999999999996,
+        "y": 3.5999999999999996,
+        "holding": true
+      },
+      {
+        "name": "p56",
+        "x": 4.8,
+        "y": 3.5999999999999996,
+        "holding": true
+      },
+      {
+        "name": "west_charger",
+        "x": -4.5,
+        "y": -3.0,
+        "dock": "west_charger",
+        "holding": true
+      }
+    ],
+    "routes": {
+      "alpha": null
+    },
+    "battery": null,
+    "infrastructure": true,
+    "scope": "Actual Open-RMF adapter; declared facility adds physical door/lift protocol and independently observed docking; energy accounting disabled; mission qualification separate"
+  },
+  "facility": {
+    "session_id": "session-jcm4sme_",
+    "ready": true,
+    "held_members": [],
+    "doors": {
+      "main": {
+        "position_m": -6.925677522887521e-11,
+        "command_m": 0.0,
+        "target_m": 0.0,
+        "mode": 0,
+        "sweep_blocked": false
+      },
+      "lift": {
+        "position_m": 0.0,
+        "command_m": 0.0,
+        "target_m": 0.0,
+        "mode": 0,
+        "sweep_blocked": false
+      }
+    },
+    "lift": {
+      "position_m": -3.4666578125036016e-09,
+      "command_m": -3.4666578125036016e-09,
+      "current_floor": "L0",
+      "destination": null,
+      "floors": [
+        "L0",
+        "L1"
+      ]
+    },
+    "docks": {
+      "west_charger": {
+        "x": -4.5,
+        "y": -3.0,
+        "z": 0.0,
+        "yaw": 0.0,
+        "position_tolerance": 0.12,
+        "height_tolerance": 0.12,
+        "yaw_tolerance": 0.15
+      }
+    },
+    "docking": {
+      "alpha": {
+        "dock": "west_charger",
+        "request_id": "8520f7bc95804d5cbfeb4dd0b8dc792d",
+        "settled": 175.6,
+        "docked": true,
+        "observation": {
+          "xyz": [
+            -4.522016028180278,
+            -2.965461709365336,
+            1.8120782432404082e-06
+          ],
+          "yaw": -0.009903271825900947,
+          "speed": 0.0,
+          "angular": 0.0,
+          "stamp": 176.68,
+          "at": 16648.134253772
+        }
+      }
+    },
+    "energy": {
+      "alpha": {
+        "fraction": 0.7970456254957782,
+        "power_W": 3.0,
+        "charging_W": 0.0,
+        "source_verified": true,
+        "coverage_complete": true,
+        "reason": "Observed simulation actuator power",
+        "source": "Authored battery model + sampled wheel effort/rate; no regeneration or hardware battery telemetry"
+      }
+    },
+    "robot_floors": {
+      "alpha": "L0"
+    },
+    "floor_z": {
+      "alpha": 0.0
+    },
+    "floor_maps": {
+      "L0": "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_maps/share/robot_lab_maps/maps/fleet_facility/maps/map.yaml",
+      "L1": "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_maps/share/robot_lab_maps/maps/fleet_facility/maps/map_L1.yaml"
+    },
+    "robot_floor_maps": {
+      "alpha": "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_maps/share/robot_lab_maps/maps/fleet_facility/maps/map.yaml"
+    },
+    "active_robot_maps": {
+      "alpha": "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_maps/share/robot_lab_maps/maps/fleet_facility/maps/map.yaml"
+    },
+    "map_loading": [],
+    "map_status": {
+      "alpha": "ready"
+    },
+    "map_errors": {},
+    "current_floor_map": "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_maps/share/robot_lab_maps/maps/fleet_facility/maps/map.yaml",
+    "operator_hold": false,
+    "rmf_protocol": true,
+    "scope": "Fresh observed body poses determine robot floors; member Nav2 maps load per observed floor and commands remain held until loading succeeds; authored energy estimate"
+  }
+}

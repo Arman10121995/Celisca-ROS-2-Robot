@@ -10,6 +10,9 @@ import math
 from pathlib import Path
 import time
 import uuid
+import xml.etree.ElementTree as ET
+
+from robot_lab_utils.fleet_energy import EnergyEstimate, qualified_source
 import rclpy
 from rclpy.node import Node
 from rclpy.clock import Clock,ClockType
@@ -34,8 +37,16 @@ class Infrastructure(Node):
         self.runtime=None;self.runtime_at=-math.inf;self.bodies={};self.paths={};self.docking={};self.events=[]
         self.doors={name:False for name in self.config['doors']};self.outputs={};self.floor='L0';self.lift_request=None;self.lift_owner='';self.lift_at=-math.inf
         self.hold=False;self.lift_gui=False;self.door_owners={name:set() for name in self.doors}
-        self.energy={m['id']:dict(joules=self.config['capacity_J'] if False else self.config['energy']['capacity_J']*self.config['energy']['initial_fraction'],last=None,power=None,at=-math.inf,valid=bool(self.config['energy'].get('effort_observation_verified')),floor='L0') for m in session['members']}
-        self._effort_verified=bool(self.config['energy'].get('effort_observation_verified'))
+        self.energy = {m['id']: dict(floor='L0') for m in session['members']}
+        self.energy_models = {}
+        sources = self.config['energy'].get('effort_sources', {})
+        for member in session['members']:
+            description = ET.parse(member['description'])
+            joints = [joint.get('name') for joint in description.findall('.//ros2_control/joint')
+                      if joint.find("command_interface[@name='velocity']") is not None]
+            certificate = sources.get(member['model'], {})
+            verified = qualified_source(member, certificate)
+            self.energy_models[member['id']] = EnergyEstimate(self.config['energy'], joints, verified)
         self.floor_offsets={}
         self.floor_maps=session.get('floor_maps',self.config.get('floor_maps',{}));self.current_floor_map=''
         self.tf_broadcaster=tf2_ros.TransformBroadcaster(self)
@@ -73,7 +84,7 @@ class Infrastructure(Node):
             self.doors={n:False for n in self.doors};self.outputs={n:self.positions[n] for n in self.targets if n in self.positions};self.lift_request=None;self.lift_owner='';self.bodies.clear();self.paths.clear();self.docking.clear()
             self.hold=True;self.outputs={};self.positions={};self.joint_stamp=None;self.rates={};self.joint_at=-math.inf
             self.door_owners={name:set() for name in self.doors}
-            for item in self.energy.values():item['valid']=False;item['last']=None
+            for item in self.energy_models.values():item.invalidate('Simulation clock reset; energy coverage lost')
         self.clock=value;self.clock_at=time.monotonic()
 
     def joints(self,msg):
@@ -156,18 +167,25 @@ class Infrastructure(Node):
     def path(self,name,msg):self.paths[name]=([(p.pose.position.x,p.pose.position.y) for p in msg.poses],time.monotonic())
 
     def motor(self,name,msg):
-        entry=self.energy[name];stamp=msg.header.stamp.sec+msg.header.stamp.nanosec*1e-9
-        values=[(v,e) for n,v,e in zip(msg.name,msg.velocity,msg.effort) if 'wheel' in n]
-        if not values or not all(math.isfinite(x) for pair in values for x in pair):return
-        power=sum(max(0.,v*e) for v,e in values)/self.config['energy']['drive_efficiency']+self.config['energy']['hotel_W']
-        if entry['last'] is not None:
-            dt=stamp-entry['last']
-            if not 0<dt<=.5:entry['valid']=False
-            else:
-                entry['valid']=self._effort_verified
-                charge=self.config['energy']['charge_W'] if self.docking.get(name,{}).get('docked') else 0.
-                entry['joules']=max(0.,min(self.config['energy']['capacity_J'],entry['joules']+(charge-power)*dt))
-        entry.update(last=stamp,power=power,at=time.monotonic())
+        now = time.monotonic()
+        stamp = msg.header.stamp.sec + msg.header.stamp.nanosec * 1e-9
+        docked = self._docked_now(name, now)
+        clock = self.clock if now - self.clock_at < .6 else None
+        self.energy_models[name].observe(msg.name, msg.velocity, msg.effort,
+                                         stamp, clock, now, docked)
+
+    def _docked_now(self, name, now):
+        item = self.docking.get(name)
+        if not item or not item.get('docked') or now - self.joint_at >= .6:
+            return False
+        body = self.bodies.get(name)
+        dock = self.config['docks'].get(item['dock'])
+        return bool(body and dock and now - body['at'] < .6
+                    and body['speed'] is not None and body['speed'] < .03
+                    and body['angular'] is not None and abs(body['angular']) < .05
+                    and math.hypot(body['xyz'][0] - dock['x'], body['xyz'][1] - dock['y']) < dock['position_tolerance']
+                    and abs(body['xyz'][2] - dock.get('z', 0.)) < dock.get('height_tolerance', .12)
+                    and abs(math.atan2(math.sin(body['yaw'] - dock['yaw']), math.cos(body['yaw'] - dock['yaw']))) < dock['yaw_tolerance'])
 
     def safe_sweep(self,door):
         now=time.monotonic();x0,x1,y0,y1=door['sweep']
@@ -261,7 +279,7 @@ class Infrastructure(Node):
                 item['settled']=self.clock if good and item['settled'] is None else item['settled'] if good else None
                 item['docked']=bool(good and self.clock-item['settled']>=1.)
                 item['observation']=dict(b) if good else None
-        energy={name:dict(fraction=v['joules']/self.config['energy']['capacity_J'] if v['valid'] and now-v['at']<.6 else None,power_W=v['power'] if now-v['at']<.6 else None,source='Authored battery model + reported wheel effort/rate; not hardware battery telemetry') for name,v in self.energy.items()}
+        energy = {name: model.state(now) for name, model in self.energy_models.items()}
         current_floor=next((f for f,z in lift['floors'].items() if lift_position is not None and abs(z-lift_position)<.03),'')
         if current_floor and abs(self.rates.get(lift['joint'],math.inf))<.01:self.current_floor_map=self.floor_maps.get(current_floor,'')
         if self.rmf:
@@ -280,24 +298,25 @@ class Infrastructure(Node):
         for name,floor in floors.items():
             body=self.bodies.get(name)
             if body and now-body['at']<.6:self._request_robot_map(name,floor,now)
-        floor_z={name:self.floor_z.get(name,0.0) for name in self.energy}
         robot_floor_maps={name:self.floor_maps.get(floor,'') for name,floor in floors.items()}
         held=sorted(set(held)|self.map_transitions)
-        # Multi-floor TF: publish map->odom with the robot's current floor z-offset
-        # so Nav2/AMCL and downstream consumers see the correct level after a lift
-        # transition. Only publish for bodies with fresh ground-truth feedback.
-        now=time.monotonic()
-        for name,b in self.bodies.items():
-            if now-b['at']>.6:continue
-            target_z=float(self.config['lift']['floors'].get(self.energy[name]['floor'],0.0))
-            self.floor_z[name]=target_z
-            t=TransformStamped()
-            t.header.stamp=self.get_clock().now().to_msg()
-            t.header.frame_id='map';t.child_frame_id=name+'/odom'
-            t.transform.translation.x=float(b['xyz'][0]);t.transform.translation.y=float(b['xyz'][1]);t.transform.translation.z=target_z
-            yaw=b.get('yaw',0.0)
-            t.transform.rotation.z=math.sin(yaw/2.0);t.transform.rotation.w=math.cos(yaw/2.0)
+        # Floor placement owns a distinct frame; AMCL alone owns map_frame ->
+        # odom. Body truth classifies height only, never localization XY/yaw.
+        for member in self.session['members']:
+            name = member['id']
+            frame = member.get('map_frame', 'map')
+            if frame == 'map':
+                continue
+            target_z = float(self.config['lift']['floors'].get(floors[name], 0.0))
+            self.floor_z[name] = target_z
+            t = TransformStamped()
+            t.header.stamp = self.get_clock().now().to_msg()
+            t.header.frame_id = 'map'
+            t.child_frame_id = frame
+            t.transform.translation.z = target_z
+            t.transform.rotation.w = 1.0
             self.tf_broadcaster.sendTransform(t)
+        floor_z={name:self.floor_z.get(name,0.0) for name in self.energy}
         state=dict(session_id=self.identity,ready=fresh,held_members=held,doors=door_rows,
                    lift=dict(position_m=lift_position,command_m=self.outputs.get(lift['joint'],lift_position),
                              current_floor=current_floor,destination=self.lift_request,floors=list(lift['floors'])),

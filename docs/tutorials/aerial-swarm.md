@@ -9,6 +9,8 @@ Fleet uses Fortress separately. These are experimental controllers; consult
 the latest [workflow receipt](../status/workflows-2026-10-27.md) for measured
 missions and remaining coverage.
 
+## Run
+
 1. Open **Aerial Swarm** in the sidebar. Choose an installed map family and
    variant, vehicle count and spacing. Blank X/Y requests separate free spawn
    positions near that world's default. Enter explicit XYZ for elevated

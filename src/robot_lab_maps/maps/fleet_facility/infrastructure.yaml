@@ -9,6 +9,11 @@ doors:
     - 0.5
     - -1.1
     - 3.1
+    approach:
+    - - -1.2
+      - 0.0
+    - - 1.2
+      - 0.0
   lift:
     joint: door_lift
     closed: 0.0
@@ -44,6 +49,17 @@ energy:
   hotel_W: 3.0
   drive_efficiency: 0.75
   charge_W: 120.0
-  effort_observation_verified: true
-  scope: Authored battery estimate from actual JointState effort/rate; verified
-    for Bumperbot/Labbot simulation with effort state interfaces enabled
+  effort_observation_verified: false
+  scope: Authored simulation battery; only source-bound observed actuator certificates
+    enable SOC. Pose-berth charging is modeled, not connector telemetry.
+  effort_sources:
+    bumperbot:
+      source_description_sha256: 721fe2146a80864e5f7e39108117aeb409cc926668997551a92e12276a8324a5
+      runtime_library: /opt/ros/humble/lib/libgz_hardware_plugins.so
+      runtime_library_sha256: 90e9edfa0e8393f3829dcfc9c0559be94ba1408a7670b4c42dfcfaa0dd1077bd
+      evidence: docs/status/evidence/fleet-energy-2026-11-02/README.md
+    labbot:
+      source_description_sha256: 05317bc229f5e6e4af594b5626c4f8c4839f8b02726e645520649dd9a76ea95d
+      runtime_library: /opt/ros/humble/lib/libgz_hardware_plugins.so
+      runtime_library_sha256: 90e9edfa0e8393f3829dcfc9c0559be94ba1408a7670b4c42dfcfaa0dd1077bd
+      evidence: docs/status/evidence/fleet-energy-2026-11-02/README.md

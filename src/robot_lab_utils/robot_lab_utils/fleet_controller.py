@@ -239,7 +239,7 @@ class FleetController(Node):
         member.message_counts['scan'] += 1
 
     def _amcl(self, member, msg):
-        if msg.header.frame_id != 'map' or not self._valid_pose(msg.pose.pose):
+        if msg.header.frame_id != member.config.get('map_frame', 'map') or not self._valid_pose(msg.pose.pose):
             member.estimate_at = -math.inf
             return
         p = msg.pose.pose
@@ -454,7 +454,7 @@ class FleetController(Node):
         member.mode = 'dispatching'
         member.deadline = time.monotonic() + goal['timeout']
         request = NavigateToPose.Goal()
-        request.pose.header.frame_id, request.pose.header.stamp = 'map', self.get_clock().now().to_msg()
+        request.pose.header.frame_id, request.pose.header.stamp = member.config.get('map_frame', 'map'), self.get_clock().now().to_msg()
         request.pose.pose.position.x, request.pose.pose.position.y = goal['x'], goal['y']
         request.pose.pose.orientation.z, request.pose.pose.orientation.w = math.sin(goal['yaw'] / 2), math.cos(goal['yaw'] / 2)
         try:
@@ -748,7 +748,7 @@ class FleetController(Node):
         transforms = []
         for member in self.members.values():
             transform = TransformStamped()
-            transform.header.frame_id, transform.child_frame_id = 'map', member.name + '/odom'
+            transform.header.frame_id, transform.child_frame_id = member.config.get('map_frame', 'map'), member.name + '/odom'
             transform.header.stamp = self.get_clock().now().to_msg()
             transform.transform.translation.x, transform.transform.translation.y = member.anchor[:2]
             transform.transform.rotation.z = math.sin(member.anchor[2] / 2)
@@ -782,7 +782,7 @@ class FleetController(Node):
             if self.session['navigation']:
                 member.reset_anchor_pending = member.anchor
                 pose = PoseWithCovarianceStamped()
-                pose.header.frame_id, pose.header.stamp = 'map', self.get_clock().now().to_msg()
+                pose.header.frame_id, pose.header.stamp = member.config.get('map_frame', 'map'), self.get_clock().now().to_msg()
                 pose.pose.pose = copy.deepcopy(member.spawn_pose)
                 pose.pose.covariance[0] = pose.pose.covariance[7] = .01
                 pose.pose.covariance[35] = .01

@@ -9,7 +9,7 @@ Unit tests, asset registration and scene loading retain their stated scope.
 
 The latest continuation adds the [sprung amphibious rover and physical fleet facility](docs/status/amphibious-facility-2026-10-30.md): measured shore round-trip goals and RGB-D mapping; actual doors, lift and settled Bumperbot docking. Use Launch → Marine for the rover and Fleet & Swarm → Facility for infrastructure.
 
-The November 2 [fleet continuation](docs/status/evidence/fleet-floor-map-transition-2026-11-02/README.md) measures one Bumperbot riding the facility lift L0-L1-L0 with observed per-member Nav2 map switches. Battery energy remains unknown; broader RMF/fleet qualification remains open.
+The November 2 [fleet continuation](docs/status/evidence/fleet-floor-map-transition-2026-11-02/README.md) measures one Bumperbot riding the facility lift L0-L1-L0 with observed per-member Nav2 map switches. The later [fleet energy/RMF continuation](docs/status/fleet-continuation-2026-11-02.md) adds source-bound Bumperbot/Labbot power readback, modeled Bumperbot berth charging/loss handling, separate floor/AMCL frames and a measured RMF door/dock route. Broader RMF/fleet qualification remains open.
 
 The earlier continuation delivers [native snake, surface-vessel and articulated-track workflows](docs/status/native-forms-2026-10-30.md): measured snake 2D/3D mapping and saved-map navigation, two-goal surface-vessel navigation, AUV acquisition and four-flipper control. Select these robots in Launch; controls and commands fill automatically.
 
@@ -34,7 +34,7 @@ candidates; enable **experimental robot workflows** to expose their candidate
 modes and autofilled command. This does not grant new mission qualification.
 
 Remaining work includes larger aerial groups and further AUV/obstacle missions,
-verified motor-power/charging integration, broader multi-robot RMF/floor-map transitions,
+automatic RMF lift-session tasks, broader multi-robot/floor-map transitions and calibrated energy,
 larger fleets, terrain/slip missions for snake and articulated tracks, further
 automatic cases and the older roadmap. Broad backend/map acceptance and real
 hardware/HIL stay separate. Implement missing functionality before broad

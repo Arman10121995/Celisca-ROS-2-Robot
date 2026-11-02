@@ -7,6 +7,8 @@ from the legged centipede. Source geometry, motor limits and provenance live
 under `robot_lab_robots/lab_snake`; `generate_serpentine_assets.py` reproduces
 the model. Gains and wave parameters are authored, not hardware calibration.
 
+## Run
+
 Select **Articulated robots → Wheeled snake → lab_snake**, **MuJoCo**,
 **Gait** and a ground world. In the Gait control column choose the sensor task
 before Run. The normal command box fills automatically:

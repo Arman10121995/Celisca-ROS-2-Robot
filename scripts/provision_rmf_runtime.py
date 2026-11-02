@@ -17,6 +17,15 @@ def run(*args, cwd=None):
     return subprocess.check_output(args, cwd=cwd, text=True, stderr=subprocess.STDOUT)
 
 
+def build_graph_serializer():
+    """Keep the official exit-event correction scoped to the Robot Lab process."""
+    workspace = Path(__file__).resolve().parents[1]
+    if (workspace / 'install/setup.bash').is_file():
+        subprocess.run(['bash', str(workspace / 'scripts/build_rmf_graph_fix.sh')], check=True)
+    else:
+        print('After building the workspace, run scripts/build_rmf_graph_fix.sh for facility lane events')
+
+
 def main():
     base = Path(os.environ.get('ROBOT_LAB_RUNTIME_ROOT', '/workspace/molar/robot_lab_runtime'))
     if not str(base.resolve()).startswith('/workspace/') or base.stat().st_dev == Path('/').stat().st_dev:
@@ -28,6 +37,7 @@ def main():
     # Always include the target; apt may already have it installed on another host.
     if not any(name == 'ros-humble-rmf-fleet-adapter-python' for name, _ in packages):
         print('Open-RMF is already installed by the OS; no SSD overlay needed')
+        build_graph_serializer()
         return
     folder = Path(tempfile.mkdtemp(prefix='humble-', dir=root))
     downloads, prefix = folder / 'debs', folder / 'prefix'
@@ -57,6 +67,7 @@ def main():
     candidate.symlink_to(folder, target_is_directory=True)
     candidate.replace(root / 'current')
     print('Open-RMF overlay: ' + str(root / 'current/prefix/opt/ros/humble'))
+    build_graph_serializer()
 
 
 if __name__ == '__main__':

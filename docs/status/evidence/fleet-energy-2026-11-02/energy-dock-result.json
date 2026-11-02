@@ -1,0 +1,298 @@
+{
+  "passed": true,
+  "reason": "Actual dock/energy increase, departure/discharge, broadcaster loss and unknown-coverage recovery observed",
+  "phase": "resume",
+  "initial_fraction": 0.7985186666667241,
+  "charged_fraction": 0.7995621666667365,
+  "departed_fraction": 0.7996246569337231,
+  "final": {
+    "session_id": "session-gktp6nju",
+    "ready": true,
+    "held_members": [],
+    "doors": {
+      "main": {
+        "position_m": 0.0,
+        "command_m": 0.0,
+        "target_m": 0.0,
+        "mode": 0,
+        "sweep_blocked": false
+      },
+      "lift": {
+        "position_m": 0.0,
+        "command_m": 0.0,
+        "target_m": 0.0,
+        "mode": 0,
+        "sweep_blocked": false
+      }
+    },
+    "lift": {
+      "position_m": -1.9261346470584242e-09,
+      "command_m": -1.9261346470584242e-09,
+      "current_floor": "L0",
+      "destination": null,
+      "floors": [
+        "L0",
+        "L1"
+      ]
+    },
+    "docks": {
+      "west_charger": {
+        "x": -4.5,
+        "y": -3.0,
+        "z": 0.0,
+        "yaw": 0.0,
+        "position_tolerance": 0.12,
+        "height_tolerance": 0.12,
+        "yaw_tolerance": 0.15
+      }
+    },
+    "docking": {
+      "alpha": {
+        "dock": "west_charger",
+        "request_id": "measured-charge",
+        "settled": null,
+        "docked": false,
+        "observation": null
+      }
+    },
+    "energy": {
+      "alpha": {
+        "fraction": null,
+        "power_W": 3.0,
+        "charging_W": 0.0,
+        "source_verified": true,
+        "coverage_complete": false,
+        "reason": "Energy coverage lost; restart session for a new authored initial state",
+        "source": "Authored battery model + sampled wheel effort/rate; no regeneration or hardware battery telemetry"
+      },
+      "beta": {
+        "fraction": 0.7983798333333962,
+        "power_W": 3.0,
+        "charging_W": 0.0,
+        "source_verified": true,
+        "coverage_complete": true,
+        "reason": "Observed simulation actuator power",
+        "source": "Authored battery model + sampled wheel effort/rate; no regeneration or hardware battery telemetry"
+      }
+    },
+    "robot_floors": {
+      "alpha": "L0",
+      "beta": "L0"
+    },
+    "floor_z": {
+      "alpha": 0.0,
+      "beta": 0.0
+    },
+    "floor_maps": {
+      "L0": "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_maps/share/robot_lab_maps/maps/fleet_facility/maps/map.yaml",
+      "L1": "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_maps/share/robot_lab_maps/maps/fleet_facility/maps/map_L1.yaml"
+    },
+    "robot_floor_maps": {
+      "alpha": "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_maps/share/robot_lab_maps/maps/fleet_facility/maps/map.yaml",
+      "beta": "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_maps/share/robot_lab_maps/maps/fleet_facility/maps/map.yaml"
+    },
+    "active_robot_maps": {
+      "alpha": "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_maps/share/robot_lab_maps/maps/fleet_facility/maps/map.yaml",
+      "beta": "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_maps/share/robot_lab_maps/maps/fleet_facility/maps/map.yaml"
+    },
+    "map_loading": [],
+    "map_status": {
+      "alpha": "ready",
+      "beta": "ready"
+    },
+    "map_errors": {},
+    "current_floor_map": "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_maps/share/robot_lab_maps/maps/fleet_facility/maps/map.yaml",
+    "operator_hold": false,
+    "rmf_protocol": true,
+    "scope": "Fresh observed body poses determine robot floors; member Nav2 maps load per observed floor and commands remain held until loading succeeds; authored energy estimate"
+  },
+  "fleet": {
+    "schema_version": 1,
+    "session_id": "session-gktp6nju",
+    "map": "fleet_facility",
+    "backend": "gazebo",
+    "navigation": true,
+    "directory": "/workspace/molar/robot_lab_runtime/fleet_sessions/session-gktp6nju",
+    "sim_time": 98.072,
+    "clock_age": 0.001,
+    "operator_id": "energy-trial",
+    "operator_fresh": true,
+    "swarm": null,
+    "members": [
+      {
+        "id": "alpha",
+        "model": "bumperbot",
+        "mode": "idle",
+        "reason": "Operator stop",
+        "included": true,
+        "ready": true,
+        "limits": {
+          "linear": 0.35,
+          "angular": 0.8
+        },
+        "navigation_ready": true,
+        "estimate": {
+          "x": -4.260176832168146,
+          "y": -3.0004770414474615,
+          "yaw": -0.0009402927391869622
+        },
+        "estimate_source": "AMCL transform + wheel feedback",
+        "truth": {
+          "x": -4.263905609575938,
+          "y": -3.0000023031348806,
+          "z": 1.8136302183209446e-06,
+          "yaw": -1.2231341214411001e-05,
+          "linear": 0.0,
+          "angular": 0.0,
+          "velocity_source": "finite difference of measured stamped Gazebo poses",
+          "source_reported_twist": {
+            "linear": 0.0,
+            "angular": 0.0
+          }
+        },
+        "command": {
+          "linear": 0.0,
+          "angular": 0.0
+        },
+        "wheel_twist": {
+          "linear": 0.0,
+          "angular": 0.0
+        },
+        "ages": {
+          "odom": 0.019,
+          "truth": 0.016,
+          "scan": 0.084,
+          "amcl": 4.775,
+          "localization_tf": 0.0
+        },
+        "message_counts": {
+          "odom": 4782,
+          "truth": 4782,
+          "scan": 478,
+          "amcl": 3
+        },
+        "task": "",
+        "goal": null,
+        "nav2_pending": false,
+        "cancel_pending": false,
+        "queued": 0,
+        "queued_tasks": [],
+        "queue_paused": false,
+        "settled_spawn_recorded": true,
+        "reset_pose": [
+          -4.499972724615504,
+          -2.999999753421296,
+          -5.178245951959323e-06
+        ],
+        "radius_m": 0.118,
+        "battery": null,
+        "charging": null
+      },
+      {
+        "id": "beta",
+        "model": "labbot",
+        "mode": "idle",
+        "reason": "Lift interlock / stale facility feedback; wheel input held neutral",
+        "included": true,
+        "ready": true,
+        "limits": {
+          "linear": 0.35,
+          "angular": 0.8
+        },
+        "navigation_ready": true,
+        "estimate": {
+          "x": -3.0000000000002225,
+          "y": -3.0000000000002225,
+          "yaw": -1.4510541949345717e-18
+        },
+        "estimate_source": "AMCL transform + wheel feedback",
+        "truth": {
+          "x": -3.000000000006183,
+          "y": -2.9999999999998765,
+          "z": -7.637381706712265e-07,
+          "yaw": 1.77061638920014e-11,
+          "linear": 0.0,
+          "angular": 0.0,
+          "velocity_source": "finite difference of measured stamped Gazebo poses",
+          "source_reported_twist": {
+            "linear": 0.0,
+            "angular": 0.0
+          }
+        },
+        "command": {
+          "linear": 0.0,
+          "angular": 0.0
+        },
+        "wheel_twist": {
+          "linear": -1.159967044655306e-20,
+          "angular": -2.1254534923025348e-19
+        },
+        "ages": {
+          "odom": 0.006,
+          "truth": 0.016,
+          "scan": 0.073,
+          "amcl": 116.812,
+          "localization_tf": 0.0
+        },
+        "message_counts": {
+          "odom": 4782,
+          "truth": 4782,
+          "scan": 478,
+          "amcl": 1
+        },
+        "task": "",
+        "goal": null,
+        "nav2_pending": false,
+        "cancel_pending": false,
+        "queued": 0,
+        "queued_tasks": [],
+        "queue_paused": false,
+        "settled_spawn_recorded": true,
+        "reset_pose": [
+          -3.000000000006183,
+          -2.9999999999998765,
+          1.77061638920014e-11
+        ],
+        "radius_m": 0.18,
+        "battery": null,
+        "charging": null
+      }
+    ],
+    "last_rejection": "",
+    "traffic": {
+      "serial": true,
+      "policy": "One autonomous route at a time; queued work waits for measured settling"
+    },
+    "task_history": [
+      {
+        "task": "a1963110043648e09fb57c46ecafbbda",
+        "source": "operator",
+        "goal": {
+          "x": -4.5,
+          "y": -3.0,
+          "yaw": 0.0,
+          "timeout": 180.0,
+          "not_before": 0.0
+        },
+        "state": "succeeded",
+        "reason": "Actual Nav2 success and measured settled arrival",
+        "finished": 15935.644274798,
+        "observation": {
+          "x": -4.499972724615504,
+          "y": -2.999999753421296,
+          "z": 1.7326781267855623e-06,
+          "yaw": -5.178245951959323e-06,
+          "linear": 0.0,
+          "angular": 0.0,
+          "velocity_source": "finite difference of measured stamped Gazebo poses",
+          "source_reported_twist": {
+            "linear": 0.0,
+            "angular": 0.0
+          }
+        }
+      }
+    ],
+    "scope": "Experimental shared-world runtime; contact and mission qualification pending"
+  },
+  "wall_seconds": 11.69011823099936
+}

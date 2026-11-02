@@ -40,3 +40,13 @@ substring-based license inference and synthetic clean-host tests must be
 replaced with actual upstream license/pin checks and executed reproduction
 logs. No blanket license compatibility, commercial-use or clean-host claim is
 made here. See `docs/status/audit-2026-10-02.md` and R9.1 in the current ledger.
+
+## Humble RMF graph serializer correction
+
+The extracted official Open-RMF graph-to-message serializer in
+`src/robot_lab_utils/vendor/rmf_graph/` retains Copyright 2021 Open Source
+Robotics Foundation and the Apache-2.0 license.
+[Upstream pinned source](https://github.com/open-rmf/rmf_ros2/blob/58ca5211f20891bcb81a619974ee327d85cd12ba/rmf_traffic_ros2/src/rmf_traffic_ros2/convert_Graph.cpp)
+and local SOURCE.json record the extraction and the exit-event/exit-orientation
+corrections. A scoped library is loaded only by the Robot Lab RMF process;
+this does not replace or relicense the installed SDK.

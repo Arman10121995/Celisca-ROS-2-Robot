@@ -1,5 +1,7 @@
 # Validation Plan - November 2, 2026
 
+November 2 update: the system Python/SSD environment ran actual Gazebo fleet missions; ENV-1 is not a reproduced global blocker. [Current measured energy/RMF cases](evidence/fleet-energy-2026-11-02/README.md) supersede the earlier missing-readback summary. Preserve the separate aerial issue and wider validation tasks.
+
 This document outlines the step-by-step validation plan for all remaining Robot Lab tasks, organized by priority and execution order.
 
 ---
@@ -21,7 +23,7 @@ This document outlines the step-by-step validation plan for all remaining Robot 
 
 | Task | Description | Owner | Estimated Time | Status |
 |------|-------------|-------|----------------|--------|
-| ENV-1 | Fix GLIBCXX_3.4.29 library issue for ROS imports | Platform | 1-2 hours | ❌ Pending |
+| ENV-1 | System Python/SSD ROS imports and native fleet missions work; no library replacement needed | Platform | Measured November 2 | Resolved for this environment |
 | ENV-2 | Verify PX4 SITL environment on Jetson | Platform | 1 hour | ❌ Pending |
 
 **Dependencies**: All Phase 2+ tasks depend on ENV-1 and ENV-2

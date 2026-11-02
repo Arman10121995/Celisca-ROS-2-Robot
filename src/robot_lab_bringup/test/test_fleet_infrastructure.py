@@ -143,55 +143,34 @@ def _body_state(x, y, z, stamp_sec=1000.0):
 
 
 def test_energy_becomes_valid_with_fresh_motor_feedback(tmp_path):
-    session = _make_session(tmp_path)
-    node = _make_node(session)
-    for name in ('alpha', 'beta'):
-        assert node.energy[name]['valid'] is True
-    Infrastructure.motor(node, 'alpha', _joint_state(
-        ['alpha/wheel_left', 'alpha/wheel_right'], [1.0, 1.0], [5.0, 5.0], 1000.0))
-    Infrastructure.motor(node, 'alpha', _joint_state(
-        ['alpha/wheel_left', 'alpha/wheel_right'], [1.0, 1.0], [5.0, 5.0], 1000.5))
-    entry = node.energy['alpha']
-    assert entry['valid'] is True
-    assert entry['power'] is not None and entry['power'] > 0
-    assert entry['joules'] < node.config['energy']['capacity_J'] * 0.8
+    from robot_lab_utils.fleet_energy import EnergyEstimate
+    node = _make_node(_make_session(tmp_path))
+    model = EnergyEstimate(node.config['energy'], ['left', 'right'], True)
+    model.observe(['left', 'right'], [1., 1.], [5., 5.], 1., 1., 1.)
+    assert model.state(1.)['fraction'] is None
+    model.observe(['left', 'right'], [1., 1.], [5., 5.], 1.5, 1.5, 1.5)
+    assert model.state(1.5)['fraction'] < .8
+    assert model.state(1.5)['power_W'] == pytest.approx(3 + 10 / .75)
 
 
 def test_energy_stays_unknown_when_effort_not_verified(tmp_path):
-    session = _make_session(tmp_path)
-    import yaml
-    cfg = yaml.safe_load(Path(session['infrastructure_file']).read_text())
-    cfg['energy']['effort_observation_verified'] = False
-    node = _make_node(session)
-    node.config = cfg
-    node._effort_verified = False
-    node.energy = {
-        m['id']: dict(
-            joules=cfg['energy']['capacity_J'] * cfg['energy']['initial_fraction'],
-            last=None, power=None, at=-math.inf,
-            valid=bool(cfg['energy'].get('effort_observation_verified')), floor='L0',
-        )
-        for m in session['members']
-    }
-    for name in ('alpha', 'beta'):
-        assert node.energy[name]['valid'] is False
-    Infrastructure.motor(node, 'alpha', _joint_state(
-        ['alpha/wheel_left', 'alpha/wheel_right'], [1.0, 1.0], [5.0, 5.0], 1000.0))
-    assert node.energy['alpha']['valid'] is False
+    from robot_lab_utils.fleet_energy import EnergyEstimate
+    node = _make_node(_make_session(tmp_path))
+    model = EnergyEstimate(node.config['energy'], ['left', 'right'], False)
+    for stamp in (1., 1.5):
+        model.observe(['left', 'right'], [1., 1.], [5., 5.], stamp, stamp, stamp)
+    assert model.state(1.5)['fraction'] is None
+    assert model.joules == 144000.
 
 
 def test_energy_charges_when_docked(tmp_path):
-    session = _make_session(tmp_path)
-    node = _make_node(session)
-    Infrastructure.motor(node, 'alpha', _joint_state(
-        ['alpha/wheel_left', 'alpha/wheel_right'], [1.0, 1.0], [10.0, 10.0], 1000.0))
-    Infrastructure.motor(node, 'alpha', _joint_state(
-        ['alpha/wheel_left', 'alpha/wheel_right'], [1.0, 1.0], [10.0, 10.0], 1000.5))
-    drained = node.energy['alpha']['joules']
-    node.docking['alpha'] = dict(dock='west_charger', request_id='r1', settled=None, docked=True)
-    Infrastructure.motor(node, 'alpha', _joint_state(
-        ['alpha/wheel_left', 'alpha/wheel_right'], [1.0, 1.0], [10.0, 10.0], 1001.0))
-    assert node.energy['alpha']['joules'] >= drained
+    from robot_lab_utils.fleet_energy import EnergyEstimate
+    node = _make_node(_make_session(tmp_path))
+    model = EnergyEstimate(node.config['energy'], ['left', 'right'], True)
+    for stamp in (1., 1.5):
+        model.observe(['left', 'right'], [0., 0.], [0., 0.], stamp, stamp, stamp, True)
+    assert model.joules == pytest.approx(144000 + (120 - 3) * .5)
+    assert model.state(1.5)['charging_W'] == 120.
 
 
 def test_robot_floor_changes_only_after_observed_body_motion(tmp_path):
@@ -306,21 +285,15 @@ def test_current_floor_map_tracks_lift_arrival(tmp_path):
     assert node.current_floor_map == 'maps/fleet_facility/maps/map_L1.yaml'
 
 
-def test_charging_power_readback_when_docked(tmp_path):
-    session = _make_session(tmp_path)
-    node = _make_node(session)
-    # Establish motor feedback with discharge
-    Infrastructure.motor(node, 'alpha', _joint_state(
-        ['alpha/wheel_left', 'alpha/wheel_right'], [1.0, 1.0], [10.0, 10.0], 1000.0))
-    Infrastructure.motor(node, 'alpha', _joint_state(
-        ['alpha/wheel_left', 'alpha/wheel_right'], [1.0, 1.0], [10.0, 10.0], 1000.5))
-    draining_power = node.energy['alpha']['power']
-    assert draining_power is not None and draining_power > 0
-    # Dock and verify charging power is applied
-    node.docking['alpha'] = dict(dock='west_charger', request_id='r1', settled=None, docked=True)
-    Infrastructure.motor(node, 'alpha', _joint_state(
-        ['alpha/wheel_left', 'alpha/wheel_right'], [1.0, 1.0], [10.0, 10.0], 1001.0))
-    entry = node.energy['alpha']
-    assert entry['joules'] > draining_power * 0.5  # net charge exceeds discharge over 0.5s
-    # Verify power readback includes hotel + drive (not just charging offset)
-    assert entry['power'] is not None and entry['power'] > 0
+def test_charging_stops_on_departure_and_feedback_loss(tmp_path):
+    from robot_lab_utils.fleet_energy import EnergyEstimate
+    node = _make_node(_make_session(tmp_path))
+    model = EnergyEstimate(node.config['energy'], ['left', 'right'], True)
+    for stamp in (1., 1.5):
+        model.observe(['left', 'right'], [0., 0.], [0., 0.], stamp, stamp, stamp, True)
+    model.observe(['left', 'right'], [0., 0.], [0., 0.], 2., 2., 2., False)
+    assert model.state(2.)['charging_W'] == 0.
+    assert model.state(2.7)['fraction'] is None
+    for stamp in (3., 3.5):
+        model.observe(['left', 'right'], [0., 0.], [0., 0.], stamp, stamp, stamp, True)
+    assert model.state(3.5)['fraction'] is None  # Unobserved energy cannot be recovered.

@@ -7,7 +7,7 @@ import os
 from pathlib import Path
 import uuid
 
-from ament_index_python.packages import get_package_share_directory as share
+from ament_index_python.packages import get_package_share_directory as share, get_package_prefix
 from launch import LaunchDescription
 from launch.actions import DeclareLaunchArgument, EmitEvent, ExecuteProcess, IncludeLaunchDescription, OpaqueFunction, RegisterEventHandler, SetEnvironmentVariable, TimerAction
 from launch.event_handlers import OnProcessExit
@@ -93,7 +93,7 @@ def _setup(context):
             servers = [('nav2_amcl', 'amcl'), ('nav2_controller', 'controller_server'), ('nav2_planner', 'planner_server'),
                        ('nav2_smoother', 'smoother_server'), ('nav2_bt_navigator', 'bt_navigator'), ('nav2_behaviors', 'behavior_server')]
             map_server = Node(package='nav2_map_server', executable='map_server', name='map_server', namespace=name,
-                parameters=[{'yaml_filename': member.get('map_yaml', session['map_yaml']), 'use_sim_time': True}], output='screen')
+                parameters=[{'yaml_filename': member.get('map_yaml', session['map_yaml']), 'frame_id': member.get('map_frame', 'map'), 'use_sim_time': True}], output='screen')
             navigation_actions = [map_server] + [Node(package=package, executable=node, name=node, namespace=name,
                 parameters=[member['navigation_file']],
                 remappings=[('tf', '/tf'), ('tf_static', '/tf_static'), ('map', '/' + name + '/map')],
@@ -122,10 +122,22 @@ def _setup(context):
         on_exit=[EmitEvent(event=Shutdown(reason='Shared-world command owner exited'))])))
     actions.append(TimerAction(period=3., actions=[controller_spawners[0]]))
     if enabled('rmf'):
+        if session.get('infrastructure_file'):
+            actions.append(Node(package='rmf_fleet_adapter', executable='door_supervisor',
+                name='facility_door_supervisor', parameters=[{'use_sim_time': True}], output='screen'))
         actions.append(Node(package='rmf_traffic_ros2', executable='rmf_traffic_schedule',
-                            name='robot_lab_rmf_schedule', parameters=[{'use_sim_time': True}], output='screen'))
-        actions.append(TimerAction(period=5., actions=[Node(package='robot_lab_utils', executable='fleet_rmf_adapter.py',
-            arguments=['--session', session['resolved_file']], output='screen')]))
+                            name='robot_lab_rmf_schedule', parameters=[{'use_sim_time': True}], cwd=session['directory'], output='screen'))
+        adapter_env = {}
+        if session.get('infrastructure_file'):
+            serializer = Path(get_package_prefix('robot_lab_utils')) / 'lib/librobot_lab_rmf_graph_fix.so'
+            if not serializer.is_file():
+                raise ValueError('Humble RMF facility lane events require scripts/build_rmf_graph_fix.sh')
+            adapter_env['LD_PRELOAD'] = os.pathsep.join(filter(None, [str(serializer), os.environ.get('LD_PRELOAD', '')]))
+        rmf_adapter = Node(package='robot_lab_utils', executable='fleet_rmf_adapter.py',
+            arguments=['--session', session['resolved_file']], additional_env=adapter_env, output='screen')
+        actions += [TimerAction(period=5., actions=[rmf_adapter]),
+            RegisterEventHandler(OnProcessExit(target_action=rmf_adapter,
+                on_exit=[EmitEvent(event=Shutdown(reason='Open-RMF workflow owner exited'))]))]
     if enabled('rviz'):
         rviz = Path(session['directory']) / 'fleet.rviz'
         map_displays = [{'Class': 'rviz_default_plugins/Map', 'Name': name + ' floor map', 'Enabled': True,

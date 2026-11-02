@@ -20,7 +20,7 @@ air1 [-0.5,-0.5,0.22726] m, air2 [-3.5,-0.5,0.22649] m); the adapter's
 formation-altitude trim is implemented and unit-tested; bounded flight trials
 recorded. Remaining: formation-error/altitude metrics and landing/disarm, then
 larger groups, other maps/behaviors and member-loss/contact cases.
-Updated: 2026-10-30 (see the current agent queue below). See [current measured and implemented status](docs/status/CURRENT_STATUS.md) and [the historical extension checkpoint](docs/status/continuation-2026-10-08.md)
+Updated: 2026-11-02 (see the current agent queue below). See [current measured and implemented status](docs/status/CURRENT_STATUS.md) and [the historical extension checkpoint](docs/status/continuation-2026-10-08.md)
 for exact physical source stages and publication checks. The
 [completion audit](docs/status/audit-2026-10-02.md) reopens unsupported
 R6/R7/R8/R9 claims: demonstration frameworks and metadata are retained,
@@ -41,7 +41,7 @@ GUI, installed inventory, measured robot scopes and exact successful CI.
 
 <a id="current-agent-queue--october-27-2026"></a>
 
-## Current agent queue — October 30, 2026
+## Current agent queue — November 2, 2026
 
 The project and R10 extension remain **partial**. Follow the detailed
 [remaining-work execution guide](docs/REMAINING_WORK_GUIDE.md), then the exact
@@ -50,7 +50,7 @@ ownership before runtime edits, preserve existing source certificates and keep
 large outputs on SSD. Complete initial functionality before broad validation;
 neutral enablement, bounds, Stop and command-loss behavior are implementation.
 
-[The later October 30 amphibious/facility delivery](docs/status/amphibious-facility-2026-10-30.md) adds a sprung native rover, actual shore round-trip/SLAM, physical door/lift/dock adapters and a Facility GUI. The [November 2 continuation](docs/status/evidence/fleet-floor-map-transition-2026-11-02/README.md) measures one Bumperbot L0-L1-L0 ride and per-member Nav2 map switching. Verified motor-power/charging and broader RMF/fleet missions remain.
+[The later October 30 amphibious/facility delivery](docs/status/amphibious-facility-2026-10-30.md) adds a sprung native rover, actual shore round-trip/SLAM, physical door/lift/dock adapters and a Facility GUI. The [November 2 continuation](docs/status/evidence/fleet-floor-map-transition-2026-11-02/README.md) measures one Bumperbot L0-L1-L0 ride and per-member Nav2 map switching. The [later fleet continuation](docs/status/fleet-continuation-2026-11-02.md) adds source-bound actuator power/authored charging, exclusive floor/AMCL frames and measured native RMF door/dock events. Automatic RMF lift-session tasks and broader missions remain.
 
 [The earlier October 30 native-form delivery](docs/status/native-forms-2026-10-30.md) adds actual snake mapping and acquired-map navigation, surface-vessel acquisition/two-goal arrival, AUV acquisition and bounded articulated flippers. The grouped GUI exposes their controls and command defaults.
 
@@ -63,7 +63,7 @@ working launch/GUI/map export features from scratch.
 | Priority | Task | Current implementation | Next acceptance/work |
 |---|---|---|---|
 | Delivered | R3.6 catalog restoration | Seven profiles restored, merge preservation, native families/defaults/autofill and explicit source-recheck candidates | New source-qualified controller missions; remaining imports |
-| 1 | R10.1–R10.3 fleet | Real queues/traffic retreat, optional RMF, coverage, native session editor; conflicting routes, settled batch goals, and one Bumperbot L0-L1-L0 ride with per-member map switching measured | Verified motor-power/charging; broader RMF conflicts/loss, other robot/floor transitions, coverage/contact and larger-fleet missions |
+| 1 | R10.1–R10.3 fleet | Real queues/traffic retreat, optional RMF, coverage, native session editor; conflicting routes, settled batch goals, source-bound power/authored charging, RMF door/dock events and one Bumperbot L0-L1-L0 ride with per-member map switching measured | Automatic RMF lift-session graph tasks; broader conflicts/loss, other robot/floor transitions, calibrated energy/RMF energy scheduling, coverage/contact and larger fleets |
 | 2 | R10.3 / R10.8 aerial swarm | Native multi-FCU controls and workloads; actual two-X500 range-reference formation and operator-loss landing on nav_empty | Other maps, larger groups, other behaviors and member-loss/contact missions |
 | 3 | R10.4–R10.5 marine | Sensor estimation, source-heading alignment, real map flush/export/protected reload, native estimated missions/ahead waypoint; ROV route and AUV acquisition measured; native surface vessel/harbor mapping and two-goal route delivered | AUV/surface saved-map routes, obstacles/current/contact/loss across installed water worlds |
 | 4 | R10.6–R10.7 multi-leg | Source FK/contact odometry, saved 2D/3D maps, localization/Nav2 and native controls; hexapod Nav2 result and octopod 3D export measured | Per-model higher-mode endpoints, terrain/slip/recovery and additional backends |

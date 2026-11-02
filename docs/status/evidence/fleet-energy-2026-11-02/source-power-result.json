@@ -1,0 +1,304 @@
+{
+  "passed": true,
+  "metrics": {
+    "alpha": {
+      "samples": 729,
+      "complete": 729,
+      "max_effort_Nm": 0.03297804953364484,
+      "max_positive_mechanical_W": 0.060843683816351135,
+      "body_displacement_m": 0.23206711933839863
+    },
+    "beta": {
+      "samples": 728,
+      "complete": 728,
+      "max_effort_Nm": 0.11048820855200368,
+      "max_positive_mechanical_W": 0.1683171012470862,
+      "body_displacement_m": 0.23200004079790504
+    }
+  },
+  "tf_parents": {
+    "beta/wheel_left_link": [
+      "beta/base_link"
+    ],
+    "beta/wheel_right_link": [
+      "beta/base_link"
+    ],
+    "beta/base_footprint": [
+      "beta/odom"
+    ],
+    "alpha/base_footprint": [
+      "alpha/odom"
+    ],
+    "alpha/map": [
+      "map"
+    ],
+    "alpha/wheel_left_link": [
+      "alpha/base_link"
+    ],
+    "alpha/wheel_right_link": [
+      "alpha/base_link"
+    ],
+    "beta/map": [
+      "map"
+    ],
+    "alpha/odom": [
+      "alpha/map"
+    ],
+    "beta/odom": [
+      "beta/map"
+    ]
+  },
+  "final": {
+    "schema_version": 1,
+    "session_id": "session-t5updll1",
+    "map": "fleet_facility",
+    "backend": "gazebo",
+    "navigation": true,
+    "directory": "/workspace/molar/robot_lab_runtime/fleet_sessions/session-t5updll1",
+    "sim_time": 24.33,
+    "clock_age": 0.001,
+    "operator_id": "energy-source-probe",
+    "operator_fresh": true,
+    "swarm": null,
+    "members": [
+      {
+        "id": "alpha",
+        "model": "bumperbot",
+        "mode": "manual",
+        "reason": "Neutral; waiting for input",
+        "included": true,
+        "ready": true,
+        "limits": {
+          "linear": 0.35,
+          "angular": 0.8
+        },
+        "navigation_ready": true,
+        "estimate": {
+          "x": -4.480253085485581,
+          "y": -3.0027441054695214,
+          "yaw": 0.001290460979463553
+        },
+        "estimate_source": "AMCL transform + wheel feedback",
+        "truth": {
+          "x": -4.48955396819183,
+          "y": -2.9999990509660783,
+          "z": 1.3866293587436525e-06,
+          "yaw": -4.370965669701554e-05,
+          "linear": 0.0,
+          "angular": 0.0,
+          "velocity_source": "finite difference of measured stamped Gazebo poses",
+          "source_reported_twist": {
+            "linear": 0.0,
+            "angular": 0.0
+          }
+        },
+        "command": {
+          "linear": 0.0,
+          "angular": 0.0
+        },
+        "wheel_twist": {
+          "linear": 0.0,
+          "angular": 0.0
+        },
+        "ages": {
+          "odom": 0.015,
+          "truth": 0.009,
+          "scan": 0.187,
+          "amcl": 2.796,
+          "localization_tf": 0.0
+        },
+        "message_counts": {
+          "odom": 1091,
+          "truth": 1091,
+          "scan": 109,
+          "amcl": 5
+        },
+        "task": "",
+        "goal": null,
+        "nav2_pending": false,
+        "cancel_pending": false,
+        "queued": 0,
+        "queued_tasks": [],
+        "queue_paused": false,
+        "settled_spawn_recorded": true,
+        "reset_pose": [
+          -4.499972724615504,
+          -2.999999753421296,
+          -5.178245951959323e-06
+        ],
+        "radius_m": 0.118,
+        "battery": null,
+        "charging": null
+      },
+      {
+        "id": "beta",
+        "model": "labbot",
+        "mode": "manual",
+        "reason": "Neutral; waiting for input",
+        "included": true,
+        "ready": true,
+        "limits": {
+          "linear": 0.35,
+          "angular": 0.8
+        },
+        "navigation_ready": true,
+        "estimate": {
+          "x": -2.9871454840432046,
+          "y": -2.997148776432571,
+          "yaw": -0.0390836172974863
+        },
+        "estimate_source": "AMCL transform + wheel feedback",
+        "truth": {
+          "x": -2.997350016819665,
+          "y": -3.0000000177081514,
+          "z": 7.552703948543984e-09,
+          "yaw": 1.6947764888173954e-07,
+          "linear": 0.0,
+          "angular": 0.0,
+          "velocity_source": "finite difference of measured stamped Gazebo poses",
+          "source_reported_twist": {
+            "linear": 0.0,
+            "angular": 0.0
+          }
+        },
+        "command": {
+          "linear": 0.0,
+          "angular": 0.0
+        },
+        "wheel_twist": {
+          "linear": 3.165870259441832e-17,
+          "angular": 6.262613884749226e-27
+        },
+        "ages": {
+          "odom": 0.013,
+          "truth": 0.009,
+          "scan": 0.166,
+          "amcl": 2.782,
+          "localization_tf": 0.0
+        },
+        "message_counts": {
+          "odom": 1090,
+          "truth": 1090,
+          "scan": 109,
+          "amcl": 5
+        },
+        "task": "",
+        "goal": null,
+        "nav2_pending": false,
+        "cancel_pending": false,
+        "queued": 0,
+        "queued_tasks": [],
+        "queue_paused": false,
+        "settled_spawn_recorded": true,
+        "reset_pose": [
+          -3.000000000006183,
+          -2.9999999999998765,
+          1.77061638920014e-11
+        ],
+        "radius_m": 0.18,
+        "battery": null,
+        "charging": null
+      }
+    ],
+    "last_rejection": "",
+    "traffic": {
+      "serial": true,
+      "policy": "One autonomous route at a time; queued work waits for measured settling"
+    },
+    "task_history": [],
+    "scope": "Experimental shared-world runtime; contact and mission qualification pending"
+  },
+  "fixture": {
+    "session_id": "session-t5updll1",
+    "ready": true,
+    "held_members": [],
+    "doors": {
+      "main": {
+        "position_m": 0.0,
+        "command_m": 0.0,
+        "target_m": 0.0,
+        "mode": 0,
+        "sweep_blocked": false
+      },
+      "lift": {
+        "position_m": 0.0,
+        "command_m": 0.0,
+        "target_m": 0.0,
+        "mode": 0,
+        "sweep_blocked": false
+      }
+    },
+    "lift": {
+      "position_m": -4.767267617471469e-10,
+      "command_m": -4.767267617471469e-10,
+      "current_floor": "L0",
+      "destination": null,
+      "floors": [
+        "L0",
+        "L1"
+      ]
+    },
+    "docks": {
+      "west_charger": {
+        "x": -4.5,
+        "y": -3.0,
+        "z": 0.0,
+        "yaw": 0.0,
+        "position_tolerance": 0.12,
+        "height_tolerance": 0.12,
+        "yaw_tolerance": 0.15
+      }
+    },
+    "docking": {},
+    "energy": {
+      "alpha": {
+        "fraction": null,
+        "power_W": 3.0,
+        "charging_W": 0.0,
+        "source_verified": false,
+        "coverage_complete": false,
+        "reason": "Actuator source not qualified",
+        "source": "Authored battery model + sampled wheel effort/rate; no regeneration or hardware battery telemetry"
+      },
+      "beta": {
+        "fraction": null,
+        "power_W": 3.0,
+        "charging_W": 0.0,
+        "source_verified": false,
+        "coverage_complete": false,
+        "reason": "Actuator source not qualified",
+        "source": "Authored battery model + sampled wheel effort/rate; no regeneration or hardware battery telemetry"
+      }
+    },
+    "robot_floors": {
+      "alpha": "L0",
+      "beta": "L0"
+    },
+    "floor_z": {
+      "alpha": 0.0,
+      "beta": 0.0
+    },
+    "floor_maps": {
+      "L0": "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_maps/share/robot_lab_maps/maps/fleet_facility/maps/map.yaml",
+      "L1": "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_maps/share/robot_lab_maps/maps/fleet_facility/maps/map_L1.yaml"
+    },
+    "robot_floor_maps": {
+      "alpha": "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_maps/share/robot_lab_maps/maps/fleet_facility/maps/map.yaml",
+      "beta": "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_maps/share/robot_lab_maps/maps/fleet_facility/maps/map.yaml"
+    },
+    "active_robot_maps": {
+      "alpha": "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_maps/share/robot_lab_maps/maps/fleet_facility/maps/map.yaml",
+      "beta": "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_maps/share/robot_lab_maps/maps/fleet_facility/maps/map.yaml"
+    },
+    "map_loading": [],
+    "map_status": {
+      "alpha": "ready",
+      "beta": "ready"
+    },
+    "map_errors": {},
+    "current_floor_map": "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_maps/share/robot_lab_maps/maps/fleet_facility/maps/map.yaml",
+    "operator_hold": false,
+    "rmf_protocol": true,
+    "scope": "Fresh observed body poses determine robot floors; member Nav2 maps load per observed floor and commands remain held until loading succeeds; authored energy estimate"
+  }
+}

@@ -240,6 +240,7 @@ def navigation_parameters(config_dir, localization_dir, member, map_yaml):
     data['amcl'] = yaml.safe_load((Path(localization_dir) / 'amcl.yaml').read_text())['amcl']
     replacements = {'base_footprint': member['id'] + '/base_footprint',
                     'base_link': member['id'] + '/base_link', 'odom': member['id'] + '/odom',
+                    'map': member.get('map_frame', 'map'),
                     '/scan': '/' + member['id'] + '/scan',
                     '/odometry/filtered': '/' + member['id'] + '/robot_lab_controller/odom'}
     def rewrite(value):
@@ -357,6 +358,7 @@ def prepare_session(session_file, map_override='', navigation=False, runtime_roo
     members = choose_spawns(members, seed, SpawnGrid(map_yaml) if map_yaml else None)
     for member in members:
         member['floor_maps'] = floor_maps
+        member['map_frame'] = member['id'] + '/map' if floor_maps else 'map'
         member['map_yaml'] = floor_maps.get('L0', map_yaml)
     base = Path(runtime_root or os.environ.get('ROBOT_LAB_RUNTIME_ROOT', '/workspace/molar/robot_lab_runtime')) / 'fleet_sessions'
     base.mkdir(parents=True, exist_ok=True)

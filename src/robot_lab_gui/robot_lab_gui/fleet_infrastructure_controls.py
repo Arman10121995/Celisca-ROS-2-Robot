@@ -42,7 +42,9 @@ class InfrastructureControls(ttk.Frame):
                    for n,v in value['doors'].items()]
             lines.append(f"Lift: {value['lift']} (operator hold: {value.get('operator_hold', False)})")
             for name,energy in value['energy'].items():
-                lines.append(name+' modeled battery: '+('unknown' if energy['fraction'] is None else f"{100*energy['fraction']:.1f}%"))
+                lines.append(name+' modeled battery: '+('unknown: '+energy.get('reason', 'motor feedback unqualified') if energy['fraction'] is None else f"{100*energy['fraction']:.1f}%"))
+                if energy.get('power_W') is not None:
+                    lines.append(f"  Observed load {energy['power_W']:.2f} W; authored charging {energy.get('charging_W', 0.):.1f} W")
             active_maps=value.get('active_robot_maps',{})
             floor_maps=value.get('robot_floor_maps',{})
             statuses=value.get('map_status',{})
