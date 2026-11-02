@@ -66,11 +66,6 @@ def _setup(context):
     actions.append(Node(package='ros_gz_bridge', executable='parameter_bridge', name='fleet_pose_service_bridge',
                         arguments=['/world/' + session['world_name'] + '/set_pose@ros_gz_interfaces/srv/SetEntityPose'],
                         output='screen'))
-    if session['map_yaml']:
-        actions += [Node(package='nav2_map_server', executable='map_server', name='map_server',
-                         parameters=[{'yaml_filename': session['map_yaml'], 'use_sim_time': True}], output='screen'),
-                    Node(package='nav2_lifecycle_manager', executable='lifecycle_manager', name='fleet_map_lifecycle',
-                         parameters=[{'use_sim_time': True, 'autostart': True, 'node_names': ['map_server']}], output='screen')]
     robot_displays = []
     controller_spawners = []
     for index, member in enumerate(session['members']):
@@ -97,13 +92,15 @@ def _setup(context):
         if session['navigation']:
             servers = [('nav2_amcl', 'amcl'), ('nav2_controller', 'controller_server'), ('nav2_planner', 'planner_server'),
                        ('nav2_smoother', 'smoother_server'), ('nav2_bt_navigator', 'bt_navigator'), ('nav2_behaviors', 'behavior_server')]
-            navigation_actions = [Node(package=package, executable=node, name=node, namespace=name,
+            map_server = Node(package='nav2_map_server', executable='map_server', name='map_server', namespace=name,
+                parameters=[{'yaml_filename': member.get('map_yaml', session['map_yaml']), 'use_sim_time': True}], output='screen')
+            navigation_actions = [map_server] + [Node(package=package, executable=node, name=node, namespace=name,
                 parameters=[member['navigation_file']],
-                remappings=[('tf', '/tf'), ('tf_static', '/tf_static'), ('map', '/map')],
+                remappings=[('tf', '/tf'), ('tf_static', '/tf_static'), ('map', '/' + name + '/map')],
                 output='screen') for package, node in servers]
             navigation_actions.append(Node(package='nav2_lifecycle_manager', executable='lifecycle_manager',
                 name='lifecycle_manager', namespace=name, parameters=[{'use_sim_time': True, 'autostart': True,
-                    'node_names': [node for _, node in servers]}], output='screen'))
+                    'node_names': ['map_server', *[node for _, node in servers]]}], output='screen'))
             actions.append(TimerAction(period=8. + index * .3, actions=navigation_actions))
         robot_displays += [dict(Class='rviz_default_plugins/RobotModel', Name=name + ' robot', Enabled=True,
                                **{'Description Source': 'Topic', 'Description Topic': '/' + name + '/robot_description', 'TF Prefix': name}),
@@ -131,11 +128,13 @@ def _setup(context):
             arguments=['--session', session['resolved_file']], output='screen')]))
     if enabled('rviz'):
         rviz = Path(session['directory']) / 'fleet.rviz'
+        map_displays = [{'Class': 'rviz_default_plugins/Map', 'Name': name + ' floor map', 'Enabled': True,
+                         'Topic': {'Value': '/' + name + '/map', 'Durability Policy': 'Transient Local'}}
+                        for name in (member['id'] for member in session['members']) if session['navigation']]
         rviz.write_text(yaml.safe_dump({'Visualization Manager': {
             'Global Options': {'Fixed Frame': 'map'}, 'Displays': robot_displays + [
                 {'Class': 'rviz_default_plugins/TF', 'Name': 'Fleet TF', 'Enabled': True},
-                {'Class': 'rviz_default_plugins/Map', 'Name': 'Shared map', 'Enabled': True,
-                 'Topic': {'Value': '/map', 'Durability Policy': 'Transient Local'}}]}}))
+                *map_displays]}}))
         actions.append(Node(package='rviz2', executable='rviz2', name='fleet_rviz', arguments=['-d', str(rviz)],
                             parameters=[{'use_sim_time': True}], output='screen'))
     return actions

@@ -1,6 +1,6 @@
 # Robot Lab — Multi-Robot Simulation and Algorithm Laboratory
 
-**Current status — October 30, 2026: the platform and extension are partial.**
+**Current status — November 2, 2026: the platform and extension are partial.**
 [Agent instructions for the remaining work](docs/REMAINING_WORK_GUIDE.md) give
 code locations, dependencies, implementation steps, acceptance and evidence
 requirements. Start with the [ordered roadmap queue](ROADMAP.md#current-agent-queue--october-27-2026).
@@ -8,6 +8,8 @@ Earlier claims that all hardware-independent work was complete are superseded.
 Unit tests, asset registration and scene loading retain their stated scope.
 
 The latest continuation adds the [sprung amphibious rover and physical fleet facility](docs/status/amphibious-facility-2026-10-30.md): measured shore round-trip goals and RGB-D mapping; actual doors, lift and settled Bumperbot docking. Use Launch → Marine for the rover and Fleet & Swarm → Facility for infrastructure.
+
+The November 2 [fleet continuation](docs/status/evidence/fleet-floor-map-transition-2026-11-02/README.md) measures one Bumperbot riding the facility lift L0-L1-L0 with observed per-member Nav2 map switches. Battery energy remains unknown; broader RMF/fleet qualification remains open.
 
 The earlier continuation delivers [native snake, surface-vessel and articulated-track workflows](docs/status/native-forms-2026-10-30.md): measured snake 2D/3D mapping and saved-map navigation, two-goal surface-vessel navigation, AUV acquisition and four-flipper control. Select these robots in Launch; controls and commands fill automatically.
 
@@ -32,8 +34,8 @@ candidates; enable **experimental robot workflows** to expose their candidate
 modes and autofilled command. This does not grant new mission qualification.
 
 Remaining work includes larger aerial groups and further AUV/obstacle missions,
-verified motor-power/charging integration, multi-floor RMF/map transitions, larger
-fleets, terrain/slip missions for snake and articulated tracks, further
+verified motor-power/charging integration, broader multi-robot RMF/floor-map transitions,
+larger fleets, terrain/slip missions for snake and articulated tracks, further
 automatic cases and the older roadmap. Broad backend/map acceptance and real
 hardware/HIL stay separate. Implement missing functionality before broad
 validation; preserve every named successful scope.

@@ -262,6 +262,8 @@ def navigation_parameters(config_dir, localization_dir, member, map_yaml):
     for name in ('local_costmap', 'global_costmap'):
         params = data[name][name]['ros__parameters']
         params['robot_radius'] = member['radius']
+        if 'static_layer' in params:
+            params['static_layer']['map_topic'] = '/' + member['id'] + '/map'
         params['obstacle_layer']['scan']['topic'] = '/' + member['id'] + '/scan'
     # Nav2 creates nested costmap nodes under the member namespace.
     return {'/' + member['id']: data}
@@ -338,6 +340,11 @@ def prepare_session(session_file, map_override='', navigation=False, runtime_roo
     map_yaml = resolve(map_cfg.get('package', 'robot_lab_maps'), map_cfg['path']) if map_cfg.get('has_2d_map') else ''
     if navigation and not map_yaml:
         raise ValueError('Fleet Nav2 requires the selected world\'s occupancy map')
+    infrastructure = map_profile.get('fleet_infrastructure', '')
+    infrastructure_file = str(Path(share('robot_lab_maps')) / infrastructure) if infrastructure else ''
+    infrastructure_config = yaml.safe_load(Path(infrastructure_file).read_text()) if infrastructure_file else {}
+    floor_maps = {floor: resolve('robot_lab_maps', path)
+                  for floor, path in infrastructure_config.get('floor_maps', {}).items()}
     profiles = yaml.safe_load((robots / 'config/robots.yaml').read_text())['robots']
     members = []
     for item in requested['members']:
@@ -348,6 +355,9 @@ def prepare_session(session_file, map_override='', navigation=False, runtime_roo
     seed = dict(x=0., y=0., z=.1, yaw=0.)
     seed.update(map_profile.get('spawn', {}))
     members = choose_spawns(members, seed, SpawnGrid(map_yaml) if map_yaml else None)
+    for member in members:
+        member['floor_maps'] = floor_maps
+        member['map_yaml'] = floor_maps.get('L0', map_yaml)
     base = Path(runtime_root or os.environ.get('ROBOT_LAB_RUNTIME_ROOT', '/workspace/molar/robot_lab_runtime')) / 'fleet_sessions'
     base.mkdir(parents=True, exist_ok=True)
     import tempfile
@@ -384,8 +394,6 @@ def prepare_session(session_file, map_override='', navigation=False, runtime_roo
             member['navigation_file'] = str(nav_file)
     bridge_file = folder / 'bridge.yaml'
     bridges=bridge_entries(members)
-    infrastructure=map_profile.get('fleet_infrastructure','')
-    infrastructure_file=str(Path(share('robot_lab_maps'))/infrastructure) if infrastructure else ''
     if infrastructure_file:
         data=yaml.safe_load(Path(infrastructure_file).read_text())
         bridges.append(dict(ros_topic_name='/facility/joint_states',gz_topic_name='/facility/joint_states',ros_type_name='sensor_msgs/msg/JointState',gz_type_name='gz.msgs.Model',direction='GZ_TO_ROS'))
@@ -397,7 +405,7 @@ def prepare_session(session_file, map_override='', navigation=False, runtime_roo
                   world=world, world_name=world_name, world_source=world_source,
                   world_source_sha256=hashlib.sha256(Path(world_source).read_bytes()).hexdigest(),
                   world_sha256=hashlib.sha256(Path(world).read_bytes()).hexdigest(),
-                  map_yaml=map_yaml, bridge_file=str(bridge_file), members=members,infrastructure_file=infrastructure_file,
+                  map_yaml=map_yaml, floor_maps=floor_maps, bridge_file=str(bridge_file), members=members,infrastructure_file=infrastructure_file,
                   session_source=str(Path(session_file).resolve()), directory=str(folder),
                   scope='Shared physical world; only Gazebo Bumperbot/Labbot adapters implemented')
     resolved_file = folder / 'session.json'

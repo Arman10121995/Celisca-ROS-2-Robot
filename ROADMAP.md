@@ -50,7 +50,7 @@ ownership before runtime edits, preserve existing source certificates and keep
 large outputs on SSD. Complete initial functionality before broad validation;
 neutral enablement, bounds, Stop and command-loss behavior are implementation.
 
-[The later October 30 amphibious/facility delivery](docs/status/amphibious-facility-2026-10-30.md) adds a sprung native rover, actual shore round-trip/SLAM, physical door/lift/dock adapters and a Facility GUI. Motor-power/charging proof, floor-map/RMF transitions and broader missions remain.
+[The later October 30 amphibious/facility delivery](docs/status/amphibious-facility-2026-10-30.md) adds a sprung native rover, actual shore round-trip/SLAM, physical door/lift/dock adapters and a Facility GUI. The [November 2 continuation](docs/status/evidence/fleet-floor-map-transition-2026-11-02/README.md) measures one Bumperbot L0-L1-L0 ride and per-member Nav2 map switching. Verified motor-power/charging and broader RMF/fleet missions remain.
 
 [The earlier October 30 native-form delivery](docs/status/native-forms-2026-10-30.md) adds actual snake mapping and acquired-map navigation, surface-vessel acquisition/two-goal arrival, AUV acquisition and bounded articulated flippers. The grouped GUI exposes their controls and command defaults.
 
@@ -63,7 +63,7 @@ working launch/GUI/map export features from scratch.
 | Priority | Task | Current implementation | Next acceptance/work |
 |---|---|---|---|
 | Delivered | R3.6 catalog restoration | Seven profiles restored, merge preservation, native families/defaults/autofill and explicit source-recheck candidates | New source-qualified controller missions; remaining imports |
-| 1 | R10.1–R10.3 fleet | Real queues/traffic retreat, optional RMF, coverage, native session editor; conflicting routes and independent settled batch goals measured | Physical facility door/lift/dock workflows delivered; motor-power/charging, floor-map/RMF transitions, coverage/contact/loss and larger-fleet missions |
+| 1 | R10.1–R10.3 fleet | Real queues/traffic retreat, optional RMF, coverage, native session editor; conflicting routes, settled batch goals, and one Bumperbot L0-L1-L0 ride with per-member map switching measured | Verified motor-power/charging; broader RMF conflicts/loss, other robot/floor transitions, coverage/contact and larger-fleet missions |
 | 2 | R10.3 / R10.8 aerial swarm | Native multi-FCU controls and workloads; actual two-X500 range-reference formation and operator-loss landing on nav_empty | Other maps, larger groups, other behaviors and member-loss/contact missions |
 | 3 | R10.4–R10.5 marine | Sensor estimation, source-heading alignment, real map flush/export/protected reload, native estimated missions/ahead waypoint; ROV route and AUV acquisition measured; native surface vessel/harbor mapping and two-goal route delivered | AUV/surface saved-map routes, obstacles/current/contact/loss across installed water worlds |
 | 4 | R10.6–R10.7 multi-leg | Source FK/contact odometry, saved 2D/3D maps, localization/Nav2 and native controls; hexapod Nav2 result and octopod 3D export measured | Per-model higher-mode endpoints, terrain/slip/recovery and additional backends |
@@ -1605,6 +1605,13 @@ pause/resume/cancel generation barriers and state/SSD journals are implemented.
 One Bumperbot action returns success at 0.06218 m physical error in a two-body
 world; it still rotates at the result, so settled arrival remains unassessed.
 Task queues, Open-RMF traffic/resource integration and broader missions remain.
+
+November 2: one Bumperbot physically rides the authored facility lift from L0
+to L1 and back. Fresh Gazebo body observations classify its floor, and the
+member's Nav2 map changes only after the floor-specific `LoadMap` succeeds.
+[Measured receipt](docs/status/evidence/fleet-floor-map-transition-2026-11-02/README.md).
+Verified motor-power/charging, multi-robot RMF conflict/loss, and other
+robot/floor/backend transitions remain open.
 
 Implement compatible Open-RMF/Nav2 adapters, real dispatch/allocation, traffic
 coordination, pause/resume/cancel, measured robot/task health and supported

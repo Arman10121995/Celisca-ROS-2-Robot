@@ -1,11 +1,30 @@
 #!/usr/bin/env python3
 """First-party physical doors, lift and charging locations, not mission results."""
 import json
+import argparse
 from pathlib import Path
 import xml.etree.ElementTree as ET
 import yaml
 from PIL import Image,ImageDraw
 from generate_marine_assets import ROOT,child,model,write
+
+FACILITY_WALLS=[((-6,0,1.25),(.2,10,2.5)),((6,0,1.25),(.2,10,2.5)),((0,5,1.25),(12,.2,2.5)),((0,-5,1.25),(12,.2,2.5)),
+                ((0,-2.9,1.25),(.15,4.2,2.5)),((0,2.9,1.25),(.15,4.2,2.5))]
+
+
+def generate_maps(target,walls):
+    resolution=.05;maps=target/'maps';maps.mkdir(exist_ok=True)
+    image=Image.new('L',(240,200),254);draw=ImageDraw.Draw(image)
+    for pose,size in walls:
+        x,y,_=pose;dx,dy,_=size
+        draw.rectangle(((x-dx/2+6)/resolution,(5-y-dy/2)/resolution,(x+dx/2+6)/resolution,(5-y+dy/2)/resolution),fill=0)
+    image.save(maps/'map.pgm')
+    (maps/'map.yaml').write_text(yaml.safe_dump(dict(image='map.pgm',resolution=resolution,origin=[-6.,-5.,0.],negate=0,occupied_thresh=.65,free_thresh=.25)))
+
+    upper=Image.new('L',(240,200),0)
+    ImageDraw.Draw(upper).rectangle(((1+6)/resolution,(5-1)/resolution,(5+6)/resolution,(5+1)/resolution),fill=254)
+    upper.save(maps/'map_L1.pgm')
+    (maps/'map_L1.yaml').write_text(yaml.safe_dump(dict(image='map_L1.pgm',resolution=resolution,origin=[-6.,-5.,0.],negate=0,occupied_thresh=.65,free_thresh=.25)))
 
 
 def generate():
@@ -19,8 +38,7 @@ def generate():
     # A real shaft hole under the 2 x 2 m platform; no coincident fixed floor.
     for name,pose,size in [('west_floor',(-1.5,0,-.15),(9,10,.3)),('east_floor',(5.5,0,-.15),(1,10,.3)),
             ('north_floor',(4,3,-.15),(2,4,.3)),('south_floor',(4,-3,-.15),(2,4,.3))]:model(w,name,pose,size,'.55 .55 .55 1')
-    walls=[((-6,0,1.25),(.2,10,2.5)),((6,0,1.25),(.2,10,2.5)),((0,5,1.25),(12,.2,2.5)),((0,-5,1.25),(12,.2,2.5)),
-           ((0,-2.9,1.25),(.15,4.2,2.5)),((0,2.9,1.25),(.15,4.2,2.5))]
+    walls=FACILITY_WALLS
     for i,(pose,size) in enumerate(walls):model(w,'wall_'+str(i),pose,size,'.65 .7 .75 1')
     # Upper landing is physical; separate floor navigation maps remain required.
     model(w,'upper_landing',(2,0,2.85),(2,3,.3),'.35 .6 .7 1')
@@ -28,7 +46,7 @@ def generate():
     anchor=child(hardware,'link',name='anchor');inertial=child(anchor,'inertial');child(inertial,'mass','1');child(inertial,'inertia');
     fixed=child(hardware,'joint',name='anchor_fixed',type='fixed');child(fixed,'parent','world');child(fixed,'child','anchor')
     definitions=[('main_door','door_main',(.16,0,1.1),(.08,1.6,2.2),'0 1 0',1.8,12.,300.,300.,80.),
-                 ('lift_door','door_lift',(3.08,0,1.1),(.08,2.,2.2),'0 1 0',2.2,15.,300.,300.,80.),
+                 ('lift_door','door_lift',(3.05,0,1.1),(.08,1.7,2.2),'0 1 0',2.2,15.,300.,1200.,80.),
                  ('lift_platform','lift_car',(4,0,-.05),(2,2,.1),'0 0 1',3.,50.,1600.,40000.,3000.)]
     joints=[]
     for link_name,name,pose,size,axis,maximum,mass,limit,kp,kd in definitions:
@@ -53,8 +71,9 @@ def generate():
     p=child(hardware,'plugin',name='ignition::gazebo::systems::JointStatePublisher',filename='ignition-gazebo-joint-state-publisher-system');child(p,'topic','/facility/joint_states')
     target=ROOT/'src/robot_lab_maps/maps/fleet_facility';write(doc,target/'worlds/fleet_facility.world')
     config=dict(schema_version=1,doors={'main':dict(joint='door_main',closed=0.,opened=1.8,sweep=[-.5,.5,-1.1,3.1]),
-        'lift':dict(joint='door_lift',closed=0.,opened=2.2,sweep=[2.6,3.4,-1.3,3.5],z_joint='lift_car')},
+        'lift':dict(joint='door_lift',closed=0.,opened=2.15,sweep=[2.6,3.4,-1.3,3.5],z_joint='lift_car')},
         lift=dict(name='facility_lift',joint='lift_car',door='lift',floors={'L0':0.,'L1':3.}),
+        floor_maps=dict(L0='maps/fleet_facility/maps/map.yaml',L1='maps/fleet_facility/maps/map_L1.yaml'),
         docks={'west_charger':dict(x=-4.5,y=-3.,z=0.,yaw=0.,position_tolerance=.12,height_tolerance=.12,yaw_tolerance=.15)},
         energy=dict(capacity_J=180000.,initial_fraction=.8,hotel_W=3.,drive_efficiency=.75,charge_W=120.,effort_observation_verified=False,
                     scope='Authored battery estimate from actual JointState effort/rate; unknown when motor feedback is missing'))
@@ -62,15 +81,14 @@ def generate():
     (target/'SOURCE.json').write_text(json.dumps(dict(author='Robot Lab contributors',license='Apache-2.0',
         assets='Physical sliding doors, 50 kg force-driven 3 m lift car with moving walls/door, floor/shaft geometry and authored dock',
         scope='Uncalibrated first-party infrastructure; graph, lift transport, docking and energy missions need actual feedback receipts'),indent=2)+'\n')
-    # Source-derived L0 occupancy slice: upper landing and dynamic leaves are
-    # excluded; closed doors remain real live obstacles to the lidar/costmap.
-    resolution=.05;image=Image.new('L',(240,200),254);draw=ImageDraw.Draw(image)
-    for pose,size in walls:
-        x,y,_=pose;dx,dy,_=size
-        draw.rectangle(((x-dx/2+6)/resolution,(5-y-dy/2)/resolution,(x+dx/2+6)/resolution,(5-y+dy/2)/resolution),fill=0)
-    draw.rectangle(((3+6)/resolution,(5-1)/resolution,(5+6)/resolution,(5+1)/resolution),fill=0) # shaft is not a static traversable floor
-    maps=target/'maps';maps.mkdir(exist_ok=True);image.save(maps/'map.pgm')
-    (maps/'map.yaml').write_text(yaml.safe_dump(dict(image='map.pgm',resolution=resolution,origin=[-6.,-5.,0.],negate=0,occupied_thresh=.65,free_thresh=.25)))
+    generate_maps(target,walls)
 
 
-if __name__=='__main__':generate()
+if __name__=='__main__':
+    parser=argparse.ArgumentParser()
+    parser.add_argument('--maps-only',action='store_true')
+    args=parser.parse_args()
+    if args.maps_only:
+        generate_maps(ROOT/'src/robot_lab_maps/maps/fleet_facility',FACILITY_WALLS)
+    else:
+        generate()

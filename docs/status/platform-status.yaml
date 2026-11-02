@@ -119,11 +119,11 @@ completion_audit:
     comparison scores are generated; the dated support matrix extrapolates Isaac qualification
     to untested maps and modes.
   revision: 2a0aae2
-current_delivery: amphibious_infrastructure_20261030
-current_revision: 'Native amphibious/facility delivery on 2026-10-30 from 09034dc on master: 152 profiles /
-  82 robot families, 54 worlds / 42 families. Actual sprung bank-water-bank autonomous endpoints/RGB-D acquisition
-  and physical facility door/lift/dock cases recorded. Motor-power/charging, floor-map/RMF transport, wider
-  source-specific missions and older roadmap remain partial. See docs/status/amphibious-facility-2026-10-30.md.'
+current_delivery: fleet_floor_map_transition_20261102
+current_revision: 'Supplemental delivery on 2026-11-02 from b9bd4ca on master: one Bumperbot physically rode
+  fleet_facility L0-L1-L0 with fresh body-derived floor classification and per-member Nav2 map switches. Platform
+  remains partial; verified motor-power/charging, broader RMF conflict/loss, and other robots/floors/backends remain.
+  See docs/status/evidence/fleet-floor-map-transition-2026-11-02/README.md and the October 30 facility receipt.'
 current_verification:
   round57_2026_10_19: 'Recorded 2026-10-29: MuJoCo small_house slam drive after the spawn fix 873753f completes
     (28.1 m, RMSE 1.3 cm, map precision/recall 0.97/0.79; 1.49 m and 0.12/0.16 before); rear-steer car course after
@@ -321,11 +321,10 @@ extension_completion_20261020:
 goal: unified_multi_robot_algorithm_lab
 handoff:
   audit: docs/status/audit-2026-10-02.md
-  next_action: Read docs/status/amphibious-facility-2026-10-30.md and docs/REMAINING_WORK_GUIDE.md. Preserve
-    complete sprung amphibious shore routes/mapping and physical facility door/lift/dock controls. Continue
-    actual motor-power/charging, floor-map/RMF/TF transitions and robot transport, then remaining source-specific
-    adapters/missions and older queue. Aerial R10.3 keeps its recorded owner; do not repeat delivered catalog/storage/amphibious/map-export
-    repairs.
+  next_action: Preserve the measured single-Bumperbot L0-L1-L0 transport and per-robot Nav2 map switch in
+    docs/status/evidence/fleet-floor-map-transition-2026-11-02/README.md. Continue verified motor-power/charging,
+    multi-robot RMF conflict/loss, other robot/floor transitions, then remaining source-specific adapters/missions
+    and older queue. Aerial R10.3 keeps its recorded owner; do not repeat delivered catalog/storage/map-export repairs.
   next_task: R10.2
   no_runtime_repairs_completed_by_this_revision: false
   parallel_ready_after_R0:
@@ -1298,17 +1297,18 @@ tasks:
       R10.1:
         acceptance_ref: ROADMAP.md R10.1
         active_scope: Physical fleet_facility doors/lift/car, typed RMF door/lift protocol, native force/position
-          feedback, neutral Facility GUI, peer/height/clock interlocks, unique independently observed docking and
-          explicit unknown unqualified energy.
+          feedback, neutral Facility GUI, peer/height/clock interlocks, unique independently observed docking, one
+          actual Bumperbot L0-L1-L0 ride with per-member Nav2 map transitions, and explicit unknown unqualified energy.
         depends_on: []
         evidence:
         - docs/status/evidence/workflows-2026-10-27/README.md
         - docs/status/workflows-2026-10-27.md
         - docs/status/amphibious-facility-2026-10-30.md
         - docs/status/evidence/amphibious-facility-2026-10-30/README.md
+        - docs/status/evidence/fleet-floor-map-transition-2026-11-02/README.md
         implementation_state: Physical fleet_facility doors/lift/car, typed RMF door/lift protocol, native force/position
-          feedback, neutral Facility GUI, peer/height/clock interlocks, unique independently observed docking and
-          explicit unknown unqualified energy.
+          feedback, neutral Facility GUI, peer/height/clock interlocks, per-member observed floor classification and
+          guarded Nav2 LoadMap transitions; authored energy remains unknown unless readback is verified.
         owner: codex
         scope_paths:
         - docs/
@@ -1324,17 +1324,18 @@ tasks:
         - scripts/
         state: partial
         title: Shared-world multi-robot sessions and per-instance control
-        validation_state: Actual main-door open/close, car-door and L0-L1-L0 motion, neutral startup and Bumperbot
-          Nav2/settled dock measured. Robot lift transport, multi-floor RMF graph/maps/TF, qualified motor-power/charging
-          and larger conflict/loss missions remain.
+        validation_state: Actual main-door open/close, car-door motion, neutral startup, settled Bumperbot Nav2 dock,
+          and one independent Bumperbot L0-L1-L0 ride with map.yaml -> map_L1.yaml -> map.yaml observed at stopped
+          landings. Qualified motor-power/charging, broader RMF conflict/loss, other robots/floors/maps/backends and
+          larger fleet missions remain.
         qualification_review: '2026-10-27 documentation review: retain the implemented code, tests and named mission
           certificates. Full declared roadmap acceptance is still open; test counts, metadata and scene loads do not
           qualify remaining robot/map/backend missions. See docs/REMAINING_WORK_GUIDE.md.'
         previous_owner: cline-agent
         claimed: '2026-10-27'
-        current_run: /workspace/molar/robot_lab_runtime/amphibious-infrastructure-20261030-mcpiqquv
-        current_scope: Preserve this delivered implementation and actual scopes; continue remaining motor energy/floor
-          transition/model-specific work.
+        current_run: /workspace/molar/robot_lab_runtime/fleet-floor-map-live-oWr3d4/mission
+        current_scope: Preserve the measured single-member elevator/map transition and the separate October 30
+          infrastructure cases; continue verified energy and broader fleet/RMF acceptance.
         historical_unqualified_notes:
         - Implementation complete with contract tests and GUI diagnostics passing
         - Fleet contract (8 tests), fleet missions, gait contract (all pass), molar backend contract (all pass)
@@ -1344,12 +1345,12 @@ tasks:
           owner: codex
           receipt: docs/status/evidence/workflows-2026-10-27/README.md
           full_scope_acceptance: partial
-        updated: '2026-10-30'
+        updated: '2026-11-02'
       R10.2:
         acceptance_ref: ROADMAP.md R10.2
         active_scope: Physical fleet_facility doors/lift/car, typed RMF door/lift protocol, native force/position
-          feedback, neutral Facility GUI, peer/height/clock interlocks, unique independently observed docking and
-          explicit unknown unqualified energy.
+          feedback, neutral Facility GUI, peer/height/clock interlocks, unique independently observed docking, one
+          measured Bumperbot L0-L1-L0 ride with per-member Nav2 map switching, and unknown unqualified energy.
         depends_on:
         - R10.1
         evidence:
@@ -1357,23 +1358,28 @@ tasks:
         - docs/status/workflows-2026-10-27.md
         - docs/status/amphibious-facility-2026-10-30.md
         - docs/status/evidence/amphibious-facility-2026-10-30/README.md
-        implementation_state: Physical fleet_facility doors/lift/car, typed RMF door/lift protocol, native force/position
-          feedback, neutral Facility GUI, peer/height/clock interlocks, unique independently observed docking and
-          explicit unknown unqualified energy.
+        - docs/status/evidence/fleet-floor-map-transition-2026-11-02/README.md
+        implementation_state: Per-member floor classification from fresh body truth; asynchronous namespaced Nav2
+          LoadMap transitions with command holds; source-generated planar floor maps and shaft-clear lift-door geometry.
+          Authored battery estimates remain disabled until effort/power inputs are qualified.
         owner: codex
-        state: partial
+        state: active
         title: Fleet management and Open-RMF mission adapters
-        validation_state: Actual main-door open/close, car-door and L0-L1-L0 motion, neutral startup and Bumperbot
-          Nav2/settled dock measured. Robot lift transport, multi-floor RMF graph/maps/TF, qualified motor-power/charging
-          and larger conflict/loss missions remain.
+        validation_state: Actual door open/close, car-door, neutral startup and Bumperbot settled dock measured. One
+          independent body trace measures Bumperbot L0-L1-L0 transport; map.yaml -> map_L1.yaml -> map.yaml loads
+          successfully at stopped landings. Qualified motor-power/charging, broader RMF conflict/loss, and other
+          robots/floors/maps/backends remain.
         qualification_review: '2026-10-27 documentation review: retain the implemented code, tests and named mission
           certificates. Full declared roadmap acceptance is still open; test counts, metadata and scene loads do not
           qualify remaining robot/map/backend missions. See docs/REMAINING_WORK_GUIDE.md.'
         previous_owner: cline-agent
         claimed: '2026-10-27'
-        current_run: /workspace/molar/robot_lab_runtime/amphibious-infrastructure-20261030-mcpiqquv
-        current_scope: Preserve this delivered implementation and actual scopes; continue remaining motor energy/floor
-          transition/model-specific work.
+        current_run: /workspace/molar/robot_lab_runtime/fleet-floor-map-live-oWr3d4/mission
+        current_scope: Preserve actual joint/body observations and the measured single-robot floor transition; continue
+          motor-power/charging and broader fleet/RMF acceptance.
+        reclaimed: '2026-11-02'
+        next_action: Qualify real motor-power readback/charging, then measure RMF conflicts/loss and additional robot/floor
+          transitions. Keep energy unknown until evidence verifies the model inputs.
         historical_unqualified_notes:
         - Implementation complete with contract tests and GUI diagnostics passing
         - Fleet contract (8 tests), fleet missions, gait contract (all pass), molar backend contract (all pass)
@@ -1383,7 +1389,7 @@ tasks:
           owner: codex
           receipt: docs/status/evidence/workflows-2026-10-27/README.md
           full_scope_acceptance: partial
-        updated: '2026-10-30'
+        updated: '2026-11-02'
       R10.3:
         acceptance_ref: ROADMAP.md R10.3
         active_scope: Native multi-FCU controls, automatic formation/operator-loss workloads, bytewise FCU parameters,
@@ -4800,10 +4806,10 @@ runtime_completion_20261027:
 project_completion_20261027:
   owner: codex
   state: active
-  updated: '2026-10-30'
-  current_scope: Continue actual motor-power/charging and multi-floor RMF/map/TF transport after delivered sprung
-    amphibious and physical fleet facility workflows, then remaining adapters/missions and older roadmap. Preserve
-    aerial R10.3 ownership.
+  updated: '2026-11-02'
+  current_scope: Preserve the measured single-robot L0-L1-L0 transport and per-member Nav2 map switches; continue
+    verified motor-power/charging, broader RMF conflict/loss and additional robot/floor/backend missions, then
+    remaining adapters and the older roadmap. Preserve aerial R10.3 ownership.
   requested: '2026-10-27'
   baseline_revision: 9664c37a820cb54a6c6d1eecfb0ff580ede6f3af
   run_directory: /workspace/molar/robot_lab_runtime/project-completion-20261027-vne3n358

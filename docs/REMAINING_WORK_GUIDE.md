@@ -1,6 +1,6 @@
 # Remaining work: agent execution guide
 
-Updated October 30, 2026 after [the amphibious/facility delivery](status/amphibious-facility-2026-10-30.md) on `master`.
+Updated November 2, 2026 after [the measured fleet floor transition](status/evidence/fleet-floor-map-transition-2026-11-02/README.md) on `master`.
 Read [the current delivery](status/workflows-2026-10-27.md),
 [actual receipt](status/evidence/workflows-2026-10-27/README.md),
 [handoff](AGENT_HANDOFF.md) and [ledger](status/platform-status.yaml).

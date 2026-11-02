@@ -1,6 +1,6 @@
 # Robot Lab done and remaining checklist
 
-**Current checkpoint: October 30, 2026; platform/extension partial.**
+**Current checkpoint: November 2, 2026; platform/extension partial.**
 
 Use [the detailed agent execution guide](../REMAINING_WORK_GUIDE.md). These
 checks describe delivered initial features; a full roadmap task closes only
@@ -26,7 +26,8 @@ when its stated mission acceptance is met.
 - [ ] Full RMF infrastructure/conflict/coverage/contact/loss and larger-fleet acceptance.
 - [x] Complete sprung amphibious rover, actual shore round-trip goals, hybrid odometry, RGB-D acquisition and native GUI controls/autofill.
 - [x] Physical facility doors, lift/car door, independently observed dock, typed RMF interfaces and neutral Facility GUI.
-- [x] Qualified backend motor-power/charging, full robot lift transport and multi-floor RMF/map transitions.
+- [x] One actual Bumperbot L0-L1-L0 ride with observed per-member Nav2 floor-map switching; see [the measured receipt](evidence/fleet-floor-map-transition-2026-11-02/README.md).
+- [ ] Qualified backend motor-power/charging, broader RMF conflict/loss, and other robot/floor/map transport missions.
 - [ ] Further flipper-aware terrain/navigation and source-appropriate additional backends.
 - [ ] Wider automatic saved-map/obstacle missions, applied seeds and real contact/clearance instrumentation.
 - [ ] Further reviewed worlds, the older roadmap, broad comparisons and release acceptance.

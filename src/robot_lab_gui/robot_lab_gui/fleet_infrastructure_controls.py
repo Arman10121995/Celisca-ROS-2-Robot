@@ -24,7 +24,7 @@ class InfrastructureControls(ttk.Frame):
         ttk.Button(self,text='Navigate selected member to dock',command=self.dock_member).grid(row=6,column=0,sticky='ew')
         ttk.Label(self,textvariable=self.feedback,wraplength=420,justify='left').grid(row=7,column=0,sticky='ew',pady=5)
         ttk.Label(self,text='Door/lift states come from native joint positions. Close waits for fresh, clear fleet-body sweeps. '
-            'Lift floor motion closes the car door first; transport and multi-floor navigation remain separate. '
+            'Lift movement is interlocked; each robot changes floor maps only after an observed settled transition. '
             'Docking requires an independently observed settled body. Energy is an authored model, never a fabricated hardware battery reading.',wraplength=420).grid(row=8,column=0,sticky='ew')
 
     def attach(self,node):
@@ -38,10 +38,21 @@ class InfrastructureControls(ttk.Frame):
             if not self.fleet.runtime or value['session_id']!=self.fleet.runtime['session_id']:return
             self.runtime=value;self.at=time.monotonic();self.doors.configure(values=list(value['doors']));self.floors.configure(values=value['lift']['floors']);self.docks.configure(values=list(value['docks']))
             self.status.set('Physical infrastructure ready' if value['ready'] else 'Infrastructure feedback stale; no arrival claim')
-            lines=[f"Door {n}: {v['position_m']:.2f} m, mode {v['mode']}" for n,v in value['doors'].items()]
-            lines.append('Lift: '+str(value['lift']))
+            lines=[f"Door {n}: {v['position_m']:.2f}/{v['command_m']:.2f} m, mode {v['mode']}"
+                   for n,v in value['doors'].items()]
+            lines.append(f"Lift: {value['lift']} (operator hold: {value.get('operator_hold', False)})")
             for name,energy in value['energy'].items():
                 lines.append(name+' modeled battery: '+('unknown' if energy['fraction'] is None else f"{100*energy['fraction']:.1f}%"))
+            active_maps=value.get('active_robot_maps',{})
+            floor_maps=value.get('robot_floor_maps',{})
+            statuses=value.get('map_status',{})
+            loading=set(value.get('map_loading',[]))
+            for name,floor in value.get('robot_floors',{}).items():
+                desired=floor_maps.get(name,'').rsplit('/',1)[-1] or 'unconfigured'
+                active=active_maps.get(name,'').rsplit('/',1)[-1] or 'unconfigured'
+                status='held/loading' if name in loading else statuses.get(name,'ready')
+                lines.append(f'{name} floor {floor}: map {desired}; active {active} ({status})')
+            lines.extend(name+' map error: '+error for name,error in value.get('map_errors',{}).items())
             lines += [n+' dock: '+('physically settled' if v['docked'] else 'not settled') for n,v in value['docking'].items()]
             self.feedback.set('\n'.join(lines))
         except (ValueError,KeyError,TypeError):return

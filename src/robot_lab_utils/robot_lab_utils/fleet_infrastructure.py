@@ -22,6 +22,7 @@ from geometry_msgs.msg import TransformStamped
 from rosgraph_msgs.msg import Clock as ClockMessage
 import yaml
 import tf2_ros
+from nav2_msgs.srv import LoadMap
 
 
 class Infrastructure(Node):
@@ -35,8 +36,8 @@ class Infrastructure(Node):
         self.hold=False;self.lift_gui=False;self.door_owners={name:set() for name in self.doors}
         self.energy={m['id']:dict(joules=self.config['capacity_J'] if False else self.config['energy']['capacity_J']*self.config['energy']['initial_fraction'],last=None,power=None,at=-math.inf,valid=bool(self.config['energy'].get('effort_observation_verified')),floor='L0') for m in session['members']}
         self._effort_verified=bool(self.config['energy'].get('effort_observation_verified'))
-        self._lift_prev=None;self._lift_prev_at=-math.inf
-        self.floor_maps=self.config.get('floor_maps',{});self.current_floor_map=''
+        self.floor_offsets={}
+        self.floor_maps=session.get('floor_maps',self.config.get('floor_maps',{}));self.current_floor_map=''
         self.tf_broadcaster=tf2_ros.TransformBroadcaster(self)
         self.floor_z={name:float(self.config['lift']['floors']['L0']) for m in session['members'] for name in [m['id']]}
         joints=[v['joint'] for v in self.config['doors'].values()]+[self.config['lift']['joint']]
@@ -51,6 +52,11 @@ class Infrastructure(Node):
             name=m['id'];self.create_subscription(Odometry,'/'+name+'/odom/ground_truth',lambda msg,n=name:self.body(n,msg),qos_profile_sensor_data)
             self.create_subscription(JointState,'/'+name+'/joint_states',lambda msg,n=name:self.motor(n,msg),10)
             self.create_subscription(NavPath,'/'+name+'/plan',lambda msg,n=name:self.path(n,msg),10)
+        self.robot_floor_maps={m['id']:m.get('floor_maps',self.floor_maps) for m in session['members']}
+        self.active_robot_maps={m['id']:m.get('map_yaml','') for m in session['members']}
+        self.map_clients={m['id']:self.create_client(LoadMap,'/'+m['id']+'/map_server/load_map')
+                          for m in session['members'] if session.get('navigation') and m.get('floor_maps')}
+        self.map_futures={};self.map_transitions=set();self.map_errors={};self.map_status={};self.map_attempt_at={}
         self.rmf=False
         try:
             from rmf_door_msgs.msg import DoorRequest,DoorState
@@ -93,6 +99,59 @@ class Infrastructure(Node):
             speed=math.dist([p.x,p.y,p.z],previous['xyz'])/(stamp-previous['stamp'])
             angular=math.atan2(math.sin(heading-previous['yaw']),math.cos(heading-previous['yaw']))/(stamp-previous['stamp'])
         self.bodies[name]=dict(xyz=[p.x,p.y,p.z],yaw=heading,speed=speed,angular=angular,stamp=stamp,at=time.monotonic())
+        self._observe_robot_floor(name, [p.x, p.y, p.z])
+
+    def _observe_robot_floor(self,name,xyz):
+        floors=self.config['lift']['floors'];tolerance=float(self.config.get('robot_floor_tolerance_m',.75))
+        if name not in self.floor_offsets:
+            initial=min(floors,key=lambda floor:abs(xyz[2]-floors[floor]))
+            if abs(xyz[2]-floors[initial])>tolerance:return
+            self.floor_offsets[name]=xyz[2]-floors[initial]
+            self.energy[name]['floor']=initial
+        observed_height=xyz[2]-self.floor_offsets[name]
+        floor=min(floors,key=lambda item:abs(observed_height-floors[item]))
+        if abs(observed_height-floors[floor])>tolerance:return
+        if 2.8<=xyz[0]<=5.2 and -1.2<=xyz[1]<=1.2:
+            lift=self.config['lift'];position=self.positions.get(lift['joint'])
+            rate=self.rates.get(lift['joint'],math.inf)
+            if position is None or abs(rate)>=.01 or abs(position-floors[floor])>=.03:return
+        self.energy[name]['floor']=floor
+
+    def _request_robot_map(self,name,floor,now):
+        target=self.robot_floor_maps.get(name,{}).get(floor,'')
+        if not target or name not in self.map_clients:return
+        if self.active_robot_maps.get(name)==target:
+            self.map_transitions.discard(name);self.map_errors.pop(name,None);self.map_status[name]='ready'
+            return
+        self.map_transitions.add(name)
+        if name in self.map_errors or name in self.map_futures or now-self.map_attempt_at.get(name,-math.inf)<1.:
+            return
+        self.map_attempt_at[name]=now
+        client=self.map_clients[name]
+        if not client.service_is_ready():
+            self.map_status[name]='waiting for map server'
+            return
+        request=LoadMap.Request();request.map_url=target
+        self.map_status[name]='loading '+floor
+        future=client.call_async(request);self.map_futures[name]=future
+        future.add_done_callback(lambda completed,n=name,f=floor,p=target:self._map_loaded(n,f,p,completed))
+
+    def _map_loaded(self,name,floor,path,future):
+        self.map_futures.pop(name,None)
+        try:
+            response=future.result()
+            if response.result!=LoadMap.Response.RESULT_SUCCESS:
+                self.map_errors[name]='map server rejected '+floor+' map (result '+str(response.result)+')'
+                self.map_status[name]='failed'
+                return
+        except Exception as error:
+            self.map_errors[name]='map load failed: '+str(error)
+            self.map_status[name]='failed'
+            return
+        self.active_robot_maps[name]=path
+        self.map_status[name]='ready'
+        self.map_errors.pop(name,None)
+        self.map_transitions.discard(name)
 
     def path(self,name,msg):self.paths[name]=([(p.pose.position.x,p.pose.position.y) for p in msg.poses],time.monotonic())
 
@@ -184,7 +243,8 @@ class Infrastructure(Node):
                 previous=self.outputs.get(door['joint'],position)
                 if not self.hold:self.outputs[door['joint']]=position if blocked else max(previous-.025,min(previous+.025,target))
                 mode=2 if abs(position-door['opened'])<.04 else 0 if abs(position)<.04 else 1
-                door_rows[name]=dict(position_m=position,target_m=target,mode=mode,sweep_blocked=blocked)
+                door_rows[name]=dict(position_m=position,command_m=self.outputs.get(door['joint'],position),
+                                      target_m=target,mode=mode,sweep_blocked=blocked)
                 if self.rmf:
                     from rmf_door_msgs.msg import DoorState
                     msg=DoorState();msg.door_name=name;msg.door_time=self.get_clock().now().to_msg();msg.current_mode.value=mode;self.door_state.publish(msg)
@@ -214,27 +274,15 @@ class Infrastructure(Node):
             rate=self.rates.get(lift['joint']);msg.door_state=door_rows.get(lift['door'],{}).get('mode',1)
             msg.motion_state=3 if rate is None or not fresh else 0 if abs(rate)<.01 else 1 if rate>0 else 2
             msg.current_mode=2 if fresh else 4;msg.available_modes=[2];msg.session_id=self.lift_owner;self.lift_state.publish(msg)
-        # Multi-floor lift transport: when the lift car moves, robots aboard are
-        # carried with it. Track the lift delta and apply it to any member whose
-        # body is on the car footprint, then record floor transitions.
-        lift_delta=0.
-        if self._lift_prev is not None and lift_position is not None:
-            lift_delta=lift_position-self._lift_prev
-        self._lift_prev=lift_position;self._lift_prev_at=time.monotonic()
-        on_lift=[name for name,b in self.bodies.items() if 2.8<=b['xyz'][0]<=5.2 and -1.2<=b['xyz'][1]<=1.2]
-        if abs(lift_delta)>1e-4:
-            for name in on_lift:
-                b=self.bodies.get(name)
-                if b:
-                    b['xyz'][2]+=lift_delta
-                    b['at']=time.monotonic()
-                    new_floor=next((f for f,z in lift['floors'].items() if abs(b['xyz'][2]-z)<.03),self.energy[name]['floor'])
-                    if new_floor!=self.energy[name]['floor']:
-                        self.energy[name]['floor']=new_floor
         moving=(lift_position is not None and (not current_floor or self.lift_request and abs(lift_position-lift['floors'][self.lift_request[0]])>.03))
         held=[name for name,b in self.bodies.items() if moving and 2.8<=b['xyz'][0]<=5.2 and -1.2<=b['xyz'][1]<=1.2]
         floors={name:self.energy[name]['floor'] for name in self.energy}
+        for name,floor in floors.items():
+            body=self.bodies.get(name)
+            if body and now-body['at']<.6:self._request_robot_map(name,floor,now)
         floor_z={name:self.floor_z.get(name,0.0) for name in self.energy}
+        robot_floor_maps={name:self.floor_maps.get(floor,'') for name,floor in floors.items()}
+        held=sorted(set(held)|self.map_transitions)
         # Multi-floor TF: publish map->odom with the robot's current floor z-offset
         # so Nav2/AMCL and downstream consumers see the correct level after a lift
         # transition. Only publish for bodies with fresh ground-truth feedback.
@@ -250,7 +298,17 @@ class Infrastructure(Node):
             yaw=b.get('yaw',0.0)
             t.transform.rotation.z=math.sin(yaw/2.0);t.transform.rotation.w=math.cos(yaw/2.0)
             self.tf_broadcaster.sendTransform(t)
-        self.publisher.publish(String(data=json.dumps(dict(session_id=self.identity,ready=fresh,held_members=held,doors=door_rows,lift=dict(position_m=lift_position,current_floor=current_floor,destination=self.lift_request,floors=list(lift['floors'])),docks=self.config['docks'],docking=self.docking,energy=energy,robot_floors=floors,floor_z=floor_z,floor_maps=self.floor_maps,current_floor_map=self.current_floor_map,rmf_protocol=self.rmf,scope='Physical joint feedback and independently observed docking; lift transport tracks robots carried between L0/L1 floors; per-floor occupancy maps and current floor map published; authored energy estimate'),allow_nan=False)))
+        state=dict(session_id=self.identity,ready=fresh,held_members=held,doors=door_rows,
+                   lift=dict(position_m=lift_position,command_m=self.outputs.get(lift['joint'],lift_position),
+                             current_floor=current_floor,destination=self.lift_request,floors=list(lift['floors'])),
+               docks=self.config['docks'],docking=self.docking,energy=energy,robot_floors=floors,
+               floor_z=floor_z,floor_maps=self.floor_maps,robot_floor_maps=robot_floor_maps,
+               active_robot_maps=self.active_robot_maps,map_loading=sorted(self.map_transitions),
+                   map_status=self.map_status,map_errors=self.map_errors,current_floor_map=self.current_floor_map,
+                   operator_hold=self.hold,
+               rmf_protocol=self.rmf,
+               scope='Fresh observed body poses determine robot floors; member Nav2 maps load per observed floor and commands remain held until loading succeeds; authored energy estimate')
+        self.publisher.publish(String(data=json.dumps(state,allow_nan=False)))
 
 
 def main(args=None):
