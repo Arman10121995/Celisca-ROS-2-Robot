@@ -3,9 +3,9 @@
 Pure-logic contracts for robot_lab_adapter/legged_policy.py and
 robot_lab_mujoco/joint_pd.py: provisioned policy loading, observation
 term/history math, PD target generation, command clamping and the MuJoCo
-in-step PD bridge config.  No ROS graph, no ONNX Runtime and no physics:
-a mock session stands in for the policy network, exactly as in the Go2
-velocity-policy tests.
+in-step PD bridge config.  No ROS graph or physics. Most cases use a mock session, as in the Go2
+velocity-policy tests. The recurrent G1 regression runs the actual exported
+checkpoint and requires ONNX Runtime (installed by both CI workflows).
 """
 
 import json
