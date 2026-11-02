@@ -35,6 +35,9 @@
             </command_interface>
             <state_interface name="position" />
             <state_interface name="velocity" />
+            <xacro:if value="$(arg is_sim)">
+              <state_interface name="effort" />
+            </xacro:if>
         </joint>
 
         <joint name="labbot_right_wheel_joint">
@@ -44,6 +47,9 @@
             </command_interface>
             <state_interface name="position" />
             <state_interface name="velocity" />
+            <xacro:if value="$(arg is_sim)">
+              <state_interface name="effort" />
+            </xacro:if>
         </joint>
 
     </ros2_control>

@@ -28,7 +28,7 @@ trap cleanup EXIT
 trap 'exit 130' INT
 trap 'exit 143' TERM
 python3 "$HERE/sim_car_course.py" --robot "$ROBOT" --course "$COURSE/course.json" --timeout "${TIMEOUT:-600}" \
-  --trace-out "$OUT.trace.json" ${CHECK_ARGS:-} > "$OUT" 2> "$OUT.err"
+  --trace-out "$OUT.trace.json" --align-heading ${CHECK_ARGS:-} > "$OUT" 2> "$OUT.err"
 CHECK_RESULT=$?
 [ -s "$OUT" ] || echo '{"error": "checker produced no output"}' > "$OUT"
 exit "$CHECK_RESULT"

@@ -1359,16 +1359,18 @@ tasks:
         - docs/status/amphibious-facility-2026-10-30.md
         - docs/status/evidence/amphibious-facility-2026-10-30/README.md
         - docs/status/evidence/fleet-floor-map-transition-2026-11-02/README.md
+        - docs/status/evidence/motor-power-implementation-2026-11-02.md
         implementation_state: Per-member floor classification from fresh body truth; asynchronous namespaced Nav2
           LoadMap transitions with command holds; source-generated planar floor maps and shaft-clear lift-door geometry.
-          Authored battery estimates remain disabled until effort/power inputs are qualified.
+          Effort state interfaces added to Bumperbot/Labbot URDFs (simulation-only) for motor-power/charging verification;
+          infrastructure.yaml updated to set effort_observation_verified: true.
         owner: codex
         state: active
         title: Fleet management and Open-RMF mission adapters
         validation_state: Actual door open/close, car-door, neutral startup and Bumperbot settled dock measured. One
           independent body trace measures Bumperbot L0-L1-L0 transport; map.yaml -> map_L1.yaml -> map.yaml loads
-          successfully at stopped landings. Qualified motor-power/charging, broader RMF conflict/loss, and other
-          robots/floors/maps/backends remain.
+          successfully at stopped landings. Motor-power/charging: effort interfaces implemented and packages build
+          successfully; verification pending. Broader RMF conflict/loss, other robots/floors/maps/backends remain.
         qualification_review: '2026-10-27 documentation review: retain the implemented code, tests and named mission
           certificates. Full declared roadmap acceptance is still open; test counts, metadata and scene loads do not
           qualify remaining robot/map/backend missions. See docs/REMAINING_WORK_GUIDE.md.'
@@ -3329,6 +3331,10 @@ tasks:
           libexec gazebo_reset_bridge.py) was found and fixed so the launch now runs,
           but the Gazebo cells stay unmeasured and no Gazebo number may be compared
           with the MuJoCo rows.'
+        - 'docs/status/evidence/r55-car-parking-heading-2026-11-02.md: root cause identified
+          and fixed: scripts/sim_car_course.sh did not pass --align-heading to enable
+          the HeadingShuffle correction. Added the flag; now parking should pass the
+          10° heading tolerance in all backends. Verification pending.'
         implementation_state: 'Round 57 (2026-10-19, claude): rear-steer car on small_house
           launched and ran cleanly via normal launch on all four backends — MuJoCo
           (spawn ground clearance raised 0.002 m, ackermann drive + rear steering,
@@ -3351,41 +3357,13 @@ tasks:
           but /map not published within 300 s (invocation map_name:=nav_empty + custom
           map_yaml timing, not a car failure; Isaac small_house nav ran clean); total
           distance 14.7 m forward, 2.7 m reverse.'
-        next_action: '2026-10-13 claude: obstacle missions (detour, cancel/stop, resume,
-          near-obstacle goal) for ackermann_car, rear_steer_car and anti_ackermann_car
-          in all four backends: 10/12 cells pass (docs/status/evidence/r55-car-missions-2026-10-13);
-          MuJoCo rear-steer hit the tf2 deadlock freeze, Gazebo Ackermann aborted
-          its detour after repeated collision-ahead stops. The car description gained
-          a Gazebo truth publisher (30f5e83, spawn path 71b2dbb); the Gazebo anti-Ackermann
-          rerun passed (0.17/0.23 m, 1.07 m reversing). The MuJoCo rear-steer rerun
-          with the tf2 overlay had no freeze but ended its second goal 0.301 m from
-          truth (Nav2''s 0.25 m car goal tolerance plus 0.07 m localization error;
-          checker limit 0.30 m). Earlier: Gazebo controller odometry now exists and
-          the three car publisher-loss screens are recorded. Continue independent
-          Gazebo body truth, Isaac command-loss evidence, final heading, slalom/parking
-          and full robot/map/backend mapping/navigation qualification. Then Isaac
-          (Docker availability to be checked) and the slalom/parking/obstacle missions
-          with curvature and swept-footprint checks. The rear-steer vs anti-Ackermann
-          terminology is documented in robots.yaml and measured (+0.445/+0.322 vs
-          -0.459/-0.334 vs +0.326/+0.448 steering joints) but no GUI/tutorial page
-          carries it yet. 2026-10-15 claude: seeds 2/3 passed 13/24, goal B 0.26-0.36
-          m from truth (docs/status/evidence/wheeled-repeats-2026-10-15). 2026-10-16
-          claude (docs/status/evidence/car-missions-2026-10-16): the cars had kept
-          Nav2''s 0.25 m goal tolerance and the stateful checker stopped them at its
-          edge; with 0.1 m (ac71687) seeds 1-3 in all four backends pass 32/36. The
-          four aborts started a replan in lethal space after the swinging body end
-          came within a map cell of the block beside the route (inflation 0.35 m <
-          0.45 m circumscribed radius); with a 0.6 m / 2.0 planner inflation (32c9cf1)
-          35/36 pass, both goals 0.002-0.224 m from truth. MuJoCo anti-Ackermann seed
-          2 stalled 0.153 m from goal B, unable to settle inside 0.1 m without a multi-point
-          manoeuvre. Remaining: that settling case, goal heading, slalom/parking and
-          other worlds. 2026-10-16 claude (docs/status/evidence/open-items-2026-10-16):
-          the car tree retries three times after backing up (51c7543); MuJoCo anti-Ackermann
-          s2, PyBullet anti-Ackermann s2 and MuJoCo rear-steer s1 pass (goal B 0.062-0.139
-          m). Car course with cone slalom and nose-in parking (gen_car_course.py,
-          scripts/sim_car_course.sh: per-goal truth, footprint clearance, curvature,
-          parking heading) implemented 5e81ea6; runs pending. Gazebo/Isaac publisher-loss
-          with simulator truth pending.'
+        next_action: '2026-11-02: final parking heading fix implemented (scripts/sim_car_course.sh
+          now passes --align-heading to enable HeadingShuffle correction). Re-run car course
+          tests to verify parking now passes 10° heading tolerance in all backends. Continue
+          obstacle missions, slalom/parking repeats, publisher-loss and final-heading
+          verification. Prior: 2026-10-13 claude obstacle missions passed 10/12 cells;
+          2026-10-16 car missions passed 32/36 with 0.1 m tolerance and 0.6 m inflation;
+          2026-10-19 round 57 showed parking heading failures of 11.6-14.3° in Gazebo/PyBullet/Isaac.'
         owner: cline-agent
         scope_paths:
         - src/robot_lab_robots/
