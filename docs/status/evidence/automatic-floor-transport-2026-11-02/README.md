@@ -117,7 +117,14 @@ source as the successful SDK trip was used. The driver always resumes its owned
 process during cleanup. ALL STOP was sent and the owned shared-world launch was
 subsequently shut down. Larger fleet/member/contact losses remain separate.
 
-Source checks: 22 focused transport/infrastructure/building-graph regressions
+Source checks: 30 focused transport/infrastructure/energy/building-graph regressions
 passed. Changed packages built. The installed native GUI rendered actual recorded
 floor/lease data and hid car-internal endpoints without creating ROS publishers.
 These checks do not extend the mission scope above.
+
+An additional fleet/GUI composition/layout batch on the existing desktop display
+reported 37 passed and one narrow-window visibility failure. That exact layout
+case passed unchanged under its documented isolated Xvfb environment (1 passed,
+5.74 seconds); both logs remain in the SSD run directory. Registry cross-reference
+validation passed. Required CI is green on the earlier cache/dependency repair
+`d064eece`; the new fleet revision `d6638c11` started its own separate workflow.
