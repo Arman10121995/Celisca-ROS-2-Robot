@@ -149,7 +149,7 @@ def build_navigation(app):
                              ('Aerial Swarm', 'Aerial swarm'), ('Live Monitor', 'Live telemetry')]),
               ('ASSETS', [('Registry', 'Registry · 3D'), ('Worlds', 'Worlds & maps'), ('Installed Extensions', 'Installed assets')]),
               ('EXPERIMENTS', [('Vacuum', 'Vacuum missions'), ('Benchmark', 'Benchmarks'), ('Training', 'Policy training'), ('Tests', 'Test suites')]),
-              ('PROJECT', [('Health', 'Health & roadmap')])]
+              ('PROJECT', [('Health', 'Learn & health')])]
     titles = {app.notebook.tab(tab, 'text') for tab in app.notebook.tabs()}
     app.nav_buttons = {}
     row = 0
@@ -165,7 +165,7 @@ def build_navigation(app):
     descriptions = dict(Launch='Configure an experiment, then run and control it',
         Registry='Browse complete models and inspect source geometry in 3D',
         Worlds='Inspect worlds and generate occupancy maps',
-        Health='Current status, verified work and remaining roadmap',
+        Health='Interactive architecture, tutorials, ROS graph and project status',
         **{'Installed Extensions': 'Installed robot and world sources', 'Live Monitor': 'Measured robot telemetry',
            'Fleet & Swarm': 'Shared-world ground missions and traffic',
            'Aerial Swarm': 'Independent PX4 vehicles in one selected world'})

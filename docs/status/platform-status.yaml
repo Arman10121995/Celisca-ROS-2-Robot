@@ -321,6 +321,18 @@ extension_completion_20261020:
     qualification; no universal robot/map/backend support claim.
   updated: '2026-10-27'
 goal: unified_multi_robot_algorithm_lab
+architecture_explorer_20261102:
+  owner: codex
+  state: done
+  scope_paths: [src/robot_lab_gui/, scripts/test_tiers.sh, docs/, README.md, ROADMAP.md]
+  requested: '2026-11-02'
+  scope: Expand the existing Health/documentation tab with native interactive system diagrams, guided architecture lessons, linked source/tutorial reading, networking explanations and optional read-only ROS discovery.
+  qualification: Documentation and read-only inspection; no robot mission or support promotion.
+  updated: '2026-11-02'
+  implementation: Existing Health workspace now includes twelve native interactive system views, six guided tours, source/tutorial/package browsing, glossary, networking lesson, SVG export and opt-in bounded ROS discovery/QoS with JSON export.
+  verification: Full fast tier passed (1157 passed, 37 skipped, 4 deselected); 21 focused model checks and 3 real Tk checks passed; installed GUI rendered all 12 views and 36 components at 1600/1024 px; actual ROS and GUI-worker discovery observed test endpoints with no robot commands/service calls and preserved caller context. Final package built with matching installed module hashes.
+  evidence: docs/status/evidence/architecture-explorer-2026-11-02/README.md
+  guide: docs/architecture/interactive-guide.md
 handoff:
   audit: docs/status/audit-2026-10-02.md
   next_action: Continue broader SDK multi-robot conflict/contact/loss and other robot/floor missions, then aerial/marine/terrain

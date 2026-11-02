@@ -1068,14 +1068,29 @@ class TestsTab(LabTab):
 
 
 class HealthTab(LabTab):
-    """Workspace health: doctor diagnostics, platform status and ROS graph."""
+    """Native architecture/tutorial explorer and existing workspace diagnostics."""
 
     def __init__(self, notebook, app):
         super().__init__(notebook, app, "Health")
+        app.health_tab = self
         self._build_ui()
 
     def _build_ui(self):
-        frame = ttk.LabelFrame(self, text="Diagnostics", padding=10)
+        from .architecture_docs import GuideLibrary
+        from .architecture_explorer import ArchitectureExplorer
+        self.columnconfigure(0, weight=1)
+        self.rowconfigure(0, weight=1)
+        self.pages = ttk.Notebook(self)
+        self.pages.grid(row=0, column=0, sticky='nsew')
+        self.guide_library = GuideLibrary(self.pages, WORKSPACE_ROOT, self._show_architecture)
+        self.explorer = ArchitectureExplorer(self.pages, WORKSPACE_ROOT, self._show_document)
+        self.diagnostics = ttk.Frame(self.pages, padding=5)
+        self.diagnostics.columnconfigure(0, weight=1)
+        self.diagnostics.rowconfigure(1, weight=1)
+        self.pages.add(self.explorer, text='Architecture & learning')
+        self.pages.add(self.guide_library, text='Tutorials & source library')
+        self.pages.add(self.diagnostics, text='Diagnostics & roadmap')
+        frame = ttk.LabelFrame(self.diagnostics, text="Diagnostics", padding=10)
         frame.grid(row=0, column=0, sticky="ew")
         frame.columnconfigure(0, weight=1)
         frame.columnconfigure(1, weight=1)
@@ -1151,11 +1166,11 @@ class HealthTab(LabTab):
             WORKSPACE_ROOT / 'docs/status/fleet-continuation-2026-11-02.md')).grid(
                 row=10, column=0, columnspan=3, sticky='ew', pady=2)
 
-        self.summary = scrolledtext.ScrolledText(self, wrap="word", height=16)
+        self.summary = scrolledtext.ScrolledText(self.diagnostics, wrap="word", height=16)
         self.summary.grid(row=1, column=0, sticky="nsew", pady=(10, 0))
         self.summary.configure(state="disabled")
-        self.rowconfigure(1, weight=1)
         self._show_platform_status()
+        self.pages.select(self.explorer)
 
     def _show_platform_status(self):
         if not STATUS_YAML.exists():
@@ -1169,11 +1184,7 @@ class HealthTab(LabTab):
         self._set_summary(format_platform_status(data))
 
     def _show_patch_guide(self):
-        path = WORKSPACE_ROOT / "docs" / "PATCH_EXECUTION_GUIDE.md"
-        try:
-            self._set_summary(path.read_text(encoding="utf-8"))
-        except OSError as exc:
-            self.app.log(f"[health] failed to read patch guide: {exc}\n")
+        self._show_document(WORKSPACE_ROOT / "docs" / "PATCH_EXECUTION_GUIDE.md")
 
     def _show_completion_audit(self):
         data = load_yaml(str(STATUS_YAML))
@@ -1187,12 +1198,20 @@ class HealthTab(LabTab):
         self._show_document(WORKSPACE_ROOT / "docs" / "STORAGE.md")
 
     def _show_document(self, path):
-        try:
-            self._set_summary(path.read_text(encoding="utf-8"))
-        except OSError as exc:
-            self.app.log(f"[health] failed to read {path.name}: {exc}\n")
+        self.guide_library.open(Path(path))
+        self.pages.select(self.guide_library)
+
+    def _show_architecture(self, key):
+        from .architecture_content import VIEW_BY_ID
+        if key not in VIEW_BY_ID:
+            self.app.log('[health] Unknown teaching diagram: '+key+'\n')
+            return
+        self.explorer.change_view(key)
+        self.explorer.tabs.select(self.explorer.map_page)
+        self.pages.select(self.explorer)
 
     def _set_summary(self, text):
+        self.pages.select(self.diagnostics)
         self.summary.configure(state="normal")
         self.summary.delete("1.0", "end")
         self.summary.insert("1.0", text)

@@ -1,0 +1,33 @@
+{
+  "boundary": "Readback after final package build. GUI/ROS diagnostics have their stated source stages; no whole-platform or robot mission certificate.",
+  "files": {
+    "src/robot_lab_gui/robot_lab_gui/architecture_canvas.py": {
+      "sha256": "b28ac8a9bb668156a21e36e0d0c95b390281b6d7bfe1aa2e8d7c478586a36928",
+      "installed_sha256": "b28ac8a9bb668156a21e36e0d0c95b390281b6d7bfe1aa2e8d7c478586a36928"
+    },
+    "src/robot_lab_gui/robot_lab_gui/architecture_content.py": {
+      "sha256": "2d1ca660ee6971b6fe3096b92218460b229d5f183730722556471b684f93df46",
+      "installed_sha256": "2d1ca660ee6971b6fe3096b92218460b229d5f183730722556471b684f93df46"
+    },
+    "src/robot_lab_gui/robot_lab_gui/architecture_docs.py": {
+      "sha256": "b0da68c42a0d78f201f3c3439ca3efd7e3cdf7f065866aca4a3a22f9269823d9",
+      "installed_sha256": "b0da68c42a0d78f201f3c3439ca3efd7e3cdf7f065866aca4a3a22f9269823d9"
+    },
+    "src/robot_lab_gui/robot_lab_gui/architecture_explorer.py": {
+      "sha256": "3a418a03bdfbfb5be36e125f60635b689fce4692f561eb8fa6600db5593040e6",
+      "installed_sha256": "3a418a03bdfbfb5be36e125f60635b689fce4692f561eb8fa6600db5593040e6"
+    },
+    "src/robot_lab_gui/robot_lab_gui/architecture_graph.py": {
+      "sha256": "a6424037ada3443c371b3ebfd6f99349a3f37f9f837d40f2022ae6c0ef938255",
+      "installed_sha256": "a6424037ada3443c371b3ebfd6f99349a3f37f9f837d40f2022ae6c0ef938255"
+    },
+    "src/robot_lab_gui/robot_lab_gui/lab_tabs.py": {
+      "sha256": "983277f63d82066b56d252435eae9f1cb6db494d3cf13e101baa551d9395a414",
+      "installed_sha256": "983277f63d82066b56d252435eae9f1cb6db494d3cf13e101baa551d9395a414"
+    },
+    "src/robot_lab_gui/robot_lab_gui/workspace_ui.py": {
+      "sha256": "3bc55bf21634f92560990838941f724489f4647ca8170a5781acfad319d75022",
+      "installed_sha256": "3bc55bf21634f92560990838941f724489f4647ca8170a5781acfad319d75022"
+    }
+  }
+}

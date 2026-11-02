@@ -1,0 +1,229 @@
+{
+  "observed_at": "2026-11-02T17:02:09.027511+00:00",
+  "domain": "229",
+  "rmw": "rmw_cyclonedds_cpp",
+  "nodes": [
+    {
+      "name": "/architecture_probe/sink",
+      "namespace": "/architecture_probe",
+      "publishers": [
+        {
+          "name": "/parameter_events",
+          "types": [
+            "rcl_interfaces/msg/ParameterEvent"
+          ]
+        },
+        {
+          "name": "/rosout",
+          "types": [
+            "rcl_interfaces/msg/Log"
+          ]
+        }
+      ],
+      "subscribers": [
+        {
+          "name": "/architecture_probe/sample",
+          "types": [
+            "std_msgs/msg/String"
+          ]
+        }
+      ],
+      "services": [
+        {
+          "name": "/architecture_probe/inspect_service",
+          "types": [
+            "std_srvs/srv/Trigger"
+          ]
+        },
+        {
+          "name": "/architecture_probe/sink/describe_parameters",
+          "types": [
+            "rcl_interfaces/srv/DescribeParameters"
+          ]
+        },
+        {
+          "name": "/architecture_probe/sink/get_parameter_types",
+          "types": [
+            "rcl_interfaces/srv/GetParameterTypes"
+          ]
+        },
+        {
+          "name": "/architecture_probe/sink/get_parameters",
+          "types": [
+            "rcl_interfaces/srv/GetParameters"
+          ]
+        },
+        {
+          "name": "/architecture_probe/sink/list_parameters",
+          "types": [
+            "rcl_interfaces/srv/ListParameters"
+          ]
+        },
+        {
+          "name": "/architecture_probe/sink/set_parameters",
+          "types": [
+            "rcl_interfaces/srv/SetParameters"
+          ]
+        },
+        {
+          "name": "/architecture_probe/sink/set_parameters_atomically",
+          "types": [
+            "rcl_interfaces/srv/SetParametersAtomically"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "/architecture_probe/source",
+      "namespace": "/architecture_probe",
+      "publishers": [
+        {
+          "name": "/architecture_probe/sample",
+          "types": [
+            "std_msgs/msg/String"
+          ]
+        },
+        {
+          "name": "/parameter_events",
+          "types": [
+            "rcl_interfaces/msg/ParameterEvent"
+          ]
+        },
+        {
+          "name": "/rosout",
+          "types": [
+            "rcl_interfaces/msg/Log"
+          ]
+        }
+      ],
+      "subscribers": [],
+      "services": [
+        {
+          "name": "/architecture_probe/source/describe_parameters",
+          "types": [
+            "rcl_interfaces/srv/DescribeParameters"
+          ]
+        },
+        {
+          "name": "/architecture_probe/source/get_parameter_types",
+          "types": [
+            "rcl_interfaces/srv/GetParameterTypes"
+          ]
+        },
+        {
+          "name": "/architecture_probe/source/get_parameters",
+          "types": [
+            "rcl_interfaces/srv/GetParameters"
+          ]
+        },
+        {
+          "name": "/architecture_probe/source/list_parameters",
+          "types": [
+            "rcl_interfaces/srv/ListParameters"
+          ]
+        },
+        {
+          "name": "/architecture_probe/source/set_parameters",
+          "types": [
+            "rcl_interfaces/srv/SetParameters"
+          ]
+        },
+        {
+          "name": "/architecture_probe/source/set_parameters_atomically",
+          "types": [
+            "rcl_interfaces/srv/SetParametersAtomically"
+          ]
+        }
+      ]
+    }
+  ],
+  "topics": {
+    "/parameter_events": [
+      "rcl_interfaces/msg/ParameterEvent"
+    ],
+    "/rosout": [
+      "rcl_interfaces/msg/Log"
+    ],
+    "/architecture_probe/sample": [
+      "std_msgs/msg/String"
+    ]
+  },
+  "endpoint_qos": {
+    "/architecture_probe/sample": {
+      "offered": [
+        {
+          "node": "/architecture_probe/source",
+          "type": "std_msgs/msg/String",
+          "reliability": "RELIABLE",
+          "durability": "VOLATILE",
+          "history": "KEEP_LAST",
+          "depth": 10
+        }
+      ],
+      "requested": [
+        {
+          "node": "/architecture_probe/sink",
+          "type": "std_msgs/msg/String",
+          "reliability": "RELIABLE",
+          "durability": "VOLATILE",
+          "history": "KEEP_LAST",
+          "depth": 10
+        }
+      ]
+    },
+    "/parameter_events": {
+      "offered": [
+        {
+          "node": "/architecture_probe/source",
+          "type": "rcl_interfaces/msg/ParameterEvent",
+          "reliability": "RELIABLE",
+          "durability": "VOLATILE",
+          "history": "KEEP_LAST",
+          "depth": 1000
+        },
+        {
+          "node": "/architecture_probe/sink",
+          "type": "rcl_interfaces/msg/ParameterEvent",
+          "reliability": "RELIABLE",
+          "durability": "VOLATILE",
+          "history": "KEEP_LAST",
+          "depth": 1000
+        },
+        {
+          "node": "/robot_lab_architecture_26e497395b",
+          "type": "rcl_interfaces/msg/ParameterEvent",
+          "reliability": "RELIABLE",
+          "durability": "VOLATILE",
+          "history": "KEEP_LAST",
+          "depth": 1000
+        }
+      ],
+      "requested": []
+    },
+    "/rosout": {
+      "offered": [
+        {
+          "node": "/architecture_probe/source",
+          "type": "rcl_interfaces/msg/Log",
+          "reliability": "RELIABLE",
+          "durability": "TRANSIENT_LOCAL",
+          "history": "KEEP_LAST",
+          "depth": 1000
+        },
+        {
+          "node": "/architecture_probe/sink",
+          "type": "rcl_interfaces/msg/Log",
+          "reliability": "RELIABLE",
+          "durability": "TRANSIENT_LOCAL",
+          "history": "KEEP_LAST",
+          "depth": 1000
+        }
+      ],
+      "requested": []
+    }
+  },
+  "qos_scope": "Advertised QoS for up to 40 topics and 40 endpoints per role; omitted entries are unqueried, not incompatible.",
+  "truncated": false,
+  "errors": [],
+  "scope": "Discovery snapshot; endpoints are not proof of QoS compatibility, traffic, readiness or a working mission."
+}

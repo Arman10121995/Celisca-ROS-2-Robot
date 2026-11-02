@@ -1,5 +1,9 @@
 # Robot Lab tutorials
 
+## Learn the whole system
+
+Start with **Learn & health → Architecture & learning** in the main GUI. [Interactive architecture guide](../architecture/interactive-guide.md) covers diagrams, tours, source browsing and the live ROS graph; [networking](../architecture/networking.md) explains discovery, QoS, frames and transport boundaries.
+
 October 30: [native-form delivery](../status/native-forms-2026-10-30.md)
 adds snake acquired-map navigation, a surface vessel and articulated flipper
 controls. The guides below distinguish runnable workflows from named missions.

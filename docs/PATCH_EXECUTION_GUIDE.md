@@ -1,5 +1,7 @@
 # Stabilization and remaining work: agent execution guide
 
+The native **Learn & health** workspace now provides architecture lessons, source/tutorial links and actual opt-in ROS discovery. Follow [the guide](architecture/interactive-guide.md) when changing these modules; maintain valid component/view/tour/source links and private discovery cleanup. This documentation feature is separate from broader robot/extension acceptance.
+
 Latest November 2: [automatic native fleet lift transport](status/evidence/automatic-floor-transport-2026-11-02/README.md) completed one Bumperbot L0-L1-L0 with autonomous boarding, map/costmap transitions and settled exits. The GUI Facility request is implemented. A real native SDK L0-L1-L0 mission also passed in 359.063 wall seconds; actual SDK process-loss/resumption held the car and required explicit re-enablement. Broader multi-robot cases remain separate. Full platform acceptance remains partial.
 
 Latest November 2 continuation: [observation-bound fleet energy, separate floor/AMCL frames and native RMF door/dock routes](status/fleet-continuation-2026-11-02.md). Preserve the source/runtime certificates, gap-to-unknown energy model, scoped upstream serializer correction and measured floor ride. Next: wider SDK conflict/loss, marine and terrain workflows; the automatic native and SDK lift round-trips now have their own receipts. Full platform acceptance remains partial.

@@ -84,9 +84,11 @@ FAST_TESTS=(
   "$BRG_TEST/test_sdf_heightfield.py"
   "$BRG_TEST/test_wheel_navigation_contract.py"
   "$GUI_TEST/test_drive_control.py"
+  "$GUI_TEST/test_architecture_model.py"
 )
 
 INTEGRATION_TESTS=(
+  "$GUI_TEST/test_architecture_explorer.py"
   "$BRG_TEST/test_fleet_infrastructure.py"
   "$GUI_TEST/test_registry_preview.py"
   "$GUI_TEST/test_workspace_layout.py"

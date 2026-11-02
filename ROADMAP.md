@@ -1,5 +1,9 @@
 # Robot Lab: implementation roadmap and continuation plan
 
+## Native architecture learning workspace — November 2, 2026
+
+The existing Health/documentation workspace now includes source-linked interactive diagrams, guided tours, an inline tutorial/package browser, a networking playground and opt-in read-only ROS discovery. [Guide](docs/architecture/interactive-guide.md). Acceptance: usable installed native UI, valid source links and lesson topology, no automatic ROS discovery/robot commands, owned discovery cleanup, explicit designed-versus-observed labels. This documentation feature does not close robot mission tasks.
+
 Latest November 2: [automatic native fleet lift transport](docs/status/evidence/automatic-floor-transport-2026-11-02/README.md) completed one Bumperbot L0-L1-L0 with autonomous boarding, map/costmap transitions and settled exits. The GUI Facility request is implemented. A real native SDK L0-L1-L0 mission also passed in 359.063 wall seconds; actual SDK process-loss/resumption held the car and required explicit re-enablement. Broader multi-robot cases remain separate. Full platform acceptance remains partial.
 
 October 14 aerial continuation: [mapped/depth route obstacles](docs/status/aerial-obstacles-2026-10-14.md)

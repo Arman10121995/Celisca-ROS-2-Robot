@@ -1,5 +1,9 @@
 # Robot Lab GUI workspace
 
+## Architecture, tutorials and diagnostics
+
+The existing Health workspace is labeled **Learn & health** in the sidebar. It contains **Architecture & learning**, **Tutorials & source library** and **Diagnostics & roadmap**. The native explorer offers clickable diagrams, tours, networking examples, bounded read-only ROS discovery and SVG/JSON exports. [Detailed walkthrough](../architecture/interactive-guide.md). Opening it is neutral; discovery starts only when requested.
+
 Latest October 30: the amphibious rover uses Launch's Marine controls with
 wheel/thrust feedback and shore Plan/Execute. Fleet & Swarm has a compact
 **Facility** subpage for physical doors, lift and docking. Battery values stay

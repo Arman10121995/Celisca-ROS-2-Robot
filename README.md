@@ -1,5 +1,9 @@
 # Robot Lab — Multi-Robot Simulation and Algorithm Laboratory
 
+## Interactive architecture inside the GUI
+
+Open **Learn & health → Architecture & learning** for twelve clickable system diagrams, guided tours, source/tutorial browsing, a networking playground and opt-in live ROS discovery. [Full interactive guide](docs/architecture/interactive-guide.md). Teaching diagrams and endpoint snapshots do not change robot support claims.
+
 Latest November 2: [automatic native fleet lift transport](docs/status/evidence/automatic-floor-transport-2026-11-02/README.md) completed one Bumperbot L0-L1-L0 with autonomous boarding, map/costmap transitions and settled exits. The GUI Facility request is implemented. A real native SDK L0-L1-L0 mission also passed in 359.063 wall seconds; actual SDK process-loss/resumption held the car and required explicit re-enablement. Broader multi-robot cases remain separate. Full platform acceptance remains partial.
 
 **Current status — November 2, 2026: the platform and extension are partial.**

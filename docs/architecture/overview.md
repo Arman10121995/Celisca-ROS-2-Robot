@@ -1,70 +1,108 @@
-# Robot Lab architecture: current implementation and target
+# Robot Lab architecture: implementation, boundaries and source map
 
-October 9 continuation places source-bound native mobile-task arbitration
-inside the MuJoCo plant, with asynchronous Nav2 actions and independent body
-settling. PX4's asynchronous selected-world checker supplies a single-use
-landed/pose/resource-bound takeoff target. The isolated queue now has an actual
-Nav2 workload and source/run/spec/trace-bound result interface. Drive/Drone
-share logical latches and persistent selected-state rendering. These new
-interfaces await physical qualification; see [the implementation scope](../status/implementation-continuation-2026-10-09.md).
+Updated November 2, 2026. Start in the native GUI at **Learn & health →
+Architecture & learning**, inside the existing Health workspace. The
+[interactive guide](interactive-guide.md) explains clickable diagrams, guided
+walkthroughs, the source/tutorial library, vector export, networking playground
+and optional read-only ROS discovery. See [networking and troubleshooting](networking.md)
+for domains, namespaces, QoS, transport partitions, MAVLink and time.
 
-Documentation updated October 9, 2026. Exact source stages and current checks
-are in the [extension checkpoint](../status/continuation-2026-10-08.md). The [current status](../status/CURRENT_STATUS.md),
-[ledger](../status/platform-status.yaml) and
-[support matrix](../status/support-matrix.md) distinguish implemented wiring,
-named measured missions and remaining qualification. Historical audits and
-source-stage reports retain their original scope.
+## System design at three scales
 
-## Goal and present gap
+**Context:** a learner/operator chooses robots, maps, algorithms and tasks;
+Robot Lab composes simulated workflows, provides class-specific controls and
+records actual scoped outcomes. The current platform and extension remain
+partial. Asset availability, initial implementation, CI and a measured robot
+mission are distinct states. [Current status](../status/CURRENT_STATUS.md),
+[ledger](../status/platform-status.yaml) and [remaining work](../REMAINING_WORK_GUIDE.md)
+retain the exact boundaries.
 
-The target is a reproducible learning platform with independently selected
-robots, simulators, maps and seven algorithm categories. Five substantive,
-ROS-connected and fairly measured alternatives in every category remain a
-qualification goal. Metadata, numerical examples and static previews do not
-close it.
+<!-- diagram: overview -->
+```mermaid
+flowchart LR
+    User[Learner / operator] --> GUI[Native GUI or CLI]
+    GUI --> Config[Profiles and typed registry]
+    Config --> Launch[Resolved launch / session]
+    Launch --> Engine[Selected physics backend]
+    Launch --> Stack[Compatible ROS algorithm / control stack]
+    Engine -->|measurements / clock / TF| Stack
+    Stack -->|bounded owned commands| Engine
+    Engine --> Measure[Independent observed outcomes]
+    Stack --> Measure
+    Measure --> Artifacts[Artifacts / reports / support ledger]
+    Artifacts --> GUI
+```
 
-The current system includes profile-driven four-backend bringup, shared GUI/CLI
-resolution, physical wheel drives, measured TurtleBot3/TurtleBot4 modes, native
-Panda joint/Hand/MoveIt control, and actual PX4 X500 flight on Gazebo Harmonic.
-Launch has a separate right-hand control column and structural robot filters;
-Registry has grouped variants/components and native embedded 3D inspection.
-These workflows have exact plant/world/backend/source evidence. Remaining
-asset/controllers/world missions, algorithm comparisons, concurrency and
-clean-host reproduction are partial.
+**Containers:** GUI, registry/resolver, bringup, model/world assets, native
+backend adapters, ROS estimation/planning/control, workload producers and
+status/artifact tools. Four backend choices do not imply identical sensors,
+actuators or supported tasks. Class-specific native flight, marine, articulation
+and fleet sessions preserve their own physical and transport contracts.
 
-The current user priority is R3.6 and R6.5–R6.7, then R5.10 and R5.7–R5.9,
-before the older wheel/legged/comparison roadmap. Follow actual owners and
-[AGENT_HANDOFF](../AGENT_HANDOFF.md); preserve separately owned terrain and
-occupancy work.
+**Components:** follow a topic/action/TF edge into its source module. The native
+atlas has twelve views and source-linked inspectors. Package/dependency browsing
+reads actual maintained `package.xml` files; live graph discovery observes
+advertised endpoints separately. A static dependency is not a ROS connection,
+and an observed ROS connection is not proof of useful data or mission success.
 
-## October 9 implementation additions
+## Current extension paths
 
-New candidate controls preserve native source plants: exact-model Unitree
-TorchScript observations/PD torques, generic authored position channels,
-local Jacobian Servo and taught measured articulation sequences. Measured
-Panda object state feeds acknowledged MoveIt collision attachment diffs;
-physical grasp remains native contact dynamics. Stretch has separate wheel
-transmission control and base/articulation ownership, source-mounted sensor
-publishers and explicit sensor-gated mapping/Nav2 composition. Truth-bootstrap
-EKF inputs are not independent state-estimation accuracy claims.
+- **Ground fleet:** one Fortress world/clock, named member controllers/Nav2,
+  queues/traffic/ownership, optional native Open-RMF scheduling and real door/lift
+  protocol events. Facility transport reserves a robot/car and observes boarding,
+  floor-map/costmap changes and settled exit. Native and SDK single-Bumperbot
+  round-trips and an active SDK loss hold have [separate actual receipts](../status/evidence/automatic-floor-transport-2026-11-02/README.md).
+- **Aerial:** actual PX4 SITL and Harmonic X500 plant, current pymavlink/MAVLink
+  ROS control, checked takeoff/planning and named multi-FCU sessions. FCU identity,
+  UDP endpoints and ROS namespaces are separate. Wider swarm/map/loss acceptance
+  remains scoped; arming does not establish flight.
+- **Marine/additional forms:** native buoyancy/hydrodynamics/thrusters/fins,
+  sensor-based acquisition/reload/routes, surface and sprung amphibious control,
+  source-contact multi-leg/snake odometry and articulated tracks. Each source
+  robot has its own control and evidence limits.
+- **Manipulation:** source-native arm/hand actions, planning/Servo/jog/teach and
+  mobile task arbitration. A reachable coordinate, previewed plan, executed
+  reach and stable contact grasp are different stages.
+- **Experiments:** real workflow producers snapshot selections and preserve
+  task/source/trace identity, bounds, endpoint observations and owned cleanup.
+  Random/demo metrics cannot close release acceptance.
 
-Static aerial geometry planning runs asynchronously so FCU setpoints remain
-responsive. PX4 executes bounded waypoint setpoints from actual FCU state and
-retains manual/Stop/Hold/Land overrides. The benchmark coordinator launches
-actual owned subprocesses with domain/partition isolation and real telemetry;
-process/trace results remain separate from mission success. Cached coplanar
-collision reduction preserves validated planar unions and source visual/raycast
-assets; physical speed/contact measurements remain pending.
+<!-- diagram: control -->
+```mermaid
+flowchart TB
+    GUI[GUI / task request] --> Owner[Workflow owner and readiness]
+    Owner --> Ground[Ground / steering / gait controls]
+    Owner --> Arm[Arm / hand / mobile task]
+    Owner --> Air[ROS MAVLink control → PX4]
+    Owner --> Water[Marine force / fin control]
+    Owner --> Fleet[Fleet queues → member Nav2]
+    RMF[Optional RMF schedule / native events] --> Fleet
+    RMF --> Facility[Physical door / lift adapter]
+    Facility --> Floor[Observed floor → map load → costmap reset]
+    Floor --> Fleet
+    Ground --> Plant[Source-specific native plant]
+    Arm --> Plant
+    Air --> Plant
+    Water --> Plant
+    Fleet --> Plant
+    Plant --> Feedback[Sensors / actuators / independent body observations]
+    Feedback --> Owner
+```
 
-Read [the implementation checkpoint](../status/implementation-2026-10-09.md)
-for exact files/commands, still-missing initial features and deferred validation.
-These new integrations have not inherited historical source certificates or
-full robot/map/backend qualification.
+## Present goals and gaps
+
+The goal is a reproducible learning platform with independently selected robots,
+simulators, maps and algorithm categories. Broad controller/map/backend
+missions, source-specific terrain/recovery, additional swarm/marine workflows,
+fair repeated algorithm comparisons and clean-host release acceptance remain
+separate tasks. Follow the live roadmap rather than historical completion
+counts. GUI grouping/tags and imported sources never grant runtime support.
 
 ## Actual source-tree and package map
 
-There are 26 discoverable ROS packages; current CI builds 25 and excludes
-optional ORB-SLAM3. Nested vendor descriptions are assets of the enclosing
+The native library inventories maintained top-level package manifests plus the
+registry/benchmark packages under `src/robot_lab`; optional ORB-SLAM3 has its own
+external dependency boundary. Nested vendor descriptions are assets of the enclosing
 `robot_lab_robots` package, not individually supported robot stacks.
 
 ```text
@@ -348,7 +386,7 @@ Progress from schema/references to assets/install, launch construction, numerica
 correctness, ROS contracts, scenario smoke and repeated measured benchmarks.
 Each level proves only its own scope.
 
-Exact `091d388` CI passes the core build, 933 fast checks with four skips/four
+Historical checkpoint `091d388` CI passed the core build, 933 fast checks with four skips/four
 deselections, 20 physics checks, 134 integration checks with twelve skips and
 registry validation. Final local GUI and physical Drive/Panda checks have
 separate measured artifacts. [Testing](../TESTING.md) and
