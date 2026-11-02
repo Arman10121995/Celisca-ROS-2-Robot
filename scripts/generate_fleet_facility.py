@@ -68,13 +68,13 @@ def generate():
         drive=child(joint,'axis');child(drive,'xyz',axis);limits=child(drive,'limit')
         for key,value in dict(lower=0,upper=maximum,effort=limit,velocity=.25).items():child(limits,key,value)
         plugin=child(hardware,'plugin',name='ignition::gazebo::systems::JointPositionController',filename='ignition-gazebo-joint-position-controller-system')
-        for key,value in dict(joint_name=name,topic='/facility/'+name+'/target',p_gain=kp,d_gain=kd,i_gain=100 if name=='lift_car' else 20,i_min=-8,i_max=8,cmd_min=-limit,cmd_max=limit,use_velocity_commands='false',initial_position=0).items():child(plugin,key,value)
+        for key,value in dict(joint_name=name,topic='/facility/'+name+'/target',p_gain=kp,d_gain=kd,i_gain=100 if name=='lift_car' else 20,i_min=-800 if name=='lift_car' else -8,i_max=800 if name=='lift_car' else 8,cmd_offset=65.*9.81 if name=='lift_car' else 0.,cmd_min=-limit,cmd_max=limit,use_velocity_commands='false',initial_position=0).items():child(plugin,key,value)
         joints.append(name)
     p=child(hardware,'plugin',name='ignition::gazebo::systems::JointStatePublisher',filename='ignition-gazebo-joint-state-publisher-system');child(p,'topic','/facility/joint_states')
     target=ROOT/'src/robot_lab_maps/maps/fleet_facility';write(doc,target/'worlds/fleet_facility.world')
     config=dict(schema_version=1,doors={'main':dict(joint='door_main',closed=0.,opened=1.8,sweep=[-.5,.5,-1.1,3.1],approach=[[-1.2,0.],[1.2,0.]]),
         'lift':dict(joint='door_lift',closed=0.,opened=2.15,sweep=[2.6,3.4,-1.3,3.5],z_joint='lift_car')},
-        lift=dict(name='facility_lift',joint='lift_car',door='lift',floors={'L0':0.,'L1':3.}),
+        lift=dict(name='facility_lift',joint='lift_car',door='lift',floors={'L0':0.,'L1':3.},level_tolerance_m=.003),
         floor_maps=dict(L0='maps/fleet_facility/maps/map.yaml',L1='maps/fleet_facility/maps/map_L1.yaml'),
         docks={'west_charger':dict(x=-4.5,y=-3.,z=0.,yaw=0.,position_tolerance=.12,height_tolerance=.12,yaw_tolerance=.15)},
         energy=dict(capacity_J=180000.,initial_fraction=.8,hotel_W=3.,drive_efficiency=.75,charge_W=120.,effort_observation_verified=False,effort_sources={},

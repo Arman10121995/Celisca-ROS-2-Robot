@@ -412,6 +412,7 @@
         <i_gain>20</i_gain>
         <i_min>-8</i_min>
         <i_max>8</i_max>
+        <cmd_offset>0.0</cmd_offset>
         <cmd_min>-300.0</cmd_min>
         <cmd_max>300.0</cmd_max>
         <use_velocity_commands>false</use_velocity_commands>
@@ -463,6 +464,7 @@
         <i_gain>20</i_gain>
         <i_min>-8</i_min>
         <i_max>8</i_max>
+        <cmd_offset>0.0</cmd_offset>
         <cmd_min>-300.0</cmd_min>
         <cmd_max>300.0</cmd_max>
         <use_velocity_commands>false</use_velocity_commands>
@@ -560,8 +562,9 @@
         <p_gain>40000.0</p_gain>
         <d_gain>3000.0</d_gain>
         <i_gain>100</i_gain>
-        <i_min>-8</i_min>
-        <i_max>8</i_max>
+        <i_min>-800</i_min>
+        <i_max>800</i_max>
+        <cmd_offset>637.65</cmd_offset>
         <cmd_min>-1600.0</cmd_min>
         <cmd_max>1600.0</cmd_max>
         <use_velocity_commands>false</use_velocity_commands>

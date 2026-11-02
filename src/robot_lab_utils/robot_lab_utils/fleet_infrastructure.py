@@ -132,7 +132,7 @@ class Infrastructure(Node):
         if 2.8<=xyz[0]<=5.2 and -1.2<=xyz[1]<=1.2:
             lift=self.config['lift'];position=self.positions.get(lift['joint'])
             rate=self.rates.get(lift['joint'],math.inf)
-            if position is None or abs(rate)>=.01 or abs(position-floors[floor])>=.03:return
+            if position is None or abs(rate)>=.01 or abs(position-floors[floor])>=self.config['lift'].get('level_tolerance_m',.03):return
         self.energy[name]['floor']=floor
 
     def _request_robot_map(self,name,floor,now):
@@ -331,7 +331,7 @@ class Infrastructure(Node):
                     raise ValueError('Fresh independent body observation required')
                 if task.in_cabin(body['xyz']):
                     lift = self.config['lift']
-                    if abs(self.positions.get(lift['joint'], -1000.) - lift['floors'][task.origin]) >= .03 or abs(self.rates.get(lift['joint'], math.inf)) >= .01:
+                    if abs(self.positions.get(lift['joint'], -1000.) - lift['floors'][task.origin]) >= lift.get('level_tolerance_m', .03) or abs(self.rates.get(lift['joint'], math.inf)) >= .01:
                         raise ValueError('Settle the occupied lift at a floor before a new transport')
                 if any(peer != name and task.in_cabin(body['xyz']) for peer, body in self.bodies.items()):
                     raise ValueError('Another physical robot occupies the car')
@@ -369,8 +369,8 @@ class Infrastructure(Node):
                 if name=='main':
                     needed |= any(now-at<1. and any(abs(x)<1.5 and abs(y)<1. for x,y in points) for points,at in self.paths.values())
                 if name==lift['door'] and self.lift_request:
-                    floor,opened=self.lift_request;needed=opened and abs(lift_position-lift['floors'][floor])<.03 and abs(self.rates.get(lift['joint'],math.inf))<.01
-                if name==lift['door'] and not any(abs(lift_position-z)<.03 for z in lift['floors'].values()):needed=False
+                    floor,opened=self.lift_request;needed=opened and abs(lift_position-lift['floors'][floor])<lift.get('level_tolerance_m',.03) and abs(self.rates.get(lift['joint'],math.inf))<.01
+                if name==lift['door'] and not any(abs(lift_position-z)<lift.get('level_tolerance_m',.03) for z in lift['floors'].values()):needed=False
                 position=self.positions[door['joint']];target=door['opened'] if needed else door['closed']
                 blocked=not needed and not self.safe_sweep(door)
                 if blocked:target=position
@@ -385,7 +385,7 @@ class Infrastructure(Node):
             target=lift_position
             if self.lift_request and now-self.lift_at<5:
                 floor,_=self.lift_request
-                if door_rows[lift['door']]['mode']==0 or abs(lift_position-lift['floors'][floor])<.03:target=lift['floors'][floor]
+                if door_rows[lift['door']]['mode']==0 or abs(lift_position-lift['floors'][floor])<lift.get('level_tolerance_m',.03):target=lift['floors'][floor]
             previous=self.outputs.get(lift['joint'],lift_position)
             if not self.hold:self.outputs[lift['joint']]=max(previous-.02,min(previous+.02,target))
             for joint,value in self.outputs.items():self.targets[joint].publish(Float64(data=float(value)))
@@ -408,7 +408,7 @@ class Infrastructure(Node):
             rate=self.rates.get(lift['joint']);msg.door_state=door_rows.get(lift['door'],{}).get('mode',1)
             msg.motion_state=3 if rate is None or not fresh else 0 if abs(rate)<.01 else 1 if rate>0 else 2
             msg.current_mode=2 if fresh else 4;msg.available_modes=[2];msg.session_id=self.lift_owner;self.lift_state.publish(msg)
-        moving=(lift_position is not None and (not current_floor or self.lift_request and abs(lift_position-lift['floors'][self.lift_request[0]])>.03))
+        moving=(lift_position is not None and (not current_floor or self.lift_request and abs(lift_position-lift['floors'][self.lift_request[0]])>lift.get('level_tolerance_m',.03)))
         held=[name for name,b in self.bodies.items() if moving and 2.8<=b['xyz'][0]<=5.2 and -1.2<=b['xyz'][1]<=1.2]
         floors={name:self.energy[name]['floor'] for name in self.energy}
         for name,floor in floors.items():

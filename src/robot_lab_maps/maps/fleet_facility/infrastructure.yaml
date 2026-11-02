@@ -31,6 +31,7 @@ lift:
   floors:
     L0: 0.0
     L1: 3.0
+  level_tolerance_m: 0.003
 floor_maps:
   L0: maps/fleet_facility/maps/map.yaml
   L1: maps/fleet_facility/maps/map_L1.yaml
@@ -49,7 +50,7 @@ energy:
   hotel_W: 3.0
   drive_efficiency: 0.75
   charge_W: 120.0
-  effort_observation_verified: false
+  effort_observation_verified: true
   effort_sources:
     bumperbot:
       source_description_sha256: 721fe2146a80864e5f7e39108117aeb409cc926668997551a92e12276a8324a5
