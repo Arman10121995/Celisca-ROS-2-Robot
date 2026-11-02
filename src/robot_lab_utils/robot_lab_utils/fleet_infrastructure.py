@@ -26,7 +26,7 @@ from geometry_msgs.msg import TransformStamped
 from rosgraph_msgs.msg import Clock as ClockMessage
 import yaml
 import tf2_ros
-from nav2_msgs.srv import LoadMap
+from nav2_msgs.srv import LoadMap, ClearEntireCostmap
 
 
 class Infrastructure(Node):
@@ -49,6 +49,7 @@ class Infrastructure(Node):
             verified = qualified_source(member, certificate)
             self.energy_models[member['id']] = EnergyEstimate(self.config['energy'], joints, verified)
         self.transports = {}
+        self.last_rejection = ''
         self.floor_offsets={}
         self.floor_maps=session.get('floor_maps',self.config.get('floor_maps',{}));self.current_floor_map=''
         self.tf_broadcaster=tf2_ros.TransformBroadcaster(self)
@@ -69,6 +70,9 @@ class Infrastructure(Node):
         self.active_robot_maps={m['id']:m.get('map_yaml','') for m in session['members']}
         self.map_clients={m['id']:self.create_client(LoadMap,'/'+m['id']+'/map_server/load_map')
                           for m in session['members'] if session.get('navigation') and m.get('floor_maps')}
+        self.map_clear_clients = {name: {kind: self.create_client(ClearEntireCostmap, '/' + name + '/' + kind + '_costmap/clear_entirely_' + kind + '_costmap') for kind in ('global', 'local')} for name in self.map_clients}
+        self.map_clear_wait = {}
+        self.map_clear_futures = {}
         self.map_futures={};self.map_transitions=set();self.map_errors={};self.map_status={};self.map_attempt_at={}
         self.rmf=False
         try:
@@ -134,6 +138,10 @@ class Infrastructure(Node):
     def _request_robot_map(self,name,floor,now):
         target=self.robot_floor_maps.get(name,{}).get(floor,'')
         if not target or name not in self.map_clients:return
+        if name in self.map_errors:return
+        if name in self.map_clear_wait:
+            self._clear_costmaps(name)
+            return
         if self.active_robot_maps.get(name)==target:
             self.map_transitions.discard(name);self.map_errors.pop(name,None);self.map_status[name]='ready'
             return
@@ -163,9 +171,34 @@ class Infrastructure(Node):
             self.map_status[name]='failed'
             return
         self.active_robot_maps[name]=path
-        self.map_status[name]='ready'
+        self.map_status[name]='clearing old-floor costmaps'
         self.map_errors.pop(name,None)
-        self.map_transitions.discard(name)
+        self.map_clear_wait[name] = {'global', 'local'}
+
+    def _clear_costmaps(self, name):
+        for kind in tuple(self.map_clear_wait[name]):
+            key = (name, kind)
+            client = self.map_clear_clients[name][kind]
+            if key in self.map_clear_futures or not client.service_is_ready():
+                continue
+            future = client.call_async(ClearEntireCostmap.Request())
+            self.map_clear_futures[key] = future
+            future.add_done_callback(lambda done,n=name,k=kind:self._costmap_cleared(n,k,done))
+
+    def _costmap_cleared(self, name, kind, future):
+        self.map_clear_futures.pop((name, kind), None)
+        try:
+            future.result()
+        except Exception as error:
+            self.map_errors[name] = 'Floor costmap reset failed: ' + str(error)
+            self.map_status[name] = 'failed'
+            return
+        self.map_clear_wait[name].discard(kind)
+        if not self.map_clear_wait[name]:
+            self.map_clear_wait.pop(name)
+            # The next tick releases only when the loaded map still matches
+            # this robot's observed floor. An older callback cannot release it.
+            self.map_status[name] = 'costmaps reset; checking observed floor'
 
     def path(self,name,msg):self.paths[name]=([(p.pose.position.x,p.pose.position.y) for p in msg.poses],time.monotonic())
 
@@ -279,6 +312,7 @@ class Infrastructure(Node):
             if not self.runtime or time.monotonic()-self.runtime_at>1 or data.get('session_id')!=self.identity:return
             if data.get('operator_id')!=self.runtime['operator_id'] or not self.runtime.get('operator_fresh'):return
             op=data['op']
+            self.last_rejection = ''
             if op=='door' and data['door'] in self.doors:
                 if type(data['open']) is not bool:return
                 self.doors[data['door']]=data['open'] is True;self.hold=False
@@ -289,9 +323,16 @@ class Infrastructure(Node):
                 if any(task.active for task in self.transports.values()):
                     raise ValueError('The physical lift is already reserved')
                 row = next((item for item in self.runtime['members'] if item['id'] == name), {})
-                if not row.get('navigation_ready') or row.get('mode') != 'idle' or row.get('queued'):
+                if not row.get('navigation_ready') or not row.get('included') or row.get('mode') != 'idle' or row.get('queued'):
                     raise ValueError('Stop active control and wait for fresh idle Nav2 before transport')
                 task = LiftTransport(name, data['operator_id'], self.energy[name]['floor'], destination, self.config['transport'], time.monotonic())
+                body = self.bodies.get(name)
+                if not body or time.monotonic() - body['at'] >= .6:
+                    raise ValueError('Fresh independent body observation required')
+                if task.in_cabin(body['xyz']):
+                    lift = self.config['lift']
+                    if abs(self.positions.get(lift['joint'], -1000.) - lift['floors'][task.origin]) >= .03 or abs(self.rates.get(lift['joint'], math.inf)) >= .01:
+                        raise ValueError('Settle the occupied lift at a floor before a new transport')
                 if any(peer != name and task.in_cabin(body['xyz']) for peer, body in self.bodies.items()):
                     raise ValueError('Another physical robot occupies the car')
                 if self.lift_owner and self.lift_owner != data['operator_id'] and time.monotonic() - self.lift_at < 5.:
@@ -314,6 +355,7 @@ class Infrastructure(Node):
                 command=dict(session_id=self.identity,operator_id=data['operator_id'],op='dispatch',targets=[name],x=target['x'],y=target['y'],yaw=target['yaw'],timeout=180.)
                 self.fleet_command.publish(String(data=json.dumps(command)))
         except (ValueError,KeyError,TypeError) as error:
+            self.last_rejection = str(error)
             self.get_logger().warning('Facility command rejected: '+str(error))
 
     def tick(self):
@@ -398,6 +440,7 @@ class Infrastructure(Node):
                docks=self.config['docks'],docking=self.docking,energy=energy,robot_floors=floors,
                transports={name: task.state() for name, task in self.transports.items()},
                reservations={name: task.prefix for name, task in self.transports.items() if task.active},
+               last_rejection=self.last_rejection,
                floor_z=floor_z,floor_maps=self.floor_maps,robot_floor_maps=robot_floor_maps,
                active_robot_maps=self.active_robot_maps,map_loading=sorted(self.map_transitions),
                    map_status=self.map_status,map_errors=self.map_errors,current_floor_map=self.current_floor_map,

@@ -20,7 +20,7 @@ class InfrastructureControls(ttk.Frame):
             ttk.Button(controls,text=label,command=lambda o=opened:self.send('door',door=self.door.get(),open=o)).pack(side='left',expand=True,fill='x')
         self.floors=ttk.Combobox(self,textvariable=self.floor,values=['L0','L1'],state='readonly');self.floors.grid(row=3,column=0,sticky='ew',pady=4)
         lift_controls=ttk.Frame(self);lift_controls.grid(row=4,column=0,sticky='ew')
-        ttk.Button(lift_controls,text='Request empty lift',command=lambda:self.send('lift',floor=self.floor.get())).pack(side='left',expand=True,fill='x')
+        ttk.Button(lift_controls,text='Request lift only',command=lambda:self.send('lift',floor=self.floor.get())).pack(side='left',expand=True,fill='x')
         ttk.Button(lift_controls,text='Transport selected robot',command=self.transport_member).pack(side='left',expand=True,fill='x')
         self.docks=ttk.Combobox(self,textvariable=self.dock,values=['west_charger'],state='readonly');self.docks.grid(row=5,column=0,sticky='ew',pady=4)
         ttk.Button(self,text='Navigate selected member to dock',command=self.dock_member).grid(row=6,column=0,sticky='ew')
@@ -39,7 +39,7 @@ class InfrastructureControls(ttk.Frame):
             value=json.loads(msg.data)
             if not self.fleet.runtime or value['session_id']!=self.fleet.runtime['session_id']:return
             self.runtime=value;self.at=time.monotonic();self.doors.configure(values=list(value['doors']));self.floors.configure(values=value['lift']['floors']);self.docks.configure(values=list(value['docks']))
-            self.status.set('Physical infrastructure ready' if value['ready'] else 'Infrastructure feedback stale; no arrival claim')
+            self.status.set('Facility request rejected: '+value['last_rejection'] if value.get('last_rejection') else 'Physical infrastructure ready' if value['ready'] else 'Infrastructure feedback stale; no arrival claim')
             lines=[f"Door {n}: {v['position_m']:.2f}/{v['command_m']:.2f} m, mode {v['mode']}"
                    for n,v in value['doors'].items()]
             lines.append(f"Lift: {value['lift']} (operator hold: {value.get('operator_hold', False)})")

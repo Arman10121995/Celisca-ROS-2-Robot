@@ -111,6 +111,12 @@ def _make_node(session):
     node.active_robot_maps = {'alpha': node.floor_maps['L0'], 'beta': node.floor_maps['L0']}
     node.map_clients = {}
     node.map_futures = {}
+    node.transports = {}
+    node.map_clear_clients = {}
+    node.map_clear_wait = {}
+    node.map_clear_futures = {}
+    node._clear_costmaps = lambda name: Infrastructure._clear_costmaps(node, name)
+    node._costmap_cleared = lambda name, kind, future: Infrastructure._costmap_cleared(node, name, kind, future)
     node.map_transitions = set()
     node.map_errors = {}
     node.map_status = {}
@@ -220,6 +226,16 @@ def test_floor_map_transition_holds_until_load_succeeds(tmp_path):
 
     client.future.callback(client.future)
     assert node.active_robot_maps['alpha'] == node.floor_maps['L1']
+    assert 'alpha' in node.map_transitions
+    node.map_clear_clients['alpha'] = {'global': Client(), 'local': Client()}
+    Infrastructure._request_robot_map(node, 'alpha', 'L1', 11.)
+    global_clear = node.map_clear_clients['alpha']['global'].future
+    local_clear = node.map_clear_clients['alpha']['local'].future
+    global_clear.callback(global_clear)
+    assert 'alpha' in node.map_transitions
+    local_clear.callback(local_clear)
+    assert 'alpha' in node.map_transitions
+    Infrastructure._request_robot_map(node, 'alpha', 'L1', 12.)
     assert 'alpha' not in node.map_transitions
 
 

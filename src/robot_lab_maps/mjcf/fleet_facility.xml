@@ -16,10 +16,17 @@
     <geom pos="0 -2.9 1.25" quat="1 0 0 0" rgba="0.55 0.57 0.6 1" type="box" size="0.075 2.1 1.25" />
     <geom pos="0 2.9 1.25" quat="1 0 0 0" rgba="0.55 0.57 0.6 1" type="box" size="0.075 2.1 1.25" />
     <geom pos="2 0 2.85" quat="1 0 0 0" rgba="0.55 0.57 0.6 1" type="box" size="1 1.5 0.15" />
-    <geom pos="0 0 1.1" quat="1 0 0 0" rgba="0.55 0.57 0.6 1" type="box" size="0.04 0.8 1.1" />
-    <geom pos="3 0 1.1" quat="1 0 0 0" rgba="0.55 0.57 0.6 1" type="box" size="0.04 1 1.1" />
+    <geom pos="1.04 0 4.1" quat="1 0 0 0" rgba="0.55 0.57 0.6 1" type="box" size="0.04 1 1.1" />
+    <geom pos="2 1 4.1" quat="1 0 0 0" rgba="0.55 0.57 0.6 1" type="box" size="1 0.04 1.1" />
+    <geom pos="2 -1 4.1" quat="1 0 0 0" rgba="0.55 0.57 0.6 1" type="box" size="1 0.04 1.1" />
+    <geom pos="0.16 0 1.1" quat="1 0 0 0" rgba="0.55 0.57 0.6 1" type="box" size="0.04 0.8 1.1" />
+    <geom pos="3.05 0 1.1" quat="1 0 0 0" rgba="0.55 0.57 0.6 1" type="box" size="0.04 0.85 1.1" />
     <geom pos="4 0 -0.05" quat="1 0 0 0" rgba="0.55 0.57 0.6 1" type="box" size="1 1 0.05" />
+    <geom pos="4.95 0 1.1" quat="1 0 0 0" rgba="0.55 0.57 0.6 1" type="box" size="0.04 1 1.1" />
+    <geom pos="4.1 0.95 1.1" quat="1 0 0 0" rgba="0.55 0.57 0.6 1" type="box" size="0.9 0.04 1.1" />
+    <geom pos="4.1 -0.95 1.1" quat="1 0 0 0" rgba="0.55 0.57 0.6 1" type="box" size="0.9 0.04 1.1" />
     <light diffuse="0.8 0.8 0.8" pos="0 0 10" dir="0 0 -1" castshadow="true" />
     <light diffuse="0.3 0.3 0.3" pos="0 -6 6" dir="0 1 -1" />
   </worldbody>
 </mujoco>
+

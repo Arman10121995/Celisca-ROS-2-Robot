@@ -79,6 +79,7 @@ FAST_TESTS=(
   "$BRG_TEST/test_mujoco_realtime_factor.py"
   "$BRG_TEST/test_nav_goals.py"
   "$BRG_TEST/test_fleet_energy.py"
+  "$BRG_TEST/test_fleet_transport.py"
   "$BRG_TEST/test_fleet_facility_graph.py"
   "$BRG_TEST/test_sdf_heightfield.py"
   "$BRG_TEST/test_wheel_navigation_contract.py"
