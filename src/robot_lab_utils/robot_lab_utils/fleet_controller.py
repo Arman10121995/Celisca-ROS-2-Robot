@@ -58,6 +58,10 @@ class Member:
     initial_pub: object = None
     mode: str = 'idle'
     reason: str = 'Waiting for measured feedback'
+    occupied: bool = False
+    occupied_at: float = -math.inf
+    recovery_initiator: str = ''
+    recovery_target: str = ''
     manual: tuple = (0., 0.)
     nav: tuple = (0., 0.)
     manual_at: float = -math.inf
@@ -561,6 +565,44 @@ class FleetController(Node):
         member.queue_paused = state != 'succeeded'
         if member.queue and not member.queue_paused:
             member.mode = 'waiting'
+
+    def _occupy_member(self, member_name, now):
+        """Mark a member as occupied at its current location."""
+        member = self.members[member_name]
+        member.occupied = True
+        member.occupied_at = now
+        member.recovery_initiator = ""
+        member.recovery_target = ""
+
+    def _unoccupy_member(self, member_name, now):
+        """Mark a member as no longer occupied."""
+        member = self.members[member_name]
+        member.occupied = False
+        member.occupied_at = -math.inf
+        member.recovery_initiator = ""
+        member.recovery_target = ""
+
+    def _initiate_recovery(self, recovery_initiator, recovery_target, now):
+        """Another member initiates recovery of an occupied member."""
+        initiator = self.members[recovery_initiator]
+        target = self.members[recovery_target]
+        target.occupied = True
+        target.occupied_at = now
+        target.recovery_initiator = recovery_initiator
+        target.recovery_target = recovery_target
+        initiator.mode = "navigation"
+        initiator.reason = "Recovering occupied member"
+
+    def _complete_recovery(self, member_name, now):
+        """Complete recovery of an occupied member."""
+        member = self.members[member_name]
+        member.occupied = False
+        member.occupied_at = -math.inf
+        member.recovery_initiator = ""
+        member.recovery_target = ""
+        member.mode = "idle"
+        member.reason = "Recovery completed"
+
 
     def _stop_member(self, member, reason, clear_queue=True, preserve_active=False):
         if clear_queue:
