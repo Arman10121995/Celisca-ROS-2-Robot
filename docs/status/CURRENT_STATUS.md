@@ -21,6 +21,18 @@ Latest November 2: [automatic native fleet lift transport](evidence/automatic-fl
 **Current checkpoint: November 3, 2026; master, curves/terrain/concurrency continuation from `43473387`.
 Platform and full extension partial.**
 
+**Isaac terrain campaign — in progress:** the Isaac Sim spawner now publishes
+the `/gait/state` ROS contract that the benches and GUI subscribe to, so the
+Isaac gait-terrain trials (gait-isaac-1..7) no longer time out in `waiting`
+phase with `deadline`. The state message carries `ready`, `operator_id`,
+`sim_time`, `support_fraction`, `position`, `tilt_rad`, `enabled`,
+`terrain_observation` and `actual_contacts`. Runtime test suite green;
+rebuild of `robot_lab_isaac` succeeds. [Related commit `0b7e4e80`.]
+
+Isaac terrain campaign continues: the Isaac backend must now deliver the
+ready/operator/sim-time/support_fraction state so the terrain probe can arm
+and walk.
+
 [Current workflow delivery and limits](workflows-2026-10-27.md),
 [actual receipts](evidence/workflows-2026-10-27/README.md),
 [remaining-work guide](../REMAINING_WORK_GUIDE.md).
