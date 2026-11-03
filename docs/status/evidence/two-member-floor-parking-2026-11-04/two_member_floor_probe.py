@@ -54,6 +54,32 @@ started = time.monotonic()
 last_trace = 0.0
 sent, passed, reason = False, False, 'deadline'
 landings = []
+root = OUT / 'two_member_floor'
+root.mkdir(exist_ok=True)
+plant_log = (root / 'plant.log').open('w')
+plant = subprocess.Popen(['ros2', 'launch', 'robot_lab_bringup',
+    'shared_world.launch.py', f'session:={ROOT / "session.yaml"}',
+    f'ros_domain_id:={DOMAIN}', f'partition:={PARTITION}',
+    'gui:=false', 'rviz:=false', 'navigation:=true'],
+    stdout=plant_log, stderr=subprocess.STDOUT, start_new_session=True, cwd=root)
+rclpy.init()
+node = rclpy.create_node('two_member_floor_probe')
+fleet, facility = {}, {}
+node.create_subscription(String, '/fleet/state', lambda msg: fleet.update(json.loads(msg.data)), 10)
+node.create_subscription(String, '/fleet/infrastructure/state',
+    lambda msg: facility.update(json.loads(msg.data)), 10)
+heartbeat = node.create_publisher(String, '/fleet/operator_heartbeat', 10)
+command = node.create_publisher(String, '/fleet/infrastructure/command', 10)
+stop = node.create_publisher(String, '/fleet/command', 10)
+trace = (root / 'trace.jsonl').open('w', buffering=1)
+started = time.monotonic()
+last_trace = 0.0
+sent, passed, reason = False, False, 'deadline'
+landings = []
+alpha = fleet.get('members', {}).get('alpha', {})
+beta = fleet.get('members', {}).get('beta', {})
+
+
 try:
     while time.monotonic() - started < 480.:
         rclpy.spin_once(node, timeout_sec=.03)
