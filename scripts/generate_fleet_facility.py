@@ -102,7 +102,7 @@ def generate():
     target=ROOT/'src/robot_lab_maps/maps/fleet_facility';write(doc,target/'worlds/fleet_facility.world')
     config=dict(schema_version=1,doors={'main':dict(joint='door_main',closed=0.,opened=1.8,sweep=[-.5,.5,-1.1,3.1],approach=[[-1.2,0.],[1.2,0.]]),
         'lift':dict(joint='door_lift',closed=0.,opened=2.15,sweep=[2.6,3.4,-1.3,3.5],z_joint='lift_car')},
-        lift=dict(name='facility_lift',joint='lift_car',door='lift',floors={'L0':0.,'L1':3.},level_tolerance_m=.0001),
+        lift=dict(name='facility_lift',joint='lift_car',door='lift',floors={'L0':0.,'L1':3.},level_tolerance_m=.003,door_admission_tolerance_m=.0001),
         floor_maps=dict(L0='maps/fleet_facility/maps/map.yaml',L1='maps/fleet_facility/maps/map_L1.yaml'),
         docks={'west_charger':dict(x=-4.5,y=-3.,z=0.,yaw=0.,position_tolerance=.12,height_tolerance=.12,yaw_tolerance=.15)},
         energy=dict(capacity_J=180000.,initial_fraction=.8,hotel_W=3.,drive_efficiency=.75,charge_W=120.,effort_observation_verified=False,effort_sources={},

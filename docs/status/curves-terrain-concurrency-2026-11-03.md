@@ -61,8 +61,10 @@ claim boundary. [Receipt, failures and reproduction](evidence/curves-terrain-con
    without the body. Preserve that rejected result and the unchanged
    independent arrival gate. Subsequent bevel trials failed and were withdrawn;
    the original flat deck is restored. The authored force PID now settles the
-   residual with integral gain 1000, and doors/floor admission require 0.1 mm
-   alignment. The original force/speed limits remain. A physical repeat is
+   residual with integral gain 1000. Initial door admission requires 0.1 mm
+   alignment; the original 3 mm continuous tracking bound remains during
+   loading. Panels have 10 mm lower clearance. The original force/speed
+   limits remain. A physical repeat is
    required before accepting the full wave.
 2. Record hexapod and centipede travel/reverse/turn/Stop/loss/reset and actual
    terrain/higher-mode missions on each backend candidate. Source tests and

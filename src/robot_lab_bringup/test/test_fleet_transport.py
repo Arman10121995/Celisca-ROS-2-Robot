@@ -4,11 +4,30 @@ import sys
 
 ROOT = Path(__file__).resolve().parents[3]
 sys.path.insert(0, str(ROOT / 'src/robot_lab_utils'))
-from robot_lab_utils.fleet_transport import LiftTransport
+from robot_lab_utils.fleet_transport import LiftTransport,lift_door_admission,door_position_mode
 
 CONFIG = dict(boarding=dict(x=3.65, y=0., yaw=0.),
               landings=dict(L0=dict(x=2.3, y=0., yaw=0.), L1=dict(x=2.2, y=0., yaw=0.)),
               cabin=[3.4, 4.6, -.6, .6])
+
+
+def test_precise_opening_survives_small_loading_compliance_but_not_motion_or_a_new_floor():
+    gate=lambda position,rate=0.,floor='L1',height=3.,admitted=None:lift_door_admission(position,rate,floor,height,admitted,.0001,.003)
+    assert gate(3.002)==(None,False)  # No initial 2 mm sill admission.
+    admitted,allowed=gate(3.00005)
+    assert allowed and admitted=='L1'
+    assert gate(2.9994,admitted=admitted)==('L1',True)  # Actual payload compliance.
+    assert gate(2.996,admitted=admitted)==(None,False)
+    assert gate(3.,rate=.02,admitted=admitted)==(None,False)
+    assert gate(3.,floor='L0',height=0.,admitted=admitted)==(None,False)
+    assert gate(3.002)==(None,False)  # A lost admission cannot silently return.
+
+
+def test_clear_door_beyond_open_target_is_still_open_in_both_directions():
+    assert door_position_mode(2.2,0.,2.15)==2
+    assert door_position_mode(-2.2,0.,-2.15)==2
+    assert door_position_mode(1.,0.,2.15)==1
+    assert door_position_mode(0.,0.,2.15)==0
 
 
 def context(task, xyz=(2.3, 0., 0.), clock=1.):

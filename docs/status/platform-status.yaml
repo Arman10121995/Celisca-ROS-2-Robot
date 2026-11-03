@@ -345,7 +345,7 @@ auv_terrain_fleet_20261102:
   - Other robot, terrain, higher-mode, loss and reset cases; further AUV obstacle/current/saved-map routes.
   - Occupied recovery, aerial itinerary flight and remaining original roadmap acceptance.
   software_checks: 84 reconciled source and physics contracts; 29 native GUI/resolver/architecture checks; complete unsourced fast tier 1177 passed, 46 skipped, 4 deselected. These checks do not qualify additional physical missions.
-  fleet_followup: Trial 5 completed alpha L1 parking and gamma arrival but failed beta boarding against the independent body gate. Bevel trials 6-8 failed and were withdrawn; the flat source deck is restored. Native force PID integral settling and a stricter 0.1 mm floor/door threshold retain physical limits. Trial 9 exposed a floor-rubbing panel; 10 mm lower clearance retains the upper edge and limits. Trial 10 has actually boarded and lifted Labbot; the full wave is still in progress.
+  fleet_followup: Bevel trials were withdrawn and the flat deck restored. Native integral settling, 10 mm panel clearance and 0.1 mm initial door admission retain physical limits. Trial 10 completed three parked endpoints but interrupted the fourth during loading. The final two-stage gate restores the original 3 mm continuous tracking bound and recognizes fully cleared door overshoot; 42 focused checks pass and trial 11 is in progress.
   remaining_acceptance: [per_model_backend_terrain_higher_mode_loss_reset_matrix, multi_member_floor_parking_campaign, further_AUV_curve_saved_map_obstacle_current_loss_cases, occupied_recovery_and_aerial_route_flight, original_roadmap_and_release]
 workflow_continuation_20261102:
   owner: codex

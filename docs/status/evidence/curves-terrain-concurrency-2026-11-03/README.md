@@ -98,6 +98,18 @@ their recorded hashes. Do not transfer a named case to changed source.
   2.2 m upper edge, link mass/inertia and actuator limits. The candidate has
   36 passing facility contracts; the subsequent actual trial has boarded and
   lifted Labbot, with the full four-stop result still separate.
+- Trial 10 completed both L1 parking legs and alpha's parked L0 return, but
+  failed the final Labbot boarding. Loading depressed the car about 0.6 mm;
+  applying the new 0.1 mm threshold to continuous floor/scan tracking paused
+  localization and correctly canceled the dependent mission. The final
+  implementation separates **initial door admission** (0.1 mm) from the
+  **original continuous floor/load tracking** bound (3 mm). Admission clears
+  on stale/held/requestless state, a different requested floor, car movement
+  or tracking-bound loss. Live sensor/lease/Stop guards are unchanged.
+  Door mode also recognizes a panel beyond its required open target as open,
+  instead of calling the fully cleared 2.2 m position "moving" relative to a
+  2.15 m target. The new gate/state regressions and facility contracts report
+  **42 passed**; the next full physical repeat remains a separate result.
 - Terrain: early Bullet rays intersected the robot and failed initial
   support. Robot-excluding ray filters retain actual world collisions.
   Sparse virtual frames had Bullet's implicit 1 kg masses; source mass is

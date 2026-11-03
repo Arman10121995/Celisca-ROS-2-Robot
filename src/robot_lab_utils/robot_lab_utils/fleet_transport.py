@@ -6,6 +6,26 @@ import uuid
 TERMINAL = {'succeeded', 'failed', 'canceled'}
 
 
+def lift_door_admission(position, rate, floor, height, admitted, precision, tracking):
+    """Require precise initial leveling; retain original load-tracking bounds."""
+    if not all(math.isfinite(v) for v in (precision,tracking)) or not 0<precision<=tracking:
+        raise ValueError('Door admission tolerance must be positive and within floor tracking tolerance')
+    if position is None or not math.isfinite(position) or not math.isfinite(rate) or abs(rate)>=.01:
+        return None,False
+    error=abs(position-height)
+    if error>=tracking:return None,False
+    if admitted==floor or error<precision:return floor,True
+    return None,False
+
+
+def door_position_mode(position, closed, opened, tolerance=.04):
+    # A panel beyond the required opening still clears the passage. It must
+    # not become "moving" solely because a bounded servo overshot the target.
+    direction=1. if opened>closed else -1.
+    if direction*(position-opened)>=-tolerance:return 2
+    return 0 if abs(position-closed)<tolerance else 1
+
+
 class LiftTransport:
     def __init__(self, robot, operator, origin, destination, config, now, parking=None):
         if origin == destination or origin not in config['landings'] or destination not in config['landings']:

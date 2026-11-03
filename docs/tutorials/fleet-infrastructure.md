@@ -133,15 +133,19 @@ target only on explicit Stop/loss.
 
 Reproduce source assets with `scripts/generate_fleet_facility.py`; it preserves
 source certificates, whose runtime/source hashes are checked on every session.
-The original flat 2 × 2 m moving deck is retained. Door/floor admission now
-requires 0.1 mm actual alignment instead of 3 mm; the authored force PID's
-integral term settles the residual after a ride. Mass, force, speed and joint
+The original flat 2 × 2 m moving deck is retained. Initial door admission now
+requires 0.1 mm actual alignment; the authored force PID's integral term
+settles the residual after a ride. Once admitted, the original 3 mm continuous
+floor/load tracking bound handles small payload compliance without pausing
+localization. Motion, floor changes, loss or Stop clear the admission. Mass, force, speed and joint
 limits are retained. Failed bevel candidates were withdrawn. Wheel odometry
 and a Nav2 success still require independent settled body arrival; see the retained Labbot boarding failure in the
 [November 3 receipt](../status/evidence/curves-terrain-concurrency-2026-11-03/README.md).
 Panels have a 10 mm lower clearance so they slide across adjacent floors
 without rubbing; their upper edges, link mass/inertia and actuator limits
 are retained. Physical open-door feedback remains required before boarding.
+A panel beyond its open target remains physically open; actuator upper limits
+and the existing minimum clear-opening threshold still apply.
 Other backends currently have static facility geometry, with moving fixture
 adapters pending. See [current continuation and limits](../status/fleet-continuation-2026-11-02.md)
 and [the earlier floor ride](../status/evidence/fleet-floor-map-transition-2026-11-02/README.md).

@@ -284,7 +284,8 @@ def test_lift_door_panel_clears_platform_and_car_walls():
 def test_lift_requires_small_caster_leveling_without_more_force_or_speed():
     directory = ROOT / 'src/robot_lab_maps/maps/fleet_facility'
     config = yaml.safe_load((directory / 'infrastructure.yaml').read_text())
-    assert config['lift']['level_tolerance_m'] <= .0001
+    assert config['lift']['door_admission_tolerance_m'] <= .0001
+    assert config['lift']['level_tolerance_m'] == .003
     root = ET.parse(directory / 'worlds/fleet_facility.world').getroot()
     platform = root.find(".//link[@name='lift_platform']")
     assert platform.findtext('collision/geometry/box/size') == '2 2 0.1'
@@ -296,15 +297,6 @@ def test_lift_requires_small_caster_leveling_without_more_force_or_speed():
     assert float(controller.findtext('p_gain')) == 40000.
     assert float(controller.findtext('d_gain')) == 3000.
     assert float(controller.findtext('cmd_max')) == 1600.
-    node = SimpleNamespace(config=config, floor_offsets={'alpha': 0.},
-        energy={'alpha': {'floor': 'L0'}}, positions={'lift_car': 3.002}, rates={'lift_car': 0.})
-    # Passenger height alone must not authorize a floor/map transition while
-    # the physical deck remains a caster-blocking 2 mm above the landing.
-    Infrastructure._observe_robot_floor(node, 'alpha', [3.65, 0., 3.])
-    assert node.energy['alpha']['floor'] == 'L0'
-    node.positions['lift_car'] = 3.00005
-    Infrastructure._observe_robot_floor(node, 'alpha', [3.65, 0., 3.])
-    assert node.energy['alpha']['floor'] == 'L1'
 
 
 def test_sliding_panels_clear_floor_without_changing_the_upper_edge():

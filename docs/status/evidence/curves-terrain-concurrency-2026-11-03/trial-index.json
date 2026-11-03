@@ -511,5 +511,83 @@
       }
     ],
     "diagnostic_stop": "Car level at L0; car panel stuck at y=0.153 against 2.15 m command at the neighboring floor edge. Explicit owned-probe Stop; no full-wave pass."
+  },
+  "fleet-concurrent-10": {
+    "passed": false,
+    "reason": "RuntimeError: Transport failed: [{'id': '43654b19235a42db85b7330691425ddf', 'robot': 'alpha', 'floor': 'L1', 'operator_id': 'concurrent-probe', 'enqueued_at': 14042.702623582, 'phase': 'succeeded', 'reason': 'Actual approach, boarding, floor/map change and settled exit observed', 'parking': 'auto', 'parking_goal': {'x': 1.55, 'y': -0.55, 'yaw': 0.0}}, {'id': '8c0d9e682f59419da1d7443c66841911', 'robot': 'beta', 'floor': 'L1', 'operator_id': 'concurrent-probe', 'enqueued_at': 14042.702623582, 'phase': 'succeeded', 'reason': 'Actual approach, boarding, floor/map change and settled exit observed', 'parking': 'auto', 'parking_goal': {'x': 1.55, 'y': 0.55, 'yaw': 0.0}}, {'id': '63ff8a270bca47b396b6b9e500857a3c', 'robot': 'alpha', 'floor': 'L0', 'operator_id': 'concurrent-probe', 'enqueued_at': 14042.702623582, 'phase': 'succeeded', 'reason': 'Actual approach, boarding, floor/map change and settled exit observed', 'parking': 'auto', 'parking_goal': {'x': 1.5, 'y': -2.5, 'yaw': 0.0}}, {'id': '462fa72c73cf4765aa6534ad4fddef2e', 'robot': 'beta', 'floor': 'L0', 'operator_id': 'concurrent-probe', 'enqueued_at': 14042.702623582, 'phase': 'failed', 'reason': 'Owned transport Nav2 task failed/canceled', 'parking': 'auto', 'parking_goal': {'x': 1.5, 'y': 2.5, 'yaw': 0.0}}]",
+    "phase": "running",
+    "wall_seconds": 741.0438747370008,
+    "overlap_s": 34.149984404999486,
+    "landings": [
+      {
+        "robot": "alpha",
+        "floor": "L1",
+        "parking_goal": {
+          "x": 1.55,
+          "y": -0.55,
+          "yaw": 0.0
+        },
+        "body": {
+          "x": 1.5779009573451852,
+          "y": -0.5356494665630379,
+          "z": 3.000001812078251,
+          "yaw": -0.006813206763454651,
+          "linear": 0.0,
+          "angular": 0.0,
+          "velocity_source": "finite difference of measured stamped Gazebo poses",
+          "source_reported_twist": {
+            "linear": 0.0,
+            "angular": 0.0
+          }
+        },
+        "map": "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_maps/share/robot_lab_maps/maps/fleet_facility/maps/map_L1.yaml"
+      },
+      {
+        "robot": "beta",
+        "floor": "L1",
+        "parking_goal": {
+          "x": 1.55,
+          "y": 0.55,
+          "yaw": 0.0
+        },
+        "body": {
+          "x": 1.5809411421718147,
+          "y": 0.5296891588126807,
+          "z": 2.999999983803292,
+          "yaw": 0.08276128851458457,
+          "linear": 0.0,
+          "angular": 0.0,
+          "velocity_source": "finite difference of measured stamped Gazebo poses",
+          "source_reported_twist": {
+            "linear": 0.0,
+            "angular": 0.0
+          }
+        },
+        "map": "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_maps/share/robot_lab_maps/maps/fleet_facility/maps/map_L1.yaml"
+      },
+      {
+        "robot": "alpha",
+        "floor": "L0",
+        "parking_goal": {
+          "x": 1.5,
+          "y": -2.5,
+          "yaw": 0.0
+        },
+        "body": {
+          "x": 1.5509720439280945,
+          "y": -2.4619021116991107,
+          "z": 1.8120782367111644e-06,
+          "yaw": 0.00364676218959405,
+          "linear": 0.0,
+          "angular": 0.0,
+          "velocity_source": "finite difference of measured stamped Gazebo poses",
+          "source_reported_twist": {
+            "linear": 0.0,
+            "angular": 0.0
+          }
+        },
+        "map": "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_maps/share/robot_lab_maps/maps/fleet_facility/maps/map.yaml"
+      }
+    ]
   }
 }

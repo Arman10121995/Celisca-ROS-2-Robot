@@ -13,7 +13,7 @@ import uuid
 import xml.etree.ElementTree as ET
 
 from robot_lab_utils.fleet_energy import EnergyEstimate, qualified_source
-from robot_lab_utils.fleet_transport import LiftTransport
+from robot_lab_utils.fleet_transport import LiftTransport,lift_door_admission,door_position_mode
 from robot_lab_utils.fleet_transport_queue import TransportQueue
 from robot_lab_utils.fleet_lift_recovery import recovery_passengers
 import rclpy
@@ -40,6 +40,7 @@ class Infrastructure(Node):
         self.runtime=None;self.runtime_at=-math.inf;self.bodies={};self.paths={};self.docking={};self.events=[]
         self.doors={name:False for name in self.config['doors']};self.outputs={};self.floor='L0';self.lift_request=None;self.lift_owner='';self.lift_at=-math.inf
         self.hold=False;self.lift_gui=False;self.door_owners={name:set() for name in self.doors}
+        self.lift_open_floor=None
         self.energy = {m['id']: dict(floor='L0') for m in session['members']}
         self.energy_models = {}
         sources = self.config['energy'].get('effort_sources', {})
@@ -651,6 +652,14 @@ class Infrastructure(Node):
             self.outputs={joint:self.positions[joint] for joint in self.targets if joint in self.positions}
         if self.lift_gui and self.runtime and self.runtime.get('operator_id')==self.lift_owner and self.runtime.get('operator_fresh') and now-self.runtime_at<1:self.lift_at=now
         lift=self.config['lift'];lift_position=self.positions.get(lift['joint']);door_rows={}
+        level_open=False
+        if fresh and self.lift_request and not self.hold:
+            requested=self.lift_request[0]
+            tracking=float(lift.get('level_tolerance_m',.03))
+            self.lift_open_floor,level_open=lift_door_admission(lift_position,
+                self.rates.get(lift['joint'],math.inf),requested,lift['floors'][requested],
+                getattr(self,'lift_open_floor',None),float(lift.get('door_admission_tolerance_m',tracking)),tracking)
+        else:self.lift_open_floor=None
         if fresh:
             for name,door in self.config['doors'].items():
                 needed=self.doors[name] or bool(self.door_owners[name])
@@ -658,19 +667,18 @@ class Infrastructure(Node):
                 if name=='main':
                     needed |= any(now-at<1. and any(abs(x)<1.5 and abs(y)<1. for x,y in points) for points,at in self.paths.values())
                 if name==lift['door'] and self.lift_request:
-                    floor,opened=self.lift_request;needed=opened and abs(lift_position-lift['floors'][floor])<lift.get('level_tolerance_m',.03) and abs(self.rates.get(lift['joint'],math.inf))<.01
+                    floor,opened=self.lift_request;needed=opened and level_open
                 if name==lift['door'] and not any(abs(lift_position-z)<lift.get('level_tolerance_m',.03) for z in lift['floors'].values()):needed=False
                 if door.get('landing_floor'):
                     level=door['landing_floor']
                     needed=bool(self.lift_request and self.lift_request[0]==level and self.lift_request[1]
-                        and abs(lift_position-lift['floors'][level])<lift.get('level_tolerance_m',.03)
-                        and abs(self.rates.get(lift['joint'],math.inf))<.01)
+                        and level_open)
                 position=self.positions[door['joint']];target=door['opened'] if needed else door['closed']
                 blocked=not needed and not self.safe_sweep(door)
                 if blocked:target=position
                 previous=self.outputs.get(door['joint'],position)
                 if not self.hold:self.outputs[door['joint']]=position if blocked else max(previous-.025,min(previous+.025,target))
-                mode=2 if abs(position-door['opened'])<.04 else 0 if abs(position)<.04 else 1
+                mode=door_position_mode(position,door['closed'],door['opened'])
                 door_rows[name]=dict(position_m=position,command_m=self.outputs.get(door['joint'],position),
                                       target_m=target,mode=mode,sweep_blocked=blocked)
                 if self.rmf:
@@ -739,7 +747,8 @@ class Infrastructure(Node):
                    fleet=now-self.runtime_at if math.isfinite(self.runtime_at) else None,
                    bodies={name:now-body['at'] for name,body in self.bodies.items()}),
                    lift=dict(position_m=lift_position,command_m=self.outputs.get(lift['joint'],lift_position),
-                             current_floor=current_floor,destination=self.lift_request,floors=list(lift['floors'])),
+                             current_floor=current_floor,destination=self.lift_request,floors=list(lift['floors']),
+                             door_admitted_floor=self.lift_open_floor),
                docks=self.config['docks'],docking=self.docking,energy=energy,robot_floors=floors,
                transports={name: task.state() for name, task in self.transports.items()},
                reservations=reservations, transport_queue=self.transport_queue.state(), lift_recovery=self.recovery,
