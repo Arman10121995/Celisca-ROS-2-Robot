@@ -774,6 +774,8 @@ class _StdinReader(threading.Thread):
         self.targets_received_at = -float('inf')
         self.stop = False
         self.reset_requested = False
+        self.enabled = False
+        self.terrain_enabled = False
 
     def run(self):
         try:
@@ -794,9 +796,24 @@ class _StdinReader(threading.Thread):
                     # Sent by the spawner's /robot_lab/reset service, which
                     # used to report success while this reader ignored it.
                     self.reset_requested = True
+                    self.enabled = False
+                    self.terrain_enabled = False
                 elif msg.get("cmd") == "shutdown":
                     self.stop = True
                     return
+                elif msg.get("op") == "terrain":
+                    # Terrain mode is a bounded low-relief walk; the terrain
+                    # observation and support_fraction gates come from the
+                    # Isaac observation pipeline, not from the runtime itself.
+                    self.terrain_enabled = bool(msg.get("enabled", True))
+                    if not self.terrain_enabled:
+                        self.enabled = False
+                elif msg.get("op") == "arm":
+                    self.enabled = True
+                    self.terrain_enabled = bool(msg.get("terrain_enabled", self.terrain_enabled))
+                elif isinstance(msg.get("op"), str) and not msg["op"]:
+                    # Ignore empty/no-op commands.
+                    continue
         except Exception:
             pass
         self.stop = True
@@ -1607,7 +1624,9 @@ def _run_stage(app, reader, cfg, state):
                 jvel = [0.0] * len(dof_names)
 
         _emit({"event": "state", "t": t, "pos": pos, "orn": orn,
-               "lin": lin, "ang": ang, "jpos": jpos, "jvel": jvel})
+               "lin": lin, "ang": ang, "jpos": jpos, "jvel": jvel,
+               "enabled": reader.enabled if reader else False,
+               "terrain_enabled": reader.terrain_enabled if reader else False})
         if gait_observation and time.monotonic()-gait_observed_at>=.1:
             gait_observed_at=time.monotonic()
             _emit(dict(event='gait',contacts=gait_observation.contacts(t,dt),terrain=gait_observation.terrain(t)))
