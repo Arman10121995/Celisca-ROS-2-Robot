@@ -62,14 +62,19 @@ def format_platform_status(data):
     checkpoint = data.get(data.get('current_delivery', ''), {})
     if checkpoint:
         inventory = checkpoint.get('inventory', {})
-        lines.extend(['', 'Current native delivery',
-                      checkpoint.get('implementation_state', ''),
-                      f"Available: {inventory.get('robot_profiles', '?')} robot profiles / "
-                      f"{inventory.get('selectable_robot_families', '?')} families; "
-                      f"{inventory.get('worlds', '?')} worlds / {inventory.get('world_families', '?')} families",
-                      'Named measured cases: '+', '.join(checkpoint.get('measured_cases', [])),
-                      'Remaining: '+', '.join(checkpoint.get('remaining', [])),
-                      'Receipt: '+checkpoint.get('receipt', '')])
+        lines.extend(['', checkpoint.get('title', 'Current native delivery'),
+                      checkpoint.get('implementation_state', '')])
+        if inventory:
+            lines.append(f"Available: {inventory.get('robot_profiles', '?')} robot profiles / "
+                         f"{inventory.get('selectable_robot_families', '?')} families; "
+                         f"{inventory.get('worlds', '?')} worlds / {inventory.get('world_families', '?')} families")
+        measured = checkpoint.get('measured_summary', checkpoint.get('measured_cases', []))
+        remaining = checkpoint.get('remaining_summary', checkpoint.get('remaining', checkpoint.get('remaining_acceptance', [])))
+        lines.append('Named measured cases:')
+        lines.extend('  • '+item for item in measured)
+        lines.append('Remaining:')
+        lines.extend('  • '+item for item in remaining)
+        lines.append('Receipt: '+checkpoint.get('receipt', ''))
     delivery = data.get('implementation_first', {})
     if delivery:
         lines.extend(['', 'Implementation first', delivery.get('policy', ''),

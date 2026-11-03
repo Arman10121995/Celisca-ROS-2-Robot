@@ -76,7 +76,15 @@ def generate():
         inertial=child(link,'inertial');child(inertial,'mass',mass);tensor=child(inertial,'inertia')
         for key,a,b in [('ixx',size[1],size[2]),('iyy',size[0],size[2]),('izz',size[0],size[1])]:child(tensor,key,mass*(a*a+b*b)/12)
         for kind in ('collision','visual'):
-            part=child(link,kind,name=link_name+'_'+kind);child(child(part,'geometry'),'box');part.find('geometry/box').append(ET.Element('size'));part.find('geometry/box/size').text=' '.join(map(str,size))
+            part=child(link,kind,name=link_name+'_'+kind)
+            extent=size
+            if name!='lift_car':
+                # Keep the original upper edge while giving the lower edge
+                # 10 mm clearance. A car panel previously jammed at y=.153
+                # when it reached the neighboring fixed floor at exact L0.
+                child(part,'pose','0 0 .005 0 0 0')
+                extent=(size[0],size[1],size[2]-.01)
+            child(child(child(part,'geometry'),'box'),'size',' '.join(map(str,extent)))
         if name=='lift_car':
             # Three moving cabin walls leave the sliding door's front rail
             # clear. The complete car mass/inertia is authored above.

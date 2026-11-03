@@ -139,6 +139,9 @@ integral term settles the residual after a ride. Mass, force, speed and joint
 limits are retained. Failed bevel candidates were withdrawn. Wheel odometry
 and a Nav2 success still require independent settled body arrival; see the retained Labbot boarding failure in the
 [November 3 receipt](../status/evidence/curves-terrain-concurrency-2026-11-03/README.md).
+Panels have a 10 mm lower clearance so they slide across adjacent floors
+without rubbing; their upper edges, link mass/inertia and actuator limits
+are retained. Physical open-door feedback remains required before boarding.
 Other backends currently have static facility geometry, with moving fixture
 adapters pending. See [current continuation and limits](../status/fleet-continuation-2026-11-02.md)
 and [the earlier floor ride](../status/evidence/fleet-floor-map-transition-2026-11-02/README.md).

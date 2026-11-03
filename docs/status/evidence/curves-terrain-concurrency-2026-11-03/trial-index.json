@@ -478,5 +478,38 @@
     "wall_seconds": 133.1359933529984,
     "overlap_s": 63.14353535400005,
     "landings": []
+  },
+  "fleet-concurrent-9": {
+    "passed": false,
+    "reason": "KeyboardInterrupt: ",
+    "phase": "running",
+    "wall_seconds": 497.0313070579996,
+    "overlap_s": 42.49077984299947,
+    "landings": [
+      {
+        "robot": "alpha",
+        "floor": "L1",
+        "parking_goal": {
+          "x": 1.55,
+          "y": -0.55,
+          "yaw": 0.0
+        },
+        "body": {
+          "x": 1.5801512924968202,
+          "y": -0.5381927261381145,
+          "z": 3.0000018120782506,
+          "yaw": -0.00597686094747408,
+          "linear": 0.0,
+          "angular": 0.0,
+          "velocity_source": "finite difference of measured stamped Gazebo poses",
+          "source_reported_twist": {
+            "linear": 0.0,
+            "angular": 0.0
+          }
+        },
+        "map": "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_maps/share/robot_lab_maps/maps/fleet_facility/maps/map_L1.yaml"
+      }
+    ],
+    "diagnostic_stop": "Car level at L0; car panel stuck at y=0.153 against 2.15 m command at the neighboring floor edge. Explicit owned-probe Stop; no full-wave pass."
   }
 }

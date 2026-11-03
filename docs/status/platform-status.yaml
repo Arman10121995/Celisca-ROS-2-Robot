@@ -1,9 +1,11 @@
 assessment: >-
   Partial multi-robot lab with scoped fleet, aerial, marine, gait, amphibious and original robot missions.
   Native/SDK floor transport, source-bound authored energy and independent frame ownership are retained.
-  New facility itineraries/recovery, marine interruption and aerial formation routes are implemented;
-  an actual empty-car recovery and a single-member two-stop floor queue are measured. Concurrent passengers,
-  occupied recovery, new route flights, further source adapters and full original roadmap acceptance remain.
+  Curved AUV routes, four source terrain adapters and concurrent fleet missions are implemented;
+  a Tethys curve, octopod terrain travel/hold on all four engines and overlapping settled Nav2 routes are measured.
+  Facility itineraries/recovery, marine interruption and aerial formation routes are implemented.
+  Concurrent passenger round trips, occupied recovery, new route flights, per-model terrain/higher-mode
+  qualification and full original roadmap acceptance remain.
   Tests/counts do not qualify missions.
 audit_revision: dff388f
 baseline:
@@ -122,7 +124,7 @@ completion_audit:
     comparison scores are generated; the dated support matrix extrapolates Isaac qualification
     to untested maps and modes.
   revision: 2a0aae2
-current_delivery: workflow_continuation_20261102
+current_delivery: auv_terrain_fleet_20261102
 current_revision: 'Continuation on master from 8b958e97: bounded facility queues and durable SDK ownership; explicit interlocked recovery with an actual empty-car receipt; marine interruption fixes; native formation itinerary Plan/Execute. Platform and full R10 acceptance remain partial; docs/status/workflow-continuation-2026-11-02.md.'
 current_verification:
   round57_2026_10_19: 'Recorded 2026-10-29: MuJoCo small_house slam drive after the spawn fix 873753f completes
@@ -322,6 +324,7 @@ goal: unified_multi_robot_algorithm_lab
 auv_terrain_fleet_20261102:
   owner: codex
   state: active
+  title: Curved AUV routes, terrain adapters and concurrent fleet missions
   reconciliation_baseline: 1d8b29a8
   baseline_revision: 43473387
   updated: '2026-11-03'
@@ -333,8 +336,16 @@ auv_terrain_fleet_20261102:
   receipt: docs/status/evidence/curves-terrain-concurrency-2026-11-03/README.md
   run_directory: /workspace/molar/robot_lab_runtime/auv-terrain-fleet-20261102
   measured_cases: [tethys_20_degree_tank_curve_34_046_s, octopod_low_relief_mujoco_travel_hold, octopod_low_relief_pybullet_travel_hold, octopod_low_relief_fortress_travel_hold, octopod_low_relief_isaac_travel_hold_276_177_s, three_base_two_concurrent_settled_nav2_missions_45_774_s_overlap]
+  measured_summary:
+  - Tethys completed a gentle 20 degree tank curve and settled arrival in 34.046 seconds.
+  - Octopod completed low-relief travel and Stop/hold on MuJoCo, PyBullet, Gazebo and Isaac; each has its own measured receipt.
+  - Two independent Nav2 routes completed with settled bodies in one three-base world, with 45.774 seconds of overlapping mission activity.
+  remaining_summary:
+  - Full two-member floor and parking round trips; the current physical repeat is still in progress.
+  - Other robot, terrain, higher-mode, loss and reset cases; further AUV obstacle/current/saved-map routes.
+  - Occupied recovery, aerial itinerary flight and remaining original roadmap acceptance.
   software_checks: 84 reconciled source and physics contracts; 29 native GUI/resolver/architecture checks; complete unsourced fast tier 1177 passed, 46 skipped, 4 deselected. These checks do not qualify additional physical missions.
-  fleet_followup: Trial 5 completed alpha L1 parking and gamma arrival but failed beta boarding against the independent body gate. Bevel trials 6-8 failed and were withdrawn; the flat source deck is restored. Native force PID integral settling and a stricter 0.1 mm floor/door threshold retain mass, force, speed and position limits. Full physical repeat pending.
+  fleet_followup: Trial 5 completed alpha L1 parking and gamma arrival but failed beta boarding against the independent body gate. Bevel trials 6-8 failed and were withdrawn; the flat source deck is restored. Native force PID integral settling and a stricter 0.1 mm floor/door threshold retain physical limits. Trial 9 exposed a floor-rubbing panel; 10 mm lower clearance retains the upper edge and limits. Trial 10 has actually boarded and lifted Labbot; the full wave is still in progress.
   remaining_acceptance: [per_model_backend_terrain_higher_mode_loss_reset_matrix, multi_member_floor_parking_campaign, further_AUV_curve_saved_map_obstacle_current_loss_cases, occupied_recovery_and_aerial_route_flight, original_roadmap_and_release]
 workflow_continuation_20261102:
   owner: codex
@@ -4852,7 +4863,7 @@ tasks:
     qualification_review: '2026-10-27 documentation review: retain the implemented code, tests and named mission
       certificates. Full declared roadmap acceptance is still open; test counts, metadata and scene loads
       do not qualify remaining robot/map/backend missions. See docs/REMAINING_WORK_GUIDE.md.'
-updated: '2026-11-02'
+updated: '2026-11-03'
 runtime_completion_20261027:
   owner: codex
   state: partial

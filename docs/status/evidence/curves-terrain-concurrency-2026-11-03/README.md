@@ -89,6 +89,15 @@ their recorded hashes. Do not transfer a named case to changed source.
   The force-based upstream [JointPositionController](https://github.com/gazebosim/gz-sim/blob/ignition-gazebo6_6.18.0/src/systems/joint_position_controller/JointPositionController.cc)
   remains active with `use_velocity_commands=false`. The actual new floor
   wave must still pass all independent body/door/map/ownership checks.
+- Trial 9 completed alpha's L1 parking under the tighter leveling gate, then
+  held beta while the empty car returned exactly level to L0. The car door
+  stalled at Y=0.153 m against a 2.15 m opening command when its flush lower
+  edge reached the adjacent fixed floor. After persistent unchanged feedback,
+  the owned diagnostic was explicitly stopped at 497.031 wall seconds; it is
+  not a passing wave. Panels now have 10 mm lower clearance with the original
+  2.2 m upper edge, link mass/inertia and actuator limits. The candidate has
+  36 passing facility contracts; the subsequent actual trial has boarded and
+  lifted Labbot, with the full four-stop result still separate.
 - Terrain: early Bullet rays intersected the robot and failed initial
   support. Robot-excluding ray filters retain actual world collisions.
   Sparse virtual frames had Bullet's implicit 1 kg masses; source mass is
@@ -133,6 +142,14 @@ including single control-state ownership and live-process preservation. Native
 GUI/resolver/architecture checks: **29 passed**, including every gait backend
 and the new terrain map command. These are software checks, not additional
 robot mission receipts.
+
+The later facility fixes have **36 passing focused contracts**. The GUI help
+ownership/diagram follow-up has **24 passing model/native Tk checks** after
+appending the existing user-site dependencies to system ROS Python. The first
+GUI invocation lacked `jsonschema` under `python -s`; no dependency or host
+NumPy replacement was installed. Platform Status now follows the current
+delivery and displays its named results/remaining acceptance without inserting
+unknown inventory counts.
 
 The unsourced fast tier initially reported 1175 passed, 46 skipped and two
 failures. The missing tutorial Run section and a stale assumption that every

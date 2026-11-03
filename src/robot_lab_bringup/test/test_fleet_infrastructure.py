@@ -307,6 +307,20 @@ def test_lift_requires_small_caster_leveling_without_more_force_or_speed():
     assert node.energy['alpha']['floor'] == 'L1'
 
 
+def test_sliding_panels_clear_floor_without_changing_the_upper_edge():
+    root = ET.parse(ROOT / 'src/robot_lab_maps/maps/fleet_facility/worlds/fleet_facility.world').getroot()
+    for name, floor in [('main_door',0.),('lift_door',0.),('lower_gate',0.),('upper_gate',3.)]:
+        link = root.find(".//link[@name='%s']" % name)
+        origin = [float(v) for v in link.findtext('pose').split()]
+        for kind in ('collision','visual'):
+            part = link.find(kind)
+            offset = [float(v) for v in part.findtext('pose').split()]
+            size = [float(v) for v in part.findtext('geometry/box/size').split()]
+            center = origin[2] + offset[2]
+            assert center-size[2]/2-floor == pytest.approx(.01)
+            assert center+size[2]/2-floor == pytest.approx(2.2)
+
+
 def test_floor_maps_loaded_from_config(tmp_path):
     session = _make_session(tmp_path)
     node = _make_node(session)

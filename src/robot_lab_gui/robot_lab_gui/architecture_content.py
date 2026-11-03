@@ -116,9 +116,10 @@ component('policy', 'Legged policies & gaits', 'Control', 'Robot-specific observ
 component('terrain', 'Measured low-relief adaptation', 'Control', 'Observed support ranges become bounded source-foot corrections.',
     'MuJoCo, Bullet and PhysX use native collision rays; the Fortress adapter uses a labeled selected-static-world range model and native contact forces. '
     'Source joint frames, mass, effort and position bounds are retained. Freshness, 2 cm differential reach, support, slip and body/tilt gates can stop the gait. '
+    'The source gait controller exclusively owns leases, Arm/Stop and /gait/state. Isaac plant diagnostics use /gait/plant_state and cannot grant control. '
     'The source hexapod, octopod and centipede have backend adapters; each measured mission remains a separate support claim. A passive-wheel snake uses its separate MuJoCo adapter.',
     'src/robot_lab_utils/robot_lab_utils/gait_terrain.py src/robot_lab_utils/robot_lab_utils/gait_gazebo_adapter.py src/robot_lab_maps/systems/gait_contact_frame.cc src/robot_lab_isaac/python/robot_lab_isaac/gait_observation.py', 'docs/tutorials/curves-terrain-concurrency.md',
-    '/gait/terrain : observed range JSON\n/gait/contacts : actual force JSON\n/gait/odometry_state : independent contact/FK consistency\n/gait/joint_targets : source-order Float64MultiArray')
+    '/gait/state : source controller ownership and Arm/Stop\n/gait/plant_state : Isaac native diagnostics only\n/gait/terrain : observed range JSON\n/gait/contacts : actual force JSON\n/gait/odometry_state : independent contact/FK consistency\n/gait/joint_targets : source-order Float64MultiArray')
 component('arm', 'Arm planning & Servo', 'Manipulation', 'Joint targets, Cartesian planning and incremental end-effector controls.',
     'A 3D target is interpreted in a named planning frame. MoveIt/native planning uses source joint limits and collision geometry. '
     'Cartesian jog/Servo and taught poses help choose reachable targets; IK failure can mean unreachable pose, orientation or collision constraints. '

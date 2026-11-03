@@ -39,6 +39,10 @@ the authored force PID now settles the leveling residual with a 0.1 mm
 door/floor admission threshold, retaining mass, force and speed limits. The full
 wave is being repeated; source/build checks do not qualify it. Failed results and the actual first parked endpoint
 are preserved in the November 3 receipt.
+The level-car repeat exposed a car panel rubbing the neighboring fixed floor;
+10 mm lower panel clearance retains its upper edge and actuator limits.
+The following physical repeat has now boarded and lifted Labbot; all four
+parked round-trip endpoints are still required for the full wave.
 
 [Current workflow delivery and limits](workflows-2026-10-27.md),
 [actual receipts](evidence/workflows-2026-10-27/README.md),

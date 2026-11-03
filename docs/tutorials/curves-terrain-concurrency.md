@@ -48,6 +48,7 @@ existing 0.6 m arrival envelope. Tight turns, arbitrary destinations and all
 water worlds have not inherited that result. Native fin/propeller limits are
 unchanged. [Source and license](../../src/robot_lab_utils/robot_lab_utils/_vendor/pythonrobotics-provenance.json).
 
+<!-- diagram: marine -->
 ```mermaid
 flowchart LR
   Pose[Estimated marine pose] --> Plan[Dubins + source collision checks]
@@ -78,6 +79,7 @@ command travel. Start around 0.02 m/s. Stop holds current bounded joint targets.
 
 The sensor and control path is:
 
+<!-- diagram: control -->
 ```mermaid
 flowchart LR
   Plant[Native joints and physics] --> Forces[Actual foot and body forces]
