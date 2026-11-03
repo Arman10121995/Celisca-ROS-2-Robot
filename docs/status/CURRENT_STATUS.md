@@ -1,5 +1,7 @@
 # Current Robot Lab status
 
+**Session stopped at the user's request on November 3.** Work is committed; the owned fleet trial was stopped and cleaned up. Trial 12's interruption is preserved separately from mission failures and successful cases. Resume with a fresh full floor/parking run after the user asks to continue; full platform acceptance remains partial.
+
 November 3: [curved AUV routes, low-relief source gait/backend adapters and concurrent fleet missions](curves-terrain-concurrency-2026-11-03.md) are implemented. Actual scoped tank-curve, octopod terrain and overlapping settled Nav2 results are in the [receipt](evidence/curves-terrain-concurrency-2026-11-03/README.md). Broader per-model/backend and multi-member floor/parking acceptance remains partial. The native GUI controls, resolver profiles, command autofill and interactive architecture/tutorial links reflect these workflows.
 
 Latest workflow continuation from `8b958e97`: bounded multi-member lift queues/round trips, durable SDK lift ownership, explicit interlocked recovery, generation-safe marine replanning and native aerial formation itineraries. Actual empty-car Stop/recovery passed in 35.949 s and a one-command two-stop Bumperbot floor round-trip in 324.259 s. Occupied recovery, concurrent members and new route-flight qualification remain pending. [Delivery and limits](workflow-continuation-2026-11-02.md). Full platform acceptance remains partial.
@@ -50,7 +52,9 @@ the full wave.
 That repeat reached three completed transports, then its old 600 s queue wait
 canceled the final return. The facility now declares 1800 s queue waiting
 with an immutable per-stop expiry, preserving the 600 s default elsewhere
-and all live feedback/ownership guards. The full repeat remains in progress.
+and all live feedback/ownership guards. Trial 12 was stopped at the user's
+request after 319.046 wall seconds, with one parked L1 endpoint recorded;
+the full repeat remains pending after resumption.
 
 [Current workflow delivery and limits](workflows-2026-10-27.md),
 [actual receipts](evidence/workflows-2026-10-27/README.md),

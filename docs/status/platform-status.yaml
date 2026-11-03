@@ -323,7 +323,10 @@ extension_completion_20261020:
 goal: unified_multi_robot_algorithm_lab
 auv_terrain_fleet_20261102:
   owner: codex
-  state: active
+  state: partial
+  execution_state: stopped_by_user
+  stop_request: User requested committing everything and stopping for today on November 3; continue only after the user resumes.
+  resume_from_revision: 5e7d29b1
   title: Curved AUV routes, terrain adapters and concurrent fleet missions
   reconciliation_baseline: 1d8b29a8
   baseline_revision: 43473387
@@ -341,11 +344,11 @@ auv_terrain_fleet_20261102:
   - Octopod completed low-relief travel and Stop/hold on MuJoCo, PyBullet, Gazebo and Isaac; each has its own measured receipt.
   - Two independent Nav2 routes completed with settled bodies in one three-base world, with 45.774 seconds of overlapping mission activity.
   remaining_summary:
-  - Full two-member floor and parking round trips; the current physical repeat is still in progress.
+  - Full two-member floor and parking round trips; the latest repeat was stopped at the user's request and needs a fresh owned run after resumption.
   - Other robot, terrain, higher-mode, loss and reset cases; further AUV obstacle/current/saved-map routes.
   - Occupied recovery, aerial itinerary flight and remaining original roadmap acceptance.
   software_checks: 84 reconciled source and physics contracts; 29 native GUI/resolver/architecture checks; complete unsourced fast tier 1177 passed, 46 skipped, 4 deselected. These checks do not qualify additional physical missions.
-  fleet_followup: Flat-deck leveling, panel clearance and separate 0.1 mm opening / original 3 mm continuous tracking fix the measured loading failures. Trial 11 completed three transport legs but the old fixed 600 second queue wait expired before the last return. Queue admission now stores an immutable finite expiry, with 1800 seconds declared for this facility and the original 600 second default elsewhere; 50 focused checks pass and trial 12 is in progress.
+  fleet_followup: Flat-deck leveling, panel clearance and separate 0.1 mm opening / original 3 mm continuous tracking fix the measured loading failures. Trial 11 completed three transport legs but the old fixed 600 second queue wait expired before the last return. Queue admission now stores an immutable finite expiry, with 1800 seconds declared for this facility and the original 600 second default elsewhere; 50 focused checks pass. Trial 12 was explicitly stopped at the user's request after 319.046 wall seconds; one parked L1 endpoint was recorded and the full wave remains unqualified.
   remaining_acceptance: [per_model_backend_terrain_higher_mode_loss_reset_matrix, multi_member_floor_parking_campaign, further_AUV_curve_saved_map_obstacle_current_loss_cases, occupied_recovery_and_aerial_route_flight, original_roadmap_and_release]
 workflow_continuation_20261102:
   owner: codex
@@ -422,8 +425,8 @@ architecture_explorer_20261102:
   guide: docs/architecture/interactive-guide.md
 handoff:
   audit: docs/status/audit-2026-10-02.md
-  next_action: Preserve the delivered curved AUV routes, four source terrain adapters and actual octopod travel/hold cases on all four backends. Continue multi-member floor/parking, per-model terrain/higher-mode/loss/reset, further AUV/current/obstacle/saved-map cases, occupied recovery and actual aerial itinerary flight before the remaining original queue. Read the November 3 receipt; metadata and helper methods do not qualify physical missions.
-  next_task: R10.5
+  next_action: Work stopped at the user's request on November 3. After the user resumes, start a fresh complete two-member floor/parking wave from the November 3 stop checkpoint. Preserve curved AUV routes, four terrain adapters, actual scoped results and all failed/interrupted trials; then continue the named per-model terrain, AUV, occupied recovery, aerial route and original roadmap acceptance.
+  next_task: R10.2
   no_runtime_repairs_completed_by_this_revision: false
   parallel_ready_after_R0:
   - R1.1

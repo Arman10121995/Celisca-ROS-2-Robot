@@ -1,5 +1,9 @@
 # Robot Lab done and remaining checklist
 
+Stopped at the user's request on November 3. Changes and the interrupted
+trial 12 are committed; the full two-member floor/parking wave remains
+pending a fresh run after resumption. [Resume checkpoint](curves-terrain-concurrency-2026-11-03.md#resume-after-the-user-continues).
+
 - [x] Curved AUV Plan/Execute with source flow/run-up/radius/depth/clearance/braking bounds and native GUI course/radius fields; actual gentle tank-curve arrival.
 - [x] Four source gait backend adapters, measured support/slip confidence, bounded low-relief control and a deterministic 8 mm terrain map; actual octopod travel/hold cases on MuJoCo, Bullet, Fortress and Isaac.
 - [x] Actual overlapping independent Nav2 missions and settled endpoints in one three-base world; floor-aware traffic, owned post-exit parking implementation and declared finite slow-host budgets.

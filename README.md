@@ -1,5 +1,7 @@
 # Robot Lab — Multi-Robot Simulation and Algorithm Laboratory
 
+Work stopped at the user's request on November 3, with changes committed and the owned trial cleaned up. [Resume checkpoint and remaining work](docs/status/curves-terrain-concurrency-2026-11-03.md#resume-after-the-user-continues).
+
 November 3: **curved AUV planning, bounded low-relief gait adapters and concurrent fleet missions** are implemented, with native GUI controls and command autofill. Actual tank-curve, octopod terrain travel/hold on all four simulators and concurrent Nav2 cases are recorded separately from the remaining per-model/backend and multi-floor parking qualification. [Current delivery](docs/status/curves-terrain-concurrency-2026-11-03.md), [GUI walkthrough](docs/tutorials/curves-terrain-concurrency.md).
 
 New workflow delivery: **queued fleet floor trips and explicit held-lift recovery**, safer cancelable marine replanning, and **aerial formation itineraries with separate Plan/Execute**. Actual empty-car recovery and one Bumperbot two-stop floor queue have simulator receipts; concurrent passengers, occupied recovery and formation-route flights remain separate qualification. [What changed and what remains](docs/status/workflow-continuation-2026-11-02.md).

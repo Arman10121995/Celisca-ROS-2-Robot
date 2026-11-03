@@ -16,6 +16,12 @@ Compact actual results and source hashes are checked in beside this file;
 `ssd-artifact-sha256.json` identifies retained larger successful-run artifacts.
 `trial-index.json` preserves successes and failures without relabeling them.
 
+**User-requested stop:** trial 12 was explicitly interrupted and cleaned up
+on November 3 after 319.046 wall seconds. Its actual result, source hashes
+and `user-stop.json` are checked in. Alpha's parked L1 endpoint is recorded;
+the full four-stop wave is not accepted. Resume only when requested, using
+a fresh run directory/domain/partition.
+
 ## Measured cases
 
 | Case directory | Actual task | Measured result |

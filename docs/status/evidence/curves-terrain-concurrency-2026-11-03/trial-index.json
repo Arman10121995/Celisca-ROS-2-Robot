@@ -644,5 +644,38 @@
         "map": "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_maps/share/robot_lab_maps/maps/fleet_facility/maps/map_L1.yaml"
       }
     ]
+  },
+  "fleet-concurrent-12": {
+    "passed": false,
+    "reason": "KeyboardInterrupt: ",
+    "phase": "running",
+    "wall_seconds": 319.0455180989993,
+    "overlap_s": 35.49867604300016,
+    "landings": [
+      {
+        "robot": "alpha",
+        "floor": "L1",
+        "parking_goal": {
+          "x": 1.55,
+          "y": -0.55,
+          "yaw": 0.0
+        },
+        "body": {
+          "x": 1.5905297252308208,
+          "y": -0.5378490586476907,
+          "z": 3.0000018120782546,
+          "yaw": -0.005386913205923812,
+          "linear": 0.0,
+          "angular": 0.0,
+          "velocity_source": "finite difference of measured stamped Gazebo poses",
+          "source_reported_twist": {
+            "linear": 0.0,
+            "angular": 0.0
+          }
+        },
+        "map": "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_maps/share/robot_lab_maps/maps/fleet_facility/maps/map_L1.yaml"
+      }
+    ],
+    "interruption": "User explicitly requested committing everything and stopping for today; not full-wave acceptance."
   }
 }

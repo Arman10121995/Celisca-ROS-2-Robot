@@ -1,5 +1,7 @@
 # Robot Lab: implementation roadmap and continuation plan
 
+November 3 stop checkpoint: the user requested committing everything and stopping for today. The owned fleet trial was stopped and recorded; restart only after the user resumes. [Exact continuation steps](docs/status/curves-terrain-concurrency-2026-11-03.md#resume-after-the-user-continues).
+
 November 3: [curved AUV routes, terrain/backend adapters and concurrent fleet missions](docs/status/curves-terrain-concurrency-2026-11-03.md) are implemented with native GUI controls. The scoped physical receipt covers a Tethys curve, octopod low-relief travel/hold on all four simulators and two overlapping settled Nav2 missions in one world. Broader robot/backend terrain, multi-member parking/floor and marine/aerial acceptance remains open.
 
 Latest workflow implementation: [facility itinerary queues/explicit recovery, marine interruption and aerial formation routes](docs/status/workflow-continuation-2026-11-02.md). Empty-car mid-shaft recovery and a one-command two-stop Bumperbot floor queue are measured. Concurrent passengers, occupied recovery and the new aerial route executor still need actual scoped missions; this delivery does not close full R10/platform acceptance.

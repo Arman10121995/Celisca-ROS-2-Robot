@@ -4,6 +4,10 @@ Continuation on `master` from `43473387`. The three requested initial
 workflows are implemented. Runtime qualification remains scoped to the
 specific cases below; full R10/platform acceptance stays **partial**.
 
+The user requested committing everything and stopping on November 3. The
+owned trial 12 was stopped and cleaned up after 319.046 wall seconds; its
+result and user-stop note remain in the receipt. Do not restart automatically.
+
 | Area | Delivered implementation | Physical evidence / limits |
 |---|---|---|
 | Curved Tethys routes | Pinned MIT Dubins solver; source −X/course conversion; flow run-up, depth/clearance and braking checks; sideslip-aware guidance; GUI course/radius fields | Actual 20° tank curve and settled arrival, 34.046 s. Tight-turn failures retained. Other curves/maps/current/saved-map cases remain separate |
@@ -77,3 +81,26 @@ claim boundary. [Receipt, failures and reproduction](evidence/curves-terrain-con
 The implementations above do not close these broader acceptance tasks from
 metadata, compile results or catalog counts. Historical certificates retain
 their exact source/revision/robot/map/backend/task scope.
+
+## Resume after the user continues
+
+Code checkpoint: `5e7d29b1` plus the documentation/receipt stop checkpoint.
+Start a fresh owned four-stop mission; do not reuse trial 12's directory or
+resume old commands. For example, from the workspace on this host:
+
+```bash
+source /opt/ros/humble/setup.bash
+source install/setup.bash
+source scripts/ssd_env.sh
+export FLEET_CASE_DIRECTORY="$ROBOT_LAB_RUNTIME_ROOT/auv-terrain-fleet-20261102/fleet-concurrent-13"
+export ROS_DOMAIN_ID=208 IGN_PARTITION=robotlab-fleet-concurrent13-resume
+/usr/bin/python3 -s "$ROBOT_LAB_RUNTIME_ROOT/auv-terrain-fleet-20261102/fleet_concurrent_probe.py"
+```
+
+First verify that the new directory and domain/partition are unused. The
+producer already enforces its 1000 s trial/log budgets and owned cleanup;
+the facility declares 900/300/180 s transport/phase/route budgets and an
+1800 s immutable queued-stop expiry. Require all four independently settled
+parked endpoints and the independent gamma route in this same actual world.
+Inspect published CI on the exact source revision; software checks remain
+separate from physical acceptance.
