@@ -133,12 +133,11 @@ target only on explicit Stop/loss.
 
 Reproduce source assets with `scripts/generate_fleet_facility.py`; it preserves
 source certificates, whose runtime/source hashes are checked on every session.
-The moving platform has a closed convex approach bevel (6 mm over 80 mm)
-within its original 2 × 2 m envelope. This accommodates the declared 3 mm
-leveling tolerance without a square curb trapping a small fixed caster. It
-does not add a fixed bridge into the shaft or increase motor/lift limits.
-Wheel odometry and a Nav2 success still require independent settled body
-arrival; see the retained Labbot boarding failure in the
+The original flat 2 × 2 m moving deck is retained. Door/floor admission now
+requires 0.1 mm actual alignment instead of 3 mm; the authored force PID's
+integral term settles the residual after a ride. Mass, force, speed and joint
+limits are retained. Failed bevel candidates were withdrawn. Wheel odometry
+and a Nav2 success still require independent settled body arrival; see the retained Labbot boarding failure in the
 [November 3 receipt](../status/evidence/curves-terrain-concurrency-2026-11-03/README.md).
 Other backends currently have static facility geometry, with moving fixture
 adapters pending. See [current continuation and limits](../status/fleet-continuation-2026-11-02.md)

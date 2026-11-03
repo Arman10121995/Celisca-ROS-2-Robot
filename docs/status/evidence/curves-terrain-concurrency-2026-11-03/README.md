@@ -66,11 +66,10 @@ their recorded hashes. Do not transfer a named case to changed source.
   car was about 2 mm above the fixed floor. Its wheels advanced localization
   without the body: Nav2 reported success at a body X of 2.8765 m against the
   3.65 m boarding goal. The unchanged independent observer rejected it. A
-  closed convex slab with a 6 mm / 80 mm approach bevel replaces that square
-  edge, entirely within the moving car. The original 50 kg platform mass,
+  6 mm / 80 mm approach bevel was tried within the moving car. The original 50 kg platform mass,
   1600 N lift limit, 0.25 m/s speed limit and arrival/feedback/lease gates are
-  retained. The candidate has 35 passing geometry/facility contracts and a
-  valid SDF/build; its full physical wave remains a separate result.
+  retained. That candidate passed 35 geometry/facility contracts and a
+  valid SDF/build; the failed physical results below supersede it.
 - Trial 6 preserves a failed native startup: Fortress's DART `CustomMeshShape`
   rejected the geometry-only OBJ's missing normals, then its ODE collision
   loader crashed. The generated OBJ now supplies explicit unit face normals
@@ -78,6 +77,18 @@ their recorded hashes. Do not transfer a named case to changed source.
   after welding coincident render vertices at hard normal seams. The corrected
   35-check result and build are archived; the next actual native trial starts
   and reaches physical robot navigation, which does not by itself pass the wave.
+- Trials 7 and 8 rejected actual boarding too: the triangle-mesh bevel and
+  then the native-box bevel caught Bumperbot near X=3.03 m. Both candidates
+  are withdrawn. Trial 8's exact uncommitted world is retained beside its
+  result; its generator/test snapshots remain on SSD. The final source
+  restores the original flat primitive deck and addresses the loaded-car
+  leveling residual directly. Door/floor admission now requires 0.1 mm
+  alignment (previously 3 mm); the authored native integral gain is 1000
+  (previously 100), retaining P=40000, D=3000, ±800 integral bounds,
+  ±1600 N force, 0.25 m/s velocity, mass, geometry and position limits.
+  The force-based upstream [JointPositionController](https://github.com/gazebosim/gz-sim/blob/ignition-gazebo6_6.18.0/src/systems/joint_position_controller/JointPositionController.cc)
+  remains active with `use_velocity_commands=false`. The actual new floor
+  wave must still pass all independent body/door/map/ownership checks.
 - Terrain: early Bullet rays intersected the robot and failed initial
   support. Robot-excluding ray filters retain actual world collisions.
   Sparse virtual frames had Bullet's implicit 1 kg masses; source mass is
@@ -134,7 +145,12 @@ The predecessor GitHub run [41530234108](https://github.com/Arman10121995/Celisc
 failed during collection because ROS-dependent tests had been placed in the
 unsourced fast tier. They now remain required in the sourced integration
 tier. No deployed policy weights, source certificates or physical limits
-were rewritten to pass CI. The new delivery's publication result is separate.
+were rewritten to pass CI. Commit `57332c2c` subsequently passed GitHub
+[run 41656199263](https://github.com/Arman10121995/Celisca-ROS-2-Robot/actions/runs/41656199263):
+core build, fast tier (1166 passed, 40 skipped, 4 deselected), physics
+(65 passed), sourced integration (244 passed, 25 skipped) and registry
+cross-references. Later lift commits have separate publication results;
+CI does not establish a physical lift mission.
 
 ## Reproduce on this host
 

@@ -586,16 +586,16 @@
         </inertial>
         <collision name="lift_platform_collision">
           <geometry>
-            <mesh>
-              <uri>lift_platform.obj</uri>
-            </mesh>
+            <box>
+              <size>2 2 0.1</size>
+            </box>
           </geometry>
         </collision>
         <visual name="lift_platform_visual">
           <geometry>
-            <mesh>
-              <uri>lift_platform.obj</uri>
-            </mesh>
+            <box>
+              <size>2 2 0.1</size>
+            </box>
           </geometry>
         </visual>
         <collision name="car_wall_0_collision">
@@ -665,7 +665,7 @@
         <topic>/facility/lift_car/target</topic>
         <p_gain>40000.0</p_gain>
         <d_gain>3000.0</d_gain>
-        <i_gain>100</i_gain>
+        <i_gain>1000</i_gain>
         <i_min>-800</i_min>
         <i_max>800</i_max>
         <cmd_offset>637.65</cmd_offset>

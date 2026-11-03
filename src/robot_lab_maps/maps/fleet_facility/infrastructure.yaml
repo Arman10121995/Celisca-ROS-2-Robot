@@ -53,7 +53,7 @@ lift:
   floors:
     L0: 0.0
     L1: 3.0
-  level_tolerance_m: 0.003
+  level_tolerance_m: 0.0001
 floor_maps:
   L0: maps/fleet_facility/maps/map.yaml
   L1: maps/fleet_facility/maps/map_L1.yaml

@@ -59,8 +59,11 @@ claim boundary. [Receipt, failures and reproduction](evidence/curves-terrain-con
    Trial 5 now has one actually settled L1 parking endpoint, but the full wave
    failed when Labbot caught the raised square sill and odometry advanced
    without the body. Preserve that rejected result and the unchanged
-   independent arrival gate. The authored moving slab now has a 6 mm / 80 mm
-   bevel within its original envelope; its physical repeat is still required.
+   independent arrival gate. Subsequent bevel trials failed and were withdrawn;
+   the original flat deck is restored. The authored force PID now settles the
+   residual with integral gain 1000, and doors/floor admission require 0.1 mm
+   alignment. The original force/speed limits remain. A physical repeat is
+   required before accepting the full wave.
 2. Record hexapod and centipede travel/reverse/turn/Stop/loss/reset and actual
    terrain/higher-mode missions on each backend candidate. Source tests and
    the octopod case do not transfer those certificates.

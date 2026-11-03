@@ -281,40 +281,30 @@ def test_lift_door_panel_clears_platform_and_car_walls():
     assert config['doors']['lift']['opened'] == 2.15
 
 
-def test_lift_sill_is_physical_convex_bevel_below_level_tolerance(tmp_path):
-    import trimesh
-    from robot_lab_utils.fleet_session import prepare_world
-    world = ROOT / 'src/robot_lab_maps/maps/fleet_facility/worlds/fleet_facility.world'
-    root = ET.parse(world).getroot()
+def test_lift_requires_small_caster_leveling_without_more_force_or_speed():
+    directory = ROOT / 'src/robot_lab_maps/maps/fleet_facility'
+    config = yaml.safe_load((directory / 'infrastructure.yaml').read_text())
+    assert config['lift']['level_tolerance_m'] <= .0001
+    root = ET.parse(directory / 'worlds/fleet_facility.world').getroot()
     platform = root.find(".//link[@name='lift_platform']")
-    mesh_path = world.parent / platform.findtext('collision/geometry/mesh/uri')
-    assert platform.findtext('visual/geometry/mesh/uri') == mesh_path.name
-    mesh = trimesh.load(mesh_path, force='mesh')
-    # Hard face normals intentionally split render vertices at creases.
-    # Check physical closure after welding only coincident positions.
-    mesh.merge_vertices(merge_norm=True, merge_tex=True)
-    assert mesh.is_watertight and mesh.is_convex
-    # Fortress's native DART loader requires expanded per-vertex normals.
-    # An otherwise closed OBJ without them caused a native startup crash.
-    rows = mesh_path.read_text().splitlines()
-    normals = [list(map(float, row.split()[1:])) for row in rows if row.startswith('vn ')]
-    faces = [row.split()[1:] for row in rows if row.startswith('f ')]
-    assert normals and all(abs(math.sqrt(sum(v*v for v in n))-1.) < 1e-9 for n in normals)
-    assert all(all('//' in v and 1 <= int(v.split('//')[1]) <= len(normals) for v in face) for face in faces)
-    # A car anywhere within the declared positive leveling tolerance must
-    # expose a leading edge below the fixed landing, not a vertical curb.
-    config = yaml.safe_load((world.parent.parent / 'infrastructure.yaml').read_text())
-    top = max(mesh.vertices[:, 2])
-    leading = mesh.vertices[mesh.vertices[:, 0] == min(mesh.vertices[:, 0])]
-    assert top - max(leading[:, 2]) > config['lift']['level_tolerance_m']
-    assert mesh.bounds.tolist() == [[-1., -1., -.05], [1., 1., .05]]
-    assert float(platform.findtext('inertial/mass')) == 50.
+    assert platform.findtext('collision/geometry/box/size') == '2 2 0.1'
     joint = root.find(".//joint[@name='lift_car']")
     assert float(joint.findtext('axis/limit/effort')) == 1600.
     assert float(joint.findtext('axis/limit/velocity')) == .25
-    staged, _ = prepare_world(world, tmp_path)
-    uri = ET.parse(staged).findtext(".//link[@name='lift_platform']/collision/geometry/mesh/uri")
-    assert uri == mesh_path.resolve().as_uri()
+    plugins = root.findall(".//plugin[@name='ignition::gazebo::systems::JointPositionController']")
+    controller = next(p for p in plugins if p.findtext('joint_name') == 'lift_car')
+    assert float(controller.findtext('p_gain')) == 40000.
+    assert float(controller.findtext('d_gain')) == 3000.
+    assert float(controller.findtext('cmd_max')) == 1600.
+    node = SimpleNamespace(config=config, floor_offsets={'alpha': 0.},
+        energy={'alpha': {'floor': 'L0'}}, positions={'lift_car': 3.002}, rates={'lift_car': 0.})
+    # Passenger height alone must not authorize a floor/map transition while
+    # the physical deck remains a caster-blocking 2 mm above the landing.
+    Infrastructure._observe_robot_floor(node, 'alpha', [3.65, 0., 3.])
+    assert node.energy['alpha']['floor'] == 'L0'
+    node.positions['lift_car'] = 3.00005
+    Infrastructure._observe_robot_floor(node, 'alpha', [3.65, 0., 3.])
+    assert node.energy['alpha']['floor'] == 'L1'
 
 
 def test_floor_maps_loaded_from_config(tmp_path):

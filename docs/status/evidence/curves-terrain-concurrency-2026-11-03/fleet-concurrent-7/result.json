@@ -1,0 +1,556 @@
+{
+  "passed": false,
+  "reason": "RuntimeError: Transport failed: [{'id': '3885565d131e4f86851c337be649f44c', 'robot': 'alpha', 'floor': 'L1', 'operator_id': 'concurrent-probe', 'enqueued_at': 12761.920850677, 'phase': 'failed', 'reason': 'Owned transport Nav2 task failed/canceled', 'parking': 'auto', 'parking_goal': {'x': 1.55, 'y': -0.55, 'yaw': 0.0}}, {'id': 'd3fe5a901e154d45aec3e4a2fa9fb668', 'robot': 'beta', 'floor': 'L1', 'operator_id': 'concurrent-probe', 'enqueued_at': 12761.920850677, 'phase': 'canceled', 'reason': 'Previous transport interrupted; explicit new itinerary required', 'parking': 'auto'}, {'id': '64e159c0c4494d11860613c2c1dd8891', 'robot': 'alpha', 'floor': 'L0', 'operator_id': 'concurrent-probe', 'enqueued_at': 12761.920850677, 'phase': 'canceled', 'reason': 'Previous transport interrupted; explicit new itinerary required', 'parking': 'auto'}, {'id': '6b9cf9e5c28d4baca60c574fb61156ed', 'robot': 'beta', 'floor': 'L0', 'operator_id': 'concurrent-probe', 'enqueued_at': 12761.920850677, 'phase': 'canceled', 'reason': 'Previous transport interrupted; explicit new itinerary required', 'parking': 'auto'}]",
+  "wall_seconds": 114.37278716500077,
+  "phase": "running",
+  "landings": [],
+  "overlap_s": 51.98880413100051,
+  "fleet": {
+    "schema_version": 1,
+    "session_id": "session-ia30uxvh",
+    "map": "fleet_facility",
+    "backend": "gazebo",
+    "navigation": true,
+    "directory": "/workspace/molar/robot_lab_runtime/fleet_sessions/session-ia30uxvh",
+    "sim_time": 45.754,
+    "clock_age": 0.002,
+    "operator_id": "concurrent-probe",
+    "operator_fresh": true,
+    "swarm": null,
+    "members": [
+      {
+        "id": "alpha",
+        "model": "bumperbot",
+        "mode": "idle",
+        "reason": "Nav2 returned success but measured arrival/settling did not pass",
+        "included": true,
+        "ready": true,
+        "limits": {
+          "linear": 0.35,
+          "angular": 0.8
+        },
+        "navigation_ready": true,
+        "estimate": {
+          "x": 3.595887237528293,
+          "y": -0.02757586395114385,
+          "yaw": 0.019715238124894383
+        },
+        "estimate_source": "AMCL transform + wheel feedback",
+        "truth": {
+          "x": 3.0254059744995554,
+          "y": 0.012805590718194877,
+          "z": -0.0007862298150077293,
+          "yaw": 0.18416811440897912,
+          "linear": -1.520238013133135e-07,
+          "angular": -0.00010060614672041668,
+          "velocity_source": "finite difference of measured stamped Gazebo poses",
+          "source_reported_twist": {
+            "linear": -1.519902979215315e-07,
+            "angular": -0.00010060614386020461
+          }
+        },
+        "command": {
+          "linear": 0.0,
+          "angular": 0.0
+        },
+        "wheel_twist": {
+          "linear": -5.520028878433454e-11,
+          "angular": 6.494151621686416e-10
+        },
+        "ages": {
+          "odom": 0.032,
+          "truth": 0.032,
+          "scan": 0.335,
+          "amcl": 12.556,
+          "localization_tf": 0.0
+        },
+        "message_counts": {
+          "odom": 2170,
+          "truth": 2170,
+          "scan": 216,
+          "amcl": 100
+        },
+        "task": "",
+        "goal": null,
+        "active_source": "",
+        "nav2_pending": false,
+        "cancel_pending": false,
+        "queued": 0,
+        "queued_tasks": [],
+        "queue_paused": true,
+        "settled_spawn_recorded": true,
+        "reset_pose": [
+          2.5000272753844976,
+          2.465787063658545e-07,
+          -5.178245951958335e-06
+        ],
+        "radius_m": 0.118,
+        "battery": null,
+        "charging": null,
+        "contact": {
+          "peer": "",
+          "at": null,
+          "margin_m": 0.0,
+          "active": false
+        }
+      },
+      {
+        "id": "beta",
+        "model": "labbot",
+        "mode": "idle",
+        "reason": "Lift interlock / stale facility feedback; wheel input held neutral",
+        "included": true,
+        "ready": true,
+        "limits": {
+          "linear": 0.35,
+          "angular": 0.8
+        },
+        "navigation_ready": true,
+        "estimate": {
+          "x": 1.6000000000000498,
+          "y": -1.7000000000000346,
+          "yaw": 1.0415021977383978e-17
+        },
+        "estimate_source": "AMCL transform + wheel feedback",
+        "truth": {
+          "x": 1.5999999999938146,
+          "y": -1.6999999999998736,
+          "z": -7.637381706712383e-07,
+          "yaw": 1.77061646892176e-11,
+          "linear": 0.0,
+          "angular": 0.0,
+          "velocity_source": "finite difference of measured stamped Gazebo poses",
+          "source_reported_twist": {
+            "linear": 0.0,
+            "angular": 0.0
+          }
+        },
+        "command": {
+          "linear": 0.0,
+          "angular": 0.0
+        },
+        "wheel_twist": {
+          "linear": -8.190789205439061e-20,
+          "angular": 7.02618338245422e-19
+        },
+        "ages": {
+          "odom": 0.008,
+          "truth": 0.031,
+          "scan": 0.315,
+          "amcl": 101.435,
+          "localization_tf": 0.0
+        },
+        "message_counts": {
+          "odom": 2168,
+          "truth": 2167,
+          "scan": 216,
+          "amcl": 1
+        },
+        "task": "",
+        "goal": null,
+        "active_source": "",
+        "nav2_pending": false,
+        "cancel_pending": false,
+        "queued": 0,
+        "queued_tasks": [],
+        "queue_paused": false,
+        "settled_spawn_recorded": true,
+        "reset_pose": [
+          1.5999999999938146,
+          -1.6999999999998736,
+          1.77061646892176e-11
+        ],
+        "radius_m": 0.18,
+        "battery": null,
+        "charging": null,
+        "contact": {
+          "peer": "",
+          "at": null,
+          "margin_m": 0.0,
+          "active": false
+        }
+      },
+      {
+        "id": "gamma",
+        "model": "bumperbot",
+        "mode": "idle",
+        "reason": "Actual Nav2 success and measured settled arrival",
+        "included": true,
+        "ready": true,
+        "limits": {
+          "linear": 0.35,
+          "angular": 0.8
+        },
+        "navigation_ready": true,
+        "estimate": {
+          "x": -2.0305320123495414,
+          "y": 0.9658377525904585,
+          "yaw": 0.014336553453071348
+        },
+        "estimate_source": "AMCL transform + wheel feedback",
+        "truth": {
+          "x": -2.005032067522889,
+          "y": 1.0000544180855444,
+          "z": 1.8120887365538522e-06,
+          "yaw": 0.017734341551525423,
+          "linear": 0.0,
+          "angular": 0.0,
+          "velocity_source": "finite difference of measured stamped Gazebo poses",
+          "source_reported_twist": {
+            "linear": 0.0,
+            "angular": 0.0
+          }
+        },
+        "command": {
+          "linear": 0.0,
+          "angular": 0.0
+        },
+        "wheel_twist": {
+          "linear": 0.0,
+          "angular": 0.0
+        },
+        "ages": {
+          "odom": 0.035,
+          "truth": 0.031,
+          "scan": 0.296,
+          "amcl": 45.386,
+          "localization_tf": 0.0
+        },
+        "message_counts": {
+          "odom": 2166,
+          "truth": 2166,
+          "scan": 217,
+          "amcl": 88
+        },
+        "task": "",
+        "goal": null,
+        "active_source": "",
+        "nav2_pending": false,
+        "cancel_pending": false,
+        "queued": 0,
+        "queued_tasks": [],
+        "queue_paused": false,
+        "settled_spawn_recorded": true,
+        "reset_pose": [
+          -2.9999727246155024,
+          -1.9999997534212959,
+          -5.178245951959753e-06
+        ],
+        "radius_m": 0.118,
+        "battery": null,
+        "charging": null,
+        "contact": {
+          "peer": "",
+          "at": null,
+          "margin_m": 0.0,
+          "active": false
+        }
+      }
+    ],
+    "last_rejection": "",
+    "traffic": {
+      "serial": false,
+      "policy": "Concurrent routes with local scan/separation guards"
+    },
+    "task_history": [
+      {
+        "task": "080cf26e4b4d408a9f015fe311d50779",
+        "source": "route:lift-16448757d15047219b8efbda66287f2c-approaching",
+        "goal": {
+          "x": 2.3,
+          "y": 0.0,
+          "yaw": 0.0,
+          "timeout": 180.0,
+          "not_before": 0.0
+        },
+        "state": "succeeded",
+        "reason": "Actual Nav2 success and measured settled arrival",
+        "finished": 12791.269967945,
+        "observation": {
+          "x": 2.357616658189827,
+          "y": 0.016792075225506266,
+          "z": 1.8081025675956145e-06,
+          "yaw": 0.010323018693504079,
+          "linear": 0.0,
+          "angular": 0.0,
+          "velocity_source": "finite difference of measured stamped Gazebo poses",
+          "source_reported_twist": {
+            "linear": 0.0,
+            "angular": 0.0
+          }
+        }
+      },
+      {
+        "task": "3f1cf45358e3405b9b12a4c31981fdbb",
+        "source": "route:independent-gamma",
+        "goal": {
+          "x": -2.0,
+          "y": 1.0,
+          "yaw": 0.0,
+          "timeout": 120.0,
+          "not_before": 0.0
+        },
+        "state": "succeeded",
+        "reason": "Actual Nav2 success and measured settled arrival",
+        "finished": 12814.116637932,
+        "observation": {
+          "x": -2.005032067522889,
+          "y": 1.0000544180855444,
+          "z": 1.8120887365538522e-06,
+          "yaw": 0.017734341551525423,
+          "linear": 0.0,
+          "angular": 0.0,
+          "velocity_source": "finite difference of measured stamped Gazebo poses",
+          "source_reported_twist": {
+            "linear": 0.0,
+            "angular": 0.0
+          }
+        }
+      },
+      {
+        "task": "8b12892b0e3f4f64b1c61e30bf14f200",
+        "source": "route:lift-16448757d15047219b8efbda66287f2c-boarding",
+        "goal": {
+          "x": 3.65,
+          "y": 0.0,
+          "yaw": 0.0,
+          "timeout": 180.0,
+          "not_before": 0.0
+        },
+        "state": "failed",
+        "reason": "Nav2 returned success but measured arrival/settling did not pass",
+        "finished": 12858.871630654,
+        "observation": {
+          "x": 3.025405995184152,
+          "y": 0.012805496280159935,
+          "z": -0.0007862297128854615,
+          "yaw": 0.18417012653191353,
+          "linear": 0.0,
+          "angular": 0.0,
+          "velocity_source": "finite difference of measured stamped Gazebo poses",
+          "source_reported_twist": {
+            "linear": 0.0,
+            "angular": 0.0
+          }
+        }
+      }
+    ],
+    "contacts": {
+      "active": [],
+      "events": []
+    },
+    "scope": "Experimental shared-world runtime; contact and mission qualification pending"
+  },
+  "facility": {
+    "session_id": "session-ia30uxvh",
+    "ready": true,
+    "held_members": [],
+    "doors": {
+      "main": {
+        "position_m": 0.0,
+        "command_m": 0.0,
+        "target_m": 0.0,
+        "mode": 0,
+        "sweep_blocked": false
+      },
+      "lift": {
+        "position_m": 2.154950280784101,
+        "command_m": 2.15,
+        "target_m": 2.15,
+        "mode": 2,
+        "sweep_blocked": false
+      },
+      "landing_L0": {
+        "position_m": 2.154950272043675,
+        "command_m": 2.15,
+        "target_m": 2.15,
+        "mode": 2,
+        "sweep_blocked": false
+      },
+      "landing_L1": {
+        "position_m": 0.0,
+        "command_m": 0.0,
+        "target_m": 0.0,
+        "mode": 0,
+        "sweep_blocked": false
+      }
+    },
+    "observation_age_s": {
+      "clock": 0.0014884459997119848,
+      "joints": 0.0025618620002205716,
+      "fleet": 0.05964546900031564,
+      "bodies": {
+        "gamma": 0.04492241399930208,
+        "alpha": 0.045420844999171095,
+        "beta": 0.04517354999916279
+      }
+    },
+    "lift": {
+      "position_m": -2.4202510753768483e-12,
+      "command_m": -2.4202510753768483e-12,
+      "current_floor": "L0",
+      "destination": null,
+      "floors": [
+        "L0",
+        "L1"
+      ]
+    },
+    "docks": {
+      "west_charger": {
+        "x": -4.5,
+        "y": -3.0,
+        "z": 0.0,
+        "yaw": 0.0,
+        "position_tolerance": 0.12,
+        "height_tolerance": 0.12,
+        "yaw_tolerance": 0.15
+      }
+    },
+    "docking": {},
+    "energy": {
+      "alpha": {
+        "fraction": 0.7992355921127104,
+        "power_W": 3.0000000000028653,
+        "charging_W": 0.0,
+        "source_verified": true,
+        "coverage_complete": true,
+        "reason": "Observed simulation actuator power",
+        "source": "Authored battery model + sampled wheel effort/rate; no regeneration or hardware battery telemetry"
+      },
+      "beta": {
+        "fraction": 0.7992480000000292,
+        "power_W": 3.0,
+        "charging_W": 0.0,
+        "source_verified": true,
+        "coverage_complete": true,
+        "reason": "Observed simulation actuator power",
+        "source": "Authored battery model + sampled wheel effort/rate; no regeneration or hardware battery telemetry"
+      },
+      "gamma": {
+        "fraction": 0.7992560217841602,
+        "power_W": 3.0,
+        "charging_W": 0.0,
+        "source_verified": true,
+        "coverage_complete": true,
+        "reason": "Observed simulation actuator power",
+        "source": "Authored battery model + sampled wheel effort/rate; no regeneration or hardware battery telemetry"
+      }
+    },
+    "robot_floors": {
+      "alpha": "L0",
+      "beta": "L0",
+      "gamma": "L0"
+    },
+    "transports": {
+      "alpha": {
+        "robot": "alpha",
+        "operator_id": "concurrent-probe",
+        "origin": "L0",
+        "destination": "L1",
+        "phase": "failed",
+        "reason": "Owned transport Nav2 task failed/canceled",
+        "request_prefix": "lift-16448757d15047219b8efbda66287f2c",
+        "route_id": "lift-16448757d15047219b8efbda66287f2c-boarding",
+        "parking_goal": {
+          "x": 1.55,
+          "y": -0.55,
+          "yaw": 0.0
+        }
+      }
+    },
+    "reservations": {},
+    "transport_queue": {
+      "active": null,
+      "pending": [],
+      "history": [
+        {
+          "id": "3885565d131e4f86851c337be649f44c",
+          "robot": "alpha",
+          "floor": "L1",
+          "operator_id": "concurrent-probe",
+          "enqueued_at": 12761.920850677,
+          "phase": "failed",
+          "reason": "Owned transport Nav2 task failed/canceled",
+          "parking": "auto",
+          "parking_goal": {
+            "x": 1.55,
+            "y": -0.55,
+            "yaw": 0.0
+          }
+        },
+        {
+          "id": "d3fe5a901e154d45aec3e4a2fa9fb668",
+          "robot": "beta",
+          "floor": "L1",
+          "operator_id": "concurrent-probe",
+          "enqueued_at": 12761.920850677,
+          "phase": "canceled",
+          "reason": "Previous transport interrupted; explicit new itinerary required",
+          "parking": "auto"
+        },
+        {
+          "id": "64e159c0c4494d11860613c2c1dd8891",
+          "robot": "alpha",
+          "floor": "L0",
+          "operator_id": "concurrent-probe",
+          "enqueued_at": 12761.920850677,
+          "phase": "canceled",
+          "reason": "Previous transport interrupted; explicit new itinerary required",
+          "parking": "auto"
+        },
+        {
+          "id": "6b9cf9e5c28d4baca60c574fb61156ed",
+          "robot": "beta",
+          "floor": "L0",
+          "operator_id": "concurrent-probe",
+          "enqueued_at": 12761.920850677,
+          "phase": "canceled",
+          "reason": "Previous transport interrupted; explicit new itinerary required",
+          "parking": "auto"
+        }
+      ],
+      "capacity": 32
+    },
+    "lift_recovery": null,
+    "last_rejection": "",
+    "operator_id": "concurrent-probe",
+    "operator_fresh": true,
+    "localization_scan_enabled": {
+      "alpha": true,
+      "beta": true,
+      "gamma": true
+    },
+    "floor_z": {
+      "alpha": 0.0,
+      "beta": 0.0,
+      "gamma": 0.0
+    },
+    "floor_maps": {
+      "L0": "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_maps/share/robot_lab_maps/maps/fleet_facility/maps/map.yaml",
+      "L1": "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_maps/share/robot_lab_maps/maps/fleet_facility/maps/map_L1.yaml"
+    },
+    "robot_floor_maps": {
+      "alpha": "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_maps/share/robot_lab_maps/maps/fleet_facility/maps/map.yaml",
+      "beta": "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_maps/share/robot_lab_maps/maps/fleet_facility/maps/map.yaml",
+      "gamma": "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_maps/share/robot_lab_maps/maps/fleet_facility/maps/map.yaml"
+    },
+    "active_robot_maps": {
+      "alpha": "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_maps/share/robot_lab_maps/maps/fleet_facility/maps/map.yaml",
+      "beta": "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_maps/share/robot_lab_maps/maps/fleet_facility/maps/map.yaml",
+      "gamma": "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_maps/share/robot_lab_maps/maps/fleet_facility/maps/map.yaml"
+    },
+    "map_loading": [],
+    "map_status": {
+      "alpha": "ready",
+      "beta": "ready",
+      "gamma": "ready"
+    },
+    "map_errors": {},
+    "current_floor_map": "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_maps/share/robot_lab_maps/maps/fleet_facility/maps/map.yaml",
+    "operator_hold": true,
+    "rmf_protocol": true,
+    "rmf_control_ready": false,
+    "rmf_stopped_at": null,
+    "scope": "Fresh observed body poses determine robot floors; member Nav2 maps load per observed floor and commands remain held until loading succeeds; authored energy estimate"
+  }
+}

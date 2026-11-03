@@ -462,5 +462,21 @@
     "wall_seconds": 24.16210214199964,
     "overlap_s": 0.0,
     "landings": []
+  },
+  "fleet-concurrent-7": {
+    "passed": false,
+    "reason": "RuntimeError: Transport failed: [{'id': '3885565d131e4f86851c337be649f44c', 'robot': 'alpha', 'floor': 'L1', 'operator_id': 'concurrent-probe', 'enqueued_at': 12761.920850677, 'phase': 'failed', 'reason': 'Owned transport Nav2 task failed/canceled', 'parking': 'auto', 'parking_goal': {'x': 1.55, 'y': -0.55, 'yaw': 0.0}}, {'id': 'd3fe5a901e154d45aec3e4a2fa9fb668', 'robot': 'beta', 'floor': 'L1', 'operator_id': 'concurrent-probe', 'enqueued_at': 12761.920850677, 'phase': 'canceled', 'reason': 'Previous transport interrupted; explicit new itinerary required', 'parking': 'auto'}, {'id': '64e159c0c4494d11860613c2c1dd8891', 'robot': 'alpha', 'floor': 'L0', 'operator_id': 'concurrent-probe', 'enqueued_at': 12761.920850677, 'phase': 'canceled', 'reason': 'Previous transport interrupted; explicit new itinerary required', 'parking': 'auto'}, {'id': '6b9cf9e5c28d4baca60c574fb61156ed', 'robot': 'beta', 'floor': 'L0', 'operator_id': 'concurrent-probe', 'enqueued_at': 12761.920850677, 'phase': 'canceled', 'reason': 'Previous transport interrupted; explicit new itinerary required', 'parking': 'auto'}]",
+    "phase": "running",
+    "wall_seconds": 114.37278716500077,
+    "overlap_s": 51.98880413100051,
+    "landings": []
+  },
+  "fleet-concurrent-8": {
+    "passed": false,
+    "reason": "RuntimeError: Transport failed: [{'id': '33b711c9943a49ab9b5f6a121b616e2e', 'robot': 'alpha', 'floor': 'L1', 'operator_id': 'concurrent-probe', 'enqueued_at': 13074.471627284, 'phase': 'failed', 'reason': 'Owned transport Nav2 task failed/canceled', 'parking': 'auto', 'parking_goal': {'x': 1.55, 'y': -0.55, 'yaw': 0.0}}, {'id': '9d2d9197daec4ee0acfb3640aa07520c', 'robot': 'beta', 'floor': 'L1', 'operator_id': 'concurrent-probe', 'enqueued_at': 13074.471627284, 'phase': 'canceled', 'reason': 'Previous transport interrupted; explicit new itinerary required', 'parking': 'auto'}, {'id': '891540aced354567ab7352d996c2b873', 'robot': 'alpha', 'floor': 'L0', 'operator_id': 'concurrent-probe', 'enqueued_at': 13074.471627284, 'phase': 'canceled', 'reason': 'Previous transport interrupted; explicit new itinerary required', 'parking': 'auto'}, {'id': '836a8505aa5145a9ba852174b9957001', 'robot': 'beta', 'floor': 'L0', 'operator_id': 'concurrent-probe', 'enqueued_at': 13074.471627284, 'phase': 'canceled', 'reason': 'Previous transport interrupted; explicit new itinerary required', 'parking': 'auto'}]",
+    "phase": "running",
+    "wall_seconds": 133.1359933529984,
+    "overlap_s": 63.14353535400005,
+    "landings": []
   }
 }
