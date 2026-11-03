@@ -71,6 +71,13 @@ their recorded hashes. Do not transfer a named case to changed source.
   1600 N lift limit, 0.25 m/s speed limit and arrival/feedback/lease gates are
   retained. The candidate has 35 passing geometry/facility contracts and a
   valid SDF/build; its full physical wave remains a separate result.
+- Trial 6 preserves a failed native startup: Fortress's DART `CustomMeshShape`
+  rejected the geometry-only OBJ's missing normals, then its ODE collision
+  loader crashed. The generated OBJ now supplies explicit unit face normals
+  for every expanded vertex and a local material. Closure/convexity is checked
+  after welding coincident render vertices at hard normal seams. The corrected
+  35-check result and build are archived; the next actual native trial starts
+  and reaches physical robot navigation, which does not by itself pass the wave.
 - Terrain: early Bullet rays intersected the robot and failed initial
   support. Robot-excluding ray filters retain actual world collisions.
   Sparse virtual frames had Bullet's implicit 1 kg masses; source mass is

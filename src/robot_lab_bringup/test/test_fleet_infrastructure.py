@@ -290,7 +290,17 @@ def test_lift_sill_is_physical_convex_bevel_below_level_tolerance(tmp_path):
     mesh_path = world.parent / platform.findtext('collision/geometry/mesh/uri')
     assert platform.findtext('visual/geometry/mesh/uri') == mesh_path.name
     mesh = trimesh.load(mesh_path, force='mesh')
+    # Hard face normals intentionally split render vertices at creases.
+    # Check physical closure after welding only coincident positions.
+    mesh.merge_vertices(merge_norm=True, merge_tex=True)
     assert mesh.is_watertight and mesh.is_convex
+    # Fortress's native DART loader requires expanded per-vertex normals.
+    # An otherwise closed OBJ without them caused a native startup crash.
+    rows = mesh_path.read_text().splitlines()
+    normals = [list(map(float, row.split()[1:])) for row in rows if row.startswith('vn ')]
+    faces = [row.split()[1:] for row in rows if row.startswith('f ')]
+    assert normals and all(abs(math.sqrt(sum(v*v for v in n))-1.) < 1e-9 for n in normals)
+    assert all(all('//' in v and 1 <= int(v.split('//')[1]) <= len(normals) for v in face) for face in faces)
     # A car anywhere within the declared positive leveling tolerance must
     # expose a leading edge below the fixed landing, not a vertical curb.
     config = yaml.safe_load((world.parent.parent / 'infrastructure.yaml').read_text())

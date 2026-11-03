@@ -2,6 +2,7 @@
 """First-party physical doors, lift and charging locations, not mission results."""
 import json
 import argparse
+import math
 from pathlib import Path
 import xml.etree.ElementTree as ET
 import yaml
@@ -35,10 +36,22 @@ def platform_mesh(path):
     for i in range(count):
         j=(i+1)%count
         faces.extend([(i,count+i,count+j),(i,count+j,j)])
+    normals=[]
+    for a,b,c in faces:
+        u=[vertices[b][i]-vertices[a][i] for i in range(3)]
+        v=[vertices[c][i]-vertices[a][i] for i in range(3)]
+        normal=[u[1]*v[2]-u[2]*v[1],u[2]*v[0]-u[0]*v[2],u[0]*v[1]-u[1]*v[0]]
+        length=math.sqrt(sum(value*value for value in normal))
+        normals.append([value/length for value in normal])
     path.parent.mkdir(parents=True,exist_ok=True)
+    path.with_suffix('.mtl').write_text('newmtl platform\nKa 0.55 0.55 0.55\nKd 0.55 0.55 0.55\nKs 0 0 0\n')
+    # Fortress CustomMeshShape requires one normal per expanded vertex;
+    # geometry-only OBJ is accepted by other loaders but crashes native DART.
     path.write_text('# Robot Lab authored convex lift slab; metres; Apache-2.0\n'
+        +'mtllib '+path.with_suffix('.mtl').name+'\no lift_platform\nusemtl platform\n'
         +''.join('v '+' '.join(format(v,'.12g') for v in vertex)+'\n' for vertex in vertices)
-        +''.join('f '+' '.join(str(v+1) for v in face)+'\n' for face in faces))
+        +''.join('vn '+' '.join(format(v,'.12g') for v in normal)+'\n' for normal in normals)
+        +''.join('f '+' '.join(str(v+1)+'//'+str(i+1) for v in face)+'\n' for i,face in enumerate(faces)))
 
 
 def generate_maps(target,walls):

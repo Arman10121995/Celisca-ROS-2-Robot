@@ -1,0 +1,122 @@
+{
+  "passed": false,
+  "reason": "RuntimeError: Owned plant exited",
+  "wall_seconds": 24.16210214199964,
+  "phase": "waiting",
+  "landings": [],
+  "overlap_s": 0.0,
+  "fleet": {},
+  "facility": {
+    "session_id": "session-utsur53g",
+    "ready": false,
+    "held_members": [],
+    "doors": {},
+    "observation_age_s": {
+      "clock": null,
+      "joints": null,
+      "fleet": null,
+      "bodies": {}
+    },
+    "lift": {
+      "position_m": null,
+      "command_m": null,
+      "current_floor": "",
+      "destination": null,
+      "floors": [
+        "L0",
+        "L1"
+      ]
+    },
+    "docks": {
+      "west_charger": {
+        "x": -4.5,
+        "y": -3.0,
+        "z": 0.0,
+        "yaw": 0.0,
+        "position_tolerance": 0.12,
+        "height_tolerance": 0.12,
+        "yaw_tolerance": 0.15
+      }
+    },
+    "docking": {},
+    "energy": {
+      "alpha": {
+        "fraction": null,
+        "power_W": null,
+        "charging_W": null,
+        "source_verified": true,
+        "coverage_complete": false,
+        "reason": "Waiting for complete actuator feedback",
+        "source": "Authored battery model + sampled wheel effort/rate; no regeneration or hardware battery telemetry"
+      },
+      "beta": {
+        "fraction": null,
+        "power_W": null,
+        "charging_W": null,
+        "source_verified": true,
+        "coverage_complete": false,
+        "reason": "Waiting for complete actuator feedback",
+        "source": "Authored battery model + sampled wheel effort/rate; no regeneration or hardware battery telemetry"
+      },
+      "gamma": {
+        "fraction": null,
+        "power_W": null,
+        "charging_W": null,
+        "source_verified": true,
+        "coverage_complete": false,
+        "reason": "Waiting for complete actuator feedback",
+        "source": "Authored battery model + sampled wheel effort/rate; no regeneration or hardware battery telemetry"
+      }
+    },
+    "robot_floors": {
+      "alpha": "L0",
+      "beta": "L0",
+      "gamma": "L0"
+    },
+    "transports": {},
+    "reservations": {},
+    "transport_queue": {
+      "active": null,
+      "pending": [],
+      "history": [],
+      "capacity": 32
+    },
+    "lift_recovery": null,
+    "last_rejection": "",
+    "operator_id": "",
+    "operator_fresh": false,
+    "localization_scan_enabled": {
+      "alpha": false,
+      "beta": false,
+      "gamma": false
+    },
+    "floor_z": {
+      "alpha": 0.0,
+      "beta": 0.0,
+      "gamma": 0.0
+    },
+    "floor_maps": {
+      "L0": "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_maps/share/robot_lab_maps/maps/fleet_facility/maps/map.yaml",
+      "L1": "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_maps/share/robot_lab_maps/maps/fleet_facility/maps/map_L1.yaml"
+    },
+    "robot_floor_maps": {
+      "alpha": "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_maps/share/robot_lab_maps/maps/fleet_facility/maps/map.yaml",
+      "beta": "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_maps/share/robot_lab_maps/maps/fleet_facility/maps/map.yaml",
+      "gamma": "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_maps/share/robot_lab_maps/maps/fleet_facility/maps/map.yaml"
+    },
+    "active_robot_maps": {
+      "alpha": "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_maps/share/robot_lab_maps/maps/fleet_facility/maps/map.yaml",
+      "beta": "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_maps/share/robot_lab_maps/maps/fleet_facility/maps/map.yaml",
+      "gamma": "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_maps/share/robot_lab_maps/maps/fleet_facility/maps/map.yaml"
+    },
+    "map_loading": [],
+    "map_status": {},
+    "map_errors": {},
+    "current_floor_map": "",
+    "operator_hold": false,
+    "rmf_protocol": true,
+    "rmf_control_ready": false,
+    "rmf_stopped_at": null,
+    "scope": "Fresh observed body poses determine robot floors; member Nav2 maps load per observed floor and commands remain held until loading succeeds; authored energy estimate"
+  }
+}

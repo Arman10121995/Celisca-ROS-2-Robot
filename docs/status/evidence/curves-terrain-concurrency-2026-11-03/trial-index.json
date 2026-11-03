@@ -454,5 +454,13 @@
         "map": "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_maps/share/robot_lab_maps/maps/fleet_facility/maps/map_L1.yaml"
       }
     ]
+  },
+  "fleet-concurrent-6": {
+    "passed": false,
+    "reason": "RuntimeError: Owned plant exited",
+    "phase": "waiting",
+    "wall_seconds": 24.16210214199964,
+    "overlap_s": 0.0,
+    "landings": []
   }
 }
