@@ -23,7 +23,8 @@ def setup(context):
     def value(key):return LaunchConfiguration(key).perform(context)
     robots=Path(share('robot_lab_robots'));bringup=Path(share('robot_lab_bringup'))
     profiles=yaml.safe_load((robots/'config/robots.yaml').read_text())['robots']
-    name=value('robot_model');profile=profiles[name]
+    name=value('robot_model');profile=profiles[name];backend=value('simulator')
+    if backend not in ('mujoco','pybullet','isaac','gazebo'):raise ValueError('Source gait backend adapter unavailable: '+backend)
     config=robots/profile['gait_model'];urdf=load_description(robots/profile['xacro']);model=load_model(urdf,config)
     task=value('task')
     if task not in ('gait','loc','slam','3d_slam','nav'):raise ValueError('Choose gait/loc/slam/3d_slam/nav for the experimental gait workflow')
@@ -37,10 +38,12 @@ def setup(context):
     gz=world['gazebo'];source_world=str(Path(share(gz.get('world_package','robot_lab_maps')))/gz['world_path'])
     # No silent empty-world fallback for this new controlled workflow.
     explicit_mjcf=world.get('mujoco',{}).get('xml_path','')
+    if explicit_mjcf and not Path(explicit_mjcf).is_absolute():
+        explicit_mjcf=str(Path(share(world.get('mujoco',{}).get('package','robot_lab_maps')))/explicit_mjcf)
     if not explicit_mjcf:
         xml_name=gz.get('world_name') or selected
         explicit_mjcf=str(Path(share('robot_lab_maps'))/'mjcf'/(xml_name+'.xml'))
-    if not Path(explicit_mjcf).is_file():raise ValueError('Selected world has no installed MuJoCo collision conversion: '+explicit_mjcf)
+    if backend=='mujoco' and not Path(explicit_mjcf).is_file():raise ValueError('Selected world has no installed MuJoCo collision conversion: '+explicit_mjcf)
     folder_root=Path(os.environ.get('ROBOT_LAB_RUNTIME_ROOT','/workspace/molar/robot_lab_runtime'))/'gait_sessions'
     folder_root.mkdir(parents=True,exist_ok=True);folder=Path(tempfile.mkdtemp(prefix=name+'-',dir=folder_root))
     description=folder/'robot.urdf';description.write_text(urdf)
@@ -58,6 +61,8 @@ def setup(context):
     pose['yaw']-=float(model.config['forward_yaw'])
     contacts={leg['id']:leg['contact_geoms'] for leg in model.legs}
     contacts['body']=model.body_geoms if model.config.get('kind')=='serpentine' else ['base_link_contact_0'] if name=='hexapod_ros2' else ['base_link_collision']+['segment_'+str(i)+'_collision' for i in range(1,len(model.config.get('spines',[]))+1)]
+    probes={leg['id']:dict(root=leg['root'],foot=leg['foot'],home=model.home[leg['id']].tolist()) for leg in model.legs} if model.config.get('kind')!='serpentine' else {}
+    if backend!='mujoco' and not probes:raise ValueError('Passive-wheel snake needs its source-specific contact/rolling adapter; use MuJoCo')
     args=dict(model=str(description),robot_name=name,robot_package='robot_lab_robots',robot_xacro=profile['xacro'],
               world_name=Path(explicit_mjcf).stem,world_path=source_world,gui=value('gui'),use_sim_time='true',
               hold_position='false',joint_pd_config=json.dumps(model.pd_config()),pd_joint_armature='.01',
@@ -69,7 +74,13 @@ def setup(context):
             camera_optical_frame='gait_camera_optical_frame',scan_samples=360,scan_rate=10.,scan_range_min=.05,
             scan_range_max=8.,camera_width=320,camera_height=240,camera_rate=5. if task=='3d_slam' else 0.,camera_horizontal_fov=1.25,
             camera_near=.1,camera_far=8.))
-    manifest=dict(robot=name,map=selected,backend='MuJoCo',world_xml=explicit_mjcf,spawn=pose,
+    args['gait_probe_config']=json.dumps(probes)
+    if backend in ('pybullet','isaac'):
+        args=dict(model=str(description),robot_name=name,gui=value('gui'),world_name=gz['world_name'],world_path=source_world,
+            hold_position='false',joint_pd_config=json.dumps(model.pd_config()),gait_probe_config=json.dumps(probes),
+            gait_floor_reference=floor_reference,physics_rate='1000.',**{'spawn_'+key:str(item) for key,item in pose.items()},
+            **({'sensor_config':args['sensor_config']} if 'sensor_config' in args else {}))
+    manifest=dict(robot=name,map=selected,backend=backend,world_xml=explicit_mjcf,spawn=pose,
                   task=task,sensor_kit=task!='gait',
                   description=str(description),config=str(config),pd=model.pd_config(),contacts=contacts,
                   scope='Experimental exact-geometry gait with actual contact/tilt guards; independent estimation/SLAM/navigation pending')
@@ -90,13 +101,23 @@ def setup(context):
         'use_sim_time':True,'description_file':str(description),'gait_config':str(config),'control_allowed':value('control')=='true',
         'goal_world_to_map':json.dumps(world_to_map),
         'navigation_enabled':task=='nav','task':task,'session_directory':str(folder)}],output='screen')
-    actions=[IncludeLaunchDescription(PythonLaunchDescriptionSource(str(Path(share('robot_lab_mujoco'))/'launch/mujoco_simulator.launch.py')),launch_arguments=args.items()),
-             controller,RegisterEventHandler(OnProcessExit(target_action=controller,on_exit=[EmitEvent(event=Shutdown(reason='Gait controller exited'))]))]
+    if backend=='gazebo':
+        if floor_reference:
+            from robot_lab_utils.gait_gazebo_description import align_initial
+            manifest['initial_support']=align_initial(urdf,model,source_world,pose,float(floor_reference))
+            (folder/'session.json').write_text(json.dumps(manifest,indent=2)+'\n')
+        from robot_lab_utils.gait_gazebo_launch import plant_actions
+        actions=plant_actions(description,model,source_world,folder,pose,value('gui')=='true',task!='gait')
+    else:actions=[IncludeLaunchDescription(PythonLaunchDescriptionSource(str(Path(share('robot_lab_'+backend))/'launch'/(backend+'_simulator.launch.py'))),launch_arguments=args.items())]
+    actions += [controller,RegisterEventHandler(OnProcessExit(target_action=controller,on_exit=[EmitEvent(event=Shutdown(reason='Gait controller exited'))]))]
     if task!='gait':
         from robot_lab_utils.gait_pipeline import pipeline
         actions+=pipeline(task,description,config,pose,world,folder,model,
             map_yaml=value('map_yaml'),database=value('database'),localization=value('localization')=='true',
             world_file=source_world)
+    elif probes and value('control')=='true':
+        actions.append(Node(package='robot_lab_utils',executable='gait_odometry.py',parameters=[dict(use_sim_time=True,
+            description_file=str(description),gait_config=str(config),initial_drive_yaw=float(pose['yaw'])+model.config['forward_yaw'])],output='screen'))
     if value('rviz')=='true':
         rviz=Path(share('robot_lab_description'))/'rviz/display.rviz'
         frame='odom'
@@ -116,6 +137,7 @@ def setup(context):
 
 def generate_launch_description():
     return LaunchDescription([DeclareLaunchArgument('robot_model',default_value='hexapod_ros2'),
+        DeclareLaunchArgument('simulator',default_value='mujoco'),
         DeclareLaunchArgument('task',default_value='gait'),
         DeclareLaunchArgument('map_yaml',default_value='',description='Acquired gait occupancy map for localization/navigation'),
         DeclareLaunchArgument('database',default_value='',description='Saved acquired RTAB-Map database; copied read-only'),

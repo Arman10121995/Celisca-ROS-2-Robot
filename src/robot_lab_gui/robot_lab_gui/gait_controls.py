@@ -25,7 +25,8 @@ class GaitControls(ScrollPanel):
         self.operator='gait-gui-'+uuid.uuid4().hex;self.last_hb=0.
         self.estimated_pose=None;self.estimated_stamp=None
         self.goal_handle=None;self.goal_generation=0;self.goal_sending=False
-        self.status=tk.StringVar(value='Select a six/eight/many-legged robot, MuJoCo and Gait mode.')
+        self.status=tk.StringVar(value='Select a six/eight/many-legged robot, a supported backend and Gait mode.')
+        self.terrain=tk.BooleanVar(value=False)
         self.feedback=tk.StringVar(value='Awaiting actual body, joints and foot forces')
         self.phase=tk.DoubleVar(value=0.0)
         self.schedule=tk.StringVar(value='wave');body.columnconfigure(0,weight=1)
@@ -36,11 +37,13 @@ class GaitControls(ScrollPanel):
                                   (4,'Stop / hold current targets',lambda:app._stop_drive(keep_input_enabled=True)),(5,'Return to source stance',lambda:self.operation('stand')),
                                   (6,'Open latched Drive / WASD controls',lambda:app.control_notebook.select(app.drive_page))]:
             ttk.Button(body,text=label,command=command).grid(row=row,column=0,sticky='ew',pady=2)
-        combo=ttk.Frame(self);combo.grid(row=7,column=0,sticky='ew',pady=6)
+        combo=ttk.Frame(body);combo.grid(row=7,column=0,sticky='ew',pady=6)
+        terrain_group=ttk.Frame(body);terrain_group.grid(row=8,column=0,sticky='ew');terrain_group.columnconfigure(0,weight=1)
+        ttk.Checkbutton(terrain_group,text='Adapt measured low relief · re-arm',variable=self.terrain,command=lambda:self.operation('terrain')).grid(row=0,column=0,sticky='w')
         ttk.Label(combo,text='Schedule').pack(side='left')
         self.combo=ttk.Combobox(combo,textvariable=self.schedule,state='readonly',values=['wave','ripple','tripod'],width=12)
         self.combo.pack(side='left',padx=5);ttk.Button(combo,text='Apply',command=lambda:self.operation('gait')).pack(side='left');ttk.Label(combo,text='Phase').pack(side='left',padx=(10,0));ttk.Scale(combo,from_=0.0,to=1.0,variable=self.phase,orient='horizontal',length=50).pack(side='left',fill='x',expand=True,padx=2)
-        ttk.Label(body,textvariable=self.feedback,wraplength=310,justify='left').grid(row=8,column=0,sticky='ew',pady=6)
+        ttk.Label(terrain_group,textvariable=self.feedback,wraplength=310,justify='left').grid(row=1,column=0,sticky='ew',pady=6)
         ttk.Label(body,text='Connect and Arm start without travel. Use Drive for latching, ramps, WASD/joystick and Space.\n'
                   'Stop/loss halts gait phases and holds bounded joint targets; bodies remain free in physics.\n'
                   'Measured contacts are separate from planned stance. Experimental contact odometry and mapping/navigation can be selected below; terrain and backend qualification remain pending.',
@@ -118,6 +121,7 @@ class GaitControls(ScrollPanel):
                 if self.runtime:self.app._stop_drive(keep_input_enabled=True)
             interrupted=bool(self.runtime and self.runtime.get('enabled') and not data['enabled'])
             self.runtime,self.runtime_at=data,time.monotonic()
+            self.terrain.set(bool(data.get('terrain_enabled')))
             if interrupted:self.app._stop_drive(keep_input_enabled=True)
             default={'hexapod_ros2':'tripod','lab_octopod':'tetrapod','lab_centipede':'wave'}.get(data['robot_id'],'wave')
             self.combo.configure(values=data.get('available_schedules',list(dict.fromkeys([default,'ripple','wave']))))
@@ -126,8 +130,16 @@ class GaitControls(ScrollPanel):
             text+=f"{data['physical_legs']} physical legs / {data['actuated_joints']} joints · {data['gait']}\n"
             if p:text+=f"Actual body ({p['x']:.3f}, {p['y']:.3f}, {p['z']:.3f}) m\n"
             if data.get('tilt_rad') is not None:text+=f"Tilt {data['tilt_rad']:.3f} rad\n"
+            if data.get('support_fraction') is not None:text+=f"Actual foot support {100*data['support_fraction']:.0f}%\n"
+            slip=data.get('kinematic_slip') or {}
+            if slip.get('slip_suspected'):text+=f"Contact odometry suspended: {slip.get('reason','inconsistent support')} ({slip.get('slip_duration_s',0.):.3f} s)\n"
             if data.get('max_ik_error_m') is not None:text+=f"IK error {data['max_ik_error_m']*1000:.2f} mm\n"
             if data.get('motion_kind')=='serpentine':text+='Passive-wheel snake · source-limited spine wave; no foot IK\n'
+            if data.get('terrain_error'):text+='Terrain unavailable: '+data['terrain_error']+'\n'
+            if data.get('terrain_enabled'):
+                text+='Measured low-relief adaptation enabled · offsets m: '+', '.join(f'{k}: {v:+.3f}' for k,v in data.get('terrain_offsets',{}).items())+'\n'
+                observation=data.get('terrain_observation') or {}
+                if observation.get('source'):text+=observation['source']+'\n'
             self.feedback.set(text+'Measured normal forces N:\n'+', '.join(f'{k}: {v:.1f}' for k,v in forces.items()))
         except (ValueError,KeyError,TypeError):return
 
@@ -135,7 +147,7 @@ class GaitControls(ScrollPanel):
         if not self.node or not self.runtime or time.monotonic()-self.runtime_at>1.:
             self.status.set('Connect to fresh gait state first');return False
         if op!='stop' and (not self.selected() or self.runtime['robot_id']!=self.app.robot_var.get() or not self.runtime.get('control_allowed')):
-            self.status.set('Select the running source robot in MuJoCo Gait mode');return False
+            self.status.set('Select the running source robot and its implemented Gait backend');return False
         self.command_pub.publish(String(data=json.dumps(dict(session_id=self.runtime['session_id'],operator_id=self.operator,op=op,**extra))))
         self.status.set('Requested '+op+'; inspect actual state below');return True
 
@@ -145,6 +157,7 @@ class GaitControls(ScrollPanel):
             self.stop();self.status.set('Waiting for actual Nav2 cancellation before re-arming');return
         self.app._stop_drive(keep_input_enabled=True)
         extra={'gait':self.schedule.get(),'phase':self.phase.get(),'spine_phase':self.spine_phase.get(),'spine_freq':self.spine_freq.get()} if op=='gait' else {}
+        if op=='terrain':extra=dict(enabled=self.terrain.get())
         self.send(op,**extra)
 
     def stop(self):

@@ -171,6 +171,7 @@ def _build_mujoco_actions(context):
     # policy's own contract.  Empty keeps the passive/effort plant.
     joint_pd_config = LaunchConfiguration("joint_pd_config").perform(context).strip()
     spawner_params["gait_contact_config"] = LaunchConfiguration("gait_contact_config").perform(context)
+    spawner_params['gait_probe_config']=LaunchConfiguration('gait_probe_config').perform(context)
     spawner_params["gait_floor_reference"] = LaunchConfiguration("gait_floor_reference").perform(context)
     if joint_pd_config:
         spawner_params["joint_pd_config"] = joint_pd_config
@@ -255,6 +256,7 @@ def generate_launch_description():
         DeclareLaunchArgument("perturbation_axis", default_value="1"),
         DeclareLaunchArgument("initial_joint_positions", default_value=""),
         DeclareLaunchArgument("gait_contact_config", default_value=""),
+        DeclareLaunchArgument('gait_probe_config',default_value=''),
         DeclareLaunchArgument("gait_floor_reference", default_value=""),
         DeclareLaunchArgument("robot_package", default_value="robot_lab_robots"),
         DeclareLaunchArgument("robot_xacro", default_value=""),

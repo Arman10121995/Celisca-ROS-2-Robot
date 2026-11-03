@@ -1,0 +1,310 @@
+{
+  "passed": true,
+  "reason": "Observed native curved travel and settled braking",
+  "phase": "executing",
+  "wall_seconds": 34.046256475005066,
+  "goal": [
+    1.605175801107802,
+    -2.27702102371754,
+    -1.9936980894711875
+  ],
+  "initial_body": {
+    "x": -3.5,
+    "y": -3.0,
+    "z": -2.0,
+    "yaw": -3.141592653589793
+  },
+  "final_body": {
+    "x": 1.5446523842966378,
+    "y": -2.3184993839329158,
+    "z": -1.664614144183055,
+    "yaw": -2.408864997245809
+  },
+  "native": {
+    "schema_version": 1,
+    "session_id": "bd6f812fa75d4c1591471872465ed7c1",
+    "robot_id": "tethys_auv",
+    "enabled": true,
+    "ready": true,
+    "control_allowed": true,
+    "reason": "Estimated-pose mission owns velocity input; manual input interrupts",
+    "input_owner": "mission",
+    "operator_id": "auv-curve-probe",
+    "operator_fresh": true,
+    "depth": 1.664341131512029,
+    "target_depth": 2.0344308388989747,
+    "position": {
+      "x": 1.5429407194288087,
+      "y": -2.319014295228672,
+      "z": -1.664341131512029
+    },
+    "rpy": [
+      0.010016348564002155,
+      -0.09143799204767455,
+      -2.409447901800586
+    ],
+    "velocity_world": [
+      0.04344195746090338,
+      0.013199227493541235,
+      -0.006734356061987081
+    ],
+    "commanded_thruster_forces_N": [
+      3.2906292408751665
+    ],
+    "fin_targets_rad": [
+      0.0,
+      0.0
+    ],
+    "actual_joints_rad": {
+      "propeller_joint": -220.55356482480218,
+      "vertical_fins_joint": -4.5001762281868675e-05,
+      "horizontal_fins_joint": 7.831437836831056e-06
+    },
+    "measured_forward_surge_m_s": 0.04113286551093958,
+    "cruise_guidance_active": false,
+    "body_samples": 1088,
+    "joint_samples": 16899,
+    "sim_time": 21.775,
+    "limits": {
+      "surge": 0.7,
+      "sway": 0.0,
+      "yaw": 0.15
+    },
+    "propulsion_kind": "propeller_fins",
+    "calibration": {
+      "source_mass_kg": 148.35709999999997,
+      "displaced_volume_m3": 0.14835710000020003,
+      "ballast_mass_kg": 3.70892750020505,
+      "complete_mass_kg": 152.06602750020502,
+      "fluid_density_kg_m3": 1025.0,
+      "center_of_buoyancy_m": [
+        0.0036994912949852763,
+        0.0,
+        0.0
+      ],
+      "ballast_note": "Declared sealed internal mass below center of buoyancy (z=-0.08 m), no added collision volume; original mass/inertia untouched",
+      "source_fuel_version": 3,
+      "source_zip_sha256": "81cded5384f86c77afa1afa56050f024463379db912c33a60d938d27d28f4a15",
+      "source_model_sha256": "a9e6b39850139ce93cbe7b3198cc5e094541a28b81b14553b4db62ccca98ae16",
+      "source_physics_sha256": "ace3dc63c21079d738d7b86ce2eb72e820ac6c98a4e1b5f031c43caa48b0d161",
+      "thrust_limit_N": 35.0,
+      "fin_limit_rad": 0.261799,
+      "source_forward_yaw": 3.141592653589793,
+      "added_mass_convention": "Fortress 6.18 applies -Ma*acceleration; derived mass diagonals are positive, original example retained unchanged",
+      "scope": "Native source AUV forces/fins; authored trim and experimental guidance, no independent estimation/SLAM/navigation"
+    },
+    "observer": "Native simulator pose/joints for inner guidance and diagnostics; independent sensor odometry and RGB-D/depth mapping use separate topics.",
+    "scope": "Pinned native Tethys AUV + declared trim ballast and authored bounded cruise guidance; no hover/strafe/pivot/depth hold at zero flow or mission qualification"
+  },
+  "mission": {
+    "status": "completed",
+    "reason": "AUV signed-thrust braking settled; propulsion stopped",
+    "robot_id": "tethys_auv",
+    "session_id": "bd6f812fa75d4c1591471872465ed7c1",
+    "ready": true,
+    "position": [
+      1.604820428695663,
+      -2.3256975343195596,
+      -1.6632897974259782
+    ],
+    "estimated_yaw": -2.4097422244044204,
+    "route": [
+      [
+        -3.499065918800223,
+        -3.0007095742866388,
+        -1.9936980894711875
+      ],
+      [
+        -3.35620877594308,
+        -3.0007095742866388,
+        -1.9936980894711875
+      ],
+      [
+        -3.2133516330859373,
+        -3.0007095742866388,
+        -1.9936980894711875
+      ],
+      [
+        -3.0704944902287945,
+        -3.0007095742866388,
+        -1.9936980894711875
+      ],
+      [
+        -2.9276373473716513,
+        -3.0007095742866388,
+        -1.9936980894711875
+      ],
+      [
+        -2.7847802045145085,
+        -3.0007095742866388,
+        -1.9936980894711875
+      ],
+      [
+        -2.6419230616573657,
+        -3.0007095742866388,
+        -1.9936980894711875
+      ],
+      [
+        -2.499065918800223,
+        -3.0007095742866383,
+        -1.9936980894711875
+      ],
+      [
+        -2.3494701436552425,
+        -2.999777084058337,
+        -1.9936980894711875
+      ],
+      [
+        -2.1998976179433485,
+        -2.9969797582964333,
+        -1.9936980894711875
+      ],
+      [
+        -2.0503715874843156,
+        -2.9923180317474216,
+        -1.9936980894711875
+      ],
+      [
+        -1.900915290871857,
+        -2.985792628913707,
+        -1.9936980894711875
+      ],
+      [
+        -1.7515519558619979,
+        -2.97740456394102,
+        -1.9936980894711875
+      ],
+      [
+        -1.602304795763132,
+        -2.9671551404608003,
+        -1.9936980894711875
+      ],
+      [
+        -1.4531970058283248,
+        -2.9550459513875857,
+        -1.9936980894711875
+      ],
+      [
+        -1.304251759650423,
+        -2.941078878671455,
+        -1.9936980894711875
+      ],
+      [
+        -1.1554922055605288,
+        -2.925256093005549,
+        -1.9936980894711875
+      ],
+      [
+        -1.006941463030401,
+        -2.9075800534887026,
+        -1.9936980894711875
+      ],
+      [
+        -0.8586226190793425,
+        -2.8880535072432707,
+        -1.9936980894711875
+      ],
+      [
+        -0.71055872468613,
+        -2.866679488988181,
+        -1.9936980894711875
+      ],
+      [
+        -0.5627727912065437,
+        -2.843461320567293,
+        -1.9936980894711875
+      ],
+      [
+        -0.4152877867970588,
+        -2.818402610433134,
+        -1.9936980894711875
+      ],
+      [
+        -0.26812663284524785,
+        -2.791507253086097,
+        -1.9936980894711875
+      ],
+      [
+        -0.1213122004074525,
+        -2.7627794284691642,
+        -1.9936980894711875
+      ],
+      [
+        0.025132693345725432,
+        -2.7322236013182923,
+        -1.9936980894711875
+      ],
+      [
+        0.1711852886755496,
+        -2.699844520468522,
+        -1.9936980894711875
+      ],
+      [
+        0.31682288681236015,
+        -2.665647218115934,
+        -1.9936980894711875
+      ],
+      [
+        0.46202285348330063,
+        -2.629637009035573,
+        -1.9936980894711875
+      ],
+      [
+        0.606762622430026,
+        -2.5918194897554585,
+        -1.9936980894711875
+      ],
+      [
+        0.7510196989158384,
+        -2.552200537686783,
+        -1.9936980894711875
+      ],
+      [
+        0.894771663221706,
+        -2.5107863102104933,
+        -1.9936980894711875
+      ],
+      [
+        1.037996174130627,
+        -2.467583243720327,
+        -1.9936980894711875
+      ],
+      [
+        1.1806709723997888,
+        -2.422598052622508,
+        -1.9936980894711875
+      ],
+      [
+        1.3227738842199899,
+        -2.37583772829222,
+        -1.9936980894711875
+      ],
+      [
+        1.4642828246617823,
+        -2.3273095379870483,
+        -1.9936980894711875
+      ],
+      [
+        1.605175801107802,
+        -2.2770210237175394,
+        -1.9936980894711875
+      ]
+    ],
+    "waypoint": 32,
+    "position_std_m": 0.051734990988301664,
+    "observed_cells": 0,
+    "directory": "/workspace/molar/robot_lab_runtime/marine_missions/8ed9618464694d4e9d871343be6e6282",
+    "authored_current_m_s": null,
+    "authored_current_age_s": null,
+    "current_cost_planning": false,
+    "route_kind": "auv_dubins",
+    "auv_turn_radius_m": 12.0,
+    "auv_cross_track_m": 0.10214994939479849,
+    "localization_mode": false,
+    "localized": false,
+    "mapping_status": "idle",
+    "saved_map": null,
+    "estimator": "Pressure/DVL simulation + native IMU; optional real RGB-D SLAM map transform",
+    "scope": "Experimental estimated-pose mission; no independent physical navigation qualification"
+  }
+}

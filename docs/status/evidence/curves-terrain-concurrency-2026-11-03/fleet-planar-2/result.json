@@ -1,0 +1,328 @@
+{
+  "passed": true,
+  "reason": "Two independent actual Nav2 missions and settled body endpoints in one three-base world",
+  "phase": "running",
+  "wall_seconds": 107.37549997599854,
+  "overlap_s": 45.77394158599782,
+  "goals": {
+    "alpha": {
+      "x": 2.3,
+      "y": 0.0,
+      "yaw": 0.0
+    },
+    "gamma": {
+      "x": -2.0,
+      "y": 1.0,
+      "yaw": 0.0
+    }
+  },
+  "fleet": {
+    "schema_version": 1,
+    "session_id": "session-7__6955v",
+    "map": "fleet_facility",
+    "backend": "gazebo",
+    "navigation": true,
+    "directory": "/workspace/molar/robot_lab_runtime/fleet_sessions/session-7__6955v",
+    "sim_time": 26.848,
+    "clock_age": 0.002,
+    "operator_id": "planar-probe",
+    "operator_fresh": true,
+    "swarm": null,
+    "members": [
+      {
+        "id": "alpha",
+        "model": "bumperbot",
+        "mode": "idle",
+        "reason": "Actual Nav2 success and measured settled arrival",
+        "included": true,
+        "ready": true,
+        "limits": {
+          "linear": 0.35,
+          "angular": 0.8
+        },
+        "navigation_ready": true,
+        "estimate": {
+          "x": 2.2487281562689194,
+          "y": -0.01718370595279973,
+          "yaw": 0.006731362604919071
+        },
+        "estimate_source": "AMCL transform + wheel feedback",
+        "truth": {
+          "x": 2.353719417492328,
+          "y": 0.021126143066576022,
+          "z": 1.81180404304554e-06,
+          "yaw": 0.011943466696882147,
+          "linear": 0.0,
+          "angular": 0.0,
+          "velocity_source": "finite difference of measured stamped Gazebo poses",
+          "source_reported_twist": {
+            "linear": 0.0,
+            "angular": 0.0
+          }
+        },
+        "command": {
+          "linear": 0.0,
+          "angular": 0.0
+        },
+        "wheel_twist": {
+          "linear": 0.0,
+          "angular": 0.0
+        },
+        "ages": {
+          "odom": 0.024,
+          "truth": 0.021,
+          "scan": 0.084,
+          "amcl": 40.79,
+          "localization_tf": 0.0
+        },
+        "message_counts": {
+          "odom": 1213,
+          "truth": 1213,
+          "scan": 121,
+          "amcl": 63
+        },
+        "task": "",
+        "goal": null,
+        "active_source": "",
+        "nav2_pending": false,
+        "cancel_pending": false,
+        "queued": 0,
+        "queued_tasks": [],
+        "queue_paused": false,
+        "settled_spawn_recorded": true,
+        "reset_pose": [
+          2.5000272753844976,
+          2.465787063658545e-07,
+          -5.178245951958335e-06
+        ],
+        "radius_m": 0.118,
+        "battery": null,
+        "charging": null,
+        "contact": {
+          "peer": "",
+          "at": null,
+          "margin_m": 0.0,
+          "active": false
+        }
+      },
+      {
+        "id": "beta",
+        "model": "labbot",
+        "mode": "idle",
+        "reason": "Lift interlock / stale facility feedback; wheel input held neutral",
+        "included": true,
+        "ready": true,
+        "limits": {
+          "linear": 0.35,
+          "angular": 0.8
+        },
+        "navigation_ready": true,
+        "estimate": {
+          "x": 1.6000000000000498,
+          "y": -1.7000000000000346,
+          "yaw": 4.935937230910453e-18
+        },
+        "estimate_source": "AMCL transform + wheel feedback",
+        "truth": {
+          "x": 1.5999999999938146,
+          "y": -1.6999999999998736,
+          "z": -7.637381706712383e-07,
+          "yaw": 1.77061646892176e-11,
+          "linear": 0.0,
+          "angular": 0.0,
+          "velocity_source": "finite difference of measured stamped Gazebo poses",
+          "source_reported_twist": {
+            "linear": 0.0,
+            "angular": 0.0
+          }
+        },
+        "command": {
+          "linear": 0.0,
+          "angular": 0.0
+        },
+        "wheel_twist": {
+          "linear": -4.159901886623344e-20,
+          "angular": 3.1799542440646433e-19
+        },
+        "ages": {
+          "odom": 0.021,
+          "truth": 0.024,
+          "scan": 0.049,
+          "amcl": null,
+          "localization_tf": 0.0
+        },
+        "message_counts": {
+          "odom": 1212,
+          "truth": 1212,
+          "scan": 121,
+          "amcl": 0
+        },
+        "task": "",
+        "goal": null,
+        "active_source": "",
+        "nav2_pending": false,
+        "cancel_pending": false,
+        "queued": 0,
+        "queued_tasks": [],
+        "queue_paused": false,
+        "settled_spawn_recorded": true,
+        "reset_pose": [
+          1.5999999999938146,
+          -1.6999999999998736,
+          1.77061646892176e-11
+        ],
+        "radius_m": 0.18,
+        "battery": null,
+        "charging": null,
+        "contact": {
+          "peer": "",
+          "at": null,
+          "margin_m": 0.0,
+          "active": false
+        }
+      },
+      {
+        "id": "gamma",
+        "model": "bumperbot",
+        "mode": "idle",
+        "reason": "Actual Nav2 success and measured settled arrival",
+        "included": true,
+        "ready": true,
+        "limits": {
+          "linear": 0.35,
+          "angular": 0.8
+        },
+        "navigation_ready": true,
+        "estimate": {
+          "x": -2.0328364572234277,
+          "y": 0.958843168191791,
+          "yaw": 0.0120283627204193
+        },
+        "estimate_source": "AMCL transform + wheel feedback",
+        "truth": {
+          "x": -1.9930310490533856,
+          "y": 0.9980447263633794,
+          "z": 1.8120887469458851e-06,
+          "yaw": 0.016293490277343163,
+          "linear": 0.0,
+          "angular": 0.0,
+          "velocity_source": "finite difference of measured stamped Gazebo poses",
+          "source_reported_twist": {
+            "linear": 0.0,
+            "angular": 0.0
+          }
+        },
+        "command": {
+          "linear": 0.0,
+          "angular": 0.0
+        },
+        "wheel_twist": {
+          "linear": 0.0,
+          "angular": 0.0
+        },
+        "ages": {
+          "odom": 0.021,
+          "truth": 0.019,
+          "scan": 0.032,
+          "amcl": 0.834,
+          "localization_tf": 0.0
+        },
+        "message_counts": {
+          "odom": 1211,
+          "truth": 1211,
+          "scan": 121,
+          "amcl": 86
+        },
+        "task": "",
+        "goal": null,
+        "active_source": "",
+        "nav2_pending": false,
+        "cancel_pending": false,
+        "queued": 0,
+        "queued_tasks": [],
+        "queue_paused": false,
+        "settled_spawn_recorded": true,
+        "reset_pose": [
+          -2.9999727246155024,
+          -1.9999997534212959,
+          -5.178245951959753e-06
+        ],
+        "radius_m": 0.118,
+        "battery": null,
+        "charging": null,
+        "contact": {
+          "peer": "",
+          "at": null,
+          "margin_m": 0.0,
+          "active": false
+        }
+      }
+    ],
+    "last_rejection": "",
+    "traffic": {
+      "serial": false,
+      "policy": "Concurrent routes with local scan/separation guards"
+    },
+    "task_history": [
+      {
+        "task": "dae15bd164f84d808c596318ccacf6b9",
+        "source": "route:concurrent-alpha",
+        "goal": {
+          "x": 2.3,
+          "y": 0.0,
+          "yaw": 0.0,
+          "timeout": 180.0,
+          "not_before": 0.0
+        },
+        "state": "succeeded",
+        "reason": "Actual Nav2 success and measured settled arrival",
+        "finished": 86495.414753382,
+        "observation": {
+          "x": 2.353719417492328,
+          "y": 0.021126143066576022,
+          "z": 1.81180404304554e-06,
+          "yaw": 0.011943466696882147,
+          "linear": 0.0,
+          "angular": 0.0,
+          "velocity_source": "finite difference of measured stamped Gazebo poses",
+          "source_reported_twist": {
+            "linear": 0.0,
+            "angular": 0.0
+          }
+        }
+      },
+      {
+        "task": "5adbca9264624f81994f1ee9a66dc471",
+        "source": "route:concurrent-gamma",
+        "goal": {
+          "x": -2.0,
+          "y": 1.0,
+          "yaw": 0.0,
+          "timeout": 180.0,
+          "not_before": 0.0
+        },
+        "state": "succeeded",
+        "reason": "Actual Nav2 success and measured settled arrival",
+        "finished": 86535.266474773,
+        "observation": {
+          "x": -1.9930310490533856,
+          "y": 0.9980447263633794,
+          "z": 1.8120887469458851e-06,
+          "yaw": 0.016293490277343163,
+          "linear": 0.0,
+          "angular": 0.0,
+          "velocity_source": "finite difference of measured stamped Gazebo poses",
+          "source_reported_twist": {
+            "linear": 0.0,
+            "angular": 0.0
+          }
+        }
+      }
+    ],
+    "contacts": {
+      "active": [],
+      "events": []
+    },
+    "scope": "Experimental shared-world runtime; contact and mission qualification pending"
+  }
+}

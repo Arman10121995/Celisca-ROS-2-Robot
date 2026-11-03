@@ -1,5 +1,13 @@
 # Aerial formation itineraries
 
+## Run
+
+Source ROS, `install/setup.bash` and `scripts/ssd_env.sh`, then run
+`ros2 run robot_lab_gui robot_lab_gui`. Open **Aerial Swarm**, select the
+installed measured two-drone reference configuration, launch its shared world
+and Connect. Use the Plan/Execute workflow below after the normal flight
+readiness and takeoff checks; a plan alone never starts a route.
+
 The native Aerial Swarm workspace can plan and execute an itinerary for two
 to four existing X500/PX4 members. This is a new experimental software
 workflow. The earlier two-drone formation/landing receipt does **not** qualify

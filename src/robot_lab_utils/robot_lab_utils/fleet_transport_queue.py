@@ -1,5 +1,6 @@
 """Bounded FIFO facility itinerary; admission is separate from physical completion."""
 import uuid
+import math
 
 
 class TransportQueue:
@@ -27,9 +28,15 @@ class TransportQueue:
             if predicted[robot] == floor:
                 raise ValueError('Each itinerary stop must change that member’s predicted floor')
             predicted[robot] = floor
+            parking=request.get('parking')
+            if parking is not None and parking != 'auto':
+                if (not isinstance(parking,dict) or set(parking)!={'x','y','yaw'}
+                        or any(isinstance(v,bool) or not isinstance(v,(int,float)) or not math.isfinite(v) for v in parking.values())):
+                    raise ValueError('Parking must be auto or finite x/y/yaw')
+                parking=dict(parking)
             staged.append(dict(id=uuid.uuid4().hex, robot=robot, floor=floor,
                                operator_id=operator, enqueued_at=now, phase='queued',
-                               reason='Waiting for exclusive lift and clear landings'))
+                               reason='Waiting for exclusive lift and clear landings',parking=parking))
         self.pending.extend(staged)  # Admission is atomic, including invalid later stops.
         return staged
 

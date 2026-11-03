@@ -87,6 +87,16 @@ energy:
   scope: Authored battery estimate from actual JointState effort/rate; unknown when
     motor feedback is missing
 transport:
+  total_timeout_s: 900.0
+  phase_timeout_s: 300.0
+  route_timeout_s: 180.0
+  parking_slots:
+    L0:
+    - {x: 1.5, y: -2.5, yaw: 0.0}
+    - {x: 1.5, y: 2.5, yaw: 0.0}
+    L1:
+    - {x: 1.55, y: -0.55, yaw: 0.0}
+    - {x: 1.55, y: 0.55, yaw: 0.0}
   boarding:
     x: 3.65
     y: 0.0

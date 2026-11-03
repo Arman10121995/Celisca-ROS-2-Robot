@@ -1,5 +1,7 @@
 # Robot Lab — Multi-Robot Simulation and Algorithm Laboratory
 
+November 3: **curved AUV planning, bounded low-relief gait adapters and concurrent fleet missions** are implemented, with native GUI controls and command autofill. Actual tank-curve, octopod terrain and concurrent Nav2 cases are recorded separately from the remaining per-model/backend and multi-floor parking qualification. [Current delivery](docs/status/curves-terrain-concurrency-2026-11-03.md), [GUI walkthrough](docs/tutorials/curves-terrain-concurrency.md).
+
 New workflow delivery: **queued fleet floor trips and explicit held-lift recovery**, safer cancelable marine replanning, and **aerial formation itineraries with separate Plan/Execute**. Actual empty-car recovery and one Bumperbot two-stop floor queue have simulator receipts; concurrent passengers, occupied recovery and formation-route flights remain separate qualification. [What changed and what remains](docs/status/workflow-continuation-2026-11-02.md).
 
 The GUI now starts on **Home**, with purpose-based navigation, **Ctrl+K** workspace search, contextual help and a consistent dark theme. **Run a robot** guides setup → review/launch → control; all control pages are reachable through one selector. [Quick tour](docs/tutorials/gui-quickstart.md).
@@ -10,7 +12,7 @@ Open **Learn & diagnose → Architecture & learning** for twelve clickable syste
 
 Latest November 2: [automatic native fleet lift transport](docs/status/evidence/automatic-floor-transport-2026-11-02/README.md) completed one Bumperbot L0-L1-L0 with autonomous boarding, map/costmap transitions and settled exits. The GUI Facility request is implemented. A real native SDK L0-L1-L0 mission also passed in 359.063 wall seconds; actual SDK process-loss/resumption held the car and required explicit re-enablement. Broader multi-robot cases remain separate. Full platform acceptance remains partial.
 
-**Current status — November 2, 2026: the platform and extension are partial.**
+**Current status — November 3, 2026: the platform and extension are partial.**
 [Agent instructions for the remaining work](docs/REMAINING_WORK_GUIDE.md) give
 code locations, dependencies, implementation steps, acceptance and evidence
 requirements. Start with the [ordered roadmap queue](ROADMAP.md#current-agent-queue--november-2-2026).

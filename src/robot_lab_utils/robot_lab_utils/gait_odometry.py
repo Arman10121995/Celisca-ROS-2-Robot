@@ -63,6 +63,7 @@ class GaitOdometry(Node):
         self.reset_seen=False
         self.engine_stamp=None
         self.samples=0
+        self.slip_since=None
         self.pub=self.create_publisher(Odometry,'/gait/odometry',10)
         self.state=self.create_publisher(String,'/gait/odometry_state',10)
         self.tf=TransformBroadcaster(self)
@@ -124,7 +125,12 @@ class GaitOdometry(Node):
             return
         angular=(previous[1].inv()*body).as_rotvec()/dt
         try:velocity,scatter=stance_velocity(previous[0],current,dt,angular,supports)
-        except ValueError:return
+        except ValueError as exc:
+            self.slip_since=stamp if self.slip_since is None else self.slip_since
+            self.state.publish(String(data=json.dumps(dict(sample_valid=False,slip_suspected=True,
+                slip_duration_s=stamp-self.slip_since,clock_time=stamp,reason=str(exc)))))
+            return
+        was_inconsistent=self.slip_since is not None;self.slip_since=None
         local=body.apply(velocity)
         self.position+=local[:2]*dt
         self.covariance+=np.eye(2)*((.005+scatter)**2*dt**2+.00002*dt)
@@ -149,7 +155,8 @@ class GaitOdometry(Node):
         quat=(heading.inv()*body).as_quat()
         for i,key in enumerate('xyzw'):setattr(trunk.transform.rotation,key,float(quat[i]))
         self.tf.sendTransform([base,trunk]);self.samples+=1
-        if self.samples%10==0:self.state.publish(String(data=json.dumps(dict(samples=self.samples,supports=supports,
+        if self.samples%10==0 or was_inconsistent:self.state.publish(String(data=json.dumps(dict(samples=self.samples,supports=supports,
+            sample_valid=True,slip_suspected=False,clock_time=stamp,
             velocity_scatter_m_s=scatter,position=self.position.tolist(),source='Measured foot contacts + complete source-chain FK + native IMU; no simulator pose input',
             scope='Experimental contact odometry; slip/terrain/reset and saved-map missions unqualified'))))
 

@@ -1,0 +1,16 @@
+{
+  "upstream": "https://github.com/gazebosim/gz-sim",
+  "revision": "728569bc66e2f64f8c1ac36758a276a10f9ba6e6",
+  "license": "Apache-2.0",
+  "files": {
+    "src/systems/physics/Physics.cc": "225fce39962696f23119870c6078289324f0b465fccce89ea8a829532b2d7486",
+    "src/systems/physics/Physics.hh": "905e7d8e1055cebe8798cee7157a8d42e1dc975613a1854021045fc8d69dc156",
+    "src/systems/physics/EntityFeatureMap.hh": "4464e0b070db9d9be43488bb3b41753b11be1c5258f02c35e39e4d59a53785bf",
+    "LICENSE": "e1925845017bf307c7d465af432e8bb20cbb6ce17b10cd323af59da717753075",
+    "src/systems/physics/CanonicalLinkModelTracker.hh": "886c7ffac3c2310a67a0584090e8e41925af4d9609ab4cb361fe4436dd60b252",
+    "src/systems/physics/CMakeLists.txt": "c8be3614e857e25368d766d3d4183ddd89900439cf3c9f5e00b214cae8524991"
+  },
+  "modifications": [
+    "Private gait-world library only; serialize actual optional contact force, normal and depth into ContactSensorData; force-aware component equality. No physics integration, actuator or collision changes."
+  ]
+}

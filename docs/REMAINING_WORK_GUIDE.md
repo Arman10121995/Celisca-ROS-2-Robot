@@ -1,5 +1,7 @@
 # Remaining work: agent execution guide
 
+November 3: [curved AUV planning, bounded terrain/backend adapters and concurrent fleet missions](status/curves-terrain-concurrency-2026-11-03.md) are implemented. Read the [source/measurement receipt](status/evidence/curves-terrain-concurrency-2026-11-03/README.md) and [native GUI guide](tutorials/curves-terrain-concurrency.md) before changing these paths. Continue the exact unresolved per-model/backend and floor/parking cases, preserving all historical certificates.
+
 Newest implementation: [facility queues/recovery, marine interruption and aerial formation routes](status/workflow-continuation-2026-11-02.md). Do not rebuild these workflows or infer their full acceptance from fixtures. Empty-car recovery and a single-member two-stop floor queue have real receipts; concurrent passenger missions, new aerial route flights, marine saved-map/obstacle/current/loss and terrain cases remain. Preserve exact source/runtime certificates and complete the remaining implementation before broad campaigns.
 
 Latest November 2: [automatic native fleet lift transport](status/evidence/automatic-floor-transport-2026-11-02/README.md) completed one Bumperbot L0-L1-L0 with autonomous boarding, map/costmap transitions and settled exits. The GUI Facility request is implemented. A real native SDK L0-L1-L0 mission also passed in 359.063 wall seconds; actual SDK process-loss/resumption held the car and required explicit re-enablement. Broader multi-robot cases remain separate. Full platform acceptance remains partial.
@@ -25,9 +27,11 @@ and real scoped measurements. Full R10/platform acceptance remains partial.
 - **Facility:** reuse `fleet_transport_queue.py`, `fleet_transport.py` and
   `fleet_lift_recovery.py`; do not bypass the controller's reservations to make
   a queue move. A peer parked on an exit landing deliberately blocks dispatch.
-  Automated parking/evacuation is still a missing feature: implement an explicit
-  source-valid post-exit parking/evacuation task, with normal Nav2 acknowledgement
-  and independently settled body, before claiming unattended multi-member floors.
+  Post-exit parking is implemented with source-valid unoccupied slots, owned
+  Nav2 acknowledgement and independently settled body. Complete its actual
+  multi-member floor campaign before claiming unattended multi-member floors.
+  The facility explicitly declares bounded 900/300/180 s total/phase/route
+  wall budgets for slow-host parking missions; observation/ownership gates remain.
   Preserve FIFO bounds, all-member observation freshness and loss-to-new-request
   behavior. The single-member two-stop floor queue is now measured; keep concurrent cases separate.
 - **Aerial:** `aerial_swarm_route.py` and the native editor already implement
@@ -37,15 +41,18 @@ and real scoped measurements. Full R10/platform acceptance remains partial.
   Next actual mission: short two-anchor two-FCU route, independent body endpoints,
   Hold and Land/disarm; larger groups/observed obstacles are separate cases.
 - **Marine:** preserve `_try_replan`/`_poll_plan` cancellation generations and
-  neutral watchdog input. The next missing navigation implementation is a
-  curvature/flow-aware Tethys planner/controller rather than unrestricted A*
-  corners: retain source -X forward, minimum speed/fin authority, native thrust/
-  surface bounds, depth limits and an independently checked terminal braking
-  corridor. Until it exists, keep the direct forward-transect gate. Do not label
+  neutral watchdog input. Reuse `auv_routes.py` and its pinned Dubins solver:
+  source −X travel, 1 m flow run-up, 10–30 m turn radii, native thrust/fin
+  bounds, depth/source clearance and clear terminal braking are implemented.
+  Retain the actual gentle tank-curve receipt and tight-turn failures. Add
+  further directions/depth/obstacle/current/loss and acquired-map missions. Do not label
   `/marine/current` as a sensor or claim current-optimized route costs.
-- **Terrain/additional forms:** extend the existing source gait/contact and
-  flipper controllers. Add measured support/slip confidence and conservative
-  terrain/step rejection to actual navigation inputs; no truth XY correction,
+- **Terrain/additional forms:** reuse `gait_terrain.py`, the native source
+  servo/contact adapters and level-source differential relief. Measured
+  support/slip confidence and reach/drop rejection are implemented. Preserve
+  pinned Fortress force serialization, exact native encoder conversions,
+  massless-frame corrections and Isaac low-relief triangles. Complete the
+  remaining per-model/backend terrain, loss/reset and higher-mode cases; no truth XY correction,
   teleported recovery or generic controller on a source-incompatible body.
 - **Release:** preserve exact existing certificates, classify new software as
   implemented/mission-pending, and retain all failed trials. The remaining

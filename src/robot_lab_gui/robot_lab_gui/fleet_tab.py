@@ -62,6 +62,7 @@ class FleetTab(ttk.Frame):
         self.map_var = tk.StringVar(value=selected if selected in self.allowed_maps else 'nav_empty')
         self.map_family = tk.StringVar(value=app.map_groups.family(self.map_var.get()))
         self.navigation, self.gui, self.rviz = tk.BooleanVar(value=False), tk.BooleanVar(value=True), tk.BooleanVar(value=True)
+        self.rgbd=tk.BooleanVar(value=True)
         self.rmf = tk.BooleanVar(value=False)
         self.status = tk.StringVar(value='Experimental Gazebo Bumperbot/Labbot shared-world control. Connect starts neutral.')
         ttk.Label(self, text='Shared world · one simulation · separate robot instances', font=('', 12, 'bold')).grid(
@@ -83,6 +84,7 @@ class FleetTab(ttk.Frame):
         options = ttk.Frame(left)
         options.grid(row=2, column=0, columnspan=2, sticky='w')
         ttk.Checkbutton(options, text='Per-robot AMCL + Nav2', variable=self.navigation, command=self._refresh_command).pack(side='left')
+        ttk.Checkbutton(options,text='RGB-D cameras · 5 Hz',variable=self.rgbd,command=self._refresh_command).pack(side='left')
         ttk.Checkbutton(options, text='Gazebo window', variable=self.gui, command=self._refresh_command).pack(side='left')
         ttk.Checkbutton(options, text='RViz', variable=self.rviz, command=self._refresh_command).pack(side='left')
         ttk.Checkbutton(options, text='Open-RMF', variable=self.rmf, command=self._refresh_command).pack(side='left')
@@ -312,6 +314,7 @@ class FleetTab(ttk.Frame):
                 if data['map'] not in self.app.map_profiles:
                     raise ValueError('Session map is not installed')
                 self.map_var.set(data['map'])
+                self.rgbd.set(data.get('rgbd',True))
                 self.map_family.set(self.app.map_groups.family(data['map']))
                 self.map_combo.configure(values=self.app.map_groups.members(self.map_family.get(), selectable=True))
                 self._set_members(data['members'])
@@ -330,7 +333,7 @@ class FleetTab(ttk.Frame):
 
     def _refresh_command(self):
         try:
-            data = validate_session(dict(schema_version=1, map=self.map_var.get(), members=self.members))
+            data = validate_session(dict(schema_version=1, map=self.map_var.get(), members=self.members,rgbd=self.rgbd.get()))
             data['members'] = [{key: value for key, value in member.items() if value is not None} for member in data['members']]
             self.session_file.write_text(yaml.safe_dump(data, sort_keys=False))
             if self.rmf.get():

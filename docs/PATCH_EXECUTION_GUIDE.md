@@ -1,5 +1,7 @@
 # Stabilization and remaining work: agent execution guide
 
+November 3: [curved AUV, terrain adapters and concurrent fleet implementation](status/curves-terrain-concurrency-2026-11-03.md) supersedes the earlier missing-implementation entries for these three features. Preserve the actual scoped receipts and the [new GUI tutorial](tutorials/curves-terrain-concurrency.md). Broader acceptance remains in the current execution guide and ledger.
+
 Newest November 2 continuation: preserve [facility queues/explicit recovery, marine interruption and aerial formation itineraries](status/workflow-continuation-2026-11-02.md). These are implemented candidates with scoped checks; empty-car recovery and one Bumperbot two-stop floor queue have new physical receipts. Complete the remaining AUV/terrain/source adapters before broad validation. Use the [current execution guide](REMAINING_WORK_GUIDE.md), not earlier demonstration completion strings.
 
 The native **Learn & diagnose** workspace now provides architecture lessons, source/tutorial links and actual opt-in ROS discovery. Follow [the guide](architecture/interactive-guide.md) when changing these modules; maintain valid component/view/tour/source links and private discovery cleanup. This documentation feature is separate from broader robot/extension acceptance.

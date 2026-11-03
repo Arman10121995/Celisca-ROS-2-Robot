@@ -239,6 +239,8 @@ class MarineMissions(ttk.Frame):
         self.last_saved_database=None
         self.goal={k:tk.DoubleVar(value=v) for k,v in [('x',1.),('y',0.),('z',-1.)]}
         self.ahead_distance=tk.DoubleVar(value=3.)
+        self.auv_course=tk.StringVar(value='')
+        self.auv_radius=tk.DoubleVar(value=12.)
         self.feedback=tk.StringVar(value='Sensor odometry starts with the marine launch. Connect Marine to see estimates.')
         ttk.Label(self,text='Estimated-pose 3D missions',font=('',11,'bold')).grid(row=0,column=0,sticky='w')
         ttk.Button(self,text='Connect Marine telemetry',command=marine.connect).grid(row=1,column=0,sticky='ew',pady=5)
@@ -251,6 +253,10 @@ class MarineMissions(ttk.Frame):
         ttk.Button(coords,text='Use estimated position',command=self.use_position).grid(row=2,column=0,columnspan=3,sticky='ew',pady=4)
         ttk.Button(coords,text='Waypoint ahead · metres',command=self.ahead).grid(row=3,column=0,columnspan=2,sticky='ew')
         ttk.Entry(coords,textvariable=self.ahead_distance,width=6).grid(row=3,column=2,sticky='ew',padx=2)
+        ttk.Label(coords,text='AUV exit course ° (blank = auto)').grid(row=4,column=0,columnspan=2,sticky='w',pady=(5,0))
+        ttk.Entry(coords,textvariable=self.auv_course,width=6).grid(row=4,column=2,sticky='ew')
+        ttk.Label(coords,text='AUV minimum turn radius · m').grid(row=5,column=0,columnspan=2,sticky='w')
+        ttk.Entry(coords,textvariable=self.auv_radius,width=6).grid(row=5,column=2,sticky='ew')
         buttons=ttk.Frame(self);buttons.grid(row=3,column=0,sticky='ew',pady=6)
         for label,op in [('Plan','plan'),('Execute','execute'),('Cancel / Stop','cancel')]:
             ttk.Button(buttons,text=label,command=lambda operation=op:self.send(operation)).pack(side='left',expand=True,fill='x')
@@ -266,7 +272,7 @@ class MarineMissions(ttk.Frame):
         mapping.columnconfigure(0,weight=1)
         ttk.Label(self,textvariable=self.feedback,wraplength=310,justify='left').grid(row=5,column=0,sticky='ew',pady=8)
         ttk.Label(self,text='Pressure and Janus-DVL are explicit noisy simulator sensor models; native IMU supplies attitude.\n'
-                  'ROV can follow checked 3D routes. Source AUV supports forward-aligned cruise transects with a clear coasting corridor.\n'
+                  'ROV can follow checked 3D routes. AUV uses checked forward curves, a 10–30 m cruise turn radius and a clear braking corridor; course is travel direction in world XY.\n'
                   'Arm on Marine before Execute. Manual input interrupts missions. Stop/heartbeat or sensor loss closes the actuator gate.\n'
                   'Saved SLAM, sensor accuracy and navigation remain experimental until physical missions are recorded.',
                   wraplength=310).grid(row=6,column=0,sticky='ew')
@@ -325,6 +331,9 @@ class MarineMissions(ttk.Frame):
             self.feedback.set('Wait for fresh Marine telemetry');return
         try:
             extra={key:var.get() for key,var in self.goal.items()} if op=='plan' else {}
+            if op=='plan' and parent.runtime.get('robot_id')=='tethys_auv':
+                extra['turn_radius']=self.auv_radius.get()
+                if self.auv_course.get().strip():extra['goal_heading']=math.radians(float(self.auv_course.get()))
             if op in ('plan','execute'):parent.clear()
             parent.mission_pub.publish(String(data=json.dumps(dict(session_id=parent.runtime['session_id'],
                 operator_id=parent.operator,op=op,**extra),allow_nan=False)))

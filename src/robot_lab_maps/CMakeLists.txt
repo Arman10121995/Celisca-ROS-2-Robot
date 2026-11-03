@@ -11,9 +11,20 @@ find_package(ament_cmake REQUIRED)
 # the active robot backend. Keep data-only builds usable without that SDK.
 find_package(ignition-gazebo6 QUIET)
 if(ignition-gazebo6_FOUND)
+  find_package(ignition-physics5 REQUIRED COMPONENTS sdf heightmap mesh)
+  find_package(ignition-common4 REQUIRED COMPONENTS graphics)
   find_package(ignition-plugin1 REQUIRED COMPONENTS register)
   find_package(ignition-transport11 REQUIRED)
   find_package(ignition-msgs8 REQUIRED)
+  add_library(robot_lab_gait_physics SHARED vendor/gait_physics/Physics.cc)
+  target_compile_features(robot_lab_gait_physics PRIVATE cxx_std_17)
+  target_link_libraries(robot_lab_gait_physics ignition-gazebo6::ignition-gazebo6
+    ignition-plugin1::ignition-plugin1 ignition-physics5::ignition-physics5
+    ignition-physics5::sdf ignition-physics5::heightmap ignition-physics5::mesh
+    ignition-common4::graphics ignition-transport11::ignition-transport11 ignition-msgs8::ignition-msgs8)
+  install(TARGETS robot_lab_gait_physics LIBRARY DESTINATION lib)
+  install(DIRECTORY vendor/gait_physics/ DESTINATION share/${PROJECT_NAME}/vendor/gait_physics
+    FILES_MATCHING PATTERN LICENSE PATTERN provenance.json)
   add_library(robot_lab_2dmap_system SHARED vendor/gazebo_2dmap/gz_2Dmap_system.cc)
   target_compile_features(robot_lab_2dmap_system PRIVATE cxx_std_17)
   target_include_directories(robot_lab_2dmap_system PRIVATE vendor/gazebo_2dmap)
@@ -31,6 +42,11 @@ if(ignition-gazebo6_FOUND)
   target_link_libraries(robot_lab_amphibious_drive ignition-gazebo6::ignition-gazebo6
     ignition-plugin1::ignition-plugin1 ignition-transport11::ignition-transport11 ignition-msgs8::ignition-msgs8)
   install(TARGETS robot_lab_amphibious_drive LIBRARY DESTINATION lib)
+  add_library(robot_lab_gait_contacts SHARED systems/gait_contact_frame.cc)
+  target_compile_features(robot_lab_gait_contacts PRIVATE cxx_std_17)
+  target_link_libraries(robot_lab_gait_contacts ignition-gazebo6::ignition-gazebo6
+    ignition-plugin1::ignition-plugin1 ignition-transport11::ignition-transport11 ignition-msgs8::ignition-msgs8)
+  install(TARGETS robot_lab_gait_contacts LIBRARY DESTINATION lib)
   add_library(robot_lab_tracked_vehicle SHARED vendor/native_tracks/TrackedVehicle.cc)
   target_compile_features(robot_lab_tracked_vehicle PRIVATE cxx_std_17)
   target_link_libraries(robot_lab_tracked_vehicle ignition-gazebo6::ignition-gazebo6

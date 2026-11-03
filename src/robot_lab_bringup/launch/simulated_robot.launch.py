@@ -789,9 +789,9 @@ def _build_simulation_actions(context):
             return _run_id_actions()+[IncludeLaunchDescription(PythonLaunchDescriptionSource(
                 _launch_file(bringup_share,'tracked_simulator.launch.py')),launch_arguments=tracked_args.items())]
         if robot_config.get('gait_model'):
-            if _launch_value(context, 'simulator') != 'mujoco' or mode_name not in ('display', 'gait'):
-                raise RuntimeError('Source multi-leg gait currently supports MuJoCo Display/Gait only')
-            gait_args = dict(robot_model=robot_model, map_name='empty' if map_free else map_name,
+            if _launch_value(context, 'simulator') not in ('mujoco','pybullet','isaac','gazebo') or mode_name not in ('display', 'gait'):
+                raise RuntimeError('Source multi-leg gait requires an implemented backend and Display/Gait mode')
+            gait_args = dict(robot_model=robot_model,simulator=_launch_value(context,'simulator'), map_name='empty' if map_free else map_name,
                 task=_config_value(context, 'gait_task', 'gait'),
                 map_yaml=_config_value(context, 'gait_map_yaml', ''),
                 database=_config_value(context, 'gait_database', ''),

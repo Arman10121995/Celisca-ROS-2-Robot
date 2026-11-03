@@ -1,0 +1,365 @@
+{
+  "auv-curve-1": {
+    "passed": false,
+    "reason": "RuntimeError: Planning failed: No source-clear curvature-constrained AUV route and 3 m terminal braking corridor",
+    "phase": "planning",
+    "wall_seconds": 4.335291342002165
+  },
+  "auv-curve-2": {
+    "passed": false,
+    "reason": "RuntimeError: AUV course error exceeds flow-guidance envelope; explicit replan required",
+    "phase": "executing",
+    "wall_seconds": 13.017434800000046
+  },
+  "auv-curve-3": {
+    "passed": false,
+    "reason": "RuntimeError: AUV left the 1 m estimated tracking envelope; explicit replan required",
+    "phase": "executing",
+    "wall_seconds": 34.98863080400042
+  },
+  "auv-curve-4": {
+    "passed": true,
+    "reason": "Observed native curved travel and settled braking",
+    "phase": "executing",
+    "wall_seconds": 34.046256475005066
+  },
+  "fleet-concurrent-1": {
+    "passed": false,
+    "reason": "RuntimeError: Transport failed: [{'id': 'ab5004a2d29e45e294b746f2e0a9262c', 'robot': 'alpha', 'floor': 'L1', 'operator_id': 'concurrent-probe', 'enqueued_at': 82461.113639047, 'phase': 'failed', 'reason': 'Feedback or operator ownership lost; explicit new request required', 'parking': 'auto', 'parking_goal': {'x': 1.55, 'y': -0.55, 'yaw': 0.0}}, {'id': 'fcb42f62563d4f9ea8b0514646df3a20', 'robot': 'beta', 'floor': 'L1', 'operator_id': 'concurrent-probe', 'enqueued_at': 82461.113639047, 'phase': 'canceled', 'reason': 'Previous transport interrupted; explicit new itinerary required', 'parking': 'auto'}, {'id': 'c2b2a017a9a7456f80f37b170403ad42', 'robot': 'alpha', 'floor': 'L0', 'operator_id': 'concurrent-probe', 'enqueued_at': 82461.113639047, 'phase': 'canceled', 'reason': 'Previous transport interrupted; explicit new itinerary required', 'parking': 'auto'}, {'id': '5f45a927e222462e8073f9cc3bf71e54', 'robot': 'beta', 'floor': 'L0', 'operator_id': 'concurrent-probe', 'enqueued_at': 82461.113639047, 'phase': 'canceled', 'reason': 'Previous transport interrupted; explicit new itinerary required', 'parking': 'auto'}]",
+    "phase": "running",
+    "wall_seconds": 21.552172181996866,
+    "overlap_s": 0.0
+  },
+  "fleet-concurrent-2": {
+    "passed": false,
+    "reason": "RuntimeError: Transport failed: [{'id': 'c5f87ca082754a21b3df682ecb044bb4', 'robot': 'alpha', 'floor': 'L1', 'operator_id': 'concurrent-probe', 'enqueued_at': 84773.579544119, 'phase': 'failed', 'reason': 'Owned transport Nav2 task failed/canceled', 'parking': 'auto', 'parking_goal': {'x': 1.55, 'y': -0.55, 'yaw': 0.0}}, {'id': 'a5c553fd13b344a5abe2521336c2051e', 'robot': 'beta', 'floor': 'L1', 'operator_id': 'concurrent-probe', 'enqueued_at': 84773.579544119, 'phase': 'canceled', 'reason': 'Previous transport interrupted; explicit new itinerary required', 'parking': 'auto'}, {'id': 'c95d8c5f633040c2a27bcf9f96e2e385', 'robot': 'alpha', 'floor': 'L0', 'operator_id': 'concurrent-probe', 'enqueued_at': 84773.579544119, 'phase': 'canceled', 'reason': 'Previous transport interrupted; explicit new itinerary required', 'parking': 'auto'}, {'id': 'a3f9858aff0347368b95e44a18ddbe45', 'robot': 'beta', 'floor': 'L0', 'operator_id': 'concurrent-probe', 'enqueued_at': 84773.579544119, 'phase': 'canceled', 'reason': 'Previous transport interrupted; explicit new itinerary required', 'parking': 'auto'}]",
+    "phase": "running",
+    "wall_seconds": 149.59091168300074,
+    "overlap_s": 91.99666809001064
+  },
+  "fleet-concurrent-3": {
+    "passed": false,
+    "reason": "RuntimeError: Transport failed: [{'id': '356f9b504e5f4897b7a4a4cf9624bec9', 'robot': 'alpha', 'floor': 'L1', 'operator_id': 'concurrent-probe', 'enqueued_at': 85089.192024804, 'phase': 'failed', 'reason': 'Owned transport Nav2 task failed/canceled', 'parking': 'auto', 'parking_goal': {'x': 1.55, 'y': -0.55, 'yaw': 0.0}}, {'id': '42e23fb4923c4fa3b632e5f4a4d53807', 'robot': 'beta', 'floor': 'L1', 'operator_id': 'concurrent-probe', 'enqueued_at': 85089.192024804, 'phase': 'canceled', 'reason': 'Previous transport interrupted; explicit new itinerary required', 'parking': 'auto'}, {'id': '2145a959f73f40318f3a6ea79fef3622', 'robot': 'alpha', 'floor': 'L0', 'operator_id': 'concurrent-probe', 'enqueued_at': 85089.192024804, 'phase': 'canceled', 'reason': 'Previous transport interrupted; explicit new itinerary required', 'parking': 'auto'}, {'id': 'a4394eb20408439f84714a00c62073d0', 'robot': 'beta', 'floor': 'L0', 'operator_id': 'concurrent-probe', 'enqueued_at': 85089.192024804, 'phase': 'canceled', 'reason': 'Previous transport interrupted; explicit new itinerary required', 'parking': 'auto'}]",
+    "phase": "running",
+    "wall_seconds": 110.98218465500395,
+    "overlap_s": 90.60282351299247
+  },
+  "fleet-concurrent-4": {
+    "passed": false,
+    "reason": "RuntimeError: Transport failed: [{'id': '51bf252edccd42e48eb3fb3f6e277c12', 'robot': 'alpha', 'floor': 'L1', 'operator_id': 'concurrent-probe', 'enqueued_at': 85526.069084973, 'phase': 'failed', 'reason': 'Bounded lift transport deadline exceeded', 'parking': 'auto', 'parking_goal': {'x': 1.55, 'y': -0.55, 'yaw': 0.0}}, {'id': '46723a2e2d744d71bdde6b63b5e01e2b', 'robot': 'beta', 'floor': 'L1', 'operator_id': 'concurrent-probe', 'enqueued_at': 85526.069084973, 'phase': 'canceled', 'reason': 'Previous transport interrupted; explicit new itinerary required', 'parking': 'auto'}, {'id': '4161afd2dded4f3d8474a6e1f02e392e', 'robot': 'alpha', 'floor': 'L0', 'operator_id': 'concurrent-probe', 'enqueued_at': 85526.069084973, 'phase': 'canceled', 'reason': 'Previous transport interrupted; explicit new itinerary required', 'parking': 'auto'}, {'id': '8025c1f0b5994b6eb5f8a3e27c85df14', 'robot': 'beta', 'floor': 'L0', 'operator_id': 'concurrent-probe', 'enqueued_at': 85526.069084973, 'phase': 'canceled', 'reason': 'Previous transport interrupted; explicit new itinerary required', 'parking': 'auto'}]",
+    "phase": "running",
+    "wall_seconds": 267.8178641709965,
+    "overlap_s": 92.70276354099042
+  },
+  "fleet-planar-1": {
+    "passed": false,
+    "reason": "RuntimeError: Native task failed: [{'task': '106ea7991a6f428995c95b01ec999077', 'source': 'route:concurrent-gamma', 'goal': {'x': -2.0, 'y': 1.0, 'yaw': 0.0, 'timeout': 180.0, 'not_before': 0.0}, 'state': 'succeeded', 'reason': 'Actual Nav2 success and measured settled arrival', 'finished': 86281.05871135, 'observation': {'x': -2.002246944920813, 'y': 0.9856790537435433, 'z': 1.8120887483393026e-06, 'yaw': 0.019001947440034302, 'linear': 0.0, 'angular': 0.0, 'velocity_source': 'finite difference of measured stamped Gazebo poses', 'source_reported_twist': {'linear': 0.0, 'angular': 0.0}}}, {'task': 'c7b39f230b9e495aa171f9a549881df2', 'source': 'route:concurrent-alpha', 'goal': {'x': 2.7, 'y': 0.0, 'yaw': 0.0, 'timeout': 180.0, 'not_before': 0.0}, 'state': 'failed', 'reason': 'Nav2 ended status=6', 'finished': 86344.787206509, 'observation': {'x': 2.6798896826396166, 'y': -0.030573791962779512, 'z': 1.7990185788427303e-06, 'yaw': 1.1333167962179185, 'linear': 0.0, 'angular': 0.0, 'velocity_source': 'finite difference of measured stamped Gazebo poses', 'source_reported_twist': {'linear': 0.0, 'angular': 0.0}}}]",
+    "phase": "running",
+    "wall_seconds": 162.96960481599672,
+    "overlap_s": 78.06508780299919
+  },
+  "fleet-planar-2": {
+    "passed": true,
+    "reason": "Two independent actual Nav2 missions and settled body endpoints in one three-base world",
+    "phase": "running",
+    "wall_seconds": 107.37549997599854,
+    "overlap_s": 45.77394158599782
+  },
+  "gait-bullet-1": {
+    "passed": false,
+    "reason": "KeyboardInterrupt: ",
+    "backend": "pybullet",
+    "robot": "lab_octopod",
+    "terrain": true,
+    "phase": "waiting",
+    "wall_seconds": 120.1632958290138
+  },
+  "gait-bullet-2": {
+    "passed": false,
+    "reason": "RuntimeError: Rejected: Insufficient measured foot support",
+    "backend": "pybullet",
+    "robot": "lab_octopod",
+    "terrain": true,
+    "phase": "arming",
+    "wall_seconds": 4.643540876990301
+  },
+  "gait-bullet-3": {
+    "passed": false,
+    "reason": "RuntimeError: Gait interrupted: Insufficient actual terrain foot support",
+    "backend": "pybullet",
+    "robot": "lab_octopod",
+    "terrain": true,
+    "phase": "walking",
+    "wall_seconds": 17.410264161007944
+  },
+  "gait-bullet-4": {
+    "passed": false,
+    "reason": "RuntimeError: Gait interrupted: Insufficient actual terrain foot support",
+    "backend": "pybullet",
+    "robot": "lab_octopod",
+    "terrain": true,
+    "phase": "walking",
+    "wall_seconds": 24.421590903002652
+  },
+  "gait-bullet-5": {
+    "passed": true,
+    "reason": "Actual source gait progress 0.1568 m; held drift 0.0005 m",
+    "backend": "pybullet",
+    "robot": "lab_octopod",
+    "terrain": true,
+    "phase": "holding",
+    "wall_seconds": 54.30959606199758
+  },
+  "gait-bullet-6": {
+    "passed": false,
+    "reason": "RuntimeError: Gait interrupted: Terrain observations lost; explicit re-arm required",
+    "backend": "pybullet",
+    "robot": "lab_octopod",
+    "terrain": true,
+    "phase": "walking",
+    "wall_seconds": 11.703497139998944
+  },
+  "gait-bullet-7": {
+    "passed": true,
+    "reason": "Actual source gait progress 0.1545 m; held drift 0.0006 m",
+    "backend": "pybullet",
+    "robot": "lab_octopod",
+    "terrain": true,
+    "phase": "holding",
+    "wall_seconds": 45.0224743400031
+  },
+  "gait-bullet-8": {
+    "passed": true,
+    "reason": "Actual source gait progress 0.1502 m; held drift 0.0005 m",
+    "backend": "pybullet",
+    "robot": "lab_octopod",
+    "terrain": true,
+    "phase": "holding",
+    "wall_seconds": 55.990850310001406
+  },
+  "gait-gazebo-1": {
+    "passed": false,
+    "reason": "RuntimeError: Owned plant exited",
+    "backend": "gazebo",
+    "robot": "lab_octopod",
+    "terrain": true,
+    "phase": "waiting",
+    "wall_seconds": 6.94488154600549
+  },
+  "gait-gazebo-10": {
+    "passed": false,
+    "reason": "RuntimeError: Gait interrupted: Observed relief/step exceeds source gait reach envelope",
+    "backend": "gazebo",
+    "robot": "lab_octopod",
+    "terrain": true,
+    "phase": "walking",
+    "wall_seconds": 39.03972026400152
+  },
+  "gait-gazebo-11": {
+    "passed": true,
+    "reason": "Actual source gait progress 0.1850 m; held drift 0.0003 m",
+    "backend": "gazebo",
+    "robot": "lab_octopod",
+    "terrain": true,
+    "phase": "holding",
+    "wall_seconds": 111.7736219530052
+  },
+  "gait-gazebo-2": {
+    "passed": false,
+    "reason": "RuntimeError: Owned plant exited",
+    "backend": "gazebo",
+    "robot": "lab_octopod",
+    "terrain": true,
+    "phase": "waiting",
+    "wall_seconds": 6.4233138489944395
+  },
+  "gait-gazebo-3": {
+    "passed": false,
+    "reason": "RuntimeError: Owned plant exited",
+    "backend": "gazebo",
+    "robot": "lab_octopod",
+    "terrain": true,
+    "phase": "waiting",
+    "wall_seconds": 6.411912356998073
+  },
+  "gait-gazebo-4": {
+    "passed": false,
+    "reason": "deadline",
+    "backend": "gazebo",
+    "robot": "lab_octopod",
+    "terrain": true,
+    "phase": "waiting",
+    "wall_seconds": 180.1039216529898
+  },
+  "gait-gazebo-5": {
+    "passed": false,
+    "reason": "RuntimeError: Gait interrupted: Terrain observations lost; explicit re-arm required",
+    "backend": "gazebo",
+    "robot": "lab_octopod",
+    "terrain": true,
+    "phase": "walking",
+    "wall_seconds": 16.72358237800654
+  },
+  "gait-gazebo-6": {
+    "passed": false,
+    "reason": "RuntimeError: Gait interrupted: Measured contact-kinematic slip interrupted terrain gait",
+    "backend": "gazebo",
+    "robot": "lab_octopod",
+    "terrain": true,
+    "phase": "walking",
+    "wall_seconds": 15.895171448006295
+  },
+  "gait-gazebo-7": {
+    "passed": false,
+    "reason": "RuntimeError: Gait interrupted: Terrain observations lost; explicit re-arm required",
+    "backend": "gazebo",
+    "robot": "lab_octopod",
+    "terrain": true,
+    "phase": "walking",
+    "wall_seconds": 13.953590842007543
+  },
+  "gait-gazebo-8": {
+    "passed": false,
+    "reason": "RuntimeError: Gait interrupted: Static terrain sensor exceeded 80 ms budget",
+    "backend": "gazebo",
+    "robot": "lab_octopod",
+    "terrain": true,
+    "phase": "walking",
+    "wall_seconds": 13.375407747997087
+  },
+  "gait-gazebo-9": {
+    "passed": false,
+    "reason": "RuntimeError: Gait interrupted: Measured contact-kinematic slip interrupted terrain gait",
+    "backend": "gazebo",
+    "robot": "lab_octopod",
+    "terrain": true,
+    "phase": "walking",
+    "wall_seconds": 14.504218403002596
+  },
+  "gait-isaac-1": {
+    "passed": false,
+    "reason": "deadline",
+    "backend": "isaac",
+    "robot": "lab_octopod",
+    "terrain": true,
+    "phase": "waiting",
+    "wall_seconds": 180.1157473409985
+  },
+  "gait-isaac-2": {
+    "passed": false,
+    "reason": "deadline",
+    "backend": "isaac",
+    "robot": "lab_octopod",
+    "terrain": true,
+    "phase": "waiting",
+    "wall_seconds": 180.05725480600086
+  },
+  "gait-isaac-3": {
+    "passed": false,
+    "reason": "deadline",
+    "backend": "isaac",
+    "robot": "lab_octopod",
+    "terrain": true,
+    "phase": "waiting",
+    "wall_seconds": 180.08448013299494
+  },
+  "gait-isaac-4": {
+    "passed": false,
+    "reason": "deadline",
+    "backend": "isaac",
+    "robot": "lab_octopod",
+    "terrain": true,
+    "phase": "waiting",
+    "wall_seconds": 180.01272192099714
+  },
+  "gait-isaac-5": {
+    "passed": false,
+    "reason": "deadline",
+    "backend": "isaac",
+    "robot": "lab_octopod",
+    "terrain": true,
+    "phase": "waiting",
+    "wall_seconds": 180.07437946199207
+  },
+  "gait-isaac-6": {
+    "passed": false,
+    "reason": "deadline",
+    "backend": "isaac",
+    "robot": "lab_octopod",
+    "terrain": true,
+    "phase": "waiting",
+    "wall_seconds": 180.04070155900263
+  },
+  "gait-isaac-7": {
+    "passed": false,
+    "reason": "deadline",
+    "backend": "isaac",
+    "robot": "lab_octopod",
+    "terrain": true,
+    "phase": "waiting",
+    "wall_seconds": 180.0645070210012
+  },
+  "gait-mujoco-1": {
+    "passed": false,
+    "reason": "RuntimeError: Owned plant exited",
+    "backend": "mujoco",
+    "robot": "lab_octopod",
+    "terrain": true,
+    "phase": "waiting",
+    "wall_seconds": 1.6822512970102252
+  },
+  "gait-mujoco-2": {
+    "passed": false,
+    "reason": "deadline",
+    "backend": "mujoco",
+    "robot": "lab_octopod",
+    "terrain": true,
+    "phase": "waiting",
+    "wall_seconds": 180.0575509640039
+  },
+  "gait-mujoco-3": {
+    "passed": false,
+    "reason": "KeyboardInterrupt: ",
+    "backend": "mujoco",
+    "robot": "lab_octopod",
+    "terrain": true,
+    "phase": "waiting",
+    "wall_seconds": 127.1580036039959
+  },
+  "gait-mujoco-4": {
+    "passed": false,
+    "reason": "deadline",
+    "backend": "mujoco",
+    "robot": "lab_octopod",
+    "terrain": true,
+    "phase": "waiting",
+    "wall_seconds": 180.097646359005
+  },
+  "gait-mujoco-5": {
+    "passed": true,
+    "reason": "Actual source gait progress 0.1816 m; held drift 0.0024 m",
+    "backend": "mujoco",
+    "robot": "lab_octopod",
+    "terrain": true,
+    "phase": "holding",
+    "wall_seconds": 23.907807160998345
+  },
+  "gait-mujoco-6": {
+    "passed": true,
+    "reason": "Actual source gait progress 0.1826 m; held drift 0.0023 m",
+    "backend": "mujoco",
+    "robot": "lab_octopod",
+    "terrain": true,
+    "phase": "holding",
+    "wall_seconds": 24.60387024001102
+  },
+  "gait-mujoco-7": {
+    "passed": true,
+    "reason": "Actual source gait progress 0.1818 m; held drift 0.0024 m",
+    "backend": "mujoco",
+    "robot": "lab_octopod",
+    "terrain": true,
+    "phase": "holding",
+    "wall_seconds": 26.847144572006073
+  }
+}

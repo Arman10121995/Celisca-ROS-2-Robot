@@ -101,9 +101,9 @@ def test_retry_cooldown_still_publishes_neutral(mission):
     assert message.linear.x == message.linear.y == message.linear.z == message.angular.z == 0.
 
 
-def test_underactuated_auv_cannot_bypass_transect_constraint_by_replanning(mission):
+def test_underactuated_auv_cannot_bypass_curvature_constraint_by_replanning(mission):
     mission.auv = True
     mission._try_replan('Transect obstructed')
     assert mission.future is None and mission.status == 'canceled'
-    assert 'forward-aligned' in mission.reason
+    assert 'curvature-constrained' in mission.reason
     mission.control.assert_called_with('stop')

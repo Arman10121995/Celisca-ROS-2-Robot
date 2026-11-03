@@ -78,6 +78,12 @@ class Infrastructure(Node):
                 self.localization_scans[name] = self.create_publisher(LaserScan, member['localization_scan'], 10)
                 self.create_subscription(LaserScan, '/' + name + '/scan', lambda msg,n=name:self._relay_scan(n,msg), qos_profile_sensor_data)
         self.robot_floor_maps={m['id']:m.get('floor_maps',self.floor_maps) for m in session['members']}
+        # Warm source occupancy/distance fields before enabling the timer.
+        # Importing SciPy on the first parking request blocked this single
+        # executor long enough to correctly trip the live feedback watchdog.
+        from robot_lab_utils.fleet_session import SpawnGrid
+        parking_paths={path for maps in self.robot_floor_maps.values() for path in maps.values() if path}
+        self.parking_grids={path:SpawnGrid(path) for path in parking_paths}
         self.active_robot_maps={m['id']:m.get('map_yaml','') for m in session['members']}
         self.map_clients={m['id']:self.create_client(LoadMap,'/'+m['id']+'/map_server/load_map')
                           for m in session['members'] if session.get('navigation') and m.get('floor_maps')}
@@ -344,17 +350,18 @@ class Infrastructure(Node):
             head['reason'] = 'Waiting for current lift session to release'
             return
         try:
-            task = self._prepare_transport(head['robot'], head['floor'], head['operator_id'], now)
+            task = self._prepare_transport(head['robot'], head['floor'], head['operator_id'], now, head.get('parking'))
         except ValueError as error:
             head['reason'] = str(error)
             return
         queue.take()
+        head['parking_goal']=task.parking
         self.transports[task.robot] = task
         self.lift_owner, self.lift_at = task.prefix, now
         self.lift_request = None
         self.lift_gui = False
 
-    def _prepare_transport(self, name, destination, operator, now):
+    def _prepare_transport(self, name, destination, operator, now, parking=None):
         row = next((item for item in self.runtime['members'] if item['id'] == name), {})
         if not row.get('navigation_ready') or not row.get('included') or row.get('mode') != 'idle' or row.get('queued'):
             raise ValueError('Waiting for fresh idle member Nav2')
@@ -369,6 +376,22 @@ class Infrastructure(Node):
         if any(peer != name and task.in_cabin(body['xyz']) for peer, body in self.bodies.items()):
             raise ValueError('Waiting for another physical robot to leave the car')
         radii = {member['id']: float(member.get('radius', .35)) for member in self.session['members']}
+        if parking is not None:
+            from robot_lab_utils.fleet_session import SpawnGrid
+            path=self.robot_floor_maps[name][destination]
+            if not hasattr(self,'parking_grids'):self.parking_grids={}
+            if path not in self.parking_grids:self.parking_grids[path]=SpawnGrid(path)
+            candidates=self.config['transport'].get('parking_slots',{}).get(destination,[]) if parking=='auto' else [parking]
+            for goal in candidates:
+                landing=task.config['landings'][destination]
+                if (task.in_cabin([goal['x'],goal['y'],0.]) or not self.parking_grids[path].clear(goal['x'],goal['y'],radii[name]+.05)
+                        or math.hypot(goal['x']-landing['x'],goal['y']-landing['y'])<2*radii[name]+.2):
+                    continue
+                if any(peer!=name and abs(body['xyz'][2]-lift['floors'][destination])<.2 and
+                       math.hypot(body['xyz'][0]-goal['x'],body['xyz'][1]-goal['y'])<radii[name]+radii[peer]+.2 for peer,body in self.bodies.items()):
+                    continue
+                task.parking=dict(goal);break
+            if task.parking is None:raise ValueError('Waiting for a source-clear unoccupied parking slot at '+destination)
         for peer, body in self.bodies.items():
             if peer == name:
                 continue
@@ -711,6 +734,10 @@ class Infrastructure(Node):
             reservations.update({name: self.lift_owner for name in self.recovery['passengers']})
         floor_z={name:self.floor_z.get(name,0.0) for name in self.energy}
         state=dict(session_id=self.identity,ready=fresh,held_members=held,doors=door_rows,
+               observation_age_s=dict(clock=now-self.clock_at if math.isfinite(self.clock_at) else None,
+                   joints=now-self.joint_at if math.isfinite(self.joint_at) else None,
+                   fleet=now-self.runtime_at if math.isfinite(self.runtime_at) else None,
+                   bodies={name:now-body['at'] for name,body in self.bodies.items()}),
                    lift=dict(position_m=lift_position,command_m=self.outputs.get(lift['joint'],lift_position),
                              current_floor=current_floor,destination=self.lift_request,floors=list(lift['floors'])),
                docks=self.config['docks'],docking=self.docking,energy=energy,robot_floors=floors,

@@ -79,12 +79,15 @@ def test_aerial_session_command_and_latches_are_neutral_until_manual_arm(app):
         tab.close();tab.destroy()
 
 
-def test_gait_saved_map_and_localization_choices_are_in_actual_command(app):
-    app.robot_var.set('hexapod_ros2');app.simulator_var.set('mujoco')
-    app.map_var.set('nav_empty');app.mode_var.set('gait');app._update_from_selection()
+@pytest.mark.parametrize('backend',['mujoco','pybullet','gazebo','isaac'])
+def test_gait_saved_map_and_localization_choices_are_in_actual_command(app,backend):
+    app.robot_var.set('hexapod_ros2');app.simulator_var.set(backend)
+    app.map_var.set('gait_low_relief');app.mode_var.set('gait');app._update_from_selection()
     app.gait_task_var.set('nav');app.gait_map_yaml_var.set('/workspace/molar/robot_lab_runtime/maps/actual/map.yaml')
     app._update_validation_and_command()
     command=shlex.split(app.command_var.get())
+    assert 'simulator:='+backend in command, app.validation_var.get()
+    assert 'map_name:=gait_low_relief' in command
     assert 'gait_task:=nav' in command
     assert 'gait_map_yaml:=/workspace/molar/robot_lab_runtime/maps/actual/map.yaml' in command
     app.gait_task_var.set('3d_slam');app.gait_database_var.set('/workspace/molar/robot_lab_runtime/maps/actual/rtabmap.db')

@@ -29,6 +29,12 @@ class GaitController(Node):
                               session_directory='',task='gait',goal_world_to_map='[0.0,0.0,0.0]').items():self.declare_parameter(key,value)
         self.model=load_model(Path(self.get_parameter('description_file').value).read_text(),self.get_parameter('gait_config').value)
         self.cfg=self.model.config;self.robot_id=self.model.robot_id;self.session_id=uuid.uuid4().hex
+        from robot_lab_utils.gait_terrain import TerrainAdaptation
+        self.terrain_model=TerrainAdaptation([leg['id'] for leg in self.model.legs])
+        self.terrain_enabled=False;self.terrain_sample=None;self.terrain_at=-math.inf
+        self.terrain_error=''
+        self.slip_observation=None;self.slip_at=-math.inf
+        self.support_loss_since=None
         self.enabled=False;self.stand_requested=False;self.reason='Source stance held; walking disarmed'
         self.input_owner='manual'
         self.spine_phase,self.spine_freq=0.,1.
@@ -51,6 +57,8 @@ class GaitController(Node):
         self.create_subscription(JointState,'/joint_states',self.observe_joints,10)
         self.create_subscription(Odometry,'/odom/ground_truth',self.observe_body,10)
         self.create_subscription(String,'/gait/contacts',self.observe_contacts,10)
+        self.create_subscription(String,'/gait/terrain',self.observe_terrain,10)
+        self.create_subscription(String,'/gait/odometry_state',self.observe_slip,10)
         self.create_subscription(ClockMessage,'/clock',self.observe_clock,qos_profile_sensor_data)
         self.create_subscription(Twist,'/key_vel',self.manual_drive,10)
         self.create_subscription(Twist,'/gait/cmd_vel',self.nav_drive,10)
@@ -110,6 +118,9 @@ class GaitController(Node):
             self.stop('Clock reset; re-arm from fresh measured stance');self.joints_at=self.pose_at=self.contacts_at=-math.inf
             self.joint_stamp=self.body_stamp=self.contact_stamp=self.engine_stamp=None
             self.reset_barrier=value
+            self.terrain_sample=None;self.terrain_at=-math.inf;self.terrain_model.last_stamp=None
+            self.slip_observation=None;self.slip_at=-math.inf
+            self.support_loss_since=None
         if self.sim_time is None or value>self.sim_time:self.clock_at=time.monotonic()
         self.sim_time=value
 
@@ -163,6 +174,22 @@ class GaitController(Node):
                 self.joints_at=self.pose_at=-math.inf
             self.contacts=data;self.contacts_at=time.monotonic();self.contact_stamp=stamp;self.engine_stamp=engine_stamp
         except (ValueError,KeyError,TypeError):return
+
+    def observe_terrain(self,msg):
+        try:
+            data=json.loads(msg.data)
+            if data.get('error'):self.terrain_sample=None;self.terrain_error=str(data['error']);return
+            stamp=float(data['clock_time'])
+            if self.matching_stamp(stamp,self.terrain_sample['clock_time'] if self.terrain_sample else None):
+                self.terrain_sample=data;self.terrain_at=time.monotonic();self.terrain_error=''
+        except (ValueError,KeyError,TypeError):self.terrain_sample=None
+
+    def observe_slip(self,msg):
+        try:
+            data=json.loads(msg.data)
+            if 'slip_suspected' in data and self.sim_time is not None and abs(float(data['clock_time'])-self.sim_time)<.4:
+                self.slip_observation=data;self.slip_at=time.monotonic()
+        except (ValueError,KeyError,TypeError):pass
 
     def matching_stamp(self,stamp,previous):
         return (self.sim_time is not None and math.isfinite(stamp)
@@ -228,6 +255,10 @@ class GaitController(Node):
             if data.get('operator_id')!=self.operator or time.monotonic()-self.hb_at>.8:raise ValueError('Live operator lease required')
             if not self.fresh():raise ValueError('Fresh actual joints, body, contacts and clock required')
             if op=='arm':
+                if self.terrain_enabled:
+                    if not self.terrain_sample or time.monotonic()-self.terrain_at>.5:raise ValueError('Fresh terrain rays required before terrain gait Arm')
+                    self.terrain_model.last_stamp=None
+                    self.terrain_model.step(self.terrain_sample,self.sim_time)
                 if (self.cfg.get('kind')=='serpentine' and self.get_parameter('navigation_enabled').value
                         and not self.rolling_navigation_ready()):
                     raise ValueError('Navigation needs fresh consistent rolling odometry; relaunch after lost pose uncertainty')
@@ -235,8 +266,14 @@ class GaitController(Node):
                 supports=sum(self.contacts['normal_forces_N'][leg['id']]>.2 for leg in self.model.legs)
                 if supports<len(self.model.legs)//2:raise ValueError('Insufficient measured foot support')
                 self.enabled=True;self.command[:]=0.;self.filtered[:]=0.;self.cmd_at=-math.inf
+                self.support_loss_since=None
                 self.input_owner='navigation' if self.get_parameter('navigation_enabled').value else 'manual'
                 self.reason='Walking armed; no travel until Drive input'
+            elif op=='terrain':
+                if type(data.get('enabled')) is not bool or self.cfg.get('kind')=='serpentine':raise ValueError('Terrain adaptation requires a source multi-leg gait and boolean enabled')
+                self.stop('Terrain mode changed; explicitly re-arm')
+                self.terrain_enabled=data['enabled'];self.terrain_model.last_stamp=None
+                self.support_loss_since=None
             elif op=='gait':
                 allowed={'serpenoid'} if self.cfg.get('kind')=='serpentine' else {'ripple','wave',self.cfg['default_gait']}
                 if data['gait'] not in allowed:raise ValueError('This source has no matching schedule')
@@ -257,6 +294,19 @@ class GaitController(Node):
         dt=0. if self.last_sim is None or self.sim_time is None else max(0.,min(.04,self.sim_time-self.last_sim))
         self.last_sim=self.sim_time
         if self.enabled and (not ready or now-self.hb_at>.8):self.stop('Observation/clock/operator loss; gait halted')
+        terrain=None
+        if self.enabled and self.terrain_enabled:
+            try:
+                if self.terrain_sample is None or now-self.terrain_at>.5:raise ValueError(self.terrain_error or 'Terrain observations lost; explicit re-arm required')
+                if (self.slip_observation and now-self.slip_at<.5 and self.slip_observation['slip_suspected']
+                        and self.slip_observation.get('slip_duration_s',0.)>.08):raise ValueError('Measured contact-kinematic slip persisted for 80 ms; terrain gait halted')
+                supports=sum(force>.2 for name,force in self.contacts['normal_forces_N'].items() if name!='body')
+                if supports<max(2,len(self.model.legs)//3):
+                    self.support_loss_since=self.sim_time if self.support_loss_since is None else self.support_loss_since
+                    if self.sim_time-self.support_loss_since>.08:raise ValueError('Insufficient actual terrain foot support for 80 ms')
+                else:self.support_loss_since=None
+                terrain=self.terrain_model.step(self.terrain_sample,self.sim_time)
+            except (ValueError,KeyError,TypeError) as exc:self.stop(str(exc))
         if (self.enabled and self.input_owner=='navigation' and self.cfg.get('kind')=='serpentine'
                 and not self.rolling_navigation_ready()):
             self.stop('Rolling odometry inconsistent/stale; navigation interrupted')
@@ -278,7 +328,7 @@ class GaitController(Node):
             if np.linalg.norm(self.filtered)>.001 and dt>0:
                 self.phase=(self.phase+dt/self.cfg['cycle_s']*(self.spine_freq if self.cfg.get('kind')=='serpentine' else 1.))%1.
                 candidate,error,self.planned=self.model.targets(self.phase,self.filtered,self.targets,self.gait,
-                    spine_phase=self.spine_phase,spine_freq=self.spine_freq)
+                    spine_phase=self.spine_phase,spine_freq=self.spine_freq,**({'terrain':terrain} if self.terrain_enabled else {}))
                 self.max_ik_error=error
                 if error is not None and error>.003:self.stop('Foot IK error exceeds 3 mm; gait halted')
                 else:
@@ -302,6 +352,12 @@ class GaitController(Node):
                        actual_contacts=self.contacts,planned_stance=self.planned,max_ik_error_m=self.max_ik_error,
                        commanded_body_velocity=self.filtered.tolist(),joint_targets=self.targets.tolist(),
                        phase=self.phase,spine_phase=self.spine_phase,spine_freq=self.spine_freq,
+                       terrain_enabled=self.terrain_enabled,terrain_observation=self.terrain_sample,
+                       terrain_error=self.terrain_error,
+                       terrain_wall_age_s=now-self.terrain_at if math.isfinite(self.terrain_at) else None,
+                       terrain_offsets=self.terrain_model.offsets,support_fraction=sum(force>.2 for name,force in self.contacts['normal_forces_N'].items() if name!='body')/max(1,len(self.model.legs)) if self.contacts else None,
+                       terrain_support_loss_since=self.support_loss_since,
+                       kinematic_slip=self.slip_observation,
                        observer='Simulator body pose for visualization/tilt only; legged odometry uses independent IMU, measured contacts and joints',
                        scope='Experimental authored gait and bounded in-step PD on exact configured geometry; physical missions pending')
             self.state_pub.publish(String(data=json.dumps(state,allow_nan=False)))

@@ -1,5 +1,7 @@
 # Current Robot Lab status
 
+November 3: [curved AUV routes, low-relief source gait/backend adapters and concurrent fleet missions](curves-terrain-concurrency-2026-11-03.md) are implemented. Actual scoped tank-curve, octopod terrain and overlapping settled Nav2 results are in the [receipt](evidence/curves-terrain-concurrency-2026-11-03/README.md). Broader per-model/backend and multi-member floor/parking acceptance remains partial. The native GUI controls, resolver profiles, command autofill and interactive architecture/tutorial links reflect these workflows.
+
 Latest workflow continuation from `8b958e97`: bounded multi-member lift queues/round trips, durable SDK lift ownership, explicit interlocked recovery, generation-safe marine replanning and native aerial formation itineraries. Actual empty-car Stop/recovery passed in 35.949 s and a one-command two-stop Bumperbot floor round-trip in 324.259 s. Occupied recovery, concurrent members and new route-flight qualification remain pending. [Delivery and limits](workflow-continuation-2026-11-02.md). Full platform acceptance remains partial.
 
 The [GUI usability refresh](../tutorials/gui-quickstart.md) adds Home, modern shared styling, purpose-based/searchable navigation, responsive sidebar, contextual help, clearer launch/Stop feedback and a selector for every control page. This is UI work; full robot/extension acceptance remains partial.
@@ -16,7 +18,7 @@ Latest November 2: [automatic native fleet lift transport](evidence/automatic-fl
 
 [November 2 fleet continuation](evidence/fleet-floor-map-transition-2026-11-02/README.md): one Bumperbot physically rode L0-L1-L0 in `fleet_facility`; fresh body observations drove per-member floor classification and the `map.yaml` → `map_L1.yaml` → `map.yaml` Nav2 transitions. That earlier floor case left energy unknown; broader RMF/fleet acceptance is still open.
 
-**Current checkpoint: November 2, 2026; master, workflow continuation from `8b958e97` plus this delivery.
+**Current checkpoint: November 3, 2026; master, curves/terrain/concurrency continuation from `43473387`.
 Platform and full extension partial.**
 
 [Current workflow delivery and limits](workflows-2026-10-27.md),

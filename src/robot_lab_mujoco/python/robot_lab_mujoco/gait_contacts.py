@@ -5,6 +5,39 @@ import mujoco
 
 
 class GaitContacts:
+    def terrain(self,model,data,stamp):
+        from robot_lab_utils.gait_terrain import sample_probes
+        original=model.geom_group.copy();model.geom_group[model.geom_bodyid>0]=5
+        mask=np.array([1,1,0,1,1,0],dtype=np.uint8)
+        def body(name):
+            index=mujoco.mj_name2id(model,mujoco.mjtObj.mjOBJ_BODY,name)
+            if index<0 and name=='base_footprint':index=mujoco.mj_name2id(model,mujoco.mjtObj.mjOBJ_BODY,'base_link')
+            if index<0 and name in ('base_link','base_footprint'):
+                # The importer names the massive source root <robot>_base.
+                # These configured roots share that source trunk frame.
+                index=int(model.geom_bodyid[self.groups['body'][0]])
+            if index<0:raise ValueError('Source probe body missing: '+name)
+            return index
+        def pose(name):
+            index=body(name)
+            return data.xpos[index],data.xmat[index].reshape(3,3)
+        def sole(name):
+            group=next(key for key,probe in self.probes.items() if probe['foot']==name)
+            offsets=[]
+            for geom in self.groups[group]:
+                bounds=model.geom_aabb[geom];row=data.geom_xmat[geom].reshape(3,3)[2]
+                # These source feet have an origin-centred spherical collider;
+                # the importer may fuse its fixed link while retaining its geom.
+                if model.geom_type[geom]!=mujoco.mjtGeom.mjGEOM_SPHERE:raise ValueError('Source terrain sole needs a reviewed collider-frame adapter')
+                offsets.append(float(-model.geom_size[geom,0]))
+            return min(offsets)
+        def ray(origin,length):
+            hit=np.array([-1],dtype=np.int32)
+            distance=mujoco.mj_ray(model,data,np.asarray(origin),np.array([0.,0.,-1.]),mask,1,-1,hit)
+            return float(distance) if 0<=distance<=length else None
+        try:return sample_probes(self.probes,pose,sole,ray,stamp)
+        finally:model.geom_group[:]=original
+
     def __init__(self,model,config):
         self.groups=json.loads(config)
         if not isinstance(self.groups,dict) or not 1<=len(self.groups)<=64:raise ValueError('Named contact groups required')

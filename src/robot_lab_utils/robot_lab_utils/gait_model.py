@@ -100,7 +100,7 @@ class GaitModel:
         if gait=='wave':return ((pair+(.5 if side=='r' else 0.))/(len(self.legs)/2))%1.,.85
         raise ValueError('Unsupported gait schedule')
 
-    def targets(self,phase,command,previous,gait,spine_phase=0.,spine_freq=1.):
+    def targets(self,phase,command,previous,gait,spine_phase=0.,spine_freq=1.,terrain=None):
         vx,vy,wz=map(float,command)
         if not all(math.isfinite(v) for v in (vx,vy,wz,phase,spine_phase,spine_freq)):raise ValueError('Finite gait inputs required')
         if not 0<=spine_phase<=1 or not .1<=spine_freq<=3:raise ValueError('Spine phase must be 0–1 and frequency 0.1–3')
@@ -115,13 +115,15 @@ class GaitModel:
             length=np.linalg.norm(stride)
             if length>self.config['max_stride']:stride*=self.config['max_stride']/length
             target=home.copy()
+            adjustment=(terrain or {}).get(name,{})
+            target[2]+=float(adjustment.get('offset',0.))
             if p<duty:
                 target[:2]+=(.5-p/duty)*stride;planned[name]=True
             else:
                 swing=(p-duty)/(1-duty)
                 smooth=swing*swing*(3-2*swing)
                 target[:2]+=(-.5+smooth)*stride
-                target[2]+=self.config['step_height']*math.sin(math.pi*swing)**2
+                target[2]+=(self.config['step_height']+float(adjustment.get('swing_extra',0.)))*math.sin(math.pi*swing)**2
                 planned[name]=False
             indices=self.indices[name];q,error=self.solve(name,target,previous[indices])
             result[indices]=q;errors.append(error)

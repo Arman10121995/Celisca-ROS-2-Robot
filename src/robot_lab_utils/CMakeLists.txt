@@ -44,11 +44,14 @@ install(PROGRAMS
   ${PROJECT_NAME}/gait_odometry.py
   ${PROJECT_NAME}/serpentine_odometry.py
   ${PROJECT_NAME}/gait_sensor_relay.py
+  ${PROJECT_NAME}/gait_gazebo_adapter.py
   ${PROJECT_NAME}/map_archive.py
   DESTINATION lib/${PROJECT_NAME}
 )
 
 install(FILES ${PROJECT_NAME}/vendor/HEXAPOD_LICENSE DESTINATION share/${PROJECT_NAME}/licenses)
+install(FILES ${PROJECT_NAME}/_vendor/PythonRobotics.LICENSE
+  ${PROJECT_NAME}/_vendor/pythonrobotics-provenance.json DESTINATION share/${PROJECT_NAME}/licenses)
 
 
 ament_package()

@@ -2373,7 +2373,8 @@ class SimulationLauncherGui(tk.Tk):
 
     def _gait_selectable(self):
         return (bool(self._robot_config().get('gait_model')) and self.mode_var.get() == 'gait'
-                and self.simulator_var.get() == 'mujoco' and self.launch_kind_var.get() == 'simulation')
+                and self.simulator_var.get() in self._robot_config().get('supported_simulators',('mujoco',))
+                and self.simulator_var.get() in ('mujoco','pybullet','isaac','gazebo') and self.launch_kind_var.get() == 'simulation')
 
     def _flight_action(self, action):
         if not self._flight_selectable():

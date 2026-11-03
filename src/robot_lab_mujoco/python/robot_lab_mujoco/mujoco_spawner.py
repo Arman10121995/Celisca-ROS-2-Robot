@@ -1314,6 +1314,7 @@ class MuJoCoSpawner(Node):
         # Per-joint PD targets applied in the physics step (JSON, see
         # robot_lab_mujoco.joint_pd); used by learned legged policies.
         self.declare_parameter("joint_pd_config", "")
+        self.declare_parameter('gait_probe_config','')
         self.declare_parameter("pd_joint_armature", 0.01)
         self.declare_parameter("gait_contact_config", "")
         self.declare_parameter("gait_floor_reference", "")
@@ -1727,7 +1728,10 @@ class MuJoCoSpawner(Node):
             from robot_lab_mujoco.gait_contacts import GaitContacts
             from std_msgs.msg import String
             self._gait_contacts = GaitContacts(self._model, gait_contacts)
+            self._gait_contacts.probes=json.loads(self.get_parameter('gait_probe_config').value or '{}')
             self._gait_contact_pub = self.create_publisher(String, '/gait/contacts', 10)
+            self._gait_terrain_pub = self.create_publisher(String,'/gait/terrain',10)
+            self._gait_terrain_at=-1.
         self._substeps = _physics_substeps(self._dt, self._model.opt.timestep)
         self._camera = self._camera_setup()
 
@@ -2153,6 +2157,11 @@ class MuJoCoSpawner(Node):
                     measured = self._gait_contacts.measure(self._model, self._data)
                     measured['clock_time'] = self._sim_t
                     self._gait_contact_pub.publish(String(data=json.dumps(measured, allow_nan=False)))
+                    if self._gait_contacts.probes and time.monotonic()-self._gait_terrain_at>=.1:
+                        self._gait_terrain_at=time.monotonic()
+                        try:terrain=self._gait_contacts.terrain(self._model,self._data,self._sim_t)
+                        except ValueError as exc:terrain=dict(clock_time=self._sim_t,error=str(exc),feet={})
+                        self._gait_terrain_pub.publish(String(data=json.dumps(terrain,allow_nan=False)))
                 if self._go2_contact_pub is not None:
                     forces = Float64MultiArray()
                     forces.data = _foot_world_contact_forces(

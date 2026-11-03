@@ -39,8 +39,18 @@ def test_trainable_robots_and_their_contracts():
     assert set(TRAINABLE) == {'unitree_a1', 'unitree_b2', 'unitree_go2', 'unitree_go2w', 'unitree_g1_29dof'}
     for robot, name in TRAINABLE.items():
         contract = PolicyContract.load(POLICY_ROOT / name)
-        # The trainer's observation layout, without history.
-        assert contract.observations == OBSERVATIONS and not contract.history
+        # A deployed template may now use history (the current Go2 export
+        # has six frames). Fresh students export the trainer's history-free
+        # layout/order; loading must not rewrite that deployed policy.
+        original_history=list(contract.history)
+        original_observations=list(contract.observations)
+        assert set(contract.observations)==set(OBSERVATIONS) and len(contract.observations)==len(OBSERVATIONS)
+        exported=policy_config(contract,robot,'fresh_student')[robot+'/fresh_student']
+        assert exported['observations']==OBSERVATIONS
+        assert exported['observations_history']==[]
+        assert exported['num_observations']==9+3*contract.num_dofs
+        assert contract.history==original_history
+        assert contract.observations==original_observations
         assert contract.num_observations == 9 + 3 * contract.num_dofs
         if robot == 'unitree_go2w':
             assert contract.num_dofs == 16 and list(contract.wheel_indices) == [12, 13, 14, 15]

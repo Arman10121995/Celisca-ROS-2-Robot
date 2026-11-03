@@ -31,6 +31,8 @@ class InfrastructureControls(ScrollPanel):
         self.recover_button=ttk.Button(queue_actions,text='Recover held lift to floor',command=lambda:self.send('recover_lift',floor=self.floor.get()),state='disabled')
         self.recover_button.pack(side='left',expand=True,fill='x')
         self.queue_text=tk.StringVar(value='No queued floor missions. Recovery requires an explicit request after Stop/loss.')
+        self.auto_park=tk.BooleanVar(value=True)
+        ttk.Checkbutton(self.body,text='Park after exit · keep landing clear',variable=self.auto_park).grid(row=12,column=0,sticky='w',pady=4)
         ttk.Label(self.body,textvariable=self.queue_text,wraplength=420,justify='left').grid(row=7,column=0,sticky='ew',pady=4)
         self.docks=ttk.Combobox(self.body,textvariable=self.dock,values=['west_charger'],state='readonly');self.docks.grid(row=8,column=0,sticky='ew',pady=4)
         ttk.Button(self.body,text='Navigate selected member to dock',command=self.dock_member).grid(row=9,column=0,sticky='ew')
@@ -124,6 +126,7 @@ class InfrastructureControls(ScrollPanel):
             origin=floors.get(name)
             if origin is None or origin==target:
                 self.status.set('Choose a different destination floor for every selected member');return
-            requests.append(dict(robot=name,floor=target))
-            if round_trip:requests.append(dict(robot=name,floor=origin))
+            requests.append(dict(robot=name,floor=target,**({'parking':'auto'} if self.auto_park.get() else {})))
+        if round_trip:
+            requests.extend(dict(robot=name,floor=floors[name],**({'parking':'auto'} if self.auto_park.get() else {})) for name in ids)
         self.send('transport_queue',requests=requests)

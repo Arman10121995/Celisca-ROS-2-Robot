@@ -1,5 +1,7 @@
 # Physical fleet infrastructure
 
+November 3: [concurrent routes and post-exit parking](curves-terrain-concurrency.md) add fresh floor-aware traffic and normal owned Nav2 parking tasks. Two overlapping single-floor missions have an actual settled-body receipt; the larger multi-member floor/parking campaign remains separate. Facility wall-time budgets are explicitly declared, while native force, observation, ownership and arrival guards remain.
+
 ## Queued transport and explicit recovery
 
 In **Fleet & Swarm → Facility**, select idle Nav2 members and a different

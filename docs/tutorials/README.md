@@ -1,5 +1,7 @@
 # Robot Lab tutorials
 
+November 3: [Curved AUV routes, measured terrain adaptation and concurrent fleets](curves-terrain-concurrency.md) explains the new native controls, architecture, source limits and exact mission boundaries.
+
 Start with [the GUI quick tour](gui-quickstart.md): Home, Run a robot, workspace search, controls and Stop behavior.
 
 ## Learn the whole system

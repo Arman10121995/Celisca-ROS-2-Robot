@@ -160,6 +160,7 @@ class FleetController(Node):
         self.create_subscription(String, '/fleet/operator_heartbeat', self._heartbeat, 10)
         self.infrastructure_holds=set();self.infrastructure_at=-math.inf
         self.infrastructure_reservations = {}
+        self.infrastructure_floors = {}
         if self.session.get('infrastructure_file'):
             self.create_subscription(String,'/fleet/infrastructure/state',self._infrastructure,10)
         self.create_subscription(ClockMessage, '/clock', self._observe_clock, qos_profile_sensor_data)
@@ -617,7 +618,7 @@ class FleetController(Node):
             if waiting_for:
                 peer = self.members.get(waiting_for['member'])
                 peer_items = ([peer.active_item] if peer and peer.active_item else []) + (peer.queue if peer else [])
-                if any(p['task'] == waiting_for['task'] for p in peer_items):
+                if self._same_floor(member,peer) and any(p['task'] == waiting_for['task'] for p in peer_items):
                     if now - waiting_for['since'] > item['goal']['timeout']:
                         member.queue.pop(0)
                         self._event('task_finished', member=member.name,
@@ -647,7 +648,7 @@ class FleetController(Node):
             member.recovery_checked_at = now
             robot = self._neighbor(member)
             peers = [(other, self._neighbor(other)) for other in self.members.values()
-                     if other is not member and fresh[other.name]]
+                     if other is not member and fresh[other.name] and self._same_floor(member,other)]
             close = [(m, p) for m, p in peers if math.hypot(robot.x-p.x, robot.y-p.y) < 1.2]
             if not close:
                 continue  # A wall is not a fleet deadlock.
@@ -661,10 +662,19 @@ class FleetController(Node):
                 self._finish_task(member, 'failed', 'Traffic recovery limit reached; remaining queue held')
                 continue
             try:
-                if not hasattr(self, '_grid'):
+                floor=getattr(self,'infrastructure_floors',{}).get(member.name)
+                floor_map=member.config.get('floor_maps',{}).get(floor)
+                if floor_map:
+                    from robot_lab_utils.fleet_session import SpawnGrid
+                    if not hasattr(self,'_traffic_grids'):self._traffic_grids={}
+                    if floor_map not in self._traffic_grids:self._traffic_grids[floor_map]=SpawnGrid(floor_map)
+                    grid=self._traffic_grids[floor_map]
+                elif not hasattr(self, '_grid'):
                     from robot_lab_utils.fleet_session import SpawnGrid
                     self._grid = SpawnGrid(self.session['map_yaml'])
-                target = traffic_yield_goal(self._grid, robot, [p for _, p in peers])
+                    grid=self._grid
+                else:grid=self._grid
+                target = traffic_yield_goal(grid, robot, [p for _, p in peers])
                 if len(member.queue) > 62:
                     raise ValueError('No queue capacity for a bounded traffic recovery')
             except ValueError as exc:
@@ -694,6 +704,7 @@ class FleetController(Node):
         neighbors = [self._neighbor(m) for m in self.members.values() if fresh[m.name]]
         for i, a in enumerate(neighbors):
             for b in neighbors[i + 1:]:
+                if not self._same_floor(a,b):continue
                 distance = math.hypot(a.x - b.x, a.y - b.y)
                 threshold = a.radius + b.radius + .08  # 8 cm contact margin
                 member_a = self.members[a.name]
@@ -839,9 +850,23 @@ class FleetController(Node):
         response.success, response.message = True, 'Motor gates latched neutral; owned Nav2 and facility stop requested'
         return response
 
+    def _same_floor(self,first,second):
+        """Separate planar traffic only with fresh observed, settled floors."""
+        if not getattr(self,'session',{}).get('infrastructure_file'):
+            return True
+        if time.monotonic()-getattr(self,'infrastructure_at',-math.inf)>=.6:
+            return True
+        a=getattr(first,'name',first);b=getattr(second,'name',second)
+        if a in getattr(self,'infrastructure_holds',set()) or b in getattr(self,'infrastructure_holds',set()):
+            return True
+        floors=getattr(self,'infrastructure_floors',{})
+        return not (floors.get(a) and floors.get(b) and floors[a]!=floors[b])
+
     def _start_swarm(self, data, targets):
         if len(targets) < 2 or any(not m.included or not self._fresh(m, time.monotonic()) for m in targets):
             raise ValueError('Swarm requires at least two included members with fresh measured state')
+        if any(not self._same_floor(targets[0],m) for m in targets[1:]):
+            raise ValueError('A planar ground swarm must share one observed floor')
         if any(m.handle is not None or m.sending or m.cancel_pending for m in targets):
             raise ValueError('Cancel Nav2 tasks and wait for terminal results before swarm control')
         mode, spacing = data['controller'], finite(data.get('spacing', 1.), 'swarm spacing')
@@ -960,6 +985,7 @@ class FleetController(Node):
             if data.get('session_id')==self.session_id and data.get('ready'):
                 self.infrastructure_holds=set(data['held_members']);self.infrastructure_at=time.monotonic()
                 self.infrastructure_reservations = data.get('reservations', {})
+                self.infrastructure_floors = data.get('robot_floors', {})
         except (ValueError,KeyError,TypeError):return
 
     def _tick(self):
@@ -1027,7 +1053,7 @@ class FleetController(Node):
                     elif member.mode == 'swarm':
                         linear, angular = swarm_commands.get(member.name, (0., 0.))
                     robot = self._neighbor(member)
-                    linear, angular, reason = separation_guard(robot, neighbors, linear, angular)
+                    linear, angular, reason = separation_guard(robot, [peer for peer in neighbors if self._same_floor(robot,peer)], linear, angular)
                     if not reason:
                         scan = member.scan
                         linear, angular, reason = scan_guard(linear, angular, scan.ranges, scan.angle_min,

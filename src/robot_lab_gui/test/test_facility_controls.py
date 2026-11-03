@@ -26,8 +26,8 @@ def test_queue_controls_keep_member_round_trips_ordered_and_do_not_publish_on_op
         panel.queue_members(True)
         assert panel.send.call_args.args == ('transport_queue',)
         assert panel.send.call_args.kwargs['requests'] == [
-            dict(robot='alpha', floor='L1'), dict(robot='alpha', floor='L0'),
-            dict(robot='beta', floor='L1'), dict(robot='beta', floor='L0')]
+            dict(robot='alpha', floor='L1',parking='auto'), dict(robot='beta', floor='L1',parking='auto'),
+            dict(robot='alpha', floor='L0',parking='auto'), dict(robot='beta', floor='L0',parking='auto')]
         panel.send.reset_mock()
         panel.floor.set('L0')
         panel.queue_members()

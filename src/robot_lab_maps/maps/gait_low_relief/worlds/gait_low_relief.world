@@ -1,0 +1,29 @@
+<sdf version="1.7">
+  <world name="gait_low_relief">
+    <physics type="ode">
+      <max_step_size>0.01</max_step_size>
+    </physics>
+    <light name="sun" type="directional">
+      <cast_shadows>true</cast_shadows>
+      <pose>0 0 20 0 0 0</pose>
+      <diffuse>0.8 0.8 0.8 1</diffuse>
+      <direction>-0.5 0.3 -1.0</direction>
+    </light>
+    <model name="terrain">
+      <static>true</static>
+      
+      <pose>0 0 0 0 0 0</pose>
+      <link name="link">
+        <collision name="collision">
+          <geometry><heightmap><uri>terrain.png</uri><size>4 4 0.008</size></heightmap></geometry>
+          <surface>
+            <friction><ode><mu>0.9</mu><mu2>0.9</mu2></ode></friction>
+          </surface>
+        </collision>
+        <visual name="visual">
+          <geometry><heightmap><uri>terrain.png</uri><size>4 4 0.008</size></heightmap></geometry>
+        </visual>
+      </link>
+    </model>
+    </world>
+</sdf>

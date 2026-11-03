@@ -183,7 +183,12 @@ def _prepare_scan(cfg, dt, robot, stage):
     if rate <= 0.0:
         return None
     import carb
-    from omni.physx import get_physx_scene_query_interface
+    try:
+        from omni.physics.core import get_physics_scene_query_interface as scene_query
+        unified_queries=True
+    except ImportError:
+        from omni.physx import get_physx_scene_query_interface as scene_query
+        unified_queries=False
     from pxr import UsdPhysics
 
     root_body = _articulation_root_body(robot)
@@ -193,11 +198,15 @@ def _prepare_scan(cfg, dt, robot, stage):
     ignored = {str(prim.GetPath()) for prim in stage.Traverse()
                if prim.HasAPI(UsdPhysics.RigidBodyAPI)
                and not str(prim.GetPath()).startswith("/World/map/")}
-    query = get_physx_scene_query_interface()
+    query = scene_query()
 
     def cast(origin, direction, distance, report):
-        query.raycast_all(carb.Float3(*origin), carb.Float3(*direction),
-                          float(distance), report)
+        def native_report(hit):
+            from pxr import PhysicsSchemaTools
+            return report(dict(rigidBody=str(PhysicsSchemaTools.intToSdfPath(hit.rigid_body)),
+                collision=str(PhysicsSchemaTools.intToSdfPath(getattr(hit,'collision',getattr(hit,'collider',0)))),distance=float(hit.distance)))
+        arguments=[carb.Float3(*origin),carb.Float3(*direction),float(distance),native_report if unified_queries else report]
+        query.raycast_all(*arguments,*([True] if unified_queries else []))
 
     every = max(1, int(round(1.0 / (dt * rate))))
     _emit({"event": "log",
@@ -923,6 +932,9 @@ def run(cfg):
         _run_stage(app, reader, cfg, state)
     except Exception as exc:
         failed = True
+        if cfg.get('gait_probes'):
+            import traceback
+            _emit({'event':'log','msg':traceback.format_exc()[-4000:]})
         _emit({"event": "error", "message": str(exc)[:500]})
     finally:
         # SimulationApp.close() can SIGABRT - or hang - during Kit teardown on
@@ -1068,6 +1080,7 @@ def _off_ground_plane(verts, tris, shape, tolerance=0.005):
     second, while it stood still with only the plane (2026-10-19).
     Returns the kept triangles and the number dropped.
     """
+    if shape.get('source_geometry')=='heightmap':return tris,0
     import numpy as np
     points = np.asarray(verts, dtype=float) * np.asarray(
         [float(v) for v in (shape.get("scale") or [1.0, 1.0, 1.0])[:3]])
@@ -1188,6 +1201,8 @@ def _run_stage(app, reader, cfg, state):
             _emit({"event": "log", "msg": "No world_path or file not found: %r" % cfg.get("world_path")})
 
     world = World(physics_dt=dt, stage_units_in_meters=1.0)
+    if cfg.get('gait_probes'):
+        world.get_physics_context().set_enable_scene_query_support(True)
     try:
         world.scene.add_ground_plane()
     except Exception:
@@ -1251,6 +1266,7 @@ def _run_stage(app, reader, cfg, state):
     camera = None
     robot = None
     dof_names = []
+    gait_observation=None
     if not robot_free:
         root_prim = prim
         cand = stage_obj.GetPrimAtPath("/World/%s" % robot_name)
@@ -1315,7 +1331,11 @@ def _run_stage(app, reader, cfg, state):
             world.scene.add(robot)
         except Exception:
             pass
+        if cfg.get('gait_probes'):
+            from gait_observation import GaitObservation
+            gait_observation=GaitObservation(stage_obj,str(root_prim.GetPath()),world,cfg['gait_probes'],cfg['gait_terrain_helper'])
         world.reset()
+        if gait_observation:gait_observation.initialize()
 
         # Give the articulation a moment to initialize, then read the DOFs.
         try:
@@ -1338,6 +1358,11 @@ def _run_stage(app, reader, cfg, state):
         if joint_pd:
             _place_joint_pd_defaults(robot, dof_names, joint_pd)
             reader.joint_targets = joint_pd_targets(joint_pd)
+        if gait_observation and cfg.get('gait_floor_reference'):
+            # Scene queries need the application/physics synchronization
+            # after imported collision cooking, before initial support rays.
+            for _ in range(5):world.step(render=True)
+            gait_observation.align_initial(robot,float(cfg['gait_floor_reference']))
         if articulation_joints:
             reader.joint_targets = _measured_articulation_hold(robot, dof_names, articulation_joints)
             reader.targets_received_at = time.monotonic()
@@ -1376,6 +1401,7 @@ def _run_stage(app, reader, cfg, state):
     wheel_separation = float(cfg.get("wheel_separation", 0.17))
     action_error_reported = False
     sim_step = 0
+    gait_observed_at=-math.inf
     headless = not bool(cfg.get('gui', False)) or not os.environ.get('DISPLAY')
     render_every = camera['every'] if camera is not None else max(1, int(round(.1/dt)))
     render_subframes = max(1, int(cfg.get('render_subframes') or 1)) if camera is not None else 1
@@ -1417,6 +1443,7 @@ def _run_stage(app, reader, cfg, state):
             reader.reset_requested = False
             try:
                 world.reset()
+                if gait_observation:gait_observation.initialize()
             except Exception as exc:
                 _emit({"event": "log", "msg": "Reset failed: %s" % exc})
                 _emit({'event': 'reset_done', 'error': str(exc)})
@@ -1581,6 +1608,9 @@ def _run_stage(app, reader, cfg, state):
 
         _emit({"event": "state", "t": t, "pos": pos, "orn": orn,
                "lin": lin, "ang": ang, "jpos": jpos, "jvel": jvel})
+        if gait_observation and time.monotonic()-gait_observed_at>=.1:
+            gait_observed_at=time.monotonic()
+            _emit(dict(event='gait',contacts=gait_observation.contacts(t,dt),terrain=gait_observation.terrain(t)))
 
         if scan is not None and q is not None and sim_step % scan["every"] == 0:
             origin, yaw = _mounted_origin_and_yaw(pos, q, scan["offset"])
@@ -1618,6 +1648,9 @@ if __name__ == "__main__":
         cfg = json.loads(sys.stdin.readline())
         run(cfg)
     except Exception as exc:  # report failures to the parent node
+        if globals().get('cfg',{}).get('gait_probes'):
+            import traceback
+            _emit({'event':'log','msg':traceback.format_exc()[-4000:]})
         _emit({"event": "error", "message": str(exc)[:500]})
         try:
             sys.stdout.flush()

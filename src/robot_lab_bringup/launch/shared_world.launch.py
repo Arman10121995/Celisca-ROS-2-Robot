@@ -84,7 +84,7 @@ def _setup(context):
             arguments=['joint_state_broadcaster', 'robot_lab_controller', '--controller-manager', '/' + name + '/controller_manager',
                        '--controller-manager-timeout', '60', '--param-file', member['controller_file']],
             parameters=[{'use_sim_time': True}], output='screen'))
-        actions.append(Node(package='robot_lab_description', executable='gz_pointcloud_to_optical.py',
+        if session.get('rgbd',True):actions.append(Node(package='robot_lab_description', executable='gz_pointcloud_to_optical.py',
             name='pointcloud_to_optical', namespace=name,
             parameters=[{'use_sim_time': True, 'input_topic': '/' + name + '/oakd/points_gz',
                          'output_topic': '/' + name + '/oakd/points', 'frame_id': name + '/oakd_rgb_camera_optical_frame'}],

@@ -48,7 +48,6 @@ FAST_TESTS=(
   "$ADP_TEST/test_namespaces.py"
   "$ADP_TEST/test_r3_3_resolver_executor.py"
   "$ADP_TEST/test_px4_frames.py"
-  "$ADP_TEST/test_aerial_swarm_route.py"
   "$ADP_TEST/test_r5_2_go2_locomotion.py"
   "$ADP_TEST/test_r5_2_go2_velocity_policy.py"
   "$ADP_TEST/test_r5_2_go2_recovery_policy.py"
@@ -81,8 +80,7 @@ FAST_TESTS=(
   "$BRG_TEST/test_nav_goals.py"
   "$BRG_TEST/test_fleet_energy.py"
   "$BRG_TEST/test_fleet_transport.py"
-  "$BRG_TEST/test_facility_queue_recovery.py"
-  "$BRG_TEST/test_marine_replanning.py"
+  "$BRG_TEST/test_auv_routes.py"
   "$BRG_TEST/test_fleet_facility_graph.py"
   "$BRG_TEST/test_sdf_heightfield.py"
   "$BRG_TEST/test_wheel_navigation_contract.py"
@@ -91,6 +89,11 @@ FAST_TESTS=(
 )
 
 INTEGRATION_TESTS=(
+  "$ADP_TEST/test_aerial_swarm_route.py"
+  "$BRG_TEST/test_facility_queue_recovery.py"
+  "$BRG_TEST/test_marine_replanning.py"
+  "$BRG_TEST/test_fleet_multifloor.py"
+  "$BRG_TEST/test_gait_terrain.py"
   "$GUI_TEST/test_experience.py"
   "$GUI_TEST/test_facility_controls.py"
   "$GUI_TEST/test_aerial_route_controls.py"

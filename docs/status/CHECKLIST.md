@@ -1,11 +1,16 @@
 # Robot Lab done and remaining checklist
 
+- [x] Curved AUV Plan/Execute with source flow/run-up/radius/depth/clearance/braking bounds and native GUI course/radius fields; actual gentle tank-curve arrival.
+- [x] Four source gait backend adapters, measured support/slip confidence, bounded low-relief control and a deterministic 8 mm terrain map; actual octopod MuJoCo/Bullet/Fortress travel/hold cases.
+- [x] Actual overlapping independent Nav2 missions and settled endpoints in one three-base world; floor-aware traffic, owned post-exit parking implementation and declared finite slow-host budgets.
+- [ ] Remaining Isaac/per-model/backend/higher-mode terrain acceptance and two-member floor/parking campaign. [Exact current receipt](evidence/curves-terrain-concurrency-2026-11-03/README.md), [agent actions](curves-terrain-concurrency-2026-11-03.md).
+
 - [x] Native bounded lift itinerary/round-trip queue, reservations, cancellation and explicit interlocked recovery; persistent SDK session ownership.
 - [x] Actual empty-car ascent, mid-shaft Stop/hold and explicit L0 recovery. [Scoped receipt](evidence/workflow-continuation-2026-11-02/README.md).
 - [x] Actual single-command, two-stop Bumperbot floor queue L0-L1-L0, independently observed settled endpoints and floor maps, 324.259 s.
 - [x] Marine blocked-input neutral hold, cancelable generation-bound replanning and fresh control/start/deadline checks.
 - [x] Native aerial formation itinerary editor, source/swept-separation Plan, explicit Execute and FCU-epoch settling. [Guide](../tutorials/formation-routes.md).
-- [ ] Concurrent multi-member passenger transport, automatic parking/evacuation and occupied recovery, wider SDK conflicts/contact, calibrated energy scheduling.
+- [ ] Multi-member passenger transport/parking qualification and occupied recovery, wider SDK conflicts/contact, calibrated energy scheduling. Automatic post-exit parking is implemented; the full campaign remains separate.
 - [ ] Actual formation-route flight/landing, larger swarms/maps, marine saved-map/obstacle/current/loss, terrain/slip/recovery and remaining original roadmap criteria.
 
 - [x] Home, modern shared styling, purpose-based navigation, Ctrl+K search, responsive sidebar, contextual help, setup/review/control flow and unified native control-page selection. [Quick tour](../tutorials/gui-quickstart.md).
@@ -14,7 +19,7 @@
 
 Latest November 2: [automatic native fleet lift transport](evidence/automatic-floor-transport-2026-11-02/README.md) completed one Bumperbot L0-L1-L0 with autonomous boarding, map/costmap transitions and settled exits. The GUI Facility request is implemented. A real native SDK L0-L1-L0 mission also passed in 359.063 wall seconds; actual SDK process-loss/resumption held the car and required explicit re-enablement. Broader multi-robot cases remain separate. Full platform acceptance remains partial.
 
-**Current checkpoint: November 2, 2026; platform/extension partial.**
+**Current checkpoint: November 3, 2026; platform/extension partial.**
 
 Use [the detailed agent execution guide](../REMAINING_WORK_GUIDE.md). These
 checks describe delivered initial features; a full roadmap task closes only

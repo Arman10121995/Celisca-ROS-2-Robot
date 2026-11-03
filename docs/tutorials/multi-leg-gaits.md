@@ -1,5 +1,7 @@
 # Six-, eight- and many-legged controls
 
+November 3: [bounded low-relief adaptation and four backend adapters](curves-terrain-concurrency.md) are implemented for the source hexapod, octopod and centipede. Select the backend in Launch; Gait task/maps and commands fill automatically. Actual octopod terrain cases retain their exact measured scope; additional robot/backend/higher-mode qualification remains separate. The passive-wheel snake retains its MuJoCo adapter.
+
 Automatic **Gait map acquisition** and **Gait navigation** now run through Experiments with actual physical outcomes. Nav2 lifecycle activation is checked before dispatch; the independent observer applies the configured CAD-to-drive heading offset. Hexapod acquisition and a physical Nav2 endpoint have measured receipts. [Latest cases and limits](../status/native-workflows-2026-10-27.md).
 
 ## October 27 saved maps and goals

@@ -300,6 +300,10 @@ class PyBulletSpawner(Node):
         # for the differential-drive parameters above.
         self.declare_parameter("drive_config", "")
         self.declare_parameter("articulation_config", "")
+        self.declare_parameter('joint_pd_config','')
+        self.declare_parameter('gait_probe_config','')
+        self.declare_parameter('gait_floor_reference','')
+        self._gait_plant=None
         self.get_logger().info("Parameters declared")
         self.declare_parameter("gui", True)
         self.declare_parameter("physics_rate", 240.0)
@@ -992,6 +996,22 @@ class PyBulletSpawner(Node):
                     self._robot_id, i, p.VELOCITY_CONTROL,
                     targetVelocity=0, force=0)
 
+        if self.get_parameter('joint_pd_config').value:
+            from robot_lab_pybullet.gait_plant import GaitPlant
+            from std_msgs.msg import Float64MultiArray,String
+            self._gait_plant=GaitPlant(p,self._robot_id,urdf,self.get_parameter('joint_pd_config').value,
+                                       self.get_parameter('gait_probe_config').value)
+            self._gait_plant.seed()
+            self._gait_terrain_at=-math.inf
+            reference=self.get_parameter('gait_floor_reference').value
+            if reference:self._gait_plant.align(float(reference))
+            self._spawn_base_pose=p.getBasePositionAndOrientation(self._robot_id)
+            self._hold_joints=False
+            self._gait_contact_pub=self.create_publisher(String,'/gait/contacts',10)
+            self._gait_terrain_pub=self.create_publisher(String,'/gait/terrain',10)
+            self.create_subscription(Float64MultiArray,self._gait_plant.config.get('topic','/gait/joint_targets'),
+                lambda msg:self._gait_plant.receive(msg.data,self._sim_t),10)
+
         self.get_logger().info(
             f"Joints: {self._joint_names}  lw={lw} rw={rw}")
         from robot_lab_utils.urdf_springs import joint_springs
@@ -1143,6 +1163,7 @@ class PyBulletSpawner(Node):
                             self._robot_id, idx, p.POSITION_CONTROL,
                             targetPosition=angle, force=10.0, maxVelocity=3.0)
 
+            if self._gait_plant is not None:self._gait_plant.step(self._sim_t)
             p.stepSimulation()
             self._sim_step += 1
             self._sim_t = self._sim_step * self._dt
@@ -1181,6 +1202,18 @@ class PyBulletSpawner(Node):
                     last_pub = self._sim_t
                     self._pub_joint_states()
                     self._pub_odom()
+                    if self._gait_plant is not None:
+                        import json
+                        from std_msgs.msg import String
+                        from robot_lab_utils.gait_terrain import sample_probes
+                        self._gait_contact_pub.publish(String(data=json.dumps(self._gait_plant.measure(self._sim_t),allow_nan=False)))
+                        if time.monotonic()-self._gait_terrain_at>=.1:
+                            self._gait_terrain_at=time.monotonic()
+                            try:
+                                terrain=sample_probes(self._gait_plant.probes,self._gait_plant.link_pose,
+                                    self._gait_plant.sole_offset,self._gait_plant.ray,self._sim_t)
+                            except ValueError as exc:terrain=dict(clock_time=self._sim_t,error=str(exc),feet={})
+                            self._gait_terrain_pub.publish(String(data=json.dumps(terrain,allow_nan=False)))
                     self._pub_imu()
                     self._pub_clock()
                 if self._sim_t - last_scan >= scan_dt:
@@ -1275,6 +1308,8 @@ class PyBulletSpawner(Node):
                 for i in range(p.getNumJoints(self._robot_id)):
                     if p.getJointInfo(self._robot_id, i)[2] != p.JOINT_FIXED:
                         p.resetJointState(self._robot_id, i, 0.0, 0.0)
+                if self._gait_plant is not None:
+                    self._gait_plant.seed();self._gait_plant.at=None
                 # A still-fresh cmd_vel would re-accelerate the wheels on
                 # the next physics tick and drag the robot out of its reset
                 # pose, so the pending command is cleared as well.

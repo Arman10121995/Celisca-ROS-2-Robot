@@ -1,0 +1,24 @@
+{
+  "repository": "AtsushiSakai/PythonRobotics",
+  "commit": "8c392897c7f41a6e4d9aab9cb2e9737a7a6fa031",
+  "files": [
+    {
+      "path": "PathPlanning/DubinsPath/dubins_path_planner.py",
+      "url": "https://raw.githubusercontent.com/AtsushiSakai/PythonRobotics/8c392897c7f41a6e4d9aab9cb2e9737a7a6fa031/PathPlanning/DubinsPath/dubins_path_planner.py",
+      "sha256": "07fba67057d900d4c2b7794c9b0818a86342af8a520c914252dec620d94c61eb"
+    },
+    {
+      "path": "utils/angle.py",
+      "url": "https://raw.githubusercontent.com/AtsushiSakai/PythonRobotics/8c392897c7f41a6e4d9aab9cb2e9737a7a6fa031/utils/angle.py",
+      "sha256": "62c3f0fdc76298d772d574b7a4357fded9265d1e0af048d87b5c8ca1a528017a"
+    },
+    {
+      "path": "LICENSE",
+      "url": "https://raw.githubusercontent.com/AtsushiSakai/PythonRobotics/8c392897c7f41a6e4d9aab9cb2e9737a7a6fa031/LICENSE",
+      "sha256": "ca6f10832a25c1cd07fa62872458ca336a6ea83ee2f2236216086bd7a5bbf264"
+    }
+  ],
+  "changes": [
+    "Remove sys.path mutation; use package-relative angle helper. Numerical planner unchanged."
+  ]
+}

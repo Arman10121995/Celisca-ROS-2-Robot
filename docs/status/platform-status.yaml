@@ -319,6 +319,20 @@ extension_completion_20261020:
     qualification; no universal robot/map/backend support claim.
   updated: '2026-10-27'
 goal: unified_multi_robot_algorithm_lab
+auv_terrain_fleet_20261102:
+  owner: codex
+  state: active
+  baseline_revision: 43473387
+  updated: '2026-11-03'
+  scope_paths: [src/robot_lab_utils/, src/robot_lab_adapter/, src/robot_lab_gui/, src/robot_lab_bringup/, src/robot_lab_mujoco/, src/robot_lab_pybullet/, src/robot_lab_isaac/, src/robot_lab_robots/, src/robot_lab_maps/, src/robot_lab/robot_lab_registry/config/, scripts/, docs/, README.md, ROADMAP.md]
+  scope: User-requested completion of source-appropriate curved AUV routes, terrain/backend adapters and concurrent fleet missions. Preserve all native source limits, ownership, observation, map and cancellation barriers and historical measurements.
+  qualification: Implement missing workflows, build packages and record actual bounded missions; software checks never substitute for physical mission evidence or universal backend acceptance.
+  implementation_state: Curved AUV planner/follower, four source gait adapters, bounded measured low-relief adaptation, floor-aware concurrent fleet queues/parking and native GUI/resolver/autofill are implemented.
+  status_document: docs/status/curves-terrain-concurrency-2026-11-03.md
+  receipt: docs/status/evidence/curves-terrain-concurrency-2026-11-03/README.md
+  run_directory: /workspace/molar/robot_lab_runtime/auv-terrain-fleet-20261102
+  measured_cases: [tethys_20_degree_tank_curve_34_046_s, octopod_low_relief_mujoco_travel_hold, octopod_low_relief_pybullet_travel_hold, octopod_low_relief_fortress_travel_hold, three_base_two_concurrent_settled_nav2_missions_45_774_s_overlap]
+  remaining_acceptance: [isaac_terrain_case_receipt, per_model_backend_terrain_higher_mode_loss_reset_matrix, multi_member_floor_parking_campaign, further_AUV_curve_saved_map_obstacle_current_loss_cases, original_roadmap_and_release]
 workflow_continuation_20261102:
   owner: codex
   state: partial
@@ -1425,6 +1439,7 @@ tasks:
         depends_on:
         - R10.1
         evidence:
+        - docs/status/evidence/curves-terrain-concurrency-2026-11-03/README.md
         - docs/status/evidence/workflows-2026-10-27/README.md
         - docs/status/workflows-2026-10-27.md
         - docs/status/amphibious-facility-2026-10-30.md
@@ -1466,7 +1481,7 @@ tasks:
           receipt: docs/status/evidence/workflows-2026-10-27/README.md
           full_scope_acceptance: partial
         updated: '2026-11-02'
-        current_scope: Bounded facility itinerary queue, durable SDK session ownership and explicit interlocked recovery; measured empty-car Stop/hold/recovery and one Bumperbot two-stop queue. Prior native and SDK single-passenger floor/energy receipts retained.
+        current_scope: Concurrent per-member missions with measured overlapping settled Nav2 outcomes; floor-aware traffic, post-exit parking and explicit bounded slow-host budgets implemented. Prior native/SDK floor and energy receipts retained.
         next_action: Record occupied recovery and queued/concurrent passenger/other-base missions, wider SDK conflicts/contact/loss; calibrated energy scheduling remains separate implementation.
         workflow_continuation_20261102:
           implementation_state: implemented
@@ -1582,6 +1597,7 @@ tasks:
         depends_on:
         - R10.4
         evidence:
+        - docs/status/evidence/curves-terrain-concurrency-2026-11-03/README.md
         - docs/REMAINING_WORK_GUIDE.md
         - docs/status/marine-2026-10-15.md
         - docs/status/auv-2026-10-15.md
@@ -1627,8 +1643,9 @@ tasks:
           owner: codex
           receipt: docs/status/evidence/workflows-2026-10-27/README.md
           full_scope_acceptance: partial
-        current_scope: Sensor-only marine navigation now holds neutral during cancelable generation-bound replanning; stale results cannot resume canceled control. AUV corner restriction and shore support are preserved.
-        next_action: Implement source-appropriate curved AUV paths, then acquire/reload independent AUV/surface maps and obstacle/current/contact/loss missions; preserve failed and earlier measured cases.
+        current_scope: Source-checked Dubins AUV curves, flow run-up, measured-course guidance and braking are implemented; gentle tank curve measured. Generation-bound neutral replanning and source actuator envelopes remain.
+        next_action: Record further curve/depth/direction and acquired AUV/surface map, obstacle/current/contact/loss missions; preserve actual tight-turn failures and source envelopes.
+        curves_terrain_concurrency_20261103: docs/status/curves-terrain-concurrency-2026-11-03.md
         workflow_continuation_20261102:
           implementation_state: implemented
           full_scope_acceptance: partial
@@ -1639,6 +1656,7 @@ tasks:
           source CAD-to-drive observer calibration and active Nav2 lifecycle guard.
         depends_on: []
         evidence:
+        - docs/status/evidence/curves-terrain-concurrency-2026-11-03/README.md
         - docs/status/evidence/workflows-2026-10-27/README.md
         - docs/status/workflows-2026-10-27.md
         - docs/status/evidence/native-workflows-2026-10-27/README.md
@@ -1668,8 +1686,9 @@ tasks:
         previous_owner: cline-agent
         claimed: '2026-10-27'
         current_run: /workspace/molar/robot_lab_runtime/project-completion-20261027-vne3n358
-        current_scope: Native workflow continuation delivered with real scoped receipts; finish the named remaining
-          families/infrastructure/matrices.
+        current_scope: Four native source gait backend adapters, measured support/slip confidence, level-source bounded low-relief adaptation and GUI resolver/autofill implemented. Octopod MuJoCo/Bullet/Fortress terrain travel/hold measured; exact remaining SDK/model/task cases are in the new receipt.
+        next_action: Finish exact remaining SDK terrain and per-model/backend higher-task, loss/reset/recovery qualification without transferring octopod receipts or historical policy certificates.
+        curves_terrain_concurrency_20261103: docs/status/curves-terrain-concurrency-2026-11-03.md
         historical_unqualified_notes:
         - Implementation complete with contract tests and GUI diagnostics passing
         - Fleet contract (8 tests), fleet missions, gait contract (all pass), molar backend contract (all pass)
@@ -1691,6 +1710,7 @@ tasks:
         depends_on:
         - R10.6
         evidence:
+        - docs/status/evidence/curves-terrain-concurrency-2026-11-03/README.md
         - docs/status/evidence/workflows-2026-10-27/README.md
         - docs/status/workflows-2026-10-27.md
         - docs/status/evidence/native-workflows-2026-10-27/README.md

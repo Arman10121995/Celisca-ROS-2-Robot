@@ -279,6 +279,8 @@ class IsaacSpawner(Node):
         # config, empty when the robot has no policy.  Legged policies need
         # their training physics rate rather than the wheeled 60 Hz.
         self.declare_parameter("joint_pd_config", "")
+        self.declare_parameter('gait_probe_config','')
+        self.declare_parameter('gait_floor_reference','')
         self.declare_parameter("physics_rate", 60.0)
         # Rotor inertia for the policy's PD joints that have none (the MuJoCo
         # bridge adds 0.01); 0 keeps PhysX's massless drives.
@@ -349,6 +351,9 @@ class IsaacSpawner(Node):
         self._imu_pub = self.create_publisher(Imu, "/imu/out", 10)
         self._scan_pub = self.create_publisher(LaserScan, "/scan", 10)
         self._clock_pub = self.create_publisher(RosClock, "/clock", 10)
+        from std_msgs.msg import String
+        self._gait_contact_pub=self.create_publisher(String,'/gait/contacts',10)
+        self._gait_terrain_pub=self.create_publisher(String,'/gait/terrain',10)
         # TF published by the EKF, not the spawner.
 
         # Readiness / health / reset contracts (R2.3).
@@ -713,6 +718,9 @@ class IsaacSpawner(Node):
             "gui": bool(gui and os.environ.get("DISPLAY")),
             "physics_rate": float(self.get_parameter("physics_rate").value),
             "joint_pd": self._policy_targets.config if self._policy_targets else None,
+            "gait_probes": json.loads(self.get_parameter('gait_probe_config').value or '{}'),
+            "gait_floor_reference":self.get_parameter('gait_floor_reference').value,
+            "gait_terrain_helper":str(__import__('robot_lab_utils.gait_terrain',fromlist=['__file__']).__file__),
             "articulation_joints": self._articulation.contract.joints if self._articulation else {},
             "passive_casters": passive_casters,
             "pd_joint_armature": float(self.get_parameter("pd_joint_armature").value),
@@ -911,7 +919,7 @@ class IsaacSpawner(Node):
                                    % os.path.basename(shape["heightmap"]))
                     continue
                 shape = dict(shape, type="mesh", mesh=staged,
-                             scale=[1.0, 1.0, 1.0])
+                             scale=[1.0, 1.0, 1.0],source_geometry='heightmap')
             loadable.append(shape)
         self.get_logger().info(
             "World '%s': %d static shape(s) for Isaac, %d skipped%s"
@@ -1023,6 +1031,10 @@ class IsaacSpawner(Node):
                         with self._lock:
                             self._state = msg
                             self._articulation_feedback_wall = time.monotonic()
+                    elif ev == 'gait':
+                        from std_msgs.msg import String
+                        self._gait_contact_pub.publish(String(data=json.dumps(msg['contacts'],allow_nan=False)))
+                        self._gait_terrain_pub.publish(String(data=json.dumps(msg['terrain'],allow_nan=False)))
                     elif ev == "scan":
                         self._publish_scan(msg)
                     elif ev == "rgbd":

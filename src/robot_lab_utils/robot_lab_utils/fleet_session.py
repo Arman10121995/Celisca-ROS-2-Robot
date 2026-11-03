@@ -40,8 +40,9 @@ def finite(value, label):
 
 def validate_session(data):
     """Small explicit contract; refuse aliases, unsupported plants and collisions."""
-    if not isinstance(data, dict) or set(data) - {'schema_version', 'map', 'members'}:
-        raise ValueError('Fleet session requires schema_version, map and members only')
+    if not isinstance(data, dict) or set(data) - {'schema_version', 'map', 'members','rgbd'}:
+        raise ValueError('Fleet session requires schema_version, map, members and optional boolean rgbd')
+    if 'rgbd' in data and type(data['rgbd']) is not bool:raise ValueError('rgbd must be boolean')
     if type(data.get('schema_version')) is not int or data.get('schema_version') != 1:
         raise ValueError('Fleet session schema_version must be 1')
     members = data.get('members')
@@ -68,7 +69,7 @@ def validate_session(data):
     map_name = data.get('map', 'nav_empty')
     if not isinstance(map_name, str) or not map_name or len(map_name) > 128:
         raise ValueError('Select a registered map id')
-    return dict(schema_version=1, map=map_name, members=result)
+    return dict(schema_version=1, map=map_name, members=result,**({'rgbd':data['rgbd']} if 'rgbd' in data else {}))
 
 
 class SpawnGrid:
@@ -138,7 +139,7 @@ def choose_spawns(members, seed, grid=None):
     return placed
 
 
-def namespace_description(urdf, member, controller_file):
+def namespace_description(urdf, member, controller_file, rgbd=True):
     """Instance identity plus the documented first-party Labbot lidar clearance."""
     root = ET.fromstring(urdf)
     name, prefix = member['id'], member['id'] + '/'
@@ -192,7 +193,10 @@ def namespace_description(urdf, member, controller_file):
                     if element is None:
                         element = ET.SubElement(plugin, tag)
                     element.text = text
-        for sensor in gazebo.findall('sensor'):
+        for sensor in list(gazebo.findall('sensor')):
+            if sensor.get('type')=='rgbd_camera' and not rgbd:
+                gazebo.remove(sensor)
+                continue
             frame = sensor.find('gz_frame_id')
             if frame is not None and frame.text:
                 frame.text = prefix + frame.text.lstrip('/')
@@ -200,6 +204,13 @@ def namespace_description(urdf, member, controller_file):
             if topic is None:
                 topic = ET.SubElement(sensor, 'topic')
             kind = sensor.get('type')
+            if kind=='rgbd_camera':
+                # Shared 2D missions retain the real camera and its frames,
+                # at a declared 5 Hz instead of rendering every 30 Hz source
+                # stream per robot. Lidar/IMU rates and watchdogs are unchanged.
+                rate=sensor.find('update_rate')
+                if rate is None:rate=ET.SubElement(sensor,'update_rate')
+                rate.text='5'
             suffix = {'imu': 'imu', 'gpu_lidar': 'scan', 'rgbd_camera': 'oakd'}.get(kind)
             if suffix is None:
                 raise ValueError('No shared-world sensor contract for ' + str(kind))
@@ -324,6 +335,7 @@ def prepare_session(session_file, map_override='', navigation=False, runtime_roo
     from .robot_description import load_description
     from .gazebo_physics_world import cap_physics_step
     requested = validate_session(yaml.safe_load(Path(session_file).read_text()))
+    rgbd=requested.get('rgbd',True)
     map_name = map_override or requested['map']
     bringup, robots = Path(share('robot_lab_bringup')), Path(share('robot_lab_robots'))
     from .installed_assets import merge_installed_profiles
@@ -379,7 +391,7 @@ def prepare_session(session_file, map_override='', navigation=False, runtime_roo
             ctrl_source = robots / 'labbot/config/robot_lab_controllers.yaml'
         controller_file = folder / (name + '-controllers.yaml')
         controller_file.write_text(yaml.safe_dump(controller_parameters(yaml.safe_load(ctrl_source.read_text()), member)))
-        description = namespace_description(urdf, member, controller_file)
+        description = namespace_description(urdf, member, controller_file, rgbd=rgbd)
         path = folder / (name + '.urdf')
         path.write_text(description)
         member.update(description=str(path), description_sha256=hashlib.sha256(description.encode()).hexdigest(),
@@ -408,7 +420,7 @@ def prepare_session(session_file, map_override='', navigation=False, runtime_roo
             topic='/facility/'+joint+'/target'
             bridges.append(dict(ros_topic_name=topic,gz_topic_name=topic,ros_type_name='std_msgs/msg/Float64',gz_type_name='gz.msgs.Double',direction='ROS_TO_GZ'))
     bridge_file.write_text(yaml.safe_dump(bridges))
-    result = dict(schema_version=1, map=map_name, backend='gazebo', navigation=navigation,
+    result = dict(schema_version=1, map=map_name, backend='gazebo', navigation=navigation, rgbd=rgbd, rgbd_rate_hz=5 if rgbd else 0,
                   world=world, world_name=world_name, world_source=world_source,
                   world_source_sha256=hashlib.sha256(Path(world_source).read_bytes()).hexdigest(),
                   world_sha256=hashlib.sha256(Path(world).read_bytes()).hexdigest(),

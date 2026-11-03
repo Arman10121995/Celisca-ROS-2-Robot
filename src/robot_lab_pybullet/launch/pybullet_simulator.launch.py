@@ -77,6 +77,9 @@ def _build_pybullet_actions(context):
         LaunchConfiguration("drive_config"), value_type=str)
     spawner_params['articulation_config'] = ParameterValue(
         LaunchConfiguration('articulation_config'), value_type=str)
+    for key in ('joint_pd_config','gait_probe_config','gait_floor_reference'):
+        spawner_params[key]=ParameterValue(LaunchConfiguration(key),value_type=str)
+    spawner_params['physics_rate']=ParameterValue(LaunchConfiguration('physics_rate'),value_type=float)
     from robot_lab_utils.sensor_config import sensor_parameters
     spawner_params.update(sensor_parameters(
         LaunchConfiguration('sensor_config').perform(context),
@@ -101,6 +104,10 @@ def _build_pybullet_actions(context):
 
 def generate_launch_description():
     return LaunchDescription([
+        DeclareLaunchArgument('joint_pd_config',default_value=''),
+        DeclareLaunchArgument('gait_probe_config',default_value=''),
+        DeclareLaunchArgument('gait_floor_reference',default_value=''),
+        DeclareLaunchArgument('physics_rate',default_value='240.0'),
         DeclareLaunchArgument("left_wheel_joint", default_value="wheel_left_joint"),
         DeclareLaunchArgument("right_wheel_joint", default_value="wheel_right_joint"),
         DeclareLaunchArgument("wheel_radius", default_value="0.033"),

@@ -154,6 +154,8 @@ def _build_isaac_actions(context):
     # Learned-policy PD bridge (legged_policy:=..., see simulated_robot.launch.py).
     spawner_params["joint_pd_config"] = ParameterValue(
         LaunchConfiguration("joint_pd_config"), value_type=str)
+    for key in ('gait_probe_config','gait_floor_reference'):
+        spawner_params[key]=ParameterValue(LaunchConfiguration(key),value_type=str)
     spawner_params["physics_rate"] = ParameterValue(
         LaunchConfiguration("physics_rate"), value_type=float)
     spawner_params["pd_joint_armature"] = ParameterValue(
@@ -209,6 +211,8 @@ def generate_launch_description():
         DeclareLaunchArgument("drive_config", default_value=""),
         DeclareLaunchArgument('articulation_config', default_value=''),
         DeclareLaunchArgument('sensor_config', default_value=''),
+        DeclareLaunchArgument('gait_probe_config',default_value=''),
+        DeclareLaunchArgument('gait_floor_reference',default_value=''),
         DeclareLaunchArgument("world_name", default_value="empty"),
         DeclareLaunchArgument("world_package", default_value="robot_lab_maps"),
         DeclareLaunchArgument("world_path", default_value=""),

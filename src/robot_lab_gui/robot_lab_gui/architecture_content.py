@@ -113,6 +113,12 @@ component('policy', 'Legged policies & gaits', 'Control', 'Robot-specific observ
     'Multi-leg gait controllers instead use source FK/contact support and an authored gait. Passive standing, a loaded checkpoint, walking, terrain recovery and Nav2 integration are distinct stages. '
     'Preserve source limits and expose experimental policy selection honestly; never route wheel commands to a humanoid and assume it walks.',
     'src/robot_lab_adapter/robot_lab_adapter/humanoid_policy_controller.py src/robot_lab_gui/robot_lab_gui/gait_controls.py src/robot_lab_gui/robot_lab_gui/training_tab.py', 'docs/tutorials/multi-leg-gaits.md')
+component('terrain', 'Measured low-relief adaptation', 'Control', 'Observed support ranges become bounded source-foot corrections.',
+    'MuJoCo, Bullet and PhysX use native collision rays; the Fortress adapter uses a labeled selected-static-world range model and native contact forces. '
+    'Source joint frames, mass, effort and position bounds are retained. Freshness, 2 cm differential reach, support, slip and body/tilt gates can stop the gait. '
+    'The source hexapod, octopod and centipede have backend adapters; each measured mission remains a separate support claim. A passive-wheel snake uses its separate MuJoCo adapter.',
+    'src/robot_lab_utils/robot_lab_utils/gait_terrain.py src/robot_lab_utils/robot_lab_utils/gait_gazebo_adapter.py src/robot_lab_maps/systems/gait_contact_frame.cc src/robot_lab_isaac/python/robot_lab_isaac/gait_observation.py', 'docs/tutorials/curves-terrain-concurrency.md',
+    '/gait/terrain : observed range JSON\n/gait/contacts : actual force JSON\n/gait/odometry_state : independent contact/FK consistency\n/gait/joint_targets : source-order Float64MultiArray')
 component('arm', 'Arm planning & Servo', 'Manipulation', 'Joint targets, Cartesian planning and incremental end-effector controls.',
     'A 3D target is interpreted in a named planning frame. MoveIt/native planning uses source joint limits and collision geometry. '
     'Cartesian jog/Servo and taught poses help choose reachable targets; IK failure can mean unreachable pose, orientation or collision constraints. '
@@ -142,6 +148,7 @@ component('aerial_plan', 'Aerial scene planning', 'Aerial', 'Selected-world geom
 component('fleet', 'Ground fleet owner', 'Fleet', 'Member queues, ownership, traffic and real Nav2 results in one world.',
     'shared_world.launch.py creates one Fortress plant/clock with named Bumperbot/Labbot instances and per-member controllers/Nav2. '
     'The fleet controller arbitrates manual input, queues, reservations and operator heartbeats. State includes task identity, actual acknowledgments and separate truth/estimated poses. '
+    'Concurrent routes retain per-member acknowledgments and measured settling. Fresh observed floors separate planar traffic; post-lift parking uses source-clear Nav2 goals. '
     'A shared world is essential for physical interactions; several isolated simulations are not a fleet.',
     'src/robot_lab_bringup/launch/shared_world.launch.py src/robot_lab_utils/robot_lab_utils/fleet_session.py src/robot_lab_utils/robot_lab_utils/fleet_controller.py', 'docs/tutorials/fleet-and-swarm.md', '/fleet/state, /fleet/command, /fleet/operator_heartbeat : std_msgs/msg/String JSON\nPer-member Nav2 actions and /<member>/* sensor/control namespaces.')
 component('rmf', 'Open-RMF traffic & tasks', 'Fleet', 'Optional native scheduling translates routes into actual member missions.',
@@ -163,9 +170,9 @@ component('marine', 'Marine force controller', 'Marine', 'ROV thrusters, AUV pro
 component('marine_map', 'Marine mapping & routes', 'Marine', 'Sensor-based acquisition, protected database reload and estimated missions.',
     'RGB-D acquisition exports a real database; saved localization reuses it with appropriate source frames and odometry. '
     'Ahead waypoints are interpreted by a marine mission controller rather than assuming planar Nav2 works underwater. '
-    'A blocked segment publishes neutral input before cancelable replanning. Generation, live ownership and start-position checks reject late results; AUVs cannot bypass their forward-transect restriction through replanning. Authored current commands are not current sensors or optimized route costs. '
+    'A blocked segment publishes neutral input before cancelable replanning. Generation, live ownership and start-position checks reject late results. Tethys uses bounded Dubins curves, a straight flow run-up and a clear braking corridor; blocked AUV routes require a new explicit plan. Authored current commands are not current sensors or optimized route costs. '
     'Native body traces measure routes independently. The measured ROV/surface/AUV cases have different scope; currents, obstacles, loss and additional maps remain separate.',
-    'src/robot_lab_mapping src/robot_lab_gui/robot_lab_gui/marine_controls.py', 'docs/tutorials/tethys-auv.md')
+    'src/robot_lab_mapping src/robot_lab_utils/robot_lab_utils/auv_routes.py src/robot_lab_gui/robot_lab_gui/marine_controls.py', 'docs/tutorials/curves-terrain-concurrency.md')
 component('queue', 'Experiments & workloads', 'Evidence', 'Snapshot selected workflows and execute owned, bounded trials.',
     'The GUI queue records resolved selections and starts real producers for compatible Nav2/fleet/marine/gait/aerial cases. '
     'Concurrency needs isolated processes, ROS domains, transport partitions, clocks and artifact paths. '
@@ -220,8 +227,8 @@ VIEWS = [
          [('world','amcl','known occupancy'),('sensors','amcl','planar scan'),('sensors','slam2','scan'),('sensors','slam3','RGB / depth / info'),('odom','slam2','motion prior'),('odom','slam3','odometry / TF'),('amcl','tf','global correction'),('slam2','tf','alternative owner'),('slam3','evidence','database / exports'),('slam2','evidence','saved grid'),('tf','goal','correct frame')],
          'Known-map localization consumes a map. SLAM creates a map while estimating motion. In a given mode only its selected estimator owns map→odom. A cloud, an occupancy grid and a mapping database are different artifacts.'),
     view('control','05 · Robot classes & actuation','A shared GUI does not mean every robot uses a wheel controller',
-         [['gui','drive','actuator'],['policy','arm','hand'],['px4','marine','plant']],
-         [('gui','drive','manual / autonomous ownership'),('drive','actuator','wheeled inputs'),('gui','policy','exact-model policy'),('policy','actuator','joint effort'),('arm','actuator','bounded joint action'),('hand','actuator','coupled finger targets'),('gui','px4','flight commands'),('gui','marine','thrust / depth'),('px4','plant','rotors'),('marine','plant','thrusters / fins'),('actuator','plant','native actuation')],
+         [['gui','drive','actuator'],['policy','arm','hand'],['px4','marine','plant'],['terrain','sensors','clock']],
+         [('gui','drive','manual / autonomous ownership'),('drive','actuator','wheeled inputs'),('gui','policy','exact-model policy'),('policy','actuator','joint effort'),('arm','actuator','bounded joint action'),('hand','actuator','coupled finger targets'),('gui','px4','flight commands'),('gui','marine','thrust / depth'),('px4','plant','rotors'),('marine','plant','thrusters / fins'),('actuator','plant','native actuation'),('plant','sensors','native feedback'),('sensors','terrain','support / range / slip'),('clock','terrain','fresh observations'),('terrain','policy','bounded source-foot targets')],
          'Choose the class-specific control page. Wheels, gaits, arms, hands, aircraft and marine vehicles have different limits and safe Stop behavior. Start with small explicit commands and inspect actual feedback.'),
     view('frames','06 · Frames, clocks & truth','One owner per TF edge · timestamps are part of the contract',
          [['clock','tf','sensors'],['amcl','odom','assets'],['facility','plant','evidence']],

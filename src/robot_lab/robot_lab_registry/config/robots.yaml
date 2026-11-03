@@ -209,7 +209,7 @@
   status: available
   robot_class: legged
   maturity: prototype
-  supported_simulators: [mujoco]
+  supported_simulators: [mujoco, pybullet, gazebo, isaac]
   supported_modes: [display, gait]
   locomotion: {type: hexapod, legs: 6, dof: 20, max_velocity: 0.025}
   capabilities: [control]
@@ -225,7 +225,7 @@
   status: available
   robot_class: legged
   maturity: prototype
-  supported_simulators: [mujoco]
+  supported_simulators: [mujoco, pybullet, gazebo, isaac]
   supported_modes: [display, gait]
   locomotion: {type: octopod, legs: 8, dof: 24, max_velocity: 0.045}
   capabilities: [control]
@@ -241,7 +241,7 @@
   status: available
   robot_class: legged
   maturity: prototype
-  supported_simulators: [mujoco]
+  supported_simulators: [mujoco, pybullet, gazebo, isaac]
   supported_modes: [display, gait]
   locomotion: {type: segmented, legs: 12, segments: 6, dof: 41, max_velocity: 0.045}
   capabilities: [control]

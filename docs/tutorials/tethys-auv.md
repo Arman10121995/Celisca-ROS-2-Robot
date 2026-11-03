@@ -1,5 +1,7 @@
 # Native Tethys AUV
 
+November 3: [curved source-checked routes](curves-terrain-concurrency.md) add GUI travel-course/radius fields, a straight flow run-up, bounded Dubins guidance, measured sideslip compensation and terminal braking. A gentle 20° tank curve has an actual arrival receipt. The older transect-only restriction below describes the earlier implementation; arbitrary stop-and-pivot paths remain unsupported.
+
 October 30 status: automatic acquisition in `marine_tank` has a measured
 2.833 m physical transect and an archived 14-node / 19,515-point RGB-D map.
 [Actual receipt](../status/evidence/native-forms-2026-10-30/README.md).

@@ -64,6 +64,8 @@ class MarineNavigation(Node):
         self.status = 'idle'
         self.reason = 'Plan from sensor odometry; explicit Execute required'
         self.route = None
+        self.auv_follower = None
+        self.auv_plan = None
         self.index = 0
         self.arrival_at = 0.
         self.deadline = 0.
@@ -205,6 +207,8 @@ class MarineNavigation(Node):
         self.stop_token.set()
         self.generation += 1
         self.route = None
+        self.auv_follower = None
+        self.auv_plan = None
         self.status, self.reason = ('canceled' if self.status in ('executing','planning','replanning','braking','coasting') else 'idle'), reason
         self.drive_pub.publish(Twist())
         if self.native and self.native.get('input_owner') == 'mission':
@@ -248,25 +252,20 @@ class MarineNavigation(Node):
                 token, generation = self.stop_token, self.generation
                 self.future_generation, self.future_kind = generation, 'plan'
                 observed=self.observed
+                goal_heading=float(data['goal_heading']) if data.get('goal_heading') is not None else None
+                turn_radius=float(data.get('turn_radius',12.))
                 def compute():
-                    if self.shore is not None:
+                    if self.auv:
+                        from robot_lab_utils.auv_routes import plan_auv
+                        route,info=plan_auv(scene,start,orientation[2],target,radius,self.bottom,self.surface,
+                            token.is_set,goal_heading=goal_heading,turn_radius=turn_radius)
+                    elif self.shore is not None:
                         route,info=self.shore.route(start,target,radius,token.is_set,observation=observed)
                     else:route, info = plan(scene, start, target, radius=radius, resolution=.4, timeout=15.,
                         canceled=token.is_set, min_altitude=self.bottom + radius + .1,
                         max_altitude=self.surface - radius - .1) if not self.surface_vessel else plan(
                             scene,start,target,radius=radius,resolution=.4,timeout=15.,canceled=token.is_set,
                             min_altitude=float(start[2])-.1,max_altitude=float(start[2])+.1)
-                    if self.auv:
-                        # This controller has no stop-and-pivot capability. Only
-                        # source-clear, forward-aligned cruise transects qualify
-                        # for initial execution; arbitrary A* corners are refused.
-                        bearing = math.atan2(target[1]-start[1], target[0]-start[0])
-                        error = math.atan2(math.sin(bearing-orientation[2]-math.pi), math.cos(bearing-orientation[2]-math.pi))
-                        if len(route) != 2 or abs(error) > .25 or np.linalg.norm(np.array(target[:2])-start[:2]) < 2.:
-                            raise ValueError('AUV currently requires a direct forward cruise transect ≥2 m and within 0.25 rad; no pivot/corner execution')
-                        direction = (np.asarray(target)-start) / np.linalg.norm(np.asarray(target)-start)
-                        if not scene.segment(target, np.asarray(target)+3*direction, radius, time.monotonic()+2., token.is_set):
-                            raise ValueError('AUV endpoint needs a 3 m clear coasting corridor')
                     return generation, route, info, start.tolist()
                 self.future = self.worker.submit(compute)
             elif data['op'] == 'execute':
@@ -274,9 +273,12 @@ class MarineNavigation(Node):
                     raise ValueError('Plan a route and Arm native marine control before Execute')
                 if math.dist(self.position, self.route[0]) > .25:
                     raise ValueError('Vehicle moved since planning; plan again')
+                if self.auv and self.auv_follower is None:
+                    raise ValueError('AUV needs a curvature-checked forward route before Execute')
                 self.control('mission_claim')
                 self.status, self.reason, self.index = 'executing', 'Estimated-pose route active', 1
-                self.deadline, self.arrival_at = time.monotonic()+180., 0.
+                budget=max(180.,min(600.,self.auv_plan['length_m']/.2*3.)) if self.auv else 180.
+                self.deadline, self.arrival_at = time.monotonic()+budget, 0.
                 self.claim_until = time.monotonic()+.6
                 self.event('execute', route=self.route, observer='sensor-only odometry / optional RTAB-Map transform')
             else:
@@ -304,7 +306,7 @@ class MarineNavigation(Node):
         # blocked segment, including while waiting out the retry cooldown.
         self.drive_pub.publish(Twist())
         if self.auv:
-            self.cancel('AUV transect blocked; propulsion stopped. Explicit forward-aligned replan required')
+            self.cancel('AUV curve blocked; propulsion stopped. Explicit curvature-constrained replan required')
             return
         now = time.monotonic()
         self.reason = reason
@@ -362,6 +364,11 @@ class MarineNavigation(Node):
                     self.reason = 'Route replanned around observed obstacle; execution resumed'
                     self.event('replan_completed', route=route, info=info)
                 elif self.status == 'planning':
+                    if getattr(self,'auv',False):
+                        if info.get('kind')!='auv_dubins':raise ValueError('Unvalidated AUV path kind')
+                        from robot_lab_utils.auv_routes import AuvPathFollower
+                        self.auv_follower=AuvPathFollower(route,info['headings_rad'])
+                        self.auv_plan=info
                     self.route, self.status = route, 'planned'
                     self.reason = 'Source collision route planned; explicit Execute required'
                     self.event('planned', route=route, info=info)
@@ -415,6 +422,12 @@ class MarineNavigation(Node):
             else:
                 if self.native.get('input_owner') == 'mission':
                     target = self.route[self.index]
+                    auv_brake=False
+                    if self.auv:
+                        try:
+                            command,target,self.index,auv_brake=self.auv_follower.command(self.position,self.orientation[2],self.velocity)
+                        except ValueError as exc:
+                            self.cancel(str(exc));return
                     scene = self.shore.with_observation(self.observed) if self.shore else ObservedScene(self.scene, self.observed) if self.observed else self.scene
                     checked_target=np.asarray(target)
                     if self.shore:
@@ -431,7 +444,8 @@ class MarineNavigation(Node):
                     if not clear:
                         self._try_replan('Observed segment blocked; replanning from current position')
                     else:
-                        command, distance = waypoint_command(self.position, self.orientation, self.velocity, target, self.auv)
+                        if not self.auv:command, distance = waypoint_command(self.position, self.orientation, self.velocity, target)
+                        else:distance=math.dist(self.position,self.route[-1])
                         if self.surface_vessel:
                             dx,dy=target[0]-self.position[0],target[1]-self.position[1]
                             distance=math.hypot(dx,dy)
@@ -439,7 +453,11 @@ class MarineNavigation(Node):
                             command=(min(.25,.5*distance)*max(0.,math.cos(error)) if abs(error)<1. else 0.,
                                      0.,0.,max(-.3,min(.3,.9*error)))
                         arrival=(max(.35,min(1.2,2.5*float(np.linalg.norm(self.velocity))+.1)) if self.auv else .08 if self.shore else .15)
-                        if distance < arrival:
+                        if self.auv and auv_brake:
+                            self.status,self.reason='braking','Curved AUV route terminal corridor reached; signed-thrust braking'
+                            self.event('auv_braking',speed_m_s=float(np.linalg.norm(self.velocity)),remaining_m=distance)
+                            command=(0.,0.,0.,0.)
+                        elif not self.auv and distance < arrival:
                             if self.index < len(self.route)-1:
                                 self.index += 1
                                 self.arrival_at = 0.
@@ -466,6 +484,9 @@ class MarineNavigation(Node):
             authored_current_m_s=list(self.current_vel) if self.current_vel is not None else None,
             authored_current_age_s=now-self.current_at if math.isfinite(self.current_at) else None,
             current_cost_planning=False,
+            route_kind='auv_dubins' if self.auv_plan else 'source_collision_route',
+            auv_turn_radius_m=self.auv_plan['turn_radius_m'] if self.auv_plan else None,
+            auv_cross_track_m=self.auv_follower.cross_track if self.auv_follower else None,
             localization_mode=self.localization, localized=self.localization and now-self.localized_at < 3.,
             mapping_status=self.archive.phase, saved_map=self.archive.result,
             estimator=('Authored downward motion/range simulation + native IMU/source support map; no image matching' if self.robot=='lab_amphibious' else 'Pressure/DVL simulation + native IMU; optional real RGB-D SLAM map transform'),
