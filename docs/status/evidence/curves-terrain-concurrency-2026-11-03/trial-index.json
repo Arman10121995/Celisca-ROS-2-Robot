@@ -68,298 +68,359 @@
   "gait-bullet-1": {
     "passed": false,
     "reason": "KeyboardInterrupt: ",
+    "phase": "waiting",
+    "wall_seconds": 120.1632958290138,
     "backend": "pybullet",
     "robot": "lab_octopod",
-    "terrain": true,
-    "phase": "waiting",
-    "wall_seconds": 120.1632958290138
+    "terrain": true
   },
   "gait-bullet-2": {
     "passed": false,
     "reason": "RuntimeError: Rejected: Insufficient measured foot support",
+    "phase": "arming",
+    "wall_seconds": 4.643540876990301,
     "backend": "pybullet",
     "robot": "lab_octopod",
-    "terrain": true,
-    "phase": "arming",
-    "wall_seconds": 4.643540876990301
+    "terrain": true
   },
   "gait-bullet-3": {
     "passed": false,
     "reason": "RuntimeError: Gait interrupted: Insufficient actual terrain foot support",
+    "phase": "walking",
+    "wall_seconds": 17.410264161007944,
     "backend": "pybullet",
     "robot": "lab_octopod",
-    "terrain": true,
-    "phase": "walking",
-    "wall_seconds": 17.410264161007944
+    "terrain": true
   },
   "gait-bullet-4": {
     "passed": false,
     "reason": "RuntimeError: Gait interrupted: Insufficient actual terrain foot support",
+    "phase": "walking",
+    "wall_seconds": 24.421590903002652,
     "backend": "pybullet",
     "robot": "lab_octopod",
-    "terrain": true,
-    "phase": "walking",
-    "wall_seconds": 24.421590903002652
+    "terrain": true
   },
   "gait-bullet-5": {
     "passed": true,
     "reason": "Actual source gait progress 0.1568 m; held drift 0.0005 m",
+    "phase": "holding",
+    "wall_seconds": 54.30959606199758,
     "backend": "pybullet",
     "robot": "lab_octopod",
-    "terrain": true,
-    "phase": "holding",
-    "wall_seconds": 54.30959606199758
+    "terrain": true
   },
   "gait-bullet-6": {
     "passed": false,
     "reason": "RuntimeError: Gait interrupted: Terrain observations lost; explicit re-arm required",
+    "phase": "walking",
+    "wall_seconds": 11.703497139998944,
     "backend": "pybullet",
     "robot": "lab_octopod",
-    "terrain": true,
-    "phase": "walking",
-    "wall_seconds": 11.703497139998944
+    "terrain": true
   },
   "gait-bullet-7": {
     "passed": true,
     "reason": "Actual source gait progress 0.1545 m; held drift 0.0006 m",
+    "phase": "holding",
+    "wall_seconds": 45.0224743400031,
     "backend": "pybullet",
     "robot": "lab_octopod",
-    "terrain": true,
-    "phase": "holding",
-    "wall_seconds": 45.0224743400031
+    "terrain": true
   },
   "gait-bullet-8": {
     "passed": true,
     "reason": "Actual source gait progress 0.1502 m; held drift 0.0005 m",
+    "phase": "holding",
+    "wall_seconds": 55.990850310001406,
     "backend": "pybullet",
     "robot": "lab_octopod",
-    "terrain": true,
-    "phase": "holding",
-    "wall_seconds": 55.990850310001406
+    "terrain": true
   },
   "gait-gazebo-1": {
     "passed": false,
     "reason": "RuntimeError: Owned plant exited",
+    "phase": "waiting",
+    "wall_seconds": 6.94488154600549,
     "backend": "gazebo",
     "robot": "lab_octopod",
-    "terrain": true,
-    "phase": "waiting",
-    "wall_seconds": 6.94488154600549
+    "terrain": true
   },
   "gait-gazebo-10": {
     "passed": false,
     "reason": "RuntimeError: Gait interrupted: Observed relief/step exceeds source gait reach envelope",
+    "phase": "walking",
+    "wall_seconds": 39.03972026400152,
     "backend": "gazebo",
     "robot": "lab_octopod",
-    "terrain": true,
-    "phase": "walking",
-    "wall_seconds": 39.03972026400152
+    "terrain": true
   },
   "gait-gazebo-11": {
     "passed": true,
     "reason": "Actual source gait progress 0.1850 m; held drift 0.0003 m",
+    "phase": "holding",
+    "wall_seconds": 111.7736219530052,
     "backend": "gazebo",
     "robot": "lab_octopod",
-    "terrain": true,
-    "phase": "holding",
-    "wall_seconds": 111.7736219530052
+    "terrain": true
   },
   "gait-gazebo-2": {
     "passed": false,
     "reason": "RuntimeError: Owned plant exited",
+    "phase": "waiting",
+    "wall_seconds": 6.4233138489944395,
     "backend": "gazebo",
     "robot": "lab_octopod",
-    "terrain": true,
-    "phase": "waiting",
-    "wall_seconds": 6.4233138489944395
+    "terrain": true
   },
   "gait-gazebo-3": {
     "passed": false,
     "reason": "RuntimeError: Owned plant exited",
+    "phase": "waiting",
+    "wall_seconds": 6.411912356998073,
     "backend": "gazebo",
     "robot": "lab_octopod",
-    "terrain": true,
-    "phase": "waiting",
-    "wall_seconds": 6.411912356998073
+    "terrain": true
   },
   "gait-gazebo-4": {
     "passed": false,
     "reason": "deadline",
+    "phase": "waiting",
+    "wall_seconds": 180.1039216529898,
     "backend": "gazebo",
     "robot": "lab_octopod",
-    "terrain": true,
-    "phase": "waiting",
-    "wall_seconds": 180.1039216529898
+    "terrain": true
   },
   "gait-gazebo-5": {
     "passed": false,
     "reason": "RuntimeError: Gait interrupted: Terrain observations lost; explicit re-arm required",
+    "phase": "walking",
+    "wall_seconds": 16.72358237800654,
     "backend": "gazebo",
     "robot": "lab_octopod",
-    "terrain": true,
-    "phase": "walking",
-    "wall_seconds": 16.72358237800654
+    "terrain": true
   },
   "gait-gazebo-6": {
     "passed": false,
     "reason": "RuntimeError: Gait interrupted: Measured contact-kinematic slip interrupted terrain gait",
+    "phase": "walking",
+    "wall_seconds": 15.895171448006295,
     "backend": "gazebo",
     "robot": "lab_octopod",
-    "terrain": true,
-    "phase": "walking",
-    "wall_seconds": 15.895171448006295
+    "terrain": true
   },
   "gait-gazebo-7": {
     "passed": false,
     "reason": "RuntimeError: Gait interrupted: Terrain observations lost; explicit re-arm required",
+    "phase": "walking",
+    "wall_seconds": 13.953590842007543,
     "backend": "gazebo",
     "robot": "lab_octopod",
-    "terrain": true,
-    "phase": "walking",
-    "wall_seconds": 13.953590842007543
+    "terrain": true
   },
   "gait-gazebo-8": {
     "passed": false,
     "reason": "RuntimeError: Gait interrupted: Static terrain sensor exceeded 80 ms budget",
+    "phase": "walking",
+    "wall_seconds": 13.375407747997087,
     "backend": "gazebo",
     "robot": "lab_octopod",
-    "terrain": true,
-    "phase": "walking",
-    "wall_seconds": 13.375407747997087
+    "terrain": true
   },
   "gait-gazebo-9": {
     "passed": false,
     "reason": "RuntimeError: Gait interrupted: Measured contact-kinematic slip interrupted terrain gait",
+    "phase": "walking",
+    "wall_seconds": 14.504218403002596,
     "backend": "gazebo",
     "robot": "lab_octopod",
-    "terrain": true,
-    "phase": "walking",
-    "wall_seconds": 14.504218403002596
+    "terrain": true
   },
   "gait-isaac-1": {
     "passed": false,
     "reason": "deadline",
+    "phase": "waiting",
+    "wall_seconds": 180.1157473409985,
     "backend": "isaac",
     "robot": "lab_octopod",
-    "terrain": true,
-    "phase": "waiting",
-    "wall_seconds": 180.1157473409985
+    "terrain": true
   },
   "gait-isaac-2": {
     "passed": false,
     "reason": "deadline",
+    "phase": "waiting",
+    "wall_seconds": 180.05725480600086,
     "backend": "isaac",
     "robot": "lab_octopod",
-    "terrain": true,
-    "phase": "waiting",
-    "wall_seconds": 180.05725480600086
+    "terrain": true
   },
   "gait-isaac-3": {
     "passed": false,
     "reason": "deadline",
+    "phase": "waiting",
+    "wall_seconds": 180.08448013299494,
     "backend": "isaac",
     "robot": "lab_octopod",
-    "terrain": true,
-    "phase": "waiting",
-    "wall_seconds": 180.08448013299494
+    "terrain": true
   },
   "gait-isaac-4": {
     "passed": false,
     "reason": "deadline",
+    "phase": "waiting",
+    "wall_seconds": 180.01272192099714,
     "backend": "isaac",
     "robot": "lab_octopod",
-    "terrain": true,
-    "phase": "waiting",
-    "wall_seconds": 180.01272192099714
+    "terrain": true
   },
   "gait-isaac-5": {
     "passed": false,
     "reason": "deadline",
+    "phase": "waiting",
+    "wall_seconds": 180.07437946199207,
     "backend": "isaac",
     "robot": "lab_octopod",
-    "terrain": true,
-    "phase": "waiting",
-    "wall_seconds": 180.07437946199207
+    "terrain": true
   },
   "gait-isaac-6": {
     "passed": false,
     "reason": "deadline",
+    "phase": "waiting",
+    "wall_seconds": 180.04070155900263,
     "backend": "isaac",
     "robot": "lab_octopod",
-    "terrain": true,
-    "phase": "waiting",
-    "wall_seconds": 180.04070155900263
+    "terrain": true
   },
   "gait-isaac-7": {
     "passed": false,
     "reason": "deadline",
+    "phase": "waiting",
+    "wall_seconds": 180.0645070210012,
     "backend": "isaac",
     "robot": "lab_octopod",
-    "terrain": true,
-    "phase": "waiting",
-    "wall_seconds": 180.0645070210012
+    "terrain": true
   },
   "gait-mujoco-1": {
     "passed": false,
     "reason": "RuntimeError: Owned plant exited",
+    "phase": "waiting",
+    "wall_seconds": 1.6822512970102252,
     "backend": "mujoco",
     "robot": "lab_octopod",
-    "terrain": true,
-    "phase": "waiting",
-    "wall_seconds": 1.6822512970102252
+    "terrain": true
   },
   "gait-mujoco-2": {
     "passed": false,
     "reason": "deadline",
+    "phase": "waiting",
+    "wall_seconds": 180.0575509640039,
     "backend": "mujoco",
     "robot": "lab_octopod",
-    "terrain": true,
-    "phase": "waiting",
-    "wall_seconds": 180.0575509640039
+    "terrain": true
   },
   "gait-mujoco-3": {
     "passed": false,
     "reason": "KeyboardInterrupt: ",
+    "phase": "waiting",
+    "wall_seconds": 127.1580036039959,
     "backend": "mujoco",
     "robot": "lab_octopod",
-    "terrain": true,
-    "phase": "waiting",
-    "wall_seconds": 127.1580036039959
+    "terrain": true
   },
   "gait-mujoco-4": {
     "passed": false,
     "reason": "deadline",
+    "phase": "waiting",
+    "wall_seconds": 180.097646359005,
     "backend": "mujoco",
     "robot": "lab_octopod",
-    "terrain": true,
-    "phase": "waiting",
-    "wall_seconds": 180.097646359005
+    "terrain": true
   },
   "gait-mujoco-5": {
     "passed": true,
     "reason": "Actual source gait progress 0.1816 m; held drift 0.0024 m",
+    "phase": "holding",
+    "wall_seconds": 23.907807160998345,
     "backend": "mujoco",
     "robot": "lab_octopod",
-    "terrain": true,
-    "phase": "holding",
-    "wall_seconds": 23.907807160998345
+    "terrain": true
   },
   "gait-mujoco-6": {
     "passed": true,
     "reason": "Actual source gait progress 0.1826 m; held drift 0.0023 m",
+    "phase": "holding",
+    "wall_seconds": 24.60387024001102,
     "backend": "mujoco",
     "robot": "lab_octopod",
-    "terrain": true,
-    "phase": "holding",
-    "wall_seconds": 24.60387024001102
+    "terrain": true
   },
   "gait-mujoco-7": {
     "passed": true,
     "reason": "Actual source gait progress 0.1818 m; held drift 0.0024 m",
+    "phase": "holding",
+    "wall_seconds": 26.847144572006073,
     "backend": "mujoco",
     "robot": "lab_octopod",
-    "terrain": true,
+    "terrain": true
+  },
+  "gait-isaac-10": {
+    "passed": false,
+    "reason": "deadline",
+    "phase": "waiting",
+    "wall_seconds": 180.04335313999036,
+    "backend": "isaac",
+    "robot": "lab_octopod",
+    "terrain": true
+  },
+  "gait-isaac-11": {
+    "passed": false,
+    "reason": "deadline",
+    "phase": "waiting",
+    "wall_seconds": 180.0790056120004,
+    "backend": "isaac",
+    "robot": "lab_octopod",
+    "terrain": true
+  },
+  "gait-isaac-12": {
+    "passed": false,
+    "reason": "deadline",
+    "phase": "walking",
+    "wall_seconds": 180.03784780499882,
+    "backend": "isaac",
+    "robot": "lab_octopod",
+    "terrain": true
+  },
+  "gait-isaac-13": {
+    "passed": true,
+    "reason": "Actual source gait progress 0.1926 m; held drift 0.0008 m",
     "phase": "holding",
-    "wall_seconds": 26.847144572006073
+    "wall_seconds": 276.17701546399985,
+    "wall_budget_s": 600.0,
+    "backend": "isaac",
+    "robot": "lab_octopod",
+    "terrain": true,
+    "state_publishers": [
+      {
+        "node": "source_gait_controller",
+        "namespace": "/"
+      }
+    ]
+  },
+  "gait-isaac-8": {
+    "passed": false,
+    "reason": "deadline",
+    "phase": "waiting",
+    "wall_seconds": 180.05815178099147,
+    "backend": "isaac",
+    "robot": "lab_octopod",
+    "terrain": true
+  },
+  "gait-isaac-9": {
+    "passed": false,
+    "reason": "deadline",
+    "phase": "waiting",
+    "wall_seconds": 180.0887451180024,
+    "backend": "isaac",
+    "robot": "lab_octopod",
+    "terrain": true
   }
 }

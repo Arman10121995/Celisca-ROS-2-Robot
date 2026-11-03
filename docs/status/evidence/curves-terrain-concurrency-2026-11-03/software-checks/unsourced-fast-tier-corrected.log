@@ -1,0 +1,35 @@
+=== Tier: fast (59 test files) ===
+........................................................................ [  5%]
+........................................................................ [ 11%]
+........................................................................ [ 17%]
+.......................................................................s [ 23%]
+..................................................s..................... [ 29%]
+........................................................................ [ 35%]
+........................................................................ [ 41%]
+.................s............ss.sssss.................................. [ 47%]
+........................................................................ [ 52%]
+.....ssssssssss......................................................... [ 58%]
+...sssssssssssssssssssssssss............................................ [ 64%]
+........................................................................ [ 70%]
+........................................................................ [ 76%]
+.......................s................................................ [ 82%]
+........................................................................ [ 88%]
+........................................................................ [ 94%]
+.......................................................................  [100%]
+=============================== warnings summary ===============================
+scripts/test_asset_staging.py::test_failed_source_refresh_preserves_previously_installed_robot
+  /usr/lib/python3/dist-packages/_pytest/monkeypatch.py:308: UserWarning: pkg_resources is deprecated as an API. See https://setuptools.pypa.io/en/latest/pkg_resources.html. The pkg_resources package is slated for removal as early as 2025-11-30. Refrain from using this package or pin to Setuptools<81.
+    from pkg_resources import fixup_namespace_packages
+
+scripts/test_asset_staging.py::test_failed_source_refresh_preserves_previously_installed_robot
+  /home/molar1/.local/lib/python3.10/site-packages/pkg_resources/__init__.py:3148: DeprecationWarning: Deprecated call to `pkg_resources.declare_namespace('mpl_toolkits')`.
+  Implementing implicit namespace packages (as specified in PEP 420) is preferred to `pkg_resources.declare_namespace`. See https://setuptools.pypa.io/en/latest/references/keywords.html#keyword-namespace-packages
+    declare_namespace(pkg)
+
+src/robot_lab_adapter/test/test_legged_training.py::test_ppo_update_keeps_the_rollout_normaliser_and_returns_finite_stats
+  /home/molar1/.local/lib/python3.10/site-packages/torch/autograd/graph.py:882: UserWarning: CUDA initialization: The NVIDIA driver on your system is too old (found version 12060). Please update your GPU driver by downloading and installing a new version from the URL: http://www.nvidia.com/Download/index.aspx Alternatively, go to: https://pytorch.org to install a PyTorch version that has been compiled with your version of the CUDA driver. (Triggered internally at /pytorch/c10/cuda/CUDAFunctions.cpp:119.)
+    return Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+
+-- Docs: https://docs.pytest.org/en/stable/warnings.html
+1177 passed, 46 skipped, 4 deselected, 3 warnings in 255.14s (0:04:15)
+=== Tier: fast PASS ===

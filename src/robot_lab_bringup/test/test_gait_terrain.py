@@ -82,6 +82,25 @@ def test_isaac_keeps_low_relief_instead_of_treating_it_as_duplicate_floor():
     assert runtime._off_ground_plane(vertices,triangles,{})==([],1)
 
 
+def test_isaac_plant_diagnostics_cannot_replace_owner_or_clear_live_process():
+    import json
+    import threading
+    from types import SimpleNamespace
+    sys.path.insert(0,str(ROOT/'src/robot_lab_isaac/python'))
+    from robot_lab_isaac.isaac_spawner import IsaacSpawner
+    node=object.__new__(IsaacSpawner);node._lock=threading.RLock()
+    node._state=dict(t=1.,pos=[1.,2.,.2],orn=[0.,0.,0.,1.])
+    contact=dict(clock_time=1.,normal_forces_N=dict(left=12.,right=11.,body=0.))
+    node._latest_gait=dict(contacts=contact,terrain=dict(clock_time=1.,feet={}))
+    node._proc=object();process=node._proc;node._spawned=False;messages=[]
+    node._gait_plant_pub=SimpleNamespace(publish=messages.append)
+    node._publish_gait_plant_state()
+    observed=json.loads(messages[0].data)
+    assert observed['actual_contacts']==contact and observed['position']==[1.,2.,.2]
+    assert not {'enabled','operator_id','session_id','ready'} & observed.keys()
+    assert node._proc is process and not node._spawned
+
+
 @pytest.mark.parametrize('robot',['hexapod_ros2','lab_octopod','lab_centipede'])
 def test_native_zero_reference_preserves_source_fk_and_effort(robot):
     import PyKDL as kdl

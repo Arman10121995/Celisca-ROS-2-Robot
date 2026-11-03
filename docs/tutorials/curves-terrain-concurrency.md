@@ -122,6 +122,13 @@ are distinct engine adapters. Their availability does not qualify a learned
 policy transfer or every terrain/navigation mission. Read the live feedback
 and [multi-leg guide](multi-leg-gaits.md) before selecting a higher task.
 
+The octopod's bounded forward/Stop/hold screen on this 8 mm example now has
+actual results on all four backends. Other models, turns, sustained terrain
+and higher tasks remain separate. In Isaac, `source_gait_controller` alone
+owns `/gait/state`, operator leases and Arm/Stop. `/gait/plant_state` contains
+native body/contact/range diagnostics; runtime debug flags are not control
+authority. The measured SDK run took 276 wall seconds for 13 simulation seconds.
+
 ## Fleet: separate tasks in one actual world
 
 Open **Fleet & Swarm**, configure named Bumperbot/Labbot members, select the

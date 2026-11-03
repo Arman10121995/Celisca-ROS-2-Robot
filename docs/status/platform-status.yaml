@@ -322,6 +322,7 @@ goal: unified_multi_robot_algorithm_lab
 auv_terrain_fleet_20261102:
   owner: codex
   state: active
+  reconciliation_baseline: 1d8b29a8
   baseline_revision: 43473387
   updated: '2026-11-03'
   scope_paths: [src/robot_lab_utils/, src/robot_lab_adapter/, src/robot_lab_gui/, src/robot_lab_bringup/, src/robot_lab_mujoco/, src/robot_lab_pybullet/, src/robot_lab_isaac/, src/robot_lab_robots/, src/robot_lab_maps/, src/robot_lab/robot_lab_registry/config/, scripts/, docs/, README.md, ROADMAP.md]
@@ -331,8 +332,9 @@ auv_terrain_fleet_20261102:
   status_document: docs/status/curves-terrain-concurrency-2026-11-03.md
   receipt: docs/status/evidence/curves-terrain-concurrency-2026-11-03/README.md
   run_directory: /workspace/molar/robot_lab_runtime/auv-terrain-fleet-20261102
-  measured_cases: [tethys_20_degree_tank_curve_34_046_s, octopod_low_relief_mujoco_travel_hold, octopod_low_relief_pybullet_travel_hold, octopod_low_relief_fortress_travel_hold, three_base_two_concurrent_settled_nav2_missions_45_774_s_overlap]
-  remaining_acceptance: [isaac_terrain_case_receipt, per_model_backend_terrain_higher_mode_loss_reset_matrix, multi_member_floor_parking_campaign, further_AUV_curve_saved_map_obstacle_current_loss_cases, original_roadmap_and_release]
+  measured_cases: [tethys_20_degree_tank_curve_34_046_s, octopod_low_relief_mujoco_travel_hold, octopod_low_relief_pybullet_travel_hold, octopod_low_relief_fortress_travel_hold, octopod_low_relief_isaac_travel_hold_276_177_s, three_base_two_concurrent_settled_nav2_missions_45_774_s_overlap]
+  software_checks: 84 reconciled source and physics contracts; 29 native GUI/resolver/architecture checks; complete unsourced fast tier 1177 passed, 46 skipped, 4 deselected. These checks do not qualify additional physical missions.
+  remaining_acceptance: [per_model_backend_terrain_higher_mode_loss_reset_matrix, multi_member_floor_parking_campaign, further_AUV_curve_saved_map_obstacle_current_loss_cases, occupied_recovery_and_aerial_route_flight, original_roadmap_and_release]
 workflow_continuation_20261102:
   owner: codex
   state: partial
@@ -408,7 +410,7 @@ architecture_explorer_20261102:
   guide: docs/architecture/interactive-guide.md
 handoff:
   audit: docs/status/audit-2026-10-02.md
-  next_action: Complete source-appropriate curved AUV routes, terrain/slip/recovery and source adapters, then the remaining original queue. Preserve new facility queues/recovery, marine worker generations and aerial itinerary Plan/Execute. New occupied/concurrent lift and aerial-route physical qualification remains separate.
+  next_action: Preserve the delivered curved AUV routes, four source terrain adapters and actual octopod travel/hold cases on all four backends. Continue multi-member floor/parking, per-model terrain/higher-mode/loss/reset, further AUV/current/obstacle/saved-map cases, occupied recovery and actual aerial itinerary flight before the remaining original queue. Read the November 3 receipt; metadata and helper methods do not qualify physical missions.
   next_task: R10.5
   no_runtime_repairs_completed_by_this_revision: false
   parallel_ready_after_R0:

@@ -7,7 +7,7 @@ specific cases below; full R10/platform acceptance stays **partial**.
 | Area | Delivered implementation | Physical evidence / limits |
 |---|---|---|
 | Curved Tethys routes | Pinned MIT Dubins solver; source −X/course conversion; flow run-up, depth/clearance and braking checks; sideslip-aware guidance; GUI course/radius fields | Actual 20° tank curve and settled arrival, 34.046 s. Tight-turn failures retained. Other curves/maps/current/saved-map cases remain separate |
-| Terrain/backend adapters | Source 6/8/12-leg adapters for MuJoCo, Bullet, Fortress and PhysX; actual force feedback, explicit bounded low-relief adaptation and selected-backend GUI autofill | Octopod low-relief travel/hold measured on MuJoCo, Bullet and Fortress. Isaac runtime check and per-model/full task matrix are recorded in the receipt; no universal walking/navigation claim |
+| Terrain/backend adapters | Source 6/8/12-leg adapters for MuJoCo, Bullet, Fortress and PhysX; actual force feedback, explicit bounded low-relief adaptation and selected-backend GUI autofill | Octopod low-relief travel/hold measured on all four backends. Isaac: 0.1926 m progress, 0.0008 m held drift in 276.177 wall seconds. Per-model/full task matrix remains separate |
 | Concurrent fleet missions | Existing concurrent member queues connected to floor-aware traffic, exit parking, batch outbound/return order, preloaded parking maps and finite slow-host budgets; optional 5 Hz RGB-D | Two independent Nav2 routes in one three-base facility world completed with 45.774 s overlap and independent settled bodies. Full multi-member floor parking remains separate |
 
 Use [the GUI tutorial](../tutorials/curves-terrain-concurrency.md). Its native
@@ -40,26 +40,28 @@ claim boundary. [Receipt, failures and reproduction](evidence/curves-terrain-con
   simulation look like a missing sensor, without relaxing freshness guards.
 - The small source heightfield keeps its triangle support in Isaac; the
   duplicate-floor optimization must not delete millimetre-scale terrain.
+- Isaac uses actual SDK 6 contact tensors and scene queries, including the
+  root rigid body and hidden collision extents. Read-only pose observations
+  do not reset articulation links. `source_gait_controller` exclusively owns
+  `/gait/state`, Arm, Stop and operator leases; the spawner publishes separate
+  `/gait/plant_state` diagnostics. The passing run observed one state publisher.
 - Simulator pose places native/static-model range probes and supplies an
   independent tilt/endpoint observer. Contact/FK odometry receives no simulator
   XY. Initial/reset floor alignment does not run during motion.
 
 ## Remaining acceptance, in order
 
-1. Finish the exact Isaac terrain mission if its receipt is unsuccessful;
-   inspect native contact tensors/rays and source geometry, preserving actual
-   error logs and the body/force/feedback gates.
-2. Complete the two-member L0→L1→L0 parking wave in the receipt producer using
+1. Complete the two-member L0→L1→L0 parking wave in the receipt producer using
    the declared 900/300/180 s facility wall budgets. The earlier 100 s phase
    timeout reached physical L1 but expired before observed door/map completion.
    An occupied car, source-clear parked peer and independently settled exit
    must be observed; two single-floor goals do not prove this campaign.
-3. Record hexapod and centipede travel/reverse/turn/Stop/loss/reset and actual
+2. Record hexapod and centipede travel/reverse/turn/Stop/loss/reset and actual
    terrain/higher-mode missions on each backend candidate. Source tests and
    the octopod case do not transfer those certificates.
-4. Extend AUV curve direction/radius/depth, obstruction/current/loss and
+3. Extend AUV curve direction/radius/depth, obstruction/current/loss and
    acquired-map missions within the existing force and tracking envelopes.
-5. Resume the separate aerial route-flight/landing, occupied recovery, broader
+4. Resume the separate aerial route-flight/landing, occupied recovery, broader
    SDK conflict/contact/loss, calibrated energy and original roadmap queue.
 
 The implementations above do not close these broader acceptance tasks from

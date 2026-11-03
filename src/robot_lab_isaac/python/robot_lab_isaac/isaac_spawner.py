@@ -414,7 +414,7 @@ class IsaacSpawner(Node):
         self._camera_error_reported = False
         self._root_offset = None  # Isaac's root body in the URDF root frame
         self._latest_gait = None  # latest gait contacts/terrain, set from event FIFO
-        self._gait_state_pub = self.create_publisher(String, '/gait/state', 10)
+        self._gait_plant_pub = self.create_publisher(String, '/gait/plant_state', 10)
 
     # ------------------------------------------------------------------
     def _make_drive(self):
@@ -1039,6 +1039,7 @@ class IsaacSpawner(Node):
                         self._gait_terrain_pub.publish(String(data=json.dumps(msg['terrain'],allow_nan=False)))
                         with self._lock:
                             self._latest_gait = msg
+                        self._publish_gait_plant_state()
                     elif ev == "scan":
                         self._publish_scan(msg)
                     elif ev == "rgbd":
@@ -1052,11 +1053,6 @@ class IsaacSpawner(Node):
                         break
                     elif ev == "exit":
                         break
-                    elif ev == 'state':
-                        with self._lock:
-                            self._state = msg
-                            self._articulation_feedback_wall = time.monotonic()
-                            self._publish_gait_state()
         except Exception as e:
             self.get_logger().error("FIFO read failed: %s" % e)
         proc = self._proc
@@ -1068,65 +1064,6 @@ class IsaacSpawner(Node):
             rc = proc.wait()
             self.get_logger().warn("Isaac runtime exited (rc=%s)" % rc)
 
-    def _publish_gait_state(self):
-        """Aggregate Isaac runtime events into the /gait/state ROS contract.
-
-        The probe (producers/gait_backend_probe.py) and the GUI gait tab
-        subscribe here expecting: ready (bool), operator_id (str), sim_time
-        (s), support_fraction (0..1), position (x,y,z), tilt_rad, enabled,
-        terrain_observation, actual_contacts, planned_stance.
-        """
-        with self._lock:
-            state = self._state or {}
-            contacts = {}
-            terrain = None
-            if self._latest_gait:
-                contacts = self._latest_gait.get('normal_forces_N', {})
-                terrain = self._latest_gait.get('terrain')
-            ready = getattr(self, '_ready', False)
-            t = float(state.get('t', 0.0) or 0.0)
-            pos = state.get('pos') or [0.0, 0.0, 0.0]
-            orn = state.get('orn') or [0.0, 0.0, 0.0, 1.0]
-
-        # Tilt (max |roll|, |pitch|) computed from the ROS-orientation
-        # quaternion [x, y, z, w].
-        tilt_rad = 0.0
-        try:
-            w, x, y, z = float(orn[3]), float(orn[0]), float(orn[1]), float(orn[2])
-            roll = math.atan2(2.0 * (w * x + y * z), 1.0 - 2.0 * (x * x + y * y))
-            pitch = math.asin(max(-1.0, min(1.0, 2.0 * (w * y - z * x))))
-            tilt_rad = max(abs(roll), abs(pitch))
-        except (TypeError, ValueError, ZeroDivisionError):
-            pass
-
-        # Support fraction: legs with normal force > 0.2 N / total legs.
-        support_fraction = None
-        try:
-            if contacts:
-                supported = sum(1 for f in contacts.values() if f > 0.2)
-                total = len(contacts)
-                if total:
-                    support_fraction = supported / max(1, total)
-        except (TypeError, ValueError):
-            pass
-
-        state_msg = dict(
-            ready=bool(ready),
-            operator_id=str(state.get('operator_id', '') or ''),
-            sim_time=t,
-            support_fraction=support_fraction,
-            position=dict(x=float(pos[0]), y=float(pos[1]), z=float(pos[2])) if len(pos) >= 3 else None,
-            tilt_rad=tilt_rad,
-            enabled=bool(state.get('enabled', False)),
-            terrain_enabled=bool(state.get('terrain_enabled', False)),
-            terrain_observation=terrain,
-            actual_contacts=dict(normal_forces_N=contacts) if contacts else None,
-            planned_stance=None,
-        )
-        try:
-            self._gait_state_pub.publish(String(data=json.dumps(state_msg, allow_nan=False)))
-        except Exception as exc:
-            self.get_logger().error("Isaac gait state publish failed: %s" % exc)
         with self._lock:
             self._proc = None
             self._spawned = True  # do not respawn a crashed Kit
@@ -1136,6 +1073,18 @@ class IsaacSpawner(Node):
             except OSError:
                 pass
             self._fifo_path = None
+
+    def _publish_gait_plant_state(self):
+        """Native diagnostics only; GaitController exclusively owns /gait/state."""
+        with self._lock:
+            state=dict(self._state or {})
+            sample=dict(self._latest_gait or {})
+        if not state or not sample:return
+        message=dict(schema_version=1,sim_time=state.get('t'),position=state.get('pos'),
+            orientation_xyzw=state.get('orn'),actual_contacts=sample.get('contacts'),
+            terrain_observation=sample.get('terrain'),
+            scope='Native plant diagnostics; operator lease/Arm/Stop belong to GaitController')
+        self._gait_plant_pub.publish(String(data=json.dumps(message,allow_nan=False)))
 
     # ------------------------------------------------------------------
     def _on_reset(self, request, response):

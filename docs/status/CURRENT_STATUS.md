@@ -21,25 +21,15 @@ Latest November 2: [automatic native fleet lift transport](evidence/automatic-fl
 **Current checkpoint: November 3, 2026; master, curves/terrain/concurrency continuation from `43473387`.
 Platform and full extension partial.**
 
-**Isaac terrain campaign — in progress:** the Isaac Sim spawner now publishes
-the `/gait/state` ROS contract that the benches and GUI subscribe to, so the
-Isaac gait-terrain trials (gait-isaac-1..7) no longer time out in `waiting`
-phase with `deadline`. The state message carries `ready`, `operator_id`,
-`sim_time`, `support_fraction`, `position`, `tilt_rad`, `enabled`,
-`terrain_enabled`, `terrain_observation` and `actual_contacts`.
-
-**Isaac runtime command handling** (in `isaac_runtime.py`):
-- `_StdinReader` now tracks `enabled` and `terrain_enabled` states.
-- Accepts `op: "terrain"` (with optional `enabled`) and `op: "arm"` commands
-  from the spawner; `op: "reset"` clears both flags.
-- The main loop publishes `enabled` and `terrain_enabled` in the state event,
-  so the probe sees the armed state and can start walking.
-- Runtime test suite green; `colcon build --packages-select robot_lab_isaac`
-  succeeds. [Commits `0b7e4e80`, `e7910a02`.]
-
-Isaac terrain campaign continues: when the probe sends `terrain,enabled=True`,
-the Isaac runtime arms terrain mode; when it sends `arm`, the runtime arms
-gait and the probe enters the walking phase.
+**Isaac ownership correction:** the existing `source_gait_controller` exclusively
+publishes `/gait/state` and owns operator leases, Arm, terrain enable and Stop.
+The spawner publishes actual diagnostics on `/gait/plant_state`; runtime debug
+flags do not establish walking or mission success. The final native trial 13
+passed the full 10 simulation-second travel + 2 second hold screen: 0.1926 m
+actual body progress and 0.0008 m held drift in 276.177 wall seconds, within
+the explicit 600 second budget. Trial 12's 180 second timeout remains a failure.
+The same octopod low-relief screen now has actual receipts on all four backends.
+Earlier schema-only/runtime-flag claims were not physical mission qualification.
 
 [Current workflow delivery and limits](workflows-2026-10-27.md),
 [actual receipts](evidence/workflows-2026-10-27/README.md),
@@ -47,11 +37,11 @@ gait and the probe enters the walking phase.
 
 | Area | Delivered / measured | Remaining |
 |---|---|---|
-| Catalog | Seven registrations restored; 152 profiles / 82 selectable families, 54 worlds / 42 families | Changed-source qualification and additional reviewed imports |
+| Catalog | Seven registrations restored; grouped complete robot/world families and the new `gait_low_relief` example | Changed-source qualification and additional reviewed imports; catalog counts are not mission acceptance |
 | Fleet | Native sessions/queues/traffic/RMF/coverage; physical facility door/lift/dock, source-bound actuator energy/authored charging and native RMF door/dock route; one measured Bumperbot L0-L1-L0 ride with observed per-member floor/map switching; actual conflict and settled batch cases | Broader SDK conflict/loss, calibrated energy/RMF scheduling, broader conflict/loss, other robot/floor/map/backend transport, contact and larger-fleet missions |
 | Aerial swarm | Native multi-FCU controls/workloads; actual nav_empty two-drone range-reference formation and operator-loss landing | Larger groups, other maps/behaviors and member-loss/contact cases |
-| Marine | Actual sensor-based map acquisition/export/protected reload/localization and completed ROV route; AUV automatic acquisition and surface-vessel mapping/two-goal arrival with actual body traces | Further AUV/localization/obstacle/current/loss missions |
-| Multi-leg | Correct source FK/contact odometry, map export/reload/Nav2; hexapod navigation result and octopod real 3D database | Per-model terrain/recovery/higher-mode/backend qualification |
+| Marine | Actual sensor-based map acquisition/export/protected reload/localization and completed ROV route; AUV automatic acquisition, a source-checked 20° tank curve/settled arrival and surface-vessel mapping/two-goal arrival | Further AUV/localization/obstacle/current/loss missions |
+| Multi-leg | Source FK/contact odometry, map export/reload/Nav2; hexapod navigation and octopod 3D database; four backend adapters and actual octopod low-relief travel/hold on all four engines | Per-model terrain/recovery/higher-mode/backend qualification |
 | Additional forms | Complete snake, surface, sprung amphibious and fixed/actuated tracked sources; actual shore round-trip/mapping, snake saved-map Nav2 and flipper/Drive cases | Further terrain/slip/recovery, articulated-track navigation, other maps/backends |
 | Experiments | Actual Nav2/fleet/marine/gait/aerial producers, artifacts/endpoints, fleet batch reset and cleanup | More cases, applied seeds and contacts/clearance |
 | Original roadmap | Existing wheeled/Panda/flight/MOLAR/training certificates retained | Detailed remaining car, perception, manipulation, policy transfer/comparison/release work |

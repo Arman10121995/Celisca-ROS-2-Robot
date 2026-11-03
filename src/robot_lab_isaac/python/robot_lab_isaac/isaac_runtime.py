@@ -132,9 +132,10 @@ def _scan_ranges(cast, origin, yaw, samples, range_min, range_max,
         nearest = [float("inf")]
 
         def report(hit, nearest=nearest):
-            if (hit.rigid_body not in ignored_bodies
-                    and hit.distance < nearest[0]):
-                nearest[0] = float(hit.distance)
+            body=hit.get('rigidBody') if isinstance(hit,dict) else hit.rigid_body
+            distance=float(hit.get('distance',math.inf)) if isinstance(hit,dict) else float(hit.distance)
+            if body not in ignored_bodies and 0<=distance<nearest[0]:
+                nearest[0] = distance
             return True
 
         cast(tuple(origin), (math.cos(angle), math.sin(angle), 0.0),
@@ -1628,8 +1629,8 @@ def _run_stage(app, reader, cfg, state):
 
         _emit({"event": "state", "t": t, "pos": pos, "orn": orn,
                "lin": lin, "ang": ang, "jpos": jpos, "jvel": jvel,
-               "enabled": reader.enabled if reader else False,
-               "terrain_enabled": reader.terrain_enabled if reader else False})
+               "runtime_debug_flags": dict(enabled=reader.enabled,terrain_enabled=reader.terrain_enabled,
+                   operator_id=reader.operator_id) if reader else {}})
         if gait_observation and time.monotonic()-gait_observed_at>=.1:
             gait_observed_at=time.monotonic()
             _emit(dict(event='gait',contacts=gait_observation.contacts(t,dt),terrain=gait_observation.terrain(t)))

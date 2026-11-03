@@ -45,7 +45,8 @@ from .legged_policy import POLICY_PROFILES, PolicyContract, default_policy_for, 
 # Robots with a provisioned template policy that this trainer supports: the
 # quadrupeds, the wheel-legged Go2W (wheel joints take velocity targets, as
 # in deployment) and the G1 humanoid.  All five templates have the same
-# history-free observation layout; the recurrent humanoid contracts do not.
+# student observation layout. Deployed templates may have history or a
+# different term order; policy_config writes the fresh student's own layout.
 TRAINABLE = {profile: name for name, profile in POLICY_PROFILES.items()
              if name in ('a1_legged_gym', 'b2_robot_lab', 'go2_himloco', 'go2w_robot_lab',
                          'g1_robomimic_locomotion')}

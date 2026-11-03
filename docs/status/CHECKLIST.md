@@ -1,9 +1,9 @@
 # Robot Lab done and remaining checklist
 
 - [x] Curved AUV Plan/Execute with source flow/run-up/radius/depth/clearance/braking bounds and native GUI course/radius fields; actual gentle tank-curve arrival.
-- [x] Four source gait backend adapters, measured support/slip confidence, bounded low-relief control and a deterministic 8 mm terrain map; actual octopod MuJoCo/Bullet/Fortress travel/hold cases.
+- [x] Four source gait backend adapters, measured support/slip confidence, bounded low-relief control and a deterministic 8 mm terrain map; actual octopod travel/hold cases on MuJoCo, Bullet, Fortress and Isaac.
 - [x] Actual overlapping independent Nav2 missions and settled endpoints in one three-base world; floor-aware traffic, owned post-exit parking implementation and declared finite slow-host budgets.
-- [ ] Remaining Isaac/per-model/backend/higher-mode terrain acceptance and two-member floor/parking campaign. Isaac `/gait/state` ROS stream now published by the Isaac Sim spawner (`src/robot_lab_isaac/.../isaac_spawner.py`); runtime test suite green. [Exact current receipt](evidence/curves-terrain-concurrency-2026-11-03/README.md), [agent actions](curves-terrain-concurrency-2026-11-03.md).
+- [ ] Remaining per-model/backend/higher-mode terrain acceptance and two-member floor/parking campaign. Source GaitController exclusively owns `/gait/state`; the Isaac spawner supplies `/gait/plant_state` diagnostics. The final Isaac mission passed with 0.1926 m progress and 0.0008 m hold drift; startup/metadata checks do not qualify other cases. [Exact current receipt](evidence/curves-terrain-concurrency-2026-11-03/README.md), [agent actions](curves-terrain-concurrency-2026-11-03.md).
 
 - [x] Native bounded lift itinerary/round-trip queue, reservations, cancellation and explicit interlocked recovery; persistent SDK session ownership.
 - [x] Actual empty-car ascent, mid-shaft Stop/hold and explicit L0 recovery. [Scoped receipt](evidence/workflow-continuation-2026-11-02/README.md).

@@ -14,6 +14,8 @@ files+=list((workspace/'src/robot_lab_maps/vendor/gait_physics').glob('*'))
 files+=list((workspace/'src/robot_lab_maps/maps/gait_low_relief').rglob('*'))
 files+=list((workspace/'src/robot_lab_robots'/robot).rglob('*.yaml'))+list((workspace/'src/robot_lab_robots'/robot).rglob('*.urdf'))
 (root/'source-sha256.json').write_text(json.dumps({str(f.relative_to(workspace)):hashlib.sha256(f.read_bytes()).hexdigest() for f in files if f.is_file()},indent=2))
+budget=float(os.environ.get('GAIT_WALL_BUDGET','180'))
+if not math.isfinite(budget) or not 0<budget<=600:raise ValueError('Trial wall budget must be finite and at most 600 s')
 log=(root/'plant.log').open('w');command=['ros2','launch','robot_lab_bringup','gait_simulator.launch.py','robot_model:='+robot,'simulator:='+backend,'map_name:='+('gait_low_relief' if terrain else 'nav_empty'),'gui:=false','rviz:=false']
 (root/'command.json').write_text(json.dumps(command));plant=subprocess.Popen(command,stdout=log,stderr=subprocess.STDOUT,cwd=root,start_new_session=True)
 rclpy.init();node=rclpy.create_node('terrain_gait_probe');state={};states=[]
@@ -22,7 +24,7 @@ hb=node.create_publisher(String,'/gait/operator_heartbeat',10);control=node.crea
 start=time.monotonic();phase='waiting';passed=False;reason='deadline';last=0.;initial=None;held=None
 def send(op,**kwargs):control.publish(String(data=json.dumps(dict(session_id=state['session_id'],operator_id='terrain-probe',op=op,**kwargs))))
 try:
- while time.monotonic()-start<180.:
+ while time.monotonic()-start<budget:
   rclpy.spin_once(node,timeout_sec=.015);now=time.monotonic()
   if plant.poll() is not None:raise RuntimeError('Owned plant exited')
   if log.tell()>64*1024*1024:raise RuntimeError('Log budget exceeded')
@@ -51,7 +53,7 @@ try:
 except (Exception,KeyboardInterrupt) as exc:reason=type(exc).__name__+': '+str(exc)
 finally:
  if state and rclpy.ok():send('stop');rclpy.spin_once(node,timeout_sec=.1)
- result=dict(passed=passed,reason=reason,backend=backend,robot=robot,terrain=terrain,wall_seconds=time.monotonic()-start,phase=phase,state=state)
+ result=dict(passed=passed,reason=reason,backend=backend,robot=robot,terrain=terrain,wall_seconds=time.monotonic()-start,phase=phase,wall_budget_s=budget,state_publishers=[dict(node=e.node_name,namespace=e.node_namespace) for e in node.get_publishers_info_by_topic('/gait/state')],state=state)
  (root/'result.json').write_text(json.dumps(result,indent=2));(root/'trace.jsonl').write_text(''.join(json.dumps(r)+'\n' for r in states));print(json.dumps({k:v for k,v in result.items() if k!='state'},indent=2),flush=True)
  children=psutil.Process(plant.pid).children(recursive=True) if plant.poll() is None else []
  if plant.poll() is None:

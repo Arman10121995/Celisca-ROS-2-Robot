@@ -37,9 +37,9 @@ class GaitObservation:
         self.robot_path=os.path.commonpath(foot_paths)
         if self.robot_path in ('/','/World'):raise ValueError('Cannot identify exclusive source robot subtree')
         self.query=scene_query();self.carb=carb
-        rigid=[prim for prim in stage.Traverse() if str(prim.GetPath()).startswith(self.robot_path+'/') and prim.HasAPI(UsdPhysics.RigidBodyAPI)]
+        rigid=[prim for prim in stage.Traverse() if (str(prim.GetPath())==self.robot_path or str(prim.GetPath()).startswith(self.robot_path+'/')) and prim.HasAPI(UsdPhysics.RigidBodyAPI)]
         self.paths=[str(prim.GetPath()) for prim in rigid]
-        filters=[str(prim.GetPath()) for prim in stage.Traverse() if prim.HasAPI(UsdPhysics.CollisionAPI) and not str(prim.GetPath()).startswith(self.robot_path+'/')]
+        filters=[str(prim.GetPath()) for prim in stage.Traverse() if prim.HasAPI(UsdPhysics.CollisionAPI) and str(prim.GetPath())!=self.robot_path and not str(prim.GetPath()).startswith(self.robot_path+'/')]
         if not self.paths or not filters:raise ValueError('Source gait requires actual rigid bodies and static collision filters')
         self.view=RigidPrim(prim_paths_expr=self.paths,name='source_gait_pose_view',reset_xform_properties=False)
         # SDK 6 may initialize the pose handle before its nested contact
@@ -47,7 +47,8 @@ class GaitObservation:
         # than treating an uninitialized sensor count as a valid zero load.
         self.forces=RigidContactView(prim_paths_expr=self.paths,filter_paths_expr=[filters for _ in self.paths],
             name='source_gait_force_view',disable_stabilization=False,max_contact_count=max(1024,len(rigid)*64))
-        world.scene.add(self.view)
+        # Read-only observation views must not restore articulation-link
+        # defaults through World.reset(). Explicit initialization follows it.
         self.by_name={prim.GetName():str(prim.GetPath()) for prim in rigid}
         self.boxes={}
         # Hidden guide meshes still have physical collision extents.
@@ -67,7 +68,12 @@ class GaitObservation:
 
     def initialize(self):
         self.view.initialize();self.indices={path:i for i,path in enumerate(self.view.prim_paths)}
-        self.forces.initialize()
+        try:
+            from isaacsim.core.simulation_manager import SimulationManager
+        except ImportError:
+            self.forces.initialize()
+        else:
+            self.forces.initialize(SimulationManager.get_physics_sim_view())
         if self.forces.num_shapes!=len(self.paths):raise ValueError('Complete actual source force sensor identity required')
 
     def update(self):

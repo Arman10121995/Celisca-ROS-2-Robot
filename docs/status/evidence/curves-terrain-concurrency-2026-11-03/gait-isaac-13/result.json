@@ -1,0 +1,200 @@
+{
+  "passed": true,
+  "reason": "Actual source gait progress 0.1926 m; held drift 0.0008 m",
+  "backend": "isaac",
+  "robot": "lab_octopod",
+  "terrain": true,
+  "wall_seconds": 276.17701546399985,
+  "phase": "holding",
+  "wall_budget_s": 600.0,
+  "state_publishers": [
+    {
+      "node": "source_gait_controller",
+      "namespace": "/"
+    }
+  ],
+  "state": {
+    "schema_version": 1,
+    "session_id": "c034bdd14d3e4dd2a53aa1dc84d7a858",
+    "robot_id": "lab_octopod",
+    "enabled": false,
+    "ready": true,
+    "control_allowed": true,
+    "reason": "Operator Stop; current joint targets held",
+    "gait": "tetrapod",
+    "input_owner": "manual",
+    "task": "gait",
+    "directory": "/workspace/molar/robot_lab_runtime/gait_sessions/lab_octopod-1_he5tia",
+    "operator_id": "terrain-probe",
+    "operator_fresh": true,
+    "physical_legs": 8,
+    "motion_kind": "multi_leg",
+    "available_schedules": [
+      "tetrapod",
+      "ripple",
+      "wave"
+    ],
+    "actuated_joints": 24,
+    "joint_samples": 11151,
+    "sim_time": 13.019,
+    "drive_forward_yaw_rad": 0.0,
+    "goal_world_to_map": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "drive_orientation_joints": [],
+    "rolling_localization_observation": null,
+    "position": {
+      "x": -0.5578462481498718,
+      "y": 0.00039368783473037183,
+      "z": 0.19003692269325256
+    },
+    "tilt_rad": 2.5087007189754528e-05,
+    "actual_contacts": {
+      "schema_version": 1,
+      "sim_time": 13.017,
+      "clock_time": 13.017,
+      "normal_forces_N": {
+        "leg_l1": 9.081964492797852,
+        "leg_r1": 0.0,
+        "leg_l2": 0.0,
+        "leg_r2": 13.250288963317871,
+        "leg_l3": 13.640803337097168,
+        "leg_r3": 0.0,
+        "leg_l4": 0.0,
+        "leg_r4": 9.473733901977539,
+        "body": 0.0
+      },
+      "source": "Actual PhysX static-collision filtered contact tensor, impulses divided by native physics dt"
+    },
+    "planned_stance": {
+      "leg_l1": true,
+      "leg_r1": false,
+      "leg_l2": false,
+      "leg_r2": true,
+      "leg_l3": true,
+      "leg_r3": false,
+      "leg_l4": false,
+      "leg_r4": true
+    },
+    "max_ik_error_m": 0.00010092596633510117,
+    "commanded_body_velocity": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "joint_targets": [
+      -0.01621949200323764,
+      0.30734842395674344,
+      1.0907330135346935,
+      -0.040128691079406184,
+      0.1782367563842157,
+      1.2436771094227892,
+      0.040128691031991584,
+      0.16728840888903812,
+      1.2561208368384151,
+      0.016219491931270417,
+      0.2949169080680381,
+      1.106104703212822,
+      -0.016219492058140172,
+      0.29203623931503303,
+      1.1096494683087446,
+      -0.040128691040212695,
+      0.16280655592091756,
+      1.2611875353924038,
+      0.04012869104651271,
+      0.1760302199828383,
+      1.2461927193241578,
+      0.016219492091709916,
+      0.30353308866429507,
+      1.095463245544195
+    ],
+    "phase": 0.23999999999998622,
+    "spine_phase": 0.0,
+    "spine_freq": 1.0,
+    "terrain_enabled": true,
+    "terrain_observation": {
+      "schema_version": 1,
+      "clock_time": 13.017,
+      "feet": {
+        "leg_l1": {
+          "height_offset_m": 0.0021813460508613713,
+          "ahead_offset_m": 0.002900803915622724,
+          "spread_m": 0.0013908594846725464
+        },
+        "leg_r1": {
+          "height_offset_m": 0.0018706582663753461,
+          "ahead_offset_m": 0.0025796704171398115,
+          "spread_m": 0.001391783356666565
+        },
+        "leg_l2": {
+          "height_offset_m": 0.0031280752046177404,
+          "ahead_offset_m": 0.00365043541026807,
+          "spread_m": 0.0010831654071807861
+        },
+        "leg_r2": {
+          "height_offset_m": 0.0034121920747544297,
+          "ahead_offset_m": 0.003933792321183873,
+          "spread_m": 0.0010843425989151
+        },
+        "leg_l3": {
+          "height_offset_m": 0.0037135921779129465,
+          "ahead_offset_m": 0.004542782193705793,
+          "spread_m": 0.0017068833112716675
+        },
+        "leg_r3": {
+          "height_offset_m": 0.0034522061399359094,
+          "ahead_offset_m": 0.00428005505122131,
+          "spread_m": 0.0017013698816299438
+        },
+        "leg_l4": {
+          "height_offset_m": 0.0022994779577394583,
+          "ahead_offset_m": 0.002654676937117205,
+          "spread_m": 0.0007056742906570435
+        },
+        "leg_r4": {
+          "height_offset_m": 0.0025673296427938842,
+          "ahead_offset_m": 0.002964564797899475,
+          "spread_m": 0.0007327347993850708
+        }
+      },
+      "source": "Actual static-world downward collision rays at source nominal feet; native transforms place the sensor only"
+    },
+    "terrain_error": "",
+    "terrain_wall_age_s": 0.03201770300074713,
+    "terrain_offsets": {
+      "leg_l1": -0.0007176075998303715,
+      "leg_r1": -0.0009090814627052517,
+      "leg_l2": 0.000338228775807161,
+      "leg_r2": 0.0005175622975425107,
+      "leg_l3": 0.0008068600617539556,
+      "leg_r3": 0.0006572701369260761,
+      "leg_l4": -0.0004964644181014652,
+      "leg_r4": -0.000338228775807161
+    },
+    "support_fraction": 0.5,
+    "terrain_support_loss_since": null,
+    "kinematic_slip": {
+      "samples": 11120,
+      "supports": [
+        "leg_l1",
+        "leg_r2",
+        "leg_l3",
+        "leg_r4"
+      ],
+      "sample_valid": true,
+      "slip_suspected": false,
+      "clock_time": 13.012,
+      "velocity_scatter_m_s": 3.225129937587852e-05,
+      "position": [
+        0.1881401381971403,
+        0.0002275897890036563
+      ],
+      "source": "Measured foot contacts + complete source-chain FK + native IMU; no simulator pose input",
+      "scope": "Experimental contact odometry; slip/terrain/reset and saved-map missions unqualified"
+    },
+    "observer": "Simulator body pose for visualization/tilt only; legged odometry uses independent IMU, measured contacts and joints",
+    "scope": "Experimental authored gait and bounded in-step PD on exact configured geometry; physical missions pending"
+  }
+}

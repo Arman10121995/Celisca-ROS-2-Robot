@@ -54,6 +54,10 @@ and real scoped measurements. Full R10/platform acceptance remains partial.
   massless-frame corrections and Isaac low-relief triangles. Complete the
   remaining per-model/backend terrain, loss/reset and higher-mode cases; no truth XY correction,
   teleported recovery or generic controller on a source-incompatible body.
+  The octopod 10 simulation-second travel / 2 second hold screen now passes
+  on all four engines. Preserve the sole source-controller `/gait/state`
+  owner and separate SDK `/gait/plant_state` diagnostics; use the explicit
+  600 s wall budget for the slow SDK case, with unchanged live feedback gates.
 - **Release:** preserve exact existing certificates, classify new software as
   implemented/mission-pending, and retain all failed trials. The remaining
   map/actor/backend, manipulation/perception/policy, applied-seed/concurrency,
