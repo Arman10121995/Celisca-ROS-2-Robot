@@ -1112,7 +1112,7 @@ class IsaacSpawner(Node):
 
         state_msg = dict(
             ready=bool(ready),
-            operator_id='',
+            operator_id=str(state.get('operator_id', '') or ''),
             sim_time=t,
             support_fraction=support_fraction,
             position=dict(x=float(pos[0]), y=float(pos[1]), z=float(pos[2])) if len(pos) >= 3 else None,

@@ -776,6 +776,7 @@ class _StdinReader(threading.Thread):
         self.reset_requested = False
         self.enabled = False
         self.terrain_enabled = False
+        self.operator_id = ''
 
     def run(self):
         try:
@@ -806,11 +807,13 @@ class _StdinReader(threading.Thread):
                     # observation and support_fraction gates come from the
                     # Isaac observation pipeline, not from the runtime itself.
                     self.terrain_enabled = bool(msg.get("enabled", True))
+                    self.operator_id = msg.get("operator_id", "")
                     if not self.terrain_enabled:
                         self.enabled = False
                 elif msg.get("op") == "arm":
                     self.enabled = True
                     self.terrain_enabled = bool(msg.get("terrain_enabled", self.terrain_enabled))
+                    self.operator_id = msg.get("operator_id", "")
                 elif isinstance(msg.get("op"), str) and not msg["op"]:
                     # Ignore empty/no-op commands.
                     continue
