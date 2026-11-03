@@ -34,6 +34,7 @@ from std_msgs.msg import String
 from std_srvs.srv import Trigger
 from tf2_ros import Buffer, StaticTransformBroadcaster, TransformException, TransformListener
 
+from robot_lab_utils.fleet_lift_recovery import recovery_passengers
 from robot_lab_utils.fleet_motion import Neighbor, angle, scan_guard, separation_guard, swarm_velocities
 from robot_lab_utils.fleet_session import finite, ID_PATTERN, MEMBER_MODELS
 from robot_lab_utils.fleet_missions import MissionHistory, coverage_plan, enqueue, mission, settled, traffic_yield_goal
@@ -695,6 +696,18 @@ class FleetController(Node):
             if not close:
                 continue  # A wall is not a fleet deadlock.
             peer, _ = min(close, key=lambda item: math.hypot(robot.x-item[1].x, robot.y-item[1].y))
+            # Occupied recovery: if the blocking peer is inside the lift car,
+            # initiate its recovery instead of yielding.
+            if self.members[peer.name].occupied:
+                original = member.active_item
+                if original.get('traffic_retries', 0) >= 3:
+                    self._finish_task(member, 'failed', 'Occupied recovery limit reached; remaining queue held')
+                    continue
+                self._initiate_recovery(member.name, peer.name, now)
+                original['traffic_retries'] = original.get('traffic_retries', 0)+1
+                self._event('recovery_initiated', member=member.name, target=peer.name,
+                            suspended_task=original['task'], attempt=original['traffic_retries'])
+                continue
             original = member.active_item
             # Older work wins ties. Never interrupt a peer's existing yield.
             if peer.active_item and (peer.active_item.get('source') == 'traffic_yield' or
