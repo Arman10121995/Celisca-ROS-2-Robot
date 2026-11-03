@@ -110,7 +110,7 @@ def generate():
     for level,z in [('L0',0.),('L1',3.)]:
         config['doors']['landing_'+level] = dict(joint='landing_'+level,closed=0.,opened=2.15,sweep=[2.6,3.1,-1.3,3.5],base_z=z,landing_floor=level)
     config['transport'] = dict(boarding=dict(x=3.65,y=0.,yaw=0.), landings=dict(L0=dict(x=2.3,y=0.,yaw=0.),L1=dict(x=2.2,y=0.,yaw=0.)),cabin=[3.4,4.6,-.6,.6])
-    config['transport'].update(total_timeout_s=900.,phase_timeout_s=300.,route_timeout_s=180.)
+    config['transport'].update(total_timeout_s=900.,phase_timeout_s=300.,route_timeout_s=180.,queue_wait_timeout_s=1800.)
     config['transport']['parking_slots']={floor:[dict(x=x,y=y,yaw=0.) for y in (-offset,offset)] for floor,x,offset in [('L0',1.5,2.5),('L1',1.55,.55)]}
     if (target/'infrastructure.yaml').exists():
         previous = yaml.safe_load((target/'infrastructure.yaml').read_text()) or {}

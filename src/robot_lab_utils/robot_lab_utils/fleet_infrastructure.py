@@ -52,7 +52,7 @@ class Infrastructure(Node):
             verified = qualified_source(member, certificate)
             self.energy_models[member['id']] = EnergyEstimate(self.config['energy'], joints, verified)
         self.transports = {}
-        self.transport_queue = TransportQueue()
+        self.transport_queue = TransportQueue(wait_timeout_s=self.config.get('transport',{}).get('queue_wait_timeout_s',600.))
         self.recovery = None
         self.last_rejection = ''
         self.floor_offsets={}
@@ -341,7 +341,7 @@ class Infrastructure(Node):
         if not operator or not fresh:
             queue.cancel('Facility/operator feedback lost; explicit new itinerary required')
             return
-        if now - head['enqueued_at'] > 600.:
+        if queue.expired(now):
             queue.cancel('Queue waiting deadline exceeded; explicit new itinerary required')
             return
         if self.hold or self.recovery and self.recovery['phase'] == 'recovering':

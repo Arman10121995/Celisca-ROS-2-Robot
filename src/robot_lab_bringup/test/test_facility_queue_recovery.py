@@ -38,6 +38,24 @@ def test_queue_bound_and_targeted_stop_preserve_other_members():
     assert queue.history[-1]['phase'] == 'canceled'
 
 
+def test_profile_wait_budget_survives_valid_long_predecessor_without_renewing_intent():
+    queue=TransportQueue(wait_timeout_s=1800.)
+    queue.append([dict(robot='alpha',floor='L1'),dict(robot='alpha',floor='L0')],'op',{'alpha':'L0'},['L0','L1'],10.)
+    original_deadline=queue.pending[1]['expires_at']
+    queue.take();queue.finish('succeeded','observed predecessor completed after 630 seconds')
+    assert not queue.expired(640.)
+    assert queue.pending[0]['expires_at']==original_deadline==1810.
+    assert queue.expired(1810.01)
+    assert queue.state()['wait_timeout_s']==1800.
+    default=TransportQueue();default.append([dict(robot='alpha',floor='L1')],'op',{'alpha':'L0'},['L0','L1'],10.)
+    assert default.expired(610.01)  # Existing non-facility default remains bounded.
+
+
+@pytest.mark.parametrize('budget',[True,None,0.,-1.,math.inf,math.nan,3600.01])
+def test_invalid_queue_wait_duration_is_refused(budget):
+    with pytest.raises(ValueError):TransportQueue(wait_timeout_s=budget)
+
+
 @pytest.fixture
 def facility(monkeypatch):
     monkeypatch.setattr('robot_lab_utils.fleet_infrastructure.time.monotonic', lambda: 100.)

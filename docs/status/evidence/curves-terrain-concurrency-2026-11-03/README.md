@@ -110,6 +110,15 @@ their recorded hashes. Do not transfer a named case to changed source.
   instead of calling the fully cleared 2.2 m position "moving" relative to a
   2.15 m target. The new gate/state regressions and facility contracts report
   **42 passed**; the next full physical repeat remains a separate result.
+- Trial 11 then completed three transport legs but the former fixed 600 s
+  queue-wait expiry canceled the last return at 630.316 wall seconds. This
+  conflicted with the facility's explicit 900 s per-transport budget. Queue
+  admission now records an immutable `expires_at` using a finite configured
+  wait budget: 1800 s for this slow-host facility, the existing 600 s default
+  elsewhere, and a validated 3600 s ceiling. Completing a predecessor does
+  not renew an intent. The GUI displays the declared budget; feedback/lease
+  loss, Stop and cancellation still invalidate dependent stops. **50 focused
+  contracts pass**; the complete physical repeat is separate.
 - Terrain: early Bullet rays intersected the robot and failed initial
   support. Robot-excluding ray filters retain actual world collisions.
   Sparse virtual frames had Bullet's implicit 1 kg masses; source mass is

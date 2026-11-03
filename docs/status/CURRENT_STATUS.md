@@ -47,6 +47,10 @@ boarding when the initial precision threshold was also applied during loading.
 The final two-stage gate preserves the original continuous tracking bound;
 all four parked endpoints are required from its new repeat before accepting
 the full wave.
+That repeat reached three completed transports, then its old 600 s queue wait
+canceled the final return. The facility now declares 1800 s queue waiting
+with an immutable per-stop expiry, preserving the 600 s default elsewhere
+and all live feedback/ownership guards. The full repeat remains in progress.
 
 [Current workflow delivery and limits](workflows-2026-10-27.md),
 [actual receipts](evidence/workflows-2026-10-27/README.md),

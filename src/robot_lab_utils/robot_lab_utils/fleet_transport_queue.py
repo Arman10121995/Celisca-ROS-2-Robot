@@ -4,7 +4,12 @@ import math
 
 
 class TransportQueue:
-    def __init__(self, limit=32):
+    def __init__(self, limit=32, wait_timeout_s=600.):
+        if isinstance(wait_timeout_s,bool):raise ValueError('Queue wait budget must be a finite positive duration up to 3600 seconds')
+        try:self.wait_timeout_s=float(wait_timeout_s)
+        except (TypeError,ValueError):raise ValueError('Queue wait budget must be a finite positive duration up to 3600 seconds') from None
+        if not math.isfinite(self.wait_timeout_s) or not 0<self.wait_timeout_s<=3600.:
+            raise ValueError('Queue wait budget must be a finite positive duration up to 3600 seconds')
         self.limit = limit
         self.pending = []
         self.history = []
@@ -35,7 +40,7 @@ class TransportQueue:
                     raise ValueError('Parking must be auto or finite x/y/yaw')
                 parking=dict(parking)
             staged.append(dict(id=uuid.uuid4().hex, robot=robot, floor=floor,
-                               operator_id=operator, enqueued_at=now, phase='queued',
+                               operator_id=operator, enqueued_at=now, expires_at=now+self.wait_timeout_s, phase='queued',
                                reason='Waiting for exclusive lift and clear landings',parking=parking))
         self.pending.extend(staged)  # Admission is atomic, including invalid later stops.
         return staged
@@ -66,4 +71,7 @@ class TransportQueue:
         self.history = self.history[-64:]
 
     def state(self):
-        return dict(active=self.active, pending=list(self.pending), history=list(self.history), capacity=self.limit)
+        return dict(active=self.active, pending=list(self.pending), history=list(self.history), capacity=self.limit,wait_timeout_s=self.wait_timeout_s)
+
+    def expired(self, now):
+        return bool(self.pending and now>self.pending[0]['expires_at'])

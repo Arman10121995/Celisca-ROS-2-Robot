@@ -69,6 +69,8 @@ class InfrastructureControls(ScrollPanel):
             lines=[f"Door {n}: {v['position_m']:.2f}/{v['command_m']:.2f} m, mode {v['mode']}"
                    for n,v in value['doors'].items()]
             lines.append(f"Lift: {value['lift']} (operator hold: {value.get('operator_hold', False)})")
+            if queue.get('wait_timeout_s') is not None:
+                lines.append(f"Queued stops expire after {queue['wait_timeout_s']:g} wall seconds; Stop or lease/feedback loss cancels them.")
             if value.get('rmf_protocol'):
                 lines.append('SDK facility lease: '+('ready' if value.get('rmf_control_ready') else
                     'inactive; explicitly give RMF control for SDK tasks'))

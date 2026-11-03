@@ -146,6 +146,11 @@ without rubbing; their upper edges, link mass/inertia and actuator limits
 are retained. Physical open-door feedback remains required before boarding.
 A panel beyond its open target remains physically open; actuator upper limits
 and the existing minimum clear-opening threshold still apply.
+The facility declares 1800 wall seconds of waiting for each queued stop to
+start; other configurations default to 600 s. Each stop records its expiry
+when admitted, with a validated 3600 s maximum. The Facility feedback shows
+the budget. Completion of another stop does not renew an old request, and
+Stop or operator/feedback loss still cancels dependent stops.
 Other backends currently have static facility geometry, with moving fixture
 adapters pending. See [current continuation and limits](../status/fleet-continuation-2026-11-02.md)
 and [the earlier floor ride](../status/evidence/fleet-floor-map-transition-2026-11-02/README.md).

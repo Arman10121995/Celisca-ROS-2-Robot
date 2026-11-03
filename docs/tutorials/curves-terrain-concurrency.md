@@ -156,8 +156,10 @@ remain conservatively in the same traffic space. Reservations prevent manual
 or unrelated queued commands from taking over a lift passenger.
 
 The facility profile declares finite slow-host wall-time budgets: 900 s per
-transport, 300 s per phase and 180 s per Nav2 leg. Other configurations retain
-the prior defaults (300/100/90 s). These budgets do not relax live feedback,
+transport, 300 s per phase, 180 s per Nav2 leg and 1800 s for a queued stop to
+start. Other configurations retain the prior defaults (300/100/90 s and
+600 s queue wait). Each queued stop keeps its original expiry; finishing a
+predecessor does not renew it. The GUI shows the queue-wait budget. These budgets do not relax live feedback,
 lease, force, floor, door or independent-settling requirements. The larger
 multi-member floor/parking mission is separate from the measured concurrent
 single-floor navigation case.

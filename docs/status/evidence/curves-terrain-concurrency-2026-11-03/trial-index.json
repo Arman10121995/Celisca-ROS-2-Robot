@@ -589,5 +589,60 @@
         "map": "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_maps/share/robot_lab_maps/maps/fleet_facility/maps/map.yaml"
       }
     ]
+  },
+  "fleet-concurrent-11": {
+    "passed": false,
+    "reason": "RuntimeError: Transport failed: [{'id': '783b5b10993446caa3e1cb82910a8921', 'robot': 'alpha', 'floor': 'L1', 'operator_id': 'concurrent-probe', 'enqueued_at': 15089.198461548, 'phase': 'succeeded', 'reason': 'Actual approach, boarding, floor/map change and settled exit observed', 'parking': 'auto', 'parking_goal': {'x': 1.55, 'y': -0.55, 'yaw': 0.0}}, {'id': 'b7a133252a98427b845ec51c5da69e64', 'robot': 'beta', 'floor': 'L1', 'operator_id': 'concurrent-probe', 'enqueued_at': 15089.198461548, 'phase': 'succeeded', 'reason': 'Actual approach, boarding, floor/map change and settled exit observed', 'parking': 'auto', 'parking_goal': {'x': 1.55, 'y': 0.55, 'yaw': 0.0}}, {'id': 'f235bc88bcdd4353b6e55a300fe050da', 'robot': 'alpha', 'floor': 'L0', 'operator_id': 'concurrent-probe', 'enqueued_at': 15089.198461548, 'phase': 'succeeded', 'reason': 'Actual approach, boarding, floor/map change and settled exit observed', 'parking': 'auto', 'parking_goal': {'x': 1.5, 'y': -2.5, 'yaw': 0.0}}, {'id': 'db62f9f9dbc943cd9ebfb3a5d9a5f290', 'robot': 'beta', 'floor': 'L0', 'operator_id': 'concurrent-probe', 'enqueued_at': 15089.198461548, 'phase': 'canceled', 'reason': 'Queue waiting deadline exceeded; explicit new itinerary required', 'parking': 'auto'}]",
+    "phase": "running",
+    "wall_seconds": 630.3162964819985,
+    "overlap_s": 34.647180628999195,
+    "landings": [
+      {
+        "robot": "alpha",
+        "floor": "L1",
+        "parking_goal": {
+          "x": 1.55,
+          "y": -0.55,
+          "yaw": 0.0
+        },
+        "body": {
+          "x": 1.5764186394301976,
+          "y": -0.5387514385725242,
+          "z": 3.00000181207825,
+          "yaw": -0.009646873024768762,
+          "linear": 0.0,
+          "angular": 0.0,
+          "velocity_source": "finite difference of measured stamped Gazebo poses",
+          "source_reported_twist": {
+            "linear": 0.0,
+            "angular": 0.0
+          }
+        },
+        "map": "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_maps/share/robot_lab_maps/maps/fleet_facility/maps/map_L1.yaml"
+      },
+      {
+        "robot": "beta",
+        "floor": "L1",
+        "parking_goal": {
+          "x": 1.55,
+          "y": 0.55,
+          "yaw": 0.0
+        },
+        "body": {
+          "x": 1.581372031842777,
+          "y": 0.5431638046887166,
+          "z": 2.9999999845285514,
+          "yaw": 0.059272130738571335,
+          "linear": 0.0,
+          "angular": 0.0,
+          "velocity_source": "finite difference of measured stamped Gazebo poses",
+          "source_reported_twist": {
+            "linear": 0.0,
+            "angular": 0.0
+          }
+        },
+        "map": "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_maps/share/robot_lab_maps/maps/fleet_facility/maps/map_L1.yaml"
+      }
+    ]
   }
 }
