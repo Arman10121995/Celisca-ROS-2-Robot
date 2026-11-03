@@ -26,12 +26,20 @@ the `/gait/state` ROS contract that the benches and GUI subscribe to, so the
 Isaac gait-terrain trials (gait-isaac-1..7) no longer time out in `waiting`
 phase with `deadline`. The state message carries `ready`, `operator_id`,
 `sim_time`, `support_fraction`, `position`, `tilt_rad`, `enabled`,
-`terrain_observation` and `actual_contacts`. Runtime test suite green;
-rebuild of `robot_lab_isaac` succeeds. [Related commit `0b7e4e80`.]
+`terrain_enabled`, `terrain_observation` and `actual_contacts`.
 
-Isaac terrain campaign continues: the Isaac backend must now deliver the
-ready/operator/sim-time/support_fraction state so the terrain probe can arm
-and walk.
+**Isaac runtime command handling** (in `isaac_runtime.py`):
+- `_StdinReader` now tracks `enabled` and `terrain_enabled` states.
+- Accepts `op: "terrain"` (with optional `enabled`) and `op: "arm"` commands
+  from the spawner; `op: "reset"` clears both flags.
+- The main loop publishes `enabled` and `terrain_enabled` in the state event,
+  so the probe sees the armed state and can start walking.
+- Runtime test suite green; `colcon build --packages-select robot_lab_isaac`
+  succeeds. [Commits `0b7e4e80`, `e7910a02`.]
+
+Isaac terrain campaign continues: when the probe sends `terrain,enabled=True`,
+the Isaac runtime arms terrain mode; when it sends `arm`, the runtime arms
+gait and the probe enters the walking phase.
 
 [Current workflow delivery and limits](workflows-2026-10-27.md),
 [actual receipts](evidence/workflows-2026-10-27/README.md),
