@@ -281,6 +281,32 @@ def test_lift_door_panel_clears_platform_and_car_walls():
     assert config['doors']['lift']['opened'] == 2.15
 
 
+def test_lift_sill_is_physical_convex_bevel_below_level_tolerance(tmp_path):
+    import trimesh
+    from robot_lab_utils.fleet_session import prepare_world
+    world = ROOT / 'src/robot_lab_maps/maps/fleet_facility/worlds/fleet_facility.world'
+    root = ET.parse(world).getroot()
+    platform = root.find(".//link[@name='lift_platform']")
+    mesh_path = world.parent / platform.findtext('collision/geometry/mesh/uri')
+    assert platform.findtext('visual/geometry/mesh/uri') == mesh_path.name
+    mesh = trimesh.load(mesh_path, force='mesh')
+    assert mesh.is_watertight and mesh.is_convex
+    # A car anywhere within the declared positive leveling tolerance must
+    # expose a leading edge below the fixed landing, not a vertical curb.
+    config = yaml.safe_load((world.parent.parent / 'infrastructure.yaml').read_text())
+    top = max(mesh.vertices[:, 2])
+    leading = mesh.vertices[mesh.vertices[:, 0] == min(mesh.vertices[:, 0])]
+    assert top - max(leading[:, 2]) > config['lift']['level_tolerance_m']
+    assert mesh.bounds.tolist() == [[-1., -1., -.05], [1., 1., .05]]
+    assert float(platform.findtext('inertial/mass')) == 50.
+    joint = root.find(".//joint[@name='lift_car']")
+    assert float(joint.findtext('axis/limit/effort')) == 1600.
+    assert float(joint.findtext('axis/limit/velocity')) == .25
+    staged, _ = prepare_world(world, tmp_path)
+    uri = ET.parse(staged).findtext(".//link[@name='lift_platform']/collision/geometry/mesh/uri")
+    assert uri == mesh_path.resolve().as_uri()
+
+
 def test_floor_maps_loaded_from_config(tmp_path):
     session = _make_session(tmp_path)
     node = _make_node(session)

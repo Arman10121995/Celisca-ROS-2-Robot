@@ -18,6 +18,29 @@ LANDING_RAILS=[('landing_west_rail',(1.04,0,4.1),(.08,2.,2.2)),
 CABIN_WALLS=[((.95,0,1.15),(.08,2.,2.2)),((.1,.95,1.15),(1.8,.08,2.2)),((.1,-.95,1.15),(1.8,.08,2.2))]
 
 
+def platform_mesh(path):
+    """Closed convex slab with a 6 mm / 80 mm approach bevel.
+
+    A levelled physical car may sit up to 3 mm above the landing. Its former
+    square edge trapped Labbot's fixed front caster while wheel odometry kept
+    advancing. The bevel stays wholly inside the moving platform: no fixed
+    bridge protrudes into the shaft and no pose/force/arrival gate is changed.
+    """
+    section=[(-1.,-.05),(1.,-.05),(1.,.05),(-.92,.05),(-1.,.044)]
+    count=len(section)
+    vertices=[(x,y,z) for y in (-1.,1.) for x,z in section]
+    faces=[]
+    for i in range(1,count-1):
+        faces.extend([(0,i,i+1),(count,count+i+1,count+i)])
+    for i in range(count):
+        j=(i+1)%count
+        faces.extend([(i,count+i,count+j),(i,count+j,j)])
+    path.parent.mkdir(parents=True,exist_ok=True)
+    path.write_text('# Robot Lab authored convex lift slab; metres; Apache-2.0\n'
+        +''.join('v '+' '.join(format(v,'.12g') for v in vertex)+'\n' for vertex in vertices)
+        +''.join('f '+' '.join(str(v+1) for v in face)+'\n' for face in faces))
+
+
 def generate_maps(target,walls):
     resolution=.05;maps=target/'maps';maps.mkdir(exist_ok=True)
     image=Image.new('L',(240,200),254);draw=ImageDraw.Draw(image)
@@ -76,7 +99,12 @@ def generate():
         inertial=child(link,'inertial');child(inertial,'mass',mass);tensor=child(inertial,'inertia')
         for key,a,b in [('ixx',size[1],size[2]),('iyy',size[0],size[2]),('izz',size[0],size[1])]:child(tensor,key,mass*(a*a+b*b)/12)
         for kind in ('collision','visual'):
-            part=child(link,kind,name=link_name+'_'+kind);child(child(part,'geometry'),'box');part.find('geometry/box').append(ET.Element('size'));part.find('geometry/box/size').text=' '.join(map(str,size))
+            part=child(link,kind,name=link_name+'_'+kind)
+            geometry=child(part,'geometry')
+            if name=='lift_car':
+                child(child(geometry,'mesh'),'uri','lift_platform.obj')
+            else:
+                child(child(geometry,'box'),'size',' '.join(map(str,size)))
         if name=='lift_car':
             # Three moving cabin walls leave the sliding door's front rail
             # clear. The complete car mass/inertia is authored above.
@@ -91,7 +119,9 @@ def generate():
         for key,value in dict(joint_name=name,topic='/facility/'+name+'/target',p_gain=kp,d_gain=kd,i_gain=100 if name=='lift_car' else 20,i_min=-800 if name=='lift_car' else -8,i_max=800 if name=='lift_car' else 8,cmd_offset=65.*9.81 if name=='lift_car' else 0.,cmd_min=-limit,cmd_max=limit,use_velocity_commands='false',initial_position=0).items():child(plugin,key,value)
         joints.append(name)
     p=child(hardware,'plugin',name='ignition::gazebo::systems::JointStatePublisher',filename='ignition-gazebo-joint-state-publisher-system');child(p,'topic','/facility/joint_states')
-    target=ROOT/'src/robot_lab_maps/maps/fleet_facility';write(doc,target/'worlds/fleet_facility.world')
+    target=ROOT/'src/robot_lab_maps/maps/fleet_facility'
+    platform_mesh(target/'worlds/lift_platform.obj')
+    write(doc,target/'worlds/fleet_facility.world')
     config=dict(schema_version=1,doors={'main':dict(joint='door_main',closed=0.,opened=1.8,sweep=[-.5,.5,-1.1,3.1],approach=[[-1.2,0.],[1.2,0.]]),
         'lift':dict(joint='door_lift',closed=0.,opened=2.15,sweep=[2.6,3.4,-1.3,3.5],z_joint='lift_car')},
         lift=dict(name='facility_lift',joint='lift_car',door='lift',floors={'L0':0.,'L1':3.},level_tolerance_m=.003),
@@ -109,7 +139,7 @@ def generate():
         config['energy']['effort_sources'] = previous.get('energy', {}).get('effort_sources', {})
     (target/'infrastructure.yaml').write_text(yaml.safe_dump(config,sort_keys=False))
     (target/'SOURCE.json').write_text(json.dumps(dict(author='Robot Lab contributors',license='Apache-2.0',
-        assets='Physical sliding doors, 50 kg force-driven 3 m lift car with moving walls/door, floor/shaft geometry and authored dock',
+        assets='Physical sliding doors, 50 kg force-driven 3 m lift car with moving walls/door and 6 mm approach bevel, floor/shaft geometry and authored dock',
         scope='Uncalibrated first-party infrastructure; graph, lift transport, docking and energy missions need actual feedback receipts'),indent=2)+'\n')
     generate_maps(target,walls)
 

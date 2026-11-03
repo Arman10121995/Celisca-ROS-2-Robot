@@ -26,6 +26,7 @@ Compact actual results and source hashes are checked in beside this file;
 | `gait-gazebo-11` | Same source octopod/terrain command, native force telemetry and source-static range model | 0.1850 m travel; 0.0003 m hold drift; 111.774 wall s |
 | `gait-isaac-13` | Same source octopod/terrain command, actual PhysX contact tensors and collision rays; one `source_gait_controller` state publisher | 0.1926 m travel; 0.0008 m hold drift; 276.177 wall s, within the explicit 600 s wall budget |
 | `fleet-planar-2` | One physical three-base `fleet_facility` world; independent alpha and gamma Nav2 routes with serial traffic reservation explicitly disabled | Both actual Nav2 results and independently settled body endpoints passed in 107.375 s; 45.774 s measured overlapping mission activity |
+| `fleet-concurrent-5` — partial, full trial failed | Three-base world, two-member four-stop floor queue and independent gamma mission | Alpha physically reached L1 and parked with its correct map and settled body. Gamma completed; 41.893 s mission overlap. Beta's boarding returned Nav2 success while its body remained at the sill; the independent gate rejected it and canceled returns |
 
 The gait screens require >5 cm actual progress, <3 cm hold drift, final tilt
 <0.3 rad and the gait actually disabled at Stop. They do not qualify sustained
@@ -60,6 +61,16 @@ their recorded hashes. Do not transfer a named case to changed source.
   100 s wall phase budget expired before observed door/map completion.
   The facility now explicitly declares bounded 900/300/180 s total/phase/
   route budgets. A full successful wave under these budgets remains separate.
+- Trial 5 passed alpha's actual L1 exit/parking and gamma's route. Beta's
+  front caster caught the square moving-platform edge while the levelled
+  car was about 2 mm above the fixed floor. Its wheels advanced localization
+  without the body: Nav2 reported success at a body X of 2.8765 m against the
+  3.65 m boarding goal. The unchanged independent observer rejected it. A
+  closed convex slab with a 6 mm / 80 mm approach bevel replaces that square
+  edge, entirely within the moving car. The original 50 kg platform mass,
+  1600 N lift limit, 0.25 m/s speed limit and arrival/feedback/lease gates are
+  retained. The candidate has 35 passing geometry/facility contracts and a
+  valid SDF/build; its full physical wave remains a separate result.
 - Terrain: early Bullet rays intersected the robot and failed initial
   support. Robot-excluding ray filters retain actual world collisions.
   Sparse virtual frames had Bullet's implicit 1 kg masses; source mass is

@@ -586,16 +586,16 @@
         </inertial>
         <collision name="lift_platform_collision">
           <geometry>
-            <box>
-              <size>2 2 0.1</size>
-            </box>
+            <mesh>
+              <uri>lift_platform.obj</uri>
+            </mesh>
           </geometry>
         </collision>
         <visual name="lift_platform_visual">
           <geometry>
-            <box>
-              <size>2 2 0.1</size>
-            </box>
+            <mesh>
+              <uri>lift_platform.obj</uri>
+            </mesh>
           </geometry>
         </visual>
         <collision name="car_wall_0_collision">

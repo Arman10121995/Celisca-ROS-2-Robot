@@ -31,6 +31,14 @@ the explicit 600 second budget. Trial 12's 180 second timeout remains a failure.
 The same octopod low-relief screen now has actual receipts on all four backends.
 Earlier schema-only/runtime-flag claims were not physical mission qualification.
 
+**Fleet follow-up:** the latest four-stop trial completed alpha's physical L1
+parking and gamma's independent route, then correctly rejected beta's false
+Nav2 arrival while its body remained at the lift sill. The moving platform now
+has an authored 6 mm / 80 mm approach bevel, retaining the original mass,
+forces and speed. The full physical wave is being repeated; it is not qualified
+by the geometry/build checks. The failed result and actual first parked endpoint
+are preserved in the November 3 receipt.
+
 [Current workflow delivery and limits](workflows-2026-10-27.md),
 [actual receipts](evidence/workflows-2026-10-27/README.md),
 [remaining-work guide](../REMAINING_WORK_GUIDE.md).

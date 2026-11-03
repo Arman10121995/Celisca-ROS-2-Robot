@@ -56,6 +56,11 @@ claim boundary. [Receipt, failures and reproduction](evidence/curves-terrain-con
    timeout reached physical L1 but expired before observed door/map completion.
    An occupied car, source-clear parked peer and independently settled exit
    must be observed; two single-floor goals do not prove this campaign.
+   Trial 5 now has one actually settled L1 parking endpoint, but the full wave
+   failed when Labbot caught the raised square sill and odometry advanced
+   without the body. Preserve that rejected result and the unchanged
+   independent arrival gate. The authored moving slab now has a 6 mm / 80 mm
+   bevel within its original envelope; its physical repeat is still required.
 2. Record hexapod and centipede travel/reverse/turn/Stop/loss/reset and actual
    terrain/higher-mode missions on each backend candidate. Source tests and
    the octopod case do not transfer those certificates.

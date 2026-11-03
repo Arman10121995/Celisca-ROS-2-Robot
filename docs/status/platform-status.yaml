@@ -334,6 +334,7 @@ auv_terrain_fleet_20261102:
   run_directory: /workspace/molar/robot_lab_runtime/auv-terrain-fleet-20261102
   measured_cases: [tethys_20_degree_tank_curve_34_046_s, octopod_low_relief_mujoco_travel_hold, octopod_low_relief_pybullet_travel_hold, octopod_low_relief_fortress_travel_hold, octopod_low_relief_isaac_travel_hold_276_177_s, three_base_two_concurrent_settled_nav2_missions_45_774_s_overlap]
   software_checks: 84 reconciled source and physics contracts; 29 native GUI/resolver/architecture checks; complete unsourced fast tier 1177 passed, 46 skipped, 4 deselected. These checks do not qualify additional physical missions.
+  fleet_followup: Trial 5 completed alpha L1 parking and gamma arrival but failed beta boarding against the independent body gate. An authored 6 mm / 80 mm moving-slab bevel retains mass and force/speed limits; 35 geometry/facility contracts pass and the full physical repeat remains pending.
   remaining_acceptance: [per_model_backend_terrain_higher_mode_loss_reset_matrix, multi_member_floor_parking_campaign, further_AUV_curve_saved_map_obstacle_current_loss_cases, occupied_recovery_and_aerial_route_flight, original_roadmap_and_release]
 workflow_continuation_20261102:
   owner: codex

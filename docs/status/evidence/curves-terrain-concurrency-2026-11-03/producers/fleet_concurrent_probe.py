@@ -4,6 +4,10 @@ import psutil,rclpy
 from std_msgs.msg import String
 
 root=Path(os.environ.get('FLEET_CASE_DIRECTORY',str(Path(__file__).parent/'fleet-concurrent-1')));root.mkdir(parents=True,exist_ok=True)
+import hashlib
+workspace=Path('/workspace/molar/ros_ws/bumperbot_ws')
+files=list((workspace/'src/robot_lab_utils/robot_lab_utils').glob('fleet*.py'))+list((workspace/'src/robot_lab_maps/maps/fleet_facility').rglob('*'))
+(root/'source-sha256.json').write_text(json.dumps({str(f.relative_to(workspace)):hashlib.sha256(f.read_bytes()).hexdigest() for f in files if f.is_file()},indent=2)+'\n')
 log=(root/'plant.log').open('w')
 plant=subprocess.Popen(['ros2','launch','robot_lab_bringup','shared_world.launch.py','session:='+str(Path(__file__).parent/'fleet_three.yaml'),
     'navigation:=true','gui:=false','rviz:=false'],stdout=log,stderr=subprocess.STDOUT,cwd=root,start_new_session=True)

@@ -422,5 +422,37 @@
     "backend": "isaac",
     "robot": "lab_octopod",
     "terrain": true
+  },
+  "fleet-concurrent-5": {
+    "passed": false,
+    "reason": "RuntimeError: Transport failed: [{'id': 'da2c5771c79648518d519f2090b7cc67', 'robot': 'alpha', 'floor': 'L1', 'operator_id': 'concurrent-probe', 'enqueued_at': 11881.423767665, 'phase': 'succeeded', 'reason': 'Actual approach, boarding, floor/map change and settled exit observed', 'parking': 'auto', 'parking_goal': {'x': 1.55, 'y': -0.55, 'yaw': 0.0}}, {'id': 'b5cf408173d342bca5b7b0ee4d246cf4', 'robot': 'beta', 'floor': 'L1', 'operator_id': 'concurrent-probe', 'enqueued_at': 11881.423767665, 'phase': 'failed', 'reason': 'Owned transport Nav2 task failed/canceled', 'parking': 'auto', 'parking_goal': {'x': 1.55, 'y': 0.55, 'yaw': 0.0}}, {'id': '8bc75f06221a480592a1b9bf6b6e6d24', 'robot': 'alpha', 'floor': 'L0', 'operator_id': 'concurrent-probe', 'enqueued_at': 11881.423767665, 'phase': 'canceled', 'reason': 'Previous transport interrupted; explicit new itinerary required', 'parking': 'auto'}, {'id': '0797e171ddde491b81df7b7cac0e477c', 'robot': 'beta', 'floor': 'L0', 'operator_id': 'concurrent-probe', 'enqueued_at': 11881.423767665, 'phase': 'canceled', 'reason': 'Previous transport interrupted; explicit new itinerary required', 'parking': 'auto'}]",
+    "phase": "running",
+    "wall_seconds": 292.1756477259987,
+    "overlap_s": 41.89300555599948,
+    "landings": [
+      {
+        "robot": "alpha",
+        "floor": "L1",
+        "parking_goal": {
+          "x": 1.55,
+          "y": -0.55,
+          "yaw": 0.0
+        },
+        "body": {
+          "x": 1.5870318332657372,
+          "y": -0.5346576860002943,
+          "z": 3.0000018120782546,
+          "yaw": -0.020921746443337438,
+          "linear": 0.0,
+          "angular": 0.0,
+          "velocity_source": "finite difference of measured stamped Gazebo poses",
+          "source_reported_twist": {
+            "linear": 0.0,
+            "angular": 0.0
+          }
+        },
+        "map": "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_maps/share/robot_lab_maps/maps/fleet_facility/maps/map_L1.yaml"
+      }
+    ]
   }
 }
