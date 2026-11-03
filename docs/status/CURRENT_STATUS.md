@@ -56,6 +56,15 @@ and all live feedback/ownership guards. Trial 12 was stopped at the user's
 request after 319.046 wall seconds, with one parked L1 endpoint recorded;
 the full repeat remains pending after resumption.
 
+**Occupied recovery protocol:** `fleet_controller.py` now tracks
+`occupied`/`occupied_at`/`recovery_initiator`/`recovery_target` per member
+and wires `_initiate_recovery` into `_traffic_recovery_tick` so a member
+blocked by an occupied peer in the lift car initiates the peer's recovery
+instead of yielding. `_occupy_member`, `_unoccupy_member` and
+`_complete_recovery` are implemented. All fleet unit tests pass (129). The
+physical two-member L0→L1→L0 parking wave and occupied recovery campaign
+remain pending a fresh Gazebo run.
+
 [Current workflow delivery and limits](workflows-2026-10-27.md),
 [actual receipts](evidence/workflows-2026-10-27/README.md),
 [remaining-work guide](../REMAINING_WORK_GUIDE.md).
