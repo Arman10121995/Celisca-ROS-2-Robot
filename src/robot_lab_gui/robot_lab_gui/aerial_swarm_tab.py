@@ -118,7 +118,7 @@ class AerialSwarmTab(ttk.Frame):
         control = ttk.LabelFrame(self, text='Live per-vehicle / group controls', padding=8)
         control.grid(row=2, column=1, sticky='nsew')
         control.columnconfigure(0, weight=1)
-        ttk.Button(control, text='Connect · neutral', command=self.connect).grid(row=0, column=0, sticky='ew')
+        ttk.Button(control, text='Connect · neutral', command=self.connect, style='Accent.TButton').grid(row=0, column=0, sticky='ew')
         self.target_combo = ttk.Combobox(control, textvariable=self.target, values=('All vehicles',), state='readonly')
         self.target_combo.grid(row=1, column=0, sticky='ew', pady=5)
         self.target_combo.bind('<<ComboboxSelected>>', lambda _: self.all_stop())
@@ -140,7 +140,7 @@ class AerialSwarmTab(ttk.Frame):
                 button.bind(event, lambda _: self.after_idle(self.sync_buttons), add='+')
         for col in range(3):
             pad.columnconfigure(col, weight=1)
-        ttk.Button(pad, text='STOP / HOLD', command=self.all_stop).grid(row=2, column=1, sticky='ew', padx=2)
+        ttk.Button(pad, text='STOP / HOLD', command=self.all_stop, style='Danger.TButton').grid(row=2, column=1, sticky='ew', padx=2)
         ttk.Checkbutton(control, text='WASD + joystick · arrows change altitude · Space holds',
             variable=self.keyboard, command=self.input_changed).grid(row=5, column=0, sticky='w', pady=5)
         increments = ttk.Frame(control)
@@ -178,7 +178,7 @@ class AerialSwarmTab(ttk.Frame):
         self.preview.grid(row=5, column=0, columnspan=2, sticky='ew', pady=5)
         run = ttk.Frame(self)
         run.grid(row=6, column=0, columnspan=2, sticky='ew')
-        ttk.Button(run, text='Run shared aerial session', command=self.run).pack(side='left')
+        ttk.Button(run, text='▶  Run shared aerial session', command=self.run, style='Accent.TButton').pack(side='left')
         ttk.Button(run, text='Copy command', command=self.copy_command).pack(side='left', padx=5)
         ttk.Button(run, text='Stop session', command=app._stop_launch).pack(side='left')
         self.bind_all('<KeyPress>', self.key_press, add='+')

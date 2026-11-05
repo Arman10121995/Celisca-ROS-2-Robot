@@ -116,7 +116,7 @@ class FleetTab(ttk.Frame):
         right = ttk.LabelFrame(self, text='Live member/group control', padding=8)
         right.grid(row=2, column=1, sticky='nsew')
         right.columnconfigure(1, weight=1)
-        ttk.Button(right, text='Connect to shared session', command=self.connect).grid(row=0, column=0, columnspan=2, sticky='ew')
+        ttk.Button(right, text='Connect to shared session', command=self.connect, style='Accent.TButton').grid(row=0, column=0, columnspan=2, sticky='ew')
         self.target = tk.StringVar(value='alpha')
         ttk.Label(right, text='Target').grid(row=1, column=0, sticky='w')
         self.target_combo = ttk.Combobox(right, textvariable=self.target, values=('alpha', 'beta', 'All included'), state='readonly')
@@ -125,7 +125,7 @@ class FleetTab(ttk.Frame):
         actions = ttk.Frame(right)
         actions.grid(row=2, column=0, columnspan=2, sticky='ew')
         ttk.Button(actions, text='Arm manual · neutral', command=self._arm).pack(side='left', fill='x', expand=True)
-        ttk.Button(actions, text='ALL STOP', command=self.all_stop).pack(side='left', fill='x', expand=True, padx=(5, 0))
+        ttk.Button(actions, text='ALL STOP', command=self.all_stop, style='Danger.TButton').pack(side='left', fill='x', expand=True, padx=(5, 0))
         control_pages = ttk.Notebook(right)
         control_pages.grid(row=3, column=0, columnspan=2, sticky='nsew', pady=5)
         right.rowconfigure(3, weight=1)
@@ -239,8 +239,10 @@ class FleetTab(ttk.Frame):
         self.command_text.grid(row=0, column=0, sticky='ew')
         command_buttons = ttk.Frame(command_frame)
         command_buttons.grid(row=0, column=1, sticky='ns', padx=5)
-        for label, callback in [('Run shared world', self.run), ('Copy command', self.copy_command), ('Stop simulation', app.stop_launch)]:
-            ttk.Button(command_buttons, text=label, command=callback).pack(fill='x', pady=2)
+        for label, callback, style in [('▶  Run shared world', self.run, 'Accent.TButton'),
+                                       ('Copy command', self.copy_command, 'TButton'),
+                                       ('Stop simulation', app.stop_launch, 'TButton')]:
+            ttk.Button(command_buttons, text=label, command=callback, style=style).pack(fill='x', pady=2)
         self.map_var.trace_add('write', lambda *_args: self._refresh_command())
         app.bind('<KeyPress>', self._key_press, add='+')
         app.bind('<KeyRelease>', self._key_release, add='+')

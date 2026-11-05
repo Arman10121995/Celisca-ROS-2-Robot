@@ -178,32 +178,42 @@ class WorldsTab(LabTab):
         self.world_var.trace_add('write',self._world_seed)
         self.output_var=tk.StringVar(value=str(Path(os.environ.get('ROBOT_LAB_RUNTIME_ROOT',
             '/workspace/molar/robot_lab_runtime'))/'generated_maps'))
-        controls=ttk.Frame(self);controls.grid(row=0,column=0,sticky='new')
-        controls.columnconfigure(1,weight=1)
-        ttk.Label(controls,text='World').grid(row=0,column=0,sticky='w')
-        self.world_combo=ttk.Combobox(controls,textvariable=self.world_family_var,values=app.map_groups.choices(),state='readonly')
-        self.world_combo.grid(row=0,column=1,sticky='ew')
+        # Three cards in working order: world, slice settings, generate.
+        self.rowconfigure(0,weight=0)
+        for column in range(3):
+            self.columnconfigure(column,weight=1,uniform='card')
+        world=step_card(self,1,'Choose a world','Any installed world family and its variant.')
+        world.master.grid(row=0,column=0,sticky='nsew',padx=(0,6))
+        ttk.Label(world,text='World family',style='SurfaceField.TLabel').grid(row=0,column=0,columnspan=2,sticky='w')
+        self.world_combo=ttk.Combobox(world,textvariable=self.world_family_var,values=app.map_groups.choices(),state='readonly')
+        self.world_combo.grid(row=1,column=0,columnspan=2,sticky='ew')
         self.world_combo.bind('<<ComboboxSelected>>',self._family_selected)
-        ttk.Label(controls,text='World variant').grid(row=1,column=0,sticky='w')
-        self.variant_combo=ttk.Combobox(controls,textvariable=self.world_var,
+        ttk.Label(world,text='World variant',style='SurfaceField.TLabel').grid(row=2,column=0,columnspan=2,sticky='w',pady=(8,0))
+        self.variant_combo=ttk.Combobox(world,textvariable=self.world_var,
             values=app.map_groups.members(self.world_family_var.get(),selectable=True),state='readonly')
-        self.variant_combo.grid(row=1,column=1,sticky='ew')
-        for row,label,var in [(2,'Resolution (m)',self.resolution_var),(3,'Slice height (m)',self.height_var),
-                              (4,'Seed X (m)',self.seed_x_var),(5,'Seed Y (m)',self.seed_y_var),
-                              (6,'Output directory',self.output_var)]:
-            ttk.Label(controls,text=label).grid(row=row,column=0,sticky='w')
-            ttk.Entry(controls,textvariable=var).grid(row=row,column=1,sticky='ew',pady=3)
-        self.generate_button=ttk.Button(controls,text='▶  Generate 2D occupancy grid',command=self.generate,style='Accent.TButton')
-        self.generate_button.grid(row=7,column=0,columnspan=2,sticky='ew',pady=6)
-        ttk.Button(controls,text='Stop Generation',command=lambda:app.stop_bg_process('world_maps')).grid(row=8,column=0,sticky='ew')
-        ttk.Button(controls,text='World / Terrain Guide',command=lambda:self.open_guide()).grid(row=8,column=1,sticky='ew')
-        ttk.Button(controls,text='Preview 3D',command=lambda:app.preview_asset('maps',self.world_var.get())).grid(row=9,column=0,columnspan=2,sticky='ew',pady=6)
-        ttk.Label(controls,text='Uses the pinned Fortress plugin in a separate headless world. Existing maps are preserved.\n'
-            'The seed selects a connected free region; change X/Y to export another room.\n'
-            'Mesh collisions and terrain use their actual scale and height slice.\n'
-            'Review the generated PGM/YAML and report before registering it for navigation.\n'
-            'External world imports and terrain conversion are tracked as R6.6 / R6.7.',
-            wraplength=720,justify='left').grid(row=10,column=0,columnspan=2,sticky='w',pady=12)
+        self.variant_combo.grid(row=3,column=0,columnspan=2,sticky='ew')
+        ttk.Button(world,text='Preview 3D',command=lambda:app.preview_asset('maps',self.world_var.get())).grid(
+            row=4,column=0,sticky='w',pady=(10,0))
+        settings=step_card(self,2,'Slice settings','Grid resolution, the height of the horizontal slice and a seed in the free region to export.')
+        settings.master.grid(row=0,column=1,sticky='nsew',padx=6)
+        for row,label,var in [(0,'Resolution (m)',self.resolution_var),(1,'Slice height (m)',self.height_var),
+                              (2,'Seed X (m)',self.seed_x_var),(3,'Seed Y (m)',self.seed_y_var),
+                              (4,'Output directory',self.output_var)]:
+            ttk.Label(settings,text=label,style='SurfaceField.TLabel').grid(row=row,column=0,sticky='w',padx=(0,8))
+            ttk.Entry(settings,textvariable=var).grid(row=row,column=1,sticky='ew',pady=3)
+        generate=step_card(self,3,'Generate','Writes a PGM/YAML occupancy grid and a report. Existing maps are preserved.')
+        generate.master.grid(row=0,column=2,sticky='nsew',padx=(6,0))
+        self.generate_button=ttk.Button(generate,text='▶  Generate 2D occupancy grid',command=self.generate,style='Accent.TButton')
+        self.generate_button.grid(row=0,column=0,columnspan=2,sticky='ew')
+        ttk.Button(generate,text='Stop generation',command=lambda:app.stop_bg_process('world_maps')).grid(
+            row=1,column=0,sticky='ew',pady=(6,0),padx=(0,3))
+        ttk.Button(generate,text='World / terrain guide',command=lambda:self.open_guide()).grid(
+            row=1,column=1,sticky='ew',pady=(6,0),padx=(3,0))
+        ttk.Label(self,text='Uses the pinned Fortress plugin in a separate headless world. The seed selects a connected '
+            'free region; change X/Y to export another room. Mesh collisions and terrain use their actual scale and '
+            'height slice. Review the generated PGM/YAML and report before registering it for navigation. External '
+            'world imports and terrain conversion are tracked as R6.6 / R6.7.',
+            style='Muted.TLabel',wraplength=1100,justify='left').grid(row=1,column=0,columnspan=3,sticky='w',pady=12)
 
     def _world_seed(self,*_args):
         seed=self.app.map_profiles.get(self.world_var.get(),{}).get('spawn',{})
@@ -825,15 +835,15 @@ class BenchmarkTab(LabTab):
         for column in range(3):
             buttons.columnconfigure(column, weight=1)
         ttk.Button(
-            buttons, text="Run Benchmark", command=self._run_benchmark
+            buttons, text="▶  Run benchmark", command=self._run_benchmark, style='Accent.TButton'
         ).grid(row=0, column=0, sticky="ew", padx=(0, 4))
         ttk.Button(
-            buttons, text="Check Regression vs Reference",
+            buttons, text="Check regression vs reference",
             command=self._check_regression,
         ).grid(row=0, column=1, sticky="ew", padx=4)
         ttk.Button(
-            buttons, text="Stop All Background",
-            command=self._stop_all,
+            buttons, text="Stop all background",
+            command=self._stop_all, style='Danger.TButton',
         ).grid(row=0, column=2, sticky="ew", padx=(4, 0))
 
         results_frame = ttk.LabelFrame(self, text="Latest Run Summary", padding=6)
