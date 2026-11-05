@@ -397,6 +397,60 @@ robots:
       max_angular_accel: 4.0
     supports_room_vacuum: true
 
+  oomwoo:
+    package: robot_lab_robots
+    xacro: oomwoo/urdf/oomwoo.urdf.xacro
+    name: oomwoo
+    supported_modes: [display, loc, slam, 3d_slam, nav]
+    features: [ros2_control, lidar_2d, distance_sensor, cliff_sensor, bumper_sensor, vacuum, lighting]
+    # OOMWOO is a compact 2D LiDAR home robot vacuum:
+    # - 2D LiDAR (RPLIDAR/A1M8) for navigation and obstacle detection
+    # - 4S Li-ion battery (14.8V) with integrated BMS
+    # - STM32 safety microcontroller for motor/driver control
+    # - ROS2 on CM4/CM5 compute module
+    # - Diff-drive base for compact patrol coverage
+    # - Home Assistant integration support
+    # - Commercial-grade: suction modes, edge cleaning, room selection, dock return
+    default_algorithms:
+      local_planning: pure_pursuit
+    drive_in_display: false
+    drive:
+      type: diff
+      # OEM xacro will define joints after package install; keep profile here
+      left_wheel_joint: null
+      right_wheel_joint: null
+      wheel_radius: 0.035
+      wheel_separation: 0.22
+      max_speed: 0.6
+      max_accel: 1.2
+      max_angular_speed: 1.8
+      max_angular_accel: 3.0
+      # Commercial vacuum robot: compact footprint for carpet edges
+      footprint_radius: 0.15
+    supports_room_vacuum: true
+    # Commercial vacuum robot power modes
+    vacuum_power_modes:
+      - id: eco
+        label: "Eco"
+        speed: 0.15
+        suction: 0.3
+        battery_drain: 0.03
+      - id: standard
+        label: "Standard"
+        speed: 0.25
+        suction: 0.6
+        battery_drain: 0.05
+      - id: turbo
+        label: "Turbo"
+        speed: 0.35
+        suction: 0.85
+        battery_drain: 0.08
+      - id: max
+        label: "Max"
+        speed: 0.25
+        suction: 1.0
+        battery_drain: 0.12
+
   labbot:
     package: robot_lab_robots
     xacro: labbot/urdf/labbot.urdf.xacro
