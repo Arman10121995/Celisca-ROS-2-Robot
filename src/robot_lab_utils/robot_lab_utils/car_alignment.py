@@ -73,17 +73,25 @@ class HeadingShuffle:
     car; ``spin(seconds)`` lets time pass while callbacks run.  Each arc ends
     when its length has been driven, when the heading error has been removed
     or after its time limit; the plan is recomputed after every pair.
+
+    Each arc starts with ``settle_s`` at ``settle_speed`` on the same
+    curvature, so the steering reaches its angle before the arc is driven.
+    Without it a 0.12 m arc ended while the wheels were still turning from
+    straight: in PyBullet a pair rotated the anti-Ackermann car about 1.3
+    degrees instead of 24, and 8 pairs left it 9.6 degrees off (round 58).
     """
 
     def __init__(self, pose: Callable[[], Optional[Tuple[float, float, float]]],
                  publish: Callable[[float, float], None], spin: Callable[[float], None],
                  turning_radius: float, speed: float = 0.15, tolerance: float = math.radians(3.0),
-                 max_step: float = 0.12, max_pairs: int = 8, radius_margin: float = 1.15):
+                 max_step: float = 0.12, max_pairs: int = 10, radius_margin: float = 1.15,
+                 settle_s: float = 0.8, settle_speed: float = 0.02):
         self.pose, self.publish, self.spin = pose, publish, spin
         # A little above the minimum radius keeps the steering off its stops.
         self.radius = float(turning_radius) * radius_margin
         self.speed, self.tolerance = float(speed), float(tolerance)
         self.max_step, self.max_pairs = float(max_step), int(max_pairs)
+        self.settle_s, self.settle_speed = float(settle_s), float(settle_speed)
         self.log = []
 
     def _drive(self, arc: Arc, goal_yaw: float, period: float = 0.05):
@@ -95,6 +103,12 @@ class HeadingShuffle:
         elapsed = 0.0
         vx = arc.direction * self.speed
         wz = vx * arc.turn / self.radius       # path curvature = wz / vx
+        settle = 0.0
+        while settle < self.settle_s:
+            creep = arc.direction * self.settle_speed
+            self.publish(creep, creep * arc.turn / self.radius)
+            self.spin(period)
+            settle += period
         while elapsed < limit:
             now = self.pose()
             if now is None:

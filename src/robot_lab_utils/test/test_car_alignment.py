@@ -72,3 +72,32 @@ def test_already_aligned_car_does_not_move():
     car = KinematicCar(math.radians(1.0))
     report = HeadingShuffle(car.pose, car.publish, car.spin, turning_radius=0.5).run(0.0)
     assert report['pairs'] == 0 and not car.commands
+
+
+class SteeringLagCar(KinematicCar):
+    """The path curvature follows the commanded one at a limited rate (steering servo)."""
+
+    def __init__(self, yaw, rate=1.0, **kwargs):
+        super().__init__(yaw, **kwargs)
+        self.curvature, self.rate = 0.0, rate
+
+    def spin(self, seconds, dt=0.01):
+        for _ in range(int(round(seconds / dt))):
+            target = self.wz / self.vx if abs(self.vx) > 1e-9 else self.curvature
+            step = max(-self.rate * dt, min(self.rate * dt, target - self.curvature))
+            self.curvature += step
+            self.x += self.vx * math.cos(self.yaw) * dt
+            self.y += self.vx * math.sin(self.yaw) * dt
+            self.yaw = wrap(self.yaw + self.vx * self.curvature * dt)
+
+
+def test_steering_settle_turns_a_lagging_car_in_fewer_pairs():
+    goal = math.pi / 2
+    runs = {}
+    for settle in (0.0, 0.8):
+        car = SteeringLagCar(goal + math.radians(-20.0), rate=2.0)
+        report = HeadingShuffle(car.pose, car.publish, car.spin, turning_radius=0.5, settle_s=settle).run(goal)
+        runs[settle] = report
+    assert abs(runs[0.8]['heading_error_after_deg']) <= 3.0
+    assert runs[0.8]['pairs'] < runs[0.0]['pairs']
+    assert runs[0.8]['displacement_m'] < 0.1
