@@ -13,7 +13,9 @@ The course comes from robot_lab_maps/maps/car_course/course.json
    With ``--align-heading`` a forward/reverse shuffle
    (robot_lab_utils.car_alignment) corrects the heading after Nav2 reports
    success, from the localization estimate; Nav2's own arrival and the
-   shuffle are both reported.
+   shuffle are both reported.  ``--trim`` then creeps straight to the bay
+   depth (car_alignment.trim_along_heading): cars stop short of a nose-in
+   bay, and a straight move leaves the corrected heading alone.
 
 Throughout, the robot's footprint polygon (its Nav2 overlay footprint,
 placed at the truth pose) is checked against the cones and boxes: the
@@ -112,6 +114,9 @@ def main(argv=None):
     parser.add_argument('--parking-position-error', type=float, default=0.15)
     parser.add_argument('--parking-yaw-error-deg', type=float, default=10.0)
     parser.add_argument('--turning-radius', type=float, default=0.5)
+    parser.add_argument('--trim', action='store_true',
+                        help='with --align-heading: then creep straight to the bay depth (cars stop short of a '
+                             'nose-in bay); the shuffle also runs when Nav2 ends within twice the bay tolerance')
     parser.add_argument('--align-heading', action='store_true',
                         help='shuffle forward/reverse after the parking goal to reach its heading')
     parser.add_argument('--align-tolerance-deg', type=float, default=3.0)
@@ -126,7 +131,7 @@ def main(argv=None):
     rclpy.init()
     node = Mission()
     report = dict(steps={}, course=args.course, footprint=geometry.footprint.tolist(),
-                  parking_alignment='shuffle' if args.align_heading else 'nav2 only')
+                  parking_alignment=('shuffle + trim' if args.trim else 'shuffle') if args.align_heading else 'nav2 only')
     started = time.monotonic()
     for name, ready in (('map', lambda: node.map is not None),
                         ('localization_tf', lambda: node.pose(args.base) is not None),
@@ -186,6 +191,11 @@ def main(argv=None):
                                  turning_radius=args.turning_radius,
                                  tolerance=math.radians(args.align_tolerance_deg))
         step['alignment'] = shuffle.run(goal['yaw'])
+        if args.trim:
+            from robot_lab_utils.car_alignment import trim_along_heading
+            step['trim'] = trim_along_heading(estimate_pose, publish,
+                                              lambda seconds: node.spin_until(lambda: False, seconds),
+                                              (goal['x'], goal['y']))
         step.update(node.measured(goal, goal['yaw'], args.base))
 
     def section(name, goals, position_error, yaw_error_deg=0.0, align_heading=False):
@@ -193,8 +203,11 @@ def main(argv=None):
         steps = []
         for goal in goals:
             step = run_goal(node, goal, goal['yaw'], args.timeout, args.base)
+            # The trim can remove a depth error, so it may start from twice the tolerance;
+            # the bay is still judged at the tolerance on truth.
+            reach = position_error * (2.0 if args.trim else 1.0)
             if (align_heading and step.get('outcome') == 'succeeded'
-                    and step.get('final_error_truth_m', math.inf) <= position_error):
+                    and step.get('final_error_truth_m', math.inf) <= reach):
                 align(step, goal)
             passed = (step.get('outcome') == 'succeeded' and step.get('settled_sim_second')
                       and step.get('final_error_truth_m', math.inf) <= position_error)

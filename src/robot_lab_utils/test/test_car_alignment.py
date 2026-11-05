@@ -101,3 +101,23 @@ def test_steering_settle_turns_a_lagging_car_in_fewer_pairs():
     assert abs(runs[0.8]['heading_error_after_deg']) <= 3.0
     assert runs[0.8]['pairs'] < runs[0.0]['pairs']
     assert runs[0.8]['displacement_m'] < 0.1
+
+
+def test_trim_drives_straight_to_the_bay_depth_and_keeps_the_heading():
+    from robot_lab_utils.car_alignment import longitudinal_error, trim_along_heading
+    car = KinematicCar(math.pi / 2)        # nose-in along +y, 0.147 m short, 0.093 m to the side
+    car.x, car.y = 8.807, 0.853
+    report = trim_along_heading(car.pose, car.publish, car.spin, (8.9, 1.0))
+    assert report['longitudinal_before_m'] == pytest.approx(0.147, abs=0.002)
+    assert abs(report['longitudinal_after_m']) <= 0.02
+    # The goal is 0.093 m to the car's right (negative: left is positive).
+    assert abs(report['heading_change_deg']) < 0.01 and report['lateral_m'] == pytest.approx(-0.093, abs=0.002)
+    assert all(wz == 0.0 for _, wz in car.commands) and car.commands[-1] == (0.0, 0.0)
+    # Overshoot backs up; within tolerance nothing moves.
+    car.y = 1.2
+    assert trim_along_heading(car.pose, car.publish, car.spin, (8.9, 1.0))['longitudinal_after_m'] == pytest.approx(
+        0.0, abs=0.02)
+    assert longitudinal_error((0.0, 0.0, 0.0), (0.01, 0.5))[0] == pytest.approx(0.01)
+    commands = len(car.commands)
+    assert trim_along_heading(car.pose, car.publish, car.spin, (car.x, car.y))['moved_m'] == 0.0
+    assert len(car.commands) == commands

@@ -148,3 +148,55 @@ class HeadingShuffle:
                     heading_error_after_deg=round(math.degrees(wrap(goal_yaw - after[2])), 2),
                     displacement_m=round(math.hypot(after[0] - before[0], after[1] - before[1]), 3),
                     log=self.log)
+
+
+def longitudinal_error(pose, goal_xy):
+    """Signed distance (m) to the goal along the car's heading, and the lateral residual."""
+    x, y, yaw = pose
+    dx, dy = goal_xy[0] - x, goal_xy[1] - y
+    return dx * math.cos(yaw) + dy * math.sin(yaw), -dx * math.sin(yaw) + dy * math.cos(yaw)
+
+
+def trim_along_heading(pose: Callable[[], Optional[Tuple[float, float, float]]],
+                       publish: Callable[[float, float], None], spin: Callable[[float], None],
+                       goal_xy, speed: float = 0.08, tolerance: float = 0.02, max_distance: float = 0.4,
+                       period: float = 0.05, settle_s: float = 0.8) -> dict:
+    """Creep straight (wheels centred) until the goal is abeam within *tolerance*.
+
+    After a heading shuffle the car points along the bay; whatever remains
+    along that axis (stopping short of a nose-in bay) is removed by driving
+    straight, which leaves the heading alone.  A lateral residual cannot be
+    removed without a turn and is reported.
+    """
+    start = pose()
+    if start is None:
+        return dict(attempted=False, note='no pose')
+    before, lateral_before = longitudinal_error(start, goal_xy)
+    if abs(before) <= tolerance:
+        return dict(attempted=True, moved_m=0.0, longitudinal_before_m=round(before, 3),
+                    longitudinal_after_m=round(before, 3), lateral_m=round(lateral_before, 3))
+    travel = max(-max_distance, min(max_distance, before))
+    direction = 1.0 if travel > 0 else -1.0
+    elapsed, settle = 0.0, 0.0
+    while settle < settle_s:          # centre the steering at a creep
+        publish(direction * 0.02, 0.0)
+        spin(period)
+        settle += period
+    limit = 3.0 * abs(travel) / speed + 2.0
+    while elapsed < limit:
+        now = pose()
+        if now is None:
+            break
+        remaining, _ = longitudinal_error(now, goal_xy)
+        if remaining * direction <= tolerance * 0.5:
+            break
+        publish(direction * speed, 0.0)
+        spin(period)
+        elapsed += period
+    publish(0.0, 0.0)
+    spin(0.5)
+    end = pose()
+    after, lateral = longitudinal_error(end, goal_xy)
+    return dict(attempted=True, moved_m=round(math.hypot(end[0] - start[0], end[1] - start[1]), 3),
+                longitudinal_before_m=round(before, 3), longitudinal_after_m=round(after, 3),
+                lateral_m=round(lateral, 3), heading_change_deg=round(math.degrees(wrap(end[2] - start[2])), 2))
