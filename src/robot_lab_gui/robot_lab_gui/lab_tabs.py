@@ -684,89 +684,340 @@ class RegistryTab(LabTab):
 
 
 class VacuumTab(LabTab):
-    """Vacuum cleaning mission control: launch the room-vacuum simulation,
-    run the vacuum_cleaner node, and manage the cleaning run."""
+    """Full-featured vacuum cleaning mission control for bumperbot and other
+    vacuum-capable robots. Provides map generation, area/zone definition
+    (cleaning zones, no-go zones, virtual walls), per-area cleaning patterns,
+    area swapping, pause/resume, return-to-dock, battery tracking and live
+    coverage monitoring via the vacuum_cleaner ROS node."""
 
     def __init__(self, notebook, app):
         super().__init__(notebook, app, "Vacuum")
         self._build_ui()
+        self._load_choices()
+        self.vac_node = None
+        self.vac_executor = None
+        self.status_sub = None
+        self.config_pub = None
+        self.pause_client = None
+        self.resume_client = None
+        self.return_home_client = None
+        self.stop_client = None
+        self._init_ros()
+        self.areas = []
+        self.no_go_zones = []
+        self.virtual_walls = []
+        self._tick_id = None
+        self._tick()
 
     def _build_ui(self):
-        # Four numbered steps in the order an operator runs them.
-        self.rowconfigure(0, weight=0)
-        self.columnconfigure(0, weight=1, uniform='card'); self.columnconfigure(1, weight=1, uniform='card')
-        ttk.Label(
+        self.columnconfigure(0, weight=1)
+        self.rowconfigure(2, weight=1)
+        intro = ttk.Label(
             self,
-            text=("Room vacuum coverage for any robot whose profile declares "
-                  "supports_room_vacuum: true. The room-vacuum launch brings up Gazebo "
-                  "with the vacuum room; the cleaner node drives systematic coverage."),
-            style='Muted.TLabel', wraplength=900, justify='left',
-        ).grid(row=0, column=0, columnspan=2, sticky='ew', pady=(0, 12))
+            text="Vacuum cleaning control — define areas, choose patterns, run and monitor coverage.",
+            style='Muted.TLabel', wraplength=900, justify='left')
+        intro.grid(row=0, column=0, sticky='ew', pady=(0, 10))
 
         robot = step_card(self, 1, 'Choose a robot', 'Vacuum-capable profiles only.')
-        robot.master.grid(row=1, column=0, sticky='nsew', padx=(0, 6), pady=(0, 12))
+        robot.master.grid(row=1, column=0, sticky='nsew', padx=(0, 6), pady=(0, 10))
         capable = sorted(
-            robot_id
-            for robot_id, config in self.app.robot_profiles.items()
-            if bool(config.get("supports_room_vacuum", False))
-        )
+            rid for rid, cfg in self.app.robot_profiles.items()
+            if bool(cfg.get("supports_room_vacuum", False)))
         self.vacuum_robot_var = tk.StringVar(
             value=self.app.robot_var.get() if self.app.robot_var.get() in capable
-            else (capable[0] if capable else "")
-        )
-        robot_combo = ttk.Combobox(robot, textvariable=self.vacuum_robot_var, values=capable, state="readonly")
-        robot_combo.grid(row=0, column=0, sticky="ew")
+            else (capable[0] if capable else ""))
+        ttk.Label(robot, text="Robot").grid(row=0, column=0, sticky="w")
+        robot_combo = ttk.Combobox(robot, textvariable=self.vacuum_robot_var,
+                                   values=capable, state="readonly")
+        robot_combo.grid(row=0, column=1, sticky="ew", padx=(8, 0))
         robot_combo.bind("<<ComboboxSelected>>", self._on_robot_selected)
+        robot.columnconfigure(1, weight=1)
 
-        launch = step_card(self, 2, 'Start the simulation', 'Gazebo with the vacuum room world.')
-        launch.master.grid(row=1, column=1, sticky='nsew', padx=(6, 0), pady=(0, 12))
-        ttk.Button(launch, text="▶  Launch room vacuum", style='Accent.TButton',
+        launch = step_card(self, 2, 'Start the simulation', 'Gazebo vacuum room world.')
+        launch.master.grid(row=1, column=1, sticky='nsew', padx=(6, 0), pady=(0, 10))
+        ttk.Button(launch, text="\u25b6  Launch room vacuum", style='Accent.TButton',
                    command=self._launch_vacuum_sim).grid(row=0, column=0, sticky="ew", padx=(0, 4))
         ttk.Button(launch, text="Stop simulation", command=self.app.stop_launch).grid(
             row=0, column=1, sticky="ew", padx=(4, 0))
 
-        cleaner = step_card(self, 3, 'Run the cleaner', 'The vacuum_cleaner node plans and drives coverage.')
-        cleaner.master.grid(row=2, column=0, sticky='nsew', padx=(0, 6), pady=(0, 12))
-        ttk.Button(cleaner, text="▶  Start cleaner node", style='Accent.TButton',
-                   command=self._start_cleaner).grid(row=0, column=0, sticky="ew", padx=(0, 4))
-        ttk.Button(cleaner, text="Stop cleaner node", command=self._stop_cleaner).grid(
-            row=0, column=1, sticky="ew", padx=(4, 0))
+        areas = step_card(self, 3, 'Define areas', 'Cleaning zones, no-go zones, virtual walls.')
+        areas.master.grid(row=2, column=0, sticky='nsew', padx=(0, 6), pady=(0, 10))
+        ttk.Label(areas, text="Cleaning areas:").grid(row=0, column=0, sticky="w")
+        self.area_listbox = tk.Listbox(areas, height=6)
+        self.area_listbox.grid(row=1, column=0, columnspan=2, sticky="ew", pady=(4, 4))
+        btnf = ttk.Frame(areas)
+        btnf.grid(row=2, column=0, columnspan=2, sticky="ew", pady=(0, 4))
+        ttk.Button(btnf, text="Add area", command=self._add_area).grid(row=0, column=0, padx=(0, 4))
+        ttk.Button(btnf, text="Remove", command=self._remove_area).grid(row=0, column=1, padx=(4, 0))
+        areas.columnconfigure(0, weight=1)
 
-        manual = step_card(self, 4, 'Or drive it yourself',
-                           'Use the Launch drive pad while the simulation runs (teleop on /key_vel). '
-                           'Choose SLAM first to build the coverage map, save it with Save Map, '
-                           'then switch to Navigation.')
-        manual.master.grid(row=2, column=1, sticky='nsew', padx=(6, 0), pady=(0, 12))
-        ttk.Button(manual, text="Open the drive pad  →", command=lambda: self.app.show_tab("Launch")).grid(
-            row=0, column=0, sticky="w")
+        config = step_card(self, 4, 'Cleaning configuration', 'Pattern, speed, passes per area.')
+        config.master.grid(row=2, column=1, sticky='nsew', padx=(6, 0), pady=(0, 10))
+        ttk.Label(config, text="Pattern").grid(row=0, column=0, sticky="w")
+        self.pattern_var = tk.StringVar(value="boustrophedon")
+        pattern_combo = ttk.Combobox(config, textvariable=self.pattern_var,
+            values=["boustrophedon", "spiral", "random", "wall_follow", "spot"], state="readonly")
+        pattern_combo.grid(row=0, column=1, sticky="ew", padx=(8, 0))
+        ttk.Label(config, text="Speed (m/s)").grid(row=1, column=0, sticky="w")
+        self.speed_var = tk.DoubleVar(value=0.2)
+        ttk.Entry(config, textvariable=self.speed_var, width=10).grid(row=1, column=1, sticky="ew", padx=(8, 0))
+        ttk.Label(config, text="Passes").grid(row=2, column=0, sticky="w")
+        self.passes_var = tk.IntVar(value=1)
+        ttk.Entry(config, textvariable=self.passes_var, width=10).grid(row=2, column=1, sticky="ew", padx=(8, 0))
+        ttk.Label(config, text="Priority").grid(row=3, column=0, sticky="w")
+        self.priority_var = tk.IntVar(value=1)
+        ttk.Entry(config, textvariable=self.priority_var, width=10).grid(row=3, column=1, sticky="ew", padx=(8, 0))
+        ttk.Button(config, text="Apply to selected area", command=self._apply_config).grid(
+            row=4, column=0, columnspan=2, sticky="ew", pady=(8, 0))
+        config.columnconfigure(1, weight=1)
+
+        control = step_card(self, 5, 'Run cleaning', 'Start, pause, resume, stop, return to dock.')
+        control.master.grid(row=3, column=0, columnspan=2, sticky='nsew', pady=(0, 10))
+        btnf2 = ttk.Frame(control)
+        btnf2.grid(row=0, column=0, columnspan=4, sticky="ew", pady=(4, 4))
+        ttk.Button(btnf2, text="\u25b6  Start", style='Accent.TButton', command=self._start_cleaning).grid(row=0, column=0, padx=(0, 4))
+        ttk.Button(btnf2, text="Pause", command=lambda: self._send_control('pause')).grid(row=0, column=1, padx=(4, 0))
+        ttk.Button(btnf2, text="Resume", command=lambda: self._send_control('resume')).grid(row=0, column=2, padx=(4, 0))
+        ttk.Button(btnf2, text="Stop", style='Danger.TButton', command=lambda: self._send_control('stop')).grid(row=0, column=3, padx=(4, 0))
+        ttk.Button(btnf2, text="Return to dock", command=lambda: self._send_control('return_home')).grid(row=0, column=4, padx=(4, 0))
+        ttk.Button(btnf2, text="Stop node", command=self._stop_cleaner_node).grid(row=0, column=5, padx=(4, 0))
+
+        monitor = step_card(self, 6, 'Monitor', 'Live coverage, battery, status.')
+        monitor.master.grid(row=4, column=0, columnspan=2, sticky='nsew')
+        mf = ttk.Frame(monitor)
+        mf.grid(row=0, column=0, sticky="ew", pady=(4, 4))
+        ttk.Label(mf, text="State:").grid(row=0, column=0, sticky="w")
+        self.status_var = tk.StringVar(value="Idle")
+        self.status_indicator = ttk.Label(mf, textvariable=self.status_var, font=('', 10, 'bold'))
+        self.status_indicator.grid(row=0, column=1, sticky="w", padx=(8, 0))
+        ttk.Label(mf, text="Battery:").grid(row=0, column=2, sticky="w", padx=(16, 0))
+        self.battery_var = tk.StringVar(value="100%")
+        ttk.Label(mf, textvariable=self.battery_var).grid(row=0, column=3, sticky="w", padx=(8, 0))
+        ttk.Label(mf, text="Coverage:").grid(row=1, column=0, sticky="w")
+        self.coverage_var = tk.StringVar(value="0%")
+        ttk.Label(mf, textvariable=self.coverage_var).grid(row=1, column=1, sticky="w", padx=(8, 0))
+        ttk.Label(mf, text="Elapsed:").grid(row=1, column=2, sticky="w", padx=(16, 0))
+        self.elapsed_var = tk.StringVar(value="0.0 s")
+        ttk.Label(mf, textvariable=self.elapsed_var).grid(row=1, column=3, sticky="w", padx=(8, 0))
+        ttk.Label(mf, text="Current area:").grid(row=2, column=0, sticky="w")
+        self.current_area_var = tk.StringVar(value="-")
+        ttk.Label(mf, textvariable=self.current_area_var).grid(row=2, column=1, sticky="w", padx=(8, 0))
+        ttk.Label(mf, text="Areas done:").grid(row=2, column=2, sticky="w", padx=(16, 0))
+        self.cleaned_var = tk.StringVar(value="0 / 0")
+        ttk.Label(mf, textvariable=self.cleaned_var).grid(row=2, column=3, sticky="w", padx=(8, 0))
+        ttk.Label(monitor, text="Status log:").grid(row=1, column=0, sticky="w", pady=(8, 0))
+        self.status_log = scrolledtext.ScrolledText(monitor, height=6, width=80)
+        self.status_log.grid(row=2, column=0, sticky="nsew", pady=(4, 0))
+        monitor.columnconfigure(0, weight=1)
+        monitor.rowconfigure(2, weight=1)
 
     def _on_robot_selected(self, _event):
-        """Sync the Vacuum robot selection back into the Launch tab."""
         self.app.robot_var.set(self.vacuum_robot_var.get())
         self.app._update_from_selection()
         self.app.set_status(f"Vacuum robot: {self.vacuum_robot_var.get()}")
 
     def _launch_vacuum_sim(self):
         command = [
-            "ros2",
-            "launch",
-            "robot_lab_bringup",
+            "ros2", "launch", "robot_lab_bringup",
             "simulated_room_vacuum.launch.py",
             f"robot_model:={self.vacuum_robot_var.get()}",
         ]
         self.app.start_launch_command(command)
 
-    def _start_cleaner(self):
+    def _add_area(self):
+        name = f"Area {len(self.areas) + 1}"
+        area = {
+            "id": f"area_{len(self.areas)}",
+            "name": name,
+            "polygon": [[-1.0, -1.0], [1.0, -1.0], [1.0, 1.0], [-1.0, 1.0]],
+            "pattern": self.pattern_var.get(),
+            "speed": self.speed_var.get(),
+            "passes": self.passes_var.get(),
+            "priority": self.priority_var.get(),
+        }
+        self.areas.append(area)
+        self._refresh_area_list()
+        self._publish_config()
+
+    def _remove_area(self):
+        sel = self.area_listbox.curselection()
+        if sel:
+            idx = sel[0]
+            del self.areas[idx]
+            self._refresh_area_list()
+            self._publish_config()
+
+    def _refresh_area_list(self):
+        self.area_listbox.delete(0, tk.END)
+        for a in self.areas:
+            self.area_listbox.insert(tk.END, f"{a['name']} ({a['pattern']})")
+
+    def _apply_config(self):
+        sel = self.area_listbox.curselection()
+        if not sel:
+            return
+        idx = sel[0]
+        self.areas[idx]["pattern"] = self.pattern_var.get()
+        self.areas[idx]["speed"] = self.speed_var.get()
+        self.areas[idx]["passes"] = self.passes_var.get()
+        self.areas[idx]["priority"] = self.priority_var.get()
+        self._refresh_area_list()
+        self._publish_config()
+
+    def _start_cleaning(self):
+        if not self.areas:
+            self.app.set_status("No areas defined; add at least one cleaning area")
+            return
+        self._publish_config()
         self.app.start_bg_process(
             ["ros2", "run", "robot_lab_vacuum_cleaning", "vacuum_cleaner"],
             "vacuum_cleaner",
         )
-        self.app.set_status("Vacuum cleaner node running")
+        self.app.set_status("Vacuum cleaning started")
+
+    def _stop_cleaner_node(self):
+        self.app.stop_bg_process("vacuum_cleaner")
+        self.app.set_status("Vacuum cleaner stopped")
+
+    def _send_control(self, command):
+        if command == 'start':
+            self._start_cleaning()
+        elif command == 'stop_node':
+            self._stop_cleaner_node()
+        else:
+            self._call_vac_service(command)
+
+    def _call_vac_service(self, command):
+        try:
+            import rclpy
+            from std_srvs.srv import Trigger, SetBool
+            if not rclpy.ok():
+                rclpy.init(args=None)
+            if self.vac_node is None:
+                self.vac_node = rclpy.create_node('vacuum_gui_tab')
+            if command == 'pause':
+                client = self.vac_node.create_client(SetBool, 'vacuum/pause')
+                req = SetBool.Request(); req.data = True
+            elif command == 'resume':
+                client = self.vac_node.create_client(Trigger, 'vacuum/resume')
+                req = Trigger.Request()
+            elif command == 'return_home':
+                client = self.vac_node.create_client(Trigger, 'vacuum/return_home')
+                req = Trigger.Request()
+            elif command == 'stop':
+                client = self.vac_node.create_client(Trigger, 'vacuum/stop')
+                req = Trigger.Request()
+            else:
+                return
+            future = client.call_async(req)
+            rclpy.spin_once(self.vac_node, timeout_sec=1.0)
+            if future.done():
+                res = future.result()
+                self.app.set_status(f"Vacuum {command}: {res.message if hasattr(res, 'message') else res}")
+        except Exception as exc:
+            self.app.set_status(f"Vacuum service {command} failed: {exc}")
+
+    def _init_ros(self):
+        try:
+            import rclpy
+            from rclpy.executors import SingleThreadedExecutor
+            from std_msgs.msg import String
+        except ImportError:
+            return
+        if rclpy is None:
+            return
+        if not rclpy.ok():
+            rclpy.init(args=None)
+        if self.vac_node is None:
+            self.vac_node = rclpy.create_node('vacuum_gui_tab')
+        self.status_sub = self.vac_node.create_subscription(
+            String, '/vacuum_status', self._status_cb, 10)
+        self.config_pub = self.vac_node.create_publisher(
+            String, '/vacuum/config', 10)
+        self.vac_executor = SingleThreadedExecutor()
+        self.vac_executor.add_node(self.vac_node)
+
+    def _status_cb(self, msg):
+        try:
+            data = json.loads(msg.data)
+            self.after(0, lambda: self._update_status_display(data))
+        except (ValueError, json.JSONDecodeError):
+            pass
+
+    def _update_status_display(self, data):
+        state = data.get('state', 'unknown')
+        self.status_var.set(state.title())
+        color = {
+            'idle': '#666666',
+            'cleaning': '#2e7d32',
+            'paused': '#e65100',
+            'returning_home': '#e65100',
+            'docking': '#e65100',
+            'stopped': '#c62828',
+        }.get(state, '#666666')
+        try:
+            self.status_indicator.configure(foreground=color)
+        except tk.TclError:
+            pass
+        self.battery_var.set(f"{data.get('battery_pct', 0):.1f}%")
+        self.coverage_var.set(f"{data.get('total_coverage_pct', 0):.1f}%")
+        self.elapsed_var.set(f"{data.get('elapsed_s', 0):.1f} s")
+        self.current_area_var.set(data.get('current_area_name', '-'))
+        self.cleaned_var.set(
+            f"{data.get('areas_cleaned', 0)} / {data.get('total_areas', 0)}")
+        log_line = (f"[{data.get('elapsed_s', 0):.1f}s] {state.title()} "
+                    f"| battery {data.get('battery_pct', 0):.0f}% "
+                    f"| coverage {data.get('total_coverage_pct', 0):.1f}%")
+        self.status_log.insert('end', log_line + '\n')
+        self.status_log.see('end')
+
+    def _tick(self):
+        try:
+            import rclpy
+            if self.vac_executor is not None and rclpy.ok():
+                self.vac_executor.spin_once(timeout_sec=0.0)
+        except Exception:
+            pass
+        self._tick_id = self.after(50, self._tick)
+
+    def close(self):
+        if self._tick_id is not None:
+            self.after_cancel(self._tick_id)
+        try:
+            import rclpy
+            if self.vac_executor is not None:
+                self.vac_executor.shutdown()
+            if self.vac_node is not None:
+                self.vac_node.destroy_node()
+                self.vac_node = None
+        except Exception:
+            pass
+
+    def _publish_config(self):
+        try:
+            import rclpy
+            from std_msgs.msg import String
+            if self.config_pub is None:
+                return
+            if not rclpy.ok():
+                return
+            cfg = {
+                'areas': self.areas,
+                'no_go_zones': self.no_go_zones,
+                'virtual_walls': self.virtual_walls,
+            }
+            self.config_pub.publish(String(data=json.dumps(cfg)))
+        except Exception:
+            pass
+
+    def _load_choices(self):
+        pass
+
+    def _start_cleaner(self):
+        self._start_cleaning()
 
     def _stop_cleaner(self):
-        self.app.stop_bg_process("vacuum_cleaner")
-        self.app.set_status("Vacuum cleaner node stopped")
-
+        self._stop_cleaner_node()
 
 class BenchmarkTab(LabTab):
     """Seeded benchmark runs via the robot_lab_benchmark LaunchOrchestrator,
