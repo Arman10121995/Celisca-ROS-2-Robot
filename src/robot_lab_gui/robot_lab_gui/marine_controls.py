@@ -38,7 +38,7 @@ class MarineControls(ttk.Frame):
         ttk.Label(self,text='Marine · physical propulsion',font=('',11,'bold')).grid(row=0,column=0,sticky='w')
         ttk.Label(self,textvariable=self.status,wraplength=300).grid(row=1,column=0,sticky='ew',pady=5)
         connect=ttk.Frame(self);connect.grid(row=2,column=0,sticky='ew')
-        ttk.Button(connect,text='Connect',command=self.connect).pack(side='left',expand=True,fill='x')
+        ttk.Button(connect,text='Connect',command=self.connect,style='Accent.TButton').pack(side='left',expand=True,fill='x')
         self.arm_label=tk.StringVar(value='Arm depth/heading hold')
         ttk.Button(connect,textvariable=self.arm_label,command=lambda:self.operation('arm')).pack(side='left',expand=True,fill='x')
         pad=ttk.Frame(self);pad.grid(row=3,column=0,sticky='ew',pady=5)
@@ -51,7 +51,7 @@ class MarineControls(ttk.Frame):
             self.buttons[direction]=button
             for event in ('<ButtonRelease-1>','<Leave>','<Enter>','<FocusOut>'):
                 button.bind(event,lambda _e:self.after_idle(self.sync),add='+')
-        ttk.Button(pad,text='STOP',command=self.stop).grid(row=2,column=1,sticky='ew',padx=2)
+        ttk.Button(pad,text='STOP',command=self.stop,style='Danger.TButton').grid(row=2,column=1,sticky='ew',padx=2)
         for col in range(3):pad.columnconfigure(col,weight=1)
         ttk.Checkbutton(self,text='WASD + joystick · Space stops',variable=self.keyboard,command=self.clear).grid(row=4,column=0,sticky='w')
         increments=ttk.Frame(self);increments.grid(row=5,column=0,sticky='ew')
@@ -243,7 +243,7 @@ class MarineMissions(ttk.Frame):
         self.auv_radius=tk.DoubleVar(value=12.)
         self.feedback=tk.StringVar(value='Sensor odometry starts with the marine launch. Connect Marine to see estimates.')
         ttk.Label(self,text='Estimated-pose 3D missions',font=('',11,'bold')).grid(row=0,column=0,sticky='w')
-        ttk.Button(self,text='Connect Marine telemetry',command=marine.connect).grid(row=1,column=0,sticky='ew',pady=5)
+        ttk.Button(self,text='Connect Marine telemetry',command=marine.connect,style='Accent.TButton').grid(row=1,column=0,sticky='ew',pady=5)
         coords=ttk.LabelFrame(self,text='World target (metres; underwater Z is negative)',padding=5)
         coords.grid(row=2,column=0,sticky='ew')
         for col,(key,var) in enumerate(self.goal.items()):

@@ -20,7 +20,7 @@ class TrackedControls(ttk.Frame):
         self.columnconfigure(0,weight=1)
         ttk.Label(self,text='Tracked vehicle · four flippers',font=('',11,'bold')).grid(row=0,column=0,columnspan=2,sticky='w')
         ttk.Label(self,textvariable=self.status,wraplength=310).grid(row=1,column=0,columnspan=2,sticky='ew',pady=5)
-        ttk.Button(self,text='Connect · no target change',command=self.connect).grid(row=2,column=0,columnspan=2,sticky='ew')
+        ttk.Button(self,text='Connect · no target change',command=self.connect,style='Accent.TButton').grid(row=2,column=0,columnspan=2,sticky='ew')
         self.values=[tk.DoubleVar(value=0.) for _ in range(4)]
         for i,(label,value) in enumerate(zip(('Front left','Rear left','Front right','Rear right'),self.values)):
             ttk.Label(self,text=label+' °').grid(row=3+i,column=0,sticky='w')
