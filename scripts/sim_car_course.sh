@@ -13,7 +13,8 @@ source /opt/ros/humble/setup.bash
 source "$HERE/../install/setup.bash"
 COURSE=$(ros2 pkg prefix robot_lab_maps)/share/robot_lab_maps/maps/car_course
 ros2 launch robot_lab_bringup simulated_robot.launch.py mode:=nav \
-  simulator:="$SIM" robot_model:="$ROBOT" map_name:=car_course \
+  simulator:="$SIM" robot_model:="$ROBOT" map_name:=nav_empty world_name:=car_course \
+  world_path:="$COURSE/worlds/car_course.world" map_yaml:="$COURSE/maps/map.yaml" \
   gui:=false start_rviz:=false "$@" > "$OUT.launch.log" 2>&1 &
 LAUNCH=$!
 cleanup() {

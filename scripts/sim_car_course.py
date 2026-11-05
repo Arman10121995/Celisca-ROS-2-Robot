@@ -178,22 +178,6 @@ def main(argv=None):
         message.linear.x, message.angular.z = float(vx), float(wz)
         command.publish(message)
 
-    def world_to_map(x_world, y_world):
-        """Transform world coordinates to map coordinates using the map origin from map.yaml.
-        
-        The course.json contains goals in world coordinates (matching the SDF world file).
-        Nav2 expects goals in map coordinates. We need to transform them.
-        """
-        # Get map origin from the map metadata
-        # The map origin is stored in node.map.info.origin.position
-        if node.map is None:
-            return x_world, y_world
-        map_origin_x = node.map.info.origin.position.x
-        map_origin_y = node.map.info.origin.position.y
-        # world_coord = map_coord + map_origin
-        # So: map_coord = world_coord - map_origin
-        return x_world - map_origin_x, y_world - map_origin_y
-
     def align(step, goal):
         from robot_lab_utils.car_alignment import HeadingShuffle
         step['nav2_arrival'] = {k: step.get(k) for k in ('final_error_truth_m', 'final_yaw_error_truth_deg',
@@ -208,10 +192,7 @@ def main(argv=None):
         watch.update(clearance=math.inf, obstacle=None, curvature=0.0)
         steps = []
         for goal in goals:
-            # Transform goal from world coordinates (course.json) to map coordinates (Nav2)
-            goal_map_x, goal_map_y = world_to_map(goal['x'], goal['y'])
-            goal_map = dict(goal, x=goal_map_x, y=goal_map_y)
-            step = run_goal(node, goal_map, goal['yaw'], args.timeout, args.base)
+            step = run_goal(node, goal, goal['yaw'], args.timeout, args.base)
             if (align_heading and step.get('outcome') == 'succeeded'
                     and step.get('final_error_truth_m', math.inf) <= position_error):
                 align(step, goal)
@@ -219,7 +200,7 @@ def main(argv=None):
                       and step.get('final_error_truth_m', math.inf) <= position_error)
             if yaw_error_deg > 0:
                 passed = passed and abs(step.get('final_yaw_error_truth_deg', math.inf)) <= yaw_error_deg
-            step['goal'] = goal_map  # Store the transformed goal
+            step['goal'] = goal
             step['passed'] = bool(passed)
             steps.append(step)
             if not passed:
