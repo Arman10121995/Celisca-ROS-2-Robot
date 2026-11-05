@@ -123,3 +123,34 @@ class HelperTests(unittest.TestCase):
 
 if __name__ == '__main__':
     unittest.main()
+
+
+
+def test_board_centres_measure_a_shifted_principal_point():
+    """Boards rendered with the principal point 3 px right and 5 px low."""
+    import pytest
+    pytest.importorskip('cv2')
+    from robot_lab_algorithms.camera_calibration import (
+        board_points, grid_centre_pixel, project_point, rpy_matrix)
+    pattern, square = (8, 6), 0.04
+    published = np.array([[221.77, 0, 159.5], [0, 221.77, 119.5], [0, 0, 1.0]])
+    true = published.copy()
+    true[0, 2] += 3.0
+    true[1, 2] += 5.0
+    rng = np.random.default_rng(4)
+    centre = np.array([3.5 * square, 2.5 * square, 0.0])
+    offsets = []
+    for flip in (False, True) * 6:
+        tilt = rpy_matrix(*rng.uniform(-0.45, 0.45, 2), rng.uniform(-0.3, 0.3))
+        rotation = tilt @ np.diag([1.0, -1.0, -1.0])
+        position = np.array([rng.uniform(-0.1, 0.1), rng.uniform(-0.08, 0.08), rng.uniform(0.5, 0.8)])
+        points = (board_points(pattern, square) - centre) @ rotation.T + position
+        pixels = points @ true.T
+        corners = pixels[:, :2] / pixels[:, 2:]
+        if flip:
+            corners = corners[::-1]     # the detector may order corners from the other end
+        measured = grid_centre_pixel(corners, pattern, square)
+        predicted = project_point(published, np.eye(3), np.zeros(3), position)
+        offsets.append(measured - predicted)
+    np.testing.assert_allclose(np.mean(offsets, axis=0), [3.0, 5.0], atol=1e-3)
+    assert project_point(published, np.eye(3), np.zeros(3), [0, 0, -1.0]) is None

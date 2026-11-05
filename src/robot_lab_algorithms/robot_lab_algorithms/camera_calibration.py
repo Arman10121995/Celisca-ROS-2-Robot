@@ -61,6 +61,39 @@ def find_board(gray, pattern):
     return None
 
 
+def rpy_matrix(roll, pitch, yaw):
+    """SDF/URDF fixed-axis roll-pitch-yaw: Rz(yaw) Ry(pitch) Rx(roll)."""
+    cr, sr, cp, sp, cy, sy = (np.cos(roll), np.sin(roll), np.cos(pitch), np.sin(pitch),
+                              np.cos(yaw), np.sin(yaw))
+    return np.array([[cy * cp, cy * sp * sr - sy * cr, cy * sp * cr + sy * sr],
+                     [sy * cp, sy * sp * sr + cy * cr, sy * sp * cr - cy * sr],
+                     [-sp, cp * sr, cp * cr]])
+
+
+def grid_centre_pixel(corners, pattern, square):
+    """Image of the inner-corner grid centre, through the board's homography.
+
+    The centre is symmetric, so the detector's corner order (which may start
+    from either end) does not matter.
+    """
+    import cv2
+    columns, rows = pattern
+    homography, _ = cv2.findHomography(board_points(pattern, square)[:, :2], np.asarray(corners, np.float32))
+    if homography is None:
+        return None
+    point = homography @ np.array([(columns - 1) * square / 2.0, (rows - 1) * square / 2.0, 1.0])
+    return point[:2] / point[2]
+
+
+def project_point(camera_matrix, world_to_camera_rotation, camera_position, point):
+    """Pixel (u, v) of a world point for a camera at *camera_position* (optical frame), or None behind it."""
+    local = np.asarray(world_to_camera_rotation, float) @ (np.asarray(point, float) - np.asarray(camera_position, float))
+    if local[2] <= 1e-6:
+        return None
+    pixel = np.asarray(camera_matrix, float) @ local
+    return pixel[:2] / pixel[2]
+
+
 def view_signature(corners, pattern, image_size):
     """(x, y, size, skew) in [0, 1] of a detected board, as cameracalibrator.py
     measures coverage: centre position, apparent size and tilt."""
