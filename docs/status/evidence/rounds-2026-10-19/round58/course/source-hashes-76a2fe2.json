@@ -1,0 +1,14 @@
+{
+ "revision": "76a2fe2",
+ "derived": "sha256 of each file as git stores it at this revision, computed 2026-11-05 after the run; uncommitted working-tree changes at run time are not captured",
+ "files": {
+  "scripts/sim_car_course.py": "37c4d2833d3fbde42ed67360c9aa94cfb8724e4edcbf369fa41b30f5f7a80a64",
+  "scripts/sim_car_course.sh": "515a7d50e9e9030eca5fd1bbddcd0ace2a3ef16fc8b4cc6273678dc33c2cb9e9",
+  "src/robot_lab_bringup/launch/simulated_robot.launch.py": "3032a3b130c149aa45852947ea1351c698fac95e1629bdc31782f4a407d4246d",
+  "src/robot_lab_mujoco/python/robot_lab_mujoco/mujoco_spawner.py": "3186f3da9d6fe08180abec938da3d1cf1420f8f4ebb317bdfc9ba650b5ed898e",
+  "src/robot_lab_navigation/config/robots/rear_steer_car.yaml": "7f2601b2bb10dfd5ae48e805a045e117b2cd8d6c8fdd8913b0c1f03932951084",
+  "src/robot_lab_navigation/launch/navigation.launch.py": "a1972460e8c636528397c79cea22d2133e324e0a46e89de48339be74d5565d04",
+  "src/robot_lab_robots/config/robots.yaml": "0f730203746601a8e268d8a55533485f12aeda2f33d64d78410e25ba5c3cb8da",
+  "src/robot_lab_utils/robot_lab_utils/car_alignment.py": "08e18158866165cee1cb756a6bfac58f4c321d742a293e7f0c9c4569ce9a282b"
+ }
+}

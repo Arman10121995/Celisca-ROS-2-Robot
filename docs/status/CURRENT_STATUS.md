@@ -1,5 +1,15 @@
 # Current Robot Lab status
 
+November 5 (recorded from the October 29 rounds):
+- **Car course** (R5.5, round 58): the parking heading shuffle passes the
+  full course in 8 of 12 cells, up from 3. All three Gazebo cars now abort
+  in the slalom.
+- **Go2 training** (R12): `go2_walk_r2` passes the drive screen in MuJoCo,
+  Gazebo and Isaac. Navigation with a trained policy passes 1 of 3 seeds
+  in MuJoCo and 0 of 3 in Isaac.
+- **Support matrix:** 647 reports, 299 cells, 289 passed and 9 failed
+  ([matrix](evidence/support-matrix-2026-11-05/README.md)).
+
 **Session stopped at the user's request on November 3.** Work is committed; the owned fleet trial was stopped and cleaned up. Trial 12's interruption is preserved separately from mission failures and successful cases. Resume with a fresh full floor/parking run after the user asks to continue; full platform acceptance remains partial.
 
 November 3: [curved AUV routes, low-relief source gait/backend adapters and concurrent fleet missions](curves-terrain-concurrency-2026-11-03.md) are implemented. Actual scoped tank-curve, octopod terrain and overlapping settled Nav2 results are in the [receipt](evidence/curves-terrain-concurrency-2026-11-03/README.md). Broader per-model/backend and multi-member floor/parking acceptance remains partial. The native GUI controls, resolver profiles, command autofill and interactive architecture/tutorial links reflect these workflows.

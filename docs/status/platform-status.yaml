@@ -131,6 +131,9 @@ current_verification:
     (28.1 m, RMSE 1.3 cm, map precision/recall 0.97/0.79; 1.49 m and 0.12/0.16 before); rear-steer car course after
     84422df passes its slalom in all four backends and the full course in MuJoCo (parking 0.091 m, -3.4 deg); parking
     heading fails in Gazebo/PyBullet/Isaac (11.6-14.3 deg). docs/status/evidence/rounds-2026-10-19/README.md.'
+  matrix_2026_11_05: '647 indexed reports, 299 measured cells: 289 passed and 9 failed screens; adds round 58
+    (car course with the parking shuffle: 8 of 12 pass; Go2 trained-policy navigation: MuJoCo 1/3, Isaac 0/3)
+    and the go2_walk_r2 drive cells. docs/status/evidence/support-matrix-2026-11-05/README.md.'
   matrix_2026_10_29: '626 indexed reports, 294 measured cells: 282 passed and 11 failed screens; adds round 57 and
     the go2_walk_r1 trained_policy_drive cells. docs/status/evidence/support-matrix-2026-10-29/README.md.'
   aerial_mapping_october_12: 'R5.10 aerial RGB-D/RTAB-Map path built and exercised
@@ -1882,19 +1885,18 @@ tasks:
       with export, resume, evaluation through LeggedPolicy, Use in Launch (legged_policy:=<directory>,
       trained robot only); optional domain randomisation, rough terrain and observation
       noise.'
-    implementation_validation: 'go2_walk_r1 (2000 iterations, 24.58M steps, 73 min) measured 2026-10-19 (corrected
-      2026-10-29 from the reports): training-environment tracking within 0.03 m/s and 0.03 rad/s; normal-launch
-      drive screens on nav_empty pass in MuJoCo (straight 0.378 of 0.4 m/s, spin 0.981 of 1.0 rad/s, strafe
-      0.285), Gazebo (0.332, 0.833, 0.224) and Isaac (0.221, 0.641, 0.131), indexed as trained_policy_drive.
-      Open: the Isaac speed gap, repeats, navigation with a trained policy, randomised/terrain runs, other robots.'
+    implementation_validation: 'go2_walk_r1 (2000 iterations, 24.58M steps, 73 min) measured 2026-10-19: drive
+      screens pass in MuJoCo (straight 0.378 of 0.4 m/s, spin 0.981 of 1.0 rad/s, strafe 0.285), Gazebo (0.332,
+      0.833, 0.224) and Isaac (0.221, 0.641, 0.131); 20 s held turn in Isaac 0.55-0.57 rad/s and MuJoCo 0.78.
+      go2_walk_r2 (randomised, noisy observations, 2026-10-29) passes in all three; Isaac 0.261 m/s and 0.846
+      rad/s, strafe lost outside MuJoCo. Navigation with go2_walk_r1 and spin_in_place on nav_obstacle: MuJoCo
+      1/3, Isaac 0/3 (round 58). Go2W/G1 contracts and an actuation delay are implemented, not run.'
     owner: claude
     scope_paths:
     - src/robot_lab_adapter/
     - src/robot_lab_gui/
     - docs/
     state: partial
-    active_scope: '2026-10-29 claude (continuing at the user''s request): 20 s held turns with go2_walk_r1 in Isaac
-      and MuJoCo, then go2_walk_r2 with randomisation and observation noise and its drive checks.'
     title: Legged policy training (GUI Training page)
     qualification_review: '2026-10-27 documentation review: retain the implemented code, tests and named mission
       certificates. Full declared roadmap acceptance is still open; test counts, metadata and scene loads

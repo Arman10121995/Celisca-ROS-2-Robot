@@ -265,3 +265,47 @@ MuJoCo now matches PyBullet (1.9 cm, 0.97/0.79) and Isaac (1.3 cm,
 - Over the 12 car-course cells the full course passes in 3: Gazebo
   Ackermann and anti-Ackermann, and MuJoCo rear-steer. Parking heading is
   still the gap, as for the other cars.
+
+## Round 58 (2026-10-29, `76a2fe2`)
+
+Reports are in [round58/](round58/) and indexed by
+[round58-batch.yaml](round58-batch.yaml).
+
+**Car course with the parking shuffle** (`CHECK_ARGS=--align-heading`,
+[car_alignment.py](../../../../src/robot_lab_utils/robot_lab_utils/car_alignment.py)).
+After Nav2 reports arrival in the bay, the car reverses with the wheels
+turned one way and drives forward with them turned the other, closed-loop
+on its estimated pose.
+
+| Backend | Ackermann | Rear-steer | Anti-Ackermann |
+|---|---|---|---|
+| MuJoCo | **passes** (0.127 m, −5.2°; Nav2 left −19.2°) | **passes** (0.111 m, −4.0°; −13.9°) | **passes** (0.134 m, −7.4°; −16.7°) |
+| Isaac | **passes** (0.116 m, −4.5°; −19.0°) | **passes** (0.122 m, −4.0°; −20.6°) | **passes** (0.095 m, −1.4°; +14.3°) |
+| PyBullet | **passes** (0.080 m, −5.1°; −11.8°) | park 0.165 m, −6.3° | park −12.3° after 8 pairs (−22.8°) |
+| Gazebo | gate 4 aborted | gate 1 aborted | gate 4 aborted |
+
+- **Full course:** passes in 8 of 12 cells, up from 3 of 12. The shuffle
+  used 1-8 pairs and moved the car 0.004-0.052 m.
+- **Estimate vs truth:** the shuffle ends within 0.2-2.6 degrees of the bay
+  heading on the localisation estimate, and truth differs by 2-5 degrees.
+- **Gazebo:** all three cars aborted in the slalom ("RegulatedPurePursuit
+  detected collision ahead") before parking. Round 51 passed Ackermann and
+  anti-Ackermann there, so this is a repeat that disagrees with that pass.
+  It needs repeats and a look at the Gazebo costmap near the cones.
+
+**Go2 navigation with the trained policy** (`legged_policy:=go2_walk_r1`,
+`spin_in_place:=true`, `nav_obstacle` seeds 1-3):
+
+| Backend | Seed 1 | Seed 2 | Seed 3 |
+|---|---|---|---|
+| MuJoCo | cancel step not reached; goal A aborted 3.39 m short; goal B 0.01 m | both goals reached (0.12 m, 0.05 m); cancel step not reached | **passes** (0.09 m, 0.03 m) |
+| Isaac | goals aborted 0.40 and 0.54 m short | 0.48 and 0.50 m short | 0.50 and 0.56 m short |
+
+- **MuJoCo:** each goal takes about 20 s. The seed 2 failure is the
+  cancel step: the robot had not moved before the cancel point, so the
+  cancel was never sent.
+- **Isaac:** the robot walks to about half a metre of each goal, then Nav2
+  aborts after 5-8 minutes. The final approach at low commanded speed is
+  the likely gap, given 0.22 of 0.4 m/s forward in the drive check. The
+  rl_sar `go2_himloco` policy with forward-arc planning still passes these
+  seeds in Isaac (round 53).

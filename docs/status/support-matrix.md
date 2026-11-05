@@ -11,12 +11,14 @@ owns task states and the [roadmap](../../ROADMAP.md) defines acceptance.
 
 ## Read support by exact composition
 
-The [generated measured matrix](evidence/support-matrix-2026-10-29/support-matrix-current.md)
-and [JSON report](evidence/support-matrix-2026-10-29/support-matrix-current.json)
-validate **626 indexed reports / 294 distinct measured cells**: 282 passed
-screens and 11 failed screens
-([what changed](evidence/support-matrix-2026-10-29/README.md)). October 29
-adds:
+The [generated measured matrix](evidence/support-matrix-2026-11-05/support-matrix-current.md)
+and [JSON report](evidence/support-matrix-2026-11-05/support-matrix-current.json)
+validate **647 indexed reports / 299 distinct measured cells**: 289 passed
+screens and 9 failed screens
+([what changed](evidence/support-matrix-2026-11-05/README.md)). November 5
+adds round 58 (car course with the parking shuffle: 8 of 12 pass; Go2
+navigation with the trained policy: MuJoCo 1/3, Isaac 0/3) and the
+`go2_walk_r2` drive cells. October 29 added:
 
 - round 57: the rear-steer car course in four backends; the full course
   now passes in MuJoCo, and the slalom in all four;

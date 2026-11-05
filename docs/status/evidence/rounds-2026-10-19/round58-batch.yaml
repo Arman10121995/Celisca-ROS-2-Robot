@@ -1,0 +1,54 @@
+# Round 58 (2026-10-29), indexed by scripts/r9_3_index_missions.py: the car
+# course with the parking heading shuffle (--align-heading) in all twelve
+# cells, and Go2 nav_obstacle with the trained go2_walk_r1 policy and
+# spin_in_place:=true.  The Go2 records take their own task_type so they do
+# not replace the rl_sar go2_himloco forward-arc navigation cells.
+date: '2026-11-05'
+scope: "Exact hashed named simulation screens through October 29; unlisted cells remain untested."
+source_files:
+  - src/robot_lab_bringup/launch/simulated_robot.launch.py
+  - src/robot_lab_robots/config/robots.yaml
+groups:
+  - reports:
+      - docs/status/evidence/rounds-2026-10-19/round58/course/*_car_course.json
+    report_kind: course_screen
+    identity: {task_type: car_course}
+    date: '2026-10-29'
+    revision: "76a2fe2 (round 58, 11:47-12:37; parking shuffle eb094b1)"
+    hash_revision: 76a2fe2
+    source_files:
+      - scripts/sim_car_course.py
+      - scripts/sim_car_course.sh
+      - src/robot_lab_utils/robot_lab_utils/car_alignment.py
+      - src/robot_lab_navigation/config/robots/rear_steer_car.yaml
+      - src/robot_lab_navigation/launch/navigation.launch.py
+      - src/robot_lab_mujoco/python/robot_lab_mujoco/mujoco_spawner.py
+    scope: >-
+      Nav2 drives the car through a four-gate cone slalom and nose-in into a
+      0.8 m parking bay; after Nav2 arrives in the bay a closed-loop
+      reverse/forward arc shuffle corrects the heading on the estimated pose.
+      Gates within 0.30 m of truth, the bay within 0.15 m and 10 degrees,
+      the footprint clear of every cone and box.
+    limitations:
+      - One run per cell; flat floor, scripted course, no traffic
+      - The shuffle closes on the localisation estimate; truth differs by 2-5 degrees
+  - reports:
+      - docs/status/evidence/rounds-2026-10-19/round58/go2/*_unitree_go2_seed*_nav_obstacle.json
+    identity: {task_type: trained_policy_navigation_go2_walk_r1}
+    date: '2026-10-29'
+    revision: "76a2fe2 (round 58, 12:37-13:27; policy go2_walk_r1 trained at eedec40)"
+    hash_revision: 76a2fe2
+    source_files:
+      - scripts/sim_nav_mission.py
+      - src/robot_lab_navigation/config/robots/unitree_go2.yaml
+      - src/robot_lab_adapter/robot_lab_adapter/legged_policy.py
+      - src/robot_lab_adapter/robot_lab_adapter/legged_policy_controller.py
+      - src/robot_lab_isaac/python/robot_lab_isaac/isaac_spawner.py
+      - src/robot_lab_isaac/python/robot_lab_isaac/isaac_runtime.py
+    scope: >-
+      Go2 with the trained go2_walk_r1 policy (legged_policy:=) and Nav2
+      allowed to turn in place (spin_in_place:=true), nav_obstacle seeds 1-3:
+      two goals judged from simulator truth, then a cancel and stop.
+    limitations:
+      - One run per seed; flat floor, no terrain
+      - The policy trained only in MuJoCo on a flat floor without randomisation

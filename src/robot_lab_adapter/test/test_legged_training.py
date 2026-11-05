@@ -296,7 +296,7 @@ def test_go2w_wheels_take_velocity_targets_and_the_wheels_are_its_feet():
     targets = env._targets()
     c = env.contract
     np.testing.assert_allclose(targets[:, 12:], c.action_scale[12:] * np.ones((2, 4)))
-    np.testing.assert_allclose(targets[:, :12], c.default_dof_pos[:12] + c.action_scale[:12])
+    np.testing.assert_allclose(targets[:, :12], np.tile(c.default_dof_pos[:12], (2, 1)))
     # Spinning wheels at rest: torque is kd * (target velocity - velocity) only.
     torque = env._torques(np.tile(c.default_dof_pos, (2, 1)) + 5.0 * env.wheels, np.zeros((2, 16)))
     np.testing.assert_allclose(torque[:, 12:], np.clip(c.rl_kd[12:] * targets[:, 12:], -c.torque_limits[12:],

@@ -988,6 +988,15 @@ Dependencies: `R5.1`, `R3.3`.
   profiles actuate distinct steering geometries on this backend; repeated and
   cross-backend angle/heading checks remain open. Gazebo steering angles match
   these geometries, but are likewise single-run.
+- 2026-10-29 round 58: after Nav2 arrives in the bay, a reverse/forward
+  arc shuffle (`car_alignment.py`, `sim_car_course.py --align-heading`)
+  corrects the parking heading. The full car course passes in 8 of 12
+  cells (was 3): all three cars in MuJoCo and Isaac, Ackermann in PyBullet.
+  Remaining failures:
+  - PyBullet anti-Ackermann parks at 12.3 degrees, rear-steer at 0.165 m;
+  - all three Gazebo cars abort in the slalom (RPP "collision ahead"). This
+    contradicts round 51's Gazebo passes, and repeats are needed.
+  [Round 58](docs/status/evidence/rounds-2026-10-19/README.md).
 
 ### R5.6 — Qualify four-wheel steering and physical mecanum motion
 
@@ -1817,20 +1826,35 @@ MuJoCo, Gazebo and Isaac. It turns on the spot at 0.98 / 0.83 / 0.64 of
 forward speed is 0.22 of 0.4 m/s
 ([evidence](docs/status/evidence/training-2026-10-19/README.md)).
 
-**Ongoing (2026-10-29):** a 20 s held turn in Isaac and MuJoCo with
-`go2_walk_r1`, then `go2_walk_r2` (randomisation and observation noise) and
-its drive checks.
+**Measured 2026-10-29:**
+- **Held turn:** `go2_walk_r1` holds a 20 s turn on the spot in Isaac
+  (0.55-0.57 rad/s) and MuJoCo (0.78 of 0.8). The rl_sar policy stops
+  after 1-2 s.
+- **Randomised run:** `go2_walk_r2` (randomisation and observation noise)
+  passes the drive screen in all three backends. Isaac forward speed rises
+  0.221 → 0.261 m/s and the turn on the spot 0.64 → 0.85 rad/s. Strafe
+  falls in Gazebo (0.061 m/s) and Isaac (0.007).
+- **Navigation:** with `go2_walk_r1` and `spin_in_place:=true` on
+  `nav_obstacle`, MuJoCo passes 1 of 3 seeds and Isaac 0 of 3. In Isaac
+  the goals abort 0.4-0.56 m short.
+- [Evidence](docs/status/evidence/training-2026-10-19/README.md),
+  [round 58](docs/status/evidence/rounds-2026-10-19/README.md).
+
+**Implemented, not yet run:** Go2W (velocity-controlled wheels) and G1
+humanoid training contracts, feet found by name, and an actuation-delay
+option (`--latency-ms`, Training page checkbox).
 
 Acceptance: a policy trained here walks (or performs its task) in measured
 runs on the lab's backends, judged by the existing drive and mission
 screens. Open:
 
-- closing the Isaac speed gap (0.22 of 0.4 m/s) and repeats per backend;
-- training with the randomisation, terrain and noise options (r2 in progress);
-- navigation missions with a trained policy, including turning in place;
-- terrain curriculum (slopes, stairs) and a latency model;
+- the Isaac speed gap (0.26 of 0.4 m/s with r2) and slow final approach;
+  repeats per backend;
+- the r2 strafe loss outside MuJoCo; a run with the actuation delay;
+- navigation passing with a trained policy (MuJoCo 1/3, Isaac 0/3);
+- a terrain curriculum (slopes, stairs);
 - GPU training;
-- Go2W (wheels) and humanoids.
+- first Go2W and G1 runs.
 
 ## Common implementation and evidence contract
 
