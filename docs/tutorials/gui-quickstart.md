@@ -31,23 +31,37 @@ Enter opens it. Escape closes search. Search navigates only: it cannot start
 or stop a launch, arm input, or send robot commands. Movement/launch key presses
 are contained by the search window; releases still reach the main application.
 
-The sidebar collapses automatically below 1250 pixels. Its short labels have
-hover descriptions. Use the header's menu button to expand/collapse it manually;
-a manual choice is kept for that GUI session. The header keeps the current
-selection and **Stop motion** visible. **Help** opens the guide for the current
-workspace. **Logs** reveals the shared console.
+Each sidebar entry has an icon, and the first nine have shortcuts:
+**Ctrl+1** (Home) to **Ctrl+9**, in sidebar order. The sidebar collapses to
+its icons below 1250 pixels. Hovering an entry shows its description and
+shortcut. The header's menu button expands or collapses it manually, and a
+manual choice is kept for that GUI session.
+
+The header shows:
+- **the session indicator:** "No session running", or "Running ·
+  robot · world · simulator · mm:ss" in green while a launch session is
+  alive. A blocked launch shows its reason in yellow. Clicking the
+  indicator opens Run a robot, and that sidebar entry carries a ● while
+  the session runs.
+- **the current selection**, robot / world / simulator / task.
+- **Help (F1)**, which opens the guide for the current workspace.
+- **Logs**, which reveals the shared console.
+- **Stop motion.**
 
 ## Configure, review, then control
 
 Choose **Run a robot** (the underlying Launch workspace).
 
-1. **Set up your experiment.** Filter the robot category/type, choose its complete
-   family and source variant, task, world and simulator. Model details/support
+1. **Set up your experiment.** Narrow the list with **Category** and **Type**
+   (side by side), then choose the **Robot family** and its source variant,
+   the task, world and simulator. Model details/support
    notes are available through the disclosure button. Unsupported modes retain
    their existing explanations and gates. Options contains advanced settings,
    source-specific policies, viewer configuration and saved profiles.
-2. **Review & launch.** The configuration hint says whether a command is prepared
-   or needs attention; an experimental selection stays explicitly labeled.
+2. **Review & launch.** A card states the setup in words, for example
+   "bumperbot in celisca_floor_1 · Inspect task · Gazebo simulator". Its hint
+   says whether a command is prepared or needs attention, and an
+   experimental selection stays explicitly labeled.
    Review **Algorithms & checks**, the generated command and Details.
    **Launch session** executes the same prepared command shown in the preview;
    **Copy command** is for a sourced terminal. A prepared command is not runtime
@@ -98,3 +112,12 @@ This interface refresh does not qualify more robots, maps, backends or algorithm
 Historical source-bound mission certificates are not refreshed by cosmetic or
 navigation checks. [Current status](../status/CURRENT_STATUS.md) and
 [the roadmap](../../ROADMAP.md) retain remaining work.
+
+## Cleaning missions and test suites
+
+Both pages are numbered cards in the order you use them:
+- **Cleaning missions:** choose a vacuum-capable robot, start the room
+  simulation, run the cleaner node, or drive the robot yourself from the
+  Launch drive pad.
+- **Test suites:** each suite has its own **Run** button, and the console
+  opens when a suite starts. **Stop test run** is at the top right.

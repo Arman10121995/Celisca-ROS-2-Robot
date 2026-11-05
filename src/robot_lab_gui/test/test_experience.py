@@ -67,3 +67,26 @@ def test_home_actions_and_resizing_are_neutral(app):
         assert page.canvas.xview()[1]==1.
     assert len(page.card_widgets)==6
     assert app.command_var.get()==before and app.ros_node is None
+
+
+def test_header_session_indicator_reads_state_only():
+    from types import SimpleNamespace
+    from robot_lab_gui.workspace_ui import session_text
+
+    class Var:
+        def __init__(self, value): self.value = value
+        def get(self): return self.value
+
+    class Alive:
+        def poll(self): return None
+
+    app = SimpleNamespace(robot_var=Var('bumperbot'), map_var=Var('nav_empty'), simulator_var=Var('mujoco'),
+                          status_var=Var('Idle'), process=None, _launch_running=False)
+    assert session_text(app) == ('○  No session running', 'PillIdle.TLabel')
+    app.status_var = Var('Launch blocked: invalid configuration')
+    text, style = session_text(app)
+    assert style == 'PillWarn.TLabel' and 'Launch blocked' in text
+    app.process, app._session_started = Alive(), 100.0
+    text, style = session_text(app, now=165.0)
+    assert style == 'PillRunning.TLabel'
+    assert text == '●  Running · bumperbot · nav_empty · mujoco · 01:05'

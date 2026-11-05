@@ -2001,3 +2001,77 @@
   updated: '2026-10-20'
   version: 1.0.0
   world_file: robot_lab_maps/maps/terrain_rough/worlds/terrain_rough.world
+- created: '2026-10-16'
+  description: Car course (R5.5) - a four-gate cone slalom and a 0.8 m nose-in parking
+    bay inside a walled 13 x 6.5 m arena; scripts/sim_car_course.py drives it
+  dimension: 2D
+  dynamics:
+    dynamic_obstacles: false
+    max_dynamic_count: 0
+    static_obstacles: true
+  goals:
+  - id: parking_bay
+    pose:
+      x: 8.9
+      y: 1.0
+      yaw: 1.5707963267948966
+  ground_truth_available: true
+  id: car_course
+  name: Car Course
+  occupancy_map: robot_lab_maps/maps/car_course/maps/map.pgm
+  reference_paths:
+  - id: slalom
+    waypoints:
+    - x: 1.75
+      y: 0.0
+      yaw: 0.0
+    - x: 3.25
+      y: -1.0
+      yaw: 0.0
+    - x: 4.75
+      y: 0.0
+      yaw: 0.0
+    - x: 6.25
+      y: -1.0
+      yaw: 0.0
+  reset_service: /robot_lab/reset
+  ros_package: robot_lab_maps
+  seed: 11
+  simulator: gazebo
+  simulators:
+  - gazebo
+  - isaac
+  - pybullet
+  - mujoco
+  size:
+    x: 13.2
+    y: 6.6
+    z: 2.0
+  source:
+    license: Apache-2.0
+    repository: internal
+  spawn_zones:
+  - id: default
+    pose:
+      x: -2.0
+      y: -4.0
+      z: 0.0
+    size:
+      x: 1.0
+      y: 1.0
+      z: 1.0
+  status: integrated
+  supported_robot_classes:
+  - mobile
+  - legged
+  - humanoid
+  - aerial
+  tags:
+  - navigation
+  - car
+  - slalom
+  - parking
+  - 2D
+  updated: '2026-11-05'
+  version: 1.0.0
+  world_file: robot_lab_maps/maps/car_course/worlds/car_course.world

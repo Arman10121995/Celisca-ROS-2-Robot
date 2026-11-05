@@ -29,6 +29,7 @@ ACCENT_YELLOW = "#f9e2af"
 ACCENT_YELLOW_DIM = "#4d4636"
 ACCENT_MAUVE = "#cba6f7"
 BORDER_COLOR = "#32465e"
+BORDER_SOFT = "#243548"
 BORDER_FOCUS = ACCENT
 ENTRY_BG = BG_INPUT
 SELECT_BG = "#45475a"
@@ -103,14 +104,29 @@ def apply(root):
     style.configure('HeroSmall.TLabel', foreground=FG_PRIMARY, font=(fonts['body'][0],17,'bold'))
     style.configure('Eyebrow.TLabel', background=BG_CARD, foreground=ACCENT, font=fonts['small_bold'])
     style.configure('Metric.TLabel', background=BG_CARD, foreground=FG_PRIMARY, font=(fonts['body'][0],22,'bold'))
-    style.configure('Section.TLabel', foreground=FG_PRIMARY, font=fonts['heading'])
+    style.configure('Section.TLabel', foreground=FG_PRIMARY, font=(fonts['body'][0], 12, 'bold'))
+    # Small caption above a field ("Category", "Robot family"...).
+    style.configure('Field.TLabel', foreground=FG_MUTED, font=fonts['small_bold'])
+    style.configure('SurfaceField.TLabel', background=BG_CARD, foreground=FG_MUTED, font=fonts['small_bold'])
+    # Launch review card: the selection stated in words.
+    style.configure('Summary.TLabel', background=BG_CARD, foreground=FG_PRIMARY, font=(fonts['body'][0], 12, 'bold'))
+    style.configure('SummaryDetail.TLabel', background=BG_CARD, foreground=FG_SECONDARY, font=fonts['body'])
+    style.configure('SummaryHint.TLabel', background=BG_CARD, foreground=FG_MUTED, font=fonts['small'])
+    # Header session indicator: idle, running, attention.
+    for name, background, foreground in (('PillIdle', BG_CARD, FG_MUTED),
+                                         ('PillRunning', ACCENT_GREEN_DIM, ACCENT_GREEN),
+                                         ('PillWarn', ACCENT_YELLOW_DIM, ACCENT_YELLOW)):
+        style.configure(name + '.TLabel', background=background, foreground=foreground,
+                        padding=(12, 5), font=fonts['small_bold'])
+    style.configure('Step.TLabel', background=BG_CARD, foreground=ACCENT, font=fonts['small_bold'])
+    style.configure('StepTitle.TLabel', background=BG_CARD, foreground=FG_PRIMARY, font=fonts['subheading'])
     style.configure('CardHeading.TLabel', background=BG_CARD, foreground=FG_PRIMARY, font=fonts['subheading'])
     style.configure('Context.TLabel', foreground=FG_SECONDARY, font=fonts['small'])
     style.configure('Badge.TLabel', background=BG_CARD_LIGHT, foreground=FG_SECONDARY, padding=(10,5), font=fonts['small_bold'])
     style.configure('Nav.TButton', background=BG_DARK, foreground=FG_SECONDARY,
-                    padding=(10, 8), anchor='w', borderwidth=0)
+                    padding=(10, 7), anchor='w', borderwidth=0, focuscolor=BG_DARK)
     style.configure('NavActive.TButton', background=BG_CARD_LIGHT, foreground=ACCENT,
-                    padding=(10, 8), anchor='w', borderwidth=0)
+                    padding=(10, 7), anchor='w', borderwidth=0, font=fonts['body_bold'])
     style.map('Nav.TButton', background=[('active', BG_CARD)])
     style.map('NavActive.TButton', background=[('active', BG_CARD_LIGHT)])
     style.configure('Workspace.TNotebook', borderwidth=0, tabmargins=0)
@@ -140,7 +156,8 @@ def apply(root):
               background=[("disabled", BG_CARD), ("pressed", ACCENT_ACTIVE),
                           ("active", BG_CARD_LIGHT)],
               foreground=[("disabled", FG_DISABLED)],
-              bordercolor=[("focus", BORDER_FOCUS)])
+              bordercolor=[("disabled", BG_CARD_LIGHT), ("focus", BORDER_FOCUS)],
+              lightcolor=[("disabled", BG_CARD)], darkcolor=[("disabled", BG_CARD)])
 
     # selected persists after the native ttk mouse/keyboard release bindings
     # clear pressed. All Drive and Drone mirrors share the same latch state.
@@ -156,16 +173,26 @@ def apply(root):
                     bordercolor=ACCENT, darkcolor=ACCENT, lightcolor=ACCENT,
                     font=fonts["body_bold"])
     style.map("Accent.TButton",
-              background=[("disabled", BORDER_COLOR), ("pressed", ACCENT_ACTIVE),
+              background=[("disabled", BG_CARD), ("pressed", ACCENT_ACTIVE),
                           ("active", ACCENT_HOVER)],
-              foreground=[("disabled", FG_DISABLED)])
+              foreground=[("disabled", FG_DISABLED)],
+              bordercolor=[("disabled", BORDER_COLOR)], lightcolor=[("disabled", BG_CARD)],
+              darkcolor=[("disabled", BG_CARD)])
+    style.configure('Primary.TButton', background=ACCENT, foreground=BG_DARK, bordercolor=ACCENT,
+                    darkcolor=ACCENT, lightcolor=ACCENT, padding=(18, 9), font=(fonts['body'][0], 11, 'bold'))
+    style.map('Primary.TButton',
+              background=[('disabled', BG_CARD), ('pressed', ACCENT_ACTIVE), ('active', ACCENT_HOVER)],
+              foreground=[('disabled', FG_DISABLED)], bordercolor=[('disabled', BORDER_COLOR)],
+              lightcolor=[('disabled', BG_CARD)], darkcolor=[('disabled', BG_CARD)])
 
     style.configure("Danger.TButton", background=ACCENT_RED, foreground=BG_DARK,
                     bordercolor=ACCENT_RED, darkcolor=ACCENT_RED,
                     lightcolor=ACCENT_RED, font=fonts["body_bold"])
     style.map("Danger.TButton",
-              background=[("disabled", BORDER_COLOR), ("active", "#f5a3b8")],
-              foreground=[("disabled", FG_DISABLED)])
+              background=[("disabled", BG_CARD), ("active", "#f5a3b8")],
+              foreground=[("disabled", FG_DISABLED)],
+              bordercolor=[("disabled", BORDER_COLOR)], lightcolor=[("disabled", BG_CARD)],
+              darkcolor=[("disabled", BG_CARD)])
     style.configure("Success.TButton", background=ACCENT_GREEN, foreground=BG_DARK,
                     bordercolor=ACCENT_GREEN, darkcolor=ACCENT_GREEN,
                     lightcolor=ACCENT_GREEN, font=fonts["body_bold"])
@@ -238,24 +265,36 @@ def apply(root):
     root.option_add("*Text.selectForeground", FG_PRIMARY)
 
     # Notebook
-    style.configure("TNotebook", background=BG_DARK, bordercolor=BORDER_COLOR)
-    style.configure("TNotebook.Tab", background=BG_CARD, foreground=FG_SECONDARY,
-                    padding=(14, 8), font=fonts["body"])
-    style.map("TNotebook.Tab", background=[("selected", BG_CARD_LIGHT), ("active", BG_HOVER)],
-              foreground=[("selected", ACCENT), ("active", FG_PRIMARY)])
+    # Flat tabs: muted text on the page colour, the selected tab lifted with
+    # an accent label; no 3D bevels.
+    style.configure("TNotebook", background=BG_DARK, bordercolor=BORDER_SOFT,
+                    lightcolor=BG_DARK, darkcolor=BG_DARK, tabmargins=(0, 2, 0, 0))
+    style.configure("TNotebook.Tab", background=BG_DARK, foreground=FG_MUTED,
+                    bordercolor=BORDER_SOFT, lightcolor=BG_DARK, darkcolor=BG_DARK,
+                    padding=(16, 7), font=fonts["body_bold"])
+    style.map("TNotebook.Tab", background=[("selected", BG_CARD), ("active", BG_HOVER)],
+              foreground=[("selected", ACCENT), ("active", FG_PRIMARY)],
+              lightcolor=[("selected", ACCENT)], bordercolor=[("selected", BORDER_COLOR)])
     style.configure('Control.TNotebook', borderwidth=0)
     style.layout('Control.TNotebook.Tab', [])
 
     # Labelframe
+    # Section frames: one soft hairline and a clear title, no bevel, so
+    # nested frames do not read as double borders.
     style.configure("TLabelframe", background=BG_DARK, foreground=FG_SECONDARY,
-                    bordercolor=BORDER_COLOR, font=fonts["body_bold"])
-    style.configure("TLabelframe.Label", background=BG_DARK, foreground=FG_SECONDARY)
+                    bordercolor=BORDER_SOFT, lightcolor=BG_DARK, darkcolor=BG_DARK,
+                    relief='solid', borderwidth=1, font=fonts["body_bold"])
+    style.configure("TLabelframe.Label", background=BG_DARK, foreground=FG_PRIMARY,
+                    font=fonts["subheading"])
 
     # Treeview
     style.configure("Treeview", background=BG_CARD, foreground=FG_PRIMARY,
-                    fieldbackground=BG_CARD, font=fonts["body"], rowheight=26)
-    style.configure("Treeview.Heading", background=BG_HOVER, foreground=FG_PRIMARY,
-                    font=fonts["body_bold"], padding=(6, 4))
+                    fieldbackground=BG_CARD, font=fonts["body"], rowheight=28,
+                    bordercolor=BORDER_SOFT, lightcolor=BG_CARD, darkcolor=BG_CARD)
+    style.configure("Treeview.Heading", background=BG_CARD_LIGHT, foreground=FG_SECONDARY,
+                    font=fonts["small_bold"], padding=(8, 6), relief='flat',
+                    bordercolor=BG_CARD, lightcolor=BG_CARD_LIGHT, darkcolor=BG_CARD_LIGHT)
+    style.map("Treeview.Heading", background=[("active", BG_HOVER)])
     style.map("Treeview", background=[("selected", ACCENT)], foreground=[("selected", BG_DARK)],
               fieldbackground=[("selected", ACCENT)])
 
@@ -263,12 +302,13 @@ def apply(root):
     style.configure("Horizontal.TProgressbar", background=ACCENT, troughcolor=SCROLL_BG)
 
     # Scrollbar
-    style.configure("Vertical.TScrollbar", background=BG_HOVER, troughcolor=SCROLL_BG,
-                    bordercolor=BG_DARK, arrowcolor=FG_MUTED)
-    style.map("Vertical.TScrollbar", background=[("active", BG_CARD_LIGHT)])
-    style.configure("Horizontal.TScrollbar", background=BG_HOVER, troughcolor=SCROLL_BG,
-                    bordercolor=BG_DARK, arrowcolor=FG_MUTED)
-    style.map("Horizontal.TScrollbar", background=[("active", BG_CARD_LIGHT)])
+    # Slim, flat scrollbars: a thumb on the page colour, no grip or bevel.
+    for orient in ("Vertical", "Horizontal"):
+        style.configure(orient + ".TScrollbar", background=BG_CARD_LIGHT, troughcolor=BG_DARK,
+                        bordercolor=BG_DARK, lightcolor=BG_CARD_LIGHT, darkcolor=BG_CARD_LIGHT,
+                        arrowcolor=FG_MUTED, arrowsize=11, gripcount=0, relief='flat')
+        style.map(orient + ".TScrollbar", background=[("active", BORDER_COLOR)],
+                  lightcolor=[("active", BORDER_COLOR)], darkcolor=[("active", BORDER_COLOR)])
 
     # Statusbar
     style.configure("Statusbar.TFrame", background=BG_CARD)

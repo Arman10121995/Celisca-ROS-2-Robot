@@ -1,5 +1,18 @@
 # Current Robot Lab status
 
+November 5 GUI redesign:
+- **Header:** a live session indicator (idle, or running with robot,
+  world, simulator and elapsed time) replaces the repeated page title.
+- **Sidebar:** icons and Ctrl+1-9 shortcuts.
+- **Launch page:** labelled Category/Type filters, title-case sections and
+  a plain-words review card with a primary Launch button.
+- **Theme:** flat tabs, hairline frames and slim scrollbars.
+- **Pages:** Tests and Cleaning missions rebuilt as numbered cards.
+- **World registry:** `car_course` is now registered, so the GUI can
+  select it.
+- [Guide](../tutorials/gui-quickstart.md). This is UI work; robot
+  qualification is unchanged.
+
 November 5 (recorded from the October 29 rounds):
 - **Car course** (R5.5, round 58): the parking heading shuffle passes the
   full course in 8 of 12 cells, up from 3. All three Gazebo cars now abort

@@ -675,19 +675,24 @@ class SimulationLauncherGui(tk.Tk):
         advanced.columnconfigure(0, weight=1)
         controls.columnconfigure(0, weight=1)
 
-        ttk.Label(controls, text="ROBOT", style='Section.TLabel').grid(row=0, column=0, sticky="w")
+        ttk.Label(controls, text="Robot", style='Section.TLabel').grid(row=0, column=0, sticky="w")
         robot_frame = ttk.Frame(controls)
         robot_frame.grid(row=1, column=0, sticky="ew", pady=(2, 12))
         robot_frame.columnconfigure(0, weight=1)
         filters = ttk.Frame(robot_frame)
-        filters.grid(row=0, column=0, sticky='ew', pady=(0, 8))
-        filters.columnconfigure(0, weight=1); filters.columnconfigure(1, weight=1)
+        filters.grid(row=0, column=0, sticky='ew', pady=(0, 3))
+        filters.columnconfigure(0, weight=1, uniform='filter'); filters.columnconfigure(1, weight=1, uniform='filter')
+        ttk.Label(filters, text='Category', style='Field.TLabel').grid(row=0, column=0, sticky='w')
+        ttk.Label(filters, text='Type', style='Field.TLabel').grid(row=0, column=1, sticky='w', padx=(6, 0))
         self.robot_category_combo = ttk.Combobox(filters, textvariable=self.robot_category_var,
-            values=(ALL_CATEGORIES, *CATEGORIES), state='readonly', width=18)
-        self.robot_category_combo.grid(row=0, column=0, columnspan=2, sticky='ew')
+            values=(ALL_CATEGORIES, *CATEGORIES), state='readonly', width=12)
+        self.robot_category_combo.grid(row=1, column=0, sticky='ew')
         self.robot_subtype_combo = ttk.Combobox(filters, textvariable=self.robot_subtype_var,
-            values=(ALL_TYPES, *self.robot_taxonomy.subtypes()), state='readonly', width=17)
-        self.robot_subtype_combo.grid(row=1, column=0, columnspan=2, sticky='ew', pady=(4, 0))
+            values=(ALL_TYPES, *self.robot_taxonomy.subtypes()), state='readonly', width=12)
+        self.robot_subtype_combo.grid(row=1, column=1, sticky='ew', padx=(6, 0))
+        ttk.Label(filters, text='Robot family', style='Field.TLabel').grid(row=2, column=0, columnspan=2, sticky='w', pady=(8, 0))
+        add_tooltip(self.robot_category_combo, 'Narrow the robot list by category.')
+        add_tooltip(self.robot_subtype_combo, 'Narrow the robot list by drive or body type.')
         self.robot_category_combo.bind('<<ComboboxSelected>>', self._robot_filter_changed)
         self.robot_subtype_combo.bind('<<ComboboxSelected>>', self._robot_filter_changed)
         self.robot_combo = ttk.Combobox(
@@ -703,7 +708,7 @@ class SimulationLauncherGui(tk.Tk):
             self.robot_combo,
             "Robot to simulate. '%s' shows the map with no robot "
             "(display mode only)." % NONE_LABEL)
-        ttk.Label(robot_frame, text='Model / source variant').grid(row=2, column=0, sticky='w', pady=(4, 0))
+        ttk.Label(robot_frame, text='Model / source variant', style='Field.TLabel').grid(row=2, column=0, sticky='w', pady=(8, 0))
         self.robot_variant_combo = ttk.Combobox(robot_frame, textvariable=self.robot_var, state='readonly', width=26)
         self.robot_variant_combo.grid(row=3, column=0, sticky='ew')
         self.robot_variant_combo.bind('<<ComboboxSelected>>', self._on_selection_changed)
@@ -726,7 +731,7 @@ class SimulationLauncherGui(tk.Tk):
         self.robot_notes_button.grid(row=5,column=0,sticky='w',pady=(4,0))
 
         ttk.Label(robot_frame, textvariable=self.robot_tags_var, style='Tag.TLabel', wraplength=300).grid(row=4, column=0, sticky='w', pady=(6, 0))
-        ttk.Label(controls, text="TASK", style='Section.TLabel').grid(row=2, column=0, sticky="w")
+        ttk.Label(controls, text="Task", style='Section.TLabel').grid(row=2, column=0, sticky="w", pady=(4, 0))
         mode_frame = ttk.Frame(controls)
         mode_frame.grid(row=3, column=0, sticky="ew", pady=(2, 12))
         for index, mode in enumerate(MODE_ORDER):
@@ -741,7 +746,7 @@ class SimulationLauncherGui(tk.Tk):
             self.mode_buttons[mode] = button
             add_tooltip(button, MODE_TOOLTIPS.get(mode, ""))
 
-        ttk.Label(controls, text="WORLD", style='Section.TLabel').grid(row=4, column=0, sticky="w")
+        ttk.Label(controls, text="World", style='Section.TLabel').grid(row=4, column=0, sticky="w", pady=(4, 0))
         map_frame = ttk.Frame(controls)
         map_frame.grid(row=5, column=0, sticky='ew', pady=(2, 12))
         map_frame.columnconfigure(0, weight=1)
@@ -754,7 +759,7 @@ class SimulationLauncherGui(tk.Tk):
         )
         self.map_combo.grid(row=0, column=0, sticky="ew")
         self.map_combo.bind("<<ComboboxSelected>>", self._map_family_selected)
-        ttk.Label(map_frame, text='World variant').grid(row=1, column=0, sticky='w', pady=(4, 0))
+        ttk.Label(map_frame, text='World variant', style='Field.TLabel').grid(row=1, column=0, sticky='w', pady=(8, 0))
         self.map_variant_combo = ttk.Combobox(map_frame, textvariable=self.map_var, state='readonly', width=26)
         self.map_variant_combo.grid(row=2, column=0, sticky='ew')
         self.map_variant_combo.bind('<<ComboboxSelected>>', self._on_selection_changed)
@@ -763,7 +768,7 @@ class SimulationLauncherGui(tk.Tk):
             "Environment to load. '%s' shows the robot with no world "
             "(display mode only)." % NONE_LABEL)
 
-        ttk.Label(controls, text="SIMULATOR", style='Section.TLabel').grid(row=6, column=0, sticky="w")
+        ttk.Label(controls, text="Simulator", style='Section.TLabel').grid(row=6, column=0, sticky="w", pady=(4, 0))
         self.simulator_combo = ttk.Combobox(
             controls,
             textvariable=self.simulator_var,
@@ -1206,16 +1211,30 @@ class SimulationLauncherGui(tk.Tk):
             wraplength=305, style='Muted.TLabel').grid(row=6, column=0, columnspan=2, sticky='w', pady=10)
         command_header = ttk.Frame(output_frame)
         command_header.grid(row=0, column=0, sticky="ew", pady=(0, 4))
-        ttk.Label(command_header, text="2 · Review & launch",style='Section.TLabel').grid(
-            row=0, column=0, columnspan=4, sticky="w", pady=(0, 6))
-        ttk.Label(command_header,textvariable=self.launch_hint,wraplength=350,style='Muted.TLabel').grid(row=1,column=0,columnspan=4,sticky='ew',pady=(0,8))
+        # The selection in words, then the actions; the exact command below.
+        summary = ttk.Frame(command_header, style='Surface.TFrame', padding=(14, 12))
+        summary.grid(row=0, column=0, columnspan=4, sticky='ew', pady=(0, 10))
+        summary.columnconfigure(0, weight=1)
+        ttk.Label(summary, text='YOU ARE ABOUT TO LAUNCH', style='Step.TLabel').grid(row=0, column=0, sticky='w')
+        self.launch_summary_label = ttk.Label(summary, textvariable=self.launch_summary, style='Summary.TLabel')
+        self.launch_summary_label.grid(row=1, column=0, sticky='w', pady=(4, 0))
+        ttk.Label(summary, textvariable=self.launch_summary_detail, style='SummaryDetail.TLabel').grid(
+            row=2, column=0, sticky='w')
+        self.launch_hint_label = ttk.Label(summary, textvariable=self.launch_hint, wraplength=350, style='SummaryHint.TLabel')
+        self.launch_hint_label.grid(row=3, column=0, sticky='ew', pady=(6, 0))
+        command_header.columnconfigure(3, weight=1)
+        def wrap_summary(event):
+            for label in (self.launch_summary_label, self.launch_hint_label):
+                label.configure(wraplength=max(200, event.width - 30))
+        summary.bind('<Configure>', wrap_summary)
         self.copy_command_button = ttk.Button(
             command_header, text="Copy command", command=self._copy_command)
         self.copy_command_button.grid(row=2, column=1, padx=4)
         self.start_button = ttk.Button(
-            command_header, text="Launch session", command=self._start_launch,
-            style="Accent.TButton")
+            command_header, text="▶  Launch session", command=self._start_launch,
+            style="Primary.TButton")
         self.start_button.grid(row=2, column=0, sticky='w', padx=(0, 4))
+        add_tooltip(self.start_button, 'Start the simulation with this setup (Ctrl+Enter).')
         self.stop_button = ttk.Button(
             command_header, text="End session", command=self._stop_launch,
             state="disabled", style="Danger.TButton", width=11)
@@ -1228,9 +1247,13 @@ class SimulationLauncherGui(tk.Tk):
                 self.copy_command_button.grid(row=2, column=1, columnspan=1, sticky='w', pady=0)
                 self.stop_button.grid(row=2, column=2, padx=(4, 0))
         command_header.bind('<Configure>', fit_command_actions)
+        command_box = ttk.Frame(output_frame)
+        command_box.grid(row=1, column=0, sticky='ew', pady=(4, 12))
+        command_box.columnconfigure(0, weight=1)
+        ttk.Label(command_box, text='Generated command', style='Field.TLabel').grid(row=0, column=0, sticky='w', pady=(0, 3))
         self.command_preview = scrolledtext.ScrolledText(
-            output_frame, wrap="word", height=4, width=1, state="disabled")
-        self.command_preview.grid(row=1, column=0, sticky="ew", pady=(0, 12))
+            command_box, wrap="word", height=4, width=1, state="disabled")
+        self.command_preview.grid(row=1, column=0, sticky="ew")
         add_tooltip(self.command_preview,
                     "Updates from the selected options. Run here or copy into a ROS 2 terminal.")
         self.output = scrolledtext.ScrolledText(self.launch_log_page, wrap="word", height=8)

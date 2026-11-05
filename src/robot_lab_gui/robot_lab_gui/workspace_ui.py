@@ -53,23 +53,28 @@ def build_workspace(app):
     install_context(app)
     header = ttk.Frame(app, padding=(14, 10))
     header.grid(row=0, column=0, columnspan=2, sticky='ew')
-    header.columnconfigure(2, weight=1)
+    header.columnconfigure(3, weight=1)
     app.navigation_toggle=ttk.Button(header,text='≡',width=3,style='Ghost.TButton',command=lambda:getattr(app,'toggle_navigation',lambda:None)())
-    app.navigation_toggle.grid(row=0,column=0,rowspan=2,padx=(0,8))
-    ttk.Button(header, text='ROBOT LAB', style='Brand.TButton',command=lambda:app.show_tab('Home')).grid(row=0, column=1,rowspan=2,padx=(0,20))
+    app.navigation_toggle.grid(row=0,column=0,padx=(0,8))
+    ttk.Button(header, text='ROBOT LAB', style='Brand.TButton',command=lambda:app.show_tab('Home')).grid(row=0, column=1,padx=(0,16))
+    # The page heading names the workspace; the header shows the session.
     app.workspace_title = tk.StringVar(value='Launch · configure, run and control')
-    ttk.Label(header, textvariable=app.workspace_title, style='Context.TLabel').grid(row=0, column=2, sticky='w')
-    ttk.Label(header, textvariable=app.selection_context,style='Muted.TLabel',wraplength=650).grid(row=1,column=2,sticky='w')
-    ttk.Button(header,text='Find  Ctrl+K',command=lambda:open_search(app),style='Ghost.TButton').grid(row=0,column=3,rowspan=2,padx=5)
-    ttk.Button(header,text='Help',command=lambda:help_for_workspace(app),style='Ghost.TButton').grid(row=0,column=4,rowspan=2,padx=5)
-    ttk.Button(header, text='Logs', command=app._toggle_console, style='Ghost.TButton').grid(row=0, column=5,rowspan=2,padx=5)
-    ttk.Button(header, text='Stop motion', command=app._stop_all_motion, style='Danger.TButton').grid(row=0, column=6,rowspan=2,padx=(6,0))
+    app.session_pill = ttk.Label(header, textvariable=app.session_state, style='PillIdle.TLabel')
+    app.session_pill.grid(row=0, column=2, sticky='w', padx=(0, 12))
+    app.session_pill.bind('<Button-1>', lambda _e: app.show_tab('Launch'))
+    app.header_context = ttk.Label(header, textvariable=app.selection_context, style='Muted.TLabel')
+    app.header_context.grid(row=0, column=3, sticky='w')
+    ttk.Button(header,text='Find  Ctrl+K',command=lambda:open_search(app),style='Ghost.TButton').grid(row=0,column=4,padx=5)
+    ttk.Button(header,text='Help  F1',command=lambda:help_for_workspace(app),style='Ghost.TButton').grid(row=0,column=5,padx=5)
+    ttk.Button(header, text='Logs', command=app._toggle_console, style='Ghost.TButton').grid(row=0, column=6,padx=5)
+    ttk.Button(header, text='Stop motion', command=app._stop_all_motion, style='Danger.TButton').grid(row=0, column=7,padx=(6,0))
     app.bind('<Control-k>',lambda event:open_search(app,event))
+    app.bind('<F1>',lambda _e:help_for_workspace(app))
     def wrap_header(event):
         if event.widget is header:
-            for child in header.winfo_children():
-                if isinstance(child,ttk.Label):child.configure(wraplength=max(150,event.width-560))
+            app.header_context.configure(wraplength=max(120,event.width-760))
     header.bind('<Configure>',wrap_header)
+    _watch_session(app)
     app.navigation = ScrollPanel(app, width=218)
     app.navigation.body.configure(padding=(6,4))
     app.navigation.grid(row=1, column=0, sticky='ns')
@@ -100,7 +105,7 @@ def build_workspace(app):
     basic, advanced = ScrollPanel(app.setup_notebook), ScrollPanel(app.setup_notebook)
     app.setup_notebook.add(basic, text='Robot & world')
     app.setup_notebook.add(advanced, text='Options')
-    app.session_frame = ttk.Frame(host, padding=(12, 0, 4, 0))
+    app.session_frame = ttk.LabelFrame(host, text='2 · Review & launch', padding=8)
     lower = ttk.LabelFrame(app.launch_split, text='3 · Control & observe', padding=8)
     lower.columnconfigure(0, weight=1); lower.rowconfigure(2, weight=1)
     app.launch_split.add(lower, weight=1)
@@ -173,6 +178,48 @@ def build_workspace(app):
     return basic.body, advanced.body
 
 
+def session_text(app, now=None):
+    """(text, style) for the header session indicator; reads state only."""
+    import time
+    process = getattr(app, 'process', None)
+    running = bool(getattr(app, '_launch_running', False)) or (process is not None and process.poll() is None)
+    if running:
+        started = getattr(app, '_session_started', None)
+        elapsed = int((now if now is not None else time.monotonic()) - started) if started else 0
+        parts = [app.robot_var.get(), app.map_var.get(), app.simulator_var.get()]
+        return ('●  Running · %s · %02d:%02d' % (' · '.join(p for p in parts if p), elapsed // 60, elapsed % 60),
+                'PillRunning.TLabel')
+    status = app.status_var.get() if hasattr(app, 'status_var') else ''
+    if status.casefold().startswith(('launch blocked', 'error', 'failed')):
+        return '▲  ' + status[:60], 'PillWarn.TLabel'
+    return '○  No session running', 'PillIdle.TLabel'
+
+
+def _watch_session(app):
+    import time
+    app.session_state = getattr(app, 'session_state', None) or tk.StringVar()
+    def tick():
+        try:
+            process = getattr(app, 'process', None)
+            running = bool(getattr(app, '_launch_running', False)) or (process is not None and process.poll() is None)
+            if running and getattr(app, '_session_started', None) is None:
+                app._session_started = time.monotonic()
+            elif not running:
+                app._session_started = None
+            text, style = session_text(app)
+            app.session_state.set(text)
+            app.session_pill.configure(style=style)
+            button = getattr(app, 'nav_buttons', {}).get('Launch')
+            if button is not None and not getattr(app, 'navigation_collapsed', False):
+                label = next((row[1] for row in getattr(app, 'nav_rows', ()) if row[0] is button), None)
+                if label:
+                    button.configure(text=label + ('   ●' if running else ''))
+            app.after(1000, tick)
+        except tk.TclError:
+            pass
+    app.after(300, tick)
+
+
 def build_navigation(app):
     from .experience import WORKSPACES, HomeTab
     from .themes.modern import tooltip
@@ -192,15 +239,20 @@ def build_navigation(app):
             heading = ttk.Label(host, text=section.upper(), style='Muted.TLabel')
             heading.grid(row=index, column=0, sticky='w', pady=(16, 6), padx=10)
             headings.append(heading); index += 1; group = section
-        button = ttk.Button(host, text=label, width=23, style='Nav.TButton', command=lambda page=title: app.show_tab(page))
-        button.grid(row=index, column=0, sticky='ew', pady=2)
-        tooltip(button, label+' · '+keywords)
-        app.nav_buttons[title] = button; rows.append((button, label, icon)); index += 1
+        shortcut = len(rows) + 1
+        text = '%s   %s' % (icon, label)
+        button = ttk.Button(host, text=text, width=23, style='Nav.TButton', command=lambda page=title: app.show_tab(page))
+        button.grid(row=index, column=0, sticky='ew', pady=1)
+        tooltip(button, label + ' · ' + keywords + ('  (Ctrl+%d)' % shortcut if shortcut <= 9 else ''))
+        if shortcut <= 9:
+            app.bind('<Control-Key-%d>' % shortcut, lambda _e, page=title: app.show_tab(page))
+        app.nav_buttons[title] = button; rows.append((button, text, icon)); index += 1
+    app.nav_rows = rows
     app.navigation_collapsed = False
     app.navigation_override = None
     def collapse(value):
         app.navigation_collapsed = value
-        app.navigation.canvas.configure(width=72 if value else 218)
+        app.navigation.canvas.configure(width=60 if value else 218)
         for button, label, icon in rows:
             button.configure(text=icon if value else label, width=3 if value else 23)
         for heading in headings:

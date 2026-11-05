@@ -10,18 +10,18 @@ from .workspace_ui import ScrollPanel
 
 
 WORKSPACES = [
-    ('Home', 'Home', 'Start here', 'H', 'overview welcome getting started'),
-    ('Launch', 'Run a robot', 'Operate', 'R', 'configure simulator launch drive'),
-    ('Fleet & Swarm', 'Ground fleet', 'Operate', 'F', 'teams multi robot rmf lift'),
-    ('Aerial Swarm', 'Aerial swarm', 'Operate', 'A', 'drone px4 flight formation'),
-    ('Live Monitor', 'Live telemetry', 'Operate', 'M', 'sensors odometry clock monitor'),
-    ('Registry', 'Robot & world registry', 'Explore', '3D', 'models variants preview assets'),
-    ('Worlds', 'Worlds & mapping', 'Explore', 'W', 'maps occupancy generation terrain'),
-    ('Installed Extensions', 'Installed assets', 'Explore', 'I', 'sources robots worlds extensions'),
-    ('Vacuum', 'Cleaning missions', 'Experiment', 'V', 'vacuum coverage'),
-    ('Benchmark', 'Experiments', 'Experiment', 'B', 'benchmark queue results compare'),
-    ('Training', 'Policy training', 'Experiment', 'T', 'reinforcement learning legged'),
-    ('Tests', 'Test suites', 'Experiment', 'Q', 'validation regressions'),
+    ('Home', 'Home', 'Start here', '⌂', 'overview welcome getting started'),
+    ('Launch', 'Run a robot', 'Operate', '▶', 'configure simulator launch drive'),
+    ('Fleet & Swarm', 'Ground fleet', 'Operate', '◈', 'teams multi robot rmf lift'),
+    ('Aerial Swarm', 'Aerial swarm', 'Operate', '✈', 'drone px4 flight formation'),
+    ('Live Monitor', 'Live telemetry', 'Operate', '◉', 'sensors odometry clock monitor'),
+    ('Registry', 'Robot & world registry', 'Explore', '◧', 'models variants preview assets'),
+    ('Worlds', 'Worlds & mapping', 'Explore', '▦', 'maps occupancy generation terrain'),
+    ('Installed Extensions', 'Installed assets', 'Explore', '⇩', 'sources robots worlds extensions'),
+    ('Vacuum', 'Cleaning missions', 'Experiment', '≋', 'vacuum coverage'),
+    ('Benchmark', 'Experiments', 'Experiment', '⚗', 'benchmark queue results compare'),
+    ('Training', 'Policy training', 'Experiment', '✦', 'reinforcement learning legged'),
+    ('Tests', 'Test suites', 'Experiment', '✓', 'validation regressions'),
     ('Health', 'Learn & diagnose', 'Understand', '?', 'architecture tutorials glossary network roadmap status health'),
 ]
 
@@ -179,10 +179,15 @@ def install_context(app):
     app.selection_context=tk.StringVar()
     app.session_badge=tk.StringVar(value='Not running')
     app.launch_hint=tk.StringVar(value='Choose a robot, world and task to prepare a command.')
+    app.session_state=tk.StringVar(value='○  No session running')
+    app.launch_summary=tk.StringVar();app.launch_summary_detail=tk.StringVar()
     def refresh(*_):
         robot=app.robot_var.get();world=app.map_var.get();backend=app.simulator_var.get();mode=app.mode_var.get()
         labels={'display':'Inspect','loc':'Localize','slam':'2D SLAM','3d_slam':'3D SLAM','nav':'Navigate','flight':'Fly','marine':'Marine'}
         app.selection_context.set(f'{robot}   /   {world}   /   {backend}   /   {labels.get(mode,mode)}')
+        names={'gazebo':'Gazebo','mujoco':'MuJoCo','pybullet':'PyBullet','isaac':'Isaac Sim'}
+        app.launch_summary.set(f'{robot}  in  {world}' if world else robot)
+        app.launch_summary_detail.set(f'{labels.get(mode,mode)} task  ·  {names.get(backend,backend)} simulator')
         prepared=bool(app.command_var.get());validation=app.validation_var.get()
         if not prepared:
             hint='Setup needs attention · '+validation

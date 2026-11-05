@@ -134,6 +134,25 @@ def format_platform_status(data):
     return "\n".join(lines) + "\n"
 
 
+def step_card(parent, number, title, text=''):
+    """A numbered card (number, title, description); returns its body frame.
+
+    The card itself is ``body.master``; the caller places it.
+    """
+    card = ttk.Frame(parent, style='Surface.TFrame', padding=(16, 14))
+    card.columnconfigure(0, weight=1)
+    ttk.Label(card, text='%02d' % number, style='Step.TLabel').grid(row=0, column=0, sticky='w')
+    ttk.Label(card, text=title, style='StepTitle.TLabel').grid(row=1, column=0, sticky='w', pady=(2, 2))
+    if text:
+        description = ttk.Label(card, text=text, style='SurfaceBody.TLabel', wraplength=420, justify='left')
+        description.grid(row=2, column=0, sticky='ew', pady=(0, 10))
+        card.bind('<Configure>', lambda e: description.configure(wraplength=max(200, e.width - 36)), add='+')
+    body = ttk.Frame(card, style='Surface.TFrame')
+    body.grid(row=3, column=0, sticky='ew')
+    body.columnconfigure(0, weight=1); body.columnconfigure(1, weight=1)
+    return body
+
+
 class LabTab(ttk.Frame):
     """Base class for control-center tabs."""
 
@@ -174,7 +193,7 @@ class WorldsTab(LabTab):
                               (6,'Output directory',self.output_var)]:
             ttk.Label(controls,text=label).grid(row=row,column=0,sticky='w')
             ttk.Entry(controls,textvariable=var).grid(row=row,column=1,sticky='ew',pady=3)
-        self.generate_button=ttk.Button(controls,text='Generate 2D Occupancy Grid',command=self.generate)
+        self.generate_button=ttk.Button(controls,text='▶  Generate 2D occupancy grid',command=self.generate,style='Accent.TButton')
         self.generate_button.grid(row=7,column=0,columnspan=2,sticky='ew',pady=6)
         ttk.Button(controls,text='Stop Generation',command=lambda:app.stop_bg_process('world_maps')).grid(row=8,column=0,sticky='ew')
         ttk.Button(controls,text='World / Terrain Guide',command=lambda:self.open_guide()).grid(row=8,column=1,sticky='ew')
@@ -663,26 +682,19 @@ class VacuumTab(LabTab):
         self._build_ui()
 
     def _build_ui(self):
-        info = ttk.LabelFrame(self, text="Vacuum Cleaning", padding=10)
-        info.grid(row=0, column=0, sticky="ew")
-        info.columnconfigure(0, weight=1)
+        # Four numbered steps in the order an operator runs them.
+        self.rowconfigure(0, weight=0)
+        self.columnconfigure(0, weight=1, uniform='card'); self.columnconfigure(1, weight=1, uniform='card')
         ttk.Label(
-            info,
-            text=(
-                "Room vacuum coverage for any robot whose launch profile declares "
-                "supports_room_vacuum: true (robot-agnostic: driven by "
-                "src/robot_lab_robots/config/robots.yaml, no per-robot package needed).\n"
-                "The room-vacuum launch brings up Gazebo + the vacuum room world; "
-                "the cleaner node drives systematic coverage."
-            ),
-            wraplength=640,
-            justify="left",
-        ).grid(row=0, column=0, sticky="ew")
+            self,
+            text=("Room vacuum coverage for any robot whose profile declares "
+                  "supports_room_vacuum: true. The room-vacuum launch brings up Gazebo "
+                  "with the vacuum room; the cleaner node drives systematic coverage."),
+            style='Muted.TLabel', wraplength=900, justify='left',
+        ).grid(row=0, column=0, columnspan=2, sticky='ew', pady=(0, 12))
 
-        robot_frame = ttk.LabelFrame(self, text="Robot (vacuum-capable profiles)", padding=10)
-        robot_frame.grid(row=1, column=0, sticky="ew", pady=(10, 0))
-        robot_frame.columnconfigure(0, weight=1)
-        robot_frame.columnconfigure(1, weight=0)
+        robot = step_card(self, 1, 'Choose a robot', 'Vacuum-capable profiles only.')
+        robot.master.grid(row=1, column=0, sticky='nsew', padx=(0, 6), pady=(0, 12))
         capable = sorted(
             robot_id
             for robot_id, config in self.app.robot_profiles.items()
@@ -692,59 +704,31 @@ class VacuumTab(LabTab):
             value=self.app.robot_var.get() if self.app.robot_var.get() in capable
             else (capable[0] if capable else "")
         )
-        robot_combo = ttk.Combobox(
-            robot_frame,
-            textvariable=self.vacuum_robot_var,
-            values=capable,
-            state="readonly",
-        )
-        robot_combo.grid(row=0, column=0, sticky="ew", padx=(0, 6))
+        robot_combo = ttk.Combobox(robot, textvariable=self.vacuum_robot_var, values=capable, state="readonly")
+        robot_combo.grid(row=0, column=0, sticky="ew")
         robot_combo.bind("<<ComboboxSelected>>", self._on_robot_selected)
-        ttk.Button(
-            robot_frame,
-            text="Open Launch Tab (drive pad)",
-            command=lambda: self.app.show_tab("Launch"),
-        ).grid(row=0, column=1, sticky="ew")
 
-        launch_frame = ttk.LabelFrame(self, text="Simulation", padding=10)
-        launch_frame.grid(row=2, column=0, sticky="ew", pady=(10, 0))
-        launch_frame.columnconfigure(0, weight=1)
-        launch_frame.columnconfigure(1, weight=1)
-        ttk.Button(
-            launch_frame,
-            text="Launch Room Vacuum Simulation",
-            command=self._launch_vacuum_sim,
-        ).grid(row=0, column=0, sticky="ew", padx=(0, 4))
-        ttk.Button(
-            launch_frame, text="Stop Simulation", command=self.app.stop_launch
-        ).grid(row=0, column=1, sticky="ew", padx=(4, 0))
+        launch = step_card(self, 2, 'Start the simulation', 'Gazebo with the vacuum room world.')
+        launch.master.grid(row=1, column=1, sticky='nsew', padx=(6, 0), pady=(0, 12))
+        ttk.Button(launch, text="▶  Launch room vacuum", style='Accent.TButton',
+                   command=self._launch_vacuum_sim).grid(row=0, column=0, sticky="ew", padx=(0, 4))
+        ttk.Button(launch, text="Stop simulation", command=self.app.stop_launch).grid(
+            row=0, column=1, sticky="ew", padx=(4, 0))
 
-        cleaner_frame = ttk.LabelFrame(self, text="Cleaner Node", padding=10)
-        cleaner_frame.grid(row=3, column=0, sticky="ew", pady=(10, 0))
-        cleaner_frame.columnconfigure(0, weight=1)
-        cleaner_frame.columnconfigure(1, weight=1)
-        ttk.Button(
-            cleaner_frame, text="Start Cleaner Node", command=self._start_cleaner
-        ).grid(row=0, column=0, sticky="ew", padx=(0, 4))
-        ttk.Button(
-            cleaner_frame, text="Stop Cleaner Node", command=self._stop_cleaner
-        ).grid(row=0, column=1, sticky="ew", padx=(4, 0))
+        cleaner = step_card(self, 3, 'Run the cleaner', 'The vacuum_cleaner node plans and drives coverage.')
+        cleaner.master.grid(row=2, column=0, sticky='nsew', padx=(0, 6), pady=(0, 12))
+        ttk.Button(cleaner, text="▶  Start cleaner node", style='Accent.TButton',
+                   command=self._start_cleaner).grid(row=0, column=0, sticky="ew", padx=(0, 4))
+        ttk.Button(cleaner, text="Stop cleaner node", command=self._stop_cleaner).grid(
+            row=0, column=1, sticky="ew", padx=(4, 0))
 
-        manual_frame = ttk.LabelFrame(self, text="Manual Cleaning Drive", padding=10)
-        manual_frame.grid(row=4, column=0, sticky="nsew", pady=(10, 0))
-        ttk.Label(
-            manual_frame,
-            text=(
-                "Use the drive pad on the Launch tab to steer the robot while the "
-                "vacuum simulation is running (teleop publishes on /key_vel). "
-                "Switch to SLAM mode first if you want to build the coverage map, "
-                "then save it with the Save Map button and switch to Navigation."
-            ),
-            wraplength=680,
-            justify="left",
-        ).grid(row=0, column=0, sticky="ew")
-
-        self.rowconfigure(4, weight=1)
+        manual = step_card(self, 4, 'Or drive it yourself',
+                           'Use the Launch drive pad while the simulation runs (teleop on /key_vel). '
+                           'Choose SLAM first to build the coverage map, save it with Save Map, '
+                           'then switch to Navigation.')
+        manual.master.grid(row=2, column=1, sticky='nsew', padx=(6, 0), pady=(0, 12))
+        ttk.Button(manual, text="Open the drive pad  →", command=lambda: self.app.show_tab("Launch")).grid(
+            row=0, column=0, sticky="w")
 
     def _on_robot_selected(self, _event):
         """Sync the Vacuum robot selection back into the Launch tab."""
@@ -993,48 +977,38 @@ class TestsTab(LabTab):
         self._build_ui()
 
     def _build_ui(self):
-        frame = ttk.LabelFrame(self, text="Test Suites", padding=10)
-        frame.grid(row=0, column=0, sticky="ew")
-        frame.columnconfigure(0, weight=1)
-        frame.columnconfigure(1, weight=1)
-
-        ttk.Button(
-            frame, text="Fast Suite (P5 + P6 logic)",
-            command=lambda: self.app.start_bg_process(
-                ["bash", str(WORKSPACE_ROOT / "scripts" / "test_fast.sh")],
-                "tests",
-            ),
-        ).grid(row=0, column=0, sticky="ew", padx=(0, 4), pady=2)
-        ttk.Button(
-            frame, text="Full Suite (all tests)",
-            command=self._run_full_suite,
-        ).grid(row=0, column=1, sticky="ew", padx=(4, 0), pady=2)
-        ttk.Button(
-            frame, text="Registry Validation",
-            command=self._run_registry_validation,
-        ).grid(row=1, column=0, sticky="ew", padx=(0, 4), pady=2)
-        ttk.Button(
-            frame, text="Compile Algorithm Modules",
-            command=self._run_compile,
-        ).grid(row=1, column=1, sticky="ew", padx=(4, 0), pady=2)
-        ttk.Button(
-            frame, text="Stop Test Run",
-            command=lambda: self.app.stop_bg_process("tests"),
-        ).grid(row=2, column=0, columnspan=2, sticky="ew", pady=(6, 2))
-
-        info = ttk.Label(
-            self,
-            text=(
-                "Fast suite runs in under a minute (no simulation needed). "
-                "The full suite includes launch-orchestration tests that take "
-                "longer and need the workspace sourced. Output is streamed to "
-                "the shared console."
-            ),
-            wraplength=680,
-            justify="left",
-            foreground="#a6adc8" if THEME_AVAILABLE else "#555555",
+        self.rowconfigure(0, weight=0)
+        self.columnconfigure(0, weight=1, uniform='card'); self.columnconfigure(1, weight=1, uniform='card')
+        header = ttk.Frame(self)
+        header.grid(row=0, column=0, columnspan=2, sticky='ew', pady=(0, 12))
+        header.columnconfigure(0, weight=1)
+        ttk.Label(header, text="Output streams to the console (Logs), which opens when a suite starts.",
+                  style='Muted.TLabel').grid(row=0, column=0, sticky='w')
+        ttk.Button(header, text="Stop test run", style='Danger.TButton',
+                   command=lambda: self.app.stop_bg_process("tests")).grid(row=0, column=1, sticky='e')
+        suites = (
+            ('Fast suite', 'P5 + P6 logic; under a minute, no simulation.', self._run_fast_suite),
+            ('Full suite', 'Registry and orchestration tests; slower, needs the workspace sourced.',
+             self._run_full_suite),
+            ('Registry validation', 'Load the registry and count robots, worlds, algorithms and scenarios.',
+             self._run_registry_validation),
+            ('Compile algorithm modules', 'Byte-compile every algorithm module to catch syntax errors.',
+             self._run_compile),
         )
-        info.grid(row=1, column=0, sticky="ew", pady=(10, 0))
+        for index, (title, text, command) in enumerate(suites):
+            body = step_card(self, index + 1, title, text)
+            body.master.grid(row=1 + index // 2, column=index % 2, sticky='nsew',
+                             padx=(0, 6) if index % 2 == 0 else (6, 0), pady=(0, 12))
+            ttk.Button(body, text="▶  Run", style='Accent.TButton',
+                       command=lambda run=command: self._run_showing_console(run)).grid(row=0, column=0, sticky='w')
+
+    def _run_showing_console(self, run):
+        if not getattr(self.app, 'console_visible', True):
+            self.app._toggle_console()
+        run()
+
+    def _run_fast_suite(self):
+        self.app.start_bg_process(["bash", str(WORKSPACE_ROOT / "scripts" / "test_fast.sh")], "tests")
 
     def _run_full_suite(self):
         command = (

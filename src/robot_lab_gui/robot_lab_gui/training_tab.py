@@ -190,7 +190,7 @@ class TrainingTab(ttk.Frame):
             row=7, column=0, columnspan=4, sticky='w', pady=(2, 0))
         buttons = ttk.Frame(self)
         buttons.grid(row=1, column=0, sticky='ew', pady=8)
-        self.start_button = ttk.Button(buttons, text='Start training', command=self.start)
+        self.start_button = ttk.Button(buttons, text='▶  Start training', command=self.start, style='Accent.TButton')
         self.stop_button = ttk.Button(buttons, text='Stop and export', command=self.stop)
         self.export_button = ttk.Button(buttons, text='Export policy', command=self.export)
         self.evaluate_button = ttk.Button(buttons, text='Evaluate policy', command=self.evaluate)
