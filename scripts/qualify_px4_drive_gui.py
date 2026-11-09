@@ -128,11 +128,22 @@ def main():
         report['neutral'] = dict(commands=len(commands)-count, displacement_m=math.dist(xyz(initial), xyz(body[-1])),
                                  armed=states[-1].get('armed'))
         assert report['neutral']['commands'] == 0 and report['neutral']['displacement_m'] < .08 and not report['neutral']['armed']
+        # The takeoff gate: a fresh selected-world clearance result from the
+        # current landed pose is consumed by Takeoff (never bypassed here).
+        planning = app.drone_planning_controls
+        takeoff_state = lambda: (planning.state or {}).get('takeoff', {})  # noqa: E731
+        until(lambda: getattr(planning, 'clients', {}).get('takeoff_check') is not None
+              and planning.clients['takeoff_check'].service_is_ready(), 30)
+        planning.check_button.invoke()
+        until(lambda: takeoff_state().get('state') in ('clear', 'failed', 'invalidated'), 60)
+        report['takeoff_check'] = {k: v for k, v in takeoff_state().items() if k in ('state', 'error', 'rise_m', 'ceiling_limited')}
+        assert takeoff_state().get('state') == 'clear', ('Takeoff check', takeoff_state())
+        expected_rise = float(takeoff_state().get('rise_m') or 3.)
         app.flight_buttons[0].invoke()
         until(lambda: states and states[-1].get('phase') == 'flying', 55)
         interval(3.)
         report['takeoff_height_m'] = body[-1]['z']-initial['z']
-        assert abs(report['takeoff_height_m']-3.) < .35
+        assert abs(report['takeoff_height_m']-expected_rise) < .35
         report['directions'] = {}
         for label, sign in (('Turn Left', 1), ('Turn Right', -1)):
             first, command_start = len(body), len(commands)
