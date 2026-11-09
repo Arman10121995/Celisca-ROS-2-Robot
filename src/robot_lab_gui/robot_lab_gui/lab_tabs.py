@@ -767,8 +767,22 @@ class VacuumTab(LabTab):
         ttk.Label(config, text="Priority").grid(row=3, column=0, sticky="w")
         self.priority_var = tk.IntVar(value=1)
         ttk.Entry(config, textvariable=self.priority_var, width=10).grid(row=3, column=1, sticky="ew", padx=(8, 0))
+
+        # Power mode selector
+        ttk.Label(config, text="Power mode").grid(row=4, column=0, sticky="w", pady=(8, 0))
+        self.power_mode_var = tk.StringVar(value="standard")
+        power_combo = ttk.Combobox(config, textvariable=self.power_mode_var,
+            values=["eco", "standard", "turbo", "max"], state="readonly", width=12)
+        power_combo.grid(row=4, column=1, sticky="ew", padx=(8, 0), pady=(8, 0))
+
+        # Edge cleaning toggle
+        self.edge_clean_var = tk.BooleanVar(value=True)
+        ttk.Checkbutton(config, text="Edge cleaning (follow walls)",
+                       variable=self.edge_clean_var).grid(
+            row=5, column=0, columnspan=2, sticky="w", pady=(4, 0))
+
         ttk.Button(config, text="Apply to selected area", command=self._apply_config).grid(
-            row=4, column=0, columnspan=2, sticky="ew", pady=(8, 0))
+            row=6, column=0, columnspan=2, sticky="ew", pady=(8, 0))
         config.columnconfigure(1, weight=1)
 
         control = step_card(self, 5, 'Run cleaning', 'Start, pause, resume, stop, return to dock.')
@@ -793,18 +807,27 @@ class VacuumTab(LabTab):
         ttk.Label(mf, text="Battery:").grid(row=0, column=2, sticky="w", padx=(16, 0))
         self.battery_var = tk.StringVar(value="100%")
         ttk.Label(mf, textvariable=self.battery_var).grid(row=0, column=3, sticky="w", padx=(8, 0))
+        ttk.Label(mf, text="Power:").grid(row=0, column=4, sticky="w", padx=(16, 0))
+        self.power_var = tk.StringVar(value="Standard")
+        ttk.Label(mf, textvariable=self.power_var).grid(row=0, column=5, sticky="w", padx=(8, 0))
         ttk.Label(mf, text="Coverage:").grid(row=1, column=0, sticky="w")
         self.coverage_var = tk.StringVar(value="0%")
         ttk.Label(mf, textvariable=self.coverage_var).grid(row=1, column=1, sticky="w", padx=(8, 0))
         ttk.Label(mf, text="Elapsed:").grid(row=1, column=2, sticky="w", padx=(16, 0))
         self.elapsed_var = tk.StringVar(value="0.0 s")
         ttk.Label(mf, textvariable=self.elapsed_var).grid(row=1, column=3, sticky="w", padx=(8, 0))
+        ttk.Label(mf, text="Edge:").grid(row=1, column=4, sticky="w", padx=(16, 0))
+        self.edge_var = tk.StringVar(value="On")
+        ttk.Label(mf, textvariable=self.edge_var).grid(row=1, column=5, sticky="w", padx=(8, 0))
         ttk.Label(mf, text="Current area:").grid(row=2, column=0, sticky="w")
         self.current_area_var = tk.StringVar(value="-")
         ttk.Label(mf, textvariable=self.current_area_var).grid(row=2, column=1, sticky="w", padx=(8, 0))
-        ttk.Label(mf, text="Areas done:").grid(row=2, column=2, sticky="w", padx=(16, 0))
+        ttk.Label(mf, text="Current room:").grid(row=2, column=2, sticky="w", padx=(16, 0))
+        self.current_room_var = tk.StringVar(value="-")
+        ttk.Label(mf, textvariable=self.current_room_var).grid(row=2, column=3, sticky="w", padx=(8, 0))
+        ttk.Label(mf, text="Areas done:").grid(row=2, column=4, sticky="w", padx=(16, 0))
         self.cleaned_var = tk.StringVar(value="0 / 0")
-        ttk.Label(mf, textvariable=self.cleaned_var).grid(row=2, column=3, sticky="w", padx=(8, 0))
+        ttk.Label(mf, textvariable=self.cleaned_var).grid(row=2, column=5, sticky="w", padx=(8, 0))
         ttk.Label(monitor, text="Status log:").grid(row=1, column=0, sticky="w", pady=(8, 0))
         self.status_log = scrolledtext.ScrolledText(monitor, height=6, width=80)
         self.status_log.grid(row=2, column=0, sticky="nsew", pady=(4, 0))
@@ -834,6 +857,8 @@ class VacuumTab(LabTab):
             "speed": self.speed_var.get(),
             "passes": self.passes_var.get(),
             "priority": self.priority_var.get(),
+            "power_mode": self.power_mode_var.get(),
+            "edge_cleaning": bool(self.edge_clean_var.get()),
         }
         self.areas.append(area)
         self._refresh_area_list()
@@ -850,7 +875,7 @@ class VacuumTab(LabTab):
     def _refresh_area_list(self):
         self.area_listbox.delete(0, tk.END)
         for a in self.areas:
-            self.area_listbox.insert(tk.END, f"{a['name']} ({a['pattern']})")
+            self.area_listbox.insert(tk.END, f"{a['name']} ({a['pattern']}, {a.get('power_mode', 'standard')})")
 
     def _apply_config(self):
         sel = self.area_listbox.curselection()
@@ -861,6 +886,8 @@ class VacuumTab(LabTab):
         self.areas[idx]["speed"] = self.speed_var.get()
         self.areas[idx]["passes"] = self.passes_var.get()
         self.areas[idx]["priority"] = self.priority_var.get()
+        self.areas[idx]["power_mode"] = self.power_mode_var.get()
+        self.areas[idx]["edge_cleaning"] = bool(self.edge_clean_var.get())
         self._refresh_area_list()
         self._publish_config()
 
@@ -963,11 +990,15 @@ class VacuumTab(LabTab):
         self.coverage_var.set(f"{data.get('total_coverage_pct', 0):.1f}%")
         self.elapsed_var.set(f"{data.get('elapsed_s', 0):.1f} s")
         self.current_area_var.set(data.get('current_area_name', '-'))
+        self.current_room_var.set(data.get('current_room_name', '-'))
+        self.power_var.set(data.get('power_label', 'Standard'))
+        self.edge_var.set("On" if data.get('edge_cleaning', False) else "Off")
         self.cleaned_var.set(
             f"{data.get('areas_cleaned', 0)} / {data.get('total_areas', 0)}")
         log_line = (f"[{data.get('elapsed_s', 0):.1f}s] {state.title()} "
                     f"| battery {data.get('battery_pct', 0):.0f}% "
-                    f"| coverage {data.get('total_coverage_pct', 0):.1f}%")
+                    f"| coverage {data.get('total_coverage_pct', 0):.1f}% "
+                    f"| power {data.get('power_label', 'Standard')}")
         self.status_log.insert('end', log_line + '\n')
         self.status_log.see('end')
 

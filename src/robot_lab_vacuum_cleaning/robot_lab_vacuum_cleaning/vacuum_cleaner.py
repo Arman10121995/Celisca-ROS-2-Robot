@@ -188,6 +188,7 @@ class VacuumCleaner(Node):
         self.battery_pct = 100.0
         self.battery_charging = False
         self.start_time: Optional[float] = None
+        self.session_start_time: Optional[float] = None
         self.pause_time: Optional[float] = None
         self.total_paused_time = 0.0
         self.area_start_time: Optional[float] = None
@@ -205,12 +206,17 @@ class VacuumCleaner(Node):
         self.schedule_enabled = False
         self.dry_dock_x = 0.0
         self.dry_dock_y = 0.0
+        self.current_room_id: Optional[str] = None
+        self.current_room: Optional[Dict] = None
 
         # Session history for reports
         self.session_history: List[Dict] = []
 
         # Status history for report exports
         self.status_log: List[Dict] = []
+
+        # Last scan for edge cleaning
+        self._last_scan = None
 
         self.timer = self.create_timer(0.05, self.control_loop)
         self.status_timer = self.create_timer(0.2, self.publish_status)
@@ -224,6 +230,7 @@ class VacuumCleaner(Node):
     def scan_cb(self, msg: LaserScan):
         valid = [r for r in msg.ranges if 0.01 < r < 30.0]
         self.min_front = min(valid) if valid else 10.0
+        self._last_scan = msg
 
     def odom_cb(self, msg: Odometry):
         with self.lock:
@@ -471,6 +478,7 @@ class VacuumCleaner(Node):
             self.current_area_index = 0
             self.current_area_id = self.sorted_area_ids[0]
             self.start_time = time.time()
+            self.session_start_time = time.time()
             self.total_paused_time = 0.0
             self.battery_charging = False
             self.battery_pct = 100.0
@@ -569,13 +577,41 @@ class VacuumCleaner(Node):
             return
         # Look for a wall ahead within min_clearance
         if self.min_front < self.min_clearance:
-            self._edge_clean_phase += 1.0
+            self.edge_clean_phase += 1.0
         elif self.min_front < self.min_clearance * 2:
-            self._edge_clean_phase += 0.2
+            self.edge_clean_phase += 0.2
 
     def _session_history(self) -> list:
         """Return the cleaning history array for reporting."""
         return self.session_history
+
+    def get_coverage_report(self) -> Dict:
+        """Return a comprehensive coverage report for the current session."""
+        with self.lock:
+            state = self.state
+            battery = self.battery_pct
+            total_pct = sum(
+                r.get('coverage_pct', 0.0) for r in self.rooms.values())
+            if self.rooms:
+                total_pct = total_pct / len(self.rooms)
+            cleaned_rooms = sum(1 for r in self.rooms.values() if r.get('cleaned', False))
+            elapsed = (
+                time.time() - self.session_start_time
+                if self.session_start_time else 0.0)
+            mode = self.power_modes.get(self.power_mode, {})
+            return {
+                'state': state,
+                'battery_pct': round(battery, 1),
+                'total_coverage_pct': round(total_pct, 1),
+                'cleaned_rooms': cleaned_rooms,
+                'total_rooms': len(self.rooms),
+                'elapsed_s': round(elapsed, 1),
+                'power_mode': self.power_mode,
+                'power_label': mode.get('label', self.power_mode.title()),
+                'suction': mode.get('suction', 0.0),
+                'edge_cleaning': self.edge_cleanings_enabled,
+                'session_history': self.session_history,
+            }
 
     def _coverage_pct_for_area(self, area: CleaningArea) -> float:
         if not area.polygon:
@@ -929,6 +965,8 @@ class VacuumCleaner(Node):
             battery = self.battery_pct
             area_id = self.current_area_id
             area = self.areas.get(area_id) if area_id else None
+            room_id = self.current_room_id
+            room = self.rooms.get(room_id) if room_id else None
             x, y = self.x, self.y
             start = self.start_time or 0.0
             paused_t = self.total_paused_time
@@ -942,6 +980,8 @@ class VacuumCleaner(Node):
                 total_pct = (sum(a.coverage_pct for a in self.areas.values())
                              / len(self.areas))
             cleaned_areas = sum(1 for a in self.areas.values() if a.cleaned)
+            cleaned_rooms = sum(1 for r in self.rooms.values() if r.get('cleaned', False))
+            mode = self.power_modes.get(self.power_mode, {})
 
         status = {
             'state': state,
@@ -950,10 +990,19 @@ class VacuumCleaner(Node):
             'y': round(y, 3),
             'current_area': area_id,
             'current_area_name': area.name if area else '',
+            'current_room': room_id,
+            'current_room_name': room.get('name', '') if room else '',
             'area_coverage_pct': round(area_pct, 1),
+            'room_coverage_pct': round(room.get('coverage_pct', 0.0) if room else 0.0, 1),
             'total_coverage_pct': round(total_pct, 1),
             'areas_cleaned': cleaned_areas,
             'total_areas': len(self.areas),
+            'rooms_cleaned': cleaned_rooms,
+            'total_rooms': len(self.rooms),
+            'power_mode': self.power_mode,
+            'power_label': mode.get('label', self.power_mode.title()),
+            'suction': mode.get('suction', 0.0),
+            'edge_cleaning': self.edge_cleanings_enabled,
             'elapsed_s': round(elapsed, 1),
         }
         self.status_pub.publish(String(data=json.dumps(status)))
