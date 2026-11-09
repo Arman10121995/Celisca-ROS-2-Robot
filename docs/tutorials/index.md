@@ -48,6 +48,7 @@ pure numerical examples. For workspace setup, follow the current root
 | Locomotion policy | [Go2 flat-ground policy](go2.md) | Opt-in MuJoCo stance, command-loss stop, forward/turn and reverse dead-zone evidence; not terrain/navigation qualification |
 | Locomotion policy | [Model-matched legged policies (rl_sar)](legged-policies.md) | Exact-model rl_sar checkpoints on Go2/Go2W/A1/B2 and the G1 humanoid; measured walks on /cmd_vel in MuJoCo, Isaac and (Go2) Gazebo, 2026-10-12 |
 | Locomotion policy | [Training legged policies](legged-policy-training.md) | The GUI Training page and `legged-train`: PPO in batched MuJoCo for Go2/A1/B2 in their rl_sar contracts, export to a launchable policy directory; experimental, no trained policy qualified |
+| Cleaning | [Robot-vacuum cleaning system](robot-vacuum.md) | The Vacuum workspace and `robot_lab_vacuum_cleaning`: rooms, zones, spot, edges, no-go areas, virtual walls, dock, recharge and resume, schedules, history and maintenance for OOMWOO-class robots; experimental |
 
 [Global planning](global_planning_comparison.md) (eight planners) and
 [local planning](local_planning_comparison.md) (five controllers) are

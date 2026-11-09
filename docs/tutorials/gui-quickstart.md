@@ -115,9 +115,11 @@ navigation checks. [Current status](../status/CURRENT_STATUS.md) and
 
 ## Cleaning missions and test suites
 
-Both pages are numbered cards in the order you use them:
-- **Cleaning missions:** choose a vacuum-capable robot, start the room
-  simulation, run the cleaner node, or drive the robot yourself from the
-  Launch drive pad.
+- **Cleaning missions:** a robot-vacuum app. On the left is a live map
+  with rooms, the cleaned area, the plan, the dock and the robot, plus
+  tools for rooms, zones, no-go areas, virtual walls, spot, dock and room
+  split. On the right are the Clean, Rooms, Schedule, History, Care and
+  Setup pages. Setup launches the robot with the cleaning system
+  ([guide](robot-vacuum.md)).
 - **Test suites:** each suite has its own **Run** button, and the console
   opens when a suite starts. **Stop test run** is at the top right.
