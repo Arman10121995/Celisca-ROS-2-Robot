@@ -36,7 +36,7 @@ import numpy as np
 import rclpy
 import yaml
 from geometry_msgs.msg import PoseStamped, Twist
-from nav_msgs.msg import OccupancyGrid, Path as PathMsg
+from nav_msgs.msg import OccupancyGrid, Odometry, Path as PathMsg
 from rclpy.duration import Duration
 from rclpy.node import Node
 from rclpy.qos import (DurabilityPolicy, HistoryPolicy, QoSProfile, ReliabilityPolicy,
@@ -125,6 +125,7 @@ class VacuumCleaner(Node):
         p('auto_start_delay', 8.0)
         p('report_path', '')         # headless: write the run record here
         p('exit_on_finish', False)
+        p('truth_topic', '/odom/ground_truth')  # simulators: recorded in the report only
         gp = lambda name: self.get_parameter(name).value  # noqa: E731
 
         self.robot_model = gp('robot_model')
@@ -154,6 +155,8 @@ class VacuumCleaner(Node):
         self.create_subscription(OccupancyGrid, gp('map_topic'), self._map_cb, LATCHED)
         self.create_subscription(LaserScan, gp('scan_topic'), self._scan_cb, qos_profile_sensor_data)
         self.create_subscription(String, '/vacuum/command', self._command_cb, 20)
+        if gp('truth_topic'):
+            self.create_subscription(Odometry, gp('truth_topic'), self._truth_cb, qos_profile_sensor_data)
         if Contacts is not None and gp('bumper_topic'):
             self.create_subscription(Contacts, gp('bumper_topic'), self._bumper_cb, qos_profile_sensor_data)
         self.cliff = {}
@@ -169,6 +172,9 @@ class VacuumCleaner(Node):
         self.scan_base = None      # (points Nx2 in base frame)
         self.laser_tf = {}
         self.bump_until = 0.0
+        self.truth = None
+        self.trail = []
+        self.last_trail = 0.0
         self.bumper_msgs = 0
         self.bumper_hits = 0
         self.scan_stamp = 0.0
@@ -245,6 +251,10 @@ class VacuumCleaner(Node):
         self.scan_base = np.column_stack((tf[0] + r * np.cos(a), tf[1] + r * np.sin(a)))
         self.scan_stamp = time.monotonic()
 
+    def _truth_cb(self, msg: Odometry):
+        p = msg.pose.pose
+        self.truth = (p.position.x, p.position.y, yaw_of(p.orientation))
+
     def _bumper_cb(self, msg):
         self.bumper_msgs += 1
         if len(msg.contacts):
@@ -307,7 +317,18 @@ class VacuumCleaner(Node):
             self.cmd_pub.publish(cmd)
         self.was_active = active
         self._flush_events()
+        self._record_trail()
         self._auto()
+
+    def _record_trail(self):
+        now = time.monotonic()
+        if self.auto_cmd is None or now - self.last_trail < 1.0 or self.mission.job is None:
+            return
+        self.last_trail = now
+        r = lambda v: None if v is None else [round(a, 3) for a in v]  # noqa: E731
+        self.trail.append({'t': round(self._now(), 2), 'state': self.mission.state,
+                           'task': self.mission.active.kind if self.mission.active else '',
+                           'pose': r(self.pose), 'truth': r(self.truth)})
 
     def _auto(self):
         if self.auto_cmd is None:
@@ -316,7 +337,12 @@ class VacuumCleaner(Node):
             ready = self.mission.grid is not None and self.pose is not None
             if ready and time.monotonic() - self.started_at > float(self.get_parameter('auto_start_delay').value):
                 self.auto_started = True
-                ok, message = self.mission.command(dict(self.auto_cmd, source='auto'))
+                cmd = dict(self.auto_cmd, source='auto')
+                layout = cmd.pop('layout', None)
+                if layout:
+                    self.mission.command(dict(layout, cmd='set_layout'))
+                    self._publish_layout(force=True)
+                ok, message = self.mission.command(cmd)
                 self.auto_job = self.mission.job['id'] if ok and self.mission.job else None
                 if not ok:
                     self._write_report({'result': 'not started', 'message': message})
@@ -333,11 +359,15 @@ class VacuumCleaner(Node):
             data = dict(record)
             data['final_state'] = self.mission.state
             data['final_pose'] = list(self.pose) if self.pose else None
+            data['final_truth'] = list(self.truth) if self.truth else None
+            data['trail'] = self.trail
             data['dock'] = self.mission.layout.get('dock')
             data['robot_model'] = self.robot_model
             data['sensors'] = (getattr(self, 'last_status', None) or {}).get('sensors')
             data['events_log'] = list(self.mission.events)
             data['rooms'] = {str(k): v for k, v in self.mission.layout['rooms'].items()}
+            data['layout'] = {k: self.mission.layout.get(k) for k in ('no_go', 'walls', 'zones')}
+            data['request'] = self.auto_cmd
             Path(path).parent.mkdir(parents=True, exist_ok=True)
             with open(path, 'w', encoding='utf-8') as handle:
                 json.dump(data, handle, indent=1, sort_keys=True)
