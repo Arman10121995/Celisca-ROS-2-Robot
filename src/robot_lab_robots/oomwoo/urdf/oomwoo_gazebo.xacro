@@ -1,37 +1,177 @@
 <?xml version="1.0"?>
-<robot xmlns:xacro="http://ros.org/wiki/xacro">
+<robot name="oomwoo" xmlns:xacro="http://ros.org/wiki/xacro">
+
+  <xacro:macro name="grip" params="link">
+    <gazebo reference="${link}">
+      <mu1>1000000000000000.0</mu1>
+      <mu2>1000000000000000.0</mu2>
+      <kp>1000000000000.0</kp>
+      <kd>10.0</kd>
+      <minDepth>0.001</minDepth>
+      <maxVel>0.1</maxVel>
+      <fdir1>1 0 0</fdir1>
+    </gazebo>
+  </xacro:macro>
+  <xacro:grip link="wheel_left_link"/>
+  <xacro:grip link="wheel_right_link"/>
+
+  <xacro:macro name="slide" params="link">
+    <gazebo reference="${link}">
+      <mu1>0.05</mu1>
+      <mu2>0.05</mu2>
+      <kp>1000000.0</kp>
+      <kd>100.0</kd>
+      <minDepth>0.001</minDepth>
+      <maxVel>1.0</maxVel>
+    </gazebo>
+  </xacro:macro>
+  <xacro:slide link="front_caster_link"/>
+  <xacro:slide link="rear_caster_link"/>
+
+  <!-- Keep the bumper a link of its own so its contact sensor sees it. -->
+  <gazebo reference="bumper_joint">
+    <preserveFixedJoint>true</preserveFixedJoint>
+  </gazebo>
 
   <gazebo>
-    <plugin filename="libgazebo_ros_diff_drive.so" name="differential_drive_controller">
-      <updateRate>20</updateRate>
-      <leftJoint>left_wheel_joint</leftJoint>
-      <rightJoint>right_wheel_joint</rightJoint>
-      <wheelSeparation>0.22</wheelSeparation>
-      <wheelDiameter>0.07</wheelDiameter>
-      <torque>2.0</torque>
-      <odometrySource>world</odometrySource>
-      <odometryFrame>odom</odometryFrame>
-      <robotBaseFrame>base_footprint</robotBaseFrame>
-    </plugin>
-    <plugin filename="libgazebo_ros_imu_sensor.so" name="imu_sensor">
-      <updateRate>100</updateRate>
-      <robotNamespace>/</robotNamespace>
-      <frameName>base_link</frameName>
-      <topicName>imu</topicName>
-    </plugin>
+    <xacro:if value="$(arg is_ignition)">
+      <plugin filename="ign_ros2_control-system" name="ign_ros2_control::IgnitionROS2ControlPlugin">
+        <parameters>$(find robot_lab_robots)/oomwoo/config/robot_lab_controllers.yaml</parameters>
+      </plugin>
+      <plugin filename="ignition-gazebo-imu-system" name="ignition::gazebo::systems::Imu">
+      </plugin>
+      <plugin filename="ignition-gazebo-sensors-system" name="ignition::gazebo::systems::Sensors">
+        <render_engine>ogre2</render_engine>
+      </plugin>
+      <plugin filename="ignition-gazebo-contact-system" name="ignition::gazebo::systems::Contact">
+      </plugin>
+      <plugin filename="ignition-gazebo-odometry-publisher-system" name="ignition::gazebo::systems::OdometryPublisher">
+        <odom_frame>world</odom_frame>
+        <robot_base_frame>base_footprint</robot_base_frame>
+        <odom_topic>/model/oomwoo/odometry_truth</odom_topic>
+        <tf_topic>/model/oomwoo/truth_pose</tf_topic>
+        <odom_publish_frequency>50</odom_publish_frequency>
+        <dimensions>3</dimensions>
+      </plugin>
+    </xacro:if>
+    <xacro:unless value="$(arg is_ignition)">
+      <plugin filename="gz_ros2_control-system" name="gz_ros2_control::GazeboSimROS2ControlPlugin">
+        <parameters>$(find robot_lab_robots)/oomwoo/config/robot_lab_controllers.yaml</parameters>
+      </plugin>
+      <plugin filename="gz-sim-imu-system" name="gz::sim::systems::Imu">
+      </plugin>
+      <plugin filename="gz-sim-sensors-system" name="gz::sim::systems::Sensors">
+        <render_engine>ogre2</render_engine>
+      </plugin>
+      <plugin filename="gz-sim-contact-system" name="gz::sim::systems::Contact">
+      </plugin>
+      <plugin filename="gz-sim-odometry-publisher-system" name="gz::sim::systems::OdometryPublisher">
+        <odom_frame>world</odom_frame>
+        <robot_base_frame>base_footprint</robot_base_frame>
+        <odom_topic>/model/oomwoo/odometry_truth</odom_topic>
+        <tf_topic>/model/oomwoo/truth_pose</tf_topic>
+        <odom_publish_frequency>50</odom_publish_frequency>
+        <dimensions>3</dimensions>
+      </plugin>
+    </xacro:unless>
   </gazebo>
 
-  <gazebo reference="base_link">
-    <material>Gazebo/Black</material>
+  <gazebo reference="imu_link">
+    <sensor name="imu" type="imu">
+      <always_on>true</always_on>
+      <update_rate>100</update_rate>
+      <gz_frame_id>imu_link</gz_frame_id>
+      <topic>imu</topic>
+      <imu>
+        <angular_velocity>
+          <x><noise type="gaussian"><mean>0.0</mean><stddev>2e-4</stddev></noise></x>
+          <y><noise type="gaussian"><mean>0.0</mean><stddev>2e-4</stddev></noise></y>
+          <z><noise type="gaussian"><mean>0.0</mean><stddev>2e-4</stddev></noise></z>
+        </angular_velocity>
+        <linear_acceleration>
+          <x><noise type="gaussian"><mean>0.0</mean><stddev>1.7e-2</stddev></noise></x>
+          <y><noise type="gaussian"><mean>0.0</mean><stddev>1.7e-2</stddev></noise></y>
+          <z><noise type="gaussian"><mean>0.0</mean><stddev>1.7e-2</stddev></noise></z>
+        </linear_acceleration>
+      </imu>
+    </sensor>
   </gazebo>
-  <gazebo reference="wheel_right_link">
-    <material>Gazebo/Blue</material>
-  </gazebo>
-  <gazebo reference="wheel_left_link">
-    <material>Gazebo/Blue</material>
-  </gazebo>
+
+  <!-- 360 degree 2D LiDAR in the turret (typical vacuum LDS: 5 Hz, 12 m). -->
   <gazebo reference="laser_link">
-    <material>Gazebo/DarkGrey</material>
+    <sensor name="lidar" type="gpu_lidar">
+      <always_on>true</always_on>
+      <visualize>true</visualize>
+      <topic>scan</topic>
+      <update_rate>5</update_rate>
+      <gz_frame_id>laser_link</gz_frame_id>
+      <lidar>
+        <scan>
+          <horizontal>
+            <samples>360</samples>
+            <resolution>1.0</resolution>
+            <min_angle>0.0</min_angle>
+            <max_angle>6.28</max_angle>
+          </horizontal>
+        </scan>
+        <range>
+          <min>0.12</min>
+          <max>12.0</max>
+          <resolution>0.02</resolution>
+        </range>
+        <noise>
+          <type>gaussian</type>
+          <mean>0.0</mean>
+          <stddev>0.01</stddev>
+        </noise>
+      </lidar>
+    </sensor>
   </gazebo>
+
+  <gazebo reference="bumper_link">
+    <sensor name="bumper" type="contact">
+      <always_on>true</always_on>
+      <update_rate>50</update_rate>
+      <topic>bumper</topic>
+      <contact>
+        <collision>bumper_link_collision</collision>
+      </contact>
+    </sensor>
+  </gazebo>
+
+  <xacro:macro name="cliff_sensor" params="side">
+    <gazebo reference="cliff_${side}_link">
+      <sensor name="cliff_${side}" type="gpu_lidar">
+        <always_on>true</always_on>
+        <visualize>false</visualize>
+        <topic>cliff/${side}</topic>
+        <update_rate>10</update_rate>
+        <gz_frame_id>cliff_${side}_link</gz_frame_id>
+        <lidar>
+          <scan>
+            <horizontal>
+              <samples>1</samples>
+              <resolution>1.0</resolution>
+              <min_angle>0.0</min_angle>
+              <max_angle>0.0</max_angle>
+            </horizontal>
+          </scan>
+          <range>
+            <min>0.002</min>
+            <max>0.25</max>
+            <resolution>0.001</resolution>
+          </range>
+        </lidar>
+      </sensor>
+    </gazebo>
+  </xacro:macro>
+  <xacro:cliff_sensor side="front_left"/>
+  <xacro:cliff_sensor side="front_right"/>
+
+  <gazebo reference="base_link"><material>Gazebo/White</material></gazebo>
+  <gazebo reference="bumper_link"><material>Gazebo/Grey</material></gazebo>
+  <gazebo reference="lidar_turret_link"><material>Gazebo/Black</material></gazebo>
+  <gazebo reference="wheel_left_link"><material>Gazebo/Black</material></gazebo>
+  <gazebo reference="wheel_right_link"><material>Gazebo/Black</material></gazebo>
 
 </robot>

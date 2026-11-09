@@ -1,14 +1,22 @@
 <?xml version="1.0"?>
 <package format="3">
   <name>robot_lab_vacuum_cleaning</name>
-  <version>0.1.0</version>
-  <description>Vacuum cleaning controller for indoor mobile robots</description>
+  <version>0.2.0</version>
+  <description>Robot-vacuum cleaning system: room division, coverage, zones, no-go areas, dock, schedules and history</description>
   <maintainer email="robot@example.com">Robot Lab</maintainer>
   <license>MIT</license>
   <depend>rclpy</depend>
   <depend>geometry_msgs</depend>
   <depend>nav_msgs</depend>
   <depend>sensor_msgs</depend>
+  <depend>std_msgs</depend>
+  <depend>std_srvs</depend>
+  <depend>tf2_ros</depend>
+  <exec_depend>ros_gz_interfaces</exec_depend>
+  <exec_depend>python3-numpy</exec_depend>
+  <exec_depend>python3-scipy</exec_depend>
+  <exec_depend>python3-yaml</exec_depend>
+  <test_depend>python3-pytest</test_depend>
   <export>
     <build_type>ament_python</build_type>
   </export>

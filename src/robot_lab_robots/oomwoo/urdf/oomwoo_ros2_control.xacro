@@ -1,24 +1,44 @@
 <?xml version="1.0"?>
-<robot xmlns:xacro="http://ros.org/wiki/xacro">
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="oomwoo">
 
-  <ros2_control name="DiffDriveSystem" type="system">
-    <hardware plugin="robot_lab_controller/DiffDriveHardware"/>
-    <param name="left_wheel_joint">left_wheel_joint</param>
-    <param name="right_wheel_joint">right_wheel_joint</param>
-    <param name="wheel_separation">0.22</param>
-    <param name="wheel_radius">0.035</param>
+  <ros2_control name="RobotSystem" type="system">
 
-    <joint name="left_wheel_joint">
-      <command_interface name="velocity"/>
-      <state_interface name="position"/>
-      <state_interface name="velocity"/>
-    </joint>
+    <xacro:if value="$(arg is_sim)">
+      <xacro:if value="$(arg is_ignition)">
+        <hardware>
+          <plugin>ign_ros2_control/IgnitionSystem</plugin>
+        </hardware>
+      </xacro:if>
+      <xacro:unless value="$(arg is_ignition)">
+        <hardware>
+          <plugin>gz_ros2_control/GazeboSimSystem</plugin>
+        </hardware>
+      </xacro:unless>
+    </xacro:if>
 
-    <joint name="right_wheel_joint">
-      <command_interface name="velocity"/>
-      <state_interface name="position"/>
-      <state_interface name="velocity"/>
-    </joint>
+    <!-- No real OOMWOO hardware interface exists yet. -->
+    <xacro:unless value="$(arg is_sim)">
+      <hardware>
+        <plugin>mock_components/GenericSystem</plugin>
+      </hardware>
+    </xacro:unless>
+
+    <xacro:macro name="wheel_interface" params="name">
+      <joint name="${name}">
+        <command_interface name="velocity">
+          <param name="min">-14</param>
+          <param name="max">14</param>
+        </command_interface>
+        <state_interface name="position"/>
+        <state_interface name="velocity"/>
+        <xacro:if value="$(arg is_sim)">
+          <state_interface name="effort"/>
+        </xacro:if>
+      </joint>
+    </xacro:macro>
+    <xacro:wheel_interface name="left_wheel_joint"/>
+    <xacro:wheel_interface name="right_wheel_joint"/>
+
   </ros2_control>
 
 </robot>

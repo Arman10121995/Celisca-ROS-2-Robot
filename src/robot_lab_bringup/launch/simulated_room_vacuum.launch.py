@@ -3,8 +3,9 @@ import os
 from ament_index_python.packages import get_package_share_directory
 from launch import LaunchDescription
 from launch.actions import DeclareLaunchArgument, IncludeLaunchDescription
+from launch.conditions import IfCondition
 from launch.launch_description_sources import PythonLaunchDescriptionSource
-from launch.substitutions import LaunchConfiguration
+from launch.substitutions import LaunchConfiguration, PythonExpression
 from launch_ros.actions import Node
 from launch_ros.parameter_descriptions import ParameterValue
 
@@ -49,6 +50,10 @@ def generate_launch_description():
     start_rtabmap_viz = LaunchConfiguration("start_rtabmap_viz")
     cleaning_grid_spacing_m = LaunchConfiguration("cleaning_grid_spacing_m")
     robot_obstacle_clearance_m = LaunchConfiguration("robot_obstacle_clearance_m")
+    controller = LaunchConfiguration("controller")
+    vacuum_auto_start = LaunchConfiguration("vacuum_auto_start")
+    vacuum_report = LaunchConfiguration("vacuum_report")
+    vacuum_battery_scale = LaunchConfiguration("vacuum_battery_time_scale")
 
     simulation = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(os.path.join(bringup_share, "launch", "simulated_robot.launch.py")),
@@ -91,11 +96,13 @@ def generate_launch_description():
         }.items(),
     )
 
+    # controller:=explore - the original explore-then-sweep controller.
     room_vacuum = Node(
         package="robot_lab_controller",
         executable="mapping_controller.py",
         name="room_vacuum_controller",
         output="screen",
+        condition=IfCondition(PythonExpression(["'", controller, "' == 'explore'"])),
         parameters=[{
             "use_sim_time": ParameterValue(use_sim_time, value_type=bool),
             "cleaning_grid_spacing_m": ParameterValue(cleaning_grid_spacing_m, value_type=float),
@@ -103,7 +110,38 @@ def generate_launch_description():
         }],
     )
 
+    # controller:=cleaning - the robot-vacuum cleaning system (rooms, zones,
+    # no-go areas, dock, schedules); the Vacuum workspace drives it.
+    cleaning = Node(
+        package="robot_lab_vacuum_cleaning",
+        executable="vacuum_cleaner",
+        name="vacuum_cleaner",
+        output="screen",
+        condition=IfCondition(PythonExpression(["'", controller, "' == 'cleaning'"])),
+        parameters=[{
+            "use_sim_time": ParameterValue(use_sim_time, value_type=bool),
+            "robot_model": robot_model,
+            "map_key": map_name,
+            "auto_start": ParameterValue(vacuum_auto_start, value_type=str),
+            "report_path": vacuum_report,
+            "battery_time_scale": ParameterValue(vacuum_battery_scale, value_type=float),
+        }],
+    )
+
     return LaunchDescription([
+        DeclareLaunchArgument(
+            "controller",
+            default_value="explore",
+            choices=["explore", "cleaning", "none"],
+            description="explore: original explore-then-sweep controller; cleaning: "
+                        "robot-vacuum cleaning system (robot_lab_vacuum_cleaning); none: simulation only.",
+        ),
+        DeclareLaunchArgument("vacuum_auto_start", default_value="",
+                              description="cleaning: start this mode (all, edges, explore) once ready."),
+        DeclareLaunchArgument("vacuum_report", default_value="",
+                              description="cleaning: write the auto-started run record to this JSON path."),
+        DeclareLaunchArgument("vacuum_battery_time_scale", default_value="-1.0",
+                              description="cleaning: battery model time scale (<=0 keeps the saved setting)."),
         DeclareLaunchArgument(
             "mode",
             default_value="nav",
@@ -175,4 +213,5 @@ def generate_launch_description():
         ),
         simulation,
         room_vacuum,
+        cleaning,
     ])
