@@ -43,7 +43,7 @@ class PlanningMap:
     def __init__(self, grid: Grid, robot_radius: float, margin: float = 0.04,
                  keepout: Optional[Keepout] = None,
                  extra_blocked: Optional[np.ndarray] = None,
-                 unknown_is_blocked: bool = True):
+                 unknown_is_blocked: bool = True, keepout_margin: float = 0.12):
         self.grid = grid
         self.robot_radius = float(robot_radius)
         self.margin = float(margin)
@@ -59,7 +59,11 @@ class PlanningMap:
         self.obstacle_clearance_m = clearance(obstacles) * res
         self.clearance_m = clearance(blocked) * res
         self.required = self.robot_radius + self.margin
-        self.traversable = self.clearance_m > self.required
+        # Operator keep-outs get a wider berth than walls: localisation and
+        # path-following errors must not carry the body into a no-go area.
+        keep_clear = clearance(self.keepout_mask) * res
+        self.traversable = (self.obstacle_clearance_m > self.required) & \
+            (keep_clear > self.required + keepout_margin)
         # Prefer the middle of free space: cost rises inside ``comfort``.
         comfort = self.required + 0.25
         excess = np.clip(comfort - self.clearance_m, 0.0, None) / 0.25

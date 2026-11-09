@@ -95,6 +95,9 @@ class PathFollower:
         self.goal_tolerance = goal_tolerance
         self.stop_margin = stop_margin
         self.index = 0
+        self.arc = [0.0]
+        for p, q in zip(self.points, self.points[1:]):
+            self.arc.append(self.arc[-1] + math.dist(p, q))
 
     def remaining(self) -> List[Point]:
         return self.points[self.index:]
@@ -111,8 +114,13 @@ class PathFollower:
         pts = self.points
         if not pts:
             return 0.0, 0.0, 'done'
-        # Advance the progress index to the nearest point in a short window.
-        end = min(len(pts), self.index + 12)
+        # Advance the progress index to the nearest point within a short
+        # stretch of path ahead (by arc length), so a spiral or a lane
+        # beside the previous one cannot pull the index past a section.
+        end = self.index + 1
+        reach = self.arc[self.index] + self.lookahead + 0.1
+        while end < len(pts) and self.arc[end] <= reach:
+            end += 1
         best = min(range(self.index, end), key=lambda i: math.dist((x, y), pts[i]))
         self.index = best
         goal = pts[-1]
@@ -796,7 +804,8 @@ class Mission:
         elif task.kind in ('transit', 'dock', 'explore'):
             speed = min(self.config.max_speed, speed * 1.2)
         speed = min(speed, self.config.max_speed)
-        self.follower = PathFollower(task.points, speed, self.config.max_turn,
+        lookahead = {'spot': 0.15, 'edge': 0.18, 'lane': 0.25}.get(task.kind, 0.3)
+        self.follower = PathFollower(task.points, speed, self.config.max_turn, lookahead=lookahead,
                                      goal_tolerance=0.1 if task.kind in ('transit', 'explore') else 0.07)
         self.plan_points = list(task.points)
         self.watch = None
