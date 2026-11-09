@@ -1,0 +1,18 @@
+{
+ "robot": "g1",
+ "variant": "lab_walk_g1_walk_r1",
+ "profile": "unitree_g1_29dof",
+ "upstream": "robot_lab_adapter.legged_train",
+ "revision": "c84db2a2",
+ "onnx_sha256": "5aa50e953a195b816925fffebcb71e9d49deb694e3bd785e1b020e9ae2f5bd2f",
+ "input_width": 96,
+ "trained_by": "robot_lab_adapter.legged_train",
+ "template_policy": "g1_robomimic_locomotion",
+ "task": "walk",
+ "iteration": 1500,
+ "environment_steps": 18432000,
+ "source_revision": "c84db2a2",
+ "checkpoint": "/workspace/molar/robot_lab_runtime/training/g1_walk_r1/checkpoints/latest.pt",
+ "exported": "2026-11-05T18:14:08",
+ "qualification": "trained in the MuJoCo training environment; runtime evidence pending"
+}

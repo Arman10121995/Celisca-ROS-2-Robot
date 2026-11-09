@@ -1,0 +1,18 @@
+{
+ "revision": "7d4ab5f3",
+ "derived": "sha256 of each file as git stores it at this revision, computed 2026-11-09 after the run; uncommitted working-tree changes at run time are not captured",
+ "files": {
+  "scripts/sim_drive_check.py": "f198d55479cd06da2a066444db67250a5bff8b19d1d985fbe075092eba69c0f5",
+  "scripts/sim_drive_check.sh": "2fea215360c227a185a2a15e0732636a1c8e7052d1169e94e5b00a49e9682042",
+  "src/robot_lab_adapter/robot_lab_adapter/legged_policy.py": "2277ab59eb447900641797a71c71595d6859dd0640ac5f883c6cc41194a83cc7",
+  "src/robot_lab_adapter/robot_lab_adapter/legged_policy_controller.py": "142047dd5d1a8a24011ee9d3a67b6e2afd9df27f1dd766292dd1bef47d527418",
+  "src/robot_lab_adapter/robot_lab_adapter/legged_train.py": "ad0eb8827b3c5c830290f52c543bc25504d4245324d8b7728c8c5aa8efff6240",
+  "src/robot_lab_adapter/robot_lab_adapter/legged_training.py": "90af311d8c907f26aa40c0a59155934ded06aa9cb9f6f7d09148c2ea633a1e19",
+  "src/robot_lab_adapter/robot_lab_adapter/ppo.py": "763c275e479f33d7dbc6edb51b92099f34c3e73a9f64dbaf4f07a1deb45c41f5",
+  "src/robot_lab_bringup/launch/simulated_robot.launch.py": "49600cff247398f7ae7c0eb554e2e764b0a0ae7e2989465600675382435d4ffa",
+  "src/robot_lab_isaac/python/robot_lab_isaac/isaac_runtime.py": "ae0161f18486bb4cc54662cd8b6fde74d9b9c62e9cb4d6788b98d979ff1f1689",
+  "src/robot_lab_isaac/python/robot_lab_isaac/isaac_spawner.py": "939d680b1a6d4dd19fcf0611aa8c886fc94d3d18637815595561aca890dbba85",
+  "src/robot_lab_mujoco/python/robot_lab_mujoco/mujoco_spawner.py": "cf702151c11e77edb91b9bdffe614b1288f618ab86bd2d98a48a96244b34679e",
+  "src/robot_lab_robots/config/robots.yaml": "07a1fed308ea3f60f32530f229250065fb410de61e869b78f483e65385d80f22"
+ }
+}

@@ -1,0 +1,30 @@
+{
+ "robot": "unitree_g1_29dof",
+ "task": "walk",
+ "envs": 512,
+ "steps": 24,
+ "iterations": 1500,
+ "learning_rate": 0.001,
+ "seed": 1,
+ "episode_s": 20.0,
+ "randomize": false,
+ "terrain": "flat",
+ "roughness": 0.03,
+ "obs_noise": 0.0,
+ "latency_ms": 0.0,
+ "obs_dim": 96,
+ "act_dim": 29,
+ "hidden": [
+  512,
+  256,
+  128
+ ],
+ "name": "g1_walk_r1",
+ "revision": "c84db2a2",
+ "template": "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_adapter/share/robot_lab_adapter/policies/rl_sar/g1_robomimic_locomotion",
+ "policy_period_s": 0.02,
+ "stand_height_m": 0.778421317831812,
+ "feet": 2,
+ "started": "2026-11-05T17:18:02",
+ "pid": 2732158
+}

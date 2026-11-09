@@ -1,0 +1,38 @@
+{
+ "last_iteration": {
+  "iteration": 2500,
+  "environment_steps": 30720000,
+  "steps_per_s": 16456,
+  "iteration_s": 2.02,
+  "wall_s": 4907.6,
+  "mean_return": 23.86047337463733,
+  "mean_episode_s": 20.0,
+  "terms": {
+   "tracking_lin_vel": 0.018965,
+   "tracking_ang_vel": 0.009033,
+   "feet_air_time": -0.000678,
+   "lin_vel_z": -0.000323,
+   "ang_vel_xy": -0.000547,
+   "orientation": -9.3e-05,
+   "torques": -0.001135,
+   "dof_acc": -0.00046,
+   "action_rate": -0.000658,
+   "termination": 0.0,
+   "lin_vel_error": 0.099873,
+   "ang_vel_error": 0.132931
+  },
+  "value_loss": 0.000229,
+  "surrogate_loss": -0.008029,
+  "entropy": 1.874577,
+  "kl": 0.012939,
+  "learning_rate": 5.1e-05,
+  "action_std": 0.285713
+ },
+ "final_record": {
+  "event": "finished",
+  "iteration": 2500,
+  "environment_steps": 30720000,
+  "policy": "/workspace/molar/robot_lab_runtime/training/go2_rough_r1/policy",
+  "stopped": false
+ }
+}

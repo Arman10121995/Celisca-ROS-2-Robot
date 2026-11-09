@@ -1,0 +1,108 @@
+{
+ "policy": "/workspace/molar/robot_lab_runtime/training/g1_walk_r1/policy",
+ "robot": "unitree_g1_29dof",
+ "task": "walk",
+ "phases": [
+  {
+   "command": [
+    0.5,
+    0.0,
+    0.0
+   ],
+   "measured": [
+    1.072,
+    -0.204,
+    0.012
+   ],
+   "seconds": 7.0,
+   "fallen": false
+  },
+  {
+   "command": [
+    1.0,
+    0.0,
+    0.0
+   ],
+   "measured": [
+    1.205,
+    -0.098,
+    -0.038
+   ],
+   "seconds": 7.0,
+   "fallen": false
+  },
+  {
+   "command": [
+    -0.4,
+    0.0,
+    0.0
+   ],
+   "measured": [
+    0.123,
+    -0.016,
+    0.244
+   ],
+   "seconds": 7.0,
+   "fallen": false
+  },
+  {
+   "command": [
+    0.0,
+    0.3,
+    0.0
+   ],
+   "measured": [
+    -0.061,
+    0.216,
+    -0.131
+   ],
+   "seconds": 7.0,
+   "fallen": false
+  },
+  {
+   "command": [
+    0.0,
+    0.0,
+    0.8
+   ],
+   "measured": [
+    0.106,
+    -0.029,
+    0.322
+   ],
+   "seconds": 7.0,
+   "fallen": false
+  },
+  {
+   "command": [
+    0.0,
+    0.0,
+    -0.8
+   ],
+   "measured": [
+    0.083,
+    -0.02,
+    0.177
+   ],
+   "seconds": 7.0,
+   "fallen": false
+  },
+  {
+   "command": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "measured": [
+    0.105,
+    -0.026,
+    0.102
+   ],
+   "seconds": 7.0,
+   "fallen": false
+  }
+ ],
+ "terrain": "flat",
+ "simulator": "mujoco (training environment)",
+ "deployment_code": "legged_policy.LeggedPolicy"
+}

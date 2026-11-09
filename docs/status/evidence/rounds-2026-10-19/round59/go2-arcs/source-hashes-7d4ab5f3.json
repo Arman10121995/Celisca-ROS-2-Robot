@@ -1,0 +1,12 @@
+{
+ "revision": "7d4ab5f3",
+ "derived": "sha256 of each file as git stores it at this revision, computed 2026-11-09 after the run; uncommitted working-tree changes at run time are not captured",
+ "files": {
+  "scripts/sim_nav_mission.py": "b859965f84c391066b2ad0ccad45755b97bd10439d14a3c849d9610943bea3ed",
+  "src/robot_lab_adapter/robot_lab_adapter/legged_policy_controller.py": "142047dd5d1a8a24011ee9d3a67b6e2afd9df27f1dd766292dd1bef47d527418",
+  "src/robot_lab_bringup/launch/simulated_robot.launch.py": "49600cff247398f7ae7c0eb554e2e764b0a0ae7e2989465600675382435d4ffa",
+  "src/robot_lab_isaac/python/robot_lab_isaac/isaac_runtime.py": "ae0161f18486bb4cc54662cd8b6fde74d9b9c62e9cb4d6788b98d979ff1f1689",
+  "src/robot_lab_navigation/config/robots/unitree_go2.yaml": "4bb55004ebf614e7454975e69cf80440b471126e61be682e731a105378f1f4a2",
+  "src/robot_lab_robots/config/robots.yaml": "07a1fed308ea3f60f32530f229250065fb410de61e869b78f483e65385d80f22"
+ }
+}

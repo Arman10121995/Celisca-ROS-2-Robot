@@ -1,0 +1,70 @@
+# Trained policies of 2026-11-05 driven through the normal launch, indexed by
+# scripts/r9_3_index_missions.py.  Each policy has its own task_type, so no
+# record replaces another policy's (or the rl_sar policies') cells.
+#   go2_walk_r3   Go2 walk, randomised, observation noise, 20 ms actuation delay
+#   go2w_walk_r1  Go2W (velocity-controlled wheels) walk, first run
+#   g1_walk_r1    G1 29-DoF humanoid walk, first run
+#   go2_rough_r1  Go2 walk on a rough heightfield (0.04 m), randomised, noise, delay
+date: '2026-11-09'
+scope: "Exact hashed named simulation screens through November 5; unlisted cells remain untested."
+source_files:
+  - src/robot_lab_bringup/launch/simulated_robot.launch.py
+  - src/robot_lab_robots/config/robots.yaml
+  - scripts/sim_drive_check.py
+  - scripts/sim_drive_check.sh
+  - src/robot_lab_adapter/robot_lab_adapter/legged_training.py
+  - src/robot_lab_adapter/robot_lab_adapter/ppo.py
+  - src/robot_lab_adapter/robot_lab_adapter/legged_train.py
+  - src/robot_lab_adapter/robot_lab_adapter/legged_policy.py
+  - src/robot_lab_adapter/robot_lab_adapter/legged_policy_controller.py
+  - src/robot_lab_mujoco/python/robot_lab_mujoco/mujoco_spawner.py
+  - src/robot_lab_isaac/python/robot_lab_isaac/isaac_spawner.py
+  - src/robot_lab_isaac/python/robot_lab_isaac/isaac_runtime.py
+groups:
+  - reports:
+      - docs/status/evidence/training-2026-10-19/go2_walk_r3/*_unitree_go2_nav_empty.json
+    report_kind: drive_screen
+    identity: {task_type: trained_policy_drive_go2_walk_r3}
+    date: '2026-11-05'
+    revision: "7d4ab5f3 (round T5, 16:13-16:19; go2_walk_r3 trained at 7d4ab5f3)"
+    hash_revision: 7d4ab5f3
+    scope: >-
+      Loc mode with legged_policy:=<go2_walk_r3/policy> on nav_empty: eight
+      /cmd_vel phases (straight, arcs, reverse, tight turn, spin in place,
+      strafe, stop) measured from simulator truth after a 10 s warm-up.
+    limitations:
+      - One run per backend on nav_empty; no terrain, pushes or navigation
+      - Trained only in MuJoCo on a flat floor
+  - reports:
+      - docs/status/evidence/training-2026-10-19/go2w_walk_r1/mujoco_unitree_go2w_nav_empty.json
+    report_kind: drive_screen
+    identity: {task_type: trained_policy_drive_go2w_walk_r1}
+    date: '2026-11-05'
+    revision: "7d4ab5f3 (round T5, 17:16-17:18)"
+    hash_revision: 7d4ab5f3
+    scope: As above for Go2W with go2w_walk_r1, MuJoCo only.
+    limitations:
+      - MuJoCo only; strafe is not tracked (0.018 m/s)
+  - reports:
+      - docs/status/evidence/training-2026-10-19/g1_walk_r1/mujoco_unitree_g1_29dof_nav_empty.json
+    report_kind: drive_screen
+    identity: {task_type: trained_policy_drive_g1_walk_r1}
+    date: '2026-11-05'
+    revision: "7d4ab5f3 (round T5, 18:14-18:16)"
+    hash_revision: 7d4ab5f3
+    scope: As above for the G1 humanoid with g1_walk_r1, MuJoCo only.
+    limitations:
+      - MuJoCo only; the policy does not track commands (about 1.0 m/s for 0.4, forward for reverse)
+  - reports:
+      - docs/status/evidence/training-2026-10-19/go2_rough_r1/*_unitree_go2_*.json
+    report_kind: drive_screen
+    identity: {task_type: trained_policy_drive_go2_rough_r1}
+    date: '2026-11-05'
+    revision: "c84db2a2 (round 62, 21:03-21:12; go2_rough_r1 trained at c84db2a2)"
+    hash_revision: c84db2a2
+    scope: >-
+      As above with go2_rough_r1 on nav_empty and terrain_heightfield in
+      MuJoCo and Isaac.
+    limitations:
+      - One run per cell
+      - On terrain_heightfield MuJoCo measured no motion and Isaac 0.064 m/s straight

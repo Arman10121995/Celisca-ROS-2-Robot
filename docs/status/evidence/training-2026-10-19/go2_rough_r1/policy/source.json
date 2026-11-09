@@ -1,0 +1,18 @@
+{
+ "robot": "go2",
+ "variant": "lab_walk_go2_rough_r1",
+ "profile": "unitree_go2",
+ "upstream": "robot_lab_adapter.legged_train",
+ "revision": "c84db2a2",
+ "onnx_sha256": "5c29b50e7ddad7e124fa1ad1a6d5c456511b57f7243f5de87eddb0aea368c8b0",
+ "input_width": 45,
+ "trained_by": "robot_lab_adapter.legged_train",
+ "template_policy": "go2_himloco",
+ "task": "walk",
+ "iteration": 2500,
+ "environment_steps": 30720000,
+ "source_revision": "c84db2a2",
+ "checkpoint": "/workspace/molar/robot_lab_runtime/training/go2_rough_r1/checkpoints/latest.pt",
+ "exported": "2026-11-05T21:02:58",
+ "qualification": "trained in the MuJoCo training environment; runtime evidence pending"
+}

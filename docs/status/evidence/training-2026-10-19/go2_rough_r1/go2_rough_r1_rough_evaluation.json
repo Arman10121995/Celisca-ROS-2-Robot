@@ -1,0 +1,108 @@
+{
+ "policy": "/workspace/molar/robot_lab_runtime/training/go2_rough_r1/policy",
+ "robot": "unitree_go2",
+ "task": "walk",
+ "phases": [
+  {
+   "command": [
+    0.5,
+    0.0,
+    0.0
+   ],
+   "measured": [
+    0.592,
+    0.031,
+    0.032
+   ],
+   "seconds": 7.0,
+   "fallen": false
+  },
+  {
+   "command": [
+    1.0,
+    0.0,
+    0.0
+   ],
+   "measured": [
+    1.053,
+    0.068,
+    0.091
+   ],
+   "seconds": 7.0,
+   "fallen": false
+  },
+  {
+   "command": [
+    -0.4,
+    0.0,
+    0.0
+   ],
+   "measured": [
+    -0.483,
+    0.003,
+    0.025
+   ],
+   "seconds": 7.0,
+   "fallen": false
+  },
+  {
+   "command": [
+    0.0,
+    0.3,
+    0.0
+   ],
+   "measured": [
+    0.057,
+    0.412,
+    0.055
+   ],
+   "seconds": 7.0,
+   "fallen": false
+  },
+  {
+   "command": [
+    0.0,
+    0.0,
+    0.8
+   ],
+   "measured": [
+    0.033,
+    0.045,
+    0.872
+   ],
+   "seconds": 7.0,
+   "fallen": false
+  },
+  {
+   "command": [
+    0.0,
+    0.0,
+    -0.8
+   ],
+   "measured": [
+    0.043,
+    0.01,
+    -0.847
+   ],
+   "seconds": 7.0,
+   "fallen": false
+  },
+  {
+   "command": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "measured": [
+    -0.002,
+    0.0,
+    0.005
+   ],
+   "seconds": 7.0,
+   "fallen": false
+  }
+ ],
+ "terrain": "rough",
+ "simulator": "mujoco (training environment)",
+ "deployment_code": "legged_policy.LeggedPolicy"
+}

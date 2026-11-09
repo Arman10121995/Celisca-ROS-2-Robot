@@ -1,0 +1,38 @@
+{
+ "last_iteration": {
+  "iteration": 2000,
+  "environment_steps": 24576000,
+  "steps_per_s": 17990,
+  "iteration_s": 2.623,
+  "wall_s": 5429.2,
+  "mean_return": 23.68263433053517,
+  "mean_episode_s": 20.0,
+  "terms": {
+   "tracking_lin_vel": 0.018982,
+   "tracking_ang_vel": 0.009104,
+   "feet_air_time": -0.001037,
+   "lin_vel_z": -0.000343,
+   "ang_vel_xy": -0.0005,
+   "orientation": -0.00015,
+   "torques": -0.001019,
+   "dof_acc": -0.000499,
+   "action_rate": -0.000641,
+   "termination": 0.0,
+   "lin_vel_error": 0.098737,
+   "ang_vel_error": 0.12731
+  },
+  "value_loss": 0.009041,
+  "surrogate_loss": -0.003848,
+  "entropy": 1.924047,
+  "kl": 0.020123,
+  "learning_rate": 1e-05,
+  "action_std": 0.285984
+ },
+ "final_record": {
+  "event": "finished",
+  "iteration": 2000,
+  "environment_steps": 24576000,
+  "policy": "/workspace/molar/robot_lab_runtime/training/go2_walk_r3/policy",
+  "stopped": false
+ }
+}

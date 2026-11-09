@@ -1,0 +1,15 @@
+{
+ "revision": "7d4ab5f3",
+ "derived": "sha256 of each file as git stores it at this revision, computed 2026-11-09 after the run; uncommitted working-tree changes at run time are not captured",
+ "files": {
+  "scripts/sim_car_course.py": "37c4d2833d3fbde42ed67360c9aa94cfb8724e4edcbf369fa41b30f5f7a80a64",
+  "scripts/sim_car_course.sh": "bc79a318d168f052fd91d3f5719b17997c7e07a548017e531f9021d016e58816",
+  "src/robot_lab_bringup/launch/simulated_robot.launch.py": "49600cff247398f7ae7c0eb554e2e764b0a0ae7e2989465600675382435d4ffa",
+  "src/robot_lab_navigation/config/robots/ackermann_car.yaml": "f43790fbd7364e3733f2c5bde0d6fcdb460ea166468249fc840e91d5843ab0fd",
+  "src/robot_lab_navigation/config/robots/anti_ackermann_car.yaml": "9ee1c0f54bb3c08e983387ab07210a705592a46b5fdea5412b5d9866b3a0b100",
+  "src/robot_lab_navigation/config/robots/rear_steer_car.yaml": "7f2601b2bb10dfd5ae48e805a045e117b2cd8d6c8fdd8913b0c1f03932951084",
+  "src/robot_lab_navigation/launch/navigation.launch.py": "a1972460e8c636528397c79cea22d2133e324e0a46e89de48339be74d5565d04",
+  "src/robot_lab_robots/config/robots.yaml": "07a1fed308ea3f60f32530f229250065fb410de61e869b78f483e65385d80f22",
+  "src/robot_lab_utils/robot_lab_utils/car_alignment.py": "57320cf44c1b40eb66b164bbfe8dff9ef9acb75cd22df4d15a1c5c922b14ed50"
+ }
+}

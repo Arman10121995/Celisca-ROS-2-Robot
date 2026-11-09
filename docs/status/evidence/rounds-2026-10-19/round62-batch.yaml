@@ -1,0 +1,31 @@
+# Round 62 (2026-11-05), indexed by scripts/r9_3_index_missions.py: the car
+# course with the heading shuffle followed by the straight depth trim
+# (--align-heading --trim) in all twelve cells.
+date: '2026-11-09'
+scope: "Exact hashed named simulation screens through November 5; unlisted cells remain untested."
+source_files:
+  - src/robot_lab_bringup/launch/simulated_robot.launch.py
+  - src/robot_lab_robots/config/robots.yaml
+groups:
+  - reports:
+      - docs/status/evidence/rounds-2026-10-19/round62/course/*_car_course.json
+    report_kind: course_screen
+    identity: {task_type: car_course}
+    date: '2026-11-05'
+    revision: "c84db2a2 (round 62, 18:52-19:41; trim 49005309)"
+    hash_revision: c84db2a2
+    source_files:
+      - scripts/sim_car_course.py
+      - scripts/sim_car_course.sh
+      - src/robot_lab_utils/robot_lab_utils/car_alignment.py
+      - src/robot_lab_navigation/config/robots/ackermann_car.yaml
+      - src/robot_lab_navigation/config/robots/anti_ackermann_car.yaml
+      - src/robot_lab_navigation/config/robots/rear_steer_car.yaml
+      - src/robot_lab_navigation/launch/navigation.launch.py
+    scope: >-
+      As round 59, plus a straight creep along the heading to the bay depth
+      after the shuffle (trim, at most 0.4 m).  Gates within 0.30 m of truth,
+      the bay within 0.15 m and 10 degrees, footprint clear.
+    limitations:
+      - One run per cell; flat floor, scripted course, no traffic
+      - Gazebo rear-steer and Isaac anti-Ackermann abort in the slalom (RPP collision-ahead)

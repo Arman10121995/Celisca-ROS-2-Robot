@@ -1,0 +1,69 @@
+# Round 59 (2026-11-05), indexed by scripts/r9_3_index_missions.py: the car
+# course with the cone-clearance planner settings and the steering settle
+# before each shuffle arc (Gazebo twice, then PyBullet, MuJoCo, Isaac), and
+# Go2 nav_obstacle in Isaac with the second trained policy go2_walk_r2.
+date: '2026-11-09'
+scope: "Exact hashed named simulation screens through November 5; unlisted cells remain untested."
+source_files:
+  - src/robot_lab_bringup/launch/simulated_robot.launch.py
+  - src/robot_lab_robots/config/robots.yaml
+groups:
+  - reports:
+      - docs/status/evidence/rounds-2026-10-19/round59/course/*_car_course.json
+      - docs/status/evidence/rounds-2026-10-19/round59/course-r2/*_car_course.json
+    report_kind: course_screen
+    identity: {task_type: car_course}
+    date: '2026-11-05'
+    revision: "7d4ab5f3 (round 59, 12:28-14:18; planner dfd89fa3, settle dfd89fa3)"
+    hash_revision: 7d4ab5f3
+    source_files:
+      - scripts/sim_car_course.py
+      - scripts/sim_car_course.sh
+      - src/robot_lab_utils/robot_lab_utils/car_alignment.py
+      - src/robot_lab_navigation/config/robots/ackermann_car.yaml
+      - src/robot_lab_navigation/config/robots/anti_ackermann_car.yaml
+      - src/robot_lab_navigation/config/robots/rear_steer_car.yaml
+      - src/robot_lab_navigation/launch/navigation.launch.py
+    scope: >-
+      Nav2 drives the car through a four-gate cone slalom and nose-in into a
+      0.8 m parking bay; the heading shuffle (with a 0.8 s steering settle
+      before each arc) corrects the heading after Nav2 arrives.  Gates within
+      0.30 m of truth, the bay within 0.15 m and 10 degrees, footprint clear.
+    limitations:
+      - One run per cell; Gazebo repeated (course-r2, indexed after course, so it controls the Gazebo cells); flat floor, no traffic
+      - No depth trim; most failures park 0.15-0.18 m short along the bay
+  - reports:
+      - docs/status/evidence/rounds-2026-10-19/round59/go2/*_unitree_go2_seed*_nav_obstacle.json
+    identity: {task_type: trained_policy_navigation_go2_walk_r2}
+    date: '2026-11-05'
+    revision: "7d4ab5f3 (round 59, 14:18-14:37; policy go2_walk_r2 trained at 6e96113)"
+    hash_revision: 7d4ab5f3
+    source_files:
+      - scripts/sim_nav_mission.py
+      - src/robot_lab_navigation/config/robots/unitree_go2.yaml
+      - src/robot_lab_adapter/robot_lab_adapter/legged_policy.py
+      - src/robot_lab_adapter/robot_lab_adapter/legged_policy_controller.py
+      - src/robot_lab_isaac/python/robot_lab_isaac/isaac_spawner.py
+      - src/robot_lab_isaac/python/robot_lab_isaac/isaac_runtime.py
+    scope: >-
+      Go2 with the trained go2_walk_r2 policy and spin_in_place:=true,
+      nav_obstacle seeds 1-3: two goals judged from simulator truth (0.25 m
+      class tolerance, yaw not judged), then a cancel and stop.
+    limitations:
+      - One run per seed in Isaac only; flat floor
+      - Yaw at the goals is not judged (--max-yaw-error-deg 0)
+  - reports:
+      - docs/status/evidence/rounds-2026-10-19/round59/go2-arcs/*_unitree_go2_seed*_nav_obstacle.json
+    identity: {task_type: trained_policy_navigation_go2_walk_r2_forward_arcs}
+    date: '2026-11-05'
+    revision: "7d4ab5f3 (round 59, 14:37-14:42; policy go2_walk_r2)"
+    hash_revision: 7d4ab5f3
+    source_files:
+      - scripts/sim_nav_mission.py
+      - src/robot_lab_navigation/config/robots/unitree_go2.yaml
+      - src/robot_lab_adapter/robot_lab_adapter/legged_policy_controller.py
+      - src/robot_lab_isaac/python/robot_lab_isaac/isaac_runtime.py
+    scope: >-
+      As above with the default forward-arc navigation (no spin in place), seed 1.
+    limitations:
+      - One seed in Isaac only
