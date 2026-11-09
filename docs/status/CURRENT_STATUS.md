@@ -1,5 +1,28 @@
 # Current Robot Lab status
 
+November 9 (recorded from the November 5 queues):
+- **Car course** (R5.5, round 62): the heading shuffle plus a straight
+  depth trim passes the full course in 10 of 12 cells, parking within
+  0.003-0.079 m. Gazebo rear-steer and Isaac anti-Ackermann abort in the
+  slalom (RPP collision-ahead). Round 59 without the trim: 5 of 15.
+- **Go2 training** (R12):
+  - `go2_walk_r3` (20 ms actuation delay) passes the drive screen in
+    MuJoCo, Gazebo and Isaac; in Isaac it reaches 0.319 of 0.4 m/s.
+  - First runs: `go2w_walk_r1` passes in MuJoCo; `g1_walk_r1` fails (no
+    command tracking).
+  - `go2_rough_r1` walks on flat floors but not on the heightfield.
+  - Isaac navigation with `go2_walk_r2` reaches every goal, but only 1 of
+    3 seeds lands within the matrix's 0.25 m.
+- **Support matrix:** 687 reports, 310 cells, 298 passed and 11 failed
+  ([matrix](evidence/support-matrix-2026-11-09/README.md)).
+- **PX4 manual-flight GUI runs in 8 worlds:** all failed because the
+  vehicle never armed. The qualification script skipped the takeoff
+  clearance check the gate requires. Fixed in 1cb48d45; not re-run yet.
+- **Robot-vacuum cleaning system** (OOMWOO-class, new R13): implemented
+  and experimental ([guide](../tutorials/robot-vacuum.md),
+  [continuation](vacuum-continuation-2026-11-09.md)); Gazebo runs in
+  progress.
+
 November 5 GUI redesign:
 - **Header:** a live session indicator (idle, or running with robot,
   world, simulator and elapsed time) replaces the repeated page title.

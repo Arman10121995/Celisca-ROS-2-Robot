@@ -997,6 +997,20 @@ Dependencies: `R5.1`, `R3.3`.
   - all three Gazebo cars abort in the slalom (RPP "collision ahead"). This
     contradicts round 51's Gazebo passes, and repeats are needed.
   [Round 58](docs/status/evidence/rounds-2026-10-19/README.md).
+- 2026-11-05 rounds 59 and 62:
+  - The Ackermann/anti-Ackermann planner limits the analytic expansion
+    (`analytic_expansion_max_length` 1.0, `cost_penalty` 3.0), which brings
+    the Gazebo cars back through the slalom.
+  - A 0.8 s steering settle precedes each shuffle arc.
+  - Round 59 passed 5 of 15 runs; most failures parked 0.15-0.18 m short
+    along the bay.
+  - A straight depth trim after the shuffle (`--trim`) closes that gap.
+    Round 62 passes the full course in **10 of 12 cells**, parking within
+    0.003-0.079 m and 4.4 degrees.
+  - Remaining: Gazebo rear-steer and Isaac anti-Ackermann abort in the
+    slalom (RPP collision-ahead); the planned
+    `max_allowed_time_to_collision_up_to_carrot` change is not applied yet.
+  - [Matrix](docs/status/evidence/support-matrix-2026-11-09/README.md).
 
 ### R5.6 — Qualify four-wheel steering and physical mecanum motion
 
@@ -1840,21 +1854,28 @@ forward speed is 0.22 of 0.4 m/s
 - [Evidence](docs/status/evidence/training-2026-10-19/README.md),
   [round 58](docs/status/evidence/rounds-2026-10-19/README.md).
 
-**Implemented, not yet run:** Go2W (velocity-controlled wheels) and G1
-humanoid training contracts, feet found by name, and an actuation-delay
-option (`--latency-ms`, Training page checkbox).
+**Measured 2026-11-05**
+([matrix](docs/status/evidence/support-matrix-2026-11-09/README.md)):
+- **Actuation delay:** `go2_walk_r3` (randomisation, noise, 20 ms
+  delay) passes the drive screen in MuJoCo, Gazebo and Isaac. Isaac reaches
+  0.319 of 0.4 m/s (r2 0.261) and keeps a 0.20 m/s strafe.
+- **First Go2W and G1 runs:** `go2w_walk_r1` passes in MuJoCo with no
+  strafe. `g1_walk_r1` fails: it does not track commands.
+- **Rough terrain:** `go2_rough_r1` (0.04 m heightfield) walks on flat
+  floors (MuJoCo 0.476, Isaac 0.322 m/s) but not on `terrain_heightfield`
+  (MuJoCo no motion, Isaac 0.064 m/s).
+- **Navigation:** in Isaac with `go2_walk_r2` and spin in place, every
+  goal is reached, but 1 of 3 seeds ends within the 0.25 m screen (0.15-0.30 m).
 
 Acceptance: a policy trained here walks (or performs its task) in measured
 runs on the lab's backends, judged by the existing drive and mission
 screens. Open:
 
-- the Isaac speed gap (0.26 of 0.4 m/s with r2) and slow final approach;
-  repeats per backend;
-- the r2 strafe loss outside MuJoCo; a run with the actuation delay;
-- navigation passing with a trained policy (MuJoCo 1/3, Isaac 0/3);
-- a terrain curriculum (slopes, stairs);
-- GPU training;
-- first Go2W and G1 runs.
+- the remaining Isaac speed gap (0.32 of 0.4 m/s with r3); repeats per backend;
+- navigation precision with a trained policy (Isaac goals 0.15-0.30 m; 1/3 inside 0.25 m);
+- a terrain curriculum (the rough policy does not walk the heightfield);
+- G1 command tracking; Go2W strafe;
+- GPU training.
 
 ## Common implementation and evidence contract
 

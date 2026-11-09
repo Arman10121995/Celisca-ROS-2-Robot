@@ -131,6 +131,10 @@ current_verification:
     (28.1 m, RMSE 1.3 cm, map precision/recall 0.97/0.79; 1.49 m and 0.12/0.16 before); rear-steer car course after
     84422df passes its slalom in all four backends and the full course in MuJoCo (parking 0.091 m, -3.4 deg); parking
     heading fails in Gazebo/PyBullet/Isaac (11.6-14.3 deg). docs/status/evidence/rounds-2026-10-19/README.md.'
+  matrix_2026_11_09: '687 indexed reports, 310 measured cells: 298 passed and 11 failed screens; adds rounds 59
+    and 62 (car course with shuffle + depth trim: 10 of 12 pass, parking 0.003-0.079 m), go2_walk_r2 Isaac
+    navigation (goals reached, 1 of 3 seeds inside 0.25 m) and the go2_walk_r3, go2w_walk_r1, g1_walk_r1 and
+    go2_rough_r1 drive cells. docs/status/evidence/support-matrix-2026-11-09/README.md.'
   matrix_2026_11_05: '647 indexed reports, 299 measured cells: 289 passed and 9 failed screens; adds round 58
     (car course with the parking shuffle: 8 of 12 pass; Go2 trained-policy navigation: MuJoCo 1/3, Isaac 0/3)
     and the go2_walk_r2 drive cells. docs/status/evidence/support-matrix-2026-11-05/README.md.'
@@ -333,7 +337,7 @@ auv_terrain_fleet_20261102:
   title: Curved AUV routes, terrain adapters and concurrent fleet missions
   reconciliation_baseline: 1d8b29a8
   baseline_revision: 43473387
-  updated: '2026-11-03'
+  updated: '2026-11-09'
   scope_paths: [src/robot_lab_utils/, src/robot_lab_adapter/, src/robot_lab_gui/, src/robot_lab_bringup/, src/robot_lab_mujoco/, src/robot_lab_pybullet/, src/robot_lab_isaac/, src/robot_lab_robots/, src/robot_lab_maps/, src/robot_lab/robot_lab_registry/config/, scripts/, docs/, README.md, ROADMAP.md]
   scope: User-requested completion of source-appropriate curved AUV routes, terrain/backend adapters and concurrent fleet missions. Preserve all native source limits, ownership, observation, map and cancellation barriers and historical measurements.
   qualification: Implement missing workflows, build packages and record actual bounded missions; software checks never substitute for physical mission evidence or universal backend acceptance.
@@ -1890,7 +1894,10 @@ tasks:
       0.833, 0.224) and Isaac (0.221, 0.641, 0.131); 20 s held turn in Isaac 0.55-0.57 rad/s and MuJoCo 0.78.
       go2_walk_r2 (randomised, noisy observations, 2026-10-29) passes in all three; Isaac 0.261 m/s and 0.846
       rad/s, strafe lost outside MuJoCo. Navigation with go2_walk_r1 and spin_in_place on nav_obstacle: MuJoCo
-      1/3, Isaac 0/3 (round 58). Go2W/G1 contracts and an actuation delay are implemented, not run.'
+      1/3, Isaac 0/3 (round 58). November 5: go2_walk_r3 (20 ms actuation delay) passes all three (Isaac
+      0.319 m/s, strafe kept); go2w_walk_r1 passes MuJoCo; g1_walk_r1 fails (no command tracking); go2_rough_r1
+      walks flat floors but not terrain_heightfield; Isaac navigation with go2_walk_r2 reaches every goal, 1 of
+      3 seeds inside 0.25 m (docs/status/evidence/support-matrix-2026-11-09/README.md).'
     owner: claude
     scope_paths:
     - src/robot_lab_adapter/
@@ -4868,7 +4875,7 @@ tasks:
     qualification_review: '2026-10-27 documentation review: retain the implemented code, tests and named mission
       certificates. Full declared roadmap acceptance is still open; test counts, metadata and scene loads
       do not qualify remaining robot/map/backend missions. See docs/REMAINING_WORK_GUIDE.md.'
-updated: '2026-11-03'
+updated: '2026-11-09'
 runtime_completion_20261027:
   owner: codex
   state: partial
