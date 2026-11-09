@@ -402,7 +402,8 @@ robots:
     xacro: oomwoo/urdf/oomwoo.urdf.xacro
     name: oomwoo
     supported_modes: [display, loc, slam, 3d_slam, nav]
-    features: [ros2_control, lidar_2d, distance_sensor, cliff_sensor, bumper_sensor, vacuum, lighting]
+    features: [ros2_control, lidar_2d, distance_sensor, cliff_sensor,
+               bumper_sensor, vacuum, lighting, velocity_base]
     # OOMWOO is a compact 2D LiDAR home robot vacuum:
     # - 2D LiDAR (RPLIDAR/A1M8) for navigation and obstacle detection
     # - 4S Li-ion battery (14.8V) with integrated BMS
@@ -417,8 +418,8 @@ robots:
     drive:
       type: diff
       # OEM xacro will define joints after package install; keep profile here
-      left_wheel_joint: null
-      right_wheel_joint: null
+      left_wheel_joint: left_wheel_joint
+      right_wheel_joint: right_wheel_joint
       wheel_radius: 0.035
       wheel_separation: 0.22
       max_speed: 0.6

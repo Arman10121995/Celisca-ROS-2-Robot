@@ -1,0 +1,37 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://ros.org/wiki/xacro">
+
+  <gazebo>
+    <plugin filename="libgazebo_ros_diff_drive.so" name="differential_drive_controller">
+      <updateRate>20</updateRate>
+      <leftJoint>left_wheel_joint</leftJoint>
+      <rightJoint>right_wheel_joint</rightJoint>
+      <wheelSeparation>0.22</wheelSeparation>
+      <wheelDiameter>0.07</wheelDiameter>
+      <torque>2.0</torque>
+      <odometrySource>world</odometrySource>
+      <odometryFrame>odom</odometryFrame>
+      <robotBaseFrame>base_footprint</robotBaseFrame>
+    </plugin>
+    <plugin filename="libgazebo_ros_imu_sensor.so" name="imu_sensor">
+      <updateRate>100</updateRate>
+      <robotNamespace>/</robotNamespace>
+      <frameName>base_link</frameName>
+      <topicName>imu</topicName>
+    </plugin>
+  </gazebo>
+
+  <gazebo reference="base_link">
+    <material>Gazebo/Black</material>
+  </gazebo>
+  <gazebo reference="wheel_right_link">
+    <material>Gazebo/Blue</material>
+  </gazebo>
+  <gazebo reference="wheel_left_link">
+    <material>Gazebo/Blue</material>
+  </gazebo>
+  <gazebo reference="laser_link">
+    <material>Gazebo/DarkGrey</material>
+  </gazebo>
+
+</robot>
