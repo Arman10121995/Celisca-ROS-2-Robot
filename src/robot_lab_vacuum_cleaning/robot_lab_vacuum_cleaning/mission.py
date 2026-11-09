@@ -94,44 +94,74 @@ class PathFollower:
         self.lookahead = lookahead
         self.goal_tolerance = goal_tolerance
         self.stop_margin = stop_margin
-        self.index = 0
+        self.index = 0          # segment the robot is on
+        self.s = 0.0            # progress along the path (m), never decreases
+        self.turning = False
         self.arc = [0.0]
         for p, q in zip(self.points, self.points[1:]):
             self.arc.append(self.arc[-1] + math.dist(p, q))
 
+    def point_at(self, s: float) -> Point:
+        pts, arc = self.points, self.arc
+        if s <= 0.0 or len(pts) == 1:
+            return pts[0]
+        if s >= arc[-1]:
+            return pts[-1]
+        i = max(0, min(len(pts) - 2, next(k for k in range(1, len(arc)) if arc[k] >= s) - 1))
+        seg = arc[i + 1] - arc[i]
+        t = 0.0 if seg <= 0 else (s - arc[i]) / seg
+        return (pts[i][0] + t * (pts[i + 1][0] - pts[i][0]), pts[i][1] + t * (pts[i + 1][1] - pts[i][1]))
+
     def remaining(self) -> List[Point]:
-        return self.points[self.index:]
+        if not self.points:
+            return []
+        rest = [p for p, a in zip(self.points, self.arc) if a > self.s + 1e-6]
+        return [self.point_at(self.s)] + rest
 
     def remaining_length(self, pose: Pose) -> float:
-        pts = self.points[self.index:]
-        if not pts:
+        if not self.points:
             return 0.0
-        d = math.dist(pose[:2], pts[0])
-        return d + sum(math.dist(p, q) for p, q in zip(pts, pts[1:]))
+        here = self.point_at(self.s)
+        return math.dist(pose[:2], here) + max(0.0, self.arc[-1] - self.s)
+
+    def _project(self, x: float, y: float) -> None:
+        """Move the progress to the closest point on the path within a short
+        stretch ahead (by arc length), so a spiral ring or a neighbouring
+        lane cannot pull it past a section."""
+        pts, arc = self.points, self.arc
+        if len(pts) < 2:
+            return
+        reach = self.s + self.lookahead + 0.15
+        best_d, best_s = math.inf, self.s
+        i = self.index
+        while i < len(pts) - 1 and arc[i] <= reach:
+            (ax, ay), (bx, by) = pts[i], pts[i + 1]
+            dx, dy = bx - ax, by - ay
+            seg2 = dx * dx + dy * dy
+            t = 0.0 if seg2 <= 0 else max(0.0, min(1.0, ((x - ax) * dx + (y - ay) * dy) / seg2))
+            d = math.hypot(x - ax - t * dx, y - ay - t * dy)
+            s = min(arc[i] + t * math.sqrt(seg2), reach)
+            if d < best_d - 1e-9 and s >= self.s - 1e-9:
+                best_d, best_s = d, s
+            i += 1
+        self.s = max(self.s, best_s)
+        while self.index < len(pts) - 2 and arc[self.index + 1] <= self.s:
+            self.index += 1
 
     def step(self, pose: Pose, front_clear: float) -> Tuple[float, float, str]:
         x, y, yaw = pose
         pts = self.points
         if not pts:
             return 0.0, 0.0, 'done'
-        # Advance the progress index to the nearest point within a short
-        # stretch of path ahead (by arc length), so a spiral or a lane
-        # beside the previous one cannot pull the index past a section.
-        end = self.index + 1
-        reach = self.arc[self.index] + self.lookahead + 0.1
-        while end < len(pts) and self.arc[end] <= reach:
-            end += 1
-        best = min(range(self.index, end), key=lambda i: math.dist((x, y), pts[i]))
-        self.index = best
+        self._project(x, y)
         goal = pts[-1]
         dist_goal = math.dist((x, y), goal)
-        if dist_goal < self.goal_tolerance and self.index >= len(pts) - 2:
+        if dist_goal < self.goal_tolerance and self.s >= self.arc[-1] - max(0.15, self.lookahead):
             return 0.0, 0.0, 'done'
-        target = goal
-        for p in pts[self.index:]:
-            if math.dist((x, y), p) >= self.lookahead:
-                target = p
-                break
+        # Aim a lookahead ahead of our place on the path (the goal at the end).
+        target = self.point_at(self.s + self.lookahead)
+        if math.dist((x, y), target) < 0.02:
+            target = goal
         heading = math.atan2(target[1] - y, target[0] - x)
         err = wrap(heading - yaw)
         remaining = self.remaining_length(pose)
@@ -139,9 +169,15 @@ class PathFollower:
         # past the end (a wall at the end of a lane) does not.
         if front_clear < self.stop_margin and remaining > front_clear + 0.06 and abs(err) <= 0.75:
             return 0.0, 0.0, 'blocked'
-        if abs(err) > 0.75:
+        # Turn on the spot when facing away; keep turning until nearly
+        # aligned so the robot does not alternate step and turn.
+        if abs(err) > 0.75 or (self.turning and abs(err) > 0.25):
+            self.turning = True
             w = max(-self.max_turn, min(self.max_turn, 2.2 * err))
+            if abs(w) < 0.3:
+                w = math.copysign(0.3, err)
             return 0.0, w, 'running'
+        self.turning = False
         v = self.speed * max(0.25, math.cos(err))
         v = min(v, 0.6 * dist_goal + 0.04)
         if front_clear < 0.25 and remaining > front_clear + 0.06:
@@ -618,16 +654,33 @@ class Mission:
         elif mode == 'spot':
             centre = tuple(req.get('point') or here)
             side = float(req.get('side', 1.6))
-            for p in range(max(passes, 2)):
-                runs = planner.spot_spiral(pm, centre, side, cfg.lane_spacing)
-                if p % 2 == 1:
-                    runs = [list(reversed(r)) for r in reversed(runs)]
-                for run in runs:
-                    tasks.append(Task('spot', run, 0, suction))
+            h = side / 2.0
+            square = grid.polygon_mask([(centre[0] - h, centre[1] - h), (centre[0] + h, centre[1] - h),
+                                        (centre[0] + h, centre[1] + h), (centre[0] - h, centre[1] + h)])
+            region = pm.traversable & reach & square
+            runs = planner.spot_spiral(pm, centre, side, cfg.lane_spacing)
+            segs = [(p, q) for run in runs for p, q in zip(run, run[1:])]
+            swept = planner.sweep_mask(grid, segs, clean_r) & region if segs else region & False
+            if region.any() and swept.sum() >= 0.9 * region.sum():
+                # Open floor: the classic spiral, out and back in.
+                for p in range(max(passes, 2)):
+                    ordered = runs if p % 2 == 0 else [list(reversed(r)) for r in reversed(runs)]
+                    for run in ordered:
+                        tasks.append(Task('spot', run, 0, suction))
+            else:
+                # Furniture cuts the spiral: cross-hatched lanes over the
+                # reachable part of the square instead.
+                axis = planner.best_axis(grid, region, cfg.lane_spacing)
+                for p in range(max(passes, 2)):
+                    ax = axis if p % 2 == 0 else ('y' if axis == 'x' else 'x')
+                    lanes = planner.lane_segments(grid, region, cfg.lane_spacing, ax, clean_r)
+                    for a, b in planner.order_segments(lanes, here):
+                        tasks.append(Task('spot', planner.segment_points(a, b), 0, suction))
+                        here = b
             half = side / 2.0 + clean_r
             poly = [(centre[0] - half, centre[1] - half), (centre[0] + half, centre[1] - half),
                     (centre[0] + half, centre[1] + half), (centre[0] - half, centre[1] + half)]
-            target = grid.polygon_mask(poly) & planner.dilate(pm.traversable & reach, clean_r / grid.resolution) & free
+            target = grid.polygon_mask(poly) & planner.dilate(region, clean_r / grid.resolution) & free
         return tasks, target
 
     def estimate_seconds(self, tasks: Optional[Sequence[Task]] = None) -> float:

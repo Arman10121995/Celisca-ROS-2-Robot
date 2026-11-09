@@ -398,11 +398,16 @@ def spot_spiral(pmap: PlanningMap, centre: Point, side: float = 1.6,
     leg = spacing
     dirs = ((1, 0), (0, 1), (-1, 0), (0, -1))
     k = 0
-    while leg <= side + 1e-9:
+    h = side / 2.0
+    # One turn past the square, clamped to it, so the last ring runs the
+    # whole edge instead of stopping short on two sides.
+    while leg <= side + 2 * spacing + 1e-9:
         for _ in range(2):
             dx, dy = dirs[k % 4]
             x, y = x + dx * leg, y + dy * leg
-            pts.append((x, y))
+            p = (min(max(x, centre[0] - h), centre[0] + h), min(max(y, centre[1] - h), centre[1] + h))
+            if math.dist(p, pts[-1]) > 1e-6:
+                pts.append(p)
             k += 1
         leg += spacing
     dense = []

@@ -285,3 +285,27 @@ def test_consumables_and_dustbin_accumulate(tmp_path, suction):
     assert status['consumables']['filter']['used_h'] > 0.0
     assert mission.command({'cmd': 'reset_consumable', 'name': 'filter'})[0]
     assert mission.status()['consumables']['filter']['used_h'] == 0.0
+
+
+@pytest.mark.parametrize('point,box', [((2.0, 2.0), False), ((2.0, 2.0), True)])
+def test_spot_covers_its_square_on_open_floor_and_beside_furniture(tmp_path, point, box):
+    grid = two_rooms()
+    if box:
+        grid.data[38:42, 44:54] = 100   # a bar 0.5 m right of the spot centre
+    mission = make_mission(tmp_path, grid, (1.0, 1.0, 0.0))
+    world = World(grid, (1.0, 1.0, 0.0))
+    assert mission.command({'cmd': 'start', 'mode': 'spot', 'point': list(point)})[0]
+    run(mission, world, 1500, until=lambda m: m.job is None)
+    assert mission.last_record['result'] == 'completed'
+    assert mission.last_record['coverage_pct'] > 85.0
+
+
+def test_follower_does_not_turn_back_to_a_path_start_behind_it():
+    f = PathFollower([(0.0, 0.2), (0.0, -0.2)], 0.25, 1.6, lookahead=0.15)
+    pose = [0.03, 0.08, -0.2]
+    for _ in range(80):
+        v, w, status = f.step(tuple(pose), 5.0)
+        if status == 'done':
+            break
+        pose = [pose[0] + v * math.cos(pose[2]) * 0.1, pose[1] + v * math.sin(pose[2]) * 0.1, pose[2] + w * 0.1]
+    assert status == 'done'
