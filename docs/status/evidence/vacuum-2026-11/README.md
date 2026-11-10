@@ -31,6 +31,27 @@ Each report is judged by **`cleaning_screen`**
 | Mapping run (slam mode) | 8a122bbe | **fail** | – | – | – | stayed at the start pose 20 min (explore loop); stopped, no report; fixed in 84dc2704 |
 | Mapping run (slam mode) | 1e229701 | **fail** | – | – | – | mapped 5 rooms, then the node died logging a warning (rclpy severity per call site); fixed in 7fb652e6 |
 | Mapping run (slam mode) | 7fb652e6 | pass | map complete, 6 rooms | 6.2 min, 85 m | 0.027 m, −3.2° | frontier exploration of the live slam_toolbox map |
+| Office, repeats 2 and 3 | e3a64f40 | pass, pass | 94.4 %, 95.0 % | 5.7, 5.6 min | 0.036 m, 0.046 m | office named by a point (`room_points`); the bumper touches furniture |
+| Keep-out zone, repeats 2 and 3 | e3a64f40 | pass, pass | 99.4 %, 99.4 % | 6.1 min each | 0.034 m each | |
+| Spot, repeats 2 and 3 | e3a64f40 | pass, pass | 91.2 %, 90.2 % | 3.0 min each | 0.041 m, 0.064 m | |
+| Keep-out zone, **PyBullet** | e3a64f40 | pass | 97.9 % (10.4 m²) | 9.9 min | 0.018 m, 2.0° | no bumper/cliff sensor in the PyBullet bridge |
+| Keep-out zone, **Isaac** | e3a64f40 | pass | 99.3 % (10.0 m²) | 7.3 min | 0.042 m, −4.4° | no bumper/cliff sensor in the Isaac bridge |
+| **Second building** (celisca_floor_1_furniture), two rooms | e3a64f40 | **fail** (interference) | 38.4 % | 17.7 min | 2.65 m | another session's Gazebo run on the same ROS domain sent a second `/clock` from minute 10; AMCL lost the robot. Rerun on domain 117 |
+
+### Live GUI session (claude-v72, `scripts/qualify_vacuum_gui.py`)
+
+The real Tk Vacuum tab under Xvfb, independent truth from `/odom/ground_truth`
+in the GUI process ([report](gui-v72/report.json)):
+
+| Job | Result | Coverage | Dock error | GUI steps |
+|---|---|---|---|---|
+| Office, paused and resumed | pass | 90.2 % (9.0 m²) | 0.022 m | Setup launch → Divide map → office clicked with the Rooms tool → Start → Pause (truth still for 5 s: 0.0 m) → Resume (moved 1.39 m in 8 s) → docked; History row read back |
+| Zone with no-go box and wall | pass | 99.5 % (10.0 m²) | 0.038 m | No-go, Wall and Zone drawn with the map tools → Start → docked |
+
+| | |
+|---|---|
+| ![Paused](gui-v72/room-office-paused.png) | ![Office docked](gui-v72/room-office-docked.png) |
+| ![Zone cleaning](gui-v72/zone-keepout-cleaning.png) | ![Zone docked](gui-v72/zone-keepout-docked.png) |
 
 ![Whole home](figures/gazebo_whole_home.png)
 
@@ -62,6 +83,8 @@ stays as the backup for obstacles the bumper does not touch.
 
 ## Limits
 
-- One run per cell; one house; Gazebo, plus one MuJoCo case.
+- Three runs each for office, keep-out zone and spot; one run for the other cells.
+- One house so far (the second-building run was invalidated by interference).
+- Gazebo for all jobs; MuJoCo, PyBullet and Isaac for the keep-out zone only.
 - Battery, dustbin and part wear are models.
-- Recorded queue folders: `/workspace/molar/robot_lab_runtime/claude-v67`, `claude-v68`, `claude-v70`, `claude-v71`.
+- Recorded queue folders: `/workspace/molar/robot_lab_runtime/claude-v67`, `claude-v68`, `claude-v70`, `claude-v71`, `claude-v72`.

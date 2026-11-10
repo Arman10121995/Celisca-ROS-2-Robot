@@ -276,3 +276,135 @@ groups:
     truth trail.'
   limitations:
   - One run; drawn with the tab's apply_tool (the handler behind a mouse drag), not synthetic mouse events
+- reports:
+  - docs/status/evidence/vacuum-2026-11/runs-v72/gazebo_rooms_office_r2.json
+  - docs/status/evidence/vacuum-2026-11/runs-v72/gazebo_rooms_office_r3.json
+  report_kind: cleaning_screen
+  identity:
+    robot_id: oomwoo
+    environment_id: small_house
+    simulator: gazebo
+    task_type: vacuum_rooms
+  date: '2026-11-10'
+  revision: e3a64f40 (queue T17, claude-v72)
+  hash_revision: e3a64f40
+  source_files:
+  - src/robot_lab_vacuum_cleaning/robot_lab_vacuum_cleaning/mission.py
+  - src/robot_lab_vacuum_cleaning/robot_lab_vacuum_cleaning/planner.py
+  - src/robot_lab_vacuum_cleaning/robot_lab_vacuum_cleaning/rooms.py
+  - src/robot_lab_vacuum_cleaning/robot_lab_vacuum_cleaning/grid.py
+  - src/robot_lab_vacuum_cleaning/robot_lab_vacuum_cleaning/vacuum_cleaner.py
+  - src/robot_lab_description/launch/gazebo.launch.py
+  scope: 'Repeats 2 and 3 of the office rooms job, the office named by a point inside it (room_points). Judged by cleaning_screen: completed, >= 85 % of the reachable target cleaned, truth on the dock within 0.10 m / 10 deg, no-go and virtual-wall compliance from the simulator-truth trail.'
+  limitations:
+  - 'Two repeats; with the first run (5061bc1d) three runs: 95.4 / 94.4 / 95.0 %'
+  - 'The working bumper touches office furniture (70 and 63 contact messages)'
+- reports:
+  - docs/status/evidence/vacuum-2026-11/runs-v72/gazebo_zone_keepout_r2.json
+  - docs/status/evidence/vacuum-2026-11/runs-v72/gazebo_zone_keepout_r3.json
+  report_kind: cleaning_screen
+  identity:
+    robot_id: oomwoo
+    environment_id: small_house
+    simulator: gazebo
+    task_type: vacuum_zone_keepout
+  date: '2026-11-10'
+  revision: e3a64f40 (queue T17, claude-v72)
+  hash_revision: e3a64f40
+  source_files:
+  - src/robot_lab_vacuum_cleaning/robot_lab_vacuum_cleaning/mission.py
+  - src/robot_lab_vacuum_cleaning/robot_lab_vacuum_cleaning/planner.py
+  - src/robot_lab_vacuum_cleaning/robot_lab_vacuum_cleaning/rooms.py
+  - src/robot_lab_vacuum_cleaning/robot_lab_vacuum_cleaning/grid.py
+  - src/robot_lab_vacuum_cleaning/robot_lab_vacuum_cleaning/vacuum_cleaner.py
+  - src/robot_lab_description/launch/gazebo.launch.py
+  scope: 'Repeats 2 and 3 of the zone job with a 1 m no-go box and a 1.6 m virtual wall. Judged by cleaning_screen: completed, >= 85 % of the reachable target cleaned, truth on the dock within 0.10 m / 10 deg, no-go and virtual-wall compliance from the simulator-truth trail.'
+  limitations:
+  - 'Two repeats; with the first run three runs: 99.6 / 99.4 / 99.4 %'
+- reports:
+  - docs/status/evidence/vacuum-2026-11/runs-v72/gazebo_spot_r2.json
+  - docs/status/evidence/vacuum-2026-11/runs-v72/gazebo_spot_r3.json
+  report_kind: cleaning_screen
+  identity:
+    robot_id: oomwoo
+    environment_id: small_house
+    simulator: gazebo
+    task_type: vacuum_spot
+  date: '2026-11-10'
+  revision: e3a64f40 (queue T17, claude-v72)
+  hash_revision: e3a64f40
+  source_files:
+  - src/robot_lab_vacuum_cleaning/robot_lab_vacuum_cleaning/mission.py
+  - src/robot_lab_vacuum_cleaning/robot_lab_vacuum_cleaning/planner.py
+  - src/robot_lab_vacuum_cleaning/robot_lab_vacuum_cleaning/rooms.py
+  - src/robot_lab_vacuum_cleaning/robot_lab_vacuum_cleaning/grid.py
+  - src/robot_lab_vacuum_cleaning/robot_lab_vacuum_cleaning/vacuum_cleaner.py
+  - src/robot_lab_description/launch/gazebo.launch.py
+  scope: 'Repeats 2 and 3 of the spot job beside a furniture bar. Judged by cleaning_screen: completed, >= 85 % of the reachable target cleaned, truth on the dock within 0.10 m / 10 deg, no-go and virtual-wall compliance from the simulator-truth trail.'
+  limitations:
+  - 'Two repeats; with the first run three runs: 90.7 / 91.2 / 90.2 %'
+- reports:
+  - docs/status/evidence/vacuum-2026-11/runs-v72/pybullet_zone_keepout.json
+  report_kind: cleaning_screen
+  identity:
+    robot_id: oomwoo
+    environment_id: small_house
+    simulator: pybullet
+    task_type: vacuum_zone_keepout
+  date: '2026-11-10'
+  revision: e3a64f40 (queue T17, claude-v72)
+  hash_revision: e3a64f40
+  source_files:
+  - src/robot_lab_vacuum_cleaning/robot_lab_vacuum_cleaning/mission.py
+  - src/robot_lab_vacuum_cleaning/robot_lab_vacuum_cleaning/planner.py
+  - src/robot_lab_vacuum_cleaning/robot_lab_vacuum_cleaning/rooms.py
+  - src/robot_lab_vacuum_cleaning/robot_lab_vacuum_cleaning/grid.py
+  - src/robot_lab_vacuum_cleaning/robot_lab_vacuum_cleaning/vacuum_cleaner.py
+  - src/robot_lab_description/launch/gazebo.launch.py
+  scope: 'The zone job with the no-go box and virtual wall in PyBullet. Judged by cleaning_screen: completed, >= 85 % of the reachable target cleaned, truth on the dock within 0.10 m / 10 deg, no-go and virtual-wall compliance from the simulator-truth trail.'
+  limitations:
+  - 'One run; the PyBullet bridge casts a 2D LiDAR but has no bumper or cliff sensor'
+- reports:
+  - docs/status/evidence/vacuum-2026-11/runs-v72/isaac_zone_keepout.json
+  report_kind: cleaning_screen
+  identity:
+    robot_id: oomwoo
+    environment_id: small_house
+    simulator: isaac
+    task_type: vacuum_zone_keepout
+  date: '2026-11-10'
+  revision: e3a64f40 (queue T17, claude-v72)
+  hash_revision: e3a64f40
+  source_files:
+  - src/robot_lab_vacuum_cleaning/robot_lab_vacuum_cleaning/mission.py
+  - src/robot_lab_vacuum_cleaning/robot_lab_vacuum_cleaning/planner.py
+  - src/robot_lab_vacuum_cleaning/robot_lab_vacuum_cleaning/rooms.py
+  - src/robot_lab_vacuum_cleaning/robot_lab_vacuum_cleaning/grid.py
+  - src/robot_lab_vacuum_cleaning/robot_lab_vacuum_cleaning/vacuum_cleaner.py
+  - src/robot_lab_description/launch/gazebo.launch.py
+  scope: 'The zone job with the no-go box and virtual wall in Isaac Sim. Judged by cleaning_screen: completed, >= 85 % of the reachable target cleaned, truth on the dock within 0.10 m / 10 deg, no-go and virtual-wall compliance from the simulator-truth trail.'
+  limitations:
+  - 'One run; the Isaac bridge has no bumper or cliff sensor'
+  - 'imu_republisher and isaac_spawner errors in the log come after the report, at shutdown'
+- reports:
+  - docs/status/evidence/vacuum-2026-11/runs-v72/gazebo_celisca_rooms.json
+  report_kind: cleaning_screen
+  identity:
+    robot_id: oomwoo
+    environment_id: celisca_floor_1_furniture
+    simulator: gazebo
+    task_type: vacuum_rooms
+  date: '2026-11-10'
+  revision: e3a64f40 (queue T17, claude-v72)
+  hash_revision: e3a64f40
+  source_files:
+  - src/robot_lab_vacuum_cleaning/robot_lab_vacuum_cleaning/mission.py
+  - src/robot_lab_vacuum_cleaning/robot_lab_vacuum_cleaning/planner.py
+  - src/robot_lab_vacuum_cleaning/robot_lab_vacuum_cleaning/rooms.py
+  - src/robot_lab_vacuum_cleaning/robot_lab_vacuum_cleaning/grid.py
+  - src/robot_lab_vacuum_cleaning/robot_lab_vacuum_cleaning/vacuum_cleaner.py
+  - src/robot_lab_description/launch/gazebo.launch.py
+  scope: 'Second building: two rooms named by points, edges first. Judged by cleaning_screen: completed, >= 85 % of the reachable target cleaned, truth on the dock within 0.10 m / 10 deg, no-go and virtual-wall compliance from the simulator-truth trail.'
+  limitations:
+  - 'FAILED and kept: 38.4 % coverage, ended in error 2.65 m from the dock'
+  - 'Invalidated by interference: another session started a Bumperbot Gazebo simulation at 17:29:49 on the same ROS domain (94); from 17:30:01 its /clock made every node log "jump back in time" (298,432 times) and AMCL lost the robot (estimate 3.26 m from truth). Rerun on domain 117 (queue T18)'

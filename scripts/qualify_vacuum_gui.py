@@ -153,7 +153,7 @@ def main():
         history_rows = [tab.history_tree.item(i, 'values') for i in tab.history_tree.get_children()]
         record.update(final_state=state(), final_truth=list(truth[-1][1:]), final_pose=(tab.status or {}).get('pose'),
                       trail=trail[first:], dock=(tab.layout or {}).get('dock'), robot_model='oomwoo',
-                      layout={k: (tab.layout or {}).get(k) for k in ('no_go', 'walls', 'zones')},
+                      layout={k: (tab.layout or {}).get(k) for k in ('no_go', 'walls', 'zones', 'carpets')},
                       rooms={str(k): v for k, v in ((tab.layout or {}).get('rooms') or {}).items()},
                       request=request, sensors=(tab.status or {}).get('sensors'))
         if pause:

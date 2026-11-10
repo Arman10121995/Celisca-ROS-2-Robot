@@ -57,10 +57,10 @@ def crosses(p1, p2, q1, q2):
 def analyse(report, radius):
     trail = [s for s in report.get('trail') or [] if s.get('truth')]
     layout = report.get('layout') or {}
-    out = {k: report.get(k) for k in ('result', 'mode', 'suction', 'passes', 'edge', 'area_m2', 'coverage_pct',
-                                      'duration_s', 'distance_m', 'events', 'skipped', 'recharges',
-                                      'bin_empties', 'battery_start', 'battery_end', 'final_state',
-                                      'estimate_s')}
+    out = {k: report.get(k) for k in ('result', 'mode', 'clean_mode', 'suction', 'passes', 'edge', 'area_m2',
+                                      'coverage_pct', 'duration_s', 'distance_m', 'events', 'skipped', 'recharges',
+                                      'bin_empties', 'battery_start', 'battery_end', 'final_state', 'estimate_s',
+                                      'carpet_m2', 'mopped_m2', 'water_used_ml', 'refills')}
     out['trail_samples'] = len(trail)
     if trail:
         est = [s for s in trail if s.get('pose')]
@@ -117,6 +117,9 @@ def figure(report, store, map_img, res, origin, path, radius):
     for z in layout.get('zones') or []:
         x0, y0, x1, y1 = z['rect'] if isinstance(z, dict) else z
         d.rectangle([px(x0, y1), px(x1, y0)], outline=(40, 110, 230), width=2)
+    for z in layout.get('carpets') or []:
+        poly = z['polygon'] if isinstance(z, dict) else z
+        d.polygon([px(*p) for p in poly], outline=(210, 160, 40), fill=(235, 210, 160))
     req = report.get('request') or {}
     for z in req.get('zones') or []:
         x0, y0, x1, y1 = z['rect'] if isinstance(z, dict) else z

@@ -405,7 +405,7 @@ class VacuumCleaner(Node):
             data['sensors'] = (getattr(self, 'last_status', None) or {}).get('sensors')
             data['events_log'] = list(self.mission.events)
             data['rooms'] = {str(k): v for k, v in self.mission.layout['rooms'].items()}
-            data['layout'] = {k: self.mission.layout.get(k) for k in ('no_go', 'walls', 'zones')}
+            data['layout'] = {k: self.mission.layout.get(k) for k in ('no_go', 'walls', 'zones', 'carpets')}
             data['request'] = self.auto_cmd
             Path(path).parent.mkdir(parents=True, exist_ok=True)
             with open(path, 'w', encoding='utf-8') as handle:

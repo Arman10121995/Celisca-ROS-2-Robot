@@ -388,7 +388,9 @@ def cleaning_screen(report):
     least 85 % of its reachable target cleaned; a mapping run completes with
     two or more rooms.  Either way the robot ends on its dock (truth within
     0.10 m and 10 degrees), its centre never comes within (radius - 2 cm) of
-    a no-go polygon and no truth step crosses a virtual wall.  A GUI-driven
+    a no-go polygon and no truth step crosses a virtual wall.  A job that
+    mopped treats its carpet areas as no-go polygons (a wet mop stays off
+    rugs).  A GUI-driven
     job (scripts/qualify_vacuum_gui.py) that was paused also needs the pause
     to hold the robot (truth drift < 3 cm, < 0.05 rad over 5 s) and Resume to
     move it again."""
@@ -406,7 +408,10 @@ def cleaning_screen(report):
               and math.dist(final[:2], dock[:2]) <= .10 and abs(yaw) <= 10.0)
     radius = report.get('robot_radius', .165)
     layout = report.get('layout') or {}
-    for zone in layout.get('no_go') or []:
+    keepouts = list(layout.get('no_go') or [])
+    if report.get('clean_mode') in ('vacuum_mop', 'mop'):
+        keepouts += layout.get('carpets') or []
+    for zone in keepouts:
         poly = zone.get('polygon') or []
         passed = passed and len(poly) >= 3 and all(
             _polygon_distance(p[0], p[1], poly) >= radius - .02 for p in trail)
