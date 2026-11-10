@@ -420,6 +420,13 @@ class Mission:
         old_info = dict(self.layout.get('room_info', {}))
         old_meta = dict(self.layout.get('rooms', {}))
         labels = rooms.segment_rooms(self.grid, door_width=door_width)
+        if self.pose is not None and self.pmap is not None:
+            # Rooms the robot cannot reach from here (the outside of a
+            # building drawn as free space, closed rooms) are not rooms to clean.
+            reach = self.pmap.reachable_from(self.pose[:2])
+            if reach.any():
+                keep = np.unique(labels[reach & (labels > 0)])
+                labels = rooms.relabel_by_area(np.where(np.isin(labels, keep), labels, 0))
         info = rooms.room_info(self.grid, labels)
         carried = rooms.match_names(old_info, labels, self.grid, old_meta)
         self.room_labels = labels
@@ -670,6 +677,16 @@ class Mission:
         if mode != 'explore':
             if mode in ('all', 'rooms', 'edges'):
                 self.ensure_rooms()
+            if req.get('room_points'):
+                # Rooms named by a point inside them (stable across room
+                # numbering): [[x, y], ...] -> room ids, in order.
+                picked = []
+                for x, y in req['room_points']:
+                    ix, iy = self.grid.world_to_cell(float(x), float(y))
+                    rid = int(self.room_labels[iy, ix]) if self.grid.inside(ix, iy) else 0
+                    if rid and rid not in picked:
+                        picked.append(rid)
+                req = dict(req, rooms=picked)
             tasks, target = self.build_plan(req, mode, suction, passes, edge)
             if not tasks:
                 return False, 'Nothing reachable to clean for this selection'

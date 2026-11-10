@@ -421,3 +421,20 @@ def test_blocked_way_home_backs_off_then_replans(tmp_path):
     assert mission.maneuvers and mission.maneuvers[0][0] < 0   # the back-off survives
     run(mission, world, 600, until=lambda m: m.state in ('docked', 'charging', 'error'))
     assert mission.state in ('docked', 'charging')
+
+
+def test_unreachable_rooms_are_dropped_and_rooms_can_be_named_by_points(tmp_path):
+    grid = two_rooms()
+    # A sealed third space: free cells walled off from the robot.
+    big = np.zeros((80, 220), dtype=np.int16)
+    big[:, :160] = grid.data
+    big[0, :] = big[-1, :] = big[:, -1] = 100
+    big[:, 165] = 100
+    grid = Grid(RES, (0.0, 0.0), big)
+    mission = make_mission(tmp_path, grid, (1.0, 1.0, 0.0))
+    mission.ensure_rooms()
+    assert mission.room_labels.max() == 2                 # the sealed space is not a room
+    assert mission.room_labels[40, 190] == 0
+    ok, _ = mission.command({'cmd': 'start', 'mode': 'rooms', 'room_points': [[6.0, 2.0]], 'edge': False})
+    right = int(mission.room_labels[40, 120])
+    assert ok and mission.job['rooms'] == [right]
