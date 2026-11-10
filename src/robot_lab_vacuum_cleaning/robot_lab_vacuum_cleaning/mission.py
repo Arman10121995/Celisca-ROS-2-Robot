@@ -33,6 +33,9 @@ DEFAULT_POWER_MODES = {
 }
 
 MODES = ('all', 'rooms', 'zones', 'spot', 'edges', 'explore')
+CLEAN_MODES = ('vacuum', 'vacuum_mop', 'mop')
+WATER_FLOWS = {'low': 1.0, 'medium': 1.8, 'high': 2.6}    # ml of water per m2 mopped
+REFILL_S = 20.0
 WORK_KINDS = ('lane', 'edge', 'spot')
 
 
@@ -47,6 +50,7 @@ class RobotConfig:
     charge_min: float = 180.0         # 0-100 % on the dock
     dustbin_m2: float = 150.0         # floor area that fills the bin
     margin: float = 0.04              # path clearance beyond the radius
+    water_tank_ml: float = 0.0        # mop module water tank; 0: no mop module
     power_modes: Dict[str, Dict] = field(default_factory=lambda: dict(DEFAULT_POWER_MODES))
 
     @property
@@ -339,6 +343,14 @@ class Mission:
         self.explore_started = None
         self.explore_empty_checks = 0
         self.explore_wait_until = -math.inf
+        # Mopping and carpets.
+        self.water_ml = float(config.water_tank_ml)
+        self.mop_mode = 'vacuum'          # the running job's clean mode
+        self.mopped: Optional[np.ndarray] = None
+        self.carpet_mask: Optional[np.ndarray] = None
+        self.on_carpet = False
+        self._water_warned = False
+        self._refill_timer = 0.0
 
     # ------------------------------------------------------------------
     # Logging and layout
@@ -351,11 +363,18 @@ class Mission:
     @staticmethod
     def _empty_layout() -> Dict:
         return {'rooms': {}, 'room_info': {}, 'room_order': [], 'no_go': [],
-                'walls': [], 'zones': [], 'dock': None, 'signature': ''}
+                'walls': [], 'zones': [], 'carpets': [], 'dock': None, 'signature': ''}
+
+    def mopping(self) -> bool:
+        """The mop is fitted for this job (a wet mop must stay off carpets)."""
+        return self.mop_mode != 'vacuum'
 
     def keepout(self) -> planner.Keepout:
+        areas = list(self.layout.get('no_go', []))
+        if self.mopping():
+            areas += self.layout.get('carpets', [])
         return planner.Keepout(
-            polygons=[z['polygon'] for z in self.layout.get('no_go', []) if len(z.get('polygon', [])) >= 3],
+            polygons=[z['polygon'] for z in areas if len(z.get('polygon', [])) >= 3],
             walls=[(tuple(w['p1']), tuple(w['p2'])) for w in self.layout.get('walls', [])])
 
     def save_layout(self) -> None:
@@ -406,6 +425,8 @@ class Mission:
             self.coverage = np.zeros(grid.data.shape, dtype=bool)
         if self.session_blocked is None or self.session_blocked.shape != grid.data.shape:
             self.session_blocked = np.zeros(grid.data.shape, dtype=bool)
+        if self.mopped is None or self.mopped.shape != grid.data.shape:
+            self.mopped = np.zeros(grid.data.shape, dtype=bool)
         self.rebuild_planning_map()
 
     def rebuild_planning_map(self) -> None:
@@ -413,6 +434,11 @@ class Mission:
             return
         self.pmap = planner.PlanningMap(self.grid, self.config.robot_radius, self.config.margin,
                                         keepout=self.keepout(), extra_blocked=self.session_blocked)
+        carpet = np.zeros(self.grid.data.shape, dtype=bool)
+        for area in self.layout.get('carpets', []):
+            if len(area.get('polygon', [])) >= 3:
+                carpet |= self.grid.polygon_mask(area['polygon'])
+        self.carpet_mask = carpet
 
     def segment(self, door_width: float = 0.9) -> int:
         if self.grid is None:
@@ -585,16 +611,19 @@ class Mission:
         return True, 'Split %s into %d rooms' % (meta[rid]['name'], len(ids))
 
     def _cmd_set_layout(self, cmd):
-        """Replace the operator geometry: no_go, walls, zones, dock."""
-        for key in ('no_go', 'walls', 'zones'):
+        """Replace the operator geometry: no_go, walls, zones, carpets, dock."""
+        for key in ('no_go', 'walls', 'zones', 'carpets'):
             if key in cmd:
                 self.layout[key] = list(cmd[key])
         if 'dock' in cmd:
             self.layout['dock'] = list(cmd['dock']) if cmd['dock'] else None
         self.save_layout()
         self.rebuild_planning_map()
-        return True, 'Layout saved (%d no-go, %d walls, %d zones)' % (
+        message = 'Layout saved (%d no-go, %d walls, %d zones)' % (
             len(self.layout['no_go']), len(self.layout['walls']), len(self.layout['zones']))
+        if self.layout.get('carpets'):
+            message = message[:-1] + ', %d carpets)' % len(self.layout['carpets'])
+        return True, message
 
     def _cmd_set_dock(self, cmd):
         pose = cmd.get('pose') or (list(self.pose) if self.pose else None)
@@ -664,6 +693,19 @@ class Mission:
             suction = 'standard'
         passes = max(1, min(3, int(req.get('passes') or self.settings.get('passes', 1))))
         edge = bool(req.get('edge', self.settings.get('edge', True)))
+        clean_mode = req.get('clean_mode') or self.settings.get('clean_mode', 'vacuum')
+        if clean_mode not in CLEAN_MODES or mode == 'explore':
+            clean_mode = 'vacuum'
+        water_flow = req.get('water_flow') or self.settings.get('water_flow', 'medium')
+        if water_flow not in WATER_FLOWS:
+            water_flow = 'medium'
+        if clean_mode != 'vacuum':
+            if self.config.water_tank_ml <= 0:
+                return False, 'This robot has no mop module'
+            if self.water_ml <= 0 and clean_mode == 'mop':
+                return False, 'The water tank is empty - refill it first'
+        self.mop_mode = clean_mode
+        self._water_warned = False
         if self.layout.get('dock') is None and self.pose is not None and \
                 self.state in ('idle', 'docked', 'charging'):
             self.layout['dock'] = list(self.pose)
@@ -689,10 +731,14 @@ class Mission:
                 req = dict(req, rooms=picked)
             tasks, target = self.build_plan(req, mode, suction, passes, edge)
             if not tasks:
+                self.mop_mode = 'vacuum'
+                self.rebuild_planning_map()
                 return False, 'Nothing reachable to clean for this selection'
             self.tasks.extend(tasks)
             self.target_mask = target
         self.coverage[:] = False
+        self.mopped[:] = False
+        self.water_start_ml = self.water_ml
         self.distance_m = 0.0
         self.stuck_count = 0
         self.explore_blacklist = []
@@ -709,6 +755,8 @@ class Mission:
             'source': req.get('source', 'app'),
             'started': time.time(), 'recharges': 0, 'bin_empties': 0, 'skipped': 0,
             'battery_start': round(self.battery, 1), 'events': 0,
+            'clean_mode': clean_mode, 'water_flow': water_flow if clean_mode != 'vacuum' else None,
+            'refills': 0,
             'estimate_s': round(self.estimate_seconds(), 1),
         }
         self.state = 'mapping' if mode == 'explore' else 'cleaning'
@@ -718,8 +766,9 @@ class Mission:
                 'edges': 'edges', 'explore': 'mapping run'}[mode]
         if mode == 'explore':
             return True, 'Started a mapping run'
-        return True, 'Started %s cleaning: %d paths, about %d min' % (
-            what, len(self.tasks), round(self.job['estimate_s'] / 60.0))
+        how = {'vacuum': 'cleaning', 'vacuum_mop': 'vacuuming and mopping', 'mop': 'mopping'}[clean_mode]
+        return True, 'Started %s %s: %d paths, about %d min' % (
+            what, how, len(self.tasks), round(self.job['estimate_s'] / 60.0))
 
     def build_plan(self, req: Dict, mode: str, suction: str, passes: int, edge: bool):
         pm, grid, cfg = self.pmap, self.grid, self.config
@@ -844,7 +893,13 @@ class Mission:
             'map': self.map_key,
             'signature': self.grid.signature() if self.grid else '',
             'room_names': [self.layout['rooms'].get(r, {}).get('name', str(r)) for r in job['rooms']],
+            'mopped_m2': round(self.mopped_area(), 2),
+            'carpet_m2': round(self.carpet_area(), 2),
+            'water_used_ml': round(max(0.0, getattr(self, 'water_start_ml', self.water_ml) - self.water_ml)
+                                   + job.get('refills', 0) * self.config.water_tank_ml, 1)
+            if job.get('clean_mode', 'vacuum') != 'vacuum' else 0.0,
         })
+        self.mop_mode = 'vacuum'   # the planning map keeps carpets out until the next rebuild
         self.last_record = record
         if self.store is not None:
             self.store.append_history(record, self.coverage)
@@ -927,6 +982,15 @@ class Mission:
                     self.job['bin_empties'] += 1
                 self.log('info', 'Dustbin emptied by the dock')
                 self._after_dock()
+        if self.state == 'refilling':
+            self._refill_timer -= dt
+            if self._refill_timer <= 0:
+                self.water_ml = self.config.water_tank_ml
+                self._water_warned = False
+                if self.job is not None:
+                    self.job['refills'] += 1
+                self.log('info', 'Water tank refilled by the dock')
+                self._after_dock()
         return 0.0, 0.0
 
     def _step_cleaning(self, now, pose, sense, dt):
@@ -950,6 +1014,19 @@ class Mission:
             if not getattr(self, '_bin_warned', False):
                 self._bin_warned = True
                 self.log('warn', 'Dustbin full - empty it (no auto-empty dock)')
+        if self.mopping() and self.water_ml <= 0.0 and not self._water_warned:
+            self._water_warned = True
+            if self.settings.get('auto_refill', True) and self.resume_after_dock != 'refill' and self.tasks:
+                self._park_active()
+                self.resume_after_dock = 'refill'
+                self._home_or_idle('water tank empty, refilling at the dock')
+                return 0.0, 0.0
+            if self.mop_mode == 'mop':
+                self._park_active()
+                self._finish_job('water tank empty')
+                self._home_or_idle('water tank empty')
+                return 0.0, 0.0
+            self.log('warn', 'Water tank empty - mopping stopped (no refilling dock)')
         if self.active is None and not self._next_task(pose):
             self._finish_job('completed')
             self._home_or_idle('job complete')
@@ -1186,12 +1263,18 @@ class Mission:
             self.state = 'emptying'
             self._empty_timer = 10.0
             return
+        if self.config.water_tank_ml > 0 and self.settings.get('auto_refill', True) and \
+                self.water_ml < self.config.water_tank_ml and self.state != 'refilling':
+            self.state = 'refilling'
+            self._refill_timer = REFILL_S * (1.0 - self.water_ml / self.config.water_tank_ml)
+            return
         self.state = 'charging' if self.battery < 99.9 else 'docked'
-        if reason == 'empty':
+        if reason in ('empty', 'refill'):
             self.resume_after_dock = ''
             if self.job is not None and self.tasks:
                 self.state = 'cleaning'
-                self.log('info', 'Resuming the job after emptying the bin')
+                self.log('info', 'Resuming the job after %s' % (
+                    'emptying the bin' if reason == 'empty' else 'refilling the water tank'))
 
     MAPPING_LIMIT_S = 1800.0
 
@@ -1242,6 +1325,17 @@ class Mission:
     # ------------------------------------------------------------------
     # Models
     # ------------------------------------------------------------------
+    def _power_mode(self, suction: Optional[str] = None) -> str:
+        """The suction level actually used: Max on carpet (carpet boost),
+        Eco-level power when only mopping."""
+        suction = suction or self.current_suction
+        modes = self.config.power_modes
+        if self.mop_mode == 'mop':
+            return 'eco' if 'eco' in modes else suction
+        if self.on_carpet and self.settings.get('carpet_boost', True):
+            return 'max' if 'max' in modes else suction
+        return suction
+
     def _speed(self, suction: str) -> float:
         mode = self.config.power_modes.get(suction) or self.config.power_modes.get('standard', {})
         return float(mode.get('speed', 0.25))
@@ -1249,11 +1343,11 @@ class Mission:
     def _update_battery(self, dt: float) -> None:
         scale = float(self.settings.get('battery_time_scale', 1.0))
         if self.state in ('cleaning', 'mapping', 'returning', 'docking'):
-            runtime = float(self.config.power_modes.get(self.current_suction, {}).get('runtime_min', 150.0))
+            runtime = float(self.config.power_modes.get(self._power_mode(), {}).get('runtime_min', 150.0))
             if self.state != 'cleaning':
                 runtime *= 1.6  # suction off / low while travelling home or mapping
             self.battery = max(0.0, self.battery - dt * scale * 100.0 / (runtime * 60.0))
-        elif self.state in ('charging', 'docked', 'emptying'):
+        elif self.state in ('charging', 'docked', 'emptying', 'refilling'):
             self.battery = min(100.0, self.battery + dt * scale * 100.0 / (self.config.charge_min * 60.0))
             if self.state == 'charging':
                 resume = float(self.settings.get('resume_battery_pct', 80.0))
@@ -1275,8 +1369,10 @@ class Mission:
     def _wear(self, dt: float, moving: bool) -> None:
         if not moving:
             return
+        mops = self.mopping() and self.water_ml > 0.0
         for key in self.consumables:
-            self.consumables[key] += dt
+            if key != 'mop_pad' or mops:
+                self.consumables[key] += dt
 
     def _paint(self, pose, task: Task) -> None:
         grid = self.grid
@@ -1285,6 +1381,7 @@ class Mission:
             return
         self.last_paint = (x, y)
         if not task.clean:
+            self.on_carpet = False
             return
         radius = (self.config.robot_radius + self.config.side_brush_reach) if task.kind == 'edge' \
             else self.config.cleaning_width / 2.0
@@ -1297,11 +1394,26 @@ class Mission:
             return
         yy, xx = np.ogrid[y0:y1, x0:x1]
         disc = (xx - ix) ** 2 + (yy - iy) ** 2 <= r * r
+        carpet = self.carpet_mask[y0:y1, x0:x1] if self.carpet_mask is not None and \
+            self.carpet_mask.shape == self.coverage.shape else np.zeros(disc.shape, dtype=bool)
+        self.on_carpet = bool(carpet[iy - y0, ix - x0]) if 0 <= iy - y0 < disc.shape[0] and \
+            0 <= ix - x0 < disc.shape[1] else False
         before = self.coverage[y0:y1, x0:x1].copy()
         self.coverage[y0:y1, x0:x1] |= disc
         fresh = int((self.coverage[y0:y1, x0:x1] & ~before).sum())
-        mode = self.config.power_modes.get(task.suction, {})
-        self.dustbin_m2 += fresh * grid.resolution ** 2 * (0.5 + float(mode.get('suction', 0.6)))
+        cell = grid.resolution ** 2
+        if self.mopping() and self.water_ml > 0.0 and task.kind != 'edge':
+            # The mop pad sits behind the brush and is about as wide; edges
+            # are vacuumed only (the pad does not reach past the body).
+            mop_before = self.mopped[y0:y1, x0:x1].copy()
+            self.mopped[y0:y1, x0:x1] |= disc & ~carpet
+            wet = int((self.mopped[y0:y1, x0:x1] & ~mop_before).sum())
+            flow = WATER_FLOWS.get((self.job or {}).get('water_flow') or 'medium', 1.8)
+            self.water_ml = max(0.0, self.water_ml - wet * cell * flow)
+        if self.mop_mode == 'mop':
+            return   # suction is off: nothing goes into the bin
+        mode = self.config.power_modes.get(self._power_mode(task.suction), {})
+        self.dustbin_m2 += fresh * cell * (0.5 + float(mode.get('suction', 0.6)))
 
     # ------------------------------------------------------------------
     # Status
@@ -1310,6 +1422,17 @@ class Mission:
         if self.coverage is None or self.grid is None:
             return 0.0
         return float((self.coverage & self.grid.free_mask()).sum()) * self.grid.resolution ** 2
+
+    def mopped_area(self) -> float:
+        if self.mopped is None or self.grid is None:
+            return 0.0
+        return float(self.mopped.sum()) * self.grid.resolution ** 2
+
+    def carpet_area(self) -> float:
+        """Floor cleaned on carpet areas in this job."""
+        if self.coverage is None or self.carpet_mask is None or self.carpet_mask.shape != self.coverage.shape:
+            return 0.0
+        return float((self.coverage & self.carpet_mask).sum()) * self.grid.resolution ** 2
 
     def coverage_pct(self) -> float:
         if self.target_mask is None or self.coverage is None or not self.target_mask.any():
@@ -1341,7 +1464,15 @@ class Mission:
             'suction_label': cfg.power_modes.get(self.current_suction, {}).get('label', self.current_suction),
             'job': {k: job.get(k) for k in ('id', 'mode', 'suction', 'passes', 'edge', 'rooms',
                                             'started', 'recharges', 'skipped', 'events',
-                                            'estimate_s', 'source')} if job else None,
+                                            'estimate_s', 'source', 'clean_mode', 'water_flow',
+                                            'refills')} if job else None,
+            'clean_mode': self.mop_mode,
+            'mop_module': self.config.water_tank_ml > 0,
+            'water_pct': round(100.0 * self.water_ml / self.config.water_tank_ml, 1)
+            if self.config.water_tank_ml > 0 else None,
+            'mopped_m2': round(self.mopped_area(), 2),
+            'on_carpet': self.on_carpet,
+            'carpet_boost_active': self._power_mode() == 'max' and self.on_carpet,
             'task': self.active.kind if self.active else '',
             'tasks_left': len(self.tasks) + (1 if self.active is not None and self.active.clean else 0),
             'remaining_s': round(remaining_s, 1),
@@ -1374,11 +1505,13 @@ class Mission:
             'no_go': self.layout.get('no_go', []),
             'walls': self.layout.get('walls', []),
             'zones': self.layout.get('zones', []),
+            'carpets': self.layout.get('carpets', []),
             'dock': self.layout.get('dock'),
             'settings': self.settings,
             'schedule': self.schedule,
             'power_modes': modes,
-            'robot': {'radius': self.config.robot_radius, 'cleaning_width': self.config.cleaning_width},
+            'robot': {'radius': self.config.robot_radius, 'cleaning_width': self.config.cleaning_width,
+                      'water_tank_ml': self.config.water_tank_ml},
         }
 
 

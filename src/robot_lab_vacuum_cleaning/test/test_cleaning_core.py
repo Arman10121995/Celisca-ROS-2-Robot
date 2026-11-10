@@ -438,3 +438,73 @@ def test_unreachable_rooms_are_dropped_and_rooms_can_be_named_by_points(tmp_path
     ok, _ = mission.command({'cmd': 'start', 'mode': 'rooms', 'room_points': [[6.0, 2.0]], 'edge': False})
     right = int(mission.room_labels[40, 120])
     assert ok and mission.job['rooms'] == [right]
+
+
+def mop_mission(tmp_path, grid, pose, tank=200.0, **settings):
+    mission = Mission(RobotConfig(water_tank_ml=tank), Store(tmp_path), map_key='test')
+    mission.settings.update(settings)
+    mission.update_map(grid)
+    mission.step(0.0, pose, Sense())
+    return mission
+
+
+CARPET = [[1.5, 1.5], [3.0, 1.5], [3.0, 3.0], [1.5, 3.0]]
+
+
+def test_mopping_needs_a_mop_module(tmp_path):
+    mission = make_mission(tmp_path, two_rooms(), (1.0, 1.0, 0.0))
+    ok, message = mission.command({'cmd': 'start', 'mode': 'all', 'clean_mode': 'mop'})
+    assert not ok and 'mop module' in message
+
+
+def test_mop_job_stays_off_carpets_and_uses_water(tmp_path):
+    grid = two_rooms()
+    mission = mop_mission(tmp_path, grid, (1.0, 1.0, 0.0))
+    world = World(grid, (1.0, 1.0, 0.0))
+    mission.command({'cmd': 'set_layout', 'carpets': [{'id': 'rug', 'polygon': CARPET}]})
+    ok, message = mission.command({'cmd': 'start', 'mode': 'zones', 'zones': [[0.2, 0.2, 3.8, 3.8]],
+                                   'clean_mode': 'vacuum_mop', 'water_flow': 'high'})
+    assert ok and 'mopping' in message, message
+    trail = []
+    run(mission, world, 2500, until=lambda m: trail.append(tuple(world.pose)) or m.job is None)
+    record = mission.last_record
+    assert record['result'] == 'completed' and record['clean_mode'] == 'vacuum_mop'
+    assert not any(1.5 < x < 3.0 and 1.5 < y < 3.0 for x, y, _ in trail)     # the wet mop never on the rug
+    assert record['carpet_m2'] < 0.05 and record['mopped_m2'] > 4.0
+    assert record['water_used_ml'] == pytest.approx(record['mopped_m2'] * 2.6, rel=0.05)
+    assert mission.consumables['mop_pad'] > 0.0
+
+
+def test_vacuuming_boosts_suction_on_carpet(tmp_path):
+    grid = two_rooms()
+    mission = mop_mission(tmp_path, grid, (1.0, 1.0, 0.0))
+    world = World(grid, (1.0, 1.0, 0.0))
+    mission.command({'cmd': 'set_layout', 'carpets': [{'id': 'rug', 'polygon': CARPET}]})
+    mission.command({'cmd': 'start', 'mode': 'zones', 'zones': [[0.2, 0.2, 3.8, 3.8]], 'edge': False})
+    boosted = []
+    run(mission, world, 2500, until=lambda m: boosted.append(m.status()['carpet_boost_active']) or m.job is None)
+    record = mission.last_record
+    assert record['result'] == 'completed' and record['carpet_m2'] > 1.5
+    assert any(boosted) and not all(boosted)
+    assert record['mopped_m2'] == 0.0 and mission.consumables['mop_pad'] == 0.0
+
+
+def test_empty_water_tank_refills_at_the_dock_and_resumes(tmp_path):
+    grid = two_rooms()
+    mission = mop_mission(tmp_path, grid, (1.0, 1.0, 0.0), tank=4.0)   # about 2 m2 at medium flow
+    world = World(grid, (1.0, 1.0, 0.0))
+    ok, _ = mission.command({'cmd': 'start', 'mode': 'zones', 'zones': [[0.2, 0.2, 3.8, 3.8]],
+                             'clean_mode': 'mop'})
+    assert ok
+    seen = set()
+    run(mission, world, 6000, until=lambda m: seen.add(m.state) or m.job is None)
+    record = mission.last_record
+    assert 'refilling' in seen and record['refills'] >= 1, list(mission.events)[-6:]
+    assert record['result'] == 'completed' and record['coverage_pct'] > 85.0
+    assert mission.dustbin_m2 == 0.0                       # mop only: suction off
+    no_dock = mop_mission(tmp_path / 'b', grid, (1.0, 1.0, 0.0), tank=4.0, auto_refill=False)
+    world = World(grid, (1.0, 1.0, 0.0))
+    no_dock.command({'cmd': 'start', 'mode': 'zones', 'zones': [[0.2, 0.2, 3.8, 3.8]], 'clean_mode': 'vacuum_mop'})
+    run(no_dock, world, 6000, until=lambda m: m.job is None)
+    assert no_dock.last_record['refills'] == 0 and no_dock.last_record['mopped_m2'] < 3.0
+    assert any('mopping stopped' in e['text'] for e in no_dock.events)

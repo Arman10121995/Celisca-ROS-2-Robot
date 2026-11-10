@@ -74,7 +74,8 @@ def robot_config_from_profile(profile: dict) -> RobotConfig:
     radius = vac.get('radius', drive.get('footprint_radius'))
     if radius:
         cfg.robot_radius = float(radius)
-    for key in ('cleaning_width', 'side_brush_reach', 'charge_min', 'dustbin_m2', 'margin', 'max_turn'):
+    for key in ('cleaning_width', 'side_brush_reach', 'charge_min', 'dustbin_m2', 'margin', 'max_turn',
+                'water_tank_ml'):
         if key in vac:
             setattr(cfg, key, float(vac[key]))
     cfg.max_speed = float(vac.get('max_speed', min(0.35, float(drive.get('max_speed', 0.3)))))
@@ -387,7 +388,7 @@ class VacuumCleaner(Node):
             return
         record = self.mission.last_record
         if self.auto_job and record and record.get('id') == self.auto_job and \
-                self.mission.state not in ('returning', 'docking'):
+                self.mission.state not in ('returning', 'docking', 'emptying', 'refilling'):
             self.auto_job = None
             self._write_report(record)
 

@@ -388,7 +388,10 @@ def cleaning_screen(report):
     least 85 % of its reachable target cleaned; a mapping run completes with
     two or more rooms.  Either way the robot ends on its dock (truth within
     0.10 m and 10 degrees), its centre never comes within (radius - 2 cm) of
-    a no-go polygon and no truth step crosses a virtual wall."""
+    a no-go polygon and no truth step crosses a virtual wall.  A GUI-driven
+    job (scripts/qualify_vacuum_gui.py) that was paused also needs the pause
+    to hold the robot (truth drift < 3 cm, < 0.05 rad over 5 s) and Resume to
+    move it again."""
     trail = [s['truth'] for s in report.get('trail') or [] if valid_position(s.get('truth'))]
     dock, final = report.get('dock'), report.get('final_truth')
     if report.get('error') or len(trail) < 10 or not valid_position(dock) or not valid_position(final):
@@ -410,6 +413,11 @@ def cleaning_screen(report):
     for wall in layout.get('walls') or []:
         a, b = wall.get('p1'), wall.get('p2')
         passed = passed and not any(_crosses(p[:2], q[:2], a, b) for p, q in zip(trail, trail[1:]))
+    pause = report.get('gui_pause')
+    if pause is not None:
+        passed = passed and finite(pause.get('drift_m')) and pause['drift_m'] < .03 and \
+            finite(pause.get('yaw_drift_rad')) and pause['yaw_drift_rad'] < .05 and \
+            finite(pause.get('moved_after_resume_m')) and pause['moved_after_resume_m'] > .05
     return bool(passed)
 
 

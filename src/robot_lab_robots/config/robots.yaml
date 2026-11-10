@@ -445,6 +445,9 @@ robots:
       max_speed: 0.30
       charge_min: 180
       dustbin_m2: 150
+      # Optional mop module (lab model): a 200 ml water tank behind the
+      # brush; 0 or absent means vacuum only.
+      water_tank_ml: 200
       power_modes:
         - id: eco
           label: "Eco"

@@ -24,6 +24,7 @@ Each report is judged by **`cleaning_screen`**
 | Spot beside a furniture bar | 5061bc1d | pass | 90.7 % (3.0 m²) | 3.0 min | 0.051 m, −1.6° | outline + cross-hatched lanes |
 | Zone with a hidden 6 cm box | 5061bc1d | pass* | 99.6 % (12.4 m²) | 5.1 min | 0.027 m, −2.6° | *stuck ~6 s against the box by truth while the estimate moved 1.2 m; the 3 m stall window saw nothing ahead |
 | Zone with a hidden 6 cm box | b3a63ae7 | pass | 97.5 % (12.2 m²) | 5.4 min | – | stall detector fired twice at the box; estimate–truth gap ≤ 0.34 m |
+| Zone with a hidden 6 cm box, **bumper** | 89b71ebb | pass | 97.0 % (12.1 m²) | 5.5 min | 0.040 m, 2.7° | 116 bumper contacts, 4 Bump events at the box; stall detector silent |
 | Bedroom (room 3), battery 60× | 5061bc1d | pass | 98.4 % (24.4 m²) | 44 min | 0.042 m, −0.6° | 10 recharge-and-resume stops |
 | Zone + keep-outs, **MuJoCo** | 8a122bbe | pass | 99.6 % (10.0 m²) | 7.9 min | 0.041 m, −3.4° | centre ≥ 0.23 m from the no-go box, 0 crossings |
 | **Whole home**, edges | 8a122bbe | pass | 96.3 % (141.6 m²) | 77 min | 0.036 m, −4.6° | 4 rooms; 1 auto-empty dock stop; 18 stalls, 17 with truth moving clearly less than the estimate |
@@ -51,11 +52,16 @@ found, in order:
 - a hidden low box invisible to every sensor (LiDAR stall detector);
 - false stalls on open floor (two-hypothesis scan test, scan-time poses).
 
-The Gazebo contact sensor of the bumper ring never published (`ign topic -l`
-lists no `/bumper`); the stall detector is the bump handler.
+Until 89b71ebb the Gazebo contact sensor of the bumper ring never
+published: a model spawned at runtime gets no contact data from a
+model-level Contact system. `gazebo.launch.py` now adds the Contact system
+to the world it starts, and the bridge maps Fortress's scoped topic
+`/world/<world>/model/oomwoo/link/bumper_link/sensor/bumper/contact` to
+`/bumper`. The hidden-box run then bumped 4 times; the LiDAR stall detector
+stays as the backup for obstacles the bumper does not touch.
 
 ## Limits
 
 - One run per cell; one house; Gazebo, plus one MuJoCo case.
 - Battery, dustbin and part wear are models.
-- Recorded queue folders: `/workspace/molar/robot_lab_runtime/claude-v67`, `claude-v68`.
+- Recorded queue folders: `/workspace/molar/robot_lab_runtime/claude-v67`, `claude-v68`, `claude-v70`, `claude-v71`.

@@ -105,6 +105,8 @@ stateDiagram-v2
     docking --> charging: aligned on the dock
     docking --> emptying: bin full and auto-empty
     emptying --> cleaning: resume the job
+    docking --> refilling: water tank empty and refilling dock
+    refilling --> cleaning: resume the job
     charging --> cleaning: battery ≥ resume level and job unfinished
     charging --> docked: full
     cleaning --> error: stuck 3 times / way blocked
@@ -162,6 +164,24 @@ When it is full, a robot with an auto-empty dock goes home, empties for
 against their replacement intervals (main brush 300 h, side brush 200 h,
 filter 150 h, sensors 30 h).
 
+### Mopping and carpets
+
+A robot with a mop module (a water tank in its profile) can **vacuum and
+mop** or **mop only**. The pad sits behind the brush, so each mopped
+square metre uses water at the chosen flow (1.0 / 1.8 / 2.6 ml). Two rules
+follow commercial robots:
+
+- **Carpets** are areas the operator draws. Vacuuming raises the suction
+  to Max on them (*carpet boost*: more battery, more dust). A wet mop must
+  not touch a rug, so a mopping job adds the carpets to the keep-out map
+  before planning. They get the same 12 cm berth as no-go areas.
+- When the **water tank** runs dry, a refilling dock is visited just like
+  an auto-empty: home, refill, continue. Without one, "vacuum and mop"
+  carries on vacuuming, and "mop only" ends.
+
+Only mopping wears the mop pad, and mopping alone puts nothing in the
+dustbin.
+
 ## 6 · The mapping run (new houses)
 
 With no map yet (`slam` mode), the **mapping run** finds **frontiers**:
@@ -192,7 +212,7 @@ All runs: [evidence](../status/evidence/vacuum-2026-11/README.md).
 ## Try it
 
 ```bash
-PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 python3 -m pytest -q src/robot_lab_vacuum_cleaning/test   # 23 tests, ~20 s
+PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 python3 -m pytest -q src/robot_lab_vacuum_cleaning/test   # 29 tests, ~30 s
 python3 docs/learn/figures/make_figures.py rooms coverage cleaning
 scripts/sim_vacuum_mission.sh gazebo oomwoo small_house /tmp/run.json \
   '{"mode": "rooms", "rooms": [4], "edge": true}'          # one recorded Gazebo job (~6 min)

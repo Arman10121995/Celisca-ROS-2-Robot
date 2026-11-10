@@ -168,3 +168,27 @@ def test_events_and_history_are_listed(tab):
     row = tab.history_tree.item('r1', 'values')
     assert row[1] == 'Hall' and row[2] == 'completed' and row[3] == '14.5'
     assert tab.totals_var.get().startswith('1 runs')
+
+
+def test_carpet_tool_mop_request_and_water_status(tab):
+    tab.apply_tool('carpet', (5.0, 1.0), (6.0, 2.0))
+    assert tab.sent[-1]['carpets'][0]['polygon'][2] == [6.0, 2.0]
+    assert tab.canvas.find_withtag('overlay')
+    status = {'state': 'docked', 'battery_pct': 100.0, 'map_ready': True, 'localised': True,
+              'mop_module': False, 'water_pct': None}
+    tab._on_json('status', msg(status))
+    assert tab.clean_mode_combo.instate(['disabled']) and tab.water_var.get() == 'no mop module'
+    tab._on_json('status', msg(dict(status, mop_module=True, water_pct=40.0)))
+    assert not tab.clean_mode_combo.instate(['disabled']) and tab.water_var.get() == '40%'
+    tab.clean_mode_var.set('Vacuum + mop')
+    tab.water_flow_var.set('high')
+    tab.mode_var.set('all')
+    tab._start()
+    assert tab.sent[-1]['clean_mode'] == 'vacuum_mop' and tab.sent[-1]['water_flow'] == 'high'
+    tab._on_json('status', msg(dict(status, state='refilling', mop_module=True, water_pct=10.0)))
+    assert tab.state_var.get().endswith('Refilling water tank') and tab.start_button.instate(['disabled'])
+    tab.apply_tool('erase', (5.5, 1.5), (5.5, 1.5), moved=False)
+    assert tab.sent[-1]['carpets'] == []
+    tab.carpet_boost_var.set(False)
+    tab._save_settings()
+    assert tab.sent[-1]['values']['carpet_boost'] is False and tab.sent[-1]['values']['auto_refill'] is True

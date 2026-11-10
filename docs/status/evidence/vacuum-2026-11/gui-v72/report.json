@@ -1,0 +1,85 @@
+{
+  "robot": "oomwoo",
+  "backend": "gazebo",
+  "map": "small_house",
+  "mode": "nav",
+  "passed": true,
+  "jobs": [
+    {
+      "name": "room-office",
+      "request": {
+        "cmd": "start",
+        "mode": "rooms",
+        "suction": "standard",
+        "passes": 1,
+        "edge": true,
+        "rooms": [
+          4
+        ]
+      },
+      "pause": {
+        "drift_m": 0.0,
+        "yaw_drift_rad": 0.0,
+        "moved_after_resume_m": 1.3865440189670062
+      },
+      "history_row": [
+        "10 Nov 16:08",
+        "Room 4",
+        "completed",
+        "9.0",
+        "90",
+        "5 min 24 s"
+      ],
+      "screen": true
+    },
+    {
+      "name": "zone-keepout",
+      "request": {
+        "cmd": "start",
+        "mode": "zones",
+        "suction": "standard",
+        "passes": 1,
+        "edge": false,
+        "zones": [
+          {
+            "id": "z23705184",
+            "rect": [
+              4.0,
+              -3.5,
+              7.5,
+              -0.5
+            ],
+            "passes": 1
+          }
+        ]
+      },
+      "history_row": [
+        "10 Nov 16:15",
+        "Zones",
+        "completed",
+        "10.0",
+        "100",
+        "6 min 27 s"
+      ],
+      "screen": true
+    }
+  ],
+  "scope": "Normal Tk Vacuum tab: Setup launch, room picked on the live room map, Pause/Resume, Zone/No-go/Wall map tools, Start, History; simulator truth is independent of the node.",
+  "command": [
+    "ros2",
+    "launch",
+    "robot_lab_bringup",
+    "simulated_room_vacuum.launch.py",
+    "robot_model:=oomwoo",
+    "map_name:=small_house",
+    "simulator:=gazebo",
+    "mode:=nav",
+    "controller:=cleaning",
+    "gui:=false",
+    "start_rviz:=false"
+  ],
+  "owned_pid": 170625,
+  "rooms_divided": 4,
+  "ready_state": "idle",
+  "launch_returncode": 0
+}

@@ -27,17 +27,22 @@ TOOLS = [('select', 'Rooms', 'Click rooms to select them (click order = cleaning
          ('zone', 'Zone', 'Drag a rectangle to clean'),
          ('nogo', 'No-go', 'Drag a rectangle the robot must stay out of'),
          ('wall', 'Wall', 'Drag a virtual wall the robot will not cross'),
+         ('carpet', 'Carpet', 'Drag a rectangle over a rug or carpet (Max suction there; a mopping job keeps off it)'),
          ('spot', 'Spot', 'Click a spot to clean intensively'),
          ('dock', 'Dock', 'Click the dock position, drag towards the way the robot faces when docked'),
          ('split', 'Split', 'Drag a line across a room to divide it'),
-         ('erase', 'Erase', 'Click a zone, no-go area or wall to remove it')]
+         ('erase', 'Erase', 'Click a zone, no-go area, carpet or wall to remove it')]
 STATE_TEXT = {
     'idle': ('Idle', 'PillIdle.TLabel'), 'docked': ('Docked', 'PillIdle.TLabel'),
     'charging': ('Charging', 'PillRunning.TLabel'), 'cleaning': ('Cleaning', 'PillRunning.TLabel'),
     'mapping': ('Mapping', 'PillRunning.TLabel'), 'paused': ('Paused', 'PillWarn.TLabel'),
     'returning': ('Returning to dock', 'PillRunning.TLabel'), 'docking': ('Docking', 'PillRunning.TLabel'),
     'emptying': ('Emptying dustbin', 'PillRunning.TLabel'), 'error': ('Error', 'PillWarn.TLabel'),
+    'refilling': ('Refilling water tank', 'PillRunning.TLabel'),
 }
+CLEAN_MODES = [('vacuum', 'Vacuum'), ('vacuum_mop', 'Vacuum + mop'), ('mop', 'Mop only')]
+WATER_FLOWS = ['low', 'medium', 'high']
+CARPET_COLOUR = '#c8a46e'
 DAYS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
 ROOM_COLOURS = [(110, 170, 230), (240, 170, 110), (140, 210, 150), (210, 140, 210), (230, 210, 120),
                 (120, 210, 210), (230, 130, 140), (170, 160, 240), (190, 220, 120), (240, 190, 200)]
@@ -147,7 +152,7 @@ class VacuumTab(LabTab):
         legend.grid(row=3, column=0, sticky='w', pady=(4, 0))
         for i, (colour, text) in enumerate([('#4fbf76', 'cleaned'), ('#ff9f43', 'path'),
                                             ('#5aa9ff', 'zone'), ('#ff5c7a', 'no-go / wall'),
-                                            ('#ffe066', 'dock')]):
+                                            (CARPET_COLOUR, 'carpet'), ('#ffe066', 'dock')]):
             sw = tk.Canvas(legend, width=12, height=12, highlightthickness=0, background=colour)
             sw.grid(row=0, column=2 * i, padx=(0 if i == 0 else 10, 4))
             ttk.Label(legend, text=text, style='Muted.TLabel').grid(row=0, column=2 * i + 1)
@@ -199,6 +204,19 @@ class VacuumTab(LabTab):
             row=2, column=0, columnspan=2, sticky='w', pady=(4, 0))
         ttk.Label(opts, text='A second pass crosses the first at right angles.',
                   style='Muted.TLabel').grid(row=3, column=0, columnspan=2, sticky='w')
+        ttk.Label(opts, text='Cleaning').grid(row=4, column=0, sticky='w', pady=(6, 0))
+        self.clean_mode_var = tk.StringVar(value='Vacuum')
+        self.clean_mode_combo = ttk.Combobox(opts, textvariable=self.clean_mode_var, state='readonly',
+                                             values=[label for _, label in CLEAN_MODES], width=14)
+        self.clean_mode_combo.grid(row=4, column=1, sticky='w', padx=8, pady=(6, 0))
+        ttk.Label(opts, text='Water flow').grid(row=5, column=0, sticky='w', pady=(4, 0))
+        self.water_flow_var = tk.StringVar(value='medium')
+        self.water_flow_combo = ttk.Combobox(opts, textvariable=self.water_flow_var, state='readonly',
+                                             values=WATER_FLOWS, width=10)
+        self.water_flow_combo.grid(row=5, column=1, sticky='w', padx=8, pady=(4, 0))
+        self.mop_hint_var = tk.StringVar(value='Mopping needs a robot with a mop module.')
+        ttk.Label(opts, textvariable=self.mop_hint_var, style='Muted.TLabel', wraplength=340,
+                  justify='left').grid(row=6, column=0, columnspan=2, sticky='w')
 
         buttons = ttk.Frame(page)
         buttons.grid(row=4, column=0, sticky='ew', pady=(8, 4))
@@ -348,7 +366,8 @@ class VacuumTab(LabTab):
         parts.grid(row=1, column=0, sticky='ew', pady=(4, 0))
         parts.columnconfigure(1, weight=1)
         for i, (key, label) in enumerate([('main_brush', 'Main brush'), ('side_brush', 'Side brush'),
-                                          ('filter', 'Filter'), ('sensors', 'Sensors (clean)')]):
+                                          ('filter', 'Filter'), ('sensors', 'Sensors (clean)'),
+                                          ('mop_pad', 'Mop pad')]):
             ttk.Label(parts, text=label).grid(row=i, column=0, sticky='w', pady=2)
             bar = ttk.Progressbar(parts, maximum=100, length=120)
             bar.grid(row=i, column=1, sticky='ew', padx=6)
@@ -364,6 +383,11 @@ class VacuumTab(LabTab):
         self.bin_bar = ttk.Progressbar(binf, maximum=100, length=120)
         self.bin_bar.grid(row=0, column=1, sticky='ew', padx=6)
         ttk.Button(binf, text='Emptied', width=8, command=lambda: self._send({'cmd': 'empty_bin'})).grid(row=0, column=2)
+        ttk.Label(binf, text='Water tank').grid(row=1, column=0, sticky='w', pady=(4, 0))
+        self.water_bar = ttk.Progressbar(binf, maximum=100, length=120)
+        self.water_bar.grid(row=1, column=1, sticky='ew', padx=6, pady=(4, 0))
+        self.water_var = tk.StringVar(value='no mop module')
+        ttk.Label(binf, textvariable=self.water_var, style='Muted.TLabel').grid(row=1, column=2, sticky='w', pady=(4, 0))
 
         ttk.Label(page, text='Behaviour', style='Section.TLabel').grid(row=3, column=0, sticky='w', pady=(12, 0))
         beh = ttk.Frame(page)
@@ -374,28 +398,34 @@ class VacuumTab(LabTab):
                         variable=self.charge_resume_var).grid(row=0, column=0, columnspan=4, sticky='w')
         ttk.Checkbutton(beh, text='Auto-empty dock (empties the bin when full)',
                         variable=self.auto_empty_var).grid(row=1, column=0, columnspan=4, sticky='w')
-        ttk.Label(beh, text='Return at').grid(row=2, column=0, sticky='w', pady=(4, 0))
+        self.carpet_boost_var = tk.BooleanVar(value=True)
+        self.auto_refill_var = tk.BooleanVar(value=True)
+        ttk.Checkbutton(beh, text='Carpet boost (Max suction on carpet areas)',
+                        variable=self.carpet_boost_var).grid(row=2, column=0, columnspan=4, sticky='w')
+        ttk.Checkbutton(beh, text='Refilling dock (refills the water tank and resumes)',
+                        variable=self.auto_refill_var).grid(row=3, column=0, columnspan=4, sticky='w')
+        ttk.Label(beh, text='Return at').grid(row=4, column=0, sticky='w', pady=(4, 0))
         self.low_var = tk.IntVar(value=20)
-        ttk.Spinbox(beh, from_=5, to=50, textvariable=self.low_var, width=4).grid(row=2, column=1, sticky='w', pady=(4, 0))
-        ttk.Label(beh, text='% · resume at').grid(row=2, column=2, sticky='w', pady=(4, 0))
+        ttk.Spinbox(beh, from_=5, to=50, textvariable=self.low_var, width=4).grid(row=4, column=1, sticky='w', pady=(4, 0))
+        ttk.Label(beh, text='% · resume at').grid(row=4, column=2, sticky='w', pady=(4, 0))
         self.resume_var = tk.IntVar(value=80)
-        ttk.Spinbox(beh, from_=30, to=100, textvariable=self.resume_var, width=4).grid(row=2, column=3, sticky='w', pady=(4, 0))
-        ttk.Label(beh, text='Battery model speed').grid(row=3, column=0, sticky='w', pady=(4, 0))
+        ttk.Spinbox(beh, from_=30, to=100, textvariable=self.resume_var, width=4).grid(row=4, column=3, sticky='w', pady=(4, 0))
+        ttk.Label(beh, text='Battery model speed').grid(row=5, column=0, sticky='w', pady=(4, 0))
         self.scale_var = tk.StringVar(value='1')
         ttk.Combobox(beh, textvariable=self.scale_var, values=['1', '10', '30', '60'], width=5).grid(
-            row=3, column=1, sticky='w', pady=(4, 0))
-        ttk.Label(beh, text='× (simulated battery)', style='Muted.TLabel').grid(row=3, column=2, columnspan=2, sticky='w', pady=(4, 0))
-        ttk.Label(beh, text='Speed').grid(row=4, column=0, sticky='w', pady=(4, 0))
+            row=5, column=1, sticky='w', pady=(4, 0))
+        ttk.Label(beh, text='× (simulated battery)', style='Muted.TLabel').grid(row=5, column=2, columnspan=2, sticky='w', pady=(4, 0))
+        ttk.Label(beh, text='Speed').grid(row=6, column=0, sticky='w', pady=(4, 0))
         self.speed_scale_var = tk.StringVar(value='1.0')
         ttk.Combobox(beh, textvariable=self.speed_scale_var, values=['0.6', '0.8', '1.0', '1.2'], width=5).grid(
-            row=4, column=1, sticky='w', pady=(4, 0))
-        ttk.Button(beh, text='Save', style='Accent.TButton', command=self._save_settings).grid(row=5, column=0, sticky='w', pady=(8, 0))
+            row=6, column=1, sticky='w', pady=(4, 0))
+        ttk.Button(beh, text='Save', style='Accent.TButton', command=self._save_settings).grid(row=7, column=0, sticky='w', pady=(8, 0))
         tools = ttk.Frame(page)
         tools.grid(row=5, column=0, sticky='ew', pady=(12, 0))
         ttk.Button(tools, text='Forget obstacles found on runs',
                    command=lambda: self._send({'cmd': 'clear_map_edits'})).grid(row=0, column=0, sticky='w')
-        ttk.Label(page, text='Battery, dustbin and part wear are models — the simulators have no battery. '
-                  'Wear counts cleaning time.', style='Muted.TLabel', wraplength=360, justify='left').grid(
+        ttk.Label(page, text='Battery, dustbin, water tank and part wear are models — the simulators have no '
+                  'battery. Wear counts cleaning time; the mop pad wears only while mopping.', style='Muted.TLabel', wraplength=360, justify='left').grid(
             row=6, column=0, sticky='w', pady=(10, 0))
 
     def _build_setup(self, page):
@@ -468,8 +498,13 @@ class VacuumTab(LabTab):
                 'mode:=%s' % self.vacuum_mode_var.get(),
                 'controller:=cleaning']
 
-    def _launch(self):
-        self.app.start_launch_command(self.launch_command())
+    def _launch(self, extra=()):
+        # The header names the running session from the main selection.
+        for name, var in (('robot_var', self.vacuum_robot_var), ('map_var', self.vacuum_map_var),
+                          ('simulator_var', self.vacuum_sim_var)):
+            if hasattr(self.app, name):
+                getattr(self.app, name).set(var.get())
+        self.app.start_launch_command(self.launch_command() + list(extra))
         self._ensure_ros()
 
     def node_command(self):
@@ -650,14 +685,29 @@ class VacuumTab(LabTab):
             self.message_var.set('Ready. Choose what to clean and press Start.')
         else:
             job = s.get('job') or {}
-            self.message_var.set('%s job · %d paths left · suction %s' % (
-                dict(MODES).get(job.get('mode'), job.get('mode', '')), s.get('tasks_left', 0), s.get('suction_label', '')))
+            how = dict(CLEAN_MODES).get(job.get('clean_mode') or 'vacuum', 'Vacuum')
+            extra = ' · carpet boost' if s.get('carpet_boost_active') else ''
+            if job.get('clean_mode') in ('vacuum_mop', 'mop'):
+                extra += ' · %.1f m² mopped · water %.0f%%' % (s.get('mopped_m2', 0.0), s.get('water_pct') or 0.0)
+            self.message_var.set('%s job (%s) · %d paths left · suction %s%s' % (
+                dict(MODES).get(job.get('mode'), job.get('mode', '')), how, s.get('tasks_left', 0),
+                s.get('suction_label', ''), extra))
         for key, (bar, var) in self.part_widgets.items():
             c = (s.get('consumables') or {}).get(key)
             if c:
                 bar['value'] = c['left_pct']
                 var.set('%.0f%% · %.1f/%d h' % (c['left_pct'], c['used_h'], c['life_h']))
-        busy = state in ('cleaning', 'mapping', 'returning', 'docking', 'emptying')
+        mop_module = bool(s.get('mop_module'))
+        self.clean_mode_combo.state(['!disabled'] if mop_module else ['disabled'])
+        self.water_flow_combo.state(['!disabled'] if mop_module else ['disabled'])
+        if not mop_module:
+            self.clean_mode_var.set('Vacuum')
+        water = s.get('water_pct')
+        self.water_bar['value'] = water or 0.0
+        self.water_var.set('no mop module' if water is None else '%.0f%%' % water)
+        self.mop_hint_var.set('Mopping keeps off carpet areas; edges are vacuumed only.' if mop_module else
+                              'Mopping needs a robot with a mop module.')
+        busy = state in ('cleaning', 'mapping', 'returning', 'docking', 'emptying', 'refilling')
         self.start_button.state(['disabled'] if busy else ['!disabled'])
         self.pause_button.state(['!disabled'] if busy else ['disabled'])
         self.resume_button.state(['!disabled'] if state in ('paused', 'error') or (
@@ -678,6 +728,8 @@ class VacuumTab(LabTab):
             self.resume_var.set(int(settings.get('resume_battery_pct', 80)))
             self.scale_var.set(str(settings.get('battery_time_scale', 1)).rstrip('0').rstrip('.') or '1')
             self.speed_scale_var.set(str(settings.get('speed_scale', 1.0)))
+            self.carpet_boost_var.set(bool(settings.get('carpet_boost', True)))
+            self.auto_refill_var.set(bool(settings.get('auto_refill', True)))
             dnd = settings.get('dnd') or {}
             self.dnd_var.set(bool(dnd.get('enabled')))
             self.dnd_start_var.set(dnd.get('start', '22:00'))
@@ -767,6 +819,10 @@ class VacuumTab(LabTab):
         mode = self.mode_var.get()
         req = {'cmd': 'start', 'mode': mode, 'suction': self.suction_var.get(),
                'passes': int(self.passes_var.get() or 1), 'edge': bool(self.edge_var.get())}
+        clean_mode = dict((label, key) for key, label in CLEAN_MODES).get(self.clean_mode_var.get(), 'vacuum')
+        if clean_mode != 'vacuum' and mode != 'explore':
+            req['clean_mode'] = clean_mode
+            req['water_flow'] = self.water_flow_var.get()
         if mode == 'rooms':
             req['rooms'] = [int(r) for r in self.selected_rooms]
         elif mode == 'zones':
@@ -908,7 +964,9 @@ class VacuumTab(LabTab):
                       'low_battery_pct': float(self.low_var.get()),
                       'resume_battery_pct': float(self.resume_var.get()),
                       'battery_time_scale': max(0.1, float(self.scale_var.get())),
-                      'speed_scale': max(0.3, min(1.5, float(self.speed_scale_var.get())))}
+                      'speed_scale': max(0.3, min(1.5, float(self.speed_scale_var.get()))),
+                      'carpet_boost': bool(self.carpet_boost_var.get()),
+                      'auto_refill': bool(self.auto_refill_var.get())}
         except (ValueError, tk.TclError):
             self.message_var.set('Settings must be numbers')
             return
@@ -1052,6 +1110,10 @@ class VacuumTab(LabTab):
         if self.view is None or self.map_data is None:
             return
         lay = self.layout
+        for area in lay.get('carpets') or []:
+            pts = [v for p in area['polygon'] for v in self.to_canvas(*p)]
+            c.create_polygon(*pts, outline=CARPET_COLOUR, fill=CARPET_COLOUR, stipple='gray12', width=2,
+                             dash=(3, 2), tags=('overlay',))
         for zone in lay.get('zones') or []:
             x0, y0, x1, y1 = zone['rect']
             a, b = self.to_canvas(x0, y0), self.to_canvas(x1, y1)
@@ -1141,8 +1203,8 @@ class VacuumTab(LabTab):
         self.canvas.delete('drag')
         sx, sy = self.drag['start']
         tool = self.tool_var.get()
-        if tool in ('zone', 'nogo'):
-            colour = '#5aa9ff' if tool == 'zone' else '#ff5c7a'
+        if tool in ('zone', 'nogo', 'carpet'):
+            colour = {'zone': '#5aa9ff', 'nogo': '#ff5c7a', 'carpet': CARPET_COLOUR}[tool]
             self.canvas.create_rectangle(sx, sy, event.x, event.y, outline=colour, width=2, dash=(4, 2), tags=('drag',))
         elif tool in ('wall', 'split', 'dock'):
             self.canvas.create_line(sx, sy, event.x, event.y, fill='#ff5c7a' if tool != 'dock' else '#ffe066',
@@ -1171,7 +1233,7 @@ class VacuumTab(LabTab):
                 self.mode_var.set('rooms')
             self._update_selection_text()
             self._mark_dirty()
-        elif tool in ('zone', 'nogo') and moved:
+        elif tool in ('zone', 'nogo', 'carpet') and moved:
             x0, x1 = sorted((start[0], end[0]))
             y0, y1 = sorted((start[1], end[1]))
             if (x1 - x0) < 0.3 or (y1 - y0) < 0.3:
@@ -1186,6 +1248,11 @@ class VacuumTab(LabTab):
                               'passes': int(self.passes_var.get() or 1)})
                 self._send_layout(zones=zones)
                 self.mode_var.set('zones')
+            elif tool == 'carpet':
+                carpets = list(lay.get('carpets') or [])
+                carpets.append({'id': 'c%d' % int(time.time() * 1000 % 1e8),
+                                'polygon': [[x0, y0], [x1, y0], [x1, y1], [x0, y1]]})
+                self._send_layout(carpets=carpets)
             else:
                 nogo = list(lay.get('no_go') or [])
                 nogo.append({'id': 'n%d' % int(time.time() * 1000 % 1e8),
@@ -1221,9 +1288,12 @@ class VacuumTab(LabTab):
         x, y = point
         zones = [z for z in lay.get('zones') or []
                  if not (z['rect'][0] <= x <= z['rect'][2] and z['rect'][1] <= y <= z['rect'][3])]
-        nogo = [z for z in lay.get('no_go') or []
-                if not (min(p[0] for p in z['polygon']) <= x <= max(p[0] for p in z['polygon'])
-                        and min(p[1] for p in z['polygon']) <= y <= max(p[1] for p in z['polygon']))]
+        def outside(area):
+            poly = area['polygon']
+            return not (min(p[0] for p in poly) <= x <= max(p[0] for p in poly)
+                        and min(p[1] for p in poly) <= y <= max(p[1] for p in poly))
+        nogo = [z for z in lay.get('no_go') or [] if outside(z)]
+        carpets = [z for z in lay.get('carpets') or [] if outside(z)]
 
         def near(wall):
             (x1, y1), (x2, y2) = wall['p1'], wall['p2']
@@ -1231,9 +1301,10 @@ class VacuumTab(LabTab):
             t = max(0.0, min(1.0, ((x - x1) * dx + (y - y1) * dy) / max(dx * dx + dy * dy, 1e-9)))
             return math.hypot(x - (x1 + t * dx), y - (y1 + t * dy)) < 0.25
         walls = [w for w in lay.get('walls') or [] if not near(w)]
-        if (len(zones), len(nogo), len(walls)) != (len(lay.get('zones') or []), len(lay.get('no_go') or []),
-                                                   len(lay.get('walls') or [])):
-            self._send_layout(zones=zones, no_go=nogo, walls=walls)
+        if (len(zones), len(nogo), len(walls), len(carpets)) != (
+                len(lay.get('zones') or []), len(lay.get('no_go') or []), len(lay.get('walls') or []),
+                len(lay.get('carpets') or [])):
+            self._send_layout(zones=zones, no_go=nogo, walls=walls, carpets=carpets)
         else:
             self.message_var.set('Nothing to erase there.')
 

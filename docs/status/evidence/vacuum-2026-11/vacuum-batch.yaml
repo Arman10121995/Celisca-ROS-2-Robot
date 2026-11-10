@@ -211,3 +211,68 @@ groups:
   - One run; the slam map is the estimate, the dock check uses truth
   - 'Earlier attempts failed: looped at the start (claude-v67), declared complete at once (claude-v68), node crash
     on a warning (claude-v69)'
+- reports:
+  - docs/status/evidence/vacuum-2026-11/runs-v71/gazebo_zone_low_box.json
+  report_kind: cleaning_screen
+  identity: *id002
+  date: '2026-11-10'
+  revision: 89b71ebb (claude-v71; run from the working tree committed as 89b71ebb a minute later)
+  hash_revision: 89b71ebb
+  source_files:
+  - src/robot_lab_vacuum_cleaning/robot_lab_vacuum_cleaning/mission.py
+  - src/robot_lab_vacuum_cleaning/robot_lab_vacuum_cleaning/planner.py
+  - src/robot_lab_vacuum_cleaning/robot_lab_vacuum_cleaning/rooms.py
+  - src/robot_lab_vacuum_cleaning/robot_lab_vacuum_cleaning/grid.py
+  - src/robot_lab_vacuum_cleaning/robot_lab_vacuum_cleaning/vacuum_cleaner.py
+  - src/robot_lab_description/launch/gazebo.launch.py
+  - src/robot_lab_robots/oomwoo/urdf/oomwoo_gazebo.xacro
+  scope: 'The hidden 6 cm box zone job with a working Gazebo bumper (world-level Contact system, scoped contact
+    topic bridged to /bumper). Judged by cleaning_screen: completed, >= 85 % of the reachable target cleaned, truth
+    on the dock within 0.10 m / 10 deg, no-go and virtual-wall compliance from the simulator-truth trail.'
+  limitations:
+  - One run; battery, dustbin and wear are models
+  - 116 bumper contact messages, 4 Bump events at the box; the stall detector did not fire (0 of 1282 tests)
+  - Indexed after the b3a63ae7 run, so it controls the cell
+- reports:
+  - docs/status/evidence/vacuum-2026-11/gui-v72/room-office.json
+  report_kind: cleaning_screen
+  identity:
+    robot_id: oomwoo
+    environment_id: small_house
+    simulator: gazebo
+    task_type: vacuum_gui_room_pause_resume
+  date: '2026-11-10'
+  revision: e3a64f40 (queue T17, claude-v72; producer scripts/qualify_vacuum_gui.py, copy in gui-v72/)
+  hash_revision: e3a64f40
+  source_files: &id004
+  - src/robot_lab_gui/robot_lab_gui/cleaning_tab.py
+  - src/robot_lab_vacuum_cleaning/robot_lab_vacuum_cleaning/mission.py
+  - src/robot_lab_vacuum_cleaning/robot_lab_vacuum_cleaning/planner.py
+  - src/robot_lab_vacuum_cleaning/robot_lab_vacuum_cleaning/rooms.py
+  - src/robot_lab_vacuum_cleaning/robot_lab_vacuum_cleaning/vacuum_cleaner.py
+  - src/robot_lab_description/launch/gazebo.launch.py
+  scope: 'Live session through the real Tk Vacuum tab: Setup launch, Divide map, the office picked on the live room
+    map with the Rooms tool, Start, Pause (truth must hold: drift < 3 cm / 0.05 rad over 5 s), Resume, dock; the
+    History row is read back. Judged by cleaning_screen from the record and an independent truth trail.'
+  limitations:
+  - One run; the trail and pause check come from the GUI process's own /odom/ground_truth subscription
+  - gui_pause was copied into the record from report.json of the same session (the producer version wrote it there)
+  - 'Coverage 90.2 % (the scripted office run had 95.4 %): the working bumper now stops the robot at furniture
+    (4 bumps)'
+- reports:
+  - docs/status/evidence/vacuum-2026-11/gui-v72/zone-keepout.json
+  report_kind: cleaning_screen
+  identity:
+    robot_id: oomwoo
+    environment_id: small_house
+    simulator: gazebo
+    task_type: vacuum_gui_zone_keepout
+  date: '2026-11-10'
+  revision: e3a64f40 (queue T17, claude-v72; producer scripts/qualify_vacuum_gui.py, copy in gui-v72/)
+  hash_revision: e3a64f40
+  source_files: *id004
+  scope: 'Same live session: a no-go box, a virtual wall and the zone drawn with the No-go, Wall and Zone map tools,
+    Start, dock. Judged by cleaning_screen: completed >= 85 %, truth on the dock, no-go and wall compliance from the
+    truth trail.'
+  limitations:
+  - One run; drawn with the tab's apply_tool (the handler behind a mouse drag), not synthetic mouse events

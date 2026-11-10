@@ -21,6 +21,10 @@ DEFAULT_SETTINGS = {
     'low_battery_pct': 20.0,
     'resume_battery_pct': 80.0,
     'dnd': {'enabled': False, 'start': '22:00', 'end': '08:00'},
+    'clean_mode': 'vacuum',      # vacuum, vacuum_mop, mop (robots with a mop module)
+    'water_flow': 'medium',
+    'carpet_boost': True,        # Max suction on carpet areas
+    'auto_refill': True,         # the dock refills the water tank
 }
 
 CONSUMABLES = {
@@ -29,6 +33,7 @@ CONSUMABLES = {
     'side_brush': {'label': 'Side brush', 'life_h': 200.0},
     'filter': {'label': 'Filter', 'life_h': 150.0},
     'sensors': {'label': 'Sensors (clean)', 'life_h': 30.0},
+    'mop_pad': {'label': 'Mop pad', 'life_h': 60.0},       # wears only while mopping
 }
 
 
