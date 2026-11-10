@@ -36,4 +36,4 @@ kill -TERM -- -"$LAUNCH" 2>/dev/null || true
 sleep 1
 kill -KILL -- -"$LAUNCH" 2>/dev/null || true
 [ -s "$OUT" ] || echo '{"result": "no report", "error": "timed out or the launch exited"}' > "$OUT"
-grep -q '"result": "completed"' "$OUT"
+grep -Eq '"result": "(completed|map complete)' "$OUT"

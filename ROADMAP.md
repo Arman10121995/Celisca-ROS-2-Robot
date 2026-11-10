@@ -1917,11 +1917,11 @@ All pass:
 
 Every run docked within 0.051 m and 4.6° of the dock by truth.
 
-The first mapping run looped at its start (fixed in 84dc2704; re-run
-pending). Gazebo never created the bumper's contact topic.
+The mapping run (slam mode) also passes at 7fb652e6: frontier exploration,
+6 rooms, docked within 0.027 m. Two earlier attempts failed and were
+fixed. Gazebo never created the bumper's contact topic.
 
 Acceptance (open):
-- mapping-run evidence;
 - repeats and more houses;
 - PyBullet and Isaac;
 - a physical bumper or contact topic;

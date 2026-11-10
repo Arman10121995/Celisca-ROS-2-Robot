@@ -12821,3 +12821,22 @@ records:
   limitations:
   - One run on one world; the other seven worlds of 2026-11-05 are not re-run
   - No obstacle planner in the manual screen
+- robot_id: oomwoo
+  environment_id: small_house
+  simulator: gazebo
+  task_type: vacuum_mapping_run
+  steering_mode: ''
+  date: '2026-11-10'
+  revision: 7fb652e6 (queue T16, claude-v70; slam mode)
+  report: docs/status/evidence/vacuum-2026-11/runs-v70/gazebo_slam_mapping.json
+  sha256: 8f883865fa9ea0289b832b347e9d6fbf8e2f65dd01fcf10a0dbce7179ac6cf2f
+  source_hashes: docs/status/evidence/vacuum-2026-11/runs-v70/source-hashes-7fb652e6.json
+  source_hashes_sha256: 8b3650e5245f776e2a9f2d04684baee49a5805518c78c6ef83302ffcb26cd8b0
+  report_kind: cleaning_screen
+  scope: 'Mapping run in slam mode (slam_toolbox live map): one turn on the spot, frontier exploration until no
+    reachable frontier is left, room division, return to the dock. Judged by cleaning_screen: map complete with
+    >= 2 rooms, truth on the dock within 0.10 m / 10 deg.'
+  limitations:
+  - One run; the slam map is the estimate, the dock check uses truth
+  - 'Earlier attempts failed: looped at the start (claude-v67), declared complete at once (claude-v68), node crash
+    on a warning (claude-v69)'

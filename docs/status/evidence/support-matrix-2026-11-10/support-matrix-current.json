@@ -1,5 +1,5 @@
 {
-  "generated_utc": "2026-11-10T14:27:55.980616+00:00",
+  "generated_utc": "2026-11-10T14:35:06.047062+00:00",
   "task": "R9.3",
   "status": "partial",
   "qualification": "Exact hashed screens only; artifact validation does not rerun a mission",
@@ -7192,6 +7192,28 @@
         "Screen evidence; full ROADMAP mission acceptance remains separate"
       ],
       "notes": "Normal owned Tk Run, Check takeoff clearance (clear, 3.0 m rise), Takeoff, seven direction buttons, altitude, release, Stop, publisher loss and Land with native X500/PX4 SITL in Gazebo Harmonic on the aerial_course world; independent Gazebo body.",
+      "steering_mode": ""
+    },
+    {
+      "robot_id": "oomwoo",
+      "environment_id": "small_house",
+      "simulator": "gazebo",
+      "task_type": "vacuum_mapping_run",
+      "support_level": "partially_supported",
+      "evidence_level": "runtime_evidence",
+      "last_tested": "2026-11-10",
+      "revision": "7fb652e6 (queue T16, claude-v70; slam mode)",
+      "test_result": "passed_screen",
+      "artifacts": [
+        "docs/status/evidence/vacuum-2026-11/runs-v70/gazebo_slam_mapping.json",
+        "docs/status/evidence/vacuum-2026-11/runs-v70/source-hashes-7fb652e6.json"
+      ],
+      "limitations": [
+        "One run; the slam map is the estimate, the dock check uses truth",
+        "Earlier attempts failed: looped at the start (claude-v67), declared complete at once (claude-v68), node crash on a warning (claude-v69)",
+        "Screen evidence; full ROADMAP mission acceptance remains separate"
+      ],
+      "notes": "Mapping run in slam mode (slam_toolbox live map): one turn on the spot, frontier exploration until no reachable frontier is left, room division, return to the dock. Judged by cleaning_screen: map complete with >= 2 rooms, truth on the dock within 0.10 m / 10 deg.",
       "steering_mode": ""
     }
   ],

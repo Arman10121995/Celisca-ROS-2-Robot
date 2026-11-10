@@ -131,7 +131,7 @@ current_verification:
     (28.1 m, RMSE 1.3 cm, map precision/recall 0.97/0.79; 1.49 m and 0.12/0.16 before); rear-steer car course after
     84422df passes its slalom in all four backends and the full course in MuJoCo (parking 0.091 m, -3.4 deg); parking
     heading fails in Gazebo/PyBullet/Isaac (11.6-14.3 deg). docs/status/evidence/rounds-2026-10-19/README.md.'
-  matrix_2026_11_10: '696 indexed reports, 318 measured cells: 306 passed and 11 failed screens; adds seven
+  matrix_2026_11_10: '697 indexed reports, 319 measured cells: 307 passed and 11 failed screens; adds eight
     robot-vacuum cleaning cells (oomwoo, small_house; cleaning_screen), all passed, and PX4 X500 manual
     flight on aerial_course after the takeoff-check script fix.
     docs/status/evidence/support-matrix-2026-11-10/README.md.'
@@ -1927,8 +1927,8 @@ tasks:
     implementation_validation: '2026-11-10 Gazebo (small_house, cleaning_screen): office 95.4 %, keep-out
       zone 99.6 % (no body entry, no wall crossing), spot 90.7 %, hidden low box 97.5 % (stall detector),
       bedroom with 10 recharges 98.4 %, whole home 96.3 % (141.6 m2, 77 min, auto-empty once); MuJoCo
-      keep-out zone 99.6 %; all docked within 0.051 m / 4.6 deg by truth. Mapping run failed (explore
-      loop, fixed 84dc2704, re-run pending). Core tests 24, GUI tests 9.'
+      keep-out zone 99.6 %; all docked within 0.051 m / 4.6 deg by truth. Mapping run (slam) passes at
+      7fb652e6 (6 rooms, docked 0.027 m) after two fixed failures. Core tests 24, GUI tests 9.'
     owner: claude
     scope_paths:
     - src/robot_lab_vacuum_cleaning/

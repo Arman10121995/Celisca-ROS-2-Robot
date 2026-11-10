@@ -139,9 +139,9 @@ Every run below docked within 0.051 m by truth.
 | Bedroom, battery model 60× | 98.4 % | 10 recharge-and-resume stops |
 | Zone + keep-outs in MuJoCo | 99.6 % | |
 | Whole home | 96.3 % | 141.6 m² in 77 min, one auto-empty stop |
+| Mapping run (slam mode) | map complete | 6 rooms, 85 m, 6 min |
 
 Not yet measured:
-- the mapping run (the first one looped; fixed, re-run pending);
 - PyBullet and Isaac;
 - repeats and other houses.
 

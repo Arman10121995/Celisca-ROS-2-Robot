@@ -11,9 +11,10 @@ November 10:
   - MuJoCo keep-out zone 99.6 %;
   - whole home 96.3 % (141.6 m², 77 min, one auto-empty stop).
 
-  Every run docked within 0.051 m by truth. The first mapping run looped
-  (fixed); the Gazebo bumper contact topic is not created
-  ([evidence](evidence/vacuum-2026-11/README.md)).
+  - mapping run on a live SLAM map: 6 rooms, after two fixed failures.
+
+  Every run docked within 0.051 m by truth. The Gazebo bumper contact
+  topic is not created ([evidence](evidence/vacuum-2026-11/README.md)).
 - **Docs:** [Learn Robot Lab from zero](../learn/README.md), an illustrated
   beginner course:
   - 8 chapters, 46 diagrams and 21 generated figures/animations;
@@ -38,7 +39,7 @@ November 9 (recorded from the November 5 queues):
     3 seeds lands within the matrix's 0.25 m.
 - **Support matrix:** 687 reports, 310 cells, 298 passed and 11 failed
   ([matrix](evidence/support-matrix-2026-11-09/README.md)). On November 10:
-  696 reports, 318 cells, 306 passed
+  697 reports, 319 cells, 307 passed
   ([matrix](evidence/support-matrix-2026-11-10/README.md)).
 - **PX4 manual-flight GUI runs in 8 worlds:** none ran a flight.
   - aerial_course and aerial_indoor never armed: the qualification script

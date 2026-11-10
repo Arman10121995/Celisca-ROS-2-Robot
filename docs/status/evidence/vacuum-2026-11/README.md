@@ -28,6 +28,8 @@ Each report is judged by **`cleaning_screen`**
 | Zone + keep-outs, **MuJoCo** | 8a122bbe | pass | 99.6 % (10.0 m²) | 7.9 min | 0.041 m, −3.4° | centre ≥ 0.23 m from the no-go box, 0 crossings |
 | **Whole home**, edges | 8a122bbe | pass | 96.3 % (141.6 m²) | 77 min | 0.036 m, −4.6° | 4 rooms; 1 auto-empty dock stop; 18 stalls, 17 with truth moving clearly less than the estimate |
 | Mapping run (slam mode) | 8a122bbe | **fail** | – | – | – | stayed at the start pose 20 min (explore loop); stopped, no report; fixed in 84dc2704 |
+| Mapping run (slam mode) | 1e229701 | **fail** | – | – | – | mapped 5 rooms, then the node died logging a warning (rclpy severity per call site); fixed in 7fb652e6 |
+| Mapping run (slam mode) | 7fb652e6 | pass | map complete, 6 rooms | 6.2 min, 85 m | 0.027 m, −3.2° | frontier exploration of the live slam_toolbox map |
 
 ![Whole home](figures/gazebo_whole_home.png)
 
@@ -35,6 +37,7 @@ Each report is judged by **`cleaning_screen`**
 |---|---|
 | ![Office](figures/gazebo_rooms_office.png) | ![Keep-out zone](figures/gazebo_zone_keepout.png) |
 | ![Spot](figures/gazebo_spot.png) | ![Recharge and resume](figures/gazebo_bedroom_recharge.png) |
+| ![Mapping run](figures/gazebo_slam_mapping.png) | ![Hidden low box (b3a63ae7)](figures/gazebo_zone_low_box_v68.png) |
 
 ## What the runs found (and the fixes)
 
