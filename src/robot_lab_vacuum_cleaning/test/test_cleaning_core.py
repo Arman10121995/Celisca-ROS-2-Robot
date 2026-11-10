@@ -29,8 +29,9 @@ def two_rooms(width=8.0, height=4.0, door=(1.6, 2.4)):
 class World:
     """Unicycle robot in a world grid that may hold obstacles the map lacks."""
 
-    def __init__(self, world: Grid, pose, radius=0.15):
+    def __init__(self, world: Grid, pose, radius=0.15, sense_range=1.5):
         self.world = world
+        self.sense_range = sense_range
         self.pose = list(pose)
         self.radius = radius
         occ = world.occupied_mask()
@@ -41,8 +42,8 @@ class World:
     def sense(self) -> Sense:
         x, y, yaw = self.pose
         d = np.hypot(self.points[:, 0] - x, self.points[:, 1] - y)
-        near = self.points[d < 1.5]
-        dn = d[d < 1.5]
+        near = self.points[d < self.sense_range]
+        dn = d[d < self.sense_range]
         front = math.inf
         if len(near):
             ang = np.arctan2(near[:, 1] - y, near[:, 0] - x) - yaw
@@ -311,18 +312,55 @@ def test_follower_does_not_turn_back_to_a_path_start_behind_it():
     assert status == 'done'
 
 
+def _room_scan(pose, size=(4.0, 3.0)):
+    """Walls of a size[0] x size[1] room (origin corner) seen from pose, robot frame."""
+    xs = np.linspace(0, size[0], 81)
+    ys = np.linspace(0, size[1], 61)
+    pts = np.concatenate([np.column_stack((xs, np.zeros_like(xs))), np.column_stack((xs, np.full_like(xs, size[1]))),
+                          np.column_stack((np.zeros_like(ys), ys)), np.column_stack((np.full_like(ys, size[0]), ys))])
+    x, y, yaw = pose
+    c, s = math.cos(yaw), math.sin(yaw)
+    dx, dy = pts[:, 0] - x, pts[:, 1] - y
+    return np.column_stack((c * dx + s * dy, -s * dx + c * dy))
+
+
 def test_stall_detector_flags_forward_motion_without_progress():
     from robot_lab_vacuum_cleaning.mission import StallDetector
-    wall = np.array([[2.0, y] for y in np.linspace(-0.5, 0.5, 21)])
-    moving, stuck = StallDetector(), StallDetector()
-    hits_moving = hits_stuck = 0
+    moving, stuck, turning = StallDetector(), StallDetector(), StallDetector()
+    hits_moving = hits_stuck = hits_turning = 0
     for k in range(40):
         t = k * 0.1
-        hits_moving += moving.update(t, 0.2, wall - [0.02 * k, 0.0])   # wall approaches
-        hits_stuck += stuck.update(t, 0.2, wall)                        # nothing changes
-    assert hits_moving == 0 and hits_stuck >= 1
-    turning = StallDetector()
-    assert not any(turning.update(k * 0.1, 0.0, wall) for k in range(40))
+        est = (1.0 + 0.02 * k, 1.0 + 0.005 * k, 0.1)
+        hits_moving += moving.update(t, 0.2, _room_scan(est), est)            # scan follows the estimate
+        hits_stuck += stuck.update(t, 0.2, _room_scan((1.0, 1.0, 0.1)), est)  # truth stays put
+        hits_turning += turning.update(t, 0.0, _room_scan((1.0, 1.0, 0.1 * k)), (1.0, 1.0, 0.1 * k))
+    assert hits_moving == 0 and hits_stuck >= 1 and hits_turning == 0
+
+
+def _base_points(world, pose):
+    sense = world.sense()
+    if sense.points is None or not len(sense.points):
+        return None
+    x, y, yaw = pose
+    c, s = math.cos(yaw), math.sin(yaw)
+    dx, dy = sense.points[:, 0] - x, sense.points[:, 1] - y
+    return np.column_stack((c * dx + s * dy, -s * dx + c * dy))
+
+
+def test_stall_detector_stays_quiet_on_a_normal_job(tmp_path):
+    from robot_lab_vacuum_cleaning.mission import StallDetector
+    grid = two_rooms()
+    mission = make_mission(tmp_path, grid, (1.0, 1.0, 0.0))
+    world = World(grid, (1.0, 1.0, 0.0), sense_range=3.0)
+    detector = StallDetector(max_range=3.0)
+    mission.command({'cmd': 'start', 'mode': 'all', 'edge': True})
+    t, v, hits = 0.0, 0.0, 0
+    while t < 3000 and mission.job is not None:
+        hits += detector.update(t, v, _base_points(world, world.pose), tuple(world.pose))
+        v, w = mission.step(t, tuple(world.pose), world.sense())
+        world.move(v, w, 0.1)
+        t += 0.1
+    assert mission.last_record['result'] == 'completed' and hits == 0
 
 
 def test_low_obstacle_below_the_lidar_is_found_by_stalling(tmp_path):
@@ -331,25 +369,24 @@ def test_low_obstacle_below_the_lidar_is_found_by_stalling(tmp_path):
     low = Grid(RES, grid.origin, grid.data.copy())
     low.data[30:42, 100:112] = 100          # a 0.6 m box under the scan plane
     mission = make_mission(tmp_path, grid, (5.0, 1.0, 0.0))
-    seen = World(grid, (5.0, 1.0, 0.0))     # what the LiDAR shows: the map only
-    body = World(low, (5.0, 1.0, 0.0))      # what the body collides with
-    detector = StallDetector()
+    seen = World(grid, (5.0, 1.0, 0.0), sense_range=3.0)   # what the LiDAR shows: the map only
+    body = World(low, (5.0, 1.0, 0.0))                     # what the body collides with
+    detector = StallDetector(max_range=3.0)
     assert mission.command({'cmd': 'start', 'mode': 'zones', 'zones': [[4.2, 0.2, 7.8, 3.8]], 'edge': False})[0]
     t, v_last, odom = 0.0, 0.0, list(body.pose)
     while t < 3000 and mission.job is not None:
-        # Wheel odometry integrates the command even when the body is blocked.
-        seen.pose = list(odom)
+        seen.pose = list(body.pose)
         sense = seen.sense()
-        x, y, yaw = body.pose
-        rel = sense.points - [x, y] if sense.points is not None and len(sense.points) else np.zeros((0, 2))
-        c, s = math.cos(-yaw), math.sin(-yaw)
-        base = np.column_stack((c * rel[:, 0] - s * rel[:, 1], s * rel[:, 0] + c * rel[:, 1]))
-        sense.stall = detector.update(t, v_last, base)
-        v, w = mission.step(t, tuple(body.pose), sense)
+        sense.stall = detector.update(t, v_last, _base_points(seen, body.pose), tuple(odom))
+        # The mission (like AMCL following odometry) sees the odometry pose.
+        v, w = mission.step(t, tuple(odom), sense)
         before = list(body.pose)
         body.move(v, w, 0.1)
-        odom = list(body.pose) if body.pose != before or v == 0 else \
-            [odom[0] + v * math.cos(odom[2]) * 0.1, odom[1] + v * math.sin(odom[2]) * 0.1, body.pose[2]]
+        if body.pose[:2] == before[:2] and abs(v) > 1e-6:
+            # Blocked: the wheels turn, odometry integrates the command.
+            odom = [odom[0] + v * math.cos(odom[2]) * 0.1, odom[1] + v * math.sin(odom[2]) * 0.1, body.pose[2]]
+        else:
+            odom = [odom[0] + body.pose[0] - before[0], odom[1] + body.pose[1] - before[1], body.pose[2]]
         v_last, t = v, t + 0.1
     assert mission.last_record['result'] == 'completed'
     assert any('Stall' in e['text'] for e in mission.events)

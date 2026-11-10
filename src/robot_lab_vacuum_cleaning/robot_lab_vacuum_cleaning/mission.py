@@ -17,6 +17,7 @@ from dataclasses import dataclass, field
 from typing import Callable, Deque, Dict, List, Optional, Sequence, Tuple
 
 import numpy as np
+from scipy.spatial import cKDTree
 
 from . import planner, rooms
 from .grid import Grid, Point
@@ -63,44 +64,89 @@ class Sense:
 
 
 class StallDetector:
-    """A virtual bumper from the LiDAR: commanded forward motion for
-    ``window`` seconds while the ranges straight ahead do not shrink means
-    the robot is pressed against something below the scan plane (or the
-    wheels slip).  Wheel odometry and a localiser that follows it keep
-    "moving" in that case, so the map pose cannot detect it."""
+    """A virtual bumper from the LiDAR.  Pressed against something below the
+    scan plane (or with slipping wheels) the robot does not move, but wheel
+    odometry and a localiser that follows it do.  Over ``window`` seconds of
+    commanded forward motion, the scan from the start of the window is
+    compared with the latest one under two hypotheses: the robot moved as the
+    pose estimate says, or it did not move.  When "did not move" explains the
+    latest scan clearly better, the robot is stalled.  Featureless scans
+    (a long corridor) fit both alike and never trigger."""
 
-    def __init__(self, window: float = 1.5, min_speed: float = 0.05, min_travel: float = 0.08,
-                 progress_fraction: float = 0.3, cone_deg: float = 25.0, max_range: float = 4.0):
+    def __init__(self, window: float = 1.5, min_speed: float = 0.05, min_travel: float = 0.12,
+                 max_range: float = 3.0, ratio: float = 0.4, min_residual: float = 0.08):
         self.window = window
         self.min_speed = min_speed
         self.min_travel = min_travel
-        self.progress_fraction = progress_fraction
-        self.cone = math.radians(cone_deg)
         self.max_range = max_range
-        self.samples: Deque[Tuple[float, float, Optional[float]]] = deque()
+        self.ratio = ratio
+        self.min_residual = min_residual
+        self.samples: Deque[Tuple[float, float, Optional[Pose], Optional[np.ndarray]]] = deque()
         self.cooldown_until = -math.inf
+        self.last = None   # (r_moved, r_static) of the latest test
 
-    def forward_range(self, points: Optional[np.ndarray]) -> Optional[float]:
+    def _points(self, points):
         if points is None or not len(points):
             return None
         d = np.hypot(points[:, 0], points[:, 1])
-        ahead = (np.abs(np.arctan2(points[:, 1], points[:, 0])) < self.cone) & (d < self.max_range)
-        return float(np.median(d[ahead])) if ahead.sum() >= 3 else None
+        pts = points[d < self.max_range]
+        if len(pts) > 180:
+            pts = pts[np.linspace(0, len(pts) - 1, 180).astype(int)]
+        return pts if len(pts) >= 20 else None
 
-    def update(self, t: float, v_cmd: float, base_points: Optional[np.ndarray]) -> bool:
-        """``base_points``: the latest scan in the robot frame (x forward)."""
-        self.samples.append((t, v_cmd, self.forward_range(base_points)))
+    def update(self, t: float, v_cmd: float, base_points: Optional[np.ndarray],
+               pose: Optional[Pose] = None) -> bool:
+        """``base_points``: the latest scan in the robot frame (x forward);
+        ``pose``: the pose estimate (map or odometry frame)."""
+        self.samples.append((t, v_cmd, pose, self._points(base_points)))
         while self.samples and t - self.samples[0][0] > self.window:
             self.samples.popleft()
         if t < self.cooldown_until or len(self.samples) < 3 or t - self.samples[0][0] < 0.9 * self.window:
             return False
-        if any(v < self.min_speed for _, v, _ in self.samples):
+        if any(v < self.min_speed for _, v, _, _ in self.samples):
             return False
-        travel = sum(0.5 * (a[1] + b[1]) * (b[0] - a[0]) for a, b in zip(self.samples, list(self.samples)[1:]))
-        first, last = self.samples[0][2], self.samples[-1][2]
-        if travel < self.min_travel or first is None or last is None:
+        _, _, p0, pts0 = self.samples[0]
+        _, _, p1, pts1 = self.samples[-1]
+        if p0 is None or p1 is None or pts0 is None or pts1 is None:
             return False
-        if first - last < self.progress_fraction * travel:
+        if math.dist(p0[:2], p1[:2]) < self.min_travel:
+            return False
+        # The start-of-window scan in the latest robot frame, if the robot
+        # moved as estimated.
+        c0, s0 = math.cos(p0[2]), math.sin(p0[2])
+        wx = p0[0] + c0 * pts0[:, 0] - s0 * pts0[:, 1]
+        wy = p0[1] + s0 * pts0[:, 0] + c0 * pts0[:, 1]
+        c1, s1 = math.cos(p1[2]), math.sin(p1[2])
+        dx, dy = wx - p1[0], wy - p1[1]
+        moved = np.column_stack((c1 * dx + s1 * dy, -s1 * dx + c1 * dy))
+        # Judge both hypotheses on the same points, ones that stay inside
+        # the range window either way (others have no partner to match).
+        inner = self.max_range - 0.25
+        keep = (np.hypot(moved[:, 0], moved[:, 1]) < inner) & (np.hypot(pts0[:, 0], pts0[:, 1]) < inner)
+        if keep.sum() < 10 or len(pts1) < 5:
+            return False
+        # Point-to-line residuals, only where the surface faces the direction
+        # of travel: walls beside a straight path fit "moved" and "did not
+        # move" alike (the aperture problem) and are left out.
+        tree = cKDTree(pts1)
+        _, near = tree.query(pts1, k=5)
+        local = pts1[near] - pts1[near].mean(axis=1, keepdims=True)
+        cov = np.einsum('nki,nkj->nij', local, local)
+        _, vecs = np.linalg.eigh(cov)
+        normals = vecs[:, :, 0]                     # smallest-variance direction
+        heading = np.array([1.0, 0.0])               # robot x axis, the direction of travel
+        residuals = []
+        for cand in (moved[keep], pts0[keep]):
+            _, idx = tree.query(cand)
+            n = normals[idx]
+            facing = np.abs(n @ heading) > 0.7
+            if facing.sum() < 8:
+                return False
+            residuals.append(float(np.median(np.abs(np.einsum('ij,ij->i', cand[facing] - pts1[idx][facing],
+                                                              n[facing])))))
+        r_moved, r_static = residuals
+        self.last = (r_moved, r_static)
+        if r_moved > self.min_residual and r_static < self.ratio * r_moved:
             self.samples.clear()
             self.cooldown_until = t + 2.0
             return True

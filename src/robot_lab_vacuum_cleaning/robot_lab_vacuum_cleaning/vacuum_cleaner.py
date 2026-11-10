@@ -298,7 +298,7 @@ class VacuumCleaner(Node):
                 sense.points = np.column_stack((pose[0] + c * near[:, 0] - s * near[:, 1],
                                                 pose[1] + s * near[:, 0] + c * near[:, 1]))
         sense.bumper = time.monotonic() < self.bump_until
-        if self.stall_detector.update(self._now(), self.last_v, pts):
+        if self.stall_detector.update(self._now(), self.last_v, pts, pose):
             sense.stall = True
             self.stall_events += 1
         sense.cliff = any(v.get('drop') for v in self.cliff.values())
