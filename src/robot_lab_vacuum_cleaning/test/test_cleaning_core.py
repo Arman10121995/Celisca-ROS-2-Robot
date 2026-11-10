@@ -252,6 +252,23 @@ def test_mapping_run_explores_unknown_space(tmp_path):
     assert mission.room_labels is not None and mission.room_labels.max() >= 2
 
 
+def test_mapping_run_ends_when_a_frontier_can_never_be_seen(tmp_path):
+    # Unknown cells right beside the start that no scan ever reveals (as
+    # under furniture): the run must not keep "arriving" there.
+    grid = two_rooms()
+    grid.data[18:22, 18:22] = -1                    # 0.2 m unknown patch next to (1.0, 1.0)
+    mission = make_mission(tmp_path, grid, (1.0, 1.0, 0.0))
+    world = World(two_rooms(), (1.0, 1.0, 0.0))
+    assert mission.command({'cmd': 'start', 'mode': 'explore'})[0]
+    t = 0.0
+    while t < 600 and mission.job is not None:
+        v, w = mission.step(t, tuple(world.pose), world.sense())
+        world.move(v, w, 0.1)
+        t += 0.1
+    assert mission.job is None and mission.last_record['result'].startswith('map complete')
+    assert t < 300
+
+
 def test_store_round_trip_and_schedule(tmp_path):
     store = Store(tmp_path)
     store.save_schedule([{'id': 'a', 'days': [0], 'time': '09:30'}])

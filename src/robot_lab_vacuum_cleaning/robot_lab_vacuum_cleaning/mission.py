@@ -336,6 +336,7 @@ class Mission:
         self._bin_warned = False
         self._empty_timer = 0.0
         self.dock_blocks = 0
+        self.explore_started = None
 
     # ------------------------------------------------------------------
     # Logging and layout
@@ -676,6 +677,7 @@ class Mission:
         self.distance_m = 0.0
         self.stuck_count = 0
         self.explore_blacklist = []
+        self.explore_started = None
         self.job = {
             'id': time.strftime('%Y%m%d-%H%M%S') + '-' + uuid.uuid4().hex[:4],
             'mode': mode, 'suction': suction, 'passes': passes, 'edge': edge,
@@ -998,6 +1000,8 @@ class Mission:
             self.state = 'docking'
             self.dock_phase = 'align'
             self.dock_blocks = 0
+        elif task.kind == 'explore':
+            self.explore_blacklist.append(task.points[-1])
 
     def _park_active(self) -> None:
         """Put the unfinished rest of a work task back at the queue front."""
@@ -1158,8 +1162,17 @@ class Mission:
                 self.state = 'cleaning'
                 self.log('info', 'Resuming the job after emptying the bin')
 
+    MAPPING_LIMIT_S = 1800.0
+
     def _step_mapping(self, now, pose, sense):
+        if self.explore_started is None:
+            self.explore_started = now
         if self.active is None:
+            if now - self.explore_started > self.MAPPING_LIMIT_S:
+                self._finish_job('map complete (time limit)')
+                self.segment()
+                self._home_or_idle('mapping time limit')
+                return 0.0, 0.0
             target = self._choose_frontier(pose)
             if target is None:
                 self._finish_job('map complete')
@@ -1171,6 +1184,11 @@ class Mission:
 
     def _choose_frontier(self, pose) -> Optional[List[Point]]:
         fronts = planner.frontiers(self.grid, self.pmap)
+        # A frontier the robot already stands at (or reached before) that is
+        # still unknown cannot be seen from there: never pick it again.
+        for p, _ in fronts:
+            if math.dist(p, pose[:2]) < 0.35:
+                self.explore_blacklist.append(p)
         fronts = [(p, n) for p, n in fronts
                   if all(math.dist(p, b) > 0.5 for b in self.explore_blacklist)]
         fronts.sort(key=lambda f: math.dist(pose[:2], f[0]) - 0.02 * f[1] * self.grid.resolution)
