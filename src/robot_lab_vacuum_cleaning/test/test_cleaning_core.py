@@ -309,3 +309,61 @@ def test_follower_does_not_turn_back_to_a_path_start_behind_it():
             break
         pose = [pose[0] + v * math.cos(pose[2]) * 0.1, pose[1] + v * math.sin(pose[2]) * 0.1, pose[2] + w * 0.1]
     assert status == 'done'
+
+
+def test_stall_detector_flags_forward_motion_without_progress():
+    from robot_lab_vacuum_cleaning.mission import StallDetector
+    wall = np.array([[2.0, y] for y in np.linspace(-0.5, 0.5, 21)])
+    moving, stuck = StallDetector(), StallDetector()
+    hits_moving = hits_stuck = 0
+    for k in range(40):
+        t = k * 0.1
+        hits_moving += moving.update(t, 0.2, wall - [0.02 * k, 0.0])   # wall approaches
+        hits_stuck += stuck.update(t, 0.2, wall)                        # nothing changes
+    assert hits_moving == 0 and hits_stuck >= 1
+    turning = StallDetector()
+    assert not any(turning.update(k * 0.1, 0.0, wall) for k in range(40))
+
+
+def test_low_obstacle_below_the_lidar_is_found_by_stalling(tmp_path):
+    from robot_lab_vacuum_cleaning.mission import StallDetector
+    grid = two_rooms()
+    low = Grid(RES, grid.origin, grid.data.copy())
+    low.data[30:42, 100:112] = 100          # a 0.6 m box under the scan plane
+    mission = make_mission(tmp_path, grid, (5.0, 1.0, 0.0))
+    seen = World(grid, (5.0, 1.0, 0.0))     # what the LiDAR shows: the map only
+    body = World(low, (5.0, 1.0, 0.0))      # what the body collides with
+    detector = StallDetector()
+    assert mission.command({'cmd': 'start', 'mode': 'zones', 'zones': [[4.2, 0.2, 7.8, 3.8]], 'edge': False})[0]
+    t, v_last, odom = 0.0, 0.0, list(body.pose)
+    while t < 3000 and mission.job is not None:
+        # Wheel odometry integrates the command even when the body is blocked.
+        seen.pose = list(odom)
+        sense = seen.sense()
+        x, y, yaw = body.pose
+        rel = sense.points - [x, y] if sense.points is not None and len(sense.points) else np.zeros((0, 2))
+        c, s = math.cos(-yaw), math.sin(-yaw)
+        base = np.column_stack((c * rel[:, 0] - s * rel[:, 1], s * rel[:, 0] + c * rel[:, 1]))
+        sense.stall = detector.update(t, v_last, base)
+        v, w = mission.step(t, tuple(body.pose), sense)
+        before = list(body.pose)
+        body.move(v, w, 0.1)
+        odom = list(body.pose) if body.pose != before or v == 0 else \
+            [odom[0] + v * math.cos(odom[2]) * 0.1, odom[1] + v * math.sin(odom[2]) * 0.1, body.pose[2]]
+        v_last, t = v, t + 0.1
+    assert mission.last_record['result'] == 'completed'
+    assert any('Stall' in e['text'] for e in mission.events)
+
+
+def test_blocked_way_home_backs_off_then_replans(tmp_path):
+    grid = two_rooms()
+    mission = make_mission(tmp_path, grid, (1.0, 1.0, 0.0))
+    world = World(grid, (6.0, 2.0, math.pi))
+    mission.layout['dock'] = [1.0, 1.0, 0.0]
+    mission.step(0.0, tuple(world.pose), world.sense())
+    assert mission.command({'cmd': 'dock'})[0] and mission.state == 'returning'
+    blocked = Sense(front_clear=0.0, points=np.array([[5.8, 2.0]]))
+    mission.step(0.1, tuple(world.pose), blocked)
+    assert mission.maneuvers and mission.maneuvers[0][0] < 0   # the back-off survives
+    run(mission, world, 600, until=lambda m: m.state in ('docked', 'charging', 'error'))
+    assert mission.state in ('docked', 'charging')

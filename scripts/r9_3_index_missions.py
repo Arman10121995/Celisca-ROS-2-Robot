@@ -46,6 +46,8 @@ SHAPES = {
     'calibration_screen': lambda content: 'pattern' in content,
     # scripts/qualify_molar_hri_gui.py report.json
     'articulation_screen': lambda content: isinstance(content.get('phases'), dict) and 'backend' in content,
+    # scripts/sim_vacuum_mission.sh: the robot_lab_vacuum_cleaning job record
+    'cleaning_screen': lambda content: 'result' in content and isinstance(content.get('trail'), list),
 }
 
 

@@ -322,15 +322,22 @@ def segment_points(p: Point, q: Point, spacing: float = 0.2) -> List[Point]:
 
 
 def edge_contours(pmap: PlanningMap, region: np.ndarray, min_length: float = 0.4,
-                  spacing: float = 0.12) -> List[List[Point]]:
+                  spacing: float = 0.12, boundary: bool = False) -> List[List[Point]]:
     """Polylines that follow obstacles/walls at the closest safe distance.
 
     Uses the outermost ring of traversable cells that borders a real obstacle
-    (not a doorway into another room, nor a keep-out area)."""
+    (not a doorway into another room, nor a keep-out area).  With
+    ``boundary`` it traces the whole outline of ``region`` instead: a zone's
+    edge, keep-out berths and obstacles alike."""
     res = pmap.resolution
-    band = pmap.required + 1.5 * res
-    edge = (region & pmap.traversable & (pmap.obstacle_clearance_m <= band)
-            & (pmap.clearance_m <= band))
+    if boundary:
+        inner = ndimage.binary_erosion(region & pmap.traversable, structure=np.array(
+            [[0, 1, 0], [1, 1, 1], [0, 1, 0]], dtype=bool))
+        edge = region & pmap.traversable & ~inner
+    else:
+        band = pmap.required + 1.5 * res
+        edge = (region & pmap.traversable & (pmap.obstacle_clearance_m <= band)
+                & (pmap.clearance_m <= band))
     if not edge.any():
         return []
     ys, xs = np.nonzero(edge)

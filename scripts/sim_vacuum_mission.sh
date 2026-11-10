@@ -23,6 +23,10 @@ ros2 launch robot_lab_bringup simulated_room_vacuum.launch.py mode:="${MODE:-nav
   vacuum_battery_time_scale:="${BATTERY_SCALE:--1}" "$@" > "$OUT.launch.log" 2>&1 &
 LAUNCH=$!
 DEADLINE=$((SECONDS + ${TIMEOUT:-3600}))
+# Record the Gazebo topics once the stack is up (bumper/cliff diagnostics).
+if [ "$SIM" = gazebo ]; then
+  ( sleep 45; { ign topic -l; echo '--- /bumper'; ign topic -i -t /bumper; } > "$OUT.gz_topics.txt" 2>&1 ) &
+fi
 while [ ! -s "$OUT" ] && [ $SECONDS -lt $DEADLINE ] && kill -0 "$LAUNCH" 2>/dev/null; do
   sleep 5
 done

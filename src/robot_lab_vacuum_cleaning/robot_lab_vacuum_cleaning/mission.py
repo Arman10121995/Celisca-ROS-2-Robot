@@ -59,6 +59,52 @@ class Sense:
     points: Optional[np.ndarray] = None   # Nx2 obstacle points (map frame)
     bumper: bool = False
     cliff: bool = False
+    stall: bool = False   # driving forward but the LiDAR shows no progress
+
+
+class StallDetector:
+    """A virtual bumper from the LiDAR: commanded forward motion for
+    ``window`` seconds while the ranges straight ahead do not shrink means
+    the robot is pressed against something below the scan plane (or the
+    wheels slip).  Wheel odometry and a localiser that follows it keep
+    "moving" in that case, so the map pose cannot detect it."""
+
+    def __init__(self, window: float = 1.5, min_speed: float = 0.05, min_travel: float = 0.08,
+                 progress_fraction: float = 0.3, cone_deg: float = 25.0, max_range: float = 4.0):
+        self.window = window
+        self.min_speed = min_speed
+        self.min_travel = min_travel
+        self.progress_fraction = progress_fraction
+        self.cone = math.radians(cone_deg)
+        self.max_range = max_range
+        self.samples: Deque[Tuple[float, float, Optional[float]]] = deque()
+        self.cooldown_until = -math.inf
+
+    def forward_range(self, points: Optional[np.ndarray]) -> Optional[float]:
+        if points is None or not len(points):
+            return None
+        d = np.hypot(points[:, 0], points[:, 1])
+        ahead = (np.abs(np.arctan2(points[:, 1], points[:, 0])) < self.cone) & (d < self.max_range)
+        return float(np.median(d[ahead])) if ahead.sum() >= 3 else None
+
+    def update(self, t: float, v_cmd: float, base_points: Optional[np.ndarray]) -> bool:
+        """``base_points``: the latest scan in the robot frame (x forward)."""
+        self.samples.append((t, v_cmd, self.forward_range(base_points)))
+        while self.samples and t - self.samples[0][0] > self.window:
+            self.samples.popleft()
+        if t < self.cooldown_until or len(self.samples) < 3 or t - self.samples[0][0] < 0.9 * self.window:
+            return False
+        if any(v < self.min_speed for _, v, _ in self.samples):
+            return False
+        travel = sum(0.5 * (a[1] + b[1]) * (b[0] - a[0]) for a, b in zip(self.samples, list(self.samples)[1:]))
+        first, last = self.samples[0][2], self.samples[-1][2]
+        if travel < self.min_travel or first is None or last is None:
+            return False
+        if first - last < self.progress_fraction * travel:
+            self.samples.clear()
+            self.cooldown_until = t + 2.0
+            return True
+        return False
 
 
 @dataclass
@@ -238,6 +284,7 @@ class Mission:
         self.last_record: Optional[Dict] = None
         self._bin_warned = False
         self._empty_timer = 0.0
+        self.dock_blocks = 0
 
     # ------------------------------------------------------------------
     # Logging and layout
@@ -387,6 +434,7 @@ class Mission:
         if self.state == 'error':
             self.error = ''
             self.stuck_count = 0
+            self.dock_blocks = 0
             if self.job is not None and (self.tasks or self.job['mode'] == 'explore'):
                 self.state = 'mapping' if self.job['mode'] == 'explore' else 'cleaning'
                 return True, 'Error cleared; continuing the job'
@@ -406,6 +454,7 @@ class Mission:
         return True, 'Stopped'
 
     def _cmd_dock(self, _cmd):
+        self.dock_blocks = 0
         if self.job is not None:
             self._finish_job('returned to dock')
         return self.go_home('requested')
@@ -605,12 +654,15 @@ class Mission:
         edge_r = cfg.robot_radius + cfg.side_brush_reach
         free = grid.free_mask()
 
-        def add_region(region, room_id, room_suction, room_passes, room_edge, lanes=True):
+        def add_region(region, room_id, room_suction, room_passes, room_edge, lanes=True, outline=False):
             nonlocal here, target
             if region.sum() * grid.resolution ** 2 < 0.02:
                 return
-            if room_edge:
-                for line in planner.order_polylines(planner.edge_contours(pm, region), here):
+            if room_edge or outline:
+                # Rooms: along walls and furniture.  Zones: the whole outline,
+                # so lane ends and keep-out borders leave no fringe.
+                lines = planner.edge_contours(pm, region, boundary=outline)
+                for line in planner.order_polylines(lines, here):
                     tasks.append(Task('edge', line, room_id, room_suction))
                     here = line[-1]
             if lanes:
@@ -650,7 +702,7 @@ class Mission:
                 poly = [(x0, y0), (x1, y0), (x1, y1), (x0, y1)]
                 region = pm.traversable & reach & grid.polygon_mask(poly)
                 zp = int(zone.get('passes', passes)) if isinstance(zone, dict) else passes
-                add_region(region, 0, suction, zp, False)
+                add_region(region, 0, suction, zp, False, outline=True)
         elif mode == 'spot':
             centre = tuple(req.get('point') or here)
             side = float(req.get('side', 1.6))
@@ -668,8 +720,11 @@ class Mission:
                     for run in ordered:
                         tasks.append(Task('spot', run, 0, suction))
             else:
-                # Furniture cuts the spiral: cross-hatched lanes over the
-                # reachable part of the square instead.
+                # Furniture cuts the spiral: the outline, then cross-hatched
+                # lanes over the reachable part of the square instead.
+                for line in planner.order_polylines(planner.edge_contours(pm, region, boundary=True), here):
+                    tasks.append(Task('spot', line, 0, suction))
+                    here = line[-1]
                 axis = planner.best_axis(grid, region, cfg.lane_spacing)
                 for p in range(max(passes, 2)):
                     ax = axis if p % 2 == 0 else ('y' if axis == 'x' else 'x')
@@ -865,7 +920,7 @@ class Mission:
 
     def _follow(self, now, pose, sense, dt):
         task = self.active
-        if sense.bumper or sense.cliff:
+        if sense.bumper or sense.cliff or sense.stall:
             self._on_blocked(pose, sense, contact=True)
             return 0.0, 0.0
         v, w, status = self.follower.step(pose, sense.front_clear)
@@ -891,6 +946,7 @@ class Mission:
         if task.kind == 'dock':
             self.state = 'docking'
             self.dock_phase = 'align'
+            self.dock_blocks = 0
 
     def _park_active(self) -> None:
         """Put the unfinished rest of a work task back at the queue front."""
@@ -929,7 +985,8 @@ class Mission:
         self.rebuild_planning_map()
         if self.job is not None:
             self.job['events'] += 1
-        what = 'cliff' if sense.cliff else 'bump' if sense.bumper else 'obstacle'
+        what = 'cliff' if sense.cliff else 'bump' if sense.bumper else \
+            'stall (no progress ahead)' if sense.stall else 'obstacle'
         self.log('info', '%s at (%.2f, %.2f); going around' % (what.capitalize(), x, y))
         # Back away first: the detour starts from where it can turn freely.
         self.maneuvers.append([-0.08, 0.0, 1.2 if contact else 0.8])
@@ -950,7 +1007,14 @@ class Mission:
                 self.explore_blacklist.append(task.points[-1])
             return
         if task.kind == 'dock':
-            self.go_home(self.home_reason)
+            # Re-plan home after the back-off (_step_returning does it once
+            # the manoeuvre is done); go_home() here would cancel the back-off.
+            self.dock_blocks += 1
+            if self.dock_blocks > 8:
+                self.maneuvers.clear()
+                self.state = 'error'
+                self.error = 'Blocked on the way to the dock - clear the path and resume'
+                self.log('error', self.error)
             return
         rest = follower.remaining() if follower else []
         keep = [i for i, p in enumerate(rest) if math.dist(p, (x, y)) > cfg.robot_radius + 0.25

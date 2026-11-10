@@ -377,7 +377,63 @@ def measured_result(report,kind):
                     and abs(full['coupling_error']) < .012
                     and hold and all(finite(v) and abs(v) < .015 for v in hold.values())
                     and abs(report['watchdog_roller_velocity']) < .1)
+    if kind == 'cleaning_screen':
+        return cleaning_screen(report)
     raise ValueError(f'Unrecognized measured report kind: {kind}')
+
+
+def cleaning_screen(report):
+    """scripts/sim_vacuum_mission.sh: one robot-vacuum job judged from its
+    record and the simulator-truth trail.  A cleaning job completes with at
+    least 85 % of its reachable target cleaned; a mapping run completes with
+    two or more rooms.  Either way the robot ends on its dock (truth within
+    0.10 m and 10 degrees), its centre never comes within (radius - 2 cm) of
+    a no-go polygon and no truth step crosses a virtual wall."""
+    trail = [s['truth'] for s in report.get('trail') or [] if valid_position(s.get('truth'))]
+    dock, final = report.get('dock'), report.get('final_truth')
+    if report.get('error') or len(trail) < 10 or not valid_position(dock) or not valid_position(final):
+        return False
+    if report.get('mode') == 'explore':
+        passed = report.get('result') == 'map complete' and len(report.get('rooms') or {}) >= 2
+    else:
+        passed = (report.get('result') == 'completed' and finite(report.get('coverage_pct'))
+                  and report['coverage_pct'] >= 85.0)
+    yaw = math.degrees(math.atan2(math.sin(final[2] - dock[2]), math.cos(final[2] - dock[2])))
+    passed = (passed and report.get('final_state') in ('docked', 'charging')
+              and math.dist(final[:2], dock[:2]) <= .10 and abs(yaw) <= 10.0)
+    radius = report.get('robot_radius', .165)
+    layout = report.get('layout') or {}
+    for zone in layout.get('no_go') or []:
+        poly = zone.get('polygon') or []
+        passed = passed and len(poly) >= 3 and all(
+            _polygon_distance(p[0], p[1], poly) >= radius - .02 for p in trail)
+    for wall in layout.get('walls') or []:
+        a, b = wall.get('p1'), wall.get('p2')
+        passed = passed and not any(_crosses(p[:2], q[:2], a, b) for p, q in zip(trail, trail[1:]))
+    return bool(passed)
+
+
+def _polygon_distance(x, y, poly):
+    inside = False
+    for i in range(len(poly)):
+        (x1, y1), (x2, y2) = poly[i], poly[i - 1]
+        if (y1 > y) != (y2 > y) and x < (x2 - x1) * (y - y1) / (y2 - y1) + x1:
+            inside = not inside
+    if inside:
+        return 0.0
+    best = math.inf
+    for i in range(len(poly)):
+        (ax, ay), (bx, by) = poly[i - 1], poly[i]
+        dx, dy = bx - ax, by - ay
+        t = max(0.0, min(1.0, ((x - ax) * dx + (y - ay) * dy) / max(dx * dx + dy * dy, 1e-12)))
+        best = min(best, math.hypot(x - ax - t * dx, y - ay - t * dy))
+    return best
+
+
+def _crosses(p1, p2, q1, q2):
+    def orient(a, b, c):
+        return (b[0] - a[0]) * (c[1] - a[1]) - (b[1] - a[1]) * (c[0] - a[0])
+    return orient(p1, p2, q1) * orient(p1, p2, q2) < 0 and orient(q1, q2, p1) * orient(q1, q2, p2) < 0
 
 
 class SupportMatrixFramework:

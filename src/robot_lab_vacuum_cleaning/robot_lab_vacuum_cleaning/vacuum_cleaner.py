@@ -48,7 +48,7 @@ from std_srvs.srv import Trigger
 from tf2_ros import Buffer, TransformException, TransformListener
 
 from .grid import Grid
-from .mission import DEFAULT_POWER_MODES, Mission, RobotConfig, Sense
+from .mission import DEFAULT_POWER_MODES, Mission, RobotConfig, Sense, StallDetector
 from .store import Store, schedule_due
 
 try:
@@ -172,6 +172,9 @@ class VacuumCleaner(Node):
         self.scan_base = None      # (points Nx2 in base frame)
         self.laser_tf = {}
         self.bump_until = 0.0
+        self.stall_detector = StallDetector()
+        self.last_v = 0.0
+        self.stall_events = 0
         self.truth = None
         self.trail = []
         self.last_trail = 0.0
@@ -295,6 +298,9 @@ class VacuumCleaner(Node):
                 sense.points = np.column_stack((pose[0] + c * near[:, 0] - s * near[:, 1],
                                                 pose[1] + s * near[:, 0] + c * near[:, 1]))
         sense.bumper = time.monotonic() < self.bump_until
+        if self.stall_detector.update(self._now(), self.last_v, pts):
+            sense.stall = True
+            self.stall_events += 1
         sense.cliff = any(v.get('drop') for v in self.cliff.values())
         return sense
 
@@ -309,6 +315,7 @@ class VacuumCleaner(Node):
             self.cmd_pub.publish(Twist())
             return
         v, w = self.mission.step(self._now(), self.pose, self._sense(self.pose))
+        self.last_v = float(v)
         active = self.mission.state in ACTIVE_STATES or bool(self.mission.maneuvers) or v != 0.0 or w != 0.0
         if active or self.was_active:
             cmd = Twist()
@@ -439,6 +446,7 @@ class VacuumCleaner(Node):
             'scan_age_s': round(now - self.scan_stamp, 2) if self.scan_stamp else None,
             'bumper_messages': self.bumper_msgs,
             'bumper_contacts': self.bumper_hits,
+            'stall_events': self.stall_events,
             'cliff': {t.rsplit('/', 1)[-1]: {'floor_m': None if v['floor'] is None else round(v['floor'], 4),
                                              'reading_m': None if v['reading'] is None else round(v['reading'], 4),
                                              'drop': bool(v['drop']), 'age_s': round(now - v['stamp'], 2)}
