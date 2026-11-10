@@ -337,6 +337,8 @@ class Mission:
         self._empty_timer = 0.0
         self.dock_blocks = 0
         self.explore_started = None
+        self.explore_empty_checks = 0
+        self.explore_wait_until = -math.inf
 
     # ------------------------------------------------------------------
     # Logging and layout
@@ -678,6 +680,11 @@ class Mission:
         self.stuck_count = 0
         self.explore_blacklist = []
         self.explore_started = None
+        self.explore_empty_checks = 0
+        self.explore_wait_until = -math.inf
+        if mode == 'explore':
+            # One slow turn on the spot first, so SLAM sees all around.
+            self.maneuvers.append([0.0, 0.8, 2 * math.pi / 0.8])
         self.job = {
             'id': time.strftime('%Y%m%d-%H%M%S') + '-' + uuid.uuid4().hex[:4],
             'mode': mode, 'suction': suction, 'passes': passes, 'edge': edge,
@@ -1173,12 +1180,21 @@ class Mission:
                 self.segment()
                 self._home_or_idle('mapping time limit')
                 return 0.0, 0.0
+            if now < self.explore_wait_until:
+                return 0.0, 0.0
             target = self._choose_frontier(pose)
             if target is None:
+                # SLAM may not have added the last scans yet: look again a
+                # few times before calling the map complete.
+                self.explore_empty_checks += 1
+                if self.explore_empty_checks < 3:
+                    self.explore_wait_until = now + 3.0
+                    return 0.0, 0.0
                 self._finish_job('map complete')
                 self.segment()
                 self._home_or_idle('mapping complete')
                 return 0.0, 0.0
+            self.explore_empty_checks = 0
             self._begin(Task('explore', target))
         return self._follow(now, pose, sense, 0.0)
 
@@ -1192,7 +1208,7 @@ class Mission:
         fronts = [(p, n) for p, n in fronts
                   if all(math.dist(p, b) > 0.5 for b in self.explore_blacklist)]
         fronts.sort(key=lambda f: math.dist(pose[:2], f[0]) - 0.02 * f[1] * self.grid.resolution)
-        for point, _ in fronts[:6]:
+        for point, _ in fronts[:40]:
             path = self.pmap.astar(pose[:2], point)
             if path is not None and len(path) >= 2:
                 return path
