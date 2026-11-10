@@ -10,6 +10,31 @@ These are educational sensor-fusion notes and numerical API sketches. Actual sen
 
 Sensor fusion combines data from multiple sensors to produce more accurate, reliable, and robust estimates than any single sensor could provide. The implemented algorithms focus on attitude estimation (IMU-based) and position-velocity-attitude fusion.
 
+## How it works, visually
+
+Each sensor is good at something different. Fusion keeps the good part of
+each:
+
+![IMU attitude fusion](../learn/figures/imu_fusion.png)
+
+```mermaid
+flowchart LR
+    G["gyro: smooth, drifts"] -->|"high-pass (short term)"| F(("fusion"))
+    A["accelerometer: noisy, no drift<br/>(gravity direction)"] -->|"low-pass (long term)"| F
+    F --> R["roll / pitch"]
+    W["wheel odometry"] --> E(("EKF / UKF"))
+    I["IMU turn rate"] --> E
+    N["GNSS fixes"] --> E
+    E --> P["pose"]
+```
+
+The complementary filter is one line: `angle = α·(angle + gyro·dt) + (1−α)·accel_angle`.
+Figure: `docs/learn/figures/algorithm_figures.py imu`, with the current
+`ComplementaryImu.update(ax, ay, az, gx, gy, dt) → (pitch, roll)` and
+`MadgwickFilter.update(ax, ay, az, gx, gy, gz, dt)`. (Drawing this figure
+found that `ComplementaryImu` integrated the gyro axes the wrong way round;
+fixed and tested in `test_sensor_fusion_axes.py`, 2026-11-10.)
+
 ## Algorithm Catalog
 
 ### Attitude Estimation Algorithms

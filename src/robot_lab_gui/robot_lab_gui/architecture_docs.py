@@ -48,18 +48,21 @@ class GuideLibrary(ttk.Frame):
     def filter(self):
         query=self.query.get().casefold().strip();self.tree.delete(*self.tree.get_children());self.entries={}
         groups={}
-        for title in ['Architecture','Tutorials','Project guides','Packages (actual package.xml)']:
-            groups[title]=self.tree.insert('','end',text=title,open=bool(query) or title=='Architecture')
-        docs=sorted((self.root/'docs').glob('*.md'))+sorted((self.root/'docs/tutorials').glob('*.md'))+sorted((self.root/'docs/architecture').glob('*.md'))
+        for title in ['Beginner course','Architecture','Tutorials','Project guides','Packages (actual package.xml)']:
+            groups[title]=self.tree.insert('','end',text=title,open=bool(query) or title in ('Beginner course','Architecture'))
+        docs=sorted((self.root/'docs/learn').glob('*.md'))
+        docs+=sorted((self.root/'docs').glob('*.md'))+sorted((self.root/'docs/tutorials').glob('*.md'))+sorted((self.root/'docs/architecture').glob('*.md'))
         docs += [p for p in [self.root/'README.md',self.root/'ROADMAP.md',self.root/'docs/status/CURRENT_STATUS.md',self.root/'docs/status/CHECKLIST.md'] if p.exists()]
         for path in docs:
             relative=str(path.relative_to(self.root))
             # Titles are read lazily when selected; filtering never crawls evidence bags/logs.
             title=path.stem.replace('_',' ').replace('-',' ')
-            if path.name=='README.md':title='Tutorial index' if '/tutorials/' in relative else 'Project README'
+            if path.name=='README.md':title=('Start here · course map' if '/learn/' in relative else
+                                             'Tutorial index' if '/tutorials/' in relative else 'Project README')
             if path.name=='interactive-guide.md':title='Start here · interactive guide'
             if query and query not in (relative+' '+title).casefold():continue
-            group='Architecture' if '/architecture/' in relative else 'Tutorials' if '/tutorials/' in relative else 'Project guides'
+            group=('Beginner course' if '/learn/' in relative else 'Architecture' if '/architecture/' in relative
+                   else 'Tutorials' if '/tutorials/' in relative else 'Project guides')
             item=self.tree.insert(groups[group],'end',text=title);self.entries[item]=path
         for row in self.packages:
             if query and query not in (row['name']+' '+row['description']).casefold():continue

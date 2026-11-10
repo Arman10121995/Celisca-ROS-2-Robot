@@ -351,8 +351,8 @@ def test_stall_detector_stays_quiet_on_a_normal_job(tmp_path):
     from robot_lab_vacuum_cleaning.mission import StallDetector
     grid = two_rooms()
     mission = make_mission(tmp_path, grid, (1.0, 1.0, 0.0))
-    world = World(grid, (1.0, 1.0, 0.0), sense_range=3.0)
-    detector = StallDetector(max_range=3.0)
+    world = World(grid, (1.0, 1.0, 0.0), sense_range=8.0)
+    detector = StallDetector(max_range=8.0)
     mission.command({'cmd': 'start', 'mode': 'all', 'edge': True})
     t, v, hits = 0.0, 0.0, 0
     while t < 3000 and mission.job is not None:
@@ -369,9 +369,9 @@ def test_low_obstacle_below_the_lidar_is_found_by_stalling(tmp_path):
     low = Grid(RES, grid.origin, grid.data.copy())
     low.data[30:42, 100:112] = 100          # a 0.6 m box under the scan plane
     mission = make_mission(tmp_path, grid, (5.0, 1.0, 0.0))
-    seen = World(grid, (5.0, 1.0, 0.0), sense_range=3.0)   # what the LiDAR shows: the map only
+    seen = World(grid, (5.0, 1.0, 0.0), sense_range=8.0)   # what the LiDAR shows: the map only
     body = World(low, (5.0, 1.0, 0.0))                     # what the body collides with
-    detector = StallDetector(max_range=3.0)
+    detector = StallDetector(max_range=8.0)
     assert mission.command({'cmd': 'start', 'mode': 'zones', 'zones': [[4.2, 0.2, 7.8, 3.8]], 'edge': False})[0]
     t, v_last, odom = 0.0, 0.0, list(body.pose)
     while t < 3000 and mission.job is not None:

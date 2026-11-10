@@ -95,11 +95,14 @@ class ComplementaryImu:
         self.roll = 0.0
 
     def update(self, ax, ay, az, gx, gy, dt):
-        # accelerometer tilt estimate
-        acc_pitch = math.atan2(ax, math.sqrt(ay * ay + az * az))
+        """Body axes as in REP-103 (x forward, y left, z up): roll is about
+        x, so it integrates gx; pitch (nose up positive) is about y and
+        integrates gy.  Returns (pitch, roll) in radians."""
+        # accelerometer tilt estimate (gravity direction in the body frame)
+        acc_pitch = math.atan2(-ax, math.sqrt(ay * ay + az * az))
         acc_roll = math.atan2(ay, math.sqrt(ax * ax + az * az))
-        self.pitch = self.alpha * (self.pitch + gx * dt) + (1 - self.alpha) * acc_pitch
-        self.roll = self.alpha * (self.roll + gy * dt) + (1 - self.alpha) * acc_roll
+        self.pitch = self.alpha * (self.pitch + gy * dt) + (1 - self.alpha) * acc_pitch
+        self.roll = self.alpha * (self.roll + gx * dt) + (1 - self.alpha) * acc_roll
         return (self.pitch, self.roll)
 
 

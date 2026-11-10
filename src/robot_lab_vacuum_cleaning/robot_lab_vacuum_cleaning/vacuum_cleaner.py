@@ -176,6 +176,7 @@ class VacuumCleaner(Node):
         self.last_v = 0.0
         self.v_min_since_scan = math.inf
         self.stall_until = 0.0
+        self.stall_tf_fallbacks = 0
         self.stall_events = 0
         self.truth = None
         self.trail = []
@@ -260,10 +261,17 @@ class VacuumCleaner(Node):
         stamp = Time.from_msg(msg.header.stamp)
         try:
             t = self.tf_buffer.lookup_transform(self.global_frame, self.base_frame, stamp)
+        except TransformException:
+            # The newest transform may be a few ms older than the scan.
+            self.stall_tf_fallbacks += 1
+            try:
+                t = self.tf_buffer.lookup_transform(self.global_frame, self.base_frame, Time())
+            except TransformException:
+                t = None
+        pose = None
+        if t is not None:
             tr = t.transform
             pose = (tr.translation.x, tr.translation.y, yaw_of(tr.rotation))
-        except TransformException:
-            pose = None
         v_min, self.v_min_since_scan = self.v_min_since_scan, math.inf
         if pose is not None and math.isfinite(v_min) and \
                 self.stall_detector.update(stamp.nanoseconds * 1e-9, v_min, self.scan_base, pose):
@@ -464,6 +472,8 @@ class VacuumCleaner(Node):
             'bumper_messages': self.bumper_msgs,
             'bumper_contacts': self.bumper_hits,
             'stall_events': self.stall_events,
+            'stall_tests': self.stall_detector.tests,
+            'stall_tf_fallbacks': self.stall_tf_fallbacks,
             'cliff': {t.rsplit('/', 1)[-1]: {'floor_m': None if v['floor'] is None else round(v['floor'], 4),
                                              'reading_m': None if v['reading'] is None else round(v['reading'], 4),
                                              'drop': bool(v['drop']), 'age_s': round(now - v['stamp'], 2)}

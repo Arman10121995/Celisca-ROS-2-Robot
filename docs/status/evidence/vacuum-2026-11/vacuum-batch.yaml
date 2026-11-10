@@ -1,0 +1,172 @@
+# Robot-vacuum cleaning system (robot_lab_vacuum_cleaning, oomwoo, small_house),
+# indexed by scripts/r9_3_index_missions.py.  Each job type has its own task_type.
+date: '2026-11-10'
+scope: "Exact hashed named simulation screens; unlisted cells remain untested."
+source_files:
+  - src/robot_lab_bringup/launch/simulated_room_vacuum.launch.py
+  - src/robot_lab_bringup/launch/simulated_robot.launch.py
+  - src/robot_lab_robots/config/robots.yaml
+  - src/robot_lab_robots/oomwoo/urdf/oomwoo.urdf.xacro
+  - src/robot_lab_robots/oomwoo/urdf/oomwoo_gazebo.xacro
+  - scripts/sim_vacuum_mission.sh
+groups:
+  - reports:
+      - docs/status/evidence/vacuum-2026-11/runs/gazebo_rooms_office.json
+    report_kind: cleaning_screen
+    identity: {robot_id: oomwoo, environment_id: small_house, simulator: gazebo, task_type: vacuum_rooms}
+    date: '2026-11-10'
+    revision: "5061bc1d (queue T13, claude-v67)"
+    hash_revision: 5061bc1d
+    source_files:
+      - src/robot_lab_vacuum_cleaning/robot_lab_vacuum_cleaning/mission.py
+      - src/robot_lab_vacuum_cleaning/robot_lab_vacuum_cleaning/planner.py
+      - src/robot_lab_vacuum_cleaning/robot_lab_vacuum_cleaning/rooms.py
+      - src/robot_lab_vacuum_cleaning/robot_lab_vacuum_cleaning/grid.py
+      - src/robot_lab_vacuum_cleaning/robot_lab_vacuum_cleaning/vacuum_cleaner.py
+    scope: >-
+      Rooms job: the office (room 4), edges first, Standard suction. Judged by cleaning_screen: completed, >= 85 % of the reachable target
+      cleaned (mapping: >= 2 rooms), truth on the dock within 0.10 m / 10 deg,
+      no-go and virtual-wall compliance from the simulator-truth trail.
+    limitations:
+      - One run; battery, dustbin and wear are models
+      - Localisation is the lab AMCL/slam_toolbox estimate; the screen uses truth
+  - reports:
+      - docs/status/evidence/vacuum-2026-11/runs/gazebo_zone_keepout.json
+    report_kind: cleaning_screen
+    identity: {robot_id: oomwoo, environment_id: small_house, simulator: gazebo, task_type: vacuum_zone_keepout}
+    date: '2026-11-10'
+    revision: "5061bc1d (queue T13, claude-v67)"
+    hash_revision: 5061bc1d
+    source_files:
+      - src/robot_lab_vacuum_cleaning/robot_lab_vacuum_cleaning/mission.py
+      - src/robot_lab_vacuum_cleaning/robot_lab_vacuum_cleaning/planner.py
+      - src/robot_lab_vacuum_cleaning/robot_lab_vacuum_cleaning/rooms.py
+      - src/robot_lab_vacuum_cleaning/robot_lab_vacuum_cleaning/grid.py
+      - src/robot_lab_vacuum_cleaning/robot_lab_vacuum_cleaning/vacuum_cleaner.py
+    scope: >-
+      Zone job (4.0,-3.5)-(7.5,-0.5) with a 1 m no-go box inside and a 1.6 m virtual wall; outline then lanes. Judged by cleaning_screen: completed, >= 85 % of the reachable target
+      cleaned (mapping: >= 2 rooms), truth on the dock within 0.10 m / 10 deg,
+      no-go and virtual-wall compliance from the simulator-truth trail.
+    limitations:
+      - One run; battery, dustbin and wear are models
+      - Localisation is the lab AMCL/slam_toolbox estimate; the screen uses truth
+  - reports:
+      - docs/status/evidence/vacuum-2026-11/runs/gazebo_spot.json
+    report_kind: cleaning_screen
+    identity: {robot_id: oomwoo, environment_id: small_house, simulator: gazebo, task_type: vacuum_spot}
+    date: '2026-11-10'
+    revision: "5061bc1d (queue T13, claude-v67)"
+    hash_revision: 5061bc1d
+    source_files:
+      - src/robot_lab_vacuum_cleaning/robot_lab_vacuum_cleaning/mission.py
+      - src/robot_lab_vacuum_cleaning/robot_lab_vacuum_cleaning/planner.py
+      - src/robot_lab_vacuum_cleaning/robot_lab_vacuum_cleaning/rooms.py
+      - src/robot_lab_vacuum_cleaning/robot_lab_vacuum_cleaning/grid.py
+      - src/robot_lab_vacuum_cleaning/robot_lab_vacuum_cleaning/vacuum_cleaner.py
+    scope: >-
+      Spot job at (2.0, 2.0) beside a furniture bar: outline and cross-hatched lanes over the reachable 1.6 m square. Judged by cleaning_screen: completed, >= 85 % of the reachable target
+      cleaned (mapping: >= 2 rooms), truth on the dock within 0.10 m / 10 deg,
+      no-go and virtual-wall compliance from the simulator-truth trail.
+    limitations:
+      - One run; battery, dustbin and wear are models
+      - Localisation is the lab AMCL/slam_toolbox estimate; the screen uses truth
+  - reports:
+      - docs/status/evidence/vacuum-2026-11/runs/gazebo_zone_low_box.json
+    report_kind: cleaning_screen
+    identity: {robot_id: oomwoo, environment_id: small_house, simulator: gazebo, task_type: vacuum_zone_low_obstacle}
+    date: '2026-11-10'
+    revision: "5061bc1d (queue T13, claude-v67)"
+    hash_revision: 5061bc1d
+    source_files:
+      - src/robot_lab_vacuum_cleaning/robot_lab_vacuum_cleaning/mission.py
+      - src/robot_lab_vacuum_cleaning/robot_lab_vacuum_cleaning/planner.py
+      - src/robot_lab_vacuum_cleaning/robot_lab_vacuum_cleaning/rooms.py
+      - src/robot_lab_vacuum_cleaning/robot_lab_vacuum_cleaning/grid.py
+      - src/robot_lab_vacuum_cleaning/robot_lab_vacuum_cleaning/vacuum_cleaner.py
+    scope: >-
+      The zone job in a world copy with a 0.30 x 0.30 x 0.06 m box the map does not have, below the LiDAR plane. Judged by cleaning_screen: completed, >= 85 % of the reachable target
+      cleaned (mapping: >= 2 rooms), truth on the dock within 0.10 m / 10 deg,
+      no-go and virtual-wall compliance from the simulator-truth trail.
+    limitations:
+      - One run; battery, dustbin and wear are models
+      - Localisation is the lab AMCL/slam_toolbox estimate; the screen uses truth
+  - reports:
+      - docs/status/evidence/vacuum-2026-11/runs/gazebo_bedroom_recharge.json
+    report_kind: cleaning_screen
+    identity: {robot_id: oomwoo, environment_id: small_house, simulator: gazebo, task_type: vacuum_recharge_resume}
+    date: '2026-11-10'
+    revision: "5061bc1d (queue T13, claude-v67)"
+    hash_revision: 5061bc1d
+    source_files:
+      - src/robot_lab_vacuum_cleaning/robot_lab_vacuum_cleaning/mission.py
+      - src/robot_lab_vacuum_cleaning/robot_lab_vacuum_cleaning/planner.py
+      - src/robot_lab_vacuum_cleaning/robot_lab_vacuum_cleaning/rooms.py
+      - src/robot_lab_vacuum_cleaning/robot_lab_vacuum_cleaning/grid.py
+      - src/robot_lab_vacuum_cleaning/robot_lab_vacuum_cleaning/vacuum_cleaner.py
+    scope: >-
+      Rooms job: the bedroom (room 3) with the battery model 60x faster, so the job needs recharge-and-resume stops. Judged by cleaning_screen: completed, >= 85 % of the reachable target
+      cleaned (mapping: >= 2 rooms), truth on the dock within 0.10 m / 10 deg,
+      no-go and virtual-wall compliance from the simulator-truth trail.
+    limitations:
+      - One run; battery, dustbin and wear are models
+      - Localisation is the lab AMCL/slam_toolbox estimate; the screen uses truth
+  - reports:
+      - docs/status/evidence/vacuum-2026-11/runs/mujoco_zone_keepout.json
+    report_kind: cleaning_screen
+    identity: {robot_id: oomwoo, environment_id: small_house, simulator: mujoco, task_type: vacuum_zone_keepout}
+    date: '2026-11-10'
+    revision: "5061bc1d (queue T13, claude-v67)"
+    hash_revision: 5061bc1d
+    source_files:
+      - src/robot_lab_vacuum_cleaning/robot_lab_vacuum_cleaning/mission.py
+      - src/robot_lab_vacuum_cleaning/robot_lab_vacuum_cleaning/planner.py
+      - src/robot_lab_vacuum_cleaning/robot_lab_vacuum_cleaning/rooms.py
+      - src/robot_lab_vacuum_cleaning/robot_lab_vacuum_cleaning/grid.py
+      - src/robot_lab_vacuum_cleaning/robot_lab_vacuum_cleaning/vacuum_cleaner.py
+    scope: >-
+      The keep-out zone job in MuJoCo (LiDAR from the bridge; no bumper or cliff sensors). Judged by cleaning_screen: completed, >= 85 % of the reachable target
+      cleaned (mapping: >= 2 rooms), truth on the dock within 0.10 m / 10 deg,
+      no-go and virtual-wall compliance from the simulator-truth trail.
+    limitations:
+      - One run; battery, dustbin and wear are models
+      - Localisation is the lab AMCL/slam_toolbox estimate; the screen uses truth
+  - reports:
+      - docs/status/evidence/vacuum-2026-11/runs/gazebo_slam_mapping.json
+    report_kind: cleaning_screen
+    identity: {robot_id: oomwoo, environment_id: small_house, simulator: gazebo, task_type: vacuum_mapping_run}
+    date: '2026-11-10'
+    revision: "5061bc1d (queue T13, claude-v67)"
+    hash_revision: 5061bc1d
+    source_files:
+      - src/robot_lab_vacuum_cleaning/robot_lab_vacuum_cleaning/mission.py
+      - src/robot_lab_vacuum_cleaning/robot_lab_vacuum_cleaning/planner.py
+      - src/robot_lab_vacuum_cleaning/robot_lab_vacuum_cleaning/rooms.py
+      - src/robot_lab_vacuum_cleaning/robot_lab_vacuum_cleaning/grid.py
+      - src/robot_lab_vacuum_cleaning/robot_lab_vacuum_cleaning/vacuum_cleaner.py
+    scope: >-
+      Mapping run in slam mode: frontier exploration of the live slam_toolbox map, then room division and return to the dock. Judged by cleaning_screen: completed, >= 85 % of the reachable target
+      cleaned (mapping: >= 2 rooms), truth on the dock within 0.10 m / 10 deg,
+      no-go and virtual-wall compliance from the simulator-truth trail.
+    limitations:
+      - One run; battery, dustbin and wear are models
+      - Localisation is the lab AMCL/slam_toolbox estimate; the screen uses truth
+  - reports:
+      - docs/status/evidence/vacuum-2026-11/runs/gazebo_whole_home.json
+    report_kind: cleaning_screen
+    identity: {robot_id: oomwoo, environment_id: small_house, simulator: gazebo, task_type: vacuum_whole_home}
+    date: '2026-11-10'
+    revision: "5061bc1d (queue T13, claude-v67)"
+    hash_revision: 5061bc1d
+    source_files:
+      - src/robot_lab_vacuum_cleaning/robot_lab_vacuum_cleaning/mission.py
+      - src/robot_lab_vacuum_cleaning/robot_lab_vacuum_cleaning/planner.py
+      - src/robot_lab_vacuum_cleaning/robot_lab_vacuum_cleaning/rooms.py
+      - src/robot_lab_vacuum_cleaning/robot_lab_vacuum_cleaning/grid.py
+      - src/robot_lab_vacuum_cleaning/robot_lab_vacuum_cleaning/vacuum_cleaner.py
+    scope: >-
+      Whole-home job: all rooms in order, edges first, Standard suction. Judged by cleaning_screen: completed, >= 85 % of the reachable target
+      cleaned (mapping: >= 2 rooms), truth on the dock within 0.10 m / 10 deg,
+      no-go and virtual-wall compliance from the simulator-truth trail.
+    limitations:
+      - One run; battery, dustbin and wear are models
+      - Localisation is the lab AMCL/slam_toolbox estimate; the screen uses truth

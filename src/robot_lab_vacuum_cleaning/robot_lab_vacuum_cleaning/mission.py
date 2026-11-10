@@ -74,7 +74,7 @@ class StallDetector:
     (a long corridor) fit both alike and never trigger."""
 
     def __init__(self, window: float = 1.5, min_speed: float = 0.05, min_travel: float = 0.12,
-                 max_range: float = 3.0, ratio: float = 0.4, min_residual: float = 0.08):
+                 max_range: float = 8.0, ratio: float = 0.4, min_residual: float = 0.08):
         self.window = window
         self.min_speed = min_speed
         self.min_travel = min_travel
@@ -84,6 +84,7 @@ class StallDetector:
         self.samples: Deque[Tuple[float, float, Optional[Pose], Optional[np.ndarray]]] = deque()
         self.cooldown_until = -math.inf
         self.last = None   # (r_moved, r_static) of the latest test
+        self.tests = 0     # how many windows were actually judged
 
     def _points(self, points):
         if points is None or not len(points):
@@ -146,6 +147,7 @@ class StallDetector:
             residuals.append(float(np.median(np.abs(np.einsum('ij,ij->i', cand[facing] - pts1[idx][facing],
                                                               n[facing])))))
         r_moved, r_static = residuals
+        self.tests += 1
         self.last = (r_moved, r_static)
         # A real stall leaves the estimate wrong by about the whole claimed
         # travel; timing and localisation noise are a few centimetres.
