@@ -1,4 +1,6 @@
+import hashlib
 import os
+import re
 import subprocess
 import tempfile
 import xml.etree.ElementTree as ET
@@ -14,6 +16,46 @@ from launch.launch_description_sources import PythonLaunchDescriptionSource
 
 from launch_ros.actions import Node
 from launch_ros.parameter_descriptions import ParameterValue
+
+
+# Fortress loads these when a world declares no systems of its own; adding
+# any plugin to such a world would drop them.
+_DEFAULT_SYSTEMS = (
+    ('ignition-gazebo-physics-system', 'ignition::gazebo::systems::Physics'),
+    ('ignition-gazebo-user-commands-system', 'ignition::gazebo::systems::UserCommands'),
+    ('ignition-gazebo-scene-broadcaster-system', 'ignition::gazebo::systems::SceneBroadcaster'),
+)
+_CONTACT_SYSTEM = ('ignition-gazebo-contact-system', 'ignition::gazebo::systems::Contact')
+
+
+def world_with_contact_system(path):
+    """The world file, or a copy of it with the Contact system added.
+
+    Contact sensors of a robot spawned into a running world (bumpers) only
+    publish when the *world* loads the Contact system; a model-level Contact
+    system never sees them (measured with oomwoo, 2026-11-10).  The copy keeps
+    the default systems of a world that declares none, and makes relative
+    <uri>s absolute so it can live in a temporary folder."""
+    try:
+        text = Path(path).read_text(encoding='utf-8')
+    except OSError:
+        return path
+    if 'contact-system' in text or 'systems::Contact' in text:
+        return path
+    opening = re.search(r'<world\b[^>]*>', text)
+    if not opening:
+        return path
+    systems = ([] if '<plugin' in text else list(_DEFAULT_SYSTEMS)) + [_CONTACT_SYSTEM]
+    plugins = ''.join('\n    <plugin filename="%s" name="%s"/>' % item for item in systems)
+    base = os.path.dirname(os.path.abspath(path))
+    text = re.sub(r'<uri>(?!\w+://)(?!/)([^<]+)</uri>',
+                  lambda m: '<uri>' + os.path.join(base, m.group(1).strip()) + '</uri>', text)
+    text = text[:opening.end()] + plugins + text[opening.end():]
+    digest = hashlib.sha256(text.encode('utf-8')).hexdigest()[:12]
+    out = os.path.join(tempfile.gettempdir(), 'robot_lab_world_%s_%s' % (digest, os.path.basename(path)))
+    if not os.path.exists(out):
+        Path(out).write_text(text, encoding='utf-8')
+    return out
 
 
 def generate_launch_description():
@@ -285,7 +327,7 @@ def generate_launch_description():
             # Robot-vacuum bumper and cliff sensors (oomwoo); idle for robots
             # without them.
             - ros_topic_name: "/bumper"
-              gz_topic_name: "/bumper"
+              gz_topic_name: "/world/{gz_world_name}/model/{rname}/link/bumper_link/sensor/bumper/contact"
               ros_type_name: "ros_gz_interfaces/msg/Contacts"
               gz_type_name: "gz.msgs.Contacts"
               direction: "GZ_TO_ROS"
@@ -357,6 +399,7 @@ def generate_launch_description():
                 w = os.path.join(robot_lab_description, "worlds", f"{wname}.world")
             if not os.path.exists(w):
                 raise RuntimeError("Selected Gazebo world does not exist: " + w)
+        w = world_with_contact_system(w)
 
         # Build GZ_SIM_RESOURCE_PATH (only executed for actual simulation)
         try:

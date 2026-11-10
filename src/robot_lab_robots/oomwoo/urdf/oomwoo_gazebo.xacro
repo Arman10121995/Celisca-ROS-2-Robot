@@ -43,8 +43,6 @@
       <plugin filename="ignition-gazebo-sensors-system" name="ignition::gazebo::systems::Sensors">
         <render_engine>ogre2</render_engine>
       </plugin>
-      <plugin filename="ignition-gazebo-contact-system" name="ignition::gazebo::systems::Contact">
-      </plugin>
       <plugin filename="ignition-gazebo-odometry-publisher-system" name="ignition::gazebo::systems::OdometryPublisher">
         <odom_frame>world</odom_frame>
         <robot_base_frame>base_footprint</robot_base_frame>
@@ -62,8 +60,6 @@
       </plugin>
       <plugin filename="gz-sim-sensors-system" name="gz::sim::systems::Sensors">
         <render_engine>ogre2</render_engine>
-      </plugin>
-      <plugin filename="gz-sim-contact-system" name="gz::sim::systems::Contact">
       </plugin>
       <plugin filename="gz-sim-odometry-publisher-system" name="gz::sim::systems::OdometryPublisher">
         <odom_frame>world</odom_frame>
@@ -128,6 +124,12 @@
     </sensor>
   </gazebo>
 
+  <!-- Bumper contact sensor.  It publishes only when the world loads the
+       Contact system (gazebo.launch.py adds it to the world it starts; a
+       model-level Contact system never sees a sensor spawned at runtime).
+       Fortress publishes on the scoped default topic
+       /world/<world>/model/oomwoo/link/bumper_link/sensor/bumper/contact,
+       which the bridge maps to /bumper; <topic> is not used. -->
   <gazebo reference="bumper_link">
     <sensor name="bumper" type="contact">
       <always_on>true</always_on>
