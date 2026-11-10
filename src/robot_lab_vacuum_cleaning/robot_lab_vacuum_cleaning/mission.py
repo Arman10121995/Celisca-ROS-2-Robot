@@ -860,6 +860,13 @@ class Mission:
             self.dock_phase = 'align'
             return True, 'At the dock'
         path = self.pmap.astar(self.pose[:2], pre) or self.pmap.astar(self.pose[:2], dock[:2])
+        if path is None and self.grid is not None:
+            # A live SLAM map has unknown specks that can cut every route;
+            # going home may cross them (obstacles and keep-outs still hold).
+            lenient = planner.PlanningMap(self.grid, self.config.robot_radius, self.config.margin,
+                                          keepout=self.keepout(), extra_blocked=self.session_blocked,
+                                          unknown_is_blocked=False)
+            path = lenient.astar(self.pose[:2], pre) or lenient.astar(self.pose[:2], dock[:2])
         if path is None:
             self.state = 'error'
             self.error = 'Cannot find a way back to the dock'

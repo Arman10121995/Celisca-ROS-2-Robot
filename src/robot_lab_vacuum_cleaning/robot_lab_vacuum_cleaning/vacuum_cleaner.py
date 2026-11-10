@@ -457,8 +457,15 @@ class VacuumCleaner(Node):
     # Outputs
     # ------------------------------------------------------------------
     def _on_log(self, level, text):
+        # One call site per severity: rclpy refuses a call site whose
+        # severity changes ("Logger severity cannot be changed between calls").
         log = self.get_logger()
-        {'warn': log.warn, 'error': log.error}.get(level, log.info)(text)
+        if level == 'error':
+            log.error(text)
+        elif level == 'warn':
+            log.warning(text)
+        else:
+            log.info(text)
 
     def _flush_events(self):
         for event in self.mission.events:
