@@ -38,9 +38,14 @@ November 9 (recorded from the November 5 queues):
     3 seeds lands within the matrix's 0.25 m.
 - **Support matrix:** 687 reports, 310 cells, 298 passed and 11 failed
   ([matrix](evidence/support-matrix-2026-11-09/README.md)).
-- **PX4 manual-flight GUI runs in 8 worlds:** all failed because the
-  vehicle never armed. The qualification script skipped the takeoff
-  clearance check the gate requires. Fixed in 1cb48d45; not re-run yet.
+- **PX4 manual-flight GUI runs in 8 worlds:** none ran a flight.
+  - aerial_course and aerial_indoor never armed: the qualification script
+    skipped the takeoff clearance check the gate requires (fixed in
+    1cb48d45).
+  - The other six never started: the queue gave them ROS domains 233–238,
+    beyond CycloneDDS's port range (a queue error, not a product
+    failure).
+  - Re-run of aerial_course in progress (domain 121).
 - **Robot-vacuum cleaning system** (OOMWOO-class, new R13): implemented
   and experimental ([guide](../tutorials/robot-vacuum.md),
   [continuation](vacuum-continuation-2026-11-09.md)); Gazebo runs in
