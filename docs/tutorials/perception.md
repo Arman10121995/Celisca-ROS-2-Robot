@@ -8,6 +8,25 @@ remaining qualification; evidence below retains its named source stages.
 
 These are perception kernel and adapter notes for scan detection, clustering, ground removal and segmentation. R7.2 real input/output, robot missions and fair multi-method comparison remain partial.
 
+## How it works, visually
+
+From raw points to "there are three objects": remove the floor, then group
+what is left.
+
+![RANSAC ground removal and DBSCAN clustering](../learn/figures/perception_pipeline.png)
+
+```mermaid
+flowchart LR
+    C["point cloud / scan"] --> R["RANSAC: fit the floor plane<br/>from random 3-point samples"]
+    R --> O["obstacle points"]
+    O --> D["DBSCAN / Euclidean clustering:<br/>points within eps belong together"]
+    D --> OBJ["objects (and noise)"]
+```
+
+Figure: `docs/learn/figures/algorithm_figures.py perception`
+(`RANSACGroundRemoval().segment(points) → (ground, obstacles)`,
+`DBSCANClusterer(eps, min_samples).cluster(points) → (clusters, noise)`).
+
 ## R7.2 Target Methods
 
 | Method | Description | Implementation | Status |

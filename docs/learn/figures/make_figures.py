@@ -31,7 +31,7 @@ sys.path.insert(0, str(ROOT / 'src' / 'robot_lab_vacuum_cleaning' / 'test'))
 
 from robot_lab_vacuum_cleaning import planner, rooms  # noqa: E402
 from robot_lab_vacuum_cleaning.grid import Grid  # noqa: E402
-from robot_lab_vacuum_cleaning.mission import Mission, PathFollower, RobotConfig, StallDetector  # noqa: E402
+from robot_lab_vacuum_cleaning.mission import Mission, PathFollower, RobotConfig  # noqa: E402
 from robot_lab_vacuum_cleaning.store import Store  # noqa: E402
 
 # One palette for every figure.

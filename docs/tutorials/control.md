@@ -10,6 +10,26 @@ These are educational control notes and numerical API sketches in `robot_lab_alg
 
 Control algorithms compute the actuator commands needed to achieve desired robot behavior. The implemented algorithms span classical control theory (PID), optimal control (LQR), predictive control (MPC), and advanced nonlinear control methods for different robot types and applications.
 
+## How it works, visually
+
+A controller measures the error between where you are and where you want to
+be, and outputs a correction many times a second:
+
+![PID step responses](../learn/figures/pid_response.png)
+
+```mermaid
+flowchart LR
+    SP["setpoint"] --> E(("−"))
+    E -->|error| C["controller<br/>P: now · I: past · D: trend"]
+    C -->|command| PL["plant (robot, motor)"]
+    PL --> Y["measured output"]
+    Y --> E
+```
+
+Figure: `docs/learn/figures/algorithm_figures.py pid`
+(`PIDController(kp, ki, kd).update(error, dt)`). How a velocity command
+becomes wheel speeds: [Robots and sensors](../learn/04-robots-and-sensors.md#moving-differential-drive).
+
 ## Algorithm Catalog
 
 ### 1. PID Controller

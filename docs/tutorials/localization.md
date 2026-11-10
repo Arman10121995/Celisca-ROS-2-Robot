@@ -8,6 +8,22 @@ remaining qualification; evidence below retains its named source stages.
 
 These are localization kernel and adapter notes for odometry, probabilistic methods, scan matching and visual localization. R7.3 interchangeable real estimators and fair comparisons remain partial; named AMCL/SLAM robot screens have separate evidence.
 
+## How it works, visually
+
+![Particle filter localisation on small_house](../learn/figures/particle_filter.png)
+
+```mermaid
+flowchart LR
+    ODOM["wheel odometry<br/>(dead reckoning: drifts)"] --> PF{"localiser"}
+    SCAN["LiDAR scan"] --> PF
+    MAP["known map"] --> PF
+    PF -->|"AMCL: particles weighted by scan fit"| TF["TF map → odom"]
+    PF -->|"scan matching: align scan to map"| TF
+```
+
+The full illustrated explanation (occupancy grids, drift, the three particle
+filter steps, SLAM): [Maps and localisation](../learn/05-maps-and-localization.md).
+
 ## R7.3 Target Methods
 
 | Method | Description | Implementation | Status |

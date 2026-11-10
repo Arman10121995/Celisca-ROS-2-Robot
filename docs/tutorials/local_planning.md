@@ -10,6 +10,28 @@ These are educational local-planning notes and numerical API sketches. A source 
 
 Local planning operates in the immediate vicinity of the robot, typically within sensor range, to generate collision-free trajectories towards waypoints provided by the global planner. The implemented algorithms span reactive methods, trajectory optimization, and sampling-based approaches.
 
+## How it works, visually
+
+A local planner runs 10–20 times a second and turns "the route" plus "what
+the LiDAR sees now" into one velocity command.
+
+![Dynamic window: sampled trajectories and the chosen one](../learn/figures/dwa_trajectories.png)
+
+```mermaid
+flowchart LR
+    PATH["global path"] --> LP{"local planner"}
+    SCAN["/scan now"] --> LP
+    ODOM["current speed"] --> LP
+    LP -->|"DWB / DWA: sample (v, w), simulate, score"| CMD["/cmd_vel"]
+    LP -->|"Pure pursuit: aim at a lookahead point"| CMD
+    LP -->|"MPPI: thousands of noisy rollouts, weighted"| CMD
+    LP -->|"Follow-the-gap: steer into the widest opening"| CMD
+```
+
+Pure pursuit, the lab's default (Regulated Pure Pursuit), is drawn in
+[Planning and control](../learn/06-planning-and-control.md#step-3-follow-the-path-pure-pursuit).
+Figure: `docs/learn/figures/algorithm_figures.py dwa`.
+
 ## Algorithm Catalog
 
 ### 1. Dynamic Window Approach (DWB)

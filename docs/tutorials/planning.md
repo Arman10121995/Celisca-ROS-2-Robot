@@ -10,6 +10,38 @@ These are educational planning notes and source API examples. Nav2 integration i
 
 Planning algorithms generate collision-free paths from start to goal positions. The implemented algorithms span graph-based planners (Dijkstra, A*, PRM), sampling-based planners (RRT, RRT*), and geometric planners (Voronoi).
 
+## How it works, visually
+
+Every planner answers "which way, around the obstacles?". They differ in
+*how* they search:
+
+![Five planners on one problem](../learn/figures/planners_compare.png)
+
+```mermaid
+flowchart LR
+    MAP["map / obstacle test<br/>is_free(x, y)"] --> GRID{"grid search"}
+    MAP --> SAMPLE{"sampling"}
+    GRID --> DJ["Dijkstra: expand nearest first<br/>(optimal on the grid)"]
+    GRID --> AS["A*: nearest + distance to goal<br/>(optimal, fewer cells)"]
+    SAMPLE --> PRM["PRM: random roadmap, then search it<br/>(many queries, one map)"]
+    SAMPLE --> RRT["RRT: grow a random tree<br/>(fast, wiggly)"]
+    RRT --> RRTS["RRT*: rewire the tree<br/>(shorter with more samples)"]
+```
+
+A* explained step by step, with an animation on the real small_house map:
+[Planning and control](../learn/06-planning-and-control.md). The figure is
+drawn by `docs/learn/figures/algorithm_figures.py planners`, which calls the
+current API:
+
+```python
+from robot_lab_algorithms.global_planning import AStarPlanner
+is_free = lambda x, y: not (2 <= x <= 3 and y <= 6.5)      # a wall
+path = AStarPlanner(resolution=0.2).plan((1, 1), (9, 9), is_free, bounds=(0, 0, 10, 10))
+```
+
+Some usage snippets below predate this API (`plan(start, goal, is_free, bounds)`);
+the figure script is the tested reference.
+
 ## Global Planning Algorithms
 
 ### 1. Dijkstra's Algorithm

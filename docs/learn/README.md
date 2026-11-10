@@ -58,3 +58,13 @@ python3 docs/learn/figures/make_figures.py astar    # one
 
 Names: `grid lidar mcl tf inflation astar pursuit diff rooms coverage spot
 stall cleaning battery matrix`.
+
+The algorithm tutorials ([planning](../tutorials/planning.md),
+[local planning](../tutorials/local_planning.md),
+[state estimation](../tutorials/state_estimation.md),
+[sensor fusion](../tutorials/sensor_fusion.md),
+[perception](../tutorials/perception.md), [control](../tutorials/control.md),
+[localisation](../tutorials/localization.md)) open with a visual section whose
+figures come from [`figures/algorithm_figures.py`](figures/algorithm_figures.py).
+It runs the project's own `robot_lab_algorithms` classes (`planners dwa kalman
+imu pid perception`).

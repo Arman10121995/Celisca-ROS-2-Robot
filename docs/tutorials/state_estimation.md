@@ -10,6 +10,31 @@ These are educational state-estimation notes and numerical API sketches. Method 
 
 State estimation is the process of determining the internal state of a system from noisy measurements and control inputs. The implemented algorithms span from basic linear filters to advanced nonlinear techniques.
 
+## How it works, visually
+
+An estimator combines a *motion model* ("I was here, moving like this") with
+noisy *measurements*, so the estimate is better than either alone:
+
+![Kalman and particle filters tracking a robot](../learn/figures/kalman_tracking.png)
+
+```mermaid
+flowchart LR
+    X["estimate + uncertainty"] --> P["predict: move by the model<br/>(uncertainty grows)"]
+    P --> U["update: blend in the measurement,<br/>weighted by trust (Kalman gain)"]
+    Z["noisy measurement"] --> U
+    U --> X
+```
+
+| Filter | Represents the belief as | Good for |
+|---|---|---|
+| Kalman (linear) | a mean and a covariance | linear motion, Gaussian noise |
+| EKF / UKF | the same, through a non-linear model | turning robots, IMU fusion |
+| Particle filter | many weighted samples | multi-modal beliefs (lost robot, AMCL) |
+
+The particle filter on the real map: [Maps and localisation](../learn/05-maps-and-localization.md).
+Figure: `docs/learn/figures/algorithm_figures.py kalman` (current API:
+`f.predict(dt); f.update(x, y); f.get_state()`).
+
 ## Algorithm Catalog
 
 ### 1. Linear Kalman Filter
