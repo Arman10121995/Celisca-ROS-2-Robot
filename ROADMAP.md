@@ -579,8 +579,8 @@ These are complete; keep them working. Details and evidence are in the
 
 - **State:** partial · **Priority:** validation V13
 - **Have:** seven comparison tutorials (three measured in Gazebo). Support
-  matrix: 697 reports, 319 cells (`scripts/r9_3_support_matrix.py`,
-  [matrix](docs/status/evidence/support-matrix-2026-11-10/README.md)).
+  matrix: 717 reports, 327 cells, 314 passed (`scripts/r9_3_support_matrix.py`,
+  [matrix](docs/status/evidence/support-matrix-2026-11-10b/README.md)).
 - **Done when:** every release claim maps to artifacts; failures and limits
   are published.
 

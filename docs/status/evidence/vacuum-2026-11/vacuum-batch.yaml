@@ -557,3 +557,22 @@ groups:
   scope: 'Second building, two rooms by points.'
   limitations:
   - 'FAILED and kept: 16.6 %; wedged once, then the estimate (0.61 m from truth) sat in an unknown pocket of the map; three escapes cleared marks but could not reconnect it. Rejoin added in 7162a09a'
+- reports:
+  - docs/status/evidence/vacuum-2026-11/runs-v77/gazebo_celisca_rooms.json
+  report_kind: cleaning_screen
+  identity:
+    robot_id: oomwoo
+    environment_id: celisca_floor_1_furniture
+    simulator: gazebo
+    task_type: vacuum_rooms
+  date: '2026-11-10'
+  revision: 7162a09a (queue T22, claude-v77, domain 117)
+  hash_revision: 7162a09a
+  source_files:
+  - src/robot_lab_vacuum_cleaning/robot_lab_vacuum_cleaning/mission.py
+  - src/robot_lab_vacuum_cleaning/robot_lab_vacuum_cleaning/planner.py
+  - src/robot_lab_vacuum_cleaning/robot_lab_vacuum_cleaning/vacuum_cleaner.py
+  - src/robot_lab_description/launch/gazebo.launch.py
+  scope: 'Second building, two rooms by points, with the escape, wedge, rejoin and headless-report fixes.'
+  limitations:
+  - 'FAILED on coverage and kept: completed and docked within 0.002 m by truth, but 73.6 % of the target (85 % required), 26 paths skipped; recovered from 1 wedge and 1 hemmed-in spot'

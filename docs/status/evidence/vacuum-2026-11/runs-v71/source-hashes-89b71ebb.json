@@ -1,0 +1,18 @@
+{
+ "revision": "89b71ebb",
+ "derived": "sha256 of each file as git stores it at this revision, computed 2026-11-10 after the run; uncommitted working-tree changes at run time are not captured",
+ "files": {
+  "scripts/sim_vacuum_mission.sh": "8db8e03acdeafb4c1ad874a60be786f2c8746543d7ceb04ec55c4ad547a36e0d",
+  "src/robot_lab_bringup/launch/simulated_robot.launch.py": "49600cff247398f7ae7c0eb554e2e764b0a0ae7e2989465600675382435d4ffa",
+  "src/robot_lab_bringup/launch/simulated_room_vacuum.launch.py": "56d452241744a7684495cea620ea27d16f8a9fb008f57a0f66feae4b6b29d664",
+  "src/robot_lab_description/launch/gazebo.launch.py": "07f962a7d719433ba7063f9f6802625983d5e7838a1e5973ac2c589dc17c8586",
+  "src/robot_lab_robots/config/robots.yaml": "35d15869d6562625f84c76e9d85546e31f89abe9c40063d8d112076ec2ce04f6",
+  "src/robot_lab_robots/oomwoo/urdf/oomwoo.urdf.xacro": "776eb9181b25aa2423bdcba8afc9424a74ae13c503d35fd17d49d1569e183271",
+  "src/robot_lab_robots/oomwoo/urdf/oomwoo_gazebo.xacro": "7da4429988266b31d33a834c2297413f5f4a73184ea36603bde46ca9c79fa033",
+  "src/robot_lab_vacuum_cleaning/robot_lab_vacuum_cleaning/grid.py": "f1a9f7d2c3663e9a9ed8da345f5136dd1de5bc8ef4d0f80c41cd4901e6003c3f",
+  "src/robot_lab_vacuum_cleaning/robot_lab_vacuum_cleaning/mission.py": "b5b926dd25668878d2f4ee9147078dedd0c94bd42c678aeab6cbc5d011125240",
+  "src/robot_lab_vacuum_cleaning/robot_lab_vacuum_cleaning/planner.py": "16838d507d9b279631ce44b2d51fd7ee5ccb1696378b289eba2ef9c68d444f52",
+  "src/robot_lab_vacuum_cleaning/robot_lab_vacuum_cleaning/rooms.py": "3465b22d3a0f7a3b4de812238a5e2ba69d1b7c3e45c0831130a2c5b97f21f080",
+  "src/robot_lab_vacuum_cleaning/robot_lab_vacuum_cleaning/vacuum_cleaner.py": "3498e2ffc7d004b092ec96829538216475ec911d6de453894272a7a7da09799b"
+ }
+}

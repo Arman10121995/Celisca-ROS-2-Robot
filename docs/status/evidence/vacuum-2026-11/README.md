@@ -45,6 +45,7 @@ Each report is judged by **`cleaning_screen`**
 | Second building | 87a97df2 | **fail** (no report) | – | 60 min | – | wedge detection backed out twice, then stopped with "Stuck"; headless runs did not write a report in error (fixed in 0cac1f24) |
 | Zone with floor objects, after the fix | 0cac1f24 | **pass** | 86.2 % (6.6 m²) | 4.6 min | 0.041 m | all four recognised, 0 bumper contacts; body ≥ 0.156 m from every object footprint by truth |
 | Second building | 0cac1f24 | **fail** | 16.6 % | 3.7 min | 2.59 m | wedged, then the estimate (0.61 m off) sat in an unknown pocket of the map; clearing marks could not reconnect it. Rejoin added in 7162a09a |
+| Second building, all fixes | 7162a09a | **fail** (coverage) | 73.6 % (28.6 m²) | 27.8 min | 0.002 m | completed and docked; recovered from 1 wedge and 1 hemmed-in spot; 26 paths skipped (furniture area of room 2) |
 
 ### Live GUI session (claude-v72, `scripts/qualify_vacuum_gui.py`)
 

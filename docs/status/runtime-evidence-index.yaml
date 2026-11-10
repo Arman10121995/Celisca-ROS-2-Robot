@@ -12840,3 +12840,358 @@ records:
   - One run; the slam map is the estimate, the dock check uses truth
   - 'Earlier attempts failed: looped at the start (claude-v67), declared complete at once (claude-v68), node crash
     on a warning (claude-v69)'
+- robot_id: oomwoo
+  environment_id: small_house
+  simulator: gazebo
+  task_type: vacuum_zone_low_obstacle
+  steering_mode: ''
+  date: '2026-11-10'
+  revision: 89b71ebb (claude-v71; run from the working tree committed as 89b71ebb a minute later)
+  report: docs/status/evidence/vacuum-2026-11/runs-v71/gazebo_zone_low_box.json
+  sha256: 0efc896ffb3c3748709c38201b0fe5d039820815edf967a40dafd6000805f35d
+  source_hashes: docs/status/evidence/vacuum-2026-11/runs-v71/source-hashes-89b71ebb.json
+  source_hashes_sha256: 817ba95e115e155203f7da8ca15dafd3b54b839757dde43ee507b039f8a0fd78
+  report_kind: cleaning_screen
+  scope: 'The hidden 6 cm box zone job with a working Gazebo bumper (world-level Contact system, scoped contact
+    topic bridged to /bumper). Judged by cleaning_screen: completed, >= 85 % of the reachable target cleaned, truth
+    on the dock within 0.10 m / 10 deg, no-go and virtual-wall compliance from the simulator-truth trail.'
+  limitations:
+  - One run; battery, dustbin and wear are models
+  - 116 bumper contact messages, 4 Bump events at the box; the stall detector did not fire (0 of 1282 tests)
+  - Indexed after the b3a63ae7 run, so it controls the cell
+- robot_id: oomwoo
+  environment_id: small_house
+  simulator: gazebo
+  task_type: vacuum_gui_room_pause_resume
+  steering_mode: ''
+  date: '2026-11-10'
+  revision: e3a64f40 (queue T17, claude-v72; producer scripts/qualify_vacuum_gui.py, copy in gui-v72/)
+  report: docs/status/evidence/vacuum-2026-11/gui-v72/room-office.json
+  sha256: d04d8d468ba308b8a9a2156244d2754cfdb69879e0316493a7803549235c562c
+  source_hashes: docs/status/evidence/vacuum-2026-11/gui-v72/source-hashes-e3a64f40.json
+  source_hashes_sha256: 5b07d3d80918bb6a015c4756f3ba7dbca4b2e7dd3fc7905aea8d0209101cacf5
+  report_kind: cleaning_screen
+  scope: 'Live session through the real Tk Vacuum tab: Setup launch, Divide map, the office picked on the live room
+    map with the Rooms tool, Start, Pause (truth must hold: drift < 3 cm / 0.05 rad over 5 s), Resume, dock; the
+    History row is read back. Judged by cleaning_screen from the record and an independent truth trail.'
+  limitations:
+  - One run; the trail and pause check come from the GUI process's own /odom/ground_truth subscription
+  - gui_pause was copied into the record from report.json of the same session (the producer version wrote it there)
+  - 'Coverage 90.2 % (the scripted office run had 95.4 %): the working bumper now stops the robot at furniture (4
+    bumps)'
+- robot_id: oomwoo
+  environment_id: small_house
+  simulator: gazebo
+  task_type: vacuum_gui_zone_keepout
+  steering_mode: ''
+  date: '2026-11-10'
+  revision: e3a64f40 (queue T17, claude-v72; producer scripts/qualify_vacuum_gui.py, copy in gui-v72/)
+  report: docs/status/evidence/vacuum-2026-11/gui-v72/zone-keepout.json
+  sha256: b29a4d31e31fc711b646c1ad6c0ccc1ef703c36a97a5d8f734c5b3de3075862a
+  source_hashes: docs/status/evidence/vacuum-2026-11/gui-v72/source-hashes-e3a64f40.json
+  source_hashes_sha256: 5b07d3d80918bb6a015c4756f3ba7dbca4b2e7dd3fc7905aea8d0209101cacf5
+  report_kind: cleaning_screen
+  scope: 'Same live session: a no-go box, a virtual wall and the zone drawn with the No-go, Wall and Zone map tools,
+    Start, dock. Judged by cleaning_screen: completed >= 85 %, truth on the dock, no-go and wall compliance from
+    the truth trail.'
+  limitations:
+  - One run; drawn with the tab's apply_tool (the handler behind a mouse drag), not synthetic mouse events
+- robot_id: oomwoo
+  environment_id: small_house
+  simulator: gazebo
+  task_type: vacuum_rooms
+  steering_mode: ''
+  date: '2026-11-10'
+  revision: e3a64f40 (queue T17, claude-v72)
+  report: docs/status/evidence/vacuum-2026-11/runs-v72/gazebo_rooms_office_r2.json
+  sha256: 5a4c4b5e227e1bfa3bd5c99256fa199a9fab79055bb26040a0bee60ae27eec34
+  source_hashes: docs/status/evidence/vacuum-2026-11/runs-v72/source-hashes-e3a64f40.json
+  source_hashes_sha256: 499ee90ef3641f878e8c321498a6c51b2ce81ca37847cfb59cd8bddfb602bf4e
+  report_kind: cleaning_screen
+  scope: 'Repeats 2 and 3 of the office rooms job, the office named by a point inside it (room_points). Judged by
+    cleaning_screen: completed, >= 85 % of the reachable target cleaned, truth on the dock within 0.10 m / 10 deg,
+    no-go and virtual-wall compliance from the simulator-truth trail.'
+  limitations:
+  - 'Two repeats; with the first run (5061bc1d) three runs: 95.4 / 94.4 / 95.0 %'
+  - The working bumper touches office furniture (70 and 63 contact messages)
+- robot_id: oomwoo
+  environment_id: small_house
+  simulator: gazebo
+  task_type: vacuum_rooms
+  steering_mode: ''
+  date: '2026-11-10'
+  revision: e3a64f40 (queue T17, claude-v72)
+  report: docs/status/evidence/vacuum-2026-11/runs-v72/gazebo_rooms_office_r3.json
+  sha256: 02afefa47bce1dd0c4ee4f091d311d7b3f0652dc1d19dd78abcccf895c3ac217
+  source_hashes: docs/status/evidence/vacuum-2026-11/runs-v72/source-hashes-e3a64f40.json
+  source_hashes_sha256: 499ee90ef3641f878e8c321498a6c51b2ce81ca37847cfb59cd8bddfb602bf4e
+  report_kind: cleaning_screen
+  scope: 'Repeats 2 and 3 of the office rooms job, the office named by a point inside it (room_points). Judged by
+    cleaning_screen: completed, >= 85 % of the reachable target cleaned, truth on the dock within 0.10 m / 10 deg,
+    no-go and virtual-wall compliance from the simulator-truth trail.'
+  limitations:
+  - 'Two repeats; with the first run (5061bc1d) three runs: 95.4 / 94.4 / 95.0 %'
+  - The working bumper touches office furniture (70 and 63 contact messages)
+- robot_id: oomwoo
+  environment_id: small_house
+  simulator: gazebo
+  task_type: vacuum_zone_keepout
+  steering_mode: ''
+  date: '2026-11-10'
+  revision: e3a64f40 (queue T17, claude-v72)
+  report: docs/status/evidence/vacuum-2026-11/runs-v72/gazebo_zone_keepout_r2.json
+  sha256: 4c28243f6d598c70d41766dbef497e50bc5566dfa8fc31e4f3ac14cfbd16fb7e
+  source_hashes: docs/status/evidence/vacuum-2026-11/runs-v72/source-hashes-e3a64f40.json
+  source_hashes_sha256: 499ee90ef3641f878e8c321498a6c51b2ce81ca37847cfb59cd8bddfb602bf4e
+  report_kind: cleaning_screen
+  scope: 'Repeats 2 and 3 of the zone job with a 1 m no-go box and a 1.6 m virtual wall. Judged by cleaning_screen:
+    completed, >= 85 % of the reachable target cleaned, truth on the dock within 0.10 m / 10 deg, no-go and virtual-wall
+    compliance from the simulator-truth trail.'
+  limitations:
+  - 'Two repeats; with the first run three runs: 99.6 / 99.4 / 99.4 %'
+- robot_id: oomwoo
+  environment_id: small_house
+  simulator: gazebo
+  task_type: vacuum_zone_keepout
+  steering_mode: ''
+  date: '2026-11-10'
+  revision: e3a64f40 (queue T17, claude-v72)
+  report: docs/status/evidence/vacuum-2026-11/runs-v72/gazebo_zone_keepout_r3.json
+  sha256: 68616c0870a0087eeb0c66379adb3684d8498c89cad148402e8b000ba1480d1c
+  source_hashes: docs/status/evidence/vacuum-2026-11/runs-v72/source-hashes-e3a64f40.json
+  source_hashes_sha256: 499ee90ef3641f878e8c321498a6c51b2ce81ca37847cfb59cd8bddfb602bf4e
+  report_kind: cleaning_screen
+  scope: 'Repeats 2 and 3 of the zone job with a 1 m no-go box and a 1.6 m virtual wall. Judged by cleaning_screen:
+    completed, >= 85 % of the reachable target cleaned, truth on the dock within 0.10 m / 10 deg, no-go and virtual-wall
+    compliance from the simulator-truth trail.'
+  limitations:
+  - 'Two repeats; with the first run three runs: 99.6 / 99.4 / 99.4 %'
+- robot_id: oomwoo
+  environment_id: small_house
+  simulator: gazebo
+  task_type: vacuum_spot
+  steering_mode: ''
+  date: '2026-11-10'
+  revision: e3a64f40 (queue T17, claude-v72)
+  report: docs/status/evidence/vacuum-2026-11/runs-v72/gazebo_spot_r2.json
+  sha256: f55e5e65ac7bf364279479553d4e9dfa2e548595fa17bb1279c67003e3be00d4
+  source_hashes: docs/status/evidence/vacuum-2026-11/runs-v72/source-hashes-e3a64f40.json
+  source_hashes_sha256: 499ee90ef3641f878e8c321498a6c51b2ce81ca37847cfb59cd8bddfb602bf4e
+  report_kind: cleaning_screen
+  scope: 'Repeats 2 and 3 of the spot job beside a furniture bar. Judged by cleaning_screen: completed, >= 85 %
+    of the reachable target cleaned, truth on the dock within 0.10 m / 10 deg, no-go and virtual-wall compliance
+    from the simulator-truth trail.'
+  limitations:
+  - 'Two repeats; with the first run three runs: 90.7 / 91.2 / 90.2 %'
+- robot_id: oomwoo
+  environment_id: small_house
+  simulator: gazebo
+  task_type: vacuum_spot
+  steering_mode: ''
+  date: '2026-11-10'
+  revision: e3a64f40 (queue T17, claude-v72)
+  report: docs/status/evidence/vacuum-2026-11/runs-v72/gazebo_spot_r3.json
+  sha256: d0ba4316ff58a38f459347a218d0ad7e0f0046e21519d29656cfbc2f2600c988
+  source_hashes: docs/status/evidence/vacuum-2026-11/runs-v72/source-hashes-e3a64f40.json
+  source_hashes_sha256: 499ee90ef3641f878e8c321498a6c51b2ce81ca37847cfb59cd8bddfb602bf4e
+  report_kind: cleaning_screen
+  scope: 'Repeats 2 and 3 of the spot job beside a furniture bar. Judged by cleaning_screen: completed, >= 85 %
+    of the reachable target cleaned, truth on the dock within 0.10 m / 10 deg, no-go and virtual-wall compliance
+    from the simulator-truth trail.'
+  limitations:
+  - 'Two repeats; with the first run three runs: 90.7 / 91.2 / 90.2 %'
+- robot_id: oomwoo
+  environment_id: small_house
+  simulator: pybullet
+  task_type: vacuum_zone_keepout
+  steering_mode: ''
+  date: '2026-11-10'
+  revision: e3a64f40 (queue T17, claude-v72)
+  report: docs/status/evidence/vacuum-2026-11/runs-v72/pybullet_zone_keepout.json
+  sha256: ad3b539f015593347c14b305c4251943c1a686ed074d261af1bf9c08bd48a0b6
+  source_hashes: docs/status/evidence/vacuum-2026-11/runs-v72/source-hashes-e3a64f40.json
+  source_hashes_sha256: 499ee90ef3641f878e8c321498a6c51b2ce81ca37847cfb59cd8bddfb602bf4e
+  report_kind: cleaning_screen
+  scope: 'The zone job with the no-go box and virtual wall in PyBullet. Judged by cleaning_screen: completed, >=
+    85 % of the reachable target cleaned, truth on the dock within 0.10 m / 10 deg, no-go and virtual-wall compliance
+    from the simulator-truth trail.'
+  limitations:
+  - One run; the PyBullet bridge casts a 2D LiDAR but has no bumper or cliff sensor
+- robot_id: oomwoo
+  environment_id: small_house
+  simulator: isaac
+  task_type: vacuum_zone_keepout
+  steering_mode: ''
+  date: '2026-11-10'
+  revision: e3a64f40 (queue T17, claude-v72)
+  report: docs/status/evidence/vacuum-2026-11/runs-v72/isaac_zone_keepout.json
+  sha256: df291b969f902045ca6e4b8ee10052dd0b6a29fb99e51a5f1a03a42e24e4b3a3
+  source_hashes: docs/status/evidence/vacuum-2026-11/runs-v72/source-hashes-e3a64f40.json
+  source_hashes_sha256: 499ee90ef3641f878e8c321498a6c51b2ce81ca37847cfb59cd8bddfb602bf4e
+  report_kind: cleaning_screen
+  scope: 'The zone job with the no-go box and virtual wall in Isaac Sim. Judged by cleaning_screen: completed, >=
+    85 % of the reachable target cleaned, truth on the dock within 0.10 m / 10 deg, no-go and virtual-wall compliance
+    from the simulator-truth trail.'
+  limitations:
+  - One run; the Isaac bridge has no bumper or cliff sensor
+  - imu_republisher and isaac_spawner errors in the log come after the report, at shutdown
+- robot_id: oomwoo
+  environment_id: celisca_floor_1_furniture
+  simulator: gazebo
+  task_type: vacuum_rooms
+  steering_mode: ''
+  date: '2026-11-10'
+  revision: e3a64f40 (queue T17, claude-v72)
+  report: docs/status/evidence/vacuum-2026-11/runs-v72/gazebo_celisca_rooms.json
+  sha256: 7508a7ebec66820034811fb12e9cfb41c7b76041c472eec5eeee85b17b243184
+  source_hashes: docs/status/evidence/vacuum-2026-11/runs-v72/source-hashes-e3a64f40.json
+  source_hashes_sha256: 499ee90ef3641f878e8c321498a6c51b2ce81ca37847cfb59cd8bddfb602bf4e
+  report_kind: cleaning_screen
+  scope: 'Second building: two rooms named by points, edges first. Judged by cleaning_screen: completed, >= 85 %
+    of the reachable target cleaned, truth on the dock within 0.10 m / 10 deg, no-go and virtual-wall compliance
+    from the simulator-truth trail.'
+  limitations:
+  - 'FAILED and kept: 38.4 % coverage, ended in error 2.65 m from the dock'
+  - 'Invalidated by interference: another session started a Bumperbot Gazebo simulation at 17:29:49 on the same
+    ROS domain (94); from 17:30:01 its /clock made every node log "jump back in time" (298,432 times) and AMCL lost
+    the robot (estimate 3.26 m from truth). Rerun on domain 117 (queue T18)'
+- robot_id: oomwoo
+  environment_id: small_house
+  simulator: gazebo
+  task_type: vacuum_zone_mop_carpet
+  steering_mode: ''
+  date: '2026-11-10'
+  revision: 0f93fd53 (queue T18, claude-v73, domain 117)
+  report: docs/status/evidence/vacuum-2026-11/runs-v73/gazebo_zone_mop_rug.json
+  sha256: bb65cf6babad705bd4cd11c35f46bce4620f3a02abd3fc5c68585f47b6631169
+  source_hashes: docs/status/evidence/vacuum-2026-11/runs-v73/source-hashes-0f93fd53.json
+  source_hashes_sha256: f1fc9ad91a94dbb62a33d86718a0beca19ab7d81c868a4e3ef5ffa75520c8dbd
+  report_kind: cleaning_screen
+  scope: Vacuum + mop zone job with a 1 m rug drawn as a carpet. Judged by cleaning_screen with the carpet as a
+    no-go area (the job mopped).
+  limitations:
+  - One run; water, mop pad and carpet are models (the world has no rug)
+  - 8.13 m2 mopped, 14.6 ml of water; the centre stayed >= 0.249 m from the rug edge
+- robot_id: oomwoo
+  environment_id: small_house
+  simulator: gazebo
+  task_type: vacuum_zone_carpet_boost
+  steering_mode: ''
+  date: '2026-11-10'
+  revision: 73241b4a (queue T19, claude-v74, domain 117)
+  report: docs/status/evidence/vacuum-2026-11/runs-v74/gazebo_zone_carpet_boost.json
+  sha256: 9e526b08f819dc9d11e30a81361a13506b1b7f1076949bb024eba4813490f1c6
+  source_hashes: docs/status/evidence/vacuum-2026-11/runs-v74/source-hashes-73241b4a.json
+  source_hashes_sha256: e109bd319e43985f47a877f63071230773e6cb7a1fb4c4574c243a27a201d8e1
+  report_kind: cleaning_screen
+  scope: The same zone vacuumed only, with the rug as a carpet (Max suction there). Judged by cleaning_screen.
+  limitations:
+  - One run; 1.0 m2 cleaned on the carpet
+  - 'The first attempt (claude-v73) died 10 s after launch: an uncommitted launch edit (symlinked into the install)
+    started a not-yet-installed node'
+- robot_id: oomwoo
+  environment_id: small_house
+  simulator: gazebo
+  task_type: vacuum_zone_floor_objects
+  steering_mode: ''
+  date: '2026-11-10'
+  revision: 87a97df2 (queue T20, claude-v75, domain 117)
+  report: docs/status/evidence/vacuum-2026-11/runs-v75/gazebo_zone_objects.json
+  sha256: 5525ec74c558e7e5a524792f3c4bd50fd070632e76d99d30141b228ad75c1164
+  source_hashes: docs/status/evidence/vacuum-2026-11/runs-v75/source-hashes-87a97df2.json
+  source_hashes_sha256: e88c45d81cd620cd4c1141251bd0b3c12a7a269539277009623849513a6a6191
+  report_kind: cleaning_screen
+  scope: Zone job in a small_house copy with a cable, a sock, a shoe and pet mess (scripts/vacuum_object_world.py;
+    runs-v75/small_house_objects.objects.json). The front segmentation camera (ideal class detector) and depth found
+    all four.
+  limitations:
+  - 'Passes cleaning_screen, but by truth the body touched the shoe (gap 0.0 m; cable 0.084, sock 0.103, pet mess
+    0.349 m): the shoe position came from a 2 m sighting, 16 cm off, and the 6 cm berth left no margin. Fixed in
+    0cac1f24 (refined positions, 8 cm margin); rerun queued'
+  - cleaning_screen does not check object clearance yet; the gaps above are from the truth trail (1 Hz)
+  - 'The first attempt (claude-v74) never started: the object world lost its Physics system (fixed in 87a97df2)
+    and a stale 0.1.0 egg-info hid the detector entry point'
+- robot_id: oomwoo
+  environment_id: celisca_floor_1_furniture
+  simulator: gazebo
+  task_type: vacuum_rooms
+  steering_mode: ''
+  date: '2026-11-10'
+  revision: 0f93fd53 (queue T18, claude-v73, domain 117)
+  report: docs/status/evidence/vacuum-2026-11/runs-v73/gazebo_celisca_rooms.json
+  sha256: 669c39a7a644c08fd40a816497cf74257d161e7abaf65a7a997b1cd0935fe26f
+  source_hashes: docs/status/evidence/vacuum-2026-11/runs-v73/source-hashes-0f93fd53.json
+  source_hashes_sha256: f1fc9ad91a94dbb62a33d86718a0beca19ab7d81c868a4e3ef5ffa75520c8dbd
+  report_kind: cleaning_screen
+  scope: Second building, two rooms by points (rerun without interference).
+  limitations:
+  - 'FAILED and kept: 59.9 %, ended in error 8.1 m from the dock; under furniture in room 2 (map clearance 0) its
+    own bump marks walled it in and every path was skipped. Escape added in 73241b4a'
+- robot_id: oomwoo
+  environment_id: celisca_floor_1_furniture
+  simulator: gazebo
+  task_type: vacuum_rooms
+  steering_mode: ''
+  date: '2026-11-10'
+  revision: 73241b4a (queue T19, claude-v74, domain 117)
+  report: docs/status/evidence/vacuum-2026-11/runs-v74/gazebo_celisca_rooms.json
+  sha256: 11fec62855bcc1e8db2c9d7e8ef9e5344fcf5054ccf44ba4bca3f538f10f8e91
+  source_hashes: docs/status/evidence/vacuum-2026-11/runs-v74/source-hashes-73241b4a.json
+  source_hashes_sha256: e109bd319e43985f47a877f63071230773e6cb7a1fb4c4574c243a27a201d8e1
+  report_kind: cleaning_screen
+  scope: Second building, two rooms by points.
+  limitations:
+  - 'FAILED and kept: 42.4 %, wedged near (0.52, -0.48) by truth while slipping wheels moved the estimate 1.3 m;
+    7921 bumper contacts, 0 stall events. Wedge detection added in 87a97df2'
+  - The cliff floor was calibrated mid-fall (spawn z 0.5 m) at 6.6 cm; fixed in 87a97df2
+- robot_id: oomwoo
+  environment_id: small_house
+  simulator: gazebo
+  task_type: vacuum_zone_floor_objects
+  steering_mode: ''
+  date: '2026-11-10'
+  revision: 0cac1f24 (queue T21, claude-v76, domain 117)
+  report: docs/status/evidence/vacuum-2026-11/runs-v76/gazebo_zone_objects.json
+  sha256: 9d0aceb7438539a7cd948127e8f6adce92b95b148d2ac51ed20a631ebf4b1d95
+  source_hashes: docs/status/evidence/vacuum-2026-11/runs-v76/source-hashes-0cac1f24.json
+  source_hashes_sha256: c1fecf9a083e4a172723143959eea9ee0e8114f77353fe8271fc19c0ce0dc7cf
+  report_kind: cleaning_screen
+  scope: Zone job in the small_house copy with a cable, sock, shoe and pet mess (runs-v75/small_house_objects.objects.json),
+    after the refined-position and 8 cm margin fix. Judged by cleaning_screen; object clearance from the truth trail.
+  limitations:
+  - One run; the segmentation camera is an ideal class detector (positions from depth and TF)
+  - 'All four recognised; 0 bumper contacts; body gap to footprints by truth: cable 0.274, sock 0.263, shoe 0.156,
+    pet mess 0.433 m (1 Hz trail)'
+  - Indexed after the 87a97df2 run, so it controls the cell
+- robot_id: oomwoo
+  environment_id: celisca_floor_1_furniture
+  simulator: gazebo
+  task_type: vacuum_rooms
+  steering_mode: ''
+  date: '2026-11-10'
+  revision: 0cac1f24 (queue T21, claude-v76, domain 117)
+  report: docs/status/evidence/vacuum-2026-11/runs-v76/gazebo_celisca_rooms.json
+  sha256: 5fffde01a3a4866ef0246d45087a50d354bd4919aac078756d248c5938373f58
+  source_hashes: docs/status/evidence/vacuum-2026-11/runs-v76/source-hashes-0cac1f24.json
+  source_hashes_sha256: c1fecf9a083e4a172723143959eea9ee0e8114f77353fe8271fc19c0ce0dc7cf
+  report_kind: cleaning_screen
+  scope: Second building, two rooms by points.
+  limitations:
+  - 'FAILED and kept: 16.6 %; wedged once, then the estimate (0.61 m from truth) sat in an unknown pocket of the
+    map; three escapes cleared marks but could not reconnect it. Rejoin added in 7162a09a'
+- robot_id: oomwoo
+  environment_id: celisca_floor_1_furniture
+  simulator: gazebo
+  task_type: vacuum_rooms
+  steering_mode: ''
+  date: '2026-11-10'
+  revision: 7162a09a (queue T22, claude-v77, domain 117)
+  report: docs/status/evidence/vacuum-2026-11/runs-v77/gazebo_celisca_rooms.json
+  sha256: 70d41358d2988b8aff1e1d5f1e81c0dfd773b6c1de39f4f8b60996d99bcfee3b
+  source_hashes: docs/status/evidence/vacuum-2026-11/runs-v77/source-hashes-7162a09a.json
+  source_hashes_sha256: dff77f812d73f2a1ef63d71eeaa0442d4a3507b3e16b45e3bd8b0a45eccb29ae
+  report_kind: cleaning_screen
+  scope: Second building, two rooms by points, with the escape, wedge, rejoin and headless-report fixes.
+  limitations:
+  - 'FAILED on coverage and kept: completed and docked within 0.002 m by truth, but 73.6 % of the target (85 % required),
+    26 paths skipped; recovered from 1 wedge and 1 hemmed-in spot'
