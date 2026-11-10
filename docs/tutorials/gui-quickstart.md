@@ -108,6 +108,15 @@ architecture diagrams/tours, the source/tutorial library, networking lessons,
 opt-in ROS discovery, or Diagnostics & roadmap. No discovery starts just by
 opening a page. See [the architecture guide](../architecture/interactive-guide.md).
 
+**Docs & tutorials** (inside Learn & diagnose, or **Start the beginner course**
+on Home) is the documentation library:
+- the [beginner course](../learn/README.md) first, then the guides grouped by
+  purpose ([`docs/library.yaml`](../library.yaml));
+- figures and animations inline (click to enlarge), and the diagrams as
+  images;
+- **Find guide / package** filters titles, **On this page** jumps to a
+  heading, **Find text** searches the page, and **Back** returns.
+
 This interface refresh does not qualify more robots, maps, backends or algorithms.
 Historical source-bound mission certificates are not refreshed by cosmetic or
 navigation checks. [Current status](../status/CURRENT_STATUS.md) and
