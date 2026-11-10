@@ -1,0 +1,11 @@
+{
+ "revision": "1e229701",
+ "derived": "sha256 of each file as git stores it at this revision, computed 2026-11-10 after the run; uncommitted working-tree changes at run time are not captured",
+ "files": {
+  "scripts/qualify_px4_drive_gui.py": "f9c1ba352370bb280c0f9d8d3b7967b10086ab500dc7db5046233be31509b2cb",
+  "src/robot_lab_adapter/robot_lab_adapter/px4_planning.py": "51d0d67656bd2b0ae9a94dfa432b2192c68e3c4636c49283b3b70bf15a7a2a91",
+  "src/robot_lab_adapter/robot_lab_adapter/px4_ros_controller.py": "06e750f9e56fb9b5dbc3bf7b3b9b00b1f16982e699e87f43ffd6a865adb1ada8",
+  "src/robot_lab_gui/robot_lab_gui/drone_planning_controls.py": "77b64fde6548bb3cbfae3cc148dc1ce975dc1e57443b0f36d3ff3e74678b48e5",
+  "src/robot_lab_robots/config/robots.yaml": "35d15869d6562625f84c76e9d85546e31f89abe9c40063d8d112076ec2ce04f6"
+ }
+}

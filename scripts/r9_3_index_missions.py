@@ -48,6 +48,8 @@ SHAPES = {
     'articulation_screen': lambda content: isinstance(content.get('phases'), dict) and 'backend' in content,
     # scripts/sim_vacuum_mission.sh: the robot_lab_vacuum_cleaning job record
     'cleaning_screen': lambda content: 'result' in content and isinstance(content.get('trail'), list),
+    # scripts/qualify_px4_drive_gui.py report.json
+    'flight_manual_screen': lambda content: isinstance(content.get('directions'), dict) and 'takeoff_height_m' in content,
 }
 
 

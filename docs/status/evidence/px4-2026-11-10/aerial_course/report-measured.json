@@ -1,0 +1,120 @@
+{
+ "altitude": {
+  "down": {
+   "height_change_m": -0.657944156628889,
+   "stop": {
+    "drift_m": 0.032114170322355313,
+    "yaw_drift_rad": 0.0006617030368110538
+   }
+  },
+  "up": {
+   "height_change_m": 0.6271956696795029,
+   "stop": {
+    "drift_m": 0.012404873314607275,
+    "yaw_drift_rad": 0.0003899198953458277
+   }
+  }
+ },
+ "backend": "gazebo",
+ "body_trace": {
+  "initial_z": 0.23412,
+  "max_z": 3.8796910601424477,
+  "min_z": 0.224023001416582,
+  "samples": 2066
+ },
+ "command": "ros2 launch robot_lab_bringup simulated_robot.launch.py robot_model:=px4_x500 simulator:=gazebo use_sim_time:=false map_name:=aerial_course world_package:=robot_lab_maps world_name:=aerial_course world_path:=maps/aerial_course/worlds/aerial_course.world map_yaml:=maps/aerial_course/maps/map.yaml mode:=flight spawn_z:=0.0 gui:=false aerial_obstacles:=none",
+ "derived_from": {
+  "original_report": {
+   "bytes": 2962,
+   "path": "/workspace/molar/robot_lab_runtime/claude-v69/px4/aerial_course/report.json",
+   "sha256": "e513fb5a4f4cd047813378a35a42750768288e732ec2b308c40fc11332f1e9e1"
+  },
+  "physical_trace": {
+   "bytes": 614246,
+   "path": "/workspace/molar/robot_lab_runtime/claude-v69/px4/aerial_course/trace.json",
+   "sha256": "3515e2b59056074214b053daaca5f7605c9cd8ba230db09b9476a3d13f2b3d77"
+  }
+ },
+ "directions": {
+  "Forward": {
+   "body_frame_travel_m": [
+    0.6985704769085701,
+    -0.050858572452990455
+   ],
+   "stop": {
+    "drift_m": 0.02833860814307948,
+    "yaw_drift_rad": 0.0009650631609737087
+   }
+  },
+  "Reverse": {
+   "body_frame_travel_m": [
+    -0.6863122073000238,
+    0.06458816480271307
+   ],
+   "stop": {
+    "drift_m": 0.02680654061068553,
+    "yaw_drift_rad": 0.0006857388106725204
+   }
+  },
+  "Strafe L": {
+   "body_frame_travel_m": [
+    0.046740226948653055,
+    0.7088597791609935
+   ],
+   "stop": {
+    "drift_m": 0.016993568260721813,
+    "yaw_drift_rad": 0.00012288694811612988
+   }
+  },
+  "Strafe R": {
+   "body_frame_travel_m": [
+    -0.08499620193236317,
+    -0.7715602972675615
+   ],
+   "stop": {
+    "drift_m": 0.014698712499446393,
+    "yaw_drift_rad": 0.001094425100889515
+   }
+  },
+  "Turn Left": {
+   "command_max_yaw_rad_s": 0.3,
+   "net_xy_m": 0.043611607493551294,
+   "stop": {
+    "drift_m": 0.018350387818186875,
+    "yaw_drift_rad": 0.002894027784822617
+   },
+   "yaw_rad": 0.5930447101218338
+  },
+  "Turn Right": {
+   "command_max_yaw_rad_s": 0.3,
+   "net_xy_m": 0.019913211513054484,
+   "stop": {
+    "drift_m": 0.004809751839311152,
+    "yaw_drift_rad": 0.0005446572992378432
+   },
+   "yaw_rad": -0.6140386534458233
+  }
+ },
+ "landing_height_error_m": 6.969806510989662e-05,
+ "launch_returncode": 0,
+ "map": "aerial_course",
+ "mode": "flight",
+ "neutral": {
+  "armed": false,
+  "commands": 0,
+  "displacement_m": 5.944124297949105e-05
+ },
+ "owned_pid": 142078,
+ "passed": true,
+ "publisher_loss_drift_m": 0.04862099409290747,
+ "robot": "px4_x500",
+ "rotor_max_rad_s": 86.98339793811292,
+ "scope": "Normal owned Tk Run/Takeoff/seven direction buttons/altitude/release/Stop/publisher loss/Land. Native X500/PX4 and independent Gazebo body; one open static map, no obstacle planner.",
+ "takeoff_check": {
+  "ceiling_limited": false,
+  "error": "",
+  "rise_m": 3.0,
+  "state": "clear"
+ },
+ "takeoff_height_m": 2.9495487260412077
+}

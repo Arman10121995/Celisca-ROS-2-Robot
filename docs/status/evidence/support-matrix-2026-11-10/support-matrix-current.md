@@ -323,6 +323,7 @@ Unlisted combinations are untested. No row establishes full mission support.
 | oomwoo | small_house | gazebo | vacuum_recharge_resume /  | passed_screen |
 | oomwoo | small_house | mujoco | vacuum_zone_keepout /  | passed_screen |
 | oomwoo | small_house | gazebo | vacuum_whole_home /  | passed_screen |
+| px4_x500 | aerial_course | gazebo | flight /  | passed_screen |
 
 Full release blockers:
 

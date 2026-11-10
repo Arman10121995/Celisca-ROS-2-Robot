@@ -131,8 +131,9 @@ current_verification:
     (28.1 m, RMSE 1.3 cm, map precision/recall 0.97/0.79; 1.49 m and 0.12/0.16 before); rear-steer car course after
     84422df passes its slalom in all four backends and the full course in MuJoCo (parking 0.091 m, -3.4 deg); parking
     heading fails in Gazebo/PyBullet/Isaac (11.6-14.3 deg). docs/status/evidence/rounds-2026-10-19/README.md.'
-  matrix_2026_11_10: '695 indexed reports, 317 measured cells: 305 passed and 11 failed screens; adds seven
-    robot-vacuum cleaning cells (oomwoo, small_house; cleaning_screen), all passed.
+  matrix_2026_11_10: '696 indexed reports, 318 measured cells: 306 passed and 11 failed screens; adds seven
+    robot-vacuum cleaning cells (oomwoo, small_house; cleaning_screen), all passed, and PX4 X500 manual
+    flight on aerial_course after the takeoff-check script fix.
     docs/status/evidence/support-matrix-2026-11-10/README.md.'
   matrix_2026_11_09: '687 indexed reports, 310 measured cells: 298 passed and 11 failed screens; adds rounds 59
     and 62 (car course with shuffle + depth trim: 10 of 12 pass, parking 0.003-0.079 m), go2_walk_r2 Isaac

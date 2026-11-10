@@ -12803,3 +12803,21 @@ records:
   - The stall detector (8 m window, scan-time poses) fired twice at the hidden box; the estimate-truth gap stayed
     <= 0.34 m
   - Indexed after the 5061bc1d run, so it controls the cell
+- robot_id: px4_x500
+  environment_id: aerial_course
+  simulator: gazebo
+  task_type: flight
+  steering_mode: ''
+  date: '2026-11-10'
+  revision: 1e229701 (queue T15, claude-v69; ROS domain 121)
+  report: docs/status/evidence/px4-2026-11-10/aerial_course/report-measured.json
+  sha256: 9653c7f2ec8c84c5cf197c432f1aedb8a7e6f215871b458c2fb786cdeb899230
+  source_hashes: docs/status/evidence/px4-2026-11-10/aerial_course/source-hashes-1e229701.json
+  source_hashes_sha256: bbf358f71655f7e4183046c18a4f8167c4087ec6edee1b62a7c4236875260e93
+  report_kind: flight_manual_screen
+  scope: Normal owned Tk Run, Check takeoff clearance (clear, 3.0 m rise), Takeoff, seven direction buttons, altitude,
+    release, Stop, publisher loss and Land with native X500/PX4 SITL in Gazebo Harmonic on the aerial_course world;
+    independent Gazebo body.
+  limitations:
+  - One run on one world; the other seven worlds of 2026-11-05 are not re-run
+  - No obstacle planner in the manual screen

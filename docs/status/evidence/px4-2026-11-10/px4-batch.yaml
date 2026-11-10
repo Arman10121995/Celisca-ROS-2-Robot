@@ -1,0 +1,28 @@
+# PX4 X500 manual-flight GUI screen on aerial_course after the takeoff
+# clearance check was added to scripts/qualify_px4_drive_gui.py (1cb48d45),
+# indexed by scripts/r9_3_index_missions.py.
+date: '2026-11-10'
+scope: "Exact hashed named simulation screens; unlisted cells remain untested."
+source_files:
+  - scripts/qualify_px4_drive_gui.py
+  - src/robot_lab_robots/config/robots.yaml
+groups:
+  - reports:
+      - docs/status/evidence/px4-2026-11-10/aerial_course/report-measured.json
+    report_kind: flight_manual_screen
+    identity: {robot_id: px4_x500, environment_id: aerial_course, simulator: gazebo, task_type: flight}
+    date: '2026-11-10'
+    revision: "1e229701 (queue T15, claude-v69; ROS domain 121)"
+    hash_revision: 1e229701
+    source_files:
+      - src/robot_lab_gui/robot_lab_gui/drone_planning_controls.py
+      - src/robot_lab_adapter/robot_lab_adapter/px4_planning.py
+      - src/robot_lab_adapter/robot_lab_adapter/px4_ros_controller.py
+    scope: >-
+      Normal owned Tk Run, Check takeoff clearance (clear, 3.0 m rise),
+      Takeoff, seven direction buttons, altitude, release, Stop, publisher
+      loss and Land with native X500/PX4 SITL in Gazebo Harmonic on the
+      aerial_course world; independent Gazebo body.
+    limitations:
+      - One run on one world; the other seven worlds of 2026-11-05 are not re-run
+      - No obstacle planner in the manual screen

@@ -1,5 +1,5 @@
 {
-  "generated_utc": "2026-11-10T13:40:54.343385+00:00",
+  "generated_utc": "2026-11-10T14:27:55.980616+00:00",
   "task": "R9.3",
   "status": "partial",
   "qualification": "Exact hashed screens only; artifact validation does not rerun a mission",
@@ -7170,6 +7170,28 @@
         "Screen evidence; full ROADMAP mission acceptance remains separate"
       ],
       "notes": "Whole-home job: all four rooms in order, edges first, Standard suction, then reachable floor outside rooms. Judged by cleaning_screen: completed, >= 85 % of the reachable target cleaned, truth on the dock within 0.10 m / 10 deg.",
+      "steering_mode": ""
+    },
+    {
+      "robot_id": "px4_x500",
+      "environment_id": "aerial_course",
+      "simulator": "gazebo",
+      "task_type": "flight",
+      "support_level": "partially_supported",
+      "evidence_level": "runtime_evidence",
+      "last_tested": "2026-11-10",
+      "revision": "1e229701 (queue T15, claude-v69; ROS domain 121)",
+      "test_result": "passed_screen",
+      "artifacts": [
+        "docs/status/evidence/px4-2026-11-10/aerial_course/report-measured.json",
+        "docs/status/evidence/px4-2026-11-10/aerial_course/source-hashes-1e229701.json"
+      ],
+      "limitations": [
+        "One run on one world; the other seven worlds of 2026-11-05 are not re-run",
+        "No obstacle planner in the manual screen",
+        "Screen evidence; full ROADMAP mission acceptance remains separate"
+      ],
+      "notes": "Normal owned Tk Run, Check takeoff clearance (clear, 3.0 m rise), Takeoff, seven direction buttons, altitude, release, Stop, publisher loss and Land with native X500/PX4 SITL in Gazebo Harmonic on the aerial_course world; independent Gazebo body.",
       "steering_mode": ""
     }
   ],
