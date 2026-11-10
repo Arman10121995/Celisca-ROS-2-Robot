@@ -1,6 +1,6 @@
 schema_version: 1
-date: '2026-11-09'
-scope: "Exact hashed named simulation screens through November 5; unlisted cells remain untested."
+date: '2026-11-10'
+scope: "Exact hashed named simulation screens; unlisted cells remain untested."
 raw_artifact_root: /workspace/molar/robot_lab_runtime/r56-qualification-2026-10-05
 records:
 - robot_id: four_wheel_steer_car
@@ -12650,3 +12650,156 @@ records:
   limitations:
   - One run per cell
   - On terrain_heightfield MuJoCo measured no motion and Isaac 0.064 m/s straight
+- robot_id: oomwoo
+  environment_id: small_house
+  simulator: gazebo
+  task_type: vacuum_rooms
+  steering_mode: ''
+  date: '2026-11-10'
+  revision: 5061bc1d (queue T13, claude-v67)
+  report: docs/status/evidence/vacuum-2026-11/runs/gazebo_rooms_office.json
+  sha256: 241961b2a56202fdeab9fde1c982d18e3b13576db64b198524dab9d1a90eae66
+  source_hashes: docs/status/evidence/vacuum-2026-11/runs/source-hashes-5061bc1d.json
+  source_hashes_sha256: 24b9a5f0a0d5625330d68a440fb148e07d058b2fe37284563c7be100d6628bc2
+  report_kind: cleaning_screen
+  scope: 'Rooms job: the office (room 4), edges first, Standard suction. Judged by cleaning_screen: completed, >=
+    85 % of the reachable target cleaned (mapping: >= 2 rooms), truth on the dock within 0.10 m / 10 deg, no-go
+    and virtual-wall compliance from the simulator-truth trail.'
+  limitations:
+  - One run; battery, dustbin and wear are models
+  - Localisation is the lab AMCL/slam_toolbox estimate; the screen uses truth
+- robot_id: oomwoo
+  environment_id: small_house
+  simulator: gazebo
+  task_type: vacuum_zone_keepout
+  steering_mode: ''
+  date: '2026-11-10'
+  revision: 5061bc1d (queue T13, claude-v67)
+  report: docs/status/evidence/vacuum-2026-11/runs/gazebo_zone_keepout.json
+  sha256: a9129afa3f240ac4962afcfbbbbef004e3ca81edb4273aa91542808afb1c9118
+  source_hashes: docs/status/evidence/vacuum-2026-11/runs/source-hashes-5061bc1d.json
+  source_hashes_sha256: 24b9a5f0a0d5625330d68a440fb148e07d058b2fe37284563c7be100d6628bc2
+  report_kind: cleaning_screen
+  scope: 'Zone job (4.0,-3.5)-(7.5,-0.5) with a 1 m no-go box inside and a 1.6 m virtual wall; outline then lanes.
+    Judged by cleaning_screen: completed, >= 85 % of the reachable target cleaned (mapping: >= 2 rooms), truth on
+    the dock within 0.10 m / 10 deg, no-go and virtual-wall compliance from the simulator-truth trail.'
+  limitations:
+  - One run; battery, dustbin and wear are models
+  - Localisation is the lab AMCL/slam_toolbox estimate; the screen uses truth
+- robot_id: oomwoo
+  environment_id: small_house
+  simulator: gazebo
+  task_type: vacuum_spot
+  steering_mode: ''
+  date: '2026-11-10'
+  revision: 5061bc1d (queue T13, claude-v67)
+  report: docs/status/evidence/vacuum-2026-11/runs/gazebo_spot.json
+  sha256: ef1fbe6e16b6ef449cc30367fcaa97da42df78d9d0ed84f20e1eb3444c86d51e
+  source_hashes: docs/status/evidence/vacuum-2026-11/runs/source-hashes-5061bc1d.json
+  source_hashes_sha256: 24b9a5f0a0d5625330d68a440fb148e07d058b2fe37284563c7be100d6628bc2
+  report_kind: cleaning_screen
+  scope: 'Spot job at (2.0, 2.0) beside a furniture bar: outline and cross-hatched lanes over the reachable 1.6
+    m square. Judged by cleaning_screen: completed, >= 85 % of the reachable target cleaned (mapping: >= 2 rooms),
+    truth on the dock within 0.10 m / 10 deg, no-go and virtual-wall compliance from the simulator-truth trail.'
+  limitations:
+  - One run; battery, dustbin and wear are models
+  - Localisation is the lab AMCL/slam_toolbox estimate; the screen uses truth
+- robot_id: oomwoo
+  environment_id: small_house
+  simulator: gazebo
+  task_type: vacuum_zone_low_obstacle
+  steering_mode: ''
+  date: '2026-11-10'
+  revision: 5061bc1d (queue T13, claude-v67)
+  report: docs/status/evidence/vacuum-2026-11/runs/gazebo_zone_low_box.json
+  sha256: bfb508aecf86a3f1d6fd1bb73da6009ba3387cd46e76fa84e86a88efa3343ee0
+  source_hashes: docs/status/evidence/vacuum-2026-11/runs/source-hashes-5061bc1d.json
+  source_hashes_sha256: 24b9a5f0a0d5625330d68a440fb148e07d058b2fe37284563c7be100d6628bc2
+  report_kind: cleaning_screen
+  scope: 'The zone job in a world copy with a 0.30 x 0.30 x 0.06 m box the map does not have, below the LiDAR plane.
+    Judged by cleaning_screen: completed, >= 85 % of the reachable target cleaned (mapping: >= 2 rooms), truth on
+    the dock within 0.10 m / 10 deg, no-go and virtual-wall compliance from the simulator-truth trail.'
+  limitations:
+  - One run; battery, dustbin and wear are models
+  - Localisation is the lab AMCL/slam_toolbox estimate; the screen uses truth
+  - The robot pressed against the hidden box for ~6 s (truth) while the estimate moved 1.2 m; the 3 m stall window
+    saw no surface ahead and did not fire. The job still completed (localisation recovered). Re-run with the 8 m
+    window in claude-v68
+- robot_id: oomwoo
+  environment_id: small_house
+  simulator: gazebo
+  task_type: vacuum_recharge_resume
+  steering_mode: ''
+  date: '2026-11-10'
+  revision: 5061bc1d (queue T13, claude-v67)
+  report: docs/status/evidence/vacuum-2026-11/runs/gazebo_bedroom_recharge.json
+  sha256: 1e4120345e14d5ec91e9cd826f98e53d4fd2d575e28b15fcec420c8a53d42f92
+  source_hashes: docs/status/evidence/vacuum-2026-11/runs/source-hashes-5061bc1d.json
+  source_hashes_sha256: 24b9a5f0a0d5625330d68a440fb148e07d058b2fe37284563c7be100d6628bc2
+  report_kind: cleaning_screen
+  scope: 'Rooms job: the bedroom (room 3) with the battery model 60x faster, so the job needs recharge-and-resume
+    stops. Judged by cleaning_screen: completed, >= 85 % of the reachable target cleaned (mapping: >= 2 rooms),
+    truth on the dock within 0.10 m / 10 deg, no-go and virtual-wall compliance from the simulator-truth trail.'
+  limitations:
+  - One run; battery, dustbin and wear are models
+  - Localisation is the lab AMCL/slam_toolbox estimate; the screen uses truth
+  - Battery model 60x faster than real; 10 recharge stops
+- robot_id: oomwoo
+  environment_id: small_house
+  simulator: mujoco
+  task_type: vacuum_zone_keepout
+  steering_mode: ''
+  date: '2026-11-10'
+  revision: 8a122bbe (queue T13, claude-v67; the install was rebuilt at 12:35 from 8a122bbe before this run)
+  report: docs/status/evidence/vacuum-2026-11/runs/mujoco_zone_keepout.json
+  sha256: 3b1f8cdbcf71d35c15804958db4cd7b2d2ba0f66b1ff4334948f91d64d0dd261
+  source_hashes: docs/status/evidence/vacuum-2026-11/runs/source-hashes-8a122bbe.json
+  source_hashes_sha256: e7dd55e8fce183d187e4b7cc59e1de3b3e3ee22cc777a7abe47985aee2f3ecea
+  report_kind: cleaning_screen
+  scope: 'The keep-out zone job in MuJoCo (LiDAR from the bridge; no bumper or cliff sensors). Judged by cleaning_screen:
+    completed, >= 85 % of the reachable target cleaned (mapping: >= 2 rooms), truth on the dock within 0.10 m /
+    10 deg, no-go and virtual-wall compliance from the simulator-truth trail.'
+  limitations:
+  - One run; battery, dustbin and wear are models
+  - Localisation is the lab AMCL/slam_toolbox estimate; the screen uses truth
+- robot_id: oomwoo
+  environment_id: small_house
+  simulator: gazebo
+  task_type: vacuum_whole_home
+  steering_mode: ''
+  date: '2026-11-10'
+  revision: 8a122bbe (queue T13, claude-v67; install rebuilt from 8a122bbe at 12:35, before this run)
+  report: docs/status/evidence/vacuum-2026-11/runs/gazebo_whole_home.json
+  sha256: e66d13ed25e0a35e402b4f8bfd9d07424f69a532591b1534bae28594be7ddd3c
+  source_hashes: docs/status/evidence/vacuum-2026-11/runs/source-hashes-8a122bbe.json
+  source_hashes_sha256: e7dd55e8fce183d187e4b7cc59e1de3b3e3ee22cc777a7abe47985aee2f3ecea
+  report_kind: cleaning_screen
+  scope: 'Whole-home job: all four rooms in order, edges first, Standard suction, then reachable floor outside rooms.
+    Judged by cleaning_screen: completed, >= 85 % of the reachable target cleaned, truth on the dock within 0.10
+    m / 10 deg.'
+  limitations:
+  - One run; battery, dustbin and wear are models
+  - Localisation is the lab AMCL estimate; the screen uses truth
+  - '18 stall events: 17 coincide with truth moving clearly less than the estimate (slipping among dining chairs,
+    the bedroom corner); 1 false'
+  - The dustbin model filled once; the auto-empty dock emptied it and the job resumed
+- robot_id: oomwoo
+  environment_id: small_house
+  simulator: gazebo
+  task_type: vacuum_zone_low_obstacle
+  steering_mode: ''
+  date: '2026-11-10'
+  revision: b3a63ae7 (queue T14, claude-v68)
+  report: docs/status/evidence/vacuum-2026-11/runs-v68/gazebo_zone_low_box.json
+  sha256: eb7d507b70ca92b4abec2bd023a8fcf8c213e82c0a94b2d04200f85abb546613
+  source_hashes: docs/status/evidence/vacuum-2026-11/runs-v68/source-hashes-b3a63ae7.json
+  source_hashes_sha256: e704980288662b6ad15fc628a8d38e59d0e7b9a6bb506a064052e335f52dbd1f
+  report_kind: cleaning_screen
+  scope: 'The zone job in a world copy with a 0.30 x 0.30 x 0.06 m box the map does not have, below the LiDAR plane.
+    Judged by cleaning_screen: completed, >= 85 % of the reachable target cleaned (mapping: >= 2 rooms), truth on
+    the dock within 0.10 m / 10 deg, no-go and virtual-wall compliance from the simulator-truth trail.'
+  limitations:
+  - One run; battery, dustbin and wear are models
+  - The stall detector (8 m window, scan-time poses) fired twice at the hidden box; the estimate-truth gap stayed
+    <= 0.34 m
+  - Indexed after the 5061bc1d run, so it controls the cell

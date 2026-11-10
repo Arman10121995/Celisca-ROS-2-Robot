@@ -126,6 +126,24 @@ computer's local clock.
 
 ## Measured so far
 
-See [CURRENT_STATUS](../status/CURRENT_STATUS.md) and the Vacuum entry
-(R13) in the [roadmap](../../ROADMAP.md). Catalog entries, unit tests and
-screenshots do not qualify a cleaning mission.
+Gazebo, `small_house`, `nav` mode, judged by `cleaning_screen` from the
+simulator truth (2026-11-10, [evidence](../status/evidence/vacuum-2026-11/README.md)).
+Every run below docked within 0.051 m by truth.
+
+| Job | Coverage | Notes |
+|---|---|---|
+| Office, edges | 95.4 % | |
+| Zone + no-go box + virtual wall | 99.6 % | centre ≥ 0.26 m from the box, no crossings |
+| Spot beside furniture | 90.7 % | |
+| Zone with a hidden 6 cm box | 97.5 % | found by the stall detector |
+| Bedroom, battery model 60× | 98.4 % | 10 recharge-and-resume stops |
+| Zone + keep-outs in MuJoCo | 99.6 % | |
+| Whole home | 96.3 % | 141.6 m² in 77 min, one auto-empty stop |
+
+Not yet measured:
+- the mapping run (the first one looped; fixed, re-run pending);
+- PyBullet and Isaac;
+- repeats and other houses.
+
+Gazebo never created the bumper's contact topic. Catalog entries, unit
+tests and screenshots do not qualify a cleaning mission.

@@ -131,6 +131,9 @@ current_verification:
     (28.1 m, RMSE 1.3 cm, map precision/recall 0.97/0.79; 1.49 m and 0.12/0.16 before); rear-steer car course after
     84422df passes its slalom in all four backends and the full course in MuJoCo (parking 0.091 m, -3.4 deg); parking
     heading fails in Gazebo/PyBullet/Isaac (11.6-14.3 deg). docs/status/evidence/rounds-2026-10-19/README.md.'
+  matrix_2026_11_10: '695 indexed reports, 317 measured cells: 305 passed and 11 failed screens; adds seven
+    robot-vacuum cleaning cells (oomwoo, small_house; cleaning_screen), all passed.
+    docs/status/evidence/support-matrix-2026-11-10/README.md.'
   matrix_2026_11_09: '687 indexed reports, 310 measured cells: 298 passed and 11 failed screens; adds rounds 59
     and 62 (car course with shuffle + depth trim: 10 of 12 pass, parking 0.003-0.079 m), go2_walk_r2 Isaac
     navigation (goals reached, 1 of 3 seeds inside 0.25 m) and the go2_walk_r3, go2w_walk_r1, g1_walk_r1 and
@@ -337,7 +340,7 @@ auv_terrain_fleet_20261102:
   title: Curved AUV routes, terrain adapters and concurrent fleet missions
   reconciliation_baseline: 1d8b29a8
   baseline_revision: 43473387
-  updated: '2026-11-09'
+  updated: '2026-11-10'
   scope_paths: [src/robot_lab_utils/, src/robot_lab_adapter/, src/robot_lab_gui/, src/robot_lab_bringup/, src/robot_lab_mujoco/, src/robot_lab_pybullet/, src/robot_lab_isaac/, src/robot_lab_robots/, src/robot_lab_maps/, src/robot_lab/robot_lab_registry/config/, scripts/, docs/, README.md, ROADMAP.md]
   scope: User-requested completion of source-appropriate curved AUV routes, terrain/backend adapters and concurrent fleet missions. Preserve all native source limits, ownership, observation, map and cancellation barriers and historical measurements.
   qualification: Implement missing workflows, build packages and record actual bounded missions; software checks never substitute for physical mission evidence or universal backend acceptance.
@@ -1908,6 +1911,31 @@ tasks:
     qualification_review: '2026-10-27 documentation review: retain the implemented code, tests and named mission
       certificates. Full declared roadmap acceptance is still open; test counts, metadata and scene loads
       do not qualify remaining robot/map/backend missions. See docs/REMAINING_WORK_GUIDE.md.'
+  R13:
+    acceptance_ref: ROADMAP.md R13
+    depends_on:
+    - R5.1
+    evidence:
+    - docs/status/evidence/vacuum-2026-11/README.md
+    - docs/tutorials/robot-vacuum.md
+    - docs/learn/07-robot-vacuum-inside.md
+    implementation_summary: 'robot_lab_vacuum_cleaning: room division, coverage lanes/edges/zones/spot,
+      mapping run, keep-outs, path-projection follower, LiDAR obstacle stop, stall detector, dock,
+      battery/recharge-resume, dustbin/auto-empty, consumables, schedules, history; oomwoo Fortress
+      model; Vacuum workspace app.'
+    implementation_validation: '2026-11-10 Gazebo (small_house, cleaning_screen): office 95.4 %, keep-out
+      zone 99.6 % (no body entry, no wall crossing), spot 90.7 %, hidden low box 97.5 % (stall detector),
+      bedroom with 10 recharges 98.4 %, whole home 96.3 % (141.6 m2, 77 min, auto-empty once); MuJoCo
+      keep-out zone 99.6 %; all docked within 0.051 m / 4.6 deg by truth. Mapping run failed (explore
+      loop, fixed 84dc2704, re-run pending). Core tests 24, GUI tests 9.'
+    owner: claude
+    scope_paths:
+    - src/robot_lab_vacuum_cleaning/
+    - src/robot_lab_robots/oomwoo/
+    - src/robot_lab_gui/robot_lab_gui/cleaning_tab.py
+    - docs/
+    state: partial
+    title: Robot-vacuum cleaning system (OOMWOO-class)
   R2:
     next_task: R3.4
     owner: cline-agent
@@ -4875,7 +4903,7 @@ tasks:
     qualification_review: '2026-10-27 documentation review: retain the implemented code, tests and named mission
       certificates. Full declared roadmap acceptance is still open; test counts, metadata and scene loads
       do not qualify remaining robot/map/backend missions. See docs/REMAINING_WORK_GUIDE.md.'
-updated: '2026-11-09'
+updated: '2026-11-10'
 runtime_completion_20261027:
   owner: codex
   state: partial

@@ -1,0 +1,203 @@
+{
+ "gazebo_bedroom_recharge": {
+  "area_m2": 24.36,
+  "battery_end": 27.6,
+  "battery_start": 100.0,
+  "bin_empties": 0,
+  "coverage_pct": 98.4,
+  "distance_m": 294.3,
+  "dock_error_m": 0.042,
+  "dock_yaw_error_deg": -0.6,
+  "duration_s": 2648.3,
+  "edge": true,
+  "estimate_s": 842.6,
+  "events": 5,
+  "final_state": "charging",
+  "localisation_error_m": {
+   "max": 1.084,
+   "mean": 0.059
+  },
+  "mode": "rooms",
+  "passes": 1,
+  "recharges": 10,
+  "result": "completed",
+  "sensors": {
+   "bumper_messages": 0,
+   "cliff": {
+    "front_left": 0.0049,
+    "front_right": 0.0049
+   }
+  },
+  "skipped": 3,
+  "suction": "standard",
+  "trail_samples": 2576
+ },
+ "gazebo_rooms_office": {
+  "area_m2": 9.57,
+  "battery_end": 96.4,
+  "battery_start": 100.0,
+  "bin_empties": 0,
+  "coverage_pct": 95.4,
+  "distance_m": 57.4,
+  "dock_error_m": 0.038,
+  "dock_yaw_error_deg": -3.6,
+  "duration_s": 323.4,
+  "edge": true,
+  "estimate_s": 374.4,
+  "events": 1,
+  "final_state": "charging",
+  "localisation_error_m": {
+   "max": 0.143,
+   "mean": 0.05
+  },
+  "mode": "rooms",
+  "passes": 1,
+  "recharges": 0,
+  "result": "completed",
+  "sensors": {
+   "bumper_messages": 0,
+   "cliff": {
+    "front_left": 0.0049,
+    "front_right": 0.0049
+   }
+  },
+  "skipped": 1,
+  "suction": "standard",
+  "trail_samples": 315
+ },
+ "gazebo_spot": {
+  "area_m2": 2.96,
+  "battery_end": 98.0,
+  "battery_start": 100.0,
+  "bin_empties": 0,
+  "coverage_pct": 90.7,
+  "distance_m": 36.4,
+  "dock_error_m": 0.051,
+  "dock_yaw_error_deg": -1.6,
+  "duration_s": 179.2,
+  "edge": true,
+  "estimate_s": 205.2,
+  "events": 0,
+  "final_state": "charging",
+  "localisation_error_m": {
+   "max": 0.083,
+   "mean": 0.031
+  },
+  "mode": "spot",
+  "passes": 1,
+  "recharges": 0,
+  "result": "completed",
+  "sensors": {
+   "bumper_messages": 0,
+   "cliff": {
+    "front_left": 0.0049,
+    "front_right": 0.0049
+   }
+  },
+  "skipped": 0,
+  "suction": "standard",
+  "trail_samples": 175
+ },
+ "gazebo_zone_keepout": {
+  "area_m2": 10.0,
+  "battery_end": 95.9,
+  "battery_start": 100.0,
+  "bin_empties": 0,
+  "coverage_pct": 99.6,
+  "distance_m": 64.8,
+  "dock_error_m": 0.048,
+  "dock_yaw_error_deg": 3.0,
+  "duration_s": 367.3,
+  "edge": false,
+  "estimate_s": 414.7,
+  "events": 0,
+  "final_state": "charging",
+  "localisation_error_m": {
+   "max": 0.137,
+   "mean": 0.048
+  },
+  "mode": "zones",
+  "no_go_body_entered": false,
+  "no_go_min_centre_distance_m": 0.26,
+  "passes": 1,
+  "recharges": 0,
+  "result": "completed",
+  "sensors": {
+   "bumper_messages": 0,
+   "cliff": {
+    "front_left": 0.0049,
+    "front_right": 0.0049
+   }
+  },
+  "skipped": 0,
+  "suction": "standard",
+  "trail_samples": 358,
+  "wall_crossings": 0
+ },
+ "gazebo_zone_low_box": {
+  "area_m2": 12.42,
+  "battery_end": 96.6,
+  "battery_start": 100.0,
+  "bin_empties": 0,
+  "coverage_pct": 99.6,
+  "distance_m": 62.5,
+  "dock_error_m": 0.027,
+  "dock_yaw_error_deg": -2.6,
+  "duration_s": 307.0,
+  "edge": false,
+  "estimate_s": 355.8,
+  "events": 0,
+  "final_state": "charging",
+  "localisation_error_m": {
+   "max": 1.225,
+   "mean": 0.112
+  },
+  "mode": "zones",
+  "passes": 1,
+  "recharges": 0,
+  "result": "completed",
+  "sensors": {
+   "bumper_messages": 0,
+   "cliff": {
+    "front_left": 0.0049,
+    "front_right": 0.0049
+   }
+  },
+  "skipped": 0,
+  "suction": "standard",
+  "trail_samples": 299
+ },
+ "mujoco_zone_keepout": {
+  "area_m2": 10.01,
+  "battery_end": 95.5,
+  "battery_start": 100.0,
+  "bin_empties": 0,
+  "coverage_pct": 99.6,
+  "distance_m": 65.4,
+  "dock_error_m": 0.041,
+  "dock_yaw_error_deg": -3.4,
+  "duration_s": 471.7,
+  "edge": false,
+  "estimate_s": 414.7,
+  "events": 0,
+  "final_state": "charging",
+  "localisation_error_m": {
+   "max": 0.21,
+   "mean": 0.086
+  },
+  "mode": "zones",
+  "no_go_body_entered": false,
+  "no_go_min_centre_distance_m": 0.228,
+  "passes": 1,
+  "recharges": 0,
+  "result": "completed",
+  "sensors": {
+   "bumper_messages": 0,
+   "cliff": {}
+  },
+  "skipped": 0,
+  "suction": "standard",
+  "trail_samples": 451,
+  "wall_crossings": 0
+ }
+}

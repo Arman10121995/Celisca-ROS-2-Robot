@@ -1,5 +1,28 @@
 # Current Robot Lab status
 
+November 10:
+- **Robot vacuum** (R13, OOMWOO-class `oomwoo`, small_house): all
+  recorded cleaning jobs pass `cleaning_screen`:
+  - office 95.4 %;
+  - keep-out zone 99.6 % with no body entry or wall crossing;
+  - spot beside furniture 90.7 %;
+  - hidden low box 97.5 %, found by the LiDAR stall detector;
+  - bedroom with 10 recharge stops 98.4 %;
+  - MuJoCo keep-out zone 99.6 %;
+  - whole home 96.3 % (141.6 m², 77 min, one auto-empty stop).
+
+  Every run docked within 0.051 m by truth. The first mapping run looped
+  (fixed); the Gazebo bumper contact topic is not created
+  ([evidence](evidence/vacuum-2026-11/README.md)).
+- **Docs:** [Learn Robot Lab from zero](../learn/README.md), an illustrated
+  beginner course:
+  - 8 chapters, 46 diagrams and 21 generated figures/animations;
+  - visual sections in the algorithm tutorials;
+  - the GUI's **Docs & tutorials** library shows it structured, with
+    figures, animations and rendered diagrams.
+- **Fix:** `sensor_fusion.ComplementaryImu` integrated the wrong gyro axes
+  (found while drawing its figure); fixed and tested.
+
 November 9 (recorded from the November 5 queues):
 - **Car course** (R5.5, round 62): the heading shuffle plus a straight
   depth trim passes the full course in 10 of 12 cells, parking within

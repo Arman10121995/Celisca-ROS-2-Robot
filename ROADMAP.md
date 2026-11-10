@@ -1877,6 +1877,58 @@ screens. Open:
 - G1 command tracking; Go2W strafe;
 - GPU training.
 
+## R13 — Robot-vacuum cleaning system (OOMWOO-class)
+
+Requested 2026-11-09: a complete commercial-style robot-vacuum system for the
+OOMWOO robot in the Cleaning missions workspace. Implemented and
+experimental:
+
+- **Core:** `robot_lab_vacuum_cleaning` is a pure-Python core plus a node.
+  - Room division (watershed on clearance), merge and split.
+  - Coverage lanes with an optional cross-hatched second pass; edges first;
+    zones with an outline pass.
+  - Spot (a spiral, or outline + lanes beside furniture) and mapping runs
+    (frontiers).
+  - No-go areas and virtual walls with a 12 cm berth.
+  - A path-projection follower; LiDAR obstacle stop and detour; a LiDAR
+    stall detector (virtual bumper); stuck recovery.
+  - Dock return and alignment.
+  - Battery model with recharge and resume; dustbin with auto-empty dock;
+    consumables; schedules and do-not-disturb; run history.
+- **Model:** `oomwoo` is a Gazebo Fortress model with lab-chosen dimensions,
+  because OOMWOO's hardware is not frozen: LiDAR turret, ring bumper,
+  cliff sensors and an IMU.
+- **GUI:** the Vacuum workspace has a live map with tools and the Clean,
+  Rooms, Schedule, History, Care and Setup pages.
+- **Docs:** [guide](docs/tutorials/robot-vacuum.md),
+  [how it works](docs/learn/07-robot-vacuum-inside.md).
+
+**Measured 2026-11-10**
+([evidence](docs/status/evidence/vacuum-2026-11/README.md), `cleaning_screen`).
+All pass:
+- office 95.4 %;
+- zone with a no-go box and a virtual wall, 99.6 % (centre ≥ 0.26 m from
+  the box, no crossings);
+- spot beside furniture, 90.7 %;
+- zone with a hidden 6 cm box, 97.5 %, found by the stall detector;
+- bedroom with 10 recharge stops, 98.4 %;
+- the keep-out zone in MuJoCo, 99.6 %;
+- the whole home, 96.3 % (141.6 m², 77 min, one auto-empty stop).
+
+Every run docked within 0.051 m and 4.6° of the dock by truth.
+
+The first mapping run looped at its start (fixed in 84dc2704; re-run
+pending). Gazebo never created the bumper's contact topic.
+
+Acceptance (open):
+- mapping-run evidence;
+- repeats and more houses;
+- PyBullet and Isaac;
+- a physical bumper or contact topic;
+- live GUI-driven runs (the app is checked with fed-message GUI tests and
+  screenshots);
+- carpet, mopping and camera obstacle classes (not implemented).
+
 ## Common implementation and evidence contract
 
 Every task requires scoped code/config/assets, dependencies and provenance,

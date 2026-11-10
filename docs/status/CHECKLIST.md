@@ -23,7 +23,11 @@ pending a fresh run after resumption. [Resume checkpoint](curves-terrain-concurr
 
 Latest November 2: [automatic native fleet lift transport](evidence/automatic-floor-transport-2026-11-02/README.md) completed one Bumperbot L0-L1-L0 with autonomous boarding, map/costmap transitions and settled exits. The GUI Facility request is implemented. A real native SDK L0-L1-L0 mission also passed in 359.063 wall seconds; actual SDK process-loss/resumption held the car and required explicit re-enablement. Broader multi-robot cases remain separate. Full platform acceptance remains partial.
 
-**Current checkpoint: November 3, 2026; platform/extension partial.**
+- [x] R13 robot-vacuum cleaning system (OOMWOO-class): rooms, zones, spot, edges, mapping run, keep-outs, dock, recharge/resume, auto-empty, schedules, history; Vacuum workspace app. Gazebo office/keep-out/spot/low-box/recharge/whole-home and MuJoCo keep-out jobs pass `cleaning_screen` ([evidence](evidence/vacuum-2026-11/README.md)).
+- [ ] R13 mapping-run evidence (fix 84dc2704 pending re-run), repeats, more houses, PyBullet/Isaac, a working bumper contact topic, live GUI-driven runs.
+- [x] Illustrated beginner course (docs/learn) and visual algorithm tutorials, structured in the GUI's Docs & tutorials library with inline figures, animations and rendered diagrams.
+
+**Current checkpoint: November 10, 2026; platform/extension partial.**
 
 Use [the detailed agent execution guide](../REMAINING_WORK_GUIDE.md). These
 checks describe delivered initial features; a full roadmap task closes only

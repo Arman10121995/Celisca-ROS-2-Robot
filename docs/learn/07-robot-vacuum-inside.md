@@ -180,8 +180,14 @@ flowchart LR
 
 The recorded Gazebo runs (`scripts/sim_vacuum_mission.sh`) are judged
 against the simulator's truth: coverage, keep-out compliance, and the final
-pose against the dock. See [chapter 8](08-evidence-and-testing.md) for the
-method and [current status](../status/CURRENT_STATUS.md) for the numbers.
+pose against the dock ([chapter 8](08-evidence-and-testing.md)). The whole
+home, measured in Gazebo on 10 November 2026: 96.3 % of the reachable floor
+(141.6 m²) in 77 minutes, one auto-empty stop, back on the dock within
+3.6 cm. Green is cleaned; orange is the true path:
+
+![Whole-home run in Gazebo](../status/evidence/vacuum-2026-11/figures/gazebo_whole_home.png)
+
+All runs: [evidence](../status/evidence/vacuum-2026-11/README.md).
 
 ## Try it
 
