@@ -366,6 +366,7 @@ class Mission:
         self.explore_empty_checks = 0
         self.explore_wait_until = -math.inf
         self.escapes = 0
+        self.rejoin_target: Optional[Point] = None
         self.bump_log: Deque[Tuple[float, List[Tuple[int, int]]]] = deque()
         self.wedges = 0
         # Mopping and carpets.
@@ -801,13 +802,26 @@ class Mission:
         disc = (xx - ix) ** 2 + (yy - iy) ** 2 <= r * r
         window = self.session_blocked[y0:y1, x0:x1]          # recognised objects stay
         cleared = int((window & disc).sum())
-        if not cleared:
-            return False
-        window[disc] = False
         self.escapes += 1
+        if not cleared:
+            return self._rejoin(pose)
+        window[disc] = False
         self.rebuild_planning_map()
         self.log('warn', 'Hemmed in by obstacles found on this run; forgetting those within %.0f cm to get free (%d/%d)'
                  % (100 * radius, self.escapes, ESCAPE_LIMIT))
+        return True
+
+    def _rejoin(self, pose) -> bool:
+        """The estimate sits in a pocket the map itself closes (it drifted
+        while wheels slipped, or the body is under furniture the map shows as
+        solid): drive straight to the nearest cell of the main free area.
+        The LiDAR obstacle stop still guards the move."""
+        target = self.pmap.nearest_main(pose[:2])
+        if target is None:
+            return False
+        self.log('warn', 'Position estimate is in a closed pocket of the map; heading to open floor at (%.2f, %.2f)'
+                 % target)
+        self.rejoin_target = target
         return True
 
     def _cmd_ignore_object(self, cmd):
@@ -1148,7 +1162,13 @@ class Mission:
                                           unknown_is_blocked=False)
             path = lenient.astar(self.pose[:2], pre) or lenient.astar(self.pose[:2], dock[:2])
         if path is None and self._free_if_trapped(self.pose):
-            path = self.pmap.astar(self.pose[:2], pre) or self.pmap.astar(self.pose[:2], dock[:2])
+            start, lead = self.pose[:2], []
+            if self.rejoin_target is not None:
+                start, self.rejoin_target = self.rejoin_target, None
+                lead = planner.segment_points(tuple(self.pose[:2]), start)
+            home = self.pmap.astar(start, pre) or self.pmap.astar(start, dock[:2])
+            if home is not None:
+                path = lead + home
         if path is None:
             self.state = 'error'
             self.error = 'Cannot find a way back to the dock'
@@ -1268,6 +1288,11 @@ class Mission:
                         break
                 if path is None:
                     if self._free_if_trapped(pose):
+                        if self.rejoin_target is not None:
+                            target, self.rejoin_target = self.rejoin_target, None
+                            self._begin(Task('transit', planner.segment_points(tuple(pose[:2]), target),
+                                             task.room, task.suction))
+                            return True
                         continue           # try the same task again from the freed pose
                     self.tasks.popleft()
                     self.job['skipped'] += 1

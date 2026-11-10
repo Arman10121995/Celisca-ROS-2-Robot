@@ -104,6 +104,27 @@ class PlanningMap:
             self._components, _ = ndimage.label(self.traversable, structure=np.ones((3, 3)))
         return self._components
 
+    def nearest_main(self, point: Point, max_distance: float = 1.5) -> Optional[Point]:
+        """Nearest cell of the largest traversable area within ``max_distance``
+        (to rejoin it from a pose estimate that drifted into a pocket)."""
+        labels = self.components()
+        ids, counts = np.unique(labels[labels > 0], return_counts=True)
+        if not len(ids):
+            return None
+        main = ids[np.argmax(counts)]
+        ix, iy = self.grid.world_to_cell(*point)
+        r = int(math.ceil(max_distance / self.resolution))
+        x0, x1 = max(ix - r, 0), min(ix + r + 1, self.grid.width)
+        y0, y1 = max(iy - r, 0), min(iy + r + 1, self.grid.height)
+        ys, xs = np.nonzero(labels[y0:y1, x0:x1] == main)
+        if not len(xs):
+            return None
+        d = (xs + x0 - ix) ** 2 + (ys + y0 - iy) ** 2
+        k = int(np.argmin(d))
+        if d[k] > r * r:
+            return None
+        return self.grid.cell_to_world(int(xs[k] + x0), int(ys[k] + y0))
+
     def reachable_from(self, point: Point) -> np.ndarray:
         cell = self.snap(point)
         if cell is None:

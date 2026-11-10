@@ -600,3 +600,21 @@ def test_a_closer_sighting_refines_an_object(tmp_path):
     assert (shoe['x'], shoe['y'], shoe['radius']) == (3.1, 1.1, 0.12) and shoe['seen'] == 2
     ix, iy = grid.world_to_cell(3.1 + 0.12 + 0.06 + 0.05, 1.1)
     assert mission.object_blocked[iy, ix]
+
+
+def test_estimate_in_a_pocket_the_map_closes_rejoins_open_floor(tmp_path):
+    grid = two_rooms()
+    world = World(Grid(RES, grid.origin, grid.data.copy()), (2.0, 2.0, 0.0))   # the real floor is open
+    mission = make_mission(tmp_path, grid, (1.0, 1.0, 0.0))
+    mission.command({'cmd': 'start', 'mode': 'zones', 'zones': [[0.2, 0.2, 3.8, 3.8]], 'edge': False})
+    # The map (not the world) shows a closed 1.2 m box around the robot's
+    # estimate, as when the estimate drifted under furniture.
+    closed = mission.grid.data.copy()
+    closed[28:52, 28:52] = 100
+    closed[31:49, 31:49] = -1                      # unknown inside: nothing traversable
+    mission.update_map(Grid(RES, grid.origin, closed))
+    mission.step(0.0, (2.0, 2.0, 0.0), Sense())
+    mission.active = mission.follower = None
+    run(mission, world, 2500, until=lambda m: m.job is None)
+    assert any('closed pocket' in e['text'] for e in mission.events)
+    assert mission.last_record['coverage_pct'] > 60.0 and mission.state != 'error'
