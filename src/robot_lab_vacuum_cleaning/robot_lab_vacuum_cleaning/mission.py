@@ -41,6 +41,12 @@ REFILL_S = 20.0
 # mess must never be touched, a shoe can be passed closely.
 OBJECT_BERTH = {'cable': 0.15, 'sock': 0.10, 'shoe': 0.06, 'pet_waste': 0.35}
 OBJECT_MERGE_M = 0.25
+# Added to every class berth: the robot's own localisation error (10-20 cm
+# in the furnished houses) must not carry the body into an object.
+OBJECT_MARGIN_M = 0.08
+# A sighting this much closer than the best one so far replaces the
+# object's position and size (projection error grows with range).
+OBJECT_REFINE_M = 0.15
 # Obstacles found on a run are remembered as blocked cells.  Several bumps in
 # a tight spot can wall the robot in; it then forgets those within this
 # radius, then twice, three times ... (never the map's own walls or
@@ -373,6 +379,7 @@ class Mission:
         # Camera-recognised floor objects: remembered across jobs until ignored.
         self.objects: List[Dict] = []
         self.object_detector = ''
+        self.object_blocked: Optional[np.ndarray] = None   # recognised objects, kept apart from bump marks
 
     # ------------------------------------------------------------------
     # Logging and layout
@@ -454,8 +461,13 @@ class Mission:
     def rebuild_planning_map(self) -> None:
         if self.grid is None:
             return
+        if self.object_blocked is None or self.object_blocked.shape != self.grid.data.shape:
+            self._refresh_object_mask()
+        extra = self.session_blocked
+        if extra is not None and extra.shape == self.object_blocked.shape:
+            extra = extra | self.object_blocked
         self.pmap = planner.PlanningMap(self.grid, self.config.robot_radius, self.config.margin,
-                                        keepout=self.keepout(), extra_blocked=self.session_blocked)
+                                        keepout=self.keepout(), extra_blocked=extra)
         carpet = np.zeros(self.grid.data.shape, dtype=bool)
         for area in self.layout.get('carpets', []):
             if len(area.get('polygon', [])) >= 3:
@@ -648,17 +660,21 @@ class Mission:
         return True, message
 
     def _object_mask(self, obj: Dict) -> np.ndarray:
-        r = float(obj.get('radius', 0.05)) + OBJECT_BERTH.get(obj['class'], 0.08)
+        """A disc of the object's radius plus its class berth and the
+        localisation margin (the planning map adds the body radius)."""
+        r = float(obj.get('radius', 0.05)) + OBJECT_BERTH.get(obj['class'], 0.08) + OBJECT_MARGIN_M
         return self.grid.polygon_mask([(obj['x'] + r * math.cos(a), obj['y'] + r * math.sin(a))
                                        for a in np.linspace(0, 2 * math.pi, 16, endpoint=False)])
 
-    def _mark_object(self, obj: Dict) -> np.ndarray:
-        """Block a disc of the object's radius plus its class berth (the
-        planning map adds the body radius); returns the cells newly blocked."""
-        mask = self._object_mask(obj)
-        fresh = mask & ~self.session_blocked
-        self.session_blocked |= mask
-        return fresh
+    def _refresh_object_mask(self) -> np.ndarray:
+        """Rebuild the recognised-object layer; returns the cells newly blocked."""
+        old = self.object_blocked
+        mask = np.zeros(self.grid.data.shape, dtype=bool)
+        for obj in self.objects:
+            if not obj.get('ignored'):
+                mask |= self._object_mask(obj)
+        self.object_blocked = mask
+        return mask if old is None or old.shape != mask.shape else mask & ~old
 
     def report_objects(self, objects: Sequence[Dict], detector: str = '') -> List[Dict]:
         """Objects a detector sees now (map frame).  New ones are remembered,
@@ -667,33 +683,38 @@ class Mission:
         if self.grid is None or self.session_blocked is None:
             return []
         self.object_detector = detector or self.object_detector
-        new = []
+        new, changed = [], False
         for o in objects:
             cls = o.get('class')
             if cls not in OBJECT_BERTH:
                 continue
+            rng = math.dist(self.pose[:2], (o['x'], o['y'])) if self.pose else math.inf
             same = [k for k in self.objects if k['class'] == cls and
                     math.dist((k['x'], k['y']), (o['x'], o['y'])) < OBJECT_MERGE_M + k['radius']]
             if same:
                 k = same[0]
                 k['seen'] += 1
-                k['radius'] = max(k['radius'], min(0.4, float(o.get('radius', 0.05))))
+                if rng < k.get('range', math.inf) - OBJECT_REFINE_M:
+                    # A closer look: its position and size replace the earlier ones.
+                    k.update(x=float(o['x']), y=float(o['y']), range=round(rng, 2),
+                             radius=min(0.4, float(o.get('radius', 0.05))))
+                    changed = True
                 continue
             obj = {'id': 'o%d' % (len(self.objects) + 1), 'class': cls, 'x': float(o['x']), 'y': float(o['y']),
                    'radius': min(0.4, float(o.get('radius', 0.05))), 'seen': 1, 'ignored': False,
-                   't': time.time()}
+                   'range': round(rng, 2), 't': time.time()}
             self.objects.append(obj)
             new.append(obj)
-            fresh = self._mark_object(obj)
-            if self.target_mask is not None:
-                # Floor the robot now keeps away from is no longer a target.
-                self.target_mask &= ~planner.dilate(fresh, self.config.robot_radius / self.grid.resolution)
             if self.job is not None:
                 self.job['events'] += 1
                 self.job.setdefault('objects', []).append(dict(obj))
             self.log('info', 'Spotted a %s at (%.2f, %.2f); keeping %.0f cm away' % (
                 cls.replace('_', ' '), obj['x'], obj['y'], 100 * OBJECT_BERTH[cls]))
-        if new:
+        if new or changed:
+            fresh = self._refresh_object_mask()
+            if self.target_mask is not None:
+                # Floor the robot now keeps away from is no longer a target.
+                self.target_mask &= ~planner.dilate(fresh, self.config.robot_radius / self.grid.resolution)
             self.rebuild_planning_map()
             self._reroute_active()
         return new
@@ -778,15 +799,11 @@ class Mission:
         x0, x1 = max(ix - r, 0), min(ix + r + 1, self.grid.width)
         yy, xx = np.ogrid[y0:y1, x0:x1]
         disc = (xx - ix) ** 2 + (yy - iy) ** 2 <= r * r
-        keep = np.zeros(self.session_blocked.shape, dtype=bool)
-        for obj in self.objects:
-            if not obj.get('ignored'):
-                keep |= self._object_mask(obj)
-        window = self.session_blocked[y0:y1, x0:x1]
-        cleared = int((window & disc & ~keep[y0:y1, x0:x1]).sum())
+        window = self.session_blocked[y0:y1, x0:x1]          # recognised objects stay
+        cleared = int((window & disc).sum())
         if not cleared:
             return False
-        window[disc & ~keep[y0:y1, x0:x1]] = False
+        window[disc] = False
         self.escapes += 1
         self.rebuild_planning_map()
         self.log('warn', 'Hemmed in by obstacles found on this run; forgetting those within %.0f cm to get free (%d/%d)'
@@ -798,12 +815,16 @@ class Mission:
         if obj is None:
             return False, 'No object %r' % cmd.get('id')
         obj['ignored'] = True
+        self._refresh_object_mask()
+        self.rebuild_planning_map()
         return True, 'The %s at (%.2f, %.2f) will be cleaned over from the next job' % (
             obj['class'].replace('_', ' '), obj['x'], obj['y'])
 
     def _cmd_forget_objects(self, _cmd):
         n = len(self.objects)
         self.objects = []
+        self._refresh_object_mask()
+        self.rebuild_planning_map()
         return True, 'Forgot %d recognised objects' % n
 
     def _cmd_set_dock(self, cmd):
@@ -893,9 +914,7 @@ class Mission:
             self.save_layout()
             self.log('info', 'Dock set at the start position')
         self.session_blocked[:] = False
-        for obj in self.objects:
-            if not obj.get('ignored'):
-                self._mark_object(obj)
+        self._refresh_object_mask()
         self.rebuild_planning_map()
         self._clear_motion()
         self.tasks.clear()

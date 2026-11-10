@@ -540,14 +540,14 @@ def test_recognised_pet_mess_is_avoided_with_its_berth_and_can_be_ignored(tmp_pa
     record = mission.last_record
     assert record['result'] == 'completed' and record['coverage_pct'] > 85.0
     closest = min(math.dist(p[:2], mess) for p in trail)
-    assert closest > 0.03 + 0.35 + 0.15 - 0.03, closest       # object + berth + body radius (- cell)
+    assert closest > 0.03 + 0.35 + 0.08 + 0.15 - 0.03, closest   # object + berth + margin + body (- cell)
     assert record['objects_avoided'][0]['class'] == 'pet_waste'
     assert mission.status()['objects'][0]['id'] == 'o1'
     assert mission.command({'cmd': 'ignore_object', 'id': 'o1'})[0]
     run(mission, world, 600, until=lambda m: m.state in ('docked', 'charging'))
     assert mission.command({'cmd': 'start', 'mode': 'zones', 'zones': [[0.2, 0.2, 3.8, 3.8]], 'edge': False})[0]
     ix, iy = grid.world_to_cell(*mess)
-    assert not mission.session_blocked[iy, ix]                  # ignored: cleaned over next time
+    assert not mission.object_blocked[iy, ix] and mission.pmap.traversable[iy, ix]   # ignored: cleaned over
 
 
 def test_robot_walled_in_by_its_own_obstacle_marks_frees_itself(tmp_path):
@@ -588,3 +588,15 @@ def test_wedged_robot_backs_out_then_asks_for_help(tmp_path):
             mission.maneuvers.clear()
         t += 40.0
     assert mission.state == 'error' and 'Stuck' in mission.error
+
+
+def test_a_closer_sighting_refines_an_object(tmp_path):
+    grid = two_rooms()
+    mission = make_mission(tmp_path, grid, (1.0, 1.0, 0.0))
+    mission.report_objects([{'class': 'shoe', 'x': 3.0, 'y': 1.2, 'radius': 0.25}])     # far, rough
+    mission.pose = (2.4, 1.0, 0.0)
+    mission.report_objects([{'class': 'shoe', 'x': 3.1, 'y': 1.1, 'radius': 0.12}])     # closer
+    (shoe,) = mission.objects
+    assert (shoe['x'], shoe['y'], shoe['radius']) == (3.1, 1.1, 0.12) and shoe['seen'] == 2
+    ix, iy = grid.world_to_cell(3.1 + 0.12 + 0.06 + 0.05, 1.1)
+    assert mission.object_blocked[iy, ix]

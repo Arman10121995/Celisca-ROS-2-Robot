@@ -203,6 +203,7 @@ class VacuumCleaner(Node):
         self.history_sent = -1
         self.started_at = time.monotonic()
         self.auto_started = False
+        self.error_since = None
         self.auto_job = None
         self.auto_cmd = None
         auto = str(gp('auto_start') or '').strip()
@@ -393,6 +394,14 @@ class VacuumCleaner(Node):
                 if not ok:
                     self._write_report({'result': 'not started', 'message': message})
             return
+        # Headless: nobody will press Resume, so an error that lasts ends the job.
+        if self.auto_job and self.mission.job and self.mission.state == 'error':
+            if self.error_since is None:
+                self.error_since = time.monotonic()
+            elif time.monotonic() - self.error_since > 30.0:
+                self.mission._finish_job('error: %s' % self.mission.error)
+        else:
+            self.error_since = None
         record = self.mission.last_record
         if self.auto_job and record and record.get('id') == self.auto_job and \
                 self.mission.state not in ('returning', 'docking', 'emptying', 'refilling'):
@@ -586,6 +595,9 @@ def main(args=None):
         rclpy.spin(node)
     except (KeyboardInterrupt, SystemExit):
         pass
+    except RuntimeError:
+        if rclpy.ok():
+            raise          # a message taken while shutting down is not an error
     finally:
         try:
             node.cmd_pub.publish(Twist())
