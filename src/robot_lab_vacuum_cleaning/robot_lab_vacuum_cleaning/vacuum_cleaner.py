@@ -12,6 +12,7 @@ Interfaces
   sub  /bumper                 ros_gz_interfaces/Contacts (optional)
   sub  /cliff/*                sensor_msgs/LaserScan, downward range (optional)
   sub  /vacuum/command         std_msgs/String JSON {"cmd": "start", ...}
+  sub  /vacuum/objects         std_msgs/String JSON, camera-recognised floor objects (vacuum_objects.py)
   pub  /cmd_vel                geometry_msgs/Twist
   pub  /vacuum/status          std_msgs/String JSON, 2 Hz
   pub  /vacuum/layout          std_msgs/String JSON (latched): rooms, zones, settings
@@ -157,6 +158,7 @@ class VacuumCleaner(Node):
         self.create_subscription(OccupancyGrid, gp('map_topic'), self._map_cb, LATCHED)
         self.create_subscription(LaserScan, gp('scan_topic'), self._scan_cb, qos_profile_sensor_data)
         self.create_subscription(String, '/vacuum/command', self._command_cb, 20)
+        self.create_subscription(String, '/vacuum/objects', self._objects_cb, 10)
         if gp('truth_topic'):
             self.create_subscription(Odometry, gp('truth_topic'), self._truth_cb, qos_profile_sensor_data)
         if Contacts is not None and gp('bumper_topic'):
@@ -431,6 +433,15 @@ class VacuumCleaner(Node):
     # ------------------------------------------------------------------
     # Commands
     # ------------------------------------------------------------------
+    def _objects_cb(self, msg: String):
+        try:
+            data = json.loads(msg.data)
+        except ValueError:
+            return
+        detector = str(data.get('detector', '')) + (' (ideal: simulator labels)' if data.get('ideal') else '')
+        if self.mission.report_objects(data.get('objects') or [], detector):
+            self._publish_plan()
+
     def _command_cb(self, msg: String):
         try:
             cmd = json.loads(msg.data)

@@ -192,3 +192,21 @@ def test_carpet_tool_mop_request_and_water_status(tab):
     tab.carpet_boost_var.set(False)
     tab._save_settings()
     assert tab.sent[-1]['values']['carpet_boost'] is False and tab.sent[-1]['values']['auto_refill'] is True
+
+
+def test_recognised_objects_are_drawn_and_can_be_ignored(tab):
+    status = {'state': 'cleaning', 'map_ready': True, 'localised': True, 'job': {'mode': 'all'},
+              'objects': [{'id': 'o1', 'class': 'pet_waste', 'x': 5.0, 'y': 2.0, 'radius': 0.03, 'ignored': False},
+                          {'id': 'o2', 'class': 'cable', 'x': 2.0, 'y': 1.0, 'radius': 0.3, 'ignored': True}]}
+    tab._on_json('status', msg(status))
+    before = len(tab.canvas.find_withtag('overlay'))
+    tab._draw_overlays()
+    assert len(tab.canvas.find_withtag('overlay')) >= before
+    texts = [tab.canvas.itemcget(i, 'text') for i in tab.canvas.find_withtag('overlay')
+             if tab.canvas.type(i) == 'text']
+    assert '!' in texts and 'C' in texts
+    tab.apply_tool('erase', (5.05, 2.0), (5.05, 2.0), moved=False)
+    assert tab.sent[-1] == {'cmd': 'ignore_object', 'id': 'o1'}
+    count = len(tab.sent)
+    tab.apply_tool('erase', (2.0, 1.0), (2.0, 1.0), moved=False)      # already ignored: nothing to send
+    assert len(tab.sent) == count

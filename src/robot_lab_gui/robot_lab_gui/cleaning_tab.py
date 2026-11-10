@@ -31,7 +31,8 @@ TOOLS = [('select', 'Rooms', 'Click rooms to select them (click order = cleaning
          ('spot', 'Spot', 'Click a spot to clean intensively'),
          ('dock', 'Dock', 'Click the dock position, drag towards the way the robot faces when docked'),
          ('split', 'Split', 'Drag a line across a room to divide it'),
-         ('erase', 'Erase', 'Click a zone, no-go area, carpet or wall to remove it')]
+         ('erase', 'Erase', 'Click a zone, no-go area, carpet or wall to remove it, '
+                            'or a recognised object to clean over it next time')]
 STATE_TEXT = {
     'idle': ('Idle', 'PillIdle.TLabel'), 'docked': ('Docked', 'PillIdle.TLabel'),
     'charging': ('Charging', 'PillRunning.TLabel'), 'cleaning': ('Cleaning', 'PillRunning.TLabel'),
@@ -43,6 +44,9 @@ STATE_TEXT = {
 CLEAN_MODES = [('vacuum', 'Vacuum'), ('vacuum_mop', 'Vacuum + mop'), ('mop', 'Mop only')]
 WATER_FLOWS = ['low', 'medium', 'high']
 CARPET_COLOUR = '#c8a46e'
+# Camera-recognised floor objects: (map glyph, colour, label).
+OBJECT_STYLE = {'cable': ('C', '#ffd166', 'cable'), 'sock': ('S', '#9bd0ff', 'sock'),
+                'shoe': ('Sh', '#d4a373', 'shoe'), 'pet_waste': ('!', '#ff6b6b', 'pet mess')}
 DAYS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
 ROOM_COLOURS = [(110, 170, 230), (240, 170, 110), (140, 210, 150), (210, 140, 210), (230, 210, 120),
                 (120, 210, 210), (230, 130, 140), (170, 160, 240), (190, 220, 120), (240, 190, 200)]
@@ -152,7 +156,8 @@ class VacuumTab(LabTab):
         legend.grid(row=3, column=0, sticky='w', pady=(4, 0))
         for i, (colour, text) in enumerate([('#4fbf76', 'cleaned'), ('#ff9f43', 'path'),
                                             ('#5aa9ff', 'zone'), ('#ff5c7a', 'no-go / wall'),
-                                            (CARPET_COLOUR, 'carpet'), ('#ffe066', 'dock')]):
+                                            (CARPET_COLOUR, 'carpet'), ('#ffd166', 'object'),
+                                            ('#ffe066', 'dock')]):
             sw = tk.Canvas(legend, width=12, height=12, highlightthickness=0, background=colour)
             sw.grid(row=0, column=2 * i, padx=(0 if i == 0 else 10, 4))
             ttk.Label(legend, text=text, style='Muted.TLabel').grid(row=0, column=2 * i + 1)
@@ -1146,6 +1151,13 @@ class VacuumTab(LabTab):
             x, y = self.to_canvas(*self.spot_point)
             r = 0.8 * self.transform()[0]
             c.create_rectangle(x - r, y - r, x + r, y + r, outline='#5aa9ff', width=2, tags=('overlay',))
+        for obj in (self.status or {}).get('objects') or []:
+            glyph, colour, _ = OBJECT_STYLE.get(obj.get('class'), ('?', '#cccccc', 'object'))
+            if obj.get('ignored'):
+                colour = '#6b7d96'
+            x, y = self.to_canvas(obj['x'], obj['y'])
+            c.create_oval(x - 8, y - 8, x + 8, y + 8, fill=colour, outline='#101823', tags=('overlay',))
+            c.create_text(x, y, text=glyph, fill='#101823', font=('', 8, 'bold'), tags=('overlay',))
         dock = lay.get('dock') or (self.status or {}).get('dock')
         if dock:
             x, y = self.to_canvas(dock[0], dock[1])
@@ -1286,6 +1298,12 @@ class VacuumTab(LabTab):
     def _erase_at(self, point):
         lay = self.layout
         x, y = point
+        for obj in (self.status or {}).get('objects') or []:
+            if not obj.get('ignored') and math.hypot(obj['x'] - x, obj['y'] - y) < max(0.25, obj.get('radius', 0)):
+                self._send({'cmd': 'ignore_object', 'id': obj['id']})
+                self.message_var.set('The %s will be cleaned over from the next job.'
+                                     % OBJECT_STYLE.get(obj['class'], ('', '', 'object'))[2])
+                return
         zones = [z for z in lay.get('zones') or []
                  if not (z['rect'][0] <= x <= z['rect'][2] and z['rect'][1] <= y <= z['rect'][3])]
         def outside(area):

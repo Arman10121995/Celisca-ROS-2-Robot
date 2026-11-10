@@ -18,5 +18,7 @@ setup(
     description='Robot-vacuum cleaning system',
     license='MIT',
     tests_require=['pytest'],
-    entry_points={'console_scripts': ['vacuum_cleaner = robot_lab_vacuum_cleaning.vacuum_cleaner:main']},
+    entry_points={'console_scripts': [
+        'vacuum_cleaner = robot_lab_vacuum_cleaning.vacuum_cleaner:main',
+        'vacuum_object_detector = robot_lab_vacuum_cleaning.vacuum_objects:main']},
 )

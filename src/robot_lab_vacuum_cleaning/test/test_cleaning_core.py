@@ -508,3 +508,64 @@ def test_empty_water_tank_refills_at_the_dock_and_resumes(tmp_path):
     run(no_dock, world, 6000, until=lambda m: m.job is None)
     assert no_dock.last_record['refills'] == 0 and no_dock.last_record['mopped_m2'] < 3.0
     assert any('mopping stopped' in e['text'] for e in no_dock.events)
+
+
+def test_label_pixels_project_to_floor_objects():
+    from robot_lab_vacuum_cleaning.vacuum_objects import project_labels
+    k = [100.0, 0.0, 40.0, 0.0, 100.0, 30.0, 0.0, 0.0, 1.0]
+    # Optical frame (z forward, x right, y down) of a camera at (2, 1) facing +x.
+    cam_to_map = np.array([[0.0, 0.0, 1.0, 2.0], [-1.0, 0.0, 0.0, 1.0], [0.0, -1.0, 0.0, 0.1], [0, 0, 0, 1.0]])
+    labels = np.zeros((60, 80), dtype=np.uint8)
+    depth = np.full((60, 80), 1.5, dtype=np.float32)
+    labels[28:33, 38:43] = 23        # pet mess straight ahead, 1.5 m away
+    labels[28:33, 70:75] = 20        # a cable to the right
+    labels[0:2, 0:2] = 21            # too few pixels: ignored
+    objects = {o['class']: o for o in project_labels(labels, depth, k, cam_to_map, {20: 'cable', 21: 'sock', 23: 'pet_waste'})}
+    assert set(objects) == {'pet_waste', 'cable'}
+    assert objects['pet_waste']['x'] == pytest.approx(3.5, abs=0.02) and objects['pet_waste']['y'] == pytest.approx(1.0, abs=0.02)
+    assert objects['cable']['y'] < 0.6            # right of the camera is -y in the map
+
+
+def test_recognised_pet_mess_is_avoided_with_its_berth_and_can_be_ignored(tmp_path):
+    grid = two_rooms()
+    mission = make_mission(tmp_path, grid, (1.0, 1.0, 0.0))
+    world = World(grid, (1.0, 1.0, 0.0))
+    mission.command({'cmd': 'start', 'mode': 'zones', 'zones': [[0.2, 0.2, 3.8, 3.8]], 'edge': False})
+    run(mission, world, 30)
+    mess = (2.0, 2.0)
+    new = mission.report_objects([{'class': 'pet_waste', 'x': mess[0], 'y': mess[1], 'radius': 0.03}], 'test')
+    assert len(new) == 1 and not mission.report_objects([{'class': 'pet_waste', 'x': 2.05, 'y': 2.0}])  # merged
+    trail = []
+    run(mission, world, 2500, until=lambda m: trail.append(tuple(world.pose)) or m.job is None)
+    record = mission.last_record
+    assert record['result'] == 'completed' and record['coverage_pct'] > 85.0
+    closest = min(math.dist(p[:2], mess) for p in trail)
+    assert closest > 0.03 + 0.35 + 0.15 - 0.03, closest       # object + berth + body radius (- cell)
+    assert record['objects_avoided'][0]['class'] == 'pet_waste'
+    assert mission.status()['objects'][0]['id'] == 'o1'
+    assert mission.command({'cmd': 'ignore_object', 'id': 'o1'})[0]
+    run(mission, world, 600, until=lambda m: m.state in ('docked', 'charging'))
+    assert mission.command({'cmd': 'start', 'mode': 'zones', 'zones': [[0.2, 0.2, 3.8, 3.8]], 'edge': False})[0]
+    ix, iy = grid.world_to_cell(*mess)
+    assert not mission.session_blocked[iy, ix]                  # ignored: cleaned over next time
+
+
+def test_robot_walled_in_by_its_own_obstacle_marks_frees_itself(tmp_path):
+    grid = two_rooms()
+    mission = make_mission(tmp_path, grid, (1.0, 1.0, 0.0))
+    world = World(grid, (1.0, 1.0, 0.0))
+    mission.command({'cmd': 'start', 'mode': 'zones', 'zones': [[0.2, 0.2, 3.8, 3.8]], 'edge': False})
+    mission.step(0.0, (2.0, 2.0, 0.0), Sense())
+    world.pose = [2.0, 2.0, 0.0]
+    # A ring of remembered bump marks 0.2-0.9 m around the robot (as after
+    # several bumps in a tight spot): nothing is reachable from here.
+    yy, xx = np.mgrid[0:grid.height, 0:grid.width]
+    d = np.hypot((xx + 0.5) * RES - 2.0, (yy + 0.5) * RES - 2.0)
+    mission.session_blocked |= (d > 0.2) & (d < 0.9)      # no free cell within the 0.6 m snap radius
+    mission.rebuild_planning_map()
+    mission.active = mission.follower = None
+    run(mission, world, 2500, until=lambda m: m.job is None)
+    record = mission.last_record
+    assert any('Hemmed in' in e['text'] for e in mission.events)
+    assert record['result'] == 'completed' and record['coverage_pct'] > 85.0, record
+    assert mission.state in ('returning', 'docking', 'charging', 'docked')

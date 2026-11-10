@@ -36,6 +36,17 @@ MODES = ('all', 'rooms', 'zones', 'spot', 'edges', 'explore')
 CLEAN_MODES = ('vacuum', 'vacuum_mop', 'mop')
 WATER_FLOWS = {'low': 1.0, 'medium': 1.8, 'high': 2.6}    # ml of water per m2 mopped
 REFILL_S = 20.0
+# Floor objects a camera recognises, and how far the body keeps from each
+# (metres beyond the object's own radius): a cable can wrap the brush, pet
+# mess must never be touched, a shoe can be passed closely.
+OBJECT_BERTH = {'cable': 0.15, 'sock': 0.10, 'shoe': 0.06, 'pet_waste': 0.35}
+OBJECT_MERGE_M = 0.25
+# Obstacles found on a run are remembered as blocked cells.  Several bumps in
+# a tight spot can wall the robot in; it then forgets those within this
+# radius, then twice, three times ... (never the map's own walls or
+# recognised objects), at most ESCAPE_LIMIT times per job.
+ESCAPE_RADIUS_M = 0.45
+ESCAPE_LIMIT = 6
 WORK_KINDS = ('lane', 'edge', 'spot')
 
 
@@ -343,6 +354,7 @@ class Mission:
         self.explore_started = None
         self.explore_empty_checks = 0
         self.explore_wait_until = -math.inf
+        self.escapes = 0
         # Mopping and carpets.
         self.water_ml = float(config.water_tank_ml)
         self.mop_mode = 'vacuum'          # the running job's clean mode
@@ -351,6 +363,9 @@ class Mission:
         self.on_carpet = False
         self._water_warned = False
         self._refill_timer = 0.0
+        # Camera-recognised floor objects: remembered across jobs until ignored.
+        self.objects: List[Dict] = []
+        self.object_detector = ''
 
     # ------------------------------------------------------------------
     # Logging and layout
@@ -625,6 +640,135 @@ class Mission:
             message = message[:-1] + ', %d carpets)' % len(self.layout['carpets'])
         return True, message
 
+    def _object_mask(self, obj: Dict) -> np.ndarray:
+        r = float(obj.get('radius', 0.05)) + OBJECT_BERTH.get(obj['class'], 0.08)
+        return self.grid.polygon_mask([(obj['x'] + r * math.cos(a), obj['y'] + r * math.sin(a))
+                                       for a in np.linspace(0, 2 * math.pi, 16, endpoint=False)])
+
+    def _mark_object(self, obj: Dict) -> np.ndarray:
+        """Block a disc of the object's radius plus its class berth (the
+        planning map adds the body radius); returns the cells newly blocked."""
+        mask = self._object_mask(obj)
+        fresh = mask & ~self.session_blocked
+        self.session_blocked |= mask
+        return fresh
+
+    def report_objects(self, objects: Sequence[Dict], detector: str = '') -> List[Dict]:
+        """Objects a detector sees now (map frame).  New ones are remembered,
+        blocked with their class berth and the active path re-routed around
+        them; returns the new objects."""
+        if self.grid is None or self.session_blocked is None:
+            return []
+        self.object_detector = detector or self.object_detector
+        new = []
+        for o in objects:
+            cls = o.get('class')
+            if cls not in OBJECT_BERTH:
+                continue
+            same = [k for k in self.objects if k['class'] == cls and
+                    math.dist((k['x'], k['y']), (o['x'], o['y'])) < OBJECT_MERGE_M + k['radius']]
+            if same:
+                k = same[0]
+                k['seen'] += 1
+                k['radius'] = max(k['radius'], min(0.4, float(o.get('radius', 0.05))))
+                continue
+            obj = {'id': 'o%d' % (len(self.objects) + 1), 'class': cls, 'x': float(o['x']), 'y': float(o['y']),
+                   'radius': min(0.4, float(o.get('radius', 0.05))), 'seen': 1, 'ignored': False,
+                   't': time.time()}
+            self.objects.append(obj)
+            new.append(obj)
+            fresh = self._mark_object(obj)
+            if self.target_mask is not None:
+                # Floor the robot now keeps away from is no longer a target.
+                self.target_mask &= ~planner.dilate(fresh, self.config.robot_radius / self.grid.resolution)
+            if self.job is not None:
+                self.job['events'] += 1
+                self.job.setdefault('objects', []).append(dict(obj))
+            self.log('info', 'Spotted a %s at (%.2f, %.2f); keeping %.0f cm away' % (
+                cls.replace('_', ' '), obj['x'], obj['y'], 100 * OBJECT_BERTH[cls]))
+        if new:
+            self.rebuild_planning_map()
+            self._reroute_active()
+        return new
+
+    def _split_at_blocked(self, task: Task, points) -> List[Task]:
+        """The parts of a work path that stay on traversable cells."""
+        runs, run = [], []
+        for p in points:
+            if self.pmap.is_traversable(self.grid.world_to_cell(*p)):
+                run.append(p)
+            elif run:
+                runs.append(run)
+                run = []
+        if run:
+            runs.append(run)
+        return [Task(task.kind, r, task.room, task.suction, task.retries) for r in runs if len(r) >= 2]
+
+    def _reroute_active(self) -> None:
+        """Split the active and the queued work paths where they now cross
+        blocked cells; the parts are reached by A* (no back-off: nothing was hit)."""
+        queued = []
+        for t in self.tasks:
+            queued.extend(self._split_at_blocked(t, t.points) if t.clean else [t])
+        self.tasks.clear()
+        self.tasks.extend(queued)
+        task, follower = self.active, self.follower
+        if task is None or follower is None or not task.clean:
+            if task is not None and task.kind == 'transit':
+                self.active, self.follower = None, None   # re-plan the transit
+            return
+        rest = follower.remaining()
+        parts = self._split_at_blocked(task, rest)
+        if len(parts) == 1 and len(parts[0].points) == len(rest):
+            return                                       # still clear
+        self.active, self.follower = None, None
+        for part in reversed(parts):
+            self.tasks.appendleft(part)
+
+    def _free_if_trapped(self, pose) -> bool:
+        """Forget this run's obstacle marks near the robot when they wall it
+        in (less than 2 m2 of floor reachable).  Recognised objects and the
+        map are kept.  True when something was cleared."""
+        if pose is None or self.pmap is None or self.session_blocked is None or self.escapes >= ESCAPE_LIMIT:
+            return False
+        res = self.grid.resolution
+        if self.pmap.reachable_from(pose[:2]).sum() * res * res >= 2.0:
+            return False
+        ix, iy = self.grid.world_to_cell(*pose[:2])
+        radius = ESCAPE_RADIUS_M * (self.escapes + 1)    # wider each time
+        r = int(math.ceil(radius / res))
+        y0, y1 = max(iy - r, 0), min(iy + r + 1, self.grid.height)
+        x0, x1 = max(ix - r, 0), min(ix + r + 1, self.grid.width)
+        yy, xx = np.ogrid[y0:y1, x0:x1]
+        disc = (xx - ix) ** 2 + (yy - iy) ** 2 <= r * r
+        keep = np.zeros(self.session_blocked.shape, dtype=bool)
+        for obj in self.objects:
+            if not obj.get('ignored'):
+                keep |= self._object_mask(obj)
+        window = self.session_blocked[y0:y1, x0:x1]
+        cleared = int((window & disc & ~keep[y0:y1, x0:x1]).sum())
+        if not cleared:
+            return False
+        window[disc & ~keep[y0:y1, x0:x1]] = False
+        self.escapes += 1
+        self.rebuild_planning_map()
+        self.log('warn', 'Hemmed in by obstacles found on this run; forgetting those within %.0f cm to get free (%d/%d)'
+                 % (100 * radius, self.escapes, ESCAPE_LIMIT))
+        return True
+
+    def _cmd_ignore_object(self, cmd):
+        obj = next((o for o in self.objects if o['id'] == cmd.get('id')), None)
+        if obj is None:
+            return False, 'No object %r' % cmd.get('id')
+        obj['ignored'] = True
+        return True, 'The %s at (%.2f, %.2f) will be cleaned over from the next job' % (
+            obj['class'].replace('_', ' '), obj['x'], obj['y'])
+
+    def _cmd_forget_objects(self, _cmd):
+        n = len(self.objects)
+        self.objects = []
+        return True, 'Forgot %d recognised objects' % n
+
     def _cmd_set_dock(self, cmd):
         pose = cmd.get('pose') or (list(self.pose) if self.pose else None)
         if not pose:
@@ -712,6 +856,9 @@ class Mission:
             self.save_layout()
             self.log('info', 'Dock set at the start position')
         self.session_blocked[:] = False
+        for obj in self.objects:
+            if not obj.get('ignored'):
+                self._mark_object(obj)
         self.rebuild_planning_map()
         self._clear_motion()
         self.tasks.clear()
@@ -738,6 +885,7 @@ class Mission:
             self.target_mask = target
         self.coverage[:] = False
         self.mopped[:] = False
+        self.escapes = 0
         self.water_start_ml = self.water_ml
         self.distance_m = 0.0
         self.stuck_count = 0
@@ -893,6 +1041,8 @@ class Mission:
             'map': self.map_key,
             'signature': self.grid.signature() if self.grid else '',
             'room_names': [self.layout['rooms'].get(r, {}).get('name', str(r)) for r in job['rooms']],
+            'objects_avoided': [dict(o) for o in self.objects if not o.get('ignored')],
+            'object_detector': self.object_detector,
             'mopped_m2': round(self.mopped_area(), 2),
             'carpet_m2': round(self.carpet_area(), 2),
             'water_used_ml': round(max(0.0, getattr(self, 'water_start_ml', self.water_ml) - self.water_ml)
@@ -939,6 +1089,8 @@ class Mission:
                                           keepout=self.keepout(), extra_blocked=self.session_blocked,
                                           unknown_is_blocked=False)
             path = lenient.astar(self.pose[:2], pre) or lenient.astar(self.pose[:2], dock[:2])
+        if path is None and self._free_if_trapped(self.pose):
+            path = self.pmap.astar(self.pose[:2], pre) or self.pmap.astar(self.pose[:2], dock[:2])
         if path is None:
             self.state = 'error'
             self.error = 'Cannot find a way back to the dock'
@@ -1057,6 +1209,8 @@ class Mission:
                         task.points = task.points[i:]
                         break
                 if path is None:
+                    if self._free_if_trapped(pose):
+                        continue           # try the same task again from the freed pose
                     self.tasks.popleft()
                     self.job['skipped'] += 1
                     continue
@@ -1472,6 +1626,8 @@ class Mission:
             if self.config.water_tank_ml > 0 else None,
             'mopped_m2': round(self.mopped_area(), 2),
             'on_carpet': self.on_carpet,
+            'objects': [dict(o) for o in self.objects],
+            'object_detector': self.object_detector,
             'carpet_boost_active': self._power_mode() == 'max' and self.on_carpet,
             'task': self.active.kind if self.active else '',
             'tasks_left': len(self.tasks) + (1 if self.active is not None and self.active.clean else 0),

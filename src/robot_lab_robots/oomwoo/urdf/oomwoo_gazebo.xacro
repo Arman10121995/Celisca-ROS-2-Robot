@@ -170,6 +170,32 @@
   <xacro:cliff_sensor side="front_left"/>
   <xacro:cliff_sensor side="front_right"/>
 
+  <!-- Front camera: an RGB-D camera and a semantic segmentation camera with
+       the same pose and intrinsics, so labels and depth are pixel-aligned.
+       Segmentation labels come from the Label system on world models
+       (scripts/vacuum_object_world.py); it is an ideal class detector. -->
+  <xacro:macro name="front_camera_common" params="*extra">
+    <always_on>true</always_on>
+    <update_rate>5</update_rate>
+    <gz_frame_id>front_camera_optical_frame</gz_frame_id>
+    <camera>
+      <xacro:insert_block name="extra"/>
+      <horizontal_fov>1.2</horizontal_fov>
+      <image><width>320</width><height>240</height></image>
+      <clip><near>0.02</near><far>4.0</far></clip>
+    </camera>
+  </xacro:macro>
+  <gazebo reference="front_camera_link">
+    <sensor name="front_camera" type="rgbd_camera">
+      <xacro:front_camera_common><noise><type>none</type></noise></xacro:front_camera_common>
+      <topic>vacuum_camera</topic>
+    </sensor>
+    <sensor name="front_labels" type="segmentation">
+      <xacro:front_camera_common><segmentation_type>semantic</segmentation_type></xacro:front_camera_common>
+      <topic>vacuum_labels</topic>
+    </sensor>
+  </gazebo>
+
   <gazebo reference="base_link"><material>Gazebo/White</material></gazebo>
   <gazebo reference="bumper_link"><material>Gazebo/Grey</material></gazebo>
   <gazebo reference="lidar_turret_link"><material>Gazebo/Black</material></gazebo>

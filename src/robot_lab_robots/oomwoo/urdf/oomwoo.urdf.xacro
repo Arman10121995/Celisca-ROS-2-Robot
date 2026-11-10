@@ -194,4 +194,21 @@
   <xacro:cliff side="front_left" y="0.07"/>
   <xacro:cliff side="front_right" y="-0.07"/>
 
+  <!-- Front camera for floor-object recognition (cables, socks, shoes, pet
+       mess): just outside the shell, 7.5 cm above the floor, pitched down
+       0.3 rad so it sees the floor from about 0.15 m to 2 m ahead.  The
+       optical frame follows REP-103 camera conventions (z forward). -->
+  <link name="front_camera_link"/>
+  <joint name="front_camera_joint" type="fixed">
+    <parent link="base_link"/>
+    <child link="front_camera_link"/>
+    <origin xyz="0.168 0 0.04" rpy="0 0.3 0"/>
+  </joint>
+  <link name="front_camera_optical_frame"/>
+  <joint name="front_camera_optical_joint" type="fixed">
+    <parent link="front_camera_link"/>
+    <child link="front_camera_optical_frame"/>
+    <origin xyz="0 0 0" rpy="-1.5708 0 -1.5708"/>
+  </joint>
+
 </robot>

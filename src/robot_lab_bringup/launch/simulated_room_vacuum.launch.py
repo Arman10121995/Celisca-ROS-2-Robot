@@ -128,6 +128,20 @@ def generate_launch_description():
         }],
     )
 
+    # Floor-object recognition from the front camera (oomwoo in Gazebo); it
+    # idles when no camera publishes.
+    object_detector = Node(
+        package="robot_lab_vacuum_cleaning",
+        executable="vacuum_object_detector",
+        name="vacuum_object_detector",
+        output="screen",
+        condition=IfCondition(PythonExpression(["'", controller, "' == 'cleaning'"])),
+        parameters=[{
+            "use_sim_time": ParameterValue(use_sim_time, value_type=bool),
+            "camera_frame": "front_camera_optical_frame",
+        }],
+    )
+
     return LaunchDescription([
         DeclareLaunchArgument(
             "controller",
@@ -214,4 +228,5 @@ def generate_launch_description():
         simulation,
         room_vacuum,
         cleaning,
+        object_detector,
     ])

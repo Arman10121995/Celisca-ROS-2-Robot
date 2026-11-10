@@ -301,7 +301,9 @@ def generate_launch_description():
         )
         bridge_config_path = os.path.join(
             tempfile.gettempdir(),
-            f"bumperbot_ros_gz_bridge_{safe_world_name}.yaml"
+            # One file per launch: a shared per-world name let concurrent
+            # sessions on the same world overwrite each other's bridge.
+            f"bumperbot_ros_gz_bridge_{safe_world_name}_{rname}_{os.getpid()}.yaml"
         )
         bridge_config = f"""\
             - ros_topic_name: "/odom/ground_truth"
@@ -340,6 +342,28 @@ def generate_launch_description():
               gz_topic_name: "/cliff/front_right"
               ros_type_name: "sensor_msgs/msg/LaserScan"
               gz_type_name: "gz.msgs.LaserScan"
+              direction: "GZ_TO_ROS"
+            # Robot-vacuum front camera (oomwoo): RGB-D plus pixel-aligned
+            # semantic labels for floor-object recognition.
+            - ros_topic_name: "/vacuum/camera/image"
+              gz_topic_name: "/vacuum_camera/image"
+              ros_type_name: "sensor_msgs/msg/Image"
+              gz_type_name: "gz.msgs.Image"
+              direction: "GZ_TO_ROS"
+            - ros_topic_name: "/vacuum/camera/depth"
+              gz_topic_name: "/vacuum_camera/depth_image"
+              ros_type_name: "sensor_msgs/msg/Image"
+              gz_type_name: "gz.msgs.Image"
+              direction: "GZ_TO_ROS"
+            - ros_topic_name: "/vacuum/camera/camera_info"
+              gz_topic_name: "/vacuum_camera/camera_info"
+              ros_type_name: "sensor_msgs/msg/CameraInfo"
+              gz_type_name: "gz.msgs.CameraInfo"
+              direction: "GZ_TO_ROS"
+            - ros_topic_name: "/vacuum/camera/labels"
+              gz_topic_name: "/vacuum_labels/labels_map"
+              ros_type_name: "sensor_msgs/msg/Image"
+              gz_type_name: "gz.msgs.Image"
               direction: "GZ_TO_ROS"
             - ros_topic_name: "/oakd/rgb/image_raw"
               gz_topic_name: "{oakd_gz_prefix}/image"
