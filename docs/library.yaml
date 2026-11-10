@@ -100,9 +100,8 @@ sections:
 
   - title: Status and roadmap
     pages:
+      - {path: ROADMAP.md, title: "Roadmap (the goal list)"}
       - {path: docs/status/CURRENT_STATUS.md, title: "Current status"}
-      - {path: docs/status/CHECKLIST.md, title: "Checklist"}
-      - {path: ROADMAP.md, title: "Roadmap"}
       - {path: docs/tutorials/README.md, title: "Tutorial index (all guides)"}
 
   - title: Project guides

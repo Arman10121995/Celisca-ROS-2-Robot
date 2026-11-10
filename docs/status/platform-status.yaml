@@ -314,6 +314,7 @@ agent_documentation_20261026:
   - Ten unique implementation queue entries; nineteen new or changed Markdown link targets resolve.
   - Git diff whitespace check passes; all eleven changed or added files are documentation/status files.
 execution_priority: implementation_first_extensions_motion_slam_navigation_then_existing_roadmap
+goal_list: ROADMAP.md  # 2026-11-10: the single goal list; its implementation queue (I1...) comes first, then the validation queue (V1...)
 extension_completion_20261020:
   baseline_revision: b8ea60e
   implementation_summary: Catalog repaired; native ground fleet and aerial swarm, real fleet batches,
@@ -1936,7 +1937,34 @@ tasks:
     - src/robot_lab_gui/robot_lab_gui/cleaning_tab.py
     - docs/
     state: partial
+    tasks:
+      R13.1:
+        acceptance_ref: ROADMAP.md R13.1
+        owner: claude
+        state: partial
+        title: Core cleaning system (implemented and measured; repeats and a second building pending)
+      R13.2:
+        acceptance_ref: ROADMAP.md R13.2
+        owner: claude
+        state: partial
+        title: Carpets, mopping modes, water tank and refill (code written 2026-11-10, build/tests pending)
+      R13.3:
+        acceptance_ref: ROADMAP.md R13.3
+        owner: null
+        state: queued
+        title: Camera obstacle recognition (cables, socks, shoes, pet mess)
     title: Robot-vacuum cleaning system (OOMWOO-class)
+  R14:
+    acceptance_ref: ROADMAP.md R14.1
+    owner: null
+    state: queued
+    title: Open-source robots in place of self-made ones
+    tasks:
+      R14.1:
+        acceptance_ref: ROADMAP.md R14.1
+        owner: null
+        state: queued
+        title: Search for and integrate open-source counterparts of the lab-authored robots (requested 2026-11-10)
   R2:
     next_task: R3.4
     owner: cline-agent
@@ -2627,6 +2655,13 @@ tasks:
             title: Aerial mapped obstacles and fresh depth route interruption
             validation_state: software/ROS fixture/GUI diagnostics only; no flight
         title: PX4 Flight selection and qualification across all installed worlds
+      R5.11:
+        acceptance_ref: ROADMAP.md R5.11
+        depends_on:
+        - R5.10
+        owner: null
+        state: queued
+        title: Drone moving-obstacle prediction, sensor-loss handling and other drone backends
       R5.2:
         acceptance_ref: ROADMAP.md
         depends_on:

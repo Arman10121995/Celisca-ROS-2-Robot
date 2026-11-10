@@ -5,6 +5,10 @@ Read `docs/AGENT_HANDOFF.md`, `docs/status/platform-status.yaml`,
 changing the platform. Preserve existing work and claim task ownership in the
 ledger. Follow the user's current priorities.
 
+`ROADMAP.md` is the single goal list. Take work from its implementation queue
+first, top to bottom, then its validation queue. Add new tasks there (new ID,
+the same task format), not in other files.
+
 The user requests a single primary branch in this existing repository. Work
 directly on `master`; do not create another branch or worktree unless the user
 explicitly asks. Commit there and push to `origin/master` when requested.

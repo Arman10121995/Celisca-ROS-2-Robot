@@ -1063,8 +1063,8 @@ class HealthTab(LabTab):
         ttk.Button(frame, text='Experiment Queue', command=lambda: self._show_document(
             WORKSPACE_ROOT / 'docs/tutorials/concurrent-experiments.md')).grid(
                 row=9, column=2, sticky='ew', pady=2)
-        ttk.Button(frame, text="Done / Remaining", command=lambda: self._show_document(
-            WORKSPACE_ROOT / 'docs/status/CHECKLIST.md')).grid(
+        ttk.Button(frame, text="Roadmap (goal list)", command=lambda: self._show_document(
+            WORKSPACE_ROOT / 'ROADMAP.md')).grid(
                 row=5, column=2, sticky='ew', padx=(4, 0), pady=2)
         ttk.Button(frame, text='Latest fleet delivery', command=lambda: self._show_document(
             WORKSPACE_ROOT / 'docs/status/fleet-continuation-2026-11-02.md')).grid(

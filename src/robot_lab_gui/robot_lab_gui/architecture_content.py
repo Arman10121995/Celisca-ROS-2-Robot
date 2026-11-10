@@ -183,7 +183,7 @@ component('evidence', 'Measurements & status', 'Evidence', 'Scope every support 
     'Manifests, traces, body observations, source hashes and measured outcomes support a named case. The ledger and current status expose implemented, experimental, measured and remaining work. '
     'CI verifies builds/regressions; it does not drive every robot mission. Historical demonstration PASS flags and random metrics do not close roadmap acceptance. '
     'Ground truth may evaluate estimation or settling but must stay labeled and outside the estimator inputs.',
-    'docs/status/platform-status.yaml docs/status/CURRENT_STATUS.md src/robot_lab/robot_lab_benchmark', 'docs/status/CHECKLIST.md')
+    'docs/status/platform-status.yaml docs/status/CURRENT_STATUS.md src/robot_lab/robot_lab_benchmark', 'ROADMAP.md')
 component('storage', 'SSD artifacts & provenance', 'Evidence', 'Keep source, generated models, builds, caches, logs and bags on the SSD.',
     'On this Jetson /workspace is the SSD, while / and /tmp are internal eMMC. Source scripts/ssd_env.sh before large runs; explicit /tmp paths ignore TMPDIR. '
     'The old PX4 relocation is complete and compatibility symlinks should remain. Asset licenses and upstream hashes stay with sources. '

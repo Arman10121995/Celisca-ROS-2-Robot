@@ -165,7 +165,7 @@ Robot Lab/
 │   ├── learn/                    # Beginner course with figures (make_figures.py)
 │   ├── status/                   # Machine ledger, current status, deliveries, evidence
 │   └── tutorials/                # Operator guides and measured comparisons
-├── ROADMAP.md                    # Implementation and acceptance plan
+├── ROADMAP.md                    # The single goal list: priorities, how-to, acceptance
 ├── AGENTS.md / docs/AGENT_HANDOFF.md   # Agent working protocol
 ├── LICENSE                       # BSD-3-Clause
 └── LICENSES/third-party-notices.md   # Imported asset and library notices

@@ -1,5 +1,7 @@
 # Agent Handoff Protocol
 
+**November 10, 2026: [ROADMAP.md](../ROADMAP.md) is the single goal list.** Every remaining task is there in one format, with an implementation queue (work it first, top to bottom), a validation queue (after) and how-to steps per task. The old checklist and roadmap text are archived in [status/archive/](status/archive/). The dated paragraphs below are history; where they conflict with the roadmap, the roadmap wins.
+
 **Stopped at the user's request — November 3.** Code through `5e7d29b1` is committed on `master`. The user requested committing everything and stopping for today; do not restart trials until they resume. The owned `fleet-concurrent-12` probe was stopped and cleaned up after 319.046 wall seconds, with its actual result and explicit user-stop note preserved. Do not count that interruption as a completed four-stop mission.
 
 On resumption, read the November 3 receipt and start a fresh fleet output directory/domain/partition. Preserve the flat deck, 10 mm panel clearance, force PID limits, 0.1 mm initial opening gate, original 3 mm continuous tracking, monotone open-panel classification and immutable 1800 s facility queue wait (600 s default elsewhere). Fifty focused facility checks pass. Next is the complete two-member parked L0→L1→L0 wave; original/source/backend matrices and other acceptance remain partial. Resume instructions are in the [current delivery](status/curves-terrain-concurrency-2026-11-03.md).
@@ -50,7 +52,7 @@ published checkpoint, and the [workflow](WORKFLOW.md) for commands.
 
 1. [`docs/status/platform-status.yaml`](status/platform-status.yaml) — the authoritative
    task ledger: states, owners, dependencies, evidence, `next_task`.
-2. [`ROADMAP.md`](../ROADMAP.md) — scope and acceptance criteria for every task.
+2. [`ROADMAP.md`](../ROADMAP.md) — the single goal list: priority order, how-to steps and acceptance for every task.
 3. [`docs/status/audit-2026-10-02.md`](status/audit-2026-10-02.md) and
    [`docs/status/continuation-2026-10-07.md`](status/continuation-2026-10-07.md) —
    audited claim boundaries, latest measured work and retained failures.
@@ -257,7 +259,7 @@ The latest October 5 user instruction prioritizes the new extensions before
 the older roadmap: R3.6/R6.5–R6.7, R5.10, then R5.7–R5.9. Preserve existing
 stabilization fixes; return to R5.6 and the remaining original acceptance next.
 Check live task ownership: another agent owns the R6.7 shared heightfield lane.
-Use the [checklist](status/CHECKLIST.md) and current ledger when coordinating.
+Use the [roadmap](../ROADMAP.md) and current ledger when coordinating.
 
 Read the [2026-10-02 completion audit](status/audit-2026-10-02.md) first.
 It reconciles baseline `2a0aae2`, retains actual measured robot work, and

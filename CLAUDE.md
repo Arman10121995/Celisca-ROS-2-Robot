@@ -8,8 +8,8 @@ or infer a mission from a queued process exit.
 
 Updated October 9, 2026. Read the [implementation checkpoint](docs/status/implementation-2026-10-09.md); work on `master`. Earlier runtime source has
 successful required CI and separate measured GUI/Drive/Panda artifacts. The
-project remains partial; start with [current status](docs/status/CURRENT_STATUS.md),
-[the checklist](docs/status/CHECKLIST.md) and [the roadmap](ROADMAP.md).
+project remains partial; [the roadmap](ROADMAP.md) is the single goal list (implementation
+queue first, then validation), and [current status](docs/status/CURRENT_STATUS.md) has the measurements.
 
 The user's latest priority is **implement everything remaining first, test and
 validate afterward**. Codex/Claude should deliver reusable controllers and

@@ -1,5 +1,9 @@
 # Current Robot Lab status
 
+This page records what was measured. **The goals and remaining work are in one list: the
+[roadmap](../../ROADMAP.md)** (implementation queue first, then validation). Remaining-work
+notes in the dated entries below are history.
+
 November 10:
 - **Robot vacuum** (R13, OOMWOO-class `oomwoo`, small_house): all
   recorded cleaning jobs pass `cleaning_screen`:
