@@ -28,6 +28,7 @@ Battery, dustbin and consumable wear are models (see mission.py).
 
 import json
 import math
+from collections import deque
 import os
 import time
 from pathlib import Path
@@ -176,7 +177,8 @@ class VacuumCleaner(Node):
         self.last_v = 0.0
         self.v_min_since_scan = math.inf
         self.stall_until = 0.0
-        self.stall_tf_fallbacks = 0
+        self.stall_tf_fallbacks = 0      # scans dropped: TF never reached their stamp
+        self.pending_scans = deque(maxlen=10)
         self.stall_events = 0
         self.truth = None
         self.trail = []
@@ -256,27 +258,30 @@ class VacuumCleaner(Node):
         r, a = ranges[ok], angles[ok] + tf[2]
         self.scan_base = np.column_stack((tf[0] + r * np.cos(a), tf[1] + r * np.sin(a)))
         self.scan_stamp = time.monotonic()
-        # Stall check per scan, with the pose at the scan's own time (the
-        # control-time pose is up to a scan period off).
-        stamp = Time.from_msg(msg.header.stamp)
-        try:
-            t = self.tf_buffer.lookup_transform(self.global_frame, self.base_frame, stamp)
-        except TransformException:
-            # The newest transform may be a few ms older than the scan.
-            self.stall_tf_fallbacks += 1
+        # The stall check pairs each scan with the pose at the scan's own
+        # time.  The newest transform is usually a little older than the
+        # scan, so scans wait here until TF reaches their stamp
+        # (_check_stalls, every control step).
+        v_min, self.v_min_since_scan = self.v_min_since_scan, math.inf
+        self.pending_scans.append((Time.from_msg(msg.header.stamp), self.scan_base, v_min))
+
+    def _check_stalls(self):
+        while self.pending_scans:
+            stamp, points, v_min = self.pending_scans[0]
             try:
-                t = self.tf_buffer.lookup_transform(self.global_frame, self.base_frame, Time())
+                t = self.tf_buffer.lookup_transform(self.global_frame, self.base_frame, stamp)
             except TransformException:
-                t = None
-        pose = None
-        if t is not None:
+                if (self.get_clock().now() - stamp).nanoseconds > 5e8:
+                    self.pending_scans.popleft()      # TF never reached it: drop, never mis-pair
+                    self.stall_tf_fallbacks += 1
+                    continue
+                return                                # wait for TF
+            self.pending_scans.popleft()
             tr = t.transform
             pose = (tr.translation.x, tr.translation.y, yaw_of(tr.rotation))
-        v_min, self.v_min_since_scan = self.v_min_since_scan, math.inf
-        if pose is not None and math.isfinite(v_min) and \
-                self.stall_detector.update(stamp.nanoseconds * 1e-9, v_min, self.scan_base, pose):
-            self.stall_until = time.monotonic() + 0.3
-            self.stall_events += 1
+            if math.isfinite(v_min) and self.stall_detector.update(stamp.nanoseconds * 1e-9, v_min, points, pose):
+                self.stall_until = time.monotonic() + 0.3
+                self.stall_events += 1
 
     def _truth_cb(self, msg: Odometry):
         p = msg.pose.pose
@@ -333,6 +338,7 @@ class VacuumCleaner(Node):
     # ------------------------------------------------------------------
     def _control(self):
         self._apply_map()
+        self._check_stalls()
         self.pose = self._lookup_pose()
         if self.pose is None and self.mission.state in ACTIVE_STATES:
             # Lost localisation: hold still.
