@@ -109,7 +109,8 @@ class StallDetector:
         _, _, p1, pts1 = self.samples[-1]
         if p0 is None or p1 is None or pts0 is None or pts1 is None:
             return False
-        if math.dist(p0[:2], p1[:2]) < self.min_travel:
+        travel = math.dist(p0[:2], p1[:2])
+        if travel < self.min_travel:
             return False
         # The start-of-window scan in the latest robot frame, if the robot
         # moved as estimated.
@@ -146,7 +147,9 @@ class StallDetector:
                                                               n[facing])))))
         r_moved, r_static = residuals
         self.last = (r_moved, r_static)
-        if r_moved > self.min_residual and r_static < self.ratio * r_moved:
+        # A real stall leaves the estimate wrong by about the whole claimed
+        # travel; timing and localisation noise are a few centimetres.
+        if r_moved > max(self.min_residual, 0.5 * travel) and r_static < self.ratio * r_moved:
             self.samples.clear()
             self.cooldown_until = t + 2.0
             return True

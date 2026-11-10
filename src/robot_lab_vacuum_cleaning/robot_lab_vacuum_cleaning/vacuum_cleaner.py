@@ -174,6 +174,8 @@ class VacuumCleaner(Node):
         self.bump_until = 0.0
         self.stall_detector = StallDetector()
         self.last_v = 0.0
+        self.v_min_since_scan = math.inf
+        self.stall_until = 0.0
         self.stall_events = 0
         self.truth = None
         self.trail = []
@@ -253,6 +255,20 @@ class VacuumCleaner(Node):
         r, a = ranges[ok], angles[ok] + tf[2]
         self.scan_base = np.column_stack((tf[0] + r * np.cos(a), tf[1] + r * np.sin(a)))
         self.scan_stamp = time.monotonic()
+        # Stall check per scan, with the pose at the scan's own time (the
+        # control-time pose is up to a scan period off).
+        stamp = Time.from_msg(msg.header.stamp)
+        try:
+            t = self.tf_buffer.lookup_transform(self.global_frame, self.base_frame, stamp)
+            tr = t.transform
+            pose = (tr.translation.x, tr.translation.y, yaw_of(tr.rotation))
+        except TransformException:
+            pose = None
+        v_min, self.v_min_since_scan = self.v_min_since_scan, math.inf
+        if pose is not None and math.isfinite(v_min) and \
+                self.stall_detector.update(stamp.nanoseconds * 1e-9, v_min, self.scan_base, pose):
+            self.stall_until = time.monotonic() + 0.3
+            self.stall_events += 1
 
     def _truth_cb(self, msg: Odometry):
         p = msg.pose.pose
@@ -298,9 +314,9 @@ class VacuumCleaner(Node):
                 sense.points = np.column_stack((pose[0] + c * near[:, 0] - s * near[:, 1],
                                                 pose[1] + s * near[:, 0] + c * near[:, 1]))
         sense.bumper = time.monotonic() < self.bump_until
-        if self.stall_detector.update(self._now(), self.last_v, pts, pose):
-            sense.stall = True
-            self.stall_events += 1
+        if time.monotonic() < self.stall_until:
+            sense.stall = True          # one-shot: the mission backs off and re-plans once
+            self.stall_until = 0.0
         sense.cliff = any(v.get('drop') for v in self.cliff.values())
         return sense
 
@@ -316,6 +332,7 @@ class VacuumCleaner(Node):
             return
         v, w = self.mission.step(self._now(), self.pose, self._sense(self.pose))
         self.last_v = float(v)
+        self.v_min_since_scan = min(self.v_min_since_scan, self.last_v)
         active = self.mission.state in ACTIVE_STATES or bool(self.mission.maneuvers) or v != 0.0 or w != 0.0
         if active or self.was_active:
             cmd = Twist()
