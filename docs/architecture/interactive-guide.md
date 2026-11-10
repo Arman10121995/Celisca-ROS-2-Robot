@@ -176,9 +176,14 @@ Use **Glossary** for new terms. Read [networking and troubleshooting](networking
 
 ## Find tutorials and implementation
 
-**Tutorials & source library** groups architecture, robot/workflow tutorials,
-project guides and maintained top-level ROS packages. Search filters titles/paths
-and package descriptions. Select a guide, use **On this page** for headings,
+**Docs & tutorials** is the documentation library. It follows
+[`docs/library.yaml`](../library.yaml): Start here, the beginner course, using
+the GUI, robots, drones/water/teams, algorithms, measured comparisons,
+architecture, status and roadmap, project guides, then maintained ROS packages.
+Pages not listed there appear under Other documents. Figures and animations
+show inline (click one to enlarge), and Mermaid diagrams show as the images
+`scripts/render_doc_diagrams.py` rendered. Search filters titles, paths and
+package descriptions. Select a guide, use **On this page** for headings,
 search text with **Find text**, and follow local Markdown links without leaving
 the GUI. **Back** returns to the previous document. External HTTP links open
 only when clicked. Binary meshes/maps belong in Registry 3D or the map viewer.

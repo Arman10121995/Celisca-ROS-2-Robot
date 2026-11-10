@@ -4,7 +4,7 @@ The November 2 interface refresh adds **Home**, purpose-based navigation, **Ctrl
 
 ## Architecture, tutorials and diagnostics
 
-The existing Health workspace is labeled **Learn & diagnose** in the sidebar. It contains **Architecture & learning**, **Tutorials & source library** and **Diagnostics & roadmap**. The native explorer offers clickable diagrams, tours, networking examples, bounded read-only ROS discovery and SVG/JSON exports. [Detailed walkthrough](../architecture/interactive-guide.md). Opening it is neutral; discovery starts only when requested.
+The existing Health workspace is labeled **Learn & diagnose** in the sidebar. It contains **Architecture & learning**, **Docs & tutorials** and **Diagnostics & roadmap**. The native explorer offers clickable diagrams, tours, networking examples, bounded read-only ROS discovery and SVG/JSON exports. [Detailed walkthrough](../architecture/interactive-guide.md). Opening it is neutral; discovery starts only when requested.
 
 Latest October 30: the amphibious rover uses Launch's Marine controls with
 wheel/thrust feedback and shore Plan/Execute. Fleet & Swarm has a compact

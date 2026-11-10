@@ -114,6 +114,11 @@ def help_for_workspace(app):
     app.show_tab('Health');app.health_tab._show_document(WORKSPACE_ROOT/'docs'/paths.get(title,'architecture/interactive-guide.md'))
 
 
+def open_course(app):
+    app.show_tab('Health')
+    if hasattr(app,'health_tab'):app.health_tab.open_course()
+
+
 def open_learning(app):
     app.show_tab('Health')
     if hasattr(app,'health_tab'):app.health_tab._show_architecture('overview')
@@ -131,7 +136,8 @@ class HomeTab(ScrollPanel):
         self.intro.grid(row=2,column=0,sticky='ew')
         actions=ttk.Frame(hero,style='Surface.TFrame');actions.grid(row=3,column=0,sticky='w',pady=(18,0))
         ttk.Button(actions,text='Configure a robot  →',style='Accent.TButton',command=lambda:app.show_tab('Launch')).pack(side='left',padx=(0,10))
-        ttk.Button(actions,text='Learn how it works',command=lambda:open_learning(app)).pack(side='left')
+        ttk.Button(actions,text='Learn how it works',command=lambda:open_learning(app)).pack(side='left',padx=(0,10))
+        ttk.Button(actions,text='Start the beginner course',command=lambda:open_course(app)).pack(side='left')
         metrics=ttk.Frame(body);metrics.grid(row=1,column=0,sticky='ew',pady=(0,18))
         for col,(number,label) in enumerate([(len(app.robot_profiles),'robot profiles'),(len(app.map_profiles),'world profiles'),(len(app.simulator_status),'backend adapters')]):
             metrics.columnconfigure(col,weight=1)

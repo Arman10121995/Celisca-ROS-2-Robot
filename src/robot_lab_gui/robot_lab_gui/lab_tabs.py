@@ -992,7 +992,7 @@ class HealthTab(LabTab):
         self.diagnostics.columnconfigure(0, weight=1)
         self.diagnostics.rowconfigure(1, weight=1)
         self.pages.add(self.explorer, text='Architecture & learning')
-        self.pages.add(self.guide_library, text='Tutorials & source library')
+        self.pages.add(self.guide_library, text='Docs & tutorials')
         self.pages.add(self.diagnostics, text='Diagnostics & roadmap')
         frame = ttk.LabelFrame(self.diagnostics, text="Diagnostics", padding=10)
         frame.grid(row=0, column=0, sticky="ew")
@@ -1104,6 +1104,11 @@ class HealthTab(LabTab):
     def _show_document(self, path):
         self.guide_library.open(Path(path))
         self.pages.select(self.guide_library)
+
+    def open_course(self, chapter='README.md'):
+        """Show the beginner course (docs/learn) in the documentation library."""
+        self.app.show_tab('Health')
+        self._show_document(WORKSPACE_ROOT / 'docs' / 'learn' / chapter)
 
     def _show_architecture(self, key):
         from .architecture_content import VIEW_BY_ID

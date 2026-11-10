@@ -1,0 +1,118 @@
+# How the GUI's documentation library (Learn & diagnose → Documentation
+# library) groups the docs.  Sections appear in this order; pages within a
+# section in the order listed.  Markdown files not listed here still appear,
+# under "Other documents", so nothing is hidden.  Titles come from each
+# page's first "# " heading unless a title is given here.
+sections:
+  - title: Start here
+    open: true
+    pages:
+      - {path: docs/learn/README.md, title: "Start here · the beginner course"}
+      - {path: docs/tutorials/gui-quickstart.md, title: "GUI quick tour"}
+      - {path: README.md, title: "Project README"}
+
+  - title: Beginner course
+    open: true
+    pages:
+      - docs/learn/01-big-picture.md
+      - docs/learn/02-ros2-concepts.md
+      - docs/learn/03-networking.md
+      - docs/learn/04-robots-and-sensors.md
+      - docs/learn/05-maps-and-localization.md
+      - docs/learn/06-planning-and-control.md
+      - docs/learn/07-robot-vacuum-inside.md
+      - docs/learn/08-evidence-and-testing.md
+
+  - title: Using the GUI
+    pages:
+      - docs/tutorials/gui-quickstart.md
+      - docs/tutorials/gui-workspace.md
+      - docs/tutorials/native-controls.md
+      - docs/tutorials/registry-3d.md
+      - docs/tutorials/concurrent-experiments.md
+
+  - title: Wheeled, legged and arm robots
+    pages:
+      - docs/tutorials/robot-vacuum.md
+      - docs/tutorials/turtlebot3.md
+      - docs/tutorials/turtlebot4.md
+      - docs/tutorials/husky.md
+      - docs/tutorials/bicycle-control.md
+      - docs/tutorials/tracked-vehicle.md
+      - docs/tutorials/wheeled-snake.md
+      - docs/tutorials/go2.md
+      - docs/tutorials/legged-policies.md
+      - docs/tutorials/legged-policy-training.md
+      - docs/tutorials/multi-leg-gaits.md
+      - docs/tutorials/panda_arm.md
+      - docs/tutorials/native-arm-planning.md
+      - docs/tutorials/native-hand-controls.md
+      - docs/tutorials/molar-hri-simulation.md
+
+  - title: Drones, water and teams
+    pages:
+      - docs/tutorials/px4_x500.md
+      - docs/tutorials/aerial-swarm.md
+      - docs/tutorials/mapped-drone-planning.md
+      - docs/tutorials/formation-routes.md
+      - docs/tutorials/marine-rov.md
+      - docs/tutorials/tethys-auv.md
+      - docs/tutorials/surface-vessel.md
+      - docs/tutorials/amphibious-rover.md
+      - docs/tutorials/fleet-and-swarm.md
+      - docs/tutorials/fleet-infrastructure.md
+      - docs/tutorials/curves-terrain-concurrency.md
+
+  - title: Algorithms explained
+    pages:
+      - docs/tutorials/planning.md
+      - docs/tutorials/local_planning.md
+      - docs/tutorials/localization.md
+      - docs/tutorials/state_estimation.md
+      - docs/tutorials/sensor_fusion.md
+      - docs/tutorials/perception.md
+      - docs/tutorials/control.md
+      - {path: docs/tutorials/index.md, title: "Algorithm examples index"}
+
+  - title: Measured comparisons
+    pages:
+      - docs/tutorials/comparison_global_planning.md
+      - docs/tutorials/comparison_local_planning.md
+      - docs/tutorials/comparison_localization.md
+      - docs/tutorials/comparison_state_estimation.md
+      - docs/tutorials/comparison_sensor_fusion.md
+      - docs/tutorials/comparison_perception.md
+      - docs/tutorials/comparison_control.md
+      - docs/tutorials/global_planning_comparison.md
+      - docs/tutorials/local_planning_comparison.md
+      - docs/tutorials/localization_comparison.md
+      - docs/tutorials/state_estimation_comparison.md
+      - docs/tutorials/sensor_fusion_comparison.md
+      - docs/tutorials/perception_comparison.md
+      - docs/tutorials/control_comparison.md
+
+  - title: Architecture
+    pages:
+      - {path: docs/architecture/interactive-guide.md, title: "Interactive architecture guide"}
+      - docs/architecture/overview.md
+      - docs/architecture/networking.md
+      - docs/architecture/glossary.md
+
+  - title: Status and roadmap
+    pages:
+      - {path: docs/status/CURRENT_STATUS.md, title: "Current status"}
+      - {path: docs/status/CHECKLIST.md, title: "Checklist"}
+      - {path: ROADMAP.md, title: "Roadmap"}
+      - {path: docs/tutorials/README.md, title: "Tutorial index (all guides)"}
+
+  - title: Project guides
+    pages:
+      - docs/TESTING.md
+      - docs/STORAGE.md
+      - docs/WORKFLOW.md
+      - docs/AGENT_HANDOFF.md
+      - docs/ASSET_EXTENSION_GUIDE.md
+      - docs/PATCH_EXECUTION_GUIDE.md
+      - docs/NEXT_EXTENSION_GUIDE.md
+      - docs/REMAINING_WORK_GUIDE.md
+      - docs/AI_ROBOT_READINESS_GUIDE.md
