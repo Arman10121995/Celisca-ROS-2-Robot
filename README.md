@@ -69,7 +69,13 @@ Or use the CLI: `ros2 launch robot_lab_bringup simulated_robot.launch.py robot_m
 
 ## 📚 Tutorials & guides
 
-Start with the [GUI quick tour](docs/tutorials/gui-quickstart.md), then explore by purpose:
+**New to ROS or robotics?** Start with [Learn Robot Lab from zero](docs/learn/README.md):
+eight short illustrated chapters (ROS 2 concepts, networking, robots and sensors,
+maps and localisation, planning and control, the robot vacuum inside out, and how
+results are measured), with diagrams, figures and animations drawn from the
+project's own code.
+
+Then take the [GUI quick tour](docs/tutorials/gui-quickstart.md) and explore by purpose:
 
 | Purpose | Guide | What it covers |
 |---------|-------|----------------|
@@ -81,6 +87,7 @@ Start with the [GUI quick tour](docs/tutorials/gui-quickstart.md), then explore 
 | **Legged policies** | [Go2 policy](docs/tutorials/go2.md) / [Legged policies](docs/tutorials/legged-policies.md) | MuJoCo/Isaac/Gazebo walks, stance, command loss |
 | **Arm & hand** | [Native Panda](docs/tutorials/panda_arm.md) / [Native hand controls](docs/tutorials/native-hand-controls.md) | Plan/Execute, grasp, teach-replay |
 | **Wheeled / tracked** | [TurtleBot3](docs/tutorials/turtlebot3.md) / [TurtleBot4](docs/tutorials/turtlebot4.md) / [Tracked vehicle](docs/tutorials/tracked-vehicle.md) | Drive, SLAM, navigation per backend |
+| **Robot vacuum** | [Robot-vacuum cleaning system](docs/tutorials/robot-vacuum.md) / [How it works](docs/learn/07-robot-vacuum-inside.md) | Rooms, zones, spot, no-go areas, dock, recharge, schedules, history |
 | **Numerical APIs** | [Learning index](docs/tutorials/index.md) | Perception, planning, localization, state estimation, sensor fusion |
 | **Measured comparisons** | [Comparison tutorials](docs/tutorials/README.md#measured-comparisons) | Global/local planning, control, sensor fusion, perception, localization, state estimation |
 
@@ -155,6 +162,7 @@ Robot Lab/
 │   └── …
 ├── docs/                         # Status, architecture, tutorials, guides
 │   ├── architecture/             # System design, networking, glossary, interactive guide
+│   ├── learn/                    # Beginner course with figures (make_figures.py)
 │   ├── status/                   # Machine ledger, current status, deliveries, evidence
 │   └── tutorials/                # Operator guides and measured comparisons
 ├── ROADMAP.md                    # Implementation and acceptance plan

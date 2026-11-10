@@ -5,7 +5,8 @@ app for any robot whose profile declares `supports_room_vacuum: true`: the
 OOMWOO-class robot vacuum (`oomwoo`) and Bumperbot. It drives the
 `robot_lab_vacuum_cleaning` node, which plans and drives the cleaning
 itself. Status: **implemented and experimental**. See the bottom of this
-page for what has been measured.
+page for what has been measured. How it works inside, with figures and
+animations: [Inside the robot vacuum](../learn/07-robot-vacuum-inside.md).
 
 ## Quick start
 

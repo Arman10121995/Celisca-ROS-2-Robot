@@ -77,6 +77,36 @@ different kinds of names/isolation. See [networking](networking.md).
 | CI | Automated build and source/contract regression checks | It does not replace physical simulator missions |
 | Real-time factor | Simulated elapsed time divided by wall elapsed time | Slow simulation and stale ownership are different issues |
 
+## More terms from the beginner course
+
+These appear in [Learn Robot Lab from zero](../learn/README.md).
+
+| Term | Plain meaning | Where in the course |
+|---|---|---|
+| Parameter | A node's named setting, given at start | [ROS 2 concepts](../learn/02-ros2-concepts.md) |
+| Simulated time | The clock the simulator publishes on `/clock`; nodes with `use_sim_time` follow it | [ROS 2 concepts](../learn/02-ros2-concepts.md) |
+| twist_mux | Passes on the highest-priority active velocity command (joystick > keyboard > navigation) | [ROS 2 concepts](../learn/02-ros2-concepts.md) |
+| URDF / xacro | XML description of a robot's links and joints / the same with variables and macros | [Robots and sensors](../learn/04-robots-and-sensors.md) |
+| Link / joint | A rigid part / the connection between two parts (fixed, continuous, revolute …) | [Robots and sensors](../learn/04-robots-and-sensors.md) |
+| LiDAR | A spinning laser that measures the distance to the first obstacle in each direction | [Robots and sensors](../learn/04-robots-and-sensors.md) |
+| Differential drive | Two driven wheels on one axle; turning comes from their speed difference | [Robots and sensors](../learn/04-robots-and-sensors.md) |
+| ros2_control | The framework separating a controller (maths) from a hardware interface (motors or a simulator) | [Robots and sensors](../learn/04-robots-and-sensors.md) |
+| EKF | Extended Kalman filter: blends sensors (wheels, IMU) weighted by how much each is trusted | [Maps and localisation](../learn/05-maps-and-localization.md) |
+| Occupancy grid | A map made of cells: 0 free, 100 occupied, -1 unknown | [Maps and localisation](../learn/05-maps-and-localization.md) |
+| Particle filter | Many pose guesses, weighted by how well each explains the sensor data, then resampled | [Maps and localisation](../learn/05-maps-and-localization.md) |
+| Loop closure | Recognising a place seen before and correcting the whole map to agree | [Maps and localisation](../learn/05-maps-and-localization.md) |
+| Distance transform | For every cell, the distance to the nearest obstacle | [Planning and control](../learn/06-planning-and-control.md) |
+| Inflation | Growing obstacles by the robot radius so a point planner keeps a real robot clear | [Planning and control](../learn/06-planning-and-control.md) |
+| A* | Grid search that expands the cell with the lowest cost-so-far + distance-to-goal | [Planning and control](../learn/06-planning-and-control.md) |
+| Pure pursuit | A path follower that steers towards a point a fixed lookahead ahead on the path | [Planning and control](../learn/06-planning-and-control.md) |
+| Behaviour tree | Nav2's flowchart of actions and fallbacks (plan, follow, recover) | [Planning and control](../learn/06-planning-and-control.md) |
+| Watershed | Growing labelled regions over a surface in order of height (here: clearance), so they meet at the narrowest points | [Inside the robot vacuum](../learn/07-robot-vacuum-inside.md) |
+| Coverage lanes | Parallel straight passes that together sweep a whole area (boustrophedon) | [Inside the robot vacuum](../learn/07-robot-vacuum-inside.md) |
+| Frontier | A free cell next to an unknown one: the edge of the explored map | [Inside the robot vacuum](../learn/07-robot-vacuum-inside.md) |
+| Stall detector | The vacuum's virtual bumper: odometry says "moved", the LiDAR says "did not" | [Inside the robot vacuum](../learn/07-robot-vacuum-inside.md) |
+| Screen | The fixed rule that judges a recorded report (for example `cleaning_screen`) | [Evidence and testing](../learn/08-evidence-and-testing.md) |
+| Support matrix | One row per robot × world × simulator × task, from the latest judged report | [Evidence and testing](../learn/08-evidence-and-testing.md) |
+
 Continue with [the architecture reference](overview.md),
 [the tutorial index](../tutorials/README.md) or
 [current status](../status/CURRENT_STATUS.md).

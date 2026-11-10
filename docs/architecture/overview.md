@@ -7,6 +7,9 @@ walkthroughs, the source/tutorial library, vector export, networking playground
 and optional read-only ROS discovery. See [networking and troubleshooting](networking.md)
 for domains, namespaces, QoS, transport partitions, MAVLink and time.
 
+New to ROS or this project? The illustrated beginner course
+[Learn Robot Lab from zero](../learn/README.md) explains the same system step by step.
+
 ## System design at three scales
 
 **Context:** a learner/operator chooses robots, maps, algorithms and tasks;

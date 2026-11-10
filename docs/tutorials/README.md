@@ -6,6 +6,8 @@ Start with [the GUI quick tour](gui-quickstart.md): Home, Run a robot, workspace
 
 ## Learn the whole system
 
+New to ROS? [Learn Robot Lab from zero](../learn/README.md) is an illustrated beginner course: ROS 2 concepts, networking, sensors, maps and localisation, planning, the robot vacuum inside out, and evidence.
+
 Start with **Learn & health → Architecture & learning** in the main GUI. [Interactive architecture guide](../architecture/interactive-guide.md) covers diagrams, tours, source browsing and the live ROS graph; [networking](../architecture/networking.md) explains discovery, QoS, frames and transport boundaries.
 
 October 30: [native-form delivery](../status/native-forms-2026-10-30.md)
