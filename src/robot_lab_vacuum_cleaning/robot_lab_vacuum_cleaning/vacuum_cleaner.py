@@ -299,11 +299,16 @@ class VacuumCleaner(Node):
     def _cliff_cb(self, topic, msg: LaserScan):
         vals = [r for r in msg.ranges if math.isfinite(r)]
         reading = min(vals) if vals else math.inf
-        floor = self.cliff.get(topic, {}).get('floor')
-        if floor is None and math.isfinite(reading):
-            floor = reading  # first reading on the floor is the reference
-        self.cliff[topic] = {'floor': floor, 'reading': reading if math.isfinite(reading) else None,
-                             'stamp': time.monotonic(),
+        state = self.cliff.get(topic, {})
+        floor, first = state.get('floor'), state.get('first')
+        now = time.monotonic()
+        if math.isfinite(reading) and (floor is None or (now - first < 10.0 and reading < floor)):
+            # The floor reference: the smallest reading of the first 10 s, so a
+            # robot spawned above the floor calibrates once it has settled.
+            floor = reading
+            first = first if first is not None else now
+        self.cliff[topic] = {'floor': floor, 'first': first, 'reading': reading if math.isfinite(reading) else None,
+                             'stamp': now,
                              'drop': (not math.isfinite(reading)) or (floor is not None and reading > floor + self.cliff_drop)}
 
     def _lookup_pose(self):

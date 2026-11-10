@@ -569,3 +569,22 @@ def test_robot_walled_in_by_its_own_obstacle_marks_frees_itself(tmp_path):
     assert any('Hemmed in' in e['text'] for e in mission.events)
     assert record['result'] == 'completed' and record['coverage_pct'] > 85.0, record
     assert mission.state in ('returning', 'docking', 'charging', 'docked')
+
+
+def test_wedged_robot_backs_out_then_asks_for_help(tmp_path):
+    grid = two_rooms()
+    mission = make_mission(tmp_path, grid, (1.0, 1.0, 0.0))
+    mission.command({'cmd': 'start', 'mode': 'zones', 'zones': [[0.2, 0.2, 3.8, 3.8]], 'edge': False})
+    t = 0.0
+    for wedge in range(1, 4):
+        for i in range(6):                         # six contacts in 12 s, the estimate drifting
+            t += 2.0
+            mission.last_now = t
+            mission._on_blocked((1.0 + 0.05 * i, 2.0, 0.0), Sense(bumper=True), contact=True)
+        assert mission.wedges == wedge
+        if wedge < 3:
+            assert mission.maneuvers and mission.state == 'cleaning'
+            assert not mission.session_blocked.any()      # marks from the wedge are forgotten
+            mission.maneuvers.clear()
+        t += 40.0
+    assert mission.state == 'error' and 'Stuck' in mission.error

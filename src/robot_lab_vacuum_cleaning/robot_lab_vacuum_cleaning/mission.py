@@ -47,6 +47,11 @@ OBJECT_MERGE_M = 0.25
 # recognised objects), at most ESCAPE_LIMIT times per job.
 ESCAPE_RADIUS_M = 0.45
 ESCAPE_LIMIT = 6
+# Wedged (under furniture, on a low crossbar): contact after contact in a
+# short time while the wheels slip and the estimate drifts.  The marks those
+# bumps left are not trustworthy, so they are forgotten and the robot tries
+# a freeing manoeuvre; the third time in a job it stops and asks for help.
+WEDGE_BUMPS, WEDGE_WINDOW_S, WEDGE_LIMIT = 6, 30.0, 3
 WORK_KINDS = ('lane', 'edge', 'spot')
 
 
@@ -355,6 +360,8 @@ class Mission:
         self.explore_empty_checks = 0
         self.explore_wait_until = -math.inf
         self.escapes = 0
+        self.bump_log: Deque[Tuple[float, List[Tuple[int, int]]]] = deque()
+        self.wedges = 0
         # Mopping and carpets.
         self.water_ml = float(config.water_tank_ml)
         self.mop_mode = 'vacuum'          # the running job's clean mode
@@ -725,6 +732,36 @@ class Mission:
         for part in reversed(parts):
             self.tasks.appendleft(part)
 
+    def _wedged(self, cells) -> bool:
+        """Record a contact back-off; True when the robot is wedged (and the
+        freeing manoeuvre or the stuck error has been set up)."""
+        now = self.last_now or 0.0
+        self.bump_log.append((now, cells))
+        while self.bump_log and now - self.bump_log[0][0] > WEDGE_WINDOW_S:
+            self.bump_log.popleft()
+        if len(self.bump_log) < WEDGE_BUMPS:
+            return False
+        for _, marked in self.bump_log:        # placed along a drifting estimate
+            for ix, iy in marked:
+                self.session_blocked[iy, ix] = False
+        self.bump_log.clear()
+        self.rebuild_planning_map()
+        self.wedges += 1
+        if self.job is not None:
+            self.job['wedged'] = self.wedges
+        self._park_active()
+        self.maneuvers.clear()
+        if self.wedges >= WEDGE_LIMIT:
+            self.state = 'error'
+            self.error = 'Stuck (wedged under furniture?) - move the robot free and resume'
+            self.log('error', self.error)
+            return True
+        turn = 0.8 if self.wedges % 2 else -0.8
+        self.maneuvers.extend([[-0.08, 0.0, 2.0], [0.0, turn, 1.2], [-0.08, 0.0, 1.5], [0.0, -turn, 0.6]])
+        self.log('warn', 'Wedged: %d bumps in %.0f s; trying to back out (%d/%d)' % (
+            WEDGE_BUMPS, WEDGE_WINDOW_S, self.wedges, WEDGE_LIMIT - 1))
+        return True
+
     def _free_if_trapped(self, pose) -> bool:
         """Forget this run's obstacle marks near the robot when they wall it
         in (less than 2 m2 of floor reachable).  Recognised objects and the
@@ -886,6 +923,8 @@ class Mission:
         self.coverage[:] = False
         self.mopped[:] = False
         self.escapes = 0
+        self.wedges = 0
+        self.bump_log.clear()
         self.water_start_ml = self.water_ml
         self.distance_m = 0.0
         self.stuck_count = 0
@@ -1295,10 +1334,14 @@ class Mission:
             ahead = cfg.robot_radius + (0.06 if sense.cliff else 0.03)
             for a in np.linspace(-0.6, 0.6, 7):
                 marks.append((x + ahead * math.cos(yaw + a), y + ahead * math.sin(yaw + a)))
+        cells = []
         for mx, my in marks:
             ix, iy = grid.world_to_cell(mx, my)
-            if grid.inside(ix, iy):
+            if grid.inside(ix, iy) and not self.session_blocked[iy, ix]:
                 self.session_blocked[iy, ix] = True
+                cells.append((ix, iy))
+        if contact and self._wedged(cells):
+            return
         self.rebuild_planning_map()
         if self.job is not None:
             self.job['events'] += 1

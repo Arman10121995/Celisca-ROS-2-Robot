@@ -45,7 +45,10 @@ def world_with_contact_system(path):
     opening = re.search(r'<world\b[^>]*>', text)
     if not opening:
         return path
-    systems = ([] if '<plugin' in text else list(_DEFAULT_SYSTEMS)) + [_CONTACT_SYSTEM]
+    # Only world-level plugins replace the defaults: a model's own plugin
+    # (a Label system, say) must not leave the world without Physics.
+    world_level = re.sub(r'<(model|actor|include)\b.*?</\1>', '', text, flags=re.S)
+    systems = ([] if '<plugin' in world_level else list(_DEFAULT_SYSTEMS)) + [_CONTACT_SYSTEM]
     plugins = ''.join('\n    <plugin filename="%s" name="%s"/>' % item for item in systems)
     base = os.path.dirname(os.path.abspath(path))
     text = re.sub(r'<uri>(?!\w+://)(?!/)([^<]+)</uri>',
