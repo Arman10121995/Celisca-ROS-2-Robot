@@ -37,6 +37,14 @@ Each report is judged by **`cleaning_screen`**
 | Keep-out zone, **PyBullet** | e3a64f40 | pass | 97.9 % (10.4 m²) | 9.9 min | 0.018 m, 2.0° | no bumper/cliff sensor in the PyBullet bridge |
 | Keep-out zone, **Isaac** | e3a64f40 | pass | 99.3 % (10.0 m²) | 7.3 min | 0.042 m, −4.4° | no bumper/cliff sensor in the Isaac bridge |
 | **Second building** (celisca_floor_1_furniture), two rooms | e3a64f40 | **fail** (interference) | 38.4 % | 17.7 min | 2.65 m | another session's Gazebo run on the same ROS domain sent a second `/clock` from minute 10; AMCL lost the robot. Rerun on domain 117 |
+| Zone, **vacuum + mop**, rug as carpet | 0f93fd53 | pass | 99.4 % (10.8 m²) | 5.7 min | 0.059 m | 8.13 m² mopped, 14.6 ml water; centre ≥ 0.249 m from the rug (body radius 0.165) |
+| Zone, vacuum, rug as carpet (**carpet boost**) | 73241b4a | pass | 99.7 % (12.5 m²) | 5.1 min | 0.040 m | 1.0 m² cleaned on the carpet at Max suction |
+| Zone with a cable, sock, shoe, pet mess (**camera objects**) | 87a97df2 | pass*, contact | 91.1 % (9.4 m²) | 5.7 min | 0.031 m | *all four recognised (ideal segmentation detector), but the body touched the shoe by truth (cable 8.4 cm, sock 10.3 cm, pet mess 34.9 cm clear); fixed in 0cac1f24, rerun queued |
+| Second building, rerun on domain 117 | 0f93fd53 | **fail** | 59.9 % | 14.7 min | 8.1 m | under furniture in room 2 its own bump marks walled it in; every path skipped. Escape added |
+| Second building | 73241b4a | **fail** | 42.4 % | 14.8 min | 1.66 m | wedged by truth while slipping wheels moved the estimate 1.3 m (7,921 bumper contacts, 0 stall events). Wedge detection added |
+| Second building | 87a97df2 | **fail** (no report) | – | 60 min | – | wedge detection backed out twice, then stopped with "Stuck"; headless runs did not write a report in error (fixed in 0cac1f24) |
+| Zone with floor objects, after the fix | 0cac1f24 | **pass** | 86.2 % (6.6 m²) | 4.6 min | 0.041 m | all four recognised, 0 bumper contacts; body ≥ 0.156 m from every object footprint by truth |
+| Second building | 0cac1f24 | **fail** | 16.6 % | 3.7 min | 2.59 m | wedged, then the estimate (0.61 m off) sat in an unknown pocket of the map; clearing marks could not reconnect it. Rejoin added in 7162a09a |
 
 ### Live GUI session (claude-v72, `scripts/qualify_vacuum_gui.py`)
 

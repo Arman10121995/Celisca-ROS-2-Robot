@@ -149,6 +149,38 @@ the path looks the same whether the robot moved or not (the "aperture
 problem"), so it decides nothing. A stall needs "did not move" to fit
 clearly better, and "moved" to miss by at least half the claimed distance.
 
+### Recognising floor objects
+
+A LiDAR cannot see a cable or a sock. Commercial vacuums use a front camera
+for these, and so does this one:
+
+1. The camera's image is labelled pixel by pixel (cable, sock, shoe, pet
+   mess). In simulation Gazebo's segmentation camera does this perfectly, so
+   it is called an *ideal detector*; a trained network would take its place
+   on a real robot.
+2. The depth image says how far each labelled pixel is. With the camera's
+   position (TF), each pixel becomes a point on the map floor, and points of
+   one class that touch become one object.
+3. The mission keeps a distance that depends on the class: 35 cm from pet
+   mess, 15 cm from a cable that could wrap the brush, 6 cm from a shoe.
+   Another 8 cm covers the robot's own position error. Lanes that now cross
+   an object are cut and re-joined around it.
+4. A closer sighting replaces the object's position and size, because the
+   projection is more accurate at short range. In the first run the robot
+   touched a shoe seen only from 2 m away; after this change it kept 15 cm
+   from every object.
+
+### Getting free
+
+Three situations look alike to the planner, "no way from here", and need
+different answers:
+
+| Situation | How it is recognised | What the robot does |
+|---|---|---|
+| Wedged (on a low crossbar, under furniture) | 6 bumps within 30 s | Forgets those bump marks (the estimate drifted while the wheels slipped), backs out and turns. The third time it stops: *Stuck* |
+| Walled in by its own bump marks | less than 2 m² of reachable floor | Forgets the marks within 45 cm, then 90 cm, ... |
+| The estimate is in a pocket the map closes | clearing marks frees nothing | Drives straight to the nearest open floor within 1.5 m, then plans normally |
+
 ## 5 · Battery, dustbin, consumables
 
 The simulators have no battery, so the battery is a **model**: each suction
@@ -212,7 +244,7 @@ All runs: [evidence](../status/evidence/vacuum-2026-11/README.md).
 ## Try it
 
 ```bash
-PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 python3 -m pytest -q src/robot_lab_vacuum_cleaning/test   # 29 tests, ~30 s
+PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 python3 -m pytest -q src/robot_lab_vacuum_cleaning/test   # 35 tests, ~30 s
 python3 docs/learn/figures/make_figures.py rooms coverage cleaning
 scripts/sim_vacuum_mission.sh gazebo oomwoo small_house /tmp/run.json \
   '{"mode": "rooms", "rooms": [4], "edge": true}'          # one recorded Gazebo job (~6 min)

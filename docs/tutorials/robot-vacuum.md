@@ -57,6 +57,8 @@ left. It then divides the rooms and returns to the dock.
 | Auto-empty dock | Care | When the bin is full it docks, empties for 10 s and continues |
 | Refilling dock | Care | When the water tank runs dry it docks, refills (up to 20 s) and continues. Without it, Vacuum + mop goes on vacuuming and Mop only ends the job |
 | Obstacles | automatic | LiDAR stop, back-off and a detour around anything not on the map. The obstacle is remembered for the run |
+| Floor objects | automatic (front camera) | Cables, socks, shoes and pet mess are recognised and kept away from (15 / 10 / 6 / 35 cm plus 8 cm). They show on the map as C, S, Sh and ! and are remembered across jobs. The **Erase** tool on one cleans over it from the next job. In simulation the recogniser is Gazebo's segmentation camera, an ideal detector |
+| Getting free | automatic | Six bumps in 30 s: wedged; it forgets those bump marks and backs out, and the third time asks for help ("Stuck"). Walled in by its own marks, or lost in a closed pocket of the map: it forgets nearby marks, then drives to the nearest open floor |
 | Bumper, cliff, stuck | automatic | Contact or a floor drop: back off, mark it and go around. Not moving for 6 s: free-itself manoeuvre, error after 3 tries |
 | Drive by hand | Setup → Drive pad | Keyboard and joystick override the cleaning system (twist_mux priority) |
 

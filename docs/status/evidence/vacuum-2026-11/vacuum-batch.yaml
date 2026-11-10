@@ -408,3 +408,152 @@ groups:
   limitations:
   - 'FAILED and kept: 38.4 % coverage, ended in error 2.65 m from the dock'
   - 'Invalidated by interference: another session started a Bumperbot Gazebo simulation at 17:29:49 on the same ROS domain (94); from 17:30:01 its /clock made every node log "jump back in time" (298,432 times) and AMCL lost the robot (estimate 3.26 m from truth). Rerun on domain 117 (queue T18)'
+- reports:
+  - docs/status/evidence/vacuum-2026-11/runs-v73/gazebo_zone_mop_rug.json
+  report_kind: cleaning_screen
+  identity:
+    robot_id: oomwoo
+    environment_id: small_house
+    simulator: gazebo
+    task_type: vacuum_zone_mop_carpet
+  date: '2026-11-10'
+  revision: 0f93fd53 (queue T18, claude-v73, domain 117)
+  hash_revision: 0f93fd53
+  source_files:
+  - src/robot_lab_vacuum_cleaning/robot_lab_vacuum_cleaning/mission.py
+  - src/robot_lab_vacuum_cleaning/robot_lab_vacuum_cleaning/planner.py
+  - src/robot_lab_vacuum_cleaning/robot_lab_vacuum_cleaning/vacuum_cleaner.py
+  - src/robot_lab_description/launch/gazebo.launch.py
+  - src/robot_lab_robots/oomwoo/urdf/oomwoo_gazebo.xacro
+  scope: 'Vacuum + mop zone job with a 1 m rug drawn as a carpet. Judged by cleaning_screen with the carpet as a no-go area (the job mopped).'
+  limitations:
+  - 'One run; water, mop pad and carpet are models (the world has no rug)'
+  - '8.13 m2 mopped, 14.6 ml of water; the centre stayed >= 0.249 m from the rug edge'
+- reports:
+  - docs/status/evidence/vacuum-2026-11/runs-v74/gazebo_zone_carpet_boost.json
+  report_kind: cleaning_screen
+  identity:
+    robot_id: oomwoo
+    environment_id: small_house
+    simulator: gazebo
+    task_type: vacuum_zone_carpet_boost
+  date: '2026-11-10'
+  revision: 73241b4a (queue T19, claude-v74, domain 117)
+  hash_revision: 73241b4a
+  source_files:
+  - src/robot_lab_vacuum_cleaning/robot_lab_vacuum_cleaning/mission.py
+  - src/robot_lab_vacuum_cleaning/robot_lab_vacuum_cleaning/planner.py
+  - src/robot_lab_vacuum_cleaning/robot_lab_vacuum_cleaning/vacuum_cleaner.py
+  - src/robot_lab_description/launch/gazebo.launch.py
+  - src/robot_lab_robots/oomwoo/urdf/oomwoo_gazebo.xacro
+  scope: 'The same zone vacuumed only, with the rug as a carpet (Max suction there). Judged by cleaning_screen.'
+  limitations:
+  - 'One run; 1.0 m2 cleaned on the carpet'
+  - 'The first attempt (claude-v73) died 10 s after launch: an uncommitted launch edit (symlinked into the install) started a not-yet-installed node'
+- reports:
+  - docs/status/evidence/vacuum-2026-11/runs-v75/gazebo_zone_objects.json
+  report_kind: cleaning_screen
+  identity:
+    robot_id: oomwoo
+    environment_id: small_house
+    simulator: gazebo
+    task_type: vacuum_zone_floor_objects
+  date: '2026-11-10'
+  revision: 87a97df2 (queue T20, claude-v75, domain 117)
+  hash_revision: 87a97df2
+  source_files:
+  - src/robot_lab_vacuum_cleaning/robot_lab_vacuum_cleaning/mission.py
+  - src/robot_lab_vacuum_cleaning/robot_lab_vacuum_cleaning/planner.py
+  - src/robot_lab_vacuum_cleaning/robot_lab_vacuum_cleaning/vacuum_cleaner.py
+  - src/robot_lab_description/launch/gazebo.launch.py
+  - src/robot_lab_robots/oomwoo/urdf/oomwoo_gazebo.xacro
+  scope: 'Zone job in a small_house copy with a cable, a sock, a shoe and pet mess (scripts/vacuum_object_world.py; runs-v75/small_house_objects.objects.json). The front segmentation camera (ideal class detector) and depth found all four.'
+  limitations:
+  - 'Passes cleaning_screen, but by truth the body touched the shoe (gap 0.0 m; cable 0.084, sock 0.103, pet mess 0.349 m): the shoe position came from a 2 m sighting, 16 cm off, and the 6 cm berth left no margin. Fixed in 0cac1f24 (refined positions, 8 cm margin); rerun queued'
+  - 'cleaning_screen does not check object clearance yet; the gaps above are from the truth trail (1 Hz)'
+  - 'The first attempt (claude-v74) never started: the object world lost its Physics system (fixed in 87a97df2) and a stale 0.1.0 egg-info hid the detector entry point'
+- reports:
+  - docs/status/evidence/vacuum-2026-11/runs-v73/gazebo_celisca_rooms.json
+  report_kind: cleaning_screen
+  identity:
+    robot_id: oomwoo
+    environment_id: celisca_floor_1_furniture
+    simulator: gazebo
+    task_type: vacuum_rooms
+  date: '2026-11-10'
+  revision: 0f93fd53 (queue T18, claude-v73, domain 117)
+  hash_revision: 0f93fd53
+  source_files:
+  - src/robot_lab_vacuum_cleaning/robot_lab_vacuum_cleaning/mission.py
+  - src/robot_lab_vacuum_cleaning/robot_lab_vacuum_cleaning/planner.py
+  - src/robot_lab_vacuum_cleaning/robot_lab_vacuum_cleaning/vacuum_cleaner.py
+  - src/robot_lab_description/launch/gazebo.launch.py
+  - src/robot_lab_robots/oomwoo/urdf/oomwoo_gazebo.xacro
+  scope: 'Second building, two rooms by points (rerun without interference).'
+  limitations:
+  - 'FAILED and kept: 59.9 %, ended in error 8.1 m from the dock; under furniture in room 2 (map clearance 0) its own bump marks walled it in and every path was skipped. Escape added in 73241b4a'
+- reports:
+  - docs/status/evidence/vacuum-2026-11/runs-v74/gazebo_celisca_rooms.json
+  report_kind: cleaning_screen
+  identity:
+    robot_id: oomwoo
+    environment_id: celisca_floor_1_furniture
+    simulator: gazebo
+    task_type: vacuum_rooms
+  date: '2026-11-10'
+  revision: 73241b4a (queue T19, claude-v74, domain 117)
+  hash_revision: 73241b4a
+  source_files:
+  - src/robot_lab_vacuum_cleaning/robot_lab_vacuum_cleaning/mission.py
+  - src/robot_lab_vacuum_cleaning/robot_lab_vacuum_cleaning/planner.py
+  - src/robot_lab_vacuum_cleaning/robot_lab_vacuum_cleaning/vacuum_cleaner.py
+  - src/robot_lab_description/launch/gazebo.launch.py
+  - src/robot_lab_robots/oomwoo/urdf/oomwoo_gazebo.xacro
+  scope: 'Second building, two rooms by points.'
+  limitations:
+  - 'FAILED and kept: 42.4 %, wedged near (0.52, -0.48) by truth while slipping wheels moved the estimate 1.3 m; 7921 bumper contacts, 0 stall events. Wedge detection added in 87a97df2'
+  - 'The cliff floor was calibrated mid-fall (spawn z 0.5 m) at 6.6 cm; fixed in 87a97df2'
+- reports:
+  - docs/status/evidence/vacuum-2026-11/runs-v76/gazebo_zone_objects.json
+  report_kind: cleaning_screen
+  identity:
+    robot_id: oomwoo
+    environment_id: small_house
+    simulator: gazebo
+    task_type: vacuum_zone_floor_objects
+  date: '2026-11-10'
+  revision: 0cac1f24 (queue T21, claude-v76, domain 117)
+  hash_revision: 0cac1f24
+  source_files:
+  - src/robot_lab_vacuum_cleaning/robot_lab_vacuum_cleaning/mission.py
+  - src/robot_lab_vacuum_cleaning/robot_lab_vacuum_cleaning/planner.py
+  - src/robot_lab_vacuum_cleaning/robot_lab_vacuum_cleaning/vacuum_cleaner.py
+  - src/robot_lab_vacuum_cleaning/robot_lab_vacuum_cleaning/vacuum_objects.py
+  - src/robot_lab_description/launch/gazebo.launch.py
+  - src/robot_lab_robots/oomwoo/urdf/oomwoo_gazebo.xacro
+  scope: 'Zone job in the small_house copy with a cable, sock, shoe and pet mess (runs-v75/small_house_objects.objects.json), after the refined-position and 8 cm margin fix. Judged by cleaning_screen; object clearance from the truth trail.'
+  limitations:
+  - 'One run; the segmentation camera is an ideal class detector (positions from depth and TF)'
+  - 'All four recognised; 0 bumper contacts; body gap to footprints by truth: cable 0.274, sock 0.263, shoe 0.156, pet mess 0.433 m (1 Hz trail)'
+  - 'Indexed after the 87a97df2 run, so it controls the cell'
+- reports:
+  - docs/status/evidence/vacuum-2026-11/runs-v76/gazebo_celisca_rooms.json
+  report_kind: cleaning_screen
+  identity:
+    robot_id: oomwoo
+    environment_id: celisca_floor_1_furniture
+    simulator: gazebo
+    task_type: vacuum_rooms
+  date: '2026-11-10'
+  revision: 0cac1f24 (queue T21, claude-v76, domain 117)
+  hash_revision: 0cac1f24
+  source_files:
+  - src/robot_lab_vacuum_cleaning/robot_lab_vacuum_cleaning/mission.py
+  - src/robot_lab_vacuum_cleaning/robot_lab_vacuum_cleaning/planner.py
+  - src/robot_lab_vacuum_cleaning/robot_lab_vacuum_cleaning/vacuum_cleaner.py
+  - src/robot_lab_vacuum_cleaning/robot_lab_vacuum_cleaning/vacuum_objects.py
+  - src/robot_lab_description/launch/gazebo.launch.py
+  - src/robot_lab_robots/oomwoo/urdf/oomwoo_gazebo.xacro
+  scope: 'Second building, two rooms by points.'
+  limitations:
+  - 'FAILED and kept: 16.6 %; wedged once, then the estimate (0.61 m from truth) sat in an unknown pocket of the map; three escapes cleared marks but could not reconnect it. Rejoin added in 7162a09a'

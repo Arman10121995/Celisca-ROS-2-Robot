@@ -123,9 +123,9 @@ Work top to bottom. Each line links to its task.
 
 | Order | Task | Remaining implementation (short) | State |
 |---|---|---|---|
-| I1 | [R13.2](#r132--vacuum-carpets-and-mopping) Vacuum carpets and mopping | Build, test and commit the code written on 2026-11-10 | partial |
-| I2 | [R13.3](#r133--vacuum-camera-obstacle-recognition) Vacuum camera obstacles | Camera, detector, class-specific avoidance, GUI icons | not started |
-| I3 | [R14.1](#r141--open-source-counterparts-for-self-made-robots) Open-source robots | Find and integrate open-source counterparts for the self-made robots | not started |
+| I1 | [R13.2](#r132--vacuum-carpets-and-mopping) Vacuum carpets and mopping | Done 2026-11-10 (Gazebo mop + rug run passes) | implemented |
+| I2 | [R13.3](#r133--vacuum-camera-obstacle-recognition) Vacuum camera obstacles | Measured with an ideal detector (0 contacts); learned detector, snapshots | partial |
+| I3 | [R14.1](#r141--open-source-counterparts-for-self-made-robots) Open-source robots | First search done; integrate TurtleBot 4 Lite as a vacuum, then WAM-V, BlueROV2, Summit-XL | partial |
 | I4 | [R6.7](#r67--terrain-generation-gui-and-four-backend-conversion) Terrain GUI | GUI page, provider manifest, Isaac contact | partial |
 | I5 | [R5.11](#r511--drone-moving-obstacles-and-other-drone-backends) Drone moving obstacles | Moving-obstacle prediction, sensor-loss handling, other backends | not started |
 | I6 | [R5.9](#r59--mobile-manipulators) Mobile manipulation | Navigate → reach → grasp → transport → release pipeline in the GUI | partial |
@@ -761,50 +761,86 @@ These are complete; keep them working. Details and evidence are in the
   - [Evidence](docs/status/evidence/vacuum-2026-11/README.md),
     [guide](docs/tutorials/robot-vacuum.md),
     [how it works](docs/learn/07-robot-vacuum-inside.md).
-- **Validation later:** repeats of every job; a second building
-  (`celisca_floor_1_furniture`, by `room_points`).
+- **Repeats:** office, keep-out zone and spot have three passing runs each.
+- **Second building (`celisca_floor_1_furniture`): fails so far.** The
+  failures, in order, each with its fix:
+  1. interference from another session's `/clock` on the same ROS domain
+     (now domain 117);
+  2. its own bump marks walled it in under furniture (escape added);
+  3. wedged with slipping wheels, the estimate drifting 1.3 m (wedge
+     detection added; cliff floor calibration fixed);
+  4. stopped with "Stuck" but wrote no report (headless error report added);
+  5. the estimate ended in a closed pocket of the map (rejoin added).
+
+  The rerun at 7162a09a is queued. Room 2's furniture area, where the robot
+  gets under furniture, is the open problem: consider a furniture-height
+  check or keep-outs there.
+- **Validation later:** more repeats; other houses.
 
 #### R13.2 — Vacuum carpets and mopping
 
-- **State:** partial (code written 2026-11-10, not yet built or tested) · **Priority:** I1
+- **State:** implemented and measured once (2026-11-10) · **Priority:** done in
+  the implementation queue; repeats are V1
 - **Have:**
   - Carpet areas (a map tool) with Max-suction carpet boost; mopping jobs
     keep off carpets.
   - Clean modes: vacuum, vacuum + mop, mop only.
   - A water-tank model with refill-and-resume at the dock; a mop-pad consumable.
-  - Tests in `src/robot_lab_vacuum_cleaning/test/test_cleaning_core.py` and
-    `src/robot_lab_gui/test/test_cleaning_tab.py`.
-- **Remaining implementation:** build, run the tests, fix, commit; add the
-  water and carpet fields to `scripts/vacuum_run_report.py` figures.
-- **Done when:** the unit and GUI tests pass, and a recorded Gazebo
-  vacuum + mop job with a carpet keeps the mop off the carpet by truth.
+  - `cleaning_screen` treats carpets as no-go areas for jobs that mopped;
+    reports and figures show the mop and carpet fields.
+  - Core tests (29) and GUI tests pass.
+  - Gazebo, small_house, vacuum + mop zone with a rug: pass. Coverage 99.4 %,
+    8.13 m² mopped, 14.6 ml of water; the centre stayed at least 0.249 m from
+    the rug edge (body radius 0.165 m); docked within 5.9 cm.
+    [Evidence](docs/status/evidence/vacuum-2026-11/README.md).
+- **Remaining implementation:** none.
+- **Validation later:** the carpet-boost run (its first attempt failed to
+  launch from an unrelated edit, not the vacuum code), mop-only with a refill,
+  repeats.
 
 #### R13.3 — Vacuum camera obstacle recognition
 
-- **State:** not started · **Priority:** I2 · **Depends on:** R13.1
+- **State:** implemented and measured once (2026-11-10) · **Priority:** I2 (learned detector remains) · **Depends on:** R13.1
 - **Goal:** like commercial vacuums, a front camera recognises cables,
   socks, shoes and pet mess. The robot keeps a class-specific distance and
   shows them on the map.
-- **How to do it:**
-  1. Add a low front RGB-D camera to `oomwoo.urdf.xacro` and
-     `oomwoo_gazebo.xacro`, bridged in `gazebo.launch.py`.
-  2. Add the object models to a `small_house` variant. Use open-licensed
-     models, Gazebo Fuel first.
-  3. Start with Gazebo's segmentation camera as an *ideal detector*, labelled
-     as such. Then add a learned detector with a permissive license: a
-     torchvision detector fine-tuned on rendered images. Avoid AGPL code in
-     the main package.
-  4. A `vacuum_obstacles` node projects detections to the floor with the depth
-     image and publishes `/vacuum/obstacles` (class, position, confidence).
-  5. `mission.py`: mark classed obstacles on the planning map with a per-class
-     berth, log events, and save them in the job record.
-  6. GUI: icons on the map, a list with snapshots, and "ignore this one".
+- **Measured:** Gazebo, small_house copy with a cable, sock, shoe and pet
+  mess: all four recognised, **0 bumper contacts**, body ≥ 0.156 m from every
+  footprint by truth, `cleaning_screen` pass (86.2 %). The first run touched
+  the shoe (a 2 m sighting, 16 cm off); fixed by refined positions and an
+  8 cm margin. [Evidence](docs/status/evidence/vacuum-2026-11/README.md).
+- **Have:**
+  - a front camera on `oomwoo`: RGB-D plus a pixel-aligned semantic
+    segmentation camera (`oomwoo.urdf.xacro`, `oomwoo_gazebo.xacro`), bridged
+    to `/vacuum/camera/{image,depth,camera_info,labels}` in `gazebo.launch.py`;
+  - `vacuum_objects.py` (`vacuum_object_detector`): projects labelled
+    pixels through depth and TF to floor objects on `/vacuum/objects`. The
+    segmentation detector is an *ideal* detector (simulator class labels;
+    positions from depth), and its messages say so;
+  - `mission.py`: remembered objects with class berths (cable 15 cm, sock
+    10 cm, shoe 6 cm, pet mess 35 cm), re-routing of the active lane,
+    `ignore_object` / `forget_objects`, record fields `objects_avoided` and `object_detector`;
+  - GUI: object glyphs on the map; the Erase tool ignores an object;
+  - `scripts/vacuum_object_world.py`: a world copy with labelled cable, sock,
+    shoe and pet mess (Gazebo Label system), checked against free floor in the map;
+  - tests: projection, avoidance and ignore (core), drawing and erase (GUI).
+- **Remaining implementation:**
+  1. A learned detector with a permissive license (for example a torchvision
+     detector fine-tuned on images rendered from these worlds; no AGPL code)
+     publishing the same labels image or objects message.
+  2. GUI snapshots of each object from `/vacuum/camera/image`.
+  3. An object-clearance check in `cleaning_screen` (the gaps above come from
+     a separate truth-trail computation).
 - **Done when:** a recorded job in a house with these objects ends with zero
   contacts with them by truth, and passes `cleaning_screen`.
 
 ### R14.1 — Open-source counterparts for self-made robots
 
-- **State:** not started · **Priority:** I3 · requested by the user 2026-11-10
+- **State:** partial (first search pass done 2026-11-10) · **Priority:** I3 · requested by the user 2026-11-10
+- **Search record:** [r14-open-source-candidates-2026-11-10](docs/status/r14-open-source-candidates-2026-11-10.md).
+  Finding: the iRobot Create 3 (BSD) is already installed, and the installed,
+  measured TurtleBot 4 Lite (Create 3 plus LiDAR) is the quickest open-source
+  platform for the cleaning system.
 - **Goal:** the lab uses open-source robots wherever a suitable one exists.
   Self-made robots stay only where none exists, with the reason recorded.
 - **Why this task exists:** these profiles were authored by agents in this

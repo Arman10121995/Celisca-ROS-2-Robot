@@ -17,8 +17,24 @@ November 10:
 
   - mapping run on a live SLAM map: 6 rooms, after two fixed failures.
 
-  Every run docked within 0.051 m by truth. The Gazebo bumper contact
-  topic is not created ([evidence](evidence/vacuum-2026-11/README.md)).
+  Every run docked within 0.051 m by truth
+  ([evidence](evidence/vacuum-2026-11/README.md)).
+- **Robot vacuum, later on November 10** (same evidence):
+  - **Gazebo bumper** works (world-level Contact system): the hidden-box run bumps 4 times (97.0 %).
+  - **Live GUI session** through the real Vacuum tab: an office picked on the room map, paused (truth still
+    for 5 s) and resumed, 90.2 %; a zone with a no-go box and a wall drawn with the map tools, 99.5 %.
+  - **PyBullet** 97.9 % and **Isaac** 99.3 % on the keep-out zone.
+  - **Repeats:** office 95.4 / 94.4 / 95.0 %, keep-out zone 99.6 / 99.4 / 99.4 %, spot 90.7 / 91.2 / 90.2 %.
+  - **New features:**
+    - vacuum + mop with a rug as a carpet: 99.4 %, the mop never on the rug;
+    - carpet boost: 99.7 %;
+    - camera floor objects (cable, sock, shoe, pet mess; ideal segmentation detector): all recognised,
+      0 contacts after a fix, 86.2 %.
+  - **Second building** (`celisca_floor_1_furniture`): **fails** in five runs. Each failure led to a fix:
+    another session's `/clock` on the shared domain; self-walling bump marks; wedging under furniture;
+    no headless error report; a drifted estimate in a closed map pocket. A rerun with all fixes is queued.
+- **Roadmap:** restructured into one goal list with an implementation queue and per-task how-to
+  ([ROADMAP](../../ROADMAP.md)); open-source counterparts for self-made robots are task R14.1.
 - **Docs:** [Learn Robot Lab from zero](../learn/README.md), an illustrated
   beginner course:
   - 8 chapters, 46 diagrams and 21 generated figures/animations;

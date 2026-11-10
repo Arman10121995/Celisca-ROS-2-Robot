@@ -1942,17 +1942,17 @@ tasks:
         acceptance_ref: ROADMAP.md R13.1
         owner: claude
         state: partial
-        title: Core cleaning system (implemented and measured; repeats and a second building pending)
+        title: 'Core cleaning system: measured; three repeats of office/zone/spot, PyBullet/Isaac zone and the live GUI session pass; the second building (celisca) fails so far'
       R13.2:
         acceptance_ref: ROADMAP.md R13.2
         owner: claude
         state: partial
-        title: Carpets, mopping modes, water tank and refill (code written 2026-11-10, build/tests pending)
+        title: 'Carpets, mopping modes, water tank and refill: implemented; Gazebo vacuum+mop rug and carpet-boost runs pass (2026-11-10)'
       R13.3:
         acceptance_ref: ROADMAP.md R13.3
-        owner: null
-        state: queued
-        title: Camera obstacle recognition (cables, socks, shoes, pet mess)
+        owner: claude
+        state: partial
+        title: 'Camera floor-object recognition (ideal segmentation detector): Gazebo run with cable/sock/shoe/pet mess passes, 0 contacts; learned detector pending'
     title: Robot-vacuum cleaning system (OOMWOO-class)
   R14:
     acceptance_ref: ROADMAP.md R14.1
