@@ -754,12 +754,13 @@ These are complete; keep them working. Details and evidence are in the
   - `go2_walk_r1`–`r3` pass drive screens on three backends.
   - [Guide](docs/tutorials/legged-policy-training.md).
 - **Remaining implementation:**
-  - Go2W strafe (PD gains updated in go2w_robot_lab/config.yaml);
-  - GPU training (CPU-only on Orin).
+  - Go2W strafe (PD gains updated in go2w_robot_lab/config.yaml; simulation test pending);
+  - GPU training (CPU-only on Orin; training possible but slower).
 - **How to do it:** `robot_lab_adapter/legged_training.py`, `ppo.py` and `legged_train.py`.
   Add robots by their provisioned policy contract; train in MuJoCo; check
   through `legged_policy:=<dir>` on all backends.
 - **Done when:** a trained policy performs its task in measured runs on the backends.
+  Go2W strafe: simulation test shows improved lateral velocity with updated PD gains.
 - **Validation later:** Isaac speed gap, navigation precision, repeats (V4).
 
 ### R13 — Robot-vacuum cleaning system (OOMWOO-class)
