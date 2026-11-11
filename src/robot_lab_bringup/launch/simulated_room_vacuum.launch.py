@@ -2,12 +2,23 @@ import os
 
 from ament_index_python.packages import get_package_share_directory
 from launch import LaunchDescription
-from launch.actions import DeclareLaunchArgument, IncludeLaunchDescription
+from launch.actions import (DeclareLaunchArgument, EmitEvent, IncludeLaunchDescription,
+                            OpaqueFunction, RegisterEventHandler)
 from launch.conditions import IfCondition
+from launch.event_handlers import OnProcessExit
+from launch.events import Shutdown
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.substitutions import LaunchConfiguration, PythonExpression
 from launch_ros.actions import Node
 from launch_ros.parameter_descriptions import ParameterValue
+
+
+def _validate_detector(context):
+    if LaunchConfiguration('vacuum_detector').perform(context) == 'learned':
+        path = LaunchConfiguration('vacuum_detector_model').perform(context)
+        if not path or not os.path.isfile(path):
+            raise RuntimeError('Learned vacuum detection requires vacuum_detector_model:=<local checkpoint>')
+    return []
 
 
 def generate_launch_description():
@@ -127,6 +138,7 @@ def generate_launch_description():
             "auto_start": ParameterValue(vacuum_auto_start, value_type=str),
             "report_path": vacuum_report,
             "battery_time_scale": ParameterValue(vacuum_battery_scale, value_type=float),
+            "object_truth_manifest": LaunchConfiguration("vacuum_object_truth"),
         }],
     )
 
@@ -137,10 +149,26 @@ def generate_launch_description():
         executable="vacuum_object_detector",
         name="vacuum_object_detector",
         output="screen",
-        condition=IfCondition(PythonExpression(["'", controller, "' == 'cleaning'"])),
+        condition=IfCondition(PythonExpression(["'", controller, "' == 'cleaning' and '",
+                                               LaunchConfiguration("vacuum_detector"), "' == 'segmentation'"])),
         parameters=[{
             "use_sim_time": ParameterValue(use_sim_time, value_type=bool),
             "camera_frame": "front_camera_optical_frame",
+        }],
+    )
+
+    learned_detector = Node(
+        package="robot_lab_vacuum_cleaning",
+        executable="vacuum_learned_detector",
+        name="vacuum_learned_object_detector",
+        output="screen",
+        condition=IfCondition(PythonExpression(["'", controller, "' == 'cleaning' and '",
+                                               LaunchConfiguration("vacuum_detector"), "' == 'learned'"])),
+        parameters=[{
+            "use_sim_time": ParameterValue(use_sim_time, value_type=bool),
+            "camera_frame": "front_camera_optical_frame",
+            "model_path": LaunchConfiguration("vacuum_detector_model"),
+            "device": LaunchConfiguration("vacuum_detector_device"),
         }],
     )
 
@@ -156,6 +184,14 @@ def generate_launch_description():
                               description="cleaning: start this mode (all, edges, explore) once ready."),
         DeclareLaunchArgument("vacuum_report", default_value="",
                               description="cleaning: write the auto-started run record to this JSON path."),
+        DeclareLaunchArgument("vacuum_detector", default_value="segmentation",
+                              choices=["segmentation", "learned", "none"],
+                              description="Floor-object source: ideal simulation labels, learned RGB checkpoint, or disabled."),
+        DeclareLaunchArgument("vacuum_detector_model", default_value="",
+                              description="Required local trained checkpoint when vacuum_detector:=learned."),
+        DeclareLaunchArgument("vacuum_detector_device", default_value="cpu"),
+        DeclareLaunchArgument("vacuum_object_truth", default_value="",
+                              description="Independent generated-world objects JSON, used only in the run report."),
         DeclareLaunchArgument("allow_experimental_assets", default_value="false",
                               description="Pass to simulated_robot.launch.py (provisioned robots whose source changed)."),
         DeclareLaunchArgument("vacuum_battery_time_scale", default_value="-1.0",
@@ -229,8 +265,13 @@ def generate_launch_description():
             default_value="0.30",
             description="Minimum clearance, in meters, around LiDAR obstacles while cleaning.",
         ),
+        OpaqueFunction(function=_validate_detector),
+        RegisterEventHandler(OnProcessExit(
+            target_action=learned_detector,
+            on_exit=[EmitEvent(event=Shutdown(reason='Selected learned object detector exited'))])),
         simulation,
         room_vacuum,
         cleaning,
         object_detector,
+        learned_detector,
     ])

@@ -27,7 +27,8 @@ from std_msgs.msg import String
 from tf2_ros import Buffer, TransformListener
 
 from .learned_detector import LearnedDetector, LABELS, CLASS_RADIUS, project_detections
-from .vacuum_objects import _image_array, _matrix
+from .vacuum_objects import _matrix
+from .camera_observations import add_snapshots, aligned_pair, image_array, stamp_seconds
 
 
 class LearnedObjectDetector(Node):
@@ -36,6 +37,8 @@ class LearnedObjectDetector(Node):
         p = self.declare_parameter
         p('model_path', '')
         p('score_thresh', 0.4)
+        p('device', 'cpu')
+        p('rgb_topic', '/vacuum/camera/image')
         p('labels_topic', '/vacuum/camera/labels')   # kept for interface parity
         p('depth_topic', '/vacuum/camera/depth')
         p('camera_info_topic', '/vacuum/camera/camera_info')
@@ -46,9 +49,8 @@ class LearnedObjectDetector(Node):
         gp = lambda name: self.get_parameter(name).value
         self.classes = {int(k): v for k, v in json.loads(gp('labels')).items()}
         model_path = gp('model_path')
-        self.detector = LearnedDetector(model_path, score_thresh=float(gp('score_thresh')))
-        if not self.detector.ok:
-            self.get_logger().warn('no learned detector checkpoint at %r; publishing no objects' % model_path)
+        self.detector = LearnedDetector(model_path, score_thresh=float(gp('score_thresh')),
+                                        device=gp('device'), labels=self.classes)
         self.buffer = Buffer(cache_time=Duration(seconds=10.0))
         self.listener = TransformListener(self.buffer, self)
         self.info = self.depth = None
@@ -57,7 +59,7 @@ class LearnedObjectDetector(Node):
         self.pub = self.create_publisher(String, '/vacuum/objects', 10)
         self.create_subscription(CameraInfo, gp('camera_info_topic'), self._info, qos_profile_sensor_data)
         self.create_subscription(Image, gp('depth_topic'), self._depth, qos_profile_sensor_data)
-        self.create_subscription(Image, '/vacuum/camera/image', self._image, qos_profile_sensor_data)
+        self.create_subscription(Image, gp('rgb_topic'), self._image, qos_profile_sensor_data)
         self.get_logger().info('Learned object detector (checkpoint %s, score_thresh %.2f)' %
                                (model_path, float(gp('score_thresh'))))
 
@@ -72,10 +74,12 @@ class LearnedObjectDetector(Node):
         if now - self.last < self.period:
             return
         self.last = now
-        if self.info is None or self.depth is None:
+        if self.info is None or not aligned_pair(msg, self.depth):
             return
-        rgb = _image_array(msg)
-        depth = _image_array(self.depth)
+        if self.info.width != msg.width or self.info.height != msg.height:
+            return
+        rgb = image_array(msg, rgb=True)
+        depth = image_array(self.depth)
         if rgb is None or depth is None:
             return
         frame = self.get_parameter('camera_frame').value or self.depth.header.frame_id or \
@@ -89,6 +93,7 @@ class LearnedObjectDetector(Node):
         detections = self.detector.detect(rgb)
         objects = project_detections(detections, depth, list(self.info.k), _matrix(tf),
                                      radius_override=CLASS_RADIUS)
+        add_snapshots(objects, rgb, stamp_seconds(msg))
         stamp = self.depth.header.stamp
         self.pub.publish(String(data=json.dumps({
             'detector': 'learned',

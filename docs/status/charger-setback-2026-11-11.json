@@ -1,0 +1,33 @@
+{
+  "backup": "/workspace/molar/robot_lab_runtime/charger-setback-20261111/before-163906",
+  "preserved_navigation_and_station_transfer": 10,
+  "physical_commands": 0,
+  "display_setback_m": 0.35,
+  "goal_or_robot_poses_changed": false,
+  "source_manifest_sha256": "8512a4151921e8a185d9864651cff2f52b2bd06693cf9d5a2ffebdef780235b0",
+  "model_source_sha256": {
+    "molar_hri.urdf": "879f4b3286b7629200723857ba661a178d718815a1276f84e92b8b0b50805c5e",
+    "probot_l.urdf": "1e6c3f62b277d4ea1148f6111998277c9be08e5455e4fe38186ace8016a115fd"
+  },
+  "floor_source_sha256": {
+    "1": "b5dfd22bb8f9ff1f2d99db9fe09f10e2b8aa504559db909400ca48c11de98e58",
+    "2": "d1667c58f4c3732ab3484df3ce3ac12727b15c4db094be050014dbe0801a7e94"
+  },
+  "native_tests_passed": 3,
+  "map_package_built": true,
+  "scope": "Map-only placement; no robot assets or real goal changes",
+  "whole_tree_review": {
+    "owner": "codex",
+    "focused_checks_passed": 52,
+    "actual_original_source_retention": [
+      1,
+      2
+    ],
+    "copied_adapter_hashes_matched": 126,
+    "installed_assets_matched": 136,
+    "charger_mesh_faces_unchanged": true,
+    "only_mesh_translation_m": 0.35,
+    "source_bytes_preserved_through_git": true,
+    "report": "docs/status/evidence/vacuum-camera-2026-11-11/whole-tree-review.md"
+  }
+}

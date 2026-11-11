@@ -27,9 +27,9 @@ import yaml
 
 PINS = {
     1: {'source': '91584e9df42751d172f245091d91e8bd7db8f9c9aaaed40e3a0047876aa82d9e',
-        'detailed': '3f2e2ec62a7edc6bc907eda4ef9519491a5b92498a921c44f1863b94f90333ac'},
+        'detailed': 'b5dfd22bb8f9ff1f2d99db9fe09f10e2b8aa504559db909400ca48c11de98e58'},
     2: {'source': '17eabdc19d88d59dad2284d376d7292eec800cf69ee778c06375a4887d2b7319',
-        'detailed': 'c9fd3c0601fdfca965d969c39dfb07952dafe97d727c17827bfbb7cef54d773c'},
+        'detailed': 'd1667c58f4c3732ab3484df3ce3ac12727b15c4db094be050014dbe0801a7e94'},
 }
 ROTATION = np.array([[1., 0., 0.], [0., 0., -1.], [0., 1., 0.]])
 COMPONENTS = {5120: '<i1', 5121: '<u1', 5122: '<i2', 5123: '<u2', 5125: '<u4', 5126: '<f4'}

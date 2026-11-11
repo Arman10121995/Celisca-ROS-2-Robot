@@ -28,6 +28,7 @@ Battery, dustbin and consumable wear are models (see mission.py).
 """
 
 import json
+import hashlib
 import math
 from collections import deque
 import os
@@ -135,9 +136,19 @@ class VacuumCleaner(Node):
         p('report_path', '')         # headless: write the run record here
         p('exit_on_finish', False)
         p('truth_topic', '/odom/ground_truth')  # simulators: recorded in the report only
+        p('object_truth_manifest', '')  # independent world footprints; reporting only
         gp = lambda name: self.get_parameter(name).value  # noqa: E731
 
         self.robot_model = gp('robot_model')
+        self.object_truth = None
+        if gp('object_truth_manifest'):
+            path = Path(gp('object_truth_manifest'))
+            payload = path.read_bytes()  # fail explicitly if the requested asset is unavailable
+            objects = json.loads(payload)
+            if not isinstance(objects, list) or not objects:
+                raise ValueError('Object truth manifest must contain generated world footprints')
+            self.object_truth = {'manifest': str(path.resolve()),
+                                 'sha256': hashlib.sha256(payload).hexdigest(), 'objects': objects}
         profile = load_profile(self.robot_model, gp('robots_config'))
         config = robot_config_from_profile(profile)
         store = Store(Path(gp('store_dir'))) if gp('store_dir') else Store()
@@ -192,6 +203,7 @@ class VacuumCleaner(Node):
         self.pending_scans = deque(maxlen=10)
         self.stall_events = 0
         self.truth = None
+        self.truth_stamp = None
         self.trail = []
         self.last_trail = 0.0
         self.bumper_msgs = 0
@@ -298,6 +310,7 @@ class VacuumCleaner(Node):
     def _truth_cb(self, msg: Odometry):
         p = msg.pose.pose
         self.truth = (p.position.x, p.position.y, yaw_of(p.orientation))
+        self.truth_stamp = msg.header.stamp.sec + msg.header.stamp.nanosec * 1e-9
 
     def _bumper_cb(self, msg):
         self.bumper_msgs += 1
@@ -377,13 +390,16 @@ class VacuumCleaner(Node):
 
     def _record_trail(self):
         now = time.monotonic()
-        if self.auto_cmd is None or now - self.last_trail < 1.0 or self.mission.job is None:
+        interval = 0.2 if self.object_truth is not None else 1.0
+        if (self.auto_cmd is None or now - self.last_trail < interval
+                or (self.mission.job is None and not self.auto_job)):
             return
         self.last_trail = now
         r = lambda v: None if v is None else [round(a, 3) for a in v]  # noqa: E731
         self.trail.append({'t': round(self._now(), 2), 'state': self.mission.state,
                            'task': self.mission.active.kind if self.mission.active else '',
-                           'pose': r(self.pose), 'truth': r(self.truth)})
+                           'pose': r(self.pose), 'truth': r(self.truth),
+                           'truth_age_s': None if self.truth_stamp is None else self._now() - self.truth_stamp})
 
     def _auto(self):
         if self.auto_cmd is None:
@@ -423,9 +439,13 @@ class VacuumCleaner(Node):
             data['final_state'] = self.mission.state
             data['final_pose'] = list(self.pose) if self.pose else None
             data['final_truth'] = list(self.truth) if self.truth else None
+            data['final_truth_age_s'] = None if self.truth_stamp is None else self._now() - self.truth_stamp
             data['trail'] = self.trail
+            if self.object_truth is not None:
+                data['object_truth'] = self.object_truth
             data['dock'] = self.mission.layout.get('dock')
             data['robot_model'] = self.robot_model
+            data['robot_radius'] = self.mission.config.robot_radius
             data['sensors'] = (getattr(self, 'last_status', None) or {}).get('sensors')
             data['events_log'] = list(self.mission.events)
             data['rooms'] = {str(k): v for k, v in self.mission.layout['rooms'].items()}

@@ -103,6 +103,14 @@ scripts/sim_vacuum_mission.sh gazebo oomwoo small_house out.json \
   '{"mode": "zones", "zones": [[4.0, -3.5, 7.5, -0.5]]}'
 ```
 
+## Camera inspection and learned recognition
+
+The **Objects** page shows timestamped RGB crops of observed floor objects. Setup selects
+`segmentation` (ideal simulator labels), `learned` (local trained checkpoint) or `none`.
+The learned pipeline is experimental; no trained checkpoint is bundled by this patch.
+See the [camera workflow and agent instructions](vacuum-camera.md) for training, launch arguments
+and independent object-world clearance checks.
+
 ## The `oomwoo` model
 
 OOMWOO ([makers-pet/oomwoo](https://github.com/makers-pet/oomwoo)) is an

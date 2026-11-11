@@ -1,0 +1,72 @@
+{
+  "baseline_revision": "9f3b54ba054d1f7981bf8aac5a8bc0378415ec05",
+  "source": "source-sha256.json",
+  "scope": "Software and actual synthetic-frame ROS transport; no learned model or robot mission",
+  "vacuum_and_support_checks": {
+    "passed": 105,
+    "log": "/workspace/molar/robot_lab_runtime/r133-camera-20261111/software-checks-final.log"
+  },
+  "latest_training_guards": {
+    "passed": 3,
+    "log": "/workspace/molar/robot_lab_runtime/r133-camera-20261111/training-contracts-final.log"
+  },
+  "gui_checks": {
+    "passed": 13,
+    "log": "/workspace/molar/robot_lab_runtime/r133-camera-20261111/gui-checks-final.log"
+  },
+  "builds": {
+    "packages": [
+      "robot_lab_vacuum_cleaning",
+      "robot_lab_gui",
+      "robot_lab_bringup"
+    ],
+    "combined_wall_s": 7.04,
+    "logs": [
+      "/workspace/molar/robot_lab_runtime/r133-camera-20261111/build-final.log",
+      "/workspace/molar/robot_lab_runtime/r133-camera-20261111/build-launch-final.log",
+      "/workspace/molar/robot_lab_runtime/r133-camera-20261111/build-gui-final.log"
+    ],
+    "review_build": {
+      "packages": [
+        "robot_lab_vacuum_cleaning",
+        "robot_lab_gui",
+        "robot_lab_bringup",
+        "robot_lab_maps"
+      ],
+      "wall_s": 11.1,
+      "log": "/workspace/molar/robot_lab_runtime/r133-camera-20261111/build-review-final.log"
+    }
+  },
+  "transport": [
+    "transport-1.json",
+    "transport-2.json",
+    "transport-3.json"
+  ],
+  "launch_selection": "launch-selection.json",
+  "remaining": [
+    "trained checkpoint with real simulator image provenance",
+    "held-out detection and projection measurements",
+    "actual learned-camera cleaning mission with independent object truth"
+  ],
+  "preserved_existing_work": "charger placement/generator/generated detailed-map assets and their R11.3 docs/ledger entries",
+  "whole_tree_review": {
+    "passed": 52,
+    "log": "/workspace/molar/robot_lab_runtime/r133-camera-20261111/whole-tree-review-tests-final.log",
+    "initial_result": {
+      "failed": 2,
+      "passed": 50,
+      "log": "/workspace/molar/robot_lab_runtime/r133-camera-20261111/whole-tree-review-tests.log",
+      "reason": "historical 96-detail expectation; actual HEAD and pinned GLBs have 148/122"
+    },
+    "gui_after_review": {
+      "passed": 2,
+      "deselected": 11,
+      "log": "/workspace/molar/robot_lab_runtime/r133-camera-20261111/gui-review-final.log"
+    },
+    "map_hashes": "whole-tree-map-review.json",
+    "mesh_deltas": "charger-geometry-review.json",
+    "report": "whole-tree-review.md",
+    "staged_adapter_hashes_matched": 126,
+    "notes": "Scoped -text/CRLF policy and explicit reindex preserve upstream bytes; staged blobs/LFS object IDs independently checked"
+  }
+}

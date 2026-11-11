@@ -61,7 +61,9 @@ def test_detailed_worlds_keep_unit_source_collision_and_no_added_slab(floor):
     assert root.find('.//visual/geometry/mesh/uri').text.endswith('/z_up_visual_v1/visual_full.dae')
     for relative, digest in record['copied_adapter_sha256'].items():
         assert provision.digest(target / relative) == digest
-    assert record['source_manifest']['detailParts'] == 96
+    # November 11 source pins include the photo-refined charger assemblies:
+    # two stations on F1, one on F2. The older 96-part model is historical.
+    assert record['source_manifest']['detailParts'] == {1: 148, 2: 122}[floor]
     assert record['source_manifest']['sanitaryFixtures'] == 11
     assert record['visual']['triangles'] > 2_000_000
 

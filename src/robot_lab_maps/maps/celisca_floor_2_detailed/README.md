@@ -7,7 +7,7 @@ Reconstruct with `python3 scripts/provision_celisca_detailed.py` on the SSD.
 The normal SDF references a source-bound full visual DAE on the SSD. It bakes
 all enhanced GLB node transforms with (x,-z,y), no scale/shift/elevation change;
 full original furniture and new bathroom visuals remain. The immutable full
-GLB and extracted textures are in `/workspace/molar/robot_lab_runtime/external_assets/celisca_detailed/c9fd3c0601fdfca965d969c39dfb07952dafe97d727c17827bfbb7cef54d773c`. PBR-to-Phong shading is approximate.
+GLB and extracted textures are in `/workspace/molar/robot_lab_runtime/external_assets/celisca_detailed/d1667c58f4c3732ab3484df3ce3ac12727b15c4db094be050014dbe0801a7e94`. PBR-to-Phong shading is approximate.
 `adapters/` contains checksum-identical source adapters and their explicitly
 lighter visual LOD. Their standalone world is a source artifact, not the native
 Robot Lab entry; use `worlds/celisca_floor_2_detailed.world` through the normal map selector.

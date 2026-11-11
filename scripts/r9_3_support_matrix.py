@@ -423,7 +423,98 @@ def cleaning_screen(report):
         passed = passed and finite(pause.get('drift_m')) and pause['drift_m'] < .03 and \
             finite(pause.get('yaw_drift_rad')) and pause['yaw_drift_rad'] < .05 and \
             finite(pause.get('moved_after_resume_m')) and pause['moved_after_resume_m'] > .05
+    if 'object_truth' in report:
+        clearance = cleaning_object_clearance(report)
+        passed = passed and clearance['measured'] and clearance['minimum_body_clearance_m'] > 0.0
     return bool(passed)
+
+
+def _point_segment_distance(point, start, end):
+    dx, dy = end[0] - start[0], end[1] - start[1]
+    t = max(0.0, min(1.0, ((point[0] - start[0]) * dx + (point[1] - start[1]) * dy)
+                     / max(dx * dx + dy * dy, 1e-20)))
+    return math.hypot(point[0] - start[0] - t * dx, point[1] - start[1] - t * dy)
+
+
+def _segment_box_distance(start, end, half):
+    """Distance to an axis-aligned closed rectangle, including edge contact."""
+    low, high = 0.0, 1.0
+    intersects = True
+    for axis in (0, 1):
+        delta = end[axis] - start[axis]
+        if abs(delta) < 1e-12:
+            if abs(start[axis]) > half[axis]:
+                intersects = False
+                break
+        else:
+            a, b = sorted(((-half[axis] - start[axis]) / delta,
+                           (half[axis] - start[axis]) / delta))
+            low, high = max(low, a), min(high, b)
+            if low > high:
+                intersects = False
+                break
+    if intersects:
+        return 0.0
+    distances = [math.hypot(max(abs(p[0]) - half[0], 0.0),
+                            max(abs(p[1]) - half[1], 0.0)) for p in (start, end)]
+    distances.extend(_point_segment_distance((x, y), start, end)
+                     for x in (-half[0], half[0]) for y in (-half[1], half[1]))
+    return min(distances)
+
+
+def cleaning_object_clearance(report):
+    """Independent swept-disc clearance against generated-world footprints.
+
+    Detector boxes/estimated object positions never supply this evidence.
+    Consecutive truth samples are swept linearly; this is conservative at
+    corners and does not assert continuous collision-free curved dynamics.
+    Historical reports without a manifest remain explicitly unmeasured.
+    """
+    missing = {'measured': False, 'minimum_body_clearance_m': None, 'objects': []}
+    source = report.get('object_truth')
+    if not isinstance(source, dict) or not source.get('manifest') or not source.get('sha256'):
+        return missing
+    objects = source.get('objects')
+    trail = [s.get('truth') for s in report.get('trail') or []]
+    ages = [s.get('truth_age_s') for s in report.get('trail') or []]
+    ages.append(report.get('final_truth_age_s'))
+    final = report.get('final_truth')
+    radius = report.get('robot_radius')
+    if (not isinstance(objects, list) or not objects or len(trail) < 10
+            or not all(valid_position(p) for p in trail) or not valid_position(final)
+            or not all(finite(age) and 0.0 <= age <= 0.5 for age in ages)
+            or not finite(radius) or radius <= 0):
+        return missing
+    trail.append(final)
+    rows = []
+    for obj in objects:
+        try:
+            x, y = obj['x'], obj['y']
+            foot = obj['footprint']
+            if not finite(x) or not finite(y):
+                return missing
+            if foot['kind'] == 'circle':
+                extent = foot['radius']
+                if not finite(extent) or extent <= 0:
+                    return missing
+                distance = min(_point_segment_distance((x, y), p, q)
+                               for p, q in zip(trail, trail[1:])) - extent
+            elif foot['kind'] == 'box':
+                half, yaw = foot['half_extents'], foot['yaw']
+                if len(half) != 2 or not all(finite(v) and v > 0 for v in half) or not finite(yaw):
+                    return missing
+                c, s = math.cos(yaw), math.sin(yaw)
+                local = [(c * (p[0] - x) + s * (p[1] - y),
+                          -s * (p[0] - x) + c * (p[1] - y)) for p in trail]
+                distance = min(_segment_box_distance(p, q, half) for p, q in zip(local, local[1:]))
+            else:
+                return missing
+            rows.append({'class': obj['class'], 'x': x, 'y': y,
+                         'body_clearance_m': distance - radius})
+        except (KeyError, TypeError, ValueError):
+            return missing
+    return {'measured': True, 'minimum_body_clearance_m': min(o['body_clearance_m'] for o in rows),
+            'objects': rows, 'method': 'linear sweep of actual truth samples and final body pose'}
 
 
 def _polygon_distance(x, y, poly):

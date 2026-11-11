@@ -1,7 +1,7 @@
 # Robot Lab roadmap
 
 **This is the project's single goal list.** Every task, goal and piece of
-remaining work is here, in one format, in priority order. Updated 2026-11-10.
+remaining work is here, in one format, in priority order. Updated 2026-11-11.
 
 - **Status and numbers** (what was measured, when, with which revision) are in
   [current status](docs/status/CURRENT_STATUS.md) and the evidence folders it links.
@@ -124,7 +124,7 @@ Work top to bottom. Each line links to its task.
 | Order | Task | Remaining implementation (short) | State |
 |---|---|---|---|
 | I1 | [R13.2](#r132--vacuum-carpets-and-mopping) Vacuum carpets and mopping | Done 2026-11-10 (Gazebo mop + rug run passes) | implemented |
-| I2 | [R13.3](#r133--vacuum-camera-obstacle-recognition) Vacuum camera obstacles | Measured with an ideal detector (0 contacts); learned detector, snapshots | partial |
+| I2 | [R13.3](#r133--vacuum-camera-obstacle-recognition) Vacuum camera obstacles | Ideal detector measured; learned pipeline, snapshots and clearance gate implemented; trained checkpoint pending | partial |
 | I3 | [R14.1](#r141--open-source-counterparts-for-self-made-robots) Open-source robots | First search done; integrate TurtleBot 4 Lite as a vacuum, then WAM-V, BlueROV2, Summit-XL | partial |
 | I4 | [R6.7](#r67--terrain-generation-gui-and-four-backend-conversion) Terrain GUI | GUI page, provider manifest, Isaac contact | partial |
 | I5 | [R5.11](#r511--drone-moving-obstacles-and-other-drone-backends) Drone moving obstacles | Moving-obstacle prediction, sensor-loss handling, other backends | not started |
@@ -744,6 +744,27 @@ These are complete; keep them working. Details and evidence are in the
 
 - **Evidence:** `docs/status/photo-model-refresh-2026-11-11.{md,json}`; 97 native checks and two package builds, nine protected source hashes retained. Scope is model/map assets, not broader R11 missions.
 
+### R11.3 — Charger display setback
+
+- **State:** done · **Priority:** explicit user map correction 2026-11-11 · **Depends on:** R11.2
+- **Owner:** codex (whole-tree review November 11).
+- **Goal:** move three visual charger assemblies 0.35 m away from cached docking goals,
+  preserving registered floors and real robot targets.
+- **Have:** reviewed GLB pins, regenerated visuals/collision adapters and occupancy projections.
+  Mesh review confirms identical faces and only 0.35 m vertex translations. Both original source
+  GLBs retain their geometry/transforms; 126 copied adapters and 136 installed assets match hashes.
+  Git preserves copied CRLF bytes so source checksums survive checkout. Updated the stale 96-part
+  test to the actual pinned 148/122 detail nodes; 52 focused map/MOLAR/camera checks pass.
+- **Remaining implementation:** none within this display-geometry scope.
+- **How to do it:** retain the reviewed pins in `scripts/provision_celisca_detailed.py`, source
+  byte policy in `.gitattributes` and each map's `PROVENANCE.json`; use the guarded generator
+  and SSD backups for future source refreshes. Do not shift FMS/AIC goals as a display adjustment.
+- **Done when:** reviewed source geometry, native/installed asset hashes and occupancy registration
+  agree, with no physical commands or navigation-profile changes.
+- **Validation later:** broader docking and floor missions remain R11 acceptance.
+- **Evidence:** `docs/status/charger-setback-2026-11-11.{md,json}` and
+  [whole-tree review](docs/status/evidence/vacuum-camera-2026-11-11/whole-tree-review.md).
+
 ### R12 — Legged policy training
 
 - **State:** partial · **Priority:** I13
@@ -819,7 +840,7 @@ These are complete; keep them working. Details and evidence are in the
 
 #### R13.3 — Vacuum camera obstacle recognition
 
-- **State:** implemented and measured once (2026-11-10) · **Priority:** I2 (learned detector remains) · **Depends on:** R13.1
+- **State:** partial; ideal detector measured, learned pipeline implemented (2026-11-11) · **Priority:** I2 (trained checkpoint remains) · **Depends on:** R13.1
 - **Goal:** like commercial vacuums, a front camera recognises cables,
   socks, shoes and pet mess. The robot keeps a class-specific distance and
   shows them on the map.
@@ -843,13 +864,23 @@ These are complete; keep them working. Details and evidence are in the
   - `scripts/vacuum_object_world.py`: a world copy with labelled cable, sock,
     shoe and pet mess (Gazebo Label system), checked against free floor in the map;
   - tests: projection, avoidance and ignore (core), drawing and erase (GUI).
-- **Remaining implementation:**
-  1. A learned detector with a permissive license (for example a torchvision
-     detector fine-tuned on images rendered from these worlds; no AGPL code)
-     publishing the same labels image or objects message.
-  2. GUI snapshots of each object from `/vacuum/camera/image`.
-  3. An object-clearance check in `cleaning_screen` (the gaps above come from
-     a separate truth-trail computation).
+- **November 11 implementation:** the torchvision RGB detector is an installed executable,
+  selected exclusively against segmentation/none in launch and GUI Setup. Missing files fail before
+  simulation; detector exit shuts down its owned launch. RGB channels/padding/endianness, paired
+  timestamps and calibration dimensions are checked. Checkpoint class maps are required; runtime
+  downloads are disabled. Read-only capture records per-instance boxes, image hashes and scene groups.
+  Training uses disjoint held-out images, checks scene/class coverage and matches inference input range.
+  The GUI **Objects** page shows bounded timestamped JPEG crops from both detectors. Generated world
+  footprints can feed reporting only; `cleaning_screen` now rejects swept-body overlap and stale truth.
+  [Implementation receipt](docs/status/evidence/vacuum-camera-2026-11-11/README.md),
+  [operator/agent guide](docs/tutorials/vacuum-camera.md).
+- **Remaining implementation:** train and provision the actual four-class checkpoint, with
+  retained data/weight provenance. The synthetic primitive renderer is a seed dataset, not evidence of
+  recognition on Gazebo camera images. Capture representative simulator RGB/labels and explicit
+  independent scene splits before training; keep the ideal detector available. No trained checkpoint
+  or learned-detector robot mission is claimed by this patch.
+- **Validation later:** learned per-class recall/false positives on held-out simulator images and
+  a physical object-world cleaning job with `vacuum_object_truth:=<world.objects.json>`.
 - **Done when:** a recorded job in a house with these objects ends with zero
   contacts with them by truth, and passes `cleaning_screen`.
 

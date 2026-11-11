@@ -124,8 +124,23 @@ completion_audit:
     comparison scores are generated; the dated support matrix extrapolates Isaac qualification
     to untested maps and modes.
   revision: 2a0aae2
-current_delivery: auv_terrain_fleet_20261102
-current_revision: 'Continuation on master from 8b958e97: bounded facility queues and durable SDK ownership; explicit interlocked recovery with an actual empty-car receipt; marine interruption fixes; native formation itinerary Plan/Execute. Platform and full R10 acceptance remain partial; docs/status/workflow-continuation-2026-11-02.md.'
+vacuum_camera_20261111:
+  owner: codex
+  state: partial
+  title: Vacuum camera recognition and object inspection
+  updated: '2026-11-11'
+  baseline_revision: 9f3b54ba
+  implementation_state: Learned detector selection, synchronized RGB/depth handling, bounded camera snapshots, corrected training split and independent swept-body clearance reporting are implemented. Checkpoint training remains pending.
+  receipt: docs/status/evidence/vacuum-camera-2026-11-11/README.md
+  measured_summary:
+  - Retained November 10 ideal-detector Gazebo job recognized four classes with zero recorded bumper contacts; that historical receipt is unchanged.
+  - Installed ROS transport with explicitly synthetic frames produced a real timestamped object crop; this is a transport diagnostic, not a robot mission.
+  - 105 focused vacuum/support checks and 13 GUI checks passed; three packages build. These are software checks only.
+  remaining_summary:
+  - Train and provision a source-bound four-class checkpoint using representative camera images and independent scene splits; record an actual learned-camera cleaning mission.
+  - Continue the roadmap implementation queue with open-source counterparts, terrain GUI, aerial obstacles and manipulation; wider fleet/marine/gait acceptance remains partial.
+current_delivery: vacuum_camera_20261111
+current_revision: 'November 11 continuation from 9f3b54ba on master: R13.3 learned-camera integration, snapshots and independent clearance reporting; checkpoint training and physical learned-camera missions remain pending.'
 current_verification:
   round57_2026_10_19: 'Recorded 2026-10-29: MuJoCo small_house slam drive after the spawn fix 873753f completes
     (28.1 m, RMSE 1.3 cm, map precision/recall 0.97/0.79; 1.49 m and 0.12/0.16 before); rear-steer car course after
@@ -336,7 +351,7 @@ goal: unified_multi_robot_algorithm_lab
 auv_terrain_fleet_20261102:
   owner: codex
   state: partial
-  execution_state: stopped_by_user
+  execution_state: deferred_by_implementation_queue
   stop_request: User requested committing everything and stopping for today on November 3; continue only after the user resumes.
   resume_from_revision: 5e7d29b1
   title: Curved AUV routes, terrain adapters and concurrent fleet missions
@@ -437,8 +452,8 @@ architecture_explorer_20261102:
   guide: docs/architecture/interactive-guide.md
 handoff:
   audit: docs/status/audit-2026-10-02.md
-  next_action: Work stopped at the user's request on November 3. After the user resumes, start a fresh complete two-member floor/parking wave from the November 3 stop checkpoint. Preserve curved AUV routes, four terrain adapters, actual scoped results and all failed/interrupted trials; then continue the named per-model terrain, AUV, occupied recovery, aerial route and original roadmap acceptance.
-  next_task: R10.2
+  next_action: User resumed November 11. Follow ROADMAP implementation order; finish R13.3 checkpoint training/provisioning, then R14.1 and subsequent tasks. Preserve newer MOLAR/charger edits and all historical receipts. The fleet four-stop campaign remains pending in its later queue position.
+  next_task: R13.3
   no_runtime_repairs_completed_by_this_revision: false
   parallel_ready_after_R0:
   - R1.1
@@ -1183,6 +1198,24 @@ task_state_options:
 - blocked
 - done
 tasks:
+  R11.3:
+    acceptance_ref: ROADMAP.md R11.3
+    title: Charger visual setback
+    owner: codex
+    state: done
+    review: Whole-tree review confirmed source retention, 0.35 m mesh translations, 126 copied adapters and 136 installed assets; fixed Git byte preservation and stale detail-count checks. 52 focused checks pass.
+    updated: '2026-11-11'
+    scope_paths:
+    - .gitattributes
+    - scripts/provision_celisca_detailed.py
+    - src/robot_lab_maps/test/test_celisca_detailed.py
+    - src/robot_lab_maps/maps/celisca_floor_1_detailed/
+    - src/robot_lab_maps/maps/celisca_floor_2_detailed/
+    - docs/
+    evidence:
+    - docs/status/charger-setback-2026-11-11.md
+    - docs/status/charger-setback-2026-11-11.json
+    notes: Display asset adjustment only; no FMS/AIC targets, settings, motion or controller changes.
   R11.2:
     acceptance_ref: ROADMAP.md R11.2
     title: Photo-refined MOLAR robot, wall-mounted charger and HRI assets
@@ -1995,9 +2028,28 @@ tasks:
         title: 'Carpets, mopping modes, water tank and refill: implemented; Gazebo vacuum+mop rug and carpet-boost runs pass (2026-11-10)'
       R13.3:
         acceptance_ref: ROADMAP.md R13.3
-        owner: claude
+        owner: codex
         state: partial
-        title: 'Camera floor-object recognition (ideal segmentation detector): Gazebo run with cable/sock/shoe/pet mess passes, 0 contacts; learned detector pending'
+        updated: '2026-11-11'
+        execution_state: implemented_candidate_checkpoint_pending
+        scope_paths:
+        - src/robot_lab_vacuum_cleaning/
+        - src/robot_lab_gui/robot_lab_gui/cleaning_tab.py
+        - src/robot_lab_gui/test/test_cleaning_tab.py
+        - src/robot_lab_bringup/launch/simulated_room_vacuum.launch.py
+        - scripts/test_tiers.sh
+        - README.md
+        - scripts/capture_vacuum_detector_data.py
+        - scripts/train_vacuum_detector.py
+        - scripts/vacuum_object_world.py
+        - scripts/r9_3_support_matrix.py
+        - docs/
+        - ROADMAP.md
+        next_action: Train/provision the four-class checkpoint from representative simulator images and independent scene splits; record per-class held-out results and a physical object-world job. Keep ideal segmentation available and preserve unrelated charger/map work.
+        evidence:
+        - docs/status/evidence/vacuum-camera-2026-11-11/README.md
+        - docs/tutorials/vacuum-camera.md
+        title: 'Camera recognition: ideal mission measured; learned executable/selection, bounded snapshots, corrected training and swept-truth gate implemented; trained checkpoint and learned mission pending'
     title: Robot-vacuum cleaning system (OOMWOO-class)
   R14:
     acceptance_ref: ROADMAP.md R14.1
@@ -4984,7 +5036,7 @@ tasks:
     qualification_review: '2026-10-27 documentation review: retain the implemented code, tests and named mission
       certificates. Full declared roadmap acceptance is still open; test counts, metadata and scene loads
       do not qualify remaining robot/map/backend missions. See docs/REMAINING_WORK_GUIDE.md.'
-updated: '2026-11-10'
+updated: '2026-11-11'
 runtime_completion_20261027:
   owner: codex
   state: partial

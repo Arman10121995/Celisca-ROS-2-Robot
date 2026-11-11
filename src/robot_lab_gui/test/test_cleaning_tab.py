@@ -64,7 +64,45 @@ def test_vacuum_tab_launches_the_cleaning_system(tab):
     assert command[:4] == ['ros2', 'launch', 'robot_lab_bringup', 'simulated_room_vacuum.launch.py']
     assert 'controller:=cleaning' in command and 'robot_model:=oomwoo' in command
     assert 'map_name:=small_house' in command and 'mode:=nav' in command
+    from ros2launch.api.api import parse_launch_arguments
+    assert dict(parse_launch_arguments(command[4:]))['vacuum_detector'] == 'segmentation'
     assert tab.node_command()[:4] == ['ros2', 'run', 'robot_lab_vacuum_cleaning', 'vacuum_cleaner']
+
+
+def test_detector_launch_selection_and_missing_checkpoint(tab, tmp_path):
+    tab.vacuum_detector_var.set('learned')
+    launched = []
+    tab.app.start_launch_command = lambda command: launched.append(command)
+    tab._launch()
+    assert not launched and 'checkpoint' in tab.message_var.get()
+    checkpoint = tmp_path / 'candidate.pt'
+    checkpoint.touch()
+    tab.vacuum_detector_model_var.set(str(checkpoint))
+    tab._launch()
+    assert 'vacuum_detector:=learned' in launched[0]
+    assert 'vacuum_detector_model:=%s' % checkpoint in launched[0]
+
+
+def test_object_gallery_displays_real_crop_and_is_bounded(tab):
+    import base64
+    from io import BytesIO
+    from PIL import Image
+    buffer = BytesIO()
+    Image.new('RGB', (30, 20), color='red').save(buffer, format='JPEG')
+    crop = {'encoding': 'jpeg', 't': 3.0,
+            'data': base64.b64encode(buffer.getvalue()).decode('ascii')}
+    objects = [{'class': 'shoe', 'x': float(i), 'y': 2., 'snapshot': crop} for i in range(40)]
+    for i in range(0, 40, 10):
+        tab._on_object_observations(msg({'detector': 'segmentation', 'ideal': True, 't': 3.,
+                                         'objects': objects[i:i+10]}))
+    assert len(tab.object_observations) == 32
+    tab.object_tree.selection_set('0')
+    tab._show_object_snapshot()
+    assert tab.object_photo is not None
+    assert 'ideal simulator' in tab.detector_status_var.get()
+    assert 'camera time 3.0' in tab.object_detail_var.get()
+    tab._clear_object_gallery()
+    assert not tab.object_observations and tab.object_photo is None
 
 
 def test_layout_fills_rooms_schedule_and_settings(tab):

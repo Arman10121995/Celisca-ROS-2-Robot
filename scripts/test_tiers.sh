@@ -21,7 +21,7 @@ set -euo pipefail
 WS="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "$WS"
 
-export PYTHONPATH="src/robot_lab/robot_lab_registry:src/robot_lab_algorithms:src/robot_lab/robot_lab_benchmark:src/robot_lab_adapter:src/robot_lab_utils:src/robot_lab_pybullet/python:src/robot_lab_mujoco/python:src/robot_lab_isaac/python:${PYTHONPATH:-}"
+export PYTHONPATH="src/robot_lab/robot_lab_registry:src/robot_lab_algorithms:src/robot_lab/robot_lab_benchmark:src/robot_lab_adapter:src/robot_lab_utils:src/robot_lab_vacuum_cleaning:src/robot_lab_pybullet/python:src/robot_lab_mujoco/python:src/robot_lab_isaac/python:${PYTHONPATH:-}"
 export PYTEST_DISABLE_PLUGIN_AUTOLOAD=1
 PYTEST=(python3 -m pytest -q -p no:anyio)
 
@@ -34,6 +34,8 @@ GUI_TEST="src/robot_lab_gui/test"
 FAST_TESTS=(
   "scripts/test_asset_staging.py"
   "scripts/test_support_evidence.py"
+  "src/robot_lab_vacuum_cleaning/test/test_camera_observations.py"
+  "src/robot_lab_vacuum_cleaning/test/test_object_clearance.py"
   "$REG_TEST/test_p5_algorithm_breadth.py"
   "src/robot_lab_algorithms/test/test_r7_simple_verification.py"
   "$REG_TEST/test_p6_benchmarking.py"

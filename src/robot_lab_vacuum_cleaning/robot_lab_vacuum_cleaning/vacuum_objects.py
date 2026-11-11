@@ -23,6 +23,8 @@ from typing import Dict, List, Optional, Sequence
 
 import numpy as np
 
+from .camera_observations import add_snapshots, aligned_pair, image_array, stamp_seconds
+
 DEFAULT_LABELS = {20: 'cable', 21: 'sock', 22: 'shoe', 23: 'pet_waste'}
 
 
@@ -38,7 +40,7 @@ def project_labels(labels: np.ndarray, depth: np.ndarray, k: Sequence[float], ca
     radius, pixels}."""
     fx, cx, fy, cy = k[0], k[2], k[4], k[5]
     out: List[Dict] = []
-    if labels.shape != depth.shape:
+    if labels.shape != depth.shape or not np.isfinite([fx, fy, cx, cy]).all() or fx <= 0 or fy <= 0:
         return out
     h, w = labels.shape
     vs, us = np.mgrid[0:h, 0:w]
@@ -76,20 +78,14 @@ def project_labels(labels: np.ndarray, depth: np.ndarray, k: Sequence[float], ca
             mx, my = float(px[members].mean()), float(py[members].mean())
             radius = float(np.hypot(px[members] - mx, py[members] - my).max())
             out.append({'class': name, 'x': round(mx, 3), 'y': round(my, 3),
-                        'radius': round(max(radius, 0.03), 3), 'pixels': len(members)})
+                        'radius': round(max(radius, 0.03), 3), 'pixels': len(members),
+                        'bbox': [int(us[mask][members].min()), int(vs[mask][members].min()),
+                                 int(us[mask][members].max()) + 1, int(vs[mask][members].max()) + 1]})
     return out
 
 
 def _image_array(msg) -> Optional[np.ndarray]:
-    data = np.frombuffer(bytes(msg.data), dtype=np.uint8)
-    if msg.encoding in ('mono8', '8UC1'):
-        return data.reshape(msg.height, msg.step)[:, :msg.width]
-    if msg.encoding in ('rgb8', 'bgr8', '8UC3'):
-        return data.reshape(msg.height, msg.step)[:, :msg.width * 3].reshape(msg.height, msg.width, 3)[:, :, 0]
-    if msg.encoding == '32FC1':
-        row = np.frombuffer(bytes(msg.data), dtype=np.float32).reshape(msg.height, msg.step // 4)
-        return row[:, :msg.width]
-    return None
+    return image_array(msg)
 
 
 def _matrix(tf) -> np.ndarray:
@@ -119,6 +115,7 @@ def main(args=None):
             p('detector', 'segmentation')
             p('labels_topic', '/vacuum/camera/labels')
             p('depth_topic', '/vacuum/camera/depth')
+            p('rgb_topic', '/vacuum/camera/image')
             p('camera_info_topic', '/vacuum/camera/camera_info')
             p('map_frame', 'map')
             p('camera_frame', '')     # overrides the image frame_id when set
@@ -128,12 +125,13 @@ def main(args=None):
             self.classes = {int(k): v for k, v in json.loads(gp('labels')).items()}
             self.buffer = Buffer(cache_time=Duration(seconds=10.0))
             self.listener = TransformListener(self.buffer, self)
-            self.info = self.depth = None
+            self.info = self.depth = self.rgb = None
             self.last = 0.0
             self.period = 1.0 / max(0.1, float(gp('rate_hz')))
             self.pub = self.create_publisher(String, '/vacuum/objects', 10)
             self.create_subscription(CameraInfo, gp('camera_info_topic'), self._info, qos_profile_sensor_data)
             self.create_subscription(Image, gp('depth_topic'), self._depth, qos_profile_sensor_data)
+            self.create_subscription(Image, gp('rgb_topic'), self._rgb, qos_profile_sensor_data)
             self.create_subscription(Image, gp('labels_topic'), self._labels, qos_profile_sensor_data)
             self.get_logger().info('Object detector (%s) for %s' % (gp('detector'), ', '.join(self.classes.values())))
 
@@ -143,11 +141,18 @@ def main(args=None):
         def _depth(self, msg):
             self.depth = msg
 
+        def _rgb(self, msg):
+            self.rgb = msg
+
         def _labels(self, msg):
             now = time.monotonic()
             if now - self.last < self.period or self.info is None or self.depth is None:
                 return
             self.last = now
+            if not aligned_pair(msg, self.depth):
+                return
+            if self.info.width != msg.width or self.info.height != msg.height:
+                return
             labels, depth = _image_array(msg), _image_array(self.depth)
             if labels is None or depth is None:
                 return
@@ -160,6 +165,8 @@ def main(args=None):
             except Exception:
                 return
             objects = project_labels(labels, depth, list(self.info.k), _matrix(tf), self.classes)
+            if aligned_pair(msg, self.rgb):
+                add_snapshots(objects, image_array(self.rgb, rgb=True), stamp_seconds(self.rgb))
             stamp = self.depth.header.stamp
             self.pub.publish(String(data=json.dumps({
                 'detector': self.get_parameter('detector').value,

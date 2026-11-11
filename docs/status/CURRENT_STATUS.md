@@ -4,6 +4,14 @@ This page records what was measured. **The goals and remaining work are in one l
 [roadmap](../../ROADMAP.md)** (implementation queue first, then validation). Remaining-work
 notes in the dated entries below are history.
 
+November 11 camera continuation (R13.3): the learned-detector executable and GUI Setup selection,
+RGB/depth pairing, Objects snapshot gallery, disjoint training/validation split and independent
+swept-body clearance gate are implemented. 105 focused vacuum/support checks and 13 GUI checks pass;
+three packages build. An actual installed ROS transport diagnostic received a timestamped crop from
+explicitly synthetic frames. **No trained checkpoint or new learned-detector robot mission is claimed.**
+See [receipt](evidence/vacuum-camera-2026-11-11/README.md) and [guide](../tutorials/vacuum-camera.md).
+The user resumed work; the current implementation queue supersedes the historical November 3 stop.
+
 November 10:
 - **Robot vacuum** (R13, OOMWOO-class `oomwoo`, small_house): all
   recorded cleaning jobs pass `cleaning_screen`:

@@ -1,0 +1,25 @@
+[
+  {
+    "selection": "segmentation",
+    "enabled": [
+      "vacuum_cleaner",
+      "vacuum_object_detector"
+    ]
+  },
+  {
+    "selection": "learned",
+    "enabled": [
+      "vacuum_cleaner",
+      "vacuum_learned_detector"
+    ]
+  },
+  {
+    "selection": "none",
+    "enabled": [
+      "vacuum_cleaner"
+    ]
+  },
+  {
+    "missing_checkpoint": "rejected before simulation launch"
+  }
+]

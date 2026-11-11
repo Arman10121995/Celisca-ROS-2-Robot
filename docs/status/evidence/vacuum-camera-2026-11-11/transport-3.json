@@ -1,0 +1,26 @@
+{
+  "scope": "installed ROS transport using synthetic RGB/depth/semantic images; no robot mission",
+  "domain": "131",
+  "passed": true,
+  "messages": 1,
+  "object": {
+    "class": "shoe",
+    "x": -0.005,
+    "y": -0.005,
+    "radius": 0.049,
+    "pixels": 64,
+    "bbox": [
+      12,
+      8,
+      20,
+      16
+    ]
+  },
+  "snapshot_size": [
+    24,
+    24
+  ],
+  "snapshot_stamp": 1794430201.4884853,
+  "captured_synthetic_frames": 2,
+  "wall_s": 1.8814001650025602
+}

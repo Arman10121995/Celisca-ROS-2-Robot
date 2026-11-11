@@ -10,30 +10,22 @@ Output (--out):
   vacuum_detector_classes.json  {label_id: class_name}
   metrics.json             per-class AP@0.5 and mAP on the val split
 
-from PIL import Image
-
 Example:
   scripts/train_vacuum_detector.py --data <render_out> --out models --epochs 8"""
 import json
-import math
+import hashlib
 import time
 from pathlib import Path
 
 import numpy as np
 import torch
-from torch.utils.data import DataLoader
+from torch.utils.data import DataLoader, Subset
 from torchvision.models.detection import fasterrcnn_mobilenet_v3_large_fpn
 from torchvision.models.detection.faster_rcnn import FastRCNNPredictor
 import os
 from PIL import Image
-import numpy as np
-import numpy as np
 from torchvision.transforms import functional as F
 from torchvision.ops import box_iou
-
-LABELS = {20: 'cable', 21: 'sock', 22: 'shoe', 23: 'pet_waste'}
-CAT_ID = {name: i + 1 for i, name in enumerate(sorted(LABELS.values()))}
-
 
 LABELS = {20: 'cable', 21: 'sock', 22: 'shoe', 23: 'pet_waste'}
 CAT_ID = {name: i + 1 for i, name in enumerate(sorted(LABELS.values()))}
@@ -52,6 +44,8 @@ class DetData(torch.utils.data.Dataset):
     def __init__(self, root, ann_file, val_file=None, transform=None):
         self.root = str(root)
         self.ann = json.load(open(ann_file))
+        if {c['name']: c['id'] for c in self.ann.get('categories', [])} != CAT_ID:
+            raise ValueError('Dataset categories do not match the four vacuum classes')
         self.images = self.ann['images']
         # build lookups: file_name -> image record, image_id -> annotations
         self.name2img = {img['file_name']: img for img in self.images}
@@ -70,12 +64,8 @@ class DetData(torch.utils.data.Dataset):
 
     @staticmethod
     def _default_transform(pil_img):
-        import numpy as np
-        arr = np.array(pil_img)
-        img = torch.from_numpy(arr).permute(2, 0, 1).float() / 255.0
-        img = (img - torch.tensor([0.485, 0.456, 0.406]).view(3, 1, 1)) / \
-              torch.tensor([0.229, 0.224, 0.225]).view(3, 1, 1)
-        return img
+        # GeneralizedRCNNTransform normalizes internally, as during inference.
+        return F.to_tensor(pil_img)
 
     def __len__(self):
         return len(self.ids)
@@ -123,6 +113,8 @@ def train_one_epoch(model, optimizer, data_loader, device):
         targets = [{k: v.to(device) for k, v in t.items()} for t in targets]
         loss_dict = model(images, targets)
         loss = sum(loss_dict.values())
+        if not torch.isfinite(loss):
+            raise RuntimeError('Non-finite detector training loss')
         optimizer.zero_grad()
         loss.backward()
         optimizer.step()
@@ -185,6 +177,39 @@ def evaluate(model, data_loader, device):
             ap += p / 11.0
         aps[cls] = float(ap)
     return aps, float(np.mean(list(aps.values())))
+
+
+def split_dataset(dataset):
+    """Honor the renderer's held-out IDs; reject empty or malformed splits."""
+    known = set(dataset.ids)
+    if len(known) != len(dataset.ids) or not dataset.val_ids <= known:
+        raise ValueError('Duplicate image IDs or unknown validation IDs')
+    train = [i for i, image_id in enumerate(dataset.ids) if image_id not in dataset.val_ids]
+    val = [i for i, image_id in enumerate(dataset.ids) if image_id in dataset.val_ids]
+    if not train or not val:
+        raise ValueError('Both training and held-out validation images are required')
+    if hasattr(dataset, 'img2anns'):
+        for name, indices in [('training', train), ('validation', val)]:
+            present = {annotation['category_id'] for i in indices
+                       for annotation in dataset.img2anns.get(dataset.ids[i], [])}
+            missing = set(CAT_ID.values()) - present
+            if missing:
+                raise ValueError('%s split lacks classes: %s' % (
+                    name, ', '.join(cls for cls, key in CAT_ID.items() if key in missing)))
+    if hasattr(dataset, 'images'):
+        scenes = {}
+        for image in dataset.images:
+            if 'scene' not in image:
+                continue
+            split = 'val' if image['id'] in dataset.val_ids else 'train'
+            if image.get('split', split) != split:
+                raise ValueError('Validation IDs disagree with captured split metadata')
+            scenes.setdefault(image['scene'], set()).add(split)
+        if any(len(splits) > 1 for splits in scenes.values()):
+            raise ValueError('The same scene appears in training and validation')
+    return Subset(dataset, train), Subset(dataset, val)
+
+
 def main():
     import argparse
     ap = argparse.ArgumentParser(description=__doc__)
@@ -195,28 +220,32 @@ def main():
     ap.add_argument('--lr', type=float, default=0.005)
     ap.add_argument('--seed', type=int, default=7)
     ap.add_argument('--device', default='cpu')
+    ap.add_argument('--weights', choices=['coco', 'none'], default='coco',
+                    help='none: offline architecture smoke test only, not a trained model claim')
     args = ap.parse_args()
+    if args.epochs <= 0 or args.batch <= 0 or not np.isfinite(args.lr) or args.lr <= 0:
+        ap.error('Positive epochs, batch size and finite learning rate are required')
     torch.manual_seed(args.seed)
     np.random.seed(args.seed)
 
     full = DetData(str(args.data), str(args.data / 'annotations.json'),
                    val_file=str(args.data / 'val_ids.json'))
-    val_ids = full.val_ids
-    train_ids = [i for i in full.ids if i not in val_ids]
-    val_ids_list = [i for i in full.ids if i in val_ids]
-
-    train_loader = DataLoader(DetData(str(args.data), str(args.data / 'annotations.json'),
-                                        val_file=str(args.data / 'val_ids.json')),
+    train_set, val_set = split_dataset(full)
+    image_hashes = {}
+    for image in full.images:
+        digest = hashlib.sha256((args.data / 'images' / image['file_name']).read_bytes()).hexdigest()
+        if image.get('sha256', digest) != digest:
+            raise ValueError('Captured image hash changed: %s' % image['file_name'])
+        image_hashes[image['file_name']] = digest
+    train_loader = DataLoader(train_set,
                               batch_size=args.batch,
                               shuffle=True, collate_fn=DetData.collate_fn, num_workers=0)
-    val_loader = DataLoader(DetData(str(args.data), str(args.data / 'annotations.json'),
-                                    val_file=str(args.data / 'val_ids.json')),
+    val_loader = DataLoader(val_set,
                             batch_size=args.batch,
                             shuffle=False, collate_fn=DetData.collate_fn, num_workers=0)
-    val_ids_list = [i for i in full.ids if i in val_ids]
-
     device = torch.device(args.device)
-    model = fasterrcnn_mobilenet_v3_large_fpn(weights='DEFAULT')
+    model = fasterrcnn_mobilenet_v3_large_fpn(
+        weights='DEFAULT' if args.weights == 'coco' else None, weights_backbone=None)
     in_features = model.roi_heads.box_predictor.cls_score.in_features
     model.roi_heads.box_predictor = FastRCNNPredictor(in_features, len(CAT_ID) + 1)
     model.to(device)
@@ -232,7 +261,7 @@ def main():
         aps, mAP = evaluate(model, val_loader, device)
         lr_scheduler.step()
         print(f'epoch {epoch+1}/{args.epochs} loss={loss:.4f} mAP@0.5={mAP:.3f} '
-              + ' '.join(f'{LABELS.get(k, k)}={v:.3f}' for k, v in sorted(aps.items()))
+              + ' '.join(f'{CLASS_NAMES[k-1]}={v:.3f}' for k, v in sorted(aps.items()))
               + f' ({time.time()-t0:.0f}s)')
         if mAP > best['mAP']:
             best['mAP'] = mAP
@@ -242,9 +271,21 @@ def main():
                 'labels': LABELS,
                 'cat_id': CAT_ID,
                 'epoch': epoch,
+                'weights_initialization': args.weights,
+                'seed': args.seed,
+                'architecture': 'fasterrcnn_mobilenet_v3_large_fpn',
+                'torch_version': str(torch.__version__),
+                'annotations_sha256': hashlib.sha256((args.data / 'annotations.json').read_bytes()).hexdigest(),
+                'split_sha256': hashlib.sha256((args.data / 'val_ids.json').read_bytes()).hexdigest(),
+                'image_sha256': image_hashes,
+                'train_ids': [full.ids[i] for i in train_set.indices],
+                'val_ids': [full.ids[i] for i in val_set.indices],
             }, args.out / 'vacuum_detector.pt')
             (args.out / 'vacuum_detector_classes.json').write_text(json.dumps({str(k): v for k, v in LABELS.items()}))
-            (args.out / 'metrics.json').write_text(json.dumps({'mAP': mAP, 'aps': aps, 'epoch': epoch}))
+            (args.out / 'metrics.json').write_text(json.dumps({
+                'mAP': mAP, 'aps': {CLASS_NAMES[k-1]: v for k, v in aps.items()}, 'epoch': epoch,
+                'train_images': len(train_set), 'val_images': len(val_set),
+                'scope': 'held-out synthetic images; not a physical cleaning mission'}))
     print('best mAP@0.5:', best['mAP'])
 
 

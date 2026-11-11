@@ -9,10 +9,13 @@ the robot_lab_vacuum_cleaning node only through its topics:
 """
 
 import json
+import base64
+from io import BytesIO
 import math
+import os
 import time
 import tkinter as tk
-from tkinter import scrolledtext, simpledialog, ttk
+from tkinter import filedialog, scrolledtext, simpledialog, ttk
 
 try:
     import numpy as np
@@ -91,6 +94,8 @@ class VacuumTab(LabTab):
         self.locate_until = 0.0
         self.job = None
         self.closed = False
+        self.object_observations = []
+        self.object_photo = None
         self._build_ui()
         self.bind('<Map>', lambda _e: self._ensure_ros(), add='+')
         self.job = self.after(150, self._poll)
@@ -171,7 +176,106 @@ class VacuumTab(LabTab):
         self._build_schedule(self._page(pages, 'Schedule'))
         self._build_history(self._page(pages, 'History'))
         self._build_care(self._page(pages, 'Care'))
+        self._build_objects(self._page(pages, 'Objects'))
         self._build_setup(self._page(pages, 'Setup'))
+
+    def _build_objects(self, page):
+        self.detector_status_var = tk.StringVar(value='No camera observations received')
+        ttk.Label(page, textvariable=self.detector_status_var, wraplength=350,
+                  style='Muted.TLabel').grid(row=0, column=0, sticky='w')
+        self.object_tree = ttk.Treeview(page, columns=('class', 'position'), show='headings', height=7)
+        self.object_tree.heading('class', text='Object')
+        self.object_tree.heading('position', text='Map position (m)')
+        self.object_tree.column('class', width=100)
+        self.object_tree.column('position', width=170)
+        self.object_tree.grid(row=1, column=0, sticky='nsew', pady=8)
+        self.object_tree.bind('<<TreeviewSelect>>', self._show_object_snapshot)
+        page.rowconfigure(1, weight=1)
+        self.object_preview = ttk.Label(page, text='Select an object to inspect its camera snapshot.',
+                                        anchor='center', wraplength=350)
+        self.object_preview.grid(row=2, column=0, sticky='ew', pady=8)
+        self.object_detail_var = tk.StringVar()
+        ttk.Label(page, textvariable=self.object_detail_var, wraplength=350,
+                  style='Muted.TLabel').grid(row=3, column=0, sticky='w')
+        ttk.Button(page, text='Clear snapshot gallery', command=self._clear_object_gallery).grid(
+            row=4, column=0, sticky='w', pady=8)
+        ttk.Label(page, text='Snapshots are timestamped camera crops, kept in memory (up to 32). '
+                  'The map Erase tool can ignore an object for cleaning. Simulator labels are ideal '
+                  'recognition; learned recognition requires a trained checkpoint in Setup.',
+                  wraplength=350, style='Muted.TLabel').grid(row=5, column=0, sticky='w')
+
+    def _clear_object_gallery(self):
+        self.object_observations.clear()
+        self.object_tree.delete(*self.object_tree.get_children())
+        self.object_photo = None
+        self.object_preview.configure(image='', text='No snapshots saved.')
+        self.object_detail_var.set('')
+
+    def _on_object_observations(self, msg):
+        try:
+            data = json.loads(msg.data)
+        except (TypeError, ValueError):
+            return
+        if not isinstance(data, dict):
+            return
+        detector = data.get('detector', 'unknown')
+        self.detector_status_var.set('%s · %s' % (
+            detector, 'ideal simulator labels' if data.get('ideal') else 'RGB learned recognition'))
+        for obj in (data.get('objects') or [])[:16]:
+            if not isinstance(obj, dict):
+                continue
+            if obj.get('class') not in OBJECT_STYLE:
+                continue
+            try:
+                x, y = float(obj['x']), float(obj['y'])
+                if not math.isfinite(x) or not math.isfinite(y):
+                    continue
+            except (KeyError, TypeError, ValueError):
+                continue
+            snap = obj.get('snapshot') or {}
+            if (not isinstance(snap, dict) or not isinstance(snap.get('data', ''), str)
+                    or len(snap.get('data', '')) > 65536):
+                continue
+            same = next((old for old in self.object_observations if old['class'] == obj['class']
+                         and math.dist((old['x'], old['y']), (x, y)) < 0.35), None)
+            observation = dict(obj, x=x, y=y, detector=detector, t=data.get('t'))
+            if same is not None:
+                if not snap:
+                    observation['snapshot'] = same.get('snapshot', {})
+                same.update(observation)
+            else:
+                self.object_observations.append(observation)
+                self.object_observations = self.object_observations[-32:]
+        selected = self.object_tree.selection()
+        self.object_tree.delete(*self.object_tree.get_children())
+        for i, obj in enumerate(self.object_observations):
+            self.object_tree.insert('', 'end', iid=str(i), values=(OBJECT_STYLE[obj['class']][2],
+                                    '%.2f, %.2f' % (obj['x'], obj['y'])))
+        if selected and self.object_tree.exists(selected[0]):
+            self.object_tree.selection_set(selected[0])
+            self._show_object_snapshot()
+
+    def _show_object_snapshot(self, _event=None):
+        selected = self.object_tree.selection()
+        if not selected:
+            return
+        obj = self.object_observations[int(selected[0])]
+        snap = obj.get('snapshot') or {}
+        self.object_photo = None
+        self.object_preview.configure(image='', text='No aligned RGB snapshot for this observation.')
+        if snap.get('encoding') == 'jpeg' and snap.get('data'):
+            try:
+                from PIL import Image, ImageTk
+                image = Image.open(BytesIO(base64.b64decode(snap['data'], validate=True)))
+                if image.width > 160 or image.height > 120:
+                    raise ValueError('Snapshot dimensions exceed the camera crop limit')
+                self.object_photo = ImageTk.PhotoImage(image, master=self)
+                self.object_preview.configure(image=self.object_photo, text='')
+            except (ValueError, OSError):
+                self.object_preview.configure(text='Snapshot could not be decoded.')
+        self.object_detail_var.set('%s · camera time %s s%s' % (
+            obj['detector'], snap.get('t', obj.get('t', '?')),
+            (' · confidence %.0f%%' % (100 * obj['score'])) if 'score' in obj else ''))
 
     @staticmethod
     def _page(notebook, title):
@@ -460,6 +564,20 @@ class VacuumTab(LabTab):
         src.grid(row=3, column=1, sticky='w', padx=6)
         ttk.Radiobutton(src, text='Saved map', value='nav', variable=self.vacuum_mode_var).grid(row=0, column=0, padx=(0, 8))
         ttk.Radiobutton(src, text='Build a new map (SLAM)', value='slam', variable=self.vacuum_mode_var).grid(row=0, column=1)
+        self.vacuum_detector_var = tk.StringVar(value='segmentation')
+        ttk.Label(form, text='Object detector').grid(row=4, column=0, sticky='w')
+        ttk.Combobox(form, textvariable=self.vacuum_detector_var, state='readonly',
+                     values=['segmentation', 'learned', 'none']).grid(row=4, column=1, sticky='ew', padx=6)
+        self.vacuum_detector_model_var = tk.StringVar()
+        ttk.Label(form, text='Checkpoint').grid(row=5, column=0, sticky='w')
+        model_row = ttk.Frame(form)
+        model_row.grid(row=5, column=1, sticky='ew', padx=6, pady=3)
+        model_row.columnconfigure(0, weight=1)
+        ttk.Entry(model_row, textvariable=self.vacuum_detector_model_var).grid(row=0, column=0, sticky='ew')
+        ttk.Button(model_row, text='Browse', command=self._choose_detector_model).grid(row=0, column=1, padx=3)
+        ttk.Label(form, text='Segmentation uses ideal simulation labels. Learned is experimental; '
+                  'select a locally trained checkpoint. No model is downloaded at launch.',
+                  wraplength=350, style='Muted.TLabel').grid(row=6, column=0, columnspan=2, sticky='w')
         row = ttk.Frame(page)
         row.grid(row=2, column=0, sticky='ew', pady=(8, 0))
         ttk.Button(row, text='▶  Launch robot + cleaning', style='Accent.TButton',
@@ -496,14 +614,30 @@ class VacuumTab(LabTab):
         self.app.set_status('Vacuum robot: %s' % robot)
 
     def launch_command(self):
-        return ['ros2', 'launch', 'robot_lab_bringup', 'simulated_room_vacuum.launch.py',
+        command = ['ros2', 'launch', 'robot_lab_bringup', 'simulated_room_vacuum.launch.py',
                 'robot_model:=%s' % self.vacuum_robot_var.get(),
                 'map_name:=%s' % self.vacuum_map_var.get(),
                 'simulator:=%s' % self.vacuum_sim_var.get(),
                 'mode:=%s' % self.vacuum_mode_var.get(),
-                'controller:=cleaning']
+                'controller:=cleaning',
+                'vacuum_detector:=%s' % self.vacuum_detector_var.get()]
+        if self.vacuum_detector_model_var.get():
+            command.append('vacuum_detector_model:=%s' % self.vacuum_detector_model_var.get())
+        return command
+
+    def _choose_detector_model(self):
+        path = filedialog.askopenfilename(parent=self, title='Select trained vacuum detector',
+                                         filetypes=[('PyTorch checkpoint', '*.pt *.pth')])
+        if path:
+            self.vacuum_detector_model_var.set(path)
+            self.vacuum_detector_var.set('learned')
 
     def _launch(self, extra=()):
+        if self.vacuum_detector_var.get() == 'learned' and not os.path.isfile(
+                self.vacuum_detector_model_var.get()):
+            self.message_var.set('Select a trained detector checkpoint in Setup before launching.')
+            return
+        self._clear_object_gallery()
         # The header names the running session from the main selection.
         for name, var in (('robot_var', self.vacuum_robot_var), ('map_var', self.vacuum_map_var),
                           ('simulator_var', self.vacuum_sim_var)):
@@ -549,6 +683,7 @@ class VacuumTab(LabTab):
             sub(String, '/vacuum/history', lambda m: self._on_json('history', m), latched)
             sub(String, '/vacuum/plan', lambda m: self._on_json('plan', m), latched)
             sub(String, '/vacuum/events', self._on_event, 50)
+            sub(String, '/vacuum/objects', self._on_object_observations, 2)
             sub(OccupancyGrid, '/map', self._on_map, latched)
             sub(OccupancyGrid, '/vacuum/rooms', lambda m: self._on_grid('rooms', m), latched)
             sub(OccupancyGrid, '/vacuum/coverage', lambda m: self._on_grid('coverage', m), latched)

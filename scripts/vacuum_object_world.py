@@ -100,7 +100,10 @@ def main():
     args.out.parent.mkdir(parents=True, exist_ok=True)
     args.out.write_text(world[:i] + ''.join(model_sdf(n, o) for n, o in enumerate(objects)) + world[i:])
     args.out.with_suffix('.objects.json').write_text(json.dumps(
-        [dict(o, label=LABELS[o['class']]) for o in objects], indent=1) + '\n')
+        [dict(o, label=LABELS[o['class']], footprint=(
+            {'kind': 'circle', 'radius': 0.025} if o['class'] == 'pet_waste' else
+            {'kind': 'box', 'half_extents': list(SHAPES[o['class']][1]), 'yaw': o.get('yaw', 0.0)}))
+         for o in objects], indent=1) + '\n')
     print('wrote %s with %d objects' % (args.out, len(objects)))
 
 

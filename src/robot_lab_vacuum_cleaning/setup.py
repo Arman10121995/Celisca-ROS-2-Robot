@@ -20,5 +20,6 @@ setup(
     tests_require=['pytest'],
     entry_points={'console_scripts': [
         'vacuum_cleaner = robot_lab_vacuum_cleaning.vacuum_cleaner:main',
-        'vacuum_object_detector = robot_lab_vacuum_cleaning.vacuum_objects:main']},
+        'vacuum_object_detector = robot_lab_vacuum_cleaning.vacuum_objects:main',
+        'vacuum_learned_detector = robot_lab_vacuum_cleaning.vacuum_learned_detector:main']},
 )
