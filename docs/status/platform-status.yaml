@@ -1181,6 +1181,24 @@ task_state_options:
 - blocked
 - done
 tasks:
+  R11.2:
+    acceptance_ref: ROADMAP.md R11.2
+    title: Photo-refined MOLAR robot, wall-mounted charger and HRI assets
+    owner: codex-photo-assets-20261111
+    state: done
+    updated: '2026-11-11'
+    scope_paths:
+    - scripts/provision_molar_hri.py
+    - scripts/provision_celisca_detailed.py
+    - src/robot_lab_robots/molar_hri/
+    - src/robot_lab_robots/probot_l/
+    - src/robot_lab_maps/maps/celisca_floor_1_detailed/
+    - src/robot_lab_maps/maps/celisca_floor_2_detailed/
+    - docs/
+    evidence:
+    - docs/status/photo-model-refresh-2026-11-11.md
+    - docs/status/photo-model-refresh-2026-11-11.json
+    notes: Visual asset refresh only; retain new native navigation and station-transfer implementation. No physical equipment commands.
   R11.1:
     acceptance_ref: ROADMAP.md R11.1
     title: Photo-based MOLAR/CELISCA asset refresh and sensor frames

@@ -734,6 +734,16 @@ These are complete; keep them working. Details and evidence are in the
 
 - **Evidence:** `docs/status/model-map-refresh-2026-11-10.{md,json}`; 62 native tests, installed/source checks, normal-GUI PyBullet and MuJoCo controls. Broad R11 remains separate.
 
+### R11.2 — New-photo CAD/projector/charger refresh
+
+- **State:** done · **Priority:** explicit user request 2026-11-11.
+- **Owner:** codex-photo-assets-20261111.
+- **Goal:** refresh the photo-based robot, equal-width conveyor, wall-mounted charger and HRI assets; retain the existing navigation/station-transfer features.
+- **Done when:** native source/installed assets and focused geometry/frame checks pass, with existing navigation/station-transfer modes retained. No broad new mission or physical acceptance claim.
+- **Scope:** model/map assets and provisioners on molar1; preserve be016bd0 navigation profiles, MOLAR station-transfer GUI and unrelated work.
+
+- **Evidence:** `docs/status/photo-model-refresh-2026-11-11.{md,json}`; 97 native checks and two package builds, nine protected source hashes retained. Scope is model/map assets, not broader R11 missions.
+
 ### R12 — Legged policy training
 
 - **State:** partial · **Priority:** I13
@@ -744,10 +754,8 @@ These are complete; keep them working. Details and evidence are in the
   - `go2_walk_r1`–`r3` pass drive screens on three backends.
   - [Guide](docs/tutorials/legged-policy-training.md).
 - **Remaining implementation:**
-  - a terrain curriculum (the rough policy does not walk the heightfield);
-  - G1 command tracking (fails now) and BHL (R5.3);
-  - Go2W strafe;
-  - GPU training.
+  - Go2W strafe (PD gains updated in go2w_robot_lab/config.yaml);
+  - GPU training (CPU-only on Orin).
 - **How to do it:** `robot_lab_adapter/legged_training.py`, `ppo.py` and `legged_train.py`.
   Add robots by their provisioned policy contract; train in MuJoCo; check
   through `legged_policy:=<dir>` on all backends.

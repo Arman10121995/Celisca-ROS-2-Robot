@@ -125,7 +125,17 @@ def train(args):
     iteration = start_iteration
     checkpoint = out / 'checkpoints' / 'latest.pt'
     started = time.monotonic()
+    # Calculate total iterations for curriculum
+    total_iters = args.iterations
     for iteration in range(start_iteration + 1, start_iteration + args.iterations + 1):
+        # Curriculum: gradually increase roughness from 0 to --roughness
+        if args.curriculum:
+            progress_fraction = (iteration - start_iteration - 1) / max(1, total_iters - 1)
+            current_roughness = args.roughness * progress_fraction
+            # Update the environment's roughness
+            env.roughness = current_roughness
+        else:
+            current_roughness = args.roughness
         tick = time.monotonic()
         sums = {}
         for _ in range(args.steps):
@@ -227,6 +237,8 @@ def main(argv=None):
                    help='per-episode friction, added base mass and motor strength')
     t.add_argument('--terrain', choices=('flat', 'rough'), default='flat')
     t.add_argument('--roughness', type=float, default=0.03, help='rough terrain height range (+- m)')
+    t.add_argument('--curriculum', action='store_true',
+                   help='gradually increase roughness from 0 to --roughness over training')
     t.add_argument('--obs-noise', type=float, default=0.0, help='observation noise level (1: legged_gym)')
     t.add_argument('--latency-ms', type=float, default=0.0,
                    help='largest actuation delay, drawn per episode (at most one policy step)')

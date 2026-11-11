@@ -24,6 +24,11 @@ def test_robot_frames_and_rest_relative_kinematics():
         assert float(joint.find('origin').get('xyz').split()[2])+spec['lower']==pytest.approx(.440)
         assert robot.find("link[@name='telescope_stage2']/visual[@name='Robot_Carriage_TransferPlate']") is not None
         assert robot.find("link[@name='conveyor_carriage']/visual[@name='Robot_Carriage_TransferPlate']") is None
+        for visual in ('Robot_Telescope_Stage1_Guides','Robot_Telescope_Stage1_Endcap'):
+            assert robot.find("link[@name='telescope_stage1']/visual[@name='"+visual+"']") is not None
+        assert robot.find("link[@name='telescope_stage2']/visual[@name='Robot_Telescope_Stage2_Guides']") is not None
+        for visual in ('Robot_Carriage_Lower_Endcap','Robot_Carriage_Cable_Connectors','Robot_Carriage_Lift_Shoes'):
+            assert robot.find("link[@name='conveyor_carriage']/visual[@name='"+visual+"']") is not None
         params=sensor_parameters(profile['sensor_config'],ET.tostring(robot,encoding='unicode'))
         assert params['laser_link_name']=='laser_link'
         scanner=robot.find("joint[@name='laser_link_mount']/origin")
@@ -47,7 +52,7 @@ def test_native_detailed_floors_preserve_spawns_and_add_chargers():
     for floor,count in ((1,2),(2,1)):
         name=f'celisca_floor_{floor}_detailed'
         provenance=json.loads((share/'maps'/name/'PROVENANCE.json').read_text())
-        assert provenance['source_manifest']['detailParts']==96+8*count
+        assert provenance['source_manifest']['detailParts']==96+26*count
         assert provenance['projection']['spawn']==maps[name]['spawn']
         assert provenance['source_manifest']['sourceGeometryAndTransformsUnchanged']
         assert all(provenance['source_manifest']['glbVerification'].values())

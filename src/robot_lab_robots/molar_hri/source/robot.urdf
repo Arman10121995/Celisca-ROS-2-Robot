@@ -524,7 +524,7 @@
         <mesh filename="meshes/molar_hri/Robot_Battery_Hatch.stl" scale="1 1 1" />
       </geometry>
       <material name="Robot_Battery_Hatch_material">
-        <color rgba="0.784314 0.792157 0.803922 1" />
+        <color rgba="0.105882 0.121569 0.137255 1" />
       </material>
     </visual>
     <visual name="Robot_Battery_Label_24V_40Ah">
@@ -575,12 +575,60 @@
         <color rgba="0.105882 0.121569 0.137255 1" />
       </material>
     </visual>
+    <visual name="Robot_Bluespot_Cable">
+      <geometry>
+        <mesh filename="meshes/molar_hri/Robot_Bluespot_Cable.stl" scale="1 1 1" />
+      </geometry>
+      <material name="Robot_Bluespot_Cable_material">
+        <color rgba="0.105882 0.121569 0.137255 1" />
+      </material>
+    </visual>
     <visual name="Robot_Bluespot_Lens">
       <geometry>
         <mesh filename="meshes/molar_hri/Robot_Bluespot_Lens.stl" scale="1 1 1" />
       </geometry>
       <material name="Robot_Bluespot_Lens_material">
-        <color rgba="0.07451 0.105882 0.137255 1" />
+        <color rgba="0.109804 0.364706 0.94902 1" />
+      </material>
+    </visual>
+    <visual name="Robot_Bluespot_Rear">
+      <geometry>
+        <mesh filename="meshes/molar_hri/Robot_Bluespot_Rear.stl" scale="1 1 1" />
+      </geometry>
+      <material name="Robot_Bluespot_Rear_material">
+        <color rgba="0.098039 0.113725 0.129412 1" />
+      </material>
+    </visual>
+    <visual name="Robot_Bluespot_Rear_Bezel">
+      <geometry>
+        <mesh filename="meshes/molar_hri/Robot_Bluespot_Rear_Bezel.stl" scale="1 1 1" />
+      </geometry>
+      <material name="Robot_Bluespot_Rear_Bezel_material">
+        <color rgba="0.137255 0.152941 0.168627 1" />
+      </material>
+    </visual>
+    <visual name="Robot_Bluespot_Rear_Bracket">
+      <geometry>
+        <mesh filename="meshes/molar_hri/Robot_Bluespot_Rear_Bracket.stl" scale="1 1 1" />
+      </geometry>
+      <material name="Robot_Bluespot_Rear_Bracket_material">
+        <color rgba="0.105882 0.121569 0.137255 1" />
+      </material>
+    </visual>
+    <visual name="Robot_Bluespot_Rear_Cable">
+      <geometry>
+        <mesh filename="meshes/molar_hri/Robot_Bluespot_Rear_Cable.stl" scale="1 1 1" />
+      </geometry>
+      <material name="Robot_Bluespot_Rear_Cable_material">
+        <color rgba="0.105882 0.121569 0.137255 1" />
+      </material>
+    </visual>
+    <visual name="Robot_Bluespot_Rear_Lens">
+      <geometry>
+        <mesh filename="meshes/molar_hri/Robot_Bluespot_Rear_Lens.stl" scale="1 1 1" />
+      </geometry>
+      <material name="Robot_Bluespot_Rear_Lens_material">
+        <color rgba="0.109804 0.364706 0.94902 1" />
       </material>
     </visual>
     <visual name="Robot_Button_Acknowledge_Left">
@@ -687,14 +735,6 @@
         <color rgba="0.176471 0.196078 0.227451 1" />
       </material>
     </visual>
-    <visual name="Robot_Cross_Brace">
-      <geometry>
-        <mesh filename="meshes/molar_hri/Robot_Cross_Brace.stl" scale="1 1 1" />
-      </geometry>
-      <material name="Robot_Cross_Brace_material">
-        <color rgba="0.627451 0.647059 0.666667 1" />
-      </material>
-    </visual>
     <visual name="Robot_Drive_Gas_Springs">
       <geometry>
         <mesh filename="meshes/molar_hri/Robot_Drive_Gas_Springs.stl" scale="1 1 1" />
@@ -741,14 +781,6 @@
       </geometry>
       <material name="Robot_Estop_Right_material">
         <color rgba="0.784314 0.098039 0.098039 1" />
-      </material>
-    </visual>
-    <visual name="Robot_IO_Panel">
-      <geometry>
-        <mesh filename="meshes/molar_hri/Robot_IO_Panel.stl" scale="1 1 1" />
-      </geometry>
-      <material name="Robot_IO_Panel_material">
-        <color rgba="0.156863 0.172549 0.196078 1" />
       </material>
     </visual>
     <visual name="Robot_Indicator_Lamps">
@@ -837,14 +869,6 @@
       </geometry>
       <material name="Robot_Network_Module_material">
         <color rgba="0.313725 0.427451 0.482353 1" />
-      </material>
-    </visual>
-    <visual name="Robot_Rating_Plate">
-      <geometry>
-        <mesh filename="meshes/molar_hri/Robot_Rating_Plate.stl" scale="1 1 1" />
-      </geometry>
-      <material name="Robot_Rating_Plate_material">
-        <color rgba="0.862745 0.870588 0.882353 1" />
       </material>
     </visual>
     <visual name="Robot_Relays_Contactors">
@@ -1144,6 +1168,30 @@
         <color rgba="0.137255 0.156863 0.188235 1" />
       </material>
     </visual>
+    <visual name="Robot_Carriage_Cable_Connectors">
+      <geometry>
+        <mesh filename="meshes/molar_hri/Robot_Carriage_Cable_Connectors.stl" scale="1 1 1" />
+      </geometry>
+      <material name="Robot_Carriage_Cable_Connectors_material">
+        <color rgba="0.105882 0.121569 0.137255 1" />
+      </material>
+    </visual>
+    <visual name="Robot_Carriage_Lift_Shoes">
+      <geometry>
+        <mesh filename="meshes/molar_hri/Robot_Carriage_Lift_Shoes.stl" scale="1 1 1" />
+      </geometry>
+      <material name="Robot_Carriage_Lift_Shoes_material">
+        <color rgba="0.137255 0.152941 0.172549 1" />
+      </material>
+    </visual>
+    <visual name="Robot_Carriage_Lower_Endcap">
+      <geometry>
+        <mesh filename="meshes/molar_hri/Robot_Carriage_Lower_Endcap.stl" scale="1 1 1" />
+      </geometry>
+      <material name="Robot_Carriage_Lower_Endcap_material">
+        <color rgba="0.937255 0.607843 0.109804 1" />
+      </material>
+    </visual>
     <visual name="Robot_Carriage_Motor">
       <geometry>
         <mesh filename="meshes/molar_hri/Robot_Carriage_Motor.stl" scale="1 1 1" />
@@ -1181,19 +1229,13 @@
         <mesh filename="meshes/molar_hri/Robot_Load_Wings.stl" scale="1 1 1" />
       </geometry>
       <material name="Robot_Load_Wings_material">
-        <color rgba="0.156863 0.470588 0.745098 1" />
+        <color rgba="0.764706 0.784314 0.803922 1" />
       </material>
     </visual>
     <collision name="conveyor_carriage_collision_0">
-      <origin xyz="0 -0.231 -0.047" rpy="0 0 0" />
+      <origin xyz="0 0 -0.084" rpy="0 0 0" />
       <geometry>
-        <box size="0.61 0.016 0.022" />
-      </geometry>
-    </collision>
-    <collision name="conveyor_carriage_collision_1">
-      <origin xyz="0 0.231 -0.047" rpy="0 0 0" />
-      <geometry>
-        <box size="0.61 0.016 0.022" />
+        <box size="0.44136 0.34 0.036" />
       </geometry>
     </collision>
   </link>
@@ -1201,7 +1243,7 @@
     <inertial>
       <origin xyz="-0.013 0 -0.019" rpy="0 0 0" />
       <mass value="2" />
-      <inertia ixx="0.029454" iyy="0.0468706667" izz="0.0762166667" ixy="0" ixz="0" iyz="0" />
+      <inertia ixx="0.0193973333" iyy="0.0469473333" izz="0.0660833333" ixy="0" ixz="0" iyz="0" />
     </inertial>
     <visual name="Robot_Telescope_Stage1">
       <geometry>
@@ -1211,16 +1253,32 @@
         <color rgba="0.568627 0.588235 0.619608 1" />
       </material>
     </visual>
-    <collision name="telescope_stage1_collision_0">
-      <origin xyz="-0.013 -0.201 -0.019" rpy="0 0 0" />
+    <visual name="Robot_Telescope_Stage1_Endcap">
       <geometry>
-        <box size="0.526 0.016 0.016" />
+        <mesh filename="meshes/molar_hri/Robot_Telescope_Stage1_Endcap.stl" scale="1 1 1" />
+      </geometry>
+      <material name="Robot_Telescope_Stage1_Endcap_material">
+        <color rgba="0.937255 0.607843 0.109804 1" />
+      </material>
+    </visual>
+    <visual name="Robot_Telescope_Stage1_Guides">
+      <geometry>
+        <mesh filename="meshes/molar_hri/Robot_Telescope_Stage1_Guides.stl" scale="1 1 1" />
+      </geometry>
+      <material name="Robot_Telescope_Stage1_Guides_material">
+        <color rgba="0.105882 0.121569 0.137255 1" />
+      </material>
+    </visual>
+    <collision name="telescope_stage1_collision_0">
+      <origin xyz="-0.013 -0.163 -0.05" rpy="0 0 0" />
+      <geometry>
+        <box size="0.52718 0.014 0.028" />
       </geometry>
     </collision>
     <collision name="telescope_stage1_collision_1">
-      <origin xyz="-0.013 0.201 -0.019" rpy="0 0 0" />
+      <origin xyz="-0.013 0.163 -0.05" rpy="0 0 0" />
       <geometry>
-        <box size="0.526 0.016 0.016" />
+        <box size="0.52718 0.014 0.028" />
       </geometry>
     </collision>
   </link>
@@ -1228,7 +1286,7 @@
     <inertial>
       <origin xyz="-0.018 0 -0.015" rpy="0 0 0" />
       <mass value="2" />
-      <inertia ixx="0.0230208333" iyy="0.0179168333" izz="0.0405293333" ixy="0" ixz="0" iyz="0" />
+      <inertia ixx="0.0194708333" iyy="0.0179168333" izz="0.0369793333" ixy="0" ixz="0" iyz="0" />
     </inertial>
     <visual name="Robot_Carriage_TransferPlate">
       <geometry>
@@ -1270,6 +1328,14 @@
         <color rgba="0.509804 0.533333 0.568627 1" />
       </material>
     </visual>
+    <visual name="Robot_Telescope_Stage2_Guides">
+      <geometry>
+        <mesh filename="meshes/molar_hri/Robot_Telescope_Stage2_Guides.stl" scale="1 1 1" />
+      </geometry>
+      <material name="Robot_Telescope_Stage2_Guides_material">
+        <color rgba="0.105882 0.121569 0.137255 1" />
+      </material>
+    </visual>
     <visual name="Robot_Telescope_Tip_Sensor">
       <geometry>
         <mesh filename="meshes/molar_hri/Robot_Telescope_Tip_Sensor.stl" scale="1 1 1" />
@@ -1279,21 +1345,21 @@
       </material>
     </visual>
     <collision name="telescope_stage2_collision_0">
-      <origin xyz="-0.018 -0.1575 -0.015" rpy="0 0 0" />
+      <origin xyz="0.15325 -0.159 -0.02" rpy="0 0 0" />
       <geometry>
-        <box size="0.304 0.053 0.012" />
+        <box size="0.3065 0.022 0.026" />
       </geometry>
     </collision>
     <collision name="telescope_stage2_collision_1">
-      <origin xyz="-0.018 0.1575 -0.015" rpy="0 0 0" />
+      <origin xyz="0.15325 0.159 -0.02" rpy="0 0 0" />
       <geometry>
-        <box size="0.304 0.053 0.012" />
+        <box size="0.3065 0.022 0.026" />
       </geometry>
     </collision>
     <collision name="telescope_stage2_collision_2">
       <origin xyz="0 0 -0.002" rpy="0 0 0" />
       <geometry>
-        <box size="0.574 0.33 0.004" />
+        <box size="0.574 0.34 0.004" />
       </geometry>
     </collision>
   </link>
@@ -1301,7 +1367,7 @@
     <inertial>
       <origin xyz="0 0 0" rpy="0 0 0" />
       <mass value="0.2" />
-      <inertia ixx="0.0025422" iyy="1.44e-05" izz="0.0025422" ixy="0" ixz="0" iyz="0" />
+      <inertia ixx="0.0015072" iyy="1.44e-05" izz="0.0015072" ixy="0" ixz="0" iyz="0" />
     </inertial>
     <visual name="Robot_Carriage_Roller">
       <geometry>
@@ -1314,7 +1380,7 @@
     <collision name="transfer_roller_collision_0">
       <origin xyz="0 0 0" rpy="1.57079633 0 0" />
       <geometry>
-        <cylinder radius="0.012" length="0.39" />
+        <cylinder radius="0.012" length="0.3" />
       </geometry>
     </collision>
   </link>

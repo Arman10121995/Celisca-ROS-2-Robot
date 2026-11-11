@@ -48,7 +48,7 @@ def test_source_mechanics_and_interfaces(variant):
 def test_scoped_profile_and_control_limits(variant):
     profiles = yaml.safe_load((ROOT / 'src/robot_lab_robots/config/robots.yaml').read_text())['robots']
     profile = profiles[variant]
-    assert profile['supported_modes'] == ['display']
+    assert profile['supported_modes'] == ['display', 'loc', 'slam', 'nav']
     assert set(profile['supported_simulators']) == {'mujoco', 'pybullet', 'gazebo', 'isaac'}
     assert profile['drive']['type'] == 'diff'
     assert profile['drive']['wheel_radius'] == .09

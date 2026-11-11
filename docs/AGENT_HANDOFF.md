@@ -1,5 +1,7 @@
 # Agent Handoff Protocol
 
+November 11 MOLAR photo assets: R11.2 is complete in its bounded scope; read [the native refresh](status/photo-model-refresh-2026-11-11.md). Models/maps are refreshed, two asset packages build and 97 checks pass. Preserve be016bd0 navigation/station-transfer work and unrelated legged-policy changes. Geometry-only provisioning avoids registration regressions. This does not complete broad R11/backend/mission qualification.
+
 **November 10, 2026: [ROADMAP.md](../ROADMAP.md) is the single goal list.** Every remaining task is there in one format, with an implementation queue (work it first, top to bottom), a validation queue (after) and how-to steps per task. The old checklist and roadmap text are archived in [status/archive/](status/archive/). The dated paragraphs below are history; where they conflict with the roadmap, the roadmap wins.
 
 **Stopped at the user's request — November 3.** Code through `5e7d29b1` is committed on `master`. The user requested committing everything and stopping for today; do not restart trials until they resume. The owned `fleet-concurrent-12` probe was stopped and cleaned up after 319.046 wall seconds, with its actual result and explicit user-stop note preserved. Do not count that interruption as a completed four-stop mission.

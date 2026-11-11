@@ -1,0 +1,26 @@
+{
+  "backup": "/workspace/molar/robot_lab_runtime/photo-final-20261111/before-125357",
+  "preserved_navigation_and_station_transfer": 9,
+  "physical_commands": 0,
+  "source_manifest_sha256": "8512a4151921e8a185d9864651cff2f52b2bd06693cf9d5a2ffebdef780235b0",
+  "model_source_sha256": {
+    "molar_hri.urdf": "879f4b3286b7629200723857ba661a178d718815a1276f84e92b8b0b50805c5e",
+    "probot_l.urdf": "1e6c3f62b277d4ea1148f6111998277c9be08e5455e4fe38186ace8016a115fd"
+  },
+  "floor_source_sha256": {
+    "1": "3f2e2ec62a7edc6bc907eda4ef9519491a5b92498a921c44f1863b94f90333ac",
+    "2": "c9fd3c0601fdfca965d969c39dfb07952dafe97d727c17827bfbb7cef54d773c"
+  },
+  "date": "2026-11-11",
+  "native_tests_passed": 97,
+  "asset_packages_built": [
+    "robot_lab_robots",
+    "robot_lab_maps"
+  ],
+  "scope": "Installed visual geometry, source bindings, sensor frames, coupling/FK and MOLAR GUI controls; not broad four-backend mission acceptance",
+  "logs": {
+    "refresh": "/workspace/molar/robot_lab_runtime/photo-final-refresh-20261111.log",
+    "build": "/workspace/molar/robot_lab_runtime/photo-build-20261111.log",
+    "tests": "/workspace/molar/robot_lab_runtime/photo-native-tests-20261111.log"
+  }
+}

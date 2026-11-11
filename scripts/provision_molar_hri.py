@@ -10,6 +10,7 @@ import yaml
 parser = argparse.ArgumentParser(description=__doc__)
 parser.add_argument('--source', type=Path, default=Path('/workspace/molar_voice/simulation/robot'))
 parser.add_argument('--root', type=Path, default=Path('/workspace/molar/ros_ws/bumperbot_ws'))
+parser.add_argument('--geometry-only', action='store_true', help='Refresh URDF/mesh/controller assets; retain current navigation profiles, registry and launch wiring')
 args = parser.parse_args()
 ROOT = args.root.resolve()
 SOURCE = args.source.resolve(strict=True)
@@ -186,6 +187,10 @@ for variant in ('probot_l', 'molar_hri'):
         frames=['odom', 'base_link', 'conveyor_carriage', 'telescope_stage1', 'telescope_stage2', 'laser_link', 'rear_scanner_link', 'barcode_link'] + (['camera_link', 'camera_optical_link'] if variant == 'molar_hri' else []),
         assets={'urdf': 'robot_lab_robots/' + variant + '/urdf/' + variant + '.urdf.xacro'},
         tags=['complete_robot', 'differential_drive', 'articulated_conveyor', 'estimated_dynamics', 'experimental_control']))
+
+if args.geometry_only:
+    print(json.dumps({'updated_geometry': list(profiles), 'navigation_profiles_retained': True, 'source': str(SOURCE)}))
+    raise SystemExit(0)
 
 path=ROOT / 'src/robot_lab_robots/config/robots.yaml'
 current=path.read_text()

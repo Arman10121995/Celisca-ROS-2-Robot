@@ -13,7 +13,7 @@
     "sourceSha256": "91584e9df42751d172f245091d91e8bd7db8f9c9aaaed40e3a0047876aa82d9e",
     "glbFrame": "raw_gltf_y_up_m",
     "simulatorFrame": "x,-z,y; Z-up metres; det +1",
-    "detailSpecSha256": "37eed5f01010e32bc28c7cabd1ddf40ac6ad0f35a6d3489c7cca38d259ec8969",
+    "detailSpecSha256": "d2d6684d43c6a68728ae5af2e141a635b281ff4cd6c58489586c02a6820ed837",
     "yUpToZUp": [
       [
         1.0,
@@ -39,7 +39,7 @@
       "originalSceneRootsUnchanged": true,
       "selfContained": true
     },
-    "detailParts": 112,
+    "detailParts": 148,
     "sanitaryFixtures": 11,
     "sanitaryPartitions": 4,
     "structuralTriangles": 7440,
@@ -52,36 +52,36 @@
     "engineRuntimeAcceptance": "not run by exporter; see validation report",
     "files": {
       "celisca_floor_1/floor.urdf": {
-        "sha256": "4dd1cae3f5edbe9ce896806b3ab37b0f66d1bc628cd6dd5fa43cf781e6960762",
-        "bytes": 6782
+        "sha256": "4826b1fe2e539fd2132928854ce0f2fd5c052b2c7f4526160d48411e83917077",
+        "bytes": 7041
       },
       "celisca_floor_1/floor.usda": {
-        "sha256": "31df87838d4e4f163d49a486ef1d0fa89a360de51b717e82a737f70444123a21",
-        "bytes": 1090180
+        "sha256": "7d7a7735f8f454c3e4dcfd49b6dbe83b5a0f13d83fffa61fe1982c3cad7bf69b",
+        "bytes": 1399845
       },
       "celisca_floor_1/floor.xml": {
-        "sha256": "79f8571dd5632b22a79c1176711893b6ef702f2ddd9ab2cd5b3171e92e787375",
-        "bytes": 3225170
+        "sha256": "745e4b6613af7fe6930b6ac7ff47d2125d7a1e3981ae670b39c1485efbdd2ca9",
+        "bytes": 3452963
       },
       "celisca_floor_1/meshes/collision.mtl": {
         "sha256": "0652bf15b1fa32e190047cf47fb8b969e39cc8929bdf4b5d2e612e8760442954",
         "bytes": 6965
       },
       "celisca_floor_1/meshes/collision.obj": {
-        "sha256": "1b5943aadec7b2194ee586c9d90980ba42b55286d505a2cb908f1d3e78249fcd",
-        "bytes": 376426
+        "sha256": "2162feaa31dcdd0bdbb0f1443b988dbc95ab21e8706ecb652dfd66a6ca2bab19",
+        "bytes": 376424
       },
       "celisca_floor_1/meshes/visual.dae": {
-        "sha256": "9fd014659a4130beba5025673a5116f5e67f506043e009337151bf71d2d11507",
-        "bytes": 636590
+        "sha256": "37fca68f66ad173421aeb24b87dc1c7b325dcc8a26642772fceb531ab32a8d1e",
+        "bytes": 896999
       },
       "celisca_floor_1/meshes/visual.mtl": {
-        "sha256": "38d9c5dd978ed6207d18d41e85011e79a42d0a1137f07762b4cfa85c15499ae0",
-        "bytes": 13326
+        "sha256": "c6fe802a415c867bb1cf134a519a7ec1416b68b7888d39810b75a9aefbaa6227",
+        "bytes": 15772
       },
       "celisca_floor_1/meshes/visual.obj": {
-        "sha256": "6e47fa2fb5b286d6f1b15bcd6ba30e2f5872a283cb2c1f4f95245f90fe4ac6f4",
-        "bytes": 600633
+        "sha256": "74a71ab1f4efb2fb97ad91cf520be72b51b5655149a605d05aeecfd988d2cf2a",
+        "bytes": 925348
       },
       "celisca_floor_1/meshes/visual_material_000.mtl": {
         "sha256": "1193e08e8f1adef1b733304d4ac5d5902b6c5d0e74e336eb484fe0cf365d71e6",
@@ -184,8 +184,8 @@
         "bytes": 65
       },
       "celisca_floor_1/meshes/visual_material_012.obj": {
-        "sha256": "aa081066955e0d356c6cb03ec98577bad01b208b1e522a23e8bc5264137a2808",
-        "bytes": 12023
+        "sha256": "8c25575a4fe067df858c1e2f0274e92ba9d594cb1f90dabadde8216c766ba7cb",
+        "bytes": 46769
       },
       "celisca_floor_1/meshes/visual_material_013.mtl": {
         "sha256": "30fdc6dad052c8c47cdda0d2117f4de8f3ddf4a050d3361e22d332ed0d0660eb",
@@ -232,16 +232,16 @@
         "bytes": 67
       },
       "celisca_floor_1/meshes/visual_material_018.obj": {
-        "sha256": "2198d9c0a919399fe505997776c0d8bafe1beb180d96f0ce689bf4f9a31ba2b5",
-        "bytes": 3210
+        "sha256": "cf722854732a205514687827846f14ef1bd369d312cbed83da788d311d13ce85",
+        "bytes": 56925
       },
       "celisca_floor_1/meshes/visual_material_019.mtl": {
         "sha256": "6ceeb5f48896e6e9397f7445c147a00b93428098acd671c0d5ffb278ba570430",
         "bytes": 63
       },
       "celisca_floor_1/meshes/visual_material_019.obj": {
-        "sha256": "3d80b50076beb04a91b270a65430e238e454b6e21fc648181c650c3db186940f",
-        "bytes": 9129
+        "sha256": "e152368921e46db98d37b2bdd03b40d6d6045fb02b1899ff1c4a2727dabf1fcb",
+        "bytes": 158600
       },
       "celisca_floor_1/meshes/visual_material_020.mtl": {
         "sha256": "82ae53aaf2b55e4385d5d56a4c3a689b5db0c5e2b95e0912dc58b557c0278800",
@@ -256,31 +256,39 @@
         "bytes": 65
       },
       "celisca_floor_1/meshes/visual_material_021.obj": {
-        "sha256": "2d9886b06cc142d2b9bbed9acc58ec2adbe330aada587c599be7a27e18d476c0",
-        "bytes": 820
+        "sha256": "8cc28bc6073e95c51efdca1777c617a6d7fa90f9264cdb52d8032e1bc3c59240",
+        "bytes": 1393
       },
       "celisca_floor_1/meshes/visual_material_022.mtl": {
         "sha256": "b06f9263c81cb9a523c6bfc51b6dd8b8b2c10211fc7c36a5a441527f9585e9cc",
         "bytes": 64
       },
       "celisca_floor_1/meshes/visual_material_022.obj": {
-        "sha256": "cd28a6a5f2894c9f9efb7789e8b74cea95c1adad78f655ab85a7da43a1e43746",
-        "bytes": 5735
+        "sha256": "651170018c54bdd1345d1503624ff95679ccb0a21e035da77a0b91e5e7ca8d52",
+        "bytes": 20016
       },
       "celisca_floor_1/meshes/visual_material_023.mtl": {
+        "sha256": "6454819530db5221717ccbfddf26734c8d96c4bd4c513866a945ef2898c7af43",
+        "bytes": 72
+      },
+      "celisca_floor_1/meshes/visual_material_023.obj": {
+        "sha256": "bc278ee787e22198c6bae282c8bdb59850f860a11c160d6e7bdb05bb2a916e70",
+        "bytes": 26312
+      },
+      "celisca_floor_1/meshes/visual_material_024.mtl": {
         "sha256": "3804d5e77f7af121b9942a27f55d3046a64cfcd4b33c43e72dcf78f86f097c95",
         "bytes": 66
       },
-      "celisca_floor_1/meshes/visual_material_023.obj": {
-        "sha256": "2fecf9fdc1209cc4c205edc39e49e2e8d59dcbe874088d26c34f87ab21343d77",
+      "celisca_floor_1/meshes/visual_material_024.obj": {
+        "sha256": "826afbb0cb98cf2e436c9aa8409417a591da549c6ea3cd52d2183b7b881825e8",
         "bytes": 165
       },
-      "celisca_floor_1/meshes/visual_material_024.mtl": {
+      "celisca_floor_1/meshes/visual_material_025.mtl": {
         "sha256": "a6c1d02ef3cf2e633346a11852424d41f2c401a9905b8b744a34a75a5782c20a",
         "bytes": 67
       },
-      "celisca_floor_1/meshes/visual_material_024.obj": {
-        "sha256": "7630dc7f6882b4f58e031ce95caffb1ea6f610a2ac889230b1630836db419986",
+      "celisca_floor_1/meshes/visual_material_025.obj": {
+        "sha256": "f4bcd28b95b064300e7e9ca984c9856768cb494d5fb607f186821ceecd914b9b",
         "bytes": 9192
       },
       "celisca_floor_1/model.config": {
@@ -296,21 +304,21 @@
         "bytes": 629
       },
       "Celisca_floor_1_detailed.glb": {
-        "sha256": "d97bd161cc702b87cd07e910ae9414c4e27c077e7d7f31d882d082c793417ebb",
-        "bytes": 45275648
+        "sha256": "3f2e2ec62a7edc6bc907eda4ef9519491a5b92498a921c44f1863b94f90333ac",
+        "bytes": 46034936
       }
     }
   },
-  "source_manifest_sha256": "519c8dbb8262ad897a0884e94eb34cb9273a44e112bd3d6f738c361827ae727e",
+  "source_manifest_sha256": "07b19ecaa269010e01422a5ff9fee4fe0e0659e059c9bb4270fdfc18e9b108fa",
   "copied_adapter_sha256": {
-    "adapters/floor.urdf": "4dd1cae3f5edbe9ce896806b3ab37b0f66d1bc628cd6dd5fa43cf781e6960762",
-    "adapters/floor.usda": "31df87838d4e4f163d49a486ef1d0fa89a360de51b717e82a737f70444123a21",
-    "adapters/floor.xml": "79f8571dd5632b22a79c1176711893b6ef702f2ddd9ab2cd5b3171e92e787375",
+    "adapters/floor.urdf": "4826b1fe2e539fd2132928854ce0f2fd5c052b2c7f4526160d48411e83917077",
+    "adapters/floor.usda": "7d7a7735f8f454c3e4dcfd49b6dbe83b5a0f13d83fffa61fe1982c3cad7bf69b",
+    "adapters/floor.xml": "745e4b6613af7fe6930b6ac7ff47d2125d7a1e3981ae670b39c1485efbdd2ca9",
     "adapters/meshes/collision.mtl": "0652bf15b1fa32e190047cf47fb8b969e39cc8929bdf4b5d2e612e8760442954",
-    "adapters/meshes/collision.obj": "1b5943aadec7b2194ee586c9d90980ba42b55286d505a2cb908f1d3e78249fcd",
-    "adapters/meshes/visual.dae": "9fd014659a4130beba5025673a5116f5e67f506043e009337151bf71d2d11507",
-    "adapters/meshes/visual.mtl": "38d9c5dd978ed6207d18d41e85011e79a42d0a1137f07762b4cfa85c15499ae0",
-    "adapters/meshes/visual.obj": "6e47fa2fb5b286d6f1b15bcd6ba30e2f5872a283cb2c1f4f95245f90fe4ac6f4",
+    "adapters/meshes/collision.obj": "2162feaa31dcdd0bdbb0f1443b988dbc95ab21e8706ecb652dfd66a6ca2bab19",
+    "adapters/meshes/visual.dae": "37fca68f66ad173421aeb24b87dc1c7b325dcc8a26642772fceb531ab32a8d1e",
+    "adapters/meshes/visual.mtl": "c6fe802a415c867bb1cf134a519a7ec1416b68b7888d39810b75a9aefbaa6227",
+    "adapters/meshes/visual.obj": "74a71ab1f4efb2fb97ad91cf520be72b51b5655149a605d05aeecfd988d2cf2a",
     "adapters/meshes/visual_material_000.mtl": "1193e08e8f1adef1b733304d4ac5d5902b6c5d0e74e336eb484fe0cf365d71e6",
     "adapters/meshes/visual_material_000.obj": "83270ec3b2b7e424a2625d0c019813d3e458852903271e2ac3528b36e491998e",
     "adapters/meshes/visual_material_001.mtl": "b4f0dc7aa39e50b28db05647837e1b02cd6dee878ca3083251f0655145a1a881",
@@ -336,7 +344,7 @@
     "adapters/meshes/visual_material_011.mtl": "cd52427c4b558283b39ae78965e6e032bdbce61b7fd8903a8f11b2fb14e5fe8f",
     "adapters/meshes/visual_material_011.obj": "8b8fe4e087f9e56c6f7c6d3450a6e4234301201515e932f8299cc5d0bdcf83ae",
     "adapters/meshes/visual_material_012.mtl": "0490f36fca474c740cedaffec3db1fcc440a76b6bc68ba13420bf34a720090dd",
-    "adapters/meshes/visual_material_012.obj": "aa081066955e0d356c6cb03ec98577bad01b208b1e522a23e8bc5264137a2808",
+    "adapters/meshes/visual_material_012.obj": "8c25575a4fe067df858c1e2f0274e92ba9d594cb1f90dabadde8216c766ba7cb",
     "adapters/meshes/visual_material_013.mtl": "30fdc6dad052c8c47cdda0d2117f4de8f3ddf4a050d3361e22d332ed0d0660eb",
     "adapters/meshes/visual_material_013.obj": "f08bc9d574f71ff79b5b01e3ff67bcec6087e73e3afedfb69ede3f2a9eece7f3",
     "adapters/meshes/visual_material_014.mtl": "57c907f62c73c24f203ddee8786180d20e426f52519c6e3b6dc95c0470016840",
@@ -348,31 +356,33 @@
     "adapters/meshes/visual_material_017.mtl": "2deecae822ded1e574660629ddcb5a0276ab3d7771765dcfe56d81ce72026e39",
     "adapters/meshes/visual_material_017.obj": "aadfbb3bf3e8f4fadc3f2b381ca6386ce292a98a831562bb3727a82abb89af0a",
     "adapters/meshes/visual_material_018.mtl": "85a069491deef6b21e5321b68beedf75c467cc847195377d74f7fbda50df89b8",
-    "adapters/meshes/visual_material_018.obj": "2198d9c0a919399fe505997776c0d8bafe1beb180d96f0ce689bf4f9a31ba2b5",
+    "adapters/meshes/visual_material_018.obj": "cf722854732a205514687827846f14ef1bd369d312cbed83da788d311d13ce85",
     "adapters/meshes/visual_material_019.mtl": "6ceeb5f48896e6e9397f7445c147a00b93428098acd671c0d5ffb278ba570430",
-    "adapters/meshes/visual_material_019.obj": "3d80b50076beb04a91b270a65430e238e454b6e21fc648181c650c3db186940f",
+    "adapters/meshes/visual_material_019.obj": "e152368921e46db98d37b2bdd03b40d6d6045fb02b1899ff1c4a2727dabf1fcb",
     "adapters/meshes/visual_material_020.mtl": "82ae53aaf2b55e4385d5d56a4c3a689b5db0c5e2b95e0912dc58b557c0278800",
     "adapters/meshes/visual_material_020.obj": "91b22d82e7ececb3fbc021b465de4906d52ed9229b31a865dd7773f4c522623d",
     "adapters/meshes/visual_material_021.mtl": "41ae89a98f8bf113a44bec6a7a630ab5ad3fc9a7877cc7bf6d2eb5ca2fed49c8",
-    "adapters/meshes/visual_material_021.obj": "2d9886b06cc142d2b9bbed9acc58ec2adbe330aada587c599be7a27e18d476c0",
+    "adapters/meshes/visual_material_021.obj": "8cc28bc6073e95c51efdca1777c617a6d7fa90f9264cdb52d8032e1bc3c59240",
     "adapters/meshes/visual_material_022.mtl": "b06f9263c81cb9a523c6bfc51b6dd8b8b2c10211fc7c36a5a441527f9585e9cc",
-    "adapters/meshes/visual_material_022.obj": "cd28a6a5f2894c9f9efb7789e8b74cea95c1adad78f655ab85a7da43a1e43746",
-    "adapters/meshes/visual_material_023.mtl": "3804d5e77f7af121b9942a27f55d3046a64cfcd4b33c43e72dcf78f86f097c95",
-    "adapters/meshes/visual_material_023.obj": "2fecf9fdc1209cc4c205edc39e49e2e8d59dcbe874088d26c34f87ab21343d77",
-    "adapters/meshes/visual_material_024.mtl": "a6c1d02ef3cf2e633346a11852424d41f2c401a9905b8b744a34a75a5782c20a",
-    "adapters/meshes/visual_material_024.obj": "7630dc7f6882b4f58e031ce95caffb1ea6f610a2ac889230b1630836db419986",
+    "adapters/meshes/visual_material_022.obj": "651170018c54bdd1345d1503624ff95679ccb0a21e035da77a0b91e5e7ca8d52",
+    "adapters/meshes/visual_material_023.mtl": "6454819530db5221717ccbfddf26734c8d96c4bd4c513866a945ef2898c7af43",
+    "adapters/meshes/visual_material_023.obj": "bc278ee787e22198c6bae282c8bdb59850f860a11c160d6e7bdb05bb2a916e70",
+    "adapters/meshes/visual_material_024.mtl": "3804d5e77f7af121b9942a27f55d3046a64cfcd4b33c43e72dcf78f86f097c95",
+    "adapters/meshes/visual_material_024.obj": "826afbb0cb98cf2e436c9aa8409417a591da549c6ea3cd52d2183b7b881825e8",
+    "adapters/meshes/visual_material_025.mtl": "a6c1d02ef3cf2e633346a11852424d41f2c401a9905b8b744a34a75a5782c20a",
+    "adapters/meshes/visual_material_025.obj": "f4bcd28b95b064300e7e9ca984c9856768cb494d5fb607f186821ceecd914b9b",
     "adapters/model.config": "5cc3cdfef66fc6759d927b2d66835622e64faa43d8553c7bb42191c264b05f22",
     "adapters/model.sdf": "4a12c20d650be8c3db31fd67b97dbc1d20c589f300d1886ae67fe4a87bf6ba81",
     "adapters/world.sdf": "87b07d6fd0b803625617012a6f173b790f6005a9f51bf340829b4216227baff4"
   },
   "full_glb": {
-    "path": "/workspace/molar/robot_lab_runtime/external_assets/celisca_detailed/d97bd161cc702b87cd07e910ae9414c4e27c077e7d7f31d882d082c793417ebb/Celisca_floor_1_detailed.glb",
-    "sha256": "d97bd161cc702b87cd07e910ae9414c4e27c077e7d7f31d882d082c793417ebb"
+    "path": "/workspace/molar/robot_lab_runtime/external_assets/celisca_detailed/3f2e2ec62a7edc6bc907eda4ef9519491a5b92498a921c44f1863b94f90333ac/Celisca_floor_1_detailed.glb",
+    "sha256": "3f2e2ec62a7edc6bc907eda4ef9519491a5b92498a921c44f1863b94f90333ac"
   },
   "visual": {
-    "path": "/workspace/molar/robot_lab_runtime/external_assets/celisca_detailed/d97bd161cc702b87cd07e910ae9414c4e27c077e7d7f31d882d082c793417ebb/z_up_visual_v1/visual_full.dae",
-    "sha256": "51ed66ecbc79c6584fc8dbc6221136e4a848cec9b6cac711e2afefd927e53a3d",
-    "bytes": 217511938,
+    "path": "/workspace/molar/robot_lab_runtime/external_assets/celisca_detailed/3f2e2ec62a7edc6bc907eda4ef9519491a5b92498a921c44f1863b94f90333ac/z_up_visual_v1/visual_full.dae",
+    "sha256": "51af3ca5d33e5b0f28d3f0ccbf710391e6b9d4fb78b476a2fe27e679e778e406",
+    "bytes": 219379755,
     "bounds_m": [
       [
         -29.424421310424805,
@@ -385,9 +395,9 @@
         3.0000014305114746
       ]
     ],
-    "triangles": 2277918,
-    "source_primitives": 3829,
-    "material_batches": 55,
+    "triangles": 2286526,
+    "source_primitives": 3865,
+    "material_batches": 56,
     "embedded_images_extracted": 9,
     "frame": "metric Z-up; (x,-z,y); no centering, scaling or elevation offset",
     "geometry": "all enhanced GLB triangle primitives; exact composed node transforms and handedness",
@@ -411,15 +421,15 @@
       2.3
     ],
     "support_surface_tolerance_m": 0.025,
-    "floor_faces": 4704,
-    "obstacle_faces": 3228,
+    "floor_faces": 4708,
+    "obstacle_faces": 3224,
     "counts": {
-      "occupied": 142104,
-      "free": 147927,
+      "occupied": 142235,
+      "free": 147796,
       "unknown": 416989
     },
-    "collision_sha256": "1b5943aadec7b2194ee586c9d90980ba42b55286d505a2cb908f1d3e78249fcd",
-    "map_sha256": "ae61c7f407afbeec2515d91b4be4a9bb169616ab3886a39dbebb9ca9edd93e95",
+    "collision_sha256": "2162feaa31dcdd0bdbb0f1443b988dbc95ab21e8706ecb652dfd66a6ca2bab19",
+    "map_sha256": "1e228fa627941688e729e0219336bf268ab856f12a44dbf8a0e1cb7fd265c1f5",
     "spawn": {
       "x": 0.9749999999999979,
       "y": 0.4250000000000007,
@@ -443,13 +453,13 @@
     "recipe": "source-triangles-explicit-normals-ascii-stl-v1",
     "path": "native/meshes/collision_normals_v1.stl",
     "source_path": "adapters/meshes/collision.obj",
-    "source_sha256": "1b5943aadec7b2194ee586c9d90980ba42b55286d505a2cb908f1d3e78249fcd",
-    "sha256": "6df0ca692d4b4bb0bda00ae526c8336a58de6d2b574ca1734487586402c19d30",
-    "bytes": 1896296,
+    "source_sha256": "2162feaa31dcdd0bdbb0f1443b988dbc95ab21e8706ecb652dfd66a6ca2bab19",
+    "sha256": "e992ebf4721442642c3d10280d08e6c4a3fa4467d03f7a3ec9ed119ed81ec039",
+    "bytes": 1896386,
     "triangles": 8496,
     "source_vertices": 11002,
     "triangle_vertices": 25488,
-    "ordered_float64_triangles_sha256": "56279091ee94da8e36376145c855011875186e92c2252ea1ab9f60b0a9a4ab07",
+    "ordered_float64_triangles_sha256": "3d898c9502c7ec0f347de26d1af1e411d99831facb753b5a2539f143c8374a80",
     "bounds_m": [
       [
         -29.42442,
