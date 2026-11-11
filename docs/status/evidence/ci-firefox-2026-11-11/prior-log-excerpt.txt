@@ -1,0 +1,9 @@
+2026-11-11T13:44:04.6154415Z ##[group]Invoking "sudo apt-get upgrade -y"
+2026-11-11T13:44:04.6160614Z [command]/usr/bin/sudo apt-get upgrade -y
+2026-11-11T13:44:13.3974720Z => Installing the firefox snap
+2026-11-11T13:44:53.4539266Z ===> Unable to contact the store, trying every minute for the next 30 minutes
+2026-11-11T14:01:21.8101679Z ===> Still unable to contact the store, trying for another 20 minutes
+2026-11-11T14:17:40.6295057Z ===> Still unable to contact the store, trying for another 10 minutes
+2026-11-11T14:34:07.8611643Z ===> Still unable to contact the store, aborting
+2026-11-11T14:34:07.8812758Z  new firefox package pre-installation script subprocess returned error exit status 1
+2026-11-11T14:34:12.3430480Z ##[error]The process '/usr/bin/sudo' failed with exit code 100

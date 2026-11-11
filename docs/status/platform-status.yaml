@@ -1297,8 +1297,8 @@ tasks:
         title: Publish truthful documentation and agent work plan
     title: Documentation recovery
   R1:
-    owner: cline-agent
-    state: active
+    owner: codex
+    state: partial
     tasks:
       R1.1:
         acceptance_ref: ROADMAP.md
@@ -1431,14 +1431,19 @@ tasks:
           not failures; exit 0 when only optional packages are unbuilt'
         - 'doctor.sh local run: 24/24 PASS, exit 0; registry cross-reference validation:
           PASS; audit: 50 packages, 0 failures (4 optional warnings)'
-        owner: cline-agent
+        owner: codex
+        updated: '2026-11-11'
+        runner_setup_review: Both workflows now hold the preinstalled Firefox package during setup-ros upgrades after actual Snap-store stalls before ROS/project checks. Workflow YAML and shell syntax pass; exact published CI verification remains pending.
+        verification_state: published_run_pending
+        next_action: Inspect the exact repaired-revision CI run; preserve all required build/test tiers and report any subsequent failure separately.
+        runner_receipt: docs/status/evidence/ci-firefox-2026-11-11/README.md
         scope_paths:
         - .github/workflows/
         - scripts/bootstrap.sh
         - scripts/doctor.sh
         - scripts/test_fast.sh
         - requirements.txt
-        state: done
+        state: partial
         title: Make CI bootstrap and doctor trustworthy
     title: Trustworthy development baseline
   R10:

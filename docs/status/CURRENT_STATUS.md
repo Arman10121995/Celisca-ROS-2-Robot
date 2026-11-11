@@ -4,6 +4,11 @@ This page records what was measured. **The goals and remaining work are in one l
 [roadmap](../../ROADMAP.md)** (implementation queue first, then validation). Remaining-work
 notes in the dated entries below are history.
 
+November 11 CI review: the recent CI failures occurred in ROS setup while the hosted runner
+upgraded Firefox through an unreachable Snap store. Both workflows now hold its preinstalled
+version during setup; exact published-run verification remains pending. All required project
+checks remain enabled. [Receipt](evidence/ci-firefox-2026-11-11/README.md).
+
 November 11 camera continuation (R13.3): the learned-detector executable and GUI Setup selection,
 RGB/depth pairing, Objects snapshot gallery, disjoint training/validation split and independent
 swept-body clearance gate are implemented. 105 focused vacuum/support checks and 13 GUI checks pass;

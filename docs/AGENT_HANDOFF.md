@@ -1,5 +1,7 @@
 # Agent Handoff Protocol
 
+November 11 CI review: recent jobs fail in `setup-ros` while the hosted runner upgrades Firefox through an unreachable Snap store, before project build/tests. Both workflows now hold the preinstalled browser package during setup. This changes ephemeral runners only. YAML/shell syntax passes; inspect the exact repaired commit's CI before restoring R1.3 to done. [Receipt](status/evidence/ci-firefox-2026-11-11/README.md). The user confirmed one active owner and requested review of every edit.
+
 November 11 continuation: the user resumed work. Follow the **current implementation queue**, not the historical November 3 fleet stop. Codex owns R13.3 camera integration. Learned detector launch/GUI selection, bounded object snapshots, corrected training split/input, and independent swept-body clearance reporting are implemented. A trained checkpoint and learned-camera physical mission remain pending. Read [the receipt](status/evidence/vacuum-camera-2026-11-11/README.md) and [camera guide](tutorials/vacuum-camera.md). Preserve the pre-existing charger/map edits. Continue R13.3 before R14.1 and later implementation tasks; do not restart the fleet validation campaign ahead of them.
 
 November 11 charger placement: R11.3 is complete; [receipt/guide](status/charger-setback-2026-11-11.md) supersedes only the R11.2 map placements. Cabinets moved 0.35 m outward; goals/robot models unchanged. Map build and three native checks pass; broader mission acceptance remains separate.

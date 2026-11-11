@@ -169,9 +169,9 @@ Blocked: [R9.4](#r94--optional-physical-bumperbot-hil) physical hardware
 
 ## 5. Task specifications
 
-### R0 — R4: foundation (done)
+### R0 — R4: foundation (R1.3 runner verification reopened)
 
-These are complete; keep them working. Details and evidence are in the
+These are implemented; R1.3 has a November 11 runner repair awaiting its exact CI run. Keep the remaining foundation contracts working. Details and evidence are in the
 [archived roadmap](docs/status/archive/ROADMAP-2026-11-10.md#r0--documentation-recovery).
 
 | Task | Result | Keep in mind |
@@ -179,7 +179,7 @@ These are complete; keep them working. Details and evidence are in the
 | R0.1, R0.2 Documentation recovery | Audited baseline and truthful docs | — |
 | R1.1 Entry points and paths | Installed executables, package-share asset paths | No developer home paths |
 | R1.2 Test tiers | Fast / physics / integration / mission tiers | `PYTEST_DISABLE_PLUGIN_AUTOLOAD=1` locally |
-| R1.3 CI | Required CI fails on real failures | — |
+| R1.3 CI | Runner Firefox/Snap upgrade blocker repaired; all required tiers retained | [Published-run verification pending](docs/status/evidence/ci-firefox-2026-11-11/README.md) |
 | R2.1–R2.3 Simulator contracts | `/clock` in every adapter; one TF owner per edge; `/robot_lab/ready`, `/health`, `/reset` | Offline fallback is never success |
 | R3.1–R3.3, R3.5 Composition | Canonical IDs, typed validation, one resolver/executor, scenario and experiment catalogs | The CLI and GUI must produce the same manifest |
 | R3.4 GUI resolver | GUI uses the same resolver; seven algorithm slots; right-hand control column | State `active` in the ledger: keep the GUI tests green |
