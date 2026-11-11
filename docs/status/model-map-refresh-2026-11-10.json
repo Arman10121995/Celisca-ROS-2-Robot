@@ -1,0 +1,70 @@
+{
+  "date": "2026-11-10",
+  "host": "molar1",
+  "hardware_commands": 0,
+  "native_tests_passed": 62,
+  "normal_gui_pybullet_passed": true,
+  "normal_gui_mujoco_control_only_passed": true,
+  "pybullet_full_range": {
+    "lift": 0.34999999985525854,
+    "stage1": 0.14000004297234664,
+    "stage2": 0.13999999995624668,
+    "total_tip": 0.2800000429285933,
+    "coupling_error": -4.301609995982503e-08
+  },
+  "mujoco_full_range": {
+    "lift": 0.34999999999975095,
+    "stage1": 0.13999999988046471,
+    "stage2": 0.13999999993982154,
+    "total_tip": 0.2799999998202862,
+    "coupling_error": 5.935682501068129e-11
+  },
+  "sensor_streams": {
+    "scope": "Native normal-GUI MuJoCo simulation on isolated domain 170; read-only subscription; no hardware streams",
+    "counts": {
+      "/oakd/rgb/camera_info": 20,
+      "/scan": 19,
+      "/oakd/rgb/image_raw": 17,
+      "/oakd/depth/image_raw": 13
+    },
+    "samples": {
+      "/oakd/rgb/camera_info": {
+        "frame": "camera_optical_link",
+        "width": 640,
+        "height": 480
+      },
+      "/scan": {
+        "frame": "laser_link",
+        "range_min": 0.05000000074505806,
+        "range_max": 12.0,
+        "angle_min": -3.1415927410125732,
+        "angle_max": 3.1299571990966797,
+        "samples": 540
+      },
+      "/oakd/rgb/image_raw": {
+        "frame": "camera_optical_link",
+        "width": 640,
+        "height": 480
+      },
+      "/oakd/depth/image_raw": {
+        "frame": "camera_optical_link",
+        "width": 640,
+        "height": 480
+      }
+    }
+  },
+  "files": {
+    "scripts/provision_molar_hri.py": "dc3426dfecf4651786878bebf88805198c64246ae0e0b7242eec77120ded8287",
+    "scripts/provision_celisca_detailed.py": "6a49db6e68328b92a658413473abd686a113f299d5f14e80b4c83a7f86c187a9",
+    "scripts/qualify_molar_hri_gui.py": "c929b77bba301cf2ae4cea3302349e1af50e01294d826f51ebea81062827598a",
+    "src/robot_lab_gui/robot_lab_gui/molar_controls.py": "91d022dcf294ccb06827e43e192bf81d9a7a3c70c1f32014bfe04a7d937e5faa",
+    "src/robot_lab_robots/config/robots.yaml": "17ab084447e87eb9b57a48973b17678c54fb74dd2d6e135edb0d87d563d0a54c",
+    "src/robot_lab_robots/molar_hri/urdf/molar_hri.urdf.xacro": "8653b53957182e697edf4916b914e038afddc4a329b7412755565f7f14ab049b",
+    "src/robot_lab_robots/molar_hri/config/articulation.json": "cb47cb7f8ababc198e6d2777dbf57c9df1ba846033f1cd6dd052ab72a958c5fd",
+    "src/robot_lab_robots/probot_l/urdf/probot_l.urdf.xacro": "5a0feae40d570702caf796b2dd26ba2d080a6c18a3a76cb541197bbd4259cc4a",
+    "src/robot_lab_robots/probot_l/config/articulation.json": "cb47cb7f8ababc198e6d2777dbf57c9df1ba846033f1cd6dd052ab72a958c5fd",
+    "src/robot_lab_maps/maps/celisca_floor_1_detailed/PROVENANCE.json": "1138d9c624895871604af40bef72633a164b2aa8bfda1c595378c874b0afa460",
+    "src/robot_lab_maps/maps/celisca_floor_2_detailed/PROVENANCE.json": "f0acaed47077b26f204250702d84f5539134b19440d342256b889088045e41df"
+  },
+  "limits": "Photo/CAD extrinsics and dynamics estimated; no broader Gazebo/Isaac missions or physical calibration acceptance."
+}

@@ -17,8 +17,9 @@ def test_source_mechanics_and_interfaces(variant):
     assert hashlib.sha256(source.read_bytes()).hexdigest() == provenance['source_sha256']
     model = ET.parse(folder / ('urdf/' + variant + '.urdf.xacro')).getroot()
     joints = {joint.get('name'): joint for joint in model.findall('joint')}
-    assert len(joints) == 14 and len(model.findall('link')) == 15
-    for name, upper, velocity in [('conveyor_lift_joint', .68, .035),
+    assert sum(j.get('type') != 'fixed' for j in joints.values()) == 14
+    assert len(joints) == (19 if variant == 'molar_hri' else 17)
+    for name, upper, velocity in [('conveyor_lift_joint', .35, .035),
                                   ('telescope_stage1_joint', .14, .1),
                                   ('telescope_stage2_joint', .14, .1)]:
         joint = joints[name]

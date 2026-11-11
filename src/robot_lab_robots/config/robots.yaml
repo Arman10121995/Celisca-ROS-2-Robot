@@ -180,13 +180,14 @@ robots:
     features:
     - velocity_base
     - articulated_conveyor
-    articulation: &id001
+    - lidar
+    articulation:
       schema: robot_lab.urdf_articulation.v1
       joints:
         conveyor_lift_joint:
           mode: position
-          lower: 0.0
-          upper: 0.68
+          lower: -0.31
+          upper: 0.35
           max_velocity: 0.035
           effort: 2000.0
           kp: 20000.0
@@ -210,6 +211,12 @@ robots:
           joint: telescope_stage1_joint
           multiplier: 1.0
           offset: 0.0
+    sensor_config:
+      laser_link_name: laser_link
+      scan_samples: 540
+      scan_rate: 10.0
+      scan_range_min: 0.05
+      scan_range_max: 12.0
     drive:
       type: diff
       left_wheel_joint: drive_left_joint
@@ -225,7 +232,8 @@ robots:
       wheel_force_limit: 30.0
     notes: 'Experimental simulation-only CAD derivative: differential drive, passive
       casters, lift, coupled telescope and roller. Estimated dynamics. Display/Drive
-      controls; sensors, SLAM/Nav2 and cross-backend missions not qualified.'
+      controls; CAD-mounted simulated sensors. Frames/rates approximate; SLAM/Nav2 and
+      cross-backend missions not qualified.'
   molar_hri:
     package: robot_lab_robots
     xacro: molar_hri/urdf/molar_hri.urdf.xacro
@@ -249,7 +257,52 @@ robots:
     features:
     - velocity_base
     - articulated_conveyor
-    articulation: *id001
+    - lidar
+    - rgbd_camera
+    articulation:
+      schema: robot_lab.urdf_articulation.v1
+      joints:
+        conveyor_lift_joint:
+          mode: position
+          lower: -0.31
+          upper: 0.35
+          max_velocity: 0.035
+          effort: 2000.0
+          kp: 20000.0
+          kd: 200.0
+        telescope_stage1_joint:
+          mode: position
+          lower: 0.0
+          upper: 0.14
+          max_velocity: 0.1
+          effort: 250.0
+          kp: 4000.0
+          kd: 80.0
+        transfer_roller_joint:
+          mode: velocity
+          max_velocity: 8.0
+          effort: 2.0
+          kp: 0.0
+          kd: 0.2
+      couplings:
+        telescope_stage2_joint:
+          joint: telescope_stage1_joint
+          multiplier: 1.0
+          offset: 0.0
+    sensor_config:
+      laser_link_name: laser_link
+      scan_samples: 540
+      scan_rate: 10.0
+      scan_range_min: 0.05
+      scan_range_max: 12.0
+      camera_link_name: camera_link
+      camera_optical_frame: camera_optical_link
+      camera_width: 640
+      camera_height: 480
+      camera_rate: 10.0
+      camera_horizontal_fov: 1.211
+      camera_near: 0.1
+      camera_far: 10.0
     drive:
       type: diff
       left_wheel_joint: drive_left_joint
@@ -265,7 +318,8 @@ robots:
       wheel_force_limit: 30.0
     notes: 'Experimental simulation-only CAD derivative: differential drive, passive
       casters, lift, coupled telescope and roller. Estimated dynamics. Display/Drive
-      controls; sensors, SLAM/Nav2 and cross-backend missions not qualified.'
+      controls; CAD-mounted simulated sensors. Frames/rates approximate; SLAM/Nav2 and
+      cross-backend missions not qualified.'
   tethys_auv:
     package: robot_lab_robots
     xacro: tethys_auv/urdf/tethys_auv.urdf

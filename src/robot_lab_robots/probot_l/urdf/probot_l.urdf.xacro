@@ -22,6 +22,70 @@
         <color rgba="0.176471 0.188235 0.203922 1" />
       </material>
     </visual>
+    <visual name="Robot_Base_Front_Fasteners">
+      <geometry>
+        <mesh filename="package://robot_lab_robots/probot_l/meshes/Robot_Base_Front_Fasteners.stl" scale="1 1 1" />
+      </geometry>
+      <material name="Robot_Base_Front_Fasteners_material">
+        <color rgba="0.705882 0.72549 0.737255 1" />
+      </material>
+    </visual>
+    <visual name="Robot_Base_Front_Recesses">
+      <geometry>
+        <mesh filename="package://robot_lab_robots/probot_l/meshes/Robot_Base_Front_Recesses.stl" scale="1 1 1" />
+      </geometry>
+      <material name="Robot_Base_Front_Recesses_material">
+        <color rgba="0.094118 0.105882 0.113725 1" />
+      </material>
+    </visual>
+    <visual name="Robot_Base_Rear_Vent_Cover">
+      <geometry>
+        <mesh filename="package://robot_lab_robots/probot_l/meshes/Robot_Base_Rear_Vent_Cover.stl" scale="1 1 1" />
+      </geometry>
+      <material name="Robot_Base_Rear_Vent_Cover_material">
+        <color rgba="0.917647 0.92549 0.933333 1" />
+      </material>
+    </visual>
+    <visual name="Robot_Base_Undertray">
+      <geometry>
+        <mesh filename="package://robot_lab_robots/probot_l/meshes/Robot_Base_Undertray.stl" scale="1 1 1" />
+      </geometry>
+      <material name="Robot_Base_Undertray_material">
+        <color rgba="0.086275 0.101961 0.117647 1" />
+      </material>
+    </visual>
+    <visual name="Robot_Base_Vent_Shadow">
+      <geometry>
+        <mesh filename="package://robot_lab_robots/probot_l/meshes/Robot_Base_Vent_Shadow.stl" scale="1 1 1" />
+      </geometry>
+      <material name="Robot_Base_Vent_Shadow_material">
+        <color rgba="0.07451 0.090196 0.101961 1" />
+      </material>
+    </visual>
+    <visual name="Robot_Battery_BMS_Boards">
+      <geometry>
+        <mesh filename="package://robot_lab_robots/probot_l/meshes/Robot_Battery_BMS_Boards.stl" scale="1 1 1" />
+      </geometry>
+      <material name="Robot_Battery_BMS_Boards_material">
+        <color rgba="0.137255 0.439216 0.282353 1" />
+      </material>
+    </visual>
+    <visual name="Robot_Battery_Cell_Terminals">
+      <geometry>
+        <mesh filename="package://robot_lab_robots/probot_l/meshes/Robot_Battery_Cell_Terminals.stl" scale="1 1 1" />
+      </geometry>
+      <material name="Robot_Battery_Cell_Terminals_material">
+        <color rgba="0.678431 0.501961 0.286275 1" />
+      </material>
+    </visual>
+    <visual name="Robot_Battery_Cells_8S">
+      <geometry>
+        <mesh filename="package://robot_lab_robots/probot_l/meshes/Robot_Battery_Cells_8S.stl" scale="1 1 1" />
+      </geometry>
+      <material name="Robot_Battery_Cells_8S_material">
+        <color rgba="0.803922 0.615686 0.243137 1" />
+      </material>
+    </visual>
     <visual name="Robot_Battery_Hatch">
       <geometry>
         <mesh filename="package://robot_lab_robots/probot_l/meshes/Robot_Battery_Hatch.stl" scale="1 1 1" />
@@ -30,20 +94,28 @@
         <color rgba="0.784314 0.792157 0.803922 1" />
       </material>
     </visual>
-    <visual name="Robot_Beacon_Left">
+    <visual name="Robot_Battery_Label_24V_40Ah">
       <geometry>
-        <mesh filename="package://robot_lab_robots/probot_l/meshes/Robot_Beacon_Left.stl" scale="1 1 1" />
+        <mesh filename="package://robot_lab_robots/probot_l/meshes/Robot_Battery_Label_24V_40Ah.stl" scale="1 1 1" />
       </geometry>
-      <material name="Robot_Beacon_Left_material">
-        <color rgba="0.941176 0.745098 0.117647 1" />
+      <material name="Robot_Battery_Label_24V_40Ah_material">
+        <color rgba="0.941176 0.945098 0.913725 1" />
       </material>
     </visual>
-    <visual name="Robot_Beacon_Right">
+    <visual name="Robot_Battery_Service_Frame">
       <geometry>
-        <mesh filename="package://robot_lab_robots/probot_l/meshes/Robot_Beacon_Right.stl" scale="1 1 1" />
+        <mesh filename="package://robot_lab_robots/probot_l/meshes/Robot_Battery_Service_Frame.stl" scale="1 1 1" />
       </geometry>
-      <material name="Robot_Beacon_Right_material">
-        <color rgba="0.941176 0.745098 0.117647 1" />
+      <material name="Robot_Battery_Service_Frame_material">
+        <color rgba="0.156863 0.168627 0.184314 1" />
+      </material>
+    </visual>
+    <visual name="Robot_Battery_Tray">
+      <geometry>
+        <mesh filename="package://robot_lab_robots/probot_l/meshes/Robot_Battery_Tray.stl" scale="1 1 1" />
+      </geometry>
+      <material name="Robot_Battery_Tray_material">
+        <color rgba="0.137255 0.156863 0.172549 1" />
       </material>
     </visual>
     <visual name="Robot_Bluespot">
@@ -51,7 +123,79 @@
         <mesh filename="package://robot_lab_robots/probot_l/meshes/Robot_Bluespot.stl" scale="1 1 1" />
       </geometry>
       <material name="Robot_Bluespot_material">
-        <color rgba="0.117647 0.313725 0.627451 1" />
+        <color rgba="0.098039 0.113725 0.129412 1" />
+      </material>
+    </visual>
+    <visual name="Robot_Bluespot_Bezel">
+      <geometry>
+        <mesh filename="package://robot_lab_robots/probot_l/meshes/Robot_Bluespot_Bezel.stl" scale="1 1 1" />
+      </geometry>
+      <material name="Robot_Bluespot_Bezel_material">
+        <color rgba="0.137255 0.152941 0.168627 1" />
+      </material>
+    </visual>
+    <visual name="Robot_Bluespot_Bracket">
+      <geometry>
+        <mesh filename="package://robot_lab_robots/probot_l/meshes/Robot_Bluespot_Bracket.stl" scale="1 1 1" />
+      </geometry>
+      <material name="Robot_Bluespot_Bracket_material">
+        <color rgba="0.105882 0.121569 0.137255 1" />
+      </material>
+    </visual>
+    <visual name="Robot_Bluespot_Lens">
+      <geometry>
+        <mesh filename="package://robot_lab_robots/probot_l/meshes/Robot_Bluespot_Lens.stl" scale="1 1 1" />
+      </geometry>
+      <material name="Robot_Bluespot_Lens_material">
+        <color rgba="0.07451 0.105882 0.137255 1" />
+      </material>
+    </visual>
+    <visual name="Robot_Button_Acknowledge_Left">
+      <geometry>
+        <mesh filename="package://robot_lab_robots/probot_l/meshes/Robot_Button_Acknowledge_Left.stl" scale="1 1 1" />
+      </geometry>
+      <material name="Robot_Button_Acknowledge_Left_material">
+        <color rgba="0.070588 0.513725 0.235294 1" />
+      </material>
+    </visual>
+    <visual name="Robot_Button_BatteryLow_Left">
+      <geometry>
+        <mesh filename="package://robot_lab_robots/probot_l/meshes/Robot_Button_BatteryLow_Left.stl" scale="1 1 1" />
+      </geometry>
+      <material name="Robot_Button_BatteryLow_Left_material">
+        <color rgba="0.090196 0.098039 0.109804 1" />
+      </material>
+    </visual>
+    <visual name="Robot_Button_BrakeRelease_Right">
+      <geometry>
+        <mesh filename="package://robot_lab_robots/probot_l/meshes/Robot_Button_BrakeRelease_Right.stl" scale="1 1 1" />
+      </geometry>
+      <material name="Robot_Button_BrakeRelease_Right_material">
+        <color rgba="0.047059 0.396078 0.709804 1" />
+      </material>
+    </visual>
+    <visual name="Robot_Button_Charge_Right">
+      <geometry>
+        <mesh filename="package://robot_lab_robots/probot_l/meshes/Robot_Button_Charge_Right.stl" scale="1 1 1" />
+      </geometry>
+      <material name="Robot_Button_Charge_Right_material">
+        <color rgba="0.901961 0.686275 0.078431 1" />
+      </material>
+    </visual>
+    <visual name="Robot_Button_Connection_Right">
+      <geometry>
+        <mesh filename="package://robot_lab_robots/probot_l/meshes/Robot_Button_Connection_Right.stl" scale="1 1 1" />
+      </geometry>
+      <material name="Robot_Button_Connection_Right_material">
+        <color rgba="0.090196 0.098039 0.109804 1" />
+      </material>
+    </visual>
+    <visual name="Robot_Button_SystemOff_Left">
+      <geometry>
+        <mesh filename="package://robot_lab_robots/probot_l/meshes/Robot_Button_SystemOff_Left.stl" scale="1 1 1" />
+      </geometry>
+      <material name="Robot_Button_SystemOff_Left_material">
+        <color rgba="0.729412 0.117647 0.137255 1" />
       </material>
     </visual>
     <visual name="Robot_Charge_Contact">
@@ -78,20 +222,28 @@
         <color rgba="0.086275 0.094118 0.109804 1" />
       </material>
     </visual>
+    <visual name="Robot_Control_Bezels_Left">
+      <geometry>
+        <mesh filename="package://robot_lab_robots/probot_l/meshes/Robot_Control_Bezels_Left.stl" scale="1 1 1" />
+      </geometry>
+      <material name="Robot_Control_Bezels_Left_material">
+        <color rgba="0.098039 0.105882 0.117647 1" />
+      </material>
+    </visual>
+    <visual name="Robot_Control_Bezels_Right">
+      <geometry>
+        <mesh filename="package://robot_lab_robots/probot_l/meshes/Robot_Control_Bezels_Right.stl" scale="1 1 1" />
+      </geometry>
+      <material name="Robot_Control_Bezels_Right_material">
+        <color rgba="0.098039 0.105882 0.117647 1" />
+      </material>
+    </visual>
     <visual name="Robot_Control_Left">
       <geometry>
         <mesh filename="package://robot_lab_robots/probot_l/meshes/Robot_Control_Left.stl" scale="1 1 1" />
       </geometry>
       <material name="Robot_Control_Left_material">
         <color rgba="0.176471 0.196078 0.227451 1" />
-      </material>
-    </visual>
-    <visual name="Robot_Control_Panel">
-      <geometry>
-        <mesh filename="package://robot_lab_robots/probot_l/meshes/Robot_Control_Panel.stl" scale="1 1 1" />
-      </geometry>
-      <material name="Robot_Control_Panel_material">
-        <color rgba="0.156863 0.164706 0.180392 1" />
       </material>
     </visual>
     <visual name="Robot_Control_Right">
@@ -116,6 +268,30 @@
       </geometry>
       <material name="Robot_Drive_Gas_Springs_material">
         <color rgba="0.392157 0.411765 0.439216 1" />
+      </material>
+    </visual>
+    <visual name="Robot_Enclosed_Module_Unidentified">
+      <geometry>
+        <mesh filename="package://robot_lab_robots/probot_l/meshes/Robot_Enclosed_Module_Unidentified.stl" scale="1 1 1" />
+      </geometry>
+      <material name="Robot_Enclosed_Module_Unidentified_material">
+        <color rgba="0.392157 0.403922 0.419608 1" />
+      </material>
+    </visual>
+    <visual name="Robot_Estop_Collar_Left">
+      <geometry>
+        <mesh filename="package://robot_lab_robots/probot_l/meshes/Robot_Estop_Collar_Left.stl" scale="1 1 1" />
+      </geometry>
+      <material name="Robot_Estop_Collar_Left_material">
+        <color rgba="0.956863 0.803922 0.117647 1" />
+      </material>
+    </visual>
+    <visual name="Robot_Estop_Collar_Right">
+      <geometry>
+        <mesh filename="package://robot_lab_robots/probot_l/meshes/Robot_Estop_Collar_Right.stl" scale="1 1 1" />
+      </geometry>
+      <material name="Robot_Estop_Collar_Right_material">
+        <color rgba="0.956863 0.803922 0.117647 1" />
       </material>
     </visual>
     <visual name="Robot_Estop_Left">
@@ -150,14 +326,6 @@
         <color rgba="0.941176 0.72549 0.078431 1" />
       </material>
     </visual>
-    <visual name="Robot_Label_L35TC">
-      <geometry>
-        <mesh filename="package://robot_lab_robots/probot_l/meshes/Robot_Label_L35TC.stl" scale="1 1 1" />
-      </geometry>
-      <material name="Robot_Label_L35TC_material">
-        <color rgba="0.188235 0.215686 0.243137 1" />
-      </material>
-    </visual>
     <visual name="Robot_Lift_Spindle">
       <geometry>
         <mesh filename="package://robot_lab_robots/probot_l/meshes/Robot_Lift_Spindle.stl" scale="1 1 1" />
@@ -172,6 +340,14 @@
       </geometry>
       <material name="Robot_Logo_ASTI_material">
         <color rgba="0.109804 0.12549 0.14902 1" />
+      </material>
+    </visual>
+    <visual name="Robot_Main_Disconnect_Red">
+      <geometry>
+        <mesh filename="package://robot_lab_robots/probot_l/meshes/Robot_Main_Disconnect_Red.stl" scale="1 1 1" />
+      </geometry>
+      <material name="Robot_Main_Disconnect_Red_material">
+        <color rgba="0.756863 0.156863 0.152941 1" />
       </material>
     </visual>
     <visual name="Robot_Mast_Drive_Strip_Left">
@@ -222,12 +398,12 @@
         <color rgba="0.972549 0.976471 0.980392 1" />
       </material>
     </visual>
-    <visual name="Robot_Nameplate_proANT">
+    <visual name="Robot_Network_Module">
       <geometry>
-        <mesh filename="package://robot_lab_robots/probot_l/meshes/Robot_Nameplate_proANT.stl" scale="1 1 1" />
+        <mesh filename="package://robot_lab_robots/probot_l/meshes/Robot_Network_Module.stl" scale="1 1 1" />
       </geometry>
-      <material name="Robot_Nameplate_proANT_material">
-        <color rgba="0.137255 0.156863 0.188235 1" />
+      <material name="Robot_Network_Module_material">
+        <color rgba="0.313725 0.427451 0.482353 1" />
       </material>
     </visual>
     <visual name="Robot_Rating_Plate">
@@ -238,6 +414,14 @@
         <color rgba="0.862745 0.870588 0.882353 1" />
       </material>
     </visual>
+    <visual name="Robot_Relays_Contactors">
+      <geometry>
+        <mesh filename="package://robot_lab_robots/probot_l/meshes/Robot_Relays_Contactors.stl" scale="1 1 1" />
+      </geometry>
+      <material name="Robot_Relays_Contactors_material">
+        <color rgba="0.639216 0.678431 0.635294 1" />
+      </material>
+    </visual>
     <visual name="Robot_Reverse_Scanner">
       <geometry>
         <mesh filename="package://robot_lab_robots/probot_l/meshes/Robot_Reverse_Scanner.stl" scale="1 1 1" />
@@ -246,20 +430,92 @@
         <color rgba="0.156863 0.172549 0.196078 1" />
       </material>
     </visual>
+    <visual name="Robot_SIMATIC_IPC_Body">
+      <geometry>
+        <mesh filename="package://robot_lab_robots/probot_l/meshes/Robot_SIMATIC_IPC_Body.stl" scale="1 1 1" />
+      </geometry>
+      <material name="Robot_SIMATIC_IPC_Body_material">
+        <color rgba="0.721569 0.745098 0.764706 1" />
+      </material>
+    </visual>
+    <visual name="Robot_SIMATIC_IPC_Brackets">
+      <geometry>
+        <mesh filename="package://robot_lab_robots/probot_l/meshes/Robot_SIMATIC_IPC_Brackets.stl" scale="1 1 1" />
+      </geometry>
+      <material name="Robot_SIMATIC_IPC_Brackets_material">
+        <color rgba="0.603922 0.639216 0.666667 1" />
+      </material>
+    </visual>
+    <visual name="Robot_SIMATIC_IPC_Fins">
+      <geometry>
+        <mesh filename="package://robot_lab_robots/probot_l/meshes/Robot_SIMATIC_IPC_Fins.stl" scale="1 1 1" />
+      </geometry>
+      <material name="Robot_SIMATIC_IPC_Fins_material">
+        <color rgba="0.815686 0.831373 0.839216 1" />
+      </material>
+    </visual>
+    <visual name="Robot_SIMATIC_IPC_Ports">
+      <geometry>
+        <mesh filename="package://robot_lab_robots/probot_l/meshes/Robot_SIMATIC_IPC_Ports.stl" scale="1 1 1" />
+      </geometry>
+      <material name="Robot_SIMATIC_IPC_Ports_material">
+        <color rgba="0.176471 0.192157 0.207843 1" />
+      </material>
+    </visual>
     <visual name="Robot_Safety_Scanner">
       <geometry>
         <mesh filename="package://robot_lab_robots/probot_l/meshes/Robot_Safety_Scanner.stl" scale="1 1 1" />
       </geometry>
       <material name="Robot_Safety_Scanner_material">
-        <color rgba="0.172549 0.184314 0.2 1" />
+        <color rgba="0.843137 0.682353 0.145098 1" />
       </material>
     </visual>
-    <visual name="Robot_Side_Scanners">
+    <visual name="Robot_Safety_Scanner_Base">
       <geometry>
-        <mesh filename="package://robot_lab_robots/probot_l/meshes/Robot_Side_Scanners.stl" scale="1 1 1" />
+        <mesh filename="package://robot_lab_robots/probot_l/meshes/Robot_Safety_Scanner_Base.stl" scale="1 1 1" />
       </geometry>
-      <material name="Robot_Side_Scanners_material">
-        <color rgba="0.196078 0.215686 0.243137 1" />
+      <material name="Robot_Safety_Scanner_Base_material">
+        <color rgba="0.141176 0.152941 0.168627 1" />
+      </material>
+    </visual>
+    <visual name="Robot_Safety_Scanner_Mount">
+      <geometry>
+        <mesh filename="package://robot_lab_robots/probot_l/meshes/Robot_Safety_Scanner_Mount.stl" scale="1 1 1" />
+      </geometry>
+      <material name="Robot_Safety_Scanner_Mount_material">
+        <color rgba="0.207843 0.223529 0.239216 1" />
+      </material>
+    </visual>
+    <visual name="Robot_Safety_Scanner_Status">
+      <geometry>
+        <mesh filename="package://robot_lab_robots/probot_l/meshes/Robot_Safety_Scanner_Status.stl" scale="1 1 1" />
+      </geometry>
+      <material name="Robot_Safety_Scanner_Status_material">
+        <color rgba="0.176471 0.192157 0.168627 1" />
+      </material>
+    </visual>
+    <visual name="Robot_Safety_Scanner_Window">
+      <geometry>
+        <mesh filename="package://robot_lab_robots/probot_l/meshes/Robot_Safety_Scanner_Window.stl" scale="1 1 1" />
+      </geometry>
+      <material name="Robot_Safety_Scanner_Window_material">
+        <color rgba="0.094118 0.113725 0.129412 1" />
+      </material>
+    </visual>
+    <visual name="Robot_Service_Fasteners">
+      <geometry>
+        <mesh filename="package://robot_lab_robots/probot_l/meshes/Robot_Service_Fasteners.stl" scale="1 1 1" />
+      </geometry>
+      <material name="Robot_Service_Fasteners_material">
+        <color rgba="0.619608 0.639216 0.662745 1" />
+      </material>
+    </visual>
+    <visual name="Robot_Service_Louvre_Recesses">
+      <geometry>
+        <mesh filename="package://robot_lab_robots/probot_l/meshes/Robot_Service_Louvre_Recesses.stl" scale="1 1 1" />
+      </geometry>
+      <material name="Robot_Service_Louvre_Recesses_material">
+        <color rgba="0.133333 0.152941 0.168627 1" />
       </material>
     </visual>
     <visual name="Robot_Speakers">
@@ -268,6 +524,46 @@
       </geometry>
       <material name="Robot_Speakers_material">
         <color rgba="0.196078 0.203922 0.219608 1" />
+      </material>
+    </visual>
+    <visual name="Robot_Terminal_DIN_Rails">
+      <geometry>
+        <mesh filename="package://robot_lab_robots/probot_l/meshes/Robot_Terminal_DIN_Rails.stl" scale="1 1 1" />
+      </geometry>
+      <material name="Robot_Terminal_DIN_Rails_material">
+        <color rgba="0.631373 0.65098 0.666667 1" />
+      </material>
+    </visual>
+    <visual name="Robot_Terminals_Grey">
+      <geometry>
+        <mesh filename="package://robot_lab_robots/probot_l/meshes/Robot_Terminals_Grey.stl" scale="1 1 1" />
+      </geometry>
+      <material name="Robot_Terminals_Grey_material">
+        <color rgba="0.635294 0.639216 0.607843 1" />
+      </material>
+    </visual>
+    <visual name="Robot_Terminals_Yellow">
+      <geometry>
+        <mesh filename="package://robot_lab_robots/probot_l/meshes/Robot_Terminals_Yellow.stl" scale="1 1 1" />
+      </geometry>
+      <material name="Robot_Terminals_Yellow_material">
+        <color rgba="0.878431 0.72549 0.184314 1" />
+      </material>
+    </visual>
+    <visual name="Robot_Tower_Lamp_Bezel_Left">
+      <geometry>
+        <mesh filename="package://robot_lab_robots/probot_l/meshes/Robot_Tower_Lamp_Bezel_Left.stl" scale="1 1 1" />
+      </geometry>
+      <material name="Robot_Tower_Lamp_Bezel_Left_material">
+        <color rgba="0.090196 0.098039 0.109804 1" />
+      </material>
+    </visual>
+    <visual name="Robot_Tower_Lamp_Bezel_Right">
+      <geometry>
+        <mesh filename="package://robot_lab_robots/probot_l/meshes/Robot_Tower_Lamp_Bezel_Right.stl" scale="1 1 1" />
+      </geometry>
+      <material name="Robot_Tower_Lamp_Bezel_Right_material">
+        <color rgba="0.090196 0.098039 0.109804 1" />
       </material>
     </visual>
     <visual name="Robot_Tower_Lamp_Left">
@@ -286,12 +582,20 @@
         <color rgba="1 0.784314 0.156863 1" />
       </material>
     </visual>
-    <visual name="Robot_Unit_ID">
+    <visual name="Robot_Wheel_Cover_Left">
       <geometry>
-        <mesh filename="package://robot_lab_robots/probot_l/meshes/Robot_Unit_ID.stl" scale="1 1 1" />
+        <mesh filename="package://robot_lab_robots/probot_l/meshes/Robot_Wheel_Cover_Left.stl" scale="1 1 1" />
       </geometry>
-      <material name="Robot_Unit_ID_material">
-        <color rgba="0.980392 0.980392 0.988235 1" />
+      <material name="Robot_Wheel_Cover_Left_material">
+        <color rgba="0.94902 0.956863 0.964706 1" />
+      </material>
+    </visual>
+    <visual name="Robot_Wheel_Cover_Right">
+      <geometry>
+        <mesh filename="package://robot_lab_robots/probot_l/meshes/Robot_Wheel_Cover_Right.stl" scale="1 1 1" />
+      </geometry>
+      <material name="Robot_Wheel_Cover_Right_material">
+        <color rgba="0.94902 0.956863 0.964706 1" />
       </material>
     </visual>
     <visual name="Robot_Wheel_Fixed_Mounts">
@@ -351,14 +655,6 @@
         <color rgba="1 0.470588 0.078431 1" />
       </material>
     </visual>
-    <visual name="Robot_Carriage_TransferPlate">
-      <geometry>
-        <mesh filename="package://robot_lab_robots/probot_l/meshes/Robot_Carriage_TransferPlate.stl" scale="1 1 1" />
-      </geometry>
-      <material name="Robot_Carriage_TransferPlate_material">
-        <color rgba="0.745098 0.764706 0.784314 1" />
-      </material>
-    </visual>
     <visual name="Robot_Counterweight">
       <geometry>
         <mesh filename="package://robot_lab_robots/probot_l/meshes/Robot_Counterweight.stl" scale="1 1 1" />
@@ -395,12 +691,6 @@
         <box size="0.61 0.016 0.022" />
       </geometry>
     </collision>
-    <collision name="conveyor_carriage_collision_2">
-      <origin xyz="0 0 -0.002" rpy="0 0 0" />
-      <geometry>
-        <box size="0.574 0.33 0.004" />
-      </geometry>
-    </collision>
   </link>
   <link name="telescope_stage1">
     <inertial>
@@ -435,6 +725,30 @@
       <mass value="2" />
       <inertia ixx="0.0230208333" iyy="0.0179168333" izz="0.0405293333" ixy="0" ixz="0" iyz="0" />
     </inertial>
+    <visual name="Robot_Carriage_TransferPlate">
+      <geometry>
+        <mesh filename="package://robot_lab_robots/probot_l/meshes/Robot_Carriage_TransferPlate.stl" scale="1 1 1" />
+      </geometry>
+      <material name="Robot_Carriage_TransferPlate_material">
+        <color rgba="0.745098 0.764706 0.784314 1" />
+      </material>
+    </visual>
+    <visual name="Robot_Deck_Flush_Fasteners">
+      <geometry>
+        <mesh filename="package://robot_lab_robots/probot_l/meshes/Robot_Deck_Flush_Fasteners.stl" scale="1 1 1" />
+      </geometry>
+      <material name="Robot_Deck_Flush_Fasteners_material">
+        <color rgba="0.694118 0.717647 0.737255 1" />
+      </material>
+    </visual>
+    <visual name="Robot_Deck_Load_Stops">
+      <geometry>
+        <mesh filename="package://robot_lab_robots/probot_l/meshes/Robot_Deck_Load_Stops.stl" scale="1 1 1" />
+      </geometry>
+      <material name="Robot_Deck_Load_Stops_material">
+        <color rgba="0.094118 0.109804 0.12549 1" />
+      </material>
+    </visual>
     <visual name="Robot_Safety_Orange">
       <geometry>
         <mesh filename="package://robot_lab_robots/probot_l/meshes/Robot_Safety_Orange.stl" scale="1 1 1" />
@@ -471,6 +785,12 @@
         <box size="0.304 0.053 0.012" />
       </geometry>
     </collision>
+    <collision name="telescope_stage2_collision_2">
+      <origin xyz="0 0 -0.002" rpy="0 0 0" />
+      <geometry>
+        <box size="0.574 0.33 0.004" />
+      </geometry>
+    </collision>
   </link>
   <link name="transfer_roller">
     <inertial>
@@ -497,14 +817,14 @@
     <inertial>
       <origin xyz="0 0 0" rpy="0 0 0" />
       <mass value="2" />
-      <inertia ixx="0.00457266667" iyy="0.0081" izz="0.00457266667" ixy="0" ixz="0" iyz="0" />
+      <inertia ixx="0.00431666667" iyy="0.0081" izz="0.00431666667" ixy="0" ixz="0" iyz="0" />
     </inertial>
     <visual name="drive_left_tyre">
       <geometry>
         <mesh filename="package://robot_lab_robots/probot_l/meshes/drive_left_tyre.stl" scale="1 1 1" />
       </geometry>
       <material name="drive_left_tyre_material">
-        <color rgba="0.13 0.14 0.15 1" />
+        <color rgba="0.803922 0.619608 0.133333 1" />
       </material>
     </visual>
     <visual name="drive_left_hub">
@@ -518,7 +838,7 @@
     <collision name="drive_left_wheel_collision_0">
       <origin xyz="0 0 0" rpy="1.57079633 0 0" />
       <geometry>
-        <cylinder radius="0.09" length="0.056" />
+        <cylinder radius="0.09" length="0.04" />
       </geometry>
     </collision>
   </link>
@@ -526,14 +846,14 @@
     <inertial>
       <origin xyz="0 0 0" rpy="0 0 0" />
       <mass value="2" />
-      <inertia ixx="0.00457266667" iyy="0.0081" izz="0.00457266667" ixy="0" ixz="0" iyz="0" />
+      <inertia ixx="0.00431666667" iyy="0.0081" izz="0.00431666667" ixy="0" ixz="0" iyz="0" />
     </inertial>
     <visual name="drive_right_tyre">
       <geometry>
         <mesh filename="package://robot_lab_robots/probot_l/meshes/drive_right_tyre.stl" scale="1 1 1" />
       </geometry>
       <material name="drive_right_tyre_material">
-        <color rgba="0.13 0.14 0.15 1" />
+        <color rgba="0.803922 0.619608 0.133333 1" />
       </material>
     </visual>
     <visual name="drive_right_hub">
@@ -547,7 +867,7 @@
     <collision name="drive_right_wheel_collision_0">
       <origin xyz="0 0 0" rpy="1.57079633 0 0" />
       <geometry>
-        <cylinder radius="0.09" length="0.056" />
+        <cylinder radius="0.09" length="0.04" />
       </geometry>
     </collision>
   </link>
@@ -698,9 +1018,9 @@
   <joint name="conveyor_lift_joint" type="prismatic">
     <parent link="base_link" />
     <child link="conveyor_carriage" />
-    <origin xyz="0.0005 0 0.42" rpy="0 0 0" />
+    <origin xyz="0.0005 0 0.75" rpy="0 0 0" />
     <axis xyz="0 0 1" />
-    <limit effort="2000" velocity="0.035" lower="-0.005" upper="0.68" />
+    <limit effort="2000" velocity="0.035" lower="-0.315" upper="0.35" />
     <dynamics damping="30" friction="0" />
   </joint>
   <joint name="telescope_stage1_joint" type="prismatic">
@@ -807,6 +1127,68 @@
     <limit effort="1" velocity="15" />
     <dynamics damping="0.01" friction="0" />
   </joint>
+  <link name="laser_link">
+    <inertial>
+      <mass value="0.000001" />
+      <inertia ixx="1e-12" iyy="1e-12" izz="1e-12" ixy="0" ixz="0" iyz="0" />
+    </inertial>
+  </link>
+  <joint name="laser_link_mount" type="fixed">
+    <parent link="base_link" />
+    <child link="laser_link" />
+    <origin xyz=".340 0 .130" rpy="0 0 0" />
+  </joint>
+  <link name="rear_scanner_link">
+    <inertial>
+      <mass value="0.000001" />
+      <inertia ixx="1e-12" iyy="1e-12" izz="1e-12" ixy="0" ixz="0" iyz="0" />
+    </inertial>
+  </link>
+  <joint name="rear_scanner_link_mount" type="fixed">
+    <parent link="base_link" />
+    <child link="rear_scanner_link" />
+    <origin xyz="-.302 0 .085" rpy="0 0 3.14159265359" />
+  </joint>
+  <link name="barcode_link">
+    <inertial>
+      <mass value="0.000001" />
+      <inertia ixx="1e-12" iyy="1e-12" izz="1e-12" ixy="0" ixz="0" iyz="0" />
+    </inertial>
+  </link>
+  <joint name="barcode_link_mount" type="fixed">
+    <parent link="conveyor_carriage" />
+    <child link="barcode_link" />
+    <origin xyz="-.0511 0 -.033" rpy="0 0 0" />
+  </joint>
+  <gazebo reference="laser_link">
+    <sensor name="lidar" type="gpu_lidar">
+      <always_on>true</always_on>
+      <visualize>false</visualize>
+      <topic>scan</topic>
+      <update_rate>10</update_rate>
+      <gz_frame_id>laser_link</gz_frame_id>
+      <lidar>
+        <scan>
+          <horizontal>
+            <samples>540</samples>
+            <resolution>1</resolution>
+            <min_angle>-3.14159265</min_angle>
+            <max_angle>3.14159265</max_angle>
+          </horizontal>
+        </scan>
+        <range>
+          <min>.05</min>
+          <max>12</max>
+          <resolution>.01</resolution>
+        </range>
+      </lidar>
+    </sensor>
+  </gazebo>
+  <gazebo>
+    <plugin filename="ignition-gazebo-sensors-system" name="ignition::gazebo::systems::Sensors">
+      <render_engine>ogre2</render_engine>
+    </plugin>
+  </gazebo>
   <ros2_control name="MolarSimulation" type="system">
     <hardware>
       <plugin>ign_ros2_control/IgnitionSystem</plugin>
@@ -952,5 +1334,14 @@
     <selfCollide>false</selfCollide>
     <mu1>0.1</mu1>
     <mu2>0.1</mu2>
+  </gazebo>
+  <gazebo reference="laser_link">
+    <selfCollide>false</selfCollide>
+  </gazebo>
+  <gazebo reference="rear_scanner_link">
+    <selfCollide>false</selfCollide>
+  </gazebo>
+  <gazebo reference="barcode_link">
+    <selfCollide>false</selfCollide>
   </gazebo>
 </robot>

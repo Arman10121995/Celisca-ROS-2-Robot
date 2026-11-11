@@ -15,7 +15,7 @@ LIFT = 'conveyor_lift_joint'
 STAGE = 'telescope_stage1_joint'
 COUPLED = 'telescope_stage2_joint'
 ROLLER = 'transfer_roller_joint'
-LIMITS = {LIFT: (0., .68), STAGE: (0., .14), COUPLED: (0., .14), ROLLER: (-8., 8.)}
+LIMITS = {LIFT: (-.310, .350), STAGE: (0., .14), COUPLED: (0., .14), ROLLER: (-8., 8.)}
 TOPIC = '/molar/articulation'
 FRESH_SECONDS = .5
 
@@ -143,7 +143,7 @@ class MolarControls(ScrollPanel):
         ttk.Label(body, text='MOLAR · conveyor and telescope', style='Heading.TLabel').grid(row=0, column=0, sticky='w')
         ttk.Label(body, textvariable=self.status, wraplength=295).grid(row=1, column=0, sticky='ew', pady=6)
         ttk.Label(body, textvariable=self.feedback, wraplength=295, justify='left').grid(row=2, column=0, sticky='ew', pady=6)
-        for row, name, label in ((3, LIFT, 'Lift above 0.420 m deck (m)'),
+        for row, name, label in ((3, LIFT, 'Lift offset from 0.750 m rest (m)'),
                                  (4, STAGE, 'Each telescope stage (m) · tip = 2×'),
                                  (5, ROLLER, 'Transfer roller velocity (rad/s)')):
             frame = ttk.LabelFrame(body, text=label, padding=6)
@@ -359,7 +359,7 @@ class MolarControls(ScrollPanel):
                     self.feedback.set('Lift %.3f m · deck height %.3f m\nSlide 1 %.3f m · slide 2 %.3f m\n'
                                       'Total tip extension %.3f m · coupling error %.4f m\n'
                                       'Roller velocity %.3f rad/s · angle %.3f rad\nBase Drive %s' %
-                                      (lift, .420 + lift, first, second, first + second,
+                                      (lift, .750 + lift, first, second, first + second,
                                        self.state['coupling_error'][COUPLED], roller['measured_velocity'],
                                        roller['measured'], 'inhibited' if self.state['base_inhibited'] else 'available'))
                     self.status.set(self.state['status'])

@@ -3,8 +3,8 @@
   "joints": {
     "conveyor_lift_joint": {
       "mode": "position",
-      "lower": 0.0,
-      "upper": 0.68,
+      "lower": -0.31,
+      "upper": 0.35,
       "max_velocity": 0.035,
       "effort": 2000.0,
       "kp": 20000.0,

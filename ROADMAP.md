@@ -724,6 +724,16 @@ These are complete; keep them working. Details and evidence are in the
   uses the existing articulation contract (`robot_lab_utils/urdf_articulation`).
 - **Done when:** a measured route plus payload transfer on a CELISCA floor.
 
+### R11.1 — Photo-based MOLAR/CELISCA asset refresh
+
+- **State:** done · **Priority:** explicit user request 2026-11-10.
+- **Owner:** codex-hri-assets-20261110.
+- **Goal:** update both MOLAR variants, manual/photo-based lift and telescope pose/limits, declared sensor frames and detailed CELISCA floor-2/3 charger geometry in the native Robot Lab.
+- **Done when:** source and installed model/map paths resolve to the refreshed assets; limits/frames and actual scoped engine loads are verified and recorded. Broad missions, calibrated sensors and physical acceptance remain separate from this asset refresh.
+- **Scope:** native molar1 development only; preserve unrelated dirty files and historical certificates. No FMS/AIC/PLC or physical motion commands.
+
+- **Evidence:** `docs/status/model-map-refresh-2026-11-10.{md,json}`; 62 native tests, installed/source checks, normal-GUI PyBullet and MuJoCo controls. Broad R11 remains separate.
+
 ### R12 — Legged policy training
 
 - **State:** partial · **Priority:** I13

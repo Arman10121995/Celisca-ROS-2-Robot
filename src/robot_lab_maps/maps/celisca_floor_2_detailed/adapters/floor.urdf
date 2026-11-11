@@ -154,7 +154,7 @@
         <mesh filename="meshes/visual_material_018.obj" scale="1 1 1" />
       </geometry>
       <material name="material_18">
-        <color rgba="0.77 0.82 0.83 1" />
+        <color rgba="0.91 0.93 0.93 1" />
       </material>
     </visual>
     <visual name="visual_19">
@@ -162,6 +162,46 @@
         <mesh filename="meshes/visual_material_019.obj" scale="1 1 1" />
       </geometry>
       <material name="material_19">
+        <color rgba="0.1 0.12 0.14 1" />
+      </material>
+    </visual>
+    <visual name="visual_20">
+      <geometry>
+        <mesh filename="meshes/visual_material_020.obj" scale="1 1 1" />
+      </geometry>
+      <material name="material_20">
+        <color rgba="0.65 0.41 0.24 1" />
+      </material>
+    </visual>
+    <visual name="visual_21">
+      <geometry>
+        <mesh filename="meshes/visual_material_021.obj" scale="1 1 1" />
+      </geometry>
+      <material name="material_21">
+        <color rgba="0.91 0.72 0.14 1" />
+      </material>
+    </visual>
+    <visual name="visual_22">
+      <geometry>
+        <mesh filename="meshes/visual_material_022.obj" scale="1 1 1" />
+      </geometry>
+      <material name="material_22">
+        <color rgba="0.76 0.14 0.14 1" />
+      </material>
+    </visual>
+    <visual name="visual_23">
+      <geometry>
+        <mesh filename="meshes/visual_material_023.obj" scale="1 1 1" />
+      </geometry>
+      <material name="material_23">
+        <color rgba="0.77 0.82 0.83 1" />
+      </material>
+    </visual>
+    <visual name="visual_24">
+      <geometry>
+        <mesh filename="meshes/visual_material_024.obj" scale="1 1 1" />
+      </geometry>
+      <material name="material_24">
         <color rgba="0.43 0.49 0.51 1" />
       </material>
     </visual>

@@ -71,8 +71,8 @@ def test_feedback_requires_exact_source_bytes_and_independent_coupled_channels(m
     channels = validate_feedback(state, model)
     assert channels[COUPLED]['coupled']
     assert channels[ROLLER]['measured'] == 12.  # angle is not a velocity target
-    assert bounded_targets({LIFT: .68, STAGE: .14, ROLLER: -8.}, channels) == {
-        LIFT: .68, STAGE: .14, ROLLER: -8.}
+    assert bounded_targets({LIFT: .35, STAGE: .14, ROLLER: -8.}, channels) == {
+        LIFT: .35, STAGE: .14, ROLLER: -8.}
     model.write_text('<robot name="different"/>\n')
     with pytest.raises(ValueError, match='does not match'):
         validate_feedback(state, model)
@@ -90,13 +90,13 @@ def test_actual_contract_neutral_hold_keeps_strict_targets_with_solver_roundoff(
     config = json.loads((folder / 'config/articulation.json').read_text())
     contract = URDFArticulation(config, source.read_text(), str(source))
     positions = {name: 0. for name in contract.joints}
-    positions[LIFT] = -1e-8
+    positions[LIFT] = -.31000001
     contract.step(positions, {name: 0. for name in contract.joints}, .01)
     state = contract.state()
     channels = validate_feedback(state, source)
     assert not state['fault'] and state['initialized']
-    assert channels[LIFT]['measured'] == -1e-8
-    assert channels[LIFT]['target'] == 0.
+    assert channels[LIFT]['measured'] == -.31000001
+    assert channels[LIFT]['target'] == -.310
 
 
 @pytest.mark.parametrize('mutate', [
@@ -131,7 +131,7 @@ def test_malformed_or_mismatched_feedback_never_enables_controls(model, mutate):
         validate_feedback(state, model)
 
 
-@pytest.mark.parametrize('targets', [{COUPLED: .01}, {LIFT: .681}, {LIFT: -.001},
+@pytest.mark.parametrize('targets', [{COUPLED: .01}, {LIFT: .351}, {LIFT: -.311},
                                    {STAGE: .141}, {ROLLER: 8.01}, {ROLLER: math.nan},
                                    {LIFT: True}, {LIFT: '0.1'}, {}])
 def test_invalid_or_coupled_targets_rejected(model, targets):
@@ -214,15 +214,15 @@ def test_real_tk_selection_dragging_and_measured_reset_never_publish_targets(pan
     panel.app.update()
     panel.pub.publish.assert_not_called()
     assert panel.heartbeat.publish.call_count == 1
-    assert 'deck height 0.620 m' in panel.feedback.get()
+    assert 'deck height 0.950 m' in panel.feedback.get()
     assert 'Slide 1 0.030 m · slide 2 0.030 m' in panel.feedback.get()
     panel.use_measured_button.invoke()
     panel.pub.publish.assert_not_called()
 
 
 @pytest.mark.parametrize('lift,slide,roller,expected', [
-    (-1e-8, .14000001, 8.00001, (0., .14, 8.)),
-    (.68000001, -1e-8, -8.00001, (.68, 0., -8.)),
+    (-.31000001, .14000001, 8.00001, (-.310, .14, 8.)),
+    (.35000001, -1e-8, -8.00001, (.35, 0., -8.)),
 ])
 def test_use_measured_clamps_editable_targets_without_changing_feedback_or_publishing(
         panel, model, lift, slide, roller, expected):

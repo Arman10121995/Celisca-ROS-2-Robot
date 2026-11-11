@@ -2050,7 +2050,7 @@
   created: "2026-10-02"
   updated: "2026-10-02"
 - id: probot_l
-  version: 0.1.0
+  version: 0.2.0
   name: ASTI ProBOT-L
   ros_package: robot_lab_robots
   status: available
@@ -2081,6 +2081,9 @@
   - conveyor_carriage
   - telescope_stage1
   - telescope_stage2
+  - laser_link
+  - rear_scanner_link
+  - barcode_link
   assets:
     urdf: robot_lab_robots/probot_l/urdf/probot_l.urdf.xacro
   tags:
@@ -2090,7 +2093,7 @@
   - estimated_dynamics
   - experimental_control
 - id: molar_hri
-  version: 0.1.0
+  version: 0.2.0
   name: MOLAR HRI
   ros_package: robot_lab_robots
   status: available
@@ -2121,6 +2124,11 @@
   - conveyor_carriage
   - telescope_stage1
   - telescope_stage2
+  - laser_link
+  - rear_scanner_link
+  - barcode_link
+  - camera_link
+  - camera_optical_link
   assets:
     urdf: robot_lab_robots/molar_hri/urdf/molar_hri.urdf.xacro
   tags:

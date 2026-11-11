@@ -27,9 +27,9 @@ import yaml
 
 PINS = {
     1: {'source': '91584e9df42751d172f245091d91e8bd7db8f9c9aaaed40e3a0047876aa82d9e',
-        'detailed': 'd697a399fb54150ad4a8e56e5e8ba6347c43b7d815270e12d4689b79635f3066'},
+        'detailed': 'd97bd161cc702b87cd07e910ae9414c4e27c077e7d7f31d882d082c793417ebb'},
     2: {'source': '17eabdc19d88d59dad2284d376d7292eec800cf69ee778c06375a4887d2b7319',
-        'detailed': '01d18338a90a41b4823e88d5f7b6a4e34a5f65653ecf0f2d5ac6e3c675ef90cc'},
+        'detailed': '912e872c73bbc60ce42d2afa18bac0db054820213fac107926170a30b1ceb7d9'},
 }
 ROTATION = np.array([[1., 0., 0.], [0., 0., -1.], [0., 1., 0.]])
 COMPONENTS = {5120: '<i1', 5121: '<u1', 5122: '<i2', 5123: '<u2', 5125: '<u4', 5126: '<f4'}
@@ -623,9 +623,10 @@ def append_configs(repo, records):
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--repo', type=Path, default=Path(__file__).resolve().parents[1])
-    parser.add_argument('--source', type=Path, default=Path('/workspace/molar_voice_super_gui_redesign/simulation/celisca'))
+    parser.add_argument('--source', type=Path, default=Path('/workspace/molar_voice/simulation/celisca'))
     parser.add_argument('--runtime-root', type=Path, default=Path('/workspace/molar/robot_lab_runtime'))
     parser.add_argument('--skip-register', action='store_true')
+    parser.add_argument('--refresh-reviewed-assets', action='store_true', help='Back up clean generated predecessors on SSD before refreshing the two detailed floors')
     parser.add_argument('--upgrade-collision-normals', action='store_true',
                         help='Guarded existing-map collision format migration only; preserve visual/grid caches')
     args = parser.parse_args()
@@ -635,6 +636,25 @@ def main():
     if args.upgrade_collision_normals:
         upgrade_collision_normals(repo)
         return
+    if args.refresh_reviewed_assets:
+        import subprocess
+        from datetime import datetime
+        backup=runtime/'r11_1_asset_refresh_20261110'/('before-'+datetime.now().strftime('%H%M%S'))
+        candidates=[repo/f'src/robot_lab_maps/maps/celisca_floor_{f}_detailed' for f in (1,2)]
+        candidates += [repo/f'src/robot_lab_maps/mjcf/celisca_floor_{f}_detailed.xml' for f in (1,2)]
+        for target in candidates:
+            if not target.exists(): continue
+            if not target.resolve().is_relative_to(repo/'src/robot_lab_maps'):
+                raise ValueError('Asset refresh path escapes the map package')
+            subprocess.run(['git','diff','--quiet','HEAD','--',str(target.relative_to(repo))],cwd=repo,check=True)
+            # Unknown files are not discarded or hidden by the refresh.
+            unknown=subprocess.check_output(['git','ls-files','--others','--exclude-standard','--',str(target.relative_to(repo))],cwd=repo,text=True)
+            if unknown.strip(): raise ValueError('Unrecorded native map edits: '+str(target))
+        for target in candidates:
+            if not target.exists(): continue
+            dest=backup/target.relative_to(repo);dest.parent.mkdir(parents=True,exist_ok=True)
+            shutil.move(str(target),str(dest))
+        print('Preserved previous generated maps at '+str(backup),flush=True)
     records = {}
     for floor in (1, 2):
         map_id = f'celisca_floor_{floor}_detailed'

@@ -1181,6 +1181,31 @@ task_state_options:
 - blocked
 - done
 tasks:
+  R11.1:
+    acceptance_ref: ROADMAP.md R11.1
+    title: Photo-based MOLAR/CELISCA asset refresh and sensor frames
+    owner: codex-hri-assets-20261110
+    state: done
+    updated: '2026-11-10'
+    scope_paths:
+    - src/robot_lab_robots/molar_hri/
+    - src/robot_lab_robots/probot_l/
+    - src/robot_lab_robots/config/robots.yaml
+    - src/robot_lab_maps/maps/celisca_floor_1_detailed/
+    - src/robot_lab_maps/maps/celisca_floor_2_detailed/
+    - src/robot_lab_maps/config/
+    - src/robot_lab_bringup/config/
+    - src/robot_lab_gui/robot_lab_gui/molar_controls.py
+    - src/robot_lab_gui/test/test_molar_controls.py
+    - src/robot_lab/robot_lab_registry/config/
+    - scripts/provision_molar_hri.py
+    - scripts/provision_celisca_detailed.py
+    - scripts/qualify_molar_hri_gui.py
+    - docs/
+    evidence:
+    - docs/status/model-map-refresh-2026-11-10.md
+    - docs/status/model-map-refresh-2026-11-10.json
+    notes: Completed native model/map refresh, 62 tests and normal-GUI PyBullet/MuJoCo controls; first heavy-render MuJoCo hold preserved. Calibrated sensors and broader R11/Gazebo/Isaac missions remain separate. No physical robot/building requests.
   R0:
     owner: documentation-coordinator
     state: done

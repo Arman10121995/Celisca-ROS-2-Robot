@@ -25,6 +25,7 @@ def main():
     parser.add_argument('--map', default='nav_empty')
     parser.add_argument('--output', required=True, type=Path)
     parser.add_argument('--startup-budget', type=float, default=240.)
+    parser.add_argument('--rviz', action='store_true', help='Also render RViz; default bounds this control probe to Tk plus simulated sensor rendering')
     args = parser.parse_args()
     out = args.output.resolve()
     out.parent.mkdir(parents=True, exist_ok=True)
@@ -33,6 +34,16 @@ def main():
     out.mkdir(exist_ok=False)
     (out/'producer.py').write_bytes(Path(__file__).read_bytes())
     app = SimulationLauncherGui()
+    if not args.rviz:
+        original_set_command=app._set_command
+        def control_only_command(command):
+            if command:
+                command=[arg for arg in command if not arg.startswith('start_rviz:=')]+['start_rviz:=false']
+            return original_set_command(command)
+        app._set_command=control_only_command
+    # The redesigned GUI can start on a landing workspace; articulation
+    # ownership requires the visible Launch workspace, just as for an operator.
+    app.notebook.select(app.launch_tab)
     app.update()
     rclpy.init()
     node = rclpy.create_node('molar_simulation_acceptance_observer')
@@ -160,15 +171,15 @@ def main():
         key('w', False)
         app._stop_drive()
 
-        # Full source range: the lift to its 0.68 m top, then both telescope
+        # Full source range: the lift to its +0.35 m offset top (1.10 m transfer height), then both telescope
         # stages to 0.14 m (0.28 m tip extension), within limits and coupled.
-        command(lift, .68)
+        command(lift, .35)
         interval(20.)
         command(stage, .14)
         interval(2.)
         report['full_range'] = dict(lift=q(lift), stage1=q(stage), stage2=q(child),
                                     total_tip=q(stage)+q(child), coupling_error=q(child)-q(stage))
-        assert (.64 < q(lift) <= .69 and .13 < q(stage) <= .15 and .13 < q(child) <= .15
+        assert (.31 < q(lift) <= .36 and .13 < q(stage) <= .15 and .13 < q(child) <= .15
                 and abs(q(child)-q(stage)) < .012), report['full_range']
 
         command(roller, 2.)
