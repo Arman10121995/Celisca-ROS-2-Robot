@@ -1,0 +1,15 @@
+# Per-robot localization overlay for 'probot_l' (same base as 'molar_hri') (merged over
+# ekf.yaml / amcl.yaml).  The description is rooted at base_link (no
+# base_footprint).  MOLAR has no simulated IMU (none is invented): the EKF
+# fuses wheel odometry only.  Front scanner at laser_link (0.34 m ahead,
+# 0.13 m up); its 360-degree simulated scan is an estimate, not the
+# certified protective field of the hardware scanner.
+ekf_filter_node:
+  ros__parameters:
+    base_link_frame: base_link
+amcl:
+  ros__parameters:
+    base_frame_id: base_link
+    scan_topic: scan
+    laser_max_range: 12.0
+    max_beams: 120

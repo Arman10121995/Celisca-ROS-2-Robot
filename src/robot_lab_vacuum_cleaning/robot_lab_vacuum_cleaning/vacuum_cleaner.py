@@ -101,9 +101,15 @@ def load_profile(robot_model: str, robots_config: str) -> dict:
             return {}
     try:
         with open(path, encoding='utf-8') as handle:
-            return (yaml.safe_load(handle).get('robots') or {}).get(robot_model) or {}
+            data = yaml.safe_load(handle) or {}
     except (OSError, AttributeError, yaml.YAMLError):
-        return {}
+        data = {}
+    try:   # provisioned open-source robots (with the repository overlays)
+        from robot_lab_utils.installed_assets import merge_installed_profiles
+        data = merge_installed_profiles(data, 'robots')
+    except Exception:
+        pass
+    return (data.get('robots') or {}).get(robot_model) or {}
 
 
 class VacuumCleaner(Node):
@@ -141,6 +147,8 @@ class VacuumCleaner(Node):
             self.mission.settings['battery_time_scale'] = float(gp('battery_time_scale'))
         self.global_frame = gp('global_frame')
         self.base_frame = gp('base_frame')
+        if self.base_frame == 'base_footprint' and (profile.get('vacuum') or {}).get('base_frame'):
+            self.base_frame = profile['vacuum']['base_frame']   # e.g. base_link-rooted descriptions
         self.cliff_drop = float(gp('cliff_drop_m'))
 
         self.tf_buffer = Buffer(cache_time=Duration(seconds=10.0))

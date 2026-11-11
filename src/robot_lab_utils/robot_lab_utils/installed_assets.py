@@ -37,7 +37,34 @@ def installed_profiles(kind):
                         implementation_state='experimental', validation_state='pending', backend='mujoco',
                         algorithms='MoveIt KDL + OMPL RRTConnect + native position trajectory'))
             available[name] = profile
-    return available
+    return _apply_overlays(available, kind)
+
+
+def _overlay_path():
+    """robot_lab_robots/config/installed_overlays.yaml: repository-kept
+    additions to provisioned profiles (re-provisioning must not erase them)."""
+    try:
+        from ament_index_python.packages import get_package_share_directory
+        return Path(get_package_share_directory('robot_lab_robots')) / 'config' / 'installed_overlays.yaml'
+    except Exception:
+        return Path(__file__).resolve().parents[2] / 'robot_lab_robots' / 'config' / 'installed_overlays.yaml'
+
+
+def _deep_merge(base, extra):
+    merged = dict(base)
+    for key, value in extra.items():
+        merged[key] = _deep_merge(merged[key], value) if isinstance(value, dict) and \
+            isinstance(merged.get(key), dict) else value
+    return merged
+
+
+def _apply_overlays(profiles, kind):
+    path = _overlay_path()
+    if not path.is_file():
+        return profiles
+    overlays = (yaml.safe_load(path.read_text()) or {}).get(kind) or {}
+    return {name: _deep_merge(profile, overlays[name]) if name in overlays else profile
+            for name, profile in profiles.items()}
 
 
 def merge_installed_profiles(data, kind):

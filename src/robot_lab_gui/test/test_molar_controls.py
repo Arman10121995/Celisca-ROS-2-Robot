@@ -49,7 +49,7 @@ def feedback(path, plant='plant-one'):
 
 
 @pytest.mark.parametrize('backend', BACKENDS)
-def test_all_four_backend_candidates_require_exact_owned_display_launch(backend):
+def test_all_four_backend_candidates_require_exact_owned_launch(backend):
     profile = {'articulation': {'schema': SCHEMA}}
     assert selectable('molar_hri', backend, 'display', 'simulation', profile)
     assert selectable('probot_l', backend, 'display', 'simulation', profile)
@@ -60,7 +60,12 @@ def test_all_four_backend_candidates_require_exact_owned_display_launch(backend)
         assert not launch_matches(args, 'molar_hri', backend, 'nav_empty')
         assert not launch_matches(command(backend) + [changed], 'molar_hri', backend, 'nav_empty')
     assert not launch_matches(' '.join(command(backend)), 'molar_hri', backend, 'nav_empty')
-    assert not selectable('molar_hri', backend, 'nav', 'simulation', profile)
+    for mode in ('loc', 'slam', 'nav'):        # navigate to a station, then transfer
+        assert selectable('molar_hri', backend, mode, 'simulation', profile)
+        args = [('mode:=' + mode) if arg.startswith('mode:=') else arg for arg in command(backend)]
+        assert launch_matches(args, 'molar_hri', backend, 'nav_empty', mode)
+        assert not launch_matches(args, 'molar_hri', backend, 'nav_empty')     # display expected
+    assert not selectable('molar_hri', backend, 'gait', 'simulation', profile)
     assert not selectable('molar_hri', backend, 'display', 'hardware', profile)
     assert not selectable('other', backend, 'display', 'simulation', profile)
     assert not selectable('molar_hri', backend, 'display', 'simulation', {})
@@ -346,3 +351,52 @@ def test_close_stops_owned_plant_and_removes_callbacks(panel, model):
     panel.stop_client.call_async.assert_called_once()
     assert panel.node is None
     panel.close()
+
+
+def receive_measured(panel, model, **measured):
+    state = feedback(model)
+    for channel in state['channels']:
+        if channel['name'] in measured:
+            key = 'measured_velocity' if channel['name'] == ROLLER else 'measured'
+            channel[key] = measured[channel['name']]
+    panel.receive(SimpleNamespace(data=json.dumps(state)),
+                  SimpleNamespace(source_timestamp=time.time_ns(), publisher_gid=b'molar-gid'))
+
+
+def test_station_transfer_runs_each_step_on_measured_state_and_aborts_on_loss(panel, model, monkeypatch):
+    activate(panel, model)
+    tick(panel)
+    panel.station_var.set(1.05)                     # lift offset 0.30 m
+    panel.roll_seconds.set(2.)
+    clock = [1000.]
+    monkeypatch.setattr(controls.time, 'monotonic', lambda: clock[0])
+    receive_measured(panel, model, **{LIFT: .2, STAGE: 0., COUPLED: 0., ROLLER: 0.})
+    assert panel.start_transfer()
+    sent = lambda: json.loads(panel.pub.publish.call_args.args[0].data)['targets']   # noqa: E731
+    assert sent() == {LIFT: pytest.approx(.30)}
+    for measured, expected in (({LIFT: .30}, {STAGE: .14}), ({LIFT: .30, STAGE: .14, COUPLED: .14}, {ROLLER: 2.})):
+        clock[0] += 1.
+        receive_measured(panel, model, **measured)
+        panel._transfer_tick()
+        assert sent() == expected
+    clock[0] += 2.5
+    receive_measured(panel, model, **{LIFT: .30, STAGE: .14, COUPLED: .14, ROLLER: 1.95})
+    panel._transfer_tick()
+    assert sent() == {ROLLER: 0.}
+    clock[0] += 1.
+    receive_measured(panel, model, **{LIFT: .30, STAGE: .14, COUPLED: .14, ROLLER: 0.})
+    panel._transfer_tick()
+    assert sent() == {STAGE: 0.}
+    assert [e['step'] for e in panel.transfer_log] == ['raise', 'extend', 'roll', 'stop_roller']
+    clock[0] += .1
+    panel.state['state_monotonic'] -= 5.            # feedback goes stale mid-transfer
+    panel._transfer_tick()
+    assert panel.transfer is None and 'feedback lost' in panel.transfer_status.get()
+    panel.stop_client.call_async.assert_called_once()   # the plant is told to hold
+    assert panel.state is None
+
+
+def test_station_transfer_rejects_an_unreachable_station(panel, model):
+    activate(panel, model)
+    panel.station_var.set(1.30)
+    assert not panel.start_transfer() and 'Station deck must be' in panel.transfer_status.get()

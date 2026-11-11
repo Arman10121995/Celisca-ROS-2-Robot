@@ -54,6 +54,7 @@ def generate_launch_description():
     vacuum_auto_start = LaunchConfiguration("vacuum_auto_start")
     vacuum_report = LaunchConfiguration("vacuum_report")
     vacuum_battery_scale = LaunchConfiguration("vacuum_battery_time_scale")
+    allow_experimental_assets = LaunchConfiguration("allow_experimental_assets")
 
     simulation = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(os.path.join(bringup_share, "launch", "simulated_robot.launch.py")),
@@ -93,6 +94,7 @@ def generate_launch_description():
             "delete_db_on_start": delete_db_on_start,
             "start_visual_odometry": start_visual_odometry,
             "start_rtabmap_viz": start_rtabmap_viz,
+            "allow_experimental_assets": allow_experimental_assets,
         }.items(),
     )
 
@@ -154,6 +156,8 @@ def generate_launch_description():
                               description="cleaning: start this mode (all, edges, explore) once ready."),
         DeclareLaunchArgument("vacuum_report", default_value="",
                               description="cleaning: write the auto-started run record to this JSON path."),
+        DeclareLaunchArgument("allow_experimental_assets", default_value="false",
+                              description="Pass to simulated_robot.launch.py (provisioned robots whose source changed)."),
         DeclareLaunchArgument("vacuum_battery_time_scale", default_value="-1.0",
                               description="cleaning: battery model time scale (<=0 keeps the saved setting)."),
         DeclareLaunchArgument(

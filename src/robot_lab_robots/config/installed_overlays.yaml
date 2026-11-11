@@ -1,0 +1,21 @@
+# Repository-kept additions to provisioned (installed) robot profiles.
+# robot_lab_utils.installed_assets deep-merges these over
+# $ROBOT_LAB_RUNTIME_ROOT/external_assets/installed/robots.yaml, so
+# re-provisioning an asset does not erase them.  Only add keys; never change
+# source geometry or measured controller settings here.
+robots:
+  # Open-source robot-vacuum platform (ROADMAP R14.1): the TurtleBot 4 Lite
+  # is an iRobot Create 3 base (BSD description) with a 2D LiDAR.  The Create
+  # 3 is a Roomba-derived educational base with no vacuum hardware: the
+  # cleaning width, battery runtimes and dustbin are the cleaning system's
+  # models, as for oomwoo.  The simulated description has bump/cliff frames
+  # but no bump/cliff sensors; the LiDAR obstacle stop and stall detector
+  # handle contact.
+  asset_turtlebot4_lite:
+    supports_room_vacuum: true
+    vacuum:
+      radius: 0.171            # Create 3 body diameter 0.342 m
+      cleaning_width: 0.24
+      side_brush_reach: 0.0    # no side brush: edge passes reach the body edge
+      max_speed: 0.3           # Create 3 limit 0.306 m/s
+      base_frame: base_link    # the description is rooted at base_link

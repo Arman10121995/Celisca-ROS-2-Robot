@@ -2063,6 +2063,9 @@
   - isaac
   supported_modes:
   - display
+  - loc
+  - slam
+  - nav
   locomotion:
     type: differential
     dof: 2
@@ -2106,6 +2109,9 @@
   - isaac
   supported_modes:
   - display
+  - loc
+  - slam
+  - nav
   locomotion:
     type: differential
     dof: 2

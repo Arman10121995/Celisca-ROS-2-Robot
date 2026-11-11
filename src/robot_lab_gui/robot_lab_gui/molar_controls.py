@@ -18,6 +18,13 @@ ROLLER = 'transfer_roller_joint'
 LIMITS = {LIFT: (-.310, .350), STAGE: (0., .14), COUPLED: (0., .14), ROLLER: (-8., 8.)}
 TOPIC = '/molar/articulation'
 FRESH_SECONDS = .5
+# The articulation plant runs in every mode; navigation modes let a MOLAR
+# drive to a station (Nav2) and then transfer there with this page.
+MODES = ('display', 'loc', 'slam', 'nav')
+REST_DECK_M = .750
+# Station transfer: tolerances on measured state and per-step time limits.
+TRANSFER_TOL = {LIFT: .01, STAGE: .005}
+TRANSFER_TIMEOUT_S = {'raise': 40., 'extend': 20., 'roll': 6., 'stop_roller': 6., 'retract': 20., 'lower': 40.}
 
 try:
     import rclpy
@@ -30,17 +37,17 @@ except ImportError:
 
 def selectable(robot, backend, mode, kind, profile):
     return (robot in ('probot_l', 'molar_hri') and backend in BACKENDS
-            and mode == 'display' and kind == 'simulation'
+            and mode in MODES and kind == 'simulation'
             and isinstance(profile.get('articulation'), dict)
             and profile['articulation'].get('schema') == SCHEMA)
 
 
-def launch_matches(args, robot, backend, map_name):
+def launch_matches(args, robot, backend, map_name, mode='display'):
     """Only the actual main launch slot, with unambiguous selected arguments."""
     if not isinstance(args, (list, tuple)) or list(args[:4]) != [
             'ros2', 'launch', 'robot_lab_bringup', 'simulated_robot.launch.py']:
         return False
-    expected = dict(robot_model=robot, simulator=backend, mode='display', map_name=map_name)
+    expected = dict(robot_model=robot, simulator=backend, mode=mode, map_name=map_name)
     return all([arg for arg in args if str(arg).startswith(key + ':=')] == [key + ':=' + value]
                for key, value in expected.items())
 
@@ -174,17 +181,128 @@ class MolarControls(ScrollPanel):
         self.use_measured_button.grid(row=0, column=0, sticky='ew', padx=2)
         self.stop_button = ttk.Button(actions, text='Stop / hold', command=self.stop, style='Danger.TButton')
         self.stop_button.grid(row=0, column=1, sticky='ew', padx=2)
+        self._build_transfer(body)
         ttk.Label(body, text='Apply and Jog explicitly command motion. Editing or dragging a target sends nothing.\n'
                   'Raise before extending; retract both stages before lowering or driving.\n'
                   'Stop holds measured lift/slides and stops the roller. Leaving this page or losing feedback stops control.\n'
                   'Experimental simulator controls; payload handling remains unvalidated.',
-                  wraplength=295, justify='left').grid(row=7, column=0, sticky='ew', pady=6)
+                  wraplength=295, justify='left').grid(row=8, column=0, sticky='ew', pady=6)
         self.traces = [(var, var.trace_add('write', self.selection_changed)) for var in
                        (app.robot_var, app.simulator_var, app.mode_var, app.launch_kind_var, app.map_var)]
         self.bindings = [(widget, widget.bind('<<NotebookTabChanged>>', self.tab_changed, add='+'))
                          for widget in (app.notebook, notebook)]
         self.job = self.after(50, self.tick)
         self.update_buttons()
+
+    def _build_transfer(self, body):
+        """Station transfer: raise to the station deck, extend, run the roller,
+        stop it, retract, lower to rest.  Each step waits for measured state."""
+        frame = ttk.LabelFrame(body, text='Station transfer', padding=6)
+        frame.grid(row=7, column=0, sticky='ew', pady=5)
+        frame.columnconfigure(1, weight=1)
+        self.station_var = tk.DoubleVar(value=.90)
+        self.transfer_dir = tk.StringVar(value='unload')
+        self.roll_seconds = tk.DoubleVar(value=4.)
+        self.roll_speed = tk.DoubleVar(value=2.)
+        ttk.Label(frame, text='Station deck (m)').grid(row=0, column=0, sticky='w')
+        self.station_entry = ttk.Entry(frame, textvariable=self.station_var, width=8)
+        self.station_entry.grid(row=0, column=1, sticky='ew', padx=2)
+        ttk.Label(frame, text='Roller time (s)').grid(row=1, column=0, sticky='w')
+        self.roll_entry = ttk.Entry(frame, textvariable=self.roll_seconds, width=8)
+        self.roll_entry.grid(row=1, column=1, sticky='ew', padx=2)
+        modes = ttk.Frame(frame)
+        modes.grid(row=2, column=0, columnspan=2, sticky='w')
+        for col, (key, label) in enumerate((('unload', 'Unload to station'), ('load', 'Load from station'))):
+            ttk.Radiobutton(modes, text=label, value=key, variable=self.transfer_dir).grid(row=0, column=col, padx=(0, 8))
+        self.transfer_button = ttk.Button(frame, text='Run transfer', command=self.start_transfer)
+        self.transfer_button.grid(row=3, column=0, columnspan=2, sticky='ew', pady=(4, 0))
+        self.transfer_status = tk.StringVar(value='Navigate to the station with the telescope retracted, then run.')
+        ttk.Label(frame, textvariable=self.transfer_status, wraplength=280, justify='left').grid(
+            row=4, column=0, columnspan=2, sticky='ew', pady=(4, 0))
+        self.transfer = None
+        self.transfer_log = []
+        self.fields.extend((self.station_entry, self.roll_entry))
+
+    def transfer_plan(self):
+        """[(step, targets)] for the selected station and direction."""
+        deck = finite(self.station_var.get())
+        lift = deck - REST_DECK_M
+        low, high = LIMITS[LIFT]
+        if not low <= lift <= high:
+            raise ValueError('Station deck must be %.3f-%.3f m.' % (REST_DECK_M + low, REST_DECK_M + high))
+        seconds = finite(self.roll_seconds.get())
+        if not 0 < seconds <= 30:
+            raise ValueError('Roller time must be 0-30 s.')
+        speed = abs(finite(self.roll_speed.get())) * (1 if self.transfer_dir.get() == 'unload' else -1)
+        return [('raise', {LIFT: lift}), ('extend', {STAGE: LIMITS[STAGE][1]}),
+                ('roll', {ROLLER: speed}), ('stop_roller', {ROLLER: 0.}),
+                ('retract', {STAGE: 0.}), ('lower', {LIFT: 0.})], seconds
+
+    def start_transfer(self):
+        if self.transfer is not None:
+            return False
+        try:
+            steps, seconds = self.transfer_plan()
+        except (ValueError, tk.TclError) as exc:
+            self.transfer_status.set(str(exc))
+            return False
+        if not self.ready():
+            self.transfer_status.set('Wait for fresh measured state from the owned model.')
+            return False
+        self.transfer = {'steps': steps, 'index': -1, 'roll_s': seconds, 'started': None}
+        self.transfer_log = []
+        return self._next_transfer_step()
+
+    def _next_transfer_step(self):
+        t = self.transfer
+        t['index'] += 1
+        if t['index'] >= len(t['steps']):
+            self.transfer = None
+            self.transfer_status.set('Transfer finished: %s.' % ', '.join(
+                '%s %.1f s' % (e['step'], e['seconds']) for e in self.transfer_log))
+            return True
+        name, targets = t['steps'][t['index']]
+        t['started'] = time.monotonic()
+        if not self.send(targets):
+            return self.abort_transfer('could not command %s' % name)
+        self.transfer_status.set('Transfer: %s ...' % name.replace('_', ' '))
+        return True
+
+    def abort_transfer(self, why):
+        step = self.transfer['steps'][self.transfer['index']][0] if self.transfer else ''
+        self.transfer = None
+        self.transfer_log.append({'step': step, 'failed': why})
+        self.stop(reason='Transfer stopped at %s: %s' % (step, why))
+        self.transfer_status.set('Transfer stopped at %s: %s.' % (step, why))
+        return False
+
+    def _transfer_tick(self):
+        """Advance the station transfer from measured state (called by tick)."""
+        t = self.transfer
+        if t is None:
+            return
+        if not self.ready():
+            self.abort_transfer('feedback lost')
+            return
+        name, targets = t['steps'][t['index']]
+        elapsed = time.monotonic() - t['started']
+        channels = self.channels()
+        if name == 'roll':
+            speed = targets[ROLLER]
+            if elapsed > 3. and abs(channels[ROLLER]['measured_velocity']) < .8 * abs(speed):
+                self.abort_transfer('roller did not reach %.1f rad/s' % abs(speed))
+                return
+            done = elapsed >= t['roll_s']
+        elif name == 'stop_roller':
+            done = abs(channels[ROLLER]['measured_velocity']) < .1
+        else:
+            done = all(abs(channels[j]['measured'] - v) <= TRANSFER_TOL[j] for j, v in targets.items())
+        if done:
+            self.transfer_log.append({'step': name, 'seconds': round(elapsed, 2), 'measured': {
+                j: round(channels[j]['measured_velocity' if j == ROLLER else 'measured'], 4) for j in targets}})
+            self._next_transfer_step()
+        elif elapsed > (TRANSFER_TIMEOUT_S[name] if name != 'roll' else t['roll_s'] + TRANSFER_TIMEOUT_S['roll']):
+            self.abort_transfer('%s did not settle in time' % name)
 
     def selected(self):
         return selectable(self.app.robot_var.get(), self.app.simulator_var.get(),
@@ -200,7 +318,8 @@ class MolarControls(ScrollPanel):
         map_name = 'none' if selected_map in ('', 'none', '— None —') else selected_map
         return bool(not self.closed and self.selected() and self.visible() and self.app._launch_running
                     and process and process.poll() is None and launch_matches(
-                        process.args, self.app.robot_var.get(), self.app.simulator_var.get(), map_name))
+                        process.args, self.app.robot_var.get(), self.app.simulator_var.get(), map_name,
+                        self.app.mode_var.get()))
 
     def connect(self):
         if self.node:
@@ -325,6 +444,9 @@ class MolarControls(ScrollPanel):
         self.state = None
         self.received = -math.inf
         self.bound_process = self.publisher_gid = None
+        if getattr(self, 'transfer', None) is not None:
+            self.transfer = None
+            self.transfer_status.set('Transfer stopped: %s' % reason)
         self.status.set(reason)
         self.update_buttons()
 
@@ -339,6 +461,7 @@ class MolarControls(ScrollPanel):
         enabled = self.ready()
         for widget in [*self.apply_buttons.values(), *self.jog_buttons.values(), *self.fields, self.use_measured_button]:
             widget.state(['!disabled'] if enabled else ['disabled'])
+        self.transfer_button.state(['!disabled'] if enabled and self.transfer is None else ['disabled'])
         self.stop_button.state(['!disabled'] if self.state else ['disabled'])
 
     def tick(self):
@@ -363,6 +486,7 @@ class MolarControls(ScrollPanel):
                                        self.state['coupling_error'][COUPLED], roller['measured_velocity'],
                                        roller['measured'], 'inhibited' if self.state['base_inhibited'] else 'available'))
                     self.status.set(self.state['status'])
+                    self._transfer_tick()
                 elif self.state:
                     self.stop(reason=self.state.get('fault') or 'Feedback lost or uninitialized; control held.')
                 else:

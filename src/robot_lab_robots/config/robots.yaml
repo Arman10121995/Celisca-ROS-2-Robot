@@ -164,6 +164,9 @@ robots:
     type: mobile_manipulator
     supported_modes:
     - display
+    - loc
+    - slam
+    - nav
     default_mode: display
     default_map: nav_empty
     supported_simulators:
@@ -241,6 +244,9 @@ robots:
     type: mobile_manipulator
     supported_modes:
     - display
+    - loc
+    - slam
+    - nav
     default_mode: display
     default_map: nav_empty
     supported_simulators:
