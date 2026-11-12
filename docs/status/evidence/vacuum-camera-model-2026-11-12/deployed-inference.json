@@ -1,0 +1,30 @@
+{
+  "scope": "actual deployed-model inference on held-out Gazebo fixture RGB; no robot mission",
+  "score_threshold": 0.4,
+  "iou_threshold": 0.5,
+  "images": 32,
+  "per_class": {
+    "1": {
+      "gt": 13,
+      "matched": 1,
+      "predicted": 2
+    },
+    "2": {
+      "gt": 5,
+      "matched": 4,
+      "predicted": 5
+    },
+    "3": {
+      "gt": 12,
+      "matched": 8,
+      "predicted": 30
+    },
+    "4": {
+      "gt": 4,
+      "matched": 3,
+      "predicted": 3
+    }
+  },
+  "inference_mean_wall_s": 0.18631516681216453,
+  "model_path": "/workspace/molar/robot_lab_runtime/models/vacuum_camera/8cbe5224c8631d7a06493d70964f8a4b8263d8bfa54abc666085b62933d4ea16/vacuum_detector.pt"
+}

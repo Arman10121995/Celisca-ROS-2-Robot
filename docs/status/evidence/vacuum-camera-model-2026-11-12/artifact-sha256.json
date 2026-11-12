@@ -1,0 +1,486 @@
+{
+  "/workspace/molar/robot_lab_runtime/r133-implementation-20261112/provision-model-1.json": {
+    "sha256": "279d6dea21595305ed4bd0ab5973fe4a37e85023b9f921d9d7888952f1f78eba",
+    "bytes": 1579
+  },
+  "/workspace/molar/robot_lab_runtime/r133-implementation-20261112/deployed-inference.json": {
+    "sha256": "6bddf5b18cd0d07022dca3043357ffe181b3aa550281fcfcc845f73f4a4c2064",
+    "bytes": 691
+  },
+  "/workspace/molar/robot_lab_runtime/r133-implementation-20261112/gui.log": {
+    "sha256": "b44bd44c40f6fe277d130758c9894e8c7c8c230ebe87dc2b592615342fe92932",
+    "bytes": 114
+  },
+  "/workspace/molar/robot_lab_runtime/r133-implementation-20261112/contracts.log": {
+    "sha256": "c2bfa646a40280844ce0c5b5762a1d29cd3ca6e10335f18915da1b9eb5652df1",
+    "bytes": 98
+  },
+  "/workspace/molar/robot_lab_runtime/r133-implementation-20261112/build.log": {
+    "sha256": "c838da93b499ab15898d271d8048b7943f8943cb5e6072db9a6fddbdf49012d5",
+    "bytes": 1793
+  },
+  "/workspace/molar/robot_lab_runtime/r133-implementation-20261112/deployed-inference-raw.json": {
+    "sha256": "b923a7a32c40e629d480e87d46da2eb5173d99796813bf4d29b27e6d56f2bc7d",
+    "bytes": 11371
+  },
+  "/workspace/molar/robot_lab_runtime/r133-implementation-20261112/render-1.log": {
+    "sha256": "7f9de0f697defdb6c3218297bbc269eb5d5c28173d880263ffc2de6c1778d08f",
+    "bytes": 2633
+  },
+  "/workspace/molar/robot_lab_runtime/r133-implementation-20261112/train-1.log": {
+    "sha256": "d613df4f78618e3454937e7a0793052a81a9c650889e0eaac54050f2f486e19c",
+    "bytes": 1717
+  },
+  "/workspace/molar/robot_lab_runtime/r133-implementation-20261112/model-1/vacuum_detector.pt": {
+    "sha256": "8cbe5224c8631d7a06493d70964f8a4b8263d8bfa54abc666085b62933d4ea16",
+    "bytes": 76088983
+  },
+  "/workspace/molar/robot_lab_runtime/r133-implementation-20261112/model-1/vacuum_detector_classes.json": {
+    "sha256": "63db9090857e9f34241ccdbda70916ce7b24d158d1d568d7668fc829b3cd8f78",
+    "bytes": 62
+  },
+  "/workspace/molar/robot_lab_runtime/r133-implementation-20261112/model-1/metrics.json": {
+    "sha256": "c4f717b56733b5ef6001c24e9aac9f1b63bd74bfe777999b21dbc5f758195b21",
+    "bytes": 275
+  },
+  "/workspace/molar/robot_lab_runtime/r133-implementation-20261112/source-model-1/train_vacuum_detector.py": {
+    "sha256": "2c84e0aa96438b6a6c7748418a548e934af21a996613fc72e000a919054ac7b3",
+    "bytes": 14309
+  },
+  "/workspace/molar/robot_lab_runtime/r133-implementation-20261112/source-model-1/generate_vacuum_camera_dataset.py": {
+    "sha256": "2e882e74d844079140d98c2d17e5e89d7b88b7bafe9c9801ee5756962cd36a0f",
+    "bytes": 12397
+  },
+  "/workspace/molar/robot_lab_runtime/r133-implementation-20261112/dataset-1/annotations.json": {
+    "sha256": "74112e395e30ed61581afc0685bf92407e70084a507f2c40f19bc478ed98c34f",
+    "bytes": 64897
+  },
+  "/workspace/molar/robot_lab_runtime/r133-implementation-20261112/dataset-1/val_ids.json": {
+    "sha256": "41e879a6df168a97b72cb1a74a5fa4fb81d782c3d53cd6fc48ee7dfc5602ef9d",
+    "bytes": 129
+  },
+  "/workspace/molar/robot_lab_runtime/r133-implementation-20261112/dataset-1/render-receipt.json": {
+    "sha256": "60a85ed080e92ee565be1bf6199b005c2e7555838deec6a865cd3e8e6c9bcdd3",
+    "bytes": 3015
+  },
+  "/workspace/molar/robot_lab_runtime/r133-implementation-20261112/dataset-1/nav_obstacle-layout-31/bridge.log": {
+    "sha256": "a9080d8059aec8ac2b5634dfb55146b95d29d6a77ef7760eae7e36d60fd83c0d",
+    "bytes": 429
+  },
+  "/workspace/molar/robot_lab_runtime/r133-implementation-20261112/dataset-1/nav_obstacle-layout-31/gazebo.log": {
+    "sha256": "1a0e8efb993e628782ee22f83c49f14523b987bc87054db792e3578c4aff3254",
+    "bytes": 491
+  },
+  "/workspace/molar/robot_lab_runtime/r133-implementation-20261112/dataset-1/nav_obstacle-layout-31/world.sdf": {
+    "sha256": "97ce0fd5a8951626f50aebde1a3b6a5eaa7dea40fc067edca9b644923b45dfac",
+    "bytes": 15739
+  },
+  "/workspace/molar/robot_lab_runtime/r133-implementation-20261112/dataset-1/images/000052.png": {
+    "sha256": "b315898e08308acf4b6fed54bec1833cd774c3f4ca043743850251b48dbce2ce",
+    "bytes": 6149
+  },
+  "/workspace/molar/robot_lab_runtime/r133-implementation-20261112/dataset-1/images/000004.png": {
+    "sha256": "d3fa47db0582f04cc00a58308fe96a4cc622f40bb14823f4e7f4ec0ad2330b08",
+    "bytes": 4715
+  },
+  "/workspace/molar/robot_lab_runtime/r133-implementation-20261112/dataset-1/images/000057.png": {
+    "sha256": "868679412c7b19bd669ee8d841bddcbb0e8ec4d55d6f71d754f60c3bac07bb02",
+    "bytes": 5238
+  },
+  "/workspace/molar/robot_lab_runtime/r133-implementation-20261112/dataset-1/images/000088.png": {
+    "sha256": "b87baf3e292e6ca41f1689001b6fef19e63c619657019247c207c151dd371b9e",
+    "bytes": 3749
+  },
+  "/workspace/molar/robot_lab_runtime/r133-implementation-20261112/dataset-1/images/000005.png": {
+    "sha256": "a7df8493b7b616e2cc9d1c964cd8c1c7a7051845e238e548ada8ea93026d9dbb",
+    "bytes": 8020
+  },
+  "/workspace/molar/robot_lab_runtime/r133-implementation-20261112/dataset-1/images/000051.png": {
+    "sha256": "3eb84e9356893e8fba455a7300606ba687a3643079f8cee736f75f3cefe8281f",
+    "bytes": 4907
+  },
+  "/workspace/molar/robot_lab_runtime/r133-implementation-20261112/dataset-1/images/000058.png": {
+    "sha256": "88ae13e21d397f5ff015650eecc3e4b8483122944c67da546dc1d2eccc5cec11",
+    "bytes": 6009
+  },
+  "/workspace/molar/robot_lab_runtime/r133-implementation-20261112/dataset-1/images/000072.png": {
+    "sha256": "fd082ca3212d96a71678c31394b11425158bb4b99645d3fb4e08f9ffa7f874d0",
+    "bytes": 5908
+  },
+  "/workspace/molar/robot_lab_runtime/r133-implementation-20261112/dataset-1/images/000070.png": {
+    "sha256": "9e3baa6ac61f483d7d6eaaffc420d8a4296e852e798f57ecd06f9c364524fb15",
+    "bytes": 3839
+  },
+  "/workspace/molar/robot_lab_runtime/r133-implementation-20261112/dataset-1/images/000091.png": {
+    "sha256": "435dcb8f307fa541806342603ddbbbc63f495316b5c24b5050e6ae0a5020d6f4",
+    "bytes": 5387
+  },
+  "/workspace/molar/robot_lab_runtime/r133-implementation-20261112/dataset-1/images/000037.png": {
+    "sha256": "ec5a40490ee6c13c64ab122be72c03b8db9305c4d37f854a6b0195b9ed7c76a4",
+    "bytes": 6771
+  },
+  "/workspace/molar/robot_lab_runtime/r133-implementation-20261112/dataset-1/images/000034.png": {
+    "sha256": "f835ac94a9cc185d975aaa9852bb6fc5acd86d35266c0da03b0bfc8375ad534d",
+    "bytes": 5970
+  },
+  "/workspace/molar/robot_lab_runtime/r133-implementation-20261112/dataset-1/images/000063.png": {
+    "sha256": "0d46c480b82e65b6c613e334732c44b0fffe5841d3ed6ab9dbc52826af332dbc",
+    "bytes": 5189
+  },
+  "/workspace/molar/robot_lab_runtime/r133-implementation-20261112/dataset-1/images/000010.png": {
+    "sha256": "be13ee65156af886066beb7259dd7b274b698d7b4c80336520313accb9f166fc",
+    "bytes": 4717
+  },
+  "/workspace/molar/robot_lab_runtime/r133-implementation-20261112/dataset-1/images/000079.png": {
+    "sha256": "d424b35d271900034f390bb929dde286e4d4aed0459a5b2e2f6f44f4fd659487",
+    "bytes": 5203
+  },
+  "/workspace/molar/robot_lab_runtime/r133-implementation-20261112/dataset-1/images/000025.png": {
+    "sha256": "7cd092844c675ded663988c06c79b92febd9fbafab6c619d2f75d248ca4019b5",
+    "bytes": 5973
+  },
+  "/workspace/molar/robot_lab_runtime/r133-implementation-20261112/dataset-1/images/000075.png": {
+    "sha256": "73202a5b6b247103a864f52b6540716c30e8bb1d16090164097bab10770198f6",
+    "bytes": 4935
+  },
+  "/workspace/molar/robot_lab_runtime/r133-implementation-20261112/dataset-1/images/000006.png": {
+    "sha256": "9f48f8ebd59b882e0c428d1cefa9aa99967947824eea16ca0bd4fc25c77f9576",
+    "bytes": 5675
+  },
+  "/workspace/molar/robot_lab_runtime/r133-implementation-20261112/dataset-1/images/000021.png": {
+    "sha256": "0df7869a68ad74f698276400c5f369cb46b7c9c77e944f576ec9550e0de22c96",
+    "bytes": 4772
+  },
+  "/workspace/molar/robot_lab_runtime/r133-implementation-20261112/dataset-1/images/000014.png": {
+    "sha256": "50d51483610d8269a41d378e45ecac2efdff93c63945d6e89d9c1e996ad16133",
+    "bytes": 5454
+  },
+  "/workspace/molar/robot_lab_runtime/r133-implementation-20261112/dataset-1/images/000071.png": {
+    "sha256": "fdf71cd02734afebfe231bcabfb5c0455bdcc75f4e64dc294f3e8612d321cbf4",
+    "bytes": 5823
+  },
+  "/workspace/molar/robot_lab_runtime/r133-implementation-20261112/dataset-1/images/000066.png": {
+    "sha256": "697e6134be74b6bebc5d79c4b2bc257a60f012bbe63186622fa494f24a6db053",
+    "bytes": 6990
+  },
+  "/workspace/molar/robot_lab_runtime/r133-implementation-20261112/dataset-1/images/000043.png": {
+    "sha256": "f52b10584623fc1e8ff0ec49128b6e798c5a176607e5a428364ad1736a2052dd",
+    "bytes": 5320
+  },
+  "/workspace/molar/robot_lab_runtime/r133-implementation-20261112/dataset-1/images/000094.png": {
+    "sha256": "4c1313fa9b56ecaf0cd21ee5acb1f023e7a157c36b3e7160ad86ab3f4c0e45df",
+    "bytes": 5801
+  },
+  "/workspace/molar/robot_lab_runtime/r133-implementation-20261112/dataset-1/images/000003.png": {
+    "sha256": "6271033449b63874d9f63af03979fc9b2a5c34ec5b7362201c3024e40391ba6b",
+    "bytes": 7491
+  },
+  "/workspace/molar/robot_lab_runtime/r133-implementation-20261112/dataset-1/images/000068.png": {
+    "sha256": "134eb967871acf9cc6fbad93ae668ef3580312578bfd677eaf49af02e4ff6345",
+    "bytes": 4547
+  },
+  "/workspace/molar/robot_lab_runtime/r133-implementation-20261112/dataset-1/images/000017.png": {
+    "sha256": "6f2c4fb8d32eb335158a8e600e0692013688c47a45b06f19f3f3d7338c607bdd",
+    "bytes": 5923
+  },
+  "/workspace/molar/robot_lab_runtime/r133-implementation-20261112/dataset-1/images/000031.png": {
+    "sha256": "1489f96f794c6c1e46ab5d7aeb7acfdf3439474b998f734a98c2f2b282ffd263",
+    "bytes": 6966
+  },
+  "/workspace/molar/robot_lab_runtime/r133-implementation-20261112/dataset-1/images/000013.png": {
+    "sha256": "8745ffcd1c76fd57fd2ccb2258289d6e655417ca46bdb8e88c36919c88eae299",
+    "bytes": 5067
+  },
+  "/workspace/molar/robot_lab_runtime/r133-implementation-20261112/dataset-1/images/000093.png": {
+    "sha256": "2cab61353945cc4c91a0e1f1fcfbceaa5ab22eaa322fb1fad6b4a26d14eaf8f2",
+    "bytes": 5951
+  },
+  "/workspace/molar/robot_lab_runtime/r133-implementation-20261112/dataset-1/images/000011.png": {
+    "sha256": "b9d54d120d0771ed24e5960246a8c0ed51d133486cd46dfea02ef4f55216d75c",
+    "bytes": 4903
+  },
+  "/workspace/molar/robot_lab_runtime/r133-implementation-20261112/dataset-1/images/000008.png": {
+    "sha256": "dfd19308445b26421b406a5cac161d328677320a3b1e55042bc8b54e7153f05d",
+    "bytes": 5906
+  },
+  "/workspace/molar/robot_lab_runtime/r133-implementation-20261112/dataset-1/images/000067.png": {
+    "sha256": "f8a3a7ad2e44beef7e886c3686ce0d9ba2a29c4822f1f255bc3bfaf79ad708da",
+    "bytes": 5137
+  },
+  "/workspace/molar/robot_lab_runtime/r133-implementation-20261112/dataset-1/images/000046.png": {
+    "sha256": "087bd7076a548f278e5925a92b511121929523a461f51b555926db41d7288446",
+    "bytes": 5438
+  },
+  "/workspace/molar/robot_lab_runtime/r133-implementation-20261112/dataset-1/images/000002.png": {
+    "sha256": "071a9d3faaa3724c14933cbde7a7cb6df03b21d669084298756c61c72fd9d6eb",
+    "bytes": 5581
+  },
+  "/workspace/molar/robot_lab_runtime/r133-implementation-20261112/dataset-1/images/000022.png": {
+    "sha256": "3be672226e2e2ffbb602d38b66cd642f262474d29087320dde52664f3b1dce14",
+    "bytes": 4717
+  },
+  "/workspace/molar/robot_lab_runtime/r133-implementation-20261112/dataset-1/images/000039.png": {
+    "sha256": "c03382d9019046e8d9ec566b2b18f965035b39067b1e45e7359ed4747c2d96a4",
+    "bytes": 5289
+  },
+  "/workspace/molar/robot_lab_runtime/r133-implementation-20261112/dataset-1/images/000035.png": {
+    "sha256": "70c2d92654b3af6285d936adbd0ff620d3b037dce08d18a36ebbd557b5f8202a",
+    "bytes": 4812
+  },
+  "/workspace/molar/robot_lab_runtime/r133-implementation-20261112/dataset-1/images/000089.png": {
+    "sha256": "8b852aecad4d7523e0f73d64c7339abd35ce6dabd8c28d0c6d44c57860688fc7",
+    "bytes": 4623
+  },
+  "/workspace/molar/robot_lab_runtime/r133-implementation-20261112/dataset-1/images/000016.png": {
+    "sha256": "9cf3c684a63ba6bb1729c9f5e44f50e414b2a4a69b4d6bdcc2b46ef084704ffc",
+    "bytes": 4531
+  },
+  "/workspace/molar/robot_lab_runtime/r133-implementation-20261112/dataset-1/images/000084.png": {
+    "sha256": "66c5d22c810747877eef23392de924131873cea33c705e8fd5d84b47e62197dc",
+    "bytes": 5010
+  },
+  "/workspace/molar/robot_lab_runtime/r133-implementation-20261112/dataset-1/images/000028.png": {
+    "sha256": "0ff7adc2b8142f239e7b75cb9a7b14e7a8048f07eebd25139a8c1d28af00ac2f",
+    "bytes": 4917
+  },
+  "/workspace/molar/robot_lab_runtime/r133-implementation-20261112/dataset-1/images/000009.png": {
+    "sha256": "df010fedecdd312102024e37679a5b5c4a946d712976c18a47dc5397b879b81c",
+    "bytes": 5233
+  },
+  "/workspace/molar/robot_lab_runtime/r133-implementation-20261112/dataset-1/images/000069.png": {
+    "sha256": "2736d1b29d5ffd7db6813726ef4a2ce3e8cb5707af8537b57f61b0bfeaef852d",
+    "bytes": 6216
+  },
+  "/workspace/molar/robot_lab_runtime/r133-implementation-20261112/dataset-1/images/000020.png": {
+    "sha256": "df6e4a8afbe94e146e649e22f5dcc5d8b7513a07ec9440f3f1d2ae74e7e411a7",
+    "bytes": 4501
+  },
+  "/workspace/molar/robot_lab_runtime/r133-implementation-20261112/dataset-1/images/000076.png": {
+    "sha256": "7b218135de09a188105fb5914b9ce4dbf678688bf0b9795c7bc90a773b8d2894",
+    "bytes": 4840
+  },
+  "/workspace/molar/robot_lab_runtime/r133-implementation-20261112/dataset-1/images/000073.png": {
+    "sha256": "ce826162ef325756f675db652971a2933df3c4935b67a2b84ac8ee71921cf964",
+    "bytes": 6323
+  },
+  "/workspace/molar/robot_lab_runtime/r133-implementation-20261112/dataset-1/images/000055.png": {
+    "sha256": "415e714c967f039577eb49bc1f11cbd42cb857b5072c5ee467a9270b5055bc65",
+    "bytes": 5293
+  },
+  "/workspace/molar/robot_lab_runtime/r133-implementation-20261112/dataset-1/images/000040.png": {
+    "sha256": "bba092e51a3957f1a5881eba81aea9880f8c9b803c4391a5c9728041f7c9af55",
+    "bytes": 5529
+  },
+  "/workspace/molar/robot_lab_runtime/r133-implementation-20261112/dataset-1/images/000090.png": {
+    "sha256": "8578c21277a1a52381544c56497ae431a9da41641afc778bc74d87c4f5978a55",
+    "bytes": 4433
+  },
+  "/workspace/molar/robot_lab_runtime/r133-implementation-20261112/dataset-1/images/000086.png": {
+    "sha256": "8fcf9eace1a12b45fb5a84b3ef9d719bff6941b8a49884892e9d1b786cf4a506",
+    "bytes": 1496
+  },
+  "/workspace/molar/robot_lab_runtime/r133-implementation-20261112/dataset-1/images/000036.png": {
+    "sha256": "50a26054b69407e8d6e5f6732ca5672c9df6d7cd396e60985589240d2e7ba56c",
+    "bytes": 5339
+  },
+  "/workspace/molar/robot_lab_runtime/r133-implementation-20261112/dataset-1/images/000001.png": {
+    "sha256": "6fd0e4d207e045f7a18c168f9198106e1e352beec0d366fae1c1c088cd60ddf8",
+    "bytes": 5502
+  },
+  "/workspace/molar/robot_lab_runtime/r133-implementation-20261112/dataset-1/images/000049.png": {
+    "sha256": "6a1a6e44fdf29381a12dceda54fc4be33a868d84ab984a532139cb95b691bb53",
+    "bytes": 7098
+  },
+  "/workspace/molar/robot_lab_runtime/r133-implementation-20261112/dataset-1/images/000032.png": {
+    "sha256": "5bfa88219fc68163edb6fc7d0779905a954064d814c46e46603c2a202df83432",
+    "bytes": 4862
+  },
+  "/workspace/molar/robot_lab_runtime/r133-implementation-20261112/dataset-1/images/000061.png": {
+    "sha256": "a5ff5ff712c197aa5c838eb70d7721b494a48b906fc328c8cef921dd3050374b",
+    "bytes": 5212
+  },
+  "/workspace/molar/robot_lab_runtime/r133-implementation-20261112/dataset-1/images/000019.png": {
+    "sha256": "d2c107821958e84cb69739af7ba6314bb31d3c9e4ff6a9fb444169b0ae14337e",
+    "bytes": 4759
+  },
+  "/workspace/molar/robot_lab_runtime/r133-implementation-20261112/dataset-1/images/000029.png": {
+    "sha256": "ec6d0ecb43a2b0fe7b2e009e67e2d7c2a57694d180141b9e5ea15a20148ffaff",
+    "bytes": 4602
+  },
+  "/workspace/molar/robot_lab_runtime/r133-implementation-20261112/dataset-1/images/000045.png": {
+    "sha256": "72db3ec4b33632b04ecc2b4a83e4d8193fc17baff1d758e52c247b717691f672",
+    "bytes": 4750
+  },
+  "/workspace/molar/robot_lab_runtime/r133-implementation-20261112/dataset-1/images/000042.png": {
+    "sha256": "7d8b59c7087a5bf5dc7949d499fd80635cd9380c63610a9807bd41355191551c",
+    "bytes": 4798
+  },
+  "/workspace/molar/robot_lab_runtime/r133-implementation-20261112/dataset-1/images/000053.png": {
+    "sha256": "5e37bc375ddcfd130991668ff9a0dd5f51a443ab01fcdf1791a83564eeaebb6d",
+    "bytes": 4692
+  },
+  "/workspace/molar/robot_lab_runtime/r133-implementation-20261112/dataset-1/images/000050.png": {
+    "sha256": "608b224e78b1b7e9625b52d375e802229371302774e027f6eefac2538ccd91b0",
+    "bytes": 4558
+  },
+  "/workspace/molar/robot_lab_runtime/r133-implementation-20261112/dataset-1/images/000082.png": {
+    "sha256": "174328f63e629efb847d22c88598fa51800810bc7aa516875eadb73e4e6ccb1b",
+    "bytes": 5701
+  },
+  "/workspace/molar/robot_lab_runtime/r133-implementation-20261112/dataset-1/images/000087.png": {
+    "sha256": "5291271bdd13afbd5e3483c2b2398c8fc7c80f996360dff83d9d763c9b8a51e8",
+    "bytes": 5486
+  },
+  "/workspace/molar/robot_lab_runtime/r133-implementation-20261112/dataset-1/images/000038.png": {
+    "sha256": "1df38cfc6fcc1d7c85af22ee3fbf4f940d584945e29987c96808b71549eb0cf7",
+    "bytes": 5474
+  },
+  "/workspace/molar/robot_lab_runtime/r133-implementation-20261112/dataset-1/images/000033.png": {
+    "sha256": "9dfe9e2d5a94f6cd5d6476757146c18b771b7d590fb5d30ffadf1e65c44c309d",
+    "bytes": 8194
+  },
+  "/workspace/molar/robot_lab_runtime/r133-implementation-20261112/dataset-1/images/000092.png": {
+    "sha256": "d31fa12843ebb5372035ec5340c019b8ac16169da1149a6bf35e4c9d9d2d9002",
+    "bytes": 781
+  },
+  "/workspace/molar/robot_lab_runtime/r133-implementation-20261112/dataset-1/images/000085.png": {
+    "sha256": "2a4dac4b88ce3d91f471e914b54fb9837e83767ae2af6469245d841c98db24a2",
+    "bytes": 5271
+  },
+  "/workspace/molar/robot_lab_runtime/r133-implementation-20261112/dataset-1/images/000012.png": {
+    "sha256": "2c39f551d911e7fae700802efea9d66e1f4d76cf692bcca2e4055188f94ca048",
+    "bytes": 5584
+  },
+  "/workspace/molar/robot_lab_runtime/r133-implementation-20261112/dataset-1/images/000054.png": {
+    "sha256": "e6d7037a76d098a9e273f9b9e150e995a7e251fefa8ec3f91471ebebb6bf4340",
+    "bytes": 5255
+  },
+  "/workspace/molar/robot_lab_runtime/r133-implementation-20261112/dataset-1/images/000080.png": {
+    "sha256": "16e26173435478557057e56b191d9b937dfeeb8534da896c9cb672a5899f9ca0",
+    "bytes": 4978
+  },
+  "/workspace/molar/robot_lab_runtime/r133-implementation-20261112/dataset-1/images/000083.png": {
+    "sha256": "52383ccd0bf8e5670b4ddbd45f2e7d599a6790e8853e0ff737991c1ad61a4dbd",
+    "bytes": 3317
+  },
+  "/workspace/molar/robot_lab_runtime/r133-implementation-20261112/dataset-1/images/000064.png": {
+    "sha256": "45c5ce17faf456a70f64f9d7376c908ec3ddd4dc305010fff4b0c1a46d4e7dfc",
+    "bytes": 7920
+  },
+  "/workspace/molar/robot_lab_runtime/r133-implementation-20261112/dataset-1/images/000062.png": {
+    "sha256": "8b8db77ce4d386d29c5db0ad1a12b3044d804a7dcb0c2b1f57c704cc2178aefb",
+    "bytes": 5775
+  },
+  "/workspace/molar/robot_lab_runtime/r133-implementation-20261112/dataset-1/images/000041.png": {
+    "sha256": "c106728d7a08684c706d1bc91619d4c5e904d236dcfbd347a2b1db8dca6ba441",
+    "bytes": 5874
+  },
+  "/workspace/molar/robot_lab_runtime/r133-implementation-20261112/dataset-1/images/000096.png": {
+    "sha256": "c1e2d41bc4c30ce6516f76fecba3cf53c6b6e77fadbe118bc7c710087bc3b0e6",
+    "bytes": 5197
+  },
+  "/workspace/molar/robot_lab_runtime/r133-implementation-20261112/dataset-1/images/000060.png": {
+    "sha256": "80f200ada45d23f479487728051e1336e6855bd81f559d1d10a153bb95c59288",
+    "bytes": 5207
+  },
+  "/workspace/molar/robot_lab_runtime/r133-implementation-20261112/dataset-1/images/000081.png": {
+    "sha256": "8531c5dfb4fde023593c8a9b12a5ef6ce726066080bc3fc89814730d63357c23",
+    "bytes": 6709
+  },
+  "/workspace/molar/robot_lab_runtime/r133-implementation-20261112/dataset-1/images/000015.png": {
+    "sha256": "a2f06f61237147075b78d0a8cf887d7dcade12a7a3564b31bb0dff2b151993cd",
+    "bytes": 4924
+  },
+  "/workspace/molar/robot_lab_runtime/r133-implementation-20261112/dataset-1/images/000065.png": {
+    "sha256": "17f72e36060fc3c14bfd930cef68f03c56f923f98e8bdcf0081fae21d43e29b5",
+    "bytes": 5024
+  },
+  "/workspace/molar/robot_lab_runtime/r133-implementation-20261112/dataset-1/images/000030.png": {
+    "sha256": "12e4ec97b6444601291e828af06cb00dee4d5388593d6ee5cc9ec2076deb2498",
+    "bytes": 5095
+  },
+  "/workspace/molar/robot_lab_runtime/r133-implementation-20261112/dataset-1/images/000056.png": {
+    "sha256": "85d15c6e3c7d9068c08bb1cfac79a9077d071aea7cdc39d18b2758c0c2d40a75",
+    "bytes": 5192
+  },
+  "/workspace/molar/robot_lab_runtime/r133-implementation-20261112/dataset-1/images/000077.png": {
+    "sha256": "e8589f5a1c94c99994619c7a8eae0c9dddba10598314aa6fc85ee5be500d058f",
+    "bytes": 5008
+  },
+  "/workspace/molar/robot_lab_runtime/r133-implementation-20261112/dataset-1/images/000047.png": {
+    "sha256": "029f35585b6af24da7c6f8f466eb2c50bb4836346fe512bc6529f974ad33f25b",
+    "bytes": 4701
+  },
+  "/workspace/molar/robot_lab_runtime/r133-implementation-20261112/dataset-1/images/000027.png": {
+    "sha256": "a9c9b5610434c58fe332dcdb18b6741f85e7c8b0198146e21995dc9ce72e30a9",
+    "bytes": 6188
+  },
+  "/workspace/molar/robot_lab_runtime/r133-implementation-20261112/dataset-1/images/000026.png": {
+    "sha256": "90a105e94f24b02f9eced6356645893d5fbd8108a3de0e41f3c63d80dc3f4c03",
+    "bytes": 4879
+  },
+  "/workspace/molar/robot_lab_runtime/r133-implementation-20261112/dataset-1/images/000007.png": {
+    "sha256": "bf539d5d5f2d24f23466f609f4fb4ec8f3beabb83f933698cea4a9a594b8f094",
+    "bytes": 4487
+  },
+  "/workspace/molar/robot_lab_runtime/r133-implementation-20261112/dataset-1/images/000095.png": {
+    "sha256": "68c71c82b501e9ae3144b5ff2259a793f76df22abfa161146b1e62dfa897a818",
+    "bytes": 5376
+  },
+  "/workspace/molar/robot_lab_runtime/r133-implementation-20261112/dataset-1/images/000044.png": {
+    "sha256": "3f09ae20b8ed4ffa9481929dcbef3be53fdaf6c41eed8f234a9570a7f63de658",
+    "bytes": 4648
+  },
+  "/workspace/molar/robot_lab_runtime/r133-implementation-20261112/dataset-1/images/000048.png": {
+    "sha256": "032fa8474e1c3c1149b59b532438d9bfacca3eeea02c51e447917a51b6d2643c",
+    "bytes": 4732
+  },
+  "/workspace/molar/robot_lab_runtime/r133-implementation-20261112/dataset-1/images/000078.png": {
+    "sha256": "4987b05280f2a8316ff6ad77365b64dd77b364a1a9629f817d8024d69f8dee0b",
+    "bytes": 3347
+  },
+  "/workspace/molar/robot_lab_runtime/r133-implementation-20261112/dataset-1/images/000018.png": {
+    "sha256": "f6726adab5253a5266666478f863095c67e17fb70a0daaf80cbc266326492014",
+    "bytes": 5330
+  },
+  "/workspace/molar/robot_lab_runtime/r133-implementation-20261112/dataset-1/images/000074.png": {
+    "sha256": "fbfb91733d5fa2bc9004ee6cea8b7b23873711d40ab5367571b10a947c23db50",
+    "bytes": 5735
+  },
+  "/workspace/molar/robot_lab_runtime/r133-implementation-20261112/dataset-1/images/000024.png": {
+    "sha256": "cb9e72cc7ebba407a2f7332b48bf03a66e6cbd57da625b8eb7ada379bcc9fef4",
+    "bytes": 5342
+  },
+  "/workspace/molar/robot_lab_runtime/r133-implementation-20261112/dataset-1/images/000059.png": {
+    "sha256": "c354eb3d7b5be470fdcf477d60a7dc234520b66df74191228d157be8fd9e017c",
+    "bytes": 6967
+  },
+  "/workspace/molar/robot_lab_runtime/r133-implementation-20261112/dataset-1/images/000023.png": {
+    "sha256": "e6edceb199537004eacf246d5246e60ca714ce80c1b9b0e1a832d433e73c2da0",
+    "bytes": 4702
+  },
+  "/workspace/molar/robot_lab_runtime/r133-implementation-20261112/dataset-1/nav_empty-layout-30/bridge.log": {
+    "sha256": "02e49e2ed21c38baaed8fd52e97d23e5985ca802f7ee51e588cabbe354bdf6e1",
+    "bytes": 429
+  },
+  "/workspace/molar/robot_lab_runtime/r133-implementation-20261112/dataset-1/nav_empty-layout-30/gazebo.log": {
+    "sha256": "1a0e8efb993e628782ee22f83c49f14523b987bc87054db792e3578c4aff3254",
+    "bytes": 491
+  },
+  "/workspace/molar/robot_lab_runtime/r133-implementation-20261112/dataset-1/nav_empty-layout-30/world.sdf": {
+    "sha256": "feeaa3f844120672c3f2ad41c470ae331333618e37c3dfd5f39f060b30f1f7a9",
+    "bytes": 10641
+  },
+  "/workspace/molar/robot_lab_runtime/r133-implementation-20261112/dataset-1/nav_empty-layout-29/bridge.log": {
+    "sha256": "1250e4c22e9a62c4b85cdb89925ff6f73136d95a5c4747a49cbfd01a60f44877",
+    "bytes": 429
+  },
+  "/workspace/molar/robot_lab_runtime/r133-implementation-20261112/dataset-1/nav_empty-layout-29/gazebo.log": {
+    "sha256": "1a0e8efb993e628782ee22f83c49f14523b987bc87054db792e3578c4aff3254",
+    "bytes": 491
+  },
+  "/workspace/molar/robot_lab_runtime/r133-implementation-20261112/dataset-1/nav_empty-layout-29/world.sdf": {
+    "sha256": "9904e05fdb4fc2275c587cb83fcb138eb40a4ef6b2470b59560922a5afef256f",
+    "bytes": 10646
+  }
+}

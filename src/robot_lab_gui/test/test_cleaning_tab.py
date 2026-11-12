@@ -71,6 +71,7 @@ def test_vacuum_tab_launches_the_cleaning_system(tab):
 
 def test_detector_launch_selection_and_missing_checkpoint(tab, tmp_path):
     tab.vacuum_detector_var.set('learned')
+    tab.vacuum_detector_model_var.set('')
     launched = []
     tab.app.start_launch_command = lambda command: launched.append(command)
     tab._launch()

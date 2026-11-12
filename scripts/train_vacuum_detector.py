@@ -220,11 +220,20 @@ def main():
     ap.add_argument('--lr', type=float, default=0.005)
     ap.add_argument('--seed', type=int, default=7)
     ap.add_argument('--device', default='cpu')
+    ap.add_argument('--min-size', type=int, default=320,
+                    help='Resize short edge for both training and deployed inference')
+    ap.add_argument('--max-size', type=int, default=640)
+    ap.add_argument('--torch-threads', type=int, default=2)
+    ap.add_argument('--freeze-features', action='store_true',
+                    help='Fine-tune proposals/ROI heads over frozen pretrained MobileNet/FPN features')
     ap.add_argument('--weights', choices=['coco', 'none'], default='coco',
                     help='none: offline architecture smoke test only, not a trained model claim')
     args = ap.parse_args()
     if args.epochs <= 0 or args.batch <= 0 or not np.isfinite(args.lr) or args.lr <= 0:
         ap.error('Positive epochs, batch size and finite learning rate are required')
+    if not 64 <= args.min_size <= args.max_size <= 2048 or args.torch_threads <= 0:
+        ap.error('Require 64 <= min-size <= max-size <= 2048 and positive torch threads')
+    torch.set_num_threads(args.torch_threads)
     torch.manual_seed(args.seed)
     np.random.seed(args.seed)
 
@@ -244,10 +253,15 @@ def main():
                             batch_size=args.batch,
                             shuffle=False, collate_fn=DetData.collate_fn, num_workers=0)
     device = torch.device(args.device)
+    model_kwargs = {'min_size': args.min_size, 'max_size': args.max_size}
     model = fasterrcnn_mobilenet_v3_large_fpn(
-        weights='DEFAULT' if args.weights == 'coco' else None, weights_backbone=None)
+        weights='DEFAULT' if args.weights == 'coco' else None, weights_backbone=None,
+        **model_kwargs)
     in_features = model.roi_heads.box_predictor.cls_score.in_features
     model.roi_heads.box_predictor = FastRCNNPredictor(in_features, len(CAT_ID) + 1)
+    if args.freeze_features:
+        for parameter in model.backbone.parameters():
+            parameter.requires_grad_(False)
     model.to(device)
 
     params = [p for p in model.parameters() if p.requires_grad]
@@ -262,7 +276,7 @@ def main():
         lr_scheduler.step()
         print(f'epoch {epoch+1}/{args.epochs} loss={loss:.4f} mAP@0.5={mAP:.3f} '
               + ' '.join(f'{CLASS_NAMES[k-1]}={v:.3f}' for k, v in sorted(aps.items()))
-              + f' ({time.time()-t0:.0f}s)')
+              + f' ({time.time()-t0:.0f}s)', flush=True)
         if mAP > best['mAP']:
             best['mAP'] = mAP
             args.out.mkdir(parents=True, exist_ok=True)
@@ -274,6 +288,8 @@ def main():
                 'weights_initialization': args.weights,
                 'seed': args.seed,
                 'architecture': 'fasterrcnn_mobilenet_v3_large_fpn',
+                'model_kwargs': model_kwargs,
+                'freeze_features': args.freeze_features,
                 'torch_version': str(torch.__version__),
                 'annotations_sha256': hashlib.sha256((args.data / 'annotations.json').read_bytes()).hexdigest(),
                 'split_sha256': hashlib.sha256((args.data / 'val_ids.json').read_bytes()).hexdigest(),

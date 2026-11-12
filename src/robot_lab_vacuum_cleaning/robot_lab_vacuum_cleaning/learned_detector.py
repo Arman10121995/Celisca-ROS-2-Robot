@@ -46,17 +46,23 @@ class LearnedDetector:
         self.model = None
         if not model_path or not os.path.isfile(model_path):
             raise FileNotFoundError('Learned detector checkpoint is required: %s' % model_path)
-        # Never download a backbone at runtime. Both weight arguments are
-        # necessary: torchvision defaults weights_backbone to ImageNet.
-        self.model = fasterrcnn_mobilenet_v3_large_fpn(weights=None, weights_backbone=None)
-        in_features = self.model.roi_heads.box_predictor.cls_score.in_features
-        self.model.roi_heads.box_predictor = FastRCNNPredictor(in_features, len(class_names) + 1)
-        self.model.to(self.device)
-        self.model.eval()
         ckpt = torch.load(model_path, map_location=self.device, weights_only=True)
         if not isinstance(ckpt, dict) or ckpt.get('cat_id') != {
                 name: key for key, name in self.cat_to_class.items()}:
             raise ValueError('Checkpoint class map does not match the vacuum detector')
+        model_kwargs = ckpt.get('model_kwargs', {})
+        if (not isinstance(model_kwargs, dict) or set(model_kwargs) - {'min_size', 'max_size'}
+                or any(type(value) is not int or not 64 <= value <= 2048
+                       for value in model_kwargs.values())
+                or model_kwargs.get('min_size', 800) > model_kwargs.get('max_size', 1333)):
+            raise ValueError('Checkpoint image transform is invalid')
+        # Never download a backbone at runtime. Both weight arguments are
+        # necessary: torchvision defaults weights_backbone to ImageNet.
+        self.model = fasterrcnn_mobilenet_v3_large_fpn(weights=None, weights_backbone=None, **model_kwargs)
+        in_features = self.model.roi_heads.box_predictor.cls_score.in_features
+        self.model.roi_heads.box_predictor = FastRCNNPredictor(in_features, len(class_names) + 1)
+        self.model.to(self.device)
+        self.model.eval()
         self.model.load_state_dict(ckpt['model'])
         self.model.eval()
         self.ok = True

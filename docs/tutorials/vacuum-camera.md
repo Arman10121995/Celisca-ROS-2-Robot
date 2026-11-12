@@ -1,10 +1,11 @@
 # Vacuum camera recognition, snapshots and training
 
-The camera workflow is **partial**. The November 10 ideal-segmentation cleaning
-mission has its own physical receipt. The November 11 patch implements learned
-inference, data capture, training contracts, snapshots and an independent object
-clearance gate. It supplies **no trained checkpoint** and no learned-detector
-robot mission. The [roadmap R13.3](../../ROADMAP.md#r133--vacuum-camera-obstacle-recognition)
+The camera workflow has its initial implementation, including a locally installed
+experimental trained model and GUI/CLI autofill. Physical acceptance remains **partial**.
+The model is trained on source-primitive Gazebo renders; it misses many cables and
+has shoe false positives. Ideal segmentation remains the default. The November 10
+ideal-segmentation mission and November 12 trained model have separate receipts.
+No learned-detector robot mission is claimed. The [roadmap R13.3](../../ROADMAP.md#r133--vacuum-camera-obstacle-recognition)
 owns the remaining work.
 
 ## Inspect objects in the GUI
@@ -17,8 +18,8 @@ Open **Cleaning missions → Setup**. The object detector can be:
 | `learned` | RGB, aligned depth and a local trained checkpoint | Experimental learned recognition |
 | `none` | No camera detector | Cleaning retains its existing LiDAR/bumper inputs |
 
-For learned recognition, use **Checkpoint → Browse** before **Launch robot +
-cleaning**. A missing file is rejected before starting the simulation. A selected
+For learned recognition, an installed candidate prefills **Checkpoint**; use
+**Browse** for a different local model, then **Launch robot + cleaning**. A missing file is rejected before starting the simulation. A selected
 learned process exiting shuts down its owned launch. Incompatible checkpoint
 class maps fail explicitly; runtime inference never downloads model weights.
 Changing Setup affects the next launch, not an already running detector.
@@ -129,13 +130,27 @@ and [source/license](https://github.com/pytorch/vision).
 `--weights none` permits an offline training smoke test; it is not a substitute
 for a qualified model. No network weights are fetched during inference.
 
+Provision a trained local candidate with image/annotation/split verification:
+
+```bash
+python3 scripts/provision_vacuum_detector.py \
+  --checkpoint "$ROBOT_LAB_RUNTIME_ROOT/vacuum-camera-model/vacuum_detector.pt" \
+  --data "$ROBOT_LAB_RUNTIME_ROOT/vacuum-camera-data"
+```
+
+For unattended actual Gazebo fixture capture, use `scripts/generate_vacuum_camera_dataset.py`;
+it owns one rendering scene at a time and moves only a camera fixture. It is dataset generation,
+not robot motion. The [measured model receipt](../status/evidence/vacuum-camera-model-2026-11-12/README.md)
+contains the exact rendering/training recipe and weak-class results. The trained image resize is
+stored in the checkpoint and reused at inference.
+
 Run the candidate through GUI Setup or:
 
 ```bash
 ros2 launch robot_lab_bringup simulated_room_vacuum.launch.py \
   robot_model:=oomwoo map_name:=small_house simulator:=gazebo controller:=cleaning \
   vacuum_detector:=learned \
-  vacuum_detector_model:="$ROBOT_LAB_RUNTIME_ROOT/vacuum-camera-model/vacuum_detector.pt"
+  vacuum_detector_model:=auto
 ```
 
 ## Independently check object clearance
@@ -165,8 +180,8 @@ object-qualified by the new code. Without a manifest,
 ## Next agent
 
 1. Preserve the source camera geometry and historical ideal-detector receipt.
-2. Capture independent representative scenes, check annotations/negative frames,
-   and train/provision the four-class checkpoint with retained provenance.
+2. The initial candidate is trained/provisioned. Retain its measured cable misses
+   and shoe false positives; improve data/training quality before support promotion.
 3. Measure per-class recall/false positives, latency and projection error on real
    held-out simulator frames. Do not infer these from synthetic images or unit tests.
 4. Record an actual learned-detector object-world cleaning job using the generated

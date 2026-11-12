@@ -568,7 +568,14 @@ class VacuumTab(LabTab):
         ttk.Label(form, text='Object detector').grid(row=4, column=0, sticky='w')
         ttk.Combobox(form, textvariable=self.vacuum_detector_var, state='readonly',
                      values=['segmentation', 'learned', 'none']).grid(row=4, column=1, sticky='ew', padx=6)
-        self.vacuum_detector_model_var = tk.StringVar()
+        model_path = ''
+        try:
+            from robot_lab_vacuum_cleaning.detector_assets import candidate_model_path
+            candidate = candidate_model_path()
+            model_path = str(candidate) if candidate is not None else ''
+        except (ImportError, OSError, ValueError, KeyError):
+            pass
+        self.vacuum_detector_model_var = tk.StringVar(value=model_path)
         ttk.Label(form, text='Checkpoint').grid(row=5, column=0, sticky='w')
         model_row = ttk.Frame(form)
         model_row.grid(row=5, column=1, sticky='ew', padx=6, pady=3)

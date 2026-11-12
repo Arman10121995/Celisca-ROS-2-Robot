@@ -107,7 +107,8 @@ scripts/sim_vacuum_mission.sh gazebo oomwoo small_house out.json \
 
 The **Objects** page shows timestamped RGB crops of observed floor objects. Setup selects
 `segmentation` (ideal simulator labels), `learned` (local trained checkpoint) or `none`.
-The learned pipeline is experimental; no trained checkpoint is bundled by this patch.
+A locally provisioned experimental checkpoint is now prefilled; learned physical
+avoidance remains unqualified and the default detector stays ideal segmentation.
 See the [camera workflow and agent instructions](vacuum-camera.md) for training, launch arguments
 and independent object-world clearance checks.
 

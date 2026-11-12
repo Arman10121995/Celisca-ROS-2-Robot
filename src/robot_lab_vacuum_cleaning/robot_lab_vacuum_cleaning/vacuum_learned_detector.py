@@ -15,7 +15,7 @@ Interfaces
 """
 import json
 import time
-from typing import Optional
+import torch
 
 import rclpy
 from rclpy.duration import Duration
@@ -38,6 +38,7 @@ class LearnedObjectDetector(Node):
         p('model_path', '')
         p('score_thresh', 0.4)
         p('device', 'cpu')
+        p('torch_threads', 2)
         p('rgb_topic', '/vacuum/camera/image')
         p('labels_topic', '/vacuum/camera/labels')   # kept for interface parity
         p('depth_topic', '/vacuum/camera/depth')
@@ -48,6 +49,7 @@ class LearnedObjectDetector(Node):
         p('rate_hz', 2.0)
         gp = lambda name: self.get_parameter(name).value
         self.classes = {int(k): v for k, v in json.loads(gp('labels')).items()}
+        torch.set_num_threads(max(1, int(gp('torch_threads'))))
         model_path = gp('model_path')
         self.detector = LearnedDetector(model_path, score_thresh=float(gp('score_thresh')),
                                         device=gp('device'), labels=self.classes)

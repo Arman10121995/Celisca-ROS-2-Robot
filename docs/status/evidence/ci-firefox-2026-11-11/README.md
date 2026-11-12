@@ -35,3 +35,7 @@ Its fast tier stops because `robot-vacuum.md` lacks the required `## Run` headin
 local inspection also finds the same issue in `vacuum-camera.md`. Both tutorials
 now have descriptive Run headings. The focused documentation contract passes.
 No test was removed or weakened; follow-up CI remains a separate check.
+
+The exact follow-up `ecaaa133` [run 43155923238](https://github.com/Arman10121995/Celisca-ROS-2-Robot/actions/runs/43155923238)
+now passes ROS setup, dependencies, workspace build, fast/physics/integration tiers and registry validation.
+R1.3 is restored to done for this scoped baseline. Subsequent implementation commits require their own CI.

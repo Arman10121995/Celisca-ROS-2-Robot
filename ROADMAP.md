@@ -124,7 +124,7 @@ Work top to bottom. Each line links to its task.
 | Order | Task | Remaining implementation (short) | State |
 |---|---|---|---|
 | I1 | [R13.2](#r132--vacuum-carpets-and-mopping) Vacuum carpets and mopping | Done 2026-11-10 (Gazebo mop + rug run passes) | implemented |
-| I2 | [R13.3](#r133--vacuum-camera-obstacle-recognition) Vacuum camera obstacles | Ideal detector measured; learned pipeline, snapshots and clearance gate implemented; trained checkpoint pending | partial |
+| I2 | [R13.3](#r133--vacuum-camera-obstacle-recognition) Vacuum camera obstacles | Initial implementation complete, including trained experimental checkpoint; recognition quality and robot mission pending | partial |
 | I3 | [R14.1](#r141--open-source-counterparts-for-self-made-robots) Open-source robots | First search done; integrate TurtleBot 4 Lite as a vacuum, then WAM-V, BlueROV2, Summit-XL | partial |
 | I4 | [R6.7](#r67--terrain-generation-gui-and-four-backend-conversion) Terrain GUI | GUI page, provider manifest, Isaac contact | partial |
 | I5 | [R5.11](#r511--drone-moving-obstacles-and-other-drone-backends) Drone moving obstacles | Moving-obstacle prediction, sensor-loss handling, other backends | not started |
@@ -169,9 +169,9 @@ Blocked: [R9.4](#r94--optional-physical-bumperbot-hil) physical hardware
 
 ## 5. Task specifications
 
-### R0 — R4: foundation (R1.3 runner verification reopened)
+### R0 — R4: foundation (done)
 
-These are implemented; R1.3 has a November 11 runner repair awaiting its exact CI run. Keep the remaining foundation contracts working. Details and evidence are in the
+These are complete; preserve their scoped contracts. R1.3 follow-up CI passes at ecaaa133 (run 43155923238). Details and evidence are in the
 [archived roadmap](docs/status/archive/ROADMAP-2026-11-10.md#r0--documentation-recovery).
 
 | Task | Result | Keep in mind |
@@ -179,7 +179,7 @@ These are implemented; R1.3 has a November 11 runner repair awaiting its exact C
 | R0.1, R0.2 Documentation recovery | Audited baseline and truthful docs | — |
 | R1.1 Entry points and paths | Installed executables, package-share asset paths | No developer home paths |
 | R1.2 Test tiers | Fast / physics / integration / mission tiers | `PYTEST_DISABLE_PLUGIN_AUTOLOAD=1` locally |
-| R1.3 CI | Runner Firefox/Snap upgrade blocker repaired; all required tiers retained | [Published-run verification pending](docs/status/evidence/ci-firefox-2026-11-11/README.md) |
+| R1.3 CI | Runner setup and documentation fixes pass published CI at ecaaa133 | [Receipt](docs/status/evidence/ci-firefox-2026-11-11/README.md) |
 | R2.1–R2.3 Simulator contracts | `/clock` in every adapter; one TF owner per edge; `/robot_lab/ready`, `/health`, `/reset` | Offline fallback is never success |
 | R3.1–R3.3, R3.5 Composition | Canonical IDs, typed validation, one resolver/executor, scenario and experiment catalogs | The CLI and GUI must produce the same manifest |
 | R3.4 GUI resolver | GUI uses the same resolver; seven algorithm slots; right-hand control column | State `active` in the ledger: keep the GUI tests green |
@@ -874,11 +874,17 @@ These are implemented; R1.3 has a November 11 runner repair awaiting its exact C
   footprints can feed reporting only; `cleaning_screen` now rejects swept-body overlap and stale truth.
   [Implementation receipt](docs/status/evidence/vacuum-camera-2026-11-11/README.md),
   [operator/agent guide](docs/tutorials/vacuum-camera.md).
-- **Remaining implementation:** train and provision the actual four-class checkpoint, with
-  retained data/weight provenance. The synthetic primitive renderer is a seed dataset, not evidence of
-  recognition on Gazebo camera images. Capture representative simulator RGB/labels and explicit
-  independent scene splits before training; keep the ideal detector available. No trained checkpoint
-  or learned-detector robot mission is claimed by this patch.
+- **November 12 initial implementation complete:** actual Gazebo fixture rendering generated 96
+  source-camera views across three layouts (64 train / 32 held-out). An eight-epoch CPU run produced
+  a content-addressed, locally provisioned experimental model; the GUI prefills its path and CLI
+  `vacuum_detector_model:=auto` verifies its checksum. Deployment preserves the trained image transform.
+  [Receipt](docs/status/evidence/vacuum-camera-model-2026-11-12/README.md).
+- **Remaining implementation:** none for the initial camera workflow; keep task state partial because
+  the runtime acceptance below has not passed.
+- **Quality/qualification gap:** held-out mAP@0.5 is 0.564. At the deployed 0.4 score threshold,
+  matches/GT are cable 1/13, pet mess 4/5, shoe 8/12 and sock 3/4; shoes have 30 predictions.
+  Cable misses and shoe false positives need training improvement before support promotion. These
+  are source-primitive renders, not general real-object recognition. Keep ideal segmentation as default.
 - **Validation later:** learned per-class recall/false positives on held-out simulator images and
   a physical object-world cleaning job with `vacuum_object_truth:=<world.objects.json>`.
 - **Done when:** a recorded job in a house with these objects ends with zero

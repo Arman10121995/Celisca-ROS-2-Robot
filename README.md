@@ -16,11 +16,10 @@ Instead of wiring simulators, controllers, and planners by hand, you select from
 
 **The platform is partial.** It is an active research lab, not a finished product. Some robot × simulator × map combinations are measured and qualified; others are implemented but unqualified. See [Current Status](#current-status) for what is done and what remains.
 
-November 11: the Vacuum workspace now includes an **Objects** camera snapshot gallery and
-Setup selection for ideal segmentation, an experimental learned detector, or no camera detector.
-The learned pipeline and independent object-clearance gate are implemented; a trained four-class
-checkpoint and learned-camera robot mission remain pending.
-[Camera guide](docs/tutorials/vacuum-camera.md) · [Current roadmap](ROADMAP.md).
+November 12: the Vacuum workspace has an **Objects** snapshot gallery and an installed,
+experimental four-class camera model with command autofill. It is trained on Gazebo source-primitive
+renders; cable misses and shoe false positives remain, and a learned-camera robot mission is unqualified.
+Ideal segmentation remains the default. [Camera guide](docs/tutorials/vacuum-camera.md) · [Roadmap](ROADMAP.md).
 
 ---
 

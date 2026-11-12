@@ -15,9 +15,9 @@ from launch_ros.parameter_descriptions import ParameterValue
 
 def _validate_detector(context):
     if LaunchConfiguration('vacuum_detector').perform(context) == 'learned':
+        from robot_lab_vacuum_cleaning.detector_assets import resolve_model_path
         path = LaunchConfiguration('vacuum_detector_model').perform(context)
-        if not path or not os.path.isfile(path):
-            raise RuntimeError('Learned vacuum detection requires vacuum_detector_model:=<local checkpoint>')
+        context.launch_configurations['vacuum_detector_model'] = resolve_model_path(path)
     return []
 
 
@@ -187,8 +187,8 @@ def generate_launch_description():
         DeclareLaunchArgument("vacuum_detector", default_value="segmentation",
                               choices=["segmentation", "learned", "none"],
                               description="Floor-object source: ideal simulation labels, learned RGB checkpoint, or disabled."),
-        DeclareLaunchArgument("vacuum_detector_model", default_value="",
-                              description="Required local trained checkpoint when vacuum_detector:=learned."),
+        DeclareLaunchArgument("vacuum_detector_model", default_value="auto",
+                              description="Local trained checkpoint; auto resolves a checksum-verified installed candidate."),
         DeclareLaunchArgument("vacuum_detector_device", default_value="cpu"),
         DeclareLaunchArgument("vacuum_object_truth", default_value="",
                               description="Independent generated-world objects JSON, used only in the run report."),

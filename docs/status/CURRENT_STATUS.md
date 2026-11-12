@@ -4,6 +4,13 @@ This page records what was measured. **The goals and remaining work are in one l
 [roadmap](../../ROADMAP.md)** (implementation queue first, then validation). Remaining-work
 notes in the dated entries below are history.
 
+November 12: **initial R13.3 camera implementation complete**, including a trained experimental
+checkpoint on SSD and GUI/CLI autofill. Actual Gazebo fixture rendering produced 96 views in 74.239 s;
+eight CPU epochs measured held-out mAP@0.5 0.564. Deployed recognition remains weak for cables
+(1/13 matches at score 0.4) and has shoe false positives; no learned-camera robot mission is qualified.
+[Model receipt](evidence/vacuum-camera-model-2026-11-12/README.md). Continue the next implementation
+item, R14.1. The CI repair passes all required gates at `ecaaa133`, run 43155923238.
+
 November 11 CI review: the recent CI failures occurred in ROS setup while the hosted runner
 upgraded Firefox through an unreachable Snap store. Both workflows now hold its preinstalled
 version during setup; exact published-run verification remains pending. All required project

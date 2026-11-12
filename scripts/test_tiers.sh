@@ -35,6 +35,7 @@ FAST_TESTS=(
   "scripts/test_asset_staging.py"
   "scripts/test_support_evidence.py"
   "src/robot_lab_vacuum_cleaning/test/test_camera_observations.py"
+  "src/robot_lab_vacuum_cleaning/test/test_detector_assets.py"
   "src/robot_lab_vacuum_cleaning/test/test_object_clearance.py"
   "$REG_TEST/test_p5_algorithm_breadth.py"
   "src/robot_lab_algorithms/test/test_r7_simple_verification.py"

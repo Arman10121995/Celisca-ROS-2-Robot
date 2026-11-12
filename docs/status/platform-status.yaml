@@ -128,19 +128,20 @@ vacuum_camera_20261111:
   owner: codex
   state: partial
   title: Vacuum camera recognition and object inspection
-  updated: '2026-11-11'
+  updated: '2026-11-12'
   baseline_revision: 9f3b54ba
-  implementation_state: Learned detector selection, synchronized RGB/depth handling, bounded camera snapshots, corrected training split and independent swept-body clearance reporting are implemented. Checkpoint training remains pending.
+  implementation_state: Initial camera workflow includes actual Gazebo fixture capture, trained four-class checkpoint, checksum-verified local provisioning, GUI command autofill, image snapshots and independent clearance reporting. Learned physical avoidance remains unqualified.
   receipt: docs/status/evidence/vacuum-camera-2026-11-11/README.md
   measured_summary:
+  - November 12 actual Gazebo capture produced 96 views; an eight-epoch model is locally provisioned with held-out mAP 0.564 and measured deployed inference 0.186 s/image. Robot avoidance remains unqualified.
   - Retained November 10 ideal-detector Gazebo job recognized four classes with zero recorded bumper contacts; that historical receipt is unchanged.
   - Installed ROS transport with explicitly synthetic frames produced a real timestamped object crop; this is a transport diagnostic, not a robot mission.
   - 105 focused vacuum/support checks and 13 GUI checks passed; three packages build. These are software checks only.
   remaining_summary:
-  - Train and provision a source-bound four-class checkpoint using representative camera images and independent scene splits; record an actual learned-camera cleaning mission.
+  - Experimental model is provisioned, with held-out mAP 0.564; cable recall is only 1/13 at score 0.4. Improve recognition and record a physical learned-camera mission before support promotion.
   - Continue the roadmap implementation queue with open-source counterparts, terrain GUI, aerial obstacles and manipulation; wider fleet/marine/gait acceptance remains partial.
 current_delivery: vacuum_camera_20261111
-current_revision: 'November 11 continuation from 9f3b54ba on master: R13.3 learned-camera integration, snapshots and independent clearance reporting; checkpoint training and physical learned-camera missions remain pending.'
+current_revision: 'November 12 serial implementation from ecaaa133: initial camera workflow now includes an actual trained/provisioned candidate, GUI command autofill and preserved input transforms. Recognition quality and physical qualification remain partial; continue R14.1 next.'
 current_verification:
   round57_2026_10_19: 'Recorded 2026-10-29: MuJoCo small_house slam drive after the spawn fix 873753f completes
     (28.1 m, RMSE 1.3 cm, map precision/recall 0.97/0.79; 1.49 m and 0.12/0.16 before); rear-steer car course after
@@ -452,8 +453,8 @@ architecture_explorer_20261102:
   guide: docs/architecture/interactive-guide.md
 handoff:
   audit: docs/status/audit-2026-10-02.md
-  next_action: User resumed November 11. Follow ROADMAP implementation order; finish R13.3 checkpoint training/provisioning, then R14.1 and subsequent tasks. Preserve newer MOLAR/charger edits and all historical receipts. The fleet four-stop campaign remains pending in its later queue position.
-  next_task: R13.3
+  next_action: November 12 initial R13.3 training/provisioning is implemented as an experimental candidate; retain weak recognition metrics and defer qualification. Continue R14.1, then R6.7 and subsequent implementation queue entries in order. Preserve historical receipts and required source limits.
+  next_task: R14.1
   no_runtime_repairs_completed_by_this_revision: false
   parallel_ready_after_R0:
   - R1.1
@@ -1298,7 +1299,7 @@ tasks:
     title: Documentation recovery
   R1:
     owner: codex
-    state: partial
+    state: done
     tasks:
       R1.1:
         acceptance_ref: ROADMAP.md
@@ -1433,9 +1434,9 @@ tasks:
           PASS; audit: 50 packages, 0 failures (4 optional warnings)'
         owner: codex
         updated: '2026-11-12'
-        runner_setup_review: Both workflows now hold the preinstalled Firefox package during setup-ros upgrades after actual Snap-store stalls before ROS/project checks. The 118cccbb run passes runner setup, dependencies and workspace build; fast tests stop at two missing tutorial Run headings, now corrected. Exact follow-up CI verification remains pending.
-        verification_state: tutorial_headings_corrected_followup_pending
-        next_action: Inspect the exact repaired-revision CI run; preserve all required build/test tiers and report any subsequent failure separately.
+        runner_setup_review: Both workflows now hold the preinstalled Firefox package during setup-ros upgrades after actual Snap-store stalls before ROS/project checks. Exact ecaaa133 run 43155923238 passes ROS setup, dependency installation, workspace build and all required test/registry gates after the tutorial-heading correction.
+        verification_state: published_43155923238_success
+        next_action: Preserve the successful ecaaa133 baseline; keep required tiers enabled and inspect new implementation commits independently.
         runner_receipt: docs/status/evidence/ci-firefox-2026-11-11/README.md
         scope_paths:
         - .github/workflows/
@@ -1443,7 +1444,7 @@ tasks:
         - scripts/doctor.sh
         - scripts/test_fast.sh
         - requirements.txt
-        state: active
+        state: done
         title: Make CI bootstrap and doctor trustworthy
     title: Trustworthy development baseline
   R10:
@@ -2034,9 +2035,9 @@ tasks:
       R13.3:
         acceptance_ref: ROADMAP.md R13.3
         owner: codex
-        state: active
+        state: partial
         updated: '2026-11-12'
-        execution_state: capturing_and_training
+        execution_state: initial_implementation_complete_validation_pending
         scope_paths:
         - src/robot_lab_vacuum_cleaning/
         - src/robot_lab_gui/robot_lab_gui/cleaning_tab.py
@@ -2044,17 +2045,20 @@ tasks:
         - src/robot_lab_bringup/launch/simulated_room_vacuum.launch.py
         - scripts/test_tiers.sh
         - README.md
+        - scripts/provision_vacuum_detector.py
+        - scripts/generate_vacuum_camera_dataset.py
         - scripts/capture_vacuum_detector_data.py
         - scripts/train_vacuum_detector.py
         - scripts/vacuum_object_world.py
         - scripts/r9_3_support_matrix.py
         - docs/
         - ROADMAP.md
-        next_action: Train/provision the four-class checkpoint from representative simulator images and independent scene splits; record per-class held-out results and a physical object-world job. Keep ideal segmentation available and preserve unrelated charger/map work.
+        next_action: Initial implementation includes trained/provisioned Gazebo-render candidate and GUI autofill. Defer wider validation; preserve measured weak cable recall (1/13 at score 0.4) and false positives, improve training quality before any support promotion, and record a physical learned-camera job. Continue R14.1 implementation next.
         evidence:
+        - docs/status/evidence/vacuum-camera-model-2026-11-12/README.md
         - docs/status/evidence/vacuum-camera-2026-11-11/README.md
         - docs/tutorials/vacuum-camera.md
-        title: 'Camera recognition: ideal mission measured; learned executable/selection, bounded snapshots, corrected training and swept-truth gate implemented; trained checkpoint and learned mission pending'
+        title: 'Camera recognition: trained experimental candidate provisioned with GUI autofill; physical mission and weak cable recognition remain unqualified'
     title: Robot-vacuum cleaning system (OOMWOO-class)
   R14:
     acceptance_ref: ROADMAP.md R14.1
@@ -5041,7 +5045,7 @@ tasks:
     qualification_review: '2026-10-27 documentation review: retain the implemented code, tests and named mission
       certificates. Full declared roadmap acceptance is still open; test counts, metadata and scene loads
       do not qualify remaining robot/map/backend missions. See docs/REMAINING_WORK_GUIDE.md.'
-updated: '2026-11-11'
+updated: '2026-11-12'
 runtime_completion_20261027:
   owner: codex
   state: partial
