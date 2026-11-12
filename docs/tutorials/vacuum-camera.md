@@ -100,7 +100,7 @@ as the selected simulation; do not start an unrelated simulator on that domain.
 Those images are not captures of Gazebo's rendering, and synthetic AP alone does
 not qualify camera recognition in a robot mission.
 
-## Train and run a checkpoint
+## Run training and a checkpoint
 
 Use a matching torch/torchvision environment. On this host, CPU imports work;
 the installed CUDA 13 torch wheel cannot initialize this host's older driver.

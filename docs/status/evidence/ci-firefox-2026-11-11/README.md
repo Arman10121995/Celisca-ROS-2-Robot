@@ -28,3 +28,10 @@ from CI, and an environment repair does not establish a green build.
 
 The camera and full working-tree review are committed at `d3e89023`; their source
 hashes describe that revision. This follow-up changes only CI and status docs.
+
+November 12 follow-up: [run 43099913627](https://github.com/Arman10121995/Celisca-ROS-2-Robot/actions/runs/43099913627)
+passes browser preparation, ROS installation, dependencies and workspace build.
+Its fast tier stops because `robot-vacuum.md` lacks the required `## Run` heading;
+local inspection also finds the same issue in `vacuum-camera.md`. Both tutorials
+now have descriptive Run headings. The focused documentation contract passes.
+No test was removed or weakened; follow-up CI remains a separate check.

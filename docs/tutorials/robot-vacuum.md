@@ -8,7 +8,7 @@ itself. Status: **implemented and experimental**. See the bottom of this
 page for what has been measured. How it works inside, with figures and
 animations: [Inside the robot vacuum](../learn/07-robot-vacuum-inside.md).
 
-## Quick start
+## Run the cleaning system
 
 1. **Setup** page: robot `oomwoo`, home map `small_house`, simulator
    Gazebo, map source **Saved map**. Press **Launch robot + cleaning**.
