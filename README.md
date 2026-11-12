@@ -19,7 +19,7 @@ Instead of wiring simulators, controllers, and planners by hand, you select from
 November 12: the Vacuum workspace has an **Objects** snapshot gallery and an installed,
 experimental four-class camera model with command autofill. It is trained on Gazebo source-primitive
 renders; cable misses and shoe false positives remain, and a learned-camera robot mission is unqualified.
-Ideal segmentation remains the default. [Camera guide](docs/tutorials/vacuum-camera.md) · [Roadmap](ROADMAP.md).
+Ideal segmentation remains the default. A separate source-native TurtleBot4 cleaning variant is now available in Vacuum Setup with explicit experimental opt-in; one Gazebo zone-clean/dock completed. [Source receipt](docs/status/evidence/counterparts-2026-11-12/README.md). [Camera guide](docs/tutorials/vacuum-camera.md) · [Roadmap](ROADMAP.md).
 
 ---
 

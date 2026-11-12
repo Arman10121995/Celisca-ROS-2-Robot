@@ -1,0 +1,148 @@
+{
+  "area_m2": 2.08,
+  "battery_end": 98.9,
+  "battery_start": 100.0,
+  "bin_empties": 0,
+  "carpet_m2": 0.0,
+  "clean_mode": "vacuum",
+  "coverage_pct": 96.8,
+  "distance_m": 13.2,
+  "dock": [
+    -0.49970424241733835,
+    -0.5000000006359038,
+    -2.369413907521435e-06
+  ],
+  "duration_s": 99.6,
+  "edge": false,
+  "ended": 1794460412.6869748,
+  "estimate_s": 85.5,
+  "events": 1,
+  "events_log": [
+    {
+      "level": "info",
+      "seq": 1,
+      "t": 1794460313.0619233,
+      "text": "Dock set at the start position"
+    },
+    {
+      "level": "info",
+      "seq": 2,
+      "t": 1794460313.1002069,
+      "text": "Started 1 zone(s) cleaning: 7 paths, about 1 min"
+    },
+    {
+      "level": "info",
+      "seq": 3,
+      "t": 1794460326.8014276,
+      "text": "Stall (no progress ahead) at (0.09, -0.95); going around"
+    },
+    {
+      "level": "info",
+      "seq": 4,
+      "t": 1794460412.6901584,
+      "text": "Job 20261112-061153-b1de: completed, 2.1 m2 cleaned, 97% of the target"
+    },
+    {
+      "level": "info",
+      "seq": 5,
+      "t": 1794460412.6912615,
+      "text": "Returning to the dock (job complete)"
+    },
+    {
+      "level": "info",
+      "seq": 6,
+      "t": 1794460423.8473008,
+      "text": "Docked"
+    }
+  ],
+  "final_pose": [
+    -0.5269281112213224,
+    -0.5044856275387959,
+    -0.0006240526190816011
+  ],
+  "final_state": "charging",
+  "final_truth": [
+    -0.5060765426913651,
+    -0.4603304494272446,
+    -0.02660035644356954
+  ],
+  "final_truth_age_s": 0.010000000000005116,
+  "id": "20261112-061153-b1de",
+  "layout": {
+    "carpets": [],
+    "no_go": [],
+    "walls": [],
+    "zones": []
+  },
+  "map": "nav_empty",
+  "mode": "zones",
+  "mopped_m2": 0.0,
+  "object_detector": "",
+  "objects_avoided": [],
+  "passes": 1,
+  "recharges": 0,
+  "refills": 0,
+  "request": {
+    "cmd": "start",
+    "edge": false,
+    "mode": "zones",
+    "zones": [
+      [
+        -1.0,
+        -1.0,
+        0.2,
+        0.2
+      ]
+    ]
+  },
+  "result": "completed",
+  "robot_model": "asset_turtlebot4_lite_cleaning",
+  "robot_radius": 0.171,
+  "room_names": [],
+  "rooms": {},
+  "sensors": {
+    "bumper_contacts": 0,
+    "bumper_messages": 0,
+    "cliff": {
+      "front_left": {
+        "age_s": 0.04,
+        "drop": false,
+        "floor_m": 0.0153,
+        "reading_m": 0.0157
+      },
+      "front_right": {
+        "age_s": 0.04,
+        "drop": false,
+        "floor_m": 0.0153,
+        "reading_m": 0.0157
+      },
+      "side_left": {
+        "age_s": 0.04,
+        "drop": false,
+        "floor_m": 0.013,
+        "reading_m": 0.0152
+      },
+      "side_right": {
+        "age_s": 0.04,
+        "drop": false,
+        "floor_m": 0.013,
+        "reading_m": 0.0152
+      }
+    },
+    "scan_age_s": 0.17,
+    "stall_events": 1,
+    "stall_tests": 190,
+    "stall_tf_fallbacks": 6
+  },
+  "signature": "280x280@0.050:-7.000,-7.000",
+  "skipped": 0,
+  "source": "auto",
+  "started": 1794460313.1000922,
+  "suction": "standard",
+  "water_flow": null,
+  "water_used_ml": 0.0,
+  "raw_report": "/workspace/molar/robot_lab_runtime/r14-implementation-20261112/turtlebot4-cleaning-1.json",
+  "raw_log": "/workspace/molar/robot_lab_runtime/r14-implementation-20261112/turtlebot4-cleaning-1.json.launch.log",
+  "truth_sample_count": 109,
+  "scope": "One actual Gazebo zone-clean and dock; no bumper impact or other-map qualification"
+}

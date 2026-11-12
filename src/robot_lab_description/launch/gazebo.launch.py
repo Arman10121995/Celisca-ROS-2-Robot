@@ -4,6 +4,7 @@ import re
 import subprocess
 import tempfile
 import xml.etree.ElementTree as ET
+import yaml
 from os import pathsep
 from pathlib import Path
 from ament_index_python.packages import get_package_share_directory
@@ -390,8 +391,17 @@ def generate_launch_description():
               direction: "GZ_TO_ROS"
             """
 
+        entries = yaml.safe_load(bridge_config)
+        if _truthy('spawn_robot', context):
+            from robot_lab_utils.robot_description import load_description
+            from robot_lab_utils.vacuum_sensors import hazard_bridge_entries
+            description = load_description(LaunchConfiguration('model').perform(context),
+                'is_ignition:=' + is_ignition, 'model_name:=' + rname)
+            hazards = hazard_bridge_entries(description, gz_world_name, rname)
+            overridden = {entry['ros_topic_name'] for entry in hazards}
+            entries = [entry for entry in entries if entry['ros_topic_name'] not in overridden] + hazards
         with open(bridge_config_path, "w", encoding="utf-8") as bridge_config_file:
-            bridge_config_file.write(bridge_config)
+            yaml.safe_dump(entries, bridge_config_file)
 
         return [Node(
             package="ros_gz_bridge",

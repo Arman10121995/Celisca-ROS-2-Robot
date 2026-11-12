@@ -14,12 +14,13 @@ export ROS_DOMAIN_ID=${ROS_DOMAIN_ID:-94}
 source "$HERE/gazebo_isolation.sh"; robot_lab_isolate_gazebo vacuum_$$
 source /opt/ros/humble/setup.bash
 source "$HERE/../install/setup.bash"
-export ROBOT_LAB_RUNTIME_ROOT="${OUT%.json}_store"
+source "$HERE/ssd_env.sh"
 rm -f "$OUT"
 
 ros2 launch robot_lab_bringup simulated_room_vacuum.launch.py mode:="${MODE:-nav}" \
   simulator:="$SIM" robot_model:="$ROBOT" map_name:="$MAP" gui:=false start_rviz:=false \
   controller:=cleaning vacuum_auto_start:="$START" vacuum_report:="$OUT" \
+  vacuum_store_dir:="${OUT%.json}_store/vacuum" \
   vacuum_battery_time_scale:="${BATTERY_SCALE:--1}" "$@" > "$OUT.launch.log" 2>&1 &
 LAUNCH=$!
 DEADLINE=$((SECONDS + ${TIMEOUT:-3600}))

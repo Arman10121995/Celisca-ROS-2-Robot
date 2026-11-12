@@ -97,6 +97,7 @@ robots:
     members:
       - {id: asset_turtlebot4_standard, label: Standard}
       - {id: asset_turtlebot4_lite, label: Lite}
+      - {id: asset_turtlebot4_lite_cleaning, label: Lite with native cleaning hazards}
   - id: franka_panda
     name: Franka Emika Panda
     preferred: menagerie_franka_emika_panda

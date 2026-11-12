@@ -132,3 +132,17 @@ The [October 6 mode trials](../status/evidence/turtlebot4-modes-2026-10-06/READM
 and [final sensors/Drive trials](../status/evidence/turtlebot4-sensors-2026-10-06/README.md)
 record exact commands, truth limits, saved-map measurements and retained
 failures. MuJoCo performance remains below real time on this host.
+
+## Source-native cleaning variant
+
+Choose **Vacuum → Setup → asset_turtlebot4_lite_cleaning**, Gazebo and `nav_empty`.
+Check **Allow experimental source variants**, then Launch. The command fills automatically.
+This separate source variant restores the Create3 bumper and four cliff sensors, and
+pauses if any required cliff scan disappears. Its original chassis, suspension and
+wheel geometry are retained; cleaning/coverage are laboratory models.
+
+One actual zone-clean and dock completed with 96.8% reported coverage. Bumper impact,
+cliff-edge recovery and other maps/backends are pending; experimental opt-in stays required.
+Read the [source and mission receipt](../status/evidence/counterparts-2026-11-12/README.md).
+Provision once from the agent shell with `python3 scripts/provision_robot_counterparts.py
+--robot turtlebot4_cleaning` after installing the original TurtleBot4 source assets.

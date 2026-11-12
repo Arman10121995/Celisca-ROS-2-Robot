@@ -68,6 +68,7 @@ FAST_TESTS=(
   "$BRG_TEST/test_asset_preview.py"
   "$BRG_TEST/test_asset_runtime_support.py"
   "$BRG_TEST/test_gazebo_physics_world.py"
+  "$BRG_TEST/test_vacuum_sensors.py"
   "$BRG_TEST/test_occupancy_slice.py"
   "$BRG_TEST/test_external_world_repairs.py"
   "$BRG_TEST/test_skid_steer.py"

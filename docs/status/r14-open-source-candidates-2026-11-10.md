@@ -26,7 +26,11 @@ the cleaning system needs for localisation. The installed and measured
 `asset_turtlebot4_lite` is a Create 3 with a 2D LiDAR and a camera, so it is
 the quickest open-source robot vacuum-class platform for R13.
 
-## Next steps (how to continue)
+## November 12 implementation update
+
+TurtleBot4 cleaning is implemented as the separate `asset_turtlebot4_lite_cleaning` variant, with native source bumper/four-cliff bridges and required fresh cliff feedback. One actual Gazebo zone-clean and dock completed; see the [receipt](evidence/counterparts-2026-11-12/README.md). Original TurtleBot4 profiles/certificates stay unchanged. Other backends/contact/edge cases remain unqualified. The steps below are the original search plan; continue with WAM-V, BlueROV2 and Summit-XL.
+
+## Original search plan
 
 1. TurtleBot 4 Lite first: enable `supports_room_vacuum` with a `vacuum:`
    block (radius 0.17 m) on the installed profile, and map its Create 3

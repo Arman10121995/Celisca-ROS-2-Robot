@@ -1,0 +1,48 @@
+{
+  "recipe": "create3-hazards-v1",
+  "source_id": "turtlebot4_vendor",
+  "revision": "a6ee13b63cbd524500cc6a68cd20dbef69f326a9",
+  "source_drive": "/workspace/molar/robot_lab_runtime/external_assets/models/asset_turtlebot4_lite/a6ee13b63cbd524500cc6a68cd20dbef69f326a9/drive.urdf",
+  "source_drive_sha256": "4914830cb00de5753c1f2235ee218a703d56dab42638eee6bbe5e6e18156c1ee",
+  "source_expanded_description": "/workspace/molar/robot_lab_runtime/external_assets/models/asset_turtlebot4_lite/a6ee13b63cbd524500cc6a68cd20dbef69f326a9/input.urdf",
+  "source_expanded_sha256": "adfb3a3e4156d0398145b6e6feb956fe316e6e057cdeaa9e4c1b80e7fa0b542d",
+  "description": "/workspace/molar/robot_lab_runtime/external_assets/models/asset_turtlebot4_lite_cleaning/66d6365680eeead8156bd9455b17825cc55e9b521d7f18114d466544054494d7/cleaning.urdf",
+  "description_sha256": "95b87d0c0d35fc6e43fdae11d78fceb3e3d63ff15ef929fc61eecb3d48e15514",
+  "restored_sensors": [
+    {
+      "frame": "bumper",
+      "sensor": "bumper_contact_sensor",
+      "type": "contact"
+    },
+    {
+      "frame": "cliff_side_left",
+      "sensor": "cliff_side_left",
+      "type": "gpu_lidar"
+    },
+    {
+      "frame": "cliff_side_right",
+      "sensor": "cliff_side_right",
+      "type": "gpu_lidar"
+    },
+    {
+      "frame": "cliff_front_left",
+      "sensor": "cliff_front_left",
+      "type": "gpu_lidar"
+    },
+    {
+      "frame": "cliff_front_right",
+      "sensor": "cliff_front_right",
+      "type": "gpu_lidar"
+    }
+  ],
+  "source_dependencies": [
+    {
+      "source_id": "create3_vendor",
+      "revision": "7d7a4f69a503d4eef22f13aeb8755c86955b8cc5",
+      "repository": "https://github.com/iRobotEducation/create3_sim",
+      "license_sha256": "0ee55d30683855927f0df38b2dc1c3cc6faa8866c19ee6c0140e33fff1156747"
+    }
+  ],
+  "runtime_mission_qualified": false,
+  "scope": "Source/native hazard integration; original profile and its certificates unchanged"
+}

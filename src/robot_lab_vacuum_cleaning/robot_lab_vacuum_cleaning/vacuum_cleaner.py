@@ -125,8 +125,6 @@ class VacuumCleaner(Node):
         p('map_topic', '/map')
         p('scan_topic', '/scan')
         p('cmd_vel_topic', '/cmd_vel')
-        p('bumper_topic', '/bumper')
-        p('cliff_topics', ['/cliff/front_left', '/cliff/front_right'])
         p('cliff_drop_m', 0.05)
         p('store_dir', '')
         p('control_rate', 20.0)
@@ -150,6 +148,15 @@ class VacuumCleaner(Node):
             self.object_truth = {'manifest': str(path.resolve()),
                                  'sha256': hashlib.sha256(payload).hexdigest(), 'objects': objects}
         profile = load_profile(self.robot_model, gp('robots_config'))
+        vacuum = profile.get('vacuum') or {}
+        p('bumper_topic', vacuum.get('bumper_topic', '/bumper'))
+        p('cliff_topics', vacuum.get('cliff_topics', ['/cliff/front_left', '/cliff/front_right']))
+        p('cliff_absolute_threshold_m', float(vacuum.get('cliff_absolute_threshold_m', 0.)))
+        self.cliff_absolute_threshold = float(gp('cliff_absolute_threshold_m'))
+        self.require_cliff_feedback = bool(vacuum.get('require_cliff_feedback', False))
+        self.expected_cliff_topics = list(gp('cliff_topics') or [])
+        if not math.isfinite(self.cliff_absolute_threshold) or self.cliff_absolute_threshold < 0:
+            raise ValueError('Cliff distance threshold must be finite and nonnegative')
         config = robot_config_from_profile(profile)
         store = Store(Path(gp('store_dir'))) if gp('store_dir') else Store()
         self.mission = Mission(config, store, log=self._on_log,
@@ -331,7 +338,9 @@ class VacuumCleaner(Node):
             first = first if first is not None else now
         self.cliff[topic] = {'floor': floor, 'first': first, 'reading': reading if math.isfinite(reading) else None,
                              'stamp': now,
-                             'drop': (not math.isfinite(reading)) or (floor is not None and reading > floor + self.cliff_drop)}
+                             'drop': (not math.isfinite(reading)) or (
+                                 reading > self.cliff_absolute_threshold if self.cliff_absolute_threshold > 0
+                                 else floor is not None and reading > floor + self.cliff_drop)}
 
     def _lookup_pose(self):
         try:
@@ -370,6 +379,15 @@ class VacuumCleaner(Node):
         self._apply_map()
         self._check_stalls()
         self.pose = self._lookup_pose()
+        if self.require_cliff_feedback and self.mission.state in ACTIVE_STATES:
+            fresh = self.expected_cliff_topics and all(
+                time.monotonic() - self.cliff.get(topic, {}).get('stamp', -math.inf) <= .5
+                for topic in self.expected_cliff_topics)
+            if not fresh:
+                self.cmd_pub.publish(Twist())
+                self.mission.command({'cmd': 'pause'})
+                self.mission.log('warn', 'Cliff feedback missing/stale; paused, explicit Resume required')
+                return
         if self.pose is None and self.mission.state in ACTIVE_STATES:
             # Lost localisation: hold still.
             self.cmd_pub.publish(Twist())

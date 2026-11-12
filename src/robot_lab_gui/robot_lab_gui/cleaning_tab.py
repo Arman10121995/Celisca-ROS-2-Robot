@@ -585,6 +585,9 @@ class VacuumTab(LabTab):
         ttk.Label(form, text='Segmentation uses ideal simulation labels. Learned is experimental; '
                   'select a locally trained checkpoint. No model is downloaded at launch.',
                   wraplength=350, style='Muted.TLabel').grid(row=6, column=0, columnspan=2, sticky='w')
+        self.vacuum_experimental_var = getattr(self.app, 'experimental_assets_var', tk.BooleanVar(value=False))
+        ttk.Checkbutton(form, text='Allow experimental source variants',
+                        variable=self.vacuum_experimental_var).grid(row=7, column=0, columnspan=2, sticky='w')
         row = ttk.Frame(page)
         row.grid(row=2, column=0, sticky='ew', pady=(8, 0))
         ttk.Button(row, text='▶  Launch robot + cleaning', style='Accent.TButton',
@@ -630,6 +633,8 @@ class VacuumTab(LabTab):
                 'vacuum_detector:=%s' % self.vacuum_detector_var.get()]
         if self.vacuum_detector_model_var.get():
             command.append('vacuum_detector_model:=%s' % self.vacuum_detector_model_var.get())
+        if self.vacuum_experimental_var.get():
+            command.append('allow_experimental_assets:=true')
         return command
 
     def _choose_detector_model(self):
@@ -647,7 +652,7 @@ class VacuumTab(LabTab):
         self._clear_object_gallery()
         # The header names the running session from the main selection.
         for name, var in (('robot_var', self.vacuum_robot_var), ('map_var', self.vacuum_map_var),
-                          ('simulator_var', self.vacuum_sim_var)):
+                          ('simulator_var', self.vacuum_sim_var), ('mode_var', self.vacuum_mode_var)):
             if hasattr(self.app, name):
                 getattr(self.app, name).set(var.get())
         self.app.start_launch_command(self.launch_command() + list(extra))

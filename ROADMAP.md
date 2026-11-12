@@ -125,7 +125,7 @@ Work top to bottom. Each line links to its task.
 |---|---|---|---|
 | I1 | [R13.2](#r132--vacuum-carpets-and-mopping) Vacuum carpets and mopping | Done 2026-11-10 (Gazebo mop + rug run passes) | implemented |
 | I2 | [R13.3](#r133--vacuum-camera-obstacle-recognition) Vacuum camera obstacles | Initial implementation complete, including trained experimental checkpoint; recognition quality and robot mission pending | partial |
-| I3 | [R14.1](#r141--open-source-counterparts-for-self-made-robots) Open-source robots | First search done; integrate TurtleBot 4 Lite as a vacuum, then WAM-V, BlueROV2, Summit-XL | partial |
+| I3 | [R14.1](#r141--open-source-counterparts-for-self-made-robots) Open-source robots | TurtleBot4 native-hazard cleaning implemented and one zone/dock measured; integrate WAM-V, BlueROV2, Summit-XL next | partial |
 | I4 | [R6.7](#r67--terrain-generation-gui-and-four-backend-conversion) Terrain GUI | GUI page, provider manifest, Isaac contact | partial |
 | I5 | [R5.11](#r511--drone-moving-obstacles-and-other-drone-backends) Drone moving obstacles | Moving-obstacle prediction, sensor-loss handling, other backends | not started |
 | I6 | [R5.9](#r59--mobile-manipulators) Mobile manipulation | Navigate → reach → grasp → transport → release pipeline in the GUI | partial |
@@ -892,7 +892,8 @@ These are complete; preserve their scoped contracts. R1.3 follow-up CI passes at
 
 ### R14.1 — Open-source counterparts for self-made robots
 
-- **State:** partial (first search pass done 2026-11-10) · **Priority:** I3 · requested by the user 2026-11-10
+- **State:** partial (TurtleBot4 cleaning derivative implemented 2026-11-12) · **Priority:** I3 · requested by the user 2026-11-10
+- **Implemented:** separate `asset_turtlebot4_lite_cleaning` source variant, native bumper/four cliff sensors, stale-feedback pause, GUI opt-in and command autofill. One Gazebo `nav_empty` zone-clean/dock completed (96.8% reported coverage); bumper impact and other-map qualification remain pending. [Receipt](docs/status/evidence/counterparts-2026-11-12/README.md). Continue WAM-V, BlueROV2, Summit-XL and the remaining source-search rows.
 - **Search record:** [r14-open-source-candidates-2026-11-10](docs/status/r14-open-source-candidates-2026-11-10.md).
   Finding: the iRobot Create 3 (BSD) is already installed, and the installed,
   measured TurtleBot 4 Lite (Create 3 plus LiDAR) is the quickest open-source
