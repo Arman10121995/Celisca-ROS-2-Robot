@@ -310,6 +310,7 @@ class PyBulletSpawner(Node):
         self.declare_parameter("publish_rate", 50.0)
         self.declare_parameter("scan_rate", 5.0)
         self.declare_parameter("laser_link_name", "laser_link")
+        self.declare_parameter("imu_link_name", "imu_link")
         self.declare_parameter("scan_samples", 360)
         self.declare_parameter("scan_range_min", 0.12)
         self.declare_parameter("scan_range_max", 12.0)
@@ -1258,7 +1259,7 @@ class PyBulletSpawner(Node):
     def _pub_imu(self):
         m = Imu()
         m.header.stamp = self._stamp()
-        m.header.frame_id = "imu_link"
+        m.header.frame_id = self.get_parameter('imu_link_name').value
         m.orientation = Quaternion(x=self._born[0], y=self._born[1], z=self._born[2], w=self._born[3])
         m.orientation_covariance = [0.001,0.0,0.0, 0.0,0.001,0.0, 0.0,0.0,0.001]
         m.angular_velocity = Vector3(x=self._bang[0], y=self._bang[1], z=self._bang[2])

@@ -489,6 +489,34 @@ def _emit_log(logger, level, message):
         logger.info(message)
 
 
+def _exclude_wheel_housing_contacts(mjcf_text, wheel_joints):
+    """Explicit base/wheel-assembly exclusion for convex CAD wheel housings.
+
+    Rest-pose overlap discovery misses rollers that enter the chassis convex
+    hull only after the hub turns. Preserve all environment and unrelated
+    self contacts; exclude just the chassis against each driven subtree.
+    Activated only by a declared per-model physical adapter.
+    """
+    root=ET.fromstring(mjcf_text)
+    base=root.find('worldbody/body')
+    if base is None or not base.get('name'):
+        raise ValueError('Wheel-housing exclusion requires a named robot root')
+    bodies={joint.get('name'):body for body in base.iter('body') for joint in body.findall('joint')}
+    contact=root.find('contact')
+    if contact is None:contact=ET.SubElement(root,'contact')
+    existing={tuple(sorted([e.get('body1'),e.get('body2')])) for e in contact.findall('exclude')}
+    for joint in wheel_joints:
+        if joint not in bodies:raise ValueError('Missing wheel-housing joint: '+joint)
+        wheel=bodies[joint]
+        for body in wheel.iter('body'):
+            name=body.get('name')
+            if not name or body is base:raise ValueError('Invalid driven body subtree')
+            pair=tuple(sorted([base.get('name'),name]))
+            if pair not in existing:
+                ET.SubElement(contact,'exclude',body1=pair[0],body2=pair[1]);existing.add(pair)
+    return ET.tostring(root,encoding='unicode')
+
+
 def _exclude_rest_pose_self_contacts(mjcf_text, logger=None):
     """Exclude robot body pairs that already interpenetrate at the rest pose.
 
@@ -856,7 +884,7 @@ def _apply_contact_geoms(mjcf_text, friction):
 
 
 def _build_mjcf_from_urdf(urdf_text, pkg_map, logger=None, robot_name="",
-                          base_dir=""):
+                          base_dir="", preserve_fixed_root=False):
     """Convert a prepared URDF into MJCF via MuJoCo's URDF importer.
 
     Mesh staging (package:// resolution, DAE->STL conversion) happens first
@@ -894,9 +922,14 @@ def _build_mjcf_from_urdf(urdf_text, pkg_map, logger=None, robot_name="",
         tmp.write(urdf_text)
         tmp.close()
         spec = mujoco.MjSpec.from_file(tmp.name)
+        if preserve_fixed_root:
+            from robot_lab_utils.urdf_inertia import fixed_root_inertial
+            root_inertia=fixed_root_inertial(urdf_text)
+        else:
+            root_inertia=_urdf_root_inertial(urdf_text)
         mjcf = _add_floating_base(
             spec.to_xml(), robot_name or "robot",
-            root_inertial=_urdf_root_inertial(urdf_text))
+            root_inertial=root_inertia)
         mjcf = _apply_contact_geoms(mjcf, contact_friction)
         mjcf = _hide_collision_proxies(mjcf, logger=logger)
         mjcf = _exclude_rest_pose_self_contacts(mjcf, logger=logger)
@@ -1324,6 +1357,7 @@ class MuJoCoSpawner(Node):
         # yaw -0.047 rad/s, residual motion after Stop) on 2026-10-12.
         self.declare_parameter("wheel_physics_timestep", 0.0)
         self.declare_parameter("laser_link_name", "laser_link")
+        self.declare_parameter("imu_link_name", "imu_link")
         self.declare_parameter("scan_samples", 360)
         self.declare_parameter("scan_range_min", 0.12)
         self.declare_parameter("scan_range_max", 12.0)
@@ -1603,10 +1637,14 @@ class MuJoCoSpawner(Node):
                 # The scan is cast from above the root link; give it that frame.
                 self._scan_frame_tf = publish_fallback_scan_frame(
                     self, self._base_frame, self.get_parameter("laser_link_name").value)
+            preserve_fixed_root=parse_drive_config(self.get_parameter('drive_config').value).get(
+                'mujoco_preserve_fixed_root_inertia',False)
+            if not isinstance(preserve_fixed_root,bool):
+                raise ValueError('mujoco_preserve_fixed_root_inertia must be a boolean')
             robot_mjcf = _build_mjcf_from_urdf(
                 urdf, pkg_map, logger=self.get_logger(),
                 robot_name=self.get_parameter("robot_name").value,
-                base_dir=os.path.dirname(os.path.abspath(str(model))))
+                base_dir=os.path.dirname(os.path.abspath(str(model))),preserve_fixed_root=preserve_fixed_root)
             if robot_mjcf != _FALLBACK_MJCF:
                 self._model_source = "urdf"
                 effort_config = self.get_parameter("effort_controller_config").value
@@ -1649,6 +1687,11 @@ class MuJoCoSpawner(Node):
                     robot_mjcf = self._pd_command.add_actuators(
                         robot_mjcf, float(self.get_parameter("pd_joint_armature").value))
                 wheel_config = parse_drive_config(self.get_parameter('drive_config').value)
+                housing=wheel_config.get('mujoco_wheel_housing_exclusions',False)
+                if not isinstance(housing,bool):
+                    raise ValueError('mujoco_wheel_housing_exclusions must be a boolean')
+                if housing:
+                    robot_mjcf=_exclude_wheel_housing_contacts(robot_mjcf,self._drive.wheel_joints)
                 self._ramp_watchdog_stop = wheel_config.get('mujoco_ramp_watchdog_stop', False)
                 if not isinstance(self._ramp_watchdog_stop, bool):
                     raise ValueError('mujoco_ramp_watchdog_stop must be a boolean')
@@ -1703,6 +1746,9 @@ class MuJoCoSpawner(Node):
                 handle.write(world_mjcf)
             self.get_logger().info("MuJoCo scene written to " + dump)
         self._model = mujoco.MjModel.from_xml_string(world_mjcf)
+        implicit_wheels=parse_drive_config(self.get_parameter('drive_config').value).get('mujoco_implicit_wheel_control',False)
+        if not isinstance(implicit_wheels,bool):raise ValueError('mujoco_implicit_wheel_control must be a boolean')
+        if implicit_wheels:self._model.opt.integrator=int(mujoco.mjtIntegrator.mjINT_IMPLICITFAST)
         from robot_lab_utils.urdf_springs import joint_springs
         for name, spring in joint_springs(urdf).items():
             joint = mujoco.mj_name2id(self._model, mujoco.mjtObj.mjOBJ_JOINT, name)
@@ -1737,6 +1783,16 @@ class MuJoCoSpawner(Node):
 
         # --- find the root body that contains the free joint ---
         self._find_body_and_joints()
+        expected_mass=parse_drive_config(self.get_parameter('drive_config').value).get('mujoco_expected_mass_kg')
+        if expected_mass is not None:
+            expected_mass=float(expected_mass)
+            if not math.isfinite(expected_mass) or expected_mass<=0 or self._body_id<=0:
+                raise ValueError('Invalid expected native robot mass')
+            root=int(self._model.body_rootid[self._body_id])
+            actual_mass=float(np.sum(self._model.body_mass[self._model.body_rootid==root]))
+            if not math.isclose(actual_mass,expected_mass,rel_tol=.001,abs_tol=.001):
+                raise ValueError('Compiled robot mass %.9f kg differs from source %.9f kg' % (actual_mass,expected_mass))
+            self.get_logger().info('Compiled robot mass %.9f kg matches source contract' % actual_mass)
         self._apply_wheel_timestep(physics_timestep)
         if self.get_parameter("robot_name").value == "unitree_go2":
             self._go2_foot_ids = [mujoco.mj_name2id(
@@ -2451,7 +2507,7 @@ class MuJoCoSpawner(Node):
     def _pub_imu(self):
         m = Imu()
         m.header.stamp = self._stamp()
-        m.header.frame_id = "imu_link"
+        m.header.frame_id = self.get_parameter('imu_link_name').value
         m.orientation = Quaternion(x=self._born[0], y=self._born[1], z=self._born[2], w=self._born[3])
         m.orientation_covariance = [0.001, 0.0, 0.0, 0.0, 0.001, 0.0, 0.0, 0.0, 0.001]
         m.angular_velocity = Vector3(x=self._bang[0], y=self._bang[1], z=self._bang[2])

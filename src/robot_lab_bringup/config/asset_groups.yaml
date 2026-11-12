@@ -4,7 +4,9 @@ schema_version: 1
 robots:
   - id: elephant_myagv_pro
     name: Elephant Robotics myAGV Pro
-    members: [{id: asset_elephant_myagv_pro, label: Official CAD base · experimental Fortress omnidirectional control}]
+    members:
+      - {id: asset_elephant_myagv_pro, label: Official CAD base · measured Fortress contact adapter}
+      - {id: asset_elephant_myagv_pro_rollers, label: Portable physical-roller adapter · experimental native backends}
   - id: light_robotics_octopod
     name: Light Robotics octopod
     members: [{id: asset_light_robotics_octopod, label: Source segmented octopod · experimental scripted gait}]

@@ -4,7 +4,7 @@ import math
 import xml.etree.ElementTree as ET
 
 
-_FRAMES = ('laser_link_name', 'camera_link_name', 'camera_optical_frame')
+_FRAMES = ('laser_link_name', 'camera_link_name', 'camera_optical_frame', 'imu_link_name')
 _INTEGERS = ('scan_samples', 'camera_width', 'camera_height')
 _NUMBERS = ('scan_rate', 'scan_range_min', 'scan_range_max', 'camera_rate',
             'camera_horizontal_fov', 'camera_near', 'camera_far')

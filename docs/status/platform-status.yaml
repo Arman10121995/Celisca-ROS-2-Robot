@@ -2105,7 +2105,7 @@ tasks:
         state: active
         updated: '2026-11-12'
         title: Official Elephant Robotics myAGV Pro integration — user top priority
-        scope_paths: [scripts/, src/robot_lab_utils/, src/robot_lab_bringup/, src/robot_lab_gui/, src/robot_lab_robots/, src/robot_lab_adapter/, src/robot_lab_navigation/, src/robot_lab/robot_lab_registry/, docs/, README.md, ROADMAP.md]
+        scope_paths: [scripts/, src/robot_lab_utils/, src/robot_lab_mujoco/, src/robot_lab_pybullet/, src/robot_lab_isaac/, src/robot_lab_bringup/, src/robot_lab_gui/, src/robot_lab_robots/, src/robot_lab_adapter/, src/robot_lab_navigation/, src/robot_lab/robot_lab_registry/, docs/, README.md, ROADMAP.md]
         next_action: Source Gazebo Display and one normal-GUI Nav2 arrival are implemented and measured. Continue portable physical wheel/contact adapters before enabling other backends; keep R14.2 ahead of all older tasks. Preserve source model, lab approximation labels and actual receipts.
         evidence: [docs/status/evidence/myagv-pro-2026-11-12/README.md, docs/tutorials/myagv-pro.md]
       R14.1:

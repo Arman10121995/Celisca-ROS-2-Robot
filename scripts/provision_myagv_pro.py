@@ -21,7 +21,9 @@ from catalog_external_assets import checkout, digest, load_source
 from provision_extension_assets import checkpoint_robots, robot_entity, source_package_prefix, write_json, write_yaml
 
 
-def provision(store, download=False):
+def provision(store, download=False, variant='fortress'):
+    if variant not in ('fortress','rollers'):raise ValueError('Unknown myAGV physical adapter')
+    portable=variant=='rollers'
     source=load_source('elephant_myagv_pro')
     if download:
         for entry in ('agv_pro_description','agv_pro_gazebo','agv_pro_base'):
@@ -35,7 +37,7 @@ def provision(store, download=False):
     entry='agv_pro_description/urdf/agv_pro.urdf'
     expanded=subprocess.check_output(['xacro',str(root/entry),'namespace:='],env=env,text=True,timeout=45)
     document=ET.fromstring(expanded)
-    name='asset_elephant_myagv_pro';document.set('name',name)
+    name='asset_elephant_myagv_pro'+('_rollers' if portable else '');document.set('name',name)
     original=ET.fromstring(expanded)
     resources={}
     for mesh in document.findall('.//mesh'):
@@ -48,10 +50,20 @@ def provision(store, download=False):
     wheels=adapt_source(document)
     compliance=lab_compliance(document)
     sensors=sensor_kit(document)
+    roller_contract=[]
+    fuji=ROOT/'src/robot_lab_robots/holonomic_wheels/third_party/fuji_mecanum'
+    if portable:
+        from robot_lab_utils.myagv_rollers import physical_rollers
+        roller_contract=physical_rollers(document,fuji)
     drive=dict(type='mecanum', **{role+'_wheel_joint':joint+'_joint' for role,joint in ROLES.items()},
         wheel_radius=.0762,wheelbase=.3431,wheel_separation=.31345248,roller_angle=.7853981633974483,
         max_speed=.3,max_accel=.3,max_angular_speed=.4,max_angular_accel=.5,max_wheel_speed=8.,wheel_force_limit=5.,
         gazebo_wheel_velocity_gain=1.,gazebo_wheel_armature=.01)
+    if portable:
+        drive['mujoco_wheel_housing_exclusions']=True
+        drive['mujoco_preserve_fixed_root_inertia']=True
+        drive['mujoco_expected_mass_kg']=sum(float(mass.get('value')) for mass in document.findall('link/inertial/mass'))
+        drive.update(mujoco_wheel_velocity_gain=10.,mujoco_wheel_armature=.02,mujoco_implicit_wheel_control=True)
     identity=hashlib.sha256(ET.tostring(document)+json.dumps(drive,sort_keys=True).encode()).hexdigest()
     target=store/'models'/name/identity;target.mkdir(parents=True,exist_ok=True)
     controls=target/'controllers.yaml'
@@ -87,16 +99,19 @@ def provision(store, download=False):
     parseable=converted if 'xmlns:ignition=' in converted else re.sub(
         r'(<sdf\b)',r'\1 xmlns:ignition="http://ignitionrobotics.org/schema"',converted,count=1)
     native=ET.fromstring(parseable)
-    if (len(native.findall('.//fdir1'))!=4
+    if (len(native.findall('.//fdir1'))!=(0 if portable else 4)
             or len(native.findall("model/link[@name='base_footprint']/sensor"))!=3):
         raise ValueError('Converted plant lost a wheel friction direction or native sensor')
     (target/'source-expanded.urdf').write_text(expanded)
     (target/'LICENSE').write_bytes((root/'LICENSE').read_bytes())
+    if portable:(target/'LICENSE-FUJI-MIT').write_bytes((fuji/'LICENSE').read_bytes())
     # Both physics and RViz retain the complete source chassis, all wheel
     # inertias and source TF. Only wheel contact/dynamics are declared adapters.
     for link in original.findall('link'):
         inertial=link.find('inertial')
         if inertial is not None:
+            if portable and link.get('name') in {n+'_link' for n in ROLES.values()}:
+                continue  # Exact aggregate mass/COM/tensor checked by physical_rollers.
             actual=document.find(f"link[@name='{link.get('name')}']/inertial")
             if ET.tostring(inertial)!=ET.tostring(actual):raise ValueError('Changed source body inertia')
     profile=dict(package='robot_lab_robots',name=name,xacro=str(output),type='mobile',external_asset=True,
@@ -122,11 +137,30 @@ def provision(store, download=False):
              'bounded passive vertical tire-compliance surrogate; 0.02 kg added carriers, original inertias retained',
              'conservative lab 5 Nm/8 rad-s wheel limits; not source hardware specifications',
              'native Fortress control/timeout and simulated sensors at original frame mounts']
+    if portable:
+        # Native mobile backends expose an ideal root-state IMU observer.
+        # Do not mislabel it with the vendor's differently rotated IMU frame.
+        sensors['imu_link_name']='base_footprint'
+        profile.update(supported_simulators=['mujoco','pybullet','isaac'],
+            experimental_modes_by_simulator={sim:['display','loc','slam','3d_slam','nav'] for sim in ('mujoco','pybullet','isaac')},
+            notes='Complete official myAGV Pro CAD base with a declared portable MIT FUJI physical-roller adapter: '
+                  '15 passive rollers per driven wheel, original vendor wheel assembly mass/COM/inertia conserved, '
+                  'original visual meshes and source sensor mounts. Lab 0.02 kg vertical-compliance kit, bounded 5 Nm/8 rad-s wheel control, '
+                  'source-mount LiDAR/RGB-D and explicitly root-frame ideal IMU observer. Original rotated imu_link remains in TF. '
+                  'Native physics drives the root; no chassis-pose/velocity override. '
+                  'Source CAD mass differs from hardware documentation. Other-mode missions and physical calibration unqualified; '
+                  'use the separate measured Fortress adapter for Gazebo.')
+        changes=['source CAD chassis/visuals/frames retained',
+                 'original wheel mass/COM/inertia decomposed into core plus 15 passive FUJI rollers',
+                 'source FUJI geometry/handedness scaled to 152.4 mm diameter',
+                 'same declared passive vertical-compliance kit and simulated sensors',
+                 'existing native backend wheel actuation, springs, measured feedback and command lease']
     receipt=dict(repository=source['repository'],source_id=source['id'],revision=source['revision'],license='BSD-3-Clause',
         original=str(root/entry),source_sha256=digest(root/entry),source_expanded_sha256=digest(target/'source-expanded.urdf'),
         description=str(output),description_sha256=digest(output),source_meshes_sha256=resources,
-        converted_sdf_sha256=digest(target/'converted.sdf'),converted_contact_directions=4,converted_sensors=3,
+        converted_sdf_sha256=digest(target/'converted.sdf'),converted_contact_directions=len(native.findall('.//fdir1')),converted_sensors=3,
         lab_compliance=compliance,added_carrier_mass_kg=.02,
+        variant=variant,physical_roller_contract=roller_contract,
         source_mass_kg=sum(float(mass.get('value')) for mass in original.findall('link/inertial/mass')),
         wheel_corner_mapping=ROLES,source_wheels=wheels,drive=drive,lab_changes=changes,runtime_mission_qualified=False)
     evidence=target/'integration.json';write_json(evidence,receipt)
@@ -136,15 +170,26 @@ def provision(store, download=False):
         tags=['extension','myagv_pro','four_wheels','mecanum','complete_robot','experimental_control'])
     entity['locomotion']=dict(type='mecanum',dof=3,wheels=4,max_velocity=.3,max_acceleration=.3)
     entity['frames']=list(dict.fromkeys(['base_footprint',*entity.get('frames',[])]))
+    if portable:
+        for item in entity.get('sensors',[]):
+            if item.get('type')=='imu':item['frame']=sensors['imu_link_name']
+    if portable:
+        extra=dict(repository='https://github.com/DaiGuard/fuji_mecanum',revision='646431a5e107448e0e2bdeeba4575db9aa3665ff',
+                   license='MIT',resource_sha256={file:digest(fuji/file) for file in ('wheel.stl','roller_collision.stl','LICENSE','README.md')})
+        receipt['auxiliary_sources']=[extra]
+        write_json(evidence,receipt)
+        entity['source']['license']='BSD-3-Clause vendor base; MIT FUJI wheel geometry; declared lab derivative'
     for item in entity['evidence']:item['date']='2026-11-12'
     checkpoint_robots(store,{name:profile},[entity],[dict(source_id=source['id'],revision=source['revision'],
-        entry=entry,status='installed',check=str(evidence),profiles=[dict(id=name,kind='robot',support='Experimental Fortress source-model adapter',notes=profile['notes'])])])
+        entry=entry+('/physical-rollers' if portable else ''),status='installed',check=str(evidence),profiles=[dict(id=name,kind='robot',
+            support='Experimental physical-roller native adapter' if portable else 'Experimental Fortress source-model adapter',notes=profile['notes'])])])
     return receipt
 
 
 def main():
     parser=argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--download',action='store_true')
+    parser.add_argument('--variant',choices=['fortress','rollers'],default='fortress')
     parser.add_argument('--store',type=Path,default=Path(os.environ.get('ROBOT_LAB_RUNTIME_ROOT','/workspace/molar/robot_lab_runtime'))/'external_assets')
     args=parser.parse_args();store=args.store.resolve()
     store.mkdir(parents=True,exist_ok=True)
@@ -152,7 +197,7 @@ def main():
     (store/'locks').mkdir(exist_ok=True)
     with (store/'locks/provision.lock').open('a') as lock:
         fcntl.flock(lock,fcntl.LOCK_EX)
-        print(json.dumps(provision(store,args.download),indent=2))
+        print(json.dumps(provision(store,args.download,args.variant),indent=2))
 
 
 if __name__=='__main__':main()

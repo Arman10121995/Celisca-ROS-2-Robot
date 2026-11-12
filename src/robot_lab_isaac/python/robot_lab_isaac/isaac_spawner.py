@@ -323,6 +323,7 @@ class IsaacSpawner(Node):
         self.declare_parameter("collision_from_visuals", False)
         # Planar scan, same parameters as the PyBullet and MuJoCo spawners.
         self.declare_parameter("laser_link_name", "laser_link")
+        self.declare_parameter("imu_link_name", "imu_link")
         self.declare_parameter("scan_rate", 5.0)
         self.declare_parameter("scan_samples", 360)
         self.declare_parameter("scan_range_min", 0.12)
@@ -1250,7 +1251,7 @@ class IsaacSpawner(Node):
 
         im = Imu()
         im.header.stamp = stamp
-        im.header.frame_id = "imu_link"
+        im.header.frame_id = self.get_parameter('imu_link_name').value
         im.orientation = Quaternion(
             x=orn[0], y=orn[1], z=orn[2], w=orn[3])
         im.orientation_covariance = [0.001, 0.0, 0.0, 0.0, 0.001, 0.0,
