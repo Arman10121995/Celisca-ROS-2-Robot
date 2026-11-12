@@ -11,6 +11,9 @@ robots:
   - id: lab_usv
     name: Laboratory surface vessel
     members: [{id: lab_usv, label: Complete twin-hull two-propeller vessel}]
+  - id: vrx_wamv
+    name: VRX WAM-V
+    members: [{id: asset_vrx_wamv_h, label: Source H layout · experimental Fortress control}]
   - id: lab_tracked
     name: Tracked vehicle with flippers
     preferred: lab_tracked

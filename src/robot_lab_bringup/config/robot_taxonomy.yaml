@@ -13,6 +13,10 @@ classes:
     subtype: Twin-hull USV
     tags: [Catamaran, Two propellers, Native buoyancy, Surface navigation, Experimental control]
     members: [lab_usv]
+  - category: Surface vessels
+    subtype: Source twin-hull USV
+    tags: [VRX WAM-V, Two propellers, Zero-held azimuth, Source water forces, Experimental control]
+    members: [vrx_wamv]
   - category: Mobile robots
     subtype: Tracked vehicle
     tags: [Native belts, Four flippers, Source geometry, Experimental control]

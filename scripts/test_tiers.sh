@@ -96,6 +96,7 @@ INTEGRATION_TESTS=(
   "$ADP_TEST/test_aerial_swarm_route.py"
   "$BRG_TEST/test_facility_queue_recovery.py"
   "$BRG_TEST/test_marine_replanning.py"
+  "$BRG_TEST/test_marine_source_chain.py"
   "$BRG_TEST/test_fleet_multifloor.py"
   "$BRG_TEST/test_gait_terrain.py"
   "$GUI_TEST/test_experience.py"

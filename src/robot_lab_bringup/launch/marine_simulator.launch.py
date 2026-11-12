@@ -28,34 +28,52 @@ def _setup(context):
     def enabled(key):return value(key).lower() in ('true','1','yes')
     from robot_lab_utils.installed_assets import merge_installed_profiles
     maps=merge_installed_profiles(yaml.safe_load((Path(share('robot_lab_bringup'))/'config/sim_maps.yaml').read_text()),'maps')['maps']
+    robots=merge_installed_profiles(yaml.safe_load((Path(share('robot_lab_robots'))/'config/robots.yaml').read_text()),'robots')['robots']
     robot=value('robot_model');amphibious=robot=='lab_amphibious'
+    robot_profile=robots.get(robot,{})
     name=value('map_name') or 'marine_tank'
     if name not in maps or (not maps[name].get('marine') and not amphibious):
         raise ValueError('ROV control requires an installed marine water world')
     profile=maps[name]; water=profile.get('marine',dict(surface_z=-1000.,bottom_z=-1006.,density=1025.))
-    if robot not in ('lab_rov','lab_usv','lab_amphibious'):raise ValueError('Choose a declared native marine/amphibious plant')
-    surface=robot in ('lab_usv','lab_amphibious')
+    if not robot_profile.get('marine_model'):raise ValueError('Choose a declared native marine/amphibious plant')
+    surface=robot_profile.get('marine_propulsion') in ('surface_twin_thrusters','wheels_propellers')
+    guarded=surface or robot_profile.get('marine_native_watchdog',False)
     gz=profile['gazebo']
     world=str(Path(share(gz['world_package']))/gz['world_path'])
     world_name=ET.parse(world).getroot().find('world').get('name')
-    urdf=load_description(str(Path(share('robot_lab_robots'))/robot/('urdf/'+robot+'.urdf.xacro')),'model_name:='+robot)
+    source=Path(robot_profile['xacro'])
+    if not source.is_absolute():source=Path(share(robot_profile['package']))/source
+    urdf=load_description(str(source),'model_name:='+robot)
+    if robot_profile.get('marine_buoyancy')=='vrx_surface':
+        document=ET.fromstring(urdf)
+        for plugin in document.findall('gazebo/plugin'):
+            if plugin.get('name')=='vrx::Surface':
+                for key,text in dict(fluid_level=str(water['surface_z']),fluid_density=str(water['density'])).items():
+                    node=plugin.find(key)
+                    if node is None:node=ET.SubElement(plugin,key)
+                    node.text=text
+        urdf=ET.tostring(document,encoding='unicode')
     model=(AmphibiousModel if amphibious else SurfaceModel if surface else MarineModel)(urdf,water['density'])
     runtime=Path(os.environ.get('ROBOT_LAB_RUNTIME_ROOT','/workspace/molar/robot_lab_runtime'))/'marine_sessions'
     runtime.mkdir(parents=True,exist_ok=True)
     folder=Path(tempfile.mkdtemp(prefix='rov-',dir=runtime))
-    if surface:
+    if guarded:
         document=ET.fromstring(urdf)
-        for joint in ([] if amphibious else model.joints):
-            original='/model/'+robot+'/joint/'+joint+'/cmd_thrust'
-            requested='/surface/request/'+joint
+        for joint,(low,high) in ([] if amphibious else zip(model.joints,model.bounds)):
+            thruster=next(p for p in document.findall('gazebo/plugin')
+                          if p.get('name','').endswith('::Thruster') and p.findtext('joint_name')==joint)
+            topic=thruster.findtext('topic')
+            original=('/'+thruster.findtext('namespace',robot).strip('/')+'/'+topic.strip('/')) if topic else '/model/'+robot+'/joint/'+joint+'/cmd_thrust'
+            requested='/surface/request/'+joint if surface else '/marine/request/'+joint
             guard=ET.SubElement(ET.SubElement(document,'gazebo'),'plugin',name='robot_lab::ThrustWatchdog',
                 filename=str(Path(get_package_prefix('robot_lab_maps'))/'lib/librobot_lab_command_watchdog.so'))
-            for key,text in dict(input=requested,output=original,timeout_s='.4',max_force='35').items():ET.SubElement(guard,key).text=text
+            for key,text in dict(input=requested,output=original,timeout_s='.4',min_force=str(float(low)),max_force=str(float(high))).items():ET.SubElement(guard,key).text=text
         if amphibious:
             plugin=ET.SubElement(ET.SubElement(document,'gazebo'),'plugin',name='robot_lab::AmphibiousDrive',
                 filename=str(Path(get_package_prefix('robot_lab_maps'))/'lib/librobot_lab_amphibious_drive.so'))
             for key,text in dict(surface_z=str(water['surface_z']),wheel_radius='.22',half_track='.49',wheel_torque='8').items():ET.SubElement(plugin,key).text=text
         urdf=ET.tostring(document,encoding='unicode')
+    if surface or robot_profile.get('external_asset'):
         document=ET.parse(world)
         element=document.getroot().find('world')
         if amphibious:
@@ -71,6 +89,9 @@ def _setup(context):
         # them without changing the underwater source or absolute water plane.
         for p in document.getroot().findall('world/plugin'):
             if p.get('name','').endswith('::Buoyancy'):
+                if robot_profile.get('marine_buoyancy')=='vrx_surface':
+                    element.remove(p)
+                    continue
                 for enabled_model in p.findall('enable'):p.remove(enabled_model)
                 ET.SubElement(p,'enable').text=robot
         for node in document.getroot().iter():
@@ -83,7 +104,8 @@ def _setup(context):
               ('/marine/odometry','/marine/odometry','nav_msgs/msg/Odometry','gz.msgs.Odometry'),
               ('/joint_states','/marine/joint_states','sensor_msgs/msg/JointState','gz.msgs.Model'),
               ('/marine/imu','/marine/imu','sensor_msgs/msg/Imu','gz.msgs.IMU')]
-    camera='/world/'+world_name+'/model/'+robot+'/link/oakd_rgb_camera_frame/sensor/rgbd_camera'
+    camera=('/world/'+world_name+'/model/'+robot+'/link/'+robot_profile.get('marine_camera_link','oakd_rgb_camera_frame')+
+            '/sensor/'+robot_profile.get('marine_camera_sensor','rgbd_camera'))
     for suffix,ros_topic,ros_type,gz_type in [('/image','/oakd/rgb/image_raw','sensor_msgs/msg/Image','gz.msgs.Image'),
             ('/camera_info','/oakd/rgb/camera_info','sensor_msgs/msg/CameraInfo','gz.msgs.CameraInfo'),
             ('/depth_image','/oakd/depth/image_raw','sensor_msgs/msg/Image','gz.msgs.Image'),
@@ -95,14 +117,13 @@ def _setup(context):
                    dict(ros_topic_name='/amphibious/wheels',gz_topic_name='/amphibious/wheels',ros_type_name='geometry_msgs/msg/Twist',gz_type_name='gz.msgs.Twist',direction='ROS_TO_GZ')]
     for joint in model.joints:
         bridge.append(dict(ros_topic_name='/marine/thrusters/'+joint+'/force',
-                           gz_topic_name='/surface/request/'+joint if surface else '/model/lab_rov/joint/'+joint+'/cmd_thrust',
+                           gz_topic_name='/surface/request/'+joint if surface else '/marine/request/'+joint if guarded else '/model/'+robot+'/joint/'+joint+'/cmd_thrust',
                            ros_type_name='std_msgs/msg/Float64',gz_type_name='gz.msgs.Double',direction='ROS_TO_GZ'))
     bridge.append(dict(ros_topic_name='/marine/current',gz_topic_name='/ocean_current',
                        ros_type_name='geometry_msgs/msg/Vector3',gz_type_name='gz.msgs.Vector3d',direction='ROS_TO_GZ'))
     bridge_file=folder/'bridge.yaml';bridge_file.write_text(yaml.safe_dump(bridge))
     spawn=dict(profile['spawn'])
     from robot_lab_utils.robot_spawn import map_spawn_override
-    robot_profile=yaml.safe_load((Path(share('robot_lab_robots'))/'config/robots.yaml').read_text())['robots'][robot]
     spawn.update(map_spawn_override(robot_profile,name))
     if surface and not amphibious:
         spawn['z']=float(water['surface_z'])
@@ -127,7 +148,10 @@ def _setup(context):
     manifest=dict(robot=robot,map=name,backend='Gazebo Fortress 6',water=water,spawn=spawn,
                   mass_kg=model.mass,displaced_volume_m3=model.displacement,source_world=world,
                   description=str(description),bridge_file=str(bridge_file),
-                  scope='Authored primitive ROV/native marine forces; independent underwater estimation/SLAM/navigation pending')
+                  source_profile=robot_profile.get('source_id','lab_authored'),
+                  source_revision=robot_profile.get('source_revision',''),
+                  buoyancy=robot_profile.get('marine_buoyancy','native_graded'),
+                  scope='Declared source/native marine forces; robot/map/mission qualification remains scoped')
     (folder/'session.json').write_text(json.dumps(manifest,indent=2)+'\n')
     print('[robot_lab marine] '+str(folder/'session.json'))
     resource=os.pathsep.join([os.environ.get('IGN_GAZEBO_RESOURCE_PATH',''),str(Path(share('robot_lab_robots')).parent),str(Path(share('robot_lab_maps')).parent)])
@@ -149,20 +173,22 @@ def _setup(context):
                 Node(package='robot_lab_description',executable='gz_pointcloud_to_optical.py',
                      parameters=[{'use_sim_time':True}],output='screen')]
     executable='amphibious_controller.py' if amphibious else 'surface_controller.py' if surface else 'marine_controller.py'
+    tuning={'surface_'+key:float(item) for key,item in robot_profile.get('surface_control',{}).items()} if surface and not amphibious else {}
     controller=Node(package='robot_lab_utils',executable=executable,parameters=[{
         'use_sim_time':True,'description_file':str(description),'density':float(water['density']),
-        'surface_z':float(water['surface_z']),'robot_id':robot,'maximum_depth':float(water['surface_z'])-float(water['bottom_z'])-.6}],output='screen')
+        'surface_z':float(water['surface_z']),'robot_id':robot,'maximum_depth':float(water['surface_z'])-float(water['bottom_z'])-.6,**tuning}],output='screen')
     # Display has no actuator ownership; the observer remains useful for TF,
     # ideal pressure and measured pose, and refuses arm/command operations.
     if not enabled('control'):
         controller=Node(package='robot_lab_utils',executable=executable,parameters=[{
             'use_sim_time':True,'description_file':str(description),'density':float(water['density']),
-            'surface_z':float(water['surface_z']),'robot_id':robot,'maximum_depth':5.4,'control_allowed':False}],output='screen')
+            'surface_z':float(water['surface_z']),'robot_id':robot,'maximum_depth':5.4,'control_allowed':False,**tuning}],output='screen')
     actions += [controller,RegisterEventHandler(OnProcessExit(target_action=controller,
                 on_exit=[EmitEvent(event=Shutdown(reason='Marine actuator/observer owner exited'))]))]
     from robot_lab_utils.marine_pipeline import pipeline
     actions += pipeline(world, description, spawn, water, robot, folder, control=enabled('control'),
-                        slam=enabled('slam'), database=value('database'), localization=enabled('localization'))
+                        slam=enabled('slam'), database=value('database'), localization=enabled('localization'),
+                        radius=robot_profile.get('marine_navigation_radius'))
     if enabled('rviz'):
         rviz=folder/'marine.rviz'
         rviz.write_text(yaml.safe_dump({'Visualization Manager':{'Global Options':{'Fixed Frame':'map'},'Displays':[

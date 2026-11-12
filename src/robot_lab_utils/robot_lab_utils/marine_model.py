@@ -15,6 +15,7 @@ class MarineModel:
     thruster_count = 8
     controlled_axes = (0, 1, 2, 3, 4, 5)
     primitive_wheels = False
+    source_surface_chain = False
     def __init__(self, description, density=1025.):
         root=ET.fromstring(description)
         self.mass=0.
@@ -25,7 +26,7 @@ class MarineModel:
             for collision in link.findall('collision'):
                 box=collision.find('geometry/box')
                 cylinder=collision.find('geometry/cylinder')
-                if self.primitive_wheels and cylinder is not None:
+                if (self.primitive_wheels or self.source_surface_chain) and cylinder is not None:
                     self.displacement+=math.pi*float(cylinder.get('radius'))**2*float(cylinder.get('length'))
                     continue
                 if box is None:
@@ -35,7 +36,7 @@ class MarineModel:
         if not all(math.isfinite(v) and v>0 for v in (self.mass,self.displacement,self.density)):
             raise ValueError('Marine source mass/volume/density must be positive and finite')
         origin=root.find("link[@name='base_link']/inertial/origin")
-        centre=np.array([float(v) for v in origin.get('xyz').split()])
+        centre=np.array([float(v) for v in origin.get('xyz','0 0 0').split()]) if origin is not None else np.zeros(3)
         self.joints=[]
         self.bounds=[]
         columns=[]
@@ -44,18 +45,51 @@ class MarineModel:
                 continue
             name=plugin.findtext('joint_name')
             joint=root.find("joint[@name='%s']"%name)
-            if joint is None or joint.find('parent') is None or joint.find('parent').get('link')!='base_link':
+            if joint is None or joint.find('parent') is None:
                 raise ValueError('Marine source thrusters must attach directly to base_link')
             pose=joint.find('origin')
             position=np.array([float(v) for v in pose.get('xyz').split()])
             orient=[float(v) for v in pose.get('rpy','0 0 0').split()]
             direction=rotation(orient)@np.array([float(v) for v in joint.find('axis').get('xyz').split()])
+            parent=joint.find('parent').get('link')
+            seen=set()
+            while parent!='base_link':
+                if not self.source_surface_chain or parent in seen:
+                    raise ValueError('Marine source thruster chain must terminate at base_link')
+                seen.add(parent)
+                mounts=[j for j in root.findall('joint') if j.find('child').get('link')==parent]
+                if len(mounts)!=1:raise ValueError('Ambiguous source thruster mount: '+parent)
+                mount=mounts[0]
+                if mount.get('type')!='fixed':
+                    # WAM-V H layout: source azimuth motors remain at zero.
+                    holds=[p for p in root.findall('gazebo/plugin')
+                           if p.get('name','').endswith('::JointPositionController')
+                           and p.findtext('joint_name')==mount.get('name')
+                           and float(p.findtext('initial_position','0'))==0.]
+                    if not holds:raise ValueError('Allocation requires a source zero-angle azimuth hold')
+                pose=mount.find('origin')
+                orient=list(map(float,pose.get('rpy','0 0 0').split())) if pose is not None else [0.,0.,0.]
+                offset=np.array(list(map(float,pose.get('xyz','0 0 0').split()))) if pose is not None else np.zeros(3)
+                matrix=rotation(orient)
+                position=offset+matrix@position
+                direction=matrix@direction
+                parent=mount.find('parent').get('link')
             direction/=np.linalg.norm(direction)
             columns.append(np.r_[direction,np.cross(position-centre,direction)])
             self.joints.append(name)
             limits=[float(plugin.findtext(tag)) for tag in ('min_thrust_cmd','max_thrust_cmd')]
             if not all(math.isfinite(v) for v in limits) or limits[0]>=0 or limits[1]<=0:
                 raise ValueError('Marine thrusters require finite signed force limits')
+            velocity_limit=joint.find('limit')
+            if velocity_limit is not None and plugin.findtext('velocity_control','false').lower()=='true':
+                speed=float(velocity_limit.get('velocity','inf'))
+                coefficient=abs(float(plugin.findtext('thrust_coefficient','1')))
+                diameter=float(plugin.findtext('propeller_diameter','.02'))
+                fluid=float(plugin.findtext('fluid_density','1000'))
+                if not speed>0 or not all(math.isfinite(v) and v>0 for v in (coefficient,diameter,fluid)):
+                    raise ValueError('Invalid source propeller velocity/force conversion')
+                maximum=fluid*coefficient*diameter**4*speed**2
+                limits=[max(limits[0],-maximum),min(limits[1],maximum)]
             self.bounds.append(limits)
         self.matrix=np.array(columns).T
         axes=list(self.controlled_axes)
@@ -82,6 +116,7 @@ class SurfaceModel(MarineModel):
     """Two physical propellers control surge and yaw; buoyancy supplies heave."""
     thruster_count = 2
     controlled_axes = (0, 5)
+    source_surface_chain = True
 
 
 class AmphibiousModel(SurfaceModel):

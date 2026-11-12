@@ -1,0 +1,6 @@
+{
+  "robot": "asset_vrx_wamv_h",
+  "mode": "marine",
+  "command": "ros2 launch robot_lab_bringup simulated_robot.launch.py mode:=marine map_name:=surface_harbor robot_model:=asset_vrx_wamv_h simulator:=gazebo gui:=auto allow_experimental_assets:=true spawn_x:=-5.0 spawn_y:=0.0 spawn_z:=0.0 spawn_yaw:=0.0 marine_slam:=true marine_localization:=false",
+  "marine_selectable": true
+}

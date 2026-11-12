@@ -69,7 +69,7 @@ def depth_cloud_node(prefix):
 
 
 def pipeline(world, description, spawn, water, robot, folder, control=True,
-             slam=False, database='', localization=False):
+             slam=False, database='', localization=False, radius=None):
     from launch_ros.actions import Node
     from launch.actions import TimerAction,RegisterEventHandler,EmitEvent
     from launch.event_handlers import OnProcessExit
@@ -98,7 +98,7 @@ def pipeline(world, description, spawn, water, robot, folder, control=True,
         parameters=[dict(params,world_file=str(world),initial_yaw=float(spawn['yaw']), **{'initial_'+k:float(spawn[k]) for k in 'xyz'})], output='screen'),
         Node(package='robot_lab_utils', executable='marine_navigation.py', parameters=[dict(use_sim_time=True,
             world_file=str(world), robot_id=robot, surface_z=float(water['surface_z']), bottom_z=float(water['bottom_z']),
-            radius=1.3 if robot=='tethys_auv' else .9 if robot in ('lab_usv','lab_amphibious') else .55, database_path=str(active) if slam else '',
+            radius=float(radius) if radius is not None else 1.3 if robot=='tethys_auv' else .9 if robot in ('lab_usv','lab_amphibious') else .55, database_path=str(active) if slam else '',
             control_allowed=bool(control), localization_mode=bool(localization),
             saved_map_source=str(source) if localization else '')], output='screen')]
     nodes.append(RegisterEventHandler(OnProcessExit(target_action=nodes[-1],

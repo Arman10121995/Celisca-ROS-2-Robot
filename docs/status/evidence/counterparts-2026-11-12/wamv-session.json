@@ -1,0 +1,25 @@
+{
+  "robot": "asset_vrx_wamv_h",
+  "map": "surface_harbor",
+  "backend": "Gazebo Fortress 6",
+  "water": {
+    "bottom_z": -6.0,
+    "density": 1025.0,
+    "surface_z": 0.0
+  },
+  "spawn": {
+    "x": -5.0,
+    "y": 0.0,
+    "z": 0.0,
+    "yaw": 0.0
+  },
+  "mass_kg": 258.0,
+  "displaced_volume_m3": 1.6350193653385092,
+  "source_world": "/workspace/molar/robot_lab_runtime/marine_sessions/rov-b77nj9iz/world.sdf",
+  "description": "/workspace/molar/robot_lab_runtime/marine_sessions/rov-b77nj9iz/asset_vrx_wamv_h.urdf",
+  "bridge_file": "/workspace/molar/robot_lab_runtime/marine_sessions/rov-b77nj9iz/bridge.yaml",
+  "source_profile": "vrx_vendor",
+  "source_revision": "dc30ed8d17aa1083fd872edad9c77c69896d2b07",
+  "buoyancy": "vrx_surface",
+  "scope": "Declared source/native marine forces; robot/map/mission qualification remains scoped"
+}

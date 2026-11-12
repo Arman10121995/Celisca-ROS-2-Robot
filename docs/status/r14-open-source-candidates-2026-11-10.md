@@ -30,6 +30,8 @@ the quickest open-source robot vacuum-class platform for R13.
 
 TurtleBot4 cleaning is implemented as the separate `asset_turtlebot4_lite_cleaning` variant, with native source bumper/four-cliff bridges and required fresh cliff feedback. One actual Gazebo zone-clean and dock completed; see the [receipt](evidence/counterparts-2026-11-12/README.md). Original TurtleBot4 profiles/certificates stay unchanged. Other backends/contact/edge cases remain unqualified. The steps below are the original search plan; continue with WAM-V, BlueROV2 and Summit-XL.
 
+VRX WAM-V H is now installed as `asset_vrx_wamv_h`, using the pinned Apache-2.0 upstream hull/propellers/water equations with a private Fortress ABI port. One physical source control screen completed; see [guide](../tutorials/wamv.md). Continue BlueROV2 and Summit-XL next.
+
 ## Original search plan
 
 1. TurtleBot 4 Lite first: enable `supports_room_vacuum` with a `vacuum:`

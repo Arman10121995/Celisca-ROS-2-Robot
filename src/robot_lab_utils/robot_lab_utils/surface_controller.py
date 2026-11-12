@@ -12,6 +12,22 @@ from robot_lab_utils.marine_model import SurfaceModel, rotation
 
 
 class SurfaceController(MarineController):
+    def __init__(self):
+        super().__init__()
+        # Defaults preserve the authored small craft. Vendor hulls pass their
+        # actual drag coefficients and declared lab feedback gains in the profile.
+        defaults=dict(surge_gain=110.,surge_drag_linear=18.,surge_drag_quadratic=22.,
+                      yaw_gain=12.,yaw_drag_linear=0.,yaw_drag_quadratic=0.,max_surge=.4,max_yaw=.3)
+        self.surface_control={}
+        for key,value in defaults.items():
+            self.declare_parameter('surface_'+key,value)
+            supplied=float(self.get_parameter('surface_'+key).value)
+            if not math.isfinite(supplied) or supplied<0 or (key in ('surge_gain','yaw_gain','max_surge','max_yaw') and supplied<=0):
+                raise ValueError('Finite positive surface gains/limits and nonnegative drag required')
+            self.surface_control[key]=supplied
+        if self.surface_control['max_surge']>.4 or self.surface_control['max_yaw']>.3:
+            raise ValueError('Surface velocity envelope is limited to 0.4 m/s and 0.3 rad/s')
+
     def load_model(self, description, density):
         return SurfaceModel(description, density)
 
@@ -27,7 +43,8 @@ class SurfaceController(MarineController):
         if not all(map(math.isfinite,values)) or any(abs(v)>1e-9 for v in values[2:]):
             self.stop('Surface craft supports surge/yaw; depth, strafe, roll and pitch are passive')
             return
-        self.command=(max(-.4,min(.4,values[0])),0.,0.,max(-.3,min(.3,values[1])))
+        surge,yaw=self.surface_control['max_surge'],self.surface_control['max_yaw']
+        self.command=(max(-surge,min(surge,values[0])),0.,0.,max(-yaw,min(yaw,values[1])))
         self.cmd_at=time.monotonic()
 
     def _command(self, msg):
@@ -67,9 +84,13 @@ class SurfaceController(MarineController):
                 else:
                     if getattr(self,'turning',False):self.target_heading=heading
                     self.turning=False
-                    desired_yaw=max(-.3,min(.3,.8*angle(self.target_heading-heading)))
-                force=110.*(vx-surge)+18.*vx+22.*vx*abs(vx)
-                torque=12.*(desired_yaw-self.rates[2])
+                    maximum=self.surface_control['max_yaw']
+                    desired_yaw=max(-maximum,min(maximum,.8*angle(self.target_heading-heading)))
+                gains=self.surface_control
+                force=(gains['surge_gain']*(vx-surge)+gains['surge_drag_linear']*vx+
+                       gains['surge_drag_quadratic']*vx*abs(vx))
+                torque=(gains['yaw_gain']*(desired_yaw-self.rates[2])+gains['yaw_drag_linear']*desired_yaw+
+                        gains['yaw_drag_quadratic']*desired_yaw*abs(desired_yaw))
                 self.forces,scale=self.model.allocate([force,0.,0.,0.,0.,torque])
         for publisher,force in zip(self.pub,self.forces):
             publisher.publish(Float64(data=float(force)))
@@ -84,9 +105,9 @@ class SurfaceController(MarineController):
                 rpy=list(self.orientation) if self.orientation else None,
                 velocity_world=self.velocity.tolist() if self.velocity is not None else None,
                 commanded_thruster_forces_N=self.forces.tolist(),force_allocation_scale=scale,
-                limits=dict(surge=.4,sway=0.,heave=0.,yaw=.3),body_samples=self.count,sim_time=self.clock_value,
+                limits=dict(surge=self.surface_control['max_surge'],sway=0.,heave=0.,yaw=self.surface_control['max_yaw']),body_samples=self.count,sim_time=self.clock_value,
                 observer='Actual body finite differences for inner thrust control; independent noisy marine odometry for missions',
-                scope='Authored native surface/amphibious forces; wave and hardware calibration unassessed',
+                scope='Profile-specific native surface/amphibious forces; wave and hardware calibration unassessed',
                 **self.extra_state()),allow_nan=False)))
 
 

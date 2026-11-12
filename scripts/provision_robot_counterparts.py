@@ -12,6 +12,7 @@ import json
 import os
 from pathlib import Path
 import sys
+import subprocess
 import xml.etree.ElementTree as ET
 
 import yaml
@@ -19,7 +20,134 @@ import yaml
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / 'src/robot_lab_utils'))
 from robot_lab_utils.vacuum_sensors import create3_hazard_derivative
-from provision_extension_assets import checkpoint_robots, digest, load_source, robot_entity, write_json
+from provision_extension_assets import checkpoint_robots, digest, load_source, robot_entity, write_json, source_package_prefix
+from catalog_external_assets import checkout
+
+
+def marine_sensor_kit(root, position):
+    """Declared massless lab RGB-D/ENU IMU kit; does not alter source forces."""
+    for name,parent,xyz,rpy in [('oakd_rgb_camera_frame','base_link',position,'0 0 0'),
+            ('oakd_rgb_camera_optical_frame','oakd_rgb_camera_frame','0 0 0','-1.5707963267948966 0 -1.5707963267948966')]:
+        ET.SubElement(root,'link',name=name)
+        joint=ET.SubElement(root,'joint',name=name+'_mount',type='fixed')
+        ET.SubElement(joint,'parent',link=parent);ET.SubElement(joint,'child',link=name)
+        ET.SubElement(joint,'origin',xyz=xyz,rpy=rpy)
+    # Massless TF links are intentionally lumped; attach the physical sensor
+    # directly to the massive source hull rather than preserving a massless link.
+    block=ET.SubElement(root,'gazebo',reference='base_link')
+    sensor=ET.SubElement(block,'sensor',name='rgbd_camera',type='rgbd_camera')
+    ET.SubElement(sensor,'pose').text=position+' 0 0 0'
+    for key,text in dict(always_on='true',update_rate='5',gz_frame_id='oakd_rgb_camera_optical_frame').items():
+        ET.SubElement(sensor,key).text=text
+    camera=ET.SubElement(sensor,'camera')
+    ET.SubElement(camera,'horizontal_fov').text='1.25'
+    image=ET.SubElement(camera,'image')
+    for key,text in dict(width='320',height='240',format='R8G8B8').items():ET.SubElement(image,key).text=text
+    for element in (ET.SubElement(camera,'clip'),ET.SubElement(ET.SubElement(camera,'depth_camera'),'clip')):
+        ET.SubElement(element,'near').text='.1';ET.SubElement(element,'far').text='8'
+    sensor=ET.SubElement(ET.SubElement(root,'gazebo',reference='base_link'),'sensor',name='marine_imu',type='imu')
+    for key,text in dict(always_on='true',update_rate='50',topic='/marine/imu',gz_frame_id='base_link').items():
+        ET.SubElement(sensor,key).text=text
+    for kind,short,values in [
+        ('OdometryPublisher','odometry-publisher',dict(odom_frame='map',robot_base_frame='base_link',
+            odom_topic='/marine/odometry',tf_topic='/marine/truth_pose',odom_publish_frequency='50',dimensions='3')),
+        ('JointStatePublisher','joint-state-publisher',dict(topic='/marine/joint_states'))]:
+        plugin=ET.SubElement(ET.SubElement(root,'gazebo'),'plugin',
+            name='ignition::gazebo::systems::'+kind,filename='ignition-gazebo-'+short+'-system')
+        for key,text in values.items():ET.SubElement(plugin,key).text=text
+
+
+def wamv(store, download=False):
+    """WAM-V H source chassis/propellers and actual upstream water equations."""
+    from build_vrx_fortress import build
+    source=load_source('vrx_vendor')
+    root=store/'sources'/source['id']/source['revision']
+    if download:checkout(source,'vrx_urdf',store)
+    libraries=build(store,download)
+    env=source_package_prefix([root/'vrx_urdf'],store/'prefixes/vrx')
+    entry='vrx_urdf/wamv_gazebo/urdf/wamv_gazebo.urdf.xacro'
+    expanded=subprocess.check_output(['xacro',str(root/entry),'namespace:=wamv','thruster_config:=H'],
+                                     text=True,env=env,timeout=60)
+    document=ET.fromstring(expanded)
+    name='asset_vrx_wamv_h'
+    document.set('name',name)
+    # The lab's frame convention uses base_link, without an embedded slash.
+    for node in document.iter():
+        for key,text in node.attrib.items():node.set(key,text.replace('wamv/',''))
+        if node.text:node.text=node.text.replace('wamv/','')
+    for mesh in document.findall('.//mesh'):
+        uri=mesh.get('filename')
+        if uri.startswith(('package://','model://')):
+            relative=uri.split('://',1)[1]
+            path=root/'vrx_urdf'/relative
+            if not path.is_file():raise ValueError('Missing source mesh '+str(path))
+            mesh.set('filename',str(path))
+    for node in document.iter():
+        if node.tag.endswith('_map') and node.text and node.text.startswith('model://'):
+            resource=root/'vrx_urdf'/node.text.removeprefix('model://')
+            if not resource.is_file():raise ValueError('Missing source material '+str(resource))
+            node.text=str(resource)
+    for block in document.findall('gazebo'):
+        for plugin in block.findall('plugin'):
+            kind=plugin.get('name','').split('::')[-1]
+            if kind in libraries['libraries']:
+                plugin.set('filename',libraries['libraries'][kind])
+                if kind=='Surface':
+                    # Session launch sets these absolute world water parameters.
+                    ET.SubElement(plugin,'fluid_density').text='1025'
+            elif kind in ('Thruster','JointPositionController'):
+                plugin.set('name','ignition::gazebo::systems::'+kind)
+                plugin.set('filename','ignition-gazebo-'+('thruster' if kind=='Thruster' else 'joint-position-controller')+'-system')
+                if kind=='Thruster':
+                    plugin.find('namespace').text=name
+                    # Explicit Fortress default reverse limit, preserving upstream max.
+                    ET.SubElement(plugin,'min_thrust_cmd').text='-1000'
+                else:
+                    ET.SubElement(plugin,'initial_position').text='0'
+            else:block.remove(plugin)
+    marine_sensor_kit(document,'.75 0 1.5')
+    text=ET.tostring(document,encoding='unicode')
+    from robot_lab_utils.marine_model import SurfaceModel
+    plant=SurfaceModel(text,1025.)
+    hydro=document.find("gazebo/plugin[@name='vrx::SimpleHydrodynamics']")
+    yaw_inertia=float(document.find("link[@name='base_link']/inertial/inertia").get('izz'))
+    tuning=dict(surge_gain=2*plant.mass,surge_drag_linear=float(hydro.findtext('xU')),
+        surge_drag_quadratic=float(hydro.findtext('xUU')),yaw_gain=2*yaw_inertia,
+        yaw_drag_linear=float(hydro.findtext('nR')),yaw_drag_quadratic=float(hydro.findtext('nRR')),
+        max_surge=.4,max_yaw=.1)
+    identity=hashlib.sha256(text.encode()).hexdigest()
+    target=store/'models'/name/identity
+    target.mkdir(parents=True,exist_ok=True)
+    (target/'source-expanded.urdf').write_text(expanded)
+    output=target/'marine.urdf';output.write_text(text)
+    profile=dict(package='robot_lab_robots',xacro=str(output),name=name,type='aquatic',
+        asset_origin='extension',source_id=source['id'],source_revision=source['revision'],source_entry=entry,
+        external_asset=True,marine_model=True,marine_propulsion='surface_twin_thrusters',
+        marine_native_watchdog=True,marine_buoyancy='vrx_surface',marine_navigation_radius=3.3,marine_slam_camera=True,
+        marine_camera_link='base_link',marine_camera_sensor='rgbd_camera',
+        supported_simulators=['gazebo'],supported_modes=['display'],default_mode='display',default_map='surface_harbor',
+        experimental_modes_by_simulator={'gazebo':['display','marine']},
+        spawn_by_map={'surface_harbor':dict(x=-5.,y=0.,z=0.,yaw=0.)},
+        qualification_state='experimental_unqualified',implementation_state='experimental',validation_state='pending',
+        drive=dict(type='marine',max_speed=.4,max_accel=.4,max_angular_speed=.1,max_angular_accel=.4),
+        surface_control=tuning,
+        features=['marine_dynamics','surface_vessel','differential_thrust','rgbd_camera','imu'],
+        notes='Pinned Apache-2.0 VRX WAM-V H source chassis, battery masses, two zero-held azimuth engines and propellers. '
+              'Private Fortress ABI port retains upstream Surface/SimpleHydrodynamics equations. Lab massless RGB-D/ENU IMU kit, '
+              'bounded differential-force controller and native watchdog. Marine mode requires explicit experimental opt-in; '
+              'wave/current calibration and mission qualification pending.')
+    receipt=dict(source_id=source['id'],revision=source['revision'],entry=entry,license='Apache-2.0',
+        source_expanded_sha256=digest(target/'source-expanded.urdf'),description_sha256=digest(output),
+        plugin_build=libraries,mass_kg=plant.mass,collision_volume_m3=plant.displacement,
+        thrusters=plant.joints,force_bounds_N=plant.bounds.tolist(),allocation=plant.matrix.tolist(),surface_control=tuning,
+        lab_changes=['frame namespace stripping','Fortress ABI port','explicit default -1000N reverse limit',
+                     'zero azimuth hold','massless RGB-D/ENU IMU kit','1025 kg/m3 water environment'],runtime_mission_qualified=False)
+    evidence=target/'integration.json';write_json(evidence,receipt)
+    entity=robot_entity(name,profile,source,entry,evidence)
+    entity.update(robot_class='aquatic',capabilities=['display'],tags=['extension','vrx','surface_vessel','complete_robot','experimental_control'])
+    checkpoint_robots(store,{name:profile},[entity],[dict(source_id=source['id'],revision=source['revision'],
+        entry=entry,status='installed',check=str(evidence),profiles=[dict(id=name,kind='robot',support='Experimental native Fortress marine control',notes=profile['notes'])])])
+    return receipt
 
 
 def turtlebot4_cleaning(store):
@@ -82,7 +210,8 @@ def turtlebot4_cleaning(store):
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('--robot', choices=['turtlebot4_cleaning'], default='turtlebot4_cleaning')
+    parser.add_argument('--robot', choices=['turtlebot4_cleaning','wamv'], default='turtlebot4_cleaning')
+    parser.add_argument('--download',action='store_true',help='Fetch the pinned upstream source before provisioning')
     parser.add_argument('--store', type=Path, default=Path(os.environ.get(
         'ROBOT_LAB_RUNTIME_ROOT', '/workspace/molar/robot_lab_runtime')) / 'external_assets')
     args = parser.parse_args()
@@ -91,7 +220,8 @@ def main():
         parser.error('Counterpart assets must remain on the mounted SSD')
     with (store / 'locks/provision.lock').open('a') as lock:
         fcntl.flock(lock, fcntl.LOCK_EX)
-        print(json.dumps(turtlebot4_cleaning(store), indent=2))
+        result=turtlebot4_cleaning(store) if args.robot=='turtlebot4_cleaning' else wamv(store,args.download)
+        print(json.dumps(result, indent=2))
 
 
 if __name__ == '__main__':

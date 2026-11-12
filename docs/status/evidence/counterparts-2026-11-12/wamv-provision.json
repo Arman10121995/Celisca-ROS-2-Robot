@@ -1,0 +1,110 @@
+{
+  "source_id": "vrx_vendor",
+  "revision": "dc30ed8d17aa1083fd872edad9c77c69896d2b07",
+  "entry": "vrx_urdf/wamv_gazebo/urdf/wamv_gazebo.urdf.xacro",
+  "license": "Apache-2.0",
+  "source_expanded_sha256": "c59fb9c5666323f0c5080e29b2abb44b36ae197ba43e4907d36aba0f28e5946c",
+  "description_sha256": "4c22802705a8ca5185bc5ef2062a3ec7385eb6e5aab0e9582dac075ca012b0f4",
+  "plugin_build": {
+    "source_id": "vrx_vendor",
+    "revision": "dc30ed8d17aa1083fd872edad9c77c69896d2b07",
+    "recipe_sha256": "bd41cdc230d81836c5d15b15134f3e7c0b8413619824d68644008bc97f23b179",
+    "source_files": {
+      "vrx_gz/src/Surface.hh": {
+        "source_sha256": "d0a7a9df046f855c6f4be963b211cc65c87feb606f2c0910720f320095c6d240",
+        "derivative_sha256": "1166f9c6ab741fd5f3df692a07f6ddf02defd68089ba0b59680b52a8d425d5f7"
+      },
+      "vrx_gz/src/Surface.cc": {
+        "source_sha256": "8879fe08d1e7064f6c33b6b59543351c415289b03052cd9e453a0a003f008d11",
+        "derivative_sha256": "79ea6dc73029575f74dfef54c68507118af25e564c7de0a53a77d5253a6bf87d"
+      },
+      "vrx_gz/src/SimpleHydrodynamics.hh": {
+        "source_sha256": "27c7cf2aa0487e022a62c4b8507351fe19434c7858f426c4a7ef83ac689a1ef7",
+        "derivative_sha256": "6e1a3dd1ec6325e3d61a1d9be98acf84b154adca41f2e398c062315cd1f9da61"
+      },
+      "vrx_gz/src/SimpleHydrodynamics.cc": {
+        "source_sha256": "eea082b744f02e7fed8166e2703412f6f88d3954bd7553e17bfb6428ad60078a",
+        "derivative_sha256": "9fd1b3ac99d9a19e00b1ad651e96ecedd704ed890ce0b55722dd557024078795"
+      },
+      "vrx_gz/src/Wavefield.hh": {
+        "source_sha256": "9d6e14b1d227bf5e19d16392270de0cc49602b16d7f46e6dedcade6aa3a5d6bf",
+        "derivative_sha256": "ac8951c7a2231d70d9edb557c11b76541de9786ebed8f3e742e911b2044be5a7"
+      },
+      "vrx_gz/src/Wavefield.cc": {
+        "source_sha256": "1fea4cfac3bbf35a57ae18e4f303b71b74fbe1e3879b78346e28e216079cf399",
+        "derivative_sha256": "80d793b2ae69fb5544ea44035f0b5d843b81b5edf2e07a5e07d55d5766ed583f"
+      }
+    },
+    "license": "Apache-2.0",
+    "libraries": {
+      "Surface": "/workspace/molar/robot_lab_runtime/external_assets/adapters/vrx_fortress/09c1d17adcd56069b1c8e0610b6b8c238c715286419e04a0ca9169ade4fe7277/build/libSurface.so",
+      "SimpleHydrodynamics": "/workspace/molar/robot_lab_runtime/external_assets/adapters/vrx_fortress/09c1d17adcd56069b1c8e0610b6b8c238c715286419e04a0ca9169ade4fe7277/build/libSimpleHydrodynamics.so"
+    },
+    "scope": "Fortress ABI port of upstream water-force plugins; runtime qualification separate",
+    "library_sha256": {
+      "Surface": "aafa1c2b612f6a4d091cc84a36ebdee33405028d74db15e133931c68ade7a97c",
+      "SimpleHydrodynamics": "9a650e27019c459771995bce9c400c0feda0091e7b944f369e0cb07d131e958d"
+    }
+  },
+  "mass_kg": 258.0,
+  "collision_volume_m3": 1.6350193653385092,
+  "thrusters": [
+    "left_engine_propeller_joint",
+    "right_engine_propeller_joint"
+  ],
+  "force_bounds_N": [
+    [
+      -70.75200000000001,
+      70.75200000000001
+    ],
+    [
+      -70.75200000000001,
+      70.75200000000001
+    ]
+  ],
+  "allocation": [
+    [
+      1.0,
+      1.0
+    ],
+    [
+      0.0,
+      0.0
+    ],
+    [
+      0.0,
+      0.0
+    ],
+    [
+      0.0,
+      0.0
+    ],
+    [
+      -0.19113400000000003,
+      -0.19113400000000003
+    ],
+    [
+      -1.027135,
+      1.027135
+    ]
+  ],
+  "surface_control": {
+    "surge_gain": 516.0,
+    "surge_drag_linear": 100.0,
+    "surge_drag_quadratic": 150.0,
+    "yaw_gain": 892.0,
+    "yaw_drag_linear": 800.0,
+    "yaw_drag_quadratic": 800.0,
+    "max_surge": 0.4,
+    "max_yaw": 0.1
+  },
+  "lab_changes": [
+    "frame namespace stripping",
+    "Fortress ABI port",
+    "explicit default -1000N reverse limit",
+    "zero azimuth hold",
+    "massless RGB-D/ENU IMU kit",
+    "1025 kg/m3 water environment"
+  ],
+  "runtime_mission_qualified": false
+}

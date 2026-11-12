@@ -72,7 +72,7 @@ class ThrustWatchdog final : public ignition::gazebo::System,
   ignition::transport::Node::Publisher publisher;
   std::mutex mutex;
   Clock::time_point received{};
-  double command{}, timeout{.4}, maximum{35};
+  double command{}, timeout{.4}, maximum{35}, minimum{-35};
  public:
   void Configure(const ignition::gazebo::Entity &,
       const std::shared_ptr<const sdf::Element> &sdf,
@@ -82,15 +82,16 @@ class ThrustWatchdog final : public ignition::gazebo::System,
     const auto output=sdf->Get<std::string>("output");
     timeout=sdf->Get<double>("timeout_s",.4).first;
     maximum=sdf->Get<double>("max_force",35.).first;
+    minimum=sdf->Get<double>("min_force",-maximum).first;
     if (!std::isfinite(timeout) || timeout<=0 || timeout>1 ||
-        !std::isfinite(maximum) || maximum<=0)
-      throw std::runtime_error("Finite positive thrust watchdog limits required");
+        !std::isfinite(maximum) || maximum<=0 || !std::isfinite(minimum) || minimum>=0)
+      throw std::runtime_error("Finite signed thrust watchdog limits required");
     publisher=node.Advertise<ignition::msgs::Double>(output);
     node.Subscribe(input,&ThrustWatchdog::Receive,this);
   }
   void Receive(const ignition::msgs::Double &message) {
     std::lock_guard<std::mutex> guard(mutex);
-    command=std::isfinite(message.data()) ? std::clamp(message.data(),-maximum,maximum) : 0.;
+    command=std::isfinite(message.data()) ? std::clamp(message.data(),minimum,maximum) : 0.;
     received=Clock::now();
   }
   void PreUpdate(const ignition::gazebo::UpdateInfo &,

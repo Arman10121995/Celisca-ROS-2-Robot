@@ -2442,7 +2442,8 @@ class SimulationLauncherGui(tk.Tk):
                     command.append(argument+str(value))
         if command and self._robot_config().get('marine_model'):
             command = [part for part in command if not part.startswith(('marine_slam:=', 'marine_database:=', 'marine_localization:='))]
-            slam = self.robot_var.get() in ('lab_rov','tethys_auv','lab_usv','lab_amphibious') and self.marine_slam_var.get()
+            slam = (self._robot_config().get('marine_slam_camera',False) or
+                    self.robot_var.get() in ('lab_rov','tethys_auv','lab_usv','lab_amphibious')) and self.marine_slam_var.get()
             command.append('marine_slam:=' + str(bool(slam)).lower())
             if slam:
                 command.append('marine_localization:=' + str(self.marine_localization_var.get()).lower())

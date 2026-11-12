@@ -1,5 +1,7 @@
 # Current Robot Lab status
 
+November 12 R14.1 continuation: complete VRX WAM-V H is installed separately with a private Fortress ABI port of upstream water equations, source-bounded thrust, normal GUI Marine controls/classification and RGB-D autofill. One clear-water run measured 1.8785 m travel and 0.7413 rad turn; no broad mission/wave/contact qualification. Continue BlueROV2, Summit-XL and remaining source-search rows before R6.7. [Receipt](evidence/counterparts-2026-11-12/README.md).
+
 This page records what was measured. **The goals and remaining work are in one list: the
 [roadmap](../../ROADMAP.md)** (implementation queue first, then validation). Remaining-work
 notes in the dated entries below are history.

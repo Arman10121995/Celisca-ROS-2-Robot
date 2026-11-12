@@ -140,8 +140,21 @@ vacuum_camera_20261111:
   remaining_summary:
   - Experimental model is provisioned, with held-out mAP 0.564; cable recall is only 1/13 at score 0.4. Improve recognition and record a physical learned-camera mission before support promotion.
   - Continue the roadmap implementation queue with open-source counterparts, terrain GUI, aerial obstacles and manipulation; wider fleet/marine/gait acceptance remains partial.
-current_delivery: vacuum_camera_20261111
-current_revision: 'November 12 serial implementation: R13.3 trained candidate remains experimental; R14.1 TurtleBot4 native-hazard cleaning derivative completed one Gazebo zone/dock. Continue source marine/wheeled integrations before later implementation queue entries.'
+counterparts_20261112:
+  owner: codex
+  state: partial
+  updated: '2026-11-12'
+  title: Source counterparts — native TurtleBot4 cleaning and VRX WAM-V control
+  receipt: docs/status/evidence/counterparts-2026-11-12/README.md
+  implementation_state: Separate source variants, native hazards and water forces, bounded controls, normal GUI classification and autofill implemented. Original models/certificates preserved.
+  measured_summary:
+  - TurtleBot4 Gazebo nav_empty zone-clean and dock completed; 96.8 percent reported coverage, four fresh native cliff scans. No bumper impact trial.
+  - WAM-V Gazebo surface_harbor forward/turn/neutral-brake completed; 1.8785 m travel, 0.7413 rad yaw, source propeller feedback within 100 rad/s, real RGB-D images.
+  remaining_summary:
+  - Continue BlueROV2 and Summit-XL integrations, then remaining source-search rows and later roadmap implementation entries in order.
+  - Contact, edge cases, message-loss, waves/currents, other maps/backends and full source missions remain separate qualification.
+current_delivery: counterparts_20261112
+current_revision: 'November 12 serial implementation: R13.3 trained candidate remains experimental; R14.1 TurtleBot4 native-hazard cleaning derivative completed one Gazebo zone/dock. VRX WAM-V upstream water forces now run in Fortress with one measured source control screen. Continue BlueROV2/Summit-XL before later implementation queue entries.'
 current_verification:
   round57_2026_10_19: 'Recorded 2026-10-29: MuJoCo small_house slam drive after the spawn fix 873753f completes
     (28.1 m, RMSE 1.3 cm, map precision/recall 0.97/0.79; 1.49 m and 0.12/0.16 before); rear-steer car course after
@@ -2074,7 +2087,7 @@ tasks:
         state: active
         title: Search for and integrate open-source counterparts of the lab-authored robots (requested 2026-11-10)
         updated: '2026-11-12'
-        next_action: Continue WAM-V, BlueROV2, Summit-XL integrations and remaining search rows. Separate source variants and preserve original certificates; broad qualification later.
+        next_action: TurtleBot4 cleaning and WAM-V control are implemented with scoped physical receipts. Continue BlueROV2, Summit-XL integrations and remaining search rows. Separate source variants and preserve original certificates; broad qualification later.
         evidence: [docs/status/evidence/counterparts-2026-11-12/README.md]
         implemented: TurtleBot4 native bumper/four-cliff derivative, missing-feedback pause, normal GUI opt-in/autofill; one actual Gazebo zone-clean and dock completed. Other maps/backends and bumper contact unqualified.
   R2:

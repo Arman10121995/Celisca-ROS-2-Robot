@@ -23,6 +23,8 @@ Ideal segmentation remains the default. A separate source-native TurtleBot4 clea
 
 ---
 
+November 12 source extension: **VRX WAM-V H** is installed in the normal GUI with experimental Fortress Marine controls and upstream water-force equations. One source control run measured forward travel and turning; higher missions remain unqualified. [WAM-V guide](docs/tutorials/wamv.md).
+
 ## 🎯 Key capabilities
 
 | Area | What's available |
