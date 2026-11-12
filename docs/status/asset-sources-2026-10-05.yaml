@@ -20,8 +20,8 @@ sources:
   kind: robot
   repository: https://github.com/RobotnikAutomation/robot_description
   revision: 1a7aff1310dbc4427e0b2ae5ef83e0ffd2094504
-  status: downloaded
-  license_note: BSD-3-Clause root license retained; rbsummit and rbsummit_steel are complete source bases; sensor dependency and Fortress control ABI adaptation pending
+  status: integration_implemented
+  license_note: BSD-3-Clause root license retained; complete RB-SUMMIT-STEEL base with source mechanics/contact model and interface limits, Fortress ABI/friction-frame port and declared massless lab sensors. One Gazebo initial control/sensing screen measured; higher missions and other backends unqualified
   entries: [robots/rbsummit, robots/rbsummit_steel, urdf, meshes/bases/rbsummit, meshes/bases/rbsummit_steel, meshes/wheels]
 - id: unitree_rl_gym
   kind: robot

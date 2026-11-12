@@ -1,0 +1,18 @@
+{
+  "display": {
+    "command": "ros2 launch robot_lab_bringup simulated_robot.launch.py mode:=display map_name:=nav_empty robot_model:=asset_robotnik_summit_steel simulator:=gazebo gui:=auto perception:=none allow_experimental_assets:=true",
+    "strafe": true
+  },
+  "loc": {
+    "command": "ros2 launch robot_lab_bringup simulated_robot.launch.py mode:=loc map_name:=nav_empty robot_model:=asset_robotnik_summit_steel simulator:=gazebo gui:=auto localization:=amcl state_estimation:=ekf_localization_node sensor_fusion:=wheel_imu_fusion allow_experimental_assets:=true"
+  },
+  "slam": {
+    "command": "ros2 launch robot_lab_bringup simulated_robot.launch.py mode:=slam map_name:=nav_empty robot_model:=asset_robotnik_summit_steel simulator:=gazebo gui:=auto localization:=slam_toolbox state_estimation:=ekf_localization_node sensor_fusion:=wheel_imu_fusion perception:=costmap_2d_observation allow_experimental_assets:=true"
+  },
+  "3d_slam": {
+    "command": "ros2 launch robot_lab_bringup simulated_robot.launch.py mode:=3d_slam map_name:=nav_empty robot_model:=asset_robotnik_summit_steel simulator:=gazebo gui:=auto localization:=rtabmap_localization state_estimation:=ekf_3d_estimator perception:=pointcloud_segmenter allow_experimental_assets:=true"
+  },
+  "nav": {
+    "command": "ros2 launch robot_lab_bringup simulated_robot.launch.py mode:=nav map_name:=nav_empty robot_model:=asset_robotnik_summit_steel simulator:=gazebo gui:=auto global_planning:=a_star_planner local_planning:=dwb_local_planner control:=native_holonomic_controller localization:=amcl state_estimation:=ekf_localization_node sensor_fusion:=wheel_imu_fusion allow_experimental_assets:=true"
+  }
+}

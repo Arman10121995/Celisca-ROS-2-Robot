@@ -199,6 +199,110 @@ def bluerov2_heavy(store,download=False):
     return receipt
 
 
+def summit_steel(store,download=False):
+    """Complete Robotnik source base with a declared lab sensing/control adapter."""
+    from robot_lab_utils.source_ground import ground_sensor_kit, summit_fortress_contacts
+    from robot_lab_utils.drive_kinematics import drive_from_config
+    from provision_extension_assets import write_yaml
+    source=load_source('robotnik_description_vendor')
+    if download:
+        for entry in ('urdf','meshes/bases/rbsummit_steel','meshes/wheels','simulators/gazebo_ignition/rbsummit_steel'):
+            checkout(source,entry,store)
+    root=store/'sources'/source['id']/source['revision']
+    if subprocess.check_output(['git','rev-parse','HEAD'],cwd=root,text=True).strip()!=source['revision']:
+        raise ValueError('Unexpected Robotnik source revision')
+    if subprocess.check_output(['git','status','--porcelain'],cwd=root,text=True):
+        raise ValueError('Preserve edited Robotnik source before provisioning')
+    env=source_package_prefix([root],store/'prefixes/robotnik')
+    recipes=store/'recipes';recipes.mkdir(exist_ok=True)
+    wrapper=recipes/'summit-steel-base.xacro'
+    wrapper.write_text('''<robot name="summit_steel" xmlns:xacro="http://www.ros.org/wiki/xacro">
+<xacro:arg name="gazebo_ignition" default="true"/><xacro:arg name="prefix" default=""/>
+<xacro:include filename="$(find robotnik_description)/urdf/bases/rbsummit_steel/rbsummit_steel_base.xacro"/>
+<xacro:rbsummit_steel prefix="" namespace="" gazebo_ignition="true"/>
+</robot>''')
+    expanded=subprocess.check_output(['xacro',str(wrapper)],env=env,text=True,timeout=60)
+    document=ET.fromstring(expanded)
+    ET.register_namespace('gz','http://gazebosim.org/schema')
+    name='asset_robotnik_summit_steel';document.set('name',name)
+    contact_frames=summit_fortress_contacts(document)
+    resources={}
+    for node in document.findall('.//mesh'):
+        uri=node.get('filename','')
+        if not uri.startswith('package://robotnik_description/'):
+            raise ValueError('Unreviewed source mesh: '+uri)
+        path=(root/uri.removeprefix('package://robotnik_description/')).resolve()
+        if not path.is_relative_to(root.resolve()) or not path.is_file():raise ValueError('Missing source mesh '+uri)
+        node.set('filename',str(path));resources[str(path)]=digest(path)
+    sensors=ground_sensor_kit(document)
+    drive=dict(type='mecanum',front_left_wheel_joint='front_left_wheel_joint',
+        front_right_wheel_joint='front_right_wheel_joint',rear_left_wheel_joint='back_left_wheel_joint',
+        rear_right_wheel_joint='back_right_wheel_joint',wheel_radius=.127,wheelbase=.445,wheel_separation=.409,
+        roller_angle=0.7853981633974483,max_speed=.3,max_accel=.4,max_angular_speed=.4,max_angular_accel=.6)
+    # The complete body/collision/inertia and source interface bounds remain.
+    control=document.find('ros2_control')
+    control.find('hardware/plugin').text='ign_ros2_control/IgnitionSystem'
+    original_bounds={j.get('name'):{p.get('name'):float(p.text) for p in j.findall('command_interface/param')}
+                     for j in control.findall('joint')}
+    if set(original_bounds)!=set(drive_from_config(drive).wheel_joints):
+        raise ValueError('Expected four source mecanum wheel velocity interfaces')
+    identity=hashlib.sha256(ET.tostring(document)+json.dumps(drive,sort_keys=True).encode()).hexdigest()
+    target=store/'models'/name/identity;target.mkdir(parents=True,exist_ok=True)
+    config_path=target/'controllers.yaml'
+    config=dict(controller_manager=dict(ros__parameters=dict(update_rate=100,use_sim_time=True,
+        joint_state_broadcaster=dict(type='joint_state_broadcaster/JointStateBroadcaster'),
+        mecanum_wheel_controller=dict(type='velocity_controllers/JointGroupVelocityController'))),
+        joint_state_broadcaster=dict(ros__parameters=dict(use_sim_time=True)),
+        mecanum_wheel_controller=dict(ros__parameters=dict(use_sim_time=True,joints=drive_from_config(drive).wheel_joints)))
+    write_yaml(config_path,config)
+    plugin=document.find("gazebo/plugin[@name='gz_ros2_control::GazeboSimROS2ControlPlugin']")
+    if plugin is None:raise ValueError('Expected the source ros2_control plugin')
+    plugin.set('filename','ign_ros2_control-system');plugin.set('name','ign_ros2_control::IgnitionROS2ControlPlugin')
+    plugin.find('parameters').text=str(config_path)
+    ros=plugin.find('ros')
+    if ros is not None:plugin.remove(ros)
+    truth=ET.SubElement(ET.SubElement(document,'gazebo'),'plugin',name='ignition::gazebo::systems::OdometryPublisher',
+                        filename='ignition-gazebo-odometry-publisher-system')
+    for key,text in dict(odom_frame='world',robot_base_frame='base_footprint',
+        odom_topic='/model/'+name+'/odometry_truth',tf_topic='/model/'+name+'/truth_pose',
+        odom_publish_frequency='50',dimensions='3').items():ET.SubElement(truth,key).text=text
+    output=target/'drive.urdf';output.write_text(ET.tostring(document,encoding='unicode'))
+    (target/'source-expanded.urdf').write_text(expanded)
+    profile=dict(package='robot_lab_robots',xacro=str(output),name=name,type='mobile',source_id=source['id'],
+        source_revision=source['revision'],source_entry='urdf/bases/rbsummit_steel/rbsummit_steel_base.xacro',
+        asset_origin='extension',drive=drive,sensor_config=sensors,drive_in_display=True,
+        controllers=['joint_state_broadcaster','mecanum_wheel_controller'],
+        controllers_yaml=str(config_path),supported_simulators=['gazebo'],supported_modes=['display'],
+        experimental_modes_by_simulator={'gazebo':['display','loc','slam','3d_slam','nav']},
+        default_mode='display',default_map='nav_empty',
+        features=['ros2_control','velocity_base','holonomic_base','lidar_2d','rgbd_camera','imu'],
+        default_algorithms={'control':'native_holonomic_controller'},
+        qualification_state='experimental_unqualified',implementation_state='experimental',validation_state='pending',
+        notes='Complete BSD-3-Clause Robotnik RB-SUMMIT-STEEL source chassis and four mecanum wheels. '
+              'Original mass, inertia, sphere contacts, anisotropic friction and ±10/20 rad/s source interfaces retained. '
+              'Fortress ros2_control ABI port, existing bounded holonomic controller and declared massless lab LiDAR/IMU/RGB-D kit. '
+              'Gazebo/nav_empty Display forward, reverse, strafe, turn, neutral and publisher-loss motion measured; '
+              'higher modes require experimental opt-in. Source contact fidelity, other maps/backends and full missions remain unqualified.')
+    receipt=dict(source_id=source['id'],revision=source['revision'],license='BSD-3-Clause',
+        source_expanded_sha256=digest(target/'source-expanded.urdf'),description_sha256=digest(output),
+        controller_yaml_sha256=digest(config_path),source_wheel_bounds_rad_s=original_bounds,contact_frame_port=contact_frames,
+        mass_kg=sum(float(m.get('value')) for m in document.findall('link/inertial/mass')),
+        source_resource_sha256=resources,sensor_config=sensors,drive=drive,
+        lab_changes=['base macro assembled without optional vendor sensors','Fortress ros2_control ABI and root namespace',
+                     'Fortress friction-frame namespace; original source body frame/directions preserved',
+                     'bounded lab holonomic controller','massless lab sensing kit'],runtime_mission_qualified=False)
+    evidence=target/'integration.json';write_json(evidence,receipt)
+    entity=robot_entity(name,profile,source,profile['source_entry'],evidence)
+    entity.update(robot_class='mobile',tags=['extension','robotnik','four_wheels','mecanum','complete_robot','experimental_control'])
+    entity['locomotion'].update(type='mecanum',dof=4)
+    entity['capabilities']=sorted(set(entity['capabilities'])|{'holonomic_base'})
+    entity['frames']=list(dict.fromkeys(['base_footprint',*entity['frames']]))
+    checkpoint_robots(store,{name:profile},[entity],[dict(source_id=source['id'],revision=source['revision'],
+        entry=profile['source_entry'],status='installed_candidate',check=str(evidence),profiles=[dict(id=name,kind='robot',
+        support='Experimental native Fortress mecanum base',notes=profile['notes'])])])
+    return receipt
+
+
 def turtlebot4_cleaning(store):
     original_id, name = 'asset_turtlebot4_lite', 'asset_turtlebot4_lite_cleaning'
     installed = store / 'installed'
@@ -259,7 +363,7 @@ def turtlebot4_cleaning(store):
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('--robot', choices=['turtlebot4_cleaning','wamv','bluerov2_heavy'], default='turtlebot4_cleaning')
+    parser.add_argument('--robot', choices=['turtlebot4_cleaning','wamv','bluerov2_heavy','summit_steel'], default='turtlebot4_cleaning')
     parser.add_argument('--download',action='store_true',help='Fetch the pinned upstream source before provisioning')
     parser.add_argument('--store', type=Path, default=Path(os.environ.get(
         'ROBOT_LAB_RUNTIME_ROOT', '/workspace/molar/robot_lab_runtime')) / 'external_assets')
@@ -270,7 +374,8 @@ def main():
     with (store / 'locks/provision.lock').open('a') as lock:
         fcntl.flock(lock, fcntl.LOCK_EX)
         result=(turtlebot4_cleaning(store) if args.robot=='turtlebot4_cleaning' else
-                wamv(store,args.download) if args.robot=='wamv' else bluerov2_heavy(store,args.download))
+                wamv(store,args.download) if args.robot=='wamv' else
+                bluerov2_heavy(store,args.download) if args.robot=='bluerov2_heavy' else summit_steel(store,args.download))
         print(json.dumps(result, indent=2))
 
 

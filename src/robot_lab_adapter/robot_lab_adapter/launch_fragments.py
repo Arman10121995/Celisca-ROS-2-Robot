@@ -250,6 +250,7 @@ class LaunchFragmentRegistry:
             'dwb_local_planner': 'dwb_local_planner_node',
             'pure_pursuit': 'pure_pursuit_node',
             'simple_controller': 'simple_controller_node',
+            'native_holonomic_controller': 'native_holonomic_controller_node',
             'follow_the_gap': 'follow_the_gap_node',
             
             # Control
@@ -447,6 +448,18 @@ class CompositionResolver:
         ))
         
         # Control fragments
+        self.fragment_registry.register_fragment(LaunchFragment(
+            id='native_holonomic_controller_node',
+            package='robot_lab_controller',
+            executable='holonomic_controller.py',
+            # The managed simulator launch supplies the selected source drive
+            # block; a standalone caller must supply it explicitly as well.
+            default_params={'use_sim_time': True},
+            category='control',
+            provided_topics=['/robot_lab_controller/odom'],
+            required_topics=['/cmd_vel', '/joint_states'],
+            status='integrated'
+        ))
         self.fragment_registry.register_fragment(LaunchFragment(
             id='simple_controller_node',
             package='robot_lab_controller',

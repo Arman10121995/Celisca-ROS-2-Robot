@@ -25,6 +25,8 @@ Ideal segmentation remains the default. A separate source-native TurtleBot4 clea
 
 November 12 source extension: **VRX WAM-V H** is installed in the normal GUI with experimental Fortress Marine controls and upstream water-force equations. One source control run measured forward travel and turning; higher missions remain unqualified. **BlueROV2 Heavy** is also installed as an experimental Marine candidate, with one native forward/turn run; source license review remains open. [BlueROV2 guide](docs/tutorials/bluerov2.md) · [WAM-V guide](docs/tutorials/wamv.md).
 
+Source **Robotnik RB-SUMMIT-STEEL** is now in the normal GUI with forward/reverse, strafe and turn control, real sensor delivery, source limits and command autofill. One Gazebo Display screen is measured; higher missions remain experimental. [Summit guide](docs/tutorials/summit-steel.md).
+
 ## 🎯 Key capabilities
 
 | Area | What's available |

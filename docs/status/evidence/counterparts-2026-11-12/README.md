@@ -115,3 +115,49 @@ includes the source family/classification, explicit experimental Marine gate and
 optional RGB-D mapping command autofill. Depth/strafe, maps/routes, message loss,
 contact, original FRD/ArduSub parity and hardware acceptance remain unqualified.
 [Operator guide](../../../tutorials/bluerov2.md).
+
+## Robotnik RB-SUMMIT-STEEL source mecanum base
+
+`asset_robotnik_summit_steel` preserves the complete BSD-3-Clause source base at
+`1a7aff1310dbc4427e0b2ae5ef83e0ffd2094504`: 151 kg, original geometry/inertias,
+four wheel motors and the manufacturer's sphere/anisotropic-contact model.
+The Fortress ros2_control ABI adapter retains the original ±10 rad/s front and
+±20 rad/s rear command interfaces. A declared massless lab sensing kit adds actual
+LiDAR, ENU IMU and RGB-D without claiming the optional vendor sensor hardware.
+
+The source `gz:expressed_in` spelling is ported to Fortress's literal
+`ignition:expressed_in`. The source direction vectors, coefficients and original
+`base_footprint` frame remain unchanged. That frame is the physical DART body after
+fixed-joint merging. The XML asset resolver preserves the native prefix instead of
+rewriting it to `ns0`, which previously made the SDK ignore the friction reference.
+Physical kit poses and the bridge account for the same fixed-joint merging.
+
+Actual `summit-drive-4`: one Gazebo `nav_empty` Display source control screen, through
+`/key_vel`, 31.362 wall seconds. Measured forward 0.250 m/s, reverse -0.243 m/s,
+lateral 0.250 m/s and yaw 0.250 rad/s. Eight actual images and eight LiDAR samples
+arrived, with 476 recorded wheel-state samples. Maximum wheel rate was 1.969 rad/s.
+Input-loss travel was 0.112 m over 3.0 s, with zero final forward/yaw speed. The lease
+now resets wheel motion immediately on expiry, including after a frozen ROS clock;
+four-wheel steering retains its last angles. No body pose is written to implement driving.
+
+[Measured summary](summit-drive.json), [source/model receipt](summit-provision.json),
+[GUI command receipt](summit-gui.log). Actual runtime URDF, retained source snapshots
+and full body/joint trajectories remain on the SSD under the R14 directory above.
+The measured summary pins their hashes. Metadata/algorithm autofill was checked after
+the physical Display run; no Navigation/SLAM mission is claimed from that GUI check.
+
+Retained negatives: `summit-drive-1` exposed a version-specific friction-frame failure;
+`-2` still lost the SDK prefix at description loading and had a camera attachment bug;
+`-3` fixed source motion/sensing but travelled 0.183 m after publisher loss because the
+old controller added a normal deceleration ramp to an expired command. `-4` corrects
+that behavior without weakening the existing 0.15 m travel criterion. Root/namespace,
+watchdog, sensor, description and kinematics checks: 78 passed; adapter/dispatch checks:
+71 passed. Four-package builds completed in 13.2 and 16.7 seconds. These are separate
+software results, not full source mission qualification.
+
+The normal GUI classifies one complete Robotnik family with strafe controls. Higher
+modes require explicit experimental opt-in and autofill compatible algorithms, including
+the actual holonomic wheel controller rather than the differential-drive PID label.
+A source-sized Nav2 footprint is implemented. Contact fidelity, other maps/backends,
+physical joystick, SLAM/3D SLAM/localization and navigation missions remain unqualified.
+[Operator guide](../../../tutorials/summit-steel.md).

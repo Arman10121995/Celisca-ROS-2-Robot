@@ -17,6 +17,9 @@ robots:
   - id: bluerov2
     name: BlueROV2
     members: [{id: asset_bluerov2_heavy, label: Source Heavy configuration · experimental Fortress candidate}]
+  - id: robotnik_summit
+    name: Robotnik Summit
+    members: [{id: asset_robotnik_summit_steel, label: RB-SUMMIT-STEEL · source mecanum base with lab sensors}]
   - id: lab_tracked
     name: Tracked vehicle with flippers
     preferred: lab_tracked

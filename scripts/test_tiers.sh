@@ -98,6 +98,8 @@ INTEGRATION_TESTS=(
   "$BRG_TEST/test_marine_replanning.py"
   "$BRG_TEST/test_marine_source_chain.py"
   "$BRG_TEST/test_bluerov_source.py"
+  "$BRG_TEST/test_source_ground.py"
+  "$BRG_TEST/test_holonomic_watchdog.py"
   "$BRG_TEST/test_fleet_multifloor.py"
   "$BRG_TEST/test_gait_terrain.py"
   "$GUI_TEST/test_experience.py"

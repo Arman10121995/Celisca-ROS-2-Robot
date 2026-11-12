@@ -1,0 +1,98 @@
+{
+  "source_id": "robotnik_description_vendor",
+  "revision": "1a7aff1310dbc4427e0b2ae5ef83e0ffd2094504",
+  "license": "BSD-3-Clause",
+  "source_expanded_sha256": "675ef73e7fd43c9d46b0e81e94ddeb5c1f377effa36b7e8c3db6bd2d9ced5462",
+  "description_sha256": "1e73b50d3ace7a13be94e5ce3ea1a92e71f7e848824844aba4c858ed0f6c95b6",
+  "controller_yaml_sha256": "d86255c979d3339525cdc86394015c2be1405940e2b6dbfbf7d7b2210dfa31ed",
+  "source_wheel_bounds_rad_s": {
+    "front_left_wheel_joint": {
+      "min": -10.0,
+      "max": 10.0
+    },
+    "front_right_wheel_joint": {
+      "min": -10.0,
+      "max": 10.0
+    },
+    "back_left_wheel_joint": {
+      "min": -20.0,
+      "max": 20.0
+    },
+    "back_right_wheel_joint": {
+      "min": -20.0,
+      "max": 20.0
+    }
+  },
+  "contact_frame_port": [
+    {
+      "link": "front_right_wheel_link",
+      "source_frame": "base_footprint",
+      "physical_frame": "base_footprint",
+      "source_direction": "1 1 0"
+    },
+    {
+      "link": "front_left_wheel_link",
+      "source_frame": "base_footprint",
+      "physical_frame": "base_footprint",
+      "source_direction": "1 -1 0"
+    },
+    {
+      "link": "back_left_wheel_link",
+      "source_frame": "base_footprint",
+      "physical_frame": "base_footprint",
+      "source_direction": "1 1 0"
+    },
+    {
+      "link": "back_right_wheel_link",
+      "source_frame": "base_footprint",
+      "physical_frame": "base_footprint",
+      "source_direction": "1 -1 0"
+    }
+  ],
+  "mass_kg": 151.0,
+  "source_resource_sha256": {
+    "/workspace/molar/robot_lab_runtime/external_assets/sources/robotnik_description_vendor/1a7aff1310dbc4427e0b2ae5ef83e0ffd2094504/meshes/bases/rbsummit_steel/rbsummit_steel_chassis.stl": "fec1186c7d5d3d503de53f88162640c858988ea9438a6895d5f7140386d50796",
+    "/workspace/molar/robot_lab_runtime/external_assets/sources/robotnik_description_vendor/1a7aff1310dbc4427e0b2ae5ef83e0ffd2094504/meshes/bases/rbsummit_steel/rbsummit_steel_top_cover.stl": "106684b35e7fc529214e014ec4a13cc969c6bcd38abf46d321107762b1fec4bd",
+    "/workspace/molar/robot_lab_runtime/external_assets/sources/robotnik_description_vendor/1a7aff1310dbc4427e0b2ae5ef83e0ffd2094504/meshes/bases/robotnik_logo_chasis.stl": "39d43bbbdfb642d12c7eb806c41444ddd98f6f7dbff30e47b6c78dddd2166641",
+    "/workspace/molar/robot_lab_runtime/external_assets/sources/robotnik_description_vendor/1a7aff1310dbc4427e0b2ae5ef83e0ffd2094504/meshes/wheels/mecanum_wheel/kairos_mecanum_wheel_2.dae": "1a935046c78a2f321f43d3f3f6b1b4d4e7c09484162997d569f0ae561afecc8e",
+    "/workspace/molar/robot_lab_runtime/external_assets/sources/robotnik_description_vendor/1a7aff1310dbc4427e0b2ae5ef83e0ffd2094504/meshes/wheels/mecanum_wheel/kairos_mecanum_wheel_1.dae": "728f46627110dda2ea1f6061bc3121eff107ac25f189fbcc86403d6369a13b95"
+  },
+  "sensor_config": {
+    "laser_link_name": "laser_link",
+    "scan_rate": 5.0,
+    "scan_samples": 640,
+    "scan_range_min": 0.1,
+    "scan_range_max": 15.0,
+    "camera_link_name": "oakd_rgb_camera_frame",
+    "camera_optical_frame": "oakd_rgb_camera_optical_frame",
+    "camera_rate": 5.0,
+    "camera_width": 320,
+    "camera_height": 240,
+    "camera_horizontal_fov": 1.25,
+    "camera_near": 0.1,
+    "camera_far": 8.0
+  },
+  "drive": {
+    "type": "mecanum",
+    "front_left_wheel_joint": "front_left_wheel_joint",
+    "front_right_wheel_joint": "front_right_wheel_joint",
+    "rear_left_wheel_joint": "back_left_wheel_joint",
+    "rear_right_wheel_joint": "back_right_wheel_joint",
+    "wheel_radius": 0.127,
+    "wheelbase": 0.445,
+    "wheel_separation": 0.409,
+    "roller_angle": 0.7853981633974483,
+    "max_speed": 0.3,
+    "max_accel": 0.4,
+    "max_angular_speed": 0.4,
+    "max_angular_accel": 0.6
+  },
+  "lab_changes": [
+    "base macro assembled without optional vendor sensors",
+    "Fortress ros2_control ABI and root namespace",
+    "Fortress friction-frame namespace; original source body frame/directions preserved",
+    "bounded lab holonomic controller",
+    "massless lab sensing kit"
+  ],
+  "runtime_mission_qualified": false
+}

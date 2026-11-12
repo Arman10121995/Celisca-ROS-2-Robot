@@ -201,6 +201,9 @@ algorithms:
       for_drive_types: [ackermann]
       for_modes: [nav]
       car_search_model: DUBIN
+    native_holonomic_controller:
+      stack: controller
+      for_drive_types: [mecanum, four_wheel_steer]
     simple_controller:
       stack: controller
     noisy_controller:

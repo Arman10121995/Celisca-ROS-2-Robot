@@ -125,7 +125,7 @@ Work top to bottom. Each line links to its task.
 |---|---|---|---|
 | I1 | [R13.2](#r132--vacuum-carpets-and-mopping) Vacuum carpets and mopping | Done 2026-11-10 (Gazebo mop + rug run passes) | implemented |
 | I2 | [R13.3](#r133--vacuum-camera-obstacle-recognition) Vacuum camera obstacles | Initial implementation complete, including trained experimental checkpoint; recognition quality and robot mission pending | partial |
-| I3 | [R14.1](#r141--open-source-counterparts-for-self-made-robots) Open-source robots | TurtleBot4 native-hazard cleaning implemented and one zone/dock measured; WAM-V Fortress control implemented and measured; BlueROV2 Heavy candidate control implemented; finish license review and Summit-XL next | partial |
+| I3 | [R14.1](#r141--open-source-counterparts-for-self-made-robots) Open-source robots | TurtleBot4 native-hazard cleaning implemented and one zone/dock measured; WAM-V Fortress control implemented and measured; TurtleBot4, WAM-V, BlueROV2 and Summit-STEEL integrations implemented; finish source-search decisions and license review | partial |
 | I4 | [R6.7](#r67--terrain-generation-gui-and-four-backend-conversion) Terrain GUI | GUI page, provider manifest, Isaac contact | partial |
 | I5 | [R5.11](#r511--drone-moving-obstacles-and-other-drone-backends) Drone moving obstacles | Moving-obstacle prediction, sensor-loss handling, other backends | not started |
 | I6 | [R5.9](#r59--mobile-manipulators) Mobile manipulation | Navigate → reach → grasp → transport → release pipeline in the GUI | partial |
@@ -896,6 +896,7 @@ These are complete; preserve their scoped contracts. R1.3 follow-up CI passes at
 - **Implemented:** separate `asset_turtlebot4_lite_cleaning` source variant, native bumper/four cliff sensors, stale-feedback pause, GUI opt-in and command autofill. One Gazebo `nav_empty` zone-clean/dock completed (96.8% reported coverage); bumper impact and other-map qualification remain pending. [Receipt](docs/status/evidence/counterparts-2026-11-12/README.md). Continue WAM-V, BlueROV2, Summit-XL and the remaining source-search rows.
 - **WAM-V implemented:** separate `asset_vrx_wamv_h` complete source vessel, private Fortress ABI port of upstream water equations, bounded source-aware controller, native timeout, normal GUI classification/autofill and declared RGB-D kit. One clear-water source run measured 1.8785 m travel and 0.7413 rad turn; other missions/maps/waves and message-loss qualification remain pending. [Guide](docs/tutorials/wamv.md).
 - **BlueROV2 candidate implemented:** separate `asset_bluerov2_heavy`, source-frame-preserving Heavy plant with native forces, bounded allocator/timeout and declared ENU/RGB-D kit. One Gazebo run measured 1.1373 m travel and 1.4250 rad turn; license/mesh redistribution review and broader missions remain pending. [Guide](docs/tutorials/bluerov2.md). Continue Summit-XL and remaining search rows before R6.7.
+- **Summit-STEEL implemented:** complete source `asset_robotnik_summit_steel` with retained source mechanics/contact model, Fortress control/friction-frame port, declared sensing kit and normal GUI defaults/autofill. One Gazebo Display run measured forward/reverse/strafe/yaw, actual sensors, source wheel bounds and 0.112 m publisher-loss travel. Higher-mode pipelines/footprint are implemented but missions remain unqualified. [Guide](docs/tutorials/summit-steel.md). Finish the remaining source-search decisions and license review; preserve the authored four-wheel-steering benchmark, since this source base is mecanum.
 - **Search record:** [r14-open-source-candidates-2026-11-10](docs/status/r14-open-source-candidates-2026-11-10.md).
   Finding: the iRobot Create 3 (BSD) is already installed, and the installed,
   measured TurtleBot 4 Lite (Create 3 plus LiDAR) is the quickest open-source
@@ -917,7 +918,8 @@ These are complete; preserve their scoped contracts. R1.3 follow-up CI passes at
   | `lab_rov` | `asset_bluerov2_heavy` experimental source candidate implemented and one physical control run measured; package MIT/root text and third-party mesh license review pending before adoption |
   | `lab_usv` | Adopted as separate experimental `asset_vrx_wamv_h`; native Fortress source control measured, broad qualification pending |
   | `ackermann_car`, `rear_steer_car`, `anti_ackermann_car` | F1TENTH, other maintained Ackermann ROS 2 models |
-  | `mecanum_car`, `four_wheel_steer_car` | Robotnik Summit-XL (mecanum), other ROS 2 omni/4WS bases |
+  | `mecanum_car` | Adopted separate `asset_robotnik_summit_steel`, complete BSD-3-Clause base; Gazebo source control/sensing measured, higher missions pending |
+  | `four_wheel_steer_car` | Separate Ranger source-model/asset-license review remains; Summit-STEEL is mecanum, so it does not replace this 4WS benchmark |
   | `lab_tracked`, `lab_tracked_articulated` | maintained tracked/flipper ROS 2 robots (search ROS index, Gazebo Fuel) |
   | `lab_snake`, `lab_amphibious`, `lab_octopod`, `lab_centipede` | search again; keep self-made if none is complete and licensed |
   | `quadrotor_sitl` (display) | already superseded by the real PX4 `px4_x500` |

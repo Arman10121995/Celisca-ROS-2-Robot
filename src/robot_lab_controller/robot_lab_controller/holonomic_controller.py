@@ -2,6 +2,7 @@
 """Gazebo joint-command and wheel-odometry bridge for 4WS and mecanum bases."""
 
 import math
+import time
 
 import rclpy
 from geometry_msgs.msg import TwistStamped
@@ -44,6 +45,7 @@ class HolonomicController(Node):
         self._timeout = float(self.get_parameter("cmd_vel_timeout").value)
         self._command = (0.0, 0.0, 0.0)
         self._command_time = None
+        self._command_wall = None
         self._last_step = None
         self._wheel_prev = None
         self._joint_time = None
@@ -58,10 +60,12 @@ class HolonomicController(Node):
         self._command = (msg.twist.linear.x, msg.twist.linear.y,
                          msg.twist.angular.z)
         self._command_time = self.get_clock().now()
+        self._command_wall = time.monotonic()
 
     def _reset_control(self, _request, response):
         self._command = (0.0, 0.0, 0.0)
         self._command_time = None
+        self._command_wall = None
         self._last_step = None
         self._wheel_prev = None
         self._joint_time = None
@@ -75,8 +79,9 @@ class HolonomicController(Node):
 
     def _step(self):
         now = self.get_clock().now()
-        stale = self._command_time is None or \
-            (now - self._command_time).nanoseconds * 1e-9 > self._timeout
+        stale = (self._command_time is None or self._command_wall is None or
+                 time.monotonic()-self._command_wall > self._timeout or
+                 (now-self._command_time).nanoseconds*1e-9 > self._timeout)
         vx, vy, wz = (0.0, 0.0, 0.0) if stale else self._command
         dt = 1.0 / self._rate
         if self._last_step is not None:
@@ -84,6 +89,10 @@ class HolonomicController(Node):
             if 0.0 < elapsed < 0.5:
                 dt = elapsed
         self._last_step = now
+        if stale:
+            # Publisher loss is a watchdog stop, not another ramp target.
+            # Both models clear wheel motion; 4WS retains steering angles.
+            self._drive.reset()
         targets = self._drive.targets(vx, wz, dt=dt, vy=vy)
         if self._steer_pub is not None:
             self._steer_pub.publish(Float64MultiArray(

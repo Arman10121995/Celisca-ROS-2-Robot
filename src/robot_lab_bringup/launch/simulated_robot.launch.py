@@ -1112,6 +1112,14 @@ def _build_simulation_actions(context):
                         output="screen",
                     )
                 )
+            if robot_config.get('drive_in_display') and drive_type in ('mecanum','four_wheel_steer'):
+                # Joint group activation alone cannot turn GUI Twist input
+                # into the source wheel targets. Preserve the normal stamped API.
+                actions += [Node(package='robot_lab_controller',executable='twist_relay',
+                    parameters=[{'use_sim_time':_as_bool(use_sim_time,True)}],output='screen'),
+                    Node(package='robot_lab_controller',executable='holonomic_controller.py',
+                    parameters=[{'use_sim_time':_as_bool(use_sim_time,True),
+                                 'drive_config':json.dumps(drive_config,sort_keys=True)}],output='screen')]
             return actions
 
         # PyBullet / MuJoCo / Isaac: their own viewer renders both the world

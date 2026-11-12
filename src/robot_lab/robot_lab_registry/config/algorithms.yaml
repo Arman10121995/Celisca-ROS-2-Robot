@@ -955,6 +955,26 @@
     license: Apache-2.0
   tags:
   - pd_control
+- id: native_holonomic_controller
+  version: 1.0.0
+  name: Native Holonomic Wheel Control
+  description: Source-configured mecanum or four-wheel-steering wheel targets and measured wheel odometry; the platform mux/relay owns command transport.
+  status: integrated
+  category: control
+  family: kinematic_control
+  implementation:
+    package: robot_lab_controller
+    plugin: HolonomicController
+    language: python
+  input_contract:
+    required_topics: [/cmd_vel, /joint_states]
+  output_contract:
+    provided_topics: [/robot_lab_controller/odom]
+  required_capabilities: [holonomic_base]
+  supported_robot_classes: [mobile]
+  parameters: {}
+  source: {repository: internal, license: BSD-3-Clause}
+  tags: [mecanum, four_wheel_steering, bounded_wheels, measured_odometry]
 - id: simple_controller
   version: 1.0.0
   name: Simple Controller

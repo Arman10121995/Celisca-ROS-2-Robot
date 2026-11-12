@@ -10,6 +10,16 @@ _NUMBERS = ('scan_rate', 'scan_range_min', 'scan_range_max', 'camera_rate',
             'camera_horizontal_fov', 'camera_near', 'camera_far')
 
 
+def mounted_rgbd_sensor(description):
+    """Find the standard lab RGB-D sensor on its actual massive source link."""
+    root=ET.fromstring(description)
+    sensors=[(block.get('reference'),sensor.get('name')) for block in root.findall('gazebo')
+             for sensor in block.findall('sensor')
+             if sensor.get('type')=='rgbd_camera' and sensor.get('name')=='rgbd_camera']
+    if len(sensors)>1:raise ValueError('The standard RGB-D bridge needs an unambiguous mounted sensor')
+    return sensors[0] if sensors else None
+
+
 def sensor_parameters(config, urdf=None):
     """Validate optional explicit settings; an empty block keeps legacy defaults.
 

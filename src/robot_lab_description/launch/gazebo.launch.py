@@ -397,6 +397,13 @@ def generate_launch_description():
             from robot_lab_utils.vacuum_sensors import hazard_bridge_entries
             description = load_description(LaunchConfiguration('model').perform(context),
                 'is_ignition:=' + is_ignition, 'model_name:=' + rname)
+            from robot_lab_utils.sensor_config import mounted_rgbd_sensor
+            mounted = mounted_rgbd_sensor(description)
+            if mounted:
+                actual_prefix=f'/world/{gz_world_name}/model/{rname}/link/{mounted[0]}/sensor/{mounted[1]}'
+                for entry in entries:
+                    topic=entry['gz_topic_name']
+                    if topic.startswith(oakd_gz_prefix):entry['gz_topic_name']=actual_prefix+topic[len(oakd_gz_prefix):]
             hazards = hazard_bridge_entries(description, gz_world_name, rname)
             overridden = {entry['ros_topic_name'] for entry in hazards}
             entries = [entry for entry in entries if entry['ros_topic_name'] not in overridden] + hazards

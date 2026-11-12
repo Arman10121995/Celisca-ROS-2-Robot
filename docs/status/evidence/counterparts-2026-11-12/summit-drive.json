@@ -1,0 +1,251 @@
+{
+  "robot": "asset_robotnik_summit_steel",
+  "source_id": "robotnik_description_vendor",
+  "source_revision": "1a7aff1310dbc4427e0b2ae5ef83e0ffd2094504",
+  "description": "/workspace/molar/robot_lab_runtime/external_assets/models/asset_robotnik_summit_steel/6282d00144d0596df291861765a3992a6504c81a00d5590e1d4f4160df0329a9/drive.urdf",
+  "description_sha256": "1e73b50d3ace7a13be94e5ce3ea1a92e71f7e848824844aba4c858ed0f6c95b6",
+  "odom": "/odom/ground_truth",
+  "input": "/key_vel",
+  "scope": "Initial source-plant control and sensing; no mission qualification",
+  "phases": [
+    {
+      "name": "forward",
+      "requested": [
+        0.25,
+        0.0,
+        0.0
+      ],
+      "measured": {
+        "vx": 0.25,
+        "vy": -0.0,
+        "wz": -0.0,
+        "distance": 0.5,
+        "measured_sim_s": 2.0,
+        "wall_s": 3.021,
+        "steering_positions_rad": {}
+      }
+    },
+    {
+      "name": "reverse",
+      "requested": [
+        -0.25,
+        0.0,
+        0.0
+      ],
+      "measured": {
+        "vx": -0.243,
+        "vy": 0.0,
+        "wz": -0.0,
+        "distance": 0.485,
+        "measured_sim_s": 2.0,
+        "wall_s": 3.121,
+        "steering_positions_rad": {}
+      }
+    },
+    {
+      "name": "strafe",
+      "requested": [
+        0.0,
+        0.25,
+        0.0
+      ],
+      "measured": {
+        "vx": -0.0,
+        "vy": 0.25,
+        "wz": 0.0,
+        "distance": 0.75,
+        "measured_sim_s": 3.0,
+        "wall_s": 4.029,
+        "steering_positions_rad": {}
+      }
+    },
+    {
+      "name": "turn",
+      "requested": [
+        0.0,
+        0.0,
+        0.25
+      ],
+      "measured": {
+        "vx": 0.0,
+        "vy": -0.0,
+        "wz": 0.25,
+        "distance": 0.0,
+        "measured_sim_s": 3.0,
+        "wall_s": 4.031,
+        "steering_positions_rad": {}
+      }
+    },
+    {
+      "name": "neutral",
+      "requested": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "measured": {
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "distance": 0.0,
+        "measured_sim_s": 2.0,
+        "wall_s": 3.022,
+        "steering_positions_rad": {}
+      }
+    }
+  ],
+  "images": [
+    {
+      "width": 320,
+      "height": 240,
+      "encoding": "rgb8",
+      "bytes": 230400,
+      "frame": "oakd_rgb_camera_optical_frame",
+      "sha256": "61b1be5b46865e619b95acf2094d65def395f23df6c05492bb99bca6e4d19fe6"
+    },
+    {
+      "width": 320,
+      "height": 240,
+      "encoding": "rgb8",
+      "bytes": 230400,
+      "frame": "oakd_rgb_camera_optical_frame",
+      "sha256": "1f20f889c94e92f5d9caae131e195d9a7f2f9ad02470e33eeaaba634f275f79b"
+    },
+    {
+      "width": 320,
+      "height": 240,
+      "encoding": "rgb8",
+      "bytes": 230400,
+      "frame": "oakd_rgb_camera_optical_frame",
+      "sha256": "7d42155f385f846d01d1c2215aefaa5d59b44a56134606bb7a07fe96f34c3d4a"
+    },
+    {
+      "width": 320,
+      "height": 240,
+      "encoding": "rgb8",
+      "bytes": 230400,
+      "frame": "oakd_rgb_camera_optical_frame",
+      "sha256": "df0cc884bebe44d8cdd94c6f0c6e583ce676f4cd414ac81d842dc3c21e27fa76"
+    },
+    {
+      "width": 320,
+      "height": 240,
+      "encoding": "rgb8",
+      "bytes": 230400,
+      "frame": "oakd_rgb_camera_optical_frame",
+      "sha256": "baae352487a48c6087e5ab75f87587aae736557c60a0672a2ecb1ec7e0945e53"
+    },
+    {
+      "width": 320,
+      "height": 240,
+      "encoding": "rgb8",
+      "bytes": 230400,
+      "frame": "oakd_rgb_camera_optical_frame",
+      "sha256": "513464ebf630b36297bc8b734e01aeaf62884ffb18d3f597d0989dbe3720696b"
+    },
+    {
+      "width": 320,
+      "height": 240,
+      "encoding": "rgb8",
+      "bytes": 230400,
+      "frame": "oakd_rgb_camera_optical_frame",
+      "sha256": "513464ebf630b36297bc8b734e01aeaf62884ffb18d3f597d0989dbe3720696b"
+    },
+    {
+      "width": 320,
+      "height": 240,
+      "encoding": "rgb8",
+      "bytes": 230400,
+      "frame": "oakd_rgb_camera_optical_frame",
+      "sha256": "fcfb0657067c15024eabc2389888e66ca748cd452ff921e61b51a67a5b0e7862"
+    }
+  ],
+  "scans": [
+    {
+      "frame": "laser_link",
+      "samples": 640,
+      "range_min": 0.10000000149011612,
+      "range_max": 15.0
+    },
+    {
+      "frame": "laser_link",
+      "samples": 640,
+      "range_min": 0.10000000149011612,
+      "range_max": 15.0
+    },
+    {
+      "frame": "laser_link",
+      "samples": 640,
+      "range_min": 0.10000000149011612,
+      "range_max": 15.0
+    },
+    {
+      "frame": "laser_link",
+      "samples": 640,
+      "range_min": 0.10000000149011612,
+      "range_max": 15.0
+    },
+    {
+      "frame": "laser_link",
+      "samples": 640,
+      "range_min": 0.10000000149011612,
+      "range_max": 15.0
+    },
+    {
+      "frame": "laser_link",
+      "samples": 640,
+      "range_min": 0.10000000149011612,
+      "range_max": 15.0
+    },
+    {
+      "frame": "laser_link",
+      "samples": 640,
+      "range_min": 0.10000000149011612,
+      "range_max": 15.0
+    },
+    {
+      "frame": "laser_link",
+      "samples": 640,
+      "range_min": 0.10000000149011612,
+      "range_max": 15.0
+    }
+  ],
+  "completed": true,
+  "error": "",
+  "publisher_loss": {
+    "duration_s": 3.0,
+    "coast_distance_m": 0.112,
+    "coast_yaw_change_rad": -0.0,
+    "tail_vx_mps": 0.0,
+    "tail_wz_rps": 0.0
+  },
+  "wall_s": 31.362147477979306,
+  "raw_report": "/workspace/molar/robot_lab_runtime/r14-implementation-20261112/summit-drive-4.json",
+  "raw_log": "/workspace/molar/robot_lab_runtime/r14-implementation-20261112/summit-drive-4.json.launch.log",
+  "baseline_revision": "12e28b04",
+  "qualification": "One native Gazebo/nav_empty initial control and sensing screen; no SLAM/Nav2/terrain or other-backend qualification",
+  "truth_sample_count": 1311,
+  "joint_sample_count": 476,
+  "max_measured_wheel_speed_rad_s": 1.968503937012878,
+  "runtime_source_sha256": {
+    "src/robot_lab_utils/robot_lab_utils/robot_description.py": "3ad3a72ded5ce6cfad5966b18d9c230d300d43e54c66f5421565e856141a12b6",
+    "src/robot_lab_utils/robot_lab_utils/source_ground.py": "e29abfc87eb01ed0f05101fca6a889fadabd2d921a952a287b5bc86f05708baf",
+    "src/robot_lab_utils/robot_lab_utils/sensor_config.py": "dc32b3ce007026dfefee9f0425f7596fe2ee5cc8679b35e48a5aaae4c0bb95d6",
+    "src/robot_lab_utils/robot_lab_utils/drive_kinematics.py": "07490c700b5953e5e750606e6c1aa4f91782e6b55739afd333e45db17cce40a6",
+    "src/robot_lab_bringup/launch/simulated_robot.launch.py": "b8c3319e8ad804c97bc743cdaba1cbbd361b93105ce58921b84f3f7013257df7",
+    "src/robot_lab_description/launch/gazebo.launch.py": "3f8e7d201a6c28f6c0f359cfbc57b4b7f3031a8e8b83e8ff59a7c560047fac55",
+    "src/robot_lab_controller/robot_lab_controller/holonomic_controller.py": "e82142048ae92ffcc8ecb725518e184d8f61cf87c09f9649d9e6b5f0615b6af9",
+    "src/robot_lab_controller/src/twist_relay.cpp": "9924f676ef307426083e0f326d5dc06b59b365eaf18672f59313302a05bc9c66",
+    "src/robot_lab_controller/config/twist_mux_topics.yaml": "9bb753a554040dd487e4064c70f7dd61a3e7a2b2e575acd8f8227c0503399ea6",
+    "scripts/screen_ground_counterpart.py": "6a671ef10eb4c864fc29023d1e4509733992a669c2b7b7f03ec99f4d84d56674",
+    "scripts/sim_drive_check.py": "f198d55479cd06da2a066444db67250a5bff8b19d1d985fbe075092eba69c0f5"
+  },
+  "runtime_source_snapshot": "/workspace/molar/robot_lab_runtime/r14-implementation-20261112/summit-runtime-source",
+  "actual_description_sha256": "9697bf6012d25708e98a85e663ee6f332edfb42c28c7edc3fa5ceb9457be5623",
+  "actual_sdk_prefix_preserved": true,
+  "launch_parameters": "/workspace/molar/robot_lab_runtime/tmp/launch_params_jihihr5u",
+  "backend": "Gazebo Fortress 6",
+  "map": "nav_empty",
+  "mode": "display",
+  "task": "R14.1 source ground counterpart initial drive/sensing"
+}

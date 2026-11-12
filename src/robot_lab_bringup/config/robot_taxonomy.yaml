@@ -22,6 +22,10 @@ classes:
     tags: [BlueROV2 Heavy, Eight propellers, Six-axis allocation, Native water forces, Experimental control]
     members: [bluerov2]
   - category: Mobile robots
+    subtype: Four-wheel mecanum base
+    tags: [Robotnik, Four wheel motors, Source contact model, Holonomic motion, Experimental control]
+    members: [robotnik_summit]
+  - category: Mobile robots
     subtype: Tracked vehicle
     tags: [Native belts, Four flippers, Source geometry, Experimental control]
     members: [lab_tracked]

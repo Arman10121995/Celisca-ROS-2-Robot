@@ -8,6 +8,15 @@ from .mesh_assets import resolve_mesh_source
 
 def resolve_relative_assets(urdf, model_path):
     root = ET.fromstring(urdf)
+    # Gazebo's extension readers use literal attribute names such as
+    # ignition:expressed_in. ElementTree's ns0 rewrite preserves XML meaning
+    # but loses that native SDK contract, making friction rotate with a wheel.
+    namespaces={name[1:].split('}',1)[0] for node in root.iter() for name in node.attrib if name.startswith('{')}
+    for uri in namespaces:
+        if uri in ('http://ignitionrobotics.org/schema','https://ignitionrobotics.org/schema'):
+            ET.register_namespace('ignition',uri)
+        elif uri in ('http://gazebosim.org/schema','https://gazebosim.org/schema'):
+            ET.register_namespace('gz',uri)
     for element in list(root.iter('mesh')) + list(root.iter('texture')):
         uri = element.get('filename', '')
         if not uri or '://' in uri:

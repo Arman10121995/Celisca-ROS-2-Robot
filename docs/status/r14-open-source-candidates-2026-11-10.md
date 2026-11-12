@@ -32,6 +32,8 @@ TurtleBot4 cleaning is implemented as the separate `asset_turtlebot4_lite_cleani
 
 VRX WAM-V H is now installed as `asset_vrx_wamv_h`, using the pinned Apache-2.0 upstream hull/propellers/water equations with a private Fortress ABI port. One physical source control screen completed; see [guide](../tutorials/wamv.md). Continue BlueROV2 and Summit-XL next.
 
+Summit-STEEL now has a source-preserving native mecanum integration and one measured Gazebo Display control/sensing screen; [guide](../tutorials/summit-steel.md). It does not replace a 4WS robot. Source-search decisions for cars, 4WS and unusual forms remain, plus the BlueROV2 source-license review.
+
 ## Original search plan
 
 1. TurtleBot 4 Lite first: enable `supports_room_vacuum` with a `vacuum:`
