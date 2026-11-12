@@ -1,0 +1,162 @@
+{
+  "source_id": "bluerov2_vendor",
+  "revision": "4451a5d1b15d204581d43ef7d93df4a0508eddbb",
+  "entry": "models/bluerov2_heavy/model.sdf",
+  "source_sdf_sha256": "e7be210ecb225fe7212709651e5f8f8bacb5b633678ffe1d9fbada869fdd16ba",
+  "description_sha256": "083d03531b592fdaab5e9adb024b5c9caab222f9c14b448a0c98f5e9543a69af",
+  "mass_kg": 13.016000000000005,
+  "displaced_volume_m3": 0.01313875,
+  "allocation": [
+    [
+      -0.7066810904127819,
+      -0.7073882691642133,
+      0.7069692424768805,
+      0.7071002877891268,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    [
+      -0.707532215841088,
+      0.7068251811083538,
+      -0.7072442931488836,
+      0.7071132745243386,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    [
+      -4.148277390345742e-08,
+      -4.148277390345742e-08,
+      -4.148277390345741e-08,
+      -4.148277390345742e-08,
+      -1.0,
+      -1.0,
+      -1.0,
+      -1.0
+    ],
+    [
+      -0.007782850557836769,
+      0.007775073175776692,
+      -0.00777968340822252,
+      0.007778242203352524,
+      0.215,
+      -0.215,
+      0.215,
+      -0.215
+    ],
+    [
+      0.007773497802128947,
+      0.007781276768394693,
+      -0.0077766674748340325,
+      -0.007778108973268741,
+      0.118,
+      0.118,
+      -0.118,
+      -0.118
+    ],
+    [
+      -0.16406917053572828,
+      0.16403524611827716,
+      0.16405537134871673,
+      -0.16404908491000708,
+      0.0,
+      0.0,
+      0.0,
+      -0.0
+    ]
+  ],
+  "force_bounds_N": [
+    [
+      -50.0,
+      50.0
+    ],
+    [
+      -50.0,
+      50.0
+    ],
+    [
+      -50.0,
+      50.0
+    ],
+    [
+      -50.0,
+      50.0
+    ],
+    [
+      -50.0,
+      50.0
+    ],
+    [
+      -50.0,
+      50.0
+    ],
+    [
+      -50.0,
+      50.0
+    ],
+    [
+      -50.0,
+      50.0
+    ]
+  ],
+  "source_contract": {
+    "meshes": {
+      "model://bluerov2_heavy/meshes/bluerov2_heavy.dae": "/workspace/molar/robot_lab_runtime/external_assets/sources/bluerov2_vendor/4451a5d1b15d204581d43ef7d93df4a0508eddbb/models/bluerov2_heavy/meshes/bluerov2_heavy.dae",
+      "model://bluerov2_heavy/meshes/t200_ccw_prop.dae": "/workspace/molar/robot_lab_runtime/external_assets/sources/bluerov2_vendor/4451a5d1b15d204581d43ef7d93df4a0508eddbb/models/bluerov2_heavy/meshes/t200_ccw_prop.dae",
+      "model://bluerov2_heavy/meshes/t200_cw_prop.dae": "/workspace/molar/robot_lab_runtime/external_assets/sources/bluerov2_vendor/4451a5d1b15d204581d43ef7d93df4a0508eddbb/models/bluerov2_heavy/meshes/t200_cw_prop.dae"
+    },
+    "force_bounds_N": {
+      "thruster1_joint": [
+        -50.0,
+        50.0
+      ],
+      "thruster2_joint": [
+        -50.0,
+        50.0
+      ],
+      "thruster3_joint": [
+        -50.0,
+        50.0
+      ],
+      "thruster4_joint": [
+        -50.0,
+        50.0
+      ],
+      "thruster5_joint": [
+        -50.0,
+        50.0
+      ],
+      "thruster6_joint": [
+        -50.0,
+        50.0
+      ],
+      "thruster7_joint": [
+        -50.0,
+        50.0
+      ],
+      "thruster8_joint": [
+        -50.0,
+        50.0
+      ]
+    },
+    "source_imu": "Original FRD sensor retained on /marine/source_frd_imu; separate lab ENU IMU added",
+    "actuation": "ArduSub control replaced by existing lab force allocator; no firmware parity claim"
+  },
+  "source_mesh_sha256": {
+    "model://bluerov2_heavy/meshes/bluerov2_heavy.dae": "5bc1c915dfbc7f8b72e1058c6b9aff8651d1e4a989a64f534b9e6e25d2caa997",
+    "model://bluerov2_heavy/meshes/t200_ccw_prop.dae": "3e631592de8b3ae67471634882db89c6464834e7f43844a4d47f863ed7d917e5",
+    "model://bluerov2_heavy/meshes/t200_cw_prop.dae": "a1d42eae2cf6f02953997136cd4e6ea5344d5ede1e96d0834f50ce02ccdf18ea"
+  },
+  "license_note": "Package declares MIT; root LICENSE absent. Mesh credits point to BlueRobotics GrabCAD; retain source cache and verify asset redistribution before integration",
+  "runtime_mission_qualified": false,
+  "lab_changes": [
+    "SDF joint/link-frame-preserving URDF derivative",
+    "Fortress built-in system ABI names",
+    "existing lab allocator replaces ArduSub",
+    "native force timeout",
+    "massless ENU IMU/RGB-D kit"
+  ]
+}

@@ -243,7 +243,7 @@ class MarineController(Node):
                        mass_kg=self.model.mass,displaced_volume_m3=self.model.displacement,gravity_trim_N=self.model.gravity_trim,
                        body_samples=self.count,sim_time=self.clock_value,
                        observer='Actual simulator pose finite difference for physical control/diagnostics; ideal pressure is separate. Sensor-only odometry and optional SLAM use their own topics.',
-                       scope='Authored laboratory ROV + native Gazebo marine forces; hardware calibration and mission qualification pending')
+                       scope='Profile-specific ROV + native Gazebo marine forces; hardware calibration and mission qualification pending')
             self.state_pub.publish(String(data=json.dumps(state,allow_nan=False)))
 
 

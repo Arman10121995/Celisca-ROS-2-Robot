@@ -13,8 +13,8 @@ sources:
   kind: robot
   repository: https://github.com/clydemcqueen/bluerov2_gz
   revision: 4451a5d1b15d204581d43ef7d93df4a0508eddbb
-  status: downloaded
-  license_note: Package declares MIT; root LICENSE absent. Mesh credits point to BlueRobotics GrabCAD; retain source cache and verify asset redistribution before integration
+  status: installed_candidate
+  license_note: Package declares MIT; root LICENSE absent, third-party mesh redistribution review remains pending. Complete Heavy source-frame derivative is locally installed with experimental Fortress control and one scoped physical run; source cache retained, no unconditional redistribution or mission qualification
   entries: [models/bluerov2_heavy/model.sdf]
 - id: robotnik_description_vendor
   kind: robot

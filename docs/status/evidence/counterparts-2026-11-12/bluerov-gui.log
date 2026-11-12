@@ -1,0 +1,6 @@
+{
+  "robot": "asset_bluerov2_heavy",
+  "mode": "marine",
+  "command": "ros2 launch robot_lab_bringup simulated_robot.launch.py mode:=marine map_name:=marine_tank robot_model:=asset_bluerov2_heavy simulator:=gazebo gui:=auto allow_experimental_assets:=true marine_slam:=true marine_localization:=false",
+  "marine_selectable": true
+}

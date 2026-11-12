@@ -87,3 +87,31 @@ Enable experimental source assets, select Gazebo/Marine and `surface_harbor`.
 The run command, source-specific spawn and optional RGB-D SLAM settings autofill.
 Connect Marine telemetry, then Arm; surge/yaw start neutral. Depth and strafe are
 unavailable on this surface craft. Stop removes propulsion; buoyancy and coasting remain physical.
+
+## BlueROV2 Heavy source candidate
+
+The separate `asset_bluerov2_heavy` is installed with the original Heavy hull, eight
+propellers, 13.016 kg mass, 0.01313875 m³ collision displacement, source inertias and
+mesh scales. SDF 1.6 link-frame joint poses convert explicitly to URDF; unreviewed
+relative frames/topologies are rejected. Native Fortress buoyancy/hydrodynamics and
+thrusters retain source coefficients. Source normalized control endpoints yield
+±50 N motor bounds; the existing lab allocator replaces ArduSub, with a native timeout.
+Original FRD IMU data is kept separate from the declared massless lab ENU IMU/RGB-D kit.
+
+The exact pinned package declares MIT but lacks a root license file; third-party
+mesh redistribution review remains pending. This is a locally cached experimental
+candidate, not an unconditionally adopted/redistributable source release.
+
+[Provision receipt](bluerov-provision.json) records source/model/mesh hashes and the
+full allocation matrix. [Measured summary](bluerov-drive.json) records `bluerov-drive-2`:
+50.826 wall seconds, 1.1373 m forward travel, 1.4250 rad yaw and real 320×240 images.
+All source joints are reported. Final neutral hold continued 0.1718 rad yaw over
+3.90 s; no instantaneous Stop claim. Actual URDF, active world, native watchdog
+binary hashes and source snapshots are preserved on SSD. The first run's relative
+world texture error is retained; cloned worlds now resolve PBR texture paths.
+
+Two source-coordinate tests and a two-package build (2.78 s) passed. The normal GUI
+includes the source family/classification, explicit experimental Marine gate and
+optional RGB-D mapping command autofill. Depth/strafe, maps/routes, message loss,
+contact, original FRD/ArduSub parity and hardware acceptance remain unqualified.
+[Operator guide](../../../tutorials/bluerov2.md).

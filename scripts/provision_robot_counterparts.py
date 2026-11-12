@@ -150,6 +150,55 @@ def wamv(store, download=False):
     return receipt
 
 
+def bluerov2_heavy(store,download=False):
+    from robot_lab_utils.bluerov_source import heavy_description
+    from robot_lab_utils.marine_model import MarineModel
+    source=load_source('bluerov2_vendor')
+    entry='models/bluerov2_heavy/model.sdf'
+    if download:checkout(source,'models/bluerov2_heavy',store)
+    root=store/'sources'/source['id']/source['revision']
+    if subprocess.check_output(['git','rev-parse','HEAD'],cwd=root,text=True).strip()!=source['revision']:
+        raise ValueError('Unexpected BlueROV2 source revision')
+    if subprocess.check_output(['git','status','--porcelain'],cwd=root,text=True):
+        raise ValueError('Preserve edited BlueROV2 source before provisioning')
+    name='asset_bluerov2_heavy'
+    document,contract=heavy_description(root/entry,name)
+    marine_sensor_kit(document,'.25 0 .13')
+    text=ET.tostring(document,encoding='unicode');plant=MarineModel(text)
+    target=store/'models'/name/hashlib.sha256(text.encode()).hexdigest()
+    target.mkdir(parents=True,exist_ok=True)
+    output=target/'marine.urdf';output.write_text(text)
+    profile=dict(package='robot_lab_robots',xacro=str(output),name=name,type='aquatic',external_asset=True,
+        asset_origin='extension',source_id=source['id'],source_revision=source['revision'],source_entry=entry,
+        marine_model=True,marine_propulsion='eight_thrusters',marine_native_watchdog=True,
+        marine_navigation_radius=.6,marine_slam_camera=True,marine_camera_link='base_link',marine_camera_sensor='rgbd_camera',
+        supported_simulators=['gazebo'],supported_modes=['display'],default_mode='display',default_map='marine_tank',
+        experimental_modes_by_simulator={'gazebo':['display','marine']},
+        implementation_state='experimental',qualification_state='experimental_unqualified',validation_state='pending',
+        source_license_review_required=True,
+        drive=dict(type='marine',max_speed=.35,max_accel=.4,max_angular_speed=.35,max_angular_accel=.5),
+        features=['marine_dynamics','underwater','eight_thrusters','rgbd_camera','imu'],
+        notes='Pinned BlueROV2 Heavy source hull, eight propellers, original mesh scales/inertias/collision volume and hydrodynamics. '
+              'Fortress native-force derivative with lab allocator, ±50 N source normalized-control envelope, native watchdog and '
+              'massless RGB-D/ENU IMU kit. Original FRD IMU retained separately; ArduSub firmware is not run. '
+              'Marine control requires experimental opt-in. Package declares MIT, root license/third-party mesh redistribution review '
+              'remains pending; assets stay in the pinned local SSD cache. No mission qualification.')
+    receipt=dict(source_id=source['id'],revision=source['revision'],entry=entry,source_sdf_sha256=digest(root/entry),
+        description_sha256=digest(output),mass_kg=plant.mass,displaced_volume_m3=plant.displacement,
+        allocation=plant.matrix.tolist(),force_bounds_N=plant.bounds.tolist(),source_contract=contract,
+        source_mesh_sha256={uri:digest(Path(path)) for uri,path in contract['meshes'].items()},
+        license_note=source['license_note'],runtime_mission_qualified=False,
+        lab_changes=['SDF joint/link-frame-preserving URDF derivative','Fortress built-in system ABI names',
+                     'existing lab allocator replaces ArduSub','native force timeout','massless ENU IMU/RGB-D kit'])
+    evidence=target/'integration.json';write_json(evidence,receipt)
+    entity=robot_entity(name,profile,source,entry,evidence)
+    entity.update(robot_class='aquatic',capabilities=['display'],tags=['extension','bluerov2','underwater','complete_robot','experimental_control'])
+    checkpoint_robots(store,{name:profile},[entity],[dict(source_id=source['id'],revision=source['revision'],
+        entry=entry,status='installed_candidate',check=str(evidence),profiles=[dict(id=name,kind='robot',
+        support='Experimental Fortress marine candidate; license review and missions pending',notes=profile['notes'])])])
+    return receipt
+
+
 def turtlebot4_cleaning(store):
     original_id, name = 'asset_turtlebot4_lite', 'asset_turtlebot4_lite_cleaning'
     installed = store / 'installed'
@@ -210,7 +259,7 @@ def turtlebot4_cleaning(store):
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('--robot', choices=['turtlebot4_cleaning','wamv'], default='turtlebot4_cleaning')
+    parser.add_argument('--robot', choices=['turtlebot4_cleaning','wamv','bluerov2_heavy'], default='turtlebot4_cleaning')
     parser.add_argument('--download',action='store_true',help='Fetch the pinned upstream source before provisioning')
     parser.add_argument('--store', type=Path, default=Path(os.environ.get(
         'ROBOT_LAB_RUNTIME_ROOT', '/workspace/molar/robot_lab_runtime')) / 'external_assets')
@@ -220,7 +269,8 @@ def main():
         parser.error('Counterpart assets must remain on the mounted SSD')
     with (store / 'locks/provision.lock').open('a') as lock:
         fcntl.flock(lock, fcntl.LOCK_EX)
-        result=turtlebot4_cleaning(store) if args.robot=='turtlebot4_cleaning' else wamv(store,args.download)
+        result=(turtlebot4_cleaning(store) if args.robot=='turtlebot4_cleaning' else
+                wamv(store,args.download) if args.robot=='wamv' else bluerov2_heavy(store,args.download))
         print(json.dumps(result, indent=2))
 
 

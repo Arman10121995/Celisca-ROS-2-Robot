@@ -9,12 +9,14 @@ import json
 import hashlib
 import math
 import os
+import re
 from pathlib import Path
 import signal
 import subprocess
 import time
 import uuid
 import shutil
+import xml.etree.ElementTree as ET
 
 import rclpy
 from geometry_msgs.msg import Twist
@@ -40,8 +42,9 @@ def main():
     snapshot=args.out.with_suffix('.source');snapshot.mkdir()
     hashes={}
     for relative in ['scripts/screen_marine_counterpart.py',
+            'scripts/provision_robot_counterparts.py',
             'src/robot_lab_bringup/launch/marine_simulator.launch.py',
-            *['src/robot_lab_utils/robot_lab_utils/'+name+'.py' for name in ('marine_model','marine_controller','surface_controller','marine_pipeline')]]:
+            *['src/robot_lab_utils/robot_lab_utils/'+name+'.py' for name in ('marine_model','marine_controller','surface_controller','marine_pipeline','bluerov_source')]]:
         source=root/relative;destination=snapshot/relative
         destination.parent.mkdir(parents=True,exist_ok=True);shutil.copy2(source,destination)
         hashes[relative]=hashlib.sha256(source.read_bytes()).hexdigest()
@@ -121,6 +124,17 @@ def main():
                 error=error,wall_s=time.monotonic()-start,trace=trace,joint_samples=joint_samples,images=images,
                 source_sha256=hashes,source_snapshot=str(snapshot),
                 scope='Initial physical source bring-up; no navigation/contact/wave/hardware qualification')
+    match=re.search(r'\[robot_lab marine\] (.*session.json)',logfile.read_text())
+    if match:
+        manifest=json.loads(Path(match.group(1)).read_text())
+        result['session']=manifest
+        description=Path(manifest['description'])
+        resources=[description,Path(manifest.get('active_world',manifest['source_world']))]
+        resources += [Path(p.get('filename')) for p in ET.parse(description).findall('gazebo/plugin')
+                      if Path(p.get('filename')).is_file()]
+        result['physical_sha256']={str(p):hashlib.sha256(p.read_bytes()).hexdigest() for p in resources}
+        shutil.copy2(description,snapshot/'actual-description.urdf')
+        shutil.copy2(resources[1],snapshot/'actual-world.sdf')
     args.out.write_text(json.dumps(result,indent=2,allow_nan=False)+'\n')
     print(json.dumps({k:v for k,v in result.items() if k not in ('trace','joint_samples')},indent=2))
     return 0 if complete else 1

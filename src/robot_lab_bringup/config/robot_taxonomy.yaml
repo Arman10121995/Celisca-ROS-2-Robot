@@ -17,6 +17,10 @@ classes:
     subtype: Source twin-hull USV
     tags: [VRX WAM-V, Two propellers, Zero-held azimuth, Source water forces, Experimental control]
     members: [vrx_wamv]
+  - category: Underwater robots
+    subtype: Source eight-thruster ROV
+    tags: [BlueROV2 Heavy, Eight propellers, Six-axis allocation, Native water forces, Experimental control]
+    members: [bluerov2]
   - category: Mobile robots
     subtype: Tracked vehicle
     tags: [Native belts, Four flippers, Source geometry, Experimental control]

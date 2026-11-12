@@ -40,6 +40,7 @@ def _setup(context):
     guarded=surface or robot_profile.get('marine_native_watchdog',False)
     gz=profile['gazebo']
     world=str(Path(share(gz['world_package']))/gz['world_path'])
+    source_world=world
     world_name=ET.parse(world).getroot().find('world').get('name')
     source=Path(robot_profile['xacro'])
     if not source.is_absolute():source=Path(share(robot_profile['package']))/source
@@ -95,7 +96,7 @@ def _setup(context):
                 for enabled_model in p.findall('enable'):p.remove(enabled_model)
                 ET.SubElement(p,'enable').text=robot
         for node in document.getroot().iter():
-            if node.tag in ('uri','diffuse','normal','image') and node.text:
+            if (node.tag in ('uri','diffuse','normal','image') or node.tag.endswith('_map')) and node.text:
                 text=node.text.strip()
                 if '://' not in text and not Path(text).is_absolute() and (Path(world).parent/text).exists():node.text=str((Path(world).parent/text).resolve())
         surface_world=folder/'world.sdf';document.write(surface_world,encoding='utf-8',xml_declaration=True);world=str(surface_world)
@@ -146,7 +147,8 @@ def _setup(context):
     if not surface and not water['bottom_z']+.4<float(spawn['z'])<water['surface_z']-.25:
         raise ValueError('Marine spawn must leave body clearance below the surface and above the seabed')
     manifest=dict(robot=robot,map=name,backend='Gazebo Fortress 6',water=water,spawn=spawn,
-                  mass_kg=model.mass,displaced_volume_m3=model.displacement,source_world=world,
+                  mass_kg=model.mass,displaced_volume_m3=model.displacement,source_world=source_world,active_world=world,
+                  volume_method='collision sum; VRX analytic buoyancy evaluated separately' if robot_profile.get('marine_buoyancy')=='vrx_surface' else 'collision displacement',
                   description=str(description),bridge_file=str(bridge_file),
                   source_profile=robot_profile.get('source_id','lab_authored'),
                   source_revision=robot_profile.get('source_revision',''),

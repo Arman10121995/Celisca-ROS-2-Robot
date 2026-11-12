@@ -14,6 +14,9 @@ robots:
   - id: vrx_wamv
     name: VRX WAM-V
     members: [{id: asset_vrx_wamv_h, label: Source H layout · experimental Fortress control}]
+  - id: bluerov2
+    name: BlueROV2
+    members: [{id: asset_bluerov2_heavy, label: Source Heavy configuration · experimental Fortress candidate}]
   - id: lab_tracked
     name: Tracked vehicle with flippers
     preferred: lab_tracked

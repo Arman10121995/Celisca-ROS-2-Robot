@@ -1,5 +1,7 @@
 # Current Robot Lab status
 
+November 12 latest R14.1: BlueROV2 Heavy is now a separate experimental source candidate with exact-frame conversion, native forces/watchdog, declared ENU/RGB-D kit and normal GUI Marine command autofill. One actual run measured 1.1373 m travel and 1.4250 rad yaw; source-license/third-party mesh review and broader missions remain pending. Continue Summit-XL and remaining R14.1 search rows before R6.7. [Receipt](evidence/counterparts-2026-11-12/README.md).
+
 November 12 R14.1 continuation: complete VRX WAM-V H is installed separately with a private Fortress ABI port of upstream water equations, source-bounded thrust, normal GUI Marine controls/classification and RGB-D autofill. One clear-water run measured 1.8785 m travel and 0.7413 rad turn; no broad mission/wave/contact qualification. Continue BlueROV2, Summit-XL and remaining source-search rows before R6.7. [Receipt](evidence/counterparts-2026-11-12/README.md).
 
 This page records what was measured. **The goals and remaining work are in one list: the

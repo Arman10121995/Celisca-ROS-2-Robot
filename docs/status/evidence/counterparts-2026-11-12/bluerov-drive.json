@@ -1,0 +1,118 @@
+{
+  "robot": "asset_bluerov2_heavy",
+  "map": "marine_tank",
+  "backend": "Gazebo Fortress",
+  "completed_phases": true,
+  "error": "",
+  "wall_s": 50.82624697001302,
+  "images": [
+    {
+      "width": 320,
+      "height": 240,
+      "bytes": 230400,
+      "frame": "oakd_rgb_camera_optical_frame"
+    },
+    {
+      "width": 320,
+      "height": 240,
+      "bytes": 230400,
+      "frame": "oakd_rgb_camera_optical_frame"
+    },
+    {
+      "width": 320,
+      "height": 240,
+      "bytes": 230400,
+      "frame": "oakd_rgb_camera_optical_frame"
+    },
+    {
+      "width": 320,
+      "height": 240,
+      "bytes": 230400,
+      "frame": "oakd_rgb_camera_optical_frame"
+    },
+    {
+      "width": 320,
+      "height": 240,
+      "bytes": 230400,
+      "frame": "oakd_rgb_camera_optical_frame"
+    }
+  ],
+  "source_sha256": {
+    "scripts/screen_marine_counterpart.py": "77ee74cde51f9b6261cbb2e6b8fc6f1b57ba4dd15ebeebec1a575310ebbac1d7",
+    "scripts/provision_robot_counterparts.py": "8a62d6694bd766698e0cdac6d88bc7dfc1b7353f71a0dde14a790fe9262c7e3e",
+    "src/robot_lab_bringup/launch/marine_simulator.launch.py": "841cf70cbef55ed44f37f64d36322575d696b18628605b41faf85fa2f0e27277",
+    "src/robot_lab_utils/robot_lab_utils/marine_model.py": "d68a8c94a093c0c6c08a7ddbfbff463b8c30525b9983e7b3c0cbaeb05efaa8d1",
+    "src/robot_lab_utils/robot_lab_utils/marine_controller.py": "960f3579249e1ef8a27555299881c344b9a751400107089a2fde4aa836da630b",
+    "src/robot_lab_utils/robot_lab_utils/surface_controller.py": "d279b08605259ea84b257a99375d77e1404661790c823c7f66bea7404c6d12b3",
+    "src/robot_lab_utils/robot_lab_utils/marine_pipeline.py": "97e28f5330c107e35b6a9788535c64a82f0c3f75a1bfb593021b1100d70665ef",
+    "src/robot_lab_utils/robot_lab_utils/bluerov_source.py": "7b8893c2f662e254e6c6595f6f732a95f5e6084951c2cfa5c7ee9133edf3d30b"
+  },
+  "source_snapshot": "/workspace/molar/robot_lab_runtime/r14-implementation-20261112/bluerov-drive-2.source",
+  "scope": "Initial physical source bring-up; no navigation/contact/wave/hardware qualification",
+  "session": {
+    "robot": "asset_bluerov2_heavy",
+    "map": "marine_tank",
+    "backend": "Gazebo Fortress 6",
+    "water": {
+      "bottom_z": -6.0,
+      "density": 1025.0,
+      "surface_z": 0.0
+    },
+    "spawn": {
+      "x": 0.0,
+      "y": 0.0,
+      "yaw": 0.0,
+      "z": -1.0
+    },
+    "mass_kg": 13.016000000000005,
+    "displaced_volume_m3": 0.01313875,
+    "source_world": "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_maps/share/robot_lab_maps/maps/marine_tank/worlds/marine_tank.world",
+    "active_world": "/workspace/molar/robot_lab_runtime/marine_sessions/rov-39a33o50/world.sdf",
+    "volume_method": "collision displacement",
+    "description": "/workspace/molar/robot_lab_runtime/marine_sessions/rov-39a33o50/asset_bluerov2_heavy.urdf",
+    "bridge_file": "/workspace/molar/robot_lab_runtime/marine_sessions/rov-39a33o50/bridge.yaml",
+    "source_profile": "bluerov2_vendor",
+    "source_revision": "4451a5d1b15d204581d43ef7d93df4a0508eddbb",
+    "buoyancy": "native_graded",
+    "scope": "Declared source/native marine forces; robot/map/mission qualification remains scoped"
+  },
+  "physical_sha256": {
+    "/workspace/molar/robot_lab_runtime/marine_sessions/rov-39a33o50/asset_bluerov2_heavy.urdf": "ff3652fc2617db08de053321d3d49ddb57d75542eaf10001c6ad1869a3345eb4",
+    "/workspace/molar/robot_lab_runtime/marine_sessions/rov-39a33o50/world.sdf": "6c2865ed73737ba619314c0a9cb66ac54e78c135bfe052720c40ffc222778a0c",
+    "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_maps/lib/librobot_lab_command_watchdog.so": "1f768c790f68bf55331ab670531d0669dac46a3f3c7c7ed8609886bfbef8374c"
+  },
+  "phases": {
+    "neutral": {
+      "samples": 22,
+      "sim_s": 1.9600000000000009,
+      "planar_distance_m": 7.235735179699605e-07,
+      "yaw_change_rad": -0.0024441592219917457
+    },
+    "forward": {
+      "samples": 83,
+      "sim_s": 7.879999999999999,
+      "planar_distance_m": 1.1372791364896953,
+      "yaw_change_rad": 0.0031095184059552403
+    },
+    "stop": {
+      "samples": 42,
+      "sim_s": 3.9599999999999973,
+      "planar_distance_m": 0.103015720139018,
+      "yaw_change_rad": -4.771355016676415e-06
+    },
+    "turn": {
+      "samples": 83,
+      "sim_s": 7.82,
+      "planar_distance_m": 0.0008954879850791714,
+      "yaw_change_rad": 1.425006008333416
+    },
+    "stop_final": {
+      "samples": 42,
+      "sim_s": 3.8999999999999986,
+      "planar_distance_m": 1.1268663001569352e-06,
+      "yaw_change_rad": 0.1717888528266227
+    }
+  },
+  "raw_report": "/workspace/molar/robot_lab_runtime/r14-implementation-20261112/bluerov-drive-2.json",
+  "qualification": "Initial physical source-plant control only; original FRD IMU/ArduSub parity, license review and broader missions unqualified"
+}
