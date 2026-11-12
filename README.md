@@ -27,6 +27,8 @@ November 12 source extension: **VRX WAM-V H** is installed in the normal GUI wit
 
 Source **Robotnik RB-SUMMIT-STEEL** is now in the normal GUI with forward/reverse, strafe and turn control, real sensor delivery, source limits and command autofill. One Gazebo Display screen is measured; higher missions remain experimental. [Summit guide](docs/tutorials/summit-steel.md).
 
+The complete MIT **Light Robotics segmented octopod** is installed with native 27-servo physics and opt-in scripted locomotion in MuJoCo Display. Forward/reverse/turn and command-loss feedback are recorded; velocity tracking is uncalibrated. [Source octopod guide](docs/tutorials/source-octopod.md).
+
 ## 🎯 Key capabilities
 
 | Area | What's available |

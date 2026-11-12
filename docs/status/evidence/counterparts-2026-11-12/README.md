@@ -161,3 +161,44 @@ the actual holonomic wheel controller rather than the differential-drive PID lab
 A source-sized Nav2 footprint is implemented. Contact fidelity, other maps/backends,
 physical joystick, SLAM/3D SLAM/localization and navigation missions remain unqualified.
 [Operator guide](../../../tutorials/summit-steel.md).
+
+
+## MIT source octopod and source-search reconciliation
+
+Complete source `asset_light_robotics_octopod` is installed from Light Robotics
+revision `c2cc2437393155760eeea5f588c5912f4654067c` (MIT), retaining 7.5 kg,
+27 original position servos, gains/damping/contacts and 2.45 Nm force caps.
+NumPy ports the flat metachronal prior; bounded side scaling, transitions,
+0.5 s wall lease and reset-required fault latch connect the normal GUI Drive
+path. It is scripted, not a learned checkpoint. The selected world owns the
+floor; explicit compiled inertias avoid source global mass rescaling on maps.
+
+Actual MuJoCo no-map run: 31.330 wall seconds, 1345 native state and root-TF
+records, 244 joint records; forward 1.4983 m, reverse -1.5354 m, turn 1.2369 rad.
+Maximum measured force 2.45 Nm, tilt 0.04551 rad, minimum base height 0.16593 m.
+Publisher loss ended at neutral with zero requested velocity; extra yaw was
+0.17655 rad and root translation about 0.043 m over that phase. Speed tracking
+is uncalibrated: 0.12 requested produced approximately 0.25 m/s forward.
+No terrain, recovery, SLAM/navigation or other-backend claim.
+
+[Motion summary](octopod-drive.json), [source/plant contract](octopod-provision.json),
+[actual GUI selection/autofill](octopod-gui.log), [five focused checks](octopod-checks.log).
+The first GUI construction attempt caught a group `label`/`name` schema error,
+fixed before the successful receipt; raw negative log is retained on SSD.
+The importer also rejected its initial canonicalization when compiled masses
+changed; explicit original inertias resolved that mismatch. The final source/native/catalog focused set has 28 passing checks. Three packages
+build; these checks are separate from physical mission qualification.
+Raw commands, source states, joints, TF and process log are on the SSD in
+`/workspace/molar/robot_lab_runtime/r14-implementation-20261112/octopod-drive-1/`.
+
+[Tracked origin audit](tracked-source-audit.json) verifies the original source
+SHA and exact seven-link/six-joint subtrees (28.26 kg). Existing tracked models
+were already imported Apache-2.0 Gazebo Sim derivatives; no duplicate added.
+[Racecar mesh audit](racecar-source-audit.json) finds 36 identical source/mirror
+mesh blobs, retaining the unresolved original asset-license chain despite the
+mirror author's MIT text. Other inspected pins are recorded in
+[source-search-snake.json](source-search-snake.json) and
+[source-search-extra.json](source-search-extra.json). See the [decision guide](../../r14-open-source-candidates-2026-11-10.md).
+Initial source-search/integration is complete; remaining redistribution review
+is R9.1 and broader missions remain in the validation queue. No original robot
+or certificate is replaced.

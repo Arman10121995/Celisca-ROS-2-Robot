@@ -144,7 +144,7 @@ counterparts_20261112:
   owner: codex
   state: partial
   updated: '2026-11-12'
-  title: Source counterparts — TurtleBot4 cleaning, WAM-V, BlueROV2 candidate and Summit-STEEL control
+  title: Source counterparts — TurtleBot4, WAM-V, Summit-STEEL, octopod and restricted BlueROV2 candidate
   receipt: docs/status/evidence/counterparts-2026-11-12/README.md
   implementation_state: Separate source variants, native hazards and water forces, bounded controls, normal GUI classification and autofill implemented. Original models/certificates preserved.
   measured_summary:
@@ -152,11 +152,12 @@ counterparts_20261112:
   - WAM-V Gazebo surface_harbor forward/turn/neutral-brake completed; 1.8785 m travel, 0.7413 rad yaw, source propeller feedback within 100 rad/s, real RGB-D images.
   - BlueROV2 Heavy candidate Gazebo marine_tank native control completed; 1.1373 m travel, 1.4250 rad yaw, actual joint/image feedback. Source license review remains pending.
   - Summit-STEEL Gazebo nav_empty source forward/reverse/strafe/yaw and sensing measured; 0.112 m publisher-loss travel with zero final speed. Higher-mode GUI defaults and footprint implemented, missions pending.
+  - Source octopod MuJoCo no-map forward/reverse/turn and command-loss neutral stance measured; 27 native servos, max 2.45 Nm and 0.0456 rad tilt. Speed tracking is uncalibrated.
   remaining_summary:
-  - Finish BlueROV2 source license review and remaining source-search decisions, then continue later implementation entries in order.
+  - Initial source-search/integration pass is implemented. BlueROV2 and reviewed car/Ranger asset-license chains are unresolved; preserve explicit non-adoption decisions and finish redistribution licensing under R9.1. Continue R6.7 next.
   - Contact, edge cases, message-loss, waves/currents, other maps/backends and full source missions remain separate qualification.
 current_delivery: counterparts_20261112
-current_revision: 'November 12 serial implementation: R13.3 trained candidate remains experimental; R14.1 TurtleBot4 native-hazard cleaning derivative completed one Gazebo zone/dock. VRX WAM-V upstream water forces now run in Fortress with one measured source control screen. BlueROV2 Heavy candidate now completes one source control screen; Summit-STEEL source control/sensing and GUI defaults now work in scoped Display. Finish source-search decisions/license review before later queue entries.'
+current_revision: 'November 12 serial implementation: R13.3 trained candidate remains experimental; R14.1 TurtleBot4 native-hazard cleaning derivative completed one Gazebo zone/dock. VRX WAM-V upstream water forces now run in Fortress with one measured source control screen. BlueROV2 Heavy candidate now completes one source control screen; Summit-STEEL source control/sensing and GUI defaults now work in scoped Display. Source octopod native gait is installed and measured; source-search decisions and tracked origin corrected. Initial R14.1 pass complete; continue R6.7. Broader missions and redistribution licensing remain partial.'
 current_verification:
   round57_2026_10_19: 'Recorded 2026-10-29: MuJoCo small_house slam drive after the spawn fix 873753f completes
     (28.1 m, RMSE 1.3 cm, map precision/recall 0.97/0.79; 1.49 m and 0.12/0.16 before); rear-steer car course after
@@ -468,8 +469,8 @@ architecture_explorer_20261102:
   guide: docs/architecture/interactive-guide.md
 handoff:
   audit: docs/status/audit-2026-10-02.md
-  next_action: November 12 initial R13.3 training/provisioning is implemented as an experimental candidate; retain weak recognition metrics and defer qualification. Continue R14.1, then R6.7 and subsequent implementation queue entries in order. Preserve historical receipts and required source limits.
-  next_task: R14.1
+  next_action: November 12 initial R13.3 training and R14.1 source-search/integration are implemented experimentally. Retain weak recognition, uncalibrated octopod speeds and restricted candidates; continue R6.7 implementation before broader validation. Preserve source limits and exact receipts.
+  next_task: R6.7
   no_runtime_repairs_completed_by_this_revision: false
   parallel_ready_after_R0:
   - R1.1
@@ -2078,20 +2079,20 @@ tasks:
   R14:
     acceptance_ref: ROADMAP.md R14.1
     owner: codex
-    state: active
+    state: partial
     updated: '2026-11-12'
-    scope_paths: [scripts/, src/robot_lab_utils/, src/robot_lab_bringup/, src/robot_lab_gui/, src/robot_lab_description/, src/robot_lab_controller/, src/robot_lab_adapter/, src/robot_lab_navigation/, src/robot_lab_vacuum_cleaning/, src/robot_lab_robots/, src/robot_lab/robot_lab_registry/, docs/, ROADMAP.md, README.md]
+    scope_paths: [scripts/, src/robot_lab_utils/, src/robot_lab_mujoco/, src/robot_lab_bringup/, src/robot_lab_gui/, src/robot_lab_description/, src/robot_lab_controller/, src/robot_lab_adapter/, src/robot_lab_navigation/, src/robot_lab_vacuum_cleaning/, src/robot_lab_robots/, src/robot_lab/robot_lab_registry/, docs/, ROADMAP.md, README.md]
     title: Open-source robots in place of self-made ones
     tasks:
       R14.1:
         acceptance_ref: ROADMAP.md R14.1
         owner: codex
-        state: active
+        state: partial
         title: Search for and integrate open-source counterparts of the lab-authored robots (requested 2026-11-10)
         updated: '2026-11-12'
-        next_action: TurtleBot4 cleaning and WAM-V control are implemented with scoped physical receipts. BlueROV2 Heavy candidate and Summit-STEEL source control/sensing are implemented with scoped measurements. Finish source-license review and remaining search decisions before R6.7. Separate source variants and preserve original certificates; broad qualification later.
+        next_action: Initial source-search/integration pass complete, including MIT native octopod and tracked-origin correction. Continue R6.7 implementation. Preserve non-adoption/license restrictions for reviewed cars, Ranger, snake and BlueROV2; finish redistribution licensing under R9.1 and broader missions in the validation queue.
         evidence: [docs/status/evidence/counterparts-2026-11-12/README.md]
-        implemented: TurtleBot4 native-hazard cleaning; WAM-V source water equations/control; BlueROV2 Heavy candidate six-axis plant; Summit-STEEL source mecanum contacts, wheel control, sensing and GUI algorithm defaults. Named source physical screens only; broader missions/maps/backends and license review remain partial.
+        implemented: TurtleBot4 native-hazard cleaning; WAM-V source water equations/control; restricted BlueROV2 candidate; Summit-STEEL source control/sensors/GUI; MIT source octopod native gait/GUI. All adopted variants have named physical screens. Reviewed non-adoption decisions and original tracked source identity recorded; wider acceptance stays partial.
   R2:
     next_task: R3.4
     owner: cline-agent

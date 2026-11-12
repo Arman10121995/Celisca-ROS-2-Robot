@@ -1,6 +1,10 @@
 # Structural catalog tags, never a runtime/controller qualification.
 schema_version: 1
 classes:
+  - category: Legged robots
+    subtype: Eight legs
+    tags: [Source octopod, Four segments, Three pitch spines, 27 servos, Scripted gait, Experimental control]
+    members: [light_robotics_octopod]
   - category: Mobile robots
     subtype: Amphibious rover
     tags: [Four wheel motors, Two propellers, Native buoyancy, Shore transitions, Experimental control]

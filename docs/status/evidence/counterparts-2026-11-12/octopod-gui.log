@@ -1,0 +1,18 @@
+{
+  "command": "ros2 launch robot_lab_bringup simulated_robot.launch.py mode:=display map_name:=none robot_model:=asset_light_robotics_octopod simulator:=mujoco gui:=false perception:=none enable_native_locomotion:=true",
+  "classification": {
+    "category": "Legged robots",
+    "subtype": "Eight legs",
+    "tags": [
+      "Source octopod",
+      "Four segments",
+      "Three pitch spines",
+      "27 servos",
+      "Scripted gait",
+      "Experimental control"
+    ]
+  },
+  "launch_enabled": true,
+  "drive_enabled": true,
+  "native_locomotion": true
+}

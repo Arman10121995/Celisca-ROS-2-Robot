@@ -5,6 +5,7 @@ Existing source profiles/qualification are preserved. New variants explicitly
 separate implemented experimental workflows from measured runtime support.
 """
 import argparse
+import ast
 import copy
 import fcntl
 import hashlib
@@ -22,6 +23,116 @@ sys.path.insert(0, str(ROOT / 'src/robot_lab_utils'))
 from robot_lab_utils.vacuum_sensors import create3_hazard_derivative
 from provision_extension_assets import checkpoint_robots, digest, load_source, robot_entity, write_json, source_package_prefix
 from catalog_external_assets import checkout
+
+
+def octopod(store, download=False):
+    """Install the MIT segmented source plant; only its scene/start pose changes."""
+    import math
+    import mujoco
+    import numpy as np
+    from robot_lab_utils.native_mjcf_assets import export_display_urdf
+    source = load_source('light_robotics_octopod')
+    entry = 'robot_rl/bodies/octopod/robot.xml'
+    if download:
+        checkout(source, 'robot_rl/bodies/octopod', store)
+    root = store/'sources'/source['id']/source['revision']
+    if subprocess.check_output(['git', 'rev-parse', 'HEAD'], cwd=root, text=True).strip() != source['revision']:
+        raise ValueError('Unexpected octopod revision')
+    if subprocess.check_output(['git', 'status', '--porcelain'], cwd=root, text=True):
+        raise ValueError('Preserve edited source octopod before provisioning')
+    original = root/entry
+    config = original.parent/'config.py'
+    # Read data, never execute the external training/JAX package to import a robot.
+    constants = {}
+    for node in ast.parse(config.read_text()).body:
+        if isinstance(node, ast.AnnAssign) and isinstance(node.target, ast.Name):
+            try:
+                constants[node.target.id] = ast.literal_eval(node.value)
+            except (ValueError, TypeError):
+                pass
+    names = constants['JOINT_NAMES']
+    nominal = [0. if n.endswith('COXA') or n.startswith('spine') else
+               (.2 if n.startswith('L') else -.2) if n.endswith('FEMUR') else
+               -(math.pi/2+.2) if n.startswith('L') else math.pi/2+.2 for n in names]
+    source_spec = mujoco.MjSpec.from_file(str(original))
+    source_model = source_spec.compile()
+    # Bake settotalmass into explicit inertias before canonical serialization.
+    # Keeping the compiler's global rescale would rescale the robot when a
+    # selected world's massive fixed geometry is attached by the native bridge.
+    for body in source_spec.bodies:
+        index = mujoco.mj_name2id(source_model, mujoco.mjtObj.mjOBJ_BODY, body.name)
+        if index > 0:
+            body.mass = source_model.body_mass[index]
+            body.inertia = source_model.body_inertia[index]
+            body.ipos = source_model.body_ipos[index]
+            body.iquat = source_model.body_iquat[index]
+            body.explicitinertial = True
+    source_spec.compiler.settotalmass = 0.
+    source_spec.compiler.saveinertial = True
+    document = ET.fromstring(source_spec.to_xml())
+    world = document.find('worldbody')
+    floor = world.find("geom[@name='floor']")
+    if floor is None or floor.get('type') != 'plane':
+        raise ValueError('Unexpected source floor')
+    world.remove(floor)
+    home = ET.SubElement(ET.SubElement(document, 'keyframe'), 'key', name='home')
+    home.set('qpos', ' '.join(map(str, [0., 0., .18, 1., 0., 0., 0.]+nominal)))
+    home.set('ctrl', ' '.join(map(str, nominal)))
+    text = ET.tostring(document, encoding='unicode')
+    name = 'asset_light_robotics_octopod'
+    output = store/'models'/name/hashlib.sha256(text.encode()).hexdigest()
+    output.mkdir(parents=True, exist_ok=True)
+    native = output/'robot.xml'; native.write_text(text)
+    model = mujoco.MjModel.from_xml_path(str(native))
+    protected = ['body_mass', 'body_inertia', 'body_ipos', 'body_iquat', 'body_pos', 'body_quat',
+                 'jnt_range', 'jnt_axis', 'dof_damping', 'dof_armature', 'dof_frictionloss',
+                 'actuator_gainprm', 'actuator_biasprm', 'actuator_forcerange', 'actuator_gear']
+    for field in protected:
+        if not np.allclose(getattr(source_model, field), getattr(model, field), rtol=1e-5, atol=1e-9):
+            raise ValueError('Canonical source plant changed: '+field)
+    if not math.isclose(sum(model.body_mass), 7.5, rel_tol=1e-6):
+        raise ValueError('Source mass differs')
+    description = output/'display.urdf'
+    geometry = export_display_urdf(model, description)
+    (output/'LICENSE').write_bytes((root/'LICENSE').read_bytes())
+    manifest = output/'locomotion.yaml'
+    resources = [original, config, original.parent/'scripted_gait_octopod.py', root/'LICENSE', native]
+    contract = dict(schema_version=1, controller='light_robotics_octopod', robot=name,
+        repository=source['repository'], revision=source['revision'], native_model=str(native),
+        joint_names=names, nominal=nominal, resources=[dict(path=str(p), sha256=digest(p)) for p in resources],
+        command_timeout_s=.5, command_limits=[.15, 0., .35], scripted_prior=True,
+        lab_changes=['selected world owns floor', 'source nominal pose/0.18m config start height',
+                     'canonical compiled inertias preserve source mass under world attachment',
+                     'NumPy flat-prior port; bounded differential side scaling and transitions',
+                     'wall command lease; finite-state/fall latch; explicit reset'],
+        qualification='experimental scripted source gait; no learned checkpoint or mission qualification')
+    manifest.write_text(yaml.safe_dump(contract, sort_keys=False))
+    profile = dict(package='robot_lab_robots', name=name, xacro=str(description), native_mjcf=str(native),
+        source_id=source['id'], source_revision=source['revision'], source_entry=entry,
+        external_asset=True, asset_origin='extension', type='legged', leg_count=8,
+        supported_simulators=['mujoco'], supported_modes=['display'],
+        supported_modes_by_simulator={'mujoco':['display']}, default_mode='display', default_map='none',
+        features=['native_locomotion', 'octopod', 'segmented_body'], locomotion_policy_config=str(manifest),
+        locomotion_drive_limits=dict(max_speed=.15, max_angular_speed=.35, max_accel=.2, max_angular_accel=.4),
+        implementation_state='experimental', validation_state='pending', qualification_state='experimental_unqualified',
+        notes='Complete pinned MIT light-robotics 7.5 kg segmented octopod: 24 leg and three pitch-spine servos. '
+              'Original native position actuators/gains, inertia, contacts and 2.45 Nm force caps. '
+              'Enable Native locomotion on MuJoCo Display for scripted flat gait and Drive/WASD. '
+              'Velocity tracking is uncalibrated. No learned policy, lateral gait, terrain, SLAM or navigation support claim.')
+    evidence = output/'integration.json'
+    receipt = dict(source_id=source['id'], revision=source['revision'], license='MIT',
+        native_model=str(native), native_sha256=digest(native), source_sha256=digest(original),
+        geometry=geometry, mass_kg=float(sum(model.body_mass)), actuator_count=model.nu,
+        force_ranges_Nm=model.actuator_forcerange.tolist(), protected_compiled_fields=protected,
+        contract=str(manifest), runtime_mission_qualified=False, lab_changes=contract['lab_changes'])
+    write_json(evidence, receipt)
+    entity = robot_entity(name, profile, source, entry, evidence)
+    entity.update(robot_class='legged', tags=['extension', 'octopod', 'eight_legged', 'segmented_body', 'complete_robot', 'experimental_control'])
+    entity['command_interfaces'] = ['geometry_msgs/Twist']
+    checkpoint_robots(store, {name:profile}, [entity], [dict(source_id=source['id'], revision=source['revision'],
+        entry=entry, status='installed', check=str(evidence), profiles=[dict(id=name, kind='robot',
+            support='MuJoCo Display; opt-in experimental scripted locomotion', notes=profile['notes'])])])
+    return receipt
 
 
 def marine_sensor_kit(root, position):
@@ -363,7 +474,7 @@ def turtlebot4_cleaning(store):
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('--robot', choices=['turtlebot4_cleaning','wamv','bluerov2_heavy','summit_steel'], default='turtlebot4_cleaning')
+    parser.add_argument('--robot', choices=['turtlebot4_cleaning','wamv','bluerov2_heavy','summit_steel','octopod'], default='turtlebot4_cleaning')
     parser.add_argument('--download',action='store_true',help='Fetch the pinned upstream source before provisioning')
     parser.add_argument('--store', type=Path, default=Path(os.environ.get(
         'ROBOT_LAB_RUNTIME_ROOT', '/workspace/molar/robot_lab_runtime')) / 'external_assets')
@@ -375,7 +486,8 @@ def main():
         fcntl.flock(lock, fcntl.LOCK_EX)
         result=(turtlebot4_cleaning(store) if args.robot=='turtlebot4_cleaning' else
                 wamv(store,args.download) if args.robot=='wamv' else
-                bluerov2_heavy(store,args.download) if args.robot=='bluerov2_heavy' else summit_steel(store,args.download))
+                bluerov2_heavy(store,args.download) if args.robot=='bluerov2_heavy' else
+                octopod(store,args.download) if args.robot=='octopod' else summit_steel(store,args.download))
         print(json.dumps(result, indent=2))
 
 

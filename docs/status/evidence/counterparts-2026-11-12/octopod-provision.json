@@ -1,0 +1,153 @@
+{
+  "source_id": "light_robotics_octopod",
+  "revision": "c2cc2437393155760eeea5f588c5912f4654067c",
+  "license": "MIT",
+  "native_model": "/workspace/molar/robot_lab_runtime/external_assets/models/asset_light_robotics_octopod/e534bbcdbd6994d8c3723eee28eca41048e9f3bf4b88af2988605e63631ff2a3/robot.xml",
+  "native_sha256": "e534bbcdbd6994d8c3723eee28eca41048e9f3bf4b88af2988605e63631ff2a3",
+  "source_sha256": "5e394899a9cf6ef6e4fa2ca49ff68e68a98f412f147252db073f86f22c5878de",
+  "geometry": {
+    "urdf": "/workspace/molar/robot_lab_runtime/external_assets/models/asset_light_robotics_octopod/e534bbcdbd6994d8c3723eee28eca41048e9f3bf4b88af2988605e63631ff2a3/display.urdf",
+    "bodies": 37,
+    "meshes": 0,
+    "unsupported_geometry": [],
+    "scope": "Native measured-body visualization; no exported controller or physics equivalence"
+  },
+  "mass_kg": 7.500005600000002,
+  "actuator_count": 27,
+  "force_ranges_Nm": [
+    [
+      -2.45,
+      2.45
+    ],
+    [
+      -2.45,
+      2.45
+    ],
+    [
+      -2.45,
+      2.45
+    ],
+    [
+      -2.45,
+      2.45
+    ],
+    [
+      -2.45,
+      2.45
+    ],
+    [
+      -2.45,
+      2.45
+    ],
+    [
+      -2.45,
+      2.45
+    ],
+    [
+      -2.45,
+      2.45
+    ],
+    [
+      -2.45,
+      2.45
+    ],
+    [
+      -2.45,
+      2.45
+    ],
+    [
+      -2.45,
+      2.45
+    ],
+    [
+      -2.45,
+      2.45
+    ],
+    [
+      -2.45,
+      2.45
+    ],
+    [
+      -2.45,
+      2.45
+    ],
+    [
+      -2.45,
+      2.45
+    ],
+    [
+      -2.45,
+      2.45
+    ],
+    [
+      -2.45,
+      2.45
+    ],
+    [
+      -2.45,
+      2.45
+    ],
+    [
+      -2.45,
+      2.45
+    ],
+    [
+      -2.45,
+      2.45
+    ],
+    [
+      -2.45,
+      2.45
+    ],
+    [
+      -2.45,
+      2.45
+    ],
+    [
+      -2.45,
+      2.45
+    ],
+    [
+      -2.45,
+      2.45
+    ],
+    [
+      -2.45,
+      2.45
+    ],
+    [
+      -2.45,
+      2.45
+    ],
+    [
+      -2.45,
+      2.45
+    ]
+  ],
+  "protected_compiled_fields": [
+    "body_mass",
+    "body_inertia",
+    "body_ipos",
+    "body_iquat",
+    "body_pos",
+    "body_quat",
+    "jnt_range",
+    "jnt_axis",
+    "dof_damping",
+    "dof_armature",
+    "dof_frictionloss",
+    "actuator_gainprm",
+    "actuator_biasprm",
+    "actuator_forcerange",
+    "actuator_gear"
+  ],
+  "contract": "/workspace/molar/robot_lab_runtime/external_assets/models/asset_light_robotics_octopod/e534bbcdbd6994d8c3723eee28eca41048e9f3bf4b88af2988605e63631ff2a3/locomotion.yaml",
+  "runtime_mission_qualified": false,
+  "lab_changes": [
+    "selected world owns floor",
+    "source nominal pose/0.18m config start height",
+    "canonical compiled inertias preserve source mass under world attachment",
+    "NumPy flat-prior port; bounded differential side scaling and transitions",
+    "wall command lease; finite-state/fall latch; explicit reset"
+  ]
+}

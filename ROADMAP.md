@@ -125,7 +125,7 @@ Work top to bottom. Each line links to its task.
 |---|---|---|---|
 | I1 | [R13.2](#r132--vacuum-carpets-and-mopping) Vacuum carpets and mopping | Done 2026-11-10 (Gazebo mop + rug run passes) | implemented |
 | I2 | [R13.3](#r133--vacuum-camera-obstacle-recognition) Vacuum camera obstacles | Initial implementation complete, including trained experimental checkpoint; recognition quality and robot mission pending | partial |
-| I3 | [R14.1](#r141--open-source-counterparts-for-self-made-robots) Open-source robots | TurtleBot4 native-hazard cleaning implemented and one zone/dock measured; WAM-V Fortress control implemented and measured; TurtleBot4, WAM-V, BlueROV2 and Summit-STEEL integrations implemented; finish source-search decisions and license review | partial |
+| I3 | [R14.1](#r141--open-source-counterparts-for-self-made-robots) Open-source robots | Initial source-search/integration pass complete: TurtleBot4, WAM-V, Summit-STEEL and source octopod measured; BlueROV2 remains a restricted local candidate. Remaining licensing/mission qualification recorded separately | implemented; acceptance partial |
 | I4 | [R6.7](#r67--terrain-generation-gui-and-four-backend-conversion) Terrain GUI | GUI page, provider manifest, Isaac contact | partial |
 | I5 | [R5.11](#r511--drone-moving-obstacles-and-other-drone-backends) Drone moving obstacles | Moving-obstacle prediction, sensor-loss handling, other backends | not started |
 | I6 | [R5.9](#r59--mobile-manipulators) Mobile manipulation | Navigate → reach → grasp → transport → release pipeline in the GUI | partial |
@@ -689,7 +689,7 @@ These are complete; preserve their scoped contracts. R1.3 follow-up CI passes at
 ### R10.7 — Segmented and additional robot forms
 
 - **State:** partial · **Priority:** I12
-- **Have:** self-made centipede, snake, catamaran USV, tracked and
+- **Have:** self-made centipede, snake, catamaran USV; imported Gazebo tracked model and
   articulated-flipper vehicles, and a sprung amphibious rover. Each has native
   controls; mapping, navigation and shore cases are measured.
   [Native forms](docs/status/native-forms-2026-10-30.md).
@@ -892,11 +892,13 @@ These are complete; preserve their scoped contracts. R1.3 follow-up CI passes at
 
 ### R14.1 — Open-source counterparts for self-made robots
 
-- **State:** partial (TurtleBot4 cleaning derivative implemented 2026-11-12) · **Priority:** I3 · requested by the user 2026-11-10
+- **State:** initial implementation complete; broader adoption/mission acceptance partial (2026-11-12) · **Priority:** I3 · requested by the user 2026-11-10
 - **Implemented:** separate `asset_turtlebot4_lite_cleaning` source variant, native bumper/four cliff sensors, stale-feedback pause, GUI opt-in and command autofill. One Gazebo `nav_empty` zone-clean/dock completed (96.8% reported coverage); bumper impact and other-map qualification remain pending. [Receipt](docs/status/evidence/counterparts-2026-11-12/README.md). Continue WAM-V, BlueROV2, Summit-XL and the remaining source-search rows.
 - **WAM-V implemented:** separate `asset_vrx_wamv_h` complete source vessel, private Fortress ABI port of upstream water equations, bounded source-aware controller, native timeout, normal GUI classification/autofill and declared RGB-D kit. One clear-water source run measured 1.8785 m travel and 0.7413 rad turn; other missions/maps/waves and message-loss qualification remain pending. [Guide](docs/tutorials/wamv.md).
 - **BlueROV2 candidate implemented:** separate `asset_bluerov2_heavy`, source-frame-preserving Heavy plant with native forces, bounded allocator/timeout and declared ENU/RGB-D kit. One Gazebo run measured 1.1373 m travel and 1.4250 rad turn; license/mesh redistribution review and broader missions remain pending. [Guide](docs/tutorials/bluerov2.md). Continue Summit-XL and remaining search rows before R6.7.
 - **Summit-STEEL implemented:** complete source `asset_robotnik_summit_steel` with retained source mechanics/contact model, Fortress control/friction-frame port, declared sensing kit and normal GUI defaults/autofill. One Gazebo Display run measured forward/reverse/strafe/yaw, actual sensors, source wheel bounds and 0.112 m publisher-loss travel. Higher-mode pipelines/footprint are implemented but missions remain unqualified. [Guide](docs/tutorials/summit-steel.md). Finish the remaining source-search decisions and license review; preserve the authored four-wheel-steering benchmark, since this source base is mecanum.
+- **Source octopod implemented:** separate MIT `asset_light_robotics_octopod`, original 7.5 kg native plant/27 position servos and source scripted gait, GUI classification/opt-in/autofill. One MuJoCo Display run measured forward/reverse/turn, 2.45 Nm maximum force and command-loss neutral stance. Requested speed is uncalibrated (0.12 m/s requested, about 0.25 m/s measured); terrain/SLAM/navigation remain unavailable. [Guide](docs/tutorials/source-octopod.md).
+- **Search pass complete:** reviewed pins and reasons for retained authored forms are recorded below and in the search guide. Tracked robots were already imported Apache-2.0 source derivatives. BlueROV2 license review found an unresolved redistribution chain; keep it a local candidate, continue R9.1 licensing before distribution. Continue R6.7 initial implementation next; broader source missions belong to the validation queue.
 - **Search record:** [r14-open-source-candidates-2026-11-10](docs/status/r14-open-source-candidates-2026-11-10.md).
   Finding: the iRobot Create 3 (BSD) is already installed, and the installed,
   measured TurtleBot 4 Lite (Create 3 plus LiDAR) is the quickest open-source
@@ -905,7 +907,7 @@ These are complete; preserve their scoped contracts. R1.3 follow-up CI passes at
   Self-made robots stay only where none exists, with the reason recorded.
 - **Why this task exists:** these profiles were authored by agents in this
   project rather than imported. The recorded reasons:
-  - no suitable licensed model was found: octopod and centipede, per the
+  - the historical octopod/centipede search found no suitable model (the octopod finding is superseded by the November 12 MIT source integration), per the
     [October 14 research](docs/NEXT_EXTENSION_GUIDE.md#upstream-candidates-researched-on-october-14);
   - the robot has no published model: OOMWOO's hardware is not frozen;
   - imported models lacked working actuation for the lab's simulators.
@@ -917,11 +919,13 @@ These are complete; preserve their scoped contracts. R1.3 follow-up CI passes at
   | `oomwoo` (robot vacuum) | Adopted as separate `asset_turtlebot4_lite_cleaning`; one native Gazebo zone-clean/dock measured, contact/other maps pending |
   | `lab_rov` | `asset_bluerov2_heavy` experimental source candidate implemented and one physical control run measured; package MIT/root text and third-party mesh license review pending before adoption |
   | `lab_usv` | Adopted as separate experimental `asset_vrx_wamv_h`; native Fortress source control measured, broad qualification pending |
-  | `ackermann_car`, `rear_steer_car`, `anti_ackermann_car` | F1TENTH, other maintained Ackermann ROS 2 models |
+  | `ackermann_car`, `rear_steer_car`, `anti_ackermann_car` | Retain benchmarks: reviewed MIT Racecar original model license is TODO; ROS2 mirror shares 36 mesh blobs without resolving original asset licensing. No matching rear/anti-steer source established in this pass |
   | `mecanum_car` | Adopted separate `asset_robotnik_summit_steel`, complete BSD-3-Clause base; Gazebo source control/sensing measured, higher missions pending |
-  | `four_wheel_steer_car` | Separate Ranger source-model/asset-license review remains; Summit-STEEL is mecanum, so it does not replace this 4WS benchmark |
-  | `lab_tracked`, `lab_tracked_articulated` | maintained tracked/flipper ROS 2 robots (search ROS index, Gazebo Fuel) |
-  | `lab_snake`, `lab_amphibious`, `lab_octopod`, `lab_centipede` | search again; keep self-made if none is complete and licensed |
+  | `four_wheel_steer_car` | Retain benchmark: Ranger source asset license unresolved; MIT omni4WS sample has coincident steering/rolling wheel colliders and lacks physical effort limits. No source-preserving ready plant adopted |
+  | `lab_tracked`, `lab_tracked_articulated` | Already Apache-2.0 Gazebo Sim source model and declared actuated derivative; original seven-link/six-joint geometry verified against source SHA. Preserve IDs and scoped receipts |
+  | `lab_octopod` | Adopted separate MIT Light Robotics source octopod; scripted MuJoCo control measured, speed/terrain/higher-mode acceptance pending |
+  | `lab_snake` | Retain benchmark: reviewed candidates have missing license text/template authors, fixed-base topology, or CAD without a complete bounded physics plant; exact pins in search record |
+  | `lab_amphibious`, `lab_centipede` | Retain authored benchmarks: reviewed amphibious research does not establish a licensed wheeled land/water plant; no complete matching twelve-leg/six-segment source was found in this bounded pass. Source octopod is an eight-leg alternative |
   | `quadrotor_sitl` (display) | already superseded by the real PX4 `px4_x500` |
 
 - **How to do it:**

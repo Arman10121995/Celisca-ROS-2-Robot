@@ -1,5 +1,50 @@
 # R14.1: open-source candidates for the self-made robots (2026-11-10)
 
+## November 12 source decisions
+
+The initial implementation/search pass is complete. TurtleBot4 cleaning,
+WAM-V, Summit-STEEL and the MIT source octopod each have a named physical
+screen. Wider mission acceptance is separate. BlueROV2 remains a local
+experimental candidate: package-only MIT metadata does not resolve its absent
+license text and third-party mesh attribution chain. Adoption/distribution is
+on hold under R9.1. Continue R6.7 initial implementation next.
+
+| Existing robot | Decision in this bounded source review |
+|---|---|
+| Vacuum | Installed separate source TurtleBot4 cleaning; one zone/dock measured |
+| USV | Installed complete Apache-2.0 WAM-V H; upstream water equations ported to Fortress |
+| ROV | Native-force BlueROV2 Heavy candidate installed; retain local experimental status pending asset licensing |
+| Mecanum | Complete BSD-3-Clause Summit-STEEL source plant and declared sensing kit installed |
+| Octopod | Complete MIT Light Robotics 7.5 kg/27-servo native plant and scripted gait installed; actual MuJoCo control/joint/TF screen |
+| Tracked/flippers | Already imported Apache-2.0 Gazebo Sim source model and declared articulated derivative. Seven link and six joint subtrees match exactly. The earlier self-made/no maintained Sim model classification was wrong; this origin audit adds no runtime certificate |
+| Ackermann/rear/anti-steer | Retain benchmarks. Original Racecar description license is TODO and has no root text. The ROS2 mirror has MIT text for its author but shares 36 mesh blobs, including chassis/wheels, with that original; model-asset licensing remains unresolved |
+| 4WS | Retain benchmark. Ranger model packages have template author/license metadata without license text; its separate BSD driver is not a CAD license. MIT omni4WS is a real alternative, but its steering/rolling links have coincident complete wheel colliders and lack physical effort limits. It needs a declared plant redesign/envelope review |
+| Mobile snake | Retain benchmark. Slither has package-only MIT; thesis packages have template BSD/TODO authors; the common seven-joint model is world-fixed. OPPAS supplies CC-BY design/CAD without a complete bounded simulation plant in the inspected tree |
+| Amphibious | Retain authored wheeled land/water benchmark: reviewed Polymander research describes a different legged form and did not establish a suitable licensed wheeled plant |
+| Centipede | Retain twelve-leg/six-segment benchmark: no complete matching licensed plant found in this bounded pass. The source octopod is an eight-leg segmented alternative, not a twelve-leg replacement |
+| Quadrotor display | Already superseded by real PX4 X500; preserve exact flight certificates |
+
+Exact source pins/reasons are in [the source catalog](asset-sources-2026-10-05.yaml).
+[Identity audits and actual receipts](evidence/counterparts-2026-11-12/README.md)
+retain the distinctions between origin checks, local candidates and physical screens.
+These outcomes do not claim that no other models can exist.
+
+Primary sources:
+[octopod](https://github.com/light-robotics/robot_rl_lab/tree/c2cc2437393155760eeea5f588c5912f4654067c/robot_rl/bodies/octopod),
+[tracked example](https://github.com/gazebosim/gz-sim/blob/ign-gazebo6/examples/worlds/tracked_vehicle_simple.sdf),
+[Racecar original](https://github.com/mit-racecar/racecar_gazebo/tree/effd29f9edc20a03c8a1f666fb6fb6c0cbbee8ff),
+[ROS2 mirror](https://github.com/cihataltiparmak/mit_racecar_gazebo_ros2/tree/77cea07f1c15e9ee7117ba2e178467af0bccc8ce),
+[Ranger models](https://github.com/agilexrobotics/ugv_gazebo_sim/tree/27633a956c845903ee630538afeb17fe70afdd84),
+[omni4WS](https://github.com/kshibata-g1412049/omnidirectional_four_wheeled_robot/tree/b40ae465683c4d2889c45e07936f658bd364a02a),
+[Slither](https://github.com/daniel-s-ingram/slither/tree/ceb388f0bd0b3a37a4edfeb82a97ee0303340711),
+[snake thesis](https://github.com/vinicius-cgomes/TG-snake-robot/tree/52ea9b436af31334de14e2fdf8649ddc083ea8d7),
+[world-fixed snake](https://github.com/guzhaoyuan/snake_robot/tree/631d758680fde32e0dcd08af173ffad458d07fc2),
+[OPPAS](https://github.com/FabReyesMecha/OPPAS/tree/1e7cd22f98b3faee9cc5d65deea4993864f39f84),
+[Polymander](https://www.epfl.ch/labs/biorob/research/amphibious/polymander/).
+
+## Historical November 10 first pass
+
+
 First search pass for [roadmap R14.1](../../ROADMAP.md#r141--open-source-counterparts-for-self-made-robots).
 These are **candidates, not integrations**. Licenses marked *listed* come from
 an index or package page; confirm each repository's own LICENSE file, pin a

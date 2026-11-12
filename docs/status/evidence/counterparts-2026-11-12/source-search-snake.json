@@ -1,0 +1,39 @@
+[
+  {
+    "repository": "daniel-s-ingram/slither",
+    "revision": "ceb388f0bd0b3a37a4edfeb82a97ee0303340711",
+    "license": null,
+    "files": [
+      "package.xml",
+      "src/wavy.py",
+      "urdf/snake.urdf"
+    ]
+  },
+  {
+    "repository": "vinicius-cgomes/TG-snake-robot",
+    "revision": "52ea9b436af31334de14e2fdf8649ddc083ea8d7",
+    "license": null,
+    "files": [
+      "Coppelia/Cena.ttt",
+      "cobra/package.xml",
+      "cobra/urdf/cobra.urdf",
+      "cobraplaca/package.xml",
+      "cobraplaca/urdf/cobraplaca.urdf",
+      "cobraplacalateral/package.xml",
+      "cobraplacalateral/urdf/cobraplacalateral.urdf",
+      "control/package.xml",
+      "control/scripts/main.py"
+    ]
+  },
+  {
+    "repository": "guzhaoyuan/snake_robot",
+    "revision": "631d758680fde32e0dcd08af173ffad458d07fc2",
+    "license": null,
+    "files": [
+      "package.xml",
+      "snake_description/urdf/sevenJoints.urdf",
+      "snake_description/urdf/threeJoints.urdf",
+      "snake_description/urdf/twoJoints.urdf"
+    ]
+  }
+]

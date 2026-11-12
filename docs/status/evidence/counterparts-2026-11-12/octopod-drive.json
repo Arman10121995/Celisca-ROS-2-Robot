@@ -1,0 +1,154 @@
+{
+  "command": [
+    "ros2",
+    "launch",
+    "robot_lab_bringup",
+    "simulated_robot.launch.py",
+    "robot_model:=asset_light_robotics_octopod",
+    "simulator:=mujoco",
+    "mode:=display",
+    "map_name:=none",
+    "enable_native_locomotion:=true",
+    "gui:=false",
+    "start_rviz:=false"
+  ],
+  "phases": [
+    {
+      "name": "startup",
+      "requested": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "sim_s": 3.0199999999998868,
+      "wall_s": 3.0,
+      "displacement_world_m": [
+        6.619625364844958e-05,
+        -5.0776171909722626e-17,
+        -0.004351354166367671
+      ],
+      "heading_change_rad": 2.7793725195827465e-17,
+      "final_command": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "name": "forward",
+      "requested": [
+        0.12,
+        0.0,
+        0.0
+      ],
+      "sim_s": 5.999999999999801,
+      "wall_s": 6.0,
+      "displacement_world_m": [
+        1.4982742035280066,
+        0.04934339425222244,
+        -0.0004992187145975435
+      ],
+      "heading_change_rad": 0.048358985917176515,
+      "final_command": [
+        0.12,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "name": "neutral",
+      "requested": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "sim_s": 3.0200000000010085,
+      "wall_s": 3.0,
+      "displacement_world_m": [
+        0.07715093239378312,
+        0.0028671455292697684,
+        0.0004983306008547184
+      ],
+      "heading_change_rad": -0.005754429885663805,
+      "final_command": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "name": "reverse",
+      "requested": [
+        -0.12,
+        0.0,
+        0.0
+      ],
+      "sim_s": 6.000000000000172,
+      "wall_s": 6.0,
+      "displacement_world_m": [
+        -1.5353680272117018,
+        -0.12510309892595955,
+        -0.0032276454503384344
+      ],
+      "heading_change_rad": 0.08375051948160209,
+      "final_command": [
+        -0.12,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "name": "turn",
+      "requested": [
+        0.0,
+        0.0,
+        0.25
+      ],
+      "sim_s": 5.999999999996675,
+      "wall_s": 6.0,
+      "displacement_world_m": [
+        -0.2276681477011759,
+        0.26422116267845885,
+        -0.004100776650092841
+      ],
+      "heading_change_rad": 1.2368526178411594,
+      "final_command": [
+        0.0,
+        0.0,
+        0.25
+      ]
+    },
+    {
+      "name": "publisher_loss",
+      "requested": [
+        null,
+        0.0,
+        null
+      ],
+      "sim_s": 2.839999999998426,
+      "wall_s": 3.0,
+      "displacement_world_m": [
+        -0.042168356023630144,
+        -0.006539536555567493,
+        0.007331858418969356
+      ],
+      "heading_change_rad": 0.17654782298760474,
+      "final_command": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    }
+  ],
+  "error": "",
+  "scope": "One experimental source-native locomotion screen; no terrain/mission qualification",
+  "wall_s": 31.330017472995678,
+  "state_count": 1345,
+  "joint_count": 244,
+  "transform_count": 1345,
+  "measured_max_force_Nm": 2.45,
+  "measured_max_tilt_rad": 0.04550683472489457,
+  "measured_min_base_height_m": 0.1659254925958994,
+  "raw_directory": "/workspace/molar/robot_lab_runtime/r14-implementation-20261112/octopod-drive-1",
+  "velocity_tracking": "Uncalibrated source-prior amplitude mapping: 0.12 m/s request yielded about 0.25 m/s forward"
+}

@@ -951,12 +951,12 @@ class SimulationLauncherGui(tk.Tk):
                     "policy node.")
 
         self.native_policy_checkbox = ttk.Checkbutton(advanced,
-            text='Native walking policy (experimental)', variable=self.native_policy_var,
+            text='Native locomotion (experimental)', variable=self.native_policy_var,
             command=self._update_from_selection)
         self.native_policy_checkbox.grid(row=24, column=0, sticky='w', pady=(6, 0))
         add_tooltip(self.native_policy_checkbox,
-            'Exact-model Unitree G1/H1/H1_2 checkpoints on MuJoCo Display. '
-            'Enable before Run; Drive/WASD commands the physical torque controller. '
+            'Exact-model Unitree checkpoints or source octopod scripted gait on MuJoCo Display. '
+            'Enable before Run; Drive/WASD commands the native physical actuators. '
             'Broader walking, terrain, SLAM and navigation validation is pending.')
         self.native_articulation_checkbox = ttk.Checkbutton(advanced,
             text='Native joint controls (experimental)', variable=self.native_articulation_var,
@@ -2753,9 +2753,12 @@ class SimulationLauncherGui(tk.Tk):
                 lines.append('Original sensor configuration is installed; mapping/navigation screens '
                              'for this backend remain pending.')
         if config.get('locomotion_policy_config'):
-            lines.append('Native walking policy: implemented, experimental; choose MuJoCo Display '
-                         'and enable the policy before Run. Drive/WASD, Stop, watchdog and Reset '
+            lines.append('Native locomotion: implemented, experimental; choose MuJoCo Display '
+                         'and enable it before Run. Drive/WASD, Stop, watchdog and Reset '
                          'are connected. Full walking/terrain/SLAM/navigation validation is deferred.')
+            if config.get('source_id') == 'light_robotics_octopod':
+                lines.append('Scripted flat-ground prior, no learned checkpoint or lateral gait. '
+                             'Velocity requests scale the gait; measured speed tracking is uncalibrated.')
         return "\n".join(lines)
 
     def _resolve_rviz_path(self):

@@ -133,6 +133,7 @@ PHYSICS_TESTS=(
   "$BRG_TEST/test_simulator_backends.py"
   "$BRG_TEST/test_backend_assets.py::MujocoSmallWheelServoTests"
   "src/robot_lab_mujoco/test/test_native_asset_display.py"
+  "src/robot_lab_mujoco/test/test_octopod_control.py"
   "src/robot_lab_mujoco/test/test_native_gripper_control.py"
   "src/robot_lab_mujoco/test/test_native_arm_bias.py"
   "$BRG_TEST/test_mujoco_world_collision.py"

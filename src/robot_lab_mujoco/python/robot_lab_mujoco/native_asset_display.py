@@ -205,10 +205,17 @@ class NativeAssetDisplay(Node):
         if policy_config:
             if controller != 'none' or self.get_parameter('grasp_fixture').value:
                 raise ValueError('Locomotion and native arm/fixture controllers cannot share actuators')
-            from robot_lab_mujoco.unitree_policy import NativeUnitreePolicy
-            self.locomotion = NativeUnitreePolicy(self.model, self.data, policy_config,
+            import yaml
+            kind = yaml.safe_load(Path(policy_config).read_text()).get('controller', 'unitree')
+            if kind == 'light_robotics_octopod':
+                from robot_lab_mujoco.octopod_control import NativeOctopodControl as Locomotion
+            elif kind == 'unitree':
+                from robot_lab_mujoco.unitree_policy import NativeUnitreePolicy as Locomotion
+            else:
+                raise ValueError('Unknown native locomotion controller: '+kind)
+            self.locomotion = Locomotion(self.model, self.data, policy_config,
                 self.get_parameter('native_mjcf').value)
-            # Initial/reset pose only: subsequent movement is motor torque.
+            # Initial/reset pose only: subsequent movement uses native actuators.
             self.data.qpos[self.locomotion.qpos] = self.locomotion.nominal
             mujoco.mj_forward(self.model, self.data)
             self.create_subscription(Twist, '/robot_lab_controller/cmd_vel_unstamped',
@@ -239,7 +246,7 @@ class NativeAssetDisplay(Node):
         self.get_logger().info('Installed native MJCF: %s; %d robot bodies / %d joints; %s' %
             (self.get_parameter('native_mjcf').value, self.robot_bodies, self.robot_joints,
              'experimental position articulation' if self.articulation else
-             'experimental Unitree policy dynamics' if self.locomotion else
+             'experimental native locomotion dynamics' if self.locomotion else
              'controlled Panda dynamics' if self.arm else
              ('passive authored-pose display' if self.hold else 'native dynamics')))
 
