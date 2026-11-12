@@ -156,8 +156,23 @@ counterparts_20261112:
   remaining_summary:
   - Initial source-search/integration pass is implemented. BlueROV2 and reviewed car/Ranger asset-license chains are unresolved; preserve explicit non-adoption decisions and finish redistribution licensing under R9.1. Continue R6.7 next.
   - Contact, edge cases, message-loss, waves/currents, other maps/backends and full source missions remain separate qualification.
-current_delivery: counterparts_20261112
-current_revision: 'November 12 serial implementation: R13.3 trained candidate remains experimental; R14.1 TurtleBot4 native-hazard cleaning derivative completed one Gazebo zone/dock. VRX WAM-V upstream water forces now run in Fortress with one measured source control screen. BlueROV2 Heavy candidate now completes one source control screen; Summit-STEEL source control/sensing and GUI defaults now work in scoped Display. Source octopod native gait is installed and measured; source-search decisions and tracked origin corrected. Initial R14.1 pass complete; continue R6.7. Broader missions and redistribution licensing remain partial.'
+myagv_pro_20261112:
+  owner: codex
+  state: partial
+  updated: '2026-11-12'
+  title: Official myAGV Pro — user top priority, source Gazebo control and GUI navigation
+  receipt: docs/status/evidence/myagv-pro-2026-11-12/README.md
+  implementation_state: Complete pinned vendor CAD/inertias/frames with declared lab contact/compliance/sensors, bounded holonomic control, observed passive joints, GUI grouping/classification and automatic algorithms/commands. Other backends gated pending portable physical wheel adapters.
+  measured_summary:
+  - Gazebo nav_empty Display forward 0.250 m/s, reverse -0.215 m/s phase average, strafe 0.250 m/s, yaw 0.234 rad/s, neutral hold and publisher-loss stop. Actual RGB, scan and eight joint states; 0.110 m publisher-loss travel, zero final speed.
+  - Normal GUI Nav2 topic goal from [-0.5,-0.5] to [1.5,-0.5] completed and settled; independent physical body error 0.125 m and 2.23 degrees. One route only; unchanged 0.15 m / 5 degree checker.
+  - Sixty focused source/conversion/kinematic/watchdog checks pass; changed packages build. These are separate from mission qualification.
+  remaining_summary:
+  - R14.2 remains first. Implement portable wheel/contact/actuator adapters before enabling MuJoCo/PyBullet/Isaac; preserve source geometry and measured Gazebo variant.
+  - Original CAD mass differs from hardware documentation; lab contact/compliance is not vendor dynamics. Serial/charging and arm-composite integration remain separate.
+  - Other maps, furnished routes, localization/2D/3D acquisition, loss/reset and hardware acceptance remain unqualified.
+current_delivery: myagv_pro_20261112
+current_revision: 'November 12 user priority myAGV Pro: complete official source model and declared Gazebo control/sensing adapter, normal GUI defaults and one independently measured Nav2 arrival delivered. R14.2 remains active for portable physical backend adapters; other roadmap implementation waits. Source octopod and earlier source integrations preserved.'
 current_verification:
   round57_2026_10_19: 'Recorded 2026-10-29: MuJoCo small_house slam drive after the spawn fix 873753f completes
     (28.1 m, RMSE 1.3 cm, map precision/recall 0.97/0.79; 1.49 m and 0.12/0.16 before); rear-steer car course after
@@ -469,8 +484,8 @@ architecture_explorer_20261102:
   guide: docs/architecture/interactive-guide.md
 handoff:
   audit: docs/status/audit-2026-10-02.md
-  next_action: November 12 initial R13.3 training and R14.1 source-search/integration are implemented experimentally. Retain weak recognition, uncalibrated octopod speeds and restricted candidates; continue R6.7 implementation before broader validation. Preserve source limits and exact receipts.
-  next_task: R6.7
+  next_action: User top priority R14.2 myAGV Pro precedes all older work. Preserve measured source Gazebo Display/Nav2, actual corner mapping, conservative combined-wheel cap, observed passive joints and matching DWB/goal-checker thresholds. Continue portable physical backend adapters; broader validation later.
+  next_task: R14.2
   no_runtime_repairs_completed_by_this_revision: false
   parallel_ready_after_R0:
   - R1.1
@@ -2079,11 +2094,20 @@ tasks:
   R14:
     acceptance_ref: ROADMAP.md R14.1
     owner: codex
-    state: partial
+    state: active
     updated: '2026-11-12'
     scope_paths: [scripts/, src/robot_lab_utils/, src/robot_lab_mujoco/, src/robot_lab_bringup/, src/robot_lab_gui/, src/robot_lab_description/, src/robot_lab_controller/, src/robot_lab_adapter/, src/robot_lab_navigation/, src/robot_lab_vacuum_cleaning/, src/robot_lab_robots/, src/robot_lab/robot_lab_registry/, docs/, ROADMAP.md, README.md]
     title: Open-source robots in place of self-made ones
     tasks:
+      R14.2:
+        acceptance_ref: ROADMAP.md R14.2
+        owner: codex
+        state: active
+        updated: '2026-11-12'
+        title: Official Elephant Robotics myAGV Pro integration — user top priority
+        scope_paths: [scripts/, src/robot_lab_utils/, src/robot_lab_bringup/, src/robot_lab_gui/, src/robot_lab_robots/, src/robot_lab_adapter/, src/robot_lab_navigation/, src/robot_lab/robot_lab_registry/, docs/, README.md, ROADMAP.md]
+        next_action: Source Gazebo Display and one normal-GUI Nav2 arrival are implemented and measured. Continue portable physical wheel/contact adapters before enabling other backends; keep R14.2 ahead of all older tasks. Preserve source model, lab approximation labels and actual receipts.
+        evidence: [docs/status/evidence/myagv-pro-2026-11-12/README.md, docs/tutorials/myagv-pro.md]
       R14.1:
         acceptance_ref: ROADMAP.md R14.1
         owner: codex

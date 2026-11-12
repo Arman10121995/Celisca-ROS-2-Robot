@@ -2750,8 +2750,8 @@ class SimulationLauncherGui(tk.Tk):
                     MODE_LABELS.get(screen['mode'], screen['mode'])+' on '+', '.join(screen['maps'])
                     for screen in screens)+'. Other maps are experiments.')
             else:
-                lines.append('Original sensor configuration is installed; mapping/navigation screens '
-                             'for this backend remain pending.')
+                lines.append('Mapping/navigation acceptance is specific to robot, map, backend and revision. '
+                             'See the profile notes and Health receipts for recorded cases.')
         if config.get('locomotion_policy_config'):
             lines.append('Native locomotion: implemented, experimental; choose MuJoCo Display '
                          'and enable it before Run. Drive/WASD, Stop, watchdog and Reset '

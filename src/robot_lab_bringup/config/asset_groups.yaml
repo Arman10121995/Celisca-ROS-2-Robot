@@ -2,6 +2,9 @@
 # A variant is not an alias for its parent's controllers or measured missions.
 schema_version: 1
 robots:
+  - id: elephant_myagv_pro
+    name: Elephant Robotics myAGV Pro
+    members: [{id: asset_elephant_myagv_pro, label: Official CAD base · experimental Fortress omnidirectional control}]
   - id: light_robotics_octopod
     name: Light Robotics octopod
     members: [{id: asset_light_robotics_octopod, label: Source segmented octopod · experimental scripted gait}]

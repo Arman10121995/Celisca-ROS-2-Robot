@@ -50,7 +50,7 @@ def main():
         stamp=message.header.stamp.sec+message.header.stamp.nanosec*1e-9
         if len(result['joints'])<800 and (not result['joints'] or stamp-result['joints'][-1]['stamp']>=.05):
             result['joints'].append(dict(stamp=stamp,
-            name=list(message.name),position=list(message.position),velocity=list(message.velocity)))
+            name=list(message.name),position=list(message.position),velocity=list(message.velocity),effort=list(message.effort)))
     node.create_subscription(Image,'/oakd/rgb/image_raw',image,qos_profile_sensor_data)
     node.create_subscription(LaserScan,'/scan',scan,qos_profile_sensor_data)
     node.create_subscription(JointState,'/joint_states',joints,qos_profile_sensor_data)

@@ -1,5 +1,8 @@
 # Current Robot Lab status
 
+November 12 top priority myAGV Pro: complete official CAD base and declared Gazebo simulation adapter are installed in the normal GUI. Display control/sensing/command loss and one normal-GUI Nav2 goal are measured; physical arrival error 0.125 m / 2.23°. Source geometry/inertias/frames, GUI defaults and source-specific goal control are retained. R14.2 stays active for portable wheel/backend adapters before terrain or older work; broader missions and hardware remain unqualified. [Guide](../tutorials/myagv-pro.md) · [receipt](evidence/myagv-pro-2026-11-12/README.md).
+
+
 November 12 source-counterpart continuation: complete MIT Light Robotics octopod installed in the normal GUI, eight-leg classification, native locomotion toggle and command autofill. One actual MuJoCo no-map screen recorded forward/reverse/turn, real joints/TF and command-loss neutral stance within source torque limits. Speed tracking remains uncalibrated; no terrain/SLAM/navigation promotion. Tracked profiles were already complete Apache-2.0 Gazebo source derivatives; their original geometry is verified, with no new runtime claim. [Guide](../tutorials/source-octopod.md) · [receipt](evidence/counterparts-2026-11-12/README.md).
 
 

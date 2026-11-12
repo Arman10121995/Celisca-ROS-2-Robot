@@ -1,6 +1,10 @@
 # Structural catalog tags, never a runtime/controller qualification.
 schema_version: 1
 classes:
+  - category: Mobile robots
+    subtype: Four-wheel mecanum base
+    tags: [Elephant Robotics, Four wheels, Omnidirectional, Official CAD, Lab contact adapter, Experimental control]
+    members: [elephant_myagv_pro]
   - category: Legged robots
     subtype: Eight legs
     tags: [Source octopod, Four segments, Three pitch spines, 27 servos, Scripted gait, Experimental control]

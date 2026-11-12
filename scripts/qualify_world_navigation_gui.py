@@ -22,6 +22,8 @@ def main():
     parser.add_argument('--map',required=True)
     parser.add_argument('--output',type=Path,required=True)
     parser.add_argument('--timeout',type=float,default=360)
+    parser.add_argument('--allow-experimental-assets',action='store_true',
+                        help='Use the normal GUI opt-in for an unqualified source variant')
     args=parser.parse_args()
     args.output.parent.mkdir(parents=True,exist_ok=True)
     if args.output.parent.stat().st_dev==Path('/').stat().st_dev:
@@ -43,6 +45,7 @@ def main():
             (out/'live-gui-output.log').write_text(app.output.get('1.0','end'))
             last_log=time.monotonic()
     try:
+        app.experimental_assets_var.set(args.allow_experimental_assets)
         app.robot_var.set(args.robot);app.simulator_var.set(args.backend)
         app.map_var.set(args.map);app.mode_var.set('nav');app.gui_var.set('false')
         app._update_from_selection();app.update()

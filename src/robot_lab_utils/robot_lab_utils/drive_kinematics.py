@@ -482,6 +482,7 @@ class MecanumDrive:
         # has no natural yaw bound, so an absent value means "do not clamp".
         self.max_angular_speed = _optional_float(config, "max_angular_speed")
         self.max_angular_accel = _optional_float(config, "max_angular_accel")
+        self.max_wheel_speed = _optional_float(config, "max_wheel_speed")
         if self.radius <= 0 or self.track <= 0 or self.wheelbase <= 0:
             raise ValueError("wheel_radius, wheel_separation and wheelbase "
                              "must be positive")
@@ -548,6 +549,13 @@ class MecanumDrive:
             lever = sgn_w * (abs(x) + abs(y))
             velocity[wheel] = (sgn_v * vy + vx
                                - wz * lever) / self.radius
+        if self.max_wheel_speed is not None and velocity:
+            peak = max(abs(value) for value in velocity.values())
+            if peak > self.max_wheel_speed:
+                scale = self.max_wheel_speed / peak
+                velocity = {joint: value*scale for joint, value in velocity.items()}
+                vx, vy, wz = vx*scale, vy*scale, wz*scale
+                self._vx, self._vy, self._wz = vx, vy, wz
         return DriveTargets(velocity, {}, (vx, wz))
 
     @staticmethod

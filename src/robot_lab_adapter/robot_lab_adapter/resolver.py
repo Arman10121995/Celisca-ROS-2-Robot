@@ -67,6 +67,7 @@ LAUNCH_PROFILES = {
     'go1': 'unitree_go1',
     'go2w': 'unitree_go2w',
     'h1_2': 'unitree_h1_2',
+    'myagv_pro': 'asset_elephant_myagv_pro',
 }
 
 

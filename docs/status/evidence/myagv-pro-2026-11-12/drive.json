@@ -1,0 +1,226 @@
+{
+  "robot": "asset_elephant_myagv_pro",
+  "source_id": "elephant_myagv_pro",
+  "source_revision": "d3851c768d2e887eef7ad79fc4dcb9a928b070ac",
+  "description": "/workspace/molar/robot_lab_runtime/external_assets/models/asset_elephant_myagv_pro/0c8473eda8d128567bf404c5e5fd1edf2d3f3bf5c179d8210562870d06d9708d/drive.urdf",
+  "description_sha256": "a1fb0d74e036f9489ab1ead6fdd8a771609b386741a13a7f35eea144edc40b14",
+  "odom": "/odom/ground_truth",
+  "input": "/key_vel",
+  "scope": "Gazebo/nav_empty Display forward/reverse/strafe/yaw/neutral/publisher-loss only; declared lab contact/compliance adapter, no broad mission qualification",
+  "phases": [
+    {
+      "name": "forward",
+      "requested": [
+        0.25,
+        0.0,
+        0.0
+      ],
+      "measured": {
+        "vx": 0.25,
+        "vy": 0.0,
+        "wz": 0.0,
+        "distance": 0.5,
+        "measured_sim_s": 2.0,
+        "wall_s": 3.021,
+        "steering_positions_rad": {}
+      }
+    },
+    {
+      "name": "reverse",
+      "requested": [
+        -0.25,
+        0.0,
+        0.0
+      ],
+      "measured": {
+        "vx": -0.215,
+        "vy": 0.0,
+        "wz": 0.0,
+        "distance": 0.429,
+        "measured_sim_s": 2.0,
+        "wall_s": 3.019,
+        "steering_positions_rad": {}
+      }
+    },
+    {
+      "name": "strafe",
+      "requested": [
+        0.0,
+        0.25,
+        0.0
+      ],
+      "measured": {
+        "vx": 0.0,
+        "vy": 0.25,
+        "wz": -0.0,
+        "distance": 0.75,
+        "measured_sim_s": 3.0,
+        "wall_s": 4.027,
+        "steering_positions_rad": {}
+      }
+    },
+    {
+      "name": "turn",
+      "requested": [
+        0.0,
+        0.0,
+        0.25
+      ],
+      "measured": {
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.234,
+        "distance": 0.001,
+        "measured_sim_s": 3.0,
+        "wall_s": 4.028,
+        "steering_positions_rad": {}
+      }
+    },
+    {
+      "name": "neutral",
+      "requested": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "measured": {
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "distance": 0.0,
+        "measured_sim_s": 2.0,
+        "wall_s": 3.018,
+        "steering_positions_rad": {}
+      }
+    }
+  ],
+  "images": [
+    {
+      "width": 320,
+      "height": 240,
+      "encoding": "rgb8",
+      "bytes": 230400,
+      "frame": "oakd_rgb_camera_optical_frame",
+      "sha256": "d94a19b009b828a320ac55869472a455d4a7afc1d35d921818e9267715548e75"
+    },
+    {
+      "width": 320,
+      "height": 240,
+      "encoding": "rgb8",
+      "bytes": 230400,
+      "frame": "oakd_rgb_camera_optical_frame",
+      "sha256": "c39d7a777dee8ec209468fe25ca645d5b9b5f0f275ecc58182dc164d21b02f64"
+    },
+    {
+      "width": 320,
+      "height": 240,
+      "encoding": "rgb8",
+      "bytes": 230400,
+      "frame": "oakd_rgb_camera_optical_frame",
+      "sha256": "122a91b0836405665ba14075fa2174a14b48ed8c126a7a65264c9438475f3fed"
+    },
+    {
+      "width": 320,
+      "height": 240,
+      "encoding": "rgb8",
+      "bytes": 230400,
+      "frame": "oakd_rgb_camera_optical_frame",
+      "sha256": "1f94fe2e58ff988fa1eb731d8a134558dcdb35c6d95aef28e429bf9efadc351b"
+    },
+    {
+      "width": 320,
+      "height": 240,
+      "encoding": "rgb8",
+      "bytes": 230400,
+      "frame": "oakd_rgb_camera_optical_frame",
+      "sha256": "10c84987589e55ea70d8f1e65dde2ebb79e016d01beaa068679c8d531f994458"
+    },
+    {
+      "width": 320,
+      "height": 240,
+      "encoding": "rgb8",
+      "bytes": 230400,
+      "frame": "oakd_rgb_camera_optical_frame",
+      "sha256": "89a995e0cbfcc1c9cf9764c51122e5eedde0c2ede48217fd3633b0432afc808d"
+    },
+    {
+      "width": 320,
+      "height": 240,
+      "encoding": "rgb8",
+      "bytes": 230400,
+      "frame": "oakd_rgb_camera_optical_frame",
+      "sha256": "582baf4b99f82515523f1aa4390ff2fe408c0dd5a24f4c5f6233f788200cec30"
+    },
+    {
+      "width": 320,
+      "height": 240,
+      "encoding": "rgb8",
+      "bytes": 230400,
+      "frame": "oakd_rgb_camera_optical_frame",
+      "sha256": "582baf4b99f82515523f1aa4390ff2fe408c0dd5a24f4c5f6233f788200cec30"
+    }
+  ],
+  "scans": [
+    {
+      "frame": "laser_link",
+      "samples": 640,
+      "range_min": 0.10000000149011612,
+      "range_max": 15.0
+    },
+    {
+      "frame": "laser_link",
+      "samples": 640,
+      "range_min": 0.10000000149011612,
+      "range_max": 15.0
+    },
+    {
+      "frame": "laser_link",
+      "samples": 640,
+      "range_min": 0.10000000149011612,
+      "range_max": 15.0
+    },
+    {
+      "frame": "laser_link",
+      "samples": 640,
+      "range_min": 0.10000000149011612,
+      "range_max": 15.0
+    },
+    {
+      "frame": "laser_link",
+      "samples": 640,
+      "range_min": 0.10000000149011612,
+      "range_max": 15.0
+    },
+    {
+      "frame": "laser_link",
+      "samples": 640,
+      "range_min": 0.10000000149011612,
+      "range_max": 15.0
+    },
+    {
+      "frame": "laser_link",
+      "samples": 640,
+      "range_min": 0.10000000149011612,
+      "range_max": 15.0
+    },
+    {
+      "frame": "laser_link",
+      "samples": 640,
+      "range_min": 0.10000000149011612,
+      "range_max": 15.0
+    }
+  ],
+  "completed": true,
+  "error": "",
+  "publisher_loss": {
+    "duration_s": 3.0,
+    "coast_distance_m": 0.11,
+    "coast_yaw_change_rad": 0.0,
+    "tail_vx_mps": 0.0,
+    "tail_wz_rps": 0.0
+  },
+  "wall_s": 31.921119160979288,
+  "joint_records": 475,
+  "truth_sample_count": 1309,
+  "raw_directory": "/workspace/molar/robot_lab_runtime/myagv-pro-20261112"
+}

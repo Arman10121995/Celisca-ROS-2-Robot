@@ -1,5 +1,8 @@
 # Stabilization and remaining work: agent execution guide
 
+November 12 user priority: implement [R14.2 myAGV Pro](../ROADMAP.md#r142--elephant-robotics-myagv-pro) before older work. Source Gazebo control/sensing, native GUI workflow and one Nav2 arrival have exact [receipts](status/evidence/myagv-pro-2026-11-12/README.md). Portable physical wheel/backend adapters remain implementation work; do not treat Fortress-only friction XML as a portable plant. Preserve source frame/corner mapping, bounded passive compliance and matching DWB/goal-checker thresholds.
+
+
 November 3: [curved AUV, terrain adapters and concurrent fleet implementation](status/curves-terrain-concurrency-2026-11-03.md) supersedes the earlier missing-implementation entries for these three features. Preserve the actual scoped receipts and the [new GUI tutorial](tutorials/curves-terrain-concurrency.md). Broader acceptance remains in the current execution guide and ledger.
 
 Newest November 2 continuation: preserve [facility queues/explicit recovery, marine interruption and aerial formation itineraries](status/workflow-continuation-2026-11-02.md). These are implemented candidates with scoped checks; empty-car recovery and one Bumperbot two-stop floor queue have new physical receipts. Complete the remaining AUV/terrain/source adapters before broad validation. Use the [current execution guide](REMAINING_WORK_GUIDE.md), not earlier demonstration completion strings.

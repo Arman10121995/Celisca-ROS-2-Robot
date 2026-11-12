@@ -1,0 +1,18 @@
+{
+  "command": "ros2 launch robot_lab_bringup simulated_robot.launch.py robot_model:=asset_elephant_myagv_pro simulator:=gazebo use_sim_time:=true map_name:=nav_empty world_package:=robot_lab_maps world_name:=nav_empty world_path:=maps/nav_empty/worlds/nav_empty.world map_yaml:=maps/nav_empty/maps/map.yaml mode:=display gui:=false perception:=none",
+  "classification": {
+    "category": "Mobile robots",
+    "subtype": "Four-wheel mecanum base",
+    "tags": [
+      "Elephant Robotics",
+      "Four wheels",
+      "Omnidirectional",
+      "Official CAD",
+      "Lab contact adapter",
+      "Experimental control"
+    ]
+  },
+  "launch_enabled": true,
+  "drive_enabled": true,
+  "drive_kind": "mecanum"
+}

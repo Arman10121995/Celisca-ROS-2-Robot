@@ -2,6 +2,13 @@ updated: '2026-11-12'
 qualification: Pinned sources; installation and exact model/world import checks are
   recorded separately from runtime missions.
 sources:
+- id: elephant_myagv_pro
+  kind: robot
+  repository: https://github.com/elephantrobotics/agv_pro_ros2
+  revision: d3851c768d2e887eef7ad79fc4dcb9a928b070ac
+  status: integration_implemented
+  license_note: Official BSD-3-Clause Humble CAD/inertias/frames retained. Declared lab Fortress tire/contact/compliance/sensor adapter, actual source Display and one GUI Nav2 arrival; other backend adapters and broader missions remain pending. CAD mass differs from hardware documentation
+  entries: [agv_pro_description, agv_pro_gazebo, agv_pro_base]
 - id: mit_racecar_review
   kind: robot_candidate_review
   repository: https://github.com/mit-racecar/racecar_gazebo

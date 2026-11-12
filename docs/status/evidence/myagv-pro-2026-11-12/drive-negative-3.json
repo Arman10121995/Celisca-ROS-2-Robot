@@ -1,0 +1,223 @@
+{
+  "robot": "asset_elephant_myagv_pro",
+  "source_id": "elephant_myagv_pro",
+  "source_revision": "d3851c768d2e887eef7ad79fc4dcb9a928b070ac",
+  "description": "/workspace/molar/robot_lab_runtime/external_assets/models/asset_elephant_myagv_pro/9682e80aec78009c2e5e719276ab9d8ba2db40cdd5e915a18fb439deb8ac2f05/drive.urdf",
+  "description_sha256": "b17e082f3a12880f6e05331b2dd63dbf8a4444ffa414f025e92695ab31160807",
+  "odom": "/odom/ground_truth",
+  "input": "/key_vel",
+  "scope": "Preserved unsuccessful physical adapter screen; completed phases do not imply acceptance",
+  "phases": [
+    {
+      "name": "forward",
+      "requested": [
+        0.25,
+        0.0,
+        0.0
+      ],
+      "measured": {
+        "vx": 0.25,
+        "vy": 0.0,
+        "wz": -0.0,
+        "distance": 0.495,
+        "measured_sim_s": 1.98,
+        "wall_s": 3.018,
+        "steering_positions_rad": {}
+      }
+    },
+    {
+      "name": "reverse",
+      "requested": [
+        -0.25,
+        0.0,
+        0.0
+      ],
+      "measured": {
+        "vx": -0.215,
+        "vy": 0.0,
+        "wz": -0.0,
+        "distance": 0.43,
+        "measured_sim_s": 2.0,
+        "wall_s": 3.016,
+        "steering_positions_rad": {}
+      }
+    },
+    {
+      "name": "strafe",
+      "requested": [
+        0.0,
+        0.25,
+        0.0
+      ],
+      "measured": {
+        "vx": 0.044,
+        "vy": -0.0,
+        "wz": -0.0,
+        "distance": 0.133,
+        "measured_sim_s": 3.0,
+        "wall_s": 4.024,
+        "steering_positions_rad": {}
+      }
+    },
+    {
+      "name": "turn",
+      "requested": [
+        0.0,
+        0.0,
+        0.25
+      ],
+      "measured": {
+        "vx": 0.009,
+        "vy": -0.0,
+        "wz": 0.0,
+        "distance": 0.026,
+        "measured_sim_s": 3.0,
+        "wall_s": 4.026,
+        "steering_positions_rad": {}
+      }
+    },
+    {
+      "name": "neutral",
+      "requested": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "measured": {
+        "vx": 0.0,
+        "vy": -0.0,
+        "wz": -0.0,
+        "distance": 0.0,
+        "measured_sim_s": 2.0,
+        "wall_s": 3.021,
+        "steering_positions_rad": {}
+      }
+    }
+  ],
+  "images": [
+    {
+      "width": 320,
+      "height": 240,
+      "encoding": "rgb8",
+      "bytes": 230400,
+      "frame": "oakd_rgb_camera_optical_frame",
+      "sha256": "d94a19b009b828a320ac55869472a455d4a7afc1d35d921818e9267715548e75"
+    },
+    {
+      "width": 320,
+      "height": 240,
+      "encoding": "rgb8",
+      "bytes": 230400,
+      "frame": "oakd_rgb_camera_optical_frame",
+      "sha256": "d363457f1105c530c320cd052e190f982ef9081879ec09bb5fafa517bf51de0a"
+    },
+    {
+      "width": 320,
+      "height": 240,
+      "encoding": "rgb8",
+      "bytes": 230400,
+      "frame": "oakd_rgb_camera_optical_frame",
+      "sha256": "af83230d7a83165f9d994b92eb1783b28248d81470bee4a45acf79b8906cbf6f"
+    },
+    {
+      "width": 320,
+      "height": 240,
+      "encoding": "rgb8",
+      "bytes": 230400,
+      "frame": "oakd_rgb_camera_optical_frame",
+      "sha256": "f1ac80e2a02426c3471c1e0299079bc71a9a2ec9c75f57d6102d9f575f4a4b79"
+    },
+    {
+      "width": 320,
+      "height": 240,
+      "encoding": "rgb8",
+      "bytes": 230400,
+      "frame": "oakd_rgb_camera_optical_frame",
+      "sha256": "a7c10e3dcffa0084ca610db10bf47222990177d2f1d1f813979321f4e5929104"
+    },
+    {
+      "width": 320,
+      "height": 240,
+      "encoding": "rgb8",
+      "bytes": 230400,
+      "frame": "oakd_rgb_camera_optical_frame",
+      "sha256": "a7c10e3dcffa0084ca610db10bf47222990177d2f1d1f813979321f4e5929104"
+    },
+    {
+      "width": 320,
+      "height": 240,
+      "encoding": "rgb8",
+      "bytes": 230400,
+      "frame": "oakd_rgb_camera_optical_frame",
+      "sha256": "a7c10e3dcffa0084ca610db10bf47222990177d2f1d1f813979321f4e5929104"
+    },
+    {
+      "width": 320,
+      "height": 240,
+      "encoding": "rgb8",
+      "bytes": 230400,
+      "frame": "oakd_rgb_camera_optical_frame",
+      "sha256": "1a5b14e94bc215c7b92cd96bf19d49c76f96b98a68901d29529bc378e120c3fa"
+    }
+  ],
+  "scans": [
+    {
+      "frame": "laser_link",
+      "samples": 640,
+      "range_min": 0.10000000149011612,
+      "range_max": 15.0
+    },
+    {
+      "frame": "laser_link",
+      "samples": 640,
+      "range_min": 0.10000000149011612,
+      "range_max": 15.0
+    },
+    {
+      "frame": "laser_link",
+      "samples": 640,
+      "range_min": 0.10000000149011612,
+      "range_max": 15.0
+    },
+    {
+      "frame": "laser_link",
+      "samples": 640,
+      "range_min": 0.10000000149011612,
+      "range_max": 15.0
+    },
+    {
+      "frame": "laser_link",
+      "samples": 640,
+      "range_min": 0.10000000149011612,
+      "range_max": 15.0
+    },
+    {
+      "frame": "laser_link",
+      "samples": 640,
+      "range_min": 0.10000000149011612,
+      "range_max": 15.0
+    },
+    {
+      "frame": "laser_link",
+      "samples": 640,
+      "range_min": 0.10000000149011612,
+      "range_max": 15.0
+    },
+    {
+      "frame": "laser_link",
+      "samples": 640,
+      "range_min": 0.10000000149011612,
+      "range_max": 15.0
+    }
+  ],
+  "completed": true,
+  "error": "",
+  "publisher_loss": {
+    "duration_s": 3.0,
+    "coast_distance_m": 0.109,
+    "coast_yaw_change_rad": 0.0,
+    "tail_vx_mps": 0.0,
+    "tail_wz_rps": 0.0
+  },
+  "wall_s": 31.81403671798762
+}

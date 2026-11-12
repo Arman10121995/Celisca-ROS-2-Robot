@@ -1,7 +1,7 @@
 # Robot Lab roadmap
 
 **This is the project's single goal list.** Every task, goal and piece of
-remaining work is here, in one format, in priority order. Updated 2026-11-11.
+remaining work is here, in one format, in priority order. Updated 2026-11-12.
 
 - **Status and numbers** (what was measured, when, with which revision) are in
   [current status](docs/status/CURRENT_STATUS.md) and the evidence folders it links.
@@ -123,6 +123,7 @@ Work top to bottom. Each line links to its task.
 
 | Order | Task | Remaining implementation (short) | State |
 |---|---|---|---|
+| I0 | [R14.2](#r142--elephant-robotics-myagv-pro) myAGV Pro | Official source Gazebo base/control/sensors/GUI and one Nav2 goal implemented and measured; portable wheel/backend adapters remain next, before other tasks | active; scoped Gazebo delivery |
 | I1 | [R13.2](#r132--vacuum-carpets-and-mopping) Vacuum carpets and mopping | Done 2026-11-10 (Gazebo mop + rug run passes) | implemented |
 | I2 | [R13.3](#r133--vacuum-camera-obstacle-recognition) Vacuum camera obstacles | Initial implementation complete, including trained experimental checkpoint; recognition quality and robot mission pending | partial |
 | I3 | [R14.1](#r141--open-source-counterparts-for-self-made-robots) Open-source robots | Initial source-search/integration pass complete: TurtleBot4, WAM-V, Summit-STEEL and source octopod measured; BlueROV2 remains a restricted local candidate. Remaining licensing/mission qualification recorded separately | implemented; acceptance partial |
@@ -943,6 +944,16 @@ These are complete; preserve their scoped contracts. R1.3 follow-up CI passes at
      none found.
 - **Done when:** every self-made robot has a recorded search result, and
   each adopted counterpart drives under its class controller on one backend.
+
+### R14.2 — Elephant Robotics myAGV Pro
+
+- **State:** active; scoped Gazebo implementation delivered · **Priority:** I0 (user top priority, 2026-11-12) · **Owner:** codex
+- **Goal:** integrate the official myAGV Pro from the [vendor guide](https://docs.elephantrobotics.com/docs/myAGV_Pro_en/) as a normal complete robot in Robot Lab.
+- **Have:** separate BSD-3-Clause `asset_elephant_myagv_pro`, complete official CAD visual model/inertias/sensor mounts, geometric corner mapping, declared lab contact/compliance adapter, bounded native holonomic control, all measured passive-joint states, LiDAR/IMU/RGB-D, native GUI family/tags, Drive/strafe and automatic algorithm/command selection. Gazebo Display forward/reverse/strafe/turn/neutral/command-loss are measured. One normal-GUI Nav2 topic goal in `nav_empty` settled at 0.125 m / 2.23° actual body error. [Guide](docs/tutorials/myagv-pro.md) · [receipt and retained failures](docs/status/evidence/myagv-pro-2026-11-12/README.md).
+- **Remaining implementation:** portable wheel/contact/actuator adapters for MuJoCo, PyBullet and Isaac; preserve the Fortress source variant while adding them. Hardware serial/charging and complete vendor arm-equipped composites need their actual contracts (also R5.9); no fictitious SDK or generic mock-hardware grant. The CAD mass (~20.316 kg) differs from the documented hardware 40 kg; physical mass/tire calibration remains separate.
+- **How to do it:** `scripts/provision_myagv_pro.py` pins `elephantrobotics/agv_pro_ros2` at `d3851c768d2e887eef7ad79fc4dcb9a928b070ac`; `robot_lab_utils/myagv_pro.py` owns explicit adaptations. Keep source assets/recipes/negative traces on SSD. Portable real rollers or a backend-supported directional contact model are required before enabling another engine; do not reuse Fortress XML there as if it worked. Preserve conservative wheel limits, joint/body feedback, geometric corner mapping and proper source mounts. DWB RotateToGoal and goal-checker XY thresholds must match; source-specific Jetson sampling budget is intentional.
+- **Done when:** source-backed robot launches from the GUI with real motion/joints/sensors/Stop on each advertised backend, compatible pipelines are implemented and exact limitations are visible. Current Gazebo Display and one Nav route have receipts; other backend adapters stay gated until implemented.
+- **Validation later:** localization/2D/3D acquisition missions, additional map/backend routes, furnished obstacles, loss/reset histories, hardware SDK operation and calibrated dynamics. Keep other implementation tasks behind this new user priority.
 
 ### Stabilization patches (P1–P8)
 

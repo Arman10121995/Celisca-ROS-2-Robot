@@ -1,0 +1,32 @@
+[
+  {
+    "mode": "display",
+    "command": "ros2 launch robot_lab_bringup simulated_robot.launch.py mode:=display map_name:=nav_empty robot_model:=asset_elephant_myagv_pro simulator:=gazebo gui:=false perception:=none allow_experimental_assets:=true",
+    "launch_enabled": true,
+    "drive_type": "mecanum"
+  },
+  {
+    "mode": "loc",
+    "command": "ros2 launch robot_lab_bringup simulated_robot.launch.py mode:=loc map_name:=nav_empty robot_model:=asset_elephant_myagv_pro simulator:=gazebo gui:=false localization:=amcl state_estimation:=ekf_localization_node sensor_fusion:=wheel_imu_fusion allow_experimental_assets:=true",
+    "launch_enabled": true,
+    "drive_type": "mecanum"
+  },
+  {
+    "mode": "slam",
+    "command": "ros2 launch robot_lab_bringup simulated_robot.launch.py mode:=slam map_name:=nav_empty robot_model:=asset_elephant_myagv_pro simulator:=gazebo gui:=false localization:=slam_toolbox state_estimation:=ekf_localization_node sensor_fusion:=wheel_imu_fusion perception:=costmap_2d_observation allow_experimental_assets:=true",
+    "launch_enabled": true,
+    "drive_type": "mecanum"
+  },
+  {
+    "mode": "3d_slam",
+    "command": "ros2 launch robot_lab_bringup simulated_robot.launch.py mode:=3d_slam map_name:=nav_empty robot_model:=asset_elephant_myagv_pro simulator:=gazebo gui:=false localization:=rtabmap_localization state_estimation:=ekf_3d_estimator perception:=pointcloud_segmenter allow_experimental_assets:=true",
+    "launch_enabled": true,
+    "drive_type": "mecanum"
+  },
+  {
+    "mode": "nav",
+    "command": "ros2 launch robot_lab_bringup simulated_robot.launch.py mode:=nav map_name:=nav_empty robot_model:=asset_elephant_myagv_pro simulator:=gazebo gui:=false global_planning:=a_star_planner local_planning:=dwb_local_planner control:=native_holonomic_controller localization:=amcl state_estimation:=ekf_localization_node sensor_fusion:=wheel_imu_fusion allow_experimental_assets:=true",
+    "launch_enabled": true,
+    "drive_type": "mecanum"
+  }
+]

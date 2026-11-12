@@ -1,0 +1,109 @@
+{
+  "robot": "asset_elephant_myagv_pro",
+  "source_id": "elephant_myagv_pro",
+  "source_revision": "d3851c768d2e887eef7ad79fc4dcb9a928b070ac",
+  "description": "/workspace/molar/robot_lab_runtime/external_assets/models/asset_elephant_myagv_pro/1bfc9dd0c56f0b1bd7630a5308e9f95cd63dcda6163ccbd663550c13938938d6/drive.urdf",
+  "description_sha256": "4e42052f52f916c1ee2c972c51757a3664217f31c2a3c251043153be7d4cf65f",
+  "odom": "/odom/ground_truth",
+  "input": "/key_vel",
+  "scope": "Preserved unsuccessful physical adapter screen; completed phases do not imply acceptance",
+  "phases": [
+    {
+      "name": "forward",
+      "requested": [
+        0.25,
+        0.0,
+        0.0
+      ],
+      "measured": {
+        "vx": 0.25,
+        "vy": 0.0,
+        "wz": -0.0,
+        "distance": 0.5,
+        "measured_sim_s": 2.0,
+        "wall_s": 3.021,
+        "steering_positions_rad": {}
+      }
+    },
+    {
+      "name": "reverse",
+      "requested": [
+        -0.25,
+        0.0,
+        0.0
+      ],
+      "measured": {
+        "vx": -0.213,
+        "vy": 0.0,
+        "wz": 0.0,
+        "distance": 0.425,
+        "measured_sim_s": 2.0,
+        "wall_s": 3.02,
+        "steering_positions_rad": {}
+      }
+    },
+    {
+      "name": "strafe",
+      "requested": [
+        0.0,
+        0.25,
+        0.0
+      ],
+      "measured": {
+        "vx": -0.25,
+        "vy": -0.0,
+        "wz": 0.0,
+        "distance": 0.75,
+        "measured_sim_s": 3.0,
+        "wall_s": 4.03,
+        "steering_positions_rad": {}
+      }
+    },
+    {
+      "name": "turn",
+      "requested": [
+        0.0,
+        0.0,
+        0.25
+      ],
+      "measured": {
+        "vx": -0.063,
+        "vy": 0.0,
+        "wz": 0.0,
+        "distance": 0.19,
+        "measured_sim_s": 3.0,
+        "wall_s": 4.03,
+        "steering_positions_rad": {}
+      }
+    },
+    {
+      "name": "neutral",
+      "requested": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "measured": {
+        "vx": 0.0,
+        "vy": 0.0,
+        "wz": 0.0,
+        "distance": 0.0,
+        "measured_sim_s": 2.0,
+        "wall_s": 3.023,
+        "steering_positions_rad": {}
+      }
+    }
+  ],
+  "images": [],
+  "scans": [],
+  "completed": true,
+  "error": "",
+  "publisher_loss": {
+    "duration_s": 3.0,
+    "coast_distance_m": 0.112,
+    "coast_yaw_change_rad": -0.0,
+    "tail_vx_mps": 0.0,
+    "tail_wz_rps": 0.0
+  },
+  "wall_s": 30.9874184000073
+}
