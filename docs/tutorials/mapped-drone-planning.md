@@ -23,14 +23,15 @@ workflow. No new mapped-route flight mission has been qualified; see
 5. **Execute route** first rechecks the entire route asynchronously against
    current observations. A clear, unchanged FCU/operator/resource context
    starts the actual Offboard waypoint controller.
-6. A detected blockage or stale sensor/map/intrinsics interrupts that route
-   and requests Hold at the current FCU position. Move/inspect the scene or
-   restore sensing, then explicitly Plan and Execute again. **Cancel / Hold**,
-   Space, manual input, direct goals and Land interrupt pending work too.
+6. A detected blockage, a moving obstacle predicted on the route, or stale
+   sensing interrupts that route and holds at the current FCU position. The
+   planner then replans to the same goal around current observations and
+   predicted sweeps ([moving obstacles](#moving-obstacles-and-sensor-loss)).
+   **Cancel / Hold**, Space, manual input, direct goals and Land interrupt
+   pending work and stop automatic replanning.
 
 The existing manual Drive/yaw/altitude and Takeoff controls remain separate
 control paths. Enabling the observation option requests no takeoff or motion.
-Data recovery does not resume an interrupted route automatically.
 
 ## Run
 
@@ -64,19 +65,82 @@ No new upstream model or download step is required.
   cell centres. It adds to the existing 0.7 m spherical planning envelope.
 - The FCU route controller checks current map/depth occupancy along 2 m of
   the upcoming route. Depth expires after 0.75 wall seconds, CameraInfo after
-  2 seconds, mapped occupancy after 10 seconds. A failed or near-contact query
-  requests Hold. The existing setpoint rate/speed and telemetry-loss Land
+  2 seconds, mapped occupancy after 60 seconds (RTAB-Map republishes only when
+  it adds a node, which a hovering drone does not). A failed or near-contact
+  query requests Hold. The existing setpoint rate/speed and telemetry-loss Land
   behavior remain.
 - Background Plan/Execute rechecks bind the operator command generation. A
   late worker result cannot start an old route after manual input, Stop or a
-  direct goal. World resource changes or >5 cm FCU drift reject execution.
+  direct goal. World resource changes or >0.3 m FCU drift reject execution.
 
-This is observed occupancy and interruption, not future actor prediction.
 Unseen space is not certified clear by an absent cloud point; the complete
-canonical static world remains the planning baseline. Unsupported actor/world
-geometry still rejects that baseline. Detouring is done by another explicit
-Plan/Execute. It does not establish autonomous dynamic navigation, tracking
-clearance or obstacle-aware manual/Takeoff control.
+canonical static world remains the planning baseline. Gazebo actors (people)
+are not part of that baseline: they are seen only through the camera.
+
+## Moving obstacles and sensor loss
+
+November 13, 2026 (ROADMAP R5.11). Implemented and experimental.
+
+```mermaid
+flowchart LR
+    D["live depth"] --> C["clusters not explained by<br/>floor or static world"]
+    C --> T["Kalman tracks<br/>(moving above 0.3 m/s)"]
+    T --> P["predicted swept columns<br/>3 s ahead"]
+    T --> S["swept memory<br/>where people walked"]
+    S --> M["mapped layer without<br/>people's ghost trails"]
+    P --> G["route guard and<br/>timed crossings"]
+    S --> W["walkway: look both ways,<br/>then overfly"]
+    G --> R["hold, replan or climb"]
+    W --> R
+```
+
+- **Tracking.** Each depth frame's voxel centres that lie neither on the floor
+  nor within 0.35 m of the known static world are clustered (0.3 m voxels).
+  Clusters feed constant-velocity Kalman tracks. A track is *moving* after
+  three frames above 0.3 m/s. A track that leaves the camera's view keeps
+  being predicted for 4 s, with its radius growing by 0.3 × speed × the
+  unseen time. A track whose bottom is within 0.8 m of the ground is assumed
+  to be at least 2 m tall. The camera sees only part of a person, and a drone
+  once passed 0.4 m over a walker's head. This is a stated prior, not a
+  measurement.
+- **Prediction.** Moving tracks become vertical columns swept 3 s ahead. The
+  3D A* replanner treats them as obstacles. The route guard compares the
+  drone's own position along the route (0.4 m/s) with each track's position
+  at the same time, and holds when they meet.
+- **Ghost removal.** RTAB-Map keeps a walking person as a wall of cells along
+  their path. Mapped points inside columns that moving tracks have swept in
+  the last 5 minutes are dropped. Live depth still reports what is there now.
+- **Walkways.** The same swept memory marks walkways. A forward camera cannot
+  see someone walking in from the side, so before the route enters a walkway
+  the drone:
+  1. holds at the edge;
+  2. turns 75° left and right (0.8 s at each heading), then back;
+  3. crosses only if no track, seen or coasting out of view, is predicted on
+     the route until it is past the walkway.
+
+  It crosses above the walkway's swept columns (their top + 0.7 m drone radius
+  + 0.3 m), but no higher than the level camera still sees ground within 80 %
+  of its 8 m depth range (about 3.5 m for the X500's camera). Higher, too
+  little valid depth counts as sensor loss. Within 20 s of a look it only
+  re-times the crossing. After 15 s of waiting it looks again, and after 3
+  looks it replans.
+- **Evasion.** A moving track predicted to reach the hovering drone, or to
+  meet it inside a walkway, makes the drone climb to 1 m above the track's
+  top (within the altitude limit). The replan then continues from there.
+- **Sensor loss.** Depth staler than 0.75 s for 1 s (grace for single late
+  frames) holds the drone. If sensing has not returned within 10 s, it lands.
+  Recovery replans to the goal.
+- **Estimator heading gate.** PX4 SITL sometimes starts its EKF with a gyro
+  bias of up to 0.15 rad/s. The magnetometer does not remove it, so the
+  heading drifts on the ground and the hover then orbits several metres.
+  Takeoff waits until the resting heading drifts less than 0.25°/s over 4 s.
+  If it does not after the 8 s preflight settle, the runtime restarts PX4's
+  `ekf2` (at most 3 times).
+
+Limits: constant-velocity prediction (a sudden turn is seen only in the next
+frames); objects never seen are not predicted; the walkway memory is learned
+during the flight; the standing-height prior and the overflight assume open
+space above walkways; people do not react to the drone in the test world.
 
 The integration uses the official
 [RTAB-Map obstacle publishers and frame contract](https://github.com/introlab/rtabmap_ros/blob/ros2/rtabmap_util/src/MapsManager.cpp)

@@ -1,0 +1,472 @@
+[
+ {
+  "run": 1,
+  "passed": false,
+  "passed_as_recorded": false,
+  "goal_reached_s": null,
+  "min_walker_distance_m": {},
+  "responses": null,
+  "preflight_heading": null,
+  "error": "TimeoutError: takeoff clearance"
+ },
+ {
+  "run": 2,
+  "passed": false,
+  "passed_as_recorded": false,
+  "goal_reached_s": null,
+  "min_walker_distance_m": {},
+  "responses": null,
+  "preflight_heading": null,
+  "error": "TimeoutError: takeoff clearance"
+ },
+ {
+  "run": 3,
+  "passed": false,
+  "passed_as_recorded": false,
+  "goal_reached_s": null,
+  "min_walker_distance_m": {},
+  "responses": null,
+  "preflight_heading": null,
+  "error": "TimeoutError: takeoff clearance"
+ },
+ {
+  "run": 4,
+  "passed": false,
+  "passed_as_recorded": false,
+  "goal_reached_s": null,
+  "min_walker_distance_m": {},
+  "responses": null,
+  "preflight_heading": null,
+  "error": "RuntimeError: takeoff check invalidated: FCU state/pose changed while checking; check again."
+ },
+ {
+  "run": 5,
+  "passed": false,
+  "passed_as_recorded": false,
+  "goal_reached_s": null,
+  "min_walker_distance_m": {},
+  "responses": null,
+  "preflight_heading": null,
+  "error": "TimeoutError: goal reached"
+ },
+ {
+  "run": 6,
+  "passed": false,
+  "passed_as_recorded": false,
+  "goal_reached_s": null,
+  "min_walker_distance_m": {},
+  "responses": null,
+  "preflight_heading": null,
+  "error": "TimeoutError: goal reached"
+ },
+ {
+  "run": 7,
+  "passed": false,
+  "passed_as_recorded": false,
+  "goal_reached_s": 84.57,
+  "min_walker_distance_m": {},
+  "responses": null,
+  "preflight_heading": null,
+  "error": "TimeoutError: sensor-loss hold"
+ },
+ {
+  "run": 8,
+  "passed": false,
+  "passed_as_recorded": false,
+  "goal_reached_s": null,
+  "min_walker_distance_m": {},
+  "responses": null,
+  "preflight_heading": null,
+  "error": "RuntimeError: execute refused: Fresh plan from the current measured FCU pose required"
+ },
+ {
+  "run": 9,
+  "passed": false,
+  "passed_as_recorded": false,
+  "goal_reached_s": 104.55,
+  "min_walker_distance_m": {},
+  "responses": null,
+  "preflight_heading": null,
+  "error": null
+ },
+ {
+  "run": 10,
+  "passed": false,
+  "passed_as_recorded": false,
+  "goal_reached_s": null,
+  "min_walker_distance_m": {},
+  "responses": null,
+  "preflight_heading": null,
+  "error": "RuntimeError: takeoff check failed: Selected world blocks the minimum 0.8 m takeoff corridor; choose a different spawn."
+ },
+ {
+  "run": 11,
+  "passed": false,
+  "passed_as_recorded": false,
+  "goal_reached_s": 111.0,
+  "min_walker_distance_m": {},
+  "responses": null,
+  "preflight_heading": null,
+  "error": "TimeoutError: sensor-loss hold"
+ },
+ {
+  "run": 12,
+  "passed": false,
+  "passed_as_recorded": false,
+  "goal_reached_s": null,
+  "min_walker_distance_m": {
+   "walker_0": 9.023,
+   "walker_1": 14.005
+  },
+  "responses": null,
+  "preflight_heading": null,
+  "error": "TimeoutError: goal reached"
+ },
+ {
+  "run": 13,
+  "passed": false,
+  "passed_as_recorded": false,
+  "goal_reached_s": null,
+  "min_walker_distance_m": {
+   "walker_0": 1.16,
+   "walker_1": 1.835
+  },
+  "responses": null,
+  "preflight_heading": null,
+  "error": "TimeoutError: goal reached"
+ },
+ {
+  "run": 14,
+  "passed": false,
+  "passed_as_recorded": false,
+  "goal_reached_s": 93.06,
+  "min_walker_distance_m": {
+   "walker_0": 0.418,
+   "walker_1": 0.307
+  },
+  "responses": null,
+  "preflight_heading": null,
+  "error": null
+ },
+ {
+  "run": 15,
+  "passed": false,
+  "passed_as_recorded": false,
+  "goal_reached_s": null,
+  "min_walker_distance_m": {
+   "walker_0": 9.323,
+   "walker_1": 14.209
+  },
+  "responses": null,
+  "preflight_heading": null,
+  "error": "RuntimeError: execute refused: Fresh plan from the current measured FCU pose required"
+ },
+ {
+  "run": 16,
+  "passed": false,
+  "passed_as_recorded": false,
+  "goal_reached_s": 435.53,
+  "min_walker_distance_m": {
+   "walker_0": 0.137,
+   "walker_1": 0.307
+  },
+  "responses": null,
+  "preflight_heading": null,
+  "error": null
+ },
+ {
+  "run": 17,
+  "passed": false,
+  "passed_as_recorded": false,
+  "goal_reached_s": null,
+  "min_walker_distance_m": {
+   "walker_0": 0.188,
+   "walker_1": 0.144
+  },
+  "responses": null,
+  "preflight_heading": null,
+  "error": "TimeoutError: reached (10.0, 0.0, 1.2)"
+ },
+ {
+  "run": 18,
+  "passed": false,
+  "passed_as_recorded": false,
+  "goal_reached_s": null,
+  "min_walker_distance_m": {
+   "walker_0": 10.0,
+   "walker_1": 15.0
+  },
+  "responses": null,
+  "preflight_heading": null,
+  "error": "TimeoutError: airborne"
+ },
+ {
+  "run": 19,
+  "passed": false,
+  "passed_as_recorded": false,
+  "goal_reached_s": null,
+  "min_walker_distance_m": {
+   "walker_0": 8.943,
+   "walker_1": 13.922
+  },
+  "responses": null,
+  "preflight_heading": null,
+  "error": "RuntimeError: execute refused: Fresh plan from the current measured FCU pose required"
+ },
+ {
+  "run": 20,
+  "passed": false,
+  "passed_as_recorded": false,
+  "goal_reached_s": null,
+  "min_walker_distance_m": {
+   "walker_0": 9.919,
+   "walker_1": 14.928
+  },
+  "responses": null,
+  "preflight_heading": {
+   "drift_deg_s": 0.018767386519027915,
+   "estimator_restarts": 1
+  },
+  "error": "TimeoutError: reached (10.0, 0.0, 1.2)"
+ },
+ {
+  "run": 21,
+  "passed": false,
+  "passed_as_recorded": false,
+  "goal_reached_s": 154.07,
+  "min_walker_distance_m": {
+   "walker_0": 0.776,
+   "walker_1": 0.255
+  },
+  "responses": null,
+  "preflight_heading": {
+   "drift_deg_s": 0.026533577378207034,
+   "estimator_restarts": 1
+  },
+  "error": null
+ },
+ {
+  "run": 22,
+  "passed": false,
+  "passed_as_recorded": false,
+  "goal_reached_s": null,
+  "min_walker_distance_m": {
+   "walker_0": 3.676,
+   "walker_1": 8.753
+  },
+  "responses": null,
+  "preflight_heading": {
+   "drift_deg_s": 0.0005978243732853773,
+   "estimator_restarts": 1
+  },
+  "error": "TimeoutError: reached (10.0, 0.0, 1.2)"
+ },
+ {
+  "run": 23,
+  "passed": false,
+  "passed_as_recorded": false,
+  "goal_reached_s": null,
+  "min_walker_distance_m": {
+   "walker_0": 9.968,
+   "walker_1": 14.967
+  },
+  "responses": null,
+  "preflight_heading": {
+   "drift_deg_s": 0.009680133993229105,
+   "estimator_restarts": 0
+  },
+  "error": "RuntimeError: plan rejected: Plan requires an airborne owned vehicle, frame map, and idle planner"
+ },
+ {
+  "run": 24,
+  "passed": false,
+  "passed_as_recorded": false,
+  "goal_reached_s": null,
+  "min_walker_distance_m": {
+   "walker_0": 9.975,
+   "walker_1": 14.955
+  },
+  "responses": null,
+  "preflight_heading": {
+   "drift_deg_s": 0.008245745875497893,
+   "estimator_restarts": 1
+  },
+  "error": "RuntimeError: plan failed: Aerial planning deadline/cancellation"
+ },
+ {
+  "run": 25,
+  "passed": false,
+  "passed_as_recorded": false,
+  "goal_reached_s": 175.14,
+  "min_walker_distance_m": {
+   "walker_0": 0.432,
+   "walker_1": 0.835
+  },
+  "responses": null,
+  "preflight_heading": {
+   "drift_deg_s": 0.08516935775674812,
+   "estimator_restarts": 0
+  },
+  "error": null
+ },
+ {
+  "run": 26,
+  "passed": false,
+  "passed_as_recorded": false,
+  "goal_reached_s": 211.86,
+  "min_walker_distance_m": {
+   "walker_0": 1.085,
+   "walker_1": 0.555
+  },
+  "responses": null,
+  "preflight_heading": {
+   "drift_deg_s": 0.013123820490692361,
+   "estimator_restarts": 0
+  },
+  "error": null
+ },
+ {
+  "run": 27,
+  "passed": false,
+  "passed_as_recorded": false,
+  "goal_reached_s": 159.76,
+  "min_walker_distance_m": {
+   "walker_0": 0.836,
+   "walker_1": 0.508
+  },
+  "responses": null,
+  "preflight_heading": {
+   "drift_deg_s": 0.0018638842775746901,
+   "estimator_restarts": 1
+  },
+  "error": null
+ },
+ {
+  "run": 28,
+  "passed": false,
+  "passed_as_recorded": false,
+  "goal_reached_s": 132.27,
+  "min_walker_distance_m": {
+   "walker_0": 0.241,
+   "walker_1": 0.623
+  },
+  "responses": null,
+  "preflight_heading": {
+   "drift_deg_s": 0.10657852635009027,
+   "estimator_restarts": 0
+  },
+  "error": null
+ },
+ {
+  "run": 29,
+  "passed": false,
+  "passed_as_recorded": false,
+  "goal_reached_s": null,
+  "min_walker_distance_m": {
+   "walker_0": 2.319,
+   "walker_1": 1.92
+  },
+  "responses": null,
+  "preflight_heading": {
+   "drift_deg_s": 0.01765014586162995,
+   "estimator_restarts": 1
+  },
+  "error": "TimeoutError: reached (10.0, 0.0, 1.2)"
+ },
+ {
+  "run": 30,
+  "passed": true,
+  "passed_as_recorded": false,
+  "goal_reached_s": 211.83,
+  "min_walker_distance_m": {
+   "walker_0": 2.198,
+   "walker_1": 1.626
+  },
+  "responses": null,
+  "preflight_heading": {
+   "drift_deg_s": 0.011245627984318204,
+   "estimator_restarts": 1
+  },
+  "error": null
+ },
+ {
+  "run": 31,
+  "passed": false,
+  "passed_as_recorded": false,
+  "goal_reached_s": 131.98,
+  "min_walker_distance_m": {
+   "walker_0": 0.197,
+   "walker_1": 0.583
+  },
+  "responses": {
+   "replanning": 0,
+   "scanning": 0,
+   "evading": 0
+  },
+  "preflight_heading": {
+   "drift_deg_s": 0.08752602830155923,
+   "estimator_restarts": 0
+  },
+  "error": null
+ },
+ {
+  "run": 32,
+  "passed": true,
+  "passed_as_recorded": true,
+  "goal_reached_s": 166.14,
+  "min_walker_distance_m": {
+   "walker_0": 1.965,
+   "walker_1": 1.439
+  },
+  "responses": {
+   "replanning": 0,
+   "scanning": 2,
+   "evading": 0
+  },
+  "preflight_heading": {
+   "drift_deg_s": 0.01047490057343471,
+   "estimator_restarts": 1
+  },
+  "error": null
+ },
+ {
+  "run": 33,
+  "passed": false,
+  "passed_as_recorded": false,
+  "goal_reached_s": null,
+  "min_walker_distance_m": {
+   "walker_0": 10.0,
+   "walker_1": 15.0
+  },
+  "responses": {
+   "replanning": 0,
+   "scanning": 0,
+   "evading": 0
+  },
+  "preflight_heading": {
+   "drift_deg_s": 0.00438540962887573,
+   "estimator_restarts": 1
+  },
+  "error": "RuntimeError: plan rejected: Fresh mapped occupancy, registered depth and capture-time transforms required"
+ },
+ {
+  "run": 34,
+  "passed": true,
+  "passed_as_recorded": true,
+  "goal_reached_s": 534.62,
+  "min_walker_distance_m": {
+   "walker_0": 2.323,
+   "walker_1": 1.075
+  },
+  "responses": {
+   "replanning": 3,
+   "scanning": 4,
+   "evading": 0
+  },
+  "preflight_heading": {
+   "drift_deg_s": 0.009540186020054306,
+   "estimator_restarts": 1
+  },
+  "error": null
+ }
+]

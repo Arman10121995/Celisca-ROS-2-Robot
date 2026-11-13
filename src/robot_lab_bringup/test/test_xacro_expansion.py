@@ -54,7 +54,8 @@ def test_robot_profile_can_be_expanded(robot_name, robot_config):
     (name, config) for name, config in ROBOTS.items() if not config.get("xacro")])
 def test_native_profile_has_an_explicit_model_loader(robot_name, robot_config):
     """A missing xacro must be deliberate, never an accidental missing model."""
-    assert robot_name == "px4_x500", f"{robot_name}: no declared native model loader"
+    # PX4 vehicles load through px4_sitl_runtime: the X500 in Gazebo, the Iris with the MuJoCo plant.
+    assert robot_name in ("px4_x500", "px4_iris"), f"{robot_name}: no declared native model loader"
     assert robot_config['package'] == 'robot_lab_adapter'
     assert robot_config['drive']['type'] == 'px4'
     assert 'flight' in robot_config['supported_modes']

@@ -18,6 +18,29 @@ from std_srvs.srv import Trigger
 SENSOR_LOSS_LAND_S = 10.
 # Replanning around predicted moving obstacles: at most once per this interval.
 REPLAN_INTERVAL_S = 1.5
+# A single late depth frame is not sensor loss: loss is declared after this much continuous staleness.
+SENSOR_STALE_GRACE_S = 1.
+# Evasion: holding still is not safe from an object that does not react (a walker walked into a
+# hovering drone, 2026-11-13). When a moving track is predicted to reach the drone where it hovers,
+# climb to this far above the track's top, within the altitude limit.
+EVADE_ABOVE_M = 1.
+# Walkways: a forward camera cannot see a person walking in from the side (contact at 0.26 m,
+# 2026-11-13). Where moving tracks have swept before (SweptMemory), the drone holds at the edge,
+# looks both ways and crosses only when no track is predicted on the route for the whole crossing.
+SCAN_LOOKAHEAD_M = 2.5
+SCAN_YAW_DEG = 75.
+SCAN_DWELL_S = .8              # at each heading: enough depth frames for a moving track
+SCAN_TURN_TIMEOUT_S = 4.
+SCAN_VALID_S = 20.             # one scan per walkway approach
+CROSS_WAIT_S = 15.             # then look again
+SCANS_PER_WALKWAY = 3          # then fall back to replanning
+# A non-reactive walker passing every 7.5 s leaves no window for an 11 s crossing at walker height
+# (0.51 m, 2026-11-13): walkways are crossed above their swept columns, this far over their top
+# (beyond the 0.7 m vehicle radius) ...
+OVERFLY_ABOVE_M = .3
+# ... but no higher than the level depth camera still sees ground within this share of its range:
+# at 4.2-4.6 m it saw too little valid depth, which is sensor loss, and the drone landed (2026-11-13).
+DEPTH_RANGE_M, VISIBLE_SHARE = 8., .8          # depth_points' range limit
 
 
 class PX4Planning(Node):
@@ -30,6 +53,11 @@ class PX4Planning(Node):
             from .aerial_obstacles import AerialObstacles
             self.obstacles = AerialObstacles(self)
             self.obstacles.ground_z = controller.ground_z
+            try:
+                from robot_lab_utils.aerial_planning import StaticScene
+                self.obstacles.static_scene = StaticScene(world)    # depth points on it are not moving objects
+            except Exception as exc:
+                self.get_logger().warning('Static scene for the tracking filter unavailable: %s' % exc)
             controller.route_guard = self.obstacles.route_guard
         self.takeoff_plan = None
         self.takeoff_state = dict(state='unchecked')
@@ -39,7 +67,9 @@ class PX4Planning(Node):
         self.canceled = threading.Event()
         self.generation, self.worker = 0, None
         self.goal_enu, self.replan_epoch, self.last_replan = None, None, -math.inf
-        self.sensor_loss_since, self.sensor_loss = None, dict(state='ok')
+        self.last_evasion = -math.inf
+        self.scanning, self.crossing_until, self.last_scan, self.scans = None, -math.inf, -math.inf, 0
+        self.sensor_loss_since, self.sensor_loss, self.stale_since = None, dict(state='ok'), None
         self.state = dict(plant_id=self.plant_id, state='idle', qualification=
             'experimental static + observed aerial planning; flight validation pending' if self.obstacles else
             'implemented static aerial planning; validation pending')
@@ -52,6 +82,8 @@ class PX4Planning(Node):
         self.create_timer(.2, self.poll)
 
     def goal(self, message):
+        # Every goal request is numbered in the status, so a client can tell its own result from an earlier one.
+        self.state['goal_request'] = self.state.get('goal_request', 0)+1
         if (self.worker and self.worker.is_alive() or message.header.frame_id != 'map'
                 or self.controller.phase != 'flying' or not self.controller.ready()
                 or self.controller.route or any(self.controller.manual)):
@@ -150,7 +182,7 @@ class PX4Planning(Node):
     def execute(self, _request, response):
         try:
             if (self.route is None or time.monotonic()-self.planned_at > 15 or not self.controller.ready()
-                    or self.controller.phase != 'flying' or math.dist(self.controller.position(), self.start) > .05):
+                    or self.controller.phase != 'flying' or math.dist(self.controller.position(), self.start) > .3):   # hover drift
                 raise ValueError('Fresh plan from the current measured FCU pose required')
             if not self.resources_current():
                 raise ValueError('Selected collision resources changed; plan again')
@@ -232,20 +264,212 @@ class PX4Planning(Node):
         self.worker.start()
         return True
 
+    def evade(self):
+        """Hovering drone in a moving object's predicted path: climb above it (then the replan resumes)."""
+        c = self.controller
+        if (not self.obstacles or c.phase != 'flying' or not c.ready() or c.route or any(c.manual)
+                or self.sensor_loss_since is not None):
+            return False
+        from robot_lab_utils.aerial_tracking import time_conflict
+        position = c.position()
+        conflict = time_conflict(position, [], 0., self.obstacles.moving_tracks(), radius=.7)
+        if not conflict:
+            return False
+        when, track = conflict
+        ceiling = c.ground_z + 10.
+        height = min(ceiling, max(position[2], track.z_high + EVADE_ABOVE_M))
+        if height - position[2] < .2 and c.target and c.target[2] >= height - .05:
+            return False                       # already above it (or climbing there)
+        if height <= track.z_high + .3:
+            self.state.update(state='evasion_limited', error='altitude limit below the obstacle top')
+            return False
+        c.clear_path('Observed route held: evading moving obstacle %d (%.1f s); climbing to %.1f m' % (
+            track.id, when, height))
+        c.route_status = ('Observed route held: evading moving obstacle %d (%.1f s); climbing to %.1f m'
+                          % (track.id, when, height))   # clear_path keeps the status of an empty route
+        c.target = [position[0], position[1], height]
+        self.last_evasion = time.monotonic()
+        self.canceled.set()                    # a replan from the old position is obsolete
+        self.state.update(state='evading', error='', evasion=dict(track=track.state(), climb_to_m=round(height, 2),
+                                                                 predicted_in_s=round(when, 2)))
+        return True
+
+    def walkway(self, route, lookahead=SCAN_LOOKAHEAD_M):
+        """Where ``route`` (from the current position) meets a swept walkway: dict(column, entry, length,
+        inside) with distances along the route, or None if it does not within ``lookahead``."""
+        swept = getattr(self.obstacles, 'swept', None)
+        columns = swept.snapshot()[1] if swept else []
+        if not columns or not route:
+            return None
+        def inside(q):
+            return next((column for column in columns if math.hypot(q[0]-column[0], q[1]-column[1]) <= column[2]+.7
+                         and column[3]-.7 <= q[2] <= column[4]+.7), None)
+        def samples():
+            points, travelled = [self.controller.position()]+[list(p) for p in route], 0.
+            for a, b in zip(points[:-1], points[1:]):
+                length = math.dist(a, b)
+                for k in range(max(1, int(length/.1))):
+                    yield travelled+k*.1, [a[i]+(b[i]-a[i])*k*.1/max(length, 1e-9) for i in range(3)]
+                travelled += length
+        first = last = None
+        top = -math.inf
+        for d, q in samples():
+            column = inside(q)
+            if column and first is None:
+                if d > lookahead:
+                    return None
+                first = (column, d)
+            if column:
+                last, top = d, max(top, column[4])
+            elif first is not None and d-last > 1.:
+                break
+        if first is None:
+            return None
+        return dict(column=first[0], entry=first[1], length=last-first[1], inside=first[1] == 0., top=top)
+
+    def overfly(self, route, found):
+        """(route, distance to the far side): ``route`` with the walkway crossed above its swept columns,
+        straight up here, across, then on."""
+        c = self.controller
+        height = found['top']+.7+OVERFLY_ABOVE_M
+        exit_d = found['entry']+found['length']+.6
+        info = getattr(self.obstacles, 'intrinsic', None)
+        half_fov = (math.atan(info[0].height/2/info[0].k[4]) if info and info[0].k[4] > 0
+                    else math.radians(25.))
+        visible = c.ground_z+VISIBLE_SHARE*DEPTH_RANGE_M*math.tan(half_fov)-.3
+        height = min(height, visible)
+        if height < found['top']+.7 or height > c.ground_z+10.-.1:
+            return route, exit_d               # cannot clear the walkway and still see: cross at route height
+        position = c.position()
+        points = [position]+[list(p) for p in route]
+        travelled, across, rest = 0., None, []
+        for a, b in zip(points[:-1], points[1:]):
+            length = math.dist(a, b)
+            if across is None and travelled+length >= exit_d:
+                f = (exit_d-travelled)/max(length, 1e-9)
+                across = [a[i]+(b[i]-a[i])*f for i in range(3)]
+            if across is not None and travelled+length > exit_d:
+                rest.append(list(b))
+            travelled += length
+        if across is None:
+            across = list(points[-1])
+        climb = [position[0], position[1], max(position[2], height)]
+        across = [across[0], across[1], max(across[2], height)]
+        return [climb, across]+rest, math.dist(position, climb)+math.dist(climb, across)
+
+    def scan(self):
+        """Look both ways at a walkway edge, then cross when no moving track is predicted on the route."""
+        from .aerial_obstacles import ROUTE_SPEED
+        from .px4_frames import yaw_enu
+        from robot_lab_utils.aerial_tracking import time_conflict
+        c, now = self.controller, time.monotonic()
+        healthy = (self.obstacles and c.phase == 'flying' and c.ready() and not any(c.manual)
+                   and self.sensor_loss_since is None)
+        if self.scanning:
+            scan = self.scanning
+            if not healthy or self.state['state'] != 'scanning':
+                c.target_yaw, self.scanning = scan['base'], None
+                return
+            if scan['headings']:
+                target = scan['headings'][0]
+                yaw = yaw_enu(c.flight.attitude.yaw) if c.flight.attitude else target
+                error = abs(math.atan2(math.sin(yaw-target), math.cos(yaw-target)))
+                if scan['reached'] is None and (error < math.radians(10) or now-scan['since'] > SCAN_TURN_TIMEOUT_S):
+                    scan['reached'] = now
+                if scan['reached'] is not None and now-scan['reached'] >= SCAN_DWELL_S:
+                    scan['headings'].pop(0)
+                    if scan['headings']:
+                        c.target_yaw, scan['since'], scan['reached'] = scan['headings'][0], now, None
+                    else:
+                        scan['looked_at'] = self.last_scan = now
+                return
+            # Looked both ways: cross when no track (seen, or coasting out of view) is predicted on the
+            # route during the whole crossing; otherwise wait, then look again, then replan.
+            tracks = self.obstacles.tracker.moving()
+            horizon = (scan['exit_d']+1.)/ROUTE_SPEED + 1.   # until the drone is past the walkway
+            conflict = time_conflict(c.position(), scan['route'], ROUTE_SPEED, tracks, horizon=horizon)
+            guard = self.obstacles.route_guard(c.position(), scan['route'])
+            if not conflict and not guard:
+                self.scanning, self.scans = None, 0
+                self.crossing_until = now+scan['entry']/ROUTE_SPEED+2.   # until the drone is in the walkway
+                try:
+                    c.set_path([c.position()]+scan['route'])   # set_path's first point is the start
+                    self.state.update(state='executing', error='', walkway=dict(scan['report'], crossed_after_s=round(now-scan['started'], 2)))
+                except ValueError as exc:
+                    self.state.update(state='rejected', error=str(exc))
+                return
+            scan['report']['waiting_for'] = (('moving obstacle %d in %.1f s' % (conflict[1].id, conflict[0])) if conflict else guard)
+            if now-scan['looked_at'] > CROSS_WAIT_S:
+                self.scanning, self.last_scan = None, now
+                if self.scans >= SCANS_PER_WALKWAY:
+                    self.state.update(state='route_stopped', error='', walkway=dict(scan['report'], outcome='replan'))
+                else:
+                    self.last_scan = -math.inf       # look again
+                    self.state.update(state='executing')
+                    c.set_path([c.position()]+scan['route'])   # re-enter the scan from the same edge
+            return
+        if not healthy or self.state['state'] != 'executing' or not c.route:
+            return
+        found = self.walkway(c.route)
+        if not found:
+            return
+        if found['inside']:
+            # Crossing (or caught) in a walkway: if a track is predicted on the rest of the crossing, climb
+            # above it and stay there; the replan from up there meets the walkway as a new crossing.
+            position = c.position()
+            conflict = time_conflict(position, c.route, ROUTE_SPEED, self.obstacles.tracker.moving(),
+                                     horizon=(found['length']+2.)/ROUTE_SPEED+1.)
+            if conflict and now-self.last_evasion > 2.:
+                when, track = conflict
+                height = min(c.ground_z+10., max(position[2], track.z_high+EVADE_ABOVE_M))
+                if height-position[2] >= .2 and height > track.z_high+.3:
+                    reason = ('Observed route held: moving obstacle %d predicted in the walkway in %.1f s; climbing to %.1f m'
+                              % (track.id, when, height))
+                    c.clear_path(reason)
+                    c.route_status = reason
+                    c.target = [position[0], position[1], height]
+                    self.last_evasion = now
+                    self.canceled.set()
+                    self.state.update(state='evading', error='', evasion=dict(track=track.state(), walkway=True,
+                                      climb_to_m=round(height, 2), predicted_in_s=round(when, 2)))
+            return
+        if now < self.crossing_until:
+            return                             # this crossing was cleared; the drone is entering
+        column, length = found['column'], found['length']
+        route, exit_d = self.overfly([list(p) for p in c.route], found)
+        base = c.target_yaw
+        look = now-self.last_scan >= SCAN_VALID_S  # a recent look both ways is reused; the timing check is not
+        c.clear_path('Observed route held: %s the walkway at (%.1f, %.1f) before crossing'
+                     % ('looking along' if look else 'timing', column[0], column[1]))
+        c.target = list(c.position())
+        headings = [base+math.radians(SCAN_YAW_DEG), base-math.radians(SCAN_YAW_DEG), base] if look else []
+        if look:
+            self.scans += 1
+            c.target_yaw = headings[0]
+        self.scanning = dict(base=base, headings=headings, since=now, reached=None, route=route, exit_d=exit_d,
+                             entry=found['entry'], started=now, looked_at=None if look else now,
+                             report=dict(walkway=[round(v, 2) for v in column[:2]], crossing_m=round(length, 2),
+                                         scan=self.scans, looked=look, crossing_z=round(route[0][2], 2)))
+        self.state.update(state='scanning', error='', walkway=self.scanning['report'])
+
     def sensor_guard(self):
         """Stale depth/map in flight: hold now, land after SENSOR_LOSS_LAND_S unless sensing returns."""
         c = self.controller
         if not self.obstacles or c.phase != 'flying' or not c.ready():
-            self.sensor_loss_since = None
+            self.sensor_loss_since = self.stale_since = None
             if self.sensor_loss.get('state') != 'landing':
                 self.sensor_loss = dict(state='ok')
             return
-        if self.obstacles.ready():
-            if self.sensor_loss_since is not None:
-                self.sensor_loss = dict(state='recovered', lost_s=round(time.monotonic()-self.sensor_loss_since, 2))
-            self.sensor_loss_since = None
-            return
         now = time.monotonic()
+        if self.obstacles.sensing_fresh():
+            if self.sensor_loss_since is not None:
+                self.sensor_loss = dict(state='recovered', lost_s=round(now-self.sensor_loss_since, 2))
+            self.sensor_loss_since = self.stale_since = None
+            return
+        if getattr(self, 'stale_since', None) is None:
+            self.stale_since = now
+        if now-self.stale_since < SENSOR_STALE_GRACE_S and self.sensor_loss_since is None:
+            return
         if self.sensor_loss_since is None:
             self.sensor_loss_since = now
             self.canceled.set()
@@ -305,7 +529,7 @@ class PX4Planning(Node):
                         self.state.update(state='rejected', error=result['error'])
                     elif (self.obstacles.ready() and self.controller.ready() and self.controller.phase == 'flying'
                             and self.controller.command_generation == result['command_generation']
-                            and not any(self.controller.manual) and math.dist(self.controller.position(), result['start']) <= .05
+                            and not any(self.controller.manual) and math.dist(self.controller.position(), result['start']) <= .3
                             and self.resources_current()):
                         try:
                             self.controller.set_path(result['route'])
@@ -355,14 +579,20 @@ class PX4Planning(Node):
             self.state.update(state='expired', error='Plan expired; plan from the current position')
         if self.obstacles:
             self.sensor_guard()
+            self.scan()
+            self.evade()                       # a walker heading for the hovering drone overrides a scan
         if self.state['state'] == 'executing' and not self.controller.route:
             self.state.update(state='route_stopped', execution=self.controller.route_status)
         c = self.controller
-        if (self.obstacles and self.goal_enu is not None and self.state['state'] in ('route_stopped', 'replan_failed')
-                and str(c.route_status).startswith('Observed route held: moving obstacle')
+        if (self.obstacles and self.goal_enu is not None and self.state['state'] in ('route_stopped', 'replan_failed', 'evading')
+                and (str(c.route_status).startswith('Observed route held:')      # moving, occupied or stale
+                     or str(c.route_status).startswith('sensor loss: holding'))
+                and self.obstacles.ready()
                 and c.phase == 'flying' and not any(c.manual) and self.sensor_loss_since is None
-                and time.monotonic()-self.last_replan > REPLAN_INTERVAL_S):
-            # The guard held for a predicted moving obstacle: replan around its swept volume.
+                and time.monotonic()-self.last_replan > REPLAN_INTERVAL_S
+                and time.monotonic()-self.last_evasion > 2.):              # let an evasive climb finish
+            # The guard held (a predicted moving obstacle, current occupancy in the lookahead, or a
+            # recovered sensor): replan to the goal around current observations and predicted sweeps.
             self.replan(c.command_generation)
         if self.takeoff_plan and (time.monotonic()-self.takeoff_plan['checked_at'] > 30
                 or not self.controller.takeoff_ready()

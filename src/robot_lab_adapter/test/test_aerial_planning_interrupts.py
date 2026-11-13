@@ -42,7 +42,8 @@ def planner(tmp_path,monkeypatch):
 def observations(point):
     layer=VoxelObstacles([point])
     return SimpleNamespace(snapshot=lambda:((layer,),dict(scope='explicit synthetic fixture')),
-        ready=lambda:True,poll=lambda:None,state=lambda:dict(enabled=True),close=lambda:None)
+        ready=lambda:True,poll=lambda:None,state=lambda:dict(enabled=True),close=lambda:None,
+        sensing_fresh=lambda:True,moving_tracks=lambda:[])
 
 
 def arm_execution(node,controller,static):

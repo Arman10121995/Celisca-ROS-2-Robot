@@ -2049,6 +2049,51 @@
       date: "2026-10-02"
   created: "2026-10-02"
   updated: "2026-10-02"
+- id: px4_iris
+  version: "1.16.2"
+  name: "PX4 Iris (MuJoCo)"
+  ros_package: robot_lab_adapter
+  description: "PX4 v1.16.2 SITL (airframe 10016_none_iris) flying an Iris-class quadrotor in MuJoCo through PX4's simulator interface (HIL lockstep). Same takeoff check, Offboard controller and planner as the Gazebo X500; no camera yet."
+  status: integrated
+  robot_class: aerial
+  maturity: simulated
+  source:
+    repository: "https://github.com/PX4/PX4-Autopilot"
+    license: "BSD-3-Clause"  # PX4; plant protocol after Pegasus Simulator (BSD-3-Clause, github.com/PegasusSimulator)
+    maintainer: "PX4 / Robot Lab adapter"
+  supported_simulators: [mujoco]
+  locomotion: {type: multirotor, dof: 6, max_velocity: 1.0, max_acceleration: 1.0}
+  sensors:
+    - {type: odometry, name: fcu_estimate, frame: base_link, topic: /px4/odometry, message_type: nav_msgs/Odometry}
+  actuators:
+    - {type: rotor, name: rotor_0, joint: rotor_0_joint}
+    - {type: rotor, name: rotor_1, joint: rotor_1_joint}
+    - {type: rotor, name: rotor_2, joint: rotor_2_joint}
+    - {type: rotor, name: rotor_3, joint: rotor_3_joint}
+  command_interfaces: [geometry_msgs/Twist, geometry_msgs/PoseStamped, std_srvs/Trigger]
+  state_interfaces: [nav_msgs/Odometry]
+  frames: [map, base_link]
+  capabilities: [flight_control]
+  dependencies: [robot_lab_adapter, robot_lab_bringup]
+  safety_limits:
+    max_velocity: 1.0
+    max_acceleration: 1.0
+    command_rate_hz: 20.0
+    obstacle_clearance_m: 0.0
+    collision_stop_time_s: null
+    max_tilt_rad: null
+    restricted_modes: [loc, slam, 3d_slam, nav, hardware]
+    notes: "SITL only, as the X500. The MuJoCo plant's mass/inertia/motor model are the PX4 SITL Iris values; sensor noise is a declared lab value."
+  compute_limits:
+    cpu_cores: 4
+    memory_mb: 2048
+    min_real_time_factor: 0.0
+    notes: "PX4 plus a MuJoCo plant paced to wall time."
+  assets: {meshes: []}
+  tags: [px4, sitl, iris, mujoco, flight]
+  evidence: []
+  created: "2026-11-13"
+  updated: "2026-11-13"
 - id: probot_l
   version: 0.2.0
   name: ASTI ProBOT-L

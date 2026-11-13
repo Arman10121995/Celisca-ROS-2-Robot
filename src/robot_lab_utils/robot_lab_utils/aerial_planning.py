@@ -42,6 +42,9 @@ class StaticScene:
                         remember(dependency)
             return path
         shapes, skipped = extract_static_shapes(world, resolve, collision_only=True)
+        # Actors move: the observed/tracked layer handles them (R5.11), not this static scene.
+        self.dynamic_actors = [note for note in skipped if note.startswith("actor '") and 'scripted motion' in note]
+        skipped = [note for note in skipped if note not in self.dynamic_actors]
         if skipped:
             raise ValueError('Incomplete aerial collision scene: '+'; '.join(skipped))
         self.shapes = []

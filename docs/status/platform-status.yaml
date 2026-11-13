@@ -2136,10 +2136,13 @@ tasks:
       R6.8:
         acceptance_ref: ROADMAP.md R6.8
         owner: claude
-        state: queued
+        state: implemented
         updated: '2026-11-13'
         title: Real-world area import from a globe (elevation, buildings, vegetation, roads, people/traffic)
-        next_action: Survey existing open-source OSM/DEM-to-simulator tools first (user principle), then pin and integrate.
+        next_action: 'Implemented 2026-11-13 (CesiumJS globe, Terrain Tiles, OSM via Overpass, SUMO actors; GUI Real
+          place page). Rostock centre support and roof heights within 1.7 cm on four simulators. Validation later:
+          robot missions in imported areas, people/traffic behaviour.'
+        evidence: [docs/status/evidence/real-world-import-2026-11-13/README.md, docs/tutorials/real-world-import.md]
       R14.1:
         acceptance_ref: ROADMAP.md R14.1
         owner: codex
@@ -2843,9 +2846,15 @@ tasks:
         acceptance_ref: ROADMAP.md R5.11
         depends_on:
         - R5.10
-        owner: null
-        state: queued
+        owner: claude
+        state: implemented
+        updated: '2026-11-13'
         title: Drone moving-obstacle prediction, sensor-loss handling and other drone backends
+        next_action: 'Implemented 2026-11-13, experimental: Kalman tracks, predicted sweeps, swept-memory ghost removal,
+          walkway look-both-ways and overflight, evasion, sensor-loss hold/land, EKF heading/height takeoff gate, PX4 +
+          MuJoCo plant (px4_iris). aerial_moving runs 32 and 34 passed (walkers >= 1.08 m), run 33 failed before the
+          mission; MuJoCo plain flight passed. Validation later (V5): repeats, reacting people, vehicles, other worlds.'
+        evidence: [docs/status/evidence/drone-moving-2026-11-13/README.md, docs/tutorials/mapped-drone-planning.md]
       R5.2:
         acceptance_ref: ROADMAP.md
         depends_on:

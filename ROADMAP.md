@@ -131,8 +131,8 @@ Work top to bottom. Each line links to its task.
 | I3 | [R14.1](#r141--open-source-counterparts-for-self-made-robots) Open-source robots | Initial source-search/integration pass complete: TurtleBot4, WAM-V, Summit-STEEL and source octopod measured; BlueROV2 remains a restricted local candidate. Remaining licensing/mission qualification recorded separately | implemented; acceptance partial |
 | I4 | [R6.7](#r67--terrain-generation-gui-and-four-backend-conversion) Terrain GUI | Done 2026-11-13: Worlds → Terrain page, procedural/raster sources with manifest, support height measured on all four (Isaac included) | implemented |
 | I4a | [R14.5](#r145--robot-status-markers-in-the-gui-selectors) Robot status markers | Done 2026-11-13: ● measured / ◐ experimental / ○ display only / ✕ unavailable plus mode letters in both robot lists, from recorded evidence | implemented |
-| I4b | [R6.8](#r68--real-world-area-import-from-a-globe) Real-world area import | Pick an area on a globe → elevation, buildings, vegetation, roads (+ people/traffic) as a world for all four simulators; reuse existing open-source tools (user request 2026-11-13) | queued |
-| I5 | [R5.11](#r511--drone-moving-obstacles-and-other-drone-backends) Drone moving obstacles | Moving-obstacle prediction, sensor-loss handling, other backends | not started |
+| I4b | [R6.8](#r68--real-world-area-import-from-a-globe) Real-world area import | Done 2026-11-13: globe picker (CesiumJS + OSM), Terrain Tiles + OSM buildings/roads/trees/water, SUMO people/traffic; support and roof heights measured on four simulators | implemented |
+| I5 | [R5.11](#r511--drone-moving-obstacles-and-other-drone-backends) Drone moving obstacles | Done 2026-11-13: Kalman tracks, predicted sweeps, walkway look-both-ways and overflight, evasion, sensor-loss hold/land, EKF heading/height gate; 2 passing flights past walkers (Gazebo); PX4 + MuJoCo plant: takeoff, 5 m route and landing | implemented |
 | I6 | [R5.9](#r59--mobile-manipulators) Mobile manipulation | Native Stretch local recipes/interlocks/costmap receipts implemented; global planning and further source adapters remain | partial |
 | I7 | [R5.7](#r57--manipulators-and-motion-planning) Arms | Pick/place with arbitrary objects, coupled mechanisms, other backends | partial |
 | I8 | [R5.8](#r58--robot-hands-and-grippers) Hands | Torque/tendon hand adapters, object workflows | partial |
@@ -412,29 +412,46 @@ These are complete; preserve their scoped contracts. R1.3 follow-up CI passes at
 
 ### R5.11 — Drone moving obstacles and other drone backends
 
-- **State:** not started · **Priority:** I5 · **Depends on:** R5.10
+- **State:** implemented (2026-11-13), experimental · **Priority:** I5 · **Owner:** claude · **Depends on:** R5.10
 - **Goal:** the drone avoids moving obstacles and handles sensor loss in flight.
   Drones also fly in a second simulator.
-- **Have:** static plus observed voxel obstacles with a 2 m lookahead
-  interruption and no automatic resume
-  ([October 14](docs/status/aerial-obstacles-2026-10-14.md)).
-- **Remaining implementation:**
-  - moving-obstacle tracking and prediction (velocity from consecutive depth
-    clusters; constant-velocity or Kalman prediction) and time-aware
-    replanning;
-  - sensor-loss behaviour: hold, then land after a timeout;
-  - a second drone backend, such as PX4 SITL with a MuJoCo or Isaac plant.
-    This needs a real FCU-plant bridge, not a metadata change.
-- **How to do it:**
-  1. Extend `robot_lab_utils/observed_aerial_scene.py` with tracked clusters
-     and predicted swept volumes. Feed them to the existing 3D A* planner in
-     `robot_lab_adapter/` as time-indexed obstacles.
-  2. Add moving actors to an aerial world (`src/robot_lab_maps/`) for testing.
-  3. For another backend, read the PX4 simulator-interface docs and write
-     a lockstep sensor/actuator bridge.
-- **Done when:** a flight in which a moving obstacle crosses the route, and
-  the drone replans or holds without contact.
-- **Validation later:** repeats, other worlds (V5).
+- **Have:**
+  - `robot_lab_utils/aerial_tracking.py`: depth clusters → constant-velocity
+    Kalman tracks; coasting for 4 s out of view; predicted swept columns; time
+    conflicts along the route; a swept memory of where people walked; a 2 m
+    standing-height prior.
+  - `aerial_obstacles.py`: the floor is estimated from the depth itself; static
+    world filter; people's ghost trails are dropped from the RTAB-Map layer.
+  - `px4_planning.py`:
+    - automatic replanning after holds;
+    - walkways: hold at the edge, look ±75°, time the crossing, then cross
+      above the swept columns, capped where the camera still sees ground;
+    - evasive climb;
+    - sensor loss: 1 s grace, hold, land after 10 s, replan on recovery.
+  - `px4_ros_controller.py`: takeoff waits for a steady resting heading
+    (≤ 0.25°/s) and height; otherwise the runtime restarts PX4's `ekf2` (at
+    most 3 times).
+  - Test world `aerial_moving` with two walking actors.
+  - `scripts/qualify_drone_moving.py`.
+  - Second backend: `px4_mujoco_plant.py` (PX4 SITL with a MuJoCo quadrotor
+    plant over the simulator interface, HIL lockstep, Iris parameters) as
+    robot `px4_iris` on MuJoCo.
+  - Tutorial: [mapped-drone-planning](docs/tutorials/mapped-drone-planning.md#moving-obstacles-and-sensor-loss).
+  - Measured: runs 32 and 34 passed: goal reached; walkers no closer than
+    1.08 m; walkway holds and replans; camera loss → hold 1.7 s → land 12 s.
+    Run 33 failed before the mission on an estimator fault, which the takeoff
+    gate now refuses. PX4 with the MuJoCo plant took off, flew a
+    checked 5 m route and landed.
+    [Evidence](docs/status/evidence/drone-moving-2026-11-13/README.md).
+- **Remaining implementation:** none for this item.
+- **Done when:** met: moving obstacles crossed the route, and the drone held,
+  replanned or overflew without contact.
+- **Validation later (V5):**
+  - repeats and statistics;
+  - people who react or turn; vehicles; crowds;
+  - other worlds;
+  - moving obstacles in the MuJoCo plant;
+  - the SITL height-estimate noise (0.05–1.7 m at rest on this host).
 
 ### R6.1 — Map geometry, alignment and resets
 
@@ -527,18 +544,27 @@ These are complete; preserve their scoped contracts. R1.3 follow-up CI passes at
 
 ### R6.8 — Real-world area import from a globe
 
-- **State:** queued (user request 2026-11-13) · **Priority:** I4b · **Owner:** claude · **Depends on:** R6.7
+- **State:** implemented (2026-11-13), experimental · **Priority:** I4b · **Owner:** claude · **Depends on:** R6.7
 - **Goal:** open a globe, select an area, and import it as a 3D world for all four simulators with
   elevation, buildings, vegetation, roads and other features; for a city, optionally people and traffic.
-- **Have:** R6.7 generator, raster import with attribution, heightmap/mesh conversion for all four backends.
-- **Remaining implementation:** survey and pin existing open-source tools first (user principle: import
-  before building), e.g. OSM/DEM-to-Gazebo world generators, OSM-to-3D (OSM2World, Blender GIS/BlenderOSM),
-  CARLA/SUMO-style traffic and pedestrians; then the globe area picker, export, conversion and registration.
-- **How to do it:** search GitHub for maintained, licensed tools; record pins and licenses in the asset-source
-  catalog; reuse R6.7's manifest, registration and four-backend support probe. Blender is available on the host.
-- **Done when:** a selected real area becomes a registered world that loads with matching support heights and
-  building collisions on four backends, with data attribution in its manifest.
-- **Validation later:** robot missions in imported areas; people/traffic behaviour.
+- **Survey first (user principle):** gazebo_terrain_generator (BSD-3, needs a Mapbox token, Gazebo only, no
+  roads/trees), OSM2World, blosm, gazebo_osm and SUMO were reviewed; the token-free route reuses CesiumJS
+  (globe), Terrain Tiles (AWS Open Data), OpenStreetMap via Overpass and Eclipse SUMO, with R6.7's conversion.
+- **Have:** `robot_lab_utils/real_world_import.py` (area ≤ 2 km, local aeqd projection, cached downloads saved
+  with the world, buildings extruded from footprints with OSM heights/levels, roads/water visual, trees and
+  forests, occupancy blocking buildings/trees/water/slopes, free spawn, manifest with WGS84 box, projection,
+  attribution and licenses, offline byte-identical regeneration); `real_world_traffic.py` (SUMO netconvert with
+  sidewalks/crossings, random vehicle and pedestrian trips, FCD tracks → Gazebo actors); `real_world_server.py`
+  + `web/globe.html` (Cesium globe, place search, rectangle selection, import progress); GUI **Worlds & mapping →
+  Real place** (open globe, typed box, result, use in Launch, Preview 3D); CLI. Measured: Rostock centre
+  (308 m, 116 buildings, 155 roads, 57 trees) on Gazebo, MuJoCo, PyBullet and Isaac: ground and two roofs
+  (20.0 and 27.1 m) within 1.7 cm; the people/traffic world (40 people, 30 vehicles) loads in Gazebo with
+  the same support heights and no missing actor meshes (rendering not checked visually)
+  ([evidence](docs/status/evidence/real-world-import-2026-11-13/README.md)).
+- **Remaining implementation:** none. Optional: satellite texture (Mapbox through gazebo_terrain_generator).
+- **Done when:** met.
+- **Validation later:** robot missions in imported areas; people/traffic behaviour; projection/datum checks
+  against surveyed points.
 
 ### R7 — Algorithm breadth
 

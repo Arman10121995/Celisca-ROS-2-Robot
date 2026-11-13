@@ -4,6 +4,7 @@ import fcntl
 from collections import deque
 import copy
 import json
+import sys
 import math
 import os
 from pathlib import Path
@@ -404,7 +405,15 @@ def main():
                              'empty starts a new map in the run directory')
     parser.add_argument('--obstacles', default='none', choices=('none', 'mapped_depth'),
                         help='Observed occupancy and live depth route interruption (needs RGB-D mapping Flight)')
+    parser.add_argument('--preflight-fcu-seconds', type=float, default=8.,
+                        help='FCU (simulation) seconds before the controller aligns its origin and allows takeoff: '
+                             'the estimator can still reset its local origin just after start (seen 2026-11-13)')
+    parser.add_argument('--plant', default='gz', choices=('gz', 'mujoco'),
+                        help='gz: upstream X500 in Gazebo Harmonic; mujoco: Iris-class quadrotor in MuJoCo through '
+                             "PX4's simulator interface (airframe 10016_none_iris; px4_mujoco_plant)")
     args = parser.parse_args()
+    if args.plant == 'mujoco' and (args.vehicle != 'x500' or args.mapping != 'none' or args.obstacles != 'none'):
+        parser.error('The MuJoCo plant has no camera yet: use --vehicle x500 without mapping or observed obstacles')
     if not math.isfinite(args.log_limit_mb) or args.log_limit_mb <= 0:
         parser.error('PX4 log limit must be positive and finite')
     if args.mapping != 'none' and args.vehicle != 'x500_depth':
@@ -439,6 +448,7 @@ def main():
     for folder in ('rootfs', 'worlds', 'models'):
         (run/folder).mkdir()
     prepare_world(args.world, run/'worlds/robot_lab_flight.sdf', upstream)
+    mujoco_plant = args.plant == 'mujoco'
     prepare_model(run/'models/x500', upstream)
     _copy_config(upstream/'models/x500/model.config', run/'models/x500/model.config', 'x500')
     camera = args.vehicle == 'x500_depth'
@@ -453,6 +463,12 @@ def main():
         PATH=str(build/'bin')+os.pathsep+os.environ['PATH'],
         PX4_GZ_MODEL_POSE=f'{args.spawn_x},{args.spawn_y},{args.spawn_z}')
     environment.update(HARMONIC_DISCOVERY_PORTS)
+    if mujoco_plant:
+        # PX4's external-simulator airframe: simulator_mavlink connects to the plant on TCP 4560.
+        for key in ('PX4_GZ_MODELS', 'PX4_GZ_WORLDS', 'PX4_GZ_PLUGINS', 'PX4_GZ_WORLD', 'PX4_GZ_MODEL_POSE',
+                    'GZ_SIM_SERVER_CONFIG_PATH'):
+            environment.pop(key, None)
+        environment.update(PX4_SIM_MODEL='none_iris', PX4_SYS_AUTOSTART='10016')
     if args.gui == 'false' or (args.gui == 'auto' and not environment.get('DISPLAY')):
         environment['HEADLESS'] = '1'
     else:
@@ -464,7 +480,8 @@ def main():
     maps = Path(get_package_share_directory('robot_lab_maps'))
     resources.extend(str(p) for p in maps.glob('maps/*/models'))
     environment['GZ_SIM_RESOURCE_PATH'] = os.pathsep.join(resources+[environment.get('GZ_SIM_RESOURCE_PATH', '')])
-    environment['GZ_SIM_SYSTEM_PLUGIN_PATH'] = os.pathsep.join([environment['PX4_GZ_PLUGINS'], environment.get('GZ_SIM_SYSTEM_PLUGIN_PATH', '')])
+    if not mujoco_plant:                       # the MuJoCo plant starts no Gazebo
+        environment['GZ_SIM_SYSTEM_PLUGIN_PATH'] = os.pathsep.join([environment['PX4_GZ_PLUGINS'], environment.get('GZ_SIM_SYSTEM_PLUGIN_PATH', '')])
     description = x500_urdf(upstream, camera=camera)
     (run/'x500.urdf').write_text(description)
     import yaml
@@ -478,6 +495,20 @@ def main():
         # PX4 (and the Gazebo server it starts) inherit the lease, so a PX4
         # that outlives this runtime still blocks a second instance on the
         # same MAVLink port instead of silently sharing it.
+        if mujoco_plant:
+            world_name = Path(args.world).stem if args.world else ''
+            from ament_index_python.packages import get_package_share_directory as share
+            candidates = [Path(args.world).parent.parent/'mjcf'/(world_name+'.xml'),
+                          Path(share('robot_lab_maps'))/'mjcf'/(world_name+'.xml')] if world_name else []
+            world_mjcf = next((str(c) for c in candidates if c.is_file()), '')
+            (run/'plant.json').write_text(json.dumps(dict(plant='mujoco', airframe='10016_none_iris',
+                                                          world_mjcf=world_mjcf)))
+            processes.append(subprocess.Popen(
+                [sys.executable, '-m', 'robot_lab_adapter.px4_mujoco_plant', '--world-mjcf', world_mjcf,
+                 '--spawn-x', str(args.spawn_x), '--spawn-y', str(args.spawn_y), '--spawn-z', str(args.spawn_z),
+                 '--ros', '--real-time'], stdout=(run/'plant.log').open('w'), stderr=subprocess.STDOUT,
+                start_new_session=True))
+            time.sleep(1.)                          # the plant listens before PX4 connects
         fcu = subprocess.Popen([str(build/'bin/px4'), '-d', str(build/'etc'), '-w', str(run/'rootfs')],
                                env=environment, stdout=log, stderr=subprocess.STDOUT, start_new_session=True,
                                pass_fds=(instance_lease.fileno(),))
@@ -515,12 +546,21 @@ def main():
             processes.append(subprocess.Popen(['rviz2', '-d', str(config)], start_new_session=True))
         rclpy.init(args=['--ros-args', '-p', 'flight_enabled:='+args.flight_enabled,
                         '-p', f'origin_x:={args.spawn_x}', '-p', f'origin_y:={args.spawn_y}',
-                        '-p', f'origin_z:={args.spawn_z+0.24}'])
+                        '-p', f'origin_z:={args.spawn_z+0.24}',   # body height on its gear (X500 and the MuJoCo plant)
+                        '-p', f'preflight_fcu_seconds:={args.preflight_fcu_seconds}'])
         controller = PX4Controller()
-        relay = NativeStateRelay(environment)
+        def restart_estimator():                   # PX4's own client for the running SITL instance 0
+            def work():
+                for verb in ('stop', 'start'):
+                    subprocess.run([str(build/'bin/px4-ekf2'), verb], env=environment, stdout=log,
+                                   stderr=subprocess.STDOUT, timeout=10, check=False)
+            threading.Thread(target=work, daemon=True).start()
+        controller.estimator_restart = restart_estimator
+        relay =None if mujoco_plant else NativeStateRelay(environment)   # the MuJoCo plant publishes truth itself
         executor = SingleThreadedExecutor()
         executor.add_node(controller)
-        executor.add_node(relay)
+        if relay:
+            executor.add_node(relay)
         from .px4_planning import PX4Planning
         from robot_lab_utils.aerial_takeoff import x500_envelope
         envelope = x500_envelope(upstream/'models', model_file=run/'models/x500/model.sdf')

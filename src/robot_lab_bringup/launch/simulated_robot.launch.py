@@ -824,7 +824,7 @@ def _build_simulation_actions(context):
                     marine_args['spawn_' + axis] = supplied
             return _run_id_actions() + [IncludeLaunchDescription(PythonLaunchDescriptionSource(
                 _launch_file(bringup_share, 'auv_simulator.launch.py' if robot_model == 'tethys_auv' else 'marine_simulator.launch.py')), launch_arguments=marine_args.items())]
-        if robot_model == 'px4_x500':
+        if robot_model in ('px4_x500', 'px4_iris'):
             spawn = map_config.get('spawn', {})
             python = os.environ.get('PX4_PYTHON', '/workspace/molar/robot_lab_runtime/px4/venv/bin/python3')
             if not Path(python).is_file():
@@ -847,6 +847,13 @@ def _build_simulation_actions(context):
                 raise RuntimeError('aerial_map_database needs aerial_mapping:=rtabmap and an existing file: '+database)
             if obstacles not in ('none', 'mapped_depth') or obstacles != 'none' and (mapping != 'rtabmap' or mode_name != 'flight'):
                 raise RuntimeError('aerial_obstacles must be none or mapped_depth with RGB-D RTAB-Map Flight')
+            if robot_model == 'px4_iris':
+                # MuJoCo Iris plant through PX4's simulator interface (no camera yet).
+                if _launch_value(context, 'simulator') != 'mujoco':
+                    raise RuntimeError('px4_iris flies in MuJoCo (simulator:=mujoco); the Gazebo drone is px4_x500')
+                if vehicle != 'x500' or mapping != 'none' or obstacles != 'none':
+                    raise RuntimeError('px4_iris has no camera yet: no px4_vehicle, aerial_mapping or aerial_obstacles')
+                command += ['--plant', 'mujoco']
             command += ['--vehicle', vehicle, '--mapping', mapping]
             command += ['--obstacles', obstacles]
             if database:

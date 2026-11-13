@@ -27,7 +27,7 @@ modes:
     - {id: visualizer, label: "Live FCU pose and rotor states"}
     requires_2d_map: false
     required_features: [flight_controller]
-    simulators: [gazebo]
+    simulators: [gazebo, mujoco]
     rviz: {enabled: true}
   display:
     category: "Perception & Visualization"

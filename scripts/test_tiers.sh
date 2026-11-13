@@ -97,6 +97,10 @@ FAST_TESTS=(
   "$BRG_TEST/test_wheel_navigation_contract.py"
   "$GUI_TEST/test_drive_control.py"
   "$GUI_TEST/test_architecture_model.py"
+  "src/robot_lab_utils/test/test_aerial_tracking.py"
+  "src/robot_lab_utils/test/test_real_world_import.py"
+  "src/robot_lab_utils/test/test_terrain_generator.py"
+  "$BRG_TEST/test_world_copy_paths.py"
 )
 
 INTEGRATION_TESTS=(
@@ -135,6 +139,11 @@ INTEGRATION_TESTS=(
   "$REG_TEST"/test_labbot_qualification.py
   "$REG_TEST"/test_bhl_qualification.py
   "$REG_TEST"/test_quadrotor_sitl_qualification.py
+  "$ADP_TEST/test_px4_heading_gate.py"
+  "$ADP_TEST/test_px4_walkway_scan.py"
+  "$ADP_TEST/test_aerial_floor_filter.py"
+  "$ADP_TEST/test_aerial_planning_interrupts.py"
+  "$GUI_TEST/test_real_world_controls.py"
 )
 
 PHYSICS_TESTS=(
@@ -160,6 +169,7 @@ PHYSICS_TESTS=(
   "$MAP_TEST/test_r6_2_sensor_disturbance.py"
   "$MAP_TEST/test_r6_3_terrain_aerial.py"
   "$MAP_TEST/test_r6_4_diverse_maps.py"
+  "$ADP_TEST/test_px4_mujoco_plant.py"
 )
 
 run_tier() {

@@ -20,6 +20,15 @@ from pymavlink import mavutil
 from .px4_frames import attitude_enu_flu, enu_to_ned, ned_to_enu, yaw_enu
 from .px4_mavlink import Flight, OFFBOARD_CUSTOM_MODE
 
+HEADING_WINDOW_S = 4.          # FCU seconds of rest over which the heading must hold
+HEADING_DRIFT_LIMIT = .25      # deg/s; settled estimators drift < 0.1, faulty ones 0.6-6 (2026-11-13)
+# A restarted EKF once let its height run away 12 s later (4.4 m and 3.5 m/s over 4 s on the ground) and
+# PX4 armed on it during a health-check flicker (2026-11-13): at rest the height must also hold. Resting
+# SITL estimates on this host move 0.05-0.4 m (up to 1.7 m, 1.9 m/s in flights that flew normally) in 4 s,
+# so these limits catch a runaway, not ordinary noise.
+REST_HEIGHT_SPREAD_M, REST_VERTICAL_SPEED = 2., 2.5
+ESTIMATOR_RESTARTS = 3
+
 
 class PX4Controller(Node):
     def __init__(self):
@@ -41,6 +50,18 @@ class PX4Controller(Node):
         self.base_frame = str(self.get_parameter('frame_prefix').value) + 'base_link'
         self.enabled = self.get_parameter('flight_enabled').value
         self.origin = [self.get_parameter('origin_'+key).value for key in 'xyz']
+        # Until the first arming the vehicle rests at its spawn: keep the origin aligned to it, so an
+        # estimator settling on the ground (8 cm of altitude drift seen 2026-11-13) cannot fail the
+        # takeoff check. After any flight the origin is left alone (a landing is not the spawn).
+        self.spawn_origin = list(self.origin)
+        self.has_armed = False
+        # PX4 SITL's EKF sometimes starts with a gyro bias of up to 0.15 rad/s that the
+        # magnetometer never removes: the heading then drifts on the ground and the hover
+        # orbits (2026-11-13 ULogs). Takeoff waits for a steady heading; the runtime may
+        # supply estimator_restart() to restart PX4's EKF when it is not.
+        self.estimator_restart = None
+        self.estimator_restarts = 0
+        self.heading_samples = []
         self.ground_z = self.origin[2]
         self.flight = Flight(mavutil.mavlink_connection(
             self.get_parameter('port').value, source_system=255, source_component=190),
@@ -92,7 +113,53 @@ class PX4Controller(Node):
         attitude, landed = self.flight.attitude, self.flight.ext_sys
         return bool(self.enabled and self.ready() and self.phase == 'idle' and not self.flight.armed()
             and landed and landed.landed_state == 1 and attitude
-            and abs(attitude.roll) <= .1 and abs(attitude.pitch) <= .1)
+            and abs(attitude.roll) <= .1 and abs(attitude.pitch) <= .1 and self.heading_settled())
+
+    def heading_drift(self):
+        """Estimated heading change (deg/s) over the last HEADING_WINDOW_S at rest, or None if not covered."""
+        samples = self.heading_samples
+        if len(samples) < 2 or samples[-1][0]-samples[0][0] < HEADING_WINDOW_S*1000*.9:
+            return None
+        change = math.degrees(math.atan2(math.sin(samples[-1][1]-samples[0][1]), math.cos(samples[-1][1]-samples[0][1])))
+        return abs(change)/((samples[-1][0]-samples[0][0])*.001)
+
+    def height_unsettled(self):
+        """True if the resting height estimate moved more than REST_HEIGHT_SPREAD_M or REST_VERTICAL_SPEED."""
+        samples = self.heading_samples
+        if len(samples) < 2:
+            return False
+        heights = [s[2] for s in samples]
+        return max(heights)-min(heights) > REST_HEIGHT_SPREAD_M or max(abs(s[3]) for s in samples) > REST_VERTICAL_SPEED
+
+    def heading_settled(self):
+        """The resting estimate holds: steady heading and height over the window (before the first flight)."""
+        if self.has_armed:
+            return True                        # only the resting estimator before the first flight is judged
+        drift = self.heading_drift()
+        return drift is not None and drift <= HEADING_DRIFT_LIMIT and not self.height_unsettled()
+
+    def watch_heading(self):
+        """At rest before the first arming: sample the FCU heading; restart the EKF if it drifts."""
+        f = self.flight
+        if self.has_armed or f.armed() or f.attitude is None or f.local_position is None:
+            self.heading_samples = []
+            return
+        boot_ms = int(f.local_position.time_boot_ms)
+        self.heading_samples = [s for s in self.heading_samples if boot_ms-s[0] <= HEADING_WINDOW_S*1000]
+        local = f.local_position
+        self.heading_samples.append((boot_ms, f.attitude.yaw, float(local.z), float(local.vz)))
+        drift = self.heading_drift()
+        if (drift is not None and (drift > HEADING_DRIFT_LIMIT or self.height_unsettled()) and self.estimator_restart
+                and self.estimator_restarts < ESTIMATOR_RESTARTS and self.phase == 'idle'
+                and self.first_ready_fcu_ms is not None
+                and (boot_ms-self.first_ready_fcu_ms)*.001 >= self.preflight_fcu_seconds):
+            self.estimator_restarts += 1
+            self.get_logger().warning('FCU estimate unsteady at rest (heading %.2f deg/s, height moving: %s); '
+                                      'restarting the PX4 estimator (%d/%d)' % (
+                drift, self.height_unsettled(), self.estimator_restarts, ESTIMATOR_RESTARTS))
+            self.estimator_restart()
+            self.heading_samples = []
+            self.first_ready_fcu_ms = None     # settle again from the restarted estimator
 
     def land_complete(self):
         """True once a requested landing has been confirmed: landed_state==1 and disarmed."""
@@ -258,6 +325,7 @@ class PX4Controller(Node):
             if self.phase not in ('waiting_for_fcu', 'idle', 'landing', 'telemetry_lost'):
                 self.transition('telemetry_lost')
             return
+        self.watch_heading()
         if not self.configured:
             # Align PX4's local estimator origin once to the configured spawn.
             # Subsequent motion uses FCU telemetry only, never simulator truth.
@@ -271,6 +339,10 @@ class PX4Controller(Node):
                                           name.encode(), f.encode_parameter(value,ptype), ptype)
             self.configured = True
             self.transition('idle')
+        if (not self.has_armed and self.phase == 'idle' and not f.armed() and f.ext_sys
+                and f.ext_sys.landed_state == 1):
+            local = f.local_position
+            self.origin = [a-b for a, b in zip(self.spawn_origin, ned_to_enu(local.x, local.y, local.z))]
         if self.phase == 'landing':
             if not f.armed() and f.ext_sys.landed_state == 1:
                 self.landing_confirmed=True;self.transition('idle')
@@ -286,6 +358,7 @@ class PX4Controller(Node):
             self.transition('arming')
         elif self.phase == 'arming':
             if f.armed():
+                self.has_armed = True
                 self.transition('ascending')
             elif elapsed > 8:
                 self.transition('idle')
@@ -354,6 +427,8 @@ class PX4Controller(Node):
             'global_altitude_m':self.flight.position.alt*.001 if self.flight.position is not None else None,
             'relative_altitude_m':self.flight.position.relative_alt*.001 if self.flight.position is not None else None,
             'preflight_remaining_fcu_s':max(0.,self.preflight_fcu_seconds-elapsed),
+            'heading_drift_deg_s':self.heading_drift(), 'estimator_restarts':self.estimator_restarts,
+            'resting_height_moving':self.height_unsettled(),
             'route_waypoints_remaining': len(self.route), 'route_status': self.route_status})))
 
 

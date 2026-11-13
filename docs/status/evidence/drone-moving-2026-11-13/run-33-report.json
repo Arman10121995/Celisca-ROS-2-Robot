@@ -1,0 +1,779 @@
+{
+ "world": "aerial_moving",
+ "robot": "px4_x500",
+ "simulator": "gazebo",
+ "goal": [
+  10.0,
+  0.0,
+  1.2
+ ],
+ "phases": [
+  {
+   "call": "takeoff_check",
+   "success": true,
+   "message": "Checking the selected world asynchronously; press Takeoff after a fresh clear result.",
+   "t": 38.03
+  },
+  {
+   "call": "takeoff",
+   "success": true,
+   "message": "Takeoff requested; priming the Offboard stream.",
+   "t": 38.05
+  }
+ ],
+ "passed": false,
+ "plain": false,
+ "command": [
+  "ros2",
+  "launch",
+  "robot_lab_bringup",
+  "simulated_robot.launch.py",
+  "robot_model:=px4_x500",
+  "simulator:=gazebo",
+  "mode:=flight",
+  "map_name:=aerial_moving",
+  "gui:=false",
+  "start_rviz:=false",
+  "px4_vehicle:=x500_depth",
+  "aerial_mapping:=rtabmap",
+  "aerial_obstacles:=mapped_depth"
+ ],
+ "preflight_heading": {
+  "drift_deg_s": 0.00438540962887573,
+  "estimator_restarts": 1
+ },
+ "max_depth_clusters": 3,
+ "error": "RuntimeError: plan rejected: Fresh mapped occupancy, registered depth and capture-time transforms required",
+ "states": [
+  [
+   3.05,
+   "idle",
+   "ok",
+   "",
+   0
+  ],
+  [
+   50.05,
+   "idle",
+   "holding",
+   "",
+   0
+  ],
+  [
+   51.65,
+   "rejected",
+   "holding",
+   "Fresh mapped occupancy, registered depth and capture-time transforms required",
+   0
+  ]
+ ],
+ "track_history": [
+  [
+   3.05,
+   null,
+   0,
+   0,
+   []
+  ],
+  [
+   4.25,
+   null,
+   0,
+   0,
+   []
+  ],
+  [
+   5.45,
+   null,
+   0,
+   0,
+   []
+  ],
+  [
+   6.65,
+   null,
+   0,
+   0,
+   []
+  ],
+  [
+   7.85,
+   null,
+   0,
+   0,
+   []
+  ],
+  [
+   9.05,
+   null,
+   0,
+   0,
+   []
+  ],
+  [
+   10.25,
+   null,
+   0,
+   0,
+   []
+  ],
+  [
+   11.44,
+   null,
+   0,
+   0,
+   []
+  ],
+  [
+   12.45,
+   null,
+   0,
+   0,
+   []
+  ],
+  [
+   13.65,
+   [
+    -10.029770731925964,
+    0.03654405102133751,
+    0.06290542125701903
+   ],
+   0,
+   0,
+   []
+  ],
+  [
+   14.85,
+   [
+    -10.134242311120033,
+    0.14867442846298218,
+    0.19633500814437865
+   ],
+   0,
+   0,
+   []
+  ],
+  [
+   16.05,
+   [
+    -10.048571065068245,
+    0.12307071685791016,
+    0.26047662436962127
+   ],
+   0,
+   0,
+   []
+  ],
+  [
+   17.25,
+   [
+    -10.179076611995697,
+    -0.019218364730477333,
+    0.2433334046602249
+   ],
+   0,
+   0,
+   []
+  ],
+  [
+   18.45,
+   [
+    -10.143958196043968,
+    -0.07327797263860703,
+    0.2684704267978668
+   ],
+   0,
+   0,
+   []
+  ],
+  [
+   19.65,
+   [
+    -10.009458382613957,
+    -0.03461861610412598,
+    0.24951188802719115
+   ],
+   0,
+   0,
+   []
+  ],
+  [
+   20.85,
+   [
+    -9.965553052723408,
+    -0.034229107201099396,
+    0.24249801576137542
+   ],
+   0,
+   0,
+   []
+  ],
+  [
+   22.05,
+   [
+    -9.933487638831139,
+    -0.056465622037649155,
+    0.2164583259820938
+   ],
+   0,
+   0,
+   []
+  ],
+  [
+   23.25,
+   [
+    -10.0,
+    0.0,
+    0.24
+   ],
+   0,
+   0,
+   []
+  ],
+  [
+   24.45,
+   [
+    -10.0,
+    0.0,
+    0.24
+   ],
+   0,
+   0,
+   []
+  ],
+  [
+   25.65,
+   [
+    -10.0,
+    0.0,
+    0.24
+   ],
+   0,
+   0,
+   []
+  ],
+  [
+   26.85,
+   [
+    -10.027450032066554,
+    0.07674696412868798,
+    0.18470326835289597
+   ],
+   0,
+   0,
+   []
+  ],
+  [
+   28.05,
+   [
+    -10.020875787362456,
+    0.0942827146500349,
+    0.19194047689437865
+   ],
+   0,
+   0,
+   []
+  ],
+  [
+   29.25,
+   [
+    -10.042132248170674,
+    0.06420724838972092,
+    0.18162189960479735
+   ],
+   0,
+   0,
+   []
+  ],
+  [
+   30.45,
+   [
+    -10.035172130912542,
+    0.0250186026096344,
+    0.14506766736507415
+   ],
+   0,
+   0,
+   []
+  ],
+  [
+   31.65,
+   [
+    -10.038697072304785,
+    0.03893248736858368,
+    0.16361226677894591
+   ],
+   0,
+   0,
+   []
+  ],
+  [
+   32.85,
+   [
+    -10.037031658925116,
+    0.04596340283751488,
+    0.16302320897579192
+   ],
+   0,
+   0,
+   []
+  ],
+  [
+   34.05,
+   [
+    -10.025663980981335,
+    0.05707402341067791,
+    0.16376379668712615
+   ],
+   0,
+   0,
+   []
+  ],
+  [
+   35.25,
+   [
+    -10.0,
+    0.0,
+    0.24
+   ],
+   0,
+   0,
+   []
+  ],
+  [
+   36.45,
+   [
+    -10.0,
+    0.0,
+    0.24
+   ],
+   0,
+   0,
+   []
+  ],
+  [
+   37.65,
+   [
+    -10.0,
+    0.0,
+    0.24
+   ],
+   0,
+   0,
+   []
+  ],
+  [
+   38.78,
+   [
+    -9.993169669993222,
+    0.003308855928480625,
+    2.3816394114494326
+   ],
+   3,
+   0,
+   [
+    [
+     [
+      -6.621,
+      -0.344,
+      1.692
+     ],
+     4.932,
+     false
+    ],
+    [
+     [
+      -2.745,
+      -0.658,
+      1.733
+     ],
+     5.456,
+     false
+    ],
+    [
+     [
+      -3.596,
+      -0.675,
+      1.733
+     ],
+     4.845,
+     false
+    ]
+   ]
+  ],
+  [
+   39.86,
+   [
+    -10.007672644685954,
+    0.031172237591817975,
+    3.6949047350883486
+   ],
+   3,
+   0,
+   [
+    [
+     [
+      -6.595,
+      -0.337,
+      3.9
+     ],
+     4.919,
+     false
+    ],
+    [
+     [
+      -2.744,
+      -0.661,
+      3.915
+     ],
+     5.452,
+     false
+    ],
+    [
+     [
+      -3.591,
+      -0.651,
+      3.908
+     ],
+     4.834,
+     false
+    ]
+   ]
+  ],
+  [
+   40.97,
+   [
+    -10.043542702682316,
+    0.03342841495759785,
+    2.1770962977409365
+   ],
+   3,
+   0,
+   [
+    [
+     [
+      -6.659,
+      -0.303,
+      1.846
+     ],
+     4.962,
+     false
+    ],
+    [
+     [
+      -2.81,
+      -0.704,
+      1.84
+     ],
+     5.454,
+     false
+    ],
+    [
+     [
+      -3.644,
+      -0.616,
+      1.842
+     ],
+     4.776,
+     false
+    ]
+   ]
+  ],
+  [
+   42.05,
+   [
+    -10.016994076315314,
+    0.005586143350228667,
+    0.8931007885932922
+   ],
+   3,
+   0,
+   [
+    [
+     [
+      -6.628,
+      -0.339,
+      0.921
+     ],
+     4.946,
+     false
+    ],
+    [
+     [
+      -2.772,
+      -0.63,
+      0.953
+     ],
+     5.472,
+     false
+    ],
+    [
+     [
+      -3.626,
+      -0.702,
+      0.953
+     ],
+     4.838,
+     false
+    ]
+   ]
+  ],
+  [
+   43.25,
+   [
+    -10.012518626637757,
+    0.009768938878551126,
+    0.33789520502090453
+   ],
+   0,
+   0,
+   []
+  ],
+  [
+   44.45,
+   [
+    -10.021398334763944,
+    0.0010755878538475372,
+    -0.11258144140243531
+   ],
+   0,
+   0,
+   []
+  ],
+  [
+   45.65,
+   [
+    -10.000174553133547,
+    -0.001963821705430746,
+    -0.45503968954086305
+   ],
+   0,
+   0,
+   []
+  ],
+  [
+   46.85,
+   [
+    -9.949896258302033,
+    -0.007225937908515334,
+    0.6005890870094299
+   ],
+   0,
+   0,
+   []
+  ],
+  [
+   48.05,
+   [
+    -9.986789430491626,
+    -0.00364742917008698,
+    2.5346497797966006
+   ],
+   0,
+   0,
+   []
+  ],
+  [
+   49.25,
+   [
+    -9.998995890840888,
+    -0.005838249111548066,
+    3.3419307971000674
+   ],
+   0,
+   0,
+   []
+  ],
+  [
+   50.45,
+   [
+    -9.998985629528761,
+    -0.012231133645400405,
+    3.652345111370087
+   ],
+   0,
+   0,
+   []
+  ],
+  [
+   51.65,
+   [
+    -10.003513757139444,
+    -0.007581777637824416,
+    4.1020488047599795
+   ],
+   0,
+   0,
+   []
+  ]
+ ],
+ "max_moving_tracks": 0,
+ "last_planning": {
+  "plant_id": "588c79e4d2a64abfb1dbcf71bd449d43",
+  "state": "rejected",
+  "qualification": "experimental static + observed aerial planning; flight validation pending",
+  "goal_request": 1,
+  "error": "Fresh mapped occupancy, registered depth and capture-time transforms required",
+  "takeoff": {
+   "state": "consumed",
+   "start_enu": [
+    -10.0,
+    0.0,
+    0.24
+   ],
+   "target_enu": [
+    -10.0,
+    0.0,
+    3.24
+   ],
+   "rise_m": 3.0,
+   "requested_rise_m": 3.0,
+   "ceiling_limited": false,
+   "envelope": {
+    "lower": [
+     -0.5038814167808732,
+     -0.5038814167808732,
+     -0.227
+    ],
+    "upper": [
+     0.5038814167808732,
+     0.5038814167808732,
+     0.12042307692307691
+    ],
+    "horizontal_margin_m": 0.06,
+    "top_margin_m": 0.06,
+    "bottom_margin_m": 0.0,
+    "rotor_sweep": true,
+    "source_sha256": "43d3cb8289c8740ecad12c5e8a591a8b1f520266db0edd5cf591f4e52a048baf"
+   },
+   "unchecked_support_band_m": 0.05,
+   "geometry_scope": "Static selected-world vertical envelope; support, actors and flight tracking require physical validation",
+   "error": ""
+  },
+  "sensor_loss": {
+   "state": "holding",
+   "lost_s": 1.6,
+   "land_in_s": 8.4
+  },
+  "obstacles": {
+   "enabled": true,
+   "ready": false,
+   "frame": "map",
+   "radius_m": 0.7,
+   "voxel_m": 0.15,
+   "lookahead_m": 2.0,
+   "scope": "Observed occupancy supplements known static world; unseen/dynamic prediction unqualified",
+   "intrinsics_ready": true,
+   "tracks": [],
+   "moving_tracks": 0,
+   "swept_columns": 0,
+   "depth_clusters": null,
+   "map": {
+    "age_wall_s": 5.528942171018571,
+    "stamp": 1794603755.0042536,
+    "occupied_cells": 328,
+    "source_points": 497,
+    "swept_removed": 0,
+    "sha256": "5adf9d82859a9566abcd3dffdabbd9144bcd863c43ee8d63f7960b2fd5baec2a",
+    "source_frame": "aerial_map"
+   },
+   "depth": {
+    "error": "Insufficient valid depth; unseen space is not certified clear"
+   }
+  }
+ },
+ "last_status": {
+  "phase": "flying",
+  "armed": true,
+  "position_ready": true,
+  "landed_state": 2,
+  "flight_enabled": true,
+  "position_enu": [
+   -10.003513757139444,
+   -0.007581777637824416,
+   4.1020488047599795
+  ],
+  "target_enu": [
+   -9.998985629528761,
+   -0.012231133645400405,
+   3.652345111370087
+  ],
+  "takeoff_ready": false,
+  "takeoff_target_z": 3.24,
+  "control_clock": "wall",
+  "estimator_parameters": {
+   "COM_OBL_RC_ACT": 4.0,
+   "COM_OF_LOSS_T": 0.5,
+   "MPC_XY_VEL_MAX": 1.0,
+   "MPC_XY_CRUISE": 1.0,
+   "MPC_Z_VEL_MAX_UP": 1.0,
+   "MPC_Z_VEL_MAX_DN": 1.0,
+   "MPC_ACC_HOR": 1.0,
+   "MPC_VEL_MANUAL": 1.0,
+   "MPC_Z_V_AUTO_DN": 1.0,
+   "MPC_Z_V_AUTO_UP": 1.0
+  },
+  "range_sensor": null,
+  "global_altitude_m": 4.743,
+  "relative_altitude_m": 2.3930000000000002,
+  "preflight_remaining_fcu_s": 0.0,
+  "heading_drift_deg_s": null,
+  "estimator_restarts": 1,
+  "route_waypoints_remaining": 0,
+  "route_status": "idle"
+ },
+ "tracks_seen": [],
+ "walker_truth": "scripted actor trajectories at Gazebo clock time (actors have no server poses)",
+ "gz_partition_found": true,
+ "closest_approach": {
+  "walker_0": {
+   "t": 27.48,
+   "drone": [
+    -10.0,
+    0.0,
+    0.23
+   ],
+   "walker": [
+    0.0,
+    0.05
+   ],
+   "state": "idle"
+  },
+  "walker_1": {
+   "t": 31.23,
+   "drone": [
+    -10.0,
+    0.0,
+    0.23
+   ],
+   "walker": [
+    5.0,
+    -0.02
+   ],
+   "state": "idle"
+  }
+ },
+ "walker_samples": {
+  "truth_samples": 670,
+  "clock_samples": 9
+ },
+ "min_walker_distance_m": {
+  "walker_0": 10.0,
+  "walker_1": 15.0
+ },
+ "moving_holds_or_replans": 0,
+ "responses": {
+  "replanning": 0,
+  "scanning": 0,
+  "evading": 0
+ },
+ "truth_samples": 670,
+ "leftover_pids": [
+  185313,
+  185314,
+  185330,
+  185398,
+  185420,
+  185699
+ ]
+}

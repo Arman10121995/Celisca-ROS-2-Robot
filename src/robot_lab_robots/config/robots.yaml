@@ -413,6 +413,25 @@ robots:
       max_angular_speed: 0.35
       max_angular_accel: 0.5
     notes: "Authored complete laboratory ROV, eight native thrusters and six-axis allocation, actual buoyancy/drag/added mass/current physics. Experimental Gazebo Fortress control with simulator-pose observer and ideal pressure emulation; independent underwater estimation, sonar/DVL, SLAM/navigation and other backends pending. Display never actuates."
+  px4_iris:
+    package: robot_lab_adapter
+    name: px4_iris
+    type: drone
+    supported_modes: [display, flight]
+    default_mode: flight
+    default_map: aerial_course
+    supported_simulators: [mujoco]
+    features: [flight_controller]
+    drive: {type: px4, max_linear_velocity: 1.0, max_angular_velocity: 1.0, max_speed: 0.5, max_accel: 1.0,
+            max_angular_speed: 0.3, max_angular_accel: 0.5}
+    implementation_state: experimental
+    validation_state: pending
+    notes: "PX4 v1.16.2 SITL (airframe 10016_none_iris) flying an Iris-class quadrotor in MuJoCo through PX4's
+      simulator interface (HIL lockstep; robot_lab_adapter/px4_mujoco_plant.py, protocol after Pegasus Simulator,
+      BSD-3). Geometry matches the airframe's control allocation; mass, inertia and motor model are the PX4 SITL
+      Iris values; small declared sensor noise. Same takeoff check, controller and planner as the Gazebo X500;
+      no camera yet (no mapping or observed obstacles)."
+
   px4_x500:
     package: robot_lab_adapter
     name: px4_x500
