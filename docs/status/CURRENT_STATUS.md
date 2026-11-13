@@ -1,5 +1,7 @@
 # Current Robot Lab status
 
+November 13 Codex: [Panda measured object selection and grasp-stage planning](arm-objects-2026-11-13.md) is implemented for native free boxes. The GUI generates source-width/padding candidates and sends explicit collision-aware approach/grasp/lift plans; execution stays separate. Fourteen focused checks, four package builds and installed widget smoke pass. Full new pick/place missions and other geometry/arms/backends remain open. Claude retains drone/import work.
+
 November 13 Codex: [native hand force feedback](hand-force-2026-11-13.md) is implemented with unchanged source gains/limits and explicit GUI activation. A pinned Robotiq component fixture unloaded roughly 12 N to 5.25 N per side for a 5 N request. Forty focused/regression/tutorial checks and GUI protocol smoke pass; three packages build. This is separate from normal GUI/hand-family/lift qualification.
 
 November 13 Codex: [Stretch local pick/place implementation](../tutorials/native-object-tasks.md) adds source-control IK, private collision planning, contact-gated grip/stow steps, GUI recipe generation, a normal free-object bench map and actual Nav2 footprint receipts. 42 focused checks, both installed-source FK/scene attachment and GUI builder smoke pass; three packages build. No completed loaded-manipulation mission is claimed. Claude retains the drone/import lane.

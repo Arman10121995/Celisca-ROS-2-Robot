@@ -1,0 +1,98 @@
+"""Exact free-box selection/state and selected-world planning scene contracts."""
+import json
+from pathlib import Path
+import sys
+from types import SimpleNamespace
+import numpy as np
+import pytest
+
+mj=pytest.importorskip('mujoco')
+pytest.importorskip('std_msgs.msg')
+from std_msgs.msg import String
+from robot_lab_mujoco.native_object_catalog import NativeObjectCatalog
+
+
+@pytest.fixture
+def catalog(tmp_path):
+    source=tmp_path/'fixture.xml';source.write_text('''<mujoco><worldbody>
+      <body name="base"><geom type="box" size=".1 .1 .1"/>
+      <body name="left"><geom type="box" size=".01 .01 .01"/></body>
+      <body name="right"><geom type="box" size=".01 .01 .01"/></body></body>
+      <body name="environment_cube" pos="1 0 1"><freejoint/>
+        <geom type="box" size=".02 .03 .04" pos=".1 0 0"/></body>
+      <body name="environment_ball" pos="2 0 1"><freejoint/>
+        <geom type="sphere" size=".04"/></body>
+      <body name="fixed_box"><geom type="box" size=".03 .03 .03"/></body>
+      </worldbody></mujoco>''')
+    model=mj.MjModel.from_xml_path(str(source));data=mj.MjData(model);mj.mj_forward(model,data)
+    published={};node=SimpleNamespace(model=model,data=data,mujoco=mj,robot_bodies=4,object_body=-1,
+        arm=SimpleNamespace(reserved=False,dofs=np.array([],dtype=int),servo=SimpleNamespace(active=lambda:False)),
+        gripper=SimpleNamespace(reserved=False,finger_bodies=[2,3],contacts=lambda:{}),
+        create_publisher=lambda kind,topic,*a:SimpleNamespace(publish=published.setdefault(topic,[]).append),
+        create_subscription=lambda *a:None,get_parameter=lambda name:SimpleNamespace(value=str(source)),
+        object_pub=SimpleNamespace(publish=published.setdefault('/manipulation/object_state',[]).append))
+    return NativeObjectCatalog(node),node,published
+
+
+def request(catalog,**values):
+    return String(data=json.dumps(dict(dict(plant_id=catalog.plant_id,source_sha256=catalog.source_sha,id='environment_cube'),**values)))
+
+
+def test_selection_is_explicit_and_state_comes_from_actual_collision_geometry(catalog):
+    catalog,node,published=catalog;before=node.data.qpos.copy()
+    assert catalog.snapshot() is None
+    catalog.publish();assert published['/manipulation/object_state']==[]
+    catalog.select(request(catalog,plant_id='stale'));assert catalog.selected is None
+    catalog.select(request(catalog));assert catalog.selected=='environment_cube' and node.object_body==-1
+    catalog.receive_scene(String(data=json.dumps(dict(object_id='environment_cube',ready=True))))
+    assert node.object_body==4
+    state=catalog.snapshot()
+    assert state['size']==[.04,.06,.08]
+    np.testing.assert_allclose(state['position'],[1.1,0.,1.])
+    assert state['world_model']=='cube' and state['selected_by_operator']
+    np.testing.assert_array_equal(node.data.qpos,before)
+    assert 'environment_ball' not in catalog.objects and catalog.unsupported
+
+
+def test_busy_or_attached_plant_cannot_switch_selection(catalog):
+    catalog,node,_=catalog
+    node.arm.reserved=True;catalog.select(request(catalog));assert catalog.selected is None
+    node.arm.reserved=False;catalog.scene=dict(ready=True,object_attached=True)
+    catalog.select(request(catalog));assert catalog.selected is None
+    assert 'detach' in catalog.error
+
+
+def test_selected_box_retires_its_static_snapshot_and_requires_real_scene_ack():
+    pytest.importorskip('moveit_msgs.msg')
+    scripts=Path(__file__).resolve().parents[1]/'scripts';sys.path.insert(0,str(scripts))
+    from native_scene_objects import MeasuredObjects
+    from native_arm_scene import collision_object
+    calls=[]
+    node=SimpleNamespace(create_client=lambda *a:None,create_subscription=lambda *a:None,
+        world_model_ids={'cube':['robot_lab_world_3']},
+        client=SimpleNamespace(call_async=lambda request:(calls.append(request) or SimpleNamespace(done=lambda:False))))
+    objects=MeasuredObjects(node,collision_object,False)
+    payload=dict(id='environment_cube',frame='native_world',size=[.03,.03,.03],position=[1.,0.,.5],
+        orientation_wxyz=[1.,0.,0.,0.],spatial_velocity=[0.]*6,selected_by_operator=True,
+        finger_links=['native_body_10','native_body_11'],world_model='cube')
+    objects.receive_object(String(data=json.dumps(payload)))
+    status={};objects.poll(status)
+    assert objects.enabled and status['object_id']=='environment_cube' and not status['ready']
+    operations={item.id:item.operation for item in calls[0].scene.world.collision_objects}
+    from moveit_msgs.msg import CollisionObject
+    assert operations['environment_cube']==CollisionObject.ADD
+    assert operations['robot_lab_world_3']==CollisionObject.REMOVE
+
+
+def test_unbound_world_object_does_not_silently_leave_a_static_planning_duplicate():
+    pytest.importorskip('moveit_msgs.msg')
+    scripts=Path(__file__).resolve().parents[1]/'scripts';sys.path.insert(0,str(scripts))
+    from native_scene_objects import MeasuredObjects
+    from native_arm_scene import collision_object
+    node=SimpleNamespace(create_client=lambda *a:None,create_subscription=lambda *a:None,world_model_ids={})
+    objects=MeasuredObjects(node,collision_object,False)
+    payload=dict(id='environment_unknown',frame='native_world',size=[.03]*3,position=[0.,0.,.5],
+        orientation_wxyz=[1.,0.,0.,0.],spatial_velocity=[0.]*6,selected_by_operator=True,
+        finger_links=['native_body_10','native_body_11'],world_model='unknown')
+    objects.receive_object(String(data=json.dumps(payload)));status={};objects.poll(status)
+    assert objects.enabled and not status['ready'] and 'canonical world' in status['object_error']

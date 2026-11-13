@@ -114,6 +114,10 @@ def test_native_hand_grasp_fixture_authors_object_between_pads_and_flows_held_re
         assert half[0] <= min(.032, .32 * span) + 1e-9
         assert half[1] <= min(.03, .32 * span) + 1e-9
         assert abs(obj_pos[2] - left_pos[2]) < 1e-6
+        from types import SimpleNamespace
+        published=[];node.object_pub=SimpleNamespace(publish=published.append)
+        node.tick()
+        np.testing.assert_allclose(json.loads(published[-1].data)['size'],2*half)
 
         # Grasp: close on the documented object and evaluate measured contact.
         control.heartbeat(None)
@@ -150,3 +154,27 @@ def test_native_hand_grasp_fixture_authors_object_between_pads_and_flows_held_re
         if rclpy.ok():
             rclpy.shutdown()
 
+
+
+def test_panda_fixture_tick_publishes_full_dimensions_without_missing_hand_size(tmp_path):
+    from types import SimpleNamespace
+    source=Path('/workspace/molar/robot_lab_runtime/external_assets/sources/mujoco_menagerie/'
+        '4d038b3feae26ec82b46a4d586379114012a8ac7/franka_emika_panda/panda.xml')
+    if not source.is_file():
+        pytest.skip('Pinned Panda source is not installed on this host')
+    model_path=tmp_path/'panda_display.urdf';_minimal_urdf(model_path)
+    rclpy.init(args=['--ros-args','-p','native_mjcf:='+str(source),'-p','model:='+str(model_path),
+                     '-p','arm_control:=panda','-p','grasp_fixture:=true','-p','gui:=false','-p','hold_position:=false'])
+    node=None
+    try:
+        node=NativeAssetDisplay();node.gui=False;node.hold=False
+        messages=[];node.object_pub=SimpleNamespace(publish=messages.append)
+        node.tick()
+        assert messages
+        state=json.loads(messages[-1].data)
+        assert state['size']==[.03,.03,.03]
+        assert state['id']=='manipulation_object'
+        assert np.all(np.isfinite(state['position']))
+    finally:
+        if node is not None:node.destroy_node()
+        if rclpy.ok():rclpy.shutdown()

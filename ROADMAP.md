@@ -319,20 +319,27 @@ These are complete; preserve their scoped contracts. R1.3 follow-up CI passes at
     reaches measured.
   - Cartesian Servo controls (`robot_lab_gui/servo_controls.py`).
   - Measured Panda object attachments.
+  - November 13: explicit measured free-box selection, source-width/padding
+    grasp candidates and GUI approach/grasp/lift planning through existing
+    collision-aware Panda IK/OMPL; acknowledged canonical-world scene updates.
+    Fourteen focused checks, four package builds and an installed widget
+    protocol smoke pass; the new full physical object mission is pending.
+    [Scope and guide](docs/status/arm-objects-2026-11-13.md).
 
   [Native arm guide](docs/tutorials/native-arm-planning.md).
 - **Remaining implementation:**
-  - a pick/place pipeline for arbitrary objects: object pose source, grasp
-    pose generation, approach/retreat and attach/detach in the planning scene;
+  - extend the measured Panda box stage planner into a complete repeated
+    pick/place pipeline; add compound/mesh geometry, perception pose sources,
+    gripper-specific grasp generation and placement/retreat sequencing;
   - coupled mechanisms (mimic and four-bar joints);
   - arm controllers on Gazebo, PyBullet and Isaac.
 - **How to do it:**
   1. Start from the Panda MoveIt workflow (`docs/tutorials/panda_arm.md`) and
      the attached-object code from the October 9 checkpoint
      (`docs/status/implementation-2026-10-09.md`).
-  2. Add a "Pick / Place" panel to the Arm page (`robot_lab_gui/arm_tab.py`)
-     that takes an object ID from the world. Object poses come from simulator
-     truth, labelled as such, until perception exists.
+  2. Extend `grasp_target_controls.py` and `native_object_catalog.py`; preserve
+     explicit selection, source binding, measured contacts and scene ACK gates.
+     Object poses come from labelled simulator truth until perception exists.
   3. For other backends, reuse the backend's joint-trajectory interface
      (Gazebo ros2_control, PyBullet/Isaac spawner joint commands) behind the same action.
 - **Done when:** a GUI pick → place of a named object, with measured object

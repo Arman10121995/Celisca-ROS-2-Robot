@@ -3887,13 +3887,14 @@ tasks:
           welding.
         implementation_validation: Pending; no new physical mission/test campaign
           for October 9 candidates.
+        object_workflow_20261113: 'Codex: native Panda free-box selection, measured collision poses, source-width/padding top-grasp candidates and explicit approach/grasp/lift IK/OMPL requests implemented. Canonical world snapshots are replaced by the measured selected object only with a known model binding; contact observer waits for real scene ACK. Fourteen focused checks, four package builds and installed GUI widget/protocol smoke pass. Full physical object mission, compound/mesh, other grippers/backends and automatic placement remain pending. See docs/status/arm-objects-2026-11-13.md. Claude retains drone/import files.'
         next_action: Extend planning to coupled/equality/torque models, arbitrary-object
           repeated pick/place and non-MuJoCo plants. The 13 new fixed-arm MoveIt candidates
           are implemented, with only UR5e/SO101 one-shot reaches measured; remaining
           arm and interruption/object missions stay pending. Validate new Servo/attachment
           code and original Panda missions after initial implementation; actual contact
           and object motion remain mandatory evidence.
-        owner: cline-agent
+        owner: codex
         result: 'Normal installed Panda / MuJoCo / nav_empty: current-pose reference
           and 1 cm XYZ targets have physical endpoint errors 0.366/0.490/0.640 mm.
           Bounded gravity/Coriolis bias uses original native PD actuators with unchanged

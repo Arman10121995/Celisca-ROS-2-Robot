@@ -7,6 +7,10 @@ Display**. UR5e and SO101 have one actual GUI reach diagnostic each in
 See [implementation and evidence](../status/native-arm-planning-2026-10-14.md).
 The existing [Panda](panda_arm.md) workflow remains separate.
 
+The Panda's November 13 [measured object-selection and grasp-stage controls](panda_arm.md#select-a-measured-object-and-plan-grasp-stages)
+use its source parallel-jaw contract. They do not grant grasp support to the
+thirteen adapters below; their tool/gripper geometry needs a separate adapter.
+
 ## Use the GUI
 
 1. Reopen the GUI after building. Choose the complete robot family and exact

@@ -52,7 +52,8 @@ class MeasuredObjects:
     def receive_object(self, message):
         try:
             value = json.loads(message.data)
-            if value.get('frame') != 'native_world' or value.get('id') != 'manipulation_object':
+            if not isinstance(value,dict):raise ValueError('Object state must be a named record')
+            if value.get('frame') != 'native_world' or not isinstance(value.get('id'),str) or not 1<=len(value['id'])<=200:
                 return
             values = [*value['position'], *value['orientation_wxyz'], *value['spatial_velocity'], *value['size']]
             if not all(math.isfinite(float(v)) for v in values) or np.linalg.norm(value['orientation_wxyz']) < .9:
@@ -61,6 +62,16 @@ class MeasuredObjects:
                     or len(value['orientation_wxyz']) != 4 or len(value['spatial_velocity']) != 6
                     or min(value['size']) <= 0):
                 raise ValueError('Invalid measured object dimensions')
+            if value.get('selected_by_operator') is True:
+                self.enabled=True
+            if value.get('world_model') is not None and value['world_model'] not in getattr(self.node,'world_model_ids',{}):
+                raise ValueError('Selected native object cannot be bound to its canonical world collision model')
+            if self.object is not None and value['id']!=self.object['id']:
+                if self.attached or self.future is not None:
+                    raise ValueError('Detach/finish the current scene update before changing objects')
+                self.applied=None
+            if value.get('selected_by_operator') is True:
+                self.enabled=True
             self.object, self.object_received = value, time.monotonic()
         except (KeyError, TypeError, ValueError) as exc:
             self.error = str(exc)
@@ -102,12 +113,12 @@ class MeasuredObjects:
     def grasped(self):
         return (time.monotonic()-self.gripper_received < .8 and all(
             sum(float(c['normal_force_n']) for c in self.gripper.get('contacts', {}).get(name, [])
-                if c.get('body') == 'manipulation_object') > .02
+                if self.object is not None and c.get('body') == self.object['id']) > .02
             for name in ('finger_joint1', 'finger_joint2')))
 
     def world_object(self):
         return self.convert(dict(type='box', size=self.object['size'], position=self.object['position'],
-            orientation=self.object['orientation_wxyz']), 'manipulation_object')
+            orientation=self.object['orientation_wxyz']), self.object['id'])
 
     def scene(self):
         message = PlanningScene(is_diff=True)
@@ -123,19 +134,20 @@ class MeasuredObjects:
     def detach(self):
         scene = self.scene()
         scene.robot_state.attached_collision_objects = [AttachedCollisionObject(
-            link_name='panda_tcp', object=CollisionObject(id='manipulation_object', operation=CollisionObject.REMOVE))]
+            link_name='panda_tcp', object=CollisionObject(id=self.object['id'], operation=CollisionObject.REMOVE))]
         scene.world.collision_objects = [self.world_object()]
         self.apply(scene, 'detach')
 
     def poll(self, status):
         if not self.enabled:
             return
-        status.update(scope='Selected-world scene plus measured fixture; attachment affects planning only',
+        status.update(scope='Selected-world scene plus measured selected object; attachment affects planning only',
+            object_id=self.object['id'] if self.object else None,
             scene_revision=self.revision, object_attached=self.attached, object_error=self.error)
         now = time.monotonic()
         fresh = now-self.object_received < .8
         if not fresh:
-            status.update(ready=False, object_error='Waiting for fresh measured object geometry')
+            status.update(ready=False, object_error=self.error or 'Waiting for fresh measured object geometry')
             return
         if self.future is not None:
             status['ready'] = False
@@ -209,6 +221,8 @@ class MeasuredObjects:
                 np.asarray(self.applied['orientation_wxyz'])+self.object['orientation_wxyz'])) > .005):
             scene = self.scene()
             scene.world.collision_objects = [self.world_object()]
+            for identifier in getattr(self.node,'world_model_ids',{}).get(self.object.get('world_model'),[]):
+                scene.world.collision_objects.append(CollisionObject(id=identifier,operation=CollisionObject.REMOVE))
             pedestal = self.object.get('pedestal')
             if pedestal:
                 scene.world.collision_objects.append(self.convert(pedestal, 'manipulation_pedestal'))

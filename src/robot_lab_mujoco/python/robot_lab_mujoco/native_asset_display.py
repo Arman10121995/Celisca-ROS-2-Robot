@@ -47,6 +47,7 @@ class NativeAssetDisplay(Node):
         os.environ.setdefault('MUJOCO_GL', 'egl')
         import mujoco
         self.mujoco = mujoco
+        self.object_size = None  # optional hand-fixture half extents; Panda uses its fixed 30 mm cube
         spec = mujoco.MjSpec.from_file(self.get_parameter('native_mjcf').value)
         original = spec.compile()
         self.robot_extent = original.stat.extent
@@ -236,6 +237,10 @@ class NativeAssetDisplay(Node):
         self.clock_pub = self.create_publisher(ClockMsg, '/clock', 10)
         self.joint_pub = self.create_publisher(JointState, '/joint_states', 10)
         self.object_pub = self.create_publisher(String, '/manipulation/object_state', 10)
+        self.object_catalog=None
+        if self.arm is not None and self.gripper is not None:
+            from robot_lab_mujoco.native_object_catalog import NativeObjectCatalog
+            self.object_catalog=NativeObjectCatalog(self)
         self.description_pub = self.create_publisher(String, '/robot_description',
             QoSProfile(depth=1, durability=DurabilityPolicy.TRANSIENT_LOCAL))
         self.description = String(data=Path(self.get_parameter('model').value).read_text())
@@ -284,10 +289,12 @@ class NativeAssetDisplay(Node):
                 self.gripper.publish()
             else:
                 mj.mj_step(self.model, self.data, nstep=steps)
-        if self.object_body >= 0:
+        if self.object_catalog is not None:
+            self.object_catalog.publish()
+        elif self.object_body >= 0:
             body = self.object_body
             self.object_pub.publish(String(data=json.dumps(dict(time=self.data.time,
-                id='manipulation_object', frame='native_world', size=self.object_size or [.03, .03, .03],
+                id='manipulation_object', frame='native_world', size=((2*np.asarray(self.object_size)).tolist() if self.object_size is not None else [.03, .03, .03]),
                 finger_links=['native_body_'+str(int(b)) for b in (self.gripper.finger_bodies if self.gripper else [])],
                 pedestal=dict(type='box', size=(2*self.model.geom_size[mj.mj_name2id(self.model,
                         mj.mjtObj.mjOBJ_GEOM, 'manipulation_pedestal_geom')]).tolist(),

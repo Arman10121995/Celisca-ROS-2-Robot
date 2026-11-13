@@ -76,6 +76,7 @@ class NativeArmScene(Node):
         configuration = self.get_parameter('planning_config').value
         model = json.loads(Path(configuration).read_text()) if configuration else None
         self.objects = None
+        self.world_model_ids={}
         if not model:
             from native_scene_objects import MeasuredObjects
             self.objects = MeasuredObjects(self, collision_object, self.get_parameter('grasp_fixture').value)
@@ -108,6 +109,8 @@ class NativeArmScene(Node):
                 shapes = [dict(type='plane', model='ground_plane', position=[0., 0., 0.],
                                orientation=[1., 0., 0., 0.], size=[100., 100.])]
             self.request.scene.world.collision_objects = [collision_object(s, 'robot_lab_world_'+str(i)) for i, s in enumerate(shapes)]
+            for index,shape in enumerate(shapes):
+                self.world_model_ids.setdefault(shape.get('model',''),[]).append('robot_lab_world_'+str(index))
             self.status['geometry_count'] = len(shapes)
             # The native fixed base may rest on the floor; all moving arm
             # links retain their floor collision checks.

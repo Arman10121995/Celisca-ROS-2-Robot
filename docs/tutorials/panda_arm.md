@@ -170,3 +170,47 @@ The final normal control-column repeat measures 0.00649/0.00639 m and
 0.780/0.765° TCP errors, preserves all original rejection/interruption/reset
 checks and closes each owned child cleanly. Its strict source certificate
 includes the shared workspace layout. Earlier repeats remain historical.
+
+## Select a measured object and plan grasp stages
+
+November 13 implementation: **Arm → Object grasp targets** exposes the actual
+MuJoCo free-box catalog for the native Panda. Keep the normal Panda/MoveIt
+launch above. The existing supported fixture works; a selected world can also
+provide free bodies with one physical box collision shape. Static map objects,
+meshes and compound bodies are not selectable grasp objects. The pose source
+is explicitly simulator truth, not a camera detector.
+
+1. Choose a named box and click **Select object** while the arm and hand are
+   idle and any previous object is released/detached. Selection changes no
+   physical state. Wait for the acknowledged measured collision scene.
+2. Click **Generate candidates**, then choose a top grasp. Candidates use the
+   measured collision geometry and the Panda's 80 mm opening. The recommended
+   gap includes the actual planning padding; a 30 mm box with the default
+   10 mm link padding recommends 54 mm.
+3. **Set gap field** edits the Hand opening value only. In Hand, explicitly
+   click **Set Opening**. Return to Arm and click **Plan approach**, then
+   **Execute Plan** after inspecting the plan.
+4. Click **Plan grasp**, inspect it, then **Execute Plan**. IK and OMPL still
+   reject unreachable or colliding poses; a geometry candidate is not a
+   successful grasp. Try another candidate or reposition the arm if needed.
+5. Explicitly close the hand. Wait for measured contact on both source
+   fingers, then use the existing **Attach grasped object** planning command.
+   Attachment changes MoveIt's collision model only; it does not weld the
+   physical object to the robot.
+6. Regenerate candidates if the box moved, then **Plan lift** and explicitly
+   **Execute Plan**. Lift planning requires acknowledged attachment and live
+   two-sided contacts. Use the existing Cartesian controls to plan a transfer;
+   release with Hand and detach the planning object after placement.
+
+All stage buttons only request plans. Existing execution, cancellation,
+heartbeat, source actuator limits and contact interruption rules still apply.
+Stale poses, changed dimensions, movement over 5 mm or orientation change
+invalidate candidates. The scene retires the selected world's static snapshot
+only after binding its canonical model ID; an unknown binding leaves planning
+unready. The contact observer changes its target only after the corresponding
+scene acknowledgement.
+
+This is an initial box-selection/stage-planning workflow, not automatic
+arbitrary-object pick/place. Other arms/backends, mesh/compound adapters,
+perception poses and a complete new physical pick/transfer/place mission remain
+open in R5.7. [Implementation and scoped checks](../status/arm-objects-2026-11-13.md).

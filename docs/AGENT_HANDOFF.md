@@ -1,5 +1,7 @@
 # Agent Handoff Protocol
 
+November 13 Codex R5.7: preserve native Panda measured free-box selection, source/plant binding, geometry poses/full dimensions, candidate opening plus scene padding, explicit IK/OMPL stage plans and separate execution. Contact observation changes only after acknowledged matching object scene; unknown world binding stays unready. Fourteen focused checks, four builds and installed widget smoke pass; no new full physical pick/place certificate. [Receipt](status/arm-objects-2026-11-13.md). Claude retains drone/import work.
+
 November 13 Codex R5.8: preserve bounded native hand force feedback, measured-entry unloading, new/worsening external-contact guards and original source gains/force limits. Robotiq component sample holds ~5.25 N per side for 5 N requested after unloading ~12 N. Forty checks and GUI protocol smoke pass; no broader hand/GUI/lift/hardware certificate. [Receipt](status/hand-force-2026-11-13.md). Claude retains drone/import work.
 
 November 13 Codex continuation: preserve [Stretch local object recipes](tutorials/native-object-tasks.md), source affine tendon/mimic kinematics, private deadline-bound planning worker, contact-only blocked-gripper settling, provisional-versus-confirmed payload gating and actual Nav2 shape receipts. The task bench map is installed separately; ordinary robot assets are unchanged. Forty-two focused checks and both source FK/scene attachment plus GUI builder smoke pass; whole physical pick/transport/place remains pending. Claude owns drone/import work.

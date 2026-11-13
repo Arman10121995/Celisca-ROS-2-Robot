@@ -67,6 +67,9 @@ class CartesianControls(ttk.LabelFrame):
         ttk.Label(self, text='Attachment requires measured contact on both fingers. '
             'It changes collision planning; source contact physics still carries the object.',
             wraplength=285).grid(row=11, column=0, columnspan=4, sticky='w')
+        from .grasp_target_controls import GraspTargetControls
+        self.grasp_targets=GraspTargetControls(self,self)
+        self.grasp_targets.grid(row=12,column=0,columnspan=4,sticky='ew',pady=6)
         self.refresh()
 
     def object_command(self, operation):
@@ -202,6 +205,9 @@ class CartesianControls(ttk.LabelFrame):
         self.joint_subscription = node.create_subscription(JointState, '/joint_states', self.receive_joints, 10)
         self.scene_subscription = node.create_subscription(String, '/arm/planning_scene_status', self.receive_scene, 10)
         self.object_pub = node.create_publisher(String, '/arm/planning_scene_command', 1)
+        self.object_subscription=node.create_subscription(String,'/manipulation/object_state',self.grasp_targets.receive,10)
+        self.grasp_targets.selection_publisher=node.create_publisher(String,'/manipulation/select_object',1)
+        self.object_catalog_subscription=node.create_subscription(String,'/manipulation/object_catalog',self.grasp_targets.receive_catalog,10)
         self.connected = True
         return True
 
@@ -234,6 +240,7 @@ class CartesianControls(ttk.LabelFrame):
                                      for n, q in self.start.items()))
 
     def poll(self):
+        self.grasp_targets.poll()
         owned = self.owned()
         if self.was_owned and not owned:
             self.invalidate()
@@ -254,6 +261,8 @@ class CartesianControls(ttk.LabelFrame):
             self.status.set('Tool-pose request timed out; try again.')
         ready = self.ready()
         fixture = bool(self.arm.app.process and 'grasp_fixture:=true' in self.arm.app.process.args)
+        fixture = fixture or (bool(self.scene.get('object_id'))
+            and self.grasp_targets.catalog.get('selected')==self.scene.get('object_id'))
         idle = self.owned() and self.arm.ready() and not self.arm.state.get('busy') and self.connected
         self.attach_button.state(['!disabled'] if idle and fixture and not self.scene.get('object_attached')
             and self.scene.get('grasp_contacts_ready') else ['disabled'])
@@ -290,6 +299,27 @@ class CartesianControls(ttk.LabelFrame):
         request = self.fk_request(self.start)
         self.status.set('Planning from measured joints with the selected-world collision scene…')
         self.fk.call_async(request).add_done_callback(lambda future: self.got_fk(future, generation, offset, request.robot_state))
+
+    def plan_pose(self,pose,label='Object target'):
+        if (not self.ready() or self.planning or self.reading_pose or not self.ik.service_is_ready()
+                or not self.planner.service_is_ready()):
+            return
+        values=[getattr(pose.position,axis) for axis in 'xyz']+[getattr(pose.orientation,axis) for axis in 'wxyz']
+        if not all(math.isfinite(v) for v in values) or not .99<=sum(v*v for v in values[3:])<=1.01:
+            self.status.set('Finite world target and unit orientation required.');return
+        from moveit_msgs.srv import GetPositionIK
+        self.invalidate();self.planning=True;self.planning_started=time.monotonic()
+        self.start=dict(self.joints)
+        state=self.fk_request(self.start).robot_state
+        request=GetPositionIK.Request();ik=request.ik_request
+        ik.group_name,ik.ik_link_name='panda_arm','panda_tcp'
+        ik.robot_state,ik.avoid_collisions=state,True
+        ik.pose_stamped.header.frame_id='native_world';ik.pose_stamped.pose=pose;ik.timeout.sec=1
+        self.target=pose
+        self.target_display.set(label+' XYZ: '+', '.join('%.3f'%v for v in values[:3])+' m')
+        self.status.set('Planning object target from measured joints and acknowledged scene…')
+        generation=self.generation
+        self.ik.call_async(request).add_done_callback(lambda future:self.got_ik(future,generation,state))
 
     def got_fk(self, future, generation, offset, state):
         if generation != self.generation:

@@ -32,6 +32,7 @@ MAP_TEST="src/robot_lab_maps/test"
 GUI_TEST="src/robot_lab_gui/test"
 
 FAST_TESTS=(
+  "$BRG_TEST/test_grasp_candidates.py"
   "$BRG_TEST/test_native_hand_force.py"
   "$BRG_TEST/test_footprint_receipts.py"
   "$BRG_TEST/test_mobile_manipulation_scene.py"
@@ -98,6 +99,7 @@ FAST_TESTS=(
 )
 
 INTEGRATION_TESTS=(
+  "$GUI_TEST/test_grasp_pose_request.py"
   "$ADP_TEST/test_aerial_swarm_route.py"
   "$BRG_TEST/test_facility_queue_recovery.py"
   "$BRG_TEST/test_marine_replanning.py"
@@ -135,6 +137,8 @@ INTEGRATION_TESTS=(
 )
 
 PHYSICS_TESTS=(
+  "$BRG_TEST/test_native_object_catalog.py"
+  "src/robot_lab_mujoco/test/test_native_asset_display_grasp_fixture.py"
   "$BRG_TEST/test_native_hand_force.py"
   "$BRG_TEST/test_native_hand.py"
   "$BRG_TEST/test_native_hand_object.py"

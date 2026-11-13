@@ -1,0 +1,13 @@
+{
+  "base_revision": "88d6aca52a459ebbdd993e253377be6e976da64b",
+  "scope": "Focused source/ROS request contracts and widget-only smoke; no new physical pick/place mission",
+  "sha256": {
+    "src/robot_lab_mujoco/python/robot_lab_mujoco/native_asset_display.py": "10db01b096972d03f1866a59444ca60b4d8d85bee6719ef9a027388a565de6cf",
+    "src/robot_lab_mujoco/python/robot_lab_mujoco/native_object_catalog.py": "9ae93fe2fc636208bcda0e435455bddc31bb2beb2ea14e305421a988b789162d",
+    "src/robot_lab_bringup/scripts/native_arm_scene.py": "9cbdf8dcbb6f944a165b726a2245557d6fe02b4b2f59758ca4ad32431e2b5168",
+    "src/robot_lab_bringup/scripts/native_scene_objects.py": "ab394c0b5d86e397a760c675c2a1fcd6edd3f27d12c1dc67b9d24617a56cc333",
+    "src/robot_lab_gui/robot_lab_gui/cartesian_controls.py": "d088838b4414e58c4c14fac2f01a85ea39e6e72b336d4468e6d826d0d7cacaf4",
+    "src/robot_lab_gui/robot_lab_gui/grasp_target_controls.py": "409c5091724db6bbdd8e869579bf8b3f626ab2bb6f33811ebb717082d4030c4d",
+    "src/robot_lab_utils/robot_lab_utils/grasp_candidates.py": "02fb7847cc8e94e8f60e50cb27a6d8f2e371debc11e8e426aae3857e5d70ed9d"
+  }
+}
