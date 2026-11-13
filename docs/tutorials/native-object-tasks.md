@@ -5,7 +5,7 @@ Stretch 3 on MuJoCo. It combines source-model reach planning, native motor
 control, measured gripper contacts, object custody and Nav2 footprint receipts.
 A complete physical pick/transport/place mission has not yet been qualified.
 
-## Open the task scene
+## Run
 
 The `mobile_manipulation_lab` world is installed in the normal map list.
 Restart the GUI if it was open during provisioning. To reproduce the installed
