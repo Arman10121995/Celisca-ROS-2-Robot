@@ -4283,48 +4283,31 @@ tasks:
           certificates. Full declared roadmap acceptance is still open; test counts, metadata and scene loads
           do not qualify remaining robot/map/backend missions. See docs/REMAINING_WORK_GUIDE.md.'
       R6.7:
-        acceptance_ref: ROADMAP.md
-        active_scope: '2026-10-05: shared heightfield conversion for Gazebo/MuJoCo/PyBullet/Isaac.
-          The SDF reader no longer drops <heightmap>; the layout is measured against
-          the installed Gazebo rather than assumed. The terrain generator workflow,
-          provider manifest and terrain missions remain outside this claim.'
-        completion_audit: Not complete. Only the shared heightfield conversion and
-          three non-Gazebo backends are delivered. Isaac is verified at the geometry
-          level (STL face count, z bounds, unit normals) with no Isaac runtime contact
-          trial, so Isaac terrain contact is unqualified. The pinned terrain-generator
-          web workflow, GAZEBO_TERRAIN_OUTPUT_PATH/provider settings, attribution
-          manifest, deterministic regeneration and class-specific terrain missions
-          are all still outstanding.
-        depends_on:
-        - R6.3
-        - R6.6
-        evidence:
-        - 'Heightfield conversion module implemented (heightfield.py): Gazebo/MuJoCo/PyBullet/Isaac
-          conversion with measured conventions'
-        - '16 tests passing (test_sdf_heightfield.py): SDF reader, grid span, partial
-          levels, OBJ output, conversion correctness'
-        - 'Gazebo measured conventions verified: 5 marine worlds + 2 terrain worlds
-          load cleanly in gz-sim 8'
-        - 'All 14 3D worlds now registered in GUI (environments.yaml + sim_maps.yaml):
-          marine (5), terrain (5), aerial (2), CELISCA detailed (2)'
-        - 'Remaining: GUI terrain generator workflow (Mapbox provider, PII-safe manual
-          mode), Isaac runtime contact trial, class-specific terrain missions'
-        next_action: Pin the sai aravind terrain generator with SSD output/cache and
-          private provider settings, save provider/data attribution with polygon,
-          seed, vertical datum and elevation range, then record class-appropriate
-          driving/walking/flight terrain missions per backend including an Isaac runtime
-          contact trial.
-        owner: cline-agent
+        acceptance_ref: ROADMAP.md R6.7
+        owner: claude
+        state: implemented
+        updated: '2026-11-13'
+        title: GUI terrain generation with four-backend conversion
         scope_paths:
         - src/robot_lab_maps/
         - src/robot_lab_utils/
         - src/robot_lab_gui/
         - docs/ASSET_EXTENSION_GUIDE.md
-        state: partial
-        title: GUI terrain generation with four-backend conversion
-        qualification_review: '2026-10-27 documentation review: retain the implemented code, tests and named mission
-          certificates. Full declared roadmap acceptance is still open; test counts, metadata and scene loads
-          do not qualify remaining robot/map/backend missions. See docs/REMAINING_WORK_GUIDE.md.'
+        active_scope: 'Terrain generator (procedural or imported elevation raster with attribution), manifest
+          with byte-identical regeneration, Worlds -> Terrain GUI page, four-backend conversion and registration.'
+        completion_audit: 'Done criterion met 2026-11-13: two generated terrains regenerate byte for byte and
+          give support heights within 2.1 mm at 24 points on Gazebo, MuJoCo, PyBullet and Isaac (first Isaac
+          terrain contact). Gazebo Fortress heightmap visuals crash the Jetson renderer with a camera; worlds
+          now draw a mesh visual of the same grid (terrain_heightfield and gait_low_relief included).'
+        depends_on:
+        - R6.3
+        - R6.6
+        evidence:
+        - docs/status/evidence/terrain-generation-2026-11-13/README.md
+        - docs/tutorials/terrain-generation.md
+        - docs/status/evidence/r6-7-heightfield-probe-2026-10-05/README.md
+        next_action: 'Validation later (V9): driving, walking and flight on generated terrain; imported-raster
+          projections/vertical datums. Optional token-gated web tile provider.'
     title: Environment qualification
     qualification_review: '2026-10-27 documentation review: retain the implemented code, tests and named mission
       certificates. Full declared roadmap acceptance is still open; test counts, metadata and scene loads

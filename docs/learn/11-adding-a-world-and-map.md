@@ -57,8 +57,13 @@ Generators for repeatable arenas live in `src/robot_lab_maps/tools/`:
 ground, stairs, stepping stones, each with a matching occupancy map),
 `gen_heightfield_arena.py` (a seeded `<heightmap>` terrain) and others. A
 generator that writes the world and the map from the same rectangles keeps
-them in agreement by construction. (A terrain generation page in the GUI is
-ROADMAP R6.7 and not built yet.)
+them in agreement by construction.
+
+**Terrain without writing code:** **Worlds & mapping → Terrain** generates a
+terrain world from a seed (or from an elevation raster you downloaded, with
+its attribution) and does steps 1–4 below for you: SDF world, MuJoCo scene,
+occupancy grid of the slopes a ground robot cannot drive, spawn pad and
+registration. See the [terrain guide](../tutorials/terrain-generation.md).
 
 ## Step 2 · MuJoCo's copy
 

@@ -277,7 +277,7 @@ def build_navigation(app):
         app.workspace_title.set(label)
         descriptions={'Launch':'Choose a robot, world and task. Review the command, then use the control column.',
             'Registry':'Explore complete families, compare variants and inspect source geometry in 3D.',
-            'Worlds':'Create occupancy maps from installed worlds with explicit resolution and slice settings.',
+            'Worlds':'Create occupancy maps from installed worlds, or generate a new terrain world for all four simulators.',
             'Fleet & Swarm':'Build a shared-world ground session. Connect and give control explicitly when ready.',
             'Aerial Swarm':'Configure independently identified aircraft in one world. Flight requires explicit controls.',
             'Live Monitor':'Connect deliberately to inspect actual robot measurements and simulation time.',

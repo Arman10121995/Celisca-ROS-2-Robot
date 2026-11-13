@@ -178,11 +178,16 @@ class WorldsTab(LabTab):
         self.world_var.trace_add('write',self._world_seed)
         self.output_var=tk.StringVar(value=str(Path(os.environ.get('ROBOT_LAB_RUNTIME_ROOT',
             '/workspace/molar/robot_lab_runtime'))/'generated_maps'))
+        # Two pages: the occupancy grid of an existing world, and terrain generation.
+        self.pages=ttk.Notebook(self)
+        self.pages.grid(row=0,column=0,sticky='nsew')
+        page=ttk.Frame(self.pages,padding=4)
+        self.pages.add(page,text='2D occupancy grid')
         # Three cards in working order: world, slice settings, generate.
-        self.rowconfigure(0,weight=0)
+        page.rowconfigure(0,weight=0)
         for column in range(3):
-            self.columnconfigure(column,weight=1,uniform='card')
-        world=step_card(self,1,'Choose a world','Any installed world family and its variant.')
+            page.columnconfigure(column,weight=1,uniform='card')
+        world=step_card(page,1,'Choose a world','Any installed world family and its variant.')
         world.master.grid(row=0,column=0,sticky='nsew',padx=(0,6))
         ttk.Label(world,text='World family',style='SurfaceField.TLabel').grid(row=0,column=0,columnspan=2,sticky='w')
         self.world_combo=ttk.Combobox(world,textvariable=self.world_family_var,values=app.map_groups.choices(),state='readonly')
@@ -194,14 +199,14 @@ class WorldsTab(LabTab):
         self.variant_combo.grid(row=3,column=0,columnspan=2,sticky='ew')
         ttk.Button(world,text='Preview 3D',command=lambda:app.preview_asset('maps',self.world_var.get())).grid(
             row=4,column=0,sticky='w',pady=(10,0))
-        settings=step_card(self,2,'Slice settings','Grid resolution, the height of the horizontal slice and a seed in the free region to export.')
+        settings=step_card(page,2,'Slice settings','Grid resolution, the height of the horizontal slice and a seed in the free region to export.')
         settings.master.grid(row=0,column=1,sticky='nsew',padx=6)
         for row,label,var in [(0,'Resolution (m)',self.resolution_var),(1,'Slice height (m)',self.height_var),
                               (2,'Seed X (m)',self.seed_x_var),(3,'Seed Y (m)',self.seed_y_var),
                               (4,'Output directory',self.output_var)]:
             ttk.Label(settings,text=label,style='SurfaceField.TLabel').grid(row=row,column=0,sticky='w',padx=(0,8))
             ttk.Entry(settings,textvariable=var).grid(row=row,column=1,sticky='ew',pady=3)
-        generate=step_card(self,3,'Generate','Writes a PGM/YAML occupancy grid and a report. Existing maps are preserved.')
+        generate=step_card(page,3,'Generate','Writes a PGM/YAML occupancy grid and a report. Existing maps are preserved.')
         generate.master.grid(row=0,column=2,sticky='nsew',padx=(6,0))
         self.generate_button=ttk.Button(generate,text='▶  Generate 2D occupancy grid',command=self.generate,style='Accent.TButton')
         self.generate_button.grid(row=0,column=0,columnspan=2,sticky='ew')
@@ -209,11 +214,13 @@ class WorldsTab(LabTab):
             row=1,column=0,sticky='ew',pady=(6,0),padx=(0,3))
         ttk.Button(generate,text='World / terrain guide',command=lambda:self.open_guide()).grid(
             row=1,column=1,sticky='ew',pady=(6,0),padx=(3,0))
-        ttk.Label(self,text='Uses the pinned Fortress plugin in a separate headless world. The seed selects a connected '
+        ttk.Label(page,text='Uses the pinned Fortress plugin in a separate headless world. The seed selects a connected '
             'free region; change X/Y to export another room. Mesh collisions and terrain use their actual scale and '
-            'height slice. Review the generated PGM/YAML and report before registering it for navigation. External '
-            'world imports and terrain conversion are tracked as R6.6 / R6.7.',
+            'height slice. Review the generated PGM/YAML and report before registering it for navigation. To make a '
+            'new terrain world, use the Terrain page.',
             style='Muted.TLabel',wraplength=1100,justify='left').grid(row=1,column=0,columnspan=3,sticky='w',pady=12)
+        from .terrain_controls import TerrainPage
+        self.terrain=TerrainPage(self.pages,app)
 
     def _world_seed(self,*_args):
         seed=self.app.map_profiles.get(self.world_var.get(),{}).get('spawn',{})

@@ -1,0 +1,223 @@
+{
+ "terrain": "generated_ridges",
+ "manifest_files": {
+  "maps/map.pgm": "e97840eeae69042a7048dec7ed4ccdad7d3adbe2ee56d8f89b3109c2e86e5476",
+  "maps/map.yaml": "410925276ebfbe2be9b0c102b5edbf824457fd6522f9d97d0cf008e3f5ba9b01",
+  "mjcf/generated_ridges.xml": "086240580dfc97bb25bbd62536a1d410f7d20a5b97805ae3204cfc31f9a69972",
+  "preview.png": "6626391c0326fe18b7664073cdf515c0a6a9d39e9e41fcd0dc66643bc108f918",
+  "worlds/generated_ridges.png": "c2179134f17eb00d428b041c670d8e646796a119139d59a484b486ea10ea9b17",
+  "worlds/generated_ridges.world": "c5476f09c87b089da057c1e8f8e86daccaab87959827928e91215306504ab93a",
+  "worlds/generated_ridges_visual.obj": "4eb997d94ce6d689426a080e6e5ecf37ffdceb3d9cb896c62322b4f2135aa37b"
+ },
+ "robot": "bumperbot",
+ "tolerance_m": 0.03,
+ "method": "settled /odom/ground_truth z on terrain minus on nav_empty",
+ "points": [
+  {
+   "x": 0.0,
+   "y": 0.0,
+   "expected_m": 1.9176
+  },
+  {
+   "x": 9.302,
+   "y": -13.953,
+   "expected_m": 3.0
+  },
+  {
+   "x": 6.512,
+   "y": 8.992,
+   "expected_m": 0.0
+  }
+ ],
+ "simulators": {
+  "gazebo": {
+   "points": [
+    {
+     "x": -0.0,
+     "y": 0.0,
+     "expected_m": 1.9176,
+     "measured_m": 1.9166,
+     "error_m": -0.001,
+     "passed": true,
+     "sim_s": 4.02,
+     "z_spread_m": 0.001,
+     "samples": 202
+    },
+    {
+     "x": 9.302,
+     "y": -13.953,
+     "expected_m": 3.0,
+     "measured_m": 2.999,
+     "error_m": -0.001,
+     "passed": true,
+     "sim_s": 4.02,
+     "z_spread_m": 0.001,
+     "samples": 202
+    },
+    {
+     "x": 6.5153,
+     "y": 8.992,
+     "expected_m": 0.0,
+     "measured_m": 0.0016,
+     "error_m": 0.0016,
+     "passed": true,
+     "sim_s": 4.02,
+     "z_spread_m": 0.0,
+     "samples": 202
+    }
+   ],
+   "flat_z": 0.0,
+   "flat": {
+    "x": -0.4999632336305415,
+    "y": -0.49999967525629563,
+    "sim_s": 4.0200000000000005,
+    "z_spread_m": 0.0,
+    "samples": 202
+   },
+   "passed": true
+  },
+  "mujoco": {
+   "points": [
+    {
+     "x": 0.0016,
+     "y": -0.0002,
+     "expected_m": 1.9176,
+     "measured_m": 1.9178,
+     "error_m": 0.0002,
+     "passed": true,
+     "sim_s": 4.02,
+     "z_spread_m": 0.0,
+     "samples": 202
+    },
+    {
+     "x": 9.302,
+     "y": -13.953,
+     "expected_m": 3.0,
+     "measured_m": 3.0,
+     "error_m": -0.0,
+     "passed": true,
+     "sim_s": 4.02,
+     "z_spread_m": 0.0,
+     "samples": 202
+    },
+    {
+     "x": 6.513,
+     "y": 8.9904,
+     "expected_m": 0.0,
+     "measured_m": 0.0021,
+     "error_m": 0.0021,
+     "passed": true,
+     "sim_s": 4.02,
+     "z_spread_m": 0.0,
+     "samples": 202
+    }
+   ],
+   "flat_z": -0.0005,
+   "flat": {
+    "x": -0.5000074549724369,
+    "y": -0.49999958664901506,
+    "sim_s": 4.019999999,
+    "z_spread_m": 0.0,
+    "samples": 202
+   },
+   "passed": true
+  },
+  "pybullet": {
+   "points": [
+    {
+     "x": 0.0002,
+     "y": 0.0,
+     "expected_m": 1.9176,
+     "measured_m": 1.9176,
+     "error_m": 0.0,
+     "passed": true,
+     "sim_s": 4.0208,
+     "z_spread_m": 0.0,
+     "samples": 194
+    },
+    {
+     "x": 9.302,
+     "y": -13.953,
+     "expected_m": 3.0,
+     "measured_m": 3.0,
+     "error_m": -0.0,
+     "passed": true,
+     "sim_s": 4.0208,
+     "z_spread_m": 0.0,
+     "samples": 194
+    },
+    {
+     "x": 6.5123,
+     "y": 8.9919,
+     "expected_m": 0.0,
+     "measured_m": 0.0016,
+     "error_m": 0.0016,
+     "passed": true,
+     "sim_s": 4.0208,
+     "z_spread_m": 0.0001,
+     "samples": 194
+    }
+   ],
+   "flat_z": -0.0,
+   "flat": {
+    "x": -0.5000225901603699,
+    "y": -0.4999999701976776,
+    "sim_s": 4.020833333000001,
+    "z_spread_m": 2.0800892343686428e-05,
+    "samples": 194
+   },
+   "passed": true
+  },
+  "isaac": {
+   "points": [
+    {
+     "x": -0.0,
+     "y": 0.0,
+     "expected_m": 1.9176,
+     "measured_m": 1.9176,
+     "error_m": 0.0,
+     "passed": true,
+     "sim_s": 4.0333,
+     "z_spread_m": 0.0,
+     "samples": 192
+    },
+    {
+     "x": 9.302,
+     "y": -13.953,
+     "expected_m": 3.0,
+     "measured_m": 3.0,
+     "error_m": -0.0,
+     "passed": true,
+     "sim_s": 4.0167,
+     "z_spread_m": 0.0,
+     "samples": 202
+    },
+    {
+     "x": 6.5122,
+     "y": 8.9922,
+     "expected_m": 0.0,
+     "measured_m": 0.0016,
+     "error_m": 0.0016,
+     "passed": true,
+     "sim_s": 4.0,
+     "z_spread_m": 0.0,
+     "samples": 197
+    }
+   ],
+   "flat_z": 0.0,
+   "flat": {
+    "x": -0.49998229074399675,
+    "y": -0.499696839228506,
+    "sim_s": 4.0,
+    "z_spread_m": 8.850729425705084e-06,
+    "samples": 244
+   },
+   "passed": true
+  }
+ },
+ "passed": true,
+ "raw": {
+  "path": "/workspace/molar/robot_lab_runtime/terrain-probe-20261113/final-generated_ridges",
+  "sha256": "70c81035c9e714b16283c316db07585ef708488495ab88235d0acd7d61f97040"
+ }
+}

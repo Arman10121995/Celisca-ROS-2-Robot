@@ -129,7 +129,9 @@ Work top to bottom. Each line links to its task.
 | I1 | [R13.2](#r132--vacuum-carpets-and-mopping) Vacuum carpets and mopping | Done 2026-11-10 (Gazebo mop + rug run passes) | implemented |
 | I2 | [R13.3](#r133--vacuum-camera-obstacle-recognition) Vacuum camera obstacles | Initial implementation complete, including trained experimental checkpoint; recognition quality and robot mission pending | partial |
 | I3 | [R14.1](#r141--open-source-counterparts-for-self-made-robots) Open-source robots | Initial source-search/integration pass complete: TurtleBot4, WAM-V, Summit-STEEL and source octopod measured; BlueROV2 remains a restricted local candidate. Remaining licensing/mission qualification recorded separately | implemented; acceptance partial |
-| I4 | [R6.7](#r67--terrain-generation-gui-and-four-backend-conversion) Terrain GUI | GUI page, provider manifest, Isaac contact | partial |
+| I4 | [R6.7](#r67--terrain-generation-gui-and-four-backend-conversion) Terrain GUI | Done 2026-11-13: Worlds → Terrain page, procedural/raster sources with manifest, support height measured on all four (Isaac included) | implemented |
+| I4a | [R14.5](#r145--robot-status-markers-in-the-gui-selectors) Robot status markers | Mark every robot in the selectors as working / experimental / display-only and by mode (user request 2026-11-13) | active |
+| I4b | [R6.8](#r68--real-world-area-import-from-a-globe) Real-world area import | Pick an area on a globe → elevation, buildings, vegetation, roads (+ people/traffic) as a world for all four simulators; reuse existing open-source tools (user request 2026-11-13) | queued |
 | I5 | [R5.11](#r511--drone-moving-obstacles-and-other-drone-backends) Drone moving obstacles | Moving-obstacle prediction, sensor-loss handling, other backends | not started |
 | I6 | [R5.9](#r59--mobile-manipulators) Mobile manipulation | Navigate → reach → grasp → transport → release pipeline in the GUI | partial |
 | I7 | [R5.7](#r57--manipulators-and-motion-planning) Arms | Pick/place with arbitrary objects, coupled mechanisms, other backends | partial |
@@ -488,34 +490,43 @@ These are complete; preserve their scoped contracts. R1.3 follow-up CI passes at
 
 ### R6.7 — Terrain generation GUI and four-backend conversion
 
-- **State:** partial · **Priority:** I4 · **Depends on:** R6.3, R6.6
+- **State:** implemented (2026-11-13), experimental · **Priority:** I4 · **Owner:** claude (sole active agent, 2026-11-13) · **Depends on:** R6.3, R6.6
 - **Goal:** a GUI page that generates terrain from a provider or
   procedurally, saves it on the SSD with attribution, and converts it for all
   four simulators.
 - **Have:**
-  - Shared heightfield conversion (`robot_lab_utils/heightfield.py`, `sdf_world.py`).
-  - Measured Gazebo conventions; MuJoCo/PyBullet contact screens.
-  - `terrain_heightfield` world.
-- **Remaining implementation:**
-  - the GUI page (procedural or provider source, area, resolution, seed,
-    spawn, height range → Generate → preview → register as a world);
-  - a provider and attribution manifest (provider, polygon, datum,
-    metres/pixel, elevation range). Keep tokens out of the repo and logs;
-  - Isaac terrain contact.
-- **How to do it:**
-  1. Add a "Terrain" page to the Worlds tab (`robot_lab_gui/`), reusing the
-     occupancy page layout. Write to `$ROBOT_LAB_RUNTIME_ROOT/terrain/<id>/`.
-  2. Procedural first: Perlin/diamond-square with a seed (no provider needed).
-     Provider tiles are optional and token-gated.
-  3. Use `heightfield.py` to write Gazebo SDF, MuJoCo hfield, a PyBullet
-     heightfield and an Isaac mesh. Register through the map profile config
-     (`src/robot_lab_bringup/config/sim_maps.yaml`).
-  4. Check that the same support height appears on all four backends with a
-     dropped-box probe (the October 5 probe scripts under
-     `docs/status/evidence/r6-7-heightfield-probe-2026-10-05/` show the method).
-- **Done when:** a generated terrain regenerates identically from its saved
-  inputs and gives matching support heights on four backends.
-- **Validation later:** class-specific driving, walking and flight on it (V9).
+  - Shared heightfield conversion (`robot_lab_utils/heightfield.py`, `sdf_world.py`), measured Gazebo conventions.
+  - `robot_lab_utils/terrain_generator.py`: procedural (seeded spectral) or imported elevation raster
+    (GeoTIFF/.npy/PNG with required attribution and license) → SDF heightmap world, MuJoCo hfield
+    scene, slope/step occupancy grid, preview and a manifest (inputs, provider, datum, metres/pixel,
+    elevation range, file hashes) under `$ROBOT_LAB_RUNTIME_ROOT/terrain/<id>/`; byte-identical
+    `regenerate()`; registry merged into the installed maps.
+  - **Worlds & mapping → Terrain** page (`robot_lab_gui/terrain_controls.py`): generate, preview,
+    use in Launch, Preview 3D, reload settings, check regeneration, remove.
+  - Measured: support height through the real launch on Gazebo, MuJoCo, PyBullet and **Isaac**,
+    24 points on two terrains within 2.1 mm ([evidence](docs/status/evidence/terrain-generation-2026-11-13/README.md)).
+  - Gazebo Fortress heightmap visuals crash its renderer on the Jetson when a camera draws them;
+    generated worlds, `terrain_heightfield` and `gait_low_relief` now draw a mesh visual of the same grid.
+- **Remaining implementation:** none. Optional: a token-gated web tile provider (keep tokens out of the repo and logs).
+- **Done when:** met — generated terrain regenerates identically from its saved inputs and gives
+  matching support heights on four backends.
+- **Validation later:** class-specific driving, walking and flight on generated terrain (V9);
+  imported-raster projections and vertical datums.
+
+### R6.8 — Real-world area import from a globe
+
+- **State:** queued (user request 2026-11-13) · **Priority:** I4b · **Owner:** claude · **Depends on:** R6.7
+- **Goal:** open a globe, select an area, and import it as a 3D world for all four simulators with
+  elevation, buildings, vegetation, roads and other features; for a city, optionally people and traffic.
+- **Have:** R6.7 generator, raster import with attribution, heightmap/mesh conversion for all four backends.
+- **Remaining implementation:** survey and pin existing open-source tools first (user principle: import
+  before building), e.g. OSM/DEM-to-Gazebo world generators, OSM-to-3D (OSM2World, Blender GIS/BlenderOSM),
+  CARLA/SUMO-style traffic and pedestrians; then the globe area picker, export, conversion and registration.
+- **How to do it:** search GitHub for maintained, licensed tools; record pins and licenses in the asset-source
+  catalog; reuse R6.7's manifest, registration and four-backend support probe. Blender is available on the host.
+- **Done when:** a selected real area becomes a registered world that loads with matching support heights and
+  building collisions on four backends, with data attribution in its manifest.
+- **Validation later:** robot missions in imported areas; people/traffic behaviour.
 
 ### R7 — Algorithm breadth
 
@@ -978,6 +989,18 @@ These are complete; preserve their scoped contracts. R1.3 follow-up CI passes at
 - **Remaining implementation:** none.
 - **Done when:** met; chapters are reachable in the GUI and the tutorial index and use only real paths and commands.
 - **Validation later:** clean-host contributor walkthrough (a new person adds a robot and a world by following the chapters) remains under R9.
+
+### R14.5 — Robot status markers in the GUI selectors
+
+- **State:** active (2026-11-13, user request) · **Priority:** I4a · **Owner:** claude
+- **Goal:** the robot drop-down lists show, at a glance, whether a robot works (measured), works only in
+  experimental mode, or is display-only, and in which modes.
+- **Have:** profile fields `supported_modes`, `experimental_modes_by_simulator`, `implementation_state`,
+  `validation_state`, `drive_in_display`; `mode_capability` feature gates; asset families/variants.
+- **Remaining implementation:** one shared status classifier, symbols in the family/variant drop-downs, a
+  legend, and a tooltip/detail line listing modes per simulator.
+- **Done when:** every robot entry in the selectors carries a status symbol and its modes, derived from the
+  profiles (never hand-written), with a visible legend.
 
 ### Stabilization patches (P1–P8)
 

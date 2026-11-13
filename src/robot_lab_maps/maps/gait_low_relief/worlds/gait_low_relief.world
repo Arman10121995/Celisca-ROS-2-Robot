@@ -21,7 +21,11 @@
           </surface>
         </collision>
         <visual name="visual">
-          <geometry><heightmap><uri>terrain.png</uri><size>4 4 0.008</size></heightmap></geometry>
+          <geometry><mesh><uri>terrain_visual.obj</uri></mesh></geometry>
+          <material>
+            <ambient>0.45 0.42 0.35 1</ambient>
+            <diffuse>0.45 0.42 0.35 1</diffuse>
+          </material>
         </visual>
       </link>
     </model>

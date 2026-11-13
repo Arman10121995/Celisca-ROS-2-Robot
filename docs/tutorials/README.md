@@ -32,6 +32,8 @@ a guide, imported model or numerical example does not qualify every mission.
 
 ## Operator guides
 
+- [Generate a terrain world](terrain-generation.md): Worlds & mapping → Terrain, procedural or from an elevation raster, for all four simulators.
+
 | Guide | Working scope and limits |
 |---|---|
 | [Amphibious rover](amphibious-rover.md) | Sprung native wheels/propellers, actual shore round-trip goals, hybrid sensing/RGB-D mapping and source-aware Plan/Execute |

@@ -1,0 +1,46 @@
+{
+ "note": "Retained failure: Gazebo Fortress aborted on every terrain launch (Ogre2 Terra heightmap shader failed to compile when the robot depth camera rendered). Flat nav_empty reference passed. Repair: mesh visual, heightmap collision.",
+ "gazebo": {
+  "points": [
+   {
+    "x": 0.0,
+    "y": 0.0,
+    "expected_m": 0.949,
+    "passed": false,
+    "error": "launch exited with 0"
+   },
+   {
+    "x": 9.922,
+    "y": 13.953,
+    "expected_m": 1.1294,
+    "passed": false,
+    "error": "launch exited with 0"
+   },
+   {
+    "x": -11.163,
+    "y": 13.953,
+    "expected_m": 0.9333,
+    "passed": false,
+    "error": "launch exited with 0"
+   }
+  ],
+  "flat_z": 0.0,
+  "flat": {
+   "x": -0.4999632336305415,
+   "y": -0.49999967525629563,
+   "sim_s": 4.0200000000000005,
+   "z_spread_m": 0.0,
+   "samples": 202
+  },
+  "passed": false
+ },
+ "mujoco_isaac_passed": [
+  true,
+  true
+ ],
+ "log_excerpt": "terminate called after throwing an instance of Ogre::RenderingAPIException: Fragment Program 700000000PixelShader_ps failed to compile (GLSLShader::compile, ogre-next 2.2.5 GL3Plus) in Ogre2DepthCamera::Render",
+ "raw": {
+  "path": "/workspace/molar/robot_lab_runtime/terrain-probe-20261113/gmi-1",
+  "sha256": "e87642b350e721fd0642ca8b33f89efab125cf0e15531dae48eae04f3cf8f861"
+ }
+}

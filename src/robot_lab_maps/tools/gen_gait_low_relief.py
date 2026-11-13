@@ -18,7 +18,8 @@ def generate():
     root=base.parent/'maps/gait_low_relief';worlds=root/'worlds';maps=root/'maps'
     worlds.mkdir(parents=True,exist_ok=True);maps.mkdir(exist_ok=True)
     image.save(worlds/'terrain.png')
-    world=ET.fromstring(helper.build_world('terrain.png').replace('<mu>100</mu><mu2>50</mu2>','<mu>0.9</mu><mu2>0.9</mu2>'))
+    (worlds/'terrain_visual.obj').write_bytes(helper.build_mesh((worlds/'terrain.png').read_bytes()))
+    world=ET.fromstring(helper.build_world('terrain.png','terrain_visual.obj').replace('<mu>100</mu><mu2>50</mu2>','<mu>0.9</mu><mu2>0.9</mu2>'))
     scene=world.find('world')
     marker=scene.find("model[@name='spawn_marker']")
     if marker is not None:scene.remove(marker)

@@ -18,9 +18,15 @@ def installed_profiles(kind):
     if kind not in ('robots', 'maps'):
         raise ValueError('Unknown asset profile kind: ' + kind)
     path = installation_root() / (kind + '.yaml')
-    if not path.is_file():
-        return {}
-    profiles = (yaml.safe_load(path.read_text()) or {}).get(kind, {})
+    profiles = (yaml.safe_load(path.read_text()) or {}).get(kind, {}) if path.is_file() else {}
+    if kind == 'maps':
+        # Terrain generated in the GUI (terrain_generator, R6.7) has its own
+        # registry, so provisioning can rewrite maps.yaml without losing it.
+        from .terrain_generator import registered_profiles
+        for name, profile in registered_profiles().items():
+            if name in profiles:
+                raise ValueError('Generated terrain would replace installed map: ' + name)
+            profiles[name] = profile
     available = {}
     for name, profile in profiles.items():
         paths = [profile.get('xacro')] if kind == 'robots' else [profile.get('gazebo', {}).get('world_path')]
@@ -81,9 +87,11 @@ def merge_installed_profiles(data, kind):
 def installed_registry_entities(kind):
     profiles = installed_profiles(kind)
     path = installation_root() / ('registry_' + kind + '.yaml')
-    if not path.is_file():
-        return []
-    entities = [entity for entity in yaml.safe_load(path.read_text()) or [] if entity.get('id') in profiles]
+    entities = [entity for entity in (yaml.safe_load(path.read_text()) or [] if path.is_file() else [])
+                if entity.get('id') in profiles]
+    if kind == 'maps':
+        from .terrain_generator import registry_entities
+        entities += [entity for entity in registry_entities() if entity['id'] in profiles]
     if kind == 'robots':
         for index, entity in enumerate(entities):
             profile = profiles[entity['id']]
