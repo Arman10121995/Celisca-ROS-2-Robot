@@ -22,12 +22,14 @@ from std_msgs.msg import String
 from std_srvs.srv import Trigger
 
 from robot_lab_utils.mobile_task import validate_task
+from robot_lab_utils.object_custody import ObjectCustody
 
 
 class NativeMobileTasks:
     def __init__(self, node):
         self.node, self.mobile, self.arm = node, node.mobile, node.articulation
         self.steps, self.handle, self.pending = None, None, False
+        self.custody, self.object_outcome, self.object_measurement = None, 'unassessed', {}
         self.nav_guard_until, self.last_heartbeat = 0., -math.inf
         self.index, self.generation, self.task_id = 0, 0, ''
         self.events, self.event_path = [], None
@@ -55,6 +57,55 @@ class NativeMobileTasks:
         node.create_subscription(PoseStamped, '/goal_pose', self.external_goal, 1)
         node.create_service(Trigger, '/mobile_task/stop', self.stop)
         node.create_timer(.1, self.tick, clock=Clock(clock_type=ClockType.SYSTEM_TIME))
+
+    def object_bodies(self, step):
+        model, mj = self.node.model, self.node.mujoco
+        ids = [mj.mj_name2id(model, mj.mjtObj.mjOBJ_BODY, step[key])
+               for key in ('object', 'left_body', 'right_body')]
+        obj, left, right = ids
+        if obj < self.node.robot_bodies or not all(1 < b < self.node.robot_bodies for b in (left, right)):
+            raise ValueError('Object must be a world body; fingers must be robot bodies')
+        adr = model.body_jntadr[obj]
+        if adr < 0 or model.jnt_type[adr] != mj.mjtJoint.mjJNT_FREE:
+            raise ValueError('Object checkpoint requires an independently free physical object')
+        # Require separate opposing subtrees; an ancestor cannot be its own opposing finger.
+        def descendants(body):
+            result = {body}
+            for child in range(body+1, model.nbody):
+                if model.body_parentid[child] in result:
+                    result.add(child)
+            return result
+        sides = [descendants(left), descendants(right)]
+        if sides[0] & sides[1]:
+            raise ValueError('Opposing finger subtrees overlap')
+        return obj, sides
+
+    def measure_object(self, step):
+        obj, sides = self.object_bodies(step)
+        model, data, mj = self.node.model, self.node.data, self.node.mujoco
+        forces, supported = [0., 0.], False
+        for index, contact in enumerate(data.contact[:data.ncon]):
+            bodies = [int(model.geom_bodyid[g]) for g in contact.geom]
+            if obj not in bodies:
+                continue
+            wrench = np.zeros(6)
+            mj.mj_contactForce(model, data, index, wrench)
+            force = float(abs(wrench[0]))
+            other = bodies[1] if bodies[0] == obj else bodies[0]
+            for side, members in enumerate(sides):
+                if other in members:
+                    forces[side] += force
+            if other not in sides[0] | sides[1] and force >= .1:
+                # Release needs support from the environment, not the robot palm/chassis.
+                if step['condition'] != 'released' or other == 0 or other >= self.node.robot_bodies:
+                    supported = True
+        velocity = np.zeros(6)
+        mj.mj_objectVelocity(model, data, mj.mjtObj.mjOBJ_BODY, obj, velocity, 0)
+        # Relative to the first finger's frame, so base/arm motion is not slip.
+        reference = mj.mj_name2id(model, mj.mjtObj.mjOBJ_BODY, step['left_body'])
+        relative = data.xmat[reference].reshape(3, 3).T @ (data.xpos[obj]-data.xpos[reference])
+        return dict(stamp=float(data.time), relative=relative.tolist(), left_force=forces[0],
+                    right_force=forces[1], supported=supported, speed=float(np.linalg.norm(velocity[3:])))
 
     def active(self):
         return self.steps is not None
@@ -101,8 +152,12 @@ class NativeMobileTasks:
             task_id = request.get('task_id')
             if not isinstance(task_id, str) or not 1 <= len(task_id) <= 80:
                 raise ValueError('A unique operator task ID is required.')
+            self.custody, self.object_outcome, self.object_measurement = None, 'unassessed', {}
             steps = validate_task(request.get('task'), self.arm.source_sha256, self.scene_id,
                 self.arm.channels, self.node.get_parameter('native_task').value == 'nav')
+            for step in steps:
+                if step['kind'] == 'object_check':
+                    self.object_bodies(step)
             if any(step['kind'] == 'navigate' for step in steps) and not self.client.server_is_ready():
                 raise ValueError('The selected-world Nav2 action server is not ready.')
             directory = Path(os.environ.get('ROBOT_LAB_RUNTIME_ROOT', '/workspace/molar/robot_lab_runtime'))/'mobile-tasks'
@@ -234,7 +289,7 @@ class NativeMobileTasks:
         if self.index == len(self.steps):
             self.steps = None
             self.halt_base()
-            self.enter('measured_steps_reached', 'Navigation/actuator measurements reached; object/grasp outcome unassessed')
+            self.enter('measured_steps_reached', 'Measured steps reached; object outcome: '+self.object_outcome)
         else:
             self.enter('waiting_for_settle', 'Waiting for measured stopped plant before next step')
 
@@ -255,6 +310,11 @@ class NativeMobileTasks:
                     if self.settled() and now >= self.nav_guard_until:
                         if step['kind'] == 'navigate':
                             self.begin_navigation(step)
+                        elif step['kind'] == 'object_check':
+                            self.object_gate = ObjectCustody()
+                            if step['condition'] == 'released':
+                                self.custody = None
+                            self.enter('checking_object', 'Waiting for sustained measured contact/support and low slip')
                         else:
                             self.sequence_id = self.task_id+'.'+str(self.index)
                             try:
@@ -263,6 +323,16 @@ class NativeMobileTasks:
                                 self.enter('articulating', 'Replaying source-matched taught configurations with stopped base')
                             except (ValueError, TypeError, KeyError) as exc:
                                 self.cancel(str(exc), failed=True)
+                elif phase == 'checking_object':
+                    self.halt_base()
+                    measurement = self.measure_object(step)
+                    self.object_measurement = measurement
+                    if self.object_gate.observe(**measurement, released=step['condition']=='released'):
+                        self.object_outcome = step['condition']
+                        self.record(object_observation=measurement, object_condition=self.object_outcome)
+                        self.custody = (dict(step=step, relative=measurement['relative'], lost_since=None)
+                                        if step['condition']=='grasped' else None)
+                        self.advance()
                 elif phase == 'navigation_settle':
                     pose, goal = self.pose(), step['pose']
                     error = math.dist(pose[:2], goal[:2])
@@ -281,9 +351,23 @@ class NativeMobileTasks:
                         self.advance()
                     elif feedback['state'] != 'executing':
                         self.cancel('Articulation interrupted: '+feedback.get('reason', ''), failed=True)
+        if (self.active() and self.custody is not None
+                and self.steps[self.index]['kind'] == 'navigate'):
+            observed = self.measure_object(self.custody['step'])
+            self.object_measurement = observed
+            lost = (min(observed['left_force'], observed['right_force']) < .1 or observed['supported']
+                    or math.dist(observed['relative'], self.custody['relative']) > .01)
+            if not lost:
+                self.custody['lost_since'] = None
+            elif self.custody['lost_since'] is None:
+                self.custody['lost_since'] = observed['stamp']
+            elif observed['stamp']-self.custody['lost_since'] >= .25:
+                self.object_outcome = 'custody_lost'
+                self.record(object_observation=observed, object_condition=self.object_outcome)
+                self.cancel('Measured object support/contact/slip changed during carry', failed=True)
         self.publisher.publish(String(data=json.dumps(dict(self.state,
             plant_id=self.arm.plant_id, source_sha256=self.arm.source_sha256, scene_id=self.scene_id,
             physical_pose=self.pose(), active=self.active(), nav_cancel_pending=bool(self.pending or self.handle),
             navigation_available=self.node.get_parameter('native_task').value == 'nav' and self.client.server_is_ready(),
-            journal=str(self.event_path) if self.event_path else '', object_outcome='unassessed',
+            journal=str(self.event_path) if self.event_path else '', object_outcome=self.object_outcome, object_measurement=self.object_measurement,
             qualification='implemented candidate; physical task validation pending'))))

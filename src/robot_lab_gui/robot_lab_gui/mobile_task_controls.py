@@ -52,6 +52,38 @@ class MobileTaskControls(ttk.LabelFrame):
             'Grasp/object outcomes require separate inspection.',
             wraplength=305).grid(row=10, column=0, columnspan=2, sticky='w', pady=4)
 
+        self.object_fields = {}
+        for row, (key, label) in enumerate((('object', 'Free object body'), ('left_body', 'First finger body'),
+                                            ('right_body', 'Opposing finger body')), 11):
+            variable = tk.StringVar()
+            self.object_fields[key] = variable
+            ttk.Label(self, text=label).grid(row=row, column=0, sticky='w')
+            ttk.Entry(self, textvariable=variable, width=18).grid(row=row, column=1, sticky='ew')
+        for column, condition in enumerate(('grasped', 'released')):
+            button = ttk.Button(self, text='Check '+condition,
+                                command=lambda value=condition: self.add_object_check(value))
+            button.grid(row=14, column=column, sticky='ew', padx=2, pady=2)
+            self.buttons['check_'+condition] = button
+        ttk.Label(self, text='Use exact MuJoCo body names. Grasp needs both fingers and no external support; '
+                  'release needs external support and low speed for 1 simulated second. '
+                  'A grasp checkpoint enables contact/slip monitoring on subsequent navigation legs.',
+                  wraplength=305).grid(row=15, column=0, columnspan=2, sticky='w')
+
+    def add_object_check(self, condition):
+        if not self.editable() or len(self.steps) >= 32:
+            return
+        step = dict(kind='object_check', condition=condition, name='Check object '+condition,
+                    **{key: variable.get().strip() for key, variable in self.object_fields.items()})
+        try:
+            document = self.document()
+            document['steps'] = [step]
+            validate_task(document, self.state['source_sha256'], self.state['scene_id'],
+                          self.control.state['channels'], self.state.get('navigation_available', False))
+            self.steps.append(step)
+            self.refresh()
+        except (ValueError, TypeError, KeyError) as exc:
+            self.status.set(str(exc))
+
     def selected(self):
         return bool(self.control.selected() and self.app._robot_config().get('mobile_control_config'))
 

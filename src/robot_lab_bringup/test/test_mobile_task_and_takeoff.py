@@ -86,7 +86,7 @@ def test_task_steps_are_validated_and_normalized():
     (_task(), "1–32"),
     (_task(dict(kind="articulate", waypoints=[dict(targets=dict(lift=0.5))])), "every running"),
     (_task(dict(kind="articulate", waypoints=[dict(targets=dict(lift=2.0, gripper=0))])), "source bounds"),
-    (_task(dict(kind="grasp")), "navigate and articulate"),
+    (_task(dict(kind="grasp")), "Implemented steps"),
 ])
 def test_bad_tasks_are_refused(document, message):
     with pytest.raises(ValueError, match=message):

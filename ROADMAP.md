@@ -367,8 +367,9 @@ These are complete; preserve their scoped contracts. R1.3 follow-up CI passes at
   (`native_mobile_control.py`, `native_mobile_workflow.launch.py`,
   [native controls](docs/tutorials/native-controls.md)), marked "runtime
   validation pending".
+- **Object custody extension (2026-11-13, Codex):** existing native Stretch sequencer now accepts explicit grasp/release checkpoints from the GUI. Uses actual free-object contacts, sustained opposing-finger forces, relative translational slip and environmental support; navigation after a grasp checkpoint monitors custody and stops on loss. [Implementation and limits](docs/status/mobile-custody-2026-11-13.md). This is an implemented candidate, not a measured pick/place mission.
 - **Remaining implementation:**
-  - a mission sequencer: navigate → stop → reach → grasp → transport → release;
+  - complete automatic reach/grasp planning and source-specific object pipelines;
   - base/arm interlock: no base motion while the arm is out, as R11 does;
   - footprint changes while carrying;
   - Fetch, PR2 or TIAGo as a second source.

@@ -13,7 +13,7 @@ def validate_task(document, source_sha256, scene_id, channels, allow_navigation)
         raise ValueError('Task must match the running native robot and selected collision scene.')
     steps = document.get('steps')
     if not isinstance(steps, list) or not 1 <= len(steps) <= 32:
-        raise ValueError('A task must contain 1–32 navigation or articulation steps.')
+        raise ValueError('A task must contain 1–32 navigation, articulation or object checkpoints.')
     known = {channel['name']: channel for channel in channels}
     output = []
     for original in steps:
@@ -50,7 +50,16 @@ def validate_task(document, source_sha256, scene_id, channels, allow_navigation)
                     if not math.isfinite(value) or not known[name]['limits'][0] <= value <= known[name]['limits'][1]:
                         raise ValueError('Taught target exceeds source bounds: '+name)
                     point['targets'][name] = value
+        elif step.get('kind') == 'object_check':
+            if step.get('condition') not in ('grasped', 'released'):
+                raise ValueError('Object condition must be grasped or released.')
+            for key in ('object', 'left_body', 'right_body'):
+                value = step.get(key)
+                if not isinstance(value, str) or not value.strip() or len(value) > 200:
+                    raise ValueError('Choose an exact model body name for '+key)
+            if len({step[key] for key in ('object', 'left_body', 'right_body')}) != 3:
+                raise ValueError('Object and opposing gripper bodies must be distinct.')
         else:
-            raise ValueError('Implemented steps are navigate and articulate.')
+            raise ValueError('Implemented steps are navigate, articulate and object_check.')
         output.append(step)
     return output
