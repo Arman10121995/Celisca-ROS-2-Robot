@@ -116,7 +116,7 @@ def _actor(name, skin, scale, samples, start, loop_time, z_offset=0.):
         '            <waypoint><time>%.2f</time><pose>%.3f %.3f %.3f 0 0 %.4f</pose></waypoint>\n'
         % (t - start, x, y, z + z_offset, yaw) for t, x, y, z, yaw in samples)
     animation = ('      <animation name="walk"><filename>%s</filename><interpolate_x>false</interpolate_x>'
-                 '</animation>\n' % skin) if skin == PERSON_SKIN else ''
+                 '</animation>\n' % skin)      # Gazebo binds the "walk" trajectory to this animation
     return ('    <actor name="%s">\n      <skin><filename>%s</filename><scale>%g</scale></skin>\n%s'
             '      <script>\n        <loop>true</loop>\n        <delay_start>%.2f</delay_start>\n'
             '        <auto_start>true</auto_start>\n        <trajectory id="0" type="walk" tension="0.4">\n%s'
@@ -175,9 +175,66 @@ def sumo_version():
 
 
 def vehicle_box_dae():
-    """A 4.4 × 1.8 × 1.5 m car-sized box, as a minimal Collada mesh."""
-    import trimesh
-    box = trimesh.creation.box(extents=(4.4, 1.8, 1.5))
-    box.apply_translation((0, 0, .75))
-    from trimesh.exchange.dae import export_collada
-    return export_collada(box)
+    """A 4.4 × 1.8 × 1.5 m car-sized box as a rigged Collada actor skin.
+
+    Gazebo renders an actor only from a skinned mesh with a skeleton ("Mesh skeleton ... not found" for a
+    plain mesh, 2026-11-13): the box is bound to one root bone, with a static two-key "walk" animation
+    that the actor's trajectory drives.
+    """
+    hx, hy, h = 2.2, .9, 1.5
+    corners = [(x, y, z) for z in (0., h) for y in (-hy, hy) for x in (-hx, hx)]
+    faces = [(0, 2, 3), (0, 3, 1), (4, 5, 7), (4, 7, 6), (0, 1, 5), (0, 5, 4),
+             (2, 6, 7), (2, 7, 3), (0, 4, 6), (0, 6, 2), (1, 3, 7), (1, 7, 5)]
+    positions = ' '.join('%g %g %g' % c for c in corners)
+    triangles = ' '.join('%d' % i for face in faces for i in face)
+    identity = '1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1'
+    text = f"""<?xml version="1.0" encoding="utf-8"?>
+<COLLADA xmlns="http://www.collada.org/2005/11/COLLADASchema" version="1.4.1">
+  <asset><unit name="meter" meter="1"/><up_axis>Z_UP</up_axis></asset>
+  <library_geometries>
+    <geometry id="box" name="box"><mesh>
+      <source id="box-pos"><float_array id="box-pos-array" count="24">{positions}</float_array>
+        <technique_common><accessor source="#box-pos-array" count="8" stride="3">
+          <param name="X" type="float"/><param name="Y" type="float"/><param name="Z" type="float"/>
+        </accessor></technique_common></source>
+      <vertices id="box-vtx"><input semantic="POSITION" source="#box-pos"/></vertices>
+      <triangles count="12"><input semantic="VERTEX" source="#box-vtx" offset="0"/><p>{triangles}</p></triangles>
+    </mesh></geometry>
+  </library_geometries>
+  <library_controllers>
+    <controller id="box-skin"><skin source="#box">
+      <bind_shape_matrix>{identity}</bind_shape_matrix>
+      <source id="box-joints"><Name_array id="box-joints-array" count="1">Root</Name_array>
+        <technique_common><accessor source="#box-joints-array" count="1"><param name="JOINT" type="name"/></accessor></technique_common></source>
+      <source id="box-binds"><float_array id="box-binds-array" count="16">{identity}</float_array>
+        <technique_common><accessor source="#box-binds-array" count="1" stride="16"><param name="TRANSFORM" type="float4x4"/></accessor></technique_common></source>
+      <source id="box-weights"><float_array id="box-weights-array" count="1">1</float_array>
+        <technique_common><accessor source="#box-weights-array" count="1"><param name="WEIGHT" type="float"/></accessor></technique_common></source>
+      <joints><input semantic="JOINT" source="#box-joints"/><input semantic="INV_BIND_MATRIX" source="#box-binds"/></joints>
+      <vertex_weights count="8"><input semantic="JOINT" source="#box-joints" offset="0"/><input semantic="WEIGHT" source="#box-weights" offset="1"/>
+        <vcount>{' '.join(['1'] * 8)}</vcount><v>{' '.join(['0 0'] * 8)}</v></vertex_weights>
+    </skin></controller>
+  </library_controllers>
+  <library_animations>
+    <animation id="Root-anim">
+      <source id="Root-time"><float_array id="Root-time-array" count="2">0 1</float_array>
+        <technique_common><accessor source="#Root-time-array" count="2"><param name="TIME" type="float"/></accessor></technique_common></source>
+      <source id="Root-pose"><float_array id="Root-pose-array" count="32">{identity} {identity}</float_array>
+        <technique_common><accessor source="#Root-pose-array" count="2" stride="16"><param name="TRANSFORM" type="float4x4"/></accessor></technique_common></source>
+      <source id="Root-interp"><Name_array id="Root-interp-array" count="2">LINEAR LINEAR</Name_array>
+        <technique_common><accessor source="#Root-interp-array" count="2"><param name="INTERPOLATION" type="name"/></accessor></technique_common></source>
+      <sampler id="Root-sampler"><input semantic="INPUT" source="#Root-time"/><input semantic="OUTPUT" source="#Root-pose"/>
+        <input semantic="INTERPOLATION" source="#Root-interp"/></sampler>
+      <channel source="#Root-sampler" target="Root/transform"/>
+    </animation>
+  </library_animations>
+  <library_visual_scenes>
+    <visual_scene id="scene">
+      <node id="Root" name="Root" sid="Root" type="JOINT"><matrix sid="transform">{identity}</matrix></node>
+      <node id="vehicle" name="vehicle"><instance_controller url="#box-skin"><skeleton>#Root</skeleton></instance_controller></node>
+    </visual_scene>
+  </library_visual_scenes>
+  <scene><instance_visual_scene url="#scene"/></scene>
+</COLLADA>
+"""
+    return text.encode()

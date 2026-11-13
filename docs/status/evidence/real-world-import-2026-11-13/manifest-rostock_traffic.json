@@ -1,0 +1,415 @@
+{
+ "conventions": "intensity / raster max * size_z; row 0 = +y; cell-centred samples (heightfield.py, measured)",
+ "datum": {
+  "frame": "map (ENU, metres)",
+  "origin": "terrain centre at x=0, y=0; lowest sample at z=0",
+  "polygon_m": [
+   [
+    -150.51,
+    -150.51
+   ],
+   [
+    150.51,
+    -150.51
+   ],
+   [
+    150.51,
+    150.51
+   ],
+   [
+    -150.51,
+    150.51
+   ]
+  ]
+ },
+ "elevation": {
+  "max_m": 11.94942331314087,
+  "min_m": 0.0,
+  "spawn_m": 8.388026560989081
+ },
+ "files": {
+  "inputs/dem.json": "1efc97290f42216d9ba8589a85babbff1c6d5ce237f4b4e2bf621da66e41e2ae",
+  "inputs/dem.npy": "cf8bab9e120b0b018bfa69dbfcb6c999ef59cf6f596dbaef70a602a8cfbb8bad",
+  "inputs/osm.json": "a80858775fb498f41d2d41590a67fbaf06d877ce9276cbee7f97f6e5bb49005a",
+  "inputs/traffic_fcd.xml": "f183ed69218070df6288e6d07b4883e3d5e2cabd5b68fa7b3cdc4fc930f90ca0",
+  "maps/map.pgm": "3dbbabad044fff1077fa1c9c0ea8119051c1994e60238d8c69ef532024546b94",
+  "maps/map.yaml": "a64c9a9f7031ebe6187a404c1bb9ab816846e272615452c4838a9d17f94965e1",
+  "mjcf/rostock_traffic.xml": "fcc88f4ba2403801c7b05e194383f5185c7472b20097203202bc03530d6f056f",
+  "preview.png": "56749f8c663749d1e1aa4a64d564cacd820979259940c7d653ca858bdca5fbda",
+  "worlds/buildings/b0001.obj": "1fd858abecfa0bca0ef33c18eae1ef74d8dd6c224f59ca28d2eafffb326fbb4c",
+  "worlds/buildings/b0002.obj": "e04c434505c181f2086fb8b86f1c88803678a77877c348fd4a5953ee1125f4e0",
+  "worlds/buildings/b0003.obj": "6140f587e219ac876f4e33c761df013e20e27eea3a29cffbabb849a117d0d5e5",
+  "worlds/buildings/b0004.obj": "bf0daadad4c7c6903fc2df5aeb6cbd2da3cf573609ec07c09f7598ef49295441",
+  "worlds/buildings/b0005.obj": "531d066aa4e2e3d42d16d0a5c2c3988ef08fd19349c666ac21ae160a80aa01e3",
+  "worlds/buildings/b0006.obj": "e274862e8cccb9bb33f6406f5bbcea6c368f9decc3e4e2733917ba422471f105",
+  "worlds/buildings/b0007.obj": "bef678b8e14888748e08d639502a492befa5721bd083b60954def870dacab850",
+  "worlds/buildings/b0008.obj": "51d93f19ca57d45b5bf78952088201f4c31d8168bb6281752ee175466e7098d2",
+  "worlds/buildings/b0009.obj": "90508b277441847d15037c610b738969e6747a334844740084eeac78fa923196",
+  "worlds/buildings/b0010.obj": "93166a263018e6f88c0d607327c4c01ab7092d18092388295a254e5badf31850",
+  "worlds/buildings/b0011.obj": "6864a1343bd762f689ddd3b9ed6c3b8f7a184d885a9f5463f82bf31ecfa8c046",
+  "worlds/buildings/b0012.obj": "42d1be8e35aeb8bd2d10adcd6b2951ec824e579f96113dc095fbb2f88a227794",
+  "worlds/buildings/b0013.obj": "d1355dc546d0d7b962b720c3ce2509ae82b90436276eaed146dc46d3785772f5",
+  "worlds/buildings/b0014.obj": "25682b5340c2f3805d05a517ebf7e610a116ca203e33e883e8082744cc50bcba",
+  "worlds/buildings/b0015.obj": "917a2dd6d97970c14b261bd8cf792d7e9d065911268df7c078476e8f94475b2f",
+  "worlds/buildings/b0016.obj": "23d173e86de3f421b52565651cb0bf8510c15c2feb94243a0a753feb58f70554",
+  "worlds/buildings/b0017.obj": "bdad08417d054855826fd89960ee6fe1257d531f09072a639c6fbea152117093",
+  "worlds/buildings/b0018.obj": "658c1b26c170131de7b15058da9a332725dcc4931e8d7fbb02de1f2631761bd0",
+  "worlds/buildings/b0019.obj": "c5d09ff6e4c4b8ff2b5cbb3e0247f3b99b2bc3a8737cacda62b90d3a9663aafb",
+  "worlds/buildings/b0020.obj": "f84b7f12986f4fe77c17a5a0d132aad87265ea1341300ef71ab4d16a445b4689",
+  "worlds/buildings/b0021.obj": "000dec0714ab71fbe54211ff3558066ba39acd9ae5dce39e250907d935c86b27",
+  "worlds/buildings/b0022.obj": "aab98556b4432fe58973cd45a0c33e6ec4b2f33ba794cbf0aa72df03166324db",
+  "worlds/buildings/b0023.obj": "f710ff03f2f01529e80ec0ffce5a893ef3010be46677ced6ac6c7c463abdaaa4",
+  "worlds/buildings/b0024.obj": "d72f2d9f7addfc13adb70dd2ad380d9b3791b877c1719e38bf69bfd3303cdcf7",
+  "worlds/buildings/b0025.obj": "8c9419bcd48ce852ff97bc76acb3f29296abc72a520379edc8ec7add89011f88",
+  "worlds/buildings/b0026.obj": "fafed68b852796f0be8b5e7f5b42ce0885077f4bbb2de5079434aaa61f5fbc11",
+  "worlds/buildings/b0027.obj": "7a251b8c3bd9c4b679dd54883a921f90ee31f67d92117e5fc4596b56312aa497",
+  "worlds/buildings/b0028.obj": "63ca1d26576e5ed83f5b4a165b888717b5960d969e9e6c9e599a22d0494e13fd",
+  "worlds/buildings/b0029.obj": "98e63b36023ac2061e37b252fe178a6754ea04ac2bbdde05cc504bacebd4feaa",
+  "worlds/buildings/b0030.obj": "8f65305e7906ea2482bbb3a1c82c452dd1813458c4e59ed17b30a1b9966e3b05",
+  "worlds/buildings/b0031.obj": "41b84e1639419fad6c7b8ee94d36cf4fc378975fad0bdc18af2c66926e17d6fd",
+  "worlds/buildings/b0032.obj": "40f8725437c26bec84bb250e4ec2f25d7311ab1cfaa589a01f6a40d310b5091e",
+  "worlds/buildings/b0033.obj": "baee08d54bbd010f4ecf0137ed342984c213ff8e0a8c7ba9a2ec0371ff0aa82c",
+  "worlds/buildings/b0034.obj": "efbf165085565a84c6373e1b06906a01426bd8ce6a2a9e05cfe21c86ed2dda1b",
+  "worlds/buildings/b0035.obj": "296b0f5a835b9c9dc4bff542198a321557e6d63407f0921ed1aa49997790ff83",
+  "worlds/buildings/b0036.obj": "eac6d69f416c9322370b89bc33c74561ccc2c262c96db3f163bd3c711aba1f6c",
+  "worlds/buildings/b0037.obj": "b73f633d3a4a83ce16fb35e6aa012a9921ced86c283f39ea86d26f7110d5435b",
+  "worlds/buildings/b0038.obj": "e8e9822016247b7bfb0c5de6866d2477d9cbfdce75baf401e7a9f353ab1ac127",
+  "worlds/buildings/b0039.obj": "b98cba30bf7a9bf4da12c9b37b04183c4996e47aa4b80c04ec46ebdba358d1b8",
+  "worlds/buildings/b0040.obj": "cfea85834b3c41691a32c16cd7646805a02f068b72b2b52b488b26327bf62f0b",
+  "worlds/buildings/b0041.obj": "c1eeb662a596bce31f9c0b7f1ba634bc1860d7caf1983c71acd0aee7e23eca95",
+  "worlds/buildings/b0042.obj": "c344ea95f5e639f5cedabcc7aba7aa0f2f67048623615a3ac79eabb367cef3ce",
+  "worlds/buildings/b0043.obj": "778f7bcdffe5ac01647ddaab6b9a4e610e5bbfa889bc54f8beda140d4823bf14",
+  "worlds/buildings/b0044.obj": "52a5d0568ed0a24e1954675114f9244f494b232a776cfe86a99dad8770a37add",
+  "worlds/buildings/b0045.obj": "2a8eb4a3cedf8cb8fa602016b1bb823110d4dc5db631d2d10b0ba4c66d3b3bd3",
+  "worlds/buildings/b0046.obj": "b3c2056bff3af0a887c70920b62f27f5c7280df632089f76a0b2ab03e9daebd4",
+  "worlds/buildings/b0047.obj": "a497f13694cbbf4476e5a08a29286b35c5741f39b614ad4cba2e5e98ea0d29e6",
+  "worlds/buildings/b0048.obj": "e3f92ba76b4d2b6f50778e7243fa34b90e3da917a758be039577fba69b0b6548",
+  "worlds/buildings/b0049.obj": "9bd076ae7515dd11f7c39ae50bdb7448d9b1921956a53fabd9423848cfb75d32",
+  "worlds/buildings/b0050.obj": "f3eaa373236b6e3f13c97700c8057b7d3a7d809b741fde14e3664b09f91dc1f0",
+  "worlds/buildings/b0051.obj": "69ad03cdb523a66ad90bdcbb944967936cb5ca5d21c12051b4f4ca75c87df47d",
+  "worlds/buildings/b0052.obj": "e6941278ad0893ea26112131d45cebbc5a86575ce40ae18726f2c41b1d470e07",
+  "worlds/buildings/b0053.obj": "c9e19cfa657a2749970939fd4c60f028cd9b46e6234cbc88e9109062f537945f",
+  "worlds/buildings/b0054.obj": "21c026cf8b371ba88924bb368ceb7a25b4b871cd6aa1fcc1f07acee1fba31eac",
+  "worlds/buildings/b0055.obj": "8504d87884f91bcbb3f6cb24e017e7319688f9feea7c22c15adae832971d3faa",
+  "worlds/buildings/b0056.obj": "ca67eab0e4e188ea23aab6a67b6d5840bb9b1665d3b3b5d4ff3402cc0ac6ebe9",
+  "worlds/buildings/b0057.obj": "6872b92a620ce50db846b85e58f91b8d94cbb9634bbc7f4988486acb5df1ffbe",
+  "worlds/buildings/b0058.obj": "718cdc060d82c8587dccfb6123e939f050d32c125af19bff1fc60b78b089de79",
+  "worlds/buildings/b0059.obj": "e3acbac0f5c594bc524f7a99fb802c6ecc4b36a6eedb38dd1f210b25a5a06e35",
+  "worlds/buildings/b0060.obj": "eb5b9d0ce3ab82a9b23bd3af555577d0e8531929008be54ff17741f43bc9aa4f",
+  "worlds/buildings/b0061.obj": "ab60cf5cdf74f0d571b799d14796fd41800f892fc12b6cdcfb47dcb9975112f8",
+  "worlds/buildings/b0062.obj": "29f7ff62ea267fc559a1ec751f033be6649537ec758faa1874c3e649c08abaf5",
+  "worlds/buildings/b0063.obj": "42675a5114daa8404616c7af73560be83eaf373edeb689f30daf9a7d4151cfbd",
+  "worlds/buildings/b0064.obj": "37fbf8e94560ee6452420b1a73a048bc7814e37a887fb83f184a099e1948268b",
+  "worlds/buildings/b0065.obj": "3fe393843a9acad5990102e69a74e1c4cbf6a554c3112844579f493cc6a76e0a",
+  "worlds/buildings/b0066.obj": "732fe54afcfdfd3d322282135e5023d3157aac388f31f2e07a2617e87c9f2dc8",
+  "worlds/buildings/b0067.obj": "d7c10d264ab1b83a1e109f89f5f843fe414f253ed41beb3ced67339bcea1d243",
+  "worlds/buildings/b0068.obj": "91096fdc3dd829f7c30b96e048dea9c92afba18ab4b8843b02f7287fa2b206a1",
+  "worlds/buildings/b0069.obj": "6b48a905dc3893dddaa80564cde4f5b64a4c66c3629b924208c180b6f99fe8e3",
+  "worlds/buildings/b0070.obj": "ed340a433212ea76ed4bf54713ba77ce02f276f3a41084551b1202364bd40a83",
+  "worlds/buildings/b0071.obj": "9a07cb80af8550459b934588764d7999c611a25ce735d4fbc68e2fb382c86b63",
+  "worlds/buildings/b0072.obj": "44e115c6f6dd4e3cc697a2fdc93b6a05cda4b4e9f21a9ed3f37e1628a52b18b3",
+  "worlds/buildings/b0073.obj": "1744280963b08236a5eba4fac2df5e3580776a806c31d6e1428205b28a98f4bb",
+  "worlds/buildings/b0074.obj": "8d062301b74ad7f23d78968e6f279e34e415c88bad96bed6ba141ec18a2ec935",
+  "worlds/buildings/b0075.obj": "bca56d25cc0303ddffef3fd9cf4bd20b15864cfd42fd8d80c059548061b53bee",
+  "worlds/buildings/b0076.obj": "fafa6b5e1c626e7c19f8385c4452d125939754c45c64ed5b6933cfcb53cb2e16",
+  "worlds/buildings/b0077.obj": "9860e9d6d11784217683d387cdb6d27d04e7259d5167e8526cb9cfcee4cae530",
+  "worlds/buildings/b0078.obj": "a52fc53282bc2a75e6c9c4258c8ade7a5a4cd957daec8eb9f84e84d112e59f1c",
+  "worlds/buildings/b0079.obj": "87e87c9b83a3fe3bc6297839290fc341ab9b10205a8f1615d36163952a1632b4",
+  "worlds/buildings/b0080.obj": "5fa464db118f1c1c2dd1dcf624fe8c688d0f7bc0f2fc03f30cfab8a7012b3cbd",
+  "worlds/buildings/b0081.obj": "0e20a884d55a996ab6b8375a38b98ecddcf560a03ff2fa2a4a288c980e7a65d9",
+  "worlds/buildings/b0082.obj": "998878cdb0573bf78f2788a29ecb31cd5c96c5fb55eba34060faaa8b0bf8019b",
+  "worlds/buildings/b0083.obj": "52888b13d65c91b630beb9b4e3da7dc29d44c3f79ba85d4ff2fabd0ee2ecb34b",
+  "worlds/buildings/b0084.obj": "e03b9e8d9689cdf4d6678235a8941dd3517333fedfa4218254f861d62ee8c8fd",
+  "worlds/buildings/b0085.obj": "e0d8cb5c4d524552117bbe8cc5f6ef7eecc6025941c656b3f548f31159319f6f",
+  "worlds/buildings/b0086.obj": "d23315bbc8f6a80874bccd1fc42c6b773cd44c190609ddb890d22c5cf29a4bc2",
+  "worlds/buildings/b0087.obj": "5e47d16ea94db0289040c701bde49ce86d28ddbdc760b784e142ad17fc74f457",
+  "worlds/buildings/b0088.obj": "3b0d3916d36e197b942bc19d7cdfe470c72e895c1515d95ec056b4f3ad04bdd4",
+  "worlds/buildings/b0089.obj": "072faf64a7fca8abd38fedbe62a93ea85f0aed6bfb42ca4c038a6a8d87dcf34c",
+  "worlds/buildings/b0090.obj": "3ee93808a3ab4b3b32f9bfe24f562c3673c7a24bb78474a19a19e00e1dbb8fdc",
+  "worlds/buildings/b0091.obj": "2dd61f6950bcb9c049b0d33ea500c0ad3b0cd38ea49805d8fc366ff566aa4de5",
+  "worlds/buildings/b0092.obj": "e7bbcec32f2566f1aa104436c4130bffe236f7d1d31770a7f09ed3575494597d",
+  "worlds/buildings/b0093.obj": "f0b25b9a951ac6191c40b44d53504beb5ca163a2400547d0e930666028b65b43",
+  "worlds/buildings/b0094.obj": "b71124734ae3e4ae41ec002363aa801e817bb2be4dba751d5f0ee0b6051171db",
+  "worlds/buildings/b0095.obj": "b05e102e66db6d4483829c2a3cd7469a619a951ad1f1dbddba2cfed38e665cef",
+  "worlds/buildings/b0096.obj": "0028b7203a6d1bef9f291aa4696cc4cf67f90d179a0d6b1b02c4e66a0c204cc2",
+  "worlds/buildings/b0097.obj": "85c742ccf2d201c8aaeaa04bd4edd1efd796611eeb04a79bfcc744e5dbdebb65",
+  "worlds/buildings/b0098.obj": "cf311117bdd4bf69d8449ecc30868f9525efa0c641d2f9b5bbd773c5345fba3f",
+  "worlds/buildings/b0099.obj": "d5f770c0d8add3a4a73d7820cb0c4dfc76cd7d4dc4726335eec8279bdeeaaca6",
+  "worlds/buildings/b0100.obj": "bbe56f49b8b283db49e6671886b29837742d9daee7845e8c8b7e88f072082cf2",
+  "worlds/buildings/b0101.obj": "f91bd46d6dba95a68af4352fe318639f919ac0e800001a1ddf2ab9e7ec5f4739",
+  "worlds/buildings/b0102.obj": "025221f05f62adb13f39d869067720c7fccfe0c04a3ad5baee4c9e9c7cb0dd76",
+  "worlds/buildings/b0103.obj": "4dff050645233298ee6b038d1f8654df045ad65b276c5b564b7e3a67be541e7d",
+  "worlds/buildings/b0104.obj": "6aaef58798ecbbbe3e2979b39a53bbf0f50d7b06609ee1d94bb135086adf00af",
+  "worlds/buildings/b0105.obj": "0ff232bd20d23780b3c4cc1141c90d29ee87d3d74adc0a67270bb7eafb920d60",
+  "worlds/buildings/b0106.obj": "741cb4204ac59a6db6784df28dad1f78ca7cd2469c63a1cb43f2a35c03c29b69",
+  "worlds/buildings/b0107.obj": "4e33f33789e6d09fea4117abeba2a873c24a559093d1c4333fc98bfc5c3875c8",
+  "worlds/buildings/b0108.obj": "b2c0dc08ab24e934c32bf77b045b8813795a823c526b5457c3b15d2fec9420ed",
+  "worlds/buildings/b0109.obj": "ea1d6d650aa2169a1511c04ace6bbb5c835771cb745ca3cd039c298d187d1206",
+  "worlds/buildings/b0110.obj": "b9322602d15ade7442e1908d5062e4f75e1b854d0f689ee81187335ab89da6b9",
+  "worlds/buildings/b0111.obj": "c905e093b2dc900d47adeb21f0d5bf438d03af284906700eef299393a3ef9840",
+  "worlds/buildings/b0112.obj": "c39188110818f67e4f1266794155effa9cc4120e2407ef7b396580bb52b32ce8",
+  "worlds/buildings/b0113.obj": "5d4d4d1fd8d86fd6d54b913363b08ee3f74f10e1e29fb1c3b334818eaa4c0b7b",
+  "worlds/buildings/b0114.obj": "41d2ddd9f021a150fbd0fb680d39025b19c9cb454d7843d792edea1060958c3a",
+  "worlds/buildings/b0115.obj": "7b210e375520b8365ab182d837a872a7f0bc6ae6c3f76ffad976d17c992a5554",
+  "worlds/buildings/b0116.obj": "614901dfde376194f962a8ebad4c8cd410473c0cd640799131c4e27371aa5b30",
+  "worlds/roads.obj": "4c512d29115b5cc4ef9885db86ad1aaf4fdbb95f4e203a62ba55dee2174ad110",
+  "worlds/rostock_traffic.png": "85c7e9afae108df92d7c7f90933131e9fe5453a2e442af42024e0e6c5526ec22",
+  "worlds/rostock_traffic.world": "e5890831f9e3da2a44636cda5f058a0a8a0b09515ad7dce10bd7bd777c7f1c28",
+  "worlds/rostock_traffic_visual.obj": "4310b85c06ef4c2327e297a96294be7b17a2c43b331a49f1c07c61830eff6c3e",
+  "worlds/vehicle_box.dae": "9898274dc6fc532b845fb973af98324e1acd15b1183690cf62b72817de658f30"
+ },
+ "generator_version": 1,
+ "id": "rostock_traffic",
+ "inputs": {
+  "attribution": "Terrain Tiles, AWS Open Data (Mapzen/Tilezen Joerd); sources include SRTM, NED, ETOPO1, GMTED and others: https://github.com/tilezen/joerd/blob/master/docs/attribution.md; \u00a9 OpenStreetMap contributors",
+  "friction": 1.0,
+  "id": "rostock_traffic",
+  "license": "Mixed open sources; attribution required (see the Joerd attribution document); ODbL 1.0 (https://www.openstreetmap.org/copyright)",
+  "max_slope_deg": 15.0,
+  "max_step_m": 0.08,
+  "min_wavelength_m": 4.0,
+  "occupancy_resolution_m": 0.1,
+  "provider": "raster",
+  "raster_path": "inputs/dem.npy (see real_world)",
+  "relief_m": 11.94942383630371,
+  "roughness": 0.5,
+  "samples": 257,
+  "seed": 7,
+  "size_m": 301.02,
+  "smoothness": 3.0,
+  "source_metres_per_pixel": 1.1712840466926069,
+  "source_sha256": "813004efe4df4eeac8e68ec37f33b10cb37fb919f9804d184f8dc448c336d8d2",
+  "spawn_pad_m": 0.0,
+  "spawn_x": 0.04,
+  "spawn_y": -0.04,
+  "style": "spectral"
+ },
+ "occupancy": {
+  "blocked_fraction": 0.0,
+  "cells": 9060100,
+  "feature_cells": 3077327,
+  "max_slope_deg": 5.11,
+  "occupied_cells": 3163943
+ },
+ "provider": {
+  "attribution": "Terrain Tiles, AWS Open Data (Mapzen/Tilezen Joerd); sources include SRTM, NED, ETOPO1, GMTED and others: https://github.com/tilezen/joerd/blob/master/docs/attribution.md; \u00a9 OpenStreetMap contributors",
+  "license": "Mixed open sources; attribution required (see the Joerd attribution document); ODbL 1.0 (https://www.openstreetmap.org/copyright)",
+  "name": "raster",
+  "source_metres_per_pixel": 1.1712840466926069,
+  "source_sha256": "813004efe4df4eeac8e68ec37f33b10cb37fb919f9804d184f8dc448c336d8d2"
+ },
+ "raster": {
+  "bits": 8,
+  "metres_per_pixel": 1.1712840466926069,
+  "quantisation_m": 0.046860483580944585,
+  "samples": 257,
+  "span_m": 299.84871595330736
+ },
+ "real_world": {
+  "bounds_wgs84": {
+   "east": 12.1428,
+   "north": 54.0901,
+   "south": 54.0874,
+   "west": 12.1382
+  },
+  "counts": {
+   "buildings": 116,
+   "roads": 155,
+   "trees": 57,
+   "truncated": {
+    "buildings": 0,
+    "trees": 0
+   },
+   "water": 0
+  },
+  "dem": {
+   "source": "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/{z}/{x}/{y}.png",
+   "tiles": 6,
+   "zoom": 15
+  },
+  "ground_datum_m": 7.199925899505615,
+  "limits": [
+   "8-bit heightmap: height steps of 0.047 m",
+   "MuJoCo collides with each building's convex hull",
+   "flat roofs; no interiors"
+  ],
+  "origin_wgs84": {
+   "lat": 54.088750000000005,
+   "lon": 12.1405
+  },
+  "projection": "+proj=aeqd +lat_0=54.088750000 +lon_0=12.140500000 +x_0=0 +y_0=0 +ellps=WGS84 +units=m +no_defs",
+  "relief_m": 11.949422836303711,
+  "request": {
+   "buildings": true,
+   "east": 12.1428,
+   "max_relief_m": 200.0,
+   "max_slope_deg": 15.0,
+   "max_step_m": 0.08,
+   "north": 54.0901,
+   "occupancy_resolution_m": 0.1,
+   "people": true,
+   "people_per_minute": 12,
+   "roads": true,
+   "samples": 257,
+   "size_m": 301.02,
+   "south": 54.0874,
+   "spawn_clearance_m": 1.5,
+   "traffic": true,
+   "traffic_seconds": 300,
+   "trees": true,
+   "vehicles_per_minute": 6,
+   "water": true,
+   "west": 12.1382
+  },
+  "roofs": [
+   {
+    "area_m2": 3226.5,
+    "top_m": 19.956,
+    "x": -112.8,
+    "y": 82.83
+   },
+   {
+    "area_m2": 2828.1,
+    "top_m": 27.097,
+    "x": 43.31,
+    "y": 0.62
+   },
+   {
+    "area_m2": 2160.3,
+    "top_m": 24.386,
+    "x": -120.92,
+    "y": -128.75
+   },
+   {
+    "area_m2": 1895.3,
+    "top_m": 32.275,
+    "x": 61.07,
+    "y": -77.37
+   },
+   {
+    "area_m2": 1414.9,
+    "top_m": 24.078,
+    "x": 82.79,
+    "y": -127.77
+   },
+   {
+    "area_m2": 1316.5,
+    "top_m": 36.29,
+    "x": -48.48,
+    "y": -85.33
+   },
+   {
+    "area_m2": 1304.2,
+    "top_m": 31.528,
+    "x": -77.05,
+    "y": -120.01
+   },
+   {
+    "area_m2": 875.1,
+    "top_m": 26.559,
+    "x": 92.17,
+    "y": -25.79
+   },
+   {
+    "area_m2": 662.5,
+    "top_m": 30.556,
+    "x": -18.3,
+    "y": -135.81
+   },
+   {
+    "area_m2": 520.7,
+    "top_m": 33.782,
+    "x": 27.46,
+    "y": -78.52
+   },
+   {
+    "area_m2": 467.6,
+    "top_m": 29.89,
+    "x": -78.79,
+    "y": -60.84
+   },
+   {
+    "area_m2": 465.0,
+    "top_m": 31.416,
+    "x": 39.04,
+    "y": -129.49
+   },
+   {
+    "area_m2": 458.2,
+    "top_m": 30.078,
+    "x": -76.7,
+    "y": -27.81
+   },
+   {
+    "area_m2": 451.5,
+    "top_m": 31.618,
+    "x": -15.13,
+    "y": -119.27
+   },
+   {
+    "area_m2": 424.3,
+    "top_m": 22.962,
+    "x": 117.09,
+    "y": -115.25
+   },
+   {
+    "area_m2": 412.8,
+    "top_m": 31.411,
+    "x": -11.85,
+    "y": -96.07
+   },
+   {
+    "area_m2": 338.5,
+    "top_m": 14.626,
+    "x": 96.79,
+    "y": 124.39
+   },
+   {
+    "area_m2": 336.9,
+    "top_m": 13.107,
+    "x": 112.85,
+    "y": -74.11
+   },
+   {
+    "area_m2": 287.6,
+    "top_m": 35.752,
+    "x": -39.44,
+    "y": 146.28
+   },
+   {
+    "area_m2": 269.3,
+    "top_m": 18.618,
+    "x": -147.66,
+    "y": -48.24
+   }
+  ],
+  "schema": "robot_lab.real_world.v1",
+  "sources": [
+   {
+    "attribution": "Terrain Tiles, AWS Open Data (Mapzen/Tilezen Joerd); sources include SRTM, NED, ETOPO1, GMTED and others: https://github.com/tilezen/joerd/blob/master/docs/attribution.md",
+    "data": "elevation",
+    "license": "Mixed open sources; attribution required (see the Joerd attribution document)"
+   },
+   {
+    "attribution": "\u00a9 OpenStreetMap contributors",
+    "data": "buildings, roads, trees, water",
+    "license": "ODbL 1.0 (https://www.openstreetmap.org/copyright)"
+   }
+  ],
+  "traffic": {
+   "people": 40,
+   "scope": "Gazebo actors replaying recorded SUMO tracks; they do not react to robots; MuJoCo, PyBullet and Isaac skip actors.",
+   "source": "Eclipse SUMO 1.28.0 (EPL-2.0), seed 42, 300 s, step 0.5 s",
+   "vehicles": 30
+  },
+  "version": 1
+ },
+ "schema": "robot_lab.terrain.v1",
+ "scope": "Generated terrain geometry. Driving, walking and flight on it are separate measured acceptance.",
+ "spawn": {
+  "x": 0.04,
+  "y": -0.04,
+  "yaw": 0.0,
+  "z": 8.48802656098908
+ }
+}

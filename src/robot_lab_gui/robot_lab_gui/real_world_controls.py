@@ -48,7 +48,8 @@ class RealPlacePage(ttk.Frame):
                           'water and optional people and traffic.')
         globe.master.grid(row=0, column=0, sticky='nsew', padx=(0, 6))
         globe.columnconfigure((0, 1), weight=1)
-        self.open_button = ttk.Button(globe, text='🌍  Open globe', command=self.open_globe, style='Accent.TButton')
+        # Plain text: Tk 8.6 segfaults rendering characters outside the BMP (a globe emoji, 2026-11-13).
+        self.open_button = ttk.Button(globe, text='Open globe', command=self.open_globe, style='Accent.TButton')
         self.open_button.grid(row=0, column=0, columnspan=2, sticky='ew')
         self.close_button = ttk.Button(globe, text='Close globe', command=self.close_globe)
         self.close_button.grid(row=1, column=0, columnspan=2, sticky='ew', pady=(6, 0))

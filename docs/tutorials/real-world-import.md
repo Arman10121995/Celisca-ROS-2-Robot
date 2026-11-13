@@ -8,7 +8,7 @@ token is needed.
 
 ## Run
 
-1. Open **Worlds & mapping → Real place** and press **🌍 Open globe**. A globe
+1. Open **Worlds & mapping → Real place** and press **Open globe**. A globe
    opens in your browser (it needs internet).
 2. Type a place in the search box (for example *Rostock, Kröpeliner Straße*)
    and press **Go**, or navigate with the mouse.
@@ -67,7 +67,19 @@ flowchart LR
 
 ## Measured
 
-REAL_WORLD_RESULTS
+A 308 × 300 m area of central Rostock (116 buildings, 155 roads, 57 trees,
+12 m of relief) imported in about 35 s. Through the real launch, a small
+robot settles within **1.7 cm** of the expected height at the spawn, two open
+ground points and **on two building roofs (20 m and 27 m)** in Gazebo,
+MuJoCo, PyBullet and Isaac, so the buildings collide in every simulator.
+With people and traffic (40 people, 30 vehicles from 300 s of SUMO trips),
+the same area loads in Gazebo with the same support heights.
+[Evidence](../status/evidence/real-world-import-2026-11-13/README.md).
+
+```bash
+python3 scripts/terrain_support_probe.py --terrain rostock_centre \
+  --output /workspace/molar/robot_lab_runtime/probe-rostock
+```
 
 ## Limits
 

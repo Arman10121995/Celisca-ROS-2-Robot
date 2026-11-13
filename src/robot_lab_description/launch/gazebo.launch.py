@@ -52,8 +52,10 @@ def world_with_contact_system(path):
     systems = ([] if '<plugin' in world_level else list(_DEFAULT_SYSTEMS)) + [_CONTACT_SYSTEM]
     plugins = ''.join('\n    <plugin filename="%s" name="%s"/>' % item for item in systems)
     base = os.path.dirname(os.path.abspath(path))
-    text = re.sub(r'<uri>(?!\w+://)(?!/)([^<]+)</uri>',
-                  lambda m: '<uri>' + os.path.join(base, m.group(1).strip()) + '</uri>', text)
+    # Relative <uri>s and actor skin/animation <filename>s (an imported city's vehicle mesh was
+    # "not found" from the temporary copy, 2026-11-13).
+    text = re.sub(r'<(uri|filename)>(?!\w+://)(?!/)([^<]+)</\1>',
+                  lambda m: '<%s>%s</%s>' % (m.group(1), os.path.join(base, m.group(2).strip()), m.group(1)), text)
     text = text[:opening.end()] + plugins + text[opening.end():]
     digest = hashlib.sha256(text.encode('utf-8')).hexdigest()[:12]
     out = os.path.join(tempfile.gettempdir(), 'robot_lab_world_%s_%s' % (digest, os.path.basename(path)))
