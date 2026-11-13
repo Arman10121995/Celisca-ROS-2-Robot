@@ -88,8 +88,16 @@ handles footprint input and publishes the oriented footprint; its
 apply separate costmap padding. This delivery preserves the existing Polygon
 input interface. It does not infer receipt from the number of subscriptions.
 
-Verification for this continuation: focused geometry/publisher/interlock tests
-are registered in the physics tier, and custody/document checks in the fast
-tier. Their execution and package build are pending while Claude's recorded
-flight occupies the shared simulator host. The earlier 20-test/build result
-above belongs to the preceding checkpoint, not these new footprint changes.
+Verification for this continuation at `1e496a9e`: after Claude's recorded
+flight finished, all 26 focused tests passed, including six native-engine
+geometry/publisher/interlock cases. robot_lab_utils, robot_lab_mujoco and
+robot_lab_gui build successfully. An Xvfb widget smoke check loads the actual
+installed task panel, checks its three read-only model selectors, and verifies
+a disconnected grasp-button click requests no task. This is UI/control-contract
+verification, not a physical grasp or Nav2 mission receipt.
+
+[Focused check output](evidence/mobile-custody-2026-11-13/checks.log) ·
+[GUI smoke output](evidence/mobile-custody-2026-11-13/gui.log).
+The tests are registered in the normal fast and physics tiers. Full raw logs,
+including the build, remain on SSD under
+`/workspace/molar/robot_lab_runtime/mobile-custody-20261113/payload/`.
