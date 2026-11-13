@@ -110,6 +110,8 @@ def test_real_sensor_publisher_updates_both_costmaps_and_invalid_bounds_keep_gat
     sensors.node = SimpleNamespace(robot_bodies=3, mobile=state,
         mobile_tasks=SimpleNamespace(payload_body=3),
         get_logger=lambda: SimpleNamespace(error=lambda message, **kw: errors.append(message)))
+    from robot_lab_utils.footprint_receipts import FootprintReceipts
+    sensors.footprint_receipts=FootprintReceipts()
     sensors.footprints = [SimpleNamespace(publish=messages.append) for messages in emitted]
     sensors.footprint()
     assert all(len(messages)==1 for messages in emitted)

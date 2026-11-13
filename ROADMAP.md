@@ -133,7 +133,7 @@ Work top to bottom. Each line links to its task.
 | I4a | [R14.5](#r145--robot-status-markers-in-the-gui-selectors) Robot status markers | Done 2026-11-13: ● measured / ◐ experimental / ○ display only / ✕ unavailable plus mode letters in both robot lists, from recorded evidence | implemented |
 | I4b | [R6.8](#r68--real-world-area-import-from-a-globe) Real-world area import | Pick an area on a globe → elevation, buildings, vegetation, roads (+ people/traffic) as a world for all four simulators; reuse existing open-source tools (user request 2026-11-13) | queued |
 | I5 | [R5.11](#r511--drone-moving-obstacles-and-other-drone-backends) Drone moving obstacles | Moving-obstacle prediction, sensor-loss handling, other backends | not started |
-| I6 | [R5.9](#r59--mobile-manipulators) Mobile manipulation | Navigate → reach → grasp → transport → release pipeline in the GUI | partial |
+| I6 | [R5.9](#r59--mobile-manipulators) Mobile manipulation | Native Stretch local recipes/interlocks/costmap receipts implemented; global planning and further source adapters remain | partial |
 | I7 | [R5.7](#r57--manipulators-and-motion-planning) Arms | Pick/place with arbitrary objects, coupled mechanisms, other backends | partial |
 | I8 | [R5.8](#r58--robot-hands-and-grippers) Hands | Torque/tendon hand adapters, object workflows | partial |
 | I9 | [R10.2](#r102--fleet-management-and-open-rmf) Fleet / Open-RMF | Conflicts, infrastructure, larger fleets, calibrated energy | partial |
@@ -369,10 +369,10 @@ These are complete; preserve their scoped contracts. R1.3 follow-up CI passes at
   validation pending".
 - **Object custody extension (2026-11-13, Codex):** existing native Stretch sequencer now accepts explicit grasp/release checkpoints from the GUI. Uses actual free-object contacts, sustained opposing-finger forces, relative translational slip and environmental support; navigation after a grasp checkpoint monitors custody and stops on loss. [Implementation and limits](docs/status/mobile-custody-2026-11-13.md). This is an implemented candidate, not a measured pick/place mission.
 - **Payload footprint extension (2026-11-13, Codex):** measured collision-bound union includes the last confirmed payload and its fixed descendants in both costmap footprint topics. Transport waits for matching, fresh footprint publication; stale/invalid payload bounds stop native Drive and cancel active task navigation. This is producer-side implementation; costmap-consumption and physical transport acceptance remain pending.
+- **Local object pipeline (2026-11-13, Codex):** normal-GUI pick/place recipe buttons, object-relative/world reaches, coupled source-control IK, bounded private planning/collision worker, contact-gated gripper operations and retraction, retained provisional payload bounds and fresh shape receipts from both Nav2 costmaps. Installed `mobile_manipulation_lab` has two benches, a free 35 g cube and matching occupancy. [Guide](docs/tutorials/native-object-tasks.md). Forty-two focused checks and source FK/scene-attachment/widget checks pass; physical mission acceptance remains partial.
 - **Remaining implementation:**
-  - complete automatic reach/grasp planning and source-specific object pipelines;
-  - base/arm interlock: no base motion while the arm is out, as R11 does;
-  - costmap-consumption confirmation and carrying-footprint mission acceptance;
+  - global arm planning, additional grasp strategies, perception-bound object poses and further source-specific object pipelines;
+  - generalize the existing native interlock and measured footprint-consumption gate to other mobile-manipulator adapters;
   - Fetch, PR2 or TIAGo as a second source.
 - **How to do it:**
   1. Write the sequencer as a small state machine node in

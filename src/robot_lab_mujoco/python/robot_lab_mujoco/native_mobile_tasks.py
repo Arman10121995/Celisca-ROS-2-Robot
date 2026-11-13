@@ -10,6 +10,8 @@ import os
 from pathlib import Path
 import time
 import uuid
+import threading
+from types import SimpleNamespace
 
 import numpy as np
 from action_msgs.msg import GoalStatus
@@ -42,7 +44,9 @@ class NativeMobileTasks:
                 joint = node.model.body_jntadr[body]
                 if joint >= 0 and node.model.jnt_type[joint] == node.mujoco.mjtJoint.mjJNT_FREE:
                     self.object_candidates.append(name)
-        self.payload_body = None
+        self.reach_worker, self.reach_result = None, None
+        self.gripped_step, self.grip_lost_since = None, None
+        self.payload_body, self.gripped_body, self.payload_confirmed = None, None, False
         self.custody, self.object_outcome, self.object_measurement = None, 'unassessed', {}
         self.nav_guard_until, self.last_heartbeat = 0., -math.inf
         self.index, self.generation, self.task_id = 0, 0, ''
@@ -111,7 +115,7 @@ class NativeMobileTasks:
                     forces[side] += force
             if other not in sides[0] | sides[1] and force >= .1:
                 # Release needs support from the environment, not the robot palm/chassis.
-                if step['condition'] != 'released' or other == 0 or other >= self.node.robot_bodies:
+                if step.get('condition') != 'released' or other == 0 or other >= self.node.robot_bodies:
                     supported = True
         velocity = np.zeros(6)
         mj.mj_objectVelocity(model, data, mj.mjtObj.mjOBJ_BODY, obj, velocity, 0)
@@ -170,7 +174,7 @@ class NativeMobileTasks:
             steps = validate_task(request.get('task'), self.arm.source_sha256, self.scene_id,
                 self.arm.channels, self.node.get_parameter('native_task').value == 'nav')
             for step in steps:
-                if step['kind'] == 'object_check':
+                if step['kind'] in ('object_check','reach_object','grip','stow_arm'):
                     self.object_bodies(step)
             if any(step['kind'] == 'navigate' for step in steps) and not self.client.server_is_ready():
                 raise ValueError('The selected-world Nav2 action server is not ready.')
@@ -235,7 +239,67 @@ class NativeMobileTasks:
         response.success, response.message = True, 'Base stop and arm hold requested; Nav2 cancellation is asynchronous.'
         return response
 
+    def grasp_settling_mask(self):
+        mask = np.zeros(len(self.arm.channels),dtype=bool)
+        if not self.active() or self.gripped_step is None or self.gripped_body is None:
+            return mask
+        observation = self.measure_object(self.gripped_step)
+        if min(observation['left_force'],observation['right_force']) < .1:
+            return mask
+        measured = self.arm.measured_controls()
+        for index,channel in enumerate(self.arm.channels):
+            if channel['name'] in ('grip','gripper') and self.arm.target[index]<=measured[index]+.001:
+                mask[index] = True  # blocked by measured opposing object contacts
+        return mask
+
+    def begin_reach(self, step):
+        if self.reach_worker is not None and self.reach_worker.is_alive():
+            raise ValueError('Previous reach planner is still stopping; retry after its bounded deadline')
+        from robot_lab_mujoco.native_mobile_reach import plan_reach
+        snapshot = self.node.mujoco.MjData(self.node.model)
+        self.node.mujoco.mj_copyData(snapshot,self.node.model,self.node.data)
+        initial = self.arm.measured_controls().copy()
+        measured = initial.copy()
+        if self.payload_body is not None:
+            for i,c in enumerate(self.arm.channels):
+                if c['name'] in ('grip','gripper'):
+                    initial[i] = self.arm.target[i]  # preserve actual motor compression target
+        generation = self.generation
+        self.reach_result = None
+        node = SimpleNamespace(model=self.node.model,mujoco=self.node.mujoco)
+        channels = [dict(c) for c in self.arm.channels]
+        robot_bodies, robot_joints = self.node.robot_bodies, self.node.robot_joints
+        excluded, payload = list(self.mobile.joints), self.gripped_body
+        def work():
+            try:
+                result = plan_reach(node,snapshot,channels,initial,dict(step),robot_bodies,
+                                    robot_joints,excluded,payload)
+                result['start_measured'] = measured.tolist()
+                self.reach_result = (generation,result,'')
+            except Exception as exc:
+                self.reach_result = (generation,None,type(exc).__name__+': '+str(exc))
+        self.enter('planning_reach','Planning a bounded source-control reach on a private scene snapshot')
+        self.reach_worker = threading.Thread(target=work,daemon=True)
+        self.reach_worker.start()
+
+    def begin_grip(self, step):
+        indices = [i for i,c in enumerate(self.arm.channels) if c['name'] in ('grip','gripper')]
+        if len(indices)!=1:
+            raise ValueError('No unique reviewed source gripper control')
+        if step['operation']=='open':
+            self.gripped_body, self.custody, self.payload_confirmed, self.gripped_step = None, None, False, None
+        self.grip_index = indices[0]
+        channel = self.arm.channels[self.grip_index]
+        self.arm.target = self.arm.measured_controls().copy()
+        self.arm.target[self.grip_index] = channel['limits'][1 if step['operation']=='open' else 0]
+        self.arm.status = 'jogging'
+        self.grip_since = None
+        self.enter('gripping','Waiting for measured source gripper opening/contact')
+
     def begin_navigation(self, step):
+        if self.payload_body is not None and not self.payload_confirmed:
+            self.cancel('A measured grasp checkpoint is required before transport.',failed=True)
+            return
         if not self.mobile.payload_footprint_ready():
             self.cancel('Wait for fresh measured payload footprint before navigation.', failed=True)
             return
@@ -332,7 +396,12 @@ class NativeMobileTasks:
                             if self.mobile.payload_footprint_ready():
                                 self.begin_navigation(step)
                             else:
-                                self.state['reason'] = 'Waiting for fresh measured payload footprint publication'
+                                self.state['reason'] = 'Waiting for measured grasp and fresh footprint receipts from both costmaps'
+                        elif step['kind'] in ('reach_object','grip','stow_arm'):
+                            try:
+                                self.begin_reach(step) if step['kind'] in ('reach_object','stow_arm') else self.begin_grip(step)
+                            except (ValueError,TypeError,KeyError) as exc:
+                                self.cancel(str(exc),failed=True)
                         elif step['kind'] == 'object_check':
                             self.object_gate = ObjectCustody()
                             if step['condition'] == 'released':
@@ -346,12 +415,62 @@ class NativeMobileTasks:
                                 self.enter('articulating', 'Replaying source-matched taught configurations with stopped base')
                             except (ValueError, TypeError, KeyError) as exc:
                                 self.cancel(str(exc), failed=True)
+                elif phase == 'planning_reach':
+                    self.halt_base()
+                    if self.reach_result is not None:
+                        generation, result, error = self.reach_result
+                        self.reach_result = None
+                        if generation != self.generation or error:
+                            self.cancel(error or 'Reach planning generation changed',failed=True)
+                        else:
+                            obj,_ = self.object_bodies(step)
+                            span = np.array([c['limits'][1]-c['limits'][0] for c in self.arm.channels])
+                            drift = np.abs(self.arm.measured_controls()-result['start_measured'])
+                            if (self.mobile.moving() or np.any(drift>np.maximum(.002,.01*span))
+                                    or np.linalg.norm(self.node.data.xpos[obj]-result['object_position'])>.01
+                                    or abs(float(np.dot(self.node.data.xquat[obj],result['object_quaternion']))) < .999):
+                                self.cancel('Robot/object moved during reach planning; request a fresh task',failed=True)
+                            else:
+                                self.sequence_id = self.task_id+'.'+str(self.index)
+                                try:
+                                    self.record(reach_plan=result)
+                                    self.arm.start_sequence(dict(source_sha256=self.arm.source_sha256,
+                                        sequence_id=self.sequence_id,waypoints=result['waypoints']))
+                                    self.enter('articulating','Executing collision-inspected source-control reach')
+                                except (ValueError,TypeError,KeyError) as exc:
+                                    self.cancel(str(exc),failed=True)
+                elif phase == 'gripping':
+                    self.halt_base()
+                    observation = self.measure_object(step)
+                    self.object_measurement = observation
+                    if step['operation']=='close':
+                        ready = min(observation['left_force'],observation['right_force'])>=.1
+                    else:
+                        ready = (abs(self.arm.measured_controls()[self.grip_index]-self.arm.target[self.grip_index])<=.002
+                                 and abs(self.arm.measured_rates()[self.grip_index])<=.005
+                                 and max(observation['left_force'],observation['right_force'])<.1)
+                    if self.mobile.moving():
+                        self.cancel('Base moved during gripper operation',failed=True)
+                    elif not ready:
+                        self.grip_since = None
+                    elif self.grip_since is None:
+                        self.grip_since = self.node.data.time
+                    elif self.node.data.time-self.grip_since>=.5:
+                        if step['operation']=='close':
+                            self.payload_body = self.gripped_body = self.object_bodies(step)[0]
+                            self.gripped_step, self.grip_lost_since = dict(step), None
+                            self.payload_confirmed = False
+                        self.record(gripper_operation=step['operation'],object_observation=observation)
+                        self.advance()
                 elif phase == 'checking_object':
                     self.halt_base()
                     measurement = self.measure_object(step)
                     self.object_measurement = measurement
                     if self.object_gate.observe(**measurement, released=step['condition']=='released'):
                         self.payload_body = (self.object_bodies(step)[0] if step['condition']=='grasped' else None)
+                        self.gripped_body = self.payload_body
+                        self.gripped_step = dict(step) if self.payload_body is not None else None
+                        self.payload_confirmed = step['condition']=='grasped'
                         self.object_outcome = step['condition']
                         self.record(object_observation=measurement, object_condition=self.object_outcome)
                         self.custody = (dict(step=step, relative=measurement['relative'], lost_since=None)
@@ -375,6 +494,16 @@ class NativeMobileTasks:
                         self.advance()
                     elif feedback['state'] != 'executing':
                         self.cancel('Articulation interrupted: '+feedback.get('reason', ''), failed=True)
+        if (self.active() and self.gripped_step is not None and self.gripped_body is not None
+                and self.steps[self.index]['kind'] in ('reach_object','stow_arm')):
+            observation = self.measure_object(self.gripped_step)
+            if min(observation['left_force'],observation['right_force'])>=.1:
+                self.grip_lost_since = None
+            elif self.grip_lost_since is None:
+                self.grip_lost_since = observation['stamp']
+            elif observation['stamp']-self.grip_lost_since>=.25:
+                self.gripped_body, self.payload_confirmed = None, False
+                self.cancel('Opposing object contacts lost during generated reach',failed=True)
         if (self.active() and self.custody is not None
                 and self.steps[self.index]['kind'] == 'navigate'):
             observed = self.measure_object(self.custody['step'])
@@ -386,6 +515,7 @@ class NativeMobileTasks:
             elif self.custody['lost_since'] is None:
                 self.custody['lost_since'] = observed['stamp']
             elif observed['stamp']-self.custody['lost_since'] >= .25:
+                self.gripped_body, self.payload_confirmed = None, False
                 self.object_outcome = 'custody_lost'
                 self.record(object_observation=observed, object_condition=self.object_outcome)
                 self.cancel('Measured object support/contact/slip changed during carry', failed=True)
@@ -396,6 +526,7 @@ class NativeMobileTasks:
             object_candidates=self.object_candidates, finger_candidates=self.finger_candidates,
             payload_name=(self.node.mujoco.mj_id2name(self.node.model, self.node.mujoco.mjtObj.mjOBJ_BODY, self.payload_body)
                           if self.payload_body is not None else ''),
-            payload_body=self.payload_body, payload_footprint_ready=self.mobile.payload_footprint_ready(),
+            costmap_footprint_consumers=sorted(self.node.sensors.footprint_receipts.received),
+            payload_body=self.payload_body, payload_confirmed=self.payload_confirmed, payload_footprint_ready=self.mobile.payload_footprint_ready(),
             journal=str(self.event_path) if self.event_path else '', object_outcome=self.object_outcome, object_measurement=self.object_measurement,
             qualification='implemented candidate; physical task validation pending'))))

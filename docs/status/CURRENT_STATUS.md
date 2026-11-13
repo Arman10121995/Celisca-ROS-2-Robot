@@ -1,5 +1,7 @@
 # Current Robot Lab status
 
+November 13 Codex: [Stretch local pick/place implementation](../tutorials/native-object-tasks.md) adds source-control IK, private collision planning, contact-gated grip/stow steps, GUI recipe generation, a normal free-object bench map and actual Nav2 footprint receipts. 42 focused checks, both installed-source FK/scene attachment and GUI builder smoke pass; three packages build. No completed loaded-manipulation mission is claimed. Claude retains the drone/import lane.
+
 November 13 Codex: native Stretch mobile-task object checkpoints and carry-loss monitoring are implemented as a candidate; [scope and usage](mobile-custody-2026-11-13.md). Physical grasp/transport/release acceptance remains pending. Claude retains the aerial/import lane.
 November 13 Codex continuation: payload geometry is now included in both native Stretch costmap footprint publications, with a matching/freshness transport interlock. 26 focused tests, an installed GUI smoke and three package builds pass. Publication is not a Nav2-consumption receipt; physical loaded navigation remains pending.
 

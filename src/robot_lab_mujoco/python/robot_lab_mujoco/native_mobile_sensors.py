@@ -8,7 +8,7 @@ They do not establish independent state-estimator accuracy.
 import math
 
 import numpy as np
-from geometry_msgs.msg import Point32, Polygon, TransformStamped
+from geometry_msgs.msg import Point32, Polygon, PolygonStamped, TransformStamped
 from nav_msgs.msg import Odometry
 from rclpy.qos import DurabilityPolicy, QoSProfile, qos_profile_sensor_data
 from sensor_msgs.msg import CameraInfo, Image, Imu, LaserScan
@@ -39,6 +39,11 @@ class NativeMobileSensors:
             QoSProfile(depth=1, durability=DurabilityPolicy.TRANSIENT_LOCAL))
         self.footprints = [node.create_publisher(Polygon, topic, 10) for topic in
                           ('/local_costmap/footprint', '/global_costmap/footprint')]
+        from robot_lab_utils.footprint_receipts import FootprintReceipts
+        self.footprint_receipts = FootprintReceipts(padding=.01)
+        for consumer in ('local','global'):
+            node.create_subscription(PolygonStamped,'/'+consumer+'_costmap/published_footprint',
+                lambda message,name=consumer:self.receive_footprint(name,message),10)
         self.last_scan, self.last_camera, self.last_footprint = -math.inf, -math.inf, -math.inf
         self.scan_count, self.camera_count = 0, 0
         self.width, self.height = 320, 240
@@ -46,6 +51,11 @@ class NativeMobileSensors:
         self.camera_error = ''
         angles = np.linspace(-math.pi, math.pi, 360, endpoint=False)
         self.directions = np.stack((np.cos(angles), np.sin(angles), np.zeros(360)), axis=1)
+
+    def receive_footprint(self,consumer,message):
+        stamp=message.header.stamp.sec+message.header.stamp.nanosec*1e-9
+        self.footprint_receipts.observe(consumer,message.header.frame_id,stamp,
+            [[p.x,p.y] for p in message.polygon.points],float(self.data.time))
 
     def static_mounts(self, stamp):
         laser = TransformStamped()
@@ -146,6 +156,7 @@ class NativeMobileSensors:
         try:
             points = collision_footprint(self.model, self.data, self.base,
                                          self.node.robot_bodies, payload)
+            self.footprint_receipts.expect(points,float(self.data.time),payload)
             polygon = Polygon(points=[Point32(x=x, y=y, z=0.) for x, y in points])
             for publisher in self.footprints:
                 publisher.publish(polygon)

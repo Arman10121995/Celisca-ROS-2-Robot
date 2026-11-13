@@ -1,0 +1,47 @@
+{
+  "id": "mobile_manipulation_lab",
+  "revision": "5c7415cbdca1a713d6daf9881acbd7f8bf3e3320976c7886d3be263372a952ac",
+  "world": "/workspace/molar/robot_lab_runtime/external_assets/worlds/mobile_manipulation_lab/5c7415cbdca1a713d6daf9881acbd7f8bf3e3320976c7886d3be263372a952ac",
+  "benches": [
+    [
+      "pickup_bench",
+      [
+        0.0,
+        -0.62,
+        0.25
+      ],
+      [
+        0.5,
+        0.32,
+        0.5
+      ]
+    ],
+    [
+      "delivery_bench",
+      [
+        1.2,
+        -0.62,
+        0.25
+      ],
+      [
+        0.5,
+        0.32,
+        0.5
+      ]
+    ]
+  ],
+  "free_object": [
+    "pickup_cube",
+    [
+      0.0,
+      -0.62,
+      0.515
+    ],
+    [
+      0.03,
+      0.03,
+      0.03
+    ]
+  ],
+  "qualification": "Installed implementation fixture; no robot mission receipt"
+}

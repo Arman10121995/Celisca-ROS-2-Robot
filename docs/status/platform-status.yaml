@@ -4043,7 +4043,7 @@ tasks:
         title: Robot hand and gripper actuation
       R5.9:
         acceptance_ref: ROADMAP.md
-        active_scope: '2026-11-13 Codex owns object custody checkpoints, carry-loss monitoring and native Stretch payload-footprint publication/interlock in mobile_task.py, native_mobile_tasks.py, native_mobile_control.py, native_mobile_sensors.py and mobile_task_controls.py; Claude retains drone/import work. Preserve existing sequencer. Historical 2026-10-09 scope: implement coordinated selected-map
+        active_scope: '2026-11-13 Codex owns source-matched automatic reach/grip task planning, object custody checkpoints, carry-loss monitoring and native Stretch payload-footprint publication/interlock in mobile_task.py, native_mobile_tasks.py, native_mobile_control.py, native_mobile_sensors.py and mobile_task_controls.py; Claude retains drone/import work. Preserve existing sequencer. Historical 2026-10-09 scope: implement coordinated selected-map
           Nav2 goals and source-matched taught arm/hand sequences for both native
           Stretch variants, with measured settling, explicit task ownership, manual
           intervention, cancellation and heartbeat loss. Initial implementation precedes
@@ -4062,12 +4062,15 @@ tasks:
           for October 9 candidates.
         object_custody_20261113: 'Codex: GUI grasp/release checkpoints and native force/support/slip observations implemented; carry-loss monitoring on navigation legs. Focused checks only; physical mission pending. See docs/status/mobile-custody-2026-11-13.md.'
         payload_footprint_20261113: 'Codex: measured robot/payload collision-bound union, retained after task interruption, published to both Nav2 costmaps; matching/freshness interlock on Drive/task navigation. 26 focused tests and installed GUI smoke pass; three packages build. Costmap consumption and physical carry mission pending. See docs/status/mobile-custody-2026-11-13.md.'
+        local_pick_place_20261113: 'Codex: source-actuator/tendon/mimic FK/IK, private sampled collision worker, source-matched reach/grip/stow task steps, contact-blocked gripper settling only, GUI pick/place recipes, installed bench/cube map, actual Nav2 shape receipts. 42 focused checks, both source FK/scene-attachment diagnostics and GUI builder smoke pass; physical mission remains unqualified. Guide: docs/tutorials/native-object-tasks.md.'
         next_action: Extend source-specific Fetch/PR2/TIAGo and other backend adapters,
           full arm planning and object/grasp mission contracts. Validate native Stretch
           coordinated tasks, sensors, dynamic footprint, saved/reloaded mapping and
           obstacle Nav2 after initial implementation.
         owner: codex
         scope_paths:
+        - scripts/provision_mobile_manipulation_scene.py
+        - src/robot_lab_utils/robot_lab_utils/mobile_manipulation_scene.py
         - src/robot_lab_robots/
         - src/robot_lab_navigation/
         - src/robot_lab_gui/

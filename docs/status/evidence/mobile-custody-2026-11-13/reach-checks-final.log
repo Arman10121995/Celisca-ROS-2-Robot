@@ -1,0 +1,14 @@
+..........................................                               [100%]
+=============================== warnings summary ===============================
+src/robot_lab_bringup/test/test_native_payload_footprint.py::test_payload_union_encloses_whole_compound_object_and_excludes_world
+src/robot_lab_bringup/test/test_native_payload_footprint.py::test_payload_union_encloses_whole_compound_object_and_excludes_world
+src/robot_lab_bringup/test/test_native_payload_footprint.py::test_footprint_changes_with_actual_arm_and_payload_pose
+src/robot_lab_bringup/test/test_native_payload_footprint.py::test_footprint_changes_with_actual_arm_and_payload_pose
+src/robot_lab_bringup/test/test_native_payload_footprint.py::test_translation_and_yaw_do_not_change_base_local_bounds
+src/robot_lab_bringup/test/test_native_payload_footprint.py::test_translation_and_yaw_do_not_change_base_local_bounds
+src/robot_lab_bringup/test/test_native_payload_footprint.py::test_real_sensor_publisher_updates_both_costmaps_and_invalid_bounds_keep_gate_closed
+  /workspace/molar/robot_lab_runtime/python_deps/geometry/shapely/decorators.py:173: DeprecationWarning: The 'resolution' argument is deprecated. Use 'quad_segs' instead
+    result = func(*args, **kwargs)
+
+-- Docs: https://docs.pytest.org/en/stable/warnings.html
+42 passed, 7 warnings in 1.59s

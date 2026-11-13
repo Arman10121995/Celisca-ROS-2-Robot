@@ -101,3 +101,33 @@ verification, not a physical grasp or Nav2 mission receipt.
 The tests are registered in the normal fast and physics tiers. Full raw logs,
 including the build, remain on SSD under
 `/workspace/molar/robot_lab_runtime/mobile-custody-20261113/payload/`.
+
+## Local object pipeline continuation
+
+The [GUI object-task guide](../tutorials/native-object-tasks.md) describes the
+new source-control reach/grip/retraction steps and recipe buttons. This
+supersedes the earlier missing local automatic-reach and consumer-receipt
+implementation notes above, not their historical measurement scope.
+
+[42 focused tests](evidence/mobile-custody-2026-11-13/reach-checks-final.log),
+[both original source FK diagnostics](evidence/mobile-custody-2026-11-13/reach-source-fk.log),
+[actual bench-scene attachment/home poses](evidence/mobile-custody-2026-11-13/reach-attached-scene.log),
+[widget-only recipe check](evidence/mobile-custody-2026-11-13/reach-gui.log) and
+[installed scene receipt](evidence/mobile-custody-2026-11-13/reach-scene-provision.json)
+are retained. Three packages build successfully. The first expanded check run
+had 41 passes and one stow-fixture failure: overlapping fictitious telescope
+sphere bounds correctly triggered collision rejection. The fixture spacing
+was corrected; the collision guard/thresholds were unchanged. The first map
+schema probe used the plural type name and then exposed an unsupported robot
+class label; corrected to the actual environment API and mobile/manipulator/
+hybrid schema classes before acceptance. Negative logs remain on SSD.
+
+The fixture is separate, declared MIT lab apparatus. Native objects are
+free, source wheel/arm actuators are unchanged, and both Stretch models retain
+the authored cube pose after real MjSpec scene attachment/home reset. This is
+not yet a measured pick/place or loaded Nav2 mission. Remaining implementation
+and later acceptance stay in ROADMAP R5.9/R5.7.
+
+Source equality reference: [MuJoCo joint equality constraints](https://mujoco.readthedocs.io/en/stable/computation.html#equality).
+The predictor uses the source reference-pose offsets and linear polynomial;
+nonlinear/closed-loop constraints need separate reviewed adapters.

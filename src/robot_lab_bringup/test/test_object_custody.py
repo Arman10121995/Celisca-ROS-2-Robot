@@ -51,3 +51,14 @@ def test_task_body_names_and_conditions_are_explicit_and_distinct():
     step['right_body'] = 'finger_l'
     with pytest.raises(ValueError, match='distinct'):
         validate_task(document, 'source', 'scene', [], False)
+
+
+def test_native_object_recipe_steps_validate_bounds_and_gripper_operation():
+    common=dict(object='cube',left_body='finger_l',right_body='finger_r')
+    steps=[dict(kind='reach_object',offset=[0.,0.,.1],**common),
+           dict(kind='grip',operation='close',**common),dict(kind='stow_arm',**common)]
+    document=dict(schema=SCHEMA,source_sha256='source',scene_id='scene',steps=steps)
+    assert len(validate_task(document,'source','scene',[],False))==3
+    steps[0]['offset']=[float('nan'),0.,0.]
+    with pytest.raises(ValueError,match='finite'):
+        validate_task(document,'source','scene',[],False)

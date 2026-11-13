@@ -71,6 +71,31 @@ class MobileTaskControls(ttk.LabelFrame):
                   'A grasp checkpoint enables contact/slip monitoring and adds the object collision bounds to the navigation footprint.',
                   wraplength=305).grid(row=15, column=0, columnspan=2, sticky='w')
 
+        self.reach_offset = [tk.DoubleVar(value=0.) for _ in range(3)]
+        self.place_target = [tk.DoubleVar(value=v) for v in (0.,0.,.5)]
+        for row, (label, values) in enumerate((('Object offset XYZ (m)',self.reach_offset),
+                                               ('Place XYZ · native world',self.place_target)),16):
+            line = ttk.Frame(self)
+            line.grid(row=row,column=0,columnspan=2,sticky='ew')
+            ttk.Label(line,text=label).pack(anchor='w')
+            fields = ttk.Frame(line);fields.pack(fill='x')
+            for variable in values:
+                ttk.Entry(fields,textvariable=variable,width=8).pack(side='left',expand=True,fill='x')
+        for row,column,name,title,callback in (
+                (18,0,'reach','Add object reach',self.add_reach),
+                (18,1,'stow','Add arm retraction',lambda:self.add_native_step('stow_arm')),
+                (19,0,'open','Add gripper open',lambda:self.add_native_step('grip',operation='open')),
+                (19,1,'close','Add contact close',lambda:self.add_native_step('grip',operation='close')),
+                (20,0,'pick','Add local pick recipe',self.add_pick),
+                (20,1,'place','Add local place recipe',self.add_place)):
+            button=ttk.Button(self,text=title,command=callback)
+            button.grid(row=row,column=column,sticky='ew',padx=2,pady=2)
+            self.buttons['object_'+name]=button
+        ttk.Label(self,text='Recipes add steps only; Run task starts motion. Reach is local source-model IK '
+                  'with sampled collision checks, not a global arm planner. Reposition the base for an unreachable target. '
+                  'Place coordinates use native_world metres. Grasp outcomes require measured checkpoints.',
+                  wraplength=305).grid(row=21,column=0,columnspan=2,sticky='w')
+
     def add_object_check(self, condition):
         if not self.editable() or len(self.steps) >= 32:
             return
@@ -84,6 +109,57 @@ class MobileTaskControls(ttk.LabelFrame):
             self.steps.append(step)
             self.refresh()
         except (ValueError, TypeError, KeyError) as exc:
+            self.status.set(str(exc))
+
+    def object_step(self, kind, **values):
+        return dict(kind=kind,name=kind.replace('_',' '),
+                    **{key:var.get().strip() for key,var in self.object_fields.items()},**values)
+
+    def add_native_steps(self, steps):
+        if not self.editable():
+            return
+        try:
+            document=self.document()
+            document['steps']=[*document['steps'],*steps]
+            validate_task(document,self.state['source_sha256'],self.state['scene_id'],
+                          self.control.state['channels'],self.state.get('navigation_available',False))
+            self.steps.extend(steps)
+            self.refresh()
+            self.status.set('Added local recipe steps; inspect destinations, then Run task.')
+        except (ValueError,TypeError,KeyError,tk.TclError) as exc:
+            self.status.set(str(exc))
+
+    def add_native_step(self, kind, **values):
+        self.add_native_steps([self.object_step(kind,**values)])
+
+    def add_reach(self):
+        try:
+            offset=[float(v.get()) for v in self.reach_offset]
+            self.add_native_step('reach_object',offset=offset)
+        except (ValueError,tk.TclError) as exc:
+            self.status.set(str(exc))
+
+    def add_pick(self):
+        self.add_native_steps([
+            self.object_step('grip',operation='open'),
+            self.object_step('reach_object',offset=[0.,0.,.08]),
+            self.object_step('reach_object',offset=[0.,0.,0.]),
+            self.object_step('grip',operation='close'),
+            self.object_step('reach_object',offset=[0.,0.,.10]),
+            self.object_step('object_check',condition='grasped'),
+            self.object_step('stow_arm')])
+
+    def add_place(self):
+        try:
+            xyz=[float(v.get()) for v in self.place_target]
+            self.add_native_steps([
+                self.object_step('reach_object',target_xyz=[xyz[0],xyz[1],xyz[2]+.08]),
+                self.object_step('reach_object',target_xyz=xyz),
+                self.object_step('grip',operation='open'),
+                self.object_step('object_check',condition='released'),
+                self.object_step('reach_object',target_xyz=[xyz[0],xyz[1],xyz[2]+.10]),
+                self.object_step('stow_arm')])
+        except (ValueError,tk.TclError) as exc:
             self.status.set(str(exc))
 
     def selected(self):
@@ -232,7 +308,9 @@ class MobileTaskControls(ttk.LabelFrame):
                 values = self.state.get('object_candidates' if name=='object' else 'finger_candidates', [])
                 choice.configure(values=values)
                 if self.object_fields[name].get() not in values:
-                    self.object_fields[name].set(values[0] if name=='object' and values else '')
+                    default = {'left_body':'rubber_tip_left','right_body':'rubber_tip_right'}.get(name)
+                    self.object_fields[name].set(default if default in values else
+                        (values[0] if name=='object' and values else ''))
             key = (self.state['source_sha256'], self.state['scene_id'])
             if key != self.key:
                 self.key = key
@@ -247,7 +325,7 @@ class MobileTaskControls(ttk.LabelFrame):
                     (' · payload: '+self.state['payload_name'] if self.state.get('payload_name') else ''))
         for name, button in self.buttons.items():
             enabled = self.ready() if name in ('stop', 'current') else self.editable()
-            if name.startswith('check_'):
+            if name.startswith(('check_','object_')):
                 enabled = enabled and bool(self.state.get('object_candidates'))
             if name == 'navigate':
                 enabled = enabled and self.state.get('navigation_available')

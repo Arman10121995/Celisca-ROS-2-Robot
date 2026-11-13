@@ -1,5 +1,7 @@
 # Native walking, joint and Cartesian controls
 
+November 13 adds [local Stretch object tasks](native-object-tasks.md): source-control reach planning, contact-gated gripper operations, pick/place recipe buttons, a free-object bench map and Nav2 payload footprint receipts. Implemented experimental; complete physical transport acceptance remains pending.
+
 October 14 adds [collision-aware native fixed arm planning](native-arm-planning.md)
 to 13 compatible profiles. Enable **Native arm planning: MoveIt** before Run;
 the GUI selects the native trajectory controller and algorithms together.

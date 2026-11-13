@@ -56,6 +56,7 @@ class NativeStretchControl:
         self.dofs = self.model.jnt_dofadr[self.joints]
         self.footprint_time, self.footprint_payload = -float('inf'), None
         self.footprint_points, self.footprint_error = [], ''
+        self.footprint_ack_required = node.get_parameter('native_task').value=='nav'
         self.received = -float('inf')
         self.command = np.zeros(2)
         self.ramped = np.zeros(2)
@@ -82,7 +83,11 @@ class NativeStretchControl:
     def payload_footprint_ready(self):
         tasks = self.node.mobile_tasks
         payload = tasks.payload_body if tasks else None
-        return payload is None or (not self.footprint_error and self.footprint_payload == payload
+        if payload is None:
+            return True
+        ack = (not getattr(self,'footprint_ack_required',False)
+               or self.node.sensors.footprint_receipts.ready(float(self.data.time)))
+        return payload is None or (getattr(tasks,'payload_confirmed',True) and ack and not self.footprint_error and self.footprint_payload == payload
             and 0 <= float(self.data.time)-self.footprint_time <= .75)
 
     def receive(self, message, task_command=False):

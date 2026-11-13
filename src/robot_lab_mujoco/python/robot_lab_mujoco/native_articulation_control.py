@@ -213,7 +213,11 @@ class NativeArticulationControl:
             if channel['units'] in ('rad', 'm') else .005*span[index]
             for index, channel in enumerate(self.channels)])
         rates = np.asarray([channel['max_rate'] for channel in self.channels])
-        settled = (np.all(np.abs(self.measured_controls()-self.target) <= tolerances)
+        position_ok = np.abs(self.measured_controls()-self.target) <= tolerances
+        tasks = getattr(self.node,'mobile_tasks',None)
+        if tasks:
+            position_ok |= tasks.grasp_settling_mask()
+        settled = (np.all(position_ok)
             and np.all(np.abs(self.measured_rates()) <= .05*rates)
             and np.all(np.abs(self.commanded-self.target) <= tolerances))
         if not settled:

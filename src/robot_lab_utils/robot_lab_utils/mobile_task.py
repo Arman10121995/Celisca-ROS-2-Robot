@@ -50,8 +50,8 @@ def validate_task(document, source_sha256, scene_id, channels, allow_navigation)
                     if not math.isfinite(value) or not known[name]['limits'][0] <= value <= known[name]['limits'][1]:
                         raise ValueError('Taught target exceeds source bounds: '+name)
                     point['targets'][name] = value
-        elif step.get('kind') == 'object_check':
-            if step.get('condition') not in ('grasped', 'released'):
+        elif step.get('kind') in ('object_check', 'reach_object', 'grip', 'stow_arm'):
+            if step['kind']=='object_check' and step.get('condition') not in ('grasped', 'released'):
                 raise ValueError('Object condition must be grasped or released.')
             for key in ('object', 'left_body', 'right_body'):
                 value = step.get(key)
@@ -59,7 +59,25 @@ def validate_task(document, source_sha256, scene_id, channels, allow_navigation)
                     raise ValueError('Choose an exact model body name for '+key)
             if len({step[key] for key in ('object', 'left_body', 'right_body')}) != 3:
                 raise ValueError('Object and opposing gripper bodies must be distinct.')
+            if step['kind']=='reach_object':
+                offset = step.get('offset', [0., 0., 0.])
+                if not isinstance(offset, list) or len(offset)!=3:
+                    raise ValueError('Reach offset must be native-world XYZ metres')
+                offset = list(map(float, offset))
+                if not all(map(math.isfinite, offset)) or max(map(abs, offset)) > .5:
+                    raise ValueError('Reach offsets must be finite and within 0.5 m')
+                step['offset'] = offset
+                if 'target_xyz' in step:
+                    target = step['target_xyz']
+                    if not isinstance(target,list) or len(target)!=3:
+                        raise ValueError('World reach target must be XYZ metres')
+                    target = list(map(float,target))
+                    if not all(map(math.isfinite,target)) or max(map(abs,target)) > 10000:
+                        raise ValueError('Finite bounded world reach target required')
+                    step['target_xyz'] = target
+            if step['kind']=='grip' and step.get('operation') not in ('open', 'close'):
+                raise ValueError('Gripper operation must be open or close')
         else:
-            raise ValueError('Implemented steps are navigate, articulate and object_check.')
+            raise ValueError('Implemented steps are navigate, articulate, object_check, reach_object, grip and stow_arm.')
         output.append(step)
     return output
