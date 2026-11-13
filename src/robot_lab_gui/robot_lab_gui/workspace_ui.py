@@ -306,3 +306,23 @@ def build_navigation(app):
     refresh_controls()
     if hasattr(app, 'home_tab'): app.notebook.select(app.home_tab)
     refresh()
+
+
+def focused_widget(widget):
+    """``widget.focus_get()`` that tolerates Tk-internal windows.
+
+    Tkinter's focus_get raises KeyError while a ttk.Combobox list is open (its
+    popdown is not a Python widget), which broke every focus-loss stop check.
+    Returns the combobox owning an open list, the focused widget, or None when
+    the application has no focus.
+    """
+    name = str(widget.tk.call('focus'))
+    if not name:
+        return None
+    try:
+        return widget.nametowidget(name)
+    except KeyError:
+        try:
+            return widget.nametowidget(name.split('.popdown')[0])
+        except KeyError:
+            return widget          # another Tk-internal window: the application still has focus

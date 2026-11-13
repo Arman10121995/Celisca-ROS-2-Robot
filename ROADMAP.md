@@ -130,7 +130,7 @@ Work top to bottom. Each line links to its task.
 | I2 | [R13.3](#r133--vacuum-camera-obstacle-recognition) Vacuum camera obstacles | Initial implementation complete, including trained experimental checkpoint; recognition quality and robot mission pending | partial |
 | I3 | [R14.1](#r141--open-source-counterparts-for-self-made-robots) Open-source robots | Initial source-search/integration pass complete: TurtleBot4, WAM-V, Summit-STEEL and source octopod measured; BlueROV2 remains a restricted local candidate. Remaining licensing/mission qualification recorded separately | implemented; acceptance partial |
 | I4 | [R6.7](#r67--terrain-generation-gui-and-four-backend-conversion) Terrain GUI | Done 2026-11-13: Worlds → Terrain page, procedural/raster sources with manifest, support height measured on all four (Isaac included) | implemented |
-| I4a | [R14.5](#r145--robot-status-markers-in-the-gui-selectors) Robot status markers | Mark every robot in the selectors as working / experimental / display-only and by mode (user request 2026-11-13) | active |
+| I4a | [R14.5](#r145--robot-status-markers-in-the-gui-selectors) Robot status markers | Done 2026-11-13: ● measured / ◐ experimental / ○ display only / ✕ unavailable plus mode letters in both robot lists, from recorded evidence | implemented |
 | I4b | [R6.8](#r68--real-world-area-import-from-a-globe) Real-world area import | Pick an area on a globe → elevation, buildings, vegetation, roads (+ people/traffic) as a world for all four simulators; reuse existing open-source tools (user request 2026-11-13) | queued |
 | I5 | [R5.11](#r511--drone-moving-obstacles-and-other-drone-backends) Drone moving obstacles | Moving-obstacle prediction, sensor-loss handling, other backends | not started |
 | I6 | [R5.9](#r59--mobile-manipulators) Mobile manipulation | Navigate → reach → grasp → transport → release pipeline in the GUI | partial |
@@ -992,15 +992,20 @@ These are complete; preserve their scoped contracts. R1.3 follow-up CI passes at
 
 ### R14.5 — Robot status markers in the GUI selectors
 
-- **State:** active (2026-11-13, user request) · **Priority:** I4a · **Owner:** claude
+- **State:** implemented (2026-11-13, user request) · **Priority:** I4a · **Owner:** claude
 - **Goal:** the robot drop-down lists show, at a glance, whether a robot works (measured), works only in
   experimental mode, or is display-only, and in which modes.
-- **Have:** profile fields `supported_modes`, `experimental_modes_by_simulator`, `implementation_state`,
-  `validation_state`, `drive_in_display`; `mode_capability` feature gates; asset families/variants.
-- **Remaining implementation:** one shared status classifier, symbols in the family/variant drop-downs, a
-  legend, and a tooltip/detail line listing modes per simulator.
-- **Done when:** every robot entry in the selectors carries a status symbol and its modes, derived from the
-  profiles (never hand-written), with a visible legend.
+- **Have:** `robot_lab_utils/robot_status.py` classifies each robot per selected simulator from recorded
+  evidence only (newest generated support matrix, `asset-runtime-support.yaml`, profile `measured_screens`)
+  and the profile's modes/controls. `robot_lab_gui/status_markers.py` decorates the family and variant
+  popdown rows (symbol, colour, mode letters; values stay exact IDs); a status line and legend sit under
+  the selectors. `measured_screens` added for measurements after the last matrix (lab amphibious/snake/USV/
+  tracked, WAM-V, BlueROV2, Summit-STEEL, octopod, TurtleBot 4 Lite cleaning, myAGV Pro variants and Pro630).
+  Tkinter `focus_get` crashed every focus-loss stop check while a list was open; `workspace_ui.focused_widget` fixes it.
+  [Guide](docs/tutorials/gui-quickstart.md#read-a-robots-status-in-the-lists).
+- **Remaining implementation:** none. Regenerate the support matrix (`scripts/r9_3_support_matrix.py`) to fold
+  `measured_screens` into it when the evidence index is next refreshed.
+- **Done when:** met.
 
 ### Stabilization patches (P1–P8)
 

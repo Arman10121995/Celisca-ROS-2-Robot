@@ -1,4 +1,5 @@
 """Native ROV controls in the Launch control column, with neutral input enable."""
+from .workspace_ui import focused_widget
 import json
 import math
 import time
@@ -158,12 +159,12 @@ class MarineControls(ttk.Frame):
         self.sync()
 
     def _focus_check(self):
-        if not self.closed and self.focus_get() is None:self.stop()
+        if not self.closed and focused_widget(self) is None:self.stop()
 
     def active_keys(self):
         return (self.keyboard.get() and self.selected() and self.app.notebook.select()==str(self.app.launch_tab)
                 and self.app.control_notebook.select()==str(self)
-                and not isinstance(self.focus_get(),(tk.Entry,ttk.Entry,tk.Text,ttk.Combobox)))
+                and not isinstance(focused_widget(self),(tk.Entry,ttk.Entry,tk.Text,ttk.Combobox)))
 
     def key_press(self,event):
         key=event.keysym.lower()

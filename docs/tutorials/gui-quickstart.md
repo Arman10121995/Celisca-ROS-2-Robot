@@ -48,6 +48,31 @@ The header shows:
 - **Logs**, which reveals the shared console.
 - **Stop motion.**
 
+## Read a robot's status in the lists
+
+Every row of **Robot family** and **Model / source variant** carries a mark
+for the simulator you chose, and the line under the selectors explains it:
+
+| Mark | Meaning |
+|---|---|
+| ● green | **measured**: at least one recorded screen or mission passed on this simulator |
+| ◐ amber | **experimental**: it runs and can be controlled here, but nothing on this simulator is measured yet |
+| ○ grey | **display only**: it loads and shows itself; no controller |
+| ✕ red | not available on this simulator (pick another simulator to use it) |
+
+The letters after the name are its modes on this simulator: **D** display,
+**L** localization, **S** SLAM, **3** 3D SLAM, **N** navigation, **F** flight,
+**M** marine, **G** gait. A **capital** letter is measured, a small one runs but
+is not measured here, and **(n)** in brackets needs the *Experimental
+imported-asset modes* switch. A family shows its best variant. Example:
+`● asset_elephant_myagv_pro_rollers   D (l) (s) (3) N` on PyBullet — driving
+and navigation measured, the other modes behind the switch.
+
+The marks come from the recorded evidence only: the generated support
+matrix, the installed robots' runtime screens and each profile's
+`measured_screens` (`robot_lab_utils/robot_status.py`). A measured mark is a
+named screen on one setup, not a guarantee for every world.
+
 ## Configure, review, then control
 
 Choose **Run a robot** (the underlying Launch workspace).

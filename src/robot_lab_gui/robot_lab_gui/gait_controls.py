@@ -9,7 +9,7 @@ import sqlite3
 import threading
 import tkinter as tk
 from tkinter import filedialog, ttk
-from .workspace_ui import ScrollPanel
+from .workspace_ui import ScrollPanel, focused_widget
 try:
     import rclpy
     from rclpy.executors import SingleThreadedExecutor
@@ -262,7 +262,7 @@ class GaitControls(ScrollPanel):
             self.send('stop')
 
     def focus_check(self):
-        if not self.closed and self.focus_get() is None:self.app._stop_drive(keep_input_enabled=True)
+        if not self.closed and focused_widget(self) is None:self.app._stop_drive(keep_input_enabled=True)
 
     def tick(self):
         if self.closed:return

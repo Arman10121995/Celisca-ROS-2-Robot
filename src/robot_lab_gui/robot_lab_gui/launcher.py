@@ -426,6 +426,7 @@ class SimulationLauncherGui(tk.Tk):
         self.robot_groups = AssetGroups('robots', self.robot_profiles)
         self.map_groups = AssetGroups('maps', self.map_profiles)
         self.robot_taxonomy = RobotTaxonomy(self.robot_groups)
+        self._load_robot_measurements()
 
         # Which simulators are actually usable on this host (installed
         # binaries / configured runtimes) — gates the Simulator combo.
@@ -712,6 +713,20 @@ class SimulationLauncherGui(tk.Tk):
         self.robot_variant_combo = ttk.Combobox(robot_frame, textvariable=self.robot_var, state='readonly', width=26)
         self.robot_variant_combo.grid(row=3, column=0, sticky='ew')
         self.robot_variant_combo.bind('<<ComboboxSelected>>', self._on_selection_changed)
+        # Status marks (R14.5): each row of both lists shows measured / experimental /
+        # display-only and the modes on the chosen simulator; the values stay exact IDs.
+        from .status_markers import decorate_combobox
+        decorate_combobox(self.robot_combo, self._robot_family_row)
+        decorate_combobox(self.robot_variant_combo, self._robot_variant_row)
+        self.robot_status_var = tk.StringVar(value='')
+        self.robot_status_label = ttk.Label(robot_frame, textvariable=self.robot_status_var, wraplength=300,
+                                            justify='left')
+        self.robot_status_label.grid(row=4, column=0, sticky='ew', pady=(6, 0))
+        from robot_lab_utils.robot_status import SYMBOLS, LABELS, LEGEND, TIERS
+        legend = ttk.Label(robot_frame, text='   '.join('%s %s' % (SYMBOLS[tier], LABELS[tier]) for tier in TIERS[:3])
+                           + '   · hover for the mode letters', style='Muted.TLabel', wraplength=300)
+        legend.grid(row=5, column=0, sticky='w')
+        add_tooltip(legend, LEGEND)
         self.robot_info_var = tk.StringVar(value="")
         self.robot_notes_label = ttk.Label(
             robot_frame,
@@ -720,7 +735,7 @@ class SimulationLauncherGui(tk.Tk):
             wraplength=295,
             justify="left",
         )
-        self.robot_notes_label.grid(row=6, column=0, sticky="ew", pady=(4, 0))
+        self.robot_notes_label.grid(row=8, column=0, sticky="ew", pady=(4, 0))
         self.robot_notes_label.grid_remove()
         self.robot_notes_open = False
         def toggle_robot_notes():
@@ -728,9 +743,9 @@ class SimulationLauncherGui(tk.Tk):
             self.robot_notes_label.grid() if self.robot_notes_open else self.robot_notes_label.grid_remove()
             self.robot_notes_button.configure(text='Hide model details ↑' if self.robot_notes_open else 'Model details & support ↓')
         self.robot_notes_button = ttk.Button(robot_frame,text='Model details & support ↓',style='Link.TButton',command=toggle_robot_notes)
-        self.robot_notes_button.grid(row=5,column=0,sticky='w',pady=(4,0))
+        self.robot_notes_button.grid(row=7,column=0,sticky='w',pady=(4,0))
 
-        ttk.Label(robot_frame, textvariable=self.robot_tags_var, style='Tag.TLabel', wraplength=300).grid(row=4, column=0, sticky='w', pady=(6, 0))
+        ttk.Label(robot_frame, textvariable=self.robot_tags_var, style='Tag.TLabel', wraplength=300).grid(row=6, column=0, sticky='w', pady=(6, 0))
         ttk.Label(controls, text="Task", style='Section.TLabel').grid(row=2, column=0, sticky="w", pady=(4, 0))
         mode_frame = ttk.Frame(controls)
         mode_frame.grid(row=3, column=0, sticky="ew", pady=(2, 12))
@@ -2318,6 +2333,49 @@ class SimulationLauncherGui(tk.Tk):
         return selectable(self.robot_var.get(), self.simulator_var.get(), self.mode_var.get(),
                           self.launch_kind_var.get(), self._robot_config())
 
+    # ── Robot status marks (R14.5) ───────────────────────────────────────
+    def _load_robot_measurements(self):
+        from robot_lab_utils.robot_status import load_measurements
+        try:
+            self.robot_measurements = load_measurements(self.robot_profiles)
+        except (OSError, ValueError) as exc:     # marks degrade to "not measured", never block the GUI
+            print('[robot_lab_gui] robot measurements unavailable: %s' % exc)
+            self.robot_measurements = {}
+
+    def _robot_status(self, profile_id):
+        from robot_lab_utils.robot_status import classify
+        profile = self.robot_profiles.get(profile_id)
+        if profile is None:
+            return None
+        return classify(profile_id, profile, self.simulator_var.get(), getattr(self, 'robot_measurements', {}))
+
+    def _robot_variant_row(self, profile_id):
+        from robot_lab_utils.robot_status import mode_letters
+        status = self._robot_status(profile_id)
+        if status is None:
+            return None
+        return '%s %s   %s' % (status['symbol'], profile_id, mode_letters(status)), status['colour']
+
+    def _robot_family_row(self, family):
+        from robot_lab_utils.robot_status import best, mode_letters
+        if is_none_selection(family):
+            return None
+        members = self.robot_groups.members(family, selectable=True) or [family]
+        status = best([s for s in map(self._robot_status, members) if s])
+        if status is None:
+            return None
+        count = ' (%d variants)' % len(members) if len(members) > 1 else ''
+        return '%s %s%s   %s' % (status['symbol'], family, count, mode_letters(status)), status['colour']
+
+    def _update_robot_status(self):
+        if not hasattr(self, 'robot_status_var'):
+            return
+        robot = self.robot_var.get()
+        status = None if is_none_selection(robot) else self._robot_status(robot)
+        self.robot_status_var.set(status['summary'] if status else '')
+        if status:
+            self.robot_status_label.configure(foreground=status['colour'])
+
     def _urdf_arm_selectable(self):
         from .urdf_arm_controls import selectable
         return selectable(self.robot_var.get(), self.simulator_var.get(), self.mode_var.get(),
@@ -2696,6 +2754,7 @@ class SimulationLauncherGui(tk.Tk):
         self.robot_info_var.set(self._robot_info_text(supported_modes, supports_vacuum))
         self._update_drive_limits_label()
         self._refresh_workspace_selection()
+        self._update_robot_status()
         if hasattr(self, 'arm_tab'):
             self.arm_tab.refresh_selection()
         if hasattr(self, 'hand_tab'):
@@ -3222,6 +3281,7 @@ class SimulationLauncherGui(tk.Tk):
         self.robot_groups = AssetGroups('robots', self.robot_profiles)
         self.map_groups = AssetGroups('maps', self.map_profiles)
         self.robot_taxonomy = RobotTaxonomy(self.robot_groups)
+        self._load_robot_measurements()
         self._refresh_slot_combos()
         self._update_from_selection()
         self.status_var.set("Refreshed catalogs")

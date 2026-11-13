@@ -1,4 +1,5 @@
 """Native multi-X500 session editor and explicitly owned flight controls."""
+from .workspace_ui import focused_widget
 import json
 import math
 import os
@@ -410,7 +411,7 @@ class AerialSwarmTab(ttk.Frame):
     def key_press(self, event):
         if self.closed or not self.keyboard.get() or self.notebook.select() != str(self):
             return
-        if isinstance(self.focus_get(), (tk.Entry, ttk.Entry, ttk.Combobox, tk.Text)):
+        if isinstance(focused_widget(self), (tk.Entry, ttk.Entry, ttk.Combobox, tk.Text)):
             return
         key = event.keysym.lower()
         if key == 'space':
@@ -429,7 +430,7 @@ class AerialSwarmTab(ttk.Frame):
             return 'break'
 
     def focus_lost(self):
-        if not self.closed and self.focus_get() is None:
+        if not self.closed and focused_widget(self) is None:
             self.clear_inputs()
 
     def tick(self):

@@ -2124,6 +2124,22 @@ tasks:
         title: Beginner contributor chapters for robots, maps and GUI integration
         next_action: 'Implemented 2026-11-13: docs/learn chapters 9-12 (prerequisites and integration path, adding a robot, adding a world and map, GUI inclusion with control pages, algorithms, docs and evidence), listed in the GUI docs library and tutorial index. Validation later: clean-host contributor walkthrough (R9).'
         evidence: [docs/learn/09-extending-the-lab.md, docs/learn/10-adding-a-robot.md, docs/learn/11-adding-a-world-and-map.md, docs/learn/12-putting-it-in-the-gui.md]
+      R14.5:
+        acceptance_ref: ROADMAP.md R14.5
+        owner: claude
+        state: implemented
+        updated: '2026-11-13'
+        title: Robot status markers (measured / experimental / display only / unavailable, modes) in the GUI lists
+        next_action: 'Implemented 2026-11-13 from recorded evidence only (support matrix, runtime screens,
+          profile measured_screens). Fold measured_screens into the next generated support matrix.'
+        evidence: [docs/tutorials/gui-quickstart.md, src/robot_lab_utils/robot_lab_utils/robot_status.py]
+      R6.8:
+        acceptance_ref: ROADMAP.md R6.8
+        owner: claude
+        state: queued
+        updated: '2026-11-13'
+        title: Real-world area import from a globe (elevation, buildings, vegetation, roads, people/traffic)
+        next_action: Survey existing open-source OSM/DEM-to-simulator tools first (user principle), then pin and integrate.
       R14.1:
         acceptance_ref: ROADMAP.md R14.1
         owner: codex

@@ -1,4 +1,5 @@
 """Native shared-world session editor, per-member controls and ground swarms."""
+from .workspace_ui import focused_widget
 import json
 import math
 import os
@@ -579,12 +580,12 @@ class FleetTab(ttk.Frame):
 
     def _can_keys(self):
         return (self.keyboard.get() and self.notebook.select() == str(self) and self.armed
-                and not isinstance(self.focus_get(), (tk.Entry, ttk.Entry, tk.Text, ttk.Combobox)))
+                and not isinstance(focused_widget(self), (tk.Entry, ttk.Entry, tk.Text, ttk.Combobox)))
 
     def _key_press(self, event):
         key = event.keysym.lower()
         if (key == 'space' and self.keyboard.get() and self.notebook.select() == str(self)
-                and not isinstance(self.focus_get(), (tk.Entry, ttk.Entry, tk.Text, ttk.Combobox))):
+                and not isinstance(focused_widget(self), (tk.Entry, ttk.Entry, tk.Text, ttk.Combobox))):
             self.all_stop()
             return 'break'
         if not self._can_keys():
@@ -604,7 +605,7 @@ class FleetTab(ttk.Frame):
 
     def _focus_out(self, _event):
         # Moving focus to another widget is fine; leaving the application clears inputs.
-        self.after_idle(lambda: self.stop_manual() if not self._closed and self.focus_get() is None else None)
+        self.after_idle(lambda: self.stop_manual() if not self._closed and focused_widget(self) is None else None)
 
     def _tick(self):
         if self._closed:

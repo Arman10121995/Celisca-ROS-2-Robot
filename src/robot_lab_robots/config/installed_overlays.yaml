@@ -19,3 +19,36 @@ robots:
       side_brush_reach: 0.0    # no side brush: edge passes reach the body edge
       max_speed: 0.3           # Create 3 limit 0.306 m/s
       base_frame: base_link    # the description is rooted at base_link
+
+  # Measured screens made after the last generated support matrix (R14.5 status
+  # marks; robot_lab_utils.robot_status). Each names its evidence document.
+  asset_vrx_wamv_h:
+    measured_screens:
+    - {simulator: gazebo, mode: marine, map: surface_harbor, evidence: docs/status/evidence/counterparts-2026-11-12/README.md}
+  asset_bluerov2_heavy:
+    measured_screens:
+    - {simulator: gazebo, mode: marine, map: marine_tank, evidence: docs/status/evidence/counterparts-2026-11-12/README.md}
+  asset_robotnik_summit_steel:
+    measured_screens:
+    - {simulator: gazebo, mode: display, map: nav_empty, evidence: docs/status/evidence/counterparts-2026-11-12/README.md}
+  asset_light_robotics_octopod:
+    measured_screens:
+    - {simulator: mujoco, mode: display, map: none, evidence: docs/status/evidence/counterparts-2026-11-12/README.md}
+  asset_turtlebot4_lite_cleaning:
+    measured_screens:
+    - {simulator: gazebo, mode: nav, map: nav_empty, evidence: docs/status/evidence/counterparts-2026-11-12/README.md}
+  asset_elephant_myagv_pro:
+    measured_screens:
+    - {simulator: gazebo, mode: display, map: nav_empty, evidence: docs/status/evidence/myagv-pro-2026-11-12/README.md}
+    - {simulator: gazebo, mode: nav, map: nav_empty, evidence: docs/status/evidence/myagv-pro-2026-11-12/README.md}
+  asset_elephant_myagv_pro_rollers:
+    measured_screens:
+    - {simulator: mujoco, mode: display, map: nav_empty, evidence: docs/status/evidence/myagv-pro-2026-11-12/README.md}
+    - {simulator: pybullet, mode: display, map: nav_empty, evidence: docs/status/evidence/myagv-pro-2026-11-12/README.md}
+    - {simulator: isaac, mode: display, map: nav_empty, evidence: docs/status/evidence/myagv-pro-2026-11-12/README.md}
+    - {simulator: pybullet, mode: nav, map: nav_empty, evidence: docs/status/evidence/myagv-pro-2026-11-12/README.md}
+  asset_elephant_myagv_pro_pro630:
+    measured_screens:
+    - {simulator: mujoco, mode: display, map: nav_empty, evidence: docs/status/evidence/myagv-pro-2026-11-12/README.md}
+    - {simulator: pybullet, mode: display, map: nav_empty, evidence: docs/status/evidence/myagv-pro-2026-11-12/README.md}
+    - {simulator: isaac, mode: display, map: nav_empty, evidence: docs/status/evidence/myagv-pro-2026-11-12/README.md}
