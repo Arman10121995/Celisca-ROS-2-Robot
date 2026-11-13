@@ -436,7 +436,8 @@ class NativeMobileTasks:
                                     self.record(reach_plan=result)
                                     self.arm.start_sequence(dict(source_sha256=self.arm.source_sha256,
                                         sequence_id=self.sequence_id,waypoints=result['waypoints']))
-                                    self.enter('articulating','Executing collision-inspected source-control reach')
+                                    self.enter('articulating','Executing collision-inspected source-control reach ('+
+                                               result['planner']['algorithm']+')')
                                 except (ValueError,TypeError,KeyError) as exc:
                                     self.cancel(str(exc),failed=True)
                 elif phase == 'gripping':

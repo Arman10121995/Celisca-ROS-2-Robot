@@ -32,6 +32,7 @@ MAP_TEST="src/robot_lab_maps/test"
 GUI_TEST="src/robot_lab_gui/test"
 
 FAST_TESTS=(
+  "$BRG_TEST/test_bounded_control_planner.py"
   "$BRG_TEST/test_grasp_candidates.py"
   "$BRG_TEST/test_native_hand_force.py"
   "$BRG_TEST/test_footprint_receipts.py"

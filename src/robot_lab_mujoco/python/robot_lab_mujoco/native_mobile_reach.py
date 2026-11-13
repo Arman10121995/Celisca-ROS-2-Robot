@@ -1,4 +1,4 @@
-"""Bounded local source-control IK and collision checks for Stretch tasks.
+"""Source-control IK and bounded configuration detours for Stretch tasks.
 
 Runs on an immutable snapshot/private MjData in a worker. It only returns motor
 waypoints; the task executor owns application, stop, heartbeat and live checks.
@@ -6,6 +6,7 @@ waypoints; the task executor owns application, stop, heartbeat and live checks.
 import time
 import numpy as np
 from robot_lab_utils.native_control_kinematics import ControlKinematics
+from robot_lab_utils.bounded_control_planner import connect_controls
 
 
 def plan_reach(node, snapshot, channels, initial, step, robot_bodies, robot_joints,
@@ -43,11 +44,9 @@ def plan_reach(node, snapshot, channels, initial, step, robot_bodies, robot_join
         target = ik.midpoint(bodies).copy()
     else:
         target_controls = ik.reach(controls,bodies,target,movable,deadline)
-    # Sample the actual motor-coordinate edge, not merely its endpoints.
     rates = np.asarray([c['max_rate'] for c in channels])
-    count = max(1,int(np.ceil(np.max(np.abs(target_controls-controls)/(rates*.25)))))
-    if count > 64:
-        raise ValueError('Source reach edge exceeds inspection budget')
+    if not np.all(np.isfinite(rates)) or np.any(rates <= 0):
+        raise ValueError('Positive finite source actuator rates required')
     baseline = {tuple(sorted(map(int,c.geom))):float(c.dist) for c in snapshot.contact[:snapshot.ncon]}
     allowed = set(bodies)
     for body in range(1,robot_bodies):
@@ -61,12 +60,18 @@ def plan_reach(node, snapshot, channels, initial, step, robot_bodies, robot_join
         relative = snapshot.xmat[ref].reshape(3,3).T @ (snapshot.xpos[payload]-snapshot.xpos[ref])
         relative_quat = np.zeros(4)
         mj.mju_mulQuat(relative_quat,snapshot.xquat[ref]*[1.,-1.,-1.,-1.],snapshot.xquat[payload])
-    points = []
-    for fraction in np.linspace(0.,1.,count+1):
+    inspections = 0
+    def collision_free(candidate):
+        nonlocal inspections
         if time.monotonic()>deadline:
             raise ValueError('Source reach collision inspection deadline exceeded')
-        candidate = controls+fraction*(target_controls-controls)
-        probe = ik.forward(candidate)
+        inspections += 1
+        if inspections > 12000:
+            raise ValueError('Source reach collision inspection budget exhausted')
+        try:
+            probe = ik.forward(candidate)
+        except ValueError:
+            return False  # A sampled source control can violate a coupled joint limit.
         if payload_address >= 0:
             # Planning-only attachment uses the measured rigid relation to one
             # pad. Live object motion is still entirely contact physics.
@@ -82,10 +87,53 @@ def plan_reach(node, snapshot, channels, initial, step, robot_bodies, robot_join
                     continue
             if (contact.dist < -.001 and contact.dist < baseline.get(pair,0.)-.0002
                     and (any(2<=body<robot_bodies for body in owners) or payload in owners)):
-                raise ValueError('Native collision blocks the local reach; use another approach')
-        if fraction > 0:
-            points.append(dict(targets={c['name']:float(v) for c,v in zip(channels,candidate)},settle_s=.2))
-    return dict(waypoints=points,target_xyz=target.tolist(),
+                return False
+        return True
+
+    def motor_points(a, b):
+        # These are the exact intermediate targets returned for execution.
+        count = max(1,int(np.ceil(np.max(np.abs(b-a)/(rates*.25)))))
+        return [a+(b-a)*(index/count) for index in range(1,count+1)]
+
+    span = np.asarray([c['limits'][1]-c['limits'][0] for c in channels])
+    sample_dt = min(.025,float(np.min(.005*span/rates)))
+    if not np.isfinite(sample_dt) or sample_dt <= 0:
+        raise ValueError('Finite nonzero source control spans required')
+    def edge_free(a, b):
+        origin = a.copy()
+        for end in motor_points(a,b):
+            delta = end-origin
+            duration = float(np.max(np.abs(delta)/rates))
+            count = max(1,int(np.ceil(duration/sample_dt)))
+            # Inspect the controller's per-channel rate clipping, including
+            # each joint's stopping instant, rather than a straight-line guess.
+            times = np.unique(np.r_[np.linspace(0.,duration,count+1),np.abs(delta)/rates])
+            for elapsed in times:
+                command = origin+np.sign(delta)*np.minimum(np.abs(delta),rates*elapsed)
+                if not collision_free(command):
+                    return False
+            origin = end
+        return True
+
+    def expand(values):
+        result = controls.copy()
+        result[movable] = values
+        return result
+    limits = np.asarray([c['limits'] for c in channels])
+    # Never sample gripper/head/base controls. The measured compressive gripper
+    # target remains held in every private and returned configuration.
+    plan = connect_controls(controls[movable],target_controls[movable],limits[movable],
+        lambda a,b:edge_free(expand(a),expand(b)),deadline=deadline,seed=0)
+    points = []
+    for a,b in zip(plan['path'],plan['path'][1:]):
+        points.extend(motor_points(expand(a),expand(b)))
+    if len(points)>64:
+        raise ValueError('Source configuration route exceeds the 64-waypoint execution budget')
+    waypoints = [dict(targets={c['name']:float(v) for c,v in zip(channels,candidate)},settle_s=.2)
+                 for candidate in points]
+    return dict(waypoints=waypoints,target_xyz=target.tolist(),
                 object_position=snapshot.xpos[obj].tolist(),object_quaternion=snapshot.xquat[obj].tolist(),
                 initial_controls=controls.tolist(),
-                scope='Local position-only source-control IK and sampled collision edge; no global planner')
+                planner=dict(algorithm=plan['planner'],seed=plan['seed'],nodes=plan['nodes'],
+                             collision_edges=plan['collision_edges'],collision_samples=inspections),
+                scope='Position-only source IK plus bounded seeded configuration search; sampled original motor slew')

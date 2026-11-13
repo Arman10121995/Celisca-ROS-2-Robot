@@ -53,17 +53,33 @@ reachability and support still require physical inspection. **Add local place
 recipe** adds an approach above this point, lowering, gripper opening,
 measured supported release, retreat and retraction. Reposition the base before
 a local reach when needed; original Stretch has fewer wrist degrees of freedom
-than Stretch 3. An unreachable or colliding local approach is refused.
+than Stretch 3. Unreachable targets and routes for which no collision-free
+configuration path is found within the planning budget are refused.
 
 ## What the planner actually does
 
 `native_control_kinematics.py` uses the compiled position-actuator gains,
 transmissions and linear joint equality constraints. Fixed-tendon telescope
-and mimic coordinates are included. It solves local position-only IK using
-native FK/Jacobians and checks the motor-coordinate edge against the actual
-scene in a private `MjData`. Unsupported spatial tendons, nonlinear/closed-loop
-equalities or inconsistent source limits are refused. This does not replace
-MoveIt/OMPL global arm planning or solve arbitrary grasp orientations.
+and mimic coordinates are included. It solves position-only IK using native
+FK/Jacobians. A clear direct motor-coordinate path is preferred; a blocked
+path now triggers bounded bidirectional RRT-Connect search over the reviewed
+lift, telescope and wrist channels. Base, head and gripper targets remain held.
+The collision checker uses the actual scene in a private `MjData` and samples
+the controller's per-channel motor rate clipping, including stopping instants.
+Unsupported spatial tendons, nonlinear/closed-loop equalities or inconsistent
+source limits are refused. This is an experimental local implementation of
+the published [RRT-Connect method](https://ompl.kavrakilab.org/classompl_1_1geometric_1_1RRTConnect.html),
+not the Panda's OMPL binding. It does not solve arbitrary grasp orientations.
+
+Search uses seed 0, at most 384 tree nodes, 2,048 collision-edge queries and
+12,000 native collision samples within the original eight-second worker
+budget. Source control limits bound the search. A result must fit the existing
+64-waypoint executor. The task journal records the planner choice, seed, nodes
+and checks. A fixed seed repeats sampling on an identical snapshot; wall-time
+timeouts can still vary. No route found within these bounds does not prove
+that the target is geometrically unreachable. Try another approach or base
+position. The fixed IK endpoint may itself collide; searching other IK branches
+and orientation-aware planning remain open.
 
 Planning is an eight-second-budget worker. It cannot write live robot/object
 poses. A late/canceled generation is ignored; object or actuator movement

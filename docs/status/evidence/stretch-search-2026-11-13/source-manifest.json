@@ -1,0 +1,10 @@
+{
+  "scope": "Software and actual synthetic MuJoCo geometry/contact checks; no physical loaded Stretch mission",
+  "sha256": {
+    "src/robot_lab_utils/robot_lab_utils/bounded_control_planner.py": "d0da43ee42dca76ba9cd9eb4496edc0b4508615c3065c3e0981c5f9abceb37cc",
+    "src/robot_lab_mujoco/python/robot_lab_mujoco/native_mobile_reach.py": "f317b44d868f3c777e709989eb6b4f735bc654d5d0d3710156feeb0b4cb02139",
+    "src/robot_lab_mujoco/python/robot_lab_mujoco/native_mobile_tasks.py": "4f76899982f87afb6d5465a6b9abcc89e21eb24822fdf31043d4221411918489",
+    "src/robot_lab_bringup/test/test_bounded_control_planner.py": "ccef8ce5f8b3b760bf30c3f9bae6a3dbeb3839445615e74cc4377584afdf4c09",
+    "src/robot_lab_bringup/test/test_native_control_kinematics.py": "52c80d714fd02b8bd7082a20d563b85fb7885cb1d79e884b1d0f17c357816c0f"
+  }
+}

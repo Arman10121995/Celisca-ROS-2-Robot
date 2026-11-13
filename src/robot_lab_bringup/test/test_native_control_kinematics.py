@@ -123,6 +123,40 @@ def test_stow_uses_source_telescope_minimum_without_releasing_grip(plant):
     assert target['lift']==pytest.approx(.2)
 
 
+def test_configuration_search_uses_actual_geometry_to_route_around_a_blocker():
+    from types import SimpleNamespace
+    from robot_lab_mujoco.native_mobile_reach import plan_reach
+    model=mj.MjModel.from_xml_string(XML.replace('</worldbody>',
+        '<geom name="barrier" type="box" pos=".20 0 .32" size=".022 .12 .09"/></worldbody>'))
+    data=mj.MjData(model);mj.mj_forward(model,data)
+    original=data.qpos.copy();gains=model.actuator_gainprm.copy()
+    channels=position_channels(model,model.njnt-1,allow_mobile_base=True)
+    initial=np.array([.2,.1,.01])
+    ik=ControlKinematics(model,data,channels,model.njnt-1)
+    snapshot=ik.forward(initial)
+    step=dict(kind='reach_object',object='object',left_body='left',right_body='right',
+              target_xyz=[.28,.005,.48])
+    route=plan_reach(SimpleNamespace(model=model,mujoco=mj),snapshot,channels,initial,
+                     step,7,model.njnt-1,[])
+    assert route['planner']['algorithm']=='rrt_connect'
+    barrier_id=mj.mj_name2id(model,mj.mjtObj.mjOBJ_GEOM,'barrier')
+    # Independently resample every returned segment more densely, following
+    # the real rate-clipped motor schedule, and inspect native contacts.
+    origin=initial.copy();rates=np.array([c['max_rate'] for c in channels])
+    for waypoint in route['waypoints']:
+        end=np.array([waypoint['targets'][c['name']] for c in channels])
+        assert end[2]==pytest.approx(initial[2])
+        delta=end-origin;duration=max(abs(delta)/rates)
+        for elapsed in np.linspace(0,duration,101):
+            probe=ik.forward(origin+np.sign(delta)*np.minimum(abs(delta),rates*elapsed))
+            assert not any(barrier_id in contact.geom and contact.dist<-.001
+                           for contact in probe.contact[:probe.ncon])
+        origin=end
+    np.testing.assert_allclose(ik.midpoint([5,6]),step['target_xyz'],atol=.008)
+    np.testing.assert_array_equal(data.qpos,original)
+    np.testing.assert_array_equal(model.actuator_gainprm,gains)
+
+
 def test_contact_blocked_settling_exemption_is_only_for_closing_gripper():
     pytest.importorskip('nav2_msgs.action')
     from types import SimpleNamespace
