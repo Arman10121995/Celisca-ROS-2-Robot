@@ -288,7 +288,12 @@ class TerrainPage(ttk.Frame):
         name = self.selected()
         if not name:
             return False
-        inputs = json.loads((self.folder(name) / 'manifest.json').read_text())['inputs']
+        manifest = json.loads((self.folder(name) / 'manifest.json').read_text())
+        if 'real_world' in manifest:
+            self.status_var.set('%s is an imported real place; make another on the Real place page.' % name)
+            self.show_preview(name)
+            return False
+        inputs = manifest['inputs']
         self.name_var.set(name + '_2')
         self.provider_var.set(inputs['provider'])
         self.samples_var.set(str(inputs['samples']))

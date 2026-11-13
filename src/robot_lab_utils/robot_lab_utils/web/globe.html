@@ -1,0 +1,159 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Robot Lab · Import a real place</title>
+<!-- CesiumJS (Apache-2.0). Imagery: OpenStreetMap tiles; no Cesium ion token is used. -->
+<script src="https://cdn.jsdelivr.net/npm/cesium@1.120.0/Build/Cesium/Cesium.js"></script>
+<link href="https://cdn.jsdelivr.net/npm/cesium@1.120.0/Build/Cesium/Widgets/widgets.css" rel="stylesheet">
+<style>
+  :root { --bg:#101826; --panel:#172234; --text:#e6edf6; --muted:#9aa7b8; --accent:#5eead4; --warn:#fbbf24; --bad:#f87171; }
+  html, body { margin:0; height:100%; background:var(--bg); color:var(--text); font:14px/1.4 system-ui, sans-serif; }
+  #globe { position:absolute; inset:0; }
+  #panel { position:absolute; top:12px; left:12px; width:330px; max-height:calc(100% - 24px); overflow:auto;
+           background:var(--panel); border-radius:10px; padding:14px 16px; box-shadow:0 6px 24px #0008; }
+  h1 { font-size:17px; margin:0 0 4px; } p { margin:4px 0 10px; color:var(--muted); }
+  label { display:block; margin:6px 0 2px; color:var(--muted); font-size:12px; }
+  input[type=text], select { width:100%; box-sizing:border-box; padding:6px 8px; border-radius:6px;
+           border:1px solid #2d3b52; background:#0d1522; color:var(--text); }
+  .row { display:flex; gap:6px; } .row > * { flex:1; }
+  .checks label { display:inline-flex; gap:5px; align-items:center; margin:3px 10px 3px 0; color:var(--text); font-size:13px; }
+  button { margin-top:10px; width:100%; padding:8px; border:0; border-radius:6px; background:#26354d; color:var(--text);
+           font-weight:600; cursor:pointer; } button.primary { background:var(--accent); color:#06231f; }
+  button:disabled { opacity:.45; cursor:default; }
+  #size { font-weight:600; } .ok { color:var(--accent); } .warn { color:var(--warn); } .bad { color:var(--bad); }
+  #log { margin-top:10px; font:12px/1.35 ui-monospace, monospace; white-space:pre-wrap; color:var(--muted); max-height:180px; overflow:auto; }
+  .credit { font-size:11px; color:var(--muted); margin-top:10px; }
+</style>
+</head>
+<body>
+<div id="globe"></div>
+<div id="panel">
+  <h1>Import a real place</h1>
+  <p>Find a place, press <b>Draw area</b>, click two opposite corners on the globe, then import it as a
+     world for Gazebo, MuJoCo, PyBullet and Isaac.</p>
+  <div class="row"><input id="search" type="text" placeholder="Search a place (e.g. Rostock, Kröpeliner Straße)">
+    <button id="go" style="flex:0 0 56px;margin:0">Go</button></div>
+  <button id="draw">Draw area</button>
+  <div style="margin-top:8px">Area: <span id="size">none selected</span></div>
+  <label for="name">World name (lower case, digits, _)</label>
+  <input id="name" type="text" value="my_place">
+  <label>Include</label>
+  <div class="checks">
+    <label><input type="checkbox" id="buildings" checked> buildings</label>
+    <label><input type="checkbox" id="roads" checked> roads</label>
+    <label><input type="checkbox" id="trees" checked> trees</label>
+    <label><input type="checkbox" id="water" checked> water</label>
+    <label><input type="checkbox" id="people"> people</label>
+    <label><input type="checkbox" id="traffic"> traffic</label>
+  </div>
+  <label for="samples">Terrain detail</label>
+  <select id="samples"><option value="129">129 × 129</option><option value="257" selected>257 × 257</option>
+    <option value="513">513 × 513</option></select>
+  <button id="import" class="primary" disabled>Import this area</button>
+  <div id="log"></div>
+  <div class="credit">Map © OpenStreetMap contributors (ODbL). Elevation: Terrain Tiles (AWS Open Data).
+    People and traffic: Eclipse SUMO. Globe: CesiumJS.</div>
+</div>
+<script>
+const viewer = new Cesium.Viewer('globe', {
+  baseLayer: false, baseLayerPicker: false, geocoder: false, timeline: false, animation: false,
+  homeButton: true, sceneModePicker: true, navigationHelpButton: false, fullscreenButton: false,
+  infoBox: false, selectionIndicator: false,
+});
+viewer.imageryLayers.addImageryProvider(new Cesium.OpenStreetMapImageryProvider({url: 'https://tile.openstreetmap.org/'}));
+viewer.camera.setView({destination: Cesium.Cartesian3.fromDegrees(12.14, 54.09, 2.5e6)});
+
+const $ = id => document.getElementById(id);
+let first = null, second = null, drawing = false, rectangle = null, polling = null;
+const handler = new Cesium.ScreenSpaceEventHandler(viewer.scene.canvas);
+
+function pick(position) {
+  const cartesian = viewer.camera.pickEllipsoid(position, viewer.scene.globe.ellipsoid);
+  return cartesian ? Cesium.Cartographic.fromCartesian(cartesian) : null;
+}
+function bounds() {
+  if (!first || !second) return null;
+  const d = Cesium.Math.toDegrees;
+  return {south: d(Math.min(first.latitude, second.latitude)), north: d(Math.max(first.latitude, second.latitude)),
+          west: d(Math.min(first.longitude, second.longitude)), east: d(Math.max(first.longitude, second.longitude))};
+}
+function sideMetres(b) {
+  const geo = (a, c) => new Cesium.EllipsoidGeodesic(Cesium.Cartographic.fromDegrees(a[1], a[0]),
+                                                     Cesium.Cartographic.fromDegrees(c[1], c[0])).surfaceDistance;
+  const mid = (b.south + b.north) / 2;
+  return [geo([mid, b.west], [mid, b.east]), geo([b.south, b.west], [b.north, b.west])];
+}
+function showArea() {
+  const b = bounds();
+  if (!b) return;
+  const [w, h] = sideMetres(b);
+  const ok = Math.max(w, h) <= 2000 && Math.min(w, h) >= 40;
+  $('size').textContent = Math.round(w) + ' × ' + Math.round(h) + ' m' + (ok ? '' : ' (must be 40–2000 m per side)');
+  $('size').className = ok ? 'ok' : 'bad';
+  $('import').disabled = !ok || drawing;
+  const rect = Cesium.Rectangle.fromDegrees(b.west, b.south, b.east, b.north);
+  if (rectangle) viewer.entities.remove(rectangle);
+  rectangle = viewer.entities.add({rectangle: {coordinates: rect,
+    material: Cesium.Color.fromCssColorString('#5eead4').withAlpha(0.25), outline: true,
+    outlineColor: Cesium.Color.fromCssColorString('#5eead4'), height: 0}});
+}
+$('draw').onclick = () => {
+  drawing = true; first = second = null; $('import').disabled = true;
+  $('size').textContent = 'click the first corner'; $('size').className = 'warn';
+};
+handler.setInputAction(click => {
+  if (!drawing) return;
+  const point = pick(click.position);
+  if (!point) return;
+  if (!first) { first = point; $('size').textContent = 'click the opposite corner'; }
+  else { second = point; drawing = false; showArea(); }
+}, Cesium.ScreenSpaceEventType.LEFT_CLICK);
+handler.setInputAction(move => {
+  if (!drawing || !first) return;
+  const point = pick(move.endPosition);
+  if (point) { second = point; showArea(); $('import').disabled = true; }
+}, Cesium.ScreenSpaceEventType.MOUSE_MOVE);
+
+async function search() {
+  const q = $('search').value.trim();
+  if (!q) return;
+  const response = await fetch('https://nominatim.openstreetmap.org/search?format=json&limit=1&q=' + encodeURIComponent(q));
+  const results = await response.json();
+  if (!results.length) { log('No place found for "' + q + '"'); return; }
+  const [south, north, west, east] = results[0].boundingbox.map(Number);
+  viewer.camera.flyTo({destination: Cesium.Rectangle.fromDegrees(west, south, east, north)});
+  log('Found: ' + results[0].display_name);
+}
+$('go').onclick = search;
+$('search').addEventListener('keydown', e => { if (e.key === 'Enter') search(); });
+
+function log(text) { $('log').textContent += text + '\n'; $('log').scrollTop = 1e9; }
+
+$('import').onclick = async () => {
+  const b = bounds();
+  const body = Object.assign({id: $('name').value.trim(), samples: Number($('samples').value)}, b);
+  for (const key of ['buildings', 'roads', 'trees', 'water', 'people', 'traffic']) body[key] = $(key).checked;
+  $('import').disabled = true; $('log').textContent = '';
+  const response = await fetch('/import', {method: 'POST', headers: {'Content-Type': 'application/json'},
+                                           body: JSON.stringify(body)});
+  const reply = await response.json();
+  if (!reply.ok) { log('Not started: ' + reply.error); $('import').disabled = false; return; }
+  log('Importing ' + body.id + ' …');
+  clearInterval(polling);
+  polling = setInterval(async () => {
+    const state = await (await fetch('/status')).json();
+    for (const line of state.messages) log(line);
+    if (state.state === 'done') {
+      clearInterval(polling); $('import').disabled = false;
+      log('Done: ' + state.result.counts.buildings + ' buildings, ' + state.result.counts.trees + ' trees, '
+          + state.result.counts.roads + ' roads. It is now in the Robot Lab world list (Launch → World).');
+    } else if (state.state === 'failed') {
+      clearInterval(polling); $('import').disabled = false; log('Failed: ' + state.error);
+    }
+  }, 1000);
+};
+</script>
+</body>
+</html>

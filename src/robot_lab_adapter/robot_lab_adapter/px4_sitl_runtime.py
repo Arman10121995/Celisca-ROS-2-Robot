@@ -36,7 +36,9 @@ def prepare_world(source, destination, upstream):
             node = ET.parse(upstream/'worlds/default.sdf').getroot().find('world/'+tag)
             if node is not None:
                 world.append(copy.deepcopy(node))
-    for uri in world.iter('uri'):
+    # Actor skins and animations name their meshes in <filename>, not <uri> (R5.11 moving actors).
+    references = list(world.iter('uri'))+[node for actor in world.iter('actor') for node in actor.iter('filename')]
+    for uri in references:
         value = (uri.text or '').strip()
         if value.startswith('package://'):
             from ament_index_python.packages import get_package_share_directory

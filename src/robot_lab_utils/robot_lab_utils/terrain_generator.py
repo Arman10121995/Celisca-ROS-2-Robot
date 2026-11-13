@@ -72,7 +72,7 @@ def validate(spec):
     if spec['samples'] not in SAMPLES:
         raise ValueError('samples must be one of %s' % (SAMPLES,))
     spec['size_m'] = _finite(spec, 'size_m', 4., 500.)
-    spec['relief_m'] = _finite(spec, 'relief_m', .05, 50.)
+    spec['relief_m'] = _finite(spec, 'relief_m', .05, 200.)
     spec['spawn_pad_m'] = _finite(spec, 'spawn_pad_m', 0., 10.)
     spec['max_slope_deg'] = _finite(spec, 'max_slope_deg', 2., 45.)
     spec['max_step_m'] = _finite(spec, 'max_step_m', .01, 1.)
@@ -224,8 +224,12 @@ def shape_heights(spec, field):
     grid_x, grid_y = sample_coordinates(spec)
     field = np.asarray(field, dtype=float)
     field = field - field.min()
-    if spec['provider'] == 'procedural' or field.max() > spec['relief_m']:
-        field = field * (spec['relief_m'] / field.max())   # imported relief is kept unless it exceeds the cap
+    if spec['provider'] == 'procedural':
+        field = field * (spec['relief_m'] / field.max())
+    elif field.max() > spec['relief_m'] + 1e-9:
+        # Real terrain is never compressed: that would change every slope.
+        raise ValueError('the imported area rises %.1f m, more than the %.1f m height range; raise the height '
+                         'range (8-bit steps of range/255) or choose a smaller area' % (field.max(), spec['relief_m']))
     if spec['spawn_pad_m'] > 0:
         distance = np.hypot(grid_x - spec['spawn_x'], grid_y - spec['spawn_y'])
         centre = float(field[np.unravel_index(np.argmin(distance), distance.shape)])
@@ -322,7 +326,10 @@ def occupancy(spec, heights):
     step[:, :-1] = np.maximum(step[:, :-1], np.abs(np.diff(heights, axis=1)))
     step[1:, :] = np.maximum(step[1:, :], np.abs(np.diff(heights, axis=0)))
     step[:-1, :] = np.maximum(step[:-1, :], np.abs(np.diff(heights, axis=0)))
-    blocked = (slope > spec['max_slope_deg']) | (step > spec['max_step_m'])
+    # A step is a jump a drivable slope cannot explain across one cell: on a coarse grid a
+    # gentle slope alone changes the height by more than max_step_m between samples.
+    step_limit = max(spec['max_step_m'], cell * math.tan(math.radians(spec['max_slope_deg'])))
+    blocked = (slope > spec['max_slope_deg']) | (step > step_limit)
     resolution = spec['occupancy_resolution_m']
     half = spec['size_m'] / 2.
     columns = rows = int(round(spec['size_m'] / resolution))
@@ -386,6 +393,8 @@ def _mjcf(world_path, name, asset_dir):
     module = importlib.util.module_from_spec(module_spec)
     module_spec.loader.exec_module(module)
     text, skipped = module.convert_world(str(world_path), name, asset_dir=str(asset_dir))
+    # Actors (people/traffic, Gazebo-only scripted motion) are not static geometry; anything else is an error.
+    skipped = [note for note in skipped if not (note.startswith("actor '") and 'scripted motion' in note)]
     if skipped:
         raise ValueError('MuJoCo conversion skipped terrain geometry: ' + '; '.join(skipped))
     return text
@@ -502,6 +511,9 @@ def regenerate(folder):
     manifest = json.loads((folder / 'manifest.json').read_text())
     if manifest.get('schema') != SCHEMA:
         raise ValueError('not a terrain manifest')
+    if 'real_world' in manifest:               # an imported place rebuilds from its saved downloads
+        from .real_world_import import regenerate as regenerate_real_world
+        return regenerate_real_world(folder)
     inputs = dict(manifest['inputs'])
     if inputs.get('provider') == 'raster':
         if hashlib.sha256(Path(inputs['raster_path']).read_bytes()).hexdigest() != inputs['source_sha256']:

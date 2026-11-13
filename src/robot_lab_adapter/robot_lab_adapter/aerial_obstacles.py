@@ -11,6 +11,10 @@ from sensor_msgs.msg import CameraInfo, Image, PointCloud2
 from tf2_ros import Buffer, TransformListener
 
 from robot_lab_utils.observed_aerial_scene import VoxelObstacles, depth_points, transform_points
+from robot_lab_utils.aerial_tracking import Tracker, cluster_points, time_conflict
+
+# Route speed of px4_ros_controller.advance_route (m/s): the time base for moving-obstacle conflicts.
+ROUTE_SPEED = .4
 
 
 class AerialObstacles:
@@ -30,6 +34,8 @@ class AerialObstacles:
         node.create_subscription(Image, '/x500/camera/depth/image_raw', lambda m:self.enqueue('depth', m), qos_profile_sensor_data)
         node.create_subscription(CameraInfo, '/x500/camera/depth/camera_info', self.info, qos_profile_sensor_data)
         self.intrinsic = None
+        self.tracker = Tracker()
+        self.tracked_stamp = None
         self.worker = threading.Thread(target=self.work, daemon=True)
         self.worker.start()
 
@@ -127,7 +133,9 @@ class AerialObstacles:
                     raise ValueError('Capture-time map/optical -> FCU map transform unavailable')
                 self.closed.wait(.01)
         layer = VoxelObstacles(points)
-        return dict(sequence=sequence, layer=layer, received=received,
+        # Clusters for moving-obstacle tracking (R5.11); the ground plane is not an object.
+        clusters = cluster_points(points, floor_z=getattr(self, 'ground_z', None)) if kind == 'depth' else []
+        return dict(sequence=sequence, layer=layer, received=received, clusters=clusters,
             stamp=message.header.stamp.sec+message.header.stamp.nanosec*1e-9,
             source_frame=message.header.frame_id, frame='map', **metadata)
 
@@ -167,6 +175,9 @@ class AerialObstacles:
             else:
                 setattr(self, kind, result)
                 self.errors[kind] = ''
+                if kind == 'depth' and result['stamp'] != self.tracked_stamp:
+                    self.tracked_stamp = result['stamp']
+                    self.tracker.update(result['clusters'], result['stamp'])
 
     def ready(self):
         return bool(self.map and self.depth and self.intrinsic and
@@ -195,12 +206,25 @@ class AerialObstacles:
             if remaining <= 1e-8:
                 break
             start = end
+        conflict = time_conflict(position, route, ROUTE_SPEED, self.moving_tracks())
+        if conflict:
+            when, track = conflict
+            return ('Observed route held: moving obstacle %d (%.1f m/s) predicted on the route in %.1f s'
+                    % (track.id, track.speed, when))
         return ''
+
+    def moving_tracks(self):
+        """Moving tracks whose last update is fresh (stale tracks are not extrapolated)."""
+        if not self.depth or time.monotonic()-self.depth['received'] > .75:
+            return []
+        return self.tracker.moving()
 
     def state(self):
         result = dict(enabled=True, ready=self.ready(), frame='map', radius_m=.7,
             voxel_m=.15, lookahead_m=2., scope='Observed occupancy supplements known static world; unseen/dynamic prediction unqualified')
         result['intrinsics_ready'] = bool(self.intrinsic and time.monotonic()-self.intrinsic[1] < 2.)
+        result['tracks'] = [track.state() for track in self.tracker.tracks][:20]
+        result['moving_tracks'] = len(self.moving_tracks())
         for kind in ('map', 'depth'):
             value = getattr(self, kind)
             result[kind] = dict(age_wall_s=time.monotonic()-value['received'], stamp=value['stamp'],

@@ -71,6 +71,28 @@ def expected_height(manifest, heights, x, y):
                  + fr * ((1 - fc) * heights[r0 + 1, c0] + fc * heights[r0 + 1, c0 + 1]))
 
 
+def real_world_points(manifest, folder, roofs=2):
+    """Imported area: the spawn, two open flat ground points clear of buildings and trees, and
+    the largest roofs (a robot resting at roof height proves the building collisions)."""
+    from robot_lab_utils.real_world_import import build as build_real, choose_spawn
+    request = dict(manifest['real_world']['request'], id=manifest['id'])
+    _, _, heights, _ = build_real(request, folder=folder, progress=lambda _message: None)
+    inputs = manifest['inputs']
+    text = (folder / 'maps' / 'map.pgm').read_bytes()
+    header = text.split(b'\n', 3)
+    columns, rows = (int(v) for v in header[1].split())
+    grid = np.frombuffer(header[3], dtype=np.uint8).reshape(rows, columns)
+    size, resolution = inputs['size_m'], inputs['occupancy_resolution_m']
+    ground = [(inputs['spawn_x'], inputs['spawn_y'])]
+    for prefer in ((size / 4, -size / 4), (-size / 4, size / 4)):
+        ground.append(choose_spawn(grid, size, resolution, clearance=2.5, prefer=prefer))
+    points = [dict(x=round(x, 3), y=round(y, 3), kind='ground', expected_m=round(expected_height(manifest, heights, x, y), 4))
+              for x, y in ground]
+    for roof in sorted(manifest['real_world']['roofs'], key=lambda r: -r['area_m2'])[:roofs]:
+        points.append(dict(x=roof['x'], y=roof['y'], kind='roof', expected_m=round(roof['top_m'], 4)))
+    return points
+
+
 def settled_height(log_path, args, extra, timeout):
     """Launch, wait for a still body, return (z, details); always stops the launch."""
     command = ['ros2', 'launch', 'robot_lab_bringup', 'simulated_robot.launch.py',
@@ -130,13 +152,17 @@ def main():
     from robot_lab_utils.terrain_generator import build, terrain_root
     folder = terrain_root() / args.terrain
     manifest = json.loads((folder / 'manifest.json').read_text())
-    _, _, heights = build(manifest['inputs'])
-    points = probe_points(manifest, heights, args.points)
+    if 'real_world' in manifest:
+        probe = real_world_points(manifest, folder)
+    else:
+        _, _, heights = build(manifest['inputs'])
+        probe = [dict(x=round(x, 3), y=round(y, 3), kind='ground',
+                      expected_m=round(expected_height(manifest, heights, x, y), 4))
+                 for x, y in probe_points(manifest, heights, args.points)]
     args.output.mkdir(parents=True, exist_ok=False)
     report = dict(terrain=args.terrain, manifest_files=manifest['files'], robot=args.robot,
                   tolerance_m=args.tolerance, method='settled /odom/ground_truth z on terrain minus on nav_empty',
-                  points=[dict(x=round(x, 3), y=round(y, 3), expected_m=round(expected_height(manifest, heights, x, y), 4))
-                          for x, y in points], simulators={}, passed=False)
+                  points=probe, simulators={}, passed=False)
     import rclpy
     rclpy.init()
     all_ok = True

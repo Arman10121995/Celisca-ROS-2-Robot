@@ -92,7 +92,7 @@ def test_imported_raster_needs_terms_and_keeps_its_provenance(tmp_path, root):
     path = tmp_path / 'dem.npy'
     np.save(path, dem)
     raster = dict(id='test_dem', provider='raster', raster_path=str(path), source_metres_per_pixel=.5,
-                  size_m=100., samples=65, relief_m=50.)
+                  size_m=100., samples=65, relief_m=80.)
     with pytest.raises(ValueError, match='attribution'):
         t.validate(raster)
     raster.update(attribution='Test DEM', license='CC-BY-4.0')
@@ -100,6 +100,8 @@ def test_imported_raster_needs_terms_and_keeps_its_provenance(tmp_path, root):
     assert manifest['provider']['attribution'] == 'Test DEM' and manifest['provider']['license'] == 'CC-BY-4.0'
     assert manifest['provider']['source_sha256'] and manifest['raster']['metres_per_pixel'] == pytest.approx(100. / 65)
     assert 30. < manifest['elevation']['max_m'] <= 60.             # the raster's own relief, not rescaled
+    with pytest.raises(ValueError, match='rises'):                  # never silently compressed
+        t.build(dict(raster, id='flattened', relief_m=20.))
     assert all(t.regenerate(root / 'test_dem').values())
     np.save(path, dem + 1.)
     with pytest.raises(ValueError, match='changed'):

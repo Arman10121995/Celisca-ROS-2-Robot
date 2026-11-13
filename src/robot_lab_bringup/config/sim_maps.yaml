@@ -59,6 +59,26 @@ maps:
       y: '-40.0'
       yaw: '0.0'
       z: '0.5'
+  aerial_moving:
+    gazebo:
+      world_name: aerial_moving
+      world_package: robot_lab_maps
+      world_path: maps/aerial_moving/worlds/aerial_moving.world
+    initial_pose:
+      x: '-10.0'
+      y: '0.0'
+      yaw: '0.0'
+    map:
+      has_2d_map: true
+      package: robot_lab_maps
+      path: maps/aerial_moving/maps/map.yaml
+    spawn:
+      x: '-10.0'
+      y: '0.0'
+      yaw: '0.0'
+      z: '0.5'
+    notes: People walk across the x axis at x = 0 and x = 5 m (Gazebo actors). R5.11 moving-obstacle test field;
+      the occupancy map holds the static pillars only.
   aerial_indoor:
     gazebo:
       world_name: aerial_indoor

@@ -221,6 +221,9 @@ class WorldsTab(LabTab):
             style='Muted.TLabel',wraplength=1100,justify='left').grid(row=1,column=0,columnspan=3,sticky='w',pady=12)
         from .terrain_controls import TerrainPage
         self.terrain=TerrainPage(self.pages,app)
+        from .real_world_controls import RealPlacePage
+        self.real_place=RealPlacePage(self.pages,app)
+        app.worlds_tab=self
 
     def _world_seed(self,*_args):
         seed=self.app.map_profiles.get(self.world_var.get(),{}).get('spawn',{})

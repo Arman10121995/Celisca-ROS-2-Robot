@@ -14,6 +14,11 @@ from rclpy.node import Node
 from std_msgs.msg import String
 from std_srvs.srv import Trigger
 
+# Sensor loss in flight (R5.11): hold at once, land if fresh sensing has not returned by then.
+SENSOR_LOSS_LAND_S = 10.
+# Replanning around predicted moving obstacles: at most once per this interval.
+REPLAN_INTERVAL_S = 1.5
+
 
 class PX4Planning(Node):
     def __init__(self, controller, world, vehicle_envelope=None, observed_obstacles=False):
@@ -24,6 +29,7 @@ class PX4Planning(Node):
         if observed_obstacles:
             from .aerial_obstacles import AerialObstacles
             self.obstacles = AerialObstacles(self)
+            self.obstacles.ground_z = controller.ground_z
             controller.route_guard = self.obstacles.route_guard
         self.takeoff_plan = None
         self.takeoff_state = dict(state='unchecked')
@@ -32,6 +38,8 @@ class PX4Planning(Node):
         self.scene, self.route, self.future_events = None, None, queue.Queue()
         self.canceled = threading.Event()
         self.generation, self.worker = 0, None
+        self.goal_enu, self.replan_epoch, self.last_replan = None, None, -math.inf
+        self.sensor_loss_since, self.sensor_loss = None, dict(state='ok')
         self.state = dict(plant_id=self.plant_id, state='idle', qualification=
             'experimental static + observed aerial planning; flight validation pending' if self.obstacles else
             'implemented static aerial planning; validation pending')
@@ -60,6 +68,7 @@ class PX4Planning(Node):
             self.state.update(state='rejected', error=str(exc))
             return
         self.route = None
+        self.goal_enu = goal
         self.generation += 1
         self.canceled = threading.Event()
         generation, canceled = self.generation, self.canceled
@@ -190,10 +199,72 @@ class PX4Planning(Node):
         except OSError:
             return False
 
+    def replan(self, epoch):
+        """Plan again to the same goal around the swept volumes of moving tracks (asynchronous)."""
+        if self.worker and self.worker.is_alive() or self.goal_enu is None:
+            return False
+        try:
+            observations, metadata = self.obstacles.snapshot()
+        except ValueError:
+            return False
+        from robot_lab_utils.aerial_tracking import PredictedObstacles
+        predicted = PredictedObstacles(self.obstacles.moving_tracks())
+        self.last_replan = time.monotonic()
+        self.generation += 1
+        self.canceled = threading.Event()
+        generation, canceled = self.generation, self.canceled
+        start, goal = list(self.controller.position()), list(self.goal_enu)
+        minimum, maximum = self.controller.ground_z+.5, self.controller.ground_z+10
+        self.state.update(state='replanning', error='', moving_obstacles=len(predicted.capsules))
+        def work():
+            try:
+                from robot_lab_utils.aerial_planning import StaticScene, plan
+                from robot_lab_utils.observed_aerial_scene import ObservedScene
+                scene = ObservedScene(StaticScene(self.world), *observations, predicted)
+                route, details = plan(scene, start, goal, radius=.7, canceled=canceled.is_set, timeout=8.,
+                                      min_altitude=minimum, max_altitude=maximum)
+                event = dict(kind='replan', generation=generation, epoch=epoch, route=route, start=start,
+                             details=details, observations=metadata, predicted=len(predicted.capsules))
+            except Exception as exc:
+                event = dict(kind='replan', generation=generation, epoch=epoch, error=str(exc))
+            self.future_events.put(event)
+        self.worker = threading.Thread(target=work, daemon=True)
+        self.worker.start()
+        return True
+
+    def sensor_guard(self):
+        """Stale depth/map in flight: hold now, land after SENSOR_LOSS_LAND_S unless sensing returns."""
+        c = self.controller
+        if not self.obstacles or c.phase != 'flying' or not c.ready():
+            self.sensor_loss_since = None
+            if self.sensor_loss.get('state') != 'landing':
+                self.sensor_loss = dict(state='ok')
+            return
+        if self.obstacles.ready():
+            if self.sensor_loss_since is not None:
+                self.sensor_loss = dict(state='recovered', lost_s=round(time.monotonic()-self.sensor_loss_since, 2))
+            self.sensor_loss_since = None
+            return
+        now = time.monotonic()
+        if self.sensor_loss_since is None:
+            self.sensor_loss_since = now
+            self.canceled.set()
+            c.clear_path('sensor loss: holding position; landing in %.0f s unless sensing returns' % SENSOR_LOSS_LAND_S)
+            c.target = c.position()
+            c.manual = (0., 0., 0., 0.)
+        lost = now-self.sensor_loss_since
+        self.sensor_loss = dict(state='holding', lost_s=round(lost, 2), land_in_s=round(max(0., SENSOR_LOSS_LAND_S-lost), 2))
+        if lost >= SENSOR_LOSS_LAND_S:
+            response = c.land(None, Trigger.Response())
+            self.sensor_loss = dict(state='landing' if response.success else 'land_refused', lost_s=round(lost, 2),
+                                    message=response.message)
+            self.sensor_loss_since = None
+
     def cancel(self, _request, response):
         self.canceled.set()
         self.generation += 1
         self.route = None
+        self.goal_enu = None
         self.takeoff_plan = None
         self.takeoff_state = dict(state='canceled')
         self.controller.clear_path('planning/route canceled')
@@ -210,6 +281,23 @@ class PX4Planning(Node):
             while True:
                 result = self.future_events.get_nowait()
                 if result['generation'] != self.generation:
+                    continue
+                if result.get('kind') == 'replan':
+                    c = self.controller
+                    if 'error' in result:
+                        self.state.update(state='replan_failed', error=result['error'])
+                    elif (c.ready() and c.phase == 'flying' and c.command_generation == result['epoch']
+                            and not any(c.manual) and not c.route and self.sensor_loss_since is None
+                            and math.dist(c.position(), result['start']) <= .3):
+                        try:
+                            c.set_path(result['route'])
+                            self.state.update(state='executing', error='', replanned=dict(
+                                waypoints=len(result['route']), predicted_obstacles=result['predicted'],
+                                **result['details']))
+                        except ValueError as exc:
+                            self.state.update(state='rejected', error=str(exc))
+                    else:
+                        self.state.update(state='invalidated', error='FCU/operator state changed during the replan')
                     continue
                 if result.get('kind') == 'execute_route':
                     if 'error' in result:
@@ -265,8 +353,17 @@ class PX4Planning(Node):
         if self.route is not None and time.monotonic()-self.planned_at > 15:
             self.route = None
             self.state.update(state='expired', error='Plan expired; plan from the current position')
+        if self.obstacles:
+            self.sensor_guard()
         if self.state['state'] == 'executing' and not self.controller.route:
             self.state.update(state='route_stopped', execution=self.controller.route_status)
+        c = self.controller
+        if (self.obstacles and self.goal_enu is not None and self.state['state'] in ('route_stopped', 'replan_failed')
+                and str(c.route_status).startswith('Observed route held: moving obstacle')
+                and c.phase == 'flying' and not any(c.manual) and self.sensor_loss_since is None
+                and time.monotonic()-self.last_replan > REPLAN_INTERVAL_S):
+            # The guard held for a predicted moving obstacle: replan around its swept volume.
+            self.replan(c.command_generation)
         if self.takeoff_plan and (time.monotonic()-self.takeoff_plan['checked_at'] > 30
                 or not self.controller.takeoff_ready()
                 or math.dist(self.controller.position(), self.takeoff_plan['details']['start_enu']) > .05):
@@ -275,7 +372,7 @@ class PX4Planning(Node):
         if self.route is not None and self.controller.command_generation != self.plan_command_generation:
             self.route = None
             self.state.update(state='invalidated', error='Operator/flight command invalidated the pending route')
-        self.publisher.publish(String(data=json.dumps(dict(self.state, takeoff=self.takeoff_state,
+        self.publisher.publish(String(data=json.dumps(dict(self.state, takeoff=self.takeoff_state, sensor_loss=self.sensor_loss,
             obstacles=self.obstacles.state() if self.obstacles else dict(enabled=False)))))
 
     def close(self):
