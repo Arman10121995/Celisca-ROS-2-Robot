@@ -32,8 +32,27 @@ ros2 launch robot_lab_bringup simulated_robot.launch.py \
 
 For experimental navigation, use `mode:=nav allow_experimental_assets:=true`.
 Choose a land world with its matching registered 2D occupancy map. Display can
-also select no map. Other simulator control adapters are not advertised as
-working by this integration.
+also select no map.
+
+### MuJoCo, PyBullet and Isaac: the roller variant
+
+Gazebo uses the official CAD wheels with a directional-friction contact model
+that only Gazebo has. The other three simulators use a separate variant,
+**`asset_elephant_myagv_pro_rollers`**: each wheel keeps the vendor visual and
+its original mass and inertia, split into a core and 15 free passive rollers
+(FUJI mecanum geometry, MIT). In the GUI pick the same robot family and its
+*physical rollers* variant, then MuJoCo, PyBullet or Isaac:
+
+```bash
+ros2 launch robot_lab_bringup simulated_robot.launch.py \
+  robot_model:=asset_elephant_myagv_pro_rollers simulator:=isaac \
+  mode:=display map_name:=nav_empty
+```
+
+Forward, reverse, strafe, turn, Stop and publisher loss are measured in all
+three; a full Nav2 mission (detour, cancel, resume, near-obstacle goal) passed in
+PyBullet ([evidence](../status/evidence/myagv-pro-2026-11-12/README.md)).
+Navigation there also needs `allow_experimental_assets:=true`.
 
 The existing Registry preview opens this complete source model inside the GUI.
 **Learn & diagnose → Documentation library** includes this page. Health uses

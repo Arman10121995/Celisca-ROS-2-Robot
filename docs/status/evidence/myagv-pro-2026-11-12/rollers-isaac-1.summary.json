@@ -1,0 +1,109 @@
+{
+ "robot": "asset_elephant_myagv_pro_rollers",
+ "source_id": "elephant_myagv_pro",
+ "source_revision": "d3851c768d2e887eef7ad79fc4dcb9a928b070ac",
+ "description_sha256": "2ae115bb158903a6a4457fb487d8deaa232e680cb0933b9bfe4e7ef817191495",
+ "odom": "/odom/ground_truth",
+ "input": "/key_vel",
+ "scope": "Initial source-plant control and sensing; no mission qualification",
+ "completed": true,
+ "error": "",
+ "publisher_loss": {
+  "duration_s": 1.45,
+  "coast_distance_m": 0.104,
+  "coast_yaw_change_rad": 0.0,
+  "tail_vx_mps": -0.002,
+  "tail_wz_rps": 0.001
+ },
+ "wall_s": 79.43929860802018,
+ "backend": "isaac",
+ "map": "nav_empty",
+ "mode": "display",
+ "phases": [
+  {
+   "name": "forward",
+   "requested": [
+    0.25,
+    0.0,
+    0.0
+   ],
+   "measured": {
+    "vx": 0.247,
+    "vy": -0.0,
+    "wz": 0.0,
+    "distance": 0.495,
+    "measured_sim_s": 2.0
+   }
+  },
+  {
+   "name": "reverse",
+   "requested": [
+    -0.25,
+    0.0,
+    0.0
+   ],
+   "measured": {
+    "vx": -0.248,
+    "vy": -0.0,
+    "wz": 0.001,
+    "distance": 0.495,
+    "measured_sim_s": 2.0
+   }
+  },
+  {
+   "name": "strafe",
+   "requested": [
+    0.0,
+    0.25,
+    0.0
+   ],
+   "measured": {
+    "vx": 0.0,
+    "vy": 0.246,
+    "wz": -0.0,
+    "distance": 0.738,
+    "measured_sim_s": 3.0
+   }
+  },
+  {
+   "name": "turn",
+   "requested": [
+    0.0,
+    0.0,
+    0.25
+   ],
+   "measured": {
+    "vx": -0.0,
+    "vy": -0.0,
+    "wz": 0.246,
+    "distance": 0.001,
+    "measured_sim_s": 3.0
+   }
+  },
+  {
+   "name": "neutral",
+   "requested": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "measured": {
+    "vx": -0.0,
+    "vy": 0.0,
+    "wz": -0.001,
+    "distance": 0.001,
+    "measured_sim_s": 2.0
+   }
+  }
+ ],
+ "sensor_counts": {
+  "images": 8,
+  "scans": 8,
+  "joint_messages": 397,
+  "truth_samples": 2517
+ },
+ "raw_report": {
+  "path": "/workspace/molar/robot_lab_runtime/myagv-pro-20261112/rollers-isaac-1.json",
+  "sha256": "d239baf34bdeb2e85cf712b3d62968bf473aeb2b7c64f3369300be0c74ecdc3d"
+ }
+}

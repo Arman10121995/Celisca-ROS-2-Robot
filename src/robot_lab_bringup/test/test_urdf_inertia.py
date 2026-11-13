@@ -3,6 +3,25 @@ import math
 
 import pytest
 from robot_lab_utils.urdf_inertia import fixed_root_inertial
+from robot_lab_utils.urdf_inertia import bullet_frame_inertials
+import xml.etree.ElementTree as ET
+
+
+def test_bullet_empty_frames_retain_names_and_real_source_inertias():
+    source='''<robot name="test"><link name="root"/><link name="body">
+      <inertial><mass value="2"/><inertia ixx=".1" iyy=".2" izz=".3"/></inertial></link>
+      <link name="imu"/><joint name="mount" type="fixed"><parent link="root"/><child link="body"/></joint>
+      <joint name="sensor" type="fixed"><parent link="body"/><child link="imu"/></joint></robot>'''
+    before=ET.fromstring(source);after=ET.fromstring(bullet_frame_inertials(source))
+    assert [e.get('name') for e in after.findall('link')]==['root','body','imu']
+    assert float(after.find("link[@name='root']/inertial/mass").get('value'))==1e-6
+    assert float(after.find("link[@name='imu']/inertial/mass").get('value'))==0.
+    assert ET.canonicalize(ET.tostring(before.find("link[@name='body']/inertial"),encoding='unicode'),strip_text=True)==ET.canonicalize(ET.tostring(after.find("link[@name='body']/inertial"),encoding='unicode'),strip_text=True)
+
+
+def test_bullet_missing_geometry_inertia_is_not_silently_invented():
+    with pytest.raises(ValueError,match='geometry'):
+        bullet_frame_inertials('<robot><link name="body"><collision/></link></robot>')
 
 
 def test_rotated_fixed_child_and_parallel_axis_preserve_root_component_only():

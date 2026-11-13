@@ -715,6 +715,8 @@ class PyBulletSpawner(Node):
         urdf = ""
         tmp = None
         link_friction = {}
+        native_config = parse_drive_config(self.get_parameter('drive_config').value)
+        source_springs = None
         if not robot_free:
             if not os.path.isfile(str(model)):
                 self.get_logger().error(f"URDF not found: {model}")
@@ -739,6 +741,12 @@ class PyBulletSpawner(Node):
             # Per-link friction lives in the <gazebo> blocks that are removed next.
             link_friction = gazebo_link_friction(urdf)
             self._base_frame = urdf_link_frames(urdf)[1] or "base_footprint"
+            if native_config.get('pybullet_preserve_passive_springs', False):
+                from robot_lab_utils.urdf_springs import joint_springs
+                source_springs = joint_springs(urdf)
+            if native_config.get('pybullet_explicit_massless_frames', False):
+                from robot_lab_utils.urdf_inertia import bullet_frame_inertials
+                urdf = bullet_frame_inertials(urdf)
             urdf = _strip_gazebo_tags(urdf)
 
             tmp = tempfile.NamedTemporaryFile(suffix=".urdf", delete=False, mode="w")
@@ -812,6 +820,13 @@ class PyBulletSpawner(Node):
         self._robot_urdf_path = tmp.name
         self.get_logger().info(f"Loaded robot id={self._robot_id}"
                                f" ({p.getNumJoints(self._robot_id)} joints)")
+        if 'pybullet_expected_mass_kg' in native_config:
+            mass = sum(p.getDynamicsInfo(self._robot_id, index)[0]
+                       for index in range(-1, p.getNumJoints(self._robot_id)))
+            expected = float(native_config['pybullet_expected_mass_kg'])
+            if not math.isfinite(mass) or not math.isclose(mass, expected, rel_tol=1e-3, abs_tol=1e-3):
+                raise ValueError(f'Imported robot mass {mass} kg differs from source {expected} kg')
+            self.get_logger().info(f'Imported source robot mass: {mass:.9f} kg (expected {expected:.9f})')
 
         # Index maps
         for i in range(p.getNumJoints(self._robot_id)):
@@ -1017,7 +1032,7 @@ class PyBulletSpawner(Node):
             f"Joints: {self._joint_names}  lw={lw} rw={rw}")
         from robot_lab_utils.urdf_springs import joint_springs
         self._spring_joints = []
-        for name, spring in joint_springs(urdf).items():
+        for name, spring in (source_springs if source_springs is not None else joint_springs(urdf)).items():
             index = self._joint_idx.get(name, -1)
             if index < 0:
                 raise ValueError('Imported passive spring joint missing: '+name)

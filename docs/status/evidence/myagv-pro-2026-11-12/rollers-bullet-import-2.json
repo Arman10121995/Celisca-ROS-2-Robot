@@ -1,0 +1,380 @@
+{
+  "total_mass": 25.33590622149241,
+  "links": [
+    {
+      "index": -1,
+      "name": "base_footprint",
+      "mass": 1.0
+    },
+    {
+      "index": 0,
+      "name": "base_link",
+      "mass": 19.236
+    },
+    {
+      "index": 1,
+      "name": "laser_link",
+      "mass": 0.049095
+    },
+    {
+      "index": 2,
+      "name": "camera_link",
+      "mass": 1.0
+    },
+    {
+      "index": 3,
+      "name": "oakd_rgb_camera_frame",
+      "mass": 1.0
+    },
+    {
+      "index": 4,
+      "name": "oakd_rgb_camera_optical_frame",
+      "mass": 1.0
+    },
+    {
+      "index": 5,
+      "name": "imu_link",
+      "mass": 1.0
+    },
+    {
+      "index": 6,
+      "name": "left_front_wheel_lab_carrier",
+      "mass": 0.005
+    },
+    {
+      "index": 7,
+      "name": "left_front_wheel_link",
+      "mass": 0.27135
+    },
+    {
+      "index": 8,
+      "name": "left_front_wheel_lab_roller_1",
+      "mass": 0.00201
+    },
+    {
+      "index": 9,
+      "name": "left_front_wheel_lab_roller_2",
+      "mass": 0.00201
+    },
+    {
+      "index": 10,
+      "name": "left_front_wheel_lab_roller_3",
+      "mass": 0.00201
+    },
+    {
+      "index": 11,
+      "name": "left_front_wheel_lab_roller_4",
+      "mass": 0.00201
+    },
+    {
+      "index": 12,
+      "name": "left_front_wheel_lab_roller_5",
+      "mass": 0.00201
+    },
+    {
+      "index": 13,
+      "name": "left_front_wheel_lab_roller_6",
+      "mass": 0.00201
+    },
+    {
+      "index": 14,
+      "name": "left_front_wheel_lab_roller_7",
+      "mass": 0.00201
+    },
+    {
+      "index": 15,
+      "name": "left_front_wheel_lab_roller_8",
+      "mass": 0.00201
+    },
+    {
+      "index": 16,
+      "name": "left_front_wheel_lab_roller_9",
+      "mass": 0.00201
+    },
+    {
+      "index": 17,
+      "name": "left_front_wheel_lab_roller_10",
+      "mass": 0.00201
+    },
+    {
+      "index": 18,
+      "name": "left_front_wheel_lab_roller_11",
+      "mass": 0.00201
+    },
+    {
+      "index": 19,
+      "name": "left_front_wheel_lab_roller_12",
+      "mass": 0.00201
+    },
+    {
+      "index": 20,
+      "name": "left_front_wheel_lab_roller_13",
+      "mass": 0.00201
+    },
+    {
+      "index": 21,
+      "name": "left_front_wheel_lab_roller_14",
+      "mass": 0.00201
+    },
+    {
+      "index": 22,
+      "name": "left_front_wheel_lab_roller_15",
+      "mass": 0.00201
+    },
+    {
+      "index": 23,
+      "name": "left_rear_wheel_lab_carrier",
+      "mass": 0.005
+    },
+    {
+      "index": 24,
+      "name": "left_rear_wheel_link",
+      "mass": 0.266517
+    },
+    {
+      "index": 25,
+      "name": "left_rear_wheel_lab_roller_1",
+      "mass": 0.0019742
+    },
+    {
+      "index": 26,
+      "name": "left_rear_wheel_lab_roller_2",
+      "mass": 0.0019742
+    },
+    {
+      "index": 27,
+      "name": "left_rear_wheel_lab_roller_3",
+      "mass": 0.0019742
+    },
+    {
+      "index": 28,
+      "name": "left_rear_wheel_lab_roller_4",
+      "mass": 0.0019742
+    },
+    {
+      "index": 29,
+      "name": "left_rear_wheel_lab_roller_5",
+      "mass": 0.0019742
+    },
+    {
+      "index": 30,
+      "name": "left_rear_wheel_lab_roller_6",
+      "mass": 0.0019742
+    },
+    {
+      "index": 31,
+      "name": "left_rear_wheel_lab_roller_7",
+      "mass": 0.0019742
+    },
+    {
+      "index": 32,
+      "name": "left_rear_wheel_lab_roller_8",
+      "mass": 0.0019742
+    },
+    {
+      "index": 33,
+      "name": "left_rear_wheel_lab_roller_9",
+      "mass": 0.0019742
+    },
+    {
+      "index": 34,
+      "name": "left_rear_wheel_lab_roller_10",
+      "mass": 0.0019742
+    },
+    {
+      "index": 35,
+      "name": "left_rear_wheel_lab_roller_11",
+      "mass": 0.0019742
+    },
+    {
+      "index": 36,
+      "name": "left_rear_wheel_lab_roller_12",
+      "mass": 0.0019742
+    },
+    {
+      "index": 37,
+      "name": "left_rear_wheel_lab_roller_13",
+      "mass": 0.0019742
+    },
+    {
+      "index": 38,
+      "name": "left_rear_wheel_lab_roller_14",
+      "mass": 0.0019742
+    },
+    {
+      "index": 39,
+      "name": "left_rear_wheel_lab_roller_15",
+      "mass": 0.0019742
+    },
+    {
+      "index": 40,
+      "name": "right_front_wheel_lab_carrier",
+      "mass": 0.005
+    },
+    {
+      "index": 41,
+      "name": "right_front_wheel_link",
+      "mass": 0.194932099343196
+    },
+    {
+      "index": 42,
+      "name": "right_front_wheel_lab_roller_1",
+      "mass": 0.0014439414766162669
+    },
+    {
+      "index": 43,
+      "name": "right_front_wheel_lab_roller_2",
+      "mass": 0.0014439414766162669
+    },
+    {
+      "index": 44,
+      "name": "right_front_wheel_lab_roller_3",
+      "mass": 0.0014439414766162669
+    },
+    {
+      "index": 45,
+      "name": "right_front_wheel_lab_roller_4",
+      "mass": 0.0014439414766162669
+    },
+    {
+      "index": 46,
+      "name": "right_front_wheel_lab_roller_5",
+      "mass": 0.0014439414766162669
+    },
+    {
+      "index": 47,
+      "name": "right_front_wheel_lab_roller_6",
+      "mass": 0.0014439414766162669
+    },
+    {
+      "index": 48,
+      "name": "right_front_wheel_lab_roller_7",
+      "mass": 0.0014439414766162669
+    },
+    {
+      "index": 49,
+      "name": "right_front_wheel_lab_roller_8",
+      "mass": 0.0014439414766162669
+    },
+    {
+      "index": 50,
+      "name": "right_front_wheel_lab_roller_9",
+      "mass": 0.0014439414766162669
+    },
+    {
+      "index": 51,
+      "name": "right_front_wheel_lab_roller_10",
+      "mass": 0.0014439414766162669
+    },
+    {
+      "index": 52,
+      "name": "right_front_wheel_lab_roller_11",
+      "mass": 0.0014439414766162669
+    },
+    {
+      "index": 53,
+      "name": "right_front_wheel_lab_roller_12",
+      "mass": 0.0014439414766162669
+    },
+    {
+      "index": 54,
+      "name": "right_front_wheel_lab_roller_13",
+      "mass": 0.0014439414766162669
+    },
+    {
+      "index": 55,
+      "name": "right_front_wheel_lab_roller_14",
+      "mass": 0.0014439414766162669
+    },
+    {
+      "index": 56,
+      "name": "right_front_wheel_lab_roller_15",
+      "mass": 0.0014439414766162669
+    },
+    {
+      "index": 57,
+      "name": "right_rear_wheel_lab_carrier",
+      "mass": 0.005
+    },
+    {
+      "index": 58,
+      "name": "right_rear_wheel_link",
+      "mass": 0.194931
+    },
+    {
+      "index": 59,
+      "name": "right_rear_wheel_lab_roller_1",
+      "mass": 0.0014439333333333335
+    },
+    {
+      "index": 60,
+      "name": "right_rear_wheel_lab_roller_2",
+      "mass": 0.0014439333333333335
+    },
+    {
+      "index": 61,
+      "name": "right_rear_wheel_lab_roller_3",
+      "mass": 0.0014439333333333335
+    },
+    {
+      "index": 62,
+      "name": "right_rear_wheel_lab_roller_4",
+      "mass": 0.0014439333333333335
+    },
+    {
+      "index": 63,
+      "name": "right_rear_wheel_lab_roller_5",
+      "mass": 0.0014439333333333335
+    },
+    {
+      "index": 64,
+      "name": "right_rear_wheel_lab_roller_6",
+      "mass": 0.0014439333333333335
+    },
+    {
+      "index": 65,
+      "name": "right_rear_wheel_lab_roller_7",
+      "mass": 0.0014439333333333335
+    },
+    {
+      "index": 66,
+      "name": "right_rear_wheel_lab_roller_8",
+      "mass": 0.0014439333333333335
+    },
+    {
+      "index": 67,
+      "name": "right_rear_wheel_lab_roller_9",
+      "mass": 0.0014439333333333335
+    },
+    {
+      "index": 68,
+      "name": "right_rear_wheel_lab_roller_10",
+      "mass": 0.0014439333333333335
+    },
+    {
+      "index": 69,
+      "name": "right_rear_wheel_lab_roller_11",
+      "mass": 0.0014439333333333335
+    },
+    {
+      "index": 70,
+      "name": "right_rear_wheel_lab_roller_12",
+      "mass": 0.0014439333333333335
+    },
+    {
+      "index": 71,
+      "name": "right_rear_wheel_lab_roller_13",
+      "mass": 0.0014439333333333335
+    },
+    {
+      "index": 72,
+      "name": "right_rear_wheel_lab_roller_14",
+      "mass": 0.0014439333333333335
+    },
+    {
+      "index": 73,
+      "name": "right_rear_wheel_lab_roller_15",
+      "mass": 0.0014439333333333335
+    }
+  ]
+}

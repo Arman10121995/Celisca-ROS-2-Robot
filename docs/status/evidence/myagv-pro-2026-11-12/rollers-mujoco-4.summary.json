@@ -1,0 +1,109 @@
+{
+ "robot": "asset_elephant_myagv_pro_rollers",
+ "source_id": "elephant_myagv_pro",
+ "source_revision": "d3851c768d2e887eef7ad79fc4dcb9a928b070ac",
+ "description_sha256": "4f26eab6929120952a64cf797a4da1073497614edd11813fba187b6cc4aeb863",
+ "odom": "/odom/ground_truth",
+ "input": "/key_vel",
+ "scope": "Initial source-plant control and sensing; no mission qualification",
+ "completed": true,
+ "error": "",
+ "publisher_loss": {
+  "duration_s": 2.6,
+  "coast_distance_m": 0.183,
+  "coast_yaw_change_rad": -0.003,
+  "tail_vx_mps": 0.0,
+  "tail_wz_rps": -0.001
+ },
+ "wall_s": 34.14249156200094,
+ "backend": "mujoco",
+ "map": "nav_empty",
+ "mode": "display",
+ "phases": [
+  {
+   "name": "forward",
+   "requested": [
+    0.25,
+    0.0,
+    0.0
+   ],
+   "measured": {
+    "vx": 0.238,
+    "vy": 0.0,
+    "wz": 0.0,
+    "distance": 0.476,
+    "measured_sim_s": 2.0
+   }
+  },
+  {
+   "name": "reverse",
+   "requested": [
+    -0.25,
+    0.0,
+    0.0
+   ],
+   "measured": {
+    "vx": -0.213,
+    "vy": 0.0,
+    "wz": 0.001,
+    "distance": 0.427,
+    "measured_sim_s": 2.0
+   }
+  },
+  {
+   "name": "strafe",
+   "requested": [
+    0.0,
+    0.25,
+    0.0
+   ],
+   "measured": {
+    "vx": 0.001,
+    "vy": 0.216,
+    "wz": 0.011,
+    "distance": 0.645,
+    "measured_sim_s": 2.98
+   }
+  },
+  {
+   "name": "turn",
+   "requested": [
+    0.0,
+    0.0,
+    0.25
+   ],
+   "measured": {
+    "vx": 0.0,
+    "vy": 0.0,
+    "wz": 0.238,
+    "distance": 0.0,
+    "measured_sim_s": 2.98
+   }
+  },
+  {
+   "name": "neutral",
+   "requested": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "measured": {
+    "vx": -0.0,
+    "vy": -0.0,
+    "wz": 0.0,
+    "distance": 0.001,
+    "measured_sim_s": 2.0
+   }
+  }
+ ],
+ "sensor_counts": {
+  "images": 8,
+  "scans": 8,
+  "joint_messages": 433,
+  "truth_samples": 1298
+ },
+ "raw_report": {
+  "path": "/workspace/molar/robot_lab_runtime/myagv-pro-20261112/rollers-mujoco-4.json",
+  "sha256": "9ed1a34d6dc3b7ab05c0f4bac1df32c26bfd2c27215099dd0059a54903a12a4b"
+ }
+}

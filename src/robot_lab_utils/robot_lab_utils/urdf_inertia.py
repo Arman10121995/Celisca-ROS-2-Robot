@@ -5,6 +5,40 @@ import numpy as np
 from scipy.spatial.transform import Rotation
 
 
+def bullet_frame_inertials(urdf, root_mass=1e-6):
+    """Avoid Bullet's default 1 kg for empty TF links, retaining link names.
+
+    Fixed geometry-free frames get explicit zero inertia. An otherwise empty
+    floating root needs a small positive inertia to remain dynamic in Bullet.
+    Never synthesize inertia for geometry or a movable non-root link.
+    """
+    import math
+    if not math.isfinite(root_mass) or root_mass <= 0:
+        raise ValueError('Floating frame root mass must be positive')
+    document = ET.fromstring(urdf)
+    links = {link.get('name'): link for link in document.findall('link')}
+    parents = {joint.find('child').get('link'): joint for joint in document.findall('joint')}
+    roots = set(links) - set(parents)
+    if len(roots) != 1:
+        raise ValueError('Expected one URDF root')
+    for name, link in links.items():
+        if link.find('inertial') is not None:
+            continue
+        if link.find('visual') is not None or link.find('collision') is not None:
+            raise ValueError('Missing source inertia on geometry link: ' + name)
+        is_root = name in roots
+        if not is_root and parents[name].get('type') != 'fixed':
+            raise ValueError('Missing source inertia on movable link: ' + name)
+        inertial = ET.SubElement(link, 'inertial')
+        ET.SubElement(inertial, 'mass', value=str(root_mass if is_root else 0.))
+        diagonal = str(root_mass * 1e-3 if is_root else 0.)
+        ET.SubElement(inertial, 'inertia', ixx=diagonal, iyy=diagonal, izz=diagonal,
+                      ixy='0', ixz='0', iyz='0')
+    # Bullet's tinyxml parser can reject this large generated URDF on one line.
+    ET.indent(document)
+    return ET.tostring(document, encoding='unicode')
+
+
 def fixed_root_inertial(urdf):
     root=ET.fromstring(urdf)
     links={e.get('name'):e for e in root.findall('link')}

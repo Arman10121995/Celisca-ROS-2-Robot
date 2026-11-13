@@ -1,0 +1,109 @@
+{
+ "robot": "asset_elephant_myagv_pro_rollers",
+ "source_id": "elephant_myagv_pro",
+ "source_revision": "d3851c768d2e887eef7ad79fc4dcb9a928b070ac",
+ "description_sha256": "2ae115bb158903a6a4457fb487d8deaa232e680cb0933b9bfe4e7ef817191495",
+ "odom": "/odom/ground_truth",
+ "input": "/key_vel",
+ "scope": "Initial source-plant control and sensing; no mission qualification",
+ "completed": true,
+ "error": "",
+ "publisher_loss": {
+  "duration_s": 1.167,
+  "coast_distance_m": 0.156,
+  "coast_yaw_change_rad": -0.004,
+  "tail_vx_mps": 0.005,
+  "tail_wz_rps": -0.002
+ },
+ "wall_s": 63.056534869014286,
+ "backend": "pybullet",
+ "map": "nav_empty",
+ "mode": "display",
+ "phases": [
+  {
+   "name": "forward",
+   "requested": [
+    0.25,
+    0.0,
+    0.0
+   ],
+   "measured": {
+    "vx": 0.248,
+    "vy": -0.003,
+    "wz": 0.002,
+    "distance": 0.495,
+    "measured_sim_s": 2.0
+   }
+  },
+  {
+   "name": "reverse",
+   "requested": [
+    -0.25,
+    0.0,
+    0.0
+   ],
+   "measured": {
+    "vx": -0.202,
+    "vy": 0.002,
+    "wz": -0.003,
+    "distance": 0.404,
+    "measured_sim_s": 2.0
+   }
+  },
+  {
+   "name": "strafe",
+   "requested": [
+    0.0,
+    0.25,
+    0.0
+   ],
+   "measured": {
+    "vx": 0.001,
+    "vy": 0.234,
+    "wz": 0.011,
+    "distance": 0.703,
+    "measured_sim_s": 3.0
+   }
+  },
+  {
+   "name": "turn",
+   "requested": [
+    0.0,
+    0.0,
+    0.25
+   ],
+   "measured": {
+    "vx": -0.001,
+    "vy": 0.001,
+    "wz": 0.248,
+    "distance": 0.003,
+    "measured_sim_s": 3.0
+   }
+  },
+  {
+   "name": "neutral",
+   "requested": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "measured": {
+    "vx": 0.001,
+    "vy": -0.002,
+    "wz": -0.01,
+    "distance": 0.005,
+    "measured_sim_s": 2.0
+   }
+  }
+ ],
+ "sensor_counts": {
+  "images": 8,
+  "scans": 8,
+  "joint_messages": 390,
+  "truth_samples": 1170
+ },
+ "raw_report": {
+  "path": "/workspace/molar/robot_lab_runtime/myagv-pro-20261112/rollers-pybullet-1.json",
+  "sha256": "6e4db58463c97ed976c8540cc11c9f63a1f0bd87987f80bc59bbf4ed738b467f"
+ }
+}

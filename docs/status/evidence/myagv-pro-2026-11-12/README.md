@@ -97,3 +97,38 @@ contact/actuator adapters before being enabled; this Fortress-specific
 anisotropy is not silently reused there. Mass/tire calibration, vendor
 charging/serial operation and complete arm-equipped composites remain
 separate. Preserve the current source variant and its scoped receipts.
+
+## Portable roller variant: MuJoCo, PyBullet, Isaac (2026-11-12/13)
+
+`asset_elephant_myagv_pro_rollers` is a separate profile for the three
+self-contained backends; the Gazebo Fortress profile is unchanged. Each driven
+wheel keeps the vendor CAD visual and the original wheel mass, centre of mass
+and inertia, decomposed into a core plus 15 free passive rollers in the
+FUJI mecanum geometry (`DaiGuard/fuji_mecanum` at
+`646431a5e107448e0e2bdeeba4575db9aa3665ff`, MIT). It is a declared lab
+derivative (`robot_lab_utils/myagv_rollers.py`), not vendor tyre calibration.
+
+PyBullet first imported 25.3 kg instead of the source 20.336 kg: Bullet gives
+every empty TF frame a default 1 kg ([retained import report](rollers-bullet-import-2.json)).
+`urdf_inertia.bullet_frame_inertials` now gives geometry-free fixed frames zero
+inertia (and the floating root 1e-6 kg), refuses to invent inertia for any
+geometry or movable link, and the spawner stops if the imported mass differs
+from the source. The repeat imported **20.335907 kg (expected 20.335907)**.
+
+Display drive screens, `nav_empty`, the normal `/key_vel` input path,
+independent simulator truth (`scripts/screen_ground_counterpart.py`, 0.25 m/s
+or rad/s requests); raw traces stay on the SSD, summaries here:
+
+| Backend | Forward | Reverse | Strafe | Turn | Neutral | Publisher loss | Sensors | Summary |
+|---|---|---|---|---|---|---|---|---|
+| MuJoCo (Codex run 4) | 0.238 m/s | −0.213 m/s | 0.216 m/s | 0.238 rad/s | still | stopped | RGB, LiDAR, joints | [summary](rollers-mujoco-4.summary.json) |
+| PyBullet | 0.248 m/s | −0.202 m/s | 0.234 m/s | 0.248 rad/s | still | coasted 0.156 m, stopped | 8 RGB, 8 scans | [summary](rollers-pybullet-1.summary.json) |
+| Isaac Sim | 0.247 m/s | −0.248 m/s | 0.246 m/s | 0.246 rad/s | still | coasted 0.104 m, stopped | 8 RGB, 8 scans | [summary](rollers-isaac-1.summary.json) |
+
+Navigation (experimental opt-in), PyBullet, `nav_empty`,
+`scripts/sim_nav_mission.sh`: **passed**: detour route, cancel, resume
+(0.034 m from goal A), near-obstacle goal B (0.118 m). [Report](rollers-pybullet-nav-1.json).
+
+Scope: named screens on one empty map; other maps, furnished routes, SLAM and
+MuJoCo/Isaac navigation are not yet measured, and higher modes stay
+experimental in the GUI.

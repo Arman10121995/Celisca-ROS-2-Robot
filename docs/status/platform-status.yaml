@@ -2101,13 +2101,27 @@ tasks:
     tasks:
       R14.2:
         acceptance_ref: ROADMAP.md R14.2
-        owner: codex
-        state: active
-        updated: '2026-11-12'
+        owner: claude
+        state: partial
+        updated: '2026-11-13'
         title: Official Elephant Robotics myAGV Pro integration — user top priority
         scope_paths: [scripts/, src/robot_lab_utils/, src/robot_lab_mujoco/, src/robot_lab_pybullet/, src/robot_lab_isaac/, src/robot_lab_bringup/, src/robot_lab_gui/, src/robot_lab_robots/, src/robot_lab_adapter/, src/robot_lab_navigation/, src/robot_lab/robot_lab_registry/, docs/, README.md, ROADMAP.md]
-        next_action: Source Gazebo Display and one normal-GUI Nav2 arrival are implemented and measured. Continue portable physical wheel/contact adapters before enabling other backends; keep R14.2 ahead of all older tasks. Preserve source model, lab approximation labels and actual receipts.
+        next_action: 'Implemented 2026-11-13 (claude, on the user''s request): Gazebo source variant plus the portable roller variant measured driving in MuJoCo, PyBullet and Isaac; Nav2 measured in Gazebo (nav_empty) and PyBullet. Validation: other maps, SLAM, MuJoCo/Isaac navigation.'
         evidence: [docs/status/evidence/myagv-pro-2026-11-12/README.md, docs/tutorials/myagv-pro.md]
+      R14.3:
+        acceptance_ref: ROADMAP.md R14.3
+        owner: claude
+        state: active
+        updated: '2026-11-13'
+        title: Official myAGV Pro plus myCobot Pro630 mobile manipulator
+        next_action: After R14.2, pin official arm assets and compose a complete mobile manipulator with native bounded Drive/Arm control and normal GUI registration.
+      R14.4:
+        acceptance_ref: ROADMAP.md R14.4
+        owner: claude
+        state: queued
+        updated: '2026-11-13'
+        title: Beginner contributor chapters for robots, maps and GUI integration
+        next_action: After R14.3, write prerequisites-to-GUI integration chapters and include them in the native documentation library.
       R14.1:
         acceptance_ref: ROADMAP.md R14.1
         owner: codex

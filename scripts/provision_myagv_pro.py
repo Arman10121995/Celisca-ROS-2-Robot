@@ -64,6 +64,8 @@ def provision(store, download=False, variant='fortress'):
         drive['mujoco_preserve_fixed_root_inertia']=True
         drive['mujoco_expected_mass_kg']=sum(float(mass.get('value')) for mass in document.findall('link/inertial/mass'))
         drive.update(mujoco_wheel_velocity_gain=10.,mujoco_wheel_armature=.02,mujoco_implicit_wheel_control=True)
+        drive.update(pybullet_explicit_massless_frames=True, pybullet_preserve_passive_springs=True,
+                     pybullet_expected_mass_kg=drive['mujoco_expected_mass_kg']+1e-6)
     identity=hashlib.sha256(ET.tostring(document)+json.dumps(drive,sort_keys=True).encode()).hexdigest()
     target=store/'models'/name/identity;target.mkdir(parents=True,exist_ok=True)
     controls=target/'controllers.yaml'

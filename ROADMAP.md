@@ -123,7 +123,9 @@ Work top to bottom. Each line links to its task.
 
 | Order | Task | Remaining implementation (short) | State |
 |---|---|---|---|
-| I0 | [R14.2](#r142--elephant-robotics-myagv-pro) myAGV Pro | Official source Gazebo base/control/sensors/GUI and one Nav2 goal implemented and measured; portable wheel/backend adapters remain next, before other tasks | active; scoped Gazebo delivery |
+| I0 | [R14.2](#r142--elephant-robotics-myagv-pro) myAGV Pro | Done: Gazebo source variant plus portable roller variant driving in MuJoCo, PyBullet and Isaac; Nav2 measured in Gazebo and PyBullet | implemented |
+| I0a | [R14.3](#r143--elephant-myagv-pro-mobile-manipulator) Elephant mobile manipulator | Official myAGV Pro + myCobot Pro630 composition, normal GUI Drive/Arm controls | not started |
+| I0b | [R14.4](#r144--contributor-integration-course) Integration guide chapters | Prerequisites, adding robots/maps/controllers/sensors and GUI registration | not started |
 | I1 | [R13.2](#r132--vacuum-carpets-and-mopping) Vacuum carpets and mopping | Done 2026-11-10 (Gazebo mop + rug run passes) | implemented |
 | I2 | [R13.3](#r133--vacuum-camera-obstacle-recognition) Vacuum camera obstacles | Initial implementation complete, including trained experimental checkpoint; recognition quality and robot mission pending | partial |
 | I3 | [R14.1](#r141--open-source-counterparts-for-self-made-robots) Open-source robots | Initial source-search/integration pass complete: TurtleBot4, WAM-V, Summit-STEEL and source octopod measured; BlueROV2 remains a restricted local candidate. Remaining licensing/mission qualification recorded separately | implemented; acceptance partial |
@@ -947,13 +949,36 @@ These are complete; preserve their scoped contracts. R1.3 follow-up CI passes at
 
 ### R14.2 — Elephant Robotics myAGV Pro
 
-- **State:** active; scoped Gazebo implementation delivered · **Priority:** I0 (user top priority, 2026-11-12) · **Owner:** codex
+- **State:** implemented (2026-11-13); validation partial · **Priority:** I0 (user top priority, 2026-11-12) · **Owner:** claude (from codex, on the user's request 2026-11-13)
 - **Goal:** integrate the official myAGV Pro from the [vendor guide](https://docs.elephantrobotics.com/docs/myAGV_Pro_en/) as a normal complete robot in Robot Lab.
 - **Have:** separate BSD-3-Clause `asset_elephant_myagv_pro`, complete official CAD visual model/inertias/sensor mounts, geometric corner mapping, declared lab contact/compliance adapter, bounded native holonomic control, all measured passive-joint states, LiDAR/IMU/RGB-D, native GUI family/tags, Drive/strafe and automatic algorithm/command selection. Gazebo Display forward/reverse/strafe/turn/neutral/command-loss are measured. One normal-GUI Nav2 topic goal in `nav_empty` settled at 0.125 m / 2.23° actual body error. [Guide](docs/tutorials/myagv-pro.md) · [receipt and retained failures](docs/status/evidence/myagv-pro-2026-11-12/README.md).
-- **Remaining implementation:** portable wheel/contact/actuator adapters for MuJoCo, PyBullet and Isaac; preserve the Fortress source variant while adding them. Hardware serial/charging and complete vendor arm-equipped composites need their actual contracts (also R5.9); no fictitious SDK or generic mock-hardware grant. The CAD mass (~20.316 kg) differs from the documented hardware 40 kg; physical mass/tire calibration remains separate.
+- **Portable variant (2026-11-13):** `asset_elephant_myagv_pro_rollers` (vendor wheel mass/inertia split into a core plus 15 free FUJI rollers, MIT) drives in MuJoCo, PyBullet and Isaac: forward/reverse/strafe/turn/neutral/publisher loss measured in each; source mass imported exactly in PyBullet (20.336 kg) after empty frames stopped getting Bullet's default 1 kg; a full Nav2 mission passed in PyBullet.
+- **Remaining implementation:** none for the base. Hardware serial/charging and complete vendor arm-equipped composites need their actual contracts (also R5.9); no fictitious SDK or generic mock-hardware grant. The CAD mass (~20.316 kg) differs from the documented hardware 40 kg; physical mass/tire calibration remains separate.
 - **How to do it:** `scripts/provision_myagv_pro.py` pins `elephantrobotics/agv_pro_ros2` at `d3851c768d2e887eef7ad79fc4dcb9a928b070ac`; `robot_lab_utils/myagv_pro.py` owns explicit adaptations. Keep source assets/recipes/negative traces on SSD. Portable real rollers or a backend-supported directional contact model are required before enabling another engine; do not reuse Fortress XML there as if it worked. Preserve conservative wheel limits, joint/body feedback, geometric corner mapping and proper source mounts. DWB RotateToGoal and goal-checker XY thresholds must match; source-specific Jetson sampling budget is intentional.
 - **Done when:** source-backed robot launches from the GUI with real motion/joints/sensors/Stop on each advertised backend, compatible pipelines are implemented and exact limitations are visible. Current Gazebo Display and one Nav route have receipts; other backend adapters stay gated until implemented.
 - **Validation later:** localization/2D/3D acquisition missions, additional map/backend routes, furnished obstacles, loss/reset histories, hardware SDK operation and calibrated dynamics. Keep other implementation tasks behind this new user priority.
+
+### R14.3 — Elephant myAGV Pro mobile manipulator
+
+- **State:** active (2026-11-13) · **Priority:** I0a (after R14.2, user request 2026-11-12) · **Owner:** claude (from codex, on the user's request)
+- **Depends on:** R14.2, existing R5.7/R5.9 arm adapters.
+- **Goal:** add the official arm-equipped myAGV Pro as a complete mobile manipulator alongside the base.
+- **Have:** vendor documents [myAGV Pro + myCobot Pro630](https://docs.elephantrobotics.com/docs/myAGV_Pro_en/7-ExamplesRobotsUsing/7.3-MyCobotPro630.html); official ROS 2 description is available for source review.
+- **Remaining implementation:** pin/license-check the official arm; compose source frames, mechanics and explicit mounting adapter; implement bounded native joint control, GUI classification/Drive/Arm defaults and visible capability limits.
+- **How to do it:** finish R14.2 first. Reuse its separate backend adapters and existing native articulation/arm contracts; keep the base-only profiles. Preserve actual arm masses, limits, names and meshes. Declare any mounting dimensions or missing inertias rather than presenting them as vendor specifications. No hardware connection merely from source availability.
+- **Done when:** complete source-backed mobile manipulator is installed in the normal GUI with real base/arm feedback and bounded control/Stop on advertised backends; supported pipelines and limitations are clear.
+- **Validation later:** navigation/reach/pick/place transport, contact/calibration and other backend/map missions remain separate measured acceptance.
+
+### R14.4 — Contributor integration course
+
+- **State:** queued · **Priority:** I0b (after R14.3, user request 2026-11-12) · **Owner:** claude (from codex, on the user's request)
+- **Depends on:** current source-backed integration recipes.
+- **Goal:** explain how a new contributor adds robots, maps and related components, including normal GUI integration.
+- **Have:** asset/agent guides and architecture explorer; concrete official robot import recipes.
+- **Remaining implementation:** linked beginner chapters with prerequisites, source/license checks, model/frame/mass contracts, backend adapters, controls/sensors, map conversion/occupancy/spawn, profiles/registry/family/defaults, documentation and scoped evidence.
+- **How to do it:** add chapters to docs/learn and the existing native GUI documentation library; reference real paths and runnable commands, illustrate the data flow and provide concrete examples and troubleshooting. Preserve ROADMAP as the single goal list.
+- **Done when:** chapters are reachable in the main GUI and tutorial index, and cover prerequisites through a usable normal GUI robot/world entry without fabricated support claims.
+- **Validation later:** clean-host contributor walkthrough and broader platform acceptance remain under R9.
 
 ### Stabilization patches (P1–P8)
 
