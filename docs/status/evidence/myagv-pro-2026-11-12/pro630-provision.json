@@ -1,0 +1,637 @@
+{
+  "repository": "https://github.com/elephantrobotics/agv_pro_ros2",
+  "source_id": "elephant_myagv_pro",
+  "revision": "d3851c768d2e887eef7ad79fc4dcb9a928b070ac",
+  "license": "BSD-3-Clause",
+  "original": "/workspace/molar/robot_lab_runtime/external_assets/sources/elephant_myagv_pro/d3851c768d2e887eef7ad79fc4dcb9a928b070ac/agv_pro_description/urdf/agv_pro.urdf",
+  "source_sha256": "e4c7a0d2bb18c54c9021b4ee230560e545e3c9c47e808ce6cea88d347f967507",
+  "source_expanded_sha256": "07a4abb8373bb13fceebe3a362db155c9aeb306ab0d43f45d2450cd79bbd61ee",
+  "description": "/workspace/molar/robot_lab_runtime/external_assets/models/asset_elephant_myagv_pro_pro630/8f0e74dd26839d190531f2d152a6abe2e797cc23b2557e9d77fd9b0e893994ce/drive.urdf",
+  "description_sha256": "495b0263b04581c066bb68d2cb0708576a12b961a7c76fec824b2706940470ca",
+  "source_meshes_sha256": {
+    "/workspace/molar/robot_lab_runtime/external_assets/sources/elephant_myagv_pro/d3851c768d2e887eef7ad79fc4dcb9a928b070ac/agv_pro_description/meshes/base_link.stl": "4924a2fca5c2b6f58d02b824d67d7d61144df814ea413f5824348912b6fdd12f",
+    "/workspace/molar/robot_lab_runtime/external_assets/sources/elephant_myagv_pro/d3851c768d2e887eef7ad79fc4dcb9a928b070ac/agv_pro_description/meshes/wheel_rb_link.stl": "5d7c620f43887fab671f70e0b81b3d786b634129c0be364753ec25a698085589",
+    "/workspace/molar/robot_lab_runtime/external_assets/sources/elephant_myagv_pro/d3851c768d2e887eef7ad79fc4dcb9a928b070ac/agv_pro_description/meshes/wheel_rf_link.stl": "44e06b755d7e3935c6238b3ccf2694c6997bce74a7a04105e0e75fcb7c24ec12",
+    "/workspace/molar/robot_lab_runtime/external_assets/sources/elephant_myagv_pro/d3851c768d2e887eef7ad79fc4dcb9a928b070ac/agv_pro_description/meshes/wheel_lf_link.stl": "403e8b4e075cb0df7c40b0fd6e1e19b84491f67d96b18e5b4eb17d113c0e52f0",
+    "/workspace/molar/robot_lab_runtime/external_assets/sources/elephant_myagv_pro/d3851c768d2e887eef7ad79fc4dcb9a928b070ac/agv_pro_description/meshes/wheel_lb_link.stl": "02c60c32183fac144c90799cbb535063049449530889fbbd7f177508dbfa1068",
+    "/workspace/molar/robot_lab_runtime/external_assets/sources/elephant_myagv_pro/d3851c768d2e887eef7ad79fc4dcb9a928b070ac/agv_pro_description/meshes/laser_link.stl": "7347ec470e10ad438d3f565522231d5346830c20f43cb27d0e6bc436d6bd8440"
+  },
+  "converted_sdf_sha256": "ec2532481f3c19edf1b6094b6ce58b4c97feb458c6ce5774dabbee4f09ab5167",
+  "converted_contact_directions": 0,
+  "converted_sensors": 3,
+  "lab_compliance": {
+    "joints": [
+      "left_front_wheel_lab_carrier_joint",
+      "left_rear_wheel_lab_carrier_joint",
+      "right_front_wheel_lab_carrier_joint",
+      "right_rear_wheel_lab_carrier_joint"
+    ],
+    "travel_m": [
+      -0.012,
+      0.012
+    ],
+    "stiffness_N_per_m": 10000.0,
+    "damping_Ns_per_m": 100.0,
+    "added_carrier_mass_kg": 0.02,
+    "scope": "Lab tire-compliance surrogate, not vendor suspension"
+  },
+  "added_carrier_mass_kg": 0.02,
+  "variant": "pro630",
+  "physical_roller_contract": [
+    {
+      "wheel": "left_front_wheel",
+      "role": "front_left",
+      "original_mass_kg": 0.3015,
+      "core_mass_kg": 0.27135,
+      "original_com_m": [
+        1.4671e-06,
+        -0.019803,
+        4.3218e-06
+      ],
+      "core_com_m": [
+        1.6301111111106115e-06,
+        -0.01942842666666667,
+        4.801999999999326e-06
+      ],
+      "original_inertia": [
+        [
+          0.00052475,
+          -2.2533e-07,
+          -4.1904e-07
+        ],
+        [
+          -2.2533e-07,
+          0.00099948,
+          7.5332e-08
+        ],
+        [
+          -4.1904e-07,
+          7.5332e-08,
+          0.00052362
+        ]
+      ],
+      "reassembled_origin_inertia": [
+        [
+          0.0006429858865449036,
+          -2.1657052613805e-07,
+          -4.190419116646032e-07
+        ],
+        [
+          -2.1657052613805e-07,
+          0.0009994800062803468,
+          1.011357585281e-07
+        ],
+        [
+          -4.190419116646032e-07,
+          1.011357585281e-07,
+          0.0006418558815624434
+        ]
+      ],
+      "roller_joints": [
+        "left_front_wheel_lab_roller_1_joint",
+        "left_front_wheel_lab_roller_2_joint",
+        "left_front_wheel_lab_roller_3_joint",
+        "left_front_wheel_lab_roller_4_joint",
+        "left_front_wheel_lab_roller_5_joint",
+        "left_front_wheel_lab_roller_6_joint",
+        "left_front_wheel_lab_roller_7_joint",
+        "left_front_wheel_lab_roller_8_joint",
+        "left_front_wheel_lab_roller_9_joint",
+        "left_front_wheel_lab_roller_10_joint",
+        "left_front_wheel_lab_roller_11_joint",
+        "left_front_wheel_lab_roller_12_joint",
+        "left_front_wheel_lab_roller_13_joint",
+        "left_front_wheel_lab_roller_14_joint",
+        "left_front_wheel_lab_roller_15_joint"
+      ],
+      "roller_mass_kg": 0.00201,
+      "geometry_scale": 0.7434146341463416
+    },
+    {
+      "wheel": "left_rear_wheel",
+      "role": "front_right",
+      "original_mass_kg": 0.29613,
+      "core_mass_kg": 0.266517,
+      "original_com_m": [
+        -2.4454e-06,
+        0.019725,
+        -4.3121e-06
+      ],
+      "core_com_m": [
+        -2.717111111111467e-06,
+        0.01934176,
+        -4.79122222222268e-06
+      ],
+      "original_inertia": [
+        [
+          0.00051227,
+          -2.0628e-07,
+          -4.9074e-07
+        ],
+        [
+          -2.0628e-07,
+          0.0009752,
+          1.173e-07
+        ],
+        [
+          -4.9074e-07,
+          1.173e-07,
+          0.00051131
+        ]
+      ],
+      "reassembled_origin_inertia": [
+        [
+          0.0006274869703375523,
+          -1.9199601694304998e-07,
+          -4.907431226343898e-07
+        ],
+        [
+          -1.9199601694304998e-07,
+          0.0009752000072771541,
+          1.42487684362425e-07
+        ],
+        [
+          -4.907431226343898e-07,
+          1.42487684362425e-07,
+          0.0006265269666021018
+        ]
+      ],
+      "roller_joints": [
+        "left_rear_wheel_lab_roller_1_joint",
+        "left_rear_wheel_lab_roller_2_joint",
+        "left_rear_wheel_lab_roller_3_joint",
+        "left_rear_wheel_lab_roller_4_joint",
+        "left_rear_wheel_lab_roller_5_joint",
+        "left_rear_wheel_lab_roller_6_joint",
+        "left_rear_wheel_lab_roller_7_joint",
+        "left_rear_wheel_lab_roller_8_joint",
+        "left_rear_wheel_lab_roller_9_joint",
+        "left_rear_wheel_lab_roller_10_joint",
+        "left_rear_wheel_lab_roller_11_joint",
+        "left_rear_wheel_lab_roller_12_joint",
+        "left_rear_wheel_lab_roller_13_joint",
+        "left_rear_wheel_lab_roller_14_joint",
+        "left_rear_wheel_lab_roller_15_joint"
+      ],
+      "roller_mass_kg": 0.0019742,
+      "geometry_scale": 0.7434146341463416
+    },
+    {
+      "wheel": "right_front_wheel",
+      "role": "rear_left",
+      "original_mass_kg": 0.21659122149244,
+      "core_mass_kg": 0.194932099343196,
+      "original_com_m": [
+        6.6563e-05,
+        -0.019725,
+        8.3836e-05
+      ],
+      "core_com_m": [
+        7.395888888888861e-05,
+        -0.01934176,
+        9.31511111111106e-05
+      ],
+      "original_inertia": [
+        [
+          0.00051181,
+          2.1577e-08,
+          2.538e-07
+        ],
+        [
+          2.1577e-08,
+          0.00097519,
+          -2.3635e-07
+        ],
+        [
+          2.538e-07,
+          -2.3635e-07,
+          0.00051178
+        ]
+      ],
+      "reassembled_origin_inertia": [
+        [
+          0.0005960818871776475,
+          3.0595156511807033e-07,
+          2.525913396176812e-07
+        ],
+        [
+          3.0595156511807033e-07,
+          0.0009751924819421697,
+          1.2181934394841796e-07
+        ],
+        [
+          2.525913396176812e-07,
+          1.2181934394841796e-07,
+          0.0005960513245078913
+        ]
+      ],
+      "roller_joints": [
+        "right_front_wheel_lab_roller_1_joint",
+        "right_front_wheel_lab_roller_2_joint",
+        "right_front_wheel_lab_roller_3_joint",
+        "right_front_wheel_lab_roller_4_joint",
+        "right_front_wheel_lab_roller_5_joint",
+        "right_front_wheel_lab_roller_6_joint",
+        "right_front_wheel_lab_roller_7_joint",
+        "right_front_wheel_lab_roller_8_joint",
+        "right_front_wheel_lab_roller_9_joint",
+        "right_front_wheel_lab_roller_10_joint",
+        "right_front_wheel_lab_roller_11_joint",
+        "right_front_wheel_lab_roller_12_joint",
+        "right_front_wheel_lab_roller_13_joint",
+        "right_front_wheel_lab_roller_14_joint",
+        "right_front_wheel_lab_roller_15_joint"
+      ],
+      "roller_mass_kg": 0.0014439414766162669,
+      "geometry_scale": 0.7434146341463416
+    },
+    {
+      "wheel": "right_rear_wheel",
+      "role": "rear_right",
+      "original_mass_kg": 0.21659,
+      "core_mass_kg": 0.194931,
+      "original_com_m": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "core_com_m": [
+        -2.7809896129540823e-19,
+        -0.0025749066666666664,
+        -3.476237016192603e-19
+      ],
+      "original_inertia": [
+        [
+          0.00051181,
+          2.1577e-08,
+          2.538e-07
+        ],
+        [
+          2.1577e-08,
+          0.00097519,
+          -2.3635e-07
+        ],
+        [
+          2.538e-07,
+          -2.3635e-07,
+          0.00051178
+        ]
+      ],
+      "reassembled_origin_inertia": [
+        [
+          0.00051181,
+          2.1577e-08,
+          2.538e-07
+        ],
+        [
+          2.1577e-08,
+          0.00097519,
+          -2.3635e-07
+        ],
+        [
+          2.538e-07,
+          -2.3635e-07,
+          0.00051178
+        ]
+      ],
+      "roller_joints": [
+        "right_rear_wheel_lab_roller_1_joint",
+        "right_rear_wheel_lab_roller_2_joint",
+        "right_rear_wheel_lab_roller_3_joint",
+        "right_rear_wheel_lab_roller_4_joint",
+        "right_rear_wheel_lab_roller_5_joint",
+        "right_rear_wheel_lab_roller_6_joint",
+        "right_rear_wheel_lab_roller_7_joint",
+        "right_rear_wheel_lab_roller_8_joint",
+        "right_rear_wheel_lab_roller_9_joint",
+        "right_rear_wheel_lab_roller_10_joint",
+        "right_rear_wheel_lab_roller_11_joint",
+        "right_rear_wheel_lab_roller_12_joint",
+        "right_rear_wheel_lab_roller_13_joint",
+        "right_rear_wheel_lab_roller_14_joint",
+        "right_rear_wheel_lab_roller_15_joint"
+      ],
+      "roller_mass_kg": 0.0014439333333333335,
+      "geometry_scale": 0.7434146341463416
+    }
+  ],
+  "source_mass_kg": 20.315906221492444,
+  "wheel_corner_mapping": {
+    "front_left": "left_front_wheel",
+    "front_right": "left_rear_wheel",
+    "rear_left": "right_front_wheel",
+    "rear_right": "right_rear_wheel"
+  },
+  "source_wheels": {
+    "left_front_wheel": {
+      "origin": {
+        "rpy": "0 0 0",
+        "xyz": "0.17128 0.1799 0.052"
+      },
+      "source_mass_kg": 0.3015
+    },
+    "left_rear_wheel": {
+      "origin": {
+        "rpy": "0 0 0",
+        "xyz": "0.17128 -0.1799 0.052"
+      },
+      "source_mass_kg": 0.29613
+    },
+    "right_front_wheel": {
+      "origin": {
+        "rpy": "0 0 0",
+        "xyz": "-0.17181 0.1799 0.051884"
+      },
+      "source_mass_kg": 0.21659122149244
+    },
+    "right_rear_wheel": {
+      "origin": {
+        "rpy": "0 0 0",
+        "xyz": "-0.171806101587598 -0.179900399999999 0.0518836514526621"
+      },
+      "source_mass_kg": 0.21659
+    }
+  },
+  "drive": {
+    "type": "mecanum",
+    "front_left_wheel_joint": "left_front_wheel_joint",
+    "front_right_wheel_joint": "left_rear_wheel_joint",
+    "rear_left_wheel_joint": "right_front_wheel_joint",
+    "rear_right_wheel_joint": "right_rear_wheel_joint",
+    "wheel_radius": 0.0762,
+    "wheelbase": 0.3431,
+    "wheel_separation": 0.31345248,
+    "roller_angle": 0.7853981633974483,
+    "max_speed": 0.3,
+    "max_accel": 0.3,
+    "max_angular_speed": 0.4,
+    "max_angular_accel": 0.5,
+    "max_wheel_speed": 8.0,
+    "wheel_force_limit": 5.0,
+    "gazebo_wheel_velocity_gain": 1.0,
+    "gazebo_wheel_armature": 0.01,
+    "mujoco_wheel_housing_exclusions": true,
+    "mujoco_preserve_fixed_root_inertia": true,
+    "mujoco_expected_mass_kg": 28.335906216292415,
+    "mujoco_wheel_velocity_gain": 10.0,
+    "mujoco_wheel_armature": 0.02,
+    "mujoco_implicit_wheel_control": true,
+    "pybullet_explicit_massless_frames": true,
+    "pybullet_preserve_passive_springs": true,
+    "pybullet_expected_mass_kg": 28.335907216292416
+  },
+  "lab_changes": [
+    "source CAD chassis/visuals/frames retained",
+    "original wheel mass/COM/inertia decomposed into core plus 15 passive FUJI rollers",
+    "source FUJI geometry/handedness scaled to 152.4 mm diameter",
+    "same declared passive vertical-compliance kit and simulated sensors",
+    "existing native backend wheel actuation, springs, measured feedback and command lease",
+    "official Pro630 arm fixed on the deck (declared mount)",
+    "Collada visuals converted to metre STL",
+    "declared arm mass/inertia/effort/speed estimates",
+    "bounded six-joint position articulation"
+  ],
+  "runtime_mission_qualified": false,
+  "arm": {
+    "source_urdf": "mycobot_description/urdf/mycobot_pro_630/mycobot_pro_630.urdf",
+    "source_urdf_sha256": "6a21c04133fcd07bfb40b46e369d2c1ecb42e7906ff2640ad8e6573851d7ad23",
+    "meshes": {
+      "base.dae": {
+        "source_sha256": "69b91684cb8a319c9c10ba5601668d25779e12466958763ddf5b7b7e830569cd",
+        "stl": "/workspace/molar/robot_lab_runtime/external_assets/model_geometry/myagv_pro630/d42ff61a78122c79246623391540d75738b03b23/base.stl",
+        "stl_sha256": "240a62fa0ce514b5640a0ae628c207c8e47cfdbe54c9012f9192f6edc40df445",
+        "faces": 57686
+      },
+      "link1.dae": {
+        "source_sha256": "46453f2e482679342e6467dfa4865f324a388631553d8ab5e32bba5b3445cf48",
+        "stl": "/workspace/molar/robot_lab_runtime/external_assets/model_geometry/myagv_pro630/d42ff61a78122c79246623391540d75738b03b23/link1.stl",
+        "stl_sha256": "af0dfeb846fbdadd9b776c0671dd5d5ef261ccb56e783ad4b13838ed83de15ec",
+        "faces": 20850
+      },
+      "link2.dae": {
+        "source_sha256": "3508f47eeeea23e98ad54c20409d39ddd44dcb3375fae1962ee8b50e7b334d0f",
+        "stl": "/workspace/molar/robot_lab_runtime/external_assets/model_geometry/myagv_pro630/d42ff61a78122c79246623391540d75738b03b23/link2.stl",
+        "stl_sha256": "dc0a323fed1295377b302f02d92244ee6e318dad79a07dc40c17e1fd23466717",
+        "faces": 39698
+      },
+      "link3.dae": {
+        "source_sha256": "b12b969f95d4f8335ee6446bf9887a47922a2deaa77127dba1182a18160fdcb2",
+        "stl": "/workspace/molar/robot_lab_runtime/external_assets/model_geometry/myagv_pro630/d42ff61a78122c79246623391540d75738b03b23/link3.stl",
+        "stl_sha256": "5c6a958b6884c748590204acbf072a571ee89f061a856664bcce78053eabd9b5",
+        "faces": 86800
+      },
+      "link4.dae": {
+        "source_sha256": "c8f5e1b8a6d7e9f1a2d81bc213c2841fa92e2a4f64a8eb666280671b6bff21fd",
+        "stl": "/workspace/molar/robot_lab_runtime/external_assets/model_geometry/myagv_pro630/d42ff61a78122c79246623391540d75738b03b23/link4.stl",
+        "stl_sha256": "ea20e90d5df5fd7da2c1fa9a25dc0ca632b91176d6d3a5551f298b2553f43b79",
+        "faces": 22529
+      },
+      "link5.dae": {
+        "source_sha256": "75da71bb3b5bd08be2bf4ebfec1758efa857b595d7db5fdab2a6d42f8e7dfb92",
+        "stl": "/workspace/molar/robot_lab_runtime/external_assets/model_geometry/myagv_pro630/d42ff61a78122c79246623391540d75738b03b23/link5.stl",
+        "stl_sha256": "174926c4db9b58e6578f55c4dc914b59b231e0c83e04cb1009dc0dd26e739904",
+        "faces": 24591
+      },
+      "link6.dae": {
+        "source_sha256": "f6f5521049ce6d9ab46e12f4b62aecfd9ab129171dc46d7a0811564519163429",
+        "stl": "/workspace/molar/robot_lab_runtime/external_assets/model_geometry/myagv_pro630/d42ff61a78122c79246623391540d75738b03b23/link6.stl",
+        "stl_sha256": "2865fe65b418be659a8121b83be80c93d2e3f07e6bdc2b58dc4da7b65eed06cb",
+        "faces": 8434
+      }
+    },
+    "estimates": {
+      "arm_mass_kg": 8.0,
+      "density_kg_m3": 1182.41,
+      "links": {
+        "base": {
+          "mass_kg": 3.2209,
+          "com_m": [
+            -0.0176,
+            0.0,
+            0.0639
+          ]
+        },
+        "link1": {
+          "mass_kg": 0.4788,
+          "com_m": [
+            0.0,
+            0.0155,
+            -0.0081
+          ]
+        },
+        "link2": {
+          "mass_kg": 1.5975,
+          "com_m": [
+            0.1345,
+            0.0,
+            -0.0905
+          ]
+        },
+        "link3": {
+          "mass_kg": 1.9954,
+          "com_m": [
+            0.1225,
+            0.0,
+            -0.0144
+          ]
+        },
+        "link4": {
+          "mass_kg": 0.3038,
+          "com_m": [
+            0.0,
+            -0.0149,
+            0.0076
+          ]
+        },
+        "link5": {
+          "mass_kg": 0.3704,
+          "com_m": [
+            0.001,
+            0.0,
+            -0.0054
+          ]
+        },
+        "link6": {
+          "mass_kg": 0.0331,
+          "com_m": [
+            -0.006,
+            0.0,
+            -0.0
+          ]
+        }
+      },
+      "payload_kg": 2.0,
+      "max_joint_speed_rad_s": 1.0,
+      "gravity_torque_nm": {
+        "pro630_joint1_to_base": 0.0,
+        "pro630_joint2_to_joint1": 26.09,
+        "pro630_joint3_to_joint2": 11.84,
+        "pro630_joint4_to_joint3": 2.45,
+        "pro630_joint5_to_joint4": 0.93,
+        "pro630_joint6_to_joint5": 0.0
+      },
+      "max_joint_inertia_kg_m2": {
+        "pro630_joint1_to_base": 1.415,
+        "pro630_joint2_to_joint1": 1.414,
+        "pro630_joint3_to_joint2": 0.392,
+        "pro630_joint4_to_joint3": 0.027,
+        "pro630_joint5_to_joint4": 0.005,
+        "pro630_joint6_to_joint5": 0.001
+      },
+      "design_accel_rad_s2": 2.0,
+      "effort_margin": 1.5,
+      "mount_xyz_base_link": [
+        0.0,
+        0.0,
+        0.22
+      ]
+    },
+    "declared_estimates": [
+      "arm masses and inertias (vendor publishes no weight)",
+      "joint speed cap (vendor publishes none)",
+      "effort caps: 1.5 x (gravity torque + inertia x 2 rad/s^2) with the rated 2 kg payload",
+      "mount position on the deck (vendor gives six M6 screws, no position)",
+      "visual colours (Collada materials not carried to STL)"
+    ],
+    "kept_from_source": [
+      "kinematics",
+      "joint axes",
+      "URDF position limits",
+      "collision primitives",
+      "visual geometry"
+    ]
+  },
+  "articulation": {
+    "schema": "robot_lab.urdf_articulation.v1",
+    "panel": "arm",
+    "joints": {
+      "pro630_joint1_to_base": {
+        "mode": "position",
+        "lower": -3.14,
+        "upper": 3.14159,
+        "max_velocity": 1.0,
+        "effort": 5.0,
+        "kp": 200.0,
+        "kd": 4.47
+      },
+      "pro630_joint2_to_joint1": {
+        "mode": "position",
+        "lower": -3.14159,
+        "upper": 3.14159,
+        "max_velocity": 1.0,
+        "effort": 43.4,
+        "kp": 1736.0,
+        "kd": 13.18
+      },
+      "pro630_joint3_to_joint2": {
+        "mode": "position",
+        "lower": -2.61,
+        "upper": 2.618,
+        "max_velocity": 1.0,
+        "effort": 18.9,
+        "kp": 756.0,
+        "kd": 8.69
+      },
+      "pro630_joint4_to_joint3": {
+        "mode": "position",
+        "lower": -2.967,
+        "upper": 2.967,
+        "max_velocity": 1.0,
+        "effort": 5.0,
+        "kp": 200.0,
+        "kd": 4.47
+      },
+      "pro630_joint5_to_joint4": {
+        "mode": "position",
+        "lower": -2.93,
+        "upper": 2.9321,
+        "max_velocity": 1.0,
+        "effort": 5.0,
+        "kp": 200.0,
+        "kd": 4.47
+      },
+      "pro630_joint6_to_joint5": {
+        "mode": "position",
+        "lower": -3.03,
+        "upper": 3.0368,
+        "max_velocity": 1.0,
+        "effort": 5.0,
+        "kp": 200.0,
+        "kd": 4.47
+      }
+    },
+    "home": {
+      "pro630_joint1_to_base": 0.0,
+      "pro630_joint2_to_joint1": 0.0,
+      "pro630_joint3_to_joint2": 0.0,
+      "pro630_joint4_to_joint3": 0.0,
+      "pro630_joint5_to_joint4": 0.0,
+      "pro630_joint6_to_joint5": 0.0
+    },
+    "base_motion_limits": [
+      0.1,
+      0.2
+    ]
+  },
+  "auxiliary_sources": [
+    {
+      "repository": "https://github.com/DaiGuard/fuji_mecanum",
+      "revision": "646431a5e107448e0e2bdeeba4575db9aa3665ff",
+      "license": "MIT",
+      "resource_sha256": {
+        "wheel.stl": "abacd88291978deb86d7ad447529fd6145b008471ba372b49568770698f7c1f6",
+        "roller_collision.stl": "cca78d2e8f7bc2aa679ad98b9c50d26ec77b55becacd7ab0854c9a9334942097",
+        "LICENSE": "0dc33809f8de406bda4e3ad5db5b20b3113a4e754ea146703fdc9cea079b3504",
+        "README.md": "154351181c8747248add1627897a7575c994a203104c297e5ef55ccbd4f158a2"
+      }
+    },
+    {
+      "repository": "https://github.com/elephantrobotics/mycobot_ros2",
+      "revision": "d42ff61a78122c79246623391540d75738b03b23",
+      "license": "BSD-2-Clause",
+      "resource_sha256": {
+        "mycobot_pro_630.urdf": "6a21c04133fcd07bfb40b46e369d2c1ecb42e7906ff2640ad8e6573851d7ad23"
+      }
+    }
+  ]
+}

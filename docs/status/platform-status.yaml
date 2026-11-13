@@ -168,7 +168,7 @@ myagv_pro_20261112:
   - Normal GUI Nav2 topic goal from [-0.5,-0.5] to [1.5,-0.5] completed and settled; independent physical body error 0.125 m and 2.23 degrees. One route only; unchanged 0.15 m / 5 degree checker.
   - Sixty focused source/conversion/kinematic/watchdog checks pass; changed packages build. These are separate from mission qualification.
   remaining_summary:
-  - R14.2 remains first. Implement portable wheel/contact/actuator adapters before enabling MuJoCo/PyBullet/Isaac; preserve source geometry and measured Gazebo variant.
+  - 'R14.2 portable roller variant measured in MuJoCo/PyBullet/Isaac (2026-11-13); R14.3 arm-equipped myAGV Pro + Pro630 implemented with drive and arm screens on all three and a live GUI arm-page run. Next: R14.4 contributor chapters.'
   - Original CAD mass differs from hardware documentation; lab contact/compliance is not vendor dynamics. Serial/charging and arm-composite integration remain separate.
   - Other maps, furnished routes, localization/2D/3D acquisition, loss/reset and hardware acceptance remain unqualified.
 current_delivery: myagv_pro_20261112
@@ -484,8 +484,8 @@ architecture_explorer_20261102:
   guide: docs/architecture/interactive-guide.md
 handoff:
   audit: docs/status/audit-2026-10-02.md
-  next_action: User top priority R14.2 myAGV Pro precedes all older work. Preserve measured source Gazebo Display/Nav2, actual corner mapping, conservative combined-wheel cap, observed passive joints and matching DWB/goal-checker thresholds. Continue portable physical backend adapters; broader validation later.
-  next_task: R14.2
+  next_action: User priority order R14.2 (implemented), R14.3 (implemented 2026-11-13), then R14.4 contributor chapters. Preserve measured myAGV Pro Gazebo/portable variants, declared Pro630 estimates and the per-profile base-motion interlock. Broader validation later.
+  next_task: R14.4
   no_runtime_repairs_completed_by_this_revision: false
   parallel_ready_after_R0:
   - R1.1
@@ -2111,14 +2111,15 @@ tasks:
       R14.3:
         acceptance_ref: ROADMAP.md R14.3
         owner: claude
-        state: active
+        state: implemented
         updated: '2026-11-13'
         title: Official myAGV Pro plus myCobot Pro630 mobile manipulator
-        next_action: After R14.2, pin official arm assets and compose a complete mobile manipulator with native bounded Drive/Arm control and normal GUI registration.
+        next_action: 'Implemented 2026-11-13: asset_elephant_myagv_pro_pro630 (official Pro630 from mycobot_ros2 d42ff61a, BSD-2-Clause, on the roller base) with declared arm mass/speed/effort/mount estimates; drive and arm screens (bounded joints, Stop, watchdog) pass in PyBullet, MuJoCo and Isaac; generic GUI Mobile arm page passed live on PyBullet. Remaining: gripper (no official Pro630 gripper description), MoveIt planning, pick/place pipeline.'
+        evidence: [docs/status/evidence/myagv-pro-2026-11-12/README.md, docs/tutorials/myagv-pro.md]
       R14.4:
         acceptance_ref: ROADMAP.md R14.4
         owner: claude
-        state: queued
+        state: active
         updated: '2026-11-13'
         title: Beginner contributor chapters for robots, maps and GUI integration
         next_action: After R14.3, write prerequisites-to-GUI integration chapters and include them in the native documentation library.

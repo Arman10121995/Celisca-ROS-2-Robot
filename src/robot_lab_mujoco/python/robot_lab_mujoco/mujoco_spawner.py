@@ -2292,7 +2292,8 @@ class MuJoCoSpawner(Node):
             positions = {name: float(self._data.qpos[self._joint_name2id[name]]) for name in names}
             velocities = {name: float(self._data.qvel[self._joint_name2dofadr[name]]) for name in names}
             targets = self._articulation.step(positions, velocities, self._dt,
-                base_moving=math.hypot(*self._blin[:2]) > .025 or abs(self._bang[2]) > .05)
+                base_moving=math.hypot(*self._blin[:2]) > self._articulation.base_limits[0]
+                or abs(self._bang[2]) > self._articulation.base_limits[1])
             for values in targets.values():
                 for name, value in values.items():
                     self._set_actuator(name, '_articulation', value)

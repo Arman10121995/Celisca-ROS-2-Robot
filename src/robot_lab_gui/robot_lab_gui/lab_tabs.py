@@ -1179,6 +1179,8 @@ def create_tabs(notebook, app):
     app.tracked_controls = TrackedControls(app.control_notebook, app)
     from .molar_controls import MolarControls
     app.molar_controls = MolarControls(app.control_notebook, app)
+    from .urdf_arm_controls import UrdfArmControls
+    app.urdf_arm_controls = UrdfArmControls(app.control_notebook, app)
     tabs = [
         app.arm_tab,
         app.hand_tab,
@@ -1188,6 +1190,7 @@ def create_tabs(notebook, app):
         app.gait_controls,
         app.tracked_controls,
         app.molar_controls,
+        app.urdf_arm_controls,
         RegistryTab(notebook, app),
         WorldsTab(notebook, app),
         AssetsTab(notebook, app),

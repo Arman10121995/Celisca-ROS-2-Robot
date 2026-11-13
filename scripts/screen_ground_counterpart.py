@@ -65,9 +65,23 @@ def main():
         if len(result['body_poses'])<1500 and (not result['body_poses'] or stamp-result['body_poses'][-1]['stamp']>=.02):
             result['body_poses'].append(dict(stamp=stamp,position=values[:3],quaternion_wxyz=values[3:]))
     node.create_subscription(Odometry,args.odom,body,qos_profile_sensor_data)
+    # An arm on the base inhibits driving until its plant is initialized and
+    # still. Isaac (3.4x slower than wall time) was still settling the Pro630
+    # through the forward and reverse phases, which read 0.02 m/s (2026-11-13).
+    articulation={}
+    if profile.get('articulation'):
+        from std_msgs.msg import String
+        node.create_subscription(String,'/molar/articulation/state',lambda m:articulation.update(json.loads(m.data)),10)
     started=time.monotonic()
     try:
         if not node.wait_for_odom(args.timeout):raise RuntimeError('No actual body feedback')
+        if profile.get('articulation'):
+            end=time.monotonic()+args.timeout
+            while time.monotonic()<end and not (articulation.get('initialized') and articulation.get('base_inhibited') is False):
+                rclpy.spin_once(node,timeout_sec=.2)
+            if articulation.get('base_inhibited') is not False:
+                raise RuntimeError('Articulation still inhibits the base: '+str(articulation.get('status')))
+            result['articulation_release_wall_s']=round(time.monotonic()-started,2)
         node.run_phase(0.,0.,args.warmup)
         for name,vx,vy,wz,duration in [('forward',.25,0.,0.,3.),('reverse',-.25,0.,0.,3.),
                 ('strafe',0.,.25,0.,4.),('turn',0.,0.,.25,4.),('neutral',0.,0.,0.,3.)]:

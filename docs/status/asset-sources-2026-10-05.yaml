@@ -9,6 +9,13 @@ sources:
   status: integration_implemented
   license_note: Official BSD-3-Clause Humble CAD/inertias/frames retained. Declared lab Fortress tire/contact/compliance/sensor adapter, actual source Display and one GUI Nav2 arrival; other backend adapters and broader missions remain pending. CAD mass differs from hardware documentation
   entries: [agv_pro_description, agv_pro_gazebo, agv_pro_base]
+- id: elephant_mycobot_ros2
+  kind: robot
+  repository: https://github.com/elephantrobotics/mycobot_ros2
+  revision: d42ff61a78122c79246623391540d75738b03b23
+  status: integration_implemented
+  license_note: Official BSD-2-Clause (repository LICENSE; mycobot_description package.xml BSD) myCobot Pro630 kinematics, joint limits and Collada visuals (mycobot_pro_630.urdf, as used by the official mycobot_630_moveit2). The source has no inertials and zero velocity limits; arm masses, inertias, efforts and the mount on the myAGV Pro are declared lab estimates (ROADMAP R14.3)
+  entries: [mycobot_description/urdf/mycobot_pro_630, mycobot_description/urdf/pro_force_gripper, mycobot_pro/mycobot_630_moveit2]
 - id: mit_racecar_review
   kind: robot_candidate_review
   repository: https://github.com/mit-racecar/racecar_gazebo

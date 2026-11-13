@@ -7,6 +7,10 @@ robots:
     members:
       - {id: asset_elephant_myagv_pro, label: Official CAD base · measured Fortress contact adapter}
       - {id: asset_elephant_myagv_pro_rollers, label: Portable physical-roller adapter · experimental native backends}
+  - id: elephant_myagv_pro630
+    name: Elephant Robotics myAGV Pro + myCobot Pro630
+    members:
+      - {id: asset_elephant_myagv_pro_pro630, label: Official base and arm · physical rollers · declared arm mass/mount estimates}
   - id: light_robotics_octopod
     name: Light Robotics octopod
     members: [{id: asset_light_robotics_octopod, label: Source segmented octopod · experimental scripted gait}]

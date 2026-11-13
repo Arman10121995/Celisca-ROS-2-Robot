@@ -1,0 +1,256 @@
+{
+ "robot": "asset_elephant_myagv_pro_pro630",
+ "source_id": "elephant_myagv_pro",
+ "source_revision": "d3851c768d2e887eef7ad79fc4dcb9a928b070ac",
+ "description_sha256": "495b0263b04581c066bb68d2cb0708576a12b961a7c76fec824b2706940470ca",
+ "odom": "/odom/ground_truth",
+ "input": "/key_vel",
+ "scope": "Initial source-plant control and sensing; no mission qualification",
+ "completed": true,
+ "error": "",
+ "publisher_loss": {
+  "duration_s": 0.917,
+  "coast_distance_m": 0.128,
+  "coast_yaw_change_rad": 0.005,
+  "tail_vx_mps": 0.025,
+  "tail_wz_rps": 0.009
+ },
+ "wall_s": 76.13892582198605,
+ "backend": "pybullet",
+ "map": "nav_empty",
+ "mode": "display",
+ "phases": [
+  {
+   "name": "forward",
+   "requested": [
+    0.25,
+    0.0,
+    0.0
+   ],
+   "measured": {
+    "vx": 0.24,
+    "vy": 0.003,
+    "wz": -0.002,
+    "distance": 0.475,
+    "measured_sim_s": 1.979
+   }
+  },
+  {
+   "name": "reverse",
+   "requested": [
+    -0.25,
+    0.0,
+    0.0
+   ],
+   "measured": {
+    "vx": -0.206,
+    "vy": 0.007,
+    "wz": -0.004,
+    "distance": 0.412,
+    "measured_sim_s": 2.0
+   }
+  },
+  {
+   "name": "strafe",
+   "requested": [
+    0.0,
+    0.25,
+    0.0
+   ],
+   "measured": {
+    "vx": 0.002,
+    "vy": 0.229,
+    "wz": 0.016,
+    "distance": 0.688,
+    "measured_sim_s": 3.0
+   }
+  },
+  {
+   "name": "turn",
+   "requested": [
+    0.0,
+    0.0,
+    0.25
+   ],
+   "measured": {
+    "vx": -0.0,
+    "vy": 0.002,
+    "wz": 0.246,
+    "distance": 0.007,
+    "measured_sim_s": 3.0
+   }
+  },
+  {
+   "name": "neutral",
+   "requested": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "measured": {
+    "vx": -0.001,
+    "vy": 0.0,
+    "wz": 0.007,
+    "distance": 0.002,
+    "measured_sim_s": 2.0
+   }
+  }
+ ],
+ "sensor_counts": {
+  "images": 8,
+  "scans": 8,
+  "joint_messages": 385,
+  "truth_samples": 1155
+ },
+ "raw_report": {
+  "path": "/workspace/molar/robot_lab_runtime/myagv-pro-20261112/pro630-pybullet-1.json",
+  "sha256": "77c29d648beb742744faaf696c01dde63c115647216b32ddef8475495e5792de"
+ },
+ "arm_screen": {
+  "phases": [
+   {
+    "joint": "pro630_joint1_to_base",
+    "out": {
+     "target": 0.5,
+     "settled_s": 1.77,
+     "steady_error_rad": 0.0034,
+     "base_inhibited_seen": true,
+     "final": 0.5
+    },
+    "back": {
+     "target": -0.0,
+     "settled_s": 1.75,
+     "steady_error_rad": 0.0179,
+     "base_inhibited_seen": true,
+     "final": 0.0
+    },
+    "passed": true
+   },
+   {
+    "joint": "pro630_joint2_to_joint1",
+    "out": {
+     "target": 0.5,
+     "settled_s": null,
+     "steady_error_rad": null,
+     "base_inhibited_seen": true,
+     "final": 0.1339
+    },
+    "back": {
+     "target": -0.0,
+     "settled_s": 0.63,
+     "steady_error_rad": 0.0115,
+     "base_inhibited_seen": true,
+     "final": 0.005
+    },
+    "passed": false
+   },
+   {
+    "joint": "pro630_joint3_to_joint2",
+    "out": {
+     "target": 0.5,
+     "settled_s": 1.69,
+     "steady_error_rad": 0.0131,
+     "base_inhibited_seen": true,
+     "final": 0.5
+    },
+    "back": {
+     "target": 0.0,
+     "settled_s": 2.01,
+     "steady_error_rad": 0.0246,
+     "base_inhibited_seen": true,
+     "final": 0.0
+    },
+    "passed": true
+   },
+   {
+    "joint": "pro630_joint4_to_joint3",
+    "out": {
+     "target": 0.4999,
+     "settled_s": 1.53,
+     "steady_error_rad": 0.0129,
+     "base_inhibited_seen": true,
+     "final": 0.4999
+    },
+    "back": {
+     "target": -0.0001,
+     "settled_s": 1.66,
+     "steady_error_rad": 0.0183,
+     "base_inhibited_seen": true,
+     "final": -0.0001
+    },
+    "passed": true
+   },
+   {
+    "joint": "pro630_joint5_to_joint4",
+    "out": {
+     "target": 0.5,
+     "settled_s": null,
+     "steady_error_rad": null,
+     "base_inhibited_seen": false,
+     "final": -0.0
+    },
+    "back": {
+     "target": 0.0,
+     "settled_s": 0.06,
+     "steady_error_rad": 0.0,
+     "base_inhibited_seen": false,
+     "final": 0.0
+    },
+    "passed": false
+   },
+   {
+    "joint": "pro630_joint6_to_joint5",
+    "out": {
+     "target": 0.5,
+     "settled_s": 1.76,
+     "steady_error_rad": 0.0244,
+     "base_inhibited_seen": true,
+     "final": 0.5
+    },
+    "back": {
+     "target": -0.0,
+     "settled_s": 1.77,
+     "steady_error_rad": 0.0179,
+     "base_inhibited_seen": true,
+     "final": -0.0001
+    },
+    "passed": true
+   }
+  ],
+  "passed": false,
+  "joints": [
+   "pro630_joint1_to_base",
+   "pro630_joint2_to_joint1",
+   "pro630_joint3_to_joint2",
+   "pro630_joint4_to_joint3",
+   "pro630_joint5_to_joint4",
+   "pro630_joint6_to_joint5"
+  ],
+  "initial": {
+   "pro630_joint1_to_base": -0.0,
+   "pro630_joint2_to_joint1": -0.0,
+   "pro630_joint3_to_joint2": 0.0,
+   "pro630_joint4_to_joint3": -0.0001,
+   "pro630_joint5_to_joint4": 0.0,
+   "pro630_joint6_to_joint5": -0.0
+  },
+  "stop": {
+   "joint": "pro630_joint1_to_base",
+   "held_at": 0.1588,
+   "target_was": 1.5,
+   "drift_after_rad": 0.0002,
+   "passed": true
+  },
+  "watchdog": {
+   "joint": "pro630_joint1_to_base",
+   "held_at": 0.016,
+   "drift_after_rad": 0.0,
+   "status": "fault/ownership/watchdog hold",
+   "passed": false
+  },
+  "final_error_rad": 0.0002,
+  "producer": "scripts/screen_urdf_arm.py",
+  "raw_sha256": "985283e316318e36d2f3249ded86498c00fc59ef0b602cb437f01ac2d39d7bba"
+ },
+ "note": "Retained failure (provision 1): joint2 and joint5 froze. The arm reaction rocked the light compliant base above the default 0.025 m/s / 0.05 rad/s base-motion interlock, which held every command. Repair: per-profile base_motion_limits [0.10, 0.20]."
+}

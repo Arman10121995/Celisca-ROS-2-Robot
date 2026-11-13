@@ -1096,7 +1096,8 @@ class PyBulletSpawner(Node):
                 articulation_targets = self._articulation.step(
                     {name: value[0] for name, value in states.items()},
                     {name: value[1] for name, value in states.items()}, self._dt,
-                    base_moving=math.hypot(*base_linear[:2]) > .025 or abs(base_angular[2]) > .05)
+                    base_moving=math.hypot(*base_linear[:2]) > self._articulation.base_limits[0]
+                    or abs(base_angular[2]) > self._articulation.base_limits[1])
                 for kind, values in articulation_targets.items():
                     for name, target in values.items():
                         spec = self._articulation.contract.joints[name]

@@ -1,0 +1,257 @@
+{
+ "robot": "asset_elephant_myagv_pro_pro630",
+ "source_id": "elephant_myagv_pro",
+ "source_revision": "d3851c768d2e887eef7ad79fc4dcb9a928b070ac",
+ "description_sha256": "495b0263b04581c066bb68d2cb0708576a12b961a7c76fec824b2706940470ca",
+ "odom": "/odom/ground_truth",
+ "input": "/key_vel",
+ "scope": "Initial source-plant control and sensing; no mission qualification",
+ "completed": true,
+ "error": "",
+ "publisher_loss": {
+  "duration_s": 1.383,
+  "coast_distance_m": 0.099,
+  "coast_yaw_change_rad": -0.001,
+  "tail_vx_mps": -0.0,
+  "tail_wz_rps": 0.0
+ },
+ "wall_s": 85.16800429698196,
+ "backend": "isaac",
+ "map": "nav_empty",
+ "mode": "display",
+ "phases": [
+  {
+   "name": "forward",
+   "requested": [
+    0.25,
+    0.0,
+    0.0
+   ],
+   "measured": {
+    "vx": 0.019,
+    "vy": -0.0,
+    "wz": 0.0,
+    "distance": 0.039,
+    "measured_sim_s": 2.0
+   }
+  },
+  {
+   "name": "reverse",
+   "requested": [
+    -0.25,
+    0.0,
+    0.0
+   ],
+   "measured": {
+    "vx": -0.014,
+    "vy": -0.0,
+    "wz": -0.001,
+    "distance": 0.028,
+    "measured_sim_s": 1.983
+   }
+  },
+  {
+   "name": "strafe",
+   "requested": [
+    0.0,
+    0.25,
+    0.0
+   ],
+   "measured": {
+    "vx": -0.0,
+    "vy": 0.245,
+    "wz": -0.0,
+    "distance": 0.735,
+    "measured_sim_s": 3.0
+   }
+  },
+  {
+   "name": "turn",
+   "requested": [
+    0.0,
+    0.0,
+    0.25
+   ],
+   "measured": {
+    "vx": 0.0,
+    "vy": -0.0,
+    "wz": 0.245,
+    "distance": 0.001,
+    "measured_sim_s": 3.0
+   }
+  },
+  {
+   "name": "neutral",
+   "requested": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "measured": {
+    "vx": 0.0,
+    "vy": -0.001,
+    "wz": 0.001,
+    "distance": 0.002,
+    "measured_sim_s": 2.0
+   }
+  }
+ ],
+ "sensor_counts": {
+  "images": 8,
+  "scans": 8,
+  "joint_messages": 396,
+  "truth_samples": 2737
+ },
+ "raw_report": {
+  "path": "/workspace/molar/robot_lab_runtime/myagv-pro-20261112/pro630-isaac-1.json",
+  "sha256": "23ecc3bc45b2850735fab45da8923f914ca93a137849e344e62ec4031880561f"
+ },
+ "arm_screen": {
+  "phases": [
+   {
+    "joint": "pro630_joint1_to_base",
+    "out": {
+     "target": 0.5001,
+     "settled_s": 1.28,
+     "steady_error_rad": 0.0032,
+     "base_inhibited_seen": true,
+     "final": 0.5001
+    },
+    "back": {
+     "target": 0.0001,
+     "settled_s": 1.32,
+     "steady_error_rad": 0.0007,
+     "base_inhibited_seen": true,
+     "final": 0.0001
+    },
+    "passed": true
+   },
+   {
+    "joint": "pro630_joint2_to_joint1",
+    "out": {
+     "target": 0.5,
+     "settled_s": 1.08,
+     "steady_error_rad": 0.0084,
+     "base_inhibited_seen": true,
+     "final": 0.5046
+    },
+    "back": {
+     "target": -0.0,
+     "settled_s": 1.19,
+     "steady_error_rad": 0.0041,
+     "base_inhibited_seen": true,
+     "final": -0.0029
+    },
+    "passed": true
+   },
+   {
+    "joint": "pro630_joint3_to_joint2",
+    "out": {
+     "target": 0.4999,
+     "settled_s": 1.14,
+     "steady_error_rad": 0.0081,
+     "base_inhibited_seen": true,
+     "final": 0.5041
+    },
+    "back": {
+     "target": -0.0001,
+     "settled_s": 1.14,
+     "steady_error_rad": 0.0017,
+     "base_inhibited_seen": true,
+     "final": -0.0006
+    },
+    "passed": true
+   },
+   {
+    "joint": "pro630_joint4_to_joint3",
+    "out": {
+     "target": 0.5,
+     "settled_s": 1.2,
+     "steady_error_rad": 0.0037,
+     "base_inhibited_seen": true,
+     "final": 0.5009
+    },
+    "back": {
+     "target": -0.0,
+     "settled_s": 1.14,
+     "steady_error_rad": 0.0099,
+     "base_inhibited_seen": true,
+     "final": -0.0
+    },
+    "passed": true
+   },
+   {
+    "joint": "pro630_joint5_to_joint4",
+    "out": {
+     "target": 0.5,
+     "settled_s": 1.14,
+     "steady_error_rad": 0.0101,
+     "base_inhibited_seen": true,
+     "final": 0.5
+    },
+    "back": {
+     "target": 0.0,
+     "settled_s": 1.2,
+     "steady_error_rad": 0.0101,
+     "base_inhibited_seen": true,
+     "final": 0.0
+    },
+    "passed": true
+   },
+   {
+    "joint": "pro630_joint6_to_joint5",
+    "out": {
+     "target": 0.5,
+     "settled_s": 1.2,
+     "steady_error_rad": 0.0101,
+     "base_inhibited_seen": true,
+     "final": 0.5
+    },
+    "back": {
+     "target": 0.0,
+     "settled_s": 1.32,
+     "steady_error_rad": 0.0023,
+     "base_inhibited_seen": true,
+     "final": 0.0
+    },
+    "passed": true
+   }
+  ],
+  "passed": true,
+  "joints": [
+   "pro630_joint1_to_base",
+   "pro630_joint2_to_joint1",
+   "pro630_joint3_to_joint2",
+   "pro630_joint4_to_joint3",
+   "pro630_joint5_to_joint4",
+   "pro630_joint6_to_joint5"
+  ],
+  "initial": {
+   "pro630_joint1_to_base": 0.0001,
+   "pro630_joint2_to_joint1": -0.0,
+   "pro630_joint3_to_joint2": -0.0001,
+   "pro630_joint4_to_joint3": -0.0,
+   "pro630_joint5_to_joint4": 0.0,
+   "pro630_joint6_to_joint5": 0.0
+  },
+  "stop": {
+   "joint": "pro630_joint1_to_base",
+   "held_at": 0.2476,
+   "target_was": 1.5001,
+   "drift_after_rad": 0.0005,
+   "passed": true
+  },
+  "watchdog": {
+   "joint": "pro630_joint1_to_base",
+   "held_at": -0.1326,
+   "target_was": -3.09,
+   "drift_after_rad": 0.0,
+   "status": "heartbeat absent; holding measured articulation",
+   "passed": true
+  },
+  "final_error_rad": 0.0,
+  "producer": "scripts/screen_urdf_arm.py",
+  "raw_sha256": "f627b3ac01fef5e766798341895bdb91532daebfdfe33eac7fe7a7d23bfaca99"
+ },
+ "note": "Retained failure: forward 0.019 and reverse -0.014 m/s. The screen started while the arm still settled after spawn (Isaac ~3.4x slower than wall time), so the articulation interlock held the base. Repair: the screen waits for the interlock to release (articulation_release_wall_s)."
+}

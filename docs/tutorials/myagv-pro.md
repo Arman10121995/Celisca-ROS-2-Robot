@@ -54,6 +54,47 @@ three; a full Nav2 mission (detour, cancel, resume, near-obstacle goal) passed i
 PyBullet ([evidence](../status/evidence/myagv-pro-2026-11-12/README.md)).
 Navigation there also needs `allow_experimental_assets:=true`.
 
+### With the myCobot Pro630 arm
+
+Elephant Robotics sells the myAGV Pro with its six-axis **myCobot Pro630**
+on the deck. **`asset_elephant_myagv_pro_pro630`** is that robot: the roller
+base above plus the official arm description from
+[`elephantrobotics/mycobot_ros2`](https://github.com/elephantrobotics/mycobot_ros2/tree/d42ff61a78122c79246623391540d75738b03b23)
+(BSD-2-Clause). It runs in MuJoCo, PyBullet and Isaac.
+
+1. Open **Launch → Mobile manipulators → Arm on omnidirectional base** and
+   choose **elephant_myagv_pro630**.
+2. Choose MuJoCo, PyBullet or Isaac, **Display** and `nav_empty`, and run.
+3. The control column opens the **Mobile arm** page: one row per joint
+   (J1–J6) with a target field, − / + jog, Apply and a slider. **Home**
+   returns every joint to zero (the arm upright); **Stop / hold** holds the
+   measured joints. The Drive page still drives the base.
+
+```bash
+ros2 launch robot_lab_bringup simulated_robot.launch.py \
+  robot_model:=asset_elephant_myagv_pro_pro630 simulator:=pybullet \
+  mode:=display map_name:=nav_empty
+```
+
+Rules the page and the plant enforce:
+
+- Only Apply, Jog and Home move the arm; editing or dragging sends nothing.
+- While any joint moves (or still settles after spawn), the base refuses
+  drive commands. While the base moves, an arm command is refused and the arm
+  holds. The page shows *Base Drive available / inhibited*.
+- The page sends a heartbeat at 10 Hz. Without one for 0.5 s the plant holds
+  the measured joints, as it does on Stop, on leaving the page, or on any
+  change of robot, simulator, mode or map.
+
+The vendor publishes no Pro630 weight, joint speeds or mount position, and
+its description has no inertias. The lab declares them: 8 kg spread over the
+links by volume, 1 rad/s per joint, torque caps sized for the rated 2 kg
+payload, and the arm centred on the deck rails. Treat arm dynamics as
+estimates. A gripper, MoveIt planning and pick-and-place for this robot are
+not yet integrated. Measured drive and arm screens for all three simulators,
+and the live GUI run, are in the
+[evidence](../status/evidence/myagv-pro-2026-11-12/README.md#myagv-pro--mycobot-pro630-r143-2026-11-13).
+
 The existing Registry preview opens this complete source model inside the GUI.
 **Learn & diagnose → Documentation library** includes this page. Health uses
 the same task ledger as the roadmap; prototype pipelines and measured missions
@@ -116,8 +157,8 @@ were recorded. Publisher-loss travel was about 0.11 m with zero final speed.
 Navigation receipts and negative runs are kept in the
 [integration evidence](../status/evidence/myagv-pro-2026-11-12/README.md).
 Other maps, furnished obstacle routes, reset/loss histories, calibrated tire
-and mass dynamics, other backends, hardware serial/charging operation and
-the manual's arm-equipped composites remain separate work. The Basic and
+and mass dynamics, hardware serial/charging operation, a Pro630 gripper and
+mobile pick-and-place remain separate work. The Basic and
 Visual-Navigation product editions are not duplicated as falsely qualified
 simulation profiles.
 
@@ -127,8 +168,13 @@ Assets are already downloaded on this host. Provisioning is an installation
 step, with no GUI download requirement:
 
 ```bash
-python3 scripts/provision_myagv_pro.py --download
+python3 scripts/provision_myagv_pro.py --download                    # Gazebo variant
+python3 scripts/provision_myagv_pro.py --download --variant rollers  # MuJoCo / PyBullet / Isaac
+python3 scripts/provision_myagv_pro.py --download --variant pro630   # with the Pro630 arm
 ```
+
+The `pro630` variant also needs `trimesh`, `scipy` and `pybullet` (mesh
+conversion, link inertias and the payload torque estimate).
 
 Source checkouts, CAD assets, generated URDF/SDF, license, resource hashes,
 contact/control recipe and installation receipts stay under
@@ -140,4 +186,6 @@ For agents: keep R14.2 ahead of other implementation tasks. Preserve the
 geometric corner mapping, source CAD/inertias, source sensor frames, observed
 passive joints, compiled contact-direction checks and matching Nav2 goal
 thresholds. Portable wheel physics is required before enabling another
-backend. Use real body/sensor feedback when adding support claims.
+backend. Use real body/sensor feedback when adding support claims. For the
+Pro630, keep the source arm kinematics/limits, the declared estimates in
+`robot_lab_utils/myagv_pro630.py` and the per-profile `base_motion_limits`.

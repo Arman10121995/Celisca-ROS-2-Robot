@@ -1,6 +1,6 @@
 # 🤖 Robot Lab — Multi-Robot Simulation & Algorithm Laboratory
 
-November 12 top priority: **Elephant Robotics myAGV Pro** is installed in the normal GUI with its official CAD base, omnidirectional Drive/strafe, real sensing, algorithm/command autofill and a declared lab simulation adapter. One Gazebo Display screen and one normal-GUI Nav2 goal are measured (0.125 m / 2.23° actual arrival error). Other backends remain gated pending portable wheel adapters. [Guide](docs/tutorials/myagv-pro.md) · [receipt](docs/status/evidence/myagv-pro-2026-11-12/README.md).
+November 12–13 top priority: **Elephant Robotics myAGV Pro** is installed in the normal GUI with its official CAD base: Gazebo with directional contact, and MuJoCo/PyBullet/Isaac with a physical-roller variant (drive screens measured on all four; Nav2 measured in Gazebo and PyBullet). The arm-equipped **myAGV Pro + myCobot Pro630** (official arm, declared mass/speed/mount estimates) drives and moves its bounded joints with Stop and watchdog in MuJoCo, PyBullet and Isaac, from the new GUI *Mobile arm* page. Gripper and pick/place remain. [Guide](docs/tutorials/myagv-pro.md) · [receipt](docs/status/evidence/myagv-pro-2026-11-12/README.md).
 
 
 A ROS 2 Humble simulation laboratory for composing, launching, and measuring multi-robot workflows across wheeled, legged, humanoid, aerial, marine, and tracked platforms — with a native GUI, typed registry, four physics backends, and an interactive architecture explorer.

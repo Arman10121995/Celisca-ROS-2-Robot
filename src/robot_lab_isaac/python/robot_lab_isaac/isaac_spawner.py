@@ -559,6 +559,9 @@ class IsaacSpawner(Node):
         velocity decides until 0.1 s of poses exist.
         """
         stamp, (x, y) = float(measured['t']), measured['pos'][:2]
+        from robot_lab_utils.urdf_articulation import DEFAULT_BASE_MOTION_LIMITS
+        linear, angular = getattr(getattr(self, '_articulation', None), 'base_limits',
+                                  DEFAULT_BASE_MOTION_LIMITS)
         qx, qy, qz, qw = measured['orn']
         yaw = math.atan2(2*(qw*qz+qx*qy), 1-2*(qy*qy+qz*qz))
         history = self._base_history
@@ -570,7 +573,7 @@ class IsaacSpawner(Node):
         start, x0, y0, yaw0 = history[0]
         span = stamp-start
         if span < .1:
-            return math.hypot(*measured['lin'][:2]) > .025 or abs(measured['ang'][2]) > .05
+            return math.hypot(*measured['lin'][:2]) > linear or abs(measured['ang'][2]) > angular
         turned = math.atan2(math.sin(yaw-yaw0), math.cos(yaw-yaw0))
         # Keep the original net-motion predicate, and also detect a reversal
         # returning to the window's first pose. The excursion floors exceed
@@ -586,8 +589,8 @@ class IsaacSpawner(Node):
             yaw_samples.append((t, unwrapped))
             previous = angle
         yaw_rate = measured_motion_rate(yaw_samples, excursion_floor=.01)
-        return (math.hypot(x-x0, y-y0)/span > .025 or abs(turned)/span > .05
-                or math.hypot(x_rate, y_rate) > .025 or abs(yaw_rate) > .05)
+        return (math.hypot(x-x0, y-y0)/span > linear or abs(turned)/span > angular
+                or math.hypot(x_rate, y_rate) > linear or abs(yaw_rate) > angular)
 
     def _on_policy_targets(self, msg):
         with self._lock:

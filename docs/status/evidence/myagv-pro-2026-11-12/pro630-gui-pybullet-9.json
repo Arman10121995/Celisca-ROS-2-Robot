@@ -1,0 +1,135 @@
+{
+ "robot": "asset_elephant_myagv_pro_pro630",
+ "simulator": "pybullet",
+ "map": "nav_empty",
+ "steps": [
+  {
+   "pressed": "Apply",
+   "button_state": "()",
+   "page_status": "Target requested; inspect actual feedback."
+  },
+  {
+   "step": "apply J1 0.5 rad",
+   "targets": {
+    "pro630_joint1_to_base": 0.5
+   },
+   "settled_s": 1.45,
+   "measured": {
+    "pro630_joint1_to_base": 0.4869,
+    "pro630_joint2_to_joint1": 0.0,
+    "pro630_joint3_to_joint2": -0.0,
+    "pro630_joint4_to_joint3": 0.0001,
+    "pro630_joint5_to_joint4": -0.0,
+    "pro630_joint6_to_joint5": 0.0001
+   }
+  },
+  {
+   "pressed": "+",
+   "button_state": "()",
+   "page_status": "Target requested; inspect actual feedback."
+  },
+  {
+   "step": "jog J2 +0.2 rad",
+   "targets": {
+    "pro630_joint2_to_joint1": 0.2
+   },
+   "settled_s": 0.95,
+   "measured": {
+    "pro630_joint1_to_base": 0.5,
+    "pro630_joint2_to_joint1": 0.1895,
+    "pro630_joint3_to_joint2": -0.0,
+    "pro630_joint4_to_joint3": 0.0002,
+    "pro630_joint5_to_joint4": -0.0,
+    "pro630_joint6_to_joint5": 0.0001
+   }
+  },
+  {
+   "pressed": "Home",
+   "button_state": "()",
+   "page_status": "Target requested; inspect actual feedback."
+  },
+  {
+   "step": "home",
+   "targets": {
+    "pro630_joint1_to_base": 0.0,
+    "pro630_joint2_to_joint1": 0.0,
+    "pro630_joint3_to_joint2": 0.0,
+    "pro630_joint4_to_joint3": 0.0,
+    "pro630_joint5_to_joint4": 0.0,
+    "pro630_joint6_to_joint5": 0.0
+   },
+   "settled_s": 1.72,
+   "measured": {
+    "pro630_joint1_to_base": 0.007,
+    "pro630_joint2_to_joint1": 0.0,
+    "pro630_joint3_to_joint2": -0.0,
+    "pro630_joint4_to_joint3": 0.0,
+    "pro630_joint5_to_joint4": 0.0,
+    "pro630_joint6_to_joint5": 0.0
+   }
+  },
+  {
+   "pressed": "Apply",
+   "button_state": "()",
+   "page_status": "Target requested; inspect actual feedback."
+  },
+  {
+   "pressed": "Stop / hold",
+   "button_state": "()",
+   "page_status": "Stop requested; holding measured lift/slides and stopping roller."
+  },
+  {
+   "pressed": "Home",
+   "button_state": "()",
+   "page_status": "Target requested; inspect actual feedback."
+  },
+  {
+   "step": "home after stop",
+   "targets": {
+    "pro630_joint1_to_base": 0.0,
+    "pro630_joint2_to_joint1": 0.0,
+    "pro630_joint3_to_joint2": 0.0,
+    "pro630_joint4_to_joint3": 0.0,
+    "pro630_joint5_to_joint4": 0.0,
+    "pro630_joint6_to_joint5": 0.0
+   },
+   "settled_s": 1.2,
+   "measured": {
+    "pro630_joint1_to_base": 0.0069,
+    "pro630_joint2_to_joint1": -0.0,
+    "pro630_joint3_to_joint2": -0.0,
+    "pro630_joint4_to_joint3": -0.0001,
+    "pro630_joint5_to_joint4": 0.0,
+    "pro630_joint6_to_joint5": -0.0
+   }
+  }
+ ],
+ "passed": true,
+ "page_selected": true,
+ "rows": [
+  "J1 \u00b7 joint1_to_base",
+  "J2 \u00b7 joint2_to_joint1",
+  "J3 \u00b7 joint3_to_joint2",
+  "J4 \u00b7 joint4_to_joint3",
+  "J5 \u00b7 joint5_to_joint4",
+  "J6 \u00b7 joint6_to_joint5"
+ ],
+ "command": "ros2 launch robot_lab_bringup simulated_robot.launch.py robot_model:=asset_elephant_myagv_pro_pro630 simulator:=pybullet use_sim_time:=true map_name:=nav_empty world_package:=robot_lab_maps world_name:=nav_empty world_path:=maps/nav_empty/worlds/nav_empty.world map_yaml:=maps/nav_empty/maps/map.yaml mode:=display gui:=false perception:=none",
+ "home_measured": {
+  "pro630_joint1_to_base": -0.0,
+  "pro630_joint2_to_joint1": -0.0,
+  "pro630_joint3_to_joint2": -0.0,
+  "pro630_joint4_to_joint3": -0.0,
+  "pro630_joint5_to_joint4": 0.0,
+  "pro630_joint6_to_joint5": -0.0
+ },
+ "stop": {
+  "held_at": 0.3251,
+  "target_was": 2.0,
+  "drift_after_rad": 0.0001,
+  "passed": true
+ },
+ "launch_returncode": 0,
+ "producer": "scripts/qualify_urdf_arm_gui.py",
+ "raw_sha256": "4655b18c73db9457323b6fb577751a2996be354740b1d2d15bd43e02d4ce221a"
+}

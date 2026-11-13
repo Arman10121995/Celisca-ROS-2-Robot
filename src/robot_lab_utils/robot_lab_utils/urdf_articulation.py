@@ -37,6 +37,25 @@ def measured_motion_rate(samples, fallback=0., excursion_floor=MOTION_EXCURSION)
     return rate
 
 
+# The articulation holds while the base moves: by default above 0.025 m/s or
+# 0.05 rad/s.  A robot whose own arm reaction rocks a light, compliant base
+# past that (myAGV Pro + Pro630: up to 0.058 m/s, 0.052 rad/s while still) may
+# declare ``base_motion_limits: [linear m/s, angular rad/s]`` in its
+# articulation config; it must stay well below its driving speed.
+DEFAULT_BASE_MOTION_LIMITS = (.025, .05)
+
+
+def base_motion_limits(config):
+    """(linear, angular) base-motion thresholds for one articulation config."""
+    if isinstance(config, str):
+        config = json.loads(config) if config else {}
+    limits = (config or {}).get('base_motion_limits', DEFAULT_BASE_MOTION_LIMITS)
+    linear, angular = (float(v) for v in limits)
+    if not (0 < linear <= .15 and 0 < angular <= .3):
+        raise ValueError('base_motion_limits must be positive and at most 0.15 m/s, 0.3 rad/s')
+    return linear, angular
+
+
 def effort_budget(feedforward, limit):
     """Finite feedforward and symmetric servo budget within one source limit."""
     if not math.isfinite(feedforward) or not math.isfinite(limit) or limit <= 0:
@@ -266,6 +285,7 @@ class ArticulationROS:
         from std_srvs.srv import Trigger
         self.contract = configuration if isinstance(configuration, URDFArticulation) else URDFArticulation(configuration, urdf, model_path)
         self.base_moving = False
+        self.base_limits = base_motion_limits(self.contract.config)   # the contract holds the parsed config
         self.publisher = node.create_publisher(String, '/molar/articulation/state', 10)
         self._string = String
         node.create_subscription(Empty, '/molar/articulation/heartbeat', lambda _: self.contract.heartbeat(), 1)

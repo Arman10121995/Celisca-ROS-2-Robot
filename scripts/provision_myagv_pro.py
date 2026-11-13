@@ -1,5 +1,9 @@
 #!/usr/bin/env python3
-"""Install the complete official myAGV Pro with declared lab simulation adapters."""
+"""Install the complete official myAGV Pro with declared lab simulation adapters.
+
+Variants: ``fortress`` (Gazebo), ``rollers`` (MuJoCo/PyBullet/Isaac) and
+``pro630``: the roller base with the official myCobot Pro630 arm on the deck
+(robot_lab_utils.myagv_pro630; ROADMAP R14.3)."""
 import argparse
 import fcntl
 import hashlib
@@ -22,8 +26,9 @@ from provision_extension_assets import checkpoint_robots, robot_entity, source_p
 
 
 def provision(store, download=False, variant='fortress'):
-    if variant not in ('fortress','rollers'):raise ValueError('Unknown myAGV physical adapter')
-    portable=variant=='rollers'
+    if variant not in ('fortress','rollers','pro630'):raise ValueError('Unknown myAGV physical adapter')
+    portable=variant in ('rollers','pro630')
+    with_arm=variant=='pro630'
     source=load_source('elephant_myagv_pro')
     if download:
         for entry in ('agv_pro_description','agv_pro_gazebo','agv_pro_base'):
@@ -37,7 +42,7 @@ def provision(store, download=False, variant='fortress'):
     entry='agv_pro_description/urdf/agv_pro.urdf'
     expanded=subprocess.check_output(['xacro',str(root/entry),'namespace:='],env=env,text=True,timeout=45)
     document=ET.fromstring(expanded)
-    name='asset_elephant_myagv_pro'+('_rollers' if portable else '');document.set('name',name)
+    name='asset_elephant_myagv_pro'+('_pro630' if with_arm else '_rollers' if portable else '');document.set('name',name)
     original=ET.fromstring(expanded)
     resources={}
     for mesh in document.findall('.//mesh'):
@@ -55,6 +60,19 @@ def provision(store, download=False, variant='fortress'):
     if portable:
         from robot_lab_utils.myagv_rollers import physical_rollers
         roller_contract=physical_rollers(document,fuji)
+    articulation=arm_receipt=arm_source=None
+    if with_arm:
+        from robot_lab_utils.myagv_pro630 import compose
+        arm_source=load_source('elephant_mycobot_ros2')
+        if download:
+            for entry_arm in arm_source['entries']:
+                checkout(arm_source,entry_arm,store)
+        arm_root=store/'sources'/arm_source['id']/arm_source['revision']
+        if subprocess.check_output(['git','rev-parse','HEAD'],cwd=arm_root,text=True).strip()!=arm_source['revision']:
+            raise ValueError('Unexpected official arm source revision')
+        if subprocess.check_output(['git','status','--porcelain'],cwd=arm_root,text=True):
+            raise ValueError('Preserve edited arm source before provisioning')
+        articulation,arm_receipt=compose(document,arm_root,store/'model_geometry'/'myagv_pro630'/arm_source['revision'])
     drive=dict(type='mecanum', **{role+'_wheel_joint':joint+'_joint' for role,joint in ROLES.items()},
         wheel_radius=.0762,wheelbase=.3431,wheel_separation=.31345248,roller_angle=.7853981633974483,
         max_speed=.3,max_accel=.3,max_angular_speed=.4,max_angular_accel=.5,max_wheel_speed=8.,wheel_force_limit=5.,
@@ -157,6 +175,17 @@ def provision(store, download=False, variant='fortress'):
                  'source FUJI geometry/handedness scaled to 152.4 mm diameter',
                  'same declared passive vertical-compliance kit and simulated sensors',
                  'existing native backend wheel actuation, springs, measured feedback and command lease']
+    if with_arm:
+        profile.update(type='mobile_manipulator',articulation=articulation,
+            features=[*profile['features'],'articulated_arm'],
+            notes='Official myAGV Pro (BSD-3-Clause) with the physical-roller adapter, and the official myCobot Pro630 arm '
+                  '(BSD-2-Clause, mycobot_ros2 d42ff61a) fixed on the deck: source kinematics, axes, URDF limits, collision primitives '
+                  'and visuals (Collada converted to metre STL). Declared lab estimates, not vendor figures: 8 kg arm mass spread by '
+                  'hull volume, 1 rad/s joint cap, efforts 1.5 x (gravity + inertia x 2 rad/s^2) with the 2 kg payload, centred mount '
+                  'on the deck rails. Bounded position control of six joints with Stop, heartbeat watchdog and base inhibition '
+                  '(urdf_articulation). No gripper (no official Pro630 gripper description). Missions unqualified.')
+        changes=[*changes,'official Pro630 arm fixed on the deck (declared mount)','Collada visuals converted to metre STL',
+                 'declared arm mass/inertia/effort/speed estimates','bounded six-joint position articulation']
     receipt=dict(repository=source['repository'],source_id=source['id'],revision=source['revision'],license='BSD-3-Clause',
         original=str(root/entry),source_sha256=digest(root/entry),source_expanded_sha256=digest(target/'source-expanded.urdf'),
         description=str(output),description_sha256=digest(output),source_meshes_sha256=resources,
@@ -164,10 +193,11 @@ def provision(store, download=False, variant='fortress'):
         lab_compliance=compliance,added_carrier_mass_kg=.02,
         variant=variant,physical_roller_contract=roller_contract,
         source_mass_kg=sum(float(mass.get('value')) for mass in original.findall('link/inertial/mass')),
-        wheel_corner_mapping=ROLES,source_wheels=wheels,drive=drive,lab_changes=changes,runtime_mission_qualified=False)
+        wheel_corner_mapping=ROLES,source_wheels=wheels,drive=drive,lab_changes=changes,runtime_mission_qualified=False,
+        arm=arm_receipt,articulation=articulation)
     evidence=target/'integration.json';write_json(evidence,receipt)
     entity=robot_entity(name,profile,source,entry,evidence)
-    entity.update(name='Elephant Robotics myAGV Pro',robot_class='mobile',
+    entity.update(name='Elephant Robotics myAGV Pro'+(' + myCobot Pro630' if with_arm else ''),robot_class='mobile',
         capabilities=['display','control','holonomic_base','lidar_2d','rgbd_camera','imu'],
         tags=['extension','myagv_pro','four_wheels','mecanum','complete_robot','experimental_control'])
     entity['locomotion']=dict(type='mecanum',dof=3,wheels=4,max_velocity=.3,max_acceleration=.3)
@@ -179,19 +209,25 @@ def provision(store, download=False, variant='fortress'):
         extra=dict(repository='https://github.com/DaiGuard/fuji_mecanum',revision='646431a5e107448e0e2bdeeba4575db9aa3665ff',
                    license='MIT',resource_sha256={file:digest(fuji/file) for file in ('wheel.stl','roller_collision.stl','LICENSE','README.md')})
         receipt['auxiliary_sources']=[extra]
+        if with_arm:
+            receipt['auxiliary_sources'].append(dict(repository=arm_source['repository'],revision=arm_source['revision'],
+                license='BSD-2-Clause',resource_sha256={'mycobot_pro_630.urdf':arm_receipt['source_urdf_sha256']}))
+            entity['tags']=list(dict.fromkeys([*entity['tags'],'mobile_manipulator','arm','mycobot_pro630']))
+            entity['capabilities']=list(dict.fromkeys([*entity['capabilities'],'manipulation']))
         write_json(evidence,receipt)
-        entity['source']['license']='BSD-3-Clause vendor base; MIT FUJI wheel geometry; declared lab derivative'
+        entity['source']['license']='BSD-3-Clause vendor base; MIT FUJI wheel geometry; declared lab derivative'+(
+            '; BSD-2-Clause myCobot Pro630 arm' if with_arm else '')
     for item in entity['evidence']:item['date']='2026-11-12'
     checkpoint_robots(store,{name:profile},[entity],[dict(source_id=source['id'],revision=source['revision'],
-        entry=entry+('/physical-rollers' if portable else ''),status='installed',check=str(evidence),profiles=[dict(id=name,kind='robot',
-            support='Experimental physical-roller native adapter' if portable else 'Experimental Fortress source-model adapter',notes=profile['notes'])])])
+        entry=entry+('/physical-rollers+pro630' if with_arm else '/physical-rollers' if portable else ''),status='installed',check=str(evidence),profiles=[dict(id=name,kind='robot',
+            support='Experimental physical-roller mobile manipulator' if with_arm else 'Experimental physical-roller native adapter' if portable else 'Experimental Fortress source-model adapter',notes=profile['notes'])])])
     return receipt
 
 
 def main():
     parser=argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--download',action='store_true')
-    parser.add_argument('--variant',choices=['fortress','rollers'],default='fortress')
+    parser.add_argument('--variant',choices=['fortress','rollers','pro630'],default='fortress')
     parser.add_argument('--store',type=Path,default=Path(os.environ.get('ROBOT_LAB_RUNTIME_ROOT','/workspace/molar/robot_lab_runtime'))/'external_assets')
     args=parser.parse_args();store=args.store.resolve()
     store.mkdir(parents=True,exist_ok=True)

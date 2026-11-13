@@ -124,7 +124,7 @@ Work top to bottom. Each line links to its task.
 | Order | Task | Remaining implementation (short) | State |
 |---|---|---|---|
 | I0 | [R14.2](#r142--elephant-robotics-myagv-pro) myAGV Pro | Done: Gazebo source variant plus portable roller variant driving in MuJoCo, PyBullet and Isaac; Nav2 measured in Gazebo and PyBullet | implemented |
-| I0a | [R14.3](#r143--elephant-myagv-pro-mobile-manipulator) Elephant mobile manipulator | Official myAGV Pro + myCobot Pro630 composition, normal GUI Drive/Arm controls | not started |
+| I0a | [R14.3](#r143--elephant-myagv-pro-mobile-manipulator) Elephant mobile manipulator | Done 2026-11-13: official Pro630 on the roller base in MuJoCo/PyBullet/Isaac, generic GUI Mobile arm page; gripper and pick/place remain | implemented |
 | I0b | [R14.4](#r144--contributor-integration-course) Integration guide chapters | Prerequisites, adding robots/maps/controllers/sensors and GUI registration | not started |
 | I1 | [R13.2](#r132--vacuum-carpets-and-mopping) Vacuum carpets and mopping | Done 2026-11-10 (Gazebo mop + rug run passes) | implemented |
 | I2 | [R13.3](#r133--vacuum-camera-obstacle-recognition) Vacuum camera obstacles | Initial implementation complete, including trained experimental checkpoint; recognition quality and robot mission pending | partial |
@@ -960,18 +960,18 @@ These are complete; preserve their scoped contracts. R1.3 follow-up CI passes at
 
 ### R14.3 — Elephant myAGV Pro mobile manipulator
 
-- **State:** active (2026-11-13) · **Priority:** I0a (after R14.2, user request 2026-11-12) · **Owner:** claude (from codex, on the user's request)
+- **State:** implemented (2026-11-13), experimental · **Priority:** I0a (after R14.2, user request 2026-11-12) · **Owner:** claude (from codex, on the user's request)
 - **Depends on:** R14.2, existing R5.7/R5.9 arm adapters.
 - **Goal:** add the official arm-equipped myAGV Pro as a complete mobile manipulator alongside the base.
-- **Have:** vendor documents [myAGV Pro + myCobot Pro630](https://docs.elephantrobotics.com/docs/myAGV_Pro_en/7-ExamplesRobotsUsing/7.3-MyCobotPro630.html); official ROS 2 description is available for source review.
-- **Remaining implementation:** pin/license-check the official arm; compose source frames, mechanics and explicit mounting adapter; implement bounded native joint control, GUI classification/Drive/Arm defaults and visible capability limits.
-- **How to do it:** finish R14.2 first. Reuse its separate backend adapters and existing native articulation/arm contracts; keep the base-only profiles. Preserve actual arm masses, limits, names and meshes. Declare any mounting dimensions or missing inertias rather than presenting them as vendor specifications. No hardware connection merely from source availability.
-- **Done when:** complete source-backed mobile manipulator is installed in the normal GUI with real base/arm feedback and bounded control/Stop on advertised backends; supported pipelines and limitations are clear.
+- **Have:** `asset_elephant_myagv_pro_pro630` (`provision_myagv_pro.py --variant pro630`): the roller base plus the official myCobot Pro630 from `elephantrobotics/mycobot_ros2` `d42ff61a` (BSD-2-Clause, the URDF the official MoveIt package uses), composed by `robot_lab_utils/myagv_pro630.py`. Source kinematics, axes, limits, collisions and meshes; declared estimates for arm mass (8 kg), speeds (1 rad/s), effort caps and the deck mount. Bounded position control, Stop, heartbeat watchdog and base interlock on the shared URDF articulation contract, with per-profile `base_motion_limits`. Generic GUI *Mobile arm* page (`robot_lab_gui/urdf_arm_controls.py`) for any profile whose articulation declares `panel: arm`; family `elephant_myagv_pro630` under Mobile manipulators / Arm on omnidirectional base. Drive and arm screens pass in PyBullet, MuJoCo and Isaac; the GUI page passed live on PyBullet ([evidence](docs/status/evidence/myagv-pro-2026-11-12/README.md#myagv-pro--mycobot-pro630-r143-2026-11-13)).
+- **Remaining implementation:** gripper (Elephant publishes no Pro630 gripper description; myGripper F100 pending), MoveIt/Cartesian planning on the composed model, and the R5.9 navigate–reach–grasp pipeline for this robot.
+- **How to do it:** a gripper needs a licensed source description or declared geometry. Planning can reuse the official `mycobot_630_moveit2` SRDF with the `pro630_` prefix.
+- **Done when:** met for the composed robot and bounded arm control. Gripper and planning are follow-ups under R5.8/R5.9.
 - **Validation later:** navigation/reach/pick/place transport, contact/calibration and other backend/map missions remain separate measured acceptance.
 
 ### R14.4 — Contributor integration course
 
-- **State:** queued · **Priority:** I0b (after R14.3, user request 2026-11-12) · **Owner:** claude (from codex, on the user's request)
+- **State:** active (2026-11-13) · **Priority:** I0b (after R14.3, user request 2026-11-12) · **Owner:** claude (from codex, on the user's request)
 - **Depends on:** current source-backed integration recipes.
 - **Goal:** explain how a new contributor adds robots, maps and related components, including normal GUI integration.
 - **Have:** asset/agent guides and architecture explorer; concrete official robot import recipes.

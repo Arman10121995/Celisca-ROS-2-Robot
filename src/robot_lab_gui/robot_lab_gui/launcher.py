@@ -1349,6 +1349,8 @@ class SimulationLauncherGui(tk.Tk):
             self._control_robot = robot
             if self._molar_selectable() and hasattr(self, 'molar_controls'):
                 self.control_notebook.select(self.molar_controls)
+            elif self._urdf_arm_selectable() and hasattr(self, 'urdf_arm_controls'):
+                self.control_notebook.select(self.urdf_arm_controls)
             elif self._robot_config().get('articulated_flippers') and hasattr(self,'tracked_controls'):
                 self.control_notebook.select(self.tracked_controls)
             elif self._gait_selectable() and hasattr(self, 'gait_controls'):
@@ -1373,7 +1375,8 @@ class SimulationLauncherGui(tk.Tk):
             control = getattr(self, name, None)
             if control is not None:
                 control.all_stop()
-        for name in ('arm_tab', 'hand_tab', 'marine_controls', 'gait_controls', 'molar_controls', 'tracked_controls'):
+        for name in ('arm_tab', 'hand_tab', 'marine_controls', 'gait_controls', 'molar_controls', 'urdf_arm_controls',
+                     'tracked_controls'):
             control = getattr(self, name, None)
             if control is not None:
                 control.stop()
@@ -2312,6 +2315,11 @@ class SimulationLauncherGui(tk.Tk):
 
     def _molar_selectable(self):
         from .molar_controls import selectable
+        return selectable(self.robot_var.get(), self.simulator_var.get(), self.mode_var.get(),
+                          self.launch_kind_var.get(), self._robot_config())
+
+    def _urdf_arm_selectable(self):
+        from .urdf_arm_controls import selectable
         return selectable(self.robot_var.get(), self.simulator_var.get(), self.mode_var.get(),
                           self.launch_kind_var.get(), self._robot_config())
 
@@ -3838,6 +3846,8 @@ class SimulationLauncherGui(tk.Tk):
             self.tracked_controls.close()
         if hasattr(self, 'molar_controls'):
             self.molar_controls.close()
+        if hasattr(self, 'urdf_arm_controls'):
+            self.urdf_arm_controls.close()
         if hasattr(self, 'gait_controls'):
             self.gait_controls.close()
         if hasattr(self, 'marine_controls'):

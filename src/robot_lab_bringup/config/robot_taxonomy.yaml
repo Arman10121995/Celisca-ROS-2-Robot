@@ -114,6 +114,10 @@ classes:
     tags: [Mobile base, Robot arm]
     members: [asset_fetch, stretch, menagerie_google_robot, menagerie_stanford_tidybot]
   - category: Mobile manipulators
+    subtype: Arm on omnidirectional base
+    tags: [Elephant Robotics, Mecanum base, Six-axis arm, Official CAD, Declared arm estimates, Experimental control]
+    members: [elephant_myagv_pro630]
+  - category: Mobile manipulators
     subtype: Dual arm on mobile base
     tags: [Mobile base, Two manipulators, Bimanual]
     members: [asset_pr2, asset_halodi_eve_r3]

@@ -58,10 +58,10 @@ def finite(value):
     return float(value)
 
 
-def validate_feedback(state, model_path):
-    """Bind actual feedback to the exact selected source, without trusting names."""
+def validate_identity(state, model_path):
+    """Fresh state from the exact selected source, with typed readiness fields."""
     if not isinstance(state, dict) or state.get('schema') != SCHEMA:
-        raise ValueError('Waiting for the MOLAR articulation state schema.')
+        raise ValueError('Waiting for the articulation state schema.')
     published = finite(state.get('state_monotonic'))
     if not -.05 <= time.monotonic() - published < FRESH_SECONDS:
         raise ValueError('Waiting for fresh articulation feedback from the running plant.')
@@ -78,6 +78,11 @@ def validate_feedback(state, model_path):
             or not isinstance(state.get('base_inhibited'), bool)
             or not isinstance(state.get('status'), str)):
         raise ValueError('Incomplete articulation readiness feedback.')
+
+
+def validate_feedback(state, model_path):
+    """Bind actual feedback to the exact selected source, without trusting names."""
+    validate_identity(state, model_path)
     channels = state.get('channels')
     if not isinstance(channels, list) or len(channels) != len(LIMITS):
         raise ValueError('Waiting for all four measured articulation channels.')
@@ -130,6 +135,8 @@ def bounded_targets(targets, channels):
 
 
 class MolarControls(ScrollPanel):
+    page_label = 'MOLAR'
+
     def __init__(self, notebook, app):
         super().__init__(notebook, width=320)
         notebook.add(self, text='MOLAR')
@@ -365,7 +372,7 @@ class MolarControls(ScrollPanel):
             if gid is None or not publisher_ok or (age is not None and not -.5 <= age < FRESH_SECONDS):
                 raise ValueError('Waiting for fresh, unambiguous articulation feedback.')
             state = json.loads(message.data)
-            validate_feedback(state, self.app._resolve_robot_path())
+            self.validate(state)
             changed = (not self.state or (state['initialized'] and not self.state.get('initialized'))
                        or state['plant_id'] != self.state['plant_id']
                        or gid != self.publisher_gid or self.bound_process is not self.app.process)
@@ -375,6 +382,24 @@ class MolarControls(ScrollPanel):
                 self.use_measured()
         except (ValueError, TypeError, KeyError, OSError, AttributeError) as exc:
             self.stop(reason=str(exc))
+
+    # Page hooks: a subclass with other channels overrides these three.
+    def validate(self, state):
+        return validate_feedback(state, self.app._resolve_robot_path())
+
+    def bounded(self, targets):
+        return bounded_targets(targets, self.channels())
+
+    def show_feedback(self):
+        channels = self.channels()
+        lift, first, second = (channels[name]['measured'] for name in (LIFT, STAGE, COUPLED))
+        roller = channels[ROLLER]
+        self.feedback.set('Lift %.3f m · deck height %.3f m\nSlide 1 %.3f m · slide 2 %.3f m\n'
+                          'Total tip extension %.3f m · coupling error %.4f m\n'
+                          'Roller velocity %.3f rad/s · angle %.3f rad\nBase Drive %s' %
+                          (lift, .750 + lift, first, second, first + second,
+                           self.state['coupling_error'][COUPLED], roller['measured_velocity'],
+                           roller['measured'], 'inhibited' if self.state['base_inhibited'] else 'available'))
 
     def ready(self):
         return bool(self.owned() and self.state and self.bound_process is self.app.process
@@ -401,8 +426,8 @@ class MolarControls(ScrollPanel):
             self.status.set('Select the owned running model and wait for fresh measured state.')
             return False
         try:
-            validate_feedback(self.state, self.app._resolve_robot_path())
-            targets = bounded_targets(targets, self.channels())
+            self.validate(self.state)
+            targets = self.bounded(targets)
             self.heartbeat.publish(Empty())
             self.last_heartbeat = time.monotonic()
             self.pub.publish(String(data=json.dumps(dict(plant_id=self.state['plant_id'], targets=targets), allow_nan=False)))
@@ -455,7 +480,7 @@ class MolarControls(ScrollPanel):
 
     def tab_changed(self, _event=None):
         if not self.visible():
-            self.stop(reason='MOLAR control held while this page is inactive.')
+            self.stop(reason=self.page_label + ' control held while this page is inactive.')
 
     def update_buttons(self):
         enabled = self.ready()
@@ -476,15 +501,7 @@ class MolarControls(ScrollPanel):
                     if time.monotonic() - self.last_heartbeat >= .1:
                         self.heartbeat.publish(Empty())
                         self.last_heartbeat = time.monotonic()
-                    channels = self.channels()
-                    lift, first, second = (channels[name]['measured'] for name in (LIFT, STAGE, COUPLED))
-                    roller = channels[ROLLER]
-                    self.feedback.set('Lift %.3f m · deck height %.3f m\nSlide 1 %.3f m · slide 2 %.3f m\n'
-                                      'Total tip extension %.3f m · coupling error %.4f m\n'
-                                      'Roller velocity %.3f rad/s · angle %.3f rad\nBase Drive %s' %
-                                      (lift, .750 + lift, first, second, first + second,
-                                       self.state['coupling_error'][COUPLED], roller['measured_velocity'],
-                                       roller['measured'], 'inhibited' if self.state['base_inhibited'] else 'available'))
+                    self.show_feedback()
                     self.status.set(self.state['status'])
                     self._transfer_tick()
                 elif self.state:

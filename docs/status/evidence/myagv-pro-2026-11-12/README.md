@@ -132,3 +132,73 @@ Navigation (experimental opt-in), PyBullet, `nav_empty`,
 Scope: named screens on one empty map; other maps, furnished routes, SLAM and
 MuJoCo/Isaac navigation are not yet measured, and higher modes stay
 experimental in the GUI.
+
+## myAGV Pro + myCobot Pro630 (R14.3, 2026-11-13)
+
+`asset_elephant_myagv_pro_pro630` is the roller base with Elephant Robotics'
+official six-axis Pro630 fixed to the deck rails
+(`provision_myagv_pro.py --variant pro630`, [receipt](pro630-provision.json)).
+Arm source: `elephantrobotics/mycobot_ros2` at
+`d42ff61a78122c79246623391540d75738b03b23` (BSD-2-Clause), the
+`mycobot_pro_630.urdf` the official `mycobot_630_moveit2` package uses.
+Kinematics, axes, position limits, collision primitives and visual meshes are
+the source's; meshes are converted from millimetre Collada to metre STL.
+
+The source has no inertials and zero velocity limits, and the vendor publishes
+no arm weight or joint speeds. Declared lab estimates
+(`robot_lab_utils/myagv_pro630.py`): 8.0 kg spread by convex-hull volume
+(base 3.22, links 0.48/1.60/2.00/0.30/0.37/0.03 kg), 1.0 rad/s per joint,
+effort caps 1.5 × (gravity torque with the rated 2 kg payload + inertia × 2
+rad/s²) with a 5 N·m floor (J2 43.4, J3 18.9 N·m), and the mount centred on
+the rails at 0.220 m. Composed mass 28.336 kg; the PyBullet import matched it.
+
+Arm control is the shared URDF articulation contract
+(`/molar/articulation/*`, 0.5 s heartbeat watchdog, Stop, base interlock).
+The arm's reaction rocks the light compliant base up to 0.06 m/s while it
+stands still, so this profile declares `base_motion_limits: [0.10, 0.20]`
+(contract cap 0.15 m/s, 0.3 rad/s) instead of the default 0.025/0.05.
+
+Display screens on `nav_empty`: drive (`screen_ground_counterpart.py`, the
+normal `/key_vel` path, simulator truth) followed by the arm
+(`screen_urdf_arm.py`: each joint +0.5 rad and back, Stop part-way through a
+1.5 rad move, heartbeat withheld during a long move):
+
+| Backend | Forward | Reverse | Strafe | Turn | Arm joints settle | Stop holds (drift) | Watchdog holds | Summary |
+|---|---|---|---|---|---|---|---|---|
+| PyBullet | 0.244 m/s | −0.206 m/s | 0.228 m/s | 0.243 rad/s | 1.4–2.1 s, ≤ 22 mrad | yes (0.2 mrad) | yes, 3.0 rad short | [summary](pro630-pybullet-2.summary.json) |
+| MuJoCo | 0.238 m/s | −0.211 m/s | 0.223 m/s | 0.235 rad/s | 0.6–0.7 s, ≤ 29 mrad | yes (0 mrad) | yes, 2.8 rad short | [summary](pro630-mujoco-2.summary.json) |
+| Isaac Sim | 0.247 m/s | −0.247 m/s | 0.246 m/s | 0.243 rad/s | 1.1–1.3 s, ≤ 20 mrad | yes (0.2 mrad) | yes, 2.9 rad short | [summary](pro630-isaac-2.summary.json) |
+
+Every run published 8 RGB images and 8 scans; neutral stayed still and the
+publisher-loss phase stopped the base.
+
+**Normal GUI**: the new *Mobile arm* page (`robot_lab_gui/urdf_arm_controls.py`)
+appears for any profile whose articulation declares `panel: arm`, one row per
+configured joint. `scripts/qualify_urdf_arm_gui.py` drove it on PyBullet through
+the launcher's own Run path and the page's widgets: Apply J1 0.5 rad (settled
+1.45 s), Jog J2 +0.2 rad (0.95 s), Home (1.72 s), Stop part-way through a 2 rad
+move (held at 0.325 rad, 0.1 mrad drift), Home again. Runs 8 and 9 both
+passed ([report](pro630-gui-pybullet-9.json)).
+
+Retained failures and repairs:
+
+* [PyBullet run 1](pro630-pybullet-1.summary.json): J2 and J5 froze; the arm's
+  reaction tripped the default base-motion interlock. Repair: the per-profile
+  limits above.
+* MuJoCo run 1 did not spawn (`'URDFArticulation' object has no attribute
+  'get'`); `ArticulationROS` now reads the limits from the parsed config.
+* [Isaac run 1](pro630-isaac-1.summary.json): forward 0.019 m/s, reverse
+  −0.014 m/s. The screen began while the arm still settled after spawn, so the
+  interlock (correctly) held the base. A probe that waited showed 0.245 m/s
+  forward with the interlock never tripping. Repair: the drive screen now waits
+  for the interlock to release (30.6 s of wall time in Isaac).
+* GUI runs 2, 4–7: the check script's own screenshots blocked the Tk loop for
+  about 1 s. The page then refused commands on stale feedback, and once the
+  plant's heartbeat watchdog held and rejected Home. Both refusals are the
+  designed behaviour; the script now waits for fresh feedback after each
+  screenshot.
+
+Scope: Display screens on one empty map. Not yet done: a gripper (Elephant
+publishes no Pro630 gripper description; myGripper F100 pending), MoveIt
+planning, mobile pick-and-place, navigation with the arm, and physical
+qualification. Mass, speeds, efforts and mount are declared estimates.
