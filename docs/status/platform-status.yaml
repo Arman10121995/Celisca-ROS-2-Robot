@@ -3956,7 +3956,7 @@ tasks:
         title: Manipulator control and GUI motion planning
       R5.8:
         acceptance_ref: ROADMAP.md
-        active_scope: '2026-10-06: preserve native Panda arm controls; add the pinned
+        active_scope: '2026-11-13 Codex owns native hand measured force regulation in native_hand_control.py, native_hand_controls.py and native_hand_force.py; Claude retains drone/import files. Preserve all original source gains/limits and Panda controllers. Historical 2026-10-06: preserve native Panda arm controls; add the pinned
           Panda coupled-finger actuator through GripperCommand and real GUI open/close/Stop.
           Measure source tendon/equality, bounded actuator force, cancellation/watchdog
           and a physical object grasp/hold/release before enabling hand controls.
@@ -3977,12 +3977,13 @@ tasks:
           tool-origin jogging extends compatible direct joint controllers.
         implementation_validation: Pending; no new physical mission/test campaign
           for October 9 candidates.
+        force_hold_20261113: 'Codex: bounded source-position force feedback and GUI request implemented; source gains/limits retained. Pinned Robotiq component fixture unloaded ~12 N to ~5.25 N per side for a 5 N request; Stop interrupted. 40 focused/regression/tutorial checks and GUI protocol smoke pass; three packages build. Other source hands, normal GUI object missions and hardware unqualified. See docs/status/hand-force-2026-11-13.md.'
         next_action: Continue further torque/tendon hand adapters, force-regulated
           grasping and arbitrary-object workflows. Existing source PID/tendon candidates
           and free-cube GUI contact/release are implemented; stable grasp/lift/repeats,
           all hands/templates and other backends remain open. Preserve Panda qualification
           separately.
-        owner: cline-agent
+        owner: codex
         result: Current normal Panda / MuJoCo / nav_empty physical cube lift is 78.1
           mm with bounded 0.5 N closure. Release, Cancel, Stop, reset and heartbeat
           loss (0.845 wall seconds) pass. Contact is summed per finger as in the existing

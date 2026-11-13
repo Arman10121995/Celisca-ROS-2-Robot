@@ -347,6 +347,7 @@ These are complete; preserve their scoped contracts. R1.3 follow-up CI passes at
 - **Have:** the Panda gripper cube grasp; DEX-EE and three coupled-tendon
   hands with closure/spread, finger selection and contact feedback.
   [Hand guide](docs/tutorials/native-hand-controls.md).
+- **Force feedback continuation (2026-11-13, Codex):** GUI-requested existing-grasp force regulation adjusts source position targets, retains original PID/transmission/force limits and requested effort fraction, unloads initial over-force and interrupts on contact loss, new/worsening external touch, overload, Stop/loss/deadline. One actual pinned Robotiq component fixture reduced about 12 N to 5.25 N per side for a 5 N request; this is not a GUI/hand-family mission. [Guide](docs/tutorials/native-hand-controls.md#regulate-an-established-grasp) · [receipt](docs/status/hand-force-2026-11-13.md).
 - **Remaining implementation:**
   - raw torque and tendon hand adapters for the remaining source hands;
   - object workflows (stable grasp detection, lift, hold, release) in the Hand page;

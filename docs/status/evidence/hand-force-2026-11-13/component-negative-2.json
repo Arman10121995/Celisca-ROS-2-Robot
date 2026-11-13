@@ -1,0 +1,31 @@
+{
+  "controller_sources_sha256": {
+    "/workspace/molar/ros_ws/bumperbot_ws/src/robot_lab_mujoco/python/robot_lab_mujoco/native_hand_control.py": "7d261daf7e06670031b8f1512fc78f38ed697be9c937338d5a685bf33b422cef",
+    "/workspace/molar/ros_ws/bumperbot_ws/src/robot_lab_utils/robot_lab_utils/native_hand_force.py": "172d2ae0d67d31c9b0ea94ff0262dd2a45028ec77cc89f01da0f3de4af10e2be"
+  },
+  "scope": "Pinned Robotiq native component fixture; no normal-GUI/map mission or hard contact-force qualification",
+  "source_sha256": "d48aca5f9151798ffd38111ce4e8b2081f3ec2d4f525161b33643451580010de",
+  "contract_sha256": "6941a8051709abed2ea00fd1420e76d00a3fe97863cfc17319e8c7cc6edd79e4",
+  "requested_force_n": 5.0,
+  "initial_force_state": {
+    "state": "unloading",
+    "target_force_n": 5.0,
+    "closure": 0.6792000000000126,
+    "scope": "Bounded position-target feedback on opposing object contacts; not a hard force cap"
+  },
+  "final_force_state": {
+    "state": "interrupted",
+    "target_force_n": 5.0,
+    "closure": 0.6792000000000126,
+    "scope": "Bounded position-target feedback on opposing object contacts; not a hard force cap",
+    "reason": "Hand force regulation stopped: Unintended external finger contact during force regulation"
+  },
+  "stopped_force_state": {
+    "state": "interrupted",
+    "target_force_n": 5.0,
+    "closure": 0.6792000000000126,
+    "scope": "Bounded position-target feedback on opposing object contacts; not a hard force cap",
+    "reason": "Component probe operator Stop"
+  },
+  "wall_s": 2.8584837960079312
+}

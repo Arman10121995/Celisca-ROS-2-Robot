@@ -1,0 +1,22 @@
+{
+  "scope": "Pinned Robotiq native component fixture; no normal-GUI/map mission or hard contact-force qualification",
+  "source_sha256": "d48aca5f9151798ffd38111ce4e8b2081f3ec2d4f525161b33643451580010de",
+  "contract_sha256": "6941a8051709abed2ea00fd1420e76d00a3fe97863cfc17319e8c7cc6edd79e4",
+  "requested_force_n": 5.0,
+  "initial_force_state": {
+    "state": "interrupted",
+    "scope": "Requested force feedback; no hard contact-force cap",
+    "reason": "Rejected hand force regulation: Measured contact overload; inspect/open before retrying"
+  },
+  "final_force_state": {
+    "state": "interrupted",
+    "scope": "Requested force feedback; no hard contact-force cap",
+    "reason": "Rejected hand force regulation: Measured contact overload; inspect/open before retrying"
+  },
+  "stopped_force_state": {
+    "state": "interrupted",
+    "scope": "Requested force feedback; no hard contact-force cap",
+    "reason": "Component probe operator Stop"
+  },
+  "wall_s": 2.77091834199382
+}

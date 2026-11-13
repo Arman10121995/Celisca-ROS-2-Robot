@@ -61,6 +61,16 @@ class NativeHandControls(ttk.Frame):
             variable=self.fixture, command=self.fixture_changed)
         self.fixture_button.grid(row=15, column=0, columnspan=2, sticky='w', pady=5)
 
+        self.force_target=tk.DoubleVar(value=1.)
+        ttk.Label(self,text='Requested hold force (N / side)').grid(row=16,column=0,sticky='w')
+        ttk.Spinbox(self,textvariable=self.force_target,from_=.2,to=5.,increment=.2,width=8).grid(row=16,column=1,sticky='w')
+        self.force_button=ttk.Button(self,text='Regulate existing object grasp',command=self.regulate_force)
+        self.force_button.grid(row=17,column=0,columnspan=2,sticky='ew',pady=4)
+        ttk.Label(self,text='Requires established opposing contacts. Adjusts bounded source position targets; '
+                  'requested force is not a hard contact-force limit. Contact loss, overload, Stop or heartbeat '
+                  'loss interrupts regulation. Lab feedback tuning remains experimental.',
+                  wraplength=305).grid(row=18,column=0,columnspan=2,sticky='w')
+
     def fixture_changed(self):
         if self.selected() and not self.owner.app._launch_running:
             if self.fixture.get():
@@ -88,6 +98,9 @@ class NativeHandControls(ttk.Frame):
             button.state(['!disabled'] if ready else ['disabled'])
         for button in (self.grasp_object_button, self.release_object_button):
             button.state(['!disabled'] if ready and hand.get('object_present') else ['disabled'])
+        force_ready=(ready and hand.get('object_present') and hand.get('object_grasp',{}).get('state')=='holding'
+                     and self.pose.get() not in ('Open','Spread'))
+        self.force_button.state(['!disabled'] if force_ready else ['disabled'])
         if not ready:
             self.feedback.set('Waiting for fresh source hand feedback from the selected Run.')
             return
@@ -102,6 +115,9 @@ class NativeHandControls(ttk.Frame):
         self.note.set(hand['adapter']+' · '+hand['actuation']+' · experimental')
         details = ['%s: %.3f N (%d contacts)' % (name, entry['normal_force_n'], entry['contact_count'])
             for name, entry in hand.get('contacts', {}).items()]
+        force=hand.get('force_regulation',{})
+        if force.get('state') not in (None,'idle'):
+            details.append('Force feedback: '+force.get('state','')+' · '+force.get('reason',''))
         blocked = ', '.join(hand.get('blocked_groups', {}))
         self.feedback.set(hand['motion']['state']+'\n'
             + '\n'.join(details)
@@ -135,6 +151,26 @@ class NativeHandControls(ttk.Frame):
                 guarded=bool(self.guarded.get()), effort_fraction=effort, contact_limit_n=contact))))
             self.feedback.set('Requested '+chosen+'; waiting for measured feedback')
         except (ValueError, TypeError, tk.TclError) as exc:
+            self.feedback.set(str(exc))
+
+    def regulate_force(self):
+        if not self.owner.ready():
+            return
+        state=self.owner.state;hand=state.get('hand',{})
+        if not hand.get('object_present'):
+            return
+        try:
+            target=float(self.force_target.get())
+            if not math.isfinite(target) or not .2<=target<=5.:
+                raise ValueError('Requested hold force must be 0.2–5 N per opposing side')
+            from std_msgs.msg import Empty,String
+            self.owner.heartbeat.publish(Empty())
+            self.owner.pub.publish(String(data=json.dumps(dict(operation='hand_force_hold',
+                plant_id=state['plant_id'],source_sha256=state['source_sha256'],
+                contract_sha256=hand['contract_sha256'],pose=self.pose.get(),target_force_n=target,
+                effort_fraction=float(self.effort.get())))))
+            self.feedback.set('Requested force feedback on existing grasp; waiting for measured response')
+        except (ValueError,TypeError,KeyError,tk.TclError) as exc:
             self.feedback.set(str(exc))
 
     def grasp_object(self):

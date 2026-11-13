@@ -16,6 +16,8 @@ from .native_articulation_control import NativeArticulationControl
 
 class NativeHandControl(NativeArticulationControl):
     def __init__(self, node, contract):
+        self.force_hold = None
+        self.force_state = dict(state='idle',scope='Requested force feedback; no hard contact-force cap')
         self.contract = contract
         self.guard = None
         self.motion = dict(state='idle', completion_scope='Hand coordinates only; object grasp unassessed')
@@ -65,6 +67,9 @@ class NativeHandControl(NativeArticulationControl):
             self.data.act[address+1] = self.commanded[slot]  # Owned previous setpoint.
 
     def hold(self, reason='stopped; holding measured hand coordinates'):
+        self.force_hold = None
+        if hasattr(self,'force_state'):
+            self.force_state.update(state='interrupted',reason=reason)
         super().hold(reason)
         self.target = self.bounded(self.target)
         self.commanded = self.target.copy()
@@ -80,6 +85,8 @@ class NativeHandControl(NativeArticulationControl):
             request = json.loads(message.data)
             if not isinstance(request, dict) or request.get('plant_id') != self.plant_id:
                 return
+            if request.get('operation') == 'hand_force_hold':
+                return self.regulate_force(request)
             if request.get('operation') == 'hand_grasp':
                 return self.grasp_object(request)
             if request.get('operation') == 'hand_release':
@@ -123,6 +130,95 @@ class NativeHandControl(NativeArticulationControl):
             self.status = 'jogging'
         except (ValueError, TypeError, KeyError, IndexError) as exc:
             self.hold('Rejected hand pose: '+str(exc))
+
+    def external_finger_contacts(self):
+        owned=set().union(*self.finger_bodies.values())
+        result={}
+        for index,contact in enumerate(self.data.contact[:self.data.ncon]):
+            bodies=[int(self.model.geom_bodyid[g]) for g in contact.geom]
+            if self.object_body in bodies or not any(body in owned for body in bodies):
+                continue
+            if any(body==0 or body>=self.node.robot_bodies for body in bodies):
+                force=np.zeros(6)
+                self.node.mujoco.mj_contactForce(self.model,self.data,index,force)
+                pair=tuple(sorted(map(int,contact.geom)))
+                entry=result.setdefault(pair,dict(force=0.,distance=0.))
+                entry['force']+=abs(float(force[0]))
+                entry['distance']=min(entry['distance'],float(contact.dist))
+        return result
+
+    def regulate_force(self,request):
+        from robot_lab_utils.native_hand_force import ContactForceHold
+        try:
+            if (self.fault or time.monotonic()-self.last_heartbeat>.8
+                    or request.get('source_sha256')!=self.source_sha256
+                    or request.get('contract_sha256')!=self.contract['contract_sha256']):
+                raise ValueError('Fresh owned hand source/heartbeat required')
+            if self.object_body<0 or self.grasp.get('state')!='holding':
+                raise ValueError('Establish a measured two-sided object grasp first')
+            effort_fraction=float(request.get('effort_fraction',.6))
+            if not np.isfinite(effort_fraction) or not .05<=effort_fraction<=1.:
+                raise ValueError('Source effort fraction must be 0.05–1')
+            pose=str(request.get('pose','Curl'))
+            if pose in ('Open','Spread') or pose not in self.contract['poses']:
+                raise ValueError('Choose the established closing grasp pose')
+            opened=hand_pose_targets(self.contract,pose,0.,0.,'All')
+            closed=hand_pose_targets(self.contract,pose,1.,0.,'All')
+            direction=np.array([closed[c['name']]-opened[c['name']] for c in self.channels])
+            origin=np.array([opened[c['name']] for c in self.channels])
+            if np.dot(direction,direction)<1e-10:
+                raise ValueError('No source closure direction for force regulation')
+            closure=float(np.clip(np.dot(self.commanded-origin,direction)/np.dot(direction,direction),0.,1.))
+            regulator=ContactForceHold(float(request['target_force_n']),closure)
+            contacts=self.object_contacts()
+            regulator.update(float(self.data.time),contacts['left_force_n'],contacts['right_force_n'])
+            # Keep the current compressive setpoint and original PID memory.
+            # A stop/hold here would remove the error that is holding the object.
+            self.cancel_sequence('Force regulation owns hand targets')
+            self.guard=None
+            self.force_origin=self.target.copy();self.force_direction=direction
+            self.force_initial_closure=closure;self.force_started=time.monotonic()
+            self.force_external_baseline=self.external_finger_contacts()
+            self.force_effort_fraction=effort_fraction
+            self.force_hold=regulator
+            self.force_state=dict(state=regulator.status,target_force_n=regulator.target,closure=closure,
+                scope='Bounded position-target feedback on opposing object contacts; not a hard force cap')
+            self.motion.update(state='force_regulation',pose=pose)
+            self.status='measured object force regulation'
+        except (ValueError,TypeError,KeyError) as exc:
+            self.hold('Rejected hand force regulation: '+str(exc))
+
+    def update_force_hold(self):
+        if self.force_hold is None:
+            return
+        try:
+            if self.fault or time.monotonic()-self.last_heartbeat>.8:
+                raise ValueError('Plant fault or operator heartbeat lost')
+            if time.monotonic()-self.force_started>60.:
+                raise ValueError('Force hold wall deadline exceeded')
+            contacts=self.object_contacts()
+            closure=self.force_hold.update(float(self.data.time),contacts['left_force_n'],contacts['right_force_n'])
+            for channel in self.channels:
+                actuator=channel['index']
+                if not np.isfinite(self.data.actuator_force[actuator]):
+                    raise ValueError('Non-finite measured source actuator effort')
+                if self.model.actuator_forcelimited[actuator]:
+                    low,high=self.model.actuator_forcerange[actuator]
+                    force=self.data.actuator_force[actuator]
+                    if force<low*self.force_effort_fraction-1e-6 or force>high*self.force_effort_fraction+1e-6:
+                        raise ValueError('Measured source actuator effort exceeds the requested source fraction')
+                elif abs(self.data.actuator_force[actuator])>2.*self.force_effort_fraction:
+                    raise ValueError('Measured actuator effort exceeds the declared unclamped-hand lab threshold')
+            for pair,contact in self.external_finger_contacts().items():
+                baseline=self.force_external_baseline.get(pair,dict(force=0.,distance=0.))
+                if (contact['force']>1.2*baseline['force']+.2
+                        or contact['distance']<min(-.002,baseline['distance']-.001)):
+                    raise ValueError('New/worsening external finger contact during force regulation')
+            self.target=self.bounded(self.force_origin+(closure-self.force_initial_closure)*self.force_direction)
+            self.force_state.update(state=self.force_hold.status,closure=closure,
+                left_force_n=contacts['left_force_n'],right_force_n=contacts['right_force_n'])
+        except (ValueError,TypeError,KeyError) as exc:
+            self.hold('Hand force regulation stopped: '+str(exc))
 
     def object_contacts(self):
         """Measured external normal force on each opposing side against the object.
@@ -357,6 +453,7 @@ class NativeHandControl(NativeArticulationControl):
                 self.stop_group(group, reason)
 
     def before_step(self):
+        self.update_force_hold()
         self.check_guard()
         super().before_step()
 
@@ -390,7 +487,7 @@ class NativeHandControl(NativeArticulationControl):
             poses=self.contract['poses'], motion=self.motion,
             contacts=self.contacts(), blocked_groups=self.guard['blocked'] if self.guard else {},
             guard_scope='Stop advancement at measured thresholds; source hard bounds unchanged; no grasp guarantee',
-            object_grasp=self.grasp,
+            object_grasp=self.grasp,force_regulation=self.force_state,
             object_present=self.object_body >= 0, object_body_id=self.object_body,
             source_effort_limits={c['name']: self.model.actuator_forcerange[c['index']].tolist()
                 if self.model.actuator_forcelimited[c['index']] else None for c in self.channels},

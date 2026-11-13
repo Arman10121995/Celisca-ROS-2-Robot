@@ -138,3 +138,36 @@ hand needs an actual arm or the UMI placement axes for a lift. Do not use a
 visual/physics weld as grasp evidence. Arbitrary-object scene editing, learned
 grasp selection, raw torque/tendon-motor hands and additional backends remain
 separate implementation tasks.
+
+## Regulate an established grasp
+
+November 13 adds **Requested hold force (N / side)** and **Regulate existing
+object grasp**. First enable the documented object fixture, Run and establish
+an actual two-sided grasp with **Grasp object**. Choose the same closing pose,
+set a finite 0.2–5 N request, then explicitly click the regulation button.
+Editing the field alone sends no motion.
+
+The controller adjusts bounded source position targets from measured opposing
+normal contacts; source PID gains, transmissions and hard actuator limits stay
+unchanged. It regulates the weaker side, with a 10% / at least 0.05 N deadband,
+normalized closure rate at most 0.03/s and gain 0.02/(N·s). These are declared
+lab settings, not calibrated vendor force specifications. The requested effort
+fraction still applies; UMI retains its existing 2 N × fraction lab threshold
+where no source force clamp exists.
+
+An existing grasp above twice the requested force enters bounded unloading.
+Entry is refused above the declared 50 N observation bound. Further increases
+above 110% of its measured entry peak stop it; after unloading, the normal
+2× requested-force overload threshold applies. Established non-object fixture
+contacts may remain, but rising force or worsening penetration there stops
+regulation. New external finger contact, source-effort violation, loss of an
+opposing contact, stale/non-finite timing/data, Stop, manual input or heartbeat
+loss interrupt regulation. Its lease is bounded to 30 simulated / 60 wall
+seconds; continuation requires an explicit new request.
+
+Requested contact force is **not a hard physical force cap**. Stop holds
+measured coordinates and may release a loaded object. No automatic regrasp or
+object attachment is performed. The native Robotiq component fixture reduced
+about 12 N per side to about 5.25 N for a 5 N request, with unchanged source
+gains/force limits. This does not qualify the normal GUI mission, other hands,
+lift/transport or hardware. [Receipt and retained failures](../status/hand-force-2026-11-13.md).
