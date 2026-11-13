@@ -4043,7 +4043,7 @@ tasks:
         title: Robot hand and gripper actuation
       R5.9:
         acceptance_ref: ROADMAP.md
-        active_scope: '2026-11-13 Codex owns object custody checkpoints and carry-loss monitoring in mobile_task.py, native_mobile_tasks.py and mobile_task_controls.py; Claude retains drone/import work. Preserve existing sequencer. Historical 2026-10-09 scope: implement coordinated selected-map
+        active_scope: '2026-11-13 Codex owns object custody checkpoints, carry-loss monitoring and native Stretch payload-footprint publication/interlock in mobile_task.py, native_mobile_tasks.py, native_mobile_control.py, native_mobile_sensors.py and mobile_task_controls.py; Claude retains drone/import work. Preserve existing sequencer. Historical 2026-10-09 scope: implement coordinated selected-map
           Nav2 goals and source-matched taught arm/hand sequences for both native
           Stretch variants, with measured settling, explicit task ownership, manual
           intervention, cancellation and heartbeat loss. Initial implementation precedes
@@ -4061,6 +4061,7 @@ tasks:
         implementation_validation: Pending; no new physical mission/test campaign
           for October 9 candidates.
         object_custody_20261113: 'Codex: GUI grasp/release checkpoints and native force/support/slip observations implemented; carry-loss monitoring on navigation legs. Focused checks only; physical mission pending. See docs/status/mobile-custody-2026-11-13.md.'
+        payload_footprint_20261113: 'Codex: measured robot/payload collision-bound union, retained after task interruption, published to both Nav2 costmaps; matching/freshness interlock on Drive/task navigation. Costmap consumption and physical carry mission pending; scoped implementation checks in docs/status/mobile-custody-2026-11-13.md.'
         next_action: Extend source-specific Fetch/PR2/TIAGo and other backend adapters,
           full arm planning and object/grasp mission contracts. Validate native Stretch
           coordinated tasks, sensors, dynamic footprint, saved/reloaded mapping and

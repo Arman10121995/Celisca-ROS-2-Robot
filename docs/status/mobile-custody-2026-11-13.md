@@ -5,7 +5,7 @@ work in the same checkout. Existing source-bound Stretch/Stretch 3 navigation,
 taught articulation, heartbeat, cancellation and base-retraction checks remain.
 
 The native task panel now offers **Check grasped** and **Check released**.
-Enter the exact MuJoCo free-object body and two opposing finger body names;
+Choose the free-object body and two opposing finger body names from the running-model lists;
 these are checked against the running model before a task starts. The object
 must have its own free joint outside the robot; finger subtrees must be distinct
 and belong to the robot. No object is attached, moved or welded by this feature.
@@ -30,7 +30,7 @@ Robot/world binding and GUI heartbeat remain mandatory. Stop/intervention
 continues to cancel tasks.
 
 These are declared lab thresholds, not vendor calibration. Relative angular
-slip, automatic grasp planning, arbitrary compound objects, dynamic carrying
+slip, automatic grasp planning, arbitrary compound objects, costmap-consumption confirmation for carrying
 footprints, further source robots and other backends remain implementation
 work in ROADMAP R5.9. Carry monitoring applies within an active task, not after
 its completion. A sequence without checkpoints still reports object outcome
@@ -46,3 +46,50 @@ Verification: 20 focused tests pass; robot_lab_utils, robot_lab_mujoco and
 robot_lab_gui build successfully. The first run had one stale error-message
 assertion (19 passed, 1 failed); updated for the additional step type and retained
 the raw failure log. These checks are separate from physical mission acceptance.
+
+## Payload-aware footprint continuation
+
+After a successful grasp checkpoint, the physical payload body is retained
+independently of task execution. NativeMobileSensors publishes the convex
+hull of current robot and payload collision AABB corners in the actual base
+frame, with the existing 3 cm padding, to `/local_costmap/footprint` and
+`/global_costmap/footprint` every 0.5 simulated seconds. Fixed descendant
+geometry is included; unrelated world bodies, floors and visual-only geometry
+are excluded. Original body/arm geometry and its transforms stay unchanged.
+
+The native Drive interlock requires the footprint to match the held payload,
+have no geometry error, and be at most 0.75 simulated seconds old. A new task
+navigation leg waits for that publication; active task navigation cancels if
+it becomes invalid/stale. The existing arm retraction, command lease and
+acceleration limits still apply. Clock reversal invalidates a future-dated
+footprint until a fresh one is produced. Stopping/canceling a task retains the
+payload envelope; a successful measured release checkpoint clears it. This
+prevents an interruption from silently restoring a smaller unloaded outline.
+
+The GUI task status exposes the payload and waiting reason, while the mobile
+state exposes the published vertices, payload ID, generation time validity
+and any geometry error. This is a publication/freshness gate, **not an
+acknowledgement that Nav2 has consumed the polygon**. Costmap consumption,
+controller collision behaviour and an actual loaded transport mission still
+need runtime evidence. The existing Nav2 footprint padding remains separate
+from the 3 cm geometric hull padding.
+
+The checkpoint selectors are populated from the running plant, rather than
+requiring model names from memory: free collision objects for the object field,
+and robot collision bodies for the two fingers. Opposing-finger selection is
+still explicit; the executor rejects overlapping subtrees. These lists describe
+physical bodies, not guaranteed graspable objects or fingers. No checkpoint
+button is enabled when the model contains no free collision object.
+
+Nav2 interface reference: the upstream Humble
+[Costmap2DROS implementation](https://github.com/ros-navigation/navigation2/blob/humble/nav2_costmap_2d/src/costmap_2d_ros.cpp)
+handles footprint input and publishes the oriented footprint; its
+[footprint utilities](https://github.com/ros-navigation/navigation2/blob/humble/nav2_costmap_2d/src/footprint.cpp)
+apply separate costmap padding. This delivery preserves the existing Polygon
+input interface. It does not infer receipt from the number of subscriptions.
+
+Verification for this continuation: focused geometry/publisher/interlock tests
+are registered in the physics tier, and custody/document checks in the fast
+tier. Their execution and package build are pending while Claude's recorded
+flight occupies the shared simulator host. The earlier 20-test/build result
+above belongs to the preceding checkpoint, not these new footprint changes.

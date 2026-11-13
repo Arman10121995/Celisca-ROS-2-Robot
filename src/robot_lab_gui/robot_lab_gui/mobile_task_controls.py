@@ -52,21 +52,23 @@ class MobileTaskControls(ttk.LabelFrame):
             'Grasp/object outcomes require separate inspection.',
             wraplength=305).grid(row=10, column=0, columnspan=2, sticky='w', pady=4)
 
-        self.object_fields = {}
+        self.object_fields, self.object_choices = {}, {}
         for row, (key, label) in enumerate((('object', 'Free object body'), ('left_body', 'First finger body'),
                                             ('right_body', 'Opposing finger body')), 11):
             variable = tk.StringVar()
             self.object_fields[key] = variable
             ttk.Label(self, text=label).grid(row=row, column=0, sticky='w')
-            ttk.Entry(self, textvariable=variable, width=18).grid(row=row, column=1, sticky='ew')
+            choice = ttk.Combobox(self, textvariable=variable, width=18, state='readonly')
+            choice.grid(row=row, column=1, sticky='ew')
+            self.object_choices[key] = choice
         for column, condition in enumerate(('grasped', 'released')):
             button = ttk.Button(self, text='Check '+condition,
                                 command=lambda value=condition: self.add_object_check(value))
             button.grid(row=14, column=column, sticky='ew', padx=2, pady=2)
             self.buttons['check_'+condition] = button
-        ttk.Label(self, text='Use exact MuJoCo body names. Grasp needs both fingers and no external support; '
+        ttk.Label(self, text='Choose the free object and two opposing finger bodies from the running model. Grasp needs both fingers and no external support; '
                   'release needs external support and low speed for 1 simulated second. '
-                  'A grasp checkpoint enables contact/slip monitoring on subsequent navigation legs.',
+                  'A grasp checkpoint enables contact/slip monitoring and adds the object collision bounds to the navigation footprint.',
                   wraplength=305).grid(row=15, column=0, columnspan=2, sticky='w')
 
     def add_object_check(self, condition):
@@ -226,6 +228,11 @@ class MobileTaskControls(ttk.LabelFrame):
         self.grid()
         self.connect()
         if self.ready():
+            for name, choice in self.object_choices.items():
+                values = self.state.get('object_candidates' if name=='object' else 'finger_candidates', [])
+                choice.configure(values=values)
+                if self.object_fields[name].get() not in values:
+                    self.object_fields[name].set(values[0] if name=='object' and values else '')
             key = (self.state['source_sha256'], self.state['scene_id'])
             if key != self.key:
                 self.key = key
@@ -236,9 +243,12 @@ class MobileTaskControls(ttk.LabelFrame):
                 self.heartbeat.publish(String(data=self.task_id))
             if self.state['state'] not in ('idle',):
                 self.status.set(self.state['state']+' · '+str(self.state.get('step', 0))+'/'+
-                    str(self.state.get('total', 0))+' · '+self.state.get('reason', ''))
+                    str(self.state.get('total', 0))+' · '+self.state.get('reason', '')+
+                    (' · payload: '+self.state['payload_name'] if self.state.get('payload_name') else ''))
         for name, button in self.buttons.items():
             enabled = self.ready() if name in ('stop', 'current') else self.editable()
+            if name.startswith('check_'):
+                enabled = enabled and bool(self.state.get('object_candidates'))
             if name == 'navigate':
                 enabled = enabled and self.state.get('navigation_available')
             if name == 'run':

@@ -140,21 +140,22 @@ class NativeMobileSensors:
         self.camera_count += 1
 
     def footprint(self):
-        from shapely.geometry import MultiPoint
-        rotation = self.data.xmat[self.base].reshape(3, 3)
-        points = []
-        corners = np.array([[x, y, z] for x in (-1., 1.) for y in (-1., 1.) for z in (-1., 1.)])
-        for geom in range(self.model.ngeom):
-            if (not 1 <= int(self.model.geom_bodyid[geom]) < self.node.robot_bodies
-                    or not (self.model.geom_contype[geom] or self.model.geom_conaffinity[geom])):
-                continue
-            center, half = self.model.geom_aabb[geom, :3], self.model.geom_aabb[geom, 3:]
-            world = (center+corners*half) @ self.data.geom_xmat[geom].reshape(3, 3).T+self.data.geom_xpos[geom]
-            points.extend(((world-self.data.xpos[self.base]) @ rotation)[:, :2].tolist())
-        hull = MultiPoint(points).convex_hull.buffer(.03, resolution=2)
-        polygon = Polygon(points=[Point32(x=float(x), y=float(y), z=0.) for x, y in list(hull.exterior.coords)[:-1]])
-        for publisher in self.footprints:
-            publisher.publish(polygon)
+        from robot_lab_utils.native_footprint import collision_footprint
+        tasks = self.node.mobile_tasks
+        payload = tasks.payload_body if tasks else None
+        try:
+            points = collision_footprint(self.model, self.data, self.base,
+                                         self.node.robot_bodies, payload)
+            polygon = Polygon(points=[Point32(x=x, y=y, z=0.) for x, y in points])
+            for publisher in self.footprints:
+                publisher.publish(polygon)
+            self.node.mobile.footprint_time = float(self.data.time)
+            self.node.mobile.footprint_payload = payload
+            self.node.mobile.footprint_points = points
+            self.node.mobile.footprint_error = ''
+        except (ValueError, TypeError, IndexError) as exc:
+            self.node.mobile.footprint_error = str(exc)
+            self.node.get_logger().error('Native payload footprint unavailable: '+str(exc), throttle_duration_sec=5.)
 
     def close(self):
         if self.renderer:

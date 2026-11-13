@@ -368,10 +368,11 @@ These are complete; preserve their scoped contracts. R1.3 follow-up CI passes at
   [native controls](docs/tutorials/native-controls.md)), marked "runtime
   validation pending".
 - **Object custody extension (2026-11-13, Codex):** existing native Stretch sequencer now accepts explicit grasp/release checkpoints from the GUI. Uses actual free-object contacts, sustained opposing-finger forces, relative translational slip and environmental support; navigation after a grasp checkpoint monitors custody and stops on loss. [Implementation and limits](docs/status/mobile-custody-2026-11-13.md). This is an implemented candidate, not a measured pick/place mission.
+- **Payload footprint extension (2026-11-13, Codex):** measured collision-bound union includes the last confirmed payload and its fixed descendants in both costmap footprint topics. Transport waits for matching, fresh footprint publication; stale/invalid payload bounds stop native Drive and cancel active task navigation. This is producer-side implementation; costmap-consumption and physical transport acceptance remain pending.
 - **Remaining implementation:**
   - complete automatic reach/grasp planning and source-specific object pipelines;
   - base/arm interlock: no base motion while the arm is out, as R11 does;
-  - footprint changes while carrying;
+  - costmap-consumption confirmation and carrying-footprint mission acceptance;
   - Fetch, PR2 or TIAGo as a second source.
 - **How to do it:**
   1. Write the sequencer as a small state machine node in

@@ -29,6 +29,20 @@ class NativeMobileTasks:
     def __init__(self, node):
         self.node, self.mobile, self.arm = node, node.mobile, node.articulation
         self.steps, self.handle, self.pending = None, None, False
+        self.object_candidates, self.finger_candidates = [], []
+        for body in range(2, node.model.nbody):
+            name = node.mujoco.mj_id2name(node.model, node.mujoco.mjtObj.mjOBJ_BODY, body)
+            geoms = np.flatnonzero(node.model.geom_bodyid == body)
+            physical = any(node.model.geom_contype[g] or node.model.geom_conaffinity[g] for g in geoms)
+            if not name or not physical:
+                continue
+            if body < node.robot_bodies:
+                self.finger_candidates.append(name)
+            else:
+                joint = node.model.body_jntadr[body]
+                if joint >= 0 and node.model.jnt_type[joint] == node.mujoco.mjtJoint.mjJNT_FREE:
+                    self.object_candidates.append(name)
+        self.payload_body = None
         self.custody, self.object_outcome, self.object_measurement = None, 'unassessed', {}
         self.nav_guard_until, self.last_heartbeat = 0., -math.inf
         self.index, self.generation, self.task_id = 0, 0, ''
@@ -222,6 +236,9 @@ class NativeMobileTasks:
         return response
 
     def begin_navigation(self, step):
+        if not self.mobile.payload_footprint_ready():
+            self.cancel('Wait for fresh measured payload footprint before navigation.', failed=True)
+            return
         if not self.mobile.stowed():
             self.cancel('Retract the arm before the next navigation step.', failed=True)
             return
@@ -298,6 +315,9 @@ class NativeMobileTasks:
             now = time.monotonic()
             if now-self.last_heartbeat > .8:
                 self.cancel('Task operator heartbeat lost')
+            elif (self.state['state'] in ('navigating', 'navigation_settle')
+                    and not self.mobile.payload_footprint_ready()):
+                self.cancel('Measured payload footprint unavailable/stale', failed=True)
             elif self.arm.fault or self.mobile.fault or not np.all(np.isfinite(self.node.data.qpos)):
                 self.cancel('Native plant fault/non-finite state', failed=True)
             elif now-self.started > 1800 or now-self.phase_started > (600 if self.state['state'] in ('navigating', 'articulating') else 60):
@@ -309,7 +329,10 @@ class NativeMobileTasks:
                     self.halt_base()
                     if self.settled() and now >= self.nav_guard_until:
                         if step['kind'] == 'navigate':
-                            self.begin_navigation(step)
+                            if self.mobile.payload_footprint_ready():
+                                self.begin_navigation(step)
+                            else:
+                                self.state['reason'] = 'Waiting for fresh measured payload footprint publication'
                         elif step['kind'] == 'object_check':
                             self.object_gate = ObjectCustody()
                             if step['condition'] == 'released':
@@ -328,6 +351,7 @@ class NativeMobileTasks:
                     measurement = self.measure_object(step)
                     self.object_measurement = measurement
                     if self.object_gate.observe(**measurement, released=step['condition']=='released'):
+                        self.payload_body = (self.object_bodies(step)[0] if step['condition']=='grasped' else None)
                         self.object_outcome = step['condition']
                         self.record(object_observation=measurement, object_condition=self.object_outcome)
                         self.custody = (dict(step=step, relative=measurement['relative'], lost_since=None)
@@ -369,5 +393,9 @@ class NativeMobileTasks:
             plant_id=self.arm.plant_id, source_sha256=self.arm.source_sha256, scene_id=self.scene_id,
             physical_pose=self.pose(), active=self.active(), nav_cancel_pending=bool(self.pending or self.handle),
             navigation_available=self.node.get_parameter('native_task').value == 'nav' and self.client.server_is_ready(),
+            object_candidates=self.object_candidates, finger_candidates=self.finger_candidates,
+            payload_name=(self.node.mujoco.mj_id2name(self.node.model, self.node.mujoco.mjtObj.mjOBJ_BODY, self.payload_body)
+                          if self.payload_body is not None else ''),
+            payload_body=self.payload_body, payload_footprint_ready=self.mobile.payload_footprint_ready(),
             journal=str(self.event_path) if self.event_path else '', object_outcome=self.object_outcome, object_measurement=self.object_measurement,
             qualification='implemented candidate; physical task validation pending'))))

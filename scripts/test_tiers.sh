@@ -32,6 +32,8 @@ MAP_TEST="src/robot_lab_maps/test"
 GUI_TEST="src/robot_lab_gui/test"
 
 FAST_TESTS=(
+  "$BRG_TEST/test_object_custody.py"
+  "$BRG_TEST/test_mobile_task_and_takeoff.py"
   "scripts/test_asset_staging.py"
   "scripts/test_support_evidence.py"
   "src/robot_lab_vacuum_cleaning/test/test_camera_observations.py"
@@ -130,6 +132,7 @@ INTEGRATION_TESTS=(
 )
 
 PHYSICS_TESTS=(
+  "$BRG_TEST/test_native_payload_footprint.py"
   "$BRG_TEST/test_simulator_backends.py"
   "$BRG_TEST/test_backend_assets.py::MujocoSmallWheelServoTests"
   "src/robot_lab_mujoco/test/test_native_asset_display.py"

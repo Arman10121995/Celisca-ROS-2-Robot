@@ -54,6 +54,8 @@ class NativeStretchControl:
         elif self.variant != 'stretch_3' or np.any(self.model.actuator_trntype[self.actuators] != self.mj.mjtTrn.mjTRN_JOINT):
             raise ValueError('Unsupported native mobile transmission')
         self.dofs = self.model.jnt_dofadr[self.joints]
+        self.footprint_time, self.footprint_payload = -float('inf'), None
+        self.footprint_points, self.footprint_error = [], ''
         self.received = -float('inf')
         self.command = np.zeros(2)
         self.ramped = np.zeros(2)
@@ -77,6 +79,12 @@ class NativeStretchControl:
         extend = self.mj.mj_name2id(self.model, self.mj.mjtObj.mjOBJ_TENDON, 'extend')
         return extend >= 0 and self.data.ten_length[extend] <= self.limits['max_drive_extension_m']
 
+    def payload_footprint_ready(self):
+        tasks = self.node.mobile_tasks
+        payload = tasks.payload_body if tasks else None
+        return payload is None or (not self.footprint_error and self.footprint_payload == payload
+            and 0 <= float(self.data.time)-self.footprint_time <= .75)
+
     def receive(self, message, task_command=False):
         tasks = self.node.mobile_tasks
         if tasks and tasks.blocks_mux() and not task_command:
@@ -86,9 +94,9 @@ class NativeStretchControl:
             self.command[:] = 0
             self.status = 'Rejected non-finite velocity'
             return
-        if self.fault or self.manipulator_busy() or (np.any(values) and not self.stowed()):
+        if self.fault or self.manipulator_busy() or (np.any(values) and (not self.stowed() or not self.payload_footprint_ready())):
             self.command[:] = 0
-            self.status = 'Stop articulation and retract the arm before driving'
+            self.status = 'Stop/retract articulation and wait for a fresh payload footprint before driving'
             return
         self.command = np.clip(values, [-self.limits['max_linear_m_s'], -self.limits['max_yaw_rad_s']],
             [self.limits['max_linear_m_s'], self.limits['max_yaw_rad_s']])
@@ -101,7 +109,7 @@ class NativeStretchControl:
         if self.fault:
             self.data.ctrl[self.actuators] = 0
             return
-        target = self.command if time.monotonic()-self.received <= .5 and not self.manipulator_busy() and self.stowed() else np.zeros(2)
+        target = self.command if time.monotonic()-self.received <= .5 and not self.manipulator_busy() and self.stowed() and self.payload_footprint_ready() else np.zeros(2)
         if not np.any(target) and np.any(self.command):
             self.status = 'watchdog/ownership stop'
         rates = np.array([self.limits['linear_acceleration_m_s2'], self.limits['yaw_acceleration_rad_s2']])
@@ -148,6 +156,9 @@ class NativeStretchControl:
         self.publisher.publish(String(data=json.dumps(dict(variant=self.variant, status=self.status,
             command=self.ramped.tolist(), measured_wheel_rates=self.data.qvel[self.dofs].tolist(),
             arm_stowed=bool(self.stowed()), articulation_busy=self.manipulator_busy(), fault=self.fault,
+            footprint_payload=self.footprint_payload, footprint_points=self.footprint_points,
+            footprint_error=self.footprint_error, payload_footprint_ready=self.payload_footprint_ready(),
+            footprint_generation_s=(self.footprint_time if np.isfinite(self.footprint_time) else None),
             axle_m=self.axle, wheel_radii_m=self.radii.tolist(), limits=self.limits,
             task_active=bool(self.node.mobile_tasks and self.node.mobile_tasks.active()),
             qualification='implemented native mobile manipulation; runtime validation pending'))))
