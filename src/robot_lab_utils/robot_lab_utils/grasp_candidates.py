@@ -54,3 +54,53 @@ def top_grasps(obj,max_opening=.08,clearance=.004,approach=.08,lift=.10):
                 opening_m=width+clearance,closing_axis_world=jaw.tolist(),poses=poses,
                 scope='Geometry candidate; requires collision-aware IK/plan and measured grasp'))
     return candidates
+
+
+def support_placement(obj, attachment, support, *, clearance=.003, approach=.08, edge_margin=.01):
+    """Keep the measured object orientation and place its bottom on a box top.
+
+    The acknowledged object-in-tool transform is inverted to compute the real
+    TCP target. Geometry/fit alone does not establish reachability or release.
+    """
+    top_grasps(obj)  # Shared measured-pose validation; need not fit an open jaw.
+    if not all(math.isfinite(v) and v>0 for v in (clearance,approach,edge_margin)):
+        raise ValueError('Positive finite placement clearances required')
+    if not isinstance(attachment,dict) or attachment.get('object_id')!=obj.get('id'):
+        raise ValueError('Matching acknowledged object-in-tool transform required')
+    for key in ('plant_id','source_sha256'):
+        if not obj.get(key) or obj[key]!=attachment.get(key):
+            raise ValueError('Placement requires the current source/plant attachment')
+    if not isinstance(support,dict) or support.get('frame')!='native_world' or support.get('type')!='box':
+        raise ValueError('Select a measured horizontal box support')
+    position=np.asarray(support['position'],dtype=float)
+    size=np.asarray(support['size'],dtype=float)
+    local_position=np.asarray(attachment['position'],dtype=float)
+    def matrix(values):
+        q=np.asarray(values,dtype=float)
+        if q.shape!=(4,) or not np.all(np.isfinite(q)) or not .9<=np.linalg.norm(q)<=1.1:
+            raise ValueError('Finite unit placement orientation required')
+        return Rotation.from_quat((q/np.linalg.norm(q))[[1,2,3,0]]).as_matrix()
+    if (position.shape!=(3,) or size.shape!=(3,) or local_position.shape!=(3,)
+            or not all(np.all(np.isfinite(v)) for v in (position,size,local_position)) or min(size)<=0):
+        raise ValueError('Finite physical support/attachment dimensions required')
+    support_rotation=matrix(support['orientation_wxyz'])
+    object_rotation=matrix(obj['orientation_wxyz'])
+    local_rotation=matrix(attachment['orientation_wxyz'])
+    if abs(support_rotation[2,2])<1.-1e-6:
+        raise ValueError('Sloped placement surfaces need a separate support adapter')
+    if obj.get('type','box')!='box':
+        raise ValueError('Only reviewed box support/placement geometry is implemented')
+    object_size=np.asarray(obj['size'],dtype=float)
+    projected=np.abs(support_rotation.T@object_rotation)@object_size
+    if np.any(projected[:2]+2*edge_margin>size[:2]):
+        raise ValueError('Object footprint does not fit inside the support edge margin')
+    half_height=float((np.abs(object_rotation)@object_size)[2]/2)
+    center=position.copy();center[2]+=size[2]/2+half_height+clearance
+    # T_world_tool = T_world_object * inverse(T_tool_object).
+    tool_rotation=object_rotation@local_rotation.T
+    tcp=center-tool_rotation@local_position
+    orientation=Rotation.from_matrix(tool_rotation).as_quat()[[3,0,1,2]].tolist()
+    return dict(object_id=obj['id'],support_id=support.get('id','support'),object_center=center.tolist(),
+        poses={name:dict(position=(tcp+[0.,0.,dz]).tolist(),orientation_wxyz=orientation)
+               for name,dz in (('above',approach),('lower',0.))},
+        scope='Measured support/attachment geometry; collision-aware IK/plan and physical release still required')

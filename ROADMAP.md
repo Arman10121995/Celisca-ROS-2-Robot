@@ -133,8 +133,8 @@ Work top to bottom. Each line links to its task.
 | I4a | [R14.5](#r145--robot-status-markers-in-the-gui-selectors) Robot status markers | Done 2026-11-13: ● measured / ◐ experimental / ○ display only / ✕ unavailable plus mode letters in both robot lists, from recorded evidence | implemented |
 | I4b | [R6.8](#r68--real-world-area-import-from-a-globe) Real-world area import | Done 2026-11-13: globe picker (CesiumJS + OSM), Terrain Tiles + OSM buildings/roads/trees/water, SUMO people/traffic; support and roof heights measured on four simulators | implemented |
 | I5 | [R5.11](#r511--drone-moving-obstacles-and-other-drone-backends) Drone moving obstacles | Done 2026-11-13: Kalman tracks, predicted sweeps, walkway look-both-ways and overflight, evasion, sensor-loss hold/land, EKF heading/height gate; 2 passing flights past walkers (Gazebo); PX4 + MuJoCo plant: takeoff, 5 m route and landing | implemented |
-| I6 | [R5.9](#r59--mobile-manipulators) Mobile manipulation | Native Stretch local recipes/interlocks/costmap receipts implemented; global planning and further source adapters remain | partial |
-| I7 | [R5.7](#r57--manipulators-and-motion-planning) Arms | Pick/place with arbitrary objects, coupled mechanisms, other backends | partial |
+| I6 | [R5.9](#r59--mobile-manipulators) Mobile manipulation | Stretch object recipes, interlocks, actual costmap receipts and bounded configuration detours implemented; full-pose planning and further source adapters remain | partial |
+| I7 | [R5.7](#r57--manipulators-and-motion-planning) Arms | Panda measured box selection, grasp and support-placement stage plans implemented; unattended sequencing, arbitrary geometry, coupled arms and other backends remain | partial |
 | I8 | [R5.8](#r58--robot-hands-and-grippers) Hands | Torque/tendon hand adapters, object workflows | partial |
 | I9 | [R10.2](#r102--fleet-management-and-open-rmf) Fleet / Open-RMF | Conflicts, infrastructure, larger fleets, calibrated energy | partial |
 | I10 | [R10.3](#r103--swarm-robotics) Swarms | Remaining behaviours, distributed protocols, cooperative coverage, larger aerial groups | partial |
@@ -325,12 +325,16 @@ These are complete; preserve their scoped contracts. R1.3 follow-up CI passes at
     Fourteen focused checks, four package builds and an installed widget
     protocol smoke pass; the new full physical object mission is pending.
     [Scope and guide](docs/status/arm-objects-2026-11-13.md).
+  - November 14: measured fixed-box support selection and explicit placement
+    above/lower plans, computed from the acknowledged grasp transform and
+    projected object footprint. Source/plant and actual scene ACK gates remain.
+    [Implementation and checks](docs/status/support-placement-2026-11-14.md).
 
   [Native arm guide](docs/tutorials/native-arm-planning.md).
 - **Remaining implementation:**
   - extend the measured Panda box stage planner into a complete repeated
     pick/place pipeline; add compound/mesh geometry, perception pose sources,
-    gripper-specific grasp generation and placement/retreat sequencing;
+    gripper-specific grasp generation and unattended placement/retreat sequencing;
   - coupled mechanisms (mimic and four-bar joints);
   - arm controllers on Gazebo, PyBullet and Isaac.
 - **How to do it:**

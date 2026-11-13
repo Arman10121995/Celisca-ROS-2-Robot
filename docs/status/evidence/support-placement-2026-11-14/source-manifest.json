@@ -1,0 +1,12 @@
+{
+  "base_revision": "78c1c77844d77936bd51ff6b576b5ce9fde56e28",
+  "scope": "Software/source geometry, actual ROS requests and Tk with protocol doubles; no physical placement mission",
+  "sha256": {
+    "src/robot_lab_mujoco/python/robot_lab_mujoco/native_object_catalog.py": "7322aa4a9e86e94b300e693f0b7a8632940300f4077f0c97e84203031308e8c8",
+    "src/robot_lab_bringup/scripts/native_scene_objects.py": "49f7d6011f66bc87c0d8032dae67d29500e53f56cbd427b3dfd0a3d780f68fbf",
+    "src/robot_lab_gui/robot_lab_gui/grasp_target_controls.py": "6f883141e7990832ce56d0b2055b3a5af9abdd5e2b6ab7d5cf96dbbf18932298",
+    "src/robot_lab_utils/robot_lab_utils/grasp_candidates.py": "2f01eb2d6743157d446e5e5400707133dc1fb3cd7c2e0472ef805eecf069baa3",
+    "src/robot_lab_bringup/test/test_support_placement.py": "4012ba435b34c3aa334536c8e9fa2a8e4ee58f84987e81e884f12af143bc1602",
+    "src/robot_lab_gui/test/test_support_placement_controls.py": "595f720d018d26910843918ef0aa0b34845c825a804d43e9c3bfaf1c8a94d523"
+  }
+}

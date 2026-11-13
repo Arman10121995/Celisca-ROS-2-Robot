@@ -18,7 +18,7 @@ class NativeObjectCatalog:
         self.node,self.model,self.data,self.mj=node,node.model,node.data,node.mujoco
         self.plant_id=uuid.uuid4().hex
         self.source_sha=hashlib.sha256(Path(node.get_parameter('native_mjcf').value).read_bytes()).hexdigest()
-        self.objects={};self.unsupported=[];self.scene={};self.error=''
+        self.objects={};self.supports={};self.unsupported=[];self.scene={};self.error=''
         by_body={}
         counts=np.zeros(self.model.nbody,dtype=int)
         for geom in range(self.model.ngeom):
@@ -41,6 +41,24 @@ class NativeObjectCatalog:
         node.create_subscription(String,'/arm/planning_scene_status',self.receive_scene,10)
         self.selected=next((name for name,(body,_) in self.objects.items() if body==node.object_body),None)
         self.explicit=False
+        # Authored fixed horizontal box tops only. A box welded to a free or
+        # articulated ancestor is not a stationary support surface.
+        fixed=np.ones(self.model.nbody,dtype=bool)
+        for body in range(1,self.model.nbody):
+            fixed[body]=fixed[int(self.model.body_parentid[body])] and self.model.body_jntnum[body]==0
+        for geom in range(self.model.ngeom):
+            body=int(self.model.geom_bodyid[geom])
+            if (0<body<node.robot_bodies or not fixed[body] or len(self.supports)>=256
+                    or int(self.model.geom_type[geom])!=int(self.mj.mjtGeom.mjGEOM_BOX)
+                    or not (self.model.geom_contype[geom] or self.model.geom_conaffinity[geom])):continue
+            matrix=self.data.geom_xmat[geom].reshape(3,3)
+            size=2*self.model.geom_size[geom]
+            top=float(self.data.geom_xpos[geom,2]+size[2]/2)
+            if abs(matrix[2,2])<1.-1e-6 or min(size[:2])<.04 or not .05<=top<=2.5:continue
+            name=self.mj.mj_id2name(self.model,self.mj.mjtObj.mjOBJ_GEOM,geom) or 'fixed_geom_'+str(geom)
+            quaternion=np.zeros(4);self.mj.mju_mat2Quat(quaternion,self.data.geom_xmat[geom])
+            self.supports[name]=dict(id=name,frame='native_world',type='box',size=size.tolist(),
+                position=self.data.geom_xpos[geom].tolist(),orientation_wxyz=quaternion.tolist())
 
     def receive_scene(self,message):
         try:
@@ -94,6 +112,7 @@ class NativeObjectCatalog:
 
     def publish(self):
         self.publisher.publish(String(data=json.dumps(dict(plant_id=self.plant_id,source_sha256=self.source_sha,
-            frame='native_world',objects=list(self.objects),unsupported=self.unsupported[:256],selected=self.selected,error=self.error))))
+            frame='native_world',objects=list(self.objects),supports=self.supports,
+            unsupported=self.unsupported[:256],selected=self.selected,error=self.error))))
         snapshot=self.snapshot()
         if snapshot is not None:self.node.object_pub.publish(String(data=json.dumps(snapshot,allow_nan=False)))

@@ -4,7 +4,7 @@ import math
 import time
 import tkinter as tk
 from tkinter import ttk
-from robot_lab_utils.grasp_candidates import top_grasps
+from robot_lab_utils.grasp_candidates import top_grasps, support_placement
 
 
 class GraspTargetControls(ttk.LabelFrame):
@@ -32,19 +32,40 @@ class GraspTargetControls(ttk.LabelFrame):
         ttk.Label(self,text='Simulator-truth object pose. Geometry candidates are not grasp certificates. '
                   'Open the Hand first. These buttons only plan; Execute Plan starts motion. '
                   'Close and confirm contacts before planning attachment/lift.',wraplength=280).grid(row=4,column=0,columnspan=3,sticky='w')
+        ttk.Separator(self).grid(row=6,column=0,columnspan=3,sticky='ew',pady=6)
+        ttk.Label(self,text='Place on a measured support surface',wraplength=280).grid(row=7,column=0,columnspan=3,sticky='w')
+        self.support_choice=tk.StringVar()
+        self.support_selector=ttk.Combobox(self,textvariable=self.support_choice,state='readonly')
+        self.support_selector.grid(row=8,column=0,columnspan=3,sticky='ew')
+        self.release_gap=tk.DoubleVar(value=.03)
+        ttk.Label(self,text='Release gap above surface (m)').grid(row=9,column=0,columnspan=2,sticky='w')
+        ttk.Spinbox(self,textvariable=self.release_gap,from_=.003,to=.15,increment=.005,width=7).grid(row=9,column=2)
+        self.place_buttons=[]
+        for column,stage,label in ((0,'above','Plan above surface'),(1,'lower','Plan lower')):
+            button=ttk.Button(self,text=label,command=lambda phase=stage:self.plan_placement(phase))
+            button.grid(row=10,column=column,columnspan=1 if column==0 else 2,sticky='ew',pady=3)
+            self.place_buttons.append(button)
+        ttk.Label(self,text='Uses the acknowledged grasp offset. These buttons only plan. '
+                  'Execute each plan, open Hand to release, then use a positive Z step to retreat. '
+                  'A release gap leaves the object to settle under gravity.',wraplength=280).grid(row=11,column=0,columnspan=3,sticky='w')
         self.columnconfigure((0,1,2),weight=1)
 
     def receive_catalog(self,message):
         try:
+            if len(message.data)>2*1024*1024:return
             data=json.loads(message.data)
             if (not isinstance(data,dict) or not isinstance(data.get('objects'),list)
                     or len(data['objects'])>256 or not data.get('plant_id') or not data.get('source_sha256')):
                 return
-            if any(not isinstance(name,str) for name in data['objects']):return
+            if (any(not isinstance(name,str) for name in data['objects'])
+                    or not isinstance(data.get('supports',{}),dict) or len(data.get('supports',{}))>256):return
             if data.get('plant_id')!=self.catalog.get('plant_id'):
                 self.candidates=[];self.object=None
             self.catalog=data;self.catalog_received=time.monotonic()
             self.object_selector.configure(values=data['objects'])
+            supports=list(data.get('supports',{}))
+            self.support_selector.configure(values=supports)
+            if self.support_choice.get() not in supports:self.support_choice.set(supports[0] if supports else '')
             if self.object_choice.get() not in data['objects']:
                 self.object_choice.set(data.get('selected') if data.get('selected') in data['objects'] else
                                        data['objects'][0] if data['objects'] else '')
@@ -76,6 +97,9 @@ class GraspTargetControls(ttk.LabelFrame):
 
     def ready(self):
         return (self.object is not None and time.monotonic()-self.received<.8 and self.cartesian.ready()
+                and not getattr(self.cartesian,'planning',False) and not getattr(self.cartesian,'reading_pose',False)
+                and self.object.get('plant_id')==self.catalog.get('plant_id')
+                and self.object.get('source_sha256')==self.catalog.get('source_sha256')
                 and self.cartesian.scene.get('object_id')==self.object.get('id'))
 
     def generate(self):
@@ -125,6 +149,26 @@ class GraspTargetControls(ttk.LabelFrame):
         for axis,value in zip('wxyz',selected['orientation_wxyz']):setattr(pose.orientation,axis,value)
         self.cartesian.plan_pose(pose,'Object '+self.candidates[index]['object_id']+' · '+stage)
 
+    def plan_placement(self,stage):
+        if stage not in ('above','lower') or not self.ready():return
+        if not (self.cartesian.scene.get('object_attached') and self.cartesian.scene.get('grasp_contacts_ready')):
+            self.feedback.set('Placement needs a measured two-finger grasp and acknowledged attachment.');return
+        if time.monotonic()-self.catalog_received>.8:return
+        try:
+            gap=float(self.release_gap.get())
+            if not math.isfinite(gap) or not .003<=gap<=.15:
+                raise ValueError('Use a finite release gap from 3 to 150 mm.')
+            support=self.catalog.get('supports',{}).get(self.support_choice.get())
+            result=support_placement(self.object,self.cartesian.scene.get('object_in_tool'),support,
+                clearance=gap,edge_margin=.01+float(self.cartesian.scene.get('link_padding_m',.01)))
+            from geometry_msgs.msg import Pose
+            target=result['poses'][stage];pose=Pose()
+            for axis,value in zip('xyz',target['position']):setattr(pose.position,axis,value)
+            for axis,value in zip('wxyz',target['orientation_wxyz']):setattr(pose.orientation,axis,value)
+            self.cartesian.plan_pose(pose,'Place '+result['object_id']+' · '+result['support_id']+' · '+stage)
+            self.feedback.set('Placement plan requested; inspect and Execute Plan. Hand release remains explicit.')
+        except (ValueError,TypeError,KeyError,tk.TclError) as exc:self.feedback.set(str(exc))
+
     def poll(self):
         ready=self.ready()
         selectable=(self.cartesian.owned() and self.cartesian.arm.ready() and self.selection_publisher is not None
@@ -134,5 +178,9 @@ class GraspTargetControls(ttk.LabelFrame):
         self.refresh_button.state(['!disabled'] if ready else ['disabled'])
         self.opening_button.state(['!disabled'] if ready and self.candidates else ['disabled'])
         for button in self.buttons:button.state(['!disabled'] if ready and self.candidates else ['disabled'])
+        place=(ready and time.monotonic()-self.catalog_received<.8
+               and bool(self.catalog.get('supports')) and self.cartesian.scene.get('object_attached')
+               and self.cartesian.scene.get('grasp_contacts_ready'))
+        for button in self.place_buttons:button.state(['!disabled'] if place else ['disabled'])
         if not self.cartesian.owned():
             self.object=None;self.candidates=[]

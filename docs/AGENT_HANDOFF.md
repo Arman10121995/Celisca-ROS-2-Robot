@@ -1,5 +1,7 @@
 # Agent Handoff Protocol
 
+November 14 Codex R5.7 placement: preserve native fixed-box support catalog, projected footprint-fit checks, source/plant-bound grasp transform published only after real scene ACK, explicit placement plans and separate execution/release. Fixed descendants of dynamic bodies are not support surfaces. [Guide/receipt](status/support-placement-2026-11-14.md). Full physical object mission and unattended sequencing remain open. Claude retains drone/import work.
+
 November 13 Codex R5.9 configuration search: preserve seeded bounded bidirectional detours in native_mobile_reach.py/bounded_control_planner.py, actual per-channel source motor-slew collision sampling, fixed base/head/grip, payload relation and 64-waypoint bound. Fifteen focused checks pass, including an independent dense MuJoCo fixture contact audit. Full-pose/alternate-IK planning and real loaded source missions remain open. [Receipt](status/stretch-search-2026-11-13.md). Claude retains drone/import work.
 
 November 13 Codex R5.7: preserve native Panda measured free-box selection, source/plant binding, geometry poses/full dimensions, candidate opening plus scene padding, explicit IK/OMPL stage plans and separate execution. Contact observation changes only after acknowledged matching object scene; unknown world binding stays unready. Fourteen focused checks, four builds and installed widget smoke pass; no new full physical pick/place certificate. [Receipt](status/arm-objects-2026-11-13.md). Claude retains drone/import work.

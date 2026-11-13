@@ -21,8 +21,9 @@ def catalog(tmp_path):
       <body name="environment_cube" pos="1 0 1"><freejoint/>
         <geom type="box" size=".02 .03 .04" pos=".1 0 0"/></body>
       <body name="environment_ball" pos="2 0 1"><freejoint/>
-        <geom type="sphere" size=".04"/></body>
-      <body name="fixed_box"><geom type="box" size=".03 .03 .03"/></body>
+        <geom type="sphere" size=".04"/>
+        <body pos="0 0 .2"><geom name="moving_shelf" type="box" size=".1 .1 .02"/></body></body>
+      <body name="fixed_box" pos="0 0 .2"><geom name="bench_top" type="box" size=".1 .1 .02"/></body>
       </worldbody></mujoco>''')
     model=mj.MjModel.from_xml_path(str(source));data=mj.MjData(model);mj.mj_forward(model,data)
     published={};node=SimpleNamespace(model=model,data=data,mujoco=mj,robot_bodies=4,object_body=-1,
@@ -52,6 +53,10 @@ def test_selection_is_explicit_and_state_comes_from_actual_collision_geometry(ca
     assert state['world_model']=='cube' and state['selected_by_operator']
     np.testing.assert_array_equal(node.data.qpos,before)
     assert 'environment_ball' not in catalog.objects and catalog.unsupported
+    assert list(catalog.supports)==['bench_top']
+    np.testing.assert_allclose(catalog.supports['bench_top']['size'],[.2,.2,.04])
+    catalog.publish()
+    assert json.loads(published['/manipulation/object_catalog'][-1].data)['supports']==catalog.supports
 
 
 def test_busy_or_attached_plant_cannot_switch_selection(catalog):
@@ -96,3 +101,44 @@ def test_unbound_world_object_does_not_silently_leave_a_static_planning_duplicat
         finger_links=['native_body_10','native_body_11'],world_model='unknown')
     objects.receive_object(String(data=json.dumps(payload)));status={};objects.poll(status)
     assert objects.enabled and not status['ready'] and 'canonical world' in status['object_error']
+
+
+def test_measured_attachment_transform_is_published_only_after_scene_ack_and_cleared_on_detach():
+    pytest.importorskip('moveit_msgs.msg')
+    import time
+    from concurrent.futures import Future
+    from geometry_msgs.msg import PoseStamped
+    scripts=Path(__file__).resolve().parents[1]/'scripts';sys.path.insert(0,str(scripts))
+    from native_scene_objects import MeasuredObjects
+    from native_arm_scene import collision_object
+    updates=[]
+    def apply(request):
+        future=Future();updates.append((request,future));return future
+    node=SimpleNamespace(create_client=lambda *a:None,create_subscription=lambda *a:None,
+        world_model_ids={'cube':['robot_lab_world_3']},client=SimpleNamespace(call_async=apply))
+    objects=MeasuredObjects(node,collision_object,True)
+    payload=dict(id='environment_cube',frame='native_world',size=[.03]*3,position=[1.,0.,.5],
+        orientation_wxyz=[1.,0.,0.,0.],spatial_velocity=[0.]*6,plant_id='current',source_sha256='source',
+        finger_links=['native_body_10','native_body_11'],world_model='cube')
+    objects.receive_object(String(data=json.dumps(payload)))
+    objects.applied=payload.copy()
+    objects.gripper={'contacts':{name:[dict(body='environment_cube',normal_force_n=1.)]
+                                for name in ['finger_joint1','finger_joint2']}}
+    objects.gripper_received=objects.joints_received=time.monotonic()
+    objects.joints={'joint1':.1}
+    fk=Future();objects.fk=SimpleNamespace(service_is_ready=lambda:True,call_async=lambda request:fk)
+    objects.command='attach';objects.poll({})
+    tool=PoseStamped();tool.pose.position.x=.9;tool.pose.position.y=.1;tool.pose.position.z=.4
+    tool.pose.orientation.w=1.
+    fk.set_result(SimpleNamespace(error_code=SimpleNamespace(val=1),pose_stamped=[tool]))
+    pending={};objects.poll(pending)
+    assert not objects.attached and objects.attachment is None and pending['object_in_tool'] is None
+    updates[-1][1].set_result(SimpleNamespace(success=True))
+    acknowledged={};objects.poll(acknowledged)
+    assert acknowledged['object_attached'] and acknowledged['ready']
+    np.testing.assert_allclose(acknowledged['object_in_tool']['position'],[.1,-.1,.1])
+    assert acknowledged['object_in_tool']['plant_id']=='current'
+    objects.command='detach';objects.poll({})
+    updates[-1][1].set_result(SimpleNamespace(success=True))
+    detached={};objects.poll(detached)
+    assert not detached['object_attached'] and detached['object_in_tool'] is None

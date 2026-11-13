@@ -32,6 +32,7 @@ MAP_TEST="src/robot_lab_maps/test"
 GUI_TEST="src/robot_lab_gui/test"
 
 FAST_TESTS=(
+  "$BRG_TEST/test_support_placement.py"
   "$BRG_TEST/test_bounded_control_planner.py"
   "$BRG_TEST/test_grasp_candidates.py"
   "$BRG_TEST/test_native_hand_force.py"
@@ -104,6 +105,7 @@ FAST_TESTS=(
 )
 
 INTEGRATION_TESTS=(
+  "$GUI_TEST/test_support_placement_controls.py"
   "$GUI_TEST/test_grasp_pose_request.py"
   "$ADP_TEST/test_aerial_swarm_route.py"
   "$BRG_TEST/test_facility_queue_recovery.py"

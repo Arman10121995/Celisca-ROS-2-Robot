@@ -40,6 +40,7 @@ class MeasuredObjects:
         self.arm = {}
         self.future, self.pending = None, None
         self.applied, self.attached, self.revision = None, False, 0
+        self.attachment = None
         self.command, self.error = None, ''
         self.fk = node.create_client(GetPositionFK, '/compute_fk')
         self.stop = node.create_client(Trigger, '/arm/stop')
@@ -70,8 +71,6 @@ class MeasuredObjects:
                 if self.attached or self.future is not None:
                     raise ValueError('Detach/finish the current scene update before changing objects')
                 self.applied=None
-            if value.get('selected_by_operator') is True:
-                self.enabled=True
             self.object, self.object_received = value, time.monotonic()
         except (KeyError, TypeError, ValueError) as exc:
             self.error = str(exc)
@@ -143,6 +142,7 @@ class MeasuredObjects:
             return
         status.update(scope='Selected-world scene plus measured selected object; attachment affects planning only',
             object_id=self.object['id'] if self.object else None,
+            object_in_tool=copy.deepcopy(self.attachment) if self.attached else None,
             scene_revision=self.revision, object_attached=self.attached, object_error=self.error)
         now = time.monotonic()
         fresh = now-self.object_received < .8
@@ -182,12 +182,19 @@ class MeasuredObjects:
                     scene.world.collision_objects = [CollisionObject(id=obj.id, operation=CollisionObject.REMOVE)]
                     scene.robot_state.attached_collision_objects = [AttachedCollisionObject(
                         link_name='panda_tcp', object=obj, touch_links=self.object['finger_links'])]
+                    self.pending_attachment=dict(object_id=self.object['id'],
+                        position=offset.tolist(),orientation_wxyz=q,
+                        plant_id=self.object.get('plant_id'),source_sha256=self.object.get('source_sha256'))
                     self.future = None
                     self.apply(scene, 'attach')
                     return
                 if not answer.success:
                     raise ValueError('MoveIt rejected the measured object scene diff')
                 self.attached = self.pending == 'attach' or (self.attached and self.pending != 'detach')
+                if self.pending=='attach':
+                    self.attachment=copy.deepcopy(self.pending_attachment)
+                elif self.pending=='detach':
+                    self.attachment=None
                 self.applied = self.pending_object
                 self.revision += 1
                 self.error = ''
@@ -231,4 +238,5 @@ class MeasuredObjects:
                                         np.linalg.norm(self.object['spatial_velocity'][:3]) > .1)
         status.update(ready=self.future is None and not moving and not self.error,
             object_attached=self.attached, scene_revision=self.revision, object_error=self.error,
+            object_in_tool=copy.deepcopy(self.attachment) if self.attached else None,
             object_moving=bool(moving), grasp_contacts_ready=bool(self.grasped()))

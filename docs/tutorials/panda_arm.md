@@ -214,3 +214,35 @@ This is an initial box-selection/stage-planning workflow, not automatic
 arbitrary-object pick/place. Other arms/backends, mesh/compound adapters,
 perception poses and a complete new physical pick/transfer/place mission remain
 open in R5.7. [Implementation and scoped checks](../status/arm-objects-2026-11-13.md).
+
+### Choose a placement surface instead of guessing coordinates
+
+November 14 adds **Place on a measured support surface** below the grasp
+targets. The list comes from fixed horizontal physical box tops in the current
+MuJoCo scene. Robot geometry, articulated/moving shelves, sloped/mesh surfaces
+and the floor plane are excluded. For example, a world with two box benches
+can offer both benches. This does not imply either is within arm reach.
+
+After a measured grasp and acknowledged planning attachment:
+
+1. Choose the destination surface. The candidate places the object at its
+   centre while retaining the measured object orientation. The complete
+   projected box footprint must fit inside its edge margin.
+2. Set **Release gap above surface (m)**. The default 0.03 m leaves room to
+   open the fingers above the surface; the free object then settles under
+   gravity. Editing the gap or selection sends no motion.
+3. Click **Plan above surface**, inspect the collision-aware plan, then
+   **Execute Plan**. Click **Plan lower**, inspect it, then **Execute Plan**.
+   Each target uses the actual acknowledged object-in-tool transform rather
+   than assuming the object centre equals the tool origin.
+4. In Hand, explicitly **Open**. Wait for the measured scene to detach the
+   released object; inspect that it is supported. Use **Use current tool
+   pose**, a small positive Z offset, **Plan**, and **Execute Plan** to retreat.
+
+If IK rejects the target, choose a reachable surface, another grasp or a joint
+configuration; the panel does not bypass reachability/collision checks.
+Unacknowledged, stale-source or mismatched attachments cannot produce a
+placement target. A valid geometric candidate is not a physical release or
+support certificate. This is staged placement assistance; unattended task
+sequencing, perception, arbitrary geometry and broad mission qualification
+remain open. [Implementation and checks](../status/support-placement-2026-11-14.md).
