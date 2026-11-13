@@ -35,6 +35,29 @@ flowchart LR
 | 7 | [Inside the robot vacuum](07-robot-vacuum-inside.md) | room division, coverage lanes, edges, spot, the mission state machine, stall detection, battery | room division in four steps, cleaning animation, state machine |
 | 8 | [Evidence and testing](08-evidence-and-testing.md) | unit tests vs simulation runs, reports, the support matrix | evidence pipeline, matrix chart |
 
+## Part 2 · Extending the lab
+
+For contributors who want to add a robot, a world or a control to the lab.
+It assumes chapters 2, 4 and 5.
+
+```mermaid
+flowchart LR
+    I["9 · What you need<br/>prerequisites, file map,<br/>integration path"] --> J["10 · Adding a robot<br/>source, model, profile,<br/>adapters, screens"]
+    I --> K["11 · Adding a world and map<br/>SDF, MJCF, occupancy,<br/>spawn, checks"]
+    J --> L["12 · Putting it in the GUI<br/>families, taxonomy, control pages,<br/>algorithms, docs, evidence"]
+    K --> L
+```
+
+| # | Chapter | You will be able to |
+|---|---|---|
+| 9 | [Extending the lab](09-extending-the-lab.md) | set up a host, find every file that matters, follow the seven-stage integration path |
+| 10 | [Adding a robot](10-adding-a-robot.md) | pin a source, check its model, write a profile or provisioning script, declare estimates, measure it |
+| 11 | [Adding a world and map](11-adding-a-world-and-map.md) | add an SDF world, its MuJoCo scene and occupancy map, set spawn and initial pose, check each simulator |
+| 12 | [Putting it in the GUI](12-putting-it-in-the-gui.md) | group and classify it, give it a control page, register algorithms, document it and record evidence |
+
+The worked example is the Elephant Robotics myAGV Pro and its Pro630 arm
+version ([tutorial](../tutorials/myagv-pro.md)).
+
 Short on time? Read 1, skim 2, then go to 7. Every chapter starts with a
 "**In one sentence**" summary and ends with "**Try it**" commands.
 

@@ -125,7 +125,7 @@ Work top to bottom. Each line links to its task.
 |---|---|---|---|
 | I0 | [R14.2](#r142--elephant-robotics-myagv-pro) myAGV Pro | Done: Gazebo source variant plus portable roller variant driving in MuJoCo, PyBullet and Isaac; Nav2 measured in Gazebo and PyBullet | implemented |
 | I0a | [R14.3](#r143--elephant-myagv-pro-mobile-manipulator) Elephant mobile manipulator | Done 2026-11-13: official Pro630 on the roller base in MuJoCo/PyBullet/Isaac, generic GUI Mobile arm page; gripper and pick/place remain | implemented |
-| I0b | [R14.4](#r144--contributor-integration-course) Integration guide chapters | Prerequisites, adding robots/maps/controllers/sensors and GUI registration | not started |
+| I0b | [R14.4](#r144--contributor-integration-course) Integration guide chapters | Done 2026-11-13: beginner course part 2 (chapters 9–12) in docs/learn and the GUI docs library; clean-host walkthrough remains | implemented |
 | I1 | [R13.2](#r132--vacuum-carpets-and-mopping) Vacuum carpets and mopping | Done 2026-11-10 (Gazebo mop + rug run passes) | implemented |
 | I2 | [R13.3](#r133--vacuum-camera-obstacle-recognition) Vacuum camera obstacles | Initial implementation complete, including trained experimental checkpoint; recognition quality and robot mission pending | partial |
 | I3 | [R14.1](#r141--open-source-counterparts-for-self-made-robots) Open-source robots | Initial source-search/integration pass complete: TurtleBot4, WAM-V, Summit-STEEL and source octopod measured; BlueROV2 remains a restricted local candidate. Remaining licensing/mission qualification recorded separately | implemented; acceptance partial |
@@ -971,14 +971,13 @@ These are complete; preserve their scoped contracts. R1.3 follow-up CI passes at
 
 ### R14.4 — Contributor integration course
 
-- **State:** active (2026-11-13) · **Priority:** I0b (after R14.3, user request 2026-11-12) · **Owner:** claude (from codex, on the user's request)
+- **State:** implemented (2026-11-13) · **Priority:** I0b (after R14.3, user request 2026-11-12) · **Owner:** claude (from codex, on the user's request)
 - **Depends on:** current source-backed integration recipes.
 - **Goal:** explain how a new contributor adds robots, maps and related components, including normal GUI integration.
-- **Have:** asset/agent guides and architecture explorer; concrete official robot import recipes.
-- **Remaining implementation:** linked beginner chapters with prerequisites, source/license checks, model/frame/mass contracts, backend adapters, controls/sensors, map conversion/occupancy/spawn, profiles/registry/family/defaults, documentation and scoped evidence.
-- **How to do it:** add chapters to docs/learn and the existing native GUI documentation library; reference real paths and runnable commands, illustrate the data flow and provide concrete examples and troubleshooting. Preserve ROADMAP as the single goal list.
-- **Done when:** chapters are reachable in the main GUI and tutorial index, and cover prerequisites through a usable normal GUI robot/world entry without fabricated support claims.
-- **Validation later:** clean-host contributor walkthrough and broader platform acceptance remain under R9.
+- **Have:** beginner course part 2 in `docs/learn/`: [9 · Extending the lab](docs/learn/09-extending-the-lab.md) (prerequisites, file map, seven-stage integration path, what "supported" means), [10 · Adding a robot](docs/learn/10-adding-a-robot.md) (source pin/license, model checks, declared estimates, profile fields, feature-gated modes, articulation, provisioning, screens, troubleshooting), [11 · Adding a world and map](docs/learn/11-adding-a-world-and-map.md) (SDF, generated MJCF, occupancy generation, spawn/initial pose, per-simulator checks) and [12 · Putting it in the GUI](docs/learn/12-putting-it-in-the-gui.md) (families/variants, taxonomy, experimental modes, control pages and how to write one, algorithms and dispatch, docs library, evidence/roadmap/ledger, checklist). Worked example: myAGV Pro and Pro630. Listed open in the GUI docs library (*Extending the lab*), the course map and the tutorial index; diagrams rendered.
+- **Remaining implementation:** none.
+- **Done when:** met; chapters are reachable in the GUI and the tutorial index and use only real paths and commands.
+- **Validation later:** clean-host contributor walkthrough (a new person adds a robot and a world by following the chapters) remains under R9.
 
 ### Stabilization patches (P1–P8)
 

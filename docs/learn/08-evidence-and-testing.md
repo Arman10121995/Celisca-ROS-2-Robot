@@ -95,4 +95,4 @@ python3 scripts/vacuum_run_report.py --map-yaml src/robot_lab_maps/maps/small_ho
 
 More: [testing guide](../TESTING.md), [current status](../status/CURRENT_STATUS.md).
 
-Back to the [course map](README.md).
+Next, for contributors: [9 · Extending the lab](09-extending-the-lab.md). Back to the [course map](README.md).
