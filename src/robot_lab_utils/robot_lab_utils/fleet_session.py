@@ -139,12 +139,15 @@ def choose_spawns(members, seed, grid=None):
     return placed
 
 
+LIDAR_RAISE = dict(labbot=.05)
+
+
 def namespace_description(urdf, member, controller_file, rgbd=True):
     """Instance identity plus the documented first-party Labbot lidar clearance."""
     root = ET.fromstring(urdf)
     name, prefix = member['id'], member['id'] + '/'
     root.set('name', name)
-    if member['model'] == 'labbot':
+    if member['model'] in LIDAR_RAISE:
         # The first-party source camera visual spans z=.195–.225 m, while
         # its source lidar plane is z=.20 m. Gazebo's GPU scan sees the
         # robot's own camera at ~.12 m. Do not invent free ranges or ignore
@@ -157,7 +160,7 @@ def namespace_description(urdf, member, controller_file, rgbd=True):
         coordinates = [float(v) for v in origin.get('xyz', '').split()]
         if len(coordinates) != 3:
             raise ValueError('Invalid source laser mount')
-        coordinates[2] += .05
+        coordinates[2] += LIDAR_RAISE[member['model']]
         origin.set('xyz', ' '.join(format(v, '.12g') for v in coordinates))
     found = 0
     # Sensors and IMU systems are installed once on the world, not per model.
@@ -281,6 +284,36 @@ def navigation_parameters(config_dir, localization_dir, member, map_yaml):
     return {'/' + member['id']: data}
 
 
+def laser_yaw(urdf):
+    """Yaw of the 2D lidar frame relative to the base (scan angles are in the lidar frame).
+
+    Bumperbot mounts its lidar turned by 3.14 rad; a scan consumer that treats
+    scan angle 0 as the robot's front would look backwards.
+    """
+    import xml.etree.ElementTree as ET
+    root = ET.fromstring(urdf)
+    frame = None
+    for sensor in root.iter('sensor'):
+        if sensor.get('type') in ('gpu_lidar', 'lidar', 'gpu_ray', 'ray'):
+            parent = next((g for g in root.iter('gazebo') if sensor in list(g.iter('sensor'))), None)
+            frame = parent.get('reference') if parent is not None else None
+            if not frame:
+                frame_id = sensor.find('.//gz_frame_id')
+                frame = frame_id.text.split('/')[-1] if frame_id is not None and frame_id.text else None
+            break
+    joints = {j.find('child').get('link'): j for j in root.findall('joint') if j.find('child') is not None}
+    total, seen = 0., set()
+    while frame in joints and frame not in seen:
+        seen.add(frame)
+        joint = joints[frame]
+        origin = joint.find('origin')
+        if origin is not None:
+            rpy = [float(v) for v in origin.get('rpy', '0 0 0').split()]
+            total += rpy[2]
+        frame = joint.find('parent').get('link')
+    return math.atan2(math.sin(total), math.cos(total))
+
+
 def bridge_entries(members):
     entries = [dict(ros_topic_name='/clock', gz_topic_name='/clock',
                     ros_type_name='rosgraph_msgs/msg/Clock', gz_type_name='gz.msgs.Clock', direction='GZ_TO_ROS')]
@@ -396,12 +429,13 @@ def prepare_session(session_file, map_override='', navigation=False, runtime_roo
         description = namespace_description(urdf, member, controller_file, rgbd=rgbd)
         path = folder / (name + '.urdf')
         path.write_text(description)
+        member['laser_yaw'] = laser_yaw(urdf)
         member.update(description=str(path), description_sha256=hashlib.sha256(description.encode()).hexdigest(),
                       source_description_sha256=hashlib.sha256(urdf.encode()).hexdigest(),
                       source_model=model_path, source_controller=str(ctrl_source), controller_file=str(controller_file))
-        member['physical_adjustments'] = ([dict(joint='laser_joint', xyz_delta=[0., 0., .05],
+        member['physical_adjustments'] = ([dict(joint='laser_joint', xyz_delta=[0., 0., LIDAR_RAISE[member['model']]],
             reason='Move the actual lidar plane above the source OAK-D camera; no fabricated scan rays')]
-            if member['model'] == 'labbot' else [])
+            if member['model'] in LIDAR_RAISE else [])
         if navigation:
             nav_file = folder / (name + '-navigation.yaml')
             parameters=navigation_parameters(Path(share('robot_lab_navigation')) / 'config',Path(share('robot_lab_localization')) / 'config',member,map_yaml)

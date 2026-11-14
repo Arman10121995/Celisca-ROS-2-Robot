@@ -199,13 +199,18 @@ class FleetTab(ttk.Frame):
         swarm_frame = ttk.LabelFrame(swarm_page, text='Ground swarm · experimental', padding=5)
         swarm_frame.grid(row=0, column=0, sticky='ew')
         self.swarm_mode, self.spacing = tk.StringVar(value='formation'), tk.DoubleVar(value=1.)
-        ttk.Combobox(swarm_frame, textvariable=self.swarm_mode, values=('formation', 'rendezvous', 'dispersion', 'flocking'),
-                     state='readonly', width=13).grid(row=0, column=0, sticky='ew')
+        # local_* are distributed: each member decides from its own scan (ROS2swarm port).
+        ttk.Combobox(swarm_frame, textvariable=self.swarm_mode, values=('formation', 'rendezvous', 'dispersion', 'flocking',
+                     'local_dispersion', 'local_attraction', 'local_aggregation', 'local_flocking'),
+                     state='readonly', width=16).grid(row=0, column=0, sticky='ew')
         ttk.Label(swarm_frame, text='Spacing m').grid(row=0, column=1)
         ttk.Entry(swarm_frame, textvariable=self.spacing, width=6).grid(row=0, column=2)
         self.use_anchor = tk.BooleanVar(value=False)
         ttk.Checkbutton(swarm_frame, text='Use goal XY as anchor; yaw sets heading', variable=self.use_anchor).grid(row=1, column=0, columnspan=3, sticky='w')
-        ttk.Button(swarm_frame, text='Start all included members', command=self._swarm).grid(row=2, column=0, columnspan=3, sticky='ew', pady=3)
+        self.replan_loss = tk.BooleanVar(value=False)
+        ttk.Checkbutton(swarm_frame, text='Continue without a lost member (replan)', variable=self.replan_loss).grid(
+            row=2, column=0, columnspan=3, sticky='w')
+        ttk.Button(swarm_frame, text='Start all included members', command=self._swarm).grid(row=3, column=0, columnspan=3, sticky='ew', pady=3)
         swarm_frame.columnconfigure(0, weight=1)
         membership = ttk.Frame(swarm_page)
         membership.grid(row=1, column=0, sticky='ew', pady=5)
@@ -213,6 +218,9 @@ class FleetTab(ttk.Frame):
         ttk.Button(membership, text='Rejoin neutral', command=lambda: self._operation('join')).pack(side='left', fill='x', expand=True)
         ttk.Label(swarm_page, text='The physical robot stays in the shared world when it leaves.\n'
                   'Fresh state/scan and a live operator heartbeat are required.\n'
+                  'local_* behaviours use only each robot\'s own scan. With replan, a lost\n'
+                  'member is excluded and kept as an obstacle at its last pose; otherwise\n'
+                  'any loss stops all. Rejoin brings it back explicitly.\n'
                   'These bounded ground kernels do not provide Open-RMF traffic scheduling.', wraplength=370).grid(row=2, column=0, sticky='w', pady=5)
         self.coverage = {key: tk.DoubleVar(value=value) for key, value in
                          [('width', 4.), ('height', 3.), ('spacing', 1.2)]}
@@ -225,11 +233,22 @@ class FleetTab(ttk.Frame):
         for col, (key, variable) in enumerate(self.coverage.items()):
             ttk.Label(dimensions, text=key.title() + ' m').grid(row=0, column=col)
             ttk.Entry(dimensions, textvariable=variable, width=8).grid(row=1, column=col, padx=3)
-        ttk.Button(coverage_page, text='Plan and queue cooperative sweep', command=self._coverage).grid(
-            row=2, column=0, sticky='ew', pady=8)
+        self.sensed_coverage = tk.BooleanVar(value=True)
+        coverage_options = ttk.Frame(coverage_page)
+        coverage_options.grid(row=2, column=0, sticky='w', pady=(6, 0))
+        ttk.Checkbutton(coverage_options, text='Measure coverage from scans (go to unseen cells)',
+                        variable=self.sensed_coverage).pack(anchor='w')
+        ttk.Checkbutton(coverage_options, text='Continue without a lost member (replan)',
+                        variable=self.replan_loss).pack(anchor='w')
+        ttk.Button(coverage_page, text='Start cooperative coverage', command=self._coverage).grid(
+            row=3, column=0, sticky='ew', pady=8)
+        self.coverage_status = tk.StringVar(value='No coverage mission.')
+        ttk.Label(coverage_page, textvariable=self.coverage_status, wraplength=370).grid(row=5, column=0, sticky='w')
         ttk.Label(coverage_page, text='Enable AMCL + Nav2 before Run. Begin with a small region.\n'
                   'Keep this operator connected; heartbeat loss cancels the mission.\n'
-                  'Stop clears queues. Failed tasks hold the remaining queue.', wraplength=370).grid(row=3, column=0, sticky='w')
+                  'Stop clears queues. Failed tasks hold the remaining queue.\n'
+                  'Measured coverage counts free cells crossed by each robot\'s scan rays\n'
+                  '(2 m); it ends at 95 % or when no reachable unseen cells remain.', wraplength=370).grid(row=4, column=0, sticky='w')
         self.live = scrolledtext.ScrolledText(self, height=7, wrap='word', state='disabled')
         self.live.grid(row=3, column=0, columnspan=2, sticky='ew', pady=(8, 3))
         ttk.Label(self, textvariable=self.status, wraplength=1000).grid(row=4, column=0, columnspan=2, sticky='ew')
@@ -424,6 +443,17 @@ class FleetTab(ttk.Frame):
                 lines.append('Last task: ' + last['state'] + ' · ' + last['reason'])
             if data.get('last_rejection'):
                 lines.append('Last rejected command: ' + data['last_rejection'])
+            blinded = [m['id'] for m in data['members'] if (m.get('scan_too_close_rays') or 0) >= 30]
+            if blinded:
+                lines.append('Scan reports a closer-than-minimum sector on ' + ', '.join(blinded) + ': the scan guard holds them. '
+                             'Sessions without RGB-D cameras showed a 90° -inf sector on Bumperbot lidars; enable RGB-D.')
+            if data.get('lost_members'):
+                lines.append('Lost and replanned around (Rejoin to restore): ' + ', '.join(data['lost_members']))
+            sensed = data.get('sensed_coverage')
+            if sensed:
+                self.coverage_status.set('Measured coverage %.1f %% of %d free cells (goal %.0f %%)%s' % (
+                    100 * sensed['fraction'], sensed['target_cells'], 100 * sensed['goal_fraction'],
+                    ' · finished: ' + sensed['finished'] if sensed.get('finished') else ''))
             self.live.configure(state='normal')
             self.live.delete('1.0', 'end')
             self.live.insert('1.0', '\n'.join(lines))
@@ -512,6 +542,7 @@ class FleetTab(ttk.Frame):
             extra = dict(controller=self.swarm_mode.get(), spacing=self.spacing.get(), heading=self.goal['yaw'].get())
             if self.use_anchor.get():
                 extra.update(x=self.goal['x'].get(), y=self.goal['y'].get())
+            extra['loss_policy'] = 'replan' if self.replan_loss.get() else 'stop'
             self._send('swarm', self._ids(all_members=True), **extra)
         except (ValueError, tk.TclError) as exc:
             self.status.set(str(exc))
@@ -520,6 +551,9 @@ class FleetTab(ttk.Frame):
         self.stop_manual()
         try:
             values = {key: variable.get() for key, variable in self.coverage.items()}
+            values['loss_policy'] = 'replan' if self.replan_loss.get() else 'stop'
+            if self.sensed_coverage.get():
+                values.update(sensed=True)
             self._send('coverage', self._ids(all_members=True), x=self.goal['x'].get(), y=self.goal['y'].get(), **values)
         except (ValueError, tk.TclError) as exc:
             self.status.set(str(exc))

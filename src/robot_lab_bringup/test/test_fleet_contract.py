@@ -18,6 +18,7 @@ from robot_lab_utils.fleet_motion import Neighbor, scan_guard, separation_guard,
 def test_namespace_keeps_source_physics_and_separates_sensors_controllers():
     source = '''<robot name="source"><link name="base_link"><inertial><mass value="4"/></inertial></link>
       <joint name="drive_joint" type="continuous"><limit effort="5" velocity="10"/></joint>
+      <joint name="laser_joint" type="fixed"><origin xyz="0 0 .12" rpy="0 0 3.14"/></joint>
       <ros2_control name="source_hardware"><joint name="drive_joint"/></ros2_control>
       <gazebo reference="base_link"><sensor name="lidar" type="gpu_lidar"><gz_frame_id>laser_link</gz_frame_id><topic>scan</topic></sensor></gazebo>
       <gazebo><plugin name="ign_ros2_control::IgnitionROS2ControlPlugin"><parameters>source.yaml</parameters></plugin>
@@ -31,6 +32,7 @@ def test_namespace_keeps_source_physics_and_separates_sensors_controllers():
         assert root.find('.//gz_frame_id').text == member['id'] + '/laser_link'
         assert root.find('.//ros/namespace').text == '/' + member['id']
         assert root.find('.//robot_param_node').text == 'robot_state_publisher'
+        assert root.find("joint[@name='laser_joint']/origin").attrib == dict(xyz='0 0 .12', rpy='0 0 3.14')
     entries = bridge_entries(members)
     assert sum(e['ros_topic_name'] == '/clock' for e in entries) == 1
     assert len({e['ros_topic_name'] for e in entries}) == len(entries)

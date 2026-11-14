@@ -156,6 +156,8 @@ class AerialSwarmTab(ttk.Frame):
         ttk.Combobox(group, textvariable=self.controller, values=('formation', 'rendezvous', 'dispersion', 'flocking'),
             state='readonly', width=14).pack(side='left')
         ttk.Button(group, text='Start selected group', command=lambda: self.operation(self.controller.get())).pack(side='left', padx=5)
+        self.replan_loss = tk.BooleanVar(value=False)
+        ttk.Checkbutton(group, text='Continue without a lost member', variable=self.replan_loss).pack(side='left', padx=5)
         self.route_open=False
         self.route_manual_widgets=[widget for row in range(3,8) for widget in control.grid_slaves(row=row)]
         self.route_toggle=ttk.Button(control,text='Show formation itinerary',command=self.toggle_route_editor)
@@ -333,6 +335,10 @@ class AerialSwarmTab(ttk.Frame):
         try:
             data = dict(session_id=self.runtime['session_id'], operator_id=self.operator,
                         op=op, targets=self.targets(), spacing=self.spacing.get())
+            if op in ('formation', 'rendezvous', 'dispersion', 'flocking'):
+                # Replan: a lost member leaves the group (landing requested) and its last
+                # position stays a 2.5 m no-fly column; at least two members must remain.
+                data['loss_policy'] = 'replan' if self.replan_loss.get() else 'stop'
             if op=='plan_route':
                 anchors=[]
                 for line in self.route_editor.get('1.0','end').splitlines():

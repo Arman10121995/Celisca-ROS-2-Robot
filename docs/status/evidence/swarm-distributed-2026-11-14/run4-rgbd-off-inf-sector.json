@@ -1,0 +1,83 @@
+{
+  "note": "Bumperbot lidars, RGB-D off: 90 contiguous -inf rays (indices 135-224, the front \u00b145\u00b0) once motion starts; lidar raised 15 cm for this run",
+  "samples": [
+    {
+      "phase": "wait",
+      "scan_too_close_rays": {
+        "gamma": 0
+      }
+    },
+    {
+      "phase": "local_dispersion",
+      "scan_too_close_rays": {
+        "gamma": 0,
+        "alpha": 90,
+        "beta": 90
+      }
+    },
+    {
+      "phase": "local_dispersion",
+      "scan_too_close_rays": {
+        "gamma": 0,
+        "alpha": 90,
+        "beta": 90
+      }
+    },
+    {
+      "phase": "local_dispersion",
+      "scan_too_close_rays": {
+        "gamma": 0,
+        "alpha": 90,
+        "beta": 90
+      }
+    },
+    {
+      "phase": "local_dispersion",
+      "scan_too_close_rays": {
+        "gamma": 0,
+        "alpha": 90,
+        "beta": 90
+      }
+    },
+    {
+      "phase": "local_dispersion",
+      "scan_too_close_rays": {
+        "gamma": 0,
+        "alpha": 90,
+        "beta": 90
+      }
+    },
+    {
+      "phase": "local_dispersion",
+      "scan_too_close_rays": {
+        "gamma": 0,
+        "alpha": 90,
+        "beta": 90
+      }
+    },
+    {
+      "phase": "stop",
+      "scan_too_close_rays": {
+        "gamma": 0,
+        "alpha": 90,
+        "beta": 90
+      }
+    },
+    {
+      "phase": "local_aggregation",
+      "scan_too_close_rays": {
+        "gamma": 0,
+        "alpha": 90,
+        "beta": 90
+      }
+    },
+    {
+      "phase": "local_aggregation",
+      "scan_too_close_rays": {
+        "gamma": 0,
+        "alpha": 90,
+        "beta": 90
+      }
+    }
+  ]
+}

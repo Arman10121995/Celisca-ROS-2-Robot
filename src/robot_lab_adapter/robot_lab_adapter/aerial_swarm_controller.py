@@ -25,6 +25,8 @@ class AerialSwarmController(Node):
         self.command_at=-math.inf;self.anchor=None;self.spacing=3.;self.reason='Connected neutral; explicit checks and Takeoff required'
         self.members={}
         self.member_lost={};self.member_lost_at={}
+        # Replan policy: a lost member leaves the group; its last pose stays a no-fly column.
+        self.loss_policy='stop';self.lost_columns={}
         self.last_status=0.;self.last_output={};self.pending=[]
         self.generation=0
         self.takeoff_targets=[]
@@ -195,8 +197,12 @@ class AerialSwarmController(Node):
                 anchor=[float(data[k]) for k in ('x','y','z')] if all(k in data for k in ('x','y','z')) else None
                 if op=='formation' and anchor is None:anchor=np.mean([m['pose'] for m in members],axis=0).tolist()
                 if op!='manual':velocities(op,{m['id']:m['pose'] for m in members},spacing,anchor)
+                policy=data.get('loss_policy','stop')
+                if policy not in ('stop','replan'):raise ValueError('Loss policy must be stop or replan')
                 self.hold('New group mode starts neutral')
                 self.mode=op;self.targets=names;self.command_at=-math.inf
+                self.loss_policy=policy if op!='manual' else 'stop'
+                for name in names:self.lost_columns.pop(name,None)
                 self.spacing,self.anchor=spacing,anchor
                 self.reason=op+' active; physical separation/mission qualification pending'
             else:raise ValueError('Unsupported aerial group operation')
@@ -223,6 +229,20 @@ class AerialSwarmController(Node):
         if self.mode!='idle':
             members=[self.members[n] for n in self.targets]
             lost=[m for m in members if not self.fresh(m) or m['status']['phase']!='flying']
+            remaining=[m for m in members if m not in lost]
+            if (lost and self.loss_policy=='replan' and self.mode in ('formation','rendezvous','dispersion','flocking')
+                    and len(remaining)>=2):
+                for m in lost:
+                    self.member_lost[m['id']]=True;self.member_lost_at[m['id']]=now
+                    self.lost_columns[m['id']]=list(m['pose'])
+                    self.event('member_lost_replanned',member=m['id'],namespace=m['namespace'],
+                        remaining=[r['id'] for r in remaining],last_pose=list(m['pose']),
+                        phase=m['status'].get('phase') if m['status'] else None)
+                    if self.fresh(m) and m['status'].get('phase')=='flying':
+                        self.service(m,'land')
+                self.targets=[r['id'] for r in remaining]
+                self.reason='Continuing without '+', '.join(m['id'] for m in lost)+' (replan policy)'
+                members,lost=remaining,[]
             if lost:
                 for m in lost:
                     if not self.member_lost.get(m['id']):
@@ -255,6 +275,11 @@ class AerialSwarmController(Node):
                     except TimeoutError:clear=False
                     for other in self.members.values():
                         if other is member:continue
+                        column=self.lost_columns.get(other['id'])
+                        if column is not None and other['id'] not in self.targets:
+                            # Replanned-around loss: keep clear of its last horizontal position.
+                            if math.hypot(target[0]-column[0],target[1]-column[1])<2.5:clear=False
+                            continue
                         if not self.fresh(other) or math.dist(target,other['pose'])<2.:
                             clear=False
                     if not clear:
@@ -323,6 +348,7 @@ class AerialSwarmController(Node):
                 formation_rms_m=round(formation_rms,4) if formation_rms is not None else None,
                 altitude_rms_m=round(altitude_rms,4) if altitude_rms is not None else None,
                 formation_samples=len(recent) if recent else 0,member_loss=dict(self.member_lost),
+                loss_policy=self.loss_policy,lost_columns=self.lost_columns,targets=list(self.targets) if self.mode!='idle' else [],
                 route=dict(phase=getattr(self,'route_phase','idle'),plan=getattr(self,'route_plan',None),
                     mission=self.route_mission.state() if getattr(self,'route_mission',None) else None)),allow_nan=False)))
 

@@ -39,10 +39,26 @@ from robot_lab_utils.fleet_motion import Neighbor, angle, scan_guard, separation
 from robot_lab_utils.fleet_session import finite, ID_PATTERN, MEMBER_MODELS
 from robot_lab_utils.fleet_missions import MissionHistory, coverage_plan, enqueue, mission, settled, traffic_yield_goal
 from robot_lab_utils.fleet_zones import PLAN_FRESH_S, ZoneArbiter, declared_zones, narrow_passages
+from robot_lab_utils.swarm_behaviours import BEHAVIOURS, LocalBehaviour
+from robot_lab_utils.swarm_coverage import SensedCoverage, reachable_from, redistribute
 
 
 def yaw(q):
     return math.atan2(2 * (q.w * q.z + q.x * q.y), 1 - 2 * (q.y * q.y + q.z * q.z))
+
+
+def scan_yaw(member):
+    """Scan angles are in the lidar frame; add its mounting yaw to get base-frame bearings."""
+    return float(member.config.get('laser_yaw', 0.))
+
+
+def loss_policy(data):
+    """'stop' (default): any member loss stops everything. 'replan': the group
+    continues without the lost member, which stays an obstacle at its last pose."""
+    policy = data.get('loss_policy', 'stop')
+    if policy not in ('stop', 'replan'):
+        raise ValueError('Loss policy must be stop or replan')
+    return policy
 
 
 def contact_state(member, now):
@@ -107,6 +123,9 @@ class Member:
     contact_margin: float = 0.
     plan: list = None
     plan_at: float = -math.inf
+    lost_pose: object = None
+    lost_at: float = -math.inf
+    swarm_info: dict = None
     sample_stamps: dict = field(default_factory=dict)
     message_counts: dict = field(default_factory=lambda: dict(odom=0, truth=0, scan=0, amcl=0))
 
@@ -131,6 +150,9 @@ class FleetController(Node):
         self.history = MissionHistory()
         self._contact_events = deque(maxlen=64)
         self.serial_traffic = True
+        self.lost_members = set()     # excluded after feedback loss under a replan policy
+        self.sensed = None            # active sensed-coverage mission
+        self.coverage_group = None    # active lane coverage group and its loss policy
         self._state_pub = self.create_publisher(String, '/fleet/state', 10)
         self._stop_pub = self.create_publisher(String, '/fleet/command', 10)
         self._set_pose = self.create_client(SetEntityPose, '/world/' + self.session['world_name'] + '/set_pose')
@@ -439,7 +461,10 @@ class FleetController(Node):
                         member.mode = 'waiting'
                     self._event('goal_queued', member=member.name, task=item['task'], queued=len(member.queue))
             elif op == 'coverage':
-                self._coverage(data, targets)
+                if data.get('sensed') is True:
+                    self._start_sensed(data, targets)
+                else:
+                    self._coverage(data, targets)
             elif op == 'route':
                 if len(targets) != 1:
                     raise ValueError('A route must target exactly one member')
@@ -477,6 +502,8 @@ class FleetController(Node):
                         member.mode = 'manual'
                     elif op == 'stop':
                         self._stop_member(member, 'Operator stop')
+                        if self.sensed and not self.sensed['finished'] and member.name in self.sensed['targets']:
+                            self._finish_sensed('Operator stopped ' + member.name)
                     elif op == 'pause':
                         goal = copy.deepcopy(member.goal)
                         self._stop_member(member, 'Paused by operator', clear_queue=False, preserve_active=True)
@@ -506,6 +533,8 @@ class FleetController(Node):
                         if not self._fresh(member, time.monotonic()):
                             raise ValueError('Member must have fresh measured feedback to rejoin')
                         member.included = True
+                        self.lost_members.discard(member.name)
+                        member.lost_pose = None
                         self._stop_member(member, 'Rejoined; neutral until a new command')
                     else:
                         raise ValueError('Unknown fleet operation: ' + str(op))
@@ -669,11 +698,155 @@ class FleetController(Node):
             member.queue.extend(checked[member.name])
             member.queue_paused = False
             member.mode = 'waiting' if member.queue else 'idle'
-        self._event('coverage_planned', targets=plan, scope='Clearance-aware sweep waypoints; actual completion is reported per task')
+        self.coverage_group = dict(targets=[m.name for m in targets], loss_policy=loss_policy(data))
+        self._event('coverage_planned', targets=plan, loss_policy=self.coverage_group['loss_policy'],
+                    scope='Clearance-aware sweep waypoints; actual completion is reported per task')
+
+    def _start_sensed(self, data, targets):
+        """Coverage measured from scans: members go to the nearest unseen free cells."""
+        if not self.session['navigation']:
+            raise ValueError('Sensed coverage requires per-instance AMCL/Nav2')
+        now = time.monotonic()
+        if not targets or any(m.mode != 'idle' or m.queue or m.active_item or m.handle or m.sending
+                              or not m.included or not self._fresh(m, now) for m in targets):
+            raise ValueError('Sensed coverage requires fresh included idle members with empty queues')
+        from robot_lab_utils.fleet_session import SpawnGrid
+        if not hasattr(self, '_grid'):
+            self._grid = SpawnGrid(self.session['map_yaml'])
+        goal_fraction = finite(data.get('goal_fraction', .95), 'coverage goal fraction')
+        if not .1 <= goal_fraction <= 1.:
+            raise ValueError('Coverage goal fraction must be 0.1–1')
+        area = SensedCoverage(self._grid, (finite(data['x'], 'x'), finite(data['y'], 'y')), data['width'], data['height'],
+                              finite(data.get('sensor_range', 2.), 'sensor range'))
+        self.sensed = dict(map=area, targets=[m.name for m in targets], initial=[m.name for m in targets], goal_fraction=goal_fraction,
+                           loss_policy=loss_policy(data), goals={}, tasks={}, skipped=[], reachable={},
+                           integrated_at={}, started=now, finished=None)
+        for member in targets:
+            member.queue_paused, member.mode = False, 'waiting'
+        self._event('sensed_coverage_started', targets=self.sensed['targets'], area=area.area,
+                    goal_fraction=goal_fraction, loss_policy=self.sensed['loss_policy'])
+
+    def _sensed_tick(self, now, fresh):
+        task = self.sensed
+        if not task or task['finished']:
+            return
+        area, radius = task['map'], max(m.config['radius'] for m in self.members.values())
+        names = [n for n in task['targets'] if n not in self.lost_members]
+        for name in names:
+            member = self.members[name]
+            if fresh[name] and member.scan is not None and now - task['integrated_at'].get(name, -math.inf) >= .2:
+                body, scan = self._neighbor(member), member.scan
+                area.integrate(body.x, body.y, body.yaw, scan.ranges, scan.angle_min + scan_yaw(member), scan.angle_increment,
+                               scan.range_min, scan.range_max)
+                task['integrated_at'][name] = now
+        if area.fraction() >= task['goal_fraction']:
+            return self._finish_sensed('Sensed coverage goal reached')
+        idle = []
+        task['skipped'] = [s for s in task['skipped'] if now - s[2] < 60.]
+        for name in names:
+            member = self.members[name]
+            if member.queue_paused and not member.active_item and member.queue:
+                # A failed step (or its traffic yield) holds the queue; coverage drops that goal
+                # for a minute and continues instead of waiting for the operator.
+                for item in member.queue:
+                    if item.get('source') == 'sensed_coverage':
+                        task['skipped'].append((item['goal']['x'], item['goal']['y'], now))
+                self._clear_queue(member, 'Sensed coverage reassigns after a failed step')
+                task['tasks'].pop(name, None)
+                task['goals'].pop(name, None)
+            if member.active_item or member.queue or member.handle or member.sending or member.mode not in ('idle', 'waiting'):
+                continue
+            previous = task['tasks'].pop(name, None)
+            if previous:
+                row = next((r for r in reversed(self.history.rows) if r['task'] == previous), None)
+                if row and row['state'] != 'succeeded' and task['goals'].get(name):
+                    task['skipped'].append((*task['goals'][name], now))  # Unreachable now; retry after a minute.
+                task['goals'].pop(name, None)
+            member.queue_paused = False
+            idle.append(name)
+        for name in idle:
+            member = self.members[name]
+            body = self._neighbor(member)
+            if now - task['reachable'].get(name, (-math.inf, None))[0] > 10.:
+                task['reachable'][name] = (now, reachable_from(self._grid, (body.x, body.y), radius))
+            held = ([goal for other, goal in task['goals'].items() if other != name and goal]
+                    + [(x, y) for x, y, _ in task['skipped']])
+            goal = area.next_goal((body.x, body.y), radius, held, task['reachable'][name][1])
+            if goal is None:
+                task['goals'][name] = None
+                member.reason = 'Sensed coverage: no reachable unseen cells left for this member'
+                continue
+            try:
+                item = mission(self._goal(dict(goal, timeout=120.)), 'sensed_coverage')
+            except ValueError as exc:
+                task['skipped'].append((goal['x'], goal['y'], now))
+                member.reason = 'Sensed coverage goal skipped: ' + str(exc)
+                continue
+            member.queue.append(item)
+            member.mode = 'waiting'
+            task['goals'][name], task['tasks'][name] = (goal['x'], goal['y']), item['task']
+        if names and all(task['goals'].get(n, 0) is None for n in names) and not task['skipped']:
+            self._finish_sensed('No reachable unseen cells remain')
+        elif not names:
+            self._finish_sensed('No remaining members')
+
+    def _end_groups(self, reason):
+        """Stop/loss ends coverage missions; nothing is reassigned afterwards."""
+        if self.sensed and not self.sensed['finished']:
+            self._finish_sensed('Stopped: ' + reason)
+        self.coverage_group = None
+
+    def _finish_sensed(self, reason):
+        task = self.sensed
+        task['finished'] = reason
+        for name in task['targets']:
+            member = self.members[name]
+            if name not in self.lost_members and (member.queue or member.active_item):
+                self._stop_member(member, 'Sensed coverage finished: ' + reason)
+        self._event('sensed_coverage_finished', reason=reason, **task['map'].state(),
+                    elapsed_s=round(time.monotonic() - task['started'], 3), lost=sorted(self.lost_members & set(task['initial'])))
+
+    def _replan_loss(self, missing, fresh, now):
+        """Continue a group whose loss policy is replan; False means stop everything."""
+        groups = [(self.swarm, 2), (self.sensed if self.sensed and not self.sensed['finished'] else None, 1),
+                  (self.coverage_group, 1)]
+        group = next(((g, need) for g, need in groups if g and g['loss_policy'] == 'replan'
+                      and set(missing) <= set(g['targets'])), None)
+        if group is None:
+            return False
+        group, need = group
+        moving = {m.name for m in self.members.values()
+                  if m.mode in ('manual', 'navigation', 'dispatching', 'settling', 'swarm')}
+        remaining = [n for n in group['targets'] if n not in missing and n not in self.lost_members and fresh[n]]
+        if not moving <= set(group['targets']) or len(remaining) < need:
+            return False
+        for name in missing:
+            member = self.members[name]
+            goals = [item['goal'] for item in ([member.active_item] if member.active_item else []) + member.queue
+                     if item.get('source') == 'coverage']
+            member.lost_pose, member.lost_at = self._neighbor(member), now
+            self._stop_member(member, 'Feedback lost; excluded from the group and replanned around')
+            member.included = False
+            self.lost_members.add(name)
+            group['targets'] = [n for n in group['targets'] if n != name]
+            if group is self.swarm and group.get('local'):
+                group['local'].pop(name, None)
+            handed = {}
+            if goals:
+                positions = {n: (self._neighbor(self.members[n]).x, self._neighbor(self.members[n]).y) for n in remaining}
+                for other, extra in redistribute(goals, positions).items():
+                    for goal in extra:
+                        self.members[other].queue.append(mission(goal, 'coverage'))
+                    if extra:
+                        self.members[other].mode = 'waiting' if self.members[other].mode == 'idle' else self.members[other].mode
+                        handed[other] = len(extra)
+            self._event('member_lost_replanned', member=name, remaining=remaining, reassigned=handed,
+                        last_pose=dict(x=member.lost_pose.x, y=member.lost_pose.y) if member.lost_pose else None)
+        return True
 
     def _schedule(self, now, fresh):
-        if not all(fresh.values()):
-            return  # Every physical peer must be observable before dispatch.
+        if not all(ready for name, ready in fresh.items() if name not in self.lost_members):
+            return  # Every physical peer must be observable before dispatch (except replanned-around losses).
         busy = any(m.mode in ('navigation', 'dispatching', 'settling', 'manual', 'swarm', 'resetting')
                    or m.handle or m.sending or m.cancel_pending for m in self.members.values())
         if self.serial_traffic and busy:
@@ -893,6 +1066,7 @@ class FleetController(Node):
         self.swarm = None
 
     def _stop_all(self, reason):
+        self._end_groups(reason)
         self.swarm = None
         for member in self.members.values():
             self._stop_member(member, reason)
@@ -927,14 +1101,22 @@ class FleetController(Node):
             raise ValueError('Cancel Nav2 tasks and wait for terminal results before swarm control')
         mode, spacing = data['controller'], finite(data.get('spacing', 1.), 'swarm spacing')
         heading = finite(data.get('heading', 0.), 'swarm heading')
+        policy = loss_policy(data)
         neighbors = [self._neighbor(m) for m in targets]
         anchor = (finite(data['x'], 'anchor x'), finite(data['y'], 'anchor y')) if 'x' in data or 'y' in data else None
-        swarm_velocities(mode, neighbors, .25, .6, spacing, anchor, heading)  # Validate before ownership changes.
+        local = None
+        if mode in BEHAVIOURS:
+            # Each member decides from its own scan only (ROS2swarm port).
+            local = {m.name: LocalBehaviour(mode, m.config['max_linear'], m.config['max_angular'], radius=m.config['radius'])
+                     for m in targets}
+        else:
+            swarm_velocities(mode, neighbors, .25, .6, spacing, anchor, heading)  # Validate before ownership changes.
         self._stop_swarm('New swarm controller')
         for member in targets:
             self._stop_member(member, 'Ground ' + mode + ' controller active')
             member.mode = 'swarm'
-        self.swarm = dict(controller=mode, targets=[m.name for m in targets], spacing=spacing, anchor=anchor, heading=heading)
+        self.swarm = dict(controller=mode, targets=[m.name for m in targets], spacing=spacing, anchor=anchor, heading=heading,
+                          loss_policy=policy, local=local, started=time.monotonic())
 
     def _request_reset(self, member):
         if member.spawn_pose is None:
@@ -1069,18 +1251,24 @@ class FleetController(Node):
             for member in self.members.values():
                 if member.mode in ('manual', 'swarm', 'navigation', 'dispatching', 'settling', 'waiting', 'paused') or member.queue:
                     self._stop_member(member, 'Operator heartbeat lost; explicit new ownership required')
+            self._end_groups('Operator heartbeat lost')
             self.swarm = None
         fresh = {m.name: self._fresh(m, now) for m in self.members.values()}
-        if not all(fresh.values()) and any(m.mode in ('manual','navigation','dispatching','settling','swarm')
-                                           for m in self.members.values()):
-            missing=', '.join(name for name,ready in fresh.items() if not ready)
-            self._stop_all('Physical peer feedback lost: '+missing+'; new commands required after rejoin')
+        missing = [name for name, ready in fresh.items() if not ready and name not in self.lost_members]
+        if missing and any(m.mode in ('manual','navigation','dispatching','settling','swarm')
+                           for m in self.members.values()):
+            if not self._replan_loss(missing, fresh, now):
+                self._stop_all('Physical peer feedback lost: '+', '.join(missing)+'; new commands required after rejoin')
         if now - self.heartbeat_at <= .8:
             self._schedule(now, fresh)
         neighbors = [self._neighbor(m) for m in self.members.values() if fresh[m.name]]
+        # A lost member may still be physically there: keep its last pose as an inflated obstacle.
+        neighbors += [Neighbor(m.name, m.lost_pose.x, m.lost_pose.y, m.lost_pose.yaw, 0., m.config['radius'] + .3)
+                      for m in self.members.values() if m.name in self.lost_members and m.lost_pose]
         if self.session['navigation'] and now-self.heartbeat_at <= .8:
             self._traffic_recovery_tick(now, fresh)
             self._zone_tick(now, fresh)
+            self._sensed_tick(now, fresh)
         self._contact_monitor(now, fresh)
         self._multi_robot_conflict(now, fresh)
         swarm_commands = {}
@@ -1088,6 +1276,14 @@ class FleetController(Node):
             ids = self.swarm['targets']
             if any(not fresh[name] for name in ids):
                 self._stop_swarm('Member feedback/scan lost')
+            elif self.swarm['local']:
+                for name in ids:
+                    scan = self.members[name].scan
+                    linear, angular, info = self.swarm['local'][name].step(
+                        scan.ranges, scan.angle_min + scan_yaw(self.members[name]), scan.angle_increment, now,
+                        scan.range_min, scan.range_max)
+                    swarm_commands[name] = (linear, angular)
+                    self.members[name].swarm_info = dict(info, linear=round(linear, 3), angular=round(angular, 3))
             else:
                 swarm_commands = swarm_velocities(self.swarm['controller'], [n for n in neighbors if n.name in ids],
                                                   .25, .6, self.swarm['spacing'], self.swarm['anchor'], self.swarm['heading'])
@@ -1113,7 +1309,7 @@ class FleetController(Node):
                     linear, angular, reason = separation_guard(robot, [peer for peer in neighbors if self._same_floor(robot,peer)], linear, angular)
                     if not reason:
                         scan = member.scan
-                        linear, angular, reason = scan_guard(linear, angular, scan.ranges, scan.angle_min,
+                        linear, angular, reason = scan_guard(linear, angular, scan.ranges, scan.angle_min + scan_yaw(member),
                                                              scan.angle_increment, member.config['radius'])
                     member.reason = reason or ('Neutral; waiting for input' if linear == angular == 0 and member.mode == 'manual'
                                                else member.mode + ' command active')
@@ -1146,6 +1342,9 @@ class FleetController(Node):
                     queued=len(member.queue),
                     queued_tasks=[dict(task=item['task'], goal=item['goal'], source=item['source']) for item in member.queue],
                     zone_wait=next((item['zone_wait'] for item in member.queue if item.get('zone_wait')), None),
+                    swarm_state=member.swarm_info if member.mode == 'swarm' else None,
+                    # -inf means closer than the lidar minimum; the scan guard treats it as contact.
+                    scan_too_close_rays=sum(1 for v in member.scan.ranges if v == -math.inf) if member.scan else None,
                     queue_paused=member.queue_paused,
                     settled_spawn_recorded=member.spawn_pose is not None,
                     reset_pose=[member.spawn_pose.position.x,member.spawn_pose.position.y,yaw(member.spawn_pose.orientation)] if member.spawn_pose else None,
@@ -1154,7 +1353,8 @@ class FleetController(Node):
             data = dict(schema_version=1, session_id=self.session_id, map=self.session['map'], backend='gazebo',
                         navigation=self.session['navigation'], directory=self.session['directory'],
                         sim_time=self.last_clock, clock_age=round(now - self.clock_at, 3) if math.isfinite(self.clock_at) else None,
-                        operator_id=self.operator, operator_fresh=now - self.heartbeat_at < .8, swarm=self.swarm, members=rows,
+                        operator_id=self.operator, operator_fresh=now - self.heartbeat_at < .8, members=rows,
+                        swarm=dict({k: v for k, v in self.swarm.items() if k != 'local'}, distributed=bool(self.swarm['local'])) if self.swarm else None,
                         last_rejection=self.last_rejection,
                         traffic=dict(serial=self.serial_traffic, policy='One autonomous route at a time; queued work waits for measured settling' if self.serial_traffic else 'Concurrent routes with local scan/separation guards'),
                         task_history=list(self.history.rows),
@@ -1165,6 +1365,12 @@ class FleetController(Node):
                                                    distance_m=e.get('distance_m'), margin_m=e.get('margin_m'),
                                                    attempt=e.get('attempt'), cycle=e.get('cycle'),
                                                    wall=round(e['now'], 3)) for e in self._contact_events][-32:]),
+                        lost_members=sorted(self.lost_members),
+                        sensed_coverage=(dict(self.sensed['map'].state(), targets=self.sensed['targets'],
+                            goal_fraction=self.sensed['goal_fraction'], loss_policy=self.sensed['loss_policy'],
+                            goals=self.sensed['goals'], skipped=len(self.sensed['skipped']), finished=self.sensed['finished'])
+                            if self.sensed else None),
+                        swarm_loss_policy=self.swarm['loss_policy'] if self.swarm else None,
                         zones=dict(declared=[z.describe() for z in self.zones.zones.values()] if self.zones else [],
                                    **self.zone_state,
                                    policy='One member per single-lane passage, door sweep and dock; others hold %.1f m before entry' % (

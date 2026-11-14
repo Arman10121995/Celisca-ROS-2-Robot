@@ -88,6 +88,8 @@ def _formation_ctrl(now=None):
     ctrl.pending = []
     ctrl.member_lost = {}
     ctrl.member_lost_at = {}
+    ctrl.loss_policy = 'stop'
+    ctrl.lost_columns = {}
     ctrl.pub = mock.MagicMock()
     ctrl.lease = mock.MagicMock()
     ctrl.scene = mock.MagicMock()
@@ -192,3 +194,50 @@ def test_member_loss_all_4fcu():
                _member3('air4', phase='flying', status_age=0.0, pose_age=0.0)]
     lost = [m for m in members if not _fresh(m, now=now) or m['status']['phase'] != 'flying']
     assert lost == []
+
+
+def _three(now, policy):
+    ctrl = _formation_ctrl(now)
+    ctrl.loss_policy = policy
+    ctrl.targets = ['air1', 'air2', 'air3']
+    ctrl.service = mock.MagicMock()
+    ctrl.members = {name: _formation_member(name, i, y, .95, now)
+                    for i, (name, y) in enumerate((('air1', -3.), ('air2', 0.), ('air3', 3.)))}
+    ctrl.members['air3']['status_at'] = now - 5.          # feedback lost
+    return ctrl
+
+
+def test_replan_policy_continues_without_a_lost_drone():
+    now = time.monotonic()
+    ctrl = _three(now, 'replan')
+    ctrl.tick()
+    assert ctrl.mode == 'formation' and ctrl.targets == ['air1', 'air2']
+    assert ctrl.lost_columns['air3'] == [0., 3., .95]
+    names = [call.args[0] for call in ctrl.event.call_args_list]
+    assert 'member_lost_replanned' in names
+    ctrl.members['air1']['velocity_pub'].publish.assert_called()
+    ctrl.service.assert_not_called()                      # a stale member cannot be commanded to land
+
+
+def test_lost_column_blocks_a_target_near_its_last_position():
+    now = time.monotonic()
+    ctrl = _three(now, 'replan')
+    ctrl.tick()
+    ctrl.members['air2']['velocity_pub'].reset_mock()
+    ctrl.members['air2']['pose'] = [0., 1.5, .95]          # 1.5 m from air3's last position
+    ctrl.members['air2']['status_at'] = ctrl.members['air2']['pose_at'] = time.monotonic()
+    ctrl.members['air1']['status_at'] = ctrl.members['air1']['pose_at'] = time.monotonic()
+    ctrl.tick()
+    published = ctrl.members['air2']['velocity_pub'].publish.call_args[0][0]
+    assert published == Twist() and 'Holding' in ctrl.reason
+
+
+def test_stop_policy_or_two_member_group_holds_on_loss():
+    now = time.monotonic()
+    ctrl = _three(now, 'stop')
+    ctrl.tick()
+    assert ctrl.mode == 'idle'
+    ctrl = _three(now, 'replan')
+    ctrl.targets = ['air2', 'air3']                        # one member would remain
+    ctrl.tick()
+    assert ctrl.mode == 'idle'

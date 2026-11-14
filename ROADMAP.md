@@ -137,7 +137,7 @@ Work top to bottom. Each line links to its task.
 | I7 | [R5.7](#r57--manipulators-and-motion-planning) Arms | Panda measured box selection, grasp and support-placement stage plans implemented; unattended sequencing, arbitrary geometry, coupled arms and other backends remain | partial |
 | I8 | [R5.8](#r58--robot-hands-and-grippers) Hands | Torque/tendon hand adapters, object workflows | partial |
 | I9 | [R10.2](#r102--fleet-management-and-open-rmf) Fleet / Open-RMF | Done 2026-11-14: shared-zone reservations (map passages, doors, docks), cycle breaker, recovery drive-out, RMF energy from a drivetrain calibration; two crossing runs pass (native and RMF). Chargers/doors in other worlds, larger fleets remain | implemented |
-| I10 | [R10.3](#r103--swarm-robotics) Swarms | Remaining behaviours, distributed protocols, cooperative coverage, larger aerial groups | partial |
+| I10 | [R10.3](#r103--swarm-robotics) Swarms | Done 2026-11-14: ROS2swarm port of per-member scan-only behaviours, scan-sensed cooperative coverage, ground/air member-loss replanning; dispersion and coverage-with-loss measured; aggregation not yet passing; 3–4 drone flight is validation | implemented |
 | I11 | [R10.5](#r105--underwater-worlds-sensing-slam-and-navigation) / [R10.4](#r104--underwater-robots-and-controllers) Marine | Estimation, 3D mapping, volumetric routes; other backends | partial |
 | I12 | [R10.6](#r106--six--and-eight-legged-robots) / [R10.7](#r107--segmented-and-additional-robot-forms) Multi-leg and forms | Terrain/slip/recovery controllers, estimation, flipper-aware navigation | partial |
 | I13 | [R5.2](#r52--go2-quadruped-locomotion) / [R5.3](#r53--berkeley-humanoid-lite-balance-and-walking) / [R12](#r12--legged-policy-training) Legged | Get-up strategy, terrain curriculum, BHL retraining, G1/Go2W policies, GPU training | partial |
@@ -705,23 +705,31 @@ tier repair awaits its exact-revision published rerun. Details and evidence are 
 
 ### R10.3 — Swarm robotics
 
-- **State:** partial · **Priority:** I10 · **Depends on:** R10.1
+- **State:** implemented, experimental (aggregation and air pending) · **Priority:** I10 · **Depends on:** R10.1
 - **Goal:** formation, rendezvous, dispersion, flocking and cooperative
   coverage for ground robots and drones, with group Stop and member loss.
 - **Have:**
   - Four centralized ground kernels with freshness/separation guards.
   - Two-X500 range-reference formation and operator-loss landing (measured).
   - Formation route Plan/Execute (`aerial_swarm_route.py`, `aerial_swarm_controller.py`).
+- **Done 2026-11-14 (implemented, experimental):**
+  - per-member behaviours from each robot's own scan, ported from ROS2swarm
+    (`swarm_behaviours.py`: dispersion, attraction, aggregation, minimalist
+    flocking, protection layer);
+  - cooperative coverage measured from scan rays (`swarm_coverage.py`);
+  - `loss_policy: replan` for ground swarms, coverage and aerial groups;
+  - lidar mounting yaw in scan bearings (Bumperbot lidar is turned 3.14 rad);
+  - measured: dispersion 0.94 → 3.15 m; coverage 90 % after a real member
+    loss. [Evidence](docs/status/evidence/swarm-distributed-2026-11-14/README.md).
 - **Remaining implementation:**
-  - distributed (per-member) behaviour versions;
-  - cooperative coverage with sensed coverage;
-  - 3–4 drone groups;
-  - member-loss replanning.
+  - aggregation that gathers all members (two of three grouped);
+  - the −inf lidar sector in RGB-D-off sessions (keep RGB-D on).
 - **How to do it:** compare with ROS2swarm behaviours (see the
   [extension guide](docs/NEXT_EXTENSION_GUIDE.md)). Keep per-FCU IDs, ports,
   leases and frames. Settle on FCU time; watchdogs use wall time.
 - **Done when:** measured relative motion and member-loss outcomes for each
-  behaviour on ground and air.
+  behaviour on ground and air. *Ground dispersion and coverage-with-loss
+  measured; attraction, flocking, aggregation and air pending.*
 
 ### R10.4 — Underwater robots and controllers
 

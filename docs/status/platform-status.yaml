@@ -1650,19 +1650,22 @@ tasks:
         - docs/status/workflows-2026-10-27.md
         - docs/status/evidence/native-workflows-2026-10-27/README.md
         - docs/status/native-workflows-2026-10-27.md
+        - docs/status/evidence/swarm-distributed-2026-11-14/README.md
         implementation_state: Native multi-FCU controls, automatic formation/operator-loss workloads, bytewise
           FCU parameters, explicit noisy range kit/EKF selection, native truth clocks and absolute independent
-          formation observations.
-        owner: codex
+          formation observations. 2026-11-14 (Claude) ROS2swarm port of per-member scan-only behaviours
+          (dispersion, attraction, aggregation, minimalist flocking, protection layer), scan-sensed cooperative
+          coverage, loss_policy replan for ground swarms, coverage and aerial groups, lidar mounting yaw in scan bearings.
+        owner: claude
         previous_owner: cline-agent
         scope_paths:
         - src/robot_lab_adapter/robot_lab_adapter/aerial_swarm_model.py
         - src/robot_lab_adapter/robot_lab_adapter/aerial_swarm_controller.py
         - src/robot_lab_adapter/robot_lab_adapter/aerial_swarm_route.py
         - src/robot_lab_gui/robot_lab_gui/aerial_swarm_tab.py
-        state: partial
+        state: implemented
         title: Ground and aerial swarm control
-        validation_state: "Two actual X500s on nav_empty with range reference pass physical formation/settling and operator-loss landing/disarm; contact/member-loss, other references/maps and larger groups remain open. Continuation 2026-10-09: both FCU takeoff corridor checks ACCEPTED; check_position air1 [-0.5,-0.5,0.22726], air2 [-3.5,-0.5,0.226494]; EKF2 range-reference params (EKF2_HGT_REF=2, EKF2_RNG_CTRL=2) applied. Formation flight MEASURED (session swarm-ja5__fhx): formation_rms_m=0.7820 m (range 0.7820-2.1590), altitude_rms_m=0.4084 m (range 0.3749-0.4683), 362 samples over 18 s; air1 converging (~0.66->0.15 m), air2 not converging (~0.95-1.10 m). Second formation mission MEASURED (session swarm-1iv3xfqo): formation_rms_m=1.1664 m (range 1.1664-2.2434), altitude_rms_m=0.8780 m (range 0.6032-0.8780), 362 samples over 18 s. Altitude trim applied. Land command accepted but FCUs remain airborne (landed_state: 2 = IN_AIR). air2 non-convergence cause: PX4 accelerometer timeout (Accel #0 fail: TIMEOUT!) in air2-px4.log — FCU telemetry stale, ready() returns False, velocity commands ignored. Environment/simulator issue, not code. Remaining: air2 environment issue, landing confirmation, larger groups, other maps/behaviors, member-loss/contact."
+        validation_state: "Two actual X500s on nav_empty with range reference pass physical formation/settling and operator-loss landing/disarm; contact/member-loss, other references/maps and larger groups remain open. Continuation 2026-10-09: both FCU takeoff corridor checks ACCEPTED; check_position air1 [-0.5,-0.5,0.22726], air2 [-3.5,-0.5,0.226494]; EKF2 range-reference params (EKF2_HGT_REF=2, EKF2_RNG_CTRL=2) applied. Formation flight MEASURED (session swarm-ja5__fhx): formation_rms_m=0.7820 m (range 0.7820-2.1590), altitude_rms_m=0.4084 m (range 0.3749-0.4683), 362 samples over 18 s; air1 converging (~0.66->0.15 m), air2 not converging (~0.95-1.10 m). Second formation mission MEASURED (session swarm-1iv3xfqo): formation_rms_m=1.1664 m (range 1.1664-2.2434), altitude_rms_m=0.8780 m (range 0.6032-0.8780), 362 samples over 18 s. Altitude trim applied. Land command accepted but FCUs remain airborne (landed_state: 2 = IN_AIR). air2 non-convergence cause: PX4 accelerometer timeout (Accel #0 fail: TIMEOUT!) in air2-px4.log — FCU telemetry stale, ready() returns False, velocity commands ignored. Environment/simulator issue, not code. Remaining: air2 environment issue, landing confirmation, larger groups, other maps/behaviors, member-loss/contact. On 2026-11-14 three ground members in nav_empty: distributed dispersion 0.94 -> 3.15 m mean spacing in 35 s; sensed coverage reached 90.1 % of 6 x 6 m after an actual AMCL loss at 40 s (replanned); aggregation grouped two of three but did not pass; RGB-D-off sessions show a 90-degree -inf Bumperbot lidar sector. Attraction, flocking and aerial loss replanning unit-tested only; no 3-4 drone flight."
         qualification_review: '2026-10-27 documentation review: retain the implemented code, tests and named
           mission certificates. Full declared roadmap acceptance is still open; test counts, metadata and scene
           loads do not qualify remaining robot/map/backend missions. See docs/REMAINING_WORK_GUIDE.md.'

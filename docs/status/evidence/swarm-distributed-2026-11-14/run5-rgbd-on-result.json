@@ -1,0 +1,150 @@
+{
+  "phases": {
+    "local_dispersion": {
+      "samples": 130,
+      "mean_start_m": 0.9411503937753247,
+      "mean_end_m": 3.146241253064637,
+      "min_pair_m": 0.8698543231894317,
+      "end_pairs": {
+        "alpha-beta": 3.5529883977187606,
+        "alpha-gamma": 2.4531504485492843,
+        "beta-gamma": 3.4325849129258654
+      },
+      "duration_s": 34.785815717012156
+    },
+    "local_aggregation": {
+      "samples": 261,
+      "mean_start_m": 3.2164315485637704,
+      "mean_end_m": 7.203746351849528,
+      "min_pair_m": 0.7700294851529492,
+      "end_pairs": {
+        "alpha-beta": 9.928021997248733,
+        "alpha-gamma": 8.59455790223892,
+        "beta-gamma": 3.088659156060932
+      },
+      "duration_s": 69.94911083002808
+    },
+    "sensed_coverage": {
+      "samples": 230,
+      "mean_start_m": 7.124138439146287,
+      "mean_end_m": 2.4442287243728313,
+      "min_pair_m": 1.4362346942096105,
+      "end_pairs": {
+        "alpha-beta": 2.9203686464825322,
+        "alpha-gamma": 1.6903363817536916,
+        "beta-gamma": 2.721981144882271
+      },
+      "duration_s": 61.734091338992584,
+      "final": {
+        "area": {
+          "x": 0.0,
+          "y": 0.0,
+          "width": 6.0,
+          "height": 6.0
+        },
+        "fraction": 0.9008,
+        "target_cells": 14400,
+        "seen_cells": 12972,
+        "sensor_range_m": 2.0,
+        "source": "Free cells crossed by each member's own scan rays from its estimated pose",
+        "targets": [
+          "alpha",
+          "beta"
+        ],
+        "goal_fraction": 0.9,
+        "loss_policy": "replan",
+        "goals": {
+          "gamma": [
+            -2.5249999999999995,
+            1.0250000000000004
+          ],
+          "beta": [
+            -1.8249999999999993,
+            2.5250000000000004
+          ],
+          "alpha": null
+        },
+        "skipped": 4,
+        "finished": "Sensed coverage goal reached"
+      },
+      "loss_at_s": 40.0246946309926,
+      "coverage_at_loss": 0.6533,
+      "elapsed_s": 61.819619812013116,
+      "tasks": {
+        "succeeded": 8,
+        "failed": 4,
+        "canceled": 2
+      }
+    }
+  },
+  "ready_s": 7.296427508001216,
+  "killed_amcl_pid": 339405,
+  "events": [
+    {
+      "event": "sensed_coverage_started",
+      "wall": 1794617752.6408668,
+      "monotonic": 311631.313120612,
+      "sim_time": 112.14800000000001,
+      "targets": [
+        "alpha",
+        "beta",
+        "gamma"
+      ],
+      "area": {
+        "x": 0.0,
+        "y": 0.0,
+        "width": 6.0,
+        "height": 6.0
+      },
+      "goal_fraction": 0.9,
+      "loss_policy": "replan"
+    },
+    {
+      "event": "member_lost_replanned",
+      "wall": 1794617795.0239787,
+      "monotonic": 311673.69623176,
+      "sim_time": 150.88,
+      "member": "gamma",
+      "remaining": [
+        "alpha",
+        "beta"
+      ],
+      "reassigned": {},
+      "last_pose": {
+        "x": 0.7434186105162424,
+        "y": -0.8705838378475128
+      }
+    },
+    {
+      "event": "sensed_coverage_finished",
+      "wall": 1794617814.4356472,
+      "monotonic": 311693.107900068,
+      "sim_time": 169.036,
+      "reason": "Sensed coverage goal reached",
+      "area": {
+        "x": 0.0,
+        "y": 0.0,
+        "width": 6.0,
+        "height": 6.0
+      },
+      "fraction": 0.9008,
+      "target_cells": 14400,
+      "seen_cells": 12972,
+      "sensor_range_m": 2.0,
+      "source": "Free cells crossed by each member's own scan rays from its estimated pose",
+      "elapsed_s": 61.81,
+      "lost": []
+    }
+  ],
+  "contacts": [],
+  "session_directory": "/workspace/molar/robot_lab_runtime/fleet_sessions/session-4jasmovo",
+  "checks": {
+    "dispersion_spread": 2.2050908592893124,
+    "aggregation_change": 3.9873148032857575,
+    "min_separation_m": 0.7700294851529492,
+    "loss_replanned": true,
+    "coverage_finished": "Sensed coverage goal reached",
+    "coverage_fraction": 0.9008,
+    "contacts": 0
+  }
+}

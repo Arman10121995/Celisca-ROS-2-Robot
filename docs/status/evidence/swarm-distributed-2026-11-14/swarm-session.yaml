@@ -1,0 +1,13 @@
+schema_version: 1
+map: nav_empty
+rgbd: false
+members:
+- id: alpha
+  model: bumperbot
+  spawn: {x: 0.0, y: 0.0, z: 0.1, yaw: 0.0}
+- id: beta
+  model: bumperbot
+  spawn: {x: 0.9, y: 0.0, z: 0.1, yaw: 1.5708}
+- id: gamma
+  model: labbot
+  spawn: {x: 0.45, y: 0.85, z: 0.1, yaw: 3.14159}

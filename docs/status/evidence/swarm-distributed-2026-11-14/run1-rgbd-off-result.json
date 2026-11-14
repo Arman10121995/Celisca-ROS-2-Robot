@@ -1,0 +1,167 @@
+{
+  "phases": {
+    "local_dispersion": {
+      "samples": 126,
+      "mean_start_m": 0.9411503937753247,
+      "mean_end_m": 1.944879277503386,
+      "min_pair_m": 0.7816366113265826,
+      "end_pairs": {
+        "alpha-beta": 0.7816366113265826,
+        "alpha-gamma": 2.4163960704236866,
+        "beta-gamma": 2.6366051507598893
+      },
+      "duration_s": 34.84739194001304
+    },
+    "local_aggregation": {
+      "samples": 252,
+      "mean_start_m": 1.915395219075289,
+      "mean_end_m": 3.8725570752951195,
+      "min_pair_m": 0.6179861469374458,
+      "end_pairs": {
+        "alpha-beta": 0.7816366113265826,
+        "alpha-gamma": 5.7668540391915215,
+        "beta-gamma": 5.069180575367254
+      },
+      "duration_s": 69.74761239998043
+    },
+    "sensed_coverage": {
+      "samples": 1671,
+      "mean_start_m": 3.8725570752951195,
+      "mean_end_m": 2.119043018787985,
+      "min_pair_m": 0.7816366113265826,
+      "end_pairs": {
+        "alpha-beta": 0.7816366113265826,
+        "alpha-gamma": 2.7074685044976716,
+        "beta-gamma": 2.8680239405397008
+      },
+      "duration_s": 459.93846291000955,
+      "final": {
+        "area": {
+          "x": 0.0,
+          "y": 0.0,
+          "width": 6.0,
+          "height": 6.0
+        },
+        "fraction": 0.5554,
+        "target_cells": 14400,
+        "seen_cells": 7998,
+        "sensor_range_m": 2.0,
+        "source": "Free cells crossed by each member's own scan rays from its estimated pose",
+        "targets": [
+          "alpha",
+          "beta"
+        ],
+        "goal_fraction": 0.9,
+        "loss_policy": "replan",
+        "goals": {
+          "alpha": [
+            -0.375,
+            -0.8249999999999993
+          ],
+          "beta": [
+            1.325000000000001,
+            -0.9749999999999996
+          ],
+          "gamma": [
+            -1.7749999999999995,
+            -1.375
+          ]
+        },
+        "skipped": 2,
+        "finished": null
+      },
+      "loss_at_s": 40.06377741298638,
+      "coverage_at_loss": 0.5465,
+      "elapsed_s": 460.09045716095716,
+      "tasks": {
+        "succeeded": 2,
+        "failed": 2,
+        "canceled": 1
+      }
+    }
+  },
+  "ready_s": 7.7595013859681785,
+  "killed_amcl_pid": 320899,
+  "events": [
+    {
+      "event": "sensed_coverage_started",
+      "wall": 1794616252.466439,
+      "monotonic": 310131.138692599,
+      "sim_time": 118.56200000000001,
+      "targets": [
+        "alpha",
+        "beta",
+        "gamma"
+      ],
+      "area": {
+        "x": 0.0,
+        "y": 0.0,
+        "width": 6.0,
+        "height": 6.0
+      },
+      "goal_fraction": 0.9,
+      "loss_policy": "replan"
+    },
+    {
+      "event": "traffic_yield_planned",
+      "wall": 1794616254.7401602,
+      "monotonic": 310133.41241289,
+      "sim_time": 120.816,
+      "member": "beta",
+      "peer": "alpha",
+      "suspended_task": "c03117633a49447e8be10266c6c8ea91",
+      "target": {
+        "x": 1.5228602360737031,
+        "y": 0.2140922733766884,
+        "yaw": 0.13537768142570875,
+        "timeout": 45.0,
+        "not_before": 0.0
+      },
+      "attempt": 1
+    },
+    {
+      "event": "traffic_yield_planned",
+      "wall": 1794616254.7541306,
+      "monotonic": 310133.426383297,
+      "sim_time": 120.816,
+      "member": "alpha",
+      "peer": "beta",
+      "suspended_task": "589bd95206514c53ba769e5bd83ea5e5",
+      "target": {
+        "x": -0.542516305097021,
+        "y": -0.06723435284838104,
+        "yaw": -3.0062149721640843,
+        "timeout": 45.0,
+        "not_before": 0.0
+      },
+      "attempt": 1
+    },
+    {
+      "event": "member_lost_replanned",
+      "wall": 1794616295.0967653,
+      "monotonic": 310173.769017969,
+      "sim_time": 160.354,
+      "member": "gamma",
+      "remaining": [
+        "alpha",
+        "beta"
+      ],
+      "reassigned": {},
+      "last_pose": {
+        "x": 0.3730662049083347,
+        "y": -2.7461217684106143
+      }
+    }
+  ],
+  "contacts": [],
+  "session_directory": "/workspace/molar/robot_lab_runtime/fleet_sessions/session-fopi5m8d",
+  "checks": {
+    "dispersion_spread": 1.0037288837280613,
+    "aggregation_change": 1.9571618562198305,
+    "min_separation_m": 0.6179861469374458,
+    "loss_replanned": true,
+    "coverage_finished": null,
+    "coverage_fraction": 0.5554,
+    "contacts": 0
+  }
+}

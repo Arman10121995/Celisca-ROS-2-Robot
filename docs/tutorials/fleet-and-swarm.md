@@ -161,12 +161,60 @@ The initial centralized kernels are:
 | Flocking | Combine separation, centroid cohesion, circular heading alignment and an operator heading bias |
 
 Spacing is 0.6–3 m. Differential bases rotate toward a feasible heading before
-translation; they are never repositioned to a formation. These are labeled
-educational kernels, not the full ROS2swarm implementation, a distributed
-protocol, cooperative coverage or Open-RMF scheduling. Member loss stops the
-controlled group. Leave group keeps the physical robot in the world and stops
-the group; Rejoin requires fresh feedback and starts neutral. Air swarms need
-separate FCU instances/leases and are not enabled by this ground interface.
+translation; they are never repositioned to a formation. These centralized
+kernels use every member's estimated pose. Leave group keeps the physical
+robot in the world and stops the group; Rejoin requires fresh feedback and
+starts neutral. Air swarms need separate FCU instances/leases and are not
+enabled by this ground interface.
+
+### Distributed behaviours
+
+The `local_*` controllers run one behaviour per member, using only that
+member's own laser scan. They are a port of
+[ROS2swarm](https://github.com/ROS2swarm/ROS2swarm) (Apache-2.0) with its
+TurtleBot3 burger parameters:
+
+| Controller | What each robot does from its own scan |
+|---|---|
+| local_dispersion | Potential field away from everything within 3.5 m; drives straight when alone |
+| local_attraction | Field toward far returns; turns in place when alone |
+| local_aggregation | Explore → join a seen robot → stay 2ⁿ × 4.8 + 3.2 s → leave (at most 6.4 s) → explore |
+| local_flocking | Zones: avoid ahead, separate when close, cohere left/right, turn to a robot behind |
+
+A peer is a free-standing object 5–60 cm wide with farther background on
+both sides. After every behaviour, ROS2swarm's protection layer turns a
+robot away from anything inside its radius + 18 cm. The usual separation
+and scan guards still apply.
+
+### Member loss
+
+With **Continue without a lost member (replan)**, a member whose feedback,
+scan or localization goes stale leaves the group instead of stopping it.
+It stays in the world as an obstacle at its last pose (+0.3 m), and its
+remaining lane-coverage goals go to the nearest remaining members. A swarm
+needs two remaining members and coverage needs one; otherwise everything
+stops, as with the default policy. Motion by any member outside the group
+also stops everything. Rejoin brings a member back explicitly.
+
+## Coverage page
+
+**Measure coverage from scans** (the default) counts the free map cells
+crossed by each member's scan rays, up to 2 m, from its estimated pose.
+Idle members get the nearest reachable unseen cells, at least 1.5 m from
+other members' goals. A failed goal is skipped for a minute. The mission
+ends at 95 % (`goal_fraction`), when no reachable unseen cells remain, on
+Stop, or on heartbeat loss. The page shows the measured fraction. Without
+the option, the earlier lane sweep plans waypoints only.
+
+Measured with two Bumperbots and a Labbot in `nav_empty`:
+- distributed dispersion spread a 0.9 m triangle to 3.15 m mean spacing in 35 s;
+- sensed coverage reached 90 % of a 6 × 6 m area in 62 s, although the
+  Labbot's localization was stopped at 40 s and the group replanned;
+- distributed aggregation grouped two of three robots but has not passed.
+
+Sessions with RGB-D off showed a 90° −inf sector on Bumperbot lidars once
+the robots moved, which holds them; keep RGB-D on. See the
+[evidence](../status/evidence/swarm-distributed-2026-11-14/README.md).
 
 ## Source and measurement details
 
