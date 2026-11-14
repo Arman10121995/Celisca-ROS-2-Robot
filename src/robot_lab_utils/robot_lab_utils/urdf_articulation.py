@@ -285,12 +285,15 @@ class ArticulationROS:
         from std_srvs.srv import Trigger
         self.contract = configuration if isinstance(configuration, URDFArticulation) else URDFArticulation(configuration, urdf, model_path)
         self.base_moving = False
+        self.motion_planner = None  # optional backend-owned private collision model
         self.base_limits = base_motion_limits(self.contract.config)   # the contract holds the parsed config
         self.publisher = node.create_publisher(String, '/molar/articulation/state', 10)
         self._string = String
         node.create_subscription(Empty, '/molar/articulation/heartbeat', lambda _: self.contract.heartbeat(), 1)
-        node.create_subscription(String, '/molar/articulation/command', lambda message: self.contract.command(message.data, base_moving=self.base_moving), 1)
+        node.create_subscription(String, '/molar/articulation/command', self.command, 1)
         def stop(_request, response):
+            if self.motion_planner is not None:
+                self.motion_planner.cancel('Stop requested; plan revoked')
             self.contract.stop()
             response.success, response.message = True, 'Holding measured articulation; roller stopped'
             return response
@@ -299,17 +302,47 @@ class ArticulationROS:
 
     @property
     def base_inhibited(self):
-        return self.contract.base_inhibited
+        return self.contract.base_inhibited or bool(self.motion_planner is not None and self.motion_planner.busy)
+
+    def command(self, message):
+        try:
+            request = json.loads(message.data)
+            if not isinstance(request, dict):
+                raise ValueError('Articulation command must be an object')
+            operation = request.get('operation')
+            if operation in ('plan', 'execute_plan'):
+                if self.motion_planner is None:
+                    raise ValueError('Collision planning is unavailable on this backend/profile')
+                self.motion_planner.request(request)
+                return
+            if self.motion_planner is not None:
+                self.motion_planner.cancel('Manual target/hold revoked the plan')
+            if operation == 'cancel_plan':
+                self.contract.stop('Plan canceled; holding measured joints')
+                return
+            self.contract.command(request, base_moving=self.base_moving)
+        except (ValueError, TypeError) as exc:
+            if self.motion_planner is not None:
+                self.motion_planner.cancel(str(exc), 'failed')
+            self.contract.stop(str(exc))
 
     def reset(self):
+        if self.motion_planner is not None:
+            self.motion_planner.cancel('Plant reset; plan revoked')
         self.contract.reset()
 
     def step(self, positions, velocities, dt, base_moving=False):
         self.base_moving = bool(base_moving)
+        if self.motion_planner is not None:
+            self.motion_planner.tick(positions, velocities, dt, base_moving=self.base_moving)
         targets = self.contract.step(positions, velocities, dt, base_moving=self.base_moving)
         now = time.monotonic()
         if now-self.last_publish >= .1:
-            self.publisher.publish(self._string(data=json.dumps(self.contract.state(), allow_nan=False)))
+            state = self.contract.state()
+            if self.motion_planner is not None:
+                state['planning'] = self.motion_planner.state()
+                state['base_inhibited'] = self.base_inhibited
+            self.publisher.publish(self._string(data=json.dumps(state, allow_nan=False)))
             self.last_publish = now
         return targets
 

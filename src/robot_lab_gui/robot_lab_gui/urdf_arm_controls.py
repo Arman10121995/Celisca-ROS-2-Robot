@@ -7,10 +7,14 @@ Ownership, freshness, heartbeat and Stop are the MOLAR page's
 """
 import math
 import os
+import json
+import uuid
+import time
 import tkinter as tk
 from tkinter import ttk
 
 from .molar_controls import BACKENDS, MODES, SCHEMA, MolarControls, finite, validate_identity
+from . import molar_controls
 from .workspace_ui import ScrollPanel
 
 
@@ -81,6 +85,7 @@ class UrdfArmControls(MolarControls):
         self.last_heartbeat = -math.inf
         self.closed = False
         self.transfer = None
+        self.plan_request = ''
         self.joint_names = ()
         self.target_vars, self.apply_buttons, self.jog_buttons, self.scales, self.fields = {}, {}, {}, {}, []
         self.status = tk.StringVar(value='Select a mobile manipulator, a simulator and Run.')
@@ -104,16 +109,30 @@ class UrdfArmControls(MolarControls):
         actions.columnconfigure((0, 1, 2), weight=1)
         self.use_measured_button = ttk.Button(actions, text='Use measured', command=self.use_measured)
         self.use_measured_button.grid(row=0, column=0, sticky='ew', padx=2)
-        self.home_button = ttk.Button(actions, text='Home', command=self.home)
+        self.home_button = ttk.Button(actions, text='Home (direct)', command=self.home)
         self.home_button.grid(row=0, column=1, sticky='ew', padx=2)
         self.stop_button = ttk.Button(actions, text='Stop / hold', command=self.stop, style='Danger.TButton')
         self.stop_button.grid(row=0, column=2, sticky='ew', padx=2)
-        ttk.Label(body, text='Apply, Jog and Home explicitly command motion; editing or dragging sends nothing.\n'
+        planning = ttk.LabelFrame(body, text='Collision-checked joint route', padding=4)
+        planning.grid(row=6, column=0, sticky='ew', pady=5)
+        planning.columnconfigure((0, 1, 2), weight=1)
+        self.plan_button = ttk.Button(planning, text='Plan targets', command=self.plan_targets)
+        self.plan_button.grid(row=0, column=0, sticky='ew', padx=2)
+        self.plan_home_button = ttk.Button(planning, text='Plan Home', command=self.plan_home)
+        self.plan_home_button.grid(row=0, column=1, sticky='ew', padx=2)
+        self.execute_button = ttk.Button(planning, text='Execute plan', command=self.execute_plan)
+        self.execute_button.grid(row=0, column=2, sticky='ew', padx=2)
+        self.plan_feedback = tk.StringVar(value='Planning requires a supported live backend/profile.')
+        ttk.Label(planning, textvariable=self.plan_feedback, wraplength=290, justify='left').grid(
+            row=1, column=0, columnspan=3, sticky='ew', pady=4)
+        ttk.Label(body, text='Apply, Jog and direct Home explicitly command motion; editing or dragging sends nothing.\n'
+                  'Plan targets / Plan Home inspect a private source/world snapshot without moving the robot. '
+                  'Execute is a separate command; edited targets or robot/scene changes require a new plan.\n'
                   'The base will not drive while a joint moves, and a command sent while the base '
                   'moves is refused and holds the arm.\n'
                   'Stop, heartbeat loss, leaving this page or a selection change hold the measured joints.\n'
                   'Experimental simulator controls; masses and limits are declared estimates where '
-                  'the vendor publishes none.', wraplength=295, justify='left').grid(row=6, column=0, sticky='ew', pady=6)
+                  'the vendor publishes none.', wraplength=295, justify='left').grid(row=7, column=0, sticky='ew', pady=6)
         self.traces = [(var, var.trace_add('write', self.selection_changed)) for var in
                        (app.robot_var, app.simulator_var, app.mode_var, app.launch_kind_var, app.map_var)]
         self.bindings = [(widget, widget.bind('<<NotebookTabChanged>>', self.tab_changed, add='+'))
@@ -207,6 +226,73 @@ class UrdfArmControls(MolarControls):
             variable.set(max(low, min(high, channel['measured'])))
             self.scales[name].configure(from_=low, to=high)
 
+    def planning(self):
+        planning = (self.state or {}).get('planning')
+        return planning if isinstance(planning, dict) and planning.get('schema') == 'robot_lab.articulation_plan.v1' else {}
+
+    def planning_enabled(self):
+        return self.ready() and self.planning().get('available') is True
+
+    def current_targets(self):
+        return self.bounded({name: variable.get() for name, variable in self.target_vars.items()})
+
+    def plan_matches(self):
+        state = self.planning()
+        try:
+            targets = self.current_targets()
+            frozen = state.get('targets', {})
+            return bool(self.planning_enabled() and state.get('phase') == 'ready'
+                        and self.plan_request and state.get('request_id') == self.plan_request
+                        and isinstance(state.get('plan_id'), str) and len(state['plan_id']) == 32
+                        and isinstance(frozen, dict) and targets.keys() == frozen.keys()
+                        and all(abs(value-finite(frozen[name])) < 1e-9 for name, value in targets.items()))
+        except (ValueError, TypeError, KeyError, tk.TclError):
+            return False
+
+    def planning_command(self, operation, **payload):
+        if not self.planning_enabled():
+            self.status.set('Wait for the owned source model with collision planning available.')
+            return False
+        request = {key: self.state[key] for key in ('plant_id', 'model_sha256', 'urdf_sha256')}
+        request.update(operation=operation, **payload)
+        self.heartbeat.publish(molar_controls.Empty())
+        self.last_heartbeat = time.monotonic()
+        self.pub.publish(molar_controls.String(data=json.dumps(request, allow_nan=False)))
+        return True
+
+    def plan_targets(self):
+        try:
+            targets = self.current_targets()
+            identity = uuid.uuid4().hex
+            if self.planning_command('plan', request_id=identity, targets=targets):
+                self.plan_request = identity
+                self.status.set('Plan requested; robot holds measured joints. Execute remains separate.')
+                return True
+        except (ValueError, TypeError, KeyError, tk.TclError) as exc:
+            self.status.set(str(exc))
+        return False
+
+    def plan_home(self):
+        if not self.planning_enabled():
+            return False
+        for name, variable in self.target_vars.items():
+            variable.set(float(self.arm().get('home', {}).get(name, 0.)))
+        return self.plan_targets()
+
+    def execute_plan(self):
+        if not self.plan_matches():
+            self.status.set('Plan again after editing targets, moving the robot or expiry.')
+            return False
+        return self.planning_command('execute_plan', plan_id=self.planning()['plan_id'])
+
+    def send(self, targets):
+        self.plan_request = ''
+        return super().send(targets)
+
+    def stop(self, reason='Stop requested; holding measured arm and revoking its plan.'):
+        self.plan_request = ''
+        return super().stop(reason)
+
     def jog(self, name, sign):
         if not self.ready():
             return False
@@ -237,3 +323,10 @@ class UrdfArmControls(MolarControls):
                        self.use_measured_button, self.home_button]:
             widget.state(['!disabled'] if enabled else ['disabled'])
         self.stop_button.state(['!disabled'] if self.state else ['disabled'])
+        planning = self.planning()
+        can_plan = self.planning_enabled() and planning.get('phase') not in ('requested', 'planning', 'executing')
+        for button in (self.plan_button, self.plan_home_button):
+            button.state(['!disabled'] if can_plan else ['disabled'])
+        self.execute_button.state(['!disabled'] if self.plan_matches() else ['disabled'])
+        self.plan_feedback.set((planning.get('phase', '')+': '+planning.get('message', '')).strip(': ')
+                              if planning else 'Collision planning is unavailable on this backend/profile. Direct joint controls remain available.')

@@ -43,6 +43,7 @@ def contracts(root):
             raise ValueError('Unexpected official TIAGo wheel geometry/limits')
     articulation = dict(schema='robot_lab.urdf_articulation.v1', panel='arm',
                         home=dict(HOME), joints={}, couplings={},
+                        planning=dict(schema='robot_lab.articulation_plan.v1', backend='mujoco'),
                         isaac_native_gravity_compensation=True)
     for name in POSITION_JOINTS:
         joint = joints[name]
