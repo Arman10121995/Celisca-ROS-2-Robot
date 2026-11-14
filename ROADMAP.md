@@ -135,7 +135,7 @@ Work top to bottom. Each line links to its task.
 | I5 | [R5.11](#r511--drone-moving-obstacles-and-other-drone-backends) Drone moving obstacles | Done 2026-11-13: Kalman tracks, predicted sweeps, walkway look-both-ways and overflight, evasion, sensor-loss hold/land, EKF heading/height gate; 2 passing flights past walkers (Gazebo); PX4 + MuJoCo plant: takeoff, 5 m route and landing | implemented |
 | I6 | [R5.9](#r59--mobile-manipulators) Mobile manipulation | Stretch recipes, camera-marker point targets, directional/pose reaches, alternate IK/configuration search, interlocks and actual costmap receipts implemented; unmarked perception and further source adapters remain | partial |
 | I7 | [R5.7](#r57--manipulators-and-motion-planning) Arms | Panda box selection, source-finger-aware grasp candidates and bounded automatic pick/place sequence implemented; further geometry, perception, coupled arms and other backends remain | partial |
-| I8 | [R5.8](#r58--robot-hands-and-grippers) Hands | Source-axis UMI lift/hold/lower, relative-pose custody and sustained supported release implemented; physical lift qualification, further torque/tendon sources and backends remain | partial |
+| I8 | [R5.8](#r58--robot-hands-and-grippers) Hands | UMI lift/hold/lower and supported release measured in a source component; normal GUI missions, further torque/tendon sources and backends remain | partial |
 | I9 | [R10.2](#r102--fleet-management-and-open-rmf) Fleet / Open-RMF | Done 2026-11-14: shared-zone reservations (map passages, doors, docks), cycle breaker, recovery drive-out, RMF energy from a drivetrain calibration; two crossing runs pass (native and RMF). Chargers/doors in other worlds, larger fleets remain | implemented |
 | I10 | [R10.3](#r103--swarm-robotics) Swarms | Done 2026-11-14: ROS2swarm port of per-member scan-only behaviours, scan-sensed cooperative coverage, ground/air member-loss replanning; dispersion and coverage-with-loss measured; aggregation not yet passing; 3–4 drone flight is validation | implemented |
 | I11 | [R10.5](#r105--underwater-worlds-sensing-slam-and-navigation) / [R10.4](#r104--underwater-robots-and-controllers) Marine | Done 2026-11-14: MuJoCo ROV plant (ported Fortress water forces; matches Gazebo), damping-based current feedforward (1 cm drift in 0.1 m/s), volumetric and current-aware AUV routes (unit-tested). PyBullet/Isaac marine, AUV sensor-only localization mission remain | implemented |
@@ -436,8 +436,11 @@ parking batch needs its own run. Details and evidence are in the
   uses actual finger-relative translation/rotation; supported release requires
   actual support and low velocity for one simulated second. Original source
   motors/rates/preload remain; Stop/watchdog/contact/clock/obstacle guards
-  interrupt. Focused source/protocol checks pass; a physical UMI lift remains
-  unqualified. [Procedure](docs/tutorials/native-hand-controls.md#source-axis-object-transport).
+  interrupt. Source direction, distal-pad fixture placement, passive-load effort
+  guards and bounded mount gravity support are corrected. One pinned UMI
+  component lifts 49.0 mm, returns to measured support with 1.52 mm seating
+  and releases; 38 hand checks pass. Normal GUI and other family/backend
+  missions remain. [Procedure](docs/tutorials/native-hand-controls.md#source-axis-object-transport).
 - **How to do it:** extend `robot_lab_mujoco/native_hand_control.py` and
   `robot_lab_gui/native_hand_controls.py`. Measure grasp stability from
   contact forces (`test_native_hand_object.py` shows the pattern).

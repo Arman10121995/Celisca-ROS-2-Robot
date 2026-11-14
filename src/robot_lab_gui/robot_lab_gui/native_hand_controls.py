@@ -52,7 +52,7 @@ class NativeHandControls(ttk.Frame):
         ttk.Label(self, text='Editing a pose or limit causes no motion. Apply sends source-bounded '
             'targets. Each guarded finger group stops advancing at a measured threshold; '
             'this does not impose a hard contact-force limit or confirm a grasp. '
-            'UMI has no source tendon force clamp: its effort threshold uses 2 N × fraction. '
+            'UMI has no source tendon force clamp: its effort guard allows 2 N × fraction above source spring/damping load. '
             'Use Open or Release object to open; Stop and heartbeat loss hold measured coordinates.',
             wraplength=305).grid(row=12, column=0, columnspan=2, sticky='w', pady=5)
         self.enable_button = ttk.Button(self, text='Enable hand controls for next Run', command=self.enable)

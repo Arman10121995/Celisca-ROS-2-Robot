@@ -21,6 +21,7 @@ class NativeHandControl(NativeHandLift, NativeArticulationControl):
         self.lift_state=dict(state='idle',reason='No source object transport requested')
         self.release_settled_since=None
         self.grasp_rotation_anchor=None
+        self.gravity_offsets={}
         self.force_hold = None
         self.force_state = dict(state='idle',scope='Requested force feedback; no hard contact-force cap')
         self.contract = contract
@@ -212,7 +213,8 @@ class NativeHandControl(NativeHandLift, NativeArticulationControl):
                 raise ValueError('Force hold wall deadline exceeded')
             contacts=self.object_contacts()
             closure=self.force_hold.update(float(self.data.time),contacts['left_force_n'],contacts['right_force_n'])
-            for channel in self.channels:
+            for slot,channel in enumerate(self.channels):
+                if abs(self.force_direction[slot])<1e-12:continue
                 actuator=channel['index']
                 if not np.isfinite(self.data.actuator_force[actuator]):
                     raise ValueError('Non-finite measured source actuator effort')
@@ -221,7 +223,7 @@ class NativeHandControl(NativeHandLift, NativeArticulationControl):
                     force=self.data.actuator_force[actuator]
                     if force<low*self.force_effort_fraction-1e-6 or force>high*self.force_effort_fraction+1e-6:
                         raise ValueError('Measured source actuator effort exceeds the requested source fraction')
-                elif abs(self.data.actuator_force[actuator])>2.*self.force_effort_fraction:
+                elif abs(self.data.actuator_force[actuator])>self.passive_effort_load(actuator)+2.*self.force_effort_fraction:
                     raise ValueError('Measured actuator effort exceeds the declared unclamped-hand lab threshold')
             for pair,contact in self.external_finger_contacts().items():
                 baseline=self.force_external_baseline.get(pair,dict(force=0.,distance=0.))
@@ -485,18 +487,68 @@ class NativeHandControl(NativeHandLift, NativeArticulationControl):
                     low, high = self.model.actuator_forcerange[index]
                     cap = (high if measured_force >= 0 else -low)*self.guard['effort_fraction']
                 else:
-                    # UMI authors no tendon force clamp. This explicit 2 N
-                    # advancement threshold is not a hard source force limit.
-                    cap = 2.*self.guard['effort_fraction']
+                    # UMI authors no tendon force clamp. Allow the authored
+                    # passive load before the additional 2 N lab threshold.
+                    cap = self.passive_effort_load(index)+2.*self.guard['effort_fraction']
                 if abs(measured_force) >= cap:
                     reason = 'Measured source actuator-effort threshold reached'
             if reason:
                 self.stop_group(group, reason)
 
+    def passive_effort_load(self,actuator):
+        """UMI spring/damping load projected through its authored tendon.
+
+        The additional 2 N advancement threshold applies above this source
+        load; otherwise it stops before the pads can reach any object.
+        """
+        channel=next((c for c in self.channels if c['index']==actuator),None)
+        if self.contract['adapter']!='umi_gripper' or channel is None or channel['name']!='fingers_actuator':return 0.
+        if self.data.actuator_moment.ndim==2:
+            moment=self.data.actuator_moment[actuator]
+        else:
+            moment=np.zeros(self.model.nv)
+            begin=int(self.data.moment_rowadr[actuator]);end=begin+int(self.data.moment_rownnz[actuator])
+            moment[self.data.moment_colind[begin:end]]=self.data.actuator_moment[begin:end]
+        norm=float(moment@moment)
+        if norm<1e-12:return 0.
+        load=float(moment@(self.data.qfrc_bias-self.data.qfrc_passive-self.data.qfrc_gravcomp)/norm)
+        return max(0.,float(np.sign(self.data.actuator_force[actuator]))*load)
+
     def before_step(self):
         self.update_force_hold()
         self.check_guard()
         super().before_step()
+        self.apply_mount_gravity_support()
+
+    def apply_mount_gravity_support(self):
+        """Bounded feedforward through the UMI source's six placement motors.
+
+        Its soft position servos otherwise sag ~0.34 m under the source mass.
+        Finger/tendon controls, original gains, limits and force clamps stay
+        unchanged. A free object's weight is included only under measured
+        unsupported opposing-finger custody, never by welding its pose.
+        """
+        if self.contract['adapter']!='umi_gripper' or self.fault:return
+        slots=[i for i,c in enumerate(self.channels) if c['name'].startswith('gripper_joint_')
+               and c['units'] in ('m','rad')]
+        if len(slots)!=6:raise ValueError('UMI source placement motor contract changed')
+        actuators=self.indices[slots]
+        joints=self.model.actuator_trnid[actuators,0]
+        dofs=self.model.jnt_dofadr[joints]
+        bias=(self.data.qfrc_bias[dofs]-self.data.qfrc_gravcomp[dofs]).copy()
+        if (self.object_body>=0 and self.grasp.get('state')=='holding' and not self.grasp.get('supported')
+                and min(self.grasp.get('left_force_n',0.),self.grasp.get('right_force_n',0.))>=.2*self.grasp.get('contact_limit_n',1.)):
+            jac=np.zeros((3,self.model.nv));angular=np.zeros_like(jac)
+            self.node.mujoco.mj_jac(self.model,self.data,jac,angular,self.data.xpos[self.object_body],min(self.object_sides[0]))
+            weight=-float(self.model.body_subtreemass[self.object_body])*self.model.opt.gravity
+            bias+=jac[:,dofs].T@weight
+        cap=np.array([.4 if self.channels[i]['units']=='m' else .2 for i in slots])
+        offset=np.clip(bias/self.model.actuator_gainprm[actuators,0],-cap,cap)
+        if not np.all(np.isfinite(offset)):
+            self.fault='Non-finite UMI mount gravity support';self.hold(self.fault);return
+        self.data.ctrl[actuators]=np.clip(self.commanded[slots]+offset,
+            self.model.actuator_ctrlrange[actuators,0],self.model.actuator_ctrlrange[actuators,1])
+        self.gravity_offsets={self.channels[i]['name']:float(value) for i,value in zip(slots,offset)}
 
     def after_step(self):
         super().after_step()
@@ -531,7 +583,10 @@ class NativeHandControl(NativeHandLift, NativeArticulationControl):
             guard_scope='Stop advancement at measured thresholds; source hard bounds unchanged; no grasp guarantee',
             object_grasp=self.grasp,force_regulation=self.force_state,object_transport=self.lift_state,
             object_lift_available=self.contract['adapter']=='umi_gripper',
+            mount_gravity_support=self.gravity_offsets,
             object_present=self.object_body >= 0, object_body_id=self.object_body,
             source_effort_limits={c['name']: self.model.actuator_forcerange[c['index']].tolist()
                 if self.model.actuator_forcelimited[c['index']] else None for c in self.channels},
-            qualification='experimental; measured contact hold only, object lift/release and other backend missions pending'))
+            qualification=('experimental; source-axis object workflow implemented; mission qualification is source/backend specific'
+                if self.contract['adapter']=='umi_gripper' else
+                'experimental; measured contact hold only, object lift/release and other backend missions pending')))

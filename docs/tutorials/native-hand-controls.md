@@ -90,7 +90,8 @@ reported separately: N·m for DEX-EE and Robotiq, N for the UMI sliding tendon
 and placement translations. Original force bounds, gains, PID settings,
 transmissions, equality constraints and collision geometry are preserved.
 UMI authors no tendon force clamp: its explicit advancement threshold is
-2 N × effort fraction. Neither that threshold nor any contact guard imposes
+2 N × effort fraction above the source spring/damping load projected through
+its tendon. Neither that threshold nor any contact guard imposes
 a hard contact-force limit; readings may overshoot between simulation steps.
 
 Stop, rejection, reset and 0.8 wall-second operator-heartbeat loss hold
@@ -138,6 +139,22 @@ heartbeat interrupt transport. There is no automatic resumption. A current
 source/backend GUI mission receipt is required before qualifying this workflow;
 protocol checks and the availability of these buttons are separate evidence.
 
+The UMI adapter uses zero for the authored clear opening and positive tendon
+coordinates for closure. The fixture cube is centred between the distal
+orange finger meshes, excluding holder/rail geometry. Its six source placement
+motors receive bounded gravity feedforward through their original position
+controls (maximum offset 0.4 m for translation and 0.2 rad for rotation).
+The free cube's weight contributes only while measured opposing contacts hold
+it without environmental support. No gains, source limits, object pose or
+external generalized-force arrays are changed.
+
+On return, source friction may leave a small gap above the original support.
+The controller can descend at 2 mm/s for at most 3 mm to seek actual support;
+normal contact/force/deadline guards remain. One pinned UMI component run lifted
+49.0 mm, used 1.52 mm seating travel, then confirmed supported release. This
+is separate from normal GUI and additional object/backend qualification.
+[Measured component receipt](../status/evidence/manipulation-2026-11-14/README.md).
+
 Read [the exact diagnostic scope and retained failures](../status/native-hands-2026-10-14.md)
 and [the receipt](../status/native-hands-receipt-2026-10-14.json). Start from
 the existing normal GUI producer on the SSD, not a replacement simulator or
@@ -175,7 +192,7 @@ normal contacts; source PID gains, transmissions and hard actuator limits stay
 unchanged. It regulates the weaker side, with a 10% / at least 0.05 N deadband,
 normalized closure rate at most 0.03/s and gain 0.02/(N·s). These are declared
 lab settings, not calibrated vendor force specifications. The requested effort
-fraction still applies; UMI retains its existing 2 N × fraction lab threshold
+fraction still applies; UMI uses 2 N × fraction above the source passive load
 where no source force clamp exists.
 
 An existing grasp above twice the requested force enters bounded unloading.

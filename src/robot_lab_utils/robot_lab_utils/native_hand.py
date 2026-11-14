@@ -178,7 +178,9 @@ def hand_contract(model, native_source):
             open_value, close_value = 0., 255.
             prefixes = ('right_', 'left_')
         else:
-            open_value, close_value = .05, 0.
+            # Positive source slide coordinates bring the opposing collision
+            # fingers inward; zero is the authored clear opening.
+            open_value, close_value = 0., .05
             prefixes = ('left_finger', 'right_finger')
         lower, upper = hand['limits']
         if not lower <= min(open_value, close_value) <= max(open_value, close_value) <= upper:

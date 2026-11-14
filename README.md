@@ -27,6 +27,11 @@ targets, with missing or stale detections stopping the task.
 [Automatic Panda tasks](docs/tutorials/panda-object-tasks.md) ·
 [Camera targets and limits](docs/tutorials/camera-object-targets.md).
 
+The Hand page also exposes UMI **Lift and hold object** and **Lower to start**.
+One pinned source component now grasps, lifts 49 mm, returns to actual support
+and releases; normal GUI and additional hand/backend missions remain separate.
+[Hand workflow](docs/tutorials/native-hand-controls.md#source-axis-object-transport).
+
 November 14 continuation: the native Panda has **Top / Side / Top + side** grasp
 choices and explicit retreat planning; Stretch pick/place recipes have selectable
 world-axis approaches. The Arm control column now fits its planning panels.

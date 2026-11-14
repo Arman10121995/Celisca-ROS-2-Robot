@@ -1,0 +1,57 @@
+[1.538s] colcon.colcon_ros.prefix_path.ament WARNING The path '/workspace/molar/robot_lab_runtime/perception/current/prefix/opt/ros/humble' in the environment variable AMENT_PREFIX_PATH doesn't contain any 'local_setup.*' files.
+[1.538s] colcon.colcon_ros.prefix_path.ament WARNING The path '/workspace/molar/robot_lab_runtime/rmf/current/prefix/opt/ros/humble' in the environment variable AMENT_PREFIX_PATH doesn't contain any 'local_setup.*' files.
+Starting >>> robot_lab_mujoco
+running egg_info
+writing ../../build/robot_lab_mujoco/robot_lab_mujoco.egg-info/PKG-INFO
+writing dependency_links to ../../build/robot_lab_mujoco/robot_lab_mujoco.egg-info/dependency_links.txt
+writing entry points to ../../build/robot_lab_mujoco/robot_lab_mujoco.egg-info/entry_points.txt
+writing requirements to ../../build/robot_lab_mujoco/robot_lab_mujoco.egg-info/requires.txt
+writing top-level names to ../../build/robot_lab_mujoco/robot_lab_mujoco.egg-info/top_level.txt
+reading manifest file '../../build/robot_lab_mujoco/robot_lab_mujoco.egg-info/SOURCES.txt'
+writing manifest file '../../build/robot_lab_mujoco/robot_lab_mujoco.egg-info/SOURCES.txt'
+running build
+running build_py
+copying python/robot_lab_mujoco/sensor_bridge.py -> /workspace/molar/ros_ws/bumperbot_ws/build/robot_lab_mujoco/build/lib/robot_lab_mujoco
+copying python/robot_lab_mujoco/booster_policy.py -> /workspace/molar/ros_ws/bumperbot_ws/build/robot_lab_mujoco/build/lib/robot_lab_mujoco
+copying python/robot_lab_mujoco/native_object_catalog.py -> /workspace/molar/ros_ws/bumperbot_ws/build/robot_lab_mujoco/build/lib/robot_lab_mujoco
+copying python/robot_lab_mujoco/native_mobile_control.py -> /workspace/molar/ros_ws/bumperbot_ws/build/robot_lab_mujoco/build/lib/robot_lab_mujoco
+copying python/robot_lab_mujoco/native_mobile_tasks.py -> /workspace/molar/ros_ws/bumperbot_ws/build/robot_lab_mujoco/build/lib/robot_lab_mujoco
+copying python/robot_lab_mujoco/octopod_control.py -> /workspace/molar/ros_ws/bumperbot_ws/build/robot_lab_mujoco/build/lib/robot_lab_mujoco
+copying python/robot_lab_mujoco/native_mobile_reach.py -> /workspace/molar/ros_ws/bumperbot_ws/build/robot_lab_mujoco/build/lib/robot_lab_mujoco
+copying python/robot_lab_mujoco/native_mobile_sensors.py -> /workspace/molar/ros_ws/bumperbot_ws/build/robot_lab_mujoco/build/lib/robot_lab_mujoco
+copying python/robot_lab_mujoco/native_asset_display.py -> /workspace/molar/ros_ws/bumperbot_ws/build/robot_lab_mujoco/build/lib/robot_lab_mujoco
+copying python/robot_lab_mujoco/native_arm_control.py -> /workspace/molar/ros_ws/bumperbot_ws/build/robot_lab_mujoco/build/lib/robot_lab_mujoco
+copying python/robot_lab_mujoco/native_hand_lift.py -> /workspace/molar/ros_ws/bumperbot_ws/build/robot_lab_mujoco/build/lib/robot_lab_mujoco
+copying python/robot_lab_mujoco/camera_render.py -> /workspace/molar/ros_ws/bumperbot_ws/build/robot_lab_mujoco/build/lib/robot_lab_mujoco
+copying python/robot_lab_mujoco/joint_pd.py -> /workspace/molar/ros_ws/bumperbot_ws/build/robot_lab_mujoco/build/lib/robot_lab_mujoco
+copying python/robot_lab_mujoco/native_cartesian_servo.py -> /workspace/molar/ros_ws/bumperbot_ws/build/robot_lab_mujoco/build/lib/robot_lab_mujoco
+copying python/robot_lab_mujoco/gait_contacts.py -> /workspace/molar/ros_ws/bumperbot_ws/build/robot_lab_mujoco/build/lib/robot_lab_mujoco
+copying python/robot_lab_mujoco/__init__.py -> /workspace/molar/ros_ws/bumperbot_ws/build/robot_lab_mujoco/build/lib/robot_lab_mujoco
+copying python/robot_lab_mujoco/unitree_policy.py -> /workspace/molar/ros_ws/bumperbot_ws/build/robot_lab_mujoco/build/lib/robot_lab_mujoco
+copying python/robot_lab_mujoco/world_collision.py -> /workspace/molar/ros_ws/bumperbot_ws/build/robot_lab_mujoco/build/lib/robot_lab_mujoco
+copying python/robot_lab_mujoco/joint_effort.py -> /workspace/molar/ros_ws/bumperbot_ws/build/robot_lab_mujoco/build/lib/robot_lab_mujoco
+copying python/robot_lab_mujoco/native_joint_planning.py -> /workspace/molar/ros_ws/bumperbot_ws/build/robot_lab_mujoco/build/lib/robot_lab_mujoco
+copying python/robot_lab_mujoco/mujoco_spawner.py -> /workspace/molar/ros_ws/bumperbot_ws/build/robot_lab_mujoco/build/lib/robot_lab_mujoco
+copying python/robot_lab_mujoco/native_articulation_control.py -> /workspace/molar/ros_ws/bumperbot_ws/build/robot_lab_mujoco/build/lib/robot_lab_mujoco
+copying python/robot_lab_mujoco/native_hand_control.py -> /workspace/molar/ros_ws/bumperbot_ws/build/robot_lab_mujoco/build/lib/robot_lab_mujoco
+copying python/robot_lab_mujoco/native_gripper_control.py -> /workspace/molar/ros_ws/bumperbot_ws/build/robot_lab_mujoco/build/lib/robot_lab_mujoco
+running install
+running install_lib
+copying /workspace/molar/ros_ws/bumperbot_ws/build/robot_lab_mujoco/build/lib/robot_lab_mujoco/native_hand_control.py -> /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_mujoco/lib/python3.10/site-packages/robot_lab_mujoco
+byte-compiling /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_mujoco/lib/python3.10/site-packages/robot_lab_mujoco/native_hand_control.py to native_hand_control.cpython-310.pyc
+running install_data
+copying resource/robot_lab_mujoco -> /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_mujoco/share/ament_index/resource_index/packages
+copying package.xml -> /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_mujoco/share/robot_lab_mujoco
+copying launch/mujoco_simulator.launch.py -> /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_mujoco/share/robot_lab_mujoco/launch
+copying vendor/octopod/LICENSE -> /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_mujoco/share/robot_lab_mujoco/vendor/octopod
+running install_egg_info
+removing '/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_mujoco/lib/python3.10/site-packages/robot_lab_mujoco-0.1.0-py3.10.egg-info' (and everything under it)
+Copying ../../build/robot_lab_mujoco/robot_lab_mujoco.egg-info to /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_mujoco/lib/python3.10/site-packages/robot_lab_mujoco-0.1.0-py3.10.egg-info
+running install_scripts
+Installing mujoco_spawner script to /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_mujoco/lib/robot_lab_mujoco
+Installing native_asset_display script to /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_mujoco/lib/robot_lab_mujoco
+Installing sensor_bridge script to /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_mujoco/lib/robot_lab_mujoco
+writing list of installed files to '/workspace/molar/ros_ws/bumperbot_ws/build/robot_lab_mujoco/install.log'
+Finished <<< robot_lab_mujoco [3.91s]
+
+Summary: 1 package finished [5.32s]

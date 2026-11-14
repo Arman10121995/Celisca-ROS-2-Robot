@@ -107,6 +107,8 @@ def object_geometry(model, data, adapter, contract):
             kind, half = int(model.geom_type[geom]), model.geom_size[geom]
             if kind == int(mj.mjtGeom.mjGEOM_MESH):
                 mesh = int(model.geom_dataid[geom])
+                if adapter=='umi_gripper' and mj.mj_id2name(model,mj.mjtObj.mjOBJ_MESH,mesh) not in ('left_finger','right_finger'):
+                    continue  # Holder/rail meshes are not the distal orange pads.
                 first, count = int(model.mesh_vertadr[mesh]), int(model.mesh_vertnum[mesh])
                 local = model.mesh_vert[first:first+count]
             elif kind == int(mj.mjtGeom.mjGEOM_BOX):

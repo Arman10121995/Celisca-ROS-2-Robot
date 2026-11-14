@@ -14,8 +14,11 @@ unsupported grasp and supported release; preserve frozen placement poses and
 bounded alternate IK seeds. [Receipt](status/evidence/manipulation-2026-11-14/README.md).
 Other object/source/backend missions remain separate; failures stay on SSD.
 UMI source-axis lift/hold/lower and sustained supported release are implemented;
-27 source/protocol checks pass. Physical UMI lift and wider R5.7/R5.8/R5.9
-source/backend missions remain open. [Panda guide](tutorials/panda-object-tasks.md)
+38 hand checks pass. One pinned UMI source component lifts 49.0 mm, seats
+1.52 mm onto support and releases. Preserve corrected positive closure,
+distal-pad fixture geometry, passive-load effort projection, bounded mount
+gravity support and measured unsupported-payload gravity gate. Normal GUI UMI
+and wider R5.7/R5.8/R5.9 source/backend missions remain open. [Panda guide](tutorials/panda-object-tasks.md)
 and [Hand guide](tutorials/native-hand-controls.md#source-axis-object-transport).
 The current ROADMAP implementation queue remains authoritative.
 

@@ -41,5 +41,29 @@ object pose was written or welded to the gripper.
 Hand/source checks establish protocol binding, original actuator preservation,
 interruption, relative-pose custody and actual Robotiq supported release.
 UMI transport protocol tests explicitly declare their observations; they are
-not physical lift measurements. Full source/backend missions remain ROADMAP
-acceptance.
+separate from the following physical component trial. Full source/backend
+missions remain ROADMAP acceptance.
+
+## UMI source continuation
+
+`umi-component.json` records a later pinned UMI source-component trial. Its
+original source motors operate the free 50 g cube: opposing forces about
+0.711 N, **49.0038 mm** measured lift, unsupported holding, a supported return
+with **1.516 mm** seating travel, then sustained supported release with no
+finger contacts. Gains and control bounds were measured unchanged. Raw trace
+hash/path and controller/source hashes are retained in the JSON.
+
+The source adapter now closes in the positive tendon direction, places the
+fixture between distal orange finger meshes and guards additional effort
+above the source's spring/damping load. Six source placement motors receive
+bounded position-control gravity feedforward, including free-cube weight only
+under measured unsupported custody. No gains, force limits, object poses or
+generalized-force arrays are changed. Return seating is limited to 3 mm at
+2 mm/s and still requires actual support.
+
+The initial reversed-closure/gravity-sag, passive-load guard, holder-centred
+fixture and above-support-return failures remain on SSD. Thirty-eight hand
+checks pass, including a real source component grasp/lift/return/release
+regression and original-motor checks. This is not a normal GUI UMI mission,
+another object, source hand, backend or hardware certificate. The earlier
+Panda/camera manifest remains a separate source snapshot.

@@ -1,0 +1,68 @@
+{
+  "scope": "Pinned UMI source component fixture; no normal-GUI mission",
+  "source_sha256": "12b6bbd5e94758164141d54417cad9cde6acdc073311c7c9657dca1ae3fde6ec",
+  "contract_sha256": "be7e41b00229b13d2d55643234a03040c4d0e2f4ced0bd46650a2f8c80bac266",
+  "grasp_before_lift": {
+    "state": "holding",
+    "scope": "Two-sided measured contact with support and no measured slip; stability/lift unassessed",
+    "left_force_n": 0.7116333070345469,
+    "right_force_n": 0.710808689506123,
+    "supported": true,
+    "slip_m": 2.2365575172209892e-07,
+    "contact_limit_n": 1.0,
+    "effort_fraction": 0.8,
+    "angular_slip_rad": 3.6667758204498348e-06,
+    "contact_count": 8,
+    "support_contact_count": 4,
+    "support_force_z_n": 0.4905584360978489,
+    "contact_state": "contact_hold"
+  },
+  "lift": {
+    "state": "holding",
+    "height_m": 0.05,
+    "reason": "Measured unsupported lift and hold",
+    "measured_height_m": 0.04900379157180085,
+    "source_displacement_error_m": 0.0009999991892097188
+  },
+  "lower": {
+    "state": "supported",
+    "height_m": 0.05,
+    "reason": "Measured supported return",
+    "measured_height_m": -1.2489339879545591e-05,
+    "source_displacement_error_m": 0.0014977155344082047,
+    "support_seating_m": 0.0015160000000005093
+  },
+  "final_grasp": {
+    "state": "supported_release",
+    "scope": "No finger contacts; supported and settled for one simulated second",
+    "left_force_n": 0.0,
+    "right_force_n": 0.0,
+    "supported": true,
+    "slip_m": 0.0,
+    "angular_slip_rad": 0.0,
+    "contact_count": 0,
+    "support_contact_count": 4,
+    "support_force_z_n": 0.4904999997159053,
+    "contact_state": "no_contact"
+  },
+  "transport": {
+    "state": "interrupted",
+    "height_m": 0.05,
+    "reason": "Object release requested",
+    "measured_height_m": -1.2489339879545591e-05,
+    "source_displacement_error_m": 0.0014977155344082047,
+    "support_seating_m": 0.0015160000000005093
+  },
+  "source_gains_unchanged": true,
+  "source_bounds_unchanged": true,
+  "trace_samples": 95,
+  "raw_trace": "/workspace/molar/robot_lab_runtime/panda-object-task-20261114/umi-component.json",
+  "raw_sha256": "c58c70c007a328765b4001cc8926ea73b0f528d893ef341b7ea0c08998c7a0bf",
+  "source_files_sha256": {
+    "src/robot_lab_utils/robot_lab_utils/native_hand.py": "1511aedfa53f40d384198d8f8c74c09e502c0ee32efe108242bde7299a45b045",
+    "src/robot_lab_utils/robot_lab_utils/native_hand_object.py": "3136acfa7e4c7967e27c3a39dc451134ce6a4cd1e3147c2ee36c09add9cc0131",
+    "src/robot_lab_mujoco/python/robot_lab_mujoco/native_hand_control.py": "d9f3875d55f960ab143432cd741ddda052b1207af224cbbf5ddfbd94c243cfee",
+    "src/robot_lab_mujoco/python/robot_lab_mujoco/native_hand_lift.py": "918a2eb02ec33cf16618f5e5e54b5325f48cce38d7553df03684f3e519480abc"
+  },
+  "base_revision": "cab77eb8d9d519819872f4d10e8de3911abce8d7"
+}

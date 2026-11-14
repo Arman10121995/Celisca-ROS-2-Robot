@@ -89,6 +89,7 @@ class NativeHandLift:
                 raise ValueError('Object transport lost controller/operator heartbeat')
             if stamp<run['last_sim']:
                 raise ValueError('Object transport simulation reset')
+            delta=max(0.,min(.05,stamp-run['last_sim']))
             if stamp>run['last_sim']:
                 run['last_sim']=stamp;run['last_wall']=now
             if now-run['last_wall']>1.:
@@ -117,6 +118,17 @@ class NativeHandLift:
                                              self.object_body,velocity,0)
             height=float(self.data.xpos[self.object_body,2])-run['start_z']
             lowering=self.lift_state['state'] in ('lowering','supported')
+            # Source friction can stop the free object ~1 mm above its old
+            # support. Seek real support slowly, at most 3 mm below the old
+            # source setpoint; never infer support merely from a height.
+            if self.lift_state['state']=='lowering' and not self.grasp['supported'] and abs(height)<.01:
+                seated=(run['start_control']-run['target'])*axis_z
+                extra=min(max(0.,.003-seated),.002*delta)
+                target=run['target']-extra/axis_z
+                low,high=self.channels[slot]['limits']
+                if not low<=target<=high:raise ValueError('Support seating exceeds source motor bounds')
+                run['target']=target;self.target[slot]=target
+                self.lift_state['support_seating_m']=(run['start_control']-target)*axis_z
             if self.lift_state['state']=='holding' and self.grasp['supported']:
                 raise ValueError('Lifted object regained unexpected environmental support')
             if self.lift_state['state']=='holding' and abs(height-run['height_m'])>.01:

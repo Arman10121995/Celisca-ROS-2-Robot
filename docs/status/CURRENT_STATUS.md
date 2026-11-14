@@ -13,9 +13,11 @@ including unsupported grasp retention, supported release and retreat in each.
 [Measured source-specific receipt](evidence/manipulation-2026-11-14/README.md).
 Other objects/backends remain unqualified. UMI Hand controls
 now request source-axis lift/hold/lower and sustained supported release, with
-finger-relative slip/rotation and Stop/watchdog guards. Twenty-seven focused
-source/protocol checks and two package builds pass; a physical UMI lift remains
-unqualified. [Panda guide](../tutorials/panda-object-tasks.md) ·
+finger-relative slip/rotation and Stop/watchdog guards. Source closure direction,
+distal-pad fixture geometry and bounded mount gravity support are repaired.
+One pinned UMI component lifts 49.0 mm, returns to actual support with 1.52 mm
+seating and releases; 38 hand checks and three package builds pass. Normal GUI
+UMI and wider hand/backend missions remain. [Panda guide](../tutorials/panda-object-tasks.md) ·
 [Hand workflow](../tutorials/native-hand-controls.md#source-axis-object-transport).
 
 November 15 Claude: worlds (I16, R6.6/R6.2), implemented and experimental:
