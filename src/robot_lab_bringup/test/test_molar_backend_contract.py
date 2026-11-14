@@ -301,6 +301,46 @@ def test_isaac_invalid_native_gravity_fails_before_writing_forces(values):
             {'arm': dict(mode='position', effort=10.)}, {}, native_gravity=True)
 
 
+def test_isaac_source_friction_binds_instanced_collider_at_editable_root(monkeypatch):
+    scope = load_nodes([source_function(RUNTIME, '_apply_source_link_friction')], dict(math=math))
+    authored, bindings = {}, []
+    class Prim:
+        def __init__(self, path, proxy=False, parent=None):
+            self.path, self.proxy, self.parent = path, proxy, parent
+        def GetPath(self): return self.path
+        def HasAPI(self, _): return True
+        def IsInstanceProxy(self): return self.proxy
+        def GetParent(self): return self.parent
+    editable = Prim('/World/Geometry/base/caster/collisions')
+    mesh = Prim(editable.path+'/mesh', proxy=True, parent=editable)
+    class Material:
+        @staticmethod
+        def Define(stage, path): return SimpleNamespace(GetPrim=lambda: path)
+    class MaterialAPI:
+        @staticmethod
+        def Apply(prim):
+            return SimpleNamespace(
+                CreateStaticFrictionAttr=lambda value: authored.setdefault(prim, {}).update(static=value),
+                CreateDynamicFrictionAttr=lambda value: authored.setdefault(prim, {}).update(dynamic=value),
+                CreateRestitutionAttr=lambda value: None,
+                CreateFrictionCombineModeAttr=lambda value: authored.setdefault(prim, {}).update(combine=value))
+    module = ModuleType('pxr')
+    module.Usd = SimpleNamespace(TraverseInstanceProxies=lambda: None)
+    module.UsdPhysics = SimpleNamespace(MaterialAPI=MaterialAPI, CollisionAPI=object())
+    module.PhysxSchema = SimpleNamespace(PhysxMaterialAPI=MaterialAPI)
+    module.UsdShade = SimpleNamespace(Material=Material, Tokens=SimpleNamespace(strongerThanDescendants='strong'),
+        MaterialBindingAPI=SimpleNamespace(Apply=lambda prim: SimpleNamespace(
+            Bind=lambda material, strength, purpose: bindings.append((prim, strength, purpose)))))
+    monkeypatch.setitem(sys.modules, 'pxr', module)
+    stage = SimpleNamespace(Traverse=lambda _: [mesh])
+    result = scope['_apply_source_link_friction'](stage, {'caster': .01})
+    assert result == {'caster': 1}
+    assert bindings == [(editable, 'strong', 'physics')]
+    assert authored['/World/PhysicsMaterials/source_caster'] == dict(static=.01, dynamic=.01, combine='min')
+    with pytest.raises(ValueError, match='colliders missing'):
+        scope['_apply_source_link_friction'](stage, {'missing': .01})
+
+
 def test_isaac_watchdog_hold_retains_gravity_budget():
     tree = ast.parse(RUNTIME.read_text())
     holds = [node for node in ast.walk(tree) if isinstance(node, ast.If)

@@ -1097,13 +1097,19 @@ def _apply_source_link_friction(stage, friction):
     for prim in stage.Traverse(Usd.TraverseInstanceProxies()):
         path = str(prim.GetPath())
         if (path.startswith('/World/map') or path.startswith('/World/PhysicsMaterials')
-                or prim.IsInstanceProxy() or not prim.HasAPI(UsdPhysics.CollisionAPI)):
+                or not prim.HasAPI(UsdPhysics.CollisionAPI)):
             continue
         matches = [part for part in path.split('/') if part in materials]
         if not matches:
             continue
         link = matches[-1]
-        UsdShade.MaterialBindingAPI.Apply(prim).Bind(materials[link], UsdShade.Tokens.strongerThanDescendants, 'physics')
+        target = prim
+        while target.IsInstanceProxy():
+            target = target.GetParent()
+        # An imported mesh collider can be an instance proxy. Author the
+        # binding on its editable instance root with descendant precedence;
+        # no prototype edits or disabling mesh instancing are required.
+        UsdShade.MaterialBindingAPI.Apply(target).Bind(materials[link], UsdShade.Tokens.strongerThanDescendants, 'physics')
         bound[link] = bound.get(link, 0)+1
     if set(materials)-set(bound):
         raise ValueError('Source friction colliders missing: '+str(sorted(set(materials)-set(bound))))

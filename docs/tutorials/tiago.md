@@ -68,6 +68,13 @@ calibrated or identical dynamics. In the short MuJoCo drive screen, a
 0.12 m/s request reached about 0.085 m/s; source joint friction/damping and
 the original effort envelope remain intact.
 
+Isaac explicitly binds the source scalar link-friction values to original
+colliders, including fixed caster frames and instanced collision meshes.
+The adapter uses minimum friction combination so the 0.01 caster friction
+can remain low against an ordinary floor; a separately authored floor with
+maximum combination can override this and needs its own contact check. This
+is a declared scalar contact port, not Gazebo solver equivalence.
+
 Isaac's previous fixed-slide gravity estimate cannot support the horizontal
 arm. This profile explicitly opts into native PhysX actual-pose generalized
 gravity compensation each physics step. Feedforward replaces the old slide

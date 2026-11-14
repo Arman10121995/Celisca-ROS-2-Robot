@@ -195,6 +195,7 @@ PHYSICS_TESTS=(
   "$BRG_TEST/test_myagv_pro_source.py"
   "$BRG_TEST/test_tiago_source.py"
   "$BRG_TEST/test_moving_urdf_camera.py"
+  "$BRG_TEST/test_molar_backend_contract.py"
   "$BRG_TEST/test_urdf_inertia.py"
   "$BRG_TEST/test_myagv_rollers.py"
   "src/robot_lab_mujoco/test/test_native_gripper_control.py"

@@ -176,6 +176,19 @@ The limits must lie inside the URDF limits, or the contract refuses to load.
 Size `effort` from the gravity torque at the worst pose plus the payload;
 `myagv_pro630.gravity_efforts` does this with PyBullet inverse dynamics.
 
+For a source that already publishes valid effort limits, preserve those
+limits. The [official TIAGo adapter](../tutorials/tiago.md) demonstrates a
+complete mobile base/arm/gripper model with independent fingers. Its lab
+`isaac_native_gravity_compensation: true` articulation option uses actual
+PhysX joint gravity forces within the original budget, correctly excluding
+the floating base's six root-wrench entries. Its drive option
+`isaac_source_friction: true` carries authored scalar link friction onto USD
+colliders, including fused frames and instanced meshes. These opt-in adapters
+do not change other robots' defaults. A camera on a moving head also needs a
+rigid carrier after fixed-link fusion; a root offset evaluated at zero is
+insufficient. Record source inertia defects/import approximations and keep
+Display control separate from collision-planned manipulation and Nav2.
+
 ## Step 4 · For a provisioned robot: the provisioning script
 
 A provisioning script is ordinary Python that runs once per host. It is
