@@ -117,6 +117,12 @@ TASKS = {
                           rewards=dict(alive=1.0, stand_still=-0.5, hold_position=-0.5, base_height=-20.0,
                                        **_REGULARIZE)),
     # Rewards are staged: uprightness always, height once roughly upright, pose once standing.
+    # get_up plus roll_over shaping (upright_rate): the first get_up policy never
+    # rolled back from poses tilted past 90 degrees (2026-11-14 evidence).
+    'get_up_roll': Task('get_up_roll', 'Get up from a collapsed pose; rolling towards upright is rewarded as it happens.',
+                        reset='fallen', terminate_on_fall=False, only_positive=False, resample_s=1e9,
+                        rewards=dict(upright=2.0, roll_over=2.0, standing_height=2.0, upright_pose=-0.5,
+                                     ang_vel_xy=-0.05, torques=-2e-4, dof_acc=-2.5e-7, action_rate=-0.01)),
     'get_up': Task('get_up', 'Get up from a collapsed pose and stand in the default pose.',
                    reset='fallen', terminate_on_fall=False, only_positive=False, resample_s=1e9,
                    rewards=dict(upright=2.0, standing_height=2.0, upright_pose=-0.5, ang_vel_xy=-0.05,
@@ -320,6 +326,17 @@ def add_foot_sensors(xml):
                       pos='%g %g %g' % tuple(centre), size='%g' % radius)
         ET.SubElement(sensor, 'touch', name=site + '_touch', site=site)
     return ET.tostring(root, encoding='unicode'), len(feet)
+
+
+def upright_rate(ang_vel, gravity):
+    """Rate at which body-frame gravity turns towards -z: -d(g_z)/dt.
+
+    With body angular velocity w, body-frame gravity changes as dg/dt = -w x g,
+    so -dg_z/dt = w_x g_y - w_y g_x.  As a reward it is potential-based
+    shaping of uprightness: its integral is the net change of -g_z, so rolling
+    over pays at once while rocking back and forth earns nothing.
+    """
+    return ang_vel[:, 0] * gravity[:, 1] - ang_vel[:, 1] * gravity[:, 0]
 
 
 def _quat_rotate_inverse(quaternion, vectors):
@@ -675,6 +692,7 @@ class LeggedTrainingEnv:
             alive=np.ones(self.num_envs),
             termination=fallen.astype(np.float64),
             upright=(1. - gravity[:, 2]) / 2. - .5,
+            roll_over=upright_rate(ang_vel, gravity),
             standing_height=np.exp(-((height - self.stand_height) / (.25 * self.stand_height)) ** 2) * (gravity[:, 2] < -.7),
             upright_pose=np.sum(np.abs(dof_pos - c.default_dof_pos)[:, ~self.wheels], axis=1) * (gravity[:, 2] < -.9))
         self.last_dof_vel = dof_vel

@@ -68,7 +68,7 @@ def test_trainable_robots_and_their_contracts():
             assert contract.num_dofs == 22 and not list(contract.wheel_indices)
         else:
             assert contract.num_dofs == 12 and not list(contract.wheel_indices)
-    assert set(TASKS) == {'walk', 'wheeled_walk', 'turn_in_place', 'stand', 'push_recovery', 'get_up'}
+    assert set(TASKS) == {'walk', 'wheeled_walk', 'turn_in_place', 'stand', 'push_recovery', 'get_up', 'get_up_roll'}
     for task in TASKS.values():
         if task.terminate_on_fall:   # get_up starts fallen and is rewarded for rising instead
             assert task.rewards['termination'] < 0 and task.description and task.only_positive
@@ -373,3 +373,17 @@ def test_actuation_delay_holds_the_previous_targets_for_its_substeps():
     np.testing.assert_allclose(control[1, :2], np.tile(c.default_dof_pos, (2, 1)))
     np.testing.assert_allclose(control[1, 2:], np.tile(new, (c.decimation - 2, 1)))
     np.testing.assert_allclose(env.last_targets, np.tile(new, (2, 1)))
+
+
+def test_upright_rate_is_minus_the_rate_of_body_gravity_z():
+    from scipy.spatial.transform import Rotation
+    from robot_lab_adapter.legged_training import upright_rate
+    rng = np.random.default_rng(4)
+    for _ in range(20):
+        rotation = Rotation.from_quat(rng.normal(size=4))
+        omega = rng.normal(size=3)                       # body-frame angular velocity
+        gravity = rotation.inv().apply([0., 0., -1.])
+        dt = 1e-6
+        later = (rotation * Rotation.from_rotvec(omega * dt)).inv().apply([0., 0., -1.])
+        rate = upright_rate(omega[None], gravity[None])[0]
+        assert rate == pytest.approx(-(later[2] - gravity[2]) / dt, rel=1e-3, abs=1e-6)
