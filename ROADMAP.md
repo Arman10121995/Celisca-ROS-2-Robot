@@ -140,7 +140,7 @@ Work top to bottom. Each line links to its task.
 | I10 | [R10.3](#r103--swarm-robotics) Swarms | Done 2026-11-14: ROS2swarm port of per-member scan-only behaviours, scan-sensed cooperative coverage, ground/air member-loss replanning; dispersion and coverage-with-loss measured; aggregation not yet passing; 3–4 drone flight is validation | implemented |
 | I11 | [R10.5](#r105--underwater-worlds-sensing-slam-and-navigation) / [R10.4](#r104--underwater-robots-and-controllers) Marine | Done 2026-11-14: MuJoCo ROV plant (ported Fortress water forces; matches Gazebo), damping-based current feedforward (1 cm drift in 0.1 m/s), volumetric and current-aware AUV routes (unit-tested). PyBullet/Isaac marine, AUV sensor-only localization mission remain | implemented |
 | I12 | [R10.6](#r106--six--and-eight-legged-robots) / [R10.7](#r107--segmented-and-additional-robot-forms) Multi-leg and forms | Done 2026-11-14: depth/IMU flipper policy (sequences a step, but the 4 Nm flippers cannot climb 0.18 m: measured), bounded gait slip/support recovery (unit-tested). Stronger flippers, other backends, per-model terrain missions remain | implemented |
-| I13 | [R5.2](#r52--go2-quadruped-locomotion) / [R5.3](#r53--berkeley-humanoid-lite-balance-and-walking) / [R12](#r12--legged-policy-training) Legged | 2026-11-14: `get_up` task and stairs curriculum implemented; first Go2 get-up policy 1/10 (not passed); BHL contract/export, G1/Go2W policies, GPU training remain | partial |
+| I13 | [R5.2](#r52--go2-quadruped-locomotion) / [R5.3](#r53--berkeley-humanoid-lite-balance-and-walking) / [R12](#r12--legged-policy-training) Legged | 2026-11-15: Go2W `wheeled_walk` policy strafes (MuJoCo 0.116, Isaac 0.271 m/s); BHL contract/export/warm start implemented, four runs not passed; `get_up_roll` shaping implemented, untrained. Go2 get-up (1/10), G1, GPU training remain | partial |
 | I14 | [R5.5](#r55--ackermann-rear-steer-and-anti-ackermann-cars) Cars | 2026-11-15: car course 13/13 on four backends (lookahead 1.25 × turning radius, forward escape when back-up is blocked); park-at-heading runtime and Drive-panel controls | implemented |
 | I15 | [R3.6](#r36--external-robot-assets-in-normal-launch) Assets | 2026-11-15: vendor policies for Booster T1 and Unitree G1/H1/H1_2 controllable (display-only 77 → 73), controllable siblings named, per-model license/mesh/texture audit (114/163 ok). 47 legged need training, 19 URDFs ship no control interface | partial |
 | I16 | [R6.5](#r65--world-to-occupancy-generation) / [R6.6](#r66--external-world-library) / [R6.2](#r62--dynamic-and-sensor-disturbance-cases) Worlds | 2026-11-15: fixture review of all 100 Gazebo examples, Fuel licences (80 models clear), 16 more worlds installed with grids, actors with real collision (`actor_collisions:=true`); earlier: free-region labelling, reviewed grid registration, sensor-fault relay on every backend. Upper floors remain | partial |
@@ -303,6 +303,13 @@ parking batch needs its own run. Details and evidence are in the
   2. Add a BHL robot spec to `legged_training.py`, built from the bridge's own MJCF import.
   3. Train and export, then check with the existing GUI drive path
      (`/key_vel` → twist_mux → policy) and `analyze_turn_gait.py`.
+- **2026-11-15 (implemented, experimental; not passed):** the BHL trainer contract,
+  BHL-order export with `bhl_policy_dir:=`, the upstream `humanoid_walk` rewards, a warm start
+  from the vendored actor and `scripts/bhl_policy_screen.py`. Four CPU runs: from scratch, the
+  policy stands but never steps (r1 and r2). Warm-started from the vendored actor, it degrades at
+  the first actor updates (r3 and r4); the vendor policy lasts only 4–6 s per episode under
+  random commands in the training environment.
+  [Receipt](docs/status/evidence/r53-bhl-training-2026-11-15/README.md).
 - **Done when:** a held ±0.3 rad/s turn and a sustained walk track their
   commands in MuJoCo, with no stall.
 - **Validation later:** Gazebo/Isaac transfer; terrain (V4).
@@ -1081,8 +1088,9 @@ parking batch needs its own run. Details and evidence are in the
     air-time reward). `go2w_walk_r2` strafes at 0.116 m/s in MuJoCo and 0.271 m/s in Isaac, and
     reverses in MuJoCo (r1: 0.006 m/s strafe, no reverse). Isaac reverse is weak (−0.077 m/s).
     [Receipt](docs/status/evidence/r12-go2w-strafe-2026-11-15/README.md);
-  - Berkeley Humanoid Lite: trainer template from the vendored upstream contract, BHL-order ONNX
-    export and `bhl_policy_dir:=` (implemented 2026-11-15; first training run in progress, see R5.3);
+  - Berkeley Humanoid Lite: trainer template, BHL-order export, `humanoid_walk` rewards and warm
+    start implemented 2026-11-15; four runs not passed (see R5.3);
+  - Go2 get-up: `get_up_roll` (potential-based roll-over shaping) implemented, not trained yet;
   - GPU training (CPU-only on Orin; training possible but slower).
 - **How to do it:** `robot_lab_adapter/legged_training.py`, `ppo.py` and `legged_train.py`.
   Add robots by their provisioned policy contract; train in MuJoCo; check

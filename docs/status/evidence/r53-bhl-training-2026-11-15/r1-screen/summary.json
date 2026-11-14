@@ -1,0 +1,21 @@
+{
+ "policy_dir": "/workspace/molar/robot_lab_runtime/training/bhl_walk_r1/policy/bhl",
+ "start_t": 3.0,
+ "stop_t": 13.0,
+ "cases": {
+  "walk": {
+   "command": [
+    0.25,
+    0.0
+   ],
+   "forward_m": 0.176,
+   "yaw_change_rad": 0.361,
+   "yaw_rate_rad_s": 0.036,
+   "late_yaw_rate_rad_s": 0.09,
+   "peak_tilt_rad": 0.399,
+   "end_tilt_rad": 0.357,
+   "upright": true,
+   "mux_messages": 759
+  }
+ }
+}

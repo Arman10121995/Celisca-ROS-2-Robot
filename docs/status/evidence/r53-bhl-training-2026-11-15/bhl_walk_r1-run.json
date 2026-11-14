@@ -1,0 +1,30 @@
+{
+ "robot": "berkeley_humanoid_lite_sim",
+ "task": "walk",
+ "envs": 512,
+ "steps": 24,
+ "iterations": 1500,
+ "learning_rate": 0.001,
+ "seed": 1,
+ "episode_s": 20.0,
+ "randomize": false,
+ "terrain": "flat",
+ "roughness": 0.03,
+ "obs_noise": 0.0,
+ "latency_ms": 8.0,
+ "obs_dim": 75,
+ "act_dim": 22,
+ "hidden": [
+  512,
+  256,
+  128
+ ],
+ "name": "bhl_walk_r1",
+ "revision": "2bee8c4d",
+ "template": "/workspace/molar/robot_lab_runtime/tmp/robot_lab_bhl_b7eae066e705/bhl_policy_humanoid",
+ "policy_period_s": 0.04,
+ "stand_height_m": 0.6357682320852167,
+ "feet": 2,
+ "started": "2026-11-14T19:57:45",
+ "pid": 1533326
+}
