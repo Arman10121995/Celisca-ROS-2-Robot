@@ -65,6 +65,8 @@ TRAINABLE['berkeley_humanoid_lite_sim'] = 'bhl_policy_humanoid'
 # Leaf bodies with these names are the feet (the Go2W wheels, the G1 ankle
 # roll links); without any, the leaf bodies with a collision sphere are.
 FOOT_NAME = re.compile(r'foot$|ankle', re.IGNORECASE)
+DEVIATION_JOINT = re.compile(r'hip_yaw|hip_roll|ankle_roll|shoulder|elbow')
+BIPED_AIR_TIME_S = 0.5
 
 OBSERVATIONS = ['ang_vel', 'gravity_vec', 'commands', 'dof_pos', 'dof_vel', 'actions']
 
@@ -105,6 +107,14 @@ TASKS = {
                          lin_vel_x=(-0.6, 1.0), lin_vel_y=(-0.4, 0.4), ang_vel_z=(-1.0, 1.0),
                          rewards=dict(tracking_lin_vel=3.0, tracking_ang_vel=1.5, stand_still_without_cmd=-2.0,
                                       **dict(_REGULARIZE, torques=-2.5e-5))),
+    # Upstream BHL velocity task (HybridRobotics/berkeley-humanoid-lite,
+    # tasks/locomotion/velocity/config/humanoid/env_cfg.py RewardsCfg/CommandsCfg).
+    'humanoid_walk': Task('humanoid_walk', 'Biped velocity tracking with single-stance stepping (BHL upstream weights).',
+                          lin_vel_x=(-1.0, 1.0), lin_vel_y=(-0.5, 0.5), ang_vel_z=(-1.5, 1.5),
+                          rewards=dict(tracking_lin_vel=2.0, tracking_ang_vel=1.0, termination=-10.0,
+                                       lin_vel_z=-0.1, ang_vel_xy=-0.05, orientation=-1.0, action_rate=-0.001,
+                                       torques=-2e-5, dof_acc=-1e-7, feet_air_time_biped=2.0, feet_slide=-0.1,
+                                       joint_deviation=-1.0)),
     'turn_in_place': Task('turn_in_place', 'Turn on the spot at the commanded yaw rate.',
                           ang_vel_z=(-1.0, 1.0), min_ang_vel_z=0.3,
                           rewards=dict(tracking_ang_vel=1.5, hold_position=-1.0, feet_air_time=0.5,
@@ -325,6 +335,7 @@ def add_foot_sensors(xml):
         ET.SubElement(bodies[name], 'site', name=site, type='sphere',
                       pos='%g %g %g' % tuple(centre), size='%g' % radius)
         ET.SubElement(sensor, 'touch', name=site + '_touch', site=site)
+        ET.SubElement(sensor, 'velocimeter', name=site + '_velocity', site=site)
     return ET.tostring(root, encoding='unicode'), len(feet)
 
 
@@ -417,6 +428,13 @@ class LeggedTrainingEnv:
         self.stand_height = self.spawn_height + float(self.height_offset[2])
         self.sensor_touch = np.array([self.model.sensor_adr[mujoco.mj_name2id(
             self.model, mujoco.mjtObj.mjOBJ_SENSOR, 'training_foot_%d_touch' % i)] for i in range(self.num_feet)])
+        self.sensor_foot_velocity = np.array([self.model.sensor_adr[mujoco.mj_name2id(
+            self.model, mujoco.mjtObj.mjOBJ_SENSOR, 'training_foot_%d_velocity' % i)] + np.arange(3)
+            for i in range(self.num_feet)]).reshape(self.num_feet, 3)
+        # Joints whose deviation from the default pose humanoid_walk penalises
+        # (upstream BHL joint_deviation_* terms: hip yaw/roll, ankle roll, arms).
+        self.deviation_joints = np.array([bool(DEVIATION_JOINT.search(name))
+                                          for name in c.training_joint_names()])
         self.obs_dim = 3 + 3 + 3 + 3 * c.num_dofs
         self.act_dim = c.num_dofs
         n = self.num_envs
@@ -429,6 +447,7 @@ class LeggedTrainingEnv:
         self.last_targets = np.tile(np.where(self.wheels, 0.0, c.default_dof_pos), (n, 1))
         self.episode_step = np.zeros(n, dtype=np.int64)
         self.feet_air = np.zeros((n, self.num_feet))
+        self.feet_contact = np.zeros((n, self.num_feet))
         self.home = np.zeros((n, 2))
         self.episode_return = np.zeros(n)
         self.term_sums = {name: np.zeros(n) for name in self.task.rewards}
@@ -585,6 +604,7 @@ class LeggedTrainingEnv:
             self.latency[index] = self.rng.integers(0, self.max_latency_substeps + 1, size=len(index))
         self.episode_step[index] = 0
         self.feet_air[index] = 0.0
+        self.feet_contact[index] = 0.0
         self.episode_return[index] = 0.0
         for sums in self.term_sums.values():
             sums[index] = 0.0
@@ -635,8 +655,10 @@ class LeggedTrainingEnv:
                                           persistent_pool=True)
         self.state = states[:, -1, :].copy()
         touch = sensors[:, -1, :][:, self.sensor_touch] if self.num_feet else np.zeros((self.num_envs, 0))
+        foot_speed = (np.linalg.norm(sensors[:, -1, :][:, self.sensor_foot_velocity], axis=2)
+                      if self.num_feet else np.zeros((self.num_envs, 0)))
         self.episode_step += 1
-        reward, terms, fallen = self._rewards(touch)
+        reward, terms, fallen = self._rewards(touch, foot_speed)
         timeout = self.episode_step >= self.max_steps
         if self.heights is not None:
             # Leaving the heightfield ends the episode as a time-out, not a fall.
@@ -656,7 +678,7 @@ class LeggedTrainingEnv:
         self._reset(np.flatnonzero(done))
         return self.observations(), reward.astype(np.float32), done, info
 
-    def _rewards(self, touch):
+    def _rewards(self, touch, foot_speed=None):
         c, task, dt = self.contract, self.task, self.dt
         qpos, qvel = self._split(self.state)
         quat = qpos[:, 3:7]
@@ -674,7 +696,17 @@ class LeggedTrainingEnv:
         self.feet_air += dt
         moving = np.linalg.norm(cmd[:, :2], axis=1) + np.abs(cmd[:, 2]) > 0.1
         air_time = np.sum((self.feet_air - 0.5) * first_contact, axis=1) * moving
+        # Isaac Lab's feet_air_time_positive_biped: while exactly one foot is
+        # down, the shorter of each foot's current contact/air time, capped.
+        self.feet_contact = np.where(contact, self.feet_contact + dt, 0.0)
+        in_mode = np.where(contact, self.feet_contact, self.feet_air)
+        single = np.sum(contact, axis=1) == 1
+        stance = (np.min(np.where(single[:, None], in_mode, 0.0), axis=1) if self.num_feet
+                  else np.zeros(self.num_envs))
+        biped_air_time = np.minimum(stance, BIPED_AIR_TIME_S) * moving
         self.feet_air[contact] = 0.0
+        slide = (np.sum(foot_speed * contact, axis=1) if foot_speed is not None and self.num_feet
+                 else np.zeros(self.num_envs))
         values = dict(
             tracking_lin_vel=np.exp(-np.sum((cmd[:, :2] - lin_vel[:, :2]) ** 2, axis=1) / 0.25),
             tracking_ang_vel=np.exp(-(cmd[:, 2] - ang_vel[:, 2]) ** 2 / 0.25),
@@ -685,6 +717,9 @@ class LeggedTrainingEnv:
             dof_acc=np.sum(((dof_vel - self.last_dof_vel) / dt) ** 2, axis=1),
             action_rate=np.sum((self.actions - self.last_actions) ** 2, axis=1),
             feet_air_time=air_time,
+            feet_air_time_biped=biped_air_time,
+            feet_slide=slide,
+            joint_deviation=np.sum(np.abs(dof_pos - c.default_dof_pos)[:, self.deviation_joints], axis=1),
             hold_position=np.sum(lin_vel[:, :2] ** 2, axis=1),
             stand_still=np.sum(np.abs(dof_pos - c.default_dof_pos)[:, ~self.wheels], axis=1),
             stand_still_without_cmd=np.sum(np.abs(dof_pos - c.default_dof_pos)[:, ~self.wheels], axis=1) * ~moving,

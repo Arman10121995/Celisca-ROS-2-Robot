@@ -68,7 +68,7 @@ def test_trainable_robots_and_their_contracts():
             assert contract.num_dofs == 22 and not list(contract.wheel_indices)
         else:
             assert contract.num_dofs == 12 and not list(contract.wheel_indices)
-    assert set(TASKS) == {'walk', 'wheeled_walk', 'turn_in_place', 'stand', 'push_recovery', 'get_up', 'get_up_roll'}
+    assert set(TASKS) == {'walk', 'wheeled_walk', 'turn_in_place', 'stand', 'push_recovery', 'get_up', 'get_up_roll', 'humanoid_walk'}
     for task in TASKS.values():
         if task.terminate_on_fall:   # get_up starts fallen and is rewarded for rising instead
             assert task.rewards['termination'] < 0 and task.description and task.only_positive
@@ -387,3 +387,27 @@ def test_upright_rate_is_minus_the_rate_of_body_gravity_z():
         later = (rotation * Rotation.from_rotvec(omega * dt)).inv().apply([0., 0., -1.])
         rate = upright_rate(omega[None], gravity[None])[0]
         assert rate == pytest.approx(-(later[2] - gravity[2]) / dt, rel=1e-3, abs=1e-6)
+
+
+def test_humanoid_walk_biped_terms_on_the_bhl_model():
+    _env('unitree_go2')                               # skips without the installed packages
+    from robot_lab_adapter.legged_training import BIPED_AIR_TIME_S, LeggedTrainingEnv
+    env = LeggedTrainingEnv('berkeley_humanoid_lite_sim', 'humanoid_walk', num_envs=3, seed=0, threads=1, episode_s=2.0)
+    assert env.num_feet == 2 and env.stand_height > 0.4
+    names = env.contract.training_joint_names()
+    deviating = {n for n, d in zip(names, env.deviation_joints) if d}
+    assert 'leg_left_hip_roll_joint' in deviating and 'arm_right_elbow_pitch_joint' in deviating
+    assert 'leg_left_knee_pitch_joint' not in deviating and 'leg_right_hip_pitch_joint' not in deviating
+    env.reset_all()
+    env.commands[:] = [[0.5, 0, 0], [0.5, 0, 0], [0, 0, 0]]
+    env.feet_air[:] = [[0.3, 0.], [0., 0.], [0.3, 0.]]
+    env.feet_contact[:] = [[0., 0.2], [0.1, 0.1], [0., 0.2]]
+    # Foot 0 in the air, foot 1 down: single stance -> min(air 0.3 + dt, contact 0.2 + dt); both down: 0;
+    # the third copy has no command.
+    touch = np.array([[0., 10.], [10., 10.], [0., 10.]])
+    _, terms, _ = env._rewards(touch, np.array([[0., .5], [0., 0.], [0., 0.]]))
+    expected = min(0.2 + env.dt, BIPED_AIR_TIME_S) * 2.0 * env.dt / 3
+    assert terms['feet_air_time_biped'] == pytest.approx(expected)
+    assert terms['feet_slide'] == pytest.approx(-0.1 * 0.5 * env.dt / 3)
+    obs, reward, done, info = env.step(np.zeros((3, env.act_dim)))
+    assert np.all(np.isfinite(obs)) and np.all(np.isfinite(reward))
