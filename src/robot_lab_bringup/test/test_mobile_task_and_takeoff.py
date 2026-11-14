@@ -97,3 +97,14 @@ def test_navigation_needs_the_nav_workflow():
     with pytest.raises(ValueError, match="native nav workflow"):
         validate_task(_task(dict(kind="navigate", pose=[0, 0, 0])), "src", "scene",
                       CHANNELS, allow_navigation=False)
+
+
+def test_orientation_steps_are_explicit_normalized_and_mutually_exclusive():
+    values=dict(kind='reach_object',object='cube',left_body='left',right_body='right')
+    steps=validate_task(_task(dict(values,orientation_wxyz=[1.01,0.,0.,0.])),
+                        'src','scene',CHANNELS,allow_navigation=False)
+    assert steps[0]['orientation_wxyz']==[1.,0.,0.,0.]
+    for invalid in [dict(orientation_wxyz=[0.]*4),dict(orientation_wxyz=[math.nan,0.,0.,1.]),
+                    dict(orientation_wxyz=[1.,0.,0.,0.],keep_orientation=True),dict(keep_orientation='yes')]:
+        with pytest.raises(ValueError):
+            validate_task(_task(dict(values,**invalid)),'src','scene',CHANNELS,allow_navigation=False)

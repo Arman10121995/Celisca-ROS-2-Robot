@@ -1,5 +1,9 @@
 # Agent Handoff Protocol
 
+November 14 Codex R5.9 orientation: preserve optional authored first-pad world orientation, keep-mode fixed wrist controls and sampled 0.05 rad/live 0.08 rad envelope, actual final-angle gate for explicit poses, normalized source-bound task fields and GUI recipe options. Legacy position-only tasks remain valid. [Receipt](status/reach-orientation-2026-11-14.md). Alternate IK branches and full loaded source missions remain open; Claude owns fleet/drone/import work.
+
+November 14 CI follow-up: `d4eb4d5a` run 43530569788 failed only the R6.8 world-copy test importing ROS from the unsourced fast tier. It remains required in the sourced integration tier; local check passes. New GUI builder source path is explicit. Do not hide/skip that test or call the historical ecaaa133 CI certificate current. [Scope](status/reach-orientation-2026-11-14.md).
+
 November 14 Codex R5.7 placement: preserve native fixed-box support catalog, projected footprint-fit checks, source/plant-bound grasp transform published only after real scene ACK, explicit placement plans and separate execution/release. Fixed descendants of dynamic bodies are not support surfaces. [Guide/receipt](status/support-placement-2026-11-14.md). Full physical object mission and unattended sequencing remain open. Claude retains drone/import work.
 
 November 13 Codex R5.9 configuration search: preserve seeded bounded bidirectional detours in native_mobile_reach.py/bounded_control_planner.py, actual per-channel source motor-slew collision sampling, fixed base/head/grip, payload relation and 64-waypoint bound. Fifteen focused checks pass, including an independent dense MuJoCo fixture contact audit. Full-pose/alternate-IK planning and real loaded source missions remain open. [Receipt](status/stretch-search-2026-11-13.md). Claude retains drone/import work.

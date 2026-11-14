@@ -81,20 +81,30 @@ class MobileTaskControls(ttk.LabelFrame):
             fields = ttk.Frame(line);fields.pack(fill='x')
             for variable in values:
                 ttk.Entry(fields,textvariable=variable,width=8).pack(side='left',expand=True,fill='x')
+        self.orientation_mode=tk.StringVar(value='Position only')
+        ttk.Combobox(self,textvariable=self.orientation_mode,state='readonly',
+            values=('Position only','Keep measured pad','World pad RPY')).grid(row=18,column=0,columnspan=2,sticky='ew')
+        self.orientation_rpy=[tk.DoubleVar(value=0.) for _ in range(3)]
+        angles=ttk.Frame(self);angles.grid(row=19,column=0,columnspan=2,sticky='ew')
+        ttk.Label(angles,text='World pad roll / pitch / yaw (deg)').pack(anchor='w')
+        entries=ttk.Frame(angles);entries.pack(fill='x')
+        for variable in self.orientation_rpy:
+            ttk.Entry(entries,textvariable=variable,width=8).pack(side='left',expand=True,fill='x')
         for row,column,name,title,callback in (
-                (18,0,'reach','Add object reach',self.add_reach),
-                (18,1,'stow','Add arm retraction',lambda:self.add_native_step('stow_arm')),
-                (19,0,'open','Add gripper open',lambda:self.add_native_step('grip',operation='open')),
-                (19,1,'close','Add contact close',lambda:self.add_native_step('grip',operation='close')),
-                (20,0,'pick','Add local pick recipe',self.add_pick),
-                (20,1,'place','Add local place recipe',self.add_place)):
+                (20,0,'reach','Add object reach',self.add_reach),
+                (20,1,'stow','Add arm retraction',lambda:self.add_native_step('stow_arm')),
+                (21,0,'open','Add gripper open',lambda:self.add_native_step('grip',operation='open')),
+                (21,1,'close','Add contact close',lambda:self.add_native_step('grip',operation='close')),
+                (22,0,'pick','Add local pick recipe',self.add_pick),
+                (22,1,'place','Add local place recipe',self.add_place)):
             button=ttk.Button(self,text=title,command=callback)
             button.grid(row=row,column=column,sticky='ew',padx=2,pady=2)
             self.buttons['object_'+name]=button
-        ttk.Label(self,text='Recipes add steps only; Run task starts motion. Reach is local source-model IK '
-                  'with sampled collision checks, not a global arm planner. Reposition the base for an unreachable target. '
-                  'Place coordinates use native_world metres. Grasp outcomes require measured checkpoints.',
-                  wraplength=305).grid(row=21,column=0,columnspan=2,sticky='w')
+        ttk.Label(self,text='Recipes add steps only; Run task starts motion. Source IK and bounded configuration '
+                  'detours inspect sampled native motor motion. Place XYZ and pad RPY use native_world axes. '
+                  'Keep measured pad holds wrist controls during each reach; explicit RPY constrains its endpoint. '
+                  'Grasp outcomes require measured checkpoints.',
+                  wraplength=305).grid(row=23,column=0,columnspan=2,sticky='w')
 
     def add_object_check(self, condition):
         if not self.editable() or len(self.steps) >= 32:
@@ -112,6 +122,16 @@ class MobileTaskControls(ttk.LabelFrame):
             self.status.set(str(exc))
 
     def object_step(self, kind, **values):
+        if kind=='reach_object':
+            mode=self.orientation_mode.get()
+            if mode=='Keep measured pad':values['keep_orientation']=True
+            elif mode=='World pad RPY':
+                from scipy.spatial.transform import Rotation
+                rpy=[float(v.get()) for v in self.orientation_rpy]
+                if not all(math.isfinite(v) and abs(v)<=360 for v in rpy):
+                    raise ValueError('Use finite pad roll/pitch/yaw within ±360 degrees')
+                values['orientation_wxyz']=Rotation.from_euler('xyz',rpy,degrees=True).as_quat()[[3,0,1,2]].tolist()
+            elif mode!='Position only':raise ValueError('Select a reviewed reach orientation mode')
         return dict(kind=kind,name=kind.replace('_',' '),
                     **{key:var.get().strip() for key,var in self.object_fields.items()},**values)
 
@@ -140,14 +160,16 @@ class MobileTaskControls(ttk.LabelFrame):
             self.status.set(str(exc))
 
     def add_pick(self):
-        self.add_native_steps([
-            self.object_step('grip',operation='open'),
-            self.object_step('reach_object',offset=[0.,0.,.08]),
-            self.object_step('reach_object',offset=[0.,0.,0.]),
-            self.object_step('grip',operation='close'),
-            self.object_step('reach_object',offset=[0.,0.,.10]),
-            self.object_step('object_check',condition='grasped'),
-            self.object_step('stow_arm')])
+        try:
+            self.add_native_steps([
+                self.object_step('grip',operation='open'),
+                self.object_step('reach_object',offset=[0.,0.,.08]),
+                self.object_step('reach_object',offset=[0.,0.,0.]),
+                self.object_step('grip',operation='close'),
+                self.object_step('reach_object',offset=[0.,0.,.10]),
+                self.object_step('object_check',condition='grasped'),
+                self.object_step('stow_arm')])
+        except (ValueError,tk.TclError) as exc:self.status.set(str(exc))
 
     def add_place(self):
         try:

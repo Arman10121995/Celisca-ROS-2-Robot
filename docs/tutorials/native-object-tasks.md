@@ -58,10 +58,36 @@ configuration path is found within the planning budget are refused.
 
 ## What the planner actually does
 
+Before adding reach/pick/place steps, choose an orientation mode:
+
+- **Position only** preserves the original task behavior: the target is the
+  midpoint of the two selected physical collision pads.
+- **Keep measured pad** captures the first selected pad body's actual world
+  orientation at the start of each reach. Wrist controls stay held while the
+  reviewed lift/telescope controls move. Planning samples must remain within
+  0.05 rad, and a measured deviation over 0.08 rad interrupts execution.
+- **World pad RPY** adds the entered roll/pitch/yaw to each new reach as a
+  normalized world quaternion. Angles are degrees, extrinsic XYZ rotations
+  relative to `native_world`, for the **first pad body's authored frame**.
+  This constrains the endpoint, not every intermediate orientation. Source
+  geometry and collision checks still determine the path. The measured final
+  pad orientation must be within 0.08 rad or the task fails.
+
+Editing fields changes no motion. Add recipe/step captures the selected mode
+in the task document; Run task executes. Existing saved position-only tasks
+remain valid. Keep mode is captured afresh for each reach, not once for the
+whole recipe. Gripper open/close and telescope stow steps keep their original
+contracts. Original Stretch cannot realize the same orientations as Stretch 3;
+an unavailable orientation is refused rather than moving the base/head or
+changing source kinematics. Prefer Keep measured pad for an initially taught
+hand orientation; arbitrary zero RPY is not a universal downward grasp.
+
 `native_control_kinematics.py` uses the compiled position-actuator gains,
 transmissions and linear joint equality constraints. Fixed-tendon telescope
-and mimic coordinates are included. It solves position-only IK using native
-FK/Jacobians. A clear direct motor-coordinate path is preferred; a blocked
+and mimic coordinates are included. It solves point or optional pad-pose IK
+using native FK/Jacobians. Pose IK uses numerical orientation derivatives and
+refuses a private FK position residual over 8 mm or angular residual over
+0.05 rad. A clear direct motor-coordinate path is preferred; a blocked
 path now triggers bounded bidirectional RRT-Connect search over the reviewed
 lift, telescope and wrist channels. Base, head and gripper targets remain held.
 The collision checker uses the actual scene in a private `MjData` and samples
@@ -69,7 +95,8 @@ the controller's per-channel motor rate clipping, including stopping instants.
 Unsupported spatial tendons, nonlinear/closed-loop equalities or inconsistent
 source limits are refused. This is an experimental local implementation of
 the published [RRT-Connect method](https://ompl.kavrakilab.org/classompl_1_1geometric_1_1RRTConnect.html),
-not the Panda's OMPL binding. It does not solve arbitrary grasp orientations.
+not the Panda's OMPL binding. It does not infer a useful grasp orientation or
+guarantee a solution for an arbitrary requested orientation.
 
 Search uses seed 0, at most 384 tree nodes, 2,048 collision-edge queries and
 12,000 native collision samples within the original eight-second worker
@@ -79,7 +106,7 @@ and checks. A fixed seed repeats sampling on an identical snapshot; wall-time
 timeouts can still vary. No route found within these bounds does not prove
 that the target is geometrically unreachable. Try another approach or base
 position. The fixed IK endpoint may itself collide; searching other IK branches
-and orientation-aware planning remain open.
+remains open.
 
 Planning is an eight-second-budget worker. It cannot write live robot/object
 poses. A late/canceled generation is ignored; object or actuator movement
@@ -108,8 +135,8 @@ seconds or 3 wall seconds; source geometry publication still has its existing
 explicit. Editing that padding requires updating the receipt contract.
 
 This is implemented consumer verification, not a completed loaded-navigation
-certificate. Contact calibration, perception-based object estimates, global
-arm planning, other grasp strategies, additional mobile-manipulator adapters
+certificate. Contact calibration, perception-based object estimates, alternate
+IK branches, other grasp strategies, additional mobile-manipulator adapters
 and full map/backend missions remain in ROADMAP R5.9/R5.7. Object pose input
 here is explicitly simulator truth. Stop, manual intervention and GUI/task
 heartbeat loss interrupt execution and retain conservative payload bounds.

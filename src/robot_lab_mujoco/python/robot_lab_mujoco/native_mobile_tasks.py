@@ -45,6 +45,7 @@ class NativeMobileTasks:
                 if joint >= 0 and node.model.jnt_type[joint] == node.mujoco.mjtJoint.mjJNT_FREE:
                     self.object_candidates.append(name)
         self.reach_worker, self.reach_result = None, None
+        self.reach_orientation = None
         self.gripped_step, self.grip_lost_since = None, None
         self.payload_body, self.gripped_body, self.payload_confirmed = None, None, False
         self.custody, self.object_outcome, self.object_measurement = None, 'unassessed', {}
@@ -221,6 +222,7 @@ class NativeMobileTasks:
         # The original acceleration-limited controller stops the actual wheels.
 
     def cancel(self, reason, failed=False):
+        self.reach_orientation = None
         was_active = self.active()
         self.steps = None
         self.generation += 1
@@ -253,6 +255,7 @@ class NativeMobileTasks:
         return mask
 
     def begin_reach(self, step):
+        self.reach_orientation = None
         if self.reach_worker is not None and self.reach_worker.is_alive():
             raise ValueError('Previous reach planner is still stopping; retry after its bounded deadline')
         from robot_lab_mujoco.native_mobile_reach import plan_reach
@@ -365,6 +368,7 @@ class NativeMobileTasks:
         return stopped and self.node.data.time-self.settled_since >= 1.
 
     def advance(self):
+        self.reach_orientation = None
         self.record(step_result='measured_step_reached')
         self.index += 1
         if self.index == len(self.steps):
@@ -436,6 +440,10 @@ class NativeMobileTasks:
                                     self.record(reach_plan=result)
                                     self.arm.start_sequence(dict(source_sha256=self.arm.source_sha256,
                                         sequence_id=self.sequence_id,waypoints=result['waypoints']))
+                                    if result.get('target_orientation_wxyz') is not None:
+                                        self.reach_orientation=(self.node.mujoco.mj_name2id(self.node.model,
+                                            self.node.mujoco.mjtObj.mjOBJ_BODY,step['left_body']),
+                                            np.asarray(result['target_orientation_wxyz']))
                                     self.enter('articulating','Executing collision-inspected source-control reach ('+
                                                result['planner']['algorithm']+')')
                                 except (ValueError,TypeError,KeyError) as exc:
@@ -489,7 +497,13 @@ class NativeMobileTasks:
                             self.cancel('Nav2 result differs from physical map pose by >0.15 m / 5 degrees', failed=True)
                 elif phase == 'articulating':
                     feedback = self.arm.sequence_state
-                    if self.mobile.moving() or feedback.get('sequence_id') != self.sequence_id:
+                    orientation_guard=getattr(self,'reach_orientation',None)
+                    orientation_error=(2*np.arccos(np.clip(abs(np.dot(self.node.data.xquat[orientation_guard[0]],
+                        orientation_guard[1])),0.,1.)) if orientation_guard is not None else 0.)
+                    if orientation_error>.08 and (step.get('keep_orientation')
+                            or feedback.get('state')=='measured_waypoints_reached'):
+                        self.cancel('Measured pad orientation left the held reach envelope',failed=True)
+                    elif self.mobile.moving() or feedback.get('sequence_id') != self.sequence_id:
                         self.cancel('Articulation ownership/base movement changed', failed=True)
                     elif feedback['state'] == 'measured_waypoints_reached':
                         self.advance()

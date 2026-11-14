@@ -22,6 +22,8 @@ def plan_reach(node, snapshot, channels, initial, step, robot_bodies, robot_join
     # Only source lift/telescope/wrist controls participate; wheels/head/grip stay held.
     movable = [i for i,c in enumerate(channels) if c['name'] in
                ('lift','arm_extend','arm','wrist_yaw','wrist_pitch','wrist_roll')]
+    if step.get('keep_orientation'):
+        movable=[i for i in movable if channels[i]['name'] in ('lift','arm_extend','arm')]
     if not movable:
         raise ValueError('No reviewed source Stretch reach channels')
     object_geoms = [g for g in range(model.ngeom) if model.geom_bodyid[g]==obj
@@ -34,6 +36,15 @@ def plan_reach(node, snapshot, channels, initial, step, robot_bodies, robot_join
     start_tcp = ik.midpoint(bodies).copy()
     if np.linalg.norm(target-start_tcp) > .8:
         raise ValueError('Reach exceeds local 0.8 m planning bound; reposition the base')
+    orientation=step.get('orientation_wxyz')
+    if step.get('keep_orientation'):
+        orientation=snapshot.xquat[bodies[0]].copy()
+    if orientation is not None:
+        orientation=np.asarray(orientation,dtype=float)
+        if (orientation.shape!=(4,) or not np.all(np.isfinite(orientation))
+                or not .9<=np.linalg.norm(orientation)<=1.1):
+            raise ValueError('Finite unit world pad orientation required')
+        orientation=orientation/np.linalg.norm(orientation)
     if step['kind']=='stow_arm':
         extension = [i for i,c in enumerate(channels) if c['name'] in ('arm','arm_extend')]
         if len(extension)!=1:
@@ -43,7 +54,7 @@ def plan_reach(node, snapshot, channels, initial, step, robot_bodies, robot_join
         ik.forward(target_controls)
         target = ik.midpoint(bodies).copy()
     else:
-        target_controls = ik.reach(controls,bodies,target,movable,deadline)
+        target_controls = ik.reach(controls,bodies,target,movable,deadline,orientation=orientation)
     rates = np.asarray([c['max_rate'] for c in channels])
     if not np.all(np.isfinite(rates)) or np.any(rates <= 0):
         raise ValueError('Positive finite source actuator rates required')
@@ -72,6 +83,9 @@ def plan_reach(node, snapshot, channels, initial, step, robot_bodies, robot_join
             probe = ik.forward(candidate)
         except ValueError:
             return False  # A sampled source control can violate a coupled joint limit.
+        if step.get('keep_orientation') and 2*np.arccos(np.clip(abs(np.dot(
+                probe.xquat[bodies[0]],orientation)),0.,1.))>.05:
+            return False
         if payload_address >= 0:
             # Planning-only attachment uses the measured rigid relation to one
             # pad. Live object motion is still entirely contact physics.
@@ -132,8 +146,10 @@ def plan_reach(node, snapshot, channels, initial, step, robot_bodies, robot_join
     waypoints = [dict(targets={c['name']:float(v) for c,v in zip(channels,candidate)},settle_s=.2)
                  for candidate in points]
     return dict(waypoints=waypoints,target_xyz=target.tolist(),
+                target_orientation_wxyz=None if orientation is None else np.asarray(orientation).tolist(),
+                orientation_body=step['left_body'] if orientation is not None else None,
                 object_position=snapshot.xpos[obj].tolist(),object_quaternion=snapshot.xquat[obj].tolist(),
                 initial_controls=controls.tolist(),
                 planner=dict(algorithm=plan['planner'],seed=plan['seed'],nodes=plan['nodes'],
                              collision_edges=plan['collision_edges'],collision_samples=inspections),
-                scope='Position-only source IK plus bounded seeded configuration search; sampled original motor slew')
+                scope='Source point/optional pad-orientation IK plus bounded seeded configuration search; sampled original motor slew')

@@ -133,7 +133,7 @@ Work top to bottom. Each line links to its task.
 | I4a | [R14.5](#r145--robot-status-markers-in-the-gui-selectors) Robot status markers | Done 2026-11-13: ● measured / ◐ experimental / ○ display only / ✕ unavailable plus mode letters in both robot lists, from recorded evidence | implemented |
 | I4b | [R6.8](#r68--real-world-area-import-from-a-globe) Real-world area import | Done 2026-11-13: globe picker (CesiumJS + OSM), Terrain Tiles + OSM buildings/roads/trees/water, SUMO people/traffic; support and roof heights measured on four simulators | implemented |
 | I5 | [R5.11](#r511--drone-moving-obstacles-and-other-drone-backends) Drone moving obstacles | Done 2026-11-13: Kalman tracks, predicted sweeps, walkway look-both-ways and overflight, evasion, sensor-loss hold/land, EKF heading/height gate; 2 passing flights past walkers (Gazebo); PX4 + MuJoCo plant: takeoff, 5 m route and landing | implemented |
-| I6 | [R5.9](#r59--mobile-manipulators) Mobile manipulation | Stretch object recipes, interlocks, actual costmap receipts and bounded configuration detours implemented; full-pose planning and further source adapters remain | partial |
+| I6 | [R5.9](#r59--mobile-manipulators) Mobile manipulation | Stretch object recipes, pose reaches, interlocks, actual costmap receipts and bounded configuration detours implemented; alternate IK branches and further source adapters remain | partial |
 | I7 | [R5.7](#r57--manipulators-and-motion-planning) Arms | Panda measured box selection, grasp and support-placement stage plans implemented; unattended sequencing, arbitrary geometry, coupled arms and other backends remain | partial |
 | I8 | [R5.8](#r58--robot-hands-and-grippers) Hands | Torque/tendon hand adapters, object workflows | partial |
 | I9 | [R10.2](#r102--fleet-management-and-open-rmf) Fleet / Open-RMF | Conflicts, infrastructure, larger fleets, calibrated energy | partial |
@@ -176,7 +176,9 @@ Blocked: [R9.4](#r94--optional-physical-bumperbot-hil) physical hardware
 
 ### R0 — R4: foundation (done)
 
-These are complete; preserve their scoped contracts. R1.3 follow-up CI passes at ecaaa133 (run 43155923238). Details and evidence are in the
+Preserve these completed baselines and their scoped contracts. R1.3's setup
+baseline passes at ecaaa133 (run 43155923238); November 14's separate launch-test
+tier repair awaits its exact-revision published rerun. Details and evidence are in the
 [archived roadmap](docs/status/archive/ROADMAP-2026-11-10.md#r0--documentation-recovery).
 
 | Task | Result | Keep in mind |
@@ -184,7 +186,7 @@ These are complete; preserve their scoped contracts. R1.3 follow-up CI passes at
 | R0.1, R0.2 Documentation recovery | Audited baseline and truthful docs | — |
 | R1.1 Entry points and paths | Installed executables, package-share asset paths | No developer home paths |
 | R1.2 Test tiers | Fast / physics / integration / mission tiers | `PYTEST_DISABLE_PLUGIN_AUTOLOAD=1` locally |
-| R1.3 CI | Runner setup and documentation fixes pass published CI at ecaaa133 | [Receipt](docs/status/evidence/ci-firefox-2026-11-11/README.md) |
+| R1.3 CI | Runner setup baseline passes at ecaaa133; new R6.8 ROS-import test tier repair implemented, exact-revision CI pending | [Baseline](docs/status/evidence/ci-firefox-2026-11-11/README.md), [follow-up](docs/status/reach-orientation-2026-11-14.md) |
 | R2.1–R2.3 Simulator contracts | `/clock` in every adapter; one TF owner per edge; `/robot_lab/ready`, `/health`, `/reset` | Offline fallback is never success |
 | R3.1–R3.3, R3.5 Composition | Canonical IDs, typed validation, one resolver/executor, scenario and experiment catalogs | The CLI and GUI must produce the same manifest |
 | R3.4 GUI resolver | GUI uses the same resolver; seven algorithm slots; right-hand control column | State `active` in the ledger: keep the GUI tests green |
@@ -383,8 +385,13 @@ These are complete; preserve their scoped contracts. R1.3 follow-up CI passes at
 - **Payload footprint extension (2026-11-13, Codex):** measured collision-bound union includes the last confirmed payload and its fixed descendants in both costmap footprint topics. Transport waits for matching, fresh footprint publication; stale/invalid payload bounds stop native Drive and cancel active task navigation. This is producer-side implementation; costmap-consumption and physical transport acceptance remain pending.
 - **Local object pipeline (2026-11-13, Codex):** normal-GUI pick/place recipe buttons, object-relative/world reaches, coupled source-control IK, bounded private planning/collision worker, contact-gated gripper operations and retraction, retained provisional payload bounds and fresh shape receipts from both Nav2 costmaps. Installed `mobile_manipulation_lab` has two benches, a free 35 g cube and matching occupancy. [Guide](docs/tutorials/native-object-tasks.md). Forty-two focused checks and source FK/scene-attachment/widget checks pass; physical mission acceptance remains partial.
 - **Configuration detours (2026-11-13, Codex):** bounded seeded bidirectional search replaces straight-edge-only rejection for reviewed Stretch lift/telescope/wrist channels. Actual source motor-slew sampling, held gripper/base/head, payload collision transform and existing worker/executor limits remain. Fifteen focused checks include a real MuJoCo geometry detour with independent dense contact inspection; no loaded source-robot mission is claimed. [Receipt](docs/status/stretch-search-2026-11-13.md).
+- **Orientation reaches (2026-11-14, Codex):** GUI task steps can keep the
+  measured first-pad orientation or request a world RPY endpoint. Private
+  source FK solves point/rotation residuals; keep mode fixes wrist controls
+  and checks the planned/measured orientation envelope. Explicit-pose goals
+  also check measured final orientation. [Scope](docs/status/reach-orientation-2026-11-14.md).
 - **Remaining implementation:**
-  - full-pose/multiple-IK-branch arm planning, additional grasp strategies,
+  - multiple-IK-branch arm planning, additional grasp strategies,
     perception-bound object poses and further source-specific object pipelines;
   - generalize the existing native interlock and measured footprint-consumption gate to other mobile-manipulator adapters;
   - Fetch, PR2 or TIAGo as a second source.
@@ -395,7 +402,14 @@ These are complete; preserve their scoped contracts. R1.3 follow-up CI passes at
      for the base inhibit.
   3. Add a "Fetch object" panel: choose object and destination, Start, Stop.
   4. For a second robot, check maintained ROS 2 descriptions (Fetch,
-     TIAGo by PAL Robotics), with licenses (see R14.1).
+     TIAGo by PAL Robotics), with licenses (see R14.1). PAL's
+     [official Humble dependency manifest](https://github.com/pal-robotics/tiago_tutorials/blob/humble-devel/tiago_public.repos)
+     and [Apache-2.0 description](https://github.com/pal-robotics/tiago_robot/tree/humble-devel)
+     provide an upstream starting point; pin exact revisions before provisioning.
+     The existing robot-assets Fetch remains Display-only: its derivative
+     `base_link` inertia has zero X/Y diagonals and wheel collisions are
+     spheres. Do not promote it by copying a drive profile or inventing
+     inertias; use reviewed complete upstream source as a separate variant.
 - **Done when:** one measured mission with object pose and stability
   traces; base and arm commands cannot interfere.
 - **Validation later:** reset, cancel, watchdog and obstacles per backend and map (V6).

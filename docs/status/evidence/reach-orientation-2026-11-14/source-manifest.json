@@ -1,0 +1,31 @@
+{
+  "base_revision": "d4eb4d5a83c16c48d452b208b0027f47573d39b9",
+  "scope": "Software/native FK and task/Tk contracts; installed-byte comparison; no physical loaded mission",
+  "modules": {
+    "src/robot_lab_utils/robot_lab_utils/native_control_kinematics.py": {
+      "source_sha256": "54fb1c77981fc165155268be30d46296dd8718e87836a59f06be6803ced734eb",
+      "installed_path": "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_utils/lib/python3.10/site-packages/robot_lab_utils/native_control_kinematics.py",
+      "installed_sha256": "54fb1c77981fc165155268be30d46296dd8718e87836a59f06be6803ced734eb"
+    },
+    "src/robot_lab_utils/robot_lab_utils/mobile_task.py": {
+      "source_sha256": "7bf26770deb67e46a08dccc2f67e1b7df35df97ea2d276a9b8fdd841fb30342f",
+      "installed_path": "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_utils/lib/python3.10/site-packages/robot_lab_utils/mobile_task.py",
+      "installed_sha256": "7bf26770deb67e46a08dccc2f67e1b7df35df97ea2d276a9b8fdd841fb30342f"
+    },
+    "src/robot_lab_gui/robot_lab_gui/mobile_task_controls.py": {
+      "source_sha256": "7c982c2c2b883b3f5a05e04e6151dadb7fafb98144cd992c871e114995ebe66a",
+      "installed_path": "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_gui/lib/python3.10/site-packages/robot_lab_gui/mobile_task_controls.py",
+      "installed_sha256": "7c982c2c2b883b3f5a05e04e6151dadb7fafb98144cd992c871e114995ebe66a"
+    },
+    "src/robot_lab_mujoco/python/robot_lab_mujoco/native_mobile_reach.py": {
+      "source_sha256": "a7d4096c0c94983fb6e4ac302ae453c0125ec87f85a65895d6f728fe7b07b947",
+      "installed_path": "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_mujoco/lib/python3.10/site-packages/robot_lab_mujoco/native_mobile_reach.py",
+      "installed_sha256": "a7d4096c0c94983fb6e4ac302ae453c0125ec87f85a65895d6f728fe7b07b947"
+    },
+    "src/robot_lab_mujoco/python/robot_lab_mujoco/native_mobile_tasks.py": {
+      "source_sha256": "5d2a476b16219caf226f937d1b063f5dd91600159ff1fb7c2c93f232edfaac76",
+      "installed_path": "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_mujoco/lib/python3.10/site-packages/robot_lab_mujoco/native_mobile_tasks.py",
+      "installed_sha256": "5d2a476b16219caf226f937d1b063f5dd91600159ff1fb7c2c93f232edfaac76"
+    }
+  }
+}

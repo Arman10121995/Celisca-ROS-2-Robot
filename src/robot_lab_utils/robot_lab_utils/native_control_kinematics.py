@@ -124,12 +124,25 @@ class ControlKinematics:
         dq_dc = self.inverse[:,:len(self.channels)] * (-self.gain/self.bias[:,1])[None,:]
         return np.mean(jacobians,axis=0) @ dq_dc
 
-    def reach(self, controls, bodies, target, movable, deadline=None, tolerance=.008):
-        """Damped numerical IK over selected source controls; local, not OMPL."""
+    def reach(self, controls, bodies, target, movable, deadline=None, tolerance=.008,
+              orientation=None, angular_tolerance=.05):
+        """Local source-control IK; optional world orientation of the first pad.
+
+        Position is the measured collision-pad midpoint. Orientation belongs
+        to the actual first pad's body frame, not an invented TCP convention.
+        """
         from scipy.optimize import least_squares
         target = np.asarray(target, dtype=float)
         if target.shape != (3,) or not np.all(np.isfinite(target)):
             raise ValueError('Finite world XYZ reach target required')
+        rotation_target=None
+        if orientation is not None:
+            from scipy.spatial.transform import Rotation
+            quaternion=np.asarray(orientation,dtype=float)
+            if (quaternion.shape!=(4,) or not np.all(np.isfinite(quaternion))
+                    or not .9<=np.linalg.norm(quaternion)<=1.1):
+                raise ValueError('Finite unit world pad orientation required')
+            rotation_target=Rotation.from_quat((quaternion/np.linalg.norm(quaternion))[[1,2,3,0]]).as_matrix()
         deadline = time.monotonic()+3. if deadline is None else deadline
         result = np.asarray(controls, dtype=float).copy()
         movable = list(movable)
@@ -140,13 +153,20 @@ class ControlKinematics:
                 raise ValueError('Source IK planning deadline exceeded')
             result[movable] = values
             self.forward(result)
-            return self.midpoint(bodies)-target
+            position_error=self.midpoint(bodies)-target
+            if rotation_target is None:return position_error
+            current=self.probe.xmat[bodies[0]].reshape(3,3)
+            angular_error=Rotation.from_matrix(rotation_target@current.T).as_rotvec()
+            return np.r_[position_error,.15*angular_error]
         lower, upper = self.limits[movable].T
         def jacobian(values):
             residual(values)
             return self.midpoint_jacobian(bodies)[:,movable]
         solved = least_squares(residual, np.clip(result[movable],lower,upper),
-            bounds=(lower,upper), jac=jacobian, max_nfev=80)
-        if np.linalg.norm(residual(solved.x)) > tolerance:
+            bounds=(lower,upper), jac=jacobian if rotation_target is None else '3-point', max_nfev=80)
+        error=residual(solved.x)
+        if np.linalg.norm(error[:3]) > tolerance:
             raise ValueError('Object/target is outside this stopped-base reach; reposition the base')
+        if rotation_target is not None and np.linalg.norm(error[3:])/.15>angular_tolerance:
+            raise ValueError('Requested pad orientation is unreachable with the reviewed source controls')
         return result.copy()

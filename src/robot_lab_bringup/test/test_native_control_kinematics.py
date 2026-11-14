@@ -1,4 +1,5 @@
 """Real native FK/Jacobian checks for source actuator and mimic/tendon contracts."""
+import math
 import numpy as np
 import pytest
 
@@ -85,6 +86,42 @@ def test_planner_honours_deadline(plant):
         ik.reach([.1,.1,.01],bodies,[.25,.005,.4],[0,1],deadline=0.)
 
 
+def test_pose_ik_uses_actual_first_pad_orientation_and_refuses_unavailable_rotation(plant):
+    model,data,channels=plant
+    ik=ControlKinematics(model,data,channels,model.njnt-1)
+    bodies=[mj.mj_name2id(model,mj.mjtObj.mjOBJ_BODY,n) for n in ('left','right')]
+    solved=ik.reach([.1,.1,.01],bodies,[.25,.005,.4],[0,1],orientation=[1.,0.,0.,0.])
+    ik.forward(solved)
+    np.testing.assert_allclose(ik.midpoint(bodies),[.25,.005,.4],atol=.008)
+    with pytest.raises(ValueError,match='orientation is unreachable'):
+        ik.reach([.1,.1,.01],bodies,[.25,.005,.4],[0,1],orientation=[.9238795,0.,0.,.3826834])
+
+
+def test_pose_ik_turns_a_real_authored_wrist_to_the_requested_orientation():
+    from scipy.spatial.transform import Rotation
+    source=XML.replace('<compiler autolimits="true"/>','<compiler autolimits="true" angle="radian"/>')
+    source=source.replace('<body name="lift">',
+        '<body name="wrist"><joint name="wrist_j" type="hinge" axis="0 0 1" range="-1 1"/>'
+        '<geom type="sphere" size=".01" mass=".1"/><body name="lift">')
+    source=source.replace('</body></body></body></body>','</body></body></body></body></body>')
+    source=source.replace('</actuator>','<position name="wrist_yaw" joint="wrist_j" kp="100" ctrlrange="-1 1"/></actuator>')
+    model=mj.MjModel.from_xml_string(source);data=mj.MjData(model);mj.mj_forward(model,data)
+    before=data.qpos.copy();gains=model.actuator_gainprm.copy()
+    channels=position_channels(model,model.njnt-1,allow_mobile_base=True)
+    ik=ControlKinematics(model,data,channels,model.njnt-1)
+    bodies=[mj.mj_name2id(model,mj.mjtObj.mjOBJ_BODY,n) for n in ('left','right')]
+    controls=np.array([.4,.18,.01,.5]);ik.forward(controls)
+    target=ik.midpoint(bodies).copy();orientation=ik.probe.xquat[bodies[0]].copy()
+    result=ik.reach([.2,.1,.01,0.],bodies,target,[0,1,3],orientation=orientation)
+    ik.forward(result)
+    np.testing.assert_allclose(ik.midpoint(bodies),target,atol=.008)
+    error=Rotation.from_matrix(ik.probe.xmat[bodies[0]].reshape(3,3)@
+        Rotation.from_quat(orientation[[1,2,3,0]]).as_matrix().T).magnitude()
+    assert error<.05 and result[2]==pytest.approx(.01)
+    np.testing.assert_array_equal(data.qpos,before)
+    np.testing.assert_array_equal(model.actuator_gainprm,gains)
+
+
 def test_reach_worker_returns_real_source_motor_waypoints_and_refuses_collisions(plant):
     from types import SimpleNamespace
     from robot_lab_mujoco.native_mobile_reach import plan_reach
@@ -121,6 +158,52 @@ def test_stow_uses_source_telescope_minimum_without_releasing_grip(plant):
     assert target['arm']==pytest.approx(0.)
     assert target['grip']==pytest.approx(.03)
     assert target['lift']==pytest.approx(.2)
+
+
+def test_keep_measured_orientation_is_carried_through_the_actual_reach_result(plant):
+    from types import SimpleNamespace
+    from robot_lab_mujoco.native_mobile_reach import plan_reach
+    model,data,channels=plant;initial=[.2,.1,.01]
+    ik=ControlKinematics(model,data,channels,model.njnt-1);snapshot=ik.forward(initial)
+    step=dict(kind='reach_object',object='object',left_body='left',right_body='right',
+              target_xyz=[.25,.005,.48],keep_orientation=True)
+    plan=plan_reach(SimpleNamespace(model=model,mujoco=mj),snapshot,channels,initial,step,7,model.njnt-1,[])
+    assert plan['orientation_body']=='left'
+    np.testing.assert_allclose(plan['target_orientation_wxyz'],[1.,0.,0.,0.])
+    for point in plan['waypoints']:
+        ik.forward([point['targets'][channel['name']] for channel in channels])
+        np.testing.assert_allclose(ik.probe.xquat[5],[1.,0.,0.,0.])
+    explicit=dict(step,keep_orientation=False,orientation_wxyz=[.99,0.,0.,0.])
+    result=plan_reach(SimpleNamespace(model=model,mujoco=mj),snapshot,channels,initial,explicit,7,model.njnt-1,[])
+    np.testing.assert_allclose(result['target_orientation_wxyz'],[1.,0.,0.,0.])
+
+
+@pytest.mark.parametrize('keep,finished,should_stop',[(True,False,True),(False,False,False),(False,True,True)])
+def test_live_task_orientation_guard_checks_held_paths_and_explicit_pose_endpoints(keep,finished,should_stop):
+    pytest.importorskip('nav2_msgs.action')
+    import time
+    from types import SimpleNamespace
+    from robot_lab_mujoco.native_mobile_tasks import NativeMobileTasks
+    task=NativeMobileTasks.__new__(NativeMobileTasks);events=[]
+    task.steps=[dict(kind='reach_object',keep_orientation=keep)];task.index=0
+    task.active=lambda:task.steps is not None
+    task.last_heartbeat=task.started=task.phase_started=time.monotonic()
+    task.state={'state':'articulating'};task.sequence_id='owned'
+    task.reach_orientation=(0,np.array([1.,0.,0.,0.]))
+    task.node=SimpleNamespace(data=SimpleNamespace(qpos=np.zeros(1),xquat=np.array([[math.cos(.1),0.,0.,math.sin(.1)]])))
+    task.node.get_parameter=lambda key:SimpleNamespace(value='display')
+    task.node.sensors=SimpleNamespace(footprint_receipts=SimpleNamespace(received={}))
+    task.mobile=SimpleNamespace(fault='',moving=lambda:False,payload_footprint_ready=lambda:True)
+    task.arm=SimpleNamespace(fault='',plant_id='plant',source_sha256='source',sequence_state=dict(sequence_id='owned',
+        state='measured_waypoints_reached' if finished else 'executing'))
+    task.gripped_step=None;task.custody=None
+    task.publisher=SimpleNamespace(publish=lambda message:None)
+    task.scene_id='scene';task.pose=lambda:[0.,0.,0.];task.pending=False;task.handle=None
+    task.object_candidates=[];task.finger_candidates=[];task.payload_body=None;task.payload_confirmed=False
+    task.event_path=None;task.object_outcome='not assessed';task.object_measurement={}
+    def cancel(reason,failed=False):events.append(reason);task.steps=None
+    task.cancel=cancel;task.tick()
+    assert bool(events)==should_stop
 
 
 def test_configuration_search_uses_actual_geometry_to_route_around_a_blocker():

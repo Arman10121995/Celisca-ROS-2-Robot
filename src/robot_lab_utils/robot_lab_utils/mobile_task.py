@@ -67,6 +67,19 @@ def validate_task(document, source_sha256, scene_id, channels, allow_navigation)
                 if not all(map(math.isfinite, offset)) or max(map(abs, offset)) > .5:
                     raise ValueError('Reach offsets must be finite and within 0.5 m')
                 step['offset'] = offset
+                if not isinstance(step.get('keep_orientation',False),bool):
+                    raise ValueError('Keep-orientation must be a boolean')
+                if 'orientation_wxyz' in step:
+                    orientation=step['orientation_wxyz']
+                    if not isinstance(orientation,list) or len(orientation)!=4:
+                        raise ValueError('Pad orientation must be a world wxyz quaternion')
+                    orientation=list(map(float,orientation))
+                    norm=math.sqrt(sum(v*v for v in orientation))
+                    if not all(map(math.isfinite,orientation)) or not .9<=norm<=1.1:
+                        raise ValueError('Finite unit world pad orientation required')
+                    if step.get('keep_orientation'):
+                        raise ValueError('Choose measured or explicit orientation, not both')
+                    step['orientation_wxyz']=[v/norm for v in orientation]
                 if 'target_xyz' in step:
                     target = step['target_xyz']
                     if not isinstance(target,list) or len(target)!=3:

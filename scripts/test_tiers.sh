@@ -21,7 +21,7 @@ set -euo pipefail
 WS="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "$WS"
 
-export PYTHONPATH="src/robot_lab/robot_lab_registry:src/robot_lab_algorithms:src/robot_lab/robot_lab_benchmark:src/robot_lab_adapter:src/robot_lab_utils:src/robot_lab_vacuum_cleaning:src/robot_lab_pybullet/python:src/robot_lab_mujoco/python:src/robot_lab_isaac/python:${PYTHONPATH:-}"
+export PYTHONPATH="src/robot_lab/robot_lab_registry:src/robot_lab_algorithms:src/robot_lab/robot_lab_benchmark:src/robot_lab_adapter:src/robot_lab_utils:src/robot_lab_gui:src/robot_lab_vacuum_cleaning:src/robot_lab_pybullet/python:src/robot_lab_mujoco/python:src/robot_lab_isaac/python:${PYTHONPATH:-}"
 export PYTEST_DISABLE_PLUGIN_AUTOLOAD=1
 PYTEST=(python3 -m pytest -q -p no:anyio)
 
@@ -32,6 +32,7 @@ MAP_TEST="src/robot_lab_maps/test"
 GUI_TEST="src/robot_lab_gui/test"
 
 FAST_TESTS=(
+  "$GUI_TEST/test_mobile_reach_orientation.py"
   "$BRG_TEST/test_support_placement.py"
   "$BRG_TEST/test_bounded_control_planner.py"
   "$BRG_TEST/test_grasp_candidates.py"
@@ -101,10 +102,10 @@ FAST_TESTS=(
   "src/robot_lab_utils/test/test_aerial_tracking.py"
   "src/robot_lab_utils/test/test_real_world_import.py"
   "src/robot_lab_utils/test/test_terrain_generator.py"
-  "$BRG_TEST/test_world_copy_paths.py"
 )
 
 INTEGRATION_TESTS=(
+  "$BRG_TEST/test_world_copy_paths.py"
   "$GUI_TEST/test_support_placement_controls.py"
   "$GUI_TEST/test_grasp_pose_request.py"
   "$ADP_TEST/test_aerial_swarm_route.py"
