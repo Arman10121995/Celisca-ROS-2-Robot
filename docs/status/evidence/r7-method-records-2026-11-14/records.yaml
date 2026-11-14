@@ -1,8 +1,8 @@
 generated: '2026-11-14'
 summary:
   methods: 78
-  installed: 71
-  not_installed: 1
+  installed: 72
+  not_installed: 0
   unavailable: 6
   with_subrecord: 42
   with_tests: 57
@@ -927,8 +927,8 @@ records:
   family: pointcloud_conversion
   catalog_status: integrated
   dispatch: node pointcloud_to_laserscan/laserscan_to_pointcloud_node
-  installed: false
-  installed_detail: package pointcloud_to_laserscan not installed
+  installed: true
+  installed_detail: pointcloud_to_laserscan/laserscan_to_pointcloud_node
   mathematics: Polar-to-Cartesian projection of scan rays (laserscan_to_pointcloud_node)
   subrecord: false
   mathematics_source: curated
@@ -938,7 +938,7 @@ records:
   name_math: corrected
   notes:
   - Its dispatch and launch fragment started pointcloud_to_laserscan_node, the reverse conversion; now laserscan_to_pointcloud_node.
-    The package is not installed on this host.
+    Runtime availability is determined from the current package index below.
 - id: obstacle_detector
   category: perception
   name: Obstacle Detector

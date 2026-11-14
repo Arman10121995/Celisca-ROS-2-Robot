@@ -2,7 +2,7 @@
 
 Generated 2026-11-14 by `scripts/algorithm_method_records.py` from the catalog, the dispatch, the R7 method subrecords and the test files. Installed and tested are facts about files on this host; they do not qualify a method.
 
-Summary: methods 78, installed 71, not_installed 1, unavailable 6, with_subrecord 42, with_tests 57, name_math_consistent 59, name_math_corrected 9, name_math_mismatch 8, name_math_not_a_method 2.
+Summary: methods 78, installed 72, not_installed 0, unavailable 6, with_subrecord 42, with_tests 57, name_math_consistent 59, name_math_corrected 9, name_math_mismatch 8, name_math_not_a_method 2.
 
 
 ## control
@@ -84,7 +84,7 @@ Summary: methods 78, installed 71, not_installed 1, unavailable 6, with_subrecor
 | `depth_image_to_pointcloud` | node robot_lab_algorithms/depth_image_to_pointcloud | yes | 0 | Pinhole back-projection p = d K^-1 [u v 1]^T | consistent |
 | `euclidean_clusterer` | node robot_lab_algorithms/euclidean_clusterer | yes | 2 | Region growing on a KD-tree (PCL EuclideanClusterExtraction) | consistent |
 | `feature_detection` | node robot_lab_algorithms/feature_detection | yes | 0 | Feature matching to a keyframe (Lowe ratio test), depth lift to 3D, PnP with RANSAC | consistent |
-| `laser_scan_to_pointcloud` | node pointcloud_to_laserscan/laserscan_to_pointcloud_node | no | 2 | Polar-to-Cartesian projection of scan rays (laserscan_to_pointcloud_node) | **corrected**: Its dispatch and launch fragment started pointcloud_to_laserscan_node, the reverse conversion; now laserscan_to_pointcloud_node. The package is not installed on this host. |
+| `laser_scan_to_pointcloud` | node pointcloud_to_laserscan/laserscan_to_pointcloud_node | yes | 2 | Polar-to-Cartesian projection of scan rays (laserscan_to_pointcloud_node) | **corrected**: Its dispatch and launch fragment started pointcloud_to_laserscan_node, the reverse conversion; now laserscan_to_pointcloud_node. Runtime availability is determined from the current package index below. |
 | `obstacle_detector` | node robot_lab_algorithms/obstacle_detector | yes | 3 | Connected components of scan points under a distance threshold | consistent |
 | `pointcloud_segmenter` | node robot_lab_algorithms/pointcloud_segmenter | yes | 3 | Ground / non-ground split by height threshold in the upright target frame | consistent |
 | `ransac_ground_removal` | node robot_lab_algorithms/ransac_ground_removal | yes | 2 | RANSAC plane hypotheses restricted to near-vertical normals, least-squares refinement on the inliers | consistent |
