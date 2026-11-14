@@ -1,5 +1,7 @@
 # Current Robot Lab status
 
+November 14 Claude: [external source licenses (R9.1)](evidence/r91-external-sources-2026-11-14/README.md). The licenses of the source trees the lab runs are now read from their own license files. PX4 v1.16.2 is BSD-3-Clause, and 23 of its 25 submodules are identified. 36 vendor trees resolve. 7 ship no license file (BlueROV2, Husky and the model datasets); keep them local until each model's terms are recorded.
+
 November 14 Claude: occupancy grids and sensor faults (R6.5/R6.2):
 - **Free regions:** generated grids now list every free region, and `all` mode also frees closed rooms the seed cannot reach. On `nav_maze` the labelling matched the map plugin cell for cell.
 - **Register reviewed grid…:** a new Worlds step and the only way a grid becomes the one Nav2 uses. It refuses grids whose files or world changed, or whose spawn isn't free.

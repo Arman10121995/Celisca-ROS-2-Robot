@@ -147,7 +147,7 @@ Work top to bottom. Each line links to its task.
 | I17 | [R11](#r11--molar--probot-l-family) MOLAR | Sensors, SLAM/Nav2, payload transfer, multi-floor | partial, needs the sensor layout |
 | I18 | [P4](#p4--mujoco-large-world-speed) MuJoCo speed | Faster flex/scan/camera updates on large worlds | partial |
 | I19 | [R7](#r7--algorithm-breadth) Algorithms | Simulator-applied seeds, remaining method contracts | partial |
-| I20 | [R9.1](#r91--provenance-licenses-and-clean-host-reproduction) Provenance | Remaining license checks (PX4 checkout) | partial |
+| I20 | [R9.1](#r91--provenance-licenses-and-clean-host-reproduction) Provenance | 2026-11-14: PX4 checkout + 25 submodules and all vendor sources scanned from their license files; 7 trees without license files listed for review | implemented |
 
 Blocked: [R9.4](#r94--optional-physical-bumperbot-hil) physical hardware
 (needs the robot and explicit authorization).
@@ -668,8 +668,14 @@ tier repair awaits its exact-revision published rerun. Details and evidence are 
 - **State:** partial · **Priority:** I20, then V13
 - **Have:** 120/125 dependency licenses resolved; asset attribution checked
   (`scripts/asset_attribution.py`); a clean container builds and runs a MuJoCo mission.
-- **Remaining implementation:** check the PX4 license against its checkout;
-  list licenses for the new open-source robots (R14.1).
+- **Done 2026-11-14:** `scripts/external_source_licenses.py` identifies the
+  licenses of every runtime source checkout from its license files: PX4
+  v1.16.2 is BSD-3-Clause with 23/25 submodules identified (MAVLink generator
+  LGPL-3.0, CycloneDDS EPL-2.0, NuttX Apache-2.0); the R14.1 robots resolve
+  except BlueROV2 (no license file; package.xml MIT).
+  [Report](docs/status/evidence/r91-external-sources-2026-11-14/README.md).
+- **Remaining implementation:** per-model terms for the unresolved datasets
+  (robot_assets, Gazebo model sets), BlueROV2 and Husky before redistribution.
 - **Done when:** a fresh host reproduces the golden comparison, and provenance is recorded.
 
 ### R9.2 / R9.3 — Comparison tutorials and release gate

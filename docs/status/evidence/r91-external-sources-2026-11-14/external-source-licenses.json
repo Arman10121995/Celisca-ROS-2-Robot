@@ -1,0 +1,1011 @@
+{
+  "px4": {
+    "path": "/workspace/molar/px4/PX4-Autopilot",
+    "license_files": [
+      {
+        "file": "LICENSE",
+        "license": "BSD-3-Clause"
+      }
+    ],
+    "licenses": [
+      "BSD-3-Clause"
+    ],
+    "package_xml": [
+      "BSD 3"
+    ],
+    "status": "resolved",
+    "name": "PX4-Autopilot",
+    "revision": "54f0455ffcd755534539a7cf33a09a20bf71d29d",
+    "tag": "v1.16.2",
+    "submodules": [
+      {
+        "path": "/workspace/molar/px4/PX4-Autopilot/src/modules/mavlink/mavlink",
+        "license_files": [
+          {
+            "file": "COPYING",
+            "license": "LGPL-3.0"
+          },
+          {
+            "file": "pymavlink/COPYING",
+            "license": "LGPL-3.0"
+          }
+        ],
+        "licenses": [
+          "LGPL-3.0"
+        ],
+        "package_xml": [],
+        "status": "resolved",
+        "name": "src/modules/mavlink/mavlink",
+        "revision": "5bfd76d80281f6027134e854aafe6cb3dbfbe9e1"
+      },
+      {
+        "path": "/workspace/molar/px4/PX4-Autopilot/Tools/simulation/jmavsim/jMAVSim",
+        "license_files": [
+          {
+            "file": "LICENSE",
+            "license": "BSD-3-Clause"
+          }
+        ],
+        "licenses": [
+          "BSD-3-Clause"
+        ],
+        "package_xml": [],
+        "status": "resolved",
+        "name": "Tools/simulation/jmavsim/jMAVSim",
+        "revision": "66b764ada522893c05224950aa6268c809f8e48a"
+      },
+      {
+        "path": "/workspace/molar/px4/PX4-Autopilot/Tools/simulation/gazebo-classic/sitl_gazebo-classic",
+        "license_files": [],
+        "licenses": [],
+        "package_xml": [
+          "BSD"
+        ],
+        "status": "unresolved",
+        "name": "Tools/simulation/gazebo-classic/sitl_gazebo-classic",
+        "revision": "70683dc759cbd3ebccfa78429b564f8b1fb5d149"
+      },
+      {
+        "path": "/workspace/molar/px4/PX4-Autopilot/src/drivers/gps/devices",
+        "license_files": [
+          {
+            "file": "LICENSE.md",
+            "license": "BSD-3-Clause"
+          }
+        ],
+        "licenses": [
+          "BSD-3-Clause"
+        ],
+        "package_xml": [],
+        "status": "resolved",
+        "name": "src/drivers/gps/devices",
+        "revision": "4cea5de87ce7e2a52e5289bd3639fd8eb770eafa"
+      },
+      {
+        "path": "/workspace/molar/px4/PX4-Autopilot/platforms/nuttx/NuttX/nuttx",
+        "license_files": [
+          {
+            "file": "LICENSE",
+            "license": "Apache-2.0"
+          },
+          {
+            "file": "NOTICE",
+            "license": null
+          }
+        ],
+        "licenses": [
+          "Apache-2.0"
+        ],
+        "package_xml": [],
+        "status": "resolved (some files unidentified)",
+        "name": "platforms/nuttx/NuttX/nuttx",
+        "revision": "886acbbdb4f061e5c0ce1a76afbcfa7cb7df9849"
+      },
+      {
+        "path": "/workspace/molar/px4/PX4-Autopilot/platforms/nuttx/NuttX/apps",
+        "license_files": [
+          {
+            "file": "LICENSE",
+            "license": "Apache-2.0"
+          },
+          {
+            "file": "NOTICE",
+            "license": null
+          }
+        ],
+        "licenses": [
+          "Apache-2.0"
+        ],
+        "package_xml": [],
+        "status": "resolved (some files unidentified)",
+        "name": "platforms/nuttx/NuttX/apps",
+        "revision": "e37940d8535f603a16b8f6f21c21edaf584218aa"
+      },
+      {
+        "path": "/workspace/molar/px4/PX4-Autopilot/Tools/simulation/flightgear/flightgear_bridge",
+        "license_files": [
+          {
+            "file": "LICENSE",
+            "license": "BSD-3-Clause"
+          }
+        ],
+        "licenses": [
+          "BSD-3-Clause"
+        ],
+        "package_xml": [],
+        "status": "resolved",
+        "name": "Tools/simulation/flightgear/flightgear_bridge",
+        "revision": "f47ce7b5fbbb3aa43d33d2be1f6cd3746b13d5bf"
+      },
+      {
+        "path": "/workspace/molar/px4/PX4-Autopilot/Tools/simulation/jsbsim/jsbsim_bridge",
+        "license_files": [
+          {
+            "file": "LICENSE",
+            "license": "BSD-3-Clause"
+          }
+        ],
+        "licenses": [
+          "BSD-3-Clause"
+        ],
+        "package_xml": [
+          "BSD-3"
+        ],
+        "status": "resolved",
+        "name": "Tools/simulation/jsbsim/jsbsim_bridge",
+        "revision": "68de2cc63ded9a0d6641d45e9eb3ed2b43454cba"
+      },
+      {
+        "path": "/workspace/molar/px4/PX4-Autopilot/src/drivers/cyphal/libcanard",
+        "license_files": [
+          {
+            "file": "LICENSE",
+            "license": "MIT"
+          }
+        ],
+        "licenses": [
+          "MIT"
+        ],
+        "package_xml": [],
+        "status": "resolved",
+        "name": "src/drivers/cyphal/libcanard",
+        "revision": "5c69d451ab0787a81dcb615692d707f2a286f5e5"
+      },
+      {
+        "path": "/workspace/molar/px4/PX4-Autopilot/src/drivers/cyphal/public_regulated_data_types",
+        "license_files": [
+          {
+            "file": "LICENSE",
+            "license": "MIT"
+          }
+        ],
+        "licenses": [
+          "MIT"
+        ],
+        "package_xml": [],
+        "status": "resolved",
+        "name": "src/drivers/cyphal/public_regulated_data_types",
+        "revision": "d0bd6516dac8ff61287fe49a9f2c75e7d4dc1b8e"
+      },
+      {
+        "path": "/workspace/molar/px4/PX4-Autopilot/src/drivers/cyphal/legacy_data_types",
+        "license_files": [
+          {
+            "file": "LICENSE",
+            "license": "MIT"
+          }
+        ],
+        "licenses": [
+          "MIT"
+        ],
+        "package_xml": [],
+        "status": "resolved",
+        "name": "src/drivers/cyphal/legacy_data_types",
+        "revision": "36a01e428b110ff84c8babe5b65667b5e3037d5e"
+      },
+      {
+        "path": "/workspace/molar/px4/PX4-Autopilot/src/lib/crypto/monocypher",
+        "license_files": [
+          {
+            "file": "LICENCE.md",
+            "license": "BSD-2-Clause"
+          }
+        ],
+        "licenses": [
+          "BSD-2-Clause"
+        ],
+        "package_xml": [],
+        "status": "resolved",
+        "name": "src/lib/crypto/monocypher",
+        "revision": "baca5d31259c598540e4d1284bc8d8f793abf83a"
+      },
+      {
+        "path": "/workspace/molar/px4/PX4-Autopilot/src/lib/events/libevents",
+        "license_files": [
+          {
+            "file": "LICENSE.md",
+            "license": "BSD-3-Clause"
+          }
+        ],
+        "licenses": [
+          "BSD-3-Clause"
+        ],
+        "package_xml": [],
+        "status": "resolved",
+        "name": "src/lib/events/libevents",
+        "revision": "9ef591c447fe0386d698bf6fb9a6d27e43988ee4"
+      },
+      {
+        "path": "/workspace/molar/px4/PX4-Autopilot/src/lib/crypto/libtomcrypt",
+        "license_files": [
+          {
+            "file": "LICENSE",
+            "license": "Unlicense"
+          }
+        ],
+        "licenses": [
+          "Unlicense"
+        ],
+        "package_xml": [],
+        "status": "resolved",
+        "name": "src/lib/crypto/libtomcrypt",
+        "revision": "673f5ce29015a9bba3c96792920a10601b5b0718"
+      },
+      {
+        "path": "/workspace/molar/px4/PX4-Autopilot/src/lib/crypto/libtommath",
+        "license_files": [
+          {
+            "file": "LICENSE",
+            "license": "Unlicense"
+          }
+        ],
+        "licenses": [
+          "Unlicense"
+        ],
+        "package_xml": [],
+        "status": "resolved",
+        "name": "src/lib/crypto/libtommath",
+        "revision": "fd73d7630b9d3ed5a79d613ff680a549e9780de7"
+      },
+      {
+        "path": "/workspace/molar/px4/PX4-Autopilot/src/modules/uxrce_dds_client/Micro-XRCE-DDS-Client",
+        "license_files": [
+          {
+            "file": "LICENSE",
+            "license": "Apache-2.0"
+          }
+        ],
+        "licenses": [
+          "Apache-2.0"
+        ],
+        "package_xml": [],
+        "status": "resolved",
+        "name": "src/modules/uxrce_dds_client/Micro-XRCE-DDS-Client",
+        "revision": "711aef423edd1820347b866d1e4164832df35d04"
+      },
+      {
+        "path": "/workspace/molar/px4/PX4-Autopilot/src/lib/cdrstream/cyclonedds",
+        "license_files": [
+          {
+            "file": "LICENSE",
+            "license": "EPL-2.0"
+          },
+          {
+            "file": "NOTICE.md",
+            "license": "EPL-2.0"
+          },
+          {
+            "file": "WiX/LICENSE.rtf",
+            "license": "EPL-2.0"
+          }
+        ],
+        "licenses": [
+          "EPL-2.0"
+        ],
+        "package_xml": [
+          "Eclipse Distribution License 1.0",
+          "Eclipse Public License 2.0"
+        ],
+        "status": "resolved",
+        "name": "src/lib/cdrstream/cyclonedds",
+        "revision": "314887ca403c2fb0a0316add22672102936ed36c"
+      },
+      {
+        "path": "/workspace/molar/px4/PX4-Autopilot/src/lib/cdrstream/rosidl",
+        "license_files": [
+          {
+            "file": "LICENSE",
+            "license": "Apache-2.0"
+          },
+          {
+            "file": "rosidl_generator_tests/LICENSE",
+            "license": "Apache-2.0"
+          }
+        ],
+        "licenses": [
+          "Apache-2.0"
+        ],
+        "package_xml": [
+          "Apache 2.0 License",
+          "Apache License 2.0",
+          "Apache-2.0"
+        ],
+        "status": "resolved",
+        "name": "src/lib/cdrstream/rosidl",
+        "revision": "7790c70717e09c003711f6f65015666c223fc283"
+      },
+      {
+        "path": "/workspace/molar/px4/PX4-Autopilot/src/modules/zenoh/zenoh-pico",
+        "license_files": [
+          {
+            "file": "LICENSE",
+            "license": "Apache-2.0"
+          },
+          {
+            "file": "NOTICE.md",
+            "license": "Apache-2.0"
+          }
+        ],
+        "licenses": [
+          "Apache-2.0"
+        ],
+        "package_xml": [],
+        "status": "resolved",
+        "name": "src/modules/zenoh/zenoh-pico",
+        "revision": "f093aa7955bb24dfa3e626de084583711e3bac5c"
+      },
+      {
+        "path": "/workspace/molar/px4/PX4-Autopilot/src/lib/heatshrink/heatshrink",
+        "license_files": [
+          {
+            "file": "LICENSE",
+            "license": "ISC"
+          }
+        ],
+        "licenses": [
+          "ISC"
+        ],
+        "package_xml": [],
+        "status": "resolved",
+        "name": "src/lib/heatshrink/heatshrink",
+        "revision": "052e6de72f67f1777198bce98f3de62f7f3c16a0"
+      },
+      {
+        "path": "/workspace/molar/px4/PX4-Autopilot/Tools/simulation/gz",
+        "license_files": [
+          {
+            "file": "LICENSE",
+            "license": "BSD-3-Clause"
+          }
+        ],
+        "licenses": [
+          "BSD-3-Clause"
+        ],
+        "package_xml": [],
+        "status": "resolved",
+        "name": "Tools/simulation/gz",
+        "revision": "e05f4312d3f28aa621157610584a4870406cb6d3"
+      },
+      {
+        "path": "/workspace/molar/px4/PX4-Autopilot/boards/modalai/voxl2/libfc-sensor-api",
+        "license_files": [],
+        "licenses": [],
+        "package_xml": [],
+        "status": "unresolved",
+        "name": "boards/modalai/voxl2/libfc-sensor-api",
+        "revision": "85151aaf6ba8b24ce82b387e088452c63f7e2096"
+      },
+      {
+        "path": "/workspace/molar/px4/PX4-Autopilot/src/drivers/actuators/vertiq_io/iq-module-communication-cpp",
+        "license_files": [
+          {
+            "file": "LICENSE",
+            "license": "MIT"
+          }
+        ],
+        "licenses": [
+          "MIT"
+        ],
+        "package_xml": [],
+        "status": "resolved",
+        "name": "src/drivers/actuators/vertiq_io/iq-module-communication-cpp",
+        "revision": "c488af4e8807de80739aa48efd2ea51614dd8195"
+      },
+      {
+        "path": "/workspace/molar/px4/PX4-Autopilot/src/drivers/uavcan/libdronecan/dsdl",
+        "license_files": [
+          {
+            "file": "LICENSE",
+            "license": "MIT"
+          }
+        ],
+        "licenses": [
+          "MIT"
+        ],
+        "package_xml": [],
+        "status": "resolved",
+        "name": "src/drivers/uavcan/libdronecan/dsdl",
+        "revision": "993be80a62ec957c01fb41115b83663959a49f46"
+      },
+      {
+        "path": "/workspace/molar/px4/PX4-Autopilot/src/drivers/uavcan/libdronecan/libuavcan/dsdl_compiler/pydronecan",
+        "license_files": [
+          {
+            "file": "LICENSE",
+            "license": "MIT"
+          }
+        ],
+        "licenses": [
+          "MIT"
+        ],
+        "package_xml": [],
+        "status": "resolved",
+        "name": "src/drivers/uavcan/libdronecan/libuavcan/dsdl_compiler/pydronecan",
+        "revision": "19fdf2e5b383243ccdb1094edae0603cf11469e8"
+      }
+    ]
+  },
+  "vendor_sources": [
+    {
+      "path": "/workspace/molar/robot_lab_runtime/external_assets/sources/bluerov2_vendor/4451a5d1b15d204581d43ef7d93df4a0508eddbb",
+      "license_files": [],
+      "licenses": [],
+      "package_xml": [
+        "MIT"
+      ],
+      "status": "unresolved",
+      "name": "bluerov2_vendor",
+      "revision": "4451a5d1b15d204581d43ef7d93df4a0508eddbb"
+    },
+    {
+      "path": "/workspace/molar/robot_lab_runtime/external_assets/sources/create3_vendor/7d7a4f69a503d4eef22f13aeb8755c86955b8cc5",
+      "license_files": [
+        {
+          "file": "LICENSE",
+          "license": "BSD-3-Clause"
+        }
+      ],
+      "licenses": [
+        "BSD-3-Clause"
+      ],
+      "package_xml": [],
+      "status": "resolved",
+      "name": "create3_vendor",
+      "revision": "7d7a4f69a503d4eef22f13aeb8755c86955b8cc5"
+    },
+    {
+      "path": "/workspace/molar/robot_lab_runtime/external_assets/sources/elephant_myagv_pro/d3851c768d2e887eef7ad79fc4dcb9a928b070ac",
+      "license_files": [
+        {
+          "file": "LICENSE",
+          "license": "BSD-3-Clause"
+        }
+      ],
+      "licenses": [
+        "BSD-3-Clause"
+      ],
+      "package_xml": [
+        "BSD-3-Clause license"
+      ],
+      "status": "resolved",
+      "name": "elephant_myagv_pro",
+      "revision": "d3851c768d2e887eef7ad79fc4dcb9a928b070ac"
+    },
+    {
+      "path": "/workspace/molar/robot_lab_runtime/external_assets/sources/elephant_mycobot_ros2/d42ff61a78122c79246623391540d75738b03b23",
+      "license_files": [
+        {
+          "file": "mycobot_description/LICENSE",
+          "license": "BSD-2-Clause"
+        }
+      ],
+      "licenses": [
+        "BSD-2-Clause"
+      ],
+      "package_xml": [
+        "BSD"
+      ],
+      "status": "resolved",
+      "name": "elephant_mycobot_ros2",
+      "revision": "d42ff61a78122c79246623391540d75738b03b23"
+    },
+    {
+      "path": "/workspace/molar/robot_lab_runtime/external_assets/sources/gazebo_classic_models/8163eb4b5e7e21985c6591d1c0bfb56468c0093f",
+      "license_files": [
+        {
+          "file": "LICENSE",
+          "license": null
+        }
+      ],
+      "licenses": [],
+      "package_xml": [],
+      "status": "unresolved",
+      "name": "gazebo_classic_models",
+      "revision": "8163eb4b5e7e21985c6591d1c0bfb56468c0093f"
+    },
+    {
+      "path": "/workspace/molar/robot_lab_runtime/external_assets/sources/gazebo_examples/b90cd2c41a193102d6951857c2d83e13f59bb64b",
+      "license_files": [
+        {
+          "file": "LICENSE",
+          "license": "Apache-2.0"
+        }
+      ],
+      "licenses": [
+        "Apache-2.0"
+      ],
+      "package_xml": [],
+      "status": "resolved",
+      "name": "gazebo_examples",
+      "revision": "b90cd2c41a193102d6951857c2d83e13f59bb64b"
+    },
+    {
+      "path": "/workspace/molar/robot_lab_runtime/external_assets/sources/gazebo_world_dataset/9d26e1f41cd7979bbee66ed852e7ef316e22b19f",
+      "license_files": [],
+      "licenses": [],
+      "package_xml": [],
+      "status": "unresolved",
+      "name": "gazebo_world_dataset",
+      "revision": "9d26e1f41cd7979bbee66ed852e7ef316e22b19f"
+    },
+    {
+      "path": "/workspace/molar/robot_lab_runtime/external_assets/sources/husky_vendor/729f8aa45ccd86fa33a05e07ef698c52c451cd9c",
+      "license_files": [],
+      "licenses": [],
+      "package_xml": [
+        "BSD"
+      ],
+      "status": "unresolved",
+      "name": "husky_vendor",
+      "revision": "729f8aa45ccd86fa33a05e07ef698c52c451cd9c"
+    },
+    {
+      "path": "/workspace/molar/robot_lab_runtime/external_assets/sources/light_robotics_octopod/c2cc2437393155760eeea5f588c5912f4654067c",
+      "license_files": [
+        {
+          "file": "LICENSE",
+          "license": "MIT"
+        }
+      ],
+      "licenses": [
+        "MIT"
+      ],
+      "package_xml": [],
+      "status": "resolved",
+      "name": "light_robotics_octopod",
+      "revision": "c2cc2437393155760eeea5f588c5912f4654067c"
+    },
+    {
+      "path": "/workspace/molar/robot_lab_runtime/external_assets/sources/mujoco_menagerie/4d038b3feae26ec82b46a4d586379114012a8ac7",
+      "license_files": [
+        {
+          "file": "LICENSE",
+          "license": "Apache-2.0"
+        },
+        {
+          "file": "agilex_piper/LICENSE",
+          "license": "MIT"
+        },
+        {
+          "file": "agility_cassie/LICENSE",
+          "license": "MIT"
+        },
+        {
+          "file": "aloha/LICENSE",
+          "license": "BSD-3-Clause"
+        },
+        {
+          "file": "anybotics_anymal_b/LICENSE",
+          "license": "BSD-3-Clause"
+        },
+        {
+          "file": "anybotics_anymal_c/LICENSE",
+          "license": "BSD-3-Clause"
+        },
+        {
+          "file": "apptronik_apollo/LICENSE",
+          "license": "Apache-2.0"
+        },
+        {
+          "file": "arx_l5/LICENSE",
+          "license": "BSD-3-Clause"
+        },
+        {
+          "file": "berkeley_humanoid/LICENSE",
+          "license": "BSD-3-Clause"
+        },
+        {
+          "file": "bitcraze_crazyflie_2/LICENSE",
+          "license": "MIT"
+        },
+        {
+          "file": "booster_t1/LICENSE",
+          "license": "Apache-2.0"
+        },
+        {
+          "file": "boston_dynamics_spot/LICENSE",
+          "license": "BSD-3-Clause"
+        },
+        {
+          "file": "dynamixel_2r/LICENSE",
+          "license": "MIT"
+        },
+        {
+          "file": "flexiv_rizon4/LICENSE",
+          "license": "Apache-2.0"
+        },
+        {
+          "file": "flexiv_rizon4s/LICENSE",
+          "license": "Apache-2.0"
+        },
+        {
+          "file": "flybody/LICENSE",
+          "license": "Apache-2.0"
+        },
+        {
+          "file": "fourier_n1/LICENSE",
+          "license": "Apache-2.0"
+        },
+        {
+          "file": "franka_emika_panda/LICENSE",
+          "license": "Apache-2.0"
+        },
+        {
+          "file": "franka_fr3/LICENSE",
+          "license": "Apache-2.0"
+        },
+        {
+          "file": "franka_fr3_v2/LICENSE",
+          "license": "Apache-2.0"
+        },
+        {
+          "file": "google_barkour_v0/LICENSE",
+          "license": "Apache-2.0"
+        },
+        {
+          "file": "google_barkour_vb/LICENSE",
+          "license": "Apache-2.0"
+        },
+        {
+          "file": "google_robot/LICENSE",
+          "license": "Apache-2.0"
+        },
+        {
+          "file": "hello_robot_stretch/LICENSE",
+          "license": "BSD-3-Clause"
+        },
+        {
+          "file": "hello_robot_stretch_3/LICENSE",
+          "license": "Apache-2.0"
+        },
+        {
+          "file": "i2rt_yam/LICENSE",
+          "license": "MIT"
+        },
+        {
+          "file": "iit_softfoot/LICENSE",
+          "license": "BSD-3-Clause"
+        },
+        {
+          "file": "kinova_gen3/LICENSE",
+          "license": "BSD-3-Clause"
+        },
+        {
+          "file": "kuka_iiwa_14/LICENSE",
+          "license": "BSD-3-Clause"
+        },
+        {
+          "file": "low_cost_robot_arm/LICENSE",
+          "license": "Apache-2.0"
+        },
+        {
+          "file": "ms_human_700/LICENSE",
+          "license": "Apache-2.0"
+        },
+        {
+          "file": "pndbotics_adam_lite/LICENSE",
+          "license": "MIT"
+        },
+        {
+          "file": "rethink_robotics_sawyer/LICENSE",
+          "license": "Apache-2.0"
+        },
+        {
+          "file": "robot_soccer_kit/LICENSE",
+          "license": "MIT"
+        },
+        {
+          "file": "robotiq_2f85/LICENSE",
+          "license": "BSD-2-Clause"
+        },
+        {
+          "file": "robotiq_2f85_v4/LICENSE",
+          "license": "BSD-2-Clause"
+        },
+        {
+          "file": "robotis_omy_3m/LICENSE",
+          "license": "Apache-2.0"
+        },
+        {
+          "file": "robotis_op3/LICENSE",
+          "license": "Apache-2.0"
+        },
+        {
+          "file": "robotstudio_so101/LICENSE",
+          "license": "Apache-2.0"
+        },
+        {
+          "file": "seeed_rebot_devarm/LICENSE",
+          "license": "MIT"
+        },
+        {
+          "file": "shadow_dexee/LICENSE",
+          "license": "Apache-2.0"
+        },
+        {
+          "file": "skydio_x2/LICENSE",
+          "license": "Apache-2.0"
+        },
+        {
+          "file": "stanford_tidybot/LICENSE",
+          "license": "MIT"
+        },
+        {
+          "file": "toddlerbot_2xc/LICENSE",
+          "license": "MIT"
+        },
+        {
+          "file": "toddlerbot_2xm/LICENSE",
+          "license": "MIT"
+        },
+        {
+          "file": "trossen_vx300s/LICENSE",
+          "license": "BSD-3-Clause"
+        },
+        {
+          "file": "trossen_wx250s/LICENSE",
+          "license": "BSD-3-Clause"
+        },
+        {
+          "file": "trossen_wxai/LICENSE",
+          "license": "BSD-3-Clause"
+        },
+        {
+          "file": "trs_so_arm100/LICENSE",
+          "license": "Apache-2.0"
+        },
+        {
+          "file": "ufactory_lite6/LICENSE",
+          "license": "BSD-3-Clause"
+        },
+        {
+          "file": "ufactory_xarm7/LICENSE",
+          "license": "BSD-3-Clause"
+        },
+        {
+          "file": "umi_gripper/LICENSE",
+          "license": "MIT"
+        },
+        {
+          "file": "unitree_a1/LICENSE",
+          "license": "BSD-3-Clause"
+        },
+        {
+          "file": "unitree_g1/LICENSE",
+          "license": "BSD-3-Clause"
+        },
+        {
+          "file": "unitree_go1/LICENSE",
+          "license": "BSD-3-Clause"
+        },
+        {
+          "file": "unitree_go2/LICENSE",
+          "license": "BSD-3-Clause"
+        },
+        {
+          "file": "unitree_h1/LICENSE",
+          "license": "BSD-3-Clause"
+        },
+        {
+          "file": "unitree_z1/LICENSE",
+          "license": "BSD-3-Clause"
+        },
+        {
+          "file": "universal_robots_ur10e/LICENSE",
+          "license": "BSD-3-Clause"
+        },
+        {
+          "file": "universal_robots_ur5e/LICENSE",
+          "license": "BSD-3-Clause"
+        }
+      ],
+      "licenses": [
+        "Apache-2.0",
+        "BSD-2-Clause",
+        "BSD-3-Clause",
+        "MIT"
+      ],
+      "package_xml": [],
+      "status": "mixed",
+      "name": "mujoco_menagerie",
+      "revision": "4d038b3feae26ec82b46a4d586379114012a8ac7"
+    },
+    {
+      "path": "/workspace/molar/robot_lab_runtime/external_assets/sources/robot_assets/24b61c71c07e831a55c5bac1e8d3e2ee83ff9b99",
+      "license_files": [],
+      "licenses": [],
+      "package_xml": [],
+      "status": "unresolved",
+      "name": "robot_assets",
+      "revision": "24b61c71c07e831a55c5bac1e8d3e2ee83ff9b99"
+    },
+    {
+      "path": "/workspace/molar/robot_lab_runtime/external_assets/sources/robotnik_description_vendor/1a7aff1310dbc4427e0b2ae5ef83e0ffd2094504",
+      "license_files": [
+        {
+          "file": "LICENSE",
+          "license": "BSD-3-Clause"
+        }
+      ],
+      "licenses": [
+        "BSD-3-Clause"
+      ],
+      "package_xml": [
+        "BSD-3-Clause"
+      ],
+      "status": "resolved",
+      "name": "robotnik_description_vendor",
+      "revision": "1a7aff1310dbc4427e0b2ae5ef83e0ffd2094504"
+    },
+    {
+      "path": "/workspace/molar/robot_lab_runtime/external_assets/sources/saiaravind19_gazebo_terrain_generator/checkout",
+      "license_files": [
+        {
+          "file": "LICENSE",
+          "license": "BSD-3-Clause"
+        }
+      ],
+      "licenses": [
+        "BSD-3-Clause"
+      ],
+      "package_xml": [],
+      "status": "resolved",
+      "name": "saiaravind19_gazebo_terrain_generator",
+      "revision": "checkout"
+    },
+    {
+      "path": "/workspace/molar/robot_lab_runtime/external_assets/sources/servicesim_models/57992bb0e47e4a28f94dbf44e8eed543d77fe039",
+      "license_files": [
+        {
+          "file": "LICENSE",
+          "license": "Apache-2.0"
+        }
+      ],
+      "licenses": [
+        "Apache-2.0"
+      ],
+      "package_xml": [
+        "Apache License 2.0"
+      ],
+      "status": "resolved",
+      "name": "servicesim_models",
+      "revision": "57992bb0e47e4a28f94dbf44e8eed543d77fe039"
+    },
+    {
+      "path": "/workspace/molar/robot_lab_runtime/external_assets/sources/summit_xl_vendor/77a728201069cf74c1be04730785086d3f1aa493",
+      "license_files": [
+        {
+          "file": "LICENSE",
+          "license": "BSD-2-Clause"
+        }
+      ],
+      "licenses": [
+        "BSD-2-Clause"
+      ],
+      "package_xml": [
+        "BSD"
+      ],
+      "status": "resolved",
+      "name": "summit_xl_vendor",
+      "revision": "77a728201069cf74c1be04730785086d3f1aa493"
+    },
+    {
+      "path": "/workspace/molar/robot_lab_runtime/external_assets/sources/turtlebot3_simulation_vendor/a35a56c8b04877dc89772b598084d8ce648a9023",
+      "license_files": [
+        {
+          "file": "LICENSE",
+          "license": "Apache-2.0"
+        }
+      ],
+      "licenses": [
+        "Apache-2.0"
+      ],
+      "package_xml": [
+        "Apache 2.0"
+      ],
+      "status": "resolved",
+      "name": "turtlebot3_simulation_vendor",
+      "revision": "a35a56c8b04877dc89772b598084d8ce648a9023"
+    },
+    {
+      "path": "/workspace/molar/robot_lab_runtime/external_assets/sources/turtlebot3_vendor/90a68bd2e3c61c12966779da89d8eeaec82730e9",
+      "license_files": [
+        {
+          "file": "LICENSE",
+          "license": "Apache-2.0"
+        }
+      ],
+      "licenses": [
+        "Apache-2.0"
+      ],
+      "package_xml": [
+        "Apache 2.0"
+      ],
+      "status": "resolved",
+      "name": "turtlebot3_vendor",
+      "revision": "90a68bd2e3c61c12966779da89d8eeaec82730e9"
+    },
+    {
+      "path": "/workspace/molar/robot_lab_runtime/external_assets/sources/turtlebot4_vendor/a6ee13b63cbd524500cc6a68cd20dbef69f326a9",
+      "license_files": [
+        {
+          "file": "LICENSE",
+          "license": "Apache-2.0"
+        }
+      ],
+      "licenses": [
+        "Apache-2.0"
+      ],
+      "package_xml": [
+        "Apache 2.0"
+      ],
+      "status": "resolved",
+      "name": "turtlebot4_vendor",
+      "revision": "a6ee13b63cbd524500cc6a68cd20dbef69f326a9"
+    },
+    {
+      "path": "/workspace/molar/robot_lab_runtime/external_assets/sources/unitree_rl_gym/276801e46c5d433564f24658bac64f254b7d2d4b",
+      "license_files": [
+        {
+          "file": "LICENSE",
+          "license": "BSD-3-Clause"
+        },
+        {
+          "file": "legged_gym/LICENSE",
+          "license": "BSD-3-Clause"
+        }
+      ],
+      "licenses": [
+        "BSD-3-Clause"
+      ],
+      "package_xml": [],
+      "status": "resolved",
+      "name": "unitree_rl_gym",
+      "revision": "276801e46c5d433564f24658bac64f254b7d2d4b"
+    },
+    {
+      "path": "/workspace/molar/robot_lab_runtime/external_assets/sources/vrx_vendor/dc30ed8d17aa1083fd872edad9c77c69896d2b07",
+      "license_files": [
+        {
+          "file": "LICENSE",
+          "license": "Apache-2.0"
+        }
+      ],
+      "licenses": [
+        "Apache-2.0"
+      ],
+      "package_xml": [
+        "Apache License 2.0"
+      ],
+      "status": "resolved",
+      "name": "vrx_vendor",
+      "revision": "dc30ed8d17aa1083fd872edad9c77c69896d2b07"
+    }
+  ],
+  "summary": {
+    "mixed": 1,
+    "resolved": 36,
+    "resolved (some files unidentified)": 2,
+    "unresolved": 7
+  }
+}
