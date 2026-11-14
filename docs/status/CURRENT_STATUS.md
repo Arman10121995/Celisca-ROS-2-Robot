@@ -1,5 +1,9 @@
 # Current Robot Lab status
 
+November 14 Codex: Stretch now tries bounded alternate source IK configurations and shares their valid endpoints in one collision search. The synthetic native wrist case selects an alternate configuration and passes independent dense contact inspection; 43 focused checks and three builds pass. [Scope](ik-branches-2026-11-14.md). A complete loaded source-robot mission remains pending. Claude's algorithm/seed/launch work is separate.
+
+November 14 CI follow-up: both workflows pin the documented MAVLink runtime. Two fleet/swarm tests that import rclpy now remain required in the sourced integration tier; 20 local checks pass. [Published failures and repairs](evidence/ci-mavlink-2026-11-14/README.md). Full exact-revision CI is pending.
+
 November 14 Claude: [external source licenses (R9.1)](evidence/r91-external-sources-2026-11-14/README.md). The licenses of the source trees the lab runs are now read from their own license files. PX4 v1.16.2 is BSD-3-Clause, and 23 of its 25 submodules are identified. 36 vendor trees resolve. 7 ship no license file (BlueROV2, Husky and the model datasets); keep them local until each model's terms are recorded.
 
 November 14 Claude: occupancy grids and sensor faults (R6.5/R6.2):

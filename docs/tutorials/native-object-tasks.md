@@ -98,6 +98,20 @@ the published [RRT-Connect method](https://ompl.kavrakilab.org/classompl_1_1geom
 not the Panda's OMPL binding. It does not infer a useful grasp orientation or
 guarantee a solution for an arbitrary requested orientation.
 
+Source IK first tries the measured controls. If that solution is unavailable
+or blocked, it can try the source-range midpoint and four seed-0 samples of
+the reviewed movable controls. Head/base/gripper and keep-mode wrists remain
+held. Duplicate solutions and colliding endpoints are excluded; every accepted
+solution must still satisfy the source FK pose tolerances. This searches a
+bounded set of possible wrist configurations, not every IK branch.
+
+A clear motor path to any candidate is preferred. Otherwise all accepted
+goals seed one bidirectional configuration search, so a disconnected first
+goal does not discard another reachable solution. The GUI execution phase
+reports an alternate IK attempt; the journal records every attempt's result,
+available goal count and selected attempt. A duplicate seed is not counted as
+a new IK solution or a successful grasp.
+
 Search uses seed 0, at most 384 tree nodes, 2,048 collision-edge queries and
 12,000 native collision samples within the original eight-second worker
 budget. Source control limits bound the search. A result must fit the existing
@@ -105,8 +119,12 @@ budget. Source control limits bound the search. A result must fit the existing
 and checks. A fixed seed repeats sampling on an identical snapshot; wall-time
 timeouts can still vary. No route found within these bounds does not prove
 that the target is geometrically unreachable. Try another approach or base
-position. The fixed IK endpoint may itself collide; searching other IK branches
-remains open.
+position. The measured-seed IK has a two-second sub-budget; alternate seeds
+have up to 0.5 seconds each, and their collection stops with three seconds
+reserved for configuration search under the default total budget. Any accepted
+path remains usable if optional shortening exhausts its inspection budget;
+only previously inspected edges are returned. Exhaustive IK, perception and
+other source/backend adapters remain open.
 
 Planning is an eight-second-budget worker. It cannot write live robot/object
 poses. A late/canceled generation is ignored; object or actuator movement
@@ -135,8 +153,8 @@ seconds or 3 wall seconds; source geometry publication still has its existing
 explicit. Editing that padding requires updating the receipt contract.
 
 This is implemented consumer verification, not a completed loaded-navigation
-certificate. Contact calibration, perception-based object estimates, alternate
-IK branches, other grasp strategies, additional mobile-manipulator adapters
+certificate. Contact calibration, perception-based object estimates, other
+grasp strategies, additional mobile-manipulator adapters
 and full map/backend missions remain in ROADMAP R5.9/R5.7. Object pose input
 here is explicitly simulator truth. Stop, manual intervention and GUI/task
 heartbeat loss interrupt execution and retain conservative payload bounds.

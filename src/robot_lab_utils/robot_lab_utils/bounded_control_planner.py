@@ -9,25 +9,32 @@ import time
 import numpy as np
 
 
+class PlanningBudgetExceeded(ValueError):
+    """A finite planner or caller-owned collision inspection budget expired."""
+
+
 def connect_controls(start, goal, limits, edge_valid, *, deadline, seed=0,
                      max_nodes=384, max_edges=2048, extension=.18):
+    """Connect to one goal vector or any of at most eight explicit goal rows."""
     start, goal, limits = (np.asarray(value, dtype=float) for value in (start, goal, limits))
-    if (start.ndim != 1 or not 1 <= len(start) <= 12 or goal.shape != start.shape
+    goals=goal[None,:] if goal.ndim==1 else goal
+    if (start.ndim != 1 or not 1 <= len(start) <= 12
+            or goals.ndim!=2 or goals.shape[1:]!=start.shape or not 1<=len(goals)<=8
             or limits.shape != (len(start), 2) or not all(np.all(np.isfinite(v)) for v in (start, goal, limits))
             or np.any(limits[:, 1] <= limits[:, 0]) or not np.isfinite(deadline)
             or not np.isfinite(extension) or extension <= 0 or max_nodes < 2 or max_edges < 1):
         raise ValueError('Finite bounded control-space planning inputs required')
     lower, span = limits[:, 0], limits[:, 1]-limits[:, 0]
-    if any(np.any(v < lower) or np.any(v > lower+span) for v in (start, goal)):
+    if any(np.any(v < lower) or np.any(v > lower+span) for v in (start, goals)):
         raise ValueError('Planning endpoint exceeds source control limits')
     rng = np.random.default_rng(seed)
-    checks, nodes = 0, 2
+    checks, nodes = 0, 1
 
     def budget():
         if time.monotonic() >= deadline:
-            raise ValueError('Source configuration planning deadline exceeded')
+            raise PlanningBudgetExceeded('Source configuration planning deadline exceeded')
         if checks >= max_edges:
-            raise ValueError('Source configuration collision-edge budget exhausted')
+            raise PlanningBudgetExceeded('Source configuration collision-edge budget exhausted')
 
     def valid(a, b):
         nonlocal checks
@@ -35,16 +42,24 @@ def connect_controls(start, goal, limits, edge_valid, *, deadline, seed=0,
         checks += 1
         return bool(edge_valid(a, b))
 
-    if not valid(start, start) or not valid(goal, goal):
-        raise ValueError('Source collision at planning start or goal; choose another approach')
-    if valid(start, goal):
-        return dict(path=[start.copy(), goal.copy()], planner='direct', seed=seed,
-                    nodes=nodes, collision_edges=checks)
+    if not valid(start,start):
+        raise ValueError('Source collision at planning start; choose another approach')
+    accepted=[index for index,target in enumerate(goals) if valid(target,target)]
+    if not accepted:
+        raise ValueError('Source collision at planning goals; choose another approach')
+    nodes+=len(accepted)
+    if nodes>max_nodes:
+        raise ValueError('Source configuration goal roots exceed the node budget')
+    for index in accepted:
+        if valid(start,goals[index]):
+            return dict(path=[start.copy(),goals[index].copy()],planner='direct',seed=seed,
+                        nodes=nodes,collision_edges=checks,goal_index=index,goal_count=len(accepted))
 
     # Each tree records whether it grows from the start. Goal-tree edges must
     # be checked child -> parent because actuator slew need not be reversible.
-    trees = [dict(points=[start.copy()], parents=[-1], start=True),
-             dict(points=[goal.copy()], parents=[-1], start=False)]
+    trees = [dict(points=[start.copy()], parents=[-1], start=True,roots=1),
+             dict(points=[goals[index].copy() for index in accepted],parents=[-1]*len(accepted),
+                  start=False,roots=len(accepted))]
 
     def grow(tree, target):
         nonlocal nodes
@@ -76,7 +91,11 @@ def connect_controls(start, goal, limits, edge_valid, *, deadline, seed=0,
     while nodes < max_nodes:
         budget()
         active, other = trees
-        sample = other['points'][0] if rng.random() < .15 else lower+rng.random(len(start))*span
+        if rng.random()<.15:
+            root=int(rng.integers(other['roots'])) if other['roots']>1 else 0
+            sample=other['points'][root]
+        else:
+            sample=lower+rng.random(len(start))*span
         first, _ = grow(active, sample)
         if first is not None:
             target = active['points'][first]
@@ -95,12 +114,19 @@ def connect_controls(start, goal, limits, edge_valid, *, deadline, seed=0,
                             if time.monotonic() >= deadline or checks >= max_edges or attempts >= 32:
                                 break
                             attempts += 1
-                            if valid(path[index], path[end]):
+                            try:
+                                shortcut=valid(path[index],path[end])
+                            except PlanningBudgetExceeded:
+                                attempts=32
+                                break
+                            if shortcut:
                                 path[index+1:end] = []
                                 break
                         index += 1
                     return dict(path=path, planner='rrt_connect', seed=seed,
-                                nodes=nodes, collision_edges=checks)
+                                nodes=nodes, collision_edges=checks,
+                                goal_index=next(i for i in accepted if np.array_equal(path[-1],goals[i])),
+                                goal_count=len(accepted))
                 if nodes >= max_nodes:
                     break
         trees.reverse()

@@ -6,7 +6,7 @@ waypoints; the task executor owns application, stop, heartbeat and live checks.
 import time
 import numpy as np
 from robot_lab_utils.native_control_kinematics import ControlKinematics
-from robot_lab_utils.bounded_control_planner import connect_controls
+from robot_lab_utils.bounded_control_planner import connect_controls, PlanningBudgetExceeded
 
 
 def plan_reach(node, snapshot, channels, initial, step, robot_bodies, robot_joints,
@@ -45,6 +45,7 @@ def plan_reach(node, snapshot, channels, initial, step, robot_bodies, robot_join
                 or not .9<=np.linalg.norm(orientation)<=1.1):
             raise ValueError('Finite unit world pad orientation required')
         orientation=orientation/np.linalg.norm(orientation)
+    target_controls=None
     if step['kind']=='stow_arm':
         extension = [i for i,c in enumerate(channels) if c['name'] in ('arm','arm_extend')]
         if len(extension)!=1:
@@ -53,8 +54,6 @@ def plan_reach(node, snapshot, channels, initial, step, robot_bodies, robot_join
         target_controls[extension[0]] = channels[extension[0]]['limits'][0]
         ik.forward(target_controls)
         target = ik.midpoint(bodies).copy()
-    else:
-        target_controls = ik.reach(controls,bodies,target,movable,deadline,orientation=orientation)
     rates = np.asarray([c['max_rate'] for c in channels])
     if not np.all(np.isfinite(rates)) or np.any(rates <= 0):
         raise ValueError('Positive finite source actuator rates required')
@@ -75,10 +74,10 @@ def plan_reach(node, snapshot, channels, initial, step, robot_bodies, robot_join
     def collision_free(candidate):
         nonlocal inspections
         if time.monotonic()>deadline:
-            raise ValueError('Source reach collision inspection deadline exceeded')
+            raise PlanningBudgetExceeded('Source reach collision inspection deadline exceeded')
+        if inspections>=12000:
+            raise PlanningBudgetExceeded('Source reach collision inspection budget exhausted')
         inspections += 1
-        if inspections > 12000:
-            raise ValueError('Source reach collision inspection budget exhausted')
         try:
             probe = ik.forward(candidate)
         except ValueError:
@@ -113,7 +112,10 @@ def plan_reach(node, snapshot, channels, initial, step, robot_bodies, robot_join
     sample_dt = min(.025,float(np.min(.005*span/rates)))
     if not np.isfinite(sample_dt) or sample_dt <= 0:
         raise ValueError('Finite nonzero source control spans required')
+    edge_checks=0
     def edge_free(a, b):
+        nonlocal edge_checks
+        edge_checks+=1
         origin = a.copy()
         for end in motor_points(a,b):
             delta = end-origin
@@ -136,8 +138,48 @@ def plan_reach(node, snapshot, channels, initial, step, robot_bodies, robot_join
     limits = np.asarray([c['limits'] for c in channels])
     # Never sample gripper/head/base controls. The measured compressive gripper
     # target remains held in every private and returned configuration.
-    plan = connect_controls(controls[movable],target_controls[movable],limits[movable],
-        lambda a,b:edge_free(expand(a),expand(b)),deadline=deadline,seed=0)
+    # Try the measured seed first. Only a blocked/unavailable solution pays for
+    # further source IK seeds. Reserve a substantial part of the same total
+    # worker budget for the shared multi-goal configuration search.
+    rng=np.random.default_rng(0)
+    seeds=[controls.copy()]
+    if step['kind']!='stow_arm':
+        for values in [np.mean(limits[movable],axis=1),
+                       *[rng.uniform(limits[movable,0],limits[movable,1]) for _ in range(4)]]:
+            candidate=controls.copy();candidate[movable]=values;seeds.append(candidate)
+    goals=[];goal_attempts=[];attempts=[];seen=[];plan=None
+    collection_end=deadline-min(3.,budget*.5)
+    for index,guess in enumerate(seeds):
+        if index and time.monotonic()>=collection_end:break
+        attempt=dict(index=index,seed_kind='measured' if index==0 else 'midpoint' if index==1 else 'seeded_random')
+        attempts.append(attempt)
+        try:
+            if step['kind']=='stow_arm':
+                goal=target_controls.copy()
+            else:
+                local_deadline=(min(deadline,time.monotonic()+2.) if index==0 else
+                                min(collection_end,time.monotonic()+.5))
+                goal=ik.reach(guess,bodies,target,movable,local_deadline,orientation=orientation)
+        except ValueError as exc:
+            attempt.update(result='ik_refused',reason=str(exc));continue
+        if any(np.max(np.abs((goal-previous)/span))<1e-3 for previous in seen):
+            attempt['result']='duplicate_solution';continue
+        seen.append(goal.copy())
+        if not collision_free(goal):
+            attempt['result']='goal_collision';continue
+        attempt['result']='goal_available'
+        goals.append(goal.copy());goal_attempts.append(index)
+        if edge_free(controls,goal):
+            plan=dict(path=[controls[movable].copy(),goal[movable].copy()],planner='direct',
+                      seed=0,nodes=2,collision_edges=edge_checks,goal_index=len(goals)-1,goal_count=len(goals))
+            break
+    if plan is None:
+        if not goals:
+            reason=next((entry.get('reason') for entry in reversed(attempts) if entry.get('reason')),
+                        'all source IK solutions collide')
+            raise ValueError('No collision-free source IK candidate within the bounded search: '+reason)
+        plan=connect_controls(controls[movable],np.asarray(goals)[:,movable],limits[movable],
+            lambda a,b:edge_free(expand(a),expand(b)),deadline=deadline,seed=0)
     points = []
     for a,b in zip(plan['path'],plan['path'][1:]):
         points.extend(motor_points(expand(a),expand(b)))
@@ -151,5 +193,7 @@ def plan_reach(node, snapshot, channels, initial, step, robot_bodies, robot_join
                 object_position=snapshot.xpos[obj].tolist(),object_quaternion=snapshot.xquat[obj].tolist(),
                 initial_controls=controls.tolist(),
                 planner=dict(algorithm=plan['planner'],seed=plan['seed'],nodes=plan['nodes'],
-                             collision_edges=plan['collision_edges'],collision_samples=inspections),
-                scope='Source point/optional pad-orientation IK plus bounded seeded configuration search; sampled original motor slew')
+                             collision_edges=plan['collision_edges'],collision_samples=inspections,
+                             inspected_motor_edges=edge_checks,ik_attempts=attempts,
+                             valid_ik_goals=len(goals),selected_ik_attempt=goal_attempts[plan['goal_index']]),
+                scope='Bounded source multi-seed point/pad-pose IK and multi-goal configuration search; sampled original motor slew')

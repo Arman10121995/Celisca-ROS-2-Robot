@@ -100,7 +100,7 @@ class MobileTaskControls(ttk.LabelFrame):
             button=ttk.Button(self,text=title,command=callback)
             button.grid(row=row,column=column,sticky='ew',padx=2,pady=2)
             self.buttons['object_'+name]=button
-        ttk.Label(self,text='Recipes add steps only; Run task starts motion. Source IK and bounded configuration '
+        ttk.Label(self,text='Recipes add steps only; Run task starts motion. Source IK tries up to six starts; bounded configuration '
                   'detours inspect sampled native motor motion. Place XYZ and pad RPY use native_world axes. '
                   'Keep measured pad holds wrist controls during each reach; explicit RPY constrains its endpoint. '
                   'Grasp outcomes require measured checkpoints.',

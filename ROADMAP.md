@@ -133,7 +133,7 @@ Work top to bottom. Each line links to its task.
 | I4a | [R14.5](#r145--robot-status-markers-in-the-gui-selectors) Robot status markers | Done 2026-11-13: ● measured / ◐ experimental / ○ display only / ✕ unavailable plus mode letters in both robot lists, from recorded evidence | implemented |
 | I4b | [R6.8](#r68--real-world-area-import-from-a-globe) Real-world area import | Done 2026-11-13: globe picker (CesiumJS + OSM), Terrain Tiles + OSM buildings/roads/trees/water, SUMO people/traffic; support and roof heights measured on four simulators | implemented |
 | I5 | [R5.11](#r511--drone-moving-obstacles-and-other-drone-backends) Drone moving obstacles | Done 2026-11-13: Kalman tracks, predicted sweeps, walkway look-both-ways and overflight, evasion, sensor-loss hold/land, EKF heading/height gate; 2 passing flights past walkers (Gazebo); PX4 + MuJoCo plant: takeoff, 5 m route and landing | implemented |
-| I6 | [R5.9](#r59--mobile-manipulators) Mobile manipulation | Stretch object recipes, pose reaches, interlocks, actual costmap receipts and bounded configuration detours implemented; alternate IK branches and further source adapters remain | partial |
+| I6 | [R5.9](#r59--mobile-manipulators) Mobile manipulation | Stretch object recipes, pose reaches, bounded alternate IK/configuration search, interlocks and actual costmap receipts implemented; perception, grasp strategies and further source adapters remain | partial |
 | I7 | [R5.7](#r57--manipulators-and-motion-planning) Arms | Panda measured box selection, grasp and support-placement stage plans implemented; unattended sequencing, arbitrary geometry, coupled arms and other backends remain | partial |
 | I8 | [R5.8](#r58--robot-hands-and-grippers) Hands | Torque/tendon hand adapters, object workflows | partial |
 | I9 | [R10.2](#r102--fleet-management-and-open-rmf) Fleet / Open-RMF | Done 2026-11-14: shared-zone reservations (map passages, doors, docks), cycle breaker, recovery drive-out, RMF energy from a drivetrain calibration; two crossing runs pass (native and RMF). Chargers/doors in other worlds, larger fleets remain | implemented |
@@ -186,7 +186,7 @@ tier repair awaits its exact-revision published rerun. Details and evidence are 
 | R0.1, R0.2 Documentation recovery | Audited baseline and truthful docs | — |
 | R1.1 Entry points and paths | Installed executables, package-share asset paths | No developer home paths |
 | R1.2 Test tiers | Fast / physics / integration / mission tiers | `PYTEST_DISABLE_PLUGIN_AUTOLOAD=1` locally |
-| R1.3 CI | Runner setup baseline passes at ecaaa133; ROS-import tier repair reached integration, where missing pymavlink stopped collection. Both workflows now pin the documented flight runtime; exact-revision CI pending | [Baseline](docs/status/evidence/ci-firefox-2026-11-11/README.md), [follow-up](docs/status/evidence/ci-mavlink-2026-11-14/README.md) |
+| R1.3 CI | Historical runner baseline passes; workflows pin the documented flight runtime, and ROS-dependent world/fleet/swarm tests remain required in sourced integration. Full exact-revision CI pending | [Baseline](docs/status/evidence/ci-firefox-2026-11-11/README.md), [follow-up](docs/status/evidence/ci-mavlink-2026-11-14/README.md) |
 | R2.1–R2.3 Simulator contracts | `/clock` in every adapter; one TF owner per edge; `/robot_lab/ready`, `/health`, `/reset` | Offline fallback is never success |
 | R3.1–R3.3, R3.5 Composition | Canonical IDs, typed validation, one resolver/executor, scenario and experiment catalogs | The CLI and GUI must produce the same manifest |
 | R3.4 GUI resolver | GUI uses the same resolver; seven algorithm slots; right-hand control column | State `active` in the ledger: keep the GUI tests green |
@@ -407,14 +407,24 @@ tier repair awaits its exact-revision published rerun. Details and evidence are 
   source FK solves point/rotation residuals; keep mode fixes wrist controls
   and checks the planned/measured orientation envelope. Explicit-pose goals
   also check measured final orientation. [Scope](docs/status/reach-orientation-2026-11-14.md).
+- **Alternate IK configurations (2026-11-14, Codex):** measured/midpoint/seeded
+  source-control IK candidates share one bounded multi-goal search; duplicate
+  and colliding endpoints are excluded. A real synthetic MuJoCo wrist fixture
+  selects another configuration when its measured-seed goal collides, with
+  independent dense contact inspection. Optional shortening no longer discards
+  a found route on inspection-budget expiry. Forty-three focused checks and
+  three package builds pass; full loaded source missions remain unqualified.
+  [Receipt](docs/status/ik-branches-2026-11-14.md).
 - **Remaining implementation:**
-  - multiple-IK-branch arm planning, additional grasp strategies,
-    perception-bound object poses and further source-specific object pipelines;
+  - additional grasp strategies, perception-bound object poses and further
+    source-specific object pipelines;
   - generalize the existing native interlock and measured footprint-consumption gate to other mobile-manipulator adapters;
   - Fetch, PR2 or TIAGo as a second source.
 - **How to do it:**
-  1. Write the sequencer as a small state machine node in
-     `robot_lab_adapter/`. Nav2 goal for the base, then R5.7 pick/place for the arm.
+  1. Extend the existing `native_mobile_tasks.py` sequencer and
+     `mobile_task_controls.py` task builder. Preserve independent Nav2 outcomes,
+     source/scene binding, measured custody and costmap receipts; do not create
+     a second conflicting base/arm owner.
   2. Reuse R11's articulation contract (`robot_lab_utils/urdf_articulation`)
      for the base inhibit.
   3. Add a "Fetch object" panel: choose object and destination, Start, Stop.

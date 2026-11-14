@@ -28,3 +28,12 @@ PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 ROS_DOMAIN_ID=114 \
 Full exact-revision published CI remains pending. Raw failed-run output and
 local logs remain on SSD at
 `/workspace/molar/robot_lab_runtime/continuation-20261114/`.
+
+Follow-up [run 43551833654](https://github.com/Arman10121995/Celisca-ROS-2-Robot/actions/runs/43551833654)
+at `6106be61` stopped earlier in fast collection: the newly registered
+`test_fleet_contact_conflict.py` and `test_swarm_distributed.py` import the real
+ROS FleetController, requiring rclpy. They remain unchanged and required, now
+in the sourced integration tier; [20 local checks](fleet-tier-checks.log) pass
+there. No fleet runtime implementation or test assertion is modified. This
+run does not establish that the newly pinned integration step passed, because
+it had not reached that step. Exact-revision full CI remains pending.

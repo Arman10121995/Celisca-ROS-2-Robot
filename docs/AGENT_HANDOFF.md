@@ -1,5 +1,7 @@
 # Agent Handoff Protocol
 
+November 14 Codex R5.9 IK branches: preserve measured/midpoint/four seeded source IK starts, duplicate/collision filtering, multi-goal directed configuration search and actual motor-slew checks. Keep held coordinates, source bounds, payload relation, original eight-second/64-waypoint limits and valid found paths when optional shortening exhausts its budget. Forty-three focused checks and three builds pass; [receipt](status/ik-branches-2026-11-14.md). Actual loaded source missions remain open; Claude owns algorithm/seed/launch work.
+
 November 14 Codex CI dependency follow-up: `a2b5e281` passed fast/physics, then integration collection lacked pymavlink for the heading-gate fixture. Both workflows now pin the existing runtime version 2.4.50; ten heading/walkway checks pass locally. Full published rerun pending; [receipt](status/evidence/ci-mavlink-2026-11-14/README.md). Claude owns algorithm/seed/launch files; Codex continues R5.9 IK branches.
 
 November 14 Codex R5.9 orientation: preserve optional authored first-pad world orientation, keep-mode fixed wrist controls and sampled 0.05 rad/live 0.08 rad envelope, actual final-angle gate for explicit poses, normalized source-bound task fields and GUI recipe options. Legacy position-only tasks remain valid. [Receipt](status/reach-orientation-2026-11-14.md). Alternate IK branches and full loaded source missions remain open; Claude owns fleet/drone/import work.

@@ -105,8 +105,6 @@ FAST_TESTS=(
   "src/robot_lab_utils/test/test_terrain_generator.py"
   "src/robot_lab_utils/test/test_fleet_zones.py"
   "src/robot_lab_utils/test/test_fleet_energy_calibration.py"
-  "src/robot_lab_utils/test/test_fleet_contact_conflict.py"
-  "src/robot_lab_utils/test/test_swarm_distributed.py"
   "src/robot_lab_utils/test/test_marine_mujoco_plant.py"
   "src/robot_lab_utils/test/test_flipper_terrain_policy.py"
   "src/robot_lab_utils/test/test_gait_recovery.py"
@@ -118,6 +116,8 @@ FAST_TESTS=(
 )
 
 INTEGRATION_TESTS=(
+  "src/robot_lab_utils/test/test_fleet_contact_conflict.py"
+  "src/robot_lab_utils/test/test_swarm_distributed.py"
   "$BRG_TEST/test_world_copy_paths.py"
   "$GUI_TEST/test_support_placement_controls.py"
   "$GUI_TEST/test_grasp_pose_request.py"

@@ -240,6 +240,46 @@ def test_configuration_search_uses_actual_geometry_to_route_around_a_blocker():
     np.testing.assert_array_equal(model.actuator_gainprm,gains)
 
 
+def test_alternate_real_wrist_ik_avoids_the_first_colliding_goal_without_moving_grip():
+    from types import SimpleNamespace
+    from robot_lab_mujoco.native_mobile_reach import plan_reach
+    source=XML.replace('<compiler autolimits="true"/>','<compiler autolimits="true" angle="radian"/>')
+    # Keep the free object out of the route: this case isolates the wrist bar
+    # and goal blocker rather than also requiring a detour around the object.
+    source=source.replace('<body name="object" pos=".25 0 .4">','<body name="object" pos=".6 0 .15">')
+    source=source.replace('<body name="left"',
+        '<body name="wrist"><joint name="wrist_j" type="hinge" axis="0 0 1" range="-3 3"/>'
+        '<geom name="tool_bar" type="box" pos=".04 0 0" size=".04 .01 .01" mass=".02"/>'
+        '<body name="left"')
+    source=source.replace('</body></body></body></body>','</body></body></body></body></body>')
+    source=source.replace('</actuator>','<position name="wrist_yaw" joint="wrist_j" kp="100" ctrlrange="-3 3"/></actuator>')
+    source=source.replace('</worldbody>',
+        '<geom name="wrist_blocker" type="box" pos=".30 0 .48" size=".02 .025 .025"/></worldbody>')
+    model=mj.MjModel.from_xml_string(source);data=mj.MjData(model);mj.mj_forward(model,data)
+    channels=position_channels(model,model.njnt-1,allow_mobile_base=True)
+    original=data.qpos.copy();gains=model.actuator_gainprm.copy()
+    initial=np.array([.2,.1,0.,0.]);ik=ControlKinematics(model,data,channels,model.njnt-1)
+    snapshot=ik.forward(initial)
+    step=dict(kind='reach_object',object='object',left_body='left',right_body='right',target_xyz=[.25,0.,.48])
+    route=plan_reach(SimpleNamespace(model=model,mujoco=mj),snapshot,channels,initial,step,8,model.njnt-1,[])
+    assert route['planner']['ik_attempts'][0]['result']=='goal_collision'
+    assert route['planner']['selected_ik_attempt']>0
+    blocker=mj.mj_name2id(model,mj.mjtObj.mjOBJ_GEOM,'wrist_blocker')
+    rates=np.array([c['max_rate'] for c in channels]);origin=initial.copy()
+    for waypoint in route['waypoints']:
+        end=np.array([waypoint['targets'][c['name']] for c in channels])
+        assert end[2]==pytest.approx(0.)
+        delta=end-origin;duration=max(abs(delta)/rates)
+        for elapsed in np.linspace(0.,duration,101):
+            probe=ik.forward(origin+np.sign(delta)*np.minimum(abs(delta),rates*elapsed))
+            assert not any(blocker in contact.geom and contact.dist<-.001 for contact in probe.contact[:probe.ncon])
+        origin=end
+    pads=[mj.mj_name2id(model,mj.mjtObj.mjOBJ_BODY,n) for n in ('left','right')]
+    np.testing.assert_allclose(ik.midpoint(pads),step['target_xyz'],atol=.008)
+    np.testing.assert_array_equal(data.qpos,original)
+    np.testing.assert_array_equal(model.actuator_gainprm,gains)
+
+
 def test_contact_blocked_settling_exemption_is_only_for_closing_gripper():
     pytest.importorskip('nav2_msgs.action')
     from types import SimpleNamespace

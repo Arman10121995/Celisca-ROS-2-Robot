@@ -445,7 +445,9 @@ class NativeMobileTasks:
                                             self.node.mujoco.mjtObj.mjOBJ_BODY,step['left_body']),
                                             np.asarray(result['target_orientation_wxyz']))
                                     self.enter('articulating','Executing collision-inspected source-control reach ('+
-                                               result['planner']['algorithm']+')')
+                                               result['planner']['algorithm']+')'+
+                                               ('; IK attempt '+str(result['planner']['selected_ik_attempt']+1)
+                                                if len(result['planner'].get('ik_attempts',[]))>1 else ''))
                                 except (ValueError,TypeError,KeyError) as exc:
                                     self.cancel(str(exc),failed=True)
                 elif phase == 'gripping':

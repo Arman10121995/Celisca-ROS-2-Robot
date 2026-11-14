@@ -1,0 +1,17 @@
+{
+  "base_revision": "6106be61b9aba575d03ce057bbf4a7c22b509586",
+  "scope": "Software/native synthetic geometry/control/Tk checks; no installed loaded robot mission",
+  "sha256": {
+    "src/robot_lab_utils/robot_lab_utils/bounded_control_planner.py": "5bbcf1ffa90fbc78812f67b8fbbc3f26ca2abfff288ef3d4bcd2e4472c486fef",
+    "src/robot_lab_mujoco/python/robot_lab_mujoco/native_mobile_reach.py": "6d43a60d86b76e66cffffa5e6976b26f594f65cc4fbcb506de63ef4fe287d0d7",
+    "src/robot_lab_mujoco/python/robot_lab_mujoco/native_mobile_tasks.py": "930f64476711a87e1068b74310d8449077fcbe112e212e6b130dd6df031cbaeb",
+    "src/robot_lab_gui/robot_lab_gui/mobile_task_controls.py": "5a6cd3ca4ba3a2bfdcf9b53ec7b6dd4b7b6eb8e88b41b7f35ddcb748a9b4966d",
+    "src/robot_lab_bringup/test/test_bounded_control_planner.py": "406d66ba1b96326d8ccfca3bf71b54c2e62bd0c6835fd9e782101f8308616da4",
+    "src/robot_lab_bringup/test/test_native_control_kinematics.py": "a4ffee0495cff3a1e1b9f9c0733f0842356511f50e9ea0d5c257c99a8cf77973"
+  },
+  "negative_logs": {
+    "checks.log": "f4331e738c6ccca32295901360474fc96540dcd9834b554232c171ed3343327e",
+    "checks-final.log": "666e5531f7d2ae4cfb624ae32e6cff53972f9abba0bc7dc139531ffff30f2f63",
+    "checks-final-2.log": "1367b70b991682d06b2ddc3ed3ef75ae02752b8c7c87793652956c0e479351ff"
+  }
+}
