@@ -1936,6 +1936,13 @@ class MuJoCoSpawner(Node):
             self._model.opt.integrator = int(mujoco.mjtIntegrator.mjINT_IMPLICITFAST)
             from robot_lab_utils.urdf_articulation import ArticulationROS
             self._articulation = ArticulationROS(self, articulation_contract, urdf, str(model))
+            # MOLAR's deck belt: payloads on the extended deck move with the
+            # measured roller (Gazebo uses TrackController; R11 payload transfer).
+            if (mujoco.mj_name2id(self._model, mujoco.mjtObj.mjOBJ_BODY, "telescope_stage2") >= 0
+                    and mujoco.mj_name2id(self._model, mujoco.mjtObj.mjOBJ_JOINT, "transfer_roller_joint") >= 0):
+                from robot_lab_mujoco.conveyor_belt import ConveyorBelt
+                self._belt = ConveyorBelt(self._model, self._data, "telescope_stage2",
+                                          "transfer_roller_joint", roller_radius=0.012)
 
         # Display-mode hold: joints keep their spawn pose through physics,
         # not by freezing the state.  Each held joint gets a passive
@@ -2482,6 +2489,8 @@ class MuJoCoSpawner(Node):
         with getattr(self, "_profile", _NO_PROFILE).phase("mj_step"):
             for _ in range(self._substeps):
                 self._apply_perturbation()
+                if getattr(self, "_belt", None) is not None:
+                    self._belt.step()
                 mujoco.mj_step(self._model, self._data)
         self._sim_step += 1
         self._read_physics_state()
@@ -2552,6 +2561,8 @@ class MuJoCoSpawner(Node):
         self._time_debt = 0.0
         if hasattr(self._data, "xfrc_applied"):
             self._data.xfrc_applied[:, :] = 0.0
+        if getattr(self, "_belt", None) is not None:
+            self._belt.applied = {}
         if getattr(self, "_flex_culling", None) is not None:
             self._flex_culling.restore(self._model)    # the robot jumped; cull again next tick
         mujoco.mj_forward(self._model, self._data)

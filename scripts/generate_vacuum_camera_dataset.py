@@ -48,7 +48,47 @@ def source_camera():
     return children, height, pitch
 
 
-def fixture_world(map_name, seed, output, scatter=False):
+class FreeFloor:
+    """The world's own occupancy grid: free cells and a seeded layout centre with room around it."""
+
+    def __init__(self, map_name):
+        import yaml
+        directory = ROOT / f'src/robot_lab_maps/maps/{map_name}/maps'
+        meta = yaml.safe_load((directory / 'map.yaml').read_text())
+        image = np.asarray(PILImage.open(directory / meta['image']))
+        self.free = image[::-1] >= 250                       # row 0 = lowest y
+        self.resolution, self.origin = float(meta['resolution']), meta['origin'][:2]
+
+    def is_free(self, x, y):
+        col = int((x - self.origin[0]) / self.resolution)
+        row = int((y - self.origin[1]) / self.resolution)
+        return 0 <= row < self.free.shape[0] and 0 <= col < self.free.shape[1] and bool(self.free[row, col])
+
+    def centre(self, rng, half=1.1, margin=.3):
+        from scipy.ndimage import distance_transform_cdt
+        clearance = distance_transform_cdt(self.free, metric='chessboard') * self.resolution
+        rows, cols = np.nonzero(clearance >= half + margin)
+        if not len(rows):
+            raise ValueError('No free %.1f m square in this map' % (2 * (half + margin)))
+        i = int(rng.integers(len(rows)))
+        return (self.origin[0] + (cols[i] + .5) * self.resolution, self.origin[1] + (rows[i] + .5) * self.resolution)
+
+
+def resource_path():
+    """Gazebo's model search path as gazebo.launch.py builds it (small_house furniture is model://)."""
+    from ament_index_python.packages import get_package_share_directory
+    paths = []
+    for package, suffixes in (('robot_lab_models', ('..', 'models')), ('robot_lab_maps', ('..', 'maps')),
+                              ('robot_lab_robots', ('..',)), ('robot_lab_description', ('..', 'models', 'meshes'))):
+        try:
+            share = Path(get_package_share_directory(package))
+        except Exception:  # noqa: BLE001 - optional package
+            continue
+        paths += [str((share / suffix).resolve()) for suffix in suffixes]
+    return os.pathsep.join(paths)
+
+
+def fixture_world(map_name, seed, output, scatter=False, auto_centre=False):
     """A fixture world with the four objects. *scatter*: anywhere in a 1.8 m square, not one per quadrant."""
     rng = np.random.default_rng(seed)
     source = ROOT / f'src/robot_lab_maps/maps/{map_name}/worlds/{map_name}.world'
@@ -61,6 +101,8 @@ def fixture_world(map_name, seed, output, scatter=False):
         if name == 'Sensors':
             ET.SubElement(plugin, 'render_engine').text = 'ogre2'
     center = (0., 0.) if map_name == 'nav_empty' else (4., 0.)
+    if auto_centre:
+        center = FreeFloor(map_name).centre(rng)
     objects = []
     placed = []
     for i, (name, delta) in enumerate(zip(CLASSES, [(-.6, -.5), (.6, .5), (-.6, .5), (.6, -.5)])):
@@ -93,7 +135,7 @@ def fixture_world(map_name, seed, output, scatter=False):
         if kind == 'segmentation':
             ET.SubElement(sensor.find('camera'), 'segmentation_type').text = 'semantic'
     output.write_bytes(ET.tostring(root, encoding='utf-8', xml_declaration=True))
-    return world.get('name'), objects, height, pitch, source
+    return world.get('name'), objects, height, pitch, source, center
 
 
 def stop_owned(process):
@@ -132,8 +174,16 @@ def generate(args):
     try:
         # Training layouts on nav_empty, held-out layouts on nav_obstacle: no
         # held-out image shares an object arrangement or a background.
-        scenes = ([('nav_empty', args.seed + i, 'train') for i in range(args.train_layouts)]
-                  + [('nav_obstacle', args.seed + args.train_layouts + i, 'val') for i in range(args.val_layouts)])
+        if args.train_maps:
+            # Layouts at map-derived centres, cycling through the maps; held-out
+            # layouts use their own seeds (arrangements and viewpoints never trained).
+            scenes = ([(args.train_maps[i % len(args.train_maps)], args.seed + i, 'train')
+                       for i in range(args.train_layouts)]
+                      + [(args.val_maps[i % len(args.val_maps)], args.seed + 1000 + i, 'val')
+                         for i in range(args.val_layouts)])
+        else:
+            scenes = ([('nav_empty', args.seed + i, 'train') for i in range(args.train_layouts)]
+                      + [('nav_obstacle', args.seed + args.train_layouts + i, 'val') for i in range(args.val_layouts)])
         weights = np.asarray([args.class_weights.get(name, 1.) for name in CLASSES], dtype=float)
         weights /= weights.sum()
         for scene_i, (map_name, seed, split) in enumerate(scenes):
@@ -142,8 +192,9 @@ def generate(args):
             scene_id = f'{map_name}-layout-{seed}'
             case = args.out / scene_id
             case.mkdir()
-            world, objects, height, pitch, source = fixture_world(map_name, seed, case / 'world.sdf',
-                                                                  scatter=args.scatter)
+            world, objects, height, pitch, source, center = fixture_world(
+                map_name, seed, case / 'world.sdf', scatter=args.scatter, auto_centre=bool(args.train_maps))
+            floor = FreeFloor(map_name) if args.train_maps else None
             scene = {'scene': scene_id, 'split': split, 'map': map_name,
                      'map_sha256': hashlib.sha256(source.read_bytes()).hexdigest(),
                      'world_sha256': hashlib.sha256((case / 'world.sdf').read_bytes()).hexdigest(),
@@ -153,8 +204,10 @@ def generate(args):
             logs = [(case / 'gazebo.log').open('w'), (case / 'bridge.log').open('w')]
             processes = []
             try:
+                gazebo_env = dict(os.environ, IGN_GAZEBO_RESOURCE_PATH=os.pathsep.join(
+                    p for p in (os.environ.get('IGN_GAZEBO_RESOURCE_PATH', ''), resource_path()) if p))
                 processes.append(subprocess.Popen(['ign', 'gazebo', '-s', '-r', '--headless-rendering',
-                                                    str(case / 'world.sdf')],
+                                                    str(case / 'world.sdf')], env=gazebo_env,
                                                    stdout=logs[0], stderr=subprocess.STDOUT, start_new_session=True))
                 processes.append(subprocess.Popen(['ros2', 'run', 'ros_gz_bridge', 'parameter_bridge',
                     '/vacuum_camera/image@sensor_msgs/msg/Image[ignition.msgs.Image',
@@ -173,11 +226,19 @@ def generate(args):
                         raise TimeoutError('Dataset generation wall budget exhausted')
                     if (case / 'gazebo.log').stat().st_size > 64 * 1024 * 1024:
                         raise RuntimeError('Rendering log exceeds the 64 MB budget')
-                    target = (objects[view % len(objects)] if args.class_weights == {} else
-                              objects[int(rng.choice(len(objects), p=weights))])
-                    yaw = float(rng.uniform(-math.pi, math.pi))
-                    distance = float(rng.uniform(.28, args.max_distance))
-                    x, y = target['x'] - distance * math.cos(yaw), target['y'] - distance * math.sin(yaw)
+                    if floor is not None and rng.random() < args.background_fraction:
+                        # A view of the surroundings: whatever is visible is labelled as seen.
+                        target = {'x': center[0] + float(rng.uniform(-2.5, 2.5)),
+                                  'y': center[1] + float(rng.uniform(-2.5, 2.5))}
+                    else:
+                        target = (objects[view % len(objects)] if args.class_weights == {} else
+                                  objects[int(rng.choice(len(objects), p=weights))])
+                    for _ in range(50):
+                        yaw = float(rng.uniform(-math.pi, math.pi))
+                        distance = float(rng.uniform(.28, args.max_distance))
+                        x, y = target['x'] - distance * math.cos(yaw), target['y'] - distance * math.sin(yaw)
+                        if floor is None or floor.is_free(x, y):
+                            break
                     qx = -math.sin(pitch / 2) * math.sin(yaw / 2)
                     qy = math.sin(pitch / 2) * math.cos(yaw / 2)
                     qz = math.cos(pitch / 2) * math.sin(yaw / 2)
@@ -185,9 +246,13 @@ def generate(args):
                     request = (f'name: "dataset_camera_fixture", position: {{x: {x}, y: {y}, z: {height}}}, '
                                f'orientation: {{x: {qx}, y: {qy}, z: {qz}, w: {qw}}}')
                     old = stamp_seconds(latest['rgb'])
-                    response = subprocess.run(['ign', 'service', '-s', f'/world/{world}/set_pose',
-                        '--reqtype', 'ignition.msgs.Pose', '--reptype', 'ignition.msgs.Boolean',
-                        '--timeout', '2000', '--req', request], capture_output=True, text=True, timeout=4)
+                    # A furnished world renders slowly on this host: allow it time, and retry.
+                    for _attempt in range(3):
+                        response = subprocess.run(['ign', 'service', '-s', f'/world/{world}/set_pose',
+                            '--reqtype', 'ignition.msgs.Pose', '--reptype', 'ignition.msgs.Boolean',
+                            '--timeout', '5000', '--req', request], capture_output=True, text=True, timeout=8)
+                        if not response.returncode and 'data: true' in response.stdout:
+                            break
                     if response.returncode or 'data: true' not in response.stdout:
                         raise RuntimeError('Camera fixture pose request failed: ' + response.stdout + response.stderr)
                     until = time.monotonic() + 10
@@ -245,6 +310,11 @@ def main():
     parser.add_argument('--class-weights', type=json.loads, default={},
                         help='JSON {class: weight} for which object a view targets (default: round robin)')
     parser.add_argument('--max-distance', type=float, default=1.3)
+    parser.add_argument('--train-maps', type=lambda s: [m for m in s.split(',') if m], default=[],
+                        help='Comma-separated maps for training layouts (centres from each map\'s free floor)')
+    parser.add_argument('--val-maps', type=lambda s: [m for m in s.split(',') if m], default=[])
+    parser.add_argument('--background-fraction', type=float, default=0.,
+                        help='Share of views aimed at the surroundings instead of an object (map layouts)')
     parser.add_argument('--timeout', type=float, default=900.)
     args = parser.parse_args()
     if args.views <= 0 or not math.isfinite(args.timeout) or args.timeout <= 0:

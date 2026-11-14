@@ -14,6 +14,16 @@ import xacro
 from robot_lab_utils.urdf_articulation import ArticulationROS
 
 
+ROLLER_RADIUS = .012     # transfer_roller collision cylinder (molar_hri.urdf.xacro)
+BELT_LIMIT = .12         # TrackController min/max velocity in the same model
+
+
+def belt_speed(roller_rad_s):
+    """Deck belt surface speed (m/s) for a measured roller angular velocity."""
+    value = float(roller_rad_s) * ROLLER_RADIUS
+    return max(-BELT_LIMIT, min(BELT_LIMIT, value)) if math.isfinite(value) else 0.
+
+
 class MolarGazeboControl(Node):
     def __init__(self):
         super().__init__('molar_gazebo_control')
@@ -35,6 +45,10 @@ class MolarGazeboControl(Node):
         self.position_pub = self.create_publisher(Float64MultiArray, '/molar_position_controller/commands', 1)
         self.roller_pub = self.create_publisher(Float64MultiArray, '/molar_roller_controller/commands', 1)
         self.drive_pub = self.create_publisher(Twist, '/molar_base_controller/cmd_vel_unstamped', 1)
+        # The deck belt moves at the measured roller surface speed (Gazebo TrackController).
+        from std_msgs.msg import Float64
+        self.belt_pub = self.create_publisher(Float64, '/molar/belt_cmd_vel', 1)
+        self._float = Float64
         self.create_subscription(JointState, '/joint_states', self.feedback, 10)
         self.create_subscription(Twist, '/robot_lab_controller/cmd_vel_unstamped', self.drive, 1)
         from std_srvs.srv import Trigger
@@ -86,6 +100,7 @@ class MolarGazeboControl(Node):
             if all(name in target['position'] for name in self.pos_names):
                 self.position_pub.publish(Float64MultiArray(data=[target['position'][name] for name in self.pos_names]))
             self.roller_pub.publish(Float64MultiArray(data=[target['velocity'].get('transfer_roller_joint', 0.)]))
+            self.belt_pub.publish(self._float(data=belt_speed(self.velocities.get('transfer_roller_joint', 0.))))
         else:
             # A forward position controller otherwise keeps its last distant
             # goal after feedback loss. Revoke it once and send the last finite,
@@ -97,6 +112,7 @@ class MolarGazeboControl(Node):
             if all(name in holds for name in self.pos_names):
                 self.position_pub.publish(Float64MultiArray(data=[holds[name] for name in self.pos_names]))
             self.roller_pub.publish(Float64MultiArray(data=[0.]))
+            self.belt_pub.publish(self._float(data=0.))
         allowed = fresh and not self.articulation.base_inhibited and now-self.command_at < .3
         self.drive_pub.publish(self.command if allowed else Twist())
         if not allowed:

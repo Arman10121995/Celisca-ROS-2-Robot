@@ -530,6 +530,12 @@ def generate_launch_description():
             hazards = hazard_bridge_entries(description, gz_world_name, rname)
             overridden = {entry['ros_topic_name'] for entry in hazards}
             entries = [entry for entry in entries if entry['ros_topic_name'] not in overridden] + hazards
+            # MOLAR's deck belt (TrackController on telescope_stage2), driven by molar_gazebo_control.
+            if 'ignition::gazebo::systems::TrackController' in description and '<link>telescope_stage2</link>' in description:
+                entries.append({'ros_topic_name': '/molar/belt_cmd_vel',
+                                'gz_topic_name': '/model/%s/link/telescope_stage2/track_cmd_vel' % rname,
+                                'ros_type_name': 'std_msgs/msg/Float64', 'gz_type_name': 'gz.msgs.Double',
+                                'direction': 'ROS_TO_GZ'})
         relays = []
         faults = LaunchConfiguration('sensor_faults').perform(context).strip()
         if faults:

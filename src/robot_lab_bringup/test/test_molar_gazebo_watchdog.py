@@ -21,9 +21,13 @@ class Publisher:
 def source_methods():
     path=ROOT/'src/robot_lab_bringup/scripts/molar_gazebo_control.py'
     cls=next(n for n in ast.parse(path.read_text()).body if isinstance(n,ast.ClassDef))
+    module=ast.parse(path.read_text()).body
     methods=[n for n in cls.body if isinstance(n,ast.FunctionDef) and n.name in ('tick','feedback','drive')]
+    # The belt helper and its constants live at module level.
+    helpers=[n for n in module if (isinstance(n,ast.FunctionDef) and n.name=='belt_speed')
+             or (isinstance(n,ast.Assign) and any(getattr(t,'id','') in ('ROLLER_RADIUS','BELT_LIMIT') for t in n.targets))]
     namespace=dict(math=math,time=NS(monotonic=lambda:10.),Twist=Twist,Float64MultiArray=Array)
-    exec(compile(ast.Module(body=methods,type_ignores=[]),str(path),'exec'),namespace)
+    exec(compile(ast.Module(body=helpers+methods,type_ignores=[]),str(path),'exec'),namespace)
     return namespace
 
 def fixture():
@@ -37,6 +41,7 @@ def fixture():
            get_clock=lambda:NS(now=lambda:NS(nanoseconds=1_000_000_000)),
            feedback_at=9.,feedback_stale=False,command_at=9.9,command=Twist(),
            pos_names=names,position_pub=Publisher(),roller_pub=Publisher(),drive_pub=Publisher(),
+           belt_pub=Publisher(),_float=lambda data:NS(data=data),
            positions={'keep':1.},velocities={'keep':0.})
     obj.command.linear.x=.25
     return obj
@@ -46,6 +51,7 @@ def test_stale_feedback_revokes_old_goal_and_holds_once():
     tick(obj)
     assert obj.position_pub.messages[-1].data==[.2,.03,.04]
     assert obj.roller_pub.messages[-1].data==[0.]
+    assert obj.belt_pub.messages[-1].data==0.
     assert obj.drive_pub.messages[-1].linear.x==0.
     assert obj.command_at==-math.inf
     tick(obj)
@@ -63,3 +69,9 @@ def test_complete_finite_feedback_admitted_atomically():
     feedback(obj,NS(name=names,position=[0.]*len(names),velocity=[0.]*len(names)))
     assert obj.feedback_at==10.
     assert set(obj.positions)==set(names) and set(obj.velocities)==set(names)
+
+
+def test_belt_follows_the_measured_roller_and_is_bounded():
+    belt_speed=source_methods()['belt_speed']
+    assert belt_speed(8.)==.096 and belt_speed(-8.)==-.096
+    assert belt_speed(100.)==.12 and belt_speed(math.nan)==0.
