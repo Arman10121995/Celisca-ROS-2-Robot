@@ -52,3 +52,31 @@ def test_exported_bhl_policy_loads_and_sees_the_trainer_observation(tmp_path):
     with torch.no_grad():
         expected = model.act(torch.as_tensor(trainer_obs[None, :]), deterministic=True)[0].numpy()
     np.testing.assert_allclose(exported, expected, rtol=1e-4, atol=1e-5)
+
+
+def test_vendored_checkpoint_warm_start_reproduces_the_vendor_policy(tmp_path):
+    ort = pytest.importorskip('onnxruntime')
+    from robot_lab_adapter.ppo import PPO, export_onnx, read_onnx_mlp
+    config = load_policy_config(name='policy_humanoid')
+    layers = read_onnx_mlp(str(config.checkpoint))
+    assert [w.shape for w, _ in layers] == [(256, 75), (128, 256), (128, 128), (22, 128)]
+    agent = PPO(75, 22, num_envs=2, steps=2, hidden=(256, 128, 128), normalize=False)
+    agent.init_actor(layers, input_permutation(22), std=0.3)
+    assert float(agent.model.log_std.exp().mean()) == pytest.approx(0.3)
+    rng = np.random.default_rng(5)
+    cmd, gyro, grav = rng.normal(size=3), rng.normal(size=3), rng.normal(size=3)
+    q, dq, prev = rng.normal(size=22), rng.normal(size=22), rng.normal(size=22)
+    bhl_obs = build_observation(cmd, gyro, grav, q, dq, prev, config.nominal)
+    trainer_obs = np.concatenate([gyro, grav, cmd, q - config.nominal, dq, prev]).astype(np.float32)
+    vendor = ort.InferenceSession(str(config.checkpoint), providers=['CPUExecutionProvider'])
+    expected = vendor.run(None, {vendor.get_inputs()[0].name: bhl_obs[None, :]})[0]
+    with torch.no_grad():
+        warm = agent.model.act(torch.as_tensor(trainer_obs[None, :]), deterministic=True)[0].numpy()
+    np.testing.assert_allclose(warm, expected, rtol=1e-4, atol=1e-5)
+    # Our own export reads back to the same layers (normaliser folded in).
+    path = export_onnx(agent.model, str(tmp_path / 'p.onnx'))
+    again = read_onnx_mlp(path)
+    for (w, b), layer in zip(again, [m for m in agent.model.actor if isinstance(m, torch.nn.Linear)]):
+        np.testing.assert_allclose(w, layer.weight.detach().numpy(), rtol=1e-5, atol=1e-6)
+    agent.freeze_actor(True)
+    assert all(not p.requires_grad for p in agent.model.actor.parameters()) and not agent.model.log_std.requires_grad

@@ -72,8 +72,12 @@ class ActorCritic(nn.Module):
 class PPO:
     def __init__(self, obs_dim, act_dim, num_envs, steps, device='cpu', learning_rate=1e-3,
                  gamma=0.99, lam=0.95, clip=0.2, epochs=5, minibatches=4, entropy=0.01,
-                 value_coef=1.0, max_grad_norm=1.0, desired_kl=0.01, hidden=(512, 256, 128)):
+                 value_coef=1.0, max_grad_norm=1.0, desired_kl=0.01, hidden=(512, 256, 128),
+                 normalize=True):
         self.device = torch.device(device)
+        # normalize=False keeps the identity normaliser (a warm start from a
+        # network that expects raw observations).
+        self.normalize = normalize
         self.model = ActorCritic(obs_dim, act_dim, hidden).to(self.device)
         self.optimizer = torch.optim.Adam(self.model.parameters(), lr=learning_rate)
         self.lr = learning_rate
@@ -173,12 +177,40 @@ class PPO:
                 updates += 1
         # The normaliser moves only between iterations, so the log
         # probabilities stored during a rollout stay those of its policy.
-        with torch.no_grad():
-            self.model.norm.update(obs)
+        if self.normalize:
+            with torch.no_grad():
+                self.model.norm.update(obs)
         self.step = 0
         stats = {k: v / max(1, updates) for k, v in stats.items()}
         stats.update(learning_rate=self.lr, action_std=float(self.model.log_std.detach().exp().mean()))
         return stats
+
+    def init_actor(self, layers, input_permutation=None, std=None):
+        """Copy an MLP's [(weight, bias)] into the actor (a warm start).
+
+        ``input_permutation[i]`` is where the actor's input ``i`` sits in the
+        source network's input (as in export_onnx).
+        """
+        linears = [layer for layer in self.model.actor if isinstance(layer, nn.Linear)]
+        if [tuple(layer.weight.shape) for layer in linears] != [tuple(np.shape(w)) for w, _ in layers]:
+            raise ValueError('source network shape %s does not match the actor %s' % (
+                [np.shape(w) for w, _ in layers], [tuple(layer.weight.shape) for layer in linears]))
+        with torch.no_grad():
+            for index, (layer, (weight, bias)) in enumerate(zip(linears, layers)):
+                weight = torch.as_tensor(np.asarray(weight, dtype=np.float32))
+                if index == 0 and input_permutation is not None:
+                    weight = weight[:, torch.as_tensor(list(input_permutation), dtype=torch.long)]
+                layer.weight.copy_(weight)
+                layer.bias.copy_(torch.as_tensor(np.asarray(bias, dtype=np.float32)))
+            if std is not None:
+                self.model.log_std.fill_(float(np.log(std)))
+
+    def freeze_actor(self, frozen):
+        """Critic warm-up: the actor and its noise stay fixed while the value function learns."""
+        for parameter in list(self.model.actor.parameters()) + [self.model.log_std]:
+            parameter.requires_grad_(not frozen)
+            if frozen:
+                parameter.grad = None
 
     def save(self, path, **extra):
         torch.save(dict(model=self.model.state_dict(), optimizer=self.optimizer.state_dict(),
@@ -191,6 +223,81 @@ class PPO:
             self.optimizer.load_state_dict(data['optimizer'])
         self.lr = float(data.get('lr', self.lr))
         return data
+
+
+# --- ONNX MLP import without the onnx package ---------------------------------
+def _read_varint(data, index):
+    value = shift = 0
+    while True:
+        byte = data[index]
+        index += 1
+        value |= (byte & 0x7F) << shift
+        shift += 7
+        if byte < 0x80:
+            return value, index
+
+
+def _fields(data):
+    index = 0
+    while index < len(data):
+        key, index = _read_varint(data, index)
+        number, wire = key >> 3, key & 7
+        if wire == 0:
+            value, index = _read_varint(data, index)
+        elif wire == 2:
+            size, index = _read_varint(data, index)
+            value, index = data[index:index + size], index + size
+        elif wire == 5:
+            value, index = data[index:index + 4], index + 4
+        elif wire == 1:
+            value, index = data[index:index + 8], index + 8
+        else:
+            raise ValueError('unsupported protobuf wire type %d' % wire)
+        yield number, wire, value
+
+
+def read_onnx_mlp(path):
+    """[(weight [out, in], bias)] of a Gemm/Elu chain ONNX (an rsl_rl/legged-train actor)."""
+    data = open(path, 'rb').read()
+    graph = next(value for number, _, value in _fields(data) if number == 7)
+    tensors, gemms = {}, []
+    for number, _, value in _fields(graph):
+        if number == 5:                                   # initializer (TensorProto)
+            dims, name, raw = [], None, None
+            for field, wire, item in _fields(value):
+                if field == 1:
+                    if wire == 2:
+                        j = 0
+                        while j < len(item):
+                            dim, j = _read_varint(item, j)
+                            dims.append(dim)
+                    else:
+                        dims.append(item)
+                elif field == 2 and item != 1:
+                    raise ValueError('only float tensors are supported')
+                elif field == 8:
+                    name = item.decode()
+                elif field == 9:
+                    raw = item
+            if raw is None:
+                raise ValueError('tensor %s has no raw data' % name)
+            tensors[name] = np.frombuffer(raw, dtype='<f4').reshape(dims).copy()
+        elif number == 1:                                 # node
+            parts = list(_fields(value))
+            op = next(item.decode() for field, _, item in parts if field == 4)
+            inputs = [item.decode() for field, _, item in parts if field == 1]
+            attributes = {}
+            for field, _, item in parts:
+                if field == 5:
+                    attribute = dict((f, v) for f, _, v in _fields(item))
+                    attributes[attribute[1].decode()] = attribute.get(3, attribute.get(2))
+            if op == 'Gemm':
+                if attributes.get('transB', 0) != 1 or attributes.get('transA', 0):
+                    raise ValueError('expected Gemm(transB=1), the torch Linear export')
+                gemms.append((inputs[1], inputs[2]))
+            elif op not in ('Elu',):
+                raise ValueError('unsupported node %s (an MLP of Gemm/Elu is expected)' % op)
+    return [(tensors[w], tensors[b]) for w, b in gemms]
 
 
 # --- ONNX export without the onnx package ------------------------------------

@@ -101,13 +101,30 @@ def train(args):
                             terrain=args.terrain, roughness=args.roughness, obs_noise=args.obs_noise,
                             latency_s=args.latency_ms / 1000.0)
     hidden = (512, 256, 128)
+    init_layers = None
+    if args.init_onnx:
+        # Warm start from a deployed actor (e.g. the vendored BHL checkpoint):
+        # its layer widths, raw observations (identity normaliser) and, for BHL,
+        # its commands-first input order.
+        from .ppo import read_onnx_mlp
+        init_layers = read_onnx_mlp(args.init_onnx)
+        hidden = tuple(int(w.shape[0]) for w, _ in init_layers[:-1])
     agent = PPO(env.obs_dim, env.act_dim, args.envs, args.steps, device=args.device,
-                learning_rate=args.learning_rate, hidden=hidden, entropy=args.entropy)
+                learning_rate=args.learning_rate, hidden=hidden, entropy=args.entropy,
+                normalize=init_layers is None)
+    if init_layers is not None:
+        permutation = None
+        if args.robot == 'berkeley_humanoid_lite_sim':
+            from .bhl_training import input_permutation
+            permutation = input_permutation(env.act_dim)
+        agent.init_actor(init_layers, permutation, std=args.init_std)
     run = dict(robot=args.robot, task=args.task, envs=args.envs, steps=args.steps,
                iterations=args.iterations, learning_rate=args.learning_rate, seed=args.seed,
                episode_s=args.episode_s, randomize=bool(args.randomize), terrain=args.terrain,
                roughness=args.roughness, obs_noise=args.obs_noise, latency_ms=args.latency_ms, obs_dim=env.obs_dim, act_dim=env.act_dim, hidden=list(hidden),
                name=name, revision=_revision(), template=env.template, policy_period_s=env.dt,
+               init_onnx=args.init_onnx or None, init_std=args.init_std if args.init_onnx else None,
+               critic_warmup=args.critic_warmup, normalize=init_layers is None,
                stand_height_m=env.stand_height, feet=env.num_feet, started=time.strftime('%Y-%m-%dT%H:%M:%S'),
                pid=os.getpid())
     start_iteration, steps_done = 0, 0
@@ -158,6 +175,7 @@ def train(args):
             for key, value in info['terms'].items():
                 sums[key] = sums.get(key, 0.0) + value / args.steps
         collected = time.monotonic()
+        agent.freeze_actor(iteration - start_iteration <= args.critic_warmup)
         stats = agent.update(obs)
         steps_done += args.envs * args.steps
         returns, lengths = returns[-200:], lengths[-200:]
@@ -265,6 +283,10 @@ def main(argv=None):
     t.add_argument('--latency-ms', type=float, default=0.0,
                    help='largest actuation delay, drawn per episode (at most one policy step)')
     t.add_argument('--checkpoint-every', type=int, default=50)
+    t.add_argument('--init-onnx', default='', help='warm-start the actor from this Gemm/Elu ONNX (raw observations)')
+    t.add_argument('--init-std', type=float, default=0.3, help='initial action noise with --init-onnx')
+    t.add_argument('--critic-warmup', type=int, default=0,
+                   help='iterations at the start during which only the critic learns')
     t.add_argument('--resume', default='')
     t.add_argument('--out', required=True)
     e = sub.add_parser('export')
