@@ -45,8 +45,13 @@ def test_real_widget_builds_source_bound_recipe_without_dispatch():
         assert len(panel.steps)==7
         assert all(step['keep_orientation'] for step in panel.steps if step['kind']=='reach_object')
         panel.orientation_mode.set('World pad RPY');panel.orientation_rpy[2].set(45.)
+        panel.approach_mode.set('From +X');panel.approach_distance.set(.12)
         panel.add_place()
         assert len(panel.steps)==13
         assert all('orientation_wxyz' in step for step in panel.steps[7:] if step['kind']=='reach_object')
+        np.testing.assert_allclose(panel.steps[7]['target_xyz'],[.12,0.,.5])
+        np.testing.assert_allclose(panel.steps[11]['target_xyz'],[.12,0.,.5])
+        panel.approach_distance.set(math.nan);panel.add_pick()
+        assert len(panel.steps)==13 and 'finite' in panel.status.get()
         assert panel.node is None  # No ROS publisher/action has been connected.
     finally:root.destroy()

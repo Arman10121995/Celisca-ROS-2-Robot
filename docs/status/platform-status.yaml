@@ -128,7 +128,7 @@ vacuum_camera_20261111:
   owner: codex
   state: partial
   title: Vacuum camera recognition and object inspection
-  updated: '2026-11-12'
+  updated: '2026-11-14'
   baseline_revision: 9f3b54ba
   implementation_state: Initial camera workflow includes actual Gazebo fixture capture, trained four-class checkpoint, checksum-verified local provisioning, GUI command autofill, image snapshots and independent clearance reporting. Learned physical avoidance remains unqualified.
   receipt: docs/status/evidence/vacuum-camera-2026-11-11/README.md
@@ -143,7 +143,7 @@ vacuum_camera_20261111:
 counterparts_20261112:
   owner: codex
   state: partial
-  updated: '2026-11-12'
+  updated: '2026-11-14'
   title: Source counterparts — TurtleBot4, WAM-V, Summit-STEEL, octopod and restricted BlueROV2 candidate
   receipt: docs/status/evidence/counterparts-2026-11-12/README.md
   implementation_state: Separate source variants, native hazards and water forces, bounded controls, normal GUI classification and autofill implemented. Original models/certificates preserved.
@@ -159,7 +159,7 @@ counterparts_20261112:
 myagv_pro_20261112:
   owner: codex
   state: partial
-  updated: '2026-11-12'
+  updated: '2026-11-14'
   title: Official myAGV Pro — user top priority, source Gazebo control and GUI navigation
   receipt: docs/status/evidence/myagv-pro-2026-11-12/README.md
   implementation_state: Complete pinned vendor CAD/inertias/frames with declared lab contact/compliance/sensors, bounded holonomic control, observed passive joints, GUI grouping/classification and automatic algorithms/commands. Other backends gated pending portable physical wheel adapters.
@@ -1472,7 +1472,7 @@ tasks:
         tier_followup_20261114: 'Codex: published d4eb4d5a CI run 43530569788 failed one R6.8 world-copy test because fast tier is intentionally unsourced and the test imports ament/ROS launch (1282 passed, 42 skipped). Unchanged test moved to required sourced integration tier and passes locally; new GUI source path added to the runner. Two GUI builder/widget checks pass without sourcing ROS. Full exact-revision published rerun pending; preserve historical baseline and Claude fleet/source edits.'
         mavlink_ci_20261114: 'Codex: a2b5e281 run 43533140298 passed fast/physics, then integration collection failed importing pymavlink in the new PX4 heading test. Both CI workflows now install documented flight runtime pymavlink 2.4.50; tests remain enabled. Ten heading/walkway checks pass with that exact runtime locally. Exact-revision full CI pending. Receipt: docs/status/evidence/ci-mavlink-2026-11-14/README.md. Claude owns algorithm/seed/launch files.'
         fleet_tiers_20261114: 'Codex: 6106be61 run 43551833654 failed fast collection because fleet_contact_conflict and swarm_distributed import the real ROS FleetController. Both unchanged tests remain required in sourced integration tier; 20 checks pass locally. No fleet implementation changed. Full exact-revision CI pending; Claude algorithm/seed/launch work preserved.'
-        takeover_ci_20261114: 'User confirms Claude stopped; Codex takes over pending edits. Inspect complete required tiers after classifying marine MuJoCo/xacro checks in physics and ROS parking checks in integration; current 12470059 CI failed xacro setup in the unsourced fast tier. Preserve all assertions and prior evidence.'
+        takeover_ci_20261114: 'Codex takeover implemented: retain marine MuJoCo/xacro checks in physics, ROS parking/fleet/swarm/world/relay launch checks in sourced integration. Unsourced fast 1358 passed, 49 skipped, 4 deselected; physics 150 passed. Initial desktop integration 338 passed/3 GUI failures; all affected widget/layout checks pass under Xvfb after Arm width repair. Published ac906819 fails the now-moved ROS relay case; next exact revision CI pending. docs/status/takeover-2026-11-14.md'
         scope_paths:
         - .github/workflows/
         - scripts/bootstrap.sh
@@ -2099,7 +2099,7 @@ tasks:
         acceptance_ref: ROADMAP.md R13.3
         owner: codex
         state: partial
-        updated: '2026-11-12'
+        updated: '2026-11-14'
         execution_state: initial_implementation_complete_validation_pending
         scope_paths:
         - src/robot_lab_vacuum_cleaning/
@@ -2127,7 +2127,7 @@ tasks:
     acceptance_ref: ROADMAP.md R14.1
     owner: codex
     state: active
-    updated: '2026-11-12'
+    updated: '2026-11-14'
     scope_paths: [scripts/, src/robot_lab_utils/, src/robot_lab_mujoco/, src/robot_lab_bringup/, src/robot_lab_gui/, src/robot_lab_description/, src/robot_lab_controller/, src/robot_lab_adapter/, src/robot_lab_navigation/, src/robot_lab_vacuum_cleaning/, src/robot_lab_robots/, src/robot_lab/robot_lab_registry/, docs/, ROADMAP.md, README.md]
     title: Open-source robots in place of self-made ones
     tasks:
@@ -2180,7 +2180,7 @@ tasks:
         owner: codex
         state: partial
         title: Search for and integrate open-source counterparts of the lab-authored robots (requested 2026-11-10)
-        updated: '2026-11-12'
+        updated: '2026-11-14'
         next_action: Initial source-search/integration pass complete, including MIT native octopod and tracked-origin correction. Continue R6.7 implementation. Preserve non-adoption/license restrictions for reviewed cars, Ranger, snake and BlueROV2; finish redistribution licensing under R9.1 and broader missions in the validation queue.
         evidence: [docs/status/evidence/counterparts-2026-11-12/README.md]
         implemented: TurtleBot4 native-hazard cleaning; WAM-V source water equations/control; restricted BlueROV2 candidate; Summit-STEEL source control/sensors/GUI; MIT source octopod native gait/GUI. All adopted variants have named physical screens. Reviewed non-adoption decisions and original tracked source identity recorded; wider acceptance stays partial.
@@ -2437,6 +2437,7 @@ tasks:
         title: Execute resolved experiments through CLI
       R3.4:
         acceptance_ref: ROADMAP.md
+        controls_followup_20261114: 'Implemented: reserve 480 px for the actual Launch controls column, including native/source Cartesian planners, scrollbar and padding. All 22 focused geometry/widget/architecture/layout checks pass in Xvfb, including narrow Run/Copy and Arm horizontal-fit checks. No movement on selection edits. docs/status/takeover-2026-11-14.md'
         active_scope: '2026-10-08 codex, latest user steering: add the seven existing
           Drive directions to the Drone control column with synchronized input state
           and gentler manual yaw; preserve neutral enablement, limits and owned callbacks.
@@ -3902,6 +3903,7 @@ tasks:
         title: Qualify four-wheel steering patterns and physical mecanum travel
       R5.7:
         acceptance_ref: ROADMAP.md
+        side_grasps_20261114: 'Implemented: Panda Top/Side/Top + side candidate generation, projected source-jaw widths, four horizontal approach directions and explicit open/detached retreat planning. Original measured scene/IK/OMPL/attachment/contact/execute gates remain. Geometry/widget checks pass; complete physical mission remains unqualified. docs/status/takeover-2026-11-14.md'
         active_scope: '2026-10-09 codex: generic native articulation/teach-replay,
           Cartesian Servo, measured fixture scenes and GUI attachment workflow are
           implemented. Preserve original Panda actuator/planning contracts; runtime
@@ -4113,6 +4115,7 @@ tasks:
         configuration_search_20261113: 'Codex: bounded seed-0 bidirectional control-space detours implemented in native_mobile_reach.py/bounded_control_planner.py. Checks actual private source FK/collisions and original clipped motor slew, preserving gripper/base/head and payload relation. 15 focused checks include independent dense native-contact audit of a detour fixture. Full loaded source Stretch mission, orientation and alternate IK branches remain pending. See docs/status/stretch-search-2026-11-13.md. Claude retains drone/import work.'
         orientation_reach_20261114: 'Codex: optional world-pad orientation IK, keep-measured mode with held wrists and sampled/live angular envelope, normalized task schema, GUI point/keep/world-RPY modes and measured final-orientation gate implemented. Existing source coupling, bounded private search, held base/head/grip and interruption rules retained. 39 focused source/schema/real Tk checks pass; MuJoCo package builds and all five changed runtime modules match installed bytes. Loaded source robot missions and alternate IK branches remain open. See docs/status/reach-orientation-2026-11-14.md. Claude retains fleet/drone/import work.'
         ik_branches_20261114: 'Codex: bounded measured/midpoint/four seed-0 source IK starts, duplicate/collision filtering and one multi-goal configuration forest implemented. Retains source coupling, held controls, original motor-slew inspection, payload transform and total eight-second budget. Found paths survive optional-shortcut budget expiry. 43 focused checks include an actual synthetic MuJoCo alternate-wrist goal with independent dense native-contact audit; three packages build. Not a loaded source Stretch mission or exhaustive IK. See docs/status/ik-branches-2026-11-14.md. Claude owns algorithm/seed/launch files.'
+        side_approaches_20261114: 'Implemented: native Stretch GUI recipe approach from above or world +/-X/Y with finite 3-25 cm distance, same-direction place retreat and independent source-pad orientation modes. Edits only build steps; actual IK, source actuation, custody and costmap gates remain. No full loaded mission claim. docs/status/takeover-2026-11-14.md'
         next_action: Extend source-specific Fetch/PR2/TIAGo and other backend adapters,
           perception, additional grasps and object mission contracts. Validate native Stretch
           coordinated tasks, sensors, dynamic footprint, saved/reloaded mapping and
@@ -4396,14 +4399,15 @@ tasks:
   R7:
     owner: codex
     state: partial
-    takeover_20261114: 'User confirms Claude stopped. Codex owns review/integration of pending Gazebo seed system, algorithm catalog/dispatch/method records, tests, docs and ledger; preserve scoped measured receipts and keep mission qualification separate.'
+    takeover_20261114: 'Codex reviewed/integrated pending algorithm dispatch/method records, Gazebo seed system and four-backend sensor-fault wiring after user confirms Claude stopped. Seed runs precede sensors, replace old seed systems and preserve original assets; single-IMU 30/30 repeat and 0/30 cross-seed observed. 13 launch/relay checks pass. Broader missions and fair algorithm comparisons remain separate. docs/status/takeover-2026-11-14.md'
+    perception_runtime_20261114: 'Implemented: official Humble pointcloud_to_laserscan 2.0.1-3jammy.20260916.045928 arm64 in hash-checked SSD overlay, no OS/dpkg change. Real ROS three-ray LaserScanToPointCloud conversion max XYZ error 1.3113417196564114e-7 m. Current file inventory 72 installed/6 unavailable IDs is not method/mission qualification. docs/status/takeover-2026-11-14.md'
     method_records:
       generated: '2026-11-14'
       generator: scripts/algorithm_method_records.py
       summary:
         methods: 78
-        installed: 71
-        not_installed: 1
+        installed: 72
+        not_installed: 0
         unavailable: 6
         with_subrecord: 42
         with_tests: 57
@@ -4546,10 +4550,10 @@ tasks:
           growing on a KD-tree (PCL EuclideanClusterExtraction)'
         feature_detection: 'perception; installed; node robot_lab_algorithms/feature_detection; tests 0; math: Feature
           matching to a keyframe (Lowe ratio test), depth lift to 3D, PnP with RANSAC'
-        laser_scan_to_pointcloud: 'perception; not installed; node pointcloud_to_laserscan/laserscan_to_pointcloud_node;
+        laser_scan_to_pointcloud: 'perception; installed; node pointcloud_to_laserscan/laserscan_to_pointcloud_node;
           tests 2; math: Polar-to-Cartesian projection of scan rays (laserscan_to_pointcloud_node); name/math corrected:
           Its dispatch and launch fragment started pointcloud_to_laserscan_node, the reverse conversion; now laserscan_to_pointcloud_node.
-          The package is not installed on this host.'
+          Runtime availability is determined from the current package index below.'
         obstacle_detector: 'perception; installed; node robot_lab_algorithms/obstacle_detector; tests 3; math: Connected
           components of scan points under a distance threshold'
         pointcloud_segmenter: 'perception; installed; node robot_lab_algorithms/pointcloud_segmenter; tests 3; math:
@@ -5389,7 +5393,7 @@ tasks:
     qualification_review: '2026-10-27 documentation review: retain the implemented code, tests and named mission
       certificates. Full declared roadmap acceptance is still open; test counts, metadata and scene loads
       do not qualify remaining robot/map/backend missions. See docs/REMAINING_WORK_GUIDE.md.'
-updated: '2026-11-12'
+updated: '2026-11-14'
 runtime_completion_20261027:
   owner: codex
   state: partial

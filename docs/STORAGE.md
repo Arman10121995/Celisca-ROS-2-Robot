@@ -1,5 +1,12 @@
 # Jetson storage: keep Robot Lab artifacts on the SSD
 
+The optional scan/cloud converter also lives on SSD. Run
+`python3 scripts/provision_perception_runtime.py` after sourcing `ssd_env.sh`,
+then source the helper again after ROS/workspace setup before starting the GUI.
+Its apt versions, hashes, archives and extracted prefix remain under
+`$ROBOT_LAB_RUNTIME_ROOT/perception/`; OS package state is unchanged.
+See [the converter guide](tutorials/scan-cloud-conversion.md).
+
 This operating guide remains current for runtime checkpoint `091d388`
 (October 7, 2026). The relocation below is a completed historical operation;
 do not rerun it. See [current project status](status/CURRENT_STATUS.md) for

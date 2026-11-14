@@ -41,8 +41,17 @@ change to its configuration. `simulator:=mujoco` (or `pybullet`, `isaac`)
 takes the same argument.
 
 MuJoCo, PyBullet and Isaac publish exact sensors, so this relay is their
-only seeded noise. Gazebo adds its own noise models. `sim_seed:=<n>` makes
-that noise repeat ([measurement](../status/evidence/r7-simulator-seed-2026-11-14/README.md)).
+seeded disturbance source in this adapter. Gazebo adds its own noise models.
+`sim_seed:=<n>` seeds its shared random generator before world sensor systems
+configure ([measurement](../status/evidence/r7-simulator-seed-2026-11-14/README.md)).
+Repeatability is measured for the named single-IMU fixture; sensor ordering,
+thread scheduling and other random sources can change a larger world's stream.
+It is not a guarantee of identical whole-robot trajectories.
+
+Native-MJCF MuJoCo robots use the relay too. Every relay needs unique absolute
+ROS input/output names. Duplicate routes, input/output intersections (including
+feedback chains), malformed names and truth-topic routes are refused before
+launch. The backend publisher moves to `input`; consumers keep `output`.
 
 ## Faults
 
@@ -64,7 +73,8 @@ identical output.
 
 The relay writes every message's outcome (dropped, release time, an output
 digest and which faults acted) to
-`$ROBOT_LAB_RUNTIME_ROOT/sensor_faults/<robot>-<pid>.jsonl`. Comparing two
+`$ROBOT_LAB_RUNTIME_ROOT/sensor_faults/<sanitized-robot>-<pid>-<uuid>.jsonl`.
+Each launch has its own writer, including two instances in one process. Comparing two
 traces checks that a degraded run repeats.
 
 ## Limits

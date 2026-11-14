@@ -81,30 +81,39 @@ class MobileTaskControls(ttk.LabelFrame):
             fields = ttk.Frame(line);fields.pack(fill='x')
             for variable in values:
                 ttk.Entry(fields,textvariable=variable,width=8).pack(side='left',expand=True,fill='x')
+        self.approach_mode=tk.StringVar(value='Above +Z')
+        self.approach_distance=tk.DoubleVar(value=.08)
+        approach=ttk.Frame(self);approach.grid(row=18,column=0,columnspan=2,sticky='ew')
+        ttk.Label(approach,text='Approach').pack(side='left')
+        ttk.Combobox(approach,textvariable=self.approach_mode,state='readonly',width=13,
+            values=('Above +Z','From +X','From -X','From +Y','From -Y')).pack(side='left',expand=True,fill='x')
+        ttk.Spinbox(approach,textvariable=self.approach_distance,from_=.03,to=.25,increment=.01,width=5).pack(side='left')
+        ttk.Label(approach,text='m').pack(side='left')
         self.orientation_mode=tk.StringVar(value='Position only')
         ttk.Combobox(self,textvariable=self.orientation_mode,state='readonly',
-            values=('Position only','Keep measured pad','World pad RPY')).grid(row=18,column=0,columnspan=2,sticky='ew')
+            values=('Position only','Keep measured pad','World pad RPY')).grid(row=19,column=0,columnspan=2,sticky='ew')
         self.orientation_rpy=[tk.DoubleVar(value=0.) for _ in range(3)]
-        angles=ttk.Frame(self);angles.grid(row=19,column=0,columnspan=2,sticky='ew')
+        angles=ttk.Frame(self);angles.grid(row=20,column=0,columnspan=2,sticky='ew')
         ttk.Label(angles,text='World pad roll / pitch / yaw (deg)').pack(anchor='w')
         entries=ttk.Frame(angles);entries.pack(fill='x')
         for variable in self.orientation_rpy:
             ttk.Entry(entries,textvariable=variable,width=8).pack(side='left',expand=True,fill='x')
         for row,column,name,title,callback in (
-                (20,0,'reach','Add object reach',self.add_reach),
-                (20,1,'stow','Add arm retraction',lambda:self.add_native_step('stow_arm')),
-                (21,0,'open','Add gripper open',lambda:self.add_native_step('grip',operation='open')),
-                (21,1,'close','Add contact close',lambda:self.add_native_step('grip',operation='close')),
-                (22,0,'pick','Add local pick recipe',self.add_pick),
-                (22,1,'place','Add local place recipe',self.add_place)):
+                (21,0,'reach','Add object reach',self.add_reach),
+                (21,1,'stow','Add arm retraction',lambda:self.add_native_step('stow_arm')),
+                (22,0,'open','Add gripper open',lambda:self.add_native_step('grip',operation='open')),
+                (22,1,'close','Add contact close',lambda:self.add_native_step('grip',operation='close')),
+                (23,0,'pick','Add local pick recipe',self.add_pick),
+                (23,1,'place','Add local place recipe',self.add_place)):
             button=ttk.Button(self,text=title,command=callback)
             button.grid(row=row,column=column,sticky='ew',padx=2,pady=2)
             self.buttons['object_'+name]=button
         ttk.Label(self,text='Recipes add steps only; Run task starts motion. Source IK tries up to six starts; bounded configuration '
                   'detours inspect sampled native motor motion. Place XYZ and pad RPY use native_world axes. '
                   'Keep measured pad holds wrist controls during each reach; explicit RPY constrains its endpoint. '
+                  'Approach selects translation from a world axis; align the pad orientation separately. '
                   'Grasp outcomes require measured checkpoints.',
-                  wraplength=305).grid(row=23,column=0,columnspan=2,sticky='w')
+                  wraplength=305).grid(row=24,column=0,columnspan=2,sticky='w')
 
     def add_object_check(self, condition):
         if not self.editable() or len(self.steps) >= 32:
@@ -161,9 +170,12 @@ class MobileTaskControls(ttk.LabelFrame):
 
     def add_pick(self):
         try:
+            offset=self.approach_offset()
+            approach=self.object_step('reach_object',offset=offset)
+            approach['name']='Approach '+self.approach_mode.get()
             self.add_native_steps([
                 self.object_step('grip',operation='open'),
-                self.object_step('reach_object',offset=[0.,0.,.08]),
+                approach,
                 self.object_step('reach_object',offset=[0.,0.,0.]),
                 self.object_step('grip',operation='close'),
                 self.object_step('reach_object',offset=[0.,0.,.10]),
@@ -174,15 +186,28 @@ class MobileTaskControls(ttk.LabelFrame):
     def add_place(self):
         try:
             xyz=[float(v.get()) for v in self.place_target]
+            offset=self.approach_offset()
+            distance=float(self.approach_distance.get())
+            above=[p+d for p,d in zip(xyz,offset)]
+            retreat=[p+d*max(1.,.1/distance) for p,d in zip(xyz,offset)]
             self.add_native_steps([
-                self.object_step('reach_object',target_xyz=[xyz[0],xyz[1],xyz[2]+.08]),
+                self.object_step('reach_object',target_xyz=above),
                 self.object_step('reach_object',target_xyz=xyz),
                 self.object_step('grip',operation='open'),
                 self.object_step('object_check',condition='released'),
-                self.object_step('reach_object',target_xyz=[xyz[0],xyz[1],xyz[2]+.10]),
+                self.object_step('reach_object',target_xyz=retreat),
                 self.object_step('stow_arm')])
         except (ValueError,tk.TclError) as exc:
             self.status.set(str(exc))
+
+    def approach_offset(self):
+        directions={'Above +Z':(0.,0.,1.),'From +X':(1.,0.,0.),'From -X':(-1.,0.,0.),
+                    'From +Y':(0.,1.,0.),'From -Y':(0.,-1.,0.)}
+        direction=directions.get(self.approach_mode.get())
+        distance=float(self.approach_distance.get())
+        if direction is None or not math.isfinite(distance) or not .03<=distance<=.25:
+            raise ValueError('Select a world-axis approach and a finite 3–25 cm distance')
+        return [distance*value for value in direction]
 
     def selected(self):
         return bool(self.control.selected() and self.app._robot_config().get('mobile_control_config'))

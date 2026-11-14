@@ -1,0 +1,65 @@
+build-and-test	Fast tier (unit/numerical/config; no ROS graph needed)	﻿2026-11-14T04:56:57.9814515Z ##[group]Run bash scripts/test_tiers.sh fast
+build-and-test	Fast tier (unit/numerical/config; no ROS graph needed)	2026-11-14T04:56:57.9814907Z ^[[36;1mbash scripts/test_tiers.sh fast^[[0m
+build-and-test	Fast tier (unit/numerical/config; no ROS graph needed)	2026-11-14T04:56:57.9880880Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+build-and-test	Fast tier (unit/numerical/config; no ROS graph needed)	2026-11-14T04:56:57.9881213Z env:
+build-and-test	Fast tier (unit/numerical/config; no ROS graph needed)	2026-11-14T04:56:57.9881396Z   LANG: en_US.UTF-8
+build-and-test	Fast tier (unit/numerical/config; no ROS graph needed)	2026-11-14T04:56:57.9881590Z ##[endgroup]
+build-and-test	Fast tier (unit/numerical/config; no ROS graph needed)	2026-11-14T04:56:58.0004780Z === Tier: fast (85 test files) ===
+build-and-test	Fast tier (unit/numerical/config; no ROS graph needed)	2026-11-14T04:57:02.2598833Z .s...............................s...................................... [  5%]
+build-and-test	Fast tier (unit/numerical/config; no ROS graph needed)	2026-11-14T04:57:03.1517747Z ........................................................................ [ 10%]
+build-and-test	Fast tier (unit/numerical/config; no ROS graph needed)	2026-11-14T04:57:11.5090250Z ........................................................................ [ 15%]
+build-and-test	Fast tier (unit/numerical/config; no ROS graph needed)	2026-11-14T04:57:34.9498458Z ........................................................................ [ 20%]
+build-and-test	Fast tier (unit/numerical/config; no ROS graph needed)	2026-11-14T04:57:49.2647665Z .......................................................................s [ 26%]
+build-and-test	Fast tier (unit/numerical/config; no ROS graph needed)	2026-11-14T04:58:18.0141815Z ........................................................................ [ 31%]
+build-and-test	Fast tier (unit/numerical/config; no ROS graph needed)	2026-11-14T04:58:18.0992507Z ........................................................................ [ 36%]
+build-and-test	Fast tier (unit/numerical/config; no ROS graph needed)	2026-11-14T04:58:18.4153616Z ........................................................................ [ 41%]
+build-and-test	Fast tier (unit/numerical/config; no ROS graph needed)	2026-11-14T04:58:18.8840598Z .................s....ss................................................ [ 46%]
+build-and-test	Fast tier (unit/numerical/config; no ROS graph needed)	2026-11-14T04:58:18.9554375Z ..................................................................ssssss [ 52%]
+build-and-test	Fast tier (unit/numerical/config; no ROS graph needed)	2026-11-14T04:58:19.0140588Z ssss.................................................................sss [ 57%]
+build-and-test	Fast tier (unit/numerical/config; no ROS graph needed)	2026-11-14T04:58:19.0743291Z ssssssssssssssssssssss.................................................. [ 62%]
+build-and-test	Fast tier (unit/numerical/config; no ROS graph needed)	2026-11-14T04:58:20.1665531Z ........................................................................ [ 67%]
+build-and-test	Fast tier (unit/numerical/config; no ROS graph needed)	2026-11-14T04:58:21.0960139Z ........................................................................ [ 72%]
+build-and-test	Fast tier (unit/numerical/config; no ROS graph needed)	2026-11-14T04:58:21.1768217Z ...................s.................................................... [ 78%]
+build-and-test	Fast tier (unit/numerical/config; no ROS graph needed)	2026-11-14T04:58:21.2313596Z ........................................................................ [ 83%]
+build-and-test	Fast tier (unit/numerical/config; no ROS graph needed)	2026-11-14T04:58:21.3269607Z ........................................................................ [ 88%]
+build-and-test	Fast tier (unit/numerical/config; no ROS graph needed)	2026-11-14T04:58:21.5511415Z ........................................................................ [ 93%]
+build-and-test	Fast tier (unit/numerical/config; no ROS graph needed)	2026-11-14T04:58:35.8713270Z ........................................................................ [ 98%]
+build-and-test	Fast tier (unit/numerical/config; no ROS graph needed)	2026-11-14T04:58:38.7239387Z ..F...........                                                           [100%]
+build-and-test	Fast tier (unit/numerical/config; no ROS graph needed)	2026-11-14T04:58:38.7240328Z =================================== FAILURES ===================================
+build-and-test	Fast tier (unit/numerical/config; no ROS graph needed)	2026-11-14T04:58:38.7241203Z ___________ test_launch_actions_move_faulted_topics_to_relay_inputs ____________
+build-and-test	Fast tier (unit/numerical/config; no ROS graph needed)	2026-11-14T04:58:38.7241898Z 
+build-and-test	Fast tier (unit/numerical/config; no ROS graph needed)	2026-11-14T04:58:38.7242460Z tmp_path = PosixPath('/tmp/pytest-of-runner/pytest-0/test_launch_actions_move_fault0')
+build-and-test	Fast tier (unit/numerical/config; no ROS graph needed)	2026-11-14T04:58:38.7243766Z monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f62a2df7550>
+build-and-test	Fast tier (unit/numerical/config; no ROS graph needed)	2026-11-14T04:58:38.7245200Z 
+build-and-test	Fast tier (unit/numerical/config; no ROS graph needed)	2026-11-14T04:58:38.7245777Z     def test_launch_actions_move_faulted_topics_to_relay_inputs(tmp_path, monkeypatch):
+build-and-test	Fast tier (unit/numerical/config; no ROS graph needed)	2026-11-14T04:58:38.7247190Z         """MuJoCo/PyBullet/Isaac: their sensor publishers are remapped onto the relay inputs."""
+build-and-test	Fast tier (unit/numerical/config; no ROS graph needed)	2026-11-14T04:58:38.7248285Z         import yaml
+build-and-test	Fast tier (unit/numerical/config; no ROS graph needed)	2026-11-14T04:58:38.7248646Z         from robot_lab_utils.sensor_fault_relay import launch_actions
+build-and-test	Fast tier (unit/numerical/config; no ROS graph needed)	2026-11-14T04:58:38.7249126Z         monkeypatch.setenv('ROBOT_LAB_RUNTIME_ROOT', str(tmp_path))
+build-and-test	Fast tier (unit/numerical/config; no ROS graph needed)	2026-11-14T04:58:38.7249529Z         scenario = tmp_path / 'faults.yaml'
+build-and-test	Fast tier (unit/numerical/config; no ROS graph needed)	2026-11-14T04:58:38.7250336Z         scenario.write_text(yaml.safe_dump(dict(seed=3, relays=[dict(input='/scan_clean', output='/scan', type='LaserScan'),
+build-and-test	Fast tier (unit/numerical/config; no ROS graph needed)	2026-11-14T04:58:38.7251094Z                                                                  dict(input='/imu_clean', output='/imu/out', type='Imu')])))
+build-and-test	Fast tier (unit/numerical/config; no ROS graph needed)	2026-11-14T04:58:38.7251666Z >       remappings, relay = launch_actions(str(scenario), 'bumperbot', True)
+build-and-test	Fast tier (unit/numerical/config; no ROS graph needed)	2026-11-14T04:58:38.7252007Z 
+build-and-test	Fast tier (unit/numerical/config; no ROS graph needed)	2026-11-14T04:58:38.7252398Z src/robot_lab_utils/test/test_sensor_fault_relay.py:90: 
+build-and-test	Fast tier (unit/numerical/config; no ROS graph needed)	2026-11-14T04:58:38.7252820Z _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+build-and-test	Fast tier (unit/numerical/config; no ROS graph needed)	2026-11-14T04:58:38.7253099Z 
+build-and-test	Fast tier (unit/numerical/config; no ROS graph needed)	2026-11-14T04:58:38.7253410Z scenario_path = '/tmp/pytest-of-runner/pytest-0/test_launch_actions_move_fault0/faults.yaml'
+build-and-test	Fast tier (unit/numerical/config; no ROS graph needed)	2026-11-14T04:58:38.7253955Z robot_name = 'bumperbot', use_sim_time = True
+build-and-test	Fast tier (unit/numerical/config; no ROS graph needed)	2026-11-14T04:58:38.7254421Z 
+build-and-test	Fast tier (unit/numerical/config; no ROS graph needed)	2026-11-14T04:58:38.7254636Z     def launch_actions(scenario_path, robot_name, use_sim_time=True):
+build-and-test	Fast tier (unit/numerical/config; no ROS graph needed)	2026-11-14T04:58:38.7255183Z         """(remappings, relay Node) for simulators whose own nodes publish the sensors.
+build-and-test	Fast tier (unit/numerical/config; no ROS graph needed)	2026-11-14T04:58:38.7255620Z     
+build-and-test	Fast tier (unit/numerical/config; no ROS graph needed)	2026-11-14T04:58:38.7255980Z         The sensor-publishing nodes take the remappings (each faulted topic moves to
+build-and-test	Fast tier (unit/numerical/config; no ROS graph needed)	2026-11-14T04:58:38.7256522Z         its relay input); the relay then publishes the original name.
+build-and-test	Fast tier (unit/numerical/config; no ROS graph needed)	2026-11-14T04:58:38.7256893Z         """
+build-and-test	Fast tier (unit/numerical/config; no ROS graph needed)	2026-11-14T04:58:38.7257105Z         import os
+build-and-test	Fast tier (unit/numerical/config; no ROS graph needed)	2026-11-14T04:58:38.7257326Z         import yaml
+build-and-test	Fast tier (unit/numerical/config; no ROS graph needed)	2026-11-14T04:58:38.7257616Z >       from launch_ros.actions import Node
+build-and-test	Fast tier (unit/numerical/config; no ROS graph needed)	2026-11-14T04:58:38.7258116Z E       ModuleNotFoundError: No module named 'launch_ros'
+build-and-test	Fast tier (unit/numerical/config; no ROS graph needed)	2026-11-14T04:58:38.7258390Z 
+build-and-test	Fast tier (unit/numerical/config; no ROS graph needed)	2026-11-14T04:58:38.7258647Z src/robot_lab_utils/robot_lab_utils/sensor_fault_relay.py:247: ModuleNotFoundError
+build-and-test	Fast tier (unit/numerical/config; no ROS graph needed)	2026-11-14T04:58:38.7259127Z =========================== short test summary info ============================
+build-and-test	Fast tier (unit/numerical/config; no ROS graph needed)	2026-11-14T04:58:38.7261706Z FAILED src/robot_lab_utils/test/test_sensor_fault_relay.py::test_launch_actions_move_faulted_topics_to_relay_inputs
+build-and-test	Fast tier (unit/numerical/config; no ROS graph needed)	2026-11-14T04:58:38.7262701Z 1 failed, 1339 passed, 44 skipped, 4 deselected in 100.57s (0:01:40)
+build-and-test	Fast tier (unit/numerical/config; no ROS graph needed)	2026-11-14T04:58:39.0403995Z ##[error]Process completed with exit code 1.

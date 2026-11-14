@@ -8,11 +8,9 @@ import numpy as np
 from scipy.spatial.transform import Rotation
 
 
-def top_grasps(obj,max_opening=.08,clearance=.004,approach=.08,lift=.10):
+def _geometry(obj):
     if not isinstance(obj,dict):
         raise ValueError('Object geometry must be a named record')
-    if not all(math.isfinite(v) and v>0 for v in (max_opening,clearance,approach,lift)):
-        raise ValueError('Positive finite gripper/approach geometry required')
     if obj.get('frame')!='native_world':
         raise ValueError('Object pose must be expressed in native_world')
     position=np.asarray(obj['position'],dtype=float)
@@ -28,11 +26,22 @@ def top_grasps(obj,max_opening=.08,clearance=.004,approach=.08,lift=.10):
     if kind not in ('box','sphere','cylinder'):
         raise ValueError('Review a source geometry adapter for this grasp object')
     rotation=Rotation.from_quat((quat/np.linalg.norm(quat))[[1,2,3,0]]).as_matrix()
+    return position,rotation,size,kind
+
+
+def _width(rotation,size,kind,direction):
+    local=rotation.T@direction
+    return (float(np.sum(np.abs(local)*size)) if kind=='box' else
+            float(2*size[0]) if kind=='sphere' else
+            float(2*size[0]*np.linalg.norm(local[:2])+size[1]*abs(local[2])))
+
+
+def top_grasps(obj,max_opening=.08,clearance=.004,approach=.08,lift=.10):
+    if not all(math.isfinite(v) and v>0 for v in (max_opening,clearance,approach,lift)):
+        raise ValueError('Positive finite gripper/approach geometry required')
+    position,rotation,size,kind=_geometry(obj)
     def projected_width(direction):
-        local=rotation.T@direction
-        return (float(np.sum(np.abs(local)*size)) if kind=='box' else
-                float(2*size[0]) if kind=='sphere' else
-                float(2*size[0]*np.linalg.norm(local[:2])+size[1]*abs(local[2])))
+        return _width(rotation,size,kind,direction)
     approach_height=max(approach,.5*projected_width(np.array([0.,0.,1.]))+.02)
     candidates=[];directions=[]
     for axis in range(3):
@@ -49,10 +58,43 @@ def top_grasps(obj,max_opening=.08,clearance=.004,approach=.08,lift=.10):
             tool=np.column_stack((side,jaw,down))
             q=Rotation.from_matrix(tool).as_quat()[[3,0,1,2]].tolist()
             poses={name:dict(position=(position+[0.,0.,dz]).tolist(),orientation_wxyz=q)
-                   for name,dz in (('approach',approach_height),('grasp',0.),('lift',lift))}
+                   for name,dz in (('approach',approach_height),('grasp',0.),('lift',lift),('retreat',approach_height))}
             candidates.append(dict(id='top_'+str(len(candidates)+1),object_id=str(obj.get('id','object')),
                 opening_m=width+clearance,closing_axis_world=jaw.tolist(),poses=poses,
                 scope='Geometry candidate; requires collision-aware IK/plan and measured grasp'))
+    return candidates
+
+
+def side_grasps(obj,max_opening=.08,clearance=.004,approach=.08,lift=.10):
+    """Parallel-jaw side targets from four world directions, not grasp certificates.
+
+    Authored Panda TCP: tool Y closes the jaws; tool Z points into the object.
+    Both horizontal and vertical pinch axes are inspected against object width.
+    """
+    if not all(math.isfinite(v) and v>0 for v in (max_opening,clearance,approach,lift)):
+        raise ValueError('Positive finite gripper/approach geometry required')
+    position,rotation,size,kind=_geometry(obj)
+    up=np.array([0.,0.,1.]);candidates=[]
+    directions=(('neg_x',[1.,0.,0.]),('pos_x',[-1.,0.,0.]),
+                ('neg_y',[0.,1.,0.]),('pos_y',[0.,-1.,0.]))
+    for label,forward in directions:
+        forward=np.asarray(forward)
+        distance=max(approach,.5*_width(rotation,size,kind,forward)+.02)
+        for pinch,closing in (('horizontal',np.cross(up,forward)),('vertical',up)):
+            opening=_width(rotation,size,kind,closing)+clearance
+            if opening>max_opening:continue
+            for number,sign in enumerate((1.,-1.),1):
+                jaw=sign*closing
+                tool=np.column_stack((np.cross(jaw,forward),jaw,forward))
+                q=Rotation.from_matrix(tool).as_quat()[[3,0,1,2]].tolist()
+                approach_position=(position-distance*forward).tolist()
+                poses={name:dict(position=value,orientation_wxyz=q) for name,value in (
+                    ('approach',approach_position),('grasp',position.tolist()),
+                    ('lift',(position+lift*up).tolist()),('retreat',approach_position))}
+                candidates.append(dict(id='side_from_'+label+'_'+pinch+'_'+str(number),
+                    object_id=str(obj.get('id','object')),opening_m=opening,
+                    closing_axis_world=jaw.tolist(),approach_axis_world=forward.tolist(),poses=poses,
+                    scope='Geometry candidate; requires collision-aware IK/plan and measured grasp'))
     return candidates
 
 
@@ -62,7 +104,7 @@ def support_placement(obj, attachment, support, *, clearance=.003, approach=.08,
     The acknowledged object-in-tool transform is inverted to compute the real
     TCP target. Geometry/fit alone does not establish reachability or release.
     """
-    top_grasps(obj)  # Shared measured-pose validation; need not fit an open jaw.
+    _geometry(obj)  # Shared measured-pose validation; need not fit an open jaw.
     if not all(math.isfinite(v) and v>0 for v in (clearance,approach,edge_margin)):
         raise ValueError('Positive finite placement clearances required')
     if not isinstance(attachment,dict) or attachment.get('object_id')!=obj.get('id'):

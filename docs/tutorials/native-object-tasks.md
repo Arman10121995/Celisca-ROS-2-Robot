@@ -36,7 +36,13 @@ In the Arm/Hand native controls, find the mobile task panel. Select
 collision pads. The choices come from the running model. A robot without a
 free object cannot enable these object controls.
 
-**Add local pick recipe** adds: open, approach 8 cm above the object, reach
+Choose **Approach** before building a recipe: **Above +Z** keeps the original
+behavior; **From ±X/±Y** selects a horizontal approach in `native_world`.
+The distance field accepts 3–25 cm and defaults to 8 cm. This selects a
+translation, not a source-gripper orientation. Use the pad orientation options
+below to align the physical fingers. A source wrist may not reach every pose.
+
+**Add local pick recipe** adds: open, approach from the selected direction, reach
 its collision-geometry centre, close until both pads have contact, lift 10 cm,
 confirm sustained measured grasp, and collision-check telescope retraction.
 It adds steps only; **Run task** executes them. You can reorder/remove steps,
@@ -50,8 +56,9 @@ Enter **Place XYZ · native world** for the gripper-pad midpoint at release.
 These coordinates are metres in `native_world`, not a camera frame. For this
 fixture, the second bench centre is approximately `(1.2, -0.62, 0.515)`;
 reachability and support still require physical inspection. **Add local place
-recipe** adds an approach above this point, lowering, gripper opening,
-measured supported release, retreat and retraction. Reposition the base before
+recipe** adds an approach from the selected direction, reach to the release
+point, gripper opening, measured supported release, retreat along that same
+direction (at least 10 cm) and retraction. Reposition the base before
 a local reach when needed; original Stretch has fewer wrist degrees of freedom
 than Stretch 3. Unreachable targets and routes for which no collision-free
 configuration path is found within the planning budget are refused.

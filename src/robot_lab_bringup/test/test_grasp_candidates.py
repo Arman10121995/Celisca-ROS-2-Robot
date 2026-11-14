@@ -3,7 +3,7 @@ import math
 import numpy as np
 import pytest
 from scipy.spatial.transform import Rotation
-from robot_lab_utils.grasp_candidates import top_grasps
+from robot_lab_utils.grasp_candidates import top_grasps, side_grasps
 
 
 def obj(**values):
@@ -39,3 +39,29 @@ def test_rotated_box_sphere_and_cylinder_use_projected_physical_widths():
     dict(orientation_wxyz=[0.,0.,0.,0.]),dict(position=[float('nan'),0.,0.]),dict(type='mesh')])
 def test_invalid_unframed_or_unreviewed_geometry_is_refused(values):
     with pytest.raises(ValueError):top_grasps(obj(**values))
+
+
+def test_side_grasps_fit_rotated_box_corners_and_approach_from_outside_the_shape():
+    from itertools import product
+    rotation=Rotation.from_euler('xyz',[.1,.2,.4])
+    size=np.array([.16,.03,.04]);position=np.array([.4,0.,.3])
+    shape=obj(size=size.tolist(),orientation_wxyz=rotation.as_quat()[[3,0,1,2]].tolist())
+    corners=rotation.apply(np.array(list(product((-1.,1.),repeat=3)))*size/2)
+    candidates=side_grasps(shape)
+    assert candidates and len({c['id'] for c in candidates})==len(candidates)
+    for c in candidates:
+        pose=c['poses']['grasp'];q=np.array(pose['orientation_wxyz'])
+        tool=Rotation.from_quat(q[[1,2,3,0]]).as_matrix()
+        assert np.linalg.det(tool)==pytest.approx(1.)
+        width=np.ptp(corners@tool[:,1])
+        assert c['opening_m']==pytest.approx(width+.004) and c['opening_m']<=.08
+        approach=np.array(c['poses']['approach']['position'])-position
+        np.testing.assert_allclose(approach/np.linalg.norm(approach),-tool[:,2],atol=1e-12)
+        assert np.linalg.norm(approach)>=max(abs(corners@tool[:,2]))+.02-1e-12
+        np.testing.assert_allclose(c['poses']['lift']['position'],position+[0.,0.,.1])
+        assert c['poses']['retreat']==c['poses']['approach']
+    assert side_grasps(obj(size=[.2,.2,.2]))==[]
+
+
+def test_top_candidates_keep_the_existing_vertical_contract_and_add_retreat():
+    for candidate in top_grasps(obj()):assert candidate['poses']['retreat']==candidate['poses']['approach']

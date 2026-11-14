@@ -19,6 +19,16 @@ Instead of wiring simulators, controllers, and planners by hand, you select from
 
 **The platform is partial.** It is an active research lab, not a finished product. Some robot × simulator × map combinations are measured and qualified; others are implemented but unqualified. See [Current Status](#current-status) for what is done and what remains.
 
+November 14 continuation: the native Panda has **Top / Side / Top + side** grasp
+choices and explicit retreat planning; Stretch pick/place recipes have selectable
+world-axis approaches. The Arm control column now fits its planning panels.
+The official scan/cloud converter is available in an SSD overlay; launch routing
+and CI tier fixes preserve the required checks.
+[Changes and measured scope](docs/status/takeover-2026-11-14.md) ·
+[Panda guide](docs/tutorials/panda_arm.md#select-a-measured-object-and-plan-grasp-stages) ·
+[Stretch guide](docs/tutorials/native-object-tasks.md) ·
+[Converter guide](docs/tutorials/scan-cloud-conversion.md).
+
 November 12: the Vacuum workspace has an **Objects** snapshot gallery and an installed,
 experimental four-class camera model with command autofill. It is trained on Gazebo source-primitive
 renders; cable misses and shoe false positives remain, and a learned-camera robot mission is unqualified.

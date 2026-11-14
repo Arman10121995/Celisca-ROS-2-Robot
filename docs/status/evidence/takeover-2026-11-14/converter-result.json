@@ -1,0 +1,41 @@
+{
+  "executable": "/workspace/molar/robot_lab_runtime/perception/current/prefix/opt/ros/humble/lib/pointcloud_to_laserscan/laserscan_to_pointcloud_node",
+  "input": "Published synthetic three-ray LaserScan; no robot/simulator",
+  "output_frame": "laser",
+  "points": [
+    [
+      -4.371138828673793e-08,
+      -1.0,
+      0.0
+    ],
+    [
+      2.0,
+      0.0,
+      0.0
+    ],
+    [
+      -1.3113417196564114e-07,
+      3.0,
+      0.0
+    ]
+  ],
+  "expected": [
+    [
+      0.0,
+      -1.0,
+      0.0
+    ],
+    [
+      2.0,
+      0.0,
+      0.0
+    ],
+    [
+      0.0,
+      3.0,
+      0.0
+    ]
+  ],
+  "maximum_error_m": 1.3113417196564114e-07,
+  "passed": true
+}

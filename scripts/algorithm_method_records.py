@@ -69,8 +69,8 @@ NAME_MATH = {
     'noisy_controller': ('corrected', 'Was catalogued as PID; it is wheel odometry with Gaussian encoder noise '
                          '(sigma 0.005 rad), with no feedback law.'),
     'laser_scan_to_pointcloud': ('corrected', 'Its dispatch and launch fragment started pointcloud_to_laserscan_node, '
-                                 'the reverse conversion; now laserscan_to_pointcloud_node. The package is not '
-                                 'installed on this host.'),
+                                 'the reverse conversion; now laserscan_to_pointcloud_node. Runtime availability '
+                                 'is determined from the current package index below.'),
     'costmap_2d_observation': ('corrected', 'The catalog named nav2_costmap_2d::ObservationLayer, which does not exist; '
                                'the Nav2 ObstacleLayer (observation buffers, ray-traced clearing) is what runs.'),
     'teb_local_planner': ('corrected', 'The catalog named nav2_teb_planner, which does not exist, and said integrated; '

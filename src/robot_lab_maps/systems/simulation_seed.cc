@@ -1,7 +1,8 @@
 // Copyright 2026 Robot Lab contributors. SPDX-License-Identifier: Apache-2.0
 // Seed Gazebo's shared random generator (ignition::math::Rand) when the world
-// loads, so sensor noise models (Gaussian noise on IMU, lidar, cameras) draw a
-// sequence that repeats for the same seed (ROADMAP R7, simulator-applied seeds).
+// loads, before sensor systems initialise their noise state (ROADMAP R7).
+// Exact repeated sensor streams still depend on sensor update ordering; the
+// named single-IMU receipt is separate from multi-sensor mission qualification.
 #include <cstdint>
 #include <stdexcept>
 #include <ignition/common/Console.hh>

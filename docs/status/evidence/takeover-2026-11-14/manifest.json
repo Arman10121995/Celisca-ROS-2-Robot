@@ -1,0 +1,112 @@
+{
+  "base_revision": "ac906819f9a39e852ad0d45bed46208a72434ac1",
+  "source_sha256": {
+    "scripts/algorithm_method_records.py": "440a20019d27eb757f73e03fa71c790cf2e3389ec7a7c0451e55a7dbc36a3415",
+    "scripts/ssd_env.sh": "2adb476ab44c9368907e204a17d91b8b0b507a9c8550fa68d755b51f4d03a16d",
+    "scripts/test_tiers.sh": "6ba9693d55b5131b25cfa6ef578f690730da2919d78051f49cf53d623781a37c",
+    "src/robot_lab_bringup/test/test_grasp_candidates.py": "275d5150533cc9a102cfcc35102b028846168474911add1d21db4e8c53f8e116",
+    "src/robot_lab_bringup/test/test_world_copy_paths.py": "c475340558e0a720beef8034c9ed0ffb0c8be127e4d81d5dda9425c7ccd23c05",
+    "src/robot_lab_description/launch/gazebo.launch.py": "0bc65d5b92080907146c9aaeb4cc51b097b9cecac3fe8919c8105fa507beea77",
+    "src/robot_lab_gui/robot_lab_gui/grasp_target_controls.py": "9ee23572645e0bb5f8c4253df17ad4caaf590fe6d6acf36efebd5511acd022d7",
+    "src/robot_lab_gui/robot_lab_gui/mobile_task_controls.py": "0eb277040f6976c9aa01da2228231ccd6e8f8b772ec5cecf709dab33d0f08033",
+    "src/robot_lab_gui/robot_lab_gui/workspace_ui.py": "1895271e36a4107fd00c5e37a84ffc1a3cfcb2cceb5dc2dafb634ce9d1cb486d",
+    "src/robot_lab_gui/test/test_mobile_reach_orientation.py": "5355e63a81b4ae81bdac7486e0b188b1c3e8b8e3f675e4b19d80424195bdbc35",
+    "src/robot_lab_maps/systems/simulation_seed.cc": "e57f3b0a453a1fb550697dd7915299db82cf5799a7189cf3d583c419cb3f6d0b",
+    "src/robot_lab_utils/robot_lab_utils/grasp_candidates.py": "b7e96a0d8acc6cd2f7b99ba8deb10ce2795e324b895fb5e29160033d9a8e647d",
+    "src/robot_lab_utils/test/test_sensor_fault_relay.py": "c740ec4245dde06cc5ea39bc286887292de05ae468e66c05e15e678b2b14d4df",
+    "scripts/perception_env.sh": "c8a5db1ac3f84c1f003a61695f799825c57d55dcdf27b44bee04adca02a0fb74",
+    "scripts/provision_perception_runtime.py": "598cf089dcacf39b1e3f6ccbbfa0c230ff2fef75efdb82384265058b7dc043b7",
+    "src/robot_lab_bringup/test/test_sensor_fault_launch.py": "ba61f97309d77d16a78cc724b8be6dd70e4c6d4e8b74c4edc8dcac1afc65c71c",
+    "src/robot_lab_gui/test/test_side_grasp_controls.py": "d2460829d74616ded596c300ee06723986193cec4d2db168b91d1f61741696b0"
+  },
+  "raw_artifacts": {
+    "/workspace/molar/robot_lab_runtime/takeover-20261114/method-records.yaml": {
+      "sha256": "b2c27aeb03190028a443cfec93b453e896fde576afb51e52d67d9ade74e9e536",
+      "bytes": 48048
+    },
+    "/workspace/molar/robot_lab_runtime/takeover-20261114/build-final.log": {
+      "sha256": "cdf6707f0ec32bc9a8bcf44b7726a55ff390ac011f6844e7bb87a68823efebca",
+      "bytes": 103391
+    },
+    "/workspace/molar/robot_lab_runtime/takeover-20261114/ci-ac906819.log": {
+      "sha256": "82488c8deb4c93fa2f469c1e8fdacd429186f78172d733bcdada908bffd06720",
+      "bytes": 10443
+    },
+    "/workspace/molar/robot_lab_runtime/takeover-20261114/launch-checks.log": {
+      "sha256": "55626e6b77da3524bacc3e7f2cce628ae795b6068090c14f553a6edfa3da0d8c",
+      "bytes": 3106
+    },
+    "/workspace/molar/robot_lab_runtime/takeover-20261114/converter-result.json": {
+      "sha256": "2f876725e5493201703ae830677ce4ed3112abca9c5aac804c51894f8fbb0b4a",
+      "bytes": 668
+    },
+    "/workspace/molar/robot_lab_runtime/takeover-20261114/pointcloud-install.log": {
+      "sha256": "9b3a3b7a78f239c4473bb193476b1a860c91f1c2b4fab9c7639eceea414a60fb",
+      "bytes": 29
+    },
+    "/workspace/molar/robot_lab_runtime/takeover-20261114/converter-node.log": {
+      "sha256": "cc68744a445d0dbbc90c68502e8437990f0933d3810c0027231a004de7053da3",
+      "bytes": 312
+    },
+    "/workspace/molar/robot_lab_runtime/takeover-20261114/physics.log": {
+      "sha256": "0363746f2f451fc288aa2b48d41c8cef8ed0dbad859f97a9515b2188d3df2574",
+      "bytes": 1558
+    },
+    "/workspace/molar/robot_lab_runtime/takeover-20261114/seed-result.json": {
+      "sha256": "b42ce726af6a63e30347e1d82b02fdd26a5b288d0ebe3ec0630da2f54b768860",
+      "bytes": 1599
+    },
+    "/workspace/molar/robot_lab_runtime/takeover-20261114/converter-probe.log": {
+      "sha256": "2f876725e5493201703ae830677ce4ed3112abca9c5aac804c51894f8fbb0b4a",
+      "bytes": 668
+    },
+    "/workspace/molar/robot_lab_runtime/takeover-20261114/perception-provision.log": {
+      "sha256": "2635b729ebf5bd014e64341d356e1c49731230ec20fe79d767319f46d5cea23e",
+      "bytes": 173
+    },
+    "/workspace/molar/robot_lab_runtime/takeover-20261114/scan_cloud_probe.py": {
+      "sha256": "67903088fe5e8e03b3316f3e5ef221080ceaf96b97f6d14daeb753a42ac19b0a",
+      "bytes": 2627
+    },
+    "/workspace/molar/robot_lab_runtime/takeover-20261114/pure-final.log": {
+      "sha256": "8eedf3767615c77eb1c2137500646d10e3d72e1059381d30770738aebdeaec1f",
+      "bytes": 99
+    },
+    "/workspace/molar/robot_lab_runtime/takeover-20261114/build.log": {
+      "sha256": "934c63e1c951b53866377d8e69ea7eca2d182fe3cdbf85bc177718eed6d2d17c",
+      "bytes": 1857
+    },
+    "/workspace/molar/robot_lab_runtime/takeover-20261114/integration.log": {
+      "sha256": "3c8e7c5171c0e8428e71822d184f2ab515a49bd3c383ecd7c9b995da922b4792",
+      "bytes": 6018
+    },
+    "/workspace/molar/robot_lab_runtime/takeover-20261114/launch-checks-final.log": {
+      "sha256": "f5bbe17480d4c1e5f755c22e010a6c83812c7ccb7b27ea35483a1ba2ab9e34c1",
+      "bytes": 99
+    },
+    "/workspace/molar/robot_lab_runtime/takeover-20261114/mavlink-install.log": {
+      "sha256": "f5cb3254ed67c10443e5359a4a4b2cb0b0cbd7ecc597891844f72c8b46e79655",
+      "bytes": 1481
+    },
+    "/workspace/molar/robot_lab_runtime/takeover-20261114/gui-final.log": {
+      "sha256": "c80493ba6575e504723ec194d12ed2d06e3282ca877794eaf4c298ac93ead2d3",
+      "bytes": 100
+    },
+    "/workspace/molar/robot_lab_runtime/takeover-20261114/launch-final.log": {
+      "sha256": "e8a03aa5376f00138c772120654eed2dcc3609732b976966954755922810b7e5",
+      "bytes": 99
+    },
+    "/workspace/molar/robot_lab_runtime/takeover-20261114/fast.log": {
+      "sha256": "8f4f1e18915a03f39394d365dda1233a2d5f612340e4d7837dbec06b2a8a4746",
+      "bytes": 3982
+    },
+    "/workspace/molar/robot_lab_runtime/takeover-20261114/gui-followup.log": {
+      "sha256": "6936d2804d07abe1cac8a7cb104f42256f3efe7888451b6191117c69f8c91484",
+      "bytes": 2910
+    },
+    "/workspace/molar/robot_lab_runtime/takeover-20261114/seed-check.log": {
+      "sha256": "8ffe4c75153878491a8799fc4600c134484d755be693c3057a1ae314e73840f2",
+      "bytes": 184
+    }
+  }
+}

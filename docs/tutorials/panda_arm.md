@@ -183,7 +183,11 @@ is explicitly simulator truth, not a camera detector.
 1. Choose a named box and click **Select object** while the arm and hand are
    idle and any previous object is released/detached. Selection changes no
    physical state. Wait for the acknowledged measured collision scene.
-2. Click **Generate candidates**, then choose a top grasp. Candidates use the
+2. Choose **Top**, **Side** or **Top + side**, click **Generate candidates**,
+   then choose a grasp. Top retains the original vertical approach. Side
+   inspects four horizontal world directions and horizontal/vertical pinches;
+   the Panda tool's Y axis closes the jaws and Z points into the object.
+   Candidates use the
    measured collision geometry and the Panda's 80 mm opening. The recommended
    gap includes the actual planning padding; a 30 mm box with the default
    10 mm link padding recommends 54 mm.
@@ -201,6 +205,14 @@ is explicitly simulator truth, not a camera detector.
    **Execute Plan**. Lift planning requires acknowledged attachment and live
    two-sided contacts. Use the existing Cartesian controls to plan a transfer;
    release with Hand and detach the planning object after placement.
+
+**Plan retreat** returns toward the selected candidate's approach point with
+the same tool orientation. It requires an open, detached hand without measured
+grasp contact. It is useful for backing away from an abandoned grasp; after
+placing on another surface, use the separate placement retreat procedure
+below. Editing the strategy invalidates the old candidate/plan and sends no
+motion. Side candidates are geometry suggestions; nearby supports and robot
+reach still determine whether IK/OMPL can find a valid path.
 
 All stage buttons only request plans. Existing execution, cancellation,
 heartbeat, source actuator limits and contact interruption rules still apply.

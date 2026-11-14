@@ -26,6 +26,7 @@ _robot_lab_ssd_env() {
     if [[ -d "$lab_storage_base/rmf/current/prefix/opt/ros/humble/share/rmf_fleet_adapter_python" ]]; then
         source "$(dirname "${BASH_SOURCE[0]}")/rmf_env.sh"
     fi
+    source "$(dirname "${BASH_SOURCE[0]}")/perception_env.sh"
     # Shared optional geometry wheels serve both sourced ROS Python and the
     # PX4 venv without moving dependencies onto internal storage.
     if [[ -d "$lab_storage_base/python_deps/geometry" &&

@@ -172,7 +172,10 @@ def build_workspace(app):
             host.columnconfigure(1, weight=1, minsize=0)
             setup.grid(row=1, column=0, columnspan=1, sticky='nsew')
             app.session_frame.grid(row=1, column=1, columnspan=1, sticky='nsew')
-        app.launch_split.sashpos(0, max(385, width-(415 if narrow else 445)))
+        # Source arm planners need room for their actual controls plus the
+        # notebook, scrollbar and body padding. A narrower fixed allocation
+        # clips even the existing native Cartesian panel horizontally.
+        app.launch_split.sashpos(0,max(385,width-480))
     app.launch_split.bind('<Configure>', split, add='+')
     app.after(150, split)
     return basic.body, advanced.body

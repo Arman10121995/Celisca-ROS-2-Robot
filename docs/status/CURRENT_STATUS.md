@@ -1,5 +1,24 @@
 # Current Robot Lab status
 
+November 14 Codex takeover: the user confirms Claude has stopped. Panda now
+offers **Top / Side / Top + side**, width-checked side pinches and explicit
+open/detached retreat planning. Stretch recipes select an above/side world-axis
+approach distance while retaining explicit source-pad orientation. Existing
+IK/OMPL, source actuation, custody and execution gates remain. The Arm column's
+horizontal overflow is fixed. **22 focused geometry/widget/layout checks pass**
+under Xvfb. Whole physical manipulation missions remain partial.
+
+The inherited launch/CI changes are integrated: native MuJoCo cannot bypass
+fault routing, routes are absolute/disjoint, and seed systems precede world
+sensors. Thirteen launch/relay checks pass. A fresh single-IMU Gazebo fixture
+repeats 30/30 samples with seed 42 and 0/30 against seed 7. The official
+Humble scan/cloud converter is provisioned on SSD; an actual ROS three-ray
+conversion agrees within 0.14 µm. Current file availability is 72 installed
+and six unavailable algorithm IDs; this is not a method-performance count.
+[Receipt, full-tier results, failures and limitations](takeover-2026-11-14.md).
+Published CI at `ac906819` failed because a ROS launch test ran unsourced;
+it remains required in integration. The new published revision is pending.
+
 November 14 Claude: algorithm breadth implementation (I19/R7) is done, experimental; the fair comparisons remain V10.
 - **[Simulator seeds](evidence/r7-simulator-seed-2026-11-14/README.md):** `sim_seed:=<n>` now seeds Gazebo's sensor noise. In a measured IMU world, the same seed repeated 300 of 300 noisy samples; another seed or no seed matched none. MuJoCo, PyBullet and Isaac publish exact sensors. Their seeded noise is the sensor-fault relay, which `sensor_faults:=` now starts on every backend.
 - **Sensor-fault fix:** the relay script had never been installed, so `sensor_faults:=` failed at launch, on Gazebo too. Smoke runs on Gazebo and MuJoCo showed the +0.5 m scan bias.

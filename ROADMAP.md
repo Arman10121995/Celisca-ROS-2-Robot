@@ -133,8 +133,8 @@ Work top to bottom. Each line links to its task.
 | I4a | [R14.5](#r145--robot-status-markers-in-the-gui-selectors) Robot status markers | Done 2026-11-13: ● measured / ◐ experimental / ○ display only / ✕ unavailable plus mode letters in both robot lists, from recorded evidence | implemented |
 | I4b | [R6.8](#r68--real-world-area-import-from-a-globe) Real-world area import | Done 2026-11-13: globe picker (CesiumJS + OSM), Terrain Tiles + OSM buildings/roads/trees/water, SUMO people/traffic; support and roof heights measured on four simulators | implemented |
 | I5 | [R5.11](#r511--drone-moving-obstacles-and-other-drone-backends) Drone moving obstacles | Done 2026-11-13: Kalman tracks, predicted sweeps, walkway look-both-ways and overflight, evasion, sensor-loss hold/land, EKF heading/height gate; 2 passing flights past walkers (Gazebo); PX4 + MuJoCo plant: takeoff, 5 m route and landing | implemented |
-| I6 | [R5.9](#r59--mobile-manipulators) Mobile manipulation | Stretch object recipes, pose reaches, bounded alternate IK/configuration search, interlocks and actual costmap receipts implemented; perception, grasp strategies and further source adapters remain | partial |
-| I7 | [R5.7](#r57--manipulators-and-motion-planning) Arms | Panda measured box selection, grasp and support-placement stage plans implemented; unattended sequencing, arbitrary geometry, coupled arms and other backends remain | partial |
+| I6 | [R5.9](#r59--mobile-manipulators) Mobile manipulation | Stretch object recipes, directional approaches, pose reaches, bounded alternate IK/configuration search, interlocks and actual costmap receipts implemented; perception and further source adapters remain | partial |
+| I7 | [R5.7](#r57--manipulators-and-motion-planning) Arms | Panda measured box selection, top/side/retreat and support-placement stage plans implemented; unattended sequencing, arbitrary geometry, coupled arms and other backends remain | partial |
 | I8 | [R5.8](#r58--robot-hands-and-grippers) Hands | Torque/tendon hand adapters, object workflows | partial |
 | I9 | [R10.2](#r102--fleet-management-and-open-rmf) Fleet / Open-RMF | Done 2026-11-14: shared-zone reservations (map passages, doors, docks), cycle breaker, recovery drive-out, RMF energy from a drivetrain calibration; two crossing runs pass (native and RMF). Chargers/doors in other worlds, larger fleets remain | implemented |
 | I10 | [R10.3](#r103--swarm-robotics) Swarms | Done 2026-11-14: ROS2swarm port of per-member scan-only behaviours, scan-sensed cooperative coverage, ground/air member-loss replanning; dispersion and coverage-with-loss measured; aggregation not yet passing; 3–4 drone flight is validation | implemented |
@@ -354,6 +354,10 @@ tier repair awaits its exact-revision published rerun. Details and evidence are 
     [Implementation and checks](docs/status/support-placement-2026-11-14.md).
 
   [Native arm guide](docs/tutorials/native-arm-planning.md).
+- **Side strategies (2026-11-14, Codex):** Top/Side/Top + side geometry candidates,
+  physical-width projection, explicit open/detached retreat plans and strategy
+  invalidation in the existing GUI. All paths still require existing IK/OMPL
+  and separate execution. [Takeover receipt](docs/status/takeover-2026-11-14.md).
 - **Remaining implementation:**
   - extend the measured Panda box stage planner into a complete repeated
     pick/place pipeline; add compound/mesh geometry, perception pose sources,
@@ -419,8 +423,12 @@ tier repair awaits its exact-revision published rerun. Details and evidence are 
   a found route on inspection-budget expiry. Forty-three focused checks and
   three package builds pass; full loaded source missions remain unqualified.
   [Receipt](docs/status/ik-branches-2026-11-14.md).
+- **Directional approaches (2026-11-14, Codex):** GUI pick/place recipes can
+  approach from above or either horizontal world axis, with a 3–25 cm distance.
+  Place retreat uses the same direction; source-pad orientation stays explicit
+  and independent. Editing only builds steps. [Receipt](docs/status/takeover-2026-11-14.md).
 - **Remaining implementation:**
-  - additional grasp strategies, perception-bound object poses and further
+  - perception-bound object poses, source-specific grasp strategies and further
     source-specific object pipelines;
   - generalize the existing native interlock and measured footprint-consumption gate to other mobile-manipulator adapters;
   - Fetch, PR2 or TIAGo as a second source.
@@ -682,8 +690,13 @@ tier repair awaits its exact-revision published rerun. Details and evidence are 
       `imu_complementary_filter` is Madgwick; `ekf_3d_estimator` is a planar
       CTRV EKF; `motion_model_estimator` is an IMM; `pose_graph_estimator` is
       a sliding-window smoother; `pd_motion_planner` is a PD controller.
-- **Remaining implementation:** none for I19. Optional: install
-  `pointcloud_to_laserscan`; a dispatched Dijkstra distinct from NavFn
+- **Converter runtime (2026-11-14, Codex):** official Humble scan/cloud binary
+  is provisioned on SSD with repository SHA256/version records. A real ROS
+  three-ray scan converted to the expected XYZ points within 0.14 µm; this is
+  a conversion fixture, not a robot mission. Native MuJoCo fault routing and
+  seed-before-sensors world copies have focused launch checks.
+  [Receipt](docs/status/takeover-2026-11-14.md).
+- **Remaining implementation:** none for I19. Optional: a dispatched Dijkstra distinct from NavFn
   (`robot_lab_planning::DijkstraPlanner` is built).
 - **How to do it:** the algorithm code is in `src/robot_lab_algorithms/`,
   with ROS wrappers in `src/robot_lab_adapter/` and the catalog in

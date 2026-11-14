@@ -83,7 +83,9 @@ def world_with_seed(path, seed):
     # A world that declares no systems gets the defaults; one more plugin must not remove them.
     if not world.findall('plugin'):
         for filename,name in _DEFAULT_SYSTEMS:ET.SubElement(world,'plugin',filename=filename,name=name)
-    plugin=ET.SubElement(world,'plugin',filename=library,name='robot_lab::SimulationSeed')
+    # Configure before sensor systems create their random noise/bias state.
+    plugin=ET.Element('plugin',filename=library,name='robot_lab::SimulationSeed')
+    world.insert(0,plugin)
     ET.SubElement(plugin,'seed').text=str(seed)
     base = os.path.dirname(os.path.abspath(path))
     for element in [*root.iter('uri'),*root.iter('filename')]:

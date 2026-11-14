@@ -79,17 +79,10 @@ def test_imu_and_depth_image_faults():
     assert np.isnan(values).sum() == 10
 
 
-def test_launch_actions_move_faulted_topics_to_relay_inputs(tmp_path, monkeypatch):
-    """MuJoCo/PyBullet/Isaac: their sensor publishers are remapped onto the relay inputs."""
-    import yaml
-    from robot_lab_utils.sensor_fault_relay import launch_actions
-    monkeypatch.setenv('ROBOT_LAB_RUNTIME_ROOT', str(tmp_path))
-    scenario = tmp_path / 'faults.yaml'
-    scenario.write_text(yaml.safe_dump(dict(seed=3, relays=[dict(input='/scan_clean', output='/scan', type='LaserScan'),
-                                                             dict(input='/imu_clean', output='/imu/out', type='Imu')])))
-    remappings, relay = launch_actions(str(scenario), 'bumperbot', True)
-    assert remappings == [('/scan', '/scan_clean'), ('/imu/out', '/imu_clean')]
-    assert relay.node_executable == 'sensor_fault_relay.py' and (tmp_path / 'sensor_faults').is_dir()
-    scenario.write_text(yaml.safe_dump(dict(relays=[dict(input='/truth_clean', output='/scan', type='LaserScan')])))
-    with pytest.raises(ValueError):
-        launch_actions(str(scenario), 'bumperbot', True)
+@pytest.mark.parametrize('relays',[
+    [dict(SPEC,input='scan_clean')],
+    [SPEC,dict(SPEC)],
+    [SPEC,dict(SPEC,input='/scan',output='/scan_clean')],
+])
+def test_ambiguous_duplicate_and_feedback_topic_routes_are_refused(relays):
+    with pytest.raises(ValueError):validate(dict(relays=copy.deepcopy(relays)))

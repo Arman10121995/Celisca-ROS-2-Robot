@@ -50,3 +50,27 @@ def test_seed_system_is_added_once_and_keeps_declared_systems(tmp_path, monkeypa
     assert text.count('ignition::gazebo::systems::Physics') == 1 and '<seed>7</seed>' in text
     with pytest.raises(ValueError):
         launch.world_with_seed(str(declared), 2 ** 32)
+
+
+def test_seed_copy_replaces_old_seed_before_sensors_and_preserves_asset_schemes(tmp_path, monkeypatch):
+    import xml.etree.ElementTree as ET
+    _fake_seed_library(tmp_path, monkeypatch)
+    world=tmp_path/'assets.world'
+    original='''<sdf version="1.9"><world name="w">
+      <plugin filename="sensors" name="ignition::gazebo::systems::Sensors"/>
+      <plugin filename="old" name="robot_lab::SimulationSeed"><seed>9</seed></plugin>
+      <model name="assets"><link name="l">
+        <visual name="relative"><geometry><mesh><uri> meshes/a.obj </uri></mesh></geometry></visual>
+        <visual name="package"><geometry><mesh><uri> package://demo/a.obj </uri></mesh></geometry></visual>
+        <visual name="web"><geometry><mesh><uri> https://example.org/a.obj </uri></mesh></geometry></visual>
+      </link></model></world></sdf>'''
+    world.write_text(original)
+    launch=load_launch()
+    copy=Path(launch.world_with_seed(str(world),42))
+    root=ET.parse(copy).getroot();plugins=root.find('world').findall('plugin')
+    assert [p.get('name') for p in plugins]==['robot_lab::SimulationSeed','ignition::gazebo::systems::Sensors']
+    assert plugins[0].findtext('seed')=='42'
+    assert [e.text.strip() for e in root.iter('uri')]==[
+        str(tmp_path/'meshes/a.obj'),'package://demo/a.obj','https://example.org/a.obj']
+    assert world.read_text()==original and copy!=world
+    assert launch.world_with_seed(str(world),42)==str(copy)

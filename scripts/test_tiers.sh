@@ -115,6 +115,8 @@ FAST_TESTS=(
 )
 
 INTEGRATION_TESTS=(
+  "$GUI_TEST/test_side_grasp_controls.py"
+  "$BRG_TEST/test_sensor_fault_launch.py"
   "src/robot_lab_utils/test/test_car_parking.py"
   "src/robot_lab_utils/test/test_fleet_contact_conflict.py"
   "src/robot_lab_utils/test/test_swarm_distributed.py"

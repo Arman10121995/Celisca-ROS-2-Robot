@@ -1,5 +1,19 @@
 # Agent Handoff Protocol
 
+November 14 takeover: the user confirms Claude has stopped; **Codex owns the
+current checkout and remaining implementation**. Preserve the integrated
+algorithm/seed/relay changes in `ac906819`, the native MuJoCo relay branch,
+disjoint absolute fault routes, unique SSD trace writers and seed-before-sensor
+ordering. Panda now has explicit top/side/retreat plans; Stretch recipes select
+world-axis approach distance independently of pad orientation. The control
+column reserves room for actual arm widgets. The official Humble converter is
+hash-checked in an SSD overlay; source `scripts/ssd_env.sh` after ROS/workspace
+setup before the GUI. [Takeover receipt](status/takeover-2026-11-14.md) records
+passed checks and retained failures. Current-revision published CI and complete
+source-robot manipulation missions remain separate acceptance. Continue R5.9's
+perception/source pipelines, then R5.7 sequencing/geometry and the rest of the
+ROADMAP implementation queue. Older Claude ownership notes below are history.
+
 November 14 Codex R5.9 IK branches: preserve measured/midpoint/four seeded source IK starts, duplicate/collision filtering, multi-goal directed configuration search and actual motor-slew checks. Keep held coordinates, source bounds, payload relation, original eight-second/64-waypoint limits and valid found paths when optional shortening exhausts its budget. Forty-three focused checks and three builds pass; [receipt](status/ik-branches-2026-11-14.md). Actual loaded source missions remain open; Claude owns algorithm/seed/launch work.
 
 November 14 Codex CI dependency follow-up: `a2b5e281` passed fast/physics, then integration collection lacked pymavlink for the heading-gate fixture. Both workflows now pin the existing runtime version 2.4.50; ten heading/walkway checks pass locally. Full published rerun pending; [receipt](status/evidence/ci-mavlink-2026-11-14/README.md). Claude owns algorithm/seed/launch files; Codex continues R5.9 IK branches.
