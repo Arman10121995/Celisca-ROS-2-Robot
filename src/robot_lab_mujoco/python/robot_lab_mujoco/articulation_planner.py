@@ -24,7 +24,8 @@ def geometry_digest(model):
     """Geometry/contact changes invalidate a snapshot; servo budgets do not."""
     digest = hashlib.sha256()
     for array in (model.body_pos, model.body_quat, model.geom_pos, model.geom_quat,
-                  model.geom_size, model.geom_contype, model.geom_conaffinity):
+                  model.geom_size, model.geom_type, model.geom_dataid,
+                  model.geom_contype, model.geom_conaffinity):
         digest.update(array.tobytes())
     return digest.hexdigest()
 
@@ -36,6 +37,8 @@ class JointScene:
         self.data = mj.MjData(self.model)
         mj.mj_copyData(self.data, self.model, data)
         self.snapshot = data.qpos.copy()
+        self.mocap_pos, self.mocap_quat = data.mocap_pos.copy(), data.mocap_quat.copy()
+        self.equalities = data.eq_active.copy()
         self.specs, self.names = copy.deepcopy(specs), tuple(names)
         self.geometry = geometry_digest(model)
         self.robot_root = int(model.body_rootid[root_body])
@@ -63,6 +66,10 @@ class JointScene:
         return np.array([float(data.qpos[self.addresses[n]]) for n in self.names])
 
     def settled_start(self, data):
+        if (not np.array_equal(data.eq_active, self.equalities)
+                or not np.allclose(data.mocap_pos, self.mocap_pos, atol=.001, rtol=0.)
+                or not np.allclose(data.mocap_quat, self.mocap_quat, atol=.001, rtol=0.)):
+            return False
         if self.scene_addresses and np.max(np.abs(data.qpos[self.scene_addresses]-self.snapshot[self.scene_addresses])) > .001:
             return False
         if self.root_addresses and np.max(np.abs(data.qpos[self.root_addresses]-self.snapshot[self.root_addresses])) > .001:
@@ -244,7 +251,7 @@ class ArticulationPlanner:
             try:
                 data, c = self.node._data, self.contract
                 if c.plant_id != self.plant:
-                    self.cancel('Plant reset; request a new plan')
+                    self.cancel('Plant reset/Stop; request a new plan', stop=False)
                     self.plant = c.plant_id
                 if self.phase in ('requested', 'planning', 'ready', 'executing'):
                     if base_moving or c.fault or time.monotonic()-c.heartbeat_at > .5:

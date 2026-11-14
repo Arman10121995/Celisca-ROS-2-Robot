@@ -349,6 +349,9 @@ class ArticulationROS:
             if operation not in (None, 'targets'):
                 raise ValueError('Unknown articulation operation')
             if self.motion_planner is not None:
+                if self.motion_planner.phase in ('requested', 'planning', 'ready', 'executing'):
+                    self.motion_planner.cancel('Manual intervention held the whole plan; observe fresh state and retry the direct target')
+                    return
                 self.motion_planner.cancel('Manual target revoked the plan', stop=False)
             self.contract.command(request, base_moving=self.base_moving)
         except (ValueError, TypeError) as exc:

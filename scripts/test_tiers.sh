@@ -194,6 +194,7 @@ PHYSICS_TESTS=(
   "src/robot_lab_mujoco/test/test_wheel_housing_contacts.py"
   "$BRG_TEST/test_myagv_pro_source.py"
   "$BRG_TEST/test_tiago_source.py"
+  "$BRG_TEST/test_articulation_planner.py"
   "$BRG_TEST/test_moving_urdf_camera.py"
   "$BRG_TEST/test_molar_backend_contract.py"
   "$BRG_TEST/test_urdf_inertia.py"

@@ -99,6 +99,7 @@ def provision(store, download=False):
         'Complete official PMB2/pal-gripper public-simulation assembly; source kinematics, inertias, collisions and fixed casters retained',
         'Source 6 Nm wheels with declared 0.2 m/s / 0.4 rad/s lab velocity caps',
         'Twelve independent source position channels, declared bounded lab PD gains/rates plus existing plant gravity feedforward',
+        'MuJoCo opt-in private joint-target planning and explicit Execute through existing source servos; separate Cartesian/object and other-backend planning remain open',
         'Isaac opt-in native actual-pose generalized gravity compensation each step, replacing slide-only feedforward within the same source effort budget',
         'Isaac opt-in scalar source link-friction bindings on original/fused/instanced colliders with minimum combination; not Gazebo solver equivalence',
         'Isaac opt-in source wheel Coulomb torque/damping port to native axis friction efforts, replacing the importer dimensionless bearing coefficient; source motor limits unchanged',
@@ -128,7 +129,8 @@ def provision(store, download=False):
         'Source antenna/tool inertias are degenerate; backend importer regularization and rest-contact exclusions are declared, not faithful-dynamics qualification. '
         'MuJoCo/PyBullet/Isaac experimental adapter; no physical mission certificate. '
         'Retained Display control screens and exact measured scope: docs/status/evidence/tiago-2026-11-14/README.md. '
-        'Gazebo Fortress source port, camera/object pipelines, payload/costmap integration and wider missions remain pending.')
+        'MuJoCo has explicit private joint-target Plan/Execute with live source/scene/contact guards. '
+        'Gazebo Fortress source port, Cartesian/object planning, camera/object pipelines, payload/costmap integration and wider missions remain pending.')
     profile = dict(package='robot_lab_robots', name=NAME, xacro=str(model), type='mobile_manipulator',
         external_asset=True, asset_origin='extension', source_id=sources[0]['id'],
         source_revision=sources[0]['revision'], source_entry=ENTRY, drive=drive,

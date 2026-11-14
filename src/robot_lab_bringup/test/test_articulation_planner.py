@@ -156,14 +156,17 @@ def test_planning_hold_keeps_lease_but_stop_revokes_old_commands(tmp_path):
     assert not c.command(dict(plant_id=plant, targets=dict(x=.1)))
 
 
-def test_manual_takeover_keeps_current_authorized_command(tmp_path):
+def test_manual_takeover_holds_whole_plan_then_requires_new_generation(tmp_path):
     node, c, planner, _ = ready_plan(tmp_path)
     bridge = object.__new__(ArticulationROS)
     bridge.contract, bridge.motion_planner, bridge.base_moving = c, planner, False
     import json
     plant = c.plant_id
     bridge.command(SimpleNamespace(data=json.dumps(dict(plant_id=plant, targets=dict(x=.03)))))
-    assert not planner.plan_id and c.plant_id == plant
+    assert not planner.plan_id and c.plant_id != plant
+    assert c.holding and c.targets['x'] == 0.
+    c.heartbeat()
+    bridge.command(SimpleNamespace(data=json.dumps(dict(plant_id=c.plant_id, targets=dict(x=.03)))))
     assert not c.holding and c.targets['x'] == .03
 
 
@@ -176,3 +179,16 @@ def test_rate_override_is_reduction_only(tmp_path):
     for rates in ({'x': .5}, {'y': 0.}, {'unknown': .1}, {'x': float('nan')}):
         with pytest.raises(ValueError, match='position rates'):
             c.step(dict(x=-.3, y=0.), dict(x=0., y=0.), .01, position_rates=rates)
+
+
+def test_mocap_actor_motion_invalidates_frozen_scene(tmp_path):
+    _, c, _ = make_fixture(tmp_path)
+    xml = XML.replace('</worldbody>', '<body name="actor" mocap="true" pos="2 0 0"><geom type="sphere" size=".1"/></body></worldbody>')
+    model = mj.MjModel.from_xml_string(xml)
+    data = mj.MjData(model)
+    mj.mj_forward(model, data)
+    scene = JointScene(model, data, mj.mj_name2id(model, mj.mjtObj.mjOBJ_BODY, 'robot'), c.joints, ('x', 'y'))
+    assert scene.settled_start(data)
+    data.mocap_pos[0, 0] += .02
+    assert not scene.settled_start(data)
+    assert scene.data.mocap_pos[0, 0] == 2.

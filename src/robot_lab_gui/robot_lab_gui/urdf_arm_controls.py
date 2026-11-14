@@ -327,7 +327,8 @@ class UrdfArmControls(MolarControls):
             widget.state(['!disabled'] if enabled else ['disabled'])
         self.stop_button.state(['!disabled'] if self.state else ['disabled'])
         planning = self.planning()
-        can_plan = self.planning_enabled() and planning.get('phase') not in ('requested', 'planning', 'executing')
+        can_plan = (self.planning_enabled() and not self.state['base_inhibited']
+                    and planning.get('phase') not in ('requested', 'planning', 'executing'))
         for button in (self.plan_button, self.plan_home_button):
             button.state(['!disabled'] if can_plan else ['disabled'])
         self.execute_button.state(['!disabled'] if self.plan_matches() else ['disabled'])
