@@ -1,5 +1,7 @@
 # Scan and point-cloud conversion
 
+## Run
+
 The Perception algorithm `laser_scan_to_pointcloud` now starts the official
 Humble `laserscan_to_pointcloud_node`: `/scan` is its input and `/cloud` its
 output. Choose it in Launch's algorithm options; the normal command preview
