@@ -1,0 +1,393 @@
+[1.447s] colcon.colcon_ros.prefix_path.ament WARNING The path '/workspace/molar/robot_lab_runtime/perception/current/prefix/opt/ros/humble' in the environment variable AMENT_PREFIX_PATH doesn't contain any 'local_setup.*' files.
+[1.447s] colcon.colcon_ros.prefix_path.ament WARNING The path '/workspace/molar/robot_lab_runtime/rmf/current/prefix/opt/ros/humble' in the environment variable AMENT_PREFIX_PATH doesn't contain any 'local_setup.*' files.
+[1.579s] colcon.colcon_core.package_selection WARNING Some selected packages are already built in one or more underlay workspaces:
+	'robot_lab_bringup' is in: /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_bringup
+	'robot_lab_utils' is in: /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_utils
+If a package in a merged underlay workspace is overridden and it installs headers, then all packages in the overlay must sort their include directories by workspace order. Failure to do so may result in build failures or undefined behavior at run time.
+If the overridden package is used by another package in any underlay, then the overriding package in the overlay must be API and ABI compatible or undefined behavior at run time may occur.
+
+If you understand the risks and want to override a package anyways, add the following to the command line:
+	--allow-overriding robot_lab_bringup robot_lab_utils
+
+This may be promoted to an error in a future release of colcon-override-check.
+Starting >>> robot_lab_utils
+[100%] Built target safety_stop
+[100%] Built target ament_cmake_python_symlink_robot_lab_utils
+running egg_info
+writing robot_lab_utils.egg-info/PKG-INFO
+writing dependency_links to robot_lab_utils.egg-info/dependency_links.txt
+writing top-level names to robot_lab_utils.egg-info/top_level.txt
+reading manifest file 'robot_lab_utils.egg-info/SOURCES.txt'
+writing manifest file 'robot_lab_utils.egg-info/SOURCES.txt'
+[100%] Built target ament_cmake_python_build_robot_lab_utils_egg
+-- Install configuration: "Release"
+-- Execute custom install script
+-- Up-to-date symlink: /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_utils/share/robot_lab_utils/environment/pythonpath.sh
+-- Up-to-date symlink: /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_utils/share/robot_lab_utils/environment/pythonpath.dsv
+-- Up-to-date symlink: /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_utils/lib/python3.10/site-packages/robot_lab_utils-0.0.0-py3.10.egg-info/PKG-INFO
+-- Up-to-date symlink: /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_utils/lib/python3.10/site-packages/robot_lab_utils-0.0.0-py3.10.egg-info/SOURCES.txt
+-- Up-to-date symlink: /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_utils/lib/python3.10/site-packages/robot_lab_utils-0.0.0-py3.10.egg-info/dependency_links.txt
+-- Up-to-date symlink: /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_utils/lib/python3.10/site-packages/robot_lab_utils-0.0.0-py3.10.egg-info/top_level.txt
+-- Up-to-date symlink: /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_utils/lib/python3.10/site-packages/robot_lab_utils/__init__.py
+-- Up-to-date symlink: /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_utils/lib/python3.10/site-packages/robot_lab_utils/_vendor/PythonRobotics.LICENSE
+-- Up-to-date symlink: /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_utils/lib/python3.10/site-packages/robot_lab_utils/_vendor/__init__.py
+-- Up-to-date symlink: /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_utils/lib/python3.10/site-packages/robot_lab_utils/_vendor/pythonrobotics-provenance.json
+-- Up-to-date symlink: /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_utils/lib/python3.10/site-packages/robot_lab_utils/_vendor/pythonrobotics_angle.py
+-- Up-to-date symlink: /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_utils/lib/python3.10/site-packages/robot_lab_utils/_vendor/pythonrobotics_dubins.py
+-- Up-to-date symlink: /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_utils/lib/python3.10/site-packages/robot_lab_utils/aerial_planning.py
+-- Up-to-date symlink: /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_utils/lib/python3.10/site-packages/robot_lab_utils/aerial_takeoff.py
+-- Up-to-date symlink: /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_utils/lib/python3.10/site-packages/robot_lab_utils/aerial_tracking.py
+-- Up-to-date symlink: /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_utils/lib/python3.10/site-packages/robot_lab_utils/amphibious_controller.py
+-- Up-to-date symlink: /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_utils/lib/python3.10/site-packages/robot_lab_utils/amphibious_planning.py
+-- Up-to-date symlink: /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_utils/lib/python3.10/site-packages/robot_lab_utils/arm_trajectory.py
+-- Up-to-date symlink: /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_utils/lib/python3.10/site-packages/robot_lab_utils/asset_groups.py
+-- Up-to-date symlink: /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_utils/lib/python3.10/site-packages/robot_lab_utils/asset_preview.py
+-- Up-to-date symlink: /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_utils/lib/python3.10/site-packages/robot_lab_utils/asset_support.py
+-- Up-to-date symlink: /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_utils/lib/python3.10/site-packages/robot_lab_utils/auv_controller.py
+-- Up-to-date symlink: /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_utils/lib/python3.10/site-packages/robot_lab_utils/auv_routes.py
+-- Up-to-date symlink: /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_utils/lib/python3.10/site-packages/robot_lab_utils/bluerov_source.py
+-- Up-to-date symlink: /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_utils/lib/python3.10/site-packages/robot_lab_utils/bounded_control_planner.py
+-- Up-to-date symlink: /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_utils/lib/python3.10/site-packages/robot_lab_utils/camera_model.py
+-- Up-to-date symlink: /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_utils/lib/python3.10/site-packages/robot_lab_utils/camera_msgs.py
+-- Up-to-date symlink: /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_utils/lib/python3.10/site-packages/robot_lab_utils/car_alignment.py
+-- Up-to-date symlink: /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_utils/lib/python3.10/site-packages/robot_lab_utils/car_parking.py
+-- Up-to-date symlink: /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_utils/lib/python3.10/site-packages/robot_lab_utils/car_parking_clearance.py
+-- Up-to-date symlink: /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_utils/lib/python3.10/site-packages/robot_lab_utils/display_reasons.py
+-- Up-to-date symlink: /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_utils/lib/python3.10/site-packages/robot_lab_utils/drive_kinematics.py
+-- Up-to-date symlink: /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_utils/lib/python3.10/site-packages/robot_lab_utils/fiducial_object_pose.py
+-- Up-to-date symlink: /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_utils/lib/python3.10/site-packages/robot_lab_utils/fiducial_objects.py
+-- Up-to-date symlink: /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_utils/lib/python3.10/site-packages/robot_lab_utils/fleet_building_graph.py
+-- Up-to-date symlink: /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_utils/lib/python3.10/site-packages/robot_lab_utils/fleet_controller.py
+-- Up-to-date symlink: /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_utils/lib/python3.10/site-packages/robot_lab_utils/fleet_energy.py
+-- Up-to-date symlink: /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_utils/lib/python3.10/site-packages/robot_lab_utils/fleet_energy_calibration.py
+-- Up-to-date symlink: /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_utils/lib/python3.10/site-packages/robot_lab_utils/fleet_facility_graph.py
+-- Up-to-date symlink: /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_utils/lib/python3.10/site-packages/robot_lab_utils/fleet_infrastructure.py
+-- Up-to-date symlink: /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_utils/lib/python3.10/site-packages/robot_lab_utils/fleet_lift_recovery.py
+-- Up-to-date symlink: /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_utils/lib/python3.10/site-packages/robot_lab_utils/fleet_missions.py
+-- Up-to-date symlink: /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_utils/lib/python3.10/site-packages/robot_lab_utils/fleet_motion.py
+-- Up-to-date symlink: /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_utils/lib/python3.10/site-packages/robot_lab_utils/fleet_rmf_adapter.py
+-- Up-to-date symlink: /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_utils/lib/python3.10/site-packages/robot_lab_utils/fleet_session.py
+-- Up-to-date symlink: /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_utils/lib/python3.10/site-packages/robot_lab_utils/fleet_transport.py
+-- Up-to-date symlink: /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_utils/lib/python3.10/site-packages/robot_lab_utils/fleet_transport_queue.py
+-- Up-to-date symlink: /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_utils/lib/python3.10/site-packages/robot_lab_utils/fleet_zones.py
+-- Up-to-date symlink: /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_utils/lib/python3.10/site-packages/robot_lab_utils/footprint_receipts.py
+-- Up-to-date symlink: /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_utils/lib/python3.10/site-packages/robot_lab_utils/gait_controller.py
+-- Up-to-date symlink: /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_utils/lib/python3.10/site-packages/robot_lab_utils/gait_gazebo_adapter.py
+-- Up-to-date symlink: /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_utils/lib/python3.10/site-packages/robot_lab_utils/gait_gazebo_description.py
+-- Up-to-date symlink: /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_utils/lib/python3.10/site-packages/robot_lab_utils/gait_gazebo_launch.py
+-- Up-to-date symlink: /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_utils/lib/python3.10/site-packages/robot_lab_utils/gait_model.py
+-- Up-to-date symlink: /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_utils/lib/python3.10/site-packages/robot_lab_utils/gait_odometry.py
+-- Up-to-date symlink: /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_utils/lib/python3.10/site-packages/robot_lab_utils/gait_pipeline.py
+-- Up-to-date symlink: /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_utils/lib/python3.10/site-packages/robot_lab_utils/gait_recovery.py
+-- Up-to-date symlink: /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_utils/lib/python3.10/site-packages/robot_lab_utils/gait_sensor_relay.py
+-- Up-to-date symlink: /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_utils/lib/python3.10/site-packages/robot_lab_utils/gait_terrain.py
+-- Up-to-date symlink: /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_utils/lib/python3.10/site-packages/robot_lab_utils/gazebo_display.py
+-- Up-to-date symlink: /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_utils/lib/python3.10/site-packages/robot_lab_utils/gazebo_physics_world.py
+-- Up-to-date symlink: /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_utils/lib/python3.10/site-packages/robot_lab_utils/go2_support.py
+-- Up-to-date symlink: /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_utils/lib/python3.10/site-packages/robot_lab_utils/grasp_candidates.py
+-- Up-to-date symlink: /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_utils/lib/python3.10/site-packages/robot_lab_utils/guarded_sequence.py
+-- Up-to-date symlink: /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_utils/lib/python3.10/site-packages/robot_lab_utils/heightfield.py
+-- Up-to-date symlink: /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_utils/lib/python3.10/site-packages/robot_lab_utils/input_devices.py
+-- Up-to-date symlink: /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_utils/lib/python3.10/site-packages/robot_lab_utils/installed_assets.py
+-- Up-to-date symlink: /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_utils/lib/python3.10/site-packages/robot_lab_utils/isaac_env.py
+-- Up-to-date symlink: /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_utils/lib/python3.10/site-packages/robot_lab_utils/map_archive.py
+-- Up-to-date symlink: /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_utils/lib/python3.10/site-packages/robot_lab_utils/map_registration.py
+-- Up-to-date symlink: /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_utils/lib/python3.10/site-packages/robot_lab_utils/marine_camera_relay.py
+-- Up-to-date symlink: /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_utils/lib/python3.10/site-packages/robot_lab_utils/marine_controller.py
+-- Up-to-date symlink: /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_utils/lib/python3.10/site-packages/robot_lab_utils/marine_model.py
+-- Up-to-date symlink: /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_utils/lib/python3.10/site-packages/robot_lab_utils/marine_mujoco_plant.py
+-- Up-to-date symlink: /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_utils/lib/python3.10/site-packages/robot_lab_utils/marine_navigation.py
+-- Up-to-date symlink: /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_utils/lib/python3.10/site-packages/robot_lab_utils/marine_navigation_model.py
+-- Up-to-date symlink: /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_utils/lib/python3.10/site-packages/robot_lab_utils/marine_pipeline.py
+-- Up-to-date symlink: /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_utils/lib/python3.10/site-packages/robot_lab_utils/marine_runtime.py
+-- Up-to-date symlink: /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_utils/lib/python3.10/site-packages/robot_lab_utils/marine_sensors.py
+-- Up-to-date symlink: /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_utils/lib/python3.10/site-packages/robot_lab_utils/mesh_assets.py
+-- Up-to-date symlink: /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_utils/lib/python3.10/site-packages/robot_lab_utils/mobile_manipulation_scene.py
+-- Up-to-date symlink: /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_utils/lib/python3.10/site-packages/robot_lab_utils/mobile_task.py
+-- Up-to-date symlink: /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_utils/lib/python3.10/site-packages/robot_lab_utils/mode_capability.py
+-- Up-to-date symlink: /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_utils/lib/python3.10/site-packages/robot_lab_utils/myagv_pro.py
+-- Up-to-date symlink: /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_utils/lib/python3.10/site-packages/robot_lab_utils/myagv_pro630.py
+-- Up-to-date symlink: /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_utils/lib/python3.10/site-packages/robot_lab_utils/myagv_rollers.py
+-- Up-to-date symlink: /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_utils/lib/python3.10/site-packages/robot_lab_utils/native_actuation.py
+-- Up-to-date symlink: /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_utils/lib/python3.10/site-packages/robot_lab_utils/native_arm_description.py
+-- Up-to-date symlink: /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_utils/lib/python3.10/site-packages/robot_lab_utils/native_arm_trajectory.py
+-- Up-to-date symlink: /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_utils/lib/python3.10/site-packages/robot_lab_utils/native_control_kinematics.py
+-- Up-to-date symlink: /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_utils/lib/python3.10/site-packages/robot_lab_utils/native_footprint.py
+-- Up-to-date symlink: /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_utils/lib/python3.10/site-packages/robot_lab_utils/native_hand.py
+-- Up-to-date symlink: /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_utils/lib/python3.10/site-packages/robot_lab_utils/native_hand_force.py
+-- Up-to-date symlink: /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_utils/lib/python3.10/site-packages/robot_lab_utils/native_hand_object.py
+-- Up-to-date symlink: /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_utils/lib/python3.10/site-packages/robot_lab_utils/native_mjcf_assets.py
+-- Up-to-date symlink: /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_utils/lib/python3.10/site-packages/robot_lab_utils/native_planning_description.py
+-- Up-to-date symlink: /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_utils/lib/python3.10/site-packages/robot_lab_utils/nav_goals.py
+-- Up-to-date symlink: /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_utils/lib/python3.10/site-packages/robot_lab_utils/object_custody.py
+-- Up-to-date symlink: /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_utils/lib/python3.10/site-packages/robot_lab_utils/object_estimates.py
+-- Up-to-date symlink: /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_utils/lib/python3.10/site-packages/robot_lab_utils/observed_aerial_scene.py
+-- Up-to-date symlink: /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_utils/lib/python3.10/site-packages/robot_lab_utils/occupancy_slice.py
+-- Up-to-date symlink: /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_utils/lib/python3.10/site-packages/robot_lab_utils/partition_reaper.py
+-- Up-to-date symlink: /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_utils/lib/python3.10/site-packages/robot_lab_utils/planar_mesh.py
+-- Up-to-date symlink: /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_utils/lib/python3.10/site-packages/robot_lab_utils/process_lifetime.py
+-- Up-to-date symlink: /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_utils/lib/python3.10/site-packages/robot_lab_utils/qualification.py
+-- Up-to-date symlink: /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_utils/lib/python3.10/site-packages/robot_lab_utils/real_world_import.py
+-- Up-to-date symlink: /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_utils/lib/python3.10/site-packages/robot_lab_utils/real_world_server.py
+-- Up-to-date symlink: /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_utils/lib/python3.10/site-packages/robot_lab_utils/real_world_traffic.py
+-- Up-to-date symlink: /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_utils/lib/python3.10/site-packages/robot_lab_utils/reset_notifications.py
+-- Up-to-date symlink: /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_utils/lib/python3.10/site-packages/robot_lab_utils/rgbd_boxes.py
+-- Up-to-date symlink: /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_utils/lib/python3.10/site-packages/robot_lab_utils/rgbd_object_pose.py
+-- Up-to-date symlink: /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_utils/lib/python3.10/site-packages/robot_lab_utils/robot_description.py
+-- Up-to-date symlink: /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_utils/lib/python3.10/site-packages/robot_lab_utils/robot_spawn.py
+-- Up-to-date symlink: /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_utils/lib/python3.10/site-packages/robot_lab_utils/robot_status.py
+-- Up-to-date symlink: /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_utils/lib/python3.10/site-packages/robot_lab_utils/robot_taxonomy.py
+-- Up-to-date symlink: /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_utils/lib/python3.10/site-packages/robot_lab_utils/ros_frames.py
+-- Up-to-date symlink: /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_utils/lib/python3.10/site-packages/robot_lab_utils/safety_stop.py
+-- Up-to-date symlink: /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_utils/lib/python3.10/site-packages/robot_lab_utils/sdf_world.py
+-- Up-to-date symlink: /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_utils/lib/python3.10/site-packages/robot_lab_utils/sensor_config.py
+-- Up-to-date symlink: /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_utils/lib/python3.10/site-packages/robot_lab_utils/sensor_fault_relay.py
+-- Up-to-date symlink: /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_utils/lib/python3.10/site-packages/robot_lab_utils/serpentine_model.py
+-- Up-to-date symlink: /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_utils/lib/python3.10/site-packages/robot_lab_utils/serpentine_odometry.py
+-- Up-to-date symlink: /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_utils/lib/python3.10/site-packages/robot_lab_utils/sim_frames.py
+-- Up-to-date symlink: /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_utils/lib/python3.10/site-packages/robot_lab_utils/skid_steer.py
+-- Up-to-date symlink: /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_utils/lib/python3.10/site-packages/robot_lab_utils/source_ground.py
+-- Up-to-date symlink: /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_utils/lib/python3.10/site-packages/robot_lab_utils/surface_controller.py
+-- Up-to-date symlink: /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_utils/lib/python3.10/site-packages/robot_lab_utils/swarm_behaviours.py
+-- Up-to-date symlink: /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_utils/lib/python3.10/site-packages/robot_lab_utils/swarm_coverage.py
+-- Up-to-date symlink: /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_utils/lib/python3.10/site-packages/robot_lab_utils/terrain_generator.py
+-- Up-to-date symlink: /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_utils/lib/python3.10/site-packages/robot_lab_utils/textured_mesh.py
+-- Up-to-date symlink: /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_utils/lib/python3.10/site-packages/robot_lab_utils/tracked_control.py
+-- Up-to-date symlink: /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_utils/lib/python3.10/site-packages/robot_lab_utils/tracked_flippers.py
+-- Up-to-date symlink: /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_utils/lib/python3.10/site-packages/robot_lab_utils/urdf_articulation.py
+-- Up-to-date symlink: /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_utils/lib/python3.10/site-packages/robot_lab_utils/urdf_contact.py
+-- Up-to-date symlink: /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_utils/lib/python3.10/site-packages/robot_lab_utils/urdf_extent.py
+-- Up-to-date symlink: /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_utils/lib/python3.10/site-packages/robot_lab_utils/urdf_inertia.py
+-- Up-to-date symlink: /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_utils/lib/python3.10/site-packages/robot_lab_utils/urdf_joints.py
+-- Up-to-date symlink: /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_utils/lib/python3.10/site-packages/robot_lab_utils/urdf_springs.py
+-- Up-to-date symlink: /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_utils/lib/python3.10/site-packages/robot_lab_utils/vacuum_sensors.py
+-- Up-to-date symlink: /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_utils/lib/python3.10/site-packages/robot_lab_utils/vendor/HEXAPOD_LICENSE
+-- Up-to-date symlink: /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_utils/lib/python3.10/site-packages/robot_lab_utils/vendor/__init__.py
+-- Up-to-date symlink: /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_utils/lib/python3.10/site-packages/robot_lab_utils/vendor/hexapod_kinematics.py
+-- Up-to-date symlink: /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_utils/lib/python3.10/site-packages/robot_lab_utils/web/globe.html
+-- Up-to-date symlink: /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_utils/lib/robot_lab_utils/safety_stop
+-- Up-to-date symlink: /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_utils/lib/robot_lab_utils/safety_stop.py
+-- Up-to-date symlink: /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_utils/lib/robot_lab_utils/fleet_controller.py
+-- Up-to-date symlink: /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_utils/lib/robot_lab_utils/fleet_rmf_adapter.py
+-- Up-to-date symlink: /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_utils/lib/robot_lab_utils/fleet_infrastructure.py
+-- Up-to-date symlink: /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_utils/lib/robot_lab_utils/marine_controller.py
+-- Up-to-date symlink: /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_utils/lib/robot_lab_utils/marine_mujoco_plant.py
+-- Up-to-date symlink: /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_utils/lib/robot_lab_utils/car_parking.py
+-- Up-to-date symlink: /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_utils/lib/robot_lab_utils/sensor_fault_relay.py
+-- Up-to-date symlink: /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_utils/lib/robot_lab_utils/fiducial_object_pose.py
+-- Up-to-date symlink: /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_utils/lib/robot_lab_utils/rgbd_object_pose.py
+-- Up-to-date symlink: /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_utils/lib/robot_lab_utils/surface_controller.py
+-- Up-to-date symlink: /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_utils/lib/robot_lab_utils/amphibious_controller.py
+-- Up-to-date symlink: /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_utils/lib/robot_lab_utils/auv_controller.py
+-- Up-to-date symlink: /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_utils/lib/robot_lab_utils/marine_sensors.py
+-- Up-to-date symlink: /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_utils/lib/robot_lab_utils/marine_navigation.py
+-- Up-to-date symlink: /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_utils/lib/robot_lab_utils/marine_camera_relay.py
+-- Up-to-date symlink: /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_utils/lib/robot_lab_utils/tracked_control.py
+-- Up-to-date symlink: /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_utils/lib/robot_lab_utils/gait_controller.py
+-- Up-to-date symlink: /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_utils/lib/robot_lab_utils/gait_odometry.py
+-- Up-to-date symlink: /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_utils/lib/robot_lab_utils/serpentine_odometry.py
+-- Up-to-date symlink: /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_utils/lib/robot_lab_utils/gait_sensor_relay.py
+-- Up-to-date symlink: /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_utils/lib/robot_lab_utils/gait_gazebo_adapter.py
+-- Up-to-date symlink: /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_utils/lib/robot_lab_utils/map_archive.py
+-- Up-to-date symlink: /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_utils/share/robot_lab_utils/licenses/HEXAPOD_LICENSE
+-- Up-to-date symlink: /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_utils/share/robot_lab_utils/licenses/PythonRobotics.LICENSE
+-- Up-to-date symlink: /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_utils/share/robot_lab_utils/licenses/pythonrobotics-provenance.json
+-- Up-to-date symlink: /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_utils/share/ament_index/resource_index/package_run_dependencies/robot_lab_utils
+-- Up-to-date symlink: /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_utils/share/ament_index/resource_index/parent_prefix_path/robot_lab_utils
+-- Up-to-date symlink: /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_utils/share/robot_lab_utils/environment/ament_prefix_path.sh
+-- Up-to-date symlink: /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_utils/share/robot_lab_utils/environment/ament_prefix_path.dsv
+-- Up-to-date symlink: /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_utils/share/robot_lab_utils/environment/path.sh
+-- Up-to-date symlink: /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_utils/share/robot_lab_utils/environment/path.dsv
+-- Up-to-date symlink: /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_utils/share/robot_lab_utils/local_setup.bash
+-- Up-to-date symlink: /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_utils/share/robot_lab_utils/local_setup.sh
+-- Up-to-date symlink: /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_utils/share/robot_lab_utils/local_setup.zsh
+-- Up-to-date symlink: /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_utils/share/robot_lab_utils/local_setup.dsv
+-- Symlinking: /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_utils/share/robot_lab_utils/package.dsv
+-- Up-to-date symlink: /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_utils/share/ament_index/resource_index/packages/robot_lab_utils
+-- Up-to-date symlink: /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_utils/share/robot_lab_utils/cmake/robot_lab_utilsConfig.cmake
+-- Up-to-date symlink: /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_utils/share/robot_lab_utils/cmake/robot_lab_utilsConfig-version.cmake
+-- Up-to-date symlink: /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_utils/share/robot_lab_utils/package.xml
+Listing '/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_utils/lib/python3.10/site-packages/robot_lab_utils'...
+Listing '/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_utils/lib/python3.10/site-packages/robot_lab_utils/_vendor'...
+Compiling '/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_utils/lib/python3.10/site-packages/robot_lab_utils/rgbd_boxes.py'...
+Listing '/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_utils/lib/python3.10/site-packages/robot_lab_utils/vendor'...
+Listing '/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_utils/lib/python3.10/site-packages/robot_lab_utils/web'...
+Finished <<< robot_lab_utils [1.40s]
+Starting >>> robot_lab_bringup
+Starting >>> robot_lab_mujoco
+-- Install configuration: "Release"
+-- Execute custom install script
+-- Up-to-date symlink: /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_bringup/share/robot_lab_bringup/config/aerial_swarm_demo.yaml
+-- Up-to-date symlink: /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_bringup/share/robot_lab_bringup/config/algorithm_dispatch.yaml
+-- Up-to-date symlink: /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_bringup/share/robot_lab_bringup/config/asset_groups.yaml
+-- Up-to-date symlink: /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_bringup/share/robot_lab_bringup/config/fleet_demo.yaml
+-- Up-to-date symlink: /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_bringup/share/robot_lab_bringup/config/px4_x500.rviz
+-- Up-to-date symlink: /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_bringup/share/robot_lab_bringup/config/robot_taxonomy.yaml
+-- Up-to-date symlink: /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_bringup/share/robot_lab_bringup/config/rplidar_a1.yaml
+-- Up-to-date symlink: /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_bringup/share/robot_lab_bringup/config/sim_maps.yaml
+-- Up-to-date symlink: /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_bringup/share/robot_lab_bringup/config/sim_modes.yaml
+-- Up-to-date symlink: /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_bringup/share/robot_lab_bringup/launch/__pycache__/marine_simulator.launch.cpython-310.pyc
+-- Up-to-date symlink: /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_bringup/share/robot_lab_bringup/launch/__pycache__/shared_world.launch.cpython-310.pyc
+-- Up-to-date symlink: /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_bringup/share/robot_lab_bringup/launch/__pycache__/simulated_robot.launch.cpython-310.pyc
+-- Up-to-date symlink: /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_bringup/share/robot_lab_bringup/launch/__pycache__/simulated_room_vacuum.launch.cpython-310.pyc
+-- Up-to-date symlink: /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_bringup/share/robot_lab_bringup/launch/__pycache__/tracked_simulator.launch.cpython-310.pyc
+-- Up-to-date symlink: /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_bringup/share/robot_lab_bringup/launch/aerial_swarm.launch.py
+-- Up-to-date symlink: /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_bringup/share/robot_lab_bringup/launch/auv_simulator.launch.py
+-- Up-to-date symlink: /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_bringup/share/robot_lab_bringup/launch/gait_simulator.launch.py
+-- Up-to-date symlink: /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_bringup/share/robot_lab_bringup/launch/marine_simulator.launch.py
+-- Up-to-date symlink: /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_bringup/share/robot_lab_bringup/launch/native_arm_planning.launch.py
+-- Up-to-date symlink: /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_bringup/share/robot_lab_bringup/launch/native_mobile_workflow.launch.py
+-- Up-to-date symlink: /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_bringup/share/robot_lab_bringup/launch/panda_planning.launch.py
+-- Up-to-date symlink: /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_bringup/share/robot_lab_bringup/launch/real_robot.launch.py
+-- Up-to-date symlink: /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_bringup/share/robot_lab_bringup/launch/shared_world.launch.py
+-- Up-to-date symlink: /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_bringup/share/robot_lab_bringup/launch/simulated_labbot.launch.py
+-- Up-to-date symlink: /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_bringup/share/robot_lab_bringup/launch/simulated_robot.launch.py
+-- Up-to-date symlink: /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_bringup/share/robot_lab_bringup/launch/simulated_room_vacuum.launch.py
+-- Up-to-date symlink: /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_bringup/share/robot_lab_bringup/launch/tracked_simulator.launch.py
+-- Up-to-date symlink: /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_bringup/lib/robot_lab_bringup/export_3d_map.py
+-- Up-to-date symlink: /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_bringup/lib/robot_lab_bringup/native_arm_scene.py
+-- Up-to-date symlink: /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_bringup/lib/robot_lab_bringup/molar_gazebo_control.py
+-- Up-to-date symlink: /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_bringup/lib/robot_lab_bringup/wait_native_sensors.py
+-- Up-to-date symlink: /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_bringup/lib/robot_lab_bringup/native_scene_objects.py
+-- Up-to-date symlink: /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_bringup/share/ament_index/resource_index/package_run_dependencies/robot_lab_bringup
+-- Up-to-date symlink: /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_bringup/share/ament_index/resource_index/parent_prefix_path/robot_lab_bringup
+-- Up-to-date symlink: /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_bringup/share/robot_lab_bringup/environment/ament_prefix_path.sh
+-- Up-to-date symlink: /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_bringup/share/robot_lab_bringup/environment/ament_prefix_path.dsv
+-- Up-to-date symlink: /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_bringup/share/robot_lab_bringup/environment/path.sh
+-- Up-to-date symlink: /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_bringup/share/robot_lab_bringup/environment/path.dsv
+-- Up-to-date symlink: /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_bringup/share/robot_lab_bringup/local_setup.bash
+-- Up-to-date symlink: /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_bringup/share/robot_lab_bringup/local_setup.sh
+-- Up-to-date symlink: /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_bringup/share/robot_lab_bringup/local_setup.zsh
+-- Up-to-date symlink: /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_bringup/share/robot_lab_bringup/local_setup.dsv
+-- Symlinking: /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_bringup/share/robot_lab_bringup/package.dsv
+-- Up-to-date symlink: /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_bringup/share/ament_index/resource_index/packages/robot_lab_bringup
+-- Up-to-date symlink: /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_bringup/share/robot_lab_bringup/cmake/robot_lab_bringupConfig.cmake
+-- Up-to-date symlink: /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_bringup/share/robot_lab_bringup/cmake/robot_lab_bringupConfig-version.cmake
+-- Up-to-date symlink: /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_bringup/share/robot_lab_bringup/package.xml
+Finished <<< robot_lab_bringup [0.99s]
+Starting >>> robot_lab_gui
+running egg_info
+writing ../../build/robot_lab_mujoco/robot_lab_mujoco.egg-info/PKG-INFO
+writing dependency_links to ../../build/robot_lab_mujoco/robot_lab_mujoco.egg-info/dependency_links.txt
+writing entry points to ../../build/robot_lab_mujoco/robot_lab_mujoco.egg-info/entry_points.txt
+writing requirements to ../../build/robot_lab_mujoco/robot_lab_mujoco.egg-info/requires.txt
+writing top-level names to ../../build/robot_lab_mujoco/robot_lab_mujoco.egg-info/top_level.txt
+reading manifest file '../../build/robot_lab_mujoco/robot_lab_mujoco.egg-info/SOURCES.txt'
+writing manifest file '../../build/robot_lab_mujoco/robot_lab_mujoco.egg-info/SOURCES.txt'
+running build
+running build_py
+copying python/robot_lab_mujoco/sensor_bridge.py -> /workspace/molar/ros_ws/bumperbot_ws/build/robot_lab_mujoco/build/lib/robot_lab_mujoco
+copying python/robot_lab_mujoco/booster_policy.py -> /workspace/molar/ros_ws/bumperbot_ws/build/robot_lab_mujoco/build/lib/robot_lab_mujoco
+copying python/robot_lab_mujoco/native_object_catalog.py -> /workspace/molar/ros_ws/bumperbot_ws/build/robot_lab_mujoco/build/lib/robot_lab_mujoco
+copying python/robot_lab_mujoco/native_mobile_control.py -> /workspace/molar/ros_ws/bumperbot_ws/build/robot_lab_mujoco/build/lib/robot_lab_mujoco
+copying python/robot_lab_mujoco/native_mobile_tasks.py -> /workspace/molar/ros_ws/bumperbot_ws/build/robot_lab_mujoco/build/lib/robot_lab_mujoco
+copying python/robot_lab_mujoco/octopod_control.py -> /workspace/molar/ros_ws/bumperbot_ws/build/robot_lab_mujoco/build/lib/robot_lab_mujoco
+copying python/robot_lab_mujoco/native_mobile_reach.py -> /workspace/molar/ros_ws/bumperbot_ws/build/robot_lab_mujoco/build/lib/robot_lab_mujoco
+copying python/robot_lab_mujoco/native_mobile_sensors.py -> /workspace/molar/ros_ws/bumperbot_ws/build/robot_lab_mujoco/build/lib/robot_lab_mujoco
+copying python/robot_lab_mujoco/native_asset_display.py -> /workspace/molar/ros_ws/bumperbot_ws/build/robot_lab_mujoco/build/lib/robot_lab_mujoco
+copying python/robot_lab_mujoco/native_arm_control.py -> /workspace/molar/ros_ws/bumperbot_ws/build/robot_lab_mujoco/build/lib/robot_lab_mujoco
+copying python/robot_lab_mujoco/native_hand_lift.py -> /workspace/molar/ros_ws/bumperbot_ws/build/robot_lab_mujoco/build/lib/robot_lab_mujoco
+copying python/robot_lab_mujoco/camera_render.py -> /workspace/molar/ros_ws/bumperbot_ws/build/robot_lab_mujoco/build/lib/robot_lab_mujoco
+copying python/robot_lab_mujoco/joint_pd.py -> /workspace/molar/ros_ws/bumperbot_ws/build/robot_lab_mujoco/build/lib/robot_lab_mujoco
+copying python/robot_lab_mujoco/native_cartesian_servo.py -> /workspace/molar/ros_ws/bumperbot_ws/build/robot_lab_mujoco/build/lib/robot_lab_mujoco
+copying python/robot_lab_mujoco/gait_contacts.py -> /workspace/molar/ros_ws/bumperbot_ws/build/robot_lab_mujoco/build/lib/robot_lab_mujoco
+copying python/robot_lab_mujoco/__init__.py -> /workspace/molar/ros_ws/bumperbot_ws/build/robot_lab_mujoco/build/lib/robot_lab_mujoco
+copying python/robot_lab_mujoco/unitree_policy.py -> /workspace/molar/ros_ws/bumperbot_ws/build/robot_lab_mujoco/build/lib/robot_lab_mujoco
+copying python/robot_lab_mujoco/world_collision.py -> /workspace/molar/ros_ws/bumperbot_ws/build/robot_lab_mujoco/build/lib/robot_lab_mujoco
+copying python/robot_lab_mujoco/joint_effort.py -> /workspace/molar/ros_ws/bumperbot_ws/build/robot_lab_mujoco/build/lib/robot_lab_mujoco
+copying python/robot_lab_mujoco/native_joint_planning.py -> /workspace/molar/ros_ws/bumperbot_ws/build/robot_lab_mujoco/build/lib/robot_lab_mujoco
+copying python/robot_lab_mujoco/mujoco_spawner.py -> /workspace/molar/ros_ws/bumperbot_ws/build/robot_lab_mujoco/build/lib/robot_lab_mujoco
+copying python/robot_lab_mujoco/native_articulation_control.py -> /workspace/molar/ros_ws/bumperbot_ws/build/robot_lab_mujoco/build/lib/robot_lab_mujoco
+copying python/robot_lab_mujoco/native_hand_control.py -> /workspace/molar/ros_ws/bumperbot_ws/build/robot_lab_mujoco/build/lib/robot_lab_mujoco
+copying python/robot_lab_mujoco/native_gripper_control.py -> /workspace/molar/ros_ws/bumperbot_ws/build/robot_lab_mujoco/build/lib/robot_lab_mujoco
+running install
+running install_lib
+copying /workspace/molar/ros_ws/bumperbot_ws/build/robot_lab_mujoco/build/lib/robot_lab_mujoco/native_mobile_tasks.py -> /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_mujoco/lib/python3.10/site-packages/robot_lab_mujoco
+byte-compiling /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_mujoco/lib/python3.10/site-packages/robot_lab_mujoco/native_mobile_tasks.py to native_mobile_tasks.cpython-310.pyc
+running install_data
+copying resource/robot_lab_mujoco -> /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_mujoco/share/ament_index/resource_index/packages
+copying package.xml -> /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_mujoco/share/robot_lab_mujoco
+copying launch/mujoco_simulator.launch.py -> /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_mujoco/share/robot_lab_mujoco/launch
+copying vendor/octopod/LICENSE -> /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_mujoco/share/robot_lab_mujoco/vendor/octopod
+running install_egg_info
+removing '/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_mujoco/lib/python3.10/site-packages/robot_lab_mujoco-0.1.0-py3.10.egg-info' (and everything under it)
+Copying ../../build/robot_lab_mujoco/robot_lab_mujoco.egg-info to /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_mujoco/lib/python3.10/site-packages/robot_lab_mujoco-0.1.0-py3.10.egg-info
+running install_scripts
+Installing mujoco_spawner script to /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_mujoco/lib/robot_lab_mujoco
+Installing native_asset_display script to /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_mujoco/lib/robot_lab_mujoco
+Installing sensor_bridge script to /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_mujoco/lib/robot_lab_mujoco
+writing list of installed files to '/workspace/molar/ros_ws/bumperbot_ws/build/robot_lab_mujoco/install.log'
+Finished <<< robot_lab_mujoco [4.05s]
+running egg_info
+writing ../../build/robot_lab_gui/robot_lab_gui.egg-info/PKG-INFO
+writing dependency_links to ../../build/robot_lab_gui/robot_lab_gui.egg-info/dependency_links.txt
+writing entry points to ../../build/robot_lab_gui/robot_lab_gui.egg-info/entry_points.txt
+writing requirements to ../../build/robot_lab_gui/robot_lab_gui.egg-info/requires.txt
+writing top-level names to ../../build/robot_lab_gui/robot_lab_gui.egg-info/top_level.txt
+reading manifest file '../../build/robot_lab_gui/robot_lab_gui.egg-info/SOURCES.txt'
+writing manifest file '../../build/robot_lab_gui/robot_lab_gui.egg-info/SOURCES.txt'
+running build
+running build_py
+copying robot_lab_gui/hand_tab.py -> /workspace/molar/ros_ws/bumperbot_ws/build/robot_lab_gui/build/lib/robot_lab_gui
+copying robot_lab_gui/fleet_tab.py -> /workspace/molar/ros_ws/bumperbot_ws/build/robot_lab_gui/build/lib/robot_lab_gui
+copying robot_lab_gui/articulation_sequences.py -> /workspace/molar/ros_ws/bumperbot_ws/build/robot_lab_gui/build/lib/robot_lab_gui
+copying robot_lab_gui/aerial_swarm_tab.py -> /workspace/molar/ros_ws/bumperbot_ws/build/robot_lab_gui/build/lib/robot_lab_gui
+copying robot_lab_gui/experience.py -> /workspace/molar/ros_ws/bumperbot_ws/build/robot_lab_gui/build/lib/robot_lab_gui
+copying robot_lab_gui/tracked_controls.py -> /workspace/molar/ros_ws/bumperbot_ws/build/robot_lab_gui/build/lib/robot_lab_gui
+copying robot_lab_gui/panda_object_task.py -> /workspace/molar/ros_ws/bumperbot_ws/build/robot_lab_gui/build/lib/robot_lab_gui
+copying robot_lab_gui/registry_preview.py -> /workspace/molar/ros_ws/bumperbot_ws/build/robot_lab_gui/build/lib/robot_lab_gui
+copying robot_lab_gui/drone_planning_controls.py -> /workspace/molar/ros_ws/bumperbot_ws/build/robot_lab_gui/build/lib/robot_lab_gui
+copying robot_lab_gui/articulation_controls.py -> /workspace/molar/ros_ws/bumperbot_ws/build/robot_lab_gui/build/lib/robot_lab_gui
+copying robot_lab_gui/servo_controls.py -> /workspace/molar/ros_ws/bumperbot_ws/build/robot_lab_gui/build/lib/robot_lab_gui
+copying robot_lab_gui/arm_tab.py -> /workspace/molar/ros_ws/bumperbot_ws/build/robot_lab_gui/build/lib/robot_lab_gui
+copying robot_lab_gui/native_planning_controls.py -> /workspace/molar/ros_ws/bumperbot_ws/build/robot_lab_gui/build/lib/robot_lab_gui
+copying robot_lab_gui/experiment_queue.py -> /workspace/molar/ros_ws/bumperbot_ws/build/robot_lab_gui/build/lib/robot_lab_gui
+copying robot_lab_gui/marine_controls.py -> /workspace/molar/ros_ws/bumperbot_ws/build/robot_lab_gui/build/lib/robot_lab_gui
+copying robot_lab_gui/gui_composition.py -> /workspace/molar/ros_ws/bumperbot_ws/build/robot_lab_gui/build/lib/robot_lab_gui
+copying robot_lab_gui/launcher.py -> /workspace/molar/ros_ws/bumperbot_ws/build/robot_lab_gui/build/lib/robot_lab_gui
+copying robot_lab_gui/real_world_controls.py -> /workspace/molar/ros_ws/bumperbot_ws/build/robot_lab_gui/build/lib/robot_lab_gui
+copying robot_lab_gui/grasp_target_controls.py -> /workspace/molar/ros_ws/bumperbot_ws/build/robot_lab_gui/build/lib/robot_lab_gui
+copying robot_lab_gui/fleet_infrastructure_controls.py -> /workspace/molar/ros_ws/bumperbot_ws/build/robot_lab_gui/build/lib/robot_lab_gui
+copying robot_lab_gui/architecture_canvas.py -> /workspace/molar/ros_ws/bumperbot_ws/build/robot_lab_gui/build/lib/robot_lab_gui
+copying robot_lab_gui/drive_control.py -> /workspace/molar/ros_ws/bumperbot_ws/build/robot_lab_gui/build/lib/robot_lab_gui
+copying robot_lab_gui/cartesian_controls.py -> /workspace/molar/ros_ws/bumperbot_ws/build/robot_lab_gui/build/lib/robot_lab_gui
+copying robot_lab_gui/gait_controls.py -> /workspace/molar/ros_ws/bumperbot_ws/build/robot_lab_gui/build/lib/robot_lab_gui
+copying robot_lab_gui/mobile_task_controls.py -> /workspace/molar/ros_ws/bumperbot_ws/build/robot_lab_gui/build/lib/robot_lab_gui
+copying robot_lab_gui/launch_profiles.py -> /workspace/molar/ros_ws/bumperbot_ws/build/robot_lab_gui/build/lib/robot_lab_gui
+copying robot_lab_gui/native_hand_controls.py -> /workspace/molar/ros_ws/bumperbot_ws/build/robot_lab_gui/build/lib/robot_lab_gui
+copying robot_lab_gui/molar_controls.py -> /workspace/molar/ros_ws/bumperbot_ws/build/robot_lab_gui/build/lib/robot_lab_gui
+copying robot_lab_gui/architecture_content.py -> /workspace/molar/ros_ws/bumperbot_ws/build/robot_lab_gui/build/lib/robot_lab_gui
+copying robot_lab_gui/simulator_compat.py -> /workspace/molar/ros_ws/bumperbot_ws/build/robot_lab_gui/build/lib/robot_lab_gui
+copying robot_lab_gui/cleaning_tab.py -> /workspace/molar/ros_ws/bumperbot_ws/build/robot_lab_gui/build/lib/robot_lab_gui
+copying robot_lab_gui/car_parking_controls.py -> /workspace/molar/ros_ws/bumperbot_ws/build/robot_lab_gui/build/lib/robot_lab_gui
+copying robot_lab_gui/architecture_docs.py -> /workspace/molar/ros_ws/bumperbot_ws/build/robot_lab_gui/build/lib/robot_lab_gui
+copying robot_lab_gui/architecture_explorer.py -> /workspace/molar/ros_ws/bumperbot_ws/build/robot_lab_gui/build/lib/robot_lab_gui
+copying robot_lab_gui/architecture_graph.py -> /workspace/molar/ros_ws/bumperbot_ws/build/robot_lab_gui/build/lib/robot_lab_gui
+copying robot_lab_gui/urdf_arm_controls.py -> /workspace/molar/ros_ws/bumperbot_ws/build/robot_lab_gui/build/lib/robot_lab_gui
+copying robot_lab_gui/__init__.py -> /workspace/molar/ros_ws/bumperbot_ws/build/robot_lab_gui/build/lib/robot_lab_gui
+copying robot_lab_gui/lab_tabs.py -> /workspace/molar/ros_ws/bumperbot_ws/build/robot_lab_gui/build/lib/robot_lab_gui
+copying robot_lab_gui/status_markers.py -> /workspace/molar/ros_ws/bumperbot_ws/build/robot_lab_gui/build/lib/robot_lab_gui
+copying robot_lab_gui/workspace_ui.py -> /workspace/molar/ros_ws/bumperbot_ws/build/robot_lab_gui/build/lib/robot_lab_gui
+copying robot_lab_gui/doc_diagrams.py -> /workspace/molar/ros_ws/bumperbot_ws/build/robot_lab_gui/build/lib/robot_lab_gui
+copying robot_lab_gui/live_monitor.py -> /workspace/molar/ros_ws/bumperbot_ws/build/robot_lab_gui/build/lib/robot_lab_gui
+copying robot_lab_gui/process_control.py -> /workspace/molar/ros_ws/bumperbot_ws/build/robot_lab_gui/build/lib/robot_lab_gui
+copying robot_lab_gui/terrain_controls.py -> /workspace/molar/ros_ws/bumperbot_ws/build/robot_lab_gui/build/lib/robot_lab_gui
+copying robot_lab_gui/native_viewer.py -> /workspace/molar/ros_ws/bumperbot_ws/build/robot_lab_gui/build/lib/robot_lab_gui
+copying robot_lab_gui/training_tab.py -> /workspace/molar/ros_ws/bumperbot_ws/build/robot_lab_gui/build/lib/robot_lab_gui
+copying robot_lab_gui/themes/modern.py -> /workspace/molar/ros_ws/bumperbot_ws/build/robot_lab_gui/build/lib/robot_lab_gui/themes
+copying robot_lab_gui/themes/__init__.py -> /workspace/molar/ros_ws/bumperbot_ws/build/robot_lab_gui/build/lib/robot_lab_gui/themes
+running install
+running install_lib
+running install_data
+copying resource/robot_lab_gui -> /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_gui/share/ament_index/resource_index/packages
+copying package.xml -> /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_gui/share/robot_lab_gui
+running install_egg_info
+removing '/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_gui/lib/python3.10/site-packages/robot_lab_gui-0.1.0-py3.10.egg-info' (and everything under it)
+Copying ../../build/robot_lab_gui/robot_lab_gui.egg-info to /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_gui/lib/python3.10/site-packages/robot_lab_gui-0.1.0-py3.10.egg-info
+running install_scripts
+Installing registry_preview script to /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_gui/lib/robot_lab_gui
+Installing robot_lab_gui script to /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_gui/lib/robot_lab_gui
+writing list of installed files to '/workspace/molar/ros_ws/bumperbot_ws/build/robot_lab_gui/install.log'
+Finished <<< robot_lab_gui [4.05s]
+
+Summary: 4 packages finished [7.81s]

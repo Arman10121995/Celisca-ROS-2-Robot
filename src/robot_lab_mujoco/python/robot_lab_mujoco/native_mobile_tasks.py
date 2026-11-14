@@ -66,6 +66,7 @@ class NativeMobileTasks:
         self.scene_id = digest.hexdigest()
         from robot_lab_utils.object_estimates import ObjectEstimates
         self.object_estimates=ObjectEstimates()
+        self.perception_estimates={'aruco_pnp':self.object_estimates,'rgbd_box_top':ObjectEstimates('rgbd_box_top')}
         self.perception_error='No camera object observations yet'
         node.create_subscription(String,'/robot_lab/object_estimates',self.receive_estimates,10)
         self.state = dict(state='idle', reason='', task_id='', step=0, total=0)
@@ -88,7 +89,10 @@ class NativeMobileTasks:
     def receive_estimates(self,message):
         try:
             if len(message.data)>131072:raise ValueError('Camera estimates exceed message bound')
-            self.object_estimates.receive(json.loads(message.data),self.estimate_identity(),float(self.node.data.time))
+            record=json.loads(message.data)
+            source=record.get('pose_source') if isinstance(record,dict) else None
+            if source not in self.perception_estimates:raise ValueError('Unknown camera object source')
+            self.perception_estimates[source].receive(record,self.estimate_identity(),float(self.node.data.time))
             self.perception_error=''
         except (ValueError,TypeError,KeyError) as exc:self.perception_error=str(exc)
 
@@ -270,9 +274,12 @@ class NativeMobileTasks:
         return mask
 
     def begin_reach(self, step):
-        if step.get('pose_source')=='aruco_pnp':
-            observed=self.object_estimates.get(step['object'],self.estimate_identity(),float(self.node.data.time))
+        source=step.get('pose_source','native_truth')
+        if source in ('aruco_pnp','rgbd_box_top'):
+            observed=self.perception_estimates[source].get(step['object'],self.estimate_identity(),float(self.node.data.time))
             obj,_=self.object_bodies(step);model=self.node.model;mj=self.node.mujoco
+            if obj in (self.gripped_body,self.payload_body):
+                raise ValueError('Camera object-relative targets require an unheld object; use an explicit carry/lift target')
             geoms=[g for g in range(model.ngeom) if model.geom_bodyid[g]==obj
                    and (model.geom_contype[g] or model.geom_conaffinity[g])]
             if (len(geoms)!=1 or int(model.geom_type[geoms[0]])!=int(mj.mjtGeom.mjGEOM_BOX)
@@ -281,9 +288,10 @@ class NativeMobileTasks:
             from scipy.spatial.transform import Rotation
             rotation=Rotation.from_quat(np.asarray(observed['orientation_wxyz'])[[1,2,3,0]])
             step=copy.deepcopy(step)
-            step['target_xyz']=(np.asarray(observed['position'])+rotation.apply(model.geom_pos[geoms[0]])
+            offset=rotation.apply(model.geom_pos[geoms[0]]) if source=='aruco_pnp' else np.zeros(3)
+            step['target_xyz']=(np.asarray(observed['position'])+offset
                                 +np.asarray(step.get('offset',[0.,0.,0.]))).tolist()
-            self.record(perception_target=observed,pose_source='aruco_pnp')
+            self.record(perception_target=observed,pose_source=source)
         self.reach_orientation = None
         if self.reach_worker is not None and self.reach_worker.is_alive():
             raise ValueError('Previous reach planner is still stopping; retry after its bounded deadline')
@@ -573,6 +581,10 @@ class NativeMobileTasks:
             perception_objects=(list(self.object_estimates.targets) if time.monotonic()-self.object_estimates.received<1.
                 and -.05<=float(self.node.data.time)-getattr(self.object_estimates,'stamp',-math.inf)<=.5 else []),
             perception_error=self.perception_error,
+            perception_errors={source:store.reason for source,store in self.perception_estimates.items()},
+            perception_sources={source:list(store.targets) for source,store in self.perception_estimates.items()
+                if store.identity==self.estimate_identity() and time.monotonic()-store.received<1.
+                and -.05<=float(self.node.data.time)-getattr(store,'stamp',-math.inf)<=.5},
             payload_name=(self.node.mujoco.mj_id2name(self.node.model, self.node.mujoco.mjtObj.mjOBJ_BODY, self.payload_body)
                           if self.payload_body is not None else ''),
             costmap_footprint_consumers=sorted(self.node.sensors.footprint_receipts.received),

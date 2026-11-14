@@ -7,8 +7,8 @@ BENCHES=[('pickup_bench',[0.,-.62,.25],[.5,.32,.5]),
 OBJECT=('pickup_cube',[0.,-.62,.515],[.03,.03,.03])
 
 
-def sdf():
-    root=ET.Element('sdf',version='1.7');world=ET.SubElement(root,'world',name=NAME)
+def sdf(world_name=NAME):
+    root=ET.Element('sdf',version='1.7');world=ET.SubElement(root,'world',name=world_name)
     ET.SubElement(world,'gravity').text='0 0 -9.81'
     physics=ET.SubElement(world,'physics',name='lab',type='ignored')
     ET.SubElement(physics,'max_step_size').text='.002'
@@ -44,8 +44,8 @@ def sdf():
     return ET.tostring(root,encoding='unicode')
 
 
-def mjcf(marker_texture=None):
-    root=ET.Element('mujoco',model=NAME)
+def mjcf(marker_texture=None,world_name=NAME):
+    root=ET.Element('mujoco',model=world_name)
     if marker_texture:
         asset=ET.SubElement(root,'asset')
         ET.SubElement(asset,'texture',name='pickup_marker_texture',type='2d',file=marker_texture)

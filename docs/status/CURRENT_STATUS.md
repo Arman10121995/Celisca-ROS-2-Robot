@@ -1,5 +1,19 @@
 # Current Robot Lab status
 
+November 14 unmarked-object continuation: native mobile recipes now offer
+**RGB-D colored boxes**, using aligned RGB/depth/calibration and image-time TF.
+Known-size upright boxes have separate source-bound observations from camera
+markers; invalid or missing observations never select simulator geometry.
+The unmarked cube is installed as a variant of the existing manipulation map,
+and normal GUI selection/autofill is checked without motion. An actual MuJoCo
+observer-camera fixture measures 0.494 mm center error. This is implemented
+perception, not a complete native robot camera/grasp mission or general object
+recognition. Four actual native Stretch camera frames also detect the cube
+after head-only source-motor commands; the startup base interlock remains.
+52 focused checks, updated GUI feedback checks and four package builds pass.
+[Guide](../tutorials/rgbd-object-targets.md) ·
+[Measurement and source scope](evidence/unmarked-rgbd-2026-11-14/README.md).
+
 November 14 Codex manipulation continuation: camera-marker point targets are
 implemented for native mobile recipes, with explicit GUI selection, image-time
 TF and source/scene/plant/freshness gates. The actual rendered marker fixture

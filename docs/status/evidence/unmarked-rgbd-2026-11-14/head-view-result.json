@@ -1,0 +1,220 @@
+{
+  "command": [
+    "ros2",
+    "launch",
+    "robot_lab_bringup",
+    "simulated_robot.launch.py",
+    "robot_model:=menagerie_hello_robot_stretch",
+    "simulator:=mujoco",
+    "use_sim_time:=true",
+    "map_name:=mobile_manipulation_lab_unmarked",
+    "world_package:=robot_lab_maps",
+    "world_name:=mobile_manipulation_lab_unmarked",
+    "world_path:=/workspace/molar/robot_lab_runtime/external_assets/worlds/mobile_manipulation_lab_unmarked/acf5b5caede4dce0875108ce9c87ce19864fb9d6fa9f5be294d561e64fc2ebb6/worlds/mobile_manipulation_lab_unmarked.world",
+    "map_yaml:=/workspace/molar/robot_lab_runtime/external_assets/worlds/mobile_manipulation_lab_unmarked/acf5b5caede4dce0875108ce9c87ce19864fb9d6fa9f5be294d561e64fc2ebb6/maps/map.yaml",
+    "mode:=display",
+    "perception:=none",
+    "enable_native_mobile:=true",
+    "native_task:=display",
+    "gui:=false",
+    "start_rviz:=false"
+  ],
+  "scope": "Native source camera after explicit head-only original-motor commands; view seed uses declared fixture prior, estimator sees only RGB-D/calibration/TF/bindings. No pick/base motion or runtime pose writes.",
+  "head_request": {
+    "operation": "targets",
+    "plant_id": "5b1708504d11461f96e210927eea69fa",
+    "source_sha256": "4f33408242b90acbe4ca0f4b544ca5efae4f423c92ef71358f0977ec0b03a316",
+    "targets": {
+      "head_pan": -1.575897059633168,
+      "head_tilt": -0.9226811839015115
+    }
+  },
+  "estimate_messages": 18,
+  "detected_frames": 4,
+  "latest_estimate": {
+    "schema": "robot_lab.object_estimates.v1",
+    "plant_id": "5b1708504d11461f96e210927eea69fa",
+    "source_sha256": "4f33408242b90acbe4ca0f4b544ca5efae4f423c92ef71358f0977ec0b03a316",
+    "scene_id": "4a9cdee5a3543402a1711335be0f9f3ecd3f91f5c1dde4b245171eac6a41d1fc",
+    "frame": "native_world",
+    "pose_source": "rgbd_box_top",
+    "stamp_s": 4.219999999,
+    "targets": {
+      "environment_pickup_cube": {
+        "object": "environment_pickup_cube",
+        "type": "box",
+        "size": [
+          0.03,
+          0.03,
+          0.03
+        ],
+        "position": [
+          0.0004188045859336853,
+          -0.619988739490509,
+          0.5148925187371001
+        ],
+        "orientation_wxyz": [
+          0.9999988096783281,
+          0.0,
+          0.0,
+          0.00154293289772818
+        ],
+        "pose_reference": "collision_box_center",
+        "position_std_bound_m": 0.007627435857443046,
+        "observed_top_size_m": [
+          0.02812321463304598,
+          0.030067825573401534
+        ],
+        "top_points": 271,
+        "yaw_symmetry_order": 4,
+        "scope": "Known-size upright colored box; declared depth/pixel bound, not calibrated covariance",
+        "observation_id": "760ebbc9711daa2aac2578b5e0d002f1924390bfbcb8a880de619b8b11ffbd9a"
+      }
+    },
+    "bindings_sha256": "8813dff778b665c065ac36d339e47abd9774c09d726719f425b10491a042b5cf",
+    "camera_frame": "native_camera_optical_frame",
+    "scope": "Aligned RGB-D known-size upright color boxes; no simulator pose input"
+  },
+  "articulation": {
+    "plant_id": "5b1708504d11461f96e210927eea69fa",
+    "channels": [
+      {
+        "index": 2,
+        "name": "lift",
+        "joint": "joint_lift",
+        "units": "m",
+        "limits": [
+          -0.5,
+          0.6
+        ],
+        "max_rate": 0.05,
+        "target": 0.0003080535164465241,
+        "command": 0.0003080535164465241,
+        "home": 0.0,
+        "measured": -1.928803943177198e-05,
+        "measured_rate": 5.463113817013443e-07,
+        "actuator_force": 0.09817515119440376
+      },
+      {
+        "index": 3,
+        "name": "arm_extend",
+        "joint": "",
+        "units": "source control",
+        "limits": [
+          0.0,
+          0.52
+        ],
+        "max_rate": 0.10400000000000001,
+        "target": 9.366888876278472e-05,
+        "command": 9.366888876278472e-05,
+        "home": 0.0,
+        "measured": 9.363270333006675e-05,
+        "measured_rate": -1.0525446467889608e-06,
+        "actuator_force": 1.4143989739685489e-05
+      },
+      {
+        "index": 4,
+        "name": "wrist_yaw",
+        "joint": "joint_wrist_yaw",
+        "units": "rad",
+        "limits": [
+          -1.75,
+          4.0
+        ],
+        "max_rate": 0.5,
+        "target": -0.008785650687643072,
+        "command": -0.008785650687643072,
+        "home": 0.0,
+        "measured": -0.008724247292402834,
+        "measured_rate": 3.327277905635568e-05,
+        "actuator_force": -6.140339524023791e-05
+      },
+      {
+        "index": 5,
+        "name": "grip",
+        "joint": "joint_gripper_slide",
+        "units": "m",
+        "limits": [
+          -0.005,
+          0.04
+        ],
+        "max_rate": 0.045,
+        "target": 3.63453458319559e-06,
+        "command": 3.63453458319559e-06,
+        "home": 0.0,
+        "measured": 2.7030659110490504e-05,
+        "measured_rate": -1.572773985778166e-08,
+        "actuator_force": -0.046789103506618274
+      },
+      {
+        "index": 6,
+        "name": "head_pan",
+        "joint": "joint_head_pan",
+        "units": "rad",
+        "limits": [
+          -3.9,
+          1.5
+        ],
+        "max_rate": 0.5,
+        "target": -1.575897059633168,
+        "command": -1.575897059633168,
+        "home": 0.0,
+        "measured": -1.5622644289481296,
+        "measured_rate": -0.1397261829529285,
+        "actuator_force": -0.1363263068503855
+      },
+      {
+        "index": 7,
+        "name": "head_tilt",
+        "joint": "joint_head_tilt",
+        "units": "rad",
+        "limits": [
+          -1.53,
+          0.79
+        ],
+        "max_rate": 0.5,
+        "target": -0.9226811839015115,
+        "command": -0.9226811839015115,
+        "home": 0.0,
+        "measured": -0.9199383354214742,
+        "measured_rate": 2.0689518787133e-05,
+        "actuator_force": -0.027428484800372743
+      }
+    ],
+    "source_sha256": "4f33408242b90acbe4ca0f4b544ca5efae4f423c92ef71358f0977ec0b03a316",
+    "sequence": {
+      "state": "idle",
+      "index": 0,
+      "total": 0
+    },
+    "native_model": "/workspace/molar/robot_lab_runtime/external_assets/sources/mujoco_menagerie/4d038b3feae26ec82b46a4d586379114012a8ac7/hello_robot_stretch/stretch.xml",
+    "status": "holding target; inspect measured joint feedback",
+    "fault": "",
+    "time": 4.279999999999751,
+    "servo": {
+      "sites": [
+        "body:link_aruco_top_wrist",
+        "body:link_aruco_inner_wrist",
+        "body:rubber_tip_left",
+        "body:rubber_tip_right",
+        "body:link_aruco_shoulder",
+        "body:realsense"
+      ],
+      "active": false,
+      "error": "",
+      "frame": "native_world",
+      "max_linear_m_s": 0.04,
+      "max_angular_rad_s": 0.2,
+      "qualification": "experimental local native Jacobian/collision servo; validation pending"
+    },
+    "planning": null,
+    "mobile_state": {
+      "moving": false,
+      "arm_stowed": true,
+      "status": "neutral; waiting for operator velocity",
+      "task_active": false
+    },
+    "qualification": "implemented experimental position controls; validation pending"
+  },
+  "launch_returncode": 0
+}

@@ -117,9 +117,9 @@ class MobileTaskControls(ttk.LabelFrame):
         self.pose_source=tk.StringVar(value='Simulator geometry')
         ttk.Label(self,text='Unheld object reach targets').grid(row=25,column=0,columnspan=2,sticky='w')
         self.pose_source_selector=ttk.Combobox(self,textvariable=self.pose_source,state='readonly',
-            values=('Simulator geometry','Camera fiducials'))
+            values=('Simulator geometry','Camera fiducials','RGB-D colored boxes'))
         self.pose_source_selector.grid(row=26,column=0,columnspan=2,sticky='ew')
-        self.perception_status=tk.StringVar(value='Camera markers require a configured marker map and live camera.')
+        self.perception_status=tk.StringVar(value='Camera targets require matching map bindings and live calibrated images.')
         ttk.Label(self,textvariable=self.perception_status,wraplength=300).grid(row=27,column=0,columnspan=2,sticky='w')
 
     def add_object_check(self, condition):
@@ -141,7 +141,8 @@ class MobileTaskControls(ttk.LabelFrame):
         if kind=='reach_object':
             if 'target_xyz' not in values and 'pose_source' not in values:
                 source=getattr(self,'pose_source',None)
-                values['pose_source']='aruco_pnp' if source is not None and source.get()=='Camera fiducials' else 'native_truth'
+                values['pose_source']={'Camera fiducials':'aruco_pnp','RGB-D colored boxes':'rgbd_box_top'}.get(
+                    source.get() if source is not None else '', 'native_truth')
             mode=self.orientation_mode.get()
             if mode=='Keep measured pad':values['keep_orientation']=True
             elif mode=='World pad RPY':
@@ -259,12 +260,18 @@ class MobileTaskControls(ttk.LabelFrame):
 
     def current(self):
         if self.ready():
-            visible=self.state.get('perception_objects',[])
-            self.perception_status.set(('Camera targets: '+', '.join(visible)) if visible else
-                'No fresh camera target · '+self.state.get('perception_error','marker not visible'))
             x, y, yaw = self.state['physical_pose']
             for variable, value in zip(self.pose, (x, y, math.degrees(yaw))):
                 variable.set(round(value, 3))
+
+    def update_perception_status(self):
+        if not self.ready():
+            self.perception_status.set('Waiting for fresh native task feedback.');return
+        method={'Camera fiducials':'aruco_pnp','RGB-D colored boxes':'rgbd_box_top'}.get(self.pose_source.get())
+        visible=self.state.get('perception_sources',{}).get(method,[])
+        error=self.state.get('perception_errors',{}).get(method) or self.state.get('perception_error') or 'check bindings and camera view'
+        self.perception_status.set('Using simulator geometry for unheld reaches.' if method is None else
+            ('Camera targets: '+', '.join(visible)) if visible else 'No fresh camera target · '+error)
 
     def add_navigation(self):
         if not self.editable() or not self.state.get('navigation_available'):
@@ -363,6 +370,8 @@ class MobileTaskControls(ttk.LabelFrame):
             return
         self.grid()
         self.connect()
+        self.update_perception_status()
+        self.pose_source_selector.configure(state='disabled' if self.state.get('active') else 'readonly')
         if self.ready():
             for name, choice in self.object_choices.items():
                 values = self.state.get('object_candidates' if name=='object' else 'finger_candidates', [])

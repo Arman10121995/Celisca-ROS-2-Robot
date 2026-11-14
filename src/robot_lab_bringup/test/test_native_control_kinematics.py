@@ -201,6 +201,7 @@ def test_live_task_orientation_guard_checks_held_paths_and_explicit_pose_endpoin
     task.scene_id='scene';task.pose=lambda:[0.,0.,0.];task.pending=False;task.handle=None
     from robot_lab_utils.object_estimates import ObjectEstimates
     task.object_estimates=ObjectEstimates();task.perception_error=''
+    task.perception_estimates={'aruco_pnp':task.object_estimates,'rgbd_box_top':ObjectEstimates('rgbd_box_top')}
     task.object_candidates=[];task.finger_candidates=[];task.payload_body=None;task.payload_confirmed=False
     task.event_path=None;task.object_outcome='not assessed';task.object_measurement={}
     def cancel(reason,failed=False):events.append(reason);task.steps=None

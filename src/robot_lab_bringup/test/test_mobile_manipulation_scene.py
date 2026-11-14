@@ -24,3 +24,10 @@ def test_static_occupancy_blocks_benches_but_leaves_the_navigation_lane_free():
     def at(x,y):return pixels[(79-int((y+2)/.05))*120+int((x+2)/.05)]
     assert at(0.,0.)==254 and at(1.2,0.)==254
     assert at(0.,-.62)==0 and at(1.2,-.62)==0
+
+
+def test_unmarked_variant_has_no_print_and_preserves_physical_geometry():
+    original=ET.fromstring(mjcf());unmarked=ET.fromstring(mjcf(world_name='mobile_manipulation_lab_unmarked'))
+    assert unmarked.get('model')=='mobile_manipulation_lab_unmarked'
+    assert unmarked.find('asset') is None
+    assert ET.tostring(original.find('worldbody'))==ET.tostring(unmarked.find('worldbody'))

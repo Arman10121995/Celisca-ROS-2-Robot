@@ -1,0 +1,82 @@
+{
+  "estimate": {
+    "object": "environment_pickup_cube",
+    "type": "box",
+    "size": [
+      0.03,
+      0.03,
+      0.03
+    ],
+    "position": [
+      -0.00037264544516801834,
+      -0.6197798252105713,
+      0.5151800892234047
+    ],
+    "orientation_wxyz": [
+      0.9999999996663913,
+      0.0,
+      0.0,
+      -2.583055155581964e-05
+    ],
+    "pose_reference": "collision_box_center",
+    "position_std_bound_m": 0.005169109924601771,
+    "observed_top_size_m": [
+      0.029997825662588736,
+      0.029952198307074154
+    ],
+    "top_points": 1361,
+    "yaw_symmetry_order": 4,
+    "scope": "Known-size upright colored box; declared depth/pixel bound, not calibrated covariance"
+  },
+  "expected_position": [
+    6.924836567984432e-19,
+    -0.62,
+    0.5149428665962179
+  ],
+  "position_error_m": 0.0004935748581055082,
+  "estimation_wall_s": 0.007076488982420415,
+  "scope": "Actual MuJoCo unmarked fixture render; independent observer camera, no robot mission",
+  "k": [
+    [
+      579.4112549695428,
+      0.0,
+      320.0
+    ],
+    [
+      0.0,
+      579.4112549695428,
+      240.0
+    ],
+    [
+      0.0,
+      0.0,
+      1.0
+    ]
+  ],
+  "world_from_camera": [
+    [
+      0.9899494936611666,
+      0.10805748868528368,
+      -0.09123365135206297,
+      0.04
+    ],
+    [
+      0.14142135623730948,
+      -0.7564024207969859,
+      0.638635559464441,
+      -0.9
+    ],
+    [
+      0.0,
+      -0.6451193354345297,
+      -0.7640818300735274,
+      0.85
+    ],
+    [
+      0.0,
+      0.0,
+      0.0,
+      1.0
+    ]
+  ]
+}

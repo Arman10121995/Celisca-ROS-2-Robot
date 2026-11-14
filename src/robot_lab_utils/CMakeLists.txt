@@ -37,6 +37,7 @@ install(PROGRAMS
   ${PROJECT_NAME}/car_parking.py
   ${PROJECT_NAME}/sensor_fault_relay.py
   ${PROJECT_NAME}/fiducial_object_pose.py
+  ${PROJECT_NAME}/rgbd_object_pose.py
   ${PROJECT_NAME}/surface_controller.py
   ${PROJECT_NAME}/amphibious_controller.py
   ${PROJECT_NAME}/auv_controller.py

@@ -2,6 +2,10 @@
 
 ## Run
 
+For a known-size colored box without a printed marker, use the separate
+[RGB-D box workflow](rgbd-object-targets.md). The two methods have independent
+observations; a task does not switch between them automatically.
+
 The native Stretch task builder can use a printed camera marker to locate a
 known box, alongside its existing simulator-geometry targets. This uses
 [OpenCV ArUco and calibrated PnP](https://docs.opencv.org/4.x/d5/dae/tutorial_aruco_detection.html).

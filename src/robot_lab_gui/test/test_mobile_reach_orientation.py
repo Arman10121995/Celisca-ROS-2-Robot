@@ -17,6 +17,9 @@ def test_recipe_steps_capture_the_selected_orientation_mode_without_commands():
     panel.orientation_mode=SimpleNamespace(get=lambda:'Position only')
     point=panel.object_step('reach_object',target_xyz=[.2,0.,.5])
     assert 'orientation_wxyz' not in point and 'keep_orientation' not in point
+    panel.pose_source=SimpleNamespace(get=lambda:'RGB-D colored boxes')
+    assert panel.object_step('reach_object')['pose_source']=='rgbd_box_top'
+    assert 'pose_source' not in panel.object_step('grip',operation='open')
     panel.orientation_mode.get=lambda:'Keep measured pad'
     assert panel.object_step('reach_object')['keep_orientation']
     panel.orientation_mode.get=lambda:'World pad RPY'
@@ -57,4 +60,16 @@ def test_real_widget_builds_source_bound_recipe_without_dispatch():
         panel.approach_distance.set(.08);panel.pose_source.set('Camera fiducials');panel.add_pick()
         assert panel.steps[14]['pose_source']=='aruco_pnp' and panel.steps[15]['pose_source']=='aruco_pnp'
         assert panel.steps[17]['pose_source']=='native_truth'  # Instrumented lift after physical contact.
+        panel.pose_source.set('RGB-D colored boxes');panel.add_pick()
+        assert panel.steps[21]['pose_source']==panel.steps[22]['pose_source']=='rgbd_box_top'
+        assert panel.steps[24]['pose_source']=='native_truth'
+        panel.ready=lambda:True
+        panel.state.update(perception_sources={'aruco_pnp':['cube']},
+                           perception_errors={'rgbd_box_top':'ambiguous color'})
+        panel.update_perception_status()
+        assert 'ambiguous color' in panel.perception_status.get()
+        panel.pose_source.set('Camera fiducials');panel.update_perception_status()
+        assert panel.perception_status.get()=='Camera targets: cube'
+        panel.ready=lambda:False;panel.update_perception_status()
+        assert 'Waiting' in panel.perception_status.get() and panel.node is None
     finally:root.destroy()

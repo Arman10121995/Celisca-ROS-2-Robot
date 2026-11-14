@@ -1,0 +1,24 @@
+{
+  "base_revision": "7bbd2dde0f08a609b4b5b2e7e800118a05fbb522",
+  "scope": "Working-tree source hashes for RGB-D implementation; observer-render error, native camera observation and GUI/ROS source checks have separate scope",
+  "raw_artifacts": "/workspace/molar/robot_lab_runtime/unmarked-rgbd-20261114",
+  "source_sha256": {
+    "src/robot_lab_utils/robot_lab_utils/rgbd_boxes.py": "b4d3537ef60120544df79d17adb4e55f4dba8ee787ed407aa37cce7d046c555a",
+    "src/robot_lab_utils/robot_lab_utils/rgbd_object_pose.py": "fcf4fadcbbaeced5e540e05c87e05d46034e25132856a50ef3002f3c41424bc2",
+    "src/robot_lab_utils/robot_lab_utils/object_estimates.py": "7b9be5b0e077586272ff97e7e9b507570626f35b9d3c3e082654ff890e31f6d2",
+    "src/robot_lab_utils/robot_lab_utils/mobile_task.py": "939701dec8a0f3f3a46b573d96a7d792b5ffc9934c5eca40ca1a387e8ce2f985",
+    "src/robot_lab_utils/robot_lab_utils/mobile_manipulation_scene.py": "d51f0eb683f2b62a45c53db19b4a700251c85865d0207966f606730d7cdb2086",
+    "src/robot_lab_gui/robot_lab_gui/mobile_task_controls.py": "5730d74bda04bf62ccfd062f782e380db73720ca0084c38ab2314a233c1cf154",
+    "src/robot_lab_mujoco/python/robot_lab_mujoco/native_mobile_tasks.py": "ea6efeeab9f9db428edbc2124d258344e88afae07155e14bda74822c42c9fbd9",
+    "src/robot_lab_bringup/launch/simulated_robot.launch.py": "7b20ee39bc99d4768df1f1fc7c93294b7aeb34af0348d7326857ebcee9a1f4de",
+    "src/robot_lab_bringup/config/asset_groups.yaml": "4a7ea46a51f9ec9f9e46ce947746cf69437f09c496c7e45c5ce06f1bfaa2fa3c",
+    "scripts/provision_mobile_manipulation_scene.py": "f34ce3cf3b2b5f3aad8c6c7c10958a0b2c1a4bd6b8408f5a6a23a10bf916b75b"
+  },
+  "reproducer_sha256": {
+    "render_probe.py": "e8b2acbbca6bdf1cbc438575526d2b90487f931bae4c21cac6524a2af21dc987",
+    "gui_probe.py": "e54875e413bea182eeb1ce397f378cd67ab65a563ad7f5daa8748bd98eff3cf1",
+    "launch_probe.py": "043eae25ba46e7bb67d0de9d54abf934a6d4cc53d21a27bb0f6f32992743f67b",
+    "head_view_probe.py": "49b29507521eeffecad59077906b7700ca41219e5cdba2a6f123bd6bbf11d171"
+  },
+  "note": "Final metadata wording clarifies object pose exclusion; camera calibration and world-camera TF remain declared inputs."
+}

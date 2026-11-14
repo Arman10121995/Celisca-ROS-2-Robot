@@ -1,5 +1,20 @@
 # Agent Handoff Protocol
 
+November 14 unmarked targets: R5.9 now has configured upright color-box RGB-D
+poses in the native mobile task builder. Preserve independent method caches,
+collision-box-center reference, source/scene/plant/size/age gates, unheld-only
+camera reaches and no truth fallback. RGB/depth/calibration must align; retry
+one pair briefly for image-time TF instead of using latest TF. The installed
+unmarked map variant stays in the existing manipulation-map family; normal
+GUI command preview/selection is checked without starting motion. An actual
+observer-camera MuJoCo render measures 0.494 mm center error. A later native
+Stretch head-only source-motor trial detects the cube in four frames; wait for
+base settling, preserve its interlock and the guide's source-specific view
+seeds. 52 focused checks plus updated GUI feedback checks and four package
+builds pass. General recognition,
+full native-camera robot tasks and further sources remain. [Guide](tutorials/rgbd-object-targets.md)
+and [receipt](status/evidence/unmarked-rgbd-2026-11-14/README.md).
+
 November 14 manipulation continuation: preserve the RGB/CameraInfo pairing,
 image-time TF and source/scene/plant-bound camera-marker task targets;
 [camera receipt](status/camera-object-targets-2026-11-14.md). Panda has a normal

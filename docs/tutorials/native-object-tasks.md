@@ -7,6 +7,10 @@ A complete physical pick/transport/place mission has not yet been qualified.
 
 ## Run
 
+Unheld reaches can also use [unmarked RGB-D box targets](rgbd-object-targets.md)
+in the installed unmarked task-map variant. The builder keeps camera methods
+separate and retains instrumented lift/custody and collision checks.
+
 The `mobile_manipulation_lab` world is installed in the normal map list.
 Restart the GUI if it was open during provisioning. To reproduce the installed
 fixture on another SSD-equipped checkout:

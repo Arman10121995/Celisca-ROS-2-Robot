@@ -23,9 +23,12 @@ Manipulation continuation: native Panda now has an explicit **Run pick / place**
 sequence for selected physical boxes and bench supports. Each stage uses the
 existing planner/actions and measured custody; full mission acceptance remains
 open. Stretch recipes can select **Camera fiducials** for unheld-object reach
-targets, with missing or stale detections stopping the task.
+targets, or **RGB-D colored boxes** without a printed marker. The installed
+unmarked cube variant shares the manipulation-map family. Missing or stale
+observations stop the reach; camera methods never fall back to geometry.
 [Automatic Panda tasks](docs/tutorials/panda-object-tasks.md) ·
-[Camera targets and limits](docs/tutorials/camera-object-targets.md).
+[Camera targets and limits](docs/tutorials/camera-object-targets.md) ·
+[Unmarked RGB-D guide](docs/tutorials/rgbd-object-targets.md).
 
 The Hand page also exposes UMI **Lift and hold object** and **Lower to start**.
 One pinned source component now grasps, lifts 49 mm, returns to actual support

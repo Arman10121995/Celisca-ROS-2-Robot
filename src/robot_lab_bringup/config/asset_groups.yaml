@@ -245,6 +245,13 @@ robots:
       - {id: menagerie_ms_human_700, label: Human musculoskeletal reference, role: reference}
       - {id: menagerie_flybody, label: Fruit fly reference, role: reference}
 maps:
+  - id: mobile_manipulation_lab
+    name: Mobile manipulation lab
+    complete: true
+    preferred: mobile_manipulation_lab
+    members:
+      - {id: mobile_manipulation_lab, label: Marker cube, role: variant}
+      - {id: mobile_manipulation_lab_unmarked, label: Unmarked RGB-D cube, role: variant}
   - id: surface_harbor
     name: Surface harbor
     members: [{id: surface_harbor, label: Docks, pilings and surface markers}]
