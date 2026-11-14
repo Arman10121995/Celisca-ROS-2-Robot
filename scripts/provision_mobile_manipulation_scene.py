@@ -18,17 +18,30 @@ def main():
     store=Path(os.environ.get('ROBOT_LAB_RUNTIME_ROOT','/workspace/molar/robot_lab_runtime'))/'external_assets'
     store.mkdir(parents=True,exist_ok=True)
     if store.stat().st_dev==Path('/').stat().st_dev:raise ValueError('Use the mounted SSD')
-    document=sdf();native=mjcf();grid=occupancy()
-    revision=hashlib.sha256(document.encode()+native.encode()+grid).hexdigest()
+    import cv2
+    dictionary=cv2.aruco.getPredefinedDictionary(cv2.aruco.DICT_4X4_50)
+    marker=(cv2.aruco.generateImageMarker(dictionary,7,200) if hasattr(cv2.aruco,'generateImageMarker') else
+            cv2.aruco.drawMarker(dictionary,7,200))
+    marker=cv2.copyMakeBorder(marker,20,20,20,20,cv2.BORDER_CONSTANT,value=255)
+    ok,png=cv2.imencode('.png',marker)
+    if not ok:raise RuntimeError('Marker image encoding failed')
+    marker_bytes=png.tobytes()
+    marker_binding=dict(schema='robot_lab.object_markers.v1',dictionary='DICT_4X4_50',markers=[dict(
+        id=7,object='environment_pickup_cube',marker_size_m=.024,object_size_m=[.03,.03,.03],
+        object_from_marker=[0.,0.,.015075,1.,0.,0.,0.])])
+    document=sdf();native=mjcf('../assets/pickup_marker.png');grid=occupancy()
+    revision=hashlib.sha256(document.encode()+native.encode()+grid+marker_bytes+json.dumps(marker_binding,sort_keys=True).encode()).hexdigest()
     folder=store/'worlds'/NAME/revision
-    for directory in ('worlds','mjcf','maps'):(folder/directory).mkdir(parents=True,exist_ok=True)
+    for directory in ('worlds','mjcf','maps','assets'):(folder/directory).mkdir(parents=True,exist_ok=True)
+    (folder/'assets/pickup_marker.png').write_bytes(marker_bytes)
+    write_yaml(folder/'object_markers.yaml',marker_binding)
     (folder/'worlds'/f'{NAME}.world').write_text(document)
     (folder/'mjcf'/f'{NAME}.xml').write_text(native)
     (folder/'maps/map.pgm').write_bytes(grid)
     write_yaml(folder/'maps/map.yaml',dict(image='map.pgm',resolution=.05,origin=[-2.,-2.,0.],negate=0,occupied_thresh=.65,free_thresh=.196))
     profile=dict(gazebo=dict(world_name=NAME,world_package='robot_lab_maps',world_path=str(folder/'worlds'/f'{NAME}.world')),
         map=dict(has_2d_map=True,package='robot_lab_maps',path=str(folder/'maps/map.yaml')),
-        source_id='robot_lab_task_fixture',source_entry=NAME,
+        source_id='robot_lab_task_fixture',source_entry=NAME,object_markers=str(folder/'object_markers.yaml'),
         spawn=dict(x='0.',y='0.',z='0.',yaw='0.'),initial_pose=dict(x='0.',y='0.',yaw='0.'),
         notes='Declared lab pickup/delivery benches, 35 g free 30 mm cube, original source robot unchanged. '
               'MuJoCo native tasks preserve the free object; Gazebo has a dynamic SDF cube. '

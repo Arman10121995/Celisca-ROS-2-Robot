@@ -37,7 +37,7 @@ class NativeAssetDisplay(Node):
                             ('gui', True), ('hold_position', True), ('arm_control', 'none'),
                             ('grasp_fixture', False), ('locomotion_policy_config', ''),
                             ('mobile_control_config', ''),
-                            ('native_task', 'display'),
+                            ('native_task', 'display'),('native_camera_width',320),('native_camera_height',240),
                             ('articulation_control', False), ('spawn_x', 0.),
                             ('arm_planning_config', ''),
                             ('adapter', ''),

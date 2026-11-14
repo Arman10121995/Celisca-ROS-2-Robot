@@ -44,8 +44,17 @@ def sdf():
     return ET.tostring(root,encoding='unicode')
 
 
-def mjcf():
+def mjcf(marker_texture=None):
     root=ET.Element('mujoco',model=NAME)
+    if marker_texture:
+        asset=ET.SubElement(root,'asset')
+        ET.SubElement(asset,'texture',name='pickup_marker_texture',type='2d',file=marker_texture)
+        ET.SubElement(asset,'material',name='pickup_marker_material',texture='pickup_marker_texture',
+                      texrepeat='1 1',texuniform='false',rgba='1 1 1 1',specular='0')
+        h=.0144;z=.000025
+        vertices=[(x,y,layer) for layer in (-z,z) for x,y in ((-h,-h),(h,-h),(h,h),(-h,h))]
+        ET.SubElement(asset,'mesh',name='pickup_marker_mesh',vertex=' '.join(str(v) for p in vertices for v in p),
+            texcoord='0 1 1 1 1 0 0 0 0 1 1 1 1 0 0 0',face='4 5 6 4 6 7 0 2 1 0 3 2 0 1 5 0 5 4 1 2 6 1 6 5 2 3 7 2 7 6 3 0 4 3 4 7')
     world=ET.SubElement(root,'worldbody')
     ET.SubElement(world,'light',pos='0 0 3',dir='0 0 -1')
     for name,position,size in [('floor',[1.,0.,-.05],[6.,4.,.1]),*BENCHES,OBJECT]:
@@ -55,6 +64,9 @@ def mjcf():
                         friction='.8 .005 .0001',rgba='1 .45 .05 1' if name==OBJECT[0] else '.4 .45 .5 1')
         if name==OBJECT[0]:attributes['mass']='.035'
         ET.SubElement(body,'geom',**attributes)
+        if name==OBJECT[0] and marker_texture:
+            ET.SubElement(body,'geom',name='pickup_marker_visual',type='mesh',mesh='pickup_marker_mesh',
+                material='pickup_marker_material',pos='0 0 .01505',mass='0',contype='0',conaffinity='0',group='2')
     ET.indent(root)
     return ET.tostring(root,encoding='unicode')
 

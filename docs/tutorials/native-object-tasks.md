@@ -31,6 +31,10 @@ arm/hand tasks. Run the autofilled command.
 
 ## Build a task
 
+For configured printed boxes, the task builder also accepts
+[camera-derived object targets](camera-object-targets.md). Simulator geometry
+remains the default; selecting Camera fiducials never enables a truth fallback.
+
 In the Arm/Hand native controls, find the mobile task panel. Select
 `environment_pickup_cube` and the two `rubber_tip_left` / `rubber_tip_right`
 collision pads. The choices come from the running model. A robot without a

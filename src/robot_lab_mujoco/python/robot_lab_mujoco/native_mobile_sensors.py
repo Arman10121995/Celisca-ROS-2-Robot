@@ -46,7 +46,10 @@ class NativeMobileSensors:
                 lambda message,name=consumer:self.receive_footprint(name,message),10)
         self.last_scan, self.last_camera, self.last_footprint = -math.inf, -math.inf, -math.inf
         self.scan_count, self.camera_count = 0, 0
-        self.width, self.height = 320, 240
+        self.width=int(node.get_parameter('native_camera_width').value)
+        self.height=int(node.get_parameter('native_camera_height').value)
+        if not 160<=self.width<=1280 or not 120<=self.height<=960:
+            raise ValueError('Native camera dimensions must be 160–1280 by 120–960')
         self.renderer = None
         self.camera_error = ''
         angles = np.linspace(-math.pi, math.pi, 360, endpoint=False)

@@ -98,6 +98,19 @@ def side_grasps(obj,max_opening=.08,clearance=.004,approach=.08,lift=.10):
     return candidates
 
 
+def release_on_support(obj,support,edge_margin=.005,height_tolerance=.015):
+    """Actual whole-box fit at a horizontal support, independent of a plan."""
+    position,rotation,size,kind=_geometry(obj)
+    center,frame,bounds,support_kind=_geometry(support)
+    if kind!='box' or support_kind!='box' or abs(frame[2,2])<1-1e-6:
+        raise ValueError('Release check requires a box and horizontal box support')
+    local=frame.T@(position-center);half=np.abs(frame.T@rotation)@size/2
+    bottom=position[2]-(np.abs(rotation)@size)[2]/2
+    top=center[2]+bounds[2]/2
+    return bool(np.all(np.abs(local[:2])+half[:2]+edge_margin<=bounds[:2]/2)
+                and abs(bottom-top)<=height_tolerance)
+
+
 def support_placement(obj, attachment, support, *, clearance=.003, approach=.08, edge_margin=.01):
     """Keep the measured object orientation and place its bottom on a box top.
 

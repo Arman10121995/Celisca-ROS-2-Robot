@@ -32,6 +32,8 @@ MAP_TEST="src/robot_lab_maps/test"
 GUI_TEST="src/robot_lab_gui/test"
 
 FAST_TESTS=(
+  "src/robot_lab_utils/test/test_guarded_sequence.py"
+  "src/robot_lab_utils/test/test_fiducial_objects.py"
   "src/robot_lab_utils/test/test_car_parking_clearance.py"
   "$GUI_TEST/test_mobile_reach_orientation.py"
   "$BRG_TEST/test_support_placement.py"
@@ -116,6 +118,7 @@ FAST_TESTS=(
 )
 
 INTEGRATION_TESTS=(
+  "$BRG_TEST/test_fiducial_transport.py"
   "$GUI_TEST/test_car_parking_controls.py"
   "$GUI_TEST/test_side_grasp_controls.py"
   "$BRG_TEST/test_sensor_fault_launch.py"

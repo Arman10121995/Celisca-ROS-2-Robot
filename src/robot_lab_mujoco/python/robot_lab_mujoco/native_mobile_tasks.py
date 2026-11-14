@@ -4,6 +4,7 @@ The executor lives with the native plant so base/arm ownership changes are
 atomic with physics. Nav2 is an asynchronous ROS action, never a pose write.
 """
 import hashlib
+import copy
 import json
 import math
 import os
@@ -63,6 +64,10 @@ class NativeMobileTasks:
                     'hfield_data', 'body_pos', 'body_quat'):
             digest.update(np.ascontiguousarray(getattr(node.model, key)).tobytes())
         self.scene_id = digest.hexdigest()
+        from robot_lab_utils.object_estimates import ObjectEstimates
+        self.object_estimates=ObjectEstimates()
+        self.perception_error='No camera object observations yet'
+        node.create_subscription(String,'/robot_lab/object_estimates',self.receive_estimates,10)
         self.state = dict(state='idle', reason='', task_id='', step=0, total=0)
         self.client = ActionClient(node, NavigateToPose, '/navigate_to_pose')
         self.publisher = node.create_publisher(String, '/mobile_task/state', 10)
@@ -76,6 +81,16 @@ class NativeMobileTasks:
         node.create_subscription(PoseStamped, '/goal_pose', self.external_goal, 1)
         node.create_service(Trigger, '/mobile_task/stop', self.stop)
         node.create_timer(.1, self.tick, clock=Clock(clock_type=ClockType.SYSTEM_TIME))
+
+    def estimate_identity(self):
+        return dict(plant_id=self.arm.plant_id,source_sha256=self.arm.source_sha256,scene_id=self.scene_id)
+
+    def receive_estimates(self,message):
+        try:
+            if len(message.data)>131072:raise ValueError('Camera estimates exceed message bound')
+            self.object_estimates.receive(json.loads(message.data),self.estimate_identity(),float(self.node.data.time))
+            self.perception_error=''
+        except (ValueError,TypeError,KeyError) as exc:self.perception_error=str(exc)
 
     def object_bodies(self, step):
         model, mj = self.node.model, self.node.mujoco
@@ -255,6 +270,20 @@ class NativeMobileTasks:
         return mask
 
     def begin_reach(self, step):
+        if step.get('pose_source')=='aruco_pnp':
+            observed=self.object_estimates.get(step['object'],self.estimate_identity(),float(self.node.data.time))
+            obj,_=self.object_bodies(step);model=self.node.model;mj=self.node.mujoco
+            geoms=[g for g in range(model.ngeom) if model.geom_bodyid[g]==obj
+                   and (model.geom_contype[g] or model.geom_conaffinity[g])]
+            if (len(geoms)!=1 or int(model.geom_type[geoms[0]])!=int(mj.mjtGeom.mjGEOM_BOX)
+                    or observed.get('type')!='box' or not np.allclose(observed.get('size'),2*model.geom_size[geoms[0]],rtol=0,atol=1e-6)):
+                raise ValueError('Camera binding must match the selected source box geometry')
+            from scipy.spatial.transform import Rotation
+            rotation=Rotation.from_quat(np.asarray(observed['orientation_wxyz'])[[1,2,3,0]])
+            step=copy.deepcopy(step)
+            step['target_xyz']=(np.asarray(observed['position'])+rotation.apply(model.geom_pos[geoms[0]])
+                                +np.asarray(step.get('offset',[0.,0.,0.]))).tolist()
+            self.record(perception_target=observed,pose_source='aruco_pnp')
         self.reach_orientation = None
         if self.reach_worker is not None and self.reach_worker.is_alive():
             raise ValueError('Previous reach planner is still stopping; retry after its bounded deadline')
@@ -541,6 +570,9 @@ class NativeMobileTasks:
             physical_pose=self.pose(), active=self.active(), nav_cancel_pending=bool(self.pending or self.handle),
             navigation_available=self.node.get_parameter('native_task').value == 'nav' and self.client.server_is_ready(),
             object_candidates=self.object_candidates, finger_candidates=self.finger_candidates,
+            perception_objects=(list(self.object_estimates.targets) if time.monotonic()-self.object_estimates.received<1.
+                and -.05<=float(self.node.data.time)-getattr(self.object_estimates,'stamp',-math.inf)<=.5 else []),
+            perception_error=self.perception_error,
             payload_name=(self.node.mujoco.mj_id2name(self.node.model, self.node.mujoco.mjtObj.mjOBJ_BODY, self.payload_body)
                           if self.payload_body is not None else ''),
             costmap_footprint_consumers=sorted(self.node.sensors.footprint_receipts.received),

@@ -52,6 +52,7 @@ class HandTab(ttk.Frame):
         self.sending = False
         self.was_owned = False
         self.closed = False
+        self.completion_serial=0;self.last_result={};self.cancel_pending=False
         from .articulation_controls import ArticulationControls
         self.generic_controls = ArticulationControls(body, app, include_hand=True)
         self.generic_controls.grid(row=9, column=0, columnspan=4, sticky='ew')
@@ -148,6 +149,8 @@ class HandTab(ttk.Frame):
             self.status_var.set('Opening must be a number in 0–80 mm')
 
     def command(self, position):
+        task=getattr(getattr(getattr(self.app,'arm_tab',None),'cartesian',None),'object_task',None)
+        if task is not None and task.engine.active and not task.dispatching:task.cancel('Manual hand command')
         if not self.ready() or self.sending or self.state['busy'] or not self.action.server_is_ready():
             return
         try:
@@ -161,31 +164,44 @@ class HandTab(ttk.Frame):
         goal = GripperCommand.Goal()
         goal.command.position, goal.command.max_effort = position, effort
         self.sending = True
+        self.cancel_pending=False
         self.action.send_goal_async(goal).add_done_callback(self.accepted)
 
     def accepted(self, future):
-        if self.closed:
+        handle=future.result()
+        if self.closed or self.cancel_pending or not self.owned():
+            if handle.accepted:handle.cancel_goal_async()
+            self.sending=False
             return
         self.sending = False
-        self.handle = future.result()
+        self.handle = handle
         if not self.handle.accepted:
             self.handle = None
             self.status_var.set('Gripper goal rejected; inspect the launch log')
+            self.completion_serial+=1;self.last_result=dict(ok=False,reason='Gripper goal rejected')
             return
         self.handle.get_result_async().add_done_callback(self.finished)
 
     def finished(self, future):
         if not self.closed:
-            result = future.result().result
+            answer=future.result();result=answer.result
+            self.completion_serial+=1;self.last_result=dict(ok=answer.status==4 and (result.reached_goal or result.stalled),
+                reached=bool(result.reached_goal),stalled=bool(result.stalled),reason='Gripper action result')
             self.status_var.set('Opening reached' if result.reached_goal else
                                 'Contact stall at force bound' if result.stalled else 'Gripper action stopped')
             self.handle = None
 
     def cancel(self):
+        self.cancel_pending=True
+        task=getattr(getattr(getattr(self.app,'arm_tab',None),'cartesian',None),'object_task',None)
+        if task is not None:task.cancel('Hand action canceled')
         if self.handle:
             self.handle.cancel_goal_async()
 
     def stop(self):
+        self.cancel_pending=True
+        task=getattr(getattr(getattr(self.app,'arm_tab',None),'cartesian',None),'object_task',None)
+        if task is not None:task.cancel('Hand Stop')
         self.generic_controls.servo_controls.stop()
         self.generic_controls.stop()
         if self.node and self.stop_client.service_is_ready():

@@ -114,6 +114,13 @@ class MobileTaskControls(ttk.LabelFrame):
                   'Approach selects translation from a world axis; align the pad orientation separately. '
                   'Grasp outcomes require measured checkpoints.',
                   wraplength=305).grid(row=24,column=0,columnspan=2,sticky='w')
+        self.pose_source=tk.StringVar(value='Simulator geometry')
+        ttk.Label(self,text='Unheld object reach targets').grid(row=25,column=0,columnspan=2,sticky='w')
+        self.pose_source_selector=ttk.Combobox(self,textvariable=self.pose_source,state='readonly',
+            values=('Simulator geometry','Camera fiducials'))
+        self.pose_source_selector.grid(row=26,column=0,columnspan=2,sticky='ew')
+        self.perception_status=tk.StringVar(value='Camera markers require a configured marker map and live camera.')
+        ttk.Label(self,textvariable=self.perception_status,wraplength=300).grid(row=27,column=0,columnspan=2,sticky='w')
 
     def add_object_check(self, condition):
         if not self.editable() or len(self.steps) >= 32:
@@ -132,6 +139,9 @@ class MobileTaskControls(ttk.LabelFrame):
 
     def object_step(self, kind, **values):
         if kind=='reach_object':
+            if 'target_xyz' not in values and 'pose_source' not in values:
+                source=getattr(self,'pose_source',None)
+                values['pose_source']='aruco_pnp' if source is not None and source.get()=='Camera fiducials' else 'native_truth'
             mode=self.orientation_mode.get()
             if mode=='Keep measured pad':values['keep_orientation']=True
             elif mode=='World pad RPY':
@@ -178,7 +188,7 @@ class MobileTaskControls(ttk.LabelFrame):
                 approach,
                 self.object_step('reach_object',offset=[0.,0.,0.]),
                 self.object_step('grip',operation='close'),
-                self.object_step('reach_object',offset=[0.,0.,.10]),
+                self.object_step('reach_object',offset=[0.,0.,.10],pose_source='native_truth'),
                 self.object_step('object_check',condition='grasped'),
                 self.object_step('stow_arm')])
         except (ValueError,tk.TclError) as exc:self.status.set(str(exc))
@@ -249,6 +259,9 @@ class MobileTaskControls(ttk.LabelFrame):
 
     def current(self):
         if self.ready():
+            visible=self.state.get('perception_objects',[])
+            self.perception_status.set(('Camera targets: '+', '.join(visible)) if visible else
+                'No fresh camera target · '+self.state.get('perception_error','marker not visible'))
             x, y, yaw = self.state['physical_pose']
             for variable, value in zip(self.pose, (x, y, math.degrees(yaw))):
                 variable.set(round(value, 3))

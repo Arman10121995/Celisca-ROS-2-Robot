@@ -54,4 +54,7 @@ def test_real_widget_builds_source_bound_recipe_without_dispatch():
         panel.approach_distance.set(math.nan);panel.add_pick()
         assert len(panel.steps)==13 and 'finite' in panel.status.get()
         assert panel.node is None  # No ROS publisher/action has been connected.
+        panel.approach_distance.set(.08);panel.pose_source.set('Camera fiducials');panel.add_pick()
+        assert panel.steps[14]['pose_source']=='aruco_pnp' and panel.steps[15]['pose_source']=='aruco_pnp'
+        assert panel.steps[17]['pose_source']=='native_truth'  # Instrumented lift after physical contact.
     finally:root.destroy()

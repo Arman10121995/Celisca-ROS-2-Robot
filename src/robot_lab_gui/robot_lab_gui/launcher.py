@@ -2494,6 +2494,8 @@ class SimulationLauncherGui(tk.Tk):
         if self.reset_robot_button.instate(['disabled']):
             return
         self._stop_drive()
+        task=getattr(getattr(getattr(self,'arm_tab',None),'cartesian',None),'object_task',None)
+        if task is not None:task.cancel('Robot reset requested')
         command = ['timeout', '30', 'ros2', 'service', 'call', '/robot_lab/reset',
                    'std_srvs/srv/Trigger', '{}']
         threading.Thread(target=self._run_aux_command, args=(command, 'Robot reset'), daemon=True).start()

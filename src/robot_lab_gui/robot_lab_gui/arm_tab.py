@@ -63,6 +63,7 @@ class ArmTab(ttk.Frame):
         self.handle = None
         self.sending = False
         self.closed = False
+        self.completion_serial=0;self.last_result={};self.cancel_pending=False
         from .cartesian_controls import CartesianControls
         self.cartesian = CartesianControls(self)
         from .articulation_controls import ArticulationControls
@@ -174,6 +175,8 @@ class ArmTab(ttk.Frame):
         self.job = self.after(100, self.poll)
 
     def send_positions(self, target):
+        task=getattr(self.cartesian,'object_task',None)
+        if task is not None and task.engine.active and not task.dispatching:task.cancel('Manual arm command')
         if not self.ready() or self.sending or self.state['busy'] or not self.action.server_is_ready():
             return
         self.cartesian.invalidate()
@@ -191,24 +194,32 @@ class ArmTab(ttk.Frame):
         point.time_from_start.nanosec = int((duration-int(duration))*1e9)
         goal.trajectory.points = [point]
         self.sending = True
+        self.cancel_pending=False
         future = self.action.send_goal_async(goal)
         future.add_done_callback(self.accepted)
 
     def accepted(self, future):
-        if self.closed:
+        handle=future.result()
+        if self.closed or self.cancel_pending or not self.owned():
+            if handle.accepted:handle.cancel_goal_async()
+            self.sending=False
             return
         self.sending = False
-        self.handle = future.result()
+        self.handle = handle
         if not self.handle.accepted:
             self.handle = None
             self.status_var.set('Arm goal rejected; inspect the launch log')
+            self.completion_serial+=1;self.last_result=dict(ok=False,reason='Arm goal rejected')
             return
         self.handle.get_result_async().add_done_callback(self.finished)
 
     def finished(self, future):
         if self.closed:
             return
-        self.status_var.set(future.result().result.error_string)
+        answer=future.result();result=answer.result
+        self.completion_serial+=1;self.last_result=dict(ok=answer.status==4 and result.error_code==0,
+            status=answer.status,error_code=result.error_code,reason=result.error_string)
+        self.status_var.set(result.error_string)
         self.handle = None
 
     def jog(self, index, sign):
@@ -234,11 +245,17 @@ class ArmTab(ttk.Frame):
             self.send_positions(self.state['home'])
 
     def cancel(self):
+        self.cancel_pending=True
+        task=getattr(self.cartesian,'object_task',None)
+        if task is not None:task.cancel('Arm trajectory canceled')
         self.cartesian.invalidate()
         if self.handle:
             self.handle.cancel_goal_async()
 
     def stop(self):
+        self.cancel_pending=True
+        task=getattr(self.cartesian,'object_task',None)
+        if task is not None:task.cancel('Arm Stop')
         self.cartesian.invalidate()
         self.articulation.stop()
         self.servo_controls.stop()

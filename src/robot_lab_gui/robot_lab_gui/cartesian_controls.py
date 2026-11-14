@@ -70,9 +70,14 @@ class CartesianControls(ttk.LabelFrame):
         from .grasp_target_controls import GraspTargetControls
         self.grasp_targets=GraspTargetControls(self,self)
         self.grasp_targets.grid(row=12,column=0,columnspan=4,sticky='ew',pady=6)
+        from .panda_object_task import PandaObjectTask
+        self.object_task=PandaObjectTask(self,self)
+        self.object_task.grid(row=13,column=0,columnspan=4,sticky='ew',pady=6)
         self.refresh()
 
     def object_command(self, operation):
+        task=getattr(self,'object_task',None)
+        if task is not None and task.engine.active and not task.dispatching:task.cancel('Manual planning attachment command')
         if not self.owned() or not self.connected or not self.arm.ready() or self.arm.state.get('busy'):
             return
         import json
@@ -106,6 +111,8 @@ class CartesianControls(ttk.LabelFrame):
         self.target_display.set('Target position: use current tool pose.')
 
     def target_edited(self, *_):
+        task=getattr(self,'object_task',None)
+        if task is not None and task.engine.active and not task.dispatching:task.cancel('Manual Cartesian target edit')
         self.invalidate()
         self.update_target_display()
 
@@ -240,6 +247,7 @@ class CartesianControls(ttk.LabelFrame):
                                      for n, q in self.start.items()))
 
     def poll(self):
+        self.object_task.poll()
         self.grasp_targets.poll()
         owned = self.owned()
         if self.was_owned and not owned:
@@ -281,6 +289,7 @@ class CartesianControls(ttk.LabelFrame):
         self.was_owned = owned
 
     def plan(self):
+        if self.object_task.engine.active and not self.object_task.dispatching:self.object_task.cancel('Manual Cartesian plan')
         if (not self.ready() or self.planning or self.reading_pose or not self.fk.service_is_ready()
                 or not self.ik.service_is_ready() or not self.planner.service_is_ready()):
             return
@@ -301,6 +310,8 @@ class CartesianControls(ttk.LabelFrame):
         self.fk.call_async(request).add_done_callback(lambda future: self.got_fk(future, generation, offset, request.robot_state))
 
     def plan_pose(self,pose,label='Object target'):
+        task=getattr(self,'object_task',None)
+        if task is not None and task.engine.active and not task.dispatching:task.cancel('Manual object plan')
         if (not self.ready() or self.planning or self.reading_pose or not self.ik.service_is_ready()
                 or not self.planner.service_is_ready()):
             return
@@ -409,6 +420,8 @@ class CartesianControls(ttk.LabelFrame):
                         (len(self.points), self.points[-1][0]))
 
     def execute(self):
+        task=getattr(self,'object_task',None)
+        if task is not None and task.engine.active and not task.dispatching:task.cancel('Manual plan execution')
         if not self.ready() or not self.points or not self.unchanged() or time.monotonic()-self.planned_at > 10:
             self.invalidate()
             return
@@ -423,5 +436,6 @@ class CartesianControls(ttk.LabelFrame):
             goal.trajectory.points.append(point)
         self.invalidate()
         self.arm.sending = True
+        self.arm.cancel_pending=False
         self.arm.action.send_goal_async(goal).add_done_callback(self.arm.accepted)
         self.status.set('Executing the checked path through the native Panda actuators.')

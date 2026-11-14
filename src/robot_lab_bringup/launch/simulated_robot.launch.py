@@ -1142,6 +1142,8 @@ def _build_simulation_actions(context):
         # behaviour).  MuJoCo/Isaac honour the flag; PyBullet already has it.
         sim_pkg, sim_launch = _SIMULATOR_DISPATCH[simulator]
         sim_share = get_package_share_directory(sim_pkg)
+        marker_config=_launch_value(context,'object_markers')
+        if marker_config=='auto':marker_config=map_config.get('object_markers','') if native_mobile else ''
         display_args = {
             "world_name": world_name,
             "world_package": world_package,
@@ -1171,6 +1173,8 @@ def _build_simulation_actions(context):
             if native_mobile:
                 display_args['mobile_control_config'] = robot_config['mobile_control_config']
                 display_args['native_task'] = _launch_value(context, 'native_task')
+                if marker_config and marker_config!='none':
+                    display_args.update(native_camera_width='640',native_camera_height='480')
             if native_articulation:
                 display_args['articulation_control'] = 'true'
             arm = _launch_value(context, 'arm_control').strip().lower()
@@ -1234,6 +1238,11 @@ def _build_simulation_actions(context):
                     'grasp_fixture': display_args.get('grasp_fixture', 'false'),
                     **{'spawn_'+axis: display_args['spawn_'+axis] for axis in ('x', 'y', 'z', 'yaw')},
                 }.items()))
+        if marker_config and marker_config!='none':
+            if not native_mobile:raise ValueError('Camera object targets currently require native mobile controls')
+            if not Path(marker_config).is_file():raise ValueError('Object marker binding file is unavailable: '+marker_config)
+            actions.append(Node(package='robot_lab_utils',executable='fiducial_object_pose.py',
+                name='fiducial_object_pose',output='screen',parameters=[{'use_sim_time':True,'bindings':marker_config}]))
         native_task = _launch_value(context, 'native_task')
         if native_task != 'display':
             if not native_mobile or map_free:
@@ -1896,6 +1905,8 @@ def generate_launch_description():
                               description='Opt into implemented imported-asset workflows awaiting source requalification'),
         DeclareLaunchArgument('enable_native_mobile', default_value='false',
             description='Explicitly enable native Stretch base and articulation controls in MuJoCo Display.'),
+        DeclareLaunchArgument('object_markers',default_value='auto',
+            description='Camera object marker binding YAML, auto from selected map, or none. Native mobile controls only.'),
         DeclareLaunchArgument('native_task', default_value='display',
             description='Explicit experimental native mobile workflow: display/loc/slam/3d_slam/nav; mode stays display to distinguish unqualified candidates.'),
         DeclareLaunchArgument(
