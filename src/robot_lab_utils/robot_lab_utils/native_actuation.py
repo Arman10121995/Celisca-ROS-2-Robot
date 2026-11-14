@@ -22,10 +22,17 @@ def position_channels(model, robot_joints=None, allow_mobile_base=False):
         if not np.isfinite(lower + upper) or lower >= upper:
             continue
         name = mujoco.mj_id2name(model, mujoco.mjtObj.mjOBJ_ACTUATOR, index)
-        if not name or name.startswith('environment_'):
+        if name and name.startswith('environment_'):
             continue
         joint_name, units = '', 'source control'
         transmission = model.actuator_trntype[index]
+        if not name:
+            # Some vendor models (Menagerie Lite6, Google Robot) leave actuators unnamed;
+            # name the channel after what it drives so it stays addressable.
+            target = int(model.actuator_trnid[index, 0])
+            kind = (mujoco.mjtObj.mjOBJ_JOINT if transmission == mujoco.mjtTrn.mjTRN_JOINT
+                    else mujoco.mjtObj.mjOBJ_TENDON if transmission == mujoco.mjtTrn.mjTRN_TENDON else None)
+            name = (mujoco.mj_id2name(model, kind, target) if kind is not None else None) or 'actuator_%d' % index
         if transmission == mujoco.mjtTrn.mjTRN_JOINT:
             joint = int(model.actuator_trnid[index, 0])
             joint_name = mujoco.mj_id2name(model, mujoco.mjtObj.mjOBJ_JOINT, joint)

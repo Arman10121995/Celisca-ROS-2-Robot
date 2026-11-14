@@ -1,5 +1,10 @@
 # Current Robot Lab status
 
+November 14 Claude: legged, car and asset implementation, none measured yet:
+- **Legged training (R5.2/R12):** new `get_up` task (starts from collapsed poses settled in physics) and a stairs curriculum (2–18 cm rises). The rough-terrain curriculum now really reshapes the terrain; before, it changed only a number. A first Go2 get-up policy is training.
+- **Cars (R5.5):** `car_parking` turns the measured heading shuffle and depth trim into a reusable park-at-heading runtime for car navigation. It has unit tests only.
+- **Display-only robots (R3.6):** all 77 now show a reason derived from their own source model. The generic servo accepts unnamed vendor actuators, which adds UFactory Lite6 and Google Robot arm jogging (not yet validated).
+
 November 14 Claude: [flipper-aware terrain policy and gait slip recovery (R10.7/R10.6)](evidence/flipper-stairs-2026-11-14/README.md) are implemented and experimental. **Automatic terrain flippers** reads the terrain ahead from the robot's own depth camera and its pitch/roll from the IMU, and sequences a step climb. Measured at a 0.18 m step, neither the policy nor fixed flippers climbs it: the 4 Nm flippers are pushed back by the hull, and the vehicle rears past the 0.6 rad tilt guard. A stronger flipper actuator is needed. Terrain gaits now pause and recover from slip or support loss instead of halting (unit-tested only).
 
 November 14 Claude: [MuJoCo marine plant, current feedforward and volumetric AUV routes (R10.4/R10.5)](evidence/marine-mujoco-currents-2026-11-14/README.md) are implemented and experimental. `simulator:=mujoco` runs the unchanged ROV controller on ported Fortress water forces and matches Gazebo: 1.03 vs 1.07 m surge and 1.44 vs 1.50 rad yaw. A damping-based current feedforward cuts the 15 s drift in a 0.1 m/s cross current from 0.37 m to 1 cm on both simulators. AUV routes now dive or climb around obstacles and rank by time through the current; these are unit-tested only, with no AUV mission flown yet.

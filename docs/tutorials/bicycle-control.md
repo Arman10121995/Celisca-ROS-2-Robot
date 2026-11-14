@@ -71,6 +71,31 @@ path rejection, contact/clearance, solver deadlines and end errors. Numerical
 constraint tests and installation checks are separate from those missions.
 See [current status](../status/CURRENT_STATUS.md) and [the ledger](../status/platform-status.yaml).
 
+## Park at a heading
+
+Nav2 ends a car goal at its position. The car stack plans a Reeds–Shepp
+path to the goal pose, but pure pursuit aims at the goal point, so arrivals
+are typically 8–23° off heading. Navigation launches for cars now also start
+`car_parking`, which turns the measured car-course fix into a runtime:
+
+```bash
+ros2 topic pub --once /car_parking/command std_msgs/msg/String \
+  '{data: "{\"op\": \"park\", \"x\": 2.0, \"y\": 1.0, \"yaw\": 1.57}"}'
+ros2 topic echo /car_parking/state
+```
+
+The node runs four steps:
+1. It sends the Nav2 goal.
+2. On success it runs the forward/reverse heading shuffle (`car_alignment`).
+3. A straight trim brings the car to the bay depth.
+4. It reports `heading_error_deg`, `position_error_m` and the along and
+   lateral residuals, all measured from the localization estimate, not
+   from truth.
+
+`{"op": "cancel"}` stops it. The same sequence parked 10 of 12 car-course
+cells within 0.003–0.079 m (round 62). The node itself has unit tests; a run
+through Nav2 is pending.
+
 ## Run
 
 From a sourced workspace, the Ackermann car on the obstacle map with the

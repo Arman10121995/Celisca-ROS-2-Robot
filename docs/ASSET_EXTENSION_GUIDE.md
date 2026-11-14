@@ -360,6 +360,30 @@ headless render cadence and map-export/GUI cleanup. Continue longer routes,
 other maps, vendor hazards/docking and visual parity; do not substitute
 ideal-sensor simulation for the vendor firmware stack.
 
+## Why a robot stays display-only
+
+`python3 -m robot_lab_utils.display_reasons --write` regenerates
+`robot_lab_robots/config/display_reasons.yaml` after provisioning. For each
+profile without a control path, it inspects the source model and records a
+reason that the GUI shows under **Model details & support**. MJCF models are
+checked for floating bases and vendor actuator types; URDF models for
+`ros2_control` and transmissions; both for legs, rotors and wheels. On
+2026-11-14 the 77 display-only profiles split as follows:
+
+| Reason | Profiles |
+|---|---|
+| Floating-base legged robot without a locomotion policy | 51 |
+| URDF with no control interface | 19 |
+| Floating base without a base or balance controller | 3 |
+| Free-flyer without a flight controller | 2 |
+| Torque-only vendor actuators | 1 |
+| No actuators | 1 |
+
+The generic native position servo now also accepts **unnamed** vendor
+position actuators; it names each channel after its joint. That made the
+Menagerie UFactory Lite6 and Google Robot controllable in the Arm page.
+Their physical validation is pending.
+
 ## Recording and enabling a new controller
 
 1. Claim the exact ledger lane and record backend, robot, source pin and map.

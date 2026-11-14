@@ -494,7 +494,15 @@ def _setup(context, *args, **kwargs):
         parameters=[{"use_sim_time": use_sim_time}],
     )
 
-    return controllers + [goal_relay, lifecycle]
+    nodes = controllers + [goal_relay, lifecycle]
+    if motion_model == "ackermann":
+        # Park-at-heading runtime: Nav2 goal, then the measured forward/reverse
+        # heading shuffle and straight depth trim (robot_lab_utils.car_parking).
+        base = LaunchConfiguration("base_frame").perform(context).strip() or "base_footprint"
+        nodes.append(Node(package="robot_lab_utils", executable="car_parking.py", name="car_parking", output="screen",
+                          parameters=[{"use_sim_time": use_sim_time, "turning_radius": CAR_TURNING_RADIUS,
+                                       "base_frame": base}]))
+    return nodes
 
 
 def generate_launch_description():

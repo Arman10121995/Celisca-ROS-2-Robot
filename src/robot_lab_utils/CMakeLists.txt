@@ -34,6 +34,7 @@ install(PROGRAMS
   ${PROJECT_NAME}/fleet_infrastructure.py
   ${PROJECT_NAME}/marine_controller.py
   ${PROJECT_NAME}/marine_mujoco_plant.py
+  ${PROJECT_NAME}/car_parking.py
   ${PROJECT_NAME}/surface_controller.py
   ${PROJECT_NAME}/amphibious_controller.py
   ${PROJECT_NAME}/auv_controller.py

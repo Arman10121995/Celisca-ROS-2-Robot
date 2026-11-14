@@ -2768,6 +2768,16 @@ class SimulationLauncherGui(tk.Tk):
             f"Modes: {', '.join(MODE_LABELS.get(m, m) for m in supported_modes) or 'none'}",
             f"Cleaning missions: {'yes' if supports_vacuum else 'no'}",
         ]
+        # Display-only robots say why, from an inspection of their own source model (R3.6).
+        if not hasattr(self, '_display_reasons'):
+            try:
+                from robot_lab_utils.display_reasons import load as load_display_reasons
+                self._display_reasons = load_display_reasons()
+            except Exception:  # noqa: BLE001 - optional generated data
+                self._display_reasons = {}
+        why = self._display_reasons.get(self.robot_var.get())
+        if why:
+            lines.append('Why display only: ' + why['reason'])
         if config.get('qualification_recheck'):
             lines.append('Historical source qualification needs recheck. Display/Drive remain available; '
                 'use the explicit implemented-workflow option to test higher modes or Panda controls.')

@@ -70,6 +70,7 @@ FAST_TESTS=(
   "$ADP_TEST/test_r5_2_go2_support_attribution.py"
   "$ADP_TEST/test_r5_2_legged_policy.py"
   "$ADP_TEST/test_legged_training.py"
+  "$ADP_TEST/test_legged_get_up_stairs.py"
   "$BRG_TEST/test_sim_profiles.py"
   "$BRG_TEST/test_installed_extensions.py"
   "$BRG_TEST/test_asset_groups.py"
@@ -109,6 +110,8 @@ FAST_TESTS=(
   "src/robot_lab_utils/test/test_marine_mujoco_plant.py"
   "src/robot_lab_utils/test/test_flipper_terrain_policy.py"
   "src/robot_lab_utils/test/test_gait_recovery.py"
+  "src/robot_lab_utils/test/test_car_parking.py"
+  "src/robot_lab_utils/test/test_display_reasons.py"
 )
 
 INTEGRATION_TESTS=(

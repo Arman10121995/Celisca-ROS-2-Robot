@@ -141,8 +141,8 @@ Work top to bottom. Each line links to its task.
 | I11 | [R10.5](#r105--underwater-worlds-sensing-slam-and-navigation) / [R10.4](#r104--underwater-robots-and-controllers) Marine | Done 2026-11-14: MuJoCo ROV plant (ported Fortress water forces; matches Gazebo), damping-based current feedforward (1 cm drift in 0.1 m/s), volumetric and current-aware AUV routes (unit-tested). PyBullet/Isaac marine, AUV sensor-only localization mission remain | implemented |
 | I12 | [R10.6](#r106--six--and-eight-legged-robots) / [R10.7](#r107--segmented-and-additional-robot-forms) Multi-leg and forms | Done 2026-11-14: depth/IMU flipper policy (sequences a step, but the 4 Nm flippers cannot climb 0.18 m: measured), bounded gait slip/support recovery (unit-tested). Stronger flippers, other backends, per-model terrain missions remain | implemented |
 | I13 | [R5.2](#r52--go2-quadruped-locomotion) / [R5.3](#r53--berkeley-humanoid-lite-balance-and-walking) / [R12](#r12--legged-policy-training) Legged | 2026-11-14: `get_up` task and stairs curriculum implemented (training runs pending); BHL contract/export, G1/Go2W policies, GPU training remain | partial |
-| I14 | [R5.5](#r55--ackermann-rear-steer-and-anti-ackermann-cars) Cars | Final-heading (parking) control | partial |
-| I15 | [R3.6](#r36--external-robot-assets-in-normal-launch) Assets | Vendor controller interfaces for display-only profiles | partial |
+| I14 | [R5.5](#r55--ackermann-rear-steer-and-anti-ackermann-cars) Cars | 2026-11-14: park-at-heading runtime (`car_parking.py`) from the measured shuffle + trim (10/12 course cells); slalom aborts and a GUI park control remain | implemented |
+| I15 | [R3.6](#r36--external-robot-assets-in-normal-launch) Assets | 2026-11-14: model-derived display-only reasons for all 77 profiles in the GUI; Lite6/Google Robot jogging via unnamed-actuator support. Vendor controllers for legged/URDF profiles remain | partial |
 | I16 | [R6.5](#r65--world-to-occupancy-generation) / [R6.6](#r66--external-world-library) / [R6.2](#r62--dynamic-and-sensor-disturbance-cases) Worlds | Occupancy registration, remaining licensed imports and actors, disturbance cases | partial |
 | I17 | [R11](#r11--molar--probot-l-family) MOLAR | Sensors, SLAM/Nav2, payload transfer, multi-floor | partial, needs the sensor layout |
 | I18 | [P4](#p4--mujoco-large-world-speed) MuJoCo speed | Faster flex/scan/camera updates on large worlds | partial |
@@ -206,9 +206,15 @@ tier repair awaits its exact-revision published rerun. Details and evidence are 
   Menagerie Panda are fully controllable on four backends. Native Registry 3D
   preview. Source variants are grouped under parent families.
   [Asset guide](docs/ASSET_EXTENSION_GUIDE.md).
+- **Done 2026-11-14:** every display-only profile shows a reason derived from
+  its own source model (`display_reasons.py`, GUI model details; 77 profiles:
+  51 floating legged without a policy, 19 URDFs without a control interface,
+  3 floating without a base controller, 2 free-flyers, 2 without usable
+  actuators). The native position servo accepts unnamed vendor actuators,
+  enabling Menagerie Lite6 and Google Robot jogging (validation pending).
 - **Remaining implementation:**
-  - vendor controller interfaces for the display-only profiles (arms, legged
-    robots, mobile bases), one source-matched controller each;
+  - source-matched controllers for the 51 legged and 19 URDF profiles
+    (each needs a vendor policy or a control interface the source lacks);
   - per-model license, texture and skin checks.
 - **How to do it:**
   1. List display-only profiles: `src/robot_lab_robots/config/robots.yaml`
@@ -289,9 +295,14 @@ tier repair awaits its exact-revision published rerun. Details and evidence are 
   mission passes 35/36 over seeds 1–3 on four backends. Watchdogs pass.
   The car course with footprint, curvature and heading checks exists
   (`scripts/sim_car_course.py`, `src/robot_lab_maps/tools/gen_car_course.py`).
-  It passes 3 of 12 cells; the others end 8–23° off the bay heading.
-- **Remaining implementation:** final-heading control. The Nav2 goal checker
-  ignores yaw, and pure pursuit aims at the goal point.
+  With the forward/reverse heading shuffle plus straight depth trim
+  (`car_alignment.py`) it passes 10 of 12 cells (round 62; Gazebo rear-steer
+  and Isaac anti-Ackermann abort in the slalom).
+- **Done 2026-11-14 (implemented, unit-tested):** the shuffle and trim as a
+  reusable runtime, `car_parking.py`, started with car navigation
+  (`/car_parking/command` park/cancel, estimate-based report).
+- **Remaining implementation:** the two slalom aborts (RPP collision-ahead);
+  a GUI park control.
 - **How to do it:**
   1. Add a yaw-aware goal checker (or enable `stateful` yaw tolerance) in
      the car Nav2 configs (`src/robot_lab_navigation/config/`).

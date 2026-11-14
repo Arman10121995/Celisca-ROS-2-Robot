@@ -57,7 +57,7 @@ for the simulator you chose, and the line under the selectors explains it:
 |---|---|
 | ● green | **measured**: at least one recorded screen or mission passed on this simulator |
 | ◐ amber | **experimental**: it runs and can be controlled here, but nothing on this simulator is measured yet |
-| ○ grey | **display only**: it loads and shows itself; no controller |
+| ○ grey | **display only**: it loads and shows itself; no controller. **Model details & support** says why, from an inspection of its own source model (for example a floating-base legged robot without a locomotion policy, or a URDF with no control interface) |
 | ✕ red | not available on this simulator (pick another simulator to use it) |
 
 The letters after the name are its modes on this simulator: **D** display,

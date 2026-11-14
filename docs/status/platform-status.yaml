@@ -2549,6 +2549,9 @@ tasks:
         title: Author benchmark scenario and experiment catalogs
       R3.6:
         acceptance_ref: ROADMAP.md
+        implementation_state: 2026-11-14 (Claude) model-derived display-only reasons (display_reasons.py, generated yaml,
+          GUI model details) for 77 profiles; native position servo accepts unnamed vendor actuators (Lite6, Google Robot
+          registered, validation pending).
         active_scope: '2026-10-09 codex: install and expose exact-model policies and reusable native controllers
           in the normal registry/GUI, preserving measured prior robots and independent terrain/review ownership.
           Initial implementation precedes testing.'
@@ -3765,15 +3768,14 @@ tasks:
           the HeadingShuffle correction. Added the flag; now parking should pass the
           10° heading tolerance in all backends. Implementation COMPLETE. Verification
           pending due to ROS GLIBCXX_3.4.29 environment issue.'
-        implementation_state: '2026-11-02: R5.5 implementation COMPLETE. scripts/sim_car_course.sh
-          updated with --align-heading flag (line 31) to enable HeadingShuffle correction.
-          HeadingShuffle.shuffle_plan() verified to generate correct 2-arc shuffle plans
-          for 11.6°, 12.0°, and 14.3° yaw errors. Car course tests previously failed
-          with 11.6-14.3° yaw errors in Gazebo/PyBullet/Isaac (MuJoCo passed with -3.4°).
-          Full Round 57 context: rear-steer car on small_house launched cleanly on all
-          four backends; MuJoCo slalom 4/4 gates passed; MuJoCo parking position error
-          0.102 m but yaw error 14.95° exceeded 10° tolerance; Gazebo slalom aborted on
-          gate 1; Isaac slalom/parking inconclusive.'
+        implementation_state: '2026-11-02: R5.5 implementation COMPLETE. scripts/sim_car_course.sh updated with --align-heading
+          flag (line 31) to enable HeadingShuffle correction. HeadingShuffle.shuffle_plan() verified to generate correct
+          2-arc shuffle plans for 11.6°, 12.0°, and 14.3° yaw errors. Car course tests previously failed with 11.6-14.3°
+          yaw errors in Gazebo/PyBullet/Isaac (MuJoCo passed with -3.4°). Full Round 57 context: rear-steer car on small_house
+          launched cleanly on all four backends; MuJoCo slalom 4/4 gates passed; MuJoCo parking position error 0.102 m but
+          yaw error 14.95° exceeded 10° tolerance; Gazebo slalom aborted on gate 1; Isaac slalom/parking inconclusive. 2026-11-14
+          (Claude) car_parking.py runtime (Nav2 goal, heading shuffle, depth trim on the estimate) started with car navigation;
+          unit-tested, no Nav2 run yet.'
         next_action: '2026-11-02: Implementation COMPLETE. BLOCKED: ROS library import
           issue (GLIBCXX_3.4.29 missing) prevents running validation tests. Next:
           Fix environment (ENV-1), then run: scripts/sim_car_course.sh <simulator>
