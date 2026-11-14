@@ -58,9 +58,10 @@ def test_trainable_robots_and_their_contracts():
             assert contract.num_dofs == 29 and not list(contract.wheel_indices)
         else:
             assert contract.num_dofs == 12 and not list(contract.wheel_indices)
-    assert set(TASKS) == {'walk', 'turn_in_place', 'stand', 'push_recovery'}
+    assert set(TASKS) == {'walk', 'turn_in_place', 'stand', 'push_recovery', 'get_up'}
     for task in TASKS.values():
-        assert task.rewards['termination'] < 0 and task.description and task.only_positive
+        if task.terminate_on_fall:   # get_up starts fallen and is rewarded for rising instead
+            assert task.rewards['termination'] < 0 and task.description and task.only_positive
 
 
 def test_onnx_export_matches_the_actor_with_normalisation_folded_in(tmp_path):

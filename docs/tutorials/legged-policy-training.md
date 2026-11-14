@@ -67,6 +67,7 @@ Tasks (`robot_lab_adapter/legged_training.py`, `TASKS`):
 | `turn_in_place` | wz ±(0.3…1.0) rad/s, no translation | yaw tracking, hold position |
 | `stand` | none | default pose, base height, hold position |
 | `push_recovery` | none, a 0.6 m/s push every 4 s | as `stand` |
+| `get_up` | none; every episode starts collapsed | uprightness, then standing height, then default pose |
 
 Every task adds the same legged_gym-style regularisers: vertical velocity,
 roll/pitch rate, tilt, torque, joint acceleration and action rate. As in
@@ -74,6 +75,15 @@ legged_gym (`only_positive_rewards`), each step's sum is clipped at zero,
 so ending an episode early never pays; a fall then costs −10 once. A fall
 is a tilt past 60° or the base below 40 % of its standing height above the
 ground under it. `stand` and `push_recovery` earn a constant alive term.
+
+`get_up` starts each episode from a pool of 256 collapsed states. Each is
+made by dropping the robot at 80 % of its standing height with a random
+roll (side, back or arbitrary), pitch and joint angles, then settling it
+for 1.5 s with the joints held. A fall does not end the episode and the
+step sum is not clipped. The policy earns uprightness throughout, standing
+height once its tilt is under about 45°, and a penalty on joint deviation
+from the default pose once it is level. The aim is the R5.2 case: getting
+up from the collapsed pose a 60 N push leaves.
 
 Options (checkboxes on the page, flags on the command line), all off by
 default:
@@ -83,6 +93,12 @@ default:
 | Randomise friction, mass, motors | `--randomize` | Each episode runs one of 16 model variants: floor and foot friction 0.5-1.25, base mass −1 to +2 kg, kp and kd ×0.9-1.1 |
 | Rough terrain | `--terrain rough` (`--roughness 0.03`) | A smooth random heightfield of ±3 cm bumps (0.3-1.2 m wavelengths), flat within 1 m of the spawn |
 | Observation noise | `--obs-noise 1` | legged_gym's uniform noise on angular velocity, gravity, joint positions and velocities |
+| Stairs curriculum | `--terrain stairs --curriculum` (GUI: **Stairs curriculum**) | Pyramid stairs with 0.3 m treads, ten steps up and then down, starting 1 m from a flat spawn. Every 10 iterations, the rise goes up 10 % of the 2–18 cm range when the robots' mean finishing distance from the spawn exceeds 3 m, and down 5 % when it is under 1.5 m (legged_gym's terrain curriculum) |
+
+`--curriculum` with rough terrain now really scales the heightfield with
+training progress. Earlier it changed only the `roughness` number and left
+the terrain unchanged, so the earlier rough-curriculum runs trained on full
+relief throughout.
 
 ## How it works
 

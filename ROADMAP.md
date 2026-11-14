@@ -140,7 +140,7 @@ Work top to bottom. Each line links to its task.
 | I10 | [R10.3](#r103--swarm-robotics) Swarms | Done 2026-11-14: ROS2swarm port of per-member scan-only behaviours, scan-sensed cooperative coverage, ground/air member-loss replanning; dispersion and coverage-with-loss measured; aggregation not yet passing; 3–4 drone flight is validation | implemented |
 | I11 | [R10.5](#r105--underwater-worlds-sensing-slam-and-navigation) / [R10.4](#r104--underwater-robots-and-controllers) Marine | Done 2026-11-14: MuJoCo ROV plant (ported Fortress water forces; matches Gazebo), damping-based current feedforward (1 cm drift in 0.1 m/s), volumetric and current-aware AUV routes (unit-tested). PyBullet/Isaac marine, AUV sensor-only localization mission remain | implemented |
 | I12 | [R10.6](#r106--six--and-eight-legged-robots) / [R10.7](#r107--segmented-and-additional-robot-forms) Multi-leg and forms | Done 2026-11-14: depth/IMU flipper policy (sequences a step, but the 4 Nm flippers cannot climb 0.18 m: measured), bounded gait slip/support recovery (unit-tested). Stronger flippers, other backends, per-model terrain missions remain | implemented |
-| I13 | [R5.2](#r52--go2-quadruped-locomotion) / [R5.3](#r53--berkeley-humanoid-lite-balance-and-walking) / [R12](#r12--legged-policy-training) Legged | Get-up strategy, terrain curriculum, BHL retraining, G1/Go2W policies, GPU training | partial |
+| I13 | [R5.2](#r52--go2-quadruped-locomotion) / [R5.3](#r53--berkeley-humanoid-lite-balance-and-walking) / [R12](#r12--legged-policy-training) Legged | 2026-11-14: `get_up` task and stairs curriculum implemented (training runs pending); BHL contract/export, G1/Go2W policies, GPU training remain | partial |
 | I14 | [R5.5](#r55--ackermann-rear-steer-and-anti-ackermann-cars) Cars | Final-heading (parking) control | partial |
 | I15 | [R3.6](#r36--external-robot-assets-in-normal-launch) Assets | Vendor controller interfaces for display-only profiles | partial |
 | I16 | [R6.5](#r65--world-to-occupancy-generation) / [R6.6](#r66--external-world-library) / [R6.2](#r62--dynamic-and-sensor-disturbance-cases) Worlds | Occupancy registration, remaining licensed imports and actors, disturbance cases | partial |
@@ -235,11 +235,14 @@ tier repair awaits its exact-revision published rerun. Details and evidence are 
   Retained negative results: stairs fail at the first ledge, and every get-up
   attempt fails (nominal pose, ported learned actor, support-transfer roll).
   [Go2 tutorial](docs/tutorials/go2.md); full history in the archive.
+- **Done 2026-11-14 (implemented):** a `get_up` training task (starts from
+  physics-settled collapsed poses, staged upright/height/pose rewards) and a
+  stairs terrain with a legged_gym-style rise curriculum (2–18 cm) in
+  `legged_training.py` / `legged_train.py` and the GUI Training page; the
+  rough-terrain curriculum now really rewrites the heightfield.
 - **Remaining implementation:**
-  - a whole-body get-up strategy that acts correctly at a collapsed pose, or
-    a get-up policy trained in the target simulator (R12);
-  - terrain traversal: a terrain-trained policy (R12 curriculum) or
-    a perceptive gait. Flat-ground policies fail the stairs.
+  - train and screen the get-up and stairs policies (a first Go2 `get_up`
+    run is in progress; screens: 60 N collapse, `terrain_stairs`).
 - **How to do it:**
   1. Train `push_recovery` and a get-up task with `legged-train`
      (`robot_lab_adapter/legged_training.py`, `ppo.py`) in MuJoCo, starting
@@ -263,7 +266,10 @@ tier repair awaits its exact-revision published rerun. Details and evidence are 
   ruled out. GUI checkbox `bhl_enable_policy`.
 - **Remaining implementation:** retrain the BHL policy in the target domain.
   Add BHL to `legged_training.py` with its observation/action/PD contract,
-  then train `walk` and `turn_in_place`.
+  then train `walk` and `turn_in_place`. Not done on 2026-11-14: BHL has no
+  rl_sar policy contract and deploys through `humanoid_policy_controller`
+  (commands-first observation order), so the trainer needs a BHL contract
+  template plus an export path to that controller first.
 - **How to do it:**
   1. Read the source policy contract in `src/robot_lab_robots/berkeley_humanoid_lite/` and the
      humanoid controller in `robot_lab_adapter/`.

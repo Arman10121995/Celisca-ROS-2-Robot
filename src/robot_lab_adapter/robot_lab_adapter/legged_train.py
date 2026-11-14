@@ -127,15 +127,21 @@ def train(args):
     started = time.monotonic()
     # Calculate total iterations for curriculum
     total_iters = args.iterations
+    distances, level = [], 0. if args.curriculum else 1.
+    if args.curriculum:
+        env.set_terrain_level(level)
     for iteration in range(start_iteration + 1, start_iteration + args.iterations + 1):
-        # Curriculum: gradually increase roughness from 0 to --roughness
-        if args.curriculum:
-            progress_fraction = (iteration - start_iteration - 1) / max(1, total_iters - 1)
-            current_roughness = args.roughness * progress_fraction
-            # Update the environment's roughness
-            env.roughness = current_roughness
-        else:
-            current_roughness = args.roughness
+        # Curriculum. Rough: relief grows linearly with training progress. Stairs:
+        # legged_gym's terrain curriculum, raising the rise when robots walk far from
+        # the spawn (about the seventh step) and lowering it when they do not.
+        if args.curriculum and args.terrain == 'rough':
+            level = (iteration - start_iteration - 1) / max(1, total_iters - 1)
+            env.set_terrain_level(level)
+        elif args.curriculum and args.terrain == 'stairs' and iteration % 10 == 0 and len(distances) >= 50:
+            mean = float(np.mean(distances[-200:]))
+            level = min(1., level + .1) if mean > 3. else max(0., level - .05) if mean < 1.5 else level
+            env.set_terrain_level(level)
+            distances = []
         tick = time.monotonic()
         sums = {}
         for _ in range(args.steps):
@@ -143,6 +149,7 @@ def train(args):
             obs, reward, done, info = env.step(actions)
             agent.record(reward, done, info['timeout'] & ~info['fallen'])
             returns.extend(info['finished_returns'].tolist())
+            distances.extend(info.get('finished_distance', np.zeros(0)).tolist())
             lengths.extend((info['finished_lengths'] * env.dt).tolist())
             for key, value in info['terms'].items():
                 sums[key] = sums.get(key, 0.0) + value / args.steps
@@ -155,7 +162,8 @@ def train(args):
                     iteration_s=round(time.monotonic() - tick, 3), wall_s=round(time.monotonic() - started, 1),
                     mean_return=float(np.mean(returns)) if returns else None,
                     mean_episode_s=float(np.mean(lengths)) if lengths else None,
-                    terms={k: round(v, 6) for k, v in sums.items()}, **{k: round(v, 6) for k, v in stats.items()})
+                    terms={k: round(v, 6) for k, v in sums.items()}, **{k: round(v, 6) for k, v in stats.items()},
+                    terrain_level=round(level, 3) if args.terrain != 'flat' else None)
         progress.write(json.dumps(line) + '\n')
         if iteration % args.checkpoint_every == 0 or stop['requested'] or (out / 'STOP').exists():
             agent.save(checkpoint, run=run, iteration=iteration, environment_steps=steps_done)
@@ -235,7 +243,7 @@ def main(argv=None):
     t.add_argument('--device', default='cpu')
     t.add_argument('--randomize', action='store_true',
                    help='per-episode friction, added base mass and motor strength')
-    t.add_argument('--terrain', choices=('flat', 'rough'), default='flat')
+    t.add_argument('--terrain', choices=('flat', 'rough', 'stairs'), default='flat')
     t.add_argument('--roughness', type=float, default=0.03, help='rough terrain height range (+- m)')
     t.add_argument('--curriculum', action='store_true',
                    help='gradually increase roughness from 0 to --roughness over training')
@@ -254,7 +262,7 @@ def main(argv=None):
     v.add_argument('--commands', default='0.5,0,0;0,0,0.8;0,0,0')
     v.add_argument('--seconds', type=float, default=6.0)
     v.add_argument('--seed', type=int, default=3)
-    v.add_argument('--terrain', choices=('flat', 'rough'), default='flat')
+    v.add_argument('--terrain', choices=('flat', 'rough', 'stairs'), default='flat')
     v.add_argument('--roughness', type=float, default=0.03)
     v.add_argument('--out', default='')
     args = parser.parse_args(argv)

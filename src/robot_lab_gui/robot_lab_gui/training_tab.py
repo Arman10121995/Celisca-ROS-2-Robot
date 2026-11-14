@@ -31,6 +31,7 @@ TASKS = {
     'turn_in_place': 'Turn on the spot at the commanded yaw rate.',
     'stand': 'Stand still and upright in the default pose.',
     'push_recovery': 'Stand, and recover from random pushes.',
+    'get_up': 'Get up from a collapsed pose and stand in the default pose.',
 }
 
 
@@ -92,14 +93,16 @@ def trainer_pid(run_dir):
 
 
 def trainer_command(robot, task, envs, iterations, steps, learning_rate, seed, out, resume='',
-                    randomize=False, rough=False, obs_noise=False, latency=False):
+                    randomize=False, rough=False, obs_noise=False, latency=False, stairs=False):
     command = [sys.executable, '-m', 'robot_lab_adapter.legged_train', 'train', '--robot', robot,
                '--task', task, '--envs', str(int(envs)), '--iterations', str(int(iterations)),
                '--steps', str(int(steps)), '--learning-rate', repr(float(learning_rate)),
                '--seed', str(int(seed)), '--out', str(out)]
     if randomize:
         command.append('--randomize')
-    if rough:
+    if stairs:
+        command += ['--terrain', 'stairs', '--curriculum']   # rise grows as robots climb farther
+    elif rough:
         command += ['--terrain', 'rough']
     if obs_noise:
         command += ['--obs-noise', '1']
@@ -176,11 +179,13 @@ class TrainingTab(ttk.Frame):
         self.rough_var = tk.BooleanVar(value=False)
         self.noise_var = tk.BooleanVar(value=False)
         self.latency_var = tk.BooleanVar(value=False)
+        self.stairs_var = tk.BooleanVar(value=False)
         options = ttk.Frame(setup)
         options.grid(row=4, column=2, columnspan=2, sticky='w', padx=(12, 0))
         for text, variable in (('Randomise friction, mass, motors', self.randomize_var),
                                ('Rough terrain', self.rough_var), ('Observation noise', self.noise_var),
-                               ('Actuation delay (0-20 ms)', self.latency_var)):
+                               ('Actuation delay (0-20 ms)', self.latency_var),
+                               ('Stairs curriculum (2–18 cm)', self.stairs_var)):
             ttk.Checkbutton(options, text=text, variable=variable).pack(side='left', padx=(0, 10))
         ttk.Label(setup, text='Run folder').grid(row=6, column=0, sticky='w')
         ttk.Entry(setup, textvariable=self.out_var).grid(row=6, column=1, columnspan=3, sticky='ew', pady=2)
@@ -269,7 +274,8 @@ class TrainingTab(ttk.Frame):
             command = trainer_command(robot, task, self.envs_var.get(), self.iterations_var.get(),
                                       self.steps_var.get(), self.lr_var.get(), self.seed_var.get(), out,
                                       self.resume_var.get().strip(), self.randomize_var.get(),
-                                      self.rough_var.get(), self.noise_var.get(), self.latency_var.get())
+                                      self.rough_var.get(), self.noise_var.get(), self.latency_var.get(),
+                                      self.stairs_var.get())
         except (tk.TclError, ValueError) as exc:
             messagebox.showerror('Training settings', str(exc))
             return
@@ -437,7 +443,8 @@ class TrainingTab(ttk.Frame):
         remaining = max(0, planned - done) / rate if rate > 0 else math.nan
         options = [label for key, label in (('randomize', 'randomised'), ('obs_noise', 'noisy observations'),
                                             ('latency_ms', 'delayed actuation'))
-                   if info.get(key)] + (['rough terrain'] if info.get('terrain') == 'rough' else [])
+                   if info.get(key)] + (['rough terrain'] if info.get('terrain') == 'rough' else []) \
+                  + (['stairs curriculum'] if info.get('terrain') == 'stairs' else [])
         self.status.set('%s · %s / %s%s · iteration %d of %s · %.2f M steps · %s steps/s · %.0f s elapsed%s' % (
             Path(run).name, info.get('robot', ''), info.get('task', ''),
             ''.join(' · ' + option for option in options), last['iteration'],

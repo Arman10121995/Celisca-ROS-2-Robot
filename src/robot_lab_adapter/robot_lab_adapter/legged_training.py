@@ -15,16 +15,23 @@ An exported policy is therefore an ordinary policy directory
 
 Tasks (TASKS) are command distributions plus reward terms, in the style of
 legged_gym: ``walk`` (velocity tracking), ``turn_in_place`` (yaw rate with
-the base held in place), ``stand`` (hold the default pose upright) and
-``push_recovery`` (stand while being pushed).
+the base held in place), ``stand`` (hold the default pose upright),
+``push_recovery`` (stand while being pushed) and ``get_up`` (episodes start
+from collapsed poses settled in physics, on the side, back or belly with
+random joints; reward uprightness, then standing height, then the default
+pose; a fall does not end the episode).
 
 Options for transfer beyond the nominal plant (all off by default):
 ``Randomization`` (floor friction, added base mass and motor strength, one
 of K model variants per episode), ``terrain='rough'`` (a smooth random
-heightfield, flat around the spawn) and ``obs_noise`` (legged_gym's
+heightfield, flat around the spawn), ``terrain='stairs'`` (pyramid stairs
+of 0.3 m treads rising from a flat spawn) and ``obs_noise`` (legged_gym's
 per-term observation noise) and ``latency_s`` (an actuation delay drawn
 per episode, 0 to ``latency_s``: the previous targets hold for that many
 physics substeps of each policy step, at most one policy step).
+``set_terrain_level(level)`` (0–1) rewrites the heightfield of every model
+copy: rough relief scales with the level, stair rise goes from 2 cm to
+``STAIR_MAX_RISE_M``. The trainer's curriculum drives it.
 
 This is a training tool, not an evaluation of any robot: a trained policy
 needs its own measured runs before any claim.
@@ -71,6 +78,8 @@ class Task:
     push_interval_s: float = 0.0
     push_velocity: float = 0.0
     rewards: Dict[str, float] = field(default_factory=dict)
+    reset: str = 'standing'          # 'fallen': start from settled collapsed poses
+    terminate_on_fall: bool = True
     # legged_gym's only_positive_rewards: the per-step sum of every term but
     # termination is clipped at zero, so ending an episode early never pays.
     only_positive: bool = True
@@ -96,7 +105,18 @@ TASKS = {
                           push_interval_s=4.0, push_velocity=0.6,
                           rewards=dict(alive=1.0, stand_still=-0.5, hold_position=-0.5, base_height=-20.0,
                                        **_REGULARIZE)),
+    # Rewards are staged: uprightness always, height once roughly upright, pose once standing.
+    'get_up': Task('get_up', 'Get up from a collapsed pose and stand in the default pose.',
+                   reset='fallen', terminate_on_fall=False, only_positive=False, resample_s=1e9,
+                   rewards=dict(upright=2.0, standing_height=2.0, upright_pose=-0.5, ang_vel_xy=-0.05,
+                                torques=-2e-4, dof_acc=-2.5e-7, action_rate=-0.01)),
 }
+
+FALLEN_POOL = 256                  # settled collapsed states drawn by get_up resets
+FALLEN_SETTLE_S = 1.5
+STAIR_TREAD_M = .3
+STAIR_MAX_RISE_M = .18
+STAIR_STEPS = 10
 
 
 @dataclass
@@ -135,6 +155,17 @@ def rough_terrain_heights(seed, roughness=0.03, half_size=TERRAIN_HALF_SIZE_M,
     radius = np.hypot(axis[:, None], axis[None, :])
     heights *= np.clip((radius - flat_radius) / flat_radius, 0.0, 1.0)
     return heights
+
+
+def stairs_terrain_heights(rise, tread=STAIR_TREAD_M, half_size=TERRAIN_HALF_SIZE_M,
+                           resolution=TERRAIN_RESOLUTION_M, flat_radius=TERRAIN_FLAT_RADIUS_M, steps=STAIR_STEPS):
+    """Pyramid stairs (square rings) climbing ``steps`` from a flat spawn, then descending."""
+    cells = int(round(2 * half_size / resolution)) + 1
+    axis = np.linspace(-half_size, half_size, cells)
+    ring = np.maximum(np.abs(axis)[:, None], np.abs(axis)[None, :])
+    index = np.floor(np.maximum(0., ring - flat_radius) / tread)
+    level = np.minimum(index, steps) - np.maximum(0., index - steps)
+    return rise * np.maximum(0., level)
 
 
 def _package_map(urdf):
@@ -188,7 +219,17 @@ def build_model_xml(robot, contract, armature=0.01, terrain='flat', roughness=0.
     option.set('timestep', '%g' % contract.dt)
     option.set('integrator', 'implicitfast')
     worldbody = root.find('worldbody')
-    if terrain == 'rough':
+    if terrain == 'stairs':
+        asset = root.find('asset')
+        if asset is None:
+            asset = ET.SubElement(root, 'asset')
+        cells = int(round(2 * TERRAIN_HALF_SIZE_M / TERRAIN_RESOLUTION_M)) + 1
+        # Data in [0, 1] spans the highest possible landing above z = 0.
+        ET.SubElement(asset, 'hfield', name='training_terrain', nrow=str(cells), ncol=str(cells),
+                      size='%g %g %g 0.1' % (TERRAIN_HALF_SIZE_M, TERRAIN_HALF_SIZE_M, STAIR_MAX_RISE_M * STAIR_STEPS))
+        ET.SubElement(worldbody, 'geom', name='training_floor', type='hfield', hfield='training_terrain',
+                      pos='0 0 0', friction='1 0.005 0.0001')
+    elif terrain == 'rough':
         asset = root.find('asset')
         if asset is None:
             asset = ET.SubElement(root, 'asset')
@@ -202,7 +243,7 @@ def build_model_xml(robot, contract, armature=0.01, terrain='flat', roughness=0.
         ET.SubElement(worldbody, 'geom', name='training_floor', type='plane', size='100 100 0.1',
                       friction='1 0.005 0.0001')
     else:
-        raise ValueError('terrain must be flat or rough, not %r' % terrain)
+        raise ValueError('terrain must be flat, rough or stairs, not %r' % terrain)
     return ET.tostring(root, encoding='unicode')
 
 
@@ -297,10 +338,10 @@ class LeggedTrainingEnv:
         self.num_envs = int(num_envs)
         self.rng = np.random.default_rng(seed)
         self.heights = None
-        if terrain == 'rough':
-            self.heights = rough_terrain_heights(seed, self.roughness)
-            # MuJoCo's hfield rows run along y, columns along x.
-            self.model.hfield_data[:] = ((self.heights.T + self.roughness) / (2 * self.roughness)).ravel()
+        self._relief = rough_terrain_heights(seed, 1.) if terrain == 'rough' else None
+        self.terrain_level = 1.
+        if terrain in ('rough', 'stairs'):
+            self._write_terrain([self.model])
         c = self.contract
         self.dt = c.dt * c.decimation
         # Physics substeps of each policy step that still apply the previous targets.
@@ -374,6 +415,27 @@ class LeggedTrainingEnv:
         mujoco.mj_setConst(model, mujoco.MjData(model))
         return model
 
+    def _write_terrain(self, models):
+        """Heights for the current level into each model's heightfield (rows along y)."""
+        if self.terrain == 'rough':
+            self.heights = self._relief * self.roughness * self.terrain_level
+            data = (self.heights.T + self.roughness) / (2 * self.roughness)
+        else:
+            rise = .02 + self.terrain_level * (STAIR_MAX_RISE_M - .02)
+            self.heights = stairs_terrain_heights(rise)
+            data = self.heights.T / (STAIR_MAX_RISE_M * STAIR_STEPS)
+        for model in models:
+            model.hfield_data[:] = data.ravel()
+
+    def set_terrain_level(self, level):
+        """Curriculum level 0–1 for rough/stairs terrain; returns the stair rise or relief (m)."""
+        if self.terrain not in ('rough', 'stairs'):
+            return 0.
+        self.terrain_level = float(min(1., max(0., level)))
+        self._write_terrain(self.models)
+        return (.02 + self.terrain_level * (STAIR_MAX_RISE_M - .02) if self.terrain == 'stairs'
+                else self.roughness * self.terrain_level)
+
     def terrain_height(self, xy):
         """Floor height (m) under (N, 2) world points."""
         if self.heights is None:
@@ -384,8 +446,40 @@ class LeggedTrainingEnv:
         return self.heights[index[:, 0], index[:, 1]]
 
     # --- state -------------------------------------------------------------
+    def _fallen_pool(self):
+        """Collapsed states: random roll/pitch and joints, dropped and settled with limp PD."""
+        from mujoco import rollout
+        mujoco, model, data, c = self.mujoco, self.model, self._scratch, self.contract
+        lower = model.jnt_range[[mujoco.mj_name2id(model, mujoco.mjtObj.mjOBJ_JOINT, n) for n in self.names]]
+        starts = np.zeros((FALLEN_POOL, self.state_size))
+        targets = np.zeros((FALLEN_POOL, model.nu))
+        for i in range(FALLEN_POOL):
+            mujoco.mj_resetData(model, data)
+            roll = self.rng.choice([self.rng.uniform(-math.pi, math.pi), math.pi / 2 * self.rng.choice([-1, 1]),
+                                    math.pi])
+            pitch, yaw = self.rng.uniform(-.6, .6), self.rng.uniform(-math.pi, math.pi)
+            from scipy.spatial.transform import Rotation
+            q = Rotation.from_euler('xyz', [roll, pitch, yaw]).as_quat()
+            data.qpos[0:3] = (0.0, 0.0, self.stand_height * .8)
+            data.qpos[3:7] = (q[3], q[0], q[1], q[2])
+            span = np.where(lower[:, 1] > lower[:, 0], lower[:, 1] - lower[:, 0], 1.)
+            joints = c.default_dof_pos + self.rng.uniform(-.35, .35, c.num_dofs) * span
+            joints = np.where(lower[:, 1] > lower[:, 0], np.clip(joints, lower[:, 0], lower[:, 1]), joints)
+            data.qpos[self.qpos_index] = np.where(self.wheels, 0.0, joints)
+            mujoco.mj_forward(model, data)
+            mujoco.mj_getState(model, data, starts[i], self.state_spec)
+            targets[i, self.actuator_index] = np.where(self.wheels, 0.0, joints)
+        steps = int(round(FALLEN_SETTLE_S / c.dt))
+        control = np.repeat(targets[:, None, :], steps, axis=1)
+        states, _ = rollout.rollout(model, self.threads, starts, control, persistent_pool=True)
+        return states[:, -1, :].copy()
+
     def _reset_state(self, count):
         """Full physics states for *count* fresh episodes (default pose, small noise)."""
+        if self.task.reset == 'fallen':
+            if getattr(self, '_fallen', None) is None:
+                self._fallen = self._fallen_pool()
+            return self._fallen[self.rng.integers(len(self._fallen), size=count)].copy()
         mujoco, model, data = self.mujoco, self.model, self._scratch
         c = self.contract
         states = np.zeros((count, self.state_size))
@@ -500,9 +594,13 @@ class LeggedTrainingEnv:
             # Leaving the heightfield ends the episode as a time-out, not a fall.
             qpos, _ = self._split(self.state)
             timeout |= np.abs(qpos[:, 0:2]).max(axis=1) > TERRAIN_HALF_SIZE_M - 2.0
-        done = fallen | timeout
+        done = (fallen if self.task.terminate_on_fall else np.zeros_like(fallen)) | timeout
         self.episode_return += reward
-        info = dict(terms=terms, fallen=fallen, timeout=timeout,
+        qpos_now, _ = self._split(self.state)
+        info = dict(terms=terms, fallen=fallen & self.task.terminate_on_fall, timeout=timeout,
+                    finished_distance=np.linalg.norm(qpos_now[done, 0:2] - self.home[done], axis=1),
+                    upright_fraction=float(np.mean(_quat_rotate_inverse(qpos_now[:, 3:7],
+                        np.tile([0.0, 0.0, -1.0], (self.num_envs, 1)))[:, 2] < -.9)),
                     finished_returns=self.episode_return[done].copy(),
                     finished_lengths=self.episode_step[done].copy())
         resample = (self.episode_step % max(1, int(round(self.task.resample_s / self.dt))) == 0) & ~done
@@ -543,7 +641,10 @@ class LeggedTrainingEnv:
             stand_still=np.sum(np.abs(dof_pos - c.default_dof_pos)[:, ~self.wheels], axis=1),
             base_height=(height - self.stand_height) ** 2,
             alive=np.ones(self.num_envs),
-            termination=fallen.astype(np.float64))
+            termination=fallen.astype(np.float64),
+            upright=(1. - gravity[:, 2]) / 2. - .5,
+            standing_height=np.exp(-((height - self.stand_height) / (.25 * self.stand_height)) ** 2) * (gravity[:, 2] < -.7),
+            upright_pose=np.sum(np.abs(dof_pos - c.default_dof_pos)[:, ~self.wheels], axis=1) * (gravity[:, 2] < -.9))
         self.last_dof_vel = dof_vel
         reward = np.zeros(self.num_envs)
         terms = {}

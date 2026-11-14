@@ -2023,6 +2023,9 @@ tasks:
       do not qualify remaining robot/map/backend missions. See docs/REMAINING_WORK_GUIDE.md.'
   R12:
     acceptance_ref: ROADMAP.md R12
+    implementation_state: 2026-11-14 (Claude) get_up task (physics-settled collapsed starts, staged upright/height/pose
+      rewards, no fall termination) and stairs terrain with a rise curriculum; rough --curriculum now rewrites the heightfield
+      (it previously only changed a number).
     depends_on:
     - R5.2
     evidence:
@@ -2883,6 +2886,8 @@ tasks:
         evidence: [docs/status/evidence/drone-moving-2026-11-13/README.md, docs/tutorials/mapped-drone-planning.md]
       R5.2:
         acceptance_ref: ROADMAP.md
+        implementation_state: 2026-11-14 (Claude) get_up and stairs-curriculum training implemented; a first Go2 get_up
+          run is in progress, not screened.
         depends_on:
         - R5.1
         evidence:
