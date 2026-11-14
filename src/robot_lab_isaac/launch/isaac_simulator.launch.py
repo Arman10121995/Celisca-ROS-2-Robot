@@ -172,12 +172,20 @@ def _build_isaac_actions(context):
         LaunchConfiguration("app_settings"), value_type=str)
     # Start the Isaac Sim core (carb/kit-based).  When isaacsim is not
     # installed the node exits gracefully with a clear log message.
+    # R6.2/R7: seeded sensor faults - the faulted sensors move to the relay inputs.
+    faults = context.launch_configurations.get('sensor_faults', '').strip()
+    fault_remaps = []
+    if faults:
+        from robot_lab_utils.sensor_fault_relay import launch_actions
+        fault_remaps, relay = launch_actions(faults, robot_name.perform(context), use_sim_time)
+        actions.append(relay)
     actions.append(
         Node(
             package="robot_lab_isaac",
             executable="isaac_spawner",
             name="isaac_spawner",
             output="screen",
+            remappings=fault_remaps,
             parameters=[spawner_params],
         )
     )
@@ -190,6 +198,7 @@ def _build_isaac_actions(context):
                 executable="sensor_bridge",
                 name="isaac_sensor_bridge",
                 output="screen",
+                remappings=fault_remaps,
                 parameters=[{
                     "robot_name": robot_name,
                     "use_sim_time": use_sim_time,
@@ -225,6 +234,7 @@ def generate_launch_description():
         DeclareLaunchArgument("spawn_z", default_value="0.0"),
         DeclareLaunchArgument("spawn_yaw", default_value="0.0"),
         DeclareLaunchArgument("use_sim_time", default_value="true"),
+        DeclareLaunchArgument('sensor_faults', default_value='',description='Seeded live sensor-fault scenario YAML'),
         DeclareLaunchArgument("gui", default_value="true"),
         DeclareLaunchArgument(
             "hold_position", default_value="false",

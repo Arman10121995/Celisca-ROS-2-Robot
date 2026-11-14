@@ -33,9 +33,16 @@ ros2 launch robot_lab_bringup simulated_robot.launch.py simulator:=gazebo \
   robot_model:=bumperbot map_name:=nav_obstacle sensor_faults:=/path/scenario.yaml
 ```
 
-For each relay, the launch renames the bridge's ROS topic (`/scan` becomes
-`/scan_clean`) and starts the relay on the original name. Every consumer
-then sees the faulted data without any change to its configuration.
+For each relay, the launch moves the sensor to the relay input (`/scan`
+becomes `/scan_clean`) and starts the relay on the original name. Gazebo
+renames the bridge's ROS topic. MuJoCo, PyBullet and Isaac remap their own
+sensor publishers. Every consumer then sees the faulted data without any
+change to its configuration. `simulator:=mujoco` (or `pybullet`, `isaac`)
+takes the same argument.
+
+MuJoCo, PyBullet and Isaac publish exact sensors, so this relay is their
+only seeded noise. Gazebo adds its own noise models. `sim_seed:=<n>` makes
+that noise repeat ([measurement](../status/evidence/r7-simulator-seed-2026-11-14/README.md)).
 
 ## Faults
 
@@ -62,8 +69,8 @@ traces checks that a degraded run repeats.
 
 ## Limits
 
-- Gazebo only. MuJoCo, PyBullet and Isaac publish their sensors from their
-  own bridges, and the launch refuses `sensor_faults` there.
+- Smoke-run on Gazebo and MuJoCo (+0.5 m scan bias seen on `/scan`).
+  PyBullet and Isaac use the same remapping but have not been run.
 - Faults apply to the message values only. A physical effect such as glare
   or motion blur is not modelled.
 - Recovery-time measurements are validation work (V9). The relay has unit

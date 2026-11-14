@@ -1,5 +1,14 @@
 # Current Robot Lab status
 
+November 14 Claude: algorithm breadth implementation (I19/R7) is done, experimental; the fair comparisons remain V10.
+- **[Simulator seeds](evidence/r7-simulator-seed-2026-11-14/README.md):** `sim_seed:=<n>` now seeds Gazebo's sensor noise. In a measured IMU world, the same seed repeated 300 of 300 noisy samples; another seed or no seed matched none. MuJoCo, PyBullet and Isaac publish exact sensors. Their seeded noise is the sensor-fault relay, which `sensor_faults:=` now starts on every backend.
+- **Sensor-fault fix:** the relay script had never been installed, so `sensor_faults:=` failed at launch, on Gazebo too. Smoke runs on Gazebo and MuJoCo showed the +0.5 m scan bias.
+- **[Method records](evidence/r7-method-records-2026-11-14/README.md):** the ledger now has one record per algorithm id (78) with its dispatch target, install state, tests, mathematics and a name/math check. Reading the code found:
+  - **9 corrected:** for example, `laser_scan_to_pointcloud` started the reverse conversion, and the retired MAVROS stub was still selectable.
+  - **8 mismatches kept, with a note:** for example, `dijkstra_planner` is the same NavFn as `navfn_planner`, and `imu_complementary_filter` is Madgwick.
+
+November 14 Claude: [the first Go2 get-up policy](evidence/go2-get-up-2026-11-14/README.md) does **not** pass. After 1500 iterations it stood in 1 of 10 trials from collapsed poses, and it never recovers the recurring pose tilted past 90°.
+
 November 14 Codex: Stretch now tries bounded alternate source IK configurations and shares their valid endpoints in one collision search. The synthetic native wrist case selects an alternate configuration and passes independent dense contact inspection; 43 focused checks and three builds pass. [Scope](ik-branches-2026-11-14.md). A complete loaded source-robot mission remains pending. Claude's algorithm/seed/launch work is separate.
 
 November 14 CI follow-up: both workflows pin the documented MAVLink runtime. Two fleet/swarm tests that import rclpy now remain required in the sourced integration tier; 20 local checks pass. [Published failures and repairs](evidence/ci-mavlink-2026-11-14/README.md). Full exact-revision CI is pending.

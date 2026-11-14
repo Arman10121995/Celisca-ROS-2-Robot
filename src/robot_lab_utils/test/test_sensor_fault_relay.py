@@ -77,3 +77,19 @@ def test_imu_and_depth_image_faults():
     Relay(dict(input='/d_clean', output='/d', type='Image', faults=[dict(kind='occlusion', fraction=.5)]), 0, 0).receive(depth, 0.)
     values = np.frombuffer(depth.data, dtype=np.float32).reshape(4, 5)
     assert np.isnan(values).sum() == 10
+
+
+def test_launch_actions_move_faulted_topics_to_relay_inputs(tmp_path, monkeypatch):
+    """MuJoCo/PyBullet/Isaac: their sensor publishers are remapped onto the relay inputs."""
+    import yaml
+    from robot_lab_utils.sensor_fault_relay import launch_actions
+    monkeypatch.setenv('ROBOT_LAB_RUNTIME_ROOT', str(tmp_path))
+    scenario = tmp_path / 'faults.yaml'
+    scenario.write_text(yaml.safe_dump(dict(seed=3, relays=[dict(input='/scan_clean', output='/scan', type='LaserScan'),
+                                                             dict(input='/imu_clean', output='/imu/out', type='Imu')])))
+    remappings, relay = launch_actions(str(scenario), 'bumperbot', True)
+    assert remappings == [('/scan', '/scan_clean'), ('/imu/out', '/imu_clean')]
+    assert relay.node_executable == 'sensor_fault_relay.py' and (tmp_path / 'sensor_faults').is_dir()
+    scenario.write_text(yaml.safe_dump(dict(relays=[dict(input='/truth_clean', output='/scan', type='LaserScan')])))
+    with pytest.raises(ValueError):
+        launch_actions(str(scenario), 'bumperbot', True)

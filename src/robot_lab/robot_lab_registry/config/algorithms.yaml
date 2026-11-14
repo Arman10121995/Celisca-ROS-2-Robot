@@ -88,7 +88,7 @@
   family: pointcloud_conversion
   implementation:
     package: pointcloud_to_laserscan
-    executable: pointcloud_to_laserscan_node
+    executable: laserscan_to_pointcloud_node
     language: cpp
   input_contract:
     required_topics:
@@ -126,7 +126,7 @@
   family: costmap
   implementation:
     package: nav2_costmap_2d
-    plugin: nav2_costmap_2d::ObservationLayer
+    plugin: nav2_costmap_2d::ObstacleLayer
     language: cpp
   input_contract:
     required_topics:
@@ -347,7 +347,7 @@
   family: kalman_filter
   implementation:
     package: robot_localization
-    plugin: nav2_ekf_node
+    executable: ekf_node
     language: cpp
   input_contract:
     required_topics:
@@ -509,7 +509,7 @@
   family: kalman_filter
   implementation:
     package: robot_localization
-    plugin: nav2_ekf_node
+    executable: ekf_node
     language: cpp
   input_contract:
     required_topics:
@@ -566,7 +566,7 @@
   description: "Upstream imu_tools Madgwick attitude filter (the id predates the name); /imu/out in, /imu/madgwick_upstream out"
   status: integrated
   category: sensor_fusion
-  family: complementary_filter
+  family: gradient_descent
   implementation:
     package: imu_filter_madgwick
     executable: imu_filter_madgwick_node
@@ -625,14 +625,14 @@
   - republish
 - id: dijkstra_planner
   version: 1.0.0
-  name: Dijkstra Planner
-  description: Dijkstra's algorithm for grid-based path planning
+  name: Dijkstra Planner (NavFn)
+  description: Dijkstra wavefront on the costmap; dispatched as NavFn with use_astar false, the same method as navfn_planner
   status: integrated
   category: global_planning
   family: grid_search
   implementation:
-    package: robot_lab_planning
-    plugin: DijkstraPlanner
+    package: nav2_navfn_planner
+    plugin: nav2_navfn_planner/NavfnPlanner
     language: cpp
   input_contract:
     required_topics:
@@ -657,13 +657,13 @@
 - id: a_star_planner
   version: 1.0.0
   name: A* Planner
-  description: A* algorithm for grid-based path planning with heuristic
+  description: A* on the costmap grid with a cost-aware heuristic (Nav2 Smac 2D)
   status: integrated
   category: global_planning
   family: grid_search
   implementation:
-    package: robot_lab_planning
-    plugin: AStarPlanner
+    package: nav2_smac_planner
+    plugin: nav2_smac_planner/SmacPlanner2D
     language: cpp
   input_contract:
     required_topics:
@@ -690,10 +690,10 @@
 - id: navfn_planner
   version: 1.0.0
   name: NavFn Planner
-  description: Navigation Function planner using potential fields
+  description: Navigation function by a Dijkstra wavefront over the costmap (A* when use_astar), descended by gradient
   status: integrated
   category: global_planning
-  family: potential_field
+  family: grid_search
   implementation:
     package: nav2_navfn_planner
     plugin: nav2_navfn_planner::NavfnPlanner
@@ -792,13 +792,13 @@
 - id: teb_local_planner
   version: 1.0.0
   name: TEB Local Planner
-  description: Timed Elastic Band local planner for collision-free trajectory optimization
-  status: integrated
+  description: Timed Elastic Band local planner for collision-free trajectory optimization; cataloged only (teb_local_planner is not installed)
+  status: cataloged
   category: local_planning
   family: optimization_based
   implementation:
-    package: nav2_teb_planner
-    plugin: nav2_teb_planner::TebLocalPlanner
+    package: teb_local_planner
+    plugin: teb_local_planner::TebLocalPlannerROS
     language: cpp
   input_contract:
     required_topics:
@@ -894,15 +894,15 @@
   updated: '2026-09-11'
 - id: pure_pursuit
   version: 1.0.0
-  name: Pure Pursuit
-  description: Pure pursuit algorithm for path following
+  name: Regulated Pure Pursuit (Nav2)
+  description: Nav2 Regulated Pure Pursuit - lookahead curvature with curvature/cost speed regulation
   status: integrated
   category: local_planning
   family: path_following
   implementation:
-    package: robot_lab_motion
-    executable: pure_pursuit
-    language: python
+    package: nav2_regulated_pure_pursuit_controller
+    plugin: nav2_regulated_pure_pursuit_controller::RegulatedPurePursuitController
+    language: cpp
   input_contract:
     required_topics:
     - /plan
@@ -978,10 +978,10 @@
 - id: simple_controller
   version: 1.0.0
   name: Simple Controller
-  description: Simple PID controller for differential drive robots
+  description: Differential-drive inverse kinematics (twist to wheel speeds) and wheel odometry; no feedback law
   status: integrated
   category: control
-  family: pid_control
+  family: differential_kinematics
   implementation:
     package: robot_lab_controller
     plugin: SimpleController
@@ -1012,10 +1012,10 @@
 - id: noisy_controller
   version: 1.0.0
   name: Noisy Controller
-  description: PID controller with configurable noise for testing robustness
+  description: Wheel odometry with Gaussian encoder noise (0.005 rad) for testing estimators; no feedback law
   status: integrated
   category: control
-  family: pid
+  family: noisy_odometry
   implementation:
     package: robot_lab_controller
     plugin: NoisyController
@@ -1510,14 +1510,13 @@
 - id: mavros_offboard_controller
   version: 1.0.0
   name: MAVROS Offboard Controller
-  description: Publishes mavros_msgs/AttitudeTarget and PositionTarget for offboard
-    control of multirotor SITL; relays setpoints to the ArduPilot FCU bridge for simulated
-    waypoint and attitude control
-  status: integrated
+  description: Retired zero-thrust mavros_msgs/AttitudeTarget demonstration (its node raises on start);
+    PX4 flight runs as px4_x500 with px4_ros_controller
+  status: blocked
   category: control
   family: mavlink
   implementation:
-    package: quadrotor_sitl
+    package: robot_lab_adapter
     executable: mavros_offboard_controller.py
     language: python
   input_contract:

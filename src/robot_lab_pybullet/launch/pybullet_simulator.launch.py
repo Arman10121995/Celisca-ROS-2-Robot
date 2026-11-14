@@ -86,12 +86,20 @@ def _build_pybullet_actions(context):
         load_description(model_path) if spawn_robot else None))
     if hold_position is not None:
         spawner_params["hold_position"] = ParameterValue(hold_position, value_type=str)
+    # R6.2/R7: seeded sensor faults - the faulted sensors move to the relay inputs.
+    faults = context.launch_configurations.get('sensor_faults', '').strip()
+    fault_remaps = []
+    if faults:
+        from robot_lab_utils.sensor_fault_relay import launch_actions
+        fault_remaps, relay = launch_actions(faults, robot_name.perform(context), use_sim_time)
+        actions.append(relay)
     actions.append(
         Node(
             package="robot_lab_pybullet",
             executable="pybullet_spawner",
             name="pybullet_spawner",
             output="screen",
+            remappings=fault_remaps,
             parameters=[spawner_params],
         )
     )
@@ -127,6 +135,7 @@ def generate_launch_description():
         DeclareLaunchArgument("spawn_z", default_value="0.0"),
         DeclareLaunchArgument("spawn_yaw", default_value="0.0"),
         DeclareLaunchArgument("use_sim_time", default_value="true"),
+        DeclareLaunchArgument('sensor_faults', default_value='',description='Seeded live sensor-fault scenario YAML'),
         DeclareLaunchArgument("gui", default_value="true"),
         DeclareLaunchArgument(
             "hold_position", default_value="false",

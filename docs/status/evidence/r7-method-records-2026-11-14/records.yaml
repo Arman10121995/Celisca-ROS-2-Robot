@@ -1,0 +1,1296 @@
+generated: '2026-11-14'
+summary:
+  methods: 78
+  installed: 71
+  not_installed: 1
+  unavailable: 6
+  with_subrecord: 42
+  with_tests: 57
+  name_math_consistent: 59
+  name_math_corrected: 9
+  name_math_mismatch: 8
+  name_math_not_a_method: 2
+records:
+- id: backstepping_controller
+  category: control
+  name: Backstepping Path Tracker
+  family: backstepping
+  catalog_status: integrated
+  dispatch: node robot_lab_algorithms/nav2_local_planner planner=backstepping
+  installed: true
+  installed_detail: robot_lab_algorithms/nav2_local_planner
+  mathematics: Lyapunov/backstepping tracking law for the unicycle
+  subrecord: true
+  mathematics_source: subrecord
+  tests:
+  - src/robot_lab_algorithms/test/test_r7_benchmark_framework.py
+  - src/robot_lab_algorithms/test/test_r7_simple_verification.py
+  - src/robot_lab_bringup/test/test_nav2_adapter_dispatch.py
+  name_math: consistent
+  notes: []
+- id: bicycle_mpc
+  category: control
+  name: Bicycle Steering-Rate MPC (experimental)
+  family: bicycle_mpc
+  catalog_status: integrated
+  dispatch: node robot_lab_algorithms/nav2_bicycle planner=bicycle_mpc
+  installed: true
+  installed_detail: robot_lab_algorithms/nav2_bicycle
+  mathematics: Linearised kinematic bicycle, steering-rate MPC over a 3-20 step horizon, warm-started, with a solve
+    deadline
+  subrecord: false
+  mathematics_source: curated
+  tests:
+  - src/robot_lab_algorithms/test/test_bicycle_control.py
+  name_math: consistent
+  notes: []
+- id: bicycle_pure_pursuit
+  category: control
+  name: Bicycle Pure Pursuit (experimental)
+  family: bicycle_geometric
+  catalog_status: integrated
+  dispatch: node robot_lab_algorithms/nav2_bicycle planner=bicycle_pure_pursuit
+  installed: true
+  installed_detail: robot_lab_algorithms/nav2_bicycle
+  mathematics: Kinematic bicycle at the fixed axle; curvature 2 y / L_d^2 to a lookahead point, kappa = tan(delta)
+    / L, steering and slew limits from the source
+  subrecord: false
+  mathematics_source: curated
+  tests: []
+  name_math: consistent
+  notes: []
+- id: bicycle_stanley
+  category: control
+  name: Bicycle Stanley (experimental)
+  family: bicycle_geometric
+  catalog_status: integrated
+  dispatch: node robot_lab_algorithms/nav2_bicycle planner=bicycle_stanley
+  installed: true
+  installed_detail: robot_lab_algorithms/nav2_bicycle
+  mathematics: Stanley law delta = heading error + atan(k e / v) at the fixed axle, with a rear-steer feedback adaptation
+    and source steering limits
+  subrecord: false
+  mathematics_source: curated
+  tests:
+  - src/robot_lab_algorithms/test/test_bicycle_control.py
+  name_math: consistent
+  notes: []
+- id: cleaning_controller
+  category: control
+  name: Cleaning Controller
+  family: task_specific
+  catalog_status: integrated
+  dispatch: node robot_lab_controller/cleaning_controller.py
+  installed: true
+  installed_detail: robot_lab_controller/cleaning_controller.py
+  mathematics: Boustrophedon-style coverage lanes over the cleanable grid cells, tracking cleaned cells
+  subrecord: false
+  mathematics_source: curated
+  tests: []
+  name_math: consistent
+  notes: []
+- id: feedback_linearization
+  category: control
+  name: Feedback-Linearisation Path Tracker
+  family: feedback_linearization
+  catalog_status: integrated
+  dispatch: node robot_lab_algorithms/nav2_local_planner planner=feedback_linearization
+  installed: true
+  installed_detail: robot_lab_algorithms/nav2_local_planner
+  mathematics: Static input-output linearisation of a point ahead of the wheel axle
+  subrecord: true
+  mathematics_source: subrecord
+  tests:
+  - src/robot_lab_algorithms/test/test_r7_benchmark_framework.py
+  - src/robot_lab_algorithms/test/test_tracking_control.py
+  - src/robot_lab_bringup/test/test_nav2_adapter_dispatch.py
+  name_math: consistent
+  notes: []
+- id: humanoid_policy_controller
+  category: control
+  name: Humanoid ONNX Policy Controller
+  family: learned_policy
+  catalog_status: integrated
+  dispatch: node robot_lab_adapter/humanoid-policy-controller
+  installed: true
+  installed_detail: robot_lab_adapter/humanoid-policy-controller
+  mathematics: 'Learned ONNX policy: joint/IMU observation to joint position targets'
+  subrecord: false
+  mathematics_source: curated
+  tests:
+  - src/robot_lab_adapter/test/test_r5_3_bhl_backend_contract.py
+  name_math: consistent
+  notes: []
+- id: humanoid_standing_controller
+  category: control
+  name: Humanoid Standing Controller
+  family: joint_position
+  catalog_status: integrated
+  dispatch: node robot_lab_adapter/humanoid-standing-controller
+  installed: true
+  installed_detail: robot_lab_adapter/humanoid-standing-controller
+  mathematics: Joint PD to a standing pose (legs Kp 120, Kd 4 N m/rad) plus an IMU ankle balance strategy and a
+    latched tilt monitor
+  subrecord: false
+  mathematics_source: curated
+  tests:
+  - src/robot_lab/robot_lab_registry/test/test_bhl_qualification.py
+  - src/robot_lab/robot_lab_registry/test/test_r3_2_composition_compatibility.py
+  name_math: consistent
+  notes: []
+- id: joint_effort_commander
+  category: control
+  name: Joint Effort Commander
+  family: joint_effort
+  catalog_status: integrated
+  dispatch: node robot_lab_adapter/joint-effort-commander
+  installed: true
+  installed_detail: robot_lab_adapter/joint-effort-commander
+  mathematics: Fixed-rate effort command relay to a forward_command_controller (no feedback law)
+  subrecord: false
+  mathematics_source: curated
+  tests: []
+  name_math: consistent
+  notes: []
+- id: lqr_controller
+  category: control
+  name: LQR Path-Tracking Controller
+  family: lqr
+  catalog_status: integrated
+  dispatch: node robot_lab_algorithms/nav2_local_planner planner=lqr
+  installed: true
+  installed_detail: robot_lab_algorithms/nav2_local_planner
+  mathematics: Discrete LQR on the lateral/heading error linearised about the path
+  subrecord: true
+  mathematics_source: subrecord
+  tests:
+  - src/robot_lab_algorithms/test/test_r7_benchmark_framework.py
+  - src/robot_lab_algorithms/test/test_r7_simple_verification.py
+  - src/robot_lab_bringup/test/test_nav2_adapter_dispatch.py
+  name_math: consistent
+  notes: []
+- id: map_coverage_controller
+  category: control
+  name: Map Coverage Controller
+  family: task_specific
+  catalog_status: integrated
+  dispatch: node robot_lab_controller/mapping_controller.py
+  installed: true
+  installed_detail: robot_lab_controller/mapping_controller.py
+  mathematics: Frontier exploration of the occupancy grid, then wall following to confirm cells
+  subrecord: false
+  mathematics_source: curated
+  tests: []
+  name_math: consistent
+  notes: []
+- id: mavros_offboard_controller
+  category: control
+  name: MAVROS Offboard Controller
+  family: mavlink
+  catalog_status: blocked
+  dispatch: unavailable retired - the zero-thrust AttitudeTarget demonstration does not hover; fly px4_x500 in mode:=flight
+  installed: false
+  installed_detail: 'unavailable: retired - the zero-thrust AttitudeTarget demonstration does not hover; fly px4_x500
+    in mode:=flight'
+  mathematics: 'Retired: constant zero-thrust AttitudeTarget (no control law)'
+  subrecord: false
+  mathematics_source: curated
+  tests:
+  - src/robot_lab/robot_lab_registry/test/test_quadrotor_sitl_qualification.py
+  - src/robot_lab_utils/test/test_algorithm_method_records.py
+  name_math: corrected
+  notes:
+  - Retired zero-thrust AttitudeTarget stub whose node raises on start, yet its dispatch still started it. Now unavailable,
+    status blocked.
+- id: mpc_controller
+  category: control
+  name: Constrained Linear MPC Path Tracker
+  family: mpc
+  catalog_status: integrated
+  dispatch: node robot_lab_algorithms/nav2_local_planner planner=linear_mpc
+  installed: true
+  installed_detail: robot_lab_algorithms/nav2_local_planner
+  mathematics: Linear time-varying MPC on the lateral error model with hard turn-rate bounds
+  subrecord: true
+  mathematics_source: subrecord
+  tests:
+  - src/robot_lab_algorithms/test/test_r7_benchmark_framework.py
+  - src/robot_lab_bringup/test/test_nav2_adapter_dispatch.py
+  name_math: consistent
+  notes: []
+- id: native_holonomic_controller
+  category: control
+  name: Native Holonomic Wheel Control
+  family: kinematic_control
+  catalog_status: integrated
+  dispatch: stack controller
+  installed: true
+  installed_detail: stack controller
+  mathematics: Mecanum / four-wheel-steer inverse kinematics from body twist to wheel commands
+  subrecord: false
+  mathematics_source: curated
+  tests:
+  - src/robot_lab_utils/test/test_algorithm_method_records.py
+  name_math: consistent
+  notes: []
+- id: native_tracked_controller
+  category: control
+  name: Native tracked command owner
+  family: bounded_teleoperation
+  catalog_status: integrated
+  dispatch: stack native_tracked
+  installed: true
+  installed_detail: stack native_tracked
+  mathematics: Bounded command gate to Gazebo TrackController belt contact (skid steering)
+  subrecord: false
+  mathematics_source: curated
+  tests: []
+  name_math: consistent
+  notes: []
+- id: noisy_controller
+  category: control
+  name: Noisy Controller
+  family: noisy_odometry
+  catalog_status: integrated
+  dispatch: node robot_lab_controller/noisy_controller
+  installed: true
+  installed_detail: robot_lab_controller/noisy_controller
+  mathematics: Differential-drive wheel odometry with Gaussian encoder noise (sigma 0.005 rad)
+  subrecord: false
+  mathematics_source: curated
+  tests: []
+  name_math: corrected
+  notes:
+  - Was catalogued as PID; it is wheel odometry with Gaussian encoder noise (sigma 0.005 rad), with no feedback
+    law.
+- id: nonlinear_mpc
+  category: control
+  name: Nonlinear MPC Path Tracker
+  family: mpc
+  catalog_status: integrated
+  dispatch: node robot_lab_algorithms/nav2_local_planner planner=nonlinear_mpc
+  installed: true
+  installed_detail: robot_lab_algorithms/nav2_local_planner
+  mathematics: Nonlinear MPC on the unicycle kinematics, single shooting with an adjoint gradient
+  subrecord: true
+  mathematics_source: subrecord
+  tests:
+  - src/robot_lab_algorithms/test/test_r7_benchmark_framework.py
+  - src/robot_lab_bringup/test/test_nav2_adapter_dispatch.py
+  name_math: consistent
+  notes: []
+- id: pid_controller
+  category: control
+  name: PID Path-Tracking Controller
+  family: pid
+  catalog_status: integrated
+  dispatch: node robot_lab_algorithms/nav2_local_planner planner=pid
+  installed: true
+  installed_detail: robot_lab_algorithms/nav2_local_planner
+  mathematics: PID on a heading error that folds in the lateral offset, with curvature feedforward
+  subrecord: true
+  mathematics_source: subrecord
+  tests:
+  - src/robot_lab_algorithms/test/test_r7_benchmark_framework.py
+  - src/robot_lab_algorithms/test/test_r7_simple_verification.py
+  - src/robot_lab_bringup/test/test_nav2_adapter_dispatch.py
+  name_math: consistent
+  notes: []
+- id: simple_controller
+  category: control
+  name: Simple Controller
+  family: differential_kinematics
+  catalog_status: integrated
+  dispatch: stack controller
+  installed: true
+  installed_detail: stack controller
+  mathematics: Differential-drive inverse kinematics v_l,r = (v -/+ w b/2) / r and wheel odometry
+  subrecord: false
+  mathematics_source: curated
+  tests:
+  - src/robot_lab/robot_lab_registry/test/test_registry.py
+  - src/robot_lab_adapter/test/test_launch_fragments.py
+  - src/robot_lab_adapter/test/test_selectors.py
+  name_math: corrected
+  notes:
+  - Was catalogued as PID; it is differential-drive inverse kinematics plus wheel odometry, with no feedback law.
+- id: twist_relay
+  category: control
+  name: Twist Relay
+  family: relay
+  catalog_status: integrated
+  dispatch: node robot_lab_controller/twist_relay
+  installed: true
+  installed_detail: robot_lab_controller/twist_relay
+  mathematics: Twist / TwistStamped relay
+  subrecord: false
+  mathematics_source: curated
+  tests: []
+  name_math: not_a_method
+  notes:
+  - Message relay, not a control law.
+- id: a_star_planner
+  category: global_planning
+  name: A* Planner
+  family: grid_search
+  catalog_status: integrated
+  dispatch: plugin nav2_smac_planner/SmacPlanner2D
+  installed: true
+  installed_detail: nav2_smac_planner/SmacPlanner2D
+  mathematics: A* on the costmap grid with cost-aware edges
+  subrecord: true
+  mathematics_source: subrecord
+  tests:
+  - src/robot_lab_adapter/test/test_r3_3_resolver_executor.py
+  - src/robot_lab_algorithms/test/test_r7_benchmark_framework.py
+  - src/robot_lab_bringup/test/test_algorithm_dispatch.py
+  - src/robot_lab_bringup/test/test_asset_runtime_support.py
+  - src/robot_lab_gui/test/test_command_autofill.py
+  - src/robot_lab_gui/test/test_r3_4_gui_composition.py
+  name_math: corrected
+  notes:
+  - Runs Nav2 Smac 2D (A* with a cost-aware heuristic); the catalog named the undispatched robot_lab_planning::AStarPlanner.
+- id: dijkstra_planner
+  category: global_planning
+  name: Dijkstra Planner (NavFn)
+  family: grid_search
+  catalog_status: integrated
+  dispatch: plugin nav2_navfn_planner/NavfnPlanner
+  installed: true
+  installed_detail: nav2_navfn_planner/NavfnPlanner
+  mathematics: Dijkstra wavefront navigation function on the costmap (NavFn with use_astar false)
+  subrecord: false
+  mathematics_source: curated
+  tests:
+  - src/robot_lab/robot_lab_benchmark/test/test_r4_3_planner_comparison.py
+  - src/robot_lab_adapter/test/test_adapter.py
+  - src/robot_lab_adapter/test/test_r3_3_resolver_executor.py
+  - src/robot_lab_algorithms/test/test_r7_benchmark_framework.py
+  - src/robot_lab_bringup/test/test_algorithm_dispatch.py
+  - src/robot_lab_utils/test/test_algorithm_method_records.py
+  name_math: mismatch
+  notes:
+  - Dispatches the same NavFn plugin as navfn_planner (use_astar false, i.e. Dijkstra), so the two ids are one method
+    and not separate comparison arms; robot_lab_planning::DijkstraPlanner is built but not dispatched.
+  - same dispatch entry as navfn_planner
+- id: hybrid_a_star_planner
+  category: global_planning
+  name: Hybrid A* Planner
+  family: kinodynamic_search
+  catalog_status: integrated
+  dispatch: plugin nav2_smac_planner/SmacPlannerHybrid
+  installed: true
+  installed_detail: nav2_smac_planner/SmacPlannerHybrid
+  mathematics: A* over (x, y, heading) with Dubins/Reeds-Shepp motion primitives
+  subrecord: true
+  mathematics_source: subrecord
+  tests: []
+  name_math: consistent
+  notes: []
+- id: navfn_planner
+  category: global_planning
+  name: NavFn Planner
+  family: grid_search
+  catalog_status: integrated
+  dispatch: plugin nav2_navfn_planner/NavfnPlanner
+  installed: true
+  installed_detail: nav2_navfn_planner/NavfnPlanner
+  mathematics: Dijkstra potential field propagated from the goal
+  subrecord: true
+  mathematics_source: subrecord
+  tests:
+  - src/robot_lab/robot_lab_benchmark/test/test_r4_3_planner_comparison.py
+  - src/robot_lab/robot_lab_registry/test/test_r3_2_composition_compatibility.py
+  - src/robot_lab/robot_lab_registry/test/test_registry.py
+  - src/robot_lab_adapter/test/test_r3_3_resolver_executor.py
+  - src/robot_lab_gui/test/test_command_autofill.py
+  - src/robot_lab_gui/test/test_r3_4_gui_composition.py
+  - src/robot_lab_utils/test/test_algorithm_method_records.py
+  name_math: corrected
+  notes:
+  - Was catalogued as a potential field; NavFn is a Dijkstra wavefront navigation function (A* with use_astar) descended
+    by gradient, i.e. grid search.
+  - same dispatch entry as dijkstra_planner
+- id: prm_planner
+  category: global_planning
+  name: null
+  family: null
+  catalog_status: dispatch only
+  dispatch: node robot_lab_algorithms/nav2_global_planner planner=prm_planner
+  installed: true
+  installed_detail: robot_lab_algorithms/nav2_global_planner
+  mathematics: 'Probabilistic roadmap: 600 free samples, k = 12 nearest-neighbour edges, Dijkstra'
+  subrecord: true
+  mathematics_source: subrecord
+  tests:
+  - src/robot_lab_algorithms/test/test_r7_benchmark_framework.py
+  - src/robot_lab_bringup/test/test_nav2_adapter_dispatch.py
+  name_math: consistent
+  notes: []
+- id: rrt_planner
+  category: global_planning
+  name: RRT Planner
+  family: sampling
+  catalog_status: integrated
+  dispatch: node robot_lab_algorithms/nav2_global_planner planner=rrt_planner
+  installed: true
+  installed_detail: robot_lab_algorithms/nav2_global_planner
+  mathematics: Goal-biased rapidly-exploring random tree with collision-checked edges
+  subrecord: true
+  mathematics_source: subrecord
+  tests:
+  - src/robot_lab/robot_lab_registry/test/test_p5_algorithm_breadth.py
+  - src/robot_lab_algorithms/test/test_nav2_adapters.py
+  - src/robot_lab_algorithms/test/test_r7_benchmark_framework.py
+  - src/robot_lab_bringup/test/test_algorithm_dispatch.py
+  - src/robot_lab_bringup/test/test_nav2_adapter_dispatch.py
+  name_math: consistent
+  notes: []
+- id: rrt_star_planner
+  category: global_planning
+  name: null
+  family: null
+  catalog_status: dispatch only
+  dispatch: node robot_lab_algorithms/nav2_global_planner planner=rrt_star_planner
+  installed: true
+  installed_detail: robot_lab_algorithms/nav2_global_planner
+  mathematics: RRT with best-parent choice and rewiring, anytime within 1 s
+  subrecord: true
+  mathematics_source: subrecord
+  tests:
+  - src/robot_lab_algorithms/test/test_nav2_adapters.py
+  - src/robot_lab_algorithms/test/test_r7_benchmark_framework.py
+  - src/robot_lab_bringup/test/test_nav2_adapter_dispatch.py
+  name_math: consistent
+  notes: []
+- id: state_lattice_planner
+  category: global_planning
+  name: State Lattice Planner
+  family: kinodynamic_search
+  catalog_status: integrated
+  dispatch: plugin nav2_smac_planner/SmacPlannerLattice
+  installed: true
+  installed_detail: nav2_smac_planner/SmacPlannerLattice
+  mathematics: Search over precomputed kinematically feasible motion primitives
+  subrecord: true
+  mathematics_source: subrecord
+  tests: []
+  name_math: consistent
+  notes: []
+- id: voronoi_planner
+  category: global_planning
+  name: Voronoi Planner
+  family: roadmap
+  catalog_status: integrated
+  dispatch: node robot_lab_algorithms/nav2_global_planner planner=voronoi_planner
+  installed: true
+  installed_detail: robot_lab_algorithms/nav2_global_planner
+  mathematics: Path along the generalized Voronoi diagram (maximum clearance)
+  subrecord: true
+  mathematics_source: subrecord
+  tests:
+  - src/robot_lab/robot_lab_registry/test/test_p5_algorithm_breadth.py
+  - src/robot_lab_algorithms/test/test_nav2_adapters.py
+  - src/robot_lab_algorithms/test/test_r7_benchmark_framework.py
+  - src/robot_lab_bringup/test/test_nav2_adapter_dispatch.py
+  name_math: consistent
+  notes: []
+- id: dwb_local_planner
+  category: local_planning
+  name: DWB Local Planner
+  family: sampling_based
+  catalog_status: integrated
+  dispatch: plugin dwb_core::DWBLocalPlanner
+  installed: true
+  installed_detail: dwb_core::DWBLocalPlanner
+  mathematics: 'Trajectory rollout: dynamic window velocity samples, rollouts scored with critics'
+  subrecord: true
+  mathematics_source: subrecord
+  tests:
+  - src/robot_lab_adapter/test/test_r3_3_resolver_executor.py
+  - src/robot_lab_algorithms/test/test_r7_benchmark_framework.py
+  - src/robot_lab_bringup/test/test_algorithm_dispatch.py
+  - src/robot_lab_gui/test/test_command_autofill.py
+  name_math: consistent
+  notes: []
+- id: follow_the_gap
+  category: local_planning
+  name: Follow The Gap
+  family: reactive
+  catalog_status: integrated
+  dispatch: node robot_lab_algorithms/nav2_local_planner planner=follow_the_gap
+  installed: true
+  installed_detail: robot_lab_algorithms/nav2_local_planner
+  mathematics: 'Reactive: steer toward the free scan gap closest to the path direction'
+  subrecord: true
+  mathematics_source: subrecord
+  tests:
+  - src/robot_lab/robot_lab_registry/test/test_p5_algorithm_breadth.py
+  - src/robot_lab_algorithms/test/test_r7_benchmark_framework.py
+  - src/robot_lab_bringup/test/test_nav2_adapter_dispatch.py
+  name_math: consistent
+  notes: []
+- id: mppi_controller
+  category: local_planning
+  name: MPPI Controller
+  family: model_predictive_control
+  catalog_status: integrated
+  dispatch: plugin nav2_mppi_controller::MPPIController
+  installed: true
+  installed_detail: nav2_mppi_controller::MPPIController
+  mathematics: 'Trajectory optimization: model predictive path integral over 2000 noisy control sequences (2.8 s),
+    weighted average'
+  subrecord: true
+  mathematics_source: subrecord
+  tests:
+  - src/robot_lab_gui/test/test_command_autofill.py
+  name_math: consistent
+  notes: []
+- id: mppi_local_planner
+  category: local_planning
+  name: null
+  family: null
+  catalog_status: dispatch only
+  dispatch: unavailable placeholder - it scores random velocities by a constant goal distance, with no horizon rollout
+    or obstacle cost; use mppi_controller (Nav2 MPPI)
+  installed: false
+  installed_detail: 'unavailable: placeholder - it scores random velocities by a constant goal distance, with no
+    horizon rollout or obstacle cost; use mppi_controller (Nav2 MPPI)'
+  mathematics: 'Retired placeholder: random velocities scored by goal distance (no rollout)'
+  subrecord: false
+  mathematics_source: curated
+  tests:
+  - src/robot_lab_algorithms/test/test_r7_benchmark_framework.py
+  - src/robot_lab_bringup/test/test_nav2_adapter_dispatch.py
+  name_math: consistent
+  notes: []
+- id: pd_motion_planner
+  category: local_planning
+  name: PD Motion Planner
+  family: control_based
+  catalog_status: integrated
+  dispatch: node robot_lab_motion/pd_motion_planner.py
+  installed: true
+  installed_detail: robot_lab_motion/pd_motion_planner.py
+  mathematics: PD law on distance and heading error to a lookahead point on the path
+  subrecord: false
+  mathematics_source: curated
+  tests: []
+  name_math: mismatch
+  notes:
+  - Catalogued as a local planner; it is a PD law on pose error toward a lookahead point, with no obstacle term
+    or trajectory search.
+- id: pure_pursuit
+  category: local_planning
+  name: Regulated Pure Pursuit (Nav2)
+  family: path_following
+  catalog_status: integrated
+  dispatch: plugin nav2_regulated_pure_pursuit_controller::RegulatedPurePursuitController
+  installed: true
+  installed_detail: nav2_regulated_pure_pursuit_controller::RegulatedPurePursuitController
+  mathematics: Pure pursuit on a lookahead point with curvature and cost speed regulation
+  subrecord: true
+  mathematics_source: subrecord
+  tests:
+  - src/robot_lab_bringup/test/test_asset_runtime_support.py
+  name_math: corrected
+  notes:
+  - Runs Nav2 Regulated Pure Pursuit; the catalog named it plain pure pursuit in robot_lab_motion. The id regulated_pure_pursuit
+    runs robot_lab's own copy of the same law.
+- id: regulated_pure_pursuit
+  category: local_planning
+  name: null
+  family: null
+  catalog_status: dispatch only
+  dispatch: node robot_lab_algorithms/nav2_local_planner planner=regulated_pure_pursuit
+  installed: true
+  installed_detail: robot_lab_algorithms/nav2_local_planner
+  mathematics: Pure pursuit with curvature slowdown below a 0.9 m turn radius, served as Nav2 FollowPath
+  subrecord: true
+  mathematics_source: subrecord
+  tests:
+  - src/robot_lab_algorithms/test/test_r7_benchmark_framework.py
+  - src/robot_lab_bringup/test/test_nav2_adapter_dispatch.py
+  name_math: consistent
+  notes: []
+- id: teb_local_planner
+  category: local_planning
+  name: TEB Local Planner
+  family: optimization_based
+  catalog_status: cataloged
+  dispatch: unavailable cataloged only - nav2_teb_planner is not built in this workspace
+  installed: false
+  installed_detail: 'unavailable: cataloged only - nav2_teb_planner is not built in this workspace'
+  mathematics: 'Timed elastic band: sparse nonlinear least squares over poses and time intervals (upstream; not
+    installed)'
+  subrecord: false
+  mathematics_source: curated
+  tests:
+  - src/robot_lab/robot_lab_benchmark/test/test_r4_3_planner_comparison.py
+  - src/robot_lab/robot_lab_registry/test/test_registry.py
+  - src/robot_lab_adapter/test/test_adapter.py
+  - src/robot_lab_algorithms/test/test_r7_benchmark_framework.py
+  - src/robot_lab_bringup/test/test_algorithm_dispatch.py
+  name_math: corrected
+  notes:
+  - The catalog named nav2_teb_planner, which does not exist, and said integrated; upstream is teb_local_planner
+    (TebLocalPlannerROS), not installed. Now cataloged; follow_the_gap is the R7.7 replacement.
+- id: amcl
+  category: localization
+  name: AMCL
+  family: particle_filter
+  catalog_status: integrated
+  dispatch: stack global_localization
+  installed: true
+  installed_detail: stack global_localization
+  mathematics: 'Adaptive Monte Carlo localization: particle filter with KLD sampling and a likelihood-field laser
+    model'
+  subrecord: false
+  mathematics_source: curated
+  tests:
+  - src/robot_lab/robot_lab_registry/test/test_r3_2_composition_compatibility.py
+  - src/robot_lab/robot_lab_registry/test/test_registry.py
+  - src/robot_lab_adapter/test/test_adapter.py
+  - src/robot_lab_adapter/test/test_launch_fragments.py
+  - src/robot_lab_adapter/test/test_namespaces.py
+  - src/robot_lab_adapter/test/test_r3_3_resolver_executor.py
+  - src/robot_lab_adapter/test/test_selectors.py
+  - src/robot_lab_algorithms/test/test_r7_benchmark_framework.py
+  - src/robot_lab_bringup/test/test_algorithm_dispatch.py
+  - src/robot_lab_bringup/test/test_fleet_energy.py
+  - src/robot_lab_bringup/test/test_installed_extensions.py
+  - src/robot_lab_gui/test/test_command_autofill.py
+  - src/robot_lab_gui/test/test_r3_4_gui_composition.py
+  name_math: consistent
+  notes: []
+- id: correlative_localization
+  category: localization
+  name: Correlative Scan Matching Localization
+  family: scan_matching
+  catalog_status: integrated
+  dispatch: node robot_lab_algorithms/correlative_localization
+  installed: true
+  installed_detail: robot_lab_algorithms/correlative_localization
+  mathematics: Exhaustive coarse-to-fine search on a Gaussian likelihood field
+  subrecord: true
+  mathematics_source: subrecord
+  tests: []
+  name_math: consistent
+  notes: []
+- id: dead_reckoning
+  category: localization
+  name: Dead Reckoning
+  family: odometry
+  catalog_status: integrated
+  dispatch: node robot_lab_algorithms/dead_reckoning
+  installed: true
+  installed_detail: robot_lab_algorithms/dead_reckoning
+  mathematics: Composition of odometry increments
+  subrecord: true
+  mathematics_source: subrecord
+  tests:
+  - src/robot_lab/robot_lab_registry/test/test_p5_algorithm_breadth.py
+  - src/robot_lab_algorithms/test/test_r7_benchmark_framework.py
+  - src/robot_lab_algorithms/test/test_scan_matching.py
+  name_math: consistent
+  notes: []
+- id: hector_slam
+  category: localization
+  name: Hector SLAM
+  family: lidar_slam
+  catalog_status: cataloged
+  dispatch: unavailable cataloged only - hector_slam is not built in this workspace
+  installed: false
+  installed_detail: 'unavailable: cataloged only - hector_slam is not built in this workspace'
+  mathematics: Gauss-Newton scan-to-map matching on a multi-resolution grid (upstream; no Humble release)
+  subrecord: false
+  mathematics_source: curated
+  tests:
+  - src/robot_lab_bringup/test/test_algorithm_dispatch.py
+  name_math: consistent
+  notes: []
+- id: icp_localization
+  category: localization
+  name: ICP Scan-to-Map Localization
+  family: scan_matching
+  catalog_status: integrated
+  dispatch: node robot_lab_algorithms/icp_localization
+  installed: true
+  installed_detail: robot_lab_algorithms/icp_localization
+  mathematics: Iterative closest point to the map surface cells, closed-form 2D rigid alignment
+  subrecord: true
+  mathematics_source: subrecord
+  tests:
+  - src/robot_lab_algorithms/test/test_r7_benchmark_framework.py
+  name_math: consistent
+  notes: []
+- id: ndt_localization
+  category: localization
+  name: NDT Scan-to-Map Localization
+  family: scan_matching
+  catalog_status: integrated
+  dispatch: node robot_lab_algorithms/ndt_localization
+  installed: true
+  installed_detail: robot_lab_algorithms/ndt_localization
+  mathematics: Normal distributions transform on 0.5 m cells, reweighted Gauss-Newton with line search
+  subrecord: true
+  mathematics_source: subrecord
+  tests:
+  - src/robot_lab_algorithms/test/test_r7_benchmark_framework.py
+  name_math: consistent
+  notes: []
+- id: odometry_motion_model
+  category: localization
+  name: Odometry Motion Model
+  family: odometry
+  catalog_status: integrated
+  dispatch: node robot_lab_localization/odometry_motion_model
+  installed: true
+  installed_detail: robot_lab_localization/odometry_motion_model
+  mathematics: Sampling odometry motion model (rotation-translation-rotation, noise alpha1-alpha4)
+  subrecord: false
+  mathematics_source: curated
+  tests: []
+  name_math: consistent
+  notes: []
+- id: plicp_localization
+  category: localization
+  name: Point-to-Line ICP Localization
+  family: scan_matching
+  catalog_status: integrated
+  dispatch: node robot_lab_algorithms/plicp_localization
+  installed: true
+  installed_detail: robot_lab_algorithms/plicp_localization
+  mathematics: Gauss-Newton on point-to-line distances with map normals and robust weights
+  subrecord: true
+  mathematics_source: subrecord
+  tests: []
+  name_math: consistent
+  notes: []
+- id: rgbd_slam_localization
+  category: localization
+  name: null
+  family: null
+  catalog_status: dispatch only
+  dispatch: unavailable retired 2026-10-13 - the node was a simplified stand-in; RGB-D localization runs as rtabmap_localization
+  installed: false
+  installed_detail: 'unavailable: retired 2026-10-13 - the node was a simplified stand-in; RGB-D localization runs
+    as rtabmap_localization'
+  mathematics: Retired stand-in; RGB-D localization runs as rtabmap_localization
+  subrecord: false
+  mathematics_source: curated
+  tests:
+  - src/robot_lab_algorithms/test/test_r7_benchmark_framework.py
+  name_math: consistent
+  notes: []
+- id: robot_localization_ekf
+  category: localization
+  name: Robot Localization EKF
+  family: kalman_filter
+  catalog_status: integrated
+  dispatch: stack local_localization
+  installed: true
+  installed_detail: stack local_localization
+  mathematics: 'robot_localization EKF: 15-state omnidirectional model, odometry and IMU updates'
+  subrecord: false
+  mathematics_source: curated
+  tests: []
+  name_math: mismatch
+  notes:
+  - Same robot_localization ekf_node as ekf_localization_node (one method, two ids); the catalog executable was
+    nav2_ekf_node, which is not a binary (corrected to ekf_node).
+- id: rtabmap_localization
+  category: localization
+  name: RTAB-Map Localization
+  family: rgb_d_slam
+  catalog_status: integrated
+  dispatch: stack rtabmap
+  installed: true
+  installed_detail: stack rtabmap
+  mathematics: 'RGB-D appearance-based localization: bag-of-words loop closure and graph optimization'
+  subrecord: false
+  mathematics_source: curated
+  tests:
+  - src/robot_lab_adapter/test/test_adapter.py
+  name_math: consistent
+  notes: []
+- id: slam_toolbox
+  category: localization
+  name: SLAM Toolbox
+  family: pose_graph_slam
+  catalog_status: integrated
+  dispatch: stack slam
+  installed: true
+  installed_detail: stack slam
+  mathematics: 'Pose-graph SLAM: correlative scan matching, loop closure, sparse pose-graph optimization'
+  subrecord: false
+  mathematics_source: curated
+  tests: []
+  name_math: consistent
+  notes: []
+- id: camera_calibration
+  category: perception
+  name: Camera Calibration (chessboard)
+  family: calibration
+  catalog_status: integrated
+  dispatch: node robot_lab_algorithms/camera_calibration
+  installed: true
+  installed_detail: robot_lab_algorithms/camera_calibration
+  mathematics: Zhang planar chessboard calibration (cv2.calibrateCamera) with sub-pixel corners
+  subrecord: false
+  mathematics_source: curated
+  tests: []
+  name_math: consistent
+  notes: []
+- id: costmap_2d_observation
+  category: perception
+  name: 2D Costmap Observation
+  family: costmap
+  catalog_status: integrated
+  dispatch: stack navigation_costmap
+  installed: true
+  installed_detail: stack navigation_costmap
+  mathematics: 'Nav2 ObstacleLayer: marks sensor hits and ray-traces free space into the costmap'
+  subrecord: false
+  mathematics_source: curated
+  tests:
+  - src/robot_lab/robot_lab_registry/test/test_registry.py
+  - src/robot_lab_adapter/test/test_launch_fragments.py
+  - src/robot_lab_adapter/test/test_selectors.py
+  name_math: corrected
+  notes:
+  - The catalog named nav2_costmap_2d::ObservationLayer, which does not exist; the Nav2 ObstacleLayer (observation
+    buffers, ray-traced clearing) is what runs.
+- id: dbscan_clusterer
+  category: perception
+  name: null
+  family: null
+  catalog_status: dispatch only
+  dispatch: node robot_lab_algorithms/dbscan_clusterer
+  installed: true
+  installed_detail: robot_lab_algorithms/dbscan_clusterer
+  mathematics: Density-based clustering with core, border and noise points
+  subrecord: true
+  mathematics_source: subrecord
+  tests:
+  - src/robot_lab_algorithms/test/test_r7_benchmark_framework.py
+  - src/robot_lab_algorithms/test/test_r7_perception_algorithms.py
+  name_math: consistent
+  notes: []
+- id: depth_image_to_pointcloud
+  category: perception
+  name: Depth Image to PointCloud
+  family: pointcloud_conversion
+  catalog_status: integrated
+  dispatch: node robot_lab_algorithms/depth_image_to_pointcloud
+  installed: true
+  installed_detail: robot_lab_algorithms/depth_image_to_pointcloud
+  mathematics: Pinhole back-projection p = d K^-1 [u v 1]^T
+  subrecord: false
+  mathematics_source: curated
+  tests: []
+  name_math: consistent
+  notes: []
+- id: euclidean_clusterer
+  category: perception
+  name: null
+  family: null
+  catalog_status: dispatch only
+  dispatch: node robot_lab_algorithms/euclidean_clusterer
+  installed: true
+  installed_detail: robot_lab_algorithms/euclidean_clusterer
+  mathematics: Region growing on a KD-tree (PCL EuclideanClusterExtraction)
+  subrecord: true
+  mathematics_source: subrecord
+  tests:
+  - src/robot_lab_algorithms/test/test_r7_benchmark_framework.py
+  - src/robot_lab_algorithms/test/test_r7_perception_algorithms.py
+  name_math: consistent
+  notes: []
+- id: feature_detection
+  category: perception
+  name: Feature Detection (RGB-D visual odometry)
+  family: feature_detection
+  catalog_status: integrated
+  dispatch: node robot_lab_algorithms/feature_detection
+  installed: true
+  installed_detail: robot_lab_algorithms/feature_detection
+  mathematics: Feature matching to a keyframe (Lowe ratio test), depth lift to 3D, PnP with RANSAC
+  subrecord: false
+  mathematics_source: curated
+  tests: []
+  name_math: consistent
+  notes: []
+- id: laser_scan_to_pointcloud
+  category: perception
+  name: Laser Scan to PointCloud
+  family: pointcloud_conversion
+  catalog_status: integrated
+  dispatch: node pointcloud_to_laserscan/laserscan_to_pointcloud_node
+  installed: false
+  installed_detail: package pointcloud_to_laserscan not installed
+  mathematics: Polar-to-Cartesian projection of scan rays (laserscan_to_pointcloud_node)
+  subrecord: false
+  mathematics_source: curated
+  tests:
+  - src/robot_lab_adapter/test/test_launch_fragments.py
+  - src/robot_lab_utils/test/test_algorithm_method_records.py
+  name_math: corrected
+  notes:
+  - Its dispatch and launch fragment started pointcloud_to_laserscan_node, the reverse conversion; now laserscan_to_pointcloud_node.
+    The package is not installed on this host.
+- id: obstacle_detector
+  category: perception
+  name: Obstacle Detector
+  family: clustering
+  catalog_status: integrated
+  dispatch: node robot_lab_algorithms/obstacle_detector
+  installed: true
+  installed_detail: robot_lab_algorithms/obstacle_detector
+  mathematics: Connected components of scan points under a distance threshold
+  subrecord: true
+  mathematics_source: subrecord
+  tests:
+  - src/robot_lab/robot_lab_registry/test/test_p5_algorithm_breadth.py
+  - src/robot_lab_algorithms/test/test_r7_benchmark_framework.py
+  - src/robot_lab_algorithms/test/test_r7_perception_algorithms.py
+  name_math: consistent
+  notes: []
+- id: pointcloud_segmenter
+  category: perception
+  name: Pointcloud Segmenter
+  family: segmentation
+  catalog_status: integrated
+  dispatch: node robot_lab_algorithms/pointcloud_segmenter
+  installed: true
+  installed_detail: robot_lab_algorithms/pointcloud_segmenter
+  mathematics: Ground / non-ground split by height threshold in the upright target frame
+  subrecord: false
+  mathematics_source: curated
+  tests:
+  - src/robot_lab/robot_lab_registry/test/test_p5_algorithm_breadth.py
+  - src/robot_lab_algorithms/test/test_r7_benchmark_framework.py
+  - src/robot_lab_algorithms/test/test_r7_perception_algorithms.py
+  name_math: consistent
+  notes: []
+- id: ransac_ground_removal
+  category: perception
+  name: null
+  family: null
+  catalog_status: dispatch only
+  dispatch: node robot_lab_algorithms/ransac_ground_removal
+  installed: true
+  installed_detail: robot_lab_algorithms/ransac_ground_removal
+  mathematics: RANSAC plane hypotheses restricted to near-vertical normals, least-squares refinement on the inliers
+  subrecord: true
+  mathematics_source: subrecord
+  tests:
+  - src/robot_lab_algorithms/test/test_r7_benchmark_framework.py
+  - src/robot_lab_algorithms/test/test_r7_perception_algorithms.py
+  name_math: consistent
+  notes: []
+- id: scan_clusterer
+  category: perception
+  name: Scan Clusterer
+  family: clustering
+  catalog_status: integrated
+  dispatch: node robot_lab_algorithms/scan_clusterer
+  installed: true
+  installed_detail: robot_lab_algorithms/scan_clusterer
+  mathematics: Sequential breakpoint detection along the scan, fixed or adaptive (range-dependent) threshold
+  subrecord: true
+  mathematics_source: subrecord
+  tests:
+  - src/robot_lab/robot_lab_registry/test/test_p5_algorithm_breadth.py
+  - src/robot_lab_algorithms/test/test_r7_benchmark_framework.py
+  - src/robot_lab_algorithms/test/test_r7_perception_algorithms.py
+  name_math: consistent
+  notes: []
+- id: attitude_eskf
+  category: sensor_fusion
+  name: Attitude Error-State Kalman Filter
+  family: kalman
+  catalog_status: integrated
+  dispatch: node robot_lab_algorithms/attitude_eskf
+  installed: true
+  installed_detail: robot_lab_algorithms/attitude_eskf
+  mathematics: Error-state Kalman filter on attitude and gyro bias
+  subrecord: true
+  mathematics_source: subrecord
+  tests: []
+  name_math: consistent
+  notes: []
+- id: complementary_imu
+  category: sensor_fusion
+  name: Complementary Attitude Filter
+  family: complementary
+  catalog_status: integrated
+  dispatch: node robot_lab_algorithms/complementary_imu
+  installed: true
+  installed_detail: robot_lab_algorithms/complementary_imu
+  mathematics: Gyro integration with roll and pitch pulled toward the accelerometer tilt
+  subrecord: true
+  mathematics_source: subrecord
+  tests:
+  - src/robot_lab/robot_lab_registry/test/test_p5_algorithm_breadth.py
+  - src/robot_lab_algorithms/test/test_r7_benchmark_framework.py
+  name_math: consistent
+  notes: []
+- id: gps_odom_fusion
+  category: sensor_fusion
+  name: Wheel + IMU + GNSS EKF
+  family: ekf
+  catalog_status: integrated
+  dispatch: node robot_lab_algorithms/gps_odom_fusion
+  installed: true
+  installed_detail: robot_lab_algorithms/gps_odom_fusion
+  mathematics: The wheel/IMU EKF with GNSS position updates
+  subrecord: true
+  mathematics_source: subrecord
+  tests:
+  - src/robot_lab/robot_lab_registry/test/test_p5_algorithm_breadth.py
+  - src/robot_lab_algorithms/test/test_r7_benchmark_framework.py
+  name_math: consistent
+  notes: []
+- id: imu_complementary_filter
+  category: sensor_fusion
+  name: IMU Madgwick Filter (imu_tools)
+  family: gradient_descent
+  catalog_status: integrated
+  dispatch: node imu_filter_madgwick/imu_filter_madgwick_node
+  installed: true
+  installed_detail: imu_filter_madgwick/imu_filter_madgwick_node
+  mathematics: Madgwick gradient-descent attitude filter (imu_tools, upstream C++)
+  subrecord: false
+  mathematics_source: curated
+  tests: []
+  name_math: mismatch
+  notes:
+  - Id says complementary filter; it runs imu_tools' Madgwick gradient-descent filter (imu_filter_madgwick_node);
+    the imu_tools complementary filter package is not installed. Kept as the upstream Madgwick reference beside
+    madgwick_filter; family corrected to gradient_descent.
+- id: imu_republisher
+  category: sensor_fusion
+  name: IMU Republisher
+  family: data_processing
+  catalog_status: integrated
+  dispatch: stack local_localization
+  installed: true
+  installed_detail: stack local_localization
+  mathematics: IMU frame/topic relay
+  subrecord: false
+  mathematics_source: curated
+  tests:
+  - src/robot_lab/robot_lab_registry/test/test_registry.py
+  name_math: not_a_method
+  notes:
+  - Frame/topic relay, not an estimator.
+- id: madgwick_filter
+  category: sensor_fusion
+  name: Madgwick Attitude Filter
+  family: gradient_descent
+  catalog_status: integrated
+  dispatch: node robot_lab_algorithms/madgwick_filter
+  installed: true
+  installed_detail: robot_lab_algorithms/madgwick_filter
+  mathematics: One normalised gradient step per sample on the gravity objective
+  subrecord: true
+  mathematics_source: subrecord
+  tests:
+  - src/robot_lab_algorithms/test/test_r7_benchmark_framework.py
+  name_math: consistent
+  notes: []
+- id: mahony_filter
+  category: sensor_fusion
+  name: Mahony Attitude Filter
+  family: complementary
+  catalog_status: integrated
+  dispatch: node robot_lab_algorithms/mahony_filter
+  installed: true
+  installed_detail: robot_lab_algorithms/mahony_filter
+  mathematics: PI feedback of the gravity cross error into the gyro
+  subrecord: true
+  mathematics_source: subrecord
+  tests:
+  - src/robot_lab_algorithms/test/test_r7_benchmark_framework.py
+  name_math: consistent
+  notes: []
+- id: wheel_imu_fusion
+  category: sensor_fusion
+  name: Wheel + IMU EKF
+  family: ekf
+  catalog_status: integrated
+  dispatch: node robot_lab_algorithms/wheel_imu_fusion
+  installed: true
+  installed_detail: robot_lab_algorithms/wheel_imu_fusion
+  mathematics: EKF on [x, y, theta, v, b_g] with a zero angular rate update at standstill
+  subrecord: true
+  mathematics_source: subrecord
+  tests:
+  - src/robot_lab/robot_lab_registry/test/test_p5_algorithm_breadth.py
+  - src/robot_lab_algorithms/test/test_r7_benchmark_framework.py
+  name_math: consistent
+  notes: []
+- id: wheel_imu_gnss_ukf
+  category: sensor_fusion
+  name: Wheel + IMU + GNSS UKF
+  family: ukf
+  catalog_status: integrated
+  dispatch: node robot_lab_algorithms/wheel_imu_gnss_ukf
+  installed: true
+  installed_detail: robot_lab_algorithms/wheel_imu_gnss_ukf
+  mathematics: Unscented Kalman filter on the same model and measurements
+  subrecord: true
+  mathematics_source: subrecord
+  tests:
+  - src/robot_lab_algorithms/test/test_r7_benchmark_framework.py
+  name_math: consistent
+  notes: []
+- id: ekf_3d_estimator
+  category: state_estimation
+  name: EKF State Estimator (CTRV)
+  family: kalman
+  catalog_status: integrated
+  dispatch: node robot_lab_algorithms/ekf_3d_estimator
+  installed: true
+  installed_detail: robot_lab_algorithms/ekf_3d_estimator
+  mathematics: Extended Kalman filter on the constant turn rate and velocity model
+  subrecord: true
+  mathematics_source: subrecord
+  tests:
+  - src/robot_lab/robot_lab_registry/test/test_p5_algorithm_breadth.py
+  - src/robot_lab_algorithms/test/test_r7_benchmark_framework.py
+  name_math: mismatch
+  notes:
+  - Id says 3D; the node runs a planar constant turn-rate and velocity (CTRV) EKF (tracking_filters.CtrvEkf). state_estimation.EKF3DEstimator
+    (per-axis scalar gains, not an EKF) is unused legacy code.
+- id: ekf_localization_node
+  category: state_estimation
+  name: EKF Localization Node
+  family: kalman_filter
+  catalog_status: integrated
+  dispatch: stack local_localization
+  installed: true
+  installed_detail: stack local_localization
+  mathematics: 'robot_localization EKF: 15-state omnidirectional model, odometry and IMU updates'
+  subrecord: false
+  mathematics_source: curated
+  tests:
+  - src/robot_lab/robot_lab_registry/test/test_r3_2_composition_compatibility.py
+  - src/robot_lab/robot_lab_registry/test/test_registry.py
+  name_math: mismatch
+  notes:
+  - Same robot_localization ekf_node as robot_localization_ekf (one method, two ids).
+- id: error_state_ekf
+  category: state_estimation
+  name: null
+  family: null
+  catalog_status: dispatch only
+  dispatch: unavailable retired 2026-10-13 - its node filtered noiseless ground truth; the error-state formulation
+    runs for attitude as sensor_fusion attitude_eskf
+  installed: false
+  installed_detail: 'unavailable: retired 2026-10-13 - its node filtered noiseless ground truth; the error-state
+    formulation runs for attitude as sensor_fusion attitude_eskf'
+  mathematics: 'Retired: filtered noiseless truth; the error-state formulation runs as attitude_eskf'
+  subrecord: false
+  mathematics_source: curated
+  tests:
+  - src/robot_lab_algorithms/test/test_r7_benchmark_framework.py
+  name_math: consistent
+  notes: []
+- id: kalman_filter_1d
+  category: state_estimation
+  name: 1D Kalman Filter
+  family: kalman_filter
+  catalog_status: integrated
+  dispatch: node robot_lab_localization/kalman_filter
+  installed: true
+  installed_detail: robot_lab_localization/kalman_filter
+  mathematics: Scalar Kalman filter on yaw rate fusing wheel odometry and IMU
+  subrecord: false
+  mathematics_source: curated
+  tests: []
+  name_math: consistent
+  notes: []
+- id: linear_kalman_filter
+  category: state_estimation
+  name: Linear Kalman Filter (constant velocity)
+  family: kalman
+  catalog_status: integrated
+  dispatch: node robot_lab_algorithms/linear_kalman_filter
+  installed: true
+  installed_detail: robot_lab_algorithms/linear_kalman_filter
+  mathematics: Kalman filter on [x, y, vx, vy]
+  subrecord: true
+  mathematics_source: subrecord
+  tests:
+  - src/robot_lab_algorithms/test/test_r7_benchmark_framework.py
+  name_math: consistent
+  notes: []
+- id: motion_model_estimator
+  category: state_estimation
+  name: Interacting Multiple Model Estimator
+  family: imm
+  catalog_status: integrated
+  dispatch: node robot_lab_algorithms/motion_model_estimator
+  installed: true
+  installed_detail: robot_lab_algorithms/motion_model_estimator
+  mathematics: IMM of a straight-line and a turning CTRV EKF
+  subrecord: true
+  mathematics_source: subrecord
+  tests:
+  - src/robot_lab/robot_lab_registry/test/test_p5_algorithm_breadth.py
+  - src/robot_lab_algorithms/test/test_r7_benchmark_framework.py
+  name_math: mismatch
+  notes:
+  - Generic id; the node runs an interacting multiple model filter (constant velocity + coordinated turn). The fixed-gain
+    MotionModelEstimator class is unused legacy code.
+- id: particle_filter
+  category: state_estimation
+  name: Particle Filter (CTRV)
+  family: particle
+  catalog_status: integrated
+  dispatch: node robot_lab_algorithms/particle_filter
+  installed: true
+  installed_detail: robot_lab_algorithms/particle_filter
+  mathematics: Sequential importance resampling on the CTRV model
+  subrecord: true
+  mathematics_source: subrecord
+  tests:
+  - src/robot_lab_algorithms/test/test_r7_benchmark_framework.py
+  name_math: consistent
+  notes: []
+- id: pose_graph_estimator
+  category: state_estimation
+  name: Sliding-Window Pose-Graph Smoother
+  family: smoother
+  catalog_status: integrated
+  dispatch: node robot_lab_algorithms/pose_graph_estimator
+  installed: true
+  installed_detail: robot_lab_algorithms/pose_graph_estimator
+  mathematics: Fixed-lag least squares over the last 20 fixes with constant-velocity factors
+  subrecord: true
+  mathematics_source: subrecord
+  tests:
+  - src/robot_lab/robot_lab_registry/test/test_p5_algorithm_breadth.py
+  - src/robot_lab_algorithms/test/test_r7_benchmark_framework.py
+  name_math: mismatch
+  notes:
+  - Id says pose graph; the node runs a 2 s sliding-window least-squares smoother over GNSS fixes with motion constraints
+    (a small pose graph without loop closures). The exponential-decay PoseGraphEstimator class is unused legacy
+    code.
+- id: ukf_estimator
+  category: state_estimation
+  name: UKF State Estimator (CTRV)
+  family: ukf
+  catalog_status: integrated
+  dispatch: node robot_lab_algorithms/ukf_estimator
+  installed: true
+  installed_detail: robot_lab_algorithms/ukf_estimator
+  mathematics: Unscented Kalman filter on the CTRV model
+  subrecord: true
+  mathematics_source: subrecord
+  tests:
+  - src/robot_lab_algorithms/test/test_r7_benchmark_framework.py
+  name_math: consistent
+  notes: []

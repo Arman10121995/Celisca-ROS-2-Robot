@@ -215,9 +215,19 @@ def evaluate(args):
                 linear = _quat_rotate_inverse(qpos[:, 3:7], qvel[:, 0:3])[0]
                 measured.append((linear[0], linear[1], qvel[0, 5]))
         mean = np.mean(measured, axis=0) if measured else [math.nan] * 3
-        phases.append(dict(command=list(command), measured=[round(float(v), 3) for v in mean],
-                           seconds=round(len(measured) * env.dt, 2), fallen=fallen))
+        phase = dict(command=list(command), measured=[round(float(v), 3) for v in mean],
+                     seconds=round(len(measured) * env.dt, 2), fallen=fallen)
+        if args.task == 'get_up':
+            # Where the episode ended: standing means upright within 25 deg and at 80 % of standing height.
+            from .legged_training import _quat_rotate_inverse
+            qpos, _ = env._split(env.state)
+            gravity_z = float(_quat_rotate_inverse(qpos[:, 3:7], np.array([[0., 0., -1.]]))[0, 2])
+            ratio = float((qpos[0, 2] - env.terrain_height(qpos[:, 0:2])[0]) / env.stand_height)
+            phase.update(final_gravity_z=round(gravity_z, 3), final_height_ratio=round(ratio, 3),
+                         stood=bool(gravity_z < -0.9 and ratio > 0.8))
+        phases.append(phase)
     report = dict(policy=str(directory), robot=robot, task=args.task, phases=phases, terrain=args.terrain,
+                  **(dict(stood=sum(p['stood'] for p in phases), trials=len(phases)) if args.task == 'get_up' else {}),
                   simulator='mujoco (training environment)', deployment_code='legged_policy.LeggedPolicy')
     print(json.dumps(report, indent=1))
     if args.out:

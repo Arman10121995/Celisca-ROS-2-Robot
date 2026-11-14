@@ -105,17 +105,17 @@ FAST_TESTS=(
   "src/robot_lab_utils/test/test_terrain_generator.py"
   "src/robot_lab_utils/test/test_fleet_zones.py"
   "src/robot_lab_utils/test/test_fleet_energy_calibration.py"
-  "src/robot_lab_utils/test/test_marine_mujoco_plant.py"
   "src/robot_lab_utils/test/test_flipper_terrain_policy.py"
   "src/robot_lab_utils/test/test_gait_recovery.py"
-  "src/robot_lab_utils/test/test_car_parking.py"
   "src/robot_lab_utils/test/test_display_reasons.py"
   "src/robot_lab_utils/test/test_sensor_fault_relay.py"
   "src/robot_lab_utils/test/test_map_registration.py"
   "src/robot_lab_utils/test/test_external_source_licenses.py"
+  "src/robot_lab_utils/test/test_algorithm_method_records.py"
 )
 
 INTEGRATION_TESTS=(
+  "src/robot_lab_utils/test/test_car_parking.py"
   "src/robot_lab_utils/test/test_fleet_contact_conflict.py"
   "src/robot_lab_utils/test/test_swarm_distributed.py"
   "$BRG_TEST/test_world_copy_paths.py"
@@ -163,6 +163,7 @@ INTEGRATION_TESTS=(
 )
 
 PHYSICS_TESTS=(
+  "src/robot_lab_utils/test/test_marine_mujoco_plant.py"
   "$BRG_TEST/test_native_object_catalog.py"
   "src/robot_lab_mujoco/test/test_native_asset_display_grasp_fixture.py"
   "$BRG_TEST/test_native_hand_force.py"

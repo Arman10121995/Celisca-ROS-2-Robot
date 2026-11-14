@@ -24,15 +24,20 @@ Scenario YAML::
       - {kind: bias, value: 0.05}
       - {kind: drift, rate: 0.001}                 # units per second since the window opened
 
-Gazebo launches take ``sensor_faults:=<scenario.yaml>``: each relayed topic's
-bridge output is renamed ``<topic>_clean`` and this relay publishes the
-original name, so every consumer (AMCL, SLAM, Nav2) sees the faulted data.
+Launches take ``sensor_faults:=<scenario.yaml>``: each relayed topic moves to
+the relay's input name (Gazebo: the bridge output; MuJoCo, PyBullet, Isaac: a
+remapping of the simulator's own sensor publishers, ``launch_actions``) and
+this relay publishes the original name, so every consumer (AMCL, SLAM, Nav2)
+sees the faulted data. Those three simulators publish exact sensors, so this
+relay is their only seeded noise.
 """
 import argparse
 import collections
 import hashlib
 import json
 import math
+import re
+import uuid
 from pathlib import Path
 
 import numpy as np
@@ -42,23 +47,33 @@ TYPES = ('LaserScan', 'Imu', 'Odometry', 'Image')
 
 
 def validate(scenario):
+    if not isinstance(scenario,dict):raise ValueError('A sensor-fault scenario must be a mapping')
     relays = scenario.get('relays')
-    if not isinstance(relays, list) or not relays:
+    if not isinstance(relays, list) or not 1<=len(relays)<=64:
         raise ValueError('A sensor-fault scenario needs at least one relay')
+    inputs,outputs=set(),set()
     for relay in relays:
+        if not isinstance(relay,dict):raise ValueError('Each sensor relay must be a mapping')
         if relay.get('type') not in TYPES:
             raise ValueError('Relay type must be one of %s' % (TYPES,))
         for key in ('input', 'output'):
+            topic=relay.get(key)
+            if not isinstance(topic,str) or not re.fullmatch(r'/[A-Za-z_][A-Za-z0-9_]*(?:/[A-Za-z_][A-Za-z0-9_]*)*',topic):
+                raise ValueError('Relay input/output must be absolute ROS topic names')
             if 'truth' in str(relay.get(key, '')).lower():
                 raise ValueError('Truth topics are never faulted: ' + str(relay.get(key)))
         if relay['input'] == relay['output']:
             raise ValueError('Relay input and output must differ')
+        if relay['input'] in inputs or relay['output'] in outputs:
+            raise ValueError('Relay inputs and outputs must be unique')
+        inputs.add(relay['input']);outputs.add(relay['output'])
         for fault in relay.get('faults', []):
             if fault.get('kind') not in KINDS:
                 raise ValueError('Unknown fault kind %r' % fault.get('kind'))
             for key, value in fault.items():
                 if isinstance(value, (int, float)) and not math.isfinite(value):
                     raise ValueError('Fault parameters must be finite')
+    if inputs & outputs:raise ValueError('Relay inputs must not be any relay output: feedback chains are unsupported')
     return scenario
 
 
@@ -219,6 +234,27 @@ class Relay:
         while self.pending and self.pending[0][0] <= t:
             out.append(self.pending.popleft()[1])
         return out
+
+
+def launch_actions(scenario_path, robot_name, use_sim_time=True):
+    """(remappings, relay Node) for simulators whose own nodes publish the sensors.
+
+    The sensor-publishing nodes take the remappings (each faulted topic moves to
+    its relay input); the relay then publishes the original name.
+    """
+    import os
+    import yaml
+    from launch_ros.actions import Node
+    scenario = validate(yaml.safe_load(Path(scenario_path).read_text()))
+    remappings = [(relay['output'], relay['input']) for relay in scenario['relays']]
+    name=re.sub(r'[^A-Za-z0-9_.-]','_',str(robot_name))[:80] or 'robot'
+    trace = os.path.join(os.environ.get('ROBOT_LAB_RUNTIME_ROOT', '/workspace/molar/robot_lab_runtime'),
+                         'sensor_faults', '%s-%d-%s.jsonl' % (name,os.getpid(),uuid.uuid4().hex))
+    os.makedirs(os.path.dirname(trace), exist_ok=True)
+    relay = Node(package='robot_lab_utils', executable='sensor_fault_relay.py', name='sensor_fault_relay',
+                 arguments=['--scenario', str(scenario_path), '--trace', trace],
+                 parameters=[{'use_sim_time': use_sim_time}], output='screen')
+    return remappings, relay
 
 
 def main(args=None):

@@ -379,12 +379,10 @@ class CompositionResolver:
         self.fragment_registry.register_fragment(LaunchFragment(
             id='laser_scan_to_pointcloud_node',
             package='pointcloud_to_laserscan',
-            executable='pointcloud_to_laserscan_node',
+            executable='laserscan_to_pointcloud_node',
             default_params={
-                'min_height': -0.1,
-                'max_height': 0.1,
-                'range_min': 0.1,
-                'range_max': 100.0
+                'transform_tolerance': 0.01,
+                'queue_size': 10
             },
             category='perception',
             provided_topics=['/cloud'],

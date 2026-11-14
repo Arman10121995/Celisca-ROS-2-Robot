@@ -64,6 +64,45 @@ def world_with_contact_system(path):
     return out
 
 
+def world_with_seed(path, seed):
+    """A copy of the world that seeds Gazebo's random generator (sensor noise) at load (R7)."""
+    if isinstance(seed,bool) or (not isinstance(seed,str) and seed!=int(seed)):
+        raise ValueError('sim_seed must be an integer in [0, 2^32)')
+    seed=int(seed)
+    if not 0<=seed<2**32:raise ValueError('sim_seed must be in [0, 2^32)')
+    from ament_index_python.packages import get_package_prefix
+    library = os.path.join(get_package_prefix('robot_lab_maps'), 'lib', 'librobot_lab_simulation_seed.so')
+    if not os.path.isfile(library):
+        raise RuntimeError('Build robot_lab_maps with the ignition-gazebo6 SDK for the simulation seed system')
+    root=ET.parse(path).getroot()
+    world=root.find('world')
+    if world is None:
+        raise ValueError('No <world> in ' + str(path))
+    for existing in list(world.findall('plugin')):
+        if existing.get('name')=='robot_lab::SimulationSeed':world.remove(existing)
+    # A world that declares no systems gets the defaults; one more plugin must not remove them.
+    if not world.findall('plugin'):
+        for filename,name in _DEFAULT_SYSTEMS:ET.SubElement(world,'plugin',filename=filename,name=name)
+    plugin=ET.SubElement(world,'plugin',filename=library,name='robot_lab::SimulationSeed')
+    ET.SubElement(plugin,'seed').text=str(seed)
+    base = os.path.dirname(os.path.abspath(path))
+    for element in [*root.iter('uri'),*root.iter('filename')]:
+        value=(element.text or '').strip()
+        if value and not value.startswith('/') and not re.match(r'^[A-Za-z][A-Za-z0-9+.-]*:',value):
+            element.text=os.path.join(base,value)
+    text=ET.tostring(root,encoding='unicode')
+    out = os.path.join(tempfile.gettempdir(), 'robot_lab_world_seed%d_%s_%s' % (
+        int(seed), hashlib.sha256(text.encode('utf-8')).hexdigest()[:12], os.path.basename(path)))
+    if not os.path.exists(out):
+        descriptor,temporary=tempfile.mkstemp(prefix='robot_lab_seed_',suffix='.sdf',dir=os.path.dirname(out))
+        try:
+            with os.fdopen(descriptor,'w',encoding='utf-8') as stream:stream.write(text)
+            os.replace(temporary,out)
+        finally:
+            if os.path.exists(temporary):os.unlink(temporary)
+    return out
+
+
 def generate_launch_description():
     robot_lab_description = get_package_share_directory("robot_lab_description")
 
@@ -93,6 +132,9 @@ def generate_launch_description():
     )
 
     world_name_arg = DeclareLaunchArgument(name="world_name", default_value="empty")
+    sim_seed_arg = DeclareLaunchArgument(
+        name="sim_seed", default_value="",
+        description="Seed Gazebo's random generator (sensor noise) at world load; empty keeps Gazebo's own")
     sensor_faults_arg = DeclareLaunchArgument(
         name="sensor_faults", default_value="",
         description="Scenario YAML for robot_lab_utils.sensor_fault_relay (seeded faults on live sensor topics)")
@@ -471,6 +513,9 @@ def generate_launch_description():
             if not os.path.exists(w):
                 raise RuntimeError("Selected Gazebo world does not exist: " + w)
         w = world_with_contact_system(w)
+        seed = LaunchConfiguration('sim_seed').perform(context).strip()
+        if seed:
+            w = world_with_seed(w, int(seed))
 
         # Build GZ_SIM_RESOURCE_PATH (only executed for actual simulation)
         try:
@@ -659,6 +704,7 @@ def generate_launch_description():
         spawn_robot_arg,
         world_name_arg,
         sensor_faults_arg,
+        sim_seed_arg,
         world_package_arg,
         world_path_arg,
         spawn_x_arg,

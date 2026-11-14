@@ -1472,6 +1472,7 @@ tasks:
         tier_followup_20261114: 'Codex: published d4eb4d5a CI run 43530569788 failed one R6.8 world-copy test because fast tier is intentionally unsourced and the test imports ament/ROS launch (1282 passed, 42 skipped). Unchanged test moved to required sourced integration tier and passes locally; new GUI source path added to the runner. Two GUI builder/widget checks pass without sourcing ROS. Full exact-revision published rerun pending; preserve historical baseline and Claude fleet/source edits.'
         mavlink_ci_20261114: 'Codex: a2b5e281 run 43533140298 passed fast/physics, then integration collection failed importing pymavlink in the new PX4 heading test. Both CI workflows now install documented flight runtime pymavlink 2.4.50; tests remain enabled. Ten heading/walkway checks pass with that exact runtime locally. Exact-revision full CI pending. Receipt: docs/status/evidence/ci-mavlink-2026-11-14/README.md. Claude owns algorithm/seed/launch files.'
         fleet_tiers_20261114: 'Codex: 6106be61 run 43551833654 failed fast collection because fleet_contact_conflict and swarm_distributed import the real ROS FleetController. Both unchanged tests remain required in sourced integration tier; 20 checks pass locally. No fleet implementation changed. Full exact-revision CI pending; Claude algorithm/seed/launch work preserved.'
+        takeover_ci_20261114: 'User confirms Claude stopped; Codex takes over pending edits. Inspect complete required tiers after classifying marine MuJoCo/xacro checks in physics and ROS parking checks in integration; current 12470059 CI failed xacro setup in the unsourced fast tier. Preserve all assertions and prior evidence.'
         scope_paths:
         - .github/workflows/
         - scripts/bootstrap.sh
@@ -3144,20 +3145,19 @@ tasks:
           100%. The two topics publish 5 of the model''s 18 colliding geoms. The entry
           primitive''s contact signal is incomplete at exactly the pose it must fix:
           the support it must move is hip load the topics do not publish.'
-        next_action: 'R5.2 remains active. The shared 18-geom support stream, guarded
-          delayed-pose hold, and 0.25 s in-range roll-transfer gate are implemented.
-          Three matched +0.4 rad support-creation variants remained negative: transient
-          foot contact only and failed:roll at ~0.139 m. Three aligned terrain_stairs
-          runs at +0.25 m/s advanced 0.039/0.122/0.149 m; a matched +0.5 m/s run advanced
-          0.132 m but raised tilt/effort. All stop short of the first 4.4 m step.
-          The dedicated harness pins the spawn and verifies measured start/telemetry.
-          Next: target-domain terrain locomotion adaptation and a different whole-body
-          get-up strategy; stop scalar splay/speed tuning. Keep recovery opt-in; terrain
-          traversal, velocity tracking, and navigation remain unqualified. 2026-10-13
-          claude: on flat ground the Go2 (go2_himloco) now completes the nav_obstacle
-          mission with leg odometry in MuJoCo and Isaac (truth errors 0.06-0.16 m);
-          Gazebo is rerun after a paused-start fix (docs/status/evidence/p7-legged-navigation-2026-10-13).
-          Terrain traversal and recovery remain.'
+        - docs/status/evidence/go2-get-up-2026-11-14/README.md
+        next_action: 'R5.2 remains active. The shared 18-geom support stream, guarded delayed-pose hold, and 0.25 s in-range
+          roll-transfer gate are implemented. Three matched +0.4 rad support-creation variants remained negative: transient
+          foot contact only and failed:roll at ~0.139 m. Three aligned terrain_stairs runs at +0.25 m/s advanced 0.039/0.122/0.149
+          m; a matched +0.5 m/s run advanced 0.132 m but raised tilt/effort. All stop short of the first 4.4 m step. The
+          dedicated harness pins the spawn and verifies measured start/telemetry. Next: target-domain terrain locomotion
+          adaptation and a different whole-body get-up strategy; stop scalar splay/speed tuning. Keep recovery opt-in; terrain
+          traversal, velocity tracking, and navigation remain unqualified. 2026-10-13 claude: on flat ground the Go2 (go2_himloco)
+          now completes the nav_obstacle mission with leg odometry in MuJoCo and Isaac (truth errors 0.06-0.16 m); Gazebo
+          is rerun after a paused-start fix (docs/status/evidence/p7-legged-navigation-2026-10-13). Terrain traversal and
+          recovery remain. 2026-11-14 claude: first Go2 get_up policy (1500 iterations, 18.4 M steps) stood in 1 of 10 trials
+          from settled collapsed poses (iteration 1050 checkpoint also 1/10); the recurring pose tilted past 90 deg is never
+          recovered. Not passed; next: diverse starts, roll-over shaping, longer training.'
         owner: cline-agent
         scope_paths:
         - src/robot_lab_robots/unitree/go2_description/
@@ -4188,6 +4188,7 @@ tasks:
           do not qualify remaining robot/map/backend missions. See docs/REMAINING_WORK_GUIDE.md.'
       R6.2:
         acceptance_ref: ROADMAP.md
+        active_scope: '2026-11-14 user confirms Claude stopped; Codex takes over pending four-backend relay wiring. Review/install original edits, close native MuJoCo early-return gap, keep sensor input/output remaps and truth separation explicit.'
         implementation_state: '2026-11-14 (Claude) sensor_fault_relay.py: seeded windowed noise/bias/drift/delay/dropout/occlusion/outlier
           for LaserScan/Imu/Odometry/Image with digest traces, truth refused; Gazebo sensor_faults:= launch argument. Unit-tested
           only.'
@@ -4201,10 +4202,13 @@ tasks:
           (PyBullet/MuJoCo), 13 deterministic sensor disturbance tests, 6 terrain/aerial
           tests, 10 diverse maps tests'
         - 'All tests pass in physics tier: 64/64 physics tests green'
-        next_action: Scenario configurations and disturbance helpers exist. Wire them
-          to live sensors/actors and record repeatable baseline/degraded traces with
-          collision, sensing and recovery outcomes; configuration validation is not
-          mission qualification.
+        - docs/status/evidence/r7-simulator-seed-2026-11-14/README.md
+        next_action: 'Scenario configurations and disturbance helpers exist. Wire them to live sensors/actors and record
+          repeatable baseline/degraded traces with collision, sensing and recovery outcomes; configuration validation is
+          not mission qualification. 2026-11-14 claude (later): sensor_faults:= now on MuJoCo/PyBullet/Isaac (simulator
+          sensor publishers remapped onto relay inputs); the relay script was never installed, so sensor_faults:= failed
+          at launch on Gazebo too - fixed. Smoke: Gazebo and MuJoCo /scan +0.5 m bias from the relay, /scan_clean from the
+          simulator. PyBullet/Isaac not run; no degraded mission yet.'
         owner: cline-agent
         scope_paths:
         - src/robot_lab_maps/
@@ -4390,8 +4394,218 @@ tasks:
       certificates. Full declared roadmap acceptance is still open; test counts, metadata and scene loads
       do not qualify remaining robot/map/backend missions. See docs/REMAINING_WORK_GUIDE.md.'
   R7:
-    owner: cline-agent
+    owner: codex
     state: partial
+    takeover_20261114: 'User confirms Claude stopped. Codex owns review/integration of pending Gazebo seed system, algorithm catalog/dispatch/method records, tests, docs and ledger; preserve scoped measured receipts and keep mission qualification separate.'
+    method_records:
+      generated: '2026-11-14'
+      generator: scripts/algorithm_method_records.py
+      summary:
+        methods: 78
+        installed: 71
+        not_installed: 1
+        unavailable: 6
+        with_subrecord: 42
+        with_tests: 57
+        name_math_consistent: 59
+        name_math_corrected: 9
+        name_math_mismatch: 8
+        name_math_not_a_method: 2
+      records:
+        backstepping_controller: 'control; installed; node robot_lab_algorithms/nav2_local_planner planner=backstepping;
+          tests 3; math: Lyapunov/backstepping tracking law for the unicycle'
+        bicycle_mpc: 'control; installed; node robot_lab_algorithms/nav2_bicycle planner=bicycle_mpc; tests 1; math:
+          Linearised kinematic bicycle, steering-rate MPC over a 3-20 step horizon, warm-started, with a solve deadline'
+        bicycle_pure_pursuit: 'control; installed; node robot_lab_algorithms/nav2_bicycle planner=bicycle_pure_pursuit;
+          tests 0; math: Kinematic bicycle at the fixed axle; curvature 2 y / L_d^2 to a lookahead point, kappa = tan(delta)
+          / L, steering and slew limits from the source'
+        bicycle_stanley: 'control; installed; node robot_lab_algorithms/nav2_bicycle planner=bicycle_stanley; tests
+          1; math: Stanley law delta = heading error + atan(k e / v) at the fixed axle, with a rear-steer feedback adaptation
+          and source steering limits'
+        cleaning_controller: 'control; installed; node robot_lab_controller/cleaning_controller.py; tests 0; math: Boustrophedon-style
+          coverage lanes over the cleanable grid cells, tracking cleaned cells'
+        feedback_linearization: 'control; installed; node robot_lab_algorithms/nav2_local_planner planner=feedback_linearization;
+          tests 3; math: Static input-output linearisation of a point ahead of the wheel axle'
+        humanoid_policy_controller: 'control; installed; node robot_lab_adapter/humanoid-policy-controller; tests 1;
+          math: Learned ONNX policy: joint/IMU observation to joint position targets'
+        humanoid_standing_controller: 'control; installed; node robot_lab_adapter/humanoid-standing-controller; tests
+          2; math: Joint PD to a standing pose (legs Kp 120, Kd 4 N m/rad) plus an IMU ankle balance strategy and a
+          latched tilt monitor'
+        joint_effort_commander: 'control; installed; node robot_lab_adapter/joint-effort-commander; tests 0; math: Fixed-rate
+          effort command relay to a forward_command_controller (no feedback law)'
+        lqr_controller: 'control; installed; node robot_lab_algorithms/nav2_local_planner planner=lqr; tests 3; math:
+          Discrete LQR on the lateral/heading error linearised about the path'
+        map_coverage_controller: 'control; installed; node robot_lab_controller/mapping_controller.py; tests 0; math:
+          Frontier exploration of the occupancy grid, then wall following to confirm cells'
+        mavros_offboard_controller: 'control; unavailable; unavailable retired - the zero-thrust AttitudeTarget demonstration
+          does not hover; fly px4_x500 in mode:=flight; tests 2; math: Retired: constant zero-thrust AttitudeTarget
+          (no control law); name/math corrected: Retired zero-thrust AttitudeTarget stub whose node raises on start,
+          yet its dispatch still started it. Now unavailable, status blocked.'
+        mpc_controller: 'control; installed; node robot_lab_algorithms/nav2_local_planner planner=linear_mpc; tests
+          2; math: Linear time-varying MPC on the lateral error model with hard turn-rate bounds'
+        native_holonomic_controller: 'control; installed; stack controller; tests 1; math: Mecanum / four-wheel-steer
+          inverse kinematics from body twist to wheel commands'
+        native_tracked_controller: 'control; installed; stack native_tracked; tests 0; math: Bounded command gate to
+          Gazebo TrackController belt contact (skid steering)'
+        noisy_controller: 'control; installed; node robot_lab_controller/noisy_controller; tests 0; math: Differential-drive
+          wheel odometry with Gaussian encoder noise (sigma 0.005 rad); name/math corrected: Was catalogued as PID;
+          it is wheel odometry with Gaussian encoder noise (sigma 0.005 rad), with no feedback law.'
+        nonlinear_mpc: 'control; installed; node robot_lab_algorithms/nav2_local_planner planner=nonlinear_mpc; tests
+          2; math: Nonlinear MPC on the unicycle kinematics, single shooting with an adjoint gradient'
+        pid_controller: 'control; installed; node robot_lab_algorithms/nav2_local_planner planner=pid; tests 3; math:
+          PID on a heading error that folds in the lateral offset, with curvature feedforward'
+        simple_controller: 'control; installed; stack controller; tests 3; math: Differential-drive inverse kinematics
+          v_l,r = (v -/+ w b/2) / r and wheel odometry; name/math corrected: Was catalogued as PID; it is differential-drive
+          inverse kinematics plus wheel odometry, with no feedback law.'
+        twist_relay: 'control; installed; node robot_lab_controller/twist_relay; tests 0; math: Twist / TwistStamped
+          relay; name/math not_a_method: Message relay, not a control law.'
+        a_star_planner: 'global_planning; installed; plugin nav2_smac_planner/SmacPlanner2D; tests 6; math: A* on the
+          costmap grid with cost-aware edges; name/math corrected: Runs Nav2 Smac 2D (A* with a cost-aware heuristic);
+          the catalog named the undispatched robot_lab_planning::AStarPlanner.'
+        dijkstra_planner: 'global_planning; installed; plugin nav2_navfn_planner/NavfnPlanner; tests 6; math: Dijkstra
+          wavefront navigation function on the costmap (NavFn with use_astar false); name/math mismatch: Dispatches
+          the same NavFn plugin as navfn_planner (use_astar false, i.e. Dijkstra), so the two ids are one method and
+          not separate comparison arms; robot_lab_planning::DijkstraPlanner is built but not dispatched. same dispatch
+          entry as navfn_planner'
+        hybrid_a_star_planner: 'global_planning; installed; plugin nav2_smac_planner/SmacPlannerHybrid; tests 0; math:
+          A* over (x, y, heading) with Dubins/Reeds-Shepp motion primitives'
+        navfn_planner: 'global_planning; installed; plugin nav2_navfn_planner/NavfnPlanner; tests 7; math: Dijkstra
+          potential field propagated from the goal; name/math corrected: Was catalogued as a potential field; NavFn
+          is a Dijkstra wavefront navigation function (A* with use_astar) descended by gradient, i.e. grid search. same
+          dispatch entry as dijkstra_planner'
+        prm_planner: 'global_planning; installed; node robot_lab_algorithms/nav2_global_planner planner=prm_planner;
+          tests 2; math: Probabilistic roadmap: 600 free samples, k = 12 nearest-neighbour edges, Dijkstra'
+        rrt_planner: 'global_planning; installed; node robot_lab_algorithms/nav2_global_planner planner=rrt_planner;
+          tests 5; math: Goal-biased rapidly-exploring random tree with collision-checked edges'
+        rrt_star_planner: 'global_planning; installed; node robot_lab_algorithms/nav2_global_planner planner=rrt_star_planner;
+          tests 3; math: RRT with best-parent choice and rewiring, anytime within 1 s'
+        state_lattice_planner: 'global_planning; installed; plugin nav2_smac_planner/SmacPlannerLattice; tests 0; math:
+          Search over precomputed kinematically feasible motion primitives'
+        voronoi_planner: 'global_planning; installed; node robot_lab_algorithms/nav2_global_planner planner=voronoi_planner;
+          tests 4; math: Path along the generalized Voronoi diagram (maximum clearance)'
+        dwb_local_planner: 'local_planning; installed; plugin dwb_core::DWBLocalPlanner; tests 4; math: Trajectory rollout:
+          dynamic window velocity samples, rollouts scored with critics'
+        follow_the_gap: 'local_planning; installed; node robot_lab_algorithms/nav2_local_planner planner=follow_the_gap;
+          tests 3; math: Reactive: steer toward the free scan gap closest to the path direction'
+        mppi_controller: 'local_planning; installed; plugin nav2_mppi_controller::MPPIController; tests 1; math: Trajectory
+          optimization: model predictive path integral over 2000 noisy control sequences (2.8 s), weighted average'
+        mppi_local_planner: 'local_planning; unavailable; unavailable placeholder - it scores random velocities by a
+          constant goal distance, with no horizon rollout or obstacle cost; use mppi_controller (Nav2 MPPI); tests 2;
+          math: Retired placeholder: random velocities scored by goal distance (no rollout)'
+        pd_motion_planner: 'local_planning; installed; node robot_lab_motion/pd_motion_planner.py; tests 0; math: PD
+          law on distance and heading error to a lookahead point on the path; name/math mismatch: Catalogued as a local
+          planner; it is a PD law on pose error toward a lookahead point, with no obstacle term or trajectory search.'
+        pure_pursuit: 'local_planning; installed; plugin nav2_regulated_pure_pursuit_controller::RegulatedPurePursuitController;
+          tests 1; math: Pure pursuit on a lookahead point with curvature and cost speed regulation; name/math corrected:
+          Runs Nav2 Regulated Pure Pursuit; the catalog named it plain pure pursuit in robot_lab_motion. The id regulated_pure_pursuit
+          runs robot_lab''s own copy of the same law.'
+        regulated_pure_pursuit: 'local_planning; installed; node robot_lab_algorithms/nav2_local_planner planner=regulated_pure_pursuit;
+          tests 2; math: Pure pursuit with curvature slowdown below a 0.9 m turn radius, served as Nav2 FollowPath'
+        teb_local_planner: 'local_planning; unavailable; unavailable cataloged only - nav2_teb_planner is not built
+          in this workspace; tests 5; math: Timed elastic band: sparse nonlinear least squares over poses and time intervals
+          (upstream; not installed); name/math corrected: The catalog named nav2_teb_planner, which does not exist,
+          and said integrated; upstream is teb_local_planner (TebLocalPlannerROS), not installed. Now cataloged; follow_the_gap
+          is the R7.7 replacement.'
+        amcl: 'localization; installed; stack global_localization; tests 13; math: Adaptive Monte Carlo localization:
+          particle filter with KLD sampling and a likelihood-field laser model'
+        correlative_localization: 'localization; installed; node robot_lab_algorithms/correlative_localization; tests
+          0; math: Exhaustive coarse-to-fine search on a Gaussian likelihood field'
+        dead_reckoning: 'localization; installed; node robot_lab_algorithms/dead_reckoning; tests 3; math: Composition
+          of odometry increments'
+        hector_slam: 'localization; unavailable; unavailable cataloged only - hector_slam is not built in this workspace;
+          tests 1; math: Gauss-Newton scan-to-map matching on a multi-resolution grid (upstream; no Humble release)'
+        icp_localization: 'localization; installed; node robot_lab_algorithms/icp_localization; tests 1; math: Iterative
+          closest point to the map surface cells, closed-form 2D rigid alignment'
+        ndt_localization: 'localization; installed; node robot_lab_algorithms/ndt_localization; tests 1; math: Normal
+          distributions transform on 0.5 m cells, reweighted Gauss-Newton with line search'
+        odometry_motion_model: 'localization; installed; node robot_lab_localization/odometry_motion_model; tests 0;
+          math: Sampling odometry motion model (rotation-translation-rotation, noise alpha1-alpha4)'
+        plicp_localization: 'localization; installed; node robot_lab_algorithms/plicp_localization; tests 0; math: Gauss-Newton
+          on point-to-line distances with map normals and robust weights'
+        rgbd_slam_localization: 'localization; unavailable; unavailable retired 2026-10-13 - the node was a simplified
+          stand-in; RGB-D localization runs as rtabmap_localization; tests 1; math: Retired stand-in; RGB-D localization
+          runs as rtabmap_localization'
+        robot_localization_ekf: 'localization; installed; stack local_localization; tests 0; math: robot_localization
+          EKF: 15-state omnidirectional model, odometry and IMU updates; name/math mismatch: Same robot_localization
+          ekf_node as ekf_localization_node (one method, two ids); the catalog executable was nav2_ekf_node, which is
+          not a binary (corrected to ekf_node).'
+        rtabmap_localization: 'localization; installed; stack rtabmap; tests 1; math: RGB-D appearance-based localization:
+          bag-of-words loop closure and graph optimization'
+        slam_toolbox: 'localization; installed; stack slam; tests 0; math: Pose-graph SLAM: correlative scan matching,
+          loop closure, sparse pose-graph optimization'
+        camera_calibration: 'perception; installed; node robot_lab_algorithms/camera_calibration; tests 0; math: Zhang
+          planar chessboard calibration (cv2.calibrateCamera) with sub-pixel corners'
+        costmap_2d_observation: 'perception; installed; stack navigation_costmap; tests 3; math: Nav2 ObstacleLayer:
+          marks sensor hits and ray-traces free space into the costmap; name/math corrected: The catalog named nav2_costmap_2d::ObservationLayer,
+          which does not exist; the Nav2 ObstacleLayer (observation buffers, ray-traced clearing) is what runs.'
+        dbscan_clusterer: 'perception; installed; node robot_lab_algorithms/dbscan_clusterer; tests 2; math: Density-based
+          clustering with core, border and noise points'
+        depth_image_to_pointcloud: 'perception; installed; node robot_lab_algorithms/depth_image_to_pointcloud; tests
+          0; math: Pinhole back-projection p = d K^-1 [u v 1]^T'
+        euclidean_clusterer: 'perception; installed; node robot_lab_algorithms/euclidean_clusterer; tests 2; math: Region
+          growing on a KD-tree (PCL EuclideanClusterExtraction)'
+        feature_detection: 'perception; installed; node robot_lab_algorithms/feature_detection; tests 0; math: Feature
+          matching to a keyframe (Lowe ratio test), depth lift to 3D, PnP with RANSAC'
+        laser_scan_to_pointcloud: 'perception; not installed; node pointcloud_to_laserscan/laserscan_to_pointcloud_node;
+          tests 2; math: Polar-to-Cartesian projection of scan rays (laserscan_to_pointcloud_node); name/math corrected:
+          Its dispatch and launch fragment started pointcloud_to_laserscan_node, the reverse conversion; now laserscan_to_pointcloud_node.
+          The package is not installed on this host.'
+        obstacle_detector: 'perception; installed; node robot_lab_algorithms/obstacle_detector; tests 3; math: Connected
+          components of scan points under a distance threshold'
+        pointcloud_segmenter: 'perception; installed; node robot_lab_algorithms/pointcloud_segmenter; tests 3; math:
+          Ground / non-ground split by height threshold in the upright target frame'
+        ransac_ground_removal: 'perception; installed; node robot_lab_algorithms/ransac_ground_removal; tests 2; math:
+          RANSAC plane hypotheses restricted to near-vertical normals, least-squares refinement on the inliers'
+        scan_clusterer: 'perception; installed; node robot_lab_algorithms/scan_clusterer; tests 3; math: Sequential
+          breakpoint detection along the scan, fixed or adaptive (range-dependent) threshold'
+        attitude_eskf: 'sensor_fusion; installed; node robot_lab_algorithms/attitude_eskf; tests 0; math: Error-state
+          Kalman filter on attitude and gyro bias'
+        complementary_imu: 'sensor_fusion; installed; node robot_lab_algorithms/complementary_imu; tests 2; math: Gyro
+          integration with roll and pitch pulled toward the accelerometer tilt'
+        gps_odom_fusion: 'sensor_fusion; installed; node robot_lab_algorithms/gps_odom_fusion; tests 2; math: The wheel/IMU
+          EKF with GNSS position updates'
+        imu_complementary_filter: 'sensor_fusion; installed; node imu_filter_madgwick/imu_filter_madgwick_node; tests
+          0; math: Madgwick gradient-descent attitude filter (imu_tools, upstream C++); name/math mismatch: Id says
+          complementary filter; it runs imu_tools'' Madgwick gradient-descent filter (imu_filter_madgwick_node); the
+          imu_tools complementary filter package is not installed. Kept as the upstream Madgwick reference beside madgwick_filter;
+          family corrected to gradient_descent.'
+        imu_republisher: 'sensor_fusion; installed; stack local_localization; tests 1; math: IMU frame/topic relay;
+          name/math not_a_method: Frame/topic relay, not an estimator.'
+        madgwick_filter: 'sensor_fusion; installed; node robot_lab_algorithms/madgwick_filter; tests 1; math: One normalised
+          gradient step per sample on the gravity objective'
+        mahony_filter: 'sensor_fusion; installed; node robot_lab_algorithms/mahony_filter; tests 1; math: PI feedback
+          of the gravity cross error into the gyro'
+        wheel_imu_fusion: 'sensor_fusion; installed; node robot_lab_algorithms/wheel_imu_fusion; tests 2; math: EKF
+          on [x, y, theta, v, b_g] with a zero angular rate update at standstill'
+        wheel_imu_gnss_ukf: 'sensor_fusion; installed; node robot_lab_algorithms/wheel_imu_gnss_ukf; tests 1; math:
+          Unscented Kalman filter on the same model and measurements'
+        ekf_3d_estimator: 'state_estimation; installed; node robot_lab_algorithms/ekf_3d_estimator; tests 2; math: Extended
+          Kalman filter on the constant turn rate and velocity model; name/math mismatch: Id says 3D; the node runs
+          a planar constant turn-rate and velocity (CTRV) EKF (tracking_filters.CtrvEkf). state_estimation.EKF3DEstimator
+          (per-axis scalar gains, not an EKF) is unused legacy code.'
+        ekf_localization_node: 'state_estimation; installed; stack local_localization; tests 2; math: robot_localization
+          EKF: 15-state omnidirectional model, odometry and IMU updates; name/math mismatch: Same robot_localization
+          ekf_node as robot_localization_ekf (one method, two ids).'
+        error_state_ekf: 'state_estimation; unavailable; unavailable retired 2026-10-13 - its node filtered noiseless
+          ground truth; the error-state formulation runs for attitude as sensor_fusion attitude_eskf; tests 1; math:
+          Retired: filtered noiseless truth; the error-state formulation runs as attitude_eskf'
+        kalman_filter_1d: 'state_estimation; installed; node robot_lab_localization/kalman_filter; tests 0; math: Scalar
+          Kalman filter on yaw rate fusing wheel odometry and IMU'
+        linear_kalman_filter: 'state_estimation; installed; node robot_lab_algorithms/linear_kalman_filter; tests 1;
+          math: Kalman filter on [x, y, vx, vy]'
+        motion_model_estimator: 'state_estimation; installed; node robot_lab_algorithms/motion_model_estimator; tests
+          2; math: IMM of a straight-line and a turning CTRV EKF; name/math mismatch: Generic id; the node runs an interacting
+          multiple model filter (constant velocity + coordinated turn). The fixed-gain MotionModelEstimator class is
+          unused legacy code.'
+        particle_filter: 'state_estimation; installed; node robot_lab_algorithms/particle_filter; tests 1; math: Sequential
+          importance resampling on the CTRV model'
+        pose_graph_estimator: 'state_estimation; installed; node robot_lab_algorithms/pose_graph_estimator; tests 2;
+          math: Fixed-lag least squares over the last 20 fixes with constant-velocity factors; name/math mismatch: Id
+          says pose graph; the node runs a 2 s sliding-window least-squares smoother over GNSS fixes with motion constraints
+          (a small pose graph without loop closures). The exponential-decay PoseGraphEstimator class is unused legacy
+          code.'
+        ukf_estimator: 'state_estimation; installed; node robot_lab_algorithms/ukf_estimator; tests 1; math: Unscented
+          Kalman filter on the CTRV model'
     tasks:
       R7.1:
         acceptance_ref: ROADMAP.md
@@ -4403,18 +4617,22 @@ tasks:
         evidence:
         - 'R7 benchmark framework with 39 tests + 21 simple verification tests: all
           pass'
-        next_action: 'Preserve the real ROS wrappers and numerical cores. Verify installed
-          useful input/output, oracle accuracy, replay and failure contracts per category;
-          counting dispatch entries, conversions and stack aliases does not prove
-          five substantive algorithms. 2026-10-13 claude: every category''s node ids
-          now run real methods with measured comparisons (R7.2-R7.8): perception 6
-          lab kernels, localization 4 scan matchers + dead reckoning beside Nav2 AMCL/slam_toolbox/RTAB-Map,
-          state estimation 6 filters, sensor fusion 4 attitude + 3 pose filters +
-          upstream imu_tools, global planning 8 planners, local planning 5 controllers,
-          control 6 FollowPath trackers. Ids whose old nodes were stand-ins are retired
-          with a reason in algorithm_dispatch.yaml (rgbd_slam_localization, error_state_ekf);
-          cataloged-only entries say so. Remaining per category: runs on simulator
-          sensor data where the comparison is offline (R7.2-R7.5).'
+        - docs/status/evidence/r7-simulator-seed-2026-11-14/README.md
+        - docs/status/evidence/r7-method-records-2026-11-14/README.md
+        next_action: 'Preserve the real ROS wrappers and numerical cores. Verify installed useful input/output, oracle accuracy,
+          replay and failure contracts per category; counting dispatch entries, conversions and stack aliases does not prove
+          five substantive algorithms. 2026-10-13 claude: every category''s node ids now run real methods with measured
+          comparisons (R7.2-R7.8): perception 6 lab kernels, localization 4 scan matchers + dead reckoning beside Nav2 AMCL/slam_toolbox/RTAB-Map,
+          state estimation 6 filters, sensor fusion 4 attitude + 3 pose filters + upstream imu_tools, global planning 8
+          planners, local planning 5 controllers, control 6 FollowPath trackers. Ids whose old nodes were stand-ins are
+          retired with a reason in algorithm_dispatch.yaml (rgbd_slam_localization, error_state_ekf); cataloged-only entries
+          say so. Remaining per category: runs on simulator sensor data where the comparison is offline (R7.2-R7.5). 2026-11-14
+          claude: implemented, experimental. I19 done: Gazebo sim_seed (robot_lab::SimulationSeed world system) repeats
+          IMU noise 300/300 for one seed, 0/300 across seeds or unseeded (scripts/gazebo_seed_check.py); MuJoCo/PyBullet/Isaac
+          publish exact sensors and take the seeded sensor-fault relay. scripts/algorithm_method_records.py writes R7.method_records
+          (78 ids; 59 consistent, 9 corrected, 8 noted name/math mismatches, 2 relays) and the catalog/dispatch were corrected
+          (laser_scan_to_pointcloud ran the reverse conversion, retired MAVROS stub still dispatched, nonexistent TEB package/costmap
+          layer, wrong NavFn/simple/noisy families, undispatched A*/pure pursuit implementations). Comparisons remain V10.'
         owner: cline-agent
         scope_paths:
         - src/robot_lab_algorithms/

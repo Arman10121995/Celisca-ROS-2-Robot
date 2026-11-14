@@ -140,13 +140,13 @@ Work top to bottom. Each line links to its task.
 | I10 | [R10.3](#r103--swarm-robotics) Swarms | Done 2026-11-14: ROS2swarm port of per-member scan-only behaviours, scan-sensed cooperative coverage, ground/air member-loss replanning; dispersion and coverage-with-loss measured; aggregation not yet passing; 3–4 drone flight is validation | implemented |
 | I11 | [R10.5](#r105--underwater-worlds-sensing-slam-and-navigation) / [R10.4](#r104--underwater-robots-and-controllers) Marine | Done 2026-11-14: MuJoCo ROV plant (ported Fortress water forces; matches Gazebo), damping-based current feedforward (1 cm drift in 0.1 m/s), volumetric and current-aware AUV routes (unit-tested). PyBullet/Isaac marine, AUV sensor-only localization mission remain | implemented |
 | I12 | [R10.6](#r106--six--and-eight-legged-robots) / [R10.7](#r107--segmented-and-additional-robot-forms) Multi-leg and forms | Done 2026-11-14: depth/IMU flipper policy (sequences a step, but the 4 Nm flippers cannot climb 0.18 m: measured), bounded gait slip/support recovery (unit-tested). Stronger flippers, other backends, per-model terrain missions remain | implemented |
-| I13 | [R5.2](#r52--go2-quadruped-locomotion) / [R5.3](#r53--berkeley-humanoid-lite-balance-and-walking) / [R12](#r12--legged-policy-training) Legged | 2026-11-14: `get_up` task and stairs curriculum implemented (training runs pending); BHL contract/export, G1/Go2W policies, GPU training remain | partial |
+| I13 | [R5.2](#r52--go2-quadruped-locomotion) / [R5.3](#r53--berkeley-humanoid-lite-balance-and-walking) / [R12](#r12--legged-policy-training) Legged | 2026-11-14: `get_up` task and stairs curriculum implemented; first Go2 get-up policy 1/10 (not passed); BHL contract/export, G1/Go2W policies, GPU training remain | partial |
 | I14 | [R5.5](#r55--ackermann-rear-steer-and-anti-ackermann-cars) Cars | 2026-11-14: park-at-heading runtime (`car_parking.py`) from the measured shuffle + trim (10/12 course cells); slalom aborts and a GUI park control remain | implemented |
 | I15 | [R3.6](#r36--external-robot-assets-in-normal-launch) Assets | 2026-11-14: model-derived display-only reasons for all 77 profiles in the GUI; Lite6/Google Robot jogging via unnamed-actuator support. Vendor controllers for legged/URDF profiles remain | partial |
-| I16 | [R6.5](#r65--world-to-occupancy-generation) / [R6.6](#r66--external-world-library) / [R6.2](#r62--dynamic-and-sensor-disturbance-cases) Worlds | 2026-11-14: free-region labelling + reviewed grid registration (R6.5), seeded live sensor-fault relay for Gazebo (R6.2). Licensed Fuel imports, fixture review, actors with collision remain | partial |
+| I16 | [R6.5](#r65--world-to-occupancy-generation) / [R6.6](#r66--external-world-library) / [R6.2](#r62--dynamic-and-sensor-disturbance-cases) Worlds | 2026-11-14: free-region labelling + reviewed grid registration (R6.5), seeded live sensor-fault relay on every backend (R6.2). Licensed Fuel imports, fixture review, actors with collision remain | partial |
 | I17 | [R11](#r11--molar--probot-l-family) MOLAR | Sensors, SLAM/Nav2, payload transfer, multi-floor | partial, needs the sensor layout |
 | I18 | [P4](#p4--mujoco-large-world-speed) MuJoCo speed | Faster flex/scan/camera updates on large worlds | partial |
-| I19 | [R7](#r7--algorithm-breadth) Algorithms | Simulator-applied seeds, remaining method contracts | partial |
+| I19 | [R7](#r7--algorithm-breadth) Algorithms | 2026-11-14: Gazebo `sim_seed` (300/300 repeat), sensor-fault relay on all backends, 78 per-method ledger records (9 corrected, 8 noted mismatches) | implemented |
 | I20 | [R9.1](#r91--provenance-licenses-and-clean-host-reproduction) Provenance | 2026-11-14: PX4 checkout + 25 submodules and all vendor sources scanned from their license files; 7 trees without license files listed for review | implemented |
 
 Blocked: [R9.4](#r94--optional-physical-bumperbot-hil) physical hardware
@@ -247,8 +247,12 @@ tier repair awaits its exact-revision published rerun. Details and evidence are 
   `legged_training.py` / `legged_train.py` and the GUI Training page; the
   rough-terrain curriculum now really rewrites the heightfield.
 - **Remaining implementation:**
-  - train and screen the get-up and stairs policies (a first Go2 `get_up`
-    run is in progress; screens: 60 N collapse, `terrain_stairs`).
+  - train and screen the get-up and stairs policies (screens: 60 N collapse,
+    `terrain_stairs`). The first Go2 `get_up` policy (1500 iterations, 18 M
+    steps) stood in 1 of 10 trials from collapsed poses, as did the
+    iteration-1050 checkpoint. It never recovers the recurring pose tilted
+    past 90° ([evidence](docs/status/evidence/go2-get-up-2026-11-14/README.md)).
+    Next: diverse starts, roll-over shaping, longer training.
 - **How to do it:**
   1. Train `push_recovery` and a get-up task with `legged-train`
      (`robot_lab_adapter/legged_training.py`, `ppo.py`) in MuJoCo, starting
@@ -518,8 +522,13 @@ tier repair awaits its exact-revision published rerun. Details and evidence are 
   delay, dropout, occlusion and outliers in time windows, digest traces, and
   truth topics refused; Gazebo launches take `sensor_faults:=<scenario>`
   (the bridge publishes `<topic>_clean`). [Guide](docs/tutorials/sensor-faults.md).
-- **Remaining implementation:** actor worlds with real collision; the relay for
-  the other backends.
+- **Done 2026-11-14 (later):** MuJoCo, PyBullet and Isaac take
+  `sensor_faults:=` too; their own sensor publishers are remapped onto the
+  relay inputs. The relay script was never installed, so `sensor_faults:=`
+  failed at launch until now. Smoke runs on Gazebo and MuJoCo showed the
+  +0.5 m scan bias on `/scan`, with `/scan_clean` from the simulator
+  ([evidence](docs/status/evidence/r7-simulator-seed-2026-11-14/README.md)).
+- **Remaining implementation:** actor worlds with real collision.
 - **How to do it:** a `sensor_fault_relay` node in `robot_lab_utils/`,
   configured per scenario in `scenarios.yaml`, with its own seeds. Truth topics
   are never touched.
@@ -623,7 +632,7 @@ tier repair awaits its exact-revision published rerun. Details and evidence are 
 
 ### R7 — Algorithm breadth
 
-- **State:** partial · **Priority:** I19, then V10 · **Depends on:** R7.1
+- **State:** partial (I19 implementation done 2026-11-14; comparisons remain V10) · **Priority:** V10 · **Depends on:** R7.1
 - **Goal:** five distinct, correct methods per category, compared fairly.
 - **Have:** real methods run in every category:
   - **Global and local planning:** eight global planners and five local
@@ -651,10 +660,31 @@ tier repair awaits its exact-revision published rerun. Details and evidence are 
   | R7.7 Local planning | DWB/DWA, Regulated Pure Pursuit, TEB or replacement, MPPI, Follow-the-Gap |
   | R7.8 Control | PID with anti-windup, LQR, linear MPC, nonlinear MPC, feedback linearization/backstepping |
 
-- **Remaining implementation:**
-  - simulator-applied seeds (each backend actually reseeds noise and actors);
-  - a method subrecord in the ledger for each method, including any method
-    whose name does not match its mathematics.
+- **Done 2026-11-14 (implemented, experimental):**
+  - **Simulator seeds:** `sim_seed:=<n>` adds a Gazebo world system that
+    seeds the shared noise generator. In a measured IMU world, the same seed
+    repeated 300 of 300 noisy samples; another seed or no seed matched 0.
+    MuJoCo, PyBullet and Isaac publish exact sensors. Their seeded noise is
+    the sensor-fault relay, which now runs on every backend
+    ([evidence](docs/status/evidence/r7-simulator-seed-2026-11-14/README.md)).
+  - **Method records:** `scripts/algorithm_method_records.py` writes one
+    ledger record per method (`R7.method_records`, 78 ids: dispatch target,
+    installed, tests, mathematics, name/math state). From reading each
+    node's code: 59 consistent, 9 corrected, 8 named mismatches kept with a
+    note, 2 relays ([records](docs/status/evidence/r7-method-records-2026-11-14/README.md)).
+    - **Corrected:** `laser_scan_to_pointcloud` started the reverse
+      conversion; the retired MAVROS stub was still dispatched; the catalog
+      named a nonexistent TEB package and costmap layer; NavFn was listed as
+      a potential field, and the simple/noisy controllers as PID;
+      `a_star_planner` and `pure_pursuit` named code that is not dispatched.
+    - **Kept with a note:** `dijkstra_planner` runs the same NavFn as
+      `navfn_planner`; the two robot_localization ids are one node;
+      `imu_complementary_filter` is Madgwick; `ekf_3d_estimator` is a planar
+      CTRV EKF; `motion_model_estimator` is an IMM; `pose_graph_estimator` is
+      a sliding-window smoother; `pd_motion_planner` is a PD controller.
+- **Remaining implementation:** none for I19. Optional: install
+  `pointcloud_to_laserscan`; a dispatched Dijkstra distinct from NavFn
+  (`robot_lab_planning::DijkstraPlanner` is built).
 - **How to do it:** the algorithm code is in `src/robot_lab_algorithms/`,
   with ROS wrappers in `src/robot_lab_adapter/` and the catalog in
   `robot_lab_registry/config/algorithms.yaml`. Dispatch is in

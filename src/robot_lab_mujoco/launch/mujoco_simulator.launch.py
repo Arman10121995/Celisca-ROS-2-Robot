@@ -71,10 +71,16 @@ def _build_mujoco_actions(context):
     model_path = LaunchConfiguration("model").perform(context).strip()
     spawn_robot = bool(model_path) and model_path.lower() != "none"
 
+    faults = context.launch_configurations.get('sensor_faults', '').strip()
+    fault_remaps = []
+    if faults:
+        from robot_lab_utils.sensor_fault_relay import launch_actions
+        fault_remaps, relay = launch_actions(faults, robot_name.perform(context), use_sim_time)
+        actions.append(relay)
     native_mjcf = LaunchConfiguration('native_mjcf').perform(context).strip()
     if native_mjcf:
-        return [Node(package='robot_lab_mujoco', executable='native_asset_display',
-            output='screen', parameters=[{
+        return [*actions, Node(package='robot_lab_mujoco', executable='native_asset_display',
+            output='screen', remappings=fault_remaps, parameters=[{
                 'native_mjcf': native_mjcf, 'model': model_path,
                 'arm_control': LaunchConfiguration('arm_control').perform(context),
                 'locomotion_policy_config': LaunchConfiguration('locomotion_policy_config').perform(context),
@@ -195,6 +201,7 @@ def _build_mujoco_actions(context):
             executable="mujoco_spawner",
             name="mujoco_spawner",
             output="screen",
+            remappings=fault_remaps,
             parameters=[spawner_params],
         )
     )
@@ -274,6 +281,7 @@ def generate_launch_description():
             description="Spawn roll (rad) about body x. Nonzero places a "
                         "fallen pose for get-up tests."),
         DeclareLaunchArgument("use_sim_time", default_value="true"),
+        DeclareLaunchArgument('sensor_faults', default_value='',description='Seeded live sensor-fault scenario YAML'),
         DeclareLaunchArgument("gui", default_value="true"),
         DeclareLaunchArgument(
             "hold_position", default_value="false",

@@ -26,7 +26,9 @@
 algorithms:
   perception:
     laser_scan_to_pointcloud:
-      node: {package: pointcloud_to_laserscan, executable: pointcloud_to_laserscan_node}
+      # Scan -> cloud is the package's laserscan_to_pointcloud_node (pointcloud_to_laserscan_node is the reverse).
+      node: {package: pointcloud_to_laserscan, executable: laserscan_to_pointcloud_node,
+             remappings: {scan_in: /scan, cloud: /cloud}}
     costmap_2d_observation:
       stack: navigation_costmap
     obstacle_detector:
@@ -255,7 +257,7 @@ algorithms:
     humanoid_policy_controller:
       node: {package: robot_lab_adapter, executable: humanoid-policy-controller}
     mavros_offboard_controller:
-      node: {package: robot_lab_adapter, executable: mavros-offboard-controller}
+      unavailable: retired - the zero-thrust AttitudeTarget demonstration does not hover; fly px4_x500 in mode:=flight
     cleaning_controller:
       node: {package: robot_lab_controller, executable: cleaning_controller.py}
     map_coverage_controller:

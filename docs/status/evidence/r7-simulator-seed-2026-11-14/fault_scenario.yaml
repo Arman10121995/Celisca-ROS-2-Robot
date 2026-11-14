@@ -1,0 +1,7 @@
+seed: 11
+relays:
+- input: /scan_clean
+  output: /scan
+  type: LaserScan
+  faults:
+  - {kind: bias, value: 0.5}
