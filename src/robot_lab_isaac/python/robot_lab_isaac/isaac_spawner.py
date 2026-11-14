@@ -655,10 +655,17 @@ class IsaacSpawner(Node):
         urdf_file = ""
         urdf = ""
         springs = {}
+        link_friction = {}
         if not robot_free:
             if not os.path.isfile(str(model)):
                 raise RuntimeError("robot model not found: %r" % model)
             urdf_text = _xacro_to_urdf(model)
+            source_friction = parse_drive_config(self.get_parameter('drive_config').value).get('isaac_source_friction', False)
+            if not isinstance(source_friction, bool):
+                raise ValueError('isaac_source_friction must be boolean')
+            if source_friction:
+                from robot_lab_utils.urdf_contact import gazebo_link_friction
+                link_friction = gazebo_link_friction(urdf_text)
             pkg_map = {}
             for pkg_name in re.findall(r"\$\(find\s+([^)]+)\)", urdf_text):
                 try:
@@ -734,6 +741,7 @@ class IsaacSpawner(Node):
             "articulation_native_gravity": (self._articulation.contract.config.get(
                 'isaac_native_gravity_compensation', False) if self._articulation else False),
             "passive_casters": passive_casters,
+            "source_link_friction": link_friction,
             "pd_joint_armature": float(self.get_parameter("pd_joint_armature").value),
             "ground_material": (json.loads(self.get_parameter("ground_material").value)
                                 if self.get_parameter("ground_material").value else None),

@@ -1,0 +1,62 @@
+[
+ {
+  "class": "cable",
+  "x": 4.9,
+  "y": -1.1,
+  "yaw": 0.0,
+  "clearance_m": 1.333,
+  "label": 20,
+  "footprint": {
+   "kind": "box",
+   "half_extents": [
+    0.4,
+    0.006
+   ],
+   "yaw": 0.0
+  }
+ },
+ {
+  "class": "sock",
+  "x": 6.6,
+  "y": -2.9,
+  "yaw": 0.6,
+  "clearance_m": 1.836,
+  "label": 21,
+  "footprint": {
+   "kind": "box",
+   "half_extents": [
+    0.11,
+    0.045
+   ],
+   "yaw": 0.6
+  }
+ },
+ {
+  "class": "shoe",
+  "x": 5.0,
+  "y": -2.9,
+  "yaw": -0.4,
+  "clearance_m": 1.382,
+  "label": 22,
+  "footprint": {
+   "kind": "box",
+   "half_extents": [
+    0.14,
+    0.055
+   ],
+   "yaw": -0.4
+  }
+ },
+ {
+  "class": "pet_waste",
+  "x": 6.1,
+  "y": -1.0,
+  "yaw": 0.0,
+  "clearance_m": 1.0,
+  "label": 23,
+  "footprint": {
+   "kind": "circle",
+   "radius": 0.025
+  }
+ }
+]

@@ -773,11 +773,20 @@ def _apply_articulation_effort_budget(robot, dof_names, joints, efforts, native_
         # PhysX computes actual-pose generalized compensation for the complete
         # floating articulation. The older ROS-side fixed-slide load cannot
         # support a horizontal seven-axis arm. Replace, never add twice.
-        values = robot._articulation_view.get_generalized_gravity_forces(joint_indices=indices)
-        values = np.asarray(values, dtype=float)
-        if values.shape != (1, len(names)) or not np.all(np.isfinite(values)):
+        # Isaac 6.0.1's deprecated wrapper indexes the first num_dof columns,
+        # but PhysX floating-base tensors prepend six root-wrench columns.
+        # Read the complete documented tensor and select JOINT columns only.
+        # https://nvidia-omniverse.github.io/PhysX/physx/latest/_api_build/classPxArticulationReducedCoordinate.html
+        values = np.asarray(robot._articulation_view._physics_view.get_gravity_compensation_forces(), dtype=float)
+        if values.shape == (1, len(dof_names)+6):
+            offset = 6
+        elif values.shape == (1, len(dof_names)):
+            offset = 0
+        else:
             raise ValueError('Invalid native articulation gravity feedback')
-        efforts = dict(zip(names, values[0].tolist()))
+        if not np.all(np.isfinite(values)):
+            raise ValueError('Invalid native articulation gravity feedback')
+        efforts = dict(zip(names, values[0, indices+offset].tolist()))
     feedforward, limits = [], []
     for name in names:
         limit, value = float(joints[name]['effort']), float(efforts.get(name, 0.))
@@ -1065,6 +1074,42 @@ def _apply_ground_material(stage, material):
     return bound
 
 
+def _apply_source_link_friction(stage, friction):
+    """Opt-in source scalar friction on original colliders, including fixed frames.
+
+    Fixed TIAGo caster spheres need their authored 0.01 sliding friction.
+    Engine defaults prevent the original 6 Nm wheels moving the base. Match
+    collider ancestor names rather than only surviving rigid bodies.
+    """
+    from pxr import PhysxSchema, Usd, UsdPhysics, UsdShade
+    import re
+    materials, bound = {}, {}
+    for link, mu in friction.items():
+        if not re.fullmatch(r'[A-Za-z_][A-Za-z0-9_]*', link) or not math.isfinite(mu) or mu < 0:
+            raise ValueError('Invalid source link friction: '+str(link))
+        material = UsdShade.Material.Define(stage, '/World/PhysicsMaterials/source_'+link)
+        api = UsdPhysics.MaterialAPI.Apply(material.GetPrim())
+        api.CreateStaticFrictionAttr(float(mu))
+        api.CreateDynamicFrictionAttr(float(mu))
+        api.CreateRestitutionAttr(0.)
+        PhysxSchema.PhysxMaterialAPI.Apply(material.GetPrim()).CreateFrictionCombineModeAttr('min')
+        materials[link] = material
+    for prim in stage.Traverse(Usd.TraverseInstanceProxies()):
+        path = str(prim.GetPath())
+        if (path.startswith('/World/map') or path.startswith('/World/PhysicsMaterials')
+                or prim.IsInstanceProxy() or not prim.HasAPI(UsdPhysics.CollisionAPI)):
+            continue
+        matches = [part for part in path.split('/') if part in materials]
+        if not matches:
+            continue
+        link = matches[-1]
+        UsdShade.MaterialBindingAPI.Apply(prim).Bind(materials[link], UsdShade.Tokens.strongerThanDescendants, 'physics')
+        bound[link] = bound.get(link, 0)+1
+    if set(materials)-set(bound):
+        raise ValueError('Source friction colliders missing: '+str(sorted(set(materials)-set(bound))))
+    return bound
+
+
 def _read_textured_obj(path):
     """(points, uv) of a staged textured part (robot_lab_utils.textured_mesh:
     unindexed corners, ``v``/``vt`` lines, faces ``f i/i j/j k/k``)."""
@@ -1340,6 +1385,9 @@ def _run_stage(app, reader, cfg, state):
             + list(cfg.get("drive_wheel_joints", [])))
         _emit({"event": "log",
                "msg": "Wheel velocity drives: %s" % (driven or "none found")})
+        if cfg.get('source_link_friction'):
+            friction_bound = _apply_source_link_friction(stage_obj, cfg['source_link_friction'])
+            _emit({'event': 'log', 'msg': 'Source collider friction (min combine): '+str(friction_bound)})
         steered = _author_steer_position_drives(
             stage_obj, cfg.get("drive_steer_joints", []))
         if steered:

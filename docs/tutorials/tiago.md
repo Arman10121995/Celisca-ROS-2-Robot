@@ -45,7 +45,7 @@ modern Gazebo controller plugin needs a separate Fortress port.
 |---|---|
 | Source mechanics | Original link/joint transforms, axes, collision geometry, URDF inertials, public-simulation fixed casters and their low friction |
 | Base | Original 0.0985 m wheel radius, 0.4044 m separation and 6 Nm limit; lab caps 0.2 m/s and 0.4 rad/s |
-| Arm / head / fingers / torso | Original position ranges and effort limits; lower lab joint rates, bounded position PD and plant gravity support |
+| Arm / head / fingers / torso | Original position ranges and effort limits; lower lab joint rates, bounded position PD and plant gravity support; opt-in native PhysX generalized compensation on Isaac |
 | Fingers | Independent source joints; no invented mimic or coupling |
 | Home | Official motion's final arm/torso endpoint, head zero and lab 0.04 m finger opening; explicit operator command |
 | LiDAR | Declared panoramic lab scan at `base_laser_link`, not the source SICK field of view |
@@ -67,6 +67,21 @@ contact pairs. These are declared import approximations. Do not call this
 calibrated or identical dynamics. In the short MuJoCo drive screen, a
 0.12 m/s request reached about 0.085 m/s; source joint friction/damping and
 the original effort envelope remain intact.
+
+Isaac's previous fixed-slide gravity estimate cannot support the horizontal
+arm. This profile explicitly opts into native PhysX actual-pose generalized
+gravity compensation each physics step. Feedforward replaces the old slide
+estimate and reserves its force from the same original effort envelope; it
+does not add an unlimited force. Missing/non-finite native feedback stops the
+SDK control path. Other robot profiles retain their existing default. The
+failed startup-interlock and slide-only-gravity trials are retained in the
+receipt.
+
+The native tensor's floating-base layout starts with six root-wrench entries,
+then joint forces. The adapter handles that layout explicitly; the host's
+deprecated wrapper truncates/indexes it as a joint-only vector. Fixed and
+floating layouts have separate checks. See the
+[PhysX gravity-compensation contract](https://nvidia-omniverse.github.io/PhysX/physx/latest/_api_build/classPxArticulationReducedCoordinate.html).
 
 The camera rides the moving head: MuJoCo attaches it to the nearest retained
 URDF ancestor, while Isaac selects only rigid ancestors after fixed-link

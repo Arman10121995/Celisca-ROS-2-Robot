@@ -1,0 +1,126 @@
+{
+ "model": "/workspace/molar/robot_lab_runtime/vacuum-camera-model2-20261115/vacuum_detector.pt",
+ "scope": "deployed-loader inference on held-out Gazebo fixture RGB; no robot mission",
+ "datasets": {
+  "/workspace/molar/robot_lab_runtime/r133-implementation-20261112/dataset-1": {
+   "images": 32,
+   "per_class": {
+    "cable": {
+     "gt": 13,
+     "matched": 8,
+     "predictions": 10,
+     "false_positives": 2,
+     "recall": 0.615,
+     "precision": 0.8
+    },
+    "pet_waste": {
+     "gt": 5,
+     "matched": 4,
+     "predictions": 7,
+     "false_positives": 3,
+     "recall": 0.8,
+     "precision": 0.571
+    },
+    "shoe": {
+     "gt": 12,
+     "matched": 12,
+     "predictions": 12,
+     "false_positives": 0,
+     "recall": 1.0,
+     "precision": 1.0
+    },
+    "sock": {
+     "gt": 4,
+     "matched": 4,
+     "predictions": 5,
+     "false_positives": 1,
+     "recall": 1.0,
+     "precision": 0.8
+    }
+   },
+   "iou_threshold": 0.5,
+   "score_threshold": 0.75,
+   "inference_mean_wall_s": 0.2391
+  },
+  "/workspace/molar/robot_lab_runtime/vacuum-camera-data-20261115": {
+   "images": 120,
+   "per_class": {
+    "cable": {
+     "gt": 51,
+     "matched": 40,
+     "predictions": 42,
+     "false_positives": 2,
+     "recall": 0.784,
+     "precision": 0.952
+    },
+    "pet_waste": {
+     "gt": 25,
+     "matched": 20,
+     "predictions": 24,
+     "false_positives": 4,
+     "recall": 0.8,
+     "precision": 0.833
+    },
+    "shoe": {
+     "gt": 43,
+     "matched": 40,
+     "predictions": 40,
+     "false_positives": 0,
+     "recall": 0.93,
+     "precision": 1.0
+    },
+    "sock": {
+     "gt": 43,
+     "matched": 27,
+     "predictions": 37,
+     "false_positives": 10,
+     "recall": 0.628,
+     "precision": 0.73
+    }
+   },
+   "iou_threshold": 0.5,
+   "score_threshold": 0.75,
+   "inference_mean_wall_s": 0.3211
+  },
+  "/workspace/molar/robot_lab_runtime/vacuum-camera-data2-20261115": {
+   "images": 150,
+   "per_class": {
+    "cable": {
+     "gt": 86,
+     "matched": 69,
+     "predictions": 80,
+     "false_positives": 11,
+     "recall": 0.802,
+     "precision": 0.863
+    },
+    "pet_waste": {
+     "gt": 52,
+     "matched": 28,
+     "predictions": 32,
+     "false_positives": 4,
+     "recall": 0.538,
+     "precision": 0.875
+    },
+    "shoe": {
+     "gt": 58,
+     "matched": 53,
+     "predictions": 53,
+     "false_positives": 0,
+     "recall": 0.914,
+     "precision": 1.0
+    },
+    "sock": {
+     "gt": 70,
+     "matched": 56,
+     "predictions": 72,
+     "false_positives": 16,
+     "recall": 0.8,
+     "precision": 0.778
+    }
+   },
+   "iou_threshold": 0.5,
+   "score_threshold": 0.75,
+   "inference_mean_wall_s": 0.7061
+  }
+ }
+}

@@ -1,0 +1,44 @@
+{
+  "schema_version": 1,
+  "status": "experimental_candidate",
+  "path": "78565183835ba3000782e86511a4a83cfcc161d1f3a9359f25a16ca0e9e5f231/vacuum_detector.pt",
+  "sha256": "78565183835ba3000782e86511a4a83cfcc161d1f3a9359f25a16ca0e9e5f231",
+  "cat_id": {
+    "cable": 1,
+    "pet_waste": 2,
+    "shoe": 3,
+    "sock": 4
+  },
+  "architecture": "fasterrcnn_mobilenet_v3_large_fpn",
+  "model_kwargs": {
+    "min_size": 480,
+    "max_size": 960
+  },
+  "dataset_path": "/workspace/molar/robot_lab_runtime/vacuum-camera-data2-20261115",
+  "metrics": {
+    "mAP": 0.8004423791510971,
+    "aps": {
+      "cable": 0.8425416714273021,
+      "pet_waste": 0.6467819809103713,
+      "shoe": 0.904306220095694,
+      "sock": 0.808139644171021
+    },
+    "epoch": 10,
+    "train_images": 900,
+    "val_images": 150,
+    "scope": "held-out synthetic images; not a physical cleaning mission"
+  },
+  "seed": 7,
+  "epoch": 10,
+  "freeze_features": false,
+  "torch_version": "2.12.1+cu130",
+  "annotations_sha256": "55be6c8aac228085dcfae6f041c6304798713d509bff84eb8b8ce880039a5c1d",
+  "split_sha256": "6322f9236c7ca0b6cb48311339a65495a0de0465e935f35797971413bd7b76f5",
+  "pretrained_weights": {
+    "url": "https://download.pytorch.org/models/fasterrcnn_mobilenet_v3_large_fpn-fb6a3cc7.pth",
+    "sha256": "fb6a3cc702b1df54c18a44b26708cd083614211062d0c36d2ca7bf9270df3533"
+  },
+  "code_license": "BSD-3-Clause (torchvision); lab wrapper MIT",
+  "source": "https://github.com/pytorch/vision",
+  "qualification": "trained on rendered source primitives; robot mission/real objects unqualified"
+}

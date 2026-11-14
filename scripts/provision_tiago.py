@@ -99,6 +99,7 @@ def provision(store, download=False):
         'Complete official PMB2/pal-gripper public-simulation assembly; source kinematics, inertias, collisions and fixed casters retained',
         'Source 6 Nm wheels with declared 0.2 m/s / 0.4 rad/s lab velocity caps',
         'Twelve independent source position channels, declared bounded lab PD gains/rates plus existing plant gravity feedforward',
+        'Isaac opt-in native actual-pose generalized gravity compensation each step, replacing slide-only feedforward within the same source effort budget',
         'Source home arm/torso target from official motion file; lab 0.04 m finger-opening Home target, head zero',
         'Declared panoramic lab lidar at vendor laser mount, ideal root IMU, source-head RGB-D optics at reduced 320x240/5 Hz',
         'Source modern Gazebo runtime plugins removed for portable backends; no Fortress support claimed',
