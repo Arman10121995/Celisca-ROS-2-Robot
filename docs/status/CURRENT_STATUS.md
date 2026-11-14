@@ -179,6 +179,14 @@ This page records what was measured. **The goals and remaining work are in one l
 [roadmap](../../ROADMAP.md)** (implementation queue first, then validation). Remaining-work
 notes in the dated entries below are history.
 
+November 15: **R13.3 learned camera, implemented, experimental.** A multi-map retrain (1050
+Gazebo fixture views over three maps, with empty background views) reaches held-out mAP@0.5 0.800
+and is the installed `auto` checkpoint, score 0.75. Through the deployed loader, d1 cable improves
+from 1/13 to 8/13 and shoe false positives from 22 to 0. Sock false positives remain (10–16 per
+held-out set). One learned-camera Gazebo zone job in the small_house object world: `completed`,
+`cleaning_screen` pass, 88.3 %, 0 bumper contacts, body ≥ 0.232 m from every object by truth.
+One run on a training map. [Receipt](evidence/r133-camera-detector-2026-11-15/README.md).
+
 November 12: **initial R13.3 camera implementation complete**, including a trained experimental
 checkpoint on SSD and GUI/CLI autofill. Actual Gazebo fixture rendering produced 96 views in 74.239 s;
 eight CPU epochs measured held-out mAP@0.5 0.564. Deployed recognition remains weak for cables

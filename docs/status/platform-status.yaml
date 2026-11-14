@@ -2121,8 +2121,8 @@ tasks:
         acceptance_ref: ROADMAP.md R13.3
         owner: codex
         state: partial
-        updated: '2026-11-14'
-        execution_state: initial_implementation_complete_validation_pending
+        updated: '2026-11-15'
+        execution_state: implemented_experimental_one_mission_measured
         scope_paths:
         - src/robot_lab_vacuum_cleaning/
         - src/robot_lab_gui/robot_lab_gui/cleaning_tab.py
@@ -2134,16 +2134,18 @@ tasks:
         - scripts/generate_vacuum_camera_dataset.py
         - scripts/capture_vacuum_detector_data.py
         - scripts/train_vacuum_detector.py
+        - scripts/evaluate_vacuum_detector.py
         - scripts/vacuum_object_world.py
         - scripts/r9_3_support_matrix.py
         - docs/
         - ROADMAP.md
-        next_action: Initial implementation includes trained/provisioned Gazebo-render candidate and GUI autofill. Defer wider validation; preserve measured weak cable recall (1/13 at score 0.4) and false positives, improve training quality before any support promotion, and record a physical learned-camera job. Continue R14.1 implementation next.
+        next_action: 'Multi-map retrain 2 (held-out mAP 0.800) installed as auto checkpoint, score 0.75; one learned-camera Gazebo zone job passes cleaning_screen with 0 contacts and >= 0.232 m truth clearance. Remaining: repeats, a held-out room, sock false positives and pet-waste recall; keep the Nov 12 weak-cable history. Continue R14.1 implementation next.'
         evidence:
+        - docs/status/evidence/r133-camera-detector-2026-11-15/README.md
         - docs/status/evidence/vacuum-camera-model-2026-11-12/README.md
         - docs/status/evidence/vacuum-camera-2026-11-11/README.md
         - docs/tutorials/vacuum-camera.md
-        title: 'Camera recognition: trained experimental candidate provisioned with GUI autofill; physical mission and weak cable recognition remain unqualified'
+        title: 'Camera recognition: multi-map learned checkpoint installed; one learned-camera Gazebo zone job passes with 0 contacts (2026-11-15); repeats and held-out rooms pending'
     title: Robot-vacuum cleaning system (OOMWOO-class)
   R14:
     acceptance_ref: ROADMAP.md R14.1
