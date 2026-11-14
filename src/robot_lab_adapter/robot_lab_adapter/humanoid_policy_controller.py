@@ -111,6 +111,10 @@ class HumanoidPolicyController(Node):
         self.declare_parameter("imu_topic", "/imu/out")
         self.declare_parameter("cmd_vel_topic", "/cmd_vel")
         self.declare_parameter("policy_name", "policy_humanoid")
+        # A directory laid out like the vendored upstream tree (configs/<name>.yaml
+        # plus its checkpoint), e.g. a policy trained by legged-train (<export>/bhl).
+        # Empty: the vendored upstream checkpoints.
+        self.declare_parameter("policy_dir", "")
         self.declare_parameter("command_rate_hz", POLICY_RATE_HZ)
         self.declare_parameter("settle_duration_s", 2.0)
         self.declare_parameter("yaw_servo_gain", 0.0)
@@ -143,7 +147,11 @@ class HumanoidPolicyController(Node):
                 f"unknown command_interface '{interface}'; falling back to effort")
             interface = "effort"
         self._interface = interface
-        self._controller = BhlPolicyController(load_policy_config(name=policy_name))
+        policy_dir = str(self.get_parameter("policy_dir").value or "")
+        self._controller = BhlPolicyController(load_policy_config(
+            upstream=policy_dir or None, name=policy_name))
+        self.get_logger().info("BHL policy %s from %s" % (
+            policy_name, policy_dir or "the vendored upstream checkpoints"))
         config = self._controller.config
         self._pd = dict(zip(config.joints, zip(config.kp, config.kd, config.effort_limits)))
         effort_rate = float(self.get_parameter("effort_rate_hz").value)

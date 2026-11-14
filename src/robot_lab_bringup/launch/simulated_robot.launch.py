@@ -1456,6 +1456,7 @@ def _build_simulation_actions(context):
                             else 0.0),
                         "torque_filter_enabled": _as_bool(
                             _launch_value(context, "bhl_enable_torque_filter")),
+                        "policy_dir": _launch_value(context, "bhl_policy_dir"),
                     }],
                 )
             )
@@ -1939,6 +1940,11 @@ def generate_launch_description():
                         "constant at the 250 Hz effort-command rate. "
                         "Experimental; matched live A/B did not revive the "
                         "sustained turn."),
+        DeclareLaunchArgument(
+            "bhl_policy_dir", default_value="",
+            description="BHL policy directory with configs/policy_humanoid.yaml and its "
+                        "checkpoint, e.g. a legged-train export's bhl/ folder; empty uses "
+                        "the vendored upstream checkpoint."),
         DeclareLaunchArgument(
             "bhl_physics_timestep", default_value="0.0",
             description="Optional BHL MuJoCo physics timestep in seconds; "

@@ -58,6 +58,10 @@ TRAINABLE = {profile: name for name, profile in POLICY_PROFILES.items()
              if name in ('a1_legged_gym', 'b2_robot_lab', 'go2_himloco', 'go2w_robot_lab',
                          'g1_robomimic_locomotion')}
 
+# Berkeley Humanoid Lite trains in a template generated from its vendored
+# upstream config (bhl_training.write_template), not a provisioned policy.
+TRAINABLE['berkeley_humanoid_lite_sim'] = 'bhl_policy_humanoid'
+
 # Leaf bodies with these names are the feet (the Go2W wheels, the G1 ankle
 # roll links); without any, the leaf bodies with a collision sphere are.
 FOOT_NAME = re.compile(r'foot$|ankle', re.IGNORECASE)
@@ -94,6 +98,13 @@ TASKS = {
                  lin_vel_x=(-0.6, 1.0), lin_vel_y=(-0.4, 0.4), ang_vel_z=(-1.0, 1.0),
                  rewards=dict(tracking_lin_vel=1.0, tracking_ang_vel=0.5, feet_air_time=1.0,
                               **_REGULARIZE)),
+    # Wheel-legged robots (Go2W) roll rather than step: robot_lab's own Go2W
+    # weights (rough_env_cfg.py: track_lin_vel_xy_exp 3.0, track_ang_vel_z_exp
+    # 1.5, feet_air_time 0, stand_still -2.0 only without a command).
+    'wheeled_walk': Task('wheeled_walk', 'Track commanded velocity on wheels; hold the pose when the command is zero.',
+                         lin_vel_x=(-0.6, 1.0), lin_vel_y=(-0.4, 0.4), ang_vel_z=(-1.0, 1.0),
+                         rewards=dict(tracking_lin_vel=3.0, tracking_ang_vel=1.5, stand_still_without_cmd=-2.0,
+                                      **dict(_REGULARIZE, torques=-2.5e-5))),
     'turn_in_place': Task('turn_in_place', 'Turn on the spot at the commanded yaw rate.',
                           ang_vel_z=(-1.0, 1.0), min_ang_vel_z=0.3,
                           rewards=dict(tracking_ang_vel=1.5, hold_position=-1.0, feet_air_time=0.5,
@@ -187,6 +198,9 @@ def template_directory(robot):
     if not name:
         raise ValueError('%s has no trainable template policy (trainable: %s)'
                          % (robot, ', '.join(sorted(TRAINABLE))))
+    if name == 'bhl_policy_humanoid':
+        from .bhl_training import write_template
+        return str(write_template())
     return os.path.join(get_package_share_directory('robot_lab_adapter'), 'policies', 'rl_sar', name)
 
 
@@ -375,7 +389,15 @@ class LeggedTrainingEnv:
         feet = _feet(self.model)
         foot_bottom = min((_geom_bottom_z(self.model, self._scratch, g) for _, geoms, _, _ in feet for g in geoms),
                           default=lowest)
-        self.stand_height = float(self.model.qpos0[2] - foot_bottom)
+        # spawn_height places the root frame; stand_height is the standing height
+        # of the point base_height() measures.  That point is the root frame,
+        # except where the root frame sits at the soles (the BHL sim model): there
+        # the root body's centre of mass, so falls and height rewards see the torso.
+        self.spawn_height = float(self.model.qpos0[2] - foot_bottom)
+        root = int(self.model.jnt_bodyid[0])
+        self.height_offset = (np.asarray(self.model.body_ipos[root], dtype=float).copy()
+                              if self.spawn_height < 0.1 else np.zeros(3))
+        self.stand_height = self.spawn_height + float(self.height_offset[2])
         self.sensor_touch = np.array([self.model.sensor_adr[mujoco.mj_name2id(
             self.model, mujoco.mjtObj.mjOBJ_SENSOR, 'training_foot_%d_touch' % i)] for i in range(self.num_feet)])
         self.obs_dim = 3 + 3 + 3 + 3 * c.num_dofs
@@ -460,7 +482,7 @@ class LeggedTrainingEnv:
             pitch, yaw = self.rng.uniform(-.6, .6), self.rng.uniform(-math.pi, math.pi)
             from scipy.spatial.transform import Rotation
             q = Rotation.from_euler('xyz', [roll, pitch, yaw]).as_quat()
-            data.qpos[0:3] = (0.0, 0.0, self.stand_height * .8)
+            data.qpos[0:3] = (0.0, 0.0, self.stand_height * .8 - self.height_offset[2])
             data.qpos[3:7] = (q[3], q[0], q[1], q[2])
             span = np.where(lower[:, 1] > lower[:, 0], lower[:, 1] - lower[:, 0], 1.)
             joints = c.default_dof_pos + self.rng.uniform(-.35, .35, c.num_dofs) * span
@@ -486,7 +508,7 @@ class LeggedTrainingEnv:
         for i in range(count):
             mujoco.mj_resetData(model, data)
             yaw = self.rng.uniform(-math.pi, math.pi)
-            data.qpos[0:3] = (0.0, 0.0, self.stand_height + 0.02)
+            data.qpos[0:3] = (0.0, 0.0, self.spawn_height + 0.02)
             data.qpos[3:7] = (math.cos(yaw / 2), 0.0, 0.0, math.sin(yaw / 2))
             data.qpos[self.qpos_index] = c.default_dof_pos + self.rng.uniform(-0.1, 0.1, c.num_dofs)
             data.qvel[0:6] = self.rng.uniform(-0.2, 0.2, 6)
@@ -494,6 +516,15 @@ class LeggedTrainingEnv:
             mujoco.mj_forward(model, data)
             mujoco.mj_getState(model, data, states[i], self.state_spec)
         return states
+
+    def base_height(self, qpos):
+        """Height above the terrain of the measured base point (see stand_height)."""
+        height = qpos[:, 2] - self.terrain_height(qpos[:, 0:2])
+        if not np.any(self.height_offset):
+            return height
+        w, x, y, z = qpos[:, 3], qpos[:, 4], qpos[:, 5], qpos[:, 6]
+        ox, oy, oz = self.height_offset
+        return height + 2 * (x * z - w * y) * ox + 2 * (y * z + w * x) * oy + (1 - 2 * (x * x + y * y)) * oz
 
     def _split(self, states):
         """qpos, qvel, ctrl columns of full physics states."""
@@ -618,7 +649,7 @@ class LeggedTrainingEnv:
         dof_vel = qvel[:, self.qvel_index]
         dof_pos = qpos[:, self.qpos_index]
         torque = self._torques(dof_pos, dof_vel)
-        height = qpos[:, 2] - self.terrain_height(qpos[:, 0:2])
+        height = self.base_height(qpos)
         fallen = (gravity[:, 2] > -0.5) | (height < 0.4 * self.stand_height)
         cmd = self.commands
         contact = touch > 1.0
@@ -639,6 +670,7 @@ class LeggedTrainingEnv:
             feet_air_time=air_time,
             hold_position=np.sum(lin_vel[:, :2] ** 2, axis=1),
             stand_still=np.sum(np.abs(dof_pos - c.default_dof_pos)[:, ~self.wheels], axis=1),
+            stand_still_without_cmd=np.sum(np.abs(dof_pos - c.default_dof_pos)[:, ~self.wheels], axis=1) * ~moving,
             base_height=(height - self.stand_height) ** 2,
             alive=np.ones(self.num_envs),
             termination=fallen.astype(np.float64),

@@ -79,6 +79,10 @@ def export_policy(checkpoint, out_dir):
         indent=1) + '\n')
     # The exported directory must load as an ordinary policy.
     PolicyContract.load(out)
+    if run['robot'] == 'berkeley_humanoid_lite_sim':
+        # BHL deploys through humanoid_policy_controller (policy_dir:=<out>/bhl).
+        from .bhl_training import export_bhl
+        export_bhl(model, out / 'bhl', run)
     return out
 
 
@@ -222,7 +226,7 @@ def evaluate(args):
             from .legged_training import _quat_rotate_inverse
             qpos, _ = env._split(env.state)
             gravity_z = float(_quat_rotate_inverse(qpos[:, 3:7], np.array([[0., 0., -1.]]))[0, 2])
-            ratio = float((qpos[0, 2] - env.terrain_height(qpos[:, 0:2])[0]) / env.stand_height)
+            ratio = float(env.base_height(qpos[:1])[0] / env.stand_height)
             phase.update(final_gravity_z=round(gravity_z, 3), final_height_ratio=round(ratio, 3),
                          stood=bool(gravity_z < -0.9 and ratio > 0.8))
         phases.append(phase)

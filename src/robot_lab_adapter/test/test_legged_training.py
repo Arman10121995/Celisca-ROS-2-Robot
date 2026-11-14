@@ -35,10 +35,18 @@ def _trained_model(obs_dim, act_dim, seed=0):
     return model
 
 
+def _template(robot):
+    if robot == 'berkeley_humanoid_lite_sim':     # generated from the vendored upstream config
+        from robot_lab_adapter.bhl_training import write_template
+        return write_template()
+    return POLICY_ROOT / TRAINABLE[robot]
+
+
 def test_trainable_robots_and_their_contracts():
-    assert set(TRAINABLE) == {'unitree_a1', 'unitree_b2', 'unitree_go2', 'unitree_go2w', 'unitree_g1_29dof'}
+    assert set(TRAINABLE) == {'unitree_a1', 'unitree_b2', 'unitree_go2', 'unitree_go2w', 'unitree_g1_29dof',
+                              'berkeley_humanoid_lite_sim'}
     for robot, name in TRAINABLE.items():
-        contract = PolicyContract.load(POLICY_ROOT / name)
+        contract = PolicyContract.load(_template(robot))
         # A deployed template may now use history (the current Go2 export
         # has six frames). Fresh students export the trainer's history-free
         # layout/order; loading must not rewrite that deployed policy.
@@ -56,9 +64,11 @@ def test_trainable_robots_and_their_contracts():
             assert contract.num_dofs == 16 and list(contract.wheel_indices) == [12, 13, 14, 15]
         elif robot == 'unitree_g1_29dof':
             assert contract.num_dofs == 29 and not list(contract.wheel_indices)
+        elif robot == 'berkeley_humanoid_lite_sim':
+            assert contract.num_dofs == 22 and not list(contract.wheel_indices)
         else:
             assert contract.num_dofs == 12 and not list(contract.wheel_indices)
-    assert set(TASKS) == {'walk', 'turn_in_place', 'stand', 'push_recovery', 'get_up'}
+    assert set(TASKS) == {'walk', 'wheeled_walk', 'turn_in_place', 'stand', 'push_recovery', 'get_up'}
     for task in TASKS.values():
         if task.terminate_on_fall:   # get_up starts fallen and is rewarded for rising instead
             assert task.rewards['termination'] < 0 and task.description and task.only_positive
@@ -123,8 +133,8 @@ def _export(tmp_path, robot, obs_dim, act_dim=12):
 def test_exported_directory_is_an_ordinary_policy_bound_to_its_robot(tmp_path, monkeypatch, robot):
     pytest.importorskip('onnxruntime')
     import robot_lab_adapter.legged_training as training
-    monkeypatch.setattr(training, 'template_directory', lambda name: str(POLICY_ROOT / TRAINABLE[name]))
-    template = PolicyContract.load(POLICY_ROOT / TRAINABLE[robot])
+    monkeypatch.setattr(training, 'template_directory', lambda name: str(_template(name)))
+    template = PolicyContract.load(_template(robot))
     obs_dim = 9 + 3 * template.num_dofs
     model, directory = _export(tmp_path, robot, obs_dim, template.num_dofs)
     contract = PolicyContract.load(directory)
@@ -308,6 +318,21 @@ def test_go2w_wheels_take_velocity_targets_and_the_wheels_are_its_feet():
         assert np.all(np.isfinite(obs)) and not np.any(info['fallen'])
     _, qvel = env._split(env.state)
     assert np.all(np.abs(qvel[:, env.qvel_index[12:]]) < 2.0), 'zero wheel action holds the wheels'
+
+
+def test_wheeled_walk_rewards_tracking_not_steps_and_holds_the_pose_only_without_a_command():
+    task = TASKS['wheeled_walk']
+    assert 'feet_air_time' not in task.rewards and task.rewards['tracking_lin_vel'] == 3.0
+    _env('unitree_go2w')                              # skips without the installed packages
+    from robot_lab_adapter.legged_training import LeggedTrainingEnv
+    env = LeggedTrainingEnv('unitree_go2w', 'wheeled_walk', num_envs=2, seed=0, threads=1, episode_s=2.0)
+    env.reset_all()
+    env.commands[:] = [[0.5, 0.0, 0.0], [0.0, 0.0, 0.0]]
+    pose = env.contract.default_dof_pos + 0.2 * ~env.wheels
+    env.state[:, 1 + env.qpos_index] = pose        # state = [time, qpos, qvel, ...]
+    _, terms, _ = env._rewards(np.ones((2, env.num_feet)) * 10.)
+    deviation = 0.2 * 12 * -2.0 * env.dt
+    assert terms['stand_still_without_cmd'] == pytest.approx(deviation / 2)   # only the zero-command copy pays
 
 
 def test_g1_humanoid_model_has_two_feet_and_its_contract_widths():

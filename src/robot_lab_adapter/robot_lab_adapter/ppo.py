@@ -238,8 +238,13 @@ def _node(op, inputs, outputs, name, attributes=b''):
     return body + _string(3, name) + _string(4, op) + attributes
 
 
-def export_onnx(model, path, input_name='obs', output_name='actions'):
-    """Deterministic actor (normalisation folded in) as an ONNX model."""
+def export_onnx(model, path, input_name='obs', output_name='actions', input_permutation=None):
+    """Deterministic actor (normalisation folded in) as an ONNX model.
+
+    ``input_permutation[i]`` is where the actor's input ``i`` sits in the
+    exported model's input (a deployment observation order); the first
+    layer's columns are moved there, so no extra graph node is needed.
+    """
     linears = [layer for layer in model.actor if isinstance(layer, nn.Linear)]
     with torch.no_grad():
         std = torch.sqrt(model.norm.var + 1e-8)
@@ -249,6 +254,13 @@ def export_onnx(model, path, input_name='obs', output_name='actions'):
         # W ((x - m) / s) + b  ==  (W / s) x + (b - W (m / s))
         biases[0] = biases[0] - weights[0] @ (mean / std)
         weights[0] = weights[0] / std
+        if input_permutation is not None:
+            order = torch.as_tensor(list(input_permutation), dtype=torch.long)
+            if sorted(order.tolist()) != list(range(weights[0].shape[1])):
+                raise ValueError('input_permutation must be a permutation of the actor inputs')
+            moved = torch.empty_like(weights[0])
+            moved[:, order] = weights[0]
+            weights[0] = moved
     nodes, initializers, current = b'', b'', input_name
     for index, (weight, bias) in enumerate(zip(weights, biases)):
         out = output_name if index == len(weights) - 1 else 'h%d' % index
