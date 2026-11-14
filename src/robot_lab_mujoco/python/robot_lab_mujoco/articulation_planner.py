@@ -41,6 +41,14 @@ class JointScene:
         self.equalities = data.eq_active.copy()
         self.specs, self.names = copy.deepcopy(specs), tuple(names)
         self.geometry = geometry_digest(model)
+        digest = hashlib.sha256(self.geometry.encode())
+        for array in (model.mesh_vert, model.mesh_face, model.hfield_data):
+            digest.update(array.tobytes())
+        self.scene_sha256 = digest.hexdigest()
+        digest = hashlib.sha256(self.scene_sha256.encode())
+        for array in (self.snapshot, self.mocap_pos, self.mocap_quat, self.equalities):
+            digest.update(array.tobytes())
+        self.snapshot_sha256 = digest.hexdigest()
         self.robot_root = int(model.body_rootid[root_body])
         self.robot_bodies = set(np.flatnonzero(model.body_rootid == self.robot_root).tolist())
         self.addresses = {}
@@ -166,6 +174,8 @@ class ArticulationPlanner:
                         message=self.message if available else 'Flex scenes require a separate full-geometry planning adapter',
                         request_id=self.request_id, plan_id=self.plan_id, targets=dict(self.targets),
                         waypoint=self.index, waypoints=len(self.path or []), planner=dict(self.summary),
+                        scene_sha256=self.scene.scene_sha256 if self.scene is not None else '',
+                        snapshot_sha256=self.scene.snapshot_sha256 if self.scene is not None else '',
                         ready_age_s=max(0., time.monotonic()-self.ready_at) if self.phase == 'ready' else None)
 
     def cancel(self, reason='Plan canceled', phase='stopped', stop=True):

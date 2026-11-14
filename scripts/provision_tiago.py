@@ -129,7 +129,8 @@ def provision(store, download=False):
         'Source antenna/tool inertias are degenerate; backend importer regularization and rest-contact exclusions are declared, not faithful-dynamics qualification. '
         'MuJoCo/PyBullet/Isaac experimental adapter; no physical mission certificate. '
         'Retained Display control screens and exact measured scope: docs/status/evidence/tiago-2026-11-14/README.md. '
-        'MuJoCo has explicit private joint-target Plan/Execute with live source/scene/contact guards. '
+        'MuJoCo has explicit private joint-target Plan/Execute with live source/scene/contact guards; '
+        'scoped normal-GUI route/Stop receipt: docs/status/evidence/tiago-joint-planning-2026-11-14/README.md. '
         'Gazebo Fortress source port, Cartesian/object planning, camera/object pipelines, payload/costmap integration and wider missions remain pending.')
     profile = dict(package='robot_lab_robots', name=NAME, xacro=str(model), type='mobile_manipulator',
         external_asset=True, asset_origin='extension', source_id=sources[0]['id'],

@@ -1,5 +1,17 @@
 # Current Robot Lab status
 
+November 14 joint-planning continuation: TIAGo's normal MuJoCo **Mobile arm**
+page now separates **Plan targets / Plan Home** from **Execute plan**. The
+planner uses a private compiled source/world snapshot, bounded configuration
+detours and the same reduced joint slew as the original servos. Live source/
+scene/start/contact/tracking/lease guards and Stop are retained. Actual GUI
+head/torso/arm/finger plans execute, and GUI Stop interrupts a second route;
+100 final checks and three package builds pass. This is joint-target planning
+on one backend, not Cartesian IK, a TIAGo obstacle/grasp mission or other-map/
+backend qualification. Those R5.9 tasks remain open.
+[Guide](../tutorials/tiago.md#plan-joint-targets-in-mujoco) ·
+[receipt](evidence/tiago-joint-planning-2026-11-14/README.md).
+
 November 14 TIAGo continuation: the complete official PAL Humble PMB2/arm/
 parallel-gripper source is installed as one normal GUI robot, with five pinned
 Apache-2.0 dependencies and twelve independent Mobile arm channels. Existing

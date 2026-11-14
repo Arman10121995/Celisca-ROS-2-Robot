@@ -1,0 +1,465 @@
+{
+  "scope": "Normal installed GUI Mobile arm Plan targets / Execute plan; source servo motion and measured feedback only. No live qpos/body/object writes, object or navigation mission.",
+  "gui_command": [
+    "ros2",
+    "launch",
+    "robot_lab_bringup",
+    "simulated_robot.launch.py",
+    "robot_model:=asset_pal_tiago",
+    "simulator:=mujoco",
+    "use_sim_time:=true",
+    "map_name:=nav_empty",
+    "world_package:=robot_lab_maps",
+    "world_name:=nav_empty",
+    "world_path:=maps/nav_empty/worlds/nav_empty.world",
+    "map_yaml:=maps/nav_empty/maps/map.yaml",
+    "mode:=display",
+    "gui:=auto",
+    "perception:=none"
+  ],
+  "actual_command": [
+    "ros2",
+    "launch",
+    "robot_lab_bringup",
+    "simulated_robot.launch.py",
+    "robot_model:=asset_pal_tiago",
+    "simulator:=mujoco",
+    "use_sim_time:=true",
+    "map_name:=nav_empty",
+    "world_package:=robot_lab_maps",
+    "world_name:=nav_empty",
+    "world_path:=maps/nav_empty/worlds/nav_empty.world",
+    "map_yaml:=maps/nav_empty/maps/map.yaml",
+    "mode:=display",
+    "perception:=none",
+    "gui:=false",
+    "start_rviz:=false"
+  ],
+  "before_plan": {
+    "schema": "robot_lab.urdf_articulation.v1",
+    "plant_id": "9d6956976949421aaf34011269f51540",
+    "state_monotonic": 371965.841098314,
+    "model_path": "/workspace/molar/robot_lab_runtime/external_assets/models/asset_pal_tiago/b2f55f132fb9c607bb67c574b67eff3afcde189c05dd69924ac088136968fe88/robot.urdf",
+    "model_sha256": "6860985f4c8af74f9e35603fa3adc2838e58e46f0c5e337f3576fd9a18cefbc3",
+    "urdf_sha256": "4934f6d260dc52c64b5bad197ee4e180afe0fd5a57b7f80f58596338f60b3b2b",
+    "initialized": true,
+    "status": "neutral; holding initial measured articulation",
+    "fault": "",
+    "base_inhibited": true,
+    "active": true,
+    "qualification": "implemented adapter; runtime validation pending",
+    "coupling_error": {},
+    "coupling_inhibited": false,
+    "channels": [
+      {
+        "name": "arm_1_joint",
+        "mode": "position",
+        "units": "rad",
+        "measured": 1.6813823975541104e-06,
+        "target": 0.0,
+        "reference": 0.0,
+        "measured_velocity": 1.933101008155892e-05,
+        "limits": [
+          0.0,
+          2.748893571891069
+        ],
+        "max_velocity": 0.35,
+        "coupled": false
+      },
+      {
+        "name": "arm_2_joint",
+        "mode": "position",
+        "units": "rad",
+        "measured": -0.0038253354927626514,
+        "target": 0.0,
+        "reference": 0.0,
+        "measured_velocity": 0.01511795569934061,
+        "limits": [
+          -1.5707963267948966,
+          1.090830782496456
+        ],
+        "max_velocity": 0.35,
+        "coupled": false
+      },
+      {
+        "name": "arm_3_joint",
+        "mode": "position",
+        "units": "rad",
+        "measured": -4.9458323149611135e-05,
+        "target": 0.0,
+        "reference": 0.0,
+        "measured_velocity": 0.0002095610953053936,
+        "limits": [
+          -3.5342917352885173,
+          1.5707963267948966
+        ],
+        "max_velocity": 0.35,
+        "coupled": false
+      },
+      {
+        "name": "arm_4_joint",
+        "mode": "position",
+        "units": "rad",
+        "measured": 0.002470900390825355,
+        "target": 0.0,
+        "reference": 0.0,
+        "measured_velocity": -0.008686975793211711,
+        "limits": [
+          -0.39269908169872414,
+          2.356194490192345
+        ],
+        "max_velocity": 0.35,
+        "coupled": false
+      },
+      {
+        "name": "arm_5_joint",
+        "mode": "position",
+        "units": "rad",
+        "measured": 2.4539380876182664e-06,
+        "target": 0.0,
+        "reference": 0.0,
+        "measured_velocity": -1.0499343895020409e-05,
+        "limits": [
+          -2.0943951023931953,
+          2.0943951023931953
+        ],
+        "max_velocity": 0.35,
+        "coupled": false
+      },
+      {
+        "name": "arm_6_joint",
+        "mode": "position",
+        "units": "rad",
+        "measured": 2.484613694313862e-07,
+        "target": 0.0,
+        "reference": 0.0,
+        "measured_velocity": -1.3384546920372537e-05,
+        "limits": [
+          -1.413716694115407,
+          1.413716694115407
+        ],
+        "max_velocity": 0.35,
+        "coupled": false
+      },
+      {
+        "name": "arm_7_joint",
+        "mode": "position",
+        "units": "rad",
+        "measured": 1.6632953700126523e-06,
+        "target": 0.0,
+        "reference": 0.0,
+        "measured_velocity": -5.242924838062601e-06,
+        "limits": [
+          -2.0943951023931953,
+          2.0943951023931953
+        ],
+        "max_velocity": 0.35,
+        "coupled": false
+      },
+      {
+        "name": "gripper_left_finger_joint",
+        "mode": "position",
+        "units": "m",
+        "measured": -0.0004906491665128565,
+        "target": 0.0,
+        "reference": 0.0,
+        "measured_velocity": 0.0011555496621683968,
+        "limits": [
+          -0.001,
+          0.045
+        ],
+        "max_velocity": 0.025,
+        "coupled": false
+      },
+      {
+        "name": "gripper_right_finger_joint",
+        "mode": "position",
+        "units": "m",
+        "measured": 0.0004907794598135417,
+        "target": 0.0,
+        "reference": 0.0,
+        "measured_velocity": -0.0011558520777579012,
+        "limits": [
+          -0.001,
+          0.045
+        ],
+        "max_velocity": 0.025,
+        "coupled": false
+      },
+      {
+        "name": "head_1_joint",
+        "mode": "position",
+        "units": "rad",
+        "measured": -5.760553271192325e-06,
+        "target": 0.0,
+        "reference": 0.0,
+        "measured_velocity": -0.00017773966025530963,
+        "limits": [
+          -1.3089969389957472,
+          1.3089969389957472
+        ],
+        "max_velocity": 0.35,
+        "coupled": false
+      },
+      {
+        "name": "head_2_joint",
+        "mode": "position",
+        "units": "rad",
+        "measured": -0.0015893463694036734,
+        "target": 0.0,
+        "reference": 0.0,
+        "measured_velocity": 0.004218513464210568,
+        "limits": [
+          -1.0471975511965976,
+          0.7853981633974483
+        ],
+        "max_velocity": 0.35,
+        "coupled": false
+      },
+      {
+        "name": "torso_lift_joint",
+        "mode": "position",
+        "units": "m",
+        "measured": -0.0010043749867204301,
+        "target": 0.0,
+        "reference": 0.0,
+        "measured_velocity": 4.337602043041735e-05,
+        "limits": [
+          -0.001,
+          0.35
+        ],
+        "max_velocity": 0.04,
+        "coupled": false
+      }
+    ],
+    "planning": {
+      "schema": "robot_lab.articulation_plan.v1",
+      "available": true,
+      "phase": "stopped",
+      "message": "Plant reset/Stop; request a new plan",
+      "request_id": "",
+      "plan_id": "",
+      "targets": {},
+      "waypoint": 0,
+      "waypoints": 0,
+      "planner": {},
+      "ready_age_s": null
+    }
+  },
+  "request_id": "5e29d0d7b91a4ca2ab8734a781c36d6a",
+  "plan_result": {
+    "schema": "robot_lab.urdf_articulation.v1",
+    "plant_id": "b87825b5dc68440eb8b14acb683b7f66",
+    "state_monotonic": 371965.943028229,
+    "model_path": "/workspace/molar/robot_lab_runtime/external_assets/models/asset_pal_tiago/b2f55f132fb9c607bb67c574b67eff3afcde189c05dd69924ac088136968fe88/robot.urdf",
+    "model_sha256": "6860985f4c8af74f9e35603fa3adc2838e58e46f0c5e337f3576fd9a18cefbc3",
+    "urdf_sha256": "4934f6d260dc52c64b5bad197ee4e180afe0fd5a57b7f80f58596338f60b3b2b",
+    "initialized": true,
+    "status": "Wait for measured articulation to stop before planning",
+    "fault": "",
+    "base_inhibited": true,
+    "active": true,
+    "qualification": "implemented adapter; runtime validation pending",
+    "coupling_error": {},
+    "coupling_inhibited": false,
+    "channels": [
+      {
+        "name": "arm_1_joint",
+        "mode": "position",
+        "units": "rad",
+        "measured": 1.3214092357910012e-06,
+        "target": 1.7814238413908676e-06,
+        "reference": 1.7814238413908676e-06,
+        "measured_velocity": -6.381634229331606e-05,
+        "limits": [
+          0.0,
+          2.748893571891069
+        ],
+        "max_velocity": 0.35,
+        "coupled": false
+      },
+      {
+        "name": "arm_2_joint",
+        "mode": "position",
+        "units": "rad",
+        "measured": -0.0024272723791997097,
+        "target": -0.0025461608460968926,
+        "reference": -0.0025461608460968926,
+        "measured_velocity": 0.0045817920404578666,
+        "limits": [
+          -1.5707963267948966,
+          1.090830782496456
+        ],
+        "max_velocity": 0.35,
+        "coupled": false
+      },
+      {
+        "name": "arm_3_joint",
+        "mode": "position",
+        "units": "rad",
+        "measured": -3.0124723600866354e-05,
+        "target": -3.1779680187813356e-05,
+        "reference": -3.1779680187813356e-05,
+        "measured_velocity": 6.652260116581438e-05,
+        "limits": [
+          -3.5342917352885173,
+          1.5707963267948966
+        ],
+        "max_velocity": 0.35,
+        "coupled": false
+      },
+      {
+        "name": "arm_4_joint",
+        "mode": "position",
+        "units": "rad",
+        "measured": 0.001654636544245134,
+        "target": 0.0017267586906567196,
+        "reference": 0.0017267586906567196,
+        "measured_velocity": -0.0028849308731571915,
+        "limits": [
+          -0.39269908169872414,
+          2.356194490192345
+        ],
+        "max_velocity": 0.35,
+        "coupled": false
+      },
+      {
+        "name": "arm_5_joint",
+        "mode": "position",
+        "units": "rad",
+        "measured": 1.8687964771002834e-06,
+        "target": 1.7413573276217487e-06,
+        "reference": 1.7413573276217487e-06,
+        "measured_velocity": 3.4468410562246285e-05,
+        "limits": [
+          -2.0943951023931953,
+          2.0943951023931953
+        ],
+        "max_velocity": 0.35,
+        "coupled": false
+      },
+      {
+        "name": "arm_6_joint",
+        "mode": "position",
+        "units": "rad",
+        "measured": -7.320907098075577e-08,
+        "target": -2.137789993005884e-07,
+        "reference": -2.137789993005884e-07,
+        "measured_velocity": 2.4804534334178268e-05,
+        "limits": [
+          -1.413716694115407,
+          1.413716694115407
+        ],
+        "max_velocity": 0.35,
+        "coupled": false
+      },
+      {
+        "name": "arm_7_joint",
+        "mode": "position",
+        "units": "rad",
+        "measured": 1.08170331022242e-06,
+        "target": 1.0988653488683691e-06,
+        "reference": 1.0988653488683691e-06,
+        "measured_velocity": 4.572578372596193e-06,
+        "limits": [
+          -2.0943951023931953,
+          2.0943951023931953
+        ],
+        "max_velocity": 0.35,
+        "coupled": false
+      },
+      {
+        "name": "gripper_left_finger_joint",
+        "mode": "position",
+        "units": "m",
+        "measured": -0.00037639337046877077,
+        "target": -0.000387078602706771,
+        "reference": -0.000387078602706771,
+        "measured_velocity": 0.000466835481256217,
+        "limits": [
+          -0.001,
+          0.045
+        ],
+        "max_velocity": 0.025,
+        "coupled": false
+      },
+      {
+        "name": "gripper_right_finger_joint",
+        "mode": "position",
+        "units": "m",
+        "measured": 0.00037651977026660177,
+        "target": 0.00038719149784152766,
+        "reference": 0.00038719149784152766,
+        "measured_velocity": -0.000465000140194091,
+        "limits": [
+          -0.001,
+          0.045
+        ],
+        "max_velocity": 0.025,
+        "coupled": false
+      },
+      {
+        "name": "head_1_joint",
+        "mode": "position",
+        "units": "rad",
+        "measured": -4.635300041477236e-06,
+        "target": -6.640819555016925e-06,
+        "reference": -6.640819555016925e-06,
+        "measured_velocity": 0.00026227615946795434,
+        "limits": [
+          -1.3089969389957472,
+          1.3089969389957472
+        ],
+        "max_velocity": 0.35,
+        "coupled": false
+      },
+      {
+        "name": "head_2_joint",
+        "mode": "position",
+        "units": "rad",
+        "measured": -0.0011758226153457782,
+        "target": -0.0012147762452319843,
+        "reference": -0.0012147762452319843,
+        "measured_velocity": 0.0020247372019635747,
+        "limits": [
+          -1.0471975511965976,
+          0.7853981633974483
+        ],
+        "max_velocity": 0.35,
+        "coupled": false
+      },
+      {
+        "name": "torso_lift_joint",
+        "mode": "position",
+        "units": "m",
+        "measured": -0.0010020470990996923,
+        "target": -0.001,
+        "reference": -0.001,
+        "measured_velocity": -0.00022619178712099766,
+        "limits": [
+          -0.001,
+          0.35
+        ],
+        "max_velocity": 0.04,
+        "coupled": false
+      }
+    ],
+    "planning": {
+      "schema": "robot_lab.articulation_plan.v1",
+      "available": true,
+      "phase": "failed",
+      "message": "Wait for measured articulation to stop before planning",
+      "request_id": "",
+      "plan_id": "",
+      "targets": {},
+      "waypoint": 0,
+      "waypoints": 0,
+      "planner": {},
+      "ready_age_s": null
+    }
+  },
+  "success": false,
+  "error": "AssertionError({'schema': 'robot_lab.articulation_plan.v1', 'available': True, 'phase': 'failed', 'message': 'Wait for measured articulation to stop before planning', 'request_id': '', 'plan_id': '', 'targets': {}, 'waypoint': 0, 'waypoints': 0, 'planner': {}, 'ready_age_s': None})",
+  "traceback": "Traceback (most recent call last):\n  File \"/workspace/molar/robot_lab_runtime/articulation-planning-20261114/gui_trial.py\", line 37, in <module>\n    assert panel.planning().get('phase')=='ready',panel.planning()\nAssertionError: {'schema': 'robot_lab.articulation_plan.v1', 'available': True, 'phase': 'failed', 'message': 'Wait for measured articulation to stop before planning', 'request_id': '', 'plan_id': '', 'targets': {}, 'waypoint': 0, 'waypoints': 0, 'planner': {}, 'ready_age_s': None}\n",
+  "launch_returncode": 0
+}

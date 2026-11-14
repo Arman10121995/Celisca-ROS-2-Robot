@@ -192,6 +192,17 @@ rigid carrier after fixed-link fusion; a root offset evaluated at zero is
 insufficient. Record source inertia defects/import approximations and keep
 Display control separate from collision-planned manipulation and Nav2.
 
+TIAGo also declares a `planning` block with schema
+`robot_lab.articulation_plan.v1` and backend `mujoco`.
+This adds **Plan targets / Plan Home → Execute plan** to
+the existing Mobile arm page. It supports independent bounded position
+channels on a private compiled rigid collision model. Every edge uses the
+same reduced per-channel slew as execution; world/start/plant changes and
+Stop revoke the route. See the [planning workflow](../tutorials/tiago.md#plan-joint-targets-in-mujoco)
+before enabling another source. Coupled joints, flex worlds, other physics
+backends, Cartesian IK and grasp/custody need their own adapters; a profile
+flag alone must not claim those capabilities.
+
 ## Step 4 · For a provisioned robot: the provisioning script
 
 A provisioning script is ordinary Python that runs once per host. It is

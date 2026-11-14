@@ -1,0 +1,115 @@
+{
+  "scope": "TIAGo/MuJoCo/nav_empty normal GUI joint-target Plan/Execute and actual Stop; no object/Cartesian/navigation mission",
+  "base_commit": "eea10d8023a5dd8f10bea04a6d88609e54e6469c",
+  "raw_root": "/workspace/molar/robot_lab_runtime/articulation-planning-20261114",
+  "source_sha256": {
+    "src/robot_lab_mujoco/python/robot_lab_mujoco/articulation_planner.py": "d94e332a4ffdb32a9c7fae0d1aa14d27e95edf6001f85cdeef053c9c5be8cb90",
+    "src/robot_lab_mujoco/python/robot_lab_mujoco/mujoco_spawner.py": "1620ba5908ef5e693f67f1fdbb653e4ec564bafe0b19993c4b1494428b4df85b",
+    "src/robot_lab_utils/robot_lab_utils/urdf_articulation.py": "7201b9b9787d0e3390a14d0e9e28f30686790312deed724153ae9ef823ccc9b0",
+    "src/robot_lab_utils/robot_lab_utils/tiago_source.py": "edc76be531d7e8799841ebf260f31f70c2d094cacfa78576c0a9615458d220f1",
+    "src/robot_lab_utils/robot_lab_utils/bounded_control_planner.py": "5bbcf1ffa90fbc78812f67b8fbbc3f26ca2abfff288ef3d4bcd2e4472c486fef",
+    "src/robot_lab_gui/robot_lab_gui/urdf_arm_controls.py": "bab63f75b007ba15acb04f206540e5b2346049b7c16528a7486cd10eaf53502d",
+    "scripts/provision_tiago.py": "96728a2a66060a1b29125512b491ceba8e08d7bf2775f43c523aad3c144c6c76"
+  },
+  "model_sha256": "6860985f4c8af74f9e35603fa3adc2838e58e46f0c5e337f3576fd9a18cefbc3",
+  "world_sha256": "0ba78b1173d9353ab4eb92b042f3860211b3f5ef95fb6933f1518484940a776d",
+  "raw_files": {
+    "build-final.log": {
+      "sha256": "0bb8a08a9deb657f8e2153b971685ecf8a013752b6b18d5a88fc483ed545de15",
+      "bytes": 1569
+    },
+    "build-gui-feedback.log": {
+      "sha256": "db04e83c0a0400cfba3d583857c4390a9472dfd7dcb6b5a5bf26d1cf0919ad22",
+      "bytes": 550
+    },
+    "build-provenance.log": {
+      "sha256": "11afe59dc4c4d7219f019685bd46a71b4f3d03875862e013c4bed8d516f242a2",
+      "bytes": 556
+    },
+    "build.log": {
+      "sha256": "dc408b4c7541f0e7e31c4f2e061d17f6d019221d3eef68e268b56817e4d8c522",
+      "bytes": 1569
+    },
+    "final-checks.log": {
+      "sha256": "b3524206801d69e2196838e2a3a8f636c329b1c09a9b0b376d5d42f9deab5723",
+      "bytes": 180
+    },
+    "first-checks.log": {
+      "sha256": "77c2ccee4a1d7d78687200c75f24b0f954b94c14a5b1eb8f83f0d35442d90745",
+      "bytes": 11702
+    },
+    "focused-checks.log": {
+      "sha256": "b36908029ce5e87ce47de114b4ddfafb711fde3d3af58ee84bdafcf17f2c60d1",
+      "bytes": 179
+    },
+    "gui-startup-interlock-result.json": {
+      "sha256": "c9b52c63aea8597ad3c001fa5fc700589bf5ef1b0ced413349ca3aa3e6554551",
+      "bytes": 14056
+    },
+    "gui-startup-interlock-trace.json": {
+      "sha256": "555626cda305be4fa1cede7ea5028d25ad768007b84fb24742ebd08e5752b5a7",
+      "bytes": 71045
+    },
+    "gui-startup-interlock.log": {
+      "sha256": "777c1cb7d5e7469076af9f1873135fe4cc271d072f88f1b92c6053744258a0e7",
+      "bytes": 14551
+    },
+    "gui-stop-before-scene-ids-result.json": {
+      "sha256": "80541623e818fcb9b8309c0086bc19fed876497e37d1e647ba8993a557921e74",
+      "bytes": 45038
+    },
+    "gui-stop-before-scene-ids-trace.json": {
+      "sha256": "01c1ec963c4afaa8cbf47f7767155807201570b9052e714a17f20e5ecbc56bb7",
+      "bytes": 815324
+    },
+    "gui-stop-before-scene-ids.log": {
+      "sha256": "80541623e818fcb9b8309c0086bc19fed876497e37d1e647ba8993a557921e74",
+      "bytes": 45038
+    },
+    "gui-stop-result.json": {
+      "sha256": "105d4d867f24cfc09766cf1c641a06a0d24b91cc48260b2442ab2afea19b45c6",
+      "bytes": 45793
+    },
+    "gui-stop-trace.json": {
+      "sha256": "9745871380d7f4c7e82b97e039571d93c7ee036c9fe28b84fa4a9404d5af7935",
+      "bytes": 804242
+    },
+    "gui-stop.log": {
+      "sha256": "105d4d867f24cfc09766cf1c641a06a0d24b91cc48260b2442ab2afea19b45c6",
+      "bytes": 45793
+    },
+    "gui-trial-result.json": {
+      "sha256": "1e177ffdd676115579702cf1f39a112829249b1d71ead0a37ad496a93753db84",
+      "bytes": 22290
+    },
+    "gui-trial-trace.json": {
+      "sha256": "94a1b5f2a8e15ec032d4624f4cc844272a6967528c5b9716cd6a965a71d40359",
+      "bytes": 505623
+    },
+    "gui-trial.log": {
+      "sha256": "1e177ffdd676115579702cf1f39a112829249b1d71ead0a37ad496a93753db84",
+      "bytes": 22290
+    },
+    "gui_stop_trial.py": {
+      "sha256": "09bb59e098d50481abc48da61acc785dcc96afa4331a82a744abeba5f71958fd",
+      "bytes": 5503
+    },
+    "gui_trial.py": {
+      "sha256": "c0dff2dc08caa144954a9ffccf614f2f5b06857f45e3f1cb1d0111c1281280de",
+      "bytes": 4269
+    },
+    "provision-final.json": {
+      "sha256": "1e907e4a5dbcf08cb461a782f83b285ce46d38eed3282a1555e7dfee13b33428",
+      "bytes": 239
+    },
+    "provision.json": {
+      "sha256": "1e907e4a5dbcf08cb461a782f83b285ce46d38eed3282a1555e7dfee13b33428",
+      "bytes": 239
+    },
+    "second-checks.log": {
+      "sha256": "94d412c148df4a7c8beee1d488b57630e550a7a986b5490e739b9b0be024a7cc",
+      "bytes": 1783
+    }
+  },
+  "cleanup": "Owned GUI/physics launches cleaned up. Initial internal-hold lease revocation and servo-tracking implementation failures plus startup readiness refusal are retained; source ceilings, tracking guard and operator Stop revocation were preserved."
+}

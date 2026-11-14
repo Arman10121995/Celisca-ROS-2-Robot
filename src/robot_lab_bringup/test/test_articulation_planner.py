@@ -192,3 +192,13 @@ def test_mocap_actor_motion_invalidates_frozen_scene(tmp_path):
     data.mocap_pos[0, 0] += .02
     assert not scene.settled_start(data)
     assert scene.data.mocap_pos[0, 0] == 2.
+
+
+def test_heartbeat_loss_revokes_an_executing_route(tmp_path):
+    node, c, planner, addresses = ready_plan(tmp_path)
+    planner.request(identity(c, operation='execute_plan', plan_id=planner.plan_id))
+    tick(planner, node, c, addresses)
+    plant = c.plant_id
+    c.heartbeat_at = time.monotonic()-1.
+    tick(planner, node, c, addresses)
+    assert planner.phase == 'failed' and c.holding and c.plant_id != plant

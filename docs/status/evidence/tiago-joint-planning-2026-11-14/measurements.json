@@ -1,0 +1,17 @@
+{
+  "planning_motion_by_units": {
+    "m": 7.397051272859852e-10,
+    "rad": 8.153516764739926e-08
+  },
+  "target_errors": {
+    "head_1_joint": 6.756849046940516e-08,
+    "torso_lift_joint": 8.881314362330084e-06,
+    "arm_4_joint": 4.826045344769048e-06,
+    "gripper_left_finger_joint": 6.928036479747837e-06,
+    "gripper_right_finger_joint": 0.00018391804052342656
+  },
+  "stop_drift_by_units": {
+    "m": 0.00017677975901504543,
+    "rad": 0.0011820496207180509
+  }
+}

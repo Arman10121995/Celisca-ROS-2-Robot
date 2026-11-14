@@ -35,9 +35,61 @@ ros2 launch robot_lab_bringup simulated_robot.launch.py \
 PyBullet and Isaac have portable adapter entries too. Their individual
 measurements and limitations are in the [receipt](../status/evidence/tiago-2026-11-14/README.md).
 Display is the currently exposed workflow. The sensor topics alone do not
-qualify SLAM, localization, Nav2, collision-planned arm motion or object tasks;
-those remain under R5.9. Gazebo is unavailable for this variant: the official
+qualify SLAM, localization, Nav2 or object tasks. MuJoCo also offers the joint
+planning workflow below; other-backend planning remains under R5.9.
+Gazebo is unavailable for this variant: the official
 modern Gazebo controller plugin needs a separate Fortress port.
+
+## Plan joint targets in MuJoCo
+
+**Mobile arm → Plan targets / Plan Home → Execute plan** is available for
+this source in MuJoCo Display. It plans joint configurations, not a Cartesian
+tool pose, grasp or object transfer.
+
+1. Wait for startup settling and **Base Drive available**. The Plan buttons
+   stay disabled while the articulation moves.
+2. Press **Use measured**, then edit the joints you want to change. Alternatively,
+   **Plan Home** fills the official Home endpoint plus the declared finger/head
+   targets and requests a plan. Neither planning button moves the robot.
+3. Inspect the targets and planner feedback. A direct valid route is used
+   first; otherwise the existing bounded RRT-Connect searches configurations.
+   The page shows the algorithm, waypoint count and progress.
+4. Press **Execute plan** within ten seconds. It sends the planned waypoints
+   to the same original finite-force servos. Planned rates are lower than the
+   manual caps, based on source rates and servo lag, so the tracking guard
+   remains strict. Every waypoint must settle for 0.2 simulated seconds.
+5. **Stop / hold** revokes the route and holds measured joints. Leaving the
+   page, changing selection or losing the heartbeat also stops execution.
+   A direct Apply/Jog/Home during a pending/active plan first stops the entire
+   route; observe the new state and retry the direct command.
+
+Planning clones the compiled model/data. It never writes the live robot or
+object pose. Its frozen scene includes the world geometry, other joints,
+mocap actors, equalities and the measured robot start. Plan/source/plant
+identities and scene/snapshot digests are reported on the existing articulation
+state topic. A changed model, moved base/held joint/world/actor, expired plan
+or lost operator lease requires a new plan.
+
+Collision edges follow the controller's **independent joint-rate clipping**,
+including joints that finish early. Samples are at most 25 ms apart, with
+angular increments at most 0.005 rad and linear increments at most 1 mm.
+The search is bounded to eight seconds, 12,000 collision inspections and 64
+execution waypoints. During execution the measured configuration and next
+servo reference are checked against the compiled collision geometry. New or
+worsening penetration, tracking divergence or a settling deadline holds the
+robot. Existing resting contacts and declared importer exclusions remain;
+this is sampled collision checking, not continuous-collision certification.
+
+Flex collision worlds currently disable this planner. Moving actors can
+invalidate a frozen plan; predictive moving-obstacle arm planning is not
+implemented. PyBullet and Isaac keep their direct joint controls and show
+planning as unavailable. A failed plan never falls back to direct motion.
+
+One normal GUI TIAGo/MuJoCo/`nav_empty` Plan → Execute reaches head, torso,
+arm joint 4 and both fingers. Another run completes that motion, then
+interrupts a second route with the GUI Stop button. The source-collision
+detour has a separate physical fixture and dense audit; it is not a TIAGo
+obstacle mission. [Planning receipt](../status/evidence/tiago-joint-planning-2026-11-14/README.md).
 
 ## What stays original, and what the lab supplies
 
@@ -53,9 +105,10 @@ modern Gazebo controller plugin needs a separate Fortress port.
 | IMU | Ideal simulated root observer, explicitly labelled `base_footprint` |
 | Not exposed | Source sonars, wrist force/torque sensor and physical robot drivers |
 
-**Home is an endpoint target, not the vendor's complete timed waypoint path
-or a collision-checked plan.** Manual joint controls do not provide obstacle
-avoidance. R5.9 must add source-specific planning, grasp/custody and payload
+**Home (direct)** sends an endpoint target without checking a route.
+**Plan Home** checks a joint route to that endpoint; it does not replay the
+vendor's complete timed motion. Manual joint controls do not provide obstacle
+avoidance. R5.9 must add Cartesian/task planning, grasp/custody and payload
 footprints before autonomous manipulation/transport is advertised.
 
 The source description totals **84.66799184112 kg**; this is a model sum,
@@ -124,3 +177,18 @@ Entry points are `scripts/provision_tiago.py`,
 and GUI `urdf_arm_controls.py`. Follow the contributor course for new robot
 and map adapters; keep any future Fortress or manipulation variant's support
 and evidence separate from this Display profile.
+
+The joint planner lives in `robot_lab_mujoco/articulation_planner.py` and reuses
+`bounded_control_planner.connect_controls`. Its source profile explicitly
+opts into `robot_lab.articulation_plan.v1` on MuJoCo. The ROS bridge queues
+planning requests into the physics step, then the worker owns a cloned model
+and data. Keep original source rates as ceilings; the executor's lower
+`position_rates` must match the collision sampler. An internal planning hold
+preserves the current authorized lease; operator Stop still rotates the plant
+generation and revokes that lease. Do not replace either with live pose writes.
+
+For the next R5.9 step, add Cartesian/TCP IK on the same private source model
+and route its joint candidates through this planner. Hold unrelated head/
+finger/base coordinates, preserve source bounds and scene binding, then add
+real grasp/custody and payload-footprint contracts. A collision-free joint
+route does not establish a grasp or authorize navigation with a payload.

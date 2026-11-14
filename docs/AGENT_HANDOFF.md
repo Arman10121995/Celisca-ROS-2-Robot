@@ -1,5 +1,22 @@
 # Agent Handoff Protocol
 
+November 14 TIAGo joint planning: the normal MuJoCo Mobile arm page has
+**Plan targets / Plan Home → Execute plan**. Preserve the private MjModel/
+MjData clone, compiled scene/snapshot hashes, existing bounded configuration
+search, exact reduced per-channel slew, source force ceilings and separate
+execution. Ready plans expire after ten seconds. Live geometry/world/mocap/
+equality/base/held-joint changes, new/worsening contacts, tracking, deadlines,
+faults and lease loss revoke plans. Operator Stop retains its plant-generation
+and heartbeat revocation; internal settled planning holds preserve the
+authorized lease. Direct commands interrupt an active plan with a whole-route
+Stop and require observing/retrying against the new generation. One hundred
+final checks and three builds pass; actual normal GUI TIAGo/nav_empty joint
+routes complete, and GUI Stop interrupts a second route. Flex scenes and
+other-backend planning remain unavailable. Continue Cartesian/TCP IK, object/
+custody and payload/map workflows under R5.9, which remains partial.
+[Guide](tutorials/tiago.md#plan-joint-targets-in-mujoco) ·
+[receipt](status/evidence/tiago-joint-planning-2026-11-14/README.md).
+
 November 14 TIAGo: complete official PMB2/arm/pal-gripper source adapter is
 installed with five immutable Apache-2.0 dependencies, original URDF mechanics,
 twelve independent position channels and the existing Drive/Mobile arm GUI

@@ -332,5 +332,11 @@ class UrdfArmControls(MolarControls):
         for button in (self.plan_button, self.plan_home_button):
             button.state(['!disabled'] if can_plan else ['disabled'])
         self.execute_button.state(['!disabled'] if self.plan_matches() else ['disabled'])
-        self.plan_feedback.set((planning.get('phase', '')+': '+planning.get('message', '')).strip(': ')
-                              if planning else 'Collision planning is unavailable on this backend/profile. Direct joint controls remain available.')
+        if planning:
+            text = (planning.get('phase', '')+': '+planning.get('message', '')).strip(': ')
+            if planning.get('waypoints'):
+                text += '\n%d waypoints · %s · completed %d' % (
+                    planning['waypoints'], planning.get('planner', {}).get('algorithm', ''), planning.get('waypoint', 0))
+            self.plan_feedback.set(text)
+        else:
+            self.plan_feedback.set('Collision planning is unavailable on this backend/profile. Direct joint controls remain available.')

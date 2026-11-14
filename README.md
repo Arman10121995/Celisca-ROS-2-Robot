@@ -27,6 +27,13 @@ forward, Stop and camera screens pass in MuJoCo, PyBullet and Isaac; higher
 modes and autonomous manipulation remain open.
 [TIAGo guide](docs/tutorials/tiago.md).
 
+TIAGo's MuJoCo **Mobile arm** page now has **Plan targets**, **Plan Home** and
+separate **Execute plan** controls. Private source/world collision checks,
+bounded joint routes, measured execution and Stop are implemented. One normal
+GUI route completes; a later route is interrupted with GUI Stop. Cartesian
+reaches and object manipulation remain open.
+[Planning workflow](docs/tutorials/tiago.md#plan-joint-targets-in-mujoco).
+
 Manipulation continuation: native Panda now has an explicit **Run pick / place**
 sequence for selected physical boxes and bench supports. Each stage uses the
 existing planner/actions and measured custody; full mission acceptance remains

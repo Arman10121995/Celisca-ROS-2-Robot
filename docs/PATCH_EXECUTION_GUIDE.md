@@ -1,5 +1,13 @@
 # Stabilization and remaining work: agent execution guide
 
+November 14 continuation: the current [ROADMAP implementation queue](../ROADMAP.md#3-implementation-queue)
+is authoritative. R5.9 now includes [TIAGo private joint Plan/Execute](tutorials/tiago.md#plan-joint-targets-in-mujoco)
+with source servo limits, measured normal-GUI execution and actual Stop.
+Preserve the [scene/lease/generation guards and scoped evidence](status/evidence/tiago-joint-planning-2026-11-14/README.md).
+Continue Cartesian/TCP IK and object/custody/payload/map adapters before broad
+validation; a joint route does not complete a manipulation mission. The dated
+priorities below are historical where they differ from the current roadmap.
+
 November 12 user priority: implement [R14.2 myAGV Pro](../ROADMAP.md#r142--elephant-robotics-myagv-pro) before older work. Source Gazebo control/sensing, native GUI workflow and one Nav2 arrival have exact [receipts](status/evidence/myagv-pro-2026-11-12/README.md). Portable physical wheel/backend adapters remain implementation work; do not treat Fortress-only friction XML as a portable plant. Preserve source frame/corner mapping, bounded passive compliance and matching DWB/goal-checker thresholds.
 
 
