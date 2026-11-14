@@ -1594,18 +1594,23 @@ tasks:
         - docs/status/evidence/motor-power-implementation-2026-11-02.md
         - docs/status/evidence/fleet-energy-2026-11-02/README.md
         - docs/status/evidence/automatic-floor-transport-2026-11-02/README.md
+        - docs/status/evidence/fleet-zones-energy-2026-11-14/README.md
         implementation_state: Complete actuator joint validation, simulated-time energy integration, source/runtime
           certificates, loss-unknown SOC, fresh settled pose-berth charging; source-declared clearance-tested RMF
           door/dock lanes and official supervisors; scoped native serializer correction; native automatic transport,
           fixed landing gates, 3 mm leveling, floor-map costmap acknowledgments and AMCL scan gating. Official
           SDK building parser supplies real multi-floor lift sessions; explicit epochs latch Stop/loss.
-        owner: codex
-        state: partial
+          2026-11-14 (Claude) shared-zone reservations (map single-lane passages, door sweeps, docks, declared
+          zones) hold a member 1 m before a peer-held zone with its task suspended; circular-wait breaker keeps
+          tasks; recovery drive-out; RMF battery-aware planning from a per-model drivetrain calibration gated on
+          description hash and <= 25 % held-out energy error. Chargers/doors in other worlds remain.
+        owner: claude
+        state: implemented
         title: Fleet management and Open-RMF mission adapters
         validation_state: Native Bumperbot/Labbot readback with actual 0.232 m motion; Bumperbot authored charge/departure/discharge
           and actual broadcaster loss/resumption; one native RMF door/dock case; autonomous native Bumperbot
           L0-L1-L0 in 319.913 wall seconds and real SDK round-trip in 359.063 seconds with independently settled exits;
-          actual SDK suspension/resumption holds the car and stays disabled until explicit re-enable. Earlier body/map results retained. No calibrated charger/chemistry, broader multi-floor RMF or multi-robot acceptance.
+          actual SDK suspension/resumption holds the car and stays disabled until explicit re-enable. Earlier body/map results retained. On 2026-11-14 a native two-robot door crossing passed (Labbot held 12.4 s, closest 2.40 m, both settled) and the same crossing under RMF with calibrated energy passed (closest 0.92 m); Bumperbot/Labbot calibrations 6 %/15 % held-out. No charger chemistry, three-robot, occupied-lift run, broader multi-floor RMF or loss acceptance.
         qualification_review: '2026-10-27 documentation review: retain the implemented code, tests and named mission
           certificates. Full declared roadmap acceptance is still open; test counts, metadata and scene loads do
           not qualify remaining robot/map/backend missions. See docs/REMAINING_WORK_GUIDE.md.'

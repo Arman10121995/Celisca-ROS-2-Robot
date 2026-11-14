@@ -355,6 +355,8 @@ def prepare_session(session_file, map_override='', navigation=False, runtime_roo
         raise ValueError('Fleet Nav2 requires the selected world\'s occupancy map')
     infrastructure = map_profile.get('fleet_infrastructure', '')
     infrastructure_file = str(Path(share('robot_lab_maps')) / infrastructure) if infrastructure else ''
+    # Optional shared zones/docks for worlds without a physical facility.
+    zones_file = str(Path(share('robot_lab_maps')) / map_profile['fleet_zones']) if map_profile.get('fleet_zones') else ''
     infrastructure_config = yaml.safe_load(Path(infrastructure_file).read_text()) if infrastructure_file else {}
     floor_maps = {floor: resolve('robot_lab_maps', path)
                   for floor, path in infrastructure_config.get('floor_maps', {}).items()}
@@ -424,7 +426,7 @@ def prepare_session(session_file, map_override='', navigation=False, runtime_roo
                   world=world, world_name=world_name, world_source=world_source,
                   world_source_sha256=hashlib.sha256(Path(world_source).read_bytes()).hexdigest(),
                   world_sha256=hashlib.sha256(Path(world).read_bytes()).hexdigest(),
-                  map_yaml=map_yaml, floor_maps=floor_maps, bridge_file=str(bridge_file), members=members,infrastructure_file=infrastructure_file,
+                  map_yaml=map_yaml, floor_maps=floor_maps, bridge_file=str(bridge_file), members=members,infrastructure_file=infrastructure_file,zones_file=zones_file,
                   session_source=str(Path(session_file).resolve()), directory=str(folder),
                   scope='Shared physical world; only Gazebo Bumperbot/Labbot adapters implemented')
     resolved_file = folder / 'session.json'

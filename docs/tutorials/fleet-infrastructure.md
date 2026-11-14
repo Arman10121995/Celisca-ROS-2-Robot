@@ -35,8 +35,14 @@ Clear landing/car gates must close before movement; only a leveled stopped
 car opens at the requested floor. Passenger/ownership loss or a 100-second
 deadline relatches measured hold. Recovery never assigns a robot pose.
 
-On completion, use manual Drive to leave the cabin or request a new floor
-transport. Recovery itself does not autonomously evacuate the passenger.
+On completion, with **After recovery, drive the passenger out** (on by
+default), the passenger leaves through an owned exit transport. It waits for
+that floor's map and an open car, drives to the landing, then parks in a free
+slot when **Park after exit** is set. It needs the same acknowledged Nav2 task
+and independently settled body as a normal transport, and Stop or loss cancels
+it. Without the option, use manual Drive to leave the cabin or request a new
+floor transport. The exit has unit tests; an occupied-car recovery mission
+has not been measured yet.
 [The new receipt](../status/evidence/workflow-continuation-2026-11-02/README.md)
 measures an **empty-car** mid-shaft Stop and return; occupied/concurrent missions
 remain separate. Non-Gazebo facility adapters remain static geometry.
@@ -44,7 +50,7 @@ remain separate. Non-Gazebo facility adapters remain static geometry.
 For agent integrations, `/fleet/infrastructure/command` accepts `transport_queue`
 with `requests: [{robot: alpha, floor: L1}, {robot: alpha, floor: L0}]`, plus the
 current session/operator IDs. `cancel_transports` cancels it; `recover_lift`
-requires `floor`. `/fleet/infrastructure/state` contains `transport_queue`,
+requires `floor` and accepts `exit: true` with `parking: "auto"`. `/fleet/infrastructure/state` contains `transport_queue`,
 `reservations`, `lift_recovery` and `last_rejection`. Use actual fleet session
 IDs/leases, not copied examples from another run.
 
@@ -125,9 +131,25 @@ Bumperbot modeled docking/charging, departure, broadcaster loss and resumption
 were exercised. A missed observation interval makes SOC unknown for the rest
 of that session: later samples cannot recover unobserved energy. Restart gives
 a fresh, explicitly authored initial estimate. Current observed load can still
-be displayed. Charging also needs fresh, settled body/dock feedback. RMF's
-nominal energy cost objects remain disabled; these are not battery chemistry
-or real charging measurements. The car retains its last commanded height
+be displayed. Charging also needs fresh, settled body/dock feedback. These are
+not battery chemistry or real charging measurements.
+
+RMF energy accounting uses a **drivetrain calibration**:
+
+```bash
+python3 -m robot_lab_utils.fleet_energy_calibration --session <session.json> --member alpha --output <dir>
+```
+
+drives one member through a 19-phase profile and fits Open-RMF's motion power
+model (`m|a|v + I|alpha||w| + mu m g v`) to the energy each phase used. Each
+half of the drive checks the other. Store the result as `rmf_mechanical`
+under the model's `effort_sources` entry, with `nominal_voltage_V`. RMF then
+plans with battery drain, but only when every member's model has a
+calibration bound to its description hash with at most 25 % held-out error.
+The modeled state of charge reaches RMF only while it is observation-backed.
+Otherwise the nominal cost objects stay disabled. The current Bumperbot and
+Labbot calibrations hold to 6 % and 15 %
+([evidence](../status/evidence/fleet-zones-energy-2026-11-14/README.md)). The car retains its last commanded height
 after requests/session completion; measured position is used as a new hold
 target only on explicit Stop/loss.
 

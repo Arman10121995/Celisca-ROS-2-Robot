@@ -20,7 +20,7 @@ import rclpy
 from action_msgs.msg import GoalStatus
 from geometry_msgs.msg import PoseWithCovarianceStamped, TransformStamped, Twist
 from nav2_msgs.action import NavigateToPose
-from nav_msgs.msg import Odometry
+from nav_msgs.msg import Odometry, Path as NavPath
 from lifecycle_msgs.srv import GetState
 from rclpy.action import ActionClient
 from rclpy.clock import Clock, ClockType
@@ -38,6 +38,7 @@ from robot_lab_utils.fleet_lift_recovery import recovery_passengers
 from robot_lab_utils.fleet_motion import Neighbor, angle, scan_guard, separation_guard, swarm_velocities
 from robot_lab_utils.fleet_session import finite, ID_PATTERN, MEMBER_MODELS
 from robot_lab_utils.fleet_missions import MissionHistory, coverage_plan, enqueue, mission, settled, traffic_yield_goal
+from robot_lab_utils.fleet_zones import PLAN_FRESH_S, ZoneArbiter, declared_zones, narrow_passages
 
 
 def yaw(q):
@@ -59,10 +60,6 @@ class Member:
     initial_pub: object = None
     mode: str = 'idle'
     reason: str = 'Waiting for measured feedback'
-    occupied: bool = False
-    occupied_at: float = -math.inf
-    recovery_initiator: str = ''
-    recovery_target: str = ''
     manual: tuple = (0., 0.)
     nav: tuple = (0., 0.)
     manual_at: float = -math.inf
@@ -108,6 +105,8 @@ class Member:
     contact_at: float = -math.inf
     contact_peer: str = ''
     contact_margin: float = 0.
+    plan: list = None
+    plan_at: float = -math.inf
     sample_stamps: dict = field(default_factory=dict)
     message_counts: dict = field(default_factory=lambda: dict(odom=0, truth=0, scan=0, amcl=0))
 
@@ -160,6 +159,8 @@ class FleetController(Node):
             subscribe(Odometry, '/odom/ground_truth', self._truth)
             subscribe(LaserScan, '/scan', self._scan, qos_profile_sensor_data)
             subscribe(PoseWithCovarianceStamped, '/amcl_pose', self._amcl)
+            if self.session['navigation']:
+                subscribe(NavPath, '/plan', self._plan)
             self.create_service(Trigger, '/' + name + '/reset', lambda _q, response, m=member: self._reset_service(m, response))
         self.create_subscription(String, '/fleet/command', self._command, 10)
         self.create_subscription(String, '/fleet/operator_heartbeat', self._heartbeat, 10)
@@ -169,6 +170,8 @@ class FleetController(Node):
         if self.session.get('infrastructure_file'):
             self.create_subscription(String,'/fleet/infrastructure/state',self._infrastructure,10)
         self.create_subscription(ClockMessage, '/clock', self._observe_clock, qos_profile_sensor_data)
+        self.zones = ZoneArbiter(self._shared_zones()) if self.session['navigation'] else None
+        self.zone_state = dict(grants={}, occupants={}, waits={}, shared=[])
         self.create_service(Trigger, '/fleet/stop', self._stop_service)
         self._steady = Clock(clock_type=ClockType.STEADY_TIME)
         self.create_timer(.05, self._tick, clock=self._steady)
@@ -176,6 +179,69 @@ class FleetController(Node):
             self._publish_anchors()
         self._event('session_started', session_id=self.session_id, source=self.session)
         self.get_logger().info('One physical world; members=' + ', '.join(self.members) + '; session=' + self.session_id)
+
+    def _shared_zones(self):
+        """Declared facility zones plus single-lane passages of every floor map."""
+        import yaml
+        from robot_lab_utils.fleet_session import SpawnGrid
+        config = {}
+        for key in ('infrastructure_file', 'zones_file'):
+            if self.session.get(key):
+                data = yaml.safe_load(Path(self.session[key]).read_text()) or {}
+                for part in ('shared_zones', 'doors', 'docks'):
+                    config.setdefault(part, {}).update(data.get(part) or {})
+        zones = declared_zones(config)
+        radius = max(m.config['radius'] for m in self.members.values())
+        floors = self.session.get('floor_maps') or {'': self.session['map_yaml']}
+        for floor, path in floors.items():
+            zones += narrow_passages(SpawnGrid(path), radius, floor=floor)
+        return zones
+
+    def _plan(self, member, msg):
+        member.plan = [(p.pose.position.x, p.pose.position.y) for p in msg.poses]
+        member.plan_at = time.monotonic()
+
+    def _zone_rows(self, now, fresh):
+        rows = {}
+        for member in self.members.values():
+            if not fresh[member.name]:
+                continue
+            body = self._neighbor(member)
+            waiting = next((item['zone_wait'] for item in member.queue if item.get('zone_wait')), None)
+            navigating = member.mode in ('navigation', 'dispatching') and member.active_item is not None
+            rows[member.name] = dict(x=body.x, y=body.y, radius=member.config['radius'],
+                floor=getattr(self, 'infrastructure_floors', {}).get(member.name, ''),
+                plan=member.plan if navigating and now - member.plan_at < PLAN_FRESH_S else None,
+                navigating=navigating, waiting_for=waiting and waiting['zone'],
+                waiting_since=waiting and waiting['since'])
+        return rows
+
+    def _zone_tick(self, now, fresh):
+        """Hold members before a shared zone granted to a peer; keep their task."""
+        if self.zones is None or not self.zones.zones:
+            return
+        self.zone_state = self.zones.update(self._zone_rows(now, fresh))
+        for name, wait in self.zone_state['waits'].items():
+            member = self.members[name]
+            original = member.active_item
+            if member.mode != 'navigation' or not original or original.get('source') == 'zone_hold':
+                continue
+            if len(member.queue) > 62:
+                self._finish_task(member, 'failed', 'No queue capacity to hold before shared zone ' + wait['zone'])
+                continue
+            member.active_item = None  # Suspended, not canceled or succeeded.
+            self._stop_member(member, 'Holding before shared zone %s (held by %s)' % (wait['zone'], wait['holder']),
+                              clear_queue=False)
+            original['zone_wait'] = dict(zone=wait['zone'], holder=wait['holder'], since=now)
+            member.queue.insert(0, original)
+            body = self._neighbor(member)
+            spots = [spot for spot in wait['holding'] if math.hypot(spot['x'] - body.x, spot['y'] - body.y) < 4.]
+            if spots:
+                spot = min(spots, key=lambda s: math.hypot(s['x'] - body.x, s['y'] - body.y))
+                member.queue.insert(0, mission(dict(spot, timeout=60., not_before=0.), 'zone_hold'))
+            member.queue_paused, member.mode = False, 'waiting'
+            self._event('zone_wait', member=name, zone=wait['zone'], holder=wait['holder'], entry_m=wait['entry_m'],
+                        suspended_task=original['task'], holding=bool(spots))
 
     def _event(self, operation, **data):
         # Bounded SSD journal; never create an unbounded prompt/telemetry log.
@@ -567,44 +633,6 @@ class FleetController(Node):
         if member.queue and not member.queue_paused:
             member.mode = 'waiting'
 
-    def _occupy_member(self, member_name, now):
-        """Mark a member as occupied at its current location."""
-        member = self.members[member_name]
-        member.occupied = True
-        member.occupied_at = now
-        member.recovery_initiator = ""
-        member.recovery_target = ""
-
-    def _unoccupy_member(self, member_name, now):
-        """Mark a member as no longer occupied."""
-        member = self.members[member_name]
-        member.occupied = False
-        member.occupied_at = -math.inf
-        member.recovery_initiator = ""
-        member.recovery_target = ""
-
-    def _initiate_recovery(self, recovery_initiator, recovery_target, now):
-        """Another member initiates recovery of an occupied member."""
-        initiator = self.members[recovery_initiator]
-        target = self.members[recovery_target]
-        target.occupied = True
-        target.occupied_at = now
-        target.recovery_initiator = recovery_initiator
-        target.recovery_target = recovery_target
-        initiator.mode = "navigation"
-        initiator.reason = "Recovering occupied member"
-
-    def _complete_recovery(self, member_name, now):
-        """Complete recovery of an occupied member."""
-        member = self.members[member_name]
-        member.occupied = False
-        member.occupied_at = -math.inf
-        member.recovery_initiator = ""
-        member.recovery_target = ""
-        member.mode = "idle"
-        member.reason = "Recovery completed"
-
-
     def _stop_member(self, member, reason, clear_queue=True, preserve_active=False):
         if clear_queue:
             self._clear_queue(member, reason)
@@ -657,6 +685,19 @@ class FleetController(Node):
         candidates.sort(key=lambda m: (m.queue[0]['admitted'], m.name))
         for member in candidates[:1] if self.serial_traffic else candidates:
             item = member.queue[0]
+            zone_wait = item.get('zone_wait')
+            if zone_wait:
+                if member.name in self.zone_state['waits']:
+                    if now - zone_wait['since'] > item['goal']['timeout']:
+                        member.queue.pop(0)
+                        self._event('task_finished', member=member.name,
+                            **self.history.finish(item, 'failed', 'Shared-zone wait budget expired; queue held for operator'))
+                        member.queue_paused = True
+                    member.reason = 'Waiting for shared zone %s (held by %s)' % (zone_wait['zone'], zone_wait['holder'])
+                    continue
+                item.pop('zone_wait')
+                self._event('zone_granted', member=member.name, zone=zone_wait['zone'], task=item['task'],
+                            waited_s=round(now - zone_wait['since'], 3))
             waiting_for = item.get('traffic_wait_for')
             if waiting_for:
                 peer = self.members.get(waiting_for['member'])
@@ -669,6 +710,7 @@ class FleetController(Node):
                         member.queue_paused = True
                     member.reason = 'Yielded; waiting for priority task on '+waiting_for['member']
                     continue
+                item.pop('traffic_wait_for')  # A dispatched task waits for no one.
             try:
                 self._dispatch(member, item['goal'], item)
                 member.queue.pop(0)  # Only remove after successful action submission.
@@ -696,18 +738,6 @@ class FleetController(Node):
             if not close:
                 continue  # A wall is not a fleet deadlock.
             peer, _ = min(close, key=lambda item: math.hypot(robot.x-item[1].x, robot.y-item[1].y))
-            # Occupied recovery: if the blocking peer is inside the lift car,
-            # initiate its recovery instead of yielding.
-            if self.members[peer.name].occupied:
-                original = member.active_item
-                if original.get('traffic_retries', 0) >= 3:
-                    self._finish_task(member, 'failed', 'Occupied recovery limit reached; remaining queue held')
-                    continue
-                self._initiate_recovery(member.name, peer.name, now)
-                original['traffic_retries'] = original.get('traffic_retries', 0)+1
-                self._event('recovery_initiated', member=member.name, target=peer.name,
-                            suspended_task=original['task'], attempt=original['traffic_retries'])
-                continue
             original = member.active_item
             # Older work wins ties. Never interrupt a peer's existing yield.
             if peer.active_item and (peer.active_item.get('source') == 'traffic_yield' or
@@ -793,62 +823,33 @@ class FleetController(Node):
                         member_b.contact_margin = 0.
 
     def _multi_robot_conflict(self, now, fresh):
-        """Detect circular waits and multi-robot deadlocks.
+        """Break circular traffic waits among queued tasks.
 
-        A conflict exists when two or more members are each blocked waiting
-        for the other to yield.  Older work (by admission time) wins; newer
-        work is yielded with a traffic_retries increment.  Conflicts beyond
-        3 retries fail the task rather than yielding indefinitely.
+        A queued task that yielded waits until its peer's named task ends. If
+        those waits form a cycle, no member would dispatch until each budget
+        expires; the oldest admission in the cycle proceeds instead. Nothing
+        is canceled: the other members keep waiting for it.
         """
-        waiting = {}
+        waits = {}
         for member in self.members.values():
-            wf = (member.active_item or {}).get('traffic_wait_for')
-            if wf and member.mode in ('waiting', 'navigation'):
-                waiting[member.name] = wf
-        if len(waiting) < 2:
-            return
-        # Detect cycles in the wait-for graph.
-        visited = set()
-        for starter in waiting:
-            if starter in visited:
+            wait = member.queue[0].get('traffic_wait_for') if member.queue else None
+            peer = self.members.get(wait['member']) if wait else None
+            if peer and any(item['task'] == wait['task']
+                            for item in ([peer.active_item] if peer.active_item else []) + peer.queue):
+                waits[member.name] = wait['member']
+        for start in sorted(waits):
+            cycle, current = [start], waits[start]
+            while current in waits and current not in cycle:
+                cycle.append(current)
+                current = waits[current]
+            if current != start:
                 continue
-            path = []
-            current = starter
-            while current in waiting and current not in visited:
-                visited.add(current)
-                path.append(current)
-                target = waiting[current]['member']
-                if target in path:
-                    # Cycle found: path[path.index(target):] forms a ring.
-                    cycle = path[path.index(target):]
-                    # Oldest admission wins; everyone else yields.
-                    members_in_cycle = [self.members[name] for name in cycle]
-                    oldest = min(members_in_cycle,
-                                 key=lambda m: (m.active_item or {}).get('admitted', now))
-                    for m in members_in_cycle:
-                        if m is oldest:
-                            continue
-                        item = m.active_item
-                        if not item:
-                            continue
-                        item['traffic_retries'] = item.get('traffic_retries', 0) + 1
-                        if item['traffic_retries'] >= 3:
-                            self._finish_task(m, 'failed',
-                                              'Multi-robot conflict resolution limit reached')
-                            m.active_item = None
-                            continue
-                        self._stop_member(m, 'Multi-robot conflict; yielding to '+oldest.name,
-                                          clear_queue=False)
-                        m.queue_paused, m.mode = False, 'waiting'
-                        m.blocked_at = 0.
-                        event = dict(kind='conflict_resolved', yielding=m.name,
-                                     priority=oldest.name, cycle=list(cycle),
-                                     attempt=item['traffic_retries'], now=now)
-                        self._contact_events.append(event)
-                        self._event('conflict_resolved', yielding=m.name,
-                                    priority=oldest.name, cycle=list(cycle),
-                                    attempt=item['traffic_retries'])
-                    break
+            oldest = min(cycle, key=lambda name: (self.members[name].queue[0]['admitted'], name))
+            self.members[oldest].queue[0].pop('traffic_wait_for')
+            event = dict(kind='conflict_resolved', proceeding=oldest, cycle=cycle, now=now)
+            self._contact_events.append(event)
+            self._event('conflict_resolved', proceeding=oldest, cycle=cycle)
+            return
 
     def _nav_ready(self, member, now):
         return member.lifecycle_active and now - member.lifecycle_at < 2. and member.action.server_is_ready()
@@ -1079,6 +1080,7 @@ class FleetController(Node):
         neighbors = [self._neighbor(m) for m in self.members.values() if fresh[m.name]]
         if self.session['navigation'] and now-self.heartbeat_at <= .8:
             self._traffic_recovery_tick(now, fresh)
+            self._zone_tick(now, fresh)
         self._contact_monitor(now, fresh)
         self._multi_robot_conflict(now, fresh)
         swarm_commands = {}
@@ -1143,6 +1145,7 @@ class FleetController(Node):
                     nav2_pending=member.sending or member.handle is not None, cancel_pending=member.cancel_pending,
                     queued=len(member.queue),
                     queued_tasks=[dict(task=item['task'], goal=item['goal'], source=item['source']) for item in member.queue],
+                    zone_wait=next((item['zone_wait'] for item in member.queue if item.get('zone_wait')), None),
                     queue_paused=member.queue_paused,
                     settled_spawn_recorded=member.spawn_pose is not None,
                     reset_pose=[member.spawn_pose.position.x,member.spawn_pose.position.y,yaw(member.spawn_pose.orientation)] if member.spawn_pose else None,
@@ -1158,9 +1161,14 @@ class FleetController(Node):
                         contacts=dict(active=[m.name for m in self.members.values() if m.contact_peer],
                                       events=[dict(kind=e['kind'], member_a=e.get('member_a'), member_b=e.get('member_b'),
                                                    yielding=e.get('yielding'), priority=e.get('priority'),
+                                                   proceeding=e.get('proceeding'),
                                                    distance_m=e.get('distance_m'), margin_m=e.get('margin_m'),
                                                    attempt=e.get('attempt'), cycle=e.get('cycle'),
                                                    wall=round(e['now'], 3)) for e in self._contact_events][-32:]),
+                        zones=dict(declared=[z.describe() for z in self.zones.zones.values()] if self.zones else [],
+                                   **self.zone_state,
+                                   policy='One member per single-lane passage, door sweep and dock; others hold %.1f m before entry' % (
+                                       self.zones.stop_distance if self.zones else 0.)),
                         scope='Experimental shared-world runtime; contact and mission qualification pending')
             self._state_pub.publish(String(data=json.dumps(data, allow_nan=False)))
 

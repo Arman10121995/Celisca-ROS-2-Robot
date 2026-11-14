@@ -87,3 +87,25 @@ def test_failed_owned_route_prevents_boarding():
     state['history'] = [dict(source='route:' + task.route_id, state='failed')]
     assert task.tick(state, 1.)[0]['kind'] == 'stop'
     assert not task.active
+
+
+def test_recovered_passenger_exit_waits_for_floor_map_and_door_then_settles_outside():
+    task = LiftTransport.exit_only('alpha', 'operator', 'L1', CONFIG, 0., parking=dict(x=1.55, y=.55, yaw=0.))
+    assert (task.origin, task.destination, task.phase) == ('L1', 'L1', 'exit_ready')
+    state = context(task, (4., 0., 3.))
+    state.update(floor='L1', car_floor='L1', map_ready=False, door_open=True)
+    assert task.tick(state, .5) == []                     # Floor map still loading.
+    state['map_ready'] = True
+    action = task.tick(state, 1.)[0]
+    assert action['kind'] == 'route' and action['goal']['x'] == 2.2 and task.phase == 'exiting'
+    state.update(history=[dict(source='route:' + task.route_id, state='succeeded')], clock=5.)
+    state['body']['xyz'] = (2.2, 0., 3.)
+    task.tick(state, 2.)
+    state['clock'] = 6.1
+    assert task.tick(state, 3.)[0]['goal']['x'] == 1.55 and task.phase == 'parking'
+
+
+def test_recovered_exit_refuses_a_passenger_outside_the_car():
+    task = LiftTransport.exit_only('alpha', 'operator', 'L0', CONFIG, 0.)
+    state = context(task, (1., 0., 0.))
+    assert task.tick(state, 1.)[-1] == dict(kind='release', hold=True) and task.phase == 'failed'

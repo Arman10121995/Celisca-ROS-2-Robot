@@ -1,5 +1,7 @@
 # Current Robot Lab status
 
+November 14 Claude: [fleet shared zones, crossing conflicts and calibrated RMF energy (R10.2)](evidence/fleet-zones-energy-2026-11-14/README.md) are implemented and experimental. Single-lane passages found in every map, door sweeps and docks are reserved one robot at a time: a robot is held 1 m before a zone a peer holds, with its task suspended, not canceled. Two robots crossing the facility door at once passed natively (one held 12.4 s, closest 2.40 m) and under Open-RMF (closest 0.92 m). RMF now plans with battery drain from a drivetrain calibration (Bumperbot/Labbot 6 %/15 % held-out energy error). Recover held lift can drive the passenger out (unit tests only). Chargers and doors in other worlds remain.
+
 November 14 Codex: native Stretch task recipes now offer position-only, keep-measured-pad and explicit world-pad RPY targets, with private source-model orientation IK and live/final angular checks. [Guide and limits](reach-orientation-2026-11-14.md). Unreachable model-specific orientations remain refused. This is implementation, not a completed loaded-object mission. Claude retains fleet/drone/import work.
 
 November 14 CI: the preceding placement revision failed one ROS launch importer in the unsourced fast tier (1,282 passed, 42 skipped). That unchanged test now runs in the required sourced integration tier and passes locally; the exact-revision published rerun is pending. Historical green CI receipts apply to their named revisions.

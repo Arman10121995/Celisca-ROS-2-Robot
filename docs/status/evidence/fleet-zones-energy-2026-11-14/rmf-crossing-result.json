@@ -1,0 +1,85 @@
+{
+  "passed": true,
+  "reason": "Both RMF patrols ended with independently settled bodies at their waypoints",
+  "chosen": {
+    "alpha": {
+      "name": "p66",
+      "x": 1.7999999999999998,
+      "y": 2.9,
+      "floor": "L0",
+      "graph_index": 54
+    },
+    "beta": {
+      "name": "p22",
+      "x": -3.0,
+      "y": -1.9,
+      "floor": "L0",
+      "graph_index": 22
+    }
+  },
+  "settled": {
+    "alpha": {
+      "x": 1.8801421677380592,
+      "y": 2.8823754275229763,
+      "z": 1.813028923154683e-06,
+      "yaw": 1.5875325278495216,
+      "linear": 0.0,
+      "angular": 0.0,
+      "velocity_source": "finite difference of measured stamped Gazebo poses",
+      "source_reported_twist": {
+        "linear": 0.0,
+        "angular": 0.0
+      },
+      "wall": 106.82582757197088
+    },
+    "beta": {
+      "x": -2.9920648467348805,
+      "y": -1.8727252157460788,
+      "z": -4.456201046958151e-09,
+      "yaw": 3.097828711177213,
+      "linear": 0.0,
+      "angular": 0.0,
+      "velocity_source": "finite difference of measured stamped Gazebo poses",
+      "source_reported_twist": {
+        "linear": 0.0,
+        "angular": 0.0
+      },
+      "wall": 227.6267718920135
+    }
+  },
+  "closest_approach": {
+    "distance": 0.9214644515750541,
+    "wall": 71.5531320059672,
+    "modes": {
+      "alpha": "navigation",
+      "beta": "navigation"
+    }
+  },
+  "elapsed_s": 227.63093395298347,
+  "energy_calibration": {
+    "mass": 0.001,
+    "inertia": 1.02113,
+    "friction": 58.5944,
+    "evidence": [
+      "docs/status/evidence/fleet-zones-energy-2026-11-14/README.md"
+    ]
+  },
+  "battery": {
+    "alpha": {
+      "fraction": 0.7966084500995869,
+      "reason": "Observed simulation actuator power"
+    },
+    "beta": {
+      "fraction": 0.7965202027561354,
+      "reason": "Observed simulation actuator power"
+    }
+  },
+  "rmf_scope": "Actual Open-RMF adapter; declared facility adds physical door/lift protocol and independently observed docking; energy accounting from the simulated-drivetrain calibration; mission qualification separate",
+  "events": [],
+  "session_directory": "/workspace/molar/robot_lab_runtime/fleet_sessions/session-_w35n7xr",
+  "task_summary": {
+    "succeeded": 50,
+    "canceled": 11,
+    "failed": 0
+  }
+}

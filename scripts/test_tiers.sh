@@ -102,6 +102,9 @@ FAST_TESTS=(
   "src/robot_lab_utils/test/test_aerial_tracking.py"
   "src/robot_lab_utils/test/test_real_world_import.py"
   "src/robot_lab_utils/test/test_terrain_generator.py"
+  "src/robot_lab_utils/test/test_fleet_zones.py"
+  "src/robot_lab_utils/test/test_fleet_energy_calibration.py"
+  "src/robot_lab_utils/test/test_fleet_contact_conflict.py"
 )
 
 INTEGRATION_TESTS=(

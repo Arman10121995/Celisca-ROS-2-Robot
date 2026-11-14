@@ -378,21 +378,7 @@ class Infrastructure(Node):
             raise ValueError('Waiting for another physical robot to leave the car')
         radii = {member['id']: float(member.get('radius', .35)) for member in self.session['members']}
         if parking is not None:
-            from robot_lab_utils.fleet_session import SpawnGrid
-            path=self.robot_floor_maps[name][destination]
-            if not hasattr(self,'parking_grids'):self.parking_grids={}
-            if path not in self.parking_grids:self.parking_grids[path]=SpawnGrid(path)
-            candidates=self.config['transport'].get('parking_slots',{}).get(destination,[]) if parking=='auto' else [parking]
-            for goal in candidates:
-                landing=task.config['landings'][destination]
-                if (task.in_cabin([goal['x'],goal['y'],0.]) or not self.parking_grids[path].clear(goal['x'],goal['y'],radii[name]+.05)
-                        or math.hypot(goal['x']-landing['x'],goal['y']-landing['y'])<2*radii[name]+.2):
-                    continue
-                if any(peer!=name and abs(body['xyz'][2]-lift['floors'][destination])<.2 and
-                       math.hypot(body['xyz'][0]-goal['x'],body['xyz'][1]-goal['y'])<radii[name]+radii[peer]+.2 for peer,body in self.bodies.items()):
-                    continue
-                task.parking=dict(goal);break
-            if task.parking is None:raise ValueError('Waiting for a source-clear unoccupied parking slot at '+destination)
+            task.parking = self._parking_slot(name, destination, task, parking)
         for peer, body in self.bodies.items():
             if peer == name:
                 continue
@@ -402,6 +388,39 @@ class Infrastructure(Node):
                         math.hypot(body['xyz'][0] - landing['x'], body['xyz'][1] - landing['y']) < radii[name] + radii[peer] + .15):
                     raise ValueError('Waiting for clear ' + floor + ' landing; move the parked peer away')
         return task
+
+    def _parking_slot(self, name, destination, task, parking):
+        from robot_lab_utils.fleet_session import SpawnGrid
+        lift = self.config['lift']
+        radii = {member['id']: float(member.get('radius', .35)) for member in self.session['members']}
+        path=self.robot_floor_maps[name][destination]
+        if not hasattr(self,'parking_grids'):self.parking_grids={}
+        if path not in self.parking_grids:self.parking_grids[path]=SpawnGrid(path)
+        candidates=self.config['transport'].get('parking_slots',{}).get(destination,[]) if parking=='auto' else [parking]
+        for goal in candidates:
+            landing=task.config['landings'][destination]
+            if (task.in_cabin([goal['x'],goal['y'],0.]) or not self.parking_grids[path].clear(goal['x'],goal['y'],radii[name]+.05)
+                    or math.hypot(goal['x']-landing['x'],goal['y']-landing['y'])<2*radii[name]+.2):
+                continue
+            if any(peer!=name and abs(body['xyz'][2]-lift['floors'][destination])<.2 and
+                   math.hypot(body['xyz'][0]-goal['x'],body['xyz'][1]-goal['y'])<radii[name]+radii[peer]+.2 for peer,body in self.bodies.items()):
+                continue
+            return dict(goal)
+        raise ValueError('Waiting for a source-clear unoccupied parking slot at '+destination)
+
+    def _recovery_exit(self, task, now):
+        """Hand a recovered passenger to an owned exit transport on the same open car."""
+        name = task['passengers'][0]
+        transport = LiftTransport.exit_only(name, task['operator_id'], task['floor'], self.config['transport'], now)
+        if task.get('parking'):
+            try:
+                transport.parking = self._parking_slot(name, task['floor'], transport, task['parking'])
+            except ValueError as error:
+                task['parking_note'] = str(error) + '; exit stops at the landing'
+        self.transports[name] = transport
+        self.lift_owner, self.lift_at = transport.prefix, now
+        task.update(phase='succeeded', exit_transport=transport.prefix,
+                    reason='Observed level car and open landing; passenger exit dispatched as ' + transport.prefix)
 
     def _stop_recovery(self, reason):
         if not self.recovery or self.recovery['phase'] != 'recovering':
@@ -447,6 +466,9 @@ class Infrastructure(Node):
         opened = all(door_rows.get(name, {}).get('mode') == 2 for name, door in self.config['doors'].items()
                      if name == lift['door'] or door.get('landing_floor') == task['floor'])
         if level and abs(self.rates.get(lift['joint'], math.inf)) < .01 and opened:
+            if task.get('exit') and task['passengers']:
+                self._recovery_exit(task, now)
+                return
             task.update(phase='succeeded', reason='Observed level car and open landing; use manual Drive to exit or request a new floor transport')
             self.lift_owner = ''
 
@@ -608,8 +630,12 @@ class Infrastructure(Node):
                 if any(rows.get(name, {}).get('mode') != 'idle' or rows.get(name, {}).get('queued') for name in passengers):
                     raise ValueError('Stop each passenger’s navigation/manual control before recovery')
                 self._cancel_transports('Explicit recovery replaces pending itinerary')
+                parking = data.get('parking')
+                if parking not in (None, 'auto'):
+                    raise ValueError('Recovery parking is automatic or none')
                 self.recovery = dict(phase='recovering', floor=data['floor'], operator_id=data['operator_id'],
-                    passengers=passengers, started=now, reason='Closing interlocked gates, then recovering to the selected floor')
+                    passengers=passengers, started=now, exit=data.get('exit') is True, parking=parking,
+                    reason='Closing interlocked gates, then recovering to the selected floor')
                 self.lift_owner = 'recovery-' + uuid.uuid4().hex
                 self.lift_at = now
                 self.lift_request = (data['floor'], True)

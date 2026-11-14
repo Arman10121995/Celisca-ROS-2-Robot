@@ -2,8 +2,10 @@
 """Humble Open-RMF RobotCommandHandle -> actual shared-world Nav2 missions.
 
 Uses the official Apache-2.0 Open-RMF Python API (fleet_adapter_template,
-humble). Declared facility sessions add physical door/lift feedback and docking;
-energy accounting stays disabled until actual motor-power observations qualify it.
+humble). Declared facility sessions add physical door/lift feedback and docking.
+Energy accounting is enabled only when every member's source carries an
+actuator-power calibration (fleet_energy_calibration); the robot's modeled
+state of charge then reaches RMF only while it is observation-backed.
 """
 import argparse
 from datetime import timedelta
@@ -151,6 +153,8 @@ class RmfBridge(Node):
         self.runtime_at = -math.inf
         self.pending = SimpleQueue()
         self.robots = {}
+        self.energy_calibration = None
+        self.battery = {}
         self.command = self.create_publisher(String, '/fleet/command', 10)
         self.heartbeat = self.create_publisher(String, '/fleet/operator_heartbeat', 10)
         self.status = self.create_publisher(String, '/fleet/rmf/state', 10)
@@ -173,6 +177,13 @@ class RmfBridge(Node):
                 for robot in self.robots.values():robot.stop()
                 self.get_logger().warning('Facility Stop/loss invalidated RMF ownership; explicit Give RMF control is required')
             self.robot_floors = state.get('robot_floors', {})
+            for name, energy in (state.get('energy') or {}).items():
+                fraction = energy.get('fraction') if self.energy_calibration else None
+                self.battery[name] = dict(fraction=fraction, reason=energy.get('reason') if self.energy_calibration
+                                          else 'RMF energy accounting disabled: no qualified actuator-power calibration')
+                robot = self.robots.get(name)
+                if fraction is not None and robot and robot.update:
+                    robot.update.update_battery_soc(max(0., min(1., float(fraction))))
             self.floor_at = time.monotonic()
             for name,robot in self.robots.items():
                 callback=None
@@ -298,11 +309,12 @@ class RmfBridge(Node):
                     total=len(request['positions']), positions=request['positions']) if request else None)
         self.status.publish(String(data=json.dumps(dict(enabled=self.enabled,
             session_id=Path(self.session['directory']).name, operator_id=self.operator,
-            robots=list(self.robots), waypoints=self.vertices, routes=routes, battery=None,
+            robots=list(self.robots), waypoints=self.vertices, routes=routes, battery=self.battery or None,
+            energy_calibration=self.energy_calibration,
             infrastructure=bool(self.session.get('infrastructure_file')),
             robot_floors=self.robot_floors, levels=sorted({v['floor'] for v in self.vertices if 'floor' in v}),
             authorization_epoch=self.authorization_epoch, enabled_at=self.enabled_at,
-            scope='Actual Open-RMF adapter; declared facility adds physical door/lift protocol and independently observed docking; energy accounting disabled; mission qualification separate'), allow_nan=False)))
+            scope='Actual Open-RMF adapter; declared facility adds physical door/lift protocol and independently observed docking; energy accounting '+('from the simulated-drivetrain calibration' if self.energy_calibration else 'disabled')+'; mission qualification separate'), allow_nan=False)))
 
 
 def main(args=None):
@@ -351,15 +363,24 @@ def main(args=None):
         install_lanes(graph_value, data, graph.lane)
     adapter.start()
     fleet = adapter.add_fleet('robot_lab', vehicle, graph_value)
-    # Required RMF API cost objects are nominal and explicitly unused for
-    # energy accounting. Do not publish the library's default battery values.
     fleet.fleet_state_publish_period(None)
     fleet.fleet_state_topic_publish_period(None)
-    power = battery.PowerSystem.make(1.)
-    nominal_battery = battery.BatterySystem.make(24., 1., 1.)
-    motion = battery.SimpleMotionPowerSink(nominal_battery, battery.MechanicalSystem.make(1., 1., .1))
-    device = battery.SimpleDevicePowerSink(nominal_battery, power)
-    if not fleet.set_task_planner_params(nominal_battery, motion, device, device, 0., 1., False, 'nothing'):
+    from robot_lab_utils.fleet_energy_calibration import fleet_calibration, rmf_systems
+    calibration = fleet_calibration(session, infra_config)
+    if calibration:
+        energy = infra_config['energy']
+        battery_system, motion, ambient, tool = rmf_systems(battery, energy, calibration)
+        planned = fleet.set_task_planner_params(battery_system, motion, ambient, tool,
+            float(energy.get('recharge_threshold', .2)), 1., True, 'nothing')
+    else:
+        # Required RMF API cost objects are nominal and explicitly unused for
+        # energy accounting. Do not publish the library's default battery values.
+        power = battery.PowerSystem.make(1.)
+        nominal_battery = battery.BatterySystem.make(24., 1., 1.)
+        motion = battery.SimpleMotionPowerSink(nominal_battery, battery.MechanicalSystem.make(1., 1., .1))
+        device = battery.SimpleDevicePowerSink(nominal_battery, power)
+        planned = fleet.set_task_planner_params(nominal_battery, motion, device, device, 0., 1., False, 'nothing')
+    if not planned:
         raise RuntimeError('Open-RMF task planner initialization failed')
     def consider_patrol(description):
         # Humble's binding takes one JSON argument and returns Confirmation;
@@ -370,6 +391,7 @@ def main(args=None):
     fleet.consider_patrol_requests(consider_patrol)
     bridge = RmfBridge(session, adapter, graph_value, fleet, data['vertices'])
     bridge.profile = profile
+    bridge.energy_calibration = calibration
     try:
         rclpy.spin(bridge)
     except KeyboardInterrupt:

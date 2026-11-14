@@ -81,14 +81,52 @@ class TestContactMonitor(unittest.TestCase):
         self.assertTrue(hasattr(FleetController, '_multi_robot_conflict'))
 
 
-class TestMultiRobotConflict(unittest.TestCase):
-    def test_cycle_detection(self):
-        from robot_lab_utils.fleet_controller import FleetController
-        self.assertTrue(hasattr(FleetController, '_multi_robot_conflict'))
+class QueuedMember:
+    def __init__(self, name, queue, active_item=None):
+        self.name, self.queue, self.active_item = name, queue, active_item
 
-    def test_no_conflict_without_waiters(self):
-        from robot_lab_utils.fleet_controller import FleetController
-        self.assertTrue(hasattr(FleetController, '_multi_robot_conflict'))
+
+def queued(task, admitted, wait_member=None, wait_task=None):
+    item = dict(task=task, admitted=admitted, source='operator', goal={})
+    if wait_member:
+        item['traffic_wait_for'] = dict(member=wait_member, task=wait_task, since=0.)
+    return item
+
+
+class TestMultiRobotConflict(unittest.TestCase):
+    def resolve(self, members):
+        ctrl = FakeController()
+        ctrl.members = {m.name: m for m in members}
+        FleetController._multi_robot_conflict.__get__(ctrl, FleetController)(1., {})
+        return ctrl
+
+    def test_cycle_releases_oldest_without_canceling(self):
+        alpha = QueuedMember('alpha', [queued('a1', 5., 'beta', 'b1')])
+        beta = QueuedMember('beta', [queued('b1', 3., 'alpha', 'a1')])
+        ctrl = self.resolve([alpha, beta])
+        self.assertNotIn('traffic_wait_for', beta.queue[0])     # older admission proceeds
+        self.assertIn('traffic_wait_for', alpha.queue[0])       # the other still waits for it
+        self.assertEqual(len(alpha.queue) + len(beta.queue), 2)  # nothing canceled
+        self.assertEqual(ctrl._contact_events[-1]['proceeding'], 'beta')
+
+    def test_three_member_cycle(self):
+        a = QueuedMember('a', [queued('a1', 2., 'b', 'b1')])
+        b = QueuedMember('b', [queued('b1', 1., 'c', 'c1')])
+        c = QueuedMember('c', [queued('c1', 3., 'a', 'a1')])
+        self.resolve([a, b, c])
+        self.assertEqual([('traffic_wait_for' in m.queue[0]) for m in (a, b, c)], [True, False, True])
+
+    def test_no_conflict_without_cycle_or_with_finished_peer_task(self):
+        alpha = QueuedMember('alpha', [queued('a1', 5., 'beta', 'b1')])
+        beta = QueuedMember('beta', [], active_item=queued('b1', 3.))
+        ctrl = self.resolve([alpha, beta])
+        self.assertIn('traffic_wait_for', alpha.queue[0])
+        self.assertEqual(ctrl._contact_events, [])
+        # A wait naming a task its peer no longer has is stale, not a cycle.
+        alpha = QueuedMember('alpha', [queued('a1', 5., 'beta', 'gone')])
+        beta = QueuedMember('beta', [queued('b1', 3., 'alpha', 'a1')])
+        self.resolve([alpha, beta])
+        self.assertIn('traffic_wait_for', beta.queue[0])
 
 
 class TestContactFields(unittest.TestCase):

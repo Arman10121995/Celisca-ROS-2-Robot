@@ -136,7 +136,7 @@ Work top to bottom. Each line links to its task.
 | I6 | [R5.9](#r59--mobile-manipulators) Mobile manipulation | Stretch object recipes, pose reaches, interlocks, actual costmap receipts and bounded configuration detours implemented; alternate IK branches and further source adapters remain | partial |
 | I7 | [R5.7](#r57--manipulators-and-motion-planning) Arms | Panda measured box selection, grasp and support-placement stage plans implemented; unattended sequencing, arbitrary geometry, coupled arms and other backends remain | partial |
 | I8 | [R5.8](#r58--robot-hands-and-grippers) Hands | Torque/tendon hand adapters, object workflows | partial |
-| I9 | [R10.2](#r102--fleet-management-and-open-rmf) Fleet / Open-RMF | Conflicts, infrastructure, larger fleets, calibrated energy | partial |
+| I9 | [R10.2](#r102--fleet-management-and-open-rmf) Fleet / Open-RMF | Done 2026-11-14: shared-zone reservations (map passages, doors, docks), cycle breaker, recovery drive-out, RMF energy from a drivetrain calibration; two crossing runs pass (native and RMF). Chargers/doors in other worlds, larger fleets remain | implemented |
 | I10 | [R10.3](#r103--swarm-robotics) Swarms | Remaining behaviours, distributed protocols, cooperative coverage, larger aerial groups | partial |
 | I11 | [R10.5](#r105--underwater-worlds-sensing-slam-and-navigation) / [R10.4](#r104--underwater-robots-and-controllers) Marine | Estimation, 3D mapping, volumetric routes; other backends | partial |
 | I12 | [R10.6](#r106--six--and-eight-legged-robots) / [R10.7](#r107--segmented-and-additional-robot-forms) Multi-leg and forms | Terrain/slip/recovery controllers, estimation, flipper-aware navigation | partial |
@@ -670,7 +670,7 @@ tier repair awaits its exact-revision published rerun. Details and evidence are 
 
 ### R10.2 — Fleet management and Open-RMF
 
-- **State:** partial · **Priority:** I9 · **Depends on:** R10.1
+- **State:** implemented, experimental (one remaining item) · **Priority:** I9 · **Depends on:** R10.1
 - **Goal:** missions are dispatched to a fleet and coordinated at shared
   places (corridors, doors, lifts, chargers).
 - **Have:**
@@ -678,18 +678,30 @@ tier repair awaits its exact-revision published rerun. Details and evidence are 
   - Queues, nearest-idle allocation, pause/resume/cancel.
   - Physical door and lift events; one Bumperbot lift ride L0→L1→L0;
     post-exit parking. [Remaining-work guide](docs/REMAINING_WORK_GUIDE.md).
+- **Done 2026-11-14 (implemented, experimental):**
+  - shared-zone reservations (`fleet_zones.py`): single-lane passages from
+    every map, door sweeps, docks and declared zones; a member is held 1 m
+    before a zone a peer holds, with its task suspended, not canceled;
+  - circular yield waits resolve to the oldest task without cancellation;
+  - **Recover held lift** can drive the passenger out and park it;
+  - RMF energy accounting from a drivetrain calibration
+    (`fleet_energy_calibration.py`), gated per model on description hash and
+    ≤ 25 % held-out energy error; modeled SOC sent to RMF;
+  - measured: native and RMF two-robot door crossings, Bumperbot/Labbot
+    calibrations (6 % / 15 % held-out).
+    [Evidence](docs/status/evidence/fleet-zones-energy-2026-11-14/README.md).
 - **Remaining implementation:**
-  - conflict resolution with two or more robots on the same route;
-  - occupied-lift recovery;
-  - calibrated energy (motor-power observations) for RMF scheduling;
-  - more infrastructure: chargers and doors in other worlds.
+  - chargers and doors (physical docking and energy) in worlds other than
+    `fleet_facility`; the infrastructure node still requires a lift.
 - **How to do it:** extend `fleet_controller.py`, `fleet_transport_queue.py`,
   `fleet_lift_recovery.py` and `fleet_rmf_adapter.py`. Keep reservations and
   observation gates; never move a robot by bypassing them. Batch runs:
   `robot-lab-fleet-workload --spec ...`.
 - **Done when:** two-robot conflicts at a shared resource resolve, with
-  physical outcomes matching task status.
-- **Validation later:** larger fleets, contacts, loss (V7).
+  physical outcomes matching task status. *Met for one door, twice
+  (2026-11-14).*
+- **Validation later:** larger fleets, three-robot passages, occupied-lift
+  drive-out run, contacts, loss (V7).
 
 ### R10.3 — Swarm robotics
 

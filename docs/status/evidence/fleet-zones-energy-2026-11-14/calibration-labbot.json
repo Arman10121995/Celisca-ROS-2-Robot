@@ -1,0 +1,62 @@
+{
+  "mass": 0.001,
+  "inertia": 1.0211299835632301,
+  "friction": 58.594387413960774,
+  "samples": 4108,
+  "phases": 19,
+  "rms_W": 0.20403161102292094,
+  "r2": -0.6282180520869693,
+  "held_out": [
+    {
+      "name": "even_to_odd",
+      "fit": {
+        "mass": 0.001,
+        "inertia": 1.1897749009817353,
+        "friction": 45.939131066409914,
+        "samples": 2087,
+        "phases": 10,
+        "rms_W": 0.1983633427772476,
+        "r2": -0.8844213545154276
+      },
+      "check": {
+        "observed_J": 2.7098728279220303,
+        "predicted_J": 2.355860295316588,
+        "relative_error": -0.1306380612985829
+      }
+    },
+    {
+      "name": "odd_to_even",
+      "fit": {
+        "mass": 0.001,
+        "inertia": 0.9037264429760132,
+        "friction": 68.46477044680405,
+        "samples": 2021,
+        "phases": 9,
+        "rms_W": 0.21097212524940726,
+        "r2": -0.5044428658558466
+      },
+      "check": {
+        "observed_J": 1.959166767832801,
+        "predicted_J": 2.257441428483874,
+        "relative_error": 0.152245671756172
+      }
+    }
+  ],
+  "held_out_max_error": 0.152245671756172,
+  "description_mass_kg": 4.6217,
+  "all_samples": {
+    "observed_J": 4.680837686202986,
+    "predicted_J": 4.73259398359089,
+    "relative_error": 0.011057058769727941
+  },
+  "model": "labbot",
+  "member": "beta",
+  "joints": [
+    "labbot_left_wheel_joint",
+    "labbot_right_wheel_joint"
+  ],
+  "efficiency": 0.75,
+  "completed_profile": true,
+  "source_description_sha256": "05317bc229f5e6e4af594b5626c4f8c4839f8b02726e645520649dd9a76ea95d",
+  "scope": "Simulated drivetrain only; hotel load, voltage and capacity stay authored"
+}

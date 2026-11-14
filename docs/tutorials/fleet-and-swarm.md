@@ -102,6 +102,52 @@ pose and waits for a consistent localization transform. The acknowledgement,
 subsequent physical pose, member isolation and dynamic clearance are distinct
 observations. Broad reset/contact qualification remains open.
 
+## Shared zones: corridors, doors and chargers
+
+With navigation enabled, the controller reserves places where two members
+cannot pass each other. One member at a time holds each:
+
+- **single-lane passage**: found from the occupancy map when a corridor is
+  narrower than two footprints plus Nav2 inflation (clearance below
+  2 × radius + 0.25 m, using the largest member's radius);
+- **door**: each declared facility door sweep (the lift car keeps its own
+  reservation);
+- **dock**: a 1.2 m square around each declared charger;
+- **declared zone**: `shared_zones` in the facility file, or in an optional
+  `fleet_zones` file named by a map profile, with optional `holding` poses.
+
+A member's fresh Nav2 plan (`/<member>/plan`) claims a zone it enters
+within 6 m. The member inside the zone holds it; otherwise the grant goes to
+a member that is already waiting, then to the nearest claim within 2 m.
+Another member whose plan reaches the zone within 1 m is held: its task is
+suspended (not canceled) and queued with the zone it waits for. If the zone
+declares holding poses within 4 m, the member first drives to the nearest.
+When the zone is free, the same task is sent again. A parked member inside a
+zone holds it, so the wait reason names that member. The task's own budget
+bounds the wait; when it runs out, the task fails and the queue is held.
+
+`/fleet/state` reports `zones` (declared zones, grants, occupants, waits)
+and each member's `zone_wait`. The journal records `zone_wait` and
+`zone_granted`. The controller also breaks circular yield waits between
+queued tasks: the oldest admission proceeds and the others keep waiting for it.
+
+Measured in `fleet_facility`: two robots crossing the main door at once
+(the Labbot held 12.4 s, both settled, closest 2.40 m), and the same crossing
+under Open-RMF with calibrated energy (closest 0.92 m, both settled). See the
+[evidence](../status/evidence/fleet-zones-energy-2026-11-14/README.md).
+Zones are experimental; three or more robots, contacts and loss are not yet
+measured.
+
+```mermaid
+flowchart LR
+    P["fresh Nav2 plan<br/>enters zone ≤ 6 m"] --> C{"zone free or<br/>held by me?"}
+    C -- yes --> G["grant; continue"]
+    C -- "no, entry ≤ 1 m" --> W["suspend task<br/>queue with zone_wait"]
+    W --> F{"holder left and<br/>no earlier waiter?"}
+    F -- yes --> R["send the same task again"]
+    F -- "budget expired" --> X["task failed; queue held"]
+```
+
 ## Ground swarm page
 
 Start controls all included members with fresh estimated state and scans.

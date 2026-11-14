@@ -47,6 +47,17 @@ class LiftTransport:
         self.settled_at = None
         self.reason = 'Waiting for physical approach'
 
+    @classmethod
+    def exit_only(cls, robot, operator, floor, config, now, parking=None):
+        """Drive a recovered passenger out of a level, open car on its floor."""
+        if floor not in config['landings']:
+            raise ValueError('Choose a configured landing floor')
+        other = next(name for name in config['landings'] if name != floor)
+        task = cls(robot, operator, other, floor, config, now, parking)
+        task.origin = floor
+        task._phase('exit_ready', now, 'Waiting for the passenger floor map before exit')
+        return task
+
     @property
     def active(self):
         return self.phase not in TERMINAL
@@ -87,6 +98,12 @@ class LiftTransport:
         member, body = context['member'], context['body']
         if member.get('mode') in ('manual', 'swarm', 'resetting', 'paused'):
             return self.cancel('Robot control was replaced or paused', True)
+        if self.phase == 'exit_ready':
+            if not self.in_cabin(body['xyz']):
+                return self.cancel('Recovered passenger is no longer in the car', True)
+            if context['floor'] == self.destination and context['map_ready'] and context['door_open']:
+                return [self._route('exiting', self.config['landings'][self.destination], now)]
+            return []
         if self.phase == 'starting':
             if self.in_cabin(body['xyz']):
                 self._phase('opening', now, 'Waiting for the origin car door')

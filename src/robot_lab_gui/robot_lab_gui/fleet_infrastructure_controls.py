@@ -28,11 +28,14 @@ class InfrastructureControls(ScrollPanel):
         ttk.Button(queue_controls,text='Queue round trip',command=lambda:self.queue_members(True)).pack(side='left',expand=True,fill='x')
         queue_actions=ttk.Frame(self.body);queue_actions.grid(row=6,column=0,sticky='ew')
         ttk.Button(queue_actions,text='Cancel transport queue',command=lambda:self.send('cancel_transports')).pack(side='left',expand=True,fill='x')
-        self.recover_button=ttk.Button(queue_actions,text='Recover held lift to floor',command=lambda:self.send('recover_lift',floor=self.floor.get()),state='disabled')
+        self.recover_button=ttk.Button(queue_actions,text='Recover held lift to floor',command=self.recover_lift,state='disabled')
         self.recover_button.pack(side='left',expand=True,fill='x')
         self.queue_text=tk.StringVar(value='No queued floor missions. Recovery requires an explicit request after Stop/loss.')
         self.auto_park=tk.BooleanVar(value=True)
-        ttk.Checkbutton(self.body,text='Park after exit · keep landing clear',variable=self.auto_park).grid(row=12,column=0,sticky='w',pady=4)
+        self.recover_exit=tk.BooleanVar(value=True)
+        options=ttk.Frame(self.body);options.grid(row=12,column=0,sticky='w',pady=4)
+        ttk.Checkbutton(options,text='Park after exit · keep landing clear',variable=self.auto_park).pack(anchor='w')
+        ttk.Checkbutton(options,text='After recovery, drive the passenger out',variable=self.recover_exit).pack(anchor='w')
         ttk.Label(self.body,textvariable=self.queue_text,wraplength=420,justify='left').grid(row=7,column=0,sticky='ew',pady=4)
         self.docks=ttk.Combobox(self.body,textvariable=self.dock,values=['west_charger'],state='readonly');self.docks.grid(row=8,column=0,sticky='ew',pady=4)
         ttk.Button(self.body,text='Navigate selected member to dock',command=self.dock_member).grid(row=9,column=0,sticky='ew')
@@ -40,13 +43,19 @@ class InfrastructureControls(ScrollPanel):
         ttk.Label(self.body,text='Door/lift states come from native joint positions. Close waits for fresh, clear fleet-body sweeps. '
             'Queued transport approaches, boards, rides, changes maps and exits one member at a time; Stop/loss cancels dependent stops. '
             'A parked peer may block a landing: move it clear before dispatch. Recovery closes clear gates and returns a held car to a floor; '
-            'use Drive to exit afterward. Docking requires an independently observed settled body. Energy is an authored model.',wraplength=420).grid(row=11,column=0,sticky='ew')
+            'with the drive-out option the passenger then exits (and parks) under the same checks as a transport, otherwise use Drive. Docking requires an independently observed settled body. Energy is an authored model.',wraplength=420).grid(row=11,column=0,sticky='ew')
         def reflow(event):
             for widget in self.body.winfo_children():
                 if isinstance(widget,ttk.Label):widget.configure(wraplength=max(240,event.width-35))
             for frame in (controls,lift_controls,queue_controls,queue_actions):
                 for button in frame.winfo_children():button.pack_configure(side='top' if event.width<430 else 'left')
         self.canvas.bind('<Configure>',reflow,add='+')
+
+    def recover_lift(self):
+        options=dict(floor=self.floor.get())
+        if self.recover_exit.get():
+            options.update(exit=True,parking='auto' if self.auto_park.get() else None)
+        self.send('recover_lift',**options)
 
     def attach(self,node):
         from std_msgs.msg import String
