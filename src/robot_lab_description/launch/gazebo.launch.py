@@ -105,6 +105,77 @@ def world_with_seed(path, seed):
     return out
 
 
+# Collision stand-ins for actors (R6.2): (half-height z, SDF geometry, mass).
+# The lab's traffic vehicles are a 4.4 x 1.8 x 1.5 m box skin with the root
+# on the ground; people are about 1.7 m tall and 0.5 m across.
+_ACTOR_COLLIDERS = {
+    'vehicle': (.75, '<box><size>4.4 1.8 1.5</size></box>', 1500.),
+    'person': (.85, '<cylinder><radius>0.25</radius><length>1.7</length></cylinder>', 80.),
+    'other': (.5, '<cylinder><radius>0.3</radius><length>1.0</length></cylinder>', 50.),
+}
+
+
+def _actor_kind(actor):
+    skin = (actor.findtext('skin/filename') or '').lower()
+    name = (actor.get('name') or '').lower()
+    if 'vehicle' in skin or name.startswith(('vehicle', 'car', 'truck', 'bus')):
+        return 'vehicle'
+    if any(word in skin for word in ('walk', 'person', 'human', 'stand', 'talk', 'run')) or \
+            name.startswith(('person', 'walker', 'actor', 'pedestrian')):
+        return 'person'
+    return 'other'
+
+
+def world_with_actor_colliders(path):
+    """A copy of the world where every scripted actor has a moving collision body (R6.2).
+
+    Fortress actors are visual only. Each SDF actor with a waypoint script
+    gets "<actor>__collider" (no visual, gravity off) that robot_lab::ActorColliders
+    moves along the actor's scripted pose every step. Returns (path, colliders).
+    """
+    from ament_index_python.packages import get_package_prefix
+    library = os.path.join(get_package_prefix('robot_lab_maps'), 'lib', 'librobot_lab_actor_colliders.so')
+    if not os.path.isfile(library):
+        raise RuntimeError('Build robot_lab_maps with the ignition-gazebo6 SDK for the actor collider system')
+    root = ET.parse(path).getroot()
+    world = root.find('world')
+    if world is None:
+        raise ValueError('No <world> in ' + str(path))
+    added = []
+    for actor in world.findall('actor'):
+        if actor.find('script/trajectory/waypoint') is None:
+            continue    # Classic <animation><script><control> actors do not move in Fortress either
+        name = actor.get('name')
+        if world.find("model[@name='%s__collider']" % name) is not None:
+            continue
+        z, geometry, mass = _ACTOR_COLLIDERS[_actor_kind(actor)]
+        pose = (actor.findtext('pose') or '0 0 0 0 0 0').split()
+        model = ET.fromstring(
+            '<model name="%s__collider"><pose>%s %s %g 0 0 0</pose><link name="link"><gravity>false</gravity>'
+            '<inertial><mass>%g</mass><inertia><ixx>%g</ixx><iyy>%g</iyy><izz>%g</izz></inertia></inertial>'
+            '<collision name="collision"><geometry>%s</geometry></collision></link></model>'
+            % (name, pose[0], pose[1], z, mass, mass, mass, mass, geometry))
+        world.append(model)
+        added.append(name)
+    if not added:
+        return str(path), []
+    if not world.findall('plugin'):
+        for filename, plugin_name in _DEFAULT_SYSTEMS:
+            ET.SubElement(world, 'plugin', filename=filename, name=plugin_name)
+    ET.SubElement(world, 'plugin', filename=library, name='robot_lab::ActorColliders')
+    base = os.path.dirname(os.path.abspath(path))
+    for element in [*root.iter('uri'), *root.iter('filename')]:
+        value = (element.text or '').strip()
+        if value and not value.startswith('/') and not re.match(r'^[A-Za-z][A-Za-z0-9+.-]*:', value):
+            element.text = os.path.join(base, value)
+    text = ET.tostring(root, encoding='unicode')
+    out = os.path.join(tempfile.gettempdir(), 'robot_lab_world_actors_%s_%s' % (
+        hashlib.sha256(text.encode('utf-8')).hexdigest()[:12], os.path.basename(path)))
+    if not os.path.exists(out):
+        Path(out).write_text(text, encoding='utf-8')
+    return out, added
+
+
 def generate_launch_description():
     robot_lab_description = get_package_share_directory("robot_lab_description")
 
@@ -137,6 +208,9 @@ def generate_launch_description():
     sim_seed_arg = DeclareLaunchArgument(
         name="sim_seed", default_value="",
         description="Seed Gazebo's random generator (sensor noise) at world load; empty keeps Gazebo's own")
+    actor_collisions_arg = DeclareLaunchArgument(
+        name="actor_collisions", default_value="false",
+        description="Give every scripted actor a moving collision body (robot_lab::ActorColliders)")
     sensor_faults_arg = DeclareLaunchArgument(
         name="sensor_faults", default_value="",
         description="Scenario YAML for robot_lab_utils.sensor_fault_relay (seeded faults on live sensor topics)")
@@ -518,6 +592,9 @@ def generate_launch_description():
         seed = LaunchConfiguration('sim_seed').perform(context).strip()
         if seed:
             w = world_with_seed(w, int(seed))
+        if LaunchConfiguration('actor_collisions').perform(context).strip().lower() == 'true':
+            w, colliders = world_with_actor_colliders(w)
+            print('[gazebo.launch] actor colliders: %s' % (', '.join(colliders) or 'none (no scripted actors)'))
 
         # Build GZ_SIM_RESOURCE_PATH (only executed for actual simulation)
         try:
@@ -707,6 +784,7 @@ def generate_launch_description():
         world_name_arg,
         sensor_faults_arg,
         sim_seed_arg,
+        actor_collisions_arg,
         world_package_arg,
         world_path_arg,
         spawn_x_arg,

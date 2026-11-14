@@ -1,5 +1,11 @@
 # Current Robot Lab status
 
+November 15 Claude: worlds (I16, R6.6/R6.2), implemented and experimental:
+- **[Gazebo example review](evidence/r66-fixture-review-2026-11-15/README.md):** all 100 Gazebo Fortress example worlds are now classified from their own content. 95 of 99 load headless.
+- **Fuel licences:** all 80 Gazebo Fuel models they use are CC0 or CC-BY 4.0.
+- **Installed:** 16 more worlds with occupancy grids, including Fuel's heightmap, lightmap and mesh scenes (34 installed worlds).
+- **[Actors that collide](evidence/r62-actor-colliders-2026-11-15/README.md):** `actor_collisions:=true` gives every scripted Gazebo actor a moving body. A walking person pushed a box 3.41 m that it used to pass through. No robot-contact run yet.
+
 November 15 Claude: [the car course passes in all 12 cells (R5.5/I14)](evidence/r55-car-course-2026-11-15/README.md): three steering geometries on four backends, plus one repeat, 13 of 13 runs. The two round-62 slalom aborts came from the path follower's 0.8 m lookahead cutting the first S-curve to within 5–6 cm of a cone. A 0.6 m lookahead keeps 0.08–0.14 m. A forward escape now follows a blocked back-up. Parking ends within 0.10 m and 4.5°. One run per cell; repeats remain validation.
 
 November 15 Claude: [vendor controllers for imported robots (R3.6/I15)](evidence/r36-vendor-controllers-2026-11-15/README.md) are implemented, experimental:

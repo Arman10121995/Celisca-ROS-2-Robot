@@ -41,6 +41,11 @@ if(ignition-gazebo6_FOUND)
   target_compile_features(robot_lab_simulation_seed PRIVATE cxx_std_17)
   target_link_libraries(robot_lab_simulation_seed ignition-gazebo6::ignition-gazebo6 ignition-plugin1::ignition-plugin1)
   install(TARGETS robot_lab_simulation_seed LIBRARY DESTINATION lib)
+  add_library(robot_lab_actor_colliders SHARED systems/actor_colliders.cc)
+  target_compile_features(robot_lab_actor_colliders PRIVATE cxx_std_17)
+  target_link_libraries(robot_lab_actor_colliders ignition-gazebo6::ignition-gazebo6
+    ignition-plugin1::ignition-plugin1 ignition-common4::graphics)
+  install(TARGETS robot_lab_actor_colliders LIBRARY DESTINATION lib)
   add_library(robot_lab_amphibious_drive SHARED systems/amphibious_drive.cc)
   target_compile_features(robot_lab_amphibious_drive PRIVATE cxx_std_17)
   target_link_libraries(robot_lab_amphibious_drive ignition-gazebo6::ignition-gazebo6

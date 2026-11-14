@@ -116,6 +116,38 @@ def frame_of(element):
     return ((x, y, z), quaternion_from_rpy(roll, pitch, yaw))
 
 
+def fuel_cache_path(uri, cache_root=None):
+    """Gazebo's local copy of a Fuel model (or a file inside it), or "" if not cached.
+
+    https://fuel.<host>/1.0/<owner>/models/<name>[/<version>][/files/<path>]
+    lives at <cache>/<host>/<owner>/models/<name>/<version>/<path>, lower-cased
+    owner and name, as gz-fuel-tools stores it. Nothing is downloaded here.
+    """
+    from urllib.parse import unquote, urlparse
+    parsed = urlparse(uri)
+    parts = [unquote(p) for p in parsed.path.split("/") if p]
+    if parts and parts[0] == "1.0":
+        parts = parts[1:]
+    if len(parts) < 3 or parts[1].lower() != "models":
+        return ""
+    owner, name, rest = parts[0].lower(), parts[2].lower(), parts[3:]
+    version = rest.pop(0) if rest and rest[0].isdigit() else None
+    if rest and rest[0] == "files":
+        rest = rest[1:]
+    root = cache_root or os.path.join(os.path.expanduser("~"), ".ignition", "fuel")
+    for host in dict.fromkeys((parsed.netloc, "fuel.gazebosim.org", "fuel.ignitionrobotics.org")):
+        directory = os.path.join(root, host, owner, "models", name)
+        if not os.path.isdir(directory):
+            continue
+        versions = sorted((v for v in os.listdir(directory) if v.isdigit()), key=int)
+        chosen = version if version in versions else (versions[-1] if versions else None)
+        if chosen:
+            candidate = os.path.join(directory, chosen, *rest)
+            if os.path.exists(candidate):
+                return candidate
+    return ""
+
+
 def uri_resolver(model_dirs=(), package_share=None):
     """Build a resolver for model://, package://, file:// and relative URIs.
 
@@ -127,6 +159,8 @@ def uri_resolver(model_dirs=(), package_share=None):
         uri = (uri or "").strip()
         if not uri:
             return ""
+        if uri.startswith(("https://fuel.", "http://fuel.")):
+            return fuel_cache_path(uri)
         if uri.startswith("model://"):
             rest = uri[len("model://"):]
             for directory in model_dirs:
@@ -144,7 +178,9 @@ def uri_resolver(model_dirs=(), package_share=None):
                 return ""
             return candidate if os.path.exists(candidate) else ""
         if uri.startswith("file://"):
-            uri = uri[len("file://"):]
+            # file URIs are percent-encoded (Fuel model names carry spaces).
+            from urllib.parse import unquote
+            uri = unquote(uri[len("file://"):])
         if os.path.isabs(uri):
             return uri if os.path.exists(uri) else ""
         candidate = os.path.normpath(os.path.join(base_dir, uri))

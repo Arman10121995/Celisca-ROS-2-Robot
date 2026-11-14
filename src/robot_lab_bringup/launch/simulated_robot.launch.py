@@ -1085,6 +1085,8 @@ def _build_simulation_actions(context):
                 gazebo_args["sensor_faults"] = _launch_value(context, "sensor_faults").strip()
             if _launch_value(context, "sim_seed").strip():
                 gazebo_args["sim_seed"] = _launch_value(context, "sim_seed").strip()
+            if _launch_value(context, "actor_collisions").strip().lower() == "true":
+                gazebo_args["actor_collisions"] = "true"
             actions.append(
                 IncludeLaunchDescription(
                     PythonLaunchDescriptionSource(
@@ -2067,6 +2069,8 @@ def generate_launch_description():
                              description='Add a physical Panda object/pedestal for grasp trials'),
         DeclareLaunchArgument("sim_seed", default_value="",
                               description="R7: seed the simulator's own random generator (Gazebo sensor noise)"),
+        DeclareLaunchArgument("actor_collisions", default_value="false",
+                              description="R6.2: Gazebo actors get moving collision bodies (robots can touch people/traffic)"),
         DeclareLaunchArgument("sensor_faults", default_value="",
                               description="R6.2 scenario YAML: seeded faults relayed onto live sensor topics"),
         DeclareLaunchArgument("display_hold", default_value="auto",

@@ -4020,6 +4020,7 @@ tasks:
             validation_state: two one-shot reaches; wider acceptance pending
         title: Manipulator control and GUI motion planning
       R5.8:
+        lift_implementation_20261114: 'Codex owns source-axis UMI object lift/hold and sustained supported-release workflow in native_hand_control.py, native_hand_controls.py and focused hand fixtures. Preserve original source actuators, rates, force bounds, Stop and watchdog; other hand families require their own physical transport adapter.'
         acceptance_ref: ROADMAP.md
         active_scope: '2026-11-13 Codex owns native hand measured force regulation in native_hand_control.py, native_hand_controls.py and native_hand_force.py; Claude retains drone/import files. Preserve all original source gains/limits and Panda controllers. Historical 2026-10-06: preserve native Panda arm controls; add the pinned
           Panda coupled-finger actuator through GripperCommand and real GUI open/close/Stop.
@@ -4219,12 +4220,16 @@ tasks:
           tests, 10 diverse maps tests'
         - 'All tests pass in physics tier: 64/64 physics tests green'
         - docs/status/evidence/r7-simulator-seed-2026-11-14/README.md
+        - docs/status/evidence/r62-actor-colliders-2026-11-15/README.md
         next_action: 'Scenario configurations and disturbance helpers exist. Wire them to live sensors/actors and record
           repeatable baseline/degraded traces with collision, sensing and recovery outcomes; configuration validation is
           not mission qualification. 2026-11-14 claude (later): sensor_faults:= now on MuJoCo/PyBullet/Isaac (simulator
           sensor publishers remapped onto relay inputs); the relay script was never installed, so sensor_faults:= failed
           at launch on Gazebo too - fixed. Smoke: Gazebo and MuJoCo /scan +0.5 m bias from the relay, /scan_clean from the
-          simulator. PyBullet/Isaac not run; no degraded mission yet.'
+          simulator. PyBullet/Isaac not run; no degraded mission yet. 2026-11-15 claude: actors with real collision implemented,
+          experimental: robot_lab::ActorColliders + actor_collisions:=true (one moving collider per waypoint-scripted actor,
+          pose as ign-gazebo6 animates the skin). Measured: a walking person pushed a free box 3.41 m; without colliders
+          0.00 m. Robot-contact mission is validation (V9).'
         owner: cline-agent
         scope_paths:
         - src/robot_lab_maps/
@@ -4348,11 +4353,16 @@ tasks:
           (PyBullet/MuJoCo), 13 deterministic sensor disturbance tests, 6 terrain/aerial
           tests, 10 diverse maps tests'
         - 'All tests pass in physics tier: 64/64 physics tests green'
-        next_action: Qualify both bases on the two-floor hospital ground-floor routes,
-          then further worlds and furniture-adjacent/multi-turn/cancel/second-goal
-          routes with physical body/floor/contact evidence. Preserve spawns and original
-          failures. Profile measured MuJoCo performance without weakening collision/sensor/control
-          fidelity. A static snapshot does not qualify actors or upper-floor travel.
+        - docs/status/evidence/r66-fixture-review-2026-11-15/README.md
+        next_action: 'Qualify both bases on the two-floor hospital ground-floor routes, then further worlds and furniture-adjacent/multi-turn/cancel/second-goal
+          routes with physical body/floor/contact evidence. Preserve spawns and original failures. Profile measured MuJoCo
+          performance without weakening collision/sensor/control fidelity. A static snapshot does not qualify actors or
+          upper-floor travel. 2026-11-15 claude: implemented, experimental. scripts/review_gazebo_examples.py classified
+          all 100 Fortress example SDFs from content incl. cached Fuel includes (33 robot / 23 sensor / 16 plugin / 4 actor
+          demos, 23 scenes, 1 empty); 95/99 load headless (3k_shapes timeout, nested_model DART error, triggered_publisher
+          Twist parse, tunnel Phone.png). scripts/fuel_models.py: 80 Fuel models, all CC0/CC-BY-4.0. Installed the 19/20
+          loading, licence-clear scenes with occupancy grids (16 new, 34 installed; polylines unsupported). Remaining: upper
+          floors; robot missions in new world classes (validation).'
         owner: cline-agent
         result: 14 dataset worlds and three environment examples remain installed.
           Six SHA-pinned hospital fixture repairs preserve originals, Gazebo Collada

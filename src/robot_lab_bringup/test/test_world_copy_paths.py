@@ -74,3 +74,32 @@ def test_seed_copy_replaces_old_seed_before_sensors_and_preserves_asset_schemes(
         str(tmp_path/'meshes/a.obj'),'package://demo/a.obj','https://example.org/a.obj']
     assert world.read_text()==original and copy!=world
     assert launch.world_with_seed(str(world),42)==str(copy)
+
+
+def test_scripted_actors_get_one_moving_collider_each(tmp_path, monkeypatch):
+    """R6.2: waypoint-scripted actors get a collider shaped like their skin; Classic scripts do not."""
+    import xml.etree.ElementTree as ET
+    import ament_index_python.packages as packages
+    (tmp_path / 'prefix/lib').mkdir(parents=True)
+    (tmp_path / 'prefix/lib/librobot_lab_actor_colliders.so').write_text('')
+    monkeypatch.setattr(packages, 'get_package_prefix', lambda name: str(tmp_path / 'prefix'))
+    script = '<script><loop>true</loop><trajectory id="0" type="walk"><waypoint><time>0</time><pose>0 0 1 0 0 0</pose>' \
+             '</waypoint><waypoint><time>4</time><pose>4 0 1 0 0 0</pose></waypoint></trajectory></script>'
+    world = tmp_path / 'street.world'
+    world.write_text('<sdf version="1.9"><world name="w">'
+                     '<actor name="person_00"><pose>1 2 0 0 0 0</pose><skin><filename>walk.dae</filename></skin>%s</actor>'
+                     '<actor name="vehicle_00"><skin><filename>vehicle_box.dae</filename></skin>%s</actor>'
+                     '<actor name="old_box"><animation name="move"><script><trajectory><control/></trajectory></script>'
+                     '</animation></actor></world></sdf>' % (script, script))
+    out, added = load_launch().world_with_actor_colliders(str(world))
+    assert added == ['person_00', 'vehicle_00']
+    root = ET.parse(out).getroot().find('world')
+    person = root.find("model[@name='person_00__collider']")
+    assert person.findtext('pose') == '1 2 0.85 0 0 0' and person.find('.//cylinder') is not None
+    assert root.find("model[@name='vehicle_00__collider']//box/size").text == '4.4 1.8 1.5'
+    assert root.find("model[@name='old_box__collider']") is None
+    assert [p.get('name') for p in root.findall('plugin')].count('robot_lab::ActorColliders') == 1
+    assert 'ignition::gazebo::systems::Physics' in [p.get('name') for p in root.findall('plugin')]
+    plain = tmp_path / 'plain.world'
+    plain.write_text('<sdf version="1.9"><world name="w"/></sdf>')
+    assert load_launch().world_with_actor_colliders(str(plain)) == (str(plain), [])

@@ -1,0 +1,140 @@
+#!/usr/bin/env python3
+"""Licences of the Gazebo Fuel models a world uses (ROADMAP R6.6).
+
+For each Fuel model URI in a world review (``review_gazebo_examples.py
+--json``), the Fuel REST API is asked for the model's metadata: owner,
+version, file size and licence. The result is cached on the SSD
+(``$ROBOT_LAB_RUNTIME_ROOT/external_assets/fuel/licenses.json``) and each
+world is marked installable only when every model it uses carries a licence
+on the allowed list. Gazebo's own Fuel cache (``~/.ignition/fuel``, kept on
+the SSD) supplies the files; this script records where they came from.
+
+  python3 scripts/fuel_models.py --review review.json --json fuel.json --markdown fuel.md
+"""
+import argparse
+import json
+import os
+import time
+import urllib.parse
+import urllib.request
+from pathlib import Path
+
+# Licences that allow use and redistribution with attribution.
+ALLOWED = ('Creative Commons Zero v1.0 Universal', 'Creative Commons Attribution 4.0 International',
+           'Creative Commons Attribution 3.0', 'Creative Commons Attribution-ShareAlike 4.0 International',
+           'Apache License 2.0', 'MIT License', 'BSD 3-Clause "New" or "Revised" License', 'Public domain')
+USER_AGENT = 'RobotLab-world-import/1.0'
+
+
+def model_key(uri):
+    """(owner, name, version or None) of a Fuel model URI."""
+    parsed = urllib.parse.urlparse(uri)
+    parts = [urllib.parse.unquote(p) for p in parsed.path.split('/') if p]
+    if parsed.netloc != 'fuel.gazebosim.org' and parsed.netloc != 'fuel.ignitionrobotics.org':
+        raise ValueError('Not a Fuel URI: ' + uri)
+    if parts and parts[0] == '1.0':
+        parts = parts[1:]
+    if len(parts) < 3 or parts[1].lower() != 'models':
+        raise ValueError('Not a Fuel model URI: ' + uri)
+    version = parts[3] if len(parts) > 3 and parts[3].isdigit() else None
+    return parts[0], parts[2], version
+
+
+def metadata(owner, name, fetch=None):
+    url = 'https://fuel.gazebosim.org/1.0/%s/models/%s' % (urllib.parse.quote(owner), urllib.parse.quote(name))
+    if fetch is not None:
+        return fetch(url)
+    request = urllib.request.Request(url, headers={'User-Agent': USER_AGENT})
+    with urllib.request.urlopen(request, timeout=30) as response:
+        return json.loads(response.read().decode())
+
+
+def cached_files(owner, name, version):
+    root = Path.home() / '.ignition/fuel/fuel.gazebosim.org' / owner.lower() / 'models' / name.lower()
+    if not root.is_dir():
+        return None
+    versions = sorted((p for p in root.iterdir() if p.is_dir() and p.name.isdigit()), key=lambda p: int(p.name))
+    chosen = next((p for p in versions if p.name == str(version)), versions[-1] if versions else None)
+    return str(chosen) if chosen else None
+
+
+def collect(review, cache, fetch=None, pause=0.2):
+    models = {}
+    for world in review['worlds']:
+        for uri in world.get('fuel_uris', []):
+            try:
+                owner, name, version = model_key(uri)
+            except ValueError as exc:
+                models.setdefault(uri, dict(uri=uri, error=str(exc)))
+                continue
+            key = '%s/%s' % (owner, name)
+            if key in models:
+                continue
+            if key in cache:
+                info = cache[key]
+            else:
+                try:
+                    data = metadata(owner, name, fetch)
+                    info = dict(owner=data.get('owner', owner), name=data.get('name', name),
+                                latest_version=data.get('version'), license=data.get('license_name'),
+                                license_url=data.get('license_url'), filesize=data.get('filesize'),
+                                queried=time.strftime('%Y-%m-%d'))
+                except Exception as exc:  # noqa: BLE001 - recorded per model
+                    info = dict(owner=owner, name=name, error=str(exc)[:200])
+                cache[key] = info
+                time.sleep(pause)
+            models[key] = dict(info, requested_version=version, allowed=info.get('license') in ALLOWED,
+                               cached_files=cached_files(owner, name, version or info.get('latest_version')))
+    worlds = []
+    for world in review['worlds']:
+        keys = []
+        for uri in world.get('fuel_uris', []):
+            try:
+                keys.append('%s/%s' % model_key(uri)[:2])
+            except ValueError:
+                keys.append(uri)
+        blocked = [k for k in keys if not models.get(k, {}).get('allowed')]
+        if keys:
+            worlds.append(dict(file=world['file'], kind=world['kind'], models=sorted(set(keys)),
+                               licenses=sorted({models[k].get('license') or 'unknown' for k in keys if k in models}),
+                               installable_licences=not blocked, blocked=sorted(set(blocked))))
+    return models, worlds
+
+
+def markdown(models, worlds):
+    lines = ['# Gazebo Fuel models used by the example worlds', '',
+             'Generated by `scripts/fuel_models.py` from the Fuel REST API. A world is licence-clear only when '
+             'every model it uses carries an allowed licence.', '',
+             '| World | Class | Fuel models | Licences | Licence-clear |', '|---|---|---:|---|---|']
+    for w in worlds:
+        lines.append('| `%s` | %s | %d | %s | %s |' % (w['file'], w['kind'], len(w['models']), '; '.join(w['licenses']),
+                     'yes' if w['installable_licences'] else 'no: ' + ', '.join(w['blocked'])))
+    lines += ['', '| Fuel model | Licence | Version | Cached |', '|---|---|---:|---|']
+    for key, m in sorted(models.items()):
+        lines.append('| %s | %s | %s | %s |' % (key, m.get('license') or m.get('error', '-'),
+                     m.get('requested_version') or m.get('latest_version') or '-', 'yes' if m.get('cached_files') else 'no'))
+    return '\n'.join(lines) + '\n'
+
+
+def main():
+    parser = argparse.ArgumentParser(description=__doc__.split('\n\n')[0])
+    parser.add_argument('--review', required=True)
+    parser.add_argument('--json', default='')
+    parser.add_argument('--markdown', default='')
+    options = parser.parse_args()
+    store = Path(os.environ.get('ROBOT_LAB_RUNTIME_ROOT', '/workspace/molar/robot_lab_runtime')) / 'external_assets/fuel'
+    store.mkdir(parents=True, exist_ok=True)
+    cache_path = store / 'licenses.json'
+    cache = json.loads(cache_path.read_text()) if cache_path.is_file() else {}
+    models, worlds = collect(json.loads(Path(options.review).read_text()), cache)
+    cache_path.write_text(json.dumps(cache, indent=1, sort_keys=True) + '\n')
+    if options.json:
+        Path(options.json).write_text(json.dumps(dict(models=models, worlds=worlds), indent=1) + '\n')
+    if options.markdown:
+        Path(options.markdown).write_text(markdown(models, worlds))
+    print(json.dumps(dict(models=len(models), allowed=sum(m.get('allowed', False) for m in models.values()),
+                          worlds=len(worlds), licence_clear=sum(w['installable_licences'] for w in worlds))))
+
+
+if __name__ == '__main__':
+    main()

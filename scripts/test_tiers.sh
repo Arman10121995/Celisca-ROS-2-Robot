@@ -116,6 +116,7 @@ FAST_TESTS=(
   "src/robot_lab_utils/test/test_external_source_licenses.py"
   "src/robot_lab_utils/test/test_algorithm_method_records.py"
   "src/robot_lab_utils/test/test_robot_asset_audit.py"
+  "src/robot_lab_utils/test/test_world_fixture_review.py"
 )
 
 INTEGRATION_TESTS=(

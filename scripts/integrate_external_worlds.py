@@ -55,6 +55,14 @@ def model_resolver(resources, preferred):
         if uri.strip() == 'file://media/materials/scripts/gazebo.material':
             return ROOT/'src/robot_lab_maps/vendor/gazebo_classic/gazebo.material'
         value = uri.strip().removeprefix('file://')
+        if uri.strip().startswith(('https://fuel.', 'http://fuel.')):
+            # Gazebo Fuel models come from Gazebo's own cache; their licences are
+            # checked per model (scripts/fuel_models.py) before a world is installed.
+            from robot_lab_utils.sdf_world import fuel_cache_path
+            cached = fuel_cache_path(uri.strip())
+            if cached:
+                return Path(cached)
+            raise ValueError('Fuel model not in the local Gazebo cache: '+uri)
         if uri.startswith('model://'):
             name, _, suffix = uri.removeprefix('model://').partition('/')
             candidates = [directory/suffix for directory in model_dirs.get(name, [])]
@@ -294,6 +302,28 @@ def generate_map(world, directory, seed):
     return json.loads(report_path.read_text()), report_path
 
 
+REVIEW = ROOT/'docs/status/evidence/r66-fixture-review-2026-11-15'
+
+
+def reviewed_example_environments(review=REVIEW):
+    """Example worlds the fixture review found to be plain scenes that load, with licence-clear Fuel models.
+
+    scripts/review_gazebo_examples.py and scripts/fuel_models.py write the
+    review; robot, sensor, plugin and actor demos stay fixtures, not maps.
+    """
+    worlds = json.loads((review/'review.json').read_text())['worlds']
+    fuel = {w['file']: w for w in json.loads((review/'fuel_licences.json').read_text())['worlds']}
+    chosen = []
+    for world in worlds:
+        if world['kind'] != 'environment' or not (world.get('load') or {}).get('ok'):
+            continue
+        if world.get('fuel_models_unreviewed') or (world.get('needs_fuel') and
+                                                   not fuel.get(world['file'], {}).get('installable_licences')):
+            continue
+        chosen.append(world['file'])
+    return chosen
+
+
 def install_worlds(store, download, source_id='gazebo_world_dataset'):
     source = load_source(source_id)
     checkout = source_checkout(source, store, download)
@@ -312,7 +342,7 @@ def install_worlds(store, download, source_id='gazebo_world_dataset'):
         # Install the self-contained environment examples first. The other
         # upstream SDFs are retained and explicitly require fixture-specific
         # resource/plugin review; do not turn robot/plugin demos into maps.
-        worlds = [checkout/'examples/worlds'/name for name in ('empty.sdf','default.sdf','shapes.sdf')]
+        worlds = [checkout/'examples/worlds'/name for name in reviewed_example_environments()]
     for dependency_id in ('gazebo_classic_models', 'servicesim_models'):
         dependency_source = load_source(dependency_id)
         dependency_root = source_checkout(dependency_source, store, download)

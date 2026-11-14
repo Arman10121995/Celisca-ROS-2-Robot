@@ -1,0 +1,1425 @@
+{
+ "models": {
+  "Mingfei/actor": {
+   "filesize": 11222368,
+   "latest_version": 1,
+   "license": "Creative Commons Attribution 4.0 International",
+   "license_url": "http://creativecommons.org/licenses/by/4.0/",
+   "name": "actor",
+   "owner": "Mingfei",
+   "queried": "2026-11-14",
+   "requested_version": null,
+   "allowed": true,
+   "cached_files": "/home/molar1/.ignition/fuel/fuel.gazebosim.org/mingfei/models/actor/1"
+  },
+  "accurrent/MBARI Tethys LRAUV": {
+   "filesize": 4981488,
+   "latest_version": 3,
+   "license": "Creative Commons Attribution 4.0 International",
+   "license_url": "http://creativecommons.org/licenses/by/4.0/",
+   "name": "MBARI Tethys LRAUV",
+   "owner": "accurrent",
+   "queried": "2026-11-14",
+   "requested_version": null,
+   "allowed": true,
+   "cached_files": null
+  },
+  "OpenRobotics/Construction Cone": {
+   "filesize": 622427,
+   "latest_version": 3,
+   "license": "Creative Commons Zero v1.0 Universal",
+   "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+   "name": "Construction Cone",
+   "owner": "OpenRobotics",
+   "queried": "2026-11-14",
+   "requested_version": null,
+   "allowed": true,
+   "cached_files": "/home/molar1/.ignition/fuel/fuel.gazebosim.org/openrobotics/models/construction cone/3"
+  },
+  "openrobotics/construction cone": {
+   "owner": "OpenRobotics",
+   "name": "Construction Cone",
+   "latest_version": 3,
+   "license": "Creative Commons Zero v1.0 Universal",
+   "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+   "filesize": 622427,
+   "queried": "2026-11-14",
+   "requested_version": "3",
+   "allowed": true,
+   "cached_files": "/home/molar1/.ignition/fuel/fuel.gazebosim.org/openrobotics/models/construction cone/3"
+  },
+  "OpenRobotics/X2 Config 1": {
+   "filesize": 725779,
+   "latest_version": 19,
+   "license": "Creative Commons Zero v1.0 Universal",
+   "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+   "name": "X2 Config 1",
+   "owner": "OpenRobotics",
+   "queried": "2026-11-14",
+   "requested_version": null,
+   "allowed": true,
+   "cached_files": "/home/molar1/.ignition/fuel/fuel.gazebosim.org/openrobotics/models/x2 config 1/19"
+  },
+  "OpenRobotics/Construction Barrel": {
+   "filesize": 1644935,
+   "latest_version": 4,
+   "license": "Creative Commons Zero v1.0 Universal",
+   "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+   "name": "Construction Barrel",
+   "owner": "OpenRobotics",
+   "queried": "2026-11-14",
+   "requested_version": null,
+   "allowed": true,
+   "cached_files": "/home/molar1/.ignition/fuel/fuel.gazebosim.org/openrobotics/models/construction barrel/4"
+  },
+  "openrobotics/construction barrel": {
+   "owner": "OpenRobotics",
+   "name": "Construction Barrel",
+   "latest_version": 4,
+   "license": "Creative Commons Zero v1.0 Universal",
+   "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+   "filesize": 1644935,
+   "queried": "2026-11-14",
+   "requested_version": "4",
+   "allowed": true,
+   "cached_files": "/home/molar1/.ignition/fuel/fuel.gazebosim.org/openrobotics/models/construction barrel/4"
+  },
+  "nlamprian/Elevator": {
+   "filesize": 279248,
+   "latest_version": 7,
+   "license": "Creative Commons Attribution 4.0 International",
+   "license_url": "http://creativecommons.org/licenses/by/4.0/",
+   "name": "Elevator",
+   "owner": "nlamprian",
+   "queried": "2026-11-14",
+   "requested_version": null,
+   "allowed": true,
+   "cached_files": "/home/molar1/.ignition/fuel/fuel.gazebosim.org/nlamprian/models/elevator/7"
+  },
+  "chapulina/Walking actor": {
+   "filesize": 759053,
+   "latest_version": 2,
+   "license": "Creative Commons Zero v1.0 Universal",
+   "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+   "name": "Walking actor",
+   "owner": "chapulina",
+   "queried": "2026-11-14",
+   "requested_version": null,
+   "allowed": true,
+   "cached_files": null
+  },
+  "OpenRobotics/Backpack": {
+   "filesize": 1778225,
+   "latest_version": 3,
+   "license": "Creative Commons Zero v1.0 Universal",
+   "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+   "name": "Backpack",
+   "owner": "OpenRobotics",
+   "queried": "2026-11-14",
+   "requested_version": null,
+   "allowed": true,
+   "cached_files": "/home/molar1/.ignition/fuel/fuel.gazebosim.org/openrobotics/models/backpack/3"
+  },
+  "OpenRobotics/Double pendulum with base": {
+   "filesize": 34092,
+   "latest_version": 5,
+   "license": "Creative Commons Zero v1.0 Universal",
+   "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+   "name": "Double pendulum with base",
+   "owner": "OpenRobotics",
+   "queried": "2026-11-14",
+   "requested_version": null,
+   "allowed": true,
+   "cached_files": "/home/molar1/.ignition/fuel/fuel.gazebosim.org/openrobotics/models/double pendulum with base/5"
+  },
+  "OpenRobotics/Gazebo - relative paths": {
+   "filesize": 1311286,
+   "latest_version": 2,
+   "license": "Creative Commons Zero v1.0 Universal",
+   "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+   "name": "Gazebo - relative paths",
+   "owner": "OpenRobotics",
+   "queried": "2026-11-14",
+   "requested_version": null,
+   "allowed": true,
+   "cached_files": "/home/molar1/.ignition/fuel/fuel.gazebosim.org/openrobotics/models/gazebo - relative paths/2"
+  },
+  "OpenRobotics/Radio": {
+   "filesize": 203820,
+   "latest_version": 6,
+   "license": "Creative Commons Zero v1.0 Universal",
+   "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+   "name": "Radio",
+   "owner": "OpenRobotics",
+   "queried": "2026-11-14",
+   "requested_version": "4",
+   "allowed": true,
+   "cached_files": "/home/molar1/.ignition/fuel/fuel.gazebosim.org/openrobotics/models/radio/4"
+  },
+  "OpenRobotics/actor - relative paths": {
+   "filesize": 11222360,
+   "latest_version": 2,
+   "license": "Creative Commons Attribution 4.0 International",
+   "license_url": "http://creativecommons.org/licenses/by/4.0/",
+   "name": "actor - relative paths",
+   "owner": "OpenRobotics",
+   "queried": "2026-11-14",
+   "requested_version": null,
+   "allowed": true,
+   "cached_files": "/home/molar1/.ignition/fuel/fuel.gazebosim.org/openrobotics/models/actor - relative paths/2"
+  },
+  "openrobotics/backpack": {
+   "owner": "OpenRobotics",
+   "name": "Backpack",
+   "latest_version": 3,
+   "license": "Creative Commons Zero v1.0 Universal",
+   "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+   "filesize": 1778225,
+   "queried": "2026-11-14",
+   "requested_version": "3",
+   "allowed": true,
+   "cached_files": "/home/molar1/.ignition/fuel/fuel.gazebosim.org/openrobotics/models/backpack/3"
+  },
+  "OpenRobotics/Fortress heightmap": {
+   "filesize": 11665504,
+   "latest_version": 2,
+   "license": "Creative Commons Attribution 4.0 International",
+   "license_url": "http://creativecommons.org/licenses/by/4.0/",
+   "name": "Fortress heightmap",
+   "owner": "OpenRobotics",
+   "queried": "2026-11-14",
+   "requested_version": null,
+   "allowed": true,
+   "cached_files": null
+  },
+  "OpenRobotics/Rescue Randy": {
+   "filesize": 10967168,
+   "latest_version": 3,
+   "license": "Creative Commons Attribution 4.0 International",
+   "license_url": "http://creativecommons.org/licenses/by/4.0/",
+   "name": "Rescue Randy",
+   "owner": "OpenRobotics",
+   "queried": "2026-11-14",
+   "requested_version": null,
+   "allowed": true,
+   "cached_files": "/home/molar1/.ignition/fuel/fuel.gazebosim.org/openrobotics/models/rescue randy/3"
+  },
+  "openrobotics/Tube Light": {
+   "filesize": 6361507,
+   "latest_version": 2,
+   "license": "Creative Commons Attribution 4.0 International",
+   "license_url": "http://creativecommons.org/licenses/by/4.0/",
+   "name": "Tube Light",
+   "owner": "OpenRobotics",
+   "queried": "2026-11-14",
+   "requested_version": null,
+   "allowed": true,
+   "cached_files": "/home/molar1/.ignition/fuel/fuel.gazebosim.org/openrobotics/models/tube light/2"
+  },
+  "openrobotics/rescue randy": {
+   "owner": "OpenRobotics",
+   "name": "Rescue Randy",
+   "latest_version": 3,
+   "license": "Creative Commons Attribution 4.0 International",
+   "license_url": "http://creativecommons.org/licenses/by/4.0/",
+   "filesize": 10967168,
+   "queried": "2026-11-14",
+   "requested_version": "3",
+   "allowed": true,
+   "cached_files": "/home/molar1/.ignition/fuel/fuel.gazebosim.org/openrobotics/models/rescue randy/3"
+  },
+  "openrobotics/tube light": {
+   "owner": "OpenRobotics",
+   "name": "Tube Light",
+   "latest_version": 2,
+   "license": "Creative Commons Attribution 4.0 International",
+   "license_url": "http://creativecommons.org/licenses/by/4.0/",
+   "filesize": 6361507,
+   "queried": "2026-11-14",
+   "requested_version": "2",
+   "allowed": true,
+   "cached_files": "/home/molar1/.ignition/fuel/fuel.gazebosim.org/openrobotics/models/tube light/2"
+  },
+  "OpenRobotics/Playground": {
+   "filesize": 915162,
+   "latest_version": 4,
+   "license": "Creative Commons Zero v1.0 Universal",
+   "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+   "name": "Playground",
+   "owner": "OpenRobotics",
+   "queried": "2026-11-14",
+   "requested_version": null,
+   "allowed": true,
+   "cached_files": "/home/molar1/.ignition/fuel/fuel.gazebosim.org/openrobotics/models/playground/4"
+  },
+  "openrobotics/playground": {
+   "owner": "OpenRobotics",
+   "name": "Playground",
+   "latest_version": 4,
+   "license": "Creative Commons Zero v1.0 Universal",
+   "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+   "filesize": 915162,
+   "queried": "2026-11-14",
+   "requested_version": "4",
+   "allowed": true,
+   "cached_files": "/home/molar1/.ignition/fuel/fuel.gazebosim.org/openrobotics/models/playground/4"
+  },
+  "chapulina/Heightmap Bowl": {
+   "filesize": 9182086,
+   "latest_version": 1,
+   "license": "Creative Commons Attribution 4.0 International",
+   "license_url": "http://creativecommons.org/licenses/by/4.0/",
+   "name": "Heightmap Bowl",
+   "owner": "chapulina",
+   "queried": "2026-11-14",
+   "requested_version": null,
+   "allowed": true,
+   "cached_files": null
+  },
+  "openrobotics/Electrical Box": {
+   "filesize": 564257,
+   "latest_version": 4,
+   "license": "Creative Commons Zero v1.0 Universal",
+   "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+   "name": "Electrical Box",
+   "owner": "OpenRobotics",
+   "queried": "2026-11-14",
+   "requested_version": null,
+   "allowed": true,
+   "cached_files": "/home/molar1/.ignition/fuel/fuel.gazebosim.org/openrobotics/models/electrical box/4"
+  },
+  "OpenRobotics/Indoor Lightmap": {
+   "filesize": 101712303,
+   "latest_version": 3,
+   "license": "Creative Commons Attribution 4.0 International",
+   "license_url": "http://creativecommons.org/licenses/by/4.0/",
+   "name": "Indoor lightmap",
+   "owner": "OpenRobotics",
+   "queried": "2026-11-14",
+   "requested_version": null,
+   "allowed": true,
+   "cached_files": null
+  },
+  "openrobotics/x2 config 1": {
+   "owner": "OpenRobotics",
+   "name": "X2 Config 1",
+   "latest_version": 19,
+   "license": "Creative Commons Zero v1.0 Universal",
+   "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+   "filesize": 725779,
+   "queried": "2026-11-14",
+   "requested_version": "19",
+   "allowed": true,
+   "cached_files": "/home/molar1/.ignition/fuel/fuel.gazebosim.org/openrobotics/models/x2 config 1/19"
+  },
+  "OpenRobotics/Robonaut": {
+   "filesize": 4372041,
+   "latest_version": 3,
+   "license": "Creative Commons Zero v1.0 Universal",
+   "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+   "name": "Robonaut",
+   "owner": "OpenRobotics",
+   "queried": "2026-11-14",
+   "requested_version": null,
+   "allowed": true,
+   "cached_files": null
+  },
+  "openrobotics/robonaut": {
+   "owner": "OpenRobotics",
+   "name": "Robonaut",
+   "latest_version": 3,
+   "license": "Creative Commons Zero v1.0 Universal",
+   "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+   "filesize": 4372041,
+   "queried": "2026-11-14",
+   "requested_version": "3",
+   "allowed": true,
+   "cached_files": null
+  },
+  "mabelzhang/ABCSign_5m": {
+   "filesize": 10971,
+   "latest_version": 1,
+   "license": "Creative Commons Attribution 4.0 International",
+   "license_url": "http://creativecommons.org/licenses/by/4.0/",
+   "name": "ABCSign_5m",
+   "owner": "mabelzhang",
+   "queried": "2026-11-14",
+   "requested_version": null,
+   "allowed": true,
+   "cached_files": null
+  },
+  "mabelzhang/Turquoise turbidity generator": {
+   "filesize": 124093,
+   "latest_version": 2,
+   "license": "Creative Commons Attribution 4.0 International",
+   "license_url": "http://creativecommons.org/licenses/by/4.0/",
+   "name": "Turquoise turbidity generator",
+   "owner": "mabelzhang",
+   "queried": "2026-11-14",
+   "requested_version": null,
+   "allowed": true,
+   "cached_files": null
+  },
+  "OpenRobotics/X3 UAV": {
+   "filesize": 21555096,
+   "latest_version": 6,
+   "license": "Creative Commons Attribution 4.0 International",
+   "license_url": "http://creativecommons.org/licenses/by/4.0/",
+   "name": "X3 UAV",
+   "owner": "OpenRobotics",
+   "queried": "2026-11-14",
+   "requested_version": "4",
+   "allowed": true,
+   "cached_files": "/home/molar1/.ignition/fuel/fuel.gazebosim.org/openrobotics/models/x3 uav/4"
+  },
+  "OpenRobotics/X4 UAV Config 1": {
+   "filesize": 4647033,
+   "latest_version": 15,
+   "license": "Creative Commons Attribution 4.0 International",
+   "license_url": "http://creativecommons.org/licenses/by/4.0/",
+   "name": "X4 UAV Config 1",
+   "owner": "OpenRobotics",
+   "queried": "2026-11-14",
+   "requested_version": null,
+   "allowed": true,
+   "cached_files": "/home/molar1/.ignition/fuel/fuel.gazebosim.org/openrobotics/models/x4 uav config 1/15"
+  },
+  "openrobotics/x3 uav": {
+   "owner": "OpenRobotics",
+   "name": "X3 UAV",
+   "latest_version": 6,
+   "license": "Creative Commons Attribution 4.0 International",
+   "license_url": "http://creativecommons.org/licenses/by/4.0/",
+   "filesize": 21555096,
+   "queried": "2026-11-14",
+   "requested_version": "4",
+   "allowed": true,
+   "cached_files": "/home/molar1/.ignition/fuel/fuel.gazebosim.org/openrobotics/models/x3 uav/4"
+  },
+  "openrobotics/x4 uav config 1": {
+   "owner": "OpenRobotics",
+   "name": "X4 UAV Config 1",
+   "latest_version": 15,
+   "license": "Creative Commons Attribution 4.0 International",
+   "license_url": "http://creativecommons.org/licenses/by/4.0/",
+   "filesize": 4647033,
+   "queried": "2026-11-14",
+   "requested_version": "15",
+   "allowed": true,
+   "cached_files": "/home/molar1/.ignition/fuel/fuel.gazebosim.org/openrobotics/models/x4 uav config 1/15"
+  },
+  "OpenRobotics/Coke": {
+   "filesize": 6315030,
+   "latest_version": 6,
+   "license": "Creative Commons Attribution 4.0 International",
+   "license_url": "http://creativecommons.org/licenses/by/4.0/",
+   "name": "Coke",
+   "owner": "OpenRobotics",
+   "queried": "2026-11-14",
+   "requested_version": null,
+   "allowed": true,
+   "cached_files": null
+  },
+  "OpenRobotics/OfficeChairBlue": {
+   "filesize": 564908,
+   "latest_version": 2,
+   "license": "Creative Commons Attribution 4.0 International",
+   "license_url": "http://creativecommons.org/licenses/by/4.0/",
+   "name": "OfficeChairBlue",
+   "owner": "OpenRobotics",
+   "queried": "2026-11-14",
+   "requested_version": null,
+   "allowed": true,
+   "cached_files": null
+  },
+  "OpenRobotics/SurgicalTrolleyMed": {
+   "filesize": 860176,
+   "latest_version": 2,
+   "license": "Creative Commons Attribution 4.0 International",
+   "license_url": "http://creativecommons.org/licenses/by/4.0/",
+   "name": "SurgicalTrolleyMed",
+   "owner": "OpenRobotics",
+   "queried": "2026-11-14",
+   "requested_version": null,
+   "allowed": true,
+   "cached_files": null
+  },
+  "OpenRobotics/VendingMachine": {
+   "filesize": 619550,
+   "latest_version": 3,
+   "license": "Creative Commons Attribution 4.0 International",
+   "license_url": "http://creativecommons.org/licenses/by/4.0/",
+   "name": "VendingMachine",
+   "owner": "OpenRobotics",
+   "queried": "2026-11-14",
+   "requested_version": null,
+   "allowed": true,
+   "cached_files": null
+  },
+  "openrobotics/coke": {
+   "owner": "OpenRobotics",
+   "name": "Coke",
+   "latest_version": 6,
+   "license": "Creative Commons Attribution 4.0 International",
+   "license_url": "http://creativecommons.org/licenses/by/4.0/",
+   "filesize": 6315030,
+   "queried": "2026-11-14",
+   "requested_version": "6",
+   "allowed": true,
+   "cached_files": null
+  },
+  "openrobotics/officechairblue": {
+   "owner": "OpenRobotics",
+   "name": "OfficeChairBlue",
+   "latest_version": 2,
+   "license": "Creative Commons Attribution 4.0 International",
+   "license_url": "http://creativecommons.org/licenses/by/4.0/",
+   "filesize": 564908,
+   "queried": "2026-11-14",
+   "requested_version": "2",
+   "allowed": true,
+   "cached_files": null
+  },
+  "openrobotics/surgicaltrolleymed": {
+   "owner": "OpenRobotics",
+   "name": "SurgicalTrolleyMed",
+   "latest_version": 2,
+   "license": "Creative Commons Attribution 4.0 International",
+   "license_url": "http://creativecommons.org/licenses/by/4.0/",
+   "filesize": 860176,
+   "queried": "2026-11-14",
+   "requested_version": "2",
+   "allowed": true,
+   "cached_files": null
+  },
+  "openrobotics/vendingmachine": {
+   "owner": "OpenRobotics",
+   "name": "VendingMachine",
+   "latest_version": 3,
+   "license": "Creative Commons Attribution 4.0 International",
+   "license_url": "http://creativecommons.org/licenses/by/4.0/",
+   "filesize": 619550,
+   "queried": "2026-11-14",
+   "requested_version": "3",
+   "allowed": true,
+   "cached_files": null
+  },
+  "caguero/smoke_generator": {
+   "filesize": 39247,
+   "latest_version": 2,
+   "license": "Creative Commons Attribution 4.0 International",
+   "license_url": "http://creativecommons.org/licenses/by/4.0/",
+   "name": "smoke_generator",
+   "owner": "caguero",
+   "queried": "2026-11-14",
+   "requested_version": null,
+   "allowed": true,
+   "cached_files": null
+  },
+  "openrobotics/fog generator": {
+   "filesize": 38413,
+   "latest_version": 2,
+   "license": "Creative Commons Attribution 4.0 International",
+   "license_url": "http://creativecommons.org/licenses/by/4.0/",
+   "name": "Fog Generator",
+   "owner": "OpenRobotics",
+   "queried": "2026-11-14",
+   "requested_version": null,
+   "allowed": true,
+   "cached_files": null
+  },
+  "OpenRobotics/Collapsed House": {
+   "filesize": 1308048,
+   "latest_version": 4,
+   "license": "Creative Commons Zero v1.0 Universal",
+   "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+   "name": "Collapsed House",
+   "owner": "OpenRobotics",
+   "queried": "2026-11-14",
+   "requested_version": null,
+   "allowed": true,
+   "cached_files": null
+  },
+  "OpenRobotics/Hatchback blue": {
+   "filesize": 686301,
+   "latest_version": 5,
+   "license": "Creative Commons Zero v1.0 Universal",
+   "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+   "name": "Hatchback blue",
+   "owner": "OpenRobotics",
+   "queried": "2026-11-14",
+   "requested_version": null,
+   "allowed": true,
+   "cached_files": null
+  },
+  "OpenRobotics/Pickup": {
+   "filesize": 435284,
+   "latest_version": 4,
+   "license": "Creative Commons Zero v1.0 Universal",
+   "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+   "name": "Pickup",
+   "owner": "OpenRobotics",
+   "queried": "2026-11-14",
+   "requested_version": null,
+   "allowed": true,
+   "cached_files": null
+  },
+  "OpenRobotics/Pine Tree": {
+   "filesize": 877470,
+   "latest_version": 6,
+   "license": "Creative Commons Zero v1.0 Universal",
+   "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+   "name": "Pine Tree",
+   "owner": "OpenRobotics",
+   "queried": "2026-11-14",
+   "requested_version": null,
+   "allowed": true,
+   "cached_files": null
+  },
+  "OpenRobotics/SUV": {
+   "filesize": 1895140,
+   "latest_version": 4,
+   "license": "Creative Commons Zero v1.0 Universal",
+   "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+   "name": "SUV",
+   "owner": "OpenRobotics",
+   "queried": "2026-11-14",
+   "requested_version": null,
+   "allowed": true,
+   "cached_files": null
+  },
+  "openrobotics/hatchback blue": {
+   "owner": "OpenRobotics",
+   "name": "Hatchback blue",
+   "latest_version": 5,
+   "license": "Creative Commons Zero v1.0 Universal",
+   "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+   "filesize": 686301,
+   "queried": "2026-11-14",
+   "requested_version": "5",
+   "allowed": true,
+   "cached_files": null
+  },
+  "openrobotics/pine tree": {
+   "owner": "OpenRobotics",
+   "name": "Pine Tree",
+   "latest_version": 6,
+   "license": "Creative Commons Zero v1.0 Universal",
+   "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+   "filesize": 877470,
+   "queried": "2026-11-14",
+   "requested_version": "6",
+   "allowed": true,
+   "cached_files": null
+  },
+  "openrobotics/deformable_sphere": {
+   "filesize": 41839,
+   "latest_version": 6,
+   "license": "Creative Commons Attribution 4.0 International",
+   "license_url": "http://creativecommons.org/licenses/by/4.0/",
+   "name": "deformable_sphere",
+   "owner": "OpenRobotics",
+   "queried": "2026-11-14",
+   "requested_version": "5",
+   "allowed": true,
+   "cached_files": null
+  },
+  "openrobotics/waves": {
+   "filesize": 1220641,
+   "latest_version": 5,
+   "license": "Creative Commons Attribution 4.0 International",
+   "license_url": "http://creativecommons.org/licenses/by/4.0/",
+   "name": "Waves",
+   "owner": "OpenRobotics",
+   "queried": "2026-11-14",
+   "requested_version": "4",
+   "allowed": true,
+   "cached_files": null
+  },
+  "OpenRobotics/Artifact Proximity Detector": {
+   "owner": "OpenRobotics",
+   "name": "Artifact Proximity Detector",
+   "latest_version": 6,
+   "license": "Creative Commons Attribution 4.0 International",
+   "license_url": "http://creativecommons.org/licenses/by/4.0/",
+   "filesize": 928,
+   "queried": "2026-11-14",
+   "requested_version": null,
+   "allowed": true,
+   "cached_files": "/home/molar1/.ignition/fuel/fuel.gazebosim.org/openrobotics/models/artifact proximity detector/6"
+  },
+  "OpenRobotics/Samsung J8 Black": {
+   "filesize": 353130,
+   "latest_version": 9,
+   "license": "Creative Commons Zero v1.0 Universal",
+   "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+   "name": "Samsung J8 Black",
+   "owner": "OpenRobotics",
+   "queried": "2026-11-14",
+   "requested_version": null,
+   "allowed": true,
+   "cached_files": "/home/molar1/.ignition/fuel/fuel.gazebosim.org/openrobotics/models/samsung j8 black/9"
+  },
+  "openrobotics/Euro pallet": {
+   "filesize": 25056,
+   "latest_version": 3,
+   "license": "Creative Commons Zero v1.0 Universal",
+   "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+   "name": "Euro pallet",
+   "owner": "OpenRobotics",
+   "queried": "2026-11-14",
+   "requested_version": null,
+   "allowed": true,
+   "cached_files": "/home/molar1/.ignition/fuel/fuel.gazebosim.org/openrobotics/models/euro pallet/3"
+  },
+  "openrobotics/euro pallet": {
+   "owner": "OpenRobotics",
+   "name": "Euro pallet",
+   "latest_version": 3,
+   "license": "Creative Commons Zero v1.0 Universal",
+   "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+   "filesize": 25056,
+   "queried": "2026-11-14",
+   "requested_version": "3",
+   "allowed": true,
+   "cached_files": "/home/molar1/.ignition/fuel/fuel.gazebosim.org/openrobotics/models/euro pallet/3"
+  },
+  "OpenRobotics/Constrained Tunnel Tile Short": {
+   "filesize": 123703,
+   "latest_version": 9,
+   "license": "Creative Commons Zero v1.0 Universal",
+   "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+   "name": "Constrained Tunnel Tile Short",
+   "owner": "OpenRobotics",
+   "queried": "2026-11-14",
+   "requested_version": null,
+   "allowed": true,
+   "cached_files": "/home/molar1/.ignition/fuel/fuel.gazebosim.org/openrobotics/models/constrained tunnel tile short/9"
+  },
+  "OpenRobotics/Constrained Tunnel Tile Tall": {
+   "filesize": 128904,
+   "latest_version": 8,
+   "license": "Creative Commons Zero v1.0 Universal",
+   "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+   "name": "Constrained Tunnel Tile Tall",
+   "owner": "OpenRobotics",
+   "queried": "2026-11-14",
+   "requested_version": null,
+   "allowed": true,
+   "cached_files": "/home/molar1/.ignition/fuel/fuel.gazebosim.org/openrobotics/models/constrained tunnel tile tall/8"
+  },
+  "OpenRobotics/Electrical Box": {
+   "filesize": 564257,
+   "latest_version": 4,
+   "license": "Creative Commons Zero v1.0 Universal",
+   "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+   "name": "Electrical Box",
+   "owner": "OpenRobotics",
+   "queried": "2026-11-14",
+   "requested_version": null,
+   "allowed": true,
+   "cached_files": "/home/molar1/.ignition/fuel/fuel.gazebosim.org/openrobotics/models/electrical box/4"
+  },
+  "OpenRobotics/Extinguisher": {
+   "filesize": 457496,
+   "latest_version": 2,
+   "license": "Creative Commons Zero v1.0 Universal",
+   "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+   "name": "Extinguisher",
+   "owner": "OpenRobotics",
+   "queried": "2026-11-14",
+   "requested_version": null,
+   "allowed": true,
+   "cached_files": "/home/molar1/.ignition/fuel/fuel.gazebosim.org/openrobotics/models/extinguisher/2"
+  },
+  "OpenRobotics/Phone": {
+   "filesize": 1120073,
+   "latest_version": 2,
+   "license": "Creative Commons Zero v1.0 Universal",
+   "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+   "name": "Phone",
+   "owner": "OpenRobotics",
+   "queried": "2026-11-14",
+   "requested_version": null,
+   "allowed": true,
+   "cached_files": "/home/molar1/.ignition/fuel/fuel.gazebosim.org/openrobotics/models/phone/2"
+  },
+  "OpenRobotics/Toolbox": {
+   "filesize": 1576101,
+   "latest_version": 2,
+   "license": "Creative Commons Zero v1.0 Universal",
+   "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+   "name": "Toolbox",
+   "owner": "OpenRobotics",
+   "queried": "2026-11-14",
+   "requested_version": null,
+   "allowed": true,
+   "cached_files": "/home/molar1/.ignition/fuel/fuel.gazebosim.org/openrobotics/models/toolbox/2"
+  },
+  "OpenRobotics/Tunnel Tile 1": {
+   "filesize": 103825050,
+   "latest_version": 5,
+   "license": "Creative Commons Attribution 4.0 International",
+   "license_url": "http://creativecommons.org/licenses/by/4.0/",
+   "name": "Tunnel Tile 1",
+   "owner": "OpenRobotics",
+   "queried": "2026-11-14",
+   "requested_version": null,
+   "allowed": true,
+   "cached_files": "/home/molar1/.ignition/fuel/fuel.gazebosim.org/openrobotics/models/tunnel tile 1/5"
+  },
+  "OpenRobotics/Tunnel Tile 2": {
+   "filesize": 463564,
+   "latest_version": 16,
+   "license": "Creative Commons Zero v1.0 Universal",
+   "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+   "name": "Tunnel Tile 2",
+   "owner": "OpenRobotics",
+   "queried": "2026-11-14",
+   "requested_version": null,
+   "allowed": true,
+   "cached_files": "/home/molar1/.ignition/fuel/fuel.gazebosim.org/openrobotics/models/tunnel tile 2/16"
+  },
+  "OpenRobotics/Tunnel Tile 5": {
+   "filesize": 433361,
+   "latest_version": 14,
+   "license": "Creative Commons Zero v1.0 Universal",
+   "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+   "name": "Tunnel Tile 5",
+   "owner": "OpenRobotics",
+   "queried": "2026-11-14",
+   "requested_version": null,
+   "allowed": true,
+   "cached_files": "/home/molar1/.ignition/fuel/fuel.gazebosim.org/openrobotics/models/tunnel tile 5/14"
+  },
+  "OpenRobotics/Tunnel Tile 6": {
+   "filesize": 499902,
+   "latest_version": 16,
+   "license": "Creative Commons Zero v1.0 Universal",
+   "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+   "name": "Tunnel Tile 6",
+   "owner": "OpenRobotics",
+   "queried": "2026-11-14",
+   "requested_version": null,
+   "allowed": true,
+   "cached_files": "/home/molar1/.ignition/fuel/fuel.gazebosim.org/openrobotics/models/tunnel tile 6/16"
+  },
+  "OpenRobotics/Tunnel Tile 7": {
+   "filesize": 376185,
+   "latest_version": 16,
+   "license": "Creative Commons Zero v1.0 Universal",
+   "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+   "name": "Tunnel Tile 7",
+   "owner": "OpenRobotics",
+   "queried": "2026-11-14",
+   "requested_version": null,
+   "allowed": true,
+   "cached_files": "/home/molar1/.ignition/fuel/fuel.gazebosim.org/openrobotics/models/tunnel tile 7/16"
+  },
+  "OpenRobotics/Tunnel Tile Blocker": {
+   "filesize": 165295,
+   "latest_version": 12,
+   "license": "Creative Commons Zero v1.0 Universal",
+   "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+   "name": "Tunnel Tile Blocker",
+   "owner": "OpenRobotics",
+   "queried": "2026-11-14",
+   "requested_version": null,
+   "allowed": true,
+   "cached_files": "/home/molar1/.ignition/fuel/fuel.gazebosim.org/openrobotics/models/tunnel tile blocker/12"
+  },
+  "OpenRobotics/Valve": {
+   "filesize": 4064300,
+   "latest_version": 2,
+   "license": "Creative Commons Zero v1.0 Universal",
+   "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+   "name": "Valve",
+   "owner": "OpenRobotics",
+   "queried": "2026-11-14",
+   "requested_version": null,
+   "allowed": true,
+   "cached_files": "/home/molar1/.ignition/fuel/fuel.gazebosim.org/openrobotics/models/valve/2"
+  },
+  "OpenRobotics/subt_tunnel_staging_area": {
+   "filesize": 5696730,
+   "latest_version": 11,
+   "license": "Creative Commons Zero v1.0 Universal",
+   "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+   "name": "subt_tunnel_staging_area",
+   "owner": "OpenRobotics",
+   "queried": "2026-11-14",
+   "requested_version": null,
+   "allowed": true,
+   "cached_files": "/home/molar1/.ignition/fuel/fuel.gazebosim.org/openrobotics/models/subt_tunnel_staging_area/11"
+  },
+  "chapulina/Extinguisher PBR": {
+   "filesize": 7507865,
+   "latest_version": 1,
+   "license": "Creative Commons Zero v1.0 Universal",
+   "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+   "name": "Extinguisher PBR",
+   "owner": "chapulina",
+   "queried": "2026-11-14",
+   "requested_version": null,
+   "allowed": true,
+   "cached_files": "/home/molar1/.ignition/fuel/fuel.gazebosim.org/chapulina/models/extinguisher pbr/1"
+  },
+  "openrobotics/extinguisher": {
+   "owner": "OpenRobotics",
+   "name": "Extinguisher",
+   "latest_version": 2,
+   "license": "Creative Commons Zero v1.0 Universal",
+   "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+   "filesize": 457496,
+   "queried": "2026-11-14",
+   "requested_version": "2",
+   "allowed": true,
+   "cached_files": "/home/molar1/.ignition/fuel/fuel.gazebosim.org/openrobotics/models/extinguisher/2"
+  },
+  "openrobotics/phone": {
+   "owner": "OpenRobotics",
+   "name": "Phone",
+   "latest_version": 2,
+   "license": "Creative Commons Zero v1.0 Universal",
+   "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+   "filesize": 1120073,
+   "queried": "2026-11-14",
+   "requested_version": "2",
+   "allowed": true,
+   "cached_files": "/home/molar1/.ignition/fuel/fuel.gazebosim.org/openrobotics/models/phone/2"
+  },
+  "openrobotics/radio": {
+   "owner": "OpenRobotics",
+   "name": "Radio",
+   "latest_version": 6,
+   "license": "Creative Commons Zero v1.0 Universal",
+   "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+   "filesize": 203820,
+   "queried": "2026-11-14",
+   "requested_version": "4",
+   "allowed": true,
+   "cached_files": "/home/molar1/.ignition/fuel/fuel.gazebosim.org/openrobotics/models/radio/4"
+  },
+  "openrobotics/subt_tunnel_staging_area": {
+   "owner": "OpenRobotics",
+   "name": "subt_tunnel_staging_area",
+   "latest_version": 11,
+   "license": "Creative Commons Zero v1.0 Universal",
+   "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+   "filesize": 5696730,
+   "queried": "2026-11-14",
+   "requested_version": "11",
+   "allowed": true,
+   "cached_files": "/home/molar1/.ignition/fuel/fuel.gazebosim.org/openrobotics/models/subt_tunnel_staging_area/11"
+  },
+  "openrobotics/toolbox": {
+   "owner": "OpenRobotics",
+   "name": "Toolbox",
+   "latest_version": 2,
+   "license": "Creative Commons Zero v1.0 Universal",
+   "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+   "filesize": 1576101,
+   "queried": "2026-11-14",
+   "requested_version": "2",
+   "allowed": true,
+   "cached_files": "/home/molar1/.ignition/fuel/fuel.gazebosim.org/openrobotics/models/toolbox/2"
+  },
+  "openrobotics/valve": {
+   "owner": "OpenRobotics",
+   "name": "Valve",
+   "latest_version": 2,
+   "license": "Creative Commons Zero v1.0 Universal",
+   "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+   "filesize": 4064300,
+   "queried": "2026-11-14",
+   "requested_version": "2",
+   "allowed": true,
+   "cached_files": "/home/molar1/.ignition/fuel/fuel.gazebosim.org/openrobotics/models/valve/2"
+  },
+  "OpenRobotics/EXPLORER_R2_SENSOR_CONFIG_2": {
+   "filesize": 4033889,
+   "latest_version": 9,
+   "license": "Creative Commons Attribution 4.0 International",
+   "license_url": "http://creativecommons.org/licenses/by/4.0/",
+   "name": "EXPLORER_R2_SENSOR_CONFIG_2",
+   "owner": "OpenRobotics",
+   "queried": "2026-11-14",
+   "requested_version": "3",
+   "allowed": true,
+   "cached_files": null
+  },
+  "openrobotics/Playground": {
+   "filesize": 915162,
+   "latest_version": 4,
+   "license": "Creative Commons Zero v1.0 Universal",
+   "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+   "name": "Playground",
+   "owner": "OpenRobotics",
+   "queried": "2026-11-14",
+   "requested_version": null,
+   "allowed": true,
+   "cached_files": "/home/molar1/.ignition/fuel/fuel.gazebosim.org/openrobotics/models/playground/4"
+  }
+ },
+ "worlds": [
+  {
+   "file": "actor.sdf",
+   "kind": "actor_demo",
+   "models": [
+    "Mingfei/actor"
+   ],
+   "licenses": [
+    "Creative Commons Attribution 4.0 International"
+   ],
+   "installable_licences": true,
+   "blocked": []
+  },
+  {
+   "file": "actor_crowd.sdf",
+   "kind": "actor_demo",
+   "models": [
+    "Mingfei/actor"
+   ],
+   "licenses": [
+    "Creative Commons Attribution 4.0 International"
+   ],
+   "installable_licences": true,
+   "blocked": []
+  },
+  {
+   "file": "auv_controls.sdf",
+   "kind": "robot_demo",
+   "models": [
+    "accurrent/MBARI Tethys LRAUV"
+   ],
+   "licenses": [
+    "Creative Commons Attribution 4.0 International"
+   ],
+   "installable_licences": true,
+   "blocked": []
+  },
+  {
+   "file": "boundingbox_camera.sdf",
+   "kind": "sensor_demo",
+   "models": [
+    "OpenRobotics/Construction Cone",
+    "openrobotics/construction cone"
+   ],
+   "licenses": [
+    "Creative Commons Zero v1.0 Universal"
+   ],
+   "installable_licences": true,
+   "blocked": []
+  },
+  {
+   "file": "breadcrumbs.sdf",
+   "kind": "robot_demo",
+   "models": [
+    "OpenRobotics/X2 Config 1"
+   ],
+   "licenses": [
+    "Creative Commons Zero v1.0 Universal"
+   ],
+   "installable_licences": true,
+   "blocked": []
+  },
+  {
+   "file": "camera_sensor.sdf",
+   "kind": "sensor_demo",
+   "models": [
+    "OpenRobotics/Construction Cone",
+    "openrobotics/construction cone"
+   ],
+   "licenses": [
+    "Creative Commons Zero v1.0 Universal"
+   ],
+   "installable_licences": true,
+   "blocked": []
+  },
+  {
+   "file": "depth_camera_sensor.sdf",
+   "kind": "sensor_demo",
+   "models": [
+    "OpenRobotics/Construction Barrel",
+    "openrobotics/construction barrel"
+   ],
+   "licenses": [
+    "Creative Commons Zero v1.0 Universal"
+   ],
+   "installable_licences": true,
+   "blocked": []
+  },
+  {
+   "file": "elevator.sdf",
+   "kind": "environment",
+   "models": [
+    "nlamprian/Elevator"
+   ],
+   "licenses": [
+    "Creative Commons Attribution 4.0 International"
+   ],
+   "installable_licences": true,
+   "blocked": []
+  },
+  {
+   "file": "follow_actor.sdf",
+   "kind": "actor_demo",
+   "models": [
+    "Mingfei/actor",
+    "chapulina/Walking actor"
+   ],
+   "licenses": [
+    "Creative Commons Attribution 4.0 International",
+    "Creative Commons Zero v1.0 Universal"
+   ],
+   "installable_licences": true,
+   "blocked": []
+  },
+  {
+   "file": "fuel.sdf",
+   "kind": "actor_demo",
+   "models": [
+    "OpenRobotics/Backpack",
+    "OpenRobotics/Double pendulum with base",
+    "OpenRobotics/Fortress heightmap",
+    "OpenRobotics/Gazebo - relative paths",
+    "OpenRobotics/Radio",
+    "OpenRobotics/actor - relative paths",
+    "openrobotics/backpack"
+   ],
+   "licenses": [
+    "Creative Commons Attribution 4.0 International",
+    "Creative Commons Zero v1.0 Universal"
+   ],
+   "installable_licences": true,
+   "blocked": []
+  },
+  {
+   "file": "fuel_textured_mesh.sdf",
+   "kind": "sensor_demo",
+   "models": [
+    "OpenRobotics/Rescue Randy",
+    "openrobotics/Tube Light",
+    "openrobotics/rescue randy",
+    "openrobotics/tube light"
+   ],
+   "licenses": [
+    "Creative Commons Attribution 4.0 International"
+   ],
+   "installable_licences": true,
+   "blocked": []
+  },
+  {
+   "file": "gpu_lidar_sensor.sdf",
+   "kind": "sensor_demo",
+   "models": [
+    "OpenRobotics/Playground",
+    "openrobotics/playground"
+   ],
+   "licenses": [
+    "Creative Commons Zero v1.0 Universal"
+   ],
+   "installable_licences": true,
+   "blocked": []
+  },
+  {
+   "file": "heightmap.sdf",
+   "kind": "environment",
+   "models": [
+    "chapulina/Heightmap Bowl"
+   ],
+   "licenses": [
+    "Creative Commons Attribution 4.0 International"
+   ],
+   "installable_licences": true,
+   "blocked": []
+  },
+  {
+   "file": "import_mesh.sdf",
+   "kind": "environment",
+   "models": [
+    "openrobotics/Electrical Box"
+   ],
+   "licenses": [
+    "Creative Commons Zero v1.0 Universal"
+   ],
+   "installable_licences": true,
+   "blocked": []
+  },
+  {
+   "file": "lightmap.sdf",
+   "kind": "environment",
+   "models": [
+    "OpenRobotics/Indoor Lightmap"
+   ],
+   "licenses": [
+    "Creative Commons Attribution 4.0 International"
+   ],
+   "installable_licences": true,
+   "blocked": []
+  },
+  {
+   "file": "log_record_resources.sdf",
+   "kind": "sensor_demo",
+   "models": [
+    "OpenRobotics/X2 Config 1",
+    "openrobotics/x2 config 1"
+   ],
+   "licenses": [
+    "Creative Commons Zero v1.0 Universal"
+   ],
+   "installable_licences": true,
+   "blocked": []
+  },
+  {
+   "file": "model_photo_shoot.sdf",
+   "kind": "sensor_demo",
+   "models": [
+    "OpenRobotics/Robonaut",
+    "openrobotics/robonaut"
+   ],
+   "licenses": [
+    "Creative Commons Zero v1.0 Universal"
+   ],
+   "installable_licences": true,
+   "blocked": []
+  },
+  {
+   "file": "multi_lrauv_race.sdf",
+   "kind": "robot_demo",
+   "models": [
+    "accurrent/MBARI Tethys LRAUV",
+    "mabelzhang/ABCSign_5m",
+    "mabelzhang/Turquoise turbidity generator"
+   ],
+   "licenses": [
+    "Creative Commons Attribution 4.0 International"
+   ],
+   "installable_licences": true,
+   "blocked": []
+  },
+  {
+   "file": "multicopter_velocity_control.sdf",
+   "kind": "robot_demo",
+   "models": [
+    "OpenRobotics/X3 UAV",
+    "OpenRobotics/X4 UAV Config 1",
+    "openrobotics/x3 uav",
+    "openrobotics/x4 uav config 1"
+   ],
+   "licenses": [
+    "Creative Commons Attribution 4.0 International"
+   ],
+   "installable_licences": true,
+   "blocked": []
+  },
+  {
+   "file": "optical_tactile_sensor_plugin.sdf",
+   "kind": "sensor_demo",
+   "models": [
+    "OpenRobotics/Coke",
+    "OpenRobotics/OfficeChairBlue",
+    "OpenRobotics/SurgicalTrolleyMed",
+    "OpenRobotics/VendingMachine",
+    "openrobotics/coke",
+    "openrobotics/officechairblue",
+    "openrobotics/surgicaltrolleymed",
+    "openrobotics/vendingmachine"
+   ],
+   "licenses": [
+    "Creative Commons Attribution 4.0 International"
+   ],
+   "installable_licences": true,
+   "blocked": []
+  },
+  {
+   "file": "particle_emitter.sdf",
+   "kind": "plugin_demo",
+   "models": [
+    "caguero/smoke_generator"
+   ],
+   "licenses": [
+    "Creative Commons Attribution 4.0 International"
+   ],
+   "installable_licences": true,
+   "blocked": []
+  },
+  {
+   "file": "particle_emitter2.sdf",
+   "kind": "plugin_demo",
+   "models": [
+    "openrobotics/fog generator"
+   ],
+   "licenses": [
+    "Creative Commons Attribution 4.0 International"
+   ],
+   "installable_licences": true,
+   "blocked": []
+  },
+  {
+   "file": "plot_3d.sdf",
+   "kind": "environment",
+   "models": [
+    "OpenRobotics/Double pendulum with base"
+   ],
+   "licenses": [
+    "Creative Commons Zero v1.0 Universal"
+   ],
+   "installable_licences": true,
+   "blocked": []
+  },
+  {
+   "file": "quadcopter.sdf",
+   "kind": "robot_demo",
+   "models": [
+    "OpenRobotics/X3 UAV",
+    "openrobotics/x3 uav"
+   ],
+   "licenses": [
+    "Creative Commons Attribution 4.0 International"
+   ],
+   "installable_licences": true,
+   "blocked": []
+  },
+  {
+   "file": "segmentation_camera.sdf",
+   "kind": "sensor_demo",
+   "models": [
+    "OpenRobotics/Collapsed House",
+    "OpenRobotics/Construction Cone",
+    "OpenRobotics/Hatchback blue",
+    "OpenRobotics/Pickup",
+    "OpenRobotics/Pine Tree",
+    "OpenRobotics/SUV",
+    "openrobotics/construction cone",
+    "openrobotics/hatchback blue",
+    "openrobotics/pine tree"
+   ],
+   "licenses": [
+    "Creative Commons Zero v1.0 Universal"
+   ],
+   "installable_licences": true,
+   "blocked": []
+  },
+  {
+   "file": "sensors_demo.sdf",
+   "kind": "sensor_demo",
+   "models": [
+    "OpenRobotics/Construction Cone",
+    "openrobotics/construction cone"
+   ],
+   "licenses": [
+    "Creative Commons Zero v1.0 Universal"
+   ],
+   "installable_licences": true,
+   "blocked": []
+  },
+  {
+   "file": "shader_param.sdf",
+   "kind": "sensor_demo",
+   "models": [
+    "openrobotics/deformable_sphere",
+    "openrobotics/waves"
+   ],
+   "licenses": [
+    "Creative Commons Attribution 4.0 International"
+   ],
+   "installable_licences": true,
+   "blocked": []
+  },
+  {
+   "file": "thermal_camera.sdf",
+   "kind": "sensor_demo",
+   "models": [
+    "OpenRobotics/Artifact Proximity Detector",
+    "OpenRobotics/Backpack",
+    "OpenRobotics/Rescue Randy",
+    "OpenRobotics/Samsung J8 Black",
+    "openrobotics/backpack",
+    "openrobotics/rescue randy"
+   ],
+   "licenses": [
+    "Creative Commons Attribution 4.0 International",
+    "Creative Commons Zero v1.0 Universal"
+   ],
+   "installable_licences": true,
+   "blocked": []
+  },
+  {
+   "file": "tracked_vehicle_simple.sdf",
+   "kind": "robot_demo",
+   "models": [
+    "openrobotics/Euro pallet",
+    "openrobotics/euro pallet"
+   ],
+   "licenses": [
+    "Creative Commons Zero v1.0 Universal"
+   ],
+   "installable_licences": true,
+   "blocked": []
+  },
+  {
+   "file": "triggered_camera_sensor.sdf",
+   "kind": "sensor_demo",
+   "models": [
+    "OpenRobotics/Construction Cone",
+    "openrobotics/construction cone"
+   ],
+   "licenses": [
+    "Creative Commons Zero v1.0 Universal"
+   ],
+   "installable_licences": true,
+   "blocked": []
+  },
+  {
+   "file": "tunnel.sdf",
+   "kind": "robot_demo",
+   "models": [
+    "OpenRobotics/Backpack",
+    "OpenRobotics/Constrained Tunnel Tile Short",
+    "OpenRobotics/Constrained Tunnel Tile Tall",
+    "OpenRobotics/EXPLORER_R2_SENSOR_CONFIG_2",
+    "OpenRobotics/Electrical Box",
+    "OpenRobotics/Extinguisher",
+    "OpenRobotics/Phone",
+    "OpenRobotics/Radio",
+    "OpenRobotics/Toolbox",
+    "OpenRobotics/Tunnel Tile 1",
+    "OpenRobotics/Tunnel Tile 2",
+    "OpenRobotics/Tunnel Tile 5",
+    "OpenRobotics/Tunnel Tile 6",
+    "OpenRobotics/Tunnel Tile 7",
+    "OpenRobotics/Tunnel Tile Blocker",
+    "OpenRobotics/Valve",
+    "OpenRobotics/subt_tunnel_staging_area",
+    "chapulina/Extinguisher PBR",
+    "openrobotics/backpack",
+    "openrobotics/extinguisher",
+    "openrobotics/phone",
+    "openrobotics/radio",
+    "openrobotics/subt_tunnel_staging_area",
+    "openrobotics/toolbox",
+    "openrobotics/valve"
+   ],
+   "licenses": [
+    "Creative Commons Attribution 4.0 International",
+    "Creative Commons Zero v1.0 Universal"
+   ],
+   "installable_licences": true,
+   "blocked": []
+  },
+  {
+   "file": "visualize_lidar.sdf",
+   "kind": "robot_demo",
+   "models": [
+    "openrobotics/Playground",
+    "openrobotics/playground"
+   ],
+   "licenses": [
+    "Creative Commons Zero v1.0 Universal"
+   ],
+   "installable_licences": true,
+   "blocked": []
+  }
+ ]
+}

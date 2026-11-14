@@ -1,0 +1,3215 @@
+{
+ "root": "/workspace/molar/robot_lab_runtime/external_assets/sources/gazebo_examples/b90cd2c41a193102d6951857c2d83e13f59bb64b/examples/worlds",
+ "worlds": [
+  {
+   "file": "3k_shapes.sdf",
+   "world": "shapes",
+   "kind": "environment",
+   "needs_fuel": false,
+   "fuel_models_inspected": 0,
+   "fuel_models_unreviewed": [],
+   "models": 3004,
+   "world_plugins": [
+    "physics",
+    "scene-broadcaster",
+    "user-commands"
+   ],
+   "extra_plugins": [],
+   "driven_models": [],
+   "actors": 0,
+   "sensors": [],
+   "fuel_uris": [],
+   "unresolved": [],
+   "lights": 1,
+   "load": {
+    "exit": "timeout",
+    "ok": false,
+    "seconds": 40.8,
+    "errors": []
+   }
+  },
+  {
+   "file": "ackermann_steering.sdf",
+   "world": "ackermann_steering",
+   "kind": "robot_demo",
+   "needs_fuel": false,
+   "fuel_models_inspected": 0,
+   "fuel_models_unreviewed": [],
+   "models": 2,
+   "world_plugins": [
+    "physics",
+    "scene-broadcaster",
+    "user-commands"
+   ],
+   "extra_plugins": [
+    "ackermann-steering"
+   ],
+   "driven_models": [
+    "vehicle_blue"
+   ],
+   "actors": 0,
+   "sensors": [],
+   "fuel_uris": [],
+   "unresolved": [],
+   "lights": 1,
+   "load": {
+    "exit": 0,
+    "ok": true,
+    "seconds": 2.6,
+    "errors": []
+   }
+  },
+  {
+   "file": "actor.sdf",
+   "world": "actors",
+   "kind": "actor_demo",
+   "needs_fuel": true,
+   "fuel_models_inspected": 1,
+   "fuel_models_unreviewed": [],
+   "models": 3,
+   "world_plugins": [
+    "physics",
+    "scene-broadcaster",
+    "sensors",
+    "user-commands"
+   ],
+   "extra_plugins": [],
+   "driven_models": [],
+   "actors": 3,
+   "sensors": [
+    "camera"
+   ],
+   "fuel_uris": [
+    "https://fuel.gazebosim.org/1.0/Mingfei/models/actor"
+   ],
+   "unresolved": [],
+   "lights": 1,
+   "load": {
+    "exit": 0,
+    "ok": true,
+    "seconds": 7.4,
+    "errors": []
+   }
+  },
+  {
+   "file": "actor_crowd.sdf",
+   "world": "actors",
+   "kind": "actor_demo",
+   "needs_fuel": true,
+   "fuel_models_inspected": 1,
+   "fuel_models_unreviewed": [],
+   "models": 1,
+   "world_plugins": [
+    "physics",
+    "scene-broadcaster",
+    "user-commands"
+   ],
+   "extra_plugins": [],
+   "driven_models": [],
+   "actors": 121,
+   "sensors": [],
+   "fuel_uris": [
+    "https://fuel.ignitionrobotics.org/1.0/Mingfei/models/actor"
+   ],
+   "unresolved": [],
+   "lights": 1,
+   "load": {
+    "exit": 0,
+    "ok": true,
+    "seconds": 4.0,
+    "errors": []
+   }
+  },
+  {
+   "file": "actors_population.sdf",
+   "kind": "empty",
+   "error": "empty file"
+  },
+  {
+   "file": "apply_joint_force.sdf",
+   "world": "apply_joint_force",
+   "kind": "robot_demo",
+   "needs_fuel": false,
+   "fuel_models_inspected": 0,
+   "fuel_models_unreviewed": [],
+   "models": 2,
+   "world_plugins": [
+    "physics",
+    "scene-broadcaster"
+   ],
+   "extra_plugins": [
+    "apply-joint-force"
+   ],
+   "driven_models": [
+    "joint_force_example"
+   ],
+   "actors": 0,
+   "sensors": [],
+   "fuel_uris": [],
+   "unresolved": [],
+   "lights": 1,
+   "load": {
+    "exit": 0,
+    "ok": true,
+    "seconds": 2.6,
+    "errors": []
+   }
+  },
+  {
+   "file": "apply_link_wrench.sdf",
+   "world": "apply_link_wrench",
+   "kind": "plugin_demo",
+   "needs_fuel": false,
+   "fuel_models_inspected": 0,
+   "fuel_models_unreviewed": [],
+   "models": 3,
+   "world_plugins": [
+    "apply-link-wrench",
+    "physics",
+    "scene-broadcaster"
+   ],
+   "extra_plugins": [
+    "apply-link-wrench"
+   ],
+   "driven_models": [],
+   "actors": 0,
+   "sensors": [],
+   "fuel_uris": [],
+   "unresolved": [],
+   "lights": 1,
+   "load": {
+    "exit": 0,
+    "ok": true,
+    "seconds": 2.5,
+    "errors": []
+   }
+  },
+  {
+   "file": "auv_controls.sdf",
+   "world": "buoyant_tethys",
+   "kind": "robot_demo",
+   "needs_fuel": true,
+   "fuel_models_inspected": 1,
+   "fuel_models_unreviewed": [],
+   "models": 1,
+   "world_plugins": [
+    "buoyancy",
+    "physics",
+    "scene-broadcaster",
+    "user-commands"
+   ],
+   "extra_plugins": [
+    "buoyancy",
+    "hydrodynamics",
+    "joint-position-controller",
+    "lift-drag",
+    "thruster"
+   ],
+   "driven_models": [
+    "tethys"
+   ],
+   "actors": 0,
+   "sensors": [],
+   "fuel_uris": [
+    "https://fuel.ignitionrobotics.org/1.0/accurrent/models/MBARI%20Tethys%20LRAUV"
+   ],
+   "unresolved": [],
+   "lights": 1,
+   "load": {
+    "exit": 0,
+    "ok": true,
+    "seconds": 2.9,
+    "errors": []
+   }
+  },
+  {
+   "file": "boundingbox_camera.sdf",
+   "world": "boundingbox_sensor",
+   "kind": "sensor_demo",
+   "needs_fuel": true,
+   "fuel_models_inspected": 1,
+   "fuel_models_unreviewed": [],
+   "models": 6,
+   "world_plugins": [
+    "physics",
+    "scene-broadcaster",
+    "sensors",
+    "user-commands"
+   ],
+   "extra_plugins": [
+    "label"
+   ],
+   "driven_models": [],
+   "actors": 0,
+   "sensors": [
+    "boundingbox_camera"
+   ],
+   "fuel_uris": [
+    "https://fuel.ignitionrobotics.org/1.0/OpenRobotics/models/Construction Cone",
+    "https://fuel.ignitionrobotics.org/1.0/openrobotics/models/construction cone/3/files/meshes/construction_cone.dae"
+   ],
+   "unresolved": [],
+   "lights": 1,
+   "load": {
+    "exit": 0,
+    "ok": true,
+    "seconds": 3.2,
+    "errors": []
+   }
+  },
+  {
+   "file": "breadcrumbs.sdf",
+   "world": "breadcrumbs",
+   "kind": "robot_demo",
+   "needs_fuel": true,
+   "fuel_models_inspected": 0,
+   "fuel_models_unreviewed": [],
+   "models": 4,
+   "world_plugins": [
+    "physics",
+    "scene-broadcaster",
+    "user-commands"
+   ],
+   "extra_plugins": [
+    "breadcrumbs",
+    "diff-drive"
+   ],
+   "driven_models": [
+    "vehicle_blue"
+   ],
+   "actors": 0,
+   "sensors": [],
+   "fuel_uris": [
+    "https://fuel.gazebosim.org/1.0/OpenRobotics/models/X2 Config 1"
+   ],
+   "unresolved": [],
+   "lights": 1,
+   "load": {
+    "exit": 0,
+    "ok": true,
+    "seconds": 2.7,
+    "errors": []
+   }
+  },
+  {
+   "file": "buoyancy.sdf",
+   "world": "buoyancy",
+   "kind": "robot_demo",
+   "needs_fuel": false,
+   "fuel_models_inspected": 0,
+   "fuel_models_unreviewed": [],
+   "models": 3,
+   "world_plugins": [
+    "buoyancy",
+    "physics",
+    "scene-broadcaster",
+    "user-commands"
+   ],
+   "extra_plugins": [
+    "apply-joint-force",
+    "buoyancy",
+    "lift-drag"
+   ],
+   "driven_models": [
+    "submarine"
+   ],
+   "actors": 0,
+   "sensors": [],
+   "fuel_uris": [],
+   "unresolved": [],
+   "lights": 1,
+   "load": {
+    "exit": 0,
+    "ok": true,
+    "seconds": 2.6,
+    "errors": []
+   }
+  },
+  {
+   "file": "buoyancy_engine.sdf",
+   "world": "buoyant_tethys",
+   "kind": "plugin_demo",
+   "needs_fuel": false,
+   "fuel_models_inspected": 0,
+   "fuel_models_unreviewed": [],
+   "models": 2,
+   "world_plugins": [
+    "buoyancy",
+    "contact",
+    "physics",
+    "scene-broadcaster",
+    "user-commands"
+   ],
+   "extra_plugins": [
+    "buoyancy",
+    "buoyancy-engine"
+   ],
+   "driven_models": [],
+   "actors": 0,
+   "sensors": [],
+   "fuel_uris": [],
+   "unresolved": [],
+   "lights": 1,
+   "load": {
+    "exit": 0,
+    "ok": true,
+    "seconds": 2.6,
+    "errors": []
+   }
+  },
+  {
+   "file": "camera_sensor.sdf",
+   "world": "camera_sensor",
+   "kind": "sensor_demo",
+   "needs_fuel": true,
+   "fuel_models_inspected": 1,
+   "fuel_models_unreviewed": [],
+   "models": 5,
+   "world_plugins": [
+    "physics",
+    "scene-broadcaster",
+    "sensors",
+    "user-commands"
+   ],
+   "extra_plugins": [],
+   "driven_models": [],
+   "actors": 0,
+   "sensors": [
+    "camera"
+   ],
+   "fuel_uris": [
+    "https://fuel.gazebosim.org/1.0/OpenRobotics/models/Construction Cone",
+    "https://fuel.gazebosim.org/1.0/openrobotics/models/construction cone/3/files/meshes/construction_cone.dae"
+   ],
+   "unresolved": [],
+   "lights": 1,
+   "load": {
+    "exit": 0,
+    "ok": true,
+    "seconds": 3.6,
+    "errors": []
+   }
+  },
+  {
+   "file": "camera_video_record_dbl_pendulum.sdf",
+   "world": "camera_video_record_pendulum",
+   "kind": "sensor_demo",
+   "needs_fuel": false,
+   "fuel_models_inspected": 0,
+   "fuel_models_unreviewed": [],
+   "models": 3,
+   "world_plugins": [
+    "physics",
+    "scene-broadcaster",
+    "sensors",
+    "user-commands"
+   ],
+   "extra_plugins": [],
+   "driven_models": [],
+   "actors": 0,
+   "sensors": [
+    "camera"
+   ],
+   "fuel_uris": [],
+   "unresolved": [],
+   "lights": 1,
+   "load": {
+    "exit": 0,
+    "ok": true,
+    "seconds": 3.1,
+    "errors": []
+   }
+  },
+  {
+   "file": "collada_world_exporter.sdf",
+   "world": "shapes",
+   "kind": "plugin_demo",
+   "needs_fuel": false,
+   "fuel_models_inspected": 0,
+   "fuel_models_unreviewed": [],
+   "models": 4,
+   "world_plugins": [
+    "collada-world-exporter"
+   ],
+   "extra_plugins": [
+    "collada-world-exporter"
+   ],
+   "driven_models": [],
+   "actors": 0,
+   "sensors": [],
+   "fuel_uris": [],
+   "unresolved": [],
+   "lights": 1,
+   "load": {
+    "exit": 0,
+    "ok": true,
+    "seconds": 2.5,
+    "errors": []
+   }
+  },
+  {
+   "file": "contact_sensor.sdf",
+   "world": "contact_sensor",
+   "kind": "sensor_demo",
+   "needs_fuel": false,
+   "fuel_models_inspected": 0,
+   "fuel_models_unreviewed": [],
+   "models": 2,
+   "world_plugins": [
+    "contact",
+    "physics",
+    "scene-broadcaster",
+    "user-commands"
+   ],
+   "extra_plugins": [],
+   "driven_models": [],
+   "actors": 0,
+   "sensors": [
+    "contact"
+   ],
+   "fuel_uris": [],
+   "unresolved": [],
+   "lights": 1,
+   "load": {
+    "exit": 0,
+    "ok": true,
+    "seconds": 2.5,
+    "errors": []
+   }
+  },
+  {
+   "file": "conveyor.sdf",
+   "world": "default",
+   "kind": "plugin_demo",
+   "needs_fuel": false,
+   "fuel_models_inspected": 0,
+   "fuel_models_unreviewed": [],
+   "models": 2,
+   "world_plugins": [
+    "physics",
+    "scene-broadcaster",
+    "user-commands"
+   ],
+   "extra_plugins": [
+    "track-controller",
+    "triggered-publisher"
+   ],
+   "driven_models": [],
+   "actors": 0,
+   "sensors": [],
+   "fuel_uris": [],
+   "unresolved": [],
+   "lights": 1,
+   "load": {
+    "exit": 0,
+    "ok": true,
+    "seconds": 3.1,
+    "errors": []
+   }
+  },
+  {
+   "file": "debug_shapes.sdf",
+   "world": "shapes",
+   "kind": "environment",
+   "needs_fuel": false,
+   "fuel_models_inspected": 0,
+   "fuel_models_unreviewed": [],
+   "models": 3,
+   "world_plugins": [
+    "physics",
+    "scene-broadcaster",
+    "user-commands"
+   ],
+   "extra_plugins": [],
+   "driven_models": [],
+   "actors": 0,
+   "sensors": [],
+   "fuel_uris": [],
+   "unresolved": [],
+   "lights": 1,
+   "load": {
+    "exit": 0,
+    "ok": true,
+    "seconds": 2.5,
+    "errors": []
+   }
+  },
+  {
+   "file": "default.sdf",
+   "world": "default",
+   "kind": "environment",
+   "needs_fuel": false,
+   "fuel_models_inspected": 0,
+   "fuel_models_unreviewed": [],
+   "models": 1,
+   "world_plugins": [],
+   "extra_plugins": [],
+   "driven_models": [],
+   "actors": 0,
+   "sensors": [],
+   "fuel_uris": [],
+   "unresolved": [],
+   "lights": 1,
+   "load": {
+    "exit": 0,
+    "ok": true,
+    "seconds": 2.5,
+    "errors": []
+   }
+  },
+  {
+   "file": "depth_camera_sensor.sdf",
+   "world": "depth_camera_sensor",
+   "kind": "sensor_demo",
+   "needs_fuel": true,
+   "fuel_models_inspected": 1,
+   "fuel_models_unreviewed": [],
+   "models": 4,
+   "world_plugins": [
+    "physics",
+    "scene-broadcaster",
+    "sensors"
+   ],
+   "extra_plugins": [],
+   "driven_models": [],
+   "actors": 0,
+   "sensors": [
+    "depth_camera"
+   ],
+   "fuel_uris": [
+    "https://fuel.gazebosim.org/1.0/OpenRobotics/models/Construction Barrel",
+    "https://fuel.gazebosim.org/1.0/openrobotics/models/construction barrel/4/files/meshes/construction_barrel.dae"
+   ],
+   "unresolved": [],
+   "lights": 1,
+   "load": {
+    "exit": 0,
+    "ok": true,
+    "seconds": 3.2,
+    "errors": []
+   }
+  },
+  {
+   "file": "detachable_joint.sdf",
+   "world": "detachable_joint",
+   "kind": "robot_demo",
+   "needs_fuel": false,
+   "fuel_models_inspected": 0,
+   "fuel_models_unreviewed": [],
+   "models": 5,
+   "world_plugins": [
+    "physics",
+    "scene-broadcaster",
+    "user-commands"
+   ],
+   "extra_plugins": [
+    "detachable-joint",
+    "diff-drive"
+   ],
+   "driven_models": [
+    "vehicle_blue"
+   ],
+   "actors": 0,
+   "sensors": [],
+   "fuel_uris": [],
+   "unresolved": [],
+   "lights": 1,
+   "load": {
+    "exit": 0,
+    "ok": true,
+    "seconds": 2.6,
+    "errors": []
+   }
+  },
+  {
+   "file": "diff_drive.sdf",
+   "world": "diff_drive",
+   "kind": "robot_demo",
+   "needs_fuel": false,
+   "fuel_models_inspected": 0,
+   "fuel_models_unreviewed": [],
+   "models": 3,
+   "world_plugins": [
+    "physics",
+    "scene-broadcaster",
+    "user-commands"
+   ],
+   "extra_plugins": [
+    "diff-drive"
+   ],
+   "driven_models": [
+    "vehicle_blue",
+    "vehicle_green"
+   ],
+   "actors": 0,
+   "sensors": [],
+   "fuel_uris": [],
+   "unresolved": [],
+   "lights": 1,
+   "load": {
+    "exit": 0,
+    "ok": true,
+    "seconds": 2.6,
+    "errors": []
+   }
+  },
+  {
+   "file": "diff_drive_skid.sdf",
+   "world": "diff_drive",
+   "kind": "robot_demo",
+   "needs_fuel": false,
+   "fuel_models_inspected": 0,
+   "fuel_models_unreviewed": [],
+   "models": 2,
+   "world_plugins": [
+    "physics",
+    "scene-broadcaster",
+    "user-commands"
+   ],
+   "extra_plugins": [
+    "diff-drive"
+   ],
+   "driven_models": [
+    "vehicle_blue"
+   ],
+   "actors": 0,
+   "sensors": [],
+   "fuel_uris": [],
+   "unresolved": [],
+   "lights": 1,
+   "load": {
+    "exit": 0,
+    "ok": true,
+    "seconds": 2.6,
+    "errors": []
+   }
+  },
+  {
+   "file": "elevator.sdf",
+   "world": "elevator_world",
+   "kind": "environment",
+   "needs_fuel": true,
+   "fuel_models_inspected": 0,
+   "fuel_models_unreviewed": [
+    "https://fuel.gazebosim.org/1.0/nlamprian/models/Elevator"
+   ],
+   "models": 1,
+   "world_plugins": [
+    "physics",
+    "scene-broadcaster",
+    "sensors"
+   ],
+   "extra_plugins": [],
+   "driven_models": [],
+   "actors": 0,
+   "sensors": [],
+   "fuel_uris": [
+    "https://fuel.gazebosim.org/1.0/nlamprian/models/Elevator"
+   ],
+   "unresolved": [],
+   "lights": 1,
+   "load": {
+    "exit": 0,
+    "ok": true,
+    "seconds": 3.4,
+    "errors": []
+   }
+  },
+  {
+   "file": "empty.sdf",
+   "world": "empty",
+   "kind": "environment",
+   "needs_fuel": false,
+   "fuel_models_inspected": 0,
+   "fuel_models_unreviewed": [],
+   "models": 1,
+   "world_plugins": [
+    "contact",
+    "physics",
+    "scene-broadcaster",
+    "user-commands"
+   ],
+   "extra_plugins": [],
+   "driven_models": [],
+   "actors": 0,
+   "sensors": [],
+   "fuel_uris": [],
+   "unresolved": [],
+   "lights": 1,
+   "load": {
+    "exit": 0,
+    "ok": true,
+    "seconds": 2.6,
+    "errors": []
+   }
+  },
+  {
+   "file": "empty_gui.sdf",
+   "world": "empty_gui",
+   "kind": "environment",
+   "needs_fuel": false,
+   "fuel_models_inspected": 0,
+   "fuel_models_unreviewed": [],
+   "models": 4,
+   "world_plugins": [],
+   "extra_plugins": [],
+   "driven_models": [],
+   "actors": 0,
+   "sensors": [],
+   "fuel_uris": [],
+   "unresolved": [],
+   "lights": 1,
+   "load": {
+    "exit": 0,
+    "ok": true,
+    "seconds": 2.5,
+    "errors": []
+   }
+  },
+  {
+   "file": "follow_actor.sdf",
+   "world": "actors",
+   "kind": "actor_demo",
+   "needs_fuel": true,
+   "fuel_models_inspected": 2,
+   "fuel_models_unreviewed": [],
+   "models": 5,
+   "world_plugins": [
+    "physics",
+    "scene-broadcaster",
+    "user-commands"
+   ],
+   "extra_plugins": [],
+   "driven_models": [],
+   "actors": 4,
+   "sensors": [],
+   "fuel_uris": [
+    "https://fuel.ignitionrobotics.org/1.0/Mingfei/models/actor",
+    "https://fuel.ignitionrobotics.org/1.0/chapulina/models/Walking actor"
+   ],
+   "unresolved": [],
+   "lights": 1,
+   "load": {
+    "exit": 0,
+    "ok": true,
+    "seconds": 2.6,
+    "errors": []
+   }
+  },
+  {
+   "file": "fuel.sdf",
+   "world": "shapes",
+   "kind": "actor_demo",
+   "needs_fuel": true,
+   "fuel_models_inspected": 4,
+   "fuel_models_unreviewed": [],
+   "models": 6,
+   "world_plugins": [
+    "physics",
+    "scene-broadcaster",
+    "user-commands"
+   ],
+   "extra_plugins": [],
+   "driven_models": [],
+   "actors": 1,
+   "sensors": [],
+   "fuel_uris": [
+    "https://fuel.gazebosim.org/1.0/OpenRobotics/models/Backpack",
+    "https://fuel.gazebosim.org/1.0/OpenRobotics/models/Double pendulum with base",
+    "https://fuel.gazebosim.org/1.0/OpenRobotics/models/Gazebo - relative paths",
+    "https://fuel.gazebosim.org/1.0/OpenRobotics/models/Radio/4/files/meshes/Radio.dae",
+    "https://fuel.gazebosim.org/1.0/OpenRobotics/models/actor - relative paths",
+    "https://fuel.gazebosim.org/1.0/openrobotics/models/backpack/3/files/meshes/Backpack.dae",
+    "https://fuel.ignitionrobotics.org/1.0/OpenRobotics/models/Fortress heightmap/tip/files/materials/textures/fortress_heightmap.png"
+   ],
+   "unresolved": [],
+   "lights": 1,
+   "load": {
+    "exit": 0,
+    "ok": true,
+    "seconds": 11.8,
+    "errors": []
+   }
+  },
+  {
+   "file": "fuel_textured_mesh.sdf",
+   "world": "fuel",
+   "kind": "sensor_demo",
+   "needs_fuel": true,
+   "fuel_models_inspected": 2,
+   "fuel_models_unreviewed": [],
+   "models": 4,
+   "world_plugins": [
+    "physics",
+    "scene-broadcaster",
+    "sensors",
+    "user-commands"
+   ],
+   "extra_plugins": [],
+   "driven_models": [],
+   "actors": 0,
+   "sensors": [
+    "camera"
+   ],
+   "fuel_uris": [
+    "https://fuel.gazebosim.org/1.0/OpenRobotics/models/Rescue Randy",
+    "https://fuel.gazebosim.org/1.0/openrobotics/models/Tube Light",
+    "https://fuel.gazebosim.org/1.0/openrobotics/models/rescue randy/3/files/materials/scripts",
+    "https://fuel.gazebosim.org/1.0/openrobotics/models/rescue randy/3/files/materials/textures",
+    "https://fuel.gazebosim.org/1.0/openrobotics/models/rescue randy/3/files/meshes/rescue_randy.dae",
+    "https://fuel.gazebosim.org/1.0/openrobotics/models/tube light/2/files/materials/scripts",
+    "https://fuel.gazebosim.org/1.0/openrobotics/models/tube light/2/files/materials/textures",
+    "https://fuel.gazebosim.org/1.0/openrobotics/models/tube light/2/files/meshes/tubelight.dae"
+   ],
+   "unresolved": [],
+   "lights": 2,
+   "load": {
+    "exit": 0,
+    "ok": true,
+    "seconds": 5.3,
+    "errors": []
+   }
+  },
+  {
+   "file": "gpu_lidar_retro_values_sensor.sdf",
+   "world": "gpu_lidar_retro_values_sensor",
+   "kind": "sensor_demo",
+   "needs_fuel": false,
+   "fuel_models_inspected": 0,
+   "fuel_models_unreviewed": [],
+   "models": 4,
+   "world_plugins": [
+    "physics",
+    "scene-broadcaster",
+    "sensors"
+   ],
+   "extra_plugins": [],
+   "driven_models": [],
+   "actors": 0,
+   "sensors": [
+    "gpu_lidar"
+   ],
+   "fuel_uris": [],
+   "unresolved": [],
+   "lights": 1,
+   "load": {
+    "exit": 0,
+    "ok": true,
+    "seconds": 3.1,
+    "errors": []
+   }
+  },
+  {
+   "file": "gpu_lidar_sensor.sdf",
+   "world": "gpu_lidar_sensor",
+   "kind": "sensor_demo",
+   "needs_fuel": true,
+   "fuel_models_inspected": 1,
+   "fuel_models_unreviewed": [],
+   "models": 4,
+   "world_plugins": [
+    "physics",
+    "scene-broadcaster",
+    "sensors"
+   ],
+   "extra_plugins": [],
+   "driven_models": [],
+   "actors": 0,
+   "sensors": [
+    "gpu_lidar"
+   ],
+   "fuel_uris": [
+    "https://fuel.gazebosim.org/1.0/OpenRobotics/models/Playground",
+    "https://fuel.gazebosim.org/1.0/openrobotics/models/playground/4/files/meshes/playground.dae"
+   ],
+   "unresolved": [],
+   "lights": 1,
+   "load": {
+    "exit": 0,
+    "ok": true,
+    "seconds": 3.2,
+    "errors": []
+   }
+  },
+  {
+   "file": "graded_buoyancy.sdf",
+   "world": "buoyancy",
+   "kind": "plugin_demo",
+   "needs_fuel": false,
+   "fuel_models_inspected": 0,
+   "fuel_models_unreviewed": [],
+   "models": 10,
+   "world_plugins": [
+    "buoyancy",
+    "physics",
+    "scene-broadcaster",
+    "user-commands"
+   ],
+   "extra_plugins": [
+    "buoyancy"
+   ],
+   "driven_models": [],
+   "actors": 0,
+   "sensors": [],
+   "fuel_uris": [],
+   "unresolved": [],
+   "lights": 1,
+   "load": {
+    "exit": 0,
+    "ok": true,
+    "seconds": 2.6,
+    "errors": []
+   }
+  },
+  {
+   "file": "grid.sdf",
+   "world": "grid",
+   "kind": "environment",
+   "needs_fuel": false,
+   "fuel_models_inspected": 0,
+   "fuel_models_unreviewed": [],
+   "models": 1,
+   "world_plugins": [
+    "contact",
+    "physics",
+    "scene-broadcaster",
+    "user-commands"
+   ],
+   "extra_plugins": [],
+   "driven_models": [],
+   "actors": 0,
+   "sensors": [],
+   "fuel_uris": [],
+   "unresolved": [],
+   "lights": 1,
+   "load": {
+    "exit": 0,
+    "ok": true,
+    "seconds": 2.5,
+    "errors": []
+   }
+  },
+  {
+   "file": "heightmap.sdf",
+   "world": "heightmap",
+   "kind": "environment",
+   "needs_fuel": true,
+   "fuel_models_inspected": 1,
+   "fuel_models_unreviewed": [],
+   "models": 5,
+   "world_plugins": [],
+   "extra_plugins": [],
+   "driven_models": [],
+   "actors": 0,
+   "sensors": [],
+   "fuel_uris": [
+    "https://fuel.ignitionrobotics.org/1.0/chapulina/models/Heightmap Bowl"
+   ],
+   "unresolved": [],
+   "lights": 1,
+   "load": {
+    "exit": 0,
+    "ok": true,
+    "seconds": 2.9,
+    "errors": []
+   }
+  },
+  {
+   "file": "import_mesh.sdf",
+   "world": "fuel",
+   "kind": "environment",
+   "needs_fuel": true,
+   "fuel_models_inspected": 1,
+   "fuel_models_unreviewed": [],
+   "models": 2,
+   "world_plugins": [
+    "physics",
+    "scene-broadcaster",
+    "user-commands"
+   ],
+   "extra_plugins": [],
+   "driven_models": [],
+   "actors": 0,
+   "sensors": [],
+   "fuel_uris": [
+    "https://fuel.gazebosim.org/1.0/openrobotics/models/Electrical Box"
+   ],
+   "unresolved": [],
+   "lights": 1,
+   "load": {
+    "exit": 0,
+    "ok": true,
+    "seconds": 2.6,
+    "errors": []
+   }
+  },
+  {
+   "file": "joint_controller.sdf",
+   "world": "default",
+   "kind": "robot_demo",
+   "needs_fuel": false,
+   "fuel_models_inspected": 0,
+   "fuel_models_unreviewed": [],
+   "models": 2,
+   "world_plugins": [
+    "physics",
+    "scene-broadcaster"
+   ],
+   "extra_plugins": [
+    "joint-controller"
+   ],
+   "driven_models": [
+    "joint_controller_demo",
+    "joint_controller_demo_2"
+   ],
+   "actors": 0,
+   "sensors": [],
+   "fuel_uris": [],
+   "unresolved": [],
+   "lights": 1,
+   "load": {
+    "exit": 0,
+    "ok": true,
+    "seconds": 2.6,
+    "errors": []
+   }
+  },
+  {
+   "file": "joint_position_controller.sdf",
+   "world": "default",
+   "kind": "robot_demo",
+   "needs_fuel": false,
+   "fuel_models_inspected": 0,
+   "fuel_models_unreviewed": [],
+   "models": 1,
+   "world_plugins": [
+    "physics",
+    "scene-broadcaster"
+   ],
+   "extra_plugins": [
+    "joint-position-controller"
+   ],
+   "driven_models": [
+    "joint_position_controller_demo"
+   ],
+   "actors": 0,
+   "sensors": [],
+   "fuel_uris": [],
+   "unresolved": [],
+   "lights": 1,
+   "load": {
+    "exit": 0,
+    "ok": true,
+    "seconds": 2.5,
+    "errors": []
+   }
+  },
+  {
+   "file": "joint_trajectory_controller.sdf",
+   "world": "default",
+   "kind": "robot_demo",
+   "needs_fuel": false,
+   "fuel_models_inspected": 0,
+   "fuel_models_unreviewed": [],
+   "models": 4,
+   "world_plugins": [
+    "physics",
+    "scene-broadcaster"
+   ],
+   "extra_plugins": [
+    "joint-trajectory-controller"
+   ],
+   "driven_models": [
+    "RR_position_control",
+    "RR_velocity_control",
+    "RR_effort_control"
+   ],
+   "actors": 0,
+   "sensors": [],
+   "fuel_uris": [],
+   "unresolved": [],
+   "lights": 1,
+   "load": {
+    "exit": 0,
+    "ok": true,
+    "seconds": 2.6,
+    "errors": []
+   }
+  },
+  {
+   "file": "kinetic_energy_monitor.sdf",
+   "world": "kinetic_energy_monitor",
+   "kind": "plugin_demo",
+   "needs_fuel": false,
+   "fuel_models_inspected": 0,
+   "fuel_models_unreviewed": [],
+   "models": 2,
+   "world_plugins": [
+    "physics",
+    "scene-broadcaster",
+    "user-commands"
+   ],
+   "extra_plugins": [
+    "kinetic-energy-monitor"
+   ],
+   "driven_models": [],
+   "actors": 0,
+   "sensors": [],
+   "fuel_uris": [],
+   "unresolved": [],
+   "lights": 1,
+   "load": {
+    "exit": 0,
+    "ok": true,
+    "seconds": 2.5,
+    "errors": []
+   }
+  },
+  {
+   "file": "levels.sdf",
+   "world": "levels",
+   "kind": "robot_demo",
+   "needs_fuel": false,
+   "fuel_models_inspected": 0,
+   "fuel_models_unreviewed": [],
+   "models": 23,
+   "world_plugins": [
+    "dummy",
+    "physics",
+    "scene-broadcaster",
+    "user-commands"
+   ],
+   "extra_plugins": [
+    "diff-drive",
+    "dummy"
+   ],
+   "driven_models": [
+    "vehicle_red",
+    "vehicle_blue"
+   ],
+   "actors": 0,
+   "sensors": [],
+   "fuel_uris": [],
+   "unresolved": [],
+   "lights": 1,
+   "load": {
+    "exit": 0,
+    "ok": true,
+    "seconds": 2.8,
+    "errors": []
+   }
+  },
+  {
+   "file": "levels_no_performers.sdf",
+   "world": "levels",
+   "kind": "robot_demo",
+   "needs_fuel": false,
+   "fuel_models_inspected": 0,
+   "fuel_models_unreviewed": [],
+   "models": 23,
+   "world_plugins": [
+    "dummy",
+    "physics",
+    "scene-broadcaster",
+    "user-commands"
+   ],
+   "extra_plugins": [
+    "diff-drive",
+    "dummy"
+   ],
+   "driven_models": [
+    "vehicle_red",
+    "vehicle_blue"
+   ],
+   "actors": 0,
+   "sensors": [],
+   "fuel_uris": [],
+   "unresolved": [],
+   "lights": 1,
+   "load": {
+    "exit": 0,
+    "ok": true,
+    "seconds": 2.8,
+    "errors": []
+   }
+  },
+  {
+   "file": "lift_drag.sdf",
+   "world": "lift_drag",
+   "kind": "robot_demo",
+   "needs_fuel": false,
+   "fuel_models_inspected": 0,
+   "fuel_models_unreviewed": [],
+   "models": 2,
+   "world_plugins": [
+    "physics",
+    "scene-broadcaster",
+    "user-commands"
+   ],
+   "extra_plugins": [
+    "apply-joint-force",
+    "joint-state-publisher",
+    "lift-drag"
+   ],
+   "driven_models": [
+    "lift_drag_demo_model"
+   ],
+   "actors": 0,
+   "sensors": [],
+   "fuel_uris": [],
+   "unresolved": [],
+   "lights": 1,
+   "load": {
+    "exit": 0,
+    "ok": true,
+    "seconds": 2.6,
+    "errors": []
+   }
+  },
+  {
+   "file": "lift_drag_battery.sdf",
+   "world": "lift_drag",
+   "kind": "robot_demo",
+   "needs_fuel": false,
+   "fuel_models_inspected": 0,
+   "fuel_models_unreviewed": [],
+   "models": 2,
+   "world_plugins": [
+    "physics",
+    "scene-broadcaster",
+    "user-commands"
+   ],
+   "extra_plugins": [
+    "apply-joint-force",
+    "joint-state-publisher",
+    "lift-drag",
+    "linearbatteryplugin"
+   ],
+   "driven_models": [
+    "lift_drag_demo_model"
+   ],
+   "actors": 0,
+   "sensors": [],
+   "fuel_uris": [],
+   "unresolved": [],
+   "lights": 1,
+   "load": {
+    "exit": 0,
+    "ok": true,
+    "seconds": 2.6,
+    "errors": []
+   }
+  },
+  {
+   "file": "lift_drag_nested.sdf",
+   "world": "lift_drag",
+   "kind": "robot_demo",
+   "needs_fuel": false,
+   "fuel_models_inspected": 0,
+   "fuel_models_unreviewed": [],
+   "models": 4,
+   "world_plugins": [
+    "physics",
+    "scene-broadcaster",
+    "user-commands"
+   ],
+   "extra_plugins": [
+    "apply-joint-force",
+    "joint-state-publisher",
+    "lift-drag"
+   ],
+   "driven_models": [
+    "lift_drag_demo_model"
+   ],
+   "actors": 0,
+   "sensors": [],
+   "fuel_uris": [],
+   "unresolved": [],
+   "lights": 1,
+   "load": {
+    "exit": 0,
+    "ok": true,
+    "seconds": 2.6,
+    "errors": []
+   }
+  },
+  {
+   "file": "lightmap.sdf",
+   "world": "lightmap",
+   "kind": "environment",
+   "needs_fuel": true,
+   "fuel_models_inspected": 1,
+   "fuel_models_unreviewed": [],
+   "models": 1,
+   "world_plugins": [],
+   "extra_plugins": [],
+   "driven_models": [],
+   "actors": 0,
+   "sensors": [],
+   "fuel_uris": [
+    "https://fuel.ignitionrobotics.org/1.0/OpenRobotics/models/Indoor Lightmap"
+   ],
+   "unresolved": [],
+   "lights": 0,
+   "load": {
+    "exit": 0,
+    "ok": true,
+    "seconds": 7.1,
+    "errors": []
+   }
+  },
+  {
+   "file": "lights.sdf",
+   "world": "lights",
+   "kind": "environment",
+   "needs_fuel": false,
+   "fuel_models_inspected": 0,
+   "fuel_models_unreviewed": [],
+   "models": 4,
+   "world_plugins": [
+    "physics",
+    "scene-broadcaster",
+    "user-commands"
+   ],
+   "extra_plugins": [],
+   "driven_models": [],
+   "actors": 0,
+   "sensors": [],
+   "fuel_uris": [],
+   "unresolved": [],
+   "lights": 3,
+   "load": {
+    "exit": 0,
+    "ok": true,
+    "seconds": 2.6,
+    "errors": []
+   }
+  },
+  {
+   "file": "linear_battery_demo.sdf",
+   "world": "default",
+   "kind": "robot_demo",
+   "needs_fuel": false,
+   "fuel_models_inspected": 0,
+   "fuel_models_unreviewed": [],
+   "models": 3,
+   "world_plugins": [
+    "physics",
+    "scene-broadcaster"
+   ],
+   "extra_plugins": [
+    "diff-drive",
+    "linearbatteryplugin"
+   ],
+   "driven_models": [
+    "vehicle_green",
+    "vehicle_blue"
+   ],
+   "actors": 0,
+   "sensors": [],
+   "fuel_uris": [],
+   "unresolved": [],
+   "lights": 1,
+   "load": {
+    "exit": 0,
+    "ok": true,
+    "seconds": 2.6,
+    "errors": []
+   }
+  },
+  {
+   "file": "log_record_dbl_pendulum.sdf",
+   "world": "log_pendulum",
+   "kind": "plugin_demo",
+   "needs_fuel": false,
+   "fuel_models_inspected": 0,
+   "fuel_models_unreviewed": [],
+   "models": 2,
+   "world_plugins": [
+    "log",
+    "physics",
+    "scene-broadcaster",
+    "user-commands"
+   ],
+   "extra_plugins": [
+    "log"
+   ],
+   "driven_models": [],
+   "actors": 0,
+   "sensors": [],
+   "fuel_uris": [],
+   "unresolved": [],
+   "lights": 1,
+   "load": {
+    "exit": 0,
+    "ok": true,
+    "seconds": 2.6,
+    "errors": []
+   }
+  },
+  {
+   "file": "log_record_keyboard.sdf",
+   "world": "default",
+   "kind": "robot_demo",
+   "needs_fuel": false,
+   "fuel_models_inspected": 0,
+   "fuel_models_unreviewed": [],
+   "models": 3,
+   "world_plugins": [
+    "log",
+    "physics",
+    "scene-broadcaster"
+   ],
+   "extra_plugins": [
+    "diff-drive",
+    "log"
+   ],
+   "driven_models": [
+    "vehicle_green",
+    "vehicle_blue"
+   ],
+   "actors": 0,
+   "sensors": [],
+   "fuel_uris": [],
+   "unresolved": [],
+   "lights": 1,
+   "load": {
+    "exit": 0,
+    "ok": true,
+    "seconds": 2.6,
+    "errors": []
+   }
+  },
+  {
+   "file": "log_record_resources.sdf",
+   "world": "default",
+   "kind": "sensor_demo",
+   "needs_fuel": true,
+   "fuel_models_inspected": 1,
+   "fuel_models_unreviewed": [],
+   "models": 2,
+   "world_plugins": [
+    "log",
+    "physics",
+    "scene-broadcaster"
+   ],
+   "extra_plugins": [
+    "log"
+   ],
+   "driven_models": [],
+   "actors": 0,
+   "sensors": [
+    "camera",
+    "gpu_ray",
+    "imu"
+   ],
+   "fuel_uris": [
+    "https://fuel.gazebosim.org/1.0/OpenRobotics/models/X2 Config 1",
+    "https://fuel.gazebosim.org/1.0/openrobotics/models/x2 config 1/19/files/meshes/headlight.dae",
+    "https://fuel.gazebosim.org/1.0/openrobotics/models/x2 config 1/19/files/meshes/x2_chassis.dae",
+    "https://fuel.gazebosim.org/1.0/openrobotics/models/x2 config 1/19/files/meshes/x2_wheel_left.dae",
+    "https://fuel.gazebosim.org/1.0/openrobotics/models/x2 config 1/19/files/meshes/x2_wheel_right.dae"
+   ],
+   "unresolved": [],
+   "lights": 1,
+   "load": {
+    "exit": 0,
+    "ok": true,
+    "seconds": 2.7,
+    "errors": []
+   }
+  },
+  {
+   "file": "log_record_shapes.sdf",
+   "world": "shapes",
+   "kind": "plugin_demo",
+   "needs_fuel": false,
+   "fuel_models_inspected": 0,
+   "fuel_models_unreviewed": [],
+   "models": 4,
+   "world_plugins": [
+    "log",
+    "physics",
+    "scene-broadcaster",
+    "user-commands"
+   ],
+   "extra_plugins": [
+    "log"
+   ],
+   "driven_models": [],
+   "actors": 0,
+   "sensors": [],
+   "fuel_uris": [],
+   "unresolved": [],
+   "lights": 1,
+   "load": {
+    "exit": 0,
+    "ok": true,
+    "seconds": 2.7,
+    "errors": []
+   }
+  },
+  {
+   "file": "logical_audio_sensor_plugin.sdf",
+   "world": "logical_audio_sensor",
+   "kind": "plugin_demo",
+   "needs_fuel": false,
+   "fuel_models_inspected": 0,
+   "fuel_models_unreviewed": [],
+   "models": 5,
+   "world_plugins": [
+    "physics",
+    "scene-broadcaster",
+    "user-commands"
+   ],
+   "extra_plugins": [
+    "logicalaudiosensorplugin"
+   ],
+   "driven_models": [],
+   "actors": 0,
+   "sensors": [],
+   "fuel_uris": [],
+   "unresolved": [],
+   "lights": 1,
+   "load": {
+    "exit": 0,
+    "ok": true,
+    "seconds": 2.5,
+    "errors": []
+   }
+  },
+  {
+   "file": "logical_camera_sensor.sdf",
+   "world": "logical_camera_sensor",
+   "kind": "sensor_demo",
+   "needs_fuel": false,
+   "fuel_models_inspected": 0,
+   "fuel_models_unreviewed": [],
+   "models": 3,
+   "world_plugins": [
+    "logical-camera",
+    "physics",
+    "scene-broadcaster",
+    "user-commands"
+   ],
+   "extra_plugins": [
+    "logical-camera"
+   ],
+   "driven_models": [],
+   "actors": 0,
+   "sensors": [
+    "logical_camera"
+   ],
+   "fuel_uris": [],
+   "unresolved": [],
+   "lights": 1,
+   "load": {
+    "exit": 0,
+    "ok": true,
+    "seconds": 2.6,
+    "errors": []
+   }
+  },
+  {
+   "file": "mecanum_drive.sdf",
+   "world": "mecanum_drive",
+   "kind": "robot_demo",
+   "needs_fuel": false,
+   "fuel_models_inspected": 0,
+   "fuel_models_unreviewed": [],
+   "models": 2,
+   "world_plugins": [
+    "physics",
+    "scene-broadcaster",
+    "user-commands"
+   ],
+   "extra_plugins": [
+    "mecanum-drive"
+   ],
+   "driven_models": [
+    "vehicle_blue"
+   ],
+   "actors": 0,
+   "sensors": [],
+   "fuel_uris": [],
+   "unresolved": [],
+   "lights": 1,
+   "load": {
+    "exit": 0,
+    "ok": true,
+    "seconds": 2.6,
+    "errors": []
+   }
+  },
+  {
+   "file": "minimal_scene.sdf",
+   "world": "minimal_scene",
+   "kind": "environment",
+   "needs_fuel": false,
+   "fuel_models_inspected": 0,
+   "fuel_models_unreviewed": [],
+   "models": 6,
+   "world_plugins": [],
+   "extra_plugins": [],
+   "driven_models": [],
+   "actors": 0,
+   "sensors": [],
+   "fuel_uris": [],
+   "unresolved": [],
+   "lights": 1,
+   "load": {
+    "exit": 0,
+    "ok": true,
+    "seconds": 2.6,
+    "errors": []
+   }
+  },
+  {
+   "file": "model_photo_shoot.sdf",
+   "world": "default",
+   "kind": "sensor_demo",
+   "needs_fuel": true,
+   "fuel_models_inspected": 1,
+   "fuel_models_unreviewed": [],
+   "models": 2,
+   "world_plugins": [
+    "physics",
+    "sensors"
+   ],
+   "extra_plugins": [
+    "model-photo-shoot"
+   ],
+   "driven_models": [],
+   "actors": 0,
+   "sensors": [
+    "camera",
+    "depth"
+   ],
+   "fuel_uris": [
+    "https://fuel.ignitionrobotics.org/1.0/OpenRobotics/models/Robonaut",
+    "https://fuel.ignitionrobotics.org/1.0/openrobotics/models/robonaut/3/files/meshes/Backpack.dae",
+    "https://fuel.ignitionrobotics.org/1.0/openrobotics/models/robonaut/3/files/meshes/Body.dae",
+    "https://fuel.ignitionrobotics.org/1.0/openrobotics/models/robonaut/3/files/meshes/Body_Cover.dae",
+    "https://fuel.ignitionrobotics.org/1.0/openrobotics/models/robonaut/3/files/meshes/Finger_Dist.dae",
+    "https://fuel.ignitionrobotics.org/1.0/openrobotics/models/robonaut/3/files/meshes/Finger_Mid.dae",
+    "https://fuel.ignitionrobotics.org/1.0/openrobotics/models/robonaut/3/files/meshes/Finger_Proximal.dae",
+    "https://fuel.ignitionrobotics.org/1.0/openrobotics/models/robonaut/3/files/meshes/Head.dae",
+    "https://fuel.ignitionrobotics.org/1.0/openrobotics/models/robonaut/3/files/meshes/Left_Elbow.dae",
+    "https://fuel.ignitionrobotics.org/1.0/openrobotics/models/robonaut/3/files/meshes/Left_Forearm.dae",
+    "https://fuel.ignitionrobotics.org/1.0/openrobotics/models/robonaut/3/files/meshes/Left_Palm.dae",
+    "https://fuel.ignitionrobotics.org/1.0/openrobotics/models/robonaut/3/files/meshes/Left_Shoulder_Lower.dae",
+    "https://fuel.ignitionrobotics.org/1.0/openrobotics/models/robonaut/3/files/meshes/Left_Shoulder_Upper.dae",
+    "https://fuel.ignitionrobotics.org/1.0/openrobotics/models/robonaut/3/files/meshes/Left_Thumb_Carp.dae",
+    "https://fuel.ignitionrobotics.org/1.0/openrobotics/models/robonaut/3/files/meshes/Left_Thumb_MtCar.dae",
+    "https://fuel.ignitionrobotics.org/1.0/openrobotics/models/robonaut/3/files/meshes/Left_Upper_Arm.dae",
+    "https://fuel.ignitionrobotics.org/1.0/openrobotics/models/robonaut/3/files/meshes/Neck_Lower.dae",
+    "https://fuel.ignitionrobotics.org/1.0/openrobotics/models/robonaut/3/files/meshes/Neck_Upper.dae",
+    "https://fuel.ignitionrobotics.org/1.0/openrobotics/models/robonaut/3/files/meshes/Right_Elbow.dae",
+    "https://fuel.ignitionrobotics.org/1.0/openrobotics/models/robonaut/3/files/meshes/Right_Forearm.dae",
+    "https://fuel.ignitionrobotics.org/1.0/openrobotics/models/robonaut/3/files/meshes/Right_Palm.dae",
+    "https://fuel.ignitionrobotics.org/1.0/openrobotics/models/robonaut/3/files/meshes/Right_Shoulder_Lower.dae",
+    "https://fuel.ignitionrobotics.org/1.0/openrobotics/models/robonaut/3/files/meshes/Right_Shoulder_Upper.dae",
+    "https://fuel.ignitionrobotics.org/1.0/openrobotics/models/robonaut/3/files/meshes/Right_Thumb_MtCar.dae",
+    "https://fuel.ignitionrobotics.org/1.0/openrobotics/models/robonaut/3/files/meshes/Right_Upper_Arm.dae",
+    "https://fuel.ignitionrobotics.org/1.0/openrobotics/models/robonaut/3/files/meshes/Stanchion.dae",
+    "https://fuel.ignitionrobotics.org/1.0/openrobotics/models/robonaut/3/files/meshes/Stanchion_Baseplate.dae",
+    "https://fuel.ignitionrobotics.org/1.0/openrobotics/models/robonaut/3/files/meshes/Thumb_Dist.dae",
+    "https://fuel.ignitionrobotics.org/1.0/openrobotics/models/robonaut/3/files/meshes/Thumb_Proximal.dae"
+   ],
+   "unresolved": [],
+   "lights": 0,
+   "load": {
+    "exit": 0,
+    "ok": true,
+    "seconds": 4.5,
+    "errors": []
+   }
+  },
+  {
+   "file": "multi_lrauv_race.sdf",
+   "world": "multi_lrauv",
+   "kind": "robot_demo",
+   "needs_fuel": true,
+   "fuel_models_inspected": 3,
+   "fuel_models_unreviewed": [],
+   "models": 6,
+   "world_plugins": [
+    "buoyancy",
+    "contact",
+    "particle-emitter2",
+    "physics",
+    "scene-broadcaster",
+    "user-commands"
+   ],
+   "extra_plugins": [
+    "buoyancy",
+    "hydrodynamics",
+    "joint-position-controller",
+    "lift-drag",
+    "particle-emitter2",
+    "thruster"
+   ],
+   "driven_models": [
+    "tethys",
+    "tethys",
+    "tethys"
+   ],
+   "actors": 0,
+   "sensors": [],
+   "fuel_uris": [
+    "https://fuel.ignitionrobotics.org/1.0/accurrent/models/MBARI Tethys LRAUV",
+    "https://fuel.ignitionrobotics.org/1.0/mabelzhang/models/ABCSign_5m",
+    "https://fuel.ignitionrobotics.org/1.0/mabelzhang/models/Turquoise turbidity generator"
+   ],
+   "unresolved": [],
+   "lights": 1,
+   "load": {
+    "exit": 0,
+    "ok": true,
+    "seconds": 5.3,
+    "errors": []
+   }
+  },
+  {
+   "file": "multicopter_velocity_control.sdf",
+   "world": "multicopter",
+   "kind": "robot_demo",
+   "needs_fuel": true,
+   "fuel_models_inspected": 2,
+   "fuel_models_unreviewed": [],
+   "models": 3,
+   "world_plugins": [
+    "physics",
+    "scene-broadcaster",
+    "sensors",
+    "user-commands"
+   ],
+   "extra_plugins": [
+    "multicopter-control",
+    "multicopter-motor-model",
+    "odometry-publisher"
+   ],
+   "driven_models": [
+    "x3",
+    "X4"
+   ],
+   "actors": 0,
+   "sensors": [
+    "air_pressure",
+    "camera",
+    "imu",
+    "magnetometer"
+   ],
+   "fuel_uris": [
+    "https://fuel.gazebosim.org/1.0/OpenRobotics/models/X3 UAV/4",
+    "https://fuel.gazebosim.org/1.0/OpenRobotics/models/X4 UAV Config 1",
+    "https://fuel.gazebosim.org/1.0/openrobotics/models/x3 uav/4/files/meshes/propeller_ccw.dae",
+    "https://fuel.gazebosim.org/1.0/openrobotics/models/x3 uav/4/files/meshes/propeller_cw.dae",
+    "https://fuel.gazebosim.org/1.0/openrobotics/models/x3 uav/4/files/meshes/x3.dae",
+    "https://fuel.gazebosim.org/1.0/openrobotics/models/x4 uav config 1/15/files/meshes/led.dae",
+    "https://fuel.gazebosim.org/1.0/openrobotics/models/x4 uav config 1/15/files/meshes/neo11_propeller_ccw.dae",
+    "https://fuel.gazebosim.org/1.0/openrobotics/models/x4 uav config 1/15/files/meshes/neo11_propeller_cw.dae",
+    "https://fuel.gazebosim.org/1.0/openrobotics/models/x4 uav config 1/15/files/meshes/spotlight.dae",
+    "https://fuel.gazebosim.org/1.0/openrobotics/models/x4 uav config 1/15/files/meshes/x4.dae"
+   ],
+   "unresolved": [],
+   "lights": 1,
+   "load": {
+    "exit": 0,
+    "ok": true,
+    "seconds": 4.2,
+    "errors": []
+   }
+  },
+  {
+   "file": "nested_model.sdf",
+   "world": "nested_model_world",
+   "kind": "environment",
+   "needs_fuel": false,
+   "fuel_models_inspected": 0,
+   "fuel_models_unreviewed": [],
+   "models": 3,
+   "world_plugins": [
+    "physics",
+    "scene-broadcaster",
+    "user-commands"
+   ],
+   "extra_plugins": [],
+   "driven_models": [],
+   "actors": 0,
+   "sensors": [],
+   "fuel_uris": [],
+   "unresolved": [],
+   "lights": 1,
+   "load": {
+    "exit": 0,
+    "ok": false,
+    "seconds": 2.6,
+    "errors": [
+     "[Err] [Physics.cc:2504] Internal error: a physics entity ptr with an ID of [3] does not exist.",
+     "[Err] [Physics.cc:2504] Internal error: a physics entity ptr with an ID of [3] does not exist.",
+     "[Err] [Physics.cc:2504] Internal error: a physics entity ptr with an ID of [3] does not exist.",
+     "[Err] [Physics.cc:2504] Internal error: a physics entity ptr with an ID of [3] does not exist.",
+     "[Err] [Physics.cc:2504] Internal error: a physics entity ptr with an ID of [3] does not exist."
+    ]
+   }
+  },
+  {
+   "file": "optical_tactile_sensor_plugin.sdf",
+   "world": "optical_tactile_plugin",
+   "kind": "sensor_demo",
+   "needs_fuel": true,
+   "fuel_models_inspected": 4,
+   "fuel_models_unreviewed": [],
+   "models": 6,
+   "world_plugins": [
+    "contact",
+    "physics",
+    "scene-broadcaster",
+    "sensors",
+    "user-commands"
+   ],
+   "extra_plugins": [
+    "opticaltactileplugin"
+   ],
+   "driven_models": [],
+   "actors": 0,
+   "sensors": [
+    "contact",
+    "depth_camera"
+   ],
+   "fuel_uris": [
+    "https://fuel.ignitionrobotics.org/1.0/OpenRobotics/models/Coke",
+    "https://fuel.ignitionrobotics.org/1.0/OpenRobotics/models/OfficeChairBlue",
+    "https://fuel.ignitionrobotics.org/1.0/OpenRobotics/models/SurgicalTrolleyMed",
+    "https://fuel.ignitionrobotics.org/1.0/OpenRobotics/models/VendingMachine",
+    "https://fuel.ignitionrobotics.org/1.0/openrobotics/models/coke/6/files/meshes/coke.obj",
+    "https://fuel.ignitionrobotics.org/1.0/openrobotics/models/officechairblue/2/files/meshes/OfficeChairBlue.obj",
+    "https://fuel.ignitionrobotics.org/1.0/openrobotics/models/officechairblue/2/files/meshes/OfficeChairBlue_Col.obj",
+    "https://fuel.ignitionrobotics.org/1.0/openrobotics/models/surgicaltrolleymed/2/files/meshes/SurgicalTrolleyMed.obj",
+    "https://fuel.ignitionrobotics.org/1.0/openrobotics/models/surgicaltrolleymed/2/files/meshes/SurgicalTrolleyMed_Col.obj",
+    "https://fuel.ignitionrobotics.org/1.0/openrobotics/models/vendingmachine/3/files/meshes/VendingMachine.obj"
+   ],
+   "unresolved": [],
+   "lights": 1,
+   "load": {
+    "exit": 0,
+    "ok": true,
+    "seconds": 4.6,
+    "errors": []
+   }
+  },
+  {
+   "file": "particle_emitter.sdf",
+   "world": "particle_emitters",
+   "kind": "plugin_demo",
+   "needs_fuel": true,
+   "fuel_models_inspected": 1,
+   "fuel_models_unreviewed": [],
+   "models": 2,
+   "world_plugins": [
+    "physics",
+    "scene-broadcaster",
+    "user-commands"
+   ],
+   "extra_plugins": [
+    "particle-emitter"
+   ],
+   "driven_models": [],
+   "actors": 0,
+   "sensors": [],
+   "fuel_uris": [
+    "https://fuel.ignitionrobotics.org/1.0/caguero/models/smoke_generator"
+   ],
+   "unresolved": [],
+   "lights": 1,
+   "load": {
+    "exit": 0,
+    "ok": true,
+    "seconds": 2.6,
+    "errors": []
+   }
+  },
+  {
+   "file": "particle_emitter2.sdf",
+   "world": "particle_emitters",
+   "kind": "plugin_demo",
+   "needs_fuel": true,
+   "fuel_models_inspected": 1,
+   "fuel_models_unreviewed": [],
+   "models": 4,
+   "world_plugins": [
+    "particle-emitter2",
+    "physics",
+    "scene-broadcaster",
+    "user-commands"
+   ],
+   "extra_plugins": [
+    "particle-emitter2"
+   ],
+   "driven_models": [],
+   "actors": 0,
+   "sensors": [],
+   "fuel_uris": [
+    "https://fuel.ignitionrobotics.org/1.0/openrobotics/models/fog generator"
+   ],
+   "unresolved": [],
+   "lights": 1,
+   "load": {
+    "exit": 0,
+    "ok": true,
+    "seconds": 2.6,
+    "errors": []
+   }
+  },
+  {
+   "file": "pendulum_links.sdf",
+   "world": "double_pendulum",
+   "kind": "robot_demo",
+   "needs_fuel": false,
+   "fuel_models_inspected": 0,
+   "fuel_models_unreviewed": [],
+   "models": 2,
+   "world_plugins": [
+    "physics",
+    "scene-broadcaster",
+    "user-commands"
+   ],
+   "extra_plugins": [
+    "velocity-control"
+   ],
+   "driven_models": [
+    "double_pendulum_with_base"
+   ],
+   "actors": 0,
+   "sensors": [],
+   "fuel_uris": [],
+   "unresolved": [],
+   "lights": 1,
+   "load": {
+    "exit": 0,
+    "ok": true,
+    "seconds": 2.5,
+    "errors": []
+   }
+  },
+  {
+   "file": "perfect_comms.sdf",
+   "world": "perfect_comms",
+   "kind": "plugin_demo",
+   "needs_fuel": false,
+   "fuel_models_inspected": 0,
+   "fuel_models_unreviewed": [],
+   "models": 3,
+   "world_plugins": [
+    "perfect-comms",
+    "physics",
+    "scene-broadcaster",
+    "user-commands"
+   ],
+   "extra_plugins": [
+    "comms-endpoint",
+    "perfect-comms"
+   ],
+   "driven_models": [],
+   "actors": 0,
+   "sensors": [],
+   "fuel_uris": [],
+   "unresolved": [],
+   "lights": 1,
+   "load": {
+    "exit": 0,
+    "ok": true,
+    "seconds": 2.5,
+    "errors": []
+   }
+  },
+  {
+   "file": "performer_detector.sdf",
+   "world": "performer_detector",
+   "kind": "robot_demo",
+   "needs_fuel": false,
+   "fuel_models_inspected": 0,
+   "fuel_models_unreviewed": [],
+   "models": 4,
+   "world_plugins": [
+    "dummy",
+    "physics",
+    "scene-broadcaster",
+    "user-commands"
+   ],
+   "extra_plugins": [
+    "diff-drive",
+    "dummy",
+    "performer-detector"
+   ],
+   "driven_models": [
+    "vehicle_blue"
+   ],
+   "actors": 0,
+   "sensors": [],
+   "fuel_uris": [],
+   "unresolved": [],
+   "lights": 1,
+   "load": {
+    "exit": 0,
+    "ok": true,
+    "seconds": 2.6,
+    "errors": []
+   }
+  },
+  {
+   "file": "physics_options.sdf",
+   "world": "shapes",
+   "kind": "environment",
+   "needs_fuel": false,
+   "fuel_models_inspected": 0,
+   "fuel_models_unreviewed": [],
+   "models": 4,
+   "world_plugins": [],
+   "extra_plugins": [],
+   "driven_models": [],
+   "actors": 0,
+   "sensors": [],
+   "fuel_uris": [],
+   "unresolved": [],
+   "lights": 1,
+   "load": {
+    "exit": 0,
+    "ok": true,
+    "seconds": 2.6,
+    "errors": []
+   }
+  },
+  {
+   "file": "plane_propeller_demo.sdf",
+   "world": "lift_drag",
+   "kind": "robot_demo",
+   "needs_fuel": false,
+   "fuel_models_inspected": 0,
+   "fuel_models_unreviewed": [],
+   "models": 2,
+   "world_plugins": [
+    "physics",
+    "scene-broadcaster",
+    "sensors",
+    "user-commands"
+   ],
+   "extra_plugins": [
+    "apply-joint-force",
+    "lift-drag"
+   ],
+   "driven_models": [
+    "propeller_plane"
+   ],
+   "actors": 0,
+   "sensors": [
+    "camera"
+   ],
+   "fuel_uris": [],
+   "unresolved": [],
+   "lights": 1,
+   "load": {
+    "exit": 0,
+    "ok": true,
+    "seconds": 3.2,
+    "errors": []
+   }
+  },
+  {
+   "file": "plot_3d.sdf",
+   "world": "shapes",
+   "kind": "environment",
+   "needs_fuel": true,
+   "fuel_models_inspected": 1,
+   "fuel_models_unreviewed": [],
+   "models": 2,
+   "world_plugins": [],
+   "extra_plugins": [],
+   "driven_models": [],
+   "actors": 0,
+   "sensors": [],
+   "fuel_uris": [
+    "https://fuel.gazebosim.org/1.0/OpenRobotics/models/Double pendulum with base"
+   ],
+   "unresolved": [],
+   "lights": 1,
+   "load": {
+    "exit": 0,
+    "ok": true,
+    "seconds": 2.6,
+    "errors": []
+   }
+  },
+  {
+   "file": "polylines.sdf",
+   "world": "polylines",
+   "kind": "environment",
+   "needs_fuel": false,
+   "fuel_models_inspected": 0,
+   "fuel_models_unreviewed": [],
+   "models": 5,
+   "world_plugins": [],
+   "extra_plugins": [],
+   "driven_models": [],
+   "actors": 0,
+   "sensors": [],
+   "fuel_uris": [],
+   "unresolved": [],
+   "lights": 1,
+   "load": {
+    "exit": 0,
+    "ok": true,
+    "seconds": 2.6,
+    "errors": []
+   }
+  },
+  {
+   "file": "pose_publisher.sdf",
+   "world": "pose_publisher",
+   "kind": "plugin_demo",
+   "needs_fuel": false,
+   "fuel_models_inspected": 0,
+   "fuel_models_unreviewed": [],
+   "models": 2,
+   "world_plugins": [
+    "physics",
+    "scene-broadcaster",
+    "user-commands"
+   ],
+   "extra_plugins": [
+    "pose-publisher"
+   ],
+   "driven_models": [],
+   "actors": 0,
+   "sensors": [],
+   "fuel_uris": [],
+   "unresolved": [],
+   "lights": 1,
+   "load": {
+    "exit": 0,
+    "ok": true,
+    "seconds": 2.6,
+    "errors": []
+   }
+  },
+  {
+   "file": "quadcopter.sdf",
+   "world": "quadcopter",
+   "kind": "robot_demo",
+   "needs_fuel": true,
+   "fuel_models_inspected": 1,
+   "fuel_models_unreviewed": [],
+   "models": 2,
+   "world_plugins": [
+    "physics",
+    "scene-broadcaster",
+    "sensors",
+    "user-commands"
+   ],
+   "extra_plugins": [
+    "multicopter-motor-model"
+   ],
+   "driven_models": [
+    "x3"
+   ],
+   "actors": 0,
+   "sensors": [],
+   "fuel_uris": [
+    "https://fuel.gazebosim.org/1.0/OpenRobotics/models/X3 UAV/4",
+    "https://fuel.gazebosim.org/1.0/openrobotics/models/x3 uav/4/files/meshes/propeller_ccw.dae",
+    "https://fuel.gazebosim.org/1.0/openrobotics/models/x3 uav/4/files/meshes/propeller_cw.dae",
+    "https://fuel.gazebosim.org/1.0/openrobotics/models/x3 uav/4/files/meshes/x3.dae"
+   ],
+   "unresolved": [],
+   "lights": 1,
+   "load": {
+    "exit": 0,
+    "ok": true,
+    "seconds": 2.6,
+    "errors": []
+   }
+  },
+  {
+   "file": "resource_spawner.sdf",
+   "world": "resource_spawner",
+   "kind": "environment",
+   "needs_fuel": false,
+   "fuel_models_inspected": 0,
+   "fuel_models_unreviewed": [],
+   "models": 1,
+   "world_plugins": [
+    "physics",
+    "scene-broadcaster",
+    "sensors"
+   ],
+   "extra_plugins": [],
+   "driven_models": [],
+   "actors": 0,
+   "sensors": [],
+   "fuel_uris": [],
+   "unresolved": [],
+   "lights": 1,
+   "load": {
+    "exit": 0,
+    "ok": true,
+    "seconds": 2.6,
+    "errors": []
+   }
+  },
+  {
+   "file": "rf_comms.sdf",
+   "world": "rf_comms",
+   "kind": "plugin_demo",
+   "needs_fuel": false,
+   "fuel_models_inspected": 0,
+   "fuel_models_unreviewed": [],
+   "models": 3,
+   "world_plugins": [
+    "physics",
+    "rf-comms",
+    "scene-broadcaster",
+    "user-commands"
+   ],
+   "extra_plugins": [
+    "comms-endpoint",
+    "rf-comms"
+   ],
+   "driven_models": [],
+   "actors": 0,
+   "sensors": [],
+   "fuel_uris": [],
+   "unresolved": [],
+   "lights": 1,
+   "load": {
+    "exit": 0,
+    "ok": true,
+    "seconds": 2.6,
+    "errors": []
+   }
+  },
+  {
+   "file": "rolling_shapes.sdf",
+   "world": "shapes",
+   "kind": "environment",
+   "needs_fuel": false,
+   "fuel_models_inspected": 0,
+   "fuel_models_unreviewed": [],
+   "models": 6,
+   "world_plugins": [
+    "physics",
+    "scene-broadcaster",
+    "user-commands"
+   ],
+   "extra_plugins": [],
+   "driven_models": [],
+   "actors": 0,
+   "sensors": [],
+   "fuel_uris": [],
+   "unresolved": [],
+   "lights": 1,
+   "load": {
+    "exit": 0,
+    "ok": true,
+    "seconds": 2.6,
+    "errors": []
+   }
+  },
+  {
+   "file": "segmentation_camera.sdf",
+   "world": "shapes",
+   "kind": "sensor_demo",
+   "needs_fuel": true,
+   "fuel_models_inspected": 6,
+   "fuel_models_unreviewed": [],
+   "models": 13,
+   "world_plugins": [
+    "physics",
+    "scene-broadcaster",
+    "sensors",
+    "user-commands"
+   ],
+   "extra_plugins": [
+    "label"
+   ],
+   "driven_models": [],
+   "actors": 0,
+   "sensors": [
+    "segmentation"
+   ],
+   "fuel_uris": [
+    "https://fuel.ignitionrobotics.org/1.0/OpenRobotics/models/Collapsed House",
+    "https://fuel.ignitionrobotics.org/1.0/OpenRobotics/models/Construction Cone",
+    "https://fuel.ignitionrobotics.org/1.0/OpenRobotics/models/Hatchback blue",
+    "https://fuel.ignitionrobotics.org/1.0/OpenRobotics/models/Pickup",
+    "https://fuel.ignitionrobotics.org/1.0/OpenRobotics/models/Pine Tree",
+    "https://fuel.ignitionrobotics.org/1.0/OpenRobotics/models/SUV",
+    "https://fuel.ignitionrobotics.org/1.0/openrobotics/models/construction cone/3/files/meshes/construction_cone.dae",
+    "https://fuel.ignitionrobotics.org/1.0/openrobotics/models/hatchback blue/5/files/meshes/hatchback.obj",
+    "https://fuel.ignitionrobotics.org/1.0/openrobotics/models/pine tree/6/files/materials/scripts/",
+    "https://fuel.ignitionrobotics.org/1.0/openrobotics/models/pine tree/6/files/materials/textures/",
+    "https://fuel.ignitionrobotics.org/1.0/openrobotics/models/pine tree/6/files/meshes/pine_tree.dae"
+   ],
+   "unresolved": [],
+   "lights": 1,
+   "load": {
+    "exit": 0,
+    "ok": true,
+    "seconds": 3.5,
+    "errors": []
+   }
+  },
+  {
+   "file": "sensors.sdf",
+   "world": "sensors",
+   "kind": "sensor_demo",
+   "needs_fuel": false,
+   "fuel_models_inspected": 0,
+   "fuel_models_unreviewed": [],
+   "models": 3,
+   "world_plugins": [
+    "air-pressure",
+    "altimeter",
+    "forcetorque",
+    "imu",
+    "magnetometer",
+    "physics",
+    "scene-broadcaster",
+    "user-commands"
+   ],
+   "extra_plugins": [
+    "air-pressure",
+    "altimeter",
+    "magnetometer"
+   ],
+   "driven_models": [],
+   "actors": 0,
+   "sensors": [
+    "air_pressure",
+    "altimeter",
+    "force_torque",
+    "imu",
+    "magnetometer"
+   ],
+   "fuel_uris": [],
+   "unresolved": [],
+   "lights": 1,
+   "load": {
+    "exit": 0,
+    "ok": true,
+    "seconds": 2.6,
+    "errors": []
+   }
+  },
+  {
+   "file": "sensors_demo.sdf",
+   "world": "lidar_sensor",
+   "kind": "sensor_demo",
+   "needs_fuel": true,
+   "fuel_models_inspected": 1,
+   "fuel_models_unreviewed": [],
+   "models": 7,
+   "world_plugins": [
+    "physics",
+    "scene-broadcaster",
+    "sensors",
+    "user-commands"
+   ],
+   "extra_plugins": [],
+   "driven_models": [],
+   "actors": 0,
+   "sensors": [
+    "camera",
+    "depth_camera",
+    "gpu_lidar",
+    "rgbd_camera",
+    "thermal_camera"
+   ],
+   "fuel_uris": [
+    "https://fuel.gazebosim.org/1.0/OpenRobotics/models/Construction Cone",
+    "https://fuel.gazebosim.org/1.0/openrobotics/models/construction cone/3/files/meshes/construction_cone.dae"
+   ],
+   "unresolved": [],
+   "lights": 1,
+   "load": {
+    "exit": 0,
+    "ok": true,
+    "seconds": 3.2,
+    "errors": []
+   }
+  },
+  {
+   "file": "shader_param.sdf",
+   "world": "deformable_sphere",
+   "kind": "sensor_demo",
+   "needs_fuel": true,
+   "fuel_models_inspected": 2,
+   "fuel_models_unreviewed": [],
+   "models": 3,
+   "world_plugins": [
+    "physics",
+    "scene-broadcaster",
+    "sensors",
+    "user-commands"
+   ],
+   "extra_plugins": [],
+   "driven_models": [],
+   "actors": 0,
+   "sensors": [
+    "camera",
+    "depth_camera"
+   ],
+   "fuel_uris": [
+    "https://fuel.ignitionrobotics.org/1.0/openrobotics/models/deformable_sphere/5",
+    "https://fuel.ignitionrobotics.org/1.0/openrobotics/models/waves/4"
+   ],
+   "unresolved": [],
+   "lights": 1,
+   "load": {
+    "exit": 0,
+    "ok": true,
+    "seconds": 3.1,
+    "errors": []
+   }
+  },
+  {
+   "file": "shapes.sdf",
+   "world": "shapes",
+   "kind": "environment",
+   "needs_fuel": false,
+   "fuel_models_inspected": 0,
+   "fuel_models_unreviewed": [],
+   "models": 6,
+   "world_plugins": [],
+   "extra_plugins": [],
+   "driven_models": [],
+   "actors": 0,
+   "sensors": [],
+   "fuel_uris": [],
+   "unresolved": [],
+   "lights": 1,
+   "load": {
+    "exit": 0,
+    "ok": true,
+    "seconds": 2.6,
+    "errors": []
+   }
+  },
+  {
+   "file": "shapes_bitmask.sdf",
+   "world": "shapes_bitmask",
+   "kind": "environment",
+   "needs_fuel": false,
+   "fuel_models_inspected": 0,
+   "fuel_models_unreviewed": [],
+   "models": 4,
+   "world_plugins": [
+    "physics",
+    "scene-broadcaster",
+    "user-commands"
+   ],
+   "extra_plugins": [],
+   "driven_models": [],
+   "actors": 0,
+   "sensors": [],
+   "fuel_uris": [],
+   "unresolved": [],
+   "lights": 1,
+   "load": {
+    "exit": 0,
+    "ok": true,
+    "seconds": 2.5,
+    "errors": []
+   }
+  },
+  {
+   "file": "skid_steer_mecanum.sdf",
+   "world": "diff_drive",
+   "kind": "robot_demo",
+   "needs_fuel": false,
+   "fuel_models_inspected": 0,
+   "fuel_models_unreviewed": [],
+   "models": 2,
+   "world_plugins": [
+    "physics",
+    "scene-broadcaster",
+    "user-commands"
+   ],
+   "extra_plugins": [
+    "diff-drive"
+   ],
+   "driven_models": [
+    "vehicle_blue"
+   ],
+   "actors": 0,
+   "sensors": [],
+   "fuel_uris": [],
+   "unresolved": [],
+   "lights": 1,
+   "load": {
+    "exit": 0,
+    "ok": true,
+    "seconds": 2.6,
+    "errors": []
+   }
+  },
+  {
+   "file": "sky.sdf",
+   "world": "sky",
+   "kind": "sensor_demo",
+   "needs_fuel": false,
+   "fuel_models_inspected": 0,
+   "fuel_models_unreviewed": [],
+   "models": 5,
+   "world_plugins": [
+    "physics",
+    "scene-broadcaster",
+    "sensors",
+    "user-commands"
+   ],
+   "extra_plugins": [],
+   "driven_models": [],
+   "actors": 0,
+   "sensors": [
+    "camera"
+   ],
+   "fuel_uris": [],
+   "unresolved": [],
+   "lights": 1,
+   "load": {
+    "exit": 0,
+    "ok": true,
+    "seconds": 3.1,
+    "errors": []
+   }
+  },
+  {
+   "file": "spaces.sdf",
+   "world": "world with spaces",
+   "kind": "environment",
+   "needs_fuel": false,
+   "fuel_models_inspected": 0,
+   "fuel_models_unreviewed": [],
+   "models": 2,
+   "world_plugins": [
+    "physics",
+    "scene-broadcaster",
+    "user-commands"
+   ],
+   "extra_plugins": [],
+   "driven_models": [],
+   "actors": 0,
+   "sensors": [],
+   "fuel_uris": [],
+   "unresolved": [],
+   "lights": 1,
+   "load": {
+    "exit": 0,
+    "ok": true,
+    "seconds": 2.5,
+    "errors": []
+   }
+  },
+  {
+   "file": "spherical_coordinates.sdf",
+   "world": "spherical_coordinates",
+   "kind": "sensor_demo",
+   "needs_fuel": false,
+   "fuel_models_inspected": 0,
+   "fuel_models_unreviewed": [],
+   "models": 2,
+   "world_plugins": [
+    "navsat",
+    "physics",
+    "scene-broadcaster",
+    "user-commands"
+   ],
+   "extra_plugins": [
+    "navsat"
+   ],
+   "driven_models": [],
+   "actors": 0,
+   "sensors": [
+    "navsat"
+   ],
+   "fuel_uris": [],
+   "unresolved": [],
+   "lights": 1,
+   "load": {
+    "exit": 0,
+    "ok": true,
+    "seconds": 2.5,
+    "errors": []
+   }
+  },
+  {
+   "file": "thermal_camera.sdf",
+   "world": "thermal_camera",
+   "kind": "sensor_demo",
+   "needs_fuel": true,
+   "fuel_models_inspected": 3,
+   "fuel_models_unreviewed": [],
+   "models": 7,
+   "world_plugins": [
+    "physics",
+    "scene-broadcaster",
+    "sensors",
+    "user-commands"
+   ],
+   "extra_plugins": [],
+   "driven_models": [],
+   "actors": 0,
+   "sensors": [
+    "thermal"
+   ],
+   "fuel_uris": [
+    "https://fuel.gazebosim.org/1.0/OpenRobotics/models/Artifact Proximity Detector",
+    "https://fuel.gazebosim.org/1.0/OpenRobotics/models/Backpack",
+    "https://fuel.gazebosim.org/1.0/OpenRobotics/models/Rescue Randy",
+    "https://fuel.gazebosim.org/1.0/OpenRobotics/models/Samsung J8 Black",
+    "https://fuel.gazebosim.org/1.0/openrobotics/models/backpack/3/files/meshes/Backpack.dae",
+    "https://fuel.gazebosim.org/1.0/openrobotics/models/rescue randy/3/files/materials/scripts",
+    "https://fuel.gazebosim.org/1.0/openrobotics/models/rescue randy/3/files/materials/textures",
+    "https://fuel.gazebosim.org/1.0/openrobotics/models/rescue randy/3/files/meshes/rescue_randy.dae"
+   ],
+   "unresolved": [],
+   "lights": 1,
+   "load": {
+    "exit": 0,
+    "ok": true,
+    "seconds": 3.7,
+    "errors": []
+   }
+  },
+  {
+   "file": "touch_plugin.sdf",
+   "world": "touch",
+   "kind": "sensor_demo",
+   "needs_fuel": false,
+   "fuel_models_inspected": 0,
+   "fuel_models_unreviewed": [],
+   "models": 3,
+   "world_plugins": [
+    "contact",
+    "physics",
+    "scene-broadcaster"
+   ],
+   "extra_plugins": [
+    "touchplugin"
+   ],
+   "driven_models": [],
+   "actors": 0,
+   "sensors": [
+    "contact"
+   ],
+   "fuel_uris": [],
+   "unresolved": [],
+   "lights": 1,
+   "load": {
+    "exit": 0,
+    "ok": true,
+    "seconds": 2.5,
+    "errors": []
+   }
+  },
+  {
+   "file": "track_drive.sdf",
+   "world": "track_drive",
+   "kind": "robot_demo",
+   "needs_fuel": false,
+   "fuel_models_inspected": 0,
+   "fuel_models_unreviewed": [],
+   "models": 3,
+   "world_plugins": [
+    "imu",
+    "physics",
+    "scene-broadcaster",
+    "user-commands"
+   ],
+   "extra_plugins": [
+    "diff-drive"
+   ],
+   "driven_models": [
+    "vehicle_blue",
+    "vehicle_green"
+   ],
+   "actors": 0,
+   "sensors": [
+    "imu"
+   ],
+   "fuel_uris": [],
+   "unresolved": [],
+   "lights": 1,
+   "load": {
+    "exit": 0,
+    "ok": true,
+    "seconds": 3.2,
+    "errors": []
+   }
+  },
+  {
+   "file": "tracked_vehicle_simple.sdf",
+   "world": "default",
+   "kind": "robot_demo",
+   "needs_fuel": true,
+   "fuel_models_inspected": 1,
+   "fuel_models_unreviewed": [],
+   "models": 6,
+   "world_plugins": [
+    "physics",
+    "scene-broadcaster",
+    "user-commands"
+   ],
+   "extra_plugins": [
+    "track-controller",
+    "tracked-vehicle",
+    "triggered-publisher"
+   ],
+   "driven_models": [
+    "simple_tracked"
+   ],
+   "actors": 0,
+   "sensors": [],
+   "fuel_uris": [
+    "https://fuel.gazebosim.org/1.0/openrobotics/models/Euro pallet",
+    "https://fuel.gazebosim.org/1.0/openrobotics/models/euro pallet/3/files/meshes/pallet.dae"
+   ],
+   "unresolved": [],
+   "lights": 1,
+   "load": {
+    "exit": 0,
+    "ok": true,
+    "seconds": 3.2,
+    "errors": []
+   }
+  },
+  {
+   "file": "trajectory_follower.sdf",
+   "world": "trajectory_follower",
+   "kind": "plugin_demo",
+   "needs_fuel": false,
+   "fuel_models_inspected": 0,
+   "fuel_models_unreviewed": [],
+   "models": 4,
+   "world_plugins": [
+    "physics",
+    "scene-broadcaster",
+    "user-commands"
+   ],
+   "extra_plugins": [
+    "trajectory-follower"
+   ],
+   "driven_models": [],
+   "actors": 0,
+   "sensors": [],
+   "fuel_uris": [],
+   "unresolved": [],
+   "lights": 1,
+   "load": {
+    "exit": 0,
+    "ok": true,
+    "seconds": 2.5,
+    "errors": []
+   }
+  },
+  {
+   "file": "triggered_camera_sensor.sdf",
+   "world": "triggered_camera_sensor",
+   "kind": "sensor_demo",
+   "needs_fuel": true,
+   "fuel_models_inspected": 1,
+   "fuel_models_unreviewed": [],
+   "models": 5,
+   "world_plugins": [
+    "physics",
+    "scene-broadcaster",
+    "sensors",
+    "user-commands"
+   ],
+   "extra_plugins": [],
+   "driven_models": [],
+   "actors": 0,
+   "sensors": [
+    "camera"
+   ],
+   "fuel_uris": [
+    "https://fuel.ignitionrobotics.org/1.0/OpenRobotics/models/Construction Cone",
+    "https://fuel.ignitionrobotics.org/1.0/openrobotics/models/construction cone/3/files/meshes/construction_cone.dae"
+   ],
+   "unresolved": [],
+   "lights": 1,
+   "load": {
+    "exit": 0,
+    "ok": true,
+    "seconds": 3.6,
+    "errors": []
+   }
+  },
+  {
+   "file": "triggered_publisher.sdf",
+   "world": "triggered_publisher",
+   "kind": "robot_demo",
+   "needs_fuel": false,
+   "fuel_models_inspected": 0,
+   "fuel_models_unreviewed": [],
+   "models": 5,
+   "world_plugins": [
+    "altimeter",
+    "contact",
+    "physics",
+    "scene-broadcaster",
+    "triggered-publisher",
+    "user-commands"
+   ],
+   "extra_plugins": [
+    "altimeter",
+    "detachable-joint",
+    "diff-drive",
+    "touchplugin",
+    "triggered-publisher"
+   ],
+   "driven_models": [
+    "vehicle_blue"
+   ],
+   "actors": 0,
+   "sensors": [
+    "altimeter",
+    "contact"
+   ],
+   "fuel_uris": [],
+   "unresolved": [],
+   "lights": 1,
+   "load": {
+    "exit": 0,
+    "ok": false,
+    "seconds": 2.6,
+    "errors": [
+     "[Err] [TriggeredPublisher.cc:600] Unable to create message of type [gz.msgs.Twist] with data [linear: {x: 0}] when creating output publisher on topic /cmd_vel."
+    ]
+   }
+  },
+  {
+   "file": "trisphere_cycle_wheel_slip.sdf",
+   "world": "wheel_slip",
+   "kind": "robot_demo",
+   "needs_fuel": false,
+   "fuel_models_inspected": 0,
+   "fuel_models_unreviewed": [],
+   "models": 3,
+   "world_plugins": [
+    "physics",
+    "scene-broadcaster",
+    "user-commands"
+   ],
+   "extra_plugins": [
+    "wheel-slip"
+   ],
+   "driven_models": [
+    "trisphere_cycle0",
+    "trisphere_cycle1"
+   ],
+   "actors": 0,
+   "sensors": [],
+   "fuel_uris": [],
+   "unresolved": [],
+   "lights": 1,
+   "load": {
+    "exit": 0,
+    "ok": true,
+    "seconds": 2.6,
+    "errors": []
+   }
+  },
+  {
+   "file": "tunnel.sdf",
+   "world": "diff_drive",
+   "kind": "robot_demo",
+   "needs_fuel": true,
+   "fuel_models_inspected": 17,
+   "fuel_models_unreviewed": [],
+   "models": 139,
+   "world_plugins": [
+    "dummy",
+    "physics",
+    "scene-broadcaster",
+    "sensors",
+    "user-commands"
+   ],
+   "extra_plugins": [
+    "diff-drive",
+    "dummy",
+    "performer-detector",
+    "triggered-publisher"
+   ],
+   "driven_models": [
+    "vehicle"
+   ],
+   "actors": 0,
+   "sensors": [
+    "camera"
+   ],
+   "fuel_uris": [
+    "https://fuel.gazebosim.org/1.0/OpenRobotics/models/Backpack",
+    "https://fuel.gazebosim.org/1.0/OpenRobotics/models/Constrained Tunnel Tile Short",
+    "https://fuel.gazebosim.org/1.0/OpenRobotics/models/Constrained Tunnel Tile Tall",
+    "https://fuel.gazebosim.org/1.0/OpenRobotics/models/Electrical Box",
+    "https://fuel.gazebosim.org/1.0/OpenRobotics/models/Extinguisher",
+    "https://fuel.gazebosim.org/1.0/OpenRobotics/models/Phone",
+    "https://fuel.gazebosim.org/1.0/OpenRobotics/models/Radio",
+    "https://fuel.gazebosim.org/1.0/OpenRobotics/models/Toolbox",
+    "https://fuel.gazebosim.org/1.0/OpenRobotics/models/Tunnel Tile 1",
+    "https://fuel.gazebosim.org/1.0/OpenRobotics/models/Tunnel Tile 2",
+    "https://fuel.gazebosim.org/1.0/OpenRobotics/models/Tunnel Tile 5",
+    "https://fuel.gazebosim.org/1.0/OpenRobotics/models/Tunnel Tile 6",
+    "https://fuel.gazebosim.org/1.0/OpenRobotics/models/Tunnel Tile 7",
+    "https://fuel.gazebosim.org/1.0/OpenRobotics/models/Tunnel Tile Blocker",
+    "https://fuel.gazebosim.org/1.0/OpenRobotics/models/Valve",
+    "https://fuel.gazebosim.org/1.0/OpenRobotics/models/subt_tunnel_staging_area",
+    "https://fuel.gazebosim.org/1.0/chapulina/models/Extinguisher PBR",
+    "https://fuel.gazebosim.org/1.0/openrobotics/models/backpack/3/files/meshes/Backpack.dae",
+    "https://fuel.gazebosim.org/1.0/openrobotics/models/extinguisher/2/files/meshes/Extinguisher.dae",
+    "https://fuel.gazebosim.org/1.0/openrobotics/models/phone/2/files/meshes/Phone.dae",
+    "https://fuel.gazebosim.org/1.0/openrobotics/models/radio/4/files/meshes/Radio.dae",
+    "https://fuel.gazebosim.org/1.0/openrobotics/models/subt_tunnel_staging_area/11/files/meshes/Asphalt_Plane.DAE",
+    "https://fuel.gazebosim.org/1.0/openrobotics/models/subt_tunnel_staging_area/11/files/meshes/Entrance.dae",
+    "https://fuel.gazebosim.org/1.0/openrobotics/models/subt_tunnel_staging_area/11/files/meshes/Fence.dae",
+    "https://fuel.gazebosim.org/1.0/openrobotics/models/toolbox/2/files/meshes/Toolbox.dae",
+    "https://fuel.gazebosim.org/1.0/openrobotics/models/valve/2/files/meshes/Valve.dae",
+    "https://fuel.ignitionrobotics.org/1.0/OpenRobotics/models/EXPLORER_R2_SENSOR_CONFIG_2/3/files/meshes/r2.dae"
+   ],
+   "unresolved": [
+    "/home/molar1/.ignition/fuel/fuel.gazebosim.org/openrobotics/models/constrained tunnel tile short/9/materials/textures",
+    "/home/molar1/.ignition/fuel/fuel.gazebosim.org/openrobotics/models/constrained tunnel tile tall/8/materials/textures",
+    "/home/molar1/.ignition/fuel/fuel.gazebosim.org/openrobotics/models/tunnel tile 2/16/materials/textures",
+    "/home/molar1/.ignition/fuel/fuel.gazebosim.org/openrobotics/models/tunnel tile 5/14/materials/textures",
+    "/home/molar1/.ignition/fuel/fuel.gazebosim.org/openrobotics/models/tunnel tile 6/16/materials/textures",
+    "/home/molar1/.ignition/fuel/fuel.gazebosim.org/openrobotics/models/tunnel tile 7/16/materials/textures"
+   ],
+   "lights": 1,
+   "load": {
+    "exit": 0,
+    "ok": false,
+    "seconds": 27.9,
+    "errors": [
+     "[Err] [SystemPaths.cc:474] Could not resolve file [Phone.png]",
+     "[Err] [SystemPaths.cc:474] Could not resolve file [Toolbox.png]",
+     "[Err] [SystemPaths.cc:474] Could not resolve file [Extinguisher.png]",
+     "[Err] [SystemPaths.cc:474] Could not resolve file [Valve.png]",
+     "[Err] [SystemPaths.cc:386] URI [https://fuel.ignitionrobotics.org/1.0/OpenRobotics/models/EXPLORER_R2_SENSOR_CONFIG_2/3/files/meshes/r2.dae] resolved to path [/meshes/r2.dae] but the path does not exist"
+    ]
+   }
+  },
+  {
+   "file": "velocity_control.sdf",
+   "world": "velocity_control",
+   "kind": "robot_demo",
+   "needs_fuel": false,
+   "fuel_models_inspected": 0,
+   "fuel_models_unreviewed": [],
+   "models": 3,
+   "world_plugins": [
+    "physics",
+    "scene-broadcaster",
+    "user-commands"
+   ],
+   "extra_plugins": [
+    "velocity-control"
+   ],
+   "driven_models": [
+    "vehicle_blue",
+    "vehicle_green"
+   ],
+   "actors": 0,
+   "sensors": [],
+   "fuel_uris": [],
+   "unresolved": [],
+   "lights": 1,
+   "load": {
+    "exit": 0,
+    "ok": true,
+    "seconds": 2.6,
+    "errors": []
+   }
+  },
+  {
+   "file": "video_record_dbl_pendulum.sdf",
+   "world": "video_record_pendulum",
+   "kind": "environment",
+   "needs_fuel": false,
+   "fuel_models_inspected": 0,
+   "fuel_models_unreviewed": [],
+   "models": 2,
+   "world_plugins": [
+    "physics",
+    "scene-broadcaster",
+    "user-commands"
+   ],
+   "extra_plugins": [],
+   "driven_models": [],
+   "actors": 0,
+   "sensors": [],
+   "fuel_uris": [],
+   "unresolved": [],
+   "lights": 1,
+   "load": {
+    "exit": 0,
+    "ok": true,
+    "seconds": 2.6,
+    "errors": []
+   }
+  },
+  {
+   "file": "visibility.sdf",
+   "world": "shapes",
+   "kind": "sensor_demo",
+   "needs_fuel": false,
+   "fuel_models_inspected": 0,
+   "fuel_models_unreviewed": [],
+   "models": 6,
+   "world_plugins": [
+    "physics",
+    "scene-broadcaster",
+    "sensors",
+    "user-commands"
+   ],
+   "extra_plugins": [],
+   "driven_models": [],
+   "actors": 0,
+   "sensors": [
+    "camera"
+   ],
+   "fuel_uris": [],
+   "unresolved": [],
+   "lights": 1,
+   "load": {
+    "exit": 0,
+    "ok": true,
+    "seconds": 3.2,
+    "errors": []
+   }
+  },
+  {
+   "file": "visualize_contacts.sdf",
+   "world": "visualize_contacts",
+   "kind": "sensor_demo",
+   "needs_fuel": false,
+   "fuel_models_inspected": 0,
+   "fuel_models_unreviewed": [],
+   "models": 3,
+   "world_plugins": [
+    "contact",
+    "physics",
+    "scene-broadcaster",
+    "user-commands"
+   ],
+   "extra_plugins": [],
+   "driven_models": [],
+   "actors": 0,
+   "sensors": [
+    "contact"
+   ],
+   "fuel_uris": [],
+   "unresolved": [],
+   "lights": 1,
+   "load": {
+    "exit": 0,
+    "ok": true,
+    "seconds": 2.6,
+    "errors": []
+   }
+  },
+  {
+   "file": "visualize_lidar.sdf",
+   "world": "visualize_lidar_world",
+   "kind": "robot_demo",
+   "needs_fuel": true,
+   "fuel_models_inspected": 1,
+   "fuel_models_unreviewed": [],
+   "models": 5,
+   "world_plugins": [
+    "physics",
+    "scene-broadcaster",
+    "sensors"
+   ],
+   "extra_plugins": [
+    "diff-drive"
+   ],
+   "driven_models": [
+    "vehicle_blue"
+   ],
+   "actors": 0,
+   "sensors": [
+    "gpu_lidar"
+   ],
+   "fuel_uris": [
+    "https://fuel.ignitionrobotics.org/1.0/openrobotics/models/Playground",
+    "https://fuel.ignitionrobotics.org/1.0/openrobotics/models/playground/4/files/meshes/playground.dae"
+   ],
+   "unresolved": [],
+   "lights": 1,
+   "load": {
+    "exit": 0,
+    "ok": true,
+    "seconds": 3.3,
+    "errors": []
+   }
+  },
+  {
+   "file": "wind.sdf",
+   "world": "wind_demo",
+   "kind": "plugin_demo",
+   "needs_fuel": false,
+   "fuel_models_inspected": 0,
+   "fuel_models_unreviewed": [],
+   "models": 2,
+   "world_plugins": [
+    "physics",
+    "scene-broadcaster",
+    "user-commands",
+    "wind-effects"
+   ],
+   "extra_plugins": [
+    "wind-effects"
+   ],
+   "driven_models": [],
+   "actors": 0,
+   "sensors": [],
+   "fuel_uris": [],
+   "unresolved": [],
+   "lights": 1,
+   "load": {
+    "exit": 0,
+    "ok": true,
+    "seconds": 2.6,
+    "errors": []
+   }
+  },
+  {
+   "file": "world_joint.sdf",
+   "world": "shapes",
+   "kind": "environment",
+   "needs_fuel": false,
+   "fuel_models_inspected": 0,
+   "fuel_models_unreviewed": [],
+   "models": 1,
+   "world_plugins": [
+    "physics",
+    "scene-broadcaster",
+    "user-commands"
+   ],
+   "extra_plugins": [],
+   "driven_models": [],
+   "actors": 0,
+   "sensors": [],
+   "fuel_uris": [],
+   "unresolved": [],
+   "lights": 1,
+   "load": {
+    "exit": 0,
+    "ok": true,
+    "seconds": 2.6,
+    "errors": []
+   }
+  }
+ ]
+}
