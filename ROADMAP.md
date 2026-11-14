@@ -400,8 +400,11 @@ parking batch needs its own run. Details and evidence are in the
   opposing contacts, acknowledged attachments and sustained lift/release
   observations. Manual commands, selection/source changes and Stop interrupt.
   Source-finger bounds add upper pinches while preserving normal link padding.
-  The live sequence is still under repair; do not qualify a full mission from
-  the availability of the panel. [Guide](docs/tutorials/panda-object-tasks.md).
+  One normal GUI Panda/MuJoCo/`mobile_manipulation_lab` run completed two
+  cycles and all 38 stages, with sustained unsupported grasp and supported
+  release in each cycle. This does not qualify other objects or backends.
+  [Guide](docs/tutorials/panda-object-tasks.md) ·
+  [Measured receipts and retained failures](docs/status/evidence/manipulation-2026-11-14/README.md).
 - **How to do it:**
   1. Start from the Panda MoveIt workflow (`docs/tutorials/panda_arm.md`) and
      the attached-object code from the October 9 checkpoint

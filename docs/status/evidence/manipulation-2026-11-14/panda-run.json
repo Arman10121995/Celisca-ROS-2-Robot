@@ -1,0 +1,212 @@
+{
+  "robot": "menagerie_franka_emika_panda",
+  "backend": "mujoco",
+  "map": "mobile_manipulation_lab",
+  "fixture": false,
+  "scope": "One normal GUI automatic object task; no second backend or general-object certificate",
+  "revision": "cba71963766b1fba75d96daf6ac62f13cf3b4846",
+  "command": "ros2 launch robot_lab_bringup simulated_robot.launch.py mode:=display map_name:=mobile_manipulation_lab robot_model:=menagerie_franka_emika_panda simulator:=mujoco gui:=false perception:=none allow_experimental_assets:=true arm_control:=panda arm_planning:=moveit",
+  "support": "environment_pickup_bench_collision",
+  "initial_object": {
+    "id": "environment_pickup_cube",
+    "frame": "native_world",
+    "type": "box",
+    "size": [
+      0.03,
+      0.03,
+      0.03
+    ],
+    "position": [
+      -3.161892098251256e-11,
+      -0.6200000001602886,
+      0.5149428665962076
+    ],
+    "orientation_wxyz": [
+      1.0,
+      -1.932737826331857e-10,
+      3.840624900936325e-11,
+      -5.871593655236796e-16
+    ],
+    "spatial_velocity": [
+      6.944566233096875e-09,
+      -1.3799849228557325e-09,
+      2.1180740344357096e-17,
+      -3.074330396239465e-11,
+      -1.5471111801559495e-10,
+      2.043551940972707e-14
+    ],
+    "time": 1.9800000000000015,
+    "source_sha256": "96ad67da03710f17f798c9478fd9e9efdf24a3bf8359f05e456dd9fb158ea273",
+    "plant_id": "0c551fbfeaaf482791ad282f0525f430",
+    "selected_by_operator": true,
+    "finger_links": [
+      "native_body_10",
+      "native_body_11"
+    ],
+    "relative_hand_orientation_wxyz": [
+      1.0951607930189211e-10,
+      0.7071414986822356,
+      0.7070720619862169,
+      1.6381697921791383e-10
+    ],
+    "custody": {
+      "stamp": 1.9800000000000015,
+      "relative": [
+        -0.6200544480865746,
+        -0.5944385924313068,
+        0.051159562891381447
+      ],
+      "left_force": 0.0,
+      "right_force": 0.0,
+      "supported": true,
+      "speed": 1.577361125226877e-10
+    },
+    "world_model": "pickup_cube"
+  },
+  "final_object": {
+    "id": "environment_pickup_cube",
+    "frame": "native_world",
+    "type": "box",
+    "size": [
+      0.03,
+      0.03,
+      0.03
+    ],
+    "position": [
+      -0.0006746699752480451,
+      -0.6203721364161947,
+      0.5149428665962076
+    ],
+    "orientation_wxyz": [
+      0.9999992620733981,
+      1.7872559865862474e-10,
+      6.739970272668298e-11,
+      0.0012148467633204434
+    ],
+    "spatial_velocity": [
+      -7.129610056124948e-09,
+      -2.6985632490690885e-09,
+      1.3837793442521984e-16,
+      -5.5032113830465555e-11,
+      1.4539491282658938e-10,
+      1.9766570995701903e-14
+    ],
+    "time": 58.22000000002519,
+    "source_sha256": "96ad67da03710f17f798c9478fd9e9efdf24a3bf8359f05e456dd9fb158ea273",
+    "plant_id": "0c551fbfeaaf482791ad282f0525f430",
+    "selected_by_operator": true,
+    "finger_links": [
+      "native_body_10",
+      "native_body_11"
+    ],
+    "relative_hand_orientation_wxyz": [
+      0.0019241407538858688,
+      0.7117706629475962,
+      0.7024066762213749,
+      0.0019189187417265412
+    ],
+    "custody": {
+      "stamp": 58.22000000002519,
+      "relative": [
+        -0.0006390337372814857,
+        -0.041547952296152185,
+        0.13078939279670249
+      ],
+      "left_force": 0.0,
+      "right_force": 0.0,
+      "supported": true,
+      "speed": 1.5546129620975816e-10
+    },
+    "world_model": "pickup_cube"
+  },
+  "state": "measured_stages_reached",
+  "stage": 38,
+  "reason": "All requested measured stages reached",
+  "journal": "/workspace/molar/robot_lab_runtime/panda-object-tasks/c66b95d42d784970bea81f46655a3066.jsonl",
+  "launch_returncode": 0,
+  "qualified_scope": "One normal GUI two-cycle task; single box/source/map/backend only",
+  "journal_sha256": "026a5cffe57b5bd1700aec2cd30cf07c1050848730888f1794e5f93027360948",
+  "measured_checkpoints": [
+    {
+      "wall_s": 349761.45673033,
+      "stage": "grasp_check",
+      "receipt": {
+        "condition": "grasped",
+        "measurement": {
+          "stamp": 22.759999999998264,
+          "relative": [
+            -0.00020770892236564775,
+            -0.014955996814569572,
+            0.053599995397975275
+          ],
+          "left_force": 0.500217398766265,
+          "right_force": 0.4997816421855682,
+          "supported": false,
+          "speed": 0.0007147417099740408
+        }
+      }
+    },
+    {
+      "wall_s": 349770.908226717,
+      "stage": "release_check",
+      "receipt": {
+        "condition": "released",
+        "measurement": {
+          "stamp": 30.97999999999371,
+          "relative": [
+            0.0001410603144617795,
+            -0.03977557435230264,
+            0.0809401307910716
+          ],
+          "left_force": 0.0,
+          "right_force": 0.0,
+          "supported": true,
+          "speed": 1.8623454383964752e-10
+        }
+      }
+    },
+    {
+      "wall_s": 349787.396132855,
+      "stage": "grasp_check",
+      "receipt": {
+        "condition": "grasped",
+        "measurement": {
+          "stamp": 46.2000000000105,
+          "relative": [
+            5.697584808180359e-05,
+            -0.014956052834023894,
+            0.053149203162109776
+          ],
+          "left_force": 0.5000388643290655,
+          "right_force": 0.49996057904836255,
+          "supported": false,
+          "speed": 0.0007140669419840788
+        }
+      }
+    },
+    {
+      "wall_s": 349797.874732631,
+      "stage": "release_check",
+      "receipt": {
+        "condition": "released",
+        "measurement": {
+          "stamp": 55.08000000002135,
+          "relative": [
+            -0.0004488780602634118,
+            -0.039805069864935476,
+            0.0806779194723087
+          ],
+          "left_force": 0.0,
+          "right_force": 0.0,
+          "supported": true,
+          "speed": 1.7891371032079888e-10
+        }
+      }
+    }
+  ],
+  "stage_receipts": 38,
+  "measured_lift_height_m": [
+    0.04663529043642989,
+    0.04810026371394027
+  ]
+}

@@ -6,11 +6,21 @@
     "src/robot_lab_utils/robot_lab_utils/object_estimates.py": "6bc92340522519ac7bb263000e05689578c174320259f1847b22c24f3b5200f1",
     "src/robot_lab_utils/robot_lab_utils/fiducial_object_pose.py": "227c46746b8af6d27b691791a46052d8b33a9218a898c823d502b1bb5ea2cfce",
     "src/robot_lab_utils/robot_lab_utils/mobile_manipulation_scene.py": "1589f02261682209b0536882de38116ab322725e1426a1a97aaa7af5a7f669a9",
-    "src/robot_lab_gui/robot_lab_gui/panda_object_task.py": "dc8a5da36dea95f8b5608337eaa82ec8ef73e690f798d207cb9dcf04df7ea50d",
+    "src/robot_lab_gui/robot_lab_gui/panda_object_task.py": "18fcc5714d0bdbff73abf9733ae69b0d16bad032e2db94ed8a77b644fe71763e",
     "src/robot_lab_gui/robot_lab_gui/cartesian_controls.py": "5814b3a9c46fade969b312581ac3505dfb2d3a116f916d5d866cba95d9b1364e",
     "src/robot_lab_mujoco/python/robot_lab_mujoco/native_hand_control.py": "9188299ce9d84d5190169e0fb2cdf8860816c7937086c00e4dbefeb3aac775db",
-    "src/robot_lab_mujoco/python/robot_lab_mujoco/native_hand_lift.py": "a4995e5d96f5f0459df20eb15cb78b88c091ffda29d62afbad4c9173f42a5a6e"
+    "src/robot_lab_mujoco/python/robot_lab_mujoco/native_hand_lift.py": "a4995e5d96f5f0459df20eb15cb78b88c091ffda29d62afbad4c9173f42a5a6e",
+    "src/robot_lab_bringup/scripts/native_scene_objects.py": "2bdea25d389fe3675e198b4dec4f885df6ec5259b98386a91c022c6a90dcd717",
+    "src/robot_lab_mujoco/python/robot_lab_mujoco/native_object_catalog.py": "4acc2fcb79f18ea3f47a3d3fd0455078813495663c6a3ddf2b2c7d6ce35db020",
+    "src/robot_lab_gui/robot_lab_gui/native_hand_controls.py": "4b2db02603afd71c140152280e30ae22f0d1e4bcd300315ddaee624bef455670",
+    "src/robot_lab_gui/robot_lab_gui/grasp_target_controls.py": "d585b51bfa334b6ed27cd59da22c1f09bd19008223c5fbf7c0cc0bc04862f387",
+    "src/robot_lab_gui/robot_lab_gui/gait_controls.py": "28a2747cac483ebd5fec40699dd125b65b352539eb7ac788452b810d5523f91a",
+    "src/robot_lab_utils/robot_lab_utils/grasp_candidates.py": "651ca2680a94d1c0904386e74c969b3a66a80676d5e0b4441cf3b1734c6ad97e",
+    "src/robot_lab_utils/robot_lab_utils/guarded_sequence.py": "a8146d2cd8a2dd61efe4211fc9fde4e757f8fd69fa0262189767d1c43ecf1ff7",
+    "src/robot_lab_utils/robot_lab_utils/object_custody.py": "6b66991c47a3680c64681e35e2bc62174c3f84dac835307cdea3e22422840dab",
+    "src/robot_lab_utils/robot_lab_utils/native_mjcf_assets.py": "61817fa819c5b50350366998535517a0ebaf425de462bd98d5100a8ed5aac4fa"
   },
   "raw_camera": "/workspace/molar/robot_lab_runtime/manipulation-camera-20261114",
-  "raw_panda": "/workspace/molar/robot_lab_runtime/panda-object-task-20261114"
+  "raw_panda": "/workspace/molar/robot_lab_runtime/panda-object-task-20261114",
+  "runtime_sources_match_revision": "d17dbc05fef504c78a0cca223f2f2e6dca1cf723"
 }

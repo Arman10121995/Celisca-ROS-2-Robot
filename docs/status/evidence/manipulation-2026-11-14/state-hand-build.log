@@ -1,0 +1,135 @@
+[1.389s] colcon.colcon_ros.prefix_path.ament WARNING The path '/workspace/molar/robot_lab_runtime/perception/current/prefix/opt/ros/humble' in the environment variable AMENT_PREFIX_PATH doesn't contain any 'local_setup.*' files.
+[1.390s] colcon.colcon_ros.prefix_path.ament WARNING The path '/workspace/molar/robot_lab_runtime/rmf/current/prefix/opt/ros/humble' in the environment variable AMENT_PREFIX_PATH doesn't contain any 'local_setup.*' files.
+Starting >>> robot_lab_mujoco
+Starting >>> robot_lab_gui
+running egg_info
+writing ../../build/robot_lab_mujoco/robot_lab_mujoco.egg-info/PKG-INFO
+writing dependency_links to ../../build/robot_lab_mujoco/robot_lab_mujoco.egg-info/dependency_links.txt
+writing entry points to ../../build/robot_lab_mujoco/robot_lab_mujoco.egg-info/entry_points.txt
+writing requirements to ../../build/robot_lab_mujoco/robot_lab_mujoco.egg-info/requires.txt
+writing top-level names to ../../build/robot_lab_mujoco/robot_lab_mujoco.egg-info/top_level.txt
+reading manifest file '../../build/robot_lab_mujoco/robot_lab_mujoco.egg-info/SOURCES.txt'
+running egg_info
+writing manifest file '../../build/robot_lab_mujoco/robot_lab_mujoco.egg-info/SOURCES.txt'
+running build
+running build_py
+copying python/robot_lab_mujoco/sensor_bridge.py -> /workspace/molar/ros_ws/bumperbot_ws/build/robot_lab_mujoco/build/lib/robot_lab_mujoco
+copying python/robot_lab_mujoco/booster_policy.py -> /workspace/molar/ros_ws/bumperbot_ws/build/robot_lab_mujoco/build/lib/robot_lab_mujoco
+copying python/robot_lab_mujoco/native_object_catalog.py -> /workspace/molar/ros_ws/bumperbot_ws/build/robot_lab_mujoco/build/lib/robot_lab_mujoco
+copying python/robot_lab_mujoco/native_mobile_control.py -> /workspace/molar/ros_ws/bumperbot_ws/build/robot_lab_mujoco/build/lib/robot_lab_mujoco
+copying python/robot_lab_mujoco/native_mobile_tasks.py -> /workspace/molar/ros_ws/bumperbot_ws/build/robot_lab_mujoco/build/lib/robot_lab_mujoco
+copying python/robot_lab_mujoco/octopod_control.py -> /workspace/molar/ros_ws/bumperbot_ws/build/robot_lab_mujoco/build/lib/robot_lab_mujoco
+copying python/robot_lab_mujoco/native_mobile_reach.py -> /workspace/molar/ros_ws/bumperbot_ws/build/robot_lab_mujoco/build/lib/robot_lab_mujoco
+copying python/robot_lab_mujoco/native_mobile_sensors.py -> /workspace/molar/ros_ws/bumperbot_ws/build/robot_lab_mujoco/build/lib/robot_lab_mujoco
+copying python/robot_lab_mujoco/native_asset_display.py -> /workspace/molar/ros_ws/bumperbot_ws/build/robot_lab_mujoco/build/lib/robot_lab_mujoco
+copying python/robot_lab_mujoco/native_arm_control.py -> /workspace/molar/ros_ws/bumperbot_ws/build/robot_lab_mujoco/build/lib/robot_lab_mujoco
+copying python/robot_lab_mujoco/native_hand_lift.py -> /workspace/molar/ros_ws/bumperbot_ws/build/robot_lab_mujoco/build/lib/robot_lab_mujoco
+copying python/robot_lab_mujoco/camera_render.py -> /workspace/molar/ros_ws/bumperbot_ws/build/robot_lab_mujoco/build/lib/robot_lab_mujoco
+copying python/robot_lab_mujoco/joint_pd.py -> /workspace/molar/ros_ws/bumperbot_ws/build/robot_lab_mujoco/build/lib/robot_lab_mujoco
+copying python/robot_lab_mujoco/native_cartesian_servo.py -> /workspace/molar/ros_ws/bumperbot_ws/build/robot_lab_mujoco/build/lib/robot_lab_mujoco
+copying python/robot_lab_mujoco/gait_contacts.py -> /workspace/molar/ros_ws/bumperbot_ws/build/robot_lab_mujoco/build/lib/robot_lab_mujoco
+copying python/robot_lab_mujoco/__init__.py -> /workspace/molar/ros_ws/bumperbot_ws/build/robot_lab_mujoco/build/lib/robot_lab_mujoco
+copying python/robot_lab_mujoco/unitree_policy.py -> /workspace/molar/ros_ws/bumperbot_ws/build/robot_lab_mujoco/build/lib/robot_lab_mujoco
+copying python/robot_lab_mujoco/world_collision.py -> /workspace/molar/ros_ws/bumperbot_ws/build/robot_lab_mujoco/build/lib/robot_lab_mujoco
+copying python/robot_lab_mujoco/joint_effort.py -> /workspace/molar/ros_ws/bumperbot_ws/build/robot_lab_mujoco/build/lib/robot_lab_mujoco
+copying python/robot_lab_mujoco/native_joint_planning.py -> /workspace/molar/ros_ws/bumperbot_ws/build/robot_lab_mujoco/build/lib/robot_lab_mujoco
+copying python/robot_lab_mujoco/mujoco_spawner.py -> /workspace/molar/ros_ws/bumperbot_ws/build/robot_lab_mujoco/build/lib/robot_lab_mujoco
+copying python/robot_lab_mujoco/native_articulation_control.py -> /workspace/molar/ros_ws/bumperbot_ws/build/robot_lab_mujoco/build/lib/robot_lab_mujoco
+copying python/robot_lab_mujoco/native_hand_control.py -> /workspace/molar/ros_ws/bumperbot_ws/build/robot_lab_mujoco/build/lib/robot_lab_mujoco
+copying python/robot_lab_mujoco/native_gripper_control.py -> /workspace/molar/ros_ws/bumperbot_ws/build/robot_lab_mujoco/build/lib/robot_lab_mujoco
+running install
+running install_lib
+writing ../../build/robot_lab_gui/robot_lab_gui.egg-info/PKG-INFO
+writing dependency_links to ../../build/robot_lab_gui/robot_lab_gui.egg-info/dependency_links.txt
+writing entry points to ../../build/robot_lab_gui/robot_lab_gui.egg-info/entry_points.txt
+writing requirements to ../../build/robot_lab_gui/robot_lab_gui.egg-info/requires.txt
+writing top-level names to ../../build/robot_lab_gui/robot_lab_gui.egg-info/top_level.txt
+copying /workspace/molar/ros_ws/bumperbot_ws/build/robot_lab_mujoco/build/lib/robot_lab_mujoco/native_hand_lift.py -> /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_mujoco/lib/python3.10/site-packages/robot_lab_mujoco
+copying /workspace/molar/ros_ws/bumperbot_ws/build/robot_lab_mujoco/build/lib/robot_lab_mujoco/native_hand_control.py -> /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_mujoco/lib/python3.10/site-packages/robot_lab_mujoco
+byte-compiling /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_mujoco/lib/python3.10/site-packages/robot_lab_mujoco/native_hand_lift.py to native_hand_lift.cpython-310.pyc
+byte-compiling /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_mujoco/lib/python3.10/site-packages/robot_lab_mujoco/native_hand_control.py to native_hand_control.cpython-310.pyc
+running install_data
+copying resource/robot_lab_mujoco -> /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_mujoco/share/ament_index/resource_index/packages
+copying package.xml -> /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_mujoco/share/robot_lab_mujoco
+copying launch/mujoco_simulator.launch.py -> /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_mujoco/share/robot_lab_mujoco/launch
+copying vendor/octopod/LICENSE -> /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_mujoco/share/robot_lab_mujoco/vendor/octopod
+running install_egg_info
+removing '/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_mujoco/lib/python3.10/site-packages/robot_lab_mujoco-0.1.0-py3.10.egg-info' (and everything under it)
+Copying ../../build/robot_lab_mujoco/robot_lab_mujoco.egg-info to /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_mujoco/lib/python3.10/site-packages/robot_lab_mujoco-0.1.0-py3.10.egg-info
+running install_scripts
+reading manifest file '../../build/robot_lab_gui/robot_lab_gui.egg-info/SOURCES.txt'
+writing manifest file '../../build/robot_lab_gui/robot_lab_gui.egg-info/SOURCES.txt'
+running build
+running build_py
+copying robot_lab_gui/hand_tab.py -> /workspace/molar/ros_ws/bumperbot_ws/build/robot_lab_gui/build/lib/robot_lab_gui
+copying robot_lab_gui/fleet_tab.py -> /workspace/molar/ros_ws/bumperbot_ws/build/robot_lab_gui/build/lib/robot_lab_gui
+copying robot_lab_gui/articulation_sequences.py -> /workspace/molar/ros_ws/bumperbot_ws/build/robot_lab_gui/build/lib/robot_lab_gui
+copying robot_lab_gui/aerial_swarm_tab.py -> /workspace/molar/ros_ws/bumperbot_ws/build/robot_lab_gui/build/lib/robot_lab_gui
+copying robot_lab_gui/experience.py -> /workspace/molar/ros_ws/bumperbot_ws/build/robot_lab_gui/build/lib/robot_lab_gui
+copying robot_lab_gui/tracked_controls.py -> /workspace/molar/ros_ws/bumperbot_ws/build/robot_lab_gui/build/lib/robot_lab_gui
+copying robot_lab_gui/panda_object_task.py -> /workspace/molar/ros_ws/bumperbot_ws/build/robot_lab_gui/build/lib/robot_lab_gui
+copying robot_lab_gui/registry_preview.py -> /workspace/molar/ros_ws/bumperbot_ws/build/robot_lab_gui/build/lib/robot_lab_gui
+copying robot_lab_gui/drone_planning_controls.py -> /workspace/molar/ros_ws/bumperbot_ws/build/robot_lab_gui/build/lib/robot_lab_gui
+copying robot_lab_gui/articulation_controls.py -> /workspace/molar/ros_ws/bumperbot_ws/build/robot_lab_gui/build/lib/robot_lab_gui
+copying robot_lab_gui/servo_controls.py -> /workspace/molar/ros_ws/bumperbot_ws/build/robot_lab_gui/build/lib/robot_lab_gui
+copying robot_lab_gui/arm_tab.py -> /workspace/molar/ros_ws/bumperbot_ws/build/robot_lab_gui/build/lib/robot_lab_gui
+copying robot_lab_gui/native_planning_controls.py -> /workspace/molar/ros_ws/bumperbot_ws/build/robot_lab_gui/build/lib/robot_lab_gui
+copying robot_lab_gui/experiment_queue.py -> /workspace/molar/ros_ws/bumperbot_ws/build/robot_lab_gui/build/lib/robot_lab_gui
+copying robot_lab_gui/marine_controls.py -> /workspace/molar/ros_ws/bumperbot_ws/build/robot_lab_gui/build/lib/robot_lab_gui
+copying robot_lab_gui/gui_composition.py -> /workspace/molar/ros_ws/bumperbot_ws/build/robot_lab_gui/build/lib/robot_lab_gui
+copying robot_lab_gui/launcher.py -> /workspace/molar/ros_ws/bumperbot_ws/build/robot_lab_gui/build/lib/robot_lab_gui
+copying robot_lab_gui/real_world_controls.py -> /workspace/molar/ros_ws/bumperbot_ws/build/robot_lab_gui/build/lib/robot_lab_gui
+copying robot_lab_gui/grasp_target_controls.py -> /workspace/molar/ros_ws/bumperbot_ws/build/robot_lab_gui/build/lib/robot_lab_gui
+copying robot_lab_gui/fleet_infrastructure_controls.py -> /workspace/molar/ros_ws/bumperbot_ws/build/robot_lab_gui/build/lib/robot_lab_gui
+copying robot_lab_gui/architecture_canvas.py -> /workspace/molar/ros_ws/bumperbot_ws/build/robot_lab_gui/build/lib/robot_lab_gui
+copying robot_lab_gui/drive_control.py -> /workspace/molar/ros_ws/bumperbot_ws/build/robot_lab_gui/build/lib/robot_lab_gui
+copying robot_lab_gui/cartesian_controls.py -> /workspace/molar/ros_ws/bumperbot_ws/build/robot_lab_gui/build/lib/robot_lab_gui
+copying robot_lab_gui/gait_controls.py -> /workspace/molar/ros_ws/bumperbot_ws/build/robot_lab_gui/build/lib/robot_lab_gui
+copying robot_lab_gui/mobile_task_controls.py -> /workspace/molar/ros_ws/bumperbot_ws/build/robot_lab_gui/build/lib/robot_lab_gui
+copying robot_lab_gui/launch_profiles.py -> /workspace/molar/ros_ws/bumperbot_ws/build/robot_lab_gui/build/lib/robot_lab_gui
+copying robot_lab_gui/native_hand_controls.py -> /workspace/molar/ros_ws/bumperbot_ws/build/robot_lab_gui/build/lib/robot_lab_gui
+copying robot_lab_gui/molar_controls.py -> /workspace/molar/ros_ws/bumperbot_ws/build/robot_lab_gui/build/lib/robot_lab_gui
+copying robot_lab_gui/architecture_content.py -> /workspace/molar/ros_ws/bumperbot_ws/build/robot_lab_gui/build/lib/robot_lab_gui
+copying robot_lab_gui/simulator_compat.py -> /workspace/molar/ros_ws/bumperbot_ws/build/robot_lab_gui/build/lib/robot_lab_gui
+copying robot_lab_gui/cleaning_tab.py -> /workspace/molar/ros_ws/bumperbot_ws/build/robot_lab_gui/build/lib/robot_lab_gui
+copying robot_lab_gui/car_parking_controls.py -> /workspace/molar/ros_ws/bumperbot_ws/build/robot_lab_gui/build/lib/robot_lab_gui
+copying robot_lab_gui/architecture_docs.py -> /workspace/molar/ros_ws/bumperbot_ws/build/robot_lab_gui/build/lib/robot_lab_gui
+copying robot_lab_gui/architecture_explorer.py -> /workspace/molar/ros_ws/bumperbot_ws/build/robot_lab_gui/build/lib/robot_lab_gui
+copying robot_lab_gui/architecture_graph.py -> /workspace/molar/ros_ws/bumperbot_ws/build/robot_lab_gui/build/lib/robot_lab_gui
+copying robot_lab_gui/urdf_arm_controls.py -> /workspace/molar/ros_ws/bumperbot_ws/build/robot_lab_gui/build/lib/robot_lab_gui
+copying robot_lab_gui/__init__.py -> /workspace/molar/ros_ws/bumperbot_ws/build/robot_lab_gui/build/lib/robot_lab_gui
+copying robot_lab_gui/lab_tabs.py -> /workspace/molar/ros_ws/bumperbot_ws/build/robot_lab_gui/build/lib/robot_lab_gui
+copying robot_lab_gui/status_markers.py -> /workspace/molar/ros_ws/bumperbot_ws/build/robot_lab_gui/build/lib/robot_lab_gui
+copying robot_lab_gui/workspace_ui.py -> /workspace/molar/ros_ws/bumperbot_ws/build/robot_lab_gui/build/lib/robot_lab_gui
+copying robot_lab_gui/doc_diagrams.py -> /workspace/molar/ros_ws/bumperbot_ws/build/robot_lab_gui/build/lib/robot_lab_gui
+copying robot_lab_gui/live_monitor.py -> /workspace/molar/ros_ws/bumperbot_ws/build/robot_lab_gui/build/lib/robot_lab_gui
+copying robot_lab_gui/process_control.py -> /workspace/molar/ros_ws/bumperbot_ws/build/robot_lab_gui/build/lib/robot_lab_gui
+copying robot_lab_gui/terrain_controls.py -> /workspace/molar/ros_ws/bumperbot_ws/build/robot_lab_gui/build/lib/robot_lab_gui
+copying robot_lab_gui/native_viewer.py -> /workspace/molar/ros_ws/bumperbot_ws/build/robot_lab_gui/build/lib/robot_lab_gui
+copying robot_lab_gui/training_tab.py -> /workspace/molar/ros_ws/bumperbot_ws/build/robot_lab_gui/build/lib/robot_lab_gui
+copying robot_lab_gui/themes/modern.py -> /workspace/molar/ros_ws/bumperbot_ws/build/robot_lab_gui/build/lib/robot_lab_gui/themes
+copying robot_lab_gui/themes/__init__.py -> /workspace/molar/ros_ws/bumperbot_ws/build/robot_lab_gui/build/lib/robot_lab_gui/themes
+running install
+running install_lib
+Installing mujoco_spawner script to /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_mujoco/lib/robot_lab_mujoco
+Installing native_asset_display script to /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_mujoco/lib/robot_lab_mujoco
+Installing sensor_bridge script to /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_mujoco/lib/robot_lab_mujoco
+writing list of installed files to '/workspace/molar/ros_ws/bumperbot_ws/build/robot_lab_mujoco/install.log'
+copying /workspace/molar/ros_ws/bumperbot_ws/build/robot_lab_gui/build/lib/robot_lab_gui/cartesian_controls.py -> /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_gui/lib/python3.10/site-packages/robot_lab_gui
+copying /workspace/molar/ros_ws/bumperbot_ws/build/robot_lab_gui/build/lib/robot_lab_gui/native_hand_controls.py -> /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_gui/lib/python3.10/site-packages/robot_lab_gui
+byte-compiling /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_gui/lib/python3.10/site-packages/robot_lab_gui/cartesian_controls.py to cartesian_controls.cpython-310.pyc
+byte-compiling /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_gui/lib/python3.10/site-packages/robot_lab_gui/native_hand_controls.py to native_hand_controls.cpython-310.pyc
+running install_data
+copying resource/robot_lab_gui -> /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_gui/share/ament_index/resource_index/packages
+copying package.xml -> /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_gui/share/robot_lab_gui
+running install_egg_info
+removing '/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_gui/lib/python3.10/site-packages/robot_lab_gui-0.1.0-py3.10.egg-info' (and everything under it)
+Copying ../../build/robot_lab_gui/robot_lab_gui.egg-info to /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_gui/lib/python3.10/site-packages/robot_lab_gui-0.1.0-py3.10.egg-info
+running install_scripts
+Finished <<< robot_lab_mujoco [4.39s]
+Installing registry_preview script to /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_gui/lib/robot_lab_gui
+Installing robot_lab_gui script to /workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_gui/lib/robot_lab_gui
+writing list of installed files to '/workspace/molar/ros_ws/bumperbot_ws/build/robot_lab_gui/install.log'
+Finished <<< robot_lab_gui [4.54s]
+
+Summary: 2 packages finished [5.86s]

@@ -7,8 +7,11 @@ measures 2.523 mm position error; this is separate from a robot mission.
 [Camera receipt](camera-object-targets-2026-11-14.md).
 
 Panda's **Automatic pick / place** panel sequences existing actions/plans,
-source-aware box grasps and sustained physical custody checks. Live repair
-continues; it is not yet a complete pick/place certificate. UMI Hand controls
+source-aware box grasps and sustained physical custody checks. One normal GUI
+Panda/MuJoCo/`mobile_manipulation_lab` run completed two cycles and all 38 stages,
+including unsupported grasp retention, supported release and retreat in each.
+[Measured source-specific receipt](evidence/manipulation-2026-11-14/README.md).
+Other objects/backends remain unqualified. UMI Hand controls
 now request source-axis lift/hold/lower and sustained supported release, with
 finger-relative slip/rotation and Stop/watchdog guards. Twenty-seven focused
 source/protocol checks and two package builds pass; a physical UMI lift remains

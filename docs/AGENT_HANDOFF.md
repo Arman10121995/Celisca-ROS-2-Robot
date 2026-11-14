@@ -8,8 +8,11 @@ source-finger-aware upper pinches, actual attachment ACK, measured custody and
 operator-selected lift/approach height. Keep arm-only planning seeds as state
 diffs, avoid duplicate world REMOVE on attachment and restrict hidden Gait
 focus callbacks to the selected gait workflow. Actual source/world keyframes
-and light-cube support aggregation are repaired. The complete Panda sequence
-is under live repair; failures stay on SSD, not a qualification claim.
+and light-cube support aggregation are repaired. One normal GUI Panda/MuJoCo/
+`mobile_manipulation_lab` run completes two cycles and 38 stages with actual
+unsupported grasp and supported release; preserve frozen placement poses and
+bounded alternate IK seeds. [Receipt](status/evidence/manipulation-2026-11-14/README.md).
+Other object/source/backend missions remain separate; failures stay on SSD.
 UMI source-axis lift/hold/lower and sustained supported release are implemented;
 27 source/protocol checks pass. Physical UMI lift and wider R5.7/R5.8/R5.9
 source/backend missions remain open. [Panda guide](tutorials/panda-object-tasks.md)
