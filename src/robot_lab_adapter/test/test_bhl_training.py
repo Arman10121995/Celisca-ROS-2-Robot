@@ -80,3 +80,20 @@ def test_vendored_checkpoint_warm_start_reproduces_the_vendor_policy(tmp_path):
         np.testing.assert_allclose(w, layer.weight.detach().numpy(), rtol=1e-5, atol=1e-6)
     agent.freeze_actor(True)
     assert all(not p.requires_grad for p in agent.model.actor.parameters()) and not agent.model.log_std.requires_grad
+
+
+def test_critic_warmup_keeps_the_learning_rate_and_the_actor():
+    from robot_lab_adapter.ppo import PPO
+    torch.manual_seed(0)
+    agent = PPO(6, 2, num_envs=8, steps=4, hidden=(8, 8), learning_rate=1e-4, normalize=False)
+    actor = [p.detach().clone() for p in agent.model.actor.parameters()]
+    agent.freeze_actor(True)
+    rng = np.random.default_rng(1)
+    for _ in range(3):
+        for _ in range(4):
+            agent.act(rng.normal(size=(8, 6)).astype(np.float32))
+            agent.record(rng.normal(size=8), np.zeros(8, bool), np.zeros(8, bool))
+        agent.update(rng.normal(size=(8, 6)).astype(np.float32))
+    assert agent.lr == pytest.approx(1e-4)
+    assert all(torch.equal(a, b) for a, b in zip(actor, agent.model.actor.parameters()))
+    assert torch.equal(agent.model.norm.mean, torch.zeros(6))      # normalize=False keeps identity

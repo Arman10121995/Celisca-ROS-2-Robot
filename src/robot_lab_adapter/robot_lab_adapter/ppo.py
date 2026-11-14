@@ -151,7 +151,9 @@ class PPO:
                     kl = torch.sum(torch.log(dist.stddev / old_stds[index] + 1e-5)
                                    + (old_stds[index] ** 2 + (old_means[index] - dist.mean) ** 2)
                                    / (2.0 * dist.stddev ** 2) - 0.5, dim=-1).mean()
-                if self.desired_kl:
+                # A frozen actor has no KL; adapting then would only ratchet the
+                # rate to its cap for the first real actor update.
+                if self.desired_kl and self.model.log_std.requires_grad:
                     if kl > 2.0 * self.desired_kl:
                         self.lr = max(1e-5, self.lr / 1.5)
                     elif 0.0 < kl < self.desired_kl / 2.0:
