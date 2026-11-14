@@ -35,6 +35,8 @@ class GaitController(Node):
         self.terrain_error=''
         self.slip_observation=None;self.slip_at=-math.inf
         self.support_loss_since=None
+        from robot_lab_utils.gait_recovery import SlipRecovery
+        self.recovery=SlipRecovery()
         self.enabled=False;self.stand_requested=False;self.reason='Source stance held; walking disarmed'
         self.input_owner='manual'
         self.spine_phase,self.spine_freq=0.,1.
@@ -266,7 +268,7 @@ class GaitController(Node):
                 supports=sum(self.contacts['normal_forces_N'][leg['id']]>.2 for leg in self.model.legs)
                 if supports<len(self.model.legs)//2:raise ValueError('Insufficient measured foot support')
                 self.enabled=True;self.command[:]=0.;self.filtered[:]=0.;self.cmd_at=-math.inf
-                self.support_loss_since=None
+                self.support_loss_since=None;self.recovery.reset()
                 self.input_owner='navigation' if self.get_parameter('navigation_enabled').value else 'manual'
                 self.reason='Walking armed; no travel until Drive input'
             elif op=='terrain':
@@ -305,8 +307,21 @@ class GaitController(Node):
                     self.support_loss_since=self.sim_time if self.support_loss_since is None else self.support_loss_since
                     if self.sim_time-self.support_loss_since>.08:raise ValueError('Insufficient actual terrain foot support for 80 ms')
                 else:self.support_loss_since=None
-                terrain=self.terrain_model.step(self.terrain_sample,self.sim_time)
-            except (ValueError,KeyError,TypeError) as exc:self.stop(str(exc))
+                if not self.recovery.active:terrain=self.terrain_model.step(self.terrain_sample,self.sim_time)
+            except (ValueError,KeyError,TypeError) as exc:
+                # Slip/support loss pauses into a bounded stance recovery; missing
+                # observations and exhausted budgets still stop.
+                recoverable=str(exc).startswith(('Measured contact-kinematic slip','Insufficient actual terrain foot support'))
+                if recoverable and self.recovery.fault(str(exc),self.sim_time)=='recover':
+                    self.filtered[:]=0.;self.reason='Recovering stance after: '+str(exc)
+                else:self.stop(str(exc)+('; recovery budget exhausted' if recoverable else ''))
+            if self.enabled and self.recovery.active:
+                supports=sum(force>.2 for name,force in self.contacts['normal_forces_N'].items() if name!='body')
+                slip_clear=not (self.slip_observation and now-self.slip_at<.5 and self.slip_observation['slip_suspected'])
+                stance=float(np.max(np.abs(self.model.initial-self.targets)))<1e-3
+                outcome=self.recovery.tick(self.sim_time,stance,supports>=len(self.model.legs)//2,slip_clear)
+                if outcome=='resumed':self.reason='Recovered stance; walking resumes at half speed'
+                elif outcome=='timeout':self.stop('Stance recovery did not regain support within 10 s; explicit re-arm required')
         if (self.enabled and self.input_owner=='navigation' and self.cfg.get('kind')=='serpentine'
                 and not self.rolling_navigation_ready()):
             self.stop('Rolling odometry inconsistent/stale; navigation interrupted')
@@ -320,8 +335,12 @@ class GaitController(Node):
             step=self.model.velocity*dt
             self.targets+=np.clip(self.model.initial-self.targets,-step,step)
             if np.max(np.abs(self.model.initial-self.targets))<1e-6:self.stand_requested=False
-        if self.enabled:
-            wanted=self.command if now-self.cmd_at<.35 else np.zeros(3)
+        if self.enabled and self.recovery.active and ready and dt>0:
+            # Paused: no gait phase advance; feet return toward the source stance.
+            step=self.model.velocity*dt
+            self.targets+=np.clip(self.model.initial-self.targets,-step,step)
+        elif self.enabled:
+            wanted=(self.command if now-self.cmd_at<.35 else np.zeros(3))*self.recovery.speed_scale(self.sim_time or 0.)
             if self.cfg.get('kind')=='serpentine' and np.linalg.norm(wanted)<1e-9:
                 self.filtered[:]=0.
             else:self.filtered+=np.clip(wanted-self.filtered,-np.array([.06,.06,.25])*dt,np.array([.06,.06,.25])*dt)
@@ -357,6 +376,7 @@ class GaitController(Node):
                        terrain_wall_age_s=now-self.terrain_at if math.isfinite(self.terrain_at) else None,
                        terrain_offsets=self.terrain_model.offsets,support_fraction=sum(force>.2 for name,force in self.contacts['normal_forces_N'].items() if name!='body')/max(1,len(self.model.legs)) if self.contacts else None,
                        terrain_support_loss_since=self.support_loss_since,
+                       slip_recovery=self.recovery.state(self.sim_time or 0.),
                        kinematic_slip=self.slip_observation,
                        observer='Simulator body pose for visualization/tilt only; legged odometry uses independent IMU, measured contacts and joints',
                        scope='Experimental authored gait and bounded in-step PD on exact configured geometry; physical missions pending')

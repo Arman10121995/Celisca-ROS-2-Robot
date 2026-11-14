@@ -26,13 +26,16 @@ class TrackedControls(ttk.Frame):
             ttk.Label(self,text=label+' °').grid(row=3+i,column=0,sticky='w')
             ttk.Spinbox(self,textvariable=value,from_=-45,to=45,increment=5,width=9).grid(row=3+i,column=1,sticky='ew',pady=3)
         for row,label,callback in [(7,'Use measured angles',self.use_measured),(8,'Apply bounded targets',self.apply),
-                (9,'Raise ends',self.raise_ends),(10,'Hold flippers / stop Drive',self.stop),
-                (11,'Open latched Drive controls',lambda:app.control_notebook.select(app.drive_page))]:
+                (9,'Raise ends',self.raise_ends),(10,'Automatic terrain flippers',lambda:self.send('auto')),
+                (11,'Hold flippers / stop Drive',self.stop),
+                (12,'Open latched Drive controls',lambda:app.control_notebook.select(app.drive_page))]:
             ttk.Button(self,text=label,command=callback).grid(row=row,column=0,columnspan=2,sticky='ew',pady=2)
-        ttk.Label(self,textvariable=self.feedback,wraplength=310).grid(row=12,column=0,columnspan=2,sticky='ew',pady=5)
+        ttk.Label(self,textvariable=self.feedback,wraplength=310).grid(row=13,column=0,columnspan=2,sticky='ew',pady=5)
         ttk.Label(self,text='Targets slew at 0.2 rad/s; native force PID is capped at 4 Nm. '
             'Hold preserves the current motor target. The body stays free in physics. '
-            'The original source variant keeps its fixed flippers.',wraplength=310).grid(row=13,column=0,columnspan=2,sticky='ew')
+            'Automatic mode reads the terrain ahead from the depth camera and pitch/roll from the IMU '
+            '(travel/approach/climb/descend/hold); any manual target or Hold ends it. With the 4 Nm cap it did not '
+            'climb a 0.18 m step. The original source variant keeps its fixed flippers.',wraplength=310).grid(row=14,column=0,columnspan=2,sticky='ew')
         self.job=self.after(50,self.tick)
 
     def connect(self):
@@ -52,7 +55,9 @@ class TrackedControls(ttk.Frame):
             self.runtime=data;self.runtime_at=time.monotonic();flippers=data['flippers']
             if flippers['positions'] is not None:
                 angles=[math.degrees(v) for v in flippers['positions']]
-                self.feedback.set('Measured ° · FL {:.1f}, RL {:.1f}, FR {:.1f}, RR {:.1f}'.format(*angles))
+                auto=flippers.get('auto_state') if flippers.get('auto') else None
+                self.feedback.set('Measured ° · FL {:.1f}, RL {:.1f}, FR {:.1f}, RR {:.1f}'.format(*angles)
+                    +(' · auto: {} (rise {:.2f} m)'.format(auto['state'],auto['rise_m']) if auto else ''))
             self.status.set('Articulated flippers connected' if flippers['enabled'] else 'Original source has fixed flippers; choose the articulated variant')
         except (ValueError,KeyError,TypeError):return
 

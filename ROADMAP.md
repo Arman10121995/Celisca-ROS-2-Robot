@@ -139,7 +139,7 @@ Work top to bottom. Each line links to its task.
 | I9 | [R10.2](#r102--fleet-management-and-open-rmf) Fleet / Open-RMF | Done 2026-11-14: shared-zone reservations (map passages, doors, docks), cycle breaker, recovery drive-out, RMF energy from a drivetrain calibration; two crossing runs pass (native and RMF). Chargers/doors in other worlds, larger fleets remain | implemented |
 | I10 | [R10.3](#r103--swarm-robotics) Swarms | Done 2026-11-14: ROS2swarm port of per-member scan-only behaviours, scan-sensed cooperative coverage, ground/air member-loss replanning; dispersion and coverage-with-loss measured; aggregation not yet passing; 3–4 drone flight is validation | implemented |
 | I11 | [R10.5](#r105--underwater-worlds-sensing-slam-and-navigation) / [R10.4](#r104--underwater-robots-and-controllers) Marine | Done 2026-11-14: MuJoCo ROV plant (ported Fortress water forces; matches Gazebo), damping-based current feedforward (1 cm drift in 0.1 m/s), volumetric and current-aware AUV routes (unit-tested). PyBullet/Isaac marine, AUV sensor-only localization mission remain | implemented |
-| I12 | [R10.6](#r106--six--and-eight-legged-robots) / [R10.7](#r107--segmented-and-additional-robot-forms) Multi-leg and forms | Terrain/slip/recovery controllers, estimation, flipper-aware navigation | partial |
+| I12 | [R10.6](#r106--six--and-eight-legged-robots) / [R10.7](#r107--segmented-and-additional-robot-forms) Multi-leg and forms | Done 2026-11-14: depth/IMU flipper policy (sequences a step, but the 4 Nm flippers cannot climb 0.18 m: measured), bounded gait slip/support recovery (unit-tested). Stronger flippers, other backends, per-model terrain missions remain | implemented |
 | I13 | [R5.2](#r52--go2-quadruped-locomotion) / [R5.3](#r53--berkeley-humanoid-lite-balance-and-walking) / [R12](#r12--legged-policy-training) Legged | Get-up strategy, terrain curriculum, BHL retraining, G1/Go2W policies, GPU training | partial |
 | I14 | [R5.5](#r55--ackermann-rear-steer-and-anti-ackermann-cars) Cars | Final-heading (parking) control | partial |
 | I15 | [R3.6](#r36--external-robot-assets-in-normal-launch) Assets | Vendor controller interfaces for display-only profiles | partial |
@@ -770,33 +770,39 @@ tier repair awaits its exact-revision published rerun. Details and evidence are 
 
 ### R10.6 — Six- and eight-legged robots
 
-- **State:** partial · **Priority:** I12
+- **State:** implemented, experimental (recovery unit-tested) · **Priority:** I12
 - **Have:**
   - Pinned MIT `hexapod_ros2` (CAD) and the self-made `lab_octopod`.
   - Tripod/tetrapod/ripple/wave gaits; four backend adapters.
   - Low-relief travel and hold pass on all four simulators.
   - [Gait guide](docs/tutorials/multi-leg-gaits.md).
+- **Done 2026-11-14 (implemented, experimental, unit-tested):** bounded slip
+  and support-loss stance recovery in terrain mode (`gait_recovery.py`).
+  Independent estimation is the existing contact-kinematic odometry; the
+  open-source octopod is the R14.1 source octopod.
 - **Remaining implementation:**
-  - per-model terrain/slip/recovery;
-  - independent estimation;
-  - saved-map goals for every model;
-  - an open-source octopod, if one exists (R14.1).
+  - per-model terrain tuning and recovery missions;
+  - saved-map goals for every model.
 - **How to do it:** `gait_model.py`, `gait_controller.py`, `gait_odometry.py` and
   `gait_terrain.py` in `robot_lab_utils/`. Keep one owner of `/gait/state`.
 - **Done when:** walking on terrain, contacts and saved-map navigation per model and backend.
 
 ### R10.7 — Segmented and additional robot forms
 
-- **State:** partial · **Priority:** I12
+- **State:** implemented, experimental (step climb not passed) · **Priority:** I12
 - **Have:** self-made centipede, snake, catamaran USV; imported Gazebo tracked model and
   articulated-flipper vehicles, and a sprung amphibious rover. Each has native
   controls; mapping, navigation and shore cases are measured.
   [Native forms](docs/status/native-forms-2026-10-30.md).
+- **Done 2026-11-14 (implemented, experimental):** flipper-aware terrain
+  policy from the robot's own depth camera and IMU (`tracked_flippers.py`,
+  GUI **Automatic terrain flippers**). Measured at a 0.18 m step: it
+  sequences approach → climb, but neither it nor fixed flippers climb; the
+  4 Nm flipper cap is back-driven and the hull rears past the 0.6 rad tilt
+  guard. [Evidence](docs/status/evidence/flipper-stairs-2026-11-14/README.md).
 - **Remaining implementation:**
-  - flipper-aware terrain navigation;
-  - terrain/slip/recovery controllers;
-  - other backends;
-  - open-source counterparts (R14.1).
+  - a stronger flipper actuator variant to make step climbing possible;
+  - other backends for the forms.
 - **Done when:** locomotion, clearance and sensor/map missions per form.
 
 ### R10.8 — Fleet, swarm and marine GUI and experiments

@@ -1823,9 +1823,12 @@ tasks:
         - docs/status/workflows-2026-10-27.md
         - docs/status/evidence/native-workflows-2026-10-27/README.md
         - docs/status/native-workflows-2026-10-27.md
-        implementation_state: Source gait/contact odometry, map/reload/goal controls and automatic acquisition/navigation;
-          source CAD-to-drive observer calibration and active Nav2 lifecycle guard.
-        owner: codex
+        - docs/status/evidence/flipper-stairs-2026-11-14/README.md
+        implementation_state: 'Source gait/contact odometry, map/reload/goal controls and automatic acquisition/navigation;
+          source CAD-to-drive observer calibration and active Nav2 lifecycle guard. 2026-11-14 (Claude) bounded slip/support-loss
+          stance recovery in terrain mode (gait_recovery.py): pause, return to stance, resume at half speed; 10 s per pause,
+          3 per minute.'
+        owner: claude
         scope_paths:
         - docs/
         - README.md
@@ -1838,10 +1841,11 @@ tasks:
         - src/robot_lab_gui/
         - src/robot_lab/robot_lab_registry/
         - scripts/
-        state: partial
+        state: implemented
         title: Six-legged hexapod and eight-legged octopod robots
         validation_state: Actual hexapod acquired occupancy and independently settled Nav2 endpoint on MuJoCo/nav_empty.
-          Earlier octopod/centipede scopes retained. Further models/tasks/terrain/backends remain open.
+          Earlier octopod/centipede scopes retained. Further models/tasks/terrain/backends remain open. On 2026-11-14 the
+          gait recovery is unit-tested only; no slip mission run.
         qualification_review: '2026-10-27 documentation review: retain the implemented code, tests and named
           mission certificates. Full declared roadmap acceptance is still open; test counts, metadata and scene
           loads do not qualify remaining robot/map/backend missions. See docs/REMAINING_WORK_GUIDE.md.'
@@ -1881,15 +1885,19 @@ tasks:
         - docs/status/evidence/native-forms-2026-10-30/README.md
         - docs/status/amphibious-facility-2026-10-30.md
         - docs/status/evidence/amphibious-facility-2026-10-30/README.md
+        - docs/status/evidence/flipper-stairs-2026-11-14/README.md
         implementation_state: Complete sprung amphibious wheel/propeller source, bank/ramp world, source bounds/leases,
           hybrid flow/range emulation and IMU estimation, RGB-D export/reload and source-aware 2.5D shore Plan/Execute.
-          Existing snake/surface/tracked families preserved.
-        owner: codex
-        state: partial
+          Existing snake/surface/tracked families preserved. 2026-11-14 (Claude) flipper-aware terrain policy from the robot
+          depth camera and IMU (tracked_flippers.py, op auto, GUI button).
+        owner: claude
+        state: implemented
         title: Centipede/segmented and additional robot families
-        validation_state: Sprung bank-water-bank goals physically settle at about 0.104/0.087 m error; real 6-node/1930-point
-          acquisition. Rigid traction/import/sensor-origin/recheck failures retained. Further terrain, maps, saved
-          localization and force backends remain.
+        validation_state: 'Sprung bank-water-bank goals physically settle at about 0.104/0.087 m error; real 6-node/1930-point
+          acquisition. Rigid traction/import/sensor-origin/recheck failures retained. Further terrain, maps, saved localization
+          and force backends remain. On 2026-11-14 at a 0.18 m terrain_stairs step: fixed flippers reared to 0.657 rad and
+          hit the 0.6 rad tilt guard; the auto policy sequenced approach/climb but the 4 Nm flippers were back-driven (rear
+          -0.69 -> -0.03 rad) and the climb also failed (0.657 rad). A stronger flipper actuator is needed.'
         qualification_review: '2026-10-27 documentation review: retain the implemented code, tests and named mission
           certificates. Full declared roadmap acceptance is still open; test counts, metadata and scene loads do not
           qualify remaining robot/map/backend missions. See docs/REMAINING_WORK_GUIDE.md.'

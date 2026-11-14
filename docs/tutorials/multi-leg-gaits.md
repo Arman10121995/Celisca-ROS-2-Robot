@@ -54,6 +54,17 @@ Legs and segments stay nested under these complete families. Registry
 **Preview 3D** uses the configured source stance. Structural leg-count tags
 never grant another robot's controller or mission support.
 
+## Slip and support-loss recovery
+
+In terrain mode, measured contact-kinematic slip (80 ms) or too few supported
+feet (80 ms) no longer halts the gait. It pauses: no gait phase advance,
+feet returning to the source stance. Walking resumes at half speed for 3 s
+once half the feet carry load and slip has been clear for 1 s. One pause is
+limited to 10 s and three are allowed per minute; beyond that the gait
+stops and needs re-arming. Tilt above 0.65 rad or body contact still stops
+immediately. `/gait/state` reports `slip_recovery`. This has unit tests only
+([evidence](../status/evidence/flipper-stairs-2026-11-14/README.md)).
+
 ## Use the GUI
 
 1. Source the SSD/ROS/workspace environment and launch

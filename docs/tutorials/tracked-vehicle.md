@@ -20,6 +20,19 @@ edit the four degree targets and **Apply bounded targets**, or **Raise ends**.
 Targets slew at 0.2 rad/s within ±0.8 rad. Native force PIDs apply at most
 4 Nm per joint; they do not set ideal joint velocity or body pose.
 **Hold flippers / stop Drive** retains current motor targets and stops Drive.
+**Automatic terrain flippers** runs a policy on the robot's own depth camera
+(terrain rise or drop 0.55–1.4 m ahead) and IMU pitch/roll:
+- travel at rest;
+- approach: front flippers up, rear pressing;
+- climb: front up, rear down;
+- descend: front reaching down;
+- hold: on roll above 0.35 rad, Drive is stopped.
+
+Any manual target or Hold ends it. At a 0.18 m step it detected and
+sequenced the climb, but the 4 Nm flipper cap let the hull back-drive the
+flippers and the vehicle reared past the 0.6 rad tilt guard, exactly as with
+fixed flippers ([evidence](../status/evidence/flipper-stairs-2026-11-14/README.md)).
+Step climbing needs a stronger flipper actuator.
 Use the normal latched Drive panel for belts. A lost ROS owner leaves the
 bounded native servos holding their last targets; the native Drive watchdog
 removes stale belt commands.

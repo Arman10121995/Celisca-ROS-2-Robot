@@ -18,6 +18,9 @@ from std_msgs.msg import String, Float64
 import uuid
 
 FLIPPER_JOINTS=('front_left_flipper_j','rear_left_flipper_j','front_right_flipper_j','rear_right_flipper_j')
+# Source camera (base_link .05 0 .34, level, 1.25 rad HFOV) and the ground line of the
+# track wheels (centre z .01855, radius .09047) in base_link.
+CAMERA_XYZ,CAMERA_HFOV,GROUND_Z=(.05,0.,.34),1.25,-.0719
 
 
 class TrackedControl(Node):
@@ -30,7 +33,11 @@ class TrackedControl(Node):
         self.articulated=self.get_parameter('articulated_flippers').value
         self.flipper_positions=None;self.flipper_at=-math.inf;self.flipper_clock=None
         self.flipper_requested=[0.]*4;self.flipper_output=[0.]*4
+        self.flipper_auto=False;self.depth=None;self.depth_at=-math.inf;self.pitch=self.roll=None;self.flipper_policy=None;self.flipper_auto_state=None
         if self.articulated:
+            from robot_lab_utils.tracked_flippers import FlipperPolicy
+            self.flipper_policy=FlipperPolicy()
+            self.create_subscription(Image,'/tracked/raw/camera/depth/image_raw',self.depth_image,qos_profile_sensor_data)
             self.flipper_publishers=[self.create_publisher(Float64,'/tracked/flippers/'+name+'/target',10) for name in FLIPPER_JOINTS]
             self.create_subscription(JointState,'/joint_states',self.flipper_feedback,10)
             self.create_subscription(String,'/tracked/flipper_command',self.flipper_command,10)
@@ -78,14 +85,23 @@ class TrackedControl(Node):
             if len(msg.data)>2048:return
             data=json.loads(msg.data)
             if data.get('session_id')!=self.session or data.get('robot_id')!=self.robot_id:return
-            if data.get('op')=='hold':self.flipper_requested=list(self.flipper_output);return
+            if data.get('op')=='auto':
+                # Terrain-aware flipper policy from the robot's own depth camera and IMU.
+                from robot_lab_utils.tracked_flippers import FlipperPolicy
+                self.flipper_policy=FlipperPolicy();self.flipper_auto=data.get('enabled',True) is True;return
+            if data.get('op')=='hold':self.flipper_auto=False;self.flipper_requested=list(self.flipper_output);return
             if data.get('op')!='target':return
             if time.monotonic()-self.flipper_at>.6 or time.monotonic()-self.clock_at>.6:return
             values=data['positions']
             if (not isinstance(values,list) or len(values)!=4
                     or any(isinstance(v,bool) or not isinstance(v,(int,float)) or not math.isfinite(v) or abs(v)>.8 for v in values)):return
-            self.flipper_requested=list(map(float,values))
+            self.flipper_auto=False;self.flipper_requested=list(map(float,values))
         except (ValueError,KeyError,TypeError,AttributeError):return
+
+    def depth_image(self,msg):
+        if msg.encoding!='32FC1' or msg.height*msg.width*4!=len(msg.data):return
+        import numpy as np
+        self.depth=np.frombuffer(bytes(msg.data),dtype=np.float32).reshape(msg.height,msg.width);self.depth_at=time.monotonic()
 
     def observe_clock(self,msg):
         value=msg.clock.sec+msg.clock.nanosec*1e-9
@@ -99,12 +115,24 @@ class TrackedControl(Node):
         if all(map(math.isfinite,[q.x,q.y,q.z,q.w])):
             self.imu_at=time.monotonic()
             self.tilt=math.acos(max(-1.,min(1.,1-2*(q.x*q.x+q.y*q.y))))
+            self.pitch=math.asin(max(-1.,min(1.,2*(q.w*q.y-q.z*q.x))))
+            self.roll=math.atan2(2*(q.w*q.x+q.y*q.z),1-2*(q.x*q.x+q.y*q.y))
 
     def tick(self):
         now=time.monotonic();dt=min(.05,now-self.last);self.last=now
         ready=now-self.odom_at<.6 and now-self.clock_at<.6 and now-self.imu_at<.6 and self.tilt is not None and self.tilt<.6
         fresh=ready and now-self.input_at<.35
         target=self.command if fresh else [0.,0.]
+        if self.articulated and getattr(self,'flipper_auto',False) and ready and self.pitch is not None:
+            from robot_lab_utils.tracked_flippers import terrain_ahead
+            terrain=None
+            if self.depth is not None and now-self.depth_at<.6:
+                try:terrain=terrain_ahead(self.depth,CAMERA_HFOV,CAMERA_XYZ,GROUND_Z)
+                except ValueError:terrain=None
+            # ROS pitch is positive nose-down; the policy takes nose-up pitch.
+            self.flipper_auto_state=self.flipper_policy.update(terrain,-self.pitch,self.roll,now)
+            self.flipper_requested=list(self.flipper_auto_state['targets'])
+            if self.flipper_auto_state['stop_drive']:target=[0.,0.]
         for i in range(2):self.actual[i]+=max(-.4*dt,min(.4*dt,target[i]-self.actual[i]))
         if not ready:self.actual=[0.,0.]
         msg=Twist();msg.linear.x,msg.angular.z=self.actual;self.publisher.publish(msg)
@@ -117,6 +145,7 @@ class TrackedControl(Node):
         self.state.publish(String(data=json.dumps(dict(ready=ready,owner=self.owner if fresh else 'idle',
             robot_id=self.robot_id,session_id=self.session,
             flippers=dict(enabled=self.articulated,joints=FLIPPER_JOINTS,positions=self.flipper_positions,
+                auto=getattr(self,'flipper_auto',False),auto_state=getattr(self,'flipper_auto_state',None) if getattr(self,'flipper_auto',False) else None,
                 targets=self.flipper_output,requested=self.flipper_requested,feedback_fresh=now-self.flipper_at<.6),
             command=self.actual,sim_time=self.clock,tilt_rad=self.tilt,
             odometry='Native track dead reckoning; surface slip is not measured',
