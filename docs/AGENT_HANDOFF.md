@@ -1,5 +1,17 @@
 # Agent Handoff Protocol
 
+November 14 car continuation: preserve the normal Drive-panel parking UI,
+exact owned-launch/current-instance binding, active-navigator lifecycle gate,
+whole-operation deadline (including server/acceptance waits), operator lease,
+fresh ROS-clock transforms/costmap and swept authored footprint. Manual Drive,
+Stop/Space/close cancel parking; late accepted goals are canceled and another
+navigation owner interrupts correction. A corrected heading/depth outside
+10 cm must report failed. [Guide](tutorials/car-parking.md) and
+[implementation receipt](status/car-parking-gui-2026-11-14.md). The two slalom
+failures and wider course/map/backend qualification remain open.
+Published takeover CI is green at `31db2d73`, run 43562150247 (all tiers,
+25-package build and registry); the following parking batch has separate CI.
+
 November 14 takeover: the user confirms Claude has stopped; **Codex owns the
 current checkout and remaining implementation**. Preserve the integrated
 algorithm/seed/relay changes in `ac906819`, the native MuJoCo relay branch,

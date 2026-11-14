@@ -1,0 +1,105 @@
+{
+  "robot": "ackermann_car",
+  "map": "nav_empty",
+  "backend": "pybullet",
+  "scope": "One installed normal-GUI parking screen; independent simulator odometry; not the car course or a backend matrix",
+  "passed": true,
+  "revision": "31db2d73504e8a0fe20e0b0b4948f0bd2724150e",
+  "installed_sha256": {
+    "install/robot_lab_utils/lib/python3.10/site-packages/robot_lab_utils/car_parking.py": "05d65c80ddc2cd1ada35e9633d1eda0e30acf2dec334b4d392800f70ca74b053",
+    "install/robot_lab_utils/lib/robot_lab_utils/car_parking.py": "05d65c80ddc2cd1ada35e9633d1eda0e30acf2dec334b4d392800f70ca74b053",
+    "install/robot_lab_utils/lib/python3.10/site-packages/robot_lab_utils/car_parking_clearance.py": "a9c941c46994aca76f7a8c5adaa06391365659ad093d060904adb1345ab9084f",
+    "install/robot_lab_gui/lib/python3.10/site-packages/robot_lab_gui/car_parking_controls.py": "929b3f6b69af1dd23b0ca7eb74276fb79366b1d7b2e24ffcee734d78843ab1d1",
+    "install/robot_lab_gui/lib/python3.10/site-packages/robot_lab_gui/launcher.py": "34de08989967f125f9c91643e95cd37b75c1249f7d0c8fc1b14b07004238684a",
+    "install/robot_lab_navigation/share/robot_lab_navigation/launch/navigation.launch.py": "02fd1ac5add219f884ad8f5035f41aea36973aac39e0d1f24504546cfa7dea48",
+    "install/robot_lab_navigation/share/robot_lab_navigation/config/robots/ackermann_car.yaml": "f43790fbd7364e3733f2c5bde0d6fcdb460ea166468249fc840e91d5843ab0fd"
+  },
+  "command": "ros2 launch robot_lab_bringup simulated_robot.launch.py robot_model:=ackermann_car simulator:=pybullet use_sim_time:=true map_name:=nav_empty world_package:=robot_lab_maps world_name:=nav_empty world_path:=maps/nav_empty/worlds/nav_empty.world map_yaml:=maps/nav_empty/maps/map.yaml local_planner_plugin:=nav2_regulated_pure_pursuit_controller::RegulatedPurePursuitController mode:=nav gui:=false global_planning:=hybrid_a_star_planner local_planning:=pure_pursuit control:=simple_controller localization:=amcl state_estimation:=ekf_localization_node sensor_fusion:=wheel_imu_fusion",
+  "initial_estimate": [
+    -0.5002,
+    -0.5,
+    0.0004
+  ],
+  "target": [
+    0.09979999998537836,
+    -0.49999581120979525,
+    10.0004
+  ],
+  "parking": {
+    "phase": "parked",
+    "goal": {
+      "x": 0.09979999998537836,
+      "y": -0.49999581120979525,
+      "yaw": 0.17453990651644094
+    },
+    "started": 329122.28427673,
+    "nav2_heading_error_deg": 6.06,
+    "alignment": {
+      "attempted": true,
+      "pairs": 1,
+      "heading_error_before_deg": 6.06,
+      "heading_error_after_deg": 0.87,
+      "displacement_m": 0.031
+    },
+    "trim": {
+      "attempted": true,
+      "moved_m": 0.141,
+      "longitudinal_before_m": 0.147,
+      "longitudinal_after_m": 0.006,
+      "lateral_m": -0.039,
+      "heading_change_deg": 0.11
+    },
+    "position_error_m": 0.039,
+    "heading_error_deg": 0.76,
+    "along_m": 0.006,
+    "lateral_m": -0.039,
+    "elapsed_s": 13.9,
+    "observer": "localization estimate (map -> base frame); not simulator truth",
+    "instance_id": "d85349b149f34054af35663d3a0c2e83",
+    "robot_model": "ackermann_car",
+    "pose": [
+      0.08780228619569858,
+      -0.4626960336771571,
+      0.16119348962263538
+    ],
+    "navigation_ready": true
+  },
+  "truth": {
+    "x": 0.06764867156744003,
+    "y": -0.46429720520973206,
+    "z": 0.000912101415451616,
+    "yaw_deg": 9.522697021594261,
+    "position_error_m": 0.048042672587876256,
+    "yaw_error_deg": -0.47770297840573855
+  },
+  "body_samples": 1244,
+  "operator_loss": {
+    "state": {
+      "phase": "failed",
+      "goal": {
+        "x": 1.0912,
+        "y": -0.4616,
+        "yaw": 0.16102233145974484
+      },
+      "started": 329137.911185789,
+      "reason": "RuntimeError: Parking operator heartbeat lost",
+      "instance_id": "d85349b149f34054af35663d3a0c2e83",
+      "robot_model": "ackermann_car",
+      "pose": [
+        0.12762725118207258,
+        -0.4562682825612008,
+        0.15237602503629633
+      ],
+      "navigation_ready": true
+    },
+    "elapsed_wall_s": 1.748607328045182,
+    "observed_body_speed_m_s": 0.00012341238023140004,
+    "velocity_vector_m_s": [
+      -0.00012183006153346604,
+      1.7409990754735244e-05,
+      -9.216502756011565e-06
+    ],
+    "settled_wall_s": 0.5
+  },
+  "launch_returncode": 0
+}

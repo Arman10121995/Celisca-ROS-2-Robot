@@ -1,0 +1,30 @@
+.........F....                                                           [100%]
+=================================== FAILURES ===================================
+_______ test_nav2_arrival_off_heading_is_shuffled_and_trimmed_to_the_bay _______
+
+    def test_nav2_arrival_off_heading_is_shuffled_and_trimmed_to_the_bay():
+        car = FakeCar(1.9, 0.02, math.radians(75.))            # Nav2 left it 15 deg off, a little short
+        state = park(car, dict(x=2.0, y=0.05, yaw=math.radians(90.)))
+>       assert state['phase'] == 'parked', state
+E       AssertionError: {'alignment': {'attempted': True, 'displacement_m': 0.017, 'heading_error_after_deg': 1.39, 'heading_error_before_deg': 15.0, ...}, 'along_m': 0.007, 'elapsed_s': 4.9, 'goal': {'x': 2.0, 'y': 0.05, 'yaw': 1.5707963267948966}, ...}
+E       assert 'failed' == 'parked'
+E         - parked
+E         + failed
+
+src/robot_lab_utils/test/test_car_parking.py:59: AssertionError
+=============================== warnings summary ===============================
+src/robot_lab_utils/test/test_car_parking_clearance.py::test_forward_and_reverse_sweeps_check_the_future_not_only_the_current_pose
+src/robot_lab_utils/test/test_car_parking_clearance.py::test_forward_and_reverse_sweeps_check_the_future_not_only_the_current_pose
+src/robot_lab_utils/test/test_car_parking_clearance.py::test_forward_and_reverse_sweeps_check_the_future_not_only_the_current_pose
+src/robot_lab_utils/test/test_car_parking_clearance.py::test_forward_and_reverse_sweeps_check_the_future_not_only_the_current_pose
+src/robot_lab_utils/test/test_car_parking_clearance.py::test_swinging_end_and_source_rear_footprint_are_checked
+src/robot_lab_utils/test/test_car_parking_clearance.py::test_swinging_end_and_source_rear_footprint_are_checked
+src/robot_lab_utils/test/test_car_parking_clearance.py::test_unreviewed_degenerate_or_nonfinite_polygon_is_refused[shape0]
+src/robot_lab_utils/test/test_car_parking_clearance.py::test_unreviewed_degenerate_or_nonfinite_polygon_is_refused[shape1]
+  /workspace/molar/ros_ws/bumperbot_ws/src/robot_lab_utils/robot_lab_utils/car_parking_clearance.py:16: DeprecationWarning: Arrays of 2-dimensional vectors are deprecated. Use arrays of 3-dimensional vectors instead. (deprecated in NumPy 2.0)
+    turns=np.cross(edges,np.roll(edges,-1,axis=0))
+
+-- Docs: https://docs.pytest.org/en/stable/warnings.html
+=========================== short test summary info ============================
+FAILED src/robot_lab_utils/test/test_car_parking.py::test_nav2_arrival_off_heading_is_shuffled_and_trimmed_to_the_bay
+1 failed, 13 passed, 8 warnings in 5.65s

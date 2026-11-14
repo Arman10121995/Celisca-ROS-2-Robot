@@ -1,0 +1,46 @@
+{
+  "robot": "ackermann_car",
+  "map": "nav_empty",
+  "backend": "pybullet",
+  "scope": "One installed normal-GUI parking screen; independent simulator odometry; not the car course or a backend matrix",
+  "passed": false,
+  "command": "ros2 launch robot_lab_bringup simulated_robot.launch.py robot_model:=ackermann_car simulator:=pybullet use_sim_time:=true map_name:=nav_empty world_package:=robot_lab_maps world_name:=nav_empty world_path:=maps/nav_empty/worlds/nav_empty.world map_yaml:=maps/nav_empty/maps/map.yaml local_planner_plugin:=nav2_regulated_pure_pursuit_controller::RegulatedPurePursuitController mode:=nav gui:=false global_planning:=hybrid_a_star_planner local_planning:=pure_pursuit control:=simple_controller localization:=amcl state_estimation:=ekf_localization_node sensor_fusion:=wheel_imu_fusion",
+  "initial_estimate": [
+    -0.5002,
+    -0.5,
+    0.0004
+  ],
+  "target": [
+    0.09979999998537836,
+    -0.49999581120979525,
+    10.0004
+  ],
+  "parking": {
+    "phase": "failed",
+    "goal": {
+      "x": 0.09979999998537836,
+      "y": -0.49999581120979525,
+      "yaw": 0.17453990651644094
+    },
+    "started": 328360.160628924,
+    "reason": "Nav2 rejected the parking goal",
+    "instance_id": "338212801a8540379d551982eaf5d845",
+    "robot_model": "ackermann_car",
+    "pose": [
+      -0.5001787473534269,
+      -0.500000269713879,
+      7.017240445161834e-06
+    ]
+  },
+  "truth": {
+    "x": -0.5002048015594482,
+    "y": -0.5000002980232239,
+    "z": 0.0009896598057821393,
+    "yaw_deg": 0.0004607791457172064,
+    "position_error_m": 0.6000048015616027,
+    "yaw_error_deg": -9.999939220854284
+  },
+  "body_samples": 730,
+  "exception": "AssertionError({'phase': 'failed', 'goal': {'x': 0.09979999998537836, 'y': -0.49999581120979525, 'yaw': 0.17453990651644094}, 'started': 328360.160628924, 'reason': 'Nav2 rejected the parking goal', 'instance_id': '338212801a8540379d551982eaf5d845', 'robot_model': 'ackermann_car', 'pose': [-0.5001787473534269, -0.500000269713879, 7.017240445161834e-06]})",
+  "launch_returncode": 0
+}

@@ -499,9 +499,21 @@ def _setup(context, *args, **kwargs):
         # Park-at-heading runtime: Nav2 goal, then the measured forward/reverse
         # heading shuffle and straight depth trim (robot_lab_utils.car_parking).
         base = LaunchConfiguration("base_frame").perform(context).strip() or "base_footprint"
+        # Use the same authored footprint as the actual local costmap. The
+        # heading correction refuses unknown/occupied/out-of-grid sweeps.
+        footprint=None
+        if os.path.isfile(overlay):
+            with open(overlay) as stream:
+                params=(yaml.safe_load(stream) or {}).get('local_costmap',{}).get('local_costmap',{}).get('ros__parameters',{})
+            footprint=params.get('footprint')
+        if footprint:
+            polygon=yaml.safe_load(footprint) if isinstance(footprint,str) else footprint
+            shape=[float(value) for point in polygon for value in point]
+        else:
+            raise ValueError('Car parking needs the selected robot local-costmap footprint')
         nodes.append(Node(package="robot_lab_utils", executable="car_parking.py", name="car_parking", output="screen",
                           parameters=[{"use_sim_time": use_sim_time, "turning_radius": CAR_TURNING_RADIUS,
-                                       "base_frame": base}]))
+                                       "base_frame": base,"robot_model":robot_model,"footprint":shape}]))
     return nodes
 
 

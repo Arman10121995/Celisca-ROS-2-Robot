@@ -1,5 +1,27 @@
 # Current Robot Lab status
 
+November 14 car GUI continuation: **Drive & limits → Park at a map pose**
+provides estimated-pose copy, X/Y/heading/budget and explicit Park/Cancel for
+the three Ackermann variants in Navigation. Runtime now requires current
+instance, active Nav2, fresh localization/costmap and an operator lease;
+correction sweeps the authored footprint and checks final tolerances. **85
+focused checks and three builds pass.** An actual installed normal-GUI
+Ackermann / `nav_empty` / PyBullet screen finished with independent body error
+**0.04804 m / 0.47770°**. Removing the parking heartbeat interrupted another
+goal; observed body speed fell below 0.05 m/s within **1.749 wall seconds**.
+The initial navigator-startup rejection is retained and fixed by the lifecycle
+gate. [Guide](../tutorials/car-parking.md) ·
+[receipt and scope](car-parking-gui-2026-11-14.md). The two slalom failures,
+other car profiles/maps/backends and full course acceptance remain open.
+
+CI follow-up: **published `31db2d73` is green**,
+[run 43562150247](https://github.com/Arman10121995/Celisca-ROS-2-Robot/actions/runs/43562150247):
+25 packages built; fast 1,344 passed/44 skipped/four deselected; physics
+137 passed/13 skipped; integration 314 passed/29 skipped; registry passes.
+It includes the takeover/arm changes and the required tutorial Run section.
+The new parking batch needs its own published result; its local checks above
+remain separate.
+
 November 14 Codex takeover: the user confirms Claude has stopped. Panda now
 offers **Top / Side / Top + side**, width-checked side pinches and explicit
 open/detached retreat planning. Stretch recipes select an above/side world-axis

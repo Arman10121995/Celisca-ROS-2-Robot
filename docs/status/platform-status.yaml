@@ -1472,7 +1472,7 @@ tasks:
         tier_followup_20261114: 'Codex: published d4eb4d5a CI run 43530569788 failed one R6.8 world-copy test because fast tier is intentionally unsourced and the test imports ament/ROS launch (1282 passed, 42 skipped). Unchanged test moved to required sourced integration tier and passes locally; new GUI source path added to the runner. Two GUI builder/widget checks pass without sourcing ROS. Full exact-revision published rerun pending; preserve historical baseline and Claude fleet/source edits.'
         mavlink_ci_20261114: 'Codex: a2b5e281 run 43533140298 passed fast/physics, then integration collection failed importing pymavlink in the new PX4 heading test. Both CI workflows now install documented flight runtime pymavlink 2.4.50; tests remain enabled. Ten heading/walkway checks pass with that exact runtime locally. Exact-revision full CI pending. Receipt: docs/status/evidence/ci-mavlink-2026-11-14/README.md. Claude owns algorithm/seed/launch files.'
         fleet_tiers_20261114: 'Codex: 6106be61 run 43551833654 failed fast collection because fleet_contact_conflict and swarm_distributed import the real ROS FleetController. Both unchanged tests remain required in sourced integration tier; 20 checks pass locally. No fleet implementation changed. Full exact-revision CI pending; Claude algorithm/seed/launch work preserved.'
-        takeover_ci_20261114: 'Codex takeover implemented: retain marine MuJoCo/xacro checks in physics, ROS parking/fleet/swarm/world/relay launch checks in sourced integration. Unsourced fast 1358 passed, 49 skipped, 4 deselected; physics 150 passed. Initial desktop integration 338 passed/3 GUI failures; all affected widget/layout checks pass under Xvfb after Arm width repair. Published ac906819 fails the now-moved ROS relay case; next exact revision CI pending. docs/status/takeover-2026-11-14.md'
+        takeover_ci_20261114: 'Published takeover revision 31db2d73 passes run 43562150247: 25 packages built; fast 1344 passed/44 skipped/4 deselected, physics 137 passed/13 skipped, integration 314 passed/29 skipped, registry passed. Required assertions remain. Newer parking implementation has 85 focused checks/three local builds and its own pending published run. docs/status/takeover-2026-11-14.md'
         scope_paths:
         - .github/workflows/
         - scripts/bootstrap.sh
@@ -3732,7 +3732,9 @@ tasks:
         state: done
         title: Integrate real multirotor SITL flight
       R5.5:
+        implementation_validation: '85 focused software/Tk/document checks and three package builds pass. Actual normal-GUI Ackermann/nav_empty/PyBullet screen: 4.80 cm / 0.48 deg independent body error; lease-loss interrupt and speed below 0.05 m/s in 1.749 s. Exact installed hashes and negative startup trial retained in docs/status/evidence/car-parking-gui-2026-11-14/. No universal course certificate.'
         acceptance_ref: ROADMAP.md
+        parking_gui_20261114: 'Implemented normal Drive-panel car parking, current-instance/owned-launch binding, active Nav2 lifecycle readiness, whole budget/heartbeat/fresh-transform gates and live costmap swept-source-footprint corrections. Actual PyBullet ackermann_car/nav_empty GUI target: independent body error 0.04804 m / 0.47770 deg; operator loss interrupts and measured body speed is below 0.05 m/s within 1.749 wall seconds. 85 focused checks and three builds pass. Full car course and two slalom failures remain. docs/status/car-parking-gui-2026-11-14.md'
         depends_on:
         - R5.1
         - R3.3
@@ -3771,14 +3773,7 @@ tasks:
           the HeadingShuffle correction. Added the flag; now parking should pass the
           10° heading tolerance in all backends. Implementation COMPLETE. Verification
           pending due to ROS GLIBCXX_3.4.29 environment issue.'
-        implementation_state: '2026-11-02: R5.5 implementation COMPLETE. scripts/sim_car_course.sh updated with --align-heading
-          flag (line 31) to enable HeadingShuffle correction. HeadingShuffle.shuffle_plan() verified to generate correct
-          2-arc shuffle plans for 11.6°, 12.0°, and 14.3° yaw errors. Car course tests previously failed with 11.6-14.3°
-          yaw errors in Gazebo/PyBullet/Isaac (MuJoCo passed with -3.4°). Full Round 57 context: rear-steer car on small_house
-          launched cleanly on all four backends; MuJoCo slalom 4/4 gates passed; MuJoCo parking position error 0.102 m but
-          yaw error 14.95° exceeded 10° tolerance; Gazebo slalom aborted on gate 1; Isaac slalom/parking inconclusive. 2026-11-14
-          (Claude) car_parking.py runtime (Nav2 goal, heading shuffle, depth trim on the estimate) started with car navigation;
-          unit-tested, no Nav2 run yet.'
+        implementation_state: 'Native three-geometry wheel control, Hybrid-A*/RPP navigation and reusable estimate-based park-at-heading runtime. Normal GUI now has measured-estimate copy, X/Y/heading/budget, explicit Park/Cancel, estimated errors and Stop/manual/close cancellation. Correction is bounded by whole-task/operator/lifecycle/fresh-map/TF checks and a swept authored footprint. Late action acceptance is canceled; final tolerances are checked. One actual PyBullet Ackermann empty-world parking/operator-loss screen is measured. Remaining source implementation: two historical slalom aborts. Wider profiles/maps/backends and course validation remain partial.'
         next_action: '2026-11-02: Implementation COMPLETE. BLOCKED: ROS library import
           issue (GLIBCXX_3.4.29 missing) prevents running validation tests. Next:
           Fix environment (ENV-1), then run: scripts/sim_car_course.sh <simulator>
@@ -3788,7 +3783,7 @@ tasks:
           missions passed 10/12 cells; 2026-10-16 car missions passed 32/36 with 0.1 m
           tolerance and 0.6 m inflation; 2026-10-19 round 57 showed parking heading
           failures of 11.6-14.3° in Gazebo/PyBullet/Isaac (MuJoCo passed at -3.4°).'
-        owner: cline-agent
+        owner: 'codex'
         scope_paths:
         - src/robot_lab_robots/
         - src/robot_lab_controller/
@@ -3797,7 +3792,7 @@ tasks:
         - src/robot_lab_mujoco/
         - src/robot_lab/robot_lab_registry/
         - src/robot_lab_gui/
-        state: active
+        state: 'partial'
         title: Integrate four-wheel Ackermann and reverse Ackermann workflows
       R5.6:
         acceptance_ref: ROADMAP.md
@@ -3925,12 +3920,7 @@ tasks:
           state trace, actual action and GUI measurements, negative producer correction,
           source hashes and software checks.'
         - docs/status/evidence/extensions-finish-2026-10-08/controls/README.md
-        implementation_summary: Native position-actuator controls on 28 fixed source
-          models; joint/hand jogging, source-matched taught replay and local Cartesian
-          Servo. October 14 adds 13 fixed-arm MoveIt KDL/OMPL candidates, real bounded
-          native trajectory actions and explicit GUI opt-in/autofill. Panda moving-cube/pedestal
-          and acknowledged planning attachment code remain separate; no physical object
-          welding.
+        implementation_summary: 'Native source arm/articulation/jog/teach/Servo and 13 fixed-arm KDL/OMPL candidates retained. Panda has source-bound measured free-box selection, Top/Side/Top + side and approach/grasp/lift/open-detached-retreat planning, acknowledged attachments and measured support-placement targets. Planning and execution stay explicit; full physical new object pipeline, compound/mesh/perception, unattended sequences and further backends remain partial.'
         implementation_validation: Pending; no new physical mission/test campaign
           for October 9 candidates.
         object_workflow_20261113: 'Codex: native Panda free-box selection, measured collision poses, source-width/padding top-grasp candidates and explicit approach/grasp/lift IK/OMPL requests implemented. Canonical world snapshots are replaced by the measured selected object only with a known model binding; contact observer waits for real scene ACK. Fourteen focused checks, four package builds and installed GUI widget/protocol smoke pass. Full physical object mission, compound/mesh, other grippers/backends and automatic placement remain pending. See docs/status/arm-objects-2026-11-13.md. Claude retains drone/import files.'
@@ -4101,12 +4091,7 @@ tasks:
         - R5.1
         - R5.7
         - R5.8
-        implementation_summary: Exact-source Stretch/Stretch 3 base/articulation and
-          sensor-gated AMCL/SLAM/RTAB-Map/Nav2 candidates. New GUI builds/saves/loads
-          source-and-scene-bound navigation plus taught arm/hand tasks; plant executor
-          uses real Nav2 actions, simulation-stamped goals, independent physical pose/settling,
-          stopped/retracted-base ownership, manual/Stop/loss cancellation and actual
-          SSD event journals. Object/grasp outcomes remain unassessed.
+        implementation_summary: 'Exact-source Stretch/Stretch 3 base/articulation and sensor-gated mapping/Nav2 candidates. GUI source/scene-bound tasks include navigation, taught control, object pick/place recipes, selectable above/side world approach and independent measured/world pad orientation. Bounded alternate IK/configuration paths sample actual motor slew; measured contact/custody, retained payload and actual costmap-shape receipts gate transport. Complete loaded source-robot mission, perception poses and other adapters remain partial.'
         implementation_validation: Pending; no new physical mission/test campaign
           for October 9 candidates.
         object_custody_20261113: 'Codex: GUI grasp/release checkpoints and native force/support/slip observations implemented; carry-loss monitoring on navigation legs. Focused checks only; physical mission pending. See docs/status/mobile-custody-2026-11-13.md.'

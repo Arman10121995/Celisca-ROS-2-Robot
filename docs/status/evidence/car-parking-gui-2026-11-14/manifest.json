@@ -1,0 +1,152 @@
+{
+  "base_revision": "31db2d73504e8a0fe20e0b0b4948f0bd2724150e",
+  "source_sha256": {
+    "scripts/test_tiers.sh": "0bb0117f97afd589ddf4d8d6f11233d3c6ec05c900121588a2ef82e9bafc6cda",
+    "src/robot_lab_gui/robot_lab_gui/launcher.py": "34de08989967f125f9c91643e95cd37b75c1249f7d0c8fc1b14b07004238684a",
+    "src/robot_lab_navigation/launch/navigation.launch.py": "02fd1ac5add219f884ad8f5035f41aea36973aac39e0d1f24504546cfa7dea48",
+    "src/robot_lab_utils/robot_lab_utils/car_parking.py": "05d65c80ddc2cd1ada35e9633d1eda0e30acf2dec334b4d392800f70ca74b053",
+    "src/robot_lab_utils/test/test_car_parking.py": "d8a4f9d9f5878f7d4ef51b801dec46d49cc5f8cd94fee38bb77de091aa09c8be",
+    "src/robot_lab_gui/robot_lab_gui/car_parking_controls.py": "929b3f6b69af1dd23b0ca7eb74276fb79366b1d7b2e24ffcee734d78843ab1d1",
+    "src/robot_lab_gui/test/test_car_parking_controls.py": "c8b9e799daf19c9f6fc4d55ff8c7c9720b41bbfca42437a3172f18021153d3ab",
+    "src/robot_lab_utils/robot_lab_utils/car_parking_clearance.py": "a9c941c46994aca76f7a8c5adaa06391365659ad093d060904adb1345ab9084f",
+    "src/robot_lab_utils/test/test_car_parking_clearance.py": "86c3240906788d2d4981c32b8723ebccb5d13644c32de053879ca61e76b3b13d"
+  },
+  "raw_artifacts": {
+    "/workspace/molar/robot_lab_runtime/car-parking-gui-20261114/focused.log": {
+      "sha256": "cbf90fa4a8a97ddcdb2c2c9b2e753e559ab19c82fd0bda12c08f0ed766f8980d",
+      "bytes": 100
+    },
+    "/workspace/molar/robot_lab_runtime/car-parking-gui-20261114/terminal-body-speed.json": {
+      "sha256": "7fb2cae1d951b2de0e04ca3622ea28dc42490459497138f2b4be5b54e97204cb",
+      "bytes": 545
+    },
+    "/workspace/molar/robot_lab_runtime/car-parking-gui-20261114/final-checks.log": {
+      "sha256": "be74940e91ab9507e86d3220e4e8f1eaf74e9878e585736aec392f85f257f432",
+      "bytes": 194
+    },
+    "/workspace/molar/robot_lab_runtime/car-parking-gui-20261114/observed-state.log": {
+      "sha256": "364191c413c3f7ae7a5188fe7521bd645099f20bb00ea37b399ac3133153a04e",
+      "bytes": 122
+    },
+    "/workspace/molar/robot_lab_runtime/car-parking-gui-20261114/build-final.log": {
+      "sha256": "9c114dbae9be3ea8a95fc2c26cfec39a6c4a8bf9400a5e37ddfc9412a236dc9f",
+      "bytes": 46709
+    },
+    "/workspace/molar/robot_lab_runtime/car-parking-gui-20261114/probe-setup-failed.json": {
+      "sha256": "a5757cd95848db345afaf7b2fb610b7e218ce4f3086f670410f58560cfab7236",
+      "bytes": 342
+    },
+    "/workspace/molar/robot_lab_runtime/car-parking-gui-20261114/body-trace.json": {
+      "sha256": "acb2a24cb53a24416566ff436484192a37c202b02849b2fd7f81e237752458a9",
+      "bytes": 201503
+    },
+    "/workspace/molar/robot_lab_runtime/car-parking-gui-20261114/live-probe.log": {
+      "sha256": "7b76bd4ac641ec1c7a7e8b4332f834eaa21ab3b5617ab78335d8a4806fe992d4",
+      "bytes": 4244
+    },
+    "/workspace/molar/robot_lab_runtime/car-parking-gui-20261114/live-report.json": {
+      "sha256": "7b76bd4ac641ec1c7a7e8b4332f834eaa21ab3b5617ab78335d8a4806fe992d4",
+      "bytes": 4244
+    },
+    "/workspace/molar/robot_lab_runtime/car-parking-gui-20261114/live_probe.py": {
+      "sha256": "8ad084d97b7feba8ec2a83b2d82dd2549d9234c65b3ab44b7f358c1596eadb7b",
+      "bytes": 6916
+    },
+    "/workspace/molar/robot_lab_runtime/car-parking-gui-20261114/runtime-initial.log": {
+      "sha256": "32f51f066f95c1dda997753ca2aeeca17f15dfb08bb57c93cb15c17f96c2547f",
+      "bytes": 2604
+    },
+    "/workspace/molar/robot_lab_runtime/car-parking-gui-20261114/parking-states.json": {
+      "sha256": "0f762d86c402a48b935b09fee7f05ad83bb3f52c62265695594a8a77996b6eb9",
+      "bytes": 23657
+    },
+    "/workspace/molar/robot_lab_runtime/car-parking-gui-20261114/focused-final.log": {
+      "sha256": "cbf90fa4a8a97ddcdb2c2c9b2e753e559ab19c82fd0bda12c08f0ed766f8980d",
+      "bytes": 100
+    },
+    "/workspace/molar/robot_lab_runtime/car-parking-gui-20261114/runtime-final.log": {
+      "sha256": "2a4b66e1650aa9884525f3a7aebace203d0ae87c65a0d3770900e932f1245843",
+      "bytes": 100
+    },
+    "/workspace/molar/robot_lab_runtime/car-parking-gui-20261114/build.log": {
+      "sha256": "11d38b6320a51375f34792746505b78b1b4cf6950e3279cdaa2e31ea34e92c49",
+      "bytes": 47617
+    },
+    "/workspace/molar/robot_lab_runtime/car-parking-gui-20261114/gui-output.log": {
+      "sha256": "0cca69fd02519ebae0691162b83eb91140648e08e7b8a6dffaea01de88de1119",
+      "bytes": 43630
+    },
+    "/workspace/molar/robot_lab_runtime/car-parking-gui-20261114/probe-setup-failed.log": {
+      "sha256": "a5757cd95848db345afaf7b2fb610b7e218ce4f3086f670410f58560cfab7236",
+      "bytes": 342
+    },
+    "/workspace/molar/robot_lab_runtime/car-parking-gui-20261114/longitudinal-only-screen/terminal-body-speed.json": {
+      "sha256": "1fab943d8c430d15600ade258dd220988a9958c36ae0479b16eee1ff57b64744",
+      "bytes": 612
+    },
+    "/workspace/molar/robot_lab_runtime/car-parking-gui-20261114/longitudinal-only-screen/body-trace.json": {
+      "sha256": "354daea0d6032f578dc79a5a25e925f1972f945f9e7b2166c27ce5cba4bed81a",
+      "bytes": 197924
+    },
+    "/workspace/molar/robot_lab_runtime/car-parking-gui-20261114/longitudinal-only-screen/live-probe.log": {
+      "sha256": "70efffb752d27273a842306203e62175b61e399422fe9124dcde7ef4e394e0bc",
+      "bytes": 3911
+    },
+    "/workspace/molar/robot_lab_runtime/car-parking-gui-20261114/longitudinal-only-screen/live-report.json": {
+      "sha256": "70efffb752d27273a842306203e62175b61e399422fe9124dcde7ef4e394e0bc",
+      "bytes": 3911
+    },
+    "/workspace/molar/robot_lab_runtime/car-parking-gui-20261114/longitudinal-only-screen/live_probe.py": {
+      "sha256": "38978feb593731746ea31c561c3afd7816f03dc777ab15a976d7c220023094da",
+      "bytes": 6532
+    },
+    "/workspace/molar/robot_lab_runtime/car-parking-gui-20261114/longitudinal-only-screen/parking-states.json": {
+      "sha256": "1fbef539de730962aab443a24444e45a73e026adc90da10f937547c5d53dbde7",
+      "bytes": 22918
+    },
+    "/workspace/molar/robot_lab_runtime/car-parking-gui-20261114/longitudinal-only-screen/gui-output.log": {
+      "sha256": "398309640535fb2bcefe0d90ac79c355bdf7a952960a4ccd0efb1a3073287a39",
+      "bytes": 43745
+    },
+    "/workspace/molar/robot_lab_runtime/car-parking-gui-20261114/first-passing-screen/body-trace.json": {
+      "sha256": "f02c9d00abe5974ddf45efdaf35c1a69762b42df5b2a6274b2c2c1521caa2613",
+      "bytes": 192934
+    },
+    "/workspace/molar/robot_lab_runtime/car-parking-gui-20261114/first-passing-screen/live-probe.log": {
+      "sha256": "c041158268962fd9e1951ff8f46d991376b36c4f416444ee7ec5185f71d35876",
+      "bytes": 2297
+    },
+    "/workspace/molar/robot_lab_runtime/car-parking-gui-20261114/first-passing-screen/live-report.json": {
+      "sha256": "c041158268962fd9e1951ff8f46d991376b36c4f416444ee7ec5185f71d35876",
+      "bytes": 2297
+    },
+    "/workspace/molar/robot_lab_runtime/car-parking-gui-20261114/first-passing-screen/parking-states.json": {
+      "sha256": "bc851ea1b362192148f247e57b4f9078d60e15e0578274b5de287746d175fa62",
+      "bytes": 24155
+    },
+    "/workspace/molar/robot_lab_runtime/car-parking-gui-20261114/first-passing-screen/gui-output.log": {
+      "sha256": "c196676c8742f28d5900f563d903b8f7cde850fe72d38dc0c67cc712210a4ce9",
+      "bytes": 42883
+    },
+    "/workspace/molar/robot_lab_runtime/car-parking-gui-20261114/nav2-startup-rejected/body-trace.json": {
+      "sha256": "c54b0e65fd0d1e23f5255ddd8c102befe5d43422263626338e6599ed993d1faf",
+      "bytes": 97322
+    },
+    "/workspace/molar/robot_lab_runtime/car-parking-gui-20261114/nav2-startup-rejected/live-probe.log": {
+      "sha256": "8155b8dda7d8cdf7c375d096682024576a334770e43c5215ad9cd8d8b6053c8b",
+      "bytes": 2058
+    },
+    "/workspace/molar/robot_lab_runtime/car-parking-gui-20261114/nav2-startup-rejected/live-report.json": {
+      "sha256": "8155b8dda7d8cdf7c375d096682024576a334770e43c5215ad9cd8d8b6053c8b",
+      "bytes": 2058
+    },
+    "/workspace/molar/robot_lab_runtime/car-parking-gui-20261114/nav2-startup-rejected/parking-states.json": {
+      "sha256": "e2626801d1203d5e50898266d58cb6c5b7b574fa5d7691af2f953e5520bf6d63",
+      "bytes": 1030
+    },
+    "/workspace/molar/robot_lab_runtime/car-parking-gui-20261114/nav2-startup-rejected/gui-output.log": {
+      "sha256": "99dadb769a1e5d5283ceffbf60a8433d3623c312eb15739419baac47c79878b3",
+      "bytes": 42800
+    }
+  }
+}

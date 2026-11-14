@@ -51,6 +51,7 @@ sections:
       - docs/tutorials/myagv-pro.md
       - docs/tutorials/source-octopod.md
       - docs/tutorials/bicycle-control.md
+      - docs/tutorials/car-parking.md
       - docs/tutorials/tracked-vehicle.md
       - docs/tutorials/wheeled-snake.md
       - docs/tutorials/go2.md
@@ -60,6 +61,7 @@ sections:
       - docs/tutorials/panda_arm.md
       - docs/tutorials/native-arm-planning.md
       - docs/tutorials/native-hand-controls.md
+      - docs/tutorials/native-object-tasks.md
       - docs/tutorials/molar-hri-simulation.md
 
   - title: Drones, water and teams
@@ -80,6 +82,8 @@ sections:
 
   - title: Algorithms explained
     pages:
+      - docs/tutorials/scan-cloud-conversion.md
+      - docs/tutorials/sensor-faults.md
       - docs/tutorials/planning.md
       - docs/tutorials/local_planning.md
       - docs/tutorials/localization.md

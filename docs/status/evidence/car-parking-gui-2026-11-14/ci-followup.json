@@ -1,0 +1,34 @@
+{
+  "revision": "3e40d84a",
+  "run": 43561114801,
+  "failure": "New converter tutorial lacked required Run section; fixed in 31db2d73. Eight tutorial checks pass.",
+  "raw_log": "/workspace/molar/robot_lab_runtime/takeover-20261114/ci-3e40d84a.log",
+  "sha256": "fd1802aee9c8957e9488a8d696cf1c5b895740f9390f42ea247125fbcbea70ca",
+  "next_run": 43562150247,
+  "next_revision": "31db2d73",
+  "next_status": "success",
+  "published_followup": {
+    "revision": "31db2d73504e8a0fe20e0b0b4948f0bd2724150e",
+    "run": 43562150247,
+    "conclusion": "success",
+    "url": "https://github.com/Arman10121995/Celisca-ROS-2-Robot/actions/runs/43562150247",
+    "packages_built": 25,
+    "fast": {
+      "passed": 1344,
+      "skipped": 44,
+      "deselected": 4
+    },
+    "physics": {
+      "passed": 137,
+      "skipped": 13
+    },
+    "integration": {
+      "passed": 314,
+      "skipped": 29
+    },
+    "registry": "passed",
+    "raw_log": "/workspace/molar/robot_lab_runtime/takeover-20261114/ci-31db2d73.log",
+    "sha256": "7c3952984bcd646c64ff8ebc8c9cf69ee482afbcef51fc55399640551c5f7fec",
+    "scope": "Published takeover batch; subsequent parking batch is a separate revision"
+  }
+}

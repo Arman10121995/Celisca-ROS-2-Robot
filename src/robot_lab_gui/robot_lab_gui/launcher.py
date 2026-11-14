@@ -1192,6 +1192,9 @@ class SimulationLauncherGui(tk.Tk):
             variable=self.drive_input_enabled, command=self._toggle_drive_input)
         self.drive_input_checkbox.grid(row=0, column=0, sticky='w')
         ttk.Label(input_frame, textvariable=self.drive_status_var, wraplength=305, style='Muted.TLabel').grid(row=1, column=0, sticky='w', pady=4)
+        from .car_parking_controls import CarParkingControls
+        self.car_parking_controls=CarParkingControls(self.drive_page.body,self)
+        self.car_parking_controls.grid(row=2,column=0,sticky='ew',pady=(10,0))
 
         self.save_map_button = ttk.Button(self.session_action_frame, text="Save Map", command=self._save_map)
         self.save_map_button.grid(row=0, column=0, sticky="ew", pady=(0, 4))
@@ -3472,6 +3475,9 @@ class SimulationLauncherGui(tk.Tk):
         return True
 
     def _publish_drive(self, linear, angular, lateral=0.0, vertical=0.0):
+        parking=getattr(self,'car_parking_controls',None)
+        if parking is not None and parking.active() and any(abs(v)>1e-9 for v in (linear,angular,lateral,vertical)):
+            parking.cancel()
         if self._ensure_ros_publisher():
             msg = Twist()
             msg.linear.x = float(linear)
@@ -3630,6 +3636,8 @@ class SimulationLauncherGui(tk.Tk):
             self.drive_repeat_job = self.after(100, self._repeat_drive)
 
     def _stop_drive(self, keep_input_enabled=False):
+        if hasattr(self,'car_parking_controls'):
+            self.car_parking_controls.cancel()
         if hasattr(self, 'molar_controls'):
             self.molar_controls.stop()
         if hasattr(self, 'gait_controls'):
@@ -3912,6 +3920,8 @@ class SimulationLauncherGui(tk.Tk):
             self.stop_bg_process(key)
 
     def _on_close(self):
+        if hasattr(self,'car_parking_controls'):
+            self.car_parking_controls.close()
         if hasattr(self, 'tracked_controls'):
             self.tracked_controls.close()
         if hasattr(self, 'molar_controls'):

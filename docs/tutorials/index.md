@@ -116,3 +116,8 @@ execution and measurement acceptance criteria are met.
 - [October 9 coordinated task/workload continuation](../status/implementation-continuation-2026-10-09.md):
   Stretch navigation plus taught arm/hand tasks, real measured Nav2 queue goals
   and persistent shared Drive/Drone click highlights.
+## Car parking controls
+
+The normal Drive panel includes [map-pose parking](car-parking.md) for the
+three Ackermann geometries in Navigation. The guide covers estimated goals,
+explicit Start/Cancel, lifecycle readiness and correction guards.

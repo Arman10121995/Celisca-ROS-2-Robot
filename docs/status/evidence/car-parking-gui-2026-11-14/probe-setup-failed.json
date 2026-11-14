@@ -1,0 +1,9 @@
+{
+  "robot": "ackermann_car",
+  "map": "nav_empty",
+  "backend": "pybullet",
+  "scope": "One installed normal-GUI parking screen; independent simulator odometry; not the car course or a backend matrix",
+  "passed": false,
+  "exception": "AttributeError(\"'_tkinter.tkapp' object has no attribute 'rviz_var'\")",
+  "launch_returncode": null
+}

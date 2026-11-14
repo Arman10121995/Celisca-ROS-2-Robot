@@ -141,7 +141,7 @@ Work top to bottom. Each line links to its task.
 | I11 | [R10.5](#r105--underwater-worlds-sensing-slam-and-navigation) / [R10.4](#r104--underwater-robots-and-controllers) Marine | Done 2026-11-14: MuJoCo ROV plant (ported Fortress water forces; matches Gazebo), damping-based current feedforward (1 cm drift in 0.1 m/s), volumetric and current-aware AUV routes (unit-tested). PyBullet/Isaac marine, AUV sensor-only localization mission remain | implemented |
 | I12 | [R10.6](#r106--six--and-eight-legged-robots) / [R10.7](#r107--segmented-and-additional-robot-forms) Multi-leg and forms | Done 2026-11-14: depth/IMU flipper policy (sequences a step, but the 4 Nm flippers cannot climb 0.18 m: measured), bounded gait slip/support recovery (unit-tested). Stronger flippers, other backends, per-model terrain missions remain | implemented |
 | I13 | [R5.2](#r52--go2-quadruped-locomotion) / [R5.3](#r53--berkeley-humanoid-lite-balance-and-walking) / [R12](#r12--legged-policy-training) Legged | 2026-11-14: `get_up` task and stairs curriculum implemented; first Go2 get-up policy 1/10 (not passed); BHL contract/export, G1/Go2W policies, GPU training remain | partial |
-| I14 | [R5.5](#r55--ackermann-rear-steer-and-anti-ackermann-cars) Cars | 2026-11-14: park-at-heading runtime (`car_parking.py`) from the measured shuffle + trim (10/12 course cells); slalom aborts and a GUI park control remain | implemented |
+| I14 | [R5.5](#r55--ackermann-rear-steer-and-anti-ackermann-cars) Cars | 2026-11-14: park-at-heading runtime and normal Drive-panel controls, lifecycle/heartbeat/whole-budget gates and costmap footprint correction checks; two historical slalom aborts remain | partial |
 | I15 | [R3.6](#r36--external-robot-assets-in-normal-launch) Assets | 2026-11-14: model-derived display-only reasons for all 77 profiles in the GUI; Lite6/Google Robot jogging via unnamed-actuator support. Vendor controllers for legged/URDF profiles remain | partial |
 | I16 | [R6.5](#r65--world-to-occupancy-generation) / [R6.6](#r66--external-world-library) / [R6.2](#r62--dynamic-and-sensor-disturbance-cases) Worlds | 2026-11-14: free-region labelling + reviewed grid registration (R6.5), seeded live sensor-fault relay on every backend (R6.2). Licensed Fuel imports, fixture review, actors with collision remain | partial |
 | I17 | [R11](#r11--molar--probot-l-family) MOLAR | Sensors, SLAM/Nav2, payload transfer, multi-floor | partial, needs the sensor layout |
@@ -177,8 +177,9 @@ Blocked: [R9.4](#r94--optional-physical-bumperbot-hil) physical hardware
 ### R0 — R4: foundation (done)
 
 Preserve these completed baselines and their scoped contracts. R1.3's setup
-baseline passes at ecaaa133 (run 43155923238); November 14's separate launch-test
-tier repair awaits its exact-revision published rerun. Details and evidence are in the
+baseline passes at ecaaa133 (run 43155923238); November 14's takeover/tier
+repair also passes published CI at `31db2d73` (run 43562150247). The following
+parking batch needs its own run. Details and evidence are in the
 [archived roadmap](docs/status/archive/ROADMAP-2026-11-10.md#r0--documentation-recovery).
 
 | Task | Result | Keep in mind |
@@ -186,7 +187,7 @@ tier repair awaits its exact-revision published rerun. Details and evidence are 
 | R0.1, R0.2 Documentation recovery | Audited baseline and truthful docs | — |
 | R1.1 Entry points and paths | Installed executables, package-share asset paths | No developer home paths |
 | R1.2 Test tiers | Fast / physics / integration / mission tiers | `PYTEST_DISABLE_PLUGIN_AUTOLOAD=1` locally |
-| R1.3 CI | Historical runner baseline passes; workflows pin the documented flight runtime, and ROS-dependent world/fleet/swarm tests remain required in sourced integration. Full exact-revision CI pending | [Baseline](docs/status/evidence/ci-firefox-2026-11-11/README.md), [follow-up](docs/status/evidence/ci-mavlink-2026-11-14/README.md) |
+| R1.3 CI | Published takeover revision `31db2d73` passes all tiers, 25-package build and registry; the newer parking batch needs its own run | [Takeover and published result](docs/status/takeover-2026-11-14.md) |
 | R2.1–R2.3 Simulator contracts | `/clock` in every adapter; one TF owner per edge; `/robot_lab/ready`, `/health`, `/reset` | Offline fallback is never success |
 | R3.1–R3.3, R3.5 Composition | Canonical IDs, typed validation, one resolver/executor, scenario and experiment catalogs | The CLI and GUI must produce the same manifest |
 | R3.4 GUI resolver | GUI uses the same resolver; seven algorithm slots; right-hand control column | State `active` in the ledger: keep the GUI tests green |
@@ -305,8 +306,15 @@ tier repair awaits its exact-revision published rerun. Details and evidence are 
 - **Done 2026-11-14 (implemented, unit-tested):** the shuffle and trim as a
   reusable runtime, `car_parking.py`, started with car navigation
   (`/car_parking/command` park/cancel, estimate-based report).
-- **Remaining implementation:** the two slalom aborts (RPP collision-ahead);
-  a GUI park control.
+- **GUI continuation (2026-11-14, Codex):** normal Drive-panel target fields,
+  estimated-pose copy, explicit Park/Cancel, feedback errors and manual/Stop
+  cancellation. Runtime now binds requests to the current instance, waits for
+  active Nav2, enforces a whole-operation budget and operator lease, requires
+  fresh transforms/costmap, checks the swept source footprint and reports
+  failure outside final tolerances. Late accepted goals are canceled too.
+  [Guide](docs/tutorials/car-parking.md) ·
+  [Source/check scope](docs/status/car-parking-gui-2026-11-14.md).
+- **Remaining implementation:** the two slalom aborts (RPP collision-ahead).
 - **How to do it:**
   1. Add a yaw-aware goal checker (or enable `stateful` yaw tolerance) in
      the car Nav2 configs (`src/robot_lab_navigation/config/`).

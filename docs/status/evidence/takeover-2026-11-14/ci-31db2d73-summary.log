@@ -1,0 +1,8 @@
+build-and-test	Build core workspace	2026-11-14T05:46:17.1172895Z Summary: 25 packages finished [2min 54s]
+build-and-test	Fast tier (unit/numerical/config; no ROS graph needed)	2026-11-14T05:48:04.9144749Z 1344 passed, 44 skipped, 4 deselected in 107.55s (0:01:47)
+build-and-test	Fast tier (unit/numerical/config; no ROS graph needed)	2026-11-14T05:48:05.5543735Z === Tier: fast PASS ===
+build-and-test	Physics tier (optional engines; explicit per-engine skips)	2026-11-14T05:48:26.3464285Z 137 passed, 13 skipped in 20.13s
+build-and-test	Physics tier (optional engines; explicit per-engine skips)	2026-11-14T05:48:26.5946663Z === Tier: physics PASS ===
+build-and-test	Integration tier (launch-contract, xacro, qualification)	2026-11-14T05:49:06.1288113Z 314 passed, 29 skipped in 38.90s
+build-and-test	Integration tier (launch-contract, xacro, qualification)	2026-11-14T05:49:06.4884905Z === Tier: integration PASS ===
+build-and-test	Registry cross-reference validation	2026-11-14T05:49:07.3685909Z Registry cross-reference validation: PASS

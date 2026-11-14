@@ -29,6 +29,11 @@ and CI tier fixes preserve the required checks.
 [Stretch guide](docs/tutorials/native-object-tasks.md) ·
 [Converter guide](docs/tutorials/scan-cloud-conversion.md).
 
+The three Ackermann car variants also have **Park at a map pose** in the Drive
+panel: estimated-pose copy, X/Y/heading target, explicit Park/Cancel and error
+feedback. Corrections require active Nav2, fresh localization/costmap and an
+operator lease. [Parking guide](docs/tutorials/car-parking.md).
+
 November 12: the Vacuum workspace has an **Objects** snapshot gallery and an installed,
 experimental four-class camera model with command autofill. It is trained on Gazebo source-primitive
 renders; cable misses and shoe false positives remain, and a learned-camera robot mission is unqualified.
