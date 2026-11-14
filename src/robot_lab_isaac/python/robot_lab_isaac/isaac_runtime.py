@@ -262,7 +262,8 @@ def _prepare_camera(cfg, dt, robot, stage):
     """USD camera plus replicator annotators, or None when there is no camera.
 
     The camera is parented to the camera link prim when the importer kept
-    one, otherwise to the articulation's root body at the link's offset.
+    one, otherwise to the nearest retained rigid carrier. Legacy configs
+    without carrier metadata retain their original root-body mount.
     """
     camera_cfg = cfg.get("camera") or {}
     rate = float(camera_cfg.get("rate", 0.0) or 0.0)
@@ -284,11 +285,28 @@ def _prepare_camera(cfg, dt, robot, stage):
             root_prim = prim
     if parent is None:
         offsets = camera_cfg.get("offsets") or {}
-        if root_prim is None or root_body not in offsets:
+        # Fixed camera frames may be fused into the moving head. Only rigid
+        # ancestors are valid carriers; a zero-pose base offset freezes the
+        # rendered camera while ROS TF correctly moves with the head.
+        carriers = camera_cfg.get('rigid_carriers')
+        if carriers is not None:
+            available = {}
+            for prim in stage.Traverse():
+                path = str(prim.GetPath())
+                if path.startswith('/World/Physics') or path.startswith('/World/map'):
+                    continue
+                if prim.GetName() in carriers:
+                    available.setdefault(prim.GetName(), prim)
+            for carrier in carriers:
+                if carrier in available and carrier in offsets:
+                    parent, offset = available[carrier], offsets[carrier]
+                    break
+        elif root_prim is not None and root_body in offsets:
+            parent, offset = root_prim, offsets[root_body]
+        if parent is None:
             _emit({"event": "log",
                    "msg": "Camera link '%s' not found; no RGB-D camera" % link})
             return None
-        parent, offset = root_prim, offsets[root_body]
 
     width, height = int(camera_cfg["width"]), int(camera_cfg["height"])
     focal_length = 18.0
@@ -739,7 +757,7 @@ def _measured_articulation_hold(robot, dof_names, joints):
             for kind in ('position','velocity')}
 
 
-def _apply_articulation_effort_budget(robot, dof_names, joints, efforts):
+def _apply_articulation_effort_budget(robot, dof_names, joints, efforts, native_gravity=False):
     """Cap native drive + feedforward together on configured position joints.
 
     This SDK process has no ROS utility package. Keep the small numerical
@@ -750,6 +768,16 @@ def _apply_articulation_effort_budget(robot, dof_names, joints, efforts):
     names = [name for name, spec in joints.items() if spec['mode'] == 'position']
     if not names:
         return
+    indices = np.array([dof_names.index(name) for name in names])
+    if native_gravity:
+        # PhysX computes actual-pose generalized compensation for the complete
+        # floating articulation. The older ROS-side fixed-slide load cannot
+        # support a horizontal seven-axis arm. Replace, never add twice.
+        values = robot._articulation_view.get_generalized_gravity_forces(joint_indices=indices)
+        values = np.asarray(values, dtype=float)
+        if values.shape != (1, len(names)) or not np.all(np.isfinite(values)):
+            raise ValueError('Invalid native articulation gravity feedback')
+        efforts = dict(zip(names, values[0].tolist()))
     feedforward, limits = [], []
     for name in names:
         limit, value = float(joints[name]['effort']), float(efforts.get(name, 0.))
@@ -758,7 +786,6 @@ def _apply_articulation_effort_budget(robot, dof_names, joints, efforts):
         value = max(-limit, min(limit, value))
         feedforward.append(value)
         limits.append(max(0., limit-abs(value)))
-    indices = np.array([dof_names.index(name) for name in names])
     robot.get_articulation_controller().set_max_efforts(np.array(limits), joint_indices=indices)
     robot.set_joint_efforts(np.array(feedforward), joint_indices=indices)
 
@@ -1530,7 +1557,8 @@ def _run_stage(app, reader, cfg, state):
                 from isaacsim.core.utils.types import ArticulationAction
                 if articulation_joints:
                     _apply_articulation_effort_budget(
-                        robot, dof_names, articulation_joints, targets.get('effort') or {})
+                        robot, dof_names, articulation_joints, targets.get('effort') or {},
+                        native_gravity=bool(cfg.get('articulation_native_gravity', False)))
                 for kind in ("velocity", "position"):
                     pairs = [(dof_names.index(name), float(value))
                              for name, value in (targets.get(kind) or {}).items()
@@ -1555,6 +1583,8 @@ def _run_stage(app, reader, cfg, state):
                     robot.set_joint_efforts(np.array([v for _, v in pairs]),
                                             joint_indices=np.array([i for i, _ in pairs]))
             except Exception as exc:
+                if articulation_joints and cfg.get('articulation_native_gravity', False):
+                    raise RuntimeError('Native articulation gravity/control failed') from exc
                 if not action_error_reported:
                     action_error_reported = True
                     _emit({"event": "log", "msg": "Drive command failed: %s" % exc})

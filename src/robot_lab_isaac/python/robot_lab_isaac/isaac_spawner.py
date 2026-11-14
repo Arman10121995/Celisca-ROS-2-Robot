@@ -676,6 +676,9 @@ class IsaacSpawner(Node):
                     raise ValueError('Articulation cannot share ownership with a learned policy')
                 from robot_lab_utils.urdf_articulation import ArticulationROS, gravity_loads
                 self._articulation = ArticulationROS(self, articulation_config, urdf, str(model))
+                native_gravity = self._articulation.contract.config.get('isaac_native_gravity_compensation', False)
+                if not isinstance(native_gravity, bool):
+                    raise ValueError('isaac_native_gravity_compensation must be boolean')
                 if set(self._articulation.contract.joints) & set(self._drive.wheel_joints):
                     raise ValueError('Articulation cannot own drive wheels')
                 self._articulation_loads = gravity_loads(urdf, self._articulation.contract)
@@ -728,6 +731,8 @@ class IsaacSpawner(Node):
             "gait_floor_reference":self.get_parameter('gait_floor_reference').value,
             "gait_terrain_helper":str(__import__('robot_lab_utils.gait_terrain',fromlist=['__file__']).__file__),
             "articulation_joints": self._articulation.contract.joints if self._articulation else {},
+            "articulation_native_gravity": (self._articulation.contract.config.get(
+                'isaac_native_gravity_compensation', False) if self._articulation else False),
             "passive_casters": passive_casters,
             "pd_joint_armature": float(self.get_parameter("pd_joint_armature").value),
             "ground_material": (json.loads(self.get_parameter("ground_material").value)
@@ -811,7 +816,8 @@ class IsaacSpawner(Node):
         """
         link = self.get_parameter("camera_link_name").value
         rate = float(self.get_parameter("camera_rate").value)
-        offsets = mounted_sensor_offsets(urdf_text, link) if rate > 0 else {}
+        from robot_lab_utils.sim_frames import rigid_sensor_offsets
+        offsets = rigid_sensor_offsets(urdf_text, link) if rate > 0 else {}
         config = {
             "rate": rate if offsets else 0.0,
             "link": link,
@@ -823,6 +829,7 @@ class IsaacSpawner(Node):
             "far": float(self.get_parameter("camera_far").value),
             "offsets": {base: [list(position), list(quaternion)]
                         for base, (position, quaternion) in offsets.items()},
+            "rigid_carriers": list(offsets),
         }
         if rate > 0 and not offsets:
             self.get_logger().info(

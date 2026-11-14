@@ -227,6 +227,28 @@ def mounted_sensor_offsets(urdf_text, sensor_link):
             if relative_frame(frames, sensor_link, base) is not None}
 
 
+def rigid_sensor_offsets(urdf_text, sensor_link):
+    """Nearest-first rigid carriers, stopping before any movable joint.
+
+    Unlike zero-configuration FK offsets, these remain valid while a head,
+    torso or arm moves. Importers may fuse only these fixed mounts when
+    selecting a camera's surviving physical parent.
+    """
+    root = ET.fromstring(urdf_text)
+    frames, _ = urdf_link_frames(urdf_text)
+    parents = {joint.find('child').get('link'): joint for joint in root.findall('joint')}
+    offsets, visited = {}, set()
+    carrier = sensor_link
+    while carrier in frames and carrier not in visited:
+        visited.add(carrier)
+        offsets[carrier] = relative_frame(frames, sensor_link, carrier)
+        joint = parents.get(carrier)
+        if joint is None or joint.get('type') != 'fixed':
+            break
+        carrier = joint.find('parent').get('link')
+    return offsets
+
+
 def mounted_pose(base_position, base_quaternion, offset):
     """World pose of a sensor rigidly mounted at *offset* from the base."""
     return compose((tuple(float(v) for v in base_position),

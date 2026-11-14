@@ -1,7 +1,42 @@
-updated: '2026-11-12'
+updated: '2026-11-14'
 qualification: Pinned sources; installation and exact model/world import checks are
   recorded separately from runtime missions.
 sources:
+- id: pal_tiago_robot
+  kind: robot
+  repository: https://github.com/pal-robotics/tiago_robot.git
+  revision: f1c33c92bdde7c1dd79f0c3e739e98a233dbd30b
+  status: integration_implemented
+  license_note: Official Humble TIAGo source, Apache-2.0 root LICENSE. Complete PMB2/pal-gripper assembly; portable lab servo/sensor adapter, no mission qualification. Modern Gazebo source requires a separate Fortress port.
+  entries: [tiago_description, tiago_bringup]
+- id: pal_pmb2_robot
+  kind: robot_dependency
+  repository: https://github.com/pal-robotics/pmb2_robot.git
+  revision: e6584136f15356b8f4944c25d70fb8689e3355af
+  status: integration_implemented
+  license_note: Official Humble PMB2 description, Apache-2.0 root LICENSE; original base/suspension/wheel/caster mechanics retained in TIAGo.
+  entries: [pmb2_description]
+- id: pal_urdf_utils
+  kind: robot_dependency
+  repository: https://github.com/pal-robotics/pal_urdf_utils.git
+  revision: e8600a339a3a9b7ffe67d1030190b97b67fb577b
+  status: integration_implemented
+  license_note: Official Humble sensor/description macros and meshes, Apache-2.0 root LICENSE.
+  entries: [urdf, meshes, package.xml]
+- id: pal_gripper
+  kind: robot_dependency
+  repository: https://github.com/pal-robotics/pal_gripper.git
+  revision: 485b535532c04b0ce31a00ad431d99e2714c0d54
+  status: integration_implemented
+  license_note: Official Humble two-finger gripper, Apache-2.0 root LICENSE; source independent position interfaces retained.
+  entries: [pal_gripper_description]
+- id: pal_hey5
+  kind: robot_dependency
+  repository: https://github.com/pal-robotics/pal_hey5.git
+  revision: 344de441fa3c378573dd7f6e04dc7ec4f8cb0cab
+  status: integration_dependency_only
+  license_note: Official Humble Apache-2.0 root LICENSE; unconditional source Xacro include dependency only. No Hey5 hand is mounted or advertised by the pal-gripper TIAGo variant.
+  entries: [pal_hey5_description]
 - id: elephant_myagv_pro
   kind: robot
   repository: https://github.com/elephantrobotics/agv_pro_ros2

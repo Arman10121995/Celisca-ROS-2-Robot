@@ -57,7 +57,7 @@ from robot_lab_utils.urdf_joints import driven_assembly_joints
 from robot_lab_utils.urdf_articulation import effort_budget
 from robot_lab_utils.sim_frames import (
     urdf_link_frames,
-    compose, mounted_pose, offset_from_root, wxyz_from_xyzw, xyzw_from_wxyz,
+    compose, invert, mounted_pose, offset_from_root, wxyz_from_xyzw, xyzw_from_wxyz,
     yaw_of)
 from robot_lab_utils.go2_support import GO2_SUPPORT_GEOM_NAMES
 
@@ -1045,14 +1045,15 @@ def _add_steer_position_actuators(mjcf_text, joint_names, kp=50.0,
     return ET.tostring(root, encoding="unicode")
 
 
-def _add_camera_to_base(mjcf_text, name, offset, fovy_degrees):
-    """Attach a fixed camera to the floating base at a camera link's pose.
+def _add_camera_to_base(mjcf_text, name, offset, fovy_degrees, urdf=None, link=None):
+    """Attach a camera to its nearest retained URDF ancestor, or legacy base.
 
     *offset* is the camera link (x forward, z up) in the base frame, from
     ``sim_frames.offset_from_root``; MJCF cameras look along -z with +y up.
-    The URDF importer fuses fixed links into the base, so the camera goes on
-    the base body.  Unchanged when there is no floating base or the camera
-    already exists.
+    With a URDF/link, fixed ancestors may be fused but movable ones must be
+    retained: a head camera must follow actual head/torso physics. A missing
+    movable carrier is an error, never a zero-pose base-camera substitute.
+    Legacy callers without these arguments retain the base mount.
     """
     try:
         root = ET.fromstring(mjcf_text)
@@ -1068,6 +1069,24 @@ def _add_camera_to_base(mjcf_text, name, offset, fovy_degrees):
             break
     if base is None:
         return mjcf_text
+    if urdf is not None and link is not None:
+        source = ET.fromstring(urdf)
+        frames, source_root = urdf_link_frames(urdf)
+        parents = {joint.find('child').get('link'): joint
+                   for joint in source.findall('joint')}
+        bodies = {body.get('name'): body for body in root.iter('body')}
+        carrier, visited = link, set()
+        while carrier not in bodies and carrier != source_root:
+            if carrier in visited or carrier not in parents:
+                raise ValueError('Camera carrier is absent from source tree: '+str(link))
+            visited.add(carrier)
+            joint = parents[carrier]
+            if joint.get('type') != 'fixed':
+                raise ValueError('Camera movable carrier was lost by importer: '+carrier)
+            carrier = joint.find('parent').get('link')
+        if carrier in bodies:
+            base = bodies[carrier]
+        offset = compose(invert(frames[carrier]), frames[link])
     position, quaternion = compose(
         offset, ((0.0, 0.0, 0.0), camera_model.LINK_TO_OPENGL_CAMERA))
     ET.SubElement(base, "camera", {
@@ -1794,7 +1813,8 @@ class MuJoCoSpawner(Node):
                         math.degrees(camera_model.vertical_fov(
                             self.get_parameter("camera_horizontal_fov").value,
                             self.get_parameter("camera_width").value,
-                            self.get_parameter("camera_height").value)))
+                            self.get_parameter("camera_height").value)),
+                        urdf=urdf, link=self.get_parameter("camera_link_name").value)
         elif self._robot_free:
             robot_mjcf = "<mujoco><worldbody/></mujoco>"
             self._model_source = "world_only"

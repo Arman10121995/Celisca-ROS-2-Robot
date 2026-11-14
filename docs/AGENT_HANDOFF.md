@@ -1,5 +1,20 @@
 # Agent Handoff Protocol
 
+November 14 TIAGo: complete official PMB2/arm/pal-gripper source adapter is
+installed with five immutable Apache-2.0 dependencies, original URDF mechanics,
+twelve independent position channels and the existing Drive/Mobile arm GUI
+page. Preserve source effort limits, low-friction fixed public-simulation
+casters, declared lab servo/sensor caps and mutual motion/heartbeat gates.
+Source antenna/tool tensors are degenerate; importer regularization, tiny
+mass bounds and rest-contact exclusions must remain explicit. MuJoCo/PyBullet
+GUI-derived Display head/finger/forward/Stop/RGB screens are measured, not
+object or mapping/navigation missions. Cameras must use actual moving-head
+carriers; fixed-link fusion cannot justify a zero-pose root fallback across
+movable joints. Forty-nine focused checks pass. Source Home is an endpoint,
+not a collision-planned trajectory. Continue R5.9 source-specific planning,
+custody, payload footprints and map workflows; Fortress port remains open.
+[Guide](tutorials/tiago.md) · [receipt](status/evidence/tiago-2026-11-14/README.md).
+
 November 14 unmarked targets: R5.9 now has configured upright color-box RGB-D
 poses in the native mobile task builder. Preserve independent method caches,
 collision-box-center reference, source/scene/plant/size/age gates, unheld-only

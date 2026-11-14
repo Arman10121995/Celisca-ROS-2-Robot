@@ -170,6 +170,7 @@ def generate_launch_description():
             "camera_frame": "front_camera_optical_frame",
             "model_path": LaunchConfiguration("vacuum_detector_model"),
             "device": LaunchConfiguration("vacuum_detector_device"),
+            "score_thresh": ParameterValue(LaunchConfiguration("vacuum_detector_score"), value_type=float),
         }],
     )
 
@@ -193,6 +194,9 @@ def generate_launch_description():
         DeclareLaunchArgument("vacuum_detector_model", default_value="auto",
                               description="Local trained checkpoint; auto resolves a checksum-verified installed candidate."),
         DeclareLaunchArgument("vacuum_detector_device", default_value="cpu"),
+        DeclareLaunchArgument("vacuum_detector_score", default_value="0.75",
+                              description="Learned detector score threshold; 0.75 is the held-out pick for the "
+                                          "2026-11-15 multi-map checkpoint (docs/status/evidence/r133-camera-detector-2026-11-15)."),
         DeclareLaunchArgument("vacuum_object_truth", default_value="",
                               description="Independent generated-world objects JSON, used only in the run report."),
         DeclareLaunchArgument("allow_experimental_assets", default_value="false",

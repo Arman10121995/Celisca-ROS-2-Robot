@@ -133,7 +133,7 @@ Work top to bottom. Each line links to its task.
 | I4a | [R14.5](#r145--robot-status-markers-in-the-gui-selectors) Robot status markers | Done 2026-11-13: ● measured / ◐ experimental / ○ display only / ✕ unavailable plus mode letters in both robot lists, from recorded evidence | implemented |
 | I4b | [R6.8](#r68--real-world-area-import-from-a-globe) Real-world area import | Done 2026-11-13: globe picker (CesiumJS + OSM), Terrain Tiles + OSM buildings/roads/trees/water, SUMO people/traffic; support and roof heights measured on four simulators | implemented |
 | I5 | [R5.11](#r511--drone-moving-obstacles-and-other-drone-backends) Drone moving obstacles | Done 2026-11-13: Kalman tracks, predicted sweeps, walkway look-both-ways and overflight, evasion, sensor-loss hold/land, EKF heading/height gate; 2 passing flights past walkers (Gazebo); PX4 + MuJoCo plant: takeoff, 5 m route and landing | implemented |
-| I6 | [R5.9](#r59--mobile-manipulators) Mobile manipulation | Stretch recipes, marker/RGB-D box targets, directional/pose reaches, alternate IK/configuration search, interlocks and actual costmap receipts implemented; general perception and further source adapters remain | partial |
+| I6 | [R5.9](#r59--mobile-manipulators) Mobile manipulation | Stretch recipes/perception/planning plus complete official TIAGo Drive/12-channel articulation implemented; general perception, TIAGo object/planning/footprint and further source pipelines remain | partial |
 | I7 | [R5.7](#r57--manipulators-and-motion-planning) Arms | Panda box selection, source-finger-aware grasp candidates and bounded automatic pick/place sequence implemented; further geometry, perception, coupled arms and other backends remain | partial |
 | I8 | [R5.8](#r58--robot-hands-and-grippers) Hands | UMI lift/hold/lower and supported release measured in a source component; normal GUI missions, further torque/tendon sources and backends remain | partial |
 | I9 | [R10.2](#r102--fleet-management-and-open-rmf) Fleet / Open-RMF | Done 2026-11-14: shared-zone reservations (map passages, doors, docks), cycle breaker, recovery drive-out, RMF energy from a drivetrain calibration; two crossing runs pass (native and RMF). Chargers/doors in other worlds, larger fleets remain | implemented |
@@ -483,7 +483,17 @@ parking batch needs its own run. Details and evidence are in the
     source-specific grasp strategies and further
     source-specific object pipelines;
   - generalize the existing native interlock and measured footprint-consumption gate to other mobile-manipulator adapters;
-  - Fetch, PR2 or TIAGo as a second source.
+  - TIAGo source-specific collision planning, grasp/custody, dynamic footprint and map workflows; its separate Fortress port remains unavailable. Further Fetch/PR2 sources are optional after completing this second-source workflow.
+- **Second source (2026-11-14, Codex):** complete official Apache-2.0 PAL
+  TIAGo PMB2/arm/pal-gripper source installed with five immutable dependencies,
+  original URDF mechanics and twelve independent bounded position channels.
+  Existing normal GUI Drive/Mobile arm selection, grouping and command autofill
+  work. MuJoCo head/finger targets, 0.289 m forward and Stop are measured;
+  head cameras follow moving carriers, including fixed-link fusion handling.
+  Source degenerate inertias/import regularization and uncalibrated velocity
+  tracking are declared. Display adapter is separate from completed object or
+  SLAM/navigation support. [Guide](docs/tutorials/tiago.md) and
+  [receipt](docs/status/evidence/tiago-2026-11-14/README.md).
 - **Camera-marker targets (2026-11-14, Codex):** RGB/CameraInfo/image-time TF
   feed bounded ArUco/IPPE object poses to the existing source/scene/plant-bound
   task builder. GUI recipes explicitly select simulator geometry or camera

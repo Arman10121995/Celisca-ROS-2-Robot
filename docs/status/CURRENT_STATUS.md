@@ -1,5 +1,18 @@
 # Current Robot Lab status
 
+November 14 TIAGo continuation: the complete official PAL Humble PMB2/arm/
+parallel-gripper source is installed as one normal GUI robot, with five pinned
+Apache-2.0 dependencies and twelve independent Mobile arm channels. Existing
+Drive, Stop, heartbeat and mutual motion gates are reused. GUI-derived Display
+screens measure head/finger control, forward and Stop in MuJoCo (0.289 m,
+66 RGB frames) and PyBullet (0.204 m, 50 RGB frames). Forty-nine focused checks
+pass. These are short control screens, not complete source manipulation or
+SLAM/navigation missions. Source degenerate inertias, backend regularization,
+tiny-mass bounds and rest-contact exclusions are declared. Source-specific
+collision planning, object/custody, payload footprints and map workflows
+remain R5.9 implementation work. [Guide](../tutorials/tiago.md) ·
+[receipt](evidence/tiago-2026-11-14/README.md).
+
 November 14 unmarked-object continuation: native mobile recipes now offer
 **RGB-D colored boxes**, using aligned RGB/depth/calibration and image-time TF.
 Known-size upright boxes have separate source-bound observations from camera

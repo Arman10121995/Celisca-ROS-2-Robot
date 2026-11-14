@@ -2,6 +2,10 @@
 # A variant is not an alias for its parent's controllers or measured missions.
 schema_version: 1
 robots:
+  - id: pal_tiago
+    name: PAL Robotics TIAGo
+    members:
+      - {id: asset_pal_tiago, label: Official PMB2 + arm + parallel gripper · experimental portable controls}
   - id: elephant_myagv_pro
     name: Elephant Robotics myAGV Pro
     members:

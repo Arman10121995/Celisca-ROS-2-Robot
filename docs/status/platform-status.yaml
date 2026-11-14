@@ -171,8 +171,21 @@ myagv_pro_20261112:
   - 'R14.2 portable roller variant measured in MuJoCo/PyBullet/Isaac (2026-11-13); R14.3 arm-equipped myAGV Pro + Pro630 implemented with drive and arm screens on all three and a live GUI arm-page run. R14.4 contributor chapters 9-12 implemented. Next: the older implementation queue (I1+).'
   - Original CAD mass differs from hardware documentation; lab contact/compliance is not vendor dynamics. Serial/charging and arm-composite integration remain separate.
   - Other maps, furnished routes, localization/2D/3D acquisition, loss/reset and hardware acceptance remain unqualified.
-current_delivery: myagv_pro_20261112
-current_revision: 'November 12 user priority myAGV Pro: complete official source model and declared Gazebo control/sensing adapter, normal GUI defaults and one independently measured Nav2 arrival delivered. R14.2 remains active for portable physical backend adapters; other roadmap implementation waits. Source octopod and earlier source integrations preserved.'
+tiago_20261114:
+  owner: codex
+  state: partial
+  title: Complete official PAL TIAGo portable Display adapter
+  receipt: docs/status/evidence/tiago-2026-11-14/README.md
+  implementation_state: Five Apache-2.0 source pins, original URDF mechanics, declared bounded lab servos/sensors, normal GUI grouping/autofill, twelve Mobile arm channels and moving-camera carrier handling implemented.
+  measured_summary:
+  - MuJoCo/nav_empty GUI-derived Display launch measured head/independent-finger targets, 0.289 m forward, Stop and 66 RGB frames. Source model sum 84.66799184112 kg; compiled 84.668099800 kg after importer bounds/regularization.
+  - PyBullet/nav_empty GUI-derived Display launch measured head/independent-finger targets, 0.204 m forward, Stop and 50 RGB frames. Imported source mass 84.667992841 kg includes the declared 1 mg root frame.
+  - Forty-nine focused source/camera/frame/arm-widget checks pass; changed packages build. These do not qualify a manipulation mission.
+  remaining_summary:
+  - Source-specific collision planning, object/custody and payload-footprint pipelines; SLAM/Nav2 workflows and missions, Fortress port and calibrated dynamics remain open under R5.9.
+  - Antenna/tool source inertias are degenerate and existing import regularization/rest-contact exclusions are declared. Velocity tracking is uncalibrated; no hardware or all-map claim.
+current_delivery: tiago_20261114
+current_revision: 'November 14 continuation: unmarked RGB-D native targets and complete official PAL TIAGo portable Drive/articulation implementation. R5.9 remains partial for source-specific object/planning/footprint and broader perception; the current ROADMAP implementation queue is authoritative.'
 current_verification:
   round57_2026_10_19: 'Recorded 2026-10-29: MuJoCo small_house slam drive after the spawn fix 873753f completes
     (28.1 m, RMSE 1.3 cm, map precision/recall 0.97/0.79; 1.49 m and 0.12/0.16 before); rear-steer car course after
@@ -4109,6 +4122,7 @@ tasks:
               broader acceptance pending
         title: Robot hand and gripper actuation
       R5.9:
+        tiago_implementation_20261114: 'Codex implemented the complete official Apache-2.0 TIAGo PMB2/arm/pal-gripper source adapter with five pins, original URDF mechanics, twelve bounded independent position channels and existing Drive/Mobile arm GUI controls. Normal installed GUI grouping/autofill and MuJoCo/PyBullet head/finger/forward/Stop/RGB screens measured. Source degenerate inertias and importer approximations declared. Forty-nine focused checks pass; portable Isaac adapter remains separately measured. Source-specific object/planning/footprint, map workflows and Fortress port remain open. Guide: docs/tutorials/tiago.md. Receipt: docs/status/evidence/tiago-2026-11-14/README.md.'
         rgbd_implementation_20261114: 'Codex implemented unmarked known-size upright colored-box RGB-D poses, strict alignment/calibration/image-time TF, independent method caches, source/scene/plant/size/age gates and unheld-only reaches. Installed unmarked map variant shares the existing family; normal GUI command/recipe selection and live feedback are checked. 52 focused checks plus updated feedback checks and four package builds pass. Observer-render error 0.494 mm; four actual Stretch source-camera frames detect the cube after head-only original-motor commands. Startup base interlock preserved. No object pose enters the estimator; full pick/transport and general recognition remain. Guide: docs/tutorials/rgbd-object-targets.md. Receipt: docs/status/evidence/unmarked-rgbd-2026-11-14/README.md.'
         implementation_batch_20261114: 'Codex owns completion batch: camera-derived fiducial object poses, source/scene/plant-bound task target integration and GUI selection, then guarded repeated Panda object sequencing. Reuse source actuators and planners; detector/fixture evidence is separate from full robot mission qualification.'
         acceptance_ref: ROADMAP.md
@@ -4131,8 +4145,9 @@ tasks:
         orientation_reach_20261114: 'Codex: optional world-pad orientation IK, keep-measured mode with held wrists and sampled/live angular envelope, normalized task schema, GUI point/keep/world-RPY modes and measured final-orientation gate implemented. Existing source coupling, bounded private search, held base/head/grip and interruption rules retained. 39 focused source/schema/real Tk checks pass; MuJoCo package builds and all five changed runtime modules match installed bytes. Loaded source robot missions and alternate IK branches remain open. See docs/status/reach-orientation-2026-11-14.md. Claude retains fleet/drone/import work.'
         ik_branches_20261114: 'Codex: bounded measured/midpoint/four seed-0 source IK starts, duplicate/collision filtering and one multi-goal configuration forest implemented. Retains source coupling, held controls, original motor-slew inspection, payload transform and total eight-second budget. Found paths survive optional-shortcut budget expiry. 43 focused checks include an actual synthetic MuJoCo alternate-wrist goal with independent dense native-contact audit; three packages build. Not a loaded source Stretch mission or exhaustive IK. See docs/status/ik-branches-2026-11-14.md. Claude owns algorithm/seed/launch files.'
         side_approaches_20261114: 'Implemented: native Stretch GUI recipe approach from above or world +/-X/Y with finite 3-25 cm distance, same-direction place retreat and independent source-pad orientation modes. Edits only build steps; actual IK, source actuation, custody and costmap gates remain. No full loaded mission claim. docs/status/takeover-2026-11-14.md'
-        next_action: Extend source-specific Fetch/PR2/TIAGo and other backend adapters,
-          perception, additional grasps and object mission contracts. Validate native Stretch
+        next_action: Complete TIAGo source-specific collision planning, object/custody,
+          footprint and map workflow adapters; extend perception and additional grasps.
+          Fetch/PR2 remain optional later sources. Validate native Stretch
           coordinated tasks, sensors, dynamic footprint, saved/reloaded mapping and
           obstacle Nav2 after initial implementation.
         owner: codex

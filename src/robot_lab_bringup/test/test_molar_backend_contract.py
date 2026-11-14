@@ -272,6 +272,34 @@ def test_isaac_missing_feedforward_clears_force_and_restores_budget():
     assert calls == [('limit', [2000.]), ('force', [0.])]
 
 
+def test_isaac_native_gravity_maps_actual_dofs_and_replaces_slide_estimate():
+    scope = load_nodes([source_function(RUNTIME, '_apply_articulation_effort_budget')], dict(math=math))
+    calls = []
+    controller = SimpleNamespace(set_max_efforts=lambda values, joint_indices:
+        calls.append(('limit', values.tolist(), joint_indices.tolist())))
+    def gravity(joint_indices):
+        assert joint_indices.tolist() == [2, 1]
+        return [[12., -3.]]
+    robot = SimpleNamespace(get_articulation_controller=lambda: controller,
+        _articulation_view=SimpleNamespace(get_generalized_gravity_forces=gravity),
+        set_joint_efforts=lambda values, joint_indices:
+            calls.append(('force', values.tolist(), joint_indices.tolist())))
+    scope['_apply_articulation_effort_budget'](robot, ['wheel', 'lift', 'arm'],
+        {'arm': dict(mode='position', effort=10.), 'lift': dict(mode='position', effort=5.)},
+        {'arm': 999., 'lift': 999.}, native_gravity=True)
+    assert calls == [('limit', [0., 2.], [2, 1]), ('force', [10., -3.], [2, 1])]
+
+
+@pytest.mark.parametrize('values', (None, [[float('nan')]], [[1., 2.]], [1.]))
+def test_isaac_invalid_native_gravity_fails_before_writing_forces(values):
+    scope = load_nodes([source_function(RUNTIME, '_apply_articulation_effort_budget')], dict(math=math))
+    robot = SimpleNamespace(_articulation_view=SimpleNamespace(
+        get_generalized_gravity_forces=lambda joint_indices: values))
+    with pytest.raises(ValueError, match='native articulation gravity'):
+        scope['_apply_articulation_effort_budget'](robot, ['arm'],
+            {'arm': dict(mode='position', effort=10.)}, {}, native_gravity=True)
+
+
 def test_isaac_watchdog_hold_retains_gravity_budget():
     tree = ast.parse(RUNTIME.read_text())
     holds = [node for node in ast.walk(tree) if isinstance(node, ast.If)
