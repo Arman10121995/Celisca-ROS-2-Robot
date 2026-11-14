@@ -4185,6 +4185,9 @@ tasks:
           do not qualify remaining robot/map/backend missions. See docs/REMAINING_WORK_GUIDE.md.'
       R6.2:
         acceptance_ref: ROADMAP.md
+        implementation_state: '2026-11-14 (Claude) sensor_fault_relay.py: seeded windowed noise/bias/drift/delay/dropout/occlusion/outlier
+          for LaserScan/Imu/Odometry/Image with digest traces, truth refused; Gazebo sensor_faults:= launch argument. Unit-tested
+          only.'
         completion_audit: '2026-10-02: prior completion is not supported by the full
           ROADMAP acceptance; see docs/status/audit-2026-10-02.md.'
         depends_on:
@@ -4266,6 +4269,9 @@ tasks:
           do not qualify remaining robot/map/backend missions. See docs/REMAINING_WORK_GUIDE.md.'
       R6.5:
         acceptance_ref: ROADMAP.md
+        implementation_state: 2026-11-14 (Claude) free-region labelling from the collision mask (--regions seed|all, regions.json;
+          nav_maze seed region matched the plugin flood fill, 322771 cells) and explicit reviewed-grid registration (map_registration.py,
+          GUI) refusing changed files/world or a spawn outside free space.
         active_scope: '2026-10-07 codex: repair terrain slice projection so separate
           elevated regions are not joined by an invented outline; measure fresh primitive/rotated/terrain
           and hospital exports, then actual navigation. Preserve independent scripts/review_occupancy_maps.py

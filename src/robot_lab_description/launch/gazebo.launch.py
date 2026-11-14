@@ -93,6 +93,9 @@ def generate_launch_description():
     )
 
     world_name_arg = DeclareLaunchArgument(name="world_name", default_value="empty")
+    sensor_faults_arg = DeclareLaunchArgument(
+        name="sensor_faults", default_value="",
+        description="Scenario YAML for robot_lab_utils.sensor_fault_relay (seeded faults on live sensor topics)")
     world_path_arg = DeclareLaunchArgument(
         name="world_path", default_value="",
         description="Explicit full path to the world .world file. If set, overrides world_package+world_name."
@@ -409,10 +412,32 @@ def generate_launch_description():
             hazards = hazard_bridge_entries(description, gz_world_name, rname)
             overridden = {entry['ros_topic_name'] for entry in hazards}
             entries = [entry for entry in entries if entry['ros_topic_name'] not in overridden] + hazards
+        relays = []
+        faults = LaunchConfiguration('sensor_faults').perform(context).strip()
+        if faults:
+            # R6.2: the bridge publishes each relayed sensor under the relay's input
+            # name; sensor_fault_relay republishes the original topic with seeded faults.
+            from pathlib import Path as _Path
+            from robot_lab_utils.sensor_fault_relay import validate
+            scenario = validate(yaml.safe_load(_Path(faults).read_text()))
+            inputs = {relay['output']: relay['input'] for relay in scenario['relays']}
+            renamed = set()
+            for entry in entries:
+                if entry['ros_topic_name'] in inputs:
+                    renamed.add(entry['ros_topic_name'])
+                    entry['ros_topic_name'] = inputs[entry['ros_topic_name']]
+            if renamed != set(inputs):
+                raise ValueError('Sensor-fault outputs are not bridged sensor topics: %s' % sorted(set(inputs) - renamed))
+            trace = os.path.join(os.environ.get('ROBOT_LAB_RUNTIME_ROOT', '/workspace/molar/robot_lab_runtime'),
+                                 'sensor_faults', '%s-%d.jsonl' % (rname, os.getpid()))
+            os.makedirs(os.path.dirname(trace), exist_ok=True)
+            relays.append(Node(package='robot_lab_utils', executable='sensor_fault_relay.py', name='sensor_fault_relay',
+                               arguments=['--scenario', faults, '--trace', trace],
+                               parameters=[{'use_sim_time': use_sim_time}], output='screen'))
         with open(bridge_config_path, "w", encoding="utf-8") as bridge_config_file:
             yaml.safe_dump(entries, bridge_config_file)
 
-        return [Node(
+        return relays + [Node(
             package="ros_gz_bridge",
             executable="parameter_bridge",
             parameters=[{
@@ -633,6 +658,7 @@ def generate_launch_description():
         model_arg, # Re-added model_arg
         spawn_robot_arg,
         world_name_arg,
+        sensor_faults_arg,
         world_package_arg,
         world_path_arg,
         spawn_x_arg,

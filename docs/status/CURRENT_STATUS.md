@@ -1,5 +1,10 @@
 # Current Robot Lab status
 
+November 14 Claude: occupancy grids and sensor faults (R6.5/R6.2):
+- **Free regions:** generated grids now list every free region, and `all` mode also frees closed rooms the seed cannot reach. On `nav_maze` the labelling matched the map plugin cell for cell.
+- **Register reviewed grid…:** a new Worlds step and the only way a grid becomes the one Nav2 uses. It refuses grids whose files or world changed, or whose spawn isn't free.
+- **Sensor-fault relay:** Gazebo launches take `sensor_faults:=<scenario>` to put seeded, repeatable noise, bias, drift, delay, dropout, occlusion and outliers on live sensor topics, never on truth. Unit-tested; no degraded mission run yet.
+
 November 14 Claude: legged, car and asset implementation, none measured yet:
 - **Legged training (R5.2/R12):** new `get_up` task (starts from collapsed poses settled in physics) and a stairs curriculum (2–18 cm rises). The rough-terrain curriculum now really reshapes the terrain; before, it changed only a number. A first Go2 get-up policy is training.
 - **Cars (R5.5):** `car_parking` turns the measured heading shuffle and depth trim into a reusable park-at-heading runtime for car navigation. It has unit tests only.

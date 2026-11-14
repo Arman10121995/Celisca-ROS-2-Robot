@@ -169,6 +169,35 @@ def prepare_mapping_world(source,destination,output,resolution,height,seed):
             'limits':'Static height slice, conservative AABB checks; heightmap cells are solid at or above the slice, so a multilevel terrain is not fully represented; preview is not navigation qualification'}
 
 
+def free_regions(mask, metadata, seed, min_area_m2=.25):
+    """Connected free regions of the complete collision mask, aligned with the PGM.
+
+    The mask is written with rows increasing in world y, the PGM with row 0
+    at the top, so the grid is the mask flipped vertically (checked: every
+    plugin-occupied cell lies on the mask). Regions touching the map border
+    are the open outside; enclosed regions are rooms or courtyards.
+    """
+    from scipy.ndimage import label
+    grid = np.flipud(mask)
+    labels, count = label(~grid)
+    rows, cols = grid.shape
+    resolution, (ox, oy) = float(metadata['resolution']), metadata['origin'][:2]
+    seed_col, seed_row = int((seed[0] - ox) / resolution), rows - 1 - int((seed[1] - oy) / resolution)
+    seed_label = int(labels[seed_row, seed_col]) if 0 <= seed_row < rows and 0 <= seed_col < cols else 0
+    border = set(np.unique(np.concatenate([labels[0], labels[-1], labels[:, 0], labels[:, -1]]))) - {0}
+    regions = []
+    for index in range(1, count + 1):
+        cells = np.argwhere(labels == index)
+        area = len(cells) * resolution ** 2
+        if area < min_area_m2 and index != seed_label:
+            continue
+        r, c = cells.mean(axis=0)
+        regions.append(dict(id=index, cells=int(len(cells)), area_m2=round(area, 3),
+                            centroid=[round(ox + (c + .5) * resolution, 3), round(oy + (rows - r - .5) * resolution, 3)],
+                            contains_seed=index == seed_label, enclosed=index not in border))
+    return labels, regions
+
+
 def main():
     parser=argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--world',type=Path,required=True)
@@ -178,6 +207,9 @@ def main():
     parser.add_argument('--seed-x',type=float,default=0)
     parser.add_argument('--seed-y',type=float,default=0)
     parser.add_argument('--timeout',type=float,default=180)
+    parser.add_argument('--regions',choices=('seed','all'),default='seed',
+                        help='seed: only the region connected to the seed is free (plugin default); all: every '
+                             'enclosed free region too, each listed in <name>.regions.json')
     args=parser.parse_args()
     if not all(math.isfinite(v) for v in [args.resolution,args.height,args.seed_x,args.seed_y,args.timeout]) or args.resolution<=0 or args.timeout<=0:
         parser.error('Resolution/timeout must be positive and all coordinates finite')
@@ -216,6 +248,19 @@ def main():
             report.update(output_yaml=str(output.with_suffix('.yaml')),free_cells=int(np.sum(image==254)),
                           occupied_cells=int(np.sum(image==0)),unknown_cells=int(np.sum(image==205)),shape=list(image.shape),origin=metadata['origin'])
             if report['free_cells']<10:raise RuntimeError('Seed is blocked or the generated map has no free region')
+            raw=(run/'mapping.collision-mask').read_bytes();head,body=raw.split(b'\n',1);w,h=map(int,head.split())
+            mask=np.frombuffer(body,dtype=np.uint8).reshape(h,w)>0
+            if mask.shape!=image.shape:raise RuntimeError('Collision mask and generated grid differ in size')
+            labels,regions=free_regions(mask,metadata,[args.seed_x,args.seed_y])
+            if args.regions=='all':
+                keep=np.isin(labels,[r['id'] for r in regions if r['enclosed'] or r['contains_seed']])
+                image=np.where(keep&(image==205),254,image).astype(np.uint8)
+                Image.fromarray(image).save(output.with_suffix('.pgm'))
+                report.update(free_cells=int(np.sum(image==254)),unknown_cells=int(np.sum(image==205)))
+            output.with_suffix('.regions.json').write_text(json.dumps(dict(mode=args.regions,regions=regions),indent=2)+'\n')
+            report.update(regions_mode=args.regions,regions=len(regions),
+                          enclosed_regions=sum(r['enclosed'] for r in regions),
+                          seed_region=next((r['id'] for r in regions if r['contains_seed']),None))
             report['artifact_sha256']={suffix:hashlib.sha256(output.with_suffix(suffix).read_bytes()).hexdigest() for suffix in ('.yaml','.pgm')}
             output.with_suffix('.generation.json').write_text(json.dumps(report,indent=2)+'\n')
             print(json.dumps(report,indent=2),flush=True)

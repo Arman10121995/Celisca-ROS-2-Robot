@@ -112,6 +112,8 @@ FAST_TESTS=(
   "src/robot_lab_utils/test/test_gait_recovery.py"
   "src/robot_lab_utils/test/test_car_parking.py"
   "src/robot_lab_utils/test/test_display_reasons.py"
+  "src/robot_lab_utils/test/test_sensor_fault_relay.py"
+  "src/robot_lab_utils/test/test_map_registration.py"
 )
 
 INTEGRATION_TESTS=(

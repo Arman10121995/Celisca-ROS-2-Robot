@@ -34,6 +34,7 @@ a guide, imported model or numerical example does not qualify every mission.
 
 - [Import a real place](real-world-import.md): pick an area on a globe; buildings, roads, trees, water, people and traffic for all four simulators.
 - [Generate a terrain world](terrain-generation.md): Worlds & mapping → Terrain, procedural or from an elevation raster, for all four simulators.
+- [Seeded sensor faults](sensor-faults.md): noise, bias, drift, delay, dropout, occlusion and outliers on live sensor topics, repeatable from seeds (Gazebo).
 
 | Guide | Working scope and limits |
 |---|---|

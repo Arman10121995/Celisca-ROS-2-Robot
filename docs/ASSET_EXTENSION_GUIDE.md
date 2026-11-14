@@ -194,6 +194,26 @@ in a fresh dated directory alongside the derived mapping SDF, Gazebo log and
 JSON report. Existing occupancy maps remain intact. **Stop Generation** stops
 the owned process and its Gazebo child.
 
+**Free regions** controls which free space the grid includes:
+- `seed` keeps the plugin's default: only the region connected to the seed is free.
+- `all` also frees every enclosed region the seed cannot reach, such as a
+  closed room or a courtyard.
+
+Either way, `<world>.regions.json` lists every free region: cells, area,
+centroid, whether it contains the seed and whether it is enclosed. The
+regions come from the complete collision mask. On `nav_maze`, the
+seed region matched the plugin's own flood fill cell for cell (322 771
+cells), and `all` added the 235 m² enclosed interior.
+
+Generation never changes the grid Nav2 uses. After review, **Register
+reviewed grid…** takes the newest generated grid of the selected world and
+shows its statistics, regions and spawn check. On confirmation it asks for a
+review note, then copies the grid into `$ROBOT_LAB_RUNTIME_ROOT/registered_maps/`.
+It refuses when the grid files changed after generation, the world source
+changed, or the world spawn is not a free cell. The map profiles then use
+the registered grid; `map_registration.unregister(world)` restores the
+original.
+
 Equivalent CLI:
 
 ```bash

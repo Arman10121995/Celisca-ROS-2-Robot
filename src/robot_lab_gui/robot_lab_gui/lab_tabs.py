@@ -214,9 +214,17 @@ class WorldsTab(LabTab):
             row=1,column=0,sticky='ew',pady=(6,0),padx=(0,3))
         ttk.Button(generate,text='World / terrain guide',command=lambda:self.open_guide()).grid(
             row=1,column=1,sticky='ew',pady=(6,0),padx=(3,0))
+        ttk.Label(generate,text='Free regions',style='SurfaceField.TLabel').grid(row=2,column=0,sticky='w',pady=(8,0))
+        self.regions_var=tk.StringVar(value='seed')
+        ttk.Combobox(generate,textvariable=self.regions_var,values=('seed','all'),state='readonly',width=8).grid(
+            row=2,column=1,sticky='w',pady=(8,0))
+        ttk.Button(generate,text='Register reviewed grid…',command=self.register_grid).grid(
+            row=3,column=0,columnspan=2,sticky='ew',pady=(8,0))
         ttk.Label(page,text='Uses the pinned Fortress plugin in a separate headless world. The seed selects a connected '
             'free region; change X/Y to export another room. Mesh collisions and terrain use their actual scale and '
-            'height slice. Review the generated PGM/YAML and report before registering it for navigation. To make a '
+            'height slice. Free regions "all" also frees every enclosed room the seed cannot reach (listed in the regions '
+            'report). Generation never changes the map Nav2 uses: review the PGM and report, then Register reviewed grid '
+            '(it refuses changed files, a changed world or a spawn outside free space). To make a '
             'new terrain world, use the Terrain page.',
             style='Muted.TLabel',wraplength=1100,justify='left').grid(row=1,column=0,columnspan=3,sticky='w',pady=12)
         from .terrain_controls import TerrainPage
@@ -248,12 +256,38 @@ class WorldsTab(LabTab):
         return ['ros2','run','robot_lab_maps','generate_occupancy_map.py','--world',str(path),
                 '--output-dir',self.output_var.get(),'--resolution',str(self.resolution_var.get()),
                 '--height',str(self.height_var.get()),'--seed-x',str(self.seed_x_var.get()),
-                '--seed-y',str(self.seed_y_var.get())]
+                '--seed-y',str(self.seed_y_var.get()),'--regions',self.regions_var.get()]
 
     def generate(self):
         try:self.app.start_bg_process(self.generation_command(),'world_maps')
         except (KeyError,ValueError,tk.TclError) as exc:
             messagebox.showerror('Generate occupancy grid',str(exc))
+
+    def register_grid(self):
+        """Register the newest generated grid of the selected world after an explicit review."""
+        from tkinter import simpledialog
+        from robot_lab_utils.map_registration import check_grid, register
+        world=self.world_var.get();profile=self.app.map_profiles.get(world,{})
+        source=Path(profile.get('gazebo',{}).get('world_path','x')).stem
+        runs=sorted(Path(self.output_var.get()).glob(source+'-*/'+source+'.generation.json'),key=lambda p:p.stat().st_mtime)
+        if not runs:
+            messagebox.showerror('Register grid','No generated grid for %s in %s'%(world,self.output_var.get()));return
+        try:summary=check_grid(runs[-1],profile)
+        except (ValueError,KeyError,OSError) as exc:
+            messagebox.showerror('Register grid','Not registrable: %s'%exc);return
+        regions=summary['regions'] or []
+        text=('%s\n\nfree %d, occupied %d, unknown %d cells at %.3f m; free regions: %s (%d listed, %d enclosed)\n'
+              'Spawn (%.2f, %.2f) is free.\n\nRegister it as the map Nav2 uses for %s?')%(
+              runs[-1].parent,summary['free_cells'],summary['occupied_cells'],summary['unknown_cells'],summary['resolution_m'],
+              summary['regions_mode'],len(regions),sum(r['enclosed'] for r in regions),*summary['spawn'],world)
+        if not messagebox.askyesno('Register reviewed grid',text):return
+        note=simpledialog.askstring('Review note','What did you check in the grid?',parent=self)
+        if not note:return
+        try:register(world,runs[-1],profile,note)
+        except (ValueError,OSError) as exc:
+            messagebox.showerror('Register grid',str(exc));return
+        self.app._refresh_maps()
+        messagebox.showinfo('Register grid','Registered for %s. Launch now uses it.'%world)
 
     def open_guide(self):
         messagebox.showinfo('World and robot extensions',(WORKSPACE_ROOT/'docs/ASSET_EXTENSION_GUIDE.md').read_text())

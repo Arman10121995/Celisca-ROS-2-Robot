@@ -80,6 +80,10 @@ def merge_installed_profiles(data, kind):
         if name in existing:
             raise ValueError('Installed extension would replace existing ' + kind + ' profile: ' + name)
         existing[name] = profile
+    if kind == 'maps':
+        # Reviewed occupancy grids registered from the Worlds page (R6.5).
+        from .map_registration import apply as apply_registered_grids
+        existing = apply_registered_grids(existing)
     result[kind] = existing
     return result
 

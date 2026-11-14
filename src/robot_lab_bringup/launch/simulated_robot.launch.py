@@ -703,6 +703,9 @@ def _algorithm_nodes(nodes, use_sim_time, robot_model="", robot_config=None):
 
 
 def _build_simulation_actions(context):
+
+    if _launch_value(context, "sensor_faults").strip() and _launch_value(context, "simulator") != "gazebo":
+        raise RuntimeError('sensor_faults relays the Gazebo bridge topics; other simulators do not support it yet')
     description_share = get_package_share_directory("robot_lab_description")
     controller_share = get_package_share_directory("robot_lab_controller")
     localization_share = get_package_share_directory("robot_lab_localization")
@@ -1080,6 +1083,8 @@ def _build_simulation_actions(context):
                 })
             else:
                 gazebo_args["spawn_robot"] = "false"
+            if _launch_value(context, "sensor_faults").strip():
+                gazebo_args["sensor_faults"] = _launch_value(context, "sensor_faults").strip()
             actions.append(
                 IncludeLaunchDescription(
                     PythonLaunchDescriptionSource(
@@ -2047,6 +2052,8 @@ def generate_launch_description():
                               description='Arm collision planning: auto, none, moveit (Panda), native_moveit (experimental fixed native arms)'),
         DeclareLaunchArgument('grasp_fixture', default_value='false',
                              description='Add a physical Panda object/pedestal for grasp trials'),
+        DeclareLaunchArgument("sensor_faults", default_value="",
+                              description="R6.2 scenario YAML: seeded faults relayed onto live sensor topics (Gazebo)"),
         DeclareLaunchArgument("display_hold", default_value="auto",
                               description="Hold the joints of robots without drive wheels or "
                                           "their own controllers at their spawn pose (PyBullet, "

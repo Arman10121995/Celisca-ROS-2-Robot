@@ -143,7 +143,7 @@ Work top to bottom. Each line links to its task.
 | I13 | [R5.2](#r52--go2-quadruped-locomotion) / [R5.3](#r53--berkeley-humanoid-lite-balance-and-walking) / [R12](#r12--legged-policy-training) Legged | 2026-11-14: `get_up` task and stairs curriculum implemented (training runs pending); BHL contract/export, G1/Go2W policies, GPU training remain | partial |
 | I14 | [R5.5](#r55--ackermann-rear-steer-and-anti-ackermann-cars) Cars | 2026-11-14: park-at-heading runtime (`car_parking.py`) from the measured shuffle + trim (10/12 course cells); slalom aborts and a GUI park control remain | implemented |
 | I15 | [R3.6](#r36--external-robot-assets-in-normal-launch) Assets | 2026-11-14: model-derived display-only reasons for all 77 profiles in the GUI; Lite6/Google Robot jogging via unnamed-actuator support. Vendor controllers for legged/URDF profiles remain | partial |
-| I16 | [R6.5](#r65--world-to-occupancy-generation) / [R6.6](#r66--external-world-library) / [R6.2](#r62--dynamic-and-sensor-disturbance-cases) Worlds | Occupancy registration, remaining licensed imports and actors, disturbance cases | partial |
+| I16 | [R6.5](#r65--world-to-occupancy-generation) / [R6.6](#r66--external-world-library) / [R6.2](#r62--dynamic-and-sensor-disturbance-cases) Worlds | 2026-11-14: free-region labelling + reviewed grid registration (R6.5), seeded live sensor-fault relay for Gazebo (R6.2). Licensed Fuel imports, fixture review, actors with collision remain | partial |
 | I17 | [R11](#r11--molar--probot-l-family) MOLAR | Sensors, SLAM/Nav2, payload transfer, multi-floor | partial, needs the sensor layout |
 | I18 | [P4](#p4--mujoco-large-world-speed) MuJoCo speed | Faster flex/scan/camera updates on large worlds | partial |
 | I19 | [R7](#r7--algorithm-breadth) Algorithms | Simulator-applied seeds, remaining method contracts | partial |
@@ -498,13 +498,18 @@ tier repair awaits its exact-revision published rerun. Details and evidence are 
 
 ### R6.2 — Dynamic and sensor-disturbance cases
 
-- **State:** partial · **Priority:** I16 · **Depends on:** R6.1, R4.2
+- **State:** implemented, experimental (relay unit-tested) · **Priority:** I16 · **Depends on:** R6.1, R4.2
 - **Goal:** seeded moving obstacles and sensor faults: noise, bias, drift,
   delay, dropout, occlusion and outliers.
 - **Have:** `src/robot_lab_maps/tools/r6_dynamic_sensor_disturbance.py`
   (framework and tests).
-- **Remaining implementation:** inject the faults into the live sensor topics
-  (a relay node with seeded fault models), and actor worlds with real collision.
+- **Done 2026-11-14 (implemented, unit-tested):** `sensor_fault_relay.py`, a
+  seeded relay for LaserScan/Imu/Odometry/Image with noise, bias, drift,
+  delay, dropout, occlusion and outliers in time windows, digest traces, and
+  truth topics refused; Gazebo launches take `sensor_faults:=<scenario>`
+  (the bridge publishes `<topic>_clean`). [Guide](docs/tutorials/sensor-faults.md).
+- **Remaining implementation:** actor worlds with real collision; the relay for
+  the other backends.
 - **How to do it:** a `sensor_fault_relay` node in `robot_lab_utils/`,
   configured per scenario in `scenarios.yaml`, with its own seeds. Truth topics
   are never touched.
@@ -523,16 +528,21 @@ tier repair awaits its exact-revision published rerun. Details and evidence are 
 
 ### R6.5 — World-to-occupancy generation
 
-- **State:** partial · **Priority:** I16 · **Depends on:** R6.1, R3.4
+- **State:** implemented · **Priority:** I16 · **Depends on:** R6.1, R3.4
 - **Goal:** generate a correct 2D grid from any selected 3D world in the GUI.
 - **Have:**
   - Worlds tab Generate/Stop with editable seeds.
   - `src/robot_lab_maps/tools/generate_occupancy_map.py`,
     `scripts/review_occupancy_maps.py` and `scripts/refresh_installed_occupancy_maps.py`.
   - Rotated triangle exports.
-- **Remaining implementation:**
-  - handle disconnected free regions (choose by seed or keep all, labelled);
-  - a "register map" step after review, so wrong grids are never auto-registered.
+- **Done 2026-11-14:** free-region labelling from the complete collision mask
+  (`--regions seed|all`, `<world>.regions.json`; on `nav_maze` the seed region
+  matched the plugin flood fill exactly and `all` added the 235 m² enclosed
+  interior), and an explicit **Register reviewed grid…** step
+  (`map_registration.py`) that refuses changed files, a changed world or a
+  spawn outside free space.
+- **Remaining implementation:** none for the two items; worlds with unresolved
+  external models (e.g. `small_house` AWS furniture) still cannot be projected.
 - **Done when:** primitive, rotated and furnished mesh worlds produce grids
   that agree with the geometry, and Nav2 uses them.
 
