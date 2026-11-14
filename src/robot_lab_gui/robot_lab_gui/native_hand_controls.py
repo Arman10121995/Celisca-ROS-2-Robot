@@ -70,6 +70,17 @@ class NativeHandControls(ttk.Frame):
                   'requested force is not a hard contact-force limit. Contact loss, overload, Stop or heartbeat '
                   'loss interrupts regulation. Lab feedback tuning remains experimental.',
                   wraplength=305).grid(row=18,column=0,columnspan=2,sticky='w')
+        self.lift_height=tk.DoubleVar(value=.05)
+        ttk.Label(self,text='Object lift height (m)').grid(row=19,column=0,sticky='w')
+        ttk.Spinbox(self,textvariable=self.lift_height,from_=.02,to=.15,increment=.01,width=8).grid(row=19,column=1,sticky='w')
+        self.lift_button=ttk.Button(self,text='Lift and hold object',command=lambda:self.transport_object(False))
+        self.lower_button=ttk.Button(self,text='Lower to start',command=lambda:self.transport_object(True))
+        self.lift_button.grid(row=20,column=0,sticky='ew',pady=4)
+        self.lower_button.grid(row=20,column=1,sticky='ew',pady=4)
+        ttk.Label(self,text='UMI source vertical motor only; other fixed hands need an arm adapter. '
+                  'Lift preserves finger preload. Lower first, then Release object for a supported release. '
+                  'Stop, manual targets, contact loss or heartbeat loss interrupt transport.',
+                  wraplength=305).grid(row=21,column=0,columnspan=2,sticky='w')
 
     def fixture_changed(self):
         if self.selected() and not self.owner.app._launch_running:
@@ -101,6 +112,12 @@ class NativeHandControls(ttk.Frame):
         force_ready=(ready and hand.get('object_present') and hand.get('object_grasp',{}).get('state')=='holding'
                      and self.pose.get() not in ('Open','Spread'))
         self.force_button.state(['!disabled'] if force_ready else ['disabled'])
+        transport=hand.get('object_transport',{})
+        lift_ready=ready and hand.get('object_lift_available') and hand.get('object_grasp',{}).get('state')=='holding'
+        self.lift_button.state(['!disabled'] if lift_ready and transport.get('state') in ('idle','interrupted') else ['disabled'])
+        self.lower_button.state(['!disabled'] if lift_ready and transport.get('state')=='holding' else ['disabled'])
+        if transport.get('state') in ('lifting','holding','lowering','supported'):
+            self.force_button.state(['disabled'])
         if not ready:
             self.feedback.set('Waiting for fresh source hand feedback from the selected Run.')
             return
@@ -118,6 +135,8 @@ class NativeHandControls(ttk.Frame):
         force=hand.get('force_regulation',{})
         if force.get('state') not in (None,'idle'):
             details.append('Force feedback: '+force.get('state','')+' · '+force.get('reason',''))
+        if transport.get('state') not in (None,'idle'):
+            details.append('Object transport: '+transport.get('state','')+' · '+transport.get('reason',''))
         blocked = ', '.join(hand.get('blocked_groups', {}))
         self.feedback.set(hand['motion']['state']+'\n'
             + '\n'.join(details)
@@ -218,6 +237,23 @@ class NativeHandControls(ttk.Frame):
             self.owner.pub.publish(String(data=json.dumps(dict(operation='hand_release',
                 plant_id=state['plant_id'], source_sha256=state['source_sha256'],
                 contract_sha256=hand['contract_sha256']))))
-            self.feedback.set('Released on the documented object; physics now owns its motion.')
+            self.feedback.set('Release requested; waiting for measured contact and supported-release feedback.')
         except (ValueError, TypeError, KeyError, IndexError, AttributeError) as exc:
             self.feedback.set('Release rejected: '+str(exc))
+
+    def transport_object(self,lowering=False):
+        if not self.owner.ready():return
+        state=self.owner.state;hand=state.get('hand',{})
+        if not hand.get('object_lift_available'):return
+        try:
+            height=float(self.lift_height.get())
+            if not math.isfinite(height) or not .02<=height<=.15:
+                raise ValueError('Lift height must be 0.02–0.15 m')
+            from std_msgs.msg import Empty,String
+            self.owner.heartbeat.publish(Empty())
+            self.owner.pub.publish(String(data=json.dumps(dict(
+                operation='hand_lower_object' if lowering else 'hand_lift_object',
+                plant_id=state['plant_id'],source_sha256=state['source_sha256'],
+                contract_sha256=hand['contract_sha256'],height_m=height))))
+            self.feedback.set('Lower requested' if lowering else 'Lift requested; awaiting physical object motion')
+        except (ValueError,TypeError,KeyError,tk.TclError) as exc:self.feedback.set(str(exc))

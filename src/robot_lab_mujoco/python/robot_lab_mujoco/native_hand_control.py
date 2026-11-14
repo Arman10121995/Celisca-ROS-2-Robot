@@ -12,10 +12,15 @@ import numpy as np
 from robot_lab_utils.native_hand import hand_pose_targets
 from robot_lab_utils.native_hand_object import classify_grasp, grasp_surface_bodies
 from .native_articulation_control import NativeArticulationControl
+from .native_hand_lift import NativeHandLift
 
 
-class NativeHandControl(NativeArticulationControl):
+class NativeHandControl(NativeHandLift, NativeArticulationControl):
     def __init__(self, node, contract):
+        self.lift_run=None
+        self.lift_state=dict(state='idle',reason='No source object transport requested')
+        self.release_settled_since=None
+        self.grasp_rotation_anchor=None
         self.force_hold = None
         self.force_state = dict(state='idle',scope='Requested force feedback; no hard contact-force cap')
         self.contract = contract
@@ -67,6 +72,8 @@ class NativeHandControl(NativeArticulationControl):
             self.data.act[address+1] = self.commanded[slot]  # Owned previous setpoint.
 
     def hold(self, reason='stopped; holding measured hand coordinates'):
+        self.lift_run=None
+        self.lift_state.update(state='interrupted',reason=reason)
         self.force_hold = None
         if hasattr(self,'force_state'):
             self.force_state.update(state='interrupted',reason=reason)
@@ -78,6 +85,7 @@ class NativeHandControl(NativeArticulationControl):
         if hasattr(self, 'grasp') and self.grasp['state'] != 'idle':
             self.grasp.update(state='interrupted', scope=reason)
             self.grasp_anchor = None
+            self.grasp_rotation_anchor = None
         self.reset_pid_memory()
 
     def receive(self, message):
@@ -91,7 +99,11 @@ class NativeHandControl(NativeArticulationControl):
                 return self.grasp_object(request)
             if request.get('operation') == 'hand_release':
                 return self.release_object(request)
+            if request.get('operation') in ('hand_lift_object','hand_lower_object'):
+                return self.lift_object(request)
             if request.get('operation') != 'hand_pose':
+                self.lift_run=None
+                self.lift_state.update(state='interrupted',reason='Manual hand target or taught sequence')
                 self.guard = None
                 self.motion.update(state='manual', reason='Individual target or taught sequence')
                 return super().receive(message)
@@ -150,6 +162,8 @@ class NativeHandControl(NativeArticulationControl):
     def regulate_force(self,request):
         from robot_lab_utils.native_hand_force import ContactForceHold
         try:
+            if self.lift_run:
+                raise ValueError('Stop object transport before changing force regulation')
             if (self.fault or time.monotonic()-self.last_heartbeat>.8
                     or request.get('source_sha256')!=self.source_sha256
                     or request.get('contract_sha256')!=self.contract['contract_sha256']):
@@ -164,8 +178,8 @@ class NativeHandControl(NativeArticulationControl):
                 raise ValueError('Choose the established closing grasp pose')
             opened=hand_pose_targets(self.contract,pose,0.,0.,'All')
             closed=hand_pose_targets(self.contract,pose,1.,0.,'All')
-            direction=np.array([closed[c['name']]-opened[c['name']] for c in self.channels])
-            origin=np.array([opened[c['name']] for c in self.channels])
+            direction=np.array([closed.get(c['name'],0.)-opened.get(c['name'],0.) for c in self.channels])
+            origin=np.array([opened.get(c['name'],self.commanded[i]) for i,c in enumerate(self.channels)])
             if np.dot(direction,direction)<1e-10:
                 raise ValueError('No source closure direction for force regulation')
             closure=float(np.clip(np.dot(self.commanded-origin,direction)/np.dot(direction,direction),0.,1.))
@@ -317,6 +331,7 @@ class NativeHandControl(NativeArticulationControl):
                     or request.get('contract_sha256') != self.contract['contract_sha256']):
                 raise ValueError('Release belongs to another source/motor contract')
             self.hold('Object release requested')
+            self.release_settled_since=None
             self.grasp_anchor = None
             self.grasp = dict(state='releasing', scope='Opening; object motion returns to contact physics',
                 left_force_n=0., right_force_n=0., supported=False, slip_m=0.)
@@ -336,29 +351,55 @@ class NativeHandControl(NativeArticulationControl):
         if self.object_body < 0:
             return
         measured = self.object_contacts()
-        position = self.data.xpos[self.object_body].copy()
+        # World displacement during a source-axis lift is motion, not slip.
+        # Measure object pose in one actual opposing-finger frame instead.
+        reference=min(self.object_sides[0])
+        rotation=self.data.xmat[reference].reshape(3,3)
+        position=rotation.T@(self.data.xpos[self.object_body]-self.data.xpos[reference])
+        relative_rotation=rotation.T@self.data.xmat[self.object_body].reshape(3,3)
         threshold = .2*self.grasp.get('contact_limit_n', 1.)
         if self.grasp['state'] == 'closing' and (measured['left_force_n'] >= threshold
                 and measured['right_force_n'] >= threshold) and self.grasp_anchor is None:
             self.grasp_anchor = position.copy()
+            self.grasp_rotation_anchor=relative_rotation.copy()
             self.grasp['state'] = 'holding'
         slip = 0. if self.grasp_anchor is None else float(np.linalg.norm(position-self.grasp_anchor))
-        if self.grasp['state'] == 'holding' and slip > .01:
+        angular_slip=0. if self.grasp_rotation_anchor is None else float(np.arccos(np.clip(
+            (np.trace(relative_rotation@self.grasp_rotation_anchor.T)-1.)/2.,-1.,1.)))
+        if self.grasp['state'] == 'holding' and (slip > .01 or angular_slip>.15):
             self.grasp['state'] = 'slipping'
         if self.grasp['state'] in ('holding', 'slipping') and (
                 measured['left_force_n'] < threshold or measured['right_force_n'] < threshold):
             self.grasp['state'] = 'contact_lost'
         verdict = classify_grasp(measured['left_force_n'], measured['right_force_n'],
             measured['supported'], slip, contact_threshold_n=threshold)
+        if not np.isfinite(slip+angular_slip):
+            self.grasp['state']='invalid_measurement'
+            verdict=dict(grasp='invalid_measurement',scope='Non-finite relative object pose')
+        elif angular_slip>.15:
+            verdict=dict(grasp='slipping',scope='Object rotated more than 0.15 rad in the finger frame')
         self.grasp.update(left_force_n=measured['left_force_n'],
             right_force_n=measured['right_force_n'], supported=measured['supported'],
-            slip_m=slip, contact_count=measured['contact_count'],
+            slip_m=slip, angular_slip_rad=angular_slip, contact_count=measured['contact_count'],
             support_contact_count=measured['support_contact_count'], support_force_z_n=measured['support_force_z_n'],
             contact_state=verdict['grasp'])
         if self.grasp['state'] in ('holding', 'slipping', 'contact_lost'):
             self.grasp['scope'] = verdict['scope']
         if self.grasp['state'] == 'releasing' and measured['contact_count'] == 0:
             self.grasp.update(state='released', scope='Fingers open; object free under contact physics')
+        if self.grasp['state'] in ('releasing','released','supported_release'):
+            velocity=np.zeros(6)
+            self.node.mujoco.mj_objectVelocity(self.model,self.data,self.node.mujoco.mjtObj.mjOBJ_BODY,
+                                             self.object_body,velocity,0)
+            settled=(measured['contact_count']==0 and measured['supported']
+                     and np.linalg.norm(velocity[:3])<.1 and np.linalg.norm(velocity[3:])<.02)
+            if not settled:
+                self.release_settled_since=None
+                if self.grasp['state']=='supported_release':
+                    self.grasp.update(state='released',scope='Supported release no longer sustained')
+            elif self.release_settled_since is None:self.release_settled_since=float(self.data.time)
+            elif float(self.data.time)-self.release_settled_since>=1.:
+                self.grasp.update(state='supported_release',scope='No finger contacts; supported and settled for one simulated second')
 
     def contacts(self):
         """Actual normal forces per finger group, excluding hand self-contact."""
@@ -461,6 +502,7 @@ class NativeHandControl(NativeArticulationControl):
         super().after_step()
         self.check_guard()
         self.update_grasp()
+        self.update_lift()
         if self.motion['state'] == 'advancing':
             tolerances = np.array([.01 if c['units'] == 'rad' else .002 if c['units'] == 'm'
                 else .005*(c['limits'][1]-c['limits'][0]) for c in self.channels])
@@ -487,7 +529,8 @@ class NativeHandControl(NativeArticulationControl):
             poses=self.contract['poses'], motion=self.motion,
             contacts=self.contacts(), blocked_groups=self.guard['blocked'] if self.guard else {},
             guard_scope='Stop advancement at measured thresholds; source hard bounds unchanged; no grasp guarantee',
-            object_grasp=self.grasp,force_regulation=self.force_state,
+            object_grasp=self.grasp,force_regulation=self.force_state,object_transport=self.lift_state,
+            object_lift_available=self.contract['adapter']=='umi_gripper',
             object_present=self.object_body >= 0, object_body_id=self.object_body,
             source_effort_limits={c['name']: self.model.actuator_forcerange[c['index']].tolist()
                 if self.model.actuator_forcelimited[c['index']] else None for c in self.channels},

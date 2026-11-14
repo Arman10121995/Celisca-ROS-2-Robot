@@ -55,6 +55,8 @@ class CartesianControls(ttk.LabelFrame):
         self.generation, self.planning = 0, False
         self.points = None
         self.start = None
+        self.ik_cache=[]
+        self.ik_owner=None
         self.was_owned = False
         object_actions = ttk.Frame(self)
         object_actions.grid(row=10, column=0, columnspan=4, sticky='ew')
@@ -148,6 +150,9 @@ class CartesianControls(ttk.LabelFrame):
         request = GetPositionFK.Request()
         request.header.frame_id = 'native_world'
         request.fk_link_names = ['panda_tcp']
+        # Preserve coordinates omitted by a sparse seed and attached bodies
+        # when reused for IK and OMPL start state.
+        request.robot_state.is_diff=True
         request.robot_state.joint_state.name = list(joints)
         request.robot_state.joint_state.position = list(joints.values())
         return request
@@ -318,19 +323,14 @@ class CartesianControls(ttk.LabelFrame):
         values=[getattr(pose.position,axis) for axis in 'xyz']+[getattr(pose.orientation,axis) for axis in 'wxyz']
         if not all(math.isfinite(v) for v in values) or not .99<=sum(v*v for v in values[3:])<=1.01:
             self.status.set('Finite world target and unit orientation required.');return
-        from moveit_msgs.srv import GetPositionIK
         self.invalidate();self.planning=True;self.planning_started=time.monotonic()
         self.start=dict(self.joints)
         state=self.fk_request(self.start).robot_state
-        request=GetPositionIK.Request();ik=request.ik_request
-        ik.group_name,ik.ik_link_name='panda_arm','panda_tcp'
-        ik.robot_state,ik.avoid_collisions=state,True
-        ik.pose_stamped.header.frame_id='native_world';ik.pose_stamped.pose=pose;ik.timeout.sec=1
         self.target=pose
         self.target_display.set(label+' XYZ: '+', '.join('%.3f'%v for v in values[:3])+' m')
         self.status.set('Planning object target from measured joints and acknowledged scene…')
         generation=self.generation
-        self.ik.call_async(request).add_done_callback(lambda future:self.got_ik(future,generation,state))
+        self.solve_ik(generation,state)
 
     def got_fk(self, future, generation, offset, state):
         if generation != self.generation:
@@ -339,7 +339,6 @@ class CartesianControls(ttk.LabelFrame):
             self.invalidate()
             self.status.set('Robot or scene state changed during planning; plan again.')
             return
-        from moveit_msgs.srv import GetPositionIK
         answer = future.result()
         if answer.error_code.val != 1 or not answer.pose_stamped:
             self.planning = False
@@ -354,14 +353,36 @@ class CartesianControls(ttk.LabelFrame):
         # elbow configurations for millimetre offsets. Seed KDL with measured
         # joints first, then plan to that collision-valid joint solution. The
         # path still goes through the real OMPL/FCL planning scene.
-        request = GetPositionIK.Request()
-        ik = request.ik_request
-        ik.group_name, ik.ik_link_name = 'panda_arm', 'panda_tcp'
-        ik.robot_state, ik.avoid_collisions = state, True
-        ik.pose_stamped.header.frame_id = 'native_world'
-        ik.pose_stamped.pose = pose
-        ik.timeout.sec = 1
-        self.ik.call_async(request).add_done_callback(lambda f: self.got_ik(f, generation, state))
+        self.solve_ik(generation,state)
+
+    def solve_ik(self,generation,state):
+        owner=id(self.arm.app.process)
+        if owner!=self.ik_owner:self.ik_cache=[];self.ik_owner=owner
+        names=self.arm.state['joint_names']
+        actual=dict(zip(state.joint_state.name,state.joint_state.position))
+        seeds=[{n:actual[n] for n in names}]
+        limits=self.arm.state['limits']
+        for candidate in list(reversed(self.ik_cache))+[{n:(lo+hi)/2 for n,(lo,hi) in zip(names,limits)}]:
+            if (all(n in candidate and math.isfinite(candidate[n]) and lo<=candidate[n]<=hi
+                    for n,(lo,hi) in zip(names,limits))
+                    and all(max(abs(candidate[n]-old[n]) for n in names)>.03 for old in seeds)):
+                seeds.append(candidate)
+            if len(seeds)==4:break
+        self.ik_attempts=seeds
+        self.next_ik(generation,state)
+
+    def next_ik(self,generation,state):
+        import copy
+        from moveit_msgs.srv import GetPositionIK
+        seed=self.ik_attempts.pop(0)
+        request=GetPositionIK.Request();ik=request.ik_request
+        ik.group_name,ik.ik_link_name='panda_arm','panda_tcp'
+        ik.robot_state=copy.deepcopy(state);ik.avoid_collisions=True
+        positions=ik.robot_state.joint_state.position
+        for i,name in enumerate(ik.robot_state.joint_state.name):
+            if name in seed:positions[i]=seed[name]
+        ik.pose_stamped.header.frame_id='native_world';ik.pose_stamped.pose=self.target;ik.timeout.sec=1
+        self.ik.call_async(request).add_done_callback(lambda f:self.got_ik(f,generation,state))
 
     def got_ik(self, future, generation, state):
         if generation != self.generation:
@@ -374,6 +395,9 @@ class CartesianControls(ttk.LabelFrame):
         from moveit_msgs.srv import GetMotionPlan
         answer = future.result()
         if answer.error_code.val != 1:
+            if self.ik_attempts and time.monotonic()-self.planning_started<4.5:
+                self.next_ik(generation,state)
+                return
             self.planning = False
             self.status.set('Target is unreachable or colliding with the current tool orientation '
                 '(MoveIt code %d). Try a smaller step or adjust a joint first.' % answer.error_code.val)
@@ -384,6 +408,8 @@ class CartesianControls(ttk.LabelFrame):
             self.planning = False
             self.status.set('MoveIt returned an incomplete IK solution.')
             return
+        self.ik_cache.append({n:solution[n] for n in names})
+        self.ik_cache=self.ik_cache[-6:]
         request = GetMotionPlan.Request()
         motion = request.motion_plan_request
         motion.group_name, motion.pipeline_id, motion.planner_id = 'panda_arm', 'ompl', 'RRTConnect'

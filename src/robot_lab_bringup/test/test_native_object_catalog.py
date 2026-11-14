@@ -104,6 +104,28 @@ def test_appended_free_world_body_keeps_authored_pose_in_robot_home_key():
     np.testing.assert_allclose(data.xpos[body],[1.,2.,.515]);np.testing.assert_allclose(data.xquat[body],[1.,0.,0.,0.])
 
 
+def test_light_cube_support_aggregates_all_four_real_contact_forces(tmp_path):
+    source=tmp_path/'supported.xml';source.write_text('''<mujoco><worldbody>
+      <geom type="plane" size="3 3 .1"/>
+      <body name="base" pos="0 0 1"><geom type="box" size=".1 .1 .1"/>
+        <body name="left"><geom type="sphere" size=".01"/></body>
+        <body name="right"><geom type="sphere" size=".01"/></body></body>
+      <body name="environment_cube" pos="1 0 .015"><freejoint/>
+        <geom type="box" size=".015 .015 .015" mass=".035"/></body>
+      </worldbody></mujoco>''')
+    model=mj.MjModel.from_xml_path(str(source));data=mj.MjData(model)
+    for _ in range(1000):mj.mj_step(model,data)
+    node=SimpleNamespace(model=model,data=data,mujoco=mj,robot_bodies=4,object_body=4,
+        gripper=SimpleNamespace(finger_bodies=[2,3]),create_publisher=lambda *args:None,
+        create_subscription=lambda *args:None,get_parameter=lambda _:SimpleNamespace(value=str(source)))
+    forces=[]
+    for i in range(data.ncon):
+        force=np.zeros(6);mj.mj_contactForce(model,data,i,force);forces.append(abs(force[0]))
+    assert len(forces)==4 and max(forces)<.1 and sum(forces)>.3
+    observation=NativeObjectCatalog(node).snapshot()['custody']
+    assert observation['supported'] and observation['speed']<.001
+
+
 def test_selected_box_retires_its_static_snapshot_and_requires_real_scene_ack():
     pytest.importorskip('moveit_msgs.msg')
     scripts=Path(__file__).resolve().parents[1]/'scripts';sys.path.insert(0,str(scripts))
@@ -170,6 +192,12 @@ def test_measured_attachment_transform_is_published_only_after_scene_ack_and_cle
     fk.set_result(SimpleNamespace(error_code=SimpleNamespace(val=1),pose_stamped=[tool]))
     pending={};objects.poll(pending)
     assert not objects.attached and objects.attachment is None and pending['object_in_tool'] is None
+    # Attached ADD performs MoveIt's world-to-robot transfer. A duplicate
+    # world REMOVE rejects the diff after that transfer has already happened.
+    scene=updates[-1][0].scene
+    assert not scene.world.collision_objects
+    assert scene.robot_state.attached_collision_objects[0].object.id=='environment_cube'
+    assert scene.robot_state.attached_collision_objects[0].object.header.frame_id=='panda_tcp'
     updates[-1][1].set_result(SimpleNamespace(success=True))
     acknowledged={};objects.poll(acknowledged)
     assert acknowledged['object_attached'] and acknowledged['ready']

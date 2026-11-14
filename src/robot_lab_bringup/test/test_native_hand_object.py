@@ -118,7 +118,7 @@ def test_published_hand_state_carries_grasp_scope(tmp_path):
     assert state['hand']['object_grasp']['state'] == 'idle'
 
 
-def _object_hand():
+def _object_hand(entry='robotiq_2f85',filename='2f85.xml'):
     """The installed Robotiq hand with a documented, supported free cube.
 
     Uses the real source coupler linkage so the pads actually close on the
@@ -129,13 +129,13 @@ def _object_hand():
     import mujoco as mj
     root = Path('/workspace/molar/robot_lab_runtime/external_assets/sources/'
                 'mujoco_menagerie/4d038b3feae26ec82b46a4d586379114012a8ac7')
-    source = root/'robotiq_2f85'/'2f85.xml'
+    source = root/entry/filename
     if not source.is_file():
         pytest.skip('Installed Robotiq source not available on this host')
     base = mj.MjModel.from_xml_path(str(source))
     base_data = mj.MjData(base)
     contract = hand_contract(base, source)
-    geometry = object_geometry(base, base_data, 'robotiq_2f85', contract)
+    geometry = object_geometry(base, base_data, entry, contract)
     spec = mj.MjSpec.from_file(str(source))
     center, half = geometry['center'], geometry['half_size']
     support_top = center[2]-half[2]
@@ -199,7 +199,8 @@ def test_real_robotiq_grasp_measures_two_sided_contact_then_release_is_free():
         control.before_step()
         mj.mj_step(model, data)
         control.after_step()
-    assert control.grasp['state'] in ('released', 'releasing')
+    assert control.grasp['state']=='supported_release'
+    assert control.grasp['supported'] and control.grasp['contact_count']==0
 
 
 def test_grasp_is_rejected_without_a_documented_object(tmp_path):

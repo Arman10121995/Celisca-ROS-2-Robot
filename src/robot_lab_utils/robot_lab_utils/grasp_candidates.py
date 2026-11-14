@@ -112,8 +112,8 @@ def release_on_support(obj,support,edge_margin=.005,height_tolerance=.015):
                 and abs(bottom-top)<=height_tolerance)
 
 
-def panda_top_grasps(obj,**kwargs):
-    """Add upper-face pinches from the reviewed Panda's 8.5 mm half-depth pads.
+def panda_top_grasps(obj,*,finger_forward_extent_m,pad_half_depth_m,link_padding_m,**kwargs):
+    """Add upper-face pinches from measured Panda collision/pad bounds.
 
     Keeping the pad inside the upper box band leaves more clearance above a
     supporting bench with the unchanged 1 cm MoveIt link padding. IK/FCL and
@@ -123,8 +123,10 @@ def panda_top_grasps(obj,**kwargs):
     _,rotation,size,kind=_geometry(obj)
     if kind!='box':return candidates
     height=float((np.abs(rotation)@size)[2])
-    offset=height/2-.0085-.002
-    if not 0.001<=offset<=.03:return candidates
+    if not all(math.isfinite(v) and v>=0 for v in (finger_forward_extent_m,pad_half_depth_m,link_padding_m)):
+        raise ValueError('Finite source finger/pad/padding bounds required')
+    offset=max(finger_forward_extent_m+link_padding_m+.001-height/2,height/2-pad_half_depth_m-.002)
+    if not 0.001<=offset<=.03 or offset>=height/2+pad_half_depth_m-.003:return candidates
     elevated=[]
     for original in candidates:
         result=copy.deepcopy(original);result['id']+='_upper'

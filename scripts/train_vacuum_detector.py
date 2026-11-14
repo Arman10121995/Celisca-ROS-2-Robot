@@ -103,6 +103,28 @@ class DetData(torch.utils.data.Dataset):
     def collate_fn(batch):
         return tuple(zip(*batch))
 
+class HorizontalFlip(torch.utils.data.Dataset):
+    """Training-only mirror augmentation: the image and its boxes flip together with probability *p*."""
+
+    def __init__(self, subset, p=0.5, seed=7):
+        self.subset, self.p = subset, p
+        self.generator = torch.Generator().manual_seed(seed)
+
+    def __len__(self):
+        return len(self.subset)
+
+    def __getitem__(self, idx):
+        image, target = self.subset[idx]
+        if float(torch.rand(1, generator=self.generator)) < self.p:
+            width = image.shape[-1]
+            image = image.flip(-1)
+            boxes = target['boxes'].clone()
+            if len(boxes):
+                boxes[:, [0, 2]] = width - target['boxes'][:, [2, 0]]
+            target = dict(target, boxes=boxes)
+        return image, target
+
+
 def train_one_epoch(model, optimizer, data_loader, device):
     model.train()
     total = 0.0
@@ -226,6 +248,8 @@ def main():
     ap.add_argument('--torch-threads', type=int, default=2)
     ap.add_argument('--freeze-features', action='store_true',
                     help='Fine-tune proposals/ROI heads over frozen pretrained MobileNet/FPN features')
+    ap.add_argument('--lr-step', type=int, default=3, help='Epochs between 10x learning-rate drops')
+    ap.add_argument('--hflip', action='store_true', help='Mirror training images (and boxes) half the time')
     ap.add_argument('--weights', choices=['coco', 'none'], default='coco',
                     help='none: offline architecture smoke test only, not a trained model claim')
     args = ap.parse_args()
@@ -246,7 +270,7 @@ def main():
         if image.get('sha256', digest) != digest:
             raise ValueError('Captured image hash changed: %s' % image['file_name'])
         image_hashes[image['file_name']] = digest
-    train_loader = DataLoader(train_set,
+    train_loader = DataLoader(HorizontalFlip(train_set, seed=args.seed) if args.hflip else train_set,
                               batch_size=args.batch,
                               shuffle=True, collate_fn=DetData.collate_fn, num_workers=0)
     val_loader = DataLoader(val_set,
@@ -266,7 +290,7 @@ def main():
 
     params = [p for p in model.parameters() if p.requires_grad]
     optimizer = torch.optim.SGD(params, lr=args.lr, momentum=0.9, weight_decay=1e-4)
-    lr_scheduler = torch.optim.lr_scheduler.StepLR(optimizer, step_size=3, gamma=0.1)
+    lr_scheduler = torch.optim.lr_scheduler.StepLR(optimizer, step_size=args.lr_step, gamma=0.1)
 
     best = {'mAP': -1.0}
     for epoch in range(args.epochs):
@@ -290,6 +314,8 @@ def main():
                 'architecture': 'fasterrcnn_mobilenet_v3_large_fpn',
                 'model_kwargs': model_kwargs,
                 'freeze_features': args.freeze_features,
+                'training': {'epochs': args.epochs, 'batch': args.batch, 'lr': args.lr, 'lr_step': args.lr_step,
+                             'hflip': args.hflip},
                 'torch_version': str(torch.__version__),
                 'annotations_sha256': hashlib.sha256((args.data / 'annotations.json').read_bytes()).hexdigest(),
                 'split_sha256': hashlib.sha256((args.data / 'val_ids.json').read_bytes()).hexdigest(),

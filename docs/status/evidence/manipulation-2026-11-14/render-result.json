@@ -1,0 +1,37 @@
+{
+  "object": "environment_pickup_cube",
+  "type": "box",
+  "size": [
+    0.03,
+    0.03,
+    0.03
+  ],
+  "position": [
+    -0.0010634248241094856,
+    -0.6184550249254839,
+    0.5133126423830453
+  ],
+  "orientation_wxyz": [
+    0.9999270718907994,
+    0.007958208641061532,
+    -0.005495258436335051,
+    -0.007233253060363796
+  ],
+  "position_std_bound_m": 0.004974835018580613,
+  "reprojection_rms_px": 0.16782351231297474,
+  "translation_std_m": 0.004448651485692398,
+  "rotation_std_rad": 0.03490438029109221,
+  "minimum_edge_px": 34.18206002961933,
+  "expected_position": [
+    0.0,
+    -0.62,
+    0.515
+  ],
+  "position_error_m": 0.002522894382431309,
+  "expected_orientation_wxyz": [
+    1.0,
+    0.0,
+    0.0,
+    0.0
+  ]
+}

@@ -3638,6 +3638,8 @@ class SimulationLauncherGui(tk.Tk):
             self.drive_repeat_job = self.after(100, self._repeat_drive)
 
     def _stop_drive(self, keep_input_enabled=False):
+        task=getattr(getattr(getattr(self,'arm_tab',None),'cartesian',None),'object_task',None)
+        if task is not None:task.cancel('Drive/Space intervention')
         if hasattr(self,'car_parking_controls'):
             self.car_parking_controls.cancel()
         if hasattr(self, 'molar_controls'):

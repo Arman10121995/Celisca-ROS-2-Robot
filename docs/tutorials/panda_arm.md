@@ -173,6 +173,9 @@ includes the shared workspace layout. Earlier repeats remain historical.
 
 ## Select a measured object and plan grasp stages
 
+The **Automatic pick / place** panel can run the existing guarded stages as a
+bounded task after explicit Start. See [the automatic task guide](panda-object-tasks.md).
+
 November 13 implementation: **Arm → Object grasp targets** exposes the actual
 MuJoCo free-box catalog for the native Panda. Keep the normal Panda/MoveIt
 launch above. The existing supported fixture works; a selected world can also

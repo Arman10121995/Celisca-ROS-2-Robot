@@ -19,6 +19,14 @@ Instead of wiring simulators, controllers, and planners by hand, you select from
 
 **The platform is partial.** It is an active research lab, not a finished product. Some robot × simulator × map combinations are measured and qualified; others are implemented but unqualified. See [Current Status](#current-status) for what is done and what remains.
 
+Manipulation continuation: native Panda now has an explicit **Run pick / place**
+sequence for selected physical boxes and bench supports. Each stage uses the
+existing planner/actions and measured custody; full mission acceptance remains
+open. Stretch recipes can select **Camera fiducials** for unheld-object reach
+targets, with missing or stale detections stopping the task.
+[Automatic Panda tasks](docs/tutorials/panda-object-tasks.md) ·
+[Camera targets and limits](docs/tutorials/camera-object-targets.md).
+
 November 14 continuation: the native Panda has **Top / Side / Top + side** grasp
 choices and explicit retreat planning; Stretch pick/place recipes have selectable
 world-axis approaches. The Arm control column now fits its planning panels.

@@ -28,6 +28,9 @@ class PandaObjectTask(ttk.LabelFrame):
         self.cycles=tk.IntVar(value=1);self.feedback=tk.StringVar(value='Select a grasp candidate and a support above; Run authorizes the complete sequence.')
         ttk.Label(self,text='Cycles').grid(row=0,column=0,sticky='w')
         ttk.Spinbox(self,textvariable=self.cycles,from_=1,to=5,width=5).grid(row=0,column=1,sticky='w')
+        self.clearance=tk.DoubleVar(value=.05)
+        ttk.Label(self,text='Lift / approach height (m)').grid(row=4,column=0,sticky='w')
+        ttk.Spinbox(self,textvariable=self.clearance,from_=.02,to=.15,increment=.01,width=6).grid(row=4,column=1,sticky='w')
         self.run_button=ttk.Button(self,text='Run pick / place',command=self.run)
         self.run_button.grid(row=1,column=0,sticky='ew',pady=4)
         self.stop_button=ttk.Button(self,text='Stop task',command=self.cancel)
@@ -56,15 +59,18 @@ class PandaObjectTask(ttk.LabelFrame):
             self.identity={k:self.grasp.object[k] for k in ('id','plant_id','source_sha256')}
             self.dimensions=list(self.grasp.object['size']);self.force=float(hand.force_var.get())
             self.release_gap=float(self.grasp.release_gap.get())
+            self.lift_height=float(self.clearance.get())
+            if not math.isfinite(self.lift_height) or not .02<=self.lift_height<=.15:
+                raise ValueError('Use a finite 2–15 cm lift/approach height')
             if not math.isfinite(self.force) or not .1<=self.force<=20:raise ValueError('Use the original 0.1–20 N force range')
             if not math.isfinite(self.release_gap) or not .003<=self.release_gap<=.15:raise ValueError('Use a 3–150 mm release gap')
             root=Path(os.environ.get('ROBOT_LAB_RUNTIME_ROOT','/workspace/molar/robot_lab_runtime'))
             directory=root/'panda-object-tasks';directory.mkdir(parents=True,exist_ok=True)
             if not directory.resolve().is_relative_to('/workspace') or directory.stat().st_dev==Path('/').stat().st_dev:
                 raise ValueError('Object task journals require the mounted SSD')
-            self.log_path=directory/(uuid.uuid4().hex+'.jsonl');self.hand=hand;self.carry=False;self.retreat=None
+            self.log_path=directory/(uuid.uuid4().hex+'.jsonl');self.hand=hand;self.carry=False;self.retreat=None;self.placement=None
             self.record(operation='start',identity=self.identity,candidate=self.candidate,support=self.support,cycles=cycles,
-                        force_n=self.force,scope='Explicit measured-stage task, not a mission certificate')
+                        force_n=self.force,lift_height_m=self.lift_height,scope='Explicit measured-stage task, not a mission certificate')
             self.engine.start(STAGES*cycles)
         except (ValueError,KeyError,TypeError,tk.TclError,OSError) as exc:self.feedback.set(str(exc))
 
@@ -94,7 +100,7 @@ class PandaObjectTask(ttk.LabelFrame):
             raise ValueError('Object source, plant, identity or dimensions changed')
         if (self.grasp.object_choice.get()!=self.identity['id'] or self.grasp.support_choice.get()!=self.support
                 or self.grasp.strategy.get()!=self.strategy or float(self.hand.force_var.get())!=self.force
-                or float(self.grasp.release_gap.get())!=self.release_gap):
+                or float(self.grasp.release_gap.get())!=self.release_gap or float(self.clearance.get())!=self.lift_height):
             raise ValueError('Task selection or force/gap changed; restart deliberately')
         selection=self.grasp.selector.current()
         if not 0<=selection<len(self.grasp.candidates) or self.grasp.candidates[selection]['id']!=self.candidate:
@@ -152,13 +158,18 @@ class PandaObjectTask(ttk.LabelFrame):
             rotation=Rotation.from_quat(np.asarray(obj['orientation_wxyz'])[[1,2,3,0]])
             local=Rotation.from_quat(np.asarray(attachment['orientation_wxyz'])[[1,2,3,0]])
             tool=rotation*local.inv()
-            position=np.asarray(obj['position'])-tool.apply(attachment['position'])+[0.,0.,.1]
+            position=np.asarray(obj['position'])-tool.apply(attachment['position'])+[0.,0.,self.lift_height]
             self.dispatch(self.cart.plan_pose,self.pose(dict(position=position,
                 orientation_wxyz=tool.as_quat()[[3,0,1,2]].tolist())),'Task lift')
         elif stage in ('plan_above','plan_lower'):
-            result=support_placement(self.grasp.object,self.cart.scene.get('object_in_tool'),
-                self.grasp.catalog['supports'][self.support],clearance=self.release_gap,
-                edge_margin=.01+float(self.cart.scene.get('link_padding_m',.01)))
+            if stage=='plan_above':
+                self.placement=support_placement(self.grasp.object,self.cart.scene.get('object_in_tool'),
+                    self.grasp.catalog['supports'][self.support],clearance=self.release_gap,
+                    approach=self.lift_height,edge_margin=.01+float(self.cart.scene.get('link_padding_m',.01)))
+            # Keep one solved orientation through above/lower/retreat. Small
+            # compliant object rotations must not silently change those poses.
+            if self.placement is None:raise ValueError('No bound placement solution')
+            result=self.placement
             label=stage.removeprefix('plan_')
             if label=='lower':
                 self.retreat=copy.deepcopy(result['poses']['above'])
@@ -169,6 +180,10 @@ class PandaObjectTask(ttk.LabelFrame):
             if self.retreat is None:raise ValueError('Placement retreat has no bound target')
             self.dispatch(self.cart.plan_pose,self.pose(self.retreat),'Task post-release retreat')
         else:raise ValueError('Unknown object task stage '+stage)
+        if self.cart.planning:
+            target=self.cart.target
+            self.record(operation='plan_target',stage=stage,position=[getattr(target.position,a) for a in 'xyz'],
+                        orientation_wxyz=[getattr(target.orientation,a) for a in 'wxyz'])
         return ('plan',self.cart.generation) if self.cart.planning else None
 
     def observe(self,stage,token):

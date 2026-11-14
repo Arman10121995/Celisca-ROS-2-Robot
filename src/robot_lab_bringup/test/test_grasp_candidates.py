@@ -65,3 +65,21 @@ def test_side_grasps_fit_rotated_box_corners_and_approach_from_outside_the_shape
 
 def test_top_candidates_keep_the_existing_vertical_contract_and_add_retreat():
     for candidate in top_grasps(obj()):assert candidate['poses']['retreat']==candidate['poses']['approach']
+
+
+def test_panda_upper_pinches_leave_pad_and_link_padding_clear_of_a_support():
+    from robot_lab_utils.grasp_candidates import panda_top_grasps,release_on_support
+    box=obj(position=[.4,0.,.515])
+    candidates=panda_top_grasps(box,finger_forward_extent_m=.01033980783,pad_half_depth_m=.0085,link_padding_m=.01)
+    upper=[c for c in candidates if c['id'].endswith('_upper')]
+    assert upper and len(candidates)==2*len(top_grasps(box))
+    for c in upper:
+        z=c['poses']['grasp']['position'][2]
+        # Source Panda pad is 17 mm high. Include 10 mm planning padding;
+        # its lower bound clears the .5 m bench, its physical top stays in box.
+        assert z-.0085-.01>.5 and z+.0085<.53
+        assert z-.01033980783-.01>.5  # Whole authored finger, including its mesh tip.
+    support=dict(id='bench',frame='native_world',type='box',size=[.2,.2,.2],position=[.4,0.,.4],orientation_wxyz=[1.,0.,0.,0.])
+    assert release_on_support(box,support)
+    assert not release_on_support(dict(box,position=[.5,0.,.515]),support)
+    assert not release_on_support(dict(box,position=[.4,0.,.1]),support)

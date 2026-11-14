@@ -115,6 +115,29 @@ the joint state's simulation timestamp.
 
 ## Implementation and validation handoff
 
+### Source-axis object transport
+
+UMI exposes **Object lift height**, **Lift and hold object** and **Lower to
+start** in the existing Hand page. Add the free-object fixture before Run,
+establish measured opposing contacts with Grasp object, wait for the source
+axis to settle, then explicitly request a 2–15 cm lift. This commands the
+original vertical position motor at its original bounded rate and keeps the
+finger preload. Other fixed-mount hands require an arm transport adapter.
+
+Completion requires measured object height, low speed, no environmental
+support, retained opposing contacts and bounded finger-relative translation
+and rotation for one simulated second. Moving the whole hand is no longer
+mistaken for object slip. **Lower to start** returns the original source-axis
+setpoint; a supported return requires actual settled support. Press **Release
+object** afterward: `released` only means finger contact has ended;
+`supported_release` requires one simulated second of supported, settled motion.
+
+Stop, manual commands, invalid requests, contact loss, changed axis, new or
+worsening external finger contact, stale simulation clock and lost operator
+heartbeat interrupt transport. There is no automatic resumption. A current
+source/backend GUI mission receipt is required before qualifying this workflow;
+protocol checks and the availability of these buttons are separate evidence.
+
 Read [the exact diagnostic scope and retained failures](../status/native-hands-2026-10-14.md)
 and [the receipt](../status/native-hands-receipt-2026-10-14.json). Start from
 the existing normal GUI producer on the SSD, not a replacement simulator or

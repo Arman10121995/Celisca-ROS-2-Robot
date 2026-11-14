@@ -1,5 +1,20 @@
 # Current Robot Lab status
 
+November 14 Codex manipulation continuation: camera-marker point targets are
+implemented for native mobile recipes, with explicit GUI selection, image-time
+TF and source/scene/plant/freshness gates. The actual rendered marker fixture
+measures 2.523 mm position error; this is separate from a robot mission.
+[Camera receipt](camera-object-targets-2026-11-14.md).
+
+Panda's **Automatic pick / place** panel sequences existing actions/plans,
+source-aware box grasps and sustained physical custody checks. Live repair
+continues; it is not yet a complete pick/place certificate. UMI Hand controls
+now request source-axis lift/hold/lower and sustained supported release, with
+finger-relative slip/rotation and Stop/watchdog guards. Twenty-seven focused
+source/protocol checks and two package builds pass; a physical UMI lift remains
+unqualified. [Panda guide](../tutorials/panda-object-tasks.md) ·
+[Hand workflow](../tutorials/native-hand-controls.md#source-axis-object-transport).
+
 November 15 Claude: worlds (I16, R6.6/R6.2), implemented and experimental:
 - **[Gazebo example review](evidence/r66-fixture-review-2026-11-15/README.md):** all 100 Gazebo Fortress example worlds are now classified from their own content. 95 of 99 load headless.
 - **Fuel licences:** all 80 Gazebo Fuel models they use are CC0 or CC-BY 4.0.

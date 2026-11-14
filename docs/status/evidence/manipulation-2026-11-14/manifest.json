@@ -1,0 +1,16 @@
+{
+  "base_revision": "cba71963766b1fba75d96daf6ac62f13cf3b4846",
+  "scope": "Camera rendered fixture and declared software/source component checks; no whole-platform certificate",
+  "source_sha256": {
+    "src/robot_lab_utils/robot_lab_utils/fiducial_objects.py": "385f63b1e33e71fe7cd4f289b6394fbc06953368d2328cd68ecfd3b876ee0340",
+    "src/robot_lab_utils/robot_lab_utils/object_estimates.py": "6bc92340522519ac7bb263000e05689578c174320259f1847b22c24f3b5200f1",
+    "src/robot_lab_utils/robot_lab_utils/fiducial_object_pose.py": "227c46746b8af6d27b691791a46052d8b33a9218a898c823d502b1bb5ea2cfce",
+    "src/robot_lab_utils/robot_lab_utils/mobile_manipulation_scene.py": "1589f02261682209b0536882de38116ab322725e1426a1a97aaa7af5a7f669a9",
+    "src/robot_lab_gui/robot_lab_gui/panda_object_task.py": "dc8a5da36dea95f8b5608337eaa82ec8ef73e690f798d207cb9dcf04df7ea50d",
+    "src/robot_lab_gui/robot_lab_gui/cartesian_controls.py": "5814b3a9c46fade969b312581ac3505dfb2d3a116f916d5d866cba95d9b1364e",
+    "src/robot_lab_mujoco/python/robot_lab_mujoco/native_hand_control.py": "9188299ce9d84d5190169e0fb2cdf8860816c7937086c00e4dbefeb3aac775db",
+    "src/robot_lab_mujoco/python/robot_lab_mujoco/native_hand_lift.py": "a4995e5d96f5f0459df20eb15cb78b88c091ffda29d62afbad4c9173f42a5a6e"
+  },
+  "raw_camera": "/workspace/molar/robot_lab_runtime/manipulation-camera-20261114",
+  "raw_panda": "/workspace/molar/robot_lab_runtime/panda-object-task-20261114"
+}

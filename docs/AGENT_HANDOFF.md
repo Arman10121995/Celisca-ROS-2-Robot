@@ -1,5 +1,21 @@
 # Agent Handoff Protocol
 
+November 14 manipulation continuation: preserve the RGB/CameraInfo pairing,
+image-time TF and source/scene/plant-bound camera-marker task targets;
+[camera receipt](status/camera-object-targets-2026-11-14.md). Panda has a normal
+GUI explicitly started automatic box task with original actions/planning,
+source-finger-aware upper pinches, actual attachment ACK, measured custody and
+operator-selected lift/approach height. Keep arm-only planning seeds as state
+diffs, avoid duplicate world REMOVE on attachment and restrict hidden Gait
+focus callbacks to the selected gait workflow. Actual source/world keyframes
+and light-cube support aggregation are repaired. The complete Panda sequence
+is under live repair; failures stay on SSD, not a qualification claim.
+UMI source-axis lift/hold/lower and sustained supported release are implemented;
+27 source/protocol checks pass. Physical UMI lift and wider R5.7/R5.8/R5.9
+source/backend missions remain open. [Panda guide](tutorials/panda-object-tasks.md)
+and [Hand guide](tutorials/native-hand-controls.md#source-axis-object-transport).
+The current ROADMAP implementation queue remains authoritative.
+
 November 14 car continuation: preserve the normal Drive-panel parking UI,
 exact owned-launch/current-instance binding, active-navigator lifecycle gate,
 whole-operation deadline (including server/acceptance waits), operator lease,

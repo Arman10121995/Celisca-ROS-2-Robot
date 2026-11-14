@@ -134,8 +134,8 @@ Work top to bottom. Each line links to its task.
 | I4b | [R6.8](#r68--real-world-area-import-from-a-globe) Real-world area import | Done 2026-11-13: globe picker (CesiumJS + OSM), Terrain Tiles + OSM buildings/roads/trees/water, SUMO people/traffic; support and roof heights measured on four simulators | implemented |
 | I5 | [R5.11](#r511--drone-moving-obstacles-and-other-drone-backends) Drone moving obstacles | Done 2026-11-13: Kalman tracks, predicted sweeps, walkway look-both-ways and overflight, evasion, sensor-loss hold/land, EKF heading/height gate; 2 passing flights past walkers (Gazebo); PX4 + MuJoCo plant: takeoff, 5 m route and landing | implemented |
 | I6 | [R5.9](#r59--mobile-manipulators) Mobile manipulation | Stretch recipes, camera-marker point targets, directional/pose reaches, alternate IK/configuration search, interlocks and actual costmap receipts implemented; unmarked perception and further source adapters remain | partial |
-| I7 | [R5.7](#r57--manipulators-and-motion-planning) Arms | Panda measured box selection, top/side/retreat and support-placement stage plans implemented; unattended sequencing, arbitrary geometry, coupled arms and other backends remain | partial |
-| I8 | [R5.8](#r58--robot-hands-and-grippers) Hands | Torque/tendon hand adapters, object workflows | partial |
+| I7 | [R5.7](#r57--manipulators-and-motion-planning) Arms | Panda box selection, source-finger-aware grasp candidates and bounded automatic pick/place sequence implemented; further geometry, perception, coupled arms and other backends remain | partial |
+| I8 | [R5.8](#r58--robot-hands-and-grippers) Hands | Source-axis UMI lift/hold/lower, relative-pose custody and sustained supported release implemented; physical lift qualification, further torque/tendon sources and backends remain | partial |
 | I9 | [R10.2](#r102--fleet-management-and-open-rmf) Fleet / Open-RMF | Done 2026-11-14: shared-zone reservations (map passages, doors, docks), cycle breaker, recovery drive-out, RMF energy from a drivetrain calibration; two crossing runs pass (native and RMF). Chargers/doors in other worlds, larger fleets remain | implemented |
 | I10 | [R10.3](#r103--swarm-robotics) Swarms | Done 2026-11-14: ROS2swarm port of per-member scan-only behaviours, scan-sensed cooperative coverage, ground/air member-loss replanning; dispersion and coverage-with-loss measured; aggregation not yet passing; 3–4 drone flight is validation | implemented |
 | I11 | [R10.5](#r105--underwater-worlds-sensing-slam-and-navigation) / [R10.4](#r104--underwater-robots-and-controllers) Marine | Done 2026-11-14: MuJoCo ROV plant (ported Fortress water forces; matches Gazebo), damping-based current feedforward (1 cm drift in 0.1 m/s), volumetric and current-aware AUV routes (unit-tested). PyBullet/Isaac marine, AUV sensor-only localization mission remain | implemented |
@@ -391,11 +391,17 @@ parking batch needs its own run. Details and evidence are in the
   invalidation in the existing GUI. All paths still require existing IK/OMPL
   and separate execution. [Takeover receipt](docs/status/takeover-2026-11-14.md).
 - **Remaining implementation:**
-  - extend the measured Panda box stage planner into a complete repeated
-    pick/place pipeline; add compound/mesh geometry, perception pose sources,
-    gripper-specific grasp generation and unattended placement/retreat sequencing;
+  - compound/mesh geometry, perception pose sources and additional
+    gripper-specific pipelines beyond the native Panda box sequence;
   - coupled mechanisms (mimic and four-bar joints);
   - arm controllers on Gazebo, PyBullet and Isaac.
+- **Automatic box tasks (2026-11-14, Codex):** normal Arm page explicitly
+  starts 1–5 pick/place cycles through the existing IK/OMPL/actions, measured
+  opposing contacts, acknowledged attachments and sustained lift/release
+  observations. Manual commands, selection/source changes and Stop interrupt.
+  Source-finger bounds add upper pinches while preserving normal link padding.
+  The live sequence is still under repair; do not qualify a full mission from
+  the availability of the panel. [Guide](docs/tutorials/panda-object-tasks.md).
 - **How to do it:**
   1. Start from the Panda MoveIt workflow (`docs/tutorials/panda_arm.md`) and
      the attached-object code from the October 9 checkpoint
@@ -420,8 +426,15 @@ parking batch needs its own run. Details and evidence are in the
 - **Force feedback continuation (2026-11-13, Codex):** GUI-requested existing-grasp force regulation adjusts source position targets, retains original PID/transmission/force limits and requested effort fraction, unloads initial over-force and interrupts on contact loss, new/worsening external touch, overload, Stop/loss/deadline. One actual pinned Robotiq component fixture reduced about 12 N to 5.25 N per side for a 5 N request; this is not a GUI/hand-family mission. [Guide](docs/tutorials/native-hand-controls.md#regulate-an-established-grasp) · [receipt](docs/status/hand-force-2026-11-13.md).
 - **Remaining implementation:**
   - raw torque and tendon hand adapters for the remaining source hands;
-  - object workflows (stable grasp detection, lift, hold, release) in the Hand page;
+  - arm transport for fixed-mount hand families and additional object workflows;
   - hands on other backends.
+- **Source-axis object workflow (2026-11-14, Codex):** Hand page now requests
+  bounded UMI vertical lift, measured hold and return before release. Custody
+  uses actual finger-relative translation/rotation; supported release requires
+  actual support and low velocity for one simulated second. Original source
+  motors/rates/preload remain; Stop/watchdog/contact/clock/obstacle guards
+  interrupt. Focused source/protocol checks pass; a physical UMI lift remains
+  unqualified. [Procedure](docs/tutorials/native-hand-controls.md#source-axis-object-transport).
 - **How to do it:** extend `robot_lab_mujoco/native_hand_control.py` and
   `robot_lab_gui/native_hand_controls.py`. Measure grasp stability from
   contact forces (`test_native_hand_object.py` shows the pattern).
@@ -464,6 +477,12 @@ parking batch needs its own run. Details and evidence are in the
     source-specific object pipelines;
   - generalize the existing native interlock and measured footprint-consumption gate to other mobile-manipulator adapters;
   - Fetch, PR2 or TIAGo as a second source.
+- **Camera-marker targets (2026-11-14, Codex):** RGB/CameraInfo/image-time TF
+  feed bounded ArUco/IPPE object poses to the existing source/scene/plant-bound
+  task builder. GUI recipes explicitly select simulator geometry or camera
+  fiducials for unheld reaches; missing/stale estimates never fall back to
+  truth. Actual rendered marker fixture error is 2.523 mm; this is separate
+  from a full robot grasp mission. [Receipt](docs/status/camera-object-targets-2026-11-14.md).
 - **How to do it:**
   1. Extend the existing `native_mobile_tasks.py` sequencer and
      `mobile_task_controls.py` task builder. Preserve independent Nav2 outcomes,

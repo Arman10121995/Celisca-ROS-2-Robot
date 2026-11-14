@@ -181,7 +181,9 @@ class MeasuredObjects:
                     obj.primitive_poses[0].position = Point(x=float(offset[0]), y=float(offset[1]), z=float(offset[2]))
                     obj.primitive_poses[0].orientation = Quaternion(w=float(q[0]), x=float(q[1]), y=float(q[2]), z=float(q[3]))
                     scene = self.scene()
-                    scene.world.collision_objects = [CollisionObject(id=obj.id, operation=CollisionObject.REMOVE)]
+                    # MoveIt's attached ADD transfers this ID out of the
+                    # world itself. A world REMOVE in the same diff runs
+                    # afterward and rejects the otherwise applied attachment.
                     scene.robot_state.attached_collision_objects = [AttachedCollisionObject(
                         link_name='panda_tcp', object=obj, touch_links=self.object['finger_links'])]
                     self.pending_attachment=dict(object_id=self.object['id'],

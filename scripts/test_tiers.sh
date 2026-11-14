@@ -32,6 +32,7 @@ MAP_TEST="src/robot_lab_maps/test"
 GUI_TEST="src/robot_lab_gui/test"
 
 FAST_TESTS=(
+  "$GUI_TEST/test_gait_focus_scope.py"
   "src/robot_lab_utils/test/test_guarded_sequence.py"
   "src/robot_lab_utils/test/test_fiducial_objects.py"
   "src/robot_lab_utils/test/test_car_parking_clearance.py"
@@ -178,6 +179,8 @@ PHYSICS_TESTS=(
   "$BRG_TEST/test_native_hand_force.py"
   "$BRG_TEST/test_native_hand.py"
   "$BRG_TEST/test_native_hand_object.py"
+  "$BRG_TEST/test_native_hand_lift.py"
+  "$GUI_TEST/test_panda_state_diff.py"
   "$BRG_TEST/test_native_control_kinematics.py"
   "$BRG_TEST/test_native_payload_footprint.py"
   "$BRG_TEST/test_simulator_backends.py"

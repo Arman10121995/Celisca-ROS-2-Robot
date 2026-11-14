@@ -48,7 +48,8 @@ def source_camera():
     return children, height, pitch
 
 
-def fixture_world(map_name, seed, output):
+def fixture_world(map_name, seed, output, scatter=False):
+    """A fixture world with the four objects. *scatter*: anywhere in a 1.8 m square, not one per quadrant."""
     rng = np.random.default_rng(seed)
     source = ROOT / f'src/robot_lab_maps/maps/{map_name}/worlds/{map_name}.world'
     root = ET.parse(source).getroot()
@@ -61,9 +62,20 @@ def fixture_world(map_name, seed, output):
             ET.SubElement(plugin, 'render_engine').text = 'ogre2'
     center = (0., 0.) if map_name == 'nav_empty' else (4., 0.)
     objects = []
+    placed = []
     for i, (name, delta) in enumerate(zip(CLASSES, [(-.6, -.5), (.6, .5), (-.6, .5), (.6, -.5)])):
-        obj = {'class': name, 'x': center[0] + delta[0] + float(rng.uniform(-.15, .15)),
-               'y': center[1] + delta[1] + float(rng.uniform(-.15, .15)),
+        if scatter:
+            # Rejection-sample 0.45 m apart so footprints never overlap.
+            for _ in range(200):
+                delta = (float(rng.uniform(-.9, .9)), float(rng.uniform(-.9, .9)))
+                if all(math.hypot(delta[0] - a, delta[1] - b) > .45 for a, b in placed):
+                    break
+            placed.append(delta)
+            jitter = (0., 0.)
+        else:
+            jitter = (float(rng.uniform(-.15, .15)), float(rng.uniform(-.15, .15)))
+        obj = {'class': name, 'x': center[0] + delta[0] + jitter[0],
+               'y': center[1] + delta[1] + jitter[1],
                'yaw': float(rng.uniform(-math.pi, math.pi))}
         world.append(ET.fromstring(model_sdf(i, obj)))
         objects.append(obj)
@@ -118,15 +130,20 @@ def generate(args):
     receipt = {'scope': 'actual Gazebo source-camera fixture renders; no robot mission',
                'seed': args.seed, 'scenes': [], 'complete': False}
     try:
-        scenes = [('nav_empty', args.seed, 'train'), ('nav_empty', args.seed + 1, 'train'),
-                  ('nav_obstacle', args.seed + 2, 'val')]
+        # Training layouts on nav_empty, held-out layouts on nav_obstacle: no
+        # held-out image shares an object arrangement or a background.
+        scenes = ([('nav_empty', args.seed + i, 'train') for i in range(args.train_layouts)]
+                  + [('nav_obstacle', args.seed + args.train_layouts + i, 'val') for i in range(args.val_layouts)])
+        weights = np.asarray([args.class_weights.get(name, 1.) for name in CLASSES], dtype=float)
+        weights /= weights.sum()
         for scene_i, (map_name, seed, split) in enumerate(scenes):
             if time.monotonic() - start >= args.timeout:
                 raise TimeoutError('Dataset generation wall budget exhausted')
             scene_id = f'{map_name}-layout-{seed}'
             case = args.out / scene_id
             case.mkdir()
-            world, objects, height, pitch, source = fixture_world(map_name, seed, case / 'world.sdf')
+            world, objects, height, pitch, source = fixture_world(map_name, seed, case / 'world.sdf',
+                                                                  scatter=args.scatter)
             scene = {'scene': scene_id, 'split': split, 'map': map_name,
                      'map_sha256': hashlib.sha256(source.read_bytes()).hexdigest(),
                      'world_sha256': hashlib.sha256((case / 'world.sdf').read_bytes()).hexdigest(),
@@ -156,9 +173,10 @@ def generate(args):
                         raise TimeoutError('Dataset generation wall budget exhausted')
                     if (case / 'gazebo.log').stat().st_size > 64 * 1024 * 1024:
                         raise RuntimeError('Rendering log exceeds the 64 MB budget')
-                    target = objects[view % len(objects)]
+                    target = (objects[view % len(objects)] if args.class_weights == {} else
+                              objects[int(rng.choice(len(objects), p=weights))])
                     yaw = float(rng.uniform(-math.pi, math.pi))
-                    distance = float(rng.uniform(.28, 1.3))
+                    distance = float(rng.uniform(.28, args.max_distance))
                     x, y = target['x'] - distance * math.cos(yaw), target['y'] - distance * math.sin(yaw)
                     qx = -math.sin(pitch / 2) * math.sin(yaw / 2)
                     qy = math.sin(pitch / 2) * math.cos(yaw / 2)
@@ -221,6 +239,12 @@ def main():
     parser.add_argument('--out', type=Path, required=True)
     parser.add_argument('--views', type=int, default=48, help='Views per independent scene (3 scenes)')
     parser.add_argument('--seed', type=int, default=29)
+    parser.add_argument('--train-layouts', type=int, default=2)
+    parser.add_argument('--val-layouts', type=int, default=1)
+    parser.add_argument('--scatter', action='store_true', help='Scatter objects over a 1.8 m square per layout')
+    parser.add_argument('--class-weights', type=json.loads, default={},
+                        help='JSON {class: weight} for which object a view targets (default: round robin)')
+    parser.add_argument('--max-distance', type=float, default=1.3)
     parser.add_argument('--timeout', type=float, default=900.)
     args = parser.parse_args()
     if args.views <= 0 or not math.isfinite(args.timeout) or args.timeout <= 0:

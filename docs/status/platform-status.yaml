@@ -3947,7 +3947,7 @@ tasks:
           state trace, actual action and GUI measurements, negative producer correction,
           source hashes and software checks.'
         - docs/status/evidence/extensions-finish-2026-10-08/controls/README.md
-        implementation_summary: 'Native source arm/articulation/jog/teach/Servo and 13 fixed-arm KDL/OMPL candidates retained. Panda has source-bound measured free-box selection, Top/Side/Top + side and approach/grasp/lift/open-detached-retreat planning, acknowledged attachments and measured support-placement targets. Planning and execution stay explicit; full physical new object pipeline, compound/mesh/perception, unattended sequences and further backends remain partial.'
+        implementation_summary: 'Native source arm/articulation/jog/teach/Servo and 13 fixed-arm KDL/OMPL candidates retained. Panda has measured box/support selection, source-finger-aware top/side candidates and explicitly started bounded automatic pick/place cycles through original planning/actions and physical custody checks. Complete live sequence is under repair; full mission, compound/mesh/perception, coupled mechanisms and further backends remain partial. Guide: docs/tutorials/panda-object-tasks.md.'
         implementation_validation: Pending; no new physical mission/test campaign
           for October 9 candidates.
         object_workflow_20261113: 'Codex: native Panda free-box selection, measured collision poses, source-width/padding top-grasp candidates and explicit approach/grasp/lift IK/OMPL requests implemented. Canonical world snapshots are replaced by the measured selected object only with a known model binding; contact observer waits for real scene ACK. Fourteen focused checks, four package builds and installed GUI widget/protocol smoke pass. Full physical object mission, compound/mesh, other grippers/backends and automatic placement remain pending. See docs/status/arm-objects-2026-11-13.md. Claude retains drone/import files.'
@@ -4038,9 +4038,7 @@ tasks:
         - 'docs/status/asset-runtime-support.yaml: checked model/controller/report
           contracts enable only the native Panda hand and named measured screens.'
         - docs/status/evidence/extensions-finish-2026-10-08/controls/README.md
-        implementation_summary: Generic Hand/Arm panel preserves native coupled-position
-          tendons, bounds and units; original Panda gripper remains separate. Cartesian
-          tool-origin jogging extends compatible direct joint controllers.
+        implementation_summary: 'Native source PID/coupled-position hand controls retain bounds and units, guarded closure and existing-grasp force regulation. UMI source-axis lift/hold/lower and sustained supported release are implemented; custody now measures finger-relative translation/rotation. Source/protocol checks pass; a physical UMI lift, arm transport for fixed hands, further raw torque/tendon sources and other backends remain open. Original Panda qualification remains separate.'
         implementation_validation: Pending; no new physical mission/test campaign
           for October 9 candidates.
         force_hold_20261113: 'Codex: bounded source-position force feedback and GUI request implemented; source gains/limits retained. Pinned Robotiq component fixture unloaded ~12 N to ~5.25 N per side for a 5 N request; Stop interrupted. 40 focused/regression/tutorial checks and GUI protocol smoke pass; three packages build. Other source hands, normal GUI object missions and hardware unqualified. See docs/status/hand-force-2026-11-13.md.'
@@ -4120,7 +4118,7 @@ tasks:
         - R5.1
         - R5.7
         - R5.8
-        implementation_summary: 'Exact-source Stretch/Stretch 3 base/articulation and sensor-gated mapping/Nav2 candidates. GUI source/scene-bound tasks include navigation, taught control, object pick/place recipes, selectable above/side world approach and independent measured/world pad orientation. Bounded alternate IK/configuration paths sample actual motor slew; measured contact/custody, retained payload and actual costmap-shape receipts gate transport. Complete loaded source-robot mission, perception poses and other adapters remain partial.'
+        implementation_summary: 'Exact-source Stretch/Stretch 3 base/articulation and sensor-gated mapping/Nav2 candidates. GUI source/scene-bound recipes offer above/side approaches, pad orientation and simulator geometry or camera-fiducial unheld targets. RGB/CameraInfo/TF detector and identity/freshness/uncertainty gates are implemented; rendered marker fixture error 2.523 mm. Alternate IK/configuration paths, source motor slew, custody, retained payload and actual costmap receipts remain. Complete loaded robot mission, unmarked perception and further adapters remain partial. Receipt: docs/status/camera-object-targets-2026-11-14.md.'
         implementation_validation: Pending; no new physical mission/test campaign
           for October 9 candidates.
         object_custody_20261113: 'Codex: GUI grasp/release checkpoints and native force/support/slip observations implemented; carry-loss monitoring on navigation legs. Focused checks only; physical mission pending. See docs/status/mobile-custody-2026-11-13.md.'

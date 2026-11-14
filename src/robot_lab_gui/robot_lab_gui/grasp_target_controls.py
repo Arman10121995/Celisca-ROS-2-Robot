@@ -115,7 +115,10 @@ class GraspTargetControls(ttk.LabelFrame):
             padding=float(self.cartesian.scene.get('link_padding_m',.01))
             mode=self.strategy.get()
             if mode not in ('Top','Side','Top + side'):raise ValueError('Select Top, Side or Top + side')
-            self.candidates=(panda_top_grasps(self.object,clearance=.004+2*padding) if mode!='Side' else [])
+            geometry=self.catalog.get('gripper_geometry')
+            self.candidates=((panda_top_grasps(self.object,clearance=.004+2*padding,link_padding_m=padding,
+                finger_forward_extent_m=geometry['finger_forward_extent_m'],pad_half_depth_m=geometry['pad_half_depth_m'])
+                if geometry else top_grasps(self.object,clearance=.004+2*padding)) if mode!='Side' else [])
             if mode!='Top':self.candidates.extend(side_grasps(self.object,clearance=.004+2*padding))
             labels=[c['id']+' · gap %.1f mm'%(c['opening_m']*1000) for c in self.candidates]
             self.selector.configure(values=labels)

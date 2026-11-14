@@ -41,6 +41,21 @@ class NativeObjectCatalog:
         node.create_subscription(String,'/arm/planning_scene_status',self.receive_scene,10)
         self.selected=next((name for name,(body,_) in self.objects.items() if body==node.object_body),None)
         self.explicit=False
+        self.gripper_geometry=None
+        hand=self.mj.mj_name2id(self.model,self.mj.mjtObj.mjOBJ_BODY,'hand')
+        pads=[g for g in range(self.model.ngeom) if int(self.model.geom_bodyid[g]) in node.gripper.finger_bodies
+              and int(self.model.geom_type[g])==int(self.mj.mjtGeom.mjGEOM_BOX)
+              and np.allclose(self.model.geom_size[g],[.0085,.004,.0085])]
+        if hand>=0 and len(pads)==2:
+            axis=self.data.xmat[hand].reshape(3,3)[:,2];tcp=np.mean(self.data.geom_xpos[pads],axis=0)
+            corners=np.array([[x,y,z] for x in (-1.,1.) for y in (-1.,1.) for z in (-1.,1.)])
+            extents=[]
+            for g in range(self.model.ngeom):
+                if int(self.model.geom_bodyid[g]) not in node.gripper.finger_bodies or not(self.model.geom_contype[g] or self.model.geom_conaffinity[g]):continue
+                points=(self.model.geom_aabb[g,:3]+corners*self.model.geom_aabb[g,3:])@self.data.geom_xmat[g].reshape(3,3).T+self.data.geom_xpos[g]
+                extents.append(float(np.max((points-tcp)@axis)))
+            self.gripper_geometry=dict(finger_forward_extent_m=max(extents),pad_half_depth_m=.0085,
+                scope='Compiled source collision AABBs projected from the authored pad TCP')
         # Authored fixed horizontal box tops only. A box welded to a free or
         # articulated ancestor is not a stationary support surface.
         fixed=np.ones(self.model.nbody,dtype=bool)
@@ -131,7 +146,7 @@ class NativeObjectCatalog:
 
     def publish(self):
         self.publisher.publish(String(data=json.dumps(dict(plant_id=self.plant_id,source_sha256=self.source_sha,
-            frame='native_world',objects=list(self.objects),supports=self.supports,
+            frame='native_world',objects=list(self.objects),supports=self.supports,gripper_geometry=self.gripper_geometry,
             unsupported=self.unsupported[:256],selected=self.selected,error=self.error))))
         snapshot=self.snapshot()
         if snapshot is not None:self.node.object_pub.publish(String(data=json.dumps(snapshot,allow_nan=False)))
