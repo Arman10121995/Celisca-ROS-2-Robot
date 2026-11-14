@@ -215,6 +215,8 @@ class NativeAssetDisplay(Node):
                 from robot_lab_mujoco.octopod_control import NativeOctopodControl as Locomotion
             elif kind == 'unitree':
                 from robot_lab_mujoco.unitree_policy import NativeUnitreePolicy as Locomotion
+            elif kind == 'booster':
+                from robot_lab_mujoco.booster_policy import NativeBoosterPolicy as Locomotion
             else:
                 raise ValueError('Unknown native locomotion controller: '+kind)
             self.locomotion = Locomotion(self.model, self.data, policy_config,

@@ -2606,14 +2606,22 @@ tasks:
         - 'docs/status/evidence/continuation-2026-10-05/README.md: actual scoped reports, source stages, failed
           and passing screens; full project remains partial.'
         - docs/status/evidence/workflows-2026-10-27/README.md
+        - docs/status/evidence/r36-vendor-controllers-2026-11-15/README.md
         implementation_summary: Three SSD-installed RL Gym G1/H1/H1_2 exact-model TorchScript policy variants;
           grouped experimental GUI walking controls. Compatible 28 fixed native models gain authored articulation;
           two Stretch profiles gain explicit mobile/sensor workflows.
         implementation_validation: Pending; no new physical mission/test campaign for October 9 candidates.
-        next_action: Restore six missing official TurtleBot3/TurtleBot4/Husky profiles and menagerie_franka_emika_panda
-          using cached source-matched assets; preserve existing installed IDs and qualified metadata. Fix
-          destructive omission during unscoped provisioning, verify normal GUI grouping/defaults/autofill,
-          then continue R10. See docs/REMAINING_WORK_GUIDE.md.
+        next_action: 'Restore six missing official TurtleBot3/TurtleBot4/Husky profiles and menagerie_franka_emika_panda
+          using cached source-matched assets; preserve existing installed IDs and qualified metadata. Fix destructive omission
+          during unscoped provisioning, verify normal GUI grouping/defaults/autofill, then continue R10. See docs/REMAINING_WORK_GUIDE.md.
+          2026-11-15 claude: implemented, experimental. Booster T1 runs the vendor booster_gym policy (deploy/models/T1.pt,
+          Apache-2.0) on the vendor MJCF (robot_lab_mujoco.booster_policy, provisioned as policy_booster_t1); Unitree G1/H1/H1_2
+          vendor policies were wired but still counted display-only (display_reasons ignored locomotion_policy_config):
+          display-only 77 -> 73. Screen through /key_vel, all four upright with no fault: T1 0.70 m / G1 0.73 m for 0.72
+          m requested, H1 0.15 m, turns 1.16-1.39 of 1.5 rad. Display reasons name controllable siblings (12). scripts/robot_asset_audit.py:
+          163 profiles, 114 ok, 48 robot_assets models without any license file, unitree_b2_mujoco lacks 10 vendor .mtl
+          files. Remaining: 47 legged profiles without a published vendor policy (training, R12), 19 URDFs without a control
+          interface.'
         owner: codex
         result: 113 installed profiles / 17 worlds retained. Husky now has four physical Drive/sensor screens
           and twenty localization, reset/resume, actual 2D/3D Save Map and clear/obstacle Nav2 screens across

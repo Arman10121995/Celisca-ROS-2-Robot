@@ -1,0 +1,149 @@
+{
+  "command": [
+    "ros2",
+    "launch",
+    "robot_lab_bringup",
+    "simulated_robot.launch.py",
+    "robot_model:=policy_booster_t1",
+    "simulator:=mujoco",
+    "mode:=display",
+    "map_name:=none",
+    "enable_native_locomotion:=true",
+    "gui:=false",
+    "start_rviz:=false"
+  ],
+  "phases": [
+    {
+      "name": "startup",
+      "requested": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "sim_s": 2.919999999999898,
+      "wall_s": 3.0,
+      "displacement_world_m": [
+        0.2298575663152363,
+        -0.011125196888917614,
+        -0.03135978910630843
+      ],
+      "heading_change_rad": -0.04300505354591806,
+      "final_command": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "name": "forward",
+      "requested": [
+        0.12,
+        0.0,
+        0.0
+      ],
+      "sim_s": 5.999999999999757,
+      "wall_s": 6.0,
+      "displacement_world_m": [
+        0.6971605876841209,
+        0.10305807442063233,
+        -0.014661074182430567
+      ],
+      "heading_change_rad": 0.1276796660933684,
+      "final_command": [
+        0.11999999731779099,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "name": "neutral",
+      "requested": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "sim_s": 3.000000000001002,
+      "wall_s": 3.0,
+      "displacement_world_m": [
+        -0.0024049626108560984,
+        0.0011864758743299064,
+        0.017523123801720053
+      ],
+      "heading_change_rad": -0.024531809423350162,
+      "final_command": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "name": "reverse",
+      "requested": [
+        -0.12,
+        0.0,
+        0.0
+      ],
+      "sim_s": 6.000000000000279,
+      "wall_s": 6.0,
+      "displacement_world_m": [
+        -0.5741142514582287,
+        -0.10375553751571462,
+        0.0005939072897394038
+      ],
+      "heading_change_rad": 0.050903200027982175,
+      "final_command": [
+        -0.11999999731779099,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "name": "turn",
+      "requested": [
+        0.0,
+        0.0,
+        0.25
+      ],
+      "sim_s": 5.999999999996675,
+      "wall_s": 6.0,
+      "displacement_world_m": [
+        0.041642865795844475,
+        -0.031898647316613266,
+        -0.00253906605570009
+      ],
+      "heading_change_rad": 1.336093833434705,
+      "final_command": [
+        0.0,
+        0.0,
+        0.25
+      ]
+    },
+    {
+      "name": "publisher_loss",
+      "requested": [
+        null,
+        0.0,
+        null
+      ],
+      "sim_s": 2.9999999999983373,
+      "wall_s": 3.0,
+      "displacement_world_m": [
+        -0.024232978288924123,
+        -0.013671113446307732,
+        0.0019447341188076894
+      ],
+      "heading_change_rad": 0.11860404218136834,
+      "final_command": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    }
+  ],
+  "error": "",
+  "scope": "One experimental source-native locomotion screen; no terrain/mission qualification",
+  "wall_s": 34.14998123701662,
+  "state_count": 1347,
+  "joint_count": 243,
+  "transform_count": 1347
+}

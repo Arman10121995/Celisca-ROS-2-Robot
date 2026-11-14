@@ -515,6 +515,89 @@ def install_unitree_policies(store, download):
     return profiles, entities, records
 
 
+def install_booster_policies(store, download):
+    """Booster T1 with the vendor's exported locomotion actor (booster_gym)."""
+    import mujoco
+    from robot_lab_utils.native_mjcf_assets import export_display_urdf
+
+    source = load_source('booster_gym')
+    root = source_checkout(source, store, download)
+    env_config = root/'envs/T1.yaml'
+    deploy_config = root/'deploy/configs/T1.yaml'
+    checkpoint = root/'deploy/models/T1.pt'
+    vendor_model = root/'resources/T1/T1_locomotion.xml'
+    for resource in (env_config, deploy_config, checkpoint, vendor_model, root/'LICENSE', root/'play_mujoco.py'):
+        if not resource.is_file():
+            raise ValueError('Missing required policy resource: '+str(resource))
+    name = 'policy_booster_t1'
+    output = store/'models'/name/source['revision']
+    output.mkdir(parents=True, exist_ok=True)
+    # The vendor file carries its own ground plane (condim 1) and lights;
+    # the selected Robot Lab world owns floor and lighting instead.
+    tree = ET.parse(vendor_model)
+    xml_root = tree.getroot()
+    xml_root.find('compiler').set('meshdir', str(vendor_model.parent/'meshes'))
+    worldbody = xml_root.find('worldbody')
+    removed = [child.tag + ':' + (child.get('name') or '') for child in list(worldbody)
+               if child.tag == 'light' or (child.tag == 'geom' and child.get('type') == 'plane')]
+    for child in list(worldbody):
+        if child.tag == 'light' or (child.tag == 'geom' and child.get('type') == 'plane'):
+            worldbody.remove(child)
+    native = output/'T1_locomotion_robot.xml'
+    tree.write(native)
+    model = mujoco.MjModel.from_xml_path(str(native))
+    env = yaml.safe_load(env_config.read_text())
+    if model.nu != int(env['env']['num_actions']) or model.nq != 7 + model.nu:
+        raise ValueError('Policy/model action dimensions differ: T1')
+    actuator_names = [mujoco.mj_id2name(model, mujoco.mjtObj.mjOBJ_ACTUATOR, a) for a in range(model.nu)]
+    description = output/'display.urdf'
+    geometry = export_display_urdf(model, description)
+    manifest = output/'locomotion.yaml'
+    resources = [native, vendor_model, env_config, deploy_config, checkpoint, root/'LICENSE', root/'play_mujoco.py']
+    resources.extend(sorted((vendor_model.parent/'meshes').glob('*')))
+    resources = [path.resolve() for path in resources if path.is_file()]
+    contract = dict(schema_version=1, controller='booster', robot='t1', repository=source['repository'],
+        revision=source['revision'], native_model=str(native.resolve()), vendor_model=str(vendor_model.resolve()),
+        upstream_config=str(env_config.resolve()), deploy_config=str(deploy_config.resolve()),
+        checkpoint=str(checkpoint.resolve()), actuator_names=actuator_names,
+        command_limits=[.5, .3, .6], command_timeout_s=.5, max_tilt_rad=.9,
+        resources=[dict(path=str(path), sha256=digest(path)) for path in resources],
+        lab_changes=['vendor ground plane and lights removed (%s); the selected world owns them' % ', '.join(removed),
+                     'meshdir made absolute to the vendor meshes',
+                     'zero startup command; command smoothing and 1 Hz gait clock from the deploy policy',
+                     'operator command watchdog; actuator ctrlrange torque caps; native joint target limits',
+                     'latched finite-state/fall stop; explicit reset'],
+        qualification='implemented experimental controller; physical walking/SLAM/navigation validation pending')
+    write_yaml(manifest, contract)
+    profile = dict(package='robot_lab_robots', xacro=str(description),
+        native_mjcf=str(native.resolve()), name=name, source_id=source['id'],
+        source_entry='resources/T1/T1_locomotion.xml', supported_simulators=['mujoco'],
+        supported_modes=['display'], supported_modes_by_simulator={'mujoco': ['display']},
+        default_mode='display', spawn={'z': '0.0'}, features=['native_locomotion'],
+        locomotion_policy_config=str(manifest),
+        locomotion_drive_limits=dict(max_speed=.5, max_angular_speed=.6, max_accel=.5, max_angular_accel=.8),
+        implementation_state='implemented', validation_state='pending',
+        notes='Booster T1 legs with the vendor locomotion actor (booster_gym deploy/models/T1.pt) on the '
+              'vendor MuJoCo model. MuJoCo Display stays passive until Native walking policy is enabled '
+              'before Run. Drive/WASD, Stop, command watchdog and Reset are implemented; walking, terrain, '
+              'sensors, SLAM and navigation validation is deferred.')
+    evidence = store/'installed/checks'/f'{name}.json'
+    check = dict(source_id=source['id'], revision=source['revision'], geometry=geometry,
+        native_model_sha256=digest(native), vendor_model_sha256=digest(vendor_model),
+        contract=str(manifest), contract_sha256=digest(manifest), checkpoint_sha256=digest(checkpoint),
+        controller='robot_lab_mujoco.booster_policy', implementation_state='implemented',
+        runtime_mission_qualified=False)
+    write_json(evidence, check)
+    profiles = {name: profile}
+    entities = [robot_entity(name, profile, source, profile['source_entry'], evidence)]
+    records = [dict(source_id=source['id'], revision=source['revision'], entry='T1', status='installed',
+                    check=str(evidence), profiles=[dict(id=name, kind='robot',
+                    support='MuJoCo Display; explicit experimental locomotion', notes=profile['notes'])])]
+    checkpoint_robots(store, profiles, entities, records)
+    print(source['id'], 'T1 implemented; validation pending', flush=True)
+    return profiles, entities, records
+
+
 def install_robots(store, download, selected_source=None, selected_entry=None):
     from robot_lab_utils.native_mjcf_assets import export_display_urdf
     import mujoco
@@ -528,6 +611,16 @@ def install_robots(store, download, selected_source=None, selected_entry=None):
             records.append(dict(source_id='unitree_rl_gym', entry='deployment variants',
                 status='needs integration repair', reason=str(exc), profiles=[]))
             print('unitree_rl_gym', str(exc), flush=True)
+    if selected_source in (None, 'booster_gym'):
+        try:
+            more = install_booster_policies(store, download)
+            profiles.update(more[0]); entities.extend(more[1]); records.extend(more[2])
+        except Exception as exc:
+            if selected_source == 'booster_gym':
+                raise
+            records.append(dict(source_id='booster_gym', entry='T1', status='needs integration repair',
+                                reason=str(exc), profiles=[]))
+            print('booster_gym', str(exc), flush=True)
     for source in yaml.safe_load(CATALOG.read_text())['sources']:
         if source['id'] not in ('robot_assets', 'mujoco_menagerie','turtlebot3_vendor','husky_vendor',
                                'turtlebot4_vendor') or selected_source and source['id'] != selected_source:

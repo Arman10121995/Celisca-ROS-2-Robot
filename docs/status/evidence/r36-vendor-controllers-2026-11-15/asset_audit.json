@@ -1,0 +1,3083 @@
+{
+ "summary": {
+  "profiles": 163,
+  "ok": 114,
+  "attention": 49,
+  "license_unresolved": 48
+ },
+ "profiles": [
+  {
+   "id": "ackermann_car",
+   "source_id": null,
+   "license": "Apache-2.0",
+   "license_file": "/workspace/molar/ros_ws/bumperbot_ws/src/robot_lab_robots/package.xml",
+   "license_kind": "package.xml tag",
+   "model": {
+    "format": "urdf",
+    "meshes": 0,
+    "missing_meshes": [],
+    "mesh_textures": 0,
+    "missing_mesh_textures": []
+   },
+   "status": "ok",
+   "problems": []
+  },
+  {
+   "id": "anti_ackermann_car",
+   "source_id": null,
+   "license": "Apache-2.0",
+   "license_file": "/workspace/molar/ros_ws/bumperbot_ws/src/robot_lab_robots/package.xml",
+   "license_kind": "package.xml tag",
+   "model": {
+    "format": "urdf",
+    "meshes": 0,
+    "missing_meshes": [],
+    "mesh_textures": 0,
+    "missing_mesh_textures": []
+   },
+   "status": "ok",
+   "problems": []
+  },
+  {
+   "id": "asset_anymal",
+   "source_id": "robot_assets",
+   "source_revision": "24b61c71c07e831a55c5bac1e8d3e2ee83ff9b99",
+   "license": null,
+   "license_file": null,
+   "model": {
+    "format": "urdf",
+    "meshes": 8,
+    "missing_meshes": [],
+    "mesh_textures": 0,
+    "missing_mesh_textures": []
+   },
+   "status": "attention",
+   "problems": [
+    "license unresolved"
+   ]
+  },
+  {
+   "id": "asset_bluerov2_heavy",
+   "source_id": "bluerov2_vendor",
+   "source_revision": "4451a5d1b15d204581d43ef7d93df4a0508eddbb",
+   "license": "MIT",
+   "license_file": "/workspace/molar/robot_lab_runtime/external_assets/sources/bluerov2_vendor/4451a5d1b15d204581d43ef7d93df4a0508eddbb/package.xml",
+   "license_kind": "package.xml tag",
+   "model": {
+    "format": "urdf",
+    "meshes": 3,
+    "missing_meshes": [],
+    "mesh_textures": 0,
+    "missing_mesh_textures": []
+   },
+   "status": "ok",
+   "problems": []
+  },
+  {
+   "id": "asset_elephant_myagv_pro",
+   "source_id": "elephant_myagv_pro",
+   "source_revision": "d3851c768d2e887eef7ad79fc4dcb9a928b070ac",
+   "license": "BSD-3-Clause",
+   "license_file": "/workspace/molar/robot_lab_runtime/external_assets/sources/elephant_myagv_pro/d3851c768d2e887eef7ad79fc4dcb9a928b070ac/LICENSE",
+   "license_kind": "license file",
+   "model": {
+    "format": "urdf",
+    "meshes": 6,
+    "missing_meshes": [],
+    "mesh_textures": 0,
+    "missing_mesh_textures": []
+   },
+   "status": "ok",
+   "problems": []
+  },
+  {
+   "id": "asset_elephant_myagv_pro_pro630",
+   "source_id": "elephant_myagv_pro",
+   "source_revision": "d3851c768d2e887eef7ad79fc4dcb9a928b070ac",
+   "license": "BSD-3-Clause",
+   "license_file": "/workspace/molar/robot_lab_runtime/external_assets/sources/elephant_myagv_pro/d3851c768d2e887eef7ad79fc4dcb9a928b070ac/LICENSE",
+   "license_kind": "license file",
+   "model": {
+    "format": "urdf",
+    "meshes": 15,
+    "missing_meshes": [],
+    "mesh_textures": 0,
+    "missing_mesh_textures": []
+   },
+   "status": "ok",
+   "problems": []
+  },
+  {
+   "id": "asset_elephant_myagv_pro_rollers",
+   "source_id": "elephant_myagv_pro",
+   "source_revision": "d3851c768d2e887eef7ad79fc4dcb9a928b070ac",
+   "license": "BSD-3-Clause",
+   "license_file": "/workspace/molar/robot_lab_runtime/external_assets/sources/elephant_myagv_pro/d3851c768d2e887eef7ad79fc4dcb9a928b070ac/LICENSE",
+   "license_kind": "license file",
+   "model": {
+    "format": "urdf",
+    "meshes": 8,
+    "missing_meshes": [],
+    "mesh_textures": 0,
+    "missing_mesh_textures": []
+   },
+   "status": "ok",
+   "problems": []
+  },
+  {
+   "id": "asset_fetch",
+   "source_id": "robot_assets",
+   "source_revision": "24b61c71c07e831a55c5bac1e8d3e2ee83ff9b99",
+   "license": null,
+   "license_file": null,
+   "model": {
+    "format": "urdf",
+    "meshes": 33,
+    "missing_meshes": [],
+    "mesh_textures": 0,
+    "missing_mesh_textures": []
+   },
+   "status": "attention",
+   "problems": [
+    "license unresolved"
+   ]
+  },
+  {
+   "id": "asset_franka_panda_panda",
+   "source_id": "robot_assets",
+   "source_revision": "24b61c71c07e831a55c5bac1e8d3e2ee83ff9b99",
+   "license": null,
+   "license_file": null,
+   "model": {
+    "format": "urdf",
+    "meshes": 20,
+    "missing_meshes": [],
+    "mesh_textures": 0,
+    "missing_mesh_textures": []
+   },
+   "status": "attention",
+   "problems": [
+    "license unresolved"
+   ]
+  },
+  {
+   "id": "asset_ginger_robot_gingerurdf",
+   "source_id": "robot_assets",
+   "source_revision": "24b61c71c07e831a55c5bac1e8d3e2ee83ff9b99",
+   "license": null,
+   "license_file": null,
+   "model": {
+    "format": "urdf",
+    "meshes": 49,
+    "missing_meshes": [],
+    "mesh_textures": 0,
+    "missing_mesh_textures": []
+   },
+   "status": "attention",
+   "problems": [
+    "license unresolved"
+   ]
+  },
+  {
+   "id": "asset_halodi_eve_r3",
+   "source_id": "robot_assets",
+   "source_revision": "24b61c71c07e831a55c5bac1e8d3e2ee83ff9b99",
+   "license": null,
+   "license_file": null,
+   "model": {
+    "format": "urdf",
+    "meshes": 25,
+    "missing_meshes": [],
+    "mesh_textures": 48,
+    "missing_mesh_textures": []
+   },
+   "status": "attention",
+   "problems": [
+    "license unresolved"
+   ]
+  },
+  {
+   "id": "asset_husky",
+   "source_id": "husky_vendor",
+   "source_revision": "729f8aa45ccd86fa33a05e07ef698c52c451cd9c",
+   "license": "BSD",
+   "license_file": "/workspace/molar/robot_lab_runtime/external_assets/sources/husky_vendor/729f8aa45ccd86fa33a05e07ef698c52c451cd9c/husky_description/package.xml",
+   "license_kind": "package.xml tag",
+   "model": {
+    "format": "urdf",
+    "meshes": 7,
+    "missing_meshes": [],
+    "mesh_textures": 0,
+    "missing_mesh_textures": []
+   },
+   "status": "ok",
+   "problems": []
+  },
+  {
+   "id": "asset_kinova",
+   "source_id": "robot_assets",
+   "source_revision": "24b61c71c07e831a55c5bac1e8d3e2ee83ff9b99",
+   "license": null,
+   "license_file": null,
+   "model": {
+    "format": "urdf",
+    "meshes": 13,
+    "missing_meshes": [],
+    "mesh_textures": 0,
+    "missing_mesh_textures": []
+   },
+   "status": "attention",
+   "problems": [
+    "license unresolved"
+   ]
+  },
+  {
+   "id": "asset_kuka_iiwa",
+   "source_id": "robot_assets",
+   "source_revision": "24b61c71c07e831a55c5bac1e8d3e2ee83ff9b99",
+   "license": null,
+   "license_file": null,
+   "model": {
+    "format": "urdf",
+    "meshes": 16,
+    "missing_meshes": [],
+    "mesh_textures": 8,
+    "missing_mesh_textures": []
+   },
+   "status": "attention",
+   "problems": [
+    "license unresolved"
+   ]
+  },
+  {
+   "id": "asset_light_robotics_octopod",
+   "source_id": "light_robotics_octopod",
+   "source_revision": "c2cc2437393155760eeea5f588c5912f4654067c",
+   "license": "MIT",
+   "license_file": "/workspace/molar/robot_lab_runtime/external_assets/sources/light_robotics_octopod/c2cc2437393155760eeea5f588c5912f4654067c/LICENSE",
+   "license_kind": "license file",
+   "model": {
+    "format": "mjcf",
+    "compiles": true,
+    "meshes": 0,
+    "textures": 1,
+    "skins": 0,
+    "mesh_textures": 0,
+    "unused_missing_mesh_materials": []
+   },
+   "status": "ok",
+   "problems": []
+  },
+  {
+   "id": "asset_pr2",
+   "source_id": "robot_assets",
+   "source_revision": "24b61c71c07e831a55c5bac1e8d3e2ee83ff9b99",
+   "license": null,
+   "license_file": null,
+   "model": {
+    "format": "urdf",
+    "meshes": 31,
+    "missing_meshes": [],
+    "mesh_textures": 0,
+    "missing_mesh_textures": []
+   },
+   "status": "attention",
+   "problems": [
+    "license unresolved"
+   ]
+  },
+  {
+   "id": "asset_r2_description_r2_left_forearm",
+   "source_id": "robot_assets",
+   "source_revision": "24b61c71c07e831a55c5bac1e8d3e2ee83ff9b99",
+   "license": null,
+   "license_file": null,
+   "model": {
+    "format": "urdf",
+    "meshes": 8,
+    "missing_meshes": [],
+    "mesh_textures": 0,
+    "missing_mesh_textures": []
+   },
+   "status": "attention",
+   "problems": [
+    "license unresolved"
+   ]
+  },
+  {
+   "id": "asset_r2_description_r2_left_gripper",
+   "source_id": "robot_assets",
+   "source_revision": "24b61c71c07e831a55c5bac1e8d3e2ee83ff9b99",
+   "license": null,
+   "license_file": null,
+   "model": {
+    "format": "urdf",
+    "meshes": 2,
+    "missing_meshes": [],
+    "mesh_textures": 0,
+    "missing_mesh_textures": []
+   },
+   "status": "attention",
+   "problems": [
+    "license unresolved"
+   ]
+  },
+  {
+   "id": "asset_r2_description_r2b",
+   "source_id": "robot_assets",
+   "source_revision": "24b61c71c07e831a55c5bac1e8d3e2ee83ff9b99",
+   "license": null,
+   "license_file": null,
+   "model": {
+    "format": "urdf",
+    "meshes": 32,
+    "missing_meshes": [],
+    "mesh_textures": 0,
+    "missing_mesh_textures": []
+   },
+   "status": "attention",
+   "problems": [
+    "license unresolved"
+   ]
+  },
+  {
+   "id": "asset_r2_description_r2b_control",
+   "source_id": "robot_assets",
+   "source_revision": "24b61c71c07e831a55c5bac1e8d3e2ee83ff9b99",
+   "license": null,
+   "license_file": null,
+   "model": {
+    "format": "urdf",
+    "meshes": 30,
+    "missing_meshes": [],
+    "mesh_textures": 0,
+    "missing_mesh_textures": []
+   },
+   "status": "attention",
+   "problems": [
+    "license unresolved"
+   ]
+  },
+  {
+   "id": "asset_r2_description_r2b_dynamics",
+   "source_id": "robot_assets",
+   "source_revision": "24b61c71c07e831a55c5bac1e8d3e2ee83ff9b99",
+   "license": null,
+   "license_file": null,
+   "model": {
+    "format": "urdf",
+    "meshes": 21,
+    "missing_meshes": [],
+    "mesh_textures": 0,
+    "missing_mesh_textures": []
+   },
+   "status": "attention",
+   "problems": [
+    "license unresolved"
+   ]
+  },
+  {
+   "id": "asset_r2_description_r2b_sim_upperbody_control",
+   "source_id": "robot_assets",
+   "source_revision": "24b61c71c07e831a55c5bac1e8d3e2ee83ff9b99",
+   "license": null,
+   "license_file": null,
+   "model": {
+    "format": "urdf",
+    "meshes": 25,
+    "missing_meshes": [],
+    "mesh_textures": 0,
+    "missing_mesh_textures": []
+   },
+   "status": "attention",
+   "problems": [
+    "license unresolved"
+   ]
+  },
+  {
+   "id": "asset_r2_description_r2b_sim_upperbody_dynamics",
+   "source_id": "robot_assets",
+   "source_revision": "24b61c71c07e831a55c5bac1e8d3e2ee83ff9b99",
+   "license": null,
+   "license_file": null,
+   "model": {
+    "format": "urdf",
+    "meshes": 16,
+    "missing_meshes": [],
+    "mesh_textures": 0,
+    "missing_mesh_textures": []
+   },
+   "status": "attention",
+   "problems": [
+    "license unresolved"
+   ]
+  },
+  {
+   "id": "asset_r2_description_r2c1",
+   "source_id": "robot_assets",
+   "source_revision": "24b61c71c07e831a55c5bac1e8d3e2ee83ff9b99",
+   "license": null,
+   "license_file": null,
+   "model": {
+    "format": "urdf",
+    "meshes": 32,
+    "missing_meshes": [],
+    "mesh_textures": 0,
+    "missing_mesh_textures": []
+   },
+   "status": "attention",
+   "problems": [
+    "license unresolved"
+   ]
+  },
+  {
+   "id": "asset_r2_description_r2c1_control",
+   "source_id": "robot_assets",
+   "source_revision": "24b61c71c07e831a55c5bac1e8d3e2ee83ff9b99",
+   "license": null,
+   "license_file": null,
+   "model": {
+    "format": "urdf",
+    "meshes": 30,
+    "missing_meshes": [],
+    "mesh_textures": 0,
+    "missing_mesh_textures": []
+   },
+   "status": "attention",
+   "problems": [
+    "license unresolved"
+   ]
+  },
+  {
+   "id": "asset_r2_description_r2c1_dynamics",
+   "source_id": "robot_assets",
+   "source_revision": "24b61c71c07e831a55c5bac1e8d3e2ee83ff9b99",
+   "license": null,
+   "license_file": null,
+   "model": {
+    "format": "urdf",
+    "meshes": 21,
+    "missing_meshes": [],
+    "mesh_textures": 0,
+    "missing_mesh_textures": []
+   },
+   "status": "attention",
+   "problems": [
+    "license unresolved"
+   ]
+  },
+  {
+   "id": "asset_r2_description_r2c5",
+   "source_id": "robot_assets",
+   "source_revision": "24b61c71c07e831a55c5bac1e8d3e2ee83ff9b99",
+   "license": null,
+   "license_file": null,
+   "model": {
+    "format": "urdf",
+    "meshes": 28,
+    "missing_meshes": [],
+    "mesh_textures": 0,
+    "missing_mesh_textures": []
+   },
+   "status": "attention",
+   "problems": [
+    "license unresolved"
+   ]
+  },
+  {
+   "id": "asset_r2_description_r2c5_control",
+   "source_id": "robot_assets",
+   "source_revision": "24b61c71c07e831a55c5bac1e8d3e2ee83ff9b99",
+   "license": null,
+   "license_file": null,
+   "model": {
+    "format": "urdf",
+    "meshes": 25,
+    "missing_meshes": [],
+    "mesh_textures": 0,
+    "missing_mesh_textures": []
+   },
+   "status": "attention",
+   "problems": [
+    "license unresolved"
+   ]
+  },
+  {
+   "id": "asset_r2_description_r2c5_dynamics",
+   "source_id": "robot_assets",
+   "source_revision": "24b61c71c07e831a55c5bac1e8d3e2ee83ff9b99",
+   "license": null,
+   "license_file": null,
+   "model": {
+    "format": "urdf",
+    "meshes": 16,
+    "missing_meshes": [],
+    "mesh_textures": 0,
+    "missing_mesh_textures": []
+   },
+   "status": "attention",
+   "problems": [
+    "license unresolved"
+   ]
+  },
+  {
+   "id": "asset_r2_description_r2c6",
+   "source_id": "robot_assets",
+   "source_revision": "24b61c71c07e831a55c5bac1e8d3e2ee83ff9b99",
+   "license": null,
+   "license_file": null,
+   "model": {
+    "format": "urdf",
+    "meshes": 32,
+    "missing_meshes": [],
+    "mesh_textures": 0,
+    "missing_mesh_textures": []
+   },
+   "status": "attention",
+   "problems": [
+    "license unresolved"
+   ]
+  },
+  {
+   "id": "asset_r2_description_r2c6_control",
+   "source_id": "robot_assets",
+   "source_revision": "24b61c71c07e831a55c5bac1e8d3e2ee83ff9b99",
+   "license": null,
+   "license_file": null,
+   "model": {
+    "format": "urdf",
+    "meshes": 30,
+    "missing_meshes": [],
+    "mesh_textures": 0,
+    "missing_mesh_textures": []
+   },
+   "status": "attention",
+   "problems": [
+    "license unresolved"
+   ]
+  },
+  {
+   "id": "asset_r2_description_r2c6_dynamics",
+   "source_id": "robot_assets",
+   "source_revision": "24b61c71c07e831a55c5bac1e8d3e2ee83ff9b99",
+   "license": null,
+   "license_file": null,
+   "model": {
+    "format": "urdf",
+    "meshes": 21,
+    "missing_meshes": [],
+    "mesh_textures": 0,
+    "missing_mesh_textures": []
+   },
+   "status": "attention",
+   "problems": [
+    "license unresolved"
+   ]
+  },
+  {
+   "id": "asset_r2_description_r2c6_valve",
+   "source_id": "robot_assets",
+   "source_revision": "24b61c71c07e831a55c5bac1e8d3e2ee83ff9b99",
+   "license": null,
+   "license_file": null,
+   "model": {
+    "format": "urdf",
+    "meshes": 32,
+    "missing_meshes": [],
+    "mesh_textures": 0,
+    "missing_mesh_textures": []
+   },
+   "status": "attention",
+   "problems": [
+    "license unresolved"
+   ]
+  },
+  {
+   "id": "asset_r2_description_r2c_sim_full_control",
+   "source_id": "robot_assets",
+   "source_revision": "24b61c71c07e831a55c5bac1e8d3e2ee83ff9b99",
+   "license": null,
+   "license_file": null,
+   "model": {
+    "format": "urdf",
+    "meshes": 30,
+    "missing_meshes": [],
+    "mesh_textures": 0,
+    "missing_mesh_textures": []
+   },
+   "status": "attention",
+   "problems": [
+    "license unresolved"
+   ]
+  },
+  {
+   "id": "asset_r2_description_r2c_sim_full_dynamics",
+   "source_id": "robot_assets",
+   "source_revision": "24b61c71c07e831a55c5bac1e8d3e2ee83ff9b99",
+   "license": null,
+   "license_file": null,
+   "model": {
+    "format": "urdf",
+    "meshes": 21,
+    "missing_meshes": [],
+    "mesh_textures": 0,
+    "missing_mesh_textures": []
+   },
+   "status": "attention",
+   "problems": [
+    "license unresolved"
+   ]
+  },
+  {
+   "id": "asset_r2_description_r2c_sim_legs_control",
+   "source_id": "robot_assets",
+   "source_revision": "24b61c71c07e831a55c5bac1e8d3e2ee83ff9b99",
+   "license": null,
+   "license_file": null,
+   "model": {
+    "format": "urdf",
+    "meshes": 5,
+    "missing_meshes": [],
+    "mesh_textures": 0,
+    "missing_mesh_textures": []
+   },
+   "status": "attention",
+   "problems": [
+    "license unresolved"
+   ]
+  },
+  {
+   "id": "asset_r2_description_r2c_sim_legs_dynamics",
+   "source_id": "robot_assets",
+   "source_revision": "24b61c71c07e831a55c5bac1e8d3e2ee83ff9b99",
+   "license": null,
+   "license_file": null,
+   "model": {
+    "format": "urdf",
+    "meshes": 5,
+    "missing_meshes": [],
+    "mesh_textures": 0,
+    "missing_mesh_textures": []
+   },
+   "status": "attention",
+   "problems": [
+    "license unresolved"
+   ]
+  },
+  {
+   "id": "asset_r2_description_r2c_sim_upperbody_control",
+   "source_id": "robot_assets",
+   "source_revision": "24b61c71c07e831a55c5bac1e8d3e2ee83ff9b99",
+   "license": null,
+   "license_file": null,
+   "model": {
+    "format": "urdf",
+    "meshes": 25,
+    "missing_meshes": [],
+    "mesh_textures": 0,
+    "missing_mesh_textures": []
+   },
+   "status": "attention",
+   "problems": [
+    "license unresolved"
+   ]
+  },
+  {
+   "id": "asset_r2_description_r2c_sim_upperbody_dynamics",
+   "source_id": "robot_assets",
+   "source_revision": "24b61c71c07e831a55c5bac1e8d3e2ee83ff9b99",
+   "license": null,
+   "license_file": null,
+   "model": {
+    "format": "urdf",
+    "meshes": 16,
+    "missing_meshes": [],
+    "mesh_textures": 0,
+    "missing_mesh_textures": []
+   },
+   "status": "attention",
+   "problems": [
+    "license unresolved"
+   ]
+  },
+  {
+   "id": "asset_robotnik_summit_steel",
+   "source_id": "robotnik_description_vendor",
+   "source_revision": "1a7aff1310dbc4427e0b2ae5ef83e0ffd2094504",
+   "license": "BSD-3-Clause",
+   "license_file": "/workspace/molar/robot_lab_runtime/external_assets/sources/robotnik_description_vendor/1a7aff1310dbc4427e0b2ae5ef83e0ffd2094504/LICENSE",
+   "license_kind": "license file",
+   "model": {
+    "format": "urdf",
+    "meshes": 5,
+    "missing_meshes": [],
+    "mesh_textures": 0,
+    "missing_mesh_textures": []
+   },
+   "status": "ok",
+   "problems": []
+  },
+  {
+   "id": "asset_turtlebot3_burger",
+   "source_id": "turtlebot3_vendor",
+   "source_revision": "90a68bd2e3c61c12966779da89d8eeaec82730e9",
+   "license": "Apache-2.0",
+   "license_file": "/workspace/molar/robot_lab_runtime/external_assets/sources/turtlebot3_vendor/90a68bd2e3c61c12966779da89d8eeaec82730e9/LICENSE",
+   "license_kind": "license file",
+   "model": {
+    "format": "urdf",
+    "meshes": 4,
+    "missing_meshes": [],
+    "mesh_textures": 0,
+    "missing_mesh_textures": []
+   },
+   "status": "ok",
+   "problems": []
+  },
+  {
+   "id": "asset_turtlebot3_waffle",
+   "source_id": "turtlebot3_vendor",
+   "source_revision": "90a68bd2e3c61c12966779da89d8eeaec82730e9",
+   "license": "Apache-2.0",
+   "license_file": "/workspace/molar/robot_lab_runtime/external_assets/sources/turtlebot3_vendor/90a68bd2e3c61c12966779da89d8eeaec82730e9/LICENSE",
+   "license_kind": "license file",
+   "model": {
+    "format": "urdf",
+    "meshes": 5,
+    "missing_meshes": [],
+    "mesh_textures": 0,
+    "missing_mesh_textures": []
+   },
+   "status": "ok",
+   "problems": []
+  },
+  {
+   "id": "asset_turtlebot3_waffle_pi",
+   "source_id": "turtlebot3_vendor",
+   "source_revision": "90a68bd2e3c61c12966779da89d8eeaec82730e9",
+   "license": "Apache-2.0",
+   "license_file": "/workspace/molar/robot_lab_runtime/external_assets/sources/turtlebot3_vendor/90a68bd2e3c61c12966779da89d8eeaec82730e9/LICENSE",
+   "license_kind": "license file",
+   "model": {
+    "format": "urdf",
+    "meshes": 4,
+    "missing_meshes": [],
+    "mesh_textures": 0,
+    "missing_mesh_textures": []
+   },
+   "status": "ok",
+   "problems": []
+  },
+  {
+   "id": "asset_turtlebot4_lite",
+   "source_id": "turtlebot4_vendor",
+   "source_revision": "a6ee13b63cbd524500cc6a68cd20dbef69f326a9",
+   "license": "Apache-2.0",
+   "license_file": "/workspace/molar/robot_lab_runtime/external_assets/sources/turtlebot4_vendor/a6ee13b63cbd524500cc6a68cd20dbef69f326a9/LICENSE",
+   "license_kind": "license file",
+   "model": {
+    "format": "urdf",
+    "meshes": 6,
+    "missing_meshes": [],
+    "mesh_textures": 0,
+    "missing_mesh_textures": []
+   },
+   "status": "ok",
+   "problems": []
+  },
+  {
+   "id": "asset_turtlebot4_lite_cleaning",
+   "source_id": "turtlebot4_vendor",
+   "source_revision": "a6ee13b63cbd524500cc6a68cd20dbef69f326a9",
+   "license": "Apache-2.0",
+   "license_file": "/workspace/molar/robot_lab_runtime/external_assets/sources/turtlebot4_vendor/a6ee13b63cbd524500cc6a68cd20dbef69f326a9/LICENSE",
+   "license_kind": "license file",
+   "model": {
+    "format": "urdf",
+    "meshes": 6,
+    "missing_meshes": [],
+    "mesh_textures": 0,
+    "missing_mesh_textures": []
+   },
+   "status": "ok",
+   "problems": []
+  },
+  {
+   "id": "asset_turtlebot4_standard",
+   "source_id": "turtlebot4_vendor",
+   "source_revision": "a6ee13b63cbd524500cc6a68cd20dbef69f326a9",
+   "license": "Apache-2.0",
+   "license_file": "/workspace/molar/robot_lab_runtime/external_assets/sources/turtlebot4_vendor/a6ee13b63cbd524500cc6a68cd20dbef69f326a9/LICENSE",
+   "license_kind": "license file",
+   "model": {
+    "format": "urdf",
+    "meshes": 11,
+    "missing_meshes": [],
+    "mesh_textures": 0,
+    "missing_mesh_textures": []
+   },
+   "status": "ok",
+   "problems": []
+  },
+  {
+   "id": "asset_ur10_ur10_robot",
+   "source_id": "robot_assets",
+   "source_revision": "24b61c71c07e831a55c5bac1e8d3e2ee83ff9b99",
+   "license": null,
+   "license_file": null,
+   "model": {
+    "format": "urdf",
+    "meshes": 14,
+    "missing_meshes": [],
+    "mesh_textures": 0,
+    "missing_mesh_textures": []
+   },
+   "status": "attention",
+   "problems": [
+    "license unresolved"
+   ]
+  },
+  {
+   "id": "asset_ur5_ur5_gripper",
+   "source_id": "robot_assets",
+   "source_revision": "24b61c71c07e831a55c5bac1e8d3e2ee83ff9b99",
+   "license": null,
+   "license_file": null,
+   "model": {
+    "format": "urdf",
+    "meshes": 14,
+    "missing_meshes": [],
+    "mesh_textures": 0,
+    "missing_mesh_textures": []
+   },
+   "status": "attention",
+   "problems": [
+    "license unresolved"
+   ]
+  },
+  {
+   "id": "asset_val_description_forearm_left",
+   "source_id": "robot_assets",
+   "source_revision": "24b61c71c07e831a55c5bac1e8d3e2ee83ff9b99",
+   "license": null,
+   "license_file": null,
+   "model": {
+    "format": "urdf",
+    "meshes": 16,
+    "missing_meshes": [],
+    "mesh_textures": 0,
+    "missing_mesh_textures": []
+   },
+   "status": "attention",
+   "problems": [
+    "license unresolved"
+   ]
+  },
+  {
+   "id": "asset_val_description_forearm_right",
+   "source_id": "robot_assets",
+   "source_revision": "24b61c71c07e831a55c5bac1e8d3e2ee83ff9b99",
+   "license": null,
+   "license_file": null,
+   "model": {
+    "format": "urdf",
+    "meshes": 16,
+    "missing_meshes": [],
+    "mesh_textures": 0,
+    "missing_mesh_textures": []
+   },
+   "status": "attention",
+   "problems": [
+    "license unresolved"
+   ]
+  },
+  {
+   "id": "asset_val_description_valkyrie_A",
+   "source_id": "robot_assets",
+   "source_revision": "24b61c71c07e831a55c5bac1e8d3e2ee83ff9b99",
+   "license": null,
+   "license_file": null,
+   "model": {
+    "format": "urdf",
+    "meshes": 55,
+    "missing_meshes": [],
+    "mesh_textures": 0,
+    "missing_mesh_textures": []
+   },
+   "status": "attention",
+   "problems": [
+    "license unresolved"
+   ]
+  },
+  {
+   "id": "asset_val_description_valkyrie_A_arm_mass_sims",
+   "source_id": "robot_assets",
+   "source_revision": "24b61c71c07e831a55c5bac1e8d3e2ee83ff9b99",
+   "license": null,
+   "license_file": null,
+   "model": {
+    "format": "urdf",
+    "meshes": 23,
+    "missing_meshes": [],
+    "mesh_textures": 0,
+    "missing_mesh_textures": []
+   },
+   "status": "attention",
+   "problems": [
+    "license unresolved"
+   ]
+  },
+  {
+   "id": "asset_val_description_valkyrie_B",
+   "source_id": "robot_assets",
+   "source_revision": "24b61c71c07e831a55c5bac1e8d3e2ee83ff9b99",
+   "license": null,
+   "license_file": null,
+   "model": {
+    "format": "urdf",
+    "meshes": 55,
+    "missing_meshes": [],
+    "mesh_textures": 0,
+    "missing_mesh_textures": []
+   },
+   "status": "attention",
+   "problems": [
+    "license unresolved"
+   ]
+  },
+  {
+   "id": "asset_val_description_valkyrie_B_arm_mass_sims",
+   "source_id": "robot_assets",
+   "source_revision": "24b61c71c07e831a55c5bac1e8d3e2ee83ff9b99",
+   "license": null,
+   "license_file": null,
+   "model": {
+    "format": "urdf",
+    "meshes": 23,
+    "missing_meshes": [],
+    "mesh_textures": 0,
+    "missing_mesh_textures": []
+   },
+   "status": "attention",
+   "problems": [
+    "license unresolved"
+   ]
+  },
+  {
+   "id": "asset_val_description_valkyrie_C",
+   "source_id": "robot_assets",
+   "source_revision": "24b61c71c07e831a55c5bac1e8d3e2ee83ff9b99",
+   "license": null,
+   "license_file": null,
+   "model": {
+    "format": "urdf",
+    "meshes": 55,
+    "missing_meshes": [],
+    "mesh_textures": 0,
+    "missing_mesh_textures": []
+   },
+   "status": "attention",
+   "problems": [
+    "license unresolved"
+   ]
+  },
+  {
+   "id": "asset_val_description_valkyrie_C_arm_mass_sims",
+   "source_id": "robot_assets",
+   "source_revision": "24b61c71c07e831a55c5bac1e8d3e2ee83ff9b99",
+   "license": null,
+   "license_file": null,
+   "model": {
+    "format": "urdf",
+    "meshes": 23,
+    "missing_meshes": [],
+    "mesh_textures": 0,
+    "missing_mesh_textures": []
+   },
+   "status": "attention",
+   "problems": [
+    "license unresolved"
+   ]
+  },
+  {
+   "id": "asset_val_description_valkyrie_D",
+   "source_id": "robot_assets",
+   "source_revision": "24b61c71c07e831a55c5bac1e8d3e2ee83ff9b99",
+   "license": null,
+   "license_file": null,
+   "model": {
+    "format": "urdf",
+    "meshes": 55,
+    "missing_meshes": [],
+    "mesh_textures": 0,
+    "missing_mesh_textures": []
+   },
+   "status": "attention",
+   "problems": [
+    "license unresolved"
+   ]
+  },
+  {
+   "id": "asset_val_description_valkyrie_D_arm_mass_sims",
+   "source_id": "robot_assets",
+   "source_revision": "24b61c71c07e831a55c5bac1e8d3e2ee83ff9b99",
+   "license": null,
+   "license_file": null,
+   "model": {
+    "format": "urdf",
+    "meshes": 23,
+    "missing_meshes": [],
+    "mesh_textures": 0,
+    "missing_mesh_textures": []
+   },
+   "status": "attention",
+   "problems": [
+    "license unresolved"
+   ]
+  },
+  {
+   "id": "asset_val_description_valkyrie_sim",
+   "source_id": "robot_assets",
+   "source_revision": "24b61c71c07e831a55c5bac1e8d3e2ee83ff9b99",
+   "license": null,
+   "license_file": null,
+   "model": {
+    "format": "urdf",
+    "meshes": 56,
+    "missing_meshes": [],
+    "mesh_textures": 0,
+    "missing_mesh_textures": []
+   },
+   "status": "attention",
+   "problems": [
+    "license unresolved"
+   ]
+  },
+  {
+   "id": "asset_val_description_valkyrie_sim_angled_legj1s",
+   "source_id": "robot_assets",
+   "source_revision": "24b61c71c07e831a55c5bac1e8d3e2ee83ff9b99",
+   "license": null,
+   "license_file": null,
+   "model": {
+    "format": "urdf",
+    "meshes": 56,
+    "missing_meshes": [],
+    "mesh_textures": 0,
+    "missing_mesh_textures": []
+   },
+   "status": "attention",
+   "problems": [
+    "license unresolved"
+   ]
+  },
+  {
+   "id": "asset_val_description_valkyrie_sim_arm_mass_sims",
+   "source_id": "robot_assets",
+   "source_revision": "24b61c71c07e831a55c5bac1e8d3e2ee83ff9b99",
+   "license": null,
+   "license_file": null,
+   "model": {
+    "format": "urdf",
+    "meshes": 24,
+    "missing_meshes": [],
+    "mesh_textures": 0,
+    "missing_mesh_textures": []
+   },
+   "status": "attention",
+   "problems": [
+    "license unresolved"
+   ]
+  },
+  {
+   "id": "asset_val_description_valkyrie_sim_gazebo_sync",
+   "source_id": "robot_assets",
+   "source_revision": "24b61c71c07e831a55c5bac1e8d3e2ee83ff9b99",
+   "license": null,
+   "license_file": null,
+   "model": {
+    "format": "urdf",
+    "meshes": 56,
+    "missing_meshes": [],
+    "mesh_textures": 0,
+    "missing_mesh_textures": []
+   },
+   "status": "attention",
+   "problems": [
+    "license unresolved"
+   ]
+  },
+  {
+   "id": "asset_vrx_wamv_h",
+   "source_id": "vrx_vendor",
+   "source_revision": "dc30ed8d17aa1083fd872edad9c77c69896d2b07",
+   "license": "Apache-2.0",
+   "license_file": "/workspace/molar/robot_lab_runtime/external_assets/sources/vrx_vendor/dc30ed8d17aa1083fd872edad9c77c69896d2b07/LICENSE",
+   "license_kind": "license file",
+   "model": {
+    "format": "urdf",
+    "meshes": 4,
+    "missing_meshes": [],
+    "mesh_textures": 3,
+    "missing_mesh_textures": []
+   },
+   "status": "ok",
+   "problems": []
+  },
+  {
+   "id": "asset_yumi",
+   "source_id": "robot_assets",
+   "source_revision": "24b61c71c07e831a55c5bac1e8d3e2ee83ff9b99",
+   "license": null,
+   "license_file": null,
+   "model": {
+    "format": "urdf",
+    "meshes": 20,
+    "missing_meshes": [],
+    "mesh_textures": 0,
+    "missing_mesh_textures": []
+   },
+   "status": "attention",
+   "problems": [
+    "license unresolved"
+   ]
+  },
+  {
+   "id": "berkeley_humanoid_lite",
+   "source_id": null,
+   "license": "CC-BY-SA-4.0",
+   "license_file": "/workspace/molar/ros_ws/bumperbot_ws/src/robot_lab_robots/berkeley_humanoid_lite/LICENCE",
+   "license_kind": "license file",
+   "model": {
+    "format": "urdf",
+    "meshes": 26,
+    "missing_meshes": [],
+    "mesh_textures": 0,
+    "missing_mesh_textures": []
+   },
+   "status": "ok",
+   "problems": []
+  },
+  {
+   "id": "berkeley_humanoid_lite_biped",
+   "source_id": null,
+   "license": "CC-BY-SA-4.0",
+   "license_file": "/workspace/molar/ros_ws/bumperbot_ws/src/robot_lab_robots/berkeley_humanoid_lite/LICENCE",
+   "license_kind": "license file",
+   "model": {
+    "format": "urdf",
+    "meshes": 14,
+    "missing_meshes": [],
+    "mesh_textures": 0,
+    "missing_mesh_textures": []
+   },
+   "status": "ok",
+   "problems": []
+  },
+  {
+   "id": "berkeley_humanoid_lite_sim",
+   "source_id": null,
+   "license": "CC-BY-SA-4.0",
+   "license_file": "/workspace/molar/ros_ws/bumperbot_ws/src/robot_lab_robots/berkeley_humanoid_lite/LICENCE",
+   "license_kind": "license file",
+   "model": {
+    "format": "urdf",
+    "meshes": 26,
+    "missing_meshes": [],
+    "mesh_textures": 0,
+    "missing_mesh_textures": []
+   },
+   "status": "ok",
+   "problems": []
+  },
+  {
+   "id": "bumperbot",
+   "source_id": null,
+   "license": "Apache-2.0",
+   "license_file": "/workspace/molar/ros_ws/bumperbot_ws/src/robot_lab_robots/package.xml",
+   "license_kind": "package.xml tag",
+   "model": {
+    "format": "urdf",
+    "meshes": 8,
+    "missing_meshes": [],
+    "mesh_textures": 0,
+    "missing_mesh_textures": []
+   },
+   "status": "ok",
+   "problems": []
+  },
+  {
+   "id": "four_wheel_steer_car",
+   "source_id": null,
+   "license": "Apache-2.0",
+   "license_file": "/workspace/molar/ros_ws/bumperbot_ws/src/robot_lab_robots/package.xml",
+   "license_kind": "package.xml tag",
+   "model": {
+    "format": "urdf",
+    "meshes": 0,
+    "missing_meshes": [],
+    "mesh_textures": 0,
+    "missing_mesh_textures": []
+   },
+   "status": "ok",
+   "problems": []
+  },
+  {
+   "id": "hexapod_ros2",
+   "source_id": null,
+   "license": "MIT",
+   "license_file": "/workspace/molar/ros_ws/bumperbot_ws/src/robot_lab_robots/hexapod_ros2/LICENSE",
+   "license_kind": "license file",
+   "model": {
+    "format": "urdf",
+    "meshes": 21,
+    "missing_meshes": [],
+    "mesh_textures": 0,
+    "missing_mesh_textures": []
+   },
+   "status": "ok",
+   "problems": []
+  },
+  {
+   "id": "lab_amphibious",
+   "source_id": null,
+   "license": "Apache-2.0",
+   "license_file": "/workspace/molar/ros_ws/bumperbot_ws/src/robot_lab_robots/package.xml",
+   "license_kind": "package.xml tag",
+   "model": {
+    "format": "urdf",
+    "meshes": 0,
+    "missing_meshes": [],
+    "mesh_textures": 0,
+    "missing_mesh_textures": []
+   },
+   "status": "ok",
+   "problems": []
+  },
+  {
+   "id": "lab_centipede",
+   "source_id": null,
+   "license": "Apache-2.0",
+   "license_file": "/workspace/molar/ros_ws/bumperbot_ws/src/robot_lab_robots/package.xml",
+   "license_kind": "package.xml tag",
+   "model": {
+    "format": "urdf",
+    "meshes": 0,
+    "missing_meshes": [],
+    "mesh_textures": 0,
+    "missing_mesh_textures": []
+   },
+   "status": "ok",
+   "problems": []
+  },
+  {
+   "id": "lab_octopod",
+   "source_id": null,
+   "license": "Apache-2.0",
+   "license_file": "/workspace/molar/ros_ws/bumperbot_ws/src/robot_lab_robots/package.xml",
+   "license_kind": "package.xml tag",
+   "model": {
+    "format": "urdf",
+    "meshes": 0,
+    "missing_meshes": [],
+    "mesh_textures": 0,
+    "missing_mesh_textures": []
+   },
+   "status": "ok",
+   "problems": []
+  },
+  {
+   "id": "lab_rov",
+   "source_id": null,
+   "license": "Apache-2.0",
+   "license_file": "/workspace/molar/ros_ws/bumperbot_ws/src/robot_lab_robots/package.xml",
+   "license_kind": "package.xml tag",
+   "model": {
+    "format": "urdf",
+    "meshes": 0,
+    "missing_meshes": [],
+    "mesh_textures": 0,
+    "missing_mesh_textures": []
+   },
+   "status": "ok",
+   "problems": []
+  },
+  {
+   "id": "lab_snake",
+   "source_id": null,
+   "license": "Apache-2.0",
+   "license_file": "/workspace/molar/ros_ws/bumperbot_ws/src/robot_lab_robots/package.xml",
+   "license_kind": "package.xml tag",
+   "model": {
+    "format": "urdf",
+    "meshes": 0,
+    "missing_meshes": [],
+    "mesh_textures": 0,
+    "missing_mesh_textures": []
+   },
+   "status": "ok",
+   "problems": []
+  },
+  {
+   "id": "lab_tracked",
+   "source_id": null,
+   "license": "Apache-2.0",
+   "license_file": "/workspace/molar/ros_ws/bumperbot_ws/src/robot_lab_robots/lab_tracked/LICENSE",
+   "license_kind": "license file",
+   "model": {
+    "format": "urdf",
+    "meshes": 0,
+    "missing_meshes": [],
+    "mesh_textures": 0,
+    "missing_mesh_textures": []
+   },
+   "status": "ok",
+   "problems": []
+  },
+  {
+   "id": "lab_tracked_articulated",
+   "source_id": null,
+   "license": "Apache-2.0",
+   "license_file": "/workspace/molar/ros_ws/bumperbot_ws/src/robot_lab_robots/lab_tracked_articulated/LICENSE",
+   "license_kind": "license file",
+   "model": {
+    "format": "urdf",
+    "meshes": 0,
+    "missing_meshes": [],
+    "mesh_textures": 0,
+    "missing_mesh_textures": []
+   },
+   "status": "ok",
+   "problems": []
+  },
+  {
+   "id": "lab_usv",
+   "source_id": null,
+   "license": "Apache-2.0",
+   "license_file": "/workspace/molar/ros_ws/bumperbot_ws/src/robot_lab_robots/package.xml",
+   "license_kind": "package.xml tag",
+   "model": {
+    "format": "urdf",
+    "meshes": 0,
+    "missing_meshes": [],
+    "mesh_textures": 0,
+    "missing_mesh_textures": []
+   },
+   "status": "ok",
+   "problems": []
+  },
+  {
+   "id": "labbot",
+   "source_id": null,
+   "license": "Apache-2.0",
+   "license_file": "/workspace/molar/ros_ws/bumperbot_ws/src/robot_lab_robots/package.xml",
+   "license_kind": "package.xml tag",
+   "model": {
+    "format": "urdf",
+    "meshes": 0,
+    "missing_meshes": [],
+    "mesh_textures": 0,
+    "missing_mesh_textures": []
+   },
+   "status": "ok",
+   "problems": []
+  },
+  {
+   "id": "mecanum_car",
+   "source_id": null,
+   "license": "Apache-2.0",
+   "license_file": "/workspace/molar/ros_ws/bumperbot_ws/src/robot_lab_robots/package.xml",
+   "license_kind": "package.xml tag",
+   "model": {
+    "format": "urdf",
+    "meshes": 3,
+    "missing_meshes": [],
+    "mesh_textures": 0,
+    "missing_mesh_textures": []
+   },
+   "status": "ok",
+   "problems": []
+  },
+  {
+   "id": "menagerie_agilex_piper",
+   "source_id": "mujoco_menagerie",
+   "source_revision": "4d038b3feae26ec82b46a4d586379114012a8ac7",
+   "license": "MIT",
+   "license_file": "/workspace/molar/robot_lab_runtime/external_assets/sources/mujoco_menagerie/4d038b3feae26ec82b46a4d586379114012a8ac7/agilex_piper/LICENSE",
+   "license_kind": "license file",
+   "model": {
+    "format": "mjcf",
+    "compiles": true,
+    "meshes": 82,
+    "textures": 0,
+    "skins": 0,
+    "mesh_textures": 72,
+    "unused_missing_mesh_materials": [
+     "/workspace/molar/robot_lab_runtime/external_assets/sources/mujoco_menagerie/4d038b3feae26ec82b46a4d586379114012a8ac7/agilex_piper/assets/material.mtl"
+    ]
+   },
+   "status": "ok",
+   "problems": []
+  },
+  {
+   "id": "menagerie_agility_cassie",
+   "source_id": "mujoco_menagerie",
+   "source_revision": "4d038b3feae26ec82b46a4d586379114012a8ac7",
+   "license": "MIT",
+   "license_file": "/workspace/molar/robot_lab_runtime/external_assets/sources/mujoco_menagerie/4d038b3feae26ec82b46a4d586379114012a8ac7/agility_cassie/LICENSE",
+   "license_kind": "license file",
+   "model": {
+    "format": "mjcf",
+    "compiles": true,
+    "meshes": 25,
+    "textures": 1,
+    "skins": 0,
+    "mesh_textures": 0,
+    "unused_missing_mesh_materials": []
+   },
+   "status": "ok",
+   "problems": []
+  },
+  {
+   "id": "menagerie_aloha",
+   "source_id": "mujoco_menagerie",
+   "source_revision": "4d038b3feae26ec82b46a4d586379114012a8ac7",
+   "license": "BSD-3-Clause",
+   "license_file": "/workspace/molar/robot_lab_runtime/external_assets/sources/mujoco_menagerie/4d038b3feae26ec82b46a4d586379114012a8ac7/aloha/LICENSE",
+   "license_kind": "license file",
+   "model": {
+    "format": "mjcf",
+    "compiles": true,
+    "meshes": 12,
+    "textures": 0,
+    "skins": 0,
+    "mesh_textures": 0,
+    "unused_missing_mesh_materials": []
+   },
+   "status": "ok",
+   "problems": []
+  },
+  {
+   "id": "menagerie_anybotics_anymal_b",
+   "source_id": "mujoco_menagerie",
+   "source_revision": "4d038b3feae26ec82b46a4d586379114012a8ac7",
+   "license": "BSD-3-Clause",
+   "license_file": "/workspace/molar/robot_lab_runtime/external_assets/sources/mujoco_menagerie/4d038b3feae26ec82b46a4d586379114012a8ac7/anybotics_anymal_b/LICENSE",
+   "license_kind": "license file",
+   "model": {
+    "format": "mjcf",
+    "compiles": true,
+    "meshes": 46,
+    "textures": 2,
+    "skins": 0,
+    "mesh_textures": 46,
+    "unused_missing_mesh_materials": [
+     "/workspace/molar/robot_lab_runtime/external_assets/sources/mujoco_menagerie/4d038b3feae26ec82b46a4d586379114012a8ac7/anybotics_anymal_b/assets/material_0.mtl"
+    ]
+   },
+   "status": "ok",
+   "problems": []
+  },
+  {
+   "id": "menagerie_anybotics_anymal_c",
+   "source_id": "mujoco_menagerie",
+   "source_revision": "4d038b3feae26ec82b46a4d586379114012a8ac7",
+   "license": "BSD-3-Clause",
+   "license_file": "/workspace/molar/robot_lab_runtime/external_assets/sources/mujoco_menagerie/4d038b3feae26ec82b46a4d586379114012a8ac7/anybotics_anymal_c/LICENSE",
+   "license_kind": "license file",
+   "model": {
+    "format": "mjcf",
+    "compiles": true,
+    "meshes": 24,
+    "textures": 19,
+    "skins": 0,
+    "mesh_textures": 24,
+    "unused_missing_mesh_materials": [
+     "/workspace/molar/robot_lab_runtime/external_assets/sources/mujoco_menagerie/4d038b3feae26ec82b46a4d586379114012a8ac7/anybotics_anymal_c/assets/Black_plastic.001.mtl",
+     "/workspace/molar/robot_lab_runtime/external_assets/sources/mujoco_menagerie/4d038b3feae26ec82b46a4d586379114012a8ac7/anybotics_anymal_c/assets/Bottom_shell.mtl",
+     "/workspace/molar/robot_lab_runtime/external_assets/sources/mujoco_menagerie/4d038b3feae26ec82b46a4d586379114012a8ac7/anybotics_anymal_c/assets/E-Stop_green.001.mtl",
+     "/workspace/molar/robot_lab_runtime/external_assets/sources/mujoco_menagerie/4d038b3feae26ec82b46a4d586379114012a8ac7/anybotics_anymal_c/assets/E-Stop_red.001.mtl",
+     "/workspace/molar/robot_lab_runtime/external_assets/sources/mujoco_menagerie/4d038b3feae26ec82b46a4d586379114012a8ac7/anybotics_anymal_c/assets/E-Stop_yellow.001.mtl",
+     "/workspace/molar/robot_lab_runtime/external_assets/sources/mujoco_menagerie/4d038b3feae26ec82b46a4d586379114012a8ac7/anybotics_anymal_c/assets/LWL.001.mtl",
+     "/workspace/molar/robot_lab_runtime/external_assets/sources/mujoco_menagerie/4d038b3feae26ec82b46a4d586379114012a8ac7/anybotics_anymal_c/assets/base.001.mtl",
+     "/workspace/molar/robot_lab_runtime/external_assets/sources/mujoco_menagerie/4d038b3feae26ec82b46a4d586379114012a8ac7/anybotics_anymal_c/assets/battery.mtl",
+     "/workspace/molar/robot_lab_runtime/external_assets/sources/mujoco_menagerie/4d038b3feae26ec82b46a4d586379114012a8ac7/anybotics_anymal_c/assets/depth_camera.mtl",
+     "/workspace/molar/robot_lab_runtime/external_assets/sources/mujoco_menagerie/4d038b3feae26ec82b46a4d586379114012a8ac7/anybotics_anymal_c/assets/drive.mtl",
+     "/workspace/molar/robot_lab_runtime/external_assets/sources/mujoco_menagerie/4d038b3feae26ec82b46a4d586379114012a8ac7/anybotics_anymal_c/assets/face.mtl",
+     "/workspace/molar/robot_lab_runtime/external_assets/sources/mujoco_menagerie/4d038b3feae26ec82b46a4d586379114012a8ac7/anybotics_anymal_c/assets/foot.mtl",
+     "/workspace/molar/robot_lab_runtime/external_assets/sources/mujoco_menagerie/4d038b3feae26ec82b46a4d586379114012a8ac7/anybotics_anymal_c/assets/handle.mtl",
+     "/workspace/molar/robot_lab_runtime/external_assets/sources/mujoco_menagerie/4d038b3feae26ec82b46a4d586379114012a8ac7/anybotics_anymal_c/assets/hatch.mtl",
+     "/workspace/molar/robot_lab_runtime/external_assets/sources/mujoco_menagerie/4d038b3feae26ec82b46a4d586379114012a8ac7/anybotics_anymal_c/assets/hip.002.mtl",
+     "/workspace/molar/robot_lab_runtime/external_assets/sources/mujoco_menagerie/4d038b3feae26ec82b46a4d586379114012a8ac7/anybotics_anymal_c/assets/hip.004.mtl",
+     "/workspace/molar/robot_lab_runtime/external_assets/sources/mujoco_menagerie/4d038b3feae26ec82b46a4d586379114012a8ac7/anybotics_anymal_c/assets/lidar.mtl",
+     "/workspace/molar/robot_lab_runtime/external_assets/sources/mujoco_menagerie/4d038b3feae26ec82b46a4d586379114012a8ac7/anybotics_anymal_c/assets/lidar_cage.mtl",
+     "/workspace/molar/robot_lab_runtime/external_assets/sources/mujoco_menagerie/4d038b3feae26ec82b46a4d586379114012a8ac7/anybotics_anymal_c/assets/remote.mtl",
+     "/workspace/molar/robot_lab_runtime/external_assets/sources/mujoco_menagerie/4d038b3feae26ec82b46a4d586379114012a8ac7/anybotics_anymal_c/assets/shank.001.mtl",
+     "/workspace/molar/robot_lab_runtime/external_assets/sources/mujoco_menagerie/4d038b3feae26ec82b46a4d586379114012a8ac7/anybotics_anymal_c/assets/shank.mtl",
+     "/workspace/molar/robot_lab_runtime/external_assets/sources/mujoco_menagerie/4d038b3feae26ec82b46a4d586379114012a8ac7/anybotics_anymal_c/assets/thigh.mtl",
+     "/workspace/molar/robot_lab_runtime/external_assets/sources/mujoco_menagerie/4d038b3feae26ec82b46a4d586379114012a8ac7/anybotics_anymal_c/assets/top_shell.mtl",
+     "/workspace/molar/robot_lab_runtime/external_assets/sources/mujoco_menagerie/4d038b3feae26ec82b46a4d586379114012a8ac7/anybotics_anymal_c/assets/wide_angle_camera.mtl"
+    ]
+   },
+   "status": "ok",
+   "problems": []
+  },
+  {
+   "id": "menagerie_apptronik_apollo",
+   "source_id": "mujoco_menagerie",
+   "source_revision": "4d038b3feae26ec82b46a4d586379114012a8ac7",
+   "license": "Apache-2.0",
+   "license_file": "/workspace/molar/robot_lab_runtime/external_assets/sources/mujoco_menagerie/4d038b3feae26ec82b46a4d586379114012a8ac7/apptronik_apollo/LICENSE",
+   "license_kind": "license file",
+   "model": {
+    "format": "mjcf",
+    "compiles": true,
+    "meshes": 44,
+    "textures": 0,
+    "skins": 0,
+    "mesh_textures": 0,
+    "unused_missing_mesh_materials": []
+   },
+   "status": "ok",
+   "problems": []
+  },
+  {
+   "id": "menagerie_arx_l5",
+   "source_id": "mujoco_menagerie",
+   "source_revision": "4d038b3feae26ec82b46a4d586379114012a8ac7",
+   "license": "BSD-3-Clause",
+   "license_file": "/workspace/molar/robot_lab_runtime/external_assets/sources/mujoco_menagerie/4d038b3feae26ec82b46a4d586379114012a8ac7/arx_l5/LICENSE",
+   "license_kind": "license file",
+   "model": {
+    "format": "mjcf",
+    "compiles": true,
+    "meshes": 10,
+    "textures": 0,
+    "skins": 0,
+    "mesh_textures": 1,
+    "unused_missing_mesh_materials": [
+     "/workspace/molar/robot_lab_runtime/external_assets/sources/mujoco_menagerie/4d038b3feae26ec82b46a4d586379114012a8ac7/arx_l5/assets/camera.mtl"
+    ]
+   },
+   "status": "ok",
+   "problems": []
+  },
+  {
+   "id": "menagerie_berkeley_humanoid",
+   "source_id": "mujoco_menagerie",
+   "source_revision": "4d038b3feae26ec82b46a4d586379114012a8ac7",
+   "license": "BSD-3-Clause",
+   "license_file": "/workspace/molar/robot_lab_runtime/external_assets/sources/mujoco_menagerie/4d038b3feae26ec82b46a4d586379114012a8ac7/berkeley_humanoid/LICENSE",
+   "license_kind": "license file",
+   "model": {
+    "format": "mjcf",
+    "compiles": true,
+    "meshes": 13,
+    "textures": 0,
+    "skins": 0,
+    "mesh_textures": 0,
+    "unused_missing_mesh_materials": []
+   },
+   "status": "ok",
+   "problems": []
+  },
+  {
+   "id": "menagerie_bitcraze_crazyflie_2",
+   "source_id": "mujoco_menagerie",
+   "source_revision": "4d038b3feae26ec82b46a4d586379114012a8ac7",
+   "license": "MIT",
+   "license_file": "/workspace/molar/robot_lab_runtime/external_assets/sources/mujoco_menagerie/4d038b3feae26ec82b46a4d586379114012a8ac7/bitcraze_crazyflie_2/LICENSE",
+   "license_kind": "license file",
+   "model": {
+    "format": "mjcf",
+    "compiles": true,
+    "meshes": 39,
+    "textures": 0,
+    "skins": 0,
+    "mesh_textures": 0,
+    "unused_missing_mesh_materials": []
+   },
+   "status": "ok",
+   "problems": []
+  },
+  {
+   "id": "menagerie_booster_t1",
+   "source_id": "mujoco_menagerie",
+   "source_revision": "4d038b3feae26ec82b46a4d586379114012a8ac7",
+   "license": "Apache-2.0",
+   "license_file": "/workspace/molar/robot_lab_runtime/external_assets/sources/mujoco_menagerie/4d038b3feae26ec82b46a4d586379114012a8ac7/booster_t1/LICENSE",
+   "license_kind": "license file",
+   "model": {
+    "format": "mjcf",
+    "compiles": true,
+    "meshes": 24,
+    "textures": 0,
+    "skins": 0,
+    "mesh_textures": 0,
+    "unused_missing_mesh_materials": []
+   },
+   "status": "ok",
+   "problems": []
+  },
+  {
+   "id": "menagerie_boston_dynamics_spot",
+   "source_id": "mujoco_menagerie",
+   "source_revision": "4d038b3feae26ec82b46a4d586379114012a8ac7",
+   "license": "BSD-3-Clause",
+   "license_file": "/workspace/molar/robot_lab_runtime/external_assets/sources/mujoco_menagerie/4d038b3feae26ec82b46a4d586379114012a8ac7/boston_dynamics_spot/LICENSE",
+   "license_kind": "license file",
+   "model": {
+    "format": "mjcf",
+    "compiles": true,
+    "meshes": 23,
+    "textures": 0,
+    "skins": 0,
+    "mesh_textures": 18,
+    "unused_missing_mesh_materials": [
+     "/workspace/molar/robot_lab_runtime/external_assets/sources/mujoco_menagerie/4d038b3feae26ec82b46a4d586379114012a8ac7/boston_dynamics_spot/assets/material.mtl"
+    ]
+   },
+   "status": "ok",
+   "problems": []
+  },
+  {
+   "id": "menagerie_dynamixel_2r",
+   "source_id": "mujoco_menagerie",
+   "source_revision": "4d038b3feae26ec82b46a4d586379114012a8ac7",
+   "license": "MIT",
+   "license_file": "/workspace/molar/robot_lab_runtime/external_assets/sources/mujoco_menagerie/4d038b3feae26ec82b46a4d586379114012a8ac7/dynamixel_2r/LICENSE",
+   "license_kind": "license file",
+   "model": {
+    "format": "mjcf",
+    "compiles": true,
+    "meshes": 15,
+    "textures": 0,
+    "skins": 0,
+    "mesh_textures": 0,
+    "unused_missing_mesh_materials": []
+   },
+   "status": "ok",
+   "problems": []
+  },
+  {
+   "id": "menagerie_flexiv_rizon4",
+   "source_id": "mujoco_menagerie",
+   "source_revision": "4d038b3feae26ec82b46a4d586379114012a8ac7",
+   "license": "Apache-2.0",
+   "license_file": "/workspace/molar/robot_lab_runtime/external_assets/sources/mujoco_menagerie/4d038b3feae26ec82b46a4d586379114012a8ac7/flexiv_rizon4/LICENSE",
+   "license_kind": "license file",
+   "model": {
+    "format": "mjcf",
+    "compiles": true,
+    "meshes": 14,
+    "textures": 0,
+    "skins": 0,
+    "mesh_textures": 14,
+    "unused_missing_mesh_materials": []
+   },
+   "status": "ok",
+   "problems": []
+  },
+  {
+   "id": "menagerie_flexiv_rizon4s",
+   "source_id": "mujoco_menagerie",
+   "source_revision": "4d038b3feae26ec82b46a4d586379114012a8ac7",
+   "license": "Apache-2.0",
+   "license_file": "/workspace/molar/robot_lab_runtime/external_assets/sources/mujoco_menagerie/4d038b3feae26ec82b46a4d586379114012a8ac7/flexiv_rizon4s/LICENSE",
+   "license_kind": "license file",
+   "model": {
+    "format": "mjcf",
+    "compiles": true,
+    "meshes": 14,
+    "textures": 0,
+    "skins": 0,
+    "mesh_textures": 14,
+    "unused_missing_mesh_materials": []
+   },
+   "status": "ok",
+   "problems": []
+  },
+  {
+   "id": "menagerie_flybody",
+   "source_id": "mujoco_menagerie",
+   "source_revision": "4d038b3feae26ec82b46a4d586379114012a8ac7",
+   "license": "Apache-2.0",
+   "license_file": "/workspace/molar/robot_lab_runtime/external_assets/sources/mujoco_menagerie/4d038b3feae26ec82b46a4d586379114012a8ac7/flybody/LICENSE",
+   "license_kind": "license file",
+   "model": {
+    "format": "mjcf",
+    "compiles": true,
+    "meshes": 85,
+    "textures": 0,
+    "skins": 0,
+    "mesh_textures": 0,
+    "unused_missing_mesh_materials": []
+   },
+   "status": "ok",
+   "problems": []
+  },
+  {
+   "id": "menagerie_fourier_n1",
+   "source_id": "mujoco_menagerie",
+   "source_revision": "4d038b3feae26ec82b46a4d586379114012a8ac7",
+   "license": "Apache-2.0",
+   "license_file": "/workspace/molar/robot_lab_runtime/external_assets/sources/mujoco_menagerie/4d038b3feae26ec82b46a4d586379114012a8ac7/fourier_n1/LICENSE",
+   "license_kind": "license file",
+   "model": {
+    "format": "mjcf",
+    "compiles": true,
+    "meshes": 29,
+    "textures": 0,
+    "skins": 0,
+    "mesh_textures": 0,
+    "unused_missing_mesh_materials": []
+   },
+   "status": "ok",
+   "problems": []
+  },
+  {
+   "id": "menagerie_franka_emika_panda",
+   "source_id": "mujoco_menagerie",
+   "source_revision": "4d038b3feae26ec82b46a4d586379114012a8ac7",
+   "license": "Apache-2.0",
+   "license_file": "/workspace/molar/robot_lab_runtime/external_assets/sources/mujoco_menagerie/4d038b3feae26ec82b46a4d586379114012a8ac7/franka_emika_panda/LICENSE",
+   "license_kind": "license file",
+   "model": {
+    "format": "mjcf",
+    "compiles": true,
+    "meshes": 67,
+    "textures": 0,
+    "skins": 0,
+    "mesh_textures": 56,
+    "unused_missing_mesh_materials": [
+     "/workspace/molar/robot_lab_runtime/external_assets/sources/mujoco_menagerie/4d038b3feae26ec82b46a4d586379114012a8ac7/franka_emika_panda/assets/material_0.mtl"
+    ]
+   },
+   "status": "ok",
+   "problems": []
+  },
+  {
+   "id": "menagerie_franka_fr3",
+   "source_id": "mujoco_menagerie",
+   "source_revision": "4d038b3feae26ec82b46a4d586379114012a8ac7",
+   "license": "Apache-2.0",
+   "license_file": "/workspace/molar/robot_lab_runtime/external_assets/sources/mujoco_menagerie/4d038b3feae26ec82b46a4d586379114012a8ac7/franka_fr3/LICENSE",
+   "license_kind": "license file",
+   "model": {
+    "format": "mjcf",
+    "compiles": true,
+    "meshes": 36,
+    "textures": 0,
+    "skins": 0,
+    "mesh_textures": 28,
+    "unused_missing_mesh_materials": [
+     "/workspace/molar/robot_lab_runtime/external_assets/sources/mujoco_menagerie/4d038b3feae26ec82b46a4d586379114012a8ac7/franka_fr3/assets/link1.mtl",
+     "/workspace/molar/robot_lab_runtime/external_assets/sources/mujoco_menagerie/4d038b3feae26ec82b46a4d586379114012a8ac7/franka_fr3/assets/link2.mtl",
+     "/workspace/molar/robot_lab_runtime/external_assets/sources/mujoco_menagerie/4d038b3feae26ec82b46a4d586379114012a8ac7/franka_fr3/assets/material.mtl"
+    ]
+   },
+   "status": "ok",
+   "problems": []
+  },
+  {
+   "id": "menagerie_franka_fr3_v2",
+   "source_id": "mujoco_menagerie",
+   "source_revision": "4d038b3feae26ec82b46a4d586379114012a8ac7",
+   "license": "Apache-2.0",
+   "license_file": "/workspace/molar/robot_lab_runtime/external_assets/sources/mujoco_menagerie/4d038b3feae26ec82b46a4d586379114012a8ac7/franka_fr3_v2/LICENSE",
+   "license_kind": "license file",
+   "model": {
+    "format": "mjcf",
+    "compiles": true,
+    "meshes": 37,
+    "textures": 0,
+    "skins": 0,
+    "mesh_textures": 29,
+    "unused_missing_mesh_materials": [
+     "/workspace/molar/robot_lab_runtime/external_assets/sources/mujoco_menagerie/4d038b3feae26ec82b46a4d586379114012a8ac7/franka_fr3_v2/assets/material.mtl"
+    ]
+   },
+   "status": "ok",
+   "problems": []
+  },
+  {
+   "id": "menagerie_google_barkour_v0",
+   "source_id": "mujoco_menagerie",
+   "source_revision": "4d038b3feae26ec82b46a4d586379114012a8ac7",
+   "license": "Apache-2.0",
+   "license_file": "/workspace/molar/robot_lab_runtime/external_assets/sources/mujoco_menagerie/4d038b3feae26ec82b46a4d586379114012a8ac7/google_barkour_v0/LICENSE",
+   "license_kind": "license file",
+   "model": {
+    "format": "mjcf",
+    "compiles": true,
+    "meshes": 14,
+    "textures": 0,
+    "skins": 0,
+    "mesh_textures": 0,
+    "unused_missing_mesh_materials": []
+   },
+   "status": "ok",
+   "problems": []
+  },
+  {
+   "id": "menagerie_google_barkour_vb",
+   "source_id": "mujoco_menagerie",
+   "source_revision": "4d038b3feae26ec82b46a4d586379114012a8ac7",
+   "license": "Apache-2.0",
+   "license_file": "/workspace/molar/robot_lab_runtime/external_assets/sources/mujoco_menagerie/4d038b3feae26ec82b46a4d586379114012a8ac7/google_barkour_vb/LICENSE",
+   "license_kind": "license file",
+   "model": {
+    "format": "mjcf",
+    "compiles": true,
+    "meshes": 11,
+    "textures": 0,
+    "skins": 0,
+    "mesh_textures": 0,
+    "unused_missing_mesh_materials": []
+   },
+   "status": "ok",
+   "problems": []
+  },
+  {
+   "id": "menagerie_google_robot",
+   "source_id": "mujoco_menagerie",
+   "source_revision": "4d038b3feae26ec82b46a4d586379114012a8ac7",
+   "license": "Apache-2.0",
+   "license_file": "/workspace/molar/robot_lab_runtime/external_assets/sources/mujoco_menagerie/4d038b3feae26ec82b46a4d586379114012a8ac7/google_robot/LICENSE",
+   "license_kind": "license file",
+   "model": {
+    "format": "mjcf",
+    "compiles": true,
+    "meshes": 47,
+    "textures": 3,
+    "skins": 0,
+    "mesh_textures": 13,
+    "unused_missing_mesh_materials": [
+     "/workspace/molar/robot_lab_runtime/external_assets/sources/mujoco_menagerie/4d038b3feae26ec82b46a4d586379114012a8ac7/google_robot/assets/link_base.mtl",
+     "/workspace/molar/robot_lab_runtime/external_assets/sources/mujoco_menagerie/4d038b3feae26ec82b46a4d586379114012a8ac7/google_robot/assets/link_bicep.mtl",
+     "/workspace/molar/robot_lab_runtime/external_assets/sources/mujoco_menagerie/4d038b3feae26ec82b46a4d586379114012a8ac7/google_robot/assets/link_elbow.mtl",
+     "/workspace/molar/robot_lab_runtime/external_assets/sources/mujoco_menagerie/4d038b3feae26ec82b46a4d586379114012a8ac7/google_robot/assets/link_finger_base_simplified.mtl",
+     "/workspace/molar/robot_lab_runtime/external_assets/sources/mujoco_menagerie/4d038b3feae26ec82b46a4d586379114012a8ac7/google_robot/assets/link_finger_tip_simplified.mtl",
+     "/workspace/molar/robot_lab_runtime/external_assets/sources/mujoco_menagerie/4d038b3feae26ec82b46a4d586379114012a8ac7/google_robot/assets/link_forearm.mtl",
+     "/workspace/molar/robot_lab_runtime/external_assets/sources/mujoco_menagerie/4d038b3feae26ec82b46a4d586379114012a8ac7/google_robot/assets/link_gripper.mtl",
+     "/workspace/molar/robot_lab_runtime/external_assets/sources/mujoco_menagerie/4d038b3feae26ec82b46a4d586379114012a8ac7/google_robot/assets/link_head_pan.mtl",
+     "/workspace/molar/robot_lab_runtime/external_assets/sources/mujoco_menagerie/4d038b3feae26ec82b46a4d586379114012a8ac7/google_robot/assets/link_head_tilt.mtl",
+     "/workspace/molar/robot_lab_runtime/external_assets/sources/mujoco_menagerie/4d038b3feae26ec82b46a4d586379114012a8ac7/google_robot/assets/link_shoulder.mtl",
+     "/workspace/molar/robot_lab_runtime/external_assets/sources/mujoco_menagerie/4d038b3feae26ec82b46a4d586379114012a8ac7/google_robot/assets/link_torso.mtl",
+     "/workspace/molar/robot_lab_runtime/external_assets/sources/mujoco_menagerie/4d038b3feae26ec82b46a4d586379114012a8ac7/google_robot/assets/link_wheel.mtl",
+     "/workspace/molar/robot_lab_runtime/external_assets/sources/mujoco_menagerie/4d038b3feae26ec82b46a4d586379114012a8ac7/google_robot/assets/link_wrist.mtl"
+    ]
+   },
+   "status": "ok",
+   "problems": []
+  },
+  {
+   "id": "menagerie_hello_robot_stretch",
+   "source_id": "mujoco_menagerie",
+   "source_revision": "4d038b3feae26ec82b46a4d586379114012a8ac7",
+   "license": "BSD-3-Clause",
+   "license_file": "/workspace/molar/robot_lab_runtime/external_assets/sources/mujoco_menagerie/4d038b3feae26ec82b46a4d586379114012a8ac7/hello_robot_stretch/LICENSE",
+   "license_kind": "license file",
+   "model": {
+    "format": "mjcf",
+    "compiles": true,
+    "meshes": 67,
+    "textures": 8,
+    "skins": 0,
+    "mesh_textures": 64,
+    "unused_missing_mesh_materials": [
+     "/workspace/molar/robot_lab_runtime/external_assets/sources/mujoco_menagerie/4d038b3feae26ec82b46a4d586379114012a8ac7/hello_robot_stretch/assets/material_0.mtl"
+    ]
+   },
+   "status": "ok",
+   "problems": []
+  },
+  {
+   "id": "menagerie_hello_robot_stretch_3",
+   "source_id": "mujoco_menagerie",
+   "source_revision": "4d038b3feae26ec82b46a4d586379114012a8ac7",
+   "license": "Apache-2.0",
+   "license_file": "/workspace/molar/robot_lab_runtime/external_assets/sources/mujoco_menagerie/4d038b3feae26ec82b46a4d586379114012a8ac7/hello_robot_stretch_3/LICENSE",
+   "license_kind": "license file",
+   "model": {
+    "format": "mjcf",
+    "compiles": true,
+    "meshes": 85,
+    "textures": 11,
+    "skins": 0,
+    "mesh_textures": 72,
+    "unused_missing_mesh_materials": [
+     "/workspace/molar/robot_lab_runtime/external_assets/sources/mujoco_menagerie/4d038b3feae26ec82b46a4d586379114012a8ac7/hello_robot_stretch_3/assets/material.mtl",
+     "/workspace/molar/robot_lab_runtime/external_assets/sources/mujoco_menagerie/4d038b3feae26ec82b46a4d586379114012a8ac7/hello_robot_stretch_3/assets/material_0.mtl"
+    ]
+   },
+   "status": "ok",
+   "problems": []
+  },
+  {
+   "id": "menagerie_i2rt_yam",
+   "source_id": "mujoco_menagerie",
+   "source_revision": "4d038b3feae26ec82b46a4d586379114012a8ac7",
+   "license": "MIT",
+   "license_file": "/workspace/molar/robot_lab_runtime/external_assets/sources/mujoco_menagerie/4d038b3feae26ec82b46a4d586379114012a8ac7/i2rt_yam/LICENSE",
+   "license_kind": "license file",
+   "model": {
+    "format": "mjcf",
+    "compiles": true,
+    "meshes": 17,
+    "textures": 0,
+    "skins": 0,
+    "mesh_textures": 0,
+    "unused_missing_mesh_materials": []
+   },
+   "status": "ok",
+   "problems": []
+  },
+  {
+   "id": "menagerie_iit_softfoot",
+   "source_id": "mujoco_menagerie",
+   "source_revision": "4d038b3feae26ec82b46a4d586379114012a8ac7",
+   "license": "BSD-3-Clause",
+   "license_file": "/workspace/molar/robot_lab_runtime/external_assets/sources/mujoco_menagerie/4d038b3feae26ec82b46a4d586379114012a8ac7/iit_softfoot/LICENSE",
+   "license_kind": "license file",
+   "model": {
+    "format": "mjcf",
+    "compiles": true,
+    "meshes": 10,
+    "textures": 0,
+    "skins": 0,
+    "mesh_textures": 0,
+    "unused_missing_mesh_materials": []
+   },
+   "status": "ok",
+   "problems": []
+  },
+  {
+   "id": "menagerie_kinova_gen3",
+   "source_id": "mujoco_menagerie",
+   "source_revision": "4d038b3feae26ec82b46a4d586379114012a8ac7",
+   "license": "BSD-3-Clause",
+   "license_file": "/workspace/molar/robot_lab_runtime/external_assets/sources/mujoco_menagerie/4d038b3feae26ec82b46a4d586379114012a8ac7/kinova_gen3/LICENSE",
+   "license_kind": "license file",
+   "model": {
+    "format": "mjcf",
+    "compiles": true,
+    "meshes": 8,
+    "textures": 0,
+    "skins": 0,
+    "mesh_textures": 0,
+    "unused_missing_mesh_materials": []
+   },
+   "status": "ok",
+   "problems": []
+  },
+  {
+   "id": "menagerie_kuka_iiwa_14",
+   "source_id": "mujoco_menagerie",
+   "source_revision": "4d038b3feae26ec82b46a4d586379114012a8ac7",
+   "license": "BSD-3-Clause",
+   "license_file": "/workspace/molar/robot_lab_runtime/external_assets/sources/mujoco_menagerie/4d038b3feae26ec82b46a4d586379114012a8ac7/kuka_iiwa_14/LICENSE",
+   "license_kind": "license file",
+   "model": {
+    "format": "mjcf",
+    "compiles": true,
+    "meshes": 13,
+    "textures": 0,
+    "skins": 0,
+    "mesh_textures": 0,
+    "unused_missing_mesh_materials": []
+   },
+   "status": "ok",
+   "problems": []
+  },
+  {
+   "id": "menagerie_low_cost_robot_arm",
+   "source_id": "mujoco_menagerie",
+   "source_revision": "4d038b3feae26ec82b46a4d586379114012a8ac7",
+   "license": "Apache-2.0",
+   "license_file": "/workspace/molar/robot_lab_runtime/external_assets/sources/mujoco_menagerie/4d038b3feae26ec82b46a4d586379114012a8ac7/low_cost_robot_arm/LICENSE",
+   "license_kind": "license file",
+   "model": {
+    "format": "mjcf",
+    "compiles": true,
+    "meshes": 22,
+    "textures": 0,
+    "skins": 0,
+    "mesh_textures": 0,
+    "unused_missing_mesh_materials": []
+   },
+   "status": "ok",
+   "problems": []
+  },
+  {
+   "id": "menagerie_ms_human_700",
+   "source_id": "mujoco_menagerie",
+   "source_revision": "4d038b3feae26ec82b46a4d586379114012a8ac7",
+   "license": "Apache-2.0",
+   "license_file": "/workspace/molar/robot_lab_runtime/external_assets/sources/mujoco_menagerie/4d038b3feae26ec82b46a4d586379114012a8ac7/ms_human_700/LICENSE",
+   "license_kind": "license file",
+   "model": {
+    "format": "mjcf",
+    "compiles": true,
+    "meshes": 189,
+    "textures": 1,
+    "skins": 0,
+    "mesh_textures": 0,
+    "unused_missing_mesh_materials": []
+   },
+   "status": "ok",
+   "problems": []
+  },
+  {
+   "id": "menagerie_pndbotics_adam_lite",
+   "source_id": "mujoco_menagerie",
+   "source_revision": "4d038b3feae26ec82b46a4d586379114012a8ac7",
+   "license": "MIT",
+   "license_file": "/workspace/molar/robot_lab_runtime/external_assets/sources/mujoco_menagerie/4d038b3feae26ec82b46a4d586379114012a8ac7/pndbotics_adam_lite/LICENSE",
+   "license_kind": "license file",
+   "model": {
+    "format": "mjcf",
+    "compiles": true,
+    "meshes": 73,
+    "textures": 1,
+    "skins": 0,
+    "mesh_textures": 73,
+    "unused_missing_mesh_materials": []
+   },
+   "status": "ok",
+   "problems": []
+  },
+  {
+   "id": "menagerie_rethink_robotics_sawyer",
+   "source_id": "mujoco_menagerie",
+   "source_revision": "4d038b3feae26ec82b46a4d586379114012a8ac7",
+   "license": "Apache-2.0",
+   "license_file": "/workspace/molar/robot_lab_runtime/external_assets/sources/mujoco_menagerie/4d038b3feae26ec82b46a4d586379114012a8ac7/rethink_robotics_sawyer/LICENSE",
+   "license_kind": "license file",
+   "model": {
+    "format": "mjcf",
+    "compiles": true,
+    "meshes": 49,
+    "textures": 0,
+    "skins": 0,
+    "mesh_textures": 49,
+    "unused_missing_mesh_materials": [
+     "/workspace/molar/robot_lab_runtime/external_assets/sources/mujoco_menagerie/4d038b3feae26ec82b46a4d586379114012a8ac7/rethink_robotics_sawyer/assets/Mtl1.001.mtl",
+     "/workspace/molar/robot_lab_runtime/external_assets/sources/mujoco_menagerie/4d038b3feae26ec82b46a4d586379114012a8ac7/rethink_robotics_sawyer/assets/Mtl1.002.mtl",
+     "/workspace/molar/robot_lab_runtime/external_assets/sources/mujoco_menagerie/4d038b3feae26ec82b46a4d586379114012a8ac7/rethink_robotics_sawyer/assets/Mtl1.003.mtl",
+     "/workspace/molar/robot_lab_runtime/external_assets/sources/mujoco_menagerie/4d038b3feae26ec82b46a4d586379114012a8ac7/rethink_robotics_sawyer/assets/Mtl1.004.mtl",
+     "/workspace/molar/robot_lab_runtime/external_assets/sources/mujoco_menagerie/4d038b3feae26ec82b46a4d586379114012a8ac7/rethink_robotics_sawyer/assets/Mtl1.005.mtl",
+     "/workspace/molar/robot_lab_runtime/external_assets/sources/mujoco_menagerie/4d038b3feae26ec82b46a4d586379114012a8ac7/rethink_robotics_sawyer/assets/Mtl1.006.mtl",
+     "/workspace/molar/robot_lab_runtime/external_assets/sources/mujoco_menagerie/4d038b3feae26ec82b46a4d586379114012a8ac7/rethink_robotics_sawyer/assets/Mtl1.007.mtl",
+     "/workspace/molar/robot_lab_runtime/external_assets/sources/mujoco_menagerie/4d038b3feae26ec82b46a4d586379114012a8ac7/rethink_robotics_sawyer/assets/Mtl1.mtl",
+     "/workspace/molar/robot_lab_runtime/external_assets/sources/mujoco_menagerie/4d038b3feae26ec82b46a4d586379114012a8ac7/rethink_robotics_sawyer/assets/Mtl1_001.mtl",
+     "/workspace/molar/robot_lab_runtime/external_assets/sources/mujoco_menagerie/4d038b3feae26ec82b46a4d586379114012a8ac7/rethink_robotics_sawyer/assets/Mtl2.001.mtl",
+     "/workspace/molar/robot_lab_runtime/external_assets/sources/mujoco_menagerie/4d038b3feae26ec82b46a4d586379114012a8ac7/rethink_robotics_sawyer/assets/Mtl2.003.mtl",
+     "/workspace/molar/robot_lab_runtime/external_assets/sources/mujoco_menagerie/4d038b3feae26ec82b46a4d586379114012a8ac7/rethink_robotics_sawyer/assets/Mtl2.004.mtl",
+     "/workspace/molar/robot_lab_runtime/external_assets/sources/mujoco_menagerie/4d038b3feae26ec82b46a4d586379114012a8ac7/rethink_robotics_sawyer/assets/Mtl2.005.mtl",
+     "/workspace/molar/robot_lab_runtime/external_assets/sources/mujoco_menagerie/4d038b3feae26ec82b46a4d586379114012a8ac7/rethink_robotics_sawyer/assets/Mtl2.006.mtl",
+     "/workspace/molar/robot_lab_runtime/external_assets/sources/mujoco_menagerie/4d038b3feae26ec82b46a4d586379114012a8ac7/rethink_robotics_sawyer/assets/Mtl2.007.mtl",
+     "/workspace/molar/robot_lab_runtime/external_assets/sources/mujoco_menagerie/4d038b3feae26ec82b46a4d586379114012a8ac7/rethink_robotics_sawyer/assets/Mtl2.mtl",
+     "/workspace/molar/robot_lab_runtime/external_assets/sources/mujoco_menagerie/4d038b3feae26ec82b46a4d586379114012a8ac7/rethink_robotics_sawyer/assets/Mtl2_001.mtl",
+     "/workspace/molar/robot_lab_runtime/external_assets/sources/mujoco_menagerie/4d038b3feae26ec82b46a4d586379114012a8ac7/rethink_robotics_sawyer/assets/Mtl3.001.mtl",
+     "/workspace/molar/robot_lab_runtime/external_assets/sources/mujoco_menagerie/4d038b3feae26ec82b46a4d586379114012a8ac7/rethink_robotics_sawyer/assets/Mtl3.002.mtl",
+     "/workspace/molar/robot_lab_runtime/external_assets/sources/mujoco_menagerie/4d038b3feae26ec82b46a4d586379114012a8ac7/rethink_robotics_sawyer/assets/Mtl3.003.mtl",
+     "/workspace/molar/robot_lab_runtime/external_assets/sources/mujoco_menagerie/4d038b3feae26ec82b46a4d586379114012a8ac7/rethink_robotics_sawyer/assets/Mtl3.004.mtl",
+     "/workspace/molar/robot_lab_runtime/external_assets/sources/mujoco_menagerie/4d038b3feae26ec82b46a4d586379114012a8ac7/rethink_robotics_sawyer/assets/Mtl3.005.mtl",
+     "/workspace/molar/robot_lab_runtime/external_assets/sources/mujoco_menagerie/4d038b3feae26ec82b46a4d586379114012a8ac7/rethink_robotics_sawyer/assets/Mtl3.mtl",
+     "/workspace/molar/robot_lab_runtime/external_assets/sources/mujoco_menagerie/4d038b3feae26ec82b46a4d586379114012a8ac7/rethink_robotics_sawyer/assets/Mtl3_001.mtl",
+     "/workspace/molar/robot_lab_runtime/external_assets/sources/mujoco_menagerie/4d038b3feae26ec82b46a4d586379114012a8ac7/rethink_robotics_sawyer/assets/Mtl4.001.mtl",
+     "/workspace/molar/robot_lab_runtime/external_assets/sources/mujoco_menagerie/4d038b3feae26ec82b46a4d586379114012a8ac7/rethink_robotics_sawyer/assets/Mtl4.002.mtl",
+     "/workspace/molar/robot_lab_runtime/external_assets/sources/mujoco_menagerie/4d038b3feae26ec82b46a4d586379114012a8ac7/rethink_robotics_sawyer/assets/Mtl4.003.mtl",
+     "/workspace/molar/robot_lab_runtime/external_assets/sources/mujoco_menagerie/4d038b3feae26ec82b46a4d586379114012a8ac7/rethink_robotics_sawyer/assets/Mtl4.004.mtl",
+     "/workspace/molar/robot_lab_runtime/external_assets/sources/mujoco_menagerie/4d038b3feae26ec82b46a4d586379114012a8ac7/rethink_robotics_sawyer/assets/Mtl4.005.mtl",
+     "/workspace/molar/robot_lab_runtime/external_assets/sources/mujoco_menagerie/4d038b3feae26ec82b46a4d586379114012a8ac7/rethink_robotics_sawyer/assets/Mtl4.mtl",
+     "/workspace/molar/robot_lab_runtime/external_assets/sources/mujoco_menagerie/4d038b3feae26ec82b46a4d586379114012a8ac7/rethink_robotics_sawyer/assets/Mtl4_001.mtl",
+     "/workspace/molar/robot_lab_runtime/external_assets/sources/mujoco_menagerie/4d038b3feae26ec82b46a4d586379114012a8ac7/rethink_robotics_sawyer/assets/Mtl5.001.mtl",
+     "/workspace/molar/robot_lab_runtime/external_assets/sources/mujoco_menagerie/4d038b3feae26ec82b46a4d586379114012a8ac7/rethink_robotics_sawyer/assets/Mtl5.002.mtl",
+     "/workspace/molar/robot_lab_runtime/external_assets/sources/mujoco_menagerie/4d038b3feae26ec82b46a4d586379114012a8ac7/rethink_robotics_sawyer/assets/Mtl5.003.mtl",
+     "/workspace/molar/robot_lab_runtime/external_assets/sources/mujoco_menagerie/4d038b3feae26ec82b46a4d586379114012a8ac7/rethink_robotics_sawyer/assets/Mtl5.004.mtl",
+     "/workspace/molar/robot_lab_runtime/external_assets/sources/mujoco_menagerie/4d038b3feae26ec82b46a4d586379114012a8ac7/rethink_robotics_sawyer/assets/Mtl5.mtl",
+     "/workspace/molar/robot_lab_runtime/external_assets/sources/mujoco_menagerie/4d038b3feae26ec82b46a4d586379114012a8ac7/rethink_robotics_sawyer/assets/Mtl5_001.mtl",
+     "/workspace/molar/robot_lab_runtime/external_assets/sources/mujoco_menagerie/4d038b3feae26ec82b46a4d586379114012a8ac7/rethink_robotics_sawyer/assets/Mtl6.002.mtl",
+     "/workspace/molar/robot_lab_runtime/external_assets/sources/mujoco_menagerie/4d038b3feae26ec82b46a4d586379114012a8ac7/rethink_robotics_sawyer/assets/Mtl6.003.mtl",
+     "/workspace/molar/robot_lab_runtime/external_assets/sources/mujoco_menagerie/4d038b3feae26ec82b46a4d586379114012a8ac7/rethink_robotics_sawyer/assets/Mtl6.mtl",
+     "/workspace/molar/robot_lab_runtime/external_assets/sources/mujoco_menagerie/4d038b3feae26ec82b46a4d586379114012a8ac7/rethink_robotics_sawyer/assets/Mtl7.001.mtl",
+     "/workspace/molar/robot_lab_runtime/external_assets/sources/mujoco_menagerie/4d038b3feae26ec82b46a4d586379114012a8ac7/rethink_robotics_sawyer/assets/Mtl7.002.mtl",
+     "/workspace/molar/robot_lab_runtime/external_assets/sources/mujoco_menagerie/4d038b3feae26ec82b46a4d586379114012a8ac7/rethink_robotics_sawyer/assets/Mtl7.mtl",
+     "/workspace/molar/robot_lab_runtime/external_assets/sources/mujoco_menagerie/4d038b3feae26ec82b46a4d586379114012a8ac7/rethink_robotics_sawyer/assets/Mtl8.001.mtl",
+     "/workspace/molar/robot_lab_runtime/external_assets/sources/mujoco_menagerie/4d038b3feae26ec82b46a4d586379114012a8ac7/rethink_robotics_sawyer/assets/Mtl8.mtl",
+     "/workspace/molar/robot_lab_runtime/external_assets/sources/mujoco_menagerie/4d038b3feae26ec82b46a4d586379114012a8ac7/rethink_robotics_sawyer/assets/Mtl9.mtl",
+     "/workspace/molar/robot_lab_runtime/external_assets/sources/mujoco_menagerie/4d038b3feae26ec82b46a4d586379114012a8ac7/rethink_robotics_sawyer/assets/Mtla.mtl",
+     "/workspace/molar/robot_lab_runtime/external_assets/sources/mujoco_menagerie/4d038b3feae26ec82b46a4d586379114012a8ac7/rethink_robotics_sawyer/assets/Mtlb.mtl",
+     "/workspace/molar/robot_lab_runtime/external_assets/sources/mujoco_menagerie/4d038b3feae26ec82b46a4d586379114012a8ac7/rethink_robotics_sawyer/assets/None.mtl"
+    ]
+   },
+   "status": "ok",
+   "problems": []
+  },
+  {
+   "id": "menagerie_robot_soccer_kit",
+   "source_id": "mujoco_menagerie",
+   "source_revision": "4d038b3feae26ec82b46a4d586379114012a8ac7",
+   "license": "MIT",
+   "license_file": "/workspace/molar/robot_lab_runtime/external_assets/sources/mujoco_menagerie/4d038b3feae26ec82b46a4d586379114012a8ac7/robot_soccer_kit/LICENSE",
+   "license_kind": "license file",
+   "model": {
+    "format": "mjcf",
+    "compiles": true,
+    "meshes": 29,
+    "textures": 0,
+    "skins": 0,
+    "mesh_textures": 0,
+    "unused_missing_mesh_materials": []
+   },
+   "status": "ok",
+   "problems": []
+  },
+  {
+   "id": "menagerie_robotiq_2f85",
+   "source_id": "mujoco_menagerie",
+   "source_revision": "4d038b3feae26ec82b46a4d586379114012a8ac7",
+   "license": "BSD-2-Clause",
+   "license_file": "/workspace/molar/robot_lab_runtime/external_assets/sources/mujoco_menagerie/4d038b3feae26ec82b46a4d586379114012a8ac7/robotiq_2f85/LICENSE",
+   "license_kind": "license file",
+   "model": {
+    "format": "mjcf",
+    "compiles": true,
+    "meshes": 8,
+    "textures": 0,
+    "skins": 0,
+    "mesh_textures": 0,
+    "unused_missing_mesh_materials": []
+   },
+   "status": "ok",
+   "problems": []
+  },
+  {
+   "id": "menagerie_robotiq_2f85_v4",
+   "source_id": "mujoco_menagerie",
+   "source_revision": "4d038b3feae26ec82b46a4d586379114012a8ac7",
+   "license": "BSD-2-Clause",
+   "license_file": "/workspace/molar/robot_lab_runtime/external_assets/sources/mujoco_menagerie/4d038b3feae26ec82b46a4d586379114012a8ac7/robotiq_2f85_v4/LICENSE",
+   "license_kind": "license file",
+   "model": {
+    "format": "mjcf",
+    "compiles": true,
+    "meshes": 8,
+    "textures": 0,
+    "skins": 0,
+    "mesh_textures": 0,
+    "unused_missing_mesh_materials": []
+   },
+   "status": "ok",
+   "problems": []
+  },
+  {
+   "id": "menagerie_robotis_omy_3m",
+   "source_id": "mujoco_menagerie",
+   "source_revision": "4d038b3feae26ec82b46a4d586379114012a8ac7",
+   "license": "Apache-2.0",
+   "license_file": "/workspace/molar/robot_lab_runtime/external_assets/sources/mujoco_menagerie/4d038b3feae26ec82b46a4d586379114012a8ac7/robotis_omy_3m/LICENSE",
+   "license_kind": "license file",
+   "model": {
+    "format": "mjcf",
+    "compiles": true,
+    "meshes": 7,
+    "textures": 0,
+    "skins": 0,
+    "mesh_textures": 0,
+    "unused_missing_mesh_materials": []
+   },
+   "status": "ok",
+   "problems": []
+  },
+  {
+   "id": "menagerie_robotis_op3",
+   "source_id": "mujoco_menagerie",
+   "source_revision": "4d038b3feae26ec82b46a4d586379114012a8ac7",
+   "license": "Apache-2.0",
+   "license_file": "/workspace/molar/robot_lab_runtime/external_assets/sources/mujoco_menagerie/4d038b3feae26ec82b46a4d586379114012a8ac7/robotis_op3/LICENSE",
+   "license_kind": "license file",
+   "model": {
+    "format": "mjcf",
+    "compiles": true,
+    "meshes": 48,
+    "textures": 0,
+    "skins": 0,
+    "mesh_textures": 0,
+    "unused_missing_mesh_materials": []
+   },
+   "status": "ok",
+   "problems": []
+  },
+  {
+   "id": "menagerie_robotstudio_so101",
+   "source_id": "mujoco_menagerie",
+   "source_revision": "4d038b3feae26ec82b46a4d586379114012a8ac7",
+   "license": "Apache-2.0",
+   "license_file": "/workspace/molar/robot_lab_runtime/external_assets/sources/mujoco_menagerie/4d038b3feae26ec82b46a4d586379114012a8ac7/robotstudio_so101/LICENSE",
+   "license_kind": "license file",
+   "model": {
+    "format": "mjcf",
+    "compiles": true,
+    "meshes": 18,
+    "textures": 0,
+    "skins": 0,
+    "mesh_textures": 0,
+    "unused_missing_mesh_materials": []
+   },
+   "status": "ok",
+   "problems": []
+  },
+  {
+   "id": "menagerie_seeed_rebot_devarm",
+   "source_id": "mujoco_menagerie",
+   "source_revision": "4d038b3feae26ec82b46a4d586379114012a8ac7",
+   "license": "MIT",
+   "license_file": "/workspace/molar/robot_lab_runtime/external_assets/sources/mujoco_menagerie/4d038b3feae26ec82b46a4d586379114012a8ac7/seeed_rebot_devarm/LICENSE",
+   "license_kind": "license file",
+   "model": {
+    "format": "mjcf",
+    "compiles": true,
+    "meshes": 115,
+    "textures": 0,
+    "skins": 0,
+    "mesh_textures": 0,
+    "unused_missing_mesh_materials": []
+   },
+   "status": "ok",
+   "problems": []
+  },
+  {
+   "id": "menagerie_shadow_dexee",
+   "source_id": "mujoco_menagerie",
+   "source_revision": "4d038b3feae26ec82b46a4d586379114012a8ac7",
+   "license": "Apache-2.0",
+   "license_file": "/workspace/molar/robot_lab_runtime/external_assets/sources/mujoco_menagerie/4d038b3feae26ec82b46a4d586379114012a8ac7/shadow_dexee/LICENSE",
+   "license_kind": "license file",
+   "model": {
+    "format": "mjcf",
+    "compiles": true,
+    "meshes": 26,
+    "textures": 0,
+    "skins": 0,
+    "mesh_textures": 0,
+    "unused_missing_mesh_materials": []
+   },
+   "status": "ok",
+   "problems": []
+  },
+  {
+   "id": "menagerie_skydio_x2",
+   "source_id": "mujoco_menagerie",
+   "source_revision": "4d038b3feae26ec82b46a4d586379114012a8ac7",
+   "license": "Apache-2.0",
+   "license_file": "/workspace/molar/robot_lab_runtime/external_assets/sources/mujoco_menagerie/4d038b3feae26ec82b46a4d586379114012a8ac7/skydio_x2/LICENSE",
+   "license_kind": "license file",
+   "model": {
+    "format": "mjcf",
+    "compiles": true,
+    "meshes": 1,
+    "textures": 1,
+    "skins": 0,
+    "mesh_textures": 1,
+    "unused_missing_mesh_materials": [
+     "/workspace/molar/robot_lab_runtime/external_assets/sources/mujoco_menagerie/4d038b3feae26ec82b46a4d586379114012a8ac7/skydio_x2/assets/phong3SG.mtl"
+    ]
+   },
+   "status": "ok",
+   "problems": []
+  },
+  {
+   "id": "menagerie_stanford_tidybot",
+   "source_id": "mujoco_menagerie",
+   "source_revision": "4d038b3feae26ec82b46a4d586379114012a8ac7",
+   "license": "MIT",
+   "license_file": "/workspace/molar/robot_lab_runtime/external_assets/sources/mujoco_menagerie/4d038b3feae26ec82b46a4d586379114012a8ac7/stanford_tidybot/LICENSE",
+   "license_kind": "license file",
+   "model": {
+    "format": "mjcf",
+    "compiles": true,
+    "meshes": 20,
+    "textures": 0,
+    "skins": 0,
+    "mesh_textures": 0,
+    "unused_missing_mesh_materials": []
+   },
+   "status": "ok",
+   "problems": []
+  },
+  {
+   "id": "menagerie_toddlerbot_2xc",
+   "source_id": "mujoco_menagerie",
+   "source_revision": "4d038b3feae26ec82b46a4d586379114012a8ac7",
+   "license": "MIT",
+   "license_file": "/workspace/molar/robot_lab_runtime/external_assets/sources/mujoco_menagerie/4d038b3feae26ec82b46a4d586379114012a8ac7/toddlerbot_2xc/LICENSE",
+   "license_kind": "license file",
+   "model": {
+    "format": "mjcf",
+    "compiles": true,
+    "meshes": 47,
+    "textures": 0,
+    "skins": 0,
+    "mesh_textures": 0,
+    "unused_missing_mesh_materials": []
+   },
+   "status": "ok",
+   "problems": []
+  },
+  {
+   "id": "menagerie_toddlerbot_2xm",
+   "source_id": "mujoco_menagerie",
+   "source_revision": "4d038b3feae26ec82b46a4d586379114012a8ac7",
+   "license": "MIT",
+   "license_file": "/workspace/molar/robot_lab_runtime/external_assets/sources/mujoco_menagerie/4d038b3feae26ec82b46a4d586379114012a8ac7/toddlerbot_2xm/LICENSE",
+   "license_kind": "license file",
+   "model": {
+    "format": "mjcf",
+    "compiles": true,
+    "meshes": 47,
+    "textures": 0,
+    "skins": 0,
+    "mesh_textures": 0,
+    "unused_missing_mesh_materials": []
+   },
+   "status": "ok",
+   "problems": []
+  },
+  {
+   "id": "menagerie_trossen_vx300s",
+   "source_id": "mujoco_menagerie",
+   "source_revision": "4d038b3feae26ec82b46a4d586379114012a8ac7",
+   "license": "BSD-3-Clause",
+   "license_file": "/workspace/molar/robot_lab_runtime/external_assets/sources/mujoco_menagerie/4d038b3feae26ec82b46a4d586379114012a8ac7/trossen_vx300s/LICENSE",
+   "license_kind": "license file",
+   "model": {
+    "format": "mjcf",
+    "compiles": true,
+    "meshes": 10,
+    "textures": 1,
+    "skins": 0,
+    "mesh_textures": 0,
+    "unused_missing_mesh_materials": []
+   },
+   "status": "ok",
+   "problems": []
+  },
+  {
+   "id": "menagerie_trossen_wx250s",
+   "source_id": "mujoco_menagerie",
+   "source_revision": "4d038b3feae26ec82b46a4d586379114012a8ac7",
+   "license": "BSD-3-Clause",
+   "license_file": "/workspace/molar/robot_lab_runtime/external_assets/sources/mujoco_menagerie/4d038b3feae26ec82b46a4d586379114012a8ac7/trossen_wx250s/LICENSE",
+   "license_kind": "license file",
+   "model": {
+    "format": "mjcf",
+    "compiles": true,
+    "meshes": 10,
+    "textures": 1,
+    "skins": 0,
+    "mesh_textures": 0,
+    "unused_missing_mesh_materials": []
+   },
+   "status": "ok",
+   "problems": []
+  },
+  {
+   "id": "menagerie_trossen_wxai",
+   "source_id": "mujoco_menagerie",
+   "source_revision": "4d038b3feae26ec82b46a4d586379114012a8ac7",
+   "license": "BSD-3-Clause",
+   "license_file": "/workspace/molar/robot_lab_runtime/external_assets/sources/mujoco_menagerie/4d038b3feae26ec82b46a4d586379114012a8ac7/trossen_wxai/LICENSE",
+   "license_kind": "license file",
+   "model": {
+    "format": "mjcf",
+    "compiles": true,
+    "meshes": 82,
+    "textures": 2,
+    "skins": 0,
+    "mesh_textures": 1,
+    "unused_missing_mesh_materials": [
+     "/workspace/molar/robot_lab_runtime/external_assets/sources/mujoco_menagerie/4d038b3feae26ec82b46a4d586379114012a8ac7/trossen_wxai/assets/meshes/wxai/link_3.mtl"
+    ]
+   },
+   "status": "ok",
+   "problems": []
+  },
+  {
+   "id": "menagerie_trs_so_arm100",
+   "source_id": "mujoco_menagerie",
+   "source_revision": "4d038b3feae26ec82b46a4d586379114012a8ac7",
+   "license": "Apache-2.0",
+   "license_file": "/workspace/molar/robot_lab_runtime/external_assets/sources/mujoco_menagerie/4d038b3feae26ec82b46a4d586379114012a8ac7/trs_so_arm100/LICENSE",
+   "license_kind": "license file",
+   "model": {
+    "format": "mjcf",
+    "compiles": true,
+    "meshes": 18,
+    "textures": 0,
+    "skins": 0,
+    "mesh_textures": 0,
+    "unused_missing_mesh_materials": []
+   },
+   "status": "ok",
+   "problems": []
+  },
+  {
+   "id": "menagerie_ufactory_lite6",
+   "source_id": "mujoco_menagerie",
+   "source_revision": "4d038b3feae26ec82b46a4d586379114012a8ac7",
+   "license": "BSD-3-Clause",
+   "license_file": "/workspace/molar/robot_lab_runtime/external_assets/sources/mujoco_menagerie/4d038b3feae26ec82b46a4d586379114012a8ac7/ufactory_lite6/LICENSE",
+   "license_kind": "license file",
+   "model": {
+    "format": "mjcf",
+    "compiles": true,
+    "meshes": 14,
+    "textures": 0,
+    "skins": 0,
+    "mesh_textures": 0,
+    "unused_missing_mesh_materials": []
+   },
+   "status": "ok",
+   "problems": []
+  },
+  {
+   "id": "menagerie_ufactory_xarm7",
+   "source_id": "mujoco_menagerie",
+   "source_revision": "4d038b3feae26ec82b46a4d586379114012a8ac7",
+   "license": "BSD-3-Clause",
+   "license_file": "/workspace/molar/robot_lab_runtime/external_assets/sources/mujoco_menagerie/4d038b3feae26ec82b46a4d586379114012a8ac7/ufactory_xarm7/LICENSE",
+   "license_kind": "license file",
+   "model": {
+    "format": "mjcf",
+    "compiles": true,
+    "meshes": 16,
+    "textures": 0,
+    "skins": 0,
+    "mesh_textures": 0,
+    "unused_missing_mesh_materials": []
+   },
+   "status": "ok",
+   "problems": []
+  },
+  {
+   "id": "menagerie_umi_gripper",
+   "source_id": "mujoco_menagerie",
+   "source_revision": "4d038b3feae26ec82b46a4d586379114012a8ac7",
+   "license": "MIT",
+   "license_file": "/workspace/molar/robot_lab_runtime/external_assets/sources/mujoco_menagerie/4d038b3feae26ec82b46a4d586379114012a8ac7/umi_gripper/LICENSE",
+   "license_kind": "license file",
+   "model": {
+    "format": "mjcf",
+    "compiles": true,
+    "meshes": 6,
+    "textures": 2,
+    "skins": 0,
+    "mesh_textures": 0,
+    "unused_missing_mesh_materials": []
+   },
+   "status": "ok",
+   "problems": []
+  },
+  {
+   "id": "menagerie_unitree_a1",
+   "source_id": "mujoco_menagerie",
+   "source_revision": "4d038b3feae26ec82b46a4d586379114012a8ac7",
+   "license": "BSD-3-Clause",
+   "license_file": "/workspace/molar/robot_lab_runtime/external_assets/sources/mujoco_menagerie/4d038b3feae26ec82b46a4d586379114012a8ac7/unitree_a1/LICENSE",
+   "license_kind": "license file",
+   "model": {
+    "format": "mjcf",
+    "compiles": true,
+    "meshes": 5,
+    "textures": 1,
+    "skins": 0,
+    "mesh_textures": 5,
+    "unused_missing_mesh_materials": [
+     "/workspace/molar/robot_lab_runtime/external_assets/sources/mujoco_menagerie/4d038b3feae26ec82b46a4d586379114012a8ac7/unitree_a1/assets/material_0.mtl"
+    ]
+   },
+   "status": "ok",
+   "problems": []
+  },
+  {
+   "id": "menagerie_unitree_g1",
+   "source_id": "mujoco_menagerie",
+   "source_revision": "4d038b3feae26ec82b46a4d586379114012a8ac7",
+   "license": "BSD-3-Clause",
+   "license_file": "/workspace/molar/robot_lab_runtime/external_assets/sources/mujoco_menagerie/4d038b3feae26ec82b46a4d586379114012a8ac7/unitree_g1/LICENSE",
+   "license_kind": "license file",
+   "model": {
+    "format": "mjcf",
+    "compiles": true,
+    "meshes": 35,
+    "textures": 0,
+    "skins": 0,
+    "mesh_textures": 0,
+    "unused_missing_mesh_materials": []
+   },
+   "status": "ok",
+   "problems": []
+  },
+  {
+   "id": "menagerie_unitree_go1",
+   "source_id": "mujoco_menagerie",
+   "source_revision": "4d038b3feae26ec82b46a4d586379114012a8ac7",
+   "license": "BSD-3-Clause",
+   "license_file": "/workspace/molar/robot_lab_runtime/external_assets/sources/mujoco_menagerie/4d038b3feae26ec82b46a4d586379114012a8ac7/unitree_go1/LICENSE",
+   "license_kind": "license file",
+   "model": {
+    "format": "mjcf",
+    "compiles": true,
+    "meshes": 5,
+    "textures": 0,
+    "skins": 0,
+    "mesh_textures": 0,
+    "unused_missing_mesh_materials": []
+   },
+   "status": "ok",
+   "problems": []
+  },
+  {
+   "id": "menagerie_unitree_go2",
+   "source_id": "mujoco_menagerie",
+   "source_revision": "4d038b3feae26ec82b46a4d586379114012a8ac7",
+   "license": "BSD-3-Clause",
+   "license_file": "/workspace/molar/robot_lab_runtime/external_assets/sources/mujoco_menagerie/4d038b3feae26ec82b46a4d586379114012a8ac7/unitree_go2/LICENSE",
+   "license_kind": "license file",
+   "model": {
+    "format": "mjcf",
+    "compiles": true,
+    "meshes": 16,
+    "textures": 0,
+    "skins": 0,
+    "mesh_textures": 16,
+    "unused_missing_mesh_materials": [
+     "/workspace/molar/robot_lab_runtime/external_assets/sources/mujoco_menagerie/4d038b3feae26ec82b46a4d586379114012a8ac7/unitree_go2/assets/Material.001.mtl",
+     "/workspace/molar/robot_lab_runtime/external_assets/sources/mujoco_menagerie/4d038b3feae26ec82b46a4d586379114012a8ac7/unitree_go2/assets/Material.009.mtl",
+     "/workspace/molar/robot_lab_runtime/external_assets/sources/mujoco_menagerie/4d038b3feae26ec82b46a4d586379114012a8ac7/unitree_go2/assets/Material.011.mtl",
+     "/workspace/molar/robot_lab_runtime/external_assets/sources/mujoco_menagerie/4d038b3feae26ec82b46a4d586379114012a8ac7/unitree_go2/assets/\u6df1\u8272\u6a61\u80f6.001.mtl",
+     "/workspace/molar/robot_lab_runtime/external_assets/sources/mujoco_menagerie/4d038b3feae26ec82b46a4d586379114012a8ac7/unitree_go2/assets/\u6df1\u8272\u6a61\u80f6.002.mtl",
+     "/workspace/molar/robot_lab_runtime/external_assets/sources/mujoco_menagerie/4d038b3feae26ec82b46a4d586379114012a8ac7/unitree_go2/assets/\u6df1\u8272\u6a61\u80f6.003.mtl",
+     "/workspace/molar/robot_lab_runtime/external_assets/sources/mujoco_menagerie/4d038b3feae26ec82b46a4d586379114012a8ac7/unitree_go2/assets/\u6df1\u8272\u6a61\u80f6.005.mtl",
+     "/workspace/molar/robot_lab_runtime/external_assets/sources/mujoco_menagerie/4d038b3feae26ec82b46a4d586379114012a8ac7/unitree_go2/assets/\u6df1\u8272\u6a61\u80f6.007.mtl",
+     "/workspace/molar/robot_lab_runtime/external_assets/sources/mujoco_menagerie/4d038b3feae26ec82b46a4d586379114012a8ac7/unitree_go2/assets/\u6df1\u8272\u6a61\u80f6.012.mtl",
+     "/workspace/molar/robot_lab_runtime/external_assets/sources/mujoco_menagerie/4d038b3feae26ec82b46a4d586379114012a8ac7/unitree_go2/assets/\u767d\u8272logo.001.mtl",
+     "/workspace/molar/robot_lab_runtime/external_assets/sources/mujoco_menagerie/4d038b3feae26ec82b46a4d586379114012a8ac7/unitree_go2/assets/\u9ed1\u8272\u5851\u6599.003.mtl",
+     "/workspace/molar/robot_lab_runtime/external_assets/sources/mujoco_menagerie/4d038b3feae26ec82b46a4d586379114012a8ac7/unitree_go2/assets/\u9ed1\u8272\u8d34\u7eb8.007.mtl",
+     "/workspace/molar/robot_lab_runtime/external_assets/sources/mujoco_menagerie/4d038b3feae26ec82b46a4d586379114012a8ac7/unitree_go2/assets/\u9ed1\u8272\u8db3\u7aef.005.mtl",
+     "/workspace/molar/robot_lab_runtime/external_assets/sources/mujoco_menagerie/4d038b3feae26ec82b46a4d586379114012a8ac7/unitree_go2/assets/\u9ed1\u8272\u8db3\u7aef.006.mtl",
+     "/workspace/molar/robot_lab_runtime/external_assets/sources/mujoco_menagerie/4d038b3feae26ec82b46a4d586379114012a8ac7/unitree_go2/assets/\u9ed1\u8272\u8db3\u7aef.007.mtl",
+     "/workspace/molar/robot_lab_runtime/external_assets/sources/mujoco_menagerie/4d038b3feae26ec82b46a4d586379114012a8ac7/unitree_go2/assets/\u9ed1\u8272\u91d1\u5c5e.007.mtl"
+    ]
+   },
+   "status": "ok",
+   "problems": []
+  },
+  {
+   "id": "menagerie_unitree_h1",
+   "source_id": "mujoco_menagerie",
+   "source_revision": "4d038b3feae26ec82b46a4d586379114012a8ac7",
+   "license": "BSD-3-Clause",
+   "license_file": "/workspace/molar/robot_lab_runtime/external_assets/sources/mujoco_menagerie/4d038b3feae26ec82b46a4d586379114012a8ac7/unitree_h1/LICENSE",
+   "license_kind": "license file",
+   "model": {
+    "format": "mjcf",
+    "compiles": true,
+    "meshes": 21,
+    "textures": 0,
+    "skins": 0,
+    "mesh_textures": 0,
+    "unused_missing_mesh_materials": []
+   },
+   "status": "ok",
+   "problems": []
+  },
+  {
+   "id": "menagerie_unitree_z1",
+   "source_id": "mujoco_menagerie",
+   "source_revision": "4d038b3feae26ec82b46a4d586379114012a8ac7",
+   "license": "BSD-3-Clause",
+   "license_file": "/workspace/molar/robot_lab_runtime/external_assets/sources/mujoco_menagerie/4d038b3feae26ec82b46a4d586379114012a8ac7/unitree_z1/LICENSE",
+   "license_kind": "license file",
+   "model": {
+    "format": "mjcf",
+    "compiles": true,
+    "meshes": 7,
+    "textures": 0,
+    "skins": 0,
+    "mesh_textures": 0,
+    "unused_missing_mesh_materials": []
+   },
+   "status": "ok",
+   "problems": []
+  },
+  {
+   "id": "menagerie_universal_robots_ur10e",
+   "source_id": "mujoco_menagerie",
+   "source_revision": "4d038b3feae26ec82b46a4d586379114012a8ac7",
+   "license": "BSD-3-Clause",
+   "license_file": "/workspace/molar/robot_lab_runtime/external_assets/sources/mujoco_menagerie/4d038b3feae26ec82b46a4d586379114012a8ac7/universal_robots_ur10e/LICENSE",
+   "license_kind": "license file",
+   "model": {
+    "format": "mjcf",
+    "compiles": true,
+    "meshes": 20,
+    "textures": 0,
+    "skins": 0,
+    "mesh_textures": 20,
+    "unused_missing_mesh_materials": [
+     "/workspace/molar/robot_lab_runtime/external_assets/sources/mujoco_menagerie/4d038b3feae26ec82b46a4d586379114012a8ac7/universal_robots_ur10e/assets/material.mtl"
+    ]
+   },
+   "status": "ok",
+   "problems": []
+  },
+  {
+   "id": "menagerie_universal_robots_ur5e",
+   "source_id": "mujoco_menagerie",
+   "source_revision": "4d038b3feae26ec82b46a4d586379114012a8ac7",
+   "license": "BSD-3-Clause",
+   "license_file": "/workspace/molar/robot_lab_runtime/external_assets/sources/mujoco_menagerie/4d038b3feae26ec82b46a4d586379114012a8ac7/universal_robots_ur5e/LICENSE",
+   "license_kind": "license file",
+   "model": {
+    "format": "mjcf",
+    "compiles": true,
+    "meshes": 20,
+    "textures": 0,
+    "skins": 0,
+    "mesh_textures": 20,
+    "unused_missing_mesh_materials": [
+     "/workspace/molar/robot_lab_runtime/external_assets/sources/mujoco_menagerie/4d038b3feae26ec82b46a4d586379114012a8ac7/universal_robots_ur5e/assets/Black.001.mtl",
+     "/workspace/molar/robot_lab_runtime/external_assets/sources/mujoco_menagerie/4d038b3feae26ec82b46a4d586379114012a8ac7/universal_robots_ur5e/assets/Black.002.mtl",
+     "/workspace/molar/robot_lab_runtime/external_assets/sources/mujoco_menagerie/4d038b3feae26ec82b46a4d586379114012a8ac7/universal_robots_ur5e/assets/Black.003.mtl",
+     "/workspace/molar/robot_lab_runtime/external_assets/sources/mujoco_menagerie/4d038b3feae26ec82b46a4d586379114012a8ac7/universal_robots_ur5e/assets/Black.004.mtl",
+     "/workspace/molar/robot_lab_runtime/external_assets/sources/mujoco_menagerie/4d038b3feae26ec82b46a4d586379114012a8ac7/universal_robots_ur5e/assets/Black.005.mtl",
+     "/workspace/molar/robot_lab_runtime/external_assets/sources/mujoco_menagerie/4d038b3feae26ec82b46a4d586379114012a8ac7/universal_robots_ur5e/assets/Black.mtl",
+     "/workspace/molar/robot_lab_runtime/external_assets/sources/mujoco_menagerie/4d038b3feae26ec82b46a4d586379114012a8ac7/universal_robots_ur5e/assets/JointGrey.001.mtl",
+     "/workspace/molar/robot_lab_runtime/external_assets/sources/mujoco_menagerie/4d038b3feae26ec82b46a4d586379114012a8ac7/universal_robots_ur5e/assets/JointGrey.002.mtl",
+     "/workspace/molar/robot_lab_runtime/external_assets/sources/mujoco_menagerie/4d038b3feae26ec82b46a4d586379114012a8ac7/universal_robots_ur5e/assets/JointGrey.003.mtl",
+     "/workspace/molar/robot_lab_runtime/external_assets/sources/mujoco_menagerie/4d038b3feae26ec82b46a4d586379114012a8ac7/universal_robots_ur5e/assets/JointGrey.004.mtl",
+     "/workspace/molar/robot_lab_runtime/external_assets/sources/mujoco_menagerie/4d038b3feae26ec82b46a4d586379114012a8ac7/universal_robots_ur5e/assets/JointGrey.005.mtl",
+     "/workspace/molar/robot_lab_runtime/external_assets/sources/mujoco_menagerie/4d038b3feae26ec82b46a4d586379114012a8ac7/universal_robots_ur5e/assets/JointGrey.mtl",
+     "/workspace/molar/robot_lab_runtime/external_assets/sources/mujoco_menagerie/4d038b3feae26ec82b46a4d586379114012a8ac7/universal_robots_ur5e/assets/LinkGrey.001.mtl",
+     "/workspace/molar/robot_lab_runtime/external_assets/sources/mujoco_menagerie/4d038b3feae26ec82b46a4d586379114012a8ac7/universal_robots_ur5e/assets/LinkGrey.002.mtl",
+     "/workspace/molar/robot_lab_runtime/external_assets/sources/mujoco_menagerie/4d038b3feae26ec82b46a4d586379114012a8ac7/universal_robots_ur5e/assets/LinkGrey.mtl",
+     "/workspace/molar/robot_lab_runtime/external_assets/sources/mujoco_menagerie/4d038b3feae26ec82b46a4d586379114012a8ac7/universal_robots_ur5e/assets/URBlue.001.mtl",
+     "/workspace/molar/robot_lab_runtime/external_assets/sources/mujoco_menagerie/4d038b3feae26ec82b46a4d586379114012a8ac7/universal_robots_ur5e/assets/URBlue.002.mtl",
+     "/workspace/molar/robot_lab_runtime/external_assets/sources/mujoco_menagerie/4d038b3feae26ec82b46a4d586379114012a8ac7/universal_robots_ur5e/assets/URBlue.003.mtl",
+     "/workspace/molar/robot_lab_runtime/external_assets/sources/mujoco_menagerie/4d038b3feae26ec82b46a4d586379114012a8ac7/universal_robots_ur5e/assets/URBlue.004.mtl",
+     "/workspace/molar/robot_lab_runtime/external_assets/sources/mujoco_menagerie/4d038b3feae26ec82b46a4d586379114012a8ac7/universal_robots_ur5e/assets/URBlue.mtl"
+    ]
+   },
+   "status": "ok",
+   "problems": []
+  },
+  {
+   "id": "molar_hri",
+   "source_id": null,
+   "license": "Apache-2.0",
+   "license_file": "/workspace/molar/ros_ws/bumperbot_ws/src/robot_lab_robots/package.xml",
+   "license_kind": "package.xml tag",
+   "model": {
+    "format": "urdf",
+    "meshes": 173,
+    "missing_meshes": [],
+    "mesh_textures": 0,
+    "missing_mesh_textures": []
+   },
+   "status": "ok",
+   "problems": []
+  },
+  {
+   "id": "oomwoo",
+   "source_id": null,
+   "license": "Apache-2.0",
+   "license_file": "/workspace/molar/ros_ws/bumperbot_ws/src/robot_lab_robots/package.xml",
+   "license_kind": "package.xml tag",
+   "model": {
+    "format": "urdf",
+    "meshes": 0,
+    "missing_meshes": [],
+    "mesh_textures": 0,
+    "missing_mesh_textures": []
+   },
+   "status": "ok",
+   "problems": []
+  },
+  {
+   "id": "policy_booster_t1",
+   "source_id": "booster_gym",
+   "source_revision": "da396a06d6eed99e2de72d7749c48ee8748950f9",
+   "license": "Apache-2.0",
+   "license_file": "/workspace/molar/robot_lab_runtime/external_assets/sources/booster_gym/da396a06d6eed99e2de72d7749c48ee8748950f9/LICENSE",
+   "license_kind": "license file",
+   "model": {
+    "format": "mjcf",
+    "compiles": true,
+    "meshes": 24,
+    "textures": 2,
+    "skins": 0,
+    "mesh_textures": 0,
+    "unused_missing_mesh_materials": []
+   },
+   "status": "ok",
+   "problems": []
+  },
+  {
+   "id": "policy_unitree_g1",
+   "source_id": "unitree_rl_gym",
+   "source_revision": "276801e46c5d433564f24658bac64f254b7d2d4b",
+   "license": "BSD-3-Clause",
+   "license_file": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/policy-sources/unitree_rl_gym/LICENSE",
+   "license_kind": "license file",
+   "model": {
+    "format": "mjcf",
+    "compiles": true,
+    "meshes": 27,
+    "textures": 0,
+    "skins": 0,
+    "mesh_textures": 0,
+    "unused_missing_mesh_materials": []
+   },
+   "status": "ok",
+   "problems": []
+  },
+  {
+   "id": "policy_unitree_h1",
+   "source_id": "unitree_rl_gym",
+   "source_revision": "276801e46c5d433564f24658bac64f254b7d2d4b",
+   "license": "BSD-3-Clause",
+   "license_file": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/policy-sources/unitree_rl_gym/LICENSE",
+   "license_kind": "license file",
+   "model": {
+    "format": "mjcf",
+    "compiles": true,
+    "meshes": 21,
+    "textures": 0,
+    "skins": 0,
+    "mesh_textures": 0,
+    "unused_missing_mesh_materials": []
+   },
+   "status": "ok",
+   "problems": []
+  },
+  {
+   "id": "policy_unitree_h1_2",
+   "source_id": "unitree_rl_gym",
+   "source_revision": "276801e46c5d433564f24658bac64f254b7d2d4b",
+   "license": "BSD-3-Clause",
+   "license_file": "/workspace/molar/robot_lab_runtime/extensions-finish-2026-10-07/policy-sources/unitree_rl_gym/LICENSE",
+   "license_kind": "license file",
+   "model": {
+    "format": "mjcf",
+    "compiles": true,
+    "meshes": 54,
+    "textures": 0,
+    "skins": 0,
+    "mesh_textures": 0,
+    "unused_missing_mesh_materials": []
+   },
+   "status": "ok",
+   "problems": []
+  },
+  {
+   "id": "probot_l",
+   "source_id": null,
+   "license": "Apache-2.0",
+   "license_file": "/workspace/molar/ros_ws/bumperbot_ws/src/robot_lab_robots/package.xml",
+   "license_kind": "package.xml tag",
+   "model": {
+    "format": "urdf",
+    "meshes": 110,
+    "missing_meshes": [],
+    "mesh_textures": 0,
+    "missing_mesh_textures": []
+   },
+   "status": "ok",
+   "problems": []
+  },
+  {
+   "id": "px4_iris",
+   "source_id": "px4",
+   "license": "BSD-3-Clause",
+   "license_file": "/workspace/molar/px4/PX4-Autopilot/LICENSE",
+   "model": {
+    "format": "generated",
+    "note": "PX4 SITL vehicle whose plant is generated in code (robot_lab_adapter/px4_mujoco_plant.py); no model file to check"
+   },
+   "license_kind": "license file",
+   "status": "ok",
+   "problems": []
+  },
+  {
+   "id": "px4_x500",
+   "source_id": "px4",
+   "license": "BSD-3-Clause",
+   "license_file": "/workspace/molar/px4/PX4-Autopilot/LICENSE",
+   "model": {
+    "format": "sdf",
+    "meshes": 13,
+    "missing_meshes": []
+   },
+   "license_kind": "license file",
+   "status": "ok",
+   "problems": []
+  },
+  {
+   "id": "quadrotor_sitl",
+   "source_id": null,
+   "license": "Apache-2.0",
+   "license_file": "/workspace/molar/ros_ws/bumperbot_ws/src/robot_lab_robots/package.xml",
+   "license_kind": "package.xml tag",
+   "model": {
+    "format": "urdf",
+    "meshes": 0,
+    "missing_meshes": [],
+    "mesh_textures": 0,
+    "missing_mesh_textures": []
+   },
+   "status": "ok",
+   "problems": []
+  },
+  {
+   "id": "rear_steer_car",
+   "source_id": null,
+   "license": "Apache-2.0",
+   "license_file": "/workspace/molar/ros_ws/bumperbot_ws/src/robot_lab_robots/package.xml",
+   "license_kind": "package.xml tag",
+   "model": {
+    "format": "urdf",
+    "meshes": 0,
+    "missing_meshes": [],
+    "mesh_textures": 0,
+    "missing_mesh_textures": []
+   },
+   "status": "ok",
+   "problems": []
+  },
+  {
+   "id": "tethys_auv",
+   "source_id": null,
+   "license": "Apache-2.0",
+   "license_file": "/workspace/molar/ros_ws/bumperbot_ws/src/robot_lab_robots/package.xml",
+   "license_kind": "package.xml tag",
+   "model": {
+    "format": "urdf",
+    "meshes": 4,
+    "missing_meshes": [],
+    "mesh_textures": 0,
+    "missing_mesh_textures": []
+   },
+   "status": "ok",
+   "problems": []
+  },
+  {
+   "id": "unitree_a1",
+   "source_id": null,
+   "license": "BSD-3-Clause",
+   "license_file": "/workspace/molar/ros_ws/bumperbot_ws/src/robot_lab_robots/unitree/LICENSE",
+   "license_kind": "license file",
+   "model": {
+    "format": "urdf",
+    "meshes": 5,
+    "missing_meshes": [],
+    "mesh_textures": 1,
+    "missing_mesh_textures": []
+   },
+   "status": "ok",
+   "problems": []
+  },
+  {
+   "id": "unitree_aliengo",
+   "source_id": null,
+   "license": "BSD-3-Clause",
+   "license_file": "/workspace/molar/ros_ws/bumperbot_ws/src/robot_lab_robots/unitree/LICENSE",
+   "license_kind": "license file",
+   "model": {
+    "format": "urdf",
+    "meshes": 5,
+    "missing_meshes": [],
+    "mesh_textures": 1,
+    "missing_mesh_textures": []
+   },
+   "status": "ok",
+   "problems": []
+  },
+  {
+   "id": "unitree_b1",
+   "source_id": null,
+   "license": "BSD-3-Clause",
+   "license_file": "/workspace/molar/ros_ws/bumperbot_ws/src/robot_lab_robots/unitree/LICENSE",
+   "license_kind": "license file",
+   "model": {
+    "format": "urdf",
+    "meshes": 5,
+    "missing_meshes": [],
+    "mesh_textures": 0,
+    "missing_mesh_textures": []
+   },
+   "status": "ok",
+   "problems": []
+  },
+  {
+   "id": "unitree_b2",
+   "source_id": null,
+   "license": "BSD-3-Clause",
+   "license_file": "/workspace/molar/ros_ws/bumperbot_ws/src/robot_lab_robots/unitree/LICENSE",
+   "license_kind": "license file",
+   "model": {
+    "format": "urdf",
+    "meshes": 5,
+    "missing_meshes": [],
+    "mesh_textures": 0,
+    "missing_mesh_textures": []
+   },
+   "status": "ok",
+   "problems": []
+  },
+  {
+   "id": "unitree_b2_mujoco",
+   "source_id": null,
+   "license": "BSD-3-Clause",
+   "license_file": "/workspace/molar/ros_ws/bumperbot_ws/src/robot_lab_robots/unitree/LICENSE",
+   "license_kind": "license file",
+   "model": {
+    "format": "urdf",
+    "meshes": 31,
+    "missing_meshes": [],
+    "mesh_textures": 14,
+    "missing_mesh_textures": [
+     "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_robots/share/robot_lab_robots/unitree/b2_description_mujoco/meshes/20231207_1950back_camera.mtl",
+     "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_robots/share/robot_lab_robots/unitree/b2_description_mujoco/meshes/20231207_1950back_camera_up.mtl",
+     "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_robots/share/robot_lab_robots/unitree/b2_description_mujoco/meshes/20231207_1950front_camera.mtl",
+     "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_robots/share/robot_lab_robots/unitree/b2_description_mujoco/meshes/20231207_1950front_camera_up.mtl",
+     "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_robots/share/robot_lab_robots/unitree/b2_description_mujoco/meshes/20231207_1950left_thigh_protect.mtl",
+     "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_robots/share/robot_lab_robots/unitree/b2_description_mujoco/meshes/mujoco_LOGO_R.mtl",
+     "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_robots/share/robot_lab_robots/unitree/b2_description_mujoco/meshes/mujoco_LOGO_RLobj.mtl",
+     "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_robots/share/robot_lab_robots/unitree/b2_description_mujoco/meshes/mujoco_foot.mtl",
+     "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_robots/share/robot_lab_robots/unitree/b2_description_mujoco/meshes/mujoco_right_thigh_protect.mtl",
+     "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_robots/share/robot_lab_robots/unitree/b2_description_mujoco/meshes/mujocolidar2.mtl"
+    ]
+   },
+   "status": "attention",
+   "problems": [
+    "10 missing mesh textures"
+   ]
+  },
+  {
+   "id": "unitree_b2w",
+   "source_id": null,
+   "license": "BSD-3-Clause",
+   "license_file": "/workspace/molar/ros_ws/bumperbot_ws/src/robot_lab_robots/unitree/LICENSE",
+   "license_kind": "license file",
+   "model": {
+    "format": "urdf",
+    "meshes": 6,
+    "missing_meshes": [],
+    "mesh_textures": 0,
+    "missing_mesh_textures": []
+   },
+   "status": "ok",
+   "problems": []
+  },
+  {
+   "id": "unitree_g1",
+   "source_id": null,
+   "license": "BSD-3-Clause",
+   "license_file": "/workspace/molar/ros_ws/bumperbot_ws/src/robot_lab_robots/unitree/LICENSE",
+   "license_kind": "license file",
+   "model": {
+    "format": "urdf",
+    "meshes": 43,
+    "missing_meshes": [],
+    "mesh_textures": 0,
+    "missing_mesh_textures": []
+   },
+   "status": "ok",
+   "problems": []
+  },
+  {
+   "id": "unitree_g1_29dof",
+   "source_id": null,
+   "license": "BSD-3-Clause",
+   "license_file": "/workspace/molar/ros_ws/bumperbot_ws/src/robot_lab_robots/unitree/LICENSE",
+   "license_kind": "license file",
+   "model": {
+    "format": "urdf",
+    "meshes": 36,
+    "missing_meshes": [],
+    "mesh_textures": 0,
+    "missing_mesh_textures": []
+   },
+   "status": "ok",
+   "problems": []
+  },
+  {
+   "id": "unitree_go1",
+   "source_id": null,
+   "license": "BSD-3-Clause",
+   "license_file": "/workspace/molar/ros_ws/bumperbot_ws/src/robot_lab_robots/unitree/LICENSE",
+   "license_kind": "license file",
+   "model": {
+    "format": "urdf",
+    "meshes": 7,
+    "missing_meshes": [],
+    "mesh_textures": 0,
+    "missing_mesh_textures": []
+   },
+   "status": "ok",
+   "problems": []
+  },
+  {
+   "id": "unitree_go2",
+   "source_id": null,
+   "license": "BSD-3-Clause",
+   "license_file": "/workspace/molar/ros_ws/bumperbot_ws/src/robot_lab_robots/unitree/LICENSE",
+   "license_kind": "license file",
+   "model": {
+    "format": "urdf",
+    "meshes": 5,
+    "missing_meshes": [],
+    "mesh_textures": 0,
+    "missing_mesh_textures": []
+   },
+   "status": "ok",
+   "problems": []
+  },
+  {
+   "id": "unitree_go2w",
+   "source_id": null,
+   "license": "BSD-3-Clause",
+   "license_file": "/workspace/molar/ros_ws/bumperbot_ws/src/robot_lab_robots/unitree/LICENSE",
+   "license_kind": "license file",
+   "model": {
+    "format": "urdf",
+    "meshes": 8,
+    "missing_meshes": [],
+    "mesh_textures": 0,
+    "missing_mesh_textures": []
+   },
+   "status": "ok",
+   "problems": []
+  },
+  {
+   "id": "unitree_h1_2",
+   "source_id": null,
+   "license": "BSD-3-Clause",
+   "license_file": "/workspace/molar/ros_ws/bumperbot_ws/src/robot_lab_robots/unitree/LICENSE",
+   "license_kind": "license file",
+   "model": {
+    "format": "urdf",
+    "meshes": 54,
+    "missing_meshes": [],
+    "mesh_textures": 0,
+    "missing_mesh_textures": []
+   },
+   "status": "ok",
+   "problems": []
+  }
+ ]
+}

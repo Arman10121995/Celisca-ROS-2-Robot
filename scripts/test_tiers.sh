@@ -115,6 +115,7 @@ FAST_TESTS=(
   "src/robot_lab_utils/test/test_map_registration.py"
   "src/robot_lab_utils/test/test_external_source_licenses.py"
   "src/robot_lab_utils/test/test_algorithm_method_records.py"
+  "src/robot_lab_utils/test/test_robot_asset_audit.py"
 )
 
 INTEGRATION_TESTS=(
@@ -182,6 +183,7 @@ PHYSICS_TESTS=(
   "$BRG_TEST/test_backend_assets.py::MujocoSmallWheelServoTests"
   "src/robot_lab_mujoco/test/test_native_asset_display.py"
   "src/robot_lab_mujoco/test/test_octopod_control.py"
+  "src/robot_lab_mujoco/test/test_booster_policy.py"
   "src/robot_lab_mujoco/test/test_wheel_housing_contacts.py"
   "$BRG_TEST/test_myagv_pro_source.py"
   "$BRG_TEST/test_urdf_inertia.py"

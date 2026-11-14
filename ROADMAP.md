@@ -142,7 +142,7 @@ Work top to bottom. Each line links to its task.
 | I12 | [R10.6](#r106--six--and-eight-legged-robots) / [R10.7](#r107--segmented-and-additional-robot-forms) Multi-leg and forms | Done 2026-11-14: depth/IMU flipper policy (sequences a step, but the 4 Nm flippers cannot climb 0.18 m: measured), bounded gait slip/support recovery (unit-tested). Stronger flippers, other backends, per-model terrain missions remain | implemented |
 | I13 | [R5.2](#r52--go2-quadruped-locomotion) / [R5.3](#r53--berkeley-humanoid-lite-balance-and-walking) / [R12](#r12--legged-policy-training) Legged | 2026-11-14: `get_up` task and stairs curriculum implemented; first Go2 get-up policy 1/10 (not passed); BHL contract/export, G1/Go2W policies, GPU training remain | partial |
 | I14 | [R5.5](#r55--ackermann-rear-steer-and-anti-ackermann-cars) Cars | 2026-11-14: park-at-heading runtime and normal Drive-panel controls, lifecycle/heartbeat/whole-budget gates and costmap footprint correction checks; two historical slalom aborts remain | partial |
-| I15 | [R3.6](#r36--external-robot-assets-in-normal-launch) Assets | 2026-11-14: model-derived display-only reasons for all 77 profiles in the GUI; Lite6/Google Robot jogging via unnamed-actuator support. Vendor controllers for legged/URDF profiles remain | partial |
+| I15 | [R3.6](#r36--external-robot-assets-in-normal-launch) Assets | 2026-11-15: vendor policies for Booster T1 and Unitree G1/H1/H1_2 controllable (display-only 77 → 73), controllable siblings named, per-model license/mesh/texture audit (114/163 ok). 47 legged need training, 19 URDFs ship no control interface | partial |
 | I16 | [R6.5](#r65--world-to-occupancy-generation) / [R6.6](#r66--external-world-library) / [R6.2](#r62--dynamic-and-sensor-disturbance-cases) Worlds | 2026-11-14: free-region labelling + reviewed grid registration (R6.5), seeded live sensor-fault relay on every backend (R6.2). Licensed Fuel imports, fixture review, actors with collision remain | partial |
 | I17 | [R11](#r11--molar--probot-l-family) MOLAR | Sensors, SLAM/Nav2, payload transfer, multi-floor | partial, needs the sensor layout |
 | I18 | [P4](#p4--mujoco-large-world-speed) MuJoCo speed | 2026-11-14: flex culling, exact tick pacing, oversleep payback, sensor thread (celisca_floor_1 0.81, furnished floor 0.99, hospital 0.43); large worlds remain flex-kinematics bound | partial |
@@ -213,10 +213,26 @@ parking batch needs its own run. Details and evidence are in the
   3 floating without a base controller, 2 free-flyers, 2 without usable
   actuators). The native position servo accepts unnamed vendor actuators,
   enabling Menagerie Lite6 and Google Robot jogging (validation pending).
+- **Done 2026-11-15 (implemented, experimental):**
+  - **Booster T1:** walks with the vendor's own policy on the vendor's MuJoCo
+    model (booster_gym `T1.pt`, `robot_lab_mujoco.booster_policy`).
+  - **Unitree G1/H1/H1_2:** their vendor policies were already wired but were
+    still listed as display-only; they are now counted as controllable.
+  - **Walking screen:** in a screen through the operator input path, all four
+    stayed up with no fault. T1 and G1 track 0.12 m/s within 0.02 m over
+    6 s, H1 tracks forward poorly, and all four turn 1.2–1.4 rad of the
+    1.5 rad requested.
+  - **Display-only profiles:** 77 → 73. Display reasons now name a
+    controllable sibling model in the same family (12 profiles).
+  - **Asset audit:** `scripts/robot_asset_audit.py` checks license, meshes,
+    textures and skins for all 163 profiles. 114 are ok; 48 robot_assets
+    models ship no license, and one vendor copy lacks its OBJ materials
+    ([evidence](docs/status/evidence/r36-vendor-controllers-2026-11-15/README.md)).
 - **Remaining implementation:**
-  - source-matched controllers for the 51 legged and 19 URDF profiles
-    (each needs a vendor policy or a control interface the source lacks);
-  - per-model license, texture and skin checks.
+  - **47 legged profiles without a published vendor policy:** Menagerie
+    Spot, ANYmal, Cassie, Apollo and others, plus NASA R2/Valkyrie. They
+    need trained policies (R12).
+  - **19 URDFs that ship no control interface.
 - **How to do it:**
   1. List display-only profiles: `src/robot_lab_robots/config/robots.yaml`
      and the provisioned registry (`scripts/provision_extension_assets.py`,

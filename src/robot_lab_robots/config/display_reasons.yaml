@@ -29,6 +29,8 @@ asset_fetch:
     vendor controller interface to use; gains would be invented.
 asset_franka_panda_panda:
   code: no_control_interface
+  controllable_variants:
+  - menagerie_franka_emika_panda
   facts:
     actuators: {}
     floating: false
@@ -39,8 +41,9 @@ asset_franka_panda_panda:
     rotors: 0
     transmissions: 0
     wheels: 0
-  reason: The source URDF has 9 movable joints but no ros2_control or transmission description, so there is no vendor
-    controller interface to use; gains would be invented.
+  reason: 'The source URDF has 9 movable joints but no ros2_control or transmission description, so there is no
+    vendor controller interface to use; gains would be invented. Controllable variant in this family (a different
+    source model): Native MuJoCo arm and hand (menagerie_franka_emika_panda).'
 asset_ginger_robot_gingerurdf:
   code: no_control_interface
   facts:
@@ -71,6 +74,8 @@ asset_halodi_eve_r3:
     for exactly this model; none is provisioned. Joint jogging alone would let it fall.'
 asset_kinova:
   code: no_control_interface
+  controllable_variants:
+  - menagerie_kinova_gen3
   facts:
     actuators: {}
     floating: null
@@ -81,10 +86,13 @@ asset_kinova:
     rotors: 0
     transmissions: 0
     wheels: 0
-  reason: The source URDF has 6 movable joints but no ros2_control or transmission description, so there is no vendor
-    controller interface to use; gains would be invented.
+  reason: 'The source URDF has 6 movable joints but no ros2_control or transmission description, so there is no
+    vendor controller interface to use; gains would be invented. Controllable variant in this family (a different
+    source model): Gen3 native source (menagerie_kinova_gen3).'
 asset_kuka_iiwa:
   code: no_control_interface
+  controllable_variants:
+  - menagerie_kuka_iiwa_14
   facts:
     actuators: {}
     floating: null
@@ -95,23 +103,9 @@ asset_kuka_iiwa:
     rotors: 0
     transmissions: 0
     wheels: 0
-  reason: The source URDF has 7 movable joints but no ros2_control or transmission description, so there is no vendor
-    controller interface to use; gains would be invented.
-asset_light_robotics_octopod:
-  code: needs_locomotion_policy
-  facts:
-    actuators:
-      general: 27
-    floating: true
-    format: mjcf
-    joints: 30
-    legs: 8
-    ros2_control: false
-    rotors: 0
-    transmissions: 0
-    wheels: 0
-  reason: 'A floating-base legged robot: standing or walking needs a balance/locomotion controller or trained policy
-    for exactly this model; none is provisioned. Joint jogging alone would let it fall.'
+  reason: 'The source URDF has 7 movable joints but no ros2_control or transmission description, so there is no
+    vendor controller interface to use; gains would be invented. Controllable variant in this family (a different
+    source model): Native iiwa 14 (menagerie_kuka_iiwa_14).'
 asset_pr2:
   code: no_control_interface
   facts:
@@ -450,6 +444,8 @@ asset_r2_description_r2c_sim_upperbody_dynamics:
     vendor controller interface to use; gains would be invented.
 asset_ur10_ur10_robot:
   code: no_control_interface
+  controllable_variants:
+  - menagerie_universal_robots_ur10e
   facts:
     actuators: {}
     floating: false
@@ -460,10 +456,13 @@ asset_ur10_ur10_robot:
     rotors: 0
     transmissions: 0
     wheels: 0
-  reason: The source URDF has 6 movable joints but no ros2_control or transmission description, so there is no vendor
-    controller interface to use; gains would be invented.
+  reason: 'The source URDF has 6 movable joints but no ros2_control or transmission description, so there is no
+    vendor controller interface to use; gains would be invented. Controllable variant in this family (a different
+    source model): UR10e native source (menagerie_universal_robots_ur10e).'
 asset_ur5_ur5_gripper:
   code: no_control_interface
+  controllable_variants:
+  - menagerie_universal_robots_ur5e
   facts:
     actuators: {}
     floating: false
@@ -474,8 +473,9 @@ asset_ur5_ur5_gripper:
     rotors: 0
     transmissions: 0
     wheels: 0
-  reason: The source URDF has 6 movable joints but no ros2_control or transmission description, so there is no vendor
-    controller interface to use; gains would be invented.
+  reason: 'The source URDF has 6 movable joints but no ros2_control or transmission description, so there is no
+    vendor controller interface to use; gains would be invented. Controllable variant in this family (a different
+    source model): UR5e native source (menagerie_universal_robots_ur5e).'
 asset_val_description_forearm_left:
   code: no_control_interface
   facts:
@@ -778,6 +778,8 @@ menagerie_bitcraze_crazyflie_2:
     the vendor''s); none is provisioned for this model.'
 menagerie_booster_t1:
   code: needs_locomotion_policy
+  controllable_variants:
+  - policy_booster_t1
   facts:
     actuators:
       position: 23
@@ -790,7 +792,8 @@ menagerie_booster_t1:
     transmissions: 0
     wheels: 0
   reason: 'A floating-base legged robot: standing or walking needs a balance/locomotion controller or trained policy
-    for exactly this model; none is provisioned. Joint jogging alone would let it fall.'
+    for exactly this model; none is provisioned. Joint jogging alone would let it fall. Controllable variant in
+    this family (a different source model): booster_gym legs with vendor policy (experimental) (policy_booster_t1).'
 menagerie_boston_dynamics_spot:
   code: needs_locomotion_policy
   facts:
@@ -869,6 +872,10 @@ menagerie_google_barkour_vb:
     for exactly this model; none is provisioned. Joint jogging alone would let it fall.'
 menagerie_iit_softfoot:
   code: no_source_actuators
+  controllable_variants:
+  - menagerie_robotiq_2f85
+  - menagerie_robotiq_2f85_v4
+  - menagerie_umi_gripper
   facts:
     actuators: {}
     floating: false
@@ -879,7 +886,9 @@ menagerie_iit_softfoot:
     rotors: 0
     transmissions: 0
     wheels: 0
-  reason: The source MJCF declares no actuators; any controller would invent gains.
+  reason: 'The source MJCF declares no actuators; any controller would invent gains. Controllable variant in this
+    family (a different source model): Robotiq 2F85 gripper (menagerie_robotiq_2f85), Robotiq 2F85 source v4 (menagerie_robotiq_2f85_v4),
+    UMI gripper (menagerie_umi_gripper).'
 menagerie_ms_human_700:
   code: torque_actuators_only
   facts:
@@ -988,6 +997,8 @@ menagerie_toddlerbot_2xm:
     for exactly this model; none is provisioned. Joint jogging alone would let it fall.'
 menagerie_unitree_a1:
   code: needs_locomotion_policy
+  controllable_variants:
+  - unitree_a1
   facts:
     actuators:
       position: 12
@@ -1000,9 +1011,14 @@ menagerie_unitree_a1:
     transmissions: 0
     wheels: 0
   reason: 'A floating-base legged robot: standing or walking needs a balance/locomotion controller or trained policy
-    for exactly this model; none is provisioned. Joint jogging alone would let it fall.'
+    for exactly this model; none is provisioned. Joint jogging alone would let it fall. Controllable variant in
+    this family (a different source model): ROS description (unitree_a1).'
 menagerie_unitree_g1:
   code: needs_locomotion_policy
+  controllable_variants:
+  - unitree_g1
+  - unitree_g1_29dof
+  - policy_unitree_g1
   facts:
     actuators:
       position: 29
@@ -1015,9 +1031,13 @@ menagerie_unitree_g1:
     transmissions: 0
     wheels: 0
   reason: 'A floating-base legged robot: standing or walking needs a balance/locomotion controller or trained policy
-    for exactly this model; none is provisioned. Joint jogging alone would let it fall.'
+    for exactly this model; none is provisioned. Joint jogging alone would let it fall. Controllable variant in
+    this family (a different source model): ROS description (unitree_g1), 29 DOF description (unitree_g1_29dof),
+    RL Gym 12 DOF policy model (experimental) (policy_unitree_g1).'
 menagerie_unitree_go1:
   code: needs_locomotion_policy
+  controllable_variants:
+  - unitree_go1
   facts:
     actuators:
       position: 12
@@ -1030,9 +1050,12 @@ menagerie_unitree_go1:
     transmissions: 0
     wheels: 0
   reason: 'A floating-base legged robot: standing or walking needs a balance/locomotion controller or trained policy
-    for exactly this model; none is provisioned. Joint jogging alone would let it fall.'
+    for exactly this model; none is provisioned. Joint jogging alone would let it fall. Controllable variant in
+    this family (a different source model): ROS description (unitree_go1).'
 menagerie_unitree_go2:
   code: needs_locomotion_policy
+  controllable_variants:
+  - unitree_go2
   facts:
     actuators:
       motor: 12
@@ -1045,9 +1068,14 @@ menagerie_unitree_go2:
     transmissions: 0
     wheels: 0
   reason: 'A floating-base legged robot: standing or walking needs a balance/locomotion controller or trained policy
-    for exactly this model; none is provisioned. Joint jogging alone would let it fall.'
+    for exactly this model; none is provisioned. Joint jogging alone would let it fall. Controllable variant in
+    this family (a different source model): Robot Lab policy model (unitree_go2).'
 menagerie_unitree_h1:
   code: needs_locomotion_policy
+  controllable_variants:
+  - unitree_h1_2
+  - policy_unitree_h1
+  - policy_unitree_h1_2
   facts:
     actuators:
       motor: 19
@@ -1060,49 +1088,6 @@ menagerie_unitree_h1:
     transmissions: 0
     wheels: 0
   reason: 'A floating-base legged robot: standing or walking needs a balance/locomotion controller or trained policy
-    for exactly this model; none is provisioned. Joint jogging alone would let it fall.'
-policy_unitree_g1:
-  code: needs_locomotion_policy
-  facts:
-    actuators:
-      motor: 12
-    floating: true
-    format: mjcf
-    joints: 13
-    legs: 12
-    ros2_control: false
-    rotors: 0
-    transmissions: 0
-    wheels: 0
-  reason: 'A floating-base legged robot: standing or walking needs a balance/locomotion controller or trained policy
-    for exactly this model; none is provisioned. Joint jogging alone would let it fall.'
-policy_unitree_h1:
-  code: needs_locomotion_policy
-  facts:
-    actuators:
-      motor: 10
-    floating: true
-    format: mjcf
-    joints: 11
-    legs: 10
-    ros2_control: false
-    rotors: 0
-    transmissions: 0
-    wheels: 0
-  reason: 'A floating-base legged robot: standing or walking needs a balance/locomotion controller or trained policy
-    for exactly this model; none is provisioned. Joint jogging alone would let it fall.'
-policy_unitree_h1_2:
-  code: needs_locomotion_policy
-  facts:
-    actuators:
-      motor: 12
-    floating: true
-    format: mjcf
-    joints: 13
-    legs: 12
-    ros2_control: false
-    rotors: 0
-    transmissions: 0
-    wheels: 0
-  reason: 'A floating-base legged robot: standing or walking needs a balance/locomotion controller or trained policy
-    for exactly this model; none is provisioned. Joint jogging alone would let it fall.'
+    for exactly this model; none is provisioned. Joint jogging alone would let it fall. Controllable variant in
+    this family (a different source model): H1 v2 source model (unitree_h1_2), RL Gym H1 policy model (experimental)
+    (policy_unitree_h1), RL Gym H1 v2 policy model (experimental) (policy_unitree_h1_2).'

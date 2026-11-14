@@ -101,6 +101,11 @@ robots:
       - {id: unitree_h1_2, label: H1 v2 source model, registry_ids: [h1_2]}
       - {id: policy_unitree_h1, label: RL Gym H1 policy model (experimental), role: source_alternative}
       - {id: policy_unitree_h1_2, label: RL Gym H1 v2 policy model (experimental), role: source_alternative}
+  - id: booster_t1
+    name: Booster T1
+    members:
+      - {id: menagerie_booster_t1, label: Menagerie source model}
+      - {id: policy_booster_t1, label: booster_gym legs with vendor policy (experimental), role: source_alternative}
   - id: unitree_z1
     name: Unitree Z1
     members:

@@ -202,7 +202,8 @@ class NativeUnitreePolicy:
             self.stop('Policy inference failed: ' + str(exc))
 
     def state(self):
-        return dict(robot=self.robot, status=self.status, fault=self.fault,
+        return dict(robot=self.robot, status=self.status, fault=self.fault, sim_time=float(self.data.time),
+                    root_pose_truth=self.data.qpos[self.base_q:self.base_q + 7].tolist(),
                     command=self.current_command().tolist(), physics_steps=self.steps,
                     decision_period_s=self.dt * self.decimation,
                     qualification='experimental; broad physical validation pending')

@@ -22,7 +22,7 @@ LEG = re.compile(r'(foot|leg|calf|thigh|knee|ankle|hip|shin)', re.I)
 ROTOR = re.compile(r'(rotor|prop|thrust)', re.I)
 WHEEL = re.compile(r'wheel', re.I)
 CONTROL_KEYS = ('drive_in_display', 'articulation', 'arm_control', 'native_articulation', 'mobile_control_config',
-                'native_hand', 'marine_model', 'gait_model')
+                'native_hand', 'marine_model', 'gait_model', 'locomotion_policy_config')
 
 
 def _mjcf_facts(path):
@@ -112,7 +112,8 @@ def display_only(profile):
     return set(profile.get('supported_modes', [])) <= {'display'} and not any(profile.get(k) for k in CONTROL_KEYS)
 
 
-def generate(profiles):
+def generate(profiles, groups=None):
+    """Reasons for every display-only profile; with *groups* (AssetGroups), name controllable siblings."""
     result = {}
     for name, profile in sorted(profiles.items()):
         if not display_only(profile):
@@ -123,7 +124,17 @@ def generate(profiles):
             facts, code, text = None, 'model_unreadable', 'The source model could not be parsed: %s' % exc
         else:
             code, text = reason(facts, profile)
-        result[name] = dict(code=code, reason=text, facts=facts)
+        row = dict(code=code, reason=text, facts=facts)
+        if groups is not None:
+            # A family member with its own control path is a different model;
+            # name it rather than borrowing its controller.
+            siblings = [member for member in groups.members(groups.family(name))
+                        if member != name and member in profiles and not display_only(profiles[member])]
+            if siblings:
+                row['controllable_variants'] = siblings
+                row['reason'] = text + ' Controllable variant in this family (a different source model): %s.' % (
+                    ', '.join('%s (%s)' % (groups.member(member).get('label', member), member) for member in siblings))
+        result[name] = row
     return result
 
 
@@ -148,7 +159,8 @@ def main(argv=None):
     from robot_lab_utils.installed_assets import merge_installed_profiles
     share = Path(get_package_share_directory('robot_lab_robots'))
     profiles = merge_installed_profiles(yaml.safe_load((share / 'config' / 'robots.yaml').read_text()), 'robots')['robots']
-    result = generate(profiles)
+    from robot_lab_utils.asset_groups import AssetGroups
+    result = generate(profiles, AssetGroups('robots', profiles))
     counts = {}
     for row in result.values():
         counts[row['code']] = counts.get(row['code'], 0) + 1

@@ -131,6 +131,17 @@ sources:
   - resources/robots/h1
   - resources/robots/h1_2
   - deploy
+- id: booster_gym
+  kind: robot
+  repository: https://github.com/BoosterRobotics/booster_gym
+  revision: da396a06d6eed99e2de72d7749c48ee8748950f9
+  status: integration_implemented
+  license_note: Apache-2.0 root license retained; vendor T1 locomotion model, deploy config and TorchScript policy (deploy/models/T1.pt); experimental implementation, runtime validation pending
+  entries:
+  - resources/T1
+  - deploy
+  - envs
+  - play_mujoco.py
 - id: turtlebot3_simulation_vendor
   kind: robot_dependency
   repository: https://github.com/ROBOTIS-GIT/turtlebot3_simulations

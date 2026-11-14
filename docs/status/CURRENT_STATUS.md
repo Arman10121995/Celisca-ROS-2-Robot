@@ -1,5 +1,13 @@
 # Current Robot Lab status
 
+November 15 Claude: [vendor controllers for imported robots (R3.6/I15)](evidence/r36-vendor-controllers-2026-11-15/README.md) are implemented, experimental:
+- **Booster T1:** walks in MuJoCo with the vendor's own trained policy (booster_gym, Apache-2.0).
+- **Unitree G1, H1 and H1_2:** their vendor policies were already wired but were still listed as display-only; they now count as controllable.
+- **Walking screen:** all four stayed upright. T1 and G1 walked within 0.02 m of the requested 0.72 m; H1 tracks forward commands poorly.
+- **Display reasons:** display-only robots 77 → 73, and their reasons now name a controllable sibling model when the family has one.
+- **Asset audit:** a per-model license, mesh, texture and skin audit passes 114 of 163 profiles. The 48 robot_assets models ship no license at all.
+- **Still display-only:** 47 legged models need trained policies, and 19 URDFs have no control interface.
+
 November 14 Claude: [MuJoCo speed (P4/I18)](evidence/p4-mujoco-culling-2026-11-14/README.md) is implemented, experimental:
 - **Changes:** world flexes collide only near moving bodies (identical contacts, 35 % faster step); each tick lasts exactly the simulated time it advances (every world had been capped at 0.96 real time); late wake-ups are paid back; scan and camera render on their own thread.
 - **Live nav real-time factor:** Labbot celisca_floor_1 0.675 → 0.806, celisca_floor_2_furniture 0.989, hospital 0.344 → 0.431, nav_obstacle 0.983.
