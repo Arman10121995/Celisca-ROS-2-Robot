@@ -72,6 +72,9 @@ class NativeAssetDisplay(Node):
             world_text = _stage_world_meshes(world_text, logger=self.get_logger())
             world = mujoco.MjSpec.from_string(world_text)
             spec.attach(world, frame=spec.worldbody.add_frame(), prefix='environment_')
+            if any(int(joint.type)==int(mujoco.mjtJoint.mjJNT_FREE) for joint in world.joints):
+                from robot_lab_utils.native_mjcf_assets import seed_appended_world_keys
+                seed_appended_world_keys(spec,self.robot_bodies)
         elif not any(int(g.type) == int(mujoco.mjtGeom.mjGEOM_PLANE) for g in spec.worldbody.geoms):
             spec.worldbody.add_geom(name='environment_ground', type=mujoco.mjtGeom.mjGEOM_PLANE,
                 size=[50., 50., .1], rgba=[.3, .33, .35, 1.], friction=[1., .005, .0001])

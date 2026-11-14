@@ -103,7 +103,7 @@ class NativeObjectCatalog:
             finger_links=['native_body_'+str(int(b)) for b in self.node.gripper.finger_bodies])
         # Independent physical custody/support observations for the object
         # sequencer. Planning attachment is not physical grasp evidence.
-        fingers=list(map(int,self.node.gripper.finger_bodies));forces=[0.,0.];supported=False
+        fingers=list(map(int,self.node.gripper.finger_bodies));forces=[0.,0.];support_force=0.
         for index,contact in enumerate(self.data.contact[:self.data.ncon]):
             owners=[int(self.model.geom_bodyid[g]) for g in contact.geom]
             if body not in owners:continue
@@ -111,12 +111,15 @@ class NativeObjectCatalog:
             wrench=np.zeros(6);self.mj.mj_contactForce(self.model,self.data,index,wrench)
             force=abs(float(wrench[0]))
             if other in fingers:forces[fingers.index(other)]+=force
-            elif force>=.1:supported=True
+            else:support_force+=force
         reference=int(self.node.gripper.finger_bodies[0])
         relative=self.data.xmat[reference].reshape(3,3).T@(self.data.geom_xpos[geom]-self.data.xpos[reference])
+        relative_quaternion=np.zeros(4)
+        self.mj.mju_mat2Quat(relative_quaternion,(self.data.xmat[reference].reshape(3,3).T@self.data.geom_xmat[geom].reshape(3,3)).ravel())
+        result['relative_hand_orientation_wxyz']=relative_quaternion.tolist()
         velocity=np.zeros(6);self.mj.mj_objectVelocity(self.model,self.data,self.mj.mjtObj.mjOBJ_BODY,body,velocity,0)
         result['custody']=dict(stamp=float(self.data.time),relative=relative.tolist(),left_force=forces[0],
-            right_force=forces[1],supported=supported,speed=float(np.linalg.norm(velocity[3:])))
+            right_force=forces[1],supported=support_force>=.1,speed=float(np.linalg.norm(velocity[3:])))
         if self.selected.startswith('environment_'):result['world_model']=self.selected.removeprefix('environment_')
         if self.selected=='manipulation_object':
             pedestal=self.mj.mj_name2id(self.model,self.mj.mjtObj.mjOBJ_BODY,'manipulation_pedestal')

@@ -56,7 +56,11 @@ def test_ros_images_calibration_tf_and_task_identity_produce_a_fresh_estimate(tm
             info=CameraInfo();info.header.frame_id='fixture_optical';info.header.stamp=probe.get_clock().now().to_msg()
             info.width=640;info.height=480;info.k=k.ravel().tolist();info.distortion_model='plumb_bob';info.d=[0.]*5
             msg=Image();msg.header=info.header;msg.width=640;msg.height=480;msg.encoding='mono8';msg.step=640;msg.data=image.tobytes()
-            infos.publish(info);images.publish(msg)
+            # The actual native camera sends RGB before CameraInfo. Exercise
+            # that delivery order instead of assuming calibration arrives first.
+            images.publish(msg)
+            for _ in range(3):executor.spin_once(timeout_sec=.005)
+            infos.publish(info)
             for _ in range(12):executor.spin_once(timeout_sec=.01)
         valid=[o for o in output if o['targets']]
         assert valid,output

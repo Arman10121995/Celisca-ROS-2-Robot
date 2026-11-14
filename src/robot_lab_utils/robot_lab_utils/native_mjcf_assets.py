@@ -10,6 +10,25 @@ import xml.etree.ElementTree as ET
 import numpy as np
 
 
+def seed_appended_world_keys(spec,robot_bodies):
+    """Preserve authored world free-body poses in an existing robot's keys.
+
+    MjSpec attachment extends robot keyframes with zero coordinates. A free
+    box must start at its world-authored pose, not at zero inside the robot.
+    Only newly appended world free joints are changed, never robot targets.
+    """
+    import mujoco as mj
+    if not list(spec.keys):return
+    model=spec.compile()
+    joints=[j for j in range(model.njnt) if int(model.jnt_bodyid[j])>=robot_bodies
+            and int(model.jnt_type[j])==int(mj.mjtJoint.mjJNT_FREE)]
+    for index,key in enumerate(spec.keys):
+        coordinates=model.key_qpos[index].copy()
+        for joint in joints:
+            address=int(model.jnt_qposadr[joint]);coordinates[address:address+7]=model.qpos0[address:address+7]
+        key.qpos=coordinates
+
+
 def body_frame(index):
     return 'native_world' if index == 0 else 'native_body_' + str(index)
 

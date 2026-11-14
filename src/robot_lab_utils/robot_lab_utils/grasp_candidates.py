@@ -4,6 +4,7 @@ Coordinates use native_world; quaternions are wxyz. No candidate certifies
 reachability, contact, grasp quality or collision clearance.
 """
 import math
+import copy
 import numpy as np
 from scipy.spatial.transform import Rotation
 
@@ -109,6 +110,28 @@ def release_on_support(obj,support,edge_margin=.005,height_tolerance=.015):
     top=center[2]+bounds[2]/2
     return bool(np.all(np.abs(local[:2])+half[:2]+edge_margin<=bounds[:2]/2)
                 and abs(bottom-top)<=height_tolerance)
+
+
+def panda_top_grasps(obj,**kwargs):
+    """Add upper-face pinches from the reviewed Panda's 8.5 mm half-depth pads.
+
+    Keeping the pad inside the upper box band leaves more clearance above a
+    supporting bench with the unchanged 1 cm MoveIt link padding. IK/FCL and
+    measured contacts still decide feasibility. Centred targets stay available.
+    """
+    candidates=top_grasps(obj,**kwargs)
+    _,rotation,size,kind=_geometry(obj)
+    if kind!='box':return candidates
+    height=float((np.abs(rotation)@size)[2])
+    offset=height/2-.0085-.002
+    if not 0.001<=offset<=.03:return candidates
+    elevated=[]
+    for original in candidates:
+        result=copy.deepcopy(original);result['id']+='_upper'
+        result['pinch_height_above_center_m']=offset
+        result['poses']['grasp']['position'][2]+=offset
+        elevated.append(result)
+    return elevated+candidates
 
 
 def support_placement(obj, attachment, support, *, clearance=.003, approach=.08, edge_margin=.01):

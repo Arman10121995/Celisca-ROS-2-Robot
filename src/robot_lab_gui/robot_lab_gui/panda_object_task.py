@@ -85,6 +85,8 @@ class PandaObjectTask(ttk.LabelFrame):
 
     def guard(self):
         if not self.arm.ready() or not self.hand.ready() or not self.cart.owned():raise ValueError('Owned arm/hand feedback lost')
+        if time.monotonic()-self.cart.scene_received>2. or time.monotonic()-self.cart.received>.5:
+            raise ValueError('Planning scene/joint feedback is stale')
         obj=self.grasp.object
         if obj is None or time.monotonic()-self.grasp.received>.8 or time.monotonic()-self.grasp.catalog_received>.8:
             raise ValueError('Physical object/catalog feedback is stale')
@@ -102,6 +104,8 @@ class PandaObjectTask(ttk.LabelFrame):
             measured=obj['custody']
             if min(measured['left_force'],measured['right_force'])<.1 or math.dist(measured['relative'],self.anchor)>.01:
                 raise ValueError('Measured grasp contact/slip lost during transfer')
+            angle=2*math.acos(float(np.clip(abs(np.dot(self.grasp.object['relative_hand_orientation_wxyz'],self.anchor_orientation)),0.,1.)))
+            if angle>.15:raise ValueError('Measured object rotation slipped during transfer')
 
     def dispatch(self,callback,*args):
         self.dispatching=True
@@ -191,7 +195,9 @@ class PandaObjectTask(ttk.LabelFrame):
             if released and not release_on_support(self.grasp.object,self.grasp.catalog['supports'][self.support]):
                 return 'failed','Released object does not fit on the selected measured support'
             if not value.observe(**measured,released=released):return 'pending','Waiting for sustained physical custody/support'
-            if not released:self.carry=True;self.anchor=list(measured['relative'])
+            if not released:
+                self.carry=True;self.anchor=list(measured['relative'])
+                self.anchor_orientation=list(self.grasp.object['relative_hand_orientation_wxyz'])
             return 'succeeded',dict(condition='released' if released else 'grasped',measurement=measured)
         return 'failed','Unknown object stage receipt'
 

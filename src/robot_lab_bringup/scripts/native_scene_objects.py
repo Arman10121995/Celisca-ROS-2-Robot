@@ -41,6 +41,7 @@ class MeasuredObjects:
         self.future, self.pending = None, None
         self.applied, self.attached, self.revision = None, False, 0
         self.attachment = None
+        self.retired_ids=set();self.pending_retired=set()
         self.command, self.error = None, ''
         self.fk = node.create_client(GetPositionFK, '/compute_fk')
         self.stop = node.create_client(Trigger, '/arm/stop')
@@ -129,6 +130,7 @@ class MeasuredObjects:
         self.pending, self.pending_at = operation, time.monotonic()
         self.future = self.node.client.call_async(request)
         self.pending_object = copy.deepcopy(self.object)
+        self.pending_retired={item.id for item in scene.world.collision_objects if item.operation==CollisionObject.REMOVE}
 
     def detach(self):
         scene = self.scene()
@@ -190,6 +192,7 @@ class MeasuredObjects:
                     return
                 if not answer.success:
                     raise ValueError('MoveIt rejected the measured object scene diff')
+                self.retired_ids.update(self.pending_retired)
                 self.attached = self.pending == 'attach' or (self.attached and self.pending != 'detach')
                 if self.pending=='attach':
                     self.attachment=copy.deepcopy(self.pending_attachment)
@@ -229,7 +232,8 @@ class MeasuredObjects:
             scene = self.scene()
             scene.world.collision_objects = [self.world_object()]
             for identifier in getattr(self.node,'world_model_ids',{}).get(self.object.get('world_model'),[]):
-                scene.world.collision_objects.append(CollisionObject(id=identifier,operation=CollisionObject.REMOVE))
+                if identifier not in self.retired_ids:
+                    scene.world.collision_objects.append(CollisionObject(id=identifier,operation=CollisionObject.REMOVE))
             pedestal = self.object.get('pedestal')
             if pedestal:
                 scene.world.collision_objects.append(self.convert(pedestal, 'manipulation_pedestal'))

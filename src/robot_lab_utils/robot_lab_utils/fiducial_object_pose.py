@@ -37,6 +37,7 @@ class FiducialObjects(Node):
         self.detector=cv2.aruco.ArucoDetector(dictionary,parameters) if hasattr(cv2.aruco,'ArucoDetector') else None
         self.dictionary,self.parameters=dictionary,parameters
         self.task_context={};self.task_context_at=-math.inf;self.info=None;self.info_at=-math.inf;self.last_frame=-math.inf
+        self.pending_image=None
         self.tf=Buffer();self.listener=TransformListener(self.tf,self)
         self.output=self.create_publisher(String,self.get_parameter('output_topic').value,10)
         self.create_subscription(String,self.get_parameter('context_topic').value,self.receive_context,10)
@@ -55,14 +56,24 @@ class FiducialObjects(Node):
             self.names=set(names);self.task_context_at=time.monotonic()
         except (ValueError,TypeError):pass
 
-    def receive_info(self,message):self.info=message;self.info_at=time.monotonic()
+    def receive_info(self,message):
+        self.info=message;self.info_at=time.monotonic();self.process_pending()
 
     def receive_image(self,message):
+        self.pending_image=message;self.process_pending()
+
+    def process_pending(self):
+        message=self.pending_image
+        if message is None or self.info is None:return
         wall=time.monotonic()
         if wall-self.last_frame<.1:return
-        self.last_frame=wall
         if not self.task_context or wall-self.task_context_at>1.:return
+        paired_stamp=self.info.header.stamp.sec+self.info.header.stamp.nanosec*1e-9
         stamp=message.header.stamp.sec+message.header.stamp.nanosec*1e-9
+        # RGB and CameraInfo can arrive in either order. Keep one latest image;
+        # never apply the previous camera sample to a new image or grow a queue.
+        if abs(paired_stamp-stamp)>.05:return
+        self.pending_image=None;self.last_frame=wall
         output=dict(schema='robot_lab.object_estimates.v1',**self.task_context,frame='native_world',pose_source='aruco_pnp',
                     stamp_s=stamp,targets={},bindings_sha256=self.bindings_sha256,
                     camera_frame=message.header.frame_id,scope='Camera PnP targets; source geometry/TF remain declared inputs')

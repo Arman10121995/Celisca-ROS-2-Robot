@@ -67,6 +67,43 @@ def test_busy_or_attached_plant_cannot_switch_selection(catalog):
     assert 'detach' in catalog.error
 
 
+def test_world_snapshot_is_retired_once_even_when_the_measured_box_moves():
+    pytest.importorskip('moveit_msgs.msg')
+    scripts=Path(__file__).resolve().parents[1]/'scripts';sys.path.insert(0,str(scripts))
+    from native_scene_objects import MeasuredObjects
+    from native_arm_scene import collision_object
+    calls=[]
+    future=SimpleNamespace(done=lambda:False,result=lambda:SimpleNamespace(success=True))
+    node=SimpleNamespace(create_client=lambda *a:None,create_subscription=lambda *a:None,
+        world_model_ids={'cube':['world_original']},client=SimpleNamespace(call_async=lambda r:calls.append(r) or future))
+    objects=MeasuredObjects(node,collision_object,False)
+    payload=dict(id='environment_cube',frame='native_world',size=[.03]*3,position=[.4,0.,.5],
+        orientation_wxyz=[1.,0.,0.,0.],spatial_velocity=[0.]*6,selected_by_operator=True,
+        finger_links=['native_body_10','native_body_11'],world_model='cube')
+    objects.receive_object(String(data=json.dumps(payload)));objects.poll({})
+    from moveit_msgs.msg import CollisionObject
+    assert any(c.id=='world_original' and c.operation==CollisionObject.REMOVE for c in calls[0].scene.world.collision_objects)
+    future.done=lambda:True;objects.poll({});assert 'world_original' in objects.retired_ids
+    payload['position'][0]+=.01;objects.receive_object(String(data=json.dumps(payload)));objects.poll({})
+    assert len(calls)==2
+    assert all(c.id!='world_original' for c in calls[-1].scene.world.collision_objects)
+
+
+def test_appended_free_world_body_keeps_authored_pose_in_robot_home_key():
+    from robot_lab_utils.native_mjcf_assets import seed_appended_world_keys
+    robot=mj.MjSpec.from_string('<mujoco><worldbody><body><joint name="arm"/>'
+        '<geom type="sphere" size=".1"/></body></worldbody><keyframe><key name="home" qpos=".3"/></keyframe></mujoco>')
+    before=robot.compile()
+    world=mj.MjSpec.from_string('<mujoco><worldbody><body name="cube" pos="1 2 .515"><freejoint/>'
+        '<geom type="box" size=".015 .015 .015" mass=".035"/></body></worldbody></mujoco>')
+    robot.attach(world,frame=robot.worldbody.add_frame(),prefix='environment_')
+    seed_appended_world_keys(robot,before.nbody)
+    model=robot.compile();data=mj.MjData(model);mj.mj_resetDataKeyframe(model,data,0);mj.mj_forward(model,data)
+    np.testing.assert_allclose(data.qpos[0],.3)
+    body=mj.mj_name2id(model,mj.mjtObj.mjOBJ_BODY,'environment_cube')
+    np.testing.assert_allclose(data.xpos[body],[1.,2.,.515]);np.testing.assert_allclose(data.xquat[body],[1.,0.,0.,0.])
+
+
 def test_selected_box_retires_its_static_snapshot_and_requires_real_scene_ack():
     pytest.importorskip('moveit_msgs.msg')
     scripts=Path(__file__).resolve().parents[1]/'scripts';sys.path.insert(0,str(scripts))

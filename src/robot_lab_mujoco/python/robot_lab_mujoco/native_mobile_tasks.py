@@ -117,7 +117,7 @@ class NativeMobileTasks:
     def measure_object(self, step):
         obj, sides = self.object_bodies(step)
         model, data, mj = self.node.model, self.node.data, self.node.mujoco
-        forces, supported = [0., 0.], False
+        forces, support_force = [0., 0.], 0.
         for index, contact in enumerate(data.contact[:data.ncon]):
             bodies = [int(model.geom_bodyid[g]) for g in contact.geom]
             if obj not in bodies:
@@ -129,17 +129,17 @@ class NativeMobileTasks:
             for side, members in enumerate(sides):
                 if other in members:
                     forces[side] += force
-            if other not in sides[0] | sides[1] and force >= .1:
+            if other not in sides[0] | sides[1]:
                 # Release needs support from the environment, not the robot palm/chassis.
                 if step.get('condition') != 'released' or other == 0 or other >= self.node.robot_bodies:
-                    supported = True
+                    support_force += force
         velocity = np.zeros(6)
         mj.mj_objectVelocity(model, data, mj.mjtObj.mjOBJ_BODY, obj, velocity, 0)
         # Relative to the first finger's frame, so base/arm motion is not slip.
         reference = mj.mj_name2id(model, mj.mjtObj.mjOBJ_BODY, step['left_body'])
         relative = data.xmat[reference].reshape(3, 3).T @ (data.xpos[obj]-data.xpos[reference])
         return dict(stamp=float(data.time), relative=relative.tolist(), left_force=forces[0],
-                    right_force=forces[1], supported=supported, speed=float(np.linalg.norm(velocity[3:])))
+                    right_force=forces[1], supported=support_force>=.1, speed=float(np.linalg.norm(velocity[3:])))
 
     def active(self):
         return self.steps is not None
