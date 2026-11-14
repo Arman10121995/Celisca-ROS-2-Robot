@@ -656,6 +656,7 @@ class IsaacSpawner(Node):
         urdf = ""
         springs = {}
         link_friction = {}
+        wheel_losses = {}
         if not robot_free:
             if not os.path.isfile(str(model)):
                 raise RuntimeError("robot model not found: %r" % model)
@@ -666,6 +667,21 @@ class IsaacSpawner(Node):
             if source_friction:
                 from robot_lab_utils.urdf_contact import gazebo_link_friction
                 link_friction = gazebo_link_friction(urdf_text)
+            source_losses = parse_drive_config(self.get_parameter('drive_config').value).get('isaac_source_joint_losses', False)
+            if not isinstance(source_losses, bool):
+                raise ValueError('isaac_source_joint_losses must be boolean')
+            if source_losses:
+                import xml.etree.ElementTree as ET
+                source_tree = ET.fromstring(urdf_text)
+                for name in self._drive.wheel_joints:
+                    joint = source_tree.find(f"joint[@name='{name}']")
+                    if joint is None:
+                        raise ValueError('Missing source wheel dynamics: '+name)
+                    dynamics, limit = joint.find('dynamics'), joint.find('limit')
+                    wheel_losses[name] = dict(
+                        friction=float(dynamics.get('friction', 0.)) if dynamics is not None else 0.,
+                        damping=float(dynamics.get('damping', 0.)) if dynamics is not None else 0.,
+                        max_velocity=float(limit.get('velocity')))
             pkg_map = {}
             for pkg_name in re.findall(r"\$\(find\s+([^)]+)\)", urdf_text):
                 try:
@@ -742,6 +758,7 @@ class IsaacSpawner(Node):
                 'isaac_native_gravity_compensation', False) if self._articulation else False),
             "passive_casters": passive_casters,
             "source_link_friction": link_friction,
+            "source_wheel_losses": wheel_losses,
             "pd_joint_armature": float(self.get_parameter("pd_joint_armature").value),
             "ground_material": (json.loads(self.get_parameter("ground_material").value)
                                 if self.get_parameter("ground_material").value else None),

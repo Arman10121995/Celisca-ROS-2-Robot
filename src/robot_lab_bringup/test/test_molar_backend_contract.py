@@ -341,6 +341,30 @@ def test_isaac_source_friction_binds_instanced_collider_at_editable_root(monkeyp
         scope['_apply_source_link_friction'](stage, {'missing': .01})
 
 
+def test_isaac_wheel_loss_port_preserves_torque_units_and_motor_envelope(monkeypatch):
+    scope = load_nodes([source_function(RUNTIME, '_author_source_wheel_losses')], dict(math=math))
+    values = {'physxJoint:jointFriction': 2., 'physxJoint:armature': .005, 'drive:maxForce': 6.}
+    class Attr:
+        def __init__(self, name): self.name = name
+        def Get(self): return values.get(self.name)
+        def Set(self, value): values[self.name] = value; return True
+    prim = SimpleNamespace(GetName=lambda: 'wheel', IsInstanceProxy=lambda: False,
+        IsA=lambda _: True, GetAttribute=lambda name: Attr(name), ApplyAPI=lambda *args: None)
+    pxr = ModuleType('pxr')
+    pxr.Usd = SimpleNamespace(TraverseInstanceProxies=lambda: None)
+    pxr.UsdPhysics = SimpleNamespace(RevoluteJoint=object())
+    monkeypatch.setitem(sys.modules, 'pxr', pxr)
+    found = scope['_author_source_wheel_losses'](SimpleNamespace(Traverse=lambda _: [prim]),
+        {'wheel': dict(friction=2., damping=1., max_velocity=100.)})
+    attrs = found['wheel']
+    assert values['physxJoint:jointFriction'] == 0.
+    assert attrs['staticFrictionEffort'] == attrs['dynamicFrictionEffort'] == 2.
+    # At one rad/s, angular viscous effort remains exactly the source 1 Nm.
+    assert attrs['viscousFrictionCoefficient']*math.degrees(1.) == pytest.approx(1.)
+    assert math.radians(attrs['maxJointVelocity']) == pytest.approx(100.)
+    assert attrs['armature'] == .005 and values['drive:maxForce'] == 6.
+
+
 def test_isaac_watchdog_hold_retains_gravity_budget():
     tree = ast.parse(RUNTIME.read_text())
     holds = [node for node in ast.walk(tree) if isinstance(node, ast.If)

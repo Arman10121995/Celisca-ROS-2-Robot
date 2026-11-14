@@ -407,6 +407,47 @@ def _author_wheel_velocity_drives(stage, joint_names,
     return sorted(driven)
 
 
+def _author_source_wheel_losses(stage, specifications):
+    """URDF torque friction and damping, not a dimensionless bearing factor.
+
+    The importer maps URDF friction to legacy jointFriction (dimensionless).
+    Native axis static/dynamic friction efforts carry Nm; angular viscous
+    units are Nm/(degree/s), so convert the original Nm/(radian/s) damping.
+    Motor limits stay untouched. Only explicitly opted-in wheel joints use it.
+    """
+    from pxr import Usd, UsdPhysics
+    found = {}
+    for prim in stage.Traverse(Usd.TraverseInstanceProxies()):
+        name = prim.GetName()
+        if name not in specifications or prim.IsInstanceProxy():
+            continue
+        if not prim.IsA(UsdPhysics.RevoluteJoint):
+            raise ValueError('Source wheel loss joint is not revolute: '+name)
+        spec = specifications[name]
+        if (any(not math.isfinite(float(v)) or float(v) < 0 for v in spec.values())
+                or float(spec['max_velocity']) <= 0):
+            raise ValueError('Invalid source wheel loss envelope: '+name)
+        old = prim.GetAttribute('physxJoint:jointFriction')
+        if old:
+            old.Set(0.)
+        armature = prim.GetAttribute('physxJoint:armature')
+        armature = armature.Get() if armature else 0.
+        prim.ApplyAPI('PhysxJointAxisAPI', 'angular')
+        attrs = dict(staticFrictionEffort=float(spec['friction']),
+                     dynamicFrictionEffort=float(spec['friction']),
+                     viscousFrictionCoefficient=math.radians(float(spec['damping'])),
+                     maxJointVelocity=math.degrees(float(spec['max_velocity'])))
+        if armature is not None:
+            attrs['armature'] = float(armature)
+        for key, value in attrs.items():
+            if not prim.GetAttribute('physxJointAxis:angular:'+key).Set(value):
+                raise ValueError('Native axis friction schema unavailable: '+name)
+        found[name] = attrs
+    if set(specifications)-set(found):
+        raise ValueError('Missing original wheel loss joint')
+    return found
+
+
 def _author_passive_caster_drives(stage, specifications):
     """No centering motors: only source bearing damping at zero velocity."""
     from pxr import Usd, UsdPhysics
@@ -1391,6 +1432,9 @@ def _run_stage(app, reader, cfg, state):
             + list(cfg.get("drive_wheel_joints", [])))
         _emit({"event": "log",
                "msg": "Wheel velocity drives: %s" % (driven or "none found")})
+        if cfg.get('source_wheel_losses'):
+            loss_contract = _author_source_wheel_losses(stage_obj, cfg['source_wheel_losses'])
+            _emit({'event': 'log', 'msg': 'Source wheel torque losses: '+str(loss_contract)})
         if cfg.get('source_link_friction'):
             friction_bound = _apply_source_link_friction(stage_obj, cfg['source_link_friction'])
             _emit({'event': 'log', 'msg': 'Source collider friction (min combine): '+str(friction_bound)})

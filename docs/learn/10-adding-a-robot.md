@@ -184,7 +184,10 @@ PhysX joint gravity forces within the original budget, correctly excluding
 the floating base's six root-wrench entries. Its drive option
 `isaac_source_friction: true` carries authored scalar link friction onto USD
 colliders, including fused frames and instanced meshes. These opt-in adapters
-do not change other robots' defaults. A camera on a moving head also needs a
+do not change other robots' defaults. The `isaac_source_joint_losses` drive
+option ports original wheel friction/damping to native torque/viscous units;
+do not treat a URDF torque-loss number as a dimensionless bearing coefficient.
+A camera on a moving head also needs a
 rigid carrier after fixed-link fusion; a root offset evaluated at zero is
 insufficient. Record source inertia defects/import approximations and keep
 Display control separate from collision-planned manipulation and Nav2.

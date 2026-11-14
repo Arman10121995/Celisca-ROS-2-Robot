@@ -70,7 +70,7 @@ def contracts(root):
         mujoco_implicit_wheel_control=True, mujoco_preserve_fixed_root_inertia=True,
         mujoco_expected_mass_kg=mass, pybullet_explicit_massless_frames=True,
         pybullet_preserve_passive_springs=True, pybullet_expected_mass_kg=mass+1e-6,
-        isaac_source_friction=True)
+        isaac_source_friction=True, isaac_source_joint_losses=True)
     return drive, articulation
 
 

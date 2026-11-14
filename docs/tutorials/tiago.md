@@ -75,6 +75,14 @@ can remain low against an ordinary floor; a separately authored floor with
 maximum combination can override this and needs its own contact check. This
 is a declared scalar contact port, not Gazebo solver equivalence.
 
+The wheel-joint port also preserves the source **2 Nm** Coulomb friction and
+**1 Nm/(rad/s)** damping using native axis friction efforts. The importer had
+treated the URDF friction number as a dimensionless bearing coefficient.
+Static/dynamic effort are both set to the source's single friction value;
+viscous damping converts to the SDK's angular degree units. The original
+6 Nm motor envelope remains unchanged. See the
+[native axis friction units](https://docs.omniverse.nvidia.com/kit/docs/omni_physics/110.1/dev_guide/joints/physx_joint_schema.html).
+
 Isaac's previous fixed-slide gravity estimate cannot support the horizontal
 arm. This profile explicitly opts into native PhysX actual-pose generalized
 gravity compensation each physics step. Feedforward replaces the old slide
