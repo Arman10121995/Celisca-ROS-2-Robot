@@ -3790,17 +3790,26 @@ tasks:
           the HeadingShuffle correction. Added the flag; now parking should pass the
           10° heading tolerance in all backends. Implementation COMPLETE. Verification
           pending due to ROS GLIBCXX_3.4.29 environment issue.'
-        implementation_state: 'Native three-geometry wheel control, Hybrid-A*/RPP navigation and reusable estimate-based park-at-heading runtime. Normal GUI now has measured-estimate copy, X/Y/heading/budget, explicit Park/Cancel, estimated errors and Stop/manual/close cancellation. Correction is bounded by whole-task/operator/lifecycle/fresh-map/TF checks and a swept authored footprint. Late action acceptance is canceled; final tolerances are checked. One actual PyBullet Ackermann empty-world parking/operator-loss screen is measured. Remaining source implementation: two historical slalom aborts. Wider profiles/maps/backends and course validation remain partial.'
-        next_action: '2026-11-02: Implementation COMPLETE. BLOCKED: ROS library import
-          issue (GLIBCXX_3.4.29 missing) prevents running validation tests. Next:
-          Fix environment (ENV-1), then run: scripts/sim_car_course.sh <simulator>
-          rear_steer_car <output.json> for all combinations (Gazebo, PyBullet, Isaac
-          x rear_steer_car, ackermann_car, anti_ackermann_car, mecanum_car). Expected:
-          All parking tests pass with < 10° yaw error. Prior: 2026-10-13 obstacle
-          missions passed 10/12 cells; 2026-10-16 car missions passed 32/36 with 0.1 m
-          tolerance and 0.6 m inflation; 2026-10-19 round 57 showed parking heading
-          failures of 11.6-14.3° in Gazebo/PyBullet/Isaac (MuJoCo passed at -3.4°).'
-        owner: 'codex'
+        - docs/status/evidence/r55-car-course-2026-11-15/README.md
+        implementation_state: 'Native three-geometry wheel control, Hybrid-A*/RPP navigation and reusable estimate-based
+          park-at-heading runtime. Normal GUI now has measured-estimate copy, X/Y/heading/budget, explicit Park/Cancel,
+          estimated errors and Stop/manual/close cancellation. Correction is bounded by whole-task/operator/lifecycle/fresh-map/TF
+          checks and a swept authored footprint. Late action acceptance is canceled; final tolerances are checked. One actual
+          PyBullet Ackermann empty-world parking/operator-loss screen is measured. Remaining source implementation: two
+          historical slalom aborts. Wider profiles/maps/backends and course validation remain partial. 2026-11-15: the two
+          slalom aborts are fixed (car course 13/13); no remaining source implementation known.'
+        next_action: '2026-11-02: Implementation COMPLETE. BLOCKED: ROS library import issue (GLIBCXX_3.4.29 missing) prevents
+          running validation tests. Next: Fix environment (ENV-1), then run: scripts/sim_car_course.sh <simulator> rear_steer_car
+          <output.json> for all combinations (Gazebo, PyBullet, Isaac x rear_steer_car, ackermann_car, anti_ackermann_car,
+          mecanum_car). Expected: All parking tests pass with < 10° yaw error. Prior: 2026-10-13 obstacle missions passed
+          10/12 cells; 2026-10-16 car missions passed 32/36 with 0.1 m tolerance and 0.6 m inflation; 2026-10-19 round 57
+          showed parking heading failures of 11.6-14.3° in Gazebo/PyBullet/Isaac (MuJoCo passed at -3.4°). 2026-11-15 claude:
+          implemented, experimental. Round-62 slalom aborts traced to RPP lookahead 0.8 m cutting the S-curve round cone
+          0 (5-6 cm footprint clearance -> collision ahead -> start in lethal -> blocked back-up). Car lookahead 0.6 m (1.25x
+          turning radius) and a DriveOnHeading forward escape after a blocked back-up: car course 13/13 (12 cells + Gazebo
+          anti repeat), slalom clearance 0.08-0.14 m, bay <= 0.10 m / 4.5 deg. One run per cell; repeats, mapping/localization
+          remain V3.'
+        owner: claude
         scope_paths:
         - src/robot_lab_robots/
         - src/robot_lab_controller/

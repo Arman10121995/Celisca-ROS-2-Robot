@@ -87,4 +87,30 @@ def test_car_tree_backs_up_and_retries_more_than_once():
     tree = ET.parse(src/'robot_lab_navigation/behavior_tree/car_navigation_w_replanning_and_recovery.xml')
     recovery = tree.getroot().find('BehaviorTree/RecoveryNode')
     assert int(recovery.get('number_of_retries')) >= 3
-    assert recovery.find('Sequence/BackUp') is not None
+    # Back up first; when that is blocked too, a short forward escape on the
+    # current heading (both collision-checked), never an in-place spin.
+    escape = recovery.find('Sequence/Fallback')
+    assert [child.tag for child in escape] == ['BackUp', 'DriveOnHeading']
+    assert float(escape.find('DriveOnHeading').get('dist_to_travel')) > 0
+    assert recovery.find('.//Spin') is None
+
+
+def test_behavior_server_provides_the_car_escape():
+    import yaml
+    src = Path(__file__).resolve().parents[2]
+    params = yaml.safe_load((src / 'robot_lab_navigation/config/behavior_server.yaml').read_text())
+    server = params['behavior_server']['ros__parameters']
+    assert 'drive_on_heading' in server['behavior_plugins']
+    assert server['drive_on_heading']['plugin'] == 'nav2_behaviors/DriveOnHeading'
+
+
+def test_car_lookahead_follows_turning_radius_arcs():
+    """Round 62: the 0.8 m lookahead cut the S-curve round cone 0 (0.05 m footprint clearance)."""
+    import importlib.util
+    src = Path(__file__).resolve().parents[2]
+    spec = importlib.util.spec_from_file_location('nav_launch', src / 'robot_lab_navigation/launch/navigation.launch.py')
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    params = module.CAR_PARAMS['controller_server']
+    assert params['FollowPath.lookahead_dist'] <= 1.25 * module.CAR_TURNING_RADIUS
+    assert params['FollowPath.min_lookahead_dist'] < params['FollowPath.lookahead_dist'] < params['FollowPath.max_lookahead_dist']

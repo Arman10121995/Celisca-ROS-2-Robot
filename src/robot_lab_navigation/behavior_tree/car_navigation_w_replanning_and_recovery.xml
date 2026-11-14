@@ -13,9 +13,18 @@
                 <FollowPath path="{path}" controller_id="FollowPath"/>
             </PipelineSequence>
             <!-- A car cannot execute the default Spin recovery. Back up to
-                 make room for a new curvature-constrained approach. -->
+                 make room for a new curvature-constrained approach.
+                 2026-11-15: after a "collision ahead" stop beside a cone or
+                 a parked car the planner reports the start in lethal space
+                 and the straight back-up can be blocked too ("Collision
+                 Ahead - Exiting DriveOnHeading"), which failed the whole goal
+                 7.7 cm from the obstacle. Then drive a short way forward on
+                 the current heading instead; both moves are collision-checked. -->
             <Sequence>
-                <BackUp backup_dist="0.30" backup_speed="0.15"/>
+                <Fallback>
+                    <BackUp backup_dist="0.30" backup_speed="0.15"/>
+                    <DriveOnHeading dist_to_travel="0.20" speed="0.15" time_allowance="5"/>
+                </Fallback>
                 <Wait wait_duration="1.0"/>
             </Sequence>
         </RecoveryNode>

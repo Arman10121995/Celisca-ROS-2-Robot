@@ -138,9 +138,13 @@ CAR_PARAMS = {
         "progress_checker.movement_time_allowance": 20.0,
         "FollowPath.use_rotate_to_heading": False,
         "FollowPath.allow_reversing": True,
-        "FollowPath.lookahead_dist": 0.8,
-        "FollowPath.min_lookahead_dist": 0.5,
-        "FollowPath.max_lookahead_dist": 1.2,
+        # 2026-11-15: 1.25x the turning radius, as for forward_arc robots.
+        # The 0.8 m lookahead cut the S-curve round cone 0 of the car course
+        # (round 62: 0.05 m footprint clearance, Gazebo rear-steer and Isaac
+        # anti-Ackermann aborted); 0.6 m kept 0.08-0.14 m in all 12 cells.
+        "FollowPath.lookahead_dist": 0.6,
+        "FollowPath.min_lookahead_dist": 0.45,
+        "FollowPath.max_lookahead_dist": 0.9,
         "FollowPath.desired_linear_vel": 0.4,
         "FollowPath.regulated_linear_scaling_min_radius": 0.6,
         "FollowPath.motion_model": "Ackermann",

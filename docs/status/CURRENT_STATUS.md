@@ -1,5 +1,7 @@
 # Current Robot Lab status
 
+November 15 Claude: [the car course passes in all 12 cells (R5.5/I14)](evidence/r55-car-course-2026-11-15/README.md): three steering geometries on four backends, plus one repeat, 13 of 13 runs. The two round-62 slalom aborts came from the path follower's 0.8 m lookahead cutting the first S-curve to within 5–6 cm of a cone. A 0.6 m lookahead keeps 0.08–0.14 m. A forward escape now follows a blocked back-up. Parking ends within 0.10 m and 4.5°. One run per cell; repeats remain validation.
+
 November 15 Claude: [vendor controllers for imported robots (R3.6/I15)](evidence/r36-vendor-controllers-2026-11-15/README.md) are implemented, experimental:
 - **Booster T1:** walks in MuJoCo with the vendor's own trained policy (booster_gym, Apache-2.0).
 - **Unitree G1, H1 and H1_2:** their vendor policies were already wired but were still listed as display-only; they now count as controllable.

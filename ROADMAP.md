@@ -141,7 +141,7 @@ Work top to bottom. Each line links to its task.
 | I11 | [R10.5](#r105--underwater-worlds-sensing-slam-and-navigation) / [R10.4](#r104--underwater-robots-and-controllers) Marine | Done 2026-11-14: MuJoCo ROV plant (ported Fortress water forces; matches Gazebo), damping-based current feedforward (1 cm drift in 0.1 m/s), volumetric and current-aware AUV routes (unit-tested). PyBullet/Isaac marine, AUV sensor-only localization mission remain | implemented |
 | I12 | [R10.6](#r106--six--and-eight-legged-robots) / [R10.7](#r107--segmented-and-additional-robot-forms) Multi-leg and forms | Done 2026-11-14: depth/IMU flipper policy (sequences a step, but the 4 Nm flippers cannot climb 0.18 m: measured), bounded gait slip/support recovery (unit-tested). Stronger flippers, other backends, per-model terrain missions remain | implemented |
 | I13 | [R5.2](#r52--go2-quadruped-locomotion) / [R5.3](#r53--berkeley-humanoid-lite-balance-and-walking) / [R12](#r12--legged-policy-training) Legged | 2026-11-14: `get_up` task and stairs curriculum implemented; first Go2 get-up policy 1/10 (not passed); BHL contract/export, G1/Go2W policies, GPU training remain | partial |
-| I14 | [R5.5](#r55--ackermann-rear-steer-and-anti-ackermann-cars) Cars | 2026-11-14: park-at-heading runtime and normal Drive-panel controls, lifecycle/heartbeat/whole-budget gates and costmap footprint correction checks; two historical slalom aborts remain | partial |
+| I14 | [R5.5](#r55--ackermann-rear-steer-and-anti-ackermann-cars) Cars | 2026-11-15: car course 13/13 on four backends (lookahead 1.25 × turning radius, forward escape when back-up is blocked); park-at-heading runtime and Drive-panel controls | implemented |
 | I15 | [R3.6](#r36--external-robot-assets-in-normal-launch) Assets | 2026-11-15: vendor policies for Booster T1 and Unitree G1/H1/H1_2 controllable (display-only 77 → 73), controllable siblings named, per-model license/mesh/texture audit (114/163 ok). 47 legged need training, 19 URDFs ship no control interface | partial |
 | I16 | [R6.5](#r65--world-to-occupancy-generation) / [R6.6](#r66--external-world-library) / [R6.2](#r62--dynamic-and-sensor-disturbance-cases) Worlds | 2026-11-14: free-region labelling + reviewed grid registration (R6.5), seeded live sensor-fault relay on every backend (R6.2). Licensed Fuel imports, fixture review, actors with collision remain | partial |
 | I17 | [R11](#r11--molar--probot-l-family) MOLAR | Sensors, SLAM/Nav2, payload transfer, multi-floor | partial, needs the sensor layout |
@@ -330,7 +330,15 @@ parking batch needs its own run. Details and evidence are in the
   failure outside final tolerances. Late accepted goals are canceled too.
   [Guide](docs/tutorials/car-parking.md) ·
   [Source/check scope](docs/status/car-parking-gui-2026-11-14.md).
-- **Remaining implementation:** the two slalom aborts (RPP collision-ahead).
+- **Done 2026-11-15 (implemented, experimental):** the two slalom aborts.
+  RPP's 0.8 m lookahead cut the S-curve round cone 0 and left 5–6 cm of
+  clearance. The car lookahead is now 0.6 m (1.25 × the turning radius), and
+  the recovery drives forward on its heading when the back-up is blocked.
+  All 12 cells pass, plus a Gazebo anti-Ackermann repeat (13/13), with
+  0.08–0.14 m slalom clearance and the bay within 0.10 m and 4.5°
+  ([evidence](docs/status/evidence/r55-car-course-2026-11-15/README.md)).
+- **Remaining implementation:** none known. The forward escape is
+  implemented, but it has not yet recovered a car in a run.
 - **How to do it:**
   1. Add a yaw-aware goal checker (or enable `stateful` yaw tolerance) in
      the car Nav2 configs (`src/robot_lab_navigation/config/`).
