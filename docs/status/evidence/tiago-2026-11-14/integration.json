@@ -1,0 +1,428 @@
+{
+  "schema": "robot_lab.source_adapter.v1",
+  "robot": "asset_pal_tiago",
+  "source_id": "pal_tiago_robot",
+  "source_entry": "tiago_description/robots/tiago.urdf.xacro",
+  "sources": [
+    {
+      "id": "pal_tiago_robot",
+      "repository": "https://github.com/pal-robotics/tiago_robot.git",
+      "revision": "f1c33c92bdde7c1dd79f0c3e739e98a233dbd30b",
+      "license": "Apache-2.0",
+      "license_sha256": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4"
+    },
+    {
+      "id": "pal_pmb2_robot",
+      "repository": "https://github.com/pal-robotics/pmb2_robot.git",
+      "revision": "e6584136f15356b8f4944c25d70fb8689e3355af",
+      "license": "Apache-2.0",
+      "license_sha256": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4"
+    },
+    {
+      "id": "pal_urdf_utils",
+      "repository": "https://github.com/pal-robotics/pal_urdf_utils.git",
+      "revision": "e8600a339a3a9b7ffe67d1030190b97b67fb577b",
+      "license": "Apache-2.0",
+      "license_sha256": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4"
+    },
+    {
+      "id": "pal_gripper",
+      "repository": "https://github.com/pal-robotics/pal_gripper.git",
+      "revision": "485b535532c04b0ce31a00ad431d99e2714c0d54",
+      "license": "Apache-2.0",
+      "license_sha256": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4"
+    },
+    {
+      "id": "pal_hey5",
+      "repository": "https://github.com/pal-robotics/pal_hey5.git",
+      "revision": "344de441fa3c378573dd7f6e04dc7ec4f8cb0cab",
+      "license": "Apache-2.0",
+      "license_sha256": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4"
+    }
+  ],
+  "source_expanded_sha256": "d79bacc248a5821926a7019100b1c13cf36b1db911a7331ba19e00466877518c",
+  "description": "/workspace/molar/robot_lab_runtime/external_assets/models/asset_pal_tiago/3a120b99f5b86a4539e9f2e679dca71a5b72930a0cd473b9c84f43138275dcb1/robot.urdf",
+  "description_sha256": "6860985f4c8af74f9e35603fa3adc2838e58e46f0c5e337f3576fd9a18cefbc3",
+  "resources": {
+    "package://pal_urdf_utils/meshes/laser/sick_tim551.stl": {
+      "path": "/workspace/molar/robot_lab_runtime/external_assets/sources/pal_urdf_utils/e8600a339a3a9b7ffe67d1030190b97b67fb577b/meshes/laser/sick_tim551.stl",
+      "sha256": "9e0184e01a67754bce3a008fb1f52b292dbda69857ed9092909d211817915cf2"
+    },
+    "package://pal_urdf_utils/meshes/laser/srf05.stl": {
+      "path": "/workspace/molar/robot_lab_runtime/external_assets/sources/pal_urdf_utils/e8600a339a3a9b7ffe67d1030190b97b67fb577b/meshes/laser/srf05.stl",
+      "sha256": "eeb656cca87825bf212355c73e8f68a2d9de42b429f00348709e9cbdfd528c9d"
+    },
+    "package://pmb2_description/meshes/base/base.stl": {
+      "path": "/workspace/molar/robot_lab_runtime/external_assets/sources/pal_pmb2_robot/e6584136f15356b8f4944c25d70fb8689e3355af/pmb2_description/meshes/base/base.stl",
+      "sha256": "fbb54a6d1c1afca726a7f6b825cee5a0167fb0d1e223746ae06c1d80190b2f71"
+    },
+    "package://pmb2_description/meshes/base/high_resolution/base_collision.stl": {
+      "path": "/workspace/molar/robot_lab_runtime/external_assets/sources/pal_pmb2_robot/e6584136f15356b8f4944c25d70fb8689e3355af/pmb2_description/meshes/base/high_resolution/base_collision.stl",
+      "sha256": "d545eff1af2bac20324ee3606b80dad4700f440d8067111a2dd5d6365fbbaa1f"
+    },
+    "package://pmb2_description/meshes/base/base_ring.stl": {
+      "path": "/workspace/molar/robot_lab_runtime/external_assets/sources/pal_pmb2_robot/e6584136f15356b8f4944c25d70fb8689e3355af/pmb2_description/meshes/base/base_ring.stl",
+      "sha256": "42227bf5392cd4e9a88b971512d8dc92608116b8e2dc186c7b73f1a185eecd36"
+    },
+    "package://pmb2_description/meshes/base/base_dock_link.stl": {
+      "path": "/workspace/molar/robot_lab_runtime/external_assets/sources/pal_pmb2_robot/e6584136f15356b8f4944c25d70fb8689e3355af/pmb2_description/meshes/base/base_dock_link.stl",
+      "sha256": "d13ab33c5a39f9daa7f34a1b728c6b8afa2b105671846af29eb9f2d8c617cd0c"
+    },
+    "package://pmb2_description/meshes/objects/antenna.stl": {
+      "path": "/workspace/molar/robot_lab_runtime/external_assets/sources/pal_pmb2_robot/e6584136f15356b8f4944c25d70fb8689e3355af/pmb2_description/meshes/objects/antenna.stl",
+      "sha256": "5dcf4914afdaec9c4682a0ad2f9b2b0b25d120cdbed470026267d843bf7d5119"
+    },
+    "package://pmb2_description/meshes/wheels/wheel.stl": {
+      "path": "/workspace/molar/robot_lab_runtime/external_assets/sources/pal_pmb2_robot/e6584136f15356b8f4944c25d70fb8689e3355af/pmb2_description/meshes/wheels/wheel.stl",
+      "sha256": "dd1604ddc6bc017837b40aca2e3677375f0e7e2535fd63bb45f86d5f395338a2"
+    },
+    "package://pmb2_description/meshes/wheels/caster_1.stl": {
+      "path": "/workspace/molar/robot_lab_runtime/external_assets/sources/pal_pmb2_robot/e6584136f15356b8f4944c25d70fb8689e3355af/pmb2_description/meshes/wheels/caster_1.stl",
+      "sha256": "e9bf8ae425cbcafe59b48a5cc955726633f0508f19acd9a06568c1bcff304606"
+    },
+    "package://pmb2_description/meshes/wheels/caster_2.stl": {
+      "path": "/workspace/molar/robot_lab_runtime/external_assets/sources/pal_pmb2_robot/e6584136f15356b8f4944c25d70fb8689e3355af/pmb2_description/meshes/wheels/caster_2.stl",
+      "sha256": "27345e857ee7ecdfd21357dc8bd5eeced8d22fceab176dc5b434c2c3ce246ecd"
+    },
+    "package://tiago_description/meshes/torso/torso_fix.stl": {
+      "path": "/workspace/molar/robot_lab_runtime/external_assets/sources/pal_tiago_robot/f1c33c92bdde7c1dd79f0c3e739e98a233dbd30b/tiago_description/meshes/torso/torso_fix.stl",
+      "sha256": "66fff54e21d0bf8174acd445215c86d27720e6953d8f815a62bb9da82ef82a5d"
+    },
+    "package://tiago_description/meshes/torso/torso_lift_with_arm.stl": {
+      "path": "/workspace/molar/robot_lab_runtime/external_assets/sources/pal_tiago_robot/f1c33c92bdde7c1dd79f0c3e739e98a233dbd30b/tiago_description/meshes/torso/torso_lift_with_arm.stl",
+      "sha256": "3626f883472f52f195393100ec9fe2ef35e29b417c7191cb7c18afd3ea1cad1a"
+    },
+    "package://tiago_description/meshes/torso/torso_lift_collision_core.dae": {
+      "path": "/workspace/molar/robot_lab_runtime/external_assets/sources/pal_tiago_robot/f1c33c92bdde7c1dd79f0c3e739e98a233dbd30b/tiago_description/meshes/torso/torso_lift_collision_core.dae",
+      "sha256": "932e983e0766eba25aef847498280e394c46cb896c73b9af45cb2a7a0600dc3c"
+    },
+    "package://tiago_description/meshes/torso/torso_lift_collision_shoulder.dae": {
+      "path": "/workspace/molar/robot_lab_runtime/external_assets/sources/pal_tiago_robot/f1c33c92bdde7c1dd79f0c3e739e98a233dbd30b/tiago_description/meshes/torso/torso_lift_collision_shoulder.dae",
+      "sha256": "430bda60fdd7eed7652bad8e66598e6145bc574ed14843a6815a5db9ba366376"
+    },
+    "package://tiago_description/meshes/torso/torso_lift_collision_neck.dae": {
+      "path": "/workspace/molar/robot_lab_runtime/external_assets/sources/pal_tiago_robot/f1c33c92bdde7c1dd79f0c3e739e98a233dbd30b/tiago_description/meshes/torso/torso_lift_collision_neck.dae",
+      "sha256": "4cda49ba69500fd4fdf20dfc4d1e46684f047c6915ad6840a8a0fb87d58fc925"
+    },
+    "package://tiago_description/meshes/arm/arm_1.stl": {
+      "path": "/workspace/molar/robot_lab_runtime/external_assets/sources/pal_tiago_robot/f1c33c92bdde7c1dd79f0c3e739e98a233dbd30b/tiago_description/meshes/arm/arm_1.stl",
+      "sha256": "a98a1becdaa0f17182ae242cbf829c327a108f11bb7dbdf1554ec76d7364c599"
+    },
+    "package://tiago_description/meshes/arm/arm_1_collision.stl": {
+      "path": "/workspace/molar/robot_lab_runtime/external_assets/sources/pal_tiago_robot/f1c33c92bdde7c1dd79f0c3e739e98a233dbd30b/tiago_description/meshes/arm/arm_1_collision.stl",
+      "sha256": "cd9e8ee419045bae78e07a2423f53fdd162f60f14e99bdc343d3645fb40e9acf"
+    },
+    "package://tiago_description/meshes/arm/arm_2.stl": {
+      "path": "/workspace/molar/robot_lab_runtime/external_assets/sources/pal_tiago_robot/f1c33c92bdde7c1dd79f0c3e739e98a233dbd30b/tiago_description/meshes/arm/arm_2.stl",
+      "sha256": "1dc20b672b900684e18054a9ca1de0b97ea18eef3dd49ab729374069ce6b423f"
+    },
+    "package://tiago_description/meshes/arm/arm_2_collision.stl": {
+      "path": "/workspace/molar/robot_lab_runtime/external_assets/sources/pal_tiago_robot/f1c33c92bdde7c1dd79f0c3e739e98a233dbd30b/tiago_description/meshes/arm/arm_2_collision.stl",
+      "sha256": "51764ae510f8a42fe78b092b8d01761ebef3acaf55092435582486b83acfa5b5"
+    },
+    "package://tiago_description/meshes/arm/arm_3.stl": {
+      "path": "/workspace/molar/robot_lab_runtime/external_assets/sources/pal_tiago_robot/f1c33c92bdde7c1dd79f0c3e739e98a233dbd30b/tiago_description/meshes/arm/arm_3.stl",
+      "sha256": "7894bc60a7c2b68cdeaa991e9ad03f48abcb5e72f8ffb5a50b1f4edadfb417e9"
+    },
+    "package://tiago_description/meshes/arm/arm_3_collision.stl": {
+      "path": "/workspace/molar/robot_lab_runtime/external_assets/sources/pal_tiago_robot/f1c33c92bdde7c1dd79f0c3e739e98a233dbd30b/tiago_description/meshes/arm/arm_3_collision.stl",
+      "sha256": "caa161d4dfcf4cb0d79cc48ba7baa7563fcf1eec9104601aa6a28346465d2c3e"
+    },
+    "package://tiago_description/meshes/arm/arm_4.stl": {
+      "path": "/workspace/molar/robot_lab_runtime/external_assets/sources/pal_tiago_robot/f1c33c92bdde7c1dd79f0c3e739e98a233dbd30b/tiago_description/meshes/arm/arm_4.stl",
+      "sha256": "12db11cef0bb9b743ce350946b08124e98890f30592516307a17c5b7c3582ea5"
+    },
+    "package://tiago_description/meshes/arm/arm_4_collision.stl": {
+      "path": "/workspace/molar/robot_lab_runtime/external_assets/sources/pal_tiago_robot/f1c33c92bdde7c1dd79f0c3e739e98a233dbd30b/tiago_description/meshes/arm/arm_4_collision.stl",
+      "sha256": "f701a62e24aec7164803648848ddb84d23f8141322cf461c931958dd28dd50ec"
+    },
+    "package://tiago_description/meshes/arm/arm_5-wrist-2017.stl": {
+      "path": "/workspace/molar/robot_lab_runtime/external_assets/sources/pal_tiago_robot/f1c33c92bdde7c1dd79f0c3e739e98a233dbd30b/tiago_description/meshes/arm/arm_5-wrist-2017.stl",
+      "sha256": "ad75b9064ed916360342c78cad139beed42e9f1429986efcad6ea1ad71578c28"
+    },
+    "package://tiago_description/meshes/arm/arm_5_collision-wrist-2017.stl": {
+      "path": "/workspace/molar/robot_lab_runtime/external_assets/sources/pal_tiago_robot/f1c33c92bdde7c1dd79f0c3e739e98a233dbd30b/tiago_description/meshes/arm/arm_5_collision-wrist-2017.stl",
+      "sha256": "77fffe1281eb37de77829f3874c8bd921dbd4988327d3f6891a3e4335a702efc"
+    },
+    "package://tiago_description/meshes/arm/arm_6-wrist-2017.stl": {
+      "path": "/workspace/molar/robot_lab_runtime/external_assets/sources/pal_tiago_robot/f1c33c92bdde7c1dd79f0c3e739e98a233dbd30b/tiago_description/meshes/arm/arm_6-wrist-2017.stl",
+      "sha256": "b3599f60d6c1c6df30266e2eee48b3bf1d1d59ded41a7acb134ee2917176be3e"
+    },
+    "package://tiago_description/meshes/arm/arm_6_collision-wrist-2017.stl": {
+      "path": "/workspace/molar/robot_lab_runtime/external_assets/sources/pal_tiago_robot/f1c33c92bdde7c1dd79f0c3e739e98a233dbd30b/tiago_description/meshes/arm/arm_6_collision-wrist-2017.stl",
+      "sha256": "4ffdd2c5d5f47f587f2bd336e4ced385c48bc3f70acf7f4fb1b6e88e09f521d5"
+    },
+    "package://pal_gripper_description/meshes/gripper_link.stl": {
+      "path": "/workspace/molar/robot_lab_runtime/external_assets/sources/pal_gripper/485b535532c04b0ce31a00ad431d99e2714c0d54/pal_gripper_description/meshes/gripper_link.stl",
+      "sha256": "d51a0e30c6c04b74eeb8bbea0b46fb825ef46b9d1aeebebfac4dc865159e8809"
+    },
+    "package://pal_gripper_description/meshes/gripper_link_collision.stl": {
+      "path": "/workspace/molar/robot_lab_runtime/external_assets/sources/pal_gripper/485b535532c04b0ce31a00ad431d99e2714c0d54/pal_gripper_description/meshes/gripper_link_collision.stl",
+      "sha256": "9612a2949a34b1ffdfabf268e9cecbf2978e15e966961dce5b3208869eb3a143"
+    },
+    "package://pal_gripper_description/meshes/gripper_finger_link.stl": {
+      "path": "/workspace/molar/robot_lab_runtime/external_assets/sources/pal_gripper/485b535532c04b0ce31a00ad431d99e2714c0d54/pal_gripper_description/meshes/gripper_finger_link.stl",
+      "sha256": "49c43b68c72d3d510e231ec5b42ffe99de6b164874e5f79a7ab66d634373bb58"
+    },
+    "package://tiago_description/meshes/head/head_1.stl": {
+      "path": "/workspace/molar/robot_lab_runtime/external_assets/sources/pal_tiago_robot/f1c33c92bdde7c1dd79f0c3e739e98a233dbd30b/tiago_description/meshes/head/head_1.stl",
+      "sha256": "da15ef00f276d4692df912889dc49561fc6b7958bf925aada017f52a15036721"
+    },
+    "package://tiago_description/meshes/head/head_1_collision.dae": {
+      "path": "/workspace/molar/robot_lab_runtime/external_assets/sources/pal_tiago_robot/f1c33c92bdde7c1dd79f0c3e739e98a233dbd30b/tiago_description/meshes/head/head_1_collision.dae",
+      "sha256": "045ee699c6d9c8af5ca214d5040d82c4f1c269a3489a0305c31aea5197f4b5f4"
+    },
+    "package://tiago_description/meshes/head/head_2.stl": {
+      "path": "/workspace/molar/robot_lab_runtime/external_assets/sources/pal_tiago_robot/f1c33c92bdde7c1dd79f0c3e739e98a233dbd30b/tiago_description/meshes/head/head_2.stl",
+      "sha256": "8cc0b5fc791d313670f5d857cc83df415de6435a7c83d407b112dc6334a33158"
+    },
+    "package://tiago_description/meshes/head/head_2_collision.dae": {
+      "path": "/workspace/molar/robot_lab_runtime/external_assets/sources/pal_tiago_robot/f1c33c92bdde7c1dd79f0c3e739e98a233dbd30b/tiago_description/meshes/head/head_2_collision.dae",
+      "sha256": "0636f903165d6117a2af0990203c11a97250b477ba413dfedfcb5b6835ead42c"
+    }
+  },
+  "drive": {
+    "type": "diff",
+    "left_wheel_joint": "wheel_left_joint",
+    "right_wheel_joint": "wheel_right_joint",
+    "wheel_radius": 0.0985,
+    "wheel_separation": 0.4044,
+    "max_speed": 0.2,
+    "max_accel": 0.2,
+    "max_angular_speed": 0.4,
+    "max_angular_accel": 0.4,
+    "wheel_force_limit": 6.0,
+    "mujoco_wheel_velocity_gain": 10.0,
+    "mujoco_wheel_armature": 0.005,
+    "mujoco_implicit_wheel_control": true,
+    "mujoco_preserve_fixed_root_inertia": true,
+    "mujoco_expected_mass_kg": 84.66799184112,
+    "pybullet_explicit_massless_frames": true,
+    "pybullet_preserve_passive_springs": true,
+    "pybullet_expected_mass_kg": 84.66799284112,
+    "isaac_source_friction": true,
+    "isaac_source_joint_losses": true
+  },
+  "articulation": {
+    "schema": "robot_lab.urdf_articulation.v1",
+    "panel": "arm",
+    "home": {
+      "torso_lift_joint": 0.15,
+      "arm_1_joint": 0.5,
+      "arm_2_joint": -1.34,
+      "arm_3_joint": -0.48,
+      "arm_4_joint": 1.94,
+      "arm_5_joint": -1.49,
+      "arm_6_joint": 1.37,
+      "arm_7_joint": 0.0,
+      "gripper_left_finger_joint": 0.04,
+      "gripper_right_finger_joint": 0.04,
+      "head_1_joint": 0.0,
+      "head_2_joint": 0.0
+    },
+    "joints": {
+      "torso_lift_joint": {
+        "mode": "position",
+        "lower": -0.001,
+        "upper": 0.35,
+        "effort": 2000.0,
+        "max_velocity": 0.04,
+        "kp": 15000.0,
+        "kd": 1800.0
+      },
+      "arm_1_joint": {
+        "mode": "position",
+        "lower": 0.0,
+        "upper": 2.748893571891069,
+        "effort": 43.0,
+        "max_velocity": 0.35,
+        "kp": 1720.0,
+        "kd": 52.459508194416
+      },
+      "arm_2_joint": {
+        "mode": "position",
+        "lower": -1.5707963267948966,
+        "upper": 1.090830782496456,
+        "effort": 43.0,
+        "max_velocity": 0.35,
+        "kp": 1720.0,
+        "kd": 52.459508194416
+      },
+      "arm_3_joint": {
+        "mode": "position",
+        "lower": -3.5342917352885173,
+        "upper": 1.5707963267948966,
+        "effort": 26.0,
+        "max_velocity": 0.35,
+        "kp": 1040.0,
+        "kd": 40.792156108742276
+      },
+      "arm_4_joint": {
+        "mode": "position",
+        "lower": -0.39269908169872414,
+        "upper": 2.356194490192345,
+        "effort": 26.0,
+        "max_velocity": 0.35,
+        "kp": 1040.0,
+        "kd": 40.792156108742276
+      },
+      "arm_5_joint": {
+        "mode": "position",
+        "lower": -2.0943951023931953,
+        "upper": 2.0943951023931953,
+        "effort": 3.0,
+        "max_velocity": 0.35,
+        "kp": 120.0,
+        "kd": 13.856406460551018
+      },
+      "arm_6_joint": {
+        "mode": "position",
+        "lower": -1.413716694115407,
+        "upper": 1.413716694115407,
+        "effort": 6.6,
+        "max_velocity": 0.35,
+        "kp": 264.0,
+        "kd": 20.552372125864206
+      },
+      "arm_7_joint": {
+        "mode": "position",
+        "lower": -2.0943951023931953,
+        "upper": 2.0943951023931953,
+        "effort": 6.6,
+        "max_velocity": 0.35,
+        "kp": 264.0,
+        "kd": 20.552372125864206
+      },
+      "gripper_left_finger_joint": {
+        "mode": "position",
+        "lower": -0.001,
+        "upper": 0.045,
+        "effort": 16.0,
+        "max_velocity": 0.025,
+        "kp": 800.0,
+        "kd": 20.0
+      },
+      "gripper_right_finger_joint": {
+        "mode": "position",
+        "lower": -0.001,
+        "upper": 0.045,
+        "effort": 16.0,
+        "max_velocity": 0.025,
+        "kp": 800.0,
+        "kd": 20.0
+      },
+      "head_1_joint": {
+        "mode": "position",
+        "lower": -1.3089969389957472,
+        "upper": 1.3089969389957472,
+        "effort": 5.197,
+        "max_velocity": 0.35,
+        "kp": 207.88,
+        "kd": 18.23754369425883
+      },
+      "head_2_joint": {
+        "mode": "position",
+        "lower": -1.0471975511965976,
+        "upper": 0.7853981633974483,
+        "effort": 2.77,
+        "max_velocity": 0.35,
+        "kp": 110.8,
+        "kd": 13.314653581674591
+      }
+    },
+    "couplings": {},
+    "isaac_native_gravity_compensation": true
+  },
+  "sensor_config": {
+    "laser_link_name": "base_laser_link",
+    "scan_samples": 640,
+    "scan_rate": 5.0,
+    "scan_range_min": 0.1,
+    "scan_range_max": 15.0,
+    "camera_link_name": "head_front_camera_color_frame",
+    "camera_optical_frame": "head_front_camera_color_optical_frame",
+    "camera_width": 320,
+    "camera_height": 240,
+    "camera_rate": 5.0,
+    "camera_horizontal_fov": 1.0995574287564276,
+    "camera_near": 0.3,
+    "camera_far": 8.0,
+    "imu_link_name": "base_footprint"
+  },
+  "source_mass_kg": 84.66799184112,
+  "lab_changes": [
+    "Complete official PMB2/pal-gripper public-simulation assembly; source kinematics, inertias, collisions and fixed casters retained",
+    "Source 6 Nm wheels with declared 0.2 m/s / 0.4 rad/s lab velocity caps",
+    "Twelve independent source position channels, declared bounded lab PD gains/rates plus existing plant gravity feedforward",
+    "Isaac opt-in native actual-pose generalized gravity compensation each step, replacing slide-only feedforward within the same source effort budget",
+    "Isaac opt-in scalar source link-friction bindings on original/fused/instanced colliders with minimum combination; not Gazebo solver equivalence",
+    "Isaac opt-in source wheel Coulomb torque/damping port to native axis friction efforts, replacing the importer dimensionless bearing coefficient; source motor limits unchanged",
+    "Source home arm/torso target from official motion file; lab 0.04 m finger-opening Home target, head zero",
+    "Declared panoramic lab lidar at vendor laser mount, ideal root IMU, source-head RGB-D optics at reduced 320x240/5 Hz",
+    "Source modern Gazebo runtime plugins removed for portable backends; no Fortress support claimed",
+    "Source sonars, wrist FT and hardware driver not exposed by this adapter"
+  ],
+  "source_home": {
+    "path": "/workspace/molar/robot_lab_runtime/external_assets/sources/pal_tiago_robot/f1c33c92bdde7c1dd79f0c3e739e98a233dbd30b/tiago_bringup/config/motions/tiago_motions_general.yaml",
+    "sha256": "12f2794451a9cba383b7bcc9187f786fbb930fe3d06f5b34185b150c9b1af1e1",
+    "endpoint": {
+      "torso_lift_joint": 0.15,
+      "arm_1_joint": 0.5,
+      "arm_2_joint": -1.34,
+      "arm_3_joint": -0.48,
+      "arm_4_joint": 1.94,
+      "arm_5_joint": -1.49,
+      "arm_6_joint": 1.37,
+      "arm_7_joint": 0.0
+    },
+    "scope": "Endpoint joint target only; not the full vendor waypoint trajectory or collision plan"
+  },
+  "source_degenerate_inertials": {
+    "base_antenna_left_link": {
+      "mass": 1e-06,
+      "inertia": {
+        "ixx": "0.00000002371",
+        "ixy": "0.00000006119",
+        "ixz": "0.00000001179",
+        "iyy": "0.00000002833",
+        "iyz": "0.00000000774",
+        "izz": "0.00000003849"
+      }
+    },
+    "base_antenna_right_link": {
+      "mass": 1e-06,
+      "inertia": {
+        "ixx": "0.00000002371",
+        "ixy": "0.00000006119",
+        "ixz": "0.00000001179",
+        "iyy": "0.00000002833",
+        "iyz": "0.00000000774",
+        "izz": "0.00000003849"
+      }
+    },
+    "arm_tool_link": {
+      "mass": 0.1,
+      "inertia": {
+        "ixx": "0.0",
+        "ixy": "0.0",
+        "ixz": "0.0",
+        "iyy": "0.0",
+        "iyz": "0.0",
+        "izz": "0.0"
+      }
+    },
+    "wrist_ft_tool_link": {
+      "mass": 0.1,
+      "inertia": {
+        "ixx": "0.0",
+        "ixy": "0.0",
+        "ixz": "0.0",
+        "iyy": "0.0",
+        "iyz": "0.0",
+        "izz": "0.0"
+      }
+    }
+  },
+  "importer_limitations": "Original antenna tensors are indefinite and tool-frame tensors zero. Source URDF remains unchanged; existing backend importers may regularize these. MuJoCo also bounds tiny masses/inertias and excludes overlapping rest-pose contact pairs. Compiled dynamics fidelity is not qualified.",
+  "runtime_mission_qualified": false
+}

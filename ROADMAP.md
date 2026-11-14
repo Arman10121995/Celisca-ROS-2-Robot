@@ -488,7 +488,9 @@ parking batch needs its own run. Details and evidence are in the
   TIAGo PMB2/arm/pal-gripper source installed with five immutable dependencies,
   original URDF mechanics and twelve independent bounded position channels.
   Existing normal GUI Drive/Mobile arm selection, grouping and command autofill
-  work. MuJoCo head/finger targets, 0.289 m forward and Stop are measured;
+  work. Head/torso/arm/finger targets, forward and Stop are measured in
+  MuJoCo (0.297 m), PyBullet (0.449 m) and Isaac (0.377 m). Isaac ports native
+  gravity/root-force layout, source caster contact and wheel-loss units;
   head cameras follow moving carriers, including fixed-link fusion handling.
   Source degenerate inertias/import regularization and uncalibrated velocity
   tracking are declared. Display adapter is separate from completed object or

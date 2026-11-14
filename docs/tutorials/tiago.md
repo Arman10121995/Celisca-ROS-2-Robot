@@ -65,7 +65,7 @@ but existing backend importers regularize these and may bound tiny inertias.
 MuJoCo compiled 84.668099800 kg and excluded three overlapping rest-pose
 contact pairs. These are declared import approximations. Do not call this
 calibrated or identical dynamics. In the short MuJoCo drive screen, a
-0.12 m/s request reached about 0.085 m/s; source joint friction/damping and
+0.12 m/s request reached about 0.079 m/s; source joint friction/damping and
 the original effort envelope remain intact.
 
 Isaac explicitly binds the source scalar link-friction values to original

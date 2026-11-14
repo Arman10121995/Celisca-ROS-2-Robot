@@ -127,6 +127,7 @@ def provision(store, download=False):
         'Drive and Mobile arm use existing command leases, Stop, measured feedback and mutual inhibition. '
         'Source antenna/tool inertias are degenerate; backend importer regularization and rest-contact exclusions are declared, not faithful-dynamics qualification. '
         'MuJoCo/PyBullet/Isaac experimental adapter; no physical mission certificate. '
+        'Retained Display control screens and exact measured scope: docs/status/evidence/tiago-2026-11-14/README.md. '
         'Gazebo Fortress source port, camera/object pipelines, payload/costmap integration and wider missions remain pending.')
     profile = dict(package='robot_lab_robots', name=NAME, xacro=str(model), type='mobile_manipulator',
         external_asset=True, asset_origin='extension', source_id=sources[0]['id'],
@@ -149,6 +150,30 @@ def provision(store, download=False):
             sensor['frame'] = sensors['imu_link_name']
     for item in entity['evidence']:
         item['date'] = '2026-11-14'
+    manifest_path = ROOT/'docs/status/evidence/tiago-2026-11-14/manifest.json'
+    recorded_hashes = json.loads(manifest_path.read_text()).get('source_code_sha256', {}) if manifest_path.is_file() else {}
+    for backend, file in (('mujoco', 'mujoco-final-result.json'),
+                          ('pybullet', 'pybullet-final-result.json'), ('isaac', 'isaac-result.json')):
+        reference = 'docs/status/evidence/tiago-2026-11-14/'+file
+        # A clean source checkout must actually contain the retained receipt
+        # before advertising it. Provisioning itself never fabricates a pass.
+        if (ROOT/reference).is_file():
+            measured = json.loads((ROOT/reference).read_text())
+            bound = measured.get('latest_state', {}).get('state', {})
+            runtime_paths = [f'src/robot_lab_{backend}/python/robot_lab_{backend}/{backend}_spawner.py',
+                'src/robot_lab_utils/robot_lab_utils/tiago_source.py',
+                'src/robot_lab_utils/robot_lab_utils/urdf_articulation.py',
+                'src/robot_lab_utils/robot_lab_utils/sim_frames.py']
+            if backend == 'isaac':
+                runtime_paths.append('src/robot_lab_isaac/python/robot_lab_isaac/isaac_runtime.py')
+            commands = measured.get('command', [])
+            if (measured.get('success') is True and bound.get('model_path') == str(model)
+                    and bound.get('model_sha256') == digest(model)
+                    and all(token in commands for token in ('robot_model:='+NAME, 'simulator:='+backend, 'map_name:=nav_empty'))
+                    and all(recorded_hashes.get(path) == digest(ROOT/path) for path in runtime_paths)):
+                entity['evidence'].append(dict(kind='runtime_test', reference=reference,
+                    description=backend+'/nav_empty Display: head/torso/arm_4/fingers, straight Drive and Stop only; not an object/SLAM/Nav2 mission',
+                    date='2026-11-14'))
     checkpoint_robots(store, {NAME: profile}, [entity], [dict(source_id=sources[0]['id'],
         revision=sources[0]['revision'], entry=ENTRY, status='installed', check=str(evidence),
         profiles=[dict(id=NAME, kind='robot', support='Experimental complete source adapter', notes=notes)])])

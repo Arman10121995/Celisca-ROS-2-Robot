@@ -1,0 +1,294 @@
+{
+  "command": [
+    "ros2",
+    "launch",
+    "robot_lab_bringup",
+    "simulated_robot.launch.py",
+    "robot_model:=asset_pal_tiago",
+    "simulator:=pybullet",
+    "use_sim_time:=true",
+    "map_name:=nav_empty",
+    "world_package:=robot_lab_maps",
+    "world_name:=nav_empty",
+    "world_path:=maps/nav_empty/worlds/nav_empty.world",
+    "map_yaml:=maps/nav_empty/maps/map.yaml",
+    "mode:=display",
+    "perception:=none",
+    "gui:=false",
+    "start_rviz:=false"
+  ],
+  "scope": "Normal GUI-derived launch with viewers disabled; source motors only. Head/finger targets, base forward and Stop. No pose writes or object mission.",
+  "request": {
+    "plant_id": "68b065f1c48a4855a563da3b59208ce0",
+    "targets": {
+      "head_1_joint": 0.2,
+      "gripper_left_finger_joint": 0.015,
+      "gripper_right_finger_joint": 0.025,
+      "torso_lift_joint": 0.02,
+      "arm_4_joint": 0.1
+    }
+  },
+  "joint_errors": {
+    "head_1_joint": 1.1755472750785145e-07,
+    "gripper_left_finger_joint": 8.58413854883805e-07,
+    "gripper_right_finger_joint": 3.3131641562211822e-09,
+    "torso_lift_joint": 4.844288362497451e-07,
+    "arm_4_joint": 1.3349252644123677e-06
+  },
+  "joint_before": {
+    "head_1_joint": -5.295980289808386e-07,
+    "gripper_left_finger_joint": 7.980152837216769e-07,
+    "gripper_right_finger_joint": -2.673829695745499e-08
+  },
+  "joint_after": {
+    "head_1_joint": 0.20000011755472752,
+    "gripper_left_finger_joint": 0.015000858413854883,
+    "gripper_right_finger_joint": 0.024999996686835845,
+    "torso_lift_joint": 0.01999951557116375,
+    "arm_4_joint": 0.0999986650747356
+  },
+  "arm_to_drive_stop_ack": true,
+  "drive_start": {
+    "wall": 369819.733658653,
+    "t": 5.25,
+    "x": -0.4982691705226898,
+    "y": -0.4999955892562866,
+    "z": 0.0009622831712476909,
+    "v": 0.0005327214260152682,
+    "w": 0.0012988011090224738
+  },
+  "drive_end": {
+    "wall": 369827.694706318,
+    "t": 9.270833333,
+    "x": -0.04964315891265869,
+    "y": -0.49684378504753113,
+    "z": 0.0009644730016589165,
+    "v": 0.12085219409260965,
+    "w": -0.00042814577308420315
+  },
+  "stop_requested": true,
+  "stopped": {
+    "wall": 369831.634579077,
+    "t": 11.291666666,
+    "x": -0.012765548191964626,
+    "y": -0.4963933527469635,
+    "z": 0.0009515873389318585,
+    "v": -9.369966301510378e-05,
+    "w": -0.00011509030040481075
+  },
+  "distance_m": 0.4486370829110029,
+  "success": true,
+  "phase": "stop",
+  "wall_s": 26.179992705001496,
+  "states": 169,
+  "odom_messages": 542,
+  "image_messages": 56,
+  "latest_image": {
+    "stamp": 11.162499999,
+    "frame": "head_front_camera_color_optical_frame",
+    "width": 320,
+    "height": 240
+  },
+  "latest_state": {
+    "wall": 369831.558505357,
+    "state": {
+      "schema": "robot_lab.urdf_articulation.v1",
+      "plant_id": "546e7778ff5c478383723f05ade8fa9a",
+      "state_monotonic": 369831.557245927,
+      "model_path": "/workspace/molar/robot_lab_runtime/external_assets/models/asset_pal_tiago/3a120b99f5b86a4539e9f2e679dca71a5b72930a0cd473b9c84f43138275dcb1/robot.urdf",
+      "model_sha256": "6860985f4c8af74f9e35603fa3adc2838e58e46f0c5e337f3576fd9a18cefbc3",
+      "urdf_sha256": "b8df74b0df7a18125f6af8ecfc92f7ed0bad7bd2b97600a41dbb53f3d6913cb0",
+      "initialized": true,
+      "status": "stopped; holding measured positions",
+      "fault": "",
+      "base_inhibited": false,
+      "active": false,
+      "qualification": "implemented adapter; runtime validation pending",
+      "coupling_error": {},
+      "coupling_inhibited": false,
+      "channels": [
+        {
+          "name": "arm_1_joint",
+          "mode": "position",
+          "units": "rad",
+          "measured": 4.540622473400026e-06,
+          "target": 3.7857998615885647e-06,
+          "reference": 3.7857998615885647e-06,
+          "measured_velocity": -1.7639553271936275e-07,
+          "limits": [
+            0.0,
+            2.748893571891069
+          ],
+          "max_velocity": 0.35,
+          "coupled": false
+        },
+        {
+          "name": "arm_2_joint",
+          "mode": "position",
+          "units": "rad",
+          "measured": -0.0002377079945496046,
+          "target": -0.00015769376961060274,
+          "reference": -0.00015769376961060274,
+          "measured_velocity": -2.70983236237592e-07,
+          "limits": [
+            -1.5707963267948966,
+            1.090830782496456
+          ],
+          "max_velocity": 0.35,
+          "coupled": false
+        },
+        {
+          "name": "arm_3_joint",
+          "mode": "position",
+          "units": "rad",
+          "measured": 3.109122376318581e-05,
+          "target": 1.667319523827489e-05,
+          "reference": 1.667319523827489e-05,
+          "measured_velocity": 9.690875552999056e-07,
+          "limits": [
+            -3.5342917352885173,
+            1.5707963267948966
+          ],
+          "max_velocity": 0.35,
+          "coupled": false
+        },
+        {
+          "name": "arm_4_joint",
+          "mode": "position",
+          "units": "rad",
+          "measured": 0.09999551837019148,
+          "target": 0.09999716793751615,
+          "reference": 0.09999716793751615,
+          "measured_velocity": -8.407364067579466e-09,
+          "limits": [
+            -0.39269908169872414,
+            2.356194490192345
+          ],
+          "max_velocity": 0.35,
+          "coupled": false
+        },
+        {
+          "name": "arm_5_joint",
+          "mode": "position",
+          "units": "rad",
+          "measured": -7.647965671716479e-05,
+          "target": -5.051120828552383e-05,
+          "reference": -5.051120828552383e-05,
+          "measured_velocity": 2.3176399263286838e-07,
+          "limits": [
+            -2.0943951023931953,
+            2.0943951023931953
+          ],
+          "max_velocity": 0.35,
+          "coupled": false
+        },
+        {
+          "name": "arm_6_joint",
+          "mode": "position",
+          "units": "rad",
+          "measured": -5.08511697546984e-06,
+          "target": -4.010972451393311e-06,
+          "reference": -4.010972451393311e-06,
+          "measured_velocity": 9.496857136278354e-08,
+          "limits": [
+            -1.413716694115407,
+            1.413716694115407
+          ],
+          "max_velocity": 0.35,
+          "coupled": false
+        },
+        {
+          "name": "arm_7_joint",
+          "mode": "position",
+          "units": "rad",
+          "measured": 5.7009412474111916e-05,
+          "target": 3.645733777745539e-05,
+          "reference": 3.645733777745539e-05,
+          "measured_velocity": 6.802606887018891e-08,
+          "limits": [
+            -2.0943951023931953,
+            2.0943951023931953
+          ],
+          "max_velocity": 0.35,
+          "coupled": false
+        },
+        {
+          "name": "gripper_left_finger_joint",
+          "mode": "position",
+          "units": "m",
+          "measured": 0.015002654469794334,
+          "target": 0.015001677439257934,
+          "reference": 0.015001677439257934,
+          "measured_velocity": 6.850217499952338e-09,
+          "limits": [
+            -0.001,
+            0.045
+          ],
+          "max_velocity": 0.025,
+          "coupled": false
+        },
+        {
+          "name": "gripper_right_finger_joint",
+          "mode": "position",
+          "units": "m",
+          "measured": 0.02499992452404653,
+          "target": 0.0249999547990128,
+          "reference": 0.0249999547990128,
+          "measured_velocity": -6.110267393924831e-10,
+          "limits": [
+            -0.001,
+            0.045
+          ],
+          "max_velocity": 0.025,
+          "coupled": false
+        },
+        {
+          "name": "head_1_joint",
+          "mode": "position",
+          "units": "rad",
+          "measured": 0.199993700408905,
+          "target": 0.19999618196584618,
+          "reference": 0.19999618196584618,
+          "measured_velocity": -8.21243750266711e-08,
+          "limits": [
+            -1.3089969389957472,
+            1.3089969389957472
+          ],
+          "max_velocity": 0.35,
+          "coupled": false
+        },
+        {
+          "name": "head_2_joint",
+          "mode": "position",
+          "units": "rad",
+          "measured": -1.5462626250428646e-05,
+          "target": -1.192015147450911e-05,
+          "reference": -1.192015147450911e-05,
+          "measured_velocity": 2.3863908936754406e-07,
+          "limits": [
+            -1.0471975511965976,
+            0.7853981633974483
+          ],
+          "max_velocity": 0.35,
+          "coupled": false
+        },
+        {
+          "name": "torso_lift_joint",
+          "mode": "position",
+          "units": "m",
+          "measured": 0.019998544965141096,
+          "target": 0.019998935190672584,
+          "reference": 0.019998935190672584,
+          "measured_velocity": -2.1494376928171247e-09,
+          "limits": [
+            -0.001,
+            0.35
+          ],
+          "max_velocity": 0.04,
+          "coupled": false
+        }
+      ]
+    }
+  },
+  "launch_returncode": 0
+}

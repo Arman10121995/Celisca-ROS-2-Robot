@@ -6,11 +6,15 @@ twelve independent position channels and the existing Drive/Mobile arm GUI
 page. Preserve source effort limits, low-friction fixed public-simulation
 casters, declared lab servo/sensor caps and mutual motion/heartbeat gates.
 Source antenna/tool tensors are degenerate; importer regularization, tiny
-mass bounds and rest-contact exclusions must remain explicit. MuJoCo/PyBullet
-GUI-derived Display head/finger/forward/Stop/RGB screens are measured, not
+mass bounds and rest-contact exclusions must remain explicit. MuJoCo/PyBullet/Isaac
+GUI-derived Display head/torso/arm/finger/forward/Stop/RGB screens are measured
+(0.297/0.449/0.377 m), not
 object or mapping/navigation missions. Cameras must use actual moving-head
 carriers; fixed-link fusion cannot justify a zero-pose root fallback across
-movable joints. Forty-nine focused checks pass. Source Home is an endpoint,
+movable joints. Isaac native gravity must skip six root-wrench columns;
+reserve original efforts, bind source friction on instance roots and port
+wheel torque/viscous units through native axis friction, retaining motor limits.
+125 focused checks pass. Source Home is an endpoint,
 not a collision-planned trajectory. Continue R5.9 source-specific planning,
 custody, payload footprints and map workflows; Fortress port remains open.
 [Guide](tutorials/tiago.md) · [receipt](status/evidence/tiago-2026-11-14/README.md).

@@ -1,0 +1,52 @@
+{
+  "command": [
+    "ros2",
+    "launch",
+    "robot_lab_bringup",
+    "simulated_robot.launch.py",
+    "robot_model:=asset_pal_tiago",
+    "simulator:=isaac",
+    "use_sim_time:=true",
+    "map_name:=nav_empty",
+    "world_package:=robot_lab_maps",
+    "world_name:=nav_empty",
+    "world_path:=maps/nav_empty/worlds/nav_empty.world",
+    "map_yaml:=maps/nav_empty/maps/map.yaml",
+    "mode:=display",
+    "perception:=none",
+    "gui:=false",
+    "start_rviz:=false"
+  ],
+  "scope": "Normal GUI-derived launch with viewers disabled; source motors only. Head/finger targets, base forward and Stop. No pose writes or object mission.",
+  "request": {
+    "plant_id": "7fd228f90fd742d2a2450ecbe194b14a",
+    "targets": {
+      "head_1_joint": 0.2,
+      "gripper_left_finger_joint": 0.015,
+      "gripper_right_finger_joint": 0.025,
+      "torso_lift_joint": 0.02,
+      "arm_4_joint": 0.1
+    }
+  },
+  "joint_errors": {
+    "head_1_joint": 0.19987708951812239,
+    "gripper_left_finger_joint": 0.01599983741529286,
+    "gripper_right_finger_joint": 0.023714834335260095,
+    "torso_lift_joint": 0.02021850355551578,
+    "arm_4_joint": 0.09420189810916782
+  },
+  "joint_before": {
+    "head_1_joint": 2.3426182868546697e-12,
+    "gripper_left_finger_joint": 4.569748746074964e-11,
+    "gripper_right_finger_joint": -4.9157043019443236e-11
+  },
+  "joint_after": {
+    "head_1_joint": 0.000122910481877625,
+    "gripper_left_finger_joint": -0.000999837415292859,
+    "gripper_right_finger_joint": 0.0012851656647399068,
+    "torso_lift_joint": -0.00021850355551578104,
+    "arm_4_joint": 0.005798101890832186
+  },
+  "error": "AssertionError({'head_1_joint': 0.19987708951812239, 'gripper_left_finger_joint': 0.01599983741529286, 'gripper_right_finger_joint': 0.023714834335260095, 'torso_lift_joint': 0.02021850355551578, 'arm_4_joint': 0.09420189810916782})",
+  "launch_returncode": 0
+}

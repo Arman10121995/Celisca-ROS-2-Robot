@@ -1,0 +1,82 @@
+{
+  "command": [
+    "ros2",
+    "launch",
+    "robot_lab_bringup",
+    "simulated_robot.launch.py",
+    "robot_model:=asset_pal_tiago",
+    "simulator:=isaac",
+    "use_sim_time:=true",
+    "map_name:=nav_empty",
+    "world_package:=robot_lab_maps",
+    "world_name:=nav_empty",
+    "world_path:=maps/nav_empty/worlds/nav_empty.world",
+    "map_yaml:=maps/nav_empty/maps/map.yaml",
+    "mode:=display",
+    "perception:=none",
+    "gui:=false",
+    "start_rviz:=false"
+  ],
+  "scope": "Normal GUI-derived launch with viewers disabled; source motors only. Head/finger targets, base forward and Stop. No pose writes or object mission.",
+  "request": {
+    "plant_id": "79bdf3d13a7e475eb4b3be4e8c264255",
+    "targets": {
+      "head_1_joint": 0.2,
+      "gripper_left_finger_joint": 0.015,
+      "gripper_right_finger_joint": 0.025,
+      "torso_lift_joint": 0.02,
+      "arm_4_joint": 0.1
+    }
+  },
+  "joint_errors": {
+    "head_1_joint": 1.655220985413708e-05,
+    "gripper_left_finger_joint": 2.805016934871729e-05,
+    "gripper_right_finger_joint": 3.0487403273583846e-05,
+    "torso_lift_joint": 2.8031393885612904e-05,
+    "arm_4_joint": 9.214878082280942e-06
+  },
+  "joint_before": {
+    "head_1_joint": -4.0408296626992524e-05,
+    "gripper_left_finger_joint": 1.0785614904307295e-05,
+    "gripper_right_finger_joint": -3.2433624710392905e-06
+  },
+  "joint_after": {
+    "head_1_joint": 0.19998344779014587,
+    "gripper_left_finger_joint": 0.015028050169348717,
+    "gripper_right_finger_joint": 0.024969512596726418,
+    "torso_lift_joint": 0.019971968606114388,
+    "arm_4_joint": 0.09999078512191772
+  },
+  "arm_to_drive_stop_ack": true,
+  "drive_start": {
+    "wall": 369344.988795127,
+    "t": 4.483333333,
+    "x": -0.49921899992445357,
+    "y": -0.4995433785056981,
+    "z": 3.3340036648010773e-05,
+    "v": 0.00018379315809427763,
+    "w": -0.0008951382911268134
+  },
+  "drive_end": {
+    "wall": 369353.429503501,
+    "t": 8.483333333000001,
+    "x": -0.4161045261740349,
+    "y": -0.4996353620688713,
+    "z": 6.006595526079905e-05,
+    "v": 0.02240908696047047,
+    "w": -0.0032856624526704375
+  },
+  "stop_requested": true,
+  "stopped": {
+    "wall": 369357.797116698,
+    "t": 10.5,
+    "x": -0.40348444327693656,
+    "y": -0.4995922801265039,
+    "z": 3.3386200162521806e-05,
+    "v": 4.960467763619556e-05,
+    "w": -0.0002614391760562429
+  },
+  "distance_m": 0.08311452464993663,
+  "error": "AssertionError({'command': ['ros2', 'launch', 'robot_lab_bringup', 'simulated_robot.launch.py', 'robot_model:=asset_pal_tiago', 'simulator:=isaac', 'use_sim_time:=true', 'map_name:=nav_empty', 'world_package:=robot_lab_maps', 'world_name:=nav_empty', 'world_path:=maps/nav_empty/worlds/nav_empty.world', 'map_yaml:=maps/nav_empty/maps/map.yaml', 'mode:=display', 'perception:=none', 'gui:=false', 'start_rviz:=false'], 'scope': 'Normal GUI-derived launch with viewers disabled; source motors only. Head/finger targets, base forward and Stop. No pose writes or object mission.', 'request': {'plant_id': '79bdf3d13a7e475eb4b3be4e8c264255', 'targets': {'head_1_joint': 0.2, 'gripper_left_finger_joint': 0.015, 'gripper_right_finger_joint': 0.025, 'torso_lift_joint': 0.02, 'arm_4_joint': 0.1}}, 'joint_errors': {'head_1_joint': 1.655220985413708e-05, 'gripper_left_finger_joint': 2.805016934871729e-05, 'gripper_right_finger_joint': 3.0487403273583846e-05, 'torso_lift_joint': 2.8031393885612904e-05, 'arm_4_joint': 9.214878082280942e-06}, 'joint_before': {'head_1_joint': -4.0408296626992524e-05, 'gripper_left_finger_joint': 1.0785614904307295e-05, 'gripper_right_finger_joint': -3.2433624710392905e-06}, 'joint_after': {'head_1_joint': 0.19998344779014587, 'gripper_left_finger_joint': 0.015028050169348717, 'gripper_right_finger_joint': 0.024969512596726418, 'torso_lift_joint': 0.019971968606114388, 'arm_4_joint': 0.09999078512191772}, 'arm_to_drive_stop_ack': True, 'drive_start': {'wall': 369344.988795127, 't': 4.483333333, 'x': -0.49921899992445357, 'y': -0.4995433785056981, 'z': 3.3340036648010773e-05, 'v': 0.00018379315809427763, 'w': -0.0008951382911268134}, 'drive_end': {'wall': 369353.429503501, 't': 8.483333333000001, 'x': -0.4161045261740349, 'y': -0.4996353620688713, 'z': 6.006595526079905e-05, 'v': 0.02240908696047047, 'w': -0.0032856624526704375}, 'stop_requested': True, 'stopped': {'wall': 369357.797116698, 't': 10.5, 'x': -0.40348444327693656, 'y': -0.4995922801265039, 'z': 3.3386200162521806e-05, 'v': 4.960467763619556e-05, 'w': -0.0002614391760562429}, 'distance_m': 0.08311452464993663})",
+  "launch_returncode": 0
+}

@@ -22,8 +22,9 @@ Instead of wiring simulators, controllers, and planners by hand, you select from
 The complete official **PAL TIAGo** now appears in the normal robot selector
 with base Drive and twelve Mobile arm channels: torso, arm, independent fingers
 and head. Source mechanics and effort limits are retained; lab servo/sensor
-adapters and importer approximations are declared. Display control has a
-scoped MuJoCo receipt; higher modes and autonomous manipulation remain open.
+adapters and importer approximations are declared. Head/torso/arm/finger,
+forward, Stop and camera screens pass in MuJoCo, PyBullet and Isaac; higher
+modes and autonomous manipulation remain open.
 [TIAGo guide](docs/tutorials/tiago.md).
 
 Manipulation continuation: native Panda now has an explicit **Run pick / place**

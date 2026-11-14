@@ -1,0 +1,19 @@
+{
+  "command": "ros2 launch robot_lab_bringup simulated_robot.launch.py robot_model:=asset_pal_tiago simulator:=mujoco use_sim_time:=true map_name:=nav_empty world_package:=robot_lab_maps world_name:=nav_empty world_path:=maps/nav_empty/worlds/nav_empty.world map_yaml:=maps/nav_empty/maps/map.yaml mode:=display gui:=auto perception:=none",
+  "family": "pal_tiago",
+  "position_channels": [
+    "torso_lift_joint",
+    "arm_1_joint",
+    "arm_2_joint",
+    "arm_3_joint",
+    "arm_4_joint",
+    "arm_5_joint",
+    "arm_6_joint",
+    "arm_7_joint",
+    "gripper_left_finger_joint",
+    "gripper_right_finger_joint",
+    "head_1_joint",
+    "head_2_joint"
+  ],
+  "scope": "Normal installed GUI selection, classification and command autofill only; no motion"
+}
