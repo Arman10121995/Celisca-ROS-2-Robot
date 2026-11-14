@@ -1730,6 +1730,10 @@
     <child link="barcode_link" />
     <origin xyz="-.0511 0 -.033" rpy="0 0 0" />
   </joint>
+  <!-- Front scanner: +-105 deg. A 360 deg scan from this mount hit MOLAR's
+       own body behind it (216 of 540 beams at 0.17-0.34 m beyond +-110 deg,
+       2026-11-15), which broke AMCL and marked the robot as an obstacle. The
+       rear arc belongs to the hardware's rear scanner, not simulated here. -->
   <gazebo reference="laser_link">
     <sensor name="lidar" type="gpu_lidar">
       <always_on>true</always_on>
@@ -1740,10 +1744,10 @@
       <lidar>
         <scan>
           <horizontal>
-            <samples>540</samples>
+            <samples>315</samples>
             <resolution>1</resolution>
-            <min_angle>-3.14159265</min_angle>
-            <max_angle>3.14159265</max_angle>
+            <min_angle>-1.83259571</min_angle>
+            <max_angle>1.83259571</max_angle>
           </horizontal>
         </scan>
         <range>

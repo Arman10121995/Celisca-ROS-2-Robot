@@ -195,7 +195,7 @@ robots:
     features:
     - velocity_base
     - articulated_conveyor
-    - lidar
+    - lidar_2d
     articulation:
       schema: robot_lab.urdf_articulation.v1
       joints:
@@ -275,7 +275,7 @@ robots:
     features:
     - velocity_base
     - articulated_conveyor
-    - lidar
+    - lidar_2d
     - rgbd_camera
     articulation:
       schema: robot_lab.urdf_articulation.v1

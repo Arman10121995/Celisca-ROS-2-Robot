@@ -194,6 +194,12 @@ This page records what was measured. **The goals and remaining work are in one l
 [roadmap](../../ROADMAP.md)** (implementation queue first, then validation). Remaining-work
 notes in the dated entries below are history.
 
+November 15: **R11 MOLAR Nav2 on CELISCA floor 1 (Gazebo), first run.** Route A (9.6 m, multi-turn)
+succeeds within 0.18 m and 11.8°, and cancel/resume pass. The near-obstacle goal B fails (localization
+drift 0.49 m). Fixes: MOLAR's own controllers and an odometry relay in Gazebo nav modes, `lidar_2d`, a
+±105° front scan (the 360° scan hit its own body) and a 0.49 m goal-selection radius.
+[Receipt](evidence/r11-molar-nav-2026-11-15/README.md).
+
 November 15: **R11 MOLAR payload transfer measured (implemented, experimental).** Through the
 normal articulation interface, the deck lifts, extends, and its belt carries a 0.5 kg box onto a
 station at the deck end: Gazebo 3/3 and MuJoCo 4/4 on `nav_empty`. Fixes: Gazebo TrackController

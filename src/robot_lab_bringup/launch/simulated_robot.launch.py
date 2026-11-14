@@ -1597,6 +1597,32 @@ def _build_simulation_actions(context):
                 }.items(),
             )
         )
+        # MOLAR-family robots (an owned articulation) bring their own
+        # ros2_control controllers (robot_config 'controllers') and
+        # molar_gazebo_control in every Gazebo mode, not the shared wheel
+        # controller their descriptions do not define. In these modes the EKF
+        # owns odom -> base_link, so the diff-drive TF is off and its odometry
+        # is relayed to /robot_lab_controller/odom.
+        if simulator == "gazebo" and robot_config.get('articulation') and not robot_free:
+            import tempfile
+            import yaml
+            no_tf = tempfile.NamedTemporaryFile('w', suffix='_no_odom_tf.yaml', delete=False)
+            yaml.safe_dump({name: {'ros__parameters': {'enable_odom_tf': False}}
+                            for name in robot_config.get('controllers', []) if name.endswith('_base_controller')},
+                           no_tf)
+            no_tf.close()
+            for _robot_controller in robot_config.get('controllers', []):
+                actions.append(Node(
+                    package="controller_manager", executable="spawner",
+                    # Four concurrent switches on a slow detailed floor exceed the 5 s default.
+                    arguments=[_robot_controller, "--controller-manager-timeout", "60", "--switch-timeout", "60"]
+                              + (["--param-file", no_tf.name] if _robot_controller.endswith('_base_controller') else []),
+                    output="screen"))
+            actions.append(Node(package='robot_lab_bringup', executable='molar_gazebo_control.py',
+                parameters=[{'use_sim_time': _as_bool(use_sim_time, True),
+                             'model_path': model_path, 'relay_odom': True,
+                             'articulation_config': json.dumps(robot_config['articulation'], sort_keys=True)}],
+                output='screen'))
         if legged_active and simulator == "gazebo":
             # The description's ros2_control plugin owns the joints; the
             # policy's PD runs in an effort trajectory controller loaded
@@ -1625,7 +1651,7 @@ def _build_simulation_actions(context):
     _sim_for_controller = _launch_value(context, "simulator")
     # A legged policy's own PD controller replaces the wheeled controller layer.
     if (_section_enabled(controller_config) and _sim_for_controller == "gazebo"
-            and not legged_active):
+            and not legged_active and not robot_config.get('articulation')):
         actions.append(
             IncludeLaunchDescription(
                 PythonLaunchDescriptionSource(_launch_file(controller_share, "controller.launch.py")),

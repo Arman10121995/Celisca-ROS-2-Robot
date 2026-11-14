@@ -337,6 +337,15 @@ python3 scripts/molar_station_transfer_check.py --simulator gazebo --out gazebo.
 python3 scripts/molar_station_transfer_check.py --simulator mujoco --out mujoco.json
 ```
 
+## Navigation (Gazebo)
+
+`mode:=loc|slam|nav` in Gazebo spawns MOLAR's own controllers and `molar_gazebo_control` (its
+odometry is relayed to `/robot_lab_controller/odom`; the EKF owns odom → base_link). The simulated
+front scanner covers ±105°; the rear arc belongs to the unsimulated rear scanner. A 360° scan from
+the front mount hits the robot's own body. First CELISCA floor 1 route:
+[receipt](../status/evidence/r11-molar-nav-2026-11-15/README.md). Mission checks need
+`--base base_link --robot-radius 0.49`.
+
 The check runs lift → extend → belt → retract → lower on a primitive box and station and judges the
 box by simulator truth ([receipt](../status/evidence/r11-molar-transfer-2026-11-15/README.md)). In
 MuJoCo, `mujoco_world_xml:=<file>` loads a prepared scene; `/mujoco/free_bodies` reports loose

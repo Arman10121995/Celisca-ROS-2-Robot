@@ -51,6 +51,14 @@ class MolarGazeboControl(Node):
         self._float = Float64
         self.create_subscription(JointState, '/joint_states', self.feedback, 10)
         self.create_subscription(Twist, '/robot_lab_controller/cmd_vel_unstamped', self.drive, 1)
+        # Navigation modes: the localization stack reads wheel odometry from
+        # the shared /robot_lab_controller/odom; MOLAR's own diff-drive
+        # controller publishes it as /molar_base_controller/odom.
+        self.declare_parameter('relay_odom', False)
+        if self.get_parameter('relay_odom').value:
+            from nav_msgs.msg import Odometry
+            self.odom_pub = self.create_publisher(Odometry, '/robot_lab_controller/odom', 10)
+            self.create_subscription(Odometry, '/molar_base_controller/odom', self.odom_pub.publish, 10)
         from std_srvs.srv import Trigger
         self.create_service(Trigger, '/robot_lab/control_reset', self.reset_control)
         # Wall-clock watchdog must still fire if the simulator clock pauses.
