@@ -1,5 +1,7 @@
 # Agent Handoff Protocol
 
+November 14 Codex CI dependency follow-up: `a2b5e281` passed fast/physics, then integration collection lacked pymavlink for the heading-gate fixture. Both workflows now pin the existing runtime version 2.4.50; ten heading/walkway checks pass locally. Full published rerun pending; [receipt](status/evidence/ci-mavlink-2026-11-14/README.md). Claude owns algorithm/seed/launch files; Codex continues R5.9 IK branches.
+
 November 14 Codex R5.9 orientation: preserve optional authored first-pad world orientation, keep-mode fixed wrist controls and sampled 0.05 rad/live 0.08 rad envelope, actual final-angle gate for explicit poses, normalized source-bound task fields and GUI recipe options. Legacy position-only tasks remain valid. [Receipt](status/reach-orientation-2026-11-14.md). Alternate IK branches and full loaded source missions remain open; Claude owns fleet/drone/import work.
 
 November 14 CI follow-up: `d4eb4d5a` run 43530569788 failed only the R6.8 world-copy test importing ROS from the unsourced fast tier. It remains required in the sourced integration tier; local check passes. New GUI builder source path is explicit. Do not hide/skip that test or call the historical ecaaa133 CI certificate current. [Scope](status/reach-orientation-2026-11-14.md).

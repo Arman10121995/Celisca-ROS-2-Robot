@@ -186,7 +186,7 @@ tier repair awaits its exact-revision published rerun. Details and evidence are 
 | R0.1, R0.2 Documentation recovery | Audited baseline and truthful docs | — |
 | R1.1 Entry points and paths | Installed executables, package-share asset paths | No developer home paths |
 | R1.2 Test tiers | Fast / physics / integration / mission tiers | `PYTEST_DISABLE_PLUGIN_AUTOLOAD=1` locally |
-| R1.3 CI | Runner setup baseline passes at ecaaa133; new R6.8 ROS-import test tier repair implemented, exact-revision CI pending | [Baseline](docs/status/evidence/ci-firefox-2026-11-11/README.md), [follow-up](docs/status/reach-orientation-2026-11-14.md) |
+| R1.3 CI | Runner setup baseline passes at ecaaa133; ROS-import tier repair reached integration, where missing pymavlink stopped collection. Both workflows now pin the documented flight runtime; exact-revision CI pending | [Baseline](docs/status/evidence/ci-firefox-2026-11-11/README.md), [follow-up](docs/status/evidence/ci-mavlink-2026-11-14/README.md) |
 | R2.1–R2.3 Simulator contracts | `/clock` in every adapter; one TF owner per edge; `/robot_lab/ready`, `/health`, `/reset` | Offline fallback is never success |
 | R3.1–R3.3, R3.5 Composition | Canonical IDs, typed validation, one resolver/executor, scenario and experiment catalogs | The CLI and GUI must produce the same manifest |
 | R3.4 GUI resolver | GUI uses the same resolver; seven algorithm slots; right-hand control column | State `active` in the ledger: keep the GUI tests green |

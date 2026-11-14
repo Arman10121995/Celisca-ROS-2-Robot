@@ -1470,6 +1470,7 @@ tasks:
         next_action: Inspect the published exact-revision rerun after the R6.8 launch-import test tier repair; retain the successful ecaaa133 setup baseline and all required tests.
         runner_receipt: docs/status/evidence/ci-firefox-2026-11-11/README.md
         tier_followup_20261114: 'Codex: published d4eb4d5a CI run 43530569788 failed one R6.8 world-copy test because fast tier is intentionally unsourced and the test imports ament/ROS launch (1282 passed, 42 skipped). Unchanged test moved to required sourced integration tier and passes locally; new GUI source path added to the runner. Two GUI builder/widget checks pass without sourcing ROS. Full exact-revision published rerun pending; preserve historical baseline and Claude fleet/source edits.'
+        mavlink_ci_20261114: 'Codex: a2b5e281 run 43533140298 passed fast/physics, then integration collection failed importing pymavlink in the new PX4 heading test. Both CI workflows now install documented flight runtime pymavlink 2.4.50; tests remain enabled. Ten heading/walkway checks pass with that exact runtime locally. Exact-revision full CI pending. Receipt: docs/status/evidence/ci-mavlink-2026-11-14/README.md. Claude owns algorithm/seed/launch files.'
         scope_paths:
         - .github/workflows/
         - scripts/bootstrap.sh
