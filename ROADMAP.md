@@ -145,7 +145,7 @@ Work top to bottom. Each line links to its task.
 | I15 | [R3.6](#r36--external-robot-assets-in-normal-launch) Assets | 2026-11-14: model-derived display-only reasons for all 77 profiles in the GUI; Lite6/Google Robot jogging via unnamed-actuator support. Vendor controllers for legged/URDF profiles remain | partial |
 | I16 | [R6.5](#r65--world-to-occupancy-generation) / [R6.6](#r66--external-world-library) / [R6.2](#r62--dynamic-and-sensor-disturbance-cases) Worlds | 2026-11-14: free-region labelling + reviewed grid registration (R6.5), seeded live sensor-fault relay on every backend (R6.2). Licensed Fuel imports, fixture review, actors with collision remain | partial |
 | I17 | [R11](#r11--molar--probot-l-family) MOLAR | Sensors, SLAM/Nav2, payload transfer, multi-floor | partial, needs the sensor layout |
-| I18 | [P4](#p4--mujoco-large-world-speed) MuJoCo speed | Faster flex/scan/camera updates on large worlds | partial |
+| I18 | [P4](#p4--mujoco-large-world-speed) MuJoCo speed | 2026-11-14: flex culling, exact tick pacing, oversleep payback, sensor thread (celisca_floor_1 0.81, furnished floor 0.99, hospital 0.43); large worlds remain flex-kinematics bound | partial |
 | I19 | [R7](#r7--algorithm-breadth) Algorithms | 2026-11-14: Gazebo `sim_seed` (300/300 repeat), sensor-fault relay on all backends, 78 per-method ledger records (9 corrected, 8 noted mismatches) | implemented |
 | I20 | [R9.1](#r91--provenance-licenses-and-clean-host-reproduction) Provenance | 2026-11-14: PX4 checkout + 25 submodules and all vendor sources scanned from their license files; 7 trees without license files listed for review | implemented |
 
@@ -1211,9 +1211,22 @@ parking batch needs its own run. Details and evidence are in the
 - **Have:** steps about 2× faster with identical contacts (Labbot
   celisca_floor_1 RTF 0.31 → 0.675; hospital 0.13 → 0.344).
   [Evidence](docs/status/evidence/p4-mujoco-step-2026-10-12/README.md).
-- **Remaining implementation:** reduce the flex-vertex update, LiDAR scan and
-  camera costs in `robot_lab_mujoco` (profile them first, then batch the
-  ray casts and render the camera only at its declared rate).
+- **Done 2026-11-14 (implemented, experimental):** profiled with
+  `profile_period_s:=`. Changes:
+  - static flex culling: identical contacts, step 2.55 → 1.66 ms;
+  - each tick lasts exactly the simulated time it advances (240 Hz ticks of
+    two 2 ms steps had capped every world at RTF 0.96);
+  - oversleep is paid back from the next sleep;
+  - scan and camera run on their own thread from state snapshots.
+
+  Live nav RTF: Labbot celisca_floor_1 0.675 → 0.806, Bumperbot 0.832,
+  celisca_floor_2_furniture 0.989, hospital 0.344 → 0.431, nav_obstacle
+  0.983 ([evidence](docs/status/evidence/p4-mujoco-culling-2026-11-14/README.md)).
+- **Remaining implementation:** the large worlds stay below real time.
+  MuJoCo updates every static flex vertex and element each step: 3.7 of 4 ms
+  per tick on celisca_floor_1, 7.7 ms on the hospital. The options that
+  remain (fewer collision triangles, SDF or convex static collision) change
+  contacts and need their own identity and mission checks.
 - **Done when:** RTF ≥ 1 on the large worlds, with the same contacts.
 
 ---

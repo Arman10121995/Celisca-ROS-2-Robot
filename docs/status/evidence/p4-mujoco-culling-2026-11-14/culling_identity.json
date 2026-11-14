@@ -1,0 +1,56 @@
+{
+ "celisca_floor_1": {
+  "nflex": 71,
+  "nflexelem": 70029,
+  "runs": {
+   "0": {
+    "identical_qpos": true,
+    "identical_ncon": true,
+    "flex_contacts": 757,
+    "ms_all": 2.531,
+    "ms_culled": 1.658,
+    "mean_enabled_flexes": 5.9,
+    "final_xy": [
+     3.863,
+     2.844
+    ]
+   },
+   "1": {
+    "identical_qpos": true,
+    "identical_ncon": true,
+    "flex_contacts": 544,
+    "ms_all": 2.526,
+    "ms_culled": 1.632,
+    "mean_enabled_flexes": 4.0,
+    "final_xy": [
+     -0.825,
+     4.599
+    ]
+   },
+   "2": {
+    "identical_qpos": true,
+    "identical_ncon": true,
+    "flex_contacts": 990,
+    "ms_all": 2.555,
+    "ms_culled": 1.67,
+    "mean_enabled_flexes": 5.0,
+    "final_xy": [
+     -3.905,
+     0.394
+    ]
+   },
+   "3": {
+    "identical_qpos": true,
+    "identical_ncon": true,
+    "flex_contacts": 1020,
+    "ms_all": 2.596,
+    "ms_culled": 1.75,
+    "mean_enabled_flexes": 7.7,
+    "final_xy": [
+     1.452,
+     -1.041
+    ]
+   }
+  }
+ }
+}

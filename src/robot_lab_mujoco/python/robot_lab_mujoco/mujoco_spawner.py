@@ -7,6 +7,7 @@ stack (joint_states, TF, odom, scan, imu, clock).
 import copy
 import hashlib
 import math
+import contextlib
 import json
 import os
 import re
@@ -1139,6 +1140,24 @@ def _physics_substeps(period, timestep):
     return max(1, int(round(float(period) / max(float(timestep), 1e-9))))
 
 
+def _pacing_sleep(period, work, debt, max_debt):
+    """(sleep seconds, debt) after a tick that took *work* of its *period*.
+
+    Wall time already owed (*debt*: oversleep or a catch-up remainder) comes
+    out of this tick's sleep, so the late wake-ups of ``time.sleep`` do not
+    add up into running slower than real time (P4: a light world slept half
+    of every tick yet ran at RTF 0.91). The debt is bounded like catch-up.
+    """
+    spare = period - work - min(debt, max_debt)
+    return (spare, 0.0) if spare > 0 else (0.0, -spare)
+
+
+def _tick_pacing(period, timestep):
+    """(substeps, tick seconds): the tick lasts exactly the physics it advances."""
+    substeps = _physics_substeps(period, timestep)
+    return substeps, substeps * float(timestep)
+
+
 def _world_normal_contact_force(model, data, geom_ids):
     """Total normal contact force [N] for named geoms against the world.
 
@@ -1227,6 +1246,43 @@ def _scan_ranges(model, data, origin, angles, robot_root, range_min, range_max):
             model, data, origin, directions[i], robot_root, range_max, geomid)
     valid = (distances > 0.0) & (distances < range_max)
     return np.where(valid, np.maximum(range_min, distances), np.inf)
+
+
+class _LoopProfile:
+    """Wall time per phase of the physics thread, logged every period (P4)."""
+
+    def __init__(self, period, logger):
+        self.period, self.logger = period, logger
+        self.totals, self.calls, self.ticks = {}, {}, 0
+        self.started = time.monotonic()
+
+    @contextlib.contextmanager
+    def phase(self, name):
+        if self.period <= 0:
+            yield
+            return
+        start = time.perf_counter()
+        try:
+            yield
+        finally:
+            self.totals[name] = self.totals.get(name, 0.) + time.perf_counter() - start
+            self.calls[name] = self.calls.get(name, 0) + 1
+
+    def tick(self):
+        if self.period <= 0:
+            return
+        self.ticks += 1
+        wall = time.monotonic() - self.started
+        if wall < self.period:
+            return
+        report = dict(wall_s=round(wall, 2), ticks=self.ticks, **{
+            name: dict(share=round(total / wall, 3), ms_per_call=round(total / self.calls[name] * 1e3, 3),
+                       calls=self.calls[name]) for name, total in sorted(self.totals.items())})
+        self.logger.info("physics thread profile " + json.dumps(report))
+        self.totals, self.calls, self.ticks, self.started = {}, {}, 0, time.monotonic()
+
+
+_NO_PROFILE = _LoopProfile(0.0, None)
 
 
 def _geom_bottom_z(model, data, geom_id):
@@ -1344,6 +1400,18 @@ class MuJoCoSpawner(Node):
         # flex worlds (world_collision.configure_world_midphase); 'on'
         # keeps it, 'off' always disables it.
         self.declare_parameter("world_midphase", "auto")
+        # Static world flexes collide only near moving geoms
+        # (world_collision.StaticFlexCulling): identical contacts, about a
+        # third off the celisca_floor_1 step (P4).
+        self.declare_parameter("world_flex_culling", True)
+        # > 0: log where the physics thread spends its time every this many
+        # wall seconds (P4 profiling; off by default).
+        self.declare_parameter("profile_period_s", 0.0)
+        # Cast the scan and render the camera on their own thread from a
+        # snapshot of the state they are due at (stamped with that time), so
+        # physics keeps stepping meanwhile; false runs them on the physics
+        # thread as before (P4).
+        self.declare_parameter("sensor_thread", True)
         # Per-joint PD targets applied in the physics step (JSON, see
         # robot_lab_mujoco.joint_pd); used by learned legged policies.
         self.declare_parameter("joint_pd_config", "")
@@ -1430,7 +1498,12 @@ class MuJoCoSpawner(Node):
         self._jpos = []
         self._jvel = []
         self._running = True
-        self._dt = 1.0 / max(self.get_parameter("physics_rate").value, 1.0)
+        # Requested tick period; once the model is loaded the tick is a whole
+        # number of model steps and _dt is exactly the simulated time it
+        # advances (P4: 240 Hz ticks of two 2 ms steps were paced at 4.17 ms
+        # of wall time for 4 ms of physics, capping real time at 0.96).
+        self._tick_period = 1.0 / max(self.get_parameter("physics_rate").value, 1.0)
+        self._dt = self._tick_period
         self._substeps = 1  # model timesteps per physics tick
         # Upper bound on the extra ticks one loop iteration may run to catch
         # up with the wall clock.  0 disables catch-up and restores the old
@@ -1504,7 +1577,7 @@ class MuJoCoSpawner(Node):
         if not wheels or wheel_step <= float(self._model.opt.timestep):
             return
         self._model.opt.timestep = wheel_step
-        self._substeps = _physics_substeps(self._dt, wheel_step)
+        self._substeps, self._dt = _tick_pacing(self._tick_period, wheel_step)
         self.get_logger().info(
             "MuJoCo wheel-drive timestep: %.4f s (%d substep(s) per %.4f s tick)"
             % (wheel_step, self._substeps, self._dt))
@@ -1778,7 +1851,7 @@ class MuJoCoSpawner(Node):
             self._gait_contact_pub = self.create_publisher(String, '/gait/contacts', 10)
             self._gait_terrain_pub = self.create_publisher(String,'/gait/terrain',10)
             self._gait_terrain_at=-1.
-        self._substeps = _physics_substeps(self._dt, self._model.opt.timestep)
+        self._substeps, self._dt = _tick_pacing(self._tick_period, self._model.opt.timestep)
         self._camera = self._camera_setup()
 
         # --- find the root body that contains the free joint ---
@@ -1962,6 +2035,12 @@ class MuJoCoSpawner(Node):
             self._viewer = None
 
         # --- start physics thread ---
+        self._sensor_pending = None
+        self._sensor_cond = threading.Condition()
+        self._sensor_thread = None
+        if self.get_parameter("sensor_thread").value:
+            self._sensor_thread = threading.Thread(target=self._sensor_loop, daemon=True)
+            self._sensor_thread.start()
         self._thread = threading.Thread(target=self._loop, daemon=True)
         self._thread.start()
         self.get_logger().info("MuJoCo spawner running.")
@@ -2150,13 +2229,16 @@ class MuJoCoSpawner(Node):
             1.0 / max(self.get_parameter("scan_rate").value, 0.1),
             1.0 / max(self._camera["rate"], 0.1) if self._camera else 0.0)
         self._last_sensor = [0.0, 0.0, 0.0]
+        self._profile = _LoopProfile(float(self.get_parameter("profile_period_s").value), self.get_logger())
         while self._running and rclpy.ok():
             now = time.monotonic()
 
             with self._physics_lock:
-                self._step_physics()
+                with getattr(self, "_profile", _NO_PROFILE).phase("physics"):
+                    self._step_physics()
                 try:
-                    self._publish_due()
+                    with getattr(self, "_profile", _NO_PROFILE).phase("publish"):
+                        self._publish_due()
                 except Exception:
                     # Launch's SIGINT can shut ROS down before this thread.
                     if not rclpy.ok():
@@ -2167,8 +2249,15 @@ class MuJoCoSpawner(Node):
                     self._viewer.sync()
 
             dt = time.monotonic() - now
+            self._profile.tick()
             if dt < self._dt:
-                time.sleep(self._dt - dt)
+                pause, self._time_debt = _pacing_sleep(
+                    self._dt, dt, self._time_debt, (self._max_catch_up_ticks + 1) * self._dt)
+                if pause > 0:
+                    with self._profile.phase("sleep"):
+                        slept = time.monotonic()
+                        time.sleep(pause)
+                        self._time_debt += max(0.0, time.monotonic() - slept - pause)
             else:
                 # A tick that overran its budget must not turn into slow
                 # motion.  Everything above - physics, the sensor publishes,
@@ -2239,10 +2328,64 @@ class MuJoCoSpawner(Node):
         if sim_time - last[1] + 1e-9 >= scan_dt:
             last[1] = sim_time
             if not getattr(self, "_robot_free", False):
-                self._pub_scan()
+                if getattr(self, "_sensor_thread", None) is not None:
+                    self._sensor_submit("scan")
+                else:
+                    with getattr(self, "_profile", _NO_PROFILE).phase("scan"):
+                        self._pub_scan()
         if self._camera is not None and sim_time - last[2] + 1e-9 >= camera_dt:
             last[2] = sim_time
-            self._pub_camera()
+            if getattr(self, "_sensor_thread", None) is not None:
+                self._sensor_submit("camera")
+            else:
+                with getattr(self, "_profile", _NO_PROFILE).phase("camera"):
+                    self._pub_camera()
+
+    def _sensor_submit(self, kind):
+        """Hand the sensor thread the state this sensor is due at (physics lock held)."""
+        snapshot = dict(qpos=self._data.qpos.copy(), mocap_pos=self._data.mocap_pos.copy(),
+                        mocap_quat=self._data.mocap_quat.copy(), time=float(self._data.time),
+                        pose=(np.array(self._bpos, dtype=float), np.array(self._born, dtype=float)),
+                        stamp=self._stamp(), kinds={kind})
+        with self._sensor_cond:
+            pending = self._sensor_pending
+            if pending is not None:
+                # Still waiting: one newer state serves both requests.
+                snapshot["kinds"] |= pending["kinds"]
+                self._sensor_superseded = getattr(self, "_sensor_superseded", 0) + 1
+            self._sensor_pending = snapshot
+            self._sensor_cond.notify()
+
+    def _sensor_loop(self):
+        """Scan and camera from snapshots, on their own MjData (P4)."""
+        data = mujoco.MjData(self._model)
+        while self._running and rclpy.ok():
+            with self._sensor_cond:
+                if self._sensor_pending is None:
+                    self._sensor_cond.wait(timeout=0.5)
+                snapshot, self._sensor_pending = self._sensor_pending, None
+            if snapshot is None:
+                continue
+            data.qpos[:] = snapshot["qpos"]
+            data.mocap_pos[:] = snapshot["mocap_pos"]
+            data.mocap_quat[:] = snapshot["mocap_quat"]
+            data.time = snapshot["time"]
+            # Positions, frames and cameras only: rays and rendering need nothing else.
+            mujoco.mj_kinematics(self._model, data)
+            mujoco.mj_comPos(self._model, data)
+            mujoco.mj_camlight(self._model, data)
+            profile = getattr(self, "_profile", _NO_PROFILE)
+            try:
+                if "scan" in snapshot["kinds"]:
+                    with profile.phase("scan"):
+                        self._pub_scan(data, snapshot["pose"], snapshot["stamp"])
+                if "camera" in snapshot["kinds"] and self._camera is not None:
+                    with profile.phase("camera"):
+                        self._pub_camera(data, snapshot["stamp"])
+            except Exception:
+                if not rclpy.ok():
+                    break
+                raise
 
     def _catch_up(self, tick_start):
         """Run the whole ticks that elapsed wall time is owed, bounded.
@@ -2268,9 +2411,11 @@ class MuJoCoSpawner(Node):
         owed = max(0, min(owed, self._max_catch_up_ticks))
         for _ in range(owed):
             with self._physics_lock:
-                self._step_physics()
+                with self._profile.phase("physics"):
+                    self._step_physics()
                 try:
-                    self._publish_due()
+                    with self._profile.phase("publish"):
+                        self._publish_due()
                 except Exception:
                     if not rclpy.ok():
                         return
@@ -2327,9 +2472,17 @@ class MuJoCoSpawner(Node):
             with self._twist_lock:
                 values = self._pd_command.command(time.monotonic())
             self._data.ctrl[self._pd_actuators] = values
-        for _ in range(self._substeps):
-            self._apply_perturbation()
-            mujoco.mj_step(self._model, self._data)
+        culling = getattr(self, "_flex_culling", None)
+        if culling is None and self._model.nflex and self.get_parameter("world_flex_culling").value:
+            from robot_lab_mujoco.world_collision import StaticFlexCulling
+            culling = self._flex_culling = StaticFlexCulling(self._model, self._data)
+            self.get_logger().info("MuJoCo static flex culling for %d world flexes" % len(culling.flexes))
+        if culling:
+            culling.update(self._model, self._data)
+        with getattr(self, "_profile", _NO_PROFILE).phase("mj_step"):
+            for _ in range(self._substeps):
+                self._apply_perturbation()
+                mujoco.mj_step(self._model, self._data)
         self._sim_step += 1
         self._read_physics_state()
 
@@ -2399,6 +2552,8 @@ class MuJoCoSpawner(Node):
         self._time_debt = 0.0
         if hasattr(self._data, "xfrc_applied"):
             self._data.xfrc_applied[:, :] = 0.0
+        if getattr(self, "_flex_culling", None) is not None:
+            self._flex_culling.restore(self._model)    # the robot jumped; cull again next tick
         mujoco.mj_forward(self._model, self._data)
         gait_floor = self.get_parameter('gait_floor_reference').value
         if adr >= 0 and self._gait_contacts is not None and gait_floor:
@@ -2569,19 +2724,22 @@ class MuJoCoSpawner(Node):
         clock_msg.clock = self._stamp()
         self._clock_pub.publish(clock_msg)
 
-    def _pub_scan(self):
+    def _pub_scan(self, data=None, pose=None, stamp=None):
+        """Publish one scan of *data* (default: the live state) from the base *pose*."""
+        data = self._data if data is None else data
+        bpos, born = pose if pose is not None else (self._bpos, self._born)
         n = int(self.get_parameter("scan_samples").value)
         am = self.get_parameter("scan_range_min").value
         ax = self.get_parameter("scan_range_max").value
         ai = 2.0 * math.pi / n
 
-        base_q = wxyz_from_xyzw(self._born)
+        base_q = wxyz_from_xyzw(born)
         if self._laser_offset is not None:
             origin, laser_q = mounted_pose(
-                self._bpos, base_q, self._laser_offset)
+                bpos, base_q, self._laser_offset)
         else:
             # No laser link in the description: same fallback as PyBullet.
-            origin = (self._bpos[0], self._bpos[1], self._bpos[2] + 0.12)
+            origin = (bpos[0], bpos[1], bpos[2] + 0.12)
             laser_q = base_q
         lp = np.array(origin, dtype=np.float64)
         # Angles are in the laser frame; Bumperbot's laser is mounted facing
@@ -2589,11 +2747,11 @@ class MuJoCoSpawner(Node):
         byaw = yaw_of(laser_q)
 
         angles = byaw - math.pi + np.arange(n) * ai
-        ranges = _scan_ranges(self._model, self._data, lp, angles,
+        ranges = _scan_ranges(self._model, data, lp, angles,
                               self._body_id, am, ax).tolist()
 
         msg = LaserScan()
-        msg.header.stamp = self._stamp()
+        msg.header.stamp = self._stamp() if stamp is None else stamp
         msg.header.frame_id = self.get_parameter("laser_link_name").value
         msg.angle_min = -math.pi
         # n samples span n - 1 increments; angle_max = pi claimed n + 1.
@@ -2644,10 +2802,11 @@ class MuJoCoSpawner(Node):
             % (link, camera["width"], camera["height"], camera["rate"]))
         return camera
 
-    def _pub_camera(self):
+    def _pub_camera(self, data=None, stamp=None):
+        data = self._data if data is None else data
         camera = self._camera
         if camera["renderer"] is None:
-            # Created on the physics thread, which owns the GL context.
+            # Created on the thread that renders, which then owns the GL context.
             try:
                 camera["renderer"] = mujoco.Renderer(
                     self._model, camera["height"], camera["width"])
@@ -2664,14 +2823,14 @@ class MuJoCoSpawner(Node):
                 self._camera = None
                 return
         renderer = camera["renderer"]
-        renderer.update_scene(self._data, camera=_CAMERA_NAME)
+        renderer.update_scene(data, camera=_CAMERA_NAME)
         rgb = renderer.render()
         depth_renderer = camera["depth_renderer"]
         depth_renderer.enable_depth_rendering()
-        depth_renderer.update_scene(self._data, camera=_CAMERA_NAME)
+        depth_renderer.update_scene(data, camera=_CAMERA_NAME)
         depth = depth_renderer.render().astype(np.float32)
         depth[depth >= camera["far"] * (1.0 - 1e-6)] = np.inf
-        stamp = self._stamp()
+        stamp = self._stamp() if stamp is None else stamp
         self._rgb_pub.publish(image_msg(stamp, camera["frame"], rgb, "rgb8"))
         self._depth_pub.publish(
             image_msg(stamp, camera["frame"], depth, "32FC1"))
@@ -2683,6 +2842,11 @@ class MuJoCoSpawner(Node):
         self._running = False
         if self._thread and self._thread.is_alive():
             self._thread.join(timeout=2.0)
+        worker = getattr(self, "_sensor_thread", None)
+        if worker is not None and worker.is_alive():
+            with self._sensor_cond:
+                self._sensor_cond.notify()
+            worker.join(timeout=2.0)
         # NOTE: We intentionally do NOT call self._viewer.close() because
         # mujoco.viewer.launch_passive() creates a viewer on a separate
         # thread with its own OpenGL context.  Calling .close() on it

@@ -143,22 +143,29 @@ def test_reset_updates_odometry_before_next_physics_tick(node):
     assert odom.header.stamp.sec == odom.header.stamp.nanosec == 0
 
 
-def test_slow_camera_does_not_trigger_on_every_physics_step(node):
+@pytest.mark.parametrize("sensor_thread", [False, True])
+def test_slow_camera_does_not_trigger_on_every_physics_step(node, sensor_thread):
     node._camera = {"rate": 5.0}
     frames = []
 
-    def render():
+    def render(*args):
+        if args and args[0] != "camera":
+            return
         frames.append(node._sim_t)
         if node._sim_t >= 0.4:
             node._running = False
 
     # Simulate expensive rendering without requiring OpenGL or waiting in real
     # time. Each loop exceeds the camera's wall-time period; the sensor must
-    # still wait for 0.2 simulated seconds between frames.
+    # still wait for 0.2 simulated seconds between frames. With the sensor
+    # thread, the frame is due when the physics thread hands it a snapshot.
+    if not sensor_thread:
+        node._sensor_thread = None
     wall_time = itertools.count(start=100.0, step=0.25)
     with patch("robot_lab_mujoco.mujoco_spawner.time.monotonic",
                side_effect=lambda: next(wall_time)), \
-            patch.object(node, "_pub_camera", side_effect=render):
+            patch.object(node, "_pub_camera", side_effect=render), \
+            patch.object(node, "_sensor_submit", side_effect=render):
         node._loop()
     assert len(frames) == 3
     np.testing.assert_allclose(np.diff(frames), [0.2, 0.2], atol=1e-8)

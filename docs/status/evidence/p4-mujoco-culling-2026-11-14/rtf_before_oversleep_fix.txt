@@ -1,0 +1,7 @@
+labbot_f1 labbot celisca_floor_1 profile_period_s:=10.0 {"rtf": 0.797, "sim_s": 15.92, "wall_s": 19.983, "clock_hz": 39.8}
+bumperbot_f1 bumperbot celisca_floor_1 profile_period_s:=10.0 {"rtf": 0.819, "sim_s": 16.36, "wall_s": 19.972, "clock_hz": 41.0}
+labbot_f2f labbot celisca_floor_2_furniture profile_period_s:=10.0 {"rtf": 0.894, "sim_s": 17.88, "wall_s": 20.001, "clock_hz": 44.7}
+labbot_hospital labbot dataset_hospital profile_period_s:=10.0 {"rtf": 0.431, "sim_s": 8.62, "wall_s": 19.979, "clock_hz": 21.6}
+bumperbot_obstacle bumperbot nav_obstacle profile_period_s:=10.0 {"rtf": 0.913, "sim_s": 18.24, "wall_s": 19.976, "clock_hz": 45.7}
+labbot_f1_nocull_sync labbot celisca_floor_1 world_flex_culling:=false sensor_thread:=false {"rtf": 0.661, "sim_s": 13.22, "wall_s": 19.986, "clock_hz": 33.1}
+ALLDONE

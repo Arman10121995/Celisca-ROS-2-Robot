@@ -1002,7 +1002,16 @@ priority_patches:
       RTF Labbot celisca_floor_1 0.31 -> 0.675, hospital 0.13 -> 0.344, nav_obstacle
       Bumperbot 0.877. Still below real time on large worlds (remaining: flex vertex
       update, scan, camera, Nav2 CPU); 4 ms wheel step rejected (Labbot drift). Earlier
-      image-packing and profile results retained.'
+      image-packing and profile results retained. 2026-11-14 claude: implemented,
+      experimental (docs/status/evidence/p4-mujoco-culling-2026-11-14/README.md): static
+      flex culling (identical qpos/contacts in 4 wall flights, step 2.55 -> 1.66 ms),
+      tick period = simulated time (240 Hz ticks had capped RTF at 0.96), oversleep
+      paid back, scan/camera on a snapshot thread, profile_period_s. Live nav RTF:
+      Labbot celisca_floor_1 0.806, Bumperbot 0.832, celisca_floor_2_furniture 0.989,
+      hospital 0.431, nav_obstacle 0.983. RTF >= 1 on the large worlds not reached:
+      MuJoCo updates every static flex vertex/element each step (3.7 of 4 ms per tick
+      on celisca_floor_1); fewer triangles or SDF/convex static collision would change
+      contacts.'
     state: active
     title: MuJoCo performance with correct control timing
   P5:

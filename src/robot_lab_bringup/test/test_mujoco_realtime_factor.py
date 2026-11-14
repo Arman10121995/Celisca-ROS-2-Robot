@@ -13,6 +13,7 @@ subprocess, and the code under test is the shipped code rather than a copy.
 
 import ast
 import threading
+import contextlib
 import time
 import types
 from pathlib import Path
@@ -62,6 +63,7 @@ def _spawner(max_catch_up_ticks, dt=TICK):
     spawner._time_debt = 0.0
     spawner._physics_lock = threading.RLock()
     spawner._viewer = None
+    spawner._profile = types.SimpleNamespace(phase=lambda name: contextlib.nullcontext())
     spawner.steps = 0
     spawner.published = 0
     spawner._step_physics = lambda: setattr(spawner, "steps",
@@ -143,3 +145,21 @@ def test_catch_up_budget_is_a_parameter_and_resets_with_the_clock():
     assert text.count("self._time_debt = 0.0") == 2
     assert 'DeclareLaunchArgument(\n            "max_catch_up_ticks"' in \
         LAUNCH.read_text()
+
+
+def test_tick_lasts_exactly_the_physics_it_advances():
+    """P4: a 240 Hz request with 2 ms steps paced 4.17 ms of wall time per 4 ms of physics (RTF <= 0.96)."""
+    from robot_lab_mujoco.mujoco_spawner import _tick_pacing
+    assert _tick_pacing(1 / 240, .002) == (2, .004)
+    assert _tick_pacing(1 / 240, .004) == (1, .004)
+    assert _tick_pacing(1 / 1000, .002) == (1, .002)
+
+
+def test_oversleep_is_paid_back_from_the_next_sleep():
+    """P4: late wake-ups must not accumulate into slower-than-real-time running."""
+    from robot_lab_mujoco.mujoco_spawner import _pacing_sleep
+    assert _pacing_sleep(.004, .001, 0., .1) == pytest.approx((.003, 0.))
+    assert _pacing_sleep(.004, .001, .0005, .1) == pytest.approx((.0025, 0.))     # last sleep overshot 0.5 ms
+    sleep, debt = _pacing_sleep(.004, .001, .005, .1)                            # owed more than the spare time
+    assert sleep == 0. and debt == pytest.approx(.002)
+    assert _pacing_sleep(.004, .001, 10., .008)[1] == pytest.approx(.005)        # a stall is bounded like catch-up

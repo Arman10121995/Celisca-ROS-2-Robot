@@ -188,6 +188,9 @@ def _build_mujoco_actions(context):
     # Static-world collision midphase (world_collision.py): 'auto' disables
     # it above the measured flex-element crossover, 'on'/'off' force it.
     spawner_params["world_midphase"] = LaunchConfiguration("world_midphase").perform(context)
+    spawner_params["world_flex_culling"] = LaunchConfiguration("world_flex_culling").perform(context).lower() == "true"
+    spawner_params["profile_period_s"] = ParameterValue(LaunchConfiguration("profile_period_s"), value_type=float)
+    spawner_params["sensor_thread"] = LaunchConfiguration("sensor_thread").perform(context).lower() == "true"
     from robot_lab_utils.sensor_config import sensor_parameters
     spawner_params.update(sensor_parameters(
         LaunchConfiguration('sensor_config').perform(context),
@@ -261,6 +264,13 @@ def generate_launch_description():
             description="Static-flex collision midphase: 'auto' disables it "
                         "above the measured element crossover, 'on'/'off' "
                         "force it."),
+        DeclareLaunchArgument(
+            "world_flex_culling", default_value="true",
+            description="Collide static world flexes only near moving geoms (same contacts, cheaper step)."),
+        DeclareLaunchArgument("profile_period_s", default_value="0.0",
+                              description="> 0: log the physics thread's time per phase every this many seconds."),
+        DeclareLaunchArgument("sensor_thread", default_value="true",
+                              description="Scan and camera from state snapshots on their own thread."),
         DeclareLaunchArgument("perturbation_force_n", default_value="0.0"),
         DeclareLaunchArgument("perturbation_start_s", default_value="0.0"),
         DeclareLaunchArgument("perturbation_duration_s", default_value="0.0"),

@@ -128,3 +128,37 @@ def test_midphase_is_disabled_only_for_large_static_flex_worlds():
     assert configure_world_midphase(small, 'off')
     assert small.opt.disableflags & int(mujoco.mjtDisableBit.mjDSBL_MIDPHASE)
     assert MIDPHASE_FLEX_ELEMENTS > 0
+
+
+def test_static_flex_culling_keeps_contacts_and_disables_far_walls(tmp_path):
+    """P4: far static flexes stop colliding; the trajectory into a wall is unchanged."""
+    from robot_lab_mujoco.world_collision import StaticFlexCulling
+    meshes = []
+    for name, x in (('left', -6), ('right', 2)):
+        path = tmp_path / (name + '.stl')
+        trimesh.creation.box([.1, 4, 1], transform=trimesh.transformations.translation_matrix([x, 0, .5])).export(path)
+        meshes.append((name, path))
+    root = ET.fromstring('<mujoco><asset>%s</asset><worldbody><geom type="plane" size="9 9 .1"/>%s'
+                         '<body pos="1.2 0 .5"><freejoint/><geom type="sphere" size=".1" mass="1"/></body>'
+                         '</worldbody></mujoco>' % (
+                             ''.join('<mesh name="%s" file="%s"/>' % m for m in meshes),
+                             ''.join('<geom type="mesh" mesh="%s"/>' % name for name, _ in meshes)))
+    assert add_static_mesh_collisions(root) == 2
+    model = mujoco.MjModel.from_xml_string(ET.tostring(root, encoding='unicode'))
+    runs = []
+    for cull in (False, True):
+        data = mujoco.MjData(model)
+        data.qvel[0] = 3
+        culling = StaticFlexCulling(model, data, margin=.3) if cull else None
+        enabled, contacts = [], 0
+        for _ in range(600):
+            if culling:
+                enabled.append(culling.update(model, data))
+            mujoco.mj_step(model, data)
+            contacts += int(np.sum(data.contact.flex[:data.ncon] >= 0))
+        if culling:
+            culling.restore(model)
+        runs.append((data.qpos.copy(), contacts, enabled))
+    assert np.array_equal(runs[0][0], runs[1][0]) and runs[0][1] == runs[1][1] > 0
+    assert len(runs[1][2]) == 600 and max(runs[1][2]) == 1      # the far left wall never collides
+    assert model.flex_contype.all() or model.flex_conaffinity.all()   # restored

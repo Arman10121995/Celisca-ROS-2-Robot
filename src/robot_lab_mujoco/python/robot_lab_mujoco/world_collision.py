@@ -173,6 +173,64 @@ def add_ray_proxies(root, size=_RAY_PROXY_FACES):
 MIDPHASE_FLEX_ELEMENTS = 5000
 
 
+class StaticFlexCulling:
+    """Collide each static world flex only while a moving geom is near it (P4).
+
+    Without the midphase, the broadphase bounds every element of every
+    collidable flex each step (celisca_floor_1: 1.16 of 2.5 ms). A static
+    piece farther than ``margin`` beyond every moving geom's bounding sphere
+    cannot touch it before the next update, so switching its collision off
+    leaves the contacts unchanged. Call ``update`` before each tick's steps
+    and ``restore`` before anything moves bodies outside the step loop.
+    """
+
+    def __init__(self, model, data, margin=0.5):
+        import mujoco
+        mujoco.mj_forward(model, data)       # mj_kinematics alone leaves flexvert_xpos unset
+        collidable = (model.flex_contype != 0) | (model.flex_conaffinity != 0)
+        flexes = []
+        for flex in np.flatnonzero(collidable):
+            start, count = model.flex_vertadr[flex], model.flex_vertnum[flex]
+            if np.any(model.flex_vertbodyid[start:start + count] != 0):
+                continue                     # only flexes fixed to the world
+            points = data.flexvert_xpos[start:start + count]
+            pad = model.flex_radius[flex] + model.flex_margin[flex]
+            flexes.append((flex, points.min(axis=0) - pad, points.max(axis=0) + pad))
+        self.flexes = np.array([f for f, _, _ in flexes], dtype=int)
+        self.lo = np.array([lo for _, lo, _ in flexes]).reshape(-1, 3)
+        self.hi = np.array([hi for _, _, hi in flexes]).reshape(-1, 3)
+        self.contype = model.flex_contype[self.flexes].copy()
+        self.conaffinity = model.flex_conaffinity[self.flexes].copy()
+        moving_body = (model.body_weldid != 0) | (model.body_mocapid >= 0)
+        self.geoms = np.flatnonzero(moving_body[model.geom_bodyid]
+                                    & ((model.geom_contype != 0) | (model.geom_conaffinity != 0)))
+        self.reach = model.geom_rbound[self.geoms] + model.geom_margin[self.geoms] + float(margin)
+        self.active = np.ones(len(self.flexes), dtype=bool)
+
+    def update(self, model, data):
+        """Enable exactly the static flexes within reach; returns how many are enabled."""
+        if not len(self.flexes):
+            return 0
+        if not len(self.geoms):
+            near = np.zeros(len(self.flexes), dtype=bool)
+        else:
+            centers = data.geom_xpos[self.geoms]
+            gap = np.maximum(0., np.maximum(self.lo[:, None] - centers[None], centers[None] - self.hi[:, None]))
+            near = (np.einsum('fgk,fgk->fg', gap, gap) <= self.reach[None] ** 2).any(axis=1)
+        changed = near != self.active
+        if changed.any():
+            index = self.flexes[changed]
+            model.flex_contype[index] = np.where(near[changed], self.contype[changed], 0)
+            model.flex_conaffinity[index] = np.where(near[changed], self.conaffinity[changed], 0)
+            self.active = near
+        return int(near.sum())
+
+    def restore(self, model):
+        model.flex_contype[self.flexes] = self.contype
+        model.flex_conaffinity[self.flexes] = self.conaffinity
+        self.active[:] = True
+
+
 def configure_world_midphase(model, mode='auto'):
     """Disable MuJoCo's midphase for large static-flex worlds ('auto').
 

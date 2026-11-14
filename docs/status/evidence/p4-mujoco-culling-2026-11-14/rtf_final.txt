@@ -1,0 +1,6 @@
+bumperbot_obstacle bumperbot nav_obstacle profile_period_s:=10.0 {"rtf": 0.983, "sim_s": 19.64, "wall_s": 19.983, "clock_hz": 49.1}
+labbot_f1 labbot celisca_floor_1 profile_period_s:=10.0 {"rtf": 0.806, "sim_s": 16.12, "wall_s": 19.997, "clock_hz": 40.3}
+bumperbot_f1 bumperbot celisca_floor_1 profile_period_s:=10.0 {"rtf": 0.832, "sim_s": 16.62, "wall_s": 19.986, "clock_hz": 41.6}
+labbot_f2f labbot celisca_floor_2_furniture profile_period_s:=10.0 {"rtf": 0.989, "sim_s": 19.78, "wall_s": 19.994, "clock_hz": 49.5}
+labbot_hospital labbot dataset_hospital profile_period_s:=10.0 {"rtf": 0.431, "sim_s": 8.6, "wall_s": 19.957, "clock_hz": 21.5}
+ALLDONE

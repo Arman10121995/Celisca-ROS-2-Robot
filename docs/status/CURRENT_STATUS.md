@@ -1,5 +1,10 @@
 # Current Robot Lab status
 
+November 14 Claude: [MuJoCo speed (P4/I18)](evidence/p4-mujoco-culling-2026-11-14/README.md) is implemented, experimental:
+- **Changes:** world flexes collide only near moving bodies (identical contacts, 35 % faster step); each tick lasts exactly the simulated time it advances (every world had been capped at 0.96 real time); late wake-ups are paid back; scan and camera render on their own thread.
+- **Live nav real-time factor:** Labbot celisca_floor_1 0.675 → 0.806, celisca_floor_2_furniture 0.989, hospital 0.344 → 0.431, nav_obstacle 0.983.
+- **Still below real time:** the large worlds, because MuJoCo updates every static flex vertex every step.
+
 November 14 car GUI continuation: **Drive & limits → Park at a map pose**
 provides estimated-pose copy, X/Y/heading/budget and explicit Park/Cancel for
 the three Ackermann variants in Navigation. Runtime now requires current
