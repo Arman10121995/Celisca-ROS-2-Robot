@@ -12,7 +12,11 @@ shore-support planner. A blocked AUV stops propulsion and needs an explicit
 forward-aligned replan; automatic cornering is not supported.
 
 `authored_current_m_s` reports the operator's finite current command, with its
-age. It is not a current sensor, and route costs do not optimize current energy.
+age. It is not a current sensor. The ROV controller cancels the current's drag
+with a feedforward from the declared damping coefficients: a 15 s hold in
+0.1 m/s cross current drifts about 1 cm in both Gazebo and MuJoCo. AUV routes
+are ranked by travel time through that current (see the
+[Tethys guide](tethys-auv.md)); ROV routes are not.
 Physical obstacle/current/loss and additional saved-map cases remain open;
 [targeted software scope](../status/workflow-continuation-2026-11-02.md).
 
@@ -110,8 +114,28 @@ thrusters bounded to ±12 N. Planar caps are 0.35 m/s surge, 0.25 m/s sway and
 parameters, with no hardware calibration claim. The five worlds have a real
 seafloor at −6 m, water surface at 0 m and collision obstacles; the surface
 visual itself has no solid collision. Currents can be supplied to the native
-`/marine/current` Vector3 bridge in world axes; UI/current-rejection missions
-remain pending.
+`/marine/current` Vector3 bridge in world axes; a UI current control remains pending.
+
+## MuJoCo backend
+
+`ros2 launch robot_lab_bringup marine_simulator.launch.py simulator:=mujoco`
+runs the same `marine_controller` on a MuJoCo plant (`lab_rov` only). The plant
+ports the Fortress systems the ROV URDF declares:
+- buoyancy from the collision boxes, clipped at the surface;
+- linear and quadratic damping on the current-relative velocity, plus added mass;
+- the eight thruster forces at their source mounts, within their bounds.
+
+The plant exchanges the same thruster-force, odometry and clock topics as
+Gazebo. Against the same probe it matches Gazebo to within 4–25 %:
+
+| Probe step | MuJoCo | Gazebo |
+|---|---|---|
+| 10 s surge at 0.2 m/s | 1.03 m | 1.07 m |
+| 6 s yaw at 0.3 rad/s | 1.44 rad | 1.50 rad |
+| Sink in 6 s after operator loss | 0.23 m | 0.29 m |
+
+The world is a seabed plane only, with no sensors, SLAM or added-mass
+Coriolis terms. [Evidence](../status/evidence/marine-mujoco-currents-2026-11-14/README.md).
 
 ## Agent continuation
 

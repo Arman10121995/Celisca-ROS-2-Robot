@@ -84,7 +84,7 @@ class MarineNavigation(Node):
         self.create_subscription(String, '/marine/state', self.observe_native, 10)
         self.replan_at = -math.inf
         # This is an operator-authored world current, not a water-current
-        # sensor. Native force control consumes it; route costs do not.
+        # sensor. Native force control consumes it; AUV route costs use it too.
         self.current_vel = None
         self.current_at = -math.inf
         self.create_subscription(Vector3, '/marine/current', self.observe_current, 10)
@@ -254,11 +254,15 @@ class MarineNavigation(Node):
                 observed=self.observed
                 goal_heading=float(data['goal_heading']) if data.get('goal_heading') is not None else None
                 turn_radius=float(data.get('turn_radius',12.))
+                # Operator-authored current (the same vector Gazebo applies); routes are ranked by
+                # time through it. Stale or absent currents plan as still water.
+                current=(list(self.current_vel) if self.current_vel is not None
+                         and time.monotonic()-self.current_at<2. else None)
                 def compute():
                     if self.auv:
                         from robot_lab_utils.auv_routes import plan_auv
                         route,info=plan_auv(scene,start,orientation[2],target,radius,self.bottom,self.surface,
-                            token.is_set,goal_heading=goal_heading,turn_radius=turn_radius)
+                            token.is_set,goal_heading=goal_heading,turn_radius=turn_radius,current=current)
                     elif self.shore is not None:
                         route,info=self.shore.route(start,target,radius,token.is_set,observation=observed)
                     else:route, info = plan(scene, start, target, radius=radius, resolution=.4, timeout=15.,

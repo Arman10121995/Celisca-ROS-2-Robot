@@ -23,7 +23,7 @@ from rosgraph_msgs.msg import Clock as ClockMessage
 from sensor_msgs.msg import FluidPressure
 from std_msgs.msg import Float64,String
 from tf2_ros import TransformBroadcaster
-from robot_lab_utils.marine_model import MarineModel,rotation
+from robot_lab_utils.marine_model import MarineModel,hydro_coefficients,rotation
 
 
 def angle(value):return math.atan2(math.sin(value),math.cos(value))
@@ -43,7 +43,12 @@ class MarineController(Node):
         super().__init__('marine_controller')
         for key,value in dict(description_file='',surface_z=0.,maximum_depth=5.4,density=1025.,robot_id='lab_rov',control_allowed=True).items():
             self.declare_parameter(key,value)
-        self.model=self.load_model(Path(self.get_parameter('description_file').value).read_text(),self.get_parameter('density').value)
+        description=Path(self.get_parameter('description_file').value).read_text()
+        self.model=self.load_model(description,self.get_parameter('density').value)
+        # Current feedforward from the declared Fortress damping, so thrust cancels the drag
+        # the current exerts; without coefficients the earlier gain-based compensation remains.
+        try:self.hydro=hydro_coefficients(description)
+        except (ValueError,TypeError):self.hydro=None
         self.surface=float(self.get_parameter('surface_z').value)
         self.maximum_depth=float(self.get_parameter('maximum_depth').value)
         self.robot_id=str(self.get_parameter('robot_id').value)
@@ -222,7 +227,13 @@ class MarineController(Node):
                 desired_world[2]=desired_z
                 # Apply current compensation: subtract current velocity from desired
                 current_vel=np.zeros(3) if self.current is None else self.current[:3]
-                force=np.array([14.,18.,28.])*(desired_world-self.velocity-current_vel)
+                if self.hydro is not None:
+                    frame=rotation(self.orientation);body_current=frame.T@current_vel
+                    # Drag at rest in a current c is -(D(c))(-c); thrust (lin+quad|c|)c cancels it.
+                    feedforward=frame@((self.hydro['linear'][:3]+self.hydro['quadratic'][:3]*np.abs(body_current))*body_current)
+                    force=np.array([14.,18.,28.])*(desired_world-self.velocity)+feedforward
+                else:
+                    force=np.array([14.,18.,28.])*(desired_world-self.velocity-current_vel)
                 force[2]+=self.model.gravity_trim
                 desired_yaw=max(-.35,min(.35,wz+.8*angle(self.target_heading-heading)))
                 torque=np.array([-3.*roll-.8*self.rates[0],-3.*pitch-.8*self.rates[1],1.2*(desired_yaw-self.rates[2])])

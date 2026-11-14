@@ -2,6 +2,15 @@
 
 Numerical Dubins geometry is pinned MIT PythonRobotics code under _vendor.
 The vehicle travels along source -X; no sideways, reverse or pivot commands.
+
+Routes are volumetric (a "Dubins airplane"): each horizontal Dubins curve
+gets a depth profile, solved by dynamic programming over stations every
+1.5 m, that climbs over or dives under obstacles within the 0.1 depth slope
+and the surface/bottom clearance, preferring the straight depth ramp.
+With an operator-authored current (not sensed), candidates are ranked by
+travel time at 0.3 m/s through the water; routes whose cross-current needs
+more than 0.5 rad of crab angle, or whose ground speed falls below
+0.08 m/s, are refused.
 """
 import math
 import time
@@ -13,8 +22,83 @@ def angle(value):
     return math.atan2(math.sin(value), math.cos(value))
 
 
+CRUISE_M_S = .3
+MAX_CRAB_RAD = .5
+MIN_GROUND_M_S = .08
+STATION_M = 1.5
+DEPTH_STEP_M = .1
+
+
+def depth_profile(scene, xy, start_z, goal_z, radius, low, high, deadline, canceled, slope=.1):
+    """Depths for each xy sample: straight ramp where clear, else over/under obstacles."""
+    xy = np.asarray(xy, dtype=float)
+    arc = np.r_[0., np.cumsum(np.linalg.norm(np.diff(xy, axis=0), axis=1))]
+    total = arc[-1]
+    ramp = start_z + (goal_z - start_z) * arc / max(total, 1e-9)
+    count = max(2, int(math.ceil(total / STATION_M)) + 1)
+    stations = np.linspace(0., total, count)
+    sxy = np.column_stack([np.interp(stations, arc, xy[:, 0]), np.interp(stations, arc, xy[:, 1])])
+    levels = np.arange(low, high + 1e-9, DEPTH_STEP_M)
+    def point(i, z):
+        return np.array([sxy[i, 0], sxy[i, 1], z])
+    # Station-wise candidate depths; the ends are fixed at the requested depths.
+    options = [[start_z]] + [list(levels) for _ in range(count - 2)] + [[goal_z]]
+    cost, back = [{start_z: 0.}], [{}]
+    for i in range(1, count):
+        if canceled() or time.monotonic() > deadline:
+            raise TimeoutError('AUV planning canceled or deadline exceeded')
+        step = stations[i] - stations[i - 1]
+        reach = slope * step + 1e-9
+        target = start_z + (goal_z - start_z) * stations[i] / max(total, 1e-9)
+        here, links = {}, {}
+        for z in options[i]:
+            best = None
+            for previous, so_far in cost[-1].items():
+                if abs(z - previous) > reach:
+                    continue
+                value = so_far + abs(z - target) * step
+                if best is not None and value >= best[0]:
+                    continue
+                if not scene.segment(point(i - 1, previous), point(i, z), radius + .01, deadline, canceled):
+                    continue
+                best = (value, previous)
+            if best is not None:
+                here[z], links[z] = best
+        if not here:
+            return None
+        cost.append(here)
+        back.append(links)
+    depths = [goal_z]
+    for i in range(count - 1, 0, -1):
+        depths.append(back[i][depths[-1]])
+    depths = np.array(depths[::-1])
+    profile = np.interp(arc, stations, depths)
+    return profile, float(np.max(np.abs(profile - ramp)))
+
+
+def route_time(xyz, current, speed=CRUISE_M_S):
+    """Travel time through a uniform current; None if crab or ground speed is out of bounds."""
+    current = np.asarray(current, dtype=float)[:2]
+    total, crab = 0., 0.
+    for a, b in zip(np.asarray(xyz)[:-1, :2], np.asarray(xyz)[1:, :2]):
+        ds = float(np.linalg.norm(b - a))
+        if ds < 1e-9:
+            continue
+        tangent = (b - a) / ds
+        along, cross = float(current @ tangent), float(current[0] * tangent[1] - current[1] * tangent[0])
+        if abs(cross) >= speed:
+            return None, math.pi / 2
+        angle_needed = math.asin(abs(cross) / speed)
+        ground = along + math.sqrt(speed ** 2 - cross ** 2)
+        if angle_needed > MAX_CRAB_RAD or ground < MIN_GROUND_M_S:
+            return None, angle_needed
+        crab = max(crab, angle_needed)
+        total += ds / ground
+    return total, crab
+
+
 def plan_auv(scene, start, body_yaw, goal, radius, bottom, surface, canceled,
-             goal_heading=None, turn_radius=12., timeout=15.):
+             goal_heading=None, turn_radius=12., timeout=15., current=None):
     start, goal = np.asarray(start, dtype=float), np.asarray(goal, dtype=float)
     if (start.shape != (3,) or goal.shape != (3,) or not np.isfinite([start, goal]).all()
             or not all(map(math.isfinite, [body_yaw, radius, turn_radius, bottom, surface]))
@@ -65,7 +149,25 @@ def plan_auv(scene, start, body_yaw, goal, radius, bottom, surface, canceled,
             distances = np.r_[0., np.cumsum(np.linalg.norm(np.diff(xy, axis=0), axis=1))]
             xyz = np.column_stack([xy, start[2]+(goal[2]-start[2])*distances/max(distances[-1], 1e-9)])
             candidates.append((length, xyz, np.asarray(yaw), modes))
-    for length, xyz, yaw, modes in sorted(candidates, key=lambda row: row[0]):
+    low, high = bottom+radius+.1, surface-radius-.1
+    def rank(row):
+        if current is None:
+            return row[0]
+        seconds, _ = route_time(row[1], current)
+        return math.inf if seconds is None else seconds
+    refused_current = 0
+    for length, xyz, yaw, modes in sorted(candidates, key=rank):
+        if current is not None and route_time(xyz, current)[0] is None:
+            refused_current += 1
+            continue
+        lifted = 0.
+        if not all(scene.segment(a, b, radius+.01, deadline, canceled) for a, b in zip(xyz[:-1], xyz[1:])):
+            solved = depth_profile(scene, xyz[:, :2], float(start[2]), float(goal[2]), radius, low, high,
+                                   deadline, canceled)
+            if solved is None:
+                continue
+            xyz = np.column_stack([xyz[:, :2], solved[0]])
+            lifted = solved[1]
         lead=np.linspace(initial,start,8)
         xyz=np.vstack([lead[:-1],xyz]);yaw=np.r_[np.full(7,heading),yaw]
         length+=1.
@@ -79,11 +181,17 @@ def plan_auv(scene, start, body_yaw, goal, radius, bottom, surface, canceled,
             brake = xyz[-1]+3.*np.array([math.cos(yaw[-1]), math.sin(yaw[-1]), 0.])
             if not scene.segment(xyz[-1], brake, radius, deadline, canceled):
                 continue
+            seconds, crab = route_time(xyz, current) if current is not None else (length / CRUISE_M_S, 0.)
             return xyz.tolist(), dict(kind='auv_dubins', length_m=length, turn_radius_m=turn_radius,
                 headings_rad=yaw.tolist(), source_forward_axis='-X', modes=list(modes),
                 terminal_course_rad=float(yaw[-1]), braking_corridor_m=3., max_depth_slope=.1,
-                straight_runup_m=1.,
-                geometry='Pinned MIT PythonRobotics Dubins, selected-world/observed collision checks')
+                straight_runup_m=1., volumetric=lifted > 1e-6, max_depth_departure_m=round(lifted, 3),
+                expected_duration_s=round(seconds, 1), max_crab_rad=round(crab, 3),
+                current=dict(vector=[float(v) for v in current], source='operator-authored uniform current, not sensed')
+                    if current is not None else None,
+                geometry='Pinned MIT PythonRobotics Dubins with a DP depth profile, selected-world/observed collision checks')
+    if refused_current:
+        raise ValueError('No AUV route can hold its course in the authored current (crab > 0.5 rad or ground speed < 0.08 m/s)')
     raise ValueError('No source-clear curvature-constrained AUV route and 3 m terminal braking corridor')
 
 

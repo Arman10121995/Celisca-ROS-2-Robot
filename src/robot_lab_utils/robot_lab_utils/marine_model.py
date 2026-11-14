@@ -11,6 +11,27 @@ def rotation(rpy):
                      [sy*cp,sy*sp*sr+cy*cr,sy*sp*cr-cy*sr],[-sp,cp*sr,cp*cr]])
 
 
+COEFFICIENTS = ('xU', 'yV', 'zW', 'kP', 'mQ', 'nR')
+
+
+def hydro_coefficients(description):
+    """Fortress Hydrodynamics coefficients declared in the URDF (missing ones are 0)."""
+    root = ET.fromstring(description)
+    plugin = next((p for p in root.findall('gazebo/plugin') if p.get('name', '').endswith('::Hydrodynamics')), None)
+    if plugin is None:
+        raise ValueError('The description declares no Fortress Hydrodynamics plugin')
+    def read(tag):
+        text = plugin.findtext(tag)
+        return float(text) if text is not None else 0.
+    linear = np.array([read(t) for t in COEFFICIENTS])
+    quadratic = np.array([read(t[0] + t[1] + 'abs' + t[1]) for t in COEFFICIENTS])   # xUabsU, ..., nRabsR
+    added = np.array([read(t[0] + 'Dot' + t[1]) for t in COEFFICIENTS])
+    current = np.array([float(v) for v in (plugin.findtext('default_current') or '0 0 0').split()])
+    return dict(linear=linear, quadratic=quadratic, added=added, link=plugin.findtext('link_name') or 'base_link',
+                default_current=current)
+
+
+
 class MarineModel:
     thruster_count = 8
     controlled_axes = (0, 1, 2, 3, 4, 5)

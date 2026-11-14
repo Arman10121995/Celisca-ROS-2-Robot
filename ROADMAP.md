@@ -138,7 +138,7 @@ Work top to bottom. Each line links to its task.
 | I8 | [R5.8](#r58--robot-hands-and-grippers) Hands | Torque/tendon hand adapters, object workflows | partial |
 | I9 | [R10.2](#r102--fleet-management-and-open-rmf) Fleet / Open-RMF | Done 2026-11-14: shared-zone reservations (map passages, doors, docks), cycle breaker, recovery drive-out, RMF energy from a drivetrain calibration; two crossing runs pass (native and RMF). Chargers/doors in other worlds, larger fleets remain | implemented |
 | I10 | [R10.3](#r103--swarm-robotics) Swarms | Done 2026-11-14: ROS2swarm port of per-member scan-only behaviours, scan-sensed cooperative coverage, ground/air member-loss replanning; dispersion and coverage-with-loss measured; aggregation not yet passing; 3–4 drone flight is validation | implemented |
-| I11 | [R10.5](#r105--underwater-worlds-sensing-slam-and-navigation) / [R10.4](#r104--underwater-robots-and-controllers) Marine | Estimation, 3D mapping, volumetric routes; other backends | partial |
+| I11 | [R10.5](#r105--underwater-worlds-sensing-slam-and-navigation) / [R10.4](#r104--underwater-robots-and-controllers) Marine | Done 2026-11-14: MuJoCo ROV plant (ported Fortress water forces; matches Gazebo), damping-based current feedforward (1 cm drift in 0.1 m/s), volumetric and current-aware AUV routes (unit-tested). PyBullet/Isaac marine, AUV sensor-only localization mission remain | implemented |
 | I12 | [R10.6](#r106--six--and-eight-legged-robots) / [R10.7](#r107--segmented-and-additional-robot-forms) Multi-leg and forms | Terrain/slip/recovery controllers, estimation, flipper-aware navigation | partial |
 | I13 | [R5.2](#r52--go2-quadruped-locomotion) / [R5.3](#r53--berkeley-humanoid-lite-balance-and-walking) / [R12](#r12--legged-policy-training) Legged | Get-up strategy, terrain curriculum, BHL retraining, G1/Go2W policies, GPU training | partial |
 | I14 | [R5.5](#r55--ackermann-rear-steer-and-anti-ackermann-cars) Cars | Final-heading (parking) control | partial |
@@ -733,28 +733,37 @@ tier repair awaits its exact-revision published rerun. Details and evidence are 
 
 ### R10.4 — Underwater robots and controllers
 
-- **State:** partial · **Priority:** I11
+- **State:** implemented, experimental (PyBullet/Isaac marine pending) · **Priority:** I11
 - **Have:** the self-made eight-thruster `lab_rov`; the pinned CC-BY MBARI
   Tethys AUV with fins and trim; Fortress buoyancy, drag and added mass.
   Tank surge/depth, reef depth/turn and a gentle tank curve are measured.
   [ROV](docs/tutorials/marine-rov.md), [AUV](docs/tutorials/tethys-auv.md).
+- **Done 2026-11-14 (implemented, experimental):** MuJoCo plant for `lab_rov`
+  (`marine_mujoco_plant.py`, `simulator:=mujoco`) with ported Fortress buoyancy,
+  damping, added mass and thrusters behind the unchanged controller; the same
+  probe gives 1.03 vs 1.07 m surge and 1.44 vs 1.50 rad yaw (MuJoCo vs Gazebo).
+  Current feedforward from the declared damping: 15 s in 0.1 m/s cross current
+  drifts 1 cm (was 0.37 m upstream).
+  [Evidence](docs/status/evidence/marine-mujoco-currents-2026-11-14/README.md).
 - **Remaining implementation:**
-  - an open-source ROV (BlueROV2-class, see R14.1);
-  - marine force adapters for other backends.
+  - BlueROV2 candidate license review (R9.1);
+  - marine force adapters for PyBullet and Isaac; a Tethys (fins) MuJoCo plant.
 - **Done when:** station keeping, all axes, disturbance and loss measured with body and force evidence.
 
 ### R10.5 — Underwater worlds, sensing, SLAM and navigation
 
-- **State:** partial · **Priority:** I11 · **Depends on:** R10.4
+- **State:** implemented, experimental (AUV localization mission pending) · **Priority:** I11 · **Depends on:** R10.4
 - **Have:**
   - Five water worlds (tank, reef, harbour, cave, wreck).
   - IMU/RGB-D bridges, labelled ideal pressure, DVL emulation (no native plugin), directional sonar.
   - ROV visual/ICP and AUV geometry registration.
   - RTAB-Map save/reload; curved AUV routes (`auv_routes.py`).
+- **Done 2026-11-14 (implemented, experimental, unit-tested):** volumetric AUV
+  routes (DP depth profile over/under obstacles within the 0.1 slope) and
+  current-aware ranking by travel time through the operator-authored current,
+  refusing > 0.5 rad crab.
 - **Remaining implementation:**
-  - sensor-only localization on saved maps for the AUV;
-  - 3D (volumetric) routes;
-  - current-aware planning, clearly labelled.
+  - sensor-only localization on saved maps for the AUV (mission run).
 - **How to do it:** `marine_sensors.py`, `marine_navigation.py`, `marine_pipeline.py` and
   `map_archive.py` in `robot_lab_utils/`. Never feed simulator pose into the estimator.
 - **Done when:** an obstacle or inspection mission runs from real sensors and estimates.

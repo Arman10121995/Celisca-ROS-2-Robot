@@ -106,6 +106,7 @@ FAST_TESTS=(
   "src/robot_lab_utils/test/test_fleet_energy_calibration.py"
   "src/robot_lab_utils/test/test_fleet_contact_conflict.py"
   "src/robot_lab_utils/test/test_swarm_distributed.py"
+  "src/robot_lab_utils/test/test_marine_mujoco_plant.py"
 )
 
 INTEGRATION_TESTS=(

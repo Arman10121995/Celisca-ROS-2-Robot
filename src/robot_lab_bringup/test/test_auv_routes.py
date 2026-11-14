@@ -71,3 +71,46 @@ def test_unobserved_tracking_error_stops_instead_of_spinning_or_strafing():
     path,info=curve();follower=AuvPathFollower(path,info['headings_rad'])
     with pytest.raises(ValueError,match='tracking envelope'):
         follower.command(np.array(path[0])+[0.,2.,0.],math.pi,[0.,0.,0.])
+
+
+class Reef:
+    """A block on the seabed across the straight line: x 8–10, top at z=-3."""
+    def segment(self, a, b, radius, deadline=None, canceled=None):
+        for t in np.linspace(0., 1., 12):
+            p = np.asarray(a) + t * (np.asarray(b) - np.asarray(a))
+            if 8. - radius < p[0] < 10. + radius and -3. + radius > p[2] and abs(p[1]) < 3. + radius:
+                return False
+        return True
+
+
+def test_volumetric_profile_climbs_over_an_obstacle_within_the_slope():
+    path, info = plan_auv(Reef(), [0., 0., -2.9], math.pi, [22., 0., -2.9], .5, -6., 0., lambda: False,
+                          goal_heading=0.)
+    points = np.array(path)
+    assert info['volumetric'] and info['max_depth_departure_m'] > .35
+    above = points[(points[:, 0] > 7.4) & (points[:, 0] < 10.6)]
+    assert (above[:, 2] > -2.5).all()                       # clears the reef top plus radius
+    slope = np.abs(np.diff(points[:, 2])) / np.maximum(np.linalg.norm(np.diff(points[:, :2], axis=0), axis=1), 1e-9)
+    assert slope.max() <= .1 + 1e-6
+    assert points[-1, 2] == pytest.approx(-2.9) and points[0, 2] == pytest.approx(-2.9)
+
+
+def test_clear_water_keeps_the_straight_depth_ramp():
+    path, info = plan_auv(SimpleNamespace(segment=lambda *args: True), [0., 0., -2.], math.pi, [16., 0., -3.],
+                          .5, -6., 0., lambda: False, goal_heading=0.)
+    assert not info['volumetric'] and info['max_depth_departure_m'] == 0.
+
+
+def test_current_ranks_by_time_and_refuses_excessive_crab():
+    from robot_lab_utils.auv_routes import route_time
+    straight = np.array([[0., 0., -2.], [10., 0., -2.]])
+    assert route_time(straight, [.1, 0., 0.])[0] == pytest.approx(10. / .4)
+    assert route_time(straight, [-.1, 0., 0.])[0] == pytest.approx(10. / .2)
+    seconds, crab = route_time(straight, [0., .2, 0.])
+    assert seconds is None and crab > .5                     # 0.2 m/s across needs 0.73 rad of crab
+    path, info = plan_auv(SimpleNamespace(segment=lambda *args: True), [0., 0., -2.], math.pi, [16., 0., -2.],
+                          .5, -6., 0., lambda: False, goal_heading=0., current=[.1, 0., 0.])
+    assert info['expected_duration_s'] < info['length_m'] / .3 and info['current']['vector'] == [.1, 0., 0.]
+    with pytest.raises(ValueError, match='authored current'):
+        plan_auv(SimpleNamespace(segment=lambda *args: True), [0., 0., -2.], math.pi, [16., 0., -2.],
+                 .5, -6., 0., lambda: False, goal_heading=0., current=[0., .25, 0.])

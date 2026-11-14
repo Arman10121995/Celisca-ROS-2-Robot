@@ -41,6 +41,21 @@ Laboratory ROV. Gazebo Fortress 6.18 supplies actual buoyancy, hydrodynamics,
 fin lift/drag and propulsion. This is experimental simulator guidance, not
 MBARI's hardware autopilot or independent underwater navigation.
 
+## Volumetric and current-aware routes
+
+Each planned Dubins curve now gets its own depth profile. Where the straight
+depth ramp would collide, a dynamic programme over 1.5 m stations climbs over
+or dives under the obstacle within the 0.1 slope and the surface/bottom
+clearance. The plan reports `volumetric` and `max_depth_departure_m`.
+
+When a fresh operator-authored `/marine/current` exists (not a sensor), the
+candidate routes are ranked by travel time at 0.3 m/s through the water. A
+route is refused if any leg needs more than 0.5 rad of crab or drops below
+0.08 m/s over ground. The plan reports `expected_duration_s` and
+`max_crab_rad`. These paths have unit tests only; no Tethys mission has been
+flown through an obstacle or a current yet
+([evidence](../status/evidence/marine-mujoco-currents-2026-11-14/README.md)).
+
 ## GUI workflow
 
 1. Source `scripts/ssd_env.sh`, `/opt/ros/humble/setup.bash` and

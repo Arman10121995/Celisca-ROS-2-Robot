@@ -1704,10 +1704,13 @@ tasks:
         evidence:
         - docs/status/evidence/workflows-2026-10-27/README.md
         - docs/status/workflows-2026-10-27.md
-        implementation_state: Source ROV/AUV forces and native controls preserved. Motion observer and
-          controller pose retention repaired; IMU heading uses a one-time configured spawn prior. AUV
-          signed-thrust arrival braking preserves zero-thrust operator Stop.
-        owner: codex
+        - docs/status/evidence/marine-mujoco-currents-2026-11-14/README.md
+        implementation_state: Source ROV/AUV forces and native controls preserved. Motion observer and controller pose retention
+          repaired; IMU heading uses a one-time configured spawn prior. AUV signed-thrust arrival braking preserves zero-thrust
+          operator Stop. 2026-11-14 (Claude) MuJoCo lab_rov plant with ported Fortress buoyancy, damping, added mass and
+          thrusters behind the unchanged controller (simulator:=mujoco); controller current feedforward from the declared
+          damping.
+        owner: claude
         scope_paths:
         - docs/
         - README.md
@@ -1720,10 +1723,12 @@ tasks:
         - src/robot_lab_gui/
         - src/robot_lab/robot_lab_registry/
         - scripts/
-        state: partial
+        state: implemented
         title: Complete underwater ROV/AUV models and controllers
-        validation_state: ROV acquired-map route and AUV tank forward transect/braking have independent
-          body traces; obstacle/current/contact/loss and further world/backend missions pending.
+        validation_state: ROV acquired-map route and AUV tank forward transect/braking have independent body traces; obstacle/current/contact/loss
+          and further world/backend missions pending. On 2026-11-14 the same probe on MuJoCo vs Gazebo gave surge 1.030
+          vs 1.074 m, yaw 1.437 vs 1.495 rad, loss sink 0.23 vs 0.29 m; 15 s in 0.1 m/s cross current drifted 0.009 / 0.010
+          m after the feedforward fix (0.37 / 0.39 m upstream before). PyBullet/Isaac marine and Tethys MuJoCo pending.
         qualification_review: '2026-10-27 documentation review: retain the implemented code, tests and
           named mission certificates. Full declared roadmap acceptance is still open; test counts, metadata
           and scene loads do not qualify remaining robot/map/backend missions. See docs/REMAINING_WORK_GUIDE.md.'
@@ -1757,15 +1762,18 @@ tasks:
         - docs/status/auv-2026-10-15.md
         - docs/status/evidence/workflows-2026-10-27/README.md
         - docs/status/workflows-2026-10-27.md
-        implementation_state: Actual pressure/DVL/sonar/IMU, estimated RGB-D/depth registration, flushed
-          RTAB-Map export, protected reload/provenance, covariance/age localization gate, AUV kit and
-          source-resource paths implemented.
-        owner: codex
-        state: partial
+        - docs/status/evidence/marine-mujoco-currents-2026-11-14/README.md
+        implementation_state: Actual pressure/DVL/sonar/IMU, estimated RGB-D/depth registration, flushed RTAB-Map export,
+          protected reload/provenance, covariance/age localization gate, AUV kit and source-resource paths implemented.
+          2026-11-14 (Claude) volumetric AUV routes (DP depth profile over/under obstacles within the 0.1 slope) and current-aware
+          ranking by travel time through the operator-authored current, refusing > 0.5 rad crab; marine_navigation passes
+          the fresh current.
+        owner: claude
+        state: implemented
         title: Underwater maps, sensors, estimation, SLAM and navigation
-        validation_state: ROV tank database save/reload/localization and route measured; AUV real RGB-D/estimated
-          transect measured. Richer-geometry AUV localization and further water-world missions remain
-          open.
+        validation_state: ROV tank database save/reload/localization and route measured; AUV real RGB-D/estimated transect
+          measured. Richer-geometry AUV localization and further water-world missions remain open. On 2026-11-14 volumetric
+          and current-aware AUV routing is unit-tested only; no AUV mission flown through an obstacle or current.
         historical_claims_superseded_20261027:
         - 'Implementation complete: marine_sensors.py DVL/sonar simulation, marine_pipeline.py workflow,
           marine_navigation_model.py estimation'
