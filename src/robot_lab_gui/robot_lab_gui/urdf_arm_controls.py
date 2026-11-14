@@ -231,7 +231,10 @@ class UrdfArmControls(MolarControls):
         return planning if isinstance(planning, dict) and planning.get('schema') == 'robot_lab.articulation_plan.v1' else {}
 
     def planning_enabled(self):
-        return self.ready() and self.planning().get('available') is True
+        configured = (self.arm() or {}).get('planning', {})
+        return (self.ready() and self.planning().get('available') is True
+                and configured.get('schema') == 'robot_lab.articulation_plan.v1'
+                and configured.get('backend') == self.app.simulator_var.get())
 
     def current_targets(self):
         return self.bounded({name: variable.get() for name, variable in self.target_vars.items()})

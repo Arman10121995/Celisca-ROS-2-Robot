@@ -168,6 +168,20 @@ class URDFArticulation:
             self.status = reason
             self.holding = True
 
+    def hold_for_planning(self, reason='Holding measured joints for an explicit plan'):
+        """Hold within the current authorized lease; this is not operator Stop.
+
+        Stop still revokes plant generation and heartbeat. A Plan request may
+        only freeze already-settled measured joints under its existing lease.
+        """
+        with self.lock:
+            if not self.initialized or self.fault or self.active or time.monotonic()-self.heartbeat_at > .5:
+                raise ValueError('Planning hold requires settled measured joints and a fresh lease')
+            for name, spec in self.joints.items():
+                value = max(spec['lower'], min(spec['upper'], self.measured[name])) if spec['mode'] == 'position' else 0.
+                self.targets[name] = self.references[name] = value
+            self.status, self.holding = reason, True
+
     def command(self, message, now=None, base_moving=False):
         with self.lock:
             now = time.monotonic() if now is None else now
@@ -190,8 +204,15 @@ class URDFArticulation:
                 self.stop('rejected: '+str(exc))
                 return False
 
-    def step(self, positions, velocities, dt, now=None, base_moving=False):
+    def step(self, positions, velocities, dt, now=None, base_moving=False, position_rates=None):
         with self.lock:
+            position_rates = {} if position_rates is None else position_rates
+            if not isinstance(position_rates, dict) or any(
+                    name not in self.masters or self.joints[name]['mode'] != 'position'
+                    or isinstance(rate, bool) or not isinstance(rate, (int, float)) or not math.isfinite(rate)
+                    or not 0 < rate <= self.joints[name]['max_velocity']
+                    for name, rate in position_rates.items()):
+                raise ValueError('Planned position rates must stay positive and within the source envelope')
             now = time.monotonic() if now is None else now
             try:
                 measured = {name: float(positions[name]) for name in self.joints}
@@ -226,7 +247,8 @@ class URDFArticulation:
                 spec = self.joints[name]
                 if spec['mode'] == 'position':
                     previous = self.references[name]
-                    delta = max(-spec['max_velocity']*dt, min(spec['max_velocity']*dt, self.targets[name]-previous))
+                    rate = position_rates.get(name, spec['max_velocity'])
+                    delta = max(-rate*dt, min(rate*dt, self.targets[name]-previous))
                     self.references[name] = max(spec['lower'], min(spec['upper'], previous+delta))
                 else:
                     self.references[name] = self.targets[name]
@@ -294,7 +316,8 @@ class ArticulationROS:
         def stop(_request, response):
             if self.motion_planner is not None:
                 self.motion_planner.cancel('Stop requested; plan revoked')
-            self.contract.stop()
+            else:
+                self.contract.stop()
             response.success, response.message = True, 'Holding measured articulation; roller stopped'
             return response
         node.create_service(Trigger, '/molar/articulation/stop', stop)
@@ -306,6 +329,8 @@ class ArticulationROS:
 
     def command(self, message):
         try:
+            if not isinstance(message.data, str) or len(message.data) > 65536:
+                raise ValueError('Articulation command exceeds the bounded message size')
             request = json.loads(message.data)
             if not isinstance(request, dict):
                 raise ValueError('Articulation command must be an object')
@@ -315,11 +340,16 @@ class ArticulationROS:
                     raise ValueError('Collision planning is unavailable on this backend/profile')
                 self.motion_planner.request(request)
                 return
-            if self.motion_planner is not None:
-                self.motion_planner.cancel('Manual target/hold revoked the plan')
             if operation == 'cancel_plan':
-                self.contract.stop('Plan canceled; holding measured joints')
+                if self.motion_planner is not None:
+                    self.motion_planner.cancel('Plan canceled; holding measured joints')
+                else:
+                    self.contract.stop('Plan canceled; holding measured joints')
                 return
+            if operation not in (None, 'targets'):
+                raise ValueError('Unknown articulation operation')
+            if self.motion_planner is not None:
+                self.motion_planner.cancel('Manual target revoked the plan', stop=False)
             self.contract.command(request, base_moving=self.base_moving)
         except (ValueError, TypeError) as exc:
             if self.motion_planner is not None:
@@ -335,7 +365,9 @@ class ArticulationROS:
         self.base_moving = bool(base_moving)
         if self.motion_planner is not None:
             self.motion_planner.tick(positions, velocities, dt, base_moving=self.base_moving)
-        targets = self.contract.step(positions, velocities, dt, base_moving=self.base_moving)
+        rates = (self.motion_planner.rates if self.motion_planner is not None
+                 and self.motion_planner.phase == 'executing' else None)
+        targets = self.contract.step(positions, velocities, dt, base_moving=self.base_moving, position_rates=rates)
         now = time.monotonic()
         if now-self.last_publish >= .1:
             state = self.contract.state()

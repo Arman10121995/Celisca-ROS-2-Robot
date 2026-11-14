@@ -62,9 +62,7 @@ class JointScene:
     def values(self, data):
         return np.array([float(data.qpos[self.addresses[n]]) for n in self.names])
 
-    def settled_start(self, data, *, geometry=True):
-        if geometry and geometry_digest(data.model if hasattr(data, 'model') else self.model) != self.geometry:
-            return False
+    def settled_start(self, data):
         if self.scene_addresses and np.max(np.abs(data.qpos[self.scene_addresses]-self.snapshot[self.scene_addresses])) > .001:
             return False
         if self.root_addresses and np.max(np.abs(data.qpos[self.root_addresses]-self.snapshot[self.root_addresses])) > .001:
@@ -127,7 +125,8 @@ def plan_joints(scene, targets, *, budget=8.):
         raise ValueError('Joint plan exceeds the 64-waypoint execution bound')
     return dict(waypoints=[dict(zip(names, map(float, point))) for point in result['path'][1:]],
                 algorithm=result['planner'], nodes=result['nodes'], edges=result['collision_edges'],
-                inspections=inspections, max_sample_dt_s=sample_dt)
+                inspections=inspections, max_sample_dt_s=sample_dt,
+                position_rates=dict(zip(names, map(float, rates))))
 
 
 class ArticulationPlanner:
@@ -143,6 +142,7 @@ class ArticulationPlanner:
         self.phase, self.message = 'idle', 'Plan joint targets, then explicitly Execute.'
         self.plan_id = self.request_id = ''
         self.targets, self.summary = {}, {}
+        self.rates = {}
         self.index = 0
         self.ready_at = self.execution_at = self.segment_at = 0.
         self.settled_since = None
@@ -154,18 +154,22 @@ class ArticulationPlanner:
 
     def state(self):
         with self.lock:
-            return dict(schema=SCHEMA, available=True, phase=self.phase, message=self.message,
+            available = not self.node._model.nflex
+            return dict(schema=SCHEMA, available=available, phase=self.phase,
+                        message=self.message if available else 'Flex scenes require a separate full-geometry planning adapter',
                         request_id=self.request_id, plan_id=self.plan_id, targets=dict(self.targets),
                         waypoint=self.index, waypoints=len(self.path or []), planner=dict(self.summary),
                         ready_age_s=max(0., time.monotonic()-self.ready_at) if self.phase == 'ready' else None)
 
-    def cancel(self, reason='Plan canceled', phase='stopped'):
+    def cancel(self, reason='Plan canceled', phase='stopped', stop=True):
         with self.lock:
             self.generation += 1
             self.pending = self.result = self.path = self.scene = None
             self.plan_id = ''
             self.phase, self.message = phase, reason
-            self.contract.stop(reason)
+            if stop:
+                self.contract.stop(reason)
+                self.plant = self.contract.plant_id
 
     def request(self, request):
         with self.lock:
@@ -187,8 +191,8 @@ class ArticulationPlanner:
             raise ValueError('Previous bounded planner is still finishing; retry')
         if self.contract.active:
             raise ValueError('Wait for measured articulation to stop before planning')
-        if getattr(self.node, '_flex_culling', None) is not None:
-            raise ValueError('Culled flex scenes need a separate full-geometry planning adapter')
+        if self.node._model.nflex or getattr(self.node, '_flex_culling', None) is not None:
+            raise ValueError('Flex scenes need a separate full-geometry planning adapter')
         targets = request.get('targets')
         request_id = request.get('request_id')
         if not isinstance(request_id, str) or not 1 <= len(request_id) <= 128:
@@ -200,11 +204,20 @@ class ArticulationPlanner:
             if (isinstance(value, bool) or not isinstance(value, (int, float)) or not math.isfinite(value)
                     or not spec['lower'] <= value <= spec['upper']):
                 raise ValueError('Plan target exceeds source limits: '+name)
-        self.cancel('Holding measured joints while planning', 'planning')
+        self.cancel('Holding measured joints while planning', 'planning', stop=False)
+        self.contract.hold_for_planning()
         self.plant = self.contract.plant_id
         self.request_id, self.targets = request_id, dict(targets)
         self.scene = scene = JointScene(self.node._model, data, self.node._body_id,
                                        self.contract.joints, sorted(targets))
+        # Keep the measured tracking guard rather than increasing its allowed
+        # error: cap planned slew by source rate and the servo's kd/kp lag.
+        self.rates = {}
+        for name in targets:
+            spec = self.contract.joints[name]
+            tracking = .003 if spec['type'] == 'prismatic' else .04
+            self.rates[name] = min(.5*spec['max_velocity'], .5*tracking*spec['kp']/max(spec['kd'], 1e-9))
+            scene.specs[name]['max_velocity'] = self.rates[name]
         generation = self.generation
         def work():
             try:
@@ -220,7 +233,7 @@ class ArticulationPlanner:
     def _scene_matches(self, data, start=False):
         if self.scene is None or self.node._model.nq != len(self.scene.snapshot):
             return False
-        if geometry_digest(self.node._model) != self.scene.geometry or not self.scene.settled_start(data, geometry=False):
+        if geometry_digest(self.node._model) != self.scene.geometry or not self.scene.settled_start(data):
             return False
         held = set(self.contract.joints)-set(self.targets)
         return self.scene.configuration_matches(data, names=None if start else held)
@@ -280,8 +293,8 @@ class ArticulationPlanner:
                            for n in scene.names):
                         raise ValueError('Measured joint motion diverged from the planned servo reference')
                     next_values = np.array([c.references[n]+np.clip(c.targets[n]-c.references[n],
-                        -c.joints[n]['max_velocity']*max(0., min(.05, dt)),
-                        c.joints[n]['max_velocity']*max(0., min(.05, dt))) for n in scene.names])
+                        -self.rates[n]*max(0., min(.05, dt)),
+                        self.rates[n]*max(0., min(.05, dt))) for n in scene.names])
                     if not scene.collision_free(next_values, live=data):
                         raise ValueError('Next servo reference intersects the current scene')
                     waypoint = self.path[self.index]
@@ -294,6 +307,7 @@ class ArticulationPlanner:
                         if self.index == len(self.path):
                             self.phase, self.message = 'succeeded', 'All planned waypoints measured and settled; holding joints'
                             c.stop(self.message)
+                            self.plant = c.plant_id
                         else:
                             self.segment_at = time.monotonic()
                             self.settled_since = None

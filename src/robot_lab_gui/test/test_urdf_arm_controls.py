@@ -127,7 +127,7 @@ def panel(model, monkeypatch):
 
 
 def activate(panel, model):
-    panel.app.process = Mock(args=command())
+    panel.app.process = Mock(args=command(panel.app.simulator_var.get()))
     panel.app.process.poll.return_value = None
     panel.app._launch_running = True
     panel.node = Mock()
@@ -176,3 +176,45 @@ def test_ownership_loss_holds_and_revokes(panel, model):
     panel.stop_client.call_async.assert_called_once()
     assert not panel.apply(J1)
     panel.pub.publish.assert_not_called()
+
+
+def enable_planning(panel, model):
+    panel.app.simulator_var.set('mujoco')
+    panel.app._robot_config = lambda: {'articulation': dict(CONFIG,
+        planning=dict(schema='robot_lab.articulation_plan.v1', backend='mujoco'))}
+    activate(panel, model)
+    panel.state['planning'] = dict(schema='robot_lab.articulation_plan.v1', available=True,
+                                  phase='idle', message='Choose joint targets')
+
+
+def test_plan_execute_are_separate_and_edits_revoke_local_execution(panel, model):
+    enable_planning(panel, model)
+    panel.target_vars[J1].set(.4)
+    assert panel.plan_targets()
+    request = sent(panel)
+    assert request['operation'] == 'plan' and request['targets'][J1] == .4
+    assert request['plant_id'] == panel.state['plant_id']
+    assert request['model_sha256'] == panel.state['model_sha256']
+    assert panel.pub.publish.call_count == 1
+    panel.state['planning'].update(phase='ready', plan_id='a'*32,
+        request_id=request['request_id'], targets=request['targets'])
+    assert panel.plan_matches()
+    panel.target_vars[J1].set(.5)
+    assert not panel.execute_plan() and panel.pub.publish.call_count == 1
+    panel.target_vars[J1].set(.4)
+    assert panel.execute_plan()
+    execute = sent(panel)
+    assert execute['operation'] == 'execute_plan' and execute['plan_id'] == 'a'*32
+    assert 'targets' not in execute
+    panel.stop()
+    assert not panel.plan_request and not panel.plan_matches()
+
+
+def test_plan_home_builds_source_target_without_sending_motion(panel, model):
+    enable_planning(panel, model)
+    assert panel.plan_home()
+    assert sent(panel)['operation'] == 'plan'
+    assert sent(panel)['targets'] == {J1: 0., J2: 0.}
+    assert panel.pub.publish.call_count == 1
+    panel.app.simulator_var.set('isaac')
+    assert not panel.planning_enabled() and not panel.execute_plan()
