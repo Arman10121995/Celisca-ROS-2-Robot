@@ -192,6 +192,7 @@ PHYSICS_TESTS=(
   "src/robot_lab_mujoco/test/test_octopod_control.py"
   "src/robot_lab_mujoco/test/test_booster_policy.py"
   "src/robot_lab_mujoco/test/test_conveyor_belt.py"
+  "src/robot_lab_mujoco/test/test_spawner_robot_body.py"
   "src/robot_lab_mujoco/test/test_wheel_housing_contacts.py"
   "$BRG_TEST/test_myagv_pro_source.py"
   "$BRG_TEST/test_tiago_source.py"

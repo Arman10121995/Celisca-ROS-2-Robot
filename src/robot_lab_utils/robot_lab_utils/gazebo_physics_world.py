@@ -98,3 +98,24 @@ def cap_physics_step(world_file, maximum_step, runtime_root=None):
         output_sha256=hashlib.sha256(payload).hexdigest(), resources=resources,
         scope='Same selected world geometry/plugins; smaller physics integration step'), indent=2)+'\n')
     return str(target)
+
+
+def track_physics_engine(runtime_root=None):
+    """The private DART physics plugin that Gazebo TrackController needs, or None.
+
+    Fortress's system dartsim plugin lacks the contact-surface callback
+    TrackController uses (gz-sim#2495): track and belt commands arrive but
+    move nothing. scripts/provision_tracked_physics.py builds the
+    Physics 5.4 plugin on SSD and writes native_tracks/receipt.json; it is
+    used only when the plugin still matches its recorded hash.
+    """
+    root = Path(runtime_root or os.environ.get('ROBOT_LAB_RUNTIME_ROOT', '/workspace/molar/robot_lab_runtime'))
+    receipt = root / 'native_tracks' / 'receipt.json'
+    try:
+        engine = json.loads(receipt.read_text())
+        plugin = Path(engine['engine'])
+        if hashlib.sha256(plugin.read_bytes()).hexdigest() != engine['engine_sha256']:
+            return None
+    except (OSError, ValueError, KeyError):
+        return None
+    return engine

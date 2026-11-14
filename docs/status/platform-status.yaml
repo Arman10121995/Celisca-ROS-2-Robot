@@ -2031,6 +2031,7 @@ tasks:
     acceptance_ref: ROADMAP.md R11
     depends_on: []
     evidence:
+    - docs/status/evidence/r11-molar-transfer-2026-11-15/README.md
     - Normal-GUI check passes for molar_hri in all 4 backends on nav_empty and both
       CELISCA floors
     - probot_l passes on nav_empty; 67 molar/gait/fleet contract tests pass

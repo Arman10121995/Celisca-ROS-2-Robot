@@ -46,7 +46,7 @@ from geometry_msgs.msg import Point, Quaternion, TransformStamped, Twist, Vector
 from nav_msgs.msg import Odometry
 from rosgraph_msgs.msg import Clock as RosClock
 from sensor_msgs.msg import CameraInfo, Image, Imu, JointState, LaserScan
-from std_msgs.msg import Bool, Float64MultiArray
+from std_msgs.msg import Bool, Float64MultiArray, String
 from std_srvs.srv import Trigger
 
 from robot_lab_utils import camera_model
@@ -1865,7 +1865,6 @@ class MuJoCoSpawner(Node):
         gait_contacts = self.get_parameter("gait_contact_config").value
         if gait_contacts:
             from robot_lab_mujoco.gait_contacts import GaitContacts
-            from std_msgs.msg import String
             self._gait_contacts = GaitContacts(self._model, gait_contacts)
             self._gait_contacts.probes=json.loads(self.get_parameter('gait_probe_config').value or '{}')
             self._gait_contact_pub = self.create_publisher(String, '/gait/contacts', 10)
@@ -1969,6 +1968,19 @@ class MuJoCoSpawner(Node):
                 from robot_lab_mujoco.conveyor_belt import ConveyorBelt
                 self._belt = ConveyorBelt(self._model, self._data, "telescope_stage2",
                                           "transfer_roller_joint", roller_radius=0.012)
+
+        # Truth for loose world objects (payloads, boxes): free-jointed
+        # bodies outside the robot, as JSON {name: [x, y, z, qw, qx, qy, qz]}
+        # on /mujoco/free_bodies at 10 Hz. Reports only; nothing reads it back.
+        robot_root = int(self._model.body_rootid[self._body_id])
+        self._free_bodies = {
+            mujoco.mj_id2name(self._model, mujoco.mjtObj.mjOBJ_BODY, int(self._model.jnt_bodyid[j])): int(self._model.jnt_bodyid[j])
+            for j in range(self._model.njnt)
+            if self._model.jnt_type[j] == mujoco.mjtJoint.mjJNT_FREE
+            and int(self._model.body_rootid[self._model.jnt_bodyid[j]]) != robot_root
+            and mujoco.mj_id2name(self._model, mujoco.mjtObj.mjOBJ_BODY, int(self._model.jnt_bodyid[j]))}
+        if self._free_bodies:
+            self._free_bodies_pub = self.create_publisher(String, '/mujoco/free_bodies', 10)
 
         # Display-mode hold: joints keep their spawn pose through physics,
         # not by freezing the state.  Each held joint gets a passive
@@ -2216,12 +2228,16 @@ class MuJoCoSpawner(Node):
         self._joint_name2dofadr = {}
         self._joint_names = []
 
-        for i in range(m.njnt):
-            jtype = m.jnt_type[i]
-            if jtype == mujoco.mjtJoint.mjJNT_FREE:
-                self._free_joint_qpos_adr = m.jnt_qposadr[i]
-                self._body_id = m.jnt_bodyid[i]
-                break
+        # The robot is the free joint _add_floating_base named after it; world
+        # MJCF bodies (loose payloads, boxes) come first in the merged model
+        # and must not be mistaken for it. Otherwise the first free joint.
+        free = [i for i in range(m.njnt) if m.jnt_type[i] == mujoco.mjtJoint.mjJNT_FREE]
+        named = "%s_freejoint" % (self.get_parameter("robot_name").value or "robot")
+        own = [i for i in free if mujoco.mj_id2name(m, mujoco.mjtObj.mjOBJ_JOINT, i) == named]
+        if own or free:
+            i = (own or free)[0]
+            self._free_joint_qpos_adr = m.jnt_qposadr[i]
+            self._body_id = m.jnt_bodyid[i]
 
         if self._body_id < 0:
             self._body_id = 0
@@ -2331,7 +2347,6 @@ class MuJoCoSpawner(Node):
             if not getattr(self, "_robot_free", False):
                 self._pub_joint_states()
                 if self._gait_contact_pub is not None:
-                    from std_msgs.msg import String
                     measured = self._gait_contacts.measure(self._model, self._data)
                     measured['clock_time'] = self._sim_t
                     self._gait_contact_pub.publish(String(data=json.dumps(measured, allow_nan=False)))
@@ -2357,6 +2372,12 @@ class MuJoCoSpawner(Node):
                     self._go2_support_pub.publish(support)
                 self._pub_odom()
                 self._pub_imu()
+                if (getattr(self, '_free_bodies_pub', None) is not None
+                        and sim_time - getattr(self, '_free_bodies_t', -1.0) + 1e-9 >= 0.1):
+                    self._free_bodies_t = sim_time
+                    self._free_bodies_pub.publish(String(data=json.dumps({
+                        name: [float(v) for v in self._data.xpos[body]] + [float(v) for v in self._data.xquat[body]]
+                        for name, body in self._free_bodies.items()})))
             self._pub_clock()
         if sim_time - last[1] + 1e-9 >= scan_dt:
             last[1] = sim_time

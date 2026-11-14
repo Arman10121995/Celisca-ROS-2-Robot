@@ -324,8 +324,26 @@ The [evidence README](../status/evidence/molar-hri-2026-10-16/README.md) has
 the table, the reports and the nine fixes. Selection loss, reset and
 reverse driving are not in the producer yet.
 
+## Payload transfer to a station (deck belt)
+
+The extended deck is a belt. In Gazebo, a TrackController on `telescope_stage2` is commanded by
+`molar_gazebo_control` from the measured roller speed. It needs the private DART plugin from
+`python3 scripts/provision_tracked_physics.py`; `gazebo.launch.py` selects it automatically and
+says so when it is missing. In MuJoCo, `robot_lab_mujoco/conveyor_belt.py` drives bodies resting
+on the deck at the roller surface speed (0.012 m × ω), bounded by Coulomb friction.
+
+```bash
+python3 scripts/molar_station_transfer_check.py --simulator gazebo --out gazebo.json
+python3 scripts/molar_station_transfer_check.py --simulator mujoco --out mujoco.json
+```
+
+The check runs lift → extend → belt → retract → lower on a primitive box and station and judges the
+box by simulator truth ([receipt](../status/evidence/r11-molar-transfer-2026-11-15/README.md)). In
+MuJoCo, `mujoco_world_xml:=<file>` loads a prepared scene; `/mujoco/free_bodies` reports loose
+objects.
+
 Masses, inertias, caster parameters, servo gains, friction, joint travel and HRI
-load allocation include estimates. Internal conveyor mechanics, payload transfer,
+load allocation include estimates. Internal conveyor mechanics beyond the deck belt,
 sensor/SLAM/Nav2 workflows, transport scheduling and physical qualification are
 not supplied by this integration. It contains no physical robot, FMS, AIC, door,
 building lift or PLC command path. Simulator diagnostics must not be reported as

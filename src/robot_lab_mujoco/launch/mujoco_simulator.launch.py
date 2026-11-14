@@ -20,6 +20,12 @@ def _resolve_mujoco_xml(context, world_name):
     silent, because an unnoticed fallback looks exactly like a map that
     failed to load.
     """
+    explicit = LaunchConfiguration("mujoco_world_xml", default="").perform(context).strip()
+    if explicit:
+        # A prepared MJCF world (e.g. a station-transfer scene with its payload).
+        if not os.path.isfile(explicit):
+            raise RuntimeError("mujoco_world_xml does not exist: " + explicit)
+        return explicit
     maps_share = get_package_share_directory("robot_lab_maps")
     candidates = [world_name.perform(context)]
     world_path = LaunchConfiguration("world_path").perform(context)
@@ -229,6 +235,8 @@ def generate_launch_description():
         DeclareLaunchArgument("world_name", default_value="empty"),
         DeclareLaunchArgument("world_package", default_value="robot_lab_maps"),
         DeclareLaunchArgument("world_path", default_value=""),
+        DeclareLaunchArgument("mujoco_world_xml", default_value="",
+                              description="Explicit MJCF world, e.g. a prepared scene with loose objects; overrides the map lookup."),
         DeclareLaunchArgument("model", default_value=""),
         DeclareLaunchArgument('native_mjcf', default_value=''),
         DeclareLaunchArgument('arm_control', default_value='none'),

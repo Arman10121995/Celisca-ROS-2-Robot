@@ -1896,7 +1896,8 @@
     <!-- Transfer belt (R11 payload transfer): the extended deck surface moves
          along its x axis at the roller's surface speed, sent by
          molar_gazebo_control as /molar/belt_cmd_vel (Gazebo TrackController,
-         as in the Gazebo conveyor example). -->
+         as in the Gazebo conveyor example; needs the private DART plugin that
+         gazebo.launch.py selects, gazebo_physics_world.track_physics_engine). -->
     <plugin filename="ignition-gazebo-track-controller-system" name="ignition::gazebo::systems::TrackController">
       <link>telescope_stage2</link>
       <min_velocity>-0.12</min_velocity>

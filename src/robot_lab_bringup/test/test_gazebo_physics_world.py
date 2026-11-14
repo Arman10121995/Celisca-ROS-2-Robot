@@ -103,3 +103,19 @@ def test_launch_and_provisioner_are_wired_to_the_bound():
     provisioner = (bringup.parents[1]/'scripts'/'provision_extension_assets.py').read_text()
     assert 'COMPLIANT_STEP_BOUNDS' in provisioner
     assert "profile['gazebo_max_physics_step_s']" in provisioner
+
+
+def test_track_physics_engine_requires_a_matching_receipt(tmp_path):
+    import hashlib
+    import json
+    from robot_lab_utils.gazebo_physics_world import track_physics_engine
+    assert track_physics_engine(tmp_path) is None                     # not provisioned
+    plugin = tmp_path / 'libdart.so'
+    plugin.write_bytes(b'plugin')
+    receipt = tmp_path / 'native_tracks' / 'receipt.json'
+    receipt.parent.mkdir()
+    receipt.write_text(json.dumps(dict(engine=str(plugin), engine_sha256=hashlib.sha256(b'plugin').hexdigest(),
+                                       library_paths=[str(tmp_path)])))
+    assert track_physics_engine(tmp_path)['engine'] == str(plugin)
+    plugin.write_bytes(b'changed')                                    # differs from its build receipt
+    assert track_physics_engine(tmp_path) is None

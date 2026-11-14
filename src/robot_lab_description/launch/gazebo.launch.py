@@ -648,7 +648,26 @@ def generate_launch_description():
         gz_plugin_path = pathsep.join(
             [p for p in ["/opt/ros/humble/lib", os.environ.get("GZ_SIM_SYSTEM_PLUGIN_PATH", ""), os.environ.get("IGN_GAZEBO_SYSTEM_PLUGIN_PATH", "")] if p]
         )
-        actions = [
+        # A description with a TrackController (the MOLAR deck belt) needs the
+        # private DART plugin; without it the belt is silently inactive.
+        engine_args = ''
+        engine_env = []
+        if _truthy('spawn_robot', context):
+            from robot_lab_utils.robot_description import load_description
+            description = load_description(LaunchConfiguration('model').perform(context),
+                'is_ignition:=' + is_ignition,
+                'model_name:=' + LaunchConfiguration("robot_name").perform(context))
+            if 'ignition::gazebo::systems::TrackController' in description:
+                from robot_lab_utils.gazebo_physics_world import track_physics_engine
+                engine = track_physics_engine()
+                if engine:
+                    engine_args = ' --physics-engine ' + engine['engine']
+                    engine_env = [SetEnvironmentVariable('LD_LIBRARY_PATH', pathsep.join(
+                        engine['library_paths'] + [os.environ.get('LD_LIBRARY_PATH', '')]))]
+                else:
+                    print('[robot_lab] TrackController in the description, but the private DART engine is '
+                          'not provisioned (python3 scripts/provision_tracked_physics.py): belts/tracks will not move')
+        actions = engine_env + [
             SetEnvironmentVariable("GZ_SIM_RESOURCE_PATH", os.environ["GZ_SIM_RESOURCE_PATH"]),
             SetEnvironmentVariable("IGN_GAZEBO_RESOURCE_PATH", os.environ["IGN_GAZEBO_RESOURCE_PATH"]),
             SetEnvironmentVariable("GZ_SIM_SYSTEM_PLUGIN_PATH", gz_plugin_path),
@@ -661,6 +680,7 @@ def generate_launch_description():
                         f"{w} -v 4 "
                         f"{'-s' if LaunchConfiguration('gui').perform(context) == 'false' else ''}"
                         f"{'' if LaunchConfiguration('paused').perform(context) == 'true' else ' -r'}"
+                        f"{engine_args}"
                     ),
                     "on_exit_shutdown": "True"
                 }.items()

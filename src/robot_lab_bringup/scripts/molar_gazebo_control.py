@@ -100,7 +100,12 @@ class MolarGazeboControl(Node):
             if all(name in target['position'] for name in self.pos_names):
                 self.position_pub.publish(Float64MultiArray(data=[target['position'][name] for name in self.pos_names]))
             self.roller_pub.publish(Float64MultiArray(data=[target['velocity'].get('transfer_roller_joint', 0.)]))
-            self.belt_pub.publish(self._float(data=belt_speed(self.velocities.get('transfer_roller_joint', 0.))))
+            # TrackController moves bodies resting on top of the track link
+            # opposite to its command (its surface motion is the ground
+            # contact's, measured 2026-11-15), so the command is the negated
+            # surface speed: a positive roller carries the payload to +x,
+            # the extended deck end, as in MuJoCo (conveyor_belt.py).
+            self.belt_pub.publish(self._float(data=-belt_speed(self.velocities.get('transfer_roller_joint', 0.))))
         else:
             # A forward position controller otherwise keeps its last distant
             # goal after feedback loss. Revoke it once and send the last finite,

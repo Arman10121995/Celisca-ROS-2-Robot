@@ -144,7 +144,7 @@ Work top to bottom. Each line links to its task.
 | I14 | [R5.5](#r55--ackermann-rear-steer-and-anti-ackermann-cars) Cars | 2026-11-15: car course 13/13 on four backends (lookahead 1.25 × turning radius, forward escape when back-up is blocked); park-at-heading runtime and Drive-panel controls | implemented |
 | I15 | [R3.6](#r36--external-robot-assets-in-normal-launch) Assets | 2026-11-15: vendor policies for Booster T1 and Unitree G1/H1/H1_2 controllable (display-only 77 → 73), controllable siblings named, per-model license/mesh/texture audit (114/163 ok). 47 legged need training, 19 URDFs ship no control interface | partial |
 | I16 | [R6.5](#r65--world-to-occupancy-generation) / [R6.6](#r66--external-world-library) / [R6.2](#r62--dynamic-and-sensor-disturbance-cases) Worlds | 2026-11-15: fixture review of all 100 Gazebo examples, Fuel licences (80 models clear), 16 more worlds installed with grids, actors with real collision (`actor_collisions:=true`); earlier: free-region labelling, reviewed grid registration, sensor-fault relay on every backend. Upper floors remain | partial |
-| I17 | [R11](#r11--molar--probot-l-family) MOLAR | Sensors, SLAM/Nav2, payload transfer, multi-floor | partial, needs the sensor layout |
+| I17 | [R11](#r11--molar--probot-l-family) MOLAR | 2026-11-15: payload transfer to a station measured (Gazebo 3/3, MuJoCo 4/4, `nav_empty`). SLAM/Nav2 route on a CELISCA floor, multi-floor and PyBullet/Isaac belts remain | partial |
 | I18 | [P4](#p4--mujoco-large-world-speed) MuJoCo speed | 2026-11-14: flex culling, exact tick pacing, oversleep payback, sensor thread (celisca_floor_1 0.81, furnished floor 0.99, hospital 0.43); large worlds remain flex-kinematics bound | partial |
 | I19 | [R7](#r7--algorithm-breadth) Algorithms | 2026-11-14: Gazebo `sim_seed` (300/300 repeat), sensor-fault relay on all backends, 78 per-method ledger records (9 corrected, 8 noted mismatches) | implemented |
 | I20 | [R9.1](#r91--provenance-licenses-and-clean-host-reproduction) Provenance | 2026-11-14: PX4 checkout + 25 submodules and all vendor sources scanned from their license files; 7 trees without license files listed for review | implemented |
@@ -1025,7 +1025,12 @@ parking batch needs its own run. Details and evidence are in the
 - **Remaining implementation:**
   - mounted sensors (needs the real layout);
   - SLAM/Nav2 on the floors;
-  - payload transfer (lift + roller to a station);
+  - payload transfer (lift + roller to a station): **measured 2026-11-15 (implemented, experimental)**.
+    The deck belt (Gazebo TrackController on the private DART plugin; MuJoCo `ConveyorBelt`) carries
+    a 0.5 kg box onto a station at the extended deck end, through the normal articulation interface.
+    Passes 3/3 in Gazebo and 4/4 in MuJoCo on `nav_empty`
+    ([receipt](docs/status/evidence/r11-molar-transfer-2026-11-15/README.md)). PyBullet/Isaac belts
+    and a CELISCA-floor station remain;
   - multi-floor operation through the fleet lift (R10.2).
 - **How to do it:** add sensors to `molar_hri.urdf.xacro`, then reuse the
   Bumperbot SLAM/Nav2 configs with the MOLAR footprint. Payload transfer

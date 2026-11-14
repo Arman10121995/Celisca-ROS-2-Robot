@@ -1,9 +1,9 @@
 """A belt surface for MuJoCo: bodies resting on a deck are carried along it (R11 payload transfer).
 
 MuJoCo has no moving-surface contact (Gazebo's TrackController equivalent),
-so the belt owns the deck's friction instead: the deck geoms get zero
-sliding friction and a higher contact priority (MuJoCo then uses their
-friction for every deck contact), and every free body touching the deck gets
+so the belt owns the deck's friction instead: the deck's collision geoms get
+normal-only contacts (condim 1) and a higher contact priority (MuJoCo then
+uses their condim for every deck contact), and every free body touching the deck gets
 a horizontal force driving its velocity relative to the deck towards the
 belt velocity (belt speed along the deck's x axis, zero across it), bounded
 by Coulomb friction (``mu`` times the contact's normal force). A stopped belt
@@ -24,11 +24,14 @@ class ConveyorBelt:
             raise ValueError('Belt deck body or roller joint missing: %s, %s' % (deck_body, roller_joint))
         self.roller_dof = int(model.jnt_dofadr[joint])
         self.radius, self.mu, self.gain = float(roller_radius), float(mu), float(gain)
-        self.deck_geoms = {g for g in range(model.ngeom) if model.geom_bodyid[g] == self.deck}
+        self.deck_geoms = {g for g in range(model.ngeom) if model.geom_bodyid[g] == self.deck
+                           and (model.geom_contype[g] or model.geom_conaffinity[g])}
         top = int(model.geom_priority.max()) + 1
         for geom in self.deck_geoms:
             model.geom_priority[geom] = top
-            model.geom_friction[geom, 0] = 0.
+            # Normal-only, not zero friction: a zero-mu pyramidal cone made the
+            # MOLAR payload's contacts blow up (20 m/s in one step, 2026-11-15).
+            model.geom_condim[geom] = 1
         root = robot_root if robot_root is not None else int(model.body_rootid[self.deck])
         self.robot_bodies = {b for b in range(model.nbody) if int(model.body_rootid[b]) == root}
         self.applied = {}          # body -> force we added last step

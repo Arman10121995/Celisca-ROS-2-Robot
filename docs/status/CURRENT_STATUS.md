@@ -194,6 +194,13 @@ This page records what was measured. **The goals and remaining work are in one l
 [roadmap](../../ROADMAP.md)** (implementation queue first, then validation). Remaining-work
 notes in the dated entries below are history.
 
+November 15: **R11 MOLAR payload transfer measured (implemented, experimental).** Through the
+normal articulation interface, the deck lifts, extends, and its belt carries a 0.5 kg box onto a
+station at the deck end: Gazebo 3/3 and MuJoCo 4/4 on `nav_empty`. Fixes: Gazebo TrackController
+needs the private DART plugin (now selected automatically) and moves top-resting bodies opposite to
+its command; the MuJoCo spawner took a loose world body for the robot; the MuJoCo belt's zero-mu
+deck contact was unstable (now condim 1). [Receipt](evidence/r11-molar-transfer-2026-11-15/README.md).
+
 November 15: **R12 Go2W strafe measured.** The new wheel gains raise the vendor Go2W strafe from
 0.206 to 0.248 m/s in MuJoCo. A `wheeled_walk` task with robot_lab's Go2W weights trains
 `go2w_walk_r2`: strafe 0.116 m/s in MuJoCo and 0.271 m/s in Isaac (r1: 0.006), and it reverses in
