@@ -1,0 +1,18 @@
+{
+ "robot": "go2w",
+ "variant": "lab_wheeled_walk_go2w_walk_r2",
+ "profile": "unitree_go2w",
+ "upstream": "robot_lab_adapter.legged_train",
+ "revision": "ee9bc75c",
+ "onnx_sha256": "f38ad8317fa07fdc82e8fe13fd1d0fb06a556337be313c63e9144e9fb5570015",
+ "input_width": 57,
+ "trained_by": "robot_lab_adapter.legged_train",
+ "template_policy": "go2w_robot_lab",
+ "task": "wheeled_walk",
+ "iteration": 1500,
+ "environment_steps": 18432000,
+ "source_revision": "ee9bc75c",
+ "checkpoint": "/workspace/molar/robot_lab_runtime/training/go2w_walk_r2/checkpoints/latest.pt",
+ "exported": "2026-11-14T19:43:00",
+ "qualification": "trained in the MuJoCo training environment; runtime evidence pending"
+}

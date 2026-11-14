@@ -1076,7 +1076,13 @@ parking batch needs its own run. Details and evidence are in the
   - `go2_walk_r1`–`r3` pass drive screens on three backends.
   - [Guide](docs/tutorials/legged-policy-training.md).
 - **Remaining implementation:**
-  - Go2W strafe (PD gains updated in go2w_robot_lab/config.yaml; simulation test pending);
+  - Go2W strafe: **measured 2026-11-15.** The new wheel gains raise the vendor policy's MuJoCo strafe
+    from 0.206 to 0.248 m/s. A new `wheeled_walk` task uses robot_lab's Go2W reward weights (no
+    air-time reward). `go2w_walk_r2` strafes at 0.116 m/s in MuJoCo and 0.271 m/s in Isaac, and
+    reverses in MuJoCo (r1: 0.006 m/s strafe, no reverse). Isaac reverse is weak (−0.077 m/s).
+    [Receipt](docs/status/evidence/r12-go2w-strafe-2026-11-15/README.md);
+  - Berkeley Humanoid Lite: trainer template from the vendored upstream contract, BHL-order ONNX
+    export and `bhl_policy_dir:=` (implemented 2026-11-15; first training run in progress, see R5.3);
   - GPU training (CPU-only on Orin; training possible but slower).
 - **How to do it:** `robot_lab_adapter/legged_training.py`, `ppo.py` and `legged_train.py`.
   Add robots by their provisioned policy contract; train in MuJoCo; check

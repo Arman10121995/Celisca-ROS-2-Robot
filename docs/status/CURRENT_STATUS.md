@@ -194,6 +194,12 @@ This page records what was measured. **The goals and remaining work are in one l
 [roadmap](../../ROADMAP.md)** (implementation queue first, then validation). Remaining-work
 notes in the dated entries below are history.
 
+November 15: **R12 Go2W strafe measured.** The new wheel gains raise the vendor Go2W strafe from
+0.206 to 0.248 m/s in MuJoCo. A `wheeled_walk` task with robot_lab's Go2W weights trains
+`go2w_walk_r2`: strafe 0.116 m/s in MuJoCo and 0.271 m/s in Isaac (r1: 0.006), and it reverses in
+MuJoCo. One screen per cell. BHL trainer contract and export implemented; first run in progress.
+[Receipt](evidence/r12-go2w-strafe-2026-11-15/README.md).
+
 November 15: **R13.3 learned camera, implemented, experimental.** A multi-map retrain (1050
 Gazebo fixture views over three maps, with empty background views) reaches held-out mAP@0.5 0.800
 and is the installed `auto` checkpoint, score 0.75. Through the deployed loader, d1 cable improves

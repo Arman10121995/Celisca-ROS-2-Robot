@@ -40,6 +40,7 @@ ros2 run robot_lab_adapter legged-train evaluate --policy-dir $RUN/policy --task
 | `unitree_b2` | `b2_robot_lab` | 12 | 45 |
 | `unitree_go2w` | `go2w_robot_lab` | 12 legs + 4 wheels | 57 |
 | `unitree_g1_29dof` | `g1_robomimic_locomotion` | 29 | 96 |
+| `berkeley_humanoid_lite_sim` | upstream `policy_humanoid.yaml` (generated template) | 22 | 75 |
 
 Each robot trains in the contract of its
 [provisioned rl_sar policy](legged-policies.md). The joint order, default
@@ -55,15 +56,23 @@ velocity.
 - **Feet:** leaf bodies named `*foot` or `*ankle*` are the feet (the Go2W
   wheels, the G1 ankle roll links); otherwise the leaf bodies with a
   collision sphere are.
-- **Status:** Go2W and G1 training is implemented but has not been run
-  yet (2026-10-29). The rewards are the quadruped ones, so a humanoid may
-  need its own terms.
+- **Go2W:** train it with `--task wheeled_walk` (robot_lab's own Go2W weights, no air-time reward).
+  `go2w_walk_r2` strafes; r1, trained with `walk`, did not
+  ([receipt](../status/evidence/r12-go2w-strafe-2026-11-15/README.md)).
+- **Berkeley Humanoid Lite:** the trainer generates its template from the vendored
+  `configs/policy_humanoid.yaml` (22 joints, unscaled observations, 250 Hz PD step, 25 Hz
+  decisions). Export also writes `<policy>/bhl/`, an ONNX in BHL's commands-first order plus
+  the unchanged upstream config. Run it with
+  `robot_model:=berkeley_humanoid_lite_sim bhl_policy_dir:=<policy>/bhl`. Where the root frame
+  sits at the soles (this model), the trainer measures height at the root body's centre of mass.
+- **G1:** implemented; `g1_walk_r1` did not track commands (2026-11-05).
 
 Tasks (`robot_lab_adapter/legged_training.py`, `TASKS`):
 
 | Task | Commands | Main reward terms |
 |---|---|---|
 | `walk` | vx −0.6…1.0, vy ±0.4, wz ±1.0 m/s, rad/s; 10 % zero | velocity tracking, feet air time |
+| `wheeled_walk` | as `walk` | velocity tracking ×3, stand still only at zero command (wheel-legged robots) |
 | `turn_in_place` | wz ±(0.3…1.0) rad/s, no translation | yaw tracking, hold position |
 | `stand` | none | default pose, base height, hold position |
 | `push_recovery` | none, a 0.6 m/s push every 4 s | as `stand` |

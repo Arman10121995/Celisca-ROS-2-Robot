@@ -2067,6 +2067,7 @@ tasks:
     depends_on:
     - R5.2
     evidence:
+    - docs/status/evidence/r12-go2w-strafe-2026-11-15/README.md
     - docs/status/evidence/training-2026-10-19/README.md
     - docs/status/evidence/support-matrix-2026-10-29/README.md
     - docs/tutorials/legged-policy-training.md
@@ -2084,7 +2085,9 @@ tasks:
       1/3, Isaac 0/3 (round 58). November 5: go2_walk_r3 (20 ms actuation delay) passes all three (Isaac
       0.319 m/s, strafe kept); go2w_walk_r1 passes MuJoCo; g1_walk_r1 fails (no command tracking); go2_rough_r1
       walks flat floors but not terrain_heightfield; Isaac navigation with go2_walk_r2 reaches every goal, 1 of
-      3 seeds inside 0.25 m (docs/status/evidence/support-matrix-2026-11-09/README.md).'
+      3 seeds inside 0.25 m (docs/status/evidence/support-matrix-2026-11-09/README.md). November 15: wheeled_walk
+      task (robot_lab Go2W weights); go2w_walk_r2 strafes 0.116 m/s MuJoCo, 0.271 Isaac (r1 0.006); new wheel gains
+      raise the vendor strafe 0.206 -> 0.248 m/s (docs/status/evidence/r12-go2w-strafe-2026-11-15/README.md).'
     owner: claude
     scope_paths:
     - src/robot_lab_adapter/

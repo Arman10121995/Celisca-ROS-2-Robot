@@ -75,6 +75,7 @@ FAST_TESTS=(
   "$ADP_TEST/test_r5_2_go2_support_attribution.py"
   "$ADP_TEST/test_r5_2_legged_policy.py"
   "$ADP_TEST/test_legged_training.py"
+  "$ADP_TEST/test_bhl_training.py"
   "$ADP_TEST/test_legged_get_up_stairs.py"
   "$BRG_TEST/test_sim_profiles.py"
   "$BRG_TEST/test_installed_extensions.py"
