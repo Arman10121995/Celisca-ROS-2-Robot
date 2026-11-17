@@ -422,9 +422,10 @@ parking batch needs its own run. Details and evidence are in the
     gripper-specific pipelines beyond the native Panda box sequence;
   - coupled mechanisms beyond gear-coupled fingers (mimic chains and
     four-bar joints);
-  - arm controllers on Gazebo, and pick and place on Isaac (the arm screen
-    passes there; the mechanical finger coupling and loose-object truth
-    have no Isaac adapter yet).
+  - arm controllers on Gazebo. Isaac pick and place passes for the URDF
+    Panda (2026-11-17: loose world objects are dynamic bodies on Isaac and
+    publish on `/simulation/free_bodies`; 20.2 s, place error 0.0 mm).
+    [Receipt](docs/status/evidence/r57-isaac-pick-place-2026-11-17/README.md).
 - **Automatic box tasks (2026-11-14, Codex):** normal Arm page explicitly
   starts 1–5 pick/place cycles through the existing IK/OMPL/actions, measured
   opposing contacts, acknowledged attachments and sustained lift/release
@@ -523,7 +524,11 @@ parking batch needs its own run. Details and evidence are in the
   and independent. Editing only builds steps. [Receipt](docs/status/takeover-2026-11-14.md).
 - **Remaining implementation:**
   - fetch with Nav2 legs and localization instead of truth-steered straight
-    legs; fetch on Isaac (no free-body truth or grip contact handling yet);
+    legs;
+  - fetch on Isaac: drive and interlock work, but the TIAGo grasp fails
+    (2026-11-17: the block tips at the pre-grasp, or the descent stalls).
+    Isaac's finger contact needs diagnosing.
+    [Receipt](docs/status/evidence/r57-isaac-pick-place-2026-11-17/README.md);
   - general recognition/pose for unconfigured, non-box or occluded objects,
     source-specific grasp strategies and further
     source-specific object pipelines;

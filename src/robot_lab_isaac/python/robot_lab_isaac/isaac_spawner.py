@@ -406,6 +406,7 @@ class IsaacSpawner(Node):
         self._lock = threading.RLock()
         self._dofs = []
         self._state = None
+        self._free_bodies_pub = None   # /simulation/free_bodies, created on first poses
         self._pose_twist = PoseTwist()
         self._spawned = False
         self._twist = Twist()
@@ -788,6 +789,7 @@ class IsaacSpawner(Node):
         # records: the runtime's interpreter has no ROS package index, and its
         # own SDF reader ignored primitives, poses and model:// includes.
         cfg["world_shapes"] = self._world_shapes(cfg["world_path"])
+        cfg["free_bodies"] = self._free_bodies(cfg["world_path"])
         cfg['joint_springs'] = springs
 
         runtime_py = os.path.join(
@@ -898,6 +900,17 @@ class IsaacSpawner(Node):
                         for base, (position, quaternion) in offsets.items()},
         }
 
+    def _free_bodies(self, world_path):
+        """Loose single-link world models, created as dynamic bodies by the runtime."""
+        if not world_path or not os.path.isfile(world_path):
+            return []
+        from robot_lab_utils.sdf_world import extract_dynamic_bodies
+        bodies = extract_dynamic_bodies(world_path)
+        for body in bodies:
+            body['position'] = [float(v) for v in body['position']]
+            body['orientation'] = [float(v) for v in body['orientation']]
+        return bodies
+
     def _world_shapes(self, world_path):
         """Static world shapes for the runtime, or None to use its fallback.
 
@@ -924,7 +937,8 @@ class IsaacSpawner(Node):
         except Exception:
             pass
         resolve = uri_resolver(model_dirs, get_package_share_directory)
-        shapes, skipped = extract_static_shapes(world_path, resolve)
+        # Loose objects are dynamic bodies (cfg["free_bodies"]), not static shapes.
+        shapes, skipped = extract_static_shapes(world_path, resolve, exclude_dynamic=True)
         # Textured Collada visuals (R7.2, 2026-10-16): a model with them is
         # drawn from its staged OBJ parts; its collision shapes stay for
         # contacts and rays but are not drawn.
@@ -1069,6 +1083,12 @@ class IsaacSpawner(Node):
                         with self._lock:
                             self._state = msg
                             self._articulation_feedback_wall = time.monotonic()
+                        if msg.get('free_bodies'):
+                            # Simulator truth for loose objects, as on MuJoCo and PyBullet.
+                            from std_msgs.msg import String
+                            if self._free_bodies_pub is None:
+                                self._free_bodies_pub = self.create_publisher(String, '/simulation/free_bodies', 10)
+                            self._free_bodies_pub.publish(String(data=json.dumps(msg['free_bodies'])))
                     elif ev == 'gait':
                         from std_msgs.msg import String
                         self._gait_contact_pub.publish(String(data=json.dumps(msg['contacts'],allow_nan=False)))

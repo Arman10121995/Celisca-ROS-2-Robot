@@ -36,7 +36,8 @@ POSITION_TOLERANCE_M = 0.002
 ANGLE_TOLERANCE_RAD = 0.02
 CONTACT_MARGIN_M = 0.002    # penetration below which a contact counts (dist < -margin)
 SEARCH_SECONDS = 15.0       # RRT-Connect budget when direct and via routes collide
-GRASP_RAISE_STEP_M = 0.006  # grip this much higher when the fingertips would hit the support
+GRASP_RAISE_STEP_M = 0.006
+APPROACH_CLEARANCE_M = 0.03  # open fingertips this far above the object's top before descending  # grip this much higher when the fingertips would hit the support
 
 
 @dataclass
@@ -293,10 +294,17 @@ class ArmScene:
             path.append(dict(solution))
         return path
 
-    def joint_route(self, start, end, vias, fingers, **allow):
-        """A joint segment; else through the first via pose (e.g. Home) whose two
-        segments are clear; else a bounded RRT-Connect search
-        (``robot_lab_utils.bounded_control_planner``)."""
+    def joint_route(self, start, end, vias, fingers, high=(), **allow):
+        """Through the first ``high`` pose above the target whose two segments are
+        clear (up and over, then down: a direct sweep can graze the target when
+        the plant tracks or collides less exactly than this model); else a
+        direct segment; else through the first other via (e.g. Home); else a
+        bounded RRT-Connect search (``robot_lab_utils.bounded_control_planner``)."""
+        for via in high:
+            try:
+                return self.joint_segment(start, via, fingers, **allow) + self.joint_segment(via, end, fingers, **allow)
+            except PlanningError:
+                continue
         try:
             return self.joint_segment(start, end, fingers, **allow)
         except PlanningError as direct:
@@ -397,8 +405,10 @@ def _plan_pick_at(scene, current, obj, tool_yaw, width, approach, lift, seeds):
     if above is None:
         raise PlanningError('no IK above the object')
     stages.append(dict(stage='open', waypoints=[dict(current)], fingers=open_f))
-    vias = _high_vias(scene, above_object, rotation, above, open_f) + [{n: s[n] for n in spec.arm_joints} for s in seeds[1:]]
-    stages.append(dict(stage='above_object', waypoints=scene.joint_route(current, above, vias, open_f), fingers=open_f))
+    high = _high_vias(scene, above_object, rotation, above, open_f)
+    vias = [{n: s[n] for n in spec.arm_joints} for s in seeds[1:]]
+    stages.append(dict(stage='above_object', waypoints=scene.joint_route(current, above, vias, open_f, high=high),
+                       fingers=open_f))
     # Fingertips may reach below the TCP: grip higher on the object (in
     # GRASP_RAISE_STEP_M steps, keeping that much of its upper half) until
     # they clear what the object stands on.
@@ -452,8 +462,10 @@ def plan_place(scene: ArmScene, current: Dict[str, float], obj: Box, support: Bo
     over = scene.solve_seeded(above_place, rotation, seeds, open_f)
     if over is None:
         raise PlanningError('no IK above the support')
-    vias = _high_vias(scene, above_place, rotation, over, open_f) + [{n: s[n] for n in spec.arm_joints} for s in seeds[1:]]
-    stages = [dict(stage='over_support', waypoints=scene.joint_route(current, over, vias, open_f, allow_fingers=True),
+    high = _high_vias(scene, above_place, rotation, over, open_f)
+    vias = [{n: s[n] for n in spec.arm_joints} for s in seeds[1:]]
+    stages = [dict(stage='over_support', waypoints=scene.joint_route(current, over, vias, open_f, high=high,
+                                                                      allow_fingers=True),
                    fingers=closed)]
     lower = scene.straight_line(over, place_point, rotation, open_f, allow_fingers=True,
                                 allow_supports=(support.name,))

@@ -1232,6 +1232,54 @@ def _off_ground_plane(verts, tris, shape, tolerance=0.005):
     return [tri for tri, flat in zip(tris, on_plane) if not flat], int(on_plane.sum())
 
 
+def _add_free_bodies(world, bodies):
+    """Loose world objects (``sdf_world.extract_dynamic_bodies``) as dynamic boxes.
+
+    Only box shapes are supported; others are reported and skipped. Each
+    keeps its world-file mass and friction. Returns {name: prim object}.
+    """
+    import re
+
+    import numpy as np
+    from isaacsim.core.api.materials import PhysicsMaterial
+    from isaacsim.core.api.objects import DynamicCuboid
+
+    created = {}
+    for body in bodies:
+        shape = body.get("shape") or {}
+        if shape.get("type") != "box":
+            _emit({"event": "log", "msg": "Free body %s skipped: only boxes are supported (%s)"
+                   % (body.get("name"), shape.get("type"))})
+            continue
+        name = re.sub(r"[^A-Za-z0-9_]", "_", str(body["name"]))
+        mu = float(body["mu"]) if body.get("mu") is not None else 1.0
+        material = PhysicsMaterial(prim_path="/World/PhysicsMaterials/free_" + name,
+                                   static_friction=mu, dynamic_friction=mu, restitution=0.0)
+        cube = DynamicCuboid(prim_path="/World/objects/" + name, name="free_" + name,
+                             position=[float(v) for v in body["position"]],
+                             orientation=[float(v) for v in body["orientation"]],   # w, x, y, z
+                             scale=[float(v) for v in shape["size"]], size=1.0,
+                             mass=float(body["mass"]), color=np.array([.85, .2, .15]),
+                             physics_material=material)
+        world.scene.add(cube)
+        created[str(body["name"])] = cube
+    if created:
+        _emit({"event": "log", "msg": "Free bodies: %s" % sorted(created)})
+    return created
+
+
+def _free_body_poses(bodies):
+    """{name: [x, y, z, qw, qx, qy, qz]} for /simulation/free_bodies."""
+    poses = {}
+    for name, cube in bodies.items():
+        try:
+            position, orientation = cube.get_world_pose()
+        except Exception:
+            continue
+        poses[name] = [float(v) for v in position] + [float(v) for v in orientation]
+    return poses
+
+
 def _add_world_shapes(stage, shapes):
     """Create static collision prims from the spawner's world shapes.
 
@@ -1347,6 +1395,7 @@ def _run_stage(app, reader, cfg, state):
         world.scene.add_ground_plane()
     except Exception:
         pass
+    free_bodies = _add_free_bodies(world, cfg.get("free_bodies") or [])
     if cfg.get("ground_material"):
         floors = _apply_ground_material(stage_utils.get_current_stage(), cfg["ground_material"])
         _emit({"event": "log", "msg": "Ground material %s on %d floor prims"
@@ -1760,8 +1809,12 @@ def _run_stage(app, reader, cfg, state):
                 jpos = [0.0] * len(dof_names)
                 jvel = [0.0] * len(dof_names)
 
+        free_poses = None
+        if free_bodies and sim_step % max(1, int(round(.1 / dt))) == 0:
+            free_poses = _free_body_poses(free_bodies)
         _emit({"event": "state", "t": t, "pos": pos, "orn": orn,
                "lin": lin, "ang": ang, "jpos": jpos, "jvel": jvel,
+               **({"free_bodies": free_poses} if free_poses else {}),
                "runtime_debug_flags": dict(enabled=reader.enabled,terrain_enabled=reader.terrain_enabled,
                    operator_id=reader.operator_id) if reader else {}})
         if gait_observation and time.monotonic()-gait_observed_at>=.1:

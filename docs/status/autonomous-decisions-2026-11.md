@@ -55,3 +55,7 @@ choices.
 | 11-17 | R3.6 | Gave UR10, UR5 and YuMi declared lab servos; kept Kinova and KUKA display-only | The first three are welded to `world` with full limits; the other two would float and have controllable Menagerie siblings |
 | 11-17 | R6.6 | Polylines become convex triangle-prism STL meshes in the shared SDF reader | No consumer changes needed, and MuJoCo's convex hulls stay exact |
 | 11-17 | R6.6 | Read "upper floors" as already covered by `--height` slicing | No installed world has two storeys in one file; the CELISCA floors are separate worlds |
+| 11-17 | R5.7 | Isaac loose objects as `DynamicCuboid`s reported through the runtime's state events | Same truth topic as the other backends, no new ROS path in the Isaac process |
+| 11-17 | R5.7 | Planner tries up-and-over routes before direct sweeps | A direct sweep grazed the TIAGo block on Isaac; standard practice, and the MuJoCo/PyBullet regressions still pass |
+| 11-17 | R5.9 | Reverted the fingertip-clearance pre-grasp and recorded TIAGo-on-Isaac as not passed | The change broke a passing MuJoCo mission; the Isaac cause was not visible in the joint/TCP data |
+| 11-17 | R3.6 | Arm screen retries a blocked joint direction instead of choosing a new home pose | Tests the servo, not the floor; the blocked attempt stays in the report |
