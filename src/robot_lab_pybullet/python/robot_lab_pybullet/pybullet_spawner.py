@@ -52,6 +52,8 @@ _HOLD_FORCE = 200.0
 # Upper bound for friction taken from <gazebo><mu1>: descriptions use values
 # like 1e15 to mean "no slip" in Gazebo's solver.
 _MAX_LATERAL_FRICTION = 1.0
+# Declared static-surface friction at or above this keeps Bullet's default (see _create_shape).
+_STATIC_DEFAULT_FRICTION_ABOVE = 1.0
 
 
 def _apply_link_friction(robot_id, link_indices, friction):
@@ -714,7 +716,7 @@ class PyBulletSpawner(Node):
         except Exception as exc:
             self.get_logger().warn(f"SDF shape load error: {exc}")
             return False
-        p.createMultiBody(
+        uid = p.createMultiBody(
             baseMass=0,
             baseCollisionShapeIndex=collision,
             baseVisualShapeIndex=-1 if hidden else visual,
@@ -722,6 +724,15 @@ class PyBulletSpawner(Node):
             baseOrientation=_xyzw(shape.get("orientation", [1, 0, 0, 0])),
             physicsClientId=client,
         )
+        if shape.get("mu") is not None and float(shape["mu"]) < _STATIC_DEFAULT_FRICTION_ABOVE:
+            # A declared low-friction surface (a passive station: mu 0.05).
+            # Bullet multiplies the two coefficients where ODE takes the
+            # smaller; below 1 the product stays close to it. Higher values
+            # (grounds declare mu 100) keep Bullet's default 0.5: a product
+            # with 100 would make every wheel grip a hundredfold. Before
+            # 2026-11-17 no static friction was applied, and the MOLAR payload
+            # stalled on its station at 0.5 x 0.8.
+            p.changeDynamics(uid, -1, lateralFriction=float(shape["mu"]), physicsClientId=client)
         return True
 
     def _on_cmd(self, msg):
@@ -1297,7 +1308,11 @@ class PyBulletSpawner(Node):
 
             if self._gait_plant is not None:self._gait_plant.step(self._sim_t)
             if getattr(self, '_belt', None) is not None:
-                self._belt.step()
+                forces = self._belt.step()
+                if forces and self._sim_step % int(round(2.0 / self._dt)) == 0:
+                    self.get_logger().info('Belt: forces %s; contacts by robot link %s' % (
+                        {k: round(v, 3) for k, v in forces.items()},
+                        {k: {link: round(n, 2) for link, n in v.items()} for k, v in self._belt.contacts.items()}))
             p.stepSimulation()
             self._sim_step += 1
             self._sim_t = self._sim_step * self._dt

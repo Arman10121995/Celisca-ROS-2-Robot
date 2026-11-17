@@ -33,7 +33,14 @@ from pathlib import Path
 BOX = (0.20, 0.15, 0.10)
 TABLE = (0.80, 0.60)          # length along the robot's x, width
 DECK_HALF_LENGTH = 0.287      # telescope_stage2 plate collision, 0.574 m long
-STATION_GAP = 0.01            # station near edge past the extended deck end
+# telescope_stage2's frame under the plate reaches 19.5 mm past the plate end
+# (0.587 m vs 0.5675 m at full extension), its top only 3 mm below the
+# plate. A station 1 cm past the plate end stopped the extending telescope at
+# 0.130 m, and the stalled 250 N servo shoved the base whenever it resumed
+# (PyBullet, 2026-11-17). Gazebo and MuJoCo passed overlapping it.
+DECK_FRONT_REACH = 0.0195
+STATION_GAP = 0.01            # station near edge past the extended deck's front-most frame
+STATION_SUPPORT = 0.05        # payload centre at least this far onto the station
 STATION_DROP = 0.005          # station top below the deck
 # The station is a passive roller table: low friction (static boxes with
 # 0.8 held the payload once most of it was across, 2026-11-15). Gazebo DART
@@ -124,7 +131,7 @@ def pybullet_world(directory, lift):
     c, s_ = math.cos(yaw), math.sin(yaw)
     px = DECK_REL_X - .10
     top = DECK_TOP_Z + lift - STATION_DROP
-    near = EXTENDED_DECK_END + STATION_GAP
+    near = EXTENDED_DECK_END + DECK_FRONT_REACH + STATION_GAP
     centre = near + TABLE[0] / 2
     payload = box_sdf('payload', BOX, (x + px * c, y + px * s_, SPAWN_Z + DECK_TOP_Z + BOX[2] / 2 + .002, 0, 0, yaw), mass=.5)
     station = box_sdf('station', (TABLE[0], TABLE[1], top), (x + centre * c, y + centre * s_, top / 2, 0, 0, yaw), mu=STATION_MU)
@@ -159,7 +166,7 @@ def mujoco_world(directory, lift):
     c, s_ = math.cos(yaw), math.sin(yaw)
     px = DECK_REL_X - .10
     top = DECK_TOP_Z + lift - STATION_DROP
-    near = EXTENDED_DECK_END + STATION_GAP
+    near = EXTENDED_DECK_END + DECK_FRONT_REACH + STATION_GAP
     centre = near + TABLE[0] / 2
     m = .5
     inertia = (m * (BOX[1] ** 2 + BOX[2] ** 2) / 12, m * (BOX[0] ** 2 + BOX[2] ** 2) / 12, m * (BOX[0] ** 2 + BOX[1] ** 2) / 12)
@@ -191,6 +198,10 @@ def main():
     parser.add_argument('--map', default='nav_empty',
                         help='Gazebo only for maps other than nav_empty: the station is spawned ahead of the '
                              "map's spawn pose, which needs ~1.4 x 0.6 m of free floor")
+    parser.add_argument('--extend-margin', type=float, default=0.0,
+                        help='Stop the telescope this far (m) short of its upper limit')
+    parser.add_argument('--trace', action='store_true',
+                        help='MuJoCo/PyBullet: record the base twist (linear and angular, 3 axes) at 20 Hz, by step')
     options = parser.parse_args()
     if options.map != 'nav_empty' and options.simulator != 'gazebo':
         parser.error('--map other than nav_empty is Gazebo only (MuJoCo/PyBullet worlds are pre-written for nav_empty)')
@@ -231,6 +242,16 @@ def main():
             truth['base_speed'] = speed
             peak = truth.setdefault('base_speed_peak', [0., 0.])
             peak[0], peak[1] = max(peak[0], speed[0]), max(peak[1], speed[1])
+            trace = truth.setdefault('trace', [])
+            if options.trace and (not trace or time.monotonic() - trace[-1]['wall'] >= .05):
+                roller = next((c.get('measured_velocity') for c in state.get('channels', [])
+                               if c.get('name') == 'transfer_roller_joint'), None)
+                trace.append(dict(wall=time.monotonic(), step=truth.get('step'), z=round(q.z, 4),
+                                  base=[round(q.x, 4), round(q.y, 4)],
+                                  v=[round(v.x, 4), round(v.y, 4), round(v.z, 4)],
+                                  w=[round(w.x, 4), round(w.y, 4), round(w.z, 4)],
+                                  payload=[round(c, 4) for c in truth.get('payload', [])[:3]],
+                                  roller=roller, status=state.get('status')))
         node.create_subscription(Odometry, '/odom/ground_truth', on_odom, 10)
     state = {}
     node.create_subscription(String, '/molar/articulation/state', lambda m: state.update(json.loads(m.data)), 10)
@@ -303,6 +324,7 @@ def main():
         # 2. lift
         lift = channel('conveyor_lift_joint')
         target = max(lift['limits'][0], min(lift['limits'][1], lift['measured'] + options.lift))
+        truth['step'] = 'lift'
         send({'conveyor_lift_joint': target})
         if not spin(30 * options.time_scale, lambda: settled('conveyor_lift_joint', target)):
             raise RuntimeError('lift did not settle: %s' % state.get('status'))
@@ -310,17 +332,18 @@ def main():
         result['steps'].append(dict(step='lifted', deck_z=p['telescope_stage2'][2],
                                     lift=channel('conveyor_lift_joint')['measured'], payload=p.get('payload')))
         # 3. extend both coupled stages
-        stage = channel('telescope_stage1_joint')['limits'][1]
+        stage = channel('telescope_stage1_joint')['limits'][1] - options.extend_margin
+        truth['step'] = 'extend'
         send({'telescope_stage1_joint': stage})
         if not spin(30 * options.time_scale, lambda: settled('telescope_stage1_joint', stage) and settled('telescope_stage2_joint')):
             raise RuntimeError('telescope did not extend: %s; %s' % (state.get('status'), json.dumps(channels())))
         # The station meets the extended deck end to end, as a conveyor
-        # handover: near edge STATION_GAP past the measured deck end, top
+        # handover: near edge STATION_GAP past the extended deck's front frame, top
         # STATION_DROP below the measured deck.
         p = observe()
         deck = p['telescope_stage2']
         deck_end = ((deck[0] - base[0]) * math.cos(yaw) + (deck[1] - base[1]) * math.sin(yaw)) + DECK_HALF_LENGTH
-        near_edge = deck_end + STATION_GAP
+        near_edge = deck_end + DECK_FRONT_REACH + STATION_GAP
         top = deck[2] - STATION_DROP
         centre = near_edge + TABLE[0] / 2
         if mujoco:
@@ -330,12 +353,14 @@ def main():
             spawn(world, env, 'station', box_sdf('station', (TABLE[0], TABLE[1], top),
                                                  (base[0] + centre * math.cos(yaw), base[1] + centre * math.sin(yaw),
                                                   top / 2, 0, 0, yaw), mu=STATION_MU))
+        truth['step'] = 'extended, settling'
         spin(2 * options.time_scale)
         result['steps'].append(dict(step='extended; station at the deck end', deck=deck, payload=p.get('payload'),
                                     deck_end_from_base_m=deck_end, station_near_edge_m=near_edge, station_top_z=top,
                                     channels=channels()))
         # 4. belt until the payload is off the deck end (or 25 s)
         truth['base_speed_peak'] = [0., 0.]
+        truth['step'] = 'roller'
         send({'transfer_roller_joint': options.roller})
         spin(1.0 * options.time_scale)
         result['roller_command'] = dict(status=state.get('status'), fault=state.get('fault'),
@@ -379,15 +404,21 @@ def main():
         q = p.get('payload')
         along = (q[0] - base[0]) * math.cos(yaw) + (q[1] - base[1]) * math.sin(yaw)
         across = -(q[0] - base[0]) * math.sin(yaw) + (q[1] - base[1]) * math.cos(yaw)
-        on_station = (near_edge + BOX[0] / 2 - .02 <= along <= near_edge + TABLE[0]
+        # Resting on the station: centre at least STATION_SUPPORT onto it, flat
+        # at its height, inside its width. (Until 2026-11-17 the box had to be
+        # within 2 cm of fully on it; with the station clear of the deck's
+        # front frame, a passive station is 3 cm away and the belt pushes only
+        # until the box's rear leaves the deck.)
+        on_station = (near_edge + STATION_SUPPORT <= along <= near_edge + TABLE[0]
                       and abs(across) <= TABLE[1] / 2 and abs(q[2] - (top + BOX[2] / 2)) < .02)
         drag = math.hypot(q[0] - before_retract[0], q[1] - before_retract[1])
         # Passed: after the deck retracts and lowers, the payload rests on the
-        # station (height, footprint), its centre past the deck end, and the
+        # station, entirely past the deck end (it left the robot), and the
         # retraction dragged it less than 1 cm.
         result.update(final_payload=q, payload_along_m=along, payload_across_m=across, station_top_z=top,
                       on_station=on_station, retract_drag_m=round(drag, 4),
-                      passed=bool(moved and on_station and along > deck_end and drag < .01))
+                      off_deck=along - BOX[0] / 2 > deck_end,
+                      passed=bool(moved and on_station and along - BOX[0] / 2 > deck_end and drag < .01))
         result['steps'].append(dict(step='retracted and lowered', status=state.get('status')))
     except Exception as exc:  # noqa: BLE001 - recorded
         result['error'] = str(exc)
@@ -402,7 +433,10 @@ def main():
             os.killpg(launch.pid, signal.SIGKILL)
             launch.wait()
         log.close()
-    print(json.dumps(result, indent=1))
+    if options.trace:
+        start = truth['trace'][0]['wall'] if truth.get('trace') else 0.
+        result['base_trace'] = [dict(sample, wall=round(sample['wall'] - start, 2)) for sample in truth.get('trace', [])]
+    print(json.dumps({k: v for k, v in result.items() if k != 'base_trace'}, indent=1))
     if options.out:
         Path(options.out).write_text(json.dumps(result, indent=1) + '\n')
     return 0 if result.get('passed') else 1

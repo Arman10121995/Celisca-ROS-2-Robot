@@ -294,6 +294,12 @@ def _walk_model(model, frame, base_dir, resolve, shapes, skipped,
                     continue
                 # Which SDF element the shape came from (visual/collision).
                 shape["element"] = _tag(source)
+                if _tag(source) == "collision":
+                    # Declared surface friction (ODE mu), for importers that
+                    # build their own static bodies (PyBullet).
+                    ode = _child(_child(_child(source, "surface"), "friction"), "ode")
+                    if _text(ode, "mu"):
+                        shape["mu"] = _floats(_text(ode, "mu"), 1, 0.0)[0]
                 if prefer_visual:
                     material = _child(source, 'material')
                     diffuse = _text(material, 'diffuse') or _text(material, 'ambient')

@@ -1,0 +1,4009 @@
+{
+"steps": [
+{
+"step": "payload on deck",
+"pose": [
+-0.5964138135348245,
+-0.4997534354756532,
+0.8009356058661544,
+0.9999999998750829,
+-1.5771108215028798e-05,
+-1.0517427891598776e-06,
+2.3347190873569113e-11
+]
+},
+{
+"step": "lifted",
+"deck_z": 0.8497434324982185,
+"lift": 0.09999998324519642,
+"payload": [
+-0.5924730691805074,
+-0.49979870712315616,
+0.9007329116484688,
+0.9999999999945808,
+3.282564294733029e-06,
+-2.5152358938071057e-07,
+2.0975457188408975e-09
+]
+},
+{
+"step": "extended; station at the deck end",
+"deck": [
+-0.21245745659163912,
+-0.4999027138346043,
+0.8497436153669989,
+1.0,
+2.9853270007151878e-06,
+8.259823403022892e-08,
+7.987002754816785e-05
+],
+"payload": [
+-0.31319271455232717,
+-0.4999044971183727,
+0.9007335044321441,
+0.999999999994893,
+3.173694773110947e-06,
+3.764432793058458e-07,
+2.3810735022160965e-09
+],
+"deck_end_from_base_m": 0.5736322492690471,
+"station_near_edge_m": 0.597,
+"station_top_z": 0.844,
+"channels": {
+"conveyor_lift_joint": {
+"measured": 0.1000002691340284,
+"target": 0.10000025494918031,
+"limits": [
+-0.31,
+0.35
+]
+},
+"telescope_stage1_joint": {
+"measured": 0.13999982492520405,
+"target": 0.14,
+"limits": [
+0.0,
+0.14
+]
+},
+"transfer_roller_joint": {
+"measured": 7.5239630442800135e-06,
+"target": 0.0,
+"limits": [
+-8.0,
+8.0
+]
+},
+"telescope_stage2_joint": {
+"measured": 0.14000000006020544,
+"target": 0.14,
+"limits": [
+0.0,
+0.14
+]
+}
+}
+},
+{
+"step": "belt",
+"transferred": true,
+"payload": [
+0.1868103349614168,
+-0.5003585711599732,
+0.8939872731609408,
+0.9999998062624185,
+1.3876395352643224e-06,
+-1.259841252515625e-05,
+0.0006223459488406468
+],
+"roller_measured": 8.000000287227618,
+"rear_overlap_m": -0.0123,
+"belt_cmd": {
+"count": 0,
+"last": null,
+"max": 0.0
+},
+"trace": [
+{
+"t": 0.0,
+"belt": null,
+"payload": [
+-0.2336386794872032,
+-0.500073811318756,
+0.9007335808562378
+]
+},
+{
+"t": 1.22,
+"belt": null,
+"payload": [
+-0.20369722739719795,
+-0.5000899585084809,
+0.9007335615877622
+]
+},
+{
+"t": 2.58,
+"belt": null,
+"payload": [
+-0.17375539927087016,
+-0.5001063879911237,
+0.900733569950088
+]
+},
+{
+"t": 3.88,
+"belt": null,
+"payload": [
+-0.1438136278385267,
+-0.500122818401596,
+0.900733547642621
+]
+},
+{
+"t": 5.24,
+"belt": null,
+"payload": [
+-0.11387152746522435,
+-0.5001393818115809,
+0.90073354284727
+]
+},
+{
+"t": 6.62,
+"belt": null,
+"payload": [
+-0.08392968893700146,
+-0.5001559225200906,
+0.9007335456211703
+]
+},
+{
+"t": 7.99,
+"belt": null,
+"payload": [
+-0.05398819822472121,
+-0.5001726507292538,
+0.9007335469731821
+]
+},
+{
+"t": 9.37,
+"belt": null,
+"payload": [
+-0.024043875267332416,
+-0.5001946283441021,
+0.9007351674393379
+]
+},
+{
+"t": 10.7,
+"belt": null,
+"payload": [
+0.005903593402979545,
+-0.500219354240429,
+0.9007345646396515
+]
+},
+{
+"t": 12.06,
+"belt": null,
+"payload": [
+0.03584644251614619,
+-0.5002461613061164,
+0.9007329475226641
+]
+},
+{
+"t": 13.37,
+"belt": null,
+"payload": [
+0.0657718304969715,
+-0.5002692080094908,
+0.9007326712395144
+]
+},
+{
+"t": 14.78,
+"belt": null,
+"payload": [
+0.09695842376496477,
+-0.5002938750757173,
+0.8995194622138697
+]
+},
+{
+"t": 16.15,
+"belt": null,
+"payload": [
+0.1312986468944645,
+-0.5003150337340099,
+0.8983020059533139
+]
+},
+{
+"t": 17.5,
+"belt": null,
+"payload": [
+0.15239215447022425,
+-0.5003260965709484,
+0.8977835973070525
+]
+},
+{
+"t": 18.85,
+"belt": null,
+"payload": [
+0.18176056125517134,
+-0.5003525938743426,
+0.8939741595496132
+]
+}
+]
+},
+{
+"step": "retracted and lowered",
+"status": "executing bounded articulation targets"
+}
+],
+"error": "",
+"map": "nav_empty",
+"simulator": "pybullet",
+"pybullet_world": {
+"near_edge": 0.597,
+"top": 0.844,
+"deck_end": 0.5675,
+"world": "/workspace/molar/robot_lab_runtime/molar-pybullet-yaw-20261117/run15.json_world/nav_empty_transfer.world"
+},
+"deck_start": [
+-0.4985973336350666,
+-0.4997867900985246,
+0.749988318240783,
+0.9999999403953552,
+-1.25138683415571e-06,
+-5.7644801927381195e-06,
+-0.0002929171023424715
+],
+"roller_command": {
+"status": "executing bounded articulation targets",
+"fault": "",
+"target": 8.0,
+"base_inhibited": true,
+"base_speed_peak": [
+0.00046999556796215557,
+0.0014628973758800238
+]
+},
+"final_payload": [
+0.1877839041758559,
+-0.500357341079486,
+0.8939888990153269,
+0.9999997600257533,
+-1.0540872415574851e-05,
+5.074220048334606e-07,
+0.0006927027272361032
+],
+"payload_along_m": 0.686873807690955,
+"payload_across_m": -0.00016657326236509942,
+"station_top_z": 0.844,
+"on_station": true,
+"retract_drag_m": 0.001,
+"passed": true,
+"base_trace": [
+{
+"wall": 0.0,
+"step": null,
+"z": 0.0974,
+"base": [
+-0.5,
+-0.5
+],
+"v": [
+0.0,
+0.0,
+-0.2043
+],
+"w": [
+-0.0,
+-0.0,
+0.0
+],
+"payload": [],
+"roller": 8.24828421787625e-24,
+"status": "neutral; holding initial measured articulation"
+},
+{
+"wall": 0.72,
+"step": null,
+"z": 0.0006,
+"base": [
+-0.5,
+-0.5
+],
+"v": [
+0.0,
+0.0,
+0.0073
+],
+"w": [
+-0.0,
+0.0,
+-0.0
+],
+"payload": [
+-0.5995,
+-0.5,
+0.798
+],
+"roller": -1.630028982228464e-05,
+"status": "neutral; holding initial measured articulation"
+},
+{
+"wall": 1.14,
+"step": null,
+"z": 0.001,
+"base": [
+-0.5,
+-0.5
+],
+"v": [
+0.0008,
+0.0006,
+0.0003
+],
+"w": [
+0.0,
+-0.0,
+-0.0
+],
+"payload": [
+-0.5995,
+-0.5,
+0.8007
+],
+"roller": -1.714154738787114e-05,
+"status": "neutral; holding initial measured articulation"
+},
+{
+"wall": 1.83,
+"step": null,
+"z": 0.001,
+"base": [
+-0.4997,
+-0.4998
+],
+"v": [
+0.0008,
+0.0,
+0.0
+],
+"w": [
+-0.0,
+-0.0,
+-0.0005
+],
+"payload": [
+-0.5994,
+-0.5,
+0.801
+],
+"roller": 3.938363071691776e-06,
+"status": "neutral; holding initial measured articulation"
+},
+{
+"wall": 2.34,
+"step": null,
+"z": 0.001,
+"base": [
+-0.4996,
+-0.4998
+],
+"v": [
+0.0001,
+0.0,
+0.0
+],
+"w": [
+-0.0,
+-0.0,
+-0.0003
+],
+"payload": [
+-0.5992,
+-0.4998,
+0.801
+],
+"roller": 3.4480969621770873e-07,
+"status": "neutral; holding initial measured articulation"
+},
+{
+"wall": 3.05,
+"step": null,
+"z": 0.001,
+"base": [
+-0.4996,
+-0.4998
+],
+"v": [
+0.0001,
+0.0,
+-0.0
+],
+"w": [
+-0.0,
+-0.0,
+-0.0003
+],
+"payload": [
+-0.5991,
+-0.4998,
+0.801
+],
+"roller": 2.538946781300268e-07,
+"status": "neutral; holding initial measured articulation"
+},
+{
+"wall": 3.5,
+"step": null,
+"z": 0.001,
+"base": [
+-0.4996,
+-0.4998
+],
+"v": [
+0.0001,
+0.0,
+-0.0
+],
+"w": [
+-0.0,
+-0.0,
+-0.0003
+],
+"payload": [
+-0.5991,
+-0.4998,
+0.801
+],
+"roller": 3.041780068818686e-07,
+"status": "neutral; holding initial measured articulation"
+},
+{
+"wall": 4.2,
+"step": null,
+"z": 0.001,
+"base": [
+-0.4996,
+-0.4998
+],
+"v": [
+0.0002,
+0.0,
+-0.0
+],
+"w": [
+-0.0,
+-0.0,
+-0.0003
+],
+"payload": [
+-0.5991,
+-0.4998,
+0.801
+],
+"roller": 4.3647177620303663e-07,
+"status": "neutral; holding initial measured articulation"
+},
+{
+"wall": 5.02,
+"step": null,
+"z": 0.001,
+"base": [
+-0.4995,
+-0.4998
+],
+"v": [
+0.0002,
+0.0,
+-0.0
+],
+"w": [
+-0.0,
+-0.0,
+-0.0004
+],
+"payload": [
+-0.599,
+-0.4998,
+0.801
+],
+"roller": 3.7283750166375004e-07,
+"status": "neutral; holding initial measured articulation"
+},
+{
+"wall": 5.7,
+"step": null,
+"z": 0.001,
+"base": [
+-0.4995,
+-0.4998
+],
+"v": [
+0.0002,
+0.0,
+-0.0
+],
+"w": [
+-0.0,
+-0.0,
+-0.0004
+],
+"payload": [
+-0.599,
+-0.4998,
+0.801
+],
+"roller": 3.3905543119172735e-07,
+"status": "neutral; holding initial measured articulation"
+},
+{
+"wall": 6.25,
+"step": null,
+"z": 0.001,
+"base": [
+-0.4995,
+-0.4998
+],
+"v": [
+0.0002,
+0.0,
+-0.0
+],
+"w": [
+-0.0,
+-0.0,
+-0.0005
+],
+"payload": [
+-0.599,
+-0.4998,
+0.801
+],
+"roller": 3.910016175760485e-07,
+"status": "neutral; holding initial measured articulation"
+},
+{
+"wall": 6.71,
+"step": null,
+"z": 0.001,
+"base": [
+-0.4994,
+-0.4998
+],
+"v": [
+0.0002,
+0.0,
+-0.0
+],
+"w": [
+-0.0,
+-0.0,
+-0.0003
+],
+"payload": [
+-0.5989,
+-0.4998,
+0.801
+],
+"roller": 6.021483672181608e-07,
+"status": "neutral; holding initial measured articulation"
+},
+{
+"wall": 7.36,
+"step": null,
+"z": 0.001,
+"base": [
+-0.4994,
+-0.4998
+],
+"v": [
+0.0002,
+0.0,
+-0.0
+],
+"w": [
+-0.0,
+-0.0,
+-0.0003
+],
+"payload": [
+-0.5989,
+-0.4998,
+0.801
+],
+"roller": 6.759005093512364e-07,
+"status": "neutral; holding initial measured articulation"
+},
+{
+"wall": 7.87,
+"step": null,
+"z": 0.001,
+"base": [
+-0.4994,
+-0.4998
+],
+"v": [
+0.0002,
+0.0,
+-0.0
+],
+"w": [
+-0.0,
+-0.0,
+-0.0002
+],
+"payload": [
+-0.5989,
+-0.4998,
+0.801
+],
+"roller": 6.942895755058813e-07,
+"status": "neutral; holding initial measured articulation"
+},
+{
+"wall": 8.66,
+"step": null,
+"z": 0.001,
+"base": [
+-0.4993,
+-0.4998
+],
+"v": [
+0.0002,
+0.0,
+-0.0
+],
+"w": [
+-0.0,
+-0.0,
+-0.0001
+],
+"payload": [
+-0.5989,
+-0.4998,
+0.801
+],
+"roller": 8.769437377716506e-07,
+"status": "neutral; holding initial measured articulation"
+},
+{
+"wall": 9.48,
+"step": null,
+"z": 0.001,
+"base": [
+-0.4993,
+-0.4998
+],
+"v": [
+0.0002,
+-0.0,
+0.0
+],
+"w": [
+0.0,
+0.0,
+0.0002
+],
+"payload": [
+-0.5988,
+-0.4998,
+0.801
+],
+"roller": 8.641199412518552e-07,
+"status": "neutral; holding initial measured articulation"
+},
+{
+"wall": 10.15,
+"step": null,
+"z": 0.001,
+"base": [
+-0.4992,
+-0.4998
+],
+"v": [
+0.0003,
+0.0,
+-0.0
+],
+"w": [
+-0.0,
+0.0,
+-0.0
+],
+"payload": [
+-0.5988,
+-0.4998,
+0.801
+],
+"roller": -2.733617715757927e-07,
+"status": "neutral; holding initial measured articulation"
+},
+{
+"wall": 10.73,
+"step": null,
+"z": 0.001,
+"base": [
+-0.4992,
+-0.4998
+],
+"v": [
+0.0003,
+0.0,
+-0.0
+],
+"w": [
+-0.0,
+-0.0,
+-0.0001
+],
+"payload": [
+-0.5987,
+-0.4998,
+0.801
+],
+"roller": 1.6671965166625631e-06,
+"status": "neutral; holding initial measured articulation"
+},
+{
+"wall": 11.42,
+"step": null,
+"z": 0.001,
+"base": [
+-0.4991,
+-0.4998
+],
+"v": [
+0.0003,
+0.0,
+-0.0
+],
+"w": [
+-0.0,
+-0.0,
+-0.0001
+],
+"payload": [
+-0.5987,
+-0.4998,
+0.801
+],
+"roller": 1.8494310802426522e-06,
+"status": "neutral; holding initial measured articulation"
+},
+{
+"wall": 11.98,
+"step": null,
+"z": 0.001,
+"base": [
+-0.4991,
+-0.4998
+],
+"v": [
+0.0003,
+0.0,
+-0.0
+],
+"w": [
+-0.0,
+-0.0,
+-0.0
+],
+"payload": [
+-0.5987,
+-0.4998,
+0.801
+],
+"roller": 2.000252701851405e-06,
+"status": "neutral; holding initial measured articulation"
+},
+{
+"wall": 12.82,
+"step": null,
+"z": 0.001,
+"base": [
+-0.499,
+-0.4998
+],
+"v": [
+0.0004,
+0.0,
+-0.0
+],
+"w": [
+-0.0,
+-0.0,
+0.0
+],
+"payload": [
+-0.5986,
+-0.4998,
+0.801
+],
+"roller": 2.0223739649525397e-06,
+"status": "neutral; holding initial measured articulation"
+},
+{
+"wall": 13.66,
+"step": null,
+"z": 0.001,
+"base": [
+-0.4989,
+-0.4998
+],
+"v": [
+0.0004,
+0.0,
+-0.0
+],
+"w": [
+-0.0,
+-0.0,
+0.0
+],
+"payload": [
+-0.5985,
+-0.4998,
+0.801
+],
+"roller": 2.58343735544436e-06,
+"status": "neutral; holding initial measured articulation"
+},
+{
+"wall": 14.41,
+"step": null,
+"z": 0.001,
+"base": [
+-0.4989,
+-0.4998
+],
+"v": [
+0.0004,
+0.0,
+-0.0
+],
+"w": [
+-0.0,
+-0.0,
+0.0
+],
+"payload": [
+-0.5984,
+-0.4998,
+0.801
+],
+"roller": 2.918756737980788e-06,
+"status": "neutral; holding initial measured articulation"
+},
+{
+"wall": 15.27,
+"step": null,
+"z": 0.001,
+"base": [
+-0.4988,
+-0.4998
+],
+"v": [
+0.0005,
+-0.0,
+-0.0
+],
+"w": [
+0.0,
+-0.0,
+0.0001
+],
+"payload": [
+-0.5983,
+-0.4998,
+0.801
+],
+"roller": 2.4583182949139302e-06,
+"status": "neutral; holding initial measured articulation"
+},
+{
+"wall": 15.79,
+"step": null,
+"z": 0.001,
+"base": [
+-0.4987,
+-0.4998
+],
+"v": [
+0.0005,
+0.0,
+-0.0
+],
+"w": [
+-0.0,
+-0.0,
+0.0001
+],
+"payload": [
+-0.5983,
+-0.4998,
+0.801
+],
+"roller": 3.1202734858785606e-06,
+"status": "neutral; holding initial measured articulation"
+},
+{
+"wall": 16.61,
+"step": null,
+"z": 0.001,
+"base": [
+-0.4986,
+-0.4998
+],
+"v": [
+0.0006,
+0.0,
+-0.0
+],
+"w": [
+-0.0,
+-0.0,
+0.0002
+],
+"payload": [
+-0.5982,
+-0.4998,
+0.801
+],
+"roller": 2.751374759118057e-07,
+"status": "neutral; holding initial measured articulation"
+},
+{
+"wall": 17.4,
+"step": null,
+"z": 0.001,
+"base": [
+-0.4985,
+-0.4998
+],
+"v": [
+0.0006,
+0.0,
+-0.0
+],
+"w": [
+-0.0,
+0.0,
+0.0001
+],
+"payload": [
+-0.5981,
+-0.4998,
+0.801
+],
+"roller": 4.0914166408716784e-05,
+"status": "neutral; holding initial measured articulation"
+},
+{
+"wall": 17.89,
+"step": null,
+"z": 0.001,
+"base": [
+-0.4984,
+-0.4998
+],
+"v": [
+0.0007,
+0.0,
+-0.0
+],
+"w": [
+-0.0,
+0.0,
+-0.0001
+],
+"payload": [
+-0.598,
+-0.4998,
+0.801
+],
+"roller": 4.846308311427093e-05,
+"status": "neutral; holding initial measured articulation"
+},
+{
+"wall": 18.77,
+"step": null,
+"z": 0.001,
+"base": [
+-0.4983,
+-0.4998
+],
+"v": [
+0.0007,
+0.0,
+-0.0
+],
+"w": [
+-0.0,
+0.0,
+-0.0004
+],
+"payload": [
+-0.5979,
+-0.4998,
+0.801
+],
+"roller": 4.3056436077982503e-05,
+"status": "neutral; holding initial measured articulation"
+},
+{
+"wall": 19.41,
+"step": null,
+"z": 0.001,
+"base": [
+-0.4982,
+-0.4998
+],
+"v": [
+0.0008,
+0.0,
+-0.0
+],
+"w": [
+-0.0,
+0.0,
+-0.0005
+],
+"payload": [
+-0.5978,
+-0.4998,
+0.801
+],
+"roller": 5.597423055151091e-06,
+"status": "neutral; holding initial measured articulation"
+},
+{
+"wall": 20.03,
+"step": null,
+"z": 0.001,
+"base": [
+-0.498,
+-0.4998
+],
+"v": [
+0.0009,
+0.0,
+-0.0
+],
+"w": [
+-0.0,
+-0.0,
+-0.0006
+],
+"payload": [
+-0.5976,
+-0.4998,
+0.801
+],
+"roller": -8.09213067930705e-06,
+"status": "neutral; holding initial measured articulation"
+},
+{
+"wall": 20.49,
+"step": null,
+"z": 0.001,
+"base": [
+-0.4979,
+-0.4998
+],
+"v": [
+0.001,
+0.0,
+-0.0
+],
+"w": [
+-0.0,
+-0.0,
+-0.0005
+],
+"payload": [
+-0.5975,
+-0.4998,
+0.801
+],
+"roller": -3.141060270074017e-05,
+"status": "neutral; holding initial measured articulation"
+},
+{
+"wall": 21.29,
+"step": null,
+"z": 0.001,
+"base": [
+-0.4977,
+-0.4998
+],
+"v": [
+0.0011,
+0.0,
+-0.0
+],
+"w": [
+-0.0,
+0.0001,
+-0.0004
+],
+"payload": [
+-0.5973,
+-0.4998,
+0.801
+],
+"roller": 6.213420812007808e-06,
+"status": "neutral; holding initial measured articulation"
+},
+{
+"wall": 22.19,
+"step": null,
+"z": 0.001,
+"base": [
+-0.4975,
+-0.4998
+],
+"v": [
+0.0012,
+0.0,
+-0.0
+],
+"w": [
+-0.0,
+0.0,
+-0.0003
+],
+"payload": [
+-0.5971,
+-0.4998,
+0.801
+],
+"roller": 1.4824065085882382e-05,
+"status": "neutral; holding initial measured articulation"
+},
+{
+"wall": 23.07,
+"step": null,
+"z": 0.001,
+"base": [
+-0.4972,
+-0.4998
+],
+"v": [
+0.0014,
+0.0,
+-0.0
+],
+"w": [
+-0.0,
+0.0,
+-0.0001
+],
+"payload": [
+-0.5969,
+-0.4998,
+0.8009
+],
+"roller": 3.1562025001940345e-05,
+"status": "neutral; holding initial measured articulation"
+},
+{
+"wall": 23.88,
+"step": null,
+"z": 0.001,
+"base": [
+-0.497,
+-0.4998
+],
+"v": [
+0.0015,
+0.0,
+-0.0
+],
+"w": [
+-0.0,
+-0.0001,
+-0.0001
+],
+"payload": [
+-0.5967,
+-0.4998,
+0.8009
+],
+"roller": 1.3304165195511111e-05,
+"status": "neutral; holding initial measured articulation"
+},
+{
+"wall": 24.38,
+"step": null,
+"z": 0.0009,
+"base": [
+-0.4968,
+-0.4998
+],
+"v": [
+0.0025,
+0.0,
+-0.0001
+],
+"w": [
+-0.0,
+-0.0,
+-0.0002
+],
+"payload": [
+-0.5964,
+-0.4998,
+0.8009
+],
+"roller": -6.8609491162667185e-06,
+"status": "neutral; holding initial measured articulation"
+},
+{
+"wall": 25.2,
+"step": "lift",
+"z": 0.0009,
+"base": [
+-0.4963,
+-0.4998
+],
+"v": [
+0.0026,
+0.0,
+-0.0001
+],
+"w": [
+-0.0001,
+0.0002,
+-0.0003
+],
+"payload": [
+-0.596,
+-0.4997,
+0.8043
+],
+"roller": -7.242072236204511e-05,
+"status": "executing bounded articulation targets"
+},
+{
+"wall": 25.72,
+"step": "lift",
+"z": 0.0009,
+"base": [
+-0.4961,
+-0.4998
+],
+"v": [
+0.0011,
+0.0,
+-0.0
+],
+"w": [
+-0.0,
+0.0001,
+-0.0002
+],
+"payload": [
+-0.5957,
+-0.4997,
+0.8079
+],
+"roller": -6.7439235031982686e-06,
+"status": "executing bounded articulation targets"
+},
+{
+"wall": 26.58,
+"step": "lift",
+"z": 0.0009,
+"base": [
+-0.4959,
+-0.4998
+],
+"v": [
+0.0014,
+0.0,
+-0.0001
+],
+"w": [
+-0.0,
+0.0001,
+-0.0001
+],
+"payload": [
+-0.5955,
+-0.4997,
+0.8152
+],
+"roller": -6.692772193647261e-06,
+"status": "executing bounded articulation targets"
+},
+{
+"wall": 27.45,
+"step": "lift",
+"z": 0.0009,
+"base": [
+-0.4956,
+-0.4998
+],
+"v": [
+0.002,
+0.0,
+-0.0001
+],
+"w": [
+-0.0,
+0.0002,
+-0.0003
+],
+"payload": [
+-0.5952,
+-0.4997,
+0.8225
+],
+"roller": -1.169486133004265e-05,
+"status": "executing bounded articulation targets"
+},
+{
+"wall": 28.31,
+"step": "lift",
+"z": 0.0009,
+"base": [
+-0.4951,
+-0.4998
+],
+"v": [
+0.0033,
+0.0,
+-0.0001
+],
+"w": [
+-0.0,
+0.0006,
+-0.0006
+],
+"payload": [
+-0.5947,
+-0.4997,
+0.8298
+],
+"roller": -2.140578359525861e-05,
+"status": "executing bounded articulation targets"
+},
+{
+"wall": 28.98,
+"step": "lift",
+"z": 0.0009,
+"base": [
+-0.4948,
+-0.4998
+],
+"v": [
+0.0012,
+0.0,
+-0.0001
+],
+"w": [
+0.0,
+-0.0002,
+0.0003
+],
+"payload": [
+-0.5944,
+-0.4997,
+0.8334
+],
+"roller": 1.909718609109876e-06,
+"status": "executing bounded articulation targets"
+},
+{
+"wall": 29.61,
+"step": "lift",
+"z": 0.0008,
+"base": [
+-0.4946,
+-0.4998
+],
+"v": [
+0.0013,
+0.0,
+-0.0001
+],
+"w": [
+-0.0,
+-0.0003,
+0.0001
+],
+"payload": [
+-0.5941,
+-0.4997,
+0.8371
+],
+"roller": 2.61822912215358e-06,
+"status": "executing bounded articulation targets"
+},
+{
+"wall": 30.36,
+"step": "lift",
+"z": 0.0008,
+"base": [
+-0.4943,
+-0.4998
+],
+"v": [
+0.0021,
+-0.0,
+-0.0001
+],
+"w": [
+0.0001,
+-0.0002,
+0.003
+],
+"payload": [
+-0.5938,
+-0.4997,
+0.8443
+],
+"roller": 1.149165572563707e-05,
+"status": "executing bounded articulation targets"
+},
+{
+"wall": 30.92,
+"step": "lift",
+"z": 0.0008,
+"base": [
+-0.494,
+-0.4998
+],
+"v": [
+0.002,
+-0.0001,
+-0.0001
+],
+"w": [
+0.0002,
+-0.0002,
+0.0042
+],
+"payload": [
+-0.5936,
+-0.4997,
+0.8479
+],
+"roller": 1.1807795662052897e-05,
+"status": "executing bounded articulation targets"
+},
+{
+"wall": 31.86,
+"step": "lift",
+"z": 0.0008,
+"base": [
+-0.4936,
+-0.4998
+],
+"v": [
+0.0012,
+-0.0,
+-0.0001
+],
+"w": [
+0.0,
+-0.0002,
+-0.0003
+],
+"payload": [
+-0.5931,
+-0.4998,
+0.8588
+],
+"roller": 8.15608676336344e-06,
+"status": "executing bounded articulation targets"
+},
+{
+"wall": 32.74,
+"step": "lift",
+"z": 0.0008,
+"base": [
+-0.4932,
+-0.4998
+],
+"v": [
+0.0017,
+0.0,
+-0.0001
+],
+"w": [
+-0.0,
+-0.0004,
+-0.0001
+],
+"payload": [
+-0.5928,
+-0.4998,
+0.8661
+],
+"roller": -0.00011652891563050385,
+"status": "executing bounded articulation targets"
+},
+{
+"wall": 33.63,
+"step": "lift",
+"z": 0.0007,
+"base": [
+-0.493,
+-0.4998
+],
+"v": [
+-0.0001,
+0.0,
+0.0
+],
+"w": [
+-0.0,
+0.0,
+-0.0004
+],
+"payload": [
+-0.5925,
+-0.4998,
+0.8734
+],
+"roller": -1.558083519083139e-05,
+"status": "executing bounded articulation targets"
+},
+{
+"wall": 34.52,
+"step": "lift",
+"z": 0.0007,
+"base": [
+-0.493,
+-0.4998
+],
+"v": [
+0.0001,
+-0.0,
+-0.0
+],
+"w": [
+0.0,
+0.0,
+0.0
+],
+"payload": [
+-0.5925,
+-0.4998,
+0.8806
+],
+"roller": 9.177647164550984e-08,
+"status": "executing bounded articulation targets"
+},
+{
+"wall": 35.4,
+"step": "lift",
+"z": 0.0007,
+"base": [
+-0.493,
+-0.4998
+],
+"v": [
+0.0,
+-0.0,
+-0.0
+],
+"w": [
+0.0,
+-0.0,
+0.0001
+],
+"payload": [
+-0.5925,
+-0.4998,
+0.8879
+],
+"roller": 2.0314573159200262e-06,
+"status": "executing bounded articulation targets"
+},
+{
+"wall": 36.3,
+"step": "lift",
+"z": 0.0007,
+"base": [
+-0.493,
+-0.4998
+],
+"v": [
+-0.0,
+0.0,
+-0.0
+],
+"w": [
+-0.0,
+0.0,
+-0.0
+],
+"payload": [
+-0.5925,
+-0.4998,
+0.8952
+],
+"roller": 1.3692666578490728e-07,
+"status": "executing bounded articulation targets"
+},
+{
+"wall": 37.23,
+"step": "lift",
+"z": 0.0007,
+"base": [
+-0.493,
+-0.4998
+],
+"v": [
+0.0,
+-0.0,
+-0.0
+],
+"w": [
+0.0,
+-0.0,
+0.0
+],
+"payload": [
+-0.5925,
+-0.4998,
+0.9006
+],
+"roller": 8.107356232410898e-08,
+"status": "executing bounded articulation targets"
+},
+{
+"wall": 38.11,
+"step": "lift",
+"z": 0.0007,
+"base": [
+-0.493,
+-0.4998
+],
+"v": [
+0.0,
+-0.0001,
+-0.0
+],
+"w": [
+0.0,
+-0.0,
+0.0
+],
+"payload": [
+-0.5925,
+-0.4998,
+0.9007
+],
+"roller": -8.888051733834153e-07,
+"status": "executing bounded articulation targets"
+},
+{
+"wall": 39.02,
+"step": "extend",
+"z": 0.0007,
+"base": [
+-0.493,
+-0.4998
+],
+"v": [
+0.0001,
+-0.0001,
+0.0
+],
+"w": [
+0.0,
+0.0,
+0.0001
+],
+"payload": [
+-0.577,
+-0.4998,
+0.9007
+],
+"roller": -1.112634197660654e-06,
+"status": "executing bounded articulation targets"
+},
+{
+"wall": 39.9,
+"step": "extend",
+"z": 0.0007,
+"base": [
+-0.493,
+-0.4998
+],
+"v": [
+0.0,
+-0.0001,
+-0.0
+],
+"w": [
+0.0,
+0.0,
+0.0001
+],
+"payload": [
+-0.5367,
+-0.4998,
+0.9007
+],
+"roller": 2.6339385733020726e-08,
+"status": "executing bounded articulation targets"
+},
+{
+"wall": 40.8,
+"step": "extend",
+"z": 0.0007,
+"base": [
+-0.493,
+-0.4999
+],
+"v": [
+-0.0,
+-0.0001,
+0.0
+],
+"w": [
+-0.0,
+0.0,
+0.0
+],
+"payload": [
+-0.4952,
+-0.4998,
+0.9007
+],
+"roller": 2.8763809350441737e-06,
+"status": "executing bounded articulation targets"
+},
+{
+"wall": 41.72,
+"step": "extend",
+"z": 0.0007,
+"base": [
+-0.493,
+-0.4999
+],
+"v": [
+0.0,
+-0.0001,
+-0.0
+],
+"w": [
+0.0,
+0.0,
+0.0001
+],
+"payload": [
+-0.4536,
+-0.4999,
+0.9007
+],
+"roller": -8.427992055421758e-07,
+"status": "executing bounded articulation targets"
+},
+{
+"wall": 42.59,
+"step": "extend",
+"z": 0.0007,
+"base": [
+-0.493,
+-0.4999
+],
+"v": [
+0.0,
+-0.0001,
+-0.0
+],
+"w": [
+0.0,
+0.0,
+0.0001
+],
+"payload": [
+-0.412,
+-0.4999,
+0.9007
+],
+"roller": 1.699715440349784e-07,
+"status": "executing bounded articulation targets"
+},
+{
+"wall": 43.5,
+"step": "extend",
+"z": 0.0007,
+"base": [
+-0.493,
+-0.4999
+],
+"v": [
+-0.0,
+-0.0001,
+0.0
+],
+"w": [
+-0.0,
+0.0,
+0.0
+],
+"payload": [
+-0.3705,
+-0.4999,
+0.9007
+],
+"roller": 3.3193077530386427e-07,
+"status": "executing bounded articulation targets"
+},
+{
+"wall": 44.37,
+"step": "extend",
+"z": 0.0007,
+"base": [
+-0.493,
+-0.4999
+],
+"v": [
+0.0004,
+-0.0001,
+0.0
+],
+"w": [
+0.0,
+0.0,
+-0.0003
+],
+"payload": [
+-0.3497,
+-0.4999,
+0.9007
+],
+"roller": -2.1590426090882455e-07,
+"status": "executing bounded articulation targets"
+},
+{
+"wall": 45.24,
+"step": "extend",
+"z": 0.0007,
+"base": [
+-0.493,
+-0.4999
+],
+"v": [
+-0.0001,
+-0.0001,
+0.0
+],
+"w": [
+-0.0,
+0.0,
+-0.0
+],
+"payload": [
+-0.3162,
+-0.4999,
+0.9007
+],
+"roller": 2.108172609521311e-07,
+"status": "executing bounded articulation targets"
+},
+{
+"wall": 45.78,
+"step": "extend",
+"z": 0.0007,
+"base": [
+-0.493,
+-0.4999
+],
+"v": [
+0.0,
+-0.0,
+0.0
+],
+"w": [
+-0.0,
+-0.0,
+-0.0
+],
+"payload": [
+-0.3132,
+-0.4999,
+0.9007
+],
+"roller": 1.2106203450097517e-07,
+"status": "executing bounded articulation targets"
+},
+{
+"wall": 46.64,
+"step": "extended, settling",
+"z": 0.0007,
+"base": [
+-0.493,
+-0.5
+],
+"v": [
+0.0,
+-0.0001,
+-0.0
+],
+"w": [
+0.0,
+-0.0,
+-0.0
+],
+"payload": [
+-0.3131,
+-0.4999,
+0.9007
+],
+"roller": 4.2346237339860856e-07,
+"status": "executing bounded articulation targets"
+},
+{
+"wall": 47.52,
+"step": "extended, settling",
+"z": 0.0007,
+"base": [
+-0.4929,
+-0.5
+],
+"v": [
+0.0,
+-0.0001,
+-0.0
+],
+"w": [
+0.0,
+0.0,
+-0.0
+],
+"payload": [
+-0.3131,
+-0.4999,
+0.9007
+],
+"roller": -3.4771525959062644e-07,
+"status": "executing bounded articulation targets"
+},
+{
+"wall": 48.39,
+"step": "extended, settling",
+"z": 0.0007,
+"base": [
+-0.4929,
+-0.5
+],
+"v": [
+0.0,
+-0.0,
+-0.0
+],
+"w": [
+0.0,
+-0.0,
+-0.0
+],
+"payload": [
+-0.3131,
+-0.4999,
+0.9007
+],
+"roller": 9.243167251534307e-08,
+"status": "executing bounded articulation targets"
+},
+{
+"wall": 48.93,
+"step": "extended, settling",
+"z": 0.0007,
+"base": [
+-0.4929,
+-0.5
+],
+"v": [
+0.0,
+-0.0,
+0.0
+],
+"w": [
+-0.0,
+0.0,
+-0.0
+],
+"payload": [
+-0.3131,
+-0.4999,
+0.9007
+],
+"roller": -1.1812387996947097e-07,
+"status": "executing bounded articulation targets"
+},
+{
+"wall": 49.82,
+"step": "extended, settling",
+"z": 0.0007,
+"base": [
+-0.4929,
+-0.5
+],
+"v": [
+0.0,
+-0.0001,
+0.0
+],
+"w": [
+-0.0,
+0.0,
+-0.0001
+],
+"payload": [
+-0.3131,
+-0.5,
+0.9007
+],
+"roller": 9.720447223568082e-08,
+"status": "executing bounded articulation targets"
+},
+{
+"wall": 50.68,
+"step": "extended, settling",
+"z": 0.0007,
+"base": [
+-0.4929,
+-0.5
+],
+"v": [
+0.0,
+-0.0001,
+-0.0
+],
+"w": [
+0.0,
+0.0,
+-0.0
+],
+"payload": [
+-0.3131,
+-0.5,
+0.9007
+],
+"roller": 4.7450353847865714e-08,
+"status": "executing bounded articulation targets"
+},
+{
+"wall": 51.26,
+"step": "extended, settling",
+"z": 0.0007,
+"base": [
+-0.4929,
+-0.5
+],
+"v": [
+0.0,
+-0.0001,
+-0.0
+],
+"w": [
+-0.0,
+-0.0,
+0.0
+],
+"payload": [
+-0.3131,
+-0.5,
+0.9007
+],
+"roller": -1.0563850425933212e-07,
+"status": "executing bounded articulation targets"
+},
+{
+"wall": 52.07,
+"step": "extended, settling",
+"z": 0.0007,
+"base": [
+-0.4929,
+-0.5
+],
+"v": [
+0.0,
+-0.0001,
+0.0
+],
+"w": [
+-0.0,
+-0.0,
+-0.0
+],
+"payload": [
+-0.3131,
+-0.5,
+0.9007
+],
+"roller": 1.262873871056269e-07,
+"status": "executing bounded articulation targets"
+},
+{
+"wall": 52.95,
+"step": "extended, settling",
+"z": 0.0007,
+"base": [
+-0.4929,
+-0.5
+],
+"v": [
+0.0,
+-0.0001,
+0.0
+],
+"w": [
+-0.0,
+0.0,
+-0.0
+],
+"payload": [
+-0.3131,
+-0.5,
+0.9007
+],
+"roller": -8.837991025764934e-07,
+"status": "executing bounded articulation targets"
+},
+{
+"wall": 53.51,
+"step": "extended, settling",
+"z": 0.0007,
+"base": [
+-0.4929,
+-0.5
+],
+"v": [
+0.0,
+-0.0001,
+-0.0
+],
+"w": [
+0.0,
+-0.0,
+-0.0
+],
+"payload": [
+-0.3131,
+-0.5,
+0.9007
+],
+"roller": -2.2544664343643939e-07,
+"status": "executing bounded articulation targets"
+},
+{
+"wall": 54.32,
+"step": "roller",
+"z": 0.0007,
+"base": [
+-0.4929,
+-0.5
+],
+"v": [
+0.0,
+-0.0001,
+-0.0
+],
+"w": [
+-0.0,
+-0.0,
+-0.0
+],
+"payload": [
+-0.3131,
+-0.5,
+0.9007
+],
+"roller": 8.000000119704614,
+"status": "executing bounded articulation targets"
+},
+{
+"wall": 55.19,
+"step": "roller",
+"z": 0.0007,
+"base": [
+-0.4929,
+-0.5001
+],
+"v": [
+0.0,
+-0.0001,
+-0.0
+],
+"w": [
+-0.0,
+-0.0,
+-0.0
+],
+"payload": [
+-0.3033,
+-0.5,
+0.9007
+],
+"roller": 8.00000073949694,
+"status": "executing bounded articulation targets"
+},
+{
+"wall": 56.12,
+"step": "roller",
+"z": 0.0007,
+"base": [
+-0.4929,
+-0.5001
+],
+"v": [
+0.0,
+-0.0001,
+-0.0
+],
+"w": [
+0.0,
+-0.0,
+-0.0
+],
+"payload": [
+-0.2835,
+-0.5,
+0.9007
+],
+"roller": 8.000000452710658,
+"status": "executing bounded articulation targets"
+},
+{
+"wall": 56.64,
+"step": "roller",
+"z": 0.0007,
+"base": [
+-0.4929,
+-0.5001
+],
+"v": [
+0.0,
+-0.0001,
+-0.0
+],
+"w": [
+0.0,
+0.0,
+-0.0
+],
+"payload": [
+-0.2636,
+-0.5001,
+0.9007
+],
+"roller": 8.000000737725815,
+"status": "executing bounded articulation targets"
+},
+{
+"wall": 57.51,
+"step": "roller",
+"z": 0.0007,
+"base": [
+-0.4929,
+-0.5001
+],
+"v": [
+0.0,
+-0.0,
+-0.0
+],
+"w": [
+-0.0,
+-0.0,
+0.0
+],
+"payload": [
+-0.2536,
+-0.5001,
+0.9007
+],
+"roller": 8.000000274330828,
+"status": "executing bounded articulation targets"
+},
+{
+"wall": 58.45,
+"step": "roller",
+"z": 0.0007,
+"base": [
+-0.4929,
+-0.5001
+],
+"v": [
+0.0,
+-0.0001,
+-0.0
+],
+"w": [
+0.0,
+-0.0,
+0.0
+],
+"payload": [
+-0.2336,
+-0.5001,
+0.9007
+],
+"roller": 7.99999882625394,
+"status": "executing bounded articulation targets"
+},
+{
+"wall": 59.36,
+"step": "roller",
+"z": 0.0007,
+"base": [
+-0.4929,
+-0.5001
+],
+"v": [
+0.0,
+-0.0,
+-0.0
+],
+"w": [
+-0.0,
+-0.0,
+0.0
+],
+"payload": [
+-0.2137,
+-0.5001,
+0.9007
+],
+"roller": 7.999999794179535,
+"status": "executing bounded articulation targets"
+},
+{
+"wall": 60.26,
+"step": "roller",
+"z": 0.0007,
+"base": [
+-0.4929,
+-0.5001
+],
+"v": [
+0.0,
+-0.0001,
+0.0
+],
+"w": [
+0.0,
+0.0,
+-0.0
+],
+"payload": [
+-0.1937,
+-0.5001,
+0.9007
+],
+"roller": 7.999999813723951,
+"status": "executing bounded articulation targets"
+},
+{
+"wall": 61.16,
+"step": "roller",
+"z": 0.0007,
+"base": [
+-0.4929,
+-0.5001
+],
+"v": [
+0.0,
+-0.0,
+0.0
+],
+"w": [
+-0.0,
+-0.0,
+-0.0
+],
+"payload": [
+-0.1738,
+-0.5001,
+0.9007
+],
+"roller": 8.000000179941452,
+"status": "executing bounded articulation targets"
+},
+{
+"wall": 62.09,
+"step": "roller",
+"z": 0.0007,
+"base": [
+-0.4929,
+-0.5001
+],
+"v": [
+0.0,
+-0.0,
+0.0
+],
+"w": [
+-0.0,
+0.0,
+-0.0
+],
+"payload": [
+-0.1538,
+-0.5001,
+0.9007
+],
+"roller": 8.000000091696041,
+"status": "executing bounded articulation targets"
+},
+{
+"wall": 63.02,
+"step": "roller",
+"z": 0.0007,
+"base": [
+-0.4929,
+-0.5002
+],
+"v": [
+0.0,
+-0.0,
+0.0
+],
+"w": [
+-0.0,
+0.0,
+-0.0001
+],
+"payload": [
+-0.1338,
+-0.5001,
+0.9007
+],
+"roller": 8.000000410656236,
+"status": "executing bounded articulation targets"
+},
+{
+"wall": 63.91,
+"step": "roller",
+"z": 0.0007,
+"base": [
+-0.4929,
+-0.5002
+],
+"v": [
+0.0,
+-0.0001,
+0.0
+],
+"w": [
+0.0,
+0.0,
+-0.0
+],
+"payload": [
+-0.1139,
+-0.5001,
+0.9007
+],
+"roller": 8.000000140787666,
+"status": "executing bounded articulation targets"
+},
+{
+"wall": 64.83,
+"step": "roller",
+"z": 0.0007,
+"base": [
+-0.4929,
+-0.5002
+],
+"v": [
+0.0,
+-0.0,
+0.0
+],
+"w": [
+-0.0,
+0.0,
+-0.0001
+],
+"payload": [
+-0.0939,
+-0.5002,
+0.9007
+],
+"roller": 8.000000184931544,
+"status": "executing bounded articulation targets"
+},
+{
+"wall": 65.74,
+"step": "roller",
+"z": 0.0007,
+"base": [
+-0.4929,
+-0.5002
+],
+"v": [
+0.0,
+-0.0,
+-0.0
+],
+"w": [
+-0.0,
+-0.0,
+0.0
+],
+"payload": [
+-0.0739,
+-0.5002,
+0.9007
+],
+"roller": 7.999999286308629,
+"status": "executing bounded articulation targets"
+},
+{
+"wall": 66.67,
+"step": "roller",
+"z": 0.0007,
+"base": [
+-0.4928,
+-0.5002
+],
+"v": [
+0.0,
+-0.0,
+0.0
+],
+"w": [
+-0.0,
+0.0,
+-0.0
+],
+"payload": [
+-0.054,
+-0.5002,
+0.9007
+],
+"roller": 8.000000073147149,
+"status": "executing bounded articulation targets"
+},
+{
+"wall": 67.6,
+"step": "roller",
+"z": 0.0007,
+"base": [
+-0.4928,
+-0.5002
+],
+"v": [
+0.0001,
+-0.0,
+-0.0
+],
+"w": [
+0.0,
+0.0,
+-0.0
+],
+"payload": [
+-0.034,
+-0.5002,
+0.9007
+],
+"roller": 7.999999590914511,
+"status": "executing bounded articulation targets"
+},
+{
+"wall": 68.1,
+"step": "roller",
+"z": 0.0007,
+"base": [
+-0.4928,
+-0.5002
+],
+"v": [
+0.0,
+-0.0001,
+0.0
+],
+"w": [
+0.0,
+-0.0,
+0.0001
+],
+"payload": [
+-0.0141,
+-0.5002,
+0.9007
+],
+"roller": 8.000000267815444,
+"status": "executing bounded articulation targets"
+},
+{
+"wall": 68.8,
+"step": "roller",
+"z": 0.0007,
+"base": [
+-0.4928,
+-0.5003
+],
+"v": [
+0.0,
+-0.0001,
+-0.0
+],
+"w": [
+-0.0,
+0.0,
+-0.0
+],
+"payload": [
+-0.0041,
+-0.5002,
+0.9007
+],
+"roller": 7.999998005614562,
+"status": "executing bounded articulation targets"
+},
+{
+"wall": 69.38,
+"step": "roller",
+"z": 0.0007,
+"base": [
+-0.4928,
+-0.5003
+],
+"v": [
+0.0001,
+-0.0001,
+0.0
+],
+"w": [
+-0.0,
+-0.0,
+0.0001
+],
+"payload": [
+0.0059,
+-0.5002,
+0.9007
+],
+"roller": 8.000000272485826,
+"status": "executing bounded articulation targets"
+},
+{
+"wall": 69.92,
+"step": "roller",
+"z": 0.0007,
+"base": [
+-0.4928,
+-0.5003
+],
+"v": [
+-0.0,
+-0.0,
+0.0
+],
+"w": [
+0.0,
+0.0,
+-0.0002
+],
+"payload": [
+0.0259,
+-0.5002,
+0.9007
+],
+"roller": 7.999999744139035,
+"status": "executing bounded articulation targets"
+},
+{
+"wall": 70.71,
+"step": "roller",
+"z": 0.0007,
+"base": [
+-0.4928,
+-0.5003
+],
+"v": [
+-0.0001,
+-0.0,
+-0.0
+],
+"w": [
+0.0,
+0.0,
+-0.0002
+],
+"payload": [
+0.0358,
+-0.5002,
+0.9007
+],
+"roller": 7.999998671978357,
+"status": "executing bounded articulation targets"
+},
+{
+"wall": 71.44,
+"step": "roller",
+"z": 0.0007,
+"base": [
+-0.4928,
+-0.5003
+],
+"v": [
+-0.0001,
+-0.0,
+-0.0
+],
+"w": [
+0.0,
+0.0,
+-0.0002
+],
+"payload": [
+0.0558,
+-0.5003,
+0.9007
+],
+"roller": 8.000000068561727,
+"status": "executing bounded articulation targets"
+},
+{
+"wall": 72.1,
+"step": "roller",
+"z": 0.0007,
+"base": [
+-0.4928,
+-0.5003
+],
+"v": [
+-0.0001,
+-0.0,
+0.0
+],
+"w": [
+0.0,
+0.0,
+-0.0002
+],
+"payload": [
+0.0658,
+-0.5003,
+0.9007
+],
+"roller": 7.99999985569457,
+"status": "executing bounded articulation targets"
+},
+{
+"wall": 72.63,
+"step": "roller",
+"z": 0.0007,
+"base": [
+-0.4928,
+-0.5003
+],
+"v": [
+-0.0001,
+-0.0001,
+0.0
+],
+"w": [
+0.0,
+0.0,
+-0.0002
+],
+"payload": [
+0.0757,
+-0.5003,
+0.9007
+],
+"roller": 7.999999820347101,
+"status": "executing bounded articulation targets"
+},
+{
+"wall": 73.44,
+"step": "roller",
+"z": 0.0007,
+"base": [
+-0.4928,
+-0.5003
+],
+"v": [
+-0.0001,
+-0.0001,
+0.0
+],
+"w": [
+0.0,
+0.0,
+-0.0002
+],
+"payload": [
+0.097,
+-0.5003,
+0.8995
+],
+"roller": 7.999999037775323,
+"status": "executing bounded articulation targets"
+},
+{
+"wall": 74.33,
+"step": "roller",
+"z": 0.0007,
+"base": [
+-0.4929,
+-0.5003
+],
+"v": [
+-0.0001,
+-0.0,
+0.0
+],
+"w": [
+0.0,
+0.0,
+-0.0002
+],
+"payload": [
+0.1203,
+-0.5003,
+0.8986
+],
+"roller": 8.00000018873461,
+"status": "executing bounded articulation targets"
+},
+{
+"wall": 74.89,
+"step": "roller",
+"z": 0.0007,
+"base": [
+-0.4929,
+-0.5003
+],
+"v": [
+-0.0,
+-0.0,
+-0.0
+],
+"w": [
+-0.0,
+-0.0,
+-0.0002
+],
+"payload": [
+0.1313,
+-0.5003,
+0.8983
+],
+"roller": 8.000000214170605,
+"status": "executing bounded articulation targets"
+},
+{
+"wall": 75.56,
+"step": "roller",
+"z": 0.0007,
+"base": [
+-0.4929,
+-0.5003
+],
+"v": [
+-0.0,
+-0.0,
+-0.0
+],
+"w": [
+-0.0,
+-0.0,
+-0.0002
+],
+"payload": [
+0.142,
+-0.5003,
+0.898
+],
+"roller": 7.999999734195383,
+"status": "executing bounded articulation targets"
+},
+{
+"wall": 76.19,
+"step": "roller",
+"z": 0.0007,
+"base": [
+-0.4929,
+-0.5003
+],
+"v": [
+-0.0,
+0.0,
+-0.0
+],
+"w": [
+-0.0,
+-0.0,
+-0.0001
+],
+"payload": [
+0.1626,
+-0.5003,
+0.8976
+],
+"roller": 8.000000144013855,
+"status": "executing bounded articulation targets"
+},
+{
+"wall": 76.71,
+"step": "roller",
+"z": 0.0007,
+"base": [
+-0.4929,
+-0.5003
+],
+"v": [
+-0.0,
+-0.0,
+-0.0
+],
+"w": [
+0.0,
+0.0,
+-0.0
+],
+"payload": [
+0.1726,
+-0.5003,
+0.8974
+],
+"roller": 8.000001879943959,
+"status": "executing bounded articulation targets"
+},
+{
+"wall": 77.6,
+"step": "roller",
+"z": 0.0007,
+"base": [
+-0.4929,
+-0.5003
+],
+"v": [
+-0.0001,
+-0.0,
+-0.0
+],
+"w": [
+0.0,
+-0.0,
+0.0004
+],
+"payload": [
+0.1868,
+-0.5004,
+0.894
+],
+"roller": -2.407222899099873e-06,
+"status": "executing bounded articulation targets"
+},
+{
+"wall": 78.48,
+"step": "roller",
+"z": 0.0007,
+"base": [
+-0.4929,
+-0.5003
+],
+"v": [
+-0.0,
+-0.0,
+-0.0
+],
+"w": [
+0.0,
+-0.0,
+0.0007
+],
+"payload": [
+0.1878,
+-0.5004,
+0.894
+],
+"roller": -1.8908646965365912e-08,
+"status": "executing bounded articulation targets"
+},
+{
+"wall": 79.16,
+"step": "roller",
+"z": 0.0007,
+"base": [
+-0.4929,
+-0.5003
+],
+"v": [
+-0.0,
+-0.0,
+0.0
+],
+"w": [
+-0.0,
+0.0,
+0.0009
+],
+"payload": [
+0.1878,
+-0.5004,
+0.894
+],
+"roller": 8.350032936061686e-06,
+"status": "executing bounded articulation targets"
+},
+{
+"wall": 79.81,
+"step": "roller",
+"z": 0.0007,
+"base": [
+-0.4929,
+-0.5003
+],
+"v": [
+0.0,
+-0.0001,
+-0.0
+],
+"w": [
+0.0,
+-0.0,
+0.0012
+],
+"payload": [
+0.1878,
+-0.5004,
+0.894
+],
+"roller": -6.084837718323052e-06,
+"status": "executing bounded articulation targets"
+},
+{
+"wall": 80.31,
+"step": "roller",
+"z": 0.0007,
+"base": [
+-0.4929,
+-0.5003
+],
+"v": [
+0.0,
+0.0004,
+0.0
+],
+"w": [
+-0.0001,
+0.0,
+-0.0002
+],
+"payload": [
+0.1878,
+-0.5004,
+0.894
+],
+"roller": 8.434290662154115e-08,
+"status": "executing bounded articulation targets"
+},
+{
+"wall": 81.18,
+"step": "roller",
+"z": 0.0007,
+"base": [
+-0.4929,
+-0.5003
+],
+"v": [
+-0.0,
+0.0,
+0.0
+],
+"w": [
+-0.0,
+0.0,
+-0.0002
+],
+"payload": [
+0.1878,
+-0.5004,
+0.894
+],
+"roller": -2.5347454420747434e-07,
+"status": "executing bounded articulation targets"
+},
+{
+"wall": 82.09,
+"step": "roller",
+"z": 0.0007,
+"base": [
+-0.4929,
+-0.5003
+],
+"v": [
+-0.0,
+0.0,
+0.0
+],
+"w": [
+-0.0,
+-0.0,
+-0.0002
+],
+"payload": [
+0.1878,
+-0.5004,
+0.894
+],
+"roller": -6.668357526109962e-08,
+"status": "executing bounded articulation targets"
+},
+{
+"wall": 82.77,
+"step": "roller",
+"z": 0.0007,
+"base": [
+-0.4929,
+-0.5003
+],
+"v": [
+-0.0,
+-0.0,
+-0.0
+],
+"w": [
+0.0,
+0.0,
+-0.0002
+],
+"payload": [
+0.1878,
+-0.5004,
+0.894
+],
+"roller": -2.2982434192434215e-06,
+"status": "executing bounded articulation targets"
+},
+{
+"wall": 83.4,
+"step": "roller",
+"z": 0.0007,
+"base": [
+-0.4929,
+-0.5003
+],
+"v": [
+0.0001,
+-0.0,
+0.0
+],
+"w": [
+0.0,
+0.0,
+0.0004
+],
+"payload": [
+0.1878,
+-0.5004,
+0.894
+],
+"roller": 1.8315106368704496e-06,
+"status": "executing bounded articulation targets"
+},
+{
+"wall": 83.91,
+"step": "roller",
+"z": 0.0007,
+"base": [
+-0.4928,
+-0.5003
+],
+"v": [
+-0.0,
+0.0,
+-0.0
+],
+"w": [
+-0.0,
+-0.0,
+0.0003
+],
+"payload": [
+0.1878,
+-0.5004,
+0.894
+],
+"roller": 2.4891944258960688e-06,
+"status": "executing bounded articulation targets"
+},
+{
+"wall": 84.76,
+"step": "roller",
+"z": 0.0007,
+"base": [
+-0.4928,
+-0.5003
+],
+"v": [
+0.0,
+-0.0,
+-0.0
+],
+"w": [
+0.0,
+-0.0,
+0.0001
+],
+"payload": [
+0.1878,
+-0.5004,
+0.894
+],
+"roller": 1.9381689240271337e-07,
+"status": "executing bounded articulation targets"
+},
+{
+"wall": 85.67,
+"step": "roller",
+"z": 0.0007,
+"base": [
+-0.4928,
+-0.5003
+],
+"v": [
+-0.0,
+0.0002,
+-0.0
+],
+"w": [
+0.0001,
+-0.0,
+0.0001
+],
+"payload": [
+0.1878,
+-0.5004,
+0.894
+],
+"roller": 3.7101759514550333e-07,
+"status": "executing bounded articulation targets"
+},
+{
+"wall": 86.33,
+"step": "roller",
+"z": 0.0007,
+"base": [
+-0.4928,
+-0.5003
+],
+"v": [
+-0.0,
+0.0,
+0.0
+],
+"w": [
+-0.0,
+-0.0,
+-0.0001
+],
+"payload": [
+0.1878,
+-0.5004,
+0.894
+],
+"roller": 6.582181991550396e-07,
+"status": "executing bounded articulation targets"
+},
+{
+"wall": 86.95,
+"step": "roller",
+"z": 0.0007,
+"base": [
+-0.4928,
+-0.5003
+],
+"v": [
+0.0,
+0.0,
+-0.0
+],
+"w": [
+-0.0,
+0.0,
+-0.0002
+],
+"payload": [
+0.1878,
+-0.5004,
+0.894
+],
+"roller": -1.2544862270628699e-06,
+"status": "executing bounded articulation targets"
+},
+{
+"wall": 87.46,
+"step": "roller",
+"z": 0.0007,
+"base": [
+-0.4928,
+-0.5003
+],
+"v": [
+0.0,
+0.0,
+0.0
+],
+"w": [
+0.0,
+0.0,
+0.0001
+],
+"payload": [
+0.1878,
+-0.5004,
+0.894
+],
+"roller": 3.9050910175534225e-08,
+"status": "executing bounded articulation targets"
+},
+{
+"wall": 88.37,
+"step": "roller",
+"z": 0.0007,
+"base": [
+-0.4928,
+-0.5003
+],
+"v": [
+-0.0,
+-0.0,
+0.0
+],
+"w": [
+0.0,
+-0.0,
+0.0
+],
+"payload": [
+0.1878,
+-0.5004,
+0.894
+],
+"roller": 6.928847412846355e-07,
+"status": "executing bounded articulation targets"
+},
+{
+"wall": 89.29,
+"step": "roller",
+"z": 0.0007,
+"base": [
+-0.4928,
+-0.5003
+],
+"v": [
+-0.0,
+0.0,
+0.0
+],
+"w": [
+-0.0,
+-0.0,
+0.0
+],
+"payload": [
+0.1878,
+-0.5004,
+0.894
+],
+"roller": -7.494579158366128e-08,
+"status": "executing bounded articulation targets"
+},
+{
+"wall": 89.93,
+"step": "roller",
+"z": 0.0007,
+"base": [
+-0.4928,
+-0.5003
+],
+"v": [
+-0.0,
+0.0,
+0.0
+],
+"w": [
+-0.0,
+-0.0,
+0.0
+],
+"payload": [
+0.1878,
+-0.5004,
+0.894
+],
+"roller": -9.748027243484123e-08,
+"status": "executing bounded articulation targets"
+},
+{
+"wall": 90.56,
+"step": "roller",
+"z": 0.0007,
+"base": [
+-0.4928,
+-0.5003
+],
+"v": [
+-0.0,
+0.0,
+0.0
+],
+"w": [
+-0.0,
+-0.0,
+-0.0
+],
+"payload": [
+0.1878,
+-0.5004,
+0.894
+],
+"roller": -1.1194879415345221e-07,
+"status": "executing bounded articulation targets"
+},
+{
+"wall": 91.1,
+"step": "roller",
+"z": 0.0007,
+"base": [
+-0.4928,
+-0.5003
+],
+"v": [
+0.0,
+0.0,
+0.0
+],
+"w": [
+-0.0,
+-0.0,
+-0.0
+],
+"payload": [
+0.1878,
+-0.5004,
+0.894
+],
+"roller": -1.3331090605480094e-07,
+"status": "executing bounded articulation targets"
+},
+{
+"wall": 91.98,
+"step": "roller",
+"z": 0.0007,
+"base": [
+-0.4928,
+-0.5003
+],
+"v": [
+0.0001,
+0.0,
+-0.0
+],
+"w": [
+-0.0,
+-0.0,
+-0.0003
+],
+"payload": [
+0.1878,
+-0.5004,
+0.894
+],
+"roller": -1.7062744918944786e-07,
+"status": "executing bounded articulation targets"
+},
+{
+"wall": 92.88,
+"step": "roller",
+"z": 0.0007,
+"base": [
+-0.4928,
+-0.5003
+],
+"v": [
+0.0,
+-0.0,
+-0.0
+],
+"w": [
+0.0,
+0.0,
+0.0
+],
+"payload": [
+0.1878,
+-0.5004,
+0.894
+],
+"roller": -5.163688786123119e-07,
+"status": "executing bounded articulation targets"
+},
+{
+"wall": 93.79,
+"step": "roller",
+"z": 0.0007,
+"base": [
+-0.4928,
+-0.5003
+],
+"v": [
+0.0,
+0.0,
+-0.0
+],
+"w": [
+-0.0,
+-0.0,
+-0.0
+],
+"payload": [
+0.1878,
+-0.5004,
+0.894
+],
+"roller": -2.9778397881886067e-07,
+"status": "executing bounded articulation targets"
+},
+{
+"wall": 94.62,
+"step": "roller",
+"z": 0.0007,
+"base": [
+-0.4928,
+-0.5003
+],
+"v": [
+0.0,
+0.0,
+-0.0
+],
+"w": [
+-0.0,
+-0.0,
+-0.0
+],
+"payload": [
+0.1878,
+-0.5004,
+0.894
+],
+"roller": -2.0963487613696984e-07,
+"status": "executing bounded articulation targets"
+},
+{
+"wall": 95.15,
+"step": "roller",
+"z": 0.0007,
+"base": [
+-0.4928,
+-0.5003
+],
+"v": [
+0.0,
+0.0,
+-0.0
+],
+"w": [
+-0.0,
+-0.0,
+-0.0
+],
+"payload": [
+0.1878,
+-0.5004,
+0.894
+],
+"roller": -2.0774034842597115e-07,
+"status": "executing bounded articulation targets"
+},
+{
+"wall": 96.02,
+"step": "roller",
+"z": 0.0007,
+"base": [
+-0.4928,
+-0.5003
+],
+"v": [
+0.0,
+-0.0,
+0.0
+],
+"w": [
+0.0,
+0.0,
+-0.0
+],
+"payload": [
+0.1878,
+-0.5004,
+0.894
+],
+"roller": -1.641468696772523e-07,
+"status": "executing bounded articulation targets"
+},
+{
+"wall": 96.92,
+"step": "roller",
+"z": 0.0007,
+"base": [
+-0.4928,
+-0.5003
+],
+"v": [
+0.0,
+0.0,
+-0.0
+],
+"w": [
+-0.0,
+-0.0,
+-0.0
+],
+"payload": [
+0.1878,
+-0.5004,
+0.894
+],
+"roller": -1.8742748866937443e-07,
+"status": "executing bounded articulation targets"
+},
+{
+"wall": 97.83,
+"step": "roller",
+"z": 0.0007,
+"base": [
+-0.4928,
+-0.5003
+],
+"v": [
+0.0,
+0.0,
+-0.0
+],
+"w": [
+-0.0,
+-0.0,
+-0.0
+],
+"payload": [
+0.1878,
+-0.5004,
+0.894
+],
+"roller": -1.8309757037579153e-07,
+"status": "executing bounded articulation targets"
+},
+{
+"wall": 98.36,
+"step": "roller",
+"z": 0.0007,
+"base": [
+-0.4928,
+-0.5003
+],
+"v": [
+0.0,
+0.0,
+-0.0
+],
+"w": [
+-0.0,
+-0.0,
+-0.0
+],
+"payload": [
+0.1878,
+-0.5004,
+0.894
+],
+"roller": -1.8023454132207774e-07,
+"status": "executing bounded articulation targets"
+},
+{
+"wall": 99.03,
+"step": "roller",
+"z": 0.0007,
+"base": [
+-0.4928,
+-0.5003
+],
+"v": [
+0.0,
+0.0,
+-0.0
+],
+"w": [
+-0.0,
+-0.0,
+-0.0
+],
+"payload": [
+0.1878,
+-0.5004,
+0.894
+],
+"roller": -1.7696035726710786e-07,
+"status": "executing bounded articulation targets"
+},
+{
+"wall": 99.66,
+"step": "roller",
+"z": 0.0007,
+"base": [
+-0.4928,
+-0.5003
+],
+"v": [
+-0.0,
+-0.0,
+-0.0
+],
+"w": [
+-0.0,
+-0.0,
+-0.0
+],
+"payload": [
+0.1878,
+-0.5004,
+0.894
+],
+"roller": -1.7447370399781644e-07,
+"status": "executing bounded articulation targets"
+},
+{
+"wall": 100.58,
+"step": "roller",
+"z": 0.0007,
+"base": [
+-0.4928,
+-0.5003
+],
+"v": [
+0.0,
+0.0,
+-0.0
+],
+"w": [
+-0.0,
+0.0,
+-0.0
+],
+"payload": [
+0.1878,
+-0.5004,
+0.894
+],
+"roller": -1.720073419829153e-07,
+"status": "executing bounded articulation targets"
+},
+{
+"wall": 101.45,
+"step": "roller",
+"z": 0.0007,
+"base": [
+-0.4928,
+-0.5003
+],
+"v": [
+-0.0,
+0.0,
+-0.0
+],
+"w": [
+-0.0,
+-0.0,
+-0.0
+],
+"payload": [
+0.1878,
+-0.5004,
+0.894
+],
+"roller": -1.741480223209701e-07,
+"status": "executing bounded articulation targets"
+},
+{
+"wall": 102.15,
+"step": "roller",
+"z": 0.0007,
+"base": [
+-0.4928,
+-0.5003
+],
+"v": [
+-0.0,
+-0.0,
+-0.0
+],
+"w": [
+-0.0,
+0.0,
+-0.0
+],
+"payload": [
+0.1878,
+-0.5004,
+0.894
+],
+"roller": -1.714330902980795e-07,
+"status": "executing bounded articulation targets"
+},
+{
+"wall": 102.8,
+"step": "roller",
+"z": 0.0007,
+"base": [
+-0.4928,
+-0.5003
+],
+"v": [
+-0.0,
+-0.0,
+-0.0
+],
+"w": [
+-0.0,
+0.0,
+-0.0
+],
+"payload": [
+0.1878,
+-0.5004,
+0.894
+],
+"roller": -1.7000924519427e-07,
+"status": "executing bounded articulation targets"
+},
+{
+"wall": 103.64,
+"step": "roller",
+"z": 0.0007,
+"base": [
+-0.4928,
+-0.5003
+],
+"v": [
+-0.0,
+-0.0,
+0.0
+],
+"w": [
+-0.0,
+0.0,
+-0.0
+],
+"payload": [
+0.1878,
+-0.5004,
+0.894
+],
+"roller": -1.6853337809744173e-07,
+"status": "executing bounded articulation targets"
+},
+{
+"wall": 104.59,
+"step": "roller",
+"z": 0.0007,
+"base": [
+-0.4928,
+-0.5003
+],
+"v": [
+-0.0,
+-0.0,
+0.0
+],
+"w": [
+0.0,
+0.0,
+-0.0
+],
+"payload": [
+0.1878,
+-0.5004,
+0.894
+],
+"roller": -1.6795111313730905e-07,
+"status": "executing bounded articulation targets"
+},
+{
+"wall": 105.33,
+"step": "roller",
+"z": 0.0007,
+"base": [
+-0.4928,
+-0.5003
+],
+"v": [
+-0.0,
+-0.0,
+0.0
+],
+"w": [
+0.0,
+0.0,
+-0.0
+],
+"payload": [
+0.1878,
+-0.5004,
+0.894
+],
+"roller": -1.6770872398000323e-07,
+"status": "executing bounded articulation targets"
+},
+{
+"wall": 106.04,
+"step": "roller",
+"z": 0.0007,
+"base": [
+-0.4928,
+-0.5003
+],
+"v": [
+-0.0,
+0.0,
+-0.0
+],
+"w": [
+-0.0,
+0.0,
+-0.0
+],
+"payload": [
+0.1878,
+-0.5004,
+0.894
+],
+"roller": -2.353599327188195e-07,
+"status": "executing bounded articulation targets"
+},
+{
+"wall": 106.7,
+"step": "roller",
+"z": 0.0007,
+"base": [
+-0.4928,
+-0.5003
+],
+"v": [
+-0.0,
+0.0,
+0.0
+],
+"w": [
+-0.0,
+0.0,
+-0.0
+],
+"payload": [
+0.1878,
+-0.5004,
+0.894
+],
+"roller": -1.605670844440228e-07,
+"status": "executing bounded articulation targets"
+}
+],
+"base_trace_note": "every 4th 20 Hz sample"
+}

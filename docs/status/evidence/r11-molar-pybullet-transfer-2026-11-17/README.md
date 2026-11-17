@@ -42,3 +42,8 @@ only weaken the interlock.
 motor's reaction, or caster damping), instead of loosening the interlock.
 
 Gazebo (3/3) and MuJoCo (4/4) transfers from 2026-11-15 are unchanged.
+
+**Later the same day:** the cause was the test's station, which overlapped
+the extended deck's front frame. With it clear, and with PyBullet applying
+the station's declared friction, the transfer passes
+([receipt](../r11-molar-transfer-station-2026-11-17/README.md)).

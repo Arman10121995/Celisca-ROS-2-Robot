@@ -28,9 +28,15 @@ class PyBulletBelt:
         rotation = np.array(p.getMatrixFromQuaternion(state[5])).reshape(3, 3)
         axis = rotation[:, 0]
         deck_velocity = np.array(state[6])
-        report = {}
+        report, self.contacts = {}, {}
         for name, body in self.bodies.items():
-            normal = sum(c[9] for c in p.getContactPoints(bodyA=self.robot, bodyB=body, linkIndexA=self.deck))
+            # Every robot link the body touches, with its normal force (N):
+            # only the deck is belt-driven; any other link rubs on it.
+            touching = {}
+            for c in p.getContactPoints(bodyA=self.robot, bodyB=body):
+                touching[c[3]] = touching.get(c[3], 0.) + c[9]
+            self.contacts[name] = touching
+            normal = touching.get(self.deck, 0.)
             if normal <= 0.:
                 continue
             mass = p.getDynamicsInfo(body, -1)[0]

@@ -2028,10 +2028,12 @@ tasks:
       mission certificates. Full declared roadmap acceptance is still open; test counts, metadata and
       scene loads do not qualify remaining robot/map/backend missions. See docs/REMAINING_WORK_GUIDE.md.'
   R11:
+    transfer_station_20261117: 'Claude: MOLAR payload transfer passes on PyBullet (and once more on MuJoCo and Gazebo, nav_empty). Root cause of the morning PyBullet failure: the checker station overlapped telescope_stage2''s front frame (0.587 m vs plate end 0.5675 m), stalling the telescope at 0.130 m; its 250 N servo shoved the base on resume. Station now clear of the frame (DECK_FRONT_REACH); pass rule = payload off the deck and centre >= 5 cm onto the station. PyBullet static shapes now take SDF mu below 1 (was default 0.5). Two trials (0.25 s motion window, wider hard stops) reverted; interlock unchanged. docs/status/evidence/r11-molar-transfer-station-2026-11-17/README.md'
     celisca_transfer_20261117: 'Claude: MOLAR payload transfer passes in Gazebo on celisca_floor_1_detailed (box on the station, 0.669 m ahead, 0.0 m retract drag; roller 8.0 rad/s); with route A on the same world (2026-11-15) the R11 done-when is met. Needed display-mode spawners with --switch-timeout 60 and checker --map/--time-scale. PyBullet transfer not passed (base yaws at roller start; interlock refuses). docs/status/evidence/r11-molar-celisca-transfer-2026-11-17/README.md'
     acceptance_ref: ROADMAP.md R11
     depends_on: []
     evidence:
+    - docs/status/evidence/r11-molar-transfer-station-2026-11-17/README.md
     - docs/status/evidence/r11-molar-celisca-transfer-2026-11-17/README.md
     - docs/status/evidence/r11-molar-pybullet-transfer-2026-11-17/README.md
     - docs/status/evidence/r11-molar-nav-2026-11-15/README.md

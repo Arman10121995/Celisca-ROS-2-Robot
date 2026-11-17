@@ -115,3 +115,18 @@ def test_loose_primitive_objects_are_dynamic_bodies_not_scenery(tmp_path):
     scenery, _ = extract_static_shapes(str(world), lambda uri, base: '', exclude_dynamic=True)
     assert {s['model'] for s in every} == {'table', 'cube', 'massless'}          # unchanged default
     assert {s['model'] for s in scenery} == {'table', 'massless'}
+
+
+def test_static_collision_friction_is_reported(tmp_path):
+    """PyBullet builds its own static bodies and needs the declared mu (MOLAR station, 2026-11-17)."""
+    world = tmp_path / "w.world"
+    world.write_text(
+        '<sdf version="1.7"><world name="w"><model name="station"><static>true</static><link name="l">'
+        '<collision name="c"><geometry><box><size>1 1 1</size></box></geometry>'
+        '<surface><friction><ode><mu>0.05</mu></ode></friction></surface></collision>'
+        '<visual name="v"><geometry><box><size>1 1 1</size></box></geometry></visual></link></model>'
+        '<model name="wall"><static>true</static><link name="l"><collision name="c">'
+        '<geometry><box><size>1 1 1</size></box></geometry></collision></link></model></world></sdf>')
+    shapes, _ = sdf_world.extract_static_shapes(str(world), lambda uri, base: "")
+    friction = {shape["model"]: shape.get("mu") for shape in shapes}
+    assert friction == {"station": 0.05, "wall": None}
