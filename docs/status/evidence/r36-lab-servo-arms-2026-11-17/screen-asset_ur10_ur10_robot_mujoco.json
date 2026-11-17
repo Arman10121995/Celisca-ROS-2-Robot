@@ -1,0 +1,149 @@
+{
+ "phases": [
+  {
+   "joint": "elbow_joint",
+   "out": {
+    "target": 0.5,
+    "settled_s": 4.32,
+    "steady_error_rad": 0.0286,
+    "base_inhibited_seen": true,
+    "final": 0.4836
+   },
+   "back": {
+    "target": 0.0,
+    "settled_s": 1.4,
+    "steady_error_rad": 0.0251,
+    "base_inhibited_seen": true,
+    "final": -0.0
+   },
+   "passed": true
+  },
+  {
+   "joint": "shoulder_lift_joint",
+   "out": {
+    "target": -0.5,
+    "settled_s": 1.4,
+    "steady_error_rad": 0.0226,
+    "base_inhibited_seen": true,
+    "final": -0.5
+   },
+   "back": {
+    "target": 0.0,
+    "settled_s": 1.4,
+    "steady_error_rad": 0.0226,
+    "base_inhibited_seen": true,
+    "final": 0.0
+   },
+   "blocked_direction": {
+    "target": 0.5,
+    "reached": 0.0637
+   },
+   "passed": true
+  },
+  {
+   "joint": "shoulder_pan_joint",
+   "out": {
+    "target": 0.5,
+    "settled_s": 1.4,
+    "steady_error_rad": 0.0226,
+    "base_inhibited_seen": true,
+    "final": 0.5
+   },
+   "back": {
+    "target": 0.0,
+    "settled_s": 1.4,
+    "steady_error_rad": 0.0226,
+    "base_inhibited_seen": true,
+    "final": 0.0
+   },
+   "passed": true
+  },
+  {
+   "joint": "wrist_1_joint",
+   "out": {
+    "target": 0.5,
+    "settled_s": 1.4,
+    "steady_error_rad": 0.0283,
+    "base_inhibited_seen": true,
+    "final": 0.5
+   },
+   "back": {
+    "target": -0.0,
+    "settled_s": 1.4,
+    "steady_error_rad": 0.0283,
+    "base_inhibited_seen": true,
+    "final": -0.0
+   },
+   "passed": true
+  },
+  {
+   "joint": "wrist_2_joint",
+   "out": {
+    "target": 0.5,
+    "settled_s": 1.4,
+    "steady_error_rad": 0.0269,
+    "base_inhibited_seen": true,
+    "final": 0.5
+   },
+   "back": {
+    "target": 0.0,
+    "settled_s": 1.4,
+    "steady_error_rad": 0.0283,
+    "base_inhibited_seen": true,
+    "final": 0.0
+   },
+   "passed": true
+  },
+  {
+   "joint": "wrist_3_joint",
+   "out": {
+    "target": 0.5,
+    "settled_s": 1.4,
+    "steady_error_rad": 0.0269,
+    "base_inhibited_seen": true,
+    "final": 0.5
+   },
+   "back": {
+    "target": -0.0,
+    "settled_s": 1.4,
+    "steady_error_rad": 0.0269,
+    "base_inhibited_seen": true,
+    "final": -0.0
+   },
+   "passed": true
+  }
+ ],
+ "passed": true,
+ "joints": [
+  "elbow_joint",
+  "shoulder_lift_joint",
+  "shoulder_pan_joint",
+  "wrist_1_joint",
+  "wrist_2_joint",
+  "wrist_3_joint"
+ ],
+ "initial": {
+  "elbow_joint": 0.0,
+  "shoulder_lift_joint": 0.0,
+  "shoulder_pan_joint": 0.0,
+  "wrist_1_joint": -0.0,
+  "wrist_2_joint": 0.0,
+  "wrist_3_joint": -0.0
+ },
+ "stop": {
+  "joint": "shoulder_lift_joint",
+  "held_at": 0.0634,
+  "target_was": 1.5,
+  "drift_after_rad": 0.0,
+  "passed": true
+ },
+ "watchdog": {
+  "joint": "shoulder_lift_joint",
+  "held_at": -0.246,
+  "target_was": -6.2332,
+  "drift_after_rad": 0.0002,
+  "status": "heartbeat absent; holding measured articulation",
+  "passed": true
+ },
+ "final_error_rad": 0.0
+}

@@ -142,7 +142,7 @@ Work top to bottom. Each line links to its task.
 | I12 | [R10.6](#r106--six--and-eight-legged-robots) / [R10.7](#r107--segmented-and-additional-robot-forms) Multi-leg and forms | Done 2026-11-14: depth/IMU flipper policy (sequences a step, but the 4 Nm flippers cannot climb 0.18 m: measured), bounded gait slip/support recovery (unit-tested). Stronger flippers, other backends, per-model terrain missions remain | implemented |
 | I13 | [R5.2](#r52--go2-quadruped-locomotion) / [R5.3](#r53--berkeley-humanoid-lite-balance-and-walking) / [R12](#r12--legged-policy-training) Legged | 2026-11-15: Go2W `wheeled_walk` policy strafes (MuJoCo 0.116, Isaac 0.271 m/s); BHL contract/export/warm start implemented, four runs not passed; `get_up_roll` shaping stands 2/10 (first get-up 1/10). Go2 get-up, G1, GPU training remain | partial |
 | I14 | [R5.5](#r55--ackermann-rear-steer-and-anti-ackermann-cars) Cars | 2026-11-15: car course 13/13 on four backends (lookahead 1.25 × turning radius, forward escape when back-up is blocked); park-at-heading runtime and Drive-panel controls | implemented |
-| I15 | [R3.6](#r36--external-robot-assets-in-normal-launch) Assets | 2026-11-15: vendor policies for Booster T1 and Unitree G1/H1/H1_2 controllable (display-only 77 → 73), controllable siblings named, per-model license/mesh/texture audit (114/163 ok). 47 legged need training, 19 URDFs ship no control interface | partial |
+| I15 | [R3.6](#r36--external-robot-assets-in-normal-launch) Assets | 2026-11-17: UR10, UR5, YuMi controllable with declared lab servos (display-only 73 → 69); 2026-11-15: vendor policies for Booster T1 and Unitree G1/H1/H1_2, controllable siblings named, license/mesh audit (114/163 ok). 47 legged need training, 15 URDFs ship no control interface | partial |
 | I16 | [R6.5](#r65--world-to-occupancy-generation) / [R6.6](#r66--external-world-library) / [R6.2](#r62--dynamic-and-sensor-disturbance-cases) Worlds | 2026-11-15: fixture review of all 100 Gazebo examples, Fuel licences (80 models clear), 16 more worlds installed with grids, actors with real collision (`actor_collisions:=true`); earlier: free-region labelling, reviewed grid registration, sensor-fault relay on every backend. Upper floors remain | partial |
 | I17 | [R11](#r11--molar--probot-l-family) MOLAR | 2026-11-15: payload transfer to a station measured (Gazebo 3/3, MuJoCo 4/4, `nav_empty`); first Gazebo Nav2 route on CELISCA floor 1 passes (near-obstacle goal fails). Repeats, other backends, multi-floor and PyBullet/Isaac belts remain | partial |
 | I18 | [P4](#p4--mujoco-large-world-speed) MuJoCo speed | 2026-11-14: flex culling, exact tick pacing, oversleep payback, sensor thread (celisca_floor_1 0.81, furnished floor 0.99, hospital 0.43); large worlds remain flex-kinematics bound | partial |
@@ -232,7 +232,11 @@ parking batch needs its own run. Details and evidence are in the
   - **47 legged profiles without a published vendor policy:** Menagerie
     Spot, ANYmal, Cassie, Apollo and others, plus NASA R2/Valkyrie. They
     need trained policies (R12).
-  - **19 URDFs that ship no control interface.
+  - **15 URDFs that ship no control interface** (19 → 15 on 2026-11-17: UR10, UR5 and YuMi got
+    declared lab servos from their own limits via `robot_lab_utils/urdf_lab_servos.py`, screened on
+    PyBullet and MuJoCo; the URDF Panda's entry was stale since R5.7. Kinova and KUKA stay
+    display-only: unanchored roots, controllable Menagerie siblings.
+    [Receipt](docs/status/evidence/r36-lab-servo-arms-2026-11-17/README.md)).
 - **How to do it:**
   1. List display-only profiles: `src/robot_lab_robots/config/robots.yaml`
      and the provisioned registry (`scripts/provision_extension_assets.py`,

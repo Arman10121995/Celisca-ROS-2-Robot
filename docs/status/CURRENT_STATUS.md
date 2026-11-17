@@ -194,6 +194,8 @@ This page records what was measured. **The goals and remaining work are in one l
 [roadmap](../../ROADMAP.md)** (implementation queue first, then validation). Remaining-work
 notes in the dated entries below are history.
 
+November 17: **R3.6 lab servos for URDF arms.** UR10, UR5 and ABB YuMi are now controllable on PyBullet and MuJoCo, with declared lab servos derived from their own URDF limits. All joints move and return; Stop and heartbeat loss hold. Display-only profiles 73 → 69. [Receipt](evidence/r36-lab-servo-arms-2026-11-17/README.md).
+
 November 17: **R13.3 vacuum camera, retrain 3 installed (implemented, experimental).** Fine-tuned on new renders weighted to pet waste and socks. At score 0.75, pet-waste false positives fall on every held-out set and pet recall rises from 54 to 60 %; cable false positives fall on two of three sets, and sock false positives on one. The learned small_house zone job passes again with 0 bumper contacts and 0.286 m minimum body clearance. [Receipt](evidence/r133-retrain3-2026-11-17/README.md).
 
 November 17: **R5.8 native hands, normal GUI (implemented, experimental).** On MuJoCo the Robotiq 2F-85, its v4 variant and UMI each pass grasp, lift 5 cm, 3 s hold, return and supported release (grasp 11.9 / 13.0 / 0.7 N per side; held height within 0.1 mm). Fixed-mount hands lift relative to a new lab support stage. The fixture pedestal no longer touches the fingers (it had kept the Robotiq from closing). The dexterous DEX-EE does not pass: the cube tilts out of its fingertip tripod; it needs grasp synthesis. [Receipt](evidence/r58-hands-2026-11-17/README.md).

@@ -5,7 +5,9 @@
 On an already running launch it:
 1. moves each position joint by ``--delta`` rad (clamped to its limits) and
    back, recording settle time, steady error and whether the base was inhibited
-   while the joint moved;
+   while the joint moved. A move that does not settle (an arm at its zero
+   pose stalls against the floor or its own body) is retried by ``-delta``,
+   and the report says so;
 2. sends a long move and calls Stop part-way: the joint must hold;
 3. sends a long move and withholds the heartbeat: the plant must hold.
 Prints a JSON report; exit 0 when every check passed.
@@ -90,12 +92,21 @@ def main():
     for name in joints:
         lo, hi = channels()[name]['limits']
         m = margin(lo, hi)
-        target = max(lo + m, min(hi - m, home[name] + min(args.delta, 0.5 * (hi - lo))))
+        step = min(args.delta, 0.5 * (hi - lo))
+        target = max(lo + m, min(hi - m, home[name] + step))
         out = move(name, target)
         back = move(name, home[name])
-        passed = (out['settled_s'] is not None and back['settled_s'] is not None and out['base_inhibited_seen'])
+        phase = dict(joint=name, out=out, back=back)
+        if out['settled_s'] is None and back['settled_s'] is not None:
+            # Blocked in that direction (floor, own body): the servo is tested the other way.
+            phase['blocked_direction'] = dict(target=round(target, 4), reached=out.get('final'))
+            target = max(lo + m, min(hi - m, home[name] - step))
+            out = phase['out'] = move(name, target)
+            back = phase['back'] = move(name, home[name])
+        phase['passed'] = passed = (out['settled_s'] is not None and back['settled_s'] is not None
+                                    and out['base_inhibited_seen'])
         ok &= passed
-        report['phases'].append(dict(joint=name, out=out, back=back, passed=passed))
+        report['phases'].append(phase)
 
     # Stop part-way through a long move: the joint must hold where it is.
     # The joint with the widest range gives the longest move.

@@ -130,3 +130,101 @@ robots:
         base_radius: 0.35      # PMB2 radius 0.27 m plus margin
         carry_radius: 0.85     # base plus the extended arm and object
         place_inset: 0.15
+  # Fixed URDF arms with complete source joint limits but no ros2_control
+  # (ROADMAP R3.6): declared lab position servos from their own limits by
+  # robot_lab_utils.urdf_lab_servos (kp 40 x effort, kd 8 x sqrt(effort),
+  # <= 0.35 rad/s), as for the URDF Panda and TIAGo. Source mimic joints are
+  # couplings. Lab servos, not vendor tuning.
+  asset_ur10_ur10_robot:
+    type: arm
+    features: [articulated_arm, joint_control]
+    implementation_state: experimental
+    validation_state: pending
+    articulation:
+      schema: robot_lab.urdf_articulation.v1
+      panel: arm
+      home: {shoulder_pan_joint: 0.0, shoulder_lift_joint: 0.0, elbow_joint: 0.0, wrist_1_joint: 0.0, wrist_2_joint: 0.0,
+        wrist_3_joint: 0.0}
+      joints:
+        shoulder_pan_joint: {mode: position, lower: -6.28318530718, upper: 6.28318530718, effort: 330.0, max_velocity: 0.35,
+          kp: 13200.0, kd: 145.327217}
+        shoulder_lift_joint: {mode: position, lower: -6.28318530718, upper: 6.28318530718, effort: 330.0, max_velocity: 0.35,
+          kp: 13200.0, kd: 145.327217}
+        elbow_joint: {mode: position, lower: -3.14159265359, upper: 3.14159265359, effort: 150.0, max_velocity: 0.35, kp: 6000.0,
+          kd: 97.97959}
+        wrist_1_joint: {mode: position, lower: -6.28318530718, upper: 6.28318530718, effort: 54.0, max_velocity: 0.35, kp: 2160.0,
+          kd: 58.787754}
+        wrist_2_joint: {mode: position, lower: -6.28318530718, upper: 6.28318530718, effort: 54.0, max_velocity: 0.35, kp: 2160.0,
+          kd: 58.787754}
+        wrist_3_joint: {mode: position, lower: -6.28318530718, upper: 6.28318530718, effort: 54.0, max_velocity: 0.35, kp: 2160.0,
+          kd: 58.787754}
+      couplings: {}
+  asset_ur5_ur5_gripper:
+    type: arm
+    features: [articulated_arm, joint_control]
+    implementation_state: experimental
+    validation_state: pending
+    articulation:
+      schema: robot_lab.urdf_articulation.v1
+      panel: arm
+      home: {shoulder_pan_joint: 0.0, shoulder_lift_joint: 0.0, elbow_joint: 0.0, wrist_1_joint: 0.0, wrist_2_joint: 0.0,
+        wrist_3_joint: 0.0}
+      joints:
+        shoulder_pan_joint: {mode: position, lower: -3.14159265, upper: 3.14159265, effort: 150.0, max_velocity: 0.35, kp: 6000.0,
+          kd: 97.97959}
+        shoulder_lift_joint: {mode: position, lower: -3.14159265, upper: 3.14159265, effort: 150.0, max_velocity: 0.35, kp: 6000.0,
+          kd: 97.97959}
+        elbow_joint: {mode: position, lower: -3.14159265, upper: 3.14159265, effort: 150.0, max_velocity: 0.35, kp: 6000.0,
+          kd: 97.97959}
+        wrist_1_joint: {mode: position, lower: -3.14159265, upper: 3.14159265, effort: 28.0, max_velocity: 0.35, kp: 1120.0,
+          kd: 42.332021}
+        wrist_2_joint: {mode: position, lower: -3.14159265, upper: 3.14159265, effort: 28.0, max_velocity: 0.35, kp: 1120.0,
+          kd: 42.332021}
+        wrist_3_joint: {mode: position, lower: -3.14159265, upper: 3.14159265, effort: 28.0, max_velocity: 0.35, kp: 1120.0,
+          kd: 42.332021}
+      couplings: {}
+  asset_yumi:
+    type: arm
+    features: [articulated_arm, joint_control]
+    implementation_state: experimental
+    validation_state: pending
+    articulation:
+      schema: robot_lab.urdf_articulation.v1
+      panel: arm
+      home: {yumi_joint_1_r: 0.0, yumi_joint_2_r: 0.0, yumi_joint_7_r: 0.0, yumi_joint_3_r: 0.0, yumi_joint_4_r: 0.0, yumi_joint_5_r: 0.0,
+        yumi_joint_6_r: 0.0, yumi_joint_1_l: 0.0, yumi_joint_2_l: 0.0, yumi_joint_7_l: 0.0, yumi_joint_3_l: 0.0, yumi_joint_4_l: 0.0,
+        yumi_joint_5_l: 0.0, yumi_joint_6_l: 0.0, gripper_r_joint: 0.0, gripper_l_joint: 0.0}
+      joints:
+        yumi_joint_1_r: {mode: position, lower: -2.94087978961, upper: 2.94087978961, effort: 300.0, max_velocity: 0.35, kp: 12000.0,
+          kd: 138.564065}
+        yumi_joint_2_r: {mode: position, lower: -2.50454747661, upper: 0.759218224618, effort: 300.0, max_velocity: 0.35,
+          kp: 12000.0, kd: 138.564065}
+        yumi_joint_7_r: {mode: position, lower: -2.94087978961, upper: 2.94087978961, effort: 300.0, max_velocity: 0.35, kp: 12000.0,
+          kd: 138.564065}
+        yumi_joint_3_r: {mode: position, lower: -2.15548162621, upper: 1.3962634016, effort: 300.0, max_velocity: 0.35, kp: 12000.0,
+          kd: 138.564065}
+        yumi_joint_4_r: {mode: position, lower: -5.06145483078, upper: 5.06145483078, effort: 300.0, max_velocity: 0.35, kp: 12000.0,
+          kd: 138.564065}
+        yumi_joint_5_r: {mode: position, lower: -1.53588974176, upper: 2.40855436775, effort: 300.0, max_velocity: 0.35, kp: 12000.0,
+          kd: 138.564065}
+        yumi_joint_6_r: {mode: position, lower: -3.99680398707, upper: 3.99680398707, effort: 300.0, max_velocity: 0.35, kp: 12000.0,
+          kd: 138.564065}
+        yumi_joint_1_l: {mode: position, lower: -2.94087978961, upper: 2.94087978961, effort: 300.0, max_velocity: 0.35, kp: 12000.0,
+          kd: 138.564065}
+        yumi_joint_2_l: {mode: position, lower: -2.50454747661, upper: 0.759218224618, effort: 300.0, max_velocity: 0.35,
+          kp: 12000.0, kd: 138.564065}
+        yumi_joint_7_l: {mode: position, lower: -2.94087978961, upper: 2.94087978961, effort: 300.0, max_velocity: 0.35, kp: 12000.0,
+          kd: 138.564065}
+        yumi_joint_3_l: {mode: position, lower: -2.15548162621, upper: 1.3962634016, effort: 300.0, max_velocity: 0.35, kp: 12000.0,
+          kd: 138.564065}
+        yumi_joint_4_l: {mode: position, lower: -5.06145483078, upper: 5.06145483078, effort: 300.0, max_velocity: 0.35, kp: 12000.0,
+          kd: 138.564065}
+        yumi_joint_5_l: {mode: position, lower: -1.53588974176, upper: 2.40855436775, effort: 300.0, max_velocity: 0.35, kp: 12000.0,
+          kd: 138.564065}
+        yumi_joint_6_l: {mode: position, lower: -3.99680398707, upper: 3.99680398707, effort: 300.0, max_velocity: 0.35, kp: 12000.0,
+          kd: 138.564065}
+        gripper_r_joint: {mode: position, lower: 0.0, upper: 0.025, effort: 20.0, max_velocity: 0.05, kp: 800.0, kd: 35.777088}
+        gripper_l_joint: {mode: position, lower: 0.0, upper: 0.025, effort: 20.0, max_velocity: 0.05, kp: 800.0, kd: 35.777088}
+      couplings:
+        gripper_r_joint_m: {joint: gripper_r_joint, multiplier: 1.0, offset: 0.0}
+        gripper_l_joint_m: {joint: gripper_l_joint, multiplier: 1.0, offset: 0.0}

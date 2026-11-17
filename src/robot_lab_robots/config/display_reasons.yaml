@@ -27,23 +27,6 @@ asset_fetch:
     wheels: 2
   reason: The source URDF has 14 movable joints but no ros2_control or transmission description, so there is no
     vendor controller interface to use; gains would be invented.
-asset_franka_panda_panda:
-  code: no_control_interface
-  controllable_variants:
-  - menagerie_franka_emika_panda
-  facts:
-    actuators: {}
-    floating: false
-    format: urdf
-    joints: 9
-    legs: 0
-    ros2_control: false
-    rotors: 0
-    transmissions: 0
-    wheels: 0
-  reason: 'The source URDF has 9 movable joints but no ros2_control or transmission description, so there is no
-    vendor controller interface to use; gains would be invented. Controllable variant in this family (a different
-    source model): Native MuJoCo arm and hand (menagerie_franka_emika_panda).'
 asset_ginger_robot_gingerurdf:
   code: no_control_interface
   facts:
@@ -442,40 +425,6 @@ asset_r2_description_r2c_sim_upperbody_dynamics:
     wheels: 0
   reason: The source URDF has 18 movable joints but no ros2_control or transmission description, so there is no
     vendor controller interface to use; gains would be invented.
-asset_ur10_ur10_robot:
-  code: no_control_interface
-  controllable_variants:
-  - menagerie_universal_robots_ur10e
-  facts:
-    actuators: {}
-    floating: false
-    format: urdf
-    joints: 6
-    legs: 0
-    ros2_control: false
-    rotors: 0
-    transmissions: 0
-    wheels: 0
-  reason: 'The source URDF has 6 movable joints but no ros2_control or transmission description, so there is no
-    vendor controller interface to use; gains would be invented. Controllable variant in this family (a different
-    source model): UR10e native source (menagerie_universal_robots_ur10e).'
-asset_ur5_ur5_gripper:
-  code: no_control_interface
-  controllable_variants:
-  - menagerie_universal_robots_ur5e
-  facts:
-    actuators: {}
-    floating: false
-    format: urdf
-    joints: 6
-    legs: 0
-    ros2_control: false
-    rotors: 0
-    transmissions: 0
-    wheels: 0
-  reason: 'The source URDF has 6 movable joints but no ros2_control or transmission description, so there is no
-    vendor controller interface to use; gains would be invented. Controllable variant in this family (a different
-    source model): UR5e native source (menagerie_universal_robots_ur5e).'
 asset_val_description_forearm_left:
   code: no_control_interface
   facts:
@@ -672,20 +621,6 @@ asset_val_description_valkyrie_sim_gazebo_sync:
     wheels: 0
   reason: 'A floating-base legged robot: standing or walking needs a balance/locomotion controller or trained policy
     for exactly this model; none is provisioned. Joint jogging alone would let it fall.'
-asset_yumi:
-  code: no_control_interface
-  facts:
-    actuators: {}
-    floating: false
-    format: urdf
-    joints: 18
-    legs: 0
-    ros2_control: false
-    rotors: 0
-    transmissions: 0
-    wheels: 0
-  reason: The source URDF has 18 movable joints but no ros2_control or transmission description, so there is no
-    vendor controller interface to use; gains would be invented.
 menagerie_agility_cassie:
   code: needs_locomotion_policy
   facts:
