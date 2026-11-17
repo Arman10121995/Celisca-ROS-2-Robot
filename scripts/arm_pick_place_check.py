@@ -101,6 +101,8 @@ def main():
     ap.add_argument('--ready-timeout', type=float, default=180.0)
     ap.add_argument('--task-timeout', type=float, default=600.0)
     ap.add_argument('--probe-interlock', action='store_true', help='try base/arm interference (mobile)')
+    ap.add_argument('--transit', choices=('auto', 'nav2', 'straight'), default='auto',
+                    help='mobile drive legs: Nav2 when its server is up (auto), or forced')
     args = ap.parse_args()
     rclpy.init()
     node = rclpy.create_node('arm_pick_place_check')
@@ -138,7 +140,8 @@ def main():
     report['home_reached'] = bool(sent and not arm.get('active'))
     time.sleep(1.0)
     previous = json.dumps(state.get('last_result'))
-    request.publish(String(data=json.dumps(dict(object=args.object, support=args.support, lift=args.lift))))
+    request.publish(String(data=json.dumps(dict(object=args.object, support=args.support, lift=args.lift,
+                                                transit=args.transit))))
     probe = Probe(node, arm, command, heartbeat) if args.probe_interlock else None
     end = time.monotonic() + args.task_timeout
     while time.monotonic() < end:

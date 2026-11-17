@@ -1645,6 +1645,16 @@ def _build_simulation_actions(context):
                 }.items(),
             )
         )
+        # Mobile manipulators with a pick_place description fetch with Nav2
+        # transit legs in these modes (R5.9); Display keeps the straight legs.
+        if (simulator != "gazebo" and robot_config.get('pick_place') and robot_config.get('articulation')
+                and not robot_free):
+            actions.append(Node(package='robot_lab_bringup', executable='urdf_pick_place.py', output='screen',
+                parameters=[{'use_sim_time': _as_bool(use_sim_time, True), 'model_path': model_path,
+                             'articulation_config': json.dumps(robot_config['articulation'], sort_keys=True),
+                             'pick_place_config': json.dumps(robot_config['pick_place'], sort_keys=True),
+                             'world_path': world_path or '', 'base_x': float(spawn_x), 'base_y': float(spawn_y),
+                             'base_z': float(spawn_z), 'base_yaw': float(spawn_yaw)}]))
         # MOLAR-family robots (an owned articulation) bring their own
         # ros2_control controllers (robot_config 'controllers') and
         # molar_gazebo_control in every Gazebo mode, not the shared wheel

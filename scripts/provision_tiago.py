@@ -137,7 +137,9 @@ def provision(store, download=False):
         source_revision=sources[0]['revision'], source_entry=ENTRY, drive=drive,
         articulation=articulation, sensor_config=sensors, drive_in_display=True,
         supported_simulators=['mujoco', 'pybullet', 'isaac'], supported_modes=['display'],
-        experimental_modes_by_simulator={sim: ['display'] for sim in ('mujoco', 'pybullet', 'isaac')},
+        # Higher modes are experimental: Nav2 transit legs for the fetch (R5.9).
+        experimental_modes_by_simulator={sim: ['display', 'loc', 'slam', '3d_slam', 'nav']
+                                         for sim in ('mujoco', 'pybullet', 'isaac')},
         default_mode='display', default_map='nav_empty', spawn=dict(z=.006),
         features=['velocity_base', 'articulated_arm', 'lidar_2d', 'rgbd_camera', 'imu'],
         implementation_state='experimental', validation_state='pending', qualification_state='experimental_unqualified',

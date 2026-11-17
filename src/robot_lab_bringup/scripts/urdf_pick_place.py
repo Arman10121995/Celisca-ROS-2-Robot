@@ -33,10 +33,22 @@ there is no perception here.
 
 - One request fetches the object: drive to a standoff at the object's
   table, pick, back off, carry to the support, place, back off.
-- Drive legs are straight segments on ``/cmd_vel``, steered by the
-  ground-truth base pose (``/odom/ground_truth``). Each segment must keep
-  its clearance to every table, or the request is refused; there is no Nav2
-  here.
+- **Transit legs** go through Nav2 (``navigate_to_pose``, in the ``map``
+  frame) when its action server is up, i.e. in Nav mode with localization.
+  The run-up point is only a hand-off: once localization (``/amcl_pose``)
+  puts the base within ``NAV2_HANDOFF`` of it, the goal is cancelled and
+  docking starts (DWB circled the 7 cm goal tolerance for minutes).
+  Otherwise they are straight segments on ``/cmd_vel``, steered by the
+  ground-truth base pose (``/odom/ground_truth``), and must keep their
+  clearance to every table, or the request is refused. A request can force
+  the straight legs with ``"transit": "straight"``.
+- **Docking legs** are always short straight segments steered by truth: the
+  final ``approach_run`` into each table, and the back-off away from it.
+  The arm is planned from the same truth pose, as the objects are.
+- While Nav2 carries the object, the costmap footprint is the convex hull
+  of the base circle and a strip out to the held object, so the controller
+  checks the arm and object too; afterwards it returns to the base circle. The receipt records, at each Nav2 arrival, the pose error
+  to the goal and the localization error (``/amcl_pose`` against truth).
 - Each arm phase is planned on arrival from the measured base pose.
 - The base and the arm never move together. The node sends no base command
   while the articulation is active, and no arm target while the base moves.
@@ -59,8 +71,9 @@ from pathlib import Path
 import numpy as np
 import rclpy
 from rclpy.node import Node
-from geometry_msgs.msg import Twist
+from geometry_msgs.msg import Point32, Polygon, PoseWithCovarianceStamped, Twist
 from nav_msgs.msg import Odometry
+from rclpy.action import ActionClient
 from std_msgs.msg import Empty, String
 from std_srvs.srv import Trigger
 
@@ -76,10 +89,13 @@ DRIVE_SPEED = 0.15      # m/s
 TURN_SPEED = 0.3        # rad/s
 POSITION_TOLERANCE = 0.03   # m
 YAW_TOLERANCE = 0.03        # rad
-DRIVE_TIMEOUT = 120.0   # s per drive phase
+DRIVE_TIMEOUT = 240.0   # s per drive phase (Nav2 transit legs took 65-75 s under load)
 TRACE_PERIOD = 0.5      # s between stability samples in the receipt
 STILL_SPEED = 0.01      # m/s and rad/s: the base counts as stopped
 CARRY_DRIFT = 0.03      # m of object motion relative to the base while carrying
+NAV2_MIN_LEG = 0.5      # m: shorter transit legs stay straight (DWB circles on tiny paths)
+NAV2_HANDOFF = 0.15      # m: localization this close to the run-up point hands over to docking
+NAV_BASE_RADIUS = 0.3   # m, the Nav2 overlay's robot_radius (asset_pal_tiago.yaml)
 MOBILE_DEFAULTS = dict(reach=0.62, max_depth=0.3, back_off=0.6, approach_run=0.6, base_radius=0.35,
                        carry_radius=0.85, place_inset=0.15)
 
@@ -124,6 +140,13 @@ class PickPlace(Node):
         if self.mobile:
             self.create_subscription(Odometry, '/odom/ground_truth', self._on_odom, 10)
             self.cmd_pub = self.create_publisher(Twist, '/cmd_vel', 1)
+            from nav2_msgs.action import NavigateToPose
+            self.nav_action = NavigateToPose
+            self.nav_client = ActionClient(self, NavigateToPose, 'navigate_to_pose')
+            self.footprint_pubs = [self.create_publisher(Polygon, topic, 1) for topic in
+                                   ('/local_costmap/footprint', '/global_costmap/footprint')]
+            self.amcl_pose, self.amcl_at = None, -math.inf
+            self.create_subscription(PoseWithCovarianceStamped, '/amcl_pose', self._on_amcl, 10)
         self.create_subscription(String, '/simulation/free_bodies', self._on_truth, 10)
         self.create_subscription(String, '/molar/articulation/state', self._on_state, 10)
         self.create_subscription(String, '/pick_place/request', self._on_request, 1)
@@ -168,6 +191,11 @@ class PickPlace(Node):
         t = message.twist.twist
         self.base_twist = (math.hypot(t.linear.x, t.linear.y), abs(t.angular.z))
         self.base_at = _now()
+
+    def _on_amcl(self, message):
+        p, q = message.pose.pose.position, message.pose.pose.orientation
+        self.amcl_pose = (p.x, p.y, math.atan2(2 * (q.w * q.z + q.x * q.y), 1 - 2 * (q.y * q.y + q.z * q.z)))
+        self.amcl_at = _now()
 
     def _on_state(self, message):
         self.state = json.loads(message.data)
@@ -243,6 +271,14 @@ class PickPlace(Node):
         if table is None:
             raise ValueError('object %r is not resting on a known table' % name)
         task['table'] = table.name
+        transit = request.get('transit', 'auto')
+        if transit not in ('auto', 'nav2', 'straight'):
+            raise ValueError('transit must be auto, nav2 or straight')
+        nav2 = transit == 'nav2' or (transit == 'auto' and self.nav_client.server_is_ready())
+        if transit == 'nav2' and not self.nav_client.server_is_ready():
+            raise ValueError('no Nav2 navigate_to_pose server (start the robot in Nav mode)')
+        task['transit'] = 'nav2' if nav2 else 'straight'
+        task['plan']['transit'] = task['transit']
         # Check both stops now so that a bad request is refused before moving.
         pick_stop = self._pick_standoff(task)
         place_stop = self._place_standoff(task, pick_stop[:2])
@@ -276,7 +312,12 @@ class PickPlace(Node):
         return place_standoff(self.supports[task['support']], robot_xy, self.mobile['place_inset'], self.mobile['reach'])
 
     def _route(self, task, goal, start, back_off, clearance):
-        """Waypoints start -> (back off) -> run-up point -> goal; checked against every table."""
+        """Waypoints start -> (back off) -> run-up point -> goal; checked against every table.
+
+        With Nav2 transit the leg to the run-up point is Nav2's: it plans
+        around the tables itself, so only the docking legs and the turn at
+        the run-up point are checked here.
+        """
         from robot_lab_mujoco.arm_pick_place import segment_clearance
         x, y, yaw = goal
         run = self.mobile['approach_run']
@@ -286,7 +327,10 @@ class PickPlace(Node):
             out = (start[0] - back_off * math.cos(start[3]), start[1] - back_off * math.sin(start[3]))
             waypoints.append(dict(x=out[0], y=out[1], reverse=True))
             points.append(out)
-        waypoints += [dict(x=pre[0], y=pre[1]), dict(x=x, y=y, yaw=yaw)]
+        transit_from = points[-1]
+        nav2 = task.get('transit') == 'nav2' and math.hypot(pre[0] - transit_from[0], pre[1] - transit_from[1]) >= NAV2_MIN_LEG
+        waypoints += [dict(x=pre[0], y=pre[1], yaw=yaw, nav2=True) if nav2 else dict(x=pre[0], y=pre[1]),
+                      dict(x=x, y=y, yaw=yaw)]
         points.append(pre)
         points.append((x, y))
         boxes = list(self.supports.values())
@@ -296,6 +340,8 @@ class PickPlace(Node):
         legs = list(zip(points[:-1], points[1:]))
         for index, (a, b) in enumerate(legs):
             straight = index == len(legs) - 1 or (back_off and index == 0)
+            if nav2 and not straight:
+                continue
             needed = self.mobile['base_radius'] if straight else clearance
             distance, nearest = segment_clearance(boxes, a, b)
             if distance < needed:
@@ -473,8 +519,12 @@ class PickPlace(Node):
         if self.state.get('active'):
             # Never drive a moving arm: wait for it to settle.
             interlock['drive_ticks_with_articulation_active'] += 1
+            if phase.get('nav_goal') is not None:
+                return self._finish('failed', 'the arm moved during a Nav2 leg')
             return self._twist(0.0, 0.0)
         x, y, _z, yaw = self.base_pose
+        if phase['waypoint'] < len(phase['waypoints']) and phase['waypoints'][phase['waypoint']].get('nav2'):
+            return self._nav2_leg(task, phase, phase['waypoints'][phase['waypoint']])
         if phase['waypoint'] >= len(phase['waypoints']):
             self._twist(0.0, 0.0)
             if max(self.base_twist) < STILL_SPEED:
@@ -514,6 +564,84 @@ class PickPlace(Node):
         phase['waypoint'] += 1
         phase['rolling'] = phase['at_point'] = False
         self._twist(0.0, 0.0)
+
+    def _nav2_leg(self, task, phase, target):
+        """Send one NavigateToPose goal and wait for its result; Nav2 owns /cmd_vel meanwhile."""
+        if phase.get('nav_goal') is None:
+            if not self.nav_client.server_is_ready():
+                return self._finish('failed', 'Nav2 navigate_to_pose server lost')
+            self._set_footprint(self._carry_outline(task) if phase.get('carrying') else None)
+            goal = self.nav_action.Goal()
+            goal.pose.header.frame_id = 'map'
+            goal.pose.header.stamp = self.get_clock().now().to_msg()
+            goal.pose.pose.position.x, goal.pose.pose.position.y = float(target['x']), float(target['y'])
+            goal.pose.pose.orientation.z = math.sin(target['yaw'] / 2.0)
+            goal.pose.pose.orientation.w = math.cos(target['yaw'] / 2.0)
+            phase['nav_goal'] = dict(sent=_now(), future=self.nav_client.send_goal_async(goal), result=None)
+            return
+        nav = phase['nav_goal']
+        if nav['result'] is None:
+            if not nav['future'].done():
+                return
+            handle = nav['future'].result()
+            if not handle.accepted:
+                return self._finish('failed', 'Nav2 rejected the %s goal' % phase['name'])
+            nav['handle'], nav['result'] = handle, handle.get_result_async()
+            return
+        from action_msgs.msg import GoalStatus
+        located = self.amcl_pose is not None and _now() - self.amcl_at < 2.0
+        if located and math.hypot(self.amcl_pose[0] - target['x'], self.amcl_pose[1] - target['y']) < NAV2_HANDOFF:
+            if not nav['result'].done():
+                nav['handle'].cancel_goal_async()
+            status = GoalStatus.STATUS_SUCCEEDED
+            handed_over = True
+        elif not nav['result'].done():
+            return
+        else:
+            status, handed_over = nav['result'].result().status, False
+        x, y, _z, yaw = self.base_pose
+        entry = dict(phase=phase['name'] + '_nav2', status=int(status), handed_over=handed_over,
+                     seconds=round(_now() - nav['sent'], 2),
+                     goal=[round(target['x'], 3), round(target['y'], 3), round(target['yaw'], 3)],
+                     truth=[round(x, 4), round(y, 4), round(yaw, 4)],
+                     goal_error_m=round(math.hypot(target['x'] - x, target['y'] - y), 4),
+                     goal_yaw_error_rad=round(_wrap(target['yaw'] - yaw), 4))
+        if self.amcl_pose is not None:
+            entry['localization_error_m'] = round(math.hypot(self.amcl_pose[0] - x, self.amcl_pose[1] - y), 4)
+            entry['localization_yaw_error_rad'] = round(_wrap(self.amcl_pose[2] - yaw), 4)
+            entry['localization_age_s'] = round(_now() - self.amcl_at, 2)
+        task['log'].append(entry)
+        if status != GoalStatus.STATUS_SUCCEEDED:
+            return self._finish('failed', 'Nav2 %s leg ended with status %d' % (phase['name'], status))
+        self._set_footprint(None)
+        phase['nav_goal'] = None
+        phase['waypoint'] += 1
+        phase['rolling'] = phase['at_point'] = False
+
+    def _carry_outline(self, task):
+        """Base circle plus a strip to 5 cm past the held object, as base-frame points."""
+        reach = float(self._in_base(self.truth[task['object']][:3])[0]) + max(self.object_sizes[task['object']][:2]) / 2.0 + 0.05
+        return [(x, -0.15) for x in (0.0, reach)] + [(reach, 0.15), (0.0, 0.15)]
+
+    def _set_footprint(self, extra):
+        """Costmap footprint (both costmaps): convex hull of the base circle and ``extra`` points."""
+        points = [(NAV_BASE_RADIUS * math.cos(a), NAV_BASE_RADIUS * math.sin(a))
+                  for a in np.linspace(0.0, 2 * math.pi, 16, endpoint=False)] + list(extra or [])
+        points = sorted(set(points))
+
+        def turn(o, a, b):
+            return (a[0] - o[0]) * (b[1] - o[1]) - (a[1] - o[1]) * (b[0] - o[0])
+        hull = []
+        for sequence in (points, points[::-1]):     # monotone chain: lower, then upper hull
+            chain = []
+            for point in sequence:
+                while len(chain) >= 2 and turn(chain[-2], chain[-1], point) <= 0:
+                    chain.pop()
+                chain.append(point)
+            hull += chain[:-1]
+        polygon = Polygon(points=[Point32(x=float(x), y=float(y), z=0.0) for x, y in hull])
+        for publisher in self.footprint_pubs:
+            publisher.publish(polygon)
 
     def _trace(self, task):
         """One stability sample: base and object truth, fingers and the object in the base frame."""
@@ -611,6 +739,12 @@ class PickPlace(Node):
     def _finish(self, outcome, message):
         task, self.task = self.task, None
         if self.mobile:
+            phase = task['phases'][min(task['phase_index'], len(task['phases']) - 1)] if task else {}
+            nav = phase.get('nav_goal') or {}
+            if nav.get('handle') is not None:
+                nav['handle'].cancel_goal_async()
+            if task and task.get('transit') == 'nav2':
+                self._set_footprint(None)
             self._twist(0.0, 0.0)
         if outcome != 'succeeded' and self.stop_client.service_is_ready():
             self.stop_client.call_async(Trigger.Request())
@@ -621,6 +755,7 @@ class PickPlace(Node):
                       message=message, request=task['request'], object=task['object'], support=task['support'],
                       object_start=task['object_start'], plan=task['plan'], stages=task['log'],
                       mobile=bool(self.mobile), interlock=task.get('interlock') if self.mobile else None,
+                      transit=task.get('transit'),
                       trace=task.get('trace', []),
                       phase=task['phases'][min(task['phase_index'], len(task['phases']) - 1)]['name'],
                       seconds=round(_now() - task['started'], 2), plant_id=self.state.get('plant_id'),

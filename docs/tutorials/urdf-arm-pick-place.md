@@ -100,7 +100,24 @@ python3 scripts/run_with_launch.py --log run.log --launch \
 **Driving.** Drives are straight legs on `/cmd_vel`, steered by
 `/odom/ground_truth`. A request is refused when a leg would pass too close
 to a table: the base radius for straight approaches and back-offs, the
-carried-arm radius for the other legs. There is no Nav2 in this mode.
+carried-arm radius for the other legs. There is no Nav2 in Display.
+
+**Driving with Nav2 (Nav mode, experimental).** Launch with `mode:=nav
+allow_experimental_assets:=true` (in the GUI, tick **Enable experimental
+robot workflows** and choose **Nav**). The node then sends the transit legs to Nav2:
+to the run-up point before the pickup table, and, while carrying, to the
+run-up point before the drop table.
+
+- **Hand-off:** once AMCL puts the base within 0.15 m of the run-up point,
+  it cancels the Nav2 goal and docks with the same straight, truth-steered
+  0.6 m move.
+- **Short legs:** a leg under 0.5 m stays straight.
+- **Carry footprint:** while carrying, the costmap footprint covers the arm
+  and object.
+- **Forcing straight legs:** `--transit straight` (request
+  `"transit": "straight"`) keeps the straight legs in Nav mode.
+
+[Measured Nav2 runs](../status/evidence/r59-tiago-nav2-fetch-2026-11-17/README.md).
 
 **Base and arm never move together.**
 

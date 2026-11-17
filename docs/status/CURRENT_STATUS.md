@@ -196,6 +196,8 @@ notes in the dated entries below are history.
 
 November 17: **R11 MOLAR done-when met.** The payload transfer passes in Gazebo on `celisca_floor_1_detailed`, the world where route A passed on 15 Nov. The box ends on the station with no drag on retract. [Receipt](evidence/r11-molar-celisca-transfer-2026-11-17/README.md).
 
+November 17: **TIAGo fetch with Nav2.** In Nav mode, TIAGo's fetch now drives its transit legs with Nav2 and AMCL. The short 0.6 m docking moves into each table stay steered by simulator truth, because AMCL error is 0.07–0.13 m in this sparse world. Passes on MuJoCo twice (265 s, 262 s) and PyBullet once (117.5 s), with place error ≤ 0.1 mm. Three failed attempts are kept with their fixes. Measured while training loaded the CPU. [Receipt](evidence/r59-tiago-nav2-fetch-2026-11-17/README.md).
+
 November 17: **URDF arms on Gazebo.** URDF arms without ros2_control now run the shared articulation contract on Gazebo, and Gazebo publishes loose-object truth. The URDF Panda's pick and place passes there twice (27.8 s and 30.6 s, place error 0.0 mm), so it passes on all four backends. UR5, YuMi and a raised UR10 pass the joint screen; the UR10 lying on the floor does not (its wrist swings on floor contact). The arm screen now also requires a joint to stay settled. Measured while training loaded the CPU. [Receipt](evidence/r57-gazebo-urdf-arms-2026-11-17/README.md).
 
 November 17: **Isaac pick and place.** Loose world objects now exist on Isaac and publish truth. The URDF Panda's pick and place passes there (20.2 s, place error 0.0 mm). TIAGo's fetch drives and keeps the interlock on Isaac, but its grasp fails: the block tips or the descent stalls. Not isolated yet. [Receipt](evidence/r57-isaac-pick-place-2026-11-17/README.md).
