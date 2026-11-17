@@ -91,6 +91,15 @@ interrupts a second route with the GUI Stop button. The source-collision
 detour has a separate physical fixture and dense audit; it is not a TIAGo
 obstacle mission. [Planning receipt](../status/evidence/tiago-joint-planning-2026-11-14/README.md).
 
+## Fetch an object (MuJoCo, PyBullet)
+
+In world `mobile_fetch_lab`, the **Mobile arm** page's **Fetch** section
+makes TIAGo do the whole task. It drives to `pickup_table`, picks
+`fetch_block`, carries it to `drop_table` and places it. Base and arm never
+move together. Object poses come from simulator truth. The
+[pick-and-place tutorial](urdf-arm-pick-place.md#fetch-with-tiago-mobile-manipulation)
+covers the run, the checks and the limits.
+
 ## What stays original, and what the lab supplies
 
 | Part | Contract |

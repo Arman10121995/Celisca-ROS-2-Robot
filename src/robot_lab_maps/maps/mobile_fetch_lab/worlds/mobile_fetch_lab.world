@@ -1,0 +1,84 @@
+<?xml version="1.0" ?>
+<!-- Mobile pick-carry-place scene (ROADMAP R5.9). A mobile manipulator
+     starts at the origin facing +x. pickup_table (0.6 x 1.0 m, top 0.50 m)
+     stands at (1.6, 0); fetch_block, a loose 40 x 40 x 150 mm, 100 g box,
+     stands 0.15 m inside its near edge (tall enough for TIAGo's long PAL
+     finger pads, which reach 0.09 m past the grasp frame). drop_table (1.0 x 0.6 m, top 0.50 m) stands at
+     (0, 2.2). The tables are static; the cube is the only dynamic model, so
+     importers that build free bodies (MuJoCo, PyBullet:
+     sdf_world.extract_dynamic_bodies) keep it loose. Lab fixture, not a
+     calibrated workcell. -->
+<sdf version="1.7">
+  <world name="mobile_fetch_lab">
+    <physics type="ode">
+      <max_step_size>0.002</max_step_size>
+    </physics>
+    <light name="sun" type="directional">
+      <cast_shadows>true</cast_shadows>
+      <pose>0 0 10 0 0 0</pose>
+      <diffuse>0.8 0.8 0.8 1</diffuse>
+      <specular>0.3 0.3 0.3 1</specular>
+      <direction>-0.3 0.2 -1</direction>
+    </light>
+    <model name="ground_plane">
+      <static>true</static>
+      <pose>0 0 -0.05 0 0 0</pose>
+      <link name="link">
+        <collision name="collision">
+          <geometry><box><size>8.0 8.0 0.1</size></box></geometry>
+          <surface><friction><ode><mu>1.0</mu><mu2>1.0</mu2></ode></friction></surface>
+        </collision>
+        <visual name="visual">
+          <geometry><box><size>8.0 8.0 0.1</size></box></geometry>
+          <material><ambient>0.55 0.55 0.5 1</ambient><diffuse>0.55 0.55 0.5 1</diffuse></material>
+        </visual>
+      </link>
+    </model>
+    <model name="pickup_table">
+      <static>true</static>
+      <pose>1.6 0.0 0.25 0 0 0</pose>
+      <link name="link">
+        <collision name="collision">
+          <geometry><box><size>0.6 1.0 0.5</size></box></geometry>
+          <surface><friction><ode><mu>0.9</mu><mu2>0.9</mu2></ode></friction></surface>
+        </collision>
+        <visual name="visual">
+          <geometry><box><size>0.6 1.0 0.5</size></box></geometry>
+          <material><ambient>0.45 0.35 0.25 1</ambient><diffuse>0.45 0.35 0.25 1</diffuse></material>
+        </visual>
+      </link>
+    </model>
+    <model name="drop_table">
+      <static>true</static>
+      <pose>0.0 2.2 0.25 0 0 0</pose>
+      <link name="link">
+        <collision name="collision">
+          <geometry><box><size>1.0 0.6 0.5</size></box></geometry>
+          <surface><friction><ode><mu>0.9</mu><mu2>0.9</mu2></ode></friction></surface>
+        </collision>
+        <visual name="visual">
+          <geometry><box><size>1.0 0.6 0.5</size></box></geometry>
+          <material><ambient>0.45 0.35 0.25 1</ambient><diffuse>0.45 0.35 0.25 1</diffuse></material>
+        </visual>
+      </link>
+    </model>
+    <model name="fetch_block">
+      <static>false</static>
+      <pose>1.45 0 0.575 0 0 0</pose>
+      <link name="link">
+        <inertial>
+          <mass>0.1</mass>
+          <inertia><ixx>2.008e-04</ixx><iyy>2.008e-04</iyy><izz>2.667e-05</izz><ixy>0</ixy><ixz>0</ixz><iyz>0</iyz></inertia>
+        </inertial>
+        <collision name="collision">
+          <geometry><box><size>0.04 0.04 0.15</size></box></geometry>
+          <surface><friction><ode><mu>1.0</mu><mu2>1.0</mu2></ode></friction></surface>
+        </collision>
+        <visual name="visual">
+          <geometry><box><size>0.04 0.04 0.15</size></box></geometry>
+          <material><ambient>0.85 0.2 0.15 1</ambient><diffuse>0.85 0.2 0.15 1</diffuse></material>
+        </visual>
+      </link>
+    </model>
+  </world>
+</sdf>

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Pick and place for a fixed URDF arm on any backend (ROADMAP R5.7).
+"""Pick and place for a URDF arm on any backend (ROADMAP R5.7, R5.9).
 
 The plan comes from robot_lab_mujoco.arm_pick_place: a private MuJoCo
 kinematics and collision model of the robot URDF and the world's static
@@ -29,6 +29,21 @@ there is no perception here.
 - **Release:** after the retreat, the object rests on the selected support:
   at its top, inside its footprint, not moving.
 
+**Mobile manipulators** (profile ``pick_place.mobile``; R5.9)
+
+- One request fetches the object: drive to a standoff at the object's
+  table, pick, back off, carry to the support, place, back off.
+- Drive legs are straight segments on ``/cmd_vel``, steered by the
+  ground-truth base pose (``/odom/ground_truth``). Each segment must keep
+  its clearance to every table, or the request is refused; there is no Nav2
+  here.
+- Each arm phase is planned on arrival from the measured base pose.
+- The base and the arm never move together. The node sends no base command
+  while the articulation is active, and no arm target while the base moves.
+  The articulation contract also enforces this (``base_inhibited``, and a
+  hold when the base moves). The receipt records both directions.
+- While carrying, the object must keep its pose relative to the base.
+
 **Stopping and receipts**
 
 - Stop, a stale articulation state, a lost plant or a failed check ends the
@@ -44,6 +59,8 @@ from pathlib import Path
 import numpy as np
 import rclpy
 from rclpy.node import Node
+from geometry_msgs.msg import Twist
+from nav_msgs.msg import Odometry
 from std_msgs.msg import Empty, String
 from std_srvs.srv import Trigger
 
@@ -51,11 +68,28 @@ PERIOD = 0.1            # s between targets while moving
 RATE = 0.3              # rad/s, below the arm channels' 0.35 cap
 SETTLE_TOLERANCE = 0.01  # rad
 STAGE_TIMEOUT = 30.0    # s per stage
+FINGER_STILL_WINDOW = 0.5   # s: fingers count as stopped when they move
+FINGER_STILL_SPAN = 0.0005  # m (or rad) less than this within the window
 STATE_STALE = 1.0       # s
+# Base driving (mobile profiles): below TIAGo's 0.2 m/s, 0.4 rad/s limits.
+DRIVE_SPEED = 0.15      # m/s
+TURN_SPEED = 0.3        # rad/s
+POSITION_TOLERANCE = 0.03   # m
+YAW_TOLERANCE = 0.03        # rad
+DRIVE_TIMEOUT = 120.0   # s per drive phase
+TRACE_PERIOD = 0.5      # s between stability samples in the receipt
+STILL_SPEED = 0.01      # m/s and rad/s: the base counts as stopped
+CARRY_DRIFT = 0.03      # m of object motion relative to the base while carrying
+MOBILE_DEFAULTS = dict(reach=0.62, max_depth=0.3, back_off=0.6, approach_run=0.6, base_radius=0.35,
+                       carry_radius=0.85, place_inset=0.15)
 
 
 def _now():
     return time.monotonic()
+
+
+def _wrap(angle):
+    return math.atan2(math.sin(angle), math.cos(angle))
 
 
 def _plain(value):
@@ -85,6 +119,11 @@ class PickPlace(Node):
         self.task = None
         self.last_result = None
         self.message = 'Select an object and a support, then request a pick and place.'
+        self.mobile = dict(MOBILE_DEFAULTS, **self.config['mobile']) if self.config.get('mobile') else None
+        self.base_pose, self.base_twist, self.base_at = None, (0.0, 0.0), -math.inf
+        if self.mobile:
+            self.create_subscription(Odometry, '/odom/ground_truth', self._on_odom, 10)
+            self.cmd_pub = self.create_publisher(Twist, '/cmd_vel', 1)
         self.create_subscription(String, '/simulation/free_bodies', self._on_truth, 10)
         self.create_subscription(String, '/molar/articulation/state', self._on_state, 10)
         self.create_subscription(String, '/pick_place/request', self._on_request, 1)
@@ -122,6 +161,14 @@ class PickPlace(Node):
         self.truth = json.loads(message.data)
         self.truth_at = _now()
 
+    def _on_odom(self, message):
+        p, q = message.pose.pose.position, message.pose.pose.orientation
+        yaw = math.atan2(2 * (q.w * q.z + q.x * q.y), 1 - 2 * (q.y * q.y + q.z * q.z))
+        self.base_pose = (p.x, p.y, p.z, yaw)
+        t = message.twist.twist
+        self.base_twist = (math.hypot(t.linear.x, t.linear.y), abs(t.angular.z))
+        self.base_at = _now()
+
     def _on_state(self, message):
         self.state = json.loads(message.data)
         self.state_at = _now()
@@ -134,6 +181,8 @@ class PickPlace(Node):
         self.state_pub.publish(String(data=json.dumps(dict(
             schema='robot_lab.pick_place_state.v1', phase=task.get('phase', 'idle'), stage=task.get('stage'),
             message=self.message, objects=sorted(self.truth), supports=sorted(self.supports),
+            mobile=bool(self.mobile), drive_phase=(task.get('phases') or [{}])[task.get('phase_index', 0)].get('name')
+            if task else None,
             last_result=self.last_result, truth_age_s=round(_now() - self.truth_at, 2) if self.truth else None),
             default=_plain)))
 
@@ -156,7 +205,7 @@ class PickPlace(Node):
             self.last_result = dict(passed=False, error=str(exc), request=message.data)
 
     def _plan(self, request):
-        from robot_lab_mujoco.arm_pick_place import ArmScene, Box, plan_pick_place, synchronised
+        """Validate a request and build its phases; arm phases on a mobile base are planned on arrival."""
         name, support_name = request.get('object'), request.get('support')
         if name not in self.truth or _now() - self.truth_at > STATE_STALE:
             raise ValueError('no fresh truth for object %r' % name)
@@ -168,25 +217,152 @@ class PickPlace(Node):
         missing = [n for n in self.spec.arm_joints + self.spec.finger_joints if n not in measured]
         if missing:
             raise ValueError('no measurement for %s' % missing)
-        pose = self.truth[name]
-        size = self.object_sizes.get(name)
-        if not size:
+        if not self.object_sizes.get(name):
             raise ValueError('object %r is not a loose box of the world file' % name)
-        obj = Box(name, pose[:3], pose[3:], size)
+        lift = float(request.get('lift', 0.10))
+        approach = float(request.get('approach', 0.10))
+        if not 0.03 <= lift <= 0.25 or not 0.03 <= approach <= 0.25:
+            raise ValueError('lift and approach must be 0.03-0.25 m')
         if self.robot_mjcf is None:
             from robot_lab_adapter.legged_training import _package_map
             from robot_lab_mujoco.mujoco_spawner import _build_mjcf_from_urdf
             urdf = Path(self.get_parameter('model_path').value).read_text()
             self.robot_mjcf = _build_mjcf_from_urdf(urdf, _package_map(urdf), robot_name='pick_place_robot')
-        obstacles = list(self.supports.values())
-        scene = ArmScene(self.robot_mjcf, self.spec, obstacles, obj, base=self.base)
+        task = dict(phase='executing', request=request, object=name, support=support_name, lift=lift,
+                    approach=approach, started=_now(), log=[], plan={}, phase_index=0,
+                    object_start=list(self.truth[name][:3]),
+                    interlock=dict(max_base_speed_in_arm_phases=0.0, max_base_turn_in_arm_phases=0.0,
+                                   drive_ticks_with_articulation_active=0, drive_ticks=0))
+        if not self.mobile:
+            task['phases'] = [dict(kind='arm', name='pick_place')]
+            self._plan_arm(task, task['phases'][0])
+            return task
+        if self.base_pose is None or _now() - self.base_at > STATE_STALE:
+            raise ValueError('no fresh base pose on /odom/ground_truth')
+        table = self._table_under(name)
+        if table is None:
+            raise ValueError('object %r is not resting on a known table' % name)
+        task['table'] = table.name
+        # Check both stops now so that a bad request is refused before moving.
+        pick_stop = self._pick_standoff(task)
+        place_stop = self._place_standoff(task, pick_stop[:2])
+        task['plan'].update(pick_base=[round(v, 3) for v in pick_stop], place_base=[round(v, 3) for v in place_stop[0]],
+                            place_xy=[round(v, 3) for v in place_stop[1]])
+        task['phases'] = [dict(kind='drive', name='to_object'), dict(kind='arm', name='pick'),
+                          dict(kind='drive', name='carry', carrying=True), dict(kind='arm', name='place'),
+                          dict(kind='drive', name='clear')]
+        self._start_phase(task)
+        return task
+
+    def _table_under(self, name):
+        from robot_lab_mujoco.arm_pick_place import box_distance
+        pose = self.truth[name]
+        half = float(self.object_sizes[name][2]) / 2.0
+        for box in self.supports.values():
+            if box_distance(box, pose) < 1e-6 and abs(pose[2] - half - box.top) < 0.02:
+                return box
+        return None
+
+    def _pick_standoff(self, task):
+        from robot_lab_mujoco.arm_pick_place import standoff
+        table = self.supports[task['table']]
+        x, y, yaw, depth = standoff(table, self.truth[task['object']][:2], self.mobile['reach'], self.base_pose[:2])
+        if depth > self.mobile['max_depth']:
+            raise ValueError('object %.2f m inside the table edge; out of reach (%.2f m)' % (depth, self.mobile['max_depth']))
+        return x, y, yaw
+
+    def _place_standoff(self, task, robot_xy):
+        from robot_lab_mujoco.arm_pick_place import place_standoff
+        return place_standoff(self.supports[task['support']], robot_xy, self.mobile['place_inset'], self.mobile['reach'])
+
+    def _route(self, task, goal, start, back_off, clearance):
+        """Waypoints start -> (back off) -> run-up point -> goal; checked against every table."""
+        from robot_lab_mujoco.arm_pick_place import segment_clearance
+        x, y, yaw = goal
+        run = self.mobile['approach_run']
+        pre = (x - run * math.cos(yaw), y - run * math.sin(yaw))
+        points, waypoints = [tuple(start[:2])], []
+        if back_off:
+            out = (start[0] - back_off * math.cos(start[3]), start[1] - back_off * math.sin(start[3]))
+            waypoints.append(dict(x=out[0], y=out[1], reverse=True))
+            points.append(out)
+        waypoints += [dict(x=pre[0], y=pre[1]), dict(x=x, y=y, yaw=yaw)]
+        points.append(pre)
+        points.append((x, y))
+        boxes = list(self.supports.values())
+        # Legs between turns keep ``clearance`` (the carried arm's sweep). The
+        # straight back-off and the last leg in run along the arm, which stays
+        # over the table, so they keep the base's own clearance.
+        legs = list(zip(points[:-1], points[1:]))
+        for index, (a, b) in enumerate(legs):
+            straight = index == len(legs) - 1 or (back_off and index == 0)
+            needed = self.mobile['base_radius'] if straight else clearance
+            distance, nearest = segment_clearance(boxes, a, b)
+            if distance < needed:
+                raise ValueError('no straight route clear of %s (%.2f m < %.2f m); move the robot or the tables'
+                                 % (nearest, distance, needed))
+        for point in points[1:-1]:     # turning in place: the carried arm sweeps a circle
+            distance, nearest = segment_clearance(boxes, point, point)
+            if distance < clearance:
+                raise ValueError('cannot turn at (%.2f, %.2f): %s %.2f m away' % (point[0], point[1], nearest, distance))
+        return waypoints
+
+    def _start_phase(self, task):
+        phase = task['phases'][task['phase_index']]
+        phase['started'] = _now()
+        task['stage'] = phase['name']
+        self.message = 'Phase %s' % phase['name']
+        if phase['kind'] == 'arm':
+            self._plan_arm(task, phase)
+            return
+        pose = self.base_pose
+        if phase['name'] == 'to_object':
+            phase['waypoints'] = self._route(task, self._pick_standoff(task), pose, 0.0, self.mobile['base_radius'])
+        elif phase['name'] == 'carry':
+            goal, xy = self._place_standoff(task, pose[:2])
+            task['plan']['place_xy'] = [round(v, 3) for v in xy]
+            phase['waypoints'] = self._route(task, goal, pose, self.mobile['back_off'], self.mobile['carry_radius'])
+            phase['reference'] = self._in_base(self.truth[task['object']][:3]).tolist()
+        else:
+            out = (pose[0] - self.mobile['back_off'] * math.cos(pose[3]),
+                   pose[1] - self.mobile['back_off'] * math.sin(pose[3]))
+            phase['waypoints'] = [dict(x=out[0], y=out[1], reverse=True)]
+        phase['waypoint'] = 0
+
+    def _in_base(self, point):
+        x, y, z, yaw = self.base_pose
+        dx, dy = point[0] - x, point[1] - y
+        return np.array([math.cos(yaw) * dx + math.sin(yaw) * dy, -math.sin(yaw) * dx + math.cos(yaw) * dy, point[2] - z])
+
+    def _plan_arm(self, task, phase):
+        """Plan an arm phase from the measured arm, base and object."""
+        from robot_lab_mujoco.arm_pick_place import ArmScene, Box, plan_pick, plan_pick_place, plan_place, synchronised
+        measured = self.measured()
+        name = task['object']
+        if _now() - self.truth_at > STATE_STALE:
+            raise ValueError('object truth stale')
+        pose = self.truth[name]
+        obj = Box(name, pose[:3], pose[3:], self.object_sizes[name])
+        base = self.base if not self.mobile else self.base_pose
+        planned_joints = set(self.spec.arm_joints + self.spec.finger_joints)
+        held = {c['name']: c['measured'] for c in self.state.get('channels', [])
+                if c.get('mode') == 'position' and c.get('measured') is not None and c['name'] not in planned_joints}
+        scene = ArmScene(self.robot_mjcf, self.spec, list(self.supports.values()), obj, base=base, held=held)
         start = {n: float(measured[n]) for n in self.spec.arm_joints}
-        lift = float(request.get('lift', 0.10))
-        approach = float(request.get('approach', 0.10))
-        if not 0.03 <= lift <= 0.25 or not 0.03 <= approach <= 0.25:
-            raise ValueError('lift and approach must be 0.03-0.25 m')
-        planned = plan_pick_place(scene, start, obj, self.supports[support_name], approach=approach, lift=lift,
-                                  seeds=[self.home])
+        options = dict(approach=task['approach'], lift=task['lift'], seeds=[self.home])
+        support = self.supports[task['support']]
+        if phase['name'] == 'pick_place':
+            planned = plan_pick_place(scene, start, obj, support, **options)
+            task['plan'].update(grasp_width_m=planned['grasp_width_m'], place_centre=planned['place_centre'])
+        elif phase['name'] == 'pick':
+            planned = plan_pick(scene, start, obj, **options)
+            task['plan'].update(grasp_width_m=planned['grasp_width_m'], pick_base_measured=[round(v, 4) for v in base])
+            task['object_start'] = list(pose[:3])
+        else:
+            scene.set_joints(dict(start, **{n: float(measured[n]) for n in self.spec.finger_joints}))
+            scene.attach()
+            planned = plan_place(scene, start, obj, support, place_xy=task['plan']['place_xy'], **options)
+            task['plan'].update(place_centre=planned['place_centre'], place_base_measured=[round(v, 4) for v in base])
         stages, previous = [], dict(start)
         for stage in planned['stages']:
             targets = synchronised(stage['waypoints'], previous, RATE, PERIOD)
@@ -194,11 +370,10 @@ class PickPlace(Node):
             stages.append(dict(name=stage['stage'], targets=targets,
                                fingers={n: v for n, v in stage['fingers'].items() if n in self.finger_masters},
                                finger_goal=stage['fingers']))
-        self.message = 'Planned %d stages; executing.' % len(stages)
-        return dict(phase='executing', stage=stages[0]['name'], stages=stages, index=0, step=0, request=request,
-                    object=name, support=support_name, scene=scene, obj=obj, plan=dict(
-                        grasp_width_m=planned['grasp_width_m'], place_centre=planned['place_centre']),
-                    started=_now(), stage_started=_now(), log=[], object_start=list(pose[:3]))
+        task.update(stages=stages, index=0, step=0, scene=scene, obj=obj, stage=stages[0]['name'],
+                    stage_started=_now())
+        task.pop('wait_until', None)
+        self.message = 'Planned %d %s stages; executing.' % (len(stages), phase['name'])
 
     # --- execution ----------------------------------------------------------------
     def _send(self, targets):
@@ -225,6 +400,17 @@ class PickPlace(Node):
         self.heartbeat_pub.publish(Empty())
         if _now() - self.state_at > STATE_STALE or self.state.get('fault'):
             return self._finish('failed', 'articulation state stale or faulted: %s' % self.state.get('status'))
+        phase = task['phases'][task['phase_index']]
+        if _now() - task.get('traced', -math.inf) >= TRACE_PERIOD:
+            self._trace(task)
+        if phase['kind'] == 'drive':
+            return self._drive(task, phase)
+        if self.mobile:
+            if _now() - self.base_at > STATE_STALE:
+                return self._finish('failed', 'base pose stale')
+            interlock = task['interlock']
+            interlock['max_base_speed_in_arm_phases'] = max(interlock['max_base_speed_in_arm_phases'], self.base_twist[0])
+            interlock['max_base_turn_in_arm_phases'] = max(interlock['max_base_turn_in_arm_phases'], self.base_twist[1])
         stage = task['stages'][task['index']]
         if _now() - task['stage_started'] > STAGE_TIMEOUT:
             return self._finish('failed', 'stage %s timed out' % stage['name'])
@@ -248,10 +434,106 @@ class PickPlace(Node):
         task['step'] = 0
         task['stage_started'] = _now()
         task.pop('wait_until', None)
+        task.pop('finger_history', None)
         if task['index'] >= len(task['stages']):
-            return self._finish('succeeded', 'Placed %s on %s' % (task['object'], task['support']))
+            return self._next_phase(task)
         task['stage'] = task['stages'][task['index']]['name']
         self.message = 'Stage %s' % task['stage']
+
+    def _next_phase(self, task):
+        phase = task['phases'][task['phase_index']]
+        task['log'].append(dict(phase=phase['name'], seconds=round(_now() - phase.get('started', task['started']), 2)))
+        if self.mobile and phase['kind'] == 'arm' and self.stop_client.service_is_ready():
+            # Hold the settled arm so that its residual target error does not
+            # keep the base inhibited; the grip keeps its bounded squeeze.
+            self.stop_client.call_async(Trigger.Request())
+        task['phase_index'] += 1
+        if task['phase_index'] >= len(task['phases']):
+            return self._finish('succeeded', 'Placed %s on %s' % (task['object'], task['support']))
+        try:
+            self._start_phase(task)
+        except Exception as exc:  # noqa: BLE001 - reported in the receipt
+            return self._finish('failed', '%s not planned: %s' % (task['phases'][task['phase_index']]['name'], exc))
+
+    def _drive(self, task, phase):
+        """Follow the phase's waypoints on /cmd_vel; never while the articulation is active."""
+        if self.base_pose is None or _now() - self.base_at > STATE_STALE:
+            return self._finish('failed', 'base pose stale')
+        if _now() - phase['started'] > DRIVE_TIMEOUT:
+            return self._finish('failed', 'drive %s timed out' % phase['name'])
+        interlock = task['interlock']
+        interlock['drive_ticks'] += 1
+        if phase.get('carrying'):
+            drift = float(np.linalg.norm(self._in_base(self.truth[task['object']][:3]) - np.asarray(phase['reference'])))
+            phase['max_drift'] = max(phase.get('max_drift', 0.0), drift)
+            if _now() - self.truth_at > STATE_STALE or drift > CARRY_DRIFT:
+                offset = self._in_base(self.truth[task['object']][:3]) - np.asarray(phase['reference'])
+                return self._finish('failed', 'object moved %.3f m relative to the base while carrying (%s)'
+                                    % (drift, ', '.join('%+.3f' % v for v in offset)))
+        if self.state.get('active'):
+            # Never drive a moving arm: wait for it to settle.
+            interlock['drive_ticks_with_articulation_active'] += 1
+            return self._twist(0.0, 0.0)
+        x, y, _z, yaw = self.base_pose
+        if phase['waypoint'] >= len(phase['waypoints']):
+            self._twist(0.0, 0.0)
+            if max(self.base_twist) < STILL_SPEED:
+                phase['still'] = phase.get('still') or _now()
+                if _now() - phase['still'] > 0.5:
+                    entry = dict(final_pose=[round(v, 4) for v in self.base_pose])
+                    if phase.get('carrying'):
+                        entry['max_carry_drift_m'] = round(phase.get('max_drift', 0.0), 4)
+                    task['log'].append(dict(phase=phase['name'] + '_arrived', **entry))
+                    return self._next_phase(task)
+            else:
+                phase['still'] = None
+            return
+        target = phase['waypoints'][phase['waypoint']]
+        dx, dy = target['x'] - x, target['y'] - y
+        distance = math.hypot(dx, dy)
+        reverse = target.get('reverse', False)
+        if distance > POSITION_TOLERANCE and not phase.get('at_point'):
+            heading = math.atan2(dy, dx) + (math.pi if reverse else 0.0)
+            error = _wrap(heading - yaw)
+            # Passed it (overshoot along the travel direction): count as reached.
+            along = (math.cos(yaw) * dx + math.sin(yaw) * dy) * (-1 if reverse else 1)
+            if phase.get('rolling') and along < 0:
+                phase['at_point'] = True
+                return self._twist(0.0, 0.0)
+            if abs(error) > (0.5 if phase.get('rolling') else 0.1):
+                phase['rolling'] = False
+                return self._twist(0.0, max(-TURN_SPEED, min(TURN_SPEED, 1.5 * error)))
+            phase['rolling'] = True
+            speed = min(DRIVE_SPEED, 0.6 * distance + 0.02)
+            return self._twist(-speed if reverse else speed, max(-TURN_SPEED, min(TURN_SPEED, 1.5 * error)))
+        phase['at_point'] = True
+        if 'yaw' in target:
+            error = _wrap(target['yaw'] - yaw)
+            if abs(error) > YAW_TOLERANCE:
+                return self._twist(0.0, max(-TURN_SPEED, min(TURN_SPEED, max(0.08, 1.5 * abs(error)) * math.copysign(1, error))))
+        phase['waypoint'] += 1
+        phase['rolling'] = phase['at_point'] = False
+        self._twist(0.0, 0.0)
+
+    def _trace(self, task):
+        """One stability sample: base and object truth, fingers and the object in the base frame."""
+        task['traced'] = _now()
+        measured = self.measured()
+        sample = dict(t=round(_now() - task['started'], 2), stage=task.get('stage'),
+                      object=[round(v, 4) for v in self.truth.get(task['object'], [])[:7]],
+                      fingers=[round(measured[n], 4) for n in self.spec.finger_joints if n in measured],
+                      finger_references=[round(c['reference'], 4) for c in self.state.get('channels', [])
+                                         if c['name'] in self.spec.finger_joints and c.get('reference') is not None])
+        if self.mobile and self.base_pose is not None:
+            sample['base'] = [round(v, 4) for v in self.base_pose]
+            if task['object'] in self.truth:
+                sample['object_in_base'] = [round(float(v), 4) for v in self._in_base(self.truth[task['object']][:3])]
+        task.setdefault('trace', []).append(sample)
+
+    def _twist(self, linear, angular):
+        message = Twist()
+        message.linear.x, message.angular.z = float(linear), float(angular)
+        self.cmd_pub.publish(message)
 
     def _settled(self, stage):
         measured = self.measured()
@@ -259,10 +541,15 @@ class PickPlace(Node):
         if any(abs(measured[n] - final[n]) > SETTLE_TOLERANCE for n in final):
             return False
         # Fingers settle on target, or once stopped (held by the object) after
-        # they had time to start moving.
-        rates = {c['name']: c.get('measured_velocity') or 0.0 for c in self.state.get('channels', [])}
+        # they had time to start moving. Stopped is judged from positions:
+        # Bullet's reported finger velocities jitter while squeezing.
         on_target = all(abs(measured[n] - stage['finger_goal'][n]) < 0.002 for n in self.spec.finger_joints)
-        stopped = all(abs(rates.get(n, 0.0)) < 0.002 for n in self.spec.finger_joints)
+        history = self.task.setdefault('finger_history', [])
+        history.append((_now(), [measured[n] for n in self.spec.finger_joints]))
+        while history and history[0][0] < _now() - FINGER_STILL_WINDOW:
+            history.pop(0)
+        spans = [max(v[k] for _t, v in history) - min(v[k] for _t, v in history) for k in range(len(self.spec.finger_joints))]
+        stopped = len(history) >= 3 and max(spans) < FINGER_STILL_SPAN
         return on_target or (stopped and _now() - self.task['stage_started'] > 1.0)
 
     def _check(self, task, stage):
@@ -323,6 +610,8 @@ class PickPlace(Node):
 
     def _finish(self, outcome, message):
         task, self.task = self.task, None
+        if self.mobile:
+            self._twist(0.0, 0.0)
         if outcome != 'succeeded' and self.stop_client.service_is_ready():
             self.stop_client.call_async(Trigger.Request())
         self.message = message
@@ -331,6 +620,9 @@ class PickPlace(Node):
         result = dict(schema='robot_lab.pick_place_result.v1', outcome=outcome, passed=outcome == 'succeeded',
                       message=message, request=task['request'], object=task['object'], support=task['support'],
                       object_start=task['object_start'], plan=task['plan'], stages=task['log'],
+                      mobile=bool(self.mobile), interlock=task.get('interlock') if self.mobile else None,
+                      trace=task.get('trace', []),
+                      phase=task['phases'][min(task['phase_index'], len(task['phases']) - 1)]['name'],
                       seconds=round(_now() - task['started'], 2), plant_id=self.state.get('plant_id'),
                       model_sha256=self.state.get('model_sha256'), finished=time.strftime('%Y-%m-%dT%H:%M:%S'))
         path = self.receipts / ('%s_%s.json' % (time.strftime('%Y%m%dT%H%M%S'), task['object']))

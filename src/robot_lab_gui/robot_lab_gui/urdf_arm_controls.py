@@ -237,6 +237,12 @@ class UrdfArmControls(MolarControls):
             if values and variable.get() not in values:
                 variable.set(values[0])
         idle = state.get('phase') == 'idle'
+        # A mobile profile fetches: drive, pick, carry, place (urdf_pick_place.py).
+        mobile = bool(state.get('mobile'))
+        title = 'Fetch: drive · pick · carry · place (simulator truth)' if mobile else 'Pick / place (simulator truth)'
+        if self.pick_frame.cget('text') != title:
+            self.pick_frame.configure(text=title)
+            self.pick_run_button.configure(text='Run fetch' if mobile else 'Run pick / place')
         self.pick_run_button.state(['!disabled'] if fresh and idle and self.ready() else ['disabled'])
         self.pick_stop_button.state(['!disabled'] if fresh and not idle else ['disabled'])
         if not self.pick_supported():

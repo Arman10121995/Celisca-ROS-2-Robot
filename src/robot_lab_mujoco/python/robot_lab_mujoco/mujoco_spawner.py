@@ -65,6 +65,7 @@ from robot_lab_utils.go2_support import GO2_SUPPORT_GEOM_NAMES
 _CAMERA_NAME = "robot_lab_rgbd"
 
 # TF is published by the EKF (odom→base_footprint), not by the simulator spawner.
+GRASP_IMPRATIO = 10.0   # friction-to-normal impedance ratio for robots with grip_joints
 
 
 # ---------------------------------------------------------------------------
@@ -1998,6 +1999,13 @@ class MuJoCoSpawner(Node):
             # and its motion kept the base inhibited (2026-10-16).  The
             # robot MJCF's <option> is not carried into a merged world.
             self._model.opt.integrator = int(mujoco.mjtIntegrator.mjINT_IMPLICITFAST)
+            if articulation_contract.grip:
+                # A robot that holds objects: MuJoCo's grasping contacts
+                # (elliptic cone, impratio 10). With the default pyramidal
+                # cone a 100 g block crept 1.7 mm/s down TIAGo's fingers
+                # at the 16 N source limit (2026-11-17).
+                self._model.opt.cone = int(mujoco.mjtCone.mjCONE_ELLIPTIC)
+                self._model.opt.impratio = GRASP_IMPRATIO
             from robot_lab_utils.urdf_articulation import ArticulationROS
             self._articulation = ArticulationROS(self, articulation_contract, urdf, str(model))
             planning = articulation_contract.config.get('planning')

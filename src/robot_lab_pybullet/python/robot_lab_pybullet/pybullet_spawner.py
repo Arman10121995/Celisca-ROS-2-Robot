@@ -518,8 +518,10 @@ class PyBulletSpawner(Node):
                 dynamics["localInertiaDiagonal"] = body["inertia"]
             if body.get("mu") is not None:
                 dynamics["lateralFriction"] = float(body["mu"])
-            if dynamics:
-                p.changeDynamics(uid, -1, **dynamics)
+            # Bullet friction anchors stop slow sliding creep: a block held
+            # in TIAGo's grip yawed 0.5 rad as the base turned (2026-11-17).
+            dynamics["frictionAnchor"] = True
+            p.changeDynamics(uid, -1, **dynamics)
         except Exception as exc:
             self.get_logger().warn("Free body %s not created: %s" % (body["name"], exc))
             return
@@ -1052,6 +1054,22 @@ class PyBulletSpawner(Node):
                                    maxForce=self._articulation.contract.joints[follower]['effort'] * 2.5)
                 self.get_logger().info('Mechanical coupling %s = %g * %s (gear constraint)'
                                        % (follower, coupling['multiplier'], coupling['joint']))
+            grip = self._articulation.contract.grip
+            if self._articulation.contract.config.get('pybullet_symmetric_grip') and len(grip) == 2:
+                # Two independently servoed fingers on a floating base drift
+                # sideways while they squeeze in Bullet: TIAGo's shoved a
+                # block 2.4 cm (2026-11-17; the same fixed-base squeeze held).
+                # Keep them level, as the gripper controller commands them.
+                gear = p.createConstraint(
+                    self._robot_id, self._joint_idx[grip[0]], self._robot_id, self._joint_idx[grip[1]],
+                    jointType=p.JOINT_GEAR, jointAxis=[1, 0, 0], parentFramePosition=[0, 0, 0],
+                    childFramePosition=[0, 0, 0])
+                p.changeConstraint(gear, gearRatio=-1.0, erp=0.1,
+                                   maxForce=self._articulation.contract.joints[grip[1]]['effort'] * 2.5)
+                self.get_logger().info('Symmetric grip %s = %s (gear constraint)' % (grip[1], grip[0]))
+            for name in grip:
+                link = self._joint_idx[name]       # a joint's child link has the joint's index
+                p.changeDynamics(self._robot_id, link, frictionAnchor=True)
             hold_mode = 'false'  # configured servos hold only lift/slides; casters remain passive
         has_drive = (self._lw >= 0 or self._rw >= 0
                      or any(j in self._joint_idx for j in self._drive.wheel_joints))
@@ -1194,9 +1212,17 @@ class PyBulletSpawner(Node):
                         # Implicit prismatic motor avoids explicit-PD stop chatter.
                         # Finite source effort and velocity limits still apply.
                         # These gains are solver parameters, not hardware PID.
+                        force = spec['effort']
+                        if name in self._articulation.contract.grip:
+                            # Two fingers squeezing an object both saturate this
+                            # motor, and nothing centres the object: TIAGo's
+                            # fingers shoved a block 2.4 cm (2026-11-17). Cap
+                            # the force at the servo's kp x error, as a P law.
+                            error = abs(target - states[name][0])
+                            force = min(spec['effort'], max(.05 * spec['effort'], spec['kp'] * error))
                         p.setJointMotorControl2(self._robot_id, self._joint_idx[name],
                             p.POSITION_CONTROL, targetPosition=target,
-                            force=spec['effort'], maxVelocity=spec['max_velocity'],
+                            force=force, maxVelocity=spec['max_velocity'],
                             positionGain=.1, velocityGain=1.)
                 if self._articulation.base_inhibited:
                     with self._twist_lock:

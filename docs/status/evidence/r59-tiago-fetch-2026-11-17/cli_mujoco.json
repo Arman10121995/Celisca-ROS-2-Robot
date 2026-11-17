@@ -1,0 +1,285 @@
+{
+ "object": "fetch_block",
+ "support": "drop_table",
+ "home_reached": true,
+ "result": {
+  "schema": "robot_lab.pick_place_result.v1",
+  "outcome": "succeeded",
+  "passed": true,
+  "message": "Placed fetch_block on drop_table",
+  "request": {
+   "object": "fetch_block",
+   "support": "drop_table",
+   "lift": 0.1
+  },
+  "object": "fetch_block",
+  "support": "drop_table",
+  "object_start": [
+   1.4500000001610334,
+   2.1403767615725635e-09,
+   0.5748922445797835
+  ],
+  "plan": {
+   "pick_base": [
+    0.83,
+    0.0,
+    0.0
+   ],
+   "place_base": [
+    0.45,
+    1.43,
+    1.571
+   ],
+   "place_xy": [
+    0.45,
+    2.05
+   ],
+   "grasp_width_m": 0.04,
+   "pick_base_measured": [
+    0.8031,
+    -0.0001,
+    -0.0001,
+    0.0007
+   ],
+   "place_centre": [
+    0.45,
+    2.05,
+    0.575
+   ],
+   "place_base_measured": [
+    0.4586,
+    1.4042,
+    -0.0001,
+    1.6004
+   ]
+  },
+  "stages": [
+   {
+    "phase": "to_object_arrived",
+    "final_pose": [
+     0.8031,
+     -0.0001,
+     -0.0001,
+     0.0007
+    ]
+   },
+   {
+    "phase": "to_object",
+    "seconds": 12.7
+   },
+   {
+    "stage": "open",
+    "seconds": 0.04,
+    "object_truth": [
+     1.45,
+     0.0,
+     0.5749
+    ],
+    "tcp_estimate": [
+     0.9874,
+     0.1879,
+     0.773
+    ],
+    "passed": true
+   },
+   {
+    "stage": "above_object",
+    "seconds": 9.53,
+    "object_truth": [
+     1.45,
+     0.0,
+     0.5749
+    ],
+    "tcp_estimate": [
+     1.4498,
+     0.0021,
+     0.6761
+    ],
+    "passed": true
+   },
+   {
+    "stage": "down_to_grasp",
+    "seconds": 0.81,
+    "object_truth": [
+     1.45,
+     0.0,
+     0.5749
+    ],
+    "tcp_estimate": [
+     1.4485,
+     0.0001,
+     0.6294
+    ],
+    "passed": true
+   },
+   {
+    "stage": "close",
+    "seconds": 1.72,
+    "object_truth": [
+     1.4499,
+     0.0,
+     0.5749
+    ],
+    "tcp_estimate": [
+     1.45,
+     -0.0,
+     0.6291
+    ],
+    "passed": true,
+    "finger_positions": [
+     0.0193,
+     0.0189
+    ],
+    "reason": ""
+   },
+   {
+    "stage": "lift",
+    "seconds": 2.53,
+    "object_truth": [
+     1.4494,
+     0.0003,
+     0.6742
+    ],
+    "tcp_estimate": [
+     1.4497,
+     0.0001,
+     0.7286
+    ],
+    "passed": true,
+    "rise_m": 0.0993,
+    "hold_drift_m": 0.0002,
+    "reason": ""
+   },
+   {
+    "phase": "pick",
+    "seconds": 15.4
+   },
+   {
+    "phase": "carry_arrived",
+    "final_pose": [
+     0.4586,
+     1.4042,
+     -0.0001,
+     1.6004
+    ],
+    "max_carry_drift_m": 0.0057
+   },
+   {
+    "phase": "carry",
+    "seconds": 63.91
+   },
+   {
+    "stage": "over_support",
+    "seconds": 1.08,
+    "object_truth": [
+     0.4498,
+     2.0498,
+     0.6746
+    ],
+    "tcp_estimate": [
+     0.4503,
+     2.0497,
+     0.7344
+    ],
+    "passed": true
+   },
+   {
+    "stage": "lower",
+    "seconds": 1.52,
+    "object_truth": [
+     0.4501,
+     2.0481,
+     0.5749
+    ],
+    "tcp_estimate": [
+     0.4506,
+     2.049,
+     0.6347
+    ],
+    "passed": true
+   },
+   {
+    "stage": "release",
+    "seconds": 2.02,
+    "object_truth": [
+     0.45,
+     2.0483,
+     0.5749
+    ],
+    "tcp_estimate": [
+     0.4505,
+     2.0498,
+     0.6347
+    ],
+    "passed": true
+   },
+   {
+    "stage": "retreat",
+    "seconds": 2.33,
+    "object_truth": [
+     0.45,
+     2.0483,
+     0.5749
+    ],
+    "tcp_estimate": [
+     0.4504,
+     2.0498,
+     0.7345
+    ],
+    "passed": true,
+    "final_pose": [
+     0.45,
+     2.0483,
+     0.5749
+    ],
+    "height_error_m": -0.0001,
+    "inside_support": true,
+    "moved_last_s_m": 0.0,
+    "reason": ""
+   },
+   {
+    "phase": "place",
+    "seconds": 7.19
+   },
+   {
+    "phase": "clear_arrived",
+    "final_pose": [
+     0.4756,
+     0.8318,
+     -0.0001,
+     1.6004
+    ]
+   },
+   {
+    "phase": "clear",
+    "seconds": 8.21
+   }
+  ],
+  "mobile": true,
+  "interlock": {
+   "max_base_speed_in_arm_phases": 0.00043943302544167224,
+   "max_base_turn_in_arm_phases": 0.0013609487527284478,
+   "drive_ticks_with_articulation_active": 0,
+   "drive_ticks": 839
+  },
+  "phase": "clear",
+  "seconds": 107.41,
+  "plant_id": "9aa9a6f029da4b40a2c50c61495aa48d",
+  "model_sha256": "6860985f4c8af74f9e35603fa3adc2838e58e46f0c5e337f3576fd9a18cefbc3",
+  "finished": "2026-11-17T14:05:37",
+  "receipt": "/workspace/molar/robot_lab_runtime/pick-place/20261117T140537_fetch_block.json"
+ },
+ "final_message": "Placed fetch_block on drop_table",
+ "passed": true,
+ "interlock_probe": {
+  "cmd_vel_during_arm_motion": {
+   "base_inhibited": true,
+   "arm_active": true,
+   "moved_m": 0.0002
+  },
+  "arm_target_during_carry": {
+   "head_moved_rad": 0.0,
+   "status_after": "rejected: Requires current plant, fresh heartbeat and stopped base"
+  }
+ }
+}

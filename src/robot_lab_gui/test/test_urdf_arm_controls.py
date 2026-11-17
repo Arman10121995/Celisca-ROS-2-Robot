@@ -262,3 +262,17 @@ def test_pick_place_runs_only_on_request_with_fresh_idle_node(panel, model):
     panel.pick_lift.set(.5)
     panel.receive_pick_place(SimpleNamespace(data=json.dumps(state)))
     assert not panel.run_pick_place()                               # lift outside 0.03-0.25 m
+
+
+def test_mobile_node_labels_the_section_as_fetch(panel, model):
+    profile = {'articulation': CONFIG, 'pick_place': {'arm_joints': [J1, J2], 'mobile': {}}}
+    panel.app._robot_config = lambda: profile
+    activate(panel, model)
+    state = dict(schema='robot_lab.pick_place_state.v1', phase='idle', message='ready', mobile=True,
+                 objects=['fetch_block'], supports=['drop_table', 'pickup_table'], last_result=None)
+    panel.receive_pick_place(SimpleNamespace(data=json.dumps(state)))
+    panel.update_pick_place()
+    assert panel.pick_frame.cget('text').startswith('Fetch') and panel.pick_run_button.cget('text') == 'Run fetch'
+    panel.receive_pick_place(SimpleNamespace(data=json.dumps(dict(state, mobile=False))))
+    panel.update_pick_place()
+    assert panel.pick_run_button.cget('text') == 'Run pick / place'

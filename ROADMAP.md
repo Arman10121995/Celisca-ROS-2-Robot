@@ -133,7 +133,7 @@ Work top to bottom. Each line links to its task.
 | I4a | [R14.5](#r145--robot-status-markers-in-the-gui-selectors) Robot status markers | Done 2026-11-13: ● measured / ◐ experimental / ○ display only / ✕ unavailable plus mode letters in both robot lists, from recorded evidence | implemented |
 | I4b | [R6.8](#r68--real-world-area-import-from-a-globe) Real-world area import | Done 2026-11-13: globe picker (CesiumJS + OSM), Terrain Tiles + OSM buildings/roads/trees/water, SUMO people/traffic; support and roof heights measured on four simulators | implemented |
 | I5 | [R5.11](#r511--drone-moving-obstacles-and-other-drone-backends) Drone moving obstacles | Done 2026-11-13: Kalman tracks, predicted sweeps, walkway look-both-ways and overflight, evasion, sensor-loss hold/land, EKF heading/height gate; 2 passing flights past walkers (Gazebo); PX4 + MuJoCo plant: takeoff, 5 m route and landing | implemented |
-| I6 | [R5.9](#r59--mobile-manipulators) Mobile manipulation | Stretch recipes/perception/planning plus TIAGo Drive, articulation and MuJoCo joint Plan/Execute implemented; general perception, TIAGo Cartesian/object/footprint/map and other-backend planning remain | partial |
+| I6 | [R5.9](#r59--mobile-manipulators) Mobile manipulation | Done-when met 11-17: TIAGo GUI fetch (drive, pick, carry, place) on MuJoCo and PyBullet with stability traces and a base/arm interlock probe. Remaining: Nav2 legs, perception, Isaac, Stretch pipeline missions | partial |
 | I7 | [R5.7](#r57--manipulators-and-motion-planning) Arms | Done-when met 11-17: URDF Panda GUI pick → place on PyBullet and MuJoCo (one run each). Native Panda box tasks on MuJoCo. Remaining: Gazebo/Isaac arm pick and place, compound geometry, perception, other coupled mechanisms | partial |
 | I8 | [R5.8](#r58--robot-hands-and-grippers) Hands | UMI lift/hold/lower and supported release measured in a source component; normal GUI missions, further torque/tendon sources and backends remain | partial |
 | I9 | [R10.2](#r102--fleet-management-and-open-rmf) Fleet / Open-RMF | Done 2026-11-14: shared-zone reservations (map passages, doors, docks), cycle breaker, recovery drive-out, RMF energy from a drivetrain calibration; two crossing runs pass (native and RMF). Chargers/doors in other worlds, larger fleets remain | implemented |
@@ -505,11 +505,29 @@ parking batch needs its own run. Details and evidence are in the
   Place retreat uses the same direction; source-pad orientation stays explicit
   and independent. Editing only builds steps. [Receipt](docs/status/takeover-2026-11-14.md).
 - **Remaining implementation:**
+  - fetch with Nav2 legs and localization instead of truth-steered straight
+    legs; fetch on Isaac (no free-body truth or grip contact handling yet);
   - general recognition/pose for unconfigured, non-box or occluded objects,
     source-specific grasp strategies and further
     source-specific object pipelines;
   - generalize the existing native interlock and measured footprint-consumption gate to other mobile-manipulator adapters;
   - TIAGo Cartesian/task planning, grasp/custody, dynamic footprint, map workflows and other-backend joint planners; its separate Fortress port remains unavailable. Further Fetch/PR2 sources are optional after completing this second-source workflow.
+- **TIAGo fetch (2026-11-17, Claude): done-when met.** One GUI request
+  drives TIAGo to `pickup_table`, picks a 150 mm block, carries it about
+  2.3 m and places it on `drop_table` (`mobile_fetch_lab`).
+  - Each arm phase is planned on arrival from the measured base pose;
+    stages are judged by simulator truth.
+  - The receipt has a 2 Hz base/object/finger stability trace.
+  - Script and GUI runs pass on MuJoCo (108.9 s GUI, 5.5 mm carry drift)
+    and PyBullet (104.6 s GUI, 17.1 mm).
+  - Base and arm never move together: the node and the articulation
+    contract both enforce it, and an outside probe confirms it (base moved
+    0.2 mm under drive commands during arm motion; an arm target during the
+    carry was rejected).
+  - New articulation `grip_joints` keep a bounded squeeze across Stop and
+    while the base drives.
+  [Guide](docs/tutorials/urdf-arm-pick-place.md#fetch-with-tiago-mobile-manipulation) ·
+  [receipt](docs/status/evidence/r59-tiago-fetch-2026-11-17/README.md).
 - **TIAGo joint routes (2026-11-14, Codex):** normal GUI **Plan targets /
   Plan Home → Execute plan**, private compiled collision snapshots, existing
   bounded RRT-Connect, source-rate servo execution, scene/start/plant/lease

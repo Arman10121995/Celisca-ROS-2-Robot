@@ -44,6 +44,19 @@ def measured_motion_rate(samples, fallback=0., excursion_floor=MOTION_EXCURSION)
 # articulation config; it must stay well below its driving speed.
 DEFAULT_BASE_MOTION_LIMITS = (.025, .05)
 
+# Grip joints (``grip_joints``: a gripper's independent finger channels) keep
+# holding an object when the articulation stops, so a mobile manipulator can
+# carry it.  A grip joint that is not moving keeps its squeeze across Stop,
+# a base-motion hold or a lost heartbeat, bounded to ``grip_hold_squeeze``
+# metres or radians past its measured position (default 5 mm, at most
+# 30 mm): that sets the retained force through the joint's kp, and is the
+# furthest a finger moves at its own rate if the object leaves.  A grip
+# joint counts as active only while it measurably moves, not while it
+# presses on an object.  (2026-11-17: a 100 g block crept 2.6 mm/s down
+# TIAGo's fingers in MuJoCo at 5 mm x 800 N/m = 4 N; it held at 16 N.)
+DEFAULT_GRIP_HOLD_SQUEEZE = .005
+MAX_GRIP_HOLD_SQUEEZE = .03
+
 
 def base_motion_limits(config):
     """(linear, angular) base-motion thresholds for one articulation config."""
@@ -118,6 +131,12 @@ class URDFArticulation:
 
         for name, entry in entries.items():
             self.joints[name] = checked(name, entry)
+        self.grip = tuple(config.get('grip_joints', ()))
+        if any(name not in self.joints or self.joints[name]['mode'] != 'position' for name in self.grip):
+            raise ValueError('grip_joints must be configured position joints')
+        self.grip_squeeze = number(config.get('grip_hold_squeeze', DEFAULT_GRIP_HOLD_SQUEEZE), 'grip_hold_squeeze', True)
+        if self.grip_squeeze > MAX_GRIP_HOLD_SQUEEZE:
+            raise ValueError('grip_hold_squeeze must be at most %g' % MAX_GRIP_HOLD_SQUEEZE)
         for name, coupling in self.couplings.items():
             if name in self.joints or not isinstance(coupling, dict) or coupling.get('joint') not in self.masters:
                 raise ValueError('Couplings must reference one independent master: '+name)
@@ -164,6 +183,10 @@ class URDFArticulation:
                     # Physics joint limits permit tiny penetration. Retain
                     # measured truth, but never publish an illegal hold target.
                     value = max(spec['lower'], min(spec['upper'], self.measured[name])) if spec['mode'] == 'position' else 0.
+                    if name in self.grip and name in self.targets and abs(self._rate(name)) <= .01:
+                        # A still gripper keeps a bounded squeeze on what it holds.
+                        squeeze = max(-self.grip_squeeze, min(self.grip_squeeze, self.targets[name]-value))
+                        value = max(spec['lower'], min(spec['upper'], value+squeeze))
                     self.targets[name] = self.references[name] = value
             self.status = reason
             self.holding = True
@@ -268,7 +291,7 @@ class URDFArticulation:
                     delta = max(-spec['max_velocity']*dt, min(spec['max_velocity']*dt, reference-previous))
                     self.references[name] = max(spec['lower'], min(spec['upper'], previous+delta))
                 result['position'][name] = self.references[name]
-            self.active = any((not self.holding and abs(self.targets[name]-self.measured[name]) > .002) or abs(self._rate(name)) > .01 if spec['mode'] == 'position' else abs(self.references[name]) > .001 or abs(self._rate(name)) > .05 for name, spec in self.joints.items())
+            self.active = any((not self.holding and name not in self.grip and abs(self.targets[name]-self.measured[name]) > .002) or abs(self._rate(name)) > .01 if spec['mode'] == 'position' else abs(self.references[name]) > .001 or abs(self._rate(name)) > .05 for name, spec in self.joints.items())
             coupling_errors = [self.measured[name]-(self.measured[c['joint']]*c['multiplier']+c['offset']) for name,c in self.couplings.items()]
             self.base_inhibited = bool(self.fault or self.active
                                        or any(self.measured.get(name, 0.) > .005 for name in ('telescope_stage1_joint', 'telescope_stage2_joint'))

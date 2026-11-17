@@ -23,6 +23,7 @@ over the support -> down to the place height -> open -> retreat up.
 from __future__ import annotations
 
 import math
+import time
 import xml.etree.ElementTree as ET
 from dataclasses import dataclass, field
 from typing import Dict, List, Optional, Sequence
@@ -34,6 +35,8 @@ JOINT_STEP_RAD = 0.02       # collision samples along joint-space segments
 POSITION_TOLERANCE_M = 0.002
 ANGLE_TOLERANCE_RAD = 0.02
 CONTACT_MARGIN_M = 0.002    # penetration below which a contact counts (dist < -margin)
+SEARCH_SECONDS = 15.0       # RRT-Connect budget when direct and via routes collide
+GRASP_RAISE_STEP_M = 0.006  # grip this much higher when the fingertips would hit the support
 
 
 @dataclass
@@ -92,7 +95,7 @@ class ArmScene:
     """Private MuJoCo model: the arm, static boxes and one object box (mocap)."""
 
     def __init__(self, robot_mjcf, spec: ArmSpec, obstacles: Sequence[Box], obj: Box,
-                 base=(0.0, 0.0, 0.0, 0.0)):
+                 base=(0.0, 0.0, 0.0, 0.0), held: Optional[Dict[str, float]] = None):
         import mujoco
         self.mj, self.spec = mujoco, spec
         root = ET.fromstring(robot_mjcf)
@@ -100,6 +103,11 @@ class ArmScene:
         tool = next((b for b in world.iter('body') if b.get('name') == spec.tool_body), None)
         if tool is None:
             raise ValueError('tool body %s not in the robot model' % spec.tool_body)
+        # A mobile robot's import floats its root; planning welds it at the
+        # measured base pose instead.
+        for body in [c for c in world if c.tag == 'body']:
+            for joint in [j for j in body if j.tag == 'freejoint' or (j.tag == 'joint' and j.get('type') == 'free')]:
+                body.remove(joint)
         ET.SubElement(tool, 'site', name='pick_place_tcp', size='0.005',
                       pos='%g %g %g' % tuple(spec.tcp_offset))
         if any(abs(v) > 1e-12 for v in base):
@@ -144,8 +152,29 @@ class ArmScene:
                        and (m.geom_contype[g] or m.geom_conaffinity[g])]
         finger_bodies = {int(m.jnt_bodyid[mujoco.mj_name2id(m, mujoco.mjtObj.mjOBJ_JOINT, f)]) for f in spec.finger_joints}
         self.robot_geoms = set(robot_geoms)
+        # Geoms the plan moves: bodies at or below a planned joint. Contacts
+        # between two robot geoms that never move (a mobile base's wheels in
+        # its chassis) are fixed by the source model and ignored.
+        planned = {int(m.jnt_bodyid[mujoco.mj_name2id(m, mujoco.mjtObj.mjOBJ_JOINT, n)])
+                   for n in spec.arm_joints + spec.finger_joints}
+
+        def moved(body):
+            while body > 0:
+                if body in planned:
+                    return True
+                body = int(m.body_parentid[body])
+            return False
+        self.moving_geoms = {g for g in robot_geoms if moved(int(m.geom_bodyid[g]))}
         self.finger_geoms = {g for g in robot_geoms if int(m.geom_bodyid[g]) in finger_bodies}
         self.attached = None        # object pose in the TCP frame while held
+        # Joints the plan never moves (a mobile manipulator's torso and head)
+        # stay at their measured values.
+        for name, value in (held or {}).items():
+            j = mujoco.mj_name2id(m, mujoco.mjtObj.mjOBJ_JOINT, name)
+            if j < 0:
+                raise ValueError('held joint %s not in the robot model' % name)
+            self.data.qpos[int(m.jnt_qposadr[j])] = float(value)
+        mujoco.mj_forward(m, self.data)
 
     # --- state ---------------------------------------------------------------
     def set_joints(self, q: Dict[str, float]):
@@ -202,6 +231,8 @@ class ArmScene:
                     continue
             elif not (pair & self.robot_geoms):
                 continue                # scenery against scenery
+            elif pair <= self.robot_geoms and not (pair & self.moving_geoms):
+                continue                # fixed robot parts against each other
             found.append((self.mj.mj_id2name(m, self.mj.mjtObj.mjOBJ_GEOM, g1) or str(g1),
                           self.mj.mj_id2name(m, self.mj.mjtObj.mjOBJ_GEOM, g2) or str(g2), round(float(c.dist), 4)))
         return found
@@ -263,7 +294,9 @@ class ArmScene:
         return path
 
     def joint_route(self, start, end, vias, fingers, **allow):
-        """A joint segment, or through the first via pose (e.g. Home) whose two segments are clear."""
+        """A joint segment; else through the first via pose (e.g. Home) whose two
+        segments are clear; else a bounded RRT-Connect search
+        (``robot_lab_utils.bounded_control_planner``)."""
         try:
             return self.joint_segment(start, end, fingers, **allow)
         except PlanningError as direct:
@@ -272,7 +305,22 @@ class ArmScene:
                     return self.joint_segment(start, via, fingers, **allow) + self.joint_segment(via, end, fingers, **allow)
                 except PlanningError:
                     continue
-            raise direct
+            from robot_lab_utils.bounded_control_planner import connect_controls
+            names = self.spec.arm_joints
+
+            def clear(a, b):
+                try:
+                    self.joint_segment(dict(zip(names, a)), dict(zip(names, b)), fingers, **allow)
+                    return True
+                except PlanningError:
+                    return False
+            try:
+                found = connect_controls([start[n] for n in names], [end[n] for n in names],
+                                         [self.limits[n] for n in names], clear,
+                                         deadline=time.monotonic() + SEARCH_SECONDS, max_nodes=600, max_edges=4000)
+            except ValueError as exc:
+                raise PlanningError('%s; search: %s' % (direct, exc)) from None
+            return [dict(zip(names, map(float, point))) for point in found['path'][1:]]
 
     def joint_segment(self, start: Dict[str, float], end: Dict[str, float], fingers, **allow):
         """Collision-checked linear joint interpolation; returns [end]."""
@@ -288,29 +336,46 @@ class ArmScene:
         return [dict(end)]
 
 
-def plan_pick_place(scene: ArmScene, current: Dict[str, float], obj: Box, support: Box, *,
-                    approach=0.10, lift=0.10, seeds: Sequence[Dict[str, float]] = ()):
-    """Stage list [{stage, waypoints (arm joints), fingers}] for one pick and place.
+def plan_pick(scene: ArmScene, current: Dict[str, float], obj: Box, *, approach=0.10, lift=0.10,
+              seeds: Sequence[Dict[str, float]] = ()):
+    """Stages open -> above the object -> down to the grasp -> close -> lift.
 
     The object is grasped top-down at its centre, fingers across the
-    object's x or y extent (whichever is narrower, within the gripper). It
-    is placed at the support's top centre with the same orientation
-    relative to the tool.
+    object's x or y extent (whichever is narrower, within the gripper). On
+    return the scene holds the object at the lifted pose.
     """
     spec = scene.spec
     open_f = {n: spec.finger_open for n in spec.finger_joints}
-    sizes = sorted(((float(obj.size[0]), 0.0), (float(obj.size[1]), math.pi / 2)))
-    width, turn = sizes[0]
-    if width > spec.max_object_width:
-        raise PlanningError('object %.3f m wider than the gripper (%.3f m)' % (width, spec.max_object_width))
+    # Fingers close along tool y, across one horizontal extent of the object.
+    # Grip across each extent that fits (narrower first), facing either way.
+    sides = sorted(((float(obj.size[0]), 0.0), (float(obj.size[1]), math.pi / 2)))
+    sides = [side for side in sides if side[0] <= spec.max_object_width]
+    if not sides:
+        raise PlanningError('object %.3f m wider than the gripper (%.3f m)' % (min(obj.size[:2]), spec.max_object_width))
     object_yaw = yaw_of(obj.quaternion)
-    # Fingers close along tool y: point tool x along the object's longer side.
-    tool_yaw = object_yaw + turn + math.pi / 2 + spec.tool_yaw_offset
-    # Two equivalent grasps 180 deg apart: take the one nearer the current wrist.
     scene.set_joints(dict(current, **open_f))
     current_rotation = scene.tcp()[1]
     current_yaw = math.atan2(current_rotation[1, 0], current_rotation[0, 0])
-    tool_yaw = min((tool_yaw, tool_yaw + math.pi), key=lambda y: abs(math.atan2(math.sin(y - current_yaw), math.cos(y - current_yaw))))
+
+    def turn_from_wrist(yaw):
+        return abs(math.atan2(math.sin(yaw - current_yaw), math.cos(yaw - current_yaw)))
+    candidates = []
+    for rank, (width, turn) in enumerate(sides):
+        base_yaw = object_yaw + turn + math.pi / 2 + spec.tool_yaw_offset
+        candidates += sorted(((rank, width, yaw) for yaw in (base_yaw, base_yaw + math.pi)),
+                             key=lambda c: turn_from_wrist(c[2]))
+    errors = []
+    for _rank, width, candidate in candidates:
+        try:
+            return _plan_pick_at(scene, current, obj, candidate, width, approach, lift, seeds)
+        except PlanningError as exc:
+            errors.append(str(exc))
+    raise PlanningError(' / '.join(errors))
+
+
+def _plan_pick_at(scene, current, obj, tool_yaw, width, approach, lift, seeds):
+    spec = scene.spec
+    open_f = {n: spec.finger_open for n in spec.finger_joints}
     rotation = top_down_rotation(tool_yaw)
     centre = np.asarray(obj.position, dtype=float)
     grasp_point = centre.copy()            # TCP at the object's centre
@@ -327,16 +392,27 @@ def plan_pick_place(scene: ArmScene, current: Dict[str, float], obj: Box, suppor
     # Pre-grasp: any collision-free joint path to the solve above the object.
     # Seeds: the current pose, then the given ones (e.g. Home) and two
     # perturbed copies of them.
-    rng = np.random.default_rng(0)
-    seeds = [dict(current)] + [dict(s) for s in seeds] + [
-        {n: v + float(rng.uniform(-0.3, 0.3)) for n, v in s.items()} for s in seeds for _ in range(2)]
+    seeds = _seeds(current, seeds)
     above = scene.solve_seeded(above_object, rotation, seeds, open_f)
     if above is None:
         raise PlanningError('no IK above the object')
     stages.append(dict(stage='open', waypoints=[dict(current)], fingers=open_f))
-    vias = [{n: s[n] for n in spec.arm_joints} for s in seeds[1:]]
+    vias = _high_vias(scene, above_object, rotation, above, open_f) + [{n: s[n] for n in spec.arm_joints} for s in seeds[1:]]
     stages.append(dict(stage='above_object', waypoints=scene.joint_route(current, above, vias, open_f), fingers=open_f))
-    down = scene.straight_line(above, grasp_point, rotation, open_f, allow_fingers=True)
+    # Fingertips may reach below the TCP: grip higher on the object (in
+    # GRASP_RAISE_STEP_M steps, keeping that much of its upper half) until
+    # they clear what the object stands on.
+    half = float(obj.size[2]) / 2.0
+    raise_m = 0.0
+    while True:
+        try:
+            down = scene.straight_line(above, grasp_point, rotation, open_f, allow_fingers=True)
+            break
+        except PlanningError:
+            raise_m += GRASP_RAISE_STEP_M
+            if raise_m > half - GRASP_RAISE_STEP_M:
+                raise
+            grasp_point = centre + [0, 0, raise_m]
     stages.append(dict(stage='down_to_grasp', waypoints=down, fingers=open_f))
     grasp = down[-1]
     closed = {n: spec.finger_closed for n in spec.finger_joints}
@@ -346,14 +422,39 @@ def plan_pick_place(scene: ArmScene, current: Dict[str, float], obj: Box, suppor
     up = scene.straight_line(grasp, grasp_point + [0, 0, lift], rotation, open_f, allow_fingers=True,
                              allow_supports=tuple(scene.obstacle_geoms))
     stages.append(dict(stage='lift', waypoints=up, fingers=closed))
-    place_centre = np.array([support.position[0], support.position[1], support.top + float(obj.size[2]) / 2.0])
-    place_point = place_centre + (grasp_point - centre)
+    return dict(stages=stages, grasp_width_m=width, tool_yaw=tool_yaw, grasp_point=grasp_point.tolist())
+
+
+def plan_place(scene: ArmScene, current: Dict[str, float], obj: Box, support: Box, *, place_xy=None,
+               approach=0.10, lift=0.10, seeds: Sequence[Dict[str, float]] = ()):
+    """Stages over the support -> down to the place height -> open -> retreat up.
+
+    The scene must already hold the object (``ArmScene.attach``) at the arm
+    pose ``current``. The object is set down at ``place_xy`` (default: the
+    support's centre) on the support's top, keeping its pose relative to the
+    tool; the tool stays pointing straight down.
+    """
+    spec = scene.spec
+    if scene.attached is None:
+        raise PlanningError('the scene does not hold the object')
+    open_f = {n: spec.finger_open for n in spec.finger_joints}
+    closed = {n: spec.finger_closed for n in spec.finger_joints}
+    scene.set_joints(dict(current, **open_f))
+    tool_position, tool_rotation = scene.tcp()
+    tool_yaw = math.atan2(tool_rotation[1, 0], tool_rotation[0, 0])
+    rotation = top_down_rotation(tool_yaw)
+    held_centre = tool_position + tool_rotation @ scene.attached[0]
+    xy = support.position[:2] if place_xy is None else place_xy
+    place_centre = np.array([float(xy[0]), float(xy[1]), support.top + float(obj.size[2]) / 2.0])
+    place_point = place_centre + (tool_position - held_centre)
     above_place = place_point + [0, 0, lift]
-    over = scene.solve_seeded(above_place, rotation, [up[-1]] + seeds[1:], open_f)
+    seeds = _seeds(current, seeds)
+    over = scene.solve_seeded(above_place, rotation, seeds, open_f)
     if over is None:
         raise PlanningError('no IK above the support')
-    stages.append(dict(stage='over_support', waypoints=scene.joint_route(up[-1], over, vias, open_f, allow_fingers=True),
-                       fingers=closed))
+    vias = _high_vias(scene, above_place, rotation, over, open_f) + [{n: s[n] for n in spec.arm_joints} for s in seeds[1:]]
+    stages = [dict(stage='over_support', waypoints=scene.joint_route(current, over, vias, open_f, allow_fingers=True),
+                   fingers=closed)]
     lower = scene.straight_line(over, place_point, rotation, open_f, allow_fingers=True,
                                 allow_supports=(support.name,))
     stages.append(dict(stage='lower', waypoints=lower, fingers=closed))
@@ -362,8 +463,119 @@ def plan_pick_place(scene: ArmScene, current: Dict[str, float], obj: Box, suppor
     scene.move_object(place_centre, obj.quaternion)
     retreat = scene.straight_line(lower[-1], place_point + [0, 0, approach], rotation, open_f, allow_fingers=True)
     stages.append(dict(stage='retreat', waypoints=retreat, fingers=open_f))
-    return dict(stages=stages, grasp_width_m=width, tool_yaw=tool_yaw, place_centre=place_centre.tolist(),
-                grasp_point=grasp_point.tolist())
+    return dict(stages=stages, place_centre=place_centre.tolist())
+
+
+def _high_vias(scene, point, rotation, seed, fingers, heights=(0.15, 0.30)):
+    """Arm poses with the tool straight above ``point``: detours that clear a table edge."""
+    vias = []
+    for height in heights:
+        solution = scene.solve(np.asarray(point) + [0, 0, height], rotation, seed, fingers)
+        if solution is not None:
+            vias.append(solution)
+    return vias
+
+
+def _seeds(current, seeds):
+    rng = np.random.default_rng(0)
+    return [dict(current)] + [dict(s) for s in seeds] + [
+        {n: v + float(rng.uniform(-0.3, 0.3)) for n, v in s.items()} for s in seeds for _ in range(2)]
+
+
+def plan_pick_place(scene: ArmScene, current: Dict[str, float], obj: Box, support: Box, *,
+                    approach=0.10, lift=0.10, seeds: Sequence[Dict[str, float]] = ()):
+    """Stage list [{stage, waypoints (arm joints), fingers}] for one pick and place
+    from a fixed base: ``plan_pick`` then ``plan_place`` at the support's centre."""
+    pick = plan_pick(scene, current, obj, approach=approach, lift=lift, seeds=seeds)
+    place = plan_place(scene, pick['stages'][-1]['waypoints'][-1], obj, support, approach=approach, lift=lift,
+                       seeds=seeds)
+    return dict(stages=pick['stages'] + place['stages'], grasp_width_m=pick['grasp_width_m'],
+                tool_yaw=pick['tool_yaw'], place_centre=place['place_centre'], grasp_point=pick['grasp_point'])
+
+
+# --- mobile manipulators: where the base stands -------------------------------
+def _local(box: Box, point):
+    yaw = yaw_of(box.quaternion)
+    dx, dy = float(point[0]) - float(box.position[0]), float(point[1]) - float(box.position[1])
+    return np.array([math.cos(yaw) * dx + math.sin(yaw) * dy, -math.sin(yaw) * dx + math.cos(yaw) * dy])
+
+
+def _world(box: Box, local):
+    yaw = yaw_of(box.quaternion)
+    c, s = math.cos(yaw), math.sin(yaw)
+    return np.array([box.position[0] + c * local[0] - s * local[1], box.position[1] + s * local[0] + c * local[1]])
+
+
+def _edges(box: Box):
+    """(outward unit normal in the box frame, half extent across, half extent along) per side."""
+    hx, hy = float(box.size[0]) / 2.0, float(box.size[1]) / 2.0
+    return [(np.array([1.0, 0.0]), hx, hy), (np.array([-1.0, 0.0]), hx, hy),
+            (np.array([0.0, 1.0]), hy, hx), (np.array([0.0, -1.0]), hy, hx)]
+
+
+def box_distance(box: Box, point):
+    """2D distance from a point to a box footprint (0 inside)."""
+    local = np.abs(_local(box, point)) - np.array([float(box.size[0]), float(box.size[1])]) / 2.0
+    return float(np.linalg.norm(np.maximum(local, 0.0)))
+
+
+def standoff(box: Box, target_xy, reach: float, robot_xy=None):
+    """Base pose (x, y, yaw) facing the box side nearest ``target_xy``, ``reach`` m short of it.
+
+    The side is the one with the target closest to its edge; on a tie, the
+    side facing ``robot_xy``. Returns (x, y, yaw, depth): depth is how far the
+    target lies inside that edge.
+    """
+    local = _local(box, target_xy)
+    robot = _local(box, robot_xy) if robot_xy is not None else np.zeros(2)
+    best = None
+    for normal, across, _along in _edges(box):
+        depth = across - float(normal @ local)
+        key = (round(depth, 3), -float(normal @ robot))
+        if best is None or key < best[0]:
+            best = (key, normal, depth)
+    _key, normal, depth = best
+    base_local = local + normal * reach
+    yaw = yaw_of(box.quaternion) + math.atan2(-normal[1], -normal[0])
+    xy = _world(box, base_local)
+    return float(xy[0]), float(xy[1]), math.atan2(math.sin(yaw), math.cos(yaw)), float(depth)
+
+
+def place_standoff(box: Box, robot_xy, inset: float, reach: float, margin: float = 0.05):
+    """Where to set an object down on ``box`` from the side facing ``robot_xy``, and where the base stands.
+
+    The place point is ``inset`` m inside that edge, level with the robot
+    along it (kept ``margin`` from the corners). The base faces the edge,
+    ``reach`` m from the place point. Returns ((x, y, yaw), (place x, place y)).
+    """
+    robot = _local(box, robot_xy)
+    best = None
+    for normal, across, along in _edges(box):
+        outside = float(normal @ robot) - across
+        if best is None or outside > best[0]:
+            best = (outside, normal, across, along)
+    _outside, normal, across, along = best
+    tangent = np.array([-normal[1], normal[0]])
+    offset = max(-(along - margin), min(along - margin, float(tangent @ robot)))
+    local = normal * (across - inset) + tangent * offset
+    place = _world(box, local)
+    base = _world(box, local + normal * reach)
+    yaw = yaw_of(box.quaternion) + math.atan2(-normal[1], -normal[0])
+    return (float(base[0]), float(base[1]), math.atan2(math.sin(yaw), math.cos(yaw))), (float(place[0]), float(place[1]))
+
+
+def segment_clearance(boxes: Sequence[Box], start, end, step: float = 0.02):
+    """Smallest 2D distance from the straight segment start -> end to any box, and that box's name."""
+    start, end = np.asarray(start[:2], dtype=float), np.asarray(end[:2], dtype=float)
+    steps = max(1, int(math.ceil(float(np.linalg.norm(end - start)) / step)))
+    best = (math.inf, None)
+    for k in range(steps + 1):
+        point = start + (end - start) * k / steps
+        for box in boxes:
+            distance = box_distance(box, point)
+            if distance < best[0]:
+                best = (distance, box.name)
+    return best
 
 
 def synchronised(waypoints: List[Dict[str, float]], start: Dict[str, float], rate: float, period: float):

@@ -42,7 +42,12 @@ def pick_place(app, page, args, report, press, settle, until, pump, screenshot):
     until(lambda: page.pick_run_button.instate(['!disabled']), 20, 'Run pick / place enabled')
     press(page.pick_run_button)
     until(lambda: page.pick_state.get('phase') == 'executing', 30, 'task started')
-    pump(8.)
+    if page.pick_state.get('mobile'):
+        # A fetch drives first: photograph it carrying, mid-route.
+        until(lambda: page.pick_state.get('stage') == 'carry' or page.pick_state.get('phase') == 'idle', 300, 'carrying')
+        pump(12.)
+    else:
+        pump(8.)
     screenshot(args.output / 'carrying.png')
     pump(1.)
     until(lambda: page.pick_state.get('phase') == 'idle' and json.dumps(page.pick_state.get('last_result')) != previous,

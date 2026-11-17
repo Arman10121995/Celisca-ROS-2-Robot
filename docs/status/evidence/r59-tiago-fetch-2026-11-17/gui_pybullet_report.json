@@ -1,0 +1,337 @@
+{
+ "robot": "asset_pal_tiago",
+ "simulator": "pybullet",
+ "map": "mobile_fetch_lab",
+ "steps": [
+  {
+   "pressed": "Home (direct)",
+   "button_state": "()",
+   "page_status": "Target requested; inspect actual feedback."
+  },
+  {
+   "step": "home",
+   "targets": {
+    "torso_lift_joint": 0.15,
+    "arm_1_joint": 0.5,
+    "arm_2_joint": -1.34,
+    "arm_3_joint": -0.48,
+    "arm_4_joint": 1.94,
+    "arm_5_joint": -1.49,
+    "arm_6_joint": 1.37,
+    "arm_7_joint": 0.0,
+    "gripper_left_finger_joint": 0.04,
+    "gripper_right_finger_joint": 0.04,
+    "head_1_joint": 0.0,
+    "head_2_joint": 0.0
+   },
+   "settled_s": 9.78,
+   "measured": {
+    "arm_1_joint": 0.5,
+    "arm_2_joint": -1.34,
+    "arm_3_joint": -0.48,
+    "arm_4_joint": 1.9122,
+    "arm_5_joint": -1.49,
+    "arm_6_joint": 1.37,
+    "arm_7_joint": -0.0,
+    "gripper_left_finger_joint": 0.04,
+    "gripper_right_finger_joint": 0.04,
+    "head_1_joint": 0.0,
+    "head_2_joint": -0.0,
+    "torso_lift_joint": 0.15
+   }
+  },
+  {
+   "pressed": "Run fetch",
+   "button_state": "()",
+   "page_status": "executing bounded articulation targets"
+  }
+ ],
+ "passed": true,
+ "page_selected": true,
+ "rows": [
+  "J1 \u00b7 torso_lift_joint",
+  "J2 \u00b7 arm_1_joint",
+  "J3 \u00b7 arm_2_joint",
+  "J4 \u00b7 arm_3_joint",
+  "J5 \u00b7 arm_4_joint",
+  "J6 \u00b7 arm_5_joint",
+  "J7 \u00b7 arm_6_joint",
+  "J8 \u00b7 arm_7_joint",
+  "J9 \u00b7 gripper_left_finger_joint",
+  "J10 \u00b7 gripper_right_finger_joint",
+  "J11 \u00b7 head_1_joint",
+  "J12 \u00b7 head_2_joint"
+ ],
+ "command": "ros2 launch robot_lab_bringup simulated_robot.launch.py robot_model:=asset_pal_tiago simulator:=pybullet use_sim_time:=true map_name:=mobile_fetch_lab world_package:=robot_lab_maps world_name:=mobile_fetch_lab world_path:=maps/mobile_fetch_lab/worlds/mobile_fetch_lab.world map_yaml:=maps/mobile_fetch_lab/maps/map.yaml mode:=display gui:=false perception:=none",
+ "pick_place": {
+  "result": {
+   "schema": "robot_lab.pick_place_result.v1",
+   "outcome": "succeeded",
+   "passed": true,
+   "message": "Placed fetch_block on drop_table",
+   "request": {
+    "object": "fetch_block",
+    "support": "drop_table",
+    "lift": 0.1
+   },
+   "object": "fetch_block",
+   "support": "drop_table",
+   "object_start": [
+    1.4500014597837543,
+    -7.622374351111536e-06,
+    0.57498841995968
+   ],
+   "plan": {
+    "pick_base": [
+     0.83,
+     -0.0,
+     0.0
+    ],
+    "place_base": [
+     0.45,
+     1.43,
+     1.571
+    ],
+    "place_xy": [
+     0.45,
+     2.05
+    ],
+    "grasp_width_m": 0.04,
+    "pick_base_measured": [
+     0.8057,
+     0.0001,
+     0.0008,
+     -0.0018
+    ],
+    "place_centre": [
+     0.45,
+     2.05,
+     0.575
+    ],
+    "place_base_measured": [
+     0.4499,
+     1.4057,
+     0.0009,
+     1.5711
+    ]
+   },
+   "stages": [
+    {
+     "phase": "to_object_arrived",
+     "final_pose": [
+      0.8057,
+      0.0001,
+      0.0008,
+      -0.0018
+     ]
+    },
+    {
+     "phase": "to_object",
+     "seconds": 15.11
+    },
+    {
+     "stage": "open",
+     "seconds": 0.02,
+     "object_truth": [
+      1.45,
+      -0.0,
+      0.575
+     ],
+     "tcp_estimate": [
+      0.9906,
+      0.1877,
+      0.7738
+     ],
+     "passed": true
+    },
+    {
+     "stage": "above_object",
+     "seconds": 16.7,
+     "object_truth": [
+      1.45,
+      0.0,
+      0.575
+     ],
+     "tcp_estimate": [
+      1.4498,
+      0.0004,
+      0.6764
+     ],
+     "passed": true
+    },
+    {
+     "stage": "down_to_grasp",
+     "seconds": 1.19,
+     "object_truth": [
+      1.4499,
+      0.0001,
+      0.575
+     ],
+     "tcp_estimate": [
+      1.4503,
+      0.0001,
+      0.6298
+     ],
+     "passed": true
+    },
+    {
+     "stage": "close",
+     "seconds": 2.91,
+     "object_truth": [
+      1.4498,
+      0.0002,
+      0.5751
+     ],
+     "tcp_estimate": [
+      1.4503,
+      0.0,
+      0.6293
+     ],
+     "passed": true,
+     "finger_positions": [
+      0.0202,
+      0.0197
+     ],
+     "reason": ""
+    },
+    {
+     "stage": "lift",
+     "seconds": 3.48,
+     "object_truth": [
+      1.4495,
+      -0.0003,
+      0.6733
+     ],
+     "tcp_estimate": [
+      1.4498,
+      0.0001,
+      0.7289
+     ],
+     "passed": true,
+     "rise_m": 0.0983,
+     "hold_drift_m": 0.0,
+     "reason": ""
+    },
+    {
+     "phase": "pick",
+     "seconds": 24.98
+    },
+    {
+     "phase": "carry_arrived",
+     "final_pose": [
+      0.4499,
+      1.4057,
+      0.0009,
+      1.5711
+     ],
+     "max_carry_drift_m": 0.0171
+    },
+    {
+     "phase": "carry",
+     "seconds": 45.01
+    },
+    {
+     "stage": "over_support",
+     "seconds": 1.11,
+     "object_truth": [
+      0.45,
+      2.0501,
+      0.6749
+     ],
+     "tcp_estimate": [
+      0.448,
+      2.0456,
+      0.7322
+     ],
+     "passed": true
+    },
+    {
+     "stage": "lower",
+     "seconds": 2.56,
+     "object_truth": [
+      0.4503,
+      2.0488,
+      0.5751
+     ],
+     "tcp_estimate": [
+      0.4481,
+      2.0454,
+      0.6324
+     ],
+     "passed": true
+    },
+    {
+     "stage": "release",
+     "seconds": 1.12,
+     "object_truth": [
+      0.4506,
+      2.0483,
+      0.5749
+     ],
+     "tcp_estimate": [
+      0.448,
+      2.0455,
+      0.6324
+     ],
+     "passed": true
+    },
+    {
+     "stage": "retreat",
+     "seconds": 3.13,
+     "object_truth": [
+      0.4521,
+      2.0468,
+      0.575
+     ],
+     "tcp_estimate": [
+      0.4479,
+      2.0453,
+      0.7321
+     ],
+     "passed": true,
+     "final_pose": [
+      0.4521,
+      2.0468,
+      0.575
+     ],
+     "height_error_m": -0.0,
+     "inside_support": true,
+     "moved_last_s_m": 0.0,
+     "reason": ""
+    },
+    {
+     "phase": "place",
+     "seconds": 8.11
+    },
+    {
+     "phase": "clear_arrived",
+     "final_pose": [
+      0.4507,
+      0.8277,
+      0.001,
+      1.5521
+     ]
+    },
+    {
+     "phase": "clear",
+     "seconds": 11.39
+    }
+   ],
+   "mobile": true,
+   "interlock": {
+    "max_base_speed_in_arm_phases": 0.0019570492554756686,
+    "max_base_turn_in_arm_phases": 0.004843072973068997,
+    "drive_ticks_with_articulation_active": 1,
+    "drive_ticks": 391
+   },
+   "phase": "clear",
+   "seconds": 104.6,
+   "plant_id": "152edc1559c74b388760ba34344e450c",
+   "model_sha256": "6860985f4c8af74f9e35603fa3adc2838e58e46f0c5e337f3576fd9a18cefbc3",
+   "finished": "2026-11-17T14:10:41",
+   "receipt": "/workspace/molar/robot_lab_runtime/pick-place/20261117T141041_fetch_block.json"
+  },
+  "page_status": "idle: Placed fetch_block on drop_table\nLast: succeeded \u00b7 /workspace/molar/robot_lab_runtime/pick-place/20261117T141041_fetch_block.json"
+ },
+ "launch_returncode": 0
+}

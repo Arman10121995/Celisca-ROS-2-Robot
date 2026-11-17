@@ -320,3 +320,81 @@ def test_feedforward_and_servo_share_one_source_effort_limit(wanted, limit):
 def test_invalid_effort_budget_is_rejected(wanted, limit):
     with pytest.raises(ValueError, match='force budget'):
         effort_budget(wanted, limit)
+
+
+GRIP_URDF = '''<robot name="grip"><link name="base"/>
+<joint name="finger_joint" type="prismatic"><limit lower="0" upper="0.045" velocity="0.05" effort="16"/></joint></robot>'''
+
+
+def grip_controller(tmp_path, **extra):
+    model = tmp_path/'grip.urdf'
+    model.write_text(GRIP_URDF)
+    config = dict(schema='robot_lab.urdf_articulation.v1', grip_joints=['finger_joint'], joints={
+        'finger_joint': dict(mode='position', lower=0., upper=.045, max_velocity=.025, effort=16., kp=800., kd=20.)},
+        **extra)
+    return URDFArticulation(config, GRIP_URDF, model)
+
+
+def squeeze_on_object(controller, at=.02, steps=40):
+    """Close on an object that stops the finger at ``at``; returns the last time."""
+    controller.step({'finger_joint': at}, {'finger_joint': 0.}, .01, now=1.)
+    controller.heartbeat(1.)
+    assert controller.command({'plant_id': controller.plant_id, 'targets': {'finger_joint': 0.}}, now=1.)
+    now = 1.
+    for _ in range(steps):
+        now += .05
+        controller.heartbeat(now)
+        controller.step({'finger_joint': at}, {'finger_joint': 0.}, .05, now=now)
+    return now
+
+
+def test_still_grip_on_an_object_does_not_inhibit_the_base(tmp_path):
+    controller = grip_controller(tmp_path)
+    squeeze_on_object(controller)
+    assert controller.targets['finger_joint'] == 0.
+    assert not controller.active and not controller.base_inhibited
+
+
+def test_stop_and_base_motion_keep_a_bounded_squeeze(tmp_path):
+    controller = grip_controller(tmp_path)
+    now = squeeze_on_object(controller)
+    controller.step({'finger_joint': .02}, {'finger_joint': 0.}, .05, now=now, base_moving=True)
+    assert controller.holding
+    assert controller.targets['finger_joint'] == controller.references['finger_joint'] == pytest.approx(.015)
+    result = controller.step({'finger_joint': .02}, {'finger_joint': 0.}, .05, now=now+.05, base_moving=True)
+    assert result['position']['finger_joint'] == pytest.approx(.015)
+    controller.stop()
+    assert controller.targets['finger_joint'] == pytest.approx(.015)    # stays bounded, never tightens
+
+
+def test_moving_grip_stops_at_its_measured_position(tmp_path):
+    controller = grip_controller(tmp_path)
+    controller.step({'finger_joint': .04}, {'finger_joint': 0.}, .01, now=1.)
+    controller.heartbeat(1.)
+    controller.command({'plant_id': controller.plant_id, 'targets': {'finger_joint': 0.}}, now=1.)
+    now, position = 1., .04
+    for _ in range(10):
+        now, position = now+.05, position-.001
+        controller.heartbeat(now)
+        controller.step({'finger_joint': position}, {'finger_joint': -.02}, .05, now=now)
+    assert controller.active
+    controller.stop()
+    assert controller.targets['finger_joint'] == pytest.approx(position)
+
+
+def test_grip_configuration_is_checked(tmp_path):
+    with pytest.raises(ValueError):
+        grip_controller(tmp_path, grip_hold_squeeze=.05)
+    model = tmp_path/'grip.urdf'
+    model.write_text(GRIP_URDF)
+    with pytest.raises(ValueError):
+        URDFArticulation(dict(schema='robot_lab.urdf_articulation.v1', grip_joints=['other'], joints={
+            'finger_joint': dict(mode='position', lower=0., upper=.045, max_velocity=.025, effort=16., kp=800., kd=20.)}),
+            GRIP_URDF, model)
+
+
+def test_configured_squeeze_keeps_the_full_grasp_force(tmp_path):
+    controller = grip_controller(tmp_path, grip_hold_squeeze=.02)
+    squeeze_on_object(controller, at=.0195)
+    controller.stop()
+    assert controller.targets['finger_joint'] == pytest.approx(0.)    # 19.5 mm < 20 mm: the full target is kept

@@ -1,3 +1,21 @@
+- id: mobile_fetch_lab
+  name: Mobile fetch lab
+  description: Mobile pick-carry-place fixture (R5.9) - robot at the origin, pickup_table (top 0.5 m) at (1.6, 0) with a loose 40 x 40 x 150 mm, 100 g block, drop_table at (0, 2.2)
+  dimension: 3D
+  dynamics: {dynamic_obstacles: false, static_obstacles: true}
+  ground_truth_available: true
+  ros_package: robot_lab_maps
+  simulator: mujoco
+  simulators: [mujoco, pybullet]
+  source: {license: Apache-2.0, repository: internal}
+  status: available
+  supported_robot_classes: [mobile, manipulator]
+  tags: [manipulation, mobile_manipulation, pick_and_place, experimental]
+  version: 0.1.0
+  size: {x: 8.0, y: 8.0, z: 0.54}
+  seed: 1
+  world_file: robot_lab_maps/maps/mobile_fetch_lab/worlds/mobile_fetch_lab.world
+  occupancy_map: robot_lab_maps/maps/mobile_fetch_lab/maps/map.pgm
 - id: arm_pick_place_lab
   name: Arm pick-and-place lab
   description: Fixed-arm pick-and-place fixture (R5.7) - arm at the origin, two 0.3 m tables at (0.5, -/+0.25), a loose 40 mm, 50 g cube

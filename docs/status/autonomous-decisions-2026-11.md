@@ -34,3 +34,13 @@ choices.
 | 11-17 | R5.7 | Renamed `/mujoco/free_bodies` to `/simulation/free_bodies` and added it to PyBullet | One truth topic for every backend |
 | 11-17 | R5.7 | Accepted that PyBullet loose objects are not in the RGB-D mirror camera | Pick and place uses truth; perception is a separate remaining item |
 | 11-17 | R5.7 | Rasterized the new world's 2D map from its boxes rather than running the Gazebo map generator | Exact for box worlds and needs no simulator run |
+| 11-17 | R5.9 | Built the mobile mission on TIAGo with the new URDF pick-and-place executor, not on the native Stretch pipeline | TIAGo runs on the shared articulation contract on three backends, and its base/arm interlock already exists |
+| 11-17 | R5.9 | Planned each arm phase on arrival from the measured base pose | Base stops are never exact; a plan from the planned stop would miss by centimetres |
+| 11-17 | R5.9 | Drove straight, truth-steered legs with table-clearance checks instead of Nav2 | TIAGo's adapter is Display-only (no Nav2 mode); the legs are checked and refused when blocked |
+| 11-17 | R5.9 | Added `grip_joints` to the articulation contract: a still gripper keeps a bounded squeeze across Stop and base motion, and counts as active only while it moves | Otherwise a squeezing gripper inhibits the base for ever, and a base-motion hold drops the object |
+| 11-17 | R5.9 | Set TIAGo's retained squeeze to its 16 N grasp force (20 mm), not the 4 N default | At 4 N the block crept down the fingers in MuJoCo |
+| 11-17 | R5.9 | Used a 40 × 40 × 150 mm block, not a 40 mm cube | PAL's finger pads reach 9 cm past the grasp frame; a top grasp of a cube on a table is impossible |
+| 11-17 | R5.9 | Planner: try all grasp sides and yaws, raise the grasp until the fingertips clear the table, route joint moves via high poses and then the repo's bounded RRT-Connect | Linear joint moves swept TIAGo's long fingers through the table edge |
+| 11-17 | R5.9 | MuJoCo grasping contacts (elliptic cone, impratio 10) only for robots with `grip_joints` | Even at 16 N the block crept 1.7 mm/s with the default pyramidal cone; scoping keeps earlier measured runs unchanged |
+| 11-17 | R5.9 | PyBullet: grip force proportional to error, a symmetric-grip gear for TIAGo, and friction anchors on fingers and loose objects | The saturated motors let the fingers drift sideways, and the block yawed 0.5 rad in the grip while turning |
+| 11-17 | R5.9 | Judged finger stillness from positions, not reported velocities | Bullet's reported finger velocities jitter while squeezing |

@@ -98,3 +98,35 @@ robots:
       finger_closed: 0.0
       max_object_width: 0.075
       tool_yaw_offset: -0.785398163
+  # Official PAL TIAGo (ROADMAP R5.9): fetch an object with the mobile base
+  # and the parallel gripper. The grasp frame is gripper_grasping_frame,
+  # 0.1931 m along arm_7_link z (fixed links merge into arm_7_link); the
+  # fingers close along arm_7_link y. The two source fingers stay independent
+  # (each has its own motor) and are both commanded. grip_joints keep a
+  # bounded squeeze when the arm holds still while the base drives: 20 mm at
+  # the 800 N/m finger servo is the 16 N source effort limit, the force of
+  # the grasp itself (4 N let a 100 g block creep in MuJoCo).
+  asset_pal_tiago:
+    articulation:
+      grip_joints: [gripper_left_finger_joint, gripper_right_finger_joint]
+      grip_hold_squeeze: 0.02
+      # Bullet only: keep the two fingers level while squeezing (they drift
+      # sideways on the floating base); MuJoCo holds without it.
+      pybullet_symmetric_grip: true
+    pick_place:
+      arm_joints: [arm_1_joint, arm_2_joint, arm_3_joint, arm_4_joint, arm_5_joint, arm_6_joint, arm_7_joint]
+      finger_joints: [gripper_left_finger_joint, gripper_right_finger_joint]
+      tool_body: arm_7_link
+      tcp_offset: [0.0, 0.0, 0.1931]
+      finger_open: 0.04
+      finger_closed: 0.0
+      max_object_width: 0.08
+      tool_yaw_offset: 0.0
+      mobile:
+        reach: 0.62            # base centre to the object, torso at Home (0.15 m)
+        max_depth: 0.3
+        back_off: 0.6
+        approach_run: 0.6
+        base_radius: 0.35      # PMB2 radius 0.27 m plus margin
+        carry_radius: 0.85     # base plus the extended arm and object
+        place_inset: 0.15
