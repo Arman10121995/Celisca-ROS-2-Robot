@@ -2137,6 +2137,7 @@ tasks:
         state: partial
         title: 'Carpets, mopping modes, water tank and refill: implemented; Gazebo vacuum+mop rug and carpet-boost runs pass (2026-11-10)'
       R13.3:
+        retrain3_20261117: 'Claude: retrain 3 installed as auto (sha256 aa3cc339...; fine-tuned from retrain 2 on 750 new renders weighted to pet waste and socks, 25 % background views; provisioning accepts fine-tunes only from an installed parent). Held-out at 0.75 versus retrain 2: pet-waste false positives 3/4/4 to 0/2/3 and dB recall 54 to 60 %; cable false positives 2/2/11 to 0/4/7; sock false positives dA 10 to 6, dB 16 to 17. Learned small_house zone job: completed, cleaning_screen pass, 86.9 %, 0 bumper contacts, min body clearance 0.286 m, three extra low-count sightings. docs/status/evidence/r133-retrain3-2026-11-17/README.md'
         acceptance_ref: ROADMAP.md R13.3
         owner: codex
         state: partial

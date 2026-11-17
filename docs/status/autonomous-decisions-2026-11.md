@@ -49,3 +49,9 @@ choices.
 | 11-17 | R5.8 | Debounced grasp holding (0.3 s, object still) and loss (0.1 s) | A first fingertip touch bounces; it was latched as contact lost |
 | 11-17 | R5.8 | Settled the Robotiq unit test before grasping instead of loosening the effort guard | The 4 N transient is the model's first-step settling, not a grasp |
 | 11-17 | R5.8 | Recorded DEX-EE as not passed and moved on | Five friction/force/geometry variants all tilt; the next step is grasp synthesis, a separate task |
+| 11-17 | R13.3 | Fine-tuned retrain 2 on new weighted renders instead of retraining from COCO | Five epochs on CPU (~45 min) instead of 16 (~2.3 h); provenance chains through the installed parent |
+| 11-17 | R13.3 | Installed retrain 3 as `auto` | It is better or equal on most held-out cells, and the learned mission still passes with more clearance |
+| 11-17 | R13.3 | Marked R13.3 implemented (done-when met); repeats and held-out rooms belong to V1 | The done-when (zero-contact job passing cleaning_screen) holds for both detectors |
+| 11-17 | R3.6 | Gave UR10, UR5 and YuMi declared lab servos; kept Kinova and KUKA display-only | The first three are welded to `world` with full limits; the other two would float and have controllable Menagerie siblings |
+| 11-17 | R6.6 | Polylines become convex triangle-prism STL meshes in the shared SDF reader | No consumer changes needed, and MuJoCo's convex hulls stay exact |
+| 11-17 | R6.6 | Read "upper floors" as already covered by `--height` slicing | No installed world has two storeys in one file; the CELISCA floors are separate worlds |

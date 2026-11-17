@@ -127,7 +127,7 @@ Work top to bottom. Each line links to its task.
 | I0a | [R14.3](#r143--elephant-myagv-pro-mobile-manipulator) Elephant mobile manipulator | Done 2026-11-13: official Pro630 on the roller base in MuJoCo/PyBullet/Isaac, generic GUI Mobile arm page; gripper and pick/place remain | implemented |
 | I0b | [R14.4](#r144--contributor-integration-course) Integration guide chapters | Done 2026-11-13: beginner course part 2 (chapters 9–12) in docs/learn and the GUI docs library; clean-host walkthrough remains | implemented |
 | I1 | [R13.2](#r132--vacuum-carpets-and-mopping) Vacuum carpets and mopping | Done 2026-11-10 (Gazebo mop + rug run passes) | implemented |
-| I2 | [R13.3](#r133--vacuum-camera-obstacle-recognition) Vacuum camera obstacles | Multi-map retrain installed; one learned-camera Gazebo zone job passes (0 contacts); repeats/held-out rooms pending | partial |
+| I2 | [R13.3](#r133--vacuum-camera-obstacle-recognition) Vacuum camera obstacles | Done-when met (ideal and learned). 11-17 retrain 3 installed (fewer pet/cable false positives, pet recall 54 → 60 %); learned zone job passes again (0 contacts, 0.286 m). Sock false positives remain; repeats/held-out room are V1 | implemented |
 | I3 | [R14.1](#r141--open-source-counterparts-for-self-made-robots) Open-source robots | Initial source-search/integration pass complete: TurtleBot4, WAM-V, Summit-STEEL and source octopod measured; BlueROV2 remains a restricted local candidate. Remaining licensing/mission qualification recorded separately | implemented; acceptance partial |
 | I4 | [R6.7](#r67--terrain-generation-gui-and-four-backend-conversion) Terrain GUI | Done 2026-11-13: Worlds → Terrain page, procedural/raster sources with manifest, support height measured on all four (Isaac included) | implemented |
 | I4a | [R14.5](#r145--robot-status-markers-in-the-gui-selectors) Robot status markers | Done 2026-11-13: ● measured / ◐ experimental / ○ display only / ✕ unavailable plus mode letters in both robot lists, from recorded evidence | implemented |
@@ -1226,7 +1226,7 @@ parking batch needs its own run. Details and evidence are in the
 
 #### R13.3 — Vacuum camera obstacle recognition
 
-- **State:** partial; implemented, experimental: learned camera measured in one Gazebo job (2026-11-15) · **Priority:** I2 (repeats/held-out rooms remain) · **Depends on:** R13.1
+- **State:** implemented, experimental (done-when met; learned camera measured in two Gazebo jobs, 2026-11-15 and 11-17) · **Priority:** I2 (repeats/held-out rooms are V1) · **Depends on:** R13.1
 - **Goal:** like commercial vacuums, a front camera recognises cables,
   socks, shoes and pet mess. The robot keeps a class-specific distance and
   shows them on the map.
@@ -1274,8 +1274,20 @@ parking batch needs its own run. Details and evidence are in the
   pass, 88.3 %, **0 bumper contacts**, body ≥ 0.232 m from every footprint by truth, all four
   recognised. One run on a training map; one extra cable sighting.
   [Receipt](docs/status/evidence/r133-camera-detector-2026-11-15/README.md).
-- **Remaining:** repeats, a held-out room, sock false positives (10–16 per held-out set) and pet-waste
-  recall (54 % on dB). Real objects remain unqualified; ideal segmentation stays the default.
+- **November 17 retrain 3 (implemented, experimental):** fine-tuned from retrain 2
+  (`train_vacuum_detector.py --init`) on 750 new renders, weighted to pet waste and socks, with a
+  quarter of the views background-only. On the same held-out sets at score 0.75:
+  - pet-waste false positives fall on every set (3 → 0, 4 → 2, 4 → 3), and dB recall rises from
+    54 % to 60 %;
+  - cable false positives fall on d1 and dB (2 → 0, 11 → 7) and rise on dA (2 → 4);
+  - sock false positives fall on dA (10 → 6) but not on dB (16 → 17).
+
+  Installed as `auto`. The learned-camera small_house zone job passes again: `completed`,
+  `cleaning_screen` pass, 86.9 %, **0 bumper contacts**, minimum body clearance 0.286 m by truth.
+  [Receipt](docs/status/evidence/r133-retrain3-2026-11-17/README.md).
+- **Remaining:** sock false positives on dB (17) and pet-waste recall (60 %) are training-quality
+  work. Repeats, a held-out room and real objects are validation (V1). Ideal segmentation stays the
+  default.
 - **History, November 12 quality gap:** held-out mAP@0.5 was 0.564. At the deployed 0.4 score threshold,
   matches/GT are cable 1/13, pet mess 4/5, shoe 8/12 and sock 3/4; shoes have 30 predictions.
   Cable misses and shoe false positives need training improvement before support promotion. These

@@ -33,8 +33,14 @@ def provision(checkpoint, dataset, destination):
     state = torch.load(checkpoint, map_location='cpu', weights_only=True)
     if (state.get('cat_id') != CLASSES
             or state.get('architecture') != 'fasterrcnn_mobilenet_v3_large_fpn'
-            or not state.get('model') or state.get('weights_initialization') != 'coco'):
+            or not state.get('model') or state.get('weights_initialization') not in ('coco', 'fine-tuned')):
         raise ValueError('Checkpoint is not a source-bound trained camera model')
+    if state['weights_initialization'] == 'fine-tuned':
+        # A fine-tune (train_vacuum_detector.py --init) must start from a
+        # checkpoint that is itself installed here, with its own provenance.
+        parent = destination / str(state.get('initialised_from_sha256')) / 'vacuum_detector.pt'
+        if not parent.is_file() or digest(parent) != state.get('initialised_from_sha256'):
+            raise ValueError('Fine-tuned checkpoint must start from an installed checkpoint')
     for name, key in [('annotations.json', 'annotations_sha256'), ('val_ids.json', 'split_sha256')]:
         if digest(dataset / name) != state.get(key):
             raise ValueError('Checkpoint dataset metadata hash mismatch: ' + name)
