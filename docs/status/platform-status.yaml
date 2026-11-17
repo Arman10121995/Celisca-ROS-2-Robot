@@ -4388,6 +4388,7 @@ tasks:
           certificates. Full declared roadmap acceptance is still open; test counts, metadata and scene loads
           do not qualify remaining robot/map/backend missions. See docs/REMAINING_WORK_GUIDE.md.'
       R6.6:
+        polylines_20261117: 'Claude: sdf_world reads <polyline> (ear-clipped outlines extruded into convex triangle prisms, cached binary STL; unit-tested). gazebo_example_polylines installed with 16 shapes, MJCF and an occupancy grid (20/20 reviewed example scenes); its models are authored 5 m up (they fall in the demo), so the static 0.3 m slice is free. Upper floors: generator slices any --height; CELISCA floors are separate worlds.'
         acceptance_ref: ROADMAP.md
         active_scope: '2026-10-08 codex: all 17 actual v4 exports preserve worlds/spawns
           and normal GUI paths; eight short hospital routes plus the separately hashed
