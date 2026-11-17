@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""MOLAR payload transfer to a station in Gazebo (ROADMAP R11): lift, extend, belt, retract.
+"""MOLAR payload transfer to a station in Gazebo, MuJoCo or PyBullet (ROADMAP R11): lift, extend, belt, retract.
 
 Launches ``molar_hri`` on ``nav_empty`` (display, headless), then through the
 normal articulation interface (``/molar/articulation/*``, current plant ID,
@@ -115,6 +115,27 @@ SPAWN_Z = 0.1                 # the map's spawn drop: robot and payload fall it 
 DECK_REL_X, DECK_TOP_Z, EXTENDED_DECK_END = 0.0005, 0.749, 0.5675
 
 
+def pybullet_world(directory, lift):
+    """nav_empty SDF with the payload (loose) and the station (static, low friction), placed as for MuJoCo."""
+    from ament_index_python.packages import get_package_share_directory
+    maps = Path(get_package_share_directory('robot_lab_maps'))
+    directory.mkdir(parents=True, exist_ok=True)
+    x, y, yaw = SPAWN
+    c, s_ = math.cos(yaw), math.sin(yaw)
+    px = DECK_REL_X - .10
+    top = DECK_TOP_Z + lift - STATION_DROP
+    near = EXTENDED_DECK_END + STATION_GAP
+    centre = near + TABLE[0] / 2
+    payload = box_sdf('payload', BOX, (x + px * c, y + px * s_, SPAWN_Z + DECK_TOP_Z + BOX[2] / 2 + .002, 0, 0, yaw), mass=.5)
+    station = box_sdf('station', (TABLE[0], TABLE[1], top), (x + centre * c, y + centre * s_, top / 2, 0, 0, yaw), mu=STATION_MU)
+    def model(sdf):
+        return sdf[sdf.index('<model'):sdf.index('</sdf>')]
+    world = directory / 'nav_empty_transfer.world'
+    text = (maps / 'maps/nav_empty/worlds/nav_empty.world').read_text()
+    world.write_text(text.replace('</world>', model(payload) + model(station) + '</world>', 1))
+    return world, dict(near_edge=near, top=top, deck_end=EXTENDED_DECK_END)
+
+
 def mujoco_world(directory, lift):
     """nav_empty with the payload on the retracted deck and the station at the extended deck end."""
     from ament_index_python.packages import get_package_share_directory
@@ -153,7 +174,7 @@ def main():
     parser.add_argument('--lift', type=float, default=0.10, help='Lift joint change before the transfer (m)')
     parser.add_argument('--roller', type=float, default=8.0)
     parser.add_argument('--out', default='')
-    parser.add_argument('--simulator', choices=('gazebo', 'mujoco'), default='gazebo')
+    parser.add_argument('--simulator', choices=('gazebo', 'mujoco', 'pybullet'), default='gazebo')
     options = parser.parse_args()
     import rclpy
     from std_msgs.msg import Empty, String
@@ -162,12 +183,18 @@ def main():
     env = dict(os.environ, IGN_PARTITION='molar_transfer_%d' % os.getpid(), GZ_PARTITION='molar_transfer_%d' % os.getpid())
     result = dict(steps=[], error='')
     log = open((options.out or 'molar_transfer') + '.launch.log', 'w')
-    mujoco = options.simulator == 'mujoco'
+    # MuJoCo and PyBullet: payload and station are in the world file before
+    # launch; truth comes from /simulation/free_bodies and odometry.
+    mujoco = options.simulator in ('mujoco', 'pybullet')
     extra, placed = [], None
-    if mujoco:
+    if options.simulator == 'mujoco':
         world_file, placed = mujoco_world(Path((options.out or 'molar_transfer') + '_world'), options.lift)
         extra = ['mujoco_world_xml:=%s' % (world_file.parent.parent / 'mjcf' / 'nav_empty.xml')]
         result['mujoco_world'] = dict(placed, world=str(world_file))
+    elif options.simulator == 'pybullet':
+        world_file, placed = pybullet_world(Path((options.out or 'molar_transfer') + '_world'), options.lift)
+        extra = ['world_path:=%s' % world_file]
+        result['pybullet_world'] = dict(placed, world=str(world_file))
     launch = subprocess.Popen(['ros2', 'launch', 'robot_lab_bringup', 'simulated_robot.launch.py',
                                'simulator:=' + options.simulator, 'robot_model:=molar_hri', 'map_name:=nav_empty',
                                'mode:=display', 'gui:=false', 'start_rviz:=false'] + extra,
@@ -181,6 +208,11 @@ def main():
         def on_odom(m):
             q, o = m.pose.pose.position, m.pose.pose.orientation
             truth['base_link'] = [q.x, q.y, q.z, o.w, o.x, o.y, o.z]
+            v, w = m.twist.twist.linear, m.twist.twist.angular
+            speed = (math.hypot(v.x, v.y), abs(w.z))
+            truth['base_speed'] = speed
+            peak = truth.setdefault('base_speed_peak', [0., 0.])
+            peak[0], peak[1] = max(peak[0], speed[0]), max(peak[1], speed[1])
         node.create_subscription(Odometry, '/odom/ground_truth', on_odom, 10)
     state = {}
     node.create_subscription(String, '/molar/articulation/state', lambda m: state.update(json.loads(m.data)), 10)
@@ -285,7 +317,13 @@ def main():
                                     deck_end_from_base_m=deck_end, station_near_edge_m=near_edge, station_top_z=top,
                                     channels=channels()))
         # 4. belt until the payload is off the deck end (or 25 s)
+        truth['base_speed_peak'] = [0., 0.]
         send({'transfer_roller_joint': options.roller})
+        spin(1.0)
+        result['roller_command'] = dict(status=state.get('status'), fault=state.get('fault'),
+                                        target=channel('transfer_roller_joint')['target'],
+                                        base_inhibited=state.get('base_inhibited'),
+                                        base_speed_peak=truth.get('base_speed_peak'))
         def off_deck():
             q = observe().get('payload')
             return q is not None and ((q[0] - base[0]) * math.cos(yaw) + (q[1] - base[1]) * math.sin(yaw)

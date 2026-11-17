@@ -59,3 +59,4 @@ choices.
 | 11-17 | R5.7 | Planner tries up-and-over routes before direct sweeps | A direct sweep grazed the TIAGo block on Isaac; standard practice, and the MuJoCo/PyBullet regressions still pass |
 | 11-17 | R5.9 | Reverted the fingertip-clearance pre-grasp and recorded TIAGo-on-Isaac as not passed | The change broke a passing MuJoCo mission; the Isaac cause was not visible in the joint/TCP data |
 | 11-17 | R3.6 | Arm screen retries a blocked joint direction instead of choosing a new home pose | Tests the servo, not the floor; the blocked attempt stays in the report |
+| 11-17 | R11 | Reverted a trial raise of MOLAR's base-motion limits and recorded the PyBullet transfer as not passed | Raising them did not help (the base yawed 0.127 rad/s), and loosening the interlock would hide a real coupling |

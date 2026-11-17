@@ -1104,8 +1104,10 @@ parking batch needs its own run. Details and evidence are in the
     Passes 3/3 in Gazebo and 4/4 in MuJoCo on `nav_empty`
     ([receipt](docs/status/evidence/r11-molar-transfer-2026-11-15/README.md)). The belt force law is
     now shared (`robot_lab_utils/belt.py`), and a **PyBullet deck belt** (`pybullet_belt.py`) is
-    implemented and unit-tested (2026-11-17); a MOLAR PyBullet transfer run, the Isaac belt and a
-    CELISCA-floor station remain;
+    implemented and unit-tested (2026-11-17). The MOLAR PyBullet transfer does not pass: starting the
+    roller rocks and yaws the base, and the base-motion interlock refuses the roller command
+    ([receipt](docs/status/evidence/r11-molar-pybullet-transfer-2026-11-17/README.md)). That cause,
+    the Isaac belt and a CELISCA-floor station remain;
   - multi-floor operation through the fleet lift (R10.2).
 - **How to do it:** add sensors to `molar_hri.urdf.xacro`, then reuse the
   Bumperbot SLAM/Nav2 configs with the MOLAR footprint. Payload transfer
