@@ -1119,9 +1119,13 @@ def _build_simulation_actions(context):
                     Node(
                         package="controller_manager",
                         executable="spawner",
+                        # Large worlds run Gazebo well below real time: the
+                        # default 5 s switch timed out joint_state_broadcaster
+                        # on celisca_floor_1_detailed (2026-11-17), as it did
+                        # for MOLAR's nav-mode controllers (2026-11-15).
                         arguments=[
                             _robot_controller,
-                            "--controller-manager-timeout", "60",
+                            "--controller-manager-timeout", "60", "--switch-timeout", "60",
                         ],
                         output="screen",
                     )

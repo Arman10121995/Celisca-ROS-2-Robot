@@ -136,6 +136,17 @@ def pybullet_world(directory, lift):
     return world, dict(near_edge=near, top=top, deck_end=EXTENDED_DECK_END)
 
 
+def gazebo_world_name(map_name):
+    """The Gazebo world name of a sim_maps.yaml map (its pose/info and create services use it)."""
+    import yaml
+    from ament_index_python.packages import get_package_share_directory
+    maps = yaml.safe_load((Path(get_package_share_directory('robot_lab_bringup')) / 'config' / 'sim_maps.yaml').read_text())
+    entry = (maps.get('maps', maps)).get(map_name)
+    if entry is None:
+        raise ValueError('unknown map %s' % map_name)
+    return (entry.get('gazebo') or {}).get('world_name', map_name)
+
+
 def mujoco_world(directory, lift):
     """nav_empty with the payload on the retracted deck and the station at the extended deck end."""
     from ament_index_python.packages import get_package_share_directory
@@ -175,13 +186,20 @@ def main():
     parser.add_argument('--roller', type=float, default=8.0)
     parser.add_argument('--out', default='')
     parser.add_argument('--simulator', choices=('gazebo', 'mujoco', 'pybullet'), default='gazebo')
+    parser.add_argument('--time-scale', type=float, default=1.0,
+                        help='Multiply the settle/belt waits (large worlds run Gazebo below real time)')
+    parser.add_argument('--map', default='nav_empty',
+                        help='Gazebo only for maps other than nav_empty: the station is spawned ahead of the '
+                             "map's spawn pose, which needs ~1.4 x 0.6 m of free floor")
     options = parser.parse_args()
+    if options.map != 'nav_empty' and options.simulator != 'gazebo':
+        parser.error('--map other than nav_empty is Gazebo only (MuJoCo/PyBullet worlds are pre-written for nav_empty)')
     import rclpy
     from std_msgs.msg import Empty, String
 
     # One Gazebo transport partition shared by the launch and the ign CLI calls.
     env = dict(os.environ, IGN_PARTITION='molar_transfer_%d' % os.getpid(), GZ_PARTITION='molar_transfer_%d' % os.getpid())
-    result = dict(steps=[], error='')
+    result = dict(steps=[], error='', map=options.map, simulator=options.simulator)
     log = open((options.out or 'molar_transfer') + '.launch.log', 'w')
     # MuJoCo and PyBullet: payload and station are in the world file before
     # launch; truth comes from /simulation/free_bodies and odometry.
@@ -196,7 +214,7 @@ def main():
         extra = ['world_path:=%s' % world_file]
         result['pybullet_world'] = dict(placed, world=str(world_file))
     launch = subprocess.Popen(['ros2', 'launch', 'robot_lab_bringup', 'simulated_robot.launch.py',
-                               'simulator:=' + options.simulator, 'robot_model:=molar_hri', 'map_name:=nav_empty',
+                               'simulator:=' + options.simulator, 'robot_model:=molar_hri', 'map_name:=' + options.map,
                                'mode:=display', 'gui:=false', 'start_rviz:=false'] + extra,
                               env=env, stdout=log, stderr=subprocess.STDOUT, start_new_session=True)
     rclpy.init()
@@ -266,11 +284,11 @@ def main():
         if 'payload' in truth:
             out['payload'] = tuple(truth['payload'])
         return out
-    world = 'nav_empty'
+    world = gazebo_world_name(options.map)
     try:
-        if not spin(120, lambda: state.get('initialized') and not state.get('fault') and state.get('channels')):
+        if not spin(120 * options.time_scale, lambda: state.get('initialized') and not state.get('fault') and state.get('channels')):
             raise RuntimeError('articulation never became ready: %s' % state.get('status'))
-        spin(3)
+        spin(3 * options.time_scale)
         p = observe()
         deck, base = p['telescope_stage2'], p['base_link']
         yaw = yaw_of(base[3:])
@@ -280,13 +298,13 @@ def main():
         by = deck[1] - .10 * math.sin(yaw)
         if not mujoco:
             spawn(world, env, 'payload', box_sdf('payload', BOX, (bx, by, deck[2] + BOX[2] / 2 + .005, 0, 0, yaw), mass=.5))
-        spin(3)
+        spin(3 * options.time_scale)
         result['steps'].append(dict(step='payload on deck', pose=observe().get('payload')))
         # 2. lift
         lift = channel('conveyor_lift_joint')
         target = max(lift['limits'][0], min(lift['limits'][1], lift['measured'] + options.lift))
         send({'conveyor_lift_joint': target})
-        if not spin(30, lambda: settled('conveyor_lift_joint', target)):
+        if not spin(30 * options.time_scale, lambda: settled('conveyor_lift_joint', target)):
             raise RuntimeError('lift did not settle: %s' % state.get('status'))
         p = observe()
         result['steps'].append(dict(step='lifted', deck_z=p['telescope_stage2'][2],
@@ -294,7 +312,7 @@ def main():
         # 3. extend both coupled stages
         stage = channel('telescope_stage1_joint')['limits'][1]
         send({'telescope_stage1_joint': stage})
-        if not spin(30, lambda: settled('telescope_stage1_joint', stage) and settled('telescope_stage2_joint')):
+        if not spin(30 * options.time_scale, lambda: settled('telescope_stage1_joint', stage) and settled('telescope_stage2_joint')):
             raise RuntimeError('telescope did not extend: %s; %s' % (state.get('status'), json.dumps(channels())))
         # The station meets the extended deck end to end, as a conveyor
         # handover: near edge STATION_GAP past the measured deck end, top
@@ -312,14 +330,14 @@ def main():
             spawn(world, env, 'station', box_sdf('station', (TABLE[0], TABLE[1], top),
                                                  (base[0] + centre * math.cos(yaw), base[1] + centre * math.sin(yaw),
                                                   top / 2, 0, 0, yaw), mu=STATION_MU))
-        spin(2)
+        spin(2 * options.time_scale)
         result['steps'].append(dict(step='extended; station at the deck end', deck=deck, payload=p.get('payload'),
                                     deck_end_from_base_m=deck_end, station_near_edge_m=near_edge, station_top_z=top,
                                     channels=channels()))
         # 4. belt until the payload is off the deck end (or 25 s)
         truth['base_speed_peak'] = [0., 0.]
         send({'transfer_roller_joint': options.roller})
-        spin(1.0)
+        spin(1.0 * options.time_scale)
         result['roller_command'] = dict(status=state.get('status'), fault=state.get('fault'),
                                         target=channel('transfer_roller_joint')['target'],
                                         base_inhibited=state.get('base_inhibited'),
@@ -340,13 +358,13 @@ def main():
                 return False
             if along_of(q) - BOX[0] / 2 > deck_end:
                 return True
-            old = [e for e in trace if e['t'] < trace[-1]['t'] - 2.0 and e['payload']]
+            old = [e for e in trace if e['t'] < trace[-1]['t'] - 2.0 * options.time_scale and e['payload']]
             return bool(old) and along_of(q) > deck_end and abs(along_of(q) - along_of(old[-1]['payload'])) < .002
-        moved = spin(25, transferred)
+        moved = spin(25 * options.time_scale, transferred)
         p = observe()
         roller = channel('transfer_roller_joint')['measured_velocity']
         send({'transfer_roller_joint': 0.})
-        spin(2)
+        spin(2 * options.time_scale)
         before_retract = p.get('payload')
         result['steps'].append(dict(step='belt', transferred=moved, payload=before_retract, roller_measured=roller,
                                     rear_overlap_m=round(deck_end - (along_of(before_retract) - BOX[0] / 2), 4),
@@ -354,9 +372,9 @@ def main():
                                                                 for e in trace[::3]]))
         # 5. retract and lower; the payload must stay on the station
         send({'telescope_stage1_joint': 0.})
-        spin(30, lambda: settled('telescope_stage1_joint', 0.) and settled('telescope_stage2_joint'))
+        spin(30 * options.time_scale, lambda: settled('telescope_stage1_joint', 0.) and settled('telescope_stage2_joint'))
         send({'conveyor_lift_joint': lift['measured']})
-        spin(30, lambda: settled('conveyor_lift_joint', lift['measured']))
+        spin(30 * options.time_scale, lambda: settled('conveyor_lift_joint', lift['measured']))
         p = observe()
         q = p.get('payload')
         along = (q[0] - base[0]) * math.cos(yaw) + (q[1] - base[1]) * math.sin(yaw)

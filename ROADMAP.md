@@ -144,7 +144,7 @@ Work top to bottom. Each line links to its task.
 | I14 | [R5.5](#r55--ackermann-rear-steer-and-anti-ackermann-cars) Cars | 2026-11-15: car course 13/13 on four backends (lookahead 1.25 × turning radius, forward escape when back-up is blocked); park-at-heading runtime and Drive-panel controls | implemented |
 | I15 | [R3.6](#r36--external-robot-assets-in-normal-launch) Assets | 2026-11-17: UR10, UR5, YuMi controllable with declared lab servos (display-only 73 → 69); 2026-11-15: vendor policies for Booster T1 and Unitree G1/H1/H1_2, controllable siblings named, license/mesh audit (114/163 ok). 47 legged need training, 15 URDFs ship no control interface | partial |
 | I16 | [R6.5](#r65--world-to-occupancy-generation) / [R6.6](#r66--external-world-library) / [R6.2](#r62--dynamic-and-sensor-disturbance-cases) Worlds | 2026-11-17: `<polyline>` geometry supported, polylines world installed (20/20 example scenes); upper floors covered by `--height` slicing. 2026-11-15: fixture review of 100 Gazebo examples, Fuel licences, 16 worlds with grids, actor collisions. Missions in new world classes are V9 | implemented |
-| I17 | [R11](#r11--molar--probot-l-family) MOLAR | 2026-11-15: payload transfer to a station measured (Gazebo 3/3, MuJoCo 4/4, `nav_empty`); first Gazebo Nav2 route on CELISCA floor 1 passes (near-obstacle goal fails). Repeats, other backends, multi-floor and PyBullet/Isaac belts remain | partial |
+| I17 | [R11](#r11--molar--probot-l-family) MOLAR | Done-when met 2026-11-17: route A and a payload transfer both on `celisca_floor_1_detailed` (Gazebo). Earlier: transfer on `nav_empty` (Gazebo 3/3, MuJoCo 4/4). Remaining: near-obstacle goal B, PyBullet transfer (base yaw at roller start), Isaac belt, multi-floor, mounted sensors (needs the user's layout); repeats are V8 | implemented |
 | I18 | [P4](#p4--mujoco-large-world-speed) MuJoCo speed | 2026-11-14: flex culling, exact tick pacing, oversleep payback, sensor thread (celisca_floor_1 0.81, furnished floor 0.99, hospital 0.43); large worlds remain flex-kinematics bound | partial |
 | I19 | [R7](#r7--algorithm-breadth) Algorithms | 2026-11-14: Gazebo `sim_seed` (300/300 repeat), sensor-fault relay on all backends, 78 per-method ledger records (9 corrected, 8 noted mismatches) | implemented |
 | I20 | [R9.1](#r91--provenance-licenses-and-clean-host-reproduction) Provenance | 2026-11-14: PX4 checkout + 25 submodules and all vendor sources scanned from their license files; 7 trees without license files listed for review | implemented |
@@ -1089,7 +1089,7 @@ parking batch needs its own run. Details and evidence are in the
 
 ### R11 — MOLAR / ProBOT-L family
 
-- **State:** partial · **Priority:** I17 (needs the real robot's sensor layout from the user)
+- **State:** implemented, experimental (done-when met 2026-11-17); remaining items below · **Priority:** I17 (mounted sensors need the real robot's layout from the user)
 - **Goal:** the user's MOLAR robots drive, carry payloads and navigate the
   detailed CELISCA floors.
 - **Have:** `molar_hri` passes the GUI check (drive, lift, telescope, roller,
@@ -1102,6 +1102,11 @@ parking batch needs its own run. Details and evidence are in the
     B fails. This needed MOLAR's own controllers in every Gazebo mode, `lidar_2d`, a ±105° front scan
     (360° hit its own body) and MOLAR-sized goal selection.
     [Receipt](docs/status/evidence/r11-molar-nav-2026-11-15/README.md);
+  - **CELISCA floor transfer (2026-11-17): passes** in Gazebo on `celisca_floor_1_detailed`, the
+    same world as route A. The box rests on the station, 0.669 m ahead, with no retract drag.
+    **R11's done-when is met.** This needed display-mode controller spawners with
+    `--switch-timeout 60` and checker waits scaled for slow worlds.
+    [Receipt](docs/status/evidence/r11-molar-celisca-transfer-2026-11-17/README.md);
   - payload transfer (lift + roller to a station): **measured 2026-11-15 (implemented, experimental)**.
     The deck belt (Gazebo TrackController on the private DART plugin; MuJoCo `ConveyorBelt`) carries
     a 0.5 kg box onto a station at the extended deck end, through the normal articulation interface.
