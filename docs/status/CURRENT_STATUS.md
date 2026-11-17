@@ -194,6 +194,10 @@ This page records what was measured. **The goals and remaining work are in one l
 [roadmap](../../ROADMAP.md)** (implementation queue first, then validation). Remaining-work
 notes in the dated entries below are history.
 
+November 17: **Go2 get-up with roll-over shaping: not passed.** `get_up_roll` (potential-based
+roll-over reward) stands 2 of 10 collapsed starts (first get-up: 1 of 10). The other 8 end in the
+same side-lying pose. [Receipt](evidence/go2-get-up-roll-2026-11-17/README.md).
+
 November 15: **R11 MOLAR Nav2 on CELISCA floor 1 (Gazebo), first run.** Route A (9.6 m, multi-turn)
 succeeds within 0.18 m and 11.8°, and cancel/resume pass. The near-obstacle goal B fails (localization
 drift 0.49 m). Fixes: MOLAR's own controllers and an odometry relay in Gazebo nav modes, `lidar_2d`, a

@@ -1,0 +1,18 @@
+{
+ "robot": "go2",
+ "variant": "lab_get_up_roll_go2_get_up_roll_r1",
+ "profile": "unitree_go2",
+ "upstream": "robot_lab_adapter.legged_train",
+ "revision": "23ecf2cf",
+ "onnx_sha256": "32d9cf31997dff613672553606ebf82a5cef428d15dea490689564e02f4a189c",
+ "input_width": 45,
+ "trained_by": "robot_lab_adapter.legged_train",
+ "template_policy": "go2_himloco",
+ "task": "get_up_roll",
+ "iteration": 1500,
+ "environment_steps": 18432000,
+ "source_revision": "23ecf2cf",
+ "checkpoint": "/workspace/molar/robot_lab_runtime/training/go2_get_up_roll_r1/checkpoints/latest.pt",
+ "exported": "2026-11-15T01:46:50",
+ "qualification": "trained in the MuJoCo training environment; runtime evidence pending"
+}
