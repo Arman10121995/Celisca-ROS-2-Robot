@@ -194,6 +194,8 @@ This page records what was measured. **The goals and remaining work are in one l
 [roadmap](../../ROADMAP.md)** (implementation queue first, then validation). Remaining-work
 notes in the dated entries below are history.
 
+November 17: **R11 MOLAR done-when met.** The payload transfer passes in Gazebo on `celisca_floor_1_detailed`, the world where route A passed on 15 Nov. The box ends on the station with no drag on retract. [Receipt](evidence/r11-molar-celisca-transfer-2026-11-17/README.md).
+
 November 17: **Isaac pick and place.** Loose world objects now exist on Isaac and publish truth. The URDF Panda's pick and place passes there (20.2 s, place error 0.0 mm). TIAGo's fetch drives and keeps the interlock on Isaac, but its grasp fails: the block tips or the descent stalls. Not isolated yet. [Receipt](evidence/r57-isaac-pick-place-2026-11-17/README.md).
 
 November 17: **R3.6 lab servos for URDF arms.** UR10, UR5 and ABB YuMi are now controllable on PyBullet and MuJoCo, with declared lab servos derived from their own URDF limits. All joints move and return; Stop and heartbeat loss hold. Display-only profiles 73 → 69. [Receipt](evidence/r36-lab-servo-arms-2026-11-17/README.md).
