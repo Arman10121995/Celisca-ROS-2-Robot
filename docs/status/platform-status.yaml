@@ -3994,7 +3994,7 @@ tasks:
           arm and interruption/object missions stay pending. Validate new Servo/attachment
           code and original Panda missions after initial implementation; actual contact
           and object motion remain mandatory evidence.
-        owner: codex
+        owner: claude
         result: 'Normal installed Panda / MuJoCo / nav_empty: current-pose reference
           and 1 cm XYZ targets have physical endpoint errors 0.366/0.490/0.640 mm.
           Bounded gravity/Coriolis bias uses original native PD actuators with unchanged
@@ -4084,7 +4084,7 @@ tasks:
           and free-cube GUI contact/release are implemented; stable grasp/lift/repeats,
           all hands/templates and other backends remain open. Preserve Panda qualification
           separately.
-        owner: codex
+        owner: claude
         result: Current normal Panda / MuJoCo / nav_empty physical cube lift is 78.1
           mm with bounded 0.5 N closure. Release, Cancel, Stop, reset and heartbeat
           loss (0.845 wall seconds) pass. Contact is summed per finger as in the existing
@@ -4175,7 +4175,7 @@ tasks:
           Fetch/PR2 remain optional later sources. Validate native Stretch
           coordinated tasks, sensors, dynamic footprint, saved/reloaded mapping and
           obstacle Nav2 after initial implementation.
-        owner: codex
+        owner: claude
         scope_paths:
         - scripts/provision_mobile_manipulation_scene.py
         - src/robot_lab_utils/robot_lab_utils/mobile_manipulation_scene.py
