@@ -13,6 +13,8 @@ replaced, never accumulated, every step.
 """
 import numpy as np
 
+from robot_lab_utils.belt import belt_force
+
 
 class ConveyorBelt:
     def __init__(self, model, data, deck_body, roller_joint, roller_radius, mu=0.8, gain=20.0, robot_root=None):
@@ -70,15 +72,8 @@ class ConveyorBelt:
             self.mj.mj_objectVelocity(self.model, self.data, self.mj.mjtObj.mjOBJ_BODY, body, velocity, 0)
             deck_velocity = np.zeros(6)
             self.mj.mj_objectVelocity(self.model, self.data, self.mj.mjtObj.mjOBJ_BODY, self.deck, deck_velocity, 0)
-            relative = velocity[3:] - deck_velocity[3:]
-            relative[2] = 0.
-            slip = belt * axis - relative
-            mass = float(self.model.body_subtreemass[body])
-            force = self.gain * mass * slip
-            limit = self.mu * n
-            size = float(np.linalg.norm(force))
-            if size > limit:
-                force *= limit / size
+            force = belt_force(belt, axis, velocity[3:] - deck_velocity[3:],
+                               float(self.model.body_subtreemass[body]), n, self.mu, self.gain)
             self.data.xfrc_applied[body, :3] += force
             self.applied[body] = force
             report[body] = float(np.dot(force, axis))

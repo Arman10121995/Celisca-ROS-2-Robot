@@ -749,9 +749,19 @@ parking batch needs its own run. Details and evidence are in the
     `import_mesh` and `lightmap` (34 installed worlds).
     `sdf_world.fuel_cache_path` resolves Fuel URIs from Gazebo's cache
     ([evidence](docs/status/evidence/r66-fixture-review-2026-11-15/README.md)).
+- **Polylines (2026-11-17, Claude):** `sdf_world` now reads `<polyline>`
+  geometry. Each outline is triangulated (ear clipping; simple polygons
+  without holes) and extruded into convex triangle prisms, written as
+  cached binary STL (`robot_lab_utils/sdf_polyline.py`). Every backend and
+  the occupancy generator load them as ordinary meshes, and MuJoCo's convex
+  hulls stay exact. Unit-tested. Installing the Gazebo `polylines` example
+  world and running a mission on it is the next step.
 - **Remaining implementation:**
-  - upper floors;
-  - `polylines` (no `<polyline>` extraction);
+  - upper floors: the occupancy generator already slices any elevation
+    (`--height`), and the CELISCA floors are separate worlds. No installed
+    world has a second storey in one file, so nothing is open until one is
+    added;
+  - install the `polylines` example world with a grid;
   - the robot/sensor demos stay fixtures by design.
 - **Done when:** every requested source shows its status, and each new world
   class has one robot mission and a generated occupancy file.
@@ -1083,8 +1093,10 @@ parking batch needs its own run. Details and evidence are in the
     The deck belt (Gazebo TrackController on the private DART plugin; MuJoCo `ConveyorBelt`) carries
     a 0.5 kg box onto a station at the extended deck end, through the normal articulation interface.
     Passes 3/3 in Gazebo and 4/4 in MuJoCo on `nav_empty`
-    ([receipt](docs/status/evidence/r11-molar-transfer-2026-11-15/README.md)). PyBullet/Isaac belts
-    and a CELISCA-floor station remain;
+    ([receipt](docs/status/evidence/r11-molar-transfer-2026-11-15/README.md)). The belt force law is
+    now shared (`robot_lab_utils/belt.py`), and a **PyBullet deck belt** (`pybullet_belt.py`) is
+    implemented and unit-tested (2026-11-17); a MOLAR PyBullet transfer run, the Isaac belt and a
+    CELISCA-floor station remain;
   - multi-floor operation through the fleet lift (R10.2).
 - **How to do it:** add sensors to `molar_hri.urdf.xacro`, then reuse the
   Bumperbot SLAM/Nav2 configs with the MOLAR footprint. Payload transfer

@@ -1071,6 +1071,14 @@ class PyBulletSpawner(Node):
                 link = self._joint_idx[name]       # a joint's child link has the joint's index
                 p.changeDynamics(self._robot_id, link, frictionAnchor=True)
             hold_mode = 'false'  # configured servos hold only lift/slides; casters remain passive
+            # MOLAR's deck belt carries loose payloads with the measured roller
+            # (Gazebo: TrackController; MuJoCo: ConveyorBelt; R11 transfer).
+            links = {p.getJointInfo(self._robot_id, i)[12].decode(): i for i in range(p.getNumJoints(self._robot_id))}
+            if 'telescope_stage2' in links and 'transfer_roller_joint' in self._joint_idx and self._free_bodies:
+                from robot_lab_pybullet.pybullet_belt import PyBulletBelt
+                self._belt = PyBulletBelt(self._robot_id, links['telescope_stage2'],
+                                          self._joint_idx['transfer_roller_joint'], 0.012, self._free_bodies)
+                self.get_logger().info('Deck belt on telescope_stage2 for %s' % sorted(self._free_bodies))
         has_drive = (self._lw >= 0 or self._rw >= 0
                      or any(j in self._joint_idx for j in self._drive.wheel_joints))
         self._hold_joints = (hold_mode == "true") or (hold_mode == "auto" and not has_drive)
@@ -1288,6 +1296,8 @@ class PyBulletSpawner(Node):
                             targetPosition=angle, force=10.0, maxVelocity=3.0)
 
             if self._gait_plant is not None:self._gait_plant.step(self._sim_t)
+            if getattr(self, '_belt', None) is not None:
+                self._belt.step()
             p.stepSimulation()
             self._sim_step += 1
             self._sim_t = self._sim_step * self._dt

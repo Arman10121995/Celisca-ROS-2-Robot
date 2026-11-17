@@ -250,6 +250,8 @@ def main():
                     help='Fine-tune proposals/ROI heads over frozen pretrained MobileNet/FPN features')
     ap.add_argument('--lr-step', type=int, default=3, help='Epochs between 10x learning-rate drops')
     ap.add_argument('--hflip', action='store_true', help='Mirror training images (and boxes) half the time')
+    ap.add_argument('--init', type=Path, default=None,
+                    help='Start from this vacuum_detector.pt (same classes and architecture): fine-tune')
     ap.add_argument('--weights', choices=['coco', 'none'], default='coco',
                     help='none: offline architecture smoke test only, not a trained model claim')
     args = ap.parse_args()
@@ -283,6 +285,13 @@ def main():
         **model_kwargs)
     in_features = model.roi_heads.box_predictor.cls_score.in_features
     model.roi_heads.box_predictor = FastRCNNPredictor(in_features, len(CAT_ID) + 1)
+    initialised_from = None
+    if args.init:
+        start = torch.load(args.init, map_location='cpu', weights_only=False)
+        if start.get('architecture') != 'fasterrcnn_mobilenet_v3_large_fpn' or start.get('labels') != LABELS:
+            raise ValueError('--init checkpoint has another architecture or class map')
+        model.load_state_dict(start['model'])
+        initialised_from = hashlib.sha256(args.init.read_bytes()).hexdigest()
     if args.freeze_features:
         for parameter in model.backbone.parameters():
             parameter.requires_grad_(False)
@@ -309,7 +318,8 @@ def main():
                 'labels': LABELS,
                 'cat_id': CAT_ID,
                 'epoch': epoch,
-                'weights_initialization': args.weights,
+                'weights_initialization': args.weights if initialised_from is None else 'fine-tuned',
+                'initialised_from_sha256': initialised_from,
                 'seed': args.seed,
                 'architecture': 'fasterrcnn_mobilenet_v3_large_fpn',
                 'model_kwargs': model_kwargs,

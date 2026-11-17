@@ -232,8 +232,19 @@ def _shape(geometry, frame, base_dir, resolve, model_name, skipped):
             skipped.append("non-positive heightmap <size> for %s" % uri.strip())
             return None
         return dict(record, type="heightmap", heightmap=path, size=size)
-    if _child(geometry, "polyline") is not None:
-        skipped.append("unsupported geometry <polyline>")
+    polylines = _children(geometry, "polyline")
+    if polylines:
+        # Convex triangle prisms as ordinary STL mesh records (sdf_polyline).
+        from .sdf_polyline import polyline_prisms
+        try:
+            outlines = [[_floats(point.text, 2, 0.0) for point in _children(line, "point")]
+                        for line in polylines]
+            height = max(_floats(_text(line, "height"), 1, 1.0)[0] for line in polylines)
+            paths = polyline_prisms(outlines, height)
+        except (ValueError, OSError) as exc:
+            skipped.append("polyline in %s: %s" % (model_name, exc))
+            return None
+        return [dict(record, type="mesh", mesh=path, scale=[1.0, 1.0, 1.0], polyline=True) for path in paths]
     return None
 
 
@@ -276,9 +287,11 @@ def _walk_model(model, frame, base_dir, resolve, shapes, skipped,
             geometry = _child(source, "geometry")
             if geometry is None:
                 continue
-            shape = _shape(geometry, compose(link_frame, frame_of(source)),
-                           base_dir, resolve, model_name, skipped)
-            if shape is not None:
+            result = _shape(geometry, compose(link_frame, frame_of(source)),
+                            base_dir, resolve, model_name, skipped)
+            for shape in (result if isinstance(result, list) else [result]):
+                if shape is None:
+                    continue
                 # Which SDF element the shape came from (visual/collision).
                 shape["element"] = _tag(source)
                 if prefer_visual:
@@ -309,7 +322,7 @@ def _dynamic_body(model):
         return None
     shape = _shape(_child(collisions[0], "geometry"), compose(frame_of(link), frame_of(collisions[0])),
                    "", lambda uri, base: "", model.get("name", "model"), [])
-    if shape is None or shape["type"] not in ("box", "sphere", "cylinder"):
+    if not isinstance(shape, dict) or shape["type"] not in ("box", "sphere", "cylinder"):
         return None
     inertia = _child(inertial, "inertia")
     diagonal = [_floats(_text(inertia, key), 1, 0.0)[0] for key in ("ixx", "iyy", "izz")] if inertia is not None else []
