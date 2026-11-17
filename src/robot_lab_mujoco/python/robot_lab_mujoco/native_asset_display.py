@@ -30,6 +30,58 @@ from robot_lab_utils.native_mjcf_assets import body_frame
 from robot_lab_utils.process_lifetime import exit_with_parent
 
 
+# Lab support stage under the native-hand grasp object (see the fixture below).
+SOURCE_LIFT_ADAPTERS = ('umi_gripper',)     # hands with their own vertical source axis
+SUPPORT_STAGE = 'lab_support_stage'
+SUPPORT_STAGE_RANGE = (-.2, .02)            # m: drops up to 20 cm, rises at most 2 cm
+SUPPORT_STAGE_KP, SUPPORT_STAGE_KV, SUPPORT_STAGE_FORCE = 20000., 300., 200.
+
+
+def add_hand_object_fixture(spec, adapter, center, half):
+    """A free 50 g box between a native hand's pads, on a pedestal; returns whether the pedestal is a stage.
+
+    The pedestal supports only the object (collision bit 2): it stands
+    between a hand's fingers, and the Robotiq linkage chattered against it
+    so the hand never settled (2026-11-17). For hands without their own
+    vertical source axis the pedestal is a lab support stage: a bounded,
+    gravity-compensated slide that drops so the hand lifts the object
+    relative to its support. The hand model itself is unchanged.
+    """
+    import mujoco
+    support_height = center[2]-half[2]
+    pedestal = spec.worldbody.add_body(name='manipulation_pedestal',
+        pos=[center[0], center[1], support_height/2])
+    stage = adapter not in SOURCE_LIFT_ADAPTERS
+    pedestal.add_geom(name='manipulation_pedestal_geom', type=mujoco.mjtGeom.mjGEOM_BOX,
+        size=[half[0]+.004, half[1]+.004, support_height/2], rgba=[.35, .4, .45, 1],
+        contype=2, conaffinity=2, **({'mass': 1.} if stage else {}))
+    if stage:
+        pedestal.gravcomp = 1.
+        pedestal.add_joint(name=SUPPORT_STAGE+'_joint', type=mujoco.mjtJoint.mjJNT_SLIDE,
+            axis=[0., 0., 1.], range=list(SUPPORT_STAGE_RANGE), limited=True)
+        spec.add_actuator(name=SUPPORT_STAGE, target=SUPPORT_STAGE+'_joint',
+            trntype=mujoco.mjtTrn.mjTRN_JOINT, gaintype=mujoco.mjtGain.mjGAIN_FIXED,
+            biastype=mujoco.mjtBias.mjBIAS_AFFINE, gainprm=[SUPPORT_STAGE_KP]+[0.]*9,
+            biasprm=[0., -SUPPORT_STAGE_KP, -SUPPORT_STAGE_KV]+[0.]*7,
+            ctrlrange=list(SUPPORT_STAGE_RANGE), ctrllimited=True,
+            forcerange=[-SUPPORT_STAGE_FORCE, SUPPORT_STAGE_FORCE], forcelimited=True)
+    cube = spec.worldbody.add_body(name='manipulation_object', pos=center)
+    cube.add_freejoint(name='manipulation_object_joint')
+    # condim 4 adds the object's authored torsional friction (0.005 m): with
+    # point fingertip contacts and none, the box pivoted freely about the
+    # DEX-EE pinch axis once unsupported (2026-11-17).
+    cube.add_geom(name='manipulation_object_geom', type=mujoco.mjtGeom.mjGEOM_BOX,
+        size=half, mass=.05, friction=[1., .005, .0001], rgba=[1., .45, .05, 1],
+        contype=3, conaffinity=3, condim=4)
+    # MjSpec extends existing keyframes with zeros for new joints. Author the
+    # initial pose so home/reset retain the support.
+    for key in spec.keys:
+        key.qpos = np.concatenate((key.qpos, [0.] if stage else [], center, [1., 0., 0., 0.]))
+        if stage:
+            key.ctrl = np.concatenate((key.ctrl, [0.]))
+    return stage
+
+
 class NativeAssetDisplay(Node):
     def __init__(self):
         super().__init__('native_asset_display')
@@ -94,20 +146,8 @@ class NativeAssetDisplay(Node):
                 center, half = geometry['center'], geometry['half_size']
                 if center[2]-half[2] <= .03:
                     raise ValueError('The grasp fixture requires a clear support height')
-                support_height = center[2]-half[2]
-                pedestal = spec.worldbody.add_body(name='manipulation_pedestal',
-                    pos=[center[0], center[1], support_height/2])
-                pedestal.add_geom(name='manipulation_pedestal_geom', type=mujoco.mjtGeom.mjGEOM_BOX,
-                    size=[half[0]+.004, half[1]+.004, support_height/2], rgba=[.35, .4, .45, 1])
-                cube = spec.worldbody.add_body(name='manipulation_object', pos=center)
-                cube.add_freejoint(name='manipulation_object_joint')
-                cube.add_geom(name='manipulation_object_geom', type=mujoco.mjtGeom.mjGEOM_BOX,
-                    size=half, mass=.05, friction=[1., .005, .0001], rgba=[1., .45, .05, 1])
+                add_hand_object_fixture(spec, adapter, center, half)
                 self.object_size = half
-                # MjSpec extends existing keyframes with zeros for a new free
-                # joint. Author its initial pose so home/reset retain the support.
-                for key in spec.keys:
-                    key.qpos = np.concatenate((key.qpos, center, [1., 0., 0., 0.]))
             else:
                 # Legacy fixed-object path; unchanged so the existing Panda
                 # display fixture still behaves as authored.

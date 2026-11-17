@@ -137,16 +137,8 @@ def _object_hand(entry='robotiq_2f85',filename='2f85.xml'):
     contract = hand_contract(base, source)
     geometry = object_geometry(base, base_data, entry, contract)
     spec = mj.MjSpec.from_file(str(source))
-    center, half = geometry['center'], geometry['half_size']
-    support_top = center[2]-half[2]
-    pedestal = spec.worldbody.add_body(name='manipulation_pedestal',
-        pos=[center[0], center[1], support_top/2])
-    pedestal.add_geom(name='manipulation_pedestal_geom', type=mj.mjtGeom.mjGEOM_BOX,
-        size=[half[0]+.004, half[1]+.004, support_top/2])
-    cube = spec.worldbody.add_body(name='manipulation_object', pos=center)
-    cube.add_freejoint(name='manipulation_object_joint')
-    cube.add_geom(name='manipulation_object_geom', type=mj.mjtGeom.mjGEOM_BOX,
-        size=half, mass=.05, friction=[1., .005, .0001])
+    from robot_lab_mujoco.native_asset_display import add_hand_object_fixture
+    add_hand_object_fixture(spec, entry, geometry['center'], geometry['half_size'])
     model = spec.compile()
     data = mj.MjData(model)
     mj.mj_forward(model, data)
@@ -169,6 +161,15 @@ def test_real_robotiq_grasp_measures_two_sided_contact_then_release_is_free():
     control, model, data, node, messages, geometry = _object_hand()
     mj = control.node.mujoco
     assert control.object_body >= 0
+    # Let the source linkage settle, as a running plant has before any
+    # grasp: its first-step equality transient reads ~4 N of velocity bias
+    # through the actuator and would trip the 80 % effort guard.
+    for step in range(250):
+        if step % 100 == 0:
+            control.heartbeat(None)
+        control.before_step()
+        mj.mj_step(model, data)
+        control.after_step()
     digest = dict(operation='hand_grasp', plant_id=control.plant_id,
         source_sha256=control.source_sha256, contract_sha256=control.contract['contract_sha256'],
         closure=1., effort_fraction=.8, contact_limit_n=2.)
@@ -244,6 +245,10 @@ def test_actual_support_force_is_measured_in_both_contact_geom_orders(tmp_path, 
     assert measurement['contact_count'] == 0
     control.grasp.update(state='holding', contact_limit_n=1.)
     control.update_grasp()
+    # A loss must last GRASP_CONTACT_LOSS_S of simulated time to count.
+    assert control.grasp['state'] == 'holding'
+    node.data.time += .11
+    control.update_grasp()
     assert control.grasp['state'] == 'contact_lost'
     assert control.grasp['contact_state'] == 'no_contact'
     control.grasp['state'] = 'closing'
@@ -257,3 +262,41 @@ def test_nonfinite_slip_cannot_claim_a_contact_hold():
     assert result['grasp'] == 'invalid_measurement'
     assert not result['two_sided_contact']
 
+
+
+def _run(control, model, data, steps):
+    mj = control.node.mujoco
+    for step in range(steps):
+        if step % 100 == 0:
+            control.heartbeat(None)
+        control.before_step()
+        mj.mj_step(model, data)
+        control.after_step()
+
+
+def test_support_stage_lifts_holds_and_returns_the_robotiq_object():
+    """The fixed-mount Robotiq lifts the object relative to its dropping support stage."""
+    import json
+    control, model, data, node, messages, geometry = _object_hand()
+    assert control.stage_actuator() >= 0
+    _run(control, model, data, 250)
+    ids = dict(plant_id=control.plant_id, source_sha256=control.source_sha256,
+               contract_sha256=control.contract['contract_sha256'])
+    control.receive(String(data=json.dumps(dict(ids, operation='hand_grasp', closure=1.,
+                                                 effort_fraction=.8, contact_limit_n=2.))))
+    _run(control, model, data, 2500)
+    assert control.grasp['state'] == 'holding'
+    start = float(data.xpos[control.object_body, 2])
+    control.receive(String(data=json.dumps(dict(ids, operation='hand_lift_object', height_m=.05))))
+    assert control.lift_state['state'] == 'lifting' and control.lift_state['mode'] == 'support_stage'
+    _run(control, model, data, 2500)
+    assert control.lift_state['state'] == 'holding', control.lift_state
+    assert not control.grasp['supported']
+    # The hand is fixed, so the object stays where the fingers hold it while
+    # the support has dropped 5 cm under it.
+    assert abs(float(data.xpos[control.object_body, 2]) - start) < .005
+    assert control.lift_state['measured_height_m'] == pytest.approx(.05, abs=.005)
+    control.receive(String(data=json.dumps(dict(ids, operation='hand_lower_object'))))
+    _run(control, model, data, 3000)
+    assert control.lift_state['state'] == 'supported', control.lift_state
+    assert control.grasp['supported']

@@ -1,11 +1,18 @@
-"""Measured object transport using the UMI source's vertical position motor.
+"""Measured object lift, hold and supported return for native hands.
 
-Other hands have fixed mounts and need an arm adapter. No pose, weld, gain,
-force or transmission changes are made here.
+UMI lifts with its source's vertical position motor. Fixed-mount hands
+(Robotiq, DEX-EE) use the grasp fixture's lab support stage instead: the
+pedestal drops, so the object is lifted relative to its support and hangs
+in the fingers (``native_asset_display.SUPPORT_STAGE``). Heights are always
+measured relative to the support. No pose, weld, gain, force or
+transmission changes are made here.
 """
 import time
 
 import numpy as np
+
+STAGE_RATE = .02            # m/s: the support stage moves no faster
+STAGE_RETURN_FORCE = 2.     # N: most support force allowed while it returns
 
 
 class NativeHandLift:
@@ -22,9 +29,45 @@ class NativeHandLift:
             entry['force']+=abs(float(force[0]));entry['distance']=min(entry['distance'],float(contact.dist))
         return result
 
+    def stage_actuator(self):
+        """The lab support stage's actuator index, or -1."""
+        return int(self.node.mujoco.mj_name2id(self.model,self.node.mujoco.mjtObj.mjOBJ_ACTUATOR,'lab_support_stage'))
+
+    # A lift axis is a source channel slot (UMI) or 'stage' (the support stage).
+    def axis_target(self,slot):
+        return self.stage_target if slot=='stage' else float(self.target[slot])
+
+    def set_axis_target(self,slot,value):
+        if slot=='stage':self.stage_target=float(value)
+        else:self.target[slot]=value
+
+    def axis_limits(self,slot):
+        if slot=='stage':
+            return tuple(float(v) for v in self.model.actuator_ctrlrange[self.stage_actuator()])
+        return self.channels[slot]['limits']
+
+    def axis_measured(self,slot):
+        if slot=='stage':
+            joint=int(self.model.actuator_trnid[self.stage_actuator(),0])
+            return float(self.data.qpos[int(self.model.jnt_qposadr[joint])])
+        return float(self.measured_controls()[slot])
+
+    def pedestal_pair(self,pair):
+        geom=self.node.mujoco.mj_name2id(self.model,self.node.mujoco.mjtObj.mjOBJ_GEOM,'manipulation_pedestal_geom')
+        return geom in pair
+
+    def support_z(self):
+        body=self.node.mujoco.mj_name2id(self.model,self.node.mujoco.mjtObj.mjOBJ_BODY,'manipulation_pedestal')
+        return float(self.data.xpos[body,2]) if body>=0 else 0.
+
     def lift_channel(self):
         if self.contract['adapter'] != 'umi_gripper':
-            raise ValueError('This source hand needs an arm transport adapter')
+            actuator=self.stage_actuator()
+            if actuator<0:
+                raise ValueError('This hand needs the grasp fixture support stage or an arm transport adapter')
+            joint=int(self.model.actuator_trnid[actuator,0])
+            # The support moves down to lift the object relative to it.
+            return 'stage',joint,-1.
         slot=next((i for i,c in enumerate(self.channels)
                    if c['name']=='gripper_joint_z_act' and c['units']=='m'),None)
         if slot is None:
@@ -58,12 +101,13 @@ class NativeHandLift:
                     raise ValueError('Lift height must be 0.02–0.15 m')
                 if abs(float(self.data.qvel[int(self.model.jnt_dofadr[joint])]))>.01:
                     raise ValueError('Wait for the measured source lift axis to settle')
-                start=float(self.target[slot]);target=start+height/axis_z
+                start=self.axis_target(slot);target=start+height/axis_z
                 run=dict(slot=slot,joint=joint,axis_z=axis_z,start_control=start,
-                    start_measured=float(self.measured_controls()[slot]),
-                    start_z=float(self.data.xpos[self.object_body,2]),height_m=height,
+                    start_measured=self.axis_measured(slot),
+                    start_z=float(self.data.xpos[self.object_body,2]),start_support_z=self.support_z(),
+                    height_m=height,mode='support_stage' if slot=='stage' else 'source_axis',
                     external=self.transport_contacts())
-            low,high=self.channels[slot]['limits']
+            low,high=self.axis_limits(slot)
             if not low<=target<=high:
                 raise ValueError('Lift exceeds original source motor bounds')
             # Retain the finger preload and PID state that produced the grasp.
@@ -73,8 +117,9 @@ class NativeHandLift:
             run.update(target=target,started=time.monotonic(),settled_since=None,
                        last_sim=float(self.data.time),last_wall=time.monotonic())
             self.lift_run=run
-            self.target[slot]=target
-            self.lift_state=dict(state='lowering' if lowering else 'lifting',
+            if slot!='stage':      # the support stage ramps there (update_lift)
+                self.set_axis_target(slot,target)
+            self.lift_state=dict(state='lowering' if lowering else 'lifting',mode=run['mode'],
                 height_m=run['height_m'],reason='Awaiting measured object motion and sustained contacts')
             self.status='source object transport'
         except (ValueError,TypeError,KeyError,IndexError) as exc:
@@ -101,7 +146,19 @@ class NativeHandLift:
             slot,joint,axis_z=self.lift_channel()
             if slot!=run['slot'] or joint!=run['joint'] or abs(axis_z-run['axis_z'])>.002:
                 raise ValueError('Source lift axis changed')
+            stage=run.get('mode')=='support_stage'
+            if stage:
+                step=STAGE_RATE*delta
+                self.stage_target+=max(-step,min(step,run['target']-self.stage_target))
+                if self.lift_state['state']=='lowering' and self.grasp['supported']:
+                    # Returning support reached the object: stop pressing up.
+                    run['target']=self.stage_target
             for pair,contact in self.transport_contacts().items():
+                if stage and self.lift_state['state'] in ('lowering','supported') and self.pedestal_pair(pair):
+                    # The returning support is expected; it must not press hard.
+                    if contact['force']>STAGE_RETURN_FORCE:
+                        raise ValueError('Returning support stage pressed the object with %.1f N'%contact['force'])
+                    continue
                 baseline=run['external'].get(pair,dict(force=0.,distance=0.))
                 if contact['force']>baseline['force']*1.2+.2 or contact['distance']<min(-.002,baseline['distance']-.001):
                     raise ValueError('New/worsening external hand/object contact during transport')
@@ -116,7 +173,9 @@ class NativeHandLift:
             velocity=np.zeros(6)
             self.node.mujoco.mj_objectVelocity(self.model,self.data,self.node.mujoco.mjtObj.mjOBJ_BODY,
                                              self.object_body,velocity,0)
-            height=float(self.data.xpos[self.object_body,2])-run['start_z']
+            # Object height relative to its support (a support stage moves it).
+            height=(float(self.data.xpos[self.object_body,2])-run['start_z']
+                    -(self.support_z()-run.get('start_support_z',self.support_z())))
             lowering=self.lift_state['state'] in ('lowering','supported')
             # Source friction can stop the free object ~1 mm above its old
             # support. Seek real support slowly, at most 3 mm below the old
@@ -125,9 +184,9 @@ class NativeHandLift:
                 seated=(run['start_control']-run['target'])*axis_z
                 extra=min(max(0.,.003-seated),.002*delta)
                 target=run['target']-extra/axis_z
-                low,high=self.channels[slot]['limits']
+                low,high=self.axis_limits(slot)
                 if not low<=target<=high:raise ValueError('Support seating exceeds source motor bounds')
-                run['target']=target;self.target[slot]=target
+                run['target']=target;self.set_axis_target(slot,target)
                 self.lift_state['support_seating_m']=(run['start_control']-target)*axis_z
             if self.lift_state['state']=='holding' and self.grasp['supported']:
                 raise ValueError('Lifted object regained unexpected environmental support')
@@ -138,7 +197,7 @@ class NativeHandLift:
             # Source position motors can retain a steady gravity error. Check
             # measured displacement from the settled start as well as actual
             # object height, without changing the motor gain or adding bias.
-            error=abs(float(self.measured_controls()[slot])-run['start_measured']
+            error=abs(self.axis_measured(slot)-run['start_measured']
                       -(run['target']-run['start_control']))
             settled=(error<=.003
                 and np.linalg.norm(velocity[:3])<=.1 and np.linalg.norm(velocity[3:])<=.02

@@ -15,8 +15,13 @@ from .native_articulation_control import NativeArticulationControl
 from .native_hand_lift import NativeHandLift
 
 
+GRASP_CONTACT_SETTLE_S = .3   # simulated s of two-sided contact before a grasp is held
+GRASP_CONTACT_LOSS_S = .1     # simulated s without it before the grasp counts as lost
+
+
 class NativeHandControl(NativeHandLift, NativeArticulationControl):
     def __init__(self, node, contract):
+        self.stage_target=0.      # lab support stage setpoint (m), when the fixture has one
         self.lift_run=None
         self.lift_state=dict(state='idle',reason='No source object transport requested')
         self.release_settled_since=None
@@ -45,6 +50,7 @@ class NativeHandControl(NativeHandLift, NativeArticulationControl):
         self.grasp = dict(state='idle', scope='No documented object in this plant',
             left_force_n=0., right_force_n=0., supported=False, slip_m=0.)
         self.grasp_anchor = None
+        self.grasp_contact_since = self.grasp_loss_since = None
         if self.object_body >= 0:
             left, right = grasp_surface_bodies(self.model, contract['adapter'], contract)
             self.object_sides = (set(left), set(right))
@@ -86,6 +92,7 @@ class NativeHandControl(NativeHandLift, NativeArticulationControl):
         if hasattr(self, 'grasp') and self.grasp['state'] != 'idle':
             self.grasp.update(state='interrupted', scope=reason)
             self.grasp_anchor = None
+            self.grasp_contact_since = self.grasp_loss_since = None
             self.grasp_rotation_anchor = None
         self.reset_pid_memory()
 
@@ -301,6 +308,7 @@ class NativeHandControl(NativeHandLift, NativeArticulationControl):
                 raise ValueError('Effort fraction 0.05–1; contact threshold 0.2–5 N')
             self.hold('Object grasp requested')
             self.grasp_anchor = None
+            self.grasp_contact_since = self.grasp_loss_since = None
             self.grasp = dict(state='closing', scope='Closing on the documented object; grasp unassessed',
                 left_force_n=0., right_force_n=0., supported=False, slip_m=0.,
                 contact_limit_n=contact_limit, effort_fraction=effort_fraction)
@@ -335,6 +343,7 @@ class NativeHandControl(NativeHandLift, NativeArticulationControl):
             self.hold('Object release requested')
             self.release_settled_since=None
             self.grasp_anchor = None
+            self.grasp_contact_since = self.grasp_loss_since = None
             self.grasp = dict(state='releasing', scope='Opening; object motion returns to contact physics',
                 left_force_n=0., right_force_n=0., supported=False, slip_m=0.)
             targets = hand_pose_targets(self.contract, 'Open', 0., 0., 'All')
@@ -360,19 +369,38 @@ class NativeHandControl(NativeHandLift, NativeArticulationControl):
         position=rotation.T@(self.data.xpos[self.object_body]-self.data.xpos[reference])
         relative_rotation=rotation.T@self.data.xmat[self.object_body].reshape(3,3)
         threshold = .2*self.grasp.get('contact_limit_n', 1.)
-        if self.grasp['state'] == 'closing' and (measured['left_force_n'] >= threshold
-                and measured['right_force_n'] >= threshold) and self.grasp_anchor is None:
-            self.grasp_anchor = position.copy()
-            self.grasp_rotation_anchor=relative_rotation.copy()
-            self.grasp['state'] = 'holding'
+        both = measured['left_force_n'] >= threshold and measured['right_force_n'] >= threshold
+        now = float(self.data.time)
+        # Fingers settle onto an object: a first touch bounces. Contact must
+        # hold GRASP_CONTACT_SETTLE_S before a grasp is held, and must be gone
+        # GRASP_CONTACT_LOSS_S before it counts as lost (DEX-EE, 2026-11-17).
+        if self.grasp['state'] == 'closing' and self.grasp_anchor is None:
+            # ... and the object must have stopped turning in the fingers
+            # before its pose is anchored for slip.
+            velocity = np.zeros(6)
+            self.node.mujoco.mj_objectVelocity(self.model, self.data, self.node.mujoco.mjtObj.mjOBJ_BODY,
+                                             self.object_body, velocity, 0)
+            still = np.linalg.norm(velocity[3:]) < .02 and np.linalg.norm(velocity[:3]) < .2
+            if not (both and still):
+                self.grasp_contact_since = None
+            elif getattr(self, 'grasp_contact_since', None) is None:
+                self.grasp_contact_since = now
+            elif now-self.grasp_contact_since >= GRASP_CONTACT_SETTLE_S:
+                self.grasp_anchor = position.copy()
+                self.grasp_rotation_anchor=relative_rotation.copy()
+                self.grasp['state'] = 'holding'
         slip = 0. if self.grasp_anchor is None else float(np.linalg.norm(position-self.grasp_anchor))
         angular_slip=0. if self.grasp_rotation_anchor is None else float(np.arccos(np.clip(
             (np.trace(relative_rotation@self.grasp_rotation_anchor.T)-1.)/2.,-1.,1.)))
         if self.grasp['state'] == 'holding' and (slip > .01 or angular_slip>.15):
             self.grasp['state'] = 'slipping'
-        if self.grasp['state'] in ('holding', 'slipping') and (
-                measured['left_force_n'] < threshold or measured['right_force_n'] < threshold):
-            self.grasp['state'] = 'contact_lost'
+        if self.grasp['state'] in ('holding', 'slipping'):
+            if both:
+                self.grasp_loss_since = None
+            elif getattr(self, 'grasp_loss_since', None) is None:
+                self.grasp_loss_since = now
+            elif now-self.grasp_loss_since >= GRASP_CONTACT_LOSS_S:
+                self.grasp['state'] = 'contact_lost'
         verdict = classify_grasp(measured['left_force_n'], measured['right_force_n'],
             measured['supported'], slip, contact_threshold_n=threshold)
         if not np.isfinite(slip+angular_slip):
@@ -519,6 +547,16 @@ class NativeHandControl(NativeHandLift, NativeArticulationControl):
         self.check_guard()
         super().before_step()
         self.apply_mount_gravity_support()
+        stage=self.stage_actuator()
+        if stage>=0:
+            low,high=self.model.actuator_ctrlrange[stage]
+            self.data.ctrl[stage]=min(max(self.stage_target,low),high)
+
+    def reset(self):
+        super().reset()
+        self.stage_target=0.
+        self.lift_run=None
+        self.lift_state=dict(state='idle',reason='Plant reset')
 
     def apply_mount_gravity_support(self):
         """Bounded feedforward through the UMI source's six placement motors.
@@ -582,11 +620,15 @@ class NativeHandControl(NativeHandLift, NativeArticulationControl):
             contacts=self.contacts(), blocked_groups=self.guard['blocked'] if self.guard else {},
             guard_scope='Stop advancement at measured thresholds; source hard bounds unchanged; no grasp guarantee',
             object_grasp=self.grasp,force_regulation=self.force_state,object_transport=self.lift_state,
-            object_lift_available=self.contract['adapter']=='umi_gripper',
+            object_lift_available=self.contract['adapter']=='umi_gripper' or self.stage_actuator()>=0,
+            object_lift_mode=('source_axis' if self.contract['adapter']=='umi_gripper'
+                else 'support_stage' if self.stage_actuator()>=0 else None),
             mount_gravity_support=self.gravity_offsets,
             object_present=self.object_body >= 0, object_body_id=self.object_body,
             source_effort_limits={c['name']: self.model.actuator_forcerange[c['index']].tolist()
                 if self.model.actuator_forcelimited[c['index']] else None for c in self.channels},
             qualification=('experimental; source-axis object workflow implemented; mission qualification is source/backend specific'
                 if self.contract['adapter']=='umi_gripper' else
+                'experimental; support-stage lift/hold/return workflow implemented; mission qualification is source/backend specific'
+                if self.stage_actuator()>=0 else
                 'experimental; measured contact hold only, object lift/release and other backend missions pending')))

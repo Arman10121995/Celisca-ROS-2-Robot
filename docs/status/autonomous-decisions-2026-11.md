@@ -44,3 +44,8 @@ choices.
 | 11-17 | R5.9 | MuJoCo grasping contacts (elliptic cone, impratio 10) only for robots with `grip_joints` | Even at 16 N the block crept 1.7 mm/s with the default pyramidal cone; scoping keeps earlier measured runs unchanged |
 | 11-17 | R5.9 | PyBullet: grip force proportional to error, a symmetric-grip gear for TIAGo, and friction anchors on fingers and loose objects | The saturated motors let the fingers drift sideways, and the block yawed 0.5 rad in the grip while turning |
 | 11-17 | R5.9 | Judged finger stillness from positions, not reported velocities | Bullet's reported finger velocities jitter while squeezing |
+| 11-17 | R5.8 | Lifted fixed-mount hands relative to a dropping lab support stage instead of mounting them on a moving stage or an arm | The hand model stays untouched (DEX-EE has four separate roots and PID plugins); the grasp carries the full weight either way |
+| 11-17 | R5.8 | Made the fixture pedestal collide only with the object | It stood between the Robotiq fingers; the linkage chattered and the grasp never closed |
+| 11-17 | R5.8 | Debounced grasp holding (0.3 s, object still) and loss (0.1 s) | A first fingertip touch bounces; it was latched as contact lost |
+| 11-17 | R5.8 | Settled the Robotiq unit test before grasping instead of loosening the effort guard | The 4 N transient is the model's first-step settling, not a grasp |
+| 11-17 | R5.8 | Recorded DEX-EE as not passed and moved on | Five friction/force/geometry variants all tilt; the next step is grasp synthesis, a separate task |

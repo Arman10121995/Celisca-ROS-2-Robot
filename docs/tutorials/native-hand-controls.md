@@ -116,6 +116,34 @@ the joint state's simulation timestamp.
 
 ## Implementation and validation handoff
 
+### Lift on the support stage (Robotiq, DEX-EE)
+
+Fixed-mount hands have no vertical axis of their own. With **Add free grasp
+object on next Run**, their fixture's pedestal is a lab support stage: a
+gravity-compensated slide with a bounded position motor. It touches only
+the object.
+
+- **Lift and hold object** drops the stage at up to 2 cm/s by the lift
+  height. The object is lifted relative to its support and hangs in the
+  fingers; the hand itself does not move.
+- **Lower to start** raises the stage until it measures support again,
+  pressing at most 2 N.
+- The same measured checks as UMI apply, with heights taken relative to the
+  support.
+
+Both Robotiq variants pass grasp → lift 5 cm → hold → return → supported
+release in the normal GUI. DEX-EE does not hold yet: the cube tilts out of
+the fingertip tripod.
+
+**Run it from the command line:**
+
+```bash
+xvfb-run -a -s "-screen 0 1600x1000x24" python3 scripts/qualify_native_hand_gui.py \
+  --robot menagerie_robotiq_2f85 --output /workspace/molar/robot_lab_runtime/hands/robotiq
+```
+
+[Measured runs and the DEX-EE diagnosis](../status/evidence/r58-hands-2026-11-17/README.md).
+
 ### Source-axis object transport
 
 UMI exposes **Object lift height**, **Lift and hold object** and **Lower to

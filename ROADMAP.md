@@ -135,7 +135,7 @@ Work top to bottom. Each line links to its task.
 | I5 | [R5.11](#r511--drone-moving-obstacles-and-other-drone-backends) Drone moving obstacles | Done 2026-11-13: Kalman tracks, predicted sweeps, walkway look-both-ways and overflight, evasion, sensor-loss hold/land, EKF heading/height gate; 2 passing flights past walkers (Gazebo); PX4 + MuJoCo plant: takeoff, 5 m route and landing | implemented |
 | I6 | [R5.9](#r59--mobile-manipulators) Mobile manipulation | Done-when met 11-17: TIAGo GUI fetch (drive, pick, carry, place) on MuJoCo and PyBullet with stability traces and a base/arm interlock probe. Remaining: Nav2 legs, perception, Isaac, Stretch pipeline missions | partial |
 | I7 | [R5.7](#r57--manipulators-and-motion-planning) Arms | Done-when met 11-17: URDF Panda GUI pick → place on PyBullet and MuJoCo (one run each). Native Panda box tasks on MuJoCo. Remaining: Gazebo/Isaac arm pick and place, compound geometry, perception, other coupled mechanisms | partial |
-| I8 | [R5.8](#r58--robot-hands-and-grippers) Hands | UMI lift/hold/lower and supported release measured in a source component; normal GUI missions, further torque/tendon sources and backends remain | partial |
+| I8 | [R5.8](#r58--robot-hands-and-grippers) Hands | 11-17: normal GUI grasp → lift 5 cm → hold → return → supported release passes for Robotiq 2F-85 (both variants, support stage) and UMI (source axis); parallel-jaw measured in R5.7/R5.9. DEX-EE (dexterous) not passed: needs grasp synthesis; other backends remain | partial |
 | I9 | [R10.2](#r102--fleet-management-and-open-rmf) Fleet / Open-RMF | Done 2026-11-14: shared-zone reservations (map passages, doors, docks), cycle breaker, recovery drive-out, RMF energy from a drivetrain calibration; two crossing runs pass (native and RMF). Chargers/doors in other worlds, larger fleets remain | implemented |
 | I10 | [R10.3](#r103--swarm-robotics) Swarms | Done 2026-11-14: ROS2swarm port of per-member scan-only behaviours, scan-sensed cooperative coverage, ground/air member-loss replanning; dispersion and coverage-with-loss measured; aggregation not yet passing; 3–4 drone flight is validation | implemented |
 | I11 | [R10.5](#r105--underwater-worlds-sensing-slam-and-navigation) / [R10.4](#r104--underwater-robots-and-controllers) Marine | Done 2026-11-14: MuJoCo ROV plant (ported Fortress water forces; matches Gazebo), damping-based current feedforward (1 cm drift in 0.1 m/s), volumetric and current-aware AUV routes (unit-tested). PyBullet/Isaac marine, AUV sensor-only localization mission remain | implemented |
@@ -454,6 +454,8 @@ parking batch needs its own run. Details and evidence are in the
   [Hand guide](docs/tutorials/native-hand-controls.md).
 - **Force feedback continuation (2026-11-13, Codex):** GUI-requested existing-grasp force regulation adjusts source position targets, retains original PID/transmission/force limits and requested effort fraction, unloads initial over-force and interrupts on contact loss, new/worsening external touch, overload, Stop/loss/deadline. One actual pinned Robotiq component fixture reduced about 12 N to 5.25 N per side for a 5 N request; this is not a GUI/hand-family mission. [Guide](docs/tutorials/native-hand-controls.md#regulate-an-established-grasp) · [receipt](docs/status/hand-force-2026-11-13.md).
 - **Remaining implementation:**
+  - DEX-EE grasp synthesis (contact points chosen for the object, not a
+    curl template) so the dexterous family holds a lifted object;
   - raw torque and tendon hand adapters for the remaining source hands;
   - arm transport for fixed-mount hand families and additional object workflows;
   - hands on other backends.
@@ -467,6 +469,17 @@ parking batch needs its own run. Details and evidence are in the
   component lifts 49.0 mm, returns to measured support with 1.52 mm seating
   and releases; 38 hand checks pass. Normal GUI and other family/backend
   missions remain. [Procedure](docs/tutorials/native-hand-controls.md#source-axis-object-transport).
+- **GUI hand missions (2026-11-17, Claude):** on MuJoCo, the Robotiq
+  2F-85, the Robotiq 2F-85 v4 and UMI each pass grasp → lift 5 cm → 3 s
+  hold → return → supported release, judged by measured states.
+  - Grasp forces: 11.9, 13.0 and 0.7 N per side.
+  - Height held within 0.1 mm.
+  - Fixed-mount hands lift relative to a new lab support stage.
+  - A pedestal/finger collision that kept the Robotiq from ever closing is
+    fixed, and the grasp state is debounced.
+  - **DEX-EE does not hold** (the cube tilts out of the fingertip tripod);
+    it needs grasp synthesis.
+  [Receipt](docs/status/evidence/r58-hands-2026-11-17/README.md).
 - **How to do it:** extend `robot_lab_mujoco/native_hand_control.py` and
   `robot_lab_gui/native_hand_controls.py`. Measure grasp stability from
   contact forces (`test_native_hand_object.py` shows the pattern).

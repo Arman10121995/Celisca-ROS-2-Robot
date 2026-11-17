@@ -77,7 +77,8 @@ class NativeHandControls(ttk.Frame):
         self.lower_button=ttk.Button(self,text='Lower to start',command=lambda:self.transport_object(True))
         self.lift_button.grid(row=20,column=0,sticky='ew',pady=4)
         self.lower_button.grid(row=20,column=1,sticky='ew',pady=4)
-        ttk.Label(self,text='UMI source vertical motor only; other fixed hands need an arm adapter. '
+        ttk.Label(self,text='UMI lifts on its source vertical motor; with the grasp object, other fixed hands '
+                  'lift it relative to a lab support stage that drops under it. '
                   'Lift preserves finger preload. Lower first, then Release object for a supported release. '
                   'Stop, manual targets, contact loss or heartbeat loss interrupt transport.',
                   wraplength=305).grid(row=21,column=0,columnspan=2,sticky='w')

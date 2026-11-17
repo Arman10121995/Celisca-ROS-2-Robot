@@ -19,13 +19,27 @@ def request(control,operation,**values):
 def test_fixed_source_hand_refuses_transport_without_changing_motor_contract():
     control,model,data,*_=_object_hand()
     gains=model.actuator_gainprm.copy();limits=model.actuator_ctrlrange.copy();pose=data.qpos.copy()
-    # The axis check itself must refuse a fixed source, even with an object.
+    # Without the fixture's support stage the axis check must refuse a fixed source.
+    control.stage_actuator=lambda:-1
     with pytest.raises(ValueError,match='arm transport adapter'):control.lift_channel()
     request(control,'hand_lift_object',height_m=.05)
     assert control.lift_run is None
     np.testing.assert_array_equal(data.qpos,pose)
     np.testing.assert_array_equal(model.actuator_gainprm,gains)
     np.testing.assert_array_equal(model.actuator_ctrlrange,limits)
+
+
+def test_fixed_hand_lifts_on_the_support_stage_not_its_source_motors():
+    control,model,data,*_=_object_hand()
+    slot,joint,axis_z=control.lift_channel()
+    assert slot=='stage' and axis_z==-1.
+    control.grasp.update(state='holding',supported=True)
+    before=control.target.copy()
+    request(control,'hand_lift_object',height_m=.05)
+    assert control.lift_state['state']=='lifting' and control.lift_state['mode']=='support_stage'
+    # The stage ramps down from its start; no source hand target changes.
+    assert control.lift_run['target']==pytest.approx(-.05) and control.stage_target==0.
+    np.testing.assert_array_equal(control.target,before)
 
 
 def test_umi_source_axis_preload_and_interruption_contract():
