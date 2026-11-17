@@ -1,3 +1,21 @@
+- id: arm_pick_place_lab
+  name: Arm pick-and-place lab
+  description: Fixed-arm pick-and-place fixture (R5.7) - arm at the origin, two 0.3 m tables at (0.5, -/+0.25), a loose 40 mm, 50 g cube
+  dimension: 3D
+  dynamics: {dynamic_obstacles: false, static_obstacles: true}
+  ground_truth_available: true
+  ros_package: robot_lab_maps
+  simulator: mujoco
+  simulators: [mujoco, pybullet]
+  source: {license: Apache-2.0, repository: internal}
+  status: available
+  supported_robot_classes: [manipulator]
+  tags: [manipulation, pick_and_place, tabletop, experimental]
+  version: 0.1.0
+  size: {x: 6.0, y: 6.0, z: 0.34}
+  seed: 1
+  world_file: robot_lab_maps/maps/arm_pick_place_lab/worlds/arm_pick_place_lab.world
+  occupancy_map: robot_lab_maps/maps/arm_pick_place_lab/maps/map.pgm
 - id: gait_low_relief
   name: Gait low relief
   dimension: 3D

@@ -218,3 +218,47 @@ def test_plan_home_builds_source_target_without_sending_motion(panel, model):
     assert panel.pub.publish.call_count == 1
     panel.app.simulator_var.set('isaac')
     assert not panel.planning_enabled() and not panel.execute_plan()
+
+
+def test_a_mechanically_coupled_finger_is_reported_not_commanded(tmp_path):
+    from robot_lab_utils.urdf_articulation import URDFArticulation
+    urdf = '''<robot name="hand"><link name="base"/><link name="left"/><link name="right"/>
+     <joint name="f1" type="prismatic"><parent link="base"/><child link="left"/><axis xyz="0 1 0"/>
+      <limit lower="-0.001" upper="0.04" effort="20" velocity="0.3"/></joint>
+     <joint name="f2" type="prismatic"><parent link="base"/><child link="right"/><axis xyz="0 -1 0"/>
+      <limit lower="-0.001" upper="0.04" effort="20" velocity="0.3"/></joint></robot>'''
+    path = tmp_path / 'hand.urdf'
+    path.write_text(urdf)
+    config = dict(schema=SCHEMA, panel='arm', home={'f1': .04}, couplings={
+        'f2': dict(joint='f1', multiplier=1., offset=0., mechanical=True)}, joints={
+        'f1': dict(mode='position', lower=-.001, upper=.04, max_velocity=.025, effort=20., kp=800., kd=20.)})
+    contract = URDFArticulation(config, urdf, str(path))
+    contract.step({'f1': .02, 'f2': .02}, {'f1': 0., 'f2': 0.}, .01)
+    found = validate_arm_feedback(contract.state(), str(path), config)
+    assert set(found) == {'f1', 'f2'} and found['f2']['coupled']
+    assert arm_config({'articulation': config})['joints'].keys() == {'f1'}
+
+
+def test_pick_place_runs_only_on_request_with_fresh_idle_node(panel, model):
+    profile = {'articulation': CONFIG, 'pick_place': {'arm_joints': [J1, J2]}}
+    panel.app._robot_config = lambda: profile
+    activate(panel, model)
+    panel.pick_pub = Mock()
+    panel.update_pick_place()
+    assert panel.pick_run_button.instate(['disabled'])              # no node state yet
+    state = dict(schema='robot_lab.pick_place_state.v1', phase='idle', message='ready',
+                 objects=['pickup_cube'], supports=['pickup_table', 'place_table'], last_result=None)
+    panel.receive_pick_place(SimpleNamespace(data=json.dumps(state)))
+    panel.update_pick_place()
+    assert panel.pick_object.get() == 'pickup_cube' and panel.pick_run_button.instate(['!disabled'])
+    panel.pick_support.set('place_table')
+    panel.pick_pub.publish.assert_not_called()                      # choosing sends nothing
+    assert panel.run_pick_place()
+    request = json.loads(panel.pick_pub.publish.call_args.args[0].data)
+    assert request == dict(object='pickup_cube', support='place_table', lift=.1)
+    panel.receive_pick_place(SimpleNamespace(data=json.dumps(dict(state, phase='executing'))))
+    panel.update_pick_place()
+    assert not panel.run_pick_place() and panel.pick_stop_button.instate(['!disabled'])
+    panel.pick_lift.set(.5)
+    panel.receive_pick_place(SimpleNamespace(data=json.dumps(state)))
+    assert not panel.run_pick_place()                               # lift outside 0.03-0.25 m

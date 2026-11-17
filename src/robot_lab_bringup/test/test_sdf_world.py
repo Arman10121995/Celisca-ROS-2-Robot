@@ -91,3 +91,27 @@ def test_occupancy_uses_collision_geometry_without_display_fallback(tmp_path):
     collision,_=sdf_world.extract_static_shapes(str(world),lambda uri,base:uri,collision_only=True)
     assert len(visible)==2
     assert len(collision)==1 and collision[0]['size']==[1,1,1]
+
+
+def test_loose_primitive_objects_are_dynamic_bodies_not_scenery(tmp_path):
+    from robot_lab_utils.sdf_world import extract_dynamic_bodies, extract_static_shapes
+    world = tmp_path / 'w.world'
+    world.write_text('''<sdf version="1.7"><world name="w">
+      <model name="table"><static>true</static><pose>1 0 0.25 0 0 0</pose><link name="l">
+        <collision name="c"><geometry><box><size>0.5 0.5 0.5</size></box></geometry></collision></link></model>
+      <model name="cube"><static>false</static><pose>1 0 0.52 0 0 0</pose><link name="l">
+        <inertial><mass>0.05</mass><inertia><ixx>1e-5</ixx><iyy>1e-5</iyy><izz>1e-5</izz></inertia></inertial>
+        <collision name="c"><geometry><box><size>0.04 0.04 0.04</size></box></geometry>
+          <surface><friction><ode><mu>0.9</mu></ode></friction></surface></collision></link></model>
+      <model name="massless"><static>false</static><link name="l">
+        <collision name="c"><geometry><sphere><radius>0.1</radius></sphere></geometry></collision></link></model>
+    </world></sdf>''')
+    bodies = extract_dynamic_bodies(str(world))
+    assert [b['name'] for b in bodies] == ['cube']              # no mass: not a free body
+    cube = bodies[0]
+    assert cube['position'] == [1.0, 0.0, 0.52] and cube['mass'] == 0.05 and cube['mu'] == 0.9
+    assert cube['shape']['type'] == 'box' and cube['shape']['size'] == [0.04, 0.04, 0.04]
+    every, _ = extract_static_shapes(str(world), lambda uri, base: '')
+    scenery, _ = extract_static_shapes(str(world), lambda uri, base: '', exclude_dynamic=True)
+    assert {s['model'] for s in every} == {'table', 'cube', 'massless'}          # unchanged default
+    assert {s['model'] for s in scenery} == {'table', 'massless'}

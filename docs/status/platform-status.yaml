@@ -3958,6 +3958,7 @@ tasks:
         state: active
         title: Qualify four-wheel steering patterns and physical mecanum travel
       R5.7:
+        urdf_pick_place_20261117: 'Claude: implemented, experimental. URDF Franka Panda (asset_franka_panda_panda) on the shared URDF articulation contract; arm screens pass on PyBullet, MuJoCo and Isaac. Backend-neutral top-grasp planner (private MuJoCo model, DLS IK, chained Cartesian lines, collision-checked joint segments) and urdf_pick_place.py executor judged by /simulation/free_bodies truth. GUI pick/place passes once on PyBullet (22.2 s) and once on MuJoCo (20.5 s) in arm_pick_place_lab; script runs pass on both. R5.7 done-when met for this arm. Fixed-base URDF weld on MuJoCo/Isaac, no PyBullet lift for fixed arms, mechanical finger coupling (PyBullet gear, MuJoCo equality). Remaining: Gazebo arm control, Isaac pick/place, other coupled mechanisms, compound geometry, perception; repeats are V6. docs/status/evidence/r57-urdf-arm-pick-place-2026-11-17/README.md'
         implementation_batch_20261114: 'Codex owns completion batch: camera-derived fiducial object poses, source/scene/plant-bound task target integration and GUI selection, then guarded repeated Panda object sequencing. Reuse source actuators and planners; detector/fixture evidence is separate from full robot mission qualification.'
         acceptance_ref: ROADMAP.md
         side_grasps_20261114: 'Implemented: Panda Top/Side/Top + side candidate generation, projected source-jaw widths, four horizontal approach directions and explicit open/detached retreat planning. Original measured scene/IK/OMPL/attachment/contact/execute gates remain. Geometry/widget checks pass; complete physical mission remains unqualified. docs/status/takeover-2026-11-14.md'
@@ -3970,6 +3971,9 @@ tasks:
         - R2.2
         - R3.4
         evidence:
+        - 'docs/status/evidence/r57-urdf-arm-pick-place-2026-11-17/README.md: URDF
+          Panda GUI pick and place, one run each on PyBullet and MuJoCo, simulator-truth
+          stage checks, arm screens on three backends and retained failures.'
         - 'docs/status/evidence/panda-cartesian-grouped-gui-2026-10-07/README.md:
           fresh actual normal GUI physical regression after shared command/catalog/SDF
           changes, original actuators, pre-trial fingerprints and unchanged physical

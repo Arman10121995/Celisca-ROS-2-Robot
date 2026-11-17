@@ -52,3 +52,49 @@ robots:
     - {simulator: mujoco, mode: display, map: nav_empty, evidence: docs/status/evidence/myagv-pro-2026-11-12/README.md}
     - {simulator: pybullet, mode: display, map: nav_empty, evidence: docs/status/evidence/myagv-pro-2026-11-12/README.md}
     - {simulator: isaac, mode: display, map: nav_empty, evidence: docs/status/evidence/myagv-pro-2026-11-12/README.md}
+
+  # R5.7: the URDF Franka Panda (robot_assets) gets the shared URDF
+  # articulation contract, so arm and fingers are position channels on
+  # PyBullet, MuJoCo and Isaac (one source of control for every backend).
+  # Limits are the source URDF's; gains are the declared bounded lab servos
+  # also used for TIAGo (kp = 40 * effort, kd = 8 * sqrt(effort), 0.35 rad/s
+  # arm cap; fingers 800/20, 0.025 m/s). Home is the standard Panda ready pose.
+  # test_panda_urdf_articulation.py keeps the limits equal to the source.
+  asset_franka_panda_panda:
+    type: arm
+    features: [articulated_arm, joint_control]
+    implementation_state: experimental
+    validation_state: pending
+    articulation:
+      schema: robot_lab.urdf_articulation.v1
+      panel: arm
+      home: {panda_joint1: 0.0, panda_joint2: -0.785, panda_joint3: 0.0, panda_joint4: -2.356, panda_joint5: 0.0,
+             panda_joint6: 1.571, panda_joint7: 0.785, panda_finger_joint1: 0.04}
+      # The Franka hand drives both fingers from one motor; the URDF has two
+      # independent prismatic joints. 'mechanical' makes the bridges couple
+      # them physically (PyBullet gear constraint, MuJoCo joint equality), not
+      # only through the servo reference: independent fingers shoved the cube
+      # aside and lost it in transfer (2026-11-17).
+      couplings:
+        panda_finger_joint2: {joint: panda_finger_joint1, multiplier: 1.0, offset: 0.0, mechanical: true}
+      joints:
+        panda_joint1: {mode: position, lower: -2.8973, upper: 2.8973, effort: 87.0, max_velocity: 0.35, kp: 3480.0, kd: 74.619032}
+        panda_joint2: {mode: position, lower: -1.7628, upper: 1.7628, effort: 87.0, max_velocity: 0.35, kp: 3480.0, kd: 74.619032}
+        panda_joint3: {mode: position, lower: -2.8973, upper: 2.8973, effort: 87.0, max_velocity: 0.35, kp: 3480.0, kd: 74.619032}
+        panda_joint4: {mode: position, lower: -3.0718, upper: 0.0698, effort: 87.0, max_velocity: 0.35, kp: 3480.0, kd: 74.619032}
+        panda_joint5: {mode: position, lower: -2.8973, upper: 2.8973, effort: 12.0, max_velocity: 0.35, kp: 480.0, kd: 27.712813}
+        panda_joint6: {mode: position, lower: -0.0175, upper: 3.7525, effort: 12.0, max_velocity: 0.35, kp: 480.0, kd: 27.712813}
+        panda_joint7: {mode: position, lower: -2.8973, upper: 2.8973, effort: 12.0, max_velocity: 0.35, kp: 480.0, kd: 27.712813}
+        panda_finger_joint1: {mode: position, lower: -0.001, upper: 0.04, effort: 20.0, max_velocity: 0.025, kp: 800.0, kd: 20.0}
+    # Pick and place (urdf_pick_place.py, arm_pick_place.py): MuJoCo merges the
+    # fixed link8/hand into panda_link7, so the TCP is 0.107 + 0.1034 m along
+    # its z axis and the hand is turned -45 deg about it.
+    pick_place:
+      arm_joints: [panda_joint1, panda_joint2, panda_joint3, panda_joint4, panda_joint5, panda_joint6, panda_joint7]
+      finger_joints: [panda_finger_joint1, panda_finger_joint2]
+      tool_body: panda_link7
+      tcp_offset: [0.0, 0.0, 0.2104]
+      finger_open: 0.04
+      finger_closed: 0.0
+      max_object_width: 0.075
+      tool_yaw_offset: -0.785398163

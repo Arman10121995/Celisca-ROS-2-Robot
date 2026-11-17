@@ -1,0 +1,205 @@
+{
+ "phases": [
+  {
+   "joint": "panda_finger_joint1",
+   "out": {
+    "target": 0.0205,
+    "settled_s": 0.06,
+    "steady_error_rad": 0.0205,
+    "base_inhibited_seen": true,
+    "final": 0.0204
+   },
+   "back": {
+    "target": 0.0,
+    "settled_s": 0.06,
+    "steady_error_rad": 0.0204,
+    "base_inhibited_seen": true,
+    "final": 0.0
+   },
+   "passed": true
+  },
+  {
+   "joint": "panda_finger_joint2",
+   "out": {
+    "target": 0.0205,
+    "settled_s": 0.06,
+    "steady_error_rad": 0.0198,
+    "base_inhibited_seen": true,
+    "final": 0.0205
+   },
+   "back": {
+    "target": -0.0,
+    "settled_s": 0.06,
+    "steady_error_rad": 0.0205,
+    "base_inhibited_seen": true,
+    "final": 0.0
+   },
+   "passed": true
+  },
+  {
+   "joint": "panda_joint1",
+   "out": {
+    "target": 0.5,
+    "settled_s": 1.58,
+    "steady_error_rad": 0.0217,
+    "base_inhibited_seen": true,
+    "final": 0.5
+   },
+   "back": {
+    "target": 0.0,
+    "settled_s": 1.58,
+    "steady_error_rad": 0.013,
+    "base_inhibited_seen": true,
+    "final": 0.0
+   },
+   "passed": true
+  },
+  {
+   "joint": "panda_joint2",
+   "out": {
+    "target": 0.5,
+    "settled_s": 1.6,
+    "steady_error_rad": 0.0062,
+    "base_inhibited_seen": true,
+    "final": 0.5
+   },
+   "back": {
+    "target": 0.0,
+    "settled_s": 1.66,
+    "steady_error_rad": 0.005,
+    "base_inhibited_seen": true,
+    "final": 0.0
+   },
+   "passed": true
+  },
+  {
+   "joint": "panda_joint3",
+   "out": {
+    "target": 0.5,
+    "settled_s": 1.59,
+    "steady_error_rad": 0.0143,
+    "base_inhibited_seen": true,
+    "final": 0.5
+   },
+   "back": {
+    "target": -0.0,
+    "settled_s": 1.67,
+    "steady_error_rad": 0.0063,
+    "base_inhibited_seen": true,
+    "final": -0.0001
+   },
+   "passed": true
+  },
+  {
+   "joint": "panda_joint4",
+   "out": {
+    "target": 0.0198,
+    "settled_s": 0.07,
+    "steady_error_rad": 0.019,
+    "base_inhibited_seen": true,
+    "final": 0.0199
+   },
+   "back": {
+    "target": 0.0001,
+    "settled_s": 0.06,
+    "steady_error_rad": 0.0173,
+    "base_inhibited_seen": true,
+    "final": 0.0001
+   },
+   "passed": true
+  },
+  {
+   "joint": "panda_joint5",
+   "out": {
+    "target": 0.5,
+    "settled_s": 1.53,
+    "steady_error_rad": 0.0297,
+    "base_inhibited_seen": true,
+    "final": 0.5
+   },
+   "back": {
+    "target": -0.0,
+    "settled_s": 1.6,
+    "steady_error_rad": 0.004,
+    "base_inhibited_seen": true,
+    "final": -0.0
+   },
+   "passed": true
+  },
+  {
+   "joint": "panda_joint6",
+   "out": {
+    "target": 0.5,
+    "settled_s": 1.53,
+    "steady_error_rad": 0.029,
+    "base_inhibited_seen": true,
+    "final": 0.5
+   },
+   "back": {
+    "target": -0.0,
+    "settled_s": 1.54,
+    "steady_error_rad": 0.029,
+    "base_inhibited_seen": true,
+    "final": -0.0
+   },
+   "passed": true
+  },
+  {
+   "joint": "panda_joint7",
+   "out": {
+    "target": 0.5,
+    "settled_s": 1.6,
+    "steady_error_rad": 0.0069,
+    "base_inhibited_seen": true,
+    "final": 0.5
+   },
+   "back": {
+    "target": 0.0,
+    "settled_s": 1.55,
+    "steady_error_rad": 0.029,
+    "base_inhibited_seen": true,
+    "final": 0.0
+   },
+   "passed": true
+  }
+ ],
+ "passed": true,
+ "joints": [
+  "panda_finger_joint1",
+  "panda_finger_joint2",
+  "panda_joint1",
+  "panda_joint2",
+  "panda_joint3",
+  "panda_joint4",
+  "panda_joint5",
+  "panda_joint6",
+  "panda_joint7"
+ ],
+ "initial": {
+  "panda_finger_joint1": 0.0,
+  "panda_finger_joint2": -0.0,
+  "panda_joint1": 0.0,
+  "panda_joint2": 0.0,
+  "panda_joint3": -0.0,
+  "panda_joint4": 0.0001,
+  "panda_joint5": -0.0,
+  "panda_joint6": -0.0,
+  "panda_joint7": 0.0
+ },
+ "stop": {
+  "joint": "panda_joint1",
+  "held_at": 0.1808,
+  "target_was": 1.5,
+  "drift_after_rad": 0.0,
+  "passed": true
+ },
+ "watchdog": {
+  "joint": "panda_joint1",
+  "held_at": -0.0904,
+  "target_was": -2.8473,
+  "drift_after_rad": 0.0,
+  "status": "heartbeat absent; holding measured articulation",
+  "passed": true
+ },
+ "final_error_rad": 0.0001
+}

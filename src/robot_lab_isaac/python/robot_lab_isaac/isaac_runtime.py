@@ -1368,14 +1368,19 @@ def _run_stage(app, reader, cfg, state):
 
     robot_free = bool(cfg.get("robot_free")) or not cfg.get("urdf_file")
     root_prim = None
+    fixed_base = False
     if not robot_free:
+        # A URDF anchored to its own 'world' link is a fixed-base arm.
+        from robot_lab_utils.urdf_base import fixed_to_world
+        with open(cfg["urdf_file"]) as handle:
+            fixed_base = fixed_to_world(handle.read())
         prim = None
         if URDFImporter is not None:
             # isaacsim 6.0 API: URDFImporter -> generated USD -> stage reference.
             try:
                 imp_cfg = URDFImporterConfig(urdf_path=cfg["urdf_file"])
                 imp_cfg.merge_fixed_joints = False
-                imp_cfg.fix_base = False
+                imp_cfg.fix_base = fixed_base
                 imp_cfg.collision_from_visuals = bool(
                     cfg.get("collision_from_visuals", False))
                 imp_cfg.joint_drive_type = "force"
@@ -1391,7 +1396,7 @@ def _run_stage(app, reader, cfg, state):
                 from omni.isaac.urdf import _urdf
             cfg_impl = _urdf.ImportConfig()
             cfg_impl.merge_fixed_joints = False
-            cfg_impl.fix_base = False
+            cfg_impl.fix_base = fixed_base
             cfg_impl.import_inertia_tensor = True
             prim = _urdf.import_urdf(cfg_impl, cfg["urdf_file"],
                                      prim_path=prim_path)

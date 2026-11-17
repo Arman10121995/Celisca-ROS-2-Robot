@@ -1216,6 +1216,17 @@ def _build_simulation_actions(context):
                 launch_arguments=display_args.items(),
             )
         )
+        # Fixed URDF arms with a pick_place description get the backend-neutral
+        # pick-and-place node (R5.7). It plans privately and moves the arm only
+        # through the spawner's articulation contract, and only on an explicit
+        # /pick_place/request.
+        if robot_config.get('pick_place') and robot_config.get('articulation') and not robot_free:
+            actions.append(Node(package='robot_lab_bringup', executable='urdf_pick_place.py', output='screen',
+                parameters=[{'use_sim_time': _as_bool(use_sim_time, True), 'model_path': model_path,
+                             'articulation_config': json.dumps(robot_config['articulation'], sort_keys=True),
+                             'pick_place_config': json.dumps(robot_config['pick_place'], sort_keys=True),
+                             'world_path': world_path or '', 'base_x': float(spawn_x), 'base_y': float(spawn_y),
+                             'base_z': float(spawn_z), 'base_yaw': float(spawn_yaw)}]))
         # Owned articulation for Gazebo only (line ~1046, provisioned): Gazebo has
         # no spawner-side plant loop, so molar_gazebo_control.py relays controller
         # commands. PyBullet/MuJoCo/Isaac spawners receive articulation_config via

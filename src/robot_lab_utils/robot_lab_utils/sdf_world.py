@@ -293,8 +293,55 @@ def _walk_model(model, frame, base_dir, resolve, shapes, skipped,
                     model_name, depth + 1, collision_only, prefer_visual)
 
 
-def extract_static_shapes(world_path, resolve, collision_only=False, prefer_visual=False):
+def _dynamic_body(model):
+    """A loose primitive object: explicit <static>false</static>, one link with
+    a declared mass and one box/sphere/cylinder collision; else None."""
+    if _text(model, "static").strip().lower() not in ("false", "0"):
+        return None
+    links = _children(model, "link")
+    if len(links) != 1 or _child(model, "include") is not None or _children(model, "model"):
+        return None
+    link = links[0]
+    inertial = _child(link, "inertial")
+    collisions = _children(link, "collision")
+    mass = _floats(_text(inertial, "mass"), 1, 0.0)[0] if inertial is not None else 0.0
+    if mass <= 0.0 or len(collisions) != 1 or _child(collisions[0], "geometry") is None:
+        return None
+    shape = _shape(_child(collisions[0], "geometry"), compose(frame_of(link), frame_of(collisions[0])),
+                   "", lambda uri, base: "", model.get("name", "model"), [])
+    if shape is None or shape["type"] not in ("box", "sphere", "cylinder"):
+        return None
+    inertia = _child(inertial, "inertia")
+    diagonal = [_floats(_text(inertia, key), 1, 0.0)[0] for key in ("ixx", "iyy", "izz")] if inertia is not None else []
+    ode = _child(_child(_child(collisions[0], "surface"), "friction"), "ode")
+    mu = _floats(_text(ode, "mu"), 1, 0.0)[0] if _text(ode, "mu") else None
+    position, orientation = frame_of(model)
+    return dict(name=model.get("name", "model"), position=list(position), orientation=list(orientation),
+                shape=shape, mass=mass, inertia=diagonal if len(diagonal) == 3 and min(diagonal) > 0 else None,
+                mu=mu)
+
+
+def extract_dynamic_bodies(world_path):
+    """Loose primitive objects of a world (see _dynamic_body), in model order.
+
+    Each is {name, position, orientation (w, x, y, z), shape (as
+    extract_static_shapes, in the model frame), mass, inertia [ixx, iyy, izz]
+    or None, mu or None}. Importers that build them as free bodies call
+    extract_static_shapes(..., exclude_dynamic=True) for everything else.
+    """
+    root = ET.parse(world_path).getroot()
+    world = _child(root, "world")
+    if world is None:
+        world = root
+    return [body for body in (_dynamic_body(model) for model in _children(world, "model")) if body]
+
+
+def extract_static_shapes(world_path, resolve, collision_only=False, prefer_visual=False, exclude_dynamic=False):
     """Return (shapes, skipped_notes) for every static shape in a world.
+
+    ``exclude_dynamic`` leaves out the loose objects extract_dynamic_bodies
+    returns (an importer that builds them as free bodies); by default every
+    model is flattened to static geometry, as before.
 
     Scripted ``<actor>`` elements are not static geometry and are reported in
     *skipped_notes* rather than dropped silently.
@@ -311,6 +358,8 @@ def extract_static_shapes(world_path, resolve, collision_only=False, prefer_visu
     base_dir = os.path.dirname(os.path.abspath(world_path))
     shapes, skipped = [], []
     for model in _children(world, "model"):
+        if exclude_dynamic and _dynamic_body(model) is not None:
+            continue
         _walk_model(model, _IDENTITY, base_dir, resolve, shapes, skipped,
                     model.get("name", "model"), collision_only=collision_only, prefer_visual=prefer_visual)
     for include in _children(world, "include"):

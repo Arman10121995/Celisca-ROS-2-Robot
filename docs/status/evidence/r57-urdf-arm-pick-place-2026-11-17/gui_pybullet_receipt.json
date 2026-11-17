@@ -1,0 +1,184 @@
+{
+ "schema": "robot_lab.pick_place_result.v1",
+ "outcome": "succeeded",
+ "passed": true,
+ "message": "Placed pickup_cube on place_table",
+ "request": {
+  "object": "pickup_cube",
+  "support": "place_table",
+  "lift": 0.1
+ },
+ "object": "pickup_cube",
+ "support": "place_table",
+ "object_start": [
+  0.4999977703466067,
+  -0.24986726903047485,
+  0.319988605087118
+ ],
+ "plan": {
+  "grasp_width_m": 0.04,
+  "place_centre": [
+   0.5,
+   0.25,
+   0.32
+  ]
+ },
+ "stages": [
+  {
+   "stage": "open",
+   "seconds": 0.13,
+   "object_truth": [
+    0.5,
+    -0.2499,
+    0.32
+   ],
+   "tcp_estimate": [
+    0.3091,
+    0.0,
+    0.4946
+   ],
+   "passed": true
+  },
+  {
+   "stage": "above_object",
+   "seconds": 7.48,
+   "object_truth": [
+    0.5,
+    -0.2498,
+    0.32
+   ],
+   "tcp_estimate": [
+    0.4994,
+    -0.2486,
+    0.42
+   ],
+   "passed": true
+  },
+  {
+   "stage": "down_to_grasp",
+   "seconds": 1.33,
+   "object_truth": [
+    0.5,
+    -0.2498,
+    0.32
+   ],
+   "tcp_estimate": [
+    0.4993,
+    -0.2498,
+    0.322
+   ],
+   "passed": true
+  },
+  {
+   "stage": "close",
+   "seconds": 1.22,
+   "object_truth": [
+    0.4988,
+    -0.2494,
+    0.3199
+   ],
+   "tcp_estimate": [
+    0.4997,
+    -0.2498,
+    0.3201
+   ],
+   "passed": true,
+   "finger_positions": [
+    0.0195,
+    0.0204
+   ],
+   "reason": ""
+  },
+  {
+   "stage": "lift",
+   "seconds": 2.53,
+   "object_truth": [
+    0.5,
+    -0.2469,
+    0.417
+   ],
+   "tcp_estimate": [
+    0.4998,
+    -0.2498,
+    0.4199
+   ],
+   "passed": true,
+   "rise_m": 0.097,
+   "hold_drift_m": 0.0004,
+   "reason": ""
+  },
+  {
+   "stage": "over_support",
+   "seconds": 3.61,
+   "object_truth": [
+    0.5005,
+    0.2543,
+    0.4095
+   ],
+   "tcp_estimate": [
+    0.4999,
+    0.2502,
+    0.4199
+   ],
+   "passed": true
+  },
+  {
+   "stage": "lower",
+   "seconds": 1.56,
+   "object_truth": [
+    0.5004,
+    0.2523,
+    0.3191
+   ],
+   "tcp_estimate": [
+    0.5,
+    0.2499,
+    0.3201
+   ],
+   "passed": true
+  },
+  {
+   "stage": "release",
+   "seconds": 1.95,
+   "object_truth": [
+    0.5002,
+    0.2528,
+    0.32
+   ],
+   "tcp_estimate": [
+    0.4999,
+    0.2499,
+    0.3201
+   ],
+   "passed": true
+  },
+  {
+   "stage": "retreat",
+   "seconds": 2.41,
+   "object_truth": [
+    0.5002,
+    0.2528,
+    0.32
+   ],
+   "tcp_estimate": [
+    0.4998,
+    0.2499,
+    0.4199
+   ],
+   "passed": true,
+   "final_pose": [
+    0.5002,
+    0.2528,
+    0.32
+   ],
+   "height_error_m": -0.0,
+   "inside_support": true,
+   "moved_last_s_m": 0.0,
+   "reason": ""
+  }
+ ],
+ "seconds": 22.23,
+ "plant_id": "98d0c14f06cb462ab5232982f7bd78d1",
+ "model_sha256": "1685e99c9fa5ab60efe1b05d5b84ee2adacc7db7f2de83ca9aa976e00d8b8fc0",
+ "finished": "2026-11-17T07:54:42"
+}

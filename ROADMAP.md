@@ -134,7 +134,7 @@ Work top to bottom. Each line links to its task.
 | I4b | [R6.8](#r68--real-world-area-import-from-a-globe) Real-world area import | Done 2026-11-13: globe picker (CesiumJS + OSM), Terrain Tiles + OSM buildings/roads/trees/water, SUMO people/traffic; support and roof heights measured on four simulators | implemented |
 | I5 | [R5.11](#r511--drone-moving-obstacles-and-other-drone-backends) Drone moving obstacles | Done 2026-11-13: Kalman tracks, predicted sweeps, walkway look-both-ways and overflight, evasion, sensor-loss hold/land, EKF heading/height gate; 2 passing flights past walkers (Gazebo); PX4 + MuJoCo plant: takeoff, 5 m route and landing | implemented |
 | I6 | [R5.9](#r59--mobile-manipulators) Mobile manipulation | Stretch recipes/perception/planning plus TIAGo Drive, articulation and MuJoCo joint Plan/Execute implemented; general perception, TIAGo Cartesian/object/footprint/map and other-backend planning remain | partial |
-| I7 | [R5.7](#r57--manipulators-and-motion-planning) Arms | Panda box selection, source-finger-aware grasp candidates and bounded automatic pick/place sequence implemented; further geometry, perception, coupled arms and other backends remain | partial |
+| I7 | [R5.7](#r57--manipulators-and-motion-planning) Arms | Done-when met 11-17: URDF Panda GUI pick → place on PyBullet and MuJoCo (one run each). Native Panda box tasks on MuJoCo. Remaining: Gazebo/Isaac arm pick and place, compound geometry, perception, other coupled mechanisms | partial |
 | I8 | [R5.8](#r58--robot-hands-and-grippers) Hands | UMI lift/hold/lower and supported release measured in a source component; normal GUI missions, further torque/tendon sources and backends remain | partial |
 | I9 | [R10.2](#r102--fleet-management-and-open-rmf) Fleet / Open-RMF | Done 2026-11-14: shared-zone reservations (map passages, doors, docks), cycle breaker, recovery drive-out, RMF energy from a drivetrain calibration; two crossing runs pass (native and RMF). Chargers/doors in other worlds, larger fleets remain | implemented |
 | I10 | [R10.3](#r103--swarm-robotics) Swarms | Done 2026-11-14: ROS2swarm port of per-member scan-only behaviours, scan-sensed cooperative coverage, ground/air member-loss replanning; dispersion and coverage-with-loss measured; aggregation not yet passing; 3–4 drone flight is validation | implemented |
@@ -394,6 +394,20 @@ parking batch needs its own run. Details and evidence are in the
     projected object footprint. Source/plant and actual scene ACK gates remain.
     [Implementation and checks](docs/status/support-placement-2026-11-14.md).
 
+  - November 17 (Claude): **URDF-arm pick and place on PyBullet and MuJoCo.**
+    The robot_assets Franka Panda is controlled through the shared URDF
+    articulation contract on PyBullet, MuJoCo and Isaac (screens pass on all
+    three). A backend-neutral planner (`robot_lab_mujoco/arm_pick_place.py`,
+    private MuJoCo kinematics/collision model) and executor
+    (`urdf_pick_place.py`) pick a loose cube and place it on a table, judged
+    by simulator truth. The GUI arm page has a **Pick / place** section. One
+    GUI run passes on PyBullet (22.2 s) and one on MuJoCo (20.5 s): **the
+    done-when is met for this arm.** Fixed-base URDFs are welded on
+    MuJoCo/Isaac, the finger coupling is mechanical, and loose world objects
+    publish on `/simulation/free_bodies`.
+    [Guide](docs/tutorials/urdf-arm-pick-place.md) ·
+    [receipt](docs/status/evidence/r57-urdf-arm-pick-place-2026-11-17/README.md).
+
   [Native arm guide](docs/tutorials/native-arm-planning.md).
 - **Side strategies (2026-11-14, Codex):** Top/Side/Top + side geometry candidates,
   physical-width projection, explicit open/detached retreat plans and strategy
@@ -402,8 +416,11 @@ parking batch needs its own run. Details and evidence are in the
 - **Remaining implementation:**
   - compound/mesh geometry, perception pose sources and additional
     gripper-specific pipelines beyond the native Panda box sequence;
-  - coupled mechanisms (mimic and four-bar joints);
-  - arm controllers on Gazebo, PyBullet and Isaac.
+  - coupled mechanisms beyond gear-coupled fingers (mimic chains and
+    four-bar joints);
+  - arm controllers on Gazebo, and pick and place on Isaac (the arm screen
+    passes there; the mechanical finger coupling and loose-object truth
+    have no Isaac adapter yet).
 - **Automatic box tasks (2026-11-14, Codex):** normal Arm page explicitly
   starts 1–5 pick/place cycles through the existing IK/OMPL/actions, measured
   opposing contacts, acknowledged attachments and sustained lift/release

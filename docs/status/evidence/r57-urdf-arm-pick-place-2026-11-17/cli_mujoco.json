@@ -1,0 +1,192 @@
+{
+ "object": "pickup_cube",
+ "support": "place_table",
+ "home_reached": true,
+ "result": {
+  "schema": "robot_lab.pick_place_result.v1",
+  "outcome": "succeeded",
+  "passed": true,
+  "message": "Placed pickup_cube on place_table",
+  "request": {
+   "object": "pickup_cube",
+   "support": "place_table",
+   "lift": 0.1
+  },
+  "object": "pickup_cube",
+  "support": "place_table",
+  "object_start": [
+   0.5000000007956795,
+   -0.24999999875607887,
+   0.31989224457978394
+  ],
+  "plan": {
+   "grasp_width_m": 0.04,
+   "place_centre": [
+    0.5,
+    0.25,
+    0.32
+   ]
+  },
+  "stages": [
+   {
+    "stage": "open",
+    "seconds": 0.08,
+    "object_truth": [
+     0.5,
+     -0.25,
+     0.3199
+    ],
+    "tcp_estimate": [
+     0.307,
+     -0.0,
+     0.4869
+    ],
+    "passed": true
+   },
+   {
+    "stage": "above_object",
+    "seconds": 7.12,
+    "object_truth": [
+     0.5,
+     -0.25,
+     0.3199
+    ],
+    "tcp_estimate": [
+     0.4992,
+     -0.2493,
+     0.42
+    ],
+    "passed": true
+   },
+   {
+    "stage": "down_to_grasp",
+    "seconds": 1.32,
+    "object_truth": [
+     0.5,
+     -0.25,
+     0.3199
+    ],
+    "tcp_estimate": [
+     0.4975,
+     -0.2496,
+     0.3182
+    ],
+    "passed": true
+   },
+   {
+    "stage": "close",
+    "seconds": 1.93,
+    "object_truth": [
+     0.4997,
+     -0.25,
+     0.3199
+    ],
+    "tcp_estimate": [
+     0.4997,
+     -0.25,
+     0.32
+    ],
+    "passed": true,
+    "finger_positions": [
+     0.0178,
+     0.0178
+    ],
+    "reason": ""
+   },
+   {
+    "stage": "lift",
+    "seconds": 2.45,
+    "object_truth": [
+     0.4998,
+     -0.2498,
+     0.4159
+    ],
+    "tcp_estimate": [
+     0.4998,
+     -0.25,
+     0.4197
+    ],
+    "passed": true,
+    "rise_m": 0.0961,
+    "hold_drift_m": 0.0016,
+    "reason": ""
+   },
+   {
+    "stage": "over_support",
+    "seconds": 3.47,
+    "object_truth": [
+     0.5,
+     0.25,
+     0.4106
+    ],
+    "tcp_estimate": [
+     0.5003,
+     0.2493,
+     0.4198
+    ],
+    "passed": true
+   },
+   {
+    "stage": "lower",
+    "seconds": 1.43,
+    "object_truth": [
+     0.4999,
+     0.2497,
+     0.3199
+    ],
+    "tcp_estimate": [
+     0.4999,
+     0.2499,
+     0.3201
+    ],
+    "passed": true
+   },
+   {
+    "stage": "release",
+    "seconds": 1.83,
+    "object_truth": [
+     0.4999,
+     0.2497,
+     0.3199
+    ],
+    "tcp_estimate": [
+     0.4999,
+     0.2499,
+     0.3201
+    ],
+    "passed": true
+   },
+   {
+    "stage": "retreat",
+    "seconds": 2.35,
+    "object_truth": [
+     0.4999,
+     0.2497,
+     0.3199
+    ],
+    "tcp_estimate": [
+     0.4998,
+     0.2499,
+     0.4199
+    ],
+    "passed": true,
+    "final_pose": [
+     0.4999,
+     0.2497,
+     0.3199
+    ],
+    "height_error_m": -0.0001,
+    "inside_support": true,
+    "moved_last_s_m": 0.0,
+    "reason": ""
+   }
+  ],
+  "seconds": 21.98,
+  "plant_id": "8c63ca59b9b442dbb0b6ada4786b3e7a",
+  "model_sha256": "1685e99c9fa5ab60efe1b05d5b84ee2adacc7db7f2de83ca9aa976e00d8b8fc0",
+  "finished": "2026-11-17T07:15:46",
+  "receipt": "/workspace/molar/robot_lab_runtime/pick-place/20261117T071546_pickup_cube.json"
+ },
+ "final_message": "Placed pickup_cube on place_table",
+ "passed": true
+}

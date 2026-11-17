@@ -55,6 +55,7 @@ from robot_lab_utils.camera_msgs import camera_info_msg, image_msg
 from robot_lab_utils.ros_frames import publish_fallback_scan_frame
 from robot_lab_utils.urdf_joints import driven_assembly_joints
 from robot_lab_utils.urdf_articulation import effort_budget
+from robot_lab_utils.urdf_base import fixed_to_world as _urdf_fixed_to_world
 from robot_lab_utils.sim_frames import (
     urdf_link_frames,
     compose, invert, mounted_pose, offset_from_root, wxyz_from_xyzw, xyzw_from_wxyz,
@@ -408,6 +409,40 @@ def _urdf_root_inertial(urdf_text):
     # MJCF fullinertia order is (ixx, iyy, izz, ixy, ixz, iyz).
     attrs["fullinertia"] = " ".join("%.10g" % v for v in values)
     return attrs
+
+
+def _add_mechanical_couplings(mjcf_text, contract):
+    """Joint equalities for mechanically linked articulation joints (one motor
+    driving two fingers): follower = offset + multiplier * master."""
+    couplings = {name: c for name, c in contract.couplings.items() if c.get('mechanical')}
+    if not couplings:
+        return mjcf_text
+    root = ET.fromstring(mjcf_text)
+    equality = root.find("equality")
+    if equality is None:
+        equality = ET.SubElement(root, "equality")
+    for follower, coupling in couplings.items():
+        ET.SubElement(equality, "joint", {"joint1": follower, "joint2": coupling["joint"],
+                                          "polycoef": "%.10g %.10g 0 0 0" % (coupling["offset"], coupling["multiplier"])})
+    return ET.tostring(root, encoding="unicode")
+
+
+def _place_fixed_base(mjcf_text, x, y, z, yaw):
+    """Move a welded robot's top-level bodies to the spawn pose (no joint)."""
+    if not any(abs(v) > 1e-12 for v in (x, y, z, yaw)):
+        return mjcf_text
+    root = ET.fromstring(mjcf_text)
+    worldbody = root.find("worldbody")
+    if worldbody is None:
+        return mjcf_text
+    # quat, not euler: euler's unit depends on the compiler's angle setting.
+    base = ET.Element("body", {"name": "fixed_base_spawn", "pos": "%.10g %.10g %.10g" % (x, y, z),
+                               "quat": "%.10g 0 0 %.10g" % (math.cos(yaw / 2), math.sin(yaw / 2))})
+    for child in [c for c in worldbody if c.tag in ("body", "geom", "site")]:
+        worldbody.remove(child)
+        base.append(child)
+    worldbody.append(base)
+    return ET.tostring(root, encoding="unicode")
 
 
 def _add_floating_base(mjcf_text, robot_name="robot", root_inertial=None):
@@ -928,9 +963,13 @@ def _build_mjcf_from_urdf(urdf_text, pkg_map, logger=None, robot_name="",
             root_inertia=fixed_root_inertial(urdf_text)
         else:
             root_inertia=_urdf_root_inertial(urdf_text)
-        mjcf = _add_floating_base(
-            spec.to_xml(), robot_name or "robot",
-            root_inertial=root_inertia)
+        if _urdf_fixed_to_world(urdf_text):
+            # A fixed-base arm: no free joint (it would stand loose on the floor).
+            mjcf = spec.to_xml()
+        else:
+            mjcf = _add_floating_base(
+                spec.to_xml(), robot_name or "robot",
+                root_inertial=root_inertia)
         mjcf = _apply_contact_geoms(mjcf, contact_friction)
         mjcf = _hide_collision_proxies(mjcf, logger=logger)
         mjcf = _exclude_rest_pose_self_contacts(mjcf, logger=logger)
@@ -1739,6 +1778,11 @@ class MuJoCoSpawner(Node):
                 base_dir=os.path.dirname(os.path.abspath(str(model))),preserve_fixed_root=preserve_fixed_root)
             if robot_mjcf != _FALLBACK_MJCF:
                 self._model_source = "urdf"
+                if _urdf_fixed_to_world(urdf):
+                    self._fixed_base = True
+                    # A welded arm has no free joint to take the spawn pose.
+                    robot_mjcf = _place_fixed_base(robot_mjcf, *(
+                        float(self.get_parameter('spawn_' + axis).value) for axis in ('x', 'y', 'z', 'yaw')))
                 effort_config = self.get_parameter("effort_controller_config").value
                 if effort_config:
                     try:
@@ -1804,6 +1848,7 @@ class MuJoCoSpawner(Node):
                     if set(articulation_contract.joints) & set(self._drive.wheel_joints):
                         raise ValueError('Articulation cannot own drive wheels')
                     robot_mjcf = add_mujoco_articulation_actuators(robot_mjcf, articulation_contract)
+                    robot_mjcf = _add_mechanical_couplings(robot_mjcf, articulation_contract)
                 camera_offset = offset_from_root(
                     urdf, self.get_parameter("camera_link_name").value)
                 if camera_offset is not None \
@@ -1971,7 +2016,7 @@ class MuJoCoSpawner(Node):
 
         # Truth for loose world objects (payloads, boxes): free-jointed
         # bodies outside the robot, as JSON {name: [x, y, z, qw, qx, qy, qz]}
-        # on /mujoco/free_bodies at 10 Hz. Reports only; nothing reads it back.
+        # on /simulation/free_bodies at 10 Hz. Reports only; nothing reads it back.
         robot_root = int(self._model.body_rootid[self._body_id])
         self._free_bodies = {
             mujoco.mj_id2name(self._model, mujoco.mjtObj.mjOBJ_BODY, int(self._model.jnt_bodyid[j])): int(self._model.jnt_bodyid[j])
@@ -1980,7 +2025,7 @@ class MuJoCoSpawner(Node):
             and int(self._model.body_rootid[self._model.jnt_bodyid[j]]) != robot_root
             and mujoco.mj_id2name(self._model, mujoco.mjtObj.mjOBJ_BODY, int(self._model.jnt_bodyid[j]))}
         if self._free_bodies:
-            self._free_bodies_pub = self.create_publisher(String, '/mujoco/free_bodies', 10)
+            self._free_bodies_pub = self.create_publisher(String, '/simulation/free_bodies', 10)
 
         # Display-mode hold: joints keep their spawn pose through physics,
         # not by freezing the state.  Each held joint gets a passive
@@ -2234,6 +2279,8 @@ class MuJoCoSpawner(Node):
         free = [i for i in range(m.njnt) if m.jnt_type[i] == mujoco.mjtJoint.mjJNT_FREE]
         named = "%s_freejoint" % (self.get_parameter("robot_name").value or "robot")
         own = [i for i in free if mujoco.mj_id2name(m, mujoco.mjtObj.mjOBJ_JOINT, i) == named]
+        if getattr(self, "_fixed_base", False):
+            free = own = []     # a welded arm: its base is the world, every free body is scenery
         if own or free:
             i = (own or free)[0]
             self._free_joint_qpos_adr = m.jnt_qposadr[i]

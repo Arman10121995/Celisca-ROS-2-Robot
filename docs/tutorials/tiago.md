@@ -9,7 +9,7 @@ The [official public source manifest](https://github.com/pal-robotics/tiago_tuto
 and [pinned TIAGo description](https://github.com/pal-robotics/tiago_robot/tree/f1c33c92bdde7c1dd79f0c3e739e98a233dbd30b)
 explain the upstream package structure.
 
-## Start from the GUI
+## Run from the GUI
 
 1. Select **Mobile manipulators**, **PAL Robotics TIAGo**, its official
    PMB2/arm/gripper variant, **MuJoCo**, **Display** and `nav_empty`.

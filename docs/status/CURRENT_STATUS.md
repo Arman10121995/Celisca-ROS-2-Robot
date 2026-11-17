@@ -194,6 +194,8 @@ This page records what was measured. **The goals and remaining work are in one l
 [roadmap](../../ROADMAP.md)** (implementation queue first, then validation). Remaining-work
 notes in the dated entries below are history.
 
+November 17: **R5.7 URDF-arm pick and place on PyBullet and MuJoCo (implemented, experimental).** The URDF Franka Panda picks a loose 40 mm cube from one table and places it on another from the normal GUI arm page: PyBullet 22.2 s and MuJoCo 20.5 s, one run each, judged by simulator truth (grasp, unsupported lift hold, rest on the support). Script runs also pass on both. Fixed-base URDFs are now welded on MuJoCo/Isaac, the second finger is coupled mechanically, and loose world objects are published on `/simulation/free_bodies`. Gazebo and Isaac pick and place, other arms and repeats remain. [Guide](../tutorials/urdf-arm-pick-place.md) · [receipt](evidence/r57-urdf-arm-pick-place-2026-11-17/README.md).
+
 November 17: **Go2 get-up with roll-over shaping: not passed.** `get_up_roll` (potential-based
 roll-over reward) stands 2 of 10 collapsed starts (first get-up: 1 of 10). The other 8 end in the
 same side-lying pose. [Receipt](evidence/go2-get-up-roll-2026-11-17/README.md).

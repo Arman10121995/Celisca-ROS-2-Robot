@@ -15,6 +15,7 @@ install(
 install(
   PROGRAMS scripts/export_3d_map.py scripts/native_arm_scene.py
     scripts/molar_gazebo_control.py
+    scripts/urdf_pick_place.py
     scripts/wait_native_sensors.py
   DESTINATION lib/${PROJECT_NAME}
 )

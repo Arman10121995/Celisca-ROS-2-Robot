@@ -83,9 +83,14 @@ def main():
                     steady_error_rad=round(max(errors), 4) if errors else None, base_inhibited_seen=inhibited,
                     final=round(channels()[name]['measured'], 4))
 
+    def margin(lo, hi):
+        """Limit margin: 0.05, or a tenth of a short range (e.g. 0.041 m fingers)."""
+        return min(0.05, 0.1 * (hi - lo))
+
     for name in joints:
         lo, hi = channels()[name]['limits']
-        target = max(lo + 0.05, min(hi - 0.05, home[name] + args.delta))
+        m = margin(lo, hi)
+        target = max(lo + m, min(hi - m, home[name] + min(args.delta, 0.5 * (hi - lo))))
         out = move(name, target)
         back = move(name, home[name])
         passed = (out['settled_s'] is not None and back['settled_s'] is not None and out['base_inhibited_seen'])
@@ -93,9 +98,11 @@ def main():
         report['phases'].append(dict(joint=name, out=out, back=back, passed=passed))
 
     # Stop part-way through a long move: the joint must hold where it is.
-    name = joints[0]
+    # The joint with the widest range gives the longest move.
+    name = max(joints, key=lambda n: channels()[n]['limits'][1] - channels()[n]['limits'][0])
     lo, hi = channels()[name]['limits']
-    far = max(lo + 0.05, min(hi - 0.05, home[name] + 1.5))
+    m = margin(lo, hi)
+    far = max(lo + m, min(hi - m, home[name] + 1.5))
     send({name: far})
     spin(0.6)
     stop.wait_for_service(timeout_sec=5.0)
@@ -111,7 +118,7 @@ def main():
     # Withhold the heartbeat during a long move: the plant must hold short of the target.
     spin(0.5)
     start = channels()[name]['measured']
-    goal = lo + 0.05 if start - lo > hi - start else hi - 0.05     # the far end of the range
+    goal = lo + m if start - lo > hi - start else hi - m     # the far end of the range
     send({name: goal})
     spin(0.4)
     beating[0] = False

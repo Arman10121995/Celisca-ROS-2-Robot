@@ -25,3 +25,12 @@ choices.
 | 11-15 | R11 | Used MOLAR's own ros2_control controllers in every Gazebo mode, with the EKF owning odom → base_link | The shared wheel controller is not in its description |
 | 11-17 | R5.2 | Recorded `get_up_roll` (2/10) as not passed and moved on | One shaping change; further progress needs curriculum or GPU-scale training |
 | 11-17 | R5.7–R5.9 | Took over the former Codex manipulation lanes (user approved) | No Codex commits since 11-15; the lanes are still partial |
+| 11-17 | R5.7 | Used the robot_assets URDF Panda for the second-backend pick and place, not the native MJCF Panda | The URDF path runs on PyBullet, MuJoCo and Isaac through one contract; the native Panda is MuJoCo-only |
+| 11-17 | R5.7 | Gave the URDF Panda the TIAGo servo formula (kp 40 × effort, kd 8 × √effort) | One declared lab rule for URDFs without ros2_control gains |
+| 11-17 | R5.7 | Planned with a private MuJoCo model of the URDF and own IK, not MoveIt | Backend-neutral; MoveIt needs an SRDF and controllers this URDF does not ship |
+| 11-17 | R5.7 | Welded URDFs whose root is a `world` link with fixed joints on every backend | They are fixed arms; floating them made the base drift |
+| 11-17 | R5.7 | Coupled the Panda fingers mechanically (PyBullet gear, MuJoCo equality) | The real hand has one motor; independent fingers lost the cube; PyBullet's own Panda example does this |
+| 11-17 | R5.7 | Refused to plan from a start pose in collision; the operator moves Home first | Same as MoveIt; the Panda's zero pose is in self-collision |
+| 11-17 | R5.7 | Renamed `/mujoco/free_bodies` to `/simulation/free_bodies` and added it to PyBullet | One truth topic for every backend |
+| 11-17 | R5.7 | Accepted that PyBullet loose objects are not in the RGB-D mirror camera | Pick and place uses truth; perception is a separate remaining item |
+| 11-17 | R5.7 | Rasterized the new world's 2D map from its boxes rather than running the Gazebo map generator | Exact for box worlds and needs no simulator run |

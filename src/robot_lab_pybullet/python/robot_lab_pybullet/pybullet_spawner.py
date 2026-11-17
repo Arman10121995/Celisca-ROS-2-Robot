@@ -4,6 +4,7 @@ Opens a PyBullet GUI window, loads the robot URDF, runs the physics
 step loop, and publishes all ROS 2 topics required by the rest of the
 stack (joint_states, TF, odom, scan, imu, clock).
 """
+import json
 import hashlib
 import math
 import os
@@ -33,7 +34,7 @@ from geometry_msgs.msg import Point, Quaternion, TransformStamped, Twist, Vector
 from nav_msgs.msg import Odometry
 from rosgraph_msgs.msg import Clock as RosClock
 from sensor_msgs.msg import CameraInfo, Image, Imu, JointState, LaserScan
-from std_msgs.msg import Bool
+from std_msgs.msg import Bool, String
 from std_srvs.srv import Trigger
 
 import numpy as np
@@ -343,6 +344,9 @@ class PyBulletSpawner(Node):
         self._joint_idx = {}
         self._joint_names = []
         self._articulation = None
+        self._free_bodies = {}
+        self._free_bodies_pub = None
+        self._free_bodies_t = -1.0
         self._lw = -1
         self._rw = -1
         self._twist = Twist()
@@ -432,7 +436,7 @@ class PyBulletSpawner(Node):
         from ament_index_python.packages import get_package_share_directory
         try:
             from robot_lab_utils.sdf_world import (
-                extract_static_shapes, uri_resolver)
+                extract_dynamic_bodies, extract_static_shapes, uri_resolver)
         except ImportError as exc:
             self.get_logger().warn(
                 f"World geometry helpers unavailable ({exc}); world not loaded")
@@ -444,9 +448,12 @@ class PyBulletSpawner(Node):
         except Exception:
             pass
         try:
+            # Loose primitive objects are free bodies of the physics client
+            # (the mirror render client keeps scenery only).
             shapes, skipped = extract_static_shapes(
                 world_path,
-                uri_resolver(model_dirs, get_package_share_directory))
+                uri_resolver(model_dirs, get_package_share_directory),
+                exclude_dynamic=client == 0)
         except Exception as exc:
             self.get_logger().warn(f"SDF world parse error: {exc}")
             return
@@ -469,10 +476,66 @@ class PyBulletSpawner(Node):
                 created += 1
             else:
                 skipped.append("%s shape not created" % shape.get("type"))
+        if client == 0:
+            for body in extract_dynamic_bodies(world_path):
+                self._create_dynamic_body(body)
         self.get_logger().info(
             "SDF world '%s': %d static shape(s) created, %d skipped, %d model(s) "
-            "drawn from textured visuals"
-            % (os.path.basename(world_path), created, len(skipped), len(drawn)))
+            "drawn from textured visuals, %d free body(ies)"
+            % (os.path.basename(world_path), created, len(skipped), len(drawn),
+               len(self._free_bodies) if client == 0 else 0))
+
+    def _create_dynamic_body(self, body):
+        """One loose primitive object (sdf_world.extract_dynamic_bodies) as a free body."""
+        shape, size = body["shape"], [float(v) for v in body["shape"].get("size") or []]
+        colour = [0.85, 0.2, 0.15, 1.0]
+        try:
+            if shape["type"] == "box":
+                half = [max(v, 1e-6) / 2.0 for v in size[:3]]
+                collision = p.createCollisionShape(p.GEOM_BOX, halfExtents=half,
+                                                   collisionFramePosition=shape["position"],
+                                                   collisionFrameOrientation=_xyzw(shape["orientation"]))
+                visual = p.createVisualShape(p.GEOM_BOX, halfExtents=half, rgbaColor=colour,
+                                             visualFramePosition=shape["position"],
+                                             visualFrameOrientation=_xyzw(shape["orientation"]))
+            elif shape["type"] == "sphere":
+                collision = p.createCollisionShape(p.GEOM_SPHERE, radius=size[0],
+                                                   collisionFramePosition=shape["position"])
+                visual = p.createVisualShape(p.GEOM_SPHERE, radius=size[0], rgbaColor=colour,
+                                             visualFramePosition=shape["position"])
+            else:
+                collision = p.createCollisionShape(p.GEOM_CYLINDER, radius=size[0], height=size[1],
+                                                   collisionFramePosition=shape["position"],
+                                                   collisionFrameOrientation=_xyzw(shape["orientation"]))
+                visual = p.createVisualShape(p.GEOM_CYLINDER, radius=size[0], length=size[1], rgbaColor=colour,
+                                             visualFramePosition=shape["position"],
+                                             visualFrameOrientation=_xyzw(shape["orientation"]))
+            uid = p.createMultiBody(baseMass=float(body["mass"]), baseCollisionShapeIndex=collision,
+                                    baseVisualShapeIndex=visual, basePosition=body["position"],
+                                    baseOrientation=_xyzw(body["orientation"]))
+            dynamics = {}
+            if body.get("inertia"):
+                dynamics["localInertiaDiagonal"] = body["inertia"]
+            if body.get("mu") is not None:
+                dynamics["lateralFriction"] = float(body["mu"])
+            if dynamics:
+                p.changeDynamics(uid, -1, **dynamics)
+        except Exception as exc:
+            self.get_logger().warn("Free body %s not created: %s" % (body["name"], exc))
+            return
+        self._free_bodies[body["name"]] = uid
+        if self._free_bodies_pub is None:
+            # Truth for loose objects, as the MuJoCo bridge publishes it:
+            # JSON {name: [x, y, z, qw, qx, qy, qz]} at 10 Hz. Reports only.
+            self._free_bodies_pub = self.create_publisher(String, "/simulation/free_bodies", 10)
+
+    def _pub_free_bodies(self):
+        poses = {}
+        for name, uid in self._free_bodies.items():
+            position, orientation = p.getBasePositionAndOrientation(uid)
+            poses[name] = [float(v) for v in position] + [float(orientation[3]), float(orientation[0]),
+                                                          float(orientation[1]), float(orientation[2])]
+        self._free_bodies_pub.publish(String(data=json.dumps(poses)))
 
     def _create_textured_visuals(self, visuals, client=0):
         """Visual-only bodies for textured Collada visuals; returns the models drawn."""
@@ -844,6 +907,11 @@ class PyBulletSpawner(Node):
                     for link in range(-1, p.getNumJoints(self._robot_id)))
         base_position, base_orientation = p.getBasePositionAndOrientation(self._robot_id)
         lift = max(0.0, .002 - min_z)
+        from robot_lab_utils.urdf_base import fixed_to_world
+        if lift > 0 and fixed_to_world(urdf):
+            # A fixed-base arm stands where its description puts it (its
+            # geometry-free 'world' root has no meaningful clearance).
+            lift = 0.0
         if lift > 0:
             base_position = (base_position[0], base_position[1], base_position[2] + lift)
             p.resetBasePositionAndOrientation(self._robot_id, base_position, base_orientation)
@@ -971,6 +1039,19 @@ class PyBulletSpawner(Node):
             self._articulation = ArticulationROS(self, articulation_config, urdf, str(model))
             if set(self._articulation.contract.joints) & set(self._drive.wheel_joints):
                 raise ValueError('Articulation cannot own drive wheels')
+            # Mechanically linked joints (a gripper's fingers on one motor) are
+            # coupled physically too, as in PyBullet's own Panda example.
+            for follower, coupling in self._articulation.contract.couplings.items():
+                if not coupling.get('mechanical'):
+                    continue
+                gear = p.createConstraint(
+                    self._robot_id, self._joint_idx[coupling['joint']], self._robot_id, self._joint_idx[follower],
+                    jointType=p.JOINT_GEAR, jointAxis=[1, 0, 0], parentFramePosition=[0, 0, 0],
+                    childFramePosition=[0, 0, 0])
+                p.changeConstraint(gear, gearRatio=-float(coupling['multiplier']), erp=0.1,
+                                   maxForce=self._articulation.contract.joints[follower]['effort'] * 2.5)
+                self.get_logger().info('Mechanical coupling %s = %g * %s (gear constraint)'
+                                       % (follower, coupling['multiplier'], coupling['joint']))
             hold_mode = 'false'  # configured servos hold only lift/slides; casters remain passive
         has_drive = (self._lw >= 0 or self._rw >= 0
                      or any(j in self._joint_idx for j in self._drive.wheel_joints))
@@ -1219,6 +1300,9 @@ class PyBulletSpawner(Node):
                     last_pub = self._sim_t
                     self._pub_joint_states()
                     self._pub_odom()
+                    if self._free_bodies and self._sim_t - self._free_bodies_t + 1e-9 >= 0.1:
+                        self._free_bodies_t = self._sim_t
+                        self._pub_free_bodies()
                     if self._gait_plant is not None:
                         import json
                         from std_msgs.msg import String

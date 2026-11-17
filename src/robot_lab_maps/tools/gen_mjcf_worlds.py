@@ -60,7 +60,7 @@ if os.path.isdir(_UTILS_SOURCE) and _UTILS_SOURCE not in sys.path:
     sys.path.insert(0, _UTILS_SOURCE)
 
 from robot_lab_utils.sdf_world import (  # noqa: E402
-    extract_static_shapes, uri_resolver)
+    extract_dynamic_bodies, extract_static_shapes, uri_resolver)
 
 # Where model:// URIs are looked up, in order of preference.
 _MODEL_DIRS = (
@@ -183,7 +183,10 @@ def convert_world(world_path, name=None, asset_dir=None):
     name = name or os.path.splitext(os.path.basename(world_path))[0]
     if asset_dir is None:
         asset_dir = os.path.dirname(world_path)
-    shapes, skipped = extract_static_shapes(world_path, _resolve_uri)
+    shapes, skipped = extract_static_shapes(world_path, _resolve_uri, exclude_dynamic=True)
+    # Loose primitive objects (explicit <static>false</static> with a mass) are
+    # free bodies, not scenery: a pickable cube must stay pickable.
+    bodies = extract_dynamic_bodies(world_path)
     meshes = {}
     hfields = {}
     geoms = [_geom(shape, meshes, hfields, asset_dir) for shape in shapes]
@@ -244,6 +247,20 @@ def convert_world(world_path, name=None, asset_dir=None):
                        "rgba": "0.35 0.37 0.4 1"})
     for geom in geoms:
         ET.SubElement(worldbody, "geom", geom)
+    for body in bodies:
+        element = ET.SubElement(worldbody, "body", {
+            "name": body["name"], "pos": "%.6g %.6g %.6g" % tuple(body["position"]),
+            "quat": "%.6g %.6g %.6g %.6g" % tuple(body["orientation"])})
+        ET.SubElement(element, "freejoint", {"name": body["name"] + "_free"})
+        inertial = {"pos": "0 0 0", "mass": "%.6g" % body["mass"]}
+        if body["inertia"]:
+            inertial["diaginertia"] = " ".join("%.6g" % v for v in body["inertia"])
+        ET.SubElement(element, "inertial", inertial)
+        geom = _geom(body["shape"], meshes, hfields, asset_dir)
+        geom["rgba"] = "0.85 0.2 0.15 1"
+        if body["mu"] is not None:
+            geom["friction"] = "%.6g 0.005 0.0001" % body["mu"]
+        ET.SubElement(element, "geom", geom)
     ET.SubElement(worldbody, "light",
                   {"diffuse": "0.8 0.8 0.8", "pos": "0 0 10",
                    "dir": "0 0 -1", "castshadow": "true"})

@@ -17,6 +17,12 @@ from .molar_controls import BACKENDS, MODES, SCHEMA, MolarControls, finite, vali
 from . import molar_controls
 from .workspace_ui import ScrollPanel
 
+try:
+    from std_msgs.msg import String
+    from std_srvs.srv import Trigger
+except ImportError:
+    String = Trigger = None
+
 
 def arm_config(profile):
     config = profile.get('articulation') if isinstance(profile, dict) else None
@@ -32,24 +38,30 @@ def selectable(robot, backend, mode, kind, profile):
 
 
 def validate_arm_feedback(state, model_path, config):
-    """Every configured joint, once, independent and inside its configured limits."""
+    """Every configured joint, once, inside its configured limits.
+
+    Configured couplings (a gripper's second finger) are reported as coupled
+    followers: measured and shown, never commanded from this page.
+    """
     validate_identity(state, model_path)
     joints = config['joints']
+    couplings = config.get('couplings') or {}
     channels = state.get('channels')
-    if not isinstance(channels, list) or len(channels) != len(joints):
+    if not isinstance(channels, list) or len(channels) != len(joints) + len(couplings):
         raise ValueError('Waiting for every configured arm joint.')
     found = {}
     for channel in channels:
         name = channel.get('name')
-        if name not in joints or name in found:
+        if name not in joints and name not in couplings or name in found:
             raise ValueError('Unexpected or duplicate arm joint.')
-        if channel.get('mode') != 'position' or channel.get('units') not in ('rad', 'm') or channel.get('coupled'):
+        if channel.get('mode') != 'position' or channel.get('units') not in ('rad', 'm') \
+                or bool(channel.get('coupled')) != (name in couplings):
             raise ValueError('The arm page drives independent position joints only.')
         bounds = channel.get('limits')
         if not isinstance(bounds, list) or len(bounds) != 2:
             raise ValueError('Missing source joint limits.')
         low, high = map(finite, bounds)
-        spec = joints[name]
+        spec = joints.get(name) or joints[couplings[name]['joint']]
         if low >= high or low < float(spec['lower']) - 1e-9 or high > float(spec['upper']) + 1e-9:
             raise ValueError('Joint limits exceed the configured arm envelope.')
         if finite(channel['max_velocity']) <= 0:
@@ -113,6 +125,7 @@ class UrdfArmControls(MolarControls):
         self.home_button.grid(row=0, column=1, sticky='ew', padx=2)
         self.stop_button = ttk.Button(actions, text='Stop / hold', command=self.stop, style='Danger.TButton')
         self.stop_button.grid(row=0, column=2, sticky='ew', padx=2)
+        self._build_pick_place(body)
         planning = ttk.LabelFrame(body, text='Collision-checked joint route', padding=4)
         planning.grid(row=6, column=0, sticky='ew', pady=5)
         planning.columnconfigure((0, 1, 2), weight=1)
@@ -132,7 +145,7 @@ class UrdfArmControls(MolarControls):
                   'moves is refused and holds the arm.\n'
                   'Stop, heartbeat loss, leaving this page or a selection change hold the measured joints.\n'
                   'Experimental simulator controls; masses and limits are declared estimates where '
-                  'the vendor publishes none.', wraplength=295, justify='left').grid(row=7, column=0, sticky='ew', pady=6)
+                  'the vendor publishes none.', wraplength=295, justify='left').grid(row=8, column=0, sticky='ew', pady=6)
         self.traces = [(var, var.trace_add('write', self.selection_changed)) for var in
                        (app.robot_var, app.simulator_var, app.mode_var, app.launch_kind_var, app.map_var)]
         self.bindings = [(widget, widget.bind('<<NotebookTabChanged>>', self.tab_changed, add='+'))
@@ -140,6 +153,102 @@ class UrdfArmControls(MolarControls):
         self.rebuild()
         self.job = self.after(50, self.tick)
         self.update_buttons()
+
+    # --- pick and place (urdf_pick_place.py) ------------------------------------
+    def _build_pick_place(self, body):
+        """Object pick and place for profiles with a pick_place description."""
+        frame = ttk.LabelFrame(body, text='Pick / place (simulator truth)', padding=4)
+        frame.grid(row=7, column=0, sticky='ew', pady=5)
+        frame.columnconfigure(1, weight=1)
+        self.pick_frame = frame
+        self.pick_state, self.pick_received = {}, -math.inf
+        self.pick_pub = self.pick_stop_client = None
+        self.pick_object, self.pick_support = tk.StringVar(), tk.StringVar()
+        self.pick_lift = tk.DoubleVar(value=.10)
+        ttk.Label(frame, text='Object').grid(row=0, column=0, sticky='w')
+        self.pick_object_box = ttk.Combobox(frame, textvariable=self.pick_object, state='readonly', width=18)
+        self.pick_object_box.grid(row=0, column=1, sticky='ew', padx=2)
+        ttk.Label(frame, text='Place on').grid(row=1, column=0, sticky='w')
+        self.pick_support_box = ttk.Combobox(frame, textvariable=self.pick_support, state='readonly', width=18)
+        self.pick_support_box.grid(row=1, column=1, sticky='ew', padx=2)
+        ttk.Label(frame, text='Lift (m)').grid(row=2, column=0, sticky='w')
+        self.pick_lift_entry = ttk.Entry(frame, textvariable=self.pick_lift, width=8)
+        self.pick_lift_entry.grid(row=2, column=1, sticky='w', padx=2)
+        buttons = ttk.Frame(frame)
+        buttons.grid(row=3, column=0, columnspan=2, sticky='ew', pady=3)
+        buttons.columnconfigure((0, 1), weight=1)
+        self.pick_run_button = ttk.Button(buttons, text='Run pick / place', command=self.run_pick_place)
+        self.pick_run_button.grid(row=0, column=0, sticky='ew', padx=2)
+        self.pick_stop_button = ttk.Button(buttons, text='Stop task', command=self.stop_pick_place,
+                                           style='Danger.TButton')
+        self.pick_stop_button.grid(row=0, column=1, sticky='ew', padx=2)
+        self.pick_status = tk.StringVar(value='Available for fixed arms with a pick_place description.')
+        ttk.Label(frame, textvariable=self.pick_status, wraplength=290, justify='left').grid(
+            row=4, column=0, columnspan=2, sticky='ew')
+
+    def pick_supported(self):
+        return bool(self.arm() and self.app._robot_config().get('pick_place'))
+
+    def connect(self):
+        connected = super().connect()
+        if connected and self.pick_pub is None:
+            self.pick_pub = self.node.create_publisher(String, '/pick_place/request', 1)
+            self.node.create_subscription(String, '/pick_place/state', self.receive_pick_place, 1)
+            self.pick_stop_client = self.node.create_client(Trigger, '/pick_place/stop')
+        return connected
+
+    def receive_pick_place(self, message):
+        try:
+            state = json.loads(message.data)
+        except ValueError:
+            return
+        if isinstance(state, dict) and state.get('schema') == 'robot_lab.pick_place_state.v1':
+            self.pick_state, self.pick_received = state, time.monotonic()
+
+    def pick_fresh(self):
+        return self.pick_supported() and time.monotonic() - self.pick_received < 2.0
+
+    def run_pick_place(self):
+        """Explicitly start one pick and place; the node plans, executes and judges it."""
+        if not (self.ready() and self.pick_fresh()) or self.pick_state.get('phase') != 'idle':
+            return False
+        lift = finite(self.pick_lift.get())
+        if not .03 <= lift <= .25 or self.pick_object.get() not in self.pick_state.get('objects', []) \
+                or self.pick_support.get() not in self.pick_state.get('supports', []):
+            self.pick_status.set('Choose an object, a support and a 0.03-0.25 m lift.')
+            return False
+        self.pick_pub.publish(String(data=json.dumps(dict(object=self.pick_object.get(),
+                                                          support=self.pick_support.get(), lift=lift))))
+        self.pick_status.set('Requested: %s onto %s.' % (self.pick_object.get(), self.pick_support.get()))
+        return True
+
+    def stop_pick_place(self):
+        if self.pick_stop_client is not None and self.pick_stop_client.service_is_ready():
+            self.pick_stop_client.call_async(Trigger.Request())
+        self.stop(reason='Pick / place stopped; holding measured arm.')
+
+    def update_pick_place(self):
+        fresh = self.pick_fresh()
+        state = self.pick_state if fresh else {}
+        for box, variable, values in ((self.pick_object_box, self.pick_object, state.get('objects', [])),
+                                      (self.pick_support_box, self.pick_support, state.get('supports', []))):
+            if list(box['values']) != list(values):
+                box['values'] = values
+            if values and variable.get() not in values:
+                variable.set(values[0])
+        idle = state.get('phase') == 'idle'
+        self.pick_run_button.state(['!disabled'] if fresh and idle and self.ready() else ['disabled'])
+        self.pick_stop_button.state(['!disabled'] if fresh and not idle else ['disabled'])
+        if not self.pick_supported():
+            self.pick_status.set('This profile has no pick_place description.')
+        elif not fresh:
+            self.pick_status.set('Waiting for the pick-and-place node.')
+        else:
+            text = '%s: %s' % (state.get('phase'), state.get('message'))
+            result = state.get('last_result') or {}
+            if idle and result:
+                text += '\nLast: %s%s' % (result.get('outcome'), (' · ' + result['receipt']) if result.get('receipt') else '')
+            self.pick_status.set(text)
 
     def arm(self):
         return arm_config(self.app._robot_config())
@@ -321,6 +430,7 @@ class UrdfArmControls(MolarControls):
         return self.send(home)
 
     def update_buttons(self):
+        self.update_pick_place()
         enabled = self.ready()
         for widget in [*self.apply_buttons.values(), *self.jog_buttons.values(), *self.fields,
                        self.use_measured_button, self.home_button]:

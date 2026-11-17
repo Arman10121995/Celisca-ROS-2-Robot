@@ -29,12 +29,39 @@ def screenshot(path):
                      bytes_per_line, 1).save(path)
 
 
+def pick_place(app, page, args, report, press, settle, until, pump, screenshot):
+    """Home, then one pick and place through the page's own widgets."""
+    home = app._robot_config()['articulation']['home']
+    press(page.home_button)
+    settle(home, 'home', 60.)
+    until(lambda: page.pick_fresh() and args.pick_place[0] in page.pick_state.get('objects', []), 60,
+          'pick-and-place node sees the object')
+    page.pick_object.set(args.pick_place[0])
+    page.pick_support.set(args.pick_place[1])
+    previous = json.dumps(page.pick_state.get('last_result'))
+    until(lambda: page.pick_run_button.instate(['!disabled']), 20, 'Run pick / place enabled')
+    press(page.pick_run_button)
+    until(lambda: page.pick_state.get('phase') == 'executing', 30, 'task started')
+    pump(8.)
+    screenshot(args.output / 'carrying.png')
+    pump(1.)
+    until(lambda: page.pick_state.get('phase') == 'idle' and json.dumps(page.pick_state.get('last_result')) != previous,
+          600, 'task finished')
+    result = page.pick_state.get('last_result') or {}
+    report['pick_place'] = dict(result=result, page_status=page.pick_status.get())
+    screenshot(args.output / 'placed.png')
+    report['passed'] = bool(report['page_selected'] and result.get('passed'))
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--robot', default='asset_elephant_myagv_pro_pro630')
     parser.add_argument('--simulator', default='pybullet')
     parser.add_argument('--map', default='nav_empty')
     parser.add_argument('--output', type=Path, required=True)
+    parser.add_argument('--pick-place', nargs=2, metavar=('OBJECT', 'SUPPORT'),
+                        help='instead of the joint steps: Home, then Run pick / place of OBJECT onto SUPPORT '
+                             'through the page (R5.7), judged by the node\'s truth checks')
     args = parser.parse_args()
     args.output.mkdir(parents=True, exist_ok=False)
     report = dict(robot=args.robot, simulator=args.simulator, map=args.map, steps=[], passed=False)
@@ -93,34 +120,37 @@ def main():
         screenshot(args.output / 'ready.png')
         pump(1.)
         names = page.joint_names
-        home = {n: round(v, 4) for n, v in measured().items()}
-        report['home_measured'] = home
-        page.target_vars[names[0]].set(.5)
-        press(page.apply_buttons[names[0]])
-        settle({names[0]: .5}, 'apply J1 0.5 rad')
-        page.step.set(.2)
-        page.target_vars[names[1]].set(round(measured()[names[1]], 4))
-        press(page.jog_buttons[names[1], 1])
-        settle({names[1]: home[names[1]] + .2}, 'jog J2 +0.2 rad')
-        screenshot(args.output / 'moved.png')
-        pump(1.)                               # heartbeat resumes before the next command
-        press(page.home_button)
-        settle({n: 0. for n in names}, 'home')
-        # Stop part-way through a long J1 move: the measured joint must hold.
-        page.target_vars[names[0]].set(2.)
-        press(page.apply_buttons[names[0]])
-        pump(.8)
-        press(page.stop_button)
-        pump(.5)
-        until(page.ready, 10, 'feedback after stop')
-        held = measured()[names[0]]
-        pump(2.)
-        drift = abs(measured()[names[0]] - held)
-        stop_ok = drift < .02 and abs(held - 2.) > .3
-        report['stop'] = dict(held_at=round(held, 4), target_was=2., drift_after_rad=round(drift, 4), passed=stop_ok)
-        press(page.home_button)
-        settle({n: 0. for n in names}, 'home after stop', 40.)
-        report['passed'] = bool(report['page_selected'] and len(report['rows']) == len(names) and stop_ok)
+        if args.pick_place:
+            pick_place(app, page, args, report, press, settle, until, pump, screenshot)
+        else:
+            home = {n: round(v, 4) for n, v in measured().items()}
+            report['home_measured'] = home
+            page.target_vars[names[0]].set(.5)
+            press(page.apply_buttons[names[0]])
+            settle({names[0]: .5}, 'apply J1 0.5 rad')
+            page.step.set(.2)
+            page.target_vars[names[1]].set(round(measured()[names[1]], 4))
+            press(page.jog_buttons[names[1], 1])
+            settle({names[1]: home[names[1]] + .2}, 'jog J2 +0.2 rad')
+            screenshot(args.output / 'moved.png')
+            pump(1.)                               # heartbeat resumes before the next command
+            press(page.home_button)
+            settle({n: 0. for n in names}, 'home')
+            # Stop part-way through a long J1 move: the measured joint must hold.
+            page.target_vars[names[0]].set(2.)
+            press(page.apply_buttons[names[0]])
+            pump(.8)
+            press(page.stop_button)
+            pump(.5)
+            until(page.ready, 10, 'feedback after stop')
+            held = measured()[names[0]]
+            pump(2.)
+            drift = abs(measured()[names[0]] - held)
+            stop_ok = drift < .02 and abs(held - 2.) > .3
+            report['stop'] = dict(held_at=round(held, 4), target_was=2., drift_after_rad=round(drift, 4), passed=stop_ok)
+            press(page.home_button)
+            settle({n: 0. for n in names}, 'home after stop', 40.)
+            report['passed'] = bool(report['page_selected'] and len(report['rows']) == len(names) and stop_ok)
     except BaseException as exc:
         report['error'] = repr(exc)
         report['page_state'] = dict(status=page.status.get(), feedback=page.feedback.get(), owned=page.owned(),

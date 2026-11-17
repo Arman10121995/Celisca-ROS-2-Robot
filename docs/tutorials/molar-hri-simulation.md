@@ -348,7 +348,7 @@ the front mount hits the robot's own body. First CELISCA floor 1 route:
 
 The check runs lift → extend → belt → retract → lower on a primitive box and station and judges the
 box by simulator truth ([receipt](../status/evidence/r11-molar-transfer-2026-11-15/README.md)). In
-MuJoCo, `mujoco_world_xml:=<file>` loads a prepared scene; `/mujoco/free_bodies` reports loose
+MuJoCo, `mujoco_world_xml:=<file>` loads a prepared scene; `/simulation/free_bodies` reports loose
 objects.
 
 Masses, inertias, caster parameters, servo gains, friction, joint travel and HRI

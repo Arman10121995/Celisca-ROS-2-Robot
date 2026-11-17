@@ -177,7 +177,7 @@ def main():
     truth = {}
     if mujoco:
         from nav_msgs.msg import Odometry
-        node.create_subscription(String, '/mujoco/free_bodies', lambda m: truth.update(json.loads(m.data)), 10)
+        node.create_subscription(String, '/simulation/free_bodies', lambda m: truth.update(json.loads(m.data)), 10)
         def on_odom(m):
             q, o = m.pose.pose.position, m.pose.pose.orientation
             truth['base_link'] = [q.x, q.y, q.z, o.w, o.x, o.y, o.z]
