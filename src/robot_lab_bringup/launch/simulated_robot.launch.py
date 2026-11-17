@@ -1637,7 +1637,9 @@ def _build_simulation_actions(context):
                              context, "go2_perturbation_duration_s"),
                          "perturbation_axis": _launch_value(
                              context, "go2_perturbation_axis")}
-                       if go2_controller_active else {}),
+                       # Also for a trained legged policy on MuJoCo (the
+                       # R5.2 get-up screen's 60 N collapse).
+                       if go2_controller_active or (legged_active and simulator == "mujoco") else {}),
                     **({"physics_timestep": _launch_value(
                         context, "bhl_physics_timestep")}
                        if bhl_policy_active else {}),

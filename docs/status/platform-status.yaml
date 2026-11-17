@@ -2950,6 +2950,7 @@ tasks:
           mission; MuJoCo plain flight passed. Validation later (V5): repeats, reacting people, vehicles, other worlds.'
         evidence: [docs/status/evidence/drone-moving-2026-11-13/README.md, docs/tutorials/mapped-drone-planning.md]
       R5.2:
+        go2_get_up_r2_20261117: 'Claude: implemented, experimental. get_up_roll r2 (6000 iterations, 73.7 M steps) stands 29/30 settled collapsed starts (seeds 3/7/11; r1 7/30 with the same procedure). Normal MuJoCo launch with legged_policy: gets up from side (0.52 s) and back (1.40 s) spawns and after 200 N/400 N lateral and 200 N forward pushes (1.5-3.3 s); 60 N does not topple it. legged_policy_controller: get-up tasks act at any tilt. Walk-to-get-up switching, other backends and stairs remain. docs/status/evidence/go2-get-up-roll-r2-2026-11-17/README.md'
         acceptance_ref: ROADMAP.md
         implementation_state: 2026-11-14 (Claude) get_up and stairs-curriculum training implemented; a first Go2 get_up
           run is in progress, not screened.

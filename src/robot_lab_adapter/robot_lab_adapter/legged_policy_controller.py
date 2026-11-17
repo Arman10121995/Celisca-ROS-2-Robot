@@ -14,6 +14,9 @@ Safety: commands are clamped to the policy's command range and expire
 after ``command_timeout_s`` (zero velocity: the policy stands); stale
 joint/IMU state or a tilt beyond ``fall_tilt_rad`` latches SAFE_STOP,
 which publishes the default standing pose until ``/legged_policy/reset``.
+A policy trained to get up (``source.json`` task in ``GET_UP_TASKS``) acts
+at any tilt: lying on its side or back is its starting state, so only
+stale state and policy failures stop it.
 """
 import json
 import math
@@ -28,6 +31,9 @@ from rclpy.node import Node
 from sensor_msgs.msg import Imu, JointState
 from std_msgs.msg import Float64MultiArray, String
 from std_srvs.srv import Trigger
+
+# Training tasks whose policies start from fallen poses (legged_training.py).
+GET_UP_TASKS = ('get_up', 'get_up_roll')
 from trajectory_msgs.msg import JointTrajectory, JointTrajectoryPoint
 
 from robot_lab_adapter.legged_policy import (
@@ -78,6 +84,7 @@ class LeggedPolicyController(Node):
         directory = policy_directory(self.get_parameter('policy').value)
         self.contract = PolicyContract.load(directory)
         self.policy = LeggedPolicy(self.contract, model_path=os.path.join(directory, 'policy.onnx'))
+        self.get_up = self.contract.source.get('task') in GET_UP_TASKS
         self.limits = [float(v) for v in self.get_parameter('command_limits').value]
         self.command, self.command_time = [0.0, 0.0, 0.0], None
         self.joints, self.joint_time = None, None
@@ -97,10 +104,11 @@ class LeggedPolicyController(Node):
         self.create_service(Trigger, '/legged_policy/reset', self.on_reset)
         self.create_timer(self.contract.policy_period, self.tick)
         self.create_timer(0.5, self.report)
-        self.get_logger().info('Legged policy %s/%s (%s, revision %s): %d joints, %.0f Hz'
+        self.get_logger().info('Legged policy %s/%s (%s, revision %s): %d joints, %.0f Hz%s'
                                % (self.contract.source.get('robot'), self.contract.source.get('variant'),
                                   self.contract.source.get('upstream'), self.contract.source.get('revision', '')[:8],
-                                  self.contract.num_dofs, 1.0/self.contract.policy_period))
+                                  self.contract.num_dofs, 1.0/self.contract.policy_period,
+                                  '; get-up policy: no tilt stop' if self.get_up else ''))
 
     def now(self):
         return self.get_clock().now().nanoseconds*1e-9
@@ -166,7 +174,7 @@ class LeggedPolicyController(Node):
         quaternion, gyro = self.imu
         gravity_z = 1.0-2.0*(quaternion[1]**2+quaternion[2]**2)   # body z in world z
         tilt = math.acos(max(-1.0, min(1.0, gravity_z)))
-        if tilt > float(self.get_parameter('fall_tilt_rad').value):
+        if not self.get_up and tilt > float(self.get_parameter('fall_tilt_rad').value):
             self.state, self.reason = 'safe_stop', 'tilt %.2f rad exceeds the fall limit' % tilt
             self.standing()
             return

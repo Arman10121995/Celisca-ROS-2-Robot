@@ -1,0 +1,182 @@
+{
+ "policy": "/workspace/molar/robot_lab_runtime/training/go2_get_up_roll_r2/policy",
+ "robot": "unitree_go2",
+ "task": "get_up",
+ "phases": [
+  {
+   "command": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "measured": [
+    0.0,
+    0.0,
+    0.003
+   ],
+   "seconds": 5.0,
+   "fallen": false,
+   "final_gravity_z": -1.0,
+   "final_height_ratio": 0.973,
+   "stood": true
+  },
+  {
+   "command": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "measured": [
+    0.001,
+    0.001,
+    0.008
+   ],
+   "seconds": 5.0,
+   "fallen": false,
+   "final_gravity_z": -1.0,
+   "final_height_ratio": 0.973,
+   "stood": true
+  },
+  {
+   "command": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "measured": [
+    -0.025,
+    0.003,
+    -0.106
+   ],
+   "seconds": 5.0,
+   "fallen": false,
+   "final_gravity_z": -1.0,
+   "final_height_ratio": 0.973,
+   "stood": true
+  },
+  {
+   "command": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "measured": [
+    -0.0,
+    0.003,
+    -0.006
+   ],
+   "seconds": 5.0,
+   "fallen": false,
+   "final_gravity_z": -0.157,
+   "final_height_ratio": 0.493,
+   "stood": false
+  },
+  {
+   "command": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "measured": [
+    -0.0,
+    0.001,
+    0.005
+   ],
+   "seconds": 5.0,
+   "fallen": false,
+   "final_gravity_z": -1.0,
+   "final_height_ratio": 0.973,
+   "stood": true
+  },
+  {
+   "command": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "measured": [
+    -0.016,
+    0.023,
+    -0.034
+   ],
+   "seconds": 5.0,
+   "fallen": false,
+   "final_gravity_z": -1.0,
+   "final_height_ratio": 0.973,
+   "stood": true
+  },
+  {
+   "command": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "measured": [
+    -0.013,
+    0.015,
+    -0.05
+   ],
+   "seconds": 5.0,
+   "fallen": false,
+   "final_gravity_z": -1.0,
+   "final_height_ratio": 0.973,
+   "stood": true
+  },
+  {
+   "command": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "measured": [
+    0.032,
+    -0.017,
+    -0.124
+   ],
+   "seconds": 5.0,
+   "fallen": false,
+   "final_gravity_z": -1.0,
+   "final_height_ratio": 0.973,
+   "stood": true
+  },
+  {
+   "command": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "measured": [
+    -0.053,
+    0.02,
+    -0.078
+   ],
+   "seconds": 5.0,
+   "fallen": false,
+   "final_gravity_z": -1.0,
+   "final_height_ratio": 0.974,
+   "stood": true
+  },
+  {
+   "command": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "measured": [
+    -0.003,
+    0.002,
+    -0.019
+   ],
+   "seconds": 5.0,
+   "fallen": false,
+   "final_gravity_z": -1.0,
+   "final_height_ratio": 0.973,
+   "stood": true
+  }
+ ],
+ "terrain": "flat",
+ "stood": 9,
+ "trials": 10,
+ "simulator": "mujoco (training environment)",
+ "deployment_code": "legged_policy.LeggedPolicy"
+}
