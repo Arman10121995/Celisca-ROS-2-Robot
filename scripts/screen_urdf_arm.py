@@ -4,7 +4,8 @@
 
 On an already running launch it:
 1. moves each position joint by ``--delta`` rad (clamped to its limits) and
-   back, recording settle time, steady error and whether the base was inhibited
+   back, recording settle time, steady error (it must stay within twice
+   ``--tolerance`` for a second after reaching the target) and whether the base was inhibited
    while the joint moved. A move that does not settle (an arm at its zero
    pose stalls against the floor or its own body) is retried by ``-delta``,
    and the report says so;
@@ -29,6 +30,7 @@ def main():
     ap.add_argument('--tolerance', type=float, default=0.03, help='rad, settled error')
     ap.add_argument('--settle-timeout', type=float, default=20.0)
     ap.add_argument('--ready-timeout', type=float, default=300.0)
+    ap.add_argument('--trace', action='store_true', help='record every joint and the reference during each move')
     args = ap.parse_args()
     rclpy.init()
     node = rclpy.create_node('urdf_arm_screen')
@@ -70,10 +72,13 @@ def main():
 
     def move(name, target):
         send({name: target})
-        start, inhibited, settled_at, errors = time.monotonic(), False, None, []
+        start, inhibited, settled_at, errors, trace = time.monotonic(), False, None, [], []
         while time.monotonic() - start < args.settle_timeout:
             spin(0.05)
             c = channels()[name]
+            if args.trace:
+                trace.append(dict(t=round(time.monotonic() - start, 2), reference=c.get('reference'),
+                                  measured={n: round(v['measured'], 4) for n, v in channels().items()}))
             inhibited |= bool(state.get('base_inhibited'))
             if abs(c['measured'] - target) < args.tolerance and settled_at is None:
                 settled_at = time.monotonic() - start
@@ -81,9 +86,12 @@ def main():
                 errors.append(abs(c['measured'] - target))
                 if time.monotonic() - start > settled_at + 1.0:
                     break
-        return dict(target=round(target, 4), settled_s=None if settled_at is None else round(settled_at, 2),
-                    steady_error_rad=round(max(errors), 4) if errors else None, base_inhibited_seen=inhibited,
-                    final=round(channels()[name]['measured'], 4))
+        result = dict(target=round(target, 4), settled_s=None if settled_at is None else round(settled_at, 2),
+                      steady_error_rad=round(max(errors), 4) if errors else None, base_inhibited_seen=inhibited,
+                      final=round(channels()[name]['measured'], 4))
+        if args.trace:
+            result['trace'] = trace
+        return result
 
     def margin(lo, hi):
         """Limit margin: 0.05, or a tenth of a short range (e.g. 0.041 m fingers)."""
@@ -103,7 +111,9 @@ def main():
             target = max(lo + m, min(hi - m, home[name] - step))
             out = phase['out'] = move(name, target)
             back = phase['back'] = move(name, home[name])
+        # Settled means reached and then kept within twice the tolerance for a second.
         phase['passed'] = passed = (out['settled_s'] is not None and back['settled_s'] is not None
+                                    and max(out['steady_error_rad'], back['steady_error_rad']) <= 2 * args.tolerance
                                     and out['base_inhibited_seen'])
         ok &= passed
         report['phases'].append(phase)

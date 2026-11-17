@@ -134,7 +134,7 @@ Work top to bottom. Each line links to its task.
 | I4b | [R6.8](#r68--real-world-area-import-from-a-globe) Real-world area import | Done 2026-11-13: globe picker (CesiumJS + OSM), Terrain Tiles + OSM buildings/roads/trees/water, SUMO people/traffic; support and roof heights measured on four simulators | implemented |
 | I5 | [R5.11](#r511--drone-moving-obstacles-and-other-drone-backends) Drone moving obstacles | Done 2026-11-13: Kalman tracks, predicted sweeps, walkway look-both-ways and overflight, evasion, sensor-loss hold/land, EKF heading/height gate; 2 passing flights past walkers (Gazebo); PX4 + MuJoCo plant: takeoff, 5 m route and landing | implemented |
 | I6 | [R5.9](#r59--mobile-manipulators) Mobile manipulation | Done-when met 11-17: TIAGo GUI fetch (drive, pick, carry, place) on MuJoCo and PyBullet with stability traces and a base/arm interlock probe. Remaining: Nav2 legs, perception, Isaac, Stretch pipeline missions | partial |
-| I7 | [R5.7](#r57--manipulators-and-motion-planning) Arms | Done-when met 11-17: URDF Panda GUI pick → place on PyBullet and MuJoCo (one run each). Native Panda box tasks on MuJoCo. Remaining: Gazebo/Isaac arm pick and place, compound geometry, perception, other coupled mechanisms | partial |
+| I7 | [R5.7](#r57--manipulators-and-motion-planning) Arms | Done-when met 11-17: URDF Panda GUI pick → place on PyBullet and MuJoCo (one run each). Native Panda box tasks on MuJoCo. 11-17: URDF Panda pick and place also passes on Isaac and Gazebo (all four backends); UR5/UR10/YuMi joint control on Gazebo. Remaining: compound geometry, perception, other coupled mechanisms | partial |
 | I8 | [R5.8](#r58--robot-hands-and-grippers) Hands | 11-17: normal GUI grasp → lift 5 cm → hold → return → supported release passes for Robotiq 2F-85 (both variants, support stage) and UMI (source axis); parallel-jaw measured in R5.7/R5.9. DEX-EE (dexterous) not passed: needs grasp synthesis; other backends remain | partial |
 | I9 | [R10.2](#r102--fleet-management-and-open-rmf) Fleet / Open-RMF | Done 2026-11-14: shared-zone reservations (map passages, doors, docks), cycle breaker, recovery drive-out, RMF energy from a drivetrain calibration; two crossing runs pass (native and RMF). Chargers/doors in other worlds, larger fleets remain | implemented |
 | I10 | [R10.3](#r103--swarm-robotics) Swarms | Done 2026-11-14: ROS2swarm port of per-member scan-only behaviours, scan-sensed cooperative coverage, ground/air member-loss replanning; dispersion and coverage-with-loss measured; aggregation not yet passing; 3–4 drone flight is validation | implemented |
@@ -422,10 +422,15 @@ parking batch needs its own run. Details and evidence are in the
     gripper-specific pipelines beyond the native Panda box sequence;
   - coupled mechanisms beyond gear-coupled fingers (mimic chains and
     four-bar joints);
-  - arm controllers on Gazebo. Isaac pick and place passes for the URDF
-    Panda (2026-11-17: loose world objects are dynamic bodies on Isaac and
-    publish on `/simulation/free_bodies`; 20.2 s, place error 0.0 mm).
-    [Receipt](docs/status/evidence/r57-isaac-pick-place-2026-11-17/README.md).
+  - Done 2026-11-17: Isaac and Gazebo pick and place for the URDF Panda.
+    On Isaac, loose world objects are dynamic bodies that publish on
+    `/simulation/free_bodies` (20.2 s, place error 0.0 mm;
+    [receipt](docs/status/evidence/r57-isaac-pick-place-2026-11-17/README.md)).
+    On Gazebo, `urdf_gazebo_articulation.py` drives the display-hold
+    controllers and `gazebo_free_bodies.py` publishes truth (27.8 s and
+    30.6 s, place error 0.0 mm). UR5, YuMi and a raised UR10 pass the joint
+    screen there; the UR10 lying on the floor does not
+    ([receipt](docs/status/evidence/r57-gazebo-urdf-arms-2026-11-17/README.md)).
 - **Automatic box tasks (2026-11-14, Codex):** normal Arm page explicitly
   starts 1–5 pick/place cycles through the existing IK/OMPL/actions, measured
   opposing contacts, acknowledged attachments and sustained lift/release

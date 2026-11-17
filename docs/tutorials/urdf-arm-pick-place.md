@@ -1,4 +1,4 @@
-# Pick and place with a URDF arm (PyBullet and MuJoCo)
+# Pick and place with a URDF arm (PyBullet, MuJoCo, Isaac and Gazebo)
 
 A backend-neutral pick and place for URDF arms whose profile has a
 `pick_place` block. It is experimental, and object poses come from simulator
@@ -15,7 +15,8 @@ From the GUI:
 
 1. Choose **Manipulators → franka_panda → asset_franka_panda_panda**, world
    **arm_pick_place_lab**, simulator **PyBullet** or **MuJoCo**, task
-   **Display**, and launch.
+   **Display**, and launch. Isaac and Gazebo pass from the command line too
+   (`simulator:=isaac` or `simulator:=gazebo`).
 2. Open the **Mobile arm** page. Press **Home (direct)** and wait for it to
    settle. The Panda's all-zero start pose is in self-collision, and the
    planner refuses it.
@@ -60,7 +61,15 @@ contract, in these stages:
 
 **Coupled fingers.** The Panda's second finger is coupled *mechanically*,
 like the real one-motor hand. PyBullet uses a gear constraint and MuJoCo a
-joint equality. Independent fingers lost the cube.
+joint equality. Independent fingers lost the cube. Gazebo ignores `<mimic>`,
+so there the second finger has its own hold controller and the contract
+drives it as a coupling.
+
+**Gazebo.** URDF arms without `<ros2_control>` get one JointPositionController
+per joint (the display hold, on `/model/<robot>/joint/<joint>/cmd_pos`).
+`urdf_gazebo_articulation.py` runs the same contract on them, and
+`gazebo_free_bodies.py` publishes the object truth. Mount arms above the
+floor: the UR10 lying at its zero pose chattered on floor contact.
 
 [Measured runs and limits](../status/evidence/r57-urdf-arm-pick-place-2026-11-17/README.md).
 

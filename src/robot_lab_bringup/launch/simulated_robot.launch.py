@@ -1102,12 +1102,45 @@ def _build_simulation_actions(context):
             # display-skipped, so without this the bringup reaches
             # controller_manager but never activates a controller.
             display_controllers = robot_config.get("controllers", [])
-            if robot_config.get('articulation'):
+            molar_model = Path(str(model_path)).name.startswith(('molar_hri.', 'probot_l.'))
+            if robot_config.get('articulation') and molar_model:
                 actions.append(Node(package='robot_lab_bringup', executable='molar_gazebo_control.py',
                     parameters=[{'use_sim_time': _as_bool(use_sim_time, True),
                                  'model_path': model_path,
                                  'articulation_config': json.dumps(robot_config['articulation'], sort_keys=True)}],
                     output='screen'))
+            elif robot_config.get('articulation') and not robot_free \
+                    and not _description_has_ros2_control(model_path):
+                # Other URDF robots: the shared contract drives the display
+                # hold's per-joint JointPositionControllers (R5.7).
+                joints = sorted(set(robot_config['articulation']['joints'])
+                                | set(robot_config['articulation'].get('couplings', {})))
+                from robot_lab_utils.gazebo_display import hold_command_topic
+                actions.append(Node(package='ros_gz_bridge', executable='parameter_bridge', output='screen',
+                    arguments=['%s@std_msgs/msg/Float64]ignition.msgs.Double' % hold_command_topic(robot_name, joint)
+                               for joint in joints]))
+                actions.append(Node(package='robot_lab_bringup', executable='urdf_gazebo_articulation.py',
+                    parameters=[{'use_sim_time': _as_bool(use_sim_time, True), 'model_path': model_path,
+                                 'robot_name': robot_name,
+                                 'articulation_config': json.dumps(robot_config['articulation'], sort_keys=True)}],
+                    output='screen'))
+                if robot_config.get('pick_place'):
+                    actions.append(Node(package='robot_lab_bringup', executable='urdf_pick_place.py', output='screen',
+                        parameters=[{'use_sim_time': _as_bool(use_sim_time, True), 'model_path': model_path,
+                                     'articulation_config': json.dumps(robot_config['articulation'], sort_keys=True),
+                                     'pick_place_config': json.dumps(robot_config['pick_place'], sort_keys=True),
+                                     'world_path': world_path or '', 'base_x': float(spawn_x), 'base_y': float(spawn_y),
+                                     'base_z': float(spawn_z), 'base_yaw': float(spawn_yaw)}]))
+            if world_path and os.path.isfile(str(world_path)):
+                from robot_lab_utils.sdf_world import extract_dynamic_bodies
+                if extract_dynamic_bodies(str(world_path)):
+                    # Truth for loose world objects, as on the other backends.
+                    actions.append(Node(package='ros_gz_bridge', executable='parameter_bridge', output='screen',
+                        arguments=['/world/%s/dynamic_pose/info@tf2_msgs/msg/TFMessage[ignition.msgs.Pose_V'
+                                   % world_name]))
+                    actions.append(Node(package='robot_lab_bringup', executable='gazebo_free_bodies.py',
+                        parameters=[{'use_sim_time': _as_bool(use_sim_time, True), 'world_path': str(world_path),
+                                     'world_name': world_name}], output='screen'))
             # Decided by the description itself: a profile can list the
             # ros2_control feature for a model that carries no
             # <ros2_control> block, and a spawner for it only waits and fails.

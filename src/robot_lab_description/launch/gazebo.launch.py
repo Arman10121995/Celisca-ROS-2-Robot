@@ -363,7 +363,8 @@ def generate_launch_description():
             executable="robot_state_publisher",
             parameters=[{
                 "robot_description": add_display_plugins(
-                    urdf, hold=_truthy("display_hold", context)),
+                    urdf, hold=_truthy("display_hold", context),
+                    model_name=LaunchConfiguration("robot_name").perform(context)),
                 "use_sim_time": use_sim_time}])]
         if not has_ros2_control(urdf):
             topic = joint_state_topic(

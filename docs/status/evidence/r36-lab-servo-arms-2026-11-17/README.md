@@ -51,4 +51,6 @@ all pass.
 
 - Joint control only; no planning or pick and place for these arms yet.
 - Gazebo needs a ros2_control description, which these URDFs do not ship.
+  (Later the same day: a Gazebo relay drives them without one; see
+  [the Gazebo receipt](../r57-gazebo-urdf-arms-2026-11-17/README.md).)
 - Isaac is not screened.

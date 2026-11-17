@@ -1,0 +1,12 @@
+{
+ "object": "pickup_cube",
+ "support": "place_table",
+ "home_reached": false,
+ "result": {
+  "passed": false,
+  "error": "articulation not ready: None",
+  "request": "{\"object\": \"pickup_cube\", \"support\": \"place_table\", \"lift\": 0.1}"
+ },
+ "final_message": "Not started: articulation not ready: None",
+ "passed": false
+}

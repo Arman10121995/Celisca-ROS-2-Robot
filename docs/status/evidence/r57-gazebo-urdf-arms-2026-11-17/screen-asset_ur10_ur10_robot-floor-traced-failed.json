@@ -1,0 +1,6069 @@
+{
+"phases": [
+{
+"joint": "elbow_joint",
+"out": {
+"target": -0.5,
+"settled_s": 1.37,
+"steady_error_rad": 0.0224,
+"base_inhibited_seen": true,
+"final": -0.5,
+"trace": [
+{
+"t": 0.05,
+"reference": -0.004899999999998527,
+"measured": {
+"elbow_joint": 0.0,
+"shoulder_lift_joint": 0.0,
+"shoulder_pan_joint": 0.0,
+"wrist_1_joint": 0.0,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": -0.0
+}
+},
+{
+"t": 0.11,
+"reference": -0.004899999999998527,
+"measured": {
+"elbow_joint": 0.0,
+"shoulder_lift_joint": 0.0,
+"shoulder_pan_joint": 0.0,
+"wrist_1_joint": 0.0,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": -0.0
+}
+},
+{
+"t": 0.17,
+"reference": -0.049000000000000196,
+"measured": {
+"elbow_joint": -0.042,
+"shoulder_lift_joint": -0.0005,
+"shoulder_pan_joint": 0.0,
+"wrist_1_joint": -0.0,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": -0.0
+}
+},
+{
+"t": 0.23,
+"reference": -0.049000000000000196,
+"measured": {
+"elbow_joint": -0.042,
+"shoulder_lift_joint": -0.0005,
+"shoulder_pan_joint": 0.0,
+"wrist_1_joint": -0.0,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": -0.0
+}
+},
+{
+"t": 0.29,
+"reference": -0.09029999999999844,
+"measured": {
+"elbow_joint": -0.0833,
+"shoulder_lift_joint": -0.0003,
+"shoulder_pan_joint": 0.0,
+"wrist_1_joint": -0.0,
+"wrist_2_joint": -0.0,
+"wrist_3_joint": -0.0
+}
+},
+{
+"t": 0.35,
+"reference": -0.1238999999999997,
+"measured": {
+"elbow_joint": -0.1169,
+"shoulder_lift_joint": -0.0001,
+"shoulder_pan_joint": 0.0,
+"wrist_1_joint": -0.0,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": -0.0
+}
+},
+{
+"t": 0.41,
+"reference": -0.1238999999999997,
+"measured": {
+"elbow_joint": -0.1169,
+"shoulder_lift_joint": -0.0001,
+"shoulder_pan_joint": 0.0,
+"wrist_1_joint": -0.0,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": -0.0
+}
+},
+{
+"t": 0.47,
+"reference": -0.16589999999999638,
+"measured": {
+"elbow_joint": -0.161,
+"shoulder_lift_joint": -0.0,
+"shoulder_pan_joint": 0.0,
+"wrist_1_joint": -0.0,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": -0.0
+}
+},
+{
+"t": 0.53,
+"reference": -0.16589999999999638,
+"measured": {
+"elbow_joint": -0.161,
+"shoulder_lift_joint": -0.0,
+"shoulder_pan_joint": 0.0,
+"wrist_1_joint": -0.0,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": -0.0
+}
+},
+{
+"t": 0.59,
+"reference": -0.20159999999999778,
+"measured": {
+"elbow_joint": -0.1932,
+"shoulder_lift_joint": -0.0,
+"shoulder_pan_joint": 0.0,
+"wrist_1_joint": -0.0,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": -0.0
+}
+},
+{
+"t": 0.65,
+"reference": -0.20159999999999778,
+"measured": {
+"elbow_joint": -0.1932,
+"shoulder_lift_joint": -0.0,
+"shoulder_pan_joint": 0.0,
+"wrist_1_joint": -0.0,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": -0.0
+}
+},
+{
+"t": 0.71,
+"reference": -0.23589999999999747,
+"measured": {
+"elbow_joint": -0.2314,
+"shoulder_lift_joint": -0.0,
+"shoulder_pan_joint": 0.0,
+"wrist_1_joint": -0.0,
+"wrist_2_joint": -0.0,
+"wrist_3_joint": -0.0
+}
+},
+{
+"t": 0.77,
+"reference": -0.23589999999999747,
+"measured": {
+"elbow_joint": -0.2314,
+"shoulder_lift_joint": -0.0,
+"shoulder_pan_joint": 0.0,
+"wrist_1_joint": -0.0,
+"wrist_2_joint": -0.0,
+"wrist_3_joint": -0.0
+}
+},
+{
+"t": 0.83,
+"reference": -0.27859999999999746,
+"measured": {
+"elbow_joint": -0.2743,
+"shoulder_lift_joint": -0.0,
+"shoulder_pan_joint": 0.0,
+"wrist_1_joint": -0.0,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": -0.0
+}
+},
+{
+"t": 0.89,
+"reference": -0.27859999999999746,
+"measured": {
+"elbow_joint": -0.2743,
+"shoulder_lift_joint": -0.0,
+"shoulder_pan_joint": 0.0,
+"wrist_1_joint": -0.0,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": -0.0
+}
+},
+{
+"t": 0.95,
+"reference": -0.32059999999999905,
+"measured": {
+"elbow_joint": -0.316,
+"shoulder_lift_joint": -0.0,
+"shoulder_pan_joint": 0.0,
+"wrist_1_joint": -0.0,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": -0.0
+}
+},
+{
+"t": 1.01,
+"reference": -0.3542000000000003,
+"measured": {
+"elbow_joint": -0.3483,
+"shoulder_lift_joint": -0.0,
+"shoulder_pan_joint": 0.0,
+"wrist_1_joint": -0.0,
+"wrist_2_joint": -0.0,
+"wrist_3_joint": -0.0
+}
+},
+{
+"t": 1.07,
+"reference": -0.3542000000000003,
+"measured": {
+"elbow_joint": -0.3483,
+"shoulder_lift_joint": -0.0,
+"shoulder_pan_joint": 0.0,
+"wrist_1_joint": -0.0,
+"wrist_2_joint": -0.0,
+"wrist_3_joint": -0.0
+}
+},
+{
+"t": 1.13,
+"reference": -0.39619999999999694,
+"measured": {
+"elbow_joint": -0.3892,
+"shoulder_lift_joint": 0.0,
+"shoulder_pan_joint": -0.0,
+"wrist_1_joint": 0.0,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": 0.0
+}
+},
+{
+"t": 1.19,
+"reference": -0.39619999999999694,
+"measured": {
+"elbow_joint": -0.3892,
+"shoulder_lift_joint": 0.0,
+"shoulder_pan_joint": -0.0,
+"wrist_1_joint": 0.0,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": 0.0
+}
+},
+{
+"t": 1.25,
+"reference": -0.43819999999999854,
+"measured": {
+"elbow_joint": -0.4309,
+"shoulder_lift_joint": 0.0,
+"shoulder_pan_joint": -0.0,
+"wrist_1_joint": 0.0,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": 0.0
+}
+},
+{
+"t": 1.31,
+"reference": -0.43819999999999854,
+"measured": {
+"elbow_joint": -0.4309,
+"shoulder_lift_joint": 0.0,
+"shoulder_pan_joint": -0.0,
+"wrist_1_joint": 0.0,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": 0.0
+}
+},
+{
+"t": 1.37,
+"reference": -0.4794999999999968,
+"measured": {
+"elbow_joint": -0.4776,
+"shoulder_lift_joint": -0.0,
+"shoulder_pan_joint": 0.0,
+"wrist_1_joint": -0.0,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": -0.0
+}
+},
+{
+"t": 1.43,
+"reference": -0.4794999999999968,
+"measured": {
+"elbow_joint": -0.4776,
+"shoulder_lift_joint": -0.0,
+"shoulder_pan_joint": 0.0,
+"wrist_1_joint": -0.0,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": -0.0
+}
+},
+{
+"t": 1.49,
+"reference": -0.5,
+"measured": {
+"elbow_joint": -0.5,
+"shoulder_lift_joint": -0.0,
+"shoulder_pan_joint": 0.0,
+"wrist_1_joint": -0.0,
+"wrist_2_joint": -0.0,
+"wrist_3_joint": -0.0
+}
+},
+{
+"t": 1.55,
+"reference": -0.5,
+"measured": {
+"elbow_joint": -0.5,
+"shoulder_lift_joint": -0.0,
+"shoulder_pan_joint": 0.0,
+"wrist_1_joint": -0.0,
+"wrist_2_joint": -0.0,
+"wrist_3_joint": -0.0
+}
+},
+{
+"t": 1.61,
+"reference": -0.5,
+"measured": {
+"elbow_joint": -0.5,
+"shoulder_lift_joint": 0.0,
+"shoulder_pan_joint": -0.0,
+"wrist_1_joint": 0.0,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": 0.0
+}
+},
+{
+"t": 1.67,
+"reference": -0.5,
+"measured": {
+"elbow_joint": -0.5,
+"shoulder_lift_joint": 0.0,
+"shoulder_pan_joint": -0.0,
+"wrist_1_joint": 0.0,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": 0.0
+}
+},
+{
+"t": 1.73,
+"reference": -0.5,
+"measured": {
+"elbow_joint": -0.5,
+"shoulder_lift_joint": 0.0,
+"shoulder_pan_joint": 0.0,
+"wrist_1_joint": 0.0,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": 0.0
+}
+},
+{
+"t": 1.79,
+"reference": -0.5,
+"measured": {
+"elbow_joint": -0.5,
+"shoulder_lift_joint": 0.0,
+"shoulder_pan_joint": 0.0,
+"wrist_1_joint": 0.0,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": 0.0
+}
+},
+{
+"t": 1.85,
+"reference": -0.5,
+"measured": {
+"elbow_joint": -0.5,
+"shoulder_lift_joint": 0.0,
+"shoulder_pan_joint": 0.0,
+"wrist_1_joint": 0.0,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": 0.0
+}
+},
+{
+"t": 1.91,
+"reference": -0.5,
+"measured": {
+"elbow_joint": -0.5,
+"shoulder_lift_joint": 0.0,
+"shoulder_pan_joint": 0.0,
+"wrist_1_joint": 0.0,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": 0.0
+}
+},
+{
+"t": 1.97,
+"reference": -0.5,
+"measured": {
+"elbow_joint": -0.5,
+"shoulder_lift_joint": 0.0,
+"shoulder_pan_joint": 0.0,
+"wrist_1_joint": 0.0,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": 0.0
+}
+},
+{
+"t": 2.03,
+"reference": -0.5,
+"measured": {
+"elbow_joint": -0.5,
+"shoulder_lift_joint": 0.0,
+"shoulder_pan_joint": 0.0,
+"wrist_1_joint": 0.0,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": 0.0
+}
+},
+{
+"t": 2.09,
+"reference": -0.5,
+"measured": {
+"elbow_joint": -0.5,
+"shoulder_lift_joint": 0.0,
+"shoulder_pan_joint": 0.0,
+"wrist_1_joint": 0.0,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": 0.0
+}
+},
+{
+"t": 2.15,
+"reference": -0.5,
+"measured": {
+"elbow_joint": -0.5,
+"shoulder_lift_joint": 0.0,
+"shoulder_pan_joint": 0.0,
+"wrist_1_joint": 0.0,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": 0.0
+}
+},
+{
+"t": 2.21,
+"reference": -0.5,
+"measured": {
+"elbow_joint": -0.5,
+"shoulder_lift_joint": 0.0,
+"shoulder_pan_joint": 0.0,
+"wrist_1_joint": 0.0,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": 0.0
+}
+},
+{
+"t": 2.27,
+"reference": -0.5,
+"measured": {
+"elbow_joint": -0.5,
+"shoulder_lift_joint": 0.0,
+"shoulder_pan_joint": 0.0,
+"wrist_1_joint": 0.0,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": 0.0
+}
+},
+{
+"t": 2.33,
+"reference": -0.5,
+"measured": {
+"elbow_joint": -0.5,
+"shoulder_lift_joint": 0.0,
+"shoulder_pan_joint": 0.0,
+"wrist_1_joint": 0.0,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": 0.0
+}
+},
+{
+"t": 2.39,
+"reference": -0.5,
+"measured": {
+"elbow_joint": -0.5,
+"shoulder_lift_joint": 0.0,
+"shoulder_pan_joint": 0.0,
+"wrist_1_joint": 0.0,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": 0.0
+}
+}
+]
+},
+"back": {
+"target": 0.0,
+"settled_s": 1.5,
+"steady_error_rad": 0.0044,
+"base_inhibited_seen": true,
+"final": 0.0,
+"trace": [
+{
+"t": 0.06,
+"reference": -0.5,
+"measured": {
+"elbow_joint": -0.5,
+"shoulder_lift_joint": 0.0,
+"shoulder_pan_joint": 0.0,
+"wrist_1_joint": 0.0,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": 0.0
+}
+},
+{
+"t": 0.12,
+"reference": -0.4594000000000001,
+"measured": {
+"elbow_joint": -0.4664,
+"shoulder_lift_joint": 0.0001,
+"shoulder_pan_joint": -0.0,
+"wrist_1_joint": 0.0,
+"wrist_2_joint": -0.0,
+"wrist_3_joint": 0.0
+}
+},
+{
+"t": 0.18,
+"reference": -0.4594000000000001,
+"measured": {
+"elbow_joint": -0.4664,
+"shoulder_lift_joint": 0.0001,
+"shoulder_pan_joint": -0.0,
+"wrist_1_joint": 0.0,
+"wrist_2_joint": -0.0,
+"wrist_3_joint": 0.0
+}
+},
+{
+"t": 0.24,
+"reference": -0.4243999999999971,
+"measured": {
+"elbow_joint": -0.4314,
+"shoulder_lift_joint": 0.001,
+"shoulder_pan_joint": -0.0,
+"wrist_1_joint": 0.0,
+"wrist_2_joint": -0.0,
+"wrist_3_joint": 0.0
+}
+},
+{
+"t": 0.3,
+"reference": -0.4243999999999971,
+"measured": {
+"elbow_joint": -0.4314,
+"shoulder_lift_joint": 0.001,
+"shoulder_pan_joint": -0.0,
+"wrist_1_joint": 0.0,
+"wrist_2_joint": -0.0,
+"wrist_3_joint": 0.0
+}
+},
+{
+"t": 0.36,
+"reference": -0.38240000000000046,
+"measured": {
+"elbow_joint": -0.3894,
+"shoulder_lift_joint": 0.0007,
+"shoulder_pan_joint": -0.0,
+"wrist_1_joint": 0.0,
+"wrist_2_joint": -0.0,
+"wrist_3_joint": 0.0
+}
+},
+{
+"t": 0.42,
+"reference": -0.38240000000000046,
+"measured": {
+"elbow_joint": -0.3894,
+"shoulder_lift_joint": 0.0007,
+"shoulder_pan_joint": -0.0,
+"wrist_1_joint": 0.0,
+"wrist_2_joint": -0.0,
+"wrist_3_joint": 0.0
+}
+},
+{
+"t": 0.48,
+"reference": -0.34039999999999887,
+"measured": {
+"elbow_joint": -0.3474,
+"shoulder_lift_joint": 0.0008,
+"shoulder_pan_joint": -0.0,
+"wrist_1_joint": 0.0,
+"wrist_2_joint": -0.0,
+"wrist_3_joint": 0.0
+}
+},
+{
+"t": 0.54,
+"reference": -0.34039999999999887,
+"measured": {
+"elbow_joint": -0.3474,
+"shoulder_lift_joint": 0.0008,
+"shoulder_pan_joint": -0.0,
+"wrist_1_joint": 0.0,
+"wrist_2_joint": -0.0,
+"wrist_3_joint": 0.0
+}
+},
+{
+"t": 0.6,
+"reference": -0.29979999999999896,
+"measured": {
+"elbow_joint": -0.3068,
+"shoulder_lift_joint": 0.0007,
+"shoulder_pan_joint": -0.0,
+"wrist_1_joint": 0.0,
+"wrist_2_joint": -0.0,
+"wrist_3_joint": 0.0
+}
+},
+{
+"t": 0.66,
+"reference": -0.29979999999999896,
+"measured": {
+"elbow_joint": -0.3068,
+"shoulder_lift_joint": 0.0007,
+"shoulder_pan_joint": -0.0,
+"wrist_1_joint": 0.0,
+"wrist_2_joint": -0.0,
+"wrist_3_joint": 0.0
+}
+},
+{
+"t": 0.72,
+"reference": -0.25779999999999736,
+"measured": {
+"elbow_joint": -0.2648,
+"shoulder_lift_joint": 0.0006,
+"shoulder_pan_joint": -0.0,
+"wrist_1_joint": 0.0,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": 0.0
+}
+},
+{
+"t": 0.78,
+"reference": -0.25779999999999736,
+"measured": {
+"elbow_joint": -0.2648,
+"shoulder_lift_joint": 0.0006,
+"shoulder_pan_joint": -0.0,
+"wrist_1_joint": 0.0,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": 0.0
+}
+},
+{
+"t": 0.84,
+"reference": -0.2227999999999993,
+"measured": {
+"elbow_joint": -0.2298,
+"shoulder_lift_joint": 0.0006,
+"shoulder_pan_joint": -0.0,
+"wrist_1_joint": 0.0,
+"wrist_2_joint": -0.0,
+"wrist_3_joint": 0.0
+}
+},
+{
+"t": 0.9,
+"reference": -0.2227999999999993,
+"measured": {
+"elbow_joint": -0.2298,
+"shoulder_lift_joint": 0.0006,
+"shoulder_pan_joint": -0.0,
+"wrist_1_joint": 0.0,
+"wrist_2_joint": -0.0,
+"wrist_3_joint": 0.0
+}
+},
+{
+"t": 0.96,
+"reference": -0.18079999999999766,
+"measured": {
+"elbow_joint": -0.1878,
+"shoulder_lift_joint": 0.0006,
+"shoulder_pan_joint": -0.0,
+"wrist_1_joint": 0.0,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": 0.0
+}
+},
+{
+"t": 1.02,
+"reference": -0.1457999999999996,
+"measured": {
+"elbow_joint": -0.1528,
+"shoulder_lift_joint": 0.0006,
+"shoulder_pan_joint": -0.0,
+"wrist_1_joint": 0.0,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": 0.0
+}
+},
+{
+"t": 1.08,
+"reference": -0.1457999999999996,
+"measured": {
+"elbow_joint": -0.1528,
+"shoulder_lift_joint": 0.0006,
+"shoulder_pan_joint": -0.0,
+"wrist_1_joint": 0.0,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": 0.0
+}
+},
+{
+"t": 1.14,
+"reference": -0.10379999999999799,
+"measured": {
+"elbow_joint": -0.105,
+"shoulder_lift_joint": 0.0,
+"shoulder_pan_joint": -0.0,
+"wrist_1_joint": 0.0,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": 0.0
+}
+},
+{
+"t": 1.2,
+"reference": -0.10379999999999799,
+"measured": {
+"elbow_joint": -0.105,
+"shoulder_lift_joint": 0.0,
+"shoulder_pan_joint": -0.0,
+"wrist_1_joint": 0.0,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": 0.0
+}
+},
+{
+"t": 1.26,
+"reference": -0.06879999999999999,
+"measured": {
+"elbow_joint": -0.0743,
+"shoulder_lift_joint": 0.0,
+"shoulder_pan_joint": -0.0,
+"wrist_1_joint": 0.0,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": 0.0
+}
+},
+{
+"t": 1.32,
+"reference": -0.06879999999999999,
+"measured": {
+"elbow_joint": -0.0743,
+"shoulder_lift_joint": 0.0,
+"shoulder_pan_joint": -0.0,
+"wrist_1_joint": 0.0,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": 0.0
+}
+},
+{
+"t": 1.38,
+"reference": -0.03660000000000044,
+"measured": {
+"elbow_joint": -0.0391,
+"shoulder_lift_joint": 0.0,
+"shoulder_pan_joint": -0.0,
+"wrist_1_joint": 0.0,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": 0.0
+}
+},
+{
+"t": 1.44,
+"reference": -0.03660000000000044,
+"measured": {
+"elbow_joint": -0.0391,
+"shoulder_lift_joint": 0.0,
+"shoulder_pan_joint": -0.0,
+"wrist_1_joint": 0.0,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": 0.0
+}
+},
+{
+"t": 1.5,
+"reference": 0.0,
+"measured": {
+"elbow_joint": -0.0044,
+"shoulder_lift_joint": 0.0,
+"shoulder_pan_joint": 0.0,
+"wrist_1_joint": 0.0,
+"wrist_2_joint": -0.0,
+"wrist_3_joint": 0.0
+}
+},
+{
+"t": 1.56,
+"reference": 0.0,
+"measured": {
+"elbow_joint": -0.0044,
+"shoulder_lift_joint": 0.0,
+"shoulder_pan_joint": 0.0,
+"wrist_1_joint": 0.0,
+"wrist_2_joint": -0.0,
+"wrist_3_joint": 0.0
+}
+},
+{
+"t": 1.62,
+"reference": 0.0,
+"measured": {
+"elbow_joint": 0.0,
+"shoulder_lift_joint": 0.0,
+"shoulder_pan_joint": 0.0,
+"wrist_1_joint": 0.0,
+"wrist_2_joint": -0.0,
+"wrist_3_joint": 0.0
+}
+},
+{
+"t": 1.68,
+"reference": 0.0,
+"measured": {
+"elbow_joint": 0.0,
+"shoulder_lift_joint": 0.0,
+"shoulder_pan_joint": 0.0,
+"wrist_1_joint": 0.0,
+"wrist_2_joint": -0.0,
+"wrist_3_joint": 0.0
+}
+},
+{
+"t": 1.74,
+"reference": 0.0,
+"measured": {
+"elbow_joint": 0.0,
+"shoulder_lift_joint": 0.0,
+"shoulder_pan_joint": 0.0,
+"wrist_1_joint": 0.0,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": 0.0
+}
+},
+{
+"t": 1.8,
+"reference": 0.0,
+"measured": {
+"elbow_joint": 0.0,
+"shoulder_lift_joint": 0.0,
+"shoulder_pan_joint": 0.0,
+"wrist_1_joint": 0.0,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": 0.0
+}
+},
+{
+"t": 1.86,
+"reference": 0.0,
+"measured": {
+"elbow_joint": 0.0,
+"shoulder_lift_joint": 0.0,
+"shoulder_pan_joint": 0.0,
+"wrist_1_joint": 0.0,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": -0.0
+}
+},
+{
+"t": 1.92,
+"reference": 0.0,
+"measured": {
+"elbow_joint": 0.0,
+"shoulder_lift_joint": 0.0,
+"shoulder_pan_joint": 0.0,
+"wrist_1_joint": 0.0,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": -0.0
+}
+},
+{
+"t": 1.99,
+"reference": 0.0,
+"measured": {
+"elbow_joint": 0.0,
+"shoulder_lift_joint": 0.0,
+"shoulder_pan_joint": 0.0,
+"wrist_1_joint": 0.0,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": 0.0
+}
+},
+{
+"t": 2.05,
+"reference": 0.0,
+"measured": {
+"elbow_joint": 0.0,
+"shoulder_lift_joint": 0.0,
+"shoulder_pan_joint": 0.0,
+"wrist_1_joint": 0.0,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": 0.0
+}
+},
+{
+"t": 2.11,
+"reference": 0.0,
+"measured": {
+"elbow_joint": 0.0,
+"shoulder_lift_joint": 0.0,
+"shoulder_pan_joint": 0.0,
+"wrist_1_joint": 0.0,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": 0.0
+}
+},
+{
+"t": 2.16,
+"reference": 0.0,
+"measured": {
+"elbow_joint": 0.0,
+"shoulder_lift_joint": 0.0,
+"shoulder_pan_joint": 0.0,
+"wrist_1_joint": 0.0,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": -0.0
+}
+},
+{
+"t": 2.22,
+"reference": 0.0,
+"measured": {
+"elbow_joint": 0.0,
+"shoulder_lift_joint": 0.0,
+"shoulder_pan_joint": 0.0,
+"wrist_1_joint": 0.0,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": -0.0
+}
+},
+{
+"t": 2.28,
+"reference": 0.0,
+"measured": {
+"elbow_joint": 0.0,
+"shoulder_lift_joint": 0.0,
+"shoulder_pan_joint": 0.0,
+"wrist_1_joint": 0.0,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": 0.0
+}
+},
+{
+"t": 2.34,
+"reference": 0.0,
+"measured": {
+"elbow_joint": 0.0,
+"shoulder_lift_joint": 0.0,
+"shoulder_pan_joint": 0.0,
+"wrist_1_joint": 0.0,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": 0.0
+}
+},
+{
+"t": 2.4,
+"reference": 0.0,
+"measured": {
+"elbow_joint": 0.0,
+"shoulder_lift_joint": 0.0,
+"shoulder_pan_joint": 0.0,
+"wrist_1_joint": 0.0,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": 0.0
+}
+},
+{
+"t": 2.46,
+"reference": 0.0,
+"measured": {
+"elbow_joint": 0.0,
+"shoulder_lift_joint": 0.0,
+"shoulder_pan_joint": 0.0,
+"wrist_1_joint": 0.0,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": 0.0
+}
+},
+{
+"t": 2.52,
+"reference": 0.0,
+"measured": {
+"elbow_joint": 0.0,
+"shoulder_lift_joint": 0.0,
+"shoulder_pan_joint": 0.0,
+"wrist_1_joint": 0.0,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": 0.0
+}
+}
+]
+},
+"blocked_direction": {
+"target": 0.5,
+"reached": 0.1199
+},
+"passed": true
+},
+{
+"joint": "shoulder_lift_joint",
+"out": {
+"target": -0.5,
+"settled_s": 1.49,
+"steady_error_rad": 0.0054,
+"base_inhibited_seen": true,
+"final": -0.5,
+"trace": [
+{
+"t": 0.05,
+"reference": -0.006999999999998607,
+"measured": {
+"elbow_joint": 0.0,
+"shoulder_lift_joint": 0.0,
+"shoulder_pan_joint": 0.0,
+"wrist_1_joint": 0.0,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": 0.0
+}
+},
+{
+"t": 0.11,
+"reference": -0.006999999999998607,
+"measured": {
+"elbow_joint": 0.0,
+"shoulder_lift_joint": 0.0,
+"shoulder_pan_joint": 0.0,
+"wrist_1_joint": 0.0,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": 0.0
+}
+},
+{
+"t": 0.17,
+"reference": -0.046900000000000115,
+"measured": {
+"elbow_joint": -0.0,
+"shoulder_lift_joint": -0.0443,
+"shoulder_pan_joint": 0.0,
+"wrist_1_joint": -0.0,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": -0.0
+}
+},
+{
+"t": 0.23,
+"reference": -0.046900000000000115,
+"measured": {
+"elbow_joint": -0.0,
+"shoulder_lift_joint": -0.0443,
+"shoulder_pan_joint": 0.0,
+"wrist_1_joint": -0.0,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": -0.0
+}
+},
+{
+"t": 0.29,
+"reference": -0.08819999999999836,
+"measured": {
+"elbow_joint": -0.0,
+"shoulder_lift_joint": -0.0827,
+"shoulder_pan_joint": 0.0,
+"wrist_1_joint": -0.0,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": -0.0
+}
+},
+{
+"t": 0.35,
+"reference": -0.122499999999998,
+"measured": {
+"elbow_joint": -0.0,
+"shoulder_lift_joint": -0.1184,
+"shoulder_pan_joint": 0.0,
+"wrist_1_joint": -0.0,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": -0.0
+}
+},
+{
+"t": 0.41,
+"reference": -0.122499999999998,
+"measured": {
+"elbow_joint": -0.0,
+"shoulder_lift_joint": -0.1184,
+"shoulder_pan_joint": 0.0,
+"wrist_1_joint": -0.0,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": -0.0
+}
+},
+{
+"t": 0.47,
+"reference": -0.15609999999999932,
+"measured": {
+"elbow_joint": -0.0,
+"shoulder_lift_joint": -0.1512,
+"shoulder_pan_joint": 0.0,
+"wrist_1_joint": -0.0,
+"wrist_2_joint": -0.0,
+"wrist_3_joint": -0.0
+}
+},
+{
+"t": 0.53,
+"reference": -0.15609999999999932,
+"measured": {
+"elbow_joint": -0.0,
+"shoulder_lift_joint": -0.1512,
+"shoulder_pan_joint": 0.0,
+"wrist_1_joint": -0.0,
+"wrist_2_joint": -0.0,
+"wrist_3_joint": -0.0
+}
+},
+{
+"t": 0.59,
+"reference": -0.19810000000000097,
+"measured": {
+"elbow_joint": -0.0,
+"shoulder_lift_joint": -0.1944,
+"shoulder_pan_joint": 0.0,
+"wrist_1_joint": -0.0,
+"wrist_2_joint": -0.0,
+"wrist_3_joint": -0.0
+}
+},
+{
+"t": 0.65,
+"reference": -0.19810000000000097,
+"measured": {
+"elbow_joint": -0.0,
+"shoulder_lift_joint": -0.1944,
+"shoulder_pan_joint": 0.0,
+"wrist_1_joint": -0.0,
+"wrist_2_joint": -0.0,
+"wrist_3_joint": -0.0
+}
+},
+{
+"t": 0.71,
+"reference": -0.24080000000000099,
+"measured": {
+"elbow_joint": -0.0,
+"shoulder_lift_joint": -0.2367,
+"shoulder_pan_joint": 0.0,
+"wrist_1_joint": -0.0,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": -0.0
+}
+},
+{
+"t": 0.77,
+"reference": -0.24080000000000099,
+"measured": {
+"elbow_joint": -0.0,
+"shoulder_lift_joint": -0.2367,
+"shoulder_pan_joint": 0.0,
+"wrist_1_joint": -0.0,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": -0.0
+}
+},
+{
+"t": 0.83,
+"reference": -0.2743999999999973,
+"measured": {
+"elbow_joint": -0.0,
+"shoulder_lift_joint": -0.2691,
+"shoulder_pan_joint": 0.0,
+"wrist_1_joint": -0.0,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": -0.0
+}
+},
+{
+"t": 0.89,
+"reference": -0.3094000000000003,
+"measured": {
+"elbow_joint": -0.0,
+"shoulder_lift_joint": -0.3051,
+"shoulder_pan_joint": 0.0,
+"wrist_1_joint": -0.0,
+"wrist_2_joint": -0.0,
+"wrist_3_joint": -0.0
+}
+},
+{
+"t": 0.95,
+"reference": -0.3094000000000003,
+"measured": {
+"elbow_joint": -0.0,
+"shoulder_lift_joint": -0.3051,
+"shoulder_pan_joint": 0.0,
+"wrist_1_joint": -0.0,
+"wrist_2_joint": -0.0,
+"wrist_3_joint": -0.0
+}
+},
+{
+"t": 1.01,
+"reference": -0.34859999999999847,
+"measured": {
+"elbow_joint": -0.0,
+"shoulder_lift_joint": -0.3423,
+"shoulder_pan_joint": 0.0,
+"wrist_1_joint": -0.0,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": -0.0
+}
+},
+{
+"t": 1.07,
+"reference": -0.34859999999999847,
+"measured": {
+"elbow_joint": -0.0,
+"shoulder_lift_joint": -0.3423,
+"shoulder_pan_joint": 0.0,
+"wrist_1_joint": -0.0,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": -0.0
+}
+},
+{
+"t": 1.13,
+"reference": -0.3891999999999984,
+"measured": {
+"elbow_joint": -0.0,
+"shoulder_lift_joint": -0.384,
+"shoulder_pan_joint": 0.0,
+"wrist_1_joint": -0.0,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": -0.0
+}
+},
+{
+"t": 1.19,
+"reference": -0.3891999999999984,
+"measured": {
+"elbow_joint": -0.0,
+"shoulder_lift_joint": -0.384,
+"shoulder_pan_joint": 0.0,
+"wrist_1_joint": -0.0,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": -0.0
+}
+},
+{
+"t": 1.25,
+"reference": -0.43119999999999997,
+"measured": {
+"elbow_joint": -0.0,
+"shoulder_lift_joint": -0.4237,
+"shoulder_pan_joint": 0.0,
+"wrist_1_joint": -0.0,
+"wrist_2_joint": -0.0,
+"wrist_3_joint": -0.0
+}
+},
+{
+"t": 1.31,
+"reference": -0.43119999999999997,
+"measured": {
+"elbow_joint": -0.0,
+"shoulder_lift_joint": -0.4237,
+"shoulder_pan_joint": 0.0,
+"wrist_1_joint": -0.0,
+"wrist_2_joint": -0.0,
+"wrist_3_joint": -0.0
+}
+},
+{
+"t": 1.37,
+"reference": -0.466199999999998,
+"measured": {
+"elbow_joint": 0.0,
+"shoulder_lift_joint": -0.4579,
+"shoulder_pan_joint": -0.0,
+"wrist_1_joint": 0.0,
+"wrist_2_joint": -0.0,
+"wrist_3_joint": 0.0
+}
+},
+{
+"t": 1.43,
+"reference": -0.466199999999998,
+"measured": {
+"elbow_joint": 0.0,
+"shoulder_lift_joint": -0.4579,
+"shoulder_pan_joint": -0.0,
+"wrist_1_joint": 0.0,
+"wrist_2_joint": -0.0,
+"wrist_3_joint": 0.0
+}
+},
+{
+"t": 1.49,
+"reference": -0.5,
+"measured": {
+"elbow_joint": -0.0,
+"shoulder_lift_joint": -0.5054,
+"shoulder_pan_joint": 0.0,
+"wrist_1_joint": -0.0,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": -0.0
+}
+},
+{
+"t": 1.55,
+"reference": -0.5,
+"measured": {
+"elbow_joint": -0.0,
+"shoulder_lift_joint": -0.5054,
+"shoulder_pan_joint": 0.0,
+"wrist_1_joint": -0.0,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": -0.0
+}
+},
+{
+"t": 1.61,
+"reference": -0.5,
+"measured": {
+"elbow_joint": -0.0,
+"shoulder_lift_joint": -0.5027,
+"shoulder_pan_joint": 0.0,
+"wrist_1_joint": -0.0,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": -0.0
+}
+},
+{
+"t": 1.67,
+"reference": -0.5,
+"measured": {
+"elbow_joint": -0.0,
+"shoulder_lift_joint": -0.5027,
+"shoulder_pan_joint": 0.0,
+"wrist_1_joint": -0.0,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": -0.0
+}
+},
+{
+"t": 1.73,
+"reference": -0.5,
+"measured": {
+"elbow_joint": -0.0,
+"shoulder_lift_joint": -0.5,
+"shoulder_pan_joint": 0.0,
+"wrist_1_joint": -0.0,
+"wrist_2_joint": -0.0,
+"wrist_3_joint": -0.0
+}
+},
+{
+"t": 1.79,
+"reference": -0.5,
+"measured": {
+"elbow_joint": 0.0,
+"shoulder_lift_joint": -0.5,
+"shoulder_pan_joint": -0.0,
+"wrist_1_joint": 0.0,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": 0.0
+}
+},
+{
+"t": 1.85,
+"reference": -0.5,
+"measured": {
+"elbow_joint": 0.0,
+"shoulder_lift_joint": -0.5,
+"shoulder_pan_joint": -0.0,
+"wrist_1_joint": 0.0,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": 0.0
+}
+},
+{
+"t": 1.91,
+"reference": -0.5,
+"measured": {
+"elbow_joint": 0.0,
+"shoulder_lift_joint": -0.5,
+"shoulder_pan_joint": 0.0,
+"wrist_1_joint": 0.0,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": 0.0
+}
+},
+{
+"t": 1.97,
+"reference": -0.5,
+"measured": {
+"elbow_joint": 0.0,
+"shoulder_lift_joint": -0.5,
+"shoulder_pan_joint": 0.0,
+"wrist_1_joint": 0.0,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": 0.0
+}
+},
+{
+"t": 2.03,
+"reference": -0.5,
+"measured": {
+"elbow_joint": 0.0,
+"shoulder_lift_joint": -0.5,
+"shoulder_pan_joint": 0.0,
+"wrist_1_joint": 0.0,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": 0.0
+}
+},
+{
+"t": 2.09,
+"reference": -0.5,
+"measured": {
+"elbow_joint": 0.0,
+"shoulder_lift_joint": -0.5,
+"shoulder_pan_joint": 0.0,
+"wrist_1_joint": 0.0,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": 0.0
+}
+},
+{
+"t": 2.15,
+"reference": -0.5,
+"measured": {
+"elbow_joint": 0.0,
+"shoulder_lift_joint": -0.5,
+"shoulder_pan_joint": 0.0,
+"wrist_1_joint": 0.0,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": -0.0
+}
+},
+{
+"t": 2.21,
+"reference": -0.5,
+"measured": {
+"elbow_joint": 0.0,
+"shoulder_lift_joint": -0.5,
+"shoulder_pan_joint": 0.0,
+"wrist_1_joint": 0.0,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": -0.0
+}
+},
+{
+"t": 2.27,
+"reference": -0.5,
+"measured": {
+"elbow_joint": 0.0,
+"shoulder_lift_joint": -0.5,
+"shoulder_pan_joint": 0.0,
+"wrist_1_joint": 0.0,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": -0.0
+}
+},
+{
+"t": 2.33,
+"reference": -0.5,
+"measured": {
+"elbow_joint": 0.0,
+"shoulder_lift_joint": -0.5,
+"shoulder_pan_joint": 0.0,
+"wrist_1_joint": 0.0,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": -0.0
+}
+},
+{
+"t": 2.39,
+"reference": -0.5,
+"measured": {
+"elbow_joint": 0.0,
+"shoulder_lift_joint": -0.5,
+"shoulder_pan_joint": 0.0,
+"wrist_1_joint": 0.0,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": -0.0
+}
+},
+{
+"t": 2.45,
+"reference": -0.5,
+"measured": {
+"elbow_joint": 0.0,
+"shoulder_lift_joint": -0.5,
+"shoulder_pan_joint": 0.0,
+"wrist_1_joint": 0.0,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": 0.0
+}
+},
+{
+"t": 2.51,
+"reference": -0.5,
+"measured": {
+"elbow_joint": 0.0,
+"shoulder_lift_joint": -0.5,
+"shoulder_pan_joint": 0.0,
+"wrist_1_joint": 0.0,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": 0.0
+}
+}
+]
+},
+"back": {
+"target": 0.0,
+"settled_s": 1.44,
+"steady_error_rad": 0.0264,
+"base_inhibited_seen": true,
+"final": 0.0,
+"trace": [
+{
+"t": 0.06,
+"reference": -0.4789999999999992,
+"measured": {
+"elbow_joint": 0.0,
+"shoulder_lift_joint": -0.4802,
+"shoulder_pan_joint": -0.0,
+"wrist_1_joint": 0.0,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": 0.0
+}
+},
+{
+"t": 0.12,
+"reference": -0.4789999999999992,
+"measured": {
+"elbow_joint": 0.0,
+"shoulder_lift_joint": -0.4802,
+"shoulder_pan_joint": -0.0,
+"wrist_1_joint": 0.0,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": 0.0
+}
+},
+{
+"t": 0.18,
+"reference": -0.4453999999999979,
+"measured": {
+"elbow_joint": 0.0,
+"shoulder_lift_joint": -0.4505,
+"shoulder_pan_joint": -0.0,
+"wrist_1_joint": 0.0,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": 0.0
+}
+},
+{
+"t": 0.24,
+"reference": -0.4453999999999979,
+"measured": {
+"elbow_joint": 0.0,
+"shoulder_lift_joint": -0.4505,
+"shoulder_pan_joint": -0.0,
+"wrist_1_joint": 0.0,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": 0.0
+}
+},
+{
+"t": 0.3,
+"reference": -0.404799999999998,
+"measured": {
+"elbow_joint": 0.0,
+"shoulder_lift_joint": -0.4078,
+"shoulder_pan_joint": -0.0,
+"wrist_1_joint": 0.0,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": 0.0
+}
+},
+{
+"t": 0.36,
+"reference": -0.404799999999998,
+"measured": {
+"elbow_joint": 0.0,
+"shoulder_lift_joint": -0.4078,
+"shoulder_pan_joint": -0.0,
+"wrist_1_joint": 0.0,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": 0.0
+}
+},
+{
+"t": 0.42,
+"reference": -0.3634999999999997,
+"measured": {
+"elbow_joint": 0.0,
+"shoulder_lift_joint": -0.3646,
+"shoulder_pan_joint": -0.0,
+"wrist_1_joint": 0.0,
+"wrist_2_joint": -0.0,
+"wrist_3_joint": 0.0
+}
+},
+{
+"t": 0.48,
+"reference": -0.3634999999999997,
+"measured": {
+"elbow_joint": 0.0,
+"shoulder_lift_joint": -0.3646,
+"shoulder_pan_joint": -0.0,
+"wrist_1_joint": 0.0,
+"wrist_2_joint": -0.0,
+"wrist_3_joint": 0.0
+}
+},
+{
+"t": 0.54,
+"reference": -0.32220000000000143,
+"measured": {
+"elbow_joint": 0.0,
+"shoulder_lift_joint": -0.326,
+"shoulder_pan_joint": -0.0,
+"wrist_1_joint": 0.0,
+"wrist_2_joint": -0.0,
+"wrist_3_joint": 0.0
+}
+},
+{
+"t": 0.6,
+"reference": -0.32220000000000143,
+"measured": {
+"elbow_joint": 0.0,
+"shoulder_lift_joint": -0.326,
+"shoulder_pan_joint": -0.0,
+"wrist_1_joint": 0.0,
+"wrist_2_joint": -0.0,
+"wrist_3_joint": 0.0
+}
+},
+{
+"t": 0.66,
+"reference": -0.28019999999999984,
+"measured": {
+"elbow_joint": 0.0,
+"shoulder_lift_joint": -0.2843,
+"shoulder_pan_joint": -0.0,
+"wrist_1_joint": 0.0,
+"wrist_2_joint": -0.0,
+"wrist_3_joint": 0.0
+}
+},
+{
+"t": 0.72,
+"reference": -0.28019999999999984,
+"measured": {
+"elbow_joint": 0.0,
+"shoulder_lift_joint": -0.2843,
+"shoulder_pan_joint": -0.0,
+"wrist_1_joint": 0.0,
+"wrist_2_joint": -0.0,
+"wrist_3_joint": 0.0
+}
+},
+{
+"t": 0.78,
+"reference": -0.23819999999999822,
+"measured": {
+"elbow_joint": 0.0,
+"shoulder_lift_joint": -0.2426,
+"shoulder_pan_joint": -0.0,
+"wrist_1_joint": 0.0,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": 0.0
+}
+},
+{
+"t": 0.84,
+"reference": -0.23819999999999822,
+"measured": {
+"elbow_joint": 0.0,
+"shoulder_lift_joint": -0.2426,
+"shoulder_pan_joint": -0.0,
+"wrist_1_joint": 0.0,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": 0.0
+}
+},
+{
+"t": 0.9,
+"reference": -0.20389999999999853,
+"measured": {
+"elbow_joint": 0.0,
+"shoulder_lift_joint": -0.2082,
+"shoulder_pan_joint": -0.0,
+"wrist_1_joint": 0.0,
+"wrist_2_joint": -0.0,
+"wrist_3_joint": 0.0
+}
+},
+{
+"t": 0.96,
+"reference": -0.16819999999999713,
+"measured": {
+"elbow_joint": 0.0,
+"shoulder_lift_joint": -0.171,
+"shoulder_pan_joint": -0.0,
+"wrist_1_joint": 0.0,
+"wrist_2_joint": -0.0,
+"wrist_3_joint": 0.0
+}
+},
+{
+"t": 1.02,
+"reference": -0.16819999999999713,
+"measured": {
+"elbow_joint": 0.0,
+"shoulder_lift_joint": -0.171,
+"shoulder_pan_joint": -0.0,
+"wrist_1_joint": 0.0,
+"wrist_2_joint": -0.0,
+"wrist_3_joint": 0.0
+}
+},
+{
+"t": 1.08,
+"reference": -0.13040000000000063,
+"measured": {
+"elbow_joint": 0.0,
+"shoulder_lift_joint": -0.1345,
+"shoulder_pan_joint": -0.0,
+"wrist_1_joint": 0.0,
+"wrist_2_joint": -0.0,
+"wrist_3_joint": 0.0
+}
+},
+{
+"t": 1.14,
+"reference": -0.13040000000000063,
+"measured": {
+"elbow_joint": 0.0,
+"shoulder_lift_joint": -0.1345,
+"shoulder_pan_joint": -0.0,
+"wrist_1_joint": 0.0,
+"wrist_2_joint": -0.0,
+"wrist_3_joint": 0.0
+}
+},
+{
+"t": 1.2,
+"reference": -0.09329999999999757,
+"measured": {
+"elbow_joint": -0.0,
+"shoulder_lift_joint": -0.1043,
+"shoulder_pan_joint": 0.0,
+"wrist_1_joint": -0.0,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": -0.0
+}
+},
+{
+"t": 1.25,
+"reference": -0.09329999999999757,
+"measured": {
+"elbow_joint": -0.0,
+"shoulder_lift_joint": -0.1043,
+"shoulder_pan_joint": 0.0,
+"wrist_1_joint": -0.0,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": -0.0
+}
+},
+{
+"t": 1.32,
+"reference": -0.06249999999999972,
+"measured": {
+"elbow_joint": -0.0,
+"shoulder_lift_joint": -0.0704,
+"shoulder_pan_joint": 0.0,
+"wrist_1_joint": -0.0,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": -0.0
+}
+},
+{
+"t": 1.38,
+"reference": -0.06249999999999972,
+"measured": {
+"elbow_joint": -0.0,
+"shoulder_lift_joint": -0.0704,
+"shoulder_pan_joint": 0.0,
+"wrist_1_joint": -0.0,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": -0.0
+}
+},
+{
+"t": 1.44,
+"reference": -0.022599999999998222,
+"measured": {
+"elbow_joint": 0.0,
+"shoulder_lift_joint": -0.0264,
+"shoulder_pan_joint": -0.0,
+"wrist_1_joint": 0.0,
+"wrist_2_joint": -0.0,
+"wrist_3_joint": 0.0
+}
+},
+{
+"t": 1.5,
+"reference": -0.022599999999998222,
+"measured": {
+"elbow_joint": 0.0,
+"shoulder_lift_joint": -0.0264,
+"shoulder_pan_joint": -0.0,
+"wrist_1_joint": 0.0,
+"wrist_2_joint": -0.0,
+"wrist_3_joint": 0.0
+}
+},
+{
+"t": 1.56,
+"reference": 0.0,
+"measured": {
+"elbow_joint": 0.0,
+"shoulder_lift_joint": 0.0086,
+"shoulder_pan_joint": 0.0,
+"wrist_1_joint": 0.0,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": 0.0
+}
+},
+{
+"t": 1.62,
+"reference": 0.0,
+"measured": {
+"elbow_joint": 0.0,
+"shoulder_lift_joint": 0.0086,
+"shoulder_pan_joint": 0.0,
+"wrist_1_joint": 0.0,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": 0.0
+}
+},
+{
+"t": 1.68,
+"reference": 0.0,
+"measured": {
+"elbow_joint": -0.0,
+"shoulder_lift_joint": -0.0007,
+"shoulder_pan_joint": -0.0,
+"wrist_1_joint": -0.0,
+"wrist_2_joint": -0.0,
+"wrist_3_joint": -0.0
+}
+},
+{
+"t": 1.74,
+"reference": 0.0,
+"measured": {
+"elbow_joint": -0.0,
+"shoulder_lift_joint": -0.0007,
+"shoulder_pan_joint": -0.0,
+"wrist_1_joint": -0.0,
+"wrist_2_joint": -0.0,
+"wrist_3_joint": -0.0
+}
+},
+{
+"t": 1.8,
+"reference": 0.0,
+"measured": {
+"elbow_joint": -0.0,
+"shoulder_lift_joint": -0.0,
+"shoulder_pan_joint": -0.0,
+"wrist_1_joint": -0.0,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": -0.0
+}
+},
+{
+"t": 1.86,
+"reference": 0.0,
+"measured": {
+"elbow_joint": -0.0,
+"shoulder_lift_joint": -0.0,
+"shoulder_pan_joint": -0.0,
+"wrist_1_joint": -0.0,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": -0.0
+}
+},
+{
+"t": 1.92,
+"reference": 0.0,
+"measured": {
+"elbow_joint": 0.0,
+"shoulder_lift_joint": 0.0,
+"shoulder_pan_joint": 0.0,
+"wrist_1_joint": 0.0,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": -0.0
+}
+},
+{
+"t": 1.98,
+"reference": 0.0,
+"measured": {
+"elbow_joint": 0.0,
+"shoulder_lift_joint": 0.0,
+"shoulder_pan_joint": 0.0,
+"wrist_1_joint": 0.0,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": -0.0
+}
+},
+{
+"t": 2.04,
+"reference": 0.0,
+"measured": {
+"elbow_joint": 0.0,
+"shoulder_lift_joint": 0.0,
+"shoulder_pan_joint": 0.0,
+"wrist_1_joint": 0.0,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": 0.0
+}
+},
+{
+"t": 2.1,
+"reference": 0.0,
+"measured": {
+"elbow_joint": 0.0,
+"shoulder_lift_joint": 0.0,
+"shoulder_pan_joint": 0.0,
+"wrist_1_joint": 0.0,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": -0.0
+}
+},
+{
+"t": 2.16,
+"reference": 0.0,
+"measured": {
+"elbow_joint": 0.0,
+"shoulder_lift_joint": 0.0,
+"shoulder_pan_joint": 0.0,
+"wrist_1_joint": 0.0,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": -0.0
+}
+},
+{
+"t": 2.22,
+"reference": 0.0,
+"measured": {
+"elbow_joint": 0.0,
+"shoulder_lift_joint": 0.0,
+"shoulder_pan_joint": 0.0,
+"wrist_1_joint": 0.0,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": 0.0
+}
+},
+{
+"t": 2.28,
+"reference": 0.0,
+"measured": {
+"elbow_joint": 0.0,
+"shoulder_lift_joint": 0.0,
+"shoulder_pan_joint": 0.0,
+"wrist_1_joint": 0.0,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": 0.0
+}
+},
+{
+"t": 2.34,
+"reference": 0.0,
+"measured": {
+"elbow_joint": 0.0,
+"shoulder_lift_joint": 0.0,
+"shoulder_pan_joint": 0.0,
+"wrist_1_joint": 0.0,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": 0.0
+}
+},
+{
+"t": 2.4,
+"reference": 0.0,
+"measured": {
+"elbow_joint": 0.0,
+"shoulder_lift_joint": 0.0,
+"shoulder_pan_joint": 0.0,
+"wrist_1_joint": 0.0,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": 0.0
+}
+},
+{
+"t": 2.46,
+"reference": 0.0,
+"measured": {
+"elbow_joint": 0.0,
+"shoulder_lift_joint": 0.0,
+"shoulder_pan_joint": 0.0,
+"wrist_1_joint": 0.0,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": -0.0
+}
+}
+]
+},
+"blocked_direction": {
+"target": 0.5,
+"reached": 0.0556
+},
+"passed": true
+},
+{
+"joint": "shoulder_pan_joint",
+"out": {
+"target": 0.5,
+"settled_s": 1.44,
+"steady_error_rad": 0.0211,
+"base_inhibited_seen": true,
+"final": 0.5,
+"trace": [
+{
+"t": 0.06,
+"reference": 0.0,
+"measured": {
+"elbow_joint": 0.0,
+"shoulder_lift_joint": 0.0,
+"shoulder_pan_joint": 0.0,
+"wrist_1_joint": 0.0,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": -0.0
+}
+},
+{
+"t": 0.12,
+"reference": 0.0279999999999994,
+"measured": {
+"elbow_joint": 0.0,
+"shoulder_lift_joint": 0.0,
+"shoulder_pan_joint": 0.0227,
+"wrist_1_joint": 0.0,
+"wrist_2_joint": -0.0,
+"wrist_3_joint": -0.0
+}
+},
+{
+"t": 0.18,
+"reference": 0.05949999999999561,
+"measured": {
+"elbow_joint": -0.0,
+"shoulder_lift_joint": -0.0,
+"shoulder_pan_joint": 0.0546,
+"wrist_1_joint": -0.0,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": -0.0
+}
+},
+{
+"t": 0.24,
+"reference": 0.05949999999999561,
+"measured": {
+"elbow_joint": -0.0,
+"shoulder_lift_joint": -0.0,
+"shoulder_pan_joint": 0.0546,
+"wrist_1_joint": -0.0,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": -0.0
+}
+},
+{
+"t": 0.3,
+"reference": 0.0930999999999969,
+"measured": {
+"elbow_joint": -0.0,
+"shoulder_lift_joint": -0.0,
+"shoulder_pan_joint": 0.0833,
+"wrist_1_joint": -0.0,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": 0.0
+}
+},
+{
+"t": 0.36,
+"reference": 0.0930999999999969,
+"measured": {
+"elbow_joint": -0.0,
+"shoulder_lift_joint": -0.0,
+"shoulder_pan_joint": 0.0833,
+"wrist_1_joint": -0.0,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": 0.0
+}
+},
+{
+"t": 0.42,
+"reference": 0.13439999999999513,
+"measured": {
+"elbow_joint": 0.0,
+"shoulder_lift_joint": 0.0,
+"shoulder_pan_joint": 0.1387,
+"wrist_1_joint": 0.0,
+"wrist_2_joint": -0.0,
+"wrist_3_joint": -0.0
+}
+},
+{
+"t": 0.48,
+"reference": 0.13439999999999513,
+"measured": {
+"elbow_joint": 0.0,
+"shoulder_lift_joint": 0.0,
+"shoulder_pan_joint": 0.1387,
+"wrist_1_joint": 0.0,
+"wrist_2_joint": -0.0,
+"wrist_3_joint": -0.0
+}
+},
+{
+"t": 0.54,
+"reference": 0.17709999999999515,
+"measured": {
+"elbow_joint": 0.0,
+"shoulder_lift_joint": 0.0,
+"shoulder_pan_joint": 0.1831,
+"wrist_1_joint": 0.0,
+"wrist_2_joint": -0.0,
+"wrist_3_joint": -0.0
+}
+},
+{
+"t": 0.6,
+"reference": 0.17709999999999515,
+"measured": {
+"elbow_joint": 0.0,
+"shoulder_lift_joint": 0.0,
+"shoulder_pan_joint": 0.1831,
+"wrist_1_joint": 0.0,
+"wrist_2_joint": -0.0,
+"wrist_3_joint": -0.0
+}
+},
+{
+"t": 0.66,
+"reference": 0.21770000000000006,
+"measured": {
+"elbow_joint": -0.0,
+"shoulder_lift_joint": -0.0,
+"shoulder_pan_joint": 0.2105,
+"wrist_1_joint": -0.0,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": 0.0
+}
+},
+{
+"t": 0.72,
+"reference": 0.21770000000000006,
+"measured": {
+"elbow_joint": -0.0,
+"shoulder_lift_joint": -0.0,
+"shoulder_pan_joint": 0.2105,
+"wrist_1_joint": -0.0,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": 0.0
+}
+},
+{
+"t": 0.78,
+"reference": 0.2596999999999967,
+"measured": {
+"elbow_joint": -0.0,
+"shoulder_lift_joint": -0.0,
+"shoulder_pan_joint": 0.2504,
+"wrist_1_joint": -0.0,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": -0.0
+}
+},
+{
+"t": 0.84,
+"reference": 0.2596999999999967,
+"measured": {
+"elbow_joint": -0.0,
+"shoulder_lift_joint": -0.0,
+"shoulder_pan_joint": 0.2504,
+"wrist_1_joint": -0.0,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": -0.0
+}
+},
+{
+"t": 0.9,
+"reference": 0.2939999999999964,
+"measured": {
+"elbow_joint": 0.0,
+"shoulder_lift_joint": 0.0,
+"shoulder_pan_joint": 0.2901,
+"wrist_1_joint": 0.0,
+"wrist_2_joint": -0.0,
+"wrist_3_joint": 0.0
+}
+},
+{
+"t": 0.96,
+"reference": 0.2939999999999964,
+"measured": {
+"elbow_joint": 0.0,
+"shoulder_lift_joint": 0.0,
+"shoulder_pan_joint": 0.2901,
+"wrist_1_joint": 0.0,
+"wrist_2_joint": -0.0,
+"wrist_3_joint": 0.0
+}
+},
+{
+"t": 1.02,
+"reference": 0.3345999999999963,
+"measured": {
+"elbow_joint": 0.0,
+"shoulder_lift_joint": 0.0,
+"shoulder_pan_joint": 0.3285,
+"wrist_1_joint": 0.0,
+"wrist_2_joint": -0.0,
+"wrist_3_joint": -0.0
+}
+},
+{
+"t": 1.08,
+"reference": 0.3345999999999963,
+"measured": {
+"elbow_joint": 0.0,
+"shoulder_lift_joint": 0.0,
+"shoulder_pan_joint": 0.3285,
+"wrist_1_joint": 0.0,
+"wrist_2_joint": -0.0,
+"wrist_3_joint": -0.0
+}
+},
+{
+"t": 1.14,
+"reference": 0.3765999999999979,
+"measured": {
+"elbow_joint": 0.0,
+"shoulder_lift_joint": 0.0,
+"shoulder_pan_joint": 0.3724,
+"wrist_1_joint": 0.0,
+"wrist_2_joint": -0.0,
+"wrist_3_joint": -0.0
+}
+},
+{
+"t": 1.2,
+"reference": 0.3765999999999979,
+"measured": {
+"elbow_joint": 0.0,
+"shoulder_lift_joint": 0.0,
+"shoulder_pan_joint": 0.3724,
+"wrist_1_joint": 0.0,
+"wrist_2_joint": -0.0,
+"wrist_3_joint": -0.0
+}
+},
+{
+"t": 1.26,
+"reference": 0.41089999999999754,
+"measured": {
+"elbow_joint": 0.0,
+"shoulder_lift_joint": 0.0,
+"shoulder_pan_joint": 0.4054,
+"wrist_1_joint": 0.0,
+"wrist_2_joint": -0.0,
+"wrist_3_joint": 0.0
+}
+},
+{
+"t": 1.32,
+"reference": 0.4521999999999958,
+"measured": {
+"elbow_joint": 0.0,
+"shoulder_lift_joint": 0.0,
+"shoulder_pan_joint": 0.447,
+"wrist_1_joint": 0.0,
+"wrist_2_joint": -0.0,
+"wrist_3_joint": -0.0
+}
+},
+{
+"t": 1.38,
+"reference": 0.4521999999999958,
+"measured": {
+"elbow_joint": 0.0,
+"shoulder_lift_joint": 0.0,
+"shoulder_pan_joint": 0.447,
+"wrist_1_joint": 0.0,
+"wrist_2_joint": -0.0,
+"wrist_3_joint": -0.0
+}
+},
+{
+"t": 1.44,
+"reference": 0.4850999999999987,
+"measured": {
+"elbow_joint": 0.0,
+"shoulder_lift_joint": 0.0,
+"shoulder_pan_joint": 0.4789,
+"wrist_1_joint": 0.0,
+"wrist_2_joint": -0.0,
+"wrist_3_joint": 0.0
+}
+},
+{
+"t": 1.5,
+"reference": 0.4850999999999987,
+"measured": {
+"elbow_joint": 0.0,
+"shoulder_lift_joint": 0.0,
+"shoulder_pan_joint": 0.4789,
+"wrist_1_joint": 0.0,
+"wrist_2_joint": -0.0,
+"wrist_3_joint": 0.0
+}
+},
+{
+"t": 1.56,
+"reference": 0.5,
+"measured": {
+"elbow_joint": 0.0,
+"shoulder_lift_joint": 0.0,
+"shoulder_pan_joint": 0.5,
+"wrist_1_joint": 0.0,
+"wrist_2_joint": -0.0,
+"wrist_3_joint": 0.0
+}
+},
+{
+"t": 1.62,
+"reference": 0.5,
+"measured": {
+"elbow_joint": 0.0,
+"shoulder_lift_joint": 0.0,
+"shoulder_pan_joint": 0.5,
+"wrist_1_joint": 0.0,
+"wrist_2_joint": -0.0,
+"wrist_3_joint": 0.0
+}
+},
+{
+"t": 1.68,
+"reference": 0.5,
+"measured": {
+"elbow_joint": 0.0,
+"shoulder_lift_joint": 0.0,
+"shoulder_pan_joint": 0.5,
+"wrist_1_joint": 0.0,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": 0.0
+}
+},
+{
+"t": 1.74,
+"reference": 0.5,
+"measured": {
+"elbow_joint": 0.0,
+"shoulder_lift_joint": 0.0,
+"shoulder_pan_joint": 0.5,
+"wrist_1_joint": 0.0,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": 0.0
+}
+},
+{
+"t": 1.8,
+"reference": 0.5,
+"measured": {
+"elbow_joint": 0.0,
+"shoulder_lift_joint": 0.0,
+"shoulder_pan_joint": 0.5,
+"wrist_1_joint": 0.0,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": -0.0
+}
+},
+{
+"t": 1.86,
+"reference": 0.5,
+"measured": {
+"elbow_joint": 0.0,
+"shoulder_lift_joint": 0.0,
+"shoulder_pan_joint": 0.5,
+"wrist_1_joint": 0.0,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": -0.0
+}
+},
+{
+"t": 1.92,
+"reference": 0.5,
+"measured": {
+"elbow_joint": 0.0,
+"shoulder_lift_joint": 0.0,
+"shoulder_pan_joint": 0.5,
+"wrist_1_joint": 0.0,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": -0.0
+}
+},
+{
+"t": 1.98,
+"reference": 0.5,
+"measured": {
+"elbow_joint": 0.0,
+"shoulder_lift_joint": 0.0,
+"shoulder_pan_joint": 0.5,
+"wrist_1_joint": 0.0,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": -0.0
+}
+},
+{
+"t": 2.04,
+"reference": 0.5,
+"measured": {
+"elbow_joint": 0.0,
+"shoulder_lift_joint": 0.0,
+"shoulder_pan_joint": 0.5,
+"wrist_1_joint": 0.0,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": -0.0
+}
+},
+{
+"t": 2.1,
+"reference": 0.5,
+"measured": {
+"elbow_joint": 0.0,
+"shoulder_lift_joint": 0.0,
+"shoulder_pan_joint": 0.5,
+"wrist_1_joint": 0.0,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": -0.0
+}
+},
+{
+"t": 2.16,
+"reference": 0.5,
+"measured": {
+"elbow_joint": 0.0,
+"shoulder_lift_joint": 0.0,
+"shoulder_pan_joint": 0.5,
+"wrist_1_joint": 0.0,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": -0.0
+}
+},
+{
+"t": 2.22,
+"reference": 0.5,
+"measured": {
+"elbow_joint": 0.0,
+"shoulder_lift_joint": 0.0,
+"shoulder_pan_joint": 0.5,
+"wrist_1_joint": 0.0,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": -0.0
+}
+},
+{
+"t": 2.28,
+"reference": 0.5,
+"measured": {
+"elbow_joint": 0.0,
+"shoulder_lift_joint": 0.0,
+"shoulder_pan_joint": 0.5,
+"wrist_1_joint": 0.0,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": -0.0
+}
+},
+{
+"t": 2.34,
+"reference": 0.5,
+"measured": {
+"elbow_joint": 0.0,
+"shoulder_lift_joint": 0.0,
+"shoulder_pan_joint": 0.5,
+"wrist_1_joint": 0.0,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": -0.0
+}
+},
+{
+"t": 2.4,
+"reference": 0.5,
+"measured": {
+"elbow_joint": 0.0,
+"shoulder_lift_joint": 0.0,
+"shoulder_pan_joint": 0.5,
+"wrist_1_joint": 0.0,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": -0.0
+}
+},
+{
+"t": 2.46,
+"reference": 0.5,
+"measured": {
+"elbow_joint": 0.0,
+"shoulder_lift_joint": 0.0,
+"shoulder_pan_joint": 0.5,
+"wrist_1_joint": 0.0,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": -0.0
+}
+}
+]
+},
+"back": {
+"target": 0.0,
+"settled_s": 1.5,
+"steady_error_rad": 0.0029,
+"base_inhibited_seen": true,
+"final": 0.0,
+"trace": [
+{
+"t": 0.06,
+"reference": 0.4789999999999992,
+"measured": {
+"elbow_joint": -0.0,
+"shoulder_lift_joint": -0.0,
+"shoulder_pan_joint": 0.4816,
+"wrist_1_joint": -0.0,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": -0.0
+}
+},
+{
+"t": 0.12,
+"reference": 0.4789999999999992,
+"measured": {
+"elbow_joint": -0.0,
+"shoulder_lift_joint": -0.0,
+"shoulder_pan_joint": 0.4816,
+"wrist_1_joint": -0.0,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": -0.0
+}
+},
+{
+"t": 0.18,
+"reference": 0.44400000000000117,
+"measured": {
+"elbow_joint": -0.0,
+"shoulder_lift_joint": -0.0,
+"shoulder_pan_joint": 0.4459,
+"wrist_1_joint": -0.0,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": 0.0
+}
+},
+{
+"t": 0.24,
+"reference": 0.44400000000000117,
+"measured": {
+"elbow_joint": -0.0,
+"shoulder_lift_joint": -0.0,
+"shoulder_pan_joint": 0.4459,
+"wrist_1_joint": -0.0,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": 0.0
+}
+},
+{
+"t": 0.3,
+"reference": 0.40199999999999964,
+"measured": {
+"elbow_joint": -0.0,
+"shoulder_lift_joint": -0.0,
+"shoulder_pan_joint": 0.4062,
+"wrist_1_joint": -0.0,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": -0.0
+}
+},
+{
+"t": 0.36,
+"reference": 0.40199999999999964,
+"measured": {
+"elbow_joint": -0.0,
+"shoulder_lift_joint": -0.0,
+"shoulder_pan_joint": 0.4062,
+"wrist_1_joint": -0.0,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": -0.0
+}
+},
+{
+"t": 0.42,
+"reference": 0.36070000000000135,
+"measured": {
+"elbow_joint": -0.0,
+"shoulder_lift_joint": -0.0,
+"shoulder_pan_joint": 0.3651,
+"wrist_1_joint": -0.0,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": -0.0
+}
+},
+{
+"t": 0.48,
+"reference": 0.36070000000000135,
+"measured": {
+"elbow_joint": -0.0,
+"shoulder_lift_joint": -0.0,
+"shoulder_pan_joint": 0.3651,
+"wrist_1_joint": -0.0,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": -0.0
+}
+},
+{
+"t": 0.54,
+"reference": 0.3257000000000033,
+"measured": {
+"elbow_joint": -0.0,
+"shoulder_lift_joint": -0.0,
+"shoulder_pan_joint": 0.3315,
+"wrist_1_joint": -0.0,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": -0.0
+}
+},
+{
+"t": 0.6,
+"reference": 0.29070000000000035,
+"measured": {
+"elbow_joint": -0.0,
+"shoulder_lift_joint": -0.0,
+"shoulder_pan_joint": 0.2958,
+"wrist_1_joint": -0.0,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": -0.0
+}
+},
+{
+"t": 0.66,
+"reference": 0.29070000000000035,
+"measured": {
+"elbow_joint": -0.0,
+"shoulder_lift_joint": -0.0,
+"shoulder_pan_joint": 0.2958,
+"wrist_1_joint": -0.0,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": -0.0
+}
+},
+{
+"t": 0.72,
+"reference": 0.2557000000000023,
+"measured": {
+"elbow_joint": 0.0,
+"shoulder_lift_joint": 0.0,
+"shoulder_pan_joint": 0.2681,
+"wrist_1_joint": 0.0,
+"wrist_2_joint": -0.0,
+"wrist_3_joint": -0.0
+}
+},
+{
+"t": 0.78,
+"reference": 0.2557000000000023,
+"measured": {
+"elbow_joint": 0.0,
+"shoulder_lift_joint": 0.0,
+"shoulder_pan_joint": 0.2681,
+"wrist_1_joint": 0.0,
+"wrist_2_joint": -0.0,
+"wrist_3_joint": -0.0
+}
+},
+{
+"t": 0.84,
+"reference": 0.21510000000000237,
+"measured": {
+"elbow_joint": -0.0,
+"shoulder_lift_joint": -0.0,
+"shoulder_pan_joint": 0.2192,
+"wrist_1_joint": -0.0,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": -0.0
+}
+},
+{
+"t": 0.9,
+"reference": 0.21510000000000237,
+"measured": {
+"elbow_joint": -0.0,
+"shoulder_lift_joint": -0.0,
+"shoulder_pan_joint": 0.2192,
+"wrist_1_joint": -0.0,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": -0.0
+}
+},
+{
+"t": 0.96,
+"reference": 0.1752000000000008,
+"measured": {
+"elbow_joint": -0.0,
+"shoulder_lift_joint": -0.0,
+"shoulder_pan_joint": 0.1789,
+"wrist_1_joint": -0.0,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": -0.0
+}
+},
+{
+"t": 1.02,
+"reference": 0.1752000000000008,
+"measured": {
+"elbow_joint": -0.0,
+"shoulder_lift_joint": -0.0,
+"shoulder_pan_joint": 0.1789,
+"wrist_1_joint": -0.0,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": -0.0
+}
+},
+{
+"t": 1.08,
+"reference": 0.136700000000001,
+"measured": {
+"elbow_joint": 0.0,
+"shoulder_lift_joint": 0.0,
+"shoulder_pan_joint": 0.1426,
+"wrist_1_joint": 0.0,
+"wrist_2_joint": -0.0,
+"wrist_3_joint": -0.0
+}
+},
+{
+"t": 1.14,
+"reference": 0.136700000000001,
+"measured": {
+"elbow_joint": 0.0,
+"shoulder_lift_joint": 0.0,
+"shoulder_pan_joint": 0.1426,
+"wrist_1_joint": 0.0,
+"wrist_2_joint": -0.0,
+"wrist_3_joint": -0.0
+}
+},
+{
+"t": 1.2,
+"reference": 0.10380000000000306,
+"measured": {
+"elbow_joint": -0.0,
+"shoulder_lift_joint": -0.0,
+"shoulder_pan_joint": 0.1059,
+"wrist_1_joint": -0.0,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": -0.0
+}
+},
+{
+"t": 1.26,
+"reference": 0.07300000000000025,
+"measured": {
+"elbow_joint": -0.0,
+"shoulder_lift_joint": -0.0,
+"shoulder_pan_joint": 0.0754,
+"wrist_1_joint": -0.0,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": 0.0
+}
+},
+{
+"t": 1.32,
+"reference": 0.07300000000000025,
+"measured": {
+"elbow_joint": -0.0,
+"shoulder_lift_joint": -0.0,
+"shoulder_pan_joint": 0.0754,
+"wrist_1_joint": -0.0,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": 0.0
+}
+},
+{
+"t": 1.38,
+"reference": 0.03309999999999875,
+"measured": {
+"elbow_joint": -0.0,
+"shoulder_lift_joint": -0.0,
+"shoulder_pan_joint": 0.0368,
+"wrist_1_joint": -0.0,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": -0.0
+}
+},
+{
+"t": 1.44,
+"reference": 0.03309999999999875,
+"measured": {
+"elbow_joint": -0.0,
+"shoulder_lift_joint": -0.0,
+"shoulder_pan_joint": 0.0368,
+"wrist_1_joint": -0.0,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": -0.0
+}
+},
+{
+"t": 1.5,
+"reference": 0.0,
+"measured": {
+"elbow_joint": -0.0,
+"shoulder_lift_joint": -0.0,
+"shoulder_pan_joint": -0.0029,
+"wrist_1_joint": -0.0,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": -0.0
+}
+},
+{
+"t": 1.56,
+"reference": 0.0,
+"measured": {
+"elbow_joint": -0.0,
+"shoulder_lift_joint": -0.0,
+"shoulder_pan_joint": -0.0029,
+"wrist_1_joint": -0.0,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": -0.0
+}
+},
+{
+"t": 1.62,
+"reference": 0.0,
+"measured": {
+"elbow_joint": -0.0,
+"shoulder_lift_joint": -0.0,
+"shoulder_pan_joint": -0.0,
+"wrist_1_joint": -0.0,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": -0.0
+}
+},
+{
+"t": 1.68,
+"reference": 0.0,
+"measured": {
+"elbow_joint": -0.0,
+"shoulder_lift_joint": -0.0,
+"shoulder_pan_joint": -0.0,
+"wrist_1_joint": -0.0,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": -0.0
+}
+},
+{
+"t": 1.74,
+"reference": 0.0,
+"measured": {
+"elbow_joint": -0.0,
+"shoulder_lift_joint": -0.0,
+"shoulder_pan_joint": -0.0,
+"wrist_1_joint": -0.0,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": -0.0
+}
+},
+{
+"t": 1.8,
+"reference": 0.0,
+"measured": {
+"elbow_joint": -0.0,
+"shoulder_lift_joint": -0.0,
+"shoulder_pan_joint": -0.0,
+"wrist_1_joint": -0.0,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": -0.0
+}
+},
+{
+"t": 1.86,
+"reference": 0.0,
+"measured": {
+"elbow_joint": 0.0,
+"shoulder_lift_joint": 0.0,
+"shoulder_pan_joint": 0.0,
+"wrist_1_joint": 0.0,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": -0.0
+}
+},
+{
+"t": 1.92,
+"reference": 0.0,
+"measured": {
+"elbow_joint": 0.0,
+"shoulder_lift_joint": 0.0,
+"shoulder_pan_joint": 0.0,
+"wrist_1_joint": 0.0,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": -0.0
+}
+},
+{
+"t": 1.98,
+"reference": 0.0,
+"measured": {
+"elbow_joint": 0.0,
+"shoulder_lift_joint": 0.0,
+"shoulder_pan_joint": 0.0,
+"wrist_1_joint": 0.0,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": -0.0
+}
+},
+{
+"t": 2.04,
+"reference": 0.0,
+"measured": {
+"elbow_joint": 0.0,
+"shoulder_lift_joint": 0.0,
+"shoulder_pan_joint": 0.0,
+"wrist_1_joint": 0.0,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": -0.0
+}
+},
+{
+"t": 2.1,
+"reference": 0.0,
+"measured": {
+"elbow_joint": 0.0,
+"shoulder_lift_joint": 0.0,
+"shoulder_pan_joint": 0.0,
+"wrist_1_joint": 0.0,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": -0.0
+}
+},
+{
+"t": 2.16,
+"reference": 0.0,
+"measured": {
+"elbow_joint": 0.0,
+"shoulder_lift_joint": 0.0,
+"shoulder_pan_joint": 0.0,
+"wrist_1_joint": 0.0,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": -0.0
+}
+},
+{
+"t": 2.22,
+"reference": 0.0,
+"measured": {
+"elbow_joint": 0.0,
+"shoulder_lift_joint": 0.0,
+"shoulder_pan_joint": 0.0,
+"wrist_1_joint": 0.0,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": -0.0
+}
+},
+{
+"t": 2.28,
+"reference": 0.0,
+"measured": {
+"elbow_joint": 0.0,
+"shoulder_lift_joint": 0.0,
+"shoulder_pan_joint": 0.0,
+"wrist_1_joint": 0.0,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": -0.0
+}
+},
+{
+"t": 2.34,
+"reference": 0.0,
+"measured": {
+"elbow_joint": 0.0,
+"shoulder_lift_joint": 0.0,
+"shoulder_pan_joint": 0.0,
+"wrist_1_joint": 0.0,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": 0.0
+}
+},
+{
+"t": 2.4,
+"reference": 0.0,
+"measured": {
+"elbow_joint": 0.0,
+"shoulder_lift_joint": 0.0,
+"shoulder_pan_joint": 0.0,
+"wrist_1_joint": 0.0,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": 0.0
+}
+},
+{
+"t": 2.46,
+"reference": 0.0,
+"measured": {
+"elbow_joint": 0.0,
+"shoulder_lift_joint": 0.0,
+"shoulder_pan_joint": 0.0,
+"wrist_1_joint": 0.0,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": -0.0
+}
+},
+{
+"t": 2.52,
+"reference": 0.0,
+"measured": {
+"elbow_joint": 0.0,
+"shoulder_lift_joint": 0.0,
+"shoulder_pan_joint": 0.0,
+"wrist_1_joint": 0.0,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": -0.0
+}
+}
+]
+},
+"passed": true
+},
+{
+"joint": "wrist_1_joint",
+"out": {
+"target": 0.5,
+"settled_s": 1.38,
+"steady_error_rad": 0.0282,
+"base_inhibited_seen": true,
+"final": 0.5,
+"trace": [
+{
+"t": 0.06,
+"reference": 0.006999999999998607,
+"measured": {
+"elbow_joint": 0.0,
+"shoulder_lift_joint": 0.0,
+"shoulder_pan_joint": 0.0,
+"wrist_1_joint": 0.0,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": 0.0
+}
+},
+{
+"t": 0.12,
+"reference": 0.006999999999998607,
+"measured": {
+"elbow_joint": 0.0,
+"shoulder_lift_joint": 0.0,
+"shoulder_pan_joint": 0.0,
+"wrist_1_joint": 0.0,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": 0.0
+}
+},
+{
+"t": 0.18,
+"reference": 0.049000000000000196,
+"measured": {
+"elbow_joint": -0.0,
+"shoulder_lift_joint": -0.0,
+"shoulder_pan_joint": -0.0,
+"wrist_1_joint": 0.042,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": -0.0
+}
+},
+{
+"t": 0.24,
+"reference": 0.0839999999999982,
+"measured": {
+"elbow_joint": -0.0,
+"shoulder_lift_joint": -0.0,
+"shoulder_pan_joint": -0.0,
+"wrist_1_joint": 0.077,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": -0.0
+}
+},
+{
+"t": 0.3,
+"reference": 0.0839999999999982,
+"measured": {
+"elbow_joint": -0.0,
+"shoulder_lift_joint": -0.0,
+"shoulder_pan_joint": -0.0,
+"wrist_1_joint": 0.077,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": -0.0
+}
+},
+{
+"t": 0.36,
+"reference": 0.1169000000000011,
+"measured": {
+"elbow_joint": -0.0,
+"shoulder_lift_joint": -0.0,
+"shoulder_pan_joint": -0.0,
+"wrist_1_joint": 0.1099,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": -0.0
+}
+},
+{
+"t": 0.42,
+"reference": 0.1169000000000011,
+"measured": {
+"elbow_joint": -0.0,
+"shoulder_lift_joint": -0.0,
+"shoulder_pan_joint": -0.0,
+"wrist_1_joint": 0.1099,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": -0.0
+}
+},
+{
+"t": 0.48,
+"reference": 0.15889999999999777,
+"measured": {
+"elbow_joint": -0.0,
+"shoulder_lift_joint": -0.0,
+"shoulder_pan_joint": -0.0,
+"wrist_1_joint": 0.1519,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": -0.0
+}
+},
+{
+"t": 0.54,
+"reference": 0.15889999999999777,
+"measured": {
+"elbow_joint": -0.0,
+"shoulder_lift_joint": -0.0,
+"shoulder_pan_joint": -0.0,
+"wrist_1_joint": 0.1519,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": -0.0
+}
+},
+{
+"t": 0.6,
+"reference": 0.1939000000000008,
+"measured": {
+"elbow_joint": -0.0,
+"shoulder_lift_joint": -0.0,
+"shoulder_pan_joint": -0.0,
+"wrist_1_joint": 0.1869,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": -0.0
+}
+},
+{
+"t": 0.66,
+"reference": 0.1939000000000008,
+"measured": {
+"elbow_joint": -0.0,
+"shoulder_lift_joint": -0.0,
+"shoulder_pan_joint": -0.0,
+"wrist_1_joint": 0.1869,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": -0.0
+}
+},
+{
+"t": 0.72,
+"reference": 0.23589999999999747,
+"measured": {
+"elbow_joint": -0.0,
+"shoulder_lift_joint": -0.0,
+"shoulder_pan_joint": -0.0,
+"wrist_1_joint": 0.2289,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": -0.0
+}
+},
+{
+"t": 0.78,
+"reference": 0.23589999999999747,
+"measured": {
+"elbow_joint": -0.0,
+"shoulder_lift_joint": -0.0,
+"shoulder_pan_joint": -0.0,
+"wrist_1_joint": 0.2289,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": -0.0
+}
+},
+{
+"t": 0.84,
+"reference": 0.2778999999999991,
+"measured": {
+"elbow_joint": -0.0,
+"shoulder_lift_joint": -0.0,
+"shoulder_pan_joint": -0.0,
+"wrist_1_joint": 0.2709,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": -0.0
+}
+},
+{
+"t": 0.9,
+"reference": 0.2778999999999991,
+"measured": {
+"elbow_joint": -0.0,
+"shoulder_lift_joint": -0.0,
+"shoulder_pan_joint": -0.0,
+"wrist_1_joint": 0.2709,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": -0.0
+}
+},
+{
+"t": 0.96,
+"reference": 0.3199000000000007,
+"measured": {
+"elbow_joint": -0.0,
+"shoulder_lift_joint": -0.0,
+"shoulder_pan_joint": -0.0,
+"wrist_1_joint": 0.3129,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": -0.0
+}
+},
+{
+"t": 1.02,
+"reference": 0.35420000000000035,
+"measured": {
+"elbow_joint": -0.0,
+"shoulder_lift_joint": -0.0,
+"shoulder_pan_joint": -0.0,
+"wrist_1_joint": 0.3472,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": -0.0
+}
+},
+{
+"t": 1.08,
+"reference": 0.35420000000000035,
+"measured": {
+"elbow_joint": -0.0,
+"shoulder_lift_joint": -0.0,
+"shoulder_pan_joint": -0.0,
+"wrist_1_joint": 0.3472,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": -0.0
+}
+},
+{
+"t": 1.14,
+"reference": 0.39620000000000194,
+"measured": {
+"elbow_joint": -0.0,
+"shoulder_lift_joint": -0.0,
+"shoulder_pan_joint": -0.0,
+"wrist_1_joint": 0.3892,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": -0.0
+}
+},
+{
+"t": 1.2,
+"reference": 0.39620000000000194,
+"measured": {
+"elbow_joint": -0.0,
+"shoulder_lift_joint": -0.0,
+"shoulder_pan_joint": -0.0,
+"wrist_1_joint": 0.3892,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": -0.0
+}
+},
+{
+"t": 1.26,
+"reference": 0.4381999999999986,
+"measured": {
+"elbow_joint": -0.0,
+"shoulder_lift_joint": -0.0,
+"shoulder_pan_joint": -0.0,
+"wrist_1_joint": 0.4312,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": -0.0
+}
+},
+{
+"t": 1.32,
+"reference": 0.4381999999999986,
+"measured": {
+"elbow_joint": -0.0,
+"shoulder_lift_joint": -0.0,
+"shoulder_pan_joint": -0.0,
+"wrist_1_joint": 0.4312,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": -0.0
+}
+},
+{
+"t": 1.38,
+"reference": 0.47879999999999845,
+"measured": {
+"elbow_joint": -0.0,
+"shoulder_lift_joint": -0.0,
+"shoulder_pan_joint": -0.0,
+"wrist_1_joint": 0.4718,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": -0.0
+}
+},
+{
+"t": 1.44,
+"reference": 0.47879999999999845,
+"measured": {
+"elbow_joint": -0.0,
+"shoulder_lift_joint": -0.0,
+"shoulder_pan_joint": -0.0,
+"wrist_1_joint": 0.4718,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": -0.0
+}
+},
+{
+"t": 1.5,
+"reference": 0.5,
+"measured": {
+"elbow_joint": 0.0,
+"shoulder_lift_joint": 0.0,
+"shoulder_pan_joint": 0.0,
+"wrist_1_joint": 0.5,
+"wrist_2_joint": -0.0,
+"wrist_3_joint": 0.0
+}
+},
+{
+"t": 1.56,
+"reference": 0.5,
+"measured": {
+"elbow_joint": 0.0,
+"shoulder_lift_joint": 0.0,
+"shoulder_pan_joint": 0.0,
+"wrist_1_joint": 0.5,
+"wrist_2_joint": -0.0,
+"wrist_3_joint": 0.0
+}
+},
+{
+"t": 1.62,
+"reference": 0.5,
+"measured": {
+"elbow_joint": 0.0,
+"shoulder_lift_joint": 0.0,
+"shoulder_pan_joint": 0.0,
+"wrist_1_joint": 0.5,
+"wrist_2_joint": -0.0,
+"wrist_3_joint": 0.0
+}
+},
+{
+"t": 1.68,
+"reference": 0.5,
+"measured": {
+"elbow_joint": 0.0,
+"shoulder_lift_joint": 0.0,
+"shoulder_pan_joint": 0.0,
+"wrist_1_joint": 0.5,
+"wrist_2_joint": -0.0,
+"wrist_3_joint": 0.0
+}
+},
+{
+"t": 1.74,
+"reference": 0.5,
+"measured": {
+"elbow_joint": 0.0,
+"shoulder_lift_joint": 0.0,
+"shoulder_pan_joint": 0.0,
+"wrist_1_joint": 0.5,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": 0.0
+}
+},
+{
+"t": 1.8,
+"reference": 0.5,
+"measured": {
+"elbow_joint": 0.0,
+"shoulder_lift_joint": 0.0,
+"shoulder_pan_joint": 0.0,
+"wrist_1_joint": 0.5,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": 0.0
+}
+},
+{
+"t": 1.86,
+"reference": 0.5,
+"measured": {
+"elbow_joint": 0.0,
+"shoulder_lift_joint": 0.0,
+"shoulder_pan_joint": 0.0,
+"wrist_1_joint": 0.5,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": 0.0
+}
+},
+{
+"t": 1.92,
+"reference": 0.5,
+"measured": {
+"elbow_joint": 0.0,
+"shoulder_lift_joint": 0.0,
+"shoulder_pan_joint": 0.0,
+"wrist_1_joint": 0.5,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": 0.0
+}
+},
+{
+"t": 1.98,
+"reference": 0.5,
+"measured": {
+"elbow_joint": 0.0,
+"shoulder_lift_joint": 0.0,
+"shoulder_pan_joint": 0.0,
+"wrist_1_joint": 0.5,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": 0.0
+}
+},
+{
+"t": 2.04,
+"reference": 0.5,
+"measured": {
+"elbow_joint": 0.0,
+"shoulder_lift_joint": 0.0,
+"shoulder_pan_joint": 0.0,
+"wrist_1_joint": 0.5,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": 0.0
+}
+},
+{
+"t": 2.1,
+"reference": 0.5,
+"measured": {
+"elbow_joint": 0.0,
+"shoulder_lift_joint": 0.0,
+"shoulder_pan_joint": 0.0,
+"wrist_1_joint": 0.5,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": 0.0
+}
+},
+{
+"t": 2.16,
+"reference": 0.5,
+"measured": {
+"elbow_joint": 0.0,
+"shoulder_lift_joint": 0.0,
+"shoulder_pan_joint": 0.0,
+"wrist_1_joint": 0.5,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": 0.0
+}
+},
+{
+"t": 2.22,
+"reference": 0.5,
+"measured": {
+"elbow_joint": 0.0,
+"shoulder_lift_joint": 0.0,
+"shoulder_pan_joint": 0.0,
+"wrist_1_joint": 0.5,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": 0.0
+}
+},
+{
+"t": 2.28,
+"reference": 0.5,
+"measured": {
+"elbow_joint": 0.0,
+"shoulder_lift_joint": 0.0,
+"shoulder_pan_joint": 0.0,
+"wrist_1_joint": 0.5,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": 0.0
+}
+},
+{
+"t": 2.34,
+"reference": 0.5,
+"measured": {
+"elbow_joint": 0.0,
+"shoulder_lift_joint": 0.0,
+"shoulder_pan_joint": 0.0,
+"wrist_1_joint": 0.5,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": 0.0
+}
+},
+{
+"t": 2.4,
+"reference": 0.5,
+"measured": {
+"elbow_joint": 0.0,
+"shoulder_lift_joint": 0.0,
+"shoulder_pan_joint": 0.0,
+"wrist_1_joint": 0.5,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": 0.0
+}
+}
+]
+},
+"back": {
+"target": 0.0,
+"settled_s": 1.26,
+"steady_error_rad": 1.4802,
+"base_inhibited_seen": true,
+"final": -0.2642,
+"trace": [
+{
+"t": 0.06,
+"reference": 0.4859999999999978,
+"measured": {
+"elbow_joint": 0.0,
+"shoulder_lift_joint": 0.0,
+"shoulder_pan_joint": 0.0,
+"wrist_1_joint": 0.493,
+"wrist_2_joint": -0.0,
+"wrist_3_joint": 0.0
+}
+},
+{
+"t": 0.12,
+"reference": 0.4859999999999978,
+"measured": {
+"elbow_joint": 0.0,
+"shoulder_lift_joint": 0.0,
+"shoulder_pan_joint": 0.0,
+"wrist_1_joint": 0.493,
+"wrist_2_joint": -0.0,
+"wrist_3_joint": 0.0
+}
+},
+{
+"t": 0.18,
+"reference": 0.44469999999999954,
+"measured": {
+"elbow_joint": 0.0,
+"shoulder_lift_joint": 0.0,
+"shoulder_pan_joint": 0.0,
+"wrist_1_joint": 0.1218,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": 0.0
+}
+},
+{
+"t": 0.24,
+"reference": 0.44469999999999954,
+"measured": {
+"elbow_joint": 0.0,
+"shoulder_lift_joint": 0.0,
+"shoulder_pan_joint": 0.0,
+"wrist_1_joint": 0.1218,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": 0.0
+}
+},
+{
+"t": 0.3,
+"reference": 0.40969999999999657,
+"measured": {
+"elbow_joint": 0.0,
+"shoulder_lift_joint": 0.0,
+"shoulder_pan_joint": -0.0,
+"wrist_1_joint": -0.1982,
+"wrist_2_joint": -0.0,
+"wrist_3_joint": 0.0
+}
+},
+{
+"t": 0.36,
+"reference": 0.40969999999999657,
+"measured": {
+"elbow_joint": 0.0,
+"shoulder_lift_joint": 0.0,
+"shoulder_pan_joint": -0.0,
+"wrist_1_joint": -0.1982,
+"wrist_2_joint": -0.0,
+"wrist_3_joint": 0.0
+}
+},
+{
+"t": 0.42,
+"reference": 0.36839999999999834,
+"measured": {
+"elbow_joint": 0.0,
+"shoulder_lift_joint": 0.0,
+"shoulder_pan_joint": -0.0,
+"wrist_1_joint": -0.5758,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": -0.0
+}
+},
+{
+"t": 0.48,
+"reference": 0.3334000000000003,
+"measured": {
+"elbow_joint": 0.0,
+"shoulder_lift_joint": 0.0,
+"shoulder_pan_joint": -0.0,
+"wrist_1_joint": -0.8894,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": 0.0
+}
+},
+{
+"t": 0.54,
+"reference": 0.3334000000000003,
+"measured": {
+"elbow_joint": 0.0,
+"shoulder_lift_joint": 0.0,
+"shoulder_pan_joint": -0.0,
+"wrist_1_joint": -0.8894,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": 0.0
+}
+},
+{
+"t": 0.6,
+"reference": 0.30120000000000074,
+"measured": {
+"elbow_joint": 0.0,
+"shoulder_lift_joint": 0.0,
+"shoulder_pan_joint": -0.0,
+"wrist_1_joint": -1.1902,
+"wrist_2_joint": -0.0,
+"wrist_3_joint": 0.0
+}
+},
+{
+"t": 0.66,
+"reference": 0.30120000000000074,
+"measured": {
+"elbow_joint": 0.0,
+"shoulder_lift_joint": 0.0,
+"shoulder_pan_joint": -0.0,
+"wrist_1_joint": -1.1902,
+"wrist_2_joint": -0.0,
+"wrist_3_joint": 0.0
+}
+},
+{
+"t": 0.72,
+"reference": 0.2640999999999977,
+"measured": {
+"elbow_joint": 0.0,
+"shoulder_lift_joint": 0.0,
+"shoulder_pan_joint": -0.0,
+"wrist_1_joint": -1.523,
+"wrist_2_joint": -0.0,
+"wrist_3_joint": -0.0
+}
+},
+{
+"t": 0.78,
+"reference": 0.2640999999999977,
+"measured": {
+"elbow_joint": 0.0,
+"shoulder_lift_joint": 0.0,
+"shoulder_pan_joint": -0.0,
+"wrist_1_joint": -1.523,
+"wrist_2_joint": -0.0,
+"wrist_3_joint": -0.0
+}
+},
+{
+"t": 0.84,
+"reference": 0.23189999999999814,
+"measured": {
+"elbow_joint": 0.0,
+"shoulder_lift_joint": 0.0,
+"shoulder_pan_joint": -0.0,
+"wrist_1_joint": -1.331,
+"wrist_2_joint": -0.0,
+"wrist_3_joint": -0.0
+}
+},
+{
+"t": 0.9,
+"reference": 0.23189999999999814,
+"measured": {
+"elbow_joint": 0.0,
+"shoulder_lift_joint": 0.0,
+"shoulder_pan_joint": -0.0,
+"wrist_1_joint": -1.331,
+"wrist_2_joint": -0.0,
+"wrist_3_joint": -0.0
+}
+},
+{
+"t": 0.96,
+"reference": 0.19619999999999677,
+"measured": {
+"elbow_joint": 0.0,
+"shoulder_lift_joint": 0.0,
+"shoulder_pan_joint": -0.0,
+"wrist_1_joint": -0.9982,
+"wrist_2_joint": -0.0,
+"wrist_3_joint": -0.0
+}
+},
+{
+"t": 1.02,
+"reference": 0.19619999999999677,
+"measured": {
+"elbow_joint": 0.0,
+"shoulder_lift_joint": 0.0,
+"shoulder_pan_joint": -0.0,
+"wrist_1_joint": -0.9982,
+"wrist_2_joint": -0.0,
+"wrist_3_joint": -0.0
+}
+},
+{
+"t": 1.08,
+"reference": 0.15769999999999693,
+"measured": {
+"elbow_joint": 0.0,
+"shoulder_lift_joint": 0.0,
+"shoulder_pan_joint": -0.0,
+"wrist_1_joint": -0.6462,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": -0.0
+}
+},
+{
+"t": 1.14,
+"reference": 0.12689999999999904,
+"measured": {
+"elbow_joint": 0.0,
+"shoulder_lift_joint": 0.0,
+"shoulder_pan_joint": -0.0,
+"wrist_1_joint": -0.3646,
+"wrist_2_joint": -0.0,
+"wrist_3_joint": 0.0
+}
+},
+{
+"t": 1.2,
+"reference": 0.12689999999999904,
+"measured": {
+"elbow_joint": 0.0,
+"shoulder_lift_joint": 0.0,
+"shoulder_pan_joint": -0.0,
+"wrist_1_joint": -0.3646,
+"wrist_2_joint": -0.0,
+"wrist_3_joint": 0.0
+}
+},
+{
+"t": 1.26,
+"reference": 0.08629999999999918,
+"measured": {
+"elbow_joint": 0.0,
+"shoulder_lift_joint": 0.0,
+"shoulder_pan_joint": 0.0,
+"wrist_1_joint": 0.0066,
+"wrist_2_joint": -0.0,
+"wrist_3_joint": 0.0
+}
+},
+{
+"t": 1.32,
+"reference": 0.08629999999999918,
+"measured": {
+"elbow_joint": 0.0,
+"shoulder_lift_joint": 0.0,
+"shoulder_pan_joint": 0.0,
+"wrist_1_joint": 0.0066,
+"wrist_2_joint": -0.0,
+"wrist_3_joint": 0.0
+}
+},
+{
+"t": 1.38,
+"reference": 0.05479999999999799,
+"measured": {
+"elbow_joint": 0.0,
+"shoulder_lift_joint": 0.0,
+"shoulder_pan_joint": -0.0,
+"wrist_1_joint": -0.0914,
+"wrist_2_joint": -0.0,
+"wrist_3_joint": 0.0
+}
+},
+{
+"t": 1.44,
+"reference": 0.05479999999999799,
+"measured": {
+"elbow_joint": 0.0,
+"shoulder_lift_joint": 0.0,
+"shoulder_pan_joint": -0.0,
+"wrist_1_joint": -0.0914,
+"wrist_2_joint": -0.0,
+"wrist_3_joint": 0.0
+}
+},
+{
+"t": 1.5,
+"reference": 0.014899999999996479,
+"measured": {
+"elbow_joint": 0.0,
+"shoulder_lift_joint": 0.0,
+"shoulder_pan_joint": -0.0,
+"wrist_1_joint": -0.4498,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": -0.0
+}
+},
+{
+"t": 1.56,
+"reference": 0.014899999999996479,
+"measured": {
+"elbow_joint": 0.0,
+"shoulder_lift_joint": 0.0,
+"shoulder_pan_joint": -0.0,
+"wrist_1_joint": -0.4498,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": -0.0
+}
+},
+{
+"t": 1.62,
+"reference": 0.0,
+"measured": {
+"elbow_joint": 0.0,
+"shoulder_lift_joint": 0.0,
+"shoulder_pan_joint": -0.0,
+"wrist_1_joint": -0.7698,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": -0.0
+}
+},
+{
+"t": 1.68,
+"reference": 0.0,
+"measured": {
+"elbow_joint": 0.0,
+"shoulder_lift_joint": 0.0,
+"shoulder_pan_joint": -0.0,
+"wrist_1_joint": -1.0898,
+"wrist_2_joint": -0.0,
+"wrist_3_joint": 0.0
+}
+},
+{
+"t": 1.74,
+"reference": 0.0,
+"measured": {
+"elbow_joint": 0.0,
+"shoulder_lift_joint": 0.0,
+"shoulder_pan_joint": -0.0,
+"wrist_1_joint": -1.0898,
+"wrist_2_joint": -0.0,
+"wrist_3_joint": 0.0
+}
+},
+{
+"t": 1.8,
+"reference": 0.0,
+"measured": {
+"elbow_joint": 0.0,
+"shoulder_lift_joint": 0.0,
+"shoulder_pan_joint": -0.0,
+"wrist_1_joint": -1.4802,
+"wrist_2_joint": -0.0,
+"wrist_3_joint": 0.0
+}
+},
+{
+"t": 1.86,
+"reference": 0.0,
+"measured": {
+"elbow_joint": 0.0,
+"shoulder_lift_joint": 0.0,
+"shoulder_pan_joint": -0.0,
+"wrist_1_joint": -1.4802,
+"wrist_2_joint": -0.0,
+"wrist_3_joint": 0.0
+}
+},
+{
+"t": 1.92,
+"reference": 0.0,
+"measured": {
+"elbow_joint": 0.0,
+"shoulder_lift_joint": 0.0,
+"shoulder_pan_joint": -0.0,
+"wrist_1_joint": -1.3586,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": -0.0
+}
+},
+{
+"t": 1.98,
+"reference": 0.0,
+"measured": {
+"elbow_joint": 0.0,
+"shoulder_lift_joint": 0.0,
+"shoulder_pan_joint": -0.0,
+"wrist_1_joint": -1.3586,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": -0.0
+}
+},
+{
+"t": 2.04,
+"reference": 0.0,
+"measured": {
+"elbow_joint": 0.0,
+"shoulder_lift_joint": 0.0,
+"shoulder_pan_joint": -0.0,
+"wrist_1_joint": -1.0578,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": -0.0
+}
+},
+{
+"t": 2.1,
+"reference": 0.0,
+"measured": {
+"elbow_joint": 0.0,
+"shoulder_lift_joint": 0.0,
+"shoulder_pan_joint": -0.0,
+"wrist_1_joint": -1.0578,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": -0.0
+}
+},
+{
+"t": 2.16,
+"reference": 0.0,
+"measured": {
+"elbow_joint": 0.0,
+"shoulder_lift_joint": 0.0,
+"shoulder_pan_joint": -0.0,
+"wrist_1_joint": -0.6482,
+"wrist_2_joint": -0.0,
+"wrist_3_joint": 0.0
+}
+},
+{
+"t": 2.22,
+"reference": 0.0,
+"measured": {
+"elbow_joint": 0.0,
+"shoulder_lift_joint": 0.0,
+"shoulder_pan_joint": -0.0,
+"wrist_1_joint": -0.6482,
+"wrist_2_joint": -0.0,
+"wrist_3_joint": 0.0
+}
+},
+{
+"t": 2.28,
+"reference": 0.0,
+"measured": {
+"elbow_joint": 0.0,
+"shoulder_lift_joint": 0.0,
+"shoulder_pan_joint": -0.0,
+"wrist_1_joint": -0.2642,
+"wrist_2_joint": -0.0,
+"wrist_3_joint": -0.0
+}
+}
+]
+},
+"passed": false
+},
+{
+"joint": "wrist_2_joint",
+"out": {
+"target": 0.5,
+"settled_s": 1.44,
+"steady_error_rad": 0.0184,
+"base_inhibited_seen": true,
+"final": 0.5,
+"trace": [
+{
+"t": 0.06,
+"reference": 0.021700000000004136,
+"measured": {
+"elbow_joint": 0.0,
+"shoulder_lift_joint": 0.0,
+"shoulder_pan_joint": 0.0,
+"wrist_1_joint": 0.0,
+"wrist_2_joint": 0.032,
+"wrist_3_joint": 0.0
+}
+},
+{
+"t": 0.12,
+"reference": 0.021700000000004136,
+"measured": {
+"elbow_joint": 0.0,
+"shoulder_lift_joint": 0.0,
+"shoulder_pan_joint": 0.0,
+"wrist_1_joint": 0.0,
+"wrist_2_joint": 0.032,
+"wrist_3_joint": 0.0
+}
+},
+{
+"t": 0.18,
+"reference": 0.06160000000000067,
+"measured": {
+"elbow_joint": -0.0,
+"shoulder_lift_joint": -0.0,
+"shoulder_pan_joint": -0.0,
+"wrist_1_joint": -0.0,
+"wrist_2_joint": 0.0567,
+"wrist_3_joint": -0.0
+}
+},
+{
+"t": 0.24,
+"reference": 0.06160000000000067,
+"measured": {
+"elbow_joint": -0.0,
+"shoulder_lift_joint": -0.0,
+"shoulder_pan_joint": -0.0,
+"wrist_1_joint": -0.0,
+"wrist_2_joint": 0.0567,
+"wrist_3_joint": -0.0
+}
+},
+{
+"t": 0.3,
+"reference": 0.09660000000000366,
+"measured": {
+"elbow_joint": -0.0,
+"shoulder_lift_joint": -0.0,
+"shoulder_pan_joint": -0.0,
+"wrist_1_joint": -0.0,
+"wrist_2_joint": 0.0896,
+"wrist_3_joint": -0.0
+}
+},
+{
+"t": 0.36,
+"reference": 0.09660000000000366,
+"measured": {
+"elbow_joint": -0.0,
+"shoulder_lift_joint": -0.0,
+"shoulder_pan_joint": -0.0,
+"wrist_1_joint": -0.0,
+"wrist_2_joint": 0.0896,
+"wrist_3_joint": -0.0
+}
+},
+{
+"t": 0.42,
+"reference": 0.13860000000000028,
+"measured": {
+"elbow_joint": -0.0,
+"shoulder_lift_joint": -0.0,
+"shoulder_pan_joint": -0.0,
+"wrist_1_joint": -0.0,
+"wrist_2_joint": 0.1316,
+"wrist_3_joint": -0.0
+}
+},
+{
+"t": 0.48,
+"reference": 0.13860000000000028,
+"measured": {
+"elbow_joint": -0.0,
+"shoulder_lift_joint": -0.0,
+"shoulder_pan_joint": -0.0,
+"wrist_1_joint": -0.0,
+"wrist_2_joint": 0.1316,
+"wrist_3_joint": -0.0
+}
+},
+{
+"t": 0.54,
+"reference": 0.17990000000000356,
+"measured": {
+"elbow_joint": -0.0,
+"shoulder_lift_joint": -0.0,
+"shoulder_pan_joint": -0.0,
+"wrist_1_joint": -0.0,
+"wrist_2_joint": 0.1736,
+"wrist_3_joint": -0.0
+}
+},
+{
+"t": 0.6,
+"reference": 0.17990000000000356,
+"measured": {
+"elbow_joint": -0.0,
+"shoulder_lift_joint": -0.0,
+"shoulder_pan_joint": -0.0,
+"wrist_1_joint": -0.0,
+"wrist_2_joint": 0.1736,
+"wrist_3_joint": -0.0
+}
+},
+{
+"t": 0.66,
+"reference": 0.21559999999999999,
+"measured": {
+"elbow_joint": 0.0,
+"shoulder_lift_joint": 0.0,
+"shoulder_pan_joint": 0.0,
+"wrist_1_joint": 0.0,
+"wrist_2_joint": 0.2086,
+"wrist_3_joint": 0.0
+}
+},
+{
+"t": 0.72,
+"reference": 0.21559999999999999,
+"measured": {
+"elbow_joint": 0.0,
+"shoulder_lift_joint": 0.0,
+"shoulder_pan_joint": 0.0,
+"wrist_1_joint": 0.0,
+"wrist_2_joint": 0.2086,
+"wrist_3_joint": 0.0
+}
+},
+{
+"t": 0.78,
+"reference": 0.2561999999999999,
+"measured": {
+"elbow_joint": 0.0,
+"shoulder_lift_joint": 0.0,
+"shoulder_pan_joint": 0.0,
+"wrist_1_joint": 0.0,
+"wrist_2_joint": 0.2506,
+"wrist_3_joint": 0.0
+}
+},
+{
+"t": 0.84,
+"reference": 0.2925999999999996,
+"measured": {
+"elbow_joint": -0.0,
+"shoulder_lift_joint": -0.0,
+"shoulder_pan_joint": -0.0,
+"wrist_1_joint": -0.0,
+"wrist_2_joint": 0.2856,
+"wrist_3_joint": -0.0
+}
+},
+{
+"t": 0.9,
+"reference": 0.2925999999999996,
+"measured": {
+"elbow_joint": -0.0,
+"shoulder_lift_joint": -0.0,
+"shoulder_pan_joint": -0.0,
+"wrist_1_joint": -0.0,
+"wrist_2_joint": 0.2856,
+"wrist_3_joint": -0.0
+}
+},
+{
+"t": 0.96,
+"reference": 0.32760000000000256,
+"measured": {
+"elbow_joint": 0.0,
+"shoulder_lift_joint": 0.0,
+"shoulder_pan_joint": 0.0,
+"wrist_1_joint": 0.0,
+"wrist_2_joint": 0.3206,
+"wrist_3_joint": 0.0
+}
+},
+{
+"t": 1.02,
+"reference": 0.32760000000000256,
+"measured": {
+"elbow_joint": 0.0,
+"shoulder_lift_joint": 0.0,
+"shoulder_pan_joint": 0.0,
+"wrist_1_joint": 0.0,
+"wrist_2_joint": 0.3206,
+"wrist_3_joint": 0.0
+}
+},
+{
+"t": 1.08,
+"reference": 0.36960000000000415,
+"measured": {
+"elbow_joint": 0.0,
+"shoulder_lift_joint": 0.0,
+"shoulder_pan_joint": 0.0,
+"wrist_1_joint": 0.0,
+"wrist_2_joint": 0.3626,
+"wrist_3_joint": 0.0
+}
+},
+{
+"t": 1.14,
+"reference": 0.36960000000000415,
+"measured": {
+"elbow_joint": 0.0,
+"shoulder_lift_joint": 0.0,
+"shoulder_pan_joint": 0.0,
+"wrist_1_joint": 0.0,
+"wrist_2_joint": 0.3626,
+"wrist_3_joint": 0.0
+}
+},
+{
+"t": 1.2,
+"reference": 0.4046000000000022,
+"measured": {
+"elbow_joint": -0.0,
+"shoulder_lift_joint": -0.0,
+"shoulder_pan_joint": -0.0,
+"wrist_1_joint": -0.0,
+"wrist_2_joint": 0.3976,
+"wrist_3_joint": -0.0
+}
+},
+{
+"t": 1.26,
+"reference": 0.4046000000000022,
+"measured": {
+"elbow_joint": -0.0,
+"shoulder_lift_joint": -0.0,
+"shoulder_pan_joint": -0.0,
+"wrist_1_joint": -0.0,
+"wrist_2_joint": 0.3976,
+"wrist_3_joint": -0.0
+}
+},
+{
+"t": 1.32,
+"reference": 0.44660000000000377,
+"measured": {
+"elbow_joint": -0.0,
+"shoulder_lift_joint": -0.0,
+"shoulder_pan_joint": -0.0,
+"wrist_1_joint": -0.0,
+"wrist_2_joint": 0.4389,
+"wrist_3_joint": -0.0
+}
+},
+{
+"t": 1.38,
+"reference": 0.44660000000000377,
+"measured": {
+"elbow_joint": -0.0,
+"shoulder_lift_joint": -0.0,
+"shoulder_pan_joint": -0.0,
+"wrist_1_joint": -0.0,
+"wrist_2_joint": 0.4389,
+"wrist_3_joint": -0.0
+}
+},
+{
+"t": 1.44,
+"reference": 0.4886000000000004,
+"measured": {
+"elbow_joint": -0.0,
+"shoulder_lift_joint": -0.0,
+"shoulder_pan_joint": -0.0,
+"wrist_1_joint": -0.0,
+"wrist_2_joint": 0.4816,
+"wrist_3_joint": -0.0
+}
+},
+{
+"t": 1.5,
+"reference": 0.4886000000000004,
+"measured": {
+"elbow_joint": -0.0,
+"shoulder_lift_joint": -0.0,
+"shoulder_pan_joint": -0.0,
+"wrist_1_joint": -0.0,
+"wrist_2_joint": 0.4816,
+"wrist_3_joint": -0.0
+}
+},
+{
+"t": 1.56,
+"reference": 0.5,
+"measured": {
+"elbow_joint": 0.0,
+"shoulder_lift_joint": 0.0,
+"shoulder_pan_joint": 0.0,
+"wrist_1_joint": 0.0,
+"wrist_2_joint": 0.5,
+"wrist_3_joint": 0.0
+}
+},
+{
+"t": 1.62,
+"reference": 0.5,
+"measured": {
+"elbow_joint": 0.0,
+"shoulder_lift_joint": 0.0,
+"shoulder_pan_joint": 0.0,
+"wrist_1_joint": 0.0,
+"wrist_2_joint": 0.5,
+"wrist_3_joint": 0.0
+}
+},
+{
+"t": 1.68,
+"reference": 0.5,
+"measured": {
+"elbow_joint": 0.0,
+"shoulder_lift_joint": 0.0,
+"shoulder_pan_joint": 0.0,
+"wrist_1_joint": 0.0,
+"wrist_2_joint": 0.5,
+"wrist_3_joint": 0.0
+}
+},
+{
+"t": 1.74,
+"reference": 0.5,
+"measured": {
+"elbow_joint": 0.0,
+"shoulder_lift_joint": 0.0,
+"shoulder_pan_joint": 0.0,
+"wrist_1_joint": 0.0,
+"wrist_2_joint": 0.5,
+"wrist_3_joint": 0.0
+}
+},
+{
+"t": 1.8,
+"reference": 0.5,
+"measured": {
+"elbow_joint": 0.0,
+"shoulder_lift_joint": 0.0,
+"shoulder_pan_joint": 0.0,
+"wrist_1_joint": 0.0,
+"wrist_2_joint": 0.5,
+"wrist_3_joint": 0.0
+}
+},
+{
+"t": 1.86,
+"reference": 0.5,
+"measured": {
+"elbow_joint": 0.0,
+"shoulder_lift_joint": 0.0,
+"shoulder_pan_joint": 0.0,
+"wrist_1_joint": 0.0,
+"wrist_2_joint": 0.5,
+"wrist_3_joint": 0.0
+}
+},
+{
+"t": 1.92,
+"reference": 0.5,
+"measured": {
+"elbow_joint": 0.0,
+"shoulder_lift_joint": 0.0,
+"shoulder_pan_joint": 0.0,
+"wrist_1_joint": 0.0,
+"wrist_2_joint": 0.5,
+"wrist_3_joint": 0.0
+}
+},
+{
+"t": 1.98,
+"reference": 0.5,
+"measured": {
+"elbow_joint": 0.0,
+"shoulder_lift_joint": 0.0,
+"shoulder_pan_joint": 0.0,
+"wrist_1_joint": 0.0,
+"wrist_2_joint": 0.5,
+"wrist_3_joint": 0.0
+}
+},
+{
+"t": 2.04,
+"reference": 0.5,
+"measured": {
+"elbow_joint": 0.0,
+"shoulder_lift_joint": 0.0,
+"shoulder_pan_joint": 0.0,
+"wrist_1_joint": 0.0,
+"wrist_2_joint": 0.5,
+"wrist_3_joint": 0.0
+}
+},
+{
+"t": 2.1,
+"reference": 0.5,
+"measured": {
+"elbow_joint": 0.0,
+"shoulder_lift_joint": 0.0,
+"shoulder_pan_joint": 0.0,
+"wrist_1_joint": 0.0,
+"wrist_2_joint": 0.5,
+"wrist_3_joint": 0.0
+}
+},
+{
+"t": 2.16,
+"reference": 0.5,
+"measured": {
+"elbow_joint": 0.0,
+"shoulder_lift_joint": 0.0,
+"shoulder_pan_joint": 0.0,
+"wrist_1_joint": 0.0,
+"wrist_2_joint": 0.5,
+"wrist_3_joint": 0.0
+}
+},
+{
+"t": 2.22,
+"reference": 0.5,
+"measured": {
+"elbow_joint": 0.0,
+"shoulder_lift_joint": 0.0,
+"shoulder_pan_joint": 0.0,
+"wrist_1_joint": 0.0,
+"wrist_2_joint": 0.5,
+"wrist_3_joint": 0.0
+}
+},
+{
+"t": 2.28,
+"reference": 0.5,
+"measured": {
+"elbow_joint": 0.0,
+"shoulder_lift_joint": 0.0,
+"shoulder_pan_joint": 0.0,
+"wrist_1_joint": 0.0,
+"wrist_2_joint": 0.5,
+"wrist_3_joint": 0.0
+}
+},
+{
+"t": 2.34,
+"reference": 0.5,
+"measured": {
+"elbow_joint": 0.0,
+"shoulder_lift_joint": 0.0,
+"shoulder_pan_joint": 0.0,
+"wrist_1_joint": 0.0,
+"wrist_2_joint": 0.5,
+"wrist_3_joint": 0.0
+}
+},
+{
+"t": 2.4,
+"reference": 0.5,
+"measured": {
+"elbow_joint": 0.0,
+"shoulder_lift_joint": 0.0,
+"shoulder_pan_joint": 0.0,
+"wrist_1_joint": 0.0,
+"wrist_2_joint": 0.5,
+"wrist_3_joint": 0.0
+}
+},
+{
+"t": 2.46,
+"reference": 0.5,
+"measured": {
+"elbow_joint": 0.0,
+"shoulder_lift_joint": 0.0,
+"shoulder_pan_joint": 0.0,
+"wrist_1_joint": 0.0,
+"wrist_2_joint": 0.5,
+"wrist_3_joint": 0.0
+}
+}
+]
+},
+"back": {
+"target": 0.0,
+"settled_s": 1.5,
+"steady_error_rad": 0.0261,
+"base_inhibited_seen": true,
+"final": 0.0,
+"trace": [
+{
+"t": 0.06,
+"reference": 0.4789999999999992,
+"measured": {
+"elbow_joint": -0.0,
+"shoulder_lift_joint": -0.0,
+"shoulder_pan_joint": -0.0,
+"wrist_1_joint": -0.0,
+"wrist_2_joint": 0.486,
+"wrist_3_joint": -0.0
+}
+},
+{
+"t": 0.12,
+"reference": 0.4789999999999992,
+"measured": {
+"elbow_joint": -0.0,
+"shoulder_lift_joint": -0.0,
+"shoulder_pan_joint": -0.0,
+"wrist_1_joint": -0.0,
+"wrist_2_joint": 0.486,
+"wrist_3_joint": -0.0
+}
+},
+{
+"t": 0.18,
+"reference": 0.44400000000000117,
+"measured": {
+"elbow_joint": -0.0,
+"shoulder_lift_joint": -0.0,
+"shoulder_pan_joint": -0.0,
+"wrist_1_joint": -0.0,
+"wrist_2_joint": 0.451,
+"wrist_3_joint": -0.0
+}
+},
+{
+"t": 0.24,
+"reference": 0.44400000000000117,
+"measured": {
+"elbow_joint": -0.0,
+"shoulder_lift_joint": -0.0,
+"shoulder_pan_joint": -0.0,
+"wrist_1_joint": -0.0,
+"wrist_2_joint": 0.451,
+"wrist_3_joint": -0.0
+}
+},
+{
+"t": 0.3,
+"reference": 0.4097000000000015,
+"measured": {
+"elbow_joint": -0.0,
+"shoulder_lift_joint": -0.0,
+"shoulder_pan_joint": -0.0,
+"wrist_1_joint": -0.0,
+"wrist_2_joint": 0.4174,
+"wrist_3_joint": -0.0
+}
+},
+{
+"t": 0.36,
+"reference": 0.4097000000000015,
+"measured": {
+"elbow_joint": -0.0,
+"shoulder_lift_joint": -0.0,
+"shoulder_pan_joint": -0.0,
+"wrist_1_joint": -0.0,
+"wrist_2_joint": 0.4174,
+"wrist_3_joint": -0.0
+}
+},
+{
+"t": 0.42,
+"reference": 0.37400000000000017,
+"measured": {
+"elbow_joint": -0.0,
+"shoulder_lift_joint": -0.0,
+"shoulder_pan_joint": -0.0,
+"wrist_1_joint": -0.0,
+"wrist_2_joint": 0.381,
+"wrist_3_joint": -0.0
+}
+},
+{
+"t": 0.48,
+"reference": 0.3418000000000006,
+"measured": {
+"elbow_joint": -0.0,
+"shoulder_lift_joint": -0.0,
+"shoulder_pan_joint": -0.0,
+"wrist_1_joint": -0.0,
+"wrist_2_joint": 0.3488,
+"wrist_3_joint": -0.0
+}
+},
+{
+"t": 0.54,
+"reference": 0.3418000000000006,
+"measured": {
+"elbow_joint": -0.0,
+"shoulder_lift_joint": -0.0,
+"shoulder_pan_joint": -0.0,
+"wrist_1_joint": -0.0,
+"wrist_2_joint": 0.3488,
+"wrist_3_joint": -0.0
+}
+},
+{
+"t": 0.6,
+"reference": 0.3109999999999978,
+"measured": {
+"elbow_joint": -0.0,
+"shoulder_lift_joint": -0.0,
+"shoulder_pan_joint": -0.0,
+"wrist_1_joint": -0.0,
+"wrist_2_joint": 0.318,
+"wrist_3_joint": -0.0
+}
+},
+{
+"t": 0.66,
+"reference": 0.3109999999999978,
+"measured": {
+"elbow_joint": -0.0,
+"shoulder_lift_joint": -0.0,
+"shoulder_pan_joint": -0.0,
+"wrist_1_joint": -0.0,
+"wrist_2_joint": 0.318,
+"wrist_3_joint": -0.0
+}
+},
+{
+"t": 0.72,
+"reference": 0.2696999999999995,
+"measured": {
+"elbow_joint": -0.0,
+"shoulder_lift_joint": -0.0,
+"shoulder_pan_joint": -0.0,
+"wrist_1_joint": -0.0,
+"wrist_2_joint": 0.2767,
+"wrist_3_joint": -0.0
+}
+},
+{
+"t": 0.78,
+"reference": 0.2696999999999995,
+"measured": {
+"elbow_joint": -0.0,
+"shoulder_lift_joint": -0.0,
+"shoulder_pan_joint": -0.0,
+"wrist_1_joint": -0.0,
+"wrist_2_joint": 0.2767,
+"wrist_3_joint": -0.0
+}
+},
+{
+"t": 0.84,
+"reference": 0.23539999999999983,
+"measured": {
+"elbow_joint": -0.0,
+"shoulder_lift_joint": -0.0,
+"shoulder_pan_joint": -0.0,
+"wrist_1_joint": -0.0,
+"wrist_2_joint": 0.2417,
+"wrist_3_joint": -0.0
+}
+},
+{
+"t": 0.91,
+"reference": 0.23539999999999983,
+"measured": {
+"elbow_joint": -0.0,
+"shoulder_lift_joint": -0.0,
+"shoulder_pan_joint": -0.0,
+"wrist_1_joint": -0.0,
+"wrist_2_joint": 0.2417,
+"wrist_3_joint": -0.0
+}
+},
+{
+"t": 0.96,
+"reference": 0.1990000000000001,
+"measured": {
+"elbow_joint": -0.0,
+"shoulder_lift_joint": -0.0,
+"shoulder_pan_joint": -0.0,
+"wrist_1_joint": -0.0,
+"wrist_2_joint": 0.206,
+"wrist_3_joint": -0.0
+}
+},
+{
+"t": 1.02,
+"reference": 0.16680000000000048,
+"measured": {
+"elbow_joint": -0.0,
+"shoulder_lift_joint": -0.0,
+"shoulder_pan_joint": -0.0,
+"wrist_1_joint": -0.0,
+"wrist_2_joint": 0.1738,
+"wrist_3_joint": -0.0
+}
+},
+{
+"t": 1.08,
+"reference": 0.16680000000000048,
+"measured": {
+"elbow_joint": -0.0,
+"shoulder_lift_joint": -0.0,
+"shoulder_pan_joint": -0.0,
+"wrist_1_joint": -0.0,
+"wrist_2_joint": 0.1738,
+"wrist_3_joint": -0.0
+}
+},
+{
+"t": 1.14,
+"reference": 0.13529999999999925,
+"measured": {
+"elbow_joint": 0.0,
+"shoulder_lift_joint": 0.0,
+"shoulder_pan_joint": 0.0,
+"wrist_1_joint": 0.0,
+"wrist_2_joint": 0.1423,
+"wrist_3_joint": 0.0
+}
+},
+{
+"t": 1.2,
+"reference": 0.13529999999999925,
+"measured": {
+"elbow_joint": 0.0,
+"shoulder_lift_joint": 0.0,
+"shoulder_pan_joint": 0.0,
+"wrist_1_joint": 0.0,
+"wrist_2_joint": 0.1423,
+"wrist_3_joint": 0.0
+}
+},
+{
+"t": 1.26,
+"reference": 0.09539999999999774,
+"measured": {
+"elbow_joint": -0.0,
+"shoulder_lift_joint": -0.0,
+"shoulder_pan_joint": -0.0,
+"wrist_1_joint": -0.0,
+"wrist_2_joint": 0.1024,
+"wrist_3_joint": -0.0
+}
+},
+{
+"t": 1.32,
+"reference": 0.09539999999999774,
+"measured": {
+"elbow_joint": -0.0,
+"shoulder_lift_joint": -0.0,
+"shoulder_pan_joint": -0.0,
+"wrist_1_joint": -0.0,
+"wrist_2_joint": 0.1024,
+"wrist_3_joint": -0.0
+}
+},
+{
+"t": 1.38,
+"reference": 0.06039999999999973,
+"measured": {
+"elbow_joint": -0.0,
+"shoulder_lift_joint": -0.0,
+"shoulder_pan_joint": -0.0,
+"wrist_1_joint": -0.0,
+"wrist_2_joint": 0.0674,
+"wrist_3_joint": -0.0
+}
+},
+{
+"t": 1.44,
+"reference": 0.06039999999999973,
+"measured": {
+"elbow_joint": -0.0,
+"shoulder_lift_joint": -0.0,
+"shoulder_pan_joint": -0.0,
+"wrist_1_joint": -0.0,
+"wrist_2_joint": 0.0674,
+"wrist_3_joint": -0.0
+}
+},
+{
+"t": 1.5,
+"reference": 0.01979999999999986,
+"measured": {
+"elbow_joint": -0.0,
+"shoulder_lift_joint": -0.0,
+"shoulder_pan_joint": -0.0,
+"wrist_1_joint": -0.0,
+"wrist_2_joint": 0.0261,
+"wrist_3_joint": -0.0
+}
+},
+{
+"t": 1.56,
+"reference": 0.01979999999999986,
+"measured": {
+"elbow_joint": -0.0,
+"shoulder_lift_joint": -0.0,
+"shoulder_pan_joint": -0.0,
+"wrist_1_joint": -0.0,
+"wrist_2_joint": 0.0261,
+"wrist_3_joint": -0.0
+}
+},
+{
+"t": 1.62,
+"reference": 0.0,
+"measured": {
+"elbow_joint": -0.0,
+"shoulder_lift_joint": -0.0,
+"shoulder_pan_joint": -0.0,
+"wrist_1_joint": -0.0,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": -0.0
+}
+},
+{
+"t": 1.68,
+"reference": 0.0,
+"measured": {
+"elbow_joint": -0.0,
+"shoulder_lift_joint": -0.0,
+"shoulder_pan_joint": 0.0,
+"wrist_1_joint": -0.0,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": -0.0
+}
+},
+{
+"t": 1.74,
+"reference": 0.0,
+"measured": {
+"elbow_joint": -0.0,
+"shoulder_lift_joint": -0.0,
+"shoulder_pan_joint": 0.0,
+"wrist_1_joint": -0.0,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": -0.0
+}
+},
+{
+"t": 1.8,
+"reference": 0.0,
+"measured": {
+"elbow_joint": 0.0,
+"shoulder_lift_joint": 0.0,
+"shoulder_pan_joint": 0.0,
+"wrist_1_joint": 0.0,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": 0.0
+}
+},
+{
+"t": 1.86,
+"reference": 0.0,
+"measured": {
+"elbow_joint": 0.0,
+"shoulder_lift_joint": 0.0,
+"shoulder_pan_joint": 0.0,
+"wrist_1_joint": 0.0,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": 0.0
+}
+},
+{
+"t": 1.92,
+"reference": 0.0,
+"measured": {
+"elbow_joint": 0.0,
+"shoulder_lift_joint": 0.0,
+"shoulder_pan_joint": 0.0,
+"wrist_1_joint": 0.0,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": 0.0
+}
+},
+{
+"t": 1.98,
+"reference": 0.0,
+"measured": {
+"elbow_joint": 0.0,
+"shoulder_lift_joint": 0.0,
+"shoulder_pan_joint": 0.0,
+"wrist_1_joint": 0.0,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": 0.0
+}
+},
+{
+"t": 2.04,
+"reference": 0.0,
+"measured": {
+"elbow_joint": 0.0,
+"shoulder_lift_joint": 0.0,
+"shoulder_pan_joint": 0.0,
+"wrist_1_joint": 0.0,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": 0.0
+}
+},
+{
+"t": 2.1,
+"reference": 0.0,
+"measured": {
+"elbow_joint": 0.0,
+"shoulder_lift_joint": 0.0,
+"shoulder_pan_joint": 0.0,
+"wrist_1_joint": 0.0,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": 0.0
+}
+},
+{
+"t": 2.16,
+"reference": 0.0,
+"measured": {
+"elbow_joint": 0.0,
+"shoulder_lift_joint": 0.0,
+"shoulder_pan_joint": 0.0,
+"wrist_1_joint": 0.0,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": 0.0
+}
+},
+{
+"t": 2.22,
+"reference": 0.0,
+"measured": {
+"elbow_joint": 0.0,
+"shoulder_lift_joint": 0.0,
+"shoulder_pan_joint": 0.0,
+"wrist_1_joint": 0.0,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": 0.0
+}
+},
+{
+"t": 2.28,
+"reference": 0.0,
+"measured": {
+"elbow_joint": 0.0,
+"shoulder_lift_joint": 0.0,
+"shoulder_pan_joint": 0.0,
+"wrist_1_joint": 0.0,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": 0.0
+}
+},
+{
+"t": 2.34,
+"reference": 0.0,
+"measured": {
+"elbow_joint": 0.0,
+"shoulder_lift_joint": 0.0,
+"shoulder_pan_joint": 0.0,
+"wrist_1_joint": 0.0,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": 0.0
+}
+},
+{
+"t": 2.4,
+"reference": 0.0,
+"measured": {
+"elbow_joint": 0.0,
+"shoulder_lift_joint": 0.0,
+"shoulder_pan_joint": 0.0,
+"wrist_1_joint": 0.0,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": 0.0
+}
+},
+{
+"t": 2.46,
+"reference": 0.0,
+"measured": {
+"elbow_joint": 0.0,
+"shoulder_lift_joint": 0.0,
+"shoulder_pan_joint": 0.0,
+"wrist_1_joint": 0.0,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": 0.0
+}
+},
+{
+"t": 2.52,
+"reference": 0.0,
+"measured": {
+"elbow_joint": 0.0,
+"shoulder_lift_joint": 0.0,
+"shoulder_pan_joint": 0.0,
+"wrist_1_joint": 0.0,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": 0.0
+}
+}
+]
+},
+"passed": true
+},
+{
+"joint": "wrist_3_joint",
+"out": {
+"target": 0.5,
+"settled_s": 1.38,
+"steady_error_rad": 0.0261,
+"base_inhibited_seen": true,
+"final": 0.5,
+"trace": [
+{
+"t": 0.06,
+"reference": 0.006999999999998607,
+"measured": {
+"elbow_joint": 0.0,
+"shoulder_lift_joint": 0.0,
+"shoulder_pan_joint": 0.0,
+"wrist_1_joint": 0.0,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": 0.0
+}
+},
+{
+"t": 0.12,
+"reference": 0.04129999999999825,
+"measured": {
+"elbow_joint": 0.0,
+"shoulder_lift_joint": 0.0,
+"shoulder_pan_joint": 0.0,
+"wrist_1_joint": 0.0,
+"wrist_2_joint": -0.0,
+"wrist_3_joint": 0.035
+}
+},
+{
+"t": 0.18,
+"reference": 0.04129999999999825,
+"measured": {
+"elbow_joint": 0.0,
+"shoulder_lift_joint": 0.0,
+"shoulder_pan_joint": 0.0,
+"wrist_1_joint": 0.0,
+"wrist_2_joint": -0.0,
+"wrist_3_joint": 0.035
+}
+},
+{
+"t": 0.24,
+"reference": 0.0769999999999996,
+"measured": {
+"elbow_joint": -0.0,
+"shoulder_lift_joint": -0.0,
+"shoulder_pan_joint": -0.0,
+"wrist_1_joint": -0.0,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": 0.07
+}
+},
+{
+"t": 0.3,
+"reference": 0.0769999999999996,
+"measured": {
+"elbow_joint": -0.0,
+"shoulder_lift_joint": -0.0,
+"shoulder_pan_joint": -0.0,
+"wrist_1_joint": -0.0,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": 0.07
+}
+},
+{
+"t": 0.36,
+"reference": 0.1189999999999962,
+"measured": {
+"elbow_joint": -0.0,
+"shoulder_lift_joint": -0.0,
+"shoulder_pan_joint": -0.0,
+"wrist_1_joint": -0.0,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": 0.112
+}
+},
+{
+"t": 0.42,
+"reference": 0.1189999999999962,
+"measured": {
+"elbow_joint": -0.0,
+"shoulder_lift_joint": -0.0,
+"shoulder_pan_joint": -0.0,
+"wrist_1_joint": -0.0,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": 0.112
+}
+},
+{
+"t": 0.48,
+"reference": 0.16099999999999784,
+"measured": {
+"elbow_joint": -0.0,
+"shoulder_lift_joint": -0.0,
+"shoulder_pan_joint": -0.0,
+"wrist_1_joint": -0.0,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": 0.154
+}
+},
+{
+"t": 0.54,
+"reference": 0.16099999999999784,
+"measured": {
+"elbow_joint": -0.0,
+"shoulder_lift_joint": -0.0,
+"shoulder_pan_joint": -0.0,
+"wrist_1_joint": -0.0,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": 0.154
+}
+},
+{
+"t": 0.6,
+"reference": 0.20230000000000112,
+"measured": {
+"elbow_joint": -0.0,
+"shoulder_lift_joint": -0.0,
+"shoulder_pan_joint": -0.0,
+"wrist_1_joint": -0.0,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": 0.1946
+}
+},
+{
+"t": 0.66,
+"reference": 0.20230000000000112,
+"measured": {
+"elbow_joint": -0.0,
+"shoulder_lift_joint": -0.0,
+"shoulder_pan_joint": -0.0,
+"wrist_1_joint": -0.0,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": 0.1946
+}
+},
+{
+"t": 0.72,
+"reference": 0.24359999999999943,
+"measured": {
+"elbow_joint": -0.0,
+"shoulder_lift_joint": -0.0,
+"shoulder_pan_joint": -0.0,
+"wrist_1_joint": -0.0,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": 0.2373
+}
+},
+{
+"t": 0.78,
+"reference": 0.24359999999999943,
+"measured": {
+"elbow_joint": -0.0,
+"shoulder_lift_joint": -0.0,
+"shoulder_pan_joint": -0.0,
+"wrist_1_joint": -0.0,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": 0.2373
+}
+},
+{
+"t": 0.84,
+"reference": 0.2862999999999994,
+"measured": {
+"elbow_joint": -0.0,
+"shoulder_lift_joint": -0.0,
+"shoulder_pan_joint": -0.0,
+"wrist_1_joint": -0.0,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": 0.2793
+}
+},
+{
+"t": 0.91,
+"reference": 0.2862999999999994,
+"measured": {
+"elbow_joint": -0.0,
+"shoulder_lift_joint": -0.0,
+"shoulder_pan_joint": -0.0,
+"wrist_1_joint": -0.0,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": 0.2793
+}
+},
+{
+"t": 0.96,
+"reference": 0.3268999999999993,
+"measured": {
+"elbow_joint": -0.0,
+"shoulder_lift_joint": -0.0,
+"shoulder_pan_joint": -0.0,
+"wrist_1_joint": -0.0,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": 0.3199
+}
+},
+{
+"t": 1.02,
+"reference": 0.3268999999999993,
+"measured": {
+"elbow_joint": -0.0,
+"shoulder_lift_joint": -0.0,
+"shoulder_pan_joint": -0.0,
+"wrist_1_joint": -0.0,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": 0.3199
+}
+},
+{
+"t": 1.08,
+"reference": 0.3681999999999976,
+"measured": {
+"elbow_joint": 0.0,
+"shoulder_lift_joint": 0.0,
+"shoulder_pan_joint": 0.0,
+"wrist_1_joint": 0.0,
+"wrist_2_joint": -0.0,
+"wrist_3_joint": 0.3619
+}
+},
+{
+"t": 1.14,
+"reference": 0.3681999999999976,
+"measured": {
+"elbow_joint": 0.0,
+"shoulder_lift_joint": 0.0,
+"shoulder_pan_joint": 0.0,
+"wrist_1_joint": 0.0,
+"wrist_2_joint": -0.0,
+"wrist_3_joint": 0.3619
+}
+},
+{
+"t": 1.2,
+"reference": 0.41089999999999754,
+"measured": {
+"elbow_joint": -0.0,
+"shoulder_lift_joint": -0.0,
+"shoulder_pan_joint": -0.0,
+"wrist_1_joint": -0.0,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": 0.4039
+}
+},
+{
+"t": 1.26,
+"reference": 0.41089999999999754,
+"measured": {
+"elbow_joint": -0.0,
+"shoulder_lift_joint": -0.0,
+"shoulder_pan_joint": -0.0,
+"wrist_1_joint": -0.0,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": 0.4039
+}
+},
+{
+"t": 1.32,
+"reference": 0.4459000000000005,
+"measured": {
+"elbow_joint": 0.0,
+"shoulder_lift_joint": 0.0,
+"shoulder_pan_joint": 0.0,
+"wrist_1_joint": 0.0,
+"wrist_2_joint": -0.0,
+"wrist_3_joint": 0.4389
+}
+},
+{
+"t": 1.38,
+"reference": 0.48089999999999855,
+"measured": {
+"elbow_joint": -0.0,
+"shoulder_lift_joint": -0.0,
+"shoulder_pan_joint": -0.0,
+"wrist_1_joint": -0.0,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": 0.4739
+}
+},
+{
+"t": 1.44,
+"reference": 0.48089999999999855,
+"measured": {
+"elbow_joint": -0.0,
+"shoulder_lift_joint": -0.0,
+"shoulder_pan_joint": -0.0,
+"wrist_1_joint": -0.0,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": 0.4739
+}
+},
+{
+"t": 1.5,
+"reference": 0.5,
+"measured": {
+"elbow_joint": -0.0,
+"shoulder_lift_joint": -0.0,
+"shoulder_pan_joint": -0.0,
+"wrist_1_joint": -0.0,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": 0.5
+}
+},
+{
+"t": 1.56,
+"reference": 0.5,
+"measured": {
+"elbow_joint": -0.0,
+"shoulder_lift_joint": -0.0,
+"shoulder_pan_joint": -0.0,
+"wrist_1_joint": -0.0,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": 0.5
+}
+},
+{
+"t": 1.62,
+"reference": 0.5,
+"measured": {
+"elbow_joint": 0.0,
+"shoulder_lift_joint": 0.0,
+"shoulder_pan_joint": 0.0,
+"wrist_1_joint": 0.0,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": 0.5
+}
+},
+{
+"t": 1.68,
+"reference": 0.5,
+"measured": {
+"elbow_joint": 0.0,
+"shoulder_lift_joint": 0.0,
+"shoulder_pan_joint": 0.0,
+"wrist_1_joint": 0.0,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": 0.5
+}
+},
+{
+"t": 1.74,
+"reference": 0.5,
+"measured": {
+"elbow_joint": 0.0,
+"shoulder_lift_joint": 0.0,
+"shoulder_pan_joint": 0.0,
+"wrist_1_joint": 0.0,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": 0.5
+}
+},
+{
+"t": 1.8,
+"reference": 0.5,
+"measured": {
+"elbow_joint": 0.0,
+"shoulder_lift_joint": 0.0,
+"shoulder_pan_joint": 0.0,
+"wrist_1_joint": 0.0,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": 0.5
+}
+},
+{
+"t": 1.86,
+"reference": 0.5,
+"measured": {
+"elbow_joint": 0.0,
+"shoulder_lift_joint": 0.0,
+"shoulder_pan_joint": 0.0,
+"wrist_1_joint": 0.0,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": 0.5
+}
+},
+{
+"t": 1.92,
+"reference": 0.5,
+"measured": {
+"elbow_joint": 0.0,
+"shoulder_lift_joint": 0.0,
+"shoulder_pan_joint": 0.0,
+"wrist_1_joint": 0.0,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": 0.5
+}
+},
+{
+"t": 1.98,
+"reference": 0.5,
+"measured": {
+"elbow_joint": 0.0,
+"shoulder_lift_joint": 0.0,
+"shoulder_pan_joint": 0.0,
+"wrist_1_joint": 0.0,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": 0.5
+}
+},
+{
+"t": 2.04,
+"reference": 0.5,
+"measured": {
+"elbow_joint": 0.0,
+"shoulder_lift_joint": 0.0,
+"shoulder_pan_joint": 0.0,
+"wrist_1_joint": 0.0,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": 0.5
+}
+},
+{
+"t": 2.1,
+"reference": 0.5,
+"measured": {
+"elbow_joint": 0.0,
+"shoulder_lift_joint": 0.0,
+"shoulder_pan_joint": 0.0,
+"wrist_1_joint": 0.0,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": 0.5
+}
+},
+{
+"t": 2.16,
+"reference": 0.5,
+"measured": {
+"elbow_joint": 0.0,
+"shoulder_lift_joint": 0.0,
+"shoulder_pan_joint": 0.0,
+"wrist_1_joint": 0.0,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": 0.5
+}
+},
+{
+"t": 2.22,
+"reference": 0.5,
+"measured": {
+"elbow_joint": 0.0,
+"shoulder_lift_joint": 0.0,
+"shoulder_pan_joint": 0.0,
+"wrist_1_joint": 0.0,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": 0.5
+}
+},
+{
+"t": 2.28,
+"reference": 0.5,
+"measured": {
+"elbow_joint": 0.0,
+"shoulder_lift_joint": 0.0,
+"shoulder_pan_joint": 0.0,
+"wrist_1_joint": 0.0,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": 0.5
+}
+},
+{
+"t": 2.34,
+"reference": 0.5,
+"measured": {
+"elbow_joint": 0.0,
+"shoulder_lift_joint": 0.0,
+"shoulder_pan_joint": 0.0,
+"wrist_1_joint": 0.0,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": 0.5
+}
+},
+{
+"t": 2.4,
+"reference": 0.5,
+"measured": {
+"elbow_joint": 0.0,
+"shoulder_lift_joint": 0.0,
+"shoulder_pan_joint": 0.0,
+"wrist_1_joint": 0.0,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": 0.5
+}
+}
+]
+},
+"back": {
+"target": 0.0,
+"settled_s": 1.52,
+"steady_error_rad": 0.0037,
+"base_inhibited_seen": true,
+"final": 0.0,
+"trace": [
+{
+"t": 0.06,
+"reference": 0.5,
+"measured": {
+"elbow_joint": 0.0,
+"shoulder_lift_joint": 0.0,
+"shoulder_pan_joint": 0.0,
+"wrist_1_joint": 0.0,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": 0.5
+}
+},
+{
+"t": 0.12,
+"reference": 0.4755000000000024,
+"measured": {
+"elbow_joint": 0.0,
+"shoulder_lift_joint": 0.0,
+"shoulder_pan_joint": 0.0,
+"wrist_1_joint": 0.0,
+"wrist_2_joint": -0.0,
+"wrist_3_joint": 0.4825
+}
+},
+{
+"t": 0.18,
+"reference": 0.4755000000000024,
+"measured": {
+"elbow_joint": 0.0,
+"shoulder_lift_joint": 0.0,
+"shoulder_pan_joint": 0.0,
+"wrist_1_joint": 0.0,
+"wrist_2_joint": -0.0,
+"wrist_3_joint": 0.4825
+}
+},
+{
+"t": 0.24,
+"reference": 0.43910000000000277,
+"measured": {
+"elbow_joint": 0.0,
+"shoulder_lift_joint": 0.0,
+"shoulder_pan_joint": 0.0,
+"wrist_1_joint": 0.0,
+"wrist_2_joint": -0.0,
+"wrist_3_joint": 0.4461
+}
+},
+{
+"t": 0.3,
+"reference": 0.4076000000000016,
+"measured": {
+"elbow_joint": 0.0,
+"shoulder_lift_joint": 0.0,
+"shoulder_pan_joint": 0.0,
+"wrist_1_joint": 0.0,
+"wrist_2_joint": -0.0,
+"wrist_3_joint": 0.416
+}
+},
+{
+"t": 0.36,
+"reference": 0.4076000000000016,
+"measured": {
+"elbow_joint": 0.0,
+"shoulder_lift_joint": 0.0,
+"shoulder_pan_joint": 0.0,
+"wrist_1_joint": 0.0,
+"wrist_2_joint": -0.0,
+"wrist_3_joint": 0.416
+}
+},
+{
+"t": 0.42,
+"reference": 0.3775000000000021,
+"measured": {
+"elbow_joint": -0.0,
+"shoulder_lift_joint": -0.0,
+"shoulder_pan_joint": -0.0,
+"wrist_1_joint": -0.0,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": 0.3831
+}
+},
+{
+"t": 0.49,
+"reference": 0.3775000000000021,
+"measured": {
+"elbow_joint": -0.0,
+"shoulder_lift_joint": -0.0,
+"shoulder_pan_joint": -0.0,
+"wrist_1_joint": -0.0,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": 0.3831
+}
+},
+{
+"t": 0.54,
+"reference": 0.34810000000000096,
+"measured": {
+"elbow_joint": -0.0,
+"shoulder_lift_joint": -0.0,
+"shoulder_pan_joint": -0.0,
+"wrist_1_joint": -0.0,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": 0.353
+}
+},
+{
+"t": 0.6,
+"reference": 0.34810000000000096,
+"measured": {
+"elbow_joint": -0.0,
+"shoulder_lift_joint": -0.0,
+"shoulder_pan_joint": -0.0,
+"wrist_1_joint": -0.0,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": 0.353
+}
+},
+{
+"t": 0.66,
+"reference": 0.3039999999999994,
+"measured": {
+"elbow_joint": 0.0,
+"shoulder_lift_joint": 0.0,
+"shoulder_pan_joint": 0.0,
+"wrist_1_joint": 0.0,
+"wrist_2_joint": -0.0,
+"wrist_3_joint": 0.311
+}
+},
+{
+"t": 0.73,
+"reference": 0.3039999999999994,
+"measured": {
+"elbow_joint": 0.0,
+"shoulder_lift_joint": 0.0,
+"shoulder_pan_joint": 0.0,
+"wrist_1_joint": 0.0,
+"wrist_2_joint": -0.0,
+"wrist_3_joint": 0.311
+}
+},
+{
+"t": 0.8,
+"reference": 0.26620000000000293,
+"measured": {
+"elbow_joint": 0.0,
+"shoulder_lift_joint": 0.0,
+"shoulder_pan_joint": 0.0,
+"wrist_1_joint": 0.0,
+"wrist_2_joint": -0.0,
+"wrist_3_joint": 0.2753
+}
+},
+{
+"t": 0.86,
+"reference": 0.2319000000000033,
+"measured": {
+"elbow_joint": 0.0,
+"shoulder_lift_joint": 0.0,
+"shoulder_pan_joint": 0.0,
+"wrist_1_joint": 0.0,
+"wrist_2_joint": -0.0,
+"wrist_3_joint": 0.2389
+}
+},
+{
+"t": 0.92,
+"reference": 0.2319000000000033,
+"measured": {
+"elbow_joint": 0.0,
+"shoulder_lift_joint": 0.0,
+"shoulder_pan_joint": 0.0,
+"wrist_1_joint": 0.0,
+"wrist_2_joint": -0.0,
+"wrist_3_joint": 0.2389
+}
+},
+{
+"t": 0.98,
+"reference": 0.1976000000000036,
+"measured": {
+"elbow_joint": 0.0,
+"shoulder_lift_joint": 0.0,
+"shoulder_pan_joint": 0.0,
+"wrist_1_joint": 0.0,
+"wrist_2_joint": -0.0,
+"wrist_3_joint": 0.2039
+}
+},
+{
+"t": 1.04,
+"reference": 0.16330000000000391,
+"measured": {
+"elbow_joint": 0.0,
+"shoulder_lift_joint": 0.0,
+"shoulder_pan_joint": 0.0,
+"wrist_1_joint": 0.0,
+"wrist_2_joint": -0.0,
+"wrist_3_joint": 0.1703
+}
+},
+{
+"t": 1.1,
+"reference": 0.16330000000000391,
+"measured": {
+"elbow_joint": 0.0,
+"shoulder_lift_joint": 0.0,
+"shoulder_pan_joint": 0.0,
+"wrist_1_joint": 0.0,
+"wrist_2_joint": -0.0,
+"wrist_3_joint": 0.1703
+}
+},
+{
+"t": 1.16,
+"reference": 0.12200000000000065,
+"measured": {
+"elbow_joint": 0.0,
+"shoulder_lift_joint": 0.0,
+"shoulder_pan_joint": 0.0,
+"wrist_1_joint": 0.0,
+"wrist_2_joint": -0.0,
+"wrist_3_joint": 0.129
+}
+},
+{
+"t": 1.22,
+"reference": 0.12200000000000065,
+"measured": {
+"elbow_joint": 0.0,
+"shoulder_lift_joint": 0.0,
+"shoulder_pan_joint": 0.0,
+"wrist_1_joint": 0.0,
+"wrist_2_joint": -0.0,
+"wrist_3_joint": 0.129
+}
+},
+{
+"t": 1.28,
+"reference": 0.08070000000000241,
+"measured": {
+"elbow_joint": 0.0,
+"shoulder_lift_joint": 0.0,
+"shoulder_pan_joint": 0.0,
+"wrist_1_joint": 0.0,
+"wrist_2_joint": -0.0,
+"wrist_3_joint": 0.0877
+}
+},
+{
+"t": 1.34,
+"reference": 0.08070000000000241,
+"measured": {
+"elbow_joint": 0.0,
+"shoulder_lift_joint": 0.0,
+"shoulder_pan_joint": 0.0,
+"wrist_1_joint": 0.0,
+"wrist_2_joint": -0.0,
+"wrist_3_joint": 0.0877
+}
+},
+{
+"t": 1.4,
+"reference": 0.038700000000000824,
+"measured": {
+"elbow_joint": 0.0,
+"shoulder_lift_joint": 0.0,
+"shoulder_pan_joint": 0.0,
+"wrist_1_joint": 0.0,
+"wrist_2_joint": -0.0,
+"wrist_3_joint": 0.0457
+}
+},
+{
+"t": 1.46,
+"reference": 0.038700000000000824,
+"measured": {
+"elbow_joint": 0.0,
+"shoulder_lift_joint": 0.0,
+"shoulder_pan_joint": 0.0,
+"wrist_1_joint": 0.0,
+"wrist_2_joint": -0.0,
+"wrist_3_joint": 0.0457
+}
+},
+{
+"t": 1.52,
+"reference": 0.0,
+"measured": {
+"elbow_joint": 0.0,
+"shoulder_lift_joint": 0.0,
+"shoulder_pan_joint": 0.0,
+"wrist_1_joint": 0.0,
+"wrist_2_joint": -0.0,
+"wrist_3_joint": 0.0037
+}
+},
+{
+"t": 1.58,
+"reference": 0.0,
+"measured": {
+"elbow_joint": 0.0,
+"shoulder_lift_joint": 0.0,
+"shoulder_pan_joint": 0.0,
+"wrist_1_joint": 0.0,
+"wrist_2_joint": -0.0,
+"wrist_3_joint": 0.0037
+}
+},
+{
+"t": 1.64,
+"reference": 0.0,
+"measured": {
+"elbow_joint": 0.0,
+"shoulder_lift_joint": 0.0,
+"shoulder_pan_joint": 0.0,
+"wrist_1_joint": 0.0,
+"wrist_2_joint": -0.0,
+"wrist_3_joint": 0.0
+}
+},
+{
+"t": 1.71,
+"reference": 0.0,
+"measured": {
+"elbow_joint": 0.0,
+"shoulder_lift_joint": 0.0,
+"shoulder_pan_joint": 0.0,
+"wrist_1_joint": 0.0,
+"wrist_2_joint": -0.0,
+"wrist_3_joint": 0.0
+}
+},
+{
+"t": 1.76,
+"reference": 0.0,
+"measured": {
+"elbow_joint": 0.0,
+"shoulder_lift_joint": 0.0,
+"shoulder_pan_joint": 0.0,
+"wrist_1_joint": 0.0,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": -0.0
+}
+},
+{
+"t": 1.82,
+"reference": 0.0,
+"measured": {
+"elbow_joint": 0.0,
+"shoulder_lift_joint": 0.0,
+"shoulder_pan_joint": 0.0,
+"wrist_1_joint": 0.0,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": -0.0
+}
+},
+{
+"t": 1.88,
+"reference": 0.0,
+"measured": {
+"elbow_joint": 0.0,
+"shoulder_lift_joint": 0.0,
+"shoulder_pan_joint": 0.0,
+"wrist_1_joint": 0.0,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": 0.0
+}
+},
+{
+"t": 1.94,
+"reference": 0.0,
+"measured": {
+"elbow_joint": 0.0,
+"shoulder_lift_joint": 0.0,
+"shoulder_pan_joint": 0.0,
+"wrist_1_joint": 0.0,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": 0.0
+}
+},
+{
+"t": 2.0,
+"reference": 0.0,
+"measured": {
+"elbow_joint": 0.0,
+"shoulder_lift_joint": 0.0,
+"shoulder_pan_joint": 0.0,
+"wrist_1_joint": 0.0,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": 0.0
+}
+},
+{
+"t": 2.06,
+"reference": 0.0,
+"measured": {
+"elbow_joint": 0.0,
+"shoulder_lift_joint": 0.0,
+"shoulder_pan_joint": 0.0,
+"wrist_1_joint": 0.0,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": 0.0
+}
+},
+{
+"t": 2.12,
+"reference": 0.0,
+"measured": {
+"elbow_joint": 0.0,
+"shoulder_lift_joint": 0.0,
+"shoulder_pan_joint": 0.0,
+"wrist_1_joint": 0.0,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": 0.0
+}
+},
+{
+"t": 2.19,
+"reference": 0.0,
+"measured": {
+"elbow_joint": 0.0,
+"shoulder_lift_joint": 0.0,
+"shoulder_pan_joint": 0.0,
+"wrist_1_joint": 0.0,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": 0.0
+}
+},
+{
+"t": 2.24,
+"reference": 0.0,
+"measured": {
+"elbow_joint": 0.0,
+"shoulder_lift_joint": 0.0,
+"shoulder_pan_joint": 0.0,
+"wrist_1_joint": 0.0,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": 0.0
+}
+},
+{
+"t": 2.3,
+"reference": 0.0,
+"measured": {
+"elbow_joint": 0.0,
+"shoulder_lift_joint": 0.0,
+"shoulder_pan_joint": 0.0,
+"wrist_1_joint": 0.0,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": 0.0
+}
+},
+{
+"t": 2.36,
+"reference": 0.0,
+"measured": {
+"elbow_joint": 0.0,
+"shoulder_lift_joint": 0.0,
+"shoulder_pan_joint": 0.0,
+"wrist_1_joint": 0.0,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": 0.0
+}
+},
+{
+"t": 2.42,
+"reference": 0.0,
+"measured": {
+"elbow_joint": 0.0,
+"shoulder_lift_joint": 0.0,
+"shoulder_pan_joint": 0.0,
+"wrist_1_joint": 0.0,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": 0.0
+}
+},
+{
+"t": 2.48,
+"reference": 0.0,
+"measured": {
+"elbow_joint": 0.0,
+"shoulder_lift_joint": 0.0,
+"shoulder_pan_joint": 0.0,
+"wrist_1_joint": 0.0,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": 0.0
+}
+},
+{
+"t": 2.54,
+"reference": 0.0,
+"measured": {
+"elbow_joint": 0.0,
+"shoulder_lift_joint": 0.0,
+"shoulder_pan_joint": 0.0,
+"wrist_1_joint": 0.0,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": 0.0
+}
+}
+]
+},
+"passed": true
+}
+],
+"passed": false,
+"joints": [
+"elbow_joint",
+"shoulder_lift_joint",
+"shoulder_pan_joint",
+"wrist_1_joint",
+"wrist_2_joint",
+"wrist_3_joint"
+],
+"initial": {
+"elbow_joint": 0.0,
+"shoulder_lift_joint": 0.0,
+"shoulder_pan_joint": 0.0,
+"wrist_1_joint": 0.0,
+"wrist_2_joint": 0.0,
+"wrist_3_joint": 0.0
+},
+"stop": {
+"joint": "shoulder_lift_joint",
+"held_at": 0.0555,
+"target_was": 1.5,
+"drift_after_rad": 0.0,
+"passed": true
+},
+"watchdog": {
+"joint": "shoulder_lift_joint",
+"held_at": -0.2599,
+"target_was": -6.2332,
+"drift_after_rad": 0.0,
+"status": "heartbeat absent; holding measured articulation",
+"passed": true
+},
+"final_error_rad": 0.0
+}
