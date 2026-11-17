@@ -61,6 +61,36 @@ time:
 controller in September, but it does not knock this policy over. The
 stronger pushes do, and the policy gets up every time.
 
+## Walk, fall, get up, walk on (policy switching)
+
+`legged_policy_controller.py` takes an optional `recovery_policy`
+(`legged_recovery_policy:=<dir>` at launch):
+
+- **Take-over:** past the walking policy's 1.0 rad tilt limit, the get-up
+  policy takes over instead of SAFE_STOP.
+- **Hand-back:** once the body has stayed within 0.35 rad for 1 s, the
+  walking policy resumes from a reset history.
+- **Refused at start-up:** the node refuses a recovery policy that is not a
+  get-up task, or whose joints, timing or PD gains differ. The simulator
+  runs one PD law for both.
+
+The vendor walking policy (`go2_himloco`) and r2 differ only in their
+observations.
+
+Launch: `legged_policy:=go2_himloco legged_recovery_policy:=<r2>`, with a
+0.2 s sideways push at 10 s. `screen_get_up.py --drive 0.3` commands
+0.3 m/s forward for 5 s once the walking policy is back.
+
+| Push | Fell | Get-up takes over | Up after | Walking policy back | Walked in 5 s |
+|---|---|---|---|---|---|
+| 60 N | no | — | — | — | — |
+| 200 N | yes, onto its back | 10.32 s (tilt 1.13 rad) | 2.66 s | 13.94 s | 1.35 m |
+| 400 N | yes, onto its back | 10.22 s | 2.66 s | 13.94 s | 0.81 m |
+
+`screen-switch-200.json` is a failed first try, kept: without
+`legged_policy:=`, MuJoCo Loc runs the older stance controller, so no
+switch happened.
+
 ## What changed
 
 **`legged_policy_controller.py`:**
@@ -72,8 +102,11 @@ stronger pushes do, and the policy gets up every time.
   needed: the first launch runs (`screen-roll*.json`) lay still.
 - Stale state and policy failures still stop every policy.
 
-**Launch:** the opt-in MuJoCo push (`go2_perturbation_*`) now also reaches
-`legged_policy` runs, not only the old stance controller.
+**Launch:**
+
+- the opt-in MuJoCo push (`go2_perturbation_*`) now also reaches
+  `legged_policy` runs, not only the old stance controller;
+- new argument `legged_recovery_policy`.
 
 ## Not passed (kept)
 
@@ -86,9 +119,8 @@ stronger pushes do, and the policy gets up every time.
 
 - **MuJoCo only.** Isaac and Gazebo get-ups were not run.
 - **One run per row.**
-- **Standing only:** the get-up policy is the robot's only controller here,
-  so it stands but does not walk. Switching from the walking policy to this
-  one after a fall is not implemented yet.
+- **Switching** was measured on MuJoCo with the vendor walking policy, one
+  run per push.
 - **Stairs**, the other half of R5.2's done-when, remain.
 - Traces here are thinned to 5 Hz. Launch logs stay on SSD under
   `robot_lab_runtime/go2-get-up-screen-20261117`.

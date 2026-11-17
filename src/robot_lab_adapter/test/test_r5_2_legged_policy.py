@@ -350,3 +350,18 @@ def test_gui_policy_mapping_matches_the_adapter():
 
 
 
+
+
+def test_recovery_policy_must_be_a_get_up_task_with_the_same_pd_law():
+    """Walk -> get-up handover (R5.2, 2026-11-17): one simulator PD law serves both policies."""
+    pytest.importorskip('trajectory_msgs')
+    import dataclasses
+    from robot_lab_adapter.legged_policy_controller import recovery_mismatch
+    walking = _load('go2_himloco')
+    get_up = dataclasses.replace(walking, observations=list(walking.observations[1:3]) + ['commands']
+                                 + list(walking.observations[3:]), history=[],
+                                 source=dict(walking.source, task='get_up_roll'))
+    assert recovery_mismatch(walking, get_up) == ''
+    assert 'not a get-up task' in recovery_mismatch(walking, dataclasses.replace(get_up, source=dict(task='walk')))
+    stiffer = dataclasses.replace(get_up, rl_kp=walking.rl_kp * 2)
+    assert 'rl_kp differs' in recovery_mismatch(walking, stiffer)

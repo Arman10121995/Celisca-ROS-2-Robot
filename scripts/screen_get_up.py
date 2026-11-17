@@ -19,8 +19,14 @@ spawns it fallen (``spawn_roll:=1.57`` on MuJoCo):
      go2_perturbation_force_n:=60 go2_perturbation_start_s:=3 go2_perturbation_duration_s:=0.2" \\
     -- python3 scripts/screen_get_up.py --stand-height 0.32
 
+With ``legged_recovery_policy:=<get-up dir>`` on a walking policy, the
+report also carries the controller's policy switches
+(``/legged_policy/status``), and ``--drive V`` then commands ``V`` m/s
+forward on ``/cmd_vel`` once the robot is up and reports how far it walked
+in ``--drive-s`` sim seconds.
+
 Prints a JSON report; exit 0 when the robot got up (or, with
-``--expect-no-fall``, when it never fell).
+``--expect-no-fall``, when it never fell), and walked on when driven.
 """
 import argparse
 import json
@@ -28,7 +34,9 @@ import math
 import time
 
 import rclpy
+from geometry_msgs.msg import Twist
 from nav_msgs.msg import Odometry
+from std_msgs.msg import String
 
 
 def main():
@@ -39,6 +47,8 @@ def main():
     ap.add_argument('--timeout', type=float, default=600.0, help='wall seconds')
     ap.add_argument('--expect-no-fall', action='store_true')
     ap.add_argument('--out', default='', help='write the full report with its trace here')
+    ap.add_argument('--drive', type=float, default=0.0, help='forward command after getting up, m/s')
+    ap.add_argument('--drive-s', type=float, default=5.0, help='sim seconds of --drive')
     args = ap.parse_args()
     rclpy.init()
     node = rclpy.create_node('get_up_screen')
@@ -50,12 +60,28 @@ def main():
             return
         q = message.pose.pose.orientation
         up_z = 1.0 - 2.0 * (q.x * q.x + q.y * q.y)     # world z of the body z axis
-        samples.append(dict(t=round(stamp, 3), up_z=round(up_z, 4), height=round(message.pose.pose.position.z, 4)))
+        p = message.pose.pose.position
+        samples.append(dict(t=round(stamp, 3), up_z=round(up_z, 4), height=round(p.z, 4),
+                            xy=[round(p.x, 3), round(p.y, 3)]))
 
+    status = {}
     node.create_subscription(Odometry, '/odom/ground_truth', on_odom, 10)
+    node.create_subscription(String, '/legged_policy/status', lambda m: status.update(json.loads(m.data)), 10)
+    command = node.create_publisher(Twist, '/cmd_vel', 1)
+    drive = dict(start=None)
     deadline = time.monotonic() + args.timeout
     while time.monotonic() < deadline and (not samples or samples[-1]['t'] - samples[0]['t'] < args.seconds):
         rclpy.spin_once(node, timeout_sec=.1)
+        if args.drive and samples and drive['start'] is None and status.get('switches') \
+                and status['switches'][-1].get('to') == 'main' and not status.get('recovering'):
+            drive['start'] = samples[-1]
+        if drive['start'] is not None and samples[-1]['t'] - drive['start']['t'] < args.drive_s:
+            message = Twist()
+            message.linear.x = args.drive
+            command.publish(message)
+        elif drive['start'] is not None and 'end' not in drive:
+            drive['end'] = samples[-1]
+            command.publish(Twist())
     node.destroy_node()
     rclpy.shutdown()
 
@@ -65,7 +91,9 @@ def main():
     def fallen(s):
         return s['up_z'] < .5 or s['height'] < .6 * args.stand_height
 
-    report = dict(stand_height_m=args.stand_height, samples=len(samples), passed=False, trace=samples)
+    report = dict(stand_height_m=args.stand_height, samples=len(samples), passed=False, trace=samples,
+                  controller=dict(state=status.get('state'), policy=status.get('policy'),
+                                  recovery_policy=status.get('recovery_policy'), switches=status.get('switches')))
     if not samples:
         report['error'] = 'no /odom/ground_truth'
         print(json.dumps(report))
@@ -96,6 +124,14 @@ def main():
         # Must still be upright at the end, not just once.
         report['upright_at_end'] = upright(samples[-1])
         report['passed'] = report['passed'] and report['upright_at_end']
+    if args.drive:
+        if drive['start'] is None or 'end' not in drive:
+            report.update(walked_m=None, passed=False, drive_note='never handed back to the main policy, or drive unfinished')
+        else:
+            a, b = drive['start']['xy'], drive['end']['xy']
+            report['walked_m'] = round(((b[0] - a[0]) ** 2 + (b[1] - a[1]) ** 2) ** .5, 3)
+            report['drive'] = dict(command_mps=args.drive, start=drive['start'], end=drive['end'])
+            report['passed'] = report['passed'] and report['walked_m'] > .5 * args.drive * args.drive_s
     print(json.dumps({k: v for k, v in report.items() if k != 'trace'}, indent=1))
     if args.out:
         with open(args.out, 'w') as stream:

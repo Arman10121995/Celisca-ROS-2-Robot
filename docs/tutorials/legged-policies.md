@@ -178,12 +178,48 @@ scripts/slam_mapping_check.sh mujoco unitree_a1 nav_obstacle /path/to/out.json
 - Command timeout (0.5 s): commands expire to zero velocity; the policy
   stands.
 - Stale joint/IMU state or trunk tilt beyond `legged_policy_fall_tilt_rad`
-  (default 1.0 rad) latches **safe-stop**: the default standing pose is
+  (default 1.0 rad) latches **safe-stop** (unless a `legged_recovery_policy`
+  takes over, or the policy itself is a get-up policy): the default standing pose is
   published until `ros2 service call /legged_policy/reset std_srvs/srv/Trigger '{}'`.
 - Bridge side: target messages that are wrong-sized or non-finite are
   refused; command loss falls back to the default pose, never the last
   value.
 - Stop/Space in the GUI still clears input state through the shared path.
+
+## Getting up after a fall (Go2, MuJoCo, experimental)
+
+A policy trained on a get-up task (`get_up`, `get_up_roll` in its
+`source.json`) acts at any tilt. For it, lying on its side or back is the
+starting state, so the tilt safe-stop does not apply; stale state still
+stops it.
+
+To recover from falls while walking, give the walking policy a get-up
+policy:
+
+```bash
+python3 scripts/run_with_launch.py --log run.log --warmup 3 --launch \
+  "robot_model:=unitree_go2 simulator:=mujoco mode:=loc map_name:=nav_empty \
+   legged_policy:=go2_himloco \
+   legged_recovery_policy:=/workspace/molar/robot_lab_runtime/training/go2_get_up_roll_r2/policy \
+   go2_perturbation_force_n:=200 go2_perturbation_start_s:=10 go2_perturbation_duration_s:=0.2" \
+  -- python3 scripts/screen_get_up.py --stand-height 0.32 --seconds 40 --drive 0.3
+```
+
+What happens:
+
+- **Fall:** past `legged_policy_fall_tilt_rad`, the get-up policy takes
+  over.
+- **Hand-back:** after 1 s within 0.35 rad of upright, the walking policy
+  resumes. `/legged_policy/status` lists each switch.
+- **Compatibility:** the two policies must share joints, timing and PD
+  gains, or the controller refuses to start.
+- **The screen:** `screen_get_up.py` judges fall and get-up from
+  `/odom/ground_truth`. `--drive` then checks that the robot walks again.
+
+[Measured runs](../status/evidence/go2-get-up-roll-r2-2026-11-17/README.md):
+
+- up again in 2.7 s after 200 N and 400 N pushes;
+- placed side and back starts: up in 0.5 s and 1.4 s.
 
 ## Limits (read before trusting it)
 
@@ -191,7 +227,7 @@ The walks above are flat-ground velocity screens; the navigation results
 are one seeded mission per cell on one flat map. These remain unqualified
 (task ledger R5.2 and R3.6):
 
-- terrain, falls and recovery;
+- terrain; fall recovery beyond the MuJoCo Go2 runs above;
 - mapping beyond the one measured loop;
 - navigation beyond the cells measured above.
 

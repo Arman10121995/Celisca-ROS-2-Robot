@@ -17,6 +17,13 @@ which publishes the default standing pose until ``/legged_policy/reset``.
 A policy trained to get up (``source.json`` task in ``GET_UP_TASKS``) acts
 at any tilt: lying on its side or back is its starting state, so only
 stale state and policy failures stop it.
+
+Fall recovery: with ``recovery_policy`` (a get-up policy sharing the main
+policy's joints, timing and PD gains, so the simulator's one PD law serves
+both), a tilt beyond ``fall_tilt_rad`` hands control to it instead of
+SAFE_STOP. Once the body has stayed within ``recovered_tilt_rad`` for
+``recovered_hold_s`` of sim time, the main policy resumes from a reset
+history. ``/legged_policy/status`` reports the active policy and switches.
 """
 import json
 import math
@@ -34,6 +41,19 @@ from std_srvs.srv import Trigger
 
 # Training tasks whose policies start from fallen poses (legged_training.py).
 GET_UP_TASKS = ('get_up', 'get_up_roll')
+# Contract fields two policies must share for one simulator PD law to serve both.
+SHARED_PD_FIELDS = ('robot_joint_names', 'joint_mapping', 'dt', 'decimation', 'rl_kp', 'rl_kd',
+                    'torque_limits', 'wheel_indices')
+
+
+def recovery_mismatch(main, recovery):
+    """Why ``recovery`` cannot take over from ``main`` (a reason string), or ''."""
+    if recovery.source.get('task') not in GET_UP_TASKS:
+        return 'recovery policy task %r is not a get-up task' % recovery.source.get('task')
+    for name in SHARED_PD_FIELDS:
+        if not np.array_equal(np.asarray(getattr(main, name)), np.asarray(getattr(recovery, name))):
+            return 'recovery policy %s differs from the main policy' % name
+    return ''
 from trajectory_msgs.msg import JointTrajectory, JointTrajectoryPoint
 
 from robot_lab_adapter.legged_policy import (
@@ -81,10 +101,24 @@ class LeggedPolicyController(Node):
         self.declare_parameter('command_timeout_s', 0.5)
         self.declare_parameter('state_timeout_s', 0.5)
         self.declare_parameter('fall_tilt_rad', 1.0)
+        self.declare_parameter('recovery_policy', '')
+        self.declare_parameter('recovered_tilt_rad', 0.35)
+        self.declare_parameter('recovered_hold_s', 1.0)
         directory = policy_directory(self.get_parameter('policy').value)
         self.contract = PolicyContract.load(directory)
         self.policy = LeggedPolicy(self.contract, model_path=os.path.join(directory, 'policy.onnx'))
         self.get_up = self.contract.source.get('task') in GET_UP_TASKS
+        self.recovery, self.recovering, self.upright_since, self.switches = None, False, None, []
+        recovery_name = str(self.get_parameter('recovery_policy').value or '')
+        if recovery_name and not self.get_up:
+            recovery_directory = policy_directory(recovery_name)
+            recovery_contract = PolicyContract.load(recovery_directory)
+            reason = recovery_mismatch(self.contract, recovery_contract)
+            if reason:
+                raise ValueError(reason)
+            self.recovery = LeggedPolicy(recovery_contract,
+                                         model_path=os.path.join(recovery_directory, 'policy.onnx'))
+            self.recovery_name = recovery_contract.source.get('variant', recovery_name)
         self.limits = [float(v) for v in self.get_parameter('command_limits').value]
         self.command, self.command_time = [0.0, 0.0, 0.0], None
         self.joints, self.joint_time = None, None
@@ -162,7 +196,7 @@ class LeggedPolicyController(Node):
             self.standing()
             return
         if not fresh:
-            if self.state == 'running':
+            if self.state in ('running', 'recovering'):
                 self.state, self.reason = 'safe_stop', 'joint/IMU state went stale'
             self.standing()
             return
@@ -174,21 +208,39 @@ class LeggedPolicyController(Node):
         quaternion, gyro = self.imu
         gravity_z = 1.0-2.0*(quaternion[1]**2+quaternion[2]**2)   # body z in world z
         tilt = math.acos(max(-1.0, min(1.0, gravity_z)))
-        if not self.get_up and tilt > float(self.get_parameter('fall_tilt_rad').value):
+        fallen = tilt > float(self.get_parameter('fall_tilt_rad').value)
+        if self.recovery is not None:
+            if fallen and not self.recovering:
+                self.recovering, self.upright_since = True, None
+                self.recovery.reset()
+                self.switches.append(dict(t=round(now, 3), to='recovery', tilt_rad=round(tilt, 3)))
+                self.get_logger().warn('Fall (tilt %.2f rad): %s takes over' % (tilt, self.recovery_name))
+            elif self.recovering:
+                if tilt < float(self.get_parameter('recovered_tilt_rad').value):
+                    self.upright_since = now if self.upright_since is None else self.upright_since
+                    if now - self.upright_since >= float(self.get_parameter('recovered_hold_s').value):
+                        self.recovering = False
+                        self.policy.reset()
+                        self.switches.append(dict(t=round(now, 3), to='main', tilt_rad=round(tilt, 3)))
+                        self.get_logger().info('Upright again: main policy resumes')
+                else:
+                    self.upright_since = None
+        elif not self.get_up and fallen:
             self.state, self.reason = 'safe_stop', 'tilt %.2f rad exceeds the fall limit' % tilt
             self.standing()
             return
         command = self.command
-        if self.command_time is None or now-self.command_time > float(self.get_parameter('command_timeout_s').value):
+        if self.recovering or self.command_time is None or \
+                now-self.command_time > float(self.get_parameter('command_timeout_s').value):
             command = [0.0, 0.0, 0.0]
         state = LeggedState(self.joints[0], self.joints[1], quaternion, gyro)
         try:
-            targets = self.policy.step(state, command)
+            targets = (self.recovery if self.recovering else self.policy).step(state, command)
         except (ValueError, RuntimeError) as exc:
             self.state, self.reason = 'safe_stop', 'policy failure: %s' % exc
             self.standing()
             return
-        self.state = 'running'
+        self.state = 'recovering' if self.recovering else 'running'
         self.steps += 1
         self.publish(targets)
 
@@ -196,6 +248,8 @@ class LeggedPolicyController(Node):
         self.status_pub.publish(String(data=json.dumps(dict(
             state=self.state, reason=self.reason, steps=self.steps, command=self.command,
             policy=self.contract.source.get('robot', '')+'/'+self.contract.source.get('variant', ''),
+            recovery_policy=getattr(self, 'recovery_name', None), recovering=self.recovering,
+            switches=self.switches[-20:],
             qualification='experimental model-matched policy; validation per robot/map pending'))))
 
 

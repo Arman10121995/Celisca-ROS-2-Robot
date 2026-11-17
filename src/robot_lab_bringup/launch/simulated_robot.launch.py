@@ -1556,6 +1556,7 @@ def _build_simulation_actions(context):
                     "fall_tilt_rad": _as_float(
                         _launch_value(context, "legged_policy_fall_tilt_rad"),
                         1.0),
+                    "recovery_policy": _launch_value(context, "legged_recovery_policy").strip(),
                 }],
             ))
 
@@ -2125,6 +2126,11 @@ def generate_launch_description():
                         "the spot); 'true' plans in-place rotations and Spin "
                         "recovery anyway, for a controller measured to turn there "
                         "(a trained legged policy); 'false' forces forward arcs."),
+        DeclareLaunchArgument(
+            "legged_recovery_policy", default_value="",
+            description="Get-up policy (name or directory) that takes over from "
+                        "legged_policy after a fall and hands back once upright "
+                        "(R5.2). Empty: a fall latches SAFE_STOP."),
         DeclareLaunchArgument(
             "legged_policy_fall_tilt_rad", default_value="1.0",
             description="Trunk tilt [rad] beyond which the legged policy "
