@@ -35,9 +35,13 @@ JOINT_STEP_RAD = 0.02       # collision samples along joint-space segments
 POSITION_TOLERANCE_M = 0.002
 ANGLE_TOLERANCE_RAD = 0.02
 CONTACT_MARGIN_M = 0.002    # penetration below which a contact counts (dist < -margin)
+# Routes that may not touch the object (the approach to the pre-grasp) keep
+# every robot part this far from it. With penetration alone, TIAGo's 9 cm
+# fingertips swept past the block within millimetres, and Isaac's tracking
+# pushed it over (2026-11-18).
+OBJECT_CLEARANCE_M = 0.015
 SEARCH_SECONDS = 15.0       # RRT-Connect budget when direct and via routes collide
 GRASP_RAISE_STEP_M = 0.006
-APPROACH_CLEARANCE_M = 0.03  # open fingertips this far above the object's top before descending  # grip this much higher when the fingertips would hit the support
 
 
 @dataclass
@@ -125,8 +129,10 @@ class ArmScene:
                           pos='%g %g %g' % tuple(box.position), quat='%g %g %g %g' % tuple(box.quaternion))
         holder = ET.SubElement(world, 'body', name='pick_place_object', mocap='true',
                                pos='%g %g %g' % tuple(obj.position), quat='%g %g %g %g' % tuple(obj.quaternion))
+        # The margin makes MuJoCo report near-misses within the clearance.
         ET.SubElement(holder, 'geom', name='object', type='box',
-                      size='%g %g %g' % tuple(max(v, 1e-6) / 2 for v in obj.size), contype='1', conaffinity='1')
+                      size='%g %g %g' % tuple(max(v, 1e-6) / 2 for v in obj.size), contype='1', conaffinity='1',
+                      margin='%g' % OBJECT_CLEARANCE_M)
         option = root.find('option')
         if option is None:
             option = ET.SubElement(root, 'option')
@@ -214,14 +220,16 @@ class ArmScene:
         self.attached = None
 
     # --- collision -------------------------------------------------------------
-    def collisions(self, allow_fingers=False, allow_supports=()):
-        """Contacts deeper than the margin, excluding allowed pairs: [(geom name, geom name, depth)]."""
+    def collisions(self, allow_fingers=False, allow_supports=(), object_clearance=True):
+        """Contacts deeper than the margin, excluding allowed pairs: [(geom name, geom name, depth)].
+
+        Robot parts must also keep OBJECT_CLEARANCE_M from the object, unless
+        fingers may touch it or ``object_clearance`` is off (the short drop
+        into a pre-grasp that straddles the object)."""
         m, d, found = self.model, self.data, []
         allowed_supports = {self.obstacle_geoms[name] for name in allow_supports}
         for i in range(d.ncon):
             c = d.contact[i]
-            if c.dist > -CONTACT_MARGIN_M:
-                continue
             g1, g2 = int(c.geom1), int(c.geom2)
             pair = {g1, g2}
             if self.object_geom in pair:
@@ -230,6 +238,11 @@ class ArmScene:
                     continue
                 if other in allowed_supports:
                     continue
+                clearance = object_clearance and not allow_fingers and other in self.robot_geoms
+                if c.dist > (OBJECT_CLEARANCE_M if clearance else -CONTACT_MARGIN_M):
+                    continue
+            elif c.dist > -CONTACT_MARGIN_M:
+                continue
             elif not (pair & self.robot_geoms):
                 continue                # scenery against scenery
             elif pair <= self.robot_geoms and not (pair & self.moving_geoms):
@@ -295,14 +308,20 @@ class ArmScene:
         return path
 
     def joint_route(self, start, end, vias, fingers, high=(), **allow):
-        """Through the first ``high`` pose above the target whose two segments are
-        clear (up and over, then down: a direct sweep can graze the target when
-        the plant tracks or collides less exactly than this model); else a
-        direct segment; else through the first other via (e.g. Home); else a
-        bounded RRT-Connect search (``robot_lab_utils.bounded_control_planner``)."""
+        """Up and over, then down: through the first ``high`` pose above the
+        target that is reachable by any route below (keeping OBJECT_CLEARANCE_M
+        from the object) and whose last, short leg straight down to ``end`` is
+        clear of penetration. A sweep at the target's height can
+        graze it when the plant tracks less exactly than this model (Isaac
+        TIAGo knocked its block over, 2026-11-18), so the first leg may use
+        every fallback rather than giving the high approach up. Without a
+        usable high pose: a direct segment; else through the first other via
+        (e.g. Home); else a bounded RRT-Connect search
+        (``robot_lab_utils.bounded_control_planner``)."""
         for via in high:
             try:
-                return self.joint_segment(start, via, fingers, **allow) + self.joint_segment(via, end, fingers, **allow)
+                down = self.joint_segment(via, end, fingers, **dict(allow, object_clearance=False))
+                return self.joint_route(start, via, vias, fingers, **allow) + down
             except PlanningError:
                 continue
         try:
@@ -478,8 +497,11 @@ def plan_place(scene: ArmScene, current: Dict[str, float], obj: Box, support: Bo
     return dict(stages=stages, place_centre=place_centre.tolist())
 
 
-def _high_vias(scene, point, rotation, seed, fingers, heights=(0.15, 0.30)):
-    """Arm poses with the tool straight above ``point``: detours that clear a table edge."""
+def _high_vias(scene, point, rotation, seed, fingers, heights=(0.10, 0.15, 0.30)):
+    """Arm poses with the tool straight above ``point``: detours that clear a table edge.
+
+    0.10 m lifts TIAGo's 9 cm fingertips clear of its block's top and is
+    within its reach; 0.15 and 0.30 m are not (2026-11-18)."""
     vias = []
     for height in heights:
         solution = scene.solve(np.asarray(point) + [0, 0, height], rotation, seed, fingers)

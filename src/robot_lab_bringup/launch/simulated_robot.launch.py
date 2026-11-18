@@ -912,6 +912,16 @@ def _build_simulation_actions(context):
     # Explicit imported sensors carry their actual mounting frame and source
     # calibration into each physics bridge. Empty retains existing defaults.
     drive_args['sensor_config'] = json.dumps(robot_config.get('sensor_config', {}), sort_keys=True)
+    if _launch_value(context, "simulator") == "isaac" and robot_config.get("pick_place") and model_path:
+        # Isaac reports the true tool and finger poses (/simulation/link_poses)
+        # so a pick and place can compare them with its kinematic estimate.
+        import xml.etree.ElementTree as _ET
+        from robot_lab_utils.robot_description import load_description
+        _place = robot_config["pick_place"]
+        _fingers = set(_place.get("finger_joints", []))
+        _links = [_place["tool_body"]] + [j.find("child").get("link") for j in
+                  _ET.fromstring(load_description(model_path)).findall("joint") if j.get("name") in _fingers]
+        drive_args["trace_links"] = ",".join(_links)
     drive_type = str(drive_config.get("type", "diff"))
     # Localization runs in the robot's own root frame (base_footprint for
     # the wheeled bases, 'base' or 'pelvis' for legged and humanoid ones).

@@ -142,6 +142,7 @@ def _build_isaac_actions(context):
         LaunchConfiguration("drive_config"), value_type=str)
     spawner_params['articulation_config'] = ParameterValue(
         LaunchConfiguration('articulation_config'), value_type=str)
+    spawner_params['trace_links'] = ParameterValue(LaunchConfiguration('trace_links'), value_type=str)
     from robot_lab_utils.sensor_config import sensor_parameters
     spawner_params.update(sensor_parameters(
         LaunchConfiguration('sensor_config').perform(context),
@@ -219,6 +220,8 @@ def generate_launch_description():
         DeclareLaunchArgument("wheel_separation", default_value="0.17"),
         DeclareLaunchArgument("drive_config", default_value=""),
         DeclareLaunchArgument('articulation_config', default_value=''),
+        DeclareLaunchArgument('trace_links', default_value='',
+                              description='Comma-separated links whose world poses are published on /simulation/link_poses'),
         DeclareLaunchArgument('sensor_config', default_value=''),
         DeclareLaunchArgument('gait_probe_config',default_value=''),
         DeclareLaunchArgument('gait_floor_reference',default_value=''),

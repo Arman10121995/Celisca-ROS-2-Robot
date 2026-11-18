@@ -1268,6 +1268,28 @@ def _add_free_bodies(world, bodies):
     return created
 
 
+def _traced_link_prims(stage, names):
+    """{name: prim} for the first prim of each traced link name (the importer keeps link names)."""
+    wanted, found = set(names), {}
+    for prim in stage.Traverse():
+        if prim.GetName() in wanted and prim.GetName() not in found:
+            found[prim.GetName()] = prim
+    return found
+
+
+def _link_world_poses(prims):
+    """{name: [x, y, z, qw, qx, qy, qz]} world poses of traced link prims."""
+    from pxr import Usd, UsdGeom
+    cache = UsdGeom.XformCache(Usd.TimeCode.Default())
+    poses = {}
+    for name, prim in prims.items():
+        matrix = cache.GetLocalToWorldTransform(prim)
+        t = matrix.ExtractTranslation()
+        q = matrix.ExtractRotationQuat()
+        poses[name] = [float(t[0]), float(t[1]), float(t[2]), float(q.GetReal())] + [float(v) for v in q.GetImaginary()]
+    return poses
+
+
 def _free_body_poses(bodies):
     """{name: [x, y, z, qw, qx, qy, qz]} for /simulation/free_bodies."""
     poses = {}
@@ -1585,6 +1607,11 @@ def _run_stage(app, reader, cfg, state):
         _emit({"event": "ready", "dofs": dof_names,
                "root_body": _articulation_root_body(robot)})
 
+    traced_links = (_traced_link_prims(stage_obj, cfg.get("trace_links") or [])
+                    if not robot_free and cfg.get("trace_links") else {})
+    if cfg.get("trace_links"):
+        _emit({"event": "log", "msg": "Traced links %s (missing %s)" % (
+            sorted(traced_links), sorted(set(cfg["trace_links"]) - set(traced_links)))})
     if not robot_free:
         try:
             scan = _prepare_scan(cfg, dt, robot, stage_obj)
@@ -1812,6 +1839,12 @@ def _run_stage(app, reader, cfg, state):
         free_poses = None
         if free_bodies and sim_step % max(1, int(round(.1 / dt))) == 0:
             free_poses = _free_body_poses(free_bodies)
+        if traced_links and sim_step % max(1, int(round(.25 / dt))) == 0:
+            try:
+                _emit({"event": "links", "t": t, "poses": _link_world_poses(traced_links)})
+            except Exception as exc:
+                _emit({"event": "log", "msg": "Link poses unavailable: %s" % exc})
+                traced_links = {}
         _emit({"event": "state", "t": t, "pos": pos, "orn": orn,
                "lin": lin, "ang": ang, "jpos": jpos, "jvel": jvel,
                **({"free_bodies": free_poses} if free_poses else {}),

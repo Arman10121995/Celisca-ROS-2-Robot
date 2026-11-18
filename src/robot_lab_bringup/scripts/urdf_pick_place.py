@@ -148,6 +148,9 @@ class PickPlace(Node):
             self.amcl_pose, self.amcl_at = None, -math.inf
             self.create_subscription(PoseWithCovarianceStamped, '/amcl_pose', self._on_amcl, 10)
         self.create_subscription(String, '/simulation/free_bodies', self._on_truth, 10)
+        # Optional truth for the tool and finger links (Isaac: trace_links).
+        self.link_poses, self.link_poses_at = {}, -math.inf
+        self.create_subscription(String, '/simulation/link_poses', self._on_link_poses, 10)
         self.create_subscription(String, '/molar/articulation/state', self._on_state, 10)
         self.create_subscription(String, '/pick_place/request', self._on_request, 1)
         self.command_pub = self.create_publisher(String, '/molar/articulation/command', 1)
@@ -183,6 +186,21 @@ class PickPlace(Node):
     def _on_truth(self, message):
         self.truth = json.loads(message.data)
         self.truth_at = _now()
+
+    def _on_link_poses(self, message):
+        self.link_poses = json.loads(message.data)
+        self.link_poses_at = _now()
+
+    def _tcp_truth(self):
+        """World TCP from the tool link's true pose and the spec's tcp_offset, or None."""
+        pose = self.link_poses.get(self.spec.tool_body) if _now() - self.link_poses_at < 1.0 else None
+        if not pose:
+            return None
+        w, x, y, z = pose[3:7]
+        rotation = np.array([[1 - 2 * (y * y + z * z), 2 * (x * y - w * z), 2 * (x * z + w * y)],
+                             [2 * (x * y + w * z), 1 - 2 * (x * x + z * z), 2 * (y * z - w * x)],
+                             [2 * (x * z - w * y), 2 * (y * z + w * x), 1 - 2 * (x * x + y * y)]])
+        return np.asarray(pose[:3]) + rotation @ np.asarray(self.spec.tcp_offset, dtype=float)
 
     def _on_odom(self, message):
         p, q = message.pose.pose.position, message.pose.pose.orientation
@@ -459,7 +477,13 @@ class PickPlace(Node):
             interlock['max_base_turn_in_arm_phases'] = max(interlock['max_base_turn_in_arm_phases'], self.base_twist[1])
         stage = task['stages'][task['index']]
         if _now() - task['stage_started'] > STAGE_TIMEOUT:
-            return self._finish('failed', 'stage %s timed out' % stage['name'])
+            measured, final = self.measured(), stage['targets'][-1]
+            errors = {n: abs(measured[n] - final[n]) for n in final if n in measured}
+            worst = max(errors, key=errors.get) if errors else None
+            return self._finish('failed', 'stage %s timed out%s' % (stage['name'], (
+                ' (worst joint %s %.4f rad from its target; %d over the %.2f rad settle tolerance)'
+                % (worst, errors[worst], sum(e > SETTLE_TOLERANCE for e in errors.values()), SETTLE_TOLERANCE))
+                if worst else ''))
         if task['step'] < len(stage['targets']):
             self._send(dict(stage['targets'][task['step']], **stage['fingers']))
             task['step'] += 1
@@ -652,6 +676,14 @@ class PickPlace(Node):
                       fingers=[round(measured[n], 4) for n in self.spec.finger_joints if n in measured],
                       finger_references=[round(c['reference'], 4) for c in self.state.get('channels', [])
                                          if c['name'] in self.spec.finger_joints and c.get('reference') is not None])
+        truth = self._tcp_truth()
+        if truth is not None:
+            sample['tcp_truth'] = [round(float(v), 4) for v in truth]
+            sample['finger_links'] = {name: [round(v, 4) for v in pose[:3]] for name, pose in self.link_poses.items()
+                                      if name != self.spec.tool_body}
+            if task.get('scene') is not None and task['phases'][task['phase_index']]['kind'] == 'arm':
+                estimate, _ = self._tcp(task)
+                sample['tcp_estimate'] = [round(float(v), 4) for v in estimate]
         if self.mobile and self.base_pose is not None:
             sample['base'] = [round(v, 4) for v in self.base_pose]
             if task['object'] in self.truth:

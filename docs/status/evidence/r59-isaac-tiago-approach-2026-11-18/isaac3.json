@@ -1,0 +1,4983 @@
+{
+"object": "fetch_block",
+"support": "drop_table",
+"home_reached": true,
+"result": {
+"schema": "robot_lab.pick_place_result.v1",
+"outcome": "failed",
+"passed": false,
+"message": "close: fingers closed past the object",
+"request": {
+"object": "fetch_block",
+"support": "drop_table",
+"lift": 0.1,
+"transit": "auto"
+},
+"object": "fetch_block",
+"support": "drop_table",
+"object_start": [
+1.450006365776062,
+2.435675696688122e-06,
+0.5749993920326233
+],
+"plan": {
+"transit": "straight",
+"pick_base": [
+0.83,
+-0.0,
+0.0
+],
+"place_base": [
+0.45,
+1.43,
+1.571
+],
+"place_xy": [
+0.45,
+2.05
+],
+"grasp_width_m": 0.04,
+"pick_base_measured": [
+0.8049,
+0.0009,
+0.0,
+-0.0242
+]
+},
+"stages": [
+{
+"phase": "to_object_arrived",
+"final_pose": [
+0.8049,
+0.0009,
+0.0,
+-0.0242
+]
+},
+{
+"phase": "to_object",
+"seconds": 21.98
+},
+{
+"stage": "open",
+"seconds": 0.25,
+"object_truth": [
+1.45,
+0.0,
+0.575
+],
+"tcp_estimate": [
+0.9941,
+0.1843,
+0.773
+],
+"passed": true
+},
+{
+"stage": "above_object",
+"seconds": 25.35,
+"object_truth": [
+1.4178,
+-0.1062,
+0.52
+],
+"tcp_estimate": [
+1.4487,
+0.0005,
+0.6735
+],
+"passed": true
+},
+{
+"stage": "down_to_grasp",
+"seconds": 4.03,
+"object_truth": [
+1.4178,
+-0.1062,
+0.52
+],
+"tcp_estimate": [
+1.4515,
+-0.0006,
+0.6322
+],
+"passed": true
+},
+{
+"stage": "close",
+"seconds": 3.87,
+"object_truth": [
+1.4178,
+-0.1062,
+0.52
+],
+"tcp_estimate": [
+1.45,
+0.0001,
+0.6292
+],
+"passed": false,
+"finger_positions": [
+0.0014,
+0.0014
+],
+"reason": "fingers closed past the object"
+}
+],
+"mobile": true,
+"interlock": {
+"max_base_speed_in_arm_phases": 0.015035505443410443,
+"max_base_turn_in_arm_phases": 0.025237034806366014,
+"drive_ticks_with_articulation_active": 0,
+"drive_ticks": 103
+},
+"transit": "straight",
+"trace": [
+{
+"t": 0.0,
+"stage": "to_object",
+"object": [
+1.45,
+0.0,
+0.575,
+1.0,
+-0.0,
+0.0,
+0.0
+],
+"fingers": [
+0.04,
+0.04
+],
+"finger_references": [
+0.04,
+0.04
+],
+"tcp_truth": [
+0.2048,
+0.1875,
+0.773
+],
+"finger_links": {
+"gripper_right_finger_link": [
+0.168,
+0.1815,
+0.6521
+],
+"gripper_left_finger_link": [
+0.2479,
+0.1845,
+0.6541
+]
+},
+"base": [
+0.0188,
+0.0006,
+0.0002,
+-0.0066
+],
+"object_in_base": [
+1.4312,
+0.0088,
+0.5748
+]
+},
+{
+"t": 0.7,
+"stage": "to_object",
+"object": [
+1.45,
+-0.0,
+0.575,
+1.0,
+0.0,
+0.0,
+0.0
+],
+"fingers": [
+0.04,
+0.04
+],
+"finger_references": [
+0.04,
+0.04
+],
+"tcp_truth": [
+0.2107,
+0.1872,
+0.773
+],
+"finger_links": {
+"gripper_right_finger_link": [
+0.1739,
+0.1813,
+0.6521
+],
+"gripper_left_finger_link": [
+0.2538,
+0.1843,
+0.6541
+]
+},
+"base": [
+0.024,
+0.0005,
+0.0,
+-0.0064
+],
+"object_in_base": [
+1.426,
+0.0086,
+0.575
+]
+},
+{
+"t": 1.32,
+"stage": "to_object",
+"object": [
+1.45,
+0.0,
+0.575,
+1.0,
+0.0,
+0.0,
+0.0
+],
+"fingers": [
+0.04,
+0.04
+],
+"finger_references": [
+0.04,
+0.04
+],
+"tcp_truth": [
+0.2107,
+0.1872,
+0.773
+],
+"finger_links": {
+"gripper_right_finger_link": [
+0.1739,
+0.1813,
+0.6521
+],
+"gripper_left_finger_link": [
+0.2538,
+0.1843,
+0.6541
+]
+},
+"base": [
+0.0393,
+0.0004,
+0.0001,
+-0.0058
+],
+"object_in_base": [
+1.4107,
+0.0078,
+0.5749
+]
+},
+{
+"t": 1.9,
+"stage": "to_object",
+"object": [
+1.45,
+0.0,
+0.575,
+1.0,
+-0.0,
+0.0,
+0.0
+],
+"fingers": [
+0.04,
+0.04
+],
+"finger_references": [
+0.04,
+0.04
+],
+"tcp_truth": [
+0.2555,
+0.1872,
+0.7731
+],
+"finger_links": {
+"gripper_right_finger_link": [
+0.2187,
+0.1812,
+0.6522
+],
+"gripper_left_finger_link": [
+0.2986,
+0.1843,
+0.6542
+]
+},
+"base": [
+0.0678,
+0.0003,
+0.0001,
+-0.005
+],
+"object_in_base": [
+1.3822,
+0.0066,
+0.5749
+]
+},
+{
+"t": 2.6,
+"stage": "to_object",
+"object": [
+1.45,
+-0.0,
+0.575,
+1.0,
+0.0,
+0.0,
+0.0
+],
+"fingers": [
+0.04,
+0.04
+],
+"finger_references": [
+0.04,
+0.04
+],
+"tcp_truth": [
+0.2807,
+0.1873,
+0.773
+],
+"finger_links": {
+"gripper_right_finger_link": [
+0.2439,
+0.1812,
+0.6521
+],
+"gripper_left_finger_link": [
+0.3238,
+0.1844,
+0.6541
+]
+},
+"base": [
+0.0998,
+0.0002,
+0.0,
+-0.0038
+],
+"object_in_base": [
+1.3502,
+0.0049,
+0.575
+]
+},
+{
+"t": 3.15,
+"stage": "to_object",
+"object": [
+1.45,
+0.0,
+0.575,
+1.0,
+-0.0,
+0.0,
+0.0
+],
+"fingers": [
+0.04,
+0.04
+],
+"finger_references": [
+0.04,
+0.04
+],
+"tcp_truth": [
+0.3022,
+0.1871,
+0.7731
+],
+"finger_links": {
+"gripper_right_finger_link": [
+0.2654,
+0.1811,
+0.6522
+],
+"gripper_left_finger_link": [
+0.3454,
+0.1843,
+0.6542
+]
+},
+"base": [
+0.1221,
+0.0001,
+0.0001,
+-0.0031
+],
+"object_in_base": [
+1.3279,
+0.0041,
+0.5749
+]
+},
+{
+"t": 3.84,
+"stage": "to_object",
+"object": [
+1.45,
+0.0,
+0.575,
+1.0,
+-0.0,
+0.0,
+0.0
+],
+"fingers": [
+0.04,
+0.04
+],
+"finger_references": [
+0.04,
+0.04
+],
+"tcp_truth": [
+0.3207,
+0.1871,
+0.7731
+],
+"finger_links": {
+"gripper_right_finger_link": [
+0.2839,
+0.1811,
+0.6522
+],
+"gripper_left_finger_link": [
+0.3638,
+0.1844,
+0.6541
+]
+},
+"base": [
+0.1454,
+0.0,
+0.0,
+-0.0027
+],
+"object_in_base": [
+1.3046,
+0.0035,
+0.575
+]
+},
+{
+"t": 4.34,
+"stage": "to_object",
+"object": [
+1.45,
+0.0,
+0.575,
+1.0,
+-0.0,
+0.0,
+0.0
+],
+"fingers": [
+0.04,
+0.04
+],
+"finger_references": [
+0.04,
+0.04
+],
+"tcp_truth": [
+0.3366,
+0.1874,
+0.773
+],
+"finger_links": {
+"gripper_right_finger_link": [
+0.2999,
+0.1813,
+0.6521
+],
+"gripper_left_finger_link": [
+0.3798,
+0.1847,
+0.6541
+]
+},
+"base": [
+0.1631,
+-0.0001,
+0.0,
+-0.002
+],
+"object_in_base": [
+1.2869,
+0.0026,
+0.575
+]
+},
+{
+"t": 4.92,
+"stage": "to_object",
+"object": [
+1.45,
+0.0,
+0.575,
+1.0,
+-0.0,
+0.0,
+0.0
+],
+"fingers": [
+0.04,
+0.0399
+],
+"finger_references": [
+0.04,
+0.04
+],
+"tcp_truth": [
+0.3614,
+0.1876,
+0.773
+],
+"finger_links": {
+"gripper_right_finger_link": [
+0.3247,
+0.1814,
+0.6521
+],
+"gripper_left_finger_link": [
+0.4046,
+0.1848,
+0.6541
+]
+},
+"base": [
+0.1757,
+-0.0,
+0.0001,
+-0.0016
+],
+"object_in_base": [
+1.2743,
+0.002,
+0.5749
+]
+},
+{
+"t": 5.55,
+"stage": "to_object",
+"object": [
+1.45,
+0.0,
+0.575,
+1.0,
+0.0,
+0.0,
+0.0
+],
+"fingers": [
+0.0401,
+0.0399
+],
+"finger_references": [
+0.04,
+0.04
+],
+"tcp_truth": [
+0.3683,
+0.1881,
+0.7729
+],
+"finger_links": {
+"gripper_right_finger_link": [
+0.3316,
+0.1818,
+0.6521
+],
+"gripper_left_finger_link": [
+0.4115,
+0.1853,
+0.654
+]
+},
+"base": [
+0.1844,
+-0.0,
+0.0002,
+0.003
+],
+"object_in_base": [
+1.2656,
+-0.0037,
+0.5748
+]
+},
+{
+"t": 6.14,
+"stage": "to_object",
+"object": [
+1.45,
+0.0,
+0.575,
+1.0,
+-0.0,
+0.0,
+0.0
+],
+"fingers": [
+0.04,
+0.04
+],
+"finger_references": [
+0.04,
+0.04
+],
+"tcp_truth": [
+0.3712,
+0.1898,
+0.773
+],
+"finger_links": {
+"gripper_right_finger_link": [
+0.3345,
+0.1832,
+0.6521
+],
+"gripper_left_finger_link": [
+0.4144,
+0.1876,
+0.6541
+]
+},
+"base": [
+0.1904,
+0.0001,
+0.0002,
+0.0117
+],
+"object_in_base": [
+1.2595,
+-0.0148,
+0.5748
+]
+},
+{
+"t": 6.64,
+"stage": "to_object",
+"object": [
+1.45,
+0.0,
+0.575,
+1.0,
+0.0,
+0.0,
+0.0
+],
+"fingers": [
+0.0401,
+0.0399
+],
+"finger_references": [
+0.04,
+0.04
+],
+"tcp_truth": [
+0.3768,
+0.1902,
+0.7731
+],
+"finger_links": {
+"gripper_right_finger_link": [
+0.3401,
+0.1835,
+0.6522
+],
+"gripper_left_finger_link": [
+0.42,
+0.1883,
+0.6542
+]
+},
+"base": [
+0.196,
+0.0002,
+0.0001,
+0.0143
+],
+"object_in_base": [
+1.2538,
+-0.0181,
+0.5749
+]
+},
+{
+"t": 7.22,
+"stage": "to_object",
+"object": [
+1.45,
+0.0,
+0.575,
+1.0,
+-0.0,
+0.0,
+0.0
+],
+"fingers": [
+0.04,
+0.04
+],
+"finger_references": [
+0.04,
+0.04
+],
+"tcp_truth": [
+0.3819,
+0.1914,
+0.773
+],
+"finger_links": {
+"gripper_right_finger_link": [
+0.3453,
+0.1845,
+0.6521
+],
+"gripper_left_finger_link": [
+0.4251,
+0.1895,
+0.6541
+]
+},
+"base": [
+0.2013,
+0.0002,
+0.0002,
+0.0193
+],
+"object_in_base": [
+1.2485,
+-0.0243,
+0.5748
+]
+},
+{
+"t": 7.76,
+"stage": "to_object",
+"object": [
+1.45,
+0.0,
+0.575,
+1.0,
+-0.0,
+0.0,
+0.0
+],
+"fingers": [
+0.04,
+0.0399
+],
+"finger_references": [
+0.04,
+0.04
+],
+"tcp_truth": [
+0.3839,
+0.192,
+0.773
+],
+"finger_links": {
+"gripper_right_finger_link": [
+0.3473,
+0.185,
+0.6521
+],
+"gripper_left_finger_link": [
+0.4271,
+0.1902,
+0.6541
+]
+},
+"base": [
+0.2036,
+0.0003,
+0.0,
+0.0215
+],
+"object_in_base": [
+1.2461,
+-0.0271,
+0.575
+]
+},
+{
+"t": 8.32,
+"stage": "to_object",
+"object": [
+1.45,
+0.0,
+0.575,
+1.0,
+-0.0,
+0.0,
+0.0
+],
+"fingers": [
+0.04,
+0.04
+],
+"finger_references": [
+0.04,
+0.04
+],
+"tcp_truth": [
+0.3886,
+0.1928,
+0.773
+],
+"finger_links": {
+"gripper_right_finger_link": [
+0.3521,
+0.1857,
+0.6521
+],
+"gripper_left_finger_link": [
+0.4318,
+0.1912,
+0.6541
+]
+},
+"base": [
+0.2117,
+0.0006,
+0.0003,
+0.0293
+],
+"object_in_base": [
+1.2377,
+-0.0368,
+0.5747
+]
+},
+{
+"t": 8.96,
+"stage": "to_object",
+"object": [
+1.45,
+0.0,
+0.575,
+1.0,
+-0.0,
+0.0,
+0.0
+],
+"fingers": [
+0.04,
+0.04
+],
+"finger_references": [
+0.04,
+0.04
+],
+"tcp_truth": [
+0.3983,
+0.1962,
+0.773
+],
+"finger_links": {
+"gripper_right_finger_link": [
+0.3619,
+0.1885,
+0.6521
+],
+"gripper_left_finger_link": [
+0.4415,
+0.1954,
+0.6541
+]
+},
+"base": [
+0.2254,
+0.0011,
+0.0001,
+0.0443
+],
+"object_in_base": [
+1.2233,
+-0.0554,
+0.5749
+]
+},
+{
+"t": 9.48,
+"stage": "to_object",
+"object": [
+1.45,
+0.0,
+0.575,
+1.0,
+-0.0,
+0.0,
+0.0
+],
+"fingers": [
+0.04,
+0.04
+],
+"finger_references": [
+0.04,
+0.04
+],
+"tcp_truth": [
+0.4244,
+0.198,
+0.773
+],
+"finger_links": {
+"gripper_right_finger_link": [
+0.388,
+0.1902,
+0.6521
+],
+"gripper_left_finger_link": [
+0.4677,
+0.1973,
+0.6541
+]
+},
+"base": [
+0.2616,
+0.0027,
+0.0001,
+0.0393
+],
+"object_in_base": [
+1.1874,
+-0.0494,
+0.5749
+]
+},
+{
+"t": 10.2,
+"stage": "to_object",
+"object": [
+1.45,
+0.0,
+0.575,
+1.0,
+0.0,
+0.0,
+0.0
+],
+"fingers": [
+0.04,
+0.04
+],
+"finger_references": [
+0.04,
+0.04
+],
+"tcp_truth": [
+0.4604,
+0.1968,
+0.7731
+],
+"finger_links": {
+"gripper_right_finger_link": [
+0.4238,
+0.1895,
+0.6522
+],
+"gripper_left_finger_link": [
+0.5036,
+0.1955,
+0.6541
+]
+},
+"base": [
+0.3012,
+0.0039,
+0.0002,
+0.0247
+],
+"object_in_base": [
+1.1483,
+-0.0324,
+0.5748
+]
+},
+{
+"t": 10.77,
+"stage": "to_object",
+"object": [
+1.45,
+0.0,
+0.575,
+1.0,
+0.0,
+0.0,
+0.0
+],
+"fingers": [
+0.04,
+0.04
+],
+"finger_references": [
+0.04,
+0.04
+],
+"tcp_truth": [
+0.4957,
+0.1956,
+0.7731
+],
+"finger_links": {
+"gripper_right_finger_link": [
+0.4591,
+0.1887,
+0.6522
+],
+"gripper_left_finger_link": [
+0.5389,
+0.1939,
+0.6542
+]
+},
+"base": [
+0.3435,
+0.0048,
+0.0001,
+0.0143
+],
+"object_in_base": [
+1.1063,
+-0.0206,
+0.5749
+]
+},
+{
+"t": 11.28,
+"stage": "to_object",
+"object": [
+1.45,
+0.0,
+0.575,
+1.0,
+-0.0,
+0.0,
+0.0
+],
+"fingers": [
+0.04,
+0.04
+],
+"finger_references": [
+0.04,
+0.04
+],
+"tcp_truth": [
+0.5648,
+0.1942,
+0.773
+],
+"finger_links": {
+"gripper_right_finger_link": [
+0.5281,
+0.1877,
+0.6521
+],
+"gripper_left_finger_link": [
+0.6079,
+0.1918,
+0.6541
+]
+},
+"base": [
+0.379,
+0.0052,
+0.0001,
+0.0067
+],
+"object_in_base": [
+1.071,
+-0.0124,
+0.5749
+]
+},
+{
+"t": 11.84,
+"stage": "to_object",
+"object": [
+1.45,
+0.0,
+0.575,
+1.0,
+-0.0,
+0.0,
+0.0
+],
+"fingers": [
+0.04,
+0.04
+],
+"finger_references": [
+0.04,
+0.04
+],
+"tcp_truth": [
+0.5648,
+0.1942,
+0.773
+],
+"finger_links": {
+"gripper_right_finger_link": [
+0.5281,
+0.1877,
+0.6521
+],
+"gripper_left_finger_link": [
+0.6079,
+0.1918,
+0.6541
+]
+},
+"base": [
+0.408,
+0.0053,
+0.0,
+0.0028
+],
+"object_in_base": [
+1.042,
+-0.0083,
+0.575
+]
+},
+{
+"t": 12.37,
+"stage": "to_object",
+"object": [
+1.45,
+0.0,
+0.575,
+1.0,
+-0.0,
+0.0,
+0.0
+],
+"fingers": [
+0.04,
+0.04
+],
+"finger_references": [
+0.04,
+0.04
+],
+"tcp_truth": [
+0.6333,
+0.1928,
+0.773
+],
+"finger_links": {
+"gripper_right_finger_link": [
+0.5966,
+0.1867,
+0.6521
+],
+"gripper_left_finger_link": [
+0.6764,
+0.1901,
+0.6541
+]
+},
+"base": [
+0.4458,
+0.0054,
+0.0001,
+-0.0017
+],
+"object_in_base": [
+1.0042,
+-0.0036,
+0.5749
+]
+},
+{
+"t": 13.02,
+"stage": "to_object",
+"object": [
+1.45,
+0.0,
+0.575,
+1.0,
+-0.0,
+0.0,
+0.0
+],
+"fingers": [
+0.04,
+0.04
+],
+"finger_references": [
+0.04,
+0.04
+],
+"tcp_truth": [
+0.6673,
+0.1918,
+0.7732
+],
+"finger_links": {
+"gripper_right_finger_link": [
+0.6305,
+0.1858,
+0.6523
+],
+"gripper_left_finger_link": [
+0.7104,
+0.189,
+0.6543
+]
+},
+"base": [
+0.4882,
+0.0052,
+0.0001,
+-0.0053
+],
+"object_in_base": [
+0.9618,
+-0.0001,
+0.5749
+]
+},
+{
+"t": 13.6,
+"stage": "to_object",
+"object": [
+1.45,
+-0.0,
+0.575,
+1.0,
+0.0,
+0.0,
+0.0
+],
+"fingers": [
+0.04,
+0.04
+],
+"finger_references": [
+0.04,
+0.04
+],
+"tcp_truth": [
+0.7011,
+0.1916,
+0.773
+],
+"finger_links": {
+"gripper_right_finger_link": [
+0.6643,
+0.1856,
+0.6521
+],
+"gripper_left_finger_link": [
+0.7442,
+0.1886,
+0.6541
+]
+},
+"base": [
+0.5282,
+0.005,
+0.0,
+-0.0082
+],
+"object_in_base": [
+0.9218,
+0.0026,
+0.575
+]
+},
+{
+"t": 14.32,
+"stage": "to_object",
+"object": [
+1.45,
+0.0,
+0.575,
+1.0,
+-0.0,
+0.0,
+0.0
+],
+"fingers": [
+0.04,
+0.04
+],
+"finger_references": [
+0.04,
+0.04
+],
+"tcp_truth": [
+0.7348,
+0.1909,
+0.773
+],
+"finger_links": {
+"gripper_right_finger_link": [
+0.6979,
+0.1851,
+0.6521
+],
+"gripper_left_finger_link": [
+0.7779,
+0.1879,
+0.6541
+]
+},
+"base": [
+0.5682,
+0.0046,
+0.0001,
+-0.0104
+],
+"object_in_base": [
+0.8818,
+0.0045,
+0.5749
+]
+},
+{
+"t": 15.0,
+"stage": "to_object",
+"object": [
+1.45,
+-0.0,
+0.575,
+1.0,
+0.0,
+0.0,
+0.0
+],
+"fingers": [
+0.04,
+0.04
+],
+"finger_references": [
+0.04,
+0.04
+],
+"tcp_truth": [
+0.7684,
+0.1902,
+0.773
+],
+"finger_links": {
+"gripper_right_finger_link": [
+0.7316,
+0.1844,
+0.6521
+],
+"gripper_left_finger_link": [
+0.8115,
+0.1871,
+0.6541
+]
+},
+"base": [
+0.6083,
+0.0042,
+0.0,
+-0.0123
+],
+"object_in_base": [
+0.8417,
+0.0062,
+0.575
+]
+},
+{
+"t": 15.66,
+"stage": "to_object",
+"object": [
+1.45,
+0.0,
+0.575,
+1.0,
+-0.0,
+0.0,
+0.0
+],
+"fingers": [
+0.04,
+0.04
+],
+"finger_references": [
+0.04,
+0.04
+],
+"tcp_truth": [
+0.835,
+0.1889,
+0.773
+],
+"finger_links": {
+"gripper_right_finger_link": [
+0.7982,
+0.1832,
+0.6521
+],
+"gripper_left_finger_link": [
+0.8781,
+0.1856,
+0.6541
+]
+},
+"base": [
+0.6477,
+0.0037,
+-0.0,
+-0.014
+],
+"object_in_base": [
+0.8023,
+0.0075,
+0.575
+]
+},
+{
+"t": 16.22,
+"stage": "to_object",
+"object": [
+1.45,
+0.0,
+0.575,
+1.0,
+-0.0,
+0.0,
+0.0
+],
+"fingers": [
+0.04,
+0.04
+],
+"finger_references": [
+0.04,
+0.04
+],
+"tcp_truth": [
+0.835,
+0.1889,
+0.773
+],
+"finger_links": {
+"gripper_right_finger_link": [
+0.7982,
+0.1832,
+0.6521
+],
+"gripper_left_finger_link": [
+0.8781,
+0.1856,
+0.6541
+]
+},
+"base": [
+0.6725,
+0.0033,
+0.0,
+-0.015
+],
+"object_in_base": [
+0.7775,
+0.0084,
+0.575
+]
+},
+{
+"t": 16.78,
+"stage": "to_object",
+"object": [
+1.45,
+-0.0,
+0.575,
+1.0,
+0.0,
+0.0,
+0.0
+],
+"fingers": [
+0.04,
+0.04
+],
+"finger_references": [
+0.04,
+0.04
+],
+"tcp_truth": [
+0.8883,
+0.1878,
+0.773
+],
+"finger_links": {
+"gripper_right_finger_link": [
+0.8514,
+0.1821,
+0.652
+],
+"gripper_left_finger_link": [
+0.9314,
+0.1844,
+0.6541
+]
+},
+"base": [
+0.699,
+0.0029,
+0.0,
+-0.0161
+],
+"object_in_base": [
+0.751,
+0.0092,
+0.575
+]
+},
+{
+"t": 17.48,
+"stage": "to_object",
+"object": [
+1.45,
+0.0,
+0.575,
+1.0,
+-0.0,
+0.0,
+0.0
+],
+"fingers": [
+0.04,
+0.04
+],
+"finger_references": [
+0.04,
+0.04
+],
+"tcp_truth": [
+0.9094,
+0.1872,
+0.773
+],
+"finger_links": {
+"gripper_right_finger_link": [
+0.8725,
+0.1816,
+0.6521
+],
+"gripper_left_finger_link": [
+0.9525,
+0.1838,
+0.6541
+]
+},
+"base": [
+0.7265,
+0.0025,
+0.0,
+-0.0174
+],
+"object_in_base": [
+0.7234,
+0.0101,
+0.575
+]
+},
+{
+"t": 18.16,
+"stage": "to_object",
+"object": [
+1.45,
+0.0,
+0.575,
+1.0,
+-0.0,
+0.0,
+0.0
+],
+"fingers": [
+0.04,
+0.04
+],
+"finger_references": [
+0.04,
+0.04
+],
+"tcp_truth": [
+0.9274,
+0.1868,
+0.773
+],
+"finger_links": {
+"gripper_right_finger_link": [
+0.8906,
+0.1812,
+0.6521
+],
+"gripper_left_finger_link": [
+0.9705,
+0.1833,
+0.6541
+]
+},
+"base": [
+0.7447,
+0.0021,
+0.0,
+-0.0183
+],
+"object_in_base": [
+0.7053,
+0.0108,
+0.575
+]
+},
+{
+"t": 18.85,
+"stage": "to_object",
+"object": [
+1.45,
+-0.0,
+0.575,
+1.0,
+0.0,
+0.0,
+0.0
+],
+"fingers": [
+0.04,
+0.04
+],
+"finger_references": [
+0.04,
+0.04
+],
+"tcp_truth": [
+0.943,
+0.1863,
+0.773
+],
+"finger_links": {
+"gripper_right_finger_link": [
+0.9061,
+0.1808,
+0.6521
+],
+"gripper_left_finger_link": [
+0.9861,
+0.1828,
+0.6541
+]
+},
+"base": [
+0.7628,
+0.0018,
+0.0,
+-0.0198
+],
+"object_in_base": [
+0.6871,
+0.0118,
+0.575
+]
+},
+{
+"t": 19.44,
+"stage": "to_object",
+"object": [
+1.45,
+0.0,
+0.575,
+1.0,
+-0.0,
+0.0,
+0.0
+],
+"fingers": [
+0.04,
+0.04
+],
+"finger_references": [
+0.04,
+0.04
+],
+"tcp_truth": [
+0.9563,
+0.1859,
+0.773
+],
+"finger_links": {
+"gripper_right_finger_link": [
+0.9194,
+0.1804,
+0.6521
+],
+"gripper_left_finger_link": [
+0.9994,
+0.1823,
+0.6541
+]
+},
+"base": [
+0.7776,
+0.0015,
+0.0,
+-0.0209
+],
+"object_in_base": [
+0.6723,
+0.0125,
+0.575
+]
+},
+{
+"t": 19.94,
+"stage": "to_object",
+"object": [
+1.45,
+0.0,
+0.575,
+1.0,
+-0.0,
+0.0,
+0.0
+],
+"fingers": [
+0.04,
+0.04
+],
+"finger_references": [
+0.04,
+0.04
+],
+"tcp_truth": [
+0.9677,
+0.1854,
+0.773
+],
+"finger_links": {
+"gripper_right_finger_link": [
+0.9308,
+0.18,
+0.6521
+],
+"gripper_left_finger_link": [
+1.0107,
+0.1818,
+0.6541
+]
+},
+"base": [
+0.7855,
+0.0013,
+0.0,
+-0.0218
+],
+"object_in_base": [
+0.6643,
+0.0131,
+0.575
+]
+},
+{
+"t": 20.66,
+"stage": "to_object",
+"object": [
+1.45,
+0.0,
+0.575,
+1.0,
+-0.0,
+0.0,
+0.0
+],
+"fingers": [
+0.04,
+0.04
+],
+"finger_references": [
+0.04,
+0.04
+],
+"tcp_truth": [
+0.9774,
+0.185,
+0.773
+],
+"finger_links": {
+"gripper_right_finger_link": [
+0.9406,
+0.1796,
+0.6521
+],
+"gripper_left_finger_link": [
+1.0205,
+0.1814,
+0.6541
+]
+},
+"base": [
+0.7952,
+0.0011,
+0.0,
+-0.0233
+],
+"object_in_base": [
+0.6546,
+0.0141,
+0.575
+]
+},
+{
+"t": 21.2,
+"stage": "to_object",
+"object": [
+1.45,
+-0.0,
+0.575,
+1.0,
+0.0,
+0.0,
+0.0
+],
+"fingers": [
+0.04,
+0.04
+],
+"finger_references": [
+0.04,
+0.04
+],
+"tcp_truth": [
+0.993,
+0.1842,
+0.773
+],
+"finger_links": {
+"gripper_right_finger_link": [
+0.9561,
+0.1789,
+0.6521
+],
+"gripper_left_finger_link": [
+1.0361,
+0.1805,
+0.6541
+]
+},
+"base": [
+0.8038,
+0.0009,
+0.0,
+-0.0244
+],
+"object_in_base": [
+0.6461,
+0.0149,
+0.575
+]
+},
+{
+"t": 21.98,
+"stage": "to_object",
+"object": [
+1.45,
+0.0,
+0.575,
+1.0,
+-0.0,
+0.0,
+0.0
+],
+"fingers": [
+0.04,
+0.04
+],
+"finger_references": [
+0.04,
+0.04
+],
+"tcp_truth": [
+0.9941,
+0.1842,
+0.773
+],
+"finger_links": {
+"gripper_right_finger_link": [
+0.9572,
+0.1789,
+0.6521
+],
+"gripper_left_finger_link": [
+1.0372,
+0.1805,
+0.6541
+]
+},
+"base": [
+0.8049,
+0.0009,
+0.0,
+-0.0242
+],
+"object_in_base": [
+0.645,
+0.0147,
+0.575
+]
+},
+{
+"t": 22.72,
+"stage": "open",
+"object": [
+1.45,
+-0.0,
+0.575,
+1.0,
+0.0,
+0.0,
+0.0
+],
+"fingers": [
+0.04,
+0.04
+],
+"finger_references": [
+0.04,
+0.04
+],
+"tcp_truth": [
+0.9941,
+0.1842,
+0.773
+],
+"finger_links": {
+"gripper_right_finger_link": [
+0.9573,
+0.1789,
+0.6521
+],
+"gripper_left_finger_link": [
+1.0372,
+0.1805,
+0.6541
+]
+},
+"tcp_estimate": [
+0.9941,
+0.1842,
+0.773
+],
+"base": [
+0.8049,
+0.0009,
+0.0,
+-0.0242
+],
+"object_in_base": [
+0.6449,
+0.0147,
+0.575
+]
+},
+{
+"t": 23.44,
+"stage": "above_object",
+"object": [
+1.45,
+0.0,
+0.575,
+1.0,
+-0.0,
+0.0,
+0.0
+],
+"fingers": [
+0.04,
+0.04
+],
+"finger_references": [
+0.04,
+0.04
+],
+"tcp_truth": [
+0.9942,
+0.1842,
+0.773
+],
+"finger_links": {
+"gripper_right_finger_link": [
+0.9573,
+0.1789,
+0.6521
+],
+"gripper_left_finger_link": [
+1.0373,
+0.1805,
+0.6541
+]
+},
+"tcp_estimate": [
+0.9939,
+0.1847,
+0.7725
+],
+"base": [
+0.8049,
+0.0009,
+0.0,
+-0.0243
+],
+"object_in_base": [
+0.6449,
+0.0148,
+0.575
+]
+},
+{
+"t": 24.04,
+"stage": "above_object",
+"object": [
+1.45,
+0.0,
+0.575,
+1.0,
+0.0,
+0.0,
+0.0
+],
+"fingers": [
+0.04,
+0.04
+],
+"finger_references": [
+0.04,
+0.04
+],
+"tcp_truth": [
+0.9934,
+0.1858,
+0.7708
+],
+"finger_links": {
+"gripper_right_finger_link": [
+0.9574,
+0.1779,
+0.6497
+],
+"gripper_left_finger_link": [
+1.0373,
+0.1816,
+0.6522
+]
+},
+"tcp_estimate": [
+0.9916,
+0.1889,
+0.764
+],
+"base": [
+0.8049,
+0.0009,
+0.0,
+-0.0242
+],
+"object_in_base": [
+0.6449,
+0.0147,
+0.575
+]
+},
+{
+"t": 24.64,
+"stage": "above_object",
+"object": [
+1.45,
+0.0,
+0.575,
+1.0,
+-0.0,
+0.0,
+0.0
+],
+"fingers": [
+0.04,
+0.04
+],
+"finger_references": [
+0.04,
+0.04
+],
+"tcp_truth": [
+0.99,
+0.1924,
+0.7488
+],
+"finger_links": {
+"gripper_right_finger_link": [
+0.9633,
+0.1666,
+0.6279
+],
+"gripper_left_finger_link": [
+1.0419,
+0.1802,
+0.6341
+]
+},
+"tcp_estimate": [
+0.9899,
+0.1924,
+0.7488
+],
+"base": [
+0.805,
+0.0009,
+0.0,
+-0.0242
+],
+"object_in_base": [
+0.6449,
+0.0147,
+0.575
+]
+},
+{
+"t": 25.21,
+"stage": "above_object",
+"object": [
+1.45,
+0.0,
+0.575,
+1.0,
+-0.0,
+0.0,
+0.0
+],
+"fingers": [
+0.04,
+0.04
+],
+"finger_references": [
+0.04,
+0.04
+],
+"tcp_truth": [
+0.99,
+0.1924,
+0.7488
+],
+"finger_links": {
+"gripper_right_finger_link": [
+0.9633,
+0.1666,
+0.6279
+],
+"gripper_left_finger_link": [
+1.0419,
+0.1802,
+0.6341
+]
+},
+"tcp_estimate": [
+0.9892,
+0.1943,
+0.7365
+],
+"base": [
+0.805,
+0.0009,
+0.0,
+-0.0242
+],
+"object_in_base": [
+0.6449,
+0.0147,
+0.575
+]
+},
+{
+"t": 25.8,
+"stage": "above_object",
+"object": [
+1.45,
+-0.0,
+0.575,
+1.0,
+0.0,
+0.0,
+0.0
+],
+"fingers": [
+0.04,
+0.04
+],
+"finger_references": [
+0.04,
+0.04
+],
+"tcp_truth": [
+0.9903,
+0.1947,
+0.7161
+],
+"finger_links": {
+"gripper_right_finger_link": [
+0.9786,
+0.1473,
+0.5994
+],
+"gripper_left_finger_link": [
+1.0542,
+0.1713,
+0.6095
+]
+},
+"tcp_estimate": [
+0.9897,
+0.1947,
+0.721
+],
+"base": [
+0.805,
+0.0009,
+0.0,
+-0.0242
+],
+"object_in_base": [
+0.6449,
+0.0147,
+0.575
+]
+},
+{
+"t": 26.46,
+"stage": "above_object",
+"object": [
+1.45,
+0.0,
+0.575,
+1.0,
+-0.0,
+0.0,
+0.0
+],
+"fingers": [
+0.0401,
+0.0398
+],
+"finger_references": [
+0.04,
+0.04
+],
+"tcp_truth": [
+0.9928,
+0.1936,
+0.6979
+],
+"finger_links": {
+"gripper_right_finger_link": [
+0.9898,
+0.1358,
+0.5855
+],
+"gripper_left_finger_link": [
+1.0634,
+0.1647,
+0.597
+]
+},
+"tcp_estimate": [
+0.9935,
+0.1934,
+0.6932
+],
+"base": [
+0.805,
+0.0009,
+0.0,
+-0.0243
+],
+"object_in_base": [
+0.6448,
+0.0148,
+0.575
+]
+},
+{
+"t": 27.12,
+"stage": "above_object",
+"object": [
+1.45,
+0.0,
+0.575,
+1.0,
+-0.0,
+0.0,
+0.0
+],
+"fingers": [
+0.0402,
+0.0397
+],
+"finger_references": [
+0.04,
+0.04
+],
+"tcp_truth": [
+0.9965,
+0.1921,
+0.6804
+],
+"finger_links": {
+"gripper_right_finger_link": [
+1.0023,
+0.1247,
+0.5736
+],
+"gripper_left_finger_link": [
+1.0737,
+0.1583,
+0.5859
+]
+},
+"tcp_estimate": [
+0.9982,
+0.1913,
+0.6734
+],
+"base": [
+0.805,
+0.0009,
+0.0,
+-0.0242
+],
+"object_in_base": [
+0.6448,
+0.0147,
+0.575
+]
+},
+{
+"t": 27.68,
+"stage": "above_object",
+"object": [
+1.45,
+0.0,
+0.575,
+1.0,
+-0.0,
+0.0,
+0.0
+],
+"fingers": [
+0.0402,
+0.0396
+],
+"finger_references": [
+0.04,
+0.04
+],
+"tcp_truth": [
+1.0014,
+0.1899,
+0.6634
+],
+"finger_links": {
+"gripper_right_finger_link": [
+1.0159,
+0.114,
+0.5634
+],
+"gripper_left_finger_link": [
+1.0849,
+0.1522,
+0.576
+]
+},
+"tcp_estimate": [
+1.0048,
+0.1884,
+0.6534
+],
+"base": [
+0.805,
+0.0009,
+0.0,
+-0.0242
+],
+"object_in_base": [
+0.6448,
+0.0147,
+0.575
+]
+},
+{
+"t": 28.22,
+"stage": "above_object",
+"object": [
+1.45,
+0.0,
+0.575,
+1.0,
+-0.0,
+0.0,
+0.0
+],
+"fingers": [
+0.0402,
+0.0396
+],
+"finger_references": [
+0.04,
+0.04
+],
+"tcp_truth": [
+1.0075,
+0.1873,
+0.647
+],
+"finger_links": {
+"gripper_right_finger_link": [
+1.0307,
+0.1038,
+0.5549
+],
+"gripper_left_finger_link": [
+1.097,
+0.1464,
+0.5674
+]
+},
+"tcp_estimate": [
+1.0101,
+0.1862,
+0.6407
+],
+"base": [
+0.8051,
+0.0009,
+0.0,
+-0.0242
+],
+"object_in_base": [
+0.6448,
+0.0147,
+0.575
+]
+},
+{
+"t": 29.0,
+"stage": "above_object",
+"object": [
+1.45,
+0.0,
+0.575,
+1.0,
+-0.0,
+0.0,
+0.0
+],
+"fingers": [
+0.0402,
+0.0397
+],
+"finger_references": [
+0.04,
+0.04
+],
+"tcp_truth": [
+1.0233,
+0.1815,
+0.6171
+],
+"finger_links": {
+"gripper_right_finger_link": [
+1.0626,
+0.0865,
+0.5435
+],
+"gripper_left_finger_link": [
+1.1237,
+0.1368,
+0.5545
+]
+},
+"tcp_estimate": [
+1.0225,
+0.1817,
+0.618
+],
+"base": [
+0.8051,
+0.0009,
+0.0,
+-0.0242
+],
+"object_in_base": [
+0.6447,
+0.0147,
+0.575
+]
+},
+{
+"t": 29.7,
+"stage": "above_object",
+"object": [
+1.45,
+-0.0,
+0.575,
+1.0,
+0.0,
+0.0,
+0.0
+],
+"fingers": [
+0.0401,
+0.0399
+],
+"finger_references": [
+0.04,
+0.04
+],
+"tcp_truth": [
+1.0329,
+0.1789,
+0.6039
+],
+"finger_links": {
+"gripper_right_finger_link": [
+1.0796,
+0.0799,
+0.5405
+],
+"gripper_left_finger_link": [
+1.1381,
+0.1334,
+0.5503
+]
+},
+"tcp_estimate": [
+1.0354,
+0.1782,
+0.6005
+],
+"base": [
+0.8051,
+0.0009,
+0.0,
+-0.0242
+],
+"object_in_base": [
+0.6447,
+0.0147,
+0.575
+]
+},
+{
+"t": 30.36,
+"stage": "above_object",
+"object": [
+1.45,
+0.0,
+0.575,
+1.0,
+-0.0,
+0.0,
+0.0
+],
+"fingers": [
+0.04,
+0.0399
+],
+"finger_references": [
+0.04,
+0.04
+],
+"tcp_truth": [
+1.0436,
+0.1763,
+0.5919
+],
+"finger_links": {
+"gripper_right_finger_link": [
+1.0969,
+0.0743,
+0.5393
+],
+"gripper_left_finger_link": [
+1.153,
+0.1307,
+0.5476
+]
+},
+"tcp_estimate": [
+1.0487,
+0.1752,
+0.5866
+],
+"base": [
+0.8052,
+0.0009,
+0.0,
+-0.0241
+],
+"object_in_base": [
+0.6447,
+0.0147,
+0.575
+]
+},
+{
+"t": 30.9,
+"stage": "above_object",
+"object": [
+1.45,
+-0.0,
+0.575,
+1.0,
+0.0,
+0.0,
+0.0
+],
+"fingers": [
+0.04,
+0.0399
+],
+"finger_references": [
+0.04,
+0.04
+],
+"tcp_truth": [
+1.0554,
+0.174,
+0.5812
+],
+"finger_links": {
+"gripper_right_finger_link": [
+1.1146,
+0.0703,
+0.5396
+],
+"gripper_left_finger_link": [
+1.1684,
+0.1291,
+0.5463
+]
+},
+"tcp_estimate": [
+1.0618,
+0.1732,
+0.5759
+],
+"base": [
+0.8052,
+0.0009,
+0.0,
+-0.0242
+],
+"object_in_base": [
+0.6446,
+0.0147,
+0.575
+]
+},
+{
+"t": 31.56,
+"stage": "above_object",
+"object": [
+1.45,
+0.0,
+0.575,
+1.0,
+-0.0,
+0.0,
+0.0
+],
+"fingers": [
+0.04,
+0.0399
+],
+"finger_references": [
+0.04,
+0.04
+],
+"tcp_truth": [
+1.0683,
+0.1726,
+0.5716
+],
+"finger_links": {
+"gripper_right_finger_link": [
+1.1326,
+0.068,
+0.5415
+],
+"gripper_left_finger_link": [
+1.1842,
+0.1288,
+0.5463
+]
+},
+"tcp_estimate": [
+1.0788,
+0.1719,
+0.565
+],
+"base": [
+0.8053,
+0.0009,
+0.0,
+-0.0241
+],
+"object_in_base": [
+0.6446,
+0.0147,
+0.575
+]
+},
+{
+"t": 32.22,
+"stage": "above_object",
+"object": [
+1.45,
+0.0,
+0.575,
+1.0,
+-0.0,
+0.0,
+0.0
+],
+"fingers": [
+0.04,
+0.04
+],
+"finger_references": [
+0.04,
+0.04
+],
+"tcp_truth": [
+1.0966,
+0.1718,
+0.5569
+],
+"finger_links": {
+"gripper_right_finger_link": [
+1.1681,
+0.0677,
+0.5494
+],
+"gripper_left_finger_link": [
+1.2164,
+0.1315,
+0.5508
+]
+},
+"tcp_estimate": [
+1.0922,
+0.1715,
+0.5585
+],
+"base": [
+0.8053,
+0.0009,
+0.0,
+-0.0241
+],
+"object_in_base": [
+0.6445,
+0.0147,
+0.575
+]
+},
+{
+"t": 32.76,
+"stage": "above_object",
+"object": [
+1.45,
+0.0,
+0.575,
+1.0,
+-0.0,
+0.0,
+0.0
+],
+"fingers": [
+0.04,
+0.04
+],
+"finger_references": [
+0.04,
+0.04
+],
+"tcp_truth": [
+1.0966,
+0.1718,
+0.5569
+],
+"finger_links": {
+"gripper_right_finger_link": [
+1.1681,
+0.0677,
+0.5494
+],
+"gripper_left_finger_link": [
+1.2164,
+0.1315,
+0.5508
+]
+},
+"tcp_estimate": [
+1.1072,
+0.1724,
+0.5528
+],
+"base": [
+0.8054,
+0.0009,
+0.0,
+-0.0241
+],
+"object_in_base": [
+0.6445,
+0.0146,
+0.575
+]
+},
+{
+"t": 33.28,
+"stage": "above_object",
+"object": [
+1.45,
+0.0,
+0.575,
+1.0,
+-0.0,
+0.0,
+0.0
+],
+"fingers": [
+0.04,
+0.04
+],
+"finger_references": [
+0.04,
+0.04
+],
+"tcp_truth": [
+1.1118,
+0.1728,
+0.5517
+],
+"finger_links": {
+"gripper_right_finger_link": [
+1.1854,
+0.07,
+0.5553
+],
+"gripper_left_finger_link": [
+1.2324,
+0.1347,
+0.5551
+]
+},
+"tcp_estimate": [
+1.1195,
+0.1738,
+0.5494
+],
+"base": [
+0.8054,
+0.0009,
+0.0,
+-0.0241
+],
+"object_in_base": [
+0.6444,
+0.0147,
+0.575
+]
+},
+{
+"t": 33.98,
+"stage": "above_object",
+"object": [
+1.45,
+-0.0,
+0.575,
+1.0,
+0.0,
+0.0,
+0.0
+],
+"fingers": [
+0.04,
+0.0401
+],
+"finger_references": [
+0.04,
+0.04
+],
+"tcp_truth": [
+1.1275,
+0.1751,
+0.5479
+],
+"finger_links": {
+"gripper_right_finger_link": [
+1.2021,
+0.074,
+0.5624
+],
+"gripper_left_finger_link": [
+1.2482,
+0.1394,
+0.5607
+]
+},
+"tcp_estimate": [
+1.1397,
+0.1775,
+0.5459
+],
+"base": [
+0.8054,
+0.0009,
+-0.0,
+-0.0239
+],
+"object_in_base": [
+0.6444,
+0.0145,
+0.575
+]
+},
+{
+"t": 34.56,
+"stage": "above_object",
+"object": [
+1.45,
+0.0,
+0.575,
+1.0,
+-0.0,
+0.0,
+0.0
+],
+"fingers": [
+0.0399,
+0.0402
+],
+"finger_references": [
+0.04,
+0.04
+],
+"tcp_truth": [
+1.1596,
+0.183,
+0.5448
+],
+"finger_links": {
+"gripper_right_finger_link": [
+1.2335,
+0.0864,
+0.5798
+],
+"gripper_left_finger_link": [
+1.2784,
+0.1526,
+0.5758
+]
+},
+"tcp_estimate": [
+1.1557,
+0.1816,
+0.5449
+],
+"base": [
+0.8055,
+0.0009,
+0.0,
+-0.0237
+],
+"object_in_base": [
+0.6444,
+0.0144,
+0.575
+]
+},
+{
+"t": 35.22,
+"stage": "above_object",
+"object": [
+1.45,
+0.0,
+0.575,
+1.0,
+-0.0,
+0.0,
+0.0
+],
+"fingers": [
+0.0397,
+0.0404
+],
+"finger_references": [
+0.04,
+0.04
+],
+"tcp_truth": [
+1.1757,
+0.189,
+0.5456
+],
+"finger_links": {
+"gripper_right_finger_link": [
+1.2478,
+0.0948,
+0.5899
+],
+"gripper_left_finger_link": [
+1.2924,
+0.1612,
+0.5853
+]
+},
+"tcp_estimate": [
+1.1795,
+0.1907,
+0.546
+],
+"base": [
+0.8055,
+0.0009,
+0.0,
+-0.0237
+],
+"object_in_base": [
+0.6443,
+0.0144,
+0.575
+]
+},
+{
+"t": 35.74,
+"stage": "above_object",
+"object": [
+1.45,
+-0.0,
+0.575,
+1.0,
+0.0,
+0.0,
+0.0
+],
+"fingers": [
+0.0395,
+0.0406
+],
+"finger_references": [
+0.04,
+0.04
+],
+"tcp_truth": [
+1.1919,
+0.1964,
+0.548
+],
+"finger_links": {
+"gripper_right_finger_link": [
+1.2613,
+0.1047,
+0.601
+],
+"gripper_left_finger_link": [
+1.306,
+0.171,
+0.5961
+]
+},
+"tcp_estimate": [
+1.1989,
+0.2,
+0.5495
+],
+"base": [
+0.8055,
+0.0009,
+0.0,
+-0.0238
+],
+"object_in_base": [
+0.6443,
+0.0144,
+0.575
+]
+},
+{
+"t": 36.32,
+"stage": "above_object",
+"object": [
+1.45,
+0.0,
+0.575,
+1.0,
+0.0,
+0.0,
+0.0
+],
+"fingers": [
+0.0394,
+0.0408
+],
+"finger_references": [
+0.04,
+0.04
+],
+"tcp_truth": [
+1.2077,
+0.2048,
+0.5518
+],
+"finger_links": {
+"gripper_right_finger_link": [
+1.2736,
+0.1153,
+0.6128
+],
+"gripper_left_finger_link": [
+1.3185,
+0.1815,
+0.608
+]
+},
+"tcp_estimate": [
+1.2163,
+0.2104,
+0.5548
+],
+"base": [
+0.8056,
+0.0009,
+0.0,
+-0.0237
+],
+"object_in_base": [
+0.6443,
+0.0144,
+0.575
+]
+},
+{
+"t": 36.9,
+"stage": "above_object",
+"object": [
+1.45,
+0.0,
+0.575,
+1.0,
+-0.0,
+0.0,
+0.0
+],
+"fingers": [
+0.0392,
+0.0409
+],
+"finger_references": [
+0.04,
+0.04
+],
+"tcp_truth": [
+1.2229,
+0.2151,
+0.5573
+],
+"finger_links": {
+"gripper_right_finger_link": [
+1.2846,
+0.1279,
+0.6255
+],
+"gripper_left_finger_link": [
+1.3298,
+0.1939,
+0.6211
+]
+},
+"tcp_estimate": [
+1.2283,
+0.2193,
+0.5597
+],
+"base": [
+0.8055,
+0.0009,
+0.0002,
+-0.0234
+],
+"object_in_base": [
+0.6443,
+0.0142,
+0.5748
+]
+},
+{
+"t": 37.42,
+"stage": "above_object",
+"object": [
+1.45,
+0.0,
+0.575,
+1.0,
+-0.0,
+0.0,
+0.0
+],
+"fingers": [
+0.0393,
+0.0408
+],
+"finger_references": [
+0.04,
+0.04
+],
+"tcp_truth": [
+1.2374,
+0.2263,
+0.564
+],
+"finger_links": {
+"gripper_right_finger_link": [
+1.2945,
+0.1412,
+0.6385
+],
+"gripper_left_finger_link": [
+1.34,
+0.207,
+0.635
+]
+},
+"tcp_estimate": [
+1.2414,
+0.2298,
+0.5664
+],
+"base": [
+0.8057,
+0.0008,
+0.0,
+-0.0231
+],
+"object_in_base": [
+0.6441,
+0.0141,
+0.575
+]
+},
+{
+"t": 37.95,
+"stage": "above_object",
+"object": [
+1.45,
+0.0,
+0.575,
+1.0,
+-0.0,
+0.0,
+0.0
+],
+"fingers": [
+0.0392,
+0.0408
+],
+"finger_references": [
+0.04,
+0.04
+],
+"tcp_truth": [
+1.2512,
+0.2386,
+0.5723
+],
+"finger_links": {
+"gripper_right_finger_link": [
+1.303,
+0.1552,
+0.6525
+],
+"gripper_left_finger_link": [
+1.349,
+0.2205,
+0.65
+]
+},
+"tcp_estimate": [
+1.256,
+0.2433,
+0.5759
+],
+"base": [
+0.8058,
+0.0008,
+0.0,
+-0.0232
+],
+"object_in_base": [
+0.6441,
+0.0141,
+0.575
+]
+},
+{
+"t": 38.52,
+"stage": "above_object",
+"object": [
+1.45,
+0.0,
+0.575,
+1.0,
+-0.0,
+0.0,
+0.0
+],
+"fingers": [
+0.0392,
+0.0408
+],
+"finger_references": [
+0.04,
+0.04
+],
+"tcp_truth": [
+1.2637,
+0.2523,
+0.5818
+],
+"finger_links": {
+"gripper_right_finger_link": [
+1.31,
+0.1704,
+0.6667
+],
+"gripper_left_finger_link": [
+1.3564,
+0.2356,
+0.6659
+]
+},
+"tcp_estimate": [
+1.268,
+0.2593,
+0.5866
+],
+"base": [
+0.8058,
+0.0008,
+0.0,
+-0.023
+],
+"object_in_base": [
+0.644,
+0.014,
+0.575
+]
+},
+{
+"t": 39.02,
+"stage": "above_object",
+"object": [
+1.45,
+0.0,
+0.575,
+1.0,
+-0.0,
+0.0,
+0.0
+],
+"fingers": [
+0.0393,
+0.0407
+],
+"finger_references": [
+0.04,
+0.04
+],
+"tcp_truth": [
+1.274,
+0.269,
+0.5924
+],
+"finger_links": {
+"gripper_right_finger_link": [
+1.3148,
+0.1884,
+0.6813
+],
+"gripper_left_finger_link": [
+1.3614,
+0.2534,
+0.6822
+]
+},
+"tcp_estimate": [
+1.2776,
+0.2771,
+0.5981
+],
+"base": [
+0.806,
+0.0008,
+0.0001,
+-0.0229
+],
+"object_in_base": [
+0.6438,
+0.0139,
+0.5749
+]
+},
+{
+"t": 39.72,
+"stage": "above_object",
+"object": [
+1.45,
+0.0,
+0.575,
+1.0,
+0.0,
+0.0,
+0.0
+],
+"fingers": [
+0.0398,
+0.0401
+],
+"finger_references": [
+0.04,
+0.04
+],
+"tcp_truth": [
+1.296,
+0.2747,
+0.6004
+],
+"finger_links": {
+"gripper_right_finger_link": [
+1.3253,
+0.202,
+0.6997
+],
+"gripper_left_finger_link": [
+1.3759,
+0.2639,
+0.6979
+]
+},
+"tcp_estimate": [
+1.2934,
+0.2746,
+0.6009
+],
+"base": [
+0.8062,
+0.0008,
+0.0,
+-0.0222
+],
+"object_in_base": [
+0.6437,
+0.0135,
+0.575
+]
+},
+{
+"t": 40.4,
+"stage": "above_object",
+"object": [
+1.45,
+-0.0,
+0.575,
+1.0,
+0.0,
+0.0,
+0.0
+],
+"fingers": [
+0.0392,
+0.0398
+],
+"finger_references": [
+0.04,
+0.04
+],
+"tcp_truth": [
+1.311,
+0.2614,
+0.6015
+],
+"finger_links": {
+"gripper_right_finger_link": [
+1.3335,
+0.1944,
+0.7063
+],
+"gripper_left_finger_link": [
+1.3879,
+0.2518,
+0.7012
+]
+},
+"tcp_estimate": [
+1.3142,
+0.2559,
+0.6021
+],
+"base": [
+0.8064,
+0.0008,
+0.0001,
+-0.0219
+],
+"object_in_base": [
+0.6435,
+0.0133,
+0.5749
+]
+},
+{
+"t": 41.04,
+"stage": "above_object",
+"object": [
+1.45,
+0.0,
+0.575,
+1.0,
+-0.0,
+0.0,
+0.0
+],
+"fingers": [
+0.0392,
+0.0398
+],
+"finger_references": [
+0.04,
+0.04
+],
+"tcp_truth": [
+1.3295,
+0.2423,
+0.6047
+],
+"finger_links": {
+"gripper_right_finger_link": [
+1.344,
+0.1809,
+0.7143
+],
+"gripper_left_finger_link": [
+1.4032,
+0.2323,
+0.7066
+]
+},
+"tcp_estimate": [
+1.3361,
+0.2317,
+0.6056
+],
+"base": [
+0.8066,
+0.0008,
+0.0002,
+-0.0216
+],
+"object_in_base": [
+0.6433,
+0.0131,
+0.5748
+]
+},
+{
+"t": 41.56,
+"stage": "above_object",
+"object": [
+1.45,
+-0.0,
+0.575,
+1.0,
+0.0,
+0.0,
+0.0
+],
+"fingers": [
+0.0395,
+0.04
+],
+"finger_references": [
+0.04,
+0.04
+],
+"tcp_truth": [
+1.3495,
+0.2182,
+0.6076
+],
+"finger_links": {
+"gripper_right_finger_link": [
+1.3554,
+0.1634,
+0.7215
+],
+"gripper_left_finger_link": [
+1.4202,
+0.2079,
+0.7118
+]
+},
+"tcp_estimate": [
+1.3556,
+0.2062,
+0.609
+],
+"base": [
+0.8066,
+0.0008,
+0.0003,
+-0.0217
+],
+"object_in_base": [
+0.6432,
+0.0131,
+0.5747
+]
+},
+{
+"t": 42.06,
+"stage": "above_object",
+"object": [
+1.45,
+-0.0,
+0.575,
+1.0,
+0.0,
+0.0,
+0.0
+],
+"fingers": [
+0.0395,
+0.0401
+],
+"finger_references": [
+0.04,
+0.04
+],
+"tcp_truth": [
+1.3695,
+0.1898,
+0.6109
+],
+"finger_links": {
+"gripper_right_finger_link": [
+1.3672,
+0.1427,
+0.7283
+],
+"gripper_left_finger_link": [
+1.4372,
+0.1789,
+0.717
+]
+},
+"tcp_estimate": [
+1.3721,
+0.1805,
+0.6124
+],
+"base": [
+0.8069,
+0.0008,
+0.0001,
+-0.0219
+],
+"object_in_base": [
+0.643,
+0.0133,
+0.5749
+]
+},
+{
+"t": 42.68,
+"stage": "above_object",
+"object": [
+1.45,
+0.0,
+0.575,
+1.0,
+0.0,
+0.0,
+0.0
+],
+"fingers": [
+0.0397,
+0.0402
+],
+"finger_references": [
+0.04,
+0.04
+],
+"tcp_truth": [
+1.3871,
+0.1591,
+0.6153
+],
+"finger_links": {
+"gripper_right_finger_link": [
+1.3774,
+0.1202,
+0.7354
+],
+"gripper_left_finger_link": [
+1.4515,
+0.1475,
+0.7235
+]
+},
+"tcp_estimate": [
+1.3944,
+0.1367,
+0.618
+],
+"base": [
+0.8071,
+0.0007,
+0.0,
+-0.0221
+],
+"object_in_base": [
+0.6427,
+0.0135,
+0.575
+]
+},
+{
+"t": 43.25,
+"stage": "above_object",
+"object": [
+1.45,
+0.0,
+0.575,
+1.0,
+-0.0,
+0.0,
+0.0
+],
+"fingers": [
+0.0398,
+0.0402
+],
+"finger_references": [
+0.04,
+0.04
+],
+"tcp_truth": [
+1.4017,
+0.1248,
+0.6194
+],
+"finger_links": {
+"gripper_right_finger_link": [
+1.3859,
+0.0948,
+0.7414
+],
+"gripper_left_finger_link": [
+1.4631,
+0.112,
+0.7292
+]
+},
+"tcp_estimate": [
+1.4054,
+0.1083,
+0.6212
+],
+"base": [
+0.8071,
+0.0007,
+0.0003,
+-0.0221
+],
+"object_in_base": [
+0.6428,
+0.0135,
+0.5747
+]
+},
+{
+"t": 43.8,
+"stage": "above_object",
+"object": [
+1.45,
+0.0,
+0.575,
+1.0,
+-0.0,
+0.0,
+0.0
+],
+"fingers": [
+0.0399,
+0.0401
+],
+"finger_references": [
+0.04,
+0.04
+],
+"tcp_truth": [
+1.4145,
+0.0923,
+0.6239
+],
+"finger_links": {
+"gripper_right_finger_link": [
+1.3942,
+0.0693,
+0.7467
+],
+"gripper_left_finger_link": [
+1.4726,
+0.0811,
+0.7357
+]
+},
+"tcp_estimate": [
+1.4152,
+0.0805,
+0.626
+],
+"base": [
+0.8076,
+0.0007,
+0.0001,
+-0.0224
+],
+"object_in_base": [
+0.6423,
+0.0137,
+0.5749
+]
+},
+{
+"t": 44.44,
+"stage": "above_object",
+"object": [
+1.4509,
+-0.0074,
+0.5768,
+0.9988,
+0.0484,
+0.0044,
+0.0028
+],
+"fingers": [
+0.0398,
+0.0401
+],
+"finger_references": [
+0.04,
+0.04
+],
+"tcp_truth": [
+1.4242,
+0.0626,
+0.6291
+],
+"finger_links": {
+"gripper_right_finger_link": [
+1.4001,
+0.0459,
+0.7522
+],
+"gripper_left_finger_link": [
+1.4791,
+0.0537,
+0.7427
+]
+},
+"tcp_estimate": [
+1.4262,
+0.0412,
+0.6337
+],
+"base": [
+0.8077,
+0.0007,
+0.0001,
+-0.0226
+],
+"object_in_base": [
+0.6431,
+0.0064,
+0.5767
+]
+},
+{
+"t": 45.18,
+"stage": "above_object",
+"object": [
+1.4475,
+-0.0306,
+0.5777,
+0.9756,
+0.1165,
+-0.0199,
+-0.1851
+],
+"fingers": [
+0.0398,
+0.0401
+],
+"finger_references": [
+0.04,
+0.04
+],
+"tcp_truth": [
+1.4355,
+0.0155,
+0.6395
+],
+"finger_links": {
+"gripper_right_finger_link": [
+1.4063,
+0.0102,
+0.7625
+],
+"gripper_left_finger_link": [
+1.4859,
+0.0118,
+0.7554
+]
+},
+"tcp_estimate": [
+1.4317,
+0.0154,
+0.6391
+],
+"base": [
+0.8081,
+0.0007,
+0.0002,
+-0.0222
+],
+"object_in_base": [
+0.6399,
+-0.0171,
+0.5775
+]
+},
+{
+"t": 45.9,
+"stage": "above_object",
+"object": [
+1.4181,
+-0.1051,
+0.5239,
+0.7108,
+0.6788,
+-0.1289,
+-0.1316
+],
+"fingers": [
+0.0399,
+0.0401
+],
+"finger_references": [
+0.04,
+0.04
+],
+"tcp_truth": [
+1.4395,
+0.0077,
+0.6464
+],
+"finger_links": {
+"gripper_right_finger_link": [
+1.4082,
+0.0046,
+0.7689
+],
+"gripper_left_finger_link": [
+1.488,
+0.0052,
+0.7632
+]
+},
+"tcp_estimate": [
+1.4366,
+0.0059,
+0.6478
+],
+"base": [
+0.8083,
+0.0006,
+0.0002,
+-0.0221
+],
+"object_in_base": [
+0.612,
+-0.0922,
+0.5237
+]
+},
+{
+"t": 46.51,
+"stage": "above_object",
+"object": [
+1.4178,
+-0.1062,
+0.52,
+0.695,
+0.695,
+-0.1303,
+-0.1303
+],
+"fingers": [
+0.0398,
+0.0402
+],
+"finger_references": [
+0.04,
+0.04
+],
+"tcp_truth": [
+1.4431,
+0.0052,
+0.6526
+],
+"finger_links": {
+"gripper_right_finger_link": [
+1.4098,
+0.0029,
+0.7747
+],
+"gripper_left_finger_link": [
+1.4896,
+0.0033,
+0.7702
+]
+},
+"tcp_estimate": [
+1.4401,
+0.0036,
+0.6546
+],
+"base": [
+0.8088,
+0.0006,
+0.0001,
+-0.0221
+],
+"object_in_base": [
+0.6113,
+-0.0933,
+0.5199
+]
+},
+{
+"t": 47.12,
+"stage": "above_object",
+"object": [
+1.4178,
+-0.1062,
+0.52,
+0.695,
+0.695,
+-0.1303,
+-0.1303
+],
+"fingers": [
+0.0397,
+0.0403
+],
+"finger_references": [
+0.04,
+0.04
+],
+"tcp_truth": [
+1.4462,
+0.0039,
+0.6585
+],
+"finger_links": {
+"gripper_right_finger_link": [
+1.4111,
+0.0023,
+0.7801
+],
+"gripper_left_finger_link": [
+1.491,
+0.0026,
+0.7767
+]
+},
+"tcp_estimate": [
+1.4436,
+0.0021,
+0.6621
+],
+"base": [
+0.8091,
+0.0006,
+0.0001,
+-0.0219
+],
+"object_in_base": [
+0.611,
+-0.0934,
+0.5199
+]
+},
+{
+"t": 47.68,
+"stage": "above_object",
+"object": [
+1.4178,
+-0.1062,
+0.52,
+0.695,
+0.695,
+-0.1303,
+-0.1303
+],
+"fingers": [
+0.0397,
+0.0403
+],
+"finger_references": [
+0.04,
+0.04
+],
+"tcp_truth": [
+1.4491,
+0.003,
+0.6643
+],
+"finger_links": {
+"gripper_right_finger_link": [
+1.4122,
+0.0018,
+0.7855
+],
+"gripper_left_finger_link": [
+1.4922,
+0.0021,
+0.7832
+]
+},
+"tcp_estimate": [
+1.446,
+0.0014,
+0.6672
+],
+"base": [
+0.8093,
+0.0006,
+0.0002,
+-0.0219
+],
+"object_in_base": [
+0.6108,
+-0.0934,
+0.5198
+]
+},
+{
+"t": 48.31,
+"stage": "above_object",
+"object": [
+1.4178,
+-0.1062,
+0.52,
+0.695,
+0.695,
+-0.1303,
+-0.1303
+],
+"fingers": [
+0.0399,
+0.0401
+],
+"finger_references": [
+0.04,
+0.04
+],
+"tcp_truth": [
+1.4537,
+0.0018,
+0.6734
+],
+"finger_links": {
+"gripper_right_finger_link": [
+1.4144,
+0.0014,
+0.7937
+],
+"gripper_left_finger_link": [
+1.4944,
+0.0017,
+0.7932
+]
+},
+"tcp_estimate": [
+1.4487,
+0.0005,
+0.6735
+],
+"base": [
+0.8097,
+0.0005,
+0.0001,
+-0.0218
+],
+"object_in_base": [
+0.6103,
+-0.0935,
+0.5199
+]
+},
+{
+"t": 48.86,
+"stage": "down_to_grasp",
+"object": [
+1.4178,
+-0.1062,
+0.52,
+0.695,
+0.695,
+-0.1303,
+-0.1303
+],
+"fingers": [
+0.0398,
+0.0402
+],
+"finger_references": [
+0.04,
+0.04
+],
+"tcp_truth": [
+1.4558,
+0.0007,
+0.6719
+],
+"finger_links": {
+"gripper_right_finger_link": [
+1.4159,
+0.0008,
+0.7921
+],
+"gripper_left_finger_link": [
+1.4958,
+0.0007,
+0.7919
+]
+},
+"tcp_estimate": [
+1.4505,
+-0.0015,
+0.6709
+],
+"base": [
+0.81,
+0.0005,
+0.0004,
+-0.0219
+],
+"object_in_base": [
+0.61,
+-0.0934,
+0.5196
+]
+},
+{
+"t": 49.56,
+"stage": "down_to_grasp",
+"object": [
+1.4178,
+-0.1062,
+0.52,
+0.695,
+0.695,
+-0.1303,
+-0.1303
+],
+"fingers": [
+0.0401,
+0.0399
+],
+"finger_references": [
+0.04,
+0.04
+],
+"tcp_truth": [
+1.4609,
+-0.0029,
+0.6643
+],
+"finger_links": {
+"gripper_right_finger_link": [
+1.4181,
+-0.0015,
+0.7834
+],
+"gripper_left_finger_link": [
+1.498,
+-0.0022,
+0.7853
+]
+},
+"tcp_estimate": [
+1.4576,
+-0.0055,
+0.6611
+],
+"base": [
+0.8105,
+0.0005,
+0.0001,
+-0.0217
+],
+"object_in_base": [
+0.6095,
+-0.0935,
+0.5199
+]
+},
+{
+"t": 50.14,
+"stage": "down_to_grasp",
+"object": [
+1.4178,
+-0.1062,
+0.52,
+0.695,
+0.695,
+-0.1303,
+-0.1303
+],
+"fingers": [
+0.0402,
+0.0398
+],
+"finger_references": [
+0.04,
+0.04
+],
+"tcp_truth": [
+1.4664,
+-0.0043,
+0.6552
+],
+"finger_links": {
+"gripper_right_finger_link": [
+1.4213,
+-0.0025,
+0.7733
+],
+"gripper_left_finger_link": [
+1.5012,
+-0.0031,
+0.7769
+]
+},
+"tcp_estimate": [
+1.46,
+-0.0051,
+0.6527
+],
+"base": [
+0.8109,
+0.0005,
+0.0001,
+-0.0216
+],
+"object_in_base": [
+0.6091,
+-0.0935,
+0.5199
+]
+},
+{
+"t": 50.74,
+"stage": "down_to_grasp",
+"object": [
+1.4178,
+-0.1062,
+0.52,
+0.695,
+0.695,
+-0.1303,
+-0.1303
+],
+"fingers": [
+0.0401,
+0.0399
+],
+"finger_references": [
+0.04,
+0.04
+],
+"tcp_truth": [
+1.4659,
+-0.0028,
+0.6493
+],
+"finger_links": {
+"gripper_right_finger_link": [
+1.4209,
+-0.0013,
+0.7675
+],
+"gripper_left_finger_link": [
+1.5008,
+-0.0014,
+0.7709
+]
+},
+"tcp_estimate": [
+1.4576,
+-0.003,
+0.6446
+],
+"base": [
+0.8112,
+0.0005,
+0.0,
+-0.0216
+],
+"object_in_base": [
+0.6088,
+-0.0935,
+0.52
+]
+},
+{
+"t": 51.38,
+"stage": "down_to_grasp",
+"object": [
+1.4178,
+-0.1062,
+0.52,
+0.695,
+0.695,
+-0.1303,
+-0.1303
+],
+"fingers": [
+0.0401,
+0.0399
+],
+"finger_references": [
+0.04,
+0.04
+],
+"tcp_truth": [
+1.4636,
+-0.0015,
+0.6432
+],
+"finger_links": {
+"gripper_right_finger_link": [
+1.4199,
+-0.0004,
+0.7619
+],
+"gripper_left_finger_link": [
+1.4998,
+-0.0004,
+0.7645
+]
+},
+"tcp_estimate": [
+1.4555,
+-0.002,
+0.64
+],
+"base": [
+0.8113,
+0.0005,
+0.0,
+-0.0216
+],
+"object_in_base": [
+0.6087,
+-0.0935,
+0.52
+]
+},
+{
+"t": 51.92,
+"stage": "down_to_grasp",
+"object": [
+1.4178,
+-0.1062,
+0.52,
+0.695,
+0.695,
+-0.1303,
+-0.1303
+],
+"fingers": [
+0.04,
+0.04
+],
+"finger_references": [
+0.04,
+0.04
+],
+"tcp_truth": [
+1.461,
+-0.0002,
+0.6376
+],
+"finger_links": {
+"gripper_right_finger_link": [
+1.4187,
+0.0003,
+0.7568
+],
+"gripper_left_finger_link": [
+1.4987,
+0.0005,
+0.7584
+]
+},
+"tcp_estimate": [
+1.4532,
+-0.0012,
+0.6353
+],
+"base": [
+0.8113,
+0.0004,
+0.0002,
+-0.0216
+],
+"object_in_base": [
+0.6087,
+-0.0935,
+0.5198
+]
+},
+{
+"t": 52.44,
+"stage": "close",
+"object": [
+1.4178,
+-0.1062,
+0.52,
+0.695,
+0.695,
+-0.1303,
+-0.1303
+],
+"fingers": [
+0.0399,
+0.0401
+],
+"finger_references": [
+0.04,
+0.04
+],
+"tcp_truth": [
+1.4589,
+0.0007,
+0.6329
+],
+"finger_links": {
+"gripper_right_finger_link": [
+1.4178,
+0.0008,
+0.7525
+],
+"gripper_left_finger_link": [
+1.4978,
+0.0011,
+0.7532
+]
+},
+"tcp_estimate": [
+1.4515,
+-0.0006,
+0.6322
+],
+"base": [
+0.8119,
+0.0004,
+0.0,
+-0.0214
+],
+"object_in_base": [
+0.6081,
+-0.0936,
+0.52
+]
+},
+{
+"t": 52.97,
+"stage": "close",
+"object": [
+1.4178,
+-0.1062,
+0.52,
+0.695,
+0.695,
+-0.1303,
+-0.1303
+],
+"fingers": [
+0.0382,
+0.0382
+],
+"finger_references": [
+0.0346,
+0.0346
+],
+"tcp_truth": [
+1.4586,
+0.0011,
+0.6303
+],
+"finger_links": {
+"gripper_right_finger_link": [
+1.4185,
+0.0011,
+0.7502
+],
+"gripper_left_finger_link": [
+1.4979,
+0.0013,
+0.7504
+]
+},
+"tcp_estimate": [
+1.4505,
+-0.0003,
+0.6302
+],
+"base": [
+0.8121,
+0.0004,
+0.0001,
+-0.0214
+],
+"object_in_base": [
+0.6079,
+-0.0936,
+0.5199
+]
+},
+{
+"t": 53.52,
+"stage": "close",
+"object": [
+1.4178,
+-0.1062,
+0.52,
+0.695,
+0.695,
+-0.1303,
+-0.1303
+],
+"fingers": [
+0.0323,
+0.0322
+],
+"finger_references": [
+0.0283,
+0.0283
+],
+"tcp_truth": [
+1.4583,
+0.0014,
+0.6295
+],
+"finger_links": {
+"gripper_right_finger_link": [
+1.4232,
+0.0013,
+0.7495
+],
+"gripper_left_finger_link": [
+1.4933,
+0.0016,
+0.7496
+]
+},
+"tcp_estimate": [
+1.4502,
+-0.0001,
+0.6297
+],
+"base": [
+0.8122,
+0.0004,
+0.0003,
+-0.021
+],
+"object_in_base": [
+0.6078,
+-0.0938,
+0.5197
+]
+},
+{
+"t": 54.1,
+"stage": "close",
+"object": [
+1.4178,
+-0.1062,
+0.52,
+0.695,
+0.695,
+-0.1303,
+-0.1303
+],
+"fingers": [
+0.0238,
+0.0238
+],
+"finger_references": [
+0.02,
+0.02
+],
+"tcp_truth": [
+1.458,
+0.0015,
+0.6294
+],
+"finger_links": {
+"gripper_right_finger_link": [
+1.4292,
+0.0015,
+0.7494
+],
+"gripper_left_finger_link": [
+1.4867,
+0.0017,
+0.7494
+]
+},
+"tcp_estimate": [
+1.45,
+-0.0,
+0.6294
+],
+"base": [
+0.8125,
+0.0004,
+0.0001,
+-0.021
+],
+"object_in_base": [
+0.6074,
+-0.0938,
+0.5199
+]
+},
+{
+"t": 54.76,
+"stage": "close",
+"object": [
+1.4178,
+-0.1062,
+0.52,
+0.695,
+0.695,
+-0.1303,
+-0.1303
+],
+"fingers": [
+0.0164,
+0.0162
+],
+"finger_references": [
+0.0125,
+0.0125
+],
+"tcp_truth": [
+1.4584,
+0.0017,
+0.6289
+],
+"finger_links": {
+"gripper_right_finger_link": [
+1.4423,
+0.0016,
+0.749
+],
+"gripper_left_finger_link": [
+1.4749,
+0.0017,
+0.7489
+]
+},
+"tcp_estimate": [
+1.45,
+0.0001,
+0.6292
+],
+"base": [
+0.8127,
+0.0003,
+0.0003,
+-0.0209
+],
+"object_in_base": [
+0.6072,
+-0.0938,
+0.5197
+]
+},
+{
+"t": 55.42,
+"stage": "close",
+"object": [
+1.4178,
+-0.1062,
+0.52,
+0.695,
+0.695,
+-0.1303,
+-0.1303
+],
+"fingers": [
+0.0085,
+0.0083
+],
+"finger_references": [
+0.0046,
+0.0046
+],
+"tcp_truth": [
+1.4589,
+0.0016,
+0.6286
+],
+"finger_links": {
+"gripper_right_finger_link": [
+1.4491,
+0.0016,
+0.7486
+],
+"gripper_left_finger_link": [
+1.469,
+0.0017,
+0.7486
+]
+},
+"tcp_estimate": [
+1.4499,
+0.0,
+0.6292
+],
+"base": [
+0.8131,
+0.0003,
+0.0001,
+-0.0208
+],
+"object_in_base": [
+0.6069,
+-0.0939,
+0.5199
+]
+},
+{
+"t": 56.1,
+"stage": "close",
+"object": [
+1.4178,
+-0.1062,
+0.52,
+0.695,
+0.695,
+-0.1303,
+-0.1303
+],
+"fingers": [
+0.0021,
+0.002
+],
+"finger_references": [
+0.0,
+0.0
+],
+"tcp_truth": [
+1.4585,
+0.0017,
+0.6291
+],
+"finger_links": {
+"gripper_right_finger_link": [
+1.4547,
+0.0017,
+0.7492
+],
+"gripper_left_finger_link": [
+1.4624,
+0.0017,
+0.7492
+]
+},
+"tcp_estimate": [
+1.45,
+0.0001,
+0.6292
+],
+"base": [
+0.8133,
+0.0003,
+0.0,
+-0.0208
+],
+"object_in_base": [
+0.6066,
+-0.0939,
+0.52
+]
+}
+],
+"phase": "pick",
+"seconds": 56.21,
+"plant_id": "09d00411ca6f49999dd7fde40cb70337",
+"model_sha256": "6860985f4c8af74f9e35603fa3adc2838e58e46f0c5e337f3576fd9a18cefbc3",
+"finished": "2026-11-18T01:36:04",
+"receipt": "/workspace/molar/robot_lab_runtime/pick-place/20261118T013604_fetch_block.json"
+},
+"final_message": "close: fingers closed past the object",
+"passed": false
+}

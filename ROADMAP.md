@@ -549,8 +549,13 @@ parking batch needs its own run. Details and evidence are in the
     [Receipt](docs/status/evidence/r59-tiago-nav2-fetch-2026-11-17/README.md);
   - fetch on Isaac: drive and interlock work, but the TIAGo grasp fails
     (2026-11-17: the block tips at the pre-grasp, or the descent stalls).
-    Isaac's finger contact needs diagnosing.
-    [Receipt](docs/status/evidence/r57-isaac-pick-place-2026-11-17/README.md);
+    [Receipt](docs/status/evidence/r57-isaac-pick-place-2026-11-17/README.md).
+    2026-11-18: true link poses showed a sideways approach at block height
+    (the high vias were out of reach). The planner now keeps 15 mm from the
+    object on transit legs and always comes in over the top. The block no
+    longer tips, but while squeezing, the hand drifts 1.8 cm along the
+    closing axis. Next: couple the fingers on Isaac.
+    [Receipt](docs/status/evidence/r59-isaac-tiago-approach-2026-11-18/README.md);
   - general recognition/pose for unconfigured, non-box or occluded objects,
     source-specific grasp strategies and further
     source-specific object pipelines;

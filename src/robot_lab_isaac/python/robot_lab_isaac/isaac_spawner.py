@@ -310,6 +310,10 @@ class IsaacSpawner(Node):
         # robot_lab_utils is importable, and sent to the runtime by joint.
         self.declare_parameter("drive_config", "")
         self.declare_parameter("articulation_config", "")
+        # Links whose world poses the runtime reports (diagnostic truth, e.g.
+        # a gripper's tool and finger links), comma-separated.
+        self.declare_parameter("trace_links", "")
+        self._link_poses_pub = None
         self._articulation = None
         self._articulation_loads = {}
         self._base_history = []
@@ -791,6 +795,7 @@ class IsaacSpawner(Node):
         cfg["world_shapes"] = self._world_shapes(cfg["world_path"])
         cfg["free_bodies"] = self._free_bodies(cfg["world_path"])
         cfg['joint_springs'] = springs
+        cfg['trace_links'] = [name for name in str(self.get_parameter('trace_links').value or '').split(',') if name]
 
         runtime_py = os.path.join(
             os.path.dirname(os.path.abspath(__file__)), "isaac_runtime.py"
@@ -1089,6 +1094,12 @@ class IsaacSpawner(Node):
                             if self._free_bodies_pub is None:
                                 self._free_bodies_pub = self.create_publisher(String, '/simulation/free_bodies', 10)
                             self._free_bodies_pub.publish(String(data=json.dumps(msg['free_bodies'])))
+                    elif ev == 'links':
+                        # Truth for traced links: {name: [x, y, z, qw, qx, qy, qz]}.
+                        from std_msgs.msg import String
+                        if self._link_poses_pub is None:
+                            self._link_poses_pub = self.create_publisher(String, '/simulation/link_poses', 10)
+                        self._link_poses_pub.publish(String(data=json.dumps(msg['poses'])))
                     elif ev == 'gait':
                         from std_msgs.msg import String
                         self._gait_contact_pub.publish(String(data=json.dumps(msg['contacts'],allow_nan=False)))
