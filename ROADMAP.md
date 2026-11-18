@@ -294,7 +294,10 @@ parking batch needs its own run. Details and evidence are in the
     (curriculum against the commanded distance) reached 10 cm rises. In a normal MuJoCo launch
     (`scripts/screen_stairs.py`) neither it nor the vendor policy climbs the 18 cm
     `terrain_stairs` or the new 10 cm `terrain_stairs_low`. Every policy stops at the first
-    step, and the trained gait keeps one front foot raised.
+    step, and the trained gait keeps one front foot raised. r3 (resumed from the evenly trotting
+    `go2_walk_r3`; curriculum level 0.7, 13 cm) walks straight to the first 10 cm step with
+    `screen_stairs.py --hold-line`, puts its front feet on it and freezes. Next: training
+    episodes that start at a riser, and course-like treads.
     [Receipt](docs/status/evidence/go2-stairs-r2-2026-11-18/README.md).
 - **How to do it:**
   1. Train `push_recovery` and a get-up task with `legged-train`
