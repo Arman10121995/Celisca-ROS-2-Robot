@@ -2,10 +2,14 @@
 """Stairs traversal screen for a legged robot on a running launch (R5.2).
 
 Drives ``--speed`` m/s forward on ``/cmd_vel`` for ``--seconds`` of sim time
-and judges from simulator truth (``/odom/ground_truth``):
+and judges from simulator truth (``/odom/ground_truth``). With
+``--hold-line`` it steers like an operator would, holding the start line
+and heading (yaw rate -2 (y - y0) - 1.5 yaw, at most 0.6 rad/s): a policy
+that drifts 0.6 m sideways walks round a 1.1 m wide stair instead of up it.
 
 - **climbed:** the base's rise above its start, and the number of whole
-  ``--rise`` steps that makes;
+  ``--rise`` steps that makes (1 cm tolerance: front feet on a step pitch the
+  base up most of a rise without climbing it);
 - **fell:** tilt past 60° (body z axis ``up_z`` < 0.5) at any time.
 
 It also records, at 10 Hz of sim time, the measured joint efforts
@@ -38,6 +42,7 @@ def main():
     ap.add_argument('--rise', type=float, default=0.18, help='step height, m')
     ap.add_argument('--steps', type=int, default=5, help='steps to climb to pass')
     ap.add_argument('--timeout', type=float, default=900.0, help='wall seconds')
+    ap.add_argument('--hold-line', action='store_true', help='steer to keep the start line and heading')
     ap.add_argument('--out', default='')
     args = ap.parse_args()
     rclpy.init()
@@ -47,7 +52,8 @@ def main():
     def on_odom(message):
         p, q = message.pose.pose.position, message.pose.pose.orientation
         truth.update(t=message.header.stamp.sec + message.header.stamp.nanosec * 1e-9, x=p.x, y=p.y, z=p.z,
-                     up_z=1.0 - 2.0 * (q.x * q.x + q.y * q.y))
+                     up_z=1.0 - 2.0 * (q.x * q.x + q.y * q.y),
+                     yaw=math.atan2(2 * (q.w * q.z + q.x * q.y), 1 - 2 * (q.y * q.y + q.z * q.z)))
 
     def on_joints(message):
         if len(message.effort) == len(message.name):
@@ -61,7 +67,8 @@ def main():
     deadline = time.monotonic() + args.timeout
     while 't' not in truth and time.monotonic() < deadline:
         rclpy.spin_once(node, timeout_sec=.1)
-    report = dict(speed_mps=args.speed, rise_m=args.rise, steps_to_pass=args.steps, passed=False)
+    report = dict(speed_mps=args.speed, rise_m=args.rise, steps_to_pass=args.steps, hold_line=args.hold_line,
+                  passed=False)
     if 't' not in truth:
         report['error'] = 'no /odom/ground_truth'
     else:
@@ -72,6 +79,10 @@ def main():
         while time.monotonic() < deadline and truth['t'] - start['t'] < args.seconds:
             message = Twist()
             message.linear.x = args.speed
+            if args.hold_line:
+                turn = -2.0 * (truth['y'] - start['y']) - 1.5 * math.atan2(math.sin(truth['yaw'] - start['yaw']),
+                                                                         math.cos(truth['yaw'] - start['yaw']))
+                message.angular.z = max(-.6, min(.6, turn))
             command.publish(message)
             rclpy.spin_once(node, timeout_sec=.05)
             if not samples or truth['t'] - samples[-1]['t'] >= .1:
@@ -89,7 +100,7 @@ def main():
         feet = [s['feet_n'] for s in samples if 'feet_n' in s]
         report.update(start=dict(x=round(start['x'], 3), y=round(start['y'], 3), z=round(start['z'], 3)),
                       end=samples[-1] if samples else None, forward_m=round(samples[-1]['x'] - start['x'], 3) if samples else 0.,
-                      max_rise_m=round(rise, 3), steps_climbed=int(math.floor((rise + .03) / args.rise)),
+                      max_rise_m=round(rise, 3), steps_climbed=int(math.floor((rise + .01) / args.rise)),
                       fell=fell is not None, fell_at_s=fell['t'] if fell else None,
                       min_up_z=round(min(s['up_z'] for s in samples), 3) if samples else None,
                       peak_effort_nm=peak,

@@ -90,9 +90,48 @@ order FL, FR, RL, RR):
 The rough-terrain run already favoured its front-left foot, and stairs
 training made it worse. Stairs r3 therefore resumes from `go2_walk_r3`.
 
+## Stairs r3 (from the even trot): still not passed
+
+r3 resumed `go2_walk_r3` (iteration 2000) with the same settings and the
+commanded-distance curriculum:
+
+- 3000 iterations, to 5000;
+- level 0.7 (13 cm) within 300 iterations, held to the end
+  (`r3-curriculum-curve.json`);
+- on flat ground it walks 4.1 m in 10 s and its gait stays close to even
+  (contact 0.39 / 0.61 / 0.70 / 0.49).
+
+**Changes to the course and the screen:**
+
+- **Run-up:** `terrain_stairs_low`'s stairs now start at x = −6.2, 1 m
+  further east, for a 1.3 m run-up. In the original arena the stairs begin
+  0.8 m from the west wall. Spawned at the riser, r3 froze on both worlds
+  (`screen-low-r3-1`, `screen-r3-1`, `screen-*-765`). On open floor in the
+  same world it walks 4.8 m (`screen-low-r3-openfloor`).
+- **`--hold-line`:** the screen can now steer like an operator, holding
+  the start line and heading. Without it r3 drifted 0.6 m sideways and
+  walked up beside the 1.1 m-wide strip (`screen-low2-go2_stairs_r3`: 5 m
+  forward, base height unchanged).
+- **Step count:** the tolerance is now 1 cm (was 3 cm). With the front feet
+  on a step, the base pitches up most of a rise without climbing it.
+
+**Result** (`screen-low3-go2_stairs_r3`, 10 cm stairs, holding the line):
+
+- r3 walks straight to the first step and puts its front feet on it (base
+  rise 8.2 cm).
+- It then stands frozen for the remaining 35 s, with its front-left foot
+  lifted.
+- Not a climb.
+
+r2 on the shifted course paws at the first step (`screen-low2-go2_stairs_r2`).
+
 ## Next
 
-- Stairs r3 from `go2_walk_r3`, the even trot (see above).
+- The trained policies freeze when a front foot meets a riser: their
+  training stairs are pyramids with 0.3 m treads that they meet
+  head-on in the middle of an episode, not from a standstill at a riser.
+  Next: start some training episodes at a riser, and use course-like
+  1.1 m treads.
 - Train with treads like the course (1.1 m) or a mixed tread curriculum.
 - GPU-scale training (thousands of environments) is not available on this
   host.

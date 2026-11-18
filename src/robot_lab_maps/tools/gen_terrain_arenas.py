@@ -124,13 +124,16 @@ ARENAS["terrain_stairs"] = {
 
 # terrain_stairs_low - the same arena with 0.10 m rises (R5.2, 2026-11-18): the
 # rise Go2's stairs curriculum reached (level 0.5 of 0.02-0.18 m), so a
-# trained policy has a named stairs course at the height it learned.
+# trained policy has a named stairs course at the height it learned. Its
+# stairs start 1 m further east (x = -6.2) than terrain_stairs (-7.2): a
+# blind policy spawned at the riser with 0.8 m to the wall froze there.
 low_h = 0.10
+low_x0 = step_x0 + 1.0
 ARENAS["terrain_stairs_low"] = {
     "min_xy": (st_lo, st_lo),
     "max_xy": (st_hi, st_hi),
     "boxes": outer_walls(st_lo, st_lo, st_hi, st_hi)
-             + [Box(step_x0 + i * 2 * step_d, -4.0, step_w, step_d, i * low_h, low_h) for i in range(5)]
+             + [Box(low_x0 + i * 2 * step_d, -4.0, step_w, step_d, i * low_h, low_h) for i in range(5)]
              + [Box(step_x0 + 9.0 + i * 2 * step_d, 4.0, step_w, step_d, (3 - i) * low_h, low_h) for i in range(4)],
     "spawn": [-7.0, -5.0, 0.0],
     "goal": [7.0, 5.0, 0.0],

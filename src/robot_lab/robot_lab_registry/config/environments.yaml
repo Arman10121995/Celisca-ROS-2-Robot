@@ -1,6 +1,6 @@
 - created: '2026-11-18'
   description: terrain_stairs with 0.10 m rises (five steps, 1.1 m treads, along y = -4) and a low descending ramp;
-    R5.2 stairs course at the rise the Go2 curriculum reached
+    R5.2 stairs course at the rise the Go2 curriculum reached; stairs start at x = -6.2 for a run-up
   dimension: 3D
   dynamics:
     dynamic_obstacles: false
