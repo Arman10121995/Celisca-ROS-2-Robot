@@ -1152,7 +1152,10 @@ parking batch needs its own run. Details and evidence are in the
     **Isaac belt (2026-11-18):** PhysX surface velocity on the deck, as in Isaac's conveyor; the
     transfer passes 2/2 there, so on all four backends
     ([receipt](docs/status/evidence/r11-molar-isaac-belt-2026-11-18/README.md));
-  - multi-floor operation through the fleet lift (R10.2).
+  - multi-floor operation through the fleet lift (R10.2). Found 2026-11-18: the `fleet_facility`
+    lift drive is limited to 1600 N, but car plus MOLAR (158 kg) needs about 2040 N. A MOLAR fleet
+    member is also missing (own controllers and relay in a namespace, `base_link` root, 0.49 m
+    radius).
 - **How to do it:** add sensors to `molar_hri.urdf.xacro`, then reuse the
   Bumperbot SLAM/Nav2 configs with the MOLAR footprint. Payload transfer
   uses the existing articulation contract (`robot_lab_utils/urdf_articulation`).
