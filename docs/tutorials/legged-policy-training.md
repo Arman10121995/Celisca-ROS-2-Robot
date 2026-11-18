@@ -41,9 +41,14 @@ ros2 run robot_lab_adapter legged-train evaluate --policy-dir $RUN/policy --task
 | `unitree_go2w` | `go2w_robot_lab` | 12 legs + 4 wheels | 57 |
 | `unitree_g1_29dof` | `g1_robomimic_locomotion` | 29 | 96 |
 | `berkeley_humanoid_lite_sim` | upstream `policy_humanoid.yaml` (generated template) | 22 | 75 |
+| `asset_anymal` (robot_assets ANYmal) | legged_gym ANYmal C (generated template) | 12 | 45 |
 
 Each robot trains in the contract of its
-[provisioned rl_sar policy](legged-policies.md). The joint order, default
+[provisioned rl_sar policy](legged-policies.md). A robot without one trains
+in a template written from a published open-source configuration
+(`robot_lab_adapter/legged_templates.py`). ANYmal uses legged_gym's ANYmal C
+values: standing pose, PD 80/2, action scale 0.5, 50 Hz. Run it in Launch
+with `mode:=loc allow_experimental_assets:=true legged_policy:=<run>/policy`. The joint order, default
 pose, action scale, kp/kd, torque limits, `dt` and decimation all come from
 that policy. The observation is
 `ang_vel, gravity_vec, commands, dof_pos, dof_vel, actions`. It has no
