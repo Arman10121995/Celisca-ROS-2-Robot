@@ -12,4 +12,12 @@ amcl:
     base_frame_id: base_link
     scan_topic: scan
     laser_max_range: 12.0
-    max_beams: 120
+    # 2026-11-18 (R11 goal B): the estimate was 0.26 m / 4.7 deg off after
+    # route A and 0.49 m later, so Nav2 saw the start "in lethal space".
+    # With wheel-only odometry (casters) and a front-only scan: update
+    # twice as often, more beams, and trust odometry rotation less.
+    max_beams: 180
+    update_min_d: 0.05
+    update_min_a: 0.05
+    alpha1: 0.2
+    alpha4: 0.2
