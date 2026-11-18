@@ -796,6 +796,12 @@ class IsaacSpawner(Node):
         cfg["free_bodies"] = self._free_bodies(cfg["world_path"])
         cfg['joint_springs'] = springs
         cfg['trace_links'] = [name for name in str(self.get_parameter('trace_links').value or '').split(',') if name]
+        # MOLAR's deck belt (R11): the runtime gives the deck a PhysX surface
+        # velocity of roller rate x roller radius, as Isaac's own conveyor
+        # does (Gazebo: TrackController; MuJoCo/PyBullet: robot_lab_utils.belt).
+        joints = self._articulation.contract.joints if self._articulation else {}
+        if cfg['free_bodies'] and 'transfer_roller_joint' in joints and 'name="telescope_stage2"' in urdf:
+            cfg['belt'] = dict(deck='telescope_stage2', roller='transfer_roller_joint', radius=0.012)
 
         runtime_py = os.path.join(
             os.path.dirname(os.path.abspath(__file__)), "isaac_runtime.py"

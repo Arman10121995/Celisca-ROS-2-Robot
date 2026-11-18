@@ -1268,6 +1268,44 @@ def _add_free_bodies(world, bodies):
     return created
 
 
+def _deck_belt(stage, cfg, dof_names):
+    """MOLAR's deck belt as PhysX surface velocity on the deck link (R11).
+
+    Isaac's own conveyor (isaacsim.asset.gen.conveyor) drives loose bodies
+    this way: contacts with the deck body see its surface moving along the
+    deck's local x. The speed follows the measured roller rate times the
+    roller radius. Returns a step function (joint velocities -> None), or
+    None when the deck or roller is missing.
+    """
+    from pxr import Gf, PhysxSchema, UsdPhysics
+    belt = cfg.get('belt') or {}
+    if not belt or belt.get('roller') not in dof_names:
+        return None
+    deck = next((prim for prim in stage.Traverse()
+                 if prim.GetName() == belt['deck'] and prim.HasAPI(UsdPhysics.RigidBodyAPI)), None)
+    if deck is None:
+        return None
+    api = PhysxSchema.PhysxSurfaceVelocityAPI.Apply(deck)
+    api.CreateSurfaceVelocityLocalSpaceAttr().Set(True)
+    api.CreateSurfaceVelocityAttr().Set(Gf.Vec3f(0.0, 0.0, 0.0))
+    enabled = api.CreateSurfaceVelocityEnabledAttr()
+    # Cycling the flag makes PhysX take the API on a running stage (as the conveyor node does).
+    enabled.Set(False)
+    enabled.Set(True)
+    index, radius, last = dof_names.index(belt['roller']), float(belt['radius']), [0.0]
+
+    def step(joint_velocities):
+        speed = float(joint_velocities[index]) * radius
+        if abs(speed - last[0]) > 1e-4:
+            # Measured on Isaac Sim 6.0.1: +x surface velocity drove the payload
+            # towards the deck's -x (it fell off the rear, 2026-11-18), so the
+            # belt's forward motion is authored as -x.
+            api.GetSurfaceVelocityAttr().Set(Gf.Vec3f(-speed, 0.0, 0.0))
+            last[0] = speed
+    _emit({"event": "log", "msg": "Deck belt: surface velocity on %s from %s" % (deck.GetPath(), belt['roller'])})
+    return step
+
+
 def _traced_link_prims(stage, names):
     """{name: prim} for the first prim of each traced link name (the importer keeps link names)."""
     wanted, found = set(names), {}
@@ -1607,6 +1645,7 @@ def _run_stage(app, reader, cfg, state):
         _emit({"event": "ready", "dofs": dof_names,
                "root_body": _articulation_root_body(robot)})
 
+    deck_belt = _deck_belt(stage_obj, cfg, dof_names) if not robot_free and cfg.get("belt") else None
     traced_links = (_traced_link_prims(stage_obj, cfg.get("trace_links") or [])
                     if not robot_free and cfg.get("trace_links") else {})
     if cfg.get("trace_links"):
@@ -1836,6 +1875,8 @@ def _run_stage(app, reader, cfg, state):
                 jpos = [0.0] * len(dof_names)
                 jvel = [0.0] * len(dof_names)
 
+        if deck_belt is not None and jvel:
+            deck_belt(jvel)
         free_poses = None
         if free_bodies and sim_step % max(1, int(round(.1 / dt))) == 0:
             free_poses = _free_body_poses(free_bodies)

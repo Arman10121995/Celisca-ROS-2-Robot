@@ -144,7 +144,7 @@ Work top to bottom. Each line links to its task.
 | I14 | [R5.5](#r55--ackermann-rear-steer-and-anti-ackermann-cars) Cars | 2026-11-15: car course 13/13 on four backends (lookahead 1.25 × turning radius, forward escape when back-up is blocked); park-at-heading runtime and Drive-panel controls | implemented |
 | I15 | [R3.6](#r36--external-robot-assets-in-normal-launch) Assets | 2026-11-18: KUKA iiwa and both Valkyrie forearms also get lab servos (display-only 69 → 66; R2 refused: placeholder hand limits); 2026-11-17: UR10, UR5, YuMi controllable with declared lab servos (display-only 73 → 69); 2026-11-15: vendor policies for Booster T1 and Unitree G1/H1/H1_2, controllable siblings named, license/mesh audit (114/163 ok). 47 legged need training, 12 URDFs ship no control interface | partial |
 | I16 | [R6.5](#r65--world-to-occupancy-generation) / [R6.6](#r66--external-world-library) / [R6.2](#r62--dynamic-and-sensor-disturbance-cases) Worlds | 2026-11-17: `<polyline>` geometry supported, polylines world installed (20/20 example scenes); upper floors covered by `--height` slicing. 2026-11-15: fixture review of 100 Gazebo examples, Fuel licences, 16 worlds with grids, actor collisions. Missions in new world classes are V9 | implemented |
-| I17 | [R11](#r11--molar--probot-l-family) MOLAR | Done-when met 2026-11-17: route A and a payload transfer both on `celisca_floor_1_detailed` (Gazebo). Earlier: transfer on `nav_empty` (Gazebo 3/3, MuJoCo 4/4). Goal B passes 2026-11-18. Remaining: Isaac belt, multi-floor, mounted sensors (needs the user's layout); repeats are V8 | implemented |
+| I17 | [R11](#r11--molar--probot-l-family) MOLAR | Done-when met 2026-11-17: route A and a payload transfer both on `celisca_floor_1_detailed` (Gazebo). Earlier: transfer on `nav_empty` (Gazebo 3/3, MuJoCo 4/4). Goal B and the Isaac belt pass 2026-11-18 (transfer on all four backends). Remaining: multi-floor, mounted sensors (needs the user's layout); repeats are V8 | implemented |
 | I18 | [P4](#p4--mujoco-large-world-speed) MuJoCo speed | 2026-11-14: flex culling, exact tick pacing, oversleep payback, sensor thread (celisca_floor_1 0.81, furnished floor 0.99, hospital 0.43); large worlds remain flex-kinematics bound | partial |
 | I19 | [R7](#r7--algorithm-breadth) Algorithms | 2026-11-14: Gazebo `sim_seed` (300/300 repeat), sensor-fault relay on all backends, 78 per-method ledger records (9 corrected, 8 noted mismatches) | implemented |
 | I20 | [R9.1](#r91--provenance-licenses-and-clean-host-reproduction) Provenance | 2026-11-14: PX4 checkout + 25 submodules and all vendor sources scanned from their license files; 7 trees without license files listed for review | implemented |
@@ -1148,8 +1148,10 @@ parking batch needs its own run. Details and evidence are in the
     whenever it resumed. PyBullet also ignored the declared friction of static surfaces (now applied
     below 1). With the station clear, the transfer passes once each on PyBullet, MuJoCo and Gazebo
     ([receipt](docs/status/evidence/r11-molar-transfer-station-2026-11-17/README.md); morning
-    [receipt](docs/status/evidence/r11-molar-pybullet-transfer-2026-11-17/README.md)). The Isaac belt
-    remains;
+    [receipt](docs/status/evidence/r11-molar-pybullet-transfer-2026-11-17/README.md)).
+    **Isaac belt (2026-11-18):** PhysX surface velocity on the deck, as in Isaac's conveyor; the
+    transfer passes 2/2 there, so on all four backends
+    ([receipt](docs/status/evidence/r11-molar-isaac-belt-2026-11-18/README.md));
   - multi-floor operation through the fleet lift (R10.2).
 - **How to do it:** add sensors to `molar_hri.urdf.xacro`, then reuse the
   Bumperbot SLAM/Nav2 configs with the MOLAR footprint. Payload transfer

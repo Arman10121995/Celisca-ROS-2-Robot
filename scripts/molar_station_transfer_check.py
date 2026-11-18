@@ -192,7 +192,7 @@ def main():
     parser.add_argument('--lift', type=float, default=0.10, help='Lift joint change before the transfer (m)')
     parser.add_argument('--roller', type=float, default=8.0)
     parser.add_argument('--out', default='')
-    parser.add_argument('--simulator', choices=('gazebo', 'mujoco', 'pybullet'), default='gazebo')
+    parser.add_argument('--simulator', choices=('gazebo', 'mujoco', 'pybullet', 'isaac'), default='gazebo')
     parser.add_argument('--time-scale', type=float, default=1.0,
                         help='Multiply the settle/belt waits (large worlds run Gazebo below real time)')
     parser.add_argument('--map', default='nav_empty',
@@ -214,13 +214,14 @@ def main():
     log = open((options.out or 'molar_transfer') + '.launch.log', 'w')
     # MuJoCo and PyBullet: payload and station are in the world file before
     # launch; truth comes from /simulation/free_bodies and odometry.
-    mujoco = options.simulator in ('mujoco', 'pybullet')
+    mujoco = options.simulator in ('mujoco', 'pybullet', 'isaac')
     extra, placed = [], None
     if options.simulator == 'mujoco':
         world_file, placed = mujoco_world(Path((options.out or 'molar_transfer') + '_world'), options.lift)
         extra = ['mujoco_world_xml:=%s' % (world_file.parent.parent / 'mjcf' / 'nav_empty.xml')]
         result['mujoco_world'] = dict(placed, world=str(world_file))
-    elif options.simulator == 'pybullet':
+    elif options.simulator in ('pybullet', 'isaac'):
+        # Isaac reads the same SDF world: loose payload, static station.
         world_file, placed = pybullet_world(Path((options.out or 'molar_transfer') + '_world'), options.lift)
         extra = ['world_path:=%s' % world_file]
         result['pybullet_world'] = dict(placed, world=str(world_file))
