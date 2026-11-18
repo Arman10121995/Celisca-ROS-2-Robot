@@ -213,3 +213,37 @@ def test_wall_fragments_are_not_robots():
         ranges[i] = .5                              # a 0.3 m peer ahead, well in front of the wall
     rays = scan_rays(ranges, -math.pi, INC)
     assert len(robots_in_scan(rays, BURGER['aggregation'])) == 1
+
+
+def test_aggregation_explore_turns_short_of_the_scan_guard_corridor():
+    # A wall 0.4 m ahead: inside scan_guard's stopping corridor at 0.35 m/s for a
+    # 0.18 m robot (0.475 m), outside the protection layer (0.36 m). Exploring
+    # straight on froze members against walls (2026-11-18).
+    from robot_lab_utils.fleet_motion import scan_guard
+    ranges = [3.0] * 360
+    for i in range(120, 241):
+        ranges[i] = .4 / math.cos(math.radians(i - 180))   # a wall 0.4 m ahead (angle_min -pi), +-60 deg
+    ranges[185] = .39                                      # nearest slightly left
+    behaviour = LocalBehaviour('local_aggregation', .35, 1., radius=.18)
+    linear, angular, info = behaviour.step(ranges, -math.pi, math.radians(1.), now=0.)
+    assert linear == 0. and angular < 0. and info.get('turning_from_obstacle')
+    assert behaviour.state == 'explore'
+    assert scan_guard(linear, angular, ranges, -math.pi, math.radians(1.), .18)[:2] == (0., angular)
+    # The same scan from a lidar mounted turned by pi (Bumperbot): angles 0 to 2 pi.
+    turned = ranges[180:] + ranges[:180]
+    behaviour = LocalBehaviour('local_aggregation', .35, 1., radius=.18)
+    linear, angular, info = behaviour.step(turned, -math.pi + math.pi, math.radians(1.), now=0.)
+    assert linear == 0. and angular < 0. and info.get('turning_from_obstacle')
+    ranges = [3.0] * 360
+    linear, angular, info = behaviour.step(ranges, -math.pi, math.radians(1.), now=1.)
+    assert linear == .35 and not info.get('turning_from_obstacle')    # open space: explore straight on
+
+
+def test_a_member_held_by_separation_turns_away_from_the_nearest_peer():
+    from robot_lab_utils.fleet_motion import separation_guard, turn_away_from_nearest
+    robot = Neighbor('gamma', 0., 0., 0., 0., .18)
+    peer = Neighbor('beta', .55, .1, 0., 0., .118)             # ahead, slightly left
+    assert separation_guard(robot, [peer], .35, 0.)[2].startswith('predicted member separation')
+    turn = turn_away_from_nearest(robot, [robot, peer], 1.)
+    assert turn == -1.                                         # away: to the right
+    assert separation_guard(robot, [peer], 0., turn)[:2] == (0., -1.)   # a turn in place passes the guard

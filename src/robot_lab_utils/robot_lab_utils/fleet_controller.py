@@ -35,7 +35,8 @@ from std_srvs.srv import Trigger
 from tf2_ros import Buffer, StaticTransformBroadcaster, TransformException, TransformListener
 
 from robot_lab_utils.fleet_lift_recovery import recovery_passengers
-from robot_lab_utils.fleet_motion import Neighbor, angle, scan_guard, separation_guard, swarm_velocities
+from robot_lab_utils.fleet_motion import (Neighbor, angle, scan_guard, separation_guard, swarm_velocities,
+                                          turn_away_from_nearest)
 from robot_lab_utils.fleet_session import finite, ID_PATTERN, MEMBER_MODELS
 from robot_lab_utils.fleet_missions import MissionHistory, coverage_plan, enqueue, mission, settled, traffic_yield_goal
 from robot_lab_utils.fleet_zones import PLAN_FRESH_S, ZoneArbiter, declared_zones, narrow_passages
@@ -1306,11 +1307,24 @@ class FleetController(Node):
                     elif member.mode == 'swarm':
                         linear, angular = swarm_commands.get(member.name, (0., 0.))
                     robot = self._neighbor(member)
-                    linear, angular, reason = separation_guard(robot, [peer for peer in neighbors if self._same_floor(robot,peer)], linear, angular)
+                    peers = [peer for peer in neighbors if self._same_floor(robot,peer)]
+                    wanted, turned = linear, False
+                    linear, angular, reason = separation_guard(robot, peers, linear, angular)
+                    if (reason.startswith('predicted member separation') and member.mode == 'swarm' and wanted > 0
+                            and self.swarm and self.swarm['local']):
+                        # A scan-only behaviour cannot see every peer (a Labbot's
+                        # lidar passes over a Bumperbot) and kept driving at one
+                        # it was held from, frozen (2026-11-18): turn in place,
+                        # away from the nearest member, still under both guards.
+                        linear, angular, reason = separation_guard(
+                            robot, peers, 0., turn_away_from_nearest(robot, peers, member.config['max_angular']))
+                        turned = not reason
                     if not reason:
                         scan = member.scan
                         linear, angular, reason = scan_guard(linear, angular, scan.ranges, scan.angle_min + scan_yaw(member),
                                                              scan.angle_increment, member.config['radius'])
+                    if turned and not reason:
+                        reason = 'swarm member turning from a peer its scan does not show'
                     member.reason = reason or ('Neutral; waiting for input' if linear == angular == 0 and member.mode == 'manual'
                                                else member.mode + ' command active')
             message = Twist()

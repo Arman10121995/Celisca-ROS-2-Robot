@@ -1678,6 +1678,7 @@ tasks:
           full_scope_acceptance: partial
           evidence: docs/status/evidence/workflow-continuation-2026-11-02/README.md
       R10.3:
+        swarm_aggregation_20261118: 'Claude: implemented, experimental. Aggregation members froze (scan_guard stopping corridor stops translation and rotation, beyond the protection layer; Labbot lidar cannot see Bumperbots so the separation guard held it). LocalBehaviour turns in place short of fleet_motion.stopping_distance (bearings wrapped for the Bumperbot pi mount); controller turns a separation-held swarm member away from the nearest peer. New swarm_arena (5 x 5 m). Three Bumperbots spread 3.6-4.0 m: mean 3.88 -> 0.96 m, all within 1.5 m from 21.9 s and 56 % of 180 s, closest 0.39 m. Mixed group 15 %; nav_empty and pre-fix runs kept. docs/status/evidence/r103-swarm-aggregation-2026-11-18/README.md'
         acceptance_ref: ROADMAP.md R10.3
         active_scope: Native multi-FCU controls, automatic formation/operator-loss workloads, bytewise FCU parameters,
           explicit noisy range kit/EKF selection, native truth clocks and absolute independent formation observations.

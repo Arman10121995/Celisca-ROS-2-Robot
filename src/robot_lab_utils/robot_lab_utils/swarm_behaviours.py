@@ -22,6 +22,13 @@ Deviations, all for Robot Lab's scans and controllers:
 - speeds are clipped to the member's limits; the fleet controller's
   separation and scan guards still apply after a behaviour.
 
+- the fleet controller's scan guard stops a member that would translate
+  into its stopping corridor, rotation included; a behaviour that keeps
+  asking to drive forward there (aggregation's explore, against a wall)
+  froze for good, short of the protection layer's reach (measured
+  2026-11-18). After the protection layer, a forward command with an
+  obstacle inside that corridor turns in place, away from the obstacle.
+
 As in ROS2swarm, a hardware protection layer runs after every behaviour:
 when more than a few rays are inside the member radius + 0.18 m it replaces
 the command with a potential field away from the obstacle (ROS2swarm's
@@ -183,8 +190,31 @@ class LocalBehaviour:
             info['protected'] = True
         linear = max(-self.max_linear, min(self.max_linear, linear))
         angular = max(-self.max_angular, min(self.max_angular, angular))
+        turned = self._turn_short_of_corridor(rays, linear)
+        if turned:
+            linear, angular = turned
+            info['turning_from_obstacle'] = True
         self.last = (linear, angular)
         return linear, angular, info
+
+    def _turn_short_of_corridor(self, rays, linear):
+        """Turn in place when scan_guard would stop a forward command (fleet_motion)."""
+        from robot_lab_utils.fleet_motion import AHEAD_HALF_ANGLE, stopping_distance
+        if linear <= 0:
+            return None
+        reach = stopping_distance(linear, self.radius)
+        # Scan angles plus a mounting yaw can run past pi (Bumperbot: 0 to 2 pi).
+        rays = [(r, math.atan2(math.sin(a), math.cos(a))) for r, a in rays]
+        ahead = [(r, a) for r, a in rays if abs(a) < AHEAD_HALF_ANGLE and r < reach]
+        if not ahead:
+            return None
+        _, bearing = min(ahead)
+        if abs(bearing) < 1e-3:
+            # Dead ahead: turn towards the side with more room.
+            left = np.mean([r for r, a in rays if 0 < a < math.pi / 2] or [0.])
+            right = np.mean([r for r, a in rays if -math.pi / 2 < a < 0] or [0.])
+            bearing = -1. if left > right else 1.
+        return 0., -math.copysign(self.max_angular, bearing)
 
     def _protect(self, rays, angle_increment):
         """ROS2swarm hardware_protection_layer: potential field away from close obstacles."""

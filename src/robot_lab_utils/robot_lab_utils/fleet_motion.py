@@ -106,6 +106,15 @@ def swarm_velocities(mode, neighbors, max_linear, max_angular, spacing=1., ancho
     return commands
 
 
+# Bearings within this of the travel direction count as ahead (scan_guard).
+AHEAD_HALF_ANGLE = .65
+
+
+def stopping_distance(linear, radius, acceleration=.7):
+    """The free distance ahead scan_guard needs before it lets a member translate."""
+    return radius + .12 + abs(linear) * .25 + linear * linear / (2 * acceleration)
+
+
 def scan_guard(linear, angular, ranges, angle_min, angle_increment, radius, acceleration=.7):
     if not all(math.isfinite(v) for v in (linear, angular, angle_min, angle_increment, radius, acceleration)):
         return 0., 0., 'invalid command/scan'
@@ -121,7 +130,7 @@ def scan_guard(linear, angular, ranges, angle_min, angle_increment, radius, acce
             value = 0.
         nearest = min(nearest, value)
         bearing = angle(angle_min + index * angle_increment - (math.pi if linear < 0 else 0.))
-        if abs(bearing) < .65:
+        if abs(bearing) < AHEAD_HALF_ANGLE:
             ahead = min(ahead, value)
     if nearest < radius + .03:
         # A soft buffer must not prevent a retreat into an observed clear
@@ -130,10 +139,20 @@ def scan_guard(linear, angular, ranges, angle_min, angle_increment, radius, acce
             return 0., 0., 'scan footprint proximity'
         if linear and ahead < radius + .12:
             return 0., angular, 'scan footprint proximity; translation held'
-    stopping = radius + .12 + abs(linear) * .25 + linear * linear / (2 * acceleration)
+    stopping = stopping_distance(linear, radius, acceleration)
     if linear and ahead < stopping:
         return 0., 0., 'scan stopping corridor'
     return linear, angular, ''
+
+
+def turn_away_from_nearest(robot, others, max_angular):
+    """In-place turn away from the nearest other member (a swarm member held by separation_guard)."""
+    others = [o for o in others if o.name != robot.name]
+    if not others:
+        return 0.
+    nearest = min(others, key=lambda o: math.hypot(o.x - robot.x, o.y - robot.y))
+    bearing = angle(math.atan2(nearest.y - robot.y, nearest.x - robot.x) - robot.yaw)
+    return -math.copysign(max_angular, bearing) if abs(bearing) > 1e-3 else max_angular
 
 
 def separation_guard(robot, others, linear, angular, horizon=.7):

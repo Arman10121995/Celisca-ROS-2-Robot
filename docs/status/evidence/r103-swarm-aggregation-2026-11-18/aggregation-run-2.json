@@ -1,0 +1,29 @@
+{
+ "phases": {
+  "local_dispersion": {
+   "samples": 93,
+   "mean_start_m": 0.9411578947421059,
+   "mean_end_m": 0.7560994357737708,
+   "min_pair_m": 0.42060633773174916,
+   "end_pairs": {
+    "alpha-beta": 1.1339354355655802,
+    "alpha-gamma": 0.5942906994292259,
+    "beta-gamma": 0.5400721723265065
+   },
+   "duration_s": 24.769568663003156
+  },
+  "local_aggregation": {
+   "samples": 556,
+   "mean_start_m": 0.7083043430395407,
+   "mean_end_m": 4.111235737317184,
+   "min_pair_m": 0.4769227278876171,
+   "end_pairs": {
+    "alpha-beta": 5.131675025647156,
+    "alpha-gamma": 2.8668528766248533,
+    "beta-gamma": 4.335179309679542
+   },
+   "duration_s": 149.9066682900011
+  }
+ },
+ "ready_s": 15.47243903198978
+}

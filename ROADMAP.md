@@ -137,7 +137,7 @@ Work top to bottom. Each line links to its task.
 | I7 | [R5.7](#r57--manipulators-and-motion-planning) Arms | Done-when met 11-17: URDF Panda GUI pick → place on PyBullet and MuJoCo (one run each). Native Panda box tasks on MuJoCo. 11-17: URDF Panda pick and place also passes on Isaac and Gazebo (all four backends); UR5/UR10/YuMi joint control on Gazebo. Remaining: compound geometry, perception, other coupled mechanisms | partial |
 | I8 | [R5.8](#r58--robot-hands-and-grippers) Hands | 11-17: normal GUI grasp → lift 5 cm → hold → return → supported release passes for Robotiq 2F-85 (both variants, support stage) and UMI (source axis); parallel-jaw measured in R5.7/R5.9. DEX-EE (dexterous) not passed: needs grasp synthesis; other backends remain | partial |
 | I9 | [R10.2](#r102--fleet-management-and-open-rmf) Fleet / Open-RMF | Done 2026-11-14: shared-zone reservations (map passages, doors, docks), cycle breaker, recovery drive-out, RMF energy from a drivetrain calibration; two crossing runs pass (native and RMF). 11-18: doors, docks and energy without a lift (`fleet_ward`: door crossing, docking and charging pass). Larger fleets are V7 | implemented |
-| I10 | [R10.3](#r103--swarm-robotics) Swarms | Done 2026-11-14: ROS2swarm port of per-member scan-only behaviours, scan-sensed cooperative coverage, ground/air member-loss replanning; dispersion and coverage-with-loss measured; aggregation not yet passing; 3–4 drone flight is validation | implemented |
+| I10 | [R10.3](#r103--swarm-robotics) Swarms | Done 2026-11-14: ROS2swarm port of per-member scan-only behaviours, scan-sensed cooperative coverage, ground/air member-loss replanning; dispersion and coverage-with-loss measured; aggregation gathers three Bumperbots in `swarm_arena` (11-18); 3–4 drone flight is validation | implemented |
 | I11 | [R10.5](#r105--underwater-worlds-sensing-slam-and-navigation) / [R10.4](#r104--underwater-robots-and-controllers) Marine | Done 2026-11-14: MuJoCo ROV plant (ported Fortress water forces; matches Gazebo), damping-based current feedforward (1 cm drift in 0.1 m/s), volumetric and current-aware AUV routes (unit-tested). PyBullet/Isaac marine, AUV sensor-only localization mission remain | implemented |
 | I12 | [R10.6](#r106--six--and-eight-legged-robots) / [R10.7](#r107--segmented-and-additional-robot-forms) Multi-leg and forms | Done 2026-11-14: depth/IMU flipper policy (sequences a step, but the 4 Nm flippers cannot climb 0.18 m: measured), bounded gait slip/support recovery (unit-tested). Stronger flippers, other backends, per-model terrain missions remain | implemented |
 | I13 | [R5.2](#r52--go2-quadruped-locomotion) / [R5.3](#r53--berkeley-humanoid-lite-balance-and-walking) / [R12](#r12--legged-policy-training) Legged | 2026-11-15: Go2W `wheeled_walk` policy strafes (MuJoCo 0.116, Isaac 0.271 m/s); BHL contract/export/warm start implemented, four runs not passed; 11-17: Go2 `get_up_roll` r2 (6000 iterations) stands 29/30 in training eval and gets up in a normal MuJoCo launch from side/back starts and 200–400 N knock-downs (60 N no longer topples it). Walk → get-up → walk switching measured. Go2 stairs not passed after 4 runs (11-18; policies are blind: a height-scan observation is next), G1, GPU training remain | partial |
@@ -1046,7 +1046,7 @@ parking batch needs its own run. Details and evidence are in the
 
 ### R10.3 — Swarm robotics
 
-- **State:** implemented, experimental (aggregation and air pending) · **Priority:** I10 · **Depends on:** R10.1
+- **State:** implemented, experimental (air pending) · **Priority:** I10 · **Depends on:** R10.1
 - **Goal:** formation, rendezvous, dispersion, flocking and cooperative
   coverage for ground robots and drones, with group Stop and member loss.
 - **Have:**
@@ -1062,15 +1062,24 @@ parking batch needs its own run. Details and evidence are in the
   - lidar mounting yaw in scan bearings (Bumperbot lidar is turned 3.14 rad);
   - measured: dispersion 0.94 → 3.15 m; coverage 90 % after a real member
     loss. [Evidence](docs/status/evidence/swarm-distributed-2026-11-14/README.md).
+- **Done 2026-11-18 (implemented, experimental): aggregation gathers.**
+  Members had frozen against walls (the scan guard stops a forward command
+  inside its stopping corridor, short of the protection layer) and against
+  peers their lidar cannot see. Behaviours now turn in place short of the
+  guard's corridor, and a member held by the separation guard turns away
+  from the nearest peer. In a new 5 × 5 m `swarm_arena`, three Bumperbots
+  starting 3.6–4.0 m apart gather (mean 3.9 → 1.0 m; all within 1.5 m from
+  21.9 s and 56 % of 180 s). Mixed Bumperbot/Labbot groups only partly
+  aggregate (a Labbot cannot see a Bumperbot).
+  [Receipt](docs/status/evidence/r103-swarm-aggregation-2026-11-18/README.md).
 - **Remaining implementation:**
-  - aggregation that gathers all members (two of three grouped);
   - the −inf lidar sector in RGB-D-off sessions (keep RGB-D on).
 - **How to do it:** compare with ROS2swarm behaviours (see the
   [extension guide](docs/NEXT_EXTENSION_GUIDE.md)). Keep per-FCU IDs, ports,
   leases and frames. Settle on FCU time; watchdogs use wall time.
 - **Done when:** measured relative motion and member-loss outcomes for each
   behaviour on ground and air. *Ground dispersion and coverage-with-loss
-  measured; attraction, flocking, aggregation and air pending.*
+  measured; aggregation measured 2026-11-18; attraction, flocking and air pending.*
 
 ### R10.4 — Underwater robots and controllers
 

@@ -149,6 +149,28 @@
   - experimental
   version: 0.1.0
   world_file: robot_lab_maps/maps/fleet_facility/worlds/fleet_facility.world
+- id: swarm_arena
+  name: Swarm arena (5 x 5 m)
+  dimension: 2D
+  dynamics:
+    dynamic_obstacles: false
+    static_obstacles: true
+  ground_truth_available: true
+  ros_package: robot_lab_maps
+  simulator: gazebo
+  simulators:
+  - gazebo
+  source:
+    license: Apache-2.0
+    repository: internal
+  status: available
+  supported_robot_classes:
+  - mobile
+  tags:
+  - swarm
+  - experimental
+  version: 0.1.0
+  world_file: robot_lab_maps/maps/swarm_arena/worlds/swarm_arena.world
 - id: fleet_ward
   name: Fleet ward (door, chargers)
   dimension: 3D
