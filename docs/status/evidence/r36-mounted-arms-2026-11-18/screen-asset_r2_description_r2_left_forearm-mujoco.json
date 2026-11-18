@@ -1,0 +1,361 @@
+{
+ "phases": [
+  {
+   "joint": "r2/left_arm/hand/index/medial",
+   "out": {
+    "target": -0.5,
+    "settled_s": null,
+    "steady_error_rad": null,
+    "base_inhibited_seen": true,
+    "final": 0.0
+   },
+   "back": {
+    "target": 0.0,
+    "settled_s": 0.06,
+    "steady_error_rad": 0.0,
+    "base_inhibited_seen": true,
+    "final": 0.0
+   },
+   "blocked_direction": {
+    "target": 0.5,
+    "reached": 0.0
+   },
+   "passed": false
+  },
+  {
+   "joint": "r2/left_arm/hand/index/proximal",
+   "out": {
+    "target": -0.5,
+    "settled_s": null,
+    "steady_error_rad": null,
+    "base_inhibited_seen": true,
+    "final": -0.0001
+   },
+   "back": {
+    "target": -0.0,
+    "settled_s": 0.06,
+    "steady_error_rad": 0.0001,
+    "base_inhibited_seen": true,
+    "final": 0.0
+   },
+   "blocked_direction": {
+    "target": 0.5,
+    "reached": -0.0001
+   },
+   "passed": false
+  },
+  {
+   "joint": "r2/left_arm/hand/index/yaw",
+   "out": {
+    "target": -0.5,
+    "settled_s": null,
+    "steady_error_rad": null,
+    "base_inhibited_seen": true,
+    "final": -0.0
+   },
+   "back": {
+    "target": 0.0,
+    "settled_s": 0.07,
+    "steady_error_rad": 0.0,
+    "base_inhibited_seen": true,
+    "final": 0.0
+   },
+   "blocked_direction": {
+    "target": 0.5,
+    "reached": 0.0
+   },
+   "passed": false
+  },
+  {
+   "joint": "r2/left_arm/hand/middle/medial",
+   "out": {
+    "target": -0.5,
+    "settled_s": null,
+    "steady_error_rad": null,
+    "base_inhibited_seen": true,
+    "final": 0.0
+   },
+   "back": {
+    "target": 0.0,
+    "settled_s": 0.06,
+    "steady_error_rad": 0.0,
+    "base_inhibited_seen": true,
+    "final": 0.0
+   },
+   "blocked_direction": {
+    "target": 0.5,
+    "reached": 0.0
+   },
+   "passed": false
+  },
+  {
+   "joint": "r2/left_arm/hand/middle/proximal",
+   "out": {
+    "target": -0.5,
+    "settled_s": null,
+    "steady_error_rad": null,
+    "base_inhibited_seen": true,
+    "final": 0.0
+   },
+   "back": {
+    "target": -0.0,
+    "settled_s": 0.06,
+    "steady_error_rad": 0.0001,
+    "base_inhibited_seen": true,
+    "final": -0.0
+   },
+   "blocked_direction": {
+    "target": 0.5,
+    "reached": 0.0
+   },
+   "passed": false
+  },
+  {
+   "joint": "r2/left_arm/hand/middle/yaw",
+   "out": {
+    "target": -0.5,
+    "settled_s": null,
+    "steady_error_rad": null,
+    "base_inhibited_seen": true,
+    "final": 0.0001
+   },
+   "back": {
+    "target": 0.0,
+    "settled_s": 0.06,
+    "steady_error_rad": 0.0001,
+    "base_inhibited_seen": true,
+    "final": 0.0
+   },
+   "blocked_direction": {
+    "target": 0.5,
+    "reached": 0.0001
+   },
+   "passed": false
+  },
+  {
+   "joint": "r2/left_arm/hand/ringlittle/little",
+   "out": {
+    "target": -0.5,
+    "settled_s": null,
+    "steady_error_rad": null,
+    "base_inhibited_seen": true,
+    "final": 0.0
+   },
+   "back": {
+    "target": 0.0,
+    "settled_s": 0.06,
+    "steady_error_rad": 0.0,
+    "base_inhibited_seen": true,
+    "final": 0.0
+   },
+   "blocked_direction": {
+    "target": 0.5,
+    "reached": 0.0
+   },
+   "passed": false
+  },
+  {
+   "joint": "r2/left_arm/hand/ringlittle/ring",
+   "out": {
+    "target": -0.5,
+    "settled_s": null,
+    "steady_error_rad": null,
+    "base_inhibited_seen": true,
+    "final": 0.0
+   },
+   "back": {
+    "target": 0.0,
+    "settled_s": 0.06,
+    "steady_error_rad": 0.0,
+    "base_inhibited_seen": true,
+    "final": 0.0
+   },
+   "blocked_direction": {
+    "target": 0.5,
+    "reached": 0.0
+   },
+   "passed": false
+  },
+  {
+   "joint": "r2/left_arm/hand/thumb/distal",
+   "out": {
+    "target": -0.5,
+    "settled_s": null,
+    "steady_error_rad": null,
+    "base_inhibited_seen": true,
+    "final": 0.0
+   },
+   "back": {
+    "target": 0.0,
+    "settled_s": 0.06,
+    "steady_error_rad": 0.0004,
+    "base_inhibited_seen": true,
+    "final": 0.0
+   },
+   "blocked_direction": {
+    "target": 0.5,
+    "reached": 0.0004
+   },
+   "passed": false
+  },
+  {
+   "joint": "r2/left_arm/hand/thumb/medial",
+   "out": {
+    "target": -0.5,
+    "settled_s": null,
+    "steady_error_rad": null,
+    "base_inhibited_seen": true,
+    "final": 0.0
+   },
+   "back": {
+    "target": 0.0,
+    "settled_s": 0.06,
+    "steady_error_rad": 0.0015,
+    "base_inhibited_seen": true,
+    "final": 0.0
+   },
+   "blocked_direction": {
+    "target": 0.5,
+    "reached": 0.0
+   },
+   "passed": false
+  },
+  {
+   "joint": "r2/left_arm/hand/thumb/proximal",
+   "out": {
+    "target": -0.5,
+    "settled_s": null,
+    "steady_error_rad": null,
+    "base_inhibited_seen": true,
+    "final": 0.0
+   },
+   "back": {
+    "target": 0.0,
+    "settled_s": 0.06,
+    "steady_error_rad": 0.0038,
+    "base_inhibited_seen": true,
+    "final": 0.0
+   },
+   "blocked_direction": {
+    "target": 0.5,
+    "reached": 0.0
+   },
+   "passed": false
+  },
+  {
+   "joint": "r2/left_arm/hand/thumb/roll",
+   "out": {
+    "target": -0.5,
+    "settled_s": null,
+    "steady_error_rad": null,
+    "base_inhibited_seen": true,
+    "final": 0.0
+   },
+   "back": {
+    "target": 0.0,
+    "settled_s": 0.06,
+    "steady_error_rad": 0.0004,
+    "base_inhibited_seen": true,
+    "final": 0.0
+   },
+   "blocked_direction": {
+    "target": 0.5,
+    "reached": 0.0
+   },
+   "passed": false
+  },
+  {
+   "joint": "r2/left_arm/wrist/pitch",
+   "out": {
+    "target": -0.5,
+    "settled_s": null,
+    "steady_error_rad": null,
+    "base_inhibited_seen": true,
+    "final": -0.0
+   },
+   "back": {
+    "target": -0.0,
+    "settled_s": 0.06,
+    "steady_error_rad": 0.0,
+    "base_inhibited_seen": true,
+    "final": -0.0
+   },
+   "blocked_direction": {
+    "target": 0.5,
+    "reached": -0.0
+   },
+   "passed": false
+  },
+  {
+   "joint": "r2/left_arm/wrist/yaw",
+   "out": {
+    "target": -0.45,
+    "settled_s": null,
+    "steady_error_rad": null,
+    "base_inhibited_seen": true,
+    "final": 0.0001
+   },
+   "back": {
+    "target": 0.0,
+    "settled_s": 0.06,
+    "steady_error_rad": 0.0001,
+    "base_inhibited_seen": true,
+    "final": 0.0
+   },
+   "blocked_direction": {
+    "target": 0.1,
+    "reached": 0.0
+   },
+   "passed": false
+  }
+ ],
+ "passed": false,
+ "joints": [
+  "r2/left_arm/hand/index/medial",
+  "r2/left_arm/hand/index/proximal",
+  "r2/left_arm/hand/index/yaw",
+  "r2/left_arm/hand/middle/medial",
+  "r2/left_arm/hand/middle/proximal",
+  "r2/left_arm/hand/middle/yaw",
+  "r2/left_arm/hand/ringlittle/little",
+  "r2/left_arm/hand/ringlittle/ring",
+  "r2/left_arm/hand/thumb/distal",
+  "r2/left_arm/hand/thumb/medial",
+  "r2/left_arm/hand/thumb/proximal",
+  "r2/left_arm/hand/thumb/roll",
+  "r2/left_arm/wrist/pitch",
+  "r2/left_arm/wrist/yaw"
+ ],
+ "initial": {
+  "r2/left_arm/hand/index/medial": 0.0,
+  "r2/left_arm/hand/index/proximal": -0.0,
+  "r2/left_arm/hand/index/yaw": 0.0,
+  "r2/left_arm/hand/middle/medial": 0.0,
+  "r2/left_arm/hand/middle/proximal": -0.0,
+  "r2/left_arm/hand/middle/yaw": 0.0,
+  "r2/left_arm/hand/ringlittle/little": 0.0,
+  "r2/left_arm/hand/ringlittle/ring": 0.0,
+  "r2/left_arm/hand/thumb/distal": 0.0,
+  "r2/left_arm/hand/thumb/medial": 0.0,
+  "r2/left_arm/hand/thumb/proximal": 0.0,
+  "r2/left_arm/hand/thumb/roll": 0.0,
+  "r2/left_arm/wrist/pitch": -0.0,
+  "r2/left_arm/wrist/yaw": 0.0
+ },
+ "stop": {
+  "joint": "r2/left_arm/hand/index/medial",
+  "held_at": 0.0,
+  "target_was": 1.5,
+  "drift_after_rad": 0.0,
+  "passed": true
+ },
+ "watchdog": {
+  "joint": "r2/left_arm/hand/index/medial",
+  "held_at": 0.0,
+  "target_was": -3.95,
+  "drift_after_rad": 0.0,
+  "status": "fault; holding last finite measured articulation",
+  "passed": true
+ },
+ "final_error_rad": 0.0
+}

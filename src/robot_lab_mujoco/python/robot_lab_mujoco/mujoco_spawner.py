@@ -2710,19 +2710,25 @@ class MuJoCoSpawner(Node):
                 continue
             dof = self._joint_name2dofadr[name]
             feedforward, reserve = effort_budget(ramp*float(self._data.qfrc_bias[dof]), spec['effort'])
-            actuator = self._actuator_ids[name+'_articulation']
+            # Looked up like _set_actuator: a joint may get its first target
+            # after this runs (R2's 42-joint upper bodies, 2026-11-18).
+            actuator = self._actuator_index(name + '_articulation')
             if actuator < 0:
                 raise ValueError('Missing articulation actuator: '+name)
             self._model.actuator_forcerange[actuator] = (-reserve, reserve)
             self._data.qfrc_applied[dof] = feedforward
 
-    def _set_actuator(self, joint_name, suffix, value):
-        """Set the control of the actuator the bridge added for a drive joint."""
-        key = joint_name + suffix
+    def _actuator_index(self, key):
+        """Actuator id by name (cached; -1 when the model has none)."""
         index = self._actuator_ids.get(key)
         if index is None:
             index = mujoco.mj_name2id(self._model, mujoco.mjtObj.mjOBJ_ACTUATOR, key)
             self._actuator_ids[key] = index
+        return index
+
+    def _set_actuator(self, joint_name, suffix, value):
+        """Set the control of the actuator the bridge added for a drive joint."""
+        index = self._actuator_index(joint_name + suffix)
         if index >= 0:
             self._data.ctrl[index] = value
         elif suffix == "_velocity":

@@ -56,7 +56,11 @@ def _urdf_facts(path):
     world = any(j.find('parent') is not None and j.find('parent').get('link') == 'world' for j in root.findall('joint'))
     # A URDF root without a world joint says nothing about how it is spawned;
     # legs decide the locomotion reason instead.
+    from .urdf_lab_servos import MAX_SOURCE_EFFORT
+    efforts = [float((j.find('limit').get('effort') if j.find('limit') is not None else 0) or 0) for j in joints]
     return dict(format='urdf', floating=None if not world else False, actuators={}, joints=len(joints),
+                placeholder_limits=sum(e > MAX_SOURCE_EFFORT for e in efforts),
+                unlimited=sum(j.get('type') == 'continuous' or j.find('limit') is None for j in joints),
                 legs=len(LEG.findall(names)), rotors=len(ROTOR.findall(names)), wheels=len(WHEEL.findall(names)),
                 ros2_control=root.find('ros2_control') is not None, transmissions=len(root.findall('transmission')))
 
@@ -98,9 +102,18 @@ def reason(facts, profile):
                                          'a torque-level controller (gravity compensation, impedance), not position '
                                          'jogging.' % other)
     if facts['format'] == 'urdf' and not (facts['ros2_control'] or facts['transmissions']):
-        return 'no_control_interface', ('The source URDF has %d movable joints but no ros2_control or transmission '
-                                        'description, so there is no vendor controller interface to use; gains would '
-                                        'be invented.' % facts['joints'])
+        text = ('The source URDF has %d movable joints but no ros2_control or transmission '
+                'description, so there is no vendor controller interface to use; gains would '
+                'be invented.' % facts['joints'])
+        # Why the declared lab servos (urdf_lab_servos, from the URDF's own
+        # limits) cannot stand in either.
+        if facts.get('placeholder_limits'):
+            text += (' Lab servos from its own limits are not possible: %d joints declare placeholder efforts '
+                     '(over 10 kN m), not actuator limits.' % facts['placeholder_limits'])
+        elif facts.get('unlimited'):
+            text += (' Lab servos from its own limits are not possible: %d joints have no position limits.'
+                     % facts['unlimited'])
+        return 'no_control_interface', text
     if facts['format'] == 'urdf':
         return 'interface_not_wired', ('The source URDF declares %s; wiring it to a simulator controller is pending '
                                        'and needs a joint-state and motion check first.'

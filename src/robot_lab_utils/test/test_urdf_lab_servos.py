@@ -29,3 +29,13 @@ def test_limits_gains_caps_and_mimic(tmp_path):
 def test_unlimited_joints_are_refused():
     with pytest.raises(ValueError, match='finite source position limits'):
         lab_servo_articulation(URDF.replace('type="revolute"', 'type="continuous"'))
+
+
+def test_placeholder_source_efforts_are_refused():
+    import pytest
+    from robot_lab_utils.urdf_lab_servos import lab_servo_articulation
+    urdf = ('<robot name="r"><link name="a"/><link name="b"/><joint name="finger" type="revolute">'
+            '<parent link="a"/><child link="b"/><limit lower="-4" upper="4" effort="10000000" velocity="1"/>'
+            '</joint></robot>')
+    with pytest.raises(ValueError, match='placeholder'):
+        lab_servo_articulation(urdf)

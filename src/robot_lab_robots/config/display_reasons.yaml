@@ -7,9 +7,11 @@ asset_anymal:
     format: urdf
     joints: 12
     legs: 12
+    placeholder_limits: 0
     ros2_control: false
     rotors: 0
     transmissions: 0
+    unlimited: 0
     wheels: 0
   reason: 'A floating-base legged robot: standing or walking needs a balance/locomotion controller or trained policy
     for exactly this model; none is provisioned. Joint jogging alone would let it fall.'
@@ -21,12 +23,15 @@ asset_fetch:
     format: urdf
     joints: 14
     legs: 0
+    placeholder_limits: 0
     ros2_control: false
     rotors: 0
     transmissions: 0
+    unlimited: 5
     wheels: 2
-  reason: The source URDF has 14 movable joints but no ros2_control or transmission description, so there is no
-    vendor controller interface to use; gains would be invented.
+  reason: 'The source URDF has 14 movable joints but no ros2_control or transmission description, so there is no
+    vendor controller interface to use; gains would be invented. Lab servos from its own limits are not possible:
+    5 joints have no position limits.'
 asset_ginger_robot_gingerurdf:
   code: no_control_interface
   facts:
@@ -35,12 +40,15 @@ asset_ginger_robot_gingerurdf:
     format: urdf
     joints: 49
     legs: 1
+    placeholder_limits: 0
     ros2_control: false
     rotors: 0
     transmissions: 0
+    unlimited: 49
     wheels: 0
-  reason: The source URDF has 49 movable joints but no ros2_control or transmission description, so there is no
-    vendor controller interface to use; gains would be invented.
+  reason: 'The source URDF has 49 movable joints but no ros2_control or transmission description, so there is no
+    vendor controller interface to use; gains would be invented. Lab servos from its own limits are not possible:
+    49 joints have no position limits.'
 asset_halodi_eve_r3:
   code: needs_locomotion_policy
   facts:
@@ -49,9 +57,11 @@ asset_halodi_eve_r3:
     format: urdf
     joints: 23
     legs: 4
+    placeholder_limits: 0
     ros2_control: false
     rotors: 0
     transmissions: 0
+    unlimited: 2
     wheels: 2
   reason: 'A floating-base humanoid: standing or walking needs a balance/locomotion controller or trained policy
     for exactly this model; none is provisioned. Joint jogging alone would let it fall.'
@@ -65,30 +75,16 @@ asset_kinova:
     format: urdf
     joints: 6
     legs: 0
+    placeholder_limits: 0
     ros2_control: false
     rotors: 0
     transmissions: 0
+    unlimited: 3
     wheels: 0
   reason: 'The source URDF has 6 movable joints but no ros2_control or transmission description, so there is no
-    vendor controller interface to use; gains would be invented. Controllable variant in this family (a different
-    source model): Gen3 native source (menagerie_kinova_gen3).'
-asset_kuka_iiwa:
-  code: no_control_interface
-  controllable_variants:
-  - menagerie_kuka_iiwa_14
-  facts:
-    actuators: {}
-    floating: null
-    format: urdf
-    joints: 7
-    legs: 0
-    ros2_control: false
-    rotors: 0
-    transmissions: 0
-    wheels: 0
-  reason: 'The source URDF has 7 movable joints but no ros2_control or transmission description, so there is no
-    vendor controller interface to use; gains would be invented. Controllable variant in this family (a different
-    source model): Native iiwa 14 (menagerie_kuka_iiwa_14).'
+    vendor controller interface to use; gains would be invented. Lab servos from its own limits are not possible:
+    3 joints have no position limits. Controllable variant in this family (a different source model): Gen3 native
+    source (menagerie_kinova_gen3).'
 asset_pr2:
   code: no_control_interface
   facts:
@@ -97,12 +93,15 @@ asset_pr2:
     format: urdf
     joints: 38
     legs: 1
+    placeholder_limits: 0
     ros2_control: false
     rotors: 0
     transmissions: 0
+    unlimited: 16
     wheels: 8
-  reason: The source URDF has 38 movable joints but no ros2_control or transmission description, so there is no
-    vendor controller interface to use; gains would be invented.
+  reason: 'The source URDF has 38 movable joints but no ros2_control or transmission description, so there is no
+    vendor controller interface to use; gains would be invented. Lab servos from its own limits are not possible:
+    16 joints have no position limits.'
 asset_r2_description_r2_left_forearm:
   code: no_control_interface
   facts:
@@ -111,12 +110,15 @@ asset_r2_description_r2_left_forearm:
     format: urdf
     joints: 14
     legs: 0
+    placeholder_limits: 12
     ros2_control: false
     rotors: 0
     transmissions: 0
+    unlimited: 0
     wheels: 0
-  reason: The source URDF has 14 movable joints but no ros2_control or transmission description, so there is no
-    vendor controller interface to use; gains would be invented.
+  reason: 'The source URDF has 14 movable joints but no ros2_control or transmission description, so there is no
+    vendor controller interface to use; gains would be invented. Lab servos from its own limits are not possible:
+    12 joints declare placeholder efforts (over 10 kN m), not actuator limits.'
 asset_r2_description_r2_left_gripper:
   code: needs_locomotion_policy
   facts:
@@ -125,9 +127,11 @@ asset_r2_description_r2_left_gripper:
     format: urdf
     joints: 3
     legs: 10
+    placeholder_limits: 0
     ros2_control: false
     rotors: 0
     transmissions: 0
+    unlimited: 0
     wheels: 0
   reason: 'A floating-base legged robot: standing or walking needs a balance/locomotion controller or trained policy
     for exactly this model; none is provisioned. Joint jogging alone would let it fall.'
@@ -139,9 +143,11 @@ asset_r2_description_r2b:
     format: urdf
     joints: 74
     legs: 38
+    placeholder_limits: 37
     ros2_control: false
     rotors: 0
     transmissions: 0
+    unlimited: 0
     wheels: 0
   reason: 'A floating-base legged robot: standing or walking needs a balance/locomotion controller or trained policy
     for exactly this model; none is provisioned. Joint jogging alone would let it fall.'
@@ -153,9 +159,11 @@ asset_r2_description_r2b_control:
     format: urdf
     joints: 56
     legs: 32
+    placeholder_limits: 25
     ros2_control: false
     rotors: 0
     transmissions: 0
+    unlimited: 0
     wheels: 0
   reason: 'A floating-base legged robot: standing or walking needs a balance/locomotion controller or trained policy
     for exactly this model; none is provisioned. Joint jogging alone would let it fall.'
@@ -167,9 +175,11 @@ asset_r2_description_r2b_dynamics:
     format: urdf
     joints: 32
     legs: 32
+    placeholder_limits: 1
     ros2_control: false
     rotors: 0
     transmissions: 0
+    unlimited: 0
     wheels: 0
   reason: 'A floating-base legged robot: standing or walking needs a balance/locomotion controller or trained policy
     for exactly this model; none is provisioned. Joint jogging alone would let it fall.'
@@ -181,12 +191,15 @@ asset_r2_description_r2b_sim_upperbody_control:
     format: urdf
     joints: 42
     legs: 0
+    placeholder_limits: 25
     ros2_control: false
     rotors: 0
     transmissions: 0
+    unlimited: 0
     wheels: 0
-  reason: The source URDF has 42 movable joints but no ros2_control or transmission description, so there is no
-    vendor controller interface to use; gains would be invented.
+  reason: 'The source URDF has 42 movable joints but no ros2_control or transmission description, so there is no
+    vendor controller interface to use; gains would be invented. Lab servos from its own limits are not possible:
+    25 joints declare placeholder efforts (over 10 kN m), not actuator limits.'
 asset_r2_description_r2b_sim_upperbody_dynamics:
   code: no_control_interface
   facts:
@@ -195,12 +208,15 @@ asset_r2_description_r2b_sim_upperbody_dynamics:
     format: urdf
     joints: 18
     legs: 0
+    placeholder_limits: 1
     ros2_control: false
     rotors: 0
     transmissions: 0
+    unlimited: 0
     wheels: 0
-  reason: The source URDF has 18 movable joints but no ros2_control or transmission description, so there is no
-    vendor controller interface to use; gains would be invented.
+  reason: 'The source URDF has 18 movable joints but no ros2_control or transmission description, so there is no
+    vendor controller interface to use; gains would be invented. Lab servos from its own limits are not possible:
+    1 joints declare placeholder efforts (over 10 kN m), not actuator limits.'
 asset_r2_description_r2c1:
   code: needs_locomotion_policy
   facts:
@@ -209,9 +225,11 @@ asset_r2_description_r2c1:
     format: urdf
     joints: 74
     legs: 38
+    placeholder_limits: 37
     ros2_control: false
     rotors: 0
     transmissions: 0
+    unlimited: 0
     wheels: 0
   reason: 'A floating-base legged robot: standing or walking needs a balance/locomotion controller or trained policy
     for exactly this model; none is provisioned. Joint jogging alone would let it fall.'
@@ -223,9 +241,11 @@ asset_r2_description_r2c1_control:
     format: urdf
     joints: 56
     legs: 32
+    placeholder_limits: 25
     ros2_control: false
     rotors: 0
     transmissions: 0
+    unlimited: 0
     wheels: 0
   reason: 'A floating-base legged robot: standing or walking needs a balance/locomotion controller or trained policy
     for exactly this model; none is provisioned. Joint jogging alone would let it fall.'
@@ -237,9 +257,11 @@ asset_r2_description_r2c1_dynamics:
     format: urdf
     joints: 32
     legs: 32
+    placeholder_limits: 1
     ros2_control: false
     rotors: 0
     transmissions: 0
+    unlimited: 0
     wheels: 0
   reason: 'A floating-base legged robot: standing or walking needs a balance/locomotion controller or trained policy
     for exactly this model; none is provisioned. Joint jogging alone would let it fall.'
@@ -251,12 +273,15 @@ asset_r2_description_r2c5:
     format: urdf
     joints: 54
     legs: 0
+    placeholder_limits: 37
     ros2_control: false
     rotors: 0
     transmissions: 0
+    unlimited: 0
     wheels: 0
-  reason: The source URDF has 54 movable joints but no ros2_control or transmission description, so there is no
-    vendor controller interface to use; gains would be invented.
+  reason: 'The source URDF has 54 movable joints but no ros2_control or transmission description, so there is no
+    vendor controller interface to use; gains would be invented. Lab servos from its own limits are not possible:
+    37 joints declare placeholder efforts (over 10 kN m), not actuator limits.'
 asset_r2_description_r2c5_control:
   code: no_control_interface
   facts:
@@ -265,12 +290,15 @@ asset_r2_description_r2c5_control:
     format: urdf
     joints: 42
     legs: 0
+    placeholder_limits: 25
     ros2_control: false
     rotors: 0
     transmissions: 0
+    unlimited: 0
     wheels: 0
-  reason: The source URDF has 42 movable joints but no ros2_control or transmission description, so there is no
-    vendor controller interface to use; gains would be invented.
+  reason: 'The source URDF has 42 movable joints but no ros2_control or transmission description, so there is no
+    vendor controller interface to use; gains would be invented. Lab servos from its own limits are not possible:
+    25 joints declare placeholder efforts (over 10 kN m), not actuator limits.'
 asset_r2_description_r2c5_dynamics:
   code: no_control_interface
   facts:
@@ -279,12 +307,15 @@ asset_r2_description_r2c5_dynamics:
     format: urdf
     joints: 18
     legs: 0
+    placeholder_limits: 1
     ros2_control: false
     rotors: 0
     transmissions: 0
+    unlimited: 0
     wheels: 0
-  reason: The source URDF has 18 movable joints but no ros2_control or transmission description, so there is no
-    vendor controller interface to use; gains would be invented.
+  reason: 'The source URDF has 18 movable joints but no ros2_control or transmission description, so there is no
+    vendor controller interface to use; gains would be invented. Lab servos from its own limits are not possible:
+    1 joints declare placeholder efforts (over 10 kN m), not actuator limits.'
 asset_r2_description_r2c6:
   code: needs_locomotion_policy
   facts:
@@ -293,9 +324,11 @@ asset_r2_description_r2c6:
     format: urdf
     joints: 74
     legs: 38
+    placeholder_limits: 37
     ros2_control: false
     rotors: 0
     transmissions: 0
+    unlimited: 0
     wheels: 0
   reason: 'A floating-base legged robot: standing or walking needs a balance/locomotion controller or trained policy
     for exactly this model; none is provisioned. Joint jogging alone would let it fall.'
@@ -307,9 +340,11 @@ asset_r2_description_r2c6_control:
     format: urdf
     joints: 56
     legs: 32
+    placeholder_limits: 25
     ros2_control: false
     rotors: 0
     transmissions: 0
+    unlimited: 0
     wheels: 0
   reason: 'A floating-base legged robot: standing or walking needs a balance/locomotion controller or trained policy
     for exactly this model; none is provisioned. Joint jogging alone would let it fall.'
@@ -321,9 +356,11 @@ asset_r2_description_r2c6_dynamics:
     format: urdf
     joints: 32
     legs: 32
+    placeholder_limits: 1
     ros2_control: false
     rotors: 0
     transmissions: 0
+    unlimited: 0
     wheels: 0
   reason: 'A floating-base legged robot: standing or walking needs a balance/locomotion controller or trained policy
     for exactly this model; none is provisioned. Joint jogging alone would let it fall.'
@@ -335,9 +372,11 @@ asset_r2_description_r2c6_valve:
     format: urdf
     joints: 74
     legs: 38
+    placeholder_limits: 37
     ros2_control: false
     rotors: 0
     transmissions: 0
+    unlimited: 0
     wheels: 0
   reason: 'A floating-base legged robot: standing or walking needs a balance/locomotion controller or trained policy
     for exactly this model; none is provisioned. Joint jogging alone would let it fall.'
@@ -349,9 +388,11 @@ asset_r2_description_r2c_sim_full_control:
     format: urdf
     joints: 56
     legs: 32
+    placeholder_limits: 25
     ros2_control: false
     rotors: 0
     transmissions: 0
+    unlimited: 0
     wheels: 0
   reason: 'A floating-base legged robot: standing or walking needs a balance/locomotion controller or trained policy
     for exactly this model; none is provisioned. Joint jogging alone would let it fall.'
@@ -363,9 +404,11 @@ asset_r2_description_r2c_sim_full_dynamics:
     format: urdf
     joints: 32
     legs: 32
+    placeholder_limits: 1
     ros2_control: false
     rotors: 0
     transmissions: 0
+    unlimited: 0
     wheels: 0
   reason: 'A floating-base legged robot: standing or walking needs a balance/locomotion controller or trained policy
     for exactly this model; none is provisioned. Joint jogging alone would let it fall.'
@@ -377,9 +420,11 @@ asset_r2_description_r2c_sim_legs_control:
     format: urdf
     joints: 14
     legs: 32
+    placeholder_limits: 0
     ros2_control: false
     rotors: 0
     transmissions: 0
+    unlimited: 0
     wheels: 0
   reason: 'A floating-base legged robot: standing or walking needs a balance/locomotion controller or trained policy
     for exactly this model; none is provisioned. Joint jogging alone would let it fall.'
@@ -391,9 +436,11 @@ asset_r2_description_r2c_sim_legs_dynamics:
     format: urdf
     joints: 14
     legs: 32
+    placeholder_limits: 0
     ros2_control: false
     rotors: 0
     transmissions: 0
+    unlimited: 0
     wheels: 0
   reason: 'A floating-base legged robot: standing or walking needs a balance/locomotion controller or trained policy
     for exactly this model; none is provisioned. Joint jogging alone would let it fall.'
@@ -405,12 +452,15 @@ asset_r2_description_r2c_sim_upperbody_control:
     format: urdf
     joints: 42
     legs: 0
+    placeholder_limits: 25
     ros2_control: false
     rotors: 0
     transmissions: 0
+    unlimited: 0
     wheels: 0
-  reason: The source URDF has 42 movable joints but no ros2_control or transmission description, so there is no
-    vendor controller interface to use; gains would be invented.
+  reason: 'The source URDF has 42 movable joints but no ros2_control or transmission description, so there is no
+    vendor controller interface to use; gains would be invented. Lab servos from its own limits are not possible:
+    25 joints declare placeholder efforts (over 10 kN m), not actuator limits.'
 asset_r2_description_r2c_sim_upperbody_dynamics:
   code: no_control_interface
   facts:
@@ -419,208 +469,267 @@ asset_r2_description_r2c_sim_upperbody_dynamics:
     format: urdf
     joints: 18
     legs: 0
+    placeholder_limits: 1
     ros2_control: false
     rotors: 0
     transmissions: 0
+    unlimited: 0
     wheels: 0
-  reason: The source URDF has 18 movable joints but no ros2_control or transmission description, so there is no
-    vendor controller interface to use; gains would be invented.
-asset_val_description_forearm_left:
-  code: no_control_interface
-  facts:
-    actuators: {}
-    floating: false
-    format: urdf
-    joints: 16
-    legs: 0
-    ros2_control: false
-    rotors: 0
-    transmissions: 0
-    wheels: 0
-  reason: The source URDF has 16 movable joints but no ros2_control or transmission description, so there is no
-    vendor controller interface to use; gains would be invented.
-asset_val_description_forearm_right:
-  code: no_control_interface
-  facts:
-    actuators: {}
-    floating: false
-    format: urdf
-    joints: 16
-    legs: 0
-    ros2_control: false
-    rotors: 0
-    transmissions: 0
-    wheels: 0
-  reason: The source URDF has 16 movable joints but no ros2_control or transmission description, so there is no
-    vendor controller interface to use; gains would be invented.
+  reason: 'The source URDF has 18 movable joints but no ros2_control or transmission description, so there is no
+    vendor controller interface to use; gains would be invented. Lab servos from its own limits are not possible:
+    1 joints declare placeholder efforts (over 10 kN m), not actuator limits.'
 asset_val_description_valkyrie_A:
   code: needs_locomotion_policy
+  controllable_variants:
+  - asset_val_description_forearm_left
+  - asset_val_description_forearm_right
   facts:
     actuators: {}
     floating: null
     format: urdf
     joints: 58
     legs: 14
+    placeholder_limits: 0
     ros2_control: false
     rotors: 0
     transmissions: 0
+    unlimited: 0
     wheels: 0
   reason: 'A floating-base legged robot: standing or walking needs a balance/locomotion controller or trained policy
-    for exactly this model; none is provisioned. Joint jogging alone would let it fall.'
+    for exactly this model; none is provisioned. Joint jogging alone would let it fall. Controllable variant in
+    this family (a different source model): Forearm (upstream left file uses right-hand link names) (asset_val_description_forearm_left),
+    Right forearm (asset_val_description_forearm_right).'
 asset_val_description_valkyrie_A_arm_mass_sims:
   code: needs_locomotion_policy
+  controllable_variants:
+  - asset_val_description_forearm_left
+  - asset_val_description_forearm_right
   facts:
     actuators: {}
     floating: null
     format: urdf
     joints: 26
     legs: 14
+    placeholder_limits: 0
     ros2_control: false
     rotors: 0
     transmissions: 0
+    unlimited: 0
     wheels: 0
   reason: 'A floating-base legged robot: standing or walking needs a balance/locomotion controller or trained policy
-    for exactly this model; none is provisioned. Joint jogging alone would let it fall.'
+    for exactly this model; none is provisioned. Joint jogging alone would let it fall. Controllable variant in
+    this family (a different source model): Forearm (upstream left file uses right-hand link names) (asset_val_description_forearm_left),
+    Right forearm (asset_val_description_forearm_right).'
 asset_val_description_valkyrie_B:
   code: needs_locomotion_policy
+  controllable_variants:
+  - asset_val_description_forearm_left
+  - asset_val_description_forearm_right
   facts:
     actuators: {}
     floating: null
     format: urdf
     joints: 58
     legs: 14
+    placeholder_limits: 0
     ros2_control: false
     rotors: 0
     transmissions: 0
+    unlimited: 0
     wheels: 0
   reason: 'A floating-base legged robot: standing or walking needs a balance/locomotion controller or trained policy
-    for exactly this model; none is provisioned. Joint jogging alone would let it fall.'
+    for exactly this model; none is provisioned. Joint jogging alone would let it fall. Controllable variant in
+    this family (a different source model): Forearm (upstream left file uses right-hand link names) (asset_val_description_forearm_left),
+    Right forearm (asset_val_description_forearm_right).'
 asset_val_description_valkyrie_B_arm_mass_sims:
   code: needs_locomotion_policy
+  controllable_variants:
+  - asset_val_description_forearm_left
+  - asset_val_description_forearm_right
   facts:
     actuators: {}
     floating: null
     format: urdf
     joints: 26
     legs: 14
+    placeholder_limits: 0
     ros2_control: false
     rotors: 0
     transmissions: 0
+    unlimited: 0
     wheels: 0
   reason: 'A floating-base legged robot: standing or walking needs a balance/locomotion controller or trained policy
-    for exactly this model; none is provisioned. Joint jogging alone would let it fall.'
+    for exactly this model; none is provisioned. Joint jogging alone would let it fall. Controllable variant in
+    this family (a different source model): Forearm (upstream left file uses right-hand link names) (asset_val_description_forearm_left),
+    Right forearm (asset_val_description_forearm_right).'
 asset_val_description_valkyrie_C:
   code: needs_locomotion_policy
+  controllable_variants:
+  - asset_val_description_forearm_left
+  - asset_val_description_forearm_right
   facts:
     actuators: {}
     floating: null
     format: urdf
     joints: 58
     legs: 14
+    placeholder_limits: 0
     ros2_control: false
     rotors: 0
     transmissions: 0
+    unlimited: 0
     wheels: 0
   reason: 'A floating-base legged robot: standing or walking needs a balance/locomotion controller or trained policy
-    for exactly this model; none is provisioned. Joint jogging alone would let it fall.'
+    for exactly this model; none is provisioned. Joint jogging alone would let it fall. Controllable variant in
+    this family (a different source model): Forearm (upstream left file uses right-hand link names) (asset_val_description_forearm_left),
+    Right forearm (asset_val_description_forearm_right).'
 asset_val_description_valkyrie_C_arm_mass_sims:
   code: needs_locomotion_policy
+  controllable_variants:
+  - asset_val_description_forearm_left
+  - asset_val_description_forearm_right
   facts:
     actuators: {}
     floating: null
     format: urdf
     joints: 26
     legs: 14
+    placeholder_limits: 0
     ros2_control: false
     rotors: 0
     transmissions: 0
+    unlimited: 0
     wheels: 0
   reason: 'A floating-base legged robot: standing or walking needs a balance/locomotion controller or trained policy
-    for exactly this model; none is provisioned. Joint jogging alone would let it fall.'
+    for exactly this model; none is provisioned. Joint jogging alone would let it fall. Controllable variant in
+    this family (a different source model): Forearm (upstream left file uses right-hand link names) (asset_val_description_forearm_left),
+    Right forearm (asset_val_description_forearm_right).'
 asset_val_description_valkyrie_D:
   code: needs_locomotion_policy
+  controllable_variants:
+  - asset_val_description_forearm_left
+  - asset_val_description_forearm_right
   facts:
     actuators: {}
     floating: null
     format: urdf
     joints: 58
     legs: 14
+    placeholder_limits: 0
     ros2_control: false
     rotors: 0
     transmissions: 0
+    unlimited: 0
     wheels: 0
   reason: 'A floating-base legged robot: standing or walking needs a balance/locomotion controller or trained policy
-    for exactly this model; none is provisioned. Joint jogging alone would let it fall.'
+    for exactly this model; none is provisioned. Joint jogging alone would let it fall. Controllable variant in
+    this family (a different source model): Forearm (upstream left file uses right-hand link names) (asset_val_description_forearm_left),
+    Right forearm (asset_val_description_forearm_right).'
 asset_val_description_valkyrie_D_arm_mass_sims:
   code: needs_locomotion_policy
+  controllable_variants:
+  - asset_val_description_forearm_left
+  - asset_val_description_forearm_right
   facts:
     actuators: {}
     floating: null
     format: urdf
     joints: 26
     legs: 14
+    placeholder_limits: 0
     ros2_control: false
     rotors: 0
     transmissions: 0
+    unlimited: 0
     wheels: 0
   reason: 'A floating-base legged robot: standing or walking needs a balance/locomotion controller or trained policy
-    for exactly this model; none is provisioned. Joint jogging alone would let it fall.'
+    for exactly this model; none is provisioned. Joint jogging alone would let it fall. Controllable variant in
+    this family (a different source model): Forearm (upstream left file uses right-hand link names) (asset_val_description_forearm_left),
+    Right forearm (asset_val_description_forearm_right).'
 asset_val_description_valkyrie_sim:
   code: needs_locomotion_policy
+  controllable_variants:
+  - asset_val_description_forearm_left
+  - asset_val_description_forearm_right
   facts:
     actuators: {}
     floating: null
     format: urdf
     joints: 59
     legs: 14
+    placeholder_limits: 0
     ros2_control: false
     rotors: 0
     transmissions: 0
+    unlimited: 1
     wheels: 0
   reason: 'A floating-base legged robot: standing or walking needs a balance/locomotion controller or trained policy
-    for exactly this model; none is provisioned. Joint jogging alone would let it fall.'
+    for exactly this model; none is provisioned. Joint jogging alone would let it fall. Controllable variant in
+    this family (a different source model): Forearm (upstream left file uses right-hand link names) (asset_val_description_forearm_left),
+    Right forearm (asset_val_description_forearm_right).'
 asset_val_description_valkyrie_sim_angled_legj1s:
   code: needs_locomotion_policy
+  controllable_variants:
+  - asset_val_description_forearm_left
+  - asset_val_description_forearm_right
   facts:
     actuators: {}
     floating: null
     format: urdf
     joints: 59
     legs: 14
+    placeholder_limits: 0
     ros2_control: false
     rotors: 0
     transmissions: 0
+    unlimited: 1
     wheels: 0
   reason: 'A floating-base legged robot: standing or walking needs a balance/locomotion controller or trained policy
-    for exactly this model; none is provisioned. Joint jogging alone would let it fall.'
+    for exactly this model; none is provisioned. Joint jogging alone would let it fall. Controllable variant in
+    this family (a different source model): Forearm (upstream left file uses right-hand link names) (asset_val_description_forearm_left),
+    Right forearm (asset_val_description_forearm_right).'
 asset_val_description_valkyrie_sim_arm_mass_sims:
   code: needs_locomotion_policy
+  controllable_variants:
+  - asset_val_description_forearm_left
+  - asset_val_description_forearm_right
   facts:
     actuators: {}
     floating: null
     format: urdf
     joints: 27
     legs: 14
+    placeholder_limits: 0
     ros2_control: false
     rotors: 0
     transmissions: 0
+    unlimited: 1
     wheels: 0
   reason: 'A floating-base legged robot: standing or walking needs a balance/locomotion controller or trained policy
-    for exactly this model; none is provisioned. Joint jogging alone would let it fall.'
+    for exactly this model; none is provisioned. Joint jogging alone would let it fall. Controllable variant in
+    this family (a different source model): Forearm (upstream left file uses right-hand link names) (asset_val_description_forearm_left),
+    Right forearm (asset_val_description_forearm_right).'
 asset_val_description_valkyrie_sim_gazebo_sync:
   code: needs_locomotion_policy
+  controllable_variants:
+  - asset_val_description_forearm_left
+  - asset_val_description_forearm_right
   facts:
     actuators: {}
     floating: null
     format: urdf
     joints: 59
     legs: 14
+    placeholder_limits: 0
     ros2_control: false
     rotors: 0
     transmissions: 0
+    unlimited: 1
     wheels: 0
   reason: 'A floating-base legged robot: standing or walking needs a balance/locomotion controller or trained policy
-    for exactly this model; none is provisioned. Joint jogging alone would let it fall.'
+    for exactly this model; none is provisioned. Joint jogging alone would let it fall. Controllable variant in
+    this family (a different source model): Forearm (upstream left file uses right-hand link names) (asset_val_description_forearm_left),
+    Right forearm (asset_val_description_forearm_right).'
 menagerie_agility_cassie:
   code: needs_locomotion_policy
   facts:

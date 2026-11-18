@@ -228,3 +228,96 @@ robots:
       couplings:
         gripper_r_joint_m: {joint: gripper_r_joint, multiplier: 1.0, offset: 0.0}
         gripper_l_joint_m: {joint: gripper_l_joint, multiplier: 1.0, offset: 0.0}
+
+  # R3.6 (2026-11-17): mounted URDF robots with complete joint limits but no
+  # ros2_control get the same declared lab servos (urdf_lab_servos: kp 40 x
+  # effort, kd 8 x sqrt(effort), <= 0.35 rad/s). The KUKA iiwa is mounted but
+  # its URDF has no 'world' anchor: fixed_base makes the launch fix it to the
+  # world at the spawn pose. Valkyrie's forearm stands already turn against a
+  # 'world' root. The R2 family stays display-only: its hand joints declare
+  # placeholder limits (effort 1e7, +-4 rad).
+  asset_kuka_iiwa:
+    type: arm
+    features: [articulated_arm, joint_control]
+    implementation_state: experimental
+    validation_state: pending
+    articulation:
+      schema: robot_lab.urdf_articulation.v1
+      panel: arm
+      home: {lbr_iiwa_joint_1: 0.0, lbr_iiwa_joint_2: 0.0, lbr_iiwa_joint_3: 0.0, lbr_iiwa_joint_4: 0.0, lbr_iiwa_joint_5: 0.0,
+        lbr_iiwa_joint_6: 0.0, lbr_iiwa_joint_7: 0.0}
+      joints:
+        lbr_iiwa_joint_1: {mode: position, lower: -2.96705972839, upper: 2.96705972839, effort: 300.0, max_velocity: 0.35, kp: 12000.0,
+          kd: 138.564065}
+        lbr_iiwa_joint_2: {mode: position, lower: -2.09439510239, upper: 2.09439510239, effort: 300.0, max_velocity: 0.35, kp: 12000.0,
+          kd: 138.564065}
+        lbr_iiwa_joint_3: {mode: position, lower: -2.96705972839, upper: 2.96705972839, effort: 300.0, max_velocity: 0.35, kp: 12000.0,
+          kd: 138.564065}
+        lbr_iiwa_joint_4: {mode: position, lower: -2.09439510239, upper: 2.09439510239, effort: 300.0, max_velocity: 0.35, kp: 12000.0,
+          kd: 138.564065}
+        lbr_iiwa_joint_5: {mode: position, lower: -2.96705972839, upper: 2.96705972839, effort: 300.0, max_velocity: 0.35, kp: 12000.0,
+          kd: 138.564065}
+        lbr_iiwa_joint_6: {mode: position, lower: -2.09439510239, upper: 2.09439510239, effort: 300.0, max_velocity: 0.35, kp: 12000.0,
+          kd: 138.564065}
+        lbr_iiwa_joint_7: {mode: position, lower: -3.05432619099, upper: 3.05432619099, effort: 300.0, max_velocity: 0.35, kp: 12000.0,
+          kd: 138.564065}
+      couplings: {}
+      fixed_base: true
+  asset_val_description_forearm_left:
+    type: arm
+    features: [articulated_arm, joint_control]
+    implementation_state: experimental
+    validation_state: pending
+    articulation:
+      schema: robot_lab.urdf_articulation.v1
+      panel: arm
+      home: {rightForearmYaw: 0.0, rightWristRoll: 0.0, rightWristPitch: 0.0, rightThumbRoll: 0.0, rightThumbPitch1: 0.0, rightThumbPitch2: 0.0,
+        rightThumbPitch3: 0.0, rightIndexFingerPitch1: 0.0, rightIndexFingerPitch2: 0.0, rightIndexFingerPitch3: 0.0, rightMiddleFingerPitch1: 0.0,
+        rightMiddleFingerPitch2: 0.0, rightMiddleFingerPitch3: 0.0, rightPinkyPitch1: 0.0, rightPinkyPitch2: 0.0, rightPinkyPitch3: 0.0}
+      joints:
+        rightForearmYaw: {mode: position, lower: -2.019, upper: 3.14, effort: 26.0, max_velocity: 0.35, kp: 1040.0, kd: 40.792156}
+        rightWristRoll: {mode: position, lower: -0.625, upper: 0.62, effort: 14.0, max_velocity: 0.35, kp: 560.0, kd: 29.933259}
+        rightWristPitch: {mode: position, lower: -0.49, upper: 0.36, effort: 14.0, max_velocity: 0.35, kp: 560.0, kd: 29.933259}
+        rightThumbRoll: {mode: position, lower: 0.0, upper: 2.356, effort: 10.0, max_velocity: 0.35, kp: 400.0, kd: 25.298221}
+        rightThumbPitch1: {mode: position, lower: 0.0, upper: 1.658, effort: 10.0, max_velocity: 0.35, kp: 400.0, kd: 25.298221}
+        rightThumbPitch2: {mode: position, lower: 0.0, upper: 1.92, effort: 10.0, max_velocity: 0.35, kp: 400.0, kd: 25.298221}
+        rightThumbPitch3: {mode: position, lower: 0.0, upper: 1.57, effort: 10.0, max_velocity: 0.35, kp: 400.0, kd: 25.298221}
+        rightIndexFingerPitch1: {mode: position, lower: 0.0, upper: 1.57, effort: 10.0, max_velocity: 0.35, kp: 400.0, kd: 25.298221}
+        rightIndexFingerPitch2: {mode: position, lower: 0.0, upper: 1.658, effort: 10.0, max_velocity: 0.35, kp: 400.0, kd: 25.298221}
+        rightIndexFingerPitch3: {mode: position, lower: 0.0, upper: 1.92, effort: 10.0, max_velocity: 0.35, kp: 400.0, kd: 25.298221}
+        rightMiddleFingerPitch1: {mode: position, lower: 0.0, upper: 1.658, effort: 10.0, max_velocity: 0.35, kp: 400.0, kd: 25.298221}
+        rightMiddleFingerPitch2: {mode: position, lower: 0.0, upper: 1.92, effort: 10.0, max_velocity: 0.35, kp: 400.0, kd: 25.298221}
+        rightMiddleFingerPitch3: {mode: position, lower: 0.0, upper: 1.57, effort: 10.0, max_velocity: 0.35, kp: 400.0, kd: 25.298221}
+        rightPinkyPitch1: {mode: position, lower: 0.0, upper: 1.57, effort: 10.0, max_velocity: 0.35, kp: 400.0, kd: 25.298221}
+        rightPinkyPitch2: {mode: position, lower: 0.0, upper: 1.658, effort: 10.0, max_velocity: 0.35, kp: 400.0, kd: 25.298221}
+        rightPinkyPitch3: {mode: position, lower: 0.0, upper: 1.92, effort: 10.0, max_velocity: 0.35, kp: 400.0, kd: 25.298221}
+      couplings: {}
+  asset_val_description_forearm_right:
+    type: arm
+    features: [articulated_arm, joint_control]
+    implementation_state: experimental
+    validation_state: pending
+    articulation:
+      schema: robot_lab.urdf_articulation.v1
+      panel: arm
+      home: {rightForearmYaw: 0.0, rightWristRoll: 0.0, rightWristPitch: 0.0, rightThumbRoll: 0.0, rightThumbPitch1: 0.0, rightThumbPitch2: 0.0,
+        rightThumbPitch3: 0.0, rightIndexFingerPitch1: 0.0, rightIndexFingerPitch2: 0.0, rightIndexFingerPitch3: 0.0, rightMiddleFingerPitch1: 0.0,
+        rightMiddleFingerPitch2: 0.0, rightMiddleFingerPitch3: 0.0, rightPinkyPitch1: 0.0, rightPinkyPitch2: 0.0, rightPinkyPitch3: 0.0}
+      joints:
+        rightForearmYaw: {mode: position, lower: -2.019, upper: 3.14, effort: 26.0, max_velocity: 0.35, kp: 1040.0, kd: 40.792156}
+        rightWristRoll: {mode: position, lower: -0.625, upper: 0.62, effort: 14.0, max_velocity: 0.35, kp: 560.0, kd: 29.933259}
+        rightWristPitch: {mode: position, lower: -0.49, upper: 0.36, effort: 14.0, max_velocity: 0.35, kp: 560.0, kd: 29.933259}
+        rightThumbRoll: {mode: position, lower: 0.0, upper: 2.356, effort: 10.0, max_velocity: 0.35, kp: 400.0, kd: 25.298221}
+        rightThumbPitch1: {mode: position, lower: 0.0, upper: 1.658, effort: 10.0, max_velocity: 0.35, kp: 400.0, kd: 25.298221}
+        rightThumbPitch2: {mode: position, lower: 0.0, upper: 1.92, effort: 10.0, max_velocity: 0.35, kp: 400.0, kd: 25.298221}
+        rightThumbPitch3: {mode: position, lower: 0.0, upper: 1.57, effort: 10.0, max_velocity: 0.35, kp: 400.0, kd: 25.298221}
+        rightIndexFingerPitch1: {mode: position, lower: 0.0, upper: 1.57, effort: 10.0, max_velocity: 0.35, kp: 400.0, kd: 25.298221}
+        rightIndexFingerPitch2: {mode: position, lower: 0.0, upper: 1.658, effort: 10.0, max_velocity: 0.35, kp: 400.0, kd: 25.298221}
+        rightIndexFingerPitch3: {mode: position, lower: 0.0, upper: 1.92, effort: 10.0, max_velocity: 0.35, kp: 400.0, kd: 25.298221}
+        rightMiddleFingerPitch1: {mode: position, lower: 0.0, upper: 1.658, effort: 10.0, max_velocity: 0.35, kp: 400.0, kd: 25.298221}
+        rightMiddleFingerPitch2: {mode: position, lower: 0.0, upper: 1.92, effort: 10.0, max_velocity: 0.35, kp: 400.0, kd: 25.298221}
+        rightMiddleFingerPitch3: {mode: position, lower: 0.0, upper: 1.57, effort: 10.0, max_velocity: 0.35, kp: 400.0, kd: 25.298221}
+        rightPinkyPitch1: {mode: position, lower: 0.0, upper: 1.57, effort: 10.0, max_velocity: 0.35, kp: 400.0, kd: 25.298221}
+        rightPinkyPitch2: {mode: position, lower: 0.0, upper: 1.658, effort: 10.0, max_velocity: 0.35, kp: 400.0, kd: 25.298221}
+        rightPinkyPitch3: {mode: position, lower: 0.0, upper: 1.92, effort: 10.0, max_velocity: 0.35, kp: 400.0, kd: 25.298221}
+      couplings: {}

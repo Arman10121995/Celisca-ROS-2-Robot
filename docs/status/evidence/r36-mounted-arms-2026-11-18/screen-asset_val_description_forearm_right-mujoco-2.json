@@ -1,0 +1,349 @@
+{
+ "phases": [
+  {
+   "joint": "rightForearmYaw",
+   "out": {
+    "target": 0.5,
+    "settled_s": 1.52,
+    "steady_error_rad": 0.0062,
+    "base_inhibited_seen": true,
+    "final": 0.5
+   },
+   "back": {
+    "target": -0.0,
+    "settled_s": 1.51,
+    "steady_error_rad": 0.0076,
+    "base_inhibited_seen": true,
+    "final": 0.0
+   },
+   "passed": true
+  },
+  {
+   "joint": "rightIndexFingerPitch1",
+   "out": {
+    "target": 0.5,
+    "settled_s": 1.46,
+    "steady_error_rad": 0.019,
+    "base_inhibited_seen": true,
+    "final": 0.5
+   },
+   "back": {
+    "target": 0.0,
+    "settled_s": 1.53,
+    "steady_error_rad": 0.0096,
+    "base_inhibited_seen": true,
+    "final": -0.0
+   },
+   "passed": true
+  },
+  {
+   "joint": "rightIndexFingerPitch2",
+   "out": {
+    "target": 0.5,
+    "settled_s": 1.52,
+    "steady_error_rad": 0.0145,
+    "base_inhibited_seen": true,
+    "final": 0.5
+   },
+   "back": {
+    "target": 0.0,
+    "settled_s": 1.48,
+    "steady_error_rad": 0.019,
+    "base_inhibited_seen": true,
+    "final": -0.0
+   },
+   "passed": true
+  },
+  {
+   "joint": "rightIndexFingerPitch3",
+   "out": {
+    "target": 0.5,
+    "settled_s": 1.52,
+    "steady_error_rad": 0.0135,
+    "base_inhibited_seen": true,
+    "final": 0.5
+   },
+   "back": {
+    "target": 0.0,
+    "settled_s": 1.46,
+    "steady_error_rad": 0.019,
+    "base_inhibited_seen": true,
+    "final": -0.0
+   },
+   "passed": true
+  },
+  {
+   "joint": "rightMiddleFingerPitch1",
+   "out": {
+    "target": 0.5,
+    "settled_s": 1.52,
+    "steady_error_rad": 0.0096,
+    "base_inhibited_seen": true,
+    "final": 0.5
+   },
+   "back": {
+    "target": 0.0,
+    "settled_s": 1.53,
+    "steady_error_rad": 0.0127,
+    "base_inhibited_seen": true,
+    "final": -0.0
+   },
+   "passed": true
+  },
+  {
+   "joint": "rightMiddleFingerPitch2",
+   "out": {
+    "target": 0.5,
+    "settled_s": 1.46,
+    "steady_error_rad": 0.019,
+    "base_inhibited_seen": true,
+    "final": 0.5
+   },
+   "back": {
+    "target": 0.0,
+    "settled_s": 1.52,
+    "steady_error_rad": 0.0096,
+    "base_inhibited_seen": true,
+    "final": -0.0
+   },
+   "passed": true
+  },
+  {
+   "joint": "rightMiddleFingerPitch3",
+   "out": {
+    "target": 0.5,
+    "settled_s": 1.52,
+    "steady_error_rad": 0.0135,
+    "base_inhibited_seen": true,
+    "final": 0.5
+   },
+   "back": {
+    "target": 0.0,
+    "settled_s": 1.46,
+    "steady_error_rad": 0.0203,
+    "base_inhibited_seen": true,
+    "final": -0.0
+   },
+   "passed": true
+  },
+  {
+   "joint": "rightPinkyPitch1",
+   "out": {
+    "target": 0.5,
+    "settled_s": 1.53,
+    "steady_error_rad": 0.0083,
+    "base_inhibited_seen": true,
+    "final": 0.5
+   },
+   "back": {
+    "target": 0.0,
+    "settled_s": 1.52,
+    "steady_error_rad": 0.0145,
+    "base_inhibited_seen": true,
+    "final": -0.0
+   },
+   "passed": true
+  },
+  {
+   "joint": "rightPinkyPitch2",
+   "out": {
+    "target": 0.5,
+    "settled_s": 1.46,
+    "steady_error_rad": 0.019,
+    "base_inhibited_seen": true,
+    "final": 0.5
+   },
+   "back": {
+    "target": 0.0,
+    "settled_s": 1.52,
+    "steady_error_rad": 0.0096,
+    "base_inhibited_seen": true,
+    "final": -0.0
+   },
+   "passed": true
+  },
+  {
+   "joint": "rightPinkyPitch3",
+   "out": {
+    "target": 0.5,
+    "settled_s": 1.52,
+    "steady_error_rad": 0.0126,
+    "base_inhibited_seen": true,
+    "final": 0.5
+   },
+   "back": {
+    "target": 0.0,
+    "settled_s": 1.46,
+    "steady_error_rad": 0.019,
+    "base_inhibited_seen": true,
+    "final": -0.0
+   },
+   "passed": true
+  },
+  {
+   "joint": "rightThumbPitch1",
+   "out": {
+    "target": 0.5,
+    "settled_s": 1.52,
+    "steady_error_rad": 0.0096,
+    "base_inhibited_seen": true,
+    "final": 0.5
+   },
+   "back": {
+    "target": 0.0,
+    "settled_s": 1.52,
+    "steady_error_rad": 0.0136,
+    "base_inhibited_seen": true,
+    "final": -0.0
+   },
+   "passed": true
+  },
+  {
+   "joint": "rightThumbPitch2",
+   "out": {
+    "target": 0.5,
+    "settled_s": 1.46,
+    "steady_error_rad": 0.019,
+    "base_inhibited_seen": true,
+    "final": 0.5
+   },
+   "back": {
+    "target": 0.0,
+    "settled_s": 1.52,
+    "steady_error_rad": 0.0089,
+    "base_inhibited_seen": true,
+    "final": -0.0
+   },
+   "passed": true
+  },
+  {
+   "joint": "rightThumbPitch3",
+   "out": {
+    "target": 0.5,
+    "settled_s": 1.53,
+    "steady_error_rad": 0.0126,
+    "base_inhibited_seen": true,
+    "final": 0.5
+   },
+   "back": {
+    "target": 0.0,
+    "settled_s": 1.47,
+    "steady_error_rad": 0.0166,
+    "base_inhibited_seen": true,
+    "final": -0.0
+   },
+   "passed": true
+  },
+  {
+   "joint": "rightThumbRoll",
+   "out": {
+    "target": 0.5,
+    "settled_s": 1.52,
+    "steady_error_rad": 0.0096,
+    "base_inhibited_seen": true,
+    "final": 0.5
+   },
+   "back": {
+    "target": 0.0,
+    "settled_s": 1.52,
+    "steady_error_rad": 0.0136,
+    "base_inhibited_seen": true,
+    "final": -0.0
+   },
+   "passed": true
+  },
+  {
+   "joint": "rightWristPitch",
+   "out": {
+    "target": 0.31,
+    "settled_s": 0.97,
+    "steady_error_rad": 0.0068,
+    "base_inhibited_seen": true,
+    "final": 0.31
+   },
+   "back": {
+    "target": 0.0,
+    "settled_s": 0.91,
+    "steady_error_rad": 0.0295,
+    "base_inhibited_seen": true,
+    "final": 0.0
+   },
+   "passed": true
+  },
+  {
+   "joint": "rightWristRoll",
+   "out": {
+    "target": -0.5,
+    "settled_s": 1.46,
+    "steady_error_rad": 0.0143,
+    "base_inhibited_seen": true,
+    "final": -0.5
+   },
+   "back": {
+    "target": 0.0,
+    "settled_s": 1.52,
+    "steady_error_rad": 0.0066,
+    "base_inhibited_seen": true,
+    "final": -0.0
+   },
+   "blocked_direction": {
+    "target": 0.5,
+    "reached": 0.4537
+   },
+   "passed": true
+  }
+ ],
+ "passed": true,
+ "joints": [
+  "rightForearmYaw",
+  "rightIndexFingerPitch1",
+  "rightIndexFingerPitch2",
+  "rightIndexFingerPitch3",
+  "rightMiddleFingerPitch1",
+  "rightMiddleFingerPitch2",
+  "rightMiddleFingerPitch3",
+  "rightPinkyPitch1",
+  "rightPinkyPitch2",
+  "rightPinkyPitch3",
+  "rightThumbPitch1",
+  "rightThumbPitch2",
+  "rightThumbPitch3",
+  "rightThumbRoll",
+  "rightWristPitch",
+  "rightWristRoll"
+ ],
+ "initial": {
+  "rightForearmYaw": -0.0,
+  "rightIndexFingerPitch1": 0.0,
+  "rightIndexFingerPitch2": 0.0,
+  "rightIndexFingerPitch3": 0.0,
+  "rightMiddleFingerPitch1": 0.0,
+  "rightMiddleFingerPitch2": 0.0,
+  "rightMiddleFingerPitch3": 0.0,
+  "rightPinkyPitch1": 0.0,
+  "rightPinkyPitch2": 0.0,
+  "rightPinkyPitch3": 0.0,
+  "rightThumbPitch1": 0.0,
+  "rightThumbPitch2": 0.0,
+  "rightThumbPitch3": 0.0,
+  "rightThumbRoll": 0.0,
+  "rightWristPitch": 0.0,
+  "rightWristRoll": 0.0
+ },
+ "stop": {
+  "joint": "rightForearmYaw",
+  "held_at": 0.1959,
+  "target_was": 1.5,
+  "drift_after_rad": 0.0,
+  "passed": true
+ },
+ "watchdog": {
+  "joint": "rightForearmYaw",
+  "held_at": 0.4674,
+  "target_was": 3.09,
+  "drift_after_rad": 0.0,
+  "status": "heartbeat absent; holding measured articulation",
+  "passed": true
+ },
+ "final_error_rad": 0.0
+}

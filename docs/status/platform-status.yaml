@@ -2601,6 +2601,7 @@ tasks:
         state: done
         title: Author benchmark scenario and experiment catalogs
       R3.6:
+        mounted_arms_20261118: 'Claude: KUKA iiwa (articulation fixed_base: the launch writes a world-mounted copy of an unanchored URDF) and Valkyrie forearm stands (world root, now recognised by fixed_to_world) get urdf_lab_servos servos; arm screens pass on MuJoCo and PyBullet (worst 0.030 rad, Stop and lost heartbeat hold). R2 refused: placeholder hand limits (urdf_lab_servos now rejects efforts over 1e4); display reasons say why. Display-only 69 -> 66, no control interface 15 -> 12. Fixes: MuJoCo articulation feedforward actuator lookup, screen home clamped into limits. docs/status/evidence/r36-mounted-arms-2026-11-18/README.md'
         lab_servo_arms_20261117: 'Claude: UR10, UR5 and ABB YuMi controllable with declared lab servos from their own URDF limits (robot_lab_utils/urdf_lab_servos.py; kp 40 x effort, kd 8 x sqrt(effort), <= 0.35 rad/s; mimic grippers as couplings). Screens pass on PyBullet and MuJoCo (every joint out and back, worst steady error 0.030 rad; Stop and lost heartbeat hold with 0 drift). Display-only 73 -> 69; no-control-interface 19 -> 15. Kinova/KUKA stay display-only (unanchored roots, controllable siblings). docs/status/evidence/r36-lab-servo-arms-2026-11-17/README.md'
         acceptance_ref: ROADMAP.md
         implementation_state: 2026-11-14 (Claude) model-derived display-only reasons (display_reasons.py, generated yaml,

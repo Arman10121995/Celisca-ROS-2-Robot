@@ -1,0 +1,165 @@
+{
+ "phases": [
+  {
+   "joint": "lbr_iiwa_joint_1",
+   "out": {
+    "target": 0.5,
+    "settled_s": 1.48,
+    "steady_error_rad": 0.0231,
+    "base_inhibited_seen": true,
+    "final": 0.5
+   },
+   "back": {
+    "target": 0.0,
+    "settled_s": 1.54,
+    "steady_error_rad": 0.0094,
+    "base_inhibited_seen": true,
+    "final": 0.0
+   },
+   "passed": true
+  },
+  {
+   "joint": "lbr_iiwa_joint_2",
+   "out": {
+    "target": 0.5,
+    "settled_s": 1.54,
+    "steady_error_rad": 0.0217,
+    "base_inhibited_seen": true,
+    "final": 0.5
+   },
+   "back": {
+    "target": 0.0,
+    "settled_s": 1.59,
+    "steady_error_rad": 0.0062,
+    "base_inhibited_seen": true,
+    "final": 0.0
+   },
+   "passed": true
+  },
+  {
+   "joint": "lbr_iiwa_joint_3",
+   "out": {
+    "target": 0.5,
+    "settled_s": 1.54,
+    "steady_error_rad": 0.0202,
+    "base_inhibited_seen": true,
+    "final": 0.5
+   },
+   "back": {
+    "target": 0.0,
+    "settled_s": 1.53,
+    "steady_error_rad": 0.029,
+    "base_inhibited_seen": true,
+    "final": 0.0
+   },
+   "passed": true
+  },
+  {
+   "joint": "lbr_iiwa_joint_4",
+   "out": {
+    "target": 0.5,
+    "settled_s": 1.61,
+    "steady_error_rad": 0.0045,
+    "base_inhibited_seen": true,
+    "final": 0.5
+   },
+   "back": {
+    "target": 0.0,
+    "settled_s": 1.64,
+    "steady_error_rad": 0.0047,
+    "base_inhibited_seen": true,
+    "final": 0.0
+   },
+   "passed": true
+  },
+  {
+   "joint": "lbr_iiwa_joint_5",
+   "out": {
+    "target": 0.5,
+    "settled_s": 1.61,
+    "steady_error_rad": 0.005,
+    "base_inhibited_seen": true,
+    "final": 0.5
+   },
+   "back": {
+    "target": -0.0,
+    "settled_s": 1.54,
+    "steady_error_rad": 0.0232,
+    "base_inhibited_seen": true,
+    "final": -0.0
+   },
+   "passed": true
+  },
+  {
+   "joint": "lbr_iiwa_joint_6",
+   "out": {
+    "target": 0.5,
+    "settled_s": 1.48,
+    "steady_error_rad": 0.0276,
+    "base_inhibited_seen": true,
+    "final": 0.5
+   },
+   "back": {
+    "target": 0.0,
+    "settled_s": 1.53,
+    "steady_error_rad": 0.0173,
+    "base_inhibited_seen": true,
+    "final": 0.0
+   },
+   "passed": true
+  },
+  {
+   "joint": "lbr_iiwa_joint_7",
+   "out": {
+    "target": 0.5,
+    "settled_s": 1.54,
+    "steady_error_rad": 0.0219,
+    "base_inhibited_seen": true,
+    "final": 0.5
+   },
+   "back": {
+    "target": 0.0,
+    "settled_s": 1.59,
+    "steady_error_rad": 0.0086,
+    "base_inhibited_seen": true,
+    "final": 0.0
+   },
+   "passed": true
+  }
+ ],
+ "passed": true,
+ "joints": [
+  "lbr_iiwa_joint_1",
+  "lbr_iiwa_joint_2",
+  "lbr_iiwa_joint_3",
+  "lbr_iiwa_joint_4",
+  "lbr_iiwa_joint_5",
+  "lbr_iiwa_joint_6",
+  "lbr_iiwa_joint_7"
+ ],
+ "initial": {
+  "lbr_iiwa_joint_1": 0.0,
+  "lbr_iiwa_joint_2": 0.0,
+  "lbr_iiwa_joint_3": 0.0,
+  "lbr_iiwa_joint_4": 0.0,
+  "lbr_iiwa_joint_5": -0.0,
+  "lbr_iiwa_joint_6": 0.0,
+  "lbr_iiwa_joint_7": 0.0
+ },
+ "stop": {
+  "joint": "lbr_iiwa_joint_7",
+  "held_at": 0.1924,
+  "target_was": 1.5,
+  "drift_after_rad": 0.0,
+  "passed": true
+ },
+ "watchdog": {
+  "joint": "lbr_iiwa_joint_7",
+  "held_at": -0.086,
+  "target_was": -3.0043,
+  "drift_after_rad": 0.0,
+  "status": "heartbeat absent; holding measured articulation",
+  "passed": true
+ },
+ "final_error_rad": 0.0
+}

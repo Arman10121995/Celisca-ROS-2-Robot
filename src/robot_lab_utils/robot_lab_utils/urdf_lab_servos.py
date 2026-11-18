@@ -14,6 +14,10 @@ ANGULAR_CAP = .35       # rad/s
 LINEAR_CAP = .05        # m/s
 
 
+# No real joint actuator exceeds this (N m or N); larger source values are placeholders.
+MAX_SOURCE_EFFORT = 1e4
+
+
 def lab_servo_articulation(urdf_text, home=None):
     """robot_lab.urdf_articulation.v1 config for every limited movable joint; raises if any is unlimited."""
     root = ET.fromstring(urdf_text)
@@ -30,6 +34,10 @@ def lab_servo_articulation(urdf_text, home=None):
         effort, rate = float(limit.get('effort', 0)), float(limit.get('velocity', 0))
         if not (low < high and effort > 0 and rate > 0 and all(map(math.isfinite, (low, high, effort, rate)))):
             raise ValueError('Joint %s lacks positive source effort/velocity or a range' % name)
+        if effort > MAX_SOURCE_EFFORT:
+            # R2's hand joints declare 1e7 and +-4 rad: placeholders, not
+            # actuator limits; servos built from them freeze the joint.
+            raise ValueError('Joint %s effort %g is a placeholder, not a source limit' % (name, effort))
         mimic = joint.find('mimic')
         if mimic is not None:
             couplings[name] = dict(joint=mimic.get('joint'), multiplier=float(mimic.get('multiplier', 1)),

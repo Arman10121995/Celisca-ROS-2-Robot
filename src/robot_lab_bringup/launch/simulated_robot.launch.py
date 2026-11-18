@@ -875,6 +875,21 @@ def _build_simulation_actions(context):
         robot_xacro = _config_value(context, "robot_xacro", robot_config.get("xacro", ""))
         robot_name = _config_value(context, "robot_name", robot_config.get("name", robot_model))
         model_path = _package_file(robot_package, robot_xacro)
+        if (robot_config.get('articulation') or {}).get('fixed_base') and model_path:
+            # A mounted robot whose source URDF has no 'world' anchor: every
+            # bridge gets a copy fixed to the world at the spawn pose (R3.6).
+            from robot_lab_utils.robot_description import load_description
+            from robot_lab_utils.urdf_base import fixed_to_world, mount_to_world
+            text = load_description(model_path)
+            if not fixed_to_world(text):
+                import hashlib
+                mounted = mount_to_world(text)
+                folder = Path(os.environ.get('ROBOT_LAB_RUNTIME_ROOT', '/workspace/molar/robot_lab_runtime')) / 'mounted_models'
+                folder.mkdir(parents=True, exist_ok=True)
+                target = folder / ('%s_%s.urdf' % (robot_model, hashlib.sha256(mounted.encode()).hexdigest()[:16]))
+                if not target.is_file():
+                    target.write_text(mounted)
+                model_path = str(target)
 
     # The simulator bridges take the differential-drive keys as arguments
     # and the whole drive block (a car's steering too) as JSON; see

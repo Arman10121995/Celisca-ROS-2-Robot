@@ -65,7 +65,11 @@ def main():
         print(json.dumps(report, indent=1))
         return 1
     joints = [n for n, c in channels().items() if c.get('mode') == 'position' and not c.get('coupled')]
-    home = {n: channels()[n]['measured'] for n in joints}
+    # The measured start, inside the limits: a joint settled a hair past its
+    # limit (a Valkyrie finger at -1e-6 rad on a 0 rad stop) would otherwise
+    # be sent a target the contract refuses.
+    home = {n: min(max(channels()[n]['measured'], channels()[n]['limits'][0]), channels()[n]['limits'][1])
+            for n in joints}
     report['joints'] = joints
     report['initial'] = {n: round(v, 4) for n, v in home.items()}
     ok = True
