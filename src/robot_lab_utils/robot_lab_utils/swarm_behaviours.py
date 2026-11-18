@@ -22,6 +22,9 @@ Deviations, all for Robot Lab's scans and controllers:
 - speeds are clipped to the member's limits; the fleet controller's
   separation and scan guards still apply after a behaviour.
 
+- flocking's avoid state only turns; in a corner every heading sees a wall
+  inside zone 1 and a member turned for 65 s (measured 2026-11-18). After
+  half a turn without a clear front it backs out for 1.5 s;
 - the fleet controller's scan guard stops a member that would translate
   into its stopping corridor, rotation included; a behaviour that keeps
   asking to drive forward there (aggregation's explore, against a wall)
@@ -41,6 +44,7 @@ import random
 import numpy as np
 
 BEHAVIOURS = ('local_dispersion', 'local_attraction', 'local_aggregation', 'local_flocking')
+FLOCKING_BACK_OUT_S = 1.5     # s of reversing out of a corner (see the module notes)
 
 # ROS2swarm config/burger/movement_pattern/basic/*.yaml
 BURGER = dict(
@@ -162,6 +166,9 @@ class LocalBehaviour:
     group_size: int = 0
     last: tuple = (0., 0.)
     held: int = 0
+    turn_sign: float = 0.         # an in-place turn short of the guard's corridor, kept until clear
+    avoid_since: float = 0.       # flocking: when the current avoid turn began
+    backing_until: float = 0.     # flocking: backing out of a corner until then
     rng: random.Random = field(default_factory=lambda: random.Random(0))
 
     def __post_init__(self):
@@ -182,7 +189,7 @@ class LocalBehaviour:
             linear, angular = self._aggregation(rays, now)
             info = dict(state=self.state, group_size=self.group_size)
         else:
-            linear, angular = self._flocking(rays, angle_increment)
+            linear, angular = self._flocking(rays, angle_increment, now)
             info = dict(state=self.state)
         protected = self._protect(rays, angle_increment)
         if protected:
@@ -198,23 +205,34 @@ class LocalBehaviour:
         return linear, angular, info
 
     def _turn_short_of_corridor(self, rays, linear):
-        """Turn in place when scan_guard would stop a forward command (fleet_motion)."""
+        """Turn in place when scan_guard would stop a translation (fleet_motion).
+
+        Bearings are taken in the direction of travel, as the guard does:
+        attraction's far-weighted field can drive a member backwards.
+        """
         from robot_lab_utils.fleet_motion import AHEAD_HALF_ANGLE, stopping_distance
-        if linear <= 0:
+        if linear == 0:
             return None
         reach = stopping_distance(linear, self.radius)
+        travel = 0. if linear > 0 else math.pi
         # Scan angles plus a mounting yaw can run past pi (Bumperbot: 0 to 2 pi).
-        rays = [(r, math.atan2(math.sin(a), math.cos(a))) for r, a in rays]
+        rays = [(r, math.atan2(math.sin(a - travel), math.cos(a - travel))) for r, a in rays]
         ahead = [(r, a) for r, a in rays if abs(a) < AHEAD_HALF_ANGLE and r < reach]
         if not ahead:
+            self.turn_sign = 0.
             return None
+        if self.turn_sign:
+            # Keep turning one way until the way ahead is clear: choosing
+            # anew each tick flipped a member back and forth in a corner.
+            return 0., self.turn_sign * self.max_angular
         _, bearing = min(ahead)
         if abs(bearing) < 1e-3:
             # Dead ahead: turn towards the side with more room.
             left = np.mean([r for r, a in rays if 0 < a < math.pi / 2] or [0.])
             right = np.mean([r for r, a in rays if -math.pi / 2 < a < 0] or [0.])
             bearing = -1. if left > right else 1.
-        return 0., -math.copysign(self.max_angular, bearing)
+        self.turn_sign = -math.copysign(1., bearing)
+        return 0., self.turn_sign * self.max_angular
 
     def _protect(self, rays, angle_increment):
         """ROS2swarm hardware_protection_layer: potential field away from close obstacles."""
@@ -256,8 +274,10 @@ class LocalBehaviour:
             return self.max_linear, 0.
         return 0., 0.
 
-    def _flocking(self, rays, angle_increment):
+    def _flocking(self, rays, angle_increment, now=0.):
         p = self.params
+        if now < self.backing_until:
+            return -p['linear'], 0.
         scale = (math.pi / 180.) / max(abs(angle_increment), 1e-6)
         robot_rays, zone2_rays = max(1, round(p['robot_rays'] * scale)), max(2, round(p['zone2_robot_rays'] * scale))
         b = p['borders']
@@ -285,7 +305,13 @@ class LocalBehaviour:
         turn_left, turn_right, move = (0., p['left']), (0., p['right']), (p['linear'], 0.)
         close = [1 < count(p['zone2'], zones[k]) < zone2_rays for k in ('left', 'front', 'right')]
         if count(p['zone1'], zones['front']) > robot_rays:
+            if self.state != 'avoid':
+                self.avoid_since = now
             self.state = 'avoid'
+            if now - self.avoid_since > math.pi / abs(p['left']):
+                # Half a turn without a clear front: a corner. Back out briefly.
+                self.state, self.backing_until = 'backing', now + FLOCKING_BACK_OUT_S
+                return -p['linear'], 0.
             front = zones['front']
             first_half = front[:len(front) // 2]
             nearest = min(front) if front else p['max_range']

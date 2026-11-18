@@ -1070,7 +1070,9 @@ parking batch needs its own run. Details and evidence are in the
   from the nearest peer. In a new 5 × 5 m `swarm_arena`, three Bumperbots
   starting 3.6–4.0 m apart gather (mean 3.9 → 1.0 m; all within 1.5 m from
   21.9 s and 56 % of 180 s). Mixed Bumperbot/Labbot groups only partly
-  aggregate (a Labbot cannot see a Bumperbot).
+  aggregate (a Labbot cannot see a Bumperbot). Attraction gathers in the
+  open (2.5 → 0.39 m in about 7 s); in the arena it goes to the walls.
+  Flocking does not flock (alignment about chance) and is time-boxed.
   [Receipt](docs/status/evidence/r103-swarm-aggregation-2026-11-18/README.md).
 - **Remaining implementation:**
   - the −inf lidar sector in RGB-D-off sessions (keep RGB-D on).
@@ -1079,7 +1081,7 @@ parking batch needs its own run. Details and evidence are in the
   leases and frames. Settle on FCU time; watchdogs use wall time.
 - **Done when:** measured relative motion and member-loss outcomes for each
   behaviour on ground and air. *Ground dispersion and coverage-with-loss
-  measured; aggregation measured 2026-11-18; attraction, flocking and air pending.*
+  measured; aggregation and attraction measured 2026-11-18; flocking not passed; air pending.*
 
 ### R10.4 — Underwater robots and controllers
 

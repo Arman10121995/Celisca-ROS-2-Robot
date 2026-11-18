@@ -1,0 +1,29 @@
+{
+ "phases": {
+  "local_attraction": {
+   "samples": 334,
+   "mean_start_m": 3.8832599439724986,
+   "mean_end_m": 4.570193338847936,
+   "min_pair_m": 3.5999724781379507,
+   "end_pairs": {
+    "alpha-beta": 3.9487343640644537,
+    "alpha-gamma": 3.979245538006857,
+    "beta-gamma": 5.7826001144724986
+   },
+   "duration_s": 89.83663364499807
+  },
+  "local_flocking": {
+   "samples": 332,
+   "mean_start_m": 4.570174423556144,
+   "mean_end_m": 3.927527716609861,
+   "min_pair_m": 0.48993145440583913,
+   "end_pairs": {
+    "alpha-beta": 5.014178707880092,
+    "alpha-gamma": 1.0313292296027101,
+    "beta-gamma": 5.737075212346784
+   },
+   "duration_s": 89.74625882398686
+  }
+ },
+ "ready_s": 15.433430637000129
+}

@@ -247,3 +247,32 @@ def test_a_member_held_by_separation_turns_away_from_the_nearest_peer():
     turn = turn_away_from_nearest(robot, [robot, peer], 1.)
     assert turn == -1.                                         # away: to the right
     assert separation_guard(robot, [peer], 0., turn)[:2] == (0., -1.)   # a turn in place passes the guard
+
+
+def test_a_corridor_turn_keeps_its_direction_until_the_way_is_clear():
+    # A corner ahead: the nearest ray changes side as the member turns; the
+    # turn must not flip back and forth (a member stayed in a corner, 2026-11-18).
+    behaviour = LocalBehaviour('local_aggregation', .35, 1., radius=.18)
+    def corner(nearest_left):
+        ranges = [3.0] * 360
+        for i in range(120, 241):
+            ranges[i] = .42                    # inside the corridor (0.475 m), outside protection (0.36 m)
+        ranges[185 if nearest_left else 175] = .4
+        return ranges
+    first = behaviour.step(corner(True), -math.pi, INC, now=0.)
+    second = behaviour.step(corner(False), -math.pi, INC, now=.1)
+    assert first[:2] == (0., -1.) and second[:2] == (0., -1.)
+    assert behaviour.step([3.0] * 360, -math.pi, INC, now=.2)[0] == .35 and behaviour.turn_sign == 0.
+
+
+def test_flocking_backs_out_of_a_corner_after_half_a_turn():
+    behaviour = LocalBehaviour('local_flocking', .2, 1., radius=.118)
+    corner = [3.0] * 360
+    for i in range(130, 231):
+        corner[i] = .4                                 # walls inside zone 1 across the whole front cone
+    assert behaviour.step(corner, -math.pi, INC, now=0.)[2]['state'] == 'avoid'
+    half_turn = math.pi / .2
+    linear, _, info = behaviour.step(corner, -math.pi, INC, now=half_turn + .1)
+    assert info['state'] == 'backing' and linear < 0.
+    assert behaviour.step(corner, -math.pi, INC, now=half_turn + 1.)[0] < 0.       # still backing out
+    assert behaviour.step([3.0] * 360, -math.pi, INC, now=half_turn + 2.)[2]['state'] == 'forward'

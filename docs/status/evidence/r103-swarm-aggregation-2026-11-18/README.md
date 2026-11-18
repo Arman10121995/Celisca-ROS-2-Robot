@@ -1,4 +1,4 @@
-# R10.3: distributed aggregation gathers three robots (November 18, 2026)
+# R10.3: aggregation and attraction gather three robots; flocking does not (November 18, 2026)
 
 **Status: implemented, experimental.** Ground aggregation, the R10.3 item
 that had not passed, gathers three Bumperbots from spread-out starts. Each
@@ -70,6 +70,35 @@ Each `aggregation-run-*.json` is the probe's summary. Full traces and
 launch logs are on SSD under `robot_lab_runtime/swarm-agg-20261118`
 (launch-log hashes here).
 
+## Attraction and flocking (the same three Bumperbots)
+
+Three more fixes came out of these runs, all in `swarm_behaviours.py` and
+unit-tested:
+
+- **Reverse travel:** attraction's far-weighted field can drive a member
+  backwards. The corridor turn now looks in the direction of travel, as the
+  guard does. In run 1 the guard had blocked 540 ticks.
+- **Turn hysteresis:** in a corner the nearest ray changes side as a member
+  turns. The turn now keeps its direction until the way is clear. Before,
+  it flipped every tick and the member stayed in the corner.
+- **Flocking corner escape:** flocking's avoid state only turns. After half
+  a turn without a clear front, the member backs out for 1.5 s. Before,
+  one member turned for 65 s.
+
+| Run | World, start | Behaviour | Mean distance (start → end) | Result |
+|---|---|---|---|---|
+| 1 | arena, spread 3.9 m | attraction 90 s | 3.9 → 4.6 m | not passed: reversed into walls (guard blocked) |
+| 2 | arena, triangle 2.5 m | attraction 90 s | 2.5 → 4.7 m | members move freely but go to the walls: attraction pulls toward anything within 3 m, and the walls are always in range |
+| **3** | **`nav_empty`, triangle 2.5 m (walls beyond range)** | **attraction 60 s** | **2.5 → 0.39 m in about 7 s, then held** | **passed**; closest 0.36 m (radii 0.24 m), separation turns 190 ticks |
+| 1, 2 | arena | flocking 90 s | 4.6 → 3.9 m; 4.7 → 3.9 m | not passed: one member trapped in a corner |
+| 3 | arena, triangle | flocking 150 s | 2.5 → 3.9 m | not passed: no traps (backing used), but heading alignment 0.53, about chance for three robots |
+| 4 | `nav_empty`, triangle | flocking 120 s | 2.5 → 7.6 m | not passed: alignment 0.45; the members drift apart |
+
+**Flocking is time-boxed and not passed.** ROS2swarm's minimalist flocking
+steers by the counts of robot rays in four zones. With three robots it
+seldom sees a peer in its cohesion zones, and the avoid and separation
+states dominate.
+
 ## Limits
 
 - One gathering run. These runs share the host with Go2 policy training.
@@ -77,4 +106,4 @@ launch logs are on SSD under `robot_lab_runtime/swarm-agg-20261118`
   with its lidar, and this behaviour uses nothing else.
 - Dispersion in a small arena gathers instead of spreading: its 3.5 m
   potential field is dominated by the walls.
-- Air swarms, attraction and flocking remain (R10.3 done-when).
+- Air swarms and flocking remain (R10.3 done-when).
