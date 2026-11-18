@@ -17,6 +17,11 @@ def test_object_pose_uses_existing_seeded_moveit_ik_without_executing():
         call_async=lambda request:(calls.append(request) or SimpleNamespace(add_done_callback=lambda fn:None)))
     control.planner=SimpleNamespace(service_is_ready=lambda:True)
     control.joints={**{'joint'+str(i):i*.1 for i in range(1,8)},'finger_joint1':.04,'finger_joint2':.04}
+    # Seeded IK (solve_ik) reads the arm's joint names and limits and keeps a
+    # per-launch cache of earlier solutions.
+    control.arm=SimpleNamespace(app=SimpleNamespace(process=None),
+        state={'joint_names':['joint'+str(i) for i in range(1,8)],'limits':[(-3.,3.)]*7})
+    control.ik_cache,control.ik_owner=[],None
     pose=Pose();pose.position.x=.4;pose.position.z=.3;pose.orientation.w=1.
     control.plan_pose(pose,'test candidate')
     assert len(calls)==1 and control.planning
