@@ -70,7 +70,8 @@ class Box:
     name: str
     position: Sequence[float]
     quaternion: Sequence[float]      # w, x, y, z
-    size: Sequence[float]            # full extents
+    size: Sequence[float]            # full extents (a cylinder: diameter, diameter, length)
+    shape: str = 'box'               # 'box' or an upright 'cylinder' (axis along the body z)
 
     @property
     def top(self):
@@ -130,9 +131,12 @@ class ArmScene:
         holder = ET.SubElement(world, 'body', name='pick_place_object', mocap='true',
                                pos='%g %g %g' % tuple(obj.position), quat='%g %g %g %g' % tuple(obj.quaternion))
         # The margin makes MuJoCo report near-misses within the clearance.
-        ET.SubElement(holder, 'geom', name='object', type='box',
-                      size='%g %g %g' % tuple(max(v, 1e-6) / 2 for v in obj.size), contype='1', conaffinity='1',
-                      margin='%g' % OBJECT_CLEARANCE_M)
+        if obj.shape == 'cylinder':
+            geometry = dict(type='cylinder', size='%g %g' % (max(obj.size[0], 1e-6) / 2, max(obj.size[2], 1e-6) / 2))
+        else:
+            geometry = dict(type='box', size='%g %g %g' % tuple(max(v, 1e-6) / 2 for v in obj.size))
+        ET.SubElement(holder, 'geom', name='object', contype='1', conaffinity='1',
+                      margin='%g' % OBJECT_CLEARANCE_M, **geometry)
         option = root.find('option')
         if option is None:
             option = ET.SubElement(root, 'option')
@@ -368,14 +372,18 @@ def plan_pick(scene: ArmScene, current: Dict[str, float], obj: Box, *, approach=
     """Stages open -> above the object -> down to the grasp -> close -> lift.
 
     The object is grasped top-down at its centre, fingers across the
-    object's x or y extent (whichever is narrower, within the gripper). On
-    return the scene holds the object at the lifted pose.
+    object's x or y extent (whichever is narrower, within the gripper), or
+    across an upright cylinder's diameter at four wrist yaws. On return the
+    scene holds the object at the lifted pose.
     """
     spec = scene.spec
     open_f = {n: spec.finger_open for n in spec.finger_joints}
     # Fingers close along tool y, across one horizontal extent of the object.
     # Grip across each extent that fits (narrower first), facing either way.
     sides = sorted(((float(obj.size[0]), 0.0), (float(obj.size[1]), math.pi / 2)))
+    if obj.shape == 'cylinder':
+        # Any yaw grips a cylinder across its diameter: more wrist yaws give IK more chances.
+        sides = [(float(obj.size[0]), k * math.pi / 4) for k in range(4)]
     sides = [side for side in sides if side[0] <= spec.max_object_width]
     if not sides:
         raise PlanningError('object %.3f m wider than the gripper (%.3f m)' % (min(obj.size[:2]), spec.max_object_width))

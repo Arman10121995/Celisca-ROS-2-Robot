@@ -141,3 +141,20 @@ def test_mobile_scene_welds_the_base_and_holds_unplanned_joints():
     # The PAL finger pads reach below the grasp frame: the grasp rises.
     assert plan['grasp_point'][2] > block.position[2] + 0.03
     assert [s['stage'] for s in plan['stages']] == ['open', 'above_object', 'down_to_grasp', 'close', 'lift']
+
+
+def test_an_upright_cylinder_is_gripped_across_its_diameter(panda):
+    can = Box('pickup_can', [0.5, -0.25, 0.345], [1, 0, 0, 0], [0.05, 0.05, 0.09], 'cylinder')
+    scene, spec, obstacles, obj, profile = scene_for(panda, can)
+    geom = scene.model.geom('object')
+    assert geom.type == mujoco.mjtGeom.mjGEOM_CYLINDER
+    np.testing.assert_allclose(geom.size[:2], [0.025, 0.045])
+    home = {n: profile['articulation']['home'][n] for n in spec.arm_joints}
+    support = next(b for b in obstacles if b.name == 'place_table')
+    plan = plan_pick_place(scene, home, can, support, seeds=[home])
+    assert plan['grasp_width_m'] == pytest.approx(0.05)
+    scene.detach()
+    lower = next(s for s in plan['stages'] if s['stage'] == 'lower')
+    scene.set_joints(dict(lower['waypoints'][-1], **lower['fingers']))
+    # The can is set down upright on the support: its centre half its length above the top.
+    assert plan['place_centre'][2] == pytest.approx(support.top + 0.045)

@@ -134,7 +134,7 @@ Work top to bottom. Each line links to its task.
 | I4b | [R6.8](#r68--real-world-area-import-from-a-globe) Real-world area import | Done 2026-11-13: globe picker (CesiumJS + OSM), Terrain Tiles + OSM buildings/roads/trees/water, SUMO people/traffic; support and roof heights measured on four simulators | implemented |
 | I5 | [R5.11](#r511--drone-moving-obstacles-and-other-drone-backends) Drone moving obstacles | Done 2026-11-13: Kalman tracks, predicted sweeps, walkway look-both-ways and overflight, evasion, sensor-loss hold/land, EKF heading/height gate; 2 passing flights past walkers (Gazebo); PX4 + MuJoCo plant: takeoff, 5 m route and landing | implemented |
 | I6 | [R5.9](#r59--mobile-manipulators) Mobile manipulation | Done-when met 11-17: TIAGo GUI fetch (drive, pick, carry, place) on MuJoCo and PyBullet with stability traces and a base/arm interlock probe. 11-17: Nav2 transit legs with AMCL (Nav mode) pass on MuJoCo 2/2 and PyBullet 1/1. 11-18: grasp planned from the head RGB-D camera (`pose_source: rgbd`, estimate error 1.5 / 5.1 mm) passes on MuJoCo and PyBullet. Remaining: general (non-box) perception, Isaac grasp, Stretch pipeline missions | partial |
-| I7 | [R5.7](#r57--manipulators-and-motion-planning) Arms | Done-when met 11-17: URDF Panda GUI pick → place on PyBullet and MuJoCo (one run each). Native Panda box tasks on MuJoCo. 11-17: URDF Panda pick and place also passes on Isaac and Gazebo (all four backends); UR5/UR10/YuMi joint control on Gazebo. Remaining: compound geometry, perception, other coupled mechanisms | partial |
+| I7 | [R5.7](#r57--manipulators-and-motion-planning) Arms | Done-when met 11-17: URDF Panda GUI pick → place on PyBullet and MuJoCo (one run each). Native Panda box tasks on MuJoCo. 11-17: URDF Panda pick and place also passes on Isaac and Gazebo (all four backends); UR5/UR10/YuMi joint control on Gazebo. 11-18: upright-cylinder pick and place on MuJoCo, PyBullet and Gazebo. Remaining: compound/mesh geometry, fixed-arm perception, other coupled mechanisms | partial |
 | I8 | [R5.8](#r58--robot-hands-and-grippers) Hands | 11-17: normal GUI grasp → lift 5 cm → hold → return → supported release passes for Robotiq 2F-85 (both variants, support stage) and UMI (source axis); parallel-jaw measured in R5.7/R5.9. DEX-EE (dexterous) not passed: needs grasp synthesis; other backends remain | partial |
 | I9 | [R10.2](#r102--fleet-management-and-open-rmf) Fleet / Open-RMF | Done 2026-11-14: shared-zone reservations (map passages, doors, docks), cycle breaker, recovery drive-out, RMF energy from a drivetrain calibration; two crossing runs pass (native and RMF). 11-18: doors, docks and energy without a lift (`fleet_ward`: door crossing, docking and charging pass). Larger fleets are V7 | implemented |
 | I10 | [R10.3](#r103--swarm-robotics) Swarms | Done 2026-11-14: ROS2swarm port of per-member scan-only behaviours, scan-sensed cooperative coverage, ground/air member-loss replanning; dispersion and coverage-with-loss measured; aggregation gathers three Bumperbots in `swarm_arena` (11-18); 3–4 drone flight is validation | implemented |
@@ -453,8 +453,13 @@ parking batch needs its own run. Details and evidence are in the
   invalidation in the existing GUI. All paths still require existing IK/OMPL
   and separate execution. [Takeover receipt](docs/status/takeover-2026-11-14.md).
 - **Remaining implementation:**
-  - compound/mesh geometry, perception pose sources and additional
-    gripper-specific pipelines beyond the native Panda box sequence;
+  - Done 2026-11-18 (implemented, experimental): upright cylinders. The
+    planner grips a cylinder across its diameter (`Box.shape`); URDF Panda
+    pick and place of a 50 × 90 mm can passes on MuJoCo (28.8 s), PyBullet
+    (24.0 s) and Gazebo (25.2 s) in the new `arm_pick_place_can`.
+    [Receipt](docs/status/evidence/r57-cylinder-pick-place-2026-11-18/README.md);
+  - compound/mesh geometry, lying cylinders, perception pose sources for
+    fixed arms and additional gripper-specific pipelines;
   - coupled mechanisms beyond gear-coupled fingers (mimic chains and
     four-bar joints);
   - Done 2026-11-17: Isaac and Gazebo pick and place for the URDF Panda.

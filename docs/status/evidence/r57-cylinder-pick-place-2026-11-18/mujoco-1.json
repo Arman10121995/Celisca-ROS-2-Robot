@@ -1,0 +1,1403 @@
+{
+ "object": "pickup_can",
+ "support": "place_table",
+ "home_reached": true,
+ "result": {
+  "schema": "robot_lab.pick_place_result.v1",
+  "outcome": "succeeded",
+  "passed": true,
+  "message": "Placed pickup_can on place_table",
+  "request": {
+   "object": "pickup_can",
+   "support": "place_table",
+   "lift": 0.1,
+   "transit": "auto",
+   "pose_source": "truth"
+  },
+  "object": "pickup_can",
+  "support": "place_table",
+  "object_start": [
+   0.5000005111412534,
+   -0.25000050645325617,
+   0.3449084101274529
+  ],
+  "plan": {
+   "grasp_width_m": 0.05,
+   "place_centre": [
+    0.5,
+    0.25,
+    0.345
+   ]
+  },
+  "stages": [
+   {
+    "stage": "open",
+    "seconds": 0.1,
+    "object_truth": [
+     0.5,
+     -0.25,
+     0.3449
+    ],
+    "tcp_estimate": [
+     0.307,
+     -0.0,
+     0.4869
+    ],
+    "passed": true
+   },
+   {
+    "stage": "above_object",
+    "seconds": 8.43,
+    "object_truth": [
+     0.5,
+     -0.25,
+     0.3449
+    ],
+    "tcp_estimate": [
+     0.4982,
+     -0.2488,
+     0.4438
+    ],
+    "passed": true
+   },
+   {
+    "stage": "down_to_grasp",
+    "seconds": 1.22,
+    "object_truth": [
+     0.5006,
+     -0.2502,
+     0.3445
+    ],
+    "tcp_estimate": [
+     0.4993,
+     -0.2497,
+     0.351
+    ],
+    "passed": true
+   },
+   {
+    "stage": "close",
+    "seconds": 2.65,
+    "object_truth": [
+     0.5018,
+     -0.2502,
+     0.3444
+    ],
+    "tcp_estimate": [
+     0.5,
+     -0.2502,
+     0.3515
+    ],
+    "passed": true,
+    "finger_positions": [
+     0.0203,
+     0.0203
+    ],
+    "reason": ""
+   },
+   {
+    "stage": "lift",
+    "seconds": 3.05,
+    "object_truth": [
+     0.5001,
+     -0.25,
+     0.4375
+    ],
+    "tcp_estimate": [
+     0.4997,
+     -0.2499,
+     0.4507
+    ],
+    "passed": true,
+    "rise_m": 0.0926,
+    "hold_drift_m": 0.0022,
+    "reason": ""
+   },
+   {
+    "stage": "over_support",
+    "seconds": 7.71,
+    "object_truth": [
+     0.4999,
+     0.2496,
+     0.4178
+    ],
+    "tcp_estimate": [
+     0.4998,
+     0.2499,
+     0.451
+    ],
+    "passed": true
+   },
+   {
+    "stage": "lower",
+    "seconds": 1.42,
+    "object_truth": [
+     0.4999,
+     0.2494,
+     0.3446
+    ],
+    "tcp_estimate": [
+     0.4999,
+     0.25,
+     0.3517
+    ],
+    "passed": true
+   },
+   {
+    "stage": "release",
+    "seconds": 1.72,
+    "object_truth": [
+     0.4999,
+     0.2494,
+     0.3446
+    ],
+    "tcp_estimate": [
+     0.4999,
+     0.25,
+     0.3517
+    ],
+    "passed": true
+   },
+   {
+    "stage": "retreat",
+    "seconds": 2.23,
+    "object_truth": [
+     0.5,
+     0.2493,
+     0.3449
+    ],
+    "tcp_estimate": [
+     0.4995,
+     0.2499,
+     0.451
+    ],
+    "passed": true,
+    "final_pose": [
+     0.5,
+     0.2493,
+     0.3449
+    ],
+    "height_error_m": -0.0001,
+    "inside_support": true,
+    "moved_last_s_m": 0.0,
+    "reason": ""
+   },
+   {
+    "phase": "pick_place",
+    "seconds": 28.82
+   }
+  ],
+  "mobile": false,
+  "interlock": null,
+  "transit": null,
+  "pose_source": "truth",
+  "perceived": null,
+  "trace": [
+   {
+    "t": 0.29,
+    "stage": "open",
+    "object": [
+     0.5,
+     -0.25,
+     0.3449,
+     1.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    "fingers": [
+     0.04,
+     0.04
+    ],
+    "finger_references": [
+     0.04,
+     0.04
+    ]
+   },
+   {
+    "t": 0.8,
+    "stage": "above_object",
+    "object": [
+     0.5,
+     -0.25,
+     0.3449,
+     1.0,
+     -0.0,
+     -0.0,
+     0.0
+    ],
+    "fingers": [
+     0.04,
+     0.0399
+    ],
+    "finger_references": [
+     0.04,
+     0.04
+    ]
+   },
+   {
+    "t": 1.31,
+    "stage": "above_object",
+    "object": [
+     0.5,
+     -0.25,
+     0.3449,
+     1.0,
+     -0.0,
+     -0.0,
+     0.0
+    ],
+    "fingers": [
+     0.04,
+     0.0399
+    ],
+    "finger_references": [
+     0.04,
+     0.04
+    ]
+   },
+   {
+    "t": 1.81,
+    "stage": "above_object",
+    "object": [
+     0.5,
+     -0.25,
+     0.3449,
+     1.0,
+     0.0,
+     0.0,
+     0.0001
+    ],
+    "fingers": [
+     0.04,
+     0.04
+    ],
+    "finger_references": [
+     0.04,
+     0.04
+    ]
+   },
+   {
+    "t": 2.32,
+    "stage": "above_object",
+    "object": [
+     0.5,
+     -0.25,
+     0.3449,
+     1.0,
+     0.0,
+     0.0,
+     0.0001
+    ],
+    "fingers": [
+     0.04,
+     0.04
+    ],
+    "finger_references": [
+     0.04,
+     0.04
+    ]
+   },
+   {
+    "t": 2.83,
+    "stage": "above_object",
+    "object": [
+     0.5,
+     -0.25,
+     0.3449,
+     1.0,
+     -0.0,
+     -0.0,
+     0.0001
+    ],
+    "fingers": [
+     0.0399,
+     0.04
+    ],
+    "finger_references": [
+     0.04,
+     0.04
+    ]
+   },
+   {
+    "t": 3.33,
+    "stage": "above_object",
+    "object": [
+     0.5,
+     -0.25,
+     0.3449,
+     1.0,
+     -0.0,
+     -0.0,
+     0.0001
+    ],
+    "fingers": [
+     0.0399,
+     0.04
+    ],
+    "finger_references": [
+     0.04,
+     0.04
+    ]
+   },
+   {
+    "t": 3.84,
+    "stage": "above_object",
+    "object": [
+     0.5,
+     -0.25,
+     0.3449,
+     1.0,
+     0.0,
+     0.0,
+     0.0001
+    ],
+    "fingers": [
+     0.0399,
+     0.04
+    ],
+    "finger_references": [
+     0.04,
+     0.04
+    ]
+   },
+   {
+    "t": 4.35,
+    "stage": "above_object",
+    "object": [
+     0.5,
+     -0.25,
+     0.3449,
+     1.0,
+     0.0,
+     0.0,
+     0.0001
+    ],
+    "fingers": [
+     0.0399,
+     0.0399
+    ],
+    "finger_references": [
+     0.04,
+     0.04
+    ]
+   },
+   {
+    "t": 4.85,
+    "stage": "above_object",
+    "object": [
+     0.5,
+     -0.25,
+     0.3449,
+     1.0,
+     -0.0,
+     -0.0,
+     0.0001
+    ],
+    "fingers": [
+     0.0398,
+     0.04
+    ],
+    "finger_references": [
+     0.04,
+     0.04
+    ]
+   },
+   {
+    "t": 5.36,
+    "stage": "above_object",
+    "object": [
+     0.5,
+     -0.25,
+     0.3449,
+     1.0,
+     -0.0,
+     -0.0,
+     0.0001
+    ],
+    "fingers": [
+     0.0398,
+     0.0399
+    ],
+    "finger_references": [
+     0.04,
+     0.04
+    ]
+   },
+   {
+    "t": 5.87,
+    "stage": "above_object",
+    "object": [
+     0.5,
+     -0.25,
+     0.3449,
+     1.0,
+     0.0,
+     0.0,
+     0.0001
+    ],
+    "fingers": [
+     0.0397,
+     0.04
+    ],
+    "finger_references": [
+     0.04,
+     0.04
+    ]
+   },
+   {
+    "t": 6.38,
+    "stage": "above_object",
+    "object": [
+     0.5,
+     -0.25,
+     0.3449,
+     1.0,
+     0.0,
+     0.0,
+     0.0001
+    ],
+    "fingers": [
+     0.0398,
+     0.0399
+    ],
+    "finger_references": [
+     0.04,
+     0.04
+    ]
+   },
+   {
+    "t": 6.88,
+    "stage": "above_object",
+    "object": [
+     0.5,
+     -0.25,
+     0.3449,
+     1.0,
+     -0.0,
+     -0.0,
+     0.0001
+    ],
+    "fingers": [
+     0.0397,
+     0.04
+    ],
+    "finger_references": [
+     0.04,
+     0.04
+    ]
+   },
+   {
+    "t": 7.39,
+    "stage": "above_object",
+    "object": [
+     0.5,
+     -0.25,
+     0.3449,
+     1.0,
+     -0.0,
+     -0.0,
+     0.0001
+    ],
+    "fingers": [
+     0.0397,
+     0.04
+    ],
+    "finger_references": [
+     0.04,
+     0.04
+    ]
+   },
+   {
+    "t": 7.9,
+    "stage": "above_object",
+    "object": [
+     0.5,
+     -0.25,
+     0.3449,
+     1.0,
+     0.0,
+     0.0,
+     0.0001
+    ],
+    "fingers": [
+     0.04,
+     0.0399
+    ],
+    "finger_references": [
+     0.04,
+     0.04
+    ]
+   },
+   {
+    "t": 8.41,
+    "stage": "above_object",
+    "object": [
+     0.5,
+     -0.25,
+     0.3449,
+     1.0,
+     0.0,
+     0.0,
+     0.0001
+    ],
+    "fingers": [
+     0.04,
+     0.0399
+    ],
+    "finger_references": [
+     0.04,
+     0.04
+    ]
+   },
+   {
+    "t": 8.92,
+    "stage": "down_to_grasp",
+    "object": [
+     0.5,
+     -0.25,
+     0.3449,
+     1.0,
+     -0.0,
+     -0.0,
+     0.0001
+    ],
+    "fingers": [
+     0.0399,
+     0.04
+    ],
+    "finger_references": [
+     0.04,
+     0.04
+    ]
+   },
+   {
+    "t": 9.42,
+    "stage": "down_to_grasp",
+    "object": [
+     0.5,
+     -0.25,
+     0.3449,
+     1.0,
+     -0.0,
+     -0.0,
+     0.0001
+    ],
+    "fingers": [
+     0.04,
+     0.0395
+    ],
+    "finger_references": [
+     0.04,
+     0.04
+    ]
+   },
+   {
+    "t": 9.93,
+    "stage": "down_to_grasp",
+    "object": [
+     0.5001,
+     -0.2499,
+     0.3445,
+     1.0,
+     -0.0009,
+     0.0027,
+     0.0006
+    ],
+    "fingers": [
+     0.04,
+     0.0392
+    ],
+    "finger_references": [
+     0.04,
+     0.04
+    ]
+   },
+   {
+    "t": 10.44,
+    "stage": "close",
+    "object": [
+     0.5007,
+     -0.2502,
+     0.3445,
+     1.0,
+     0.0,
+     -0.0007,
+     -0.0007
+    ],
+    "fingers": [
+     0.0342,
+     0.0343
+    ],
+    "finger_references": [
+     0.0336,
+     0.0336
+    ]
+   },
+   {
+    "t": 10.95,
+    "stage": "close",
+    "object": [
+     0.5002,
+     -0.2502,
+     0.3445,
+     1.0,
+     0.0,
+     -0.0008,
+     -0.0006
+    ],
+    "fingers": [
+     0.0247,
+     0.0244
+    ],
+    "finger_references": [
+     0.0212,
+     0.0212
+    ]
+   },
+   {
+    "t": 11.46,
+    "stage": "close",
+    "object": [
+     0.5001,
+     -0.2502,
+     0.3445,
+     1.0,
+     0.0,
+     -0.0007,
+     -0.0012
+    ],
+    "fingers": [
+     0.0225,
+     0.0224
+    ],
+    "finger_references": [
+     0.0087,
+     0.0087
+    ]
+   },
+   {
+    "t": 11.97,
+    "stage": "close",
+    "object": [
+     0.5006,
+     -0.2502,
+     0.3445,
+     1.0,
+     -0.0,
+     -0.0006,
+     -0.0027
+    ],
+    "fingers": [
+     0.0207,
+     0.0214
+    ],
+    "finger_references": [
+     0.0,
+     0.0
+    ]
+   },
+   {
+    "t": 12.47,
+    "stage": "close",
+    "object": [
+     0.5017,
+     -0.2502,
+     0.3444,
+     1.0,
+     0.0,
+     -0.0007,
+     -0.0042
+    ],
+    "fingers": [
+     0.0202,
+     0.0203
+    ],
+    "finger_references": [
+     0.0,
+     0.0
+    ]
+   },
+   {
+    "t": 12.99,
+    "stage": "lift",
+    "object": [
+     0.5049,
+     -0.2506,
+     0.3648,
+     0.9999,
+     -0.0004,
+     -0.0073,
+     -0.0075
+    ],
+    "fingers": [
+     0.0206,
+     0.0214
+    ],
+    "finger_references": [
+     0.0,
+     0.0
+    ]
+   },
+   {
+    "t": 13.49,
+    "stage": "lift",
+    "object": [
+     0.5027,
+     -0.2505,
+     0.4126,
+     0.9999,
+     0.0078,
+     -0.0063,
+     -0.0049
+    ],
+    "fingers": [
+     0.0227,
+     0.0232
+    ],
+    "finger_references": [
+     0.0,
+     0.0
+    ]
+   },
+   {
+    "t": 14.0,
+    "stage": "lift",
+    "object": [
+     0.5004,
+     -0.2499,
+     0.4405,
+     1.0,
+     0.004,
+     0.0002,
+     -0.0036
+    ],
+    "fingers": [
+     0.023,
+     0.0229
+    ],
+    "finger_references": [
+     0.0,
+     0.0
+    ]
+   },
+   {
+    "t": 14.51,
+    "stage": "lift",
+    "object": [
+     0.5,
+     -0.2499,
+     0.4395,
+     1.0,
+     0.0051,
+     0.0006,
+     -0.0028
+    ],
+    "fingers": [
+     0.0229,
+     0.0229
+    ],
+    "finger_references": [
+     0.0,
+     0.0
+    ]
+   },
+   {
+    "t": 15.02,
+    "stage": "lift",
+    "object": [
+     0.5001,
+     -0.25,
+     0.4387,
+     1.0,
+     0.0019,
+     0.0006,
+     -0.0022
+    ],
+    "fingers": [
+     0.0229,
+     0.0229
+    ],
+    "finger_references": [
+     0.0,
+     0.0
+    ]
+   },
+   {
+    "t": 15.53,
+    "stage": "lift",
+    "object": [
+     0.4997,
+     -0.2499,
+     0.4379,
+     1.0,
+     0.007,
+     0.0006,
+     -0.0017
+    ],
+    "fingers": [
+     0.0232,
+     0.0232
+    ],
+    "finger_references": [
+     0.0,
+     0.0
+    ]
+   },
+   {
+    "t": 16.03,
+    "stage": "over_support",
+    "object": [
+     0.5165,
+     -0.2179,
+     0.4455,
+     0.9993,
+     -0.0344,
+     -0.004,
+     -0.0136
+    ],
+    "fingers": [
+     0.0224,
+     0.0231
+    ],
+    "finger_references": [
+     0.0,
+     0.0
+    ]
+   },
+   {
+    "t": 16.54,
+    "stage": "over_support",
+    "object": [
+     0.545,
+     -0.1354,
+     0.4632,
+     0.9998,
+     0.0136,
+     -0.0036,
+     -0.012
+    ],
+    "fingers": [
+     0.0225,
+     0.0231
+    ],
+    "finger_references": [
+     0.0,
+     0.0
+    ]
+   },
+   {
+    "t": 17.05,
+    "stage": "over_support",
+    "object": [
+     0.5598,
+     -0.0506,
+     0.4802,
+     0.9999,
+     0.0095,
+     -0.0051,
+     -0.0113
+    ],
+    "fingers": [
+     0.0226,
+     0.0232
+    ],
+    "finger_references": [
+     0.0,
+     0.0
+    ]
+   },
+   {
+    "t": 17.55,
+    "stage": "over_support",
+    "object": [
+     0.5613,
+     0.0352,
+     0.4959,
+     0.9998,
+     -0.0185,
+     -0.0065,
+     -0.0085
+    ],
+    "fingers": [
+     0.022,
+     0.0225
+    ],
+    "finger_references": [
+     0.0,
+     0.0
+    ]
+   },
+   {
+    "t": 18.06,
+    "stage": "over_support",
+    "object": [
+     0.548,
+     0.1221,
+     0.51,
+     0.9998,
+     -0.016,
+     -0.0057,
+     -0.0059
+    ],
+    "fingers": [
+     0.0218,
+     0.0221
+    ],
+    "finger_references": [
+     0.0,
+     0.0
+    ]
+   },
+   {
+    "t": 18.57,
+    "stage": "over_support",
+    "object": [
+     0.5211,
+     0.2051,
+     0.5233,
+     1.0,
+     -0.001,
+     -0.0037,
+     -0.0052
+    ],
+    "fingers": [
+     0.022,
+     0.0223
+    ],
+    "finger_references": [
+     0.0,
+     0.0
+    ]
+   },
+   {
+    "t": 19.08,
+    "stage": "over_support",
+    "object": [
+     0.4998,
+     0.2512,
+     0.5132,
+     0.9997,
+     0.0246,
+     0.0029,
+     0.0046
+    ],
+    "fingers": [
+     0.0229,
+     0.0226
+    ],
+    "finger_references": [
+     0.0,
+     0.0
+    ]
+   },
+   {
+    "t": 19.58,
+    "stage": "over_support",
+    "object": [
+     0.501,
+     0.251,
+     0.4672,
+     0.9999,
+     0.014,
+     0.0022,
+     0.0048
+    ],
+    "fingers": [
+     0.0226,
+     0.0225
+    ],
+    "finger_references": [
+     0.0,
+     0.0
+    ]
+   },
+   {
+    "t": 20.09,
+    "stage": "over_support",
+    "object": [
+     0.4991,
+     0.2499,
+     0.4268,
+     1.0,
+     0.0033,
+     0.0019,
+     0.0084
+    ],
+    "fingers": [
+     0.022,
+     0.0226
+    ],
+    "finger_references": [
+     0.0,
+     0.0
+    ]
+   },
+   {
+    "t": 20.6,
+    "stage": "over_support",
+    "object": [
+     0.4998,
+     0.2498,
+     0.4254,
+     1.0,
+     0.0049,
+     0.0006,
+     0.004
+    ],
+    "fingers": [
+     0.0225,
+     0.0225
+    ],
+    "finger_references": [
+     0.0,
+     0.0
+    ]
+   },
+   {
+    "t": 21.11,
+    "stage": "over_support",
+    "object": [
+     0.4998,
+     0.2497,
+     0.424,
+     1.0,
+     0.0036,
+     0.0006,
+     0.0017
+    ],
+    "fingers": [
+     0.0226,
+     0.0226
+    ],
+    "finger_references": [
+     0.0,
+     0.0
+    ]
+   },
+   {
+    "t": 21.61,
+    "stage": "over_support",
+    "object": [
+     0.4998,
+     0.2497,
+     0.4227,
+     1.0,
+     0.0022,
+     0.0006,
+     0.0009
+    ],
+    "fingers": [
+     0.0227,
+     0.0227
+    ],
+    "finger_references": [
+     0.0,
+     0.0
+    ]
+   },
+   {
+    "t": 22.12,
+    "stage": "over_support",
+    "object": [
+     0.5004,
+     0.2496,
+     0.4212,
+     1.0,
+     0.0014,
+     0.0006,
+     0.0015
+    ],
+    "fingers": [
+     0.0225,
+     0.0225
+    ],
+    "finger_references": [
+     0.0,
+     0.0
+    ]
+   },
+   {
+    "t": 22.63,
+    "stage": "over_support",
+    "object": [
+     0.5001,
+     0.2496,
+     0.4198,
+     1.0,
+     0.0012,
+     0.0006,
+     0.0017
+    ],
+    "fingers": [
+     0.0225,
+     0.0225
+    ],
+    "finger_references": [
+     0.0,
+     0.0
+    ]
+   },
+   {
+    "t": 23.14,
+    "stage": "over_support",
+    "object": [
+     0.5002,
+     0.2496,
+     0.4185,
+     1.0,
+     0.0004,
+     0.0006,
+     0.0007
+    ],
+    "fingers": [
+     0.0223,
+     0.0223
+    ],
+    "finger_references": [
+     0.0,
+     0.0
+    ]
+   },
+   {
+    "t": 23.64,
+    "stage": "lower",
+    "object": [
+     0.4982,
+     0.2494,
+     0.4077,
+     1.0,
+     0.0049,
+     0.0033,
+     -0.0023
+    ],
+    "fingers": [
+     0.0221,
+     0.0214
+    ],
+    "finger_references": [
+     0.0,
+     0.0
+    ]
+   },
+   {
+    "t": 24.15,
+    "stage": "lower",
+    "object": [
+     0.4968,
+     0.2492,
+     0.3543,
+     1.0,
+     0.005,
+     0.005,
+     -0.0055
+    ],
+    "fingers": [
+     0.0217,
+     0.0214
+    ],
+    "finger_references": [
+     0.0,
+     0.0
+    ]
+   },
+   {
+    "t": 24.66,
+    "stage": "lower",
+    "object": [
+     0.4996,
+     0.2494,
+     0.3446,
+     1.0,
+     0.0002,
+     -0.0,
+     -0.0031
+    ],
+    "fingers": [
+     0.0225,
+     0.023
+    ],
+    "finger_references": [
+     0.0,
+     0.0
+    ]
+   },
+   {
+    "t": 25.17,
+    "stage": "release",
+    "object": [
+     0.5,
+     0.2494,
+     0.3446,
+     1.0,
+     -0.0,
+     -0.0005,
+     -0.0029
+    ],
+    "fingers": [
+     0.0229,
+     0.0229
+    ],
+    "finger_references": [
+     0.0039,
+     0.0039
+    ]
+   },
+   {
+    "t": 25.67,
+    "stage": "release",
+    "object": [
+     0.4999,
+     0.2494,
+     0.3446,
+     1.0,
+     -0.0,
+     -0.0005,
+     -0.0026
+    ],
+    "fingers": [
+     0.0242,
+     0.0242
+    ],
+    "finger_references": [
+     0.0164,
+     0.0164
+    ]
+   },
+   {
+    "t": 26.18,
+    "stage": "release",
+    "object": [
+     0.4999,
+     0.2494,
+     0.3446,
+     1.0,
+     -0.0,
+     -0.0005,
+     -0.0025
+    ],
+    "fingers": [
+     0.0282,
+     0.0282
+    ],
+    "finger_references": [
+     0.0289,
+     0.0289
+    ]
+   },
+   {
+    "t": 26.69,
+    "stage": "retreat",
+    "object": [
+     0.4999,
+     0.2494,
+     0.3446,
+     1.0,
+     -0.0,
+     -0.0005,
+     -0.0025
+    ],
+    "fingers": [
+     0.04,
+     0.04
+    ],
+    "finger_references": [
+     0.04,
+     0.04
+    ]
+   },
+   {
+    "t": 27.2,
+    "stage": "retreat",
+    "object": [
+     0.5,
+     0.2493,
+     0.3449,
+     1.0,
+     -0.0,
+     -0.0,
+     -0.0039
+    ],
+    "fingers": [
+     0.0397,
+     0.04
+    ],
+    "finger_references": [
+     0.04,
+     0.04
+    ]
+   },
+   {
+    "t": 27.7,
+    "stage": "retreat",
+    "object": [
+     0.5,
+     0.2493,
+     0.3449,
+     1.0,
+     -0.0,
+     0.0,
+     -0.0039
+    ],
+    "fingers": [
+     0.0398,
+     0.04
+    ],
+    "finger_references": [
+     0.04,
+     0.04
+    ]
+   },
+   {
+    "t": 28.21,
+    "stage": "retreat",
+    "object": [
+     0.5,
+     0.2493,
+     0.3449,
+     1.0,
+     -0.0,
+     0.0,
+     -0.0039
+    ],
+    "fingers": [
+     0.04,
+     0.04
+    ],
+    "finger_references": [
+     0.04,
+     0.04
+    ]
+   },
+   {
+    "t": 28.71,
+    "stage": "retreat",
+    "object": [
+     0.5,
+     0.2493,
+     0.3449,
+     1.0,
+     -0.0,
+     0.0,
+     -0.0039
+    ],
+    "fingers": [
+     0.04,
+     0.04
+    ],
+    "finger_references": [
+     0.04,
+     0.04
+    ]
+   }
+  ],
+  "phase": "pick_place",
+  "seconds": 28.82,
+  "plant_id": "052990a7d77d4619b9e02fd94b2c3557",
+  "model_sha256": "1685e99c9fa5ab60efe1b05d5b84ee2adacc7db7f2de83ca9aa976e00d8b8fc0",
+  "finished": "2026-11-18T14:23:10",
+  "receipt": "/workspace/molar/robot_lab_runtime/pick-place/20261118T142310_pickup_can.json"
+ },
+ "final_message": "Placed pickup_can on place_table",
+ "passed": true
+}

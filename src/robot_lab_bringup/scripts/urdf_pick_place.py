@@ -153,6 +153,7 @@ class PickPlace(Node):
         # Coupled followers (the second Panda finger) are measured, not commanded.
         self.finger_masters = [n for n in self.spec.finger_joints if n in articulation['joints']]
         self.base = tuple(float(self.get_parameter(k).value) for k in ('base_x', 'base_y', 'base_z', 'base_yaw'))
+        self.object_shapes = {}
         self.supports, self.object_sizes = self._world_boxes()
         self.robot_mjcf = None
         self.truth, self.truth_at = {}, -math.inf
@@ -212,8 +213,17 @@ class PickPlace(Node):
         path = self.get_parameter('world_path').value
         if not path or not os.path.isfile(path):
             return {}, {}
-        sizes = {body['name']: list(body['shape']['size']) for body in extract_dynamic_bodies(path)
-                 if body['shape']['type'] == 'box'}
+        sizes = {}
+        for body in extract_dynamic_bodies(path):
+            shape = body['shape']
+            if shape['type'] == 'box':
+                sizes[body['name']] = list(shape['size'])
+            elif shape['type'] == 'cylinder':
+                # Upright cylinders (radius, length): planned as a cylinder in
+                # its bounding extents (Box.shape).
+                radius, length = (float(v) for v in shape['size'][:2])
+                sizes[body['name']] = [2 * radius, 2 * radius, length]
+                self.object_shapes[body['name']] = 'cylinder'
         shapes, _ = extract_static_shapes(path, lambda uri, base: '', exclude_dynamic=True)
         boxes = {}
         for shape in shapes:
@@ -318,7 +328,7 @@ class PickPlace(Node):
         if missing:
             raise ValueError('no measurement for %s' % missing)
         if not self.object_sizes.get(name):
-            raise ValueError('object %r is not a loose box of the world file' % name)
+            raise ValueError('object %r is not a loose box or upright cylinder of the world file' % name)
         lift = float(request.get('lift', 0.10))
         approach = float(request.get('approach', 0.10))
         if not 0.03 <= lift <= 0.25 or not 0.03 <= approach <= 0.25:
@@ -582,7 +592,8 @@ class PickPlace(Node):
         held = {c['name']: c['measured'] for c in self.state.get('channels', [])
                 if c.get('mode') == 'position' and c.get('measured') is not None and c['name'] not in planned}
         # Any object pose will do: only the arm is evaluated.
-        scene = ArmScene(self.robot_mjcf, self.spec, [], Box(name, [0, 0, -5], [1, 0, 0, 0], self.object_sizes[name]),
+        scene = ArmScene(self.robot_mjcf, self.spec, [], Box(name, [0, 0, -5], [1, 0, 0, 0], self.object_sizes[name],
+                                                             self.object_shapes.get(name, 'box')),
                          base=self.base_pose, held=held)
         scene.set_joints({n: measured[n] for n in planned})
         return scene.tcp()
@@ -593,7 +604,7 @@ class PickPlace(Node):
         measured = self.measured()
         name = task['object']
         pose = self._object_pose(task, phase)
-        obj = Box(name, pose[:3], pose[3:], self.object_sizes[name])
+        obj = Box(name, pose[:3], pose[3:], self.object_sizes[name], self.object_shapes.get(name, 'box'))
         base = self.base if not self.mobile else self.base_pose
         planned_joints = set(self.spec.arm_joints + self.spec.finger_joints)
         held = {c['name']: c['measured'] for c in self.state.get('channels', [])
