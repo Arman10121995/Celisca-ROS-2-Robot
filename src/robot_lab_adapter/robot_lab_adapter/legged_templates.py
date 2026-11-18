@@ -19,7 +19,9 @@ import yaml
 # configuration: default_joint_angles, control stiffness 80 N m/rad and
 # damping 2 N m s/rad on every joint, action_scale 0.5, sim dt 0.005 s with
 # decimation 4. Joint names match robot_assets' ANYmal URDF (asset_anymal);
-# effort limits are that URDF's own (80 N m).
+# effort limits are that URDF's own (80 N m). Its flat config's reward
+# weights (orientation -5, torques -2.5e-5, feet_air_time 2) replace the
+# trainer's Go2-sized walk weights for this robot.
 ANYMAL_POSE = {'LF_HAA': 0.0, 'LH_HAA': 0.0, 'RF_HAA': -0.0, 'RH_HAA': -0.0,
                'LF_HFE': 0.4, 'LH_HFE': -0.4, 'RF_HFE': 0.4, 'RH_HFE': -0.4,
                'LF_KFE': -0.8, 'LH_KFE': 0.8, 'RF_KFE': -0.8, 'RH_KFE': 0.8}
@@ -31,7 +33,9 @@ TEMPLATES = {
                'dt 0.005, decimation 4); https://github.com/leggedrobotics/legged_gym',
         joints=['LF_HAA', 'LF_HFE', 'LF_KFE', 'RF_HAA', 'RF_HFE', 'RF_KFE',
                 'LH_HAA', 'LH_HFE', 'LH_KFE', 'RH_HAA', 'RH_HFE', 'RH_KFE'],
-        pose=ANYMAL_POSE, kp=80.0, kd=2.0, action_scale=0.5, effort=80.0, dt=0.005, decimation=4),
+        pose=ANYMAL_POSE, kp=80.0, kd=2.0, action_scale=0.5, effort=80.0, dt=0.005, decimation=4,
+        # legged_gym AnymalCFlatCfg.rewards.scales over its LeggedRobotCfg defaults.
+        walk_rewards=dict(orientation=-5.0, torques=-2.5e-5, feet_air_time=2.0)),
 }
 
 

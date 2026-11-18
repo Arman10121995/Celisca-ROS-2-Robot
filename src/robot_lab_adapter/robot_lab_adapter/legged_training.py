@@ -389,6 +389,13 @@ class LeggedTrainingEnv:
         self.mujoco = mujoco
         self.robot = robot
         self.task = TASKS[task]
+        # A template from a published configuration brings that configuration's
+        # reward weights for the walk tasks (legged_gym ANYmal: its 30 kg robot
+        # would otherwise drown in the Go2-sized torque penalty, 2026-11-18).
+        overrides = _TEMPLATES.get(robot, {}).get('walk_rewards')
+        if overrides and task == 'walk':
+            import dataclasses
+            self.task = dataclasses.replace(self.task, rewards=dict(self.task.rewards, **overrides))
         self.template = template_directory(robot)
         self.contract = PolicyContract.load(self.template)
         self.terrain, self.roughness, self.obs_noise = terrain, float(roughness), float(obs_noise)
