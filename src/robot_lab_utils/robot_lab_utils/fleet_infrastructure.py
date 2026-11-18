@@ -1,6 +1,9 @@
 #!/usr/bin/env python3
 """Physical facility feedback, RMF door/lift protocol and measured docking.
 
+A facility may have no lift (``lift`` absent): doors, docks and energy then
+work on one floor, ``L0``, and lift transport and recovery are refused.
+
 Battery energy is an authored estimate from actual reported motor power.
 Missing motor feedback makes it unknown; no nominal library SOC is published.
 """
@@ -31,6 +34,19 @@ import tf2_ros
 from nav2_msgs.srv import LoadMap, ClearEntireCostmap
 
 
+def facility_floors(config):
+    """Floor heights: the lift's floors, or one floor L0 without a lift."""
+    return dict(config['lift']['floors']) if config.get('lift') else {'L0': 0.}
+
+
+def in_lift_area(config, xyz):
+    """Whether a body is over the lift car's footprint ([x0, x1, y0, y1], lift.area)."""
+    if not config.get('lift'):
+        return False
+    x0, x1, y0, y1 = config['lift'].get('area', (2.8, 5.2, -1.2, 1.2))
+    return x0 <= xyz[0] <= x1 and y0 <= xyz[1] <= y1
+
+
 class Infrastructure(Node):
     def __init__(self,session):
         super().__init__('fleet_infrastructure');self.session=session;self.identity=Path(session['directory']).name
@@ -58,8 +74,8 @@ class Infrastructure(Node):
         self.floor_offsets={}
         self.floor_maps=session.get('floor_maps',self.config.get('floor_maps',{}));self.current_floor_map=''
         self.tf_broadcaster=tf2_ros.TransformBroadcaster(self)
-        self.floor_z={name:float(self.config['lift']['floors']['L0']) for m in session['members'] for name in [m['id']]}
-        joints=[v['joint'] for v in self.config['doors'].values()]+[self.config['lift']['joint']]
+        self.floor_z={name:float(facility_floors(self.config)['L0']) for m in session['members'] for name in [m['id']]}
+        joints=[v['joint'] for v in self.config['doors'].values()]+([self.config['lift']['joint']] if self.config.get('lift') else [])
         self.targets={name:self.create_publisher(Float64,'/facility/'+name+'/target',10) for name in joints}
         self.publisher=self.create_publisher(String,'/fleet/infrastructure/state',10);self.fleet_command=self.create_publisher(String,'/fleet/command',10)
         self.create_subscription(JointState,'/facility/joint_states',self.joints,10)
@@ -146,7 +162,7 @@ class Infrastructure(Node):
         self._observe_robot_floor(name, [p.x, p.y, p.z])
 
     def _observe_robot_floor(self,name,xyz):
-        floors=self.config['lift']['floors'];tolerance=float(self.config.get('robot_floor_tolerance_m',.75))
+        floors=facility_floors(self.config);tolerance=float(self.config.get('robot_floor_tolerance_m',.75))
         if name not in self.floor_offsets:
             initial=min(floors,key=lambda floor:abs(xyz[2]-floors[floor]))
             if abs(xyz[2]-floors[initial])>tolerance:return
@@ -155,7 +171,7 @@ class Infrastructure(Node):
         observed_height=xyz[2]-self.floor_offsets[name]
         floor=min(floors,key=lambda item:abs(observed_height-floors[item]))
         if abs(observed_height-floors[floor])>tolerance:return
-        if 2.8<=xyz[0]<=5.2 and -1.2<=xyz[1]<=1.2:
+        if in_lift_area(self.config,xyz):
             lift=self.config['lift'];position=self.positions.get(lift['joint'])
             rate=self.rates.get(lift['joint'],math.inf)
             if position is None or abs(rate)>=.01 or abs(position-floors[floor])>=self.config['lift'].get('level_tolerance_m',.03):return
@@ -172,8 +188,7 @@ class Infrastructure(Node):
         # A planar map observation model is invalid while the physical sensor
         # traverses floors. Keep the existing AMCL/wheel XY prior; never replace
         # it with body truth. Raw obstacle/Drive scans remain on the original topic.
-        x, y, _ = body['xyz']
-        if 2.8 <= x <= 5.2 and -1.2 <= y <= 1.2:
+        if in_lift_area(self.config, body['xyz']):
             lift = self.config['lift']
             position = self.positions.get(lift['joint'])
             if (position is None or abs(self.rates.get(lift['joint'], math.inf)) >= .01
@@ -549,7 +564,7 @@ class Infrastructure(Node):
             self.hold=False
 
     def request_lift(self,msg):
-        if msg.lift_name!=self.config['lift']['name']:return
+        if not self.config.get('lift') or msg.lift_name!=self.config['lift']['name']:return
         now=time.monotonic()
         if any(task.active and msg.session_id != task.prefix for task in self.transports.values()):return
         # RMF may stop repeating requests once an event succeeds. A live
@@ -612,6 +627,8 @@ class Infrastructure(Node):
                 if self.hold:
                     raise ValueError('Explicitly recover the held lift before manual facility commands')
                 self.doors[data['door']]=data['open'] is True;self.hold=False
+            elif op in ('transport', 'transport_queue', 'recover_lift', 'lift') and not self.config.get('lift'):
+                raise ValueError('This facility has no lift')
             elif op in ('transport', 'transport_queue'):
                 requests = [dict(robot=data['robot'], floor=data['floor'])] if op == 'transport' else data['requests']
                 self._admit_transports(requests, data['operator_id'], time.monotonic())
@@ -677,9 +694,9 @@ class Infrastructure(Node):
             self.hold=True
             self.outputs={joint:self.positions[joint] for joint in self.targets if joint in self.positions}
         if self.lift_gui and self.runtime and self.runtime.get('operator_id')==self.lift_owner and self.runtime.get('operator_fresh') and now-self.runtime_at<1:self.lift_at=now
-        lift=self.config['lift'];lift_position=self.positions.get(lift['joint']);door_rows={}
+        lift=self.config.get('lift');lift_position=self.positions.get(lift['joint']) if lift else None;door_rows={}
         level_open=False
-        if fresh and self.lift_request and not self.hold:
+        if lift and fresh and self.lift_request and not self.hold:
             requested=self.lift_request[0]
             tracking=float(lift.get('level_tolerance_m',.03))
             self.lift_open_floor,level_open=lift_door_admission(lift_position,
@@ -689,12 +706,14 @@ class Infrastructure(Node):
         if fresh:
             for name,door in self.config['doors'].items():
                 needed=self.doors[name] or bool(self.door_owners[name])
-                # Actual Nav2 paths request the physical corridor door open.
-                if name=='main':
-                    needed |= any(now-at<1. and any(abs(x)<1.5 and abs(y)<1. for x,y in points) for points,at in self.paths.values())
-                if name==lift['door'] and self.lift_request:
+                # Actual Nav2 paths through a door's path_zone ([x0, x1, y0,
+                # y1]) request the physical door open.
+                if door.get('path_zone'):
+                    x0,x1,y0,y1=door['path_zone']
+                    needed |= any(now-at<1. and any(x0<=x<=x1 and y0<=y<=y1 for x,y in points) for points,at in self.paths.values())
+                if lift and name==lift['door'] and self.lift_request:
                     floor,opened=self.lift_request;needed=opened and level_open
-                if name==lift['door'] and not any(abs(lift_position-z)<lift.get('level_tolerance_m',.03) for z in lift['floors'].values()):needed=False
+                if lift and name==lift['door'] and not any(abs(lift_position-z)<lift.get('level_tolerance_m',.03) for z in lift['floors'].values()):needed=False
                 if door.get('landing_floor'):
                     level=door['landing_floor']
                     needed=bool(self.lift_request and self.lift_request[0]==level and self.lift_request[1]
@@ -710,9 +729,10 @@ class Infrastructure(Node):
                 if self.rmf:
                     from rmf_door_msgs.msg import DoorState
                     msg=DoorState();msg.door_name=name;msg.door_time=self.get_clock().now().to_msg();msg.current_mode.value=mode;self.door_state.publish(msg)
-            target=self.lift_target(lift_position,door_rows,now)
-            previous=self.outputs.get(lift['joint'],lift_position)
-            if not self.hold:self.outputs[lift['joint']]=max(previous-.02,min(previous+.02,target))
+            if lift:
+                target=self.lift_target(lift_position,door_rows,now)
+                previous=self.outputs.get(lift['joint'],lift_position)
+                if not self.hold:self.outputs[lift['joint']]=max(previous-.02,min(previous+.02,target))
             for joint,value in self.outputs.items():self.targets[joint].publish(Float64(data=float(value)))
             for name,item in self.docking.items():
                 b=self.bodies.get(name);d=self.config['docks'][item['dock']]
@@ -721,21 +741,26 @@ class Infrastructure(Node):
                 item['docked']=bool(good and self.clock-item['settled']>=1.)
                 item['observation']=dict(b) if good else None
         energy = {name: model.state(now) for name, model in self.energy_models.items()}
-        current_floor=next((f for f,z in lift['floors'].items() if lift_position is not None and abs(z-lift_position)<.03),'')
-        if current_floor and abs(self.rates.get(lift['joint'],math.inf))<.01:self.current_floor_map=self.floor_maps.get(current_floor,'')
+        if lift:
+            current_floor=next((f for f,z in lift['floors'].items() if lift_position is not None and abs(z-lift_position)<.03),'')
+            settled=abs(self.rates.get(lift['joint'],math.inf))<.01
+        else:
+            current_floor,settled='L0',True
+        if current_floor and settled:self.current_floor_map=self.floor_maps.get(current_floor,'')
         if self.rmf:
             if not fresh:
                 from rmf_door_msgs.msg import DoorState
                 for name in self.doors:
                     door=DoorState();door.door_name=name;door.door_time=self.get_clock().now().to_msg();door.current_mode.value=3;self.door_state.publish(door)
+        if self.rmf and lift:
             from rmf_lift_msgs.msg import LiftState
             msg=LiftState();msg.lift_name=lift['name'];msg.lift_time=self.get_clock().now().to_msg();msg.available_floors=list(lift['floors']);msg.current_floor=current_floor;msg.destination_floor=self.lift_request[0] if self.lift_request else current_floor
             rate=self.rates.get(lift['joint']);relevant=[row['mode'] for name,row in door_rows.items() if name==lift['door'] or self.config['doors'][name].get('landing_floor')==current_floor]
             msg.door_state=2 if relevant and all(mode==2 for mode in relevant) else 0 if relevant and all(mode==0 for mode in relevant) else 1
             msg.motion_state=3 if rate is None or not fresh else 0 if abs(rate)<.01 else 1 if rate>0 else 2
             msg.current_mode=2 if fresh else 4;msg.available_modes=[2];msg.session_id=self.lift_owner;self.lift_state.publish(msg)
-        moving=(lift_position is not None and (not current_floor or self.lift_request and abs(lift_position-lift['floors'][self.lift_request[0]])>lift.get('level_tolerance_m',.03)))
-        held=[name for name,b in self.bodies.items() if moving and 2.8<=b['xyz'][0]<=5.2 and -1.2<=b['xyz'][1]<=1.2]
+        moving=bool(lift and lift_position is not None and (not current_floor or self.lift_request and abs(lift_position-lift['floors'][self.lift_request[0]])>lift.get('level_tolerance_m',.03)))
+        held=[name for name,b in self.bodies.items() if moving and in_lift_area(self.config,b['xyz'])]
         floors={name:self.energy[name]['floor'] for name in self.energy}
         for name,floor in floors.items():
             body=self.bodies.get(name)
@@ -749,7 +774,7 @@ class Infrastructure(Node):
             frame = member.get('map_frame', 'map')
             if frame == 'map':
                 continue
-            target_z = float(self.config['lift']['floors'].get(floors[name], 0.0))
+            target_z = float(facility_floors(self.config).get(floors[name], 0.0))
             self.floor_z[name] = target_z
             t = TransformStamped()
             t.header.stamp = self.get_clock().now().to_msg()
@@ -758,7 +783,7 @@ class Infrastructure(Node):
             t.transform.translation.z = target_z
             t.transform.rotation.w = 1.0
             self.tf_broadcaster.sendTransform(t)
-        self._transport_tick(now, fresh, current_floor if abs(self.rates.get(lift['joint'], math.inf)) < .01 else '', door_rows)
+        self._transport_tick(now, fresh, current_floor if settled else '', door_rows)
         self._recovery_tick(now, fresh, door_rows)
         if self.recovery and self.recovery['phase'] == 'recovering':
             held = sorted(set(held) | set(self.recovery['passengers']))
@@ -774,7 +799,8 @@ class Infrastructure(Node):
                    bodies={name:now-body['at'] for name,body in self.bodies.items()}),
                    lift=dict(position_m=lift_position,command_m=self.outputs.get(lift['joint'],lift_position),
                              current_floor=current_floor,destination=self.lift_request,floors=list(lift['floors']),
-                             door_admitted_floor=self.lift_open_floor),
+                             door_admitted_floor=self.lift_open_floor) if lift else None,
+               floors=list(facility_floors(self.config)),
                docks=self.config['docks'],docking=self.docking,energy=energy,robot_floors=floors,
                transports={name: task.state() for name, task in self.transports.items()},
                reservations=reservations, transport_queue=self.transport_queue.state(), lift_recovery=self.recovery,

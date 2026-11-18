@@ -66,7 +66,7 @@ class InfrastructureControls(ScrollPanel):
         try:
             value=json.loads(msg.data)
             if not self.fleet.runtime or value['session_id']!=self.fleet.runtime['session_id']:return
-            self.runtime=value;self.at=time.monotonic();self.doors.configure(values=list(value['doors']));self.floors.configure(values=value['lift']['floors']);self.docks.configure(values=list(value['docks']))
+            self.runtime=value;self.at=time.monotonic();self.doors.configure(values=list(value['doors']));self.floors.configure(values=value.get('floors') or (value.get('lift') or {}).get('floors', []));self.docks.configure(values=list(value['docks']))
             self.recover_button.configure(state='normal' if value.get('ready') and value.get('operator_hold') else 'disabled')
             queue=value.get('transport_queue',{})
             rows=([queue['active']] if queue.get('active') else [])+queue.get('pending',[])
@@ -77,7 +77,8 @@ class InfrastructureControls(ScrollPanel):
             self.status.set('Facility request rejected: '+value['last_rejection'] if value.get('last_rejection') else 'Physical infrastructure ready' if value['ready'] else 'Infrastructure feedback stale; no arrival claim')
             lines=[f"Door {n}: {v['position_m']:.2f}/{v['command_m']:.2f} m, mode {v['mode']}"
                    for n,v in value['doors'].items()]
-            lines.append(f"Lift: {value['lift']} (operator hold: {value.get('operator_hold', False)})")
+            lines.append(f"Lift: {value['lift']} (operator hold: {value.get('operator_hold', False)})" if value.get('lift')
+                         else f"No lift (operator hold: {value.get('operator_hold', False)})")
             if queue.get('wait_timeout_s') is not None:
                 lines.append(f"Queued stops expire after {queue['wait_timeout_s']:g} wall seconds; Stop or lease/feedback loss cancels them.")
             if value.get('rmf_protocol'):

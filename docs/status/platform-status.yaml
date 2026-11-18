@@ -1615,6 +1615,7 @@ tasks:
           full_scope_acceptance: partial
         updated: '2026-11-02'
       R10.2:
+        fleet_ward_no_lift_20261118: 'Claude: implemented, experimental. fleet_infrastructure lift optional (one floor L0; lift commands refused; lift.area and door path_zone in configuration, fleet_facility unchanged). New world fleet_ward (scripts/generate_fleet_ward.py): two rooms, fleet_facility main-door design, west/east chargers. Gazebo Nav2 Bumperbot+Labbot: simultaneous door crossing (alpha held for door:ward, closest 1.05 m, no contact), then dock 21.6 s and modeled charge 0.7988 -> 0.8047 in 10 s; run 3 passed, run 1 (old energy certificates) and run 2 (probe verdict bug) kept. Energy source certificates re-bound to the gz_ros2_control 0.7.21 readback library after a source-bound readback case (835/832 complete samples); rmf_mechanical fits not refit. docs/status/evidence/r102-fleet-ward-2026-11-18/README.md'
         acceptance_ref: ROADMAP.md R10.2
         active_scope: Physical facility and observed floor-map transitions; source/runtime-bound energy; separate
           floor/AMCL frames; actual main-door RMF crossing and independently settled docking. Native autonomous

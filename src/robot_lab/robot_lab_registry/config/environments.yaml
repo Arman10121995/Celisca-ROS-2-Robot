@@ -149,6 +149,31 @@
   - experimental
   version: 0.1.0
   world_file: robot_lab_maps/maps/fleet_facility/worlds/fleet_facility.world
+- id: fleet_ward
+  name: Fleet ward (door, chargers)
+  dimension: 3D
+  dynamics:
+    dynamic_obstacles: true
+    static_obstacles: true
+  ground_truth_available: true
+  ros_package: robot_lab_maps
+  simulator: gazebo
+  simulators:
+  - gazebo
+  source:
+    license: Apache-2.0
+    repository: internal
+  status: available
+  supported_robot_classes:
+  - mobile
+  tags:
+  - fleet
+  - doors
+  - dock
+  - modeled_energy
+  - experimental
+  version: 0.1.0
+  world_file: robot_lab_maps/maps/fleet_ward/worlds/fleet_ward.world
 - id: amphibious_shore
   name: Amphibious shore
   dimension: 3D

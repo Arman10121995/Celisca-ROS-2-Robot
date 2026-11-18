@@ -14,6 +14,11 @@ doors:
       - 0.0
     - - 1.2
       - 0.0
+    path_zone:
+    - -1.5
+    - 1.5
+    - -1.0
+    - 1.0
   lift:
     joint: door_lift
     closed: 0.0
@@ -55,6 +60,11 @@ lift:
     L1: 3.0
   level_tolerance_m: 0.003
   door_admission_tolerance_m: 0.0001
+  area:
+  - 2.8
+  - 5.2
+  - -1.2
+  - 1.2
 floor_maps:
   L0: maps/fleet_facility/maps/map.yaml
   L1: maps/fleet_facility/maps/map_L1.yaml
@@ -80,8 +90,8 @@ energy:
     bumperbot:
       source_description_sha256: 721fe2146a80864e5f7e39108117aeb409cc926668997551a92e12276a8324a5
       runtime_library: /opt/ros/humble/lib/libgz_hardware_plugins.so
-      runtime_library_sha256: 90e9edfa0e8393f3829dcfc9c0559be94ba1408a7670b4c42dfcfaa0dd1077bd
-      evidence: docs/status/evidence/fleet-energy-2026-11-02/README.md
+      runtime_library_sha256: d54e2d9d8fdbfd074f107f52cfc0ae95864e62f7f61d735c39c26fa1c26cacb5
+      evidence: docs/status/evidence/r102-fleet-ward-2026-11-18/README.md
       rmf_mechanical:
         mass: 0.001
         inertia: 0.0332837
@@ -91,8 +101,8 @@ energy:
     labbot:
       source_description_sha256: 05317bc229f5e6e4af594b5626c4f8c4839f8b02726e645520649dd9a76ea95d
       runtime_library: /opt/ros/humble/lib/libgz_hardware_plugins.so
-      runtime_library_sha256: 90e9edfa0e8393f3829dcfc9c0559be94ba1408a7670b4c42dfcfaa0dd1077bd
-      evidence: docs/status/evidence/fleet-energy-2026-11-02/README.md
+      runtime_library_sha256: d54e2d9d8fdbfd074f107f52cfc0ae95864e62f7f61d735c39c26fa1c26cacb5
+      evidence: docs/status/evidence/r102-fleet-ward-2026-11-18/README.md
       rmf_mechanical:
         mass: 0.001
         inertia: 1.02113

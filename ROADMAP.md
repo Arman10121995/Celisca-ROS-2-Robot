@@ -136,7 +136,7 @@ Work top to bottom. Each line links to its task.
 | I6 | [R5.9](#r59--mobile-manipulators) Mobile manipulation | Done-when met 11-17: TIAGo GUI fetch (drive, pick, carry, place) on MuJoCo and PyBullet with stability traces and a base/arm interlock probe. 11-17: Nav2 transit legs with AMCL (Nav mode) pass on MuJoCo 2/2 and PyBullet 1/1. 11-18: grasp planned from the head RGB-D camera (`pose_source: rgbd`, estimate error 1.5 / 5.1 mm) passes on MuJoCo and PyBullet. Remaining: general (non-box) perception, Isaac grasp, Stretch pipeline missions | partial |
 | I7 | [R5.7](#r57--manipulators-and-motion-planning) Arms | Done-when met 11-17: URDF Panda GUI pick → place on PyBullet and MuJoCo (one run each). Native Panda box tasks on MuJoCo. 11-17: URDF Panda pick and place also passes on Isaac and Gazebo (all four backends); UR5/UR10/YuMi joint control on Gazebo. Remaining: compound geometry, perception, other coupled mechanisms | partial |
 | I8 | [R5.8](#r58--robot-hands-and-grippers) Hands | 11-17: normal GUI grasp → lift 5 cm → hold → return → supported release passes for Robotiq 2F-85 (both variants, support stage) and UMI (source axis); parallel-jaw measured in R5.7/R5.9. DEX-EE (dexterous) not passed: needs grasp synthesis; other backends remain | partial |
-| I9 | [R10.2](#r102--fleet-management-and-open-rmf) Fleet / Open-RMF | Done 2026-11-14: shared-zone reservations (map passages, doors, docks), cycle breaker, recovery drive-out, RMF energy from a drivetrain calibration; two crossing runs pass (native and RMF). Chargers/doors in other worlds, larger fleets remain | implemented |
+| I9 | [R10.2](#r102--fleet-management-and-open-rmf) Fleet / Open-RMF | Done 2026-11-14: shared-zone reservations (map passages, doors, docks), cycle breaker, recovery drive-out, RMF energy from a drivetrain calibration; two crossing runs pass (native and RMF). 11-18: doors, docks and energy without a lift (`fleet_ward`: door crossing, docking and charging pass). Larger fleets are V7 | implemented |
 | I10 | [R10.3](#r103--swarm-robotics) Swarms | Done 2026-11-14: ROS2swarm port of per-member scan-only behaviours, scan-sensed cooperative coverage, ground/air member-loss replanning; dispersion and coverage-with-loss measured; aggregation not yet passing; 3–4 drone flight is validation | implemented |
 | I11 | [R10.5](#r105--underwater-worlds-sensing-slam-and-navigation) / [R10.4](#r104--underwater-robots-and-controllers) Marine | Done 2026-11-14: MuJoCo ROV plant (ported Fortress water forces; matches Gazebo), damping-based current feedforward (1 cm drift in 0.1 m/s), volumetric and current-aware AUV routes (unit-tested). PyBullet/Isaac marine, AUV sensor-only localization mission remain | implemented |
 | I12 | [R10.6](#r106--six--and-eight-legged-robots) / [R10.7](#r107--segmented-and-additional-robot-forms) Multi-leg and forms | Done 2026-11-14: depth/IMU flipper policy (sequences a step, but the 4 Nm flippers cannot climb 0.18 m: measured), bounded gait slip/support recovery (unit-tested). Stronger flippers, other backends, per-model terrain missions remain | implemented |
@@ -1002,7 +1002,7 @@ parking batch needs its own run. Details and evidence are in the
 
 ### R10.2 — Fleet management and Open-RMF
 
-- **State:** implemented, experimental (one remaining item) · **Priority:** I9 · **Depends on:** R10.1
+- **State:** implemented, experimental · **Priority:** I9 · **Depends on:** R10.1
 - **Goal:** missions are dispatched to a fleet and coordinated at shared
   places (corridors, doors, lifts, chargers).
 - **Have:**
@@ -1022,9 +1022,18 @@ parking batch needs its own run. Details and evidence are in the
   - measured: native and RMF two-robot door crossings, Bumperbot/Labbot
     calibrations (6 % / 15 % held-out).
     [Evidence](docs/status/evidence/fleet-zones-energy-2026-11-14/README.md).
-- **Remaining implementation:**
-  - chargers and doors (physical docking and energy) in worlds other than
-    `fleet_facility`; the infrastructure node still requires a lift.
+- **Done 2026-11-18 (implemented, experimental): doors, chargers and energy
+  without a lift.** The infrastructure node takes an optional `lift` (one
+  floor `L0` without it; lift commands refused), with the lift footprint and
+  door path zones in configuration. New world `fleet_ward`: two rooms, one
+  physical sliding door, two chargers. Bumperbot and Labbot cross the door
+  at once (the door reservation holds one, closest approach 1.05 m, no
+  contact), then dock and charge (0.7988 → 0.8047 modeled fraction in 10 s).
+  The energy certificates were re-bound after a system update changed the
+  readback library (new readback case passes).
+  [Receipt](docs/status/evidence/r102-fleet-ward-2026-11-18/README.md).
+- **Remaining implementation:** none known; larger fleets and RMF in other
+  worlds are validation (V7).
 - **How to do it:** extend `fleet_controller.py`, `fleet_transport_queue.py`,
   `fleet_lift_recovery.py` and `fleet_rmf_adapter.py`. Keep reservations and
   observation gates; never move a robot by bypassing them. Batch runs:

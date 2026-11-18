@@ -452,7 +452,7 @@ def prepare_session(session_file, map_override='', navigation=False, runtime_roo
     if infrastructure_file:
         data=yaml.safe_load(Path(infrastructure_file).read_text())
         bridges.append(dict(ros_topic_name='/facility/joint_states',gz_topic_name='/facility/joint_states',ros_type_name='sensor_msgs/msg/JointState',gz_type_name='gz.msgs.Model',direction='GZ_TO_ROS'))
-        for joint in [v['joint'] for v in data['doors'].values()]+[data['lift']['joint']]:
+        for joint in [v['joint'] for v in data['doors'].values()]+([data['lift']['joint']] if data.get('lift') else []):
             topic='/facility/'+joint+'/target'
             bridges.append(dict(ros_topic_name=topic,gz_topic_name=topic,ros_type_name='std_msgs/msg/Float64',gz_type_name='gz.msgs.Double',direction='ROS_TO_GZ'))
     bridge_file.write_text(yaml.safe_dump(bridges))

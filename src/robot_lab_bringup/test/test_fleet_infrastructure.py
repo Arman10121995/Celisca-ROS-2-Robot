@@ -418,3 +418,41 @@ def test_lift_keeps_its_commanded_height_after_session_requests_stop(tmp_path):
     node.lift_request = ('L1', True)
     assert Infrastructure.lift_target(node, .002, {'lift': {'mode': 2}}, 10.) == .002
     assert Infrastructure.lift_target(node, .002, {'lift': {'mode': 0}}, 10.) == 3.
+
+
+def _no_lift_session(tmp_path):
+    session = _make_session(tmp_path)
+    config = yaml.safe_load(Path(session['infrastructure_file']).read_text())
+    del config['lift']
+    del config['doors']['lift']
+    config['floor_maps'] = {'L0': config['floor_maps']['L0']}
+    config['doors']['main']['path_zone'] = [-1.5, 1.5, -1.0, 1.0]
+    Path(session['infrastructure_file']).write_text(yaml.safe_dump(config))
+    return session
+
+
+def test_a_facility_without_a_lift_has_one_floor_and_no_lift_area(tmp_path):
+    from robot_lab_utils.fleet_infrastructure import facility_floors, in_lift_area
+    node = _make_node(_no_lift_session(tmp_path))
+    assert facility_floors(node.config) == {'L0': 0.0}
+    assert not in_lift_area(node.config, [4.0, 0.0, 0.0])
+    Infrastructure.body(node, 'alpha', _body_state(4.0, 0.0, 0.1, 1000.0))
+    assert node.energy['alpha']['floor'] == 'L0'
+    (tmp_path / 'lift').mkdir()
+    with_lift = _make_node(_make_session(tmp_path / 'lift'))
+    assert in_lift_area(with_lift.config, [4.0, 0.0, 0.0])          # the facility's default car footprint
+
+
+def test_a_facility_without_a_lift_refuses_lift_commands(tmp_path):
+    import json
+    import time
+    node = _make_node(_no_lift_session(tmp_path))
+    node.runtime = dict(operator_id='op', operator_fresh=True, members=[])
+    node.runtime_at = time.monotonic()
+    node.last_rejection = ''
+    node.get_logger = lambda: SimpleNamespace(warning=lambda text: None)
+    for op in (dict(op='transport', robot='alpha', floor='L0'), dict(op='lift', floor='L0'),
+               dict(op='recover_lift', floor='L0')):
+        Infrastructure.command(node, SimpleNamespace(data=json.dumps(dict(session_id='sess', operator_id='op', **op))))
+        assert node.last_rejection == 'This facility has no lift'
+    assert Infrastructure.request_lift(node, SimpleNamespace(lift_name='facility_lift')) is None
