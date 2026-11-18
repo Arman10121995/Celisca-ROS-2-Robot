@@ -39,12 +39,15 @@ def _template(robot):
     if robot == 'berkeley_humanoid_lite_sim':     # generated from the vendored upstream config
         from robot_lab_adapter.bhl_training import write_template
         return write_template()
+    from robot_lab_adapter.legged_templates import TEMPLATES, write_template as write_robot_template
+    if robot in TEMPLATES:                        # generated from a published open-source config
+        return write_robot_template(robot)
     return POLICY_ROOT / TRAINABLE[robot]
 
 
 def test_trainable_robots_and_their_contracts():
     assert set(TRAINABLE) == {'unitree_a1', 'unitree_b2', 'unitree_go2', 'unitree_go2w', 'unitree_g1_29dof',
-                              'berkeley_humanoid_lite_sim'}
+                              'berkeley_humanoid_lite_sim', 'asset_anymal'}
     for robot, name in TRAINABLE.items():
         contract = PolicyContract.load(_template(robot))
         # A deployed template may now use history (the current Go2 export
@@ -411,3 +414,14 @@ def test_humanoid_walk_biped_terms_on_the_bhl_model():
     assert terms['feet_slide'] == pytest.approx(-0.1 * 0.5 * env.dt / 3)
     obs, reward, done, info = env.step(np.zeros((3, env.act_dim)))
     assert np.all(np.isfinite(obs)) and np.all(np.isfinite(reward))
+
+
+def test_anymal_template_is_the_legged_gym_contract(tmp_path):
+    """robot_assets ANYmal trains in the legged_gym ANYmal C template (R3.6/R12, 2026-11-18)."""
+    from robot_lab_adapter.legged_policy import PolicyContract
+    from robot_lab_adapter.legged_templates import ANYMAL_POSE, write_template
+    contract = PolicyContract.load(write_template('asset_anymal', tmp_path / 'lab_anymal'))
+    assert contract.source['profile'] == 'asset_anymal' and contract.num_dofs == 12
+    assert abs(contract.policy_period - 0.02) < 1e-9
+    assert dict(zip(contract.training_joint_names(), contract.default_dof_pos.tolist())) == ANYMAL_POSE
+    assert set(contract.rl_kp.tolist()) == {80.0} and set(contract.rl_kd.tolist()) == {2.0}

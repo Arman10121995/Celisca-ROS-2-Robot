@@ -321,3 +321,10 @@ robots:
         rightPinkyPitch2: {mode: position, lower: 0.0, upper: 1.658, effort: 10.0, max_velocity: 0.35, kp: 400.0, kd: 25.298221}
         rightPinkyPitch3: {mode: position, lower: 0.0, upper: 1.92, effort: 10.0, max_velocity: 0.35, kp: 400.0, kd: 25.298221}
       couplings: {}
+
+  # R3.6/R12 (2026-11-18): robot_assets ANYmal walks with a policy trained in
+  # the legged_gym ANYmal C template (robot_lab_adapter/legged_templates.py).
+  # Loc runs the policy (legged_policy:=<dir>); experimental until screened.
+  asset_anymal:
+    experimental_modes_by_simulator:
+      mujoco: [display, loc]

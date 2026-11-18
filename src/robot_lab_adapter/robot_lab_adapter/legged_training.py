@@ -62,6 +62,24 @@ TRAINABLE = {profile: name for name, profile in POLICY_PROFILES.items()
 # upstream config (bhl_training.write_template), not a provisioned policy.
 TRAINABLE['berkeley_humanoid_lite_sim'] = 'bhl_policy_humanoid'
 
+# Robots without a provisioned policy train in a template from a published
+# open-source configuration (legged_templates; ANYmal from legged_gym).
+from .legged_templates import TEMPLATES as _TEMPLATES  # noqa: E402
+TRAINABLE.update({profile: spec['name'] for profile, spec in _TEMPLATES.items()})
+
+
+def robot_profiles():
+    """Robot profiles: robots.yaml plus installed external assets (asset_*)."""
+    import yaml
+    from ament_index_python.packages import get_package_share_directory
+    data = yaml.safe_load(open(os.path.join(get_package_share_directory('robot_lab_robots'), 'config', 'robots.yaml')))
+    try:
+        from robot_lab_utils.installed_assets import merge_installed_profiles
+        data = merge_installed_profiles(data, 'robots')
+    except ImportError:
+        pass
+    return data['robots']
+
 # Leaf bodies with these names are the feet (the Go2W wheels, the G1 ankle
 # roll links); without any, the leaf bodies with a collision sphere are.
 FOOT_NAME = re.compile(r'foot$|ankle', re.IGNORECASE)
@@ -217,6 +235,9 @@ def template_directory(robot):
     if name == 'bhl_policy_humanoid':
         from .bhl_training import write_template
         return str(write_template())
+    if robot in _TEMPLATES:
+        from .legged_templates import write_template as write_robot_template
+        return str(write_robot_template(robot))
     return os.path.join(get_package_share_directory('robot_lab_adapter'), 'policies', 'rl_sar', name)
 
 
@@ -234,9 +255,7 @@ def build_model_xml(robot, contract, armature=0.01, terrain='flat', roughness=0.
     from ament_index_python.packages import get_package_share_directory
     from robot_lab_mujoco.joint_pd import JointPDCommand
     from robot_lab_mujoco.mujoco_spawner import _build_mjcf_from_urdf, _xacro_to_urdf
-    profiles = yaml.safe_load(open(os.path.join(
-        get_package_share_directory('robot_lab_robots'), 'config', 'robots.yaml')))['robots']
-    profile = profiles[robot]
+    profile = robot_profiles()[robot]
     urdf = _xacro_to_urdf(os.path.join(get_package_share_directory(profile['package']), profile['xacro']))
     mjcf = _build_mjcf_from_urdf(urdf, _package_map(urdf), robot_name=robot)
     if 'fallback_robot' in mjcf:
