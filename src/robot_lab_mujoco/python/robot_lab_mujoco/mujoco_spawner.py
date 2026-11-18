@@ -46,7 +46,7 @@ from geometry_msgs.msg import Point, Quaternion, TransformStamped, Twist, Vector
 from nav_msgs.msg import Odometry
 from rosgraph_msgs.msg import Clock as RosClock
 from sensor_msgs.msg import CameraInfo, Image, Imu, JointState, LaserScan
-from std_msgs.msg import Bool, Float64MultiArray, String
+from std_msgs.msg import Bool, Float32MultiArray, Float64MultiArray, String
 from std_srvs.srv import Trigger
 
 from robot_lab_utils import camera_model
@@ -1256,6 +1256,31 @@ from robot_lab_mujoco.world_collision import RANGE_SENSOR_GEOMGROUP as _RANGE_GR
 _RANGE_GEOMGROUP = np.array(_RANGE_GROUPS, dtype=np.uint8)
 
 
+def height_scan(model, data, points_xy, top_z, robot_root):
+    """Terrain height (m) under each world xy point, by vertical rays from top_z.
+
+    A ray that meets the robot itself (a foot under a scan point) is cast
+    again from just below the hit. Points over nothing read -1e3 m.
+    """
+    geom = np.zeros(1, dtype=np.int32)
+    heights = np.empty(len(points_xy))
+    down = np.array([0.0, 0.0, -1.0])
+    for index, (x, y) in enumerate(points_xy):
+        start = np.array([x, y, top_z])
+        height = -1e3
+        for _ in range(4):
+            distance = mujoco.mj_ray(model, data, start, down, _RANGE_GEOMGROUP, 1, -1, geom)
+            if distance < 0:
+                break
+            hit = start[2] - distance
+            if model.body_rootid[model.geom_bodyid[geom[0]]] != robot_root:
+                height = hit
+                break
+            start = np.array([x, y, hit - 1e-4])
+        heights[index] = height
+    return heights
+
+
 def _ray_skipping_robot(model, data, origin, direction, robot_root, max_range,
                         geomid):
     """Distance along a ray to the first geom not belonging to the robot.
@@ -1474,6 +1499,9 @@ class MuJoCoSpawner(Node):
         # Per-joint PD targets applied in the physics step (JSON, see
         # robot_lab_mujoco.joint_pd); used by learned legged policies.
         self.declare_parameter("joint_pd_config", "")
+        # A policy observing terrain heights (legged_policy.HEIGHT_SCAN, JSON):
+        # publish the base's height above the terrain at its scan points.
+        self.declare_parameter("height_scan", "")
         self.declare_parameter('gait_probe_config','')
         self.declare_parameter("pd_joint_armature", 0.01)
         self.declare_parameter("gait_contact_config", "")
@@ -1537,6 +1565,7 @@ class MuJoCoSpawner(Node):
         self._go2_trunk_ids = []
         self._go2_support_ids = []
         self._go2_contact_pub = None
+        self._height_scan_pub = None
         self._gait_contacts = self._gait_contact_pub = None
         self._go2_trunk_pub = None
         self._go2_support_pub = None
@@ -1934,6 +1963,13 @@ class MuJoCoSpawner(Node):
                 raise ValueError('Compiled robot mass %.9f kg differs from source %.9f kg' % (actual_mass,expected_mass))
             self.get_logger().info('Compiled robot mass %.9f kg matches source contract' % actual_mass)
         self._apply_wheel_timestep(physics_timestep)
+        scan_spec = self.get_parameter("height_scan").value
+        if scan_spec:
+            from robot_lab_adapter.legged_policy import HEIGHT_SCAN_TOPIC
+            self._height_scan_spec = json.loads(scan_spec)
+            self._height_scan_root = int(self._model.body_rootid[self._body_id])
+            self._height_scan_pub = self.create_publisher(Float32MultiArray, HEIGHT_SCAN_TOPIC, 10)
+            self.get_logger().info('Height scan on %s for the policy' % HEIGHT_SCAN_TOPIC)
         if self.get_parameter("robot_name").value == "unitree_go2":
             self._go2_foot_ids = [mujoco.mj_name2id(
                 self._model, mujoco.mjtObj.mjOBJ_GEOM,
@@ -2429,6 +2465,8 @@ class MuJoCoSpawner(Node):
                     self._go2_support_pub.publish(support)
                 self._pub_odom()
                 self._pub_imu()
+                if self._height_scan_pub is not None:
+                    self._pub_height_scan()
                 if (getattr(self, '_free_bodies_pub', None) is not None
                         and sim_time - getattr(self, '_free_bodies_t', -1.0) + 1e-9 >= 0.1):
                     self._free_bodies_t = sim_time
@@ -2784,6 +2822,15 @@ class MuJoCoSpawner(Node):
         m.twist.twist.linear = Vector3(x=self._blin[0], y=self._blin[1], z=self._blin[2])
         m.twist.twist.angular = Vector3(x=self._bang[0], y=self._bang[1], z=self._bang[2])
         self._odom_pub.publish(m)
+
+    def _pub_height_scan(self):
+        """Base height above the terrain at the policy's scan points (legged_policy.HEIGHT_SCAN)."""
+        from robot_lab_adapter.legged_policy import height_scan_world
+        x, y, z, w = self._born
+        yaw = math.atan2(2 * (w * z + x * y), 1 - 2 * (y * y + z * z))
+        points = height_scan_world(self._bpos[:2], yaw, self._height_scan_spec)
+        ground = height_scan(self._model, self._data, points, self._bpos[2] + 1.0, self._height_scan_root)
+        self._height_scan_pub.publish(Float32MultiArray(data=[float(v) for v in self._bpos[2] - ground]))
 
     def _pub_imu(self):
         m = Imu()

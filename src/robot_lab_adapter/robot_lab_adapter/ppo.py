@@ -218,10 +218,25 @@ class PPO:
         torch.save(dict(model=self.model.state_dict(), optimizer=self.optimizer.state_dict(),
                         lr=self.lr, **extra), path)
 
-    def load(self, path):
+    def load(self, path, widen=False):
+        """Resume a checkpoint. ``widen``: a checkpoint with fewer inputs gets
+        zero weights (and an identity normaliser) on the new, trailing ones,
+        so it acts as before; its optimizer state is then dropped."""
         data = torch.load(path, map_location=self.device, weights_only=False)
-        self.model.load_state_dict(data['model'])
-        if 'optimizer' in data:
+        state = data['model']
+        width = int(self.model.norm.mean.shape[0])
+        old = int(state['norm.mean'].shape[0])
+        widened = widen and old < width
+        if widened:
+            state = dict(state)
+            pad = width - old
+            state['norm.mean'] = torch.cat([state['norm.mean'], torch.zeros(pad, dtype=state['norm.mean'].dtype)])
+            state['norm.var'] = torch.cat([state['norm.var'], torch.ones(pad, dtype=state['norm.var'].dtype)])
+            for key in ('actor.0.weight', 'critic.0.weight'):
+                weight = state[key]
+                state[key] = torch.cat([weight, torch.zeros(weight.shape[0], pad, dtype=weight.dtype)], dim=1)
+        self.model.load_state_dict(state)
+        if 'optimizer' in data and not widened:
             self.optimizer.load_state_dict(data['optimizer'])
         self.lr = float(data.get('lr', self.lr))
         return data

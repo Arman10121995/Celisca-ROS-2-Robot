@@ -47,7 +47,8 @@ from typing import Dict, List, Optional
 
 import numpy as np
 
-from .legged_policy import POLICY_PROFILES, PolicyContract, default_policy_for, mujoco_pd_config
+from .legged_policy import (HEIGHT_SCAN, POLICY_PROFILES, PolicyContract, default_policy_for, height_scan_points,
+                            height_scan_term, height_scan_world, mujoco_pd_config)
 
 # Robots with a provisioned template policy that this trainer supports: the
 # quadrupeds, the wheel-legged Go2W (wheel joints take velocity targets, as
@@ -174,7 +175,7 @@ class Randomization:
 
 
 # legged_gym's noise_scales, multiplied by the contract's observation scales.
-OBS_NOISE = dict(ang_vel=0.2, gravity_vec=0.05, dof_pos=0.01, dof_vel=1.5)
+OBS_NOISE = dict(ang_vel=0.2, gravity_vec=0.05, dof_pos=0.01, dof_vel=1.5, height_scan=0.1)
 
 TERRAIN_HALF_SIZE_M = 25.0
 TERRAIN_RESOLUTION_M = 0.1
@@ -389,7 +390,8 @@ class LeggedTrainingEnv:
 
     def __init__(self, robot, task='walk', num_envs=256, seed=0, threads=None, episode_s=20.0,
                  model_xml=None, randomization: Optional[Randomization] = None, terrain='flat',
-                 roughness=0.03, obs_noise=0.0, latency_s=0.0):
+                 roughness=0.03, obs_noise=0.0, latency_s=0.0, height_scan=False,
+                 riser_start=RISER_START_FRACTION):
         import mujoco
         self.mujoco = mujoco
         self.robot = robot
@@ -466,7 +468,12 @@ class LeggedTrainingEnv:
         # (upstream BHL joint_deviation_* terms: hip yaw/roll, ankle roll, arms).
         self.deviation_joints = np.array([bool(DEVIATION_JOINT.search(name))
                                           for name in c.training_joint_names()])
-        self.obs_dim = 3 + 3 + 3 + 3 * c.num_dofs
+        # Terrain heights around the base (legged_gym's height measurements),
+        # appended after the blind terms so a blind policy can be widened.
+        self.height_scan = bool(height_scan)
+        self.riser_start = float(riser_start)
+        self.scan_points = len(height_scan_points()) if self.height_scan else 0
+        self.obs_dim = 3 + 3 + 3 + 3 * c.num_dofs + self.scan_points
         self.act_dim = c.num_dofs
         n = self.num_envs
         self.state = np.zeros((n, self.state_size))
@@ -579,7 +586,7 @@ class LeggedTrainingEnv:
             mujoco.mj_resetData(model, data)
             yaw = self.rng.uniform(-math.pi, math.pi)
             data.qpos[0:3] = (0.0, 0.0, self.spawn_height + 0.02)
-            if self.terrain == 'stairs' and self.rng.random() < RISER_START_FRACTION:
+            if self.terrain == 'stairs' and self.rng.random() < self.riser_start:
                 # Before riser k on one of the four sides of the square pyramid.
                 k = int(self.rng.integers(0, STAIR_STEPS))
                 side = int(self.rng.integers(4)) * math.pi / 2
@@ -674,8 +681,27 @@ class LeggedTrainingEnv:
                       OBS_NOISE['dof_pos'] * c.dof_pos_scale, OBS_NOISE['dof_vel'] * c.dof_vel_scale, 0.0)
             terms = [term + self.obs_noise * scale * self.rng.uniform(-1.0, 1.0, term.shape)
                      for term, scale in zip(terms, scales)]
+        if self.height_scan:
+            terms.append(self.scan_observation(qpos))
         obs = np.concatenate(terms, axis=1)
         return np.clip(obs, -c.clip_obs, c.clip_obs).astype(np.float32)
+
+    def scan_heights(self, qpos):
+        """Base height above the terrain at each scan point, per environment (m)."""
+        quat = qpos[:, 3:7]
+        yaw = np.arctan2(2 * (quat[:, 0] * quat[:, 3] + quat[:, 1] * quat[:, 2]),
+                         1 - 2 * (quat[:, 2] ** 2 + quat[:, 3] ** 2))
+        points = height_scan_world(qpos[:, :2], yaw)
+        ground = self.terrain_height(points.reshape(-1, 2)).reshape(len(qpos), -1)
+        return qpos[:, 2:3] - ground
+
+    def scan_observation(self, qpos):
+        """The height_scan term for every environment (HEIGHT_SCAN)."""
+        term = height_scan_term(self.scan_heights(qpos))
+        if self.obs_noise > 0:
+            noise = self.obs_noise * OBS_NOISE['height_scan'] * HEIGHT_SCAN['scale']
+            term = term + noise * self.rng.uniform(-1.0, 1.0, term.shape)
+        return term
 
     # --- step ---------------------------------------------------------------
     def step(self, actions):
@@ -816,13 +842,15 @@ class LeggedTrainingEnv:
         return np.clip(torque, -c.torque_limits, c.torque_limits)
 
 
-def policy_config(contract, robot_key, variant):
+def policy_config(contract, robot_key, variant, height_scan=False):
     """config.yaml section (rl_sar layout) for a policy trained here."""
     c = contract
     vec = lambda values: [float(v) for v in values]  # noqa: E731
+    scan = dict(height_scan=dict(HEIGHT_SCAN)) if height_scan else {}
     return {robot_key + '/' + variant: dict(
-        model_name='policy.onnx', num_observations=3 + 3 + 3 + 3 * c.num_dofs,
-        observations=list(OBSERVATIONS), observations_history=[],
+        model_name='policy.onnx',
+        num_observations=3 + 3 + 3 + 3 * c.num_dofs + (len(height_scan_points()) if height_scan else 0),
+        observations=list(OBSERVATIONS) + (['height_scan'] if height_scan else []), **scan, observations_history=[],
         observations_history_priority='time', default_commands=[0.0, 0.0, 0.0],
         clip_obs=float(c.clip_obs), clip_actions_lower=vec(c.clip_actions_lower),
         clip_actions_upper=vec(c.clip_actions_upper), rl_kp=vec(c.rl_kp), rl_kd=vec(c.rl_kd),

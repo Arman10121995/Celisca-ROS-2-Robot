@@ -123,6 +123,9 @@ class LeggedPolicyController(Node):
         self.command, self.command_time = [0.0, 0.0, 0.0], None
         self.joints, self.joint_time = None, None
         self.imu, self.imu_time = None, None
+        # Terrain heights around the base, for policies that observe them
+        # (the simulator's height-scan publisher; see legged_policy.HEIGHT_SCAN).
+        self.scan, self.scan_time = None, None
         self.state, self.reason = 'waiting_for_state', ''
         self.steps = 0
         self.targets_pub = self.create_publisher(
@@ -133,6 +136,10 @@ class LeggedPolicyController(Node):
                                if trajectory_topic else None)
         self.create_subscription(JointState, '/joint_states', self.on_joints, 5)
         self.create_subscription(Imu, '/imu/out', self.on_imu, 5)
+        if self.contract.height_scan is not None:
+            from std_msgs.msg import Float32MultiArray
+            from robot_lab_adapter.legged_policy import HEIGHT_SCAN_TOPIC
+            self.create_subscription(Float32MultiArray, HEIGHT_SCAN_TOPIC, self.on_scan, 5)
         for topic in self.get_parameter('command_topics').value:
             self.create_subscription(Twist, topic, self.on_command, 5)
         self.create_service(Trigger, '/legged_policy/reset', self.on_reset)
@@ -160,6 +167,10 @@ class LeggedPolicyController(Node):
         q, w = message.orientation, message.angular_velocity
         self.imu = ((q.w, q.x, q.y, q.z), (w.x, w.y, w.z))
         self.imu_time = self.now()
+
+    def on_scan(self, message):
+        self.scan = list(message.data)
+        self.scan_time = self.now()
 
     def on_command(self, message):
         self.command = clamp_command((message.linear.x, message.linear.y, message.angular.z), self.limits)
@@ -191,13 +202,15 @@ class LeggedPolicyController(Node):
         now = self.now()
         timeout = float(self.get_parameter('state_timeout_s').value)
         fresh = (self.joints is not None and self.imu is not None
-                 and now-self.joint_time <= timeout and now-self.imu_time <= timeout)
+                 and now-self.joint_time <= timeout and now-self.imu_time <= timeout
+                 and (self.contract.height_scan is None
+                      or (self.scan is not None and now-self.scan_time <= timeout)))
         if self.state == 'safe_stop':
             self.standing()
             return
         if not fresh:
             if self.state in ('running', 'recovering'):
-                self.state, self.reason = 'safe_stop', 'joint/IMU state went stale'
+                self.state, self.reason = 'safe_stop', 'joint/IMU/height-scan state went stale'
             self.standing()
             return
         names = self.policy.names
@@ -233,7 +246,7 @@ class LeggedPolicyController(Node):
         if self.recovering or self.command_time is None or \
                 now-self.command_time > float(self.get_parameter('command_timeout_s').value):
             command = [0.0, 0.0, 0.0]
-        state = LeggedState(self.joints[0], self.joints[1], quaternion, gyro)
+        state = LeggedState(self.joints[0], self.joints[1], quaternion, gyro, height_scan=self.scan)
         try:
             targets = (self.recovery if self.recovering else self.policy).step(state, command)
         except (ValueError, RuntimeError) as exc:

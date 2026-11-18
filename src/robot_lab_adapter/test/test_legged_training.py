@@ -425,3 +425,74 @@ def test_anymal_template_is_the_legged_gym_contract(tmp_path):
     assert abs(contract.policy_period - 0.02) < 1e-9
     assert dict(zip(contract.training_joint_names(), contract.default_dof_pos.tolist())) == ANYMAL_POSE
     assert set(contract.rl_kp.tolist()) == {80.0} and set(contract.rl_kd.tolist()) == {2.0}
+
+
+def test_height_scan_is_legged_gyms_grid_in_the_base_yaw_frame():
+    from robot_lab_adapter.legged_policy import height_scan_points, height_scan_term, height_scan_world
+    local = height_scan_points()
+    assert local.shape == (187, 2)
+    assert np.allclose(local[0], [-0.8, -0.5]) and np.allclose(local[1], [-0.8, -0.4])   # x-major
+    world = height_scan_world([1.0, 2.0], np.pi / 2)
+    assert np.allclose(world[0], [1.0 + 0.5, 2.0 - 0.8])                               # rotated by yaw
+    assert np.allclose(height_scan_term([0.3, 0.5, 2.0]), [-1.0, 0.0, 5.0])
+
+
+def test_height_scan_policy_config_round_trips_and_needs_the_heights():
+    contract = PolicyContract.load(POLICY_ROOT / 'go2_himloco')
+    section = policy_config(contract, 'go2', 'lab_walk_scan', height_scan=True)
+    (key, values), = section.items()
+    assert values['num_observations'] == 45 + 187 and values['observations'][-1] == 'height_scan'
+    base = {'go2': dict(joint_names=contract.robot_joint_names, dt=contract.dt, decimation=contract.decimation,
+                        num_of_dofs=contract.num_dofs)}
+    parsed = PolicyContract.from_rl_sar(base, section, 'go2', 'lab_walk_scan')
+    assert parsed.height_scan['x'] == [-0.8, 0.8, 17]
+    policy = LeggedPolicy(parsed, session=_FakeSession(45 + 187))
+    names = parsed.training_joint_names()
+    state = LeggedState({n: 0.0 for n in names}, {n: 0.0 for n in names}, (1, 0, 0, 0), (0, 0, 0))
+    with pytest.raises(ValueError, match='height_scan'):
+        policy.observation(state, (0, 0, 0))
+    state.height_scan = [0.32] * 187
+    frame = policy.observation(state, (0, 0, 0))
+    assert frame.shape == (232,) and np.allclose(frame[-187:], (0.32 - 0.5) * 5)
+
+
+class _FakeSession:
+    def __init__(self, width):
+        self.width = width
+
+    def get_inputs(self):
+        from types import SimpleNamespace
+        return [SimpleNamespace(name='obs', shape=[1, self.width])]
+
+
+def test_a_blind_checkpoint_widens_with_zero_weights_on_the_new_inputs(tmp_path):
+    blind = PPO(10, 3, 2, 4, hidden=(8, 8))
+    with torch.no_grad():
+        blind.model.norm.update(torch.randn(50, 10) * 2 + 1)
+    blind.save(tmp_path / 'blind.pt')
+    wide = PPO(14, 3, 2, 4, hidden=(8, 8))
+    wide.load(tmp_path / 'blind.pt', widen=True)
+    obs = torch.randn(5, 10)
+    extra = torch.randn(5, 4) * 3
+    with torch.no_grad():
+        same = blind.model.distribution(obs).mean
+        widened = wide.model.distribution(torch.cat([obs, extra], dim=1)).mean
+    assert torch.allclose(same, widened, atol=1e-6)
+    with pytest.raises(RuntimeError):
+        PPO(14, 3, 2, 4, hidden=(8, 8)).load(tmp_path / 'blind.pt')       # widening is explicit
+
+
+def test_stairs_env_observes_the_step_ahead(go2_env):
+    from robot_lab_adapter.legged_training import LeggedTrainingEnv
+    env = LeggedTrainingEnv('unitree_go2', 'walk', num_envs=1, seed=0, threads=1, episode_s=2.0,
+                            terrain='stairs', height_scan=True)
+    env.set_terrain_level(1.0)
+    assert env.obs_dim == 45 + 187
+    qpos, _ = env._split(env.state)
+    qpos = qpos.copy()
+    qpos[0, :3] = [0.85, 0.0, 0.32]          # just before the first riser (1.0 m), facing +x
+    qpos[0, 3:7] = [1, 0, 0, 0]
+    heights = env.scan_heights(qpos)[0].reshape(17, 11)
+    assert np.allclose(heights[:8], 0.32)     # behind and at the base: the flat pad
+    assert np.all(heights[-3:] < 0.32 - 0.1)  # 0.6-0.8 m ahead: up the first step
+    assert env.observations().shape == (1, 232)

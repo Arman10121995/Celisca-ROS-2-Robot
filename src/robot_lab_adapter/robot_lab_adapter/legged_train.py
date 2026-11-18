@@ -61,7 +61,8 @@ def export_policy(checkpoint, out_dir):
     shutil.copyfile(Path(template) / 'base.yaml', out / 'base.yaml')
     (out / 'config.yaml').write_text(
         '# Trained by robot_lab_adapter.legged_train in the contract of %s.\n' % Path(template).name
-        + yaml.safe_dump(policy_config(contract, robot_key, variant), sort_keys=False))
+        + yaml.safe_dump(policy_config(contract, robot_key, variant, height_scan=run.get('height_scan', False)),
+                         sort_keys=False))
     export_onnx(model, str(out / 'policy.onnx'))
     import hashlib
     onnx_sha256 = hashlib.sha256((out / 'policy.onnx').read_bytes()).hexdigest()
@@ -99,7 +100,8 @@ def train(args):
                             episode_s=args.episode_s,
                             randomization=Randomization() if args.randomize else None,
                             terrain=args.terrain, roughness=args.roughness, obs_noise=args.obs_noise,
-                            latency_s=args.latency_ms / 1000.0)
+                            latency_s=args.latency_ms / 1000.0, height_scan=args.height_scan,
+                            riser_start=args.riser_start)
     hidden = (512, 256, 128)
     init_layers = None
     if args.init_onnx:
@@ -122,6 +124,7 @@ def train(args):
                iterations=args.iterations, learning_rate=args.learning_rate, seed=args.seed,
                episode_s=args.episode_s, randomize=bool(args.randomize), terrain=args.terrain,
                roughness=args.roughness, obs_noise=args.obs_noise, latency_ms=args.latency_ms, obs_dim=env.obs_dim, act_dim=env.act_dim, hidden=list(hidden),
+               height_scan=bool(args.height_scan), riser_start=args.riser_start,
                name=name, revision=_revision(), template=env.template, policy_period_s=env.dt,
                init_onnx=args.init_onnx or None, init_std=args.init_std if args.init_onnx else None,
                critic_warmup=args.critic_warmup, normalize=init_layers is None,
@@ -129,7 +132,9 @@ def train(args):
                pid=os.getpid())
     start_iteration, steps_done = 0, 0
     if args.resume:
-        data = agent.load(args.resume)
+        # A blind checkpoint resumes into a height-scan policy with zero
+        # weights on the new inputs: it starts out as the blind policy.
+        data = agent.load(args.resume, widen=bool(args.height_scan))
         start_iteration = int(data.get('iteration', 0))
         steps_done = int(data.get('environment_steps', 0))
         run['resumed_from'] = str(args.resume)
@@ -215,7 +220,8 @@ def evaluate(args):
     robot = contract.source['profile']
     policy = LeggedPolicy(contract, model_path=str(directory / 'policy.onnx'))
     env = LeggedTrainingEnv(robot, args.task, 1, seed=args.seed, threads=1, episode_s=1e9,
-                            terrain=args.terrain, roughness=args.roughness)
+                            terrain=args.terrain, roughness=args.roughness,
+                            height_scan=contract.height_scan is not None)
     commands = [tuple(float(v) for v in item.split(',')) for item in args.commands.split(';') if item.strip()]
     phases = []
     for command in commands:
@@ -230,7 +236,7 @@ def evaluate(args):
             quat = qpos[0, 3:7]
             state = LeggedState(dict(zip(env.names, qpos[0, env.qpos_index])),
                                 dict(zip(env.names, qvel[0, env.qvel_index])),
-                                quat, qvel[0, 3:6])
+                                quat, qvel[0, 3:6], height_scan=env.scan_heights(qpos)[0] if env.height_scan else None)
             policy.step(state, command)
             _, _, done, info = env.step(policy.actions[None, :])
             if done[0]:
@@ -292,6 +298,10 @@ def main(argv=None):
     t.add_argument('--init-std', type=float, default=0.3, help='initial action noise with --init-onnx')
     t.add_argument('--critic-warmup', type=int, default=0,
                    help='iterations at the start during which only the critic learns')
+    t.add_argument('--height-scan', action='store_true',
+                   help="observe terrain heights around the base (legged_gym's height measurements)")
+    t.add_argument('--riser-start', type=float, default=0.3,
+                   help='share of stairs episodes that start just before a riser')
     t.add_argument('--resume', default='')
     t.add_argument('--out', required=True)
     e = sub.add_parser('export')

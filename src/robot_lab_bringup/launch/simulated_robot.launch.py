@@ -1428,6 +1428,7 @@ def _build_simulation_actions(context):
             legged_policy_name = ""
         legged_policy_dir = ""
         legged_pd_config = ""
+        legged_height_scan = ""
         legged_initial_positions = ""
         legged_physics_rate = ""
         legged_controller_params = ""
@@ -1474,6 +1475,14 @@ def _build_simulation_actions(context):
                                        legged_contract.default_dof_pos)})
             legged_physics_rate = "%g" % (1.0/legged_contract.dt)
             legged_active = True
+            if legged_contract.height_scan is not None:
+                # A policy that observes terrain heights needs the simulator's
+                # height scan, published by the MuJoCo bridge only so far.
+                if simulator != "mujoco":
+                    raise RuntimeError(
+                        "legged_policy:=%s observes terrain heights (height_scan); only "
+                        "MuJoCo publishes them so far" % legged_policy_name)
+                legged_height_scan = json.dumps(legged_contract.height_scan)
             if simulator == "gazebo":
                 import tempfile
                 import yaml as _yaml
@@ -1627,6 +1636,7 @@ def _build_simulation_actions(context):
                                                     if legged_active
                                                     else go2_initial_positions)}
                        if (go2_mujoco or legged_active) else {}),
+                    **({"height_scan": legged_height_scan} if legged_height_scan else {}),
                     **({"joint_pd_config": legged_pd_config,
                         "pd_joint_armature": _launch_value(
                             context, "legged_policy_pd_armature")}

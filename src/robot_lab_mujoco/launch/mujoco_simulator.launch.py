@@ -191,6 +191,9 @@ def _build_mujoco_actions(context):
         spawner_params["joint_pd_config"] = joint_pd_config
         spawner_params["pd_joint_armature"] = ParameterValue(
             LaunchConfiguration("pd_joint_armature"), value_type=float)
+    height_scan = LaunchConfiguration("height_scan").perform(context).strip()
+    if height_scan:
+        spawner_params["height_scan"] = height_scan
     # Static-world collision midphase (world_collision.py): 'auto' disables
     # it above the measured flex-element crossover, 'on'/'off' force it.
     spawner_params["world_midphase"] = LaunchConfiguration("world_midphase").perform(context)
@@ -258,6 +261,9 @@ def generate_launch_description():
                         "time at real time instead of slow motion; 0 "
                         "disables catch-up."),
         DeclareLaunchArgument("effort_joint_armature", default_value="0.0"),
+        DeclareLaunchArgument(
+            "height_scan", default_value="",
+            description="Height-scan spec (JSON) of a terrain-observing legged policy"),
         DeclareLaunchArgument(
             "joint_pd_config", default_value="",
             description="JSON in-step joint PD config (robot_lab_mujoco/"

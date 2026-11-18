@@ -11,7 +11,8 @@ checkpoints run on the lab's own robot models:
   ang_vel_scale), ``gravity_vec`` (gravity in the body frame), ``commands``
   (x commands_scale), ``dof_pos`` (minus default pose, wheels zeroed, x
   dof_pos_scale), ``dof_vel`` (x dof_vel_scale), ``actions`` (previous raw
-  actions), ``lin_vel`` (x lin_vel_scale); clipped to +/-clip_obs;
+  actions), ``lin_vel`` (x lin_vel_scale), ``height_scan`` (lab-trained
+  policies only, see HEIGHT_SCAN); clipped to +/-clip_obs;
 * optional history of whole observation frames, newest first, flattened
   by time ("time") or by term ("term");
 * actions clipped, scaled by action_scale; leg joints track
@@ -48,6 +49,40 @@ POLICY_PROFILES = {'a1_legged_gym': 'unitree_a1', 'b2_robot_lab': 'unitree_b2',
                    'g1_robomimic_locomotion': 'unitree_g1_29dof'}
 
 _TERMS_WITH_DOFS = ("dof_pos", "dof_vel", "actions")
+
+# Terrain heights around the base, as legged_gym's rough-terrain policies
+# observe them (LeggedRobotCfg.terrain.measured_points_x/y,
+# rewards.base_height_target 0.5 as the offset, obs_scales.height_measurements
+# 5): a 17 x 11 grid of points 0.1 m apart in the base's yaw frame, each
+# clip(base height above the terrain there - 0.5, -1, 1) x 5. Points are in
+# x-major order (legged_gym's meshgrid(x, y, indexing='ij')).
+HEIGHT_SCAN = dict(x=[-0.8, 0.8, 17], y=[-0.5, 0.5, 11], offset=0.5, scale=5.0)
+HEIGHT_SCAN_TOPIC = '/legged/height_scan'
+
+
+def height_scan_points(spec=None):
+    """(N, 2) scan points in the base's yaw frame."""
+    spec = spec or HEIGHT_SCAN
+    xs = np.linspace(*spec['x'][:2], int(spec['x'][2]))
+    ys = np.linspace(*spec['y'][:2], int(spec['y'][2]))
+    grid_x, grid_y = np.meshgrid(xs, ys, indexing='ij')
+    return np.stack([grid_x.ravel(), grid_y.ravel()], axis=1)
+
+
+def height_scan_world(base_xy, yaw, spec=None):
+    """World xy of the scan points for each base: (..., N, 2)."""
+    local = height_scan_points(spec)
+    yaw = np.asarray(yaw, dtype=float)[..., None]
+    c, s = np.cos(yaw), np.sin(yaw)
+    x = c * local[:, 0] - s * local[:, 1]
+    y = s * local[:, 0] + c * local[:, 1]
+    return np.stack([x, y], axis=-1) + np.asarray(base_xy, dtype=float)[..., None, :]
+
+
+def height_scan_term(base_above_terrain, spec=None):
+    """The observation from the base's height above the terrain at each point (m)."""
+    spec = spec or HEIGHT_SCAN
+    return np.clip(np.asarray(base_above_terrain, dtype=float) - spec['offset'], -1.0, 1.0) * spec['scale']
 
 
 def _vector(config, key, size=None, default=None):
@@ -89,6 +124,7 @@ class PolicyContract:
     dof_vel_scale: float = 0.05
     clip_obs: float = 100.0
     num_observations: int = 0
+    height_scan: Optional[dict] = None    # the HEIGHT_SCAN spec, when observed
     model_name: str = ''
     source: Dict[str, str] = field(default_factory=dict)
 
@@ -120,7 +156,7 @@ class PolicyContract:
         if priority not in ('time', 'term'):
             raise ValueError('observations_history_priority must be time or term')
         observations = list(merged['observations'])
-        known = {'lin_vel', 'ang_vel', 'gravity_vec', 'commands', 'dof_pos', 'dof_vel', 'actions'}
+        known = {'lin_vel', 'ang_vel', 'gravity_vec', 'commands', 'dof_pos', 'dof_vel', 'actions', 'height_scan'}
         unknown = [term for term in observations if term not in known]
         if unknown:
             raise ValueError('unsupported observation terms: %s' % unknown)
@@ -142,6 +178,7 @@ class PolicyContract:
             dof_vel_scale=float(merged.get('dof_vel_scale', 0.05)),
             clip_obs=float(merged.get('clip_obs', 100.0)),
             num_observations=int(merged.get('num_observations', 0)),
+            height_scan=dict(merged['height_scan']) if 'height_scan' in observations else None,
             model_name=str(merged.get('model_name', '')),
             source=dict(source or {}))
         if contract.dt <= 0 or contract.decimation < 1:
@@ -181,6 +218,8 @@ class LeggedState:
     quaternion_wxyz: Sequence[float]
     angular_velocity_body: Sequence[float]
     linear_velocity_body: Sequence[float] = (0.0, 0.0, 0.0)
+    # Base height above the terrain at the height-scan points (m), if observed.
+    height_scan: Optional[Sequence[float]] = None
 
 
 @dataclass
@@ -254,6 +293,11 @@ class LeggedPolicy:
                 terms.append(dq * c.dof_vel_scale)
             elif term == 'actions':
                 terms.append(self.actions.copy())
+            elif term == 'height_scan':
+                expected = len(height_scan_points(c.height_scan))
+                if state.height_scan is None or len(state.height_scan) != expected:
+                    raise ValueError('height_scan needs %d terrain heights' % expected)
+                terms.append(height_scan_term(state.height_scan, c.height_scan))
         return terms
 
     def observation(self, state: LeggedState, command) -> np.ndarray:
