@@ -1219,7 +1219,13 @@ parking batch needs its own run. Details and evidence are in the
     [Receipt](docs/status/evidence/r12-go2w-strafe-2026-11-15/README.md);
   - Berkeley Humanoid Lite: trainer template, BHL-order export, `humanoid_walk` rewards and warm
     start implemented 2026-11-15; four runs not passed (see R5.3);
-  - Go2 get-up: `get_up_roll` (potential-based roll-over shaping) trained 2026-11-17, stands 2 of 10 (not passed);
+  - Go2 get-up: `get_up_roll` (potential-based roll-over shaping) trained 2026-11-17, stands 2 of 10;
+    **continued to 6000 iterations (r2): stands 29/30 and gets up in a normal MuJoCo launch,
+    including walk → get-up → walk switching** (2026-11-17,
+    [receipt](docs/status/evidence/go2-get-up-roll-r2-2026-11-17/README.md));
+  - Go2 stairs: the stairs curriculum is now judged against the commanded distance (2026-11-18).
+    The old fixed 3 m rule held r1 at 4.4 cm rises; r2 is training (level 0.4, about 8 cm, at
+    iteration 5500);
   - GPU training (CPU-only on Orin; training possible but slower).
 - **How to do it:** `robot_lab_adapter/legged_training.py`, `ppo.py` and `legged_train.py`.
   Add robots by their provisioned policy contract; train in MuJoCo; check
