@@ -76,10 +76,23 @@ Peak efforts and contact fractions are in each `screen-*.json`. Traces here
 are thinned to 1 Hz; full traces and launch logs are on SSD under
 `robot_lab_runtime/go2-stairs-screen-20261118`.
 
+## The three-legged gait is inherited
+
+Foot contact on flat `nav_empty` at 0.5 m/s, 10 s (`flat-*.json`; feet in
+order FL, FR, RL, RR):
+
+| Policy | Forward | Fraction of time in contact |
+|---|---|---|
+| `go2_walk_r3` (flat) | 5.07 m | 0.53, 0.49, 0.49, 0.50: an even trot |
+| `go2_rough_r1` (rough; the start of the stairs runs) | 5.45 m | **0.16**, 0.64, 0.55, 0.48 |
+| `go2_stairs_r2` | 3.54 m | **0.15**, 0.08, 0.76, 0.25 |
+
+The rough-terrain run already favoured its front-left foot, and stairs
+training made it worse. Stairs r3 therefore resumes from `go2_walk_r3`.
+
 ## Next
 
-- Find out why the gait lifts one foot: its air-time and contact reward
-  terms, and command sampling.
+- Stairs r3 from `go2_walk_r3`, the even trot (see above).
 - Train with treads like the course (1.1 m) or a mixed tread curriculum.
 - GPU-scale training (thousands of environments) is not available on this
   host.
