@@ -1124,6 +1124,13 @@ def test_px4_preserves_every_installed_world_and_autofills_flight(app):
     # Worlds the registry restricts to other robot classes (the R10.4
     # underwater worlds are aquatic-only) are refused, never re-routed.
     environments = yaml.safe_load(open(SRC/'robot_lab'/'robot_lab_registry'/'config'/'environments.yaml'))
+    # Installed maps (mobile_manipulation_lab) carry their registry entries
+    # with the installation, as the GUI's validation reads them.
+    try:
+        from robot_lab_utils.installed_assets import installed_registry_entities
+        environments = environments + installed_registry_entities('maps')
+    except ImportError:
+        pass
     restricted = {entry['id'] for entry in environments
                   if 'supported_robot_classes' in entry and 'aerial' not in entry['supported_robot_classes']}
     assert {'marine_cave', 'marine_wreck'} <= restricted
