@@ -63,3 +63,26 @@ def test_thrust_commands_are_clipped_to_source_bounds(urdf):
     plant.command(0, 1e6)
     plant.command(1, float('nan'))
     assert plant.forces[0] == plant.model_source.bounds[0][1] and plant.forces[1] == 0.
+
+
+def test_spawn_yaw_is_in_radians_and_pybullet_integrates_the_same_wrench(urdf):
+    import math
+    from robot_lab_utils.marine_pybullet_plant import MarinePyBulletPlant
+    pytest.importorskip('pybullet')
+    def yaw(q):
+        x, y, z, w = q
+        return math.atan2(2 * (w * z + x * y), 1 - 2 * (y * y + z * z))
+    results = []
+    for cls in (MarinePlant, MarinePyBulletPlant):
+        plant = cls(urdf, [0., 0., -2., .3], 0., -6.)
+        plant.current[:] = 0.
+        assert abs(yaw(plant.pose()[1]) - .3) < 1e-6
+        forces, _ = plant.model_source.allocate([10., 0., plant.model_source.gravity_trim, 0., 0., 2.])
+        for index, value in enumerate(forces):
+            plant.command(index, value)
+        for _ in range(10):
+            plant.step(1.)
+        position, quaternion = plant.pose()
+        results.append((position, yaw(quaternion)))
+    (mj_position, mj_yaw), (pb_position, pb_yaw) = results
+    assert np.linalg.norm(mj_position - pb_position) < .15 and abs(mj_yaw - pb_yaw) < .05

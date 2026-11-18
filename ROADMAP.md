@@ -138,7 +138,7 @@ Work top to bottom. Each line links to its task.
 | I8 | [R5.8](#r58--robot-hands-and-grippers) Hands | 11-17: normal GUI grasp → lift 5 cm → hold → return → supported release passes for Robotiq 2F-85 (both variants, support stage) and UMI (source axis); parallel-jaw measured in R5.7/R5.9. DEX-EE (dexterous) not passed: needs grasp synthesis; other backends remain | partial |
 | I9 | [R10.2](#r102--fleet-management-and-open-rmf) Fleet / Open-RMF | Done 2026-11-14: shared-zone reservations (map passages, doors, docks), cycle breaker, recovery drive-out, RMF energy from a drivetrain calibration; two crossing runs pass (native and RMF). 11-18: doors, docks and energy without a lift (`fleet_ward`: door crossing, docking and charging pass). Larger fleets are V7 | implemented |
 | I10 | [R10.3](#r103--swarm-robotics) Swarms | Done 2026-11-14: ROS2swarm port of per-member scan-only behaviours, scan-sensed cooperative coverage, ground/air member-loss replanning; dispersion and coverage-with-loss measured; aggregation gathers three Bumperbots in `swarm_arena` (11-18); 3–4 drone flight is validation | implemented |
-| I11 | [R10.5](#r105--underwater-worlds-sensing-slam-and-navigation) / [R10.4](#r104--underwater-robots-and-controllers) Marine | Done 2026-11-14: MuJoCo ROV plant (ported Fortress water forces; matches Gazebo), damping-based current feedforward (1 cm drift in 0.1 m/s), volumetric and current-aware AUV routes (unit-tested). PyBullet/Isaac marine, AUV sensor-only localization mission remain | implemented |
+| I11 | [R10.5](#r105--underwater-worlds-sensing-slam-and-navigation) / [R10.4](#r104--underwater-robots-and-controllers) Marine | Done 2026-11-14: MuJoCo ROV plant (ported Fortress water forces; matches Gazebo), damping-based current feedforward (1 cm drift in 0.1 m/s), volumetric and current-aware AUV routes (unit-tested). 11-18: PyBullet ROV plant matches MuJoCo (surge 1.041 vs 1.030 m). Isaac marine, AUV sensor-only localization mission remain | implemented |
 | I12 | [R10.6](#r106--six--and-eight-legged-robots) / [R10.7](#r107--segmented-and-additional-robot-forms) Multi-leg and forms | Done 2026-11-14: depth/IMU flipper policy (sequences a step, but the 4 Nm flippers cannot climb 0.18 m: measured), bounded gait slip/support recovery (unit-tested). Stronger flippers, other backends, per-model terrain missions remain | implemented |
 | I13 | [R5.2](#r52--go2-quadruped-locomotion) / [R5.3](#r53--berkeley-humanoid-lite-balance-and-walking) / [R12](#r12--legged-policy-training) Legged | 2026-11-15: Go2W `wheeled_walk` policy strafes (MuJoCo 0.116, Isaac 0.271 m/s); BHL contract/export/warm start implemented, four runs not passed; 11-17: Go2 `get_up_roll` r2 (6000 iterations) stands 29/30 in training eval and gets up in a normal MuJoCo launch from side/back starts and 200–400 N knock-downs (60 N no longer topples it). Walk → get-up → walk switching measured. Go2 stairs not passed after 4 runs (11-18; policies are blind: a height-scan observation is next), G1, GPU training remain | partial |
 | I14 | [R5.5](#r55--ackermann-rear-steer-and-anti-ackermann-cars) Cars | 2026-11-15: car course 13/13 on four backends (lookahead 1.25 × turning radius, forward escape when back-up is blocked); park-at-heading runtime and Drive-panel controls | implemented |
@@ -1085,7 +1085,7 @@ parking batch needs its own run. Details and evidence are in the
 
 ### R10.4 — Underwater robots and controllers
 
-- **State:** implemented, experimental (PyBullet/Isaac marine pending) · **Priority:** I11
+- **State:** implemented, experimental (Isaac marine pending) · **Priority:** I11
 - **Have:** the self-made eight-thruster `lab_rov`; the pinned CC-BY MBARI
   Tethys AUV with fins and trim; Fortress buoyancy, drag and added mass.
   Tank surge/depth, reef depth/turn and a gentle tank curve are measured.
@@ -1097,9 +1097,16 @@ parking batch needs its own run. Details and evidence are in the
   Current feedforward from the declared damping: 15 s in 0.1 m/s cross current
   drifts 1 cm (was 0.37 m upstream).
   [Evidence](docs/status/evidence/marine-mujoco-currents-2026-11-14/README.md).
+- **Done 2026-11-18 (implemented, experimental): PyBullet plant.** The
+  water and thruster wrench is engine-neutral (`WaterForces`);
+  `marine_pybullet_plant.py` integrates it in Bullet (`simulator:=pybullet`).
+  The same probe gives surge 1.041 m, yaw 1.439 rad, 3.5 cm drift in a
+  0.1 m/s current and disarm on operator loss (MuJoCo: 1.030 m, 1.437 rad,
+  0.9 cm). The MuJoCo plant's spawn yaw was read in degrees; fixed.
+  [Receipt](docs/status/evidence/r104-marine-pybullet-2026-11-18/README.md).
 - **Remaining implementation:**
   - BlueROV2 candidate license review (R9.1);
-  - marine force adapters for PyBullet and Isaac; a Tethys (fins) MuJoCo plant.
+  - an Isaac marine force adapter; a Tethys (fins) MuJoCo plant.
 - **Done when:** station keeping, all axes, disturbance and loss measured with body and force evidence.
 
 ### R10.5 — Underwater worlds, sensing, SLAM and navigation

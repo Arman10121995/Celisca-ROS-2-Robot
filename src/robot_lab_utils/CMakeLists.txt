@@ -34,6 +34,7 @@ install(PROGRAMS
   ${PROJECT_NAME}/fleet_infrastructure.py
   ${PROJECT_NAME}/marine_controller.py
   ${PROJECT_NAME}/marine_mujoco_plant.py
+  ${PROJECT_NAME}/marine_pybullet_plant.py
   ${PROJECT_NAME}/car_parking.py
   ${PROJECT_NAME}/sensor_fault_relay.py
   ${PROJECT_NAME}/fiducial_object_pose.py

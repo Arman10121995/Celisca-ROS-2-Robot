@@ -20,7 +20,7 @@ from launch_ros.parameter_descriptions import ParameterValue
 
 def _setup(context):
     from robot_lab_utils.marine_runtime import require_fortress_mass_convention
-    if LaunchConfiguration('simulator').perform(context) != 'mujoco':
+    if LaunchConfiguration('simulator').perform(context) not in ('mujoco', 'pybullet'):
         require_fortress_mass_convention()
     from robot_lab_utils.robot_description import load_description
     from robot_lab_utils.marine_model import MarineModel, SurfaceModel, AmphibiousModel
@@ -163,15 +163,15 @@ def _setup(context):
         os.environ[key]=item
     actions=[SetEnvironmentVariable(key,item) for key,item in dict(IGN_PARTITION=partition,GZ_PARTITION=partition,
               IGN_GAZEBO_RESOURCE_PATH=resource,GZ_SIM_RESOURCE_PATH=resource).items()]
-    mujoco=value('simulator')=='mujoco'
-    if mujoco:
+    plant={'mujoco':'marine_mujoco_plant.py','pybullet':'marine_pybullet_plant.py'}.get(value('simulator'))
+    if plant:
         if robot!='lab_rov':
-            raise ValueError('The MuJoCo marine plant currently supports the native lab_rov force interface only')
+            raise ValueError('The %s marine plant currently supports the native lab_rov force interface only'%value('simulator'))
         # Same controller and force/odometry topics; water forces are a port of the declared Fortress
         # buoyancy/hydrodynamics/thrusters. No Gazebo, bridge, sensors or SLAM pipeline.
         actions += [Node(package='robot_state_publisher',executable='robot_state_publisher',
                          parameters=[{'use_sim_time':True,'robot_description':ParameterValue(urdf,value_type=str)}],output='screen'),
-                    Node(package='robot_lab_utils',executable='marine_mujoco_plant.py',arguments=[
+                    Node(package='robot_lab_utils',executable=plant,arguments=[
                          '--description',str(description),'--spawn-x',str(spawn['x']),'--spawn-y',str(spawn['y']),
                          '--spawn-z',str(spawn['z']),'--spawn-yaw',str(spawn.get('yaw',0.)),
                          '--surface-z',str(water['surface_z']),'--bottom-z',str(water['bottom_z']),
@@ -224,7 +224,7 @@ def _setup(context):
 def generate_launch_description():
     return LaunchDescription([
         DeclareLaunchArgument('robot_model',default_value='lab_rov'),
-        DeclareLaunchArgument('simulator',default_value='gazebo',description='gazebo, or mujoco for the ported lab_rov water forces'),
+        DeclareLaunchArgument('simulator',default_value='gazebo',description='gazebo, or mujoco/pybullet for the ported lab_rov water forces'),
         DeclareLaunchArgument('map_name',default_value='marine_tank'),DeclareLaunchArgument('control',default_value='true'),
         DeclareLaunchArgument('gui',default_value='true'),DeclareLaunchArgument('rviz',default_value='true'),
         DeclareLaunchArgument('slam',default_value='false'),DeclareLaunchArgument('database',default_value=''),

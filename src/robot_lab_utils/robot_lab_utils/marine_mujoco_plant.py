@@ -55,7 +55,10 @@ def mjcf(model, boxes, spawn, bottom_z, inertia):
     """Single rigid body with the source mass/inertia; water forces come from the plant."""
     xyz, size = boxes[0]
     hx, hy, hz = size / 2
+    # angle="radian": the spawn yaw is in radians (MJCF euler defaults to
+    # degrees, which turned a 0.3 rad spawn into 0.005 rad until 2026-11-18).
     return f"""<mujoco model="marine_plant">
+  <compiler angle="radian"/>
   <option timestep="0.002" gravity="0 0 -9.81" integrator="implicitfast"/>
   <worldbody>
     <geom name="seabed" type="plane" size="200 200 .1" pos="0 0 {bottom_z}" friction="0.6 0.005 0.0001"/>
@@ -69,10 +72,15 @@ def mjcf(model, boxes, spawn, bottom_z, inertia):
 </mujoco>"""
 
 
-class MarinePlant:
-    def __init__(self, description, spawn, surface_z, bottom_z, density=1025.):
-        import mujoco
-        self.mujoco = mujoco
+class WaterForces:
+    """The ported Fortress water and thruster wrench, independent of the physics engine.
+
+    A plant sets ``model_source``, ``hydro``, ``boxes``, ``mounts``,
+    ``surface``, ``density``, ``current`` and ``forces`` and calls
+    ``water_wrench`` once per physics step.
+    """
+
+    def _load(self, description, surface_z, bottom_z, density):
         self.model_source = MarineModel(description, density)
         root = ET.fromstring(description)
         origin = root.find("link[@name='base_link']/inertial/origin")
@@ -82,13 +90,9 @@ class MarinePlant:
         self.boxes = displacement_boxes(description)
         self.mounts = self._thruster_mounts(root)
         tensor = root.find("link[@name='base_link']/inertial/inertia")
-        inertia = (np.array([float(tensor.get(k)) for k in ('ixx', 'iyy', 'izz')]) if tensor is not None
-                   else np.full(3, self.model_source.mass * .01))
+        self.inertia = (np.array([float(tensor.get(k)) for k in ('ixx', 'iyy', 'izz')]) if tensor is not None
+                        else np.full(3, self.model_source.mass * .01))
         self.surface, self.bottom, self.density = float(surface_z), float(bottom_z), float(density)
-        self.model = mujoco.MjModel.from_xml_string(mjcf(self.model_source, self.boxes, spawn, self.bottom, inertia))
-        self.data = mujoco.MjData(self.model)
-        mujoco.mj_forward(self.model, self.data)
-        self.body = self.model.body('rov').id
         self.forces = np.zeros(len(self.model_source.joints))
         self.current = self.hydro['default_current'].copy()
         self.previous_relative = None
@@ -109,6 +113,56 @@ class MarinePlant:
         low, high = self.model_source.bounds[index]
         self.forces[index] = max(low, min(high, float(force))) if math.isfinite(force) else 0.
 
+    def water_wrench(self, R, origin, com, linear, angular, timestep):
+        """World force and torque about the centre of mass.
+
+        R: body rotation; origin: base_link origin (world); com: centre of
+        mass (world); linear, angular: base_link velocity in the body frame.
+        """
+        force, torque = np.zeros(3), np.zeros(3)
+        # Buoyancy of each box, clipped to the submerged part (uniform fluid below the surface).
+        for xyz, size in self.boxes:
+            centre = origin + R @ xyz
+            height = abs(R[2, :]) @ size                 # world vertical extent of the box
+            bottom = centre[2] - height / 2
+            fraction = min(1., max(0., (self.surface - bottom) / max(height, 1e-9)))
+            if fraction <= 0:
+                continue
+            lift = np.array([0., 0., self.density * 9.81 * np.prod(size) * fraction])
+            cob = centre.copy()
+            cob[2] = bottom + fraction * height / 2
+            force += lift
+            torque += np.cross(cob - com, lift)
+        # Hydrodynamics on the velocity relative to the current, in the body frame.
+        relative = np.r_[linear - R.T @ self.current, angular]
+        rate = np.zeros(6) if self.previous_relative is None else (relative - self.previous_relative) / timestep
+        self.previous_relative = relative
+        body = (self.hydro['linear'] + self.hydro['quadratic'] * np.abs(relative)) * relative - self.hydro['added'] * rate
+        force += R @ body[:3]
+        torque += R @ body[3:]
+        # Thrusters at their source mounts.
+        for (position, direction), thrust in zip(self.mounts, self.forces):
+            world_force = R @ (direction * thrust)
+            force += world_force
+            torque += np.cross(origin + R @ position - com, world_force)
+        self.wrench = np.r_[force, torque]
+        return force, torque
+
+
+class MarinePlant(WaterForces):
+    """MuJoCo rigid body integrating the water and thruster wrench."""
+    engine = 'mujoco'
+    scope = 'MuJoCo rigid body with ported Fortress buoyancy/hydrodynamics/thruster forces; seabed plane only'
+
+    def __init__(self, description, spawn, surface_z, bottom_z, density=1025.):
+        import mujoco
+        self.mujoco = mujoco
+        self._load(description, surface_z, bottom_z, density)
+        self.model = mujoco.MjModel.from_xml_string(mjcf(self.model_source, self.boxes, spawn, self.bottom, self.inertia))
+        self.data = mujoco.MjData(self.model)
+        mujoco.mj_forward(self.model, self.data)
+        self.body = self.model.body('rov').id
+
     def pose(self):
         q = self.data.qpos
         return q[:3].copy(), np.array([q[4], q[5], q[6], q[3]])  # xyz, quaternion xyzw
@@ -121,63 +175,26 @@ class MarinePlant:
         steps = max(1, int(round(dt / self.model.opt.timestep)))
         for _ in range(steps):
             R = self._rotation()
-            origin = self.data.xpos[self.body].copy()      # base_link frame origin in world
-            com = self.data.xipos[self.body].copy()
-            force, torque = np.zeros(3), np.zeros(3)
-            # Buoyancy of each box, clipped to the submerged part (uniform fluid below the surface).
-            for xyz, size in self.boxes:
-                centre = origin + R @ xyz
-                height = abs(R[2, :]) @ size                 # world vertical extent of the box
-                top, bottom = centre[2] + height / 2, centre[2] - height / 2
-                fraction = min(1., max(0., (self.surface - bottom) / max(height, 1e-9)))
-                if fraction <= 0:
-                    continue
-                lift = np.array([0., 0., self.density * 9.81 * np.prod(size) * fraction])
-                cob = centre.copy()
-                cob[2] = bottom + fraction * height / 2
-                force += lift
-                torque += np.cross(cob - com, lift)
-            # Hydrodynamics on the velocity relative to the current, in the body frame.
             velocity = np.zeros(6)
             mujoco.mj_objectVelocity(self.model, self.data, mujoco.mjtObj.mjOBJ_BODY, self.body, velocity, 1)
-            angular, linear = velocity[:3], velocity[3:]
-            relative = np.r_[linear - R.T @ self.current, angular]
-            rate = np.zeros(6) if self.previous_relative is None else (relative - self.previous_relative) / self.model.opt.timestep
-            self.previous_relative = relative
-            body = (self.hydro['linear'] + self.hydro['quadratic'] * np.abs(relative)) * relative - self.hydro['added'] * rate
-            force += R @ body[:3]
-            torque += R @ body[3:]
-            # Thrusters at their source mounts.
-            for (position, direction), thrust in zip(self.mounts, self.forces):
-                world_force = R @ (direction * thrust)
-                force += world_force
-                torque += np.cross(origin + R @ position - com, world_force)
-            self.wrench = np.r_[force, torque]
+            force, torque = self.water_wrench(R, self.data.xpos[self.body].copy(), self.data.xipos[self.body].copy(),
+                                              velocity[3:], velocity[:3], self.model.opt.timestep)
             self.data.xfrc_applied[self.body, :3] = force
             self.data.xfrc_applied[self.body, 3:] = torque
             mujoco.mj_step(self.model, self.data)
         return self.data.time
 
 
-def main(args=None):
+def run_plant(plant, node_name, args=None):
+    """The marine plant node: thruster forces and current in, clock and odometry out."""
+    import json
     import rclpy
     from rclpy.node import Node
     from geometry_msgs.msg import Vector3
     from nav_msgs.msg import Odometry
     from rosgraph_msgs.msg import Clock
     from std_msgs.msg import Float64, String
-    import json
-    from robot_lab_utils.process_lifetime import exit_with_parent
-    exit_with_parent()
-    rclpy.init(args=args)
-    parser = argparse.ArgumentParser()
-    for key in ('description', 'spawn_x', 'spawn_y', 'spawn_z', 'spawn_yaw', 'surface_z', 'bottom_z', 'density'):
-        parser.add_argument('--' + key.replace('_', '-'), required=key == 'description', default='0')
-    options = parser.parse_args(rclpy.utilities.remove_ros_args()[1:])
-    plant = MarinePlant(Path(options.description).read_text(),
-                        [float(options.spawn_x), float(options.spawn_y), float(options.spawn_z), float(options.spawn_yaw)],
-                        float(options.surface_z), float(options.bottom_z), float(options.density))
-    node = Node('marine_mujoco_plant')
+    node = Node(node_name)
     stamps = [-math.inf] * len(plant.forces)
     def subscribe(index, joint):
         def receive(msg):
@@ -193,7 +210,7 @@ def main(args=None):
     node.create_subscription(Vector3, '/marine/current', current, 10)
     clock = node.create_publisher(Clock, '/clock', 10)
     odometry = node.create_publisher(Odometry, '/marine/odometry', 10)
-    state = node.create_publisher(String, '/marine/mujoco_plant', 10)
+    state = node.create_publisher(String, '/marine/%s_plant' % plant.engine, 10)
     period, last_odom, last_state = .01, -math.inf, -math.inf
     next_tick = time.monotonic()
     try:
@@ -220,8 +237,7 @@ def main(args=None):
             if now - last_state > .2:
                 last_state = now
                 state.publish(String(data=json.dumps(dict(sim_time=sim, thrust_N=plant.forces.tolist(),
-                    wrench=plant.wrench.round(4).tolist(), current=plant.current.tolist(),
-                    scope='MuJoCo rigid body with ported Fortress buoyancy/hydrodynamics/thruster forces; seabed plane only'))))
+                    wrench=plant.wrench.round(4).tolist(), current=plant.current.tolist(), scope=plant.scope))))
             next_tick += period
             delay = next_tick - time.monotonic()
             if delay > 0:
@@ -234,6 +250,25 @@ def main(args=None):
         node.destroy_node()
         if rclpy.ok():
             rclpy.shutdown()
+
+
+def plant_arguments():
+    import rclpy
+    parser = argparse.ArgumentParser()
+    for key in ('description', 'spawn_x', 'spawn_y', 'spawn_z', 'spawn_yaw', 'surface_z', 'bottom_z', 'density'):
+        parser.add_argument('--' + key.replace('_', '-'), required=key == 'description', default='0')
+    options = parser.parse_args(rclpy.utilities.remove_ros_args()[1:])
+    return (Path(options.description).read_text(),
+            [float(options.spawn_x), float(options.spawn_y), float(options.spawn_z), float(options.spawn_yaw)],
+            float(options.surface_z), float(options.bottom_z), float(options.density))
+
+
+def main(args=None):
+    import rclpy
+    from robot_lab_utils.process_lifetime import exit_with_parent
+    exit_with_parent()
+    rclpy.init(args=args)
+    run_plant(MarinePlant(*plant_arguments()), 'marine_mujoco_plant')
 
 
 if __name__ == '__main__':

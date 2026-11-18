@@ -1734,6 +1734,7 @@ tasks:
           full_scope_acceptance: partial
           evidence: docs/status/evidence/workflow-continuation-2026-11-02/README.md
       R10.4:
+        marine_pybullet_20261118: 'Claude: implemented, experimental. marine_mujoco_plant.WaterForces (engine-neutral ported Fortress buoyancy/hydrodynamics/thrusters); marine_pybullet_plant.py (Bullet rigid body, simulator:=pybullet). rov_probe on marine_tank: surge 1.041 m, yaw 1.439 rad, 3.5 cm in 0.1 m/s current, disarm and 0.23 m sink on operator loss (MuJoCo 1.030 m, 1.437 rad, 0.9 cm). MuJoCo plant spawn yaw was read in degrees (fixed; measured lab_rov runs at yaw 0). Parity test. docs/status/evidence/r104-marine-pybullet-2026-11-18/README.md'
         acceptance_ref: ROADMAP.md R10.4
         active_scope: Source ROV/AUV forces and native controls preserved. Motion observer and controller
           pose retention repaired; IMU heading uses a one-time configured spawn prior. AUV signed-thrust
