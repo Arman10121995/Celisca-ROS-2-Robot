@@ -1,0 +1,66 @@
+{
+ "policy": "/workspace/molar/robot_lab_runtime/training/go2_stairs_r2/policy",
+ "robot": "unitree_go2",
+ "task": "walk",
+ "phases": [
+  {
+   "command": [
+    0.5,
+    0.0,
+    0.0
+   ],
+   "measured": [
+    0.186,
+    0.058,
+    0.123
+   ],
+   "seconds": 5.0,
+   "fallen": false
+  },
+  {
+   "command": [
+    0.3,
+    0.0,
+    0.0
+   ],
+   "measured": [
+    0.151,
+    0.045,
+    0.1
+   ],
+   "seconds": 5.0,
+   "fallen": false
+  },
+  {
+   "command": [
+    0.0,
+    0.0,
+    0.8
+   ],
+   "measured": [
+    -0.009,
+    0.132,
+    0.689
+   ],
+   "seconds": 5.0,
+   "fallen": false
+  },
+  {
+   "command": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "measured": [
+    0.002,
+    0.001,
+    -0.003
+   ],
+   "seconds": 5.0,
+   "fallen": false
+  }
+ ],
+ "terrain": "stairs",
+ "simulator": "mujoco (training environment)",
+ "deployment_code": "legged_policy.LeggedPolicy"
+}

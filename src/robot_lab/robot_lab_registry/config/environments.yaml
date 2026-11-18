@@ -1,3 +1,75 @@
+- created: '2026-11-18'
+  description: terrain_stairs with 0.10 m rises (five steps, 1.1 m treads, along y = -4) and a low descending ramp;
+    R5.2 stairs course at the rise the Go2 curriculum reached
+  dimension: 3D
+  dynamics:
+    dynamic_obstacles: false
+    max_dynamic_count: 0
+    static_obstacles: true
+  goals:
+  - id: east_ramp
+    pose:
+      x: 7.0
+      y: 5.0
+      yaw: 0.0
+  ground_truth_available: true
+  id: terrain_stairs_low
+  name: Low staircase terrain
+  occupancy_map: robot_lab_maps/maps/terrain_stairs_low/maps/map.pgm
+  reference_paths:
+  - id: spawn_to_east
+    waypoints:
+    - x: -7.0
+      y: -5.0
+      yaw: 0.0
+    - x: -1.0
+      y: -5.0
+      yaw: 0.0
+    - x: 2.0
+      y: -2.0
+      yaw: 0.0
+    - x: 7.0
+      y: 5.0
+      yaw: 0.0
+  reset_service: /robot_lab/reset
+  ros_package: robot_lab_maps
+  seed: 7
+  simulator: gazebo
+  simulators:
+  - gazebo
+  - isaac
+  - pybullet
+  - mujoco
+  size:
+    x: 16.0
+    y: 16.0
+    z: 3.0
+  source:
+    license: Apache-2.0
+    repository: internal
+  spawn_zones:
+  - id: default
+    pose:
+      x: -7.0
+      y: -5.0
+      z: 0.0
+    size:
+      x: 2.0
+      y: 2.0
+      z: 1.0
+  status: integrated
+  supported_robot_classes:
+  - legged
+  - humanoid
+  - aerial
+  tags:
+  - stairs
+  - 3D
+  - legged
+  - terrain
+  updated: '2026-11-18'
+  version: 1.0.0
+  world_file: robot_lab_maps/maps/terrain_stairs_low/worlds/terrain_stairs_low.world
 - id: mobile_fetch_lab
   name: Mobile fetch lab
   description: Mobile pick-carry-place fixture (R5.9) - robot at the origin, pickup_table (top 0.5 m) at (1.6, 0) with a loose 40 x 40 x 150 mm, 100 g block, drop_table at (0, 2.2)

@@ -122,6 +122,20 @@ ARENAS["terrain_stairs"] = {
     "goal": [7.0, 5.0, 0.0],
 }
 
+# terrain_stairs_low - the same arena with 0.10 m rises (R5.2, 2026-11-18): the
+# rise Go2's stairs curriculum reached (level 0.5 of 0.02-0.18 m), so a
+# trained policy has a named stairs course at the height it learned.
+low_h = 0.10
+ARENAS["terrain_stairs_low"] = {
+    "min_xy": (st_lo, st_lo),
+    "max_xy": (st_hi, st_hi),
+    "boxes": outer_walls(st_lo, st_lo, st_hi, st_hi)
+             + [Box(step_x0 + i * 2 * step_d, -4.0, step_w, step_d, i * low_h, low_h) for i in range(5)]
+             + [Box(step_x0 + 9.0 + i * 2 * step_d, 4.0, step_w, step_d, (3 - i) * low_h, low_h) for i in range(4)],
+    "spawn": [-7.0, -5.0, 0.0],
+    "goal": [7.0, 5.0, 0.0],
+}
+
 
 # ---------------------------------------------------------------------------
 # terrain_stepping_stones - an 18m x 14m arena with a serpentine path of raised
@@ -309,10 +323,13 @@ def build_occupancy(name, min_xy, max_xy, boxes):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--out-dir", default=str(Path(__file__).resolve().parent.parent / "maps"))
+    ap.add_argument("--only", nargs="*", help="arena names to generate (default: all)")
     args = ap.parse_args()
 
     out_dir = Path(args.out_dir)
     for name, spec in ARENAS.items():
+        if args.only and name not in args.only:
+            continue
         world_dir = out_dir / name / "worlds"
         map_dir = out_dir / name / "maps"
         world_dir.mkdir(parents=True, exist_ok=True)

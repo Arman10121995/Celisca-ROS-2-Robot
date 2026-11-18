@@ -196,6 +196,8 @@ notes in the dated entries below are history.
 
 November 17: **R11 MOLAR done-when met.** The payload transfer passes in Gazebo on `celisca_floor_1_detailed`, the world where route A passed on 15 Nov. The box ends on the station with no drag on retract. [Receipt](evidence/r11-molar-celisca-transfer-2026-11-17/README.md).
 
+November 18: **Go2 stairs: not passed yet.** The stairs curriculum now compares the distance walked with the distance commanded. Training reached 10 cm rises (r1 had stalled at 4.4 cm). In a normal MuJoCo launch, neither the trained nor the vendor policy climbs the 18 cm `terrain_stairs` or the new 10 cm `terrain_stairs_low`. Each stops at the first step without falling. The trained gait also keeps one front foot raised, a training issue to fix next. The new screen `scripts/screen_stairs.py` tracks contact and effort. [Receipt](evidence/go2-stairs-r2-2026-11-18/README.md).
+
 November 18: **MOLAR transfer on Isaac.** Isaac now has MOLAR's deck belt, using PhysX surface velocity on the deck link, as Isaac's own conveyor does. The transfer passes twice there: the payload ends 0.67 m ahead on the station with no retract drag. It now passes on all four simulators. The belt direction had to be flipped from the first, failed run. [Receipt](evidence/r11-molar-isaac-belt-2026-11-18/README.md).
 
 November 18: **MOLAR's near-obstacle goal B passes on CELISCA floor 1.** On 15 November localization drifted 0.49 m, so Nav2 saw MOLAR's footprint inside an obstacle and aborted. AMCL now updates twice as often, uses more beams and trusts odometry rotation less. The whole mission passes twice: route A within 0.08–0.12 m, goal B within 0.09 m. [Receipt](evidence/r11-molar-nav-goal-b-2026-11-18/README.md).

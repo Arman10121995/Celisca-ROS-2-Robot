@@ -290,7 +290,12 @@ parking batch needs its own run. Details and evidence are in the
     200 N and 400 N pushes the vendor walking policy hands over to the get-up policy, is upright in
     2.7 s, resumes and walks 0.8–1.4 m on a 0.3 m/s command (MuJoCo);
   - get-ups on Isaac and Gazebo;
-  - stairs (the other half of the done-when).
+  - stairs (the other half of the done-when). **2026-11-18: not passed.** r2 stairs training
+    (curriculum against the commanded distance) reached 10 cm rises. In a normal MuJoCo launch
+    (`scripts/screen_stairs.py`) neither it nor the vendor policy climbs the 18 cm
+    `terrain_stairs` or the new 10 cm `terrain_stairs_low`. Every policy stops at the first
+    step, and the trained gait keeps one front foot raised.
+    [Receipt](docs/status/evidence/go2-stairs-r2-2026-11-18/README.md).
 - **How to do it:**
   1. Train `push_recovery` and a get-up task with `legged-train`
      (`robot_lab_adapter/legged_training.py`, `ppo.py`) in MuJoCo, starting
@@ -1224,8 +1229,8 @@ parking batch needs its own run. Details and evidence are in the
     including walk → get-up → walk switching** (2026-11-17,
     [receipt](docs/status/evidence/go2-get-up-roll-r2-2026-11-17/README.md));
   - Go2 stairs: the stairs curriculum is now judged against the commanded distance (2026-11-18).
-    The old fixed 3 m rule held r1 at 4.4 cm rises; r2 is training (level 0.4, about 8 cm, at
-    iteration 5500);
+    The old fixed 3 m rule held r1 at 4.4 cm rises; r2 reached level 0.5 (10 cm) by iteration 8205,
+    but does not climb in deployment (see R5.2);
   - GPU training (CPU-only on Orin; training possible but slower).
 - **How to do it:** `robot_lab_adapter/legged_training.py`, `ppo.py` and `legged_train.py`.
   Add robots by their provisioned policy contract; train in MuJoCo; check
