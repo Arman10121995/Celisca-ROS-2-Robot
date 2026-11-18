@@ -1,0 +1,18 @@
+{
+ "robot": "anymal",
+ "variant": "lab_walk_anymal_walk_r2",
+ "profile": "asset_anymal",
+ "upstream": "robot_lab_adapter.legged_train",
+ "revision": "d9b7cba4",
+ "onnx_sha256": "e373abf270f83e6854c7b9c3d4f4753ccaa651da6992bfc47b72c2abe3f26898",
+ "input_width": 45,
+ "trained_by": "robot_lab_adapter.legged_train",
+ "template_policy": "lab_anymal",
+ "task": "walk",
+ "iteration": 2000,
+ "environment_steps": 24576000,
+ "source_revision": "d9b7cba4",
+ "checkpoint": "/workspace/molar/robot_lab_runtime/training/anymal_walk_r2/checkpoints/latest.pt",
+ "exported": "2026-11-18T10:36:43",
+ "qualification": "trained in the MuJoCo training environment; runtime evidence pending"
+}

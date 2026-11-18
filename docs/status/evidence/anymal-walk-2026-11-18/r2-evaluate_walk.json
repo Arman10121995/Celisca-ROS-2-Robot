@@ -1,0 +1,80 @@
+{
+ "policy": "/workspace/molar/robot_lab_runtime/training/anymal_walk_r2/policy",
+ "robot": "asset_anymal",
+ "task": "walk",
+ "phases": [
+  {
+   "command": [
+    0.5,
+    0.0,
+    0.0
+   ],
+   "measured": [
+    0.357,
+    -0.033,
+    0.001
+   ],
+   "seconds": 5.0,
+   "fallen": false
+  },
+  {
+   "command": [
+    0.0,
+    0.0,
+    0.8
+   ],
+   "measured": [
+    -0.006,
+    0.053,
+    0.765
+   ],
+   "seconds": 5.0,
+   "fallen": false
+  },
+  {
+   "command": [
+    -0.3,
+    0.0,
+    0.0
+   ],
+   "measured": [
+    -0.235,
+    0.008,
+    0.003
+   ],
+   "seconds": 5.0,
+   "fallen": false
+  },
+  {
+   "command": [
+    0.0,
+    0.3,
+    0.0
+   ],
+   "measured": [
+    -0.004,
+    0.074,
+    0.064
+   ],
+   "seconds": 5.0,
+   "fallen": false
+  },
+  {
+   "command": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "measured": [
+    -0.001,
+    -0.004,
+    -0.016
+   ],
+   "seconds": 5.0,
+   "fallen": false
+  }
+ ],
+ "terrain": "flat",
+ "simulator": "mujoco (training environment)",
+ "deployment_code": "legged_policy.LeggedPolicy"
+}

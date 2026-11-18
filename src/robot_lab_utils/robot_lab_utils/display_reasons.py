@@ -122,7 +122,10 @@ def reason(facts, profile):
 
 
 def display_only(profile):
-    return set(profile.get('supported_modes', [])) <= {'display'} and not any(profile.get(k) for k in CONTROL_KEYS)
+    # A declared legged_policy feature: a trained model-matched policy walks it
+    # (legged_policy:=<dir>; robot_assets ANYmal, 2026-11-18).
+    return (set(profile.get('supported_modes', [])) <= {'display'} and not any(profile.get(k) for k in CONTROL_KEYS)
+            and 'legged_policy' not in (profile.get('features') or []))
 
 
 def generate(profiles, groups=None):

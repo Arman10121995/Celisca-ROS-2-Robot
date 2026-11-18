@@ -326,5 +326,9 @@ robots:
   # the legged_gym ANYmal C template (robot_lab_adapter/legged_templates.py).
   # Loc runs the policy (legged_policy:=<dir>); experimental until screened.
   asset_anymal:
+    # A trained policy (legged_policy:=<dir>) stands and walks it on the
+    # in-step PD bridges (mode_capability).
+    features: [legged_policy]
     experimental_modes_by_simulator:
       mujoco: [display, loc]
+      isaac: [display, loc]

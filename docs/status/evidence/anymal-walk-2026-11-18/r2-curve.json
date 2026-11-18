@@ -1,0 +1,322 @@
+[
+{
+"iteration": 1,
+"mean_return": -10.0,
+"mean_episode_s": 0.42799999999999994,
+"tracking_lin_vel": 0.007327,
+"torques": -0.007461,
+"action_std": 1.002437
+},
+{
+"iteration": 51,
+"mean_return": 0.05,
+"mean_episode_s": 20.0,
+"tracking_lin_vel": 0.007553,
+"torques": -0.008169,
+"action_std": 1.03021
+},
+{
+"iteration": 101,
+"mean_return": -0.09,
+"mean_episode_s": 19.804499999999997,
+"tracking_lin_vel": 0.00763,
+"torques": -0.008988,
+"action_std": 1.031334
+},
+{
+"iteration": 151,
+"mean_return": -0.01,
+"mean_episode_s": 19.902,
+"tracking_lin_vel": 0.008059,
+"torques": -0.009809,
+"action_std": 1.035907
+},
+{
+"iteration": 201,
+"mean_return": -0.12,
+"mean_episode_s": 19.8413,
+"tracking_lin_vel": 0.007975,
+"torques": -0.010002,
+"action_std": 1.047799
+},
+{
+"iteration": 251,
+"mean_return": -0.08,
+"mean_episode_s": 19.8034,
+"tracking_lin_vel": 0.008111,
+"torques": -0.009963,
+"action_std": 1.048966
+},
+{
+"iteration": 301,
+"mean_return": 0.02,
+"mean_episode_s": 20.0,
+"tracking_lin_vel": 0.008311,
+"torques": -0.009986,
+"action_std": 1.049584
+},
+{
+"iteration": 351,
+"mean_return": 0.02,
+"mean_episode_s": 20.0,
+"tracking_lin_vel": 0.008042,
+"torques": -0.010234,
+"action_std": 1.061747
+},
+{
+"iteration": 401,
+"mean_return": 0.02,
+"mean_episode_s": 20.0,
+"tracking_lin_vel": 0.007783,
+"torques": -0.00993,
+"action_std": 1.048041
+},
+{
+"iteration": 451,
+"mean_return": 0.02,
+"mean_episode_s": 20.0,
+"tracking_lin_vel": 0.007661,
+"torques": -0.009508,
+"action_std": 1.032071
+},
+{
+"iteration": 501,
+"mean_return": 0.06,
+"mean_episode_s": 20.0,
+"tracking_lin_vel": 0.008484,
+"torques": -0.007092,
+"action_std": 0.933736
+},
+{
+"iteration": 551,
+"mean_return": 0.35,
+"mean_episode_s": 19.5365,
+"tracking_lin_vel": 0.009039,
+"torques": -0.004988,
+"action_std": 0.79826
+},
+{
+"iteration": 601,
+"mean_return": 2.14,
+"mean_episode_s": 20.0,
+"tracking_lin_vel": 0.009236,
+"torques": -0.004402,
+"action_std": 0.69914
+},
+{
+"iteration": 651,
+"mean_return": 2.78,
+"mean_episode_s": 19.6018,
+"tracking_lin_vel": 0.00953,
+"torques": -0.00414,
+"action_std": 0.667388
+},
+{
+"iteration": 701,
+"mean_return": 2.82,
+"mean_episode_s": 19.229400000000002,
+"tracking_lin_vel": 0.010265,
+"torques": -0.003796,
+"action_std": 0.631927
+},
+{
+"iteration": 751,
+"mean_return": 2.53,
+"mean_episode_s": 18.0225,
+"tracking_lin_vel": 0.010356,
+"torques": -0.00365,
+"action_std": 0.619429
+},
+{
+"iteration": 801,
+"mean_return": 4.19,
+"mean_episode_s": 19.0793,
+"tracking_lin_vel": 0.010865,
+"torques": -0.003539,
+"action_std": 0.605435
+},
+{
+"iteration": 851,
+"mean_return": 5.05,
+"mean_episode_s": 19.1033,
+"tracking_lin_vel": 0.01098,
+"torques": -0.003517,
+"action_std": 0.602779
+},
+{
+"iteration": 901,
+"mean_return": 5.35,
+"mean_episode_s": 19.529600000000002,
+"tracking_lin_vel": 0.011302,
+"torques": -0.003359,
+"action_std": 0.584686
+},
+{
+"iteration": 951,
+"mean_return": 6.96,
+"mean_episode_s": 19.7015,
+"tracking_lin_vel": 0.01197,
+"torques": -0.003186,
+"action_std": 0.562369
+},
+{
+"iteration": 1001,
+"mean_return": 7.65,
+"mean_episode_s": 19.6782,
+"tracking_lin_vel": 0.011809,
+"torques": -0.003252,
+"action_std": 0.527901
+},
+{
+"iteration": 1051,
+"mean_return": 9.92,
+"mean_episode_s": 20.0,
+"tracking_lin_vel": 0.013148,
+"torques": -0.003021,
+"action_std": 0.496641
+},
+{
+"iteration": 1101,
+"mean_return": 10.85,
+"mean_episode_s": 19.8794,
+"tracking_lin_vel": 0.013573,
+"torques": -0.00282,
+"action_std": 0.470975
+},
+{
+"iteration": 1151,
+"mean_return": 11.51,
+"mean_episode_s": 19.9344,
+"tracking_lin_vel": 0.014095,
+"torques": -0.002789,
+"action_std": 0.453534
+},
+{
+"iteration": 1201,
+"mean_return": 12.31,
+"mean_episode_s": 19.802599999999998,
+"tracking_lin_vel": 0.014133,
+"torques": -0.002819,
+"action_std": 0.443449
+},
+{
+"iteration": 1251,
+"mean_return": 12.72,
+"mean_episode_s": 19.9359,
+"tracking_lin_vel": 0.014478,
+"torques": -0.002636,
+"action_std": 0.427177
+},
+{
+"iteration": 1301,
+"mean_return": 14.5,
+"mean_episode_s": 20.0,
+"tracking_lin_vel": 0.014294,
+"torques": -0.002605,
+"action_std": 0.407721
+},
+{
+"iteration": 1351,
+"mean_return": 15.38,
+"mean_episode_s": 19.9634,
+"tracking_lin_vel": 0.015195,
+"torques": -0.002455,
+"action_std": 0.391203
+},
+{
+"iteration": 1401,
+"mean_return": 15.48,
+"mean_episode_s": 19.933,
+"tracking_lin_vel": 0.01591,
+"torques": -0.00229,
+"action_std": 0.380111
+},
+{
+"iteration": 1451,
+"mean_return": 16.44,
+"mean_episode_s": 19.9635,
+"tracking_lin_vel": 0.016674,
+"torques": -0.002292,
+"action_std": 0.365761
+},
+{
+"iteration": 1501,
+"mean_return": 17.67,
+"mean_episode_s": 20.0,
+"tracking_lin_vel": 0.016516,
+"torques": -0.002207,
+"action_std": 0.352345
+},
+{
+"iteration": 1551,
+"mean_return": 18.28,
+"mean_episode_s": 20.0,
+"tracking_lin_vel": 0.016972,
+"torques": -0.002053,
+"action_std": 0.339748
+},
+{
+"iteration": 1601,
+"mean_return": 19.11,
+"mean_episode_s": 19.918699999999998,
+"tracking_lin_vel": 0.017391,
+"torques": -0.001907,
+"action_std": 0.325506
+},
+{
+"iteration": 1651,
+"mean_return": 19.8,
+"mean_episode_s": 20.0,
+"tracking_lin_vel": 0.017708,
+"torques": -0.001836,
+"action_std": 0.313618
+},
+{
+"iteration": 1701,
+"mean_return": 20.61,
+"mean_episode_s": 20.0,
+"tracking_lin_vel": 0.017928,
+"torques": -0.001773,
+"action_std": 0.303
+},
+{
+"iteration": 1751,
+"mean_return": 21.12,
+"mean_episode_s": 19.9877,
+"tracking_lin_vel": 0.01763,
+"torques": -0.00178,
+"action_std": 0.296867
+},
+{
+"iteration": 1801,
+"mean_return": 21.49,
+"mean_episode_s": 20.0,
+"tracking_lin_vel": 0.017952,
+"torques": -0.001733,
+"action_std": 0.289161
+},
+{
+"iteration": 1851,
+"mean_return": 21.6,
+"mean_episode_s": 20.0,
+"tracking_lin_vel": 0.018265,
+"torques": -0.001608,
+"action_std": 0.280608
+},
+{
+"iteration": 1901,
+"mean_return": 22.04,
+"mean_episode_s": 19.953400000000002,
+"tracking_lin_vel": 0.018237,
+"torques": -0.001655,
+"action_std": 0.276008
+},
+{
+"iteration": 1951,
+"mean_return": 21.64,
+"mean_episode_s": 19.7569,
+"tracking_lin_vel": 0.018241,
+"torques": -0.00163,
+"action_std": 0.270312
+}
+]
