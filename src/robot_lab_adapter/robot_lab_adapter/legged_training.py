@@ -450,6 +450,9 @@ class LeggedTrainingEnv:
         self.feet_contact = np.zeros((n, self.num_feet))
         self.home = np.zeros((n, 2))
         self.episode_return = np.zeros(n)
+        # Distance the commands asked for this episode (|commanded xy velocity| x time).
+        self.commanded_distance = np.zeros(n)
+        self.walked_distance = np.zeros(n)      # path length of the base in xy
         self.term_sums = {name: np.zeros(n) for name in self.task.rewards}
         self.randomization = randomization
         self.models = [self.model]
@@ -606,6 +609,8 @@ class LeggedTrainingEnv:
         self.feet_air[index] = 0.0
         self.feet_contact[index] = 0.0
         self.episode_return[index] = 0.0
+        self.commanded_distance[index] = 0.0
+        self.walked_distance[index] = 0.0
         for sums in self.term_sums.values():
             sums[index] = 0.0
         self._sample_commands(index)
@@ -666,9 +671,13 @@ class LeggedTrainingEnv:
             timeout |= np.abs(qpos[:, 0:2]).max(axis=1) > TERRAIN_HALF_SIZE_M - 2.0
         done = (fallen if self.task.terminate_on_fall else np.zeros_like(fallen)) | timeout
         self.episode_return += reward
-        qpos_now, _ = self._split(self.state)
+        self.commanded_distance += np.linalg.norm(self.commands[:, 0:2], axis=1) * self.dt
+        qpos_now, qvel_now = self._split(self.state)
+        self.walked_distance += np.linalg.norm(qvel_now[:, 0:2], axis=1) * self.dt
         info = dict(terms=terms, fallen=fallen & self.task.terminate_on_fall, timeout=timeout,
                     finished_distance=np.linalg.norm(qpos_now[done, 0:2] - self.home[done], axis=1),
+                    finished_commanded_distance=self.commanded_distance[done].copy(),
+                    finished_walked_distance=self.walked_distance[done].copy(),
                     upright_fraction=float(np.mean(_quat_rotate_inverse(qpos_now[:, 3:7],
                         np.tile([0.0, 0.0, -1.0], (self.num_envs, 1)))[:, 2] < -.9)),
                     finished_returns=self.episode_return[done].copy(),

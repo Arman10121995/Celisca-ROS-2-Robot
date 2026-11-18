@@ -153,14 +153,17 @@ def train(args):
         env.set_terrain_level(level)
     for iteration in range(start_iteration + 1, start_iteration + args.iterations + 1):
         # Curriculum. Rough: relief grows linearly with training progress. Stairs:
-        # legged_gym's terrain curriculum, raising the rise when robots walk far from
-        # the spawn (about the seventh step) and lowering it when they do not.
+        # legged_gym's terrain curriculum against the commanded distance: raise the
+        # rise when robots' paths cover at least 80 % of what their commands asked for,
+        # lower it below 40 %. (A fixed 3 m from spawn left the rise at 4.4 cm for
+        # 1700 iterations: turning, sideways and slow commands rarely ask for 3 m,
+        # 2026-11-18.) Episodes commanding under 1 m (standing, turning) do not count.
         if args.curriculum and args.terrain == 'rough':
             level = (iteration - start_iteration - 1) / max(1, total_iters - 1)
             env.set_terrain_level(level)
         elif args.curriculum and args.terrain == 'stairs' and iteration % 10 == 0 and len(distances) >= 50:
             mean = float(np.mean(distances[-200:]))
-            level = min(1., level + .1) if mean > 3. else max(0., level - .05) if mean < 1.5 else level
+            level = min(1., level + .1) if mean > .8 else max(0., level - .05) if mean < .4 else level
             env.set_terrain_level(level)
             distances = []
         tick = time.monotonic()
@@ -170,7 +173,9 @@ def train(args):
             obs, reward, done, info = env.step(actions)
             agent.record(reward, done, info['timeout'] & ~info['fallen'])
             returns.extend(info['finished_returns'].tolist())
-            distances.extend(info.get('finished_distance', np.zeros(0)).tolist())
+            asked = info.get('finished_commanded_distance', np.zeros(0))
+            walked = info.get('finished_walked_distance', np.zeros(0))
+            distances.extend((walked[asked >= 1.] / asked[asked >= 1.]).tolist())
             lengths.extend((info['finished_lengths'] * env.dt).tolist())
             for key, value in info['terms'].items():
                 sums[key] = sums.get(key, 0.0) + value / args.steps
