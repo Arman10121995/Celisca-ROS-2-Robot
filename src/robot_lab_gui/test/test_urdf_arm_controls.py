@@ -255,13 +255,36 @@ def test_pick_place_runs_only_on_request_with_fresh_idle_node(panel, model):
     panel.pick_pub.publish.assert_not_called()                      # choosing sends nothing
     assert panel.run_pick_place()
     request = json.loads(panel.pick_pub.publish.call_args.args[0].data)
-    assert request == dict(object='pickup_cube', support='place_table', lift=.1)
+    assert request == dict(object='pickup_cube', support='place_table', lift=.1, pose_source='truth')
     panel.receive_pick_place(SimpleNamespace(data=json.dumps(dict(state, phase='executing'))))
     panel.update_pick_place()
     assert not panel.run_pick_place() and panel.pick_stop_button.instate(['!disabled'])
     panel.pick_lift.set(.5)
     panel.receive_pick_place(SimpleNamespace(data=json.dumps(state)))
     assert not panel.run_pick_place()                               # lift outside 0.03-0.25 m
+
+
+def test_camera_pose_source_is_offered_only_when_the_node_has_it(panel, model):
+    profile = {'articulation': CONFIG, 'pick_place': {'arm_joints': [J1, J2], 'mobile': {}}}
+    panel.app._robot_config = lambda: profile
+    activate(panel, model)
+    panel.pick_pub = Mock()
+    state = dict(schema='robot_lab.pick_place_state.v1', phase='idle', message='ready', mobile=True,
+                 objects=['fetch_block', 'other_block'], supports=['drop_table'], last_result=None)
+    panel.receive_pick_place(SimpleNamespace(data=json.dumps(state)))
+    panel.update_pick_place()
+    assert list(panel.pick_source_box['values']) == ['Simulator truth']
+    state.update(pose_sources=['truth', 'rgbd'], rgbd_objects=['fetch_block'])
+    panel.receive_pick_place(SimpleNamespace(data=json.dumps(state)))
+    panel.update_pick_place()
+    assert list(panel.pick_source_box['values']) == ['Simulator truth', 'RGB-D camera']
+    panel.pick_source.set('RGB-D camera')
+    panel.pick_object.set('other_block')
+    assert not panel.run_pick_place()                               # no declared colour and size
+    panel.pick_pub.publish.assert_not_called()
+    panel.pick_object.set('fetch_block')
+    assert panel.run_pick_place()
+    assert json.loads(panel.pick_pub.publish.call_args.args[0].data)['pose_source'] == 'rgbd'
 
 
 def test_mobile_node_labels_the_section_as_fetch(panel, model):

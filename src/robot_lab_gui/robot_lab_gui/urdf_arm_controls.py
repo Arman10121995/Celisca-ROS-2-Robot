@@ -23,6 +23,9 @@ try:
 except ImportError:
     String = Trigger = None
 
+# urdf_pick_place.py pose_source values and their labels.
+POSE_SOURCE_LABELS = {'truth': 'Simulator truth', 'rgbd': 'RGB-D camera'}
+
 
 def arm_config(profile):
     config = profile.get('articulation') if isinstance(profile, dict) else None
@@ -157,7 +160,7 @@ class UrdfArmControls(MolarControls):
     # --- pick and place (urdf_pick_place.py) ------------------------------------
     def _build_pick_place(self, body):
         """Object pick and place for profiles with a pick_place description."""
-        frame = ttk.LabelFrame(body, text='Pick / place (simulator truth)', padding=4)
+        frame = ttk.LabelFrame(body, text='Pick / place', padding=4)
         frame.grid(row=7, column=0, sticky='ew', pady=5)
         frame.columnconfigure(1, weight=1)
         self.pick_frame = frame
@@ -165,6 +168,8 @@ class UrdfArmControls(MolarControls):
         self.pick_pub = self.pick_stop_client = None
         self.pick_object, self.pick_support = tk.StringVar(), tk.StringVar()
         self.pick_lift = tk.DoubleVar(value=.10)
+        # Object pose for the grasp: simulator truth, or the head camera (mobile fetch).
+        self.pick_source = tk.StringVar(value=POSE_SOURCE_LABELS['truth'])
         ttk.Label(frame, text='Object').grid(row=0, column=0, sticky='w')
         self.pick_object_box = ttk.Combobox(frame, textvariable=self.pick_object, state='readonly', width=18)
         self.pick_object_box.grid(row=0, column=1, sticky='ew', padx=2)
@@ -174,8 +179,12 @@ class UrdfArmControls(MolarControls):
         ttk.Label(frame, text='Lift (m)').grid(row=2, column=0, sticky='w')
         self.pick_lift_entry = ttk.Entry(frame, textvariable=self.pick_lift, width=8)
         self.pick_lift_entry.grid(row=2, column=1, sticky='w', padx=2)
+        ttk.Label(frame, text='Object pose').grid(row=3, column=0, sticky='w')
+        self.pick_source_box = ttk.Combobox(frame, textvariable=self.pick_source, state='readonly', width=18,
+                                            values=[POSE_SOURCE_LABELS['truth']])
+        self.pick_source_box.grid(row=3, column=1, sticky='ew', padx=2)
         buttons = ttk.Frame(frame)
-        buttons.grid(row=3, column=0, columnspan=2, sticky='ew', pady=3)
+        buttons.grid(row=4, column=0, columnspan=2, sticky='ew', pady=3)
         buttons.columnconfigure((0, 1), weight=1)
         self.pick_run_button = ttk.Button(buttons, text='Run pick / place', command=self.run_pick_place)
         self.pick_run_button.grid(row=0, column=0, sticky='ew', padx=2)
@@ -184,7 +193,7 @@ class UrdfArmControls(MolarControls):
         self.pick_stop_button.grid(row=0, column=1, sticky='ew', padx=2)
         self.pick_status = tk.StringVar(value='Available for fixed arms with a pick_place description.')
         ttk.Label(frame, textvariable=self.pick_status, wraplength=290, justify='left').grid(
-            row=4, column=0, columnspan=2, sticky='ew')
+            row=5, column=0, columnspan=2, sticky='ew')
 
     def pick_supported(self):
         return bool(self.arm() and self.app._robot_config().get('pick_place'))
@@ -217,8 +226,16 @@ class UrdfArmControls(MolarControls):
                 or self.pick_support.get() not in self.pick_state.get('supports', []):
             self.pick_status.set('Choose an object, a support and a 0.03-0.25 m lift.')
             return False
+        source = next((k for k, v in POSE_SOURCE_LABELS.items() if v == self.pick_source.get()), 'truth')
+        if source not in self.pick_state.get('pose_sources', ['truth']):
+            self.pick_status.set('This robot and world have no %s object pose.' % self.pick_source.get())
+            return False
+        if source == 'rgbd' and self.pick_object.get() not in self.pick_state.get('rgbd_objects', []):
+            self.pick_status.set('%s has no declared RGB-D colour and size in this world.' % self.pick_object.get())
+            return False
         self.pick_pub.publish(String(data=json.dumps(dict(object=self.pick_object.get(),
-                                                          support=self.pick_support.get(), lift=lift))))
+                                                          support=self.pick_support.get(), lift=lift,
+                                                          pose_source=source))))
         self.pick_status.set('Requested: %s onto %s.' % (self.pick_object.get(), self.pick_support.get()))
         return True
 
@@ -236,10 +253,15 @@ class UrdfArmControls(MolarControls):
                 box['values'] = values
             if values and variable.get() not in values:
                 variable.set(values[0])
+        sources = [POSE_SOURCE_LABELS[k] for k in state.get('pose_sources', ['truth']) if k in POSE_SOURCE_LABELS]
+        if list(self.pick_source_box['values']) != sources:
+            self.pick_source_box['values'] = sources
+        if sources and self.pick_source.get() not in sources:
+            self.pick_source.set(sources[0])
         idle = state.get('phase') == 'idle'
         # A mobile profile fetches: drive, pick, carry, place (urdf_pick_place.py).
         mobile = bool(state.get('mobile'))
-        title = 'Fetch: drive · pick · carry · place (simulator truth)' if mobile else 'Pick / place (simulator truth)'
+        title = 'Fetch: drive · pick · carry · place' if mobile else 'Pick / place'
         if self.pick_frame.cget('text') != title:
             self.pick_frame.configure(text=title)
             self.pick_run_button.configure(text='Run fetch' if mobile else 'Run pick / place')

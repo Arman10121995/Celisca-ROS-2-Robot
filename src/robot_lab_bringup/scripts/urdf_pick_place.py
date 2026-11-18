@@ -5,8 +5,9 @@ The plan comes from robot_lab_mujoco.arm_pick_place: a private MuJoCo
 kinematics and collision model of the robot URDF and the world's static
 boxes. It executes through the shared articulation contract
 (``/molar/articulation/{state,command,heartbeat,stop}``). Object poses come
-from simulator truth on ``/simulation/free_bodies`` (MuJoCo, PyBullet);
-there is no perception here.
+from simulator truth on ``/simulation/free_bodies`` (MuJoCo, PyBullet),
+or, for the grasp of a mobile fetch, from the robot's RGB-D camera
+(``"pose_source": "rgbd"``, below).
 
 **Interface**
 
@@ -56,6 +57,24 @@ there is no perception here.
   hold when the base moves). The receipt records both directions.
 - While carrying, the object must keep its pose relative to the base.
 
+**Camera object pose** (``"pose_source": "rgbd"``, mobile profiles with a
+``pick_place.look`` head pose)
+
+- A ``look`` phase after the drive to the object points the head at the
+  table (``look`` joint targets), waits ``LOOK_SETTLE`` s after the head
+  settles, then fits the object in RGB-D frames with
+  ``robot_lab_utils.rgbd_boxes.estimate_box``: a declared colour and size
+  (``rgbd_boxes.yaml`` next to the world's ``worlds/`` folder), depth,
+  calibration and the camera transform (TF from the base frame, the base
+  pose from ``/odom/ground_truth`` as for the arm plan).
+- ``LOOK_FRAMES`` consecutive estimates within ``LOOK_SPREAD`` of their
+  median make the object pose. Its grasp is planned from that pose. The
+  place is planned from the object's grasp-time offset to the tool, carried
+  by the measured arm, not from truth.
+- Simulator truth still chooses the table and standoff (the "go to that
+  table" hint) and judges every stage. The receipt records the estimate's
+  error against truth.
+
 **Stopping and receipts**
 
 - Stop, a stale articulation state, a lost plant or a failed check ends the
@@ -96,6 +115,12 @@ CARRY_DRIFT = 0.03      # m of object motion relative to the base while carrying
 NAV2_MIN_LEG = 0.5      # m: shorter transit legs stay straight (DWB circles on tiny paths)
 NAV2_HANDOFF = 0.15      # m: localization this close to the run-up point hands over to docking
 NAV_BASE_RADIUS = 0.3   # m, the Nav2 overlay's robot_radius (asset_pal_tiago.yaml)
+POSE_SOURCES = ('truth', 'rgbd')
+LOOK_TOLERANCE = 0.02   # rad: the head counts as on its look target
+LOOK_SETTLE = 0.5       # s after the head settles before frames count
+LOOK_FRAMES = 3         # consecutive RGB-D estimates for one object pose
+LOOK_SPREAD = 0.01      # m: those estimates must lie this close to their median
+LOOK_TIMEOUT = 30.0     # s for the look phase
 MOBILE_DEFAULTS = dict(reach=0.62, max_depth=0.3, back_off=0.6, approach_run=0.6, base_radius=0.35,
                        carry_radius=0.85, place_inset=0.15)
 
@@ -117,7 +142,7 @@ class PickPlace(Node):
     def __init__(self):
         super().__init__('urdf_pick_place')
         for name, default in (('model_path', ''), ('articulation_config', ''), ('pick_place_config', ''),
-                              ('world_path', ''), ('base_x', 0.0), ('base_y', 0.0), ('base_z', 0.0),
+                              ('world_path', ''), ('rgbd_bindings', ''), ('base_x', 0.0), ('base_y', 0.0), ('base_z', 0.0),
                               ('base_yaw', 0.0)):
             self.declare_parameter(name, default)
         self.config = json.loads(self.get_parameter('pick_place_config').value)
@@ -147,6 +172,21 @@ class PickPlace(Node):
                                    ('/local_costmap/footprint', '/global_costmap/footprint')]
             self.amcl_pose, self.amcl_at = None, -math.inf
             self.create_subscription(PoseWithCovarianceStamped, '/amcl_pose', self._on_amcl, 10)
+        self.base_frame = None
+        self.look = dict(self.config.get('look') or {})
+        self.rgbd_bindings = self._rgbd_bindings()
+        self.camera = {}
+        if self.mobile and self.look and self.rgbd_bindings:
+            from rclpy.qos import qos_profile_sensor_data
+            from robot_lab_utils.camera_model import OAKD
+            from sensor_msgs.msg import CameraInfo, Image
+            from tf2_ros import Buffer, TransformListener
+            self.tf = Buffer()
+            self.tf_listener = TransformListener(self.tf, self)
+            for key, topic, kind in (('rgb', OAKD['rgb_topic'], Image), ('depth', OAKD['depth_topic'], Image),
+                                     ('info', OAKD['info_topic'], CameraInfo)):
+                self.create_subscription(kind, topic, lambda m, key=key: self.camera.__setitem__(key, (m, _now())),
+                                         qos_profile_sensor_data)
         self.create_subscription(String, '/simulation/free_bodies', self._on_truth, 10)
         # Optional truth for the tool and finger links (Isaac: trace_links).
         self.link_poses, self.link_poses_at = {}, -math.inf
@@ -183,6 +223,18 @@ class PickPlace(Node):
                 boxes[shape['model']] = Box(shape['model'], shape['position'], shape['orientation'], shape['size'])
         return boxes, sizes
 
+    def _rgbd_bindings(self):
+        """The world's declared RGB-D boxes (rgbd_boxes.v1), or {}."""
+        path = self.get_parameter('rgbd_bindings').value
+        world = self.get_parameter('world_path').value
+        if not path and world:
+            path = str(Path(world).resolve().parent.parent / 'rgbd_boxes.yaml')
+        if not path or not os.path.isfile(path):
+            return {}
+        import yaml
+        from robot_lab_utils.rgbd_boxes import bindings
+        return bindings(yaml.safe_load(Path(path).read_text()))
+
     def _on_truth(self, message):
         self.truth = json.loads(message.data)
         self.truth_at = _now()
@@ -206,6 +258,7 @@ class PickPlace(Node):
         p, q = message.pose.pose.position, message.pose.pose.orientation
         yaw = math.atan2(2 * (q.w * q.z + q.x * q.y), 1 - 2 * (q.y * q.y + q.z * q.z))
         self.base_pose = (p.x, p.y, p.z, yaw)
+        self.base_frame = message.child_frame_id or self.base_frame
         t = message.twist.twist
         self.base_twist = (math.hypot(t.linear.x, t.linear.y), abs(t.angular.z))
         self.base_at = _now()
@@ -227,7 +280,8 @@ class PickPlace(Node):
         self.state_pub.publish(String(data=json.dumps(dict(
             schema='robot_lab.pick_place_state.v1', phase=task.get('phase', 'idle'), stage=task.get('stage'),
             message=self.message, objects=sorted(self.truth), supports=sorted(self.supports),
-            mobile=bool(self.mobile), drive_phase=(task.get('phases') or [{}])[task.get('phase_index', 0)].get('name')
+            mobile=bool(self.mobile), pose_sources=['truth'] + (['rgbd'] if self.mobile and self.look and self.rgbd_bindings else []),
+            rgbd_objects=sorted(self.rgbd_bindings), pose_source=task.get('pose_source'), drive_phase=(task.get('phases') or [{}])[task.get('phase_index', 0)].get('name')
             if task else None,
             last_result=self.last_result, truth_age_s=round(_now() - self.truth_at, 2) if self.truth else None),
             default=_plain)))
@@ -269,13 +323,24 @@ class PickPlace(Node):
         approach = float(request.get('approach', 0.10))
         if not 0.03 <= lift <= 0.25 or not 0.03 <= approach <= 0.25:
             raise ValueError('lift and approach must be 0.03-0.25 m')
+        pose_source = request.get('pose_source', 'truth')
+        if pose_source not in POSE_SOURCES:
+            raise ValueError('pose_source must be one of %s' % (POSE_SOURCES,))
+        if pose_source == 'rgbd':
+            if not (self.mobile and self.look):
+                raise ValueError('RGB-D object poses need a mobile profile with a pick_place.look head pose')
+            if name not in self.rgbd_bindings:
+                raise ValueError('object %r has no RGB-D binding (rgbd_boxes.yaml next to the world)' % name)
+            missing = [n for n in self.look if n not in measured]
+            if missing:
+                raise ValueError('no measurement for look joints %s' % missing)
         if self.robot_mjcf is None:
             from robot_lab_adapter.legged_training import _package_map
             from robot_lab_mujoco.mujoco_spawner import _build_mjcf_from_urdf
             urdf = Path(self.get_parameter('model_path').value).read_text()
             self.robot_mjcf = _build_mjcf_from_urdf(urdf, _package_map(urdf), robot_name='pick_place_robot')
         task = dict(phase='executing', request=request, object=name, support=support_name, lift=lift,
-                    approach=approach, started=_now(), log=[], plan={}, phase_index=0,
+                    approach=approach, started=_now(), log=[], plan={}, phase_index=0, pose_source=pose_source,
                     object_start=list(self.truth[name][:3]),
                     interlock=dict(max_base_speed_in_arm_phases=0.0, max_base_turn_in_arm_phases=0.0,
                                    drive_ticks_with_articulation_active=0, drive_ticks=0))
@@ -305,6 +370,11 @@ class PickPlace(Node):
         task['phases'] = [dict(kind='drive', name='to_object'), dict(kind='arm', name='pick'),
                           dict(kind='drive', name='carry', carrying=True), dict(kind='arm', name='place'),
                           dict(kind='drive', name='clear')]
+        if pose_source == 'rgbd':
+            task['phases'].insert(1, dict(kind='look', name='look'))
+            task['plan']['pose_sources'] = dict(
+                navigation='truth: the object table and standoff', grasp='rgbd: head camera estimate',
+                place='rgbd: grasp-time object offset carried by the measured arm', judged_by='truth')
         self._start_phase(task)
         return task
 
@@ -379,6 +449,10 @@ class PickPlace(Node):
         if phase['kind'] == 'arm':
             self._plan_arm(task, phase)
             return
+        if phase['kind'] == 'look':
+            phase.update(targets={n: float(v) for n, v in self.look.items()}, estimates=[], rejected=[],
+                         settled=None, frames_used=0)
+            return
         pose = self.base_pose
         if phase['name'] == 'to_object':
             phase['waypoints'] = self._route(task, self._pick_standoff(task), pose, 0.0, self.mobile['base_radius'])
@@ -398,14 +472,127 @@ class PickPlace(Node):
         dx, dy = point[0] - x, point[1] - y
         return np.array([math.cos(yaw) * dx + math.sin(yaw) * dy, -math.sin(yaw) * dx + math.cos(yaw) * dy, point[2] - z])
 
+    def _look(self, task, phase):
+        """Point the head at the table, then fit the object in consecutive RGB-D frames."""
+        if _now() - phase['started'] > LOOK_TIMEOUT:
+            reason = phase['rejected'][-1] if phase['rejected'] else 'no fresh RGB-D frames'
+            self._save_look_frame(task)
+            return self._finish('failed', 'no RGB-D pose for %s within %.0f s (%d frames; last: %s)'
+                                % (task['object'], LOOK_TIMEOUT, phase['frames_used'], reason))
+        measured = self.measured()
+        if any(abs(measured.get(n, math.inf) - v) > LOOK_TOLERANCE for n, v in phase['targets'].items()):
+            phase['settled'] = None
+            return self._send(dict(phase['targets']))
+        phase['settled'] = phase['settled'] or _now()
+        if _now() - phase['settled'] < LOOK_SETTLE or not all(k in self.camera for k in ('rgb', 'depth', 'info')):
+            return
+        received = [self.camera[k][1] for k in ('rgb', 'depth', 'info')]
+        if min(received) < phase['settled'] + LOOK_SETTLE or min(received) <= phase.get('last_frame', -math.inf):
+            return
+        phase['last_frame'] = max(received)
+        phase['frames_used'] += 1
+        try:
+            estimate = self._rgbd_estimate(task['object'])
+        except Exception as exc:  # noqa: BLE001 - every rejection is reported
+            phase['rejected'] = (phase['rejected'] + ['%s: %s' % (type(exc).__name__, exc)])[-5:]
+            return
+        phase['estimates'] = (phase['estimates'] + [estimate])[-LOOK_FRAMES:]
+        if len(phase['estimates']) < LOOK_FRAMES:
+            return
+        positions = np.array([e['position'] for e in phase['estimates']])
+        centre = np.median(positions, axis=0)
+        spread = float(np.max(np.linalg.norm(positions - centre, axis=1)))
+        if spread > LOOK_SPREAD:
+            return
+        last = phase['estimates'][-1]
+        perceived = dict(position=centre.tolist(), orientation_wxyz=last['orientation_wxyz'], spread_m=spread,
+                         position_std_bound_m=max(e['position_std_bound_m'] for e in phase['estimates']),
+                         frames_used=phase['frames_used'], camera_frame=last['camera_frame'])
+        truth = self.truth.get(task['object'])
+        if truth is not None:
+            # Receipt only: the estimate's error against simulator truth.
+            perceived['truth'] = [round(v, 4) for v in truth[:3]]
+            perceived['error_m'] = round(float(np.linalg.norm(centre - np.asarray(truth[:3]))), 4)
+            perceived['error_xyz_m'] = [round(float(v), 4) for v in centre - np.asarray(truth[:3])]
+        task['perceived'] = perceived
+        task['log'].append(dict(phase='look', seconds=round(_now() - phase['started'], 2), head=dict(phase['targets']),
+                                rejected=phase['rejected'], **{k: v for k, v in perceived.items()}))
+        self._next_phase(task)
+
+    def _save_look_frame(self, task):
+        """Keep the last RGB frame of a failed look next to the receipts, for the operator."""
+        if 'rgb' not in self.camera:
+            return
+        try:
+            import cv2
+            from robot_lab_utils.rgbd_object_pose import pixels
+            path = self.receipts / ('%s_%s_look.png' % (time.strftime('%Y%m%dT%H%M%S'), task['object']))
+            cv2.imwrite(str(path), pixels(self.camera['rgb'][0])[:, :, ::-1])
+            task['plan']['look_frame'] = str(path)
+        except Exception as exc:  # noqa: BLE001 - the frame is a diagnostic only
+            self.get_logger().warn('could not save the look frame: %r' % exc)
+
+    def _rgbd_estimate(self, name):
+        """One estimate of the object's pose (world) from the latest RGB-D frames."""
+        from robot_lab_utils.rgbd_boxes import estimate_box
+        from robot_lab_utils.rgbd_object_pose import pixels, stamp
+        from scipy.spatial.transform import Rotation
+        rgb, depth, info = (self.camera[k][0] for k in ('rgb', 'depth', 'info'))
+        if max(stamp(rgb), stamp(depth), stamp(info)) - min(stamp(rgb), stamp(depth), stamp(info)) > 0.02:
+            raise ValueError('RGB, depth and calibration are not from one sample')
+        if not rgb.header.frame_id or len({rgb.header.frame_id, depth.header.frame_id, info.header.frame_id}) != 1:
+            raise ValueError('RGB and depth must share one optical frame')
+        if not self.base_frame or self.base_pose is None or _now() - self.base_at > STATE_STALE:
+            raise ValueError('no fresh base pose')
+        # The base and head are still here, so the latest transform is the image's.
+        t = self.tf.lookup_transform(self.base_frame, rgb.header.frame_id, rclpy.time.Time()).transform
+        base_from_camera = np.eye(4)
+        base_from_camera[:3, :3] = Rotation.from_quat([t.rotation.x, t.rotation.y, t.rotation.z, t.rotation.w]).as_matrix()
+        base_from_camera[:3, 3] = [t.translation.x, t.translation.y, t.translation.z]
+        x, y, z, yaw = self.base_pose
+        world_from_base = np.eye(4)
+        world_from_base[:3, :3] = Rotation.from_euler('z', yaw).as_matrix()
+        world_from_base[:3, 3] = [x, y, z]
+        result = estimate_box(pixels(rgb), pixels(depth, True), np.asarray(info.k).reshape(3, 3), info.d,
+                              world_from_base @ base_from_camera, self.rgbd_bindings[name])
+        result['camera_frame'] = rgb.header.frame_id
+        return result
+
+    def _object_pose(self, task, phase):
+        """[x, y, z, qw, qx, qy, qz] the arm phase plans with: truth, or the camera's estimate."""
+        name = task['object']
+        if task['pose_source'] != 'rgbd':
+            if _now() - self.truth_at > STATE_STALE:
+                raise ValueError('object truth stale')
+            return list(self.truth[name])
+        if phase['name'] == 'pick':
+            return list(task['perceived']['position']) + list(task['perceived']['orientation_wxyz'])
+        # Place: where the grasp-time offset puts the object on the measured tool.
+        from scipy.spatial.transform import Rotation
+        offset, relative = task['held_in_tool']
+        position, rotation = self._measured_tcp(name)
+        w_x_y_z = Rotation.from_matrix(rotation @ np.asarray(relative)).as_quat()[[3, 0, 1, 2]]
+        return list(position + rotation @ np.asarray(offset)) + w_x_y_z.tolist()
+
+    def _measured_tcp(self, name):
+        """World TCP position and rotation at the measured joints and base pose."""
+        from robot_lab_mujoco.arm_pick_place import ArmScene, Box
+        measured = self.measured()
+        planned = set(self.spec.arm_joints + self.spec.finger_joints)
+        held = {c['name']: c['measured'] for c in self.state.get('channels', [])
+                if c.get('mode') == 'position' and c.get('measured') is not None and c['name'] not in planned}
+        # Any object pose will do: only the arm is evaluated.
+        scene = ArmScene(self.robot_mjcf, self.spec, [], Box(name, [0, 0, -5], [1, 0, 0, 0], self.object_sizes[name]),
+                         base=self.base_pose, held=held)
+        scene.set_joints({n: measured[n] for n in planned})
+        return scene.tcp()
+
     def _plan_arm(self, task, phase):
         """Plan an arm phase from the measured arm, base and object."""
         from robot_lab_mujoco.arm_pick_place import ArmScene, Box, plan_pick, plan_pick_place, plan_place, synchronised
         measured = self.measured()
         name = task['object']
-        if _now() - self.truth_at > STATE_STALE:
-            raise ValueError('object truth stale')
-        pose = self.truth[name]
+        pose = self._object_pose(task, phase)
         obj = Box(name, pose[:3], pose[3:], self.object_sizes[name])
         base = self.base if not self.mobile else self.base_pose
         planned_joints = set(self.spec.arm_joints + self.spec.finger_joints)
@@ -421,7 +608,10 @@ class PickPlace(Node):
         elif phase['name'] == 'pick':
             planned = plan_pick(scene, start, obj, **options)
             task['plan'].update(grasp_width_m=planned['grasp_width_m'], pick_base_measured=[round(v, 4) for v in base])
-            task['object_start'] = list(pose[:3])
+            # The lift is judged against truth, whatever the plan used.
+            task['object_start'] = list(self.truth[name][:3])
+            # The object's planned pose relative to the tool at the grasp.
+            task['held_in_tool'] = tuple(np.array(a, dtype=float) for a in scene.attached)
         else:
             scene.set_joints(dict(start, **{n: float(measured[n]) for n in self.spec.finger_joints}))
             scene.attach()
@@ -469,6 +659,8 @@ class PickPlace(Node):
             self._trace(task)
         if phase['kind'] == 'drive':
             return self._drive(task, phase)
+        if phase['kind'] == 'look':
+            return self._look(task, phase)
         if self.mobile:
             if _now() - self.base_at > STATE_STALE:
                 return self._finish('failed', 'base pose stale')
@@ -787,7 +979,8 @@ class PickPlace(Node):
                       message=message, request=task['request'], object=task['object'], support=task['support'],
                       object_start=task['object_start'], plan=task['plan'], stages=task['log'],
                       mobile=bool(self.mobile), interlock=task.get('interlock') if self.mobile else None,
-                      transit=task.get('transit'),
+                      transit=task.get('transit'), pose_source=task.get('pose_source', 'truth'),
+                      perceived=task.get('perceived'),
                       trace=task.get('trace', []),
                       phase=task['phases'][min(task['phase_index'], len(task['phases']) - 1)]['name'],
                       seconds=round(_now() - task['started'], 2), plant_id=self.state.get('plant_id'),

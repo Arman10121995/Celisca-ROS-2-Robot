@@ -103,6 +103,8 @@ def main():
     ap.add_argument('--probe-interlock', action='store_true', help='try base/arm interference (mobile)')
     ap.add_argument('--transit', choices=('auto', 'nav2', 'straight'), default='auto',
                     help='mobile drive legs: Nav2 when its server is up (auto), or forced')
+    ap.add_argument('--pose-source', choices=('truth', 'rgbd'), default='truth',
+                    help='object pose the grasp is planned from (rgbd: the head camera, mobile)')
     args = ap.parse_args()
     rclpy.init()
     node = rclpy.create_node('arm_pick_place_check')
@@ -141,7 +143,7 @@ def main():
     time.sleep(1.0)
     previous = json.dumps(state.get('last_result'))
     request.publish(String(data=json.dumps(dict(object=args.object, support=args.support, lift=args.lift,
-                                                transit=args.transit))))
+                                                transit=args.transit, pose_source=args.pose_source))))
     probe = Probe(node, arm, command, heartbeat) if args.probe_interlock else None
     end = time.monotonic() + args.task_timeout
     while time.monotonic() < end:

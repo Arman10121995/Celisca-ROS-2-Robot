@@ -133,14 +133,14 @@ Work top to bottom. Each line links to its task.
 | I4a | [R14.5](#r145--robot-status-markers-in-the-gui-selectors) Robot status markers | Done 2026-11-13: ● measured / ◐ experimental / ○ display only / ✕ unavailable plus mode letters in both robot lists, from recorded evidence | implemented |
 | I4b | [R6.8](#r68--real-world-area-import-from-a-globe) Real-world area import | Done 2026-11-13: globe picker (CesiumJS + OSM), Terrain Tiles + OSM buildings/roads/trees/water, SUMO people/traffic; support and roof heights measured on four simulators | implemented |
 | I5 | [R5.11](#r511--drone-moving-obstacles-and-other-drone-backends) Drone moving obstacles | Done 2026-11-13: Kalman tracks, predicted sweeps, walkway look-both-ways and overflight, evasion, sensor-loss hold/land, EKF heading/height gate; 2 passing flights past walkers (Gazebo); PX4 + MuJoCo plant: takeoff, 5 m route and landing | implemented |
-| I6 | [R5.9](#r59--mobile-manipulators) Mobile manipulation | Done-when met 11-17: TIAGo GUI fetch (drive, pick, carry, place) on MuJoCo and PyBullet with stability traces and a base/arm interlock probe. 11-17: Nav2 transit legs with AMCL (Nav mode) pass on MuJoCo 2/2 and PyBullet 1/1. Remaining: perception, Isaac grasp, Stretch pipeline missions | partial |
+| I6 | [R5.9](#r59--mobile-manipulators) Mobile manipulation | Done-when met 11-17: TIAGo GUI fetch (drive, pick, carry, place) on MuJoCo and PyBullet with stability traces and a base/arm interlock probe. 11-17: Nav2 transit legs with AMCL (Nav mode) pass on MuJoCo 2/2 and PyBullet 1/1. 11-18: grasp planned from the head RGB-D camera (`pose_source: rgbd`, estimate error 1.5 / 5.1 mm) passes on MuJoCo and PyBullet. Remaining: general (non-box) perception, Isaac grasp, Stretch pipeline missions | partial |
 | I7 | [R5.7](#r57--manipulators-and-motion-planning) Arms | Done-when met 11-17: URDF Panda GUI pick → place on PyBullet and MuJoCo (one run each). Native Panda box tasks on MuJoCo. 11-17: URDF Panda pick and place also passes on Isaac and Gazebo (all four backends); UR5/UR10/YuMi joint control on Gazebo. Remaining: compound geometry, perception, other coupled mechanisms | partial |
 | I8 | [R5.8](#r58--robot-hands-and-grippers) Hands | 11-17: normal GUI grasp → lift 5 cm → hold → return → supported release passes for Robotiq 2F-85 (both variants, support stage) and UMI (source axis); parallel-jaw measured in R5.7/R5.9. DEX-EE (dexterous) not passed: needs grasp synthesis; other backends remain | partial |
 | I9 | [R10.2](#r102--fleet-management-and-open-rmf) Fleet / Open-RMF | Done 2026-11-14: shared-zone reservations (map passages, doors, docks), cycle breaker, recovery drive-out, RMF energy from a drivetrain calibration; two crossing runs pass (native and RMF). Chargers/doors in other worlds, larger fleets remain | implemented |
 | I10 | [R10.3](#r103--swarm-robotics) Swarms | Done 2026-11-14: ROS2swarm port of per-member scan-only behaviours, scan-sensed cooperative coverage, ground/air member-loss replanning; dispersion and coverage-with-loss measured; aggregation not yet passing; 3–4 drone flight is validation | implemented |
 | I11 | [R10.5](#r105--underwater-worlds-sensing-slam-and-navigation) / [R10.4](#r104--underwater-robots-and-controllers) Marine | Done 2026-11-14: MuJoCo ROV plant (ported Fortress water forces; matches Gazebo), damping-based current feedforward (1 cm drift in 0.1 m/s), volumetric and current-aware AUV routes (unit-tested). PyBullet/Isaac marine, AUV sensor-only localization mission remain | implemented |
 | I12 | [R10.6](#r106--six--and-eight-legged-robots) / [R10.7](#r107--segmented-and-additional-robot-forms) Multi-leg and forms | Done 2026-11-14: depth/IMU flipper policy (sequences a step, but the 4 Nm flippers cannot climb 0.18 m: measured), bounded gait slip/support recovery (unit-tested). Stronger flippers, other backends, per-model terrain missions remain | implemented |
-| I13 | [R5.2](#r52--go2-quadruped-locomotion) / [R5.3](#r53--berkeley-humanoid-lite-balance-and-walking) / [R12](#r12--legged-policy-training) Legged | 2026-11-15: Go2W `wheeled_walk` policy strafes (MuJoCo 0.116, Isaac 0.271 m/s); BHL contract/export/warm start implemented, four runs not passed; 11-17: Go2 `get_up_roll` r2 (6000 iterations) stands 29/30 in training eval and gets up in a normal MuJoCo launch from side/back starts and 200–400 N knock-downs (60 N no longer topples it). Walk → get-up → walk switching measured. Go2 stairs (training running), G1, GPU training remain | partial |
+| I13 | [R5.2](#r52--go2-quadruped-locomotion) / [R5.3](#r53--berkeley-humanoid-lite-balance-and-walking) / [R12](#r12--legged-policy-training) Legged | 2026-11-15: Go2W `wheeled_walk` policy strafes (MuJoCo 0.116, Isaac 0.271 m/s); BHL contract/export/warm start implemented, four runs not passed; 11-17: Go2 `get_up_roll` r2 (6000 iterations) stands 29/30 in training eval and gets up in a normal MuJoCo launch from side/back starts and 200–400 N knock-downs (60 N no longer topples it). Walk → get-up → walk switching measured. Go2 stairs not passed after 4 runs (11-18; policies are blind: a height-scan observation is next), G1, GPU training remain | partial |
 | I14 | [R5.5](#r55--ackermann-rear-steer-and-anti-ackermann-cars) Cars | 2026-11-15: car course 13/13 on four backends (lookahead 1.25 × turning radius, forward escape when back-up is blocked); park-at-heading runtime and Drive-panel controls | implemented |
 | I15 | [R3.6](#r36--external-robot-assets-in-normal-launch) Assets | 2026-11-18: KUKA iiwa and both Valkyrie forearms also get lab servos (display-only 69 → 66; R2 refused: placeholder hand limits); 2026-11-18: robot_assets ANYmal walks with a policy trained in a legged_gym template (MuJoCo 2/2 drive screens; display-only 66 → 65); 2026-11-17: UR10, UR5, YuMi controllable with declared lab servos (display-only 73 → 69); 2026-11-15: vendor policies for Booster T1 and Unitree G1/H1/H1_2, controllable siblings named, license/mesh audit (114/163 ok). 47 legged need training, 12 URDFs ship no control interface | partial |
 | I16 | [R6.5](#r65--world-to-occupancy-generation) / [R6.6](#r66--external-world-library) / [R6.2](#r62--dynamic-and-sensor-disturbance-cases) Worlds | 2026-11-17: `<polyline>` geometry supported, polylines world installed (20/20 example scenes); upper floors covered by `--height` slicing. 2026-11-15: fixture review of 100 Gazebo examples, Fuel licences, 16 worlds with grids, actor collisions. Missions in new world classes are V9 | implemented |
@@ -296,8 +296,10 @@ parking batch needs its own run. Details and evidence are in the
     `terrain_stairs` or the new 10 cm `terrain_stairs_low`. Every policy stops at the first
     step, and the trained gait keeps one front foot raised. r3 (resumed from the evenly trotting
     `go2_walk_r3`; curriculum level 0.7, 13 cm) walks straight to the first 10 cm step with
-    `screen_stairs.py --hold-line`, puts its front feet on it and freezes. Next: training
-    episodes that start at a riser, and course-like treads.
+    `screen_stairs.py --hold-line`, puts its front feet on it and freezes. r4 (30 % of
+    episodes start 0.3 m before a riser) reached only level 0.4 and stops 0.45 m short of
+    the first step. All four policies are blind (no terrain observation). Next: a height-scan
+    observation, as in legged_gym's rough configuration, with a matching deployed sensor.
     [Receipt](docs/status/evidence/go2-stairs-r2-2026-11-18/README.md).
 - **How to do it:**
   1. Train `push_recovery` and a get-up task with `legged-train`
@@ -564,6 +566,15 @@ parking batch needs its own run. Details and evidence are in the
     longer tips, but while squeezing, the hand drifts 1.8 cm along the
     closing axis. Next: couple the fingers on Isaac.
     [Receipt](docs/status/evidence/r59-isaac-tiago-approach-2026-11-18/README.md);
+  - Done 2026-11-18 (implemented, experimental): **the fetch's grasp
+    planned from TIAGo's head camera** (`"pose_source": "rgbd"`; GUI
+    **Object pose → RGB-D camera**). A look phase tilts the head; three
+    agreeing `rgbd_boxes.estimate_box` fits of the world's declared box
+    give the object pose; the place uses the grasp-time offset carried by
+    the measured arm. Truth still picks the table and judges. Passes on
+    MuJoCo (estimate error 1.5 mm, 167.7 s) and PyBullet (5.1 mm, 142.5 s,
+    after its camera mirror learned to draw loose objects and SDF colours).
+    [Receipt](docs/status/evidence/r59-tiago-rgbd-fetch-2026-11-18/README.md);
   - general recognition/pose for unconfigured, non-box or occluded objects,
     source-specific grasp strategies and further
     source-specific object pipelines;

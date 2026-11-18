@@ -54,6 +54,9 @@ _HOLD_FORCE = 200.0
 _MAX_LATERAL_FRICTION = 1.0
 # Declared static-surface friction at or above this keeps Bullet's default (see _create_shape).
 _STATIC_DEFAULT_FRICTION_ABOVE = 1.0
+# Loose world objects are drawn in this colour, in the physics client and in
+# the camera's mirror client alike.
+DYNAMIC_BODY_COLOUR = [0.85, 0.2, 0.15, 1.0]
 
 
 def _apply_link_friction(robot_id, link_indices, friction):
@@ -450,12 +453,14 @@ class PyBulletSpawner(Node):
         except Exception:
             pass
         try:
-            # Loose primitive objects are free bodies of the physics client
-            # (the mirror render client keeps scenery only).
+            # Loose primitive objects are free bodies of the physics client;
+            # the mirror render client draws them from the physics state
+            # (_mirror_free_bodies). The mirror takes visual geometry and its
+            # SDF colours: what a camera sees.
             shapes, skipped = extract_static_shapes(
                 world_path,
                 uri_resolver(model_dirs, get_package_share_directory),
-                exclude_dynamic=client == 0)
+                prefer_visual=client != 0, exclude_dynamic=True)
         except Exception as exc:
             self.get_logger().warn(f"SDF world parse error: {exc}")
             return
@@ -478,9 +483,11 @@ class PyBulletSpawner(Node):
                 created += 1
             else:
                 skipped.append("%s shape not created" % shape.get("type"))
-        if client == 0:
-            for body in extract_dynamic_bodies(world_path):
+        for body in extract_dynamic_bodies(world_path):
+            if client == 0:
                 self._create_dynamic_body(body)
+            else:
+                self._create_mirror_body(body, client)
         self.get_logger().info(
             "SDF world '%s': %d static shape(s) created, %d skipped, %d model(s) "
             "drawn from textured visuals, %d free body(ies)"
@@ -490,7 +497,7 @@ class PyBulletSpawner(Node):
     def _create_dynamic_body(self, body):
         """One loose primitive object (sdf_world.extract_dynamic_bodies) as a free body."""
         shape, size = body["shape"], [float(v) for v in body["shape"].get("size") or []]
-        colour = [0.85, 0.2, 0.15, 1.0]
+        colour = DYNAMIC_BODY_COLOUR
         try:
             if shape["type"] == "box":
                 half = [max(v, 1e-6) / 2.0 for v in size[:3]]
@@ -532,6 +539,27 @@ class PyBulletSpawner(Node):
             # Truth for loose objects, as the MuJoCo bridge publishes it:
             # JSON {name: [x, y, z, qw, qx, qy, qz]} at 10 Hz. Reports only.
             self._free_bodies_pub = self.create_publisher(String, "/simulation/free_bodies", 10)
+
+    def _create_mirror_body(self, body, client):
+        """A visual-only copy of a loose object in the mirror render client."""
+        shape, size = body["shape"], [float(v) for v in body["shape"].get("size") or []]
+        frame = dict(visualFramePosition=shape["position"], physicsClientId=client)
+        try:
+            if shape["type"] == "box":
+                visual = p.createVisualShape(p.GEOM_BOX, halfExtents=[max(v, 1e-6) / 2.0 for v in size[:3]],
+                                             rgbaColor=DYNAMIC_BODY_COLOUR,
+                                             visualFrameOrientation=_xyzw(shape["orientation"]), **frame)
+            elif shape["type"] == "sphere":
+                visual = p.createVisualShape(p.GEOM_SPHERE, radius=size[0], rgbaColor=DYNAMIC_BODY_COLOUR, **frame)
+            else:
+                visual = p.createVisualShape(p.GEOM_CYLINDER, radius=size[0], length=size[1],
+                                             rgbaColor=DYNAMIC_BODY_COLOUR,
+                                             visualFrameOrientation=_xyzw(shape["orientation"]), **frame)
+            self._mirror_free_bodies[body["name"]] = p.createMultiBody(
+                baseMass=0.0, baseVisualShapeIndex=visual, basePosition=body["position"],
+                baseOrientation=_xyzw(body["orientation"]), physicsClientId=client)
+        except Exception as exc:
+            self.get_logger().warn("Free body %s not mirrored for the camera: %s" % (body["name"], exc))
 
     def _pub_free_bodies(self):
         poses = {}
@@ -658,7 +686,8 @@ class PyBulletSpawner(Node):
         drawn from its textured visuals)."""
         kind = shape.get("type")
         size = [float(v) for v in (shape.get("size") or [])]
-        colour = [0.55, 0.57, 0.6, 1.0]
+        # SDF material colour where given (visual shapes of the mirror).
+        colour = list(shape.get("rgba") or [0.55, 0.57, 0.6, 1.0])
         try:
             if kind in ("box", "plane"):
                 if kind == "box":
@@ -959,6 +988,7 @@ class PyBulletSpawner(Node):
         self._render_client = -1
         self._camera_thread = None
         self._cam_pose = None
+        self._mirror_free_bodies, self._free_poses = {}, {}
         if self._camera is not None:
             try:
                 self._render_client = p.connect(p.DIRECT)
@@ -1338,6 +1368,8 @@ class PyBulletSpawner(Node):
                 st = p.getLinkState(self._robot_id, self._camera["link"],
                                     computeForwardKinematics=True)
                 self._cam_pose = (list(st[4]), list(st[5]))
+                self._free_poses = {name: p.getBasePositionAndOrientation(uid)
+                                    for name, uid in self._free_bodies.items()}
 
             try:
                 # A reset rewinds sim time; re-arm the publish gates so the
@@ -1619,6 +1651,11 @@ class PyBulletSpawner(Node):
                     if ji is not None:
                         p.resetJointState(self._render_robot_id, ji, jp, jv,
                                           physicsClientId=self._render_client)
+                for name, (position, orientation) in self._free_poses.items():
+                    uid = self._mirror_free_bodies.get(name)
+                    if uid is not None:
+                        p.resetBasePositionAndOrientation(uid, position, orientation,
+                                                          physicsClientId=self._render_client)
                 rgb, depth = _render_rgbd(
                     self._cam_pose[0], self._cam_pose[1], camera,
                     client=self._render_client)

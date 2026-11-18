@@ -141,6 +141,26 @@ run-up point before the drop table.
 above, so the world uses a 40 × 40 × 150 mm, 100 g block. The planner grips
 it higher up, so the fingertips clear the table.
 
+### Grasp from the head camera
+
+On the Fetch section, set **Object pose → RGB-D camera** before **Run
+fetch** (script: `arm_pick_place_check.py --pose-source rgbd`).
+
+1. After the drive, TIAGo tilts its head to the profile's
+   `pick_place.look` pose.
+2. Each new RGB-D frame is fitted as a known-size box of a declared colour.
+   The declaration is `rgbd_boxes.yaml` next to the world's `worlds/`
+   folder: the object name, size and an OpenCV HSV range.
+3. Three estimates within 1 cm of each other make the grasp pose.
+4. The place uses where the object sat in the hand at the grasp.
+
+Simulator truth still picks the table to drive to and judges the result.
+The receipt's `perceived` block records the estimate and its error against
+truth. A world without a binding for the object offers only **Simulator
+truth**. If no estimate comes within 30 s, the task stops, and the last
+camera frame is saved next to the receipt.
+[Measured runs](../status/evidence/r59-tiago-rgbd-fetch-2026-11-18/README.md).
+
 ## Add another arm
 
 Give the arm's installed profile these blocks (TIAGo's in

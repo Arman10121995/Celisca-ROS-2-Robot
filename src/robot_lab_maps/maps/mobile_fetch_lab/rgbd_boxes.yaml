@@ -1,0 +1,11 @@
+# Declared RGB-D box targets of mobile_fetch_lab (robot_lab_utils.rgbd_boxes).
+# fetch_block is the world's 0.04 x 0.04 x 0.15 m box with diffuse colour
+# 0.85 0.2 0.15 (OpenCV hue about 2); the tables (hue about 15, saturation
+# about 110) and the grey floor fall outside the range.
+schema: robot_lab.rgbd_boxes.v1
+boxes:
+  - object: fetch_block
+    size_m: [0.04, 0.04, 0.15]
+    hsv_low: [0, 150, 40]
+    hsv_high: [10, 255, 255]
+    depth_noise_m: 0.001

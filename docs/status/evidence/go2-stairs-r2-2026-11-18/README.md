@@ -1,4 +1,4 @@
-# Go2 stairs: curriculum fixed, traversal not passed (November 18, 2026)
+# Go2 stairs: curriculum fixed, traversal not passed (r1–r4, November 18, 2026)
 
 **Status: not passed** (implemented, experimental).
 
@@ -125,13 +125,36 @@ commanded-distance curriculum:
 
 r2 on the shifted course paws at the first step (`screen-low2-go2_stairs_r2`).
 
+## Stairs r4 (riser starts): not passed
+
+r4 resumed r3's final checkpoint (iteration 5000) for 2000 iterations with
+one trainer change: 30 % of stairs episodes start 0.3 m before a random
+riser, facing it (± 0.2 rad).
+
+- The curriculum restarted at level 0 and reached 0.4 (8.4 cm) by
+  iteration 6200, then stayed there to 7000 (`r4-curriculum-curve.json`).
+  r3 had reached 0.7.
+- **Screen** (`screen-low3-go2_stairs_r4`, 10 cm stairs, 0.5 m/s, holding
+  the line):
+  - it walked 0.76 m in 8 s, then stood at x = −6.65, 0.45 m short of the
+    first riser, for the remaining 32 s;
+  - max rise 4.1 cm, no fall, feet almost always in contact
+    (0.98 / 0.77 / 0.75 / 0.99).
+- Worse than r3, which at least reached the step.
+
+**The policies are blind.** Every run here observes angular velocity,
+gravity, commands, joint positions and velocities and the last action, and
+no terrain. legged_gym's rough and stairs configurations add a height scan
+around the base (`measure_heights`). A blind policy can only find a riser
+with its feet.
+
 ## Next
 
-- The trained policies freeze when a front foot meets a riser: their
-  training stairs are pyramids with 0.3 m treads that they meet
-  head-on in the middle of an episode, not from a standstill at a riser.
-  Next: start some training episodes at a riser, and use course-like
-  1.1 m treads.
+- The trained policies freeze when a front foot meets a riser. Riser-start
+  episodes (r4) did not help.
+- Next: a height-scan observation (as legged_gym's rough configuration),
+  which needs a matching height sensor in the deployed controller on each
+  backend.
 - Train with treads like the course (1.1 m) or a mixed tread curriculum.
 - GPU-scale training (thousands of environments) is not available on this
   host.

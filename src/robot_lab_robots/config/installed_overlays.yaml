@@ -122,6 +122,9 @@ robots:
       finger_closed: 0.0
       max_object_width: 0.08
       tool_yaw_offset: 0.0
+      # RGB-D object poses ("pose_source": "rgbd"): the head pose that
+      # looks at an object on a table at the pick standoff.
+      look: {head_1_joint: 0.0, head_2_joint: -0.85}
       mobile:
         reach: 0.62            # base centre to the object, torso at Home (0.15 m)
         max_depth: 0.3
