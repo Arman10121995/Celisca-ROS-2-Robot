@@ -142,7 +142,7 @@ Work top to bottom. Each line links to its task.
 | I12 | [R10.6](#r106--six--and-eight-legged-robots) / [R10.7](#r107--segmented-and-additional-robot-forms) Multi-leg and forms | Done 2026-11-14: depth/IMU flipper policy (sequences a step, but the 4 Nm flippers cannot climb 0.18 m: measured), bounded gait slip/support recovery (unit-tested). Stronger flippers, other backends, per-model terrain missions remain | implemented |
 | I13 | [R5.2](#r52--go2-quadruped-locomotion) / [R5.3](#r53--berkeley-humanoid-lite-balance-and-walking) / [R12](#r12--legged-policy-training) Legged | 2026-11-15: Go2W `wheeled_walk` policy strafes (MuJoCo 0.116, Isaac 0.271 m/s); BHL contract/export/warm start implemented, four runs not passed; 11-17: Go2 `get_up_roll` r2 (6000 iterations) stands 29/30 in training eval and gets up in a normal MuJoCo launch from side/back starts and 200–400 N knock-downs (60 N no longer topples it). Walk → get-up → walk switching measured. Go2 stairs not passed after 4 runs (11-18; policies are blind: a height-scan observation is next), G1, GPU training remain | partial |
 | I14 | [R5.5](#r55--ackermann-rear-steer-and-anti-ackermann-cars) Cars | 2026-11-15: car course 13/13 on four backends (lookahead 1.25 × turning radius, forward escape when back-up is blocked); park-at-heading runtime and Drive-panel controls | implemented |
-| I15 | [R3.6](#r36--external-robot-assets-in-normal-launch) Assets | 2026-11-18: KUKA iiwa and both Valkyrie forearms also get lab servos (display-only 69 → 66; R2 refused: placeholder hand limits); 2026-11-18: robot_assets ANYmal walks with a policy trained in a legged_gym template (MuJoCo 2/2 drive screens; display-only 66 → 65); 2026-11-17: UR10, UR5, YuMi controllable with declared lab servos (display-only 73 → 69); 2026-11-15: vendor policies for Booster T1 and Unitree G1/H1/H1_2, controllable siblings named, license/mesh audit (114/163 ok). 47 legged need training, 12 URDFs ship no control interface | partial |
+| I15 | [R3.6](#r36--external-robot-assets-in-normal-launch) Assets | 2026-11-18: Kinova Jaco 2 gets lab servos (continuous joints with a declared source range; out-of-range zeros spawn at home); MuJoCo screen passes, PyBullet joint 4 overshoots (display-only 65 → 64); 2026-11-18: KUKA iiwa and both Valkyrie forearms also get lab servos (display-only 69 → 66; R2 refused: placeholder hand limits); 2026-11-18: robot_assets ANYmal walks with a policy trained in a legged_gym template (MuJoCo 2/2 drive screens; display-only 66 → 65); 2026-11-17: UR10, UR5, YuMi controllable with declared lab servos (display-only 73 → 69); 2026-11-15: vendor policies for Booster T1 and Unitree G1/H1/H1_2, controllable siblings named, license/mesh audit (114/163 ok). 47 legged need training, 12 URDFs ship no control interface | partial |
 | I16 | [R6.5](#r65--world-to-occupancy-generation) / [R6.6](#r66--external-world-library) / [R6.2](#r62--dynamic-and-sensor-disturbance-cases) Worlds | 2026-11-17: `<polyline>` geometry supported, polylines world installed (20/20 example scenes); upper floors covered by `--height` slicing. 2026-11-15: fixture review of 100 Gazebo examples, Fuel licences, 16 worlds with grids, actor collisions. Missions in new world classes are V9 | implemented |
 | I17 | [R11](#r11--molar--probot-l-family) MOLAR | Done-when met 2026-11-17: route A and a payload transfer both on `celisca_floor_1_detailed` (Gazebo). Earlier: transfer on `nav_empty` (Gazebo 3/3, MuJoCo 4/4). Goal B and the Isaac belt pass 2026-11-18 (transfer on all four backends). Remaining: multi-floor, mounted sensors (needs the user's layout); repeats are V8 | implemented |
 | I18 | [P4](#p4--mujoco-large-world-speed) MuJoCo speed | 2026-11-14: flex culling, exact tick pacing, oversleep payback, sensor thread (celisca_floor_1 0.81, furnished floor 0.99, hospital 0.43); large worlds remain flex-kinematics bound | partial |
@@ -213,6 +213,16 @@ parking batch needs its own run. Details and evidence are in the
   3 floating without a base controller, 2 free-flyers, 2 without usable
   actuators). The native position servo accepts unnamed vendor actuators,
   enabling Menagerie Lite6 and Google Robot jogging (validation pending).
+- **Done 2026-11-18 (implemented, experimental): Kinova Jaco 2.**
+  `urdf_lab_servos` and the articulation contract accept a continuous joint
+  as a position channel when its source `<limit>` declares a finite range
+  (Kinova: ±2π; Fetch and PR2 declare none and stay refused). Joints whose
+  range excludes 0 spawn at their clamped home on MuJoCo and PyBullet
+  (`URDFArticulation.spawn_positions`); before this the Jaco started out of
+  bounds and the contract refused every command. MuJoCo screen passes
+  (0.028 rad, Stop and heartbeat hold); on PyBullet joint 4 overshoots to a
+  0.082 rad steady error (cause not found).
+  [Receipt](docs/status/evidence/r36-kinova-2026-11-18/README.md).
 - **Done 2026-11-15 (implemented, experimental):**
   - **Booster T1:** walks with the vendor's own policy on the vendor's MuJoCo
     model (booster_gym `T1.pt`, `robot_lab_mujoco.booster_policy`).

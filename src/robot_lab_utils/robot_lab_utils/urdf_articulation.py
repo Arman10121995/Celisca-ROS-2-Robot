@@ -123,7 +123,11 @@ class URDFArticulation:
             if spec['mode'] == 'position':
                 spec['lower'] = number(spec['lower'], name+' lower')
                 spec['upper'] = number(spec['upper'], name+' upper')
-                if not spec['lower'] < spec['upper'] or spec['type'] == 'continuous' or spec['lower'] < float(limit.get('lower', '0')) - 1e-9 or spec['upper'] > float(limit.get('upper', '0')) + 1e-9:
+                # A continuous joint is a position channel only within a range
+                # its source declares (Kinova's +-2 pi; urdf_lab_servos).
+                from .urdf_lab_servos import has_source_range
+                if not spec['lower'] < spec['upper'] or (spec['type'] == 'continuous' and not has_source_range(joint)) \
+                        or spec['lower'] < float(limit.get('lower', '0')) - 1e-9 or spec['upper'] > float(limit.get('upper', '0')) + 1e-9:
                     raise ValueError('Articulation position range exceeds source: '+name)
             else:
                 spec['lower'], spec['upper'] = -spec['max_velocity'], spec['max_velocity']
@@ -131,6 +135,14 @@ class URDFArticulation:
 
         for name, entry in entries.items():
             self.joints[name] = checked(name, entry)
+        home = config.get('home') or {}
+        # Plants spawn joints at 0. A joint whose range excludes 0 (Kinova's
+        # shoulder, 0.82-5.46 rad) would start outside its bounds, which
+        # faults the contract; it starts at its home, clamped into range.
+        self.spawn_positions = {
+            name: min(max(float(home.get(name, spec['lower'])), spec['lower']), spec['upper'])
+            for name, spec in self.joints.items()
+            if spec['mode'] == 'position' and not spec['lower'] <= 0.0 <= spec['upper']}
         self.grip = tuple(config.get('grip_joints', ()))
         if any(name not in self.joints or self.joints[name]['mode'] != 'position' for name in self.grip):
             raise ValueError('grip_joints must be configured position joints')

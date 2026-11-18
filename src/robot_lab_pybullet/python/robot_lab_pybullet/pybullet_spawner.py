@@ -1082,6 +1082,10 @@ class PyBulletSpawner(Node):
             self._articulation = ArticulationROS(self, articulation_config, urdf, str(model))
             if set(self._articulation.contract.joints) & set(self._drive.wheel_joints):
                 raise ValueError('Articulation cannot own drive wheels')
+            # Joints whose range excludes 0 start at their home (contract).
+            for name, value in self._articulation.contract.spawn_positions.items():
+                if name in self._joint_idx:
+                    p.resetJointState(self._robot_id, self._joint_idx[name], value)
             # Mechanically linked joints (a gripper's fingers on one motor) are
             # coupled physically too, as in PyBullet's own Panda example.
             for follower, coupling in self._articulation.contract.couplings.items():
@@ -1492,6 +1496,10 @@ class PyBulletSpawner(Node):
                 for i in range(p.getNumJoints(self._robot_id)):
                     if p.getJointInfo(self._robot_id, i)[2] != p.JOINT_FIXED:
                         p.resetJointState(self._robot_id, i, 0.0, 0.0)
+                if self._articulation is not None:
+                    for name, value in self._articulation.contract.spawn_positions.items():
+                        if name in self._joint_idx:
+                            p.resetJointState(self._robot_id, self._joint_idx[name], value, 0.0)
                 if self._gait_plant is not None:
                     self._gait_plant.seed();self._gait_plant.at=None
                 # A still-fresh cmd_vel would re-accelerate the wheels on

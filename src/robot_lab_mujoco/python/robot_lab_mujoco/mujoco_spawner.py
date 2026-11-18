@@ -1531,6 +1531,7 @@ class MuJoCoSpawner(Node):
         self._effort_actuators = []
         self._pd_command = None
         self._articulation = None
+        self._articulation_spawn = {}
         self._pd_actuators = []
         self._go2_foot_ids = []
         self._go2_trunk_ids = []
@@ -1846,6 +1847,7 @@ class MuJoCoSpawner(Node):
                         raise ValueError('Articulation cannot share joint ownership with policy/effort input')
                     from robot_lab_utils.urdf_articulation import URDFArticulation, add_mujoco_articulation_actuators
                     articulation_contract = URDFArticulation(articulation_config, urdf, str(model))
+                    self._articulation_spawn = articulation_contract.spawn_positions
                     if set(articulation_contract.joints) & set(self._drive.wheel_joints):
                         raise ValueError('Articulation cannot own drive wheels')
                     robot_mjcf = add_mujoco_articulation_actuators(robot_mjcf, articulation_contract)
@@ -2647,6 +2649,10 @@ class MuJoCoSpawner(Node):
                 if self._model.jnt_limited[joint_id]:
                     lower, upper = self._model.jnt_range[joint_id]
                     value = max(lower, min(upper, value))
+                self._data.qpos[self._joint_name2id[name]] = value
+        # Articulated joints whose range excludes 0 (URDFArticulation.spawn_positions).
+        for name, value in self._articulation_spawn.items():
+            if name in self._joint_name2id:
                 self._data.qpos[self._joint_name2id[name]] = value
         with self._twist_lock:
             self._twist = Twist()

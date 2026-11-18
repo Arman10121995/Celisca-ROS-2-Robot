@@ -1,0 +1,165 @@
+{
+ "phases": [
+  {
+   "joint": "j2s6s200_joint_1",
+   "out": {
+    "target": -1.1361,
+    "settled_s": null,
+    "steady_error_rad": null,
+    "base_inhibited_seen": true,
+    "final": -0.6361
+   },
+   "back": {
+    "target": -0.6361,
+    "settled_s": 0.06,
+    "steady_error_rad": 0.0,
+    "base_inhibited_seen": true,
+    "final": -0.6361
+   },
+   "blocked_direction": {
+    "target": -0.1361,
+    "reached": -0.6361
+   },
+   "passed": false
+  },
+  {
+   "joint": "j2s6s200_joint_2",
+   "out": {
+    "target": 0.8703,
+    "settled_s": 0.06,
+    "steady_error_rad": 0.0225,
+    "base_inhibited_seen": true,
+    "final": 0.8478
+   },
+   "back": {
+    "target": 0.8478,
+    "settled_s": 0.06,
+    "steady_error_rad": 0.0,
+    "base_inhibited_seen": true,
+    "final": 0.8478
+   },
+   "blocked_direction": {
+    "target": 1.3478,
+    "reached": 0.8478
+   },
+   "passed": true
+  },
+  {
+   "joint": "j2s6s200_joint_3",
+   "out": {
+    "target": 1.3176,
+    "settled_s": null,
+    "steady_error_rad": null,
+    "base_inhibited_seen": true,
+    "final": 1.8176
+   },
+   "back": {
+    "target": 1.8176,
+    "settled_s": 0.06,
+    "steady_error_rad": 0.0,
+    "base_inhibited_seen": true,
+    "final": 1.8176
+   },
+   "blocked_direction": {
+    "target": 2.3176,
+    "reached": 1.8176
+   },
+   "passed": false
+  },
+  {
+   "joint": "j2s6s200_joint_4",
+   "out": {
+    "target": -0.5005,
+    "settled_s": null,
+    "steady_error_rad": null,
+    "base_inhibited_seen": true,
+    "final": -0.0005
+   },
+   "back": {
+    "target": -0.0005,
+    "settled_s": 0.06,
+    "steady_error_rad": 0.0,
+    "base_inhibited_seen": true,
+    "final": -0.0005
+   },
+   "blocked_direction": {
+    "target": 0.4995,
+    "reached": -0.0005
+   },
+   "passed": false
+  },
+  {
+   "joint": "j2s6s200_joint_5",
+   "out": {
+    "target": 1.038,
+    "settled_s": null,
+    "steady_error_rad": null,
+    "base_inhibited_seen": true,
+    "final": 0.5836
+   },
+   "back": {
+    "target": 0.538,
+    "settled_s": null,
+    "steady_error_rad": null,
+    "base_inhibited_seen": true,
+    "final": 0.5839
+   },
+   "passed": false
+  },
+  {
+   "joint": "j2s6s200_joint_6",
+   "out": {
+    "target": -0.499,
+    "settled_s": null,
+    "steady_error_rad": null,
+    "base_inhibited_seen": true,
+    "final": 0.001
+   },
+   "back": {
+    "target": 0.001,
+    "settled_s": 0.06,
+    "steady_error_rad": 0.0,
+    "base_inhibited_seen": true,
+    "final": 0.001
+   },
+   "blocked_direction": {
+    "target": 0.501,
+    "reached": 0.001
+   },
+   "passed": false
+  }
+ ],
+ "passed": false,
+ "joints": [
+  "j2s6s200_joint_1",
+  "j2s6s200_joint_2",
+  "j2s6s200_joint_3",
+  "j2s6s200_joint_4",
+  "j2s6s200_joint_5",
+  "j2s6s200_joint_6"
+ ],
+ "initial": {
+  "j2s6s200_joint_1": -0.6361,
+  "j2s6s200_joint_2": 0.8478,
+  "j2s6s200_joint_3": 1.8176,
+  "j2s6s200_joint_4": -0.0005,
+  "j2s6s200_joint_5": 0.538,
+  "j2s6s200_joint_6": 0.001
+ },
+ "stop": {
+  "joint": "j2s6s200_joint_1",
+  "held_at": -0.6361,
+  "target_was": 0.8639,
+  "drift_after_rad": 0.0,
+  "passed": true
+ },
+ "watchdog": {
+  "joint": "j2s6s200_joint_1",
+  "held_at": -0.6361,
+  "target_was": 6.2332,
+  "drift_after_rad": 0.0,
+  "status": "rejected: Requires current plant, fresh heartbeat and stopped base",
+  "passed": true
+ },
+ "final_error_rad": 0.0486
+}

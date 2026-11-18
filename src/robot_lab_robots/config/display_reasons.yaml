@@ -45,30 +45,10 @@ asset_halodi_eve_r3:
     ros2_control: false
     rotors: 0
     transmissions: 0
-    unlimited: 2
+    unlimited: 0
     wheels: 2
   reason: 'A floating-base humanoid: standing or walking needs a balance/locomotion controller or trained policy
     for exactly this model; none is provisioned. Joint jogging alone would let it fall.'
-asset_kinova:
-  code: no_control_interface
-  controllable_variants:
-  - menagerie_kinova_gen3
-  facts:
-    actuators: {}
-    floating: null
-    format: urdf
-    joints: 6
-    legs: 0
-    placeholder_limits: 0
-    ros2_control: false
-    rotors: 0
-    transmissions: 0
-    unlimited: 3
-    wheels: 0
-  reason: 'The source URDF has 6 movable joints but no ros2_control or transmission description, so there is no
-    vendor controller interface to use; gains would be invented. Lab servos from its own limits are not possible:
-    3 joints have no position limits. Controllable variant in this family (a different source model): Gen3 native
-    source (menagerie_kinova_gen3).'
 asset_pr2:
   code: no_control_interface
   facts:

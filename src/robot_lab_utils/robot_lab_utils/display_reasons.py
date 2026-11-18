@@ -56,11 +56,11 @@ def _urdf_facts(path):
     world = any(j.find('parent') is not None and j.find('parent').get('link') == 'world' for j in root.findall('joint'))
     # A URDF root without a world joint says nothing about how it is spawned;
     # legs decide the locomotion reason instead.
-    from .urdf_lab_servos import MAX_SOURCE_EFFORT
+    from .urdf_lab_servos import MAX_SOURCE_EFFORT, has_source_range
     efforts = [float((j.find('limit').get('effort') if j.find('limit') is not None else 0) or 0) for j in joints]
     return dict(format='urdf', floating=None if not world else False, actuators={}, joints=len(joints),
                 placeholder_limits=sum(e > MAX_SOURCE_EFFORT for e in efforts),
-                unlimited=sum(j.get('type') == 'continuous' or j.find('limit') is None for j in joints),
+                unlimited=sum(not has_source_range(j) for j in joints),
                 legs=len(LEG.findall(names)), rotors=len(ROTOR.findall(names)), wheels=len(WHEEL.findall(names)),
                 ros2_control=root.find('ros2_control') is not None, transmissions=len(root.findall('transmission')))
 

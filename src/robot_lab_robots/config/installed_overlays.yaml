@@ -324,6 +324,35 @@ robots:
         rightPinkyPitch2: {mode: position, lower: 0.0, upper: 1.658, effort: 10.0, max_velocity: 0.35, kp: 400.0, kd: 25.298221}
         rightPinkyPitch3: {mode: position, lower: 0.0, upper: 1.92, effort: 10.0, max_velocity: 0.35, kp: 400.0, kd: 25.298221}
       couplings: {}
+  # Kinova Jaco 2 (j2s6s200) on its mounting block: the same lab servos. Its
+  # three continuous joints declare +-2 pi in the source <limit>, which
+  # urdf_lab_servos now reads as their range. Lab home: the middle of each
+  # limited joint's range (pi: the straight-up pose), 0 on the continuous ones.
+  asset_kinova:
+    type: arm
+    features: [articulated_arm, joint_control]
+    implementation_state: experimental
+    validation_state: pending
+    articulation:
+      schema: robot_lab.urdf_articulation.v1
+      panel: arm
+      home: {j2s6s200_joint_1: 0.0, j2s6s200_joint_2: 3.141593, j2s6s200_joint_3: 3.141593, j2s6s200_joint_4: 0.0,
+        j2s6s200_joint_5: 3.141593, j2s6s200_joint_6: 0.0}
+      joints:
+        j2s6s200_joint_1: {mode: position, lower: -6.28318530718, upper: 6.28318530718, effort: 40.0, max_velocity: 0.35, kp: 1600.0,
+          kd: 50.596443}
+        j2s6s200_joint_2: {mode: position, lower: 0.820304748437, upper: 5.46288055874, effort: 80.0, max_velocity: 0.35, kp: 3200.0,
+          kd: 71.554175}
+        j2s6s200_joint_3: {mode: position, lower: 0.331612557879, upper: 5.9515727493, effort: 40.0, max_velocity: 0.35, kp: 1600.0,
+          kd: 50.596443}
+        j2s6s200_joint_4: {mode: position, lower: -6.28318530718, upper: 6.28318530718, effort: 20.0, max_velocity: 0.35, kp: 800.0,
+          kd: 35.777088}
+        j2s6s200_joint_5: {mode: position, lower: 0.523598775598, upper: 5.75958653158, effort: 20.0, max_velocity: 0.35, kp: 800.0,
+          kd: 35.777088}
+        j2s6s200_joint_6: {mode: position, lower: -6.28318530718, upper: 6.28318530718, effort: 20.0, max_velocity: 0.35, kp: 800.0,
+          kd: 35.777088}
+      couplings: {}
+      fixed_base: true
 
   # R3.6/R12 (2026-11-18): robot_assets ANYmal walks with a policy trained in
   # the legged_gym ANYmal C template (robot_lab_adapter/legged_templates.py).
