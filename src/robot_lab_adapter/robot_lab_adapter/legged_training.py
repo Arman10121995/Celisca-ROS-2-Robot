@@ -179,6 +179,11 @@ OBS_NOISE = dict(ang_vel=0.2, gravity_vec=0.05, dof_pos=0.01, dof_vel=1.5)
 TERRAIN_HALF_SIZE_M = 25.0
 TERRAIN_RESOLUTION_M = 0.1
 TERRAIN_FLAT_RADIUS_M = 1.0
+# On stairs, this share of episodes starts standing in front of a riser,
+# facing up: trained policies froze when a front foot met a riser from a
+# standstill, which spawning on the flat pad never produced (2026-11-18).
+RISER_START_FRACTION = 0.3
+RISER_START_BACK_M = 0.3      # base this far before the riser
 
 
 def rough_terrain_heights(seed, roughness=0.03, half_size=TERRAIN_HALF_SIZE_M,
@@ -574,6 +579,17 @@ class LeggedTrainingEnv:
             mujoco.mj_resetData(model, data)
             yaw = self.rng.uniform(-math.pi, math.pi)
             data.qpos[0:3] = (0.0, 0.0, self.spawn_height + 0.02)
+            if self.terrain == 'stairs' and self.rng.random() < RISER_START_FRACTION:
+                # Before riser k on one of the four sides of the square pyramid.
+                k = int(self.rng.integers(0, STAIR_STEPS))
+                side = int(self.rng.integers(4)) * math.pi / 2
+                along = TERRAIN_FLAT_RADIUS_M + k * STAIR_TREAD_M - RISER_START_BACK_M
+                across = self.rng.uniform(-0.5, 0.5) * along
+                x = math.cos(side) * along - math.sin(side) * across
+                y = math.sin(side) * along + math.cos(side) * across
+                ground = float(self.terrain_height(np.array([[x, y]]))[0])
+                yaw = side + self.rng.uniform(-0.2, 0.2)
+                data.qpos[0:3] = (x, y, ground + self.spawn_height + 0.02)
             data.qpos[3:7] = (math.cos(yaw / 2), 0.0, 0.0, math.sin(yaw / 2))
             data.qpos[self.qpos_index] = c.default_dof_pos + self.rng.uniform(-0.1, 0.1, c.num_dofs)
             data.qvel[0:6] = self.rng.uniform(-0.2, 0.2, 6)
