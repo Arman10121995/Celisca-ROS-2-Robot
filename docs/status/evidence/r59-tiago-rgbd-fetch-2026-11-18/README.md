@@ -55,6 +55,8 @@ CPU.
 | MuJoCo 1 | passed | 167.7 s | 3.9 s | 3 of 3 | 1.5 mm (−1.5, 0.1, −0.1) | 0.3 mm | 10.1 mm | 5.5 mm | −0.1 mm, 2.9 mm |
 | PyBullet 1, 2 | failed: no estimate in 30 s (64 frames) | — | — | 0 | — | — | — | — | — |
 | PyBullet 3 (after the mirror fix below) | passed | 142.5 s | 6.0 s | 3 of 3 | 5.1 mm (−4.0, −0.4, 3.2) | 0.2 mm | 9.9 mm | 16.6 mm | 0.0 mm, 6.1 mm |
+| MuJoCo 2 (repeat, 11-19) | passed | 167.9 s | — | 3 of 3 | 1.5 mm | 0.3 mm | 10.1 mm | 5.5 mm | -0.1 mm |
+| PyBullet 4 (repeat, 11-19) | passed | 143.3 s | — | 3 of 3 | 3.2 mm | 0.0 mm | 8.8 mm | 16.5 mm | -0.0 mm |
 
 **Other numbers from MuJoCo 1:**
 

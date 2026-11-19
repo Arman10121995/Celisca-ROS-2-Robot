@@ -28,6 +28,8 @@ passes on MuJoCo, PyBullet and Gazebo.
 | MuJoCo | passed | 28.8 s | 20.3 / 20.3 mm | 92.6 mm, 2.2 mm | −0.1 mm, yes |
 | PyBullet | passed | 24.0 s | 25.2 / 25.7 mm | 98.1 mm, 0.0 mm | 0.0 mm, yes |
 | Gazebo | passed | 25.2 s | 24.9 / 25.3 mm | 96.5 mm, 0.0 mm | 0.0 mm, yes (12 mm from the planned point) |
+| MuJoCo (repeat, 11-19) | passed | 32.5 s | 22.2 / 22.4 mm | 92.8 mm, 1.7 mm | -0.1 mm, yes |
+| PyBullet (repeat, 11-19) | passed | 24.0 s | 25.2 / 25.7 mm | 98.2 mm, 0.0 mm | -0.0 mm, yes |
 
 **MuJoCo's finger reading:**
 
@@ -45,6 +47,6 @@ host with Go2 policy training.
 
 - Upright cylinders only. Lying cylinders, meshes and compound objects
   remain.
-- One run per backend; Isaac is not run.
+- Two runs on MuJoCo and PyBullet, one on Gazebo; Isaac is not run.
 - Object poses come from simulator truth. The RGB-D estimator fits boxes
   only.
