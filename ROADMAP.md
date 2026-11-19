@@ -1199,8 +1199,13 @@ parking batch needs its own run. Details and evidence are in the
     outside the 0.15 m contract.
   - `scripts/qualify_gait_saved_map.py`.
   [Receipt](docs/status/evidence/r106-gait-saved-map-2026-11-19/README.md).
+- **Slip mission (2026-11-19, recovery not exercised):** new `gait_slip_patch` world (friction-0.05
+  plate; MuJoCo contact priority so the plate's friction applies). The octopod crosses it at its
+  0.045 m/s limit without a measured slip. Plates rolled 4–6° (enough to beat the friction) exceed the
+  gait's 2 cm terrain envelope, and the gait stops before them. The recovery stays unit-tested.
+  [Receipt](docs/status/evidence/r106-gait-slip-2026-11-19/README.md).
 - **Remaining implementation:**
-  - per-model terrain tuning and recovery missions;
+  - per-model terrain tuning; a recovery mission needs lower friction or push disturbances;
   - saved-map goals on other worlds and backends.
 - **How to do it:** `gait_model.py`, `gait_controller.py`, `gait_odometry.py` and
   `gait_terrain.py` in `robot_lab_utils/`. Keep one owner of `/gait/state`.

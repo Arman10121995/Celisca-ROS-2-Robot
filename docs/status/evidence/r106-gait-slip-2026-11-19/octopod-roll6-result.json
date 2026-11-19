@@ -1,0 +1,19 @@
+{
+ "recovery_reasons": [
+  "null"
+ ],
+ "passed": false,
+ "reason": "RuntimeError: Gait interrupted: Observed relief/step exceeds source gait reach envelope",
+ "backend": "mujoco",
+ "robot": "lab_octopod",
+ "terrain": true,
+ "wall_seconds": 6.155613420996815,
+ "phase": "walking",
+ "wall_budget_s": 300.0,
+ "state_publishers": [
+  {
+   "node": "source_gait_controller",
+   "namespace": "/"
+  }
+ ]
+}

@@ -141,6 +141,23 @@
   seed: 7
   world_file: robot_lab_maps/maps/gait_low_relief/worlds/gait_low_relief.world
   occupancy_map: robot_lab_maps/maps/gait_low_relief/maps/map.pgm
+- id: gait_slip_patch
+  name: Gait slip patch
+  dimension: 3D
+  dynamics: {dynamic_obstacles: false, static_obstacles: true}
+  ground_truth_available: true
+  ros_package: robot_lab_maps
+  simulator: gazebo
+  simulators: [gazebo, mujoco]
+  source: {license: Apache-2.0, repository: internal}
+  status: available
+  supported_robot_classes: [legged]
+  tags: [terrain, heightfield, low_relief, slippery, experimental]
+  version: 0.1.0
+  size: {x: 4.0, y: 4.0, z: 0.008}
+  seed: 7
+  world_file: robot_lab_maps/maps/gait_slip_patch/worlds/gait_slip_patch.world
+  occupancy_map: robot_lab_maps/maps/gait_slip_patch/maps/map.pgm
 - id: fleet_facility
   name: Fleet facility
   dimension: 3D

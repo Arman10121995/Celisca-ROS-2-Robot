@@ -1,0 +1,19 @@
+{
+ "recovery_reasons": [
+  "null"
+ ],
+ "passed": true,
+ "reason": "Actual source gait progress 0.9959 m; held drift 0.0029 m",
+ "backend": "mujoco",
+ "robot": "lab_octopod",
+ "terrain": true,
+ "wall_seconds": 34.17307740304386,
+ "phase": "holding",
+ "wall_budget_s": 300.0,
+ "state_publishers": [
+  {
+   "node": "source_gait_controller",
+   "namespace": "/"
+  }
+ ]
+}

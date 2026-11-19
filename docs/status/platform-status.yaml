@@ -1904,6 +1904,9 @@ tasks:
           grid, then reaches a goal on it in a fresh launch by independent truth (hexapod 0.090 m, octopod 0.081 m, centipede
           0.119 m; one centipede run 0.157 m outside the 0.15 m contract retained).
           docs/status/evidence/r106-gait-saved-map-2026-11-19/README.md
+          On 2026-11-19 a slip mission in the new gait_slip_patch world (friction 0.05, contact priority 2); the octopod
+          crossed at 0.045 m/s with no measured slip; 4-6 deg rolled plates exceeded the 2 cm terrain envelope and the
+          gait stopped first. Recovery still unit-tested only. docs/status/evidence/r106-gait-slip-2026-11-19/README.md
         qualification_review: '2026-10-27 documentation review: retain the implemented code, tests and named
           mission certificates. Full declared roadmap acceptance is still open; test counts, metadata and scene
           loads do not qualify remaining robot/map/backend missions. See docs/REMAINING_WORK_GUIDE.md.'
