@@ -1,4 +1,4 @@
-# R10.4: Tethys AUV on MuJoCo and PyBullet (November 19, 2026)
+# R10.4: Tethys AUV on MuJoCo, PyBullet and Isaac Sim (November 19, 2026)
 
 **Status: implemented, experimental.** The pinned Tethys AUV (propeller
 and fins) runs on MuJoCo behind the unchanged `auv_controller`
@@ -82,8 +82,21 @@ against −2.55 rad.
 | Turn | 7.43 m, yaw +0.51 rad, depth +0.6 cm | 7.17 m, +0.86 rad, rose 0.32 m | 6.93 m, +1.19 rad, rose 0.24 m |
 | Operator loss | disarmed | disarmed | disarmed |
 
-In the closed-loop turn PyBullet turns least of the three; the reason is
-not found.
+## Isaac Sim (`simulator:=isaac`)
+
+`TethysIsaacPlant` sends the thrust, fin targets and current to the Isaac
+child (`marine_isaac_runtime`, kind `tethys`). The child integrates the same
+wrench and fin servos on a PhysX rigid body, with the full inertia on its
+principal axes. Offline it ends within 4 cm of the PyBullet plant.
+
+| Phase | Isaac | PyBullet | MuJoCo | Gazebo |
+|---|---|---|---|---|
+| Cruise | 2.43 m, +0.4 cm | 2.42 m, +0.4 cm | 2.43 m, +0.3 cm | 2.45 m, +4.9 cm |
+| Turn | 7.44 m, yaw +0.49 rad | 7.43 m, +0.51 rad | 7.17 m, +0.86 rad | 6.93 m, +1.19 rad |
+| Operator loss | disarmed | disarmed | disarmed | disarmed |
+
+PyBullet and Isaac agree on the turn. MuJoCo turns more, and all three
+ports turn less than Gazebo; the cause is not found.
 
 ## Limits
 
@@ -92,4 +105,4 @@ not found.
 - No walls, sensors or mapping pipeline on MuJoCo.
 - The fins are kinematic in the hull's dynamics (their reaction torque on
   the hull is not applied).
-- Tethys on Isaac remains. The turn rate differs between engines (0.51 / 0.86 / 1.19 rad).
+- The turn rate differs between engines: 0.49 (Isaac), 0.51 (PyBullet), 0.86 (MuJoCo) and 1.19 rad (Gazebo).

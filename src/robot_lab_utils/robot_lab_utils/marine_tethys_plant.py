@@ -397,12 +397,43 @@ class TethysPyBulletPlant(TethysForces):
         return self.time
 
 
+class TethysIsaacPlant(TethysForces):
+    """The same Tethys wrench on an Isaac Sim PhysX rigid body (marine_isaac_runtime, kind tethys)."""
+    engine = 'isaac'
+    scope = ('Isaac PhysX (CPU) rigid body with ported Fortress buoyancy, hydrodynamics, thruster and fin '
+             'LiftDrag; added-mass Coriolis off by default; seabed only')
+
+    def __init__(self, sdf_text, spawn, surface_z, bottom_z, density=1025., coriolis='off'):
+        from robot_lab_utils.marine_isaac_plant import IsaacChild
+        self._setup(sdf_text, surface_z, density, coriolis)
+        self.child = IsaacChild(dict(kind='tethys', description=sdf_text, spawn=[float(v) for v in spawn],
+                                     surface_z=float(surface_z), bottom_z=float(bottom_z), density=float(density),
+                                     coriolis=coriolis))
+        self.time = 0.
+        self.position = np.asarray(spawn[:3], dtype=float)
+        self.quaternion = np.array([0., 0., math.sin(spawn[3] / 2), math.cos(spawn[3] / 2)])
+
+    def pose(self):
+        return self.position.copy(), self.quaternion.copy()
+
+    def step(self, dt):
+        state = self.child.step(dict(thrust=self.thrust, fins=self.fin_target, current=list(map(float, self.current)),
+                                     dt=float(dt)))
+        self.time = float(state['t'])
+        self.position = np.asarray(state['position'], dtype=float)
+        self.quaternion = np.asarray(state['quaternion_xyzw'], dtype=float)
+        self.wrench = np.asarray(state['wrench'], dtype=float)
+        self.fin_angle = dict(state['fins'])
+        self.propeller_angle = float(state['joints'][self.source['thruster']['joint']])
+        return self.time
+
+
 def _xyzw_from_matrix(R):
     from scipy.spatial.transform import Rotation
     return Rotation.from_matrix(np.asarray(R)).as_quat().tolist()
 
 
-ENGINES = dict(mujoco=TethysPlant, pybullet=TethysPyBulletPlant)
+ENGINES = dict(mujoco=TethysPlant, pybullet=TethysPyBulletPlant, isaac=TethysIsaacPlant)
 
 
 def main(args=None):
@@ -483,6 +514,8 @@ def main(args=None):
     except KeyboardInterrupt:
         pass
     finally:
+        if hasattr(plant, 'child'):
+            plant.child.close()          # the Isaac child process
         node.destroy_node()
         if rclpy.ok():
             rclpy.shutdown()

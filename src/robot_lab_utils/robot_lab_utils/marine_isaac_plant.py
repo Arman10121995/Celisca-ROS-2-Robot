@@ -22,13 +22,11 @@ STARTUP_TIMEOUT_S = 180.   # Isaac Sim boot
 STEP_TIMEOUT_S = 10.
 
 
-class MarineIsaacPlant(WaterForces):
-    engine = 'isaac'
-    scope = 'Isaac PhysX (CPU) rigid body with ported Fortress buoyancy/hydrodynamics/thruster forces; seabed only'
+class IsaacChild:
+    """The ``marine_isaac_runtime`` process: configuration and commands on stdin, events on a FIFO."""
 
-    def __init__(self, description, spawn, surface_z, bottom_z, density=1025., isaac_python=None):
+    def __init__(self, cfg, isaac_python=None):
         from robot_lab_utils.isaac_env import find_isaac_python, isaac_preload_libraries
-        self._load(description, surface_z, bottom_z, density)
         python = isaac_python or find_isaac_python()
         if not python or not Path(python).exists():
             raise RuntimeError('No Isaac Sim Python found (set ISAAC_PYTHON)')
@@ -50,23 +48,20 @@ class MarineIsaacPlant(WaterForces):
         self.log = open(log_dir / ('marine_isaac_runtime_%d.log' % os.getpid()), 'w')
         self.process = subprocess.Popen([python, '-u', runtime], stdin=subprocess.PIPE,
                                         stdout=self.log, stderr=subprocess.STDOUT, env=env, text=True)
-        package_root = str(Path(robot_lab_utils.__file__).resolve().parent.parent)   # its site directory
-        self.process.stdin.write(json.dumps(dict(description=description, spawn=[float(v) for v in spawn],
-                                                 surface_z=float(surface_z), bottom_z=float(bottom_z),
-                                                 density=float(density), pythonpath=[package_root])) + '\n')
-        self.process.stdin.flush()
+        cfg = dict(cfg, pythonpath=[str(Path(robot_lab_utils.__file__).resolve().parent.parent)])
+        self.send(cfg)
         # Non-blocking: a child that dies before opening the FIFO must not hang us.
         self.events = os.fdopen(os.open(fifo, os.O_RDONLY | os.O_NONBLOCK))
         self.buffer = ''
-        ready = self._event(timeout=STARTUP_TIMEOUT_S)
+        ready = self.event(timeout=STARTUP_TIMEOUT_S)
         if ready.get('event') != 'ready':
             raise RuntimeError('Isaac marine runtime failed: %s' % ready)
-        self.time = 0.
-        self.position = np.asarray(spawn[:3], dtype=float)
-        yaw = float(spawn[3])
-        self.quaternion = np.array([0., 0., np.sin(yaw / 2), np.cos(yaw / 2)])
 
-    def _event(self, timeout=STEP_TIMEOUT_S):
+    def send(self, message):
+        self.process.stdin.write(json.dumps(message) + '\n')
+        self.process.stdin.flush()
+
+    def event(self, timeout=STEP_TIMEOUT_S):
         import select
         import time
         deadline = time.monotonic() + timeout
@@ -82,16 +77,40 @@ class MarineIsaacPlant(WaterForces):
         line, self.buffer = self.buffer.split('\n', 1)
         return json.loads(line)
 
+    def step(self, command):
+        self.send(command)
+        state = self.event()
+        if state.get('event') != 'state':
+            raise RuntimeError('Isaac marine runtime: %s' % state)
+        return state
+
+    def close(self):
+        try:
+            self.send(dict(stop=True))
+        except (BrokenPipeError, ValueError):
+            pass
+        self.process.wait(timeout=20)
+
+
+class MarineIsaacPlant(WaterForces):
+    engine = 'isaac'
+    scope = 'Isaac PhysX (CPU) rigid body with ported Fortress buoyancy/hydrodynamics/thruster forces; seabed only'
+
+    def __init__(self, description, spawn, surface_z, bottom_z, density=1025., isaac_python=None):
+        self._load(description, surface_z, bottom_z, density)
+        self.child = IsaacChild(dict(kind='rov', description=description, spawn=[float(v) for v in spawn],
+                                     surface_z=float(surface_z), bottom_z=float(bottom_z), density=float(density)),
+                                isaac_python)
+        self.time = 0.
+        self.position = np.asarray(spawn[:3], dtype=float)
+        yaw = float(spawn[3])
+        self.quaternion = np.array([0., 0., np.sin(yaw / 2), np.cos(yaw / 2)])
+
     def pose(self):
         return self.position.copy(), self.quaternion.copy()
 
     def step(self, dt):
-        self.process.stdin.write(json.dumps(dict(forces=self.forces.tolist(), current=list(map(float, self.current)),
-                                                 dt=float(dt))) + '\n')
-        self.process.stdin.flush()
-        state = self._event()
-        if state.get('event') != 'state':
-            raise RuntimeError('Isaac marine runtime: %s' % state)
+        state = self.child.step(dict(forces=self.forces.tolist(), current=list(map(float, self.current)), dt=float(dt)))
         self.time = float(state['t'])
         self.position = np.asarray(state['position'], dtype=float)
         self.quaternion = np.asarray(state['quaternion_xyzw'], dtype=float)
@@ -99,12 +118,7 @@ class MarineIsaacPlant(WaterForces):
         return self.time
 
     def close(self):
-        try:
-            self.process.stdin.write(json.dumps(dict(stop=True)) + '\n')
-            self.process.stdin.flush()
-        except (BrokenPipeError, ValueError):
-            pass
-        self.process.wait(timeout=20)
+        self.child.close()
 
 
 def main(args=None):
