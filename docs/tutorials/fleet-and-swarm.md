@@ -148,6 +148,14 @@ flowchart LR
     F -- "budget expired" --> X["task failed; queue held"]
 ```
 
+### A world without a lift: `fleet_ward`
+
+Two rooms share one sliding door, and each room has a charger. The
+facility node runs without a lift: doors, docks and energy work, and lift
+commands are refused. Two robots crossing the door at the same time are
+held by the door reservation, then dock and charge.
+[Evidence](../status/evidence/r102-fleet-ward-2026-11-18/README.md).
+
 ## Ground swarm page
 
 Start controls all included members with fresh estimated state and scans.
@@ -185,6 +193,28 @@ A peer is a free-standing object 5–60 cm wide with farther background on
 both sides. After every behaviour, ROS2swarm's protection layer turns a
 robot away from anything inside its radius + 18 cm. The usual separation
 and scan guards still apply.
+
+**Not freezing at walls or peers** (2026-11-19):
+
+- A behaviour never keeps asking for motion the scan guard refuses. If a
+  translation would enter the guard's stopping corridor (radius + 0.12 m
+  plus a speed term), the robot turns in place away from the obstacle, and
+  keeps turning one way until the path is clear.
+- A member held by the pose-based separation guard turns away from the
+  nearest member. A Labbot's lidar passes over a Bumperbot, so its scan
+  cannot show that peer.
+- Flocking backs out of a corner after half a turn without a clear front.
+
+**Where they work:**
+
+- Aggregation gathers three Bumperbots in the 5 × 5 m `swarm_arena`,
+  sized to the 3.5 m sensing range: from 3.6–4.0 m apart they were all
+  within 1.5 m from 21.9 s and for 56 % of the time.
+- Attraction pulls toward anything within 3 m, so use it where walls are
+  out of range (in `nav_empty`: 2.5 → 0.39 m in about 7 s).
+- Flocking does not form a flock with three robots.
+
+[Evidence](../status/evidence/r103-swarm-aggregation-2026-11-18/README.md).
 
 ### Member loss
 

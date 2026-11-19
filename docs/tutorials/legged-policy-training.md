@@ -182,6 +182,23 @@ ros2 launch robot_lab_bringup simulated_robot.launch.py mode:=loc simulator:=muj
 
 `ros2 run robot_lab_adapter legged-train export --checkpoint … --out …` exports any checkpoint.
 
+### Terrain heights (`--height-scan`)
+
+`--height-scan` adds legged_gym's height measurements to the observation:
+a 17 × 11 grid of points 0.1 m apart around the base, in its yaw frame.
+Each value is clip(base height above the terrain there − 0.5, −1, 1) × 5.
+
+- The exported `config.yaml` lists the `height_scan` term and its grid.
+- On MuJoCo, the launch then has the simulator ray-cast the same grid and
+  publish it on `/legged/height_scan`.
+- Other simulators refuse such a policy for now.
+
+`--resume` with a blind checkpoint widens it with zero weights on the new
+inputs, so training starts from the blind policy's behaviour.
+
+`--riser-start` (default 0.3) is the share of stairs episodes that start
+just before a riser.
+
 ## Measured so far
 
 - **Pipeline smoke run** (Go2, `stand`, 64 environments, 4 iterations):

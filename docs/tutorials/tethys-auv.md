@@ -97,6 +97,41 @@ ros2 launch robot_lab_bringup simulated_robot.launch.py \
   robot_model:=tethys_auv simulator:=gazebo mode:=marine map_name:=marine_reef
 ```
 
+## MuJoCo backend
+
+```bash
+ros2 launch robot_lab_bringup auv_simulator.launch.py simulator:=mujoco map_name:=marine_tank
+```
+
+This runs the unchanged AUV controller on a MuJoCo plant
+(`marine_tethys_plant.py`). The plant ports the source buoyancy,
+hydrodynamics, the velocity-controlled thruster, the fin joint servos and
+Fortress LiftDrag on each fin. The world is a seabed plane only, with no
+sensors or mapping.
+
+- A 10 s cruise matches Gazebo (2.43 vs 2.45 m).
+- A cruising turn reaches 0.86 rad where Gazebo reaches 1.19 rad.
+- The added-mass Coriolis term is off by default (`tethys_coriolis:=off`),
+  the closest of three forms to the installed Fortress. `fossen` made pitch
+  diverge in a turn; `flipped` turned the wrong way.
+
+[Evidence](../status/evidence/r104-tethys-mujoco-2026-11-19/README.md).
+
+## A mission from the sensor estimate
+
+On Gazebo with `slam:=true`, the mission controller plans and follows a
+route from the IMU, pressure and DVL estimate only. Keep the vehicle
+2–4 m deep in a 6 m tank: the planner keeps its 1.3 m radius plus 3σ from
+the surface and the seabed.
+
+- A 3.5 m route stopped 0.20 m from the goal, with the estimate within
+  0.13 m of truth.
+- Longer routes can diverge, a slow yaw and pitch drift of the vehicle.
+- Relocalizing on a saved map needs visual or ICP structure in view; the
+  empty tank has none.
+
+[Evidence](../status/evidence/r105-auv-estimated-mission-2026-11-19/README.md).
+
 ## Source and handoff
 
 Read [model provenance](../../src/robot_lab_robots/tethys_auv/SOURCE.md) and

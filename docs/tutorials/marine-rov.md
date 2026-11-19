@@ -137,6 +137,22 @@ Gazebo. Against the same probe it matches Gazebo to within 4–25 %:
 The world is a seabed plane only, with no sensors, SLAM or added-mass
 Coriolis terms. [Evidence](../status/evidence/marine-mujoco-currents-2026-11-14/README.md).
 
+## PyBullet backend
+
+`simulator:=pybullet` runs the same controller on a Bullet rigid body with
+the same water and thruster forces (`marine_pybullet_plant.py`). Both
+plants share one force model (`marine_mujoco_plant.WaterForces`), and a
+test checks that they agree.
+
+| Probe step | PyBullet | MuJoCo |
+|---|---|---|
+| 10 s surge at 0.2 m/s | 1.041 m | 1.030 m |
+| 6 s yaw at 0.3 rad/s | 1.439 rad | 1.437 rad |
+| 15 s in a 0.1 m/s current | 3.5 cm drift | 0.9 cm |
+| Sink in 6 s after operator loss | 0.23 m | 0.23 m |
+
+[Evidence](../status/evidence/r104-marine-pybullet-2026-11-18/README.md).
+
 ## Agent continuation
 
 Read [the measured scope](../status/marine-2026-10-15.md) and the task ledger
