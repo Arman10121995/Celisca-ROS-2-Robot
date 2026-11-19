@@ -1256,11 +1256,18 @@ from robot_lab_mujoco.world_collision import RANGE_SENSOR_GEOMGROUP as _RANGE_GR
 _RANGE_GEOMGROUP = np.array(_RANGE_GROUPS, dtype=np.uint8)
 
 
+HEIGHT_SCAN_RECAST_STEP = .02   # m below a robot hit
+HEIGHT_SCAN_RECASTS = 40        # enough to pass 0.8 m of robot
+
+
 def height_scan(model, data, points_xy, top_z, robot_root):
     """Terrain height (m) under each world xy point, by vertical rays from top_z.
 
-    A ray that meets the robot itself (a foot under a scan point) is cast
-    again from just below the hit. Points over nothing read -1e3 m.
+    A ray that meets the robot itself (its body or a foot under a scan
+    point) is cast again from 2 cm below the hit: restarting 0.1 mm below,
+    inside the robot's geometry, met the robot again until the tries ran
+    out, and points under the trunk read -1e3 m (2026-11-19). Points over
+    nothing read -1e3 m.
     """
     geom = np.zeros(1, dtype=np.int32)
     heights = np.empty(len(points_xy))
@@ -1268,7 +1275,7 @@ def height_scan(model, data, points_xy, top_z, robot_root):
     for index, (x, y) in enumerate(points_xy):
         start = np.array([x, y, top_z])
         height = -1e3
-        for _ in range(4):
+        for _ in range(HEIGHT_SCAN_RECASTS):
             distance = mujoco.mj_ray(model, data, start, down, _RANGE_GEOMGROUP, 1, -1, geom)
             if distance < 0:
                 break
@@ -1276,7 +1283,7 @@ def height_scan(model, data, points_xy, top_z, robot_root):
             if model.body_rootid[model.geom_bodyid[geom[0]]] != robot_root:
                 height = hit
                 break
-            start = np.array([x, y, hit - 1e-4])
+            start = np.array([x, y, hit - HEIGHT_SCAN_RECAST_STEP])
         heights[index] = height
     return heights
 

@@ -496,3 +496,21 @@ def test_stairs_env_observes_the_step_ahead(go2_env):
     assert np.allclose(heights[:8], 0.32)     # behind and at the base: the flat pad
     assert np.all(heights[-3:] < 0.32 - 0.1)  # 0.6-0.8 m ahead: up the first step
     assert env.observations().shape == (1, 232)
+
+
+def test_the_deployed_height_scan_sees_the_floor_under_the_robot(go2_env):
+    # Points under the trunk read -1e3 m when a ray kept meeting the robot
+    # (2026-11-19); the policy then stood still on flat ground.
+    import mujoco
+    from robot_lab_adapter.legged_policy import height_scan_world
+    from robot_lab_mujoco.mujoco_spawner import height_scan
+    env = go2_env
+    model, data = env.model, mujoco.MjData(env.model)
+    qpos, _ = env._split(env.state)
+    data.qpos[:] = qpos[0][:model.nq]
+    mujoco.mj_forward(model, data)
+    free = next(j for j in range(model.njnt) if model.jnt_type[j] == mujoco.mjtJoint.mjJNT_FREE)
+    root = int(model.body_rootid[model.jnt_bodyid[free]])
+    base = data.xpos[model.jnt_bodyid[free]]
+    ground = height_scan(model, data, height_scan_world(base[:2], 0.), base[2] + 1.0, root)
+    np.testing.assert_allclose(ground, 0.0, atol=.01)

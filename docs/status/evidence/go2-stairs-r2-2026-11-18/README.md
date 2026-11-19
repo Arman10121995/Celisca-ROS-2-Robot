@@ -1,4 +1,4 @@
-# Go2 stairs: curriculum fixed, traversal not passed (r1–r4, November 18, 2026)
+# Go2 stairs: curriculum fixed, traversal not passed (r1–r5, November 18–19, 2026)
 
 **Status: not passed** (implemented, experimental).
 
@@ -148,13 +148,48 @@ no terrain. legged_gym's rough and stairs configurations add a height scan
 around the base (`measure_heights`). A blind policy can only find a riser
 with its feet.
 
+## Stairs r5 (height scan): walks to the riser and keeps trying; not passed
+
+r5 resumed r3 (iteration 5000) with one change: the height-scan
+observation (legged_gym's 17 × 11 grid, 0.1 m spacing). The blind
+checkpoint was widened with zero weights on the 187 new inputs. Riser
+starts were off.
+
+- 3000 iterations, to 8000. The curriculum reached level 0.5 (10 cm, the
+  course height) by iteration 5900 and stayed there
+  (`r5-curriculum-curve.json`).
+- In the training environment it tracks 0.5 m/s as 0.73 m/s on flat ground.
+
+**First screens failed because of a deployment bug** (kept as `*-failed-scan-misses`):
+
+- the robot stood still on flat ground and on the course;
+- about 10 of the 187 deployed scan points read 1000 m, the "nothing
+  there" value;
+- under the robot, the MuJoCo ray met the trunk, and the re-cast started
+  0.1 mm below the hit, inside the robot. It met the robot again until its
+  4 tries ran out.
+
+Rays now step 2 cm past a robot hit, with up to 40 tries. A test casts
+under the real Go2: with the old settings it gives 10 misses, now none.
+
+**Screens after the fix:**
+
+| Screen | Result |
+|---|---|
+| `nav_empty`, 0.5 m/s, 15 s (`flat-r5-2`) | 5.97 m, no fall; feet in contact 0.81 / 0.38 / 0.31 / 0.71 |
+| `terrain_stairs_low`, 0.5 m/s, holding the line (`screen-low3-go2_stairs_r5`) | not passed: walks 0.85 m to the first riser, then keeps trying for 35 s; the base rises 5–7 cm and settles back, max rise 7.1 cm, 0 steps, no fall |
+
+Unlike the blind runs, it keeps stepping at the riser instead of freezing.
+It trained no higher than the course's 10 cm. r6 continues from r5 with
+the height scan and riser starts (30 %).
+
 ## Next
 
 - The trained policies freeze when a front foot meets a riser. Riser-start
   episodes (r4) did not help.
-- Next: a height-scan observation (as legged_gym's rough configuration),
-  which needs a matching height sensor in the deployed controller on each
-  backend.
+- Height scan: implemented on MuJoCo (r5); r5 tries at the riser but
+  does not climb. r6 adds riser starts. Other backends need their own scan
+  publisher.
 - Train with treads like the course (1.1 m) or a mixed tread curriculum.
 - GPU-scale training (thousands of environments) is not available on this
   host.
