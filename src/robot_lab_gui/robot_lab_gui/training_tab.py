@@ -39,18 +39,56 @@ def training_root():
     return Path(subprocess_env().get('ROBOT_LAB_RUNTIME_ROOT', '/workspace/molar/robot_lab_runtime')) / 'training'
 
 
-def read_progress(run_dir, limit=None):
-    """Iteration lines (and the finish line) of a run's progress.jsonl."""
-    path = Path(run_dir) / 'progress.jsonl'
+# Parsed progress by path, reused while the file's size and mtime are unchanged.
+# The Runs list rescans every run every 10 s while training; parsing all of
+# them (26 MB) stalled the GUI ~1 s and tripped the 0.8 s hand heartbeat
+# (2026-11-19).
+_PROGRESS_CACHE = {}
+PROGRESS_TAIL_BYTES = 16384
+
+
+def _parse_lines(text):
     lines = []
-    if not path.exists():
-        return lines
-    for raw in path.read_text().splitlines():
+    for raw in text.splitlines():
         try:
             lines.append(json.loads(raw))
         except ValueError:
             continue
-    return lines[-limit:] if limit else lines
+    return lines
+
+
+def _progress_cached(path, key, read):
+    try:
+        stat = path.stat()
+    except OSError:
+        return []
+    stamp = (stat.st_size, stat.st_mtime_ns)
+    entry = _PROGRESS_CACHE.get((str(path), key))
+    if entry is None or entry[0] != stamp:
+        entry = (stamp, read())
+        _PROGRESS_CACHE[(str(path), key)] = entry
+    return entry[1]
+
+
+def read_progress(run_dir, limit=None):
+    """Iteration lines (and the finish line) of a run's progress.jsonl."""
+    path = Path(run_dir) / 'progress.jsonl'
+    lines = _progress_cached(path, 'all', lambda: _parse_lines(path.read_text()))
+    return lines[-limit:] if limit else list(lines)
+
+
+def read_progress_tail(run_dir):
+    """Only the last lines of a run's progress.jsonl (its last iteration and finish line)."""
+    path = Path(run_dir) / 'progress.jsonl'
+    def read():
+        with path.open('rb') as handle:
+            handle.seek(0, 2)
+            size = handle.tell()
+            handle.seek(max(0, size-PROGRESS_TAIL_BYTES))
+            text = handle.read().decode(errors='replace')
+        # Drop a line cut by the seek.
+        return _parse_lines(text if size <= PROGRESS_TAIL_BYTES else text.split('\n', 1)[-1])
+    return _progress_cached(path, 'tail', read)
 
 
 def run_summary(run_dir):
@@ -60,7 +98,7 @@ def run_summary(run_dir):
         run = json.loads((run_dir / 'run.json').read_text())
     except (OSError, ValueError):
         return None
-    lines = read_progress(run_dir)
+    lines = read_progress_tail(run_dir)
     iterations = [line for line in lines if 'iteration' in line and 'event' not in line]
     last = iterations[-1] if iterations else {}
     finished = any(line.get('event') == 'finished' for line in lines)

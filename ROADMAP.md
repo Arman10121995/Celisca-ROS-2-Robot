@@ -135,7 +135,7 @@ Work top to bottom. Each line links to its task.
 | I5 | [R5.11](#r511--drone-moving-obstacles-and-other-drone-backends) Drone moving obstacles | Done 2026-11-13: Kalman tracks, predicted sweeps, walkway look-both-ways and overflight, evasion, sensor-loss hold/land, EKF heading/height gate; 2 passing flights past walkers (Gazebo); PX4 + MuJoCo plant: takeoff, 5 m route and landing | implemented |
 | I6 | [R5.9](#r59--mobile-manipulators) Mobile manipulation | Done-when met 11-17: TIAGo GUI fetch (drive, pick, carry, place) on MuJoCo and PyBullet with stability traces and a base/arm interlock probe. 11-17: Nav2 transit legs with AMCL (Nav mode) pass on MuJoCo 2/2 and PyBullet 1/1. 11-18: grasp planned from the head RGB-D camera (`pose_source: rgbd`, estimate error 1.5 / 5.1 mm) passes on MuJoCo and PyBullet. Remaining: general (non-box) perception, Isaac grasp, Stretch pipeline missions | partial |
 | I7 | [R5.7](#r57--manipulators-and-motion-planning) Arms | Done-when met 11-17: URDF Panda GUI pick → place on PyBullet and MuJoCo (one run each). Native Panda box tasks on MuJoCo. 11-17: URDF Panda pick and place also passes on Isaac and Gazebo (all four backends); UR5/UR10/YuMi joint control on Gazebo. 11-18: upright-cylinder pick and place on MuJoCo, PyBullet and Gazebo. Remaining: compound/mesh geometry, fixed-arm perception, other coupled mechanisms | partial |
-| I8 | [R5.8](#r58--robot-hands-and-grippers) Hands | 11-17: normal GUI grasp → lift 5 cm → hold → return → supported release passes for Robotiq 2F-85 (both variants, support stage) and UMI (source axis); parallel-jaw measured in R5.7/R5.9. DEX-EE (dexterous) not passed: needs grasp synthesis; other backends remain | partial |
+| I8 | [R5.8](#r58--robot-hands-and-grippers) Hands | Done-when met 11-19: normal GUI grasp → lift 5 cm → hold → return → supported release passes for Robotiq 2F-85 (both variants, support stage), UMI (source axis) and DEX-EE (synthesized tripod, 2/2); parallel-jaw measured in R5.7/R5.9. Raw torque/tendon adapters, arm transport and other backends remain | implemented |
 | I9 | [R10.2](#r102--fleet-management-and-open-rmf) Fleet / Open-RMF | Done 2026-11-14: shared-zone reservations (map passages, doors, docks), cycle breaker, recovery drive-out, RMF energy from a drivetrain calibration; two crossing runs pass (native and RMF). 11-18: doors, docks and energy without a lift (`fleet_ward`: door crossing, docking and charging pass). Larger fleets are V7 | implemented |
 | I10 | [R10.3](#r103--swarm-robotics) Swarms | Done 2026-11-14: ROS2swarm port of per-member scan-only behaviours, scan-sensed cooperative coverage, ground/air member-loss replanning; dispersion and coverage-with-loss measured; aggregation gathers three Bumperbots in `swarm_arena` (11-18); 3–4 drone flight is validation | implemented |
 | I11 | [R10.5](#r105--underwater-worlds-sensing-slam-and-navigation) / [R10.4](#r104--underwater-robots-and-controllers) Marine | Done 2026-11-14: MuJoCo ROV plant (ported Fortress water forces; matches Gazebo), damping-based current feedforward (1 cm drift in 0.1 m/s), volumetric and current-aware AUV routes (unit-tested). 11-18: PyBullet ROV plant matches MuJoCo (surge 1.041 vs 1.030 m). 11-19: Tethys AUV on MuJoCo (cruise matches Gazebo, turn 0.86 vs 1.19 rad). AUV mission flown from the sensor estimate (11-19, 0.20 m from the goal). Tethys and the ROV run on all four backends. Saved-map relocalization remains | implemented |
@@ -498,7 +498,7 @@ parking batch needs its own run. Details and evidence are in the
 
 ### R5.8 — Robot hands and grippers
 
-- **State:** partial · **Priority:** I8 · **Depends on:** R3.6, R5.7
+- **State:** implemented, experimental (done-when met 2026-11-19) · **Priority:** I8 · **Depends on:** R3.6, R5.7
 - **Goal:** grippers and dexterous hands grasp and release objects with
   measured contact forces.
 - **Have:** the Panda gripper cube grasp; DEX-EE and three coupled-tendon
@@ -506,8 +506,6 @@ parking batch needs its own run. Details and evidence are in the
   [Hand guide](docs/tutorials/native-hand-controls.md).
 - **Force feedback continuation (2026-11-13, Codex):** GUI-requested existing-grasp force regulation adjusts source position targets, retains original PID/transmission/force limits and requested effort fraction, unloads initial over-force and interrupts on contact loss, new/worsening external touch, overload, Stop/loss/deadline. One actual pinned Robotiq component fixture reduced about 12 N to 5.25 N per side for a 5 N request; this is not a GUI/hand-family mission. [Guide](docs/tutorials/native-hand-controls.md#regulate-an-established-grasp) · [receipt](docs/status/hand-force-2026-11-13.md).
 - **Remaining implementation:**
-  - DEX-EE grasp synthesis (contact points chosen for the object, not a
-    curl template) so the dexterous family holds a lifted object;
   - raw torque and tendon hand adapters for the remaining source hands;
   - arm transport for fixed-mount hand families and additional object workflows;
   - hands on other backends.
@@ -532,6 +530,20 @@ parking batch needs its own run. Details and evidence are in the
   - **DEX-EE does not hold** (the cube tilts out of the fingertip tripod);
     it needs grasp synthesis.
   [Receipt](docs/status/evidence/r58-hands-2026-11-17/README.md).
+- **DEX-EE grasp synthesis (2026-11-19, Claude):**
+  - `hand_grasp_synthesis.py` chooses a three-finger tripod for the box:
+    the thumb against F1+F2 on opposite faces at its mid-plane.
+  - Per-finger joint targets come from the executed kinematics, and the
+    box is placed for the best force closure.
+  - The GUI grasps with the new **Synthesized tripod** pose. Normal GUI
+    grasp → lift 5 cm → 3 s hold → return → supported release passes, 2/2
+    (about 4–5 N per side).
+  - Fixes on the way:
+    - the support-stage seating jumped instead of ramping;
+    - a returned box held firmly by the fingers lost its stage contact;
+    - the pose selector stayed on Curl;
+    - the Training tab's 1 s rescan stall tripped the hand heartbeat.
+  [Receipt](docs/status/evidence/r58-dexee-synthesis-2026-11-19/README.md).
 - **How to do it:** extend `robot_lab_mujoco/native_hand_control.py` and
   `robot_lab_gui/native_hand_controls.py`. Measure grasp stability from
   contact forces (`test_native_hand_object.py` shows the pattern).

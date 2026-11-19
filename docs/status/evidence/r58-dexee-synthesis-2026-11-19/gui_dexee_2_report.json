@@ -1,0 +1,912 @@
+{
+ "robot": "menagerie_shadow_dexee",
+ "simulator": "mujoco",
+ "map": "nav_empty",
+ "height_m": 0.05,
+ "steps": [
+  {
+   "reached": "hand ready with object",
+   "wall_s": 7.35
+  },
+  {
+   "reached": "Grasp object enabled",
+   "wall_s": 10.36
+  },
+  {
+   "pressed": "Grasp object",
+   "feedback": "Closing on the documented object; measured contact hold pending.",
+   "wall_s": 10.36
+  },
+  {
+   "reached": "grasp holding",
+   "wall_s": 11.4
+  },
+  {
+   "reached": "Lift and hold object enabled",
+   "wall_s": 12.46
+  },
+  {
+   "pressed": "Lift and hold object",
+   "feedback": "Lift requested; awaiting physical object motion",
+   "wall_s": 12.46
+  },
+  {
+   "reached": "lift started",
+   "wall_s": 12.64
+  },
+  {
+   "reached": "lift settled",
+   "wall_s": 16.89
+  },
+  {
+   "reached": "Lower to start enabled",
+   "wall_s": 19.89
+  },
+  {
+   "pressed": "Lower to start",
+   "feedback": "Lower requested",
+   "wall_s": 19.89
+  },
+  {
+   "reached": "return settled",
+   "wall_s": 24.65
+  },
+  {
+   "reached": "Release object enabled",
+   "wall_s": 24.65
+  },
+  {
+   "pressed": "Release object",
+   "feedback": "Release requested; waiting for measured contact and supported-release feedback.",
+   "wall_s": 24.65
+  },
+  {
+   "reached": "supported release",
+   "wall_s": 25.82
+  },
+  {
+   "reached": "shutdown",
+   "wall_s": 26.6
+  }
+ ],
+ "trace": [
+  {
+   "wall_s": 7.35,
+   "grasp": "idle",
+   "left_n": 0.0,
+   "right_n": 0.0,
+   "supported": true,
+   "slip_m": 0.0,
+   "angular_slip_rad": 0.0,
+   "transport": "interrupted",
+   "height_m": null
+  },
+  {
+   "wall_s": 7.61,
+   "grasp": "idle",
+   "left_n": 0.0,
+   "right_n": 0.0,
+   "supported": true,
+   "slip_m": 0.0,
+   "angular_slip_rad": 0.0,
+   "transport": "interrupted",
+   "height_m": null
+  },
+  {
+   "wall_s": 7.86,
+   "grasp": "idle",
+   "left_n": 0.0,
+   "right_n": 0.0,
+   "supported": true,
+   "slip_m": 0.0,
+   "angular_slip_rad": 0.0,
+   "transport": "interrupted",
+   "height_m": null
+  },
+  {
+   "wall_s": 8.12,
+   "grasp": "idle",
+   "left_n": 0.0,
+   "right_n": 0.0,
+   "supported": true,
+   "slip_m": 0.0,
+   "angular_slip_rad": 0.0,
+   "transport": "interrupted",
+   "height_m": null
+  },
+  {
+   "wall_s": 8.39,
+   "grasp": "idle",
+   "left_n": 0.0,
+   "right_n": 0.0,
+   "supported": true,
+   "slip_m": 0.0,
+   "angular_slip_rad": 0.0,
+   "transport": "interrupted",
+   "height_m": null
+  },
+  {
+   "wall_s": 8.67,
+   "grasp": "idle",
+   "left_n": 0.0,
+   "right_n": 0.0,
+   "supported": true,
+   "slip_m": 0.0,
+   "angular_slip_rad": 0.0,
+   "transport": "interrupted",
+   "height_m": null
+  },
+  {
+   "wall_s": 8.92,
+   "grasp": "idle",
+   "left_n": 0.0,
+   "right_n": 0.0,
+   "supported": true,
+   "slip_m": 0.0,
+   "angular_slip_rad": 0.0,
+   "transport": "interrupted",
+   "height_m": null
+  },
+  {
+   "wall_s": 9.17,
+   "grasp": "idle",
+   "left_n": 0.0,
+   "right_n": 0.0,
+   "supported": true,
+   "slip_m": 0.0,
+   "angular_slip_rad": 0.0,
+   "transport": "interrupted",
+   "height_m": null
+  },
+  {
+   "wall_s": 9.45,
+   "grasp": "idle",
+   "left_n": 0.0,
+   "right_n": 0.0,
+   "supported": true,
+   "slip_m": 0.0,
+   "angular_slip_rad": 0.0,
+   "transport": "interrupted",
+   "height_m": null
+  },
+  {
+   "wall_s": 9.72,
+   "grasp": "idle",
+   "left_n": 0.0,
+   "right_n": 0.0,
+   "supported": true,
+   "slip_m": 0.0,
+   "angular_slip_rad": 0.0,
+   "transport": "interrupted",
+   "height_m": null
+  },
+  {
+   "wall_s": 9.99,
+   "grasp": "idle",
+   "left_n": 0.0,
+   "right_n": 0.0,
+   "supported": true,
+   "slip_m": 0.0,
+   "angular_slip_rad": 0.0,
+   "transport": "interrupted",
+   "height_m": null
+  },
+  {
+   "wall_s": 10.32,
+   "grasp": "idle",
+   "left_n": 0.0,
+   "right_n": 0.0,
+   "supported": true,
+   "slip_m": 0.0,
+   "angular_slip_rad": 0.0,
+   "transport": "interrupted",
+   "height_m": null
+  },
+  {
+   "wall_s": 10.6,
+   "grasp": "closing",
+   "left_n": 0.0,
+   "right_n": 0.0,
+   "supported": true,
+   "slip_m": 0.0,
+   "angular_slip_rad": 0.0,
+   "transport": "interrupted",
+   "height_m": null
+  },
+  {
+   "wall_s": 10.87,
+   "grasp": "closing",
+   "left_n": 0.555,
+   "right_n": 0.0,
+   "supported": true,
+   "slip_m": 0.0,
+   "angular_slip_rad": 0.0,
+   "transport": "interrupted",
+   "height_m": null
+  },
+  {
+   "wall_s": 11.15,
+   "grasp": "closing",
+   "left_n": 1.775,
+   "right_n": 2.059,
+   "supported": false,
+   "slip_m": 0.0,
+   "angular_slip_rad": 0.0,
+   "transport": "interrupted",
+   "height_m": null
+  },
+  {
+   "wall_s": 11.4,
+   "grasp": "holding",
+   "left_n": 2.349,
+   "right_n": 2.626,
+   "supported": false,
+   "slip_m": 0.0,
+   "angular_slip_rad": 0.0001,
+   "transport": "interrupted",
+   "height_m": null
+  },
+  {
+   "wall_s": 11.65,
+   "grasp": "holding",
+   "left_n": 2.698,
+   "right_n": 3.03,
+   "supported": false,
+   "slip_m": 0.0,
+   "angular_slip_rad": 0.001,
+   "transport": "interrupted",
+   "height_m": null
+  },
+  {
+   "wall_s": 11.92,
+   "grasp": "holding",
+   "left_n": 3.147,
+   "right_n": 3.555,
+   "supported": false,
+   "slip_m": 0.0001,
+   "angular_slip_rad": 0.0011,
+   "transport": "interrupted",
+   "height_m": null
+  },
+  {
+   "wall_s": 12.23,
+   "grasp": "holding",
+   "left_n": 3.77,
+   "right_n": 4.283,
+   "supported": false,
+   "slip_m": 0.0002,
+   "angular_slip_rad": 0.0041,
+   "transport": "interrupted",
+   "height_m": null
+  },
+  {
+   "wall_s": 12.48,
+   "grasp": "holding",
+   "left_n": 4.207,
+   "right_n": 4.785,
+   "supported": false,
+   "slip_m": 0.0003,
+   "angular_slip_rad": 0.0054,
+   "transport": "interrupted",
+   "height_m": null
+  },
+  {
+   "wall_s": 12.76,
+   "grasp": "holding",
+   "left_n": 4.434,
+   "right_n": 5.067,
+   "supported": false,
+   "slip_m": 0.0004,
+   "angular_slip_rad": 0.0055,
+   "transport": "lifting",
+   "height_m": 0.0027597422873215094
+  },
+  {
+   "wall_s": 13.04,
+   "grasp": "holding",
+   "left_n": 4.562,
+   "right_n": 5.21,
+   "supported": false,
+   "slip_m": 0.0006,
+   "angular_slip_rad": 0.0051,
+   "transport": "lifting",
+   "height_m": 0.00666438296326588
+  },
+  {
+   "wall_s": 13.31,
+   "grasp": "holding",
+   "left_n": 4.717,
+   "right_n": 5.412,
+   "supported": false,
+   "slip_m": 0.0009,
+   "angular_slip_rad": 0.0077,
+   "transport": "lifting",
+   "height_m": 0.010971302190577792
+  },
+  {
+   "wall_s": 13.6,
+   "grasp": "holding",
+   "left_n": 4.849,
+   "right_n": 5.578,
+   "supported": false,
+   "slip_m": 0.0011,
+   "angular_slip_rad": 0.0099,
+   "transport": "lifting",
+   "height_m": 0.015291369476713862
+  },
+  {
+   "wall_s": 13.86,
+   "grasp": "holding",
+   "left_n": 4.978,
+   "right_n": 5.749,
+   "supported": false,
+   "slip_m": 0.0014,
+   "angular_slip_rad": 0.0128,
+   "transport": "lifting",
+   "height_m": 0.020007795519216415
+  },
+  {
+   "wall_s": 14.13,
+   "grasp": "holding",
+   "left_n": 5.038,
+   "right_n": 5.844,
+   "supported": false,
+   "slip_m": 0.0015,
+   "angular_slip_rad": 0.0134,
+   "transport": "lifting",
+   "height_m": 0.0239563668318169
+  },
+  {
+   "wall_s": 14.42,
+   "grasp": "holding",
+   "left_n": 5.077,
+   "right_n": 5.918,
+   "supported": false,
+   "slip_m": 0.0015,
+   "angular_slip_rad": 0.014,
+   "transport": "lifting",
+   "height_m": 0.028308581663028826
+  },
+  {
+   "wall_s": 14.68,
+   "grasp": "holding",
+   "left_n": 5.108,
+   "right_n": 5.988,
+   "supported": false,
+   "slip_m": 0.0016,
+   "angular_slip_rad": 0.0146,
+   "transport": "lifting",
+   "height_m": 0.03346858805950961
+  },
+  {
+   "wall_s": 14.95,
+   "grasp": "holding",
+   "left_n": 5.124,
+   "right_n": 5.912,
+   "supported": false,
+   "slip_m": 0.0016,
+   "angular_slip_rad": 0.0149,
+   "transport": "lifting",
+   "height_m": 0.037852900229123854
+  },
+  {
+   "wall_s": 15.21,
+   "grasp": "holding",
+   "left_n": 5.135,
+   "right_n": 5.926,
+   "supported": false,
+   "slip_m": 0.0016,
+   "angular_slip_rad": 0.0151,
+   "transport": "lifting",
+   "height_m": 0.042239451219160645
+  },
+  {
+   "wall_s": 15.51,
+   "grasp": "holding",
+   "left_n": 5.142,
+   "right_n": 5.935,
+   "supported": false,
+   "slip_m": 0.0016,
+   "angular_slip_rad": 0.0153,
+   "transport": "lifting",
+   "height_m": 0.046229399511799635
+  },
+  {
+   "wall_s": 15.77,
+   "grasp": "holding",
+   "left_n": 5.147,
+   "right_n": 5.94,
+   "supported": false,
+   "slip_m": 0.0017,
+   "angular_slip_rad": 0.0155,
+   "transport": "lifting",
+   "height_m": 0.04936097374836659
+  },
+  {
+   "wall_s": 16.03,
+   "grasp": "holding",
+   "left_n": 5.153,
+   "right_n": 5.942,
+   "supported": false,
+   "slip_m": 0.0017,
+   "angular_slip_rad": 0.0157,
+   "transport": "lifting",
+   "height_m": 0.04935166013084803
+  },
+  {
+   "wall_s": 16.31,
+   "grasp": "holding",
+   "left_n": 5.157,
+   "right_n": 5.94,
+   "supported": false,
+   "slip_m": 0.0017,
+   "angular_slip_rad": 0.0159,
+   "transport": "lifting",
+   "height_m": 0.0493449801794056
+  },
+  {
+   "wall_s": 16.59,
+   "grasp": "holding",
+   "left_n": 5.16,
+   "right_n": 5.937,
+   "supported": false,
+   "slip_m": 0.0017,
+   "angular_slip_rad": 0.0163,
+   "transport": "lifting",
+   "height_m": 0.04933701304736461
+  },
+  {
+   "wall_s": 16.89,
+   "grasp": "holding",
+   "left_n": 5.163,
+   "right_n": 5.939,
+   "supported": false,
+   "slip_m": 0.0017,
+   "angular_slip_rad": 0.0166,
+   "transport": "holding",
+   "height_m": 0.04932977018154462
+  },
+  {
+   "wall_s": 17.16,
+   "grasp": "holding",
+   "left_n": 5.165,
+   "right_n": 5.948,
+   "supported": false,
+   "slip_m": 0.0017,
+   "angular_slip_rad": 0.0169,
+   "transport": "holding",
+   "height_m": 0.04932571531634479
+  },
+  {
+   "wall_s": 17.41,
+   "grasp": "holding",
+   "left_n": 5.167,
+   "right_n": 5.967,
+   "supported": false,
+   "slip_m": 0.0017,
+   "angular_slip_rad": 0.0172,
+   "transport": "holding",
+   "height_m": 0.04932116440100544
+  },
+  {
+   "wall_s": 17.7,
+   "grasp": "holding",
+   "left_n": 5.174,
+   "right_n": 5.974,
+   "supported": false,
+   "slip_m": 0.0018,
+   "angular_slip_rad": 0.0178,
+   "transport": "holding",
+   "height_m": 0.04931417232256276
+  },
+  {
+   "wall_s": 17.96,
+   "grasp": "holding",
+   "left_n": 5.18,
+   "right_n": 5.961,
+   "supported": false,
+   "slip_m": 0.0018,
+   "angular_slip_rad": 0.0183,
+   "transport": "holding",
+   "height_m": 0.04930888427854303
+  },
+  {
+   "wall_s": 18.23,
+   "grasp": "holding",
+   "left_n": 5.185,
+   "right_n": 5.951,
+   "supported": false,
+   "slip_m": 0.0018,
+   "angular_slip_rad": 0.0188,
+   "transport": "holding",
+   "height_m": 0.0493038140946377
+  },
+  {
+   "wall_s": 18.57,
+   "grasp": "holding",
+   "left_n": 5.195,
+   "right_n": 5.932,
+   "supported": false,
+   "slip_m": 0.0018,
+   "angular_slip_rad": 0.0195,
+   "transport": "holding",
+   "height_m": 0.049289638702938635
+  },
+  {
+   "wall_s": 18.82,
+   "grasp": "holding",
+   "left_n": 5.201,
+   "right_n": 5.922,
+   "supported": false,
+   "slip_m": 0.0019,
+   "angular_slip_rad": 0.0199,
+   "transport": "holding",
+   "height_m": 0.0492839147258254
+  },
+  {
+   "wall_s": 19.09,
+   "grasp": "holding",
+   "left_n": 5.206,
+   "right_n": 5.91,
+   "supported": false,
+   "slip_m": 0.0019,
+   "angular_slip_rad": 0.0205,
+   "transport": "holding",
+   "height_m": 0.04927862434587667
+  },
+  {
+   "wall_s": 19.36,
+   "grasp": "holding",
+   "left_n": 5.213,
+   "right_n": 5.897,
+   "supported": false,
+   "slip_m": 0.0019,
+   "angular_slip_rad": 0.0212,
+   "transport": "holding",
+   "height_m": 0.04927292217482111
+  },
+  {
+   "wall_s": 19.65,
+   "grasp": "holding",
+   "left_n": 5.221,
+   "right_n": 5.879,
+   "supported": false,
+   "slip_m": 0.0019,
+   "angular_slip_rad": 0.0221,
+   "transport": "holding",
+   "height_m": 0.04926587219370561
+  },
+  {
+   "wall_s": 19.9,
+   "grasp": "holding",
+   "left_n": 5.226,
+   "right_n": 5.867,
+   "supported": false,
+   "slip_m": 0.0019,
+   "angular_slip_rad": 0.0227,
+   "transport": "holding",
+   "height_m": 0.04926147254620479
+  },
+  {
+   "wall_s": 20.18,
+   "grasp": "holding",
+   "left_n": 5.231,
+   "right_n": 5.853,
+   "supported": false,
+   "slip_m": 0.002,
+   "angular_slip_rad": 0.0233,
+   "transport": "lowering",
+   "height_m": 0.04679673990443778
+  },
+  {
+   "wall_s": 20.46,
+   "grasp": "holding",
+   "left_n": 5.235,
+   "right_n": 5.841,
+   "supported": false,
+   "slip_m": 0.002,
+   "angular_slip_rad": 0.024,
+   "transport": "lowering",
+   "height_m": 0.04319263308390575
+  },
+  {
+   "wall_s": 20.76,
+   "grasp": "holding",
+   "left_n": 5.24,
+   "right_n": 5.826,
+   "supported": false,
+   "slip_m": 0.002,
+   "angular_slip_rad": 0.0247,
+   "transport": "lowering",
+   "height_m": 0.038787827860773616
+  },
+  {
+   "wall_s": 21.04,
+   "grasp": "holding",
+   "left_n": 5.245,
+   "right_n": 5.811,
+   "supported": false,
+   "slip_m": 0.002,
+   "angular_slip_rad": 0.0255,
+   "transport": "lowering",
+   "height_m": 0.03438327832376403
+  },
+  {
+   "wall_s": 21.32,
+   "grasp": "holding",
+   "left_n": 5.249,
+   "right_n": 5.796,
+   "supported": false,
+   "slip_m": 0.002,
+   "angular_slip_rad": 0.0262,
+   "transport": "lowering",
+   "height_m": 0.029978974808062053
+  },
+  {
+   "wall_s": 21.62,
+   "grasp": "holding",
+   "left_n": 5.254,
+   "right_n": 5.78,
+   "supported": false,
+   "slip_m": 0.0021,
+   "angular_slip_rad": 0.027,
+   "transport": "lowering",
+   "height_m": 0.0251747341474437
+  },
+  {
+   "wall_s": 21.93,
+   "grasp": "holding",
+   "left_n": 5.259,
+   "right_n": 5.76,
+   "supported": false,
+   "slip_m": 0.0021,
+   "angular_slip_rad": 0.0281,
+   "transport": "lowering",
+   "height_m": 0.01876943949192439
+  },
+  {
+   "wall_s": 22.2,
+   "grasp": "holding",
+   "left_n": 5.262,
+   "right_n": 5.749,
+   "supported": false,
+   "slip_m": 0.0021,
+   "angular_slip_rad": 0.0288,
+   "transport": "lowering",
+   "height_m": 0.014365588751920927
+  },
+  {
+   "wall_s": 22.46,
+   "grasp": "holding",
+   "left_n": 5.265,
+   "right_n": 5.738,
+   "supported": false,
+   "slip_m": 0.0021,
+   "angular_slip_rad": 0.0294,
+   "transport": "lowering",
+   "height_m": 0.009962899996791563
+  },
+  {
+   "wall_s": 22.75,
+   "grasp": "holding",
+   "left_n": 5.267,
+   "right_n": 5.728,
+   "supported": false,
+   "slip_m": 0.0021,
+   "angular_slip_rad": 0.0299,
+   "transport": "lowering",
+   "height_m": 0.005560820355050594
+  },
+  {
+   "wall_s": 23.01,
+   "grasp": "holding",
+   "left_n": 5.268,
+   "right_n": 5.719,
+   "supported": false,
+   "slip_m": 0.0021,
+   "angular_slip_rad": 0.0303,
+   "transport": "lowering",
+   "height_m": 0.001160963520025149
+  },
+  {
+   "wall_s": 23.29,
+   "grasp": "holding",
+   "left_n": 5.251,
+   "right_n": 5.426,
+   "supported": true,
+   "slip_m": 0.0021,
+   "angular_slip_rad": 0.0311,
+   "transport": "lowering",
+   "height_m": -0.00047252790621771235
+  },
+  {
+   "wall_s": 23.55,
+   "grasp": "holding",
+   "left_n": 5.251,
+   "right_n": 5.416,
+   "supported": true,
+   "slip_m": 0.0021,
+   "angular_slip_rad": 0.0316,
+   "transport": "lowering",
+   "height_m": -0.00047502757143627616
+  },
+  {
+   "wall_s": 23.81,
+   "grasp": "holding",
+   "left_n": 5.259,
+   "right_n": 5.401,
+   "supported": true,
+   "slip_m": 0.0021,
+   "angular_slip_rad": 0.032,
+   "transport": "lowering",
+   "height_m": -0.00047644050997086573
+  },
+  {
+   "wall_s": 24.11,
+   "grasp": "holding",
+   "left_n": 5.265,
+   "right_n": 5.385,
+   "supported": true,
+   "slip_m": 0.0021,
+   "angular_slip_rad": 0.032,
+   "transport": "lowering",
+   "height_m": -0.0004748742564698871
+  },
+  {
+   "wall_s": 24.37,
+   "grasp": "holding",
+   "left_n": 5.267,
+   "right_n": 5.383,
+   "supported": true,
+   "slip_m": 0.0022,
+   "angular_slip_rad": 0.0315,
+   "transport": "lowering",
+   "height_m": -0.0004713833767756581
+  },
+  {
+   "wall_s": 24.65,
+   "grasp": "holding",
+   "left_n": 5.271,
+   "right_n": 5.384,
+   "supported": true,
+   "slip_m": 0.0022,
+   "angular_slip_rad": 0.0308,
+   "transport": "supported",
+   "height_m": -0.00046776396883332905
+  },
+  {
+   "wall_s": 24.97,
+   "grasp": "released",
+   "left_n": 0.0,
+   "right_n": 0.0,
+   "supported": true,
+   "slip_m": 0.0,
+   "angular_slip_rad": 0.0,
+   "transport": "interrupted",
+   "height_m": -0.0004660285605165848
+  },
+  {
+   "wall_s": 25.25,
+   "grasp": "released",
+   "left_n": 0.0,
+   "right_n": 0.0,
+   "supported": true,
+   "slip_m": 0.0,
+   "angular_slip_rad": 0.0,
+   "transport": "interrupted",
+   "height_m": -0.0004660285605165848
+  },
+  {
+   "wall_s": 25.52,
+   "grasp": "released",
+   "left_n": 0.0,
+   "right_n": 0.0,
+   "supported": true,
+   "slip_m": 0.0,
+   "angular_slip_rad": 0.0,
+   "transport": "interrupted",
+   "height_m": -0.0004660285605165848
+  },
+  {
+   "wall_s": 25.82,
+   "grasp": "supported_release",
+   "left_n": 0.0,
+   "right_n": 0.0,
+   "supported": true,
+   "slip_m": 0.0,
+   "angular_slip_rad": 0.0,
+   "transport": "interrupted",
+   "height_m": -0.0004660285605165848
+  },
+  {
+   "wall_s": 26.1,
+   "grasp": "supported_release",
+   "left_n": 0.0,
+   "right_n": 0.0,
+   "supported": true,
+   "slip_m": 0.0,
+   "angular_slip_rad": 0.0,
+   "transport": "interrupted",
+   "height_m": -0.0004660285605165848
+  },
+  {
+   "wall_s": 26.39,
+   "grasp": "supported_release",
+   "left_n": 0.0,
+   "right_n": 0.0,
+   "supported": true,
+   "slip_m": 0.0,
+   "angular_slip_rad": 0.0,
+   "transport": "interrupted",
+   "height_m": -0.0004660285605165848
+  }
+ ],
+ "passed": true,
+ "command": "ros2 launch robot_lab_bringup simulated_robot.launch.py robot_model:=menagerie_shadow_dexee simulator:=mujoco use_sim_time:=true map_name:=nav_empty world_package:=robot_lab_maps world_name:=nav_empty world_path:=maps/nav_empty/worlds/nav_empty.world map_yaml:=maps/nav_empty/maps/map.yaml mode:=display gui:=false perception:=none enable_native_articulation:=true grasp_fixture:=true",
+ "hand": {
+  "adapter": "shadow_dexee",
+  "lift_mode": "support_stage",
+  "qualification": "experimental; support-stage lift/hold/return workflow implemented; mission qualification is source/backend specific"
+ },
+ "grasp": {
+  "state": "holding",
+  "scope": "Two-sided contact but the object is not supported from below",
+  "left_force_n": 3.9707356976632333,
+  "right_force_n": 4.5131058045169565,
+  "supported": false,
+  "slip_m": 0.00026031551175771547,
+  "contact_limit_n": 2.0,
+  "effort_fraction": 0.8,
+  "angular_slip_rad": 0.004887911140427401,
+  "contact_count": 16,
+  "support_contact_count": 0,
+  "support_force_z_n": 0.0,
+  "contact_state": "unsupported"
+ },
+ "lift": {
+  "state": "holding",
+  "mode": "support_stage",
+  "height_m": 0.05,
+  "reason": "Measured unsupported lift and hold",
+  "measured_height_m": 0.04926147254620479,
+  "source_displacement_error_m": 0.0,
+  "grasp": {
+   "state": "holding",
+   "scope": "Two-sided contact but the object is not supported from below",
+   "left_force_n": 5.2255794671432,
+   "right_force_n": 5.86681761933138,
+   "supported": false,
+   "slip_m": 0.0019415344834567134,
+   "contact_limit_n": 2.0,
+   "effort_fraction": 0.8,
+   "angular_slip_rad": 0.022661213400593263,
+   "contact_count": 17,
+   "support_contact_count": 0,
+   "support_force_z_n": 0.0,
+   "contact_state": "unsupported"
+  }
+ },
+ "return": {
+  "state": "supported",
+  "mode": "support_stage",
+  "height_m": 0.05,
+  "reason": "Measured supported return",
+  "measured_height_m": -0.00046776396883332905,
+  "source_displacement_error_m": 2.7362807681364945e-05,
+  "support_seating_m": 0.0010120000000003336
+ },
+ "release": {
+  "state": "supported_release",
+  "scope": "No finger contacts; supported and settled for one simulated second",
+  "left_force_n": 0.0,
+  "right_force_n": 0.0,
+  "supported": true,
+  "slip_m": 0.0,
+  "angular_slip_rad": 0.0,
+  "contact_count": 0,
+  "support_contact_count": 4,
+  "support_force_z_n": 0.49050000703281094,
+  "contact_state": "no_contact"
+ },
+ "launch_returncode": 0
+}

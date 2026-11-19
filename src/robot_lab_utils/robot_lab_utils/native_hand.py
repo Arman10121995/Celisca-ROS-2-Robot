@@ -44,17 +44,25 @@ def _name(mj, model, kind, index):
     return mj.mj_id2name(model, kind, int(index)) or ''
 
 
-def hand_contract(model, native_source):
+SYNTHESIZED_POSE = 'Synthesized tripod'
+
+
+def hand_contract(model, native_source, grasp_plan=None):
     """Validate source-specific native channels against the executed model.
 
     Returns None for other robots. A recognized but altered/incompatible hand
     raises instead of guessing. World bodies may have been appended already.
+    ``grasp_plan`` (DEX-EE only, from ``hand_grasp_synthesis``) adds the
+    synthesized tripod as the first pose, and its approach opening becomes
+    Open so opening never sweeps the fingers into the planned object.
     """
     import mujoco as mj
     source = Path(native_source)
     entry = source.parent.name
     if entry not in HAND_MODELS.values():
         return None
+    if grasp_plan is not None and entry != 'shadow_dexee':
+        raise ValueError('Grasp synthesis is reviewed for DEX-EE only')
     root = ET.parse(source).getroot()
     if root.findall('.//freejoint') or root.findall(".//joint[@type='free']"):
         raise ValueError('Native hand requires an authored fixed mount')
@@ -157,6 +165,16 @@ def hand_contract(model, native_source):
         # J1/J2/J3 curl. They make no claim to an object-specific grasp pose.
         curled = {channel['name']: (0., -.4, .9, .5)[int(channel['joint'][-1])] for channel in channels}
         poses = ['Curl', 'Pinch F0 + F1', 'Spread']
+        if grasp_plan is not None:
+            names = {channel['name'] for channel in channels}
+            if set(grasp_plan['approach']) != names or set(grasp_plan['grasp']) != names:
+                raise ValueError('Synthesized grasp must name every DEX-EE channel')
+            for channel in channels:
+                low, high = channel['limits']
+                if not all(low <= grasp_plan[key][channel['name']] <= high for key in ('approach', 'grasp')):
+                    raise ValueError('Synthesized grasp exceeds the executed source bounds')
+            open_targets = {name: float(value) for name, value in grasp_plan['approach'].items()}
+            poses = [SYNTHESIZED_POSE]+poses
     else:
         source_joints = {element.get('name') for element in root.findall('.//worldbody//joint')}
         robot_joints = [j for j in range(model.njnt)
@@ -197,6 +215,8 @@ def hand_contract(model, native_source):
                 channel['name'] == 'fingers_actuator' and entry == 'umi_gripper') else 'N m'
     contract = dict(adapter=entry, channels=channels, groups=groups,
         open_targets=open_targets, curled_targets=curled, poses=poses,
+        **(dict(grasp_plan={key: grasp_plan[key] for key in ('grasp', 'centre', 'half_size', 'force_closure_epsilon', 'scope')})
+           if grasp_plan is not None else {}),
         source_sha256=hashlib.sha256(source.read_bytes()).hexdigest())
     # Bind the executed source motors, joint limits and coupling, independently
     # of appended selected-world bodies/objects. Do not bind a guessed TCP.
@@ -223,11 +243,14 @@ def hand_pose_targets(contract, pose, closure, spread=0., finger='All'):
     targets = {}
     for name in names:
         start, end = contract['open_targets'][name], contract['curled_targets'][name]
+        if pose == SYNTHESIZED_POSE:
+            end = contract['grasp_plan']['grasp'][name]
         amount = 0. if pose in ('Open', 'Spread') else closure
         if pose == 'Pinch F0 + F1' and name.startswith('F2/'):
             amount = 0.
         value = start+amount*(end-start)
-        if contract['adapter'] == 'shadow_dexee' and name.endswith('J0_actuator') and pose != 'Open':
+        if (contract['adapter'] == 'shadow_dexee' and name.endswith('J0_actuator')
+                and pose not in ('Open', SYNTHESIZED_POSE)):
             value = spread*.25*(1. if name.startswith('F0/') else -1. if name.startswith('F1/') else 0.)
         channel = next(c for c in contract['channels'] if c['name'] == name)
         if not channel['limits'][0] <= value <= channel['limits'][1]:

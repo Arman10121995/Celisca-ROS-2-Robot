@@ -4109,9 +4109,17 @@ tasks:
         - 'docs/status/asset-runtime-support.yaml: checked model/controller/report
           contracts enable only the native Panda hand and named measured screens.'
         - docs/status/evidence/extensions-finish-2026-10-08/controls/README.md
+        - docs/status/evidence/r58-dexee-synthesis-2026-11-19/README.md
         implementation_summary: 'Native source PID/coupled-position hand controls retain bounds and units, guarded closure and existing-grasp force regulation. UMI source-axis lift/hold/lower and sustained supported release are implemented with finger-relative custody, source-positive closure, distal-pad fixture, passive-load effort guard and bounded mount gravity support. One pinned UMI component lifts 49.0 mm, returns to actual support and releases; 38 hand checks pass. Normal GUI missions, arm transport for fixed hands, further torque/tendon sources and other backends remain open. Original Panda qualification remains separate.'
         implementation_validation: Pending; no new physical mission/test campaign
           for October 9 candidates.
+        dexee_synthesis_20261119: 'Claude: implemented, experimental. DEX-EE tripod grasp synthesis (hand_grasp_synthesis.py:
+          thumb vs F1+F2 on opposite faces at the box mid-plane, per-finger joints from the executed kinematics, box placed for
+          the best Ferrari-Canny force closure; lab approach home key; Synthesized tripod pose first, Open = approach). Normal
+          GUI MuJoCo grasp, lift 5 cm, 3 s hold, return and supported release pass 2/2 (4.0-4.7 N per side, 49.3 mm); the
+          done-when is met for every hand family on MuJoCo. Fixed: stage seating jump, returned-box support loss (reseat),
+          stale Curl pose selector, Training-tab 1 s rescan stall. Robotiq GUI regression passes. Retained: Curl-pose and two
+          heartbeat-stall failures. docs/status/evidence/r58-dexee-synthesis-2026-11-19/README.md'
         force_hold_20261113: 'Codex: bounded source-position force feedback and GUI request implemented; source gains/limits retained. Pinned Robotiq component fixture unloaded ~12 N to ~5.25 N per side for a 5 N request; Stop interrupted. 40 focused/regression/tutorial checks and GUI protocol smoke pass; three packages build. Other source hands, normal GUI object missions and hardware unqualified. See docs/status/hand-force-2026-11-13.md.'
         next_action: Continue further torque/tendon hand adapters, force-regulated
           grasping and arbitrary-object workflows. Existing source PID/tendon candidates

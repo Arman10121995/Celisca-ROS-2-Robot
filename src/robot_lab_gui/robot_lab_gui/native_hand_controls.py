@@ -126,8 +126,11 @@ class NativeHandControls(ttk.Frame):
         fingers = ['All']+[g['name'] for g in hand['groups']]
         self.pose_selector.configure(values=poses)
         self.finger_selector.configure(values=fingers)
-        if self.pose.get() not in poses:
+        # A new Run's contract selects its first pose (DEX-EE with a planned
+        # object: Synthesized tripod); later operator choices are kept.
+        if self.pose.get() not in poses or getattr(self, 'pose_contract', None) != hand.get('contract_sha256'):
             self.pose.set(poses[0])
+            self.pose_contract = hand.get('contract_sha256')
         if self.finger.get() not in fingers:
             self.finger.set('All')
         self.note.set(hand['adapter']+' · '+hand['actuation']+' · experimental')

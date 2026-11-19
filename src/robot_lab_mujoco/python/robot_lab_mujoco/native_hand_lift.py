@@ -13,6 +13,7 @@ import numpy as np
 
 STAGE_RATE = .02            # m/s: the support stage moves no faster
 STAGE_RETURN_FORCE = 2.     # N: most support force allowed while it returns
+SUPPORT_LOSS_S = .1         # simulated s without support before a returned object counts as unsupported
 
 
 class NativeHandLift:
@@ -186,14 +187,27 @@ class NativeHandLift:
                 target=run['target']-extra/axis_z
                 low,high=self.axis_limits(slot)
                 if not low<=target<=high:raise ValueError('Support seating exceeds source motor bounds')
-                run['target']=target;self.set_axis_target(slot,target)
+                run['target']=target
+                if slot!='stage':   # the stage ramps there at STAGE_RATE; a jump struck the DEX-EE object (2026-11-19)
+                    self.set_axis_target(slot,target)
                 self.lift_state['support_seating_m']=(run['start_control']-target)*axis_z
             if self.lift_state['state']=='holding' and self.grasp['supported']:
                 raise ValueError('Lifted object regained unexpected environmental support')
             if self.lift_state['state']=='holding' and abs(height-run['height_m'])>.01:
                 raise ValueError('Object drifted from its measured lift height')
+            # A firm tripod's position servos slowly take the whole weight and
+            # lift the returned box microns off the stage (DEX-EE, 2026-11-19).
+            # After a debounce the stage resumes its slow seating inside the
+            # same 3 mm budget; only a spent budget is a loss.
             if self.lift_state['state']=='supported' and not self.grasp['supported']:
-                raise ValueError('Returned object lost environmental support')
+                if run.get('support_lost_since') is None:run['support_lost_since']=stamp
+                if stamp-run['support_lost_since']>=SUPPORT_LOSS_S:
+                    seated=(run['start_control']-run['target'])*axis_z
+                    if not stage or seated>=.003-1e-6:
+                        raise ValueError('Returned object lost environmental support')
+                    self.lift_state.update(state='lowering',reason='Reseating the returned object on its support')
+                    run['settled_since']=run['support_lost_since']=None
+            else:run['support_lost_since']=None
             # Source position motors can retain a steady gravity error. Check
             # measured displacement from the settled start as well as actual
             # object height, without changing the motor gain or adding bias.

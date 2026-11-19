@@ -37,8 +37,11 @@ SUPPORT_STAGE_RANGE = (-.2, .02)            # m: drops up to 20 cm, rises at mos
 SUPPORT_STAGE_KP, SUPPORT_STAGE_KV, SUPPORT_STAGE_FORCE = 20000., 300., 200.
 
 
-def add_hand_object_fixture(spec, adapter, center, half):
+def add_hand_object_fixture(spec, adapter, center, half, quat=(1., 0., 0., 0.)):
     """A free 50 g box between a native hand's pads, on a pedestal; returns whether the pedestal is a stage.
+
+    ``quat`` (wxyz) orients the box and pedestal, e.g. to a synthesized grasp
+    frame; the default is axis-aligned.
 
     The pedestal supports only the object (collision bit 2): it stands
     between a hand's fingers, and the Robotiq linkage chattered against it
@@ -50,7 +53,7 @@ def add_hand_object_fixture(spec, adapter, center, half):
     import mujoco
     support_height = center[2]-half[2]
     pedestal = spec.worldbody.add_body(name='manipulation_pedestal',
-        pos=[center[0], center[1], support_height/2])
+        pos=[center[0], center[1], support_height/2], quat=list(quat))
     stage = adapter not in SOURCE_LIFT_ADAPTERS
     pedestal.add_geom(name='manipulation_pedestal_geom', type=mujoco.mjtGeom.mjGEOM_BOX,
         size=[half[0]+.004, half[1]+.004, support_height/2], rgba=[.35, .4, .45, 1],
@@ -65,7 +68,7 @@ def add_hand_object_fixture(spec, adapter, center, half):
             biasprm=[0., -SUPPORT_STAGE_KP, -SUPPORT_STAGE_KV]+[0.]*7,
             ctrlrange=list(SUPPORT_STAGE_RANGE), ctrllimited=True,
             forcerange=[-SUPPORT_STAGE_FORCE, SUPPORT_STAGE_FORCE], forcelimited=True)
-    cube = spec.worldbody.add_body(name='manipulation_object', pos=center)
+    cube = spec.worldbody.add_body(name='manipulation_object', pos=center, quat=list(quat))
     cube.add_freejoint(name='manipulation_object_joint')
     # condim 4 adds the object's authored torsional friction (0.005 m): with
     # point fingertip contacts and none, the box pivoted freely about the
@@ -76,10 +79,37 @@ def add_hand_object_fixture(spec, adapter, center, half):
     # MjSpec extends existing keyframes with zeros for new joints. Author the
     # initial pose so home/reset retain the support.
     for key in spec.keys:
-        key.qpos = np.concatenate((key.qpos, [0.] if stage else [], center, [1., 0., 0., 0.]))
+        key.qpos = np.concatenate((key.qpos, [0.] if stage else [], center, list(quat)))
         if stage:
             key.ctrl = np.concatenate((key.ctrl, [0.]))
     return stage
+
+
+def author_grasp_home(spec, plan):
+    """Start a synthesized DEX-EE grasp at its approach opening (lab pre-grasp home).
+
+    The source authors no keyframe, and its zero pose puts a fingertip inside
+    the planned box. Existing keys keep every coordinate except the finger
+    joints and their PID targets; without keys a ``home`` key is added.
+    """
+    import mujoco
+    model = spec.compile()
+    keys = list(spec.keys)
+    rows = [(model.key_qpos[i].copy(), model.key_ctrl[i].copy()) for i in range(len(keys))] or [
+        (model.qpos0.copy(), np.zeros(model.nu))]
+    for qpos, ctrl in rows:
+        for name, value in plan['approach'].items():
+            joint = mujoco.mj_name2id(model, mujoco.mjtObj.mjOBJ_JOINT, name[:-len('_actuator')])
+            actuator = mujoco.mj_name2id(model, mujoco.mjtObj.mjOBJ_ACTUATOR, name)
+            if joint < 0 or actuator < 0:
+                raise ValueError('Synthesized grasp channel missing in executed model: '+name)
+            qpos[int(model.jnt_qposadr[joint])] = value
+            ctrl[actuator] = value
+    if keys:
+        for key, (qpos, ctrl) in zip(keys, rows):
+            key.qpos, key.ctrl = qpos, ctrl
+    else:
+        spec.add_key(name='home', qpos=rows[0][0], ctrl=rows[0][1])
 
 
 class NativeAssetDisplay(Node):
@@ -100,6 +130,7 @@ class NativeAssetDisplay(Node):
         import mujoco
         self.mujoco = mujoco
         self.object_size = None  # optional hand-fixture half extents; Panda uses its fixed 30 mm cube
+        self.grasp_plan = None   # synthesized DEX-EE tripod, when its fixture is requested
         spec = mujoco.MjSpec.from_file(self.get_parameter('native_mjcf').value)
         original = spec.compile()
         self.robot_extent = original.stat.extent
@@ -142,11 +173,23 @@ class NativeAssetDisplay(Node):
                 if preview.nkey:
                     mujoco.mj_resetDataKeyframe(preview, preview_data, 0)
                 mujoco.mj_forward(preview, preview_data)
-                geometry = object_geometry(preview, preview_data, adapter, None)
-                center, half = geometry['center'], geometry['half_size']
+                quat = (1., 0., 0., 0.)
+                if adapter == 'shadow_dexee':
+                    # Contacts chosen for the object, not a curl template
+                    # (the template tripod rolled the box out, 2026-11-17).
+                    from robot_lab_utils.hand_grasp_synthesis import synthesize_tripod
+                    from robot_lab_utils.native_hand import hand_contract
+                    self.grasp_plan = synthesize_tripod(preview, preview_data,
+                        hand_contract(preview, self.get_parameter('native_mjcf').value))
+                    center, half, quat = self.grasp_plan['centre'], self.grasp_plan['half_size'], self.grasp_plan['quat_wxyz']
+                else:
+                    geometry = object_geometry(preview, preview_data, adapter, None)
+                    center, half = geometry['center'], geometry['half_size']
                 if center[2]-half[2] <= .03:
                     raise ValueError('The grasp fixture requires a clear support height')
-                add_hand_object_fixture(spec, adapter, center, half)
+                add_hand_object_fixture(spec, adapter, center, half, quat)
+                if self.grasp_plan is not None:
+                    author_grasp_home(spec, self.grasp_plan)
                 self.object_size = half
             else:
                 # Legacy fixed-object path; unchanged so the existing Panda
@@ -235,7 +278,7 @@ class NativeAssetDisplay(Node):
             if controller != 'none' or policy_config:
                 raise ValueError('Generic articulation requires exclusive actuator ownership')
             from robot_lab_utils.native_hand import hand_contract
-            hand = hand_contract(self.model, self.get_parameter('native_mjcf').value)
+            hand = hand_contract(self.model, self.get_parameter('native_mjcf').value, self.grasp_plan)
             if hand:
                 from robot_lab_mujoco.native_hand_control import NativeHandControl
                 self.articulation = NativeHandControl(self, hand)

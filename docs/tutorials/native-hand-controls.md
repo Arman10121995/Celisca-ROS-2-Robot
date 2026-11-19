@@ -7,7 +7,7 @@ all-map/all-backend mission. Panda keeps its separate measured gripper workflow.
 
 | Robot variant | Motors and coordinates | Hand controls |
 |---|---|---|
-| `menagerie_shadow_dexee` | Original 12 `mujoco.pid` position actuators, radians, asymmetric source torque limits | Three finger groups; Curl, Pinch F0 + F1, Spread, Open; individual joint targets and taught replay |
+| `menagerie_shadow_dexee` | Original 12 `mujoco.pid` position actuators, radians, asymmetric source torque limits | Three finger groups; Curl, Pinch F0 + F1, Spread, Open (with the object fixture also Synthesized tripod, listed first); individual joint targets and taught replay |
 | `menagerie_robotiq_2f85` | Original coupled tendon, source control 0–255, original ±5 actuator effort bounds | Normalized closure, Open, measured coupled-finger contact/effort interruption |
 | `menagerie_robotiq_2f85_v4` | Its own source linkage/tendon/equality model | Same controls with its own source/plant identity |
 | `menagerie_umi_gripper` | Original coupled position tendon, 0–0.05 m; six source placement actuators remain separate | Normalized closure and Open; existing placement jogging and taught replay |
@@ -131,9 +131,30 @@ the object.
 - The same measured checks as UMI apply, with heights taken relative to the
   support.
 
-Both Robotiq variants pass grasp → lift 5 cm → hold → return → supported
-release in the normal GUI. DEX-EE does not hold yet: the cube tilts out of
-the fingertip tripod.
+Both Robotiq variants and DEX-EE pass grasp → lift 5 cm → hold → return →
+supported release in the normal GUI.
+
+### DEX-EE synthesized tripod
+
+With the object fixture, DEX-EE does not use its Curl template. On Run it
+plans a grasp for the box:
+
+- the thumb presses the middle of one face;
+- the two other fingers press the opposite face, all at the box's
+  mid-height;
+- each finger's joint targets come from the hand's own kinematics, and the
+  box is placed where the three contacts give the best force closure.
+
+The hand starts open at the plan's approach pose. **Synthesized tripod** is
+the first pose, so **Grasp object** uses it, and **Open** returns to the
+approach pose rather than to straight fingers.
+
+```bash
+xvfb-run -a -s "-screen 0 1600x1000x24" python3 scripts/qualify_native_hand_gui.py \
+  --robot menagerie_shadow_dexee --output /workspace/molar/robot_lab_runtime/hands/dexee
+```
+
+[DEX-EE measured runs](../status/evidence/r58-dexee-synthesis-2026-11-19/README.md).
 
 **Run it from the command line:**
 
