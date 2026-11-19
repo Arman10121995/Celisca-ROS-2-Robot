@@ -69,7 +69,7 @@ def depth_cloud_node(prefix):
 
 
 def pipeline(world, description, spawn, water, robot, folder, control=True,
-             slam=False, database='', localization=False, radius=None):
+             slam=False, database='', localization=False, radius=None, visual_features=False):
     from launch_ros.actions import Node
     from launch.actions import TimerAction,RegisterEventHandler,EmitEvent
     from launch.event_handlers import OnProcessExit
@@ -113,7 +113,10 @@ def pipeline(world, description, spawn, water, robot, folder, control=True,
                     odom_frame_id='marine_sensor_odom', map_frame_id='map', database_path=str(active),
                     subscribe_depth=True, subscribe_rgb=True, subscribe_odom_info=False, approx_sync=True,
                     approx_sync_max_interval=.15, wait_for_transform=.3, qos_image=2, qos_camera_info=2,
-                    **depth_registration_parameters(geometry_only=robot=='tethys_auv'),
+                    # Tethys maps geometry-only by default; visual_features
+                    # (opt-in) stores visual words so a saved map in a
+                    # textured world can be relocalized (R10.5, 2026-11-19).
+                    **depth_registration_parameters(geometry_only=robot=='tethys_auv' and not visual_features),
                     **{'Mem/IncrementalMemory':'false' if localization else 'true', 'Mem/InitWMWithAllNodes':'true' if localization else 'false',
                        'Grid/3D':'true', 'Grid/Sensor':'1', 'Grid/RangeMax':'8.0',
                        'RGBD/LinearUpdate':'0.05', 'RGBD/AngularUpdate':'0.05'} )],

@@ -284,6 +284,32 @@
     dynamic_obstacles: false
     static_obstacles: true
   ground_truth_available: true
+  id: marine_tank_textured
+  name: Marine tank (textured, relocalization)
+  ros_package: robot_lab_maps
+  simulator: gazebo
+  simulators:
+  - gazebo
+  source:
+    license: Apache-2.0
+    repository: internal
+  status: available
+  supported_robot_classes:
+  - aquatic
+  tags:
+  - underwater
+  - water_surface
+  - physical_buoyancy
+  - tank
+  - visual_features
+  - experimental
+  version: 0.1.0
+  world_file: robot_lab_maps/maps/marine_tank_textured/worlds/marine_tank_textured.world
+- dimension: 3D
+  dynamics:
+    dynamic_obstacles: false
+    static_obstacles: true
+  ground_truth_available: true
   id: marine_reef
   name: Reef and seabed
   ros_package: robot_lab_maps

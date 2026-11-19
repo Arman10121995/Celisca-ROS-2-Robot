@@ -53,7 +53,7 @@ def test_native_added_mass_opposes_acceleration_on_fortress_618(model):
 
 
 def test_no_unsupported_current_or_light_plugins():
-    for name in ('marine_tank','marine_reef','marine_harbor','marine_cave','marine_wreck'):
+    for name in ('marine_tank','marine_tank_textured','marine_reef','marine_harbor','marine_cave','marine_wreck'):
         world=ET.parse(ROOT/'src/robot_lab_maps/maps'/name/'worlds'/(name+'.world')).getroot().find('world')
         for plugin in world.findall('plugin'):
             assert 'current-system' not in plugin.get('filename',''), name
@@ -61,7 +61,7 @@ def test_no_unsupported_current_or_light_plugins():
 
 
 def test_water_is_a_density_boundary_not_a_solid_collision_box():
-    for name in ('marine_tank','marine_reef','marine_harbor','marine_cave','marine_wreck'):
+    for name in ('marine_tank','marine_tank_textured','marine_reef','marine_harbor','marine_cave','marine_wreck'):
         world=ET.parse(ROOT/'src/robot_lab_maps/maps'/name/'worlds'/(name+'.world')).getroot().find('world')
         assert world.find("model[@name='water_surface']/link/collision") is None
         assert world.find("model[@name='seafloor']/link/collision") is not None
@@ -73,7 +73,7 @@ def test_water_is_a_density_boundary_not_a_solid_collision_box():
 
 
 def test_fortress_worlds_do_not_require_the_unavailable_harmonic_dvl_plugin():
-    for name in ('marine_tank','marine_reef','marine_harbor','marine_cave','marine_wreck'):
+    for name in ('marine_tank','marine_tank_textured','marine_reef','marine_harbor','marine_cave','marine_wreck'):
         world=ET.parse(ROOT/'src/robot_lab_maps/maps'/name/'worlds'/(name+'.world')).getroot().find('world')
         dvl=[p for p in world.findall('plugin') if p.get('name','').endswith('DopplerVelocityLogSystem')]
         assert not dvl, name
@@ -91,6 +91,37 @@ def test_rov_keeps_native_imu_and_uses_separate_emulated_dvl():
     assert sensor.findtext('always_on')=='true'
     assert float(sensor.findtext('update_rate'))>0.
     assert sensor.findtext('gz_frame_id')=='base_link'
+
+
+def test_textured_tank_structure_is_in_view_and_clear_of_the_measured_route():
+    """Relocalization panels (R10.5) stay clear of the route, its braking corridor and the walls."""
+    import math
+    world=ET.parse(ROOT/'src/robot_lab_maps/maps/marine_tank_textured/worlds/marine_tank_textured.world').getroot().find('world')
+    start,goal=np.array([-4.,-3.]),np.array([-.93,-1.32])
+    heading=(goal-start)/np.linalg.norm(goal-start)
+    end=goal+3.*heading                       # 3 m terminal braking corridor
+    added=[m for m in world.findall('model') if m.get('name').startswith('relocalization_')]
+    assert len(added)==4
+    for model in added:
+        x,y,z,_,_,yaw=map(float,model.findtext('pose').split())
+        sx,sy,sz=map(float,model.findtext('link/visual/geometry/box/size').split())
+        reach=math.hypot(sx,sy)/2
+        p=np.array([x,y]); t=np.clip((p-start)@(end-start)/((end-start)@(end-start)),0,1)
+        assert np.linalg.norm(p-(start+t*(end-start)))-reach>1.3+.5, model.get('name')   # planner radius + margin
+        bearing=math.atan2(y-start[1],x-start[0])-.5
+        assert abs(bearing)<math.radians(36) and np.linalg.norm(p-start)<8., model.get('name')   # in the camera view
+        assert abs(x)+reach<5.85 and abs(y)+reach<4.85
+        texture=model.findtext('link/visual/material/pbr/metal/albedo_map')
+        assert (ROOT/'src/robot_lab_maps/maps/marine_tank_textured/worlds'/texture).resolve().is_file()
+
+
+def test_tethys_slam_is_geometry_only_unless_visual_features_are_requested():
+    from robot_lab_utils.marine_pipeline import depth_registration_parameters
+    assert depth_registration_parameters(geometry_only=True)['Kp/MaxFeatures']=='-1'
+    visual=depth_registration_parameters(geometry_only=False)
+    assert 'Kp/MaxFeatures' not in visual and visual['Reg/Strategy']=='2'
+    launch=(ROOT/'src/robot_lab_bringup/launch/auv_simulator.launch.py').read_text()
+    assert "DeclareLaunchArgument('visual_features',default_value='false'" in launch
 
 
 def test_marine_launch_uses_the_explicit_sensor_pipeline_instead_of_a_missing_native_bridge():

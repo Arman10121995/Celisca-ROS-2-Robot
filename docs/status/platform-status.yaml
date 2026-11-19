@@ -1807,6 +1807,7 @@ tasks:
         - docs/status/evidence/workflows-2026-10-27/README.md
         - docs/status/workflows-2026-10-27.md
         - docs/status/evidence/marine-mujoco-currents-2026-11-14/README.md
+        - docs/status/evidence/r105-auv-relocalization-2026-11-19/README.md
         implementation_state: Actual pressure/DVL/sonar/IMU, estimated RGB-D/depth registration, flushed RTAB-Map export,
           protected reload/provenance, covariance/age localization gate, AUV kit and source-resource paths implemented.
           2026-11-14 (Claude) volumetric AUV routes (DP depth profile over/under obstacles within the 0.1 slope) and current-aware
@@ -1817,7 +1818,10 @@ tasks:
         title: Underwater maps, sensors, estimation, SLAM and navigation
         validation_state: ROV tank database save/reload/localization and route measured; AUV real RGB-D/estimated transect
           measured. Richer-geometry AUV localization and further water-world missions remain open. On 2026-11-14 volumetric
-          and current-aware AUV routing is unit-tested only; no AUV mission flown through an obstacle or current.
+          and current-aware AUV routing is unit-tested only; no AUV mission flown through an obstacle or current. On
+          2026-11-19 (Claude) the Tethys AUV relocalized on a saved map in the new marine_tank_textured world with the opt-in
+          visual_features:=true pipeline and flew the mission from it 2/2 (0.18/0.31 m from the goal); failed layouts and the
+          geometry-only relocalization failure retained in the receipt.
         historical_claims_superseded_20261027:
         - 'Implementation complete: marine_sensors.py DVL/sonar simulation, marine_pipeline.py workflow,
           marine_navigation_model.py estimation'

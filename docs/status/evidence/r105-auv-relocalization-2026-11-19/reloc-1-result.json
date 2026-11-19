@@ -1,0 +1,31 @@
+{
+ "target": [
+  -0.93,
+  -1.32,
+  -3.0
+ ],
+ "statuses": [
+  "idle"
+ ],
+ "final_status": "idle",
+ "final_reason": "Native marine session/operator changed",
+ "end_truth": [
+  -4.0,
+  -3.0,
+  -3.0
+ ],
+ "end_estimate": [
+  -3.2684937373022387,
+  -2.8768086686040366,
+  -2.994455209652817
+ ],
+ "truth_to_goal_m": 3.4996142644582986,
+ "estimate_to_goal_m": 2.8093125377469943,
+ "estimate_error_end_m": 0.7418276492536191,
+ "estimate_error_max_m": 0.7421333602592027,
+ "position_std_end_m": 0.17985199470676208,
+ "localization_mode": true,
+ "localized_end": false,
+ "localized_seen": false,
+ "mission_seconds": null
+}
