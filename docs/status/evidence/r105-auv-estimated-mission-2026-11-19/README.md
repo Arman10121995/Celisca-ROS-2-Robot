@@ -33,6 +33,9 @@ and the estimate error.
 | 2 | 3 m deep, 6.5 m straight ahead | canceled after 22 s, 1.4 m short: "AUV course error exceeds flow-guidance envelope". It tracked within 6 cm for 3 m, then drifted 0.55 m left and 0.33 m up. | 0.13 m | 1.41 m |
 | **3** | **3 m deep, 3.5 m straight ahead** | **completed** in 17.5 s: braked and settled ("signed-thrust braking settled; propulsion stopped") | **0.13 m** (σ 0.07 m) | **0.20 m** |
 
+| 4 | as run 3, then `save_map` | completed 0.19 m from the goal; map saved (RTAB-Map database and an 8416-point occupied cloud) | 0.13 m | 0.19 m |
+| 5 | relocalize on run 4's map (`localization:=true database:=...`), same route | **not passed**: never relocalized, so the controller never accepted a plan. RTAB-Map logged "Missing visual features" and rejected ICP as "structural complexity is too low" in the empty tank. The idle estimate drifted 0.75 m in 300 s. | 0.75 m | — |
+
 Run 2's divergence is the vehicle's own: a slow coupled yaw and pitch
 drift under the cruise controller. The estimate stayed within 0.13 m of
 truth throughout.
@@ -44,8 +47,10 @@ host with Go2 policy training.
 ## Limits
 
 - One completed short mission. The longer route diverged.
-- Mapping runs online; relocalizing on a saved map
-  (`localization:=true database:=...`) was not run.
+- Relocalizing on a saved map fails in the featureless tank (run 5). It
+  needs a world with texture or structure within the forward camera's
+  view at the vehicle's 2–4 m working depth; the reef's rocks are deeper
+  than that.
 - Ideal DVL and pressure emulation, not native sensor plugins.
 - The tank is obstacle-free on this route; no obstacle avoidance was
   exercised.

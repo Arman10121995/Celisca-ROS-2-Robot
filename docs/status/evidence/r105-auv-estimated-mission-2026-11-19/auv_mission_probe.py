@@ -31,6 +31,7 @@ hb = node.create_publisher(String, '/marine/operator_heartbeat', 10)
 operator = 'auv-mission-probe'
 def send(pub, **c): pub.publish(String(data=json.dumps(dict(session_id=native['session_id'], operator_id=operator, **c))))
 phase, started, last_hb, sent_at, errors, statuses = 'wait', time.monotonic(), 0., None, [], []
+localized_seen = False
 result = dict(target=TARGET)
 while time.monotonic() - started < float(os.environ.get('CASE_BUDGET_S', '600')):
     rclpy.spin_once(node, timeout_sec=.02)
@@ -38,6 +39,7 @@ while time.monotonic() - started < float(os.environ.get('CASE_BUDGET_S', '600'))
     if not native: continue
     if now - last_hb > .15:
         hb.publish(String(data=json.dumps(dict(session_id=native['session_id'], operator_id=operator)))); last_hb = now
+    localized_seen = localized_seen or bool(mission.get('localized'))
     if truth and estimate:
         errors.append(math.dist(truth['xyz'], estimate['xyz']))
     if mission.get('status') and (not statuses or statuses[-1] != mission['status']):
@@ -61,13 +63,22 @@ while time.monotonic() - started < float(os.environ.get('CASE_BUDGET_S', '600'))
             trace.write(json.dumps(dict(kind='sample', wall=now - started, truth=truth.get('xyz'), estimate=estimate.get('xyz'),
                                         status=mission.get('status'), std=mission.get('position_std_m'))) + '\n')
         if mission.get('status') in ('completed', 'failed', 'canceled', 'idle') and now - sent_at > 3:
+            if os.environ.get('CASE_SAVE_MAP') and mission.get('status') == 'completed':
+                result['mission_status'] = mission.get('status')
+                send(mission_cmd, op='save_map'); phase, saved_at = 'saving', now
+            else:
+                break
+    elif phase == 'saving':
+        if mission.get('mapping_status') in ('saved', 'failed') or now - saved_at > 120:
+            result['saved_map'], result['mapping_status'] = mission.get('saved_map'), mission.get('mapping_status')
             break
-result.update(statuses=statuses, final_status=mission.get('status'), final_reason=mission.get('reason'),
+result.update(statuses=statuses, final_status=result.get('mission_status', mission.get('status')), final_reason=mission.get('reason'),
               end_truth=truth.get('xyz'), end_estimate=estimate.get('xyz'),
               truth_to_goal_m=math.dist(truth['xyz'], TARGET) if truth else None,
               estimate_to_goal_m=math.dist(estimate['xyz'], TARGET) if estimate else None,
               estimate_error_end_m=errors[-1] if errors else None, estimate_error_max_m=max(errors) if errors else None,
               position_std_end_m=mission.get('position_std_m'), localization_mode=mission.get('localization_mode'),
+              localized_end=mission.get('localized'), localized_seen=localized_seen,
               mission_seconds=time.monotonic() - sent_at if sent_at else None)
 send(command, op='stop')
 (root / 'result.json').write_text(json.dumps(result, indent=2, default=str))

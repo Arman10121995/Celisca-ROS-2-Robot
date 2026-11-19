@@ -1142,7 +1142,10 @@ parking batch needs its own run. Details and evidence are in the
   refused by the depth clearance. *Done-when met for one mission.*
   [Receipt](docs/status/evidence/r105-auv-estimated-mission-2026-11-19/README.md).
 - **Remaining implementation:**
-  - relocalization on a saved map for the AUV, and longer routes.
+  - relocalization on a saved map for the AUV (11-19: map saved, but the
+    featureless tank gave RTAB-Map no visual features or ICP structure, so
+    it never relocalized; needs a textured world at 2–4 m depth), and
+    longer routes.
 - **How to do it:** `marine_sensors.py`, `marine_navigation.py`, `marine_pipeline.py` and
   `map_archive.py` in `robot_lab_utils/`. Never feed simulator pose into the estimator.
 - **Done when:** an obstacle or inspection mission runs from real sensors and estimates.
