@@ -19,7 +19,8 @@ from launch_ros.parameter_descriptions import ParameterValue
 
 def setup(context):
     from robot_lab_utils.marine_runtime import require_fortress_mass_convention
-    require_fortress_mass_convention()
+    if LaunchConfiguration('simulator').perform(context) != 'mujoco':
+        require_fortress_mass_convention()
     from robot_lab_utils.robot_description import load_description
     from robot_lab_utils.fleet_session import finite
     from robot_lab_utils.robot_spawn import map_spawn_override
@@ -85,6 +86,20 @@ def setup(context):
         sensor_kit='Authored ideal forward RGB-D kit; no source hull/mass/force changes' if value('slam')=='true' else None,
         scope='Pinned source AUV/native propeller/fins + explicit trim; experimental cruise guidance, independent underwater estimation/SLAM/navigation pending'),indent=2)+'\n')
     print('[robot_lab AUV] '+str(folder/'session.json'))
+    if value('simulator')=='mujoco':
+        # Ported Fortress buoyancy/hydrodynamics/thruster/fin LiftDrag
+        # (marine_tethys_plant.py) behind the unchanged controller. No
+        # Gazebo server, bridge, sensors or mapping pipeline.
+        plant=Node(package='robot_lab_utils',executable='marine_tethys_plant.py',arguments=[
+            '--model',str(model_file),'--spawn-x',str(pose['x']),'--spawn-y',str(pose['y']),'--spawn-z',str(pose['z']),
+            '--spawn-yaw',str(pose['yaw']),'--surface-z',str(water['surface_z']),'--bottom-z',str(water['bottom_z']),
+            '--density',str(water['density']),'--coriolis',value('tethys_coriolis')],output='screen')
+        controller=Node(package='robot_lab_utils',executable='auv_controller.py',parameters=[{'use_sim_time':True,'calibration_file':str(assets/'calibration.json'),
+            'surface_z':float(water['surface_z']),'maximum_depth':float(water['surface_z'])-float(water['bottom_z'])-.6,'control_allowed':value('control')=='true'}],output='screen')
+        return [plant,Node(package='robot_state_publisher',executable='robot_state_publisher',
+                           parameters=[{'use_sim_time':True,'robot_description':ParameterValue(description,value_type=str)}],output='screen'),
+                controller,RegisterEventHandler(OnProcessExit(target_action=controller,
+                    on_exit=[EmitEvent(event=Shutdown(reason='AUV controller owner exited'))]))]
     partition=os.environ.get('IGN_PARTITION') or os.environ.get('GZ_PARTITION') or 'robot_lab_auv_'+uuid.uuid4().hex[:12]
     resources=os.pathsep.join(filter(None,[os.environ.get('IGN_GAZEBO_RESOURCE_PATH',''),str(robots.parent),str(Path(share('robot_lab_maps')).parent),str(assets/'source')]))
     env=dict(IGN_PARTITION=partition,GZ_PARTITION=partition,IGN_GAZEBO_RESOURCE_PATH=resources,GZ_SIM_RESOURCE_PATH=resources)
@@ -108,7 +123,9 @@ def setup(context):
 
 
 def generate_launch_description():
-    return LaunchDescription([DeclareLaunchArgument('map_name',default_value='marine_tank'),DeclareLaunchArgument('control',default_value='true'),
+    return LaunchDescription([DeclareLaunchArgument('map_name',default_value='marine_tank'),
+        DeclareLaunchArgument('simulator',default_value='gazebo',description='gazebo, or mujoco for the ported Tethys forces'),
+        DeclareLaunchArgument('tethys_coriolis',default_value='off',description='MuJoCo plant added-mass Coriolis: off (closest to Fortress 6.18), fossen or flipped'),DeclareLaunchArgument('control',default_value='true'),
         DeclareLaunchArgument('gui',default_value='true'),DeclareLaunchArgument('rviz',default_value='true'),
         DeclareLaunchArgument('slam',default_value='false'),DeclareLaunchArgument('database',default_value=''),
         DeclareLaunchArgument('localization',default_value='false'),

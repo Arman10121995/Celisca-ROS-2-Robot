@@ -1,0 +1,135 @@
+{
+  "backend": "gazebo",
+  "phases": {
+    "neutral": {
+      "duration_s": 4.98,
+      "start": [
+        -4.0,
+        -3.0,
+        -1.5
+      ],
+      "end": [
+        -4.0,
+        -3.0,
+        -1.5
+      ],
+      "displacement_m": 0.0,
+      "depth_change_m": 0.0,
+      "max_depth_dev_m": 0.0,
+      "max_xy_drift_m": 0.0,
+      "yaw_change_rad": 0.0,
+      "speed_m_s": 0.0,
+      "enabled_end": true,
+      "reason_end": "AUV armed neutral; depth/heading guidance requires forward flow",
+      "mean_surge_m_s": 0.0,
+      "guidance_fraction": 0.0,
+      "depth_start": 1.5,
+      "depth_end": 1.5
+    },
+    "cruise": {
+      "duration_s": 9.939999999999998,
+      "start": [
+        -4.0,
+        -3.0,
+        -1.5
+      ],
+      "end": [
+        -1.848387489899901,
+        -1.8239481756393678,
+        -1.5484319942096987
+      ],
+      "displacement_m": 2.452046958604427,
+      "depth_change_m": -0.04843199420969868,
+      "max_depth_dev_m": 0.051511942627434415,
+      "max_xy_drift_m": 2.452046958604427,
+      "yaw_change_rad": -0.0009338337114330741,
+      "speed_m_s": 0.2466848046885742,
+      "enabled_end": true,
+      "reason_end": "AUV armed neutral; depth/heading guidance requires forward flow",
+      "mean_surge_m_s": 0.24202521531819599,
+      "guidance_fraction": 0.8557213930348259,
+      "depth_start": 1.5,
+      "depth_end": 1.5489680991317554
+    },
+    "turn": {
+      "duration_s": 24.96,
+      "start": [
+        -1.8379144259490776,
+        -1.8182758339252896,
+        -1.5480432668736268
+      ],
+      "end": [
+        2.5033861507398267,
+        3.5796035986587693,
+        -1.3120196779386573
+      ],
+      "displacement_m": 6.927047932985119,
+      "depth_change_m": 0.23602358893496955,
+      "max_depth_dev_m": 0.23602358893496955,
+      "max_xy_drift_m": 6.927047932985119,
+      "yaw_change_rad": 1.193450644412228,
+      "speed_m_s": 0.27752595885357045,
+      "enabled_end": true,
+      "reason_end": "AUV armed neutral; depth/heading guidance requires forward flow",
+      "mean_surge_m_s": 0.28974727833236136,
+      "guidance_fraction": 1.0,
+      "depth_start": 1.5480432668736268,
+      "depth_end": 1.3120196779386573
+    },
+    "climb": {
+      "duration_s": 9.920000000000002,
+      "start": [
+        2.5041652762685183,
+        3.591364423372753,
+        -1.3108346135120363
+      ],
+      "end": [
+        2.3214273701390296,
+        3.8499676175154747,
+        -1.397455157793598
+      ],
+      "displacement_m": 0.3166524188402926,
+      "depth_change_m": -0.08662054428156174,
+      "max_depth_dev_m": 0.09240131027829479,
+      "max_xy_drift_m": 0.31991360421480264,
+      "yaw_change_rad": -0.1238464487669666,
+      "speed_m_s": 0.03192060673793272,
+      "enabled_end": true,
+      "reason_end": "AUV armed neutral; depth/heading guidance requires forward flow",
+      "mean_surge_m_s": 0.029234059679275535,
+      "guidance_fraction": 0.0891089108910891,
+      "depth_start": 1.3120196779386573,
+      "depth_end": 1.3972224500075445
+    },
+    "loss": {
+      "duration_s": 5.980000000000004,
+      "start": [
+        2.321696636693186,
+        3.8499741809576653,
+        -1.3974015297347484
+      ],
+      "end": [
+        2.30824576171773,
+        3.847703674027567,
+        -1.4014274694075681
+      ],
+      "displacement_m": 0.01364115974999807,
+      "depth_change_m": -0.004025939672819723,
+      "max_depth_dev_m": 0.004025939672819723,
+      "max_xy_drift_m": 0.01364115974999807,
+      "yaw_change_rad": -0.010460071925567862,
+      "speed_m_s": 0.0022811303929762645,
+      "enabled_end": false,
+      "reason_end": "AUV feedback/operator loss; propulsion zero, fins neutral",
+      "mean_surge_m_s": -0.0003757058118889715,
+      "guidance_fraction": 0.0,
+      "depth_start": 1.397479082839447,
+      "depth_end": 1.401377217501952
+    }
+  },
+  "samples": 1127,
+  "loss": {
+    "disarmed": true,
+    "reason": "AUV feedback/operator loss; propulsion zero, fins neutral"
+  }
+}
