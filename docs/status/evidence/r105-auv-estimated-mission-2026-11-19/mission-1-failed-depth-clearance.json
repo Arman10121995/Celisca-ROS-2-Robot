@@ -1,0 +1,40 @@
+{
+  "target": [
+    1.5,
+    0.0,
+    -2.0
+  ],
+  "start_truth": [
+    -4.0,
+    -3.0,
+    -1.5
+  ],
+  "start_estimate": [
+    -3.9032730141939638,
+    -2.976030439788592,
+    -1.4973445925150997
+  ],
+  "statuses": [
+    "idle",
+    "canceled"
+  ],
+  "final_status": "canceled",
+  "final_reason": "Planning failed: AUV route violates source-inflated depth clearance",
+  "end_truth": [
+    -4.0,
+    -3.0,
+    -1.5
+  ],
+  "end_estimate": [
+    -2.6530132059284006,
+    -2.731291098404351,
+    -1.502908539426051
+  ],
+  "truth_to_goal_m": 6.284902544988268,
+  "estimate_to_goal_m": 4.99545490150938,
+  "estimate_error_end_m": 1.3735306173513637,
+  "estimate_error_max_m": 1.3743591761220288,
+  "position_std_end_m": 0.24607271283098953,
+  "localization_mode": false,
+  "mission_seconds": 599.733909261995
+}

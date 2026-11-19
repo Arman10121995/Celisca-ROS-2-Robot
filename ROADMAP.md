@@ -138,7 +138,7 @@ Work top to bottom. Each line links to its task.
 | I8 | [R5.8](#r58--robot-hands-and-grippers) Hands | 11-17: normal GUI grasp → lift 5 cm → hold → return → supported release passes for Robotiq 2F-85 (both variants, support stage) and UMI (source axis); parallel-jaw measured in R5.7/R5.9. DEX-EE (dexterous) not passed: needs grasp synthesis; other backends remain | partial |
 | I9 | [R10.2](#r102--fleet-management-and-open-rmf) Fleet / Open-RMF | Done 2026-11-14: shared-zone reservations (map passages, doors, docks), cycle breaker, recovery drive-out, RMF energy from a drivetrain calibration; two crossing runs pass (native and RMF). 11-18: doors, docks and energy without a lift (`fleet_ward`: door crossing, docking and charging pass). Larger fleets are V7 | implemented |
 | I10 | [R10.3](#r103--swarm-robotics) Swarms | Done 2026-11-14: ROS2swarm port of per-member scan-only behaviours, scan-sensed cooperative coverage, ground/air member-loss replanning; dispersion and coverage-with-loss measured; aggregation gathers three Bumperbots in `swarm_arena` (11-18); 3–4 drone flight is validation | implemented |
-| I11 | [R10.5](#r105--underwater-worlds-sensing-slam-and-navigation) / [R10.4](#r104--underwater-robots-and-controllers) Marine | Done 2026-11-14: MuJoCo ROV plant (ported Fortress water forces; matches Gazebo), damping-based current feedforward (1 cm drift in 0.1 m/s), volumetric and current-aware AUV routes (unit-tested). 11-18: PyBullet ROV plant matches MuJoCo (surge 1.041 vs 1.030 m). 11-19: Tethys AUV on MuJoCo (cruise matches Gazebo, turn 0.86 vs 1.19 rad). Isaac marine, AUV sensor-only localization mission remain | implemented |
+| I11 | [R10.5](#r105--underwater-worlds-sensing-slam-and-navigation) / [R10.4](#r104--underwater-robots-and-controllers) Marine | Done 2026-11-14: MuJoCo ROV plant (ported Fortress water forces; matches Gazebo), damping-based current feedforward (1 cm drift in 0.1 m/s), volumetric and current-aware AUV routes (unit-tested). 11-18: PyBullet ROV plant matches MuJoCo (surge 1.041 vs 1.030 m). 11-19: Tethys AUV on MuJoCo (cruise matches Gazebo, turn 0.86 vs 1.19 rad). AUV mission flown from the sensor estimate (11-19, 0.20 m from the goal). Isaac marine, saved-map relocalization remain | implemented |
 | I12 | [R10.6](#r106--six--and-eight-legged-robots) / [R10.7](#r107--segmented-and-additional-robot-forms) Multi-leg and forms | Done 2026-11-14: depth/IMU flipper policy (sequences a step, but the 4 Nm flippers cannot climb 0.18 m: measured), bounded gait slip/support recovery (unit-tested). Stronger flippers, other backends, per-model terrain missions remain | implemented |
 | I13 | [R5.2](#r52--go2-quadruped-locomotion) / [R5.3](#r53--berkeley-humanoid-lite-balance-and-walking) / [R12](#r12--legged-policy-training) Legged | 2026-11-15: Go2W `wheeled_walk` policy strafes (MuJoCo 0.116, Isaac 0.271 m/s); BHL contract/export/warm start implemented, four runs not passed; 11-17: Go2 `get_up_roll` r2 (6000 iterations) stands 29/30 in training eval and gets up in a normal MuJoCo launch from side/back starts and 200–400 N knock-downs (60 N no longer topples it). Walk → get-up → walk switching measured. Go2 stairs not passed after 5 runs (r5 with a height scan steps at the riser; r6 training), G1, GPU training remain | partial |
 | I14 | [R5.5](#r55--ackermann-rear-steer-and-anti-ackermann-cars) Cars | 2026-11-15: car course 13/13 on four backends (lookahead 1.25 × turning radius, forward escape when back-up is blocked); park-at-heading runtime and Drive-panel controls | implemented |
@@ -1124,7 +1124,7 @@ parking batch needs its own run. Details and evidence are in the
 
 ### R10.5 — Underwater worlds, sensing, SLAM and navigation
 
-- **State:** implemented, experimental (AUV localization mission pending) · **Priority:** I11 · **Depends on:** R10.4
+- **State:** implemented, experimental (saved-map relocalization pending) · **Priority:** I11 · **Depends on:** R10.4
 - **Have:**
   - Five water worlds (tank, reef, harbour, cave, wreck).
   - IMU/RGB-D bridges, labelled ideal pressure, DVL emulation (no native plugin), directional sonar.
@@ -1134,8 +1134,15 @@ parking batch needs its own run. Details and evidence are in the
   routes (DP depth profile over/under obstacles within the 0.1 slope) and
   current-aware ranking by travel time through the operator-authored current,
   refusing > 0.5 rad crab.
+- **Done 2026-11-19 (implemented, experimental): a mission from the sensor
+  estimate.** On Gazebo, Tethys planned and flew a 3.5 m route from the
+  IMU/pressure/DVL estimate (RTAB-Map mapping online) and stopped 0.20 m
+  from the goal by truth; the estimate stayed within 0.13 m. A 6.5 m route
+  diverged after 3 m (vehicle yaw/pitch drift); a start 1.5 m deep was
+  refused by the depth clearance. *Done-when met for one mission.*
+  [Receipt](docs/status/evidence/r105-auv-estimated-mission-2026-11-19/README.md).
 - **Remaining implementation:**
-  - sensor-only localization on saved maps for the AUV (mission run).
+  - relocalization on a saved map for the AUV, and longer routes.
 - **How to do it:** `marine_sensors.py`, `marine_navigation.py`, `marine_pipeline.py` and
   `map_archive.py` in `robot_lab_utils/`. Never feed simulator pose into the estimator.
 - **Done when:** an obstacle or inspection mission runs from real sensors and estimates.

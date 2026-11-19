@@ -1791,6 +1791,7 @@ tasks:
           receipt: docs/status/evidence/workflows-2026-10-27/README.md
           full_scope_acceptance: partial
       R10.5:
+        auv_estimated_mission_20261119: 'Claude: implemented, experimental; done-when met for one mission. Gazebo Tethys, slam:=true, spawn 3 m deep: marine_navigation planned and flew a 3.5 m route from the IMU/pressure/DVL estimate, completed (braking settled) 0.20 m from the goal by truth in 17.5 s; estimate error <= 0.13 m. A 6.5 m route was canceled by the flow-guidance envelope after 3 m (vehicle drift); a 1.5 m start was refused by the depth clearance. Saved-map relocalization not run. docs/status/evidence/r105-auv-estimated-mission-2026-11-19/README.md'
         acceptance_ref: ROADMAP.md R10.5
         active_scope: Actual pressure/DVL/sonar/IMU, estimated RGB-D/depth registration, flushed RTAB-Map
           export, protected reload/provenance, covariance/age localization gate, AUV kit and source-resource
