@@ -124,3 +124,4 @@ choices.
 | 11-19 | R10.5 | Added a separate `marine_tank_textured` world rather than adding features to `marine_tank` | Keeps the measured tank runs reproducible |
 | 11-19 | R10.5 | Made Tethys visual words opt-in (`visual_features:=true`) instead of changing the geometry-only default | The default guards against repeating panels pulling a cruising AUV sideways; relocalization needs visual words, so the textured world uses unique markers and the opt-in |
 | 11-19 | R10.5 | Placed the panels beside the route at ±30° (6 m) instead of straight ahead | Straight ahead they fell inside the 3 m terminal braking corridor (planning refused); farther away they were past the 8 m depth clip at the start |
+| 11-19 | R5.2 | Closed the stairs time-box after r6 failed and did not start r7 | Six CPU runs have plateaued at the 10 cm level; the remaining levers (course-like 1.1 m treads, GPU-scale environments) are a larger change than another resume |

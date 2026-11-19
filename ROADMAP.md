@@ -310,8 +310,10 @@ parking batch needs its own run. Details and evidence are in the
     episodes start 0.3 m before a riser) reached only level 0.4 and stops 0.45 m short of
     the first step. All four policies are blind (no terrain observation). r5 (11-19) adds a
     height-scan observation (MuJoCo ray-cast in deployment): it walks 5.97 m on flat ground
-    and keeps stepping at the 10 cm riser (base rises 7 cm) but does not climb. r6 (riser
-    starts) is training.
+    and keeps stepping at the 10 cm riser (base rises 7 cm) but does not climb. r6 (r5 plus
+    30 % riser starts, 3000 iterations) also fails: its curriculum stalls at level 0.5 (10 cm)
+    and it rises 8.5 cm at the 10 cm riser with 0 steps; flat 5.72 m in 15 s. Stairs is
+    time-boxed again; next would be course-like 1.1 m treads or GPU-scale training.
     [Receipt](docs/status/evidence/go2-stairs-r2-2026-11-18/README.md).
 - **How to do it:**
   1. Train `push_recovery` and a get-up task with `legged-train`

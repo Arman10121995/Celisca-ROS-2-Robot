@@ -183,13 +183,32 @@ Unlike the blind runs, it keeps stepping at the riser instead of freezing.
 It trained no higher than the course's 10 cm. r6 continues from r5 with
 the height scan and riser starts (30 %).
 
+## Stairs r6 (height scan + riser starts): not passed
+
+r6 resumed r5 (iteration 8000) for 3000 iterations with `--height-scan
+--riser-start 0.3`, again with 512 environments on the CPU while other
+work shared the host.
+
+- **Curriculum:** level 0.5 (10 cm) from iteration 8600 to the end;
+  mean return fell from 12.1 to 6.0 (`r6-curriculum-curve.json`).
+- **`terrain_stairs_low`, 0.5 m/s, holding the line
+  (`screen-low3-go2_stairs_r6`):** walks 0.87 m to the first riser and
+  steps at it for 40 s. The base rises at most 8.5 cm (r5: 7.1 cm), 0
+  steps, no fall.
+- **`nav_empty`, 0.5 m/s, 15 s (`flat-r6`):** 5.72 m, no fall. Base height
+  varies up to 8.7 cm (r5: 2 cm), and only the front-right and rear-left
+  feet were in contact at the end sample.
+
+Riser starts with terrain input did not get past the 10 cm level either.
+The stairs time-box is closed again after r6.
+
 ## Next
 
 - The trained policies freeze when a front foot meets a riser. Riser-start
   episodes (r4) did not help.
 - Height scan: implemented on MuJoCo (r5); r5 tries at the riser but
-  does not climb. r6 adds riser starts. Other backends need their own scan
-  publisher.
+  does not climb; r6 (plus riser starts) does not either. Other backends
+  need their own scan publisher.
 - Train with treads like the course (1.1 m) or a mixed tread curriculum.
 - GPU-scale training (thousands of environments) is not available on this
   host.
