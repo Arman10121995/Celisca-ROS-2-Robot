@@ -1117,14 +1117,14 @@ parking batch needs its own run. Details and evidence are in the
     (`marine_isaac_plant.py`, PhysX rigid body with the shared water
     forces): surge 1.038 m and yaw 1.452 rad, as on the other three
     backends. [Receipt](docs/status/evidence/r104-marine-isaac-2026-11-19/README.md);
-  - Tethys on Isaac. Done 2026-11-19 (PyBullet too: cruise 2.42 m; the
-    turn reaches 0.51 rad). Done 2026-11-19
-    (implemented, experimental): Tethys MuJoCo plant (ported buoyancy,
-    hydrodynamics, thruster and fin LiftDrag; `simulator:=mujoco`). Cruise
-    matches Gazebo (2.43 vs 2.45 m in 10 s); a cruising turn reaches
-    0.86 rad against 1.19 rad. The added-mass Coriolis term is off by
-    default (closest to Fortress 6.18 of three forms).
-    [Receipt](docs/status/evidence/r104-tethys-mujoco-2026-11-19/README.md).
+  - Done 2026-11-19 (implemented, experimental): Tethys plants on MuJoCo
+    and PyBullet (ported buoyancy, hydrodynamics, thruster and fin
+    LiftDrag; `auv_simulator.launch.py simulator:=mujoco|pybullet`). Cruise
+    matches Gazebo (2.43 / 2.42 vs 2.45 m in 10 s); a cruising turn reaches
+    0.86 / 0.51 rad against 1.19 rad. The added-mass Coriolis term is off
+    by default (closest to Fortress 6.18 of three forms).
+    [Receipt](docs/status/evidence/r104-tethys-mujoco-2026-11-19/README.md);
+  - Tethys on Isaac.
 - **Done when:** station keeping, all axes, disturbance and loss measured with body and force evidence.
 
 ### R10.5 — Underwater worlds, sensing, SLAM and navigation
