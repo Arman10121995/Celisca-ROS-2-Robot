@@ -24,6 +24,22 @@ def test_original_geometry_stays_fixed_and_derivative_has_real_force_pids():
         assert float(plugin.findtext('cmd_max'))==4 and float(plugin.findtext('cmd_min'))==-4
 
 
+def test_strong_variant_only_scales_the_flipper_actuators():
+    weak=ET.parse(ROOT/'src/robot_lab_robots/lab_tracked_articulated/model.sdf').getroot().find('model')
+    strong=ET.parse(ROOT/'src/robot_lab_robots/lab_tracked_strong_flippers/model.sdf').getroot().find('model')
+    assert [ET.tostring(link) for link in weak.findall('link')]==[ET.tostring(link) for link in strong.findall('link')]
+    for name in FLIPPER_JOINTS:
+        limit=strong.find("joint[@name='%s']/axis/limit"%name)
+        assert float(limit.findtext('effort'))==40
+        limit.find('effort').text='4'   # the only joint difference
+    assert [ET.tostring(joint) for joint in weak.findall('joint')]==[ET.tostring(joint) for joint in strong.findall('joint')]
+    for name in FLIPPER_JOINTS:
+        plugin=next(p for p in strong.findall('plugin') if p.findtext('joint_name')==name)
+        assert plugin.findtext('use_velocity_commands')=='false'
+        assert float(plugin.findtext('cmd_max'))==40 and float(plugin.findtext('cmd_min'))==-40
+        assert float(plugin.findtext('p_gain'))==80
+
+
 @pytest.mark.parametrize('values',[[0,0,0], [0,0,0,1.], [float('nan'),0,0,0],[True,0,0,0]])
 def test_unbounded_or_malformed_targets_cannot_reach_native_servos(values):
     node=SimpleNamespace(session='actual',robot_id='lab_tracked_articulated',flipper_at=time.monotonic(),

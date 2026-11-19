@@ -1930,10 +1930,12 @@ tasks:
         - docs/status/amphibious-facility-2026-10-30.md
         - docs/status/evidence/amphibious-facility-2026-10-30/README.md
         - docs/status/evidence/flipper-stairs-2026-11-14/README.md
+        - docs/status/evidence/flipper-strong-2026-11-19/README.md
         implementation_state: Complete sprung amphibious wheel/propeller source, bank/ramp world, source bounds/leases,
           hybrid flow/range emulation and IMU estimation, RGB-D export/reload and source-aware 2.5D shore Plan/Execute.
           Existing snake/surface/tracked families preserved. 2026-11-14 (Claude) flipper-aware terrain policy from the robot
-          depth camera and IMU (tracked_flippers.py, op auto, GUI button).
+          depth camera and IMU (tracked_flippers.py, op auto, GUI button). 2026-11-19 (Claude) lab_tracked_strong_flippers (40 Nm
+          flipper PID) and a full-press climb state (flipper_full_press profile key).
         owner: claude
         state: implemented
         title: Centipede/segmented and additional robot families
@@ -1941,7 +1943,9 @@ tasks:
           acquisition. Rigid traction/import/sensor-origin/recheck failures retained. Further terrain, maps, saved localization
           and force backends remain. On 2026-11-14 at a 0.18 m terrain_stairs step: fixed flippers reared to 0.657 rad and
           hit the 0.6 rad tilt guard; the auto policy sequenced approach/climb but the 4 Nm flippers were back-driven (rear
-          -0.69 -> -0.03 rad) and the climb also failed (0.657 rad). A stronger flipper actuator is needed.'
+          -0.69 -> -0.03 rad) and the climb also failed (0.657 rad). A stronger flipper actuator is needed. On 2026-11-19
+          the 40 Nm variant with full-press climb crossed the step 2/2 (tread z 0.252, then down the far side); the same
+          vehicle with fixed flippers reared to 0.658 rad and with the default climb stalled at the edge.'
         qualification_review: '2026-10-27 documentation review: retain the implemented code, tests and named mission
           certificates. Full declared roadmap acceptance is still open; test counts, metadata and scene loads do not
           qualify remaining robot/map/backend missions. See docs/REMAINING_WORK_GUIDE.md.'

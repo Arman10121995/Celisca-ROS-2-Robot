@@ -12,7 +12,10 @@ world geometry or simulator pose is read. The classic step sequence is:
 - climb:    the hull pitches up; front flippers stay up so the tracks ride
             the edge, rear flippers press down to lift the tail, push and
             limit the rear-up (the source flipper PID is capped at 4 Nm, too
-            weak to lift the hull with the front pair: measured 2026-11-14);
+            weak to lift the hull with the front pair: measured 2026-11-14).
+            With ``full_press`` (an actuator that carries the hull, such as
+            the 40 Nm variant) both pairs press to the joint limit instead,
+            levering the hull over the edge (measured 2026-11-19);
 - descend:  a drop ahead or nose-down pitch; front flippers reach down first,
             rear flippers lift;
 - hold:     roll beyond 0.35 rad; flippers hold and the drive is stopped.
@@ -29,6 +32,7 @@ FLIPPER_LENGTH_M = .33
 PIVOT_HEIGHT_M = .09          # front/rear wheel centre above ground
 REST_RAD = .5                 # joint 0: 29° above horizontal
 PRESS_RAD = -.15              # tip below the pivot: presses on the ground/tread
+FULL_PRESS_RAD = -.3          # both pairs at the ±0.8 rad joint limit
 RISE_M, DROP_M = .05, .06
 CLIMB_PITCH, LEVEL_PITCH = .12, .05
 MAX_ROLL = .35
@@ -83,7 +87,8 @@ def edge_elevation(rise):
 
 
 class FlipperPolicy:
-    def __init__(self):
+    def __init__(self, full_press=False):
+        self.full_press = bool(full_press)
         self.state, self.since, self.level_since = 'travel', 0., None
         self.elevations = (REST_RAD, REST_RAD)
 
@@ -117,7 +122,7 @@ class FlipperPolicy:
         if self.state == 'approach':
             self.elevations = (max(REST_RAD, edge_elevation(rise)), PRESS_RAD)
         elif self.state == 'climb':
-            self.elevations = (REST_RAD, PRESS_RAD)
+            self.elevations = (FULL_PRESS_RAD, FULL_PRESS_RAD) if self.full_press else (REST_RAD, PRESS_RAD)
         elif self.state == 'descend':
             self.elevations = (PRESS_RAD, REST_RAD)
         elif self.state == 'travel':

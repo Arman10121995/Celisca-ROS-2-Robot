@@ -121,7 +121,8 @@ def setup(context):
     resource=os.pathsep.join([os.environ.get('IGN_GAZEBO_RESOURCE_PATH',''),str(source.parent),str(Path(share('robot_lab_maps'))),str(Path(share('robot_lab_robots')))])
     actions.extend(SetEnvironmentVariable(key,resource) for key in ('IGN_GAZEBO_RESOURCE_PATH','GZ_SIM_RESOURCE_PATH'))
     owner=Node(package='robot_lab_utils',executable='tracked_control.py',parameters=[dict(use_sim_time=True,navigation=task=='nav',
-        robot_id=robot_id,articulated_flippers=bool(robot_profile.get('articulated_flippers')))])
+        robot_id=robot_id,articulated_flippers=bool(robot_profile.get('articulated_flippers')),
+        flipper_full_press=bool(robot_profile.get('flipper_full_press')))])
     actions.append(RegisterEventHandler(OnProcessExit(target_action=owner,on_exit=[EmitEvent(event=Shutdown(reason='Native tracked command owner exited'))])))
     actions+=[include('ros_gz_sim','gz_sim.launch.py',dict(gz_args='-r -v 2 --physics-engine '+engine['engine']+' '+('' if value('gui')=='true' else '-s --headless-rendering ')+str(world_file),on_exit_shutdown='True')),
         Node(package='robot_state_publisher',executable='robot_state_publisher',parameters=[dict(use_sim_time=True,robot_description=ParameterValue(description,value_type=str))]),

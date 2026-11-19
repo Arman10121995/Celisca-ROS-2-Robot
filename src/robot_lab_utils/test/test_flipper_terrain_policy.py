@@ -71,6 +71,13 @@ def test_step_sequence_approach_climb_travel(step, flat):
     assert policy.update(terrain_ahead(flat, HFOV, CAM, GROUND), .02, 0., 3.1)['state'] == 'travel'
 
 
+def test_full_press_climb_levers_with_both_pairs(step):
+    policy = FlipperPolicy(full_press=True)
+    assert policy.update(terrain_ahead(step, HFOV, CAM, GROUND), 0., 0., 0.)['elevations'][1] == PRESS_RAD
+    out = policy.update(terrain_ahead(step, HFOV, CAM, GROUND), .25, 0., 1.)
+    assert out['state'] == 'climb' and out['targets'] == [.8, -.8, .8, -.8]
+
+
 def test_drop_descends_and_roll_holds(ledge, flat):
     policy = FlipperPolicy()
     out = policy.update(terrain_ahead(ledge, HFOV, CAM, GROUND), 0., 0., 0.)

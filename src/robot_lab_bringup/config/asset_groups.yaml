@@ -42,6 +42,7 @@ robots:
     members:
       - {id: lab_tracked, label: Original complete source · fixed flippers}
       - {id: lab_tracked_articulated, label: Derived four-motor articulated flippers}
+      - {id: lab_tracked_strong_flippers, label: Derived 40 Nm flipper actuator variant}
   - id: molar_family
     name: MOLAR / ProBOT-L
     preferred: molar_hri

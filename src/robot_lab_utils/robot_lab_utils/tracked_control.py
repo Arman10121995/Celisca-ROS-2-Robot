@@ -29,14 +29,16 @@ class TrackedControl(Node):
         self.declare_parameter('navigation',False)
         self.declare_parameter('robot_id','lab_tracked')
         self.declare_parameter('articulated_flippers',False)
+        self.declare_parameter('flipper_full_press',False)
         self.robot_id=self.get_parameter('robot_id').value;self.session=uuid.uuid4().hex
         self.articulated=self.get_parameter('articulated_flippers').value
+        self.full_press=self.get_parameter('flipper_full_press').value is True
         self.flipper_positions=None;self.flipper_at=-math.inf;self.flipper_clock=None
         self.flipper_requested=[0.]*4;self.flipper_output=[0.]*4
         self.flipper_auto=False;self.depth=None;self.depth_at=-math.inf;self.pitch=self.roll=None;self.flipper_policy=None;self.flipper_auto_state=None
         if self.articulated:
             from robot_lab_utils.tracked_flippers import FlipperPolicy
-            self.flipper_policy=FlipperPolicy()
+            self.flipper_policy=FlipperPolicy(self.full_press)
             self.create_subscription(Image,'/tracked/raw/camera/depth/image_raw',self.depth_image,qos_profile_sensor_data)
             self.flipper_publishers=[self.create_publisher(Float64,'/tracked/flippers/'+name+'/target',10) for name in FLIPPER_JOINTS]
             self.create_subscription(JointState,'/joint_states',self.flipper_feedback,10)
@@ -88,7 +90,7 @@ class TrackedControl(Node):
             if data.get('op')=='auto':
                 # Terrain-aware flipper policy from the robot's own depth camera and IMU.
                 from robot_lab_utils.tracked_flippers import FlipperPolicy
-                self.flipper_policy=FlipperPolicy();self.flipper_auto=data.get('enabled',True) is True;return
+                self.flipper_policy=FlipperPolicy(self.full_press);self.flipper_auto=data.get('enabled',True) is True;return
             if data.get('op')=='hold':self.flipper_auto=False;self.flipper_requested=list(self.flipper_output);return
             if data.get('op')!='target':return
             if time.monotonic()-self.flipper_at>.6 or time.monotonic()-self.clock_at>.6:return

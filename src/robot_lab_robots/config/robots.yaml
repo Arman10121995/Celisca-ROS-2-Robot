@@ -169,6 +169,15 @@ robots:
     notes: "Explicit derivative of the retained tracked source: four unlocked ±0.8 rad flippers, native force PID capped at 4 Nm and 0.2 rad/s target slew. Same complete hull/belts/sensors; inspect actual joint feedback in Tracks. Separate terrain and higher-mode acceptance required."
     measured_screens:
     - {simulator: gazebo, mode: display, map: nav_empty, evidence: docs/status/native-forms-2026-10-30.md}
+  lab_tracked_strong_flippers:
+    <<: *lab_tracked_profile
+    name: lab_tracked_strong_flippers
+    xacro: lab_tracked_strong_flippers/robot.urdf
+    tracked_sdf: lab_tracked_strong_flippers/model.sdf
+    articulated_flippers: true
+    flipper_full_press: true
+    validation_scope: "Fortress/terrain_stairs actuator variant for the R10.7 step climb; docs/status/evidence/flipper-strong-2026-11-19. Inherits no other receipt."
+    notes: "Derived actuator variant of lab_tracked_articulated (scripts/generate_articulated_tracks.py): the same four ±0.8 rad flippers with the native force PID capped at 40 Nm (gains scaled 10×) instead of 4 Nm, because the 4 Nm hull back-drove the flippers on the 0.18 m step. Same hull, belts and sensors."
   probot_l:
     package: robot_lab_robots
     xacro: probot_l/urdf/probot_l.urdf.xacro
