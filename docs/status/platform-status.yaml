@@ -950,8 +950,9 @@ molar_hri_integration_20261016:
   multi_floor_20261119: 'Claude: implemented, experimental. MOLAR is a shared-world fleet member (own base
     controller, base_footprint root, MOLAR-only AMCL overlay) and rides the fleet_facility lift L0 -> L1 -> L0
     2/2 with floor and Nav2 map switching; lift drive raised 1600 -> 4000 N, integral gain 1000 -> 8000 (the
-    1000 run stopped 9.4 mm short of L1, retained); Bumperbot ride re-passes. L1 navigation and a full transport
-    task remain. docs/status/evidence/r11-molar-lift-2026-11-19/README.md'
+    1000 run stopped 9.4 mm short of L1, retained); Bumperbot ride re-passes. A fleet Nav2 goal on L1 after the
+    ride passes 2/2 (0.043/0.047 m); a goal needing a turn beside the landing rail failed (retained). A full
+    transport task remains. docs/status/evidence/r11-molar-lift-2026-11-19/README.md'
   owner: cline-agent
   priority: Latest user request; detailed MOLAR maps and differential-drive/telescope
     robot in native Robot Lab

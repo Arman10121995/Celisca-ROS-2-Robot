@@ -24,6 +24,8 @@ MEMBER = os.environ.get('CASE_MEMBER', 'alpha')
 SPAWN_X = float(os.environ.get('CASE_SPAWN_X', '2.5'))
 BOARD_X = float(os.environ.get('CASE_BOARD_X', '3.65'))
 SPEED = float(os.environ.get('CASE_SPEED', '.12'))
+# Optional Nav2 goal on L1 (x,y,yaw in the floor map) instead of riding back.
+L1_GOAL = [float(v) for v in os.environ['CASE_L1_GOAL'].split(',')] if os.environ.get('CASE_L1_GOAL') else None
 
 
 class FloorMapTrial(Node):
@@ -168,8 +170,30 @@ class FloorMapTrial(Node):
                     and self.map_name() == 'map_L1.yaml' and MEMBER not in errors):
                 self.record('floor_arrival', floor='L1', body=self.pose, active_map=self.map_name(),
                             map_status=self.infrastructure.get('map_status', {}).get(MEMBER))
-                self.send_infrastructure('lift', floor='L0')
-                self.advance('ride_to_l0', body_z_start=self.pose['z'])
+                if L1_GOAL:
+                    self.advance('l1_ready')
+                else:
+                    self.send_infrastructure('lift', floor='L0')
+                    self.advance('ride_to_l0', body_z_start=self.pose['z'])
+        elif self.phase == 'l1_ready':
+            row = self.member()
+            if (self.infrastructure['doors']['lift']['mode'] == 2 and row.get('mode') == 'idle'
+                    and row.get('navigation_ready') and self.infrastructure.get('map_status', {}).get(MEMBER) == 'ready'):
+                x, y, yaw = L1_GOAL
+                self.send_fleet('dispatch', targets=[MEMBER], x=x, y=y, yaw=yaw, timeout=240.)
+                self.advance('l1_navigate', goal=L1_GOAL)
+        elif self.phase == 'l1_navigate':
+            row = self.member()
+            if row.get('mode') == 'idle' and now - self.phase_at > 3:
+                if row.get('reason') == 'Actual Nav2 success and measured settled arrival':
+                    x, y, yaw = L1_GOAL
+                    error = math.hypot(self.pose['x']-x, self.pose['y']-y)
+                    self.record('l1_arrival', body=self.pose, error_m=error, floor=self.infrastructure.get('robot_floors', {}).get(MEMBER))
+                    self.success = True
+                    self.reason = 'Actual body rode L0-L1, drove off the car and reached a Nav2 goal on L1 (%.3f m)' % error
+                    self.advance('complete')
+                else:
+                    raise RuntimeError('L1 navigation ended: ' + str(row.get('reason')))
         elif self.phase == 'ride_to_l0':
             floors = self.infrastructure.get('robot_floors', {})
             errors = self.infrastructure.get('map_errors', {})
@@ -183,7 +207,7 @@ class FloorMapTrial(Node):
                 self.advance('complete')
         if self.phase not in ('complete', 'wait_ready'):
             timeouts = dict(approach_lift=110, open_l0_door=30, arm_boarding_drive=30,
-                            settle_on_car=20, ride_to_l1=60, ride_to_l0=60)
+                            settle_on_car=20, ride_to_l1=60, ride_to_l0=60, l1_ready=60, l1_navigate=300)
             if now - self.phase_at > timeouts.get(self.phase, 240):
                 raise TimeoutError('Phase timed out: ' + self.phase)
         if self.fleet and now - self.last_trace >= .5:

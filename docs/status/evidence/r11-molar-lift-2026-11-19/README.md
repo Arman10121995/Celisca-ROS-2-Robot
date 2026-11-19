@@ -46,10 +46,27 @@ floor and namespaced Nav2 map at both landings (2 of 2 runs).
 Boarding used the fleet's manual mode at 0.12 m/s under its watchdog; there
 were no pose writes.
 
+### Then a Nav2 goal on L1 (`CASE_L1_GOAL`)
+
+After the L1 arrival the trial waits for the open lift door and a ready L1
+map. It then dispatches MOLAR through the fleet controller (`dispatch`).
+It passes only on "Actual Nav2 success and measured settled arrival".
+
+| Run | L1 goal (x, y, yaw) | Result |
+|---|---|---|
+| `l1-1` | (1.8, 0, π) | **not passed**: MOLAR drove off the car and stopped 0.10 m from the goal, but at yaw −2.19. The fleet scan guard blocked the last turn ("scan stopping corridor": Nav2 still commanded a little translation toward the 2 cm facility goal tolerance with the landing's west rail inside the stopping distance), and Nav2 aborted |
+| `l1-2` | (2.1, 0, π), the heading it drives off the car with | **passed**: settled 0.043 m from the goal by truth (86.6 s for the whole trial) |
+| `l1-3` | same | **passed**: 0.047 m |
+
+The guard was not loosened. The L1 landing is a 1.8 × 2 m pen for MOLAR's
+0.98 m circle, and the goal was moved so no turn is needed next to the rail.
+
 ## Limits
 
-- Lift ride and floor/map switch only. A MOLAR Nav2 goal on L1 and a full
-  fleet transport task (queue, parking, return) with MOLAR are not run yet.
+- One L1 goal on the landing. A full fleet transport task (queue, parking,
+  return) with MOLAR is not run yet.
+- Fleet goal checks use the session's L0 map for clearance, not the floor's
+  map (the L1 landing goal is free on both).
 - One MOLAR at a time; Gazebo only. The deck lift, telescope and roller are
   not driven in a fleet.
 
