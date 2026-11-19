@@ -1,0 +1,28 @@
+{
+  "schema": "robot_lab.extension_workload.v1",
+  "workflow": "gait",
+  "task": "navigation",
+  "truth_coordinates": "selected_world",
+  "goals": [
+    [
+      0.20466314702926475,
+      -0.46763690526310175,
+      0.02881345888535434
+    ]
+  ],
+  "timeout_s": 220.0,
+  "selection": {},
+  "launch_command": [
+    "ros2",
+    "launch",
+    "robot_lab_bringup",
+    "gait_simulator.launch.py",
+    "robot_model:=lab_centipede",
+    "task:=nav",
+    "map_name:=nav_empty",
+    "gui:=false",
+    "rviz:=false",
+    "map_yaml:=/workspace/molar/robot_lab_runtime/gait_sessions/lab_centipede-06ifmemz/saved_maps/map-3bee8139e5/map.yaml"
+  ],
+  "expected_producer_sha256": "95092cbbbca6e814c44a5cf5ad154cb814d49d8e60d8d0a090bac40c32277566"
+}

@@ -1,0 +1,114 @@
+[
+ {
+  "robot": "hexapod_ros2",
+  "run": "1",
+  "known_cells": 32502,
+  "acquisition_success": true,
+  "map_yaml": "/workspace/molar/robot_lab_runtime/gait_sessions/hexapod_ros2-zk71jp81/saved_maps/map-78759691d0/map.yaml",
+  "start": [
+   -0.29550099123112766,
+   -0.49786781200153934,
+   0.0034027797347939703
+  ],
+  "goal": [
+   0.2044961140441846,
+   -0.49616642541751377,
+   0.0034027797347939703
+  ],
+  "end": [
+   0.1159654086883837,
+   -0.47798883609231313
+  ],
+  "end_yaw": 0.02852161940074471,
+  "position_error_m": 0.09037759979370598,
+  "heading_error_rad": 0.02511883966595074,
+  "navigation_success": true,
+  "reason": "Every native goal physically settled",
+  "sim_s_after_execute": 83.1,
+  "nav2_goal_succeeded": 1
+ },
+ {
+  "robot": "lab_octopod",
+  "run": "1",
+  "known_cells": 32680,
+  "acquisition_success": true,
+  "map_yaml": "/workspace/molar/robot_lab_runtime/gait_sessions/lab_octopod-35mryrp8/saved_maps/map-35be217292/map.yaml",
+  "start": [
+   -0.2951397131581289,
+   -0.5000023080711089,
+   -0.00013857566349101473
+  ],
+  "goal": [
+   0.20486028204106743,
+   -0.5000715959026326,
+   -0.00013857566349101473
+  ],
+  "end": [
+   0.12443000133255036,
+   -0.49433708177178964
+  ],
+  "end_yaw": 0.0009999365314974458,
+  "position_error_m": 0.08063445111841272,
+  "heading_error_rad": 0.0011385121949884604,
+  "navigation_success": true,
+  "reason": "Every native goal physically settled",
+  "sim_s_after_execute": 48.939999998999994,
+  "nav2_goal_succeeded": 1
+ },
+ {
+  "robot": "lab_centipede",
+  "run": "1",
+  "known_cells": 32650,
+  "acquisition_success": true,
+  "map_yaml": "/workspace/molar/robot_lab_runtime/gait_sessions/lab_centipede-zvugoraq/saved_maps/map-a315e95662/map.yaml",
+  "start": [
+   -0.29513614037375724,
+   -0.4841677798755451,
+   0.027629318342473796
+  ],
+  "goal": [
+   0.20467302695849665,
+   -0.4703548782745405,
+   0.027629318342473796
+  ],
+  "end": [
+   0.04922794797574882,
+   -0.4919394663260292
+  ],
+  "end_yaw": -0.10818340021738962,
+  "position_error_m": 0.15693650633713363,
+  "heading_error_rad": 0.1358127185598634,
+  "navigation_success": false,
+  "reason": "Measured extension workload timed out",
+  "sim_s_after_execute": 178.02,
+  "nav2_goal_succeeded": 1
+ },
+ {
+  "robot": "lab_centipede",
+  "run": "2",
+  "known_cells": 32704,
+  "acquisition_success": true,
+  "map_yaml": "/workspace/molar/robot_lab_runtime/gait_sessions/lab_centipede-06ifmemz/saved_maps/map-3bee8139e5/map.yaml",
+  "start": [
+   -0.29512931347663734,
+   -0.48204164134038796,
+   0.02881345888535434
+  ],
+  "goal": [
+   0.20466314702926475,
+   -0.46763690526310175,
+   0.02881345888535434
+  ],
+  "end": [
+   0.09395531978027373,
+   -0.4231846457818464
+  ],
+  "end_yaw": 0.1313821307241576,
+  "position_error_m": 0.11929889516328848,
+  "heading_error_rad": 0.10256867183880328,
+  "navigation_success": true,
+  "reason": "Every native goal physically settled",
+  "sim_s_after_execute": 52.139999999,
+  "nav2_goal_succeeded": 1
+ }
+]

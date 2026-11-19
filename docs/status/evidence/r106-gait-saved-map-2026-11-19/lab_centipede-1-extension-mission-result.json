@@ -1,0 +1,29 @@
+{
+  "schema": "robot_lab.measured_extension_result.v1",
+  "workflow": "gait",
+  "task": "navigation",
+  "session_id": "18cdf07acb49461d82c25de9d166803e",
+  "run_id": "82fb00a60a264c859733b01ed7e72e86",
+  "ros_domain_id": 20,
+  "success": false,
+  "reason": "Measured extension workload timed out",
+  "measurements": [],
+  "goal_contract": {
+    "position_m": 0.15,
+    "heading_rad": 0.15,
+    "linear_m_s": 0.03,
+    "angular_rad_s": 0.05,
+    "settle_sim_s": 1.0
+  },
+  "truth_samples": {
+    "body": 9229
+  },
+  "control_released": true,
+  "wall_duration_s": 220.038163108984,
+  "contacts": null,
+  "minimum_swept_clearance_m": null,
+  "producer_sha256": "95092cbbbca6e814c44a5cf5ad154cb814d49d8e60d8d0a090bac40c32277566",
+  "workload_sha256": "431411810e6a395cf1bfc592f02671c1b057a372333e85624a47fc7e7372ca20",
+  "trace_sha256": "a132e2cca4c4b7f5ba8e28201fb371d4bfb35960c756d3b1165b8f336a2820a9",
+  "scope": "Actual native task and independent physical measurements; parent runner owns process cleanup"
+}

@@ -1894,6 +1894,10 @@ tasks:
         validation_state: Actual hexapod acquired occupancy and independently settled Nav2 endpoint on MuJoCo/nav_empty.
           Earlier octopod/centipede scopes retained. Further models/tasks/terrain/backends remain open. On 2026-11-14 the
           gait recovery is unit-tested only; no slip mission run.
+          On 2026-11-19 (Claude) saved-map Nav2 goals for every gait model on MuJoCo nav_empty: each acquires and saves a
+          grid, then reaches a goal on it in a fresh launch by independent truth (hexapod 0.090 m, octopod 0.081 m, centipede
+          0.119 m; one centipede run 0.157 m outside the 0.15 m contract retained).
+          docs/status/evidence/r106-gait-saved-map-2026-11-19/README.md
         qualification_review: '2026-10-27 documentation review: retain the implemented code, tests and named
           mission certificates. Full declared roadmap acceptance is still open; test counts, metadata and scene
           loads do not qualify remaining robot/map/backend missions. See docs/REMAINING_WORK_GUIDE.md.'
