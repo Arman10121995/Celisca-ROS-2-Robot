@@ -69,7 +69,11 @@ def generate():
                  ('lift_door','door_lift',(3.05,0,1.1),(.08,1.7,2.2),'0 1 0',2.2,15.,300.,1200.,80.),
                  ('lower_gate','landing_L0',(2.85,0,1.1),(.08,1.7,2.2),'0 1 0',2.2,15.,300.,1200.,80.),
                  ('upper_gate','landing_L1',(2.85,0,4.1),(.08,1.7,2.2),'0 1 0',2.2,15.,300.,1200.,80.),
-                 ('lift_platform','lift_car',(4,0,-.05),(2,2,.1),'0 0 1',3.,50.,1600.,40000.,3000.)]
+                 # 4000 N and a +-3000 N integral (gain 8000: ~5 s to take up the
+                 # load) carry the 50 kg car with a 158 kg MOLAR (about 2040 N)
+                 # to the 3 mm landing tolerance;
+                 # 1600 N was enough only for the small fleet robots (R11, 2026-11-19).
+                 ('lift_platform','lift_car',(4,0,-.05),(2,2,.1),'0 0 1',3.,50.,4000.,40000.,3000.)]
     joints=[]
     for link_name,name,pose,size,axis,maximum,mass,limit,kp,kd in definitions:
         link=child(hardware,'link',name=link_name);child(link,'pose',' '.join(map(str,pose))+' 0 0 0')
@@ -96,7 +100,7 @@ def generate():
         drive=child(joint,'axis');child(drive,'xyz',axis);limits=child(drive,'limit')
         for key,value in dict(lower=0,upper=maximum,effort=limit,velocity=.25).items():child(limits,key,value)
         plugin=child(hardware,'plugin',name='ignition::gazebo::systems::JointPositionController',filename='ignition-gazebo-joint-position-controller-system')
-        for key,value in dict(joint_name=name,topic='/facility/'+name+'/target',p_gain=kp,d_gain=kd,i_gain=1000 if name=='lift_car' else 20,i_min=-800 if name=='lift_car' else -8,i_max=800 if name=='lift_car' else 8,cmd_offset=65.*9.81 if name=='lift_car' else 0.,cmd_min=-limit,cmd_max=limit,use_velocity_commands='false',initial_position=0).items():child(plugin,key,value)
+        for key,value in dict(joint_name=name,topic='/facility/'+name+'/target',p_gain=kp,d_gain=kd,i_gain=8000 if name=='lift_car' else 20,i_min=-3000 if name=='lift_car' else -8,i_max=3000 if name=='lift_car' else 8,cmd_offset=65.*9.81 if name=='lift_car' else 0.,cmd_min=-limit,cmd_max=limit,use_velocity_commands='false',initial_position=0).items():child(plugin,key,value)
         joints.append(name)
     p=child(hardware,'plugin',name='ignition::gazebo::systems::JointStatePublisher',filename='ignition-gazebo-joint-state-publisher-system');child(p,'topic','/facility/joint_states')
     target=ROOT/'src/robot_lab_maps/maps/fleet_facility';write(doc,target/'worlds/fleet_facility.world')

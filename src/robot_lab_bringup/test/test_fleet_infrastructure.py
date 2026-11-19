@@ -290,13 +290,16 @@ def test_lift_requires_small_caster_leveling_without_more_force_or_speed():
     platform = root.find(".//link[@name='lift_platform']")
     assert platform.findtext('collision/geometry/box/size') == '2 2 0.1'
     joint = root.find(".//joint[@name='lift_car']")
-    assert float(joint.findtext('axis/limit/effort')) == 1600.
+    # 2026-11-19: 4000 N (was 1600) and a larger, faster integral so the lift
+    # also carries a 158 kg MOLAR to the 3 mm tolerance; the speed is unchanged.
+    assert float(joint.findtext('axis/limit/effort')) == 4000.
     assert float(joint.findtext('axis/limit/velocity')) == .25
     plugins = root.findall(".//plugin[@name='ignition::gazebo::systems::JointPositionController']")
     controller = next(p for p in plugins if p.findtext('joint_name') == 'lift_car')
     assert float(controller.findtext('p_gain')) == 40000.
     assert float(controller.findtext('d_gain')) == 3000.
-    assert float(controller.findtext('cmd_max')) == 1600.
+    assert float(controller.findtext('cmd_max')) == 4000.
+    assert float(controller.findtext('i_gain')) == 8000. and float(controller.findtext('i_max')) == 3000.
 
 
 def test_sliding_panels_clear_floor_without_changing_the_upper_edge():

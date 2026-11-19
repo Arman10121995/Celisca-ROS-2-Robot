@@ -21,7 +21,14 @@ from PIL import Image
 import yaml
 
 
-MEMBER_MODELS = ('bumperbot', 'labbot')
+MEMBER_MODELS = ('bumperbot', 'labbot', 'molar_hri')
+# Circumscribed planning radius per model (m); MOLAR's from its 0.70 x 0.62 m
+# base footprint (R11 multi-floor, 2026-11-19).
+MEMBER_RADIUS = dict(bumperbot=.118, labbot=.18, molar_hri=.49)
+# Models whose per-robot AMCL overlay is merged in the fleet (MOLAR's wheel-only
+# odometry needs its measured goal-B overlay; the Bumperbot/Labbot fleet
+# certificates keep the shared amcl.yaml).
+FLEET_LOCALIZATION_OVERLAYS = ('molar_hri',)
 MAX_MEMBERS = 8
 ID_PATTERN = re.compile(r'^[a-z][a-z0-9_]{0,31}$')
 
@@ -162,6 +169,15 @@ def namespace_description(urdf, member, controller_file, rgbd=True):
             raise ValueError('Invalid source laser mount')
         coordinates[2] += LIDAR_RAISE[member['model']]
         origin.set('xyz', ' '.join(format(v, '.12g') for v in coordinates))
+    if member['model'] == 'molar_hri':
+        # MOLAR is rooted at base_link on the ground plane (wheel axles at the
+        # 0.09 m radius); the fleet frames and odometry use base_footprint.
+        footprint = ET.Element('link', name='base_footprint')
+        root.insert(0, footprint)
+        joint = ET.SubElement(root, 'joint', name='base_footprint_joint', type='fixed')
+        ET.SubElement(joint, 'parent', link='base_footprint')
+        ET.SubElement(joint, 'child', link='base_link')
+        ET.SubElement(joint, 'origin', xyz='0 0 0', rpy='0 0 0')
     found = 0
     # Sensors and IMU systems are installed once on the world, not per model.
     for gazebo in root.findall('gazebo'):
@@ -223,6 +239,22 @@ def namespace_description(urdf, member, controller_file, rgbd=True):
     return ET.tostring(root, encoding='unicode')
 
 
+def molar_fleet_controllers(source):
+    """MOLAR's own diff-drive base controller under the fleet's controller name.
+
+    Same type, wheels, geometry and limits; the lift/telescope/roller
+    controllers are not loaded in a fleet (the base drives with them in).
+    """
+    data = copy.deepcopy(source)
+    manager = data['controller_manager']['ros__parameters']
+    for name in ('molar_position_controller', 'molar_roller_controller'):
+        manager.pop(name, None)
+        data.pop(name, None)
+    manager['robot_lab_controller'] = manager.pop('molar_base_controller')
+    data['robot_lab_controller'] = data.pop('molar_base_controller')
+    return data
+
+
 def controller_parameters(source, member):
     """Keep source geometry/gains; wheel feedback owns odom, never Gazebo truth."""
     data = copy.deepcopy(source)
@@ -252,6 +284,9 @@ def navigation_parameters(config_dir, localization_dir, member, map_yaml):
                 target[key] = copy.deepcopy(value)
     merge(data, yaml.safe_load((Path(config_dir) / 'robots' / (member['model'] + '.yaml')).read_text()))
     data['amcl'] = yaml.safe_load((Path(localization_dir) / 'amcl.yaml').read_text())['amcl']
+    overlay = Path(localization_dir) / 'robots' / (member['model'] + '.yaml')
+    if member['model'] in FLEET_LOCALIZATION_OVERLAYS and overlay.exists():
+        merge(data['amcl'], yaml.safe_load(overlay.read_text()).get('amcl', {}))
     replacements = {'base_footprint': member['id'] + '/base_footprint',
                     'base_link': member['id'] + '/base_link', 'odom': member['id'] + '/odom',
                     'map': member.get('map_frame', 'map'),
@@ -397,7 +432,7 @@ def prepare_session(session_file, map_override='', navigation=False, runtime_roo
     members = []
     for item in requested['members']:
         profile = profiles[item['model']]
-        members.append(dict(item, radius=.118 if item['model'] == 'bumperbot' else .18,
+        members.append(dict(item, radius=MEMBER_RADIUS[item['model']],
                             max_linear=min(.35, profile.get('drive', {}).get('max_speed', .35)),
                             max_angular=min(.8, profile.get('drive', {}).get('max_angular_speed', .8))))
     seed = dict(x=0., y=0., z=.1, yaw=0.)
@@ -422,10 +457,15 @@ def prepare_session(session_file, map_override='', navigation=False, runtime_roo
         urdf = load_description(model_path, 'is_ignition:=true', 'is_sim:=true')
         if member['model'] == 'bumperbot':
             ctrl_source = Path(share('robot_lab_controller')) / 'config/robot_lab_controllers.yaml'
+        elif member['model'] == 'molar_hri':
+            ctrl_source = robots / 'molar_hri/config/controllers.yaml'
         else:
             ctrl_source = robots / 'labbot/config/robot_lab_controllers.yaml'
+        controllers = yaml.safe_load(ctrl_source.read_text())
+        if member['model'] == 'molar_hri':
+            controllers = molar_fleet_controllers(controllers)
         controller_file = folder / (name + '-controllers.yaml')
-        controller_file.write_text(yaml.safe_dump(controller_parameters(yaml.safe_load(ctrl_source.read_text()), member)))
+        controller_file.write_text(yaml.safe_dump(controller_parameters(controllers, member)))
         description = namespace_description(urdf, member, controller_file, rgbd=rgbd)
         path = folder / (name + '.urdf')
         path.write_text(description)
@@ -462,7 +502,7 @@ def prepare_session(session_file, map_override='', navigation=False, runtime_roo
                   world_sha256=hashlib.sha256(Path(world).read_bytes()).hexdigest(),
                   map_yaml=map_yaml, floor_maps=floor_maps, bridge_file=str(bridge_file), members=members,infrastructure_file=infrastructure_file,zones_file=zones_file,
                   session_source=str(Path(session_file).resolve()), directory=str(folder),
-                  scope='Shared physical world; only Gazebo Bumperbot/Labbot adapters implemented')
+                  scope='Shared physical world; only Gazebo Bumperbot/Labbot/MOLAR adapters implemented')
     resolved_file = folder / 'session.json'
     result['resolved_file'] = str(resolved_file)
     result['session_source_sha256'] = hashlib.sha256(Path(session_file).read_bytes()).hexdigest()

@@ -947,6 +947,11 @@ molar_hri_integration_20261016:
   open: Sensors, SLAM/Nav2 and routes on the floors; payload transfer; multi-floor,
     door or building-lift operation; repeats and identified dynamics; probot_l on
     the detailed floors.
+  multi_floor_20261119: 'Claude: implemented, experimental. MOLAR is a shared-world fleet member (own base
+    controller, base_footprint root, MOLAR-only AMCL overlay) and rides the fleet_facility lift L0 -> L1 -> L0
+    2/2 with floor and Nav2 map switching; lift drive raised 1600 -> 4000 N, integral gain 1000 -> 8000 (the
+    1000 run stopped 9.4 mm short of L1, retained); Bumperbot ride re-passes. L1 navigation and a full transport
+    task remain. docs/status/evidence/r11-molar-lift-2026-11-19/README.md'
   owner: cline-agent
   priority: Latest user request; detailed MOLAR maps and differential-drive/telescope
     robot in native Robot Lab
@@ -1894,7 +1899,7 @@ tasks:
         validation_state: Actual hexapod acquired occupancy and independently settled Nav2 endpoint on MuJoCo/nav_empty.
           Earlier octopod/centipede scopes retained. Further models/tasks/terrain/backends remain open. On 2026-11-14 the
           gait recovery is unit-tested only; no slip mission run.
-          On 2026-11-19 (Claude) saved-map Nav2 goals for every gait model on MuJoCo nav_empty: each acquires and saves a
+          On 2026-11-19 (Claude) saved-map Nav2 goals for every gait model on MuJoCo nav_empty; each acquires and saves a
           grid, then reaches a goal on it in a fresh launch by independent truth (hexapod 0.090 m, octopod 0.081 m, centipede
           0.119 m; one centipede run 0.157 m outside the 0.15 m contract retained).
           docs/status/evidence/r106-gait-saved-map-2026-11-19/README.md

@@ -11,7 +11,8 @@ import yaml
 
 ROOT = Path(__file__).resolve().parents[3]
 sys.path.insert(0, str(ROOT / 'src/robot_lab_utils'))
-from robot_lab_utils.fleet_session import SpawnGrid, bridge_entries, choose_spawns, namespace_description, validate_session
+from robot_lab_utils.fleet_session import (MEMBER_RADIUS, SpawnGrid, bridge_entries, choose_spawns, controller_parameters,
+    molar_fleet_controllers, namespace_description, validate_session)
 from robot_lab_utils.fleet_motion import Neighbor, scan_guard, separation_guard, swarm_velocities
 
 
@@ -49,6 +50,29 @@ def test_labbot_fleet_sensor_moves_physically_without_changing_drive_geometry():
     assert ET.tostring(root.find("joint[@name='drive_joint']")) == ET.tostring(original.find("joint[@name='drive_joint']"))
     assert original.find("joint[@name='laser_joint']/origin").get('xyz') == '0 0 .08'
     assert root.find("joint[@name='laser_joint']/origin").get('xyz') == '0 0 0.13'
+
+
+def test_molar_member_gets_a_ground_footprint_root_and_its_own_base_controller():
+    """MOLAR fleet derivative (R11 multi-floor): source links/joints kept, base_footprint added at base_link."""
+    source = '''<robot name="molar_hri"><link name="base_link"/><link name="drive_left_wheel"/>
+      <joint name="drive_left_joint" type="continuous"><parent link="base_link"/><child link="drive_left_wheel"/><origin xyz="0 .2865 .09"/></joint>
+      <gazebo><plugin name="ign_ros2_control::IgnitionROS2ControlPlugin"/></gazebo></robot>'''
+    root = ET.fromstring(namespace_description(source, dict(id='molar', model='molar_hri'), 'molar.yaml'))
+    assert root.find('link').get('name') == 'base_footprint'
+    joint = root.find("joint[@name='base_footprint_joint']")
+    assert joint.find('parent').get('link') == 'base_footprint' and joint.find('child').get('link') == 'base_link'
+    assert joint.find('origin').get('xyz') == '0 0 0'
+    original = ET.fromstring(source)
+    assert ET.tostring(root.find("joint[@name='drive_left_joint']")) == ET.tostring(original.find("joint[@name='drive_left_joint']"))
+    controllers = yaml.safe_load((ROOT/'src/robot_lab_robots/molar_hri/config/controllers.yaml').read_text())
+    fleet = molar_fleet_controllers(controllers)
+    manager = fleet['controller_manager']['ros__parameters']
+    assert set(manager) - {'update_rate', 'use_sim_time'} == {'joint_state_broadcaster', 'robot_lab_controller'}
+    source_base = controllers['molar_base_controller']['ros__parameters']
+    params = controller_parameters(fleet, dict(id='molar', max_linear=.25, max_angular=.5))['/molar/robot_lab_controller']['ros__parameters']
+    assert params['wheel_separation'] == source_base['wheel_separation'] and params['wheel_radius'] == source_base['wheel_radius']
+    assert params['base_frame_id'] == 'molar/base_footprint' and params['linear']['x']['max_velocity'] == .25
+    assert MEMBER_RADIUS['molar_hri'] == .49
 
 
 @pytest.mark.parametrize('members', [[], [{'id':'alpha','model':'bumperbot'}]*2,

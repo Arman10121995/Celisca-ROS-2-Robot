@@ -663,7 +663,7 @@
           <limit>
             <lower>0</lower>
             <upper>3.0</upper>
-            <effort>1600.0</effort>
+            <effort>4000.0</effort>
             <velocity>0.25</velocity>
           </limit>
         </axis>
@@ -673,12 +673,12 @@
         <topic>/facility/lift_car/target</topic>
         <p_gain>40000.0</p_gain>
         <d_gain>3000.0</d_gain>
-        <i_gain>1000</i_gain>
-        <i_min>-800</i_min>
-        <i_max>800</i_max>
+        <i_gain>8000</i_gain>
+        <i_min>-3000</i_min>
+        <i_max>3000</i_max>
         <cmd_offset>637.65</cmd_offset>
-        <cmd_min>-1600.0</cmd_min>
-        <cmd_max>1600.0</cmd_max>
+        <cmd_min>-4000.0</cmd_min>
+        <cmd_max>4000.0</cmd_max>
         <use_velocity_commands>false</use_velocity_commands>
         <initial_position>0</initial_position>
       </plugin>

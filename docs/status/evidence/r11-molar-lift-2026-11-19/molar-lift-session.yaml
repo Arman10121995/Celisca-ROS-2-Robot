@@ -1,0 +1,11 @@
+schema_version: 1
+map: fleet_facility
+rgbd: false
+members:
+  - id: molar
+    model: molar_hri
+    spawn:
+      x: 2.0
+      y: 0.0
+      z: 0.05
+      yaw: 0.0
