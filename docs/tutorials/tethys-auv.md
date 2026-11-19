@@ -115,6 +115,8 @@ sensors or mapping.
   the closest of three forms to the installed Fortress. `fossen` made pitch
   diverge in a turn; `flipped` turned the wrong way.
 
+`simulator:=pybullet` runs the same forces on PyBullet: the cruise
+matches, and the turn reaches 0.51 rad.
 [Evidence](../status/evidence/r104-tethys-mujoco-2026-11-19/README.md).
 
 ## A mission from the sensor estimate

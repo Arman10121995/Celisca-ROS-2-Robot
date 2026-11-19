@@ -183,43 +183,16 @@ def _axis_rotation(axis, angle):
     return np.eye(3) + math.sin(angle) * K + (1 - math.cos(angle)) * K @ K
 
 
-class TethysPlant:
-    engine = 'mujoco'
-    scope = ('MuJoCo rigid body with ported Fortress buoyancy, hydrodynamics, thruster and fin LiftDrag; '
-             'added-mass Coriolis off by default; seabed plane only')
+class TethysForces:
+    """The ported Tethys wrench and fin/propeller joint states, independent of the physics engine."""
     timestep = .002
 
-    def __init__(self, sdf_text, spawn, surface_z, bottom_z, density=1025., coriolis='off'):
-        import mujoco
+    def _setup(self, sdf_text, surface_z, density, coriolis):
         if coriolis not in CORIOLIS_SIGNS:
             raise ValueError('coriolis must be one of %s' % sorted(CORIOLIS_SIGNS))
-        self.mujoco = mujoco
         self.coriolis_sign = CORIOLIS_SIGNS[coriolis]
         self.source = source_physics(sdf_text)
-        s = self.source
         self.surface, self.density = float(surface_z), float(density)
-        eigen, frame = np.linalg.eigh(s['inertia'])
-        quat = np.zeros(4)
-        mujoco.mju_mat2Quat(quat, frame.ravel())
-        hull_centre, hull_size = s['boxes'][0]
-        xml = f"""<mujoco model="tethys_plant">
-  <compiler angle="radian"/>
-  <option timestep="{self.timestep}" gravity="0 0 -9.81" integrator="implicitfast"/>
-  <worldbody>
-    <geom name="seabed" type="plane" size="200 200 .1" pos="0 0 {bottom_z}" friction="0.6 0.005 0.0001"/>
-    <body name="auv" pos="{spawn[0]} {spawn[1]} {spawn[2]}" euler="0 0 {spawn[3]}">
-      <freejoint/>
-      <inertial pos="{s['centre'][0]} {s['centre'][1]} {s['centre'][2]}" quat="{quat[0]} {quat[1]} {quat[2]} {quat[3]}"
-                mass="{s['mass']}" diaginertia="{eigen[0]} {eigen[1]} {eigen[2]}"/>
-      <geom name="hull" type="box" pos="{hull_centre[0]} {hull_centre[1]} {hull_centre[2]}"
-            size="{hull_size[0] / 2} {hull_size[1] / 2} {hull_size[2] / 2}" mass="0"/>
-    </body>
-  </worldbody>
-</mujoco>"""
-        self.model = mujoco.MjModel.from_xml_string(xml)
-        self.data = mujoco.MjData(self.model)
-        mujoco.mj_forward(self.model, self.data)
-        self.body = self.model.body('auv').id
         self.current = np.zeros(3)
         self.thrust = 0.
         self.propeller_angle = 0.
@@ -237,11 +210,6 @@ class TethysPlant:
     def command_fin(self, name, value):
         if math.isfinite(value):
             self.fin_target[name] = float(value)
-
-    # --- state ------------------------------------------------------------------
-    def pose(self):
-        q = self.data.qpos
-        return q[:3].copy(), np.array([q[4], q[5], q[6], q[3]])
 
     def joints(self):
         rows = {self.source['fins'][name]['joint']: self.fin_angle[name] for name in FINS}
@@ -265,56 +233,176 @@ class TethysPlant:
                 self.fin_rate[name] = 0.
             self.fin_angle[name] = angle
 
+    def advance_joints(self):
+        """Fin servos and propeller angle over one physics step."""
+        self._fins_step(self.timestep)
+        self.propeller_angle += self._propeller_rate() * self.timestep
+
+    def tethys_wrench(self, R, origin, com, linear_body, angular_body):
+        """World force and torque about the centre of mass for one physics step.
+
+        R: body rotation; origin: base_link origin (world); com: centre of
+        mass (world); linear_body, angular_body: base_link velocity in the
+        body frame.
+        """
+        s = self.source
+        force, torque = np.zeros(3), np.zeros(3)
+        for centre, size in s['boxes']:
+            position = origin + R @ centre
+            height = abs(R[2, :]) @ size
+            bottom = position[2] - height / 2
+            fraction = min(1., max(0., (self.surface - bottom) / max(height, 1e-9)))
+            if fraction <= 0:
+                continue
+            lift = np.array([0., 0., self.density * 9.81 * np.prod(size) * fraction])
+            point = position.copy()
+            point[2] = bottom + fraction * height / 2
+            force += lift
+            torque += np.cross(point - com, lift)
+        state = np.r_[linear_body - R.T @ self.current, angular_body]
+        rate = np.zeros(6) if self.previous is None else (state - self.previous) / self.timestep
+        self.previous = state
+        body = ((s['linear'] + s['quadratic'] * np.abs(state)) * state - s['added'] * rate
+                + self.coriolis_sign * coriolis_added_mass(s['added'], state) @ state)
+        force += R @ body[:3]
+        torque += R @ body[3:]
+        t = s['thruster']
+        thrust = R @ (t['axis'] * self.thrust)
+        force += thrust
+        torque += np.cross(origin + R @ t['origin'] - com, thrust)
+        omega_world = R @ angular_body
+        v_origin = R @ linear_body
+        for name in FINS:
+            fin = s['fins'][name]
+            fin_rotation = R @ _axis_rotation(fin['axis'], self.fin_angle[name])
+            cp = origin + R @ fin['origin'] + fin_rotation @ fin['cp']
+            v = v_origin + np.cross(omega_world, cp - origin) - self.current
+            f = lift_drag(fin, v, fin_rotation @ fin['upward'], fin_rotation @ fin['forward'])
+            force += f
+            torque += np.cross(cp - com, f)
+        self.wrench = np.r_[force, torque]
+        return force, torque
+
+
+class TethysPlant(TethysForces):
+    """MuJoCo rigid body integrating the Tethys wrench."""
+    engine = 'mujoco'
+    scope = ('MuJoCo rigid body with ported Fortress buoyancy, hydrodynamics, thruster and fin LiftDrag; '
+             'added-mass Coriolis off by default; seabed plane only')
+
+    def __init__(self, sdf_text, spawn, surface_z, bottom_z, density=1025., coriolis='off'):
+        import mujoco
+        self.mujoco = mujoco
+        self._setup(sdf_text, surface_z, density, coriolis)
+        s = self.source
+        eigen, frame = np.linalg.eigh(s['inertia'])
+        quat = np.zeros(4)
+        mujoco.mju_mat2Quat(quat, frame.ravel())
+        hull_centre, hull_size = s['boxes'][0]
+        xml = f"""<mujoco model="tethys_plant">
+  <compiler angle="radian"/>
+  <option timestep="{self.timestep}" gravity="0 0 -9.81" integrator="implicitfast"/>
+  <worldbody>
+    <geom name="seabed" type="plane" size="200 200 .1" pos="0 0 {bottom_z}" friction="0.6 0.005 0.0001"/>
+    <body name="auv" pos="{spawn[0]} {spawn[1]} {spawn[2]}" euler="0 0 {spawn[3]}">
+      <freejoint/>
+      <inertial pos="{s['centre'][0]} {s['centre'][1]} {s['centre'][2]}" quat="{quat[0]} {quat[1]} {quat[2]} {quat[3]}"
+                mass="{s['mass']}" diaginertia="{eigen[0]} {eigen[1]} {eigen[2]}"/>
+      <geom name="hull" type="box" pos="{hull_centre[0]} {hull_centre[1]} {hull_centre[2]}"
+            size="{hull_size[0] / 2} {hull_size[1] / 2} {hull_size[2] / 2}" mass="0"/>
+    </body>
+  </worldbody>
+</mujoco>"""
+        self.model = mujoco.MjModel.from_xml_string(xml)
+        self.data = mujoco.MjData(self.model)
+        mujoco.mj_forward(self.model, self.data)
+        self.body = self.model.body('auv').id
+
+    def pose(self):
+        q = self.data.qpos
+        return q[:3].copy(), np.array([q[4], q[5], q[6], q[3]])
+
     def step(self, dt):
-        mujoco, s = self.mujoco, self.source
+        mujoco = self.mujoco
         for _ in range(max(1, int(round(dt / self.timestep)))):
-            R = self.data.xmat[self.body].reshape(3, 3).copy()
-            origin = self.data.xpos[self.body].copy()
-            com = self.data.xipos[self.body].copy()
             velocity = np.zeros(6)
             mujoco.mj_objectVelocity(self.model, self.data, mujoco.mjtObj.mjOBJ_BODY, self.body, velocity, 1)
-            angular_body, linear_body = velocity[:3], velocity[3:]
-            force, torque = np.zeros(3), np.zeros(3)
-            for centre, size in s['boxes']:
-                position = origin + R @ centre
-                height = abs(R[2, :]) @ size
-                bottom = position[2] - height / 2
-                fraction = min(1., max(0., (self.surface - bottom) / max(height, 1e-9)))
-                if fraction <= 0:
-                    continue
-                lift = np.array([0., 0., self.density * 9.81 * np.prod(size) * fraction])
-                point = position.copy()
-                point[2] = bottom + fraction * height / 2
-                force += lift
-                torque += np.cross(point - com, lift)
-            state = np.r_[linear_body - R.T @ self.current, angular_body]
-            rate = np.zeros(6) if self.previous is None else (state - self.previous) / self.timestep
-            self.previous = state
-            body = ((s['linear'] + s['quadratic'] * np.abs(state)) * state - s['added'] * rate
-                    + self.coriolis_sign * coriolis_added_mass(s['added'], state) @ state)
-            force += R @ body[:3]
-            torque += R @ body[3:]
-            t = s['thruster']
-            thrust = R @ (t['axis'] * self.thrust)
-            force += thrust
-            torque += np.cross(origin + R @ t['origin'] - com, thrust)
-            omega_world = R @ angular_body
-            v_origin = R @ linear_body
-            for name in FINS:
-                fin = s['fins'][name]
-                fin_rotation = R @ _axis_rotation(fin['axis'], self.fin_angle[name])
-                cp = origin + R @ fin['origin'] + fin_rotation @ fin['cp']
-                v = v_origin + np.cross(omega_world, cp - origin) - self.current
-                f = lift_drag(fin, v, fin_rotation @ fin['upward'], fin_rotation @ fin['forward'])
-                force += f
-                torque += np.cross(cp - com, f)
-            self.wrench = np.r_[force, torque]
+            force, torque = self.tethys_wrench(self.data.xmat[self.body].reshape(3, 3).copy(),
+                                               self.data.xpos[self.body].copy(), self.data.xipos[self.body].copy(),
+                                               velocity[3:], velocity[:3])
             self.data.xfrc_applied[self.body, :3] = force
             self.data.xfrc_applied[self.body, 3:] = torque
             mujoco.mj_step(self.model, self.data)
-            self._fins_step(self.timestep)
-            self.propeller_angle += self._propeller_rate() * self.timestep
+            self.advance_joints()
         return self.data.time
+
+
+class TethysPyBulletPlant(TethysForces):
+    """Bullet rigid body integrating the same Tethys wrench."""
+    engine = 'pybullet'
+    scope = ('PyBullet rigid body with ported Fortress buoyancy, hydrodynamics, thruster and fin LiftDrag; '
+             'added-mass Coriolis off by default; seabed plane only')
+
+    def __init__(self, sdf_text, spawn, surface_z, bottom_z, density=1025., coriolis='off'):
+        import pybullet as p
+        self.p = p
+        self._setup(sdf_text, surface_z, density, coriolis)
+        s = self.source
+        self.client = p.connect(p.DIRECT)
+        p.setGravity(0, 0, -9.81, physicsClientId=self.client)
+        p.setTimeStep(self.timestep, physicsClientId=self.client)
+        p.createMultiBody(0, p.createCollisionShape(p.GEOM_PLANE, physicsClientId=self.client),
+                          basePosition=[0, 0, bottom_z], physicsClientId=self.client)
+        eigen, frame = np.linalg.eigh(s['inertia'])
+        if np.linalg.det(frame) < 0:
+            frame[:, 0] = -frame[:, 0]
+        self.principal = frame                            # inertial frame in the body frame
+        hull_centre, hull_size = s['boxes'][0]
+        # Bullet's base frame is the inertial frame (centre of mass, principal axes).
+        hull = p.createCollisionShape(p.GEOM_BOX, halfExtents=(np.asarray(hull_size) / 2).tolist(),
+                                      collisionFramePosition=(frame.T @ (hull_centre - s['centre'])).tolist(),
+                                      collisionFrameOrientation=_xyzw_from_matrix(frame.T), physicsClientId=self.client)
+        yaw = float(spawn[3])
+        spawn_rotation = _axis_rotation([0., 0., 1.], yaw)
+        start = np.asarray(spawn[:3], dtype=float) + spawn_rotation @ s['centre']
+        self.body = p.createMultiBody(s['mass'], hull, basePosition=start.tolist(),
+                                      baseOrientation=_xyzw_from_matrix(spawn_rotation @ frame), physicsClientId=self.client)
+        p.changeDynamics(self.body, -1, localInertiaDiagonal=eigen.tolist(), linearDamping=0., angularDamping=0.,
+                         physicsClientId=self.client)
+        self.time = 0.
+
+    def _state(self):
+        p = self.p
+        com, q = p.getBasePositionAndOrientation(self.body, physicsClientId=self.client)
+        R = np.array(p.getMatrixFromQuaternion(q)).reshape(3, 3) @ self.principal.T     # body (base_link) rotation
+        com = np.asarray(com)
+        return com, R, com - R @ self.source['centre']
+
+    def pose(self):
+        _, R, origin = self._state()
+        return origin, np.asarray(_xyzw_from_matrix(R))
+
+    def step(self, dt):
+        p = self.p
+        for _ in range(max(1, int(round(dt / self.timestep)))):
+            com, R, origin = self._state()
+            linear_com, angular = (np.asarray(v) for v in p.getBaseVelocity(self.body, physicsClientId=self.client))
+            linear_origin = linear_com + np.cross(angular, origin - com)
+            force, torque = self.tethys_wrench(R, origin, com, R.T @ linear_origin, R.T @ angular)
+            p.applyExternalForce(self.body, -1, force.tolist(), com.tolist(), p.WORLD_FRAME, physicsClientId=self.client)
+            p.applyExternalTorque(self.body, -1, torque.tolist(), p.WORLD_FRAME, physicsClientId=self.client)
+            p.stepSimulation(physicsClientId=self.client)
+            self.advance_joints()
+            self.time += self.timestep
+        return self.time
+
+
+def _xyzw_from_matrix(R):
+    from scipy.spatial.transform import Rotation
+    return Rotation.from_matrix(np.asarray(R)).as_quat().tolist()
+
+
+ENGINES = dict(mujoco=TethysPlant, pybullet=TethysPyBulletPlant)
 
 
 def main(args=None):
@@ -333,8 +421,9 @@ def main(args=None):
     for key in ('model', 'spawn_x', 'spawn_y', 'spawn_z', 'spawn_yaw', 'surface_z', 'bottom_z', 'density'):
         parser.add_argument('--' + key.replace('_', '-'), required=key == 'model', default='0')
     parser.add_argument('--coriolis', default='off', choices=sorted(CORIOLIS_SIGNS))
+    parser.add_argument('--engine', default='mujoco', choices=sorted(ENGINES))
     o = parser.parse_args(rclpy.utilities.remove_ros_args()[1:])
-    plant = TethysPlant(Path(o.model).read_text(), [float(o.spawn_x), float(o.spawn_y), float(o.spawn_z), float(o.spawn_yaw)],
+    plant = ENGINES[o.engine](Path(o.model).read_text(), [float(o.spawn_x), float(o.spawn_y), float(o.spawn_z), float(o.spawn_yaw)],
                         float(o.surface_z), float(o.bottom_z), float(o.density), o.coriolis)
     node = rclpy.create_node('marine_tethys_plant')
     stamps = dict(thrust=-math.inf)
@@ -352,7 +441,7 @@ def main(args=None):
     clock = node.create_publisher(Clock, '/clock', 10)
     odometry = node.create_publisher(Odometry, '/marine/odometry', 10)
     joints = node.create_publisher(JointState, '/joint_states', 10)
-    state = node.create_publisher(String, '/marine/tethys_plant', 10)
+    state = node.create_publisher(String, '/marine/tethys_%s_plant' % plant.engine, 10)
     period, last_odom, last_state = .01, -math.inf, -math.inf
     next_tick = time.monotonic()
     try:

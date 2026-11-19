@@ -1117,7 +1117,8 @@ parking batch needs its own run. Details and evidence are in the
     (`marine_isaac_plant.py`, PhysX rigid body with the shared water
     forces): surge 1.038 m and yaw 1.452 rad, as on the other three
     backends. [Receipt](docs/status/evidence/r104-marine-isaac-2026-11-19/README.md);
-  - Tethys on PyBullet and Isaac. Done 2026-11-19
+  - Tethys on Isaac. Done 2026-11-19 (PyBullet too: cruise 2.42 m; the
+    turn reaches 0.51 rad). Done 2026-11-19
     (implemented, experimental): Tethys MuJoCo plant (ported buoyancy,
     hydrodynamics, thruster and fin LiftDrag; `simulator:=mujoco`). Cruise
     matches Gazebo (2.43 vs 2.45 m in 10 s); a cruising turn reaches

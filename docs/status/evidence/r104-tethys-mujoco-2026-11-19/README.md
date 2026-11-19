@@ -1,4 +1,4 @@
-# R10.4: Tethys AUV on MuJoCo (November 19, 2026)
+# R10.4: Tethys AUV on MuJoCo and PyBullet (November 19, 2026)
 
 **Status: implemented, experimental.** The pinned Tethys AUV (propeller
 and fins) runs on MuJoCo behind the unchanged `auv_controller`
@@ -68,6 +68,23 @@ Results are in `*-result.json`. Launch logs are on SSD under
 `robot_lab_runtime/tethys-mujoco-20261119` (hashes here). The runs shared
 the host with Go2 policy training.
 
+## PyBullet (`simulator:=pybullet`)
+
+The Tethys wrench is engine-neutral (`TethysForces`). `TethysPyBulletPlant`
+integrates it on a Bullet rigid body whose base frame is the inertial frame
+(centre of mass, principal axes). Offline, under the same commands for
+10 s, the MuJoCo and PyBullet plants end 4 cm apart, with yaw −2.59
+against −2.55 rad.
+
+| Phase | PyBullet | MuJoCo | Gazebo |
+|---|---|---|---|
+| Cruise | 2.42 m, depth +0.4 cm | 2.43 m, +0.3 cm | 2.45 m, +4.9 cm |
+| Turn | 7.43 m, yaw +0.51 rad, depth +0.6 cm | 7.17 m, +0.86 rad, rose 0.32 m | 6.93 m, +1.19 rad, rose 0.24 m |
+| Operator loss | disarmed | disarmed | disarmed |
+
+In the closed-loop turn PyBullet turns least of the three; the reason is
+not found.
+
 ## Limits
 
 - One run per configuration. The turn is about 30 % slower than on Gazebo,
@@ -75,4 +92,4 @@ the host with Go2 policy training.
 - No walls, sensors or mapping pipeline on MuJoCo.
 - The fins are kinematic in the hull's dynamics (their reaction torque on
   the hull is not applied).
-- Tethys on PyBullet and Isaac, and an Isaac ROV adapter, remain.
+- Tethys on Isaac remains. The turn rate differs between engines (0.51 / 0.86 / 1.19 rad).
