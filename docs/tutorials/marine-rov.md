@@ -153,6 +153,14 @@ test checks that they agree.
 
 [Evidence](../status/evidence/r104-marine-pybullet-2026-11-18/README.md).
 
+## Isaac Sim backend
+
+`simulator:=isaac` runs the same forces on an Isaac Sim PhysX rigid body
+(`marine_isaac_plant.py` starts an Isaac child process). The tank probe:
+surge 1.038 m, yaw 1.452 rad, a 3.2 cm drift in a 0.1 m/s current, and a
+0.27 m sink after operator loss. PhysX runs on the CPU on this Jetson.
+[Evidence](../status/evidence/r104-marine-isaac-2026-11-19/README.md).
+
 ## Agent continuation
 
 Read [the measured scope](../status/marine-2026-10-15.md) and the task ledger
