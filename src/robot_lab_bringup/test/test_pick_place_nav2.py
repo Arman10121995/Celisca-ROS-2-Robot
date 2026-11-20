@@ -1,6 +1,7 @@
 """Owned Nav2 action transitions in the mobile pick-and-place node."""
 from concurrent.futures import Future
 import importlib.util
+import math
 from pathlib import Path
 from types import SimpleNamespace
 from unittest.mock import Mock
@@ -102,3 +103,18 @@ def test_stop_keeps_the_loaded_costmap_polygon(pick_place, tmp_path):
     assert node.stopping_nav is nav
     assert node.carried_footprint == [(0.6, 0.15)]
     node._set_footprint.assert_not_called()
+
+
+def test_loaded_outline_encloses_robot_and_rotated_payload_in_base_frame(pick_place):
+    from shapely.geometry import Point, Polygon
+
+    node = object.__new__(pick_place.PickPlace)
+    node.base_pose = (4., -3., 0., math.pi/2)
+    node.truth = dict(box=[3.9, -2.3, 0.7, math.sqrt(.5), 0., 0., math.sqrt(.5)])
+    node.object_sizes = dict(box=[.12, .04, .2])
+    robot = [[-.3, 0.], [.5, -.14], [.4, .25]]
+    task = dict(scene=SimpleNamespace(robot_collision_points=lambda: robot), object='box')
+    polygon = Polygon(node._carry_outline(task))
+    assert all(polygon.covers(Point(*point)) for point in robot)
+    assert polygon.covers(Point(.76, .12))
+    assert polygon.bounds[2] == pytest.approx(.76+pick_place.CARRY_DRIFT)

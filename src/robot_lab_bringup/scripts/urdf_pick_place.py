@@ -915,13 +915,24 @@ class PickPlace(Node):
         return None
 
     def _carry_outline(self, task):
-        """Arm strip and conservative payload bounds in the measured base frame."""
+        """Project source robot collision bounds and measured payload pose into base XY."""
+        from scipy.spatial.transform import Rotation
+        from shapely.geometry import MultiPoint
+        from robot_lab_utils.native_footprint import CORNERS
+
+        # _tcp above has already loaded measured positions into the private
+        # source scene. Neither the live robot nor any object is changed here.
+        robot = task['scene'].robot_collision_points()
         name = task['object']
-        x, y, _ = self._in_base(self.truth[name][:3])
-        radius = math.hypot(*self.object_sizes[name])/2 + CARRY_DRIFT
-        reach = max(0., x + radius)
-        return ([(px, py) for px in (0., reach) for py in (-.15, .15)]
-                + [(x+dx, y+dy) for dx in (-radius, radius) for dy in (-radius, radius)])
+        pose = np.asarray(self.truth[name][:7], dtype=float)
+        rotation = Rotation.from_quat(pose[[4, 5, 6, 3]]).as_matrix()
+        world = (CORNERS * (np.asarray(self.object_sizes[name], dtype=float) / 2.)) @ rotation.T + pose[:3]
+        payload = np.array([self._in_base(point)[:2] for point in world])
+        points = np.vstack((robot, payload))
+        if not np.all(np.isfinite(points)):
+            raise ValueError('Expected finite measured robot and payload bounds')
+        hull = MultiPoint(points).convex_hull.buffer(CARRY_DRIFT, 2)
+        return list(hull.exterior.coords)[:-1]
 
     def _set_footprint(self, extra, payload=None):
         """Costmap footprint (both costmaps): convex hull of the base circle and ``extra`` points."""

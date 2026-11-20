@@ -10,6 +10,13 @@ from shapely.geometry import MultiPoint
 CORNERS = np.array([[x, y, z] for x in (-1., 1.) for y in (-1., 1.) for z in (-1., 1.)])
 
 
+def geometry_corners(model, data, geom):
+    """World corners of one collision geometry's local bounding box."""
+    center, half = model.geom_aabb[geom, :3], model.geom_aabb[geom, 3:]
+    return ((center+CORNERS*half) @ data.geom_xmat[geom].reshape(3, 3).T
+            + data.geom_xpos[geom])
+
+
 def collision_footprint(model, data, base, robot_bodies, payload=None, padding=.03):
     if not np.isfinite(padding) or padding < 0:
         raise ValueError('Footprint padding must be finite and nonnegative')
@@ -36,9 +43,7 @@ def collision_footprint(model, data, base, robot_bodies, payload=None, padding=.
             continue
         if body >= robot_bodies:
             payload_geoms += 1
-        center, half = model.geom_aabb[geom, :3], model.geom_aabb[geom, 3:]
-        world = ((center+CORNERS*half) @ data.geom_xmat[geom].reshape(3, 3).T
-                 + data.geom_xpos[geom])
+        world = geometry_corners(model, data, geom)
         points.extend(((world-data.xpos[base]) @ rotation)[:, :2])
     if payload is not None and not payload_geoms:
         raise ValueError('Payload has no physical collision geometry')

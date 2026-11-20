@@ -14,7 +14,9 @@ checks pass. Repeats of the live fetch remain pending. [TIAGo guide](../tutorial
 November 20 Codex: TIAGo loaded fetch waits for matching local and global
 costmap polygons before sending Nav2. It cancels if either receipt goes
 stale. The loaded polygon stays active during docking and after an interrupted
-carry. Live consumption on a new fetch remains pending. [Pick-and-place guide](../tutorials/urdf-arm-pick-place.md#fetch-with-tiago-mobile-manipulation).
+carry. It projects the source robot collision geometry at measured joints and
+the measured payload pose. Compiled source and geometry checks pass. Live
+consumption on a new fetch remains pending. [Pick-and-place guide](../tutorials/urdf-arm-pick-place.md#fetch-with-tiago-mobile-manipulation).
 
 November 20 Codex: Fleet goals now stay bound to the member's acknowledged
 floor map. Nearest-idle allocation and coverage account for floor boundaries,

@@ -104,6 +104,7 @@ class ArmScene:
                  base=(0.0, 0.0, 0.0, 0.0), held: Optional[Dict[str, float]] = None):
         import mujoco
         self.mj, self.spec = mujoco, spec
+        self.base = base
         root = ET.fromstring(robot_mjcf)
         world = root.find('worldbody')
         tool = next((b for b in world.iter('body') if b.get('name') == spec.tool_body), None)
@@ -199,6 +200,18 @@ class ArmScene:
 
     def tcp(self):
         return (self.data.site_xpos[self.site].copy(), self.data.site_xmat[self.site].reshape(3, 3).copy())
+
+    def robot_collision_points(self):
+        """Project the source collision bounds at the scene's joint state into base XY."""
+        from robot_lab_utils.native_footprint import geometry_corners
+
+        if not self.robot_geoms:
+            raise ValueError('Planning model has no source robot collision bounds')
+        x, y, _z, yaw = self.base
+        c, s = math.cos(yaw), math.sin(yaw)
+        yaw_rotation = np.array(((c, -s), (s, c)))
+        world = np.concatenate([geometry_corners(self.model, self.data, geom) for geom in sorted(self.robot_geoms)])
+        return (world[:, :2] - (x, y)) @ yaw_rotation
 
     def _place_object(self, position, rotation):
         quat = np.zeros(4)

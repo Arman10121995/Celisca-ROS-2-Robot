@@ -141,6 +141,17 @@ def test_mobile_scene_welds_the_base_and_holds_unplanned_joints():
     # The PAL finger pads reach below the grasp frame: the grasp rises.
     assert plan['grasp_point'][2] > block.position[2] + 0.03
     assert [s['stage'] for s in plan['stages']] == ['open', 'above_object', 'down_to_grasp', 'close', 'lift']
+    lift = plan['stages'][-1]
+    scene.detach()
+    scene.set_joints(dict(lift['waypoints'][-1], **lift['fingers']))
+    points = scene.robot_collision_points()
+    assert np.isfinite(points).all()
+    assert .5 < np.max(points[:, 0]) < .9
+    # Source geometry stays in base coordinates even when the entire robot
+    # is translated and rotated relative to the tables and loose object.
+    moved = ArmScene(mjcf, spec, [table], block, base=(5., -3., 0.006, math.pi/2), held=held)
+    moved.set_joints(dict(lift['waypoints'][-1], **lift['fingers']))
+    np.testing.assert_allclose(moved.robot_collision_points(), points, atol=3e-6)
 
 
 def test_an_upright_cylinder_is_gripped_across_its_diameter(panda):
