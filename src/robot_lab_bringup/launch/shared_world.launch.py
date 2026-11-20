@@ -68,6 +68,7 @@ def _setup(context):
                         output='screen'))
     robot_displays = []
     controller_spawners = []
+    cargo_spawners = {}
     for index, member in enumerate(session['members']):
         name, pose = member['id'], member['spawn']
         actions.append(Node(package='robot_state_publisher', executable='robot_state_publisher',
@@ -84,6 +85,13 @@ def _setup(context):
             arguments=['joint_state_broadcaster', 'robot_lab_controller', '--controller-manager', '/' + name + '/controller_manager',
                        '--controller-manager-timeout', '60', '--param-file', member['controller_file']],
             parameters=[{'use_sim_time': True}], output='screen'))
+        cargo = member.get('cargo_config')
+        if cargo:
+            x, y, z = cargo['spawn']
+            cargo_spawners[index] = Node(package='ros_gz_sim', executable='create',
+                name='spawn_'+cargo['name'], arguments=['-world', session['world_name'], '-file', cargo['model_file'],
+                    '-name', cargo['name'], '-allow_renaming', 'false',
+                    '-x', str(x), '-y', str(y), '-z', str(z), '-Y', str(pose['yaw'])], output='screen')
         if session.get('rgbd',True):actions.append(Node(package='robot_lab_description', executable='gz_pointcloud_to_optical.py',
             name='pointcloud_to_optical', namespace=name,
             parameters=[{'use_sim_time': True, 'input_topic': '/' + name + '/oakd/points_gz',
@@ -111,13 +119,19 @@ def _setup(context):
     # Loading the same controller library concurrently in several embedded
     # managers can race class_loader. Configure/activate each manager in
     # sequence and explicitly pass its parameter file before on_init.
+    def advance_to(next_action):
+        def on_exit(event, _context):
+            if event.returncode:
+                return [EmitEvent(event=Shutdown(reason='Shared-world controller or cargo startup failed'))]
+            return [next_action]
+        return on_exit
+
     for index, spawner in enumerate(controller_spawners):
         following = controller_spawners[index + 1] if index + 1 < len(controller_spawners) else fleet_controller
-        def after_controller(event, _context, next_action=following):
-            if event.returncode:
-                return [EmitEvent(event=Shutdown(reason='Shared-world controller startup failed'))]
-            return [next_action]
-        actions.append(RegisterEventHandler(OnProcessExit(target_action=spawner, on_exit=after_controller)))
+        cargo = cargo_spawners.get(index)
+        if cargo:
+            actions.append(RegisterEventHandler(OnProcessExit(target_action=cargo, on_exit=advance_to(following))))
+        actions.append(RegisterEventHandler(OnProcessExit(target_action=spawner, on_exit=advance_to(cargo or following))))
     actions.append(RegisterEventHandler(OnProcessExit(target_action=fleet_controller,
         on_exit=[EmitEvent(event=Shutdown(reason='Shared-world command owner exited'))])))
     actions.append(TimerAction(period=3., actions=[controller_spawners[0]]))

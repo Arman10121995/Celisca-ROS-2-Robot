@@ -1,5 +1,12 @@
 # Current Robot Lab status
 
+November 20 Codex: [MOLAR fleet cargo](evidence/r11-molar-fleet-cargo-2026-11-20/README.md)
+adds an optional loose 0.5 kg box and a measured on-deck motion interlock
+to the Fleet editor. One run boards the Gazebo lift with the box retained
+in 184/184 samples. The run stopped before the ride so another simulator
+could use the host. 63 focused checks and three packages pass. A loaded
+round trip remains pending.
+
 November 20 Codex: [MOLAR completes the Open-RMF lift round trip](evidence/r11-molar-rmf-return-2026-11-20/README.md)
 on the revised Gazebo `fleet_facility` in 223.7 s. The wider upper landing
 and separate waiting-point Spin keep the turn clear of the closed gate.

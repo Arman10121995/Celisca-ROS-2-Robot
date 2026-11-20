@@ -1,5 +1,11 @@
 # Agent Handoff Protocol
 
+November 20 MOLAR cargo: the Fleet GUI option spawns a loose reference
+box on the stowed deck. Preserve the measured retention gate and restart
+requirement after loss; do not move the deck from under the box with a
+scoped reset. Loaded boarding is measured; a loaded ride and return are
+still pending. See [cargo evidence](status/evidence/r11-molar-fleet-cargo-2026-11-20/README.md).
+
 November 20 MOLAR return: one Gazebo Open-RMF round trip passes with the
 widened L1 landing, forward-only retreat and Spin at the upper approach.
 Keep the collision world and occupancy grid generated together, and

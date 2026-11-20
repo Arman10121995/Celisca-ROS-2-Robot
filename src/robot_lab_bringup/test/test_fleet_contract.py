@@ -14,6 +14,32 @@ sys.path.insert(0, str(ROOT / 'src/robot_lab_utils'))
 from robot_lab_utils.fleet_session import (MEMBER_RADIUS, SpawnGrid, bridge_entries, choose_spawns, controller_parameters,
     molar_fleet_controllers, namespace_description, validate_session)
 from robot_lab_utils.fleet_motion import Neighbor, scan_guard, separation_guard, swarm_velocities
+from robot_lab_utils.fleet_cargo import CARGO, load_config, model_sdf, retention, spawn_position
+from robot_lab_utils.sdf_world import quaternion_from_rpy
+
+
+def test_molar_loose_cargo_uses_the_source_deck_and_detects_overhang():
+    member = dict(id='molar', model='molar_hri', cargo=CARGO)
+    session = dict(schema_version=1, map='fleet_facility', members=[member])
+    assert validate_session(session)['members'][0]['cargo'] == CARGO
+    with pytest.raises(ValueError, match='Only MOLAR'):
+        validate_session(dict(session, members=[dict(member, model='labbot')]))
+    urdf = (ROOT/'src/robot_lab_robots/molar_hri/urdf/molar_hri.urdf.xacro').read_text()
+    config = load_config(member, urdf)
+    model = ET.fromstring(model_sdf(config))
+    assert model.findtext('.//inertial/mass') == '0.5'
+    assert model.find('.//joint') is None
+    assert any(entry['ros_topic_name'] == '/molar/cargo/ground_truth'
+               for entry in bridge_entries([dict(member, cargo_config=config)]))
+    home = config['deck_home'], (1., 0., 0., 0.)
+    base_rotation = quaternion_from_rpy(0., 0., math.pi/2)
+    base = (1., 2., 3.), base_rotation
+    placement = spawn_position(config, dict(x=1., y=2., z=3., yaw=math.pi/2))
+    assert retention(config, base, home, (placement, base_rotation))[0]
+    drifted = placement[0]+.15, placement[1], placement[2]
+    assert not retention(config, base, home, (drifted, base_rotation))[0]
+    raised = (home[0][0], home[0][1], home[0][2]+.10), home[1]
+    assert not retention(config, base, raised, (placement, base_rotation))[0]
 
 
 def test_namespace_keeps_source_physics_and_separates_sensors_controllers():

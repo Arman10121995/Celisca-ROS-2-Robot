@@ -20,6 +20,8 @@ import numpy as np
 from PIL import Image
 import yaml
 
+from .fleet_cargo import CARGO, load_config as load_cargo_config, model_sdf as cargo_sdf, spawn_position as cargo_spawn
+
 
 MEMBER_MODELS = ('bumperbot', 'labbot', 'molar_hri')
 # Circumscribed planning radius per model (m); MOLAR's from its 0.70 x 0.62 m
@@ -57,15 +59,17 @@ def validate_session(data):
         raise ValueError('A shared-world session supports 1–8 complete robots')
     seen, result = set(), []
     for item in members:
-        if not isinstance(item, dict) or set(item) - {'id', 'model', 'spawn'}:
-            raise ValueError('Each member requires id/model and optional spawn')
+        if not isinstance(item, dict) or set(item) - {'id', 'model', 'spawn', 'cargo'}:
+            raise ValueError('Each member requires id/model and optional spawn or cargo')
         name, model = item.get('id', ''), item.get('model', '')
         if not isinstance(name, str) or not ID_PATTERN.fullmatch(name) or name in seen:
             raise ValueError('Robot ids must be distinct lowercase ROS names')
-        if name in {'fleet', 'map', 'world', 'clock', 'tf', 'tf_static'}:
+        if name in {'fleet', 'map', 'world', 'clock', 'tf', 'tf_static'} or name.startswith('fleet_cargo_'):
             raise ValueError('Reserved fleet id: ' + name)
         if model not in MEMBER_MODELS:
             raise ValueError('Shared-world Gazebo control currently supports ' + ', '.join(MEMBER_MODELS))
+        if 'cargo' in item and (model != 'molar_hri' or item['cargo'] != CARGO):
+            raise ValueError('Only MOLAR supports the reference cargo box')
         seen.add(name)
         pose = item.get('spawn')
         if pose is not None:
@@ -73,6 +77,8 @@ def validate_session(data):
                 raise ValueError('Explicit spawn requires x/y; z/yaw are optional')
             pose = {key: finite(value, 'spawn ' + key) for key, value in pose.items()}
         result.append(dict(id=name, model=model, spawn=pose))
+        if 'cargo' in item:
+            result[-1]['cargo'] = CARGO
     map_name = data.get('map', 'nav_empty')
     if not isinstance(map_name, str) or not map_name or len(map_name) > 128:
         raise ValueError('Select a registered map id')
@@ -357,6 +363,8 @@ def bridge_entries(members):
         mappings = [('/odom/ground_truth', '/model/' + name + '/odometry_truth', 'nav_msgs/msg/Odometry', 'gz.msgs.Odometry'),
                     ('/scan', '/fleet/' + name + '/scan', 'sensor_msgs/msg/LaserScan', 'gz.msgs.LaserScan'),
                     ('/imu/out', '/fleet/' + name + '/imu', 'sensor_msgs/msg/Imu', 'gz.msgs.IMU')]
+        if member.get('cargo_config'):
+            mappings.append(('/cargo/ground_truth', member['cargo_config']['topic'], 'nav_msgs/msg/Odometry', 'gz.msgs.Odometry'))
         for suffix, gz_suffix, ros_type, gz_type in (
                 ('/oakd/rgb/image_raw', '/image', 'sensor_msgs/msg/Image', 'gz.msgs.Image'),
                 ('/oakd/rgb/camera_info', '/camera_info', 'sensor_msgs/msg/CameraInfo', 'gz.msgs.CameraInfo'),
@@ -455,6 +463,12 @@ def prepare_session(session_file, map_override='', navigation=False, runtime_roo
         name, profile = member['id'], profiles[member['model']]
         model_path = resolve(profile['package'], profile['xacro'])
         urdf = load_description(model_path, 'is_ignition:=true', 'is_sim:=true')
+        if member.get('cargo') == CARGO:
+            config = load_cargo_config(member, urdf)
+            cargo_file = folder / (config['name'] + '.sdf')
+            cargo_file.write_text(cargo_sdf(config))
+            member['cargo_config'] = dict(config, model_file=str(cargo_file),
+                                          spawn=cargo_spawn(config, member['spawn']))
         if member['model'] == 'bumperbot':
             ctrl_source = Path(share('robot_lab_controller')) / 'config/robot_lab_controllers.yaml'
         elif member['model'] == 'molar_hri':

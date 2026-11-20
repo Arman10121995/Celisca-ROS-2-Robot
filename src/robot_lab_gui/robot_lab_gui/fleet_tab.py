@@ -14,6 +14,7 @@ import yaml
 
 from .drive_control import LinuxJoystick, RampDrive
 from robot_lab_utils.fleet_session import MEMBER_MODELS, validate_session
+from robot_lab_utils.fleet_cargo import CARGO
 
 try:
     import rclpy
@@ -98,6 +99,7 @@ class FleetTab(ttk.Frame):
         self.tree.grid(row=3, column=0, columnspan=2, sticky='nsew', pady=5)
         self.tree.bind('<<TreeviewSelect>>', self._edit_selected)
         self.member_id, self.member_model = tk.StringVar(value='gamma'), tk.StringVar(value='bumperbot')
+        self.cargo = tk.BooleanVar(value=False)
         self.spawn = {key: tk.StringVar() for key in ('x', 'y', 'z', 'yaw')}
         editor = ttk.Frame(left)
         editor.grid(row=4, column=0, columnspan=2, sticky='ew')
@@ -106,6 +108,10 @@ class FleetTab(ttk.Frame):
             widget = ttk.Combobox(editor, textvariable=variable, values=MEMBER_MODELS, state='readonly', width=11) if label == 'Model' else ttk.Entry(editor, textvariable=variable, width=8)
             widget.grid(row=1, column=col, sticky='ew', padx=(0, 4))
             editor.columnconfigure(col, weight=1)
+        self.cargo_control = ttk.Checkbutton(editor, text='Start with 0.5 kg box on MOLAR deck', variable=self.cargo)
+        self.cargo_control.grid(row=2, column=0, columnspan=6, sticky='w', pady=(4, 0))
+        self.member_model.trace_add('write', self._cargo_selection)
+        self._cargo_selection()
         buttons = ttk.Frame(left)
         buttons.grid(row=5, column=0, columnspan=2, sticky='w', pady=5)
         for label, callback in [('Add', self._add), ('Update selected', self._update), ('Remove', self._remove),
@@ -281,8 +287,15 @@ class FleetTab(ttk.Frame):
         self.tree.delete(*self.tree.get_children())
         for member in self.members:
             pose = member.get('spawn') or {}
+            label = member['model'] + (' + box' if member.get('cargo') else '')
             self.tree.insert('', 'end', iid=member['id'], text=member['id'],
-                             values=(member['model'], *[pose.get(key, 'auto') for key in ('x', 'y', 'z', 'yaw')]))
+                             values=(label, *[pose.get(key, 'auto') for key in ('x', 'y', 'z', 'yaw')]))
+
+    def _cargo_selection(self, *_):
+        enabled = self.member_model.get() == 'molar_hri'
+        self.cargo_control.state(['!disabled'] if enabled else ['disabled'])
+        if not enabled:
+            self.cargo.set(False)
 
     def _edit_selected(self, _event=None):
         selected = self.tree.selection()
@@ -290,6 +303,7 @@ class FleetTab(ttk.Frame):
             member = next(m for m in self.members if m['id'] == selected[0])
             self.member_id.set(member['id'])
             self.member_model.set(member['model'])
+            self.cargo.set(member.get('cargo') == CARGO)
             for key, variable in self.spawn.items():
                 variable.set(str((member.get('spawn') or {}).get(key, '')))
 
@@ -298,6 +312,8 @@ class FleetTab(ttk.Frame):
         pose = {key: variable.get().strip() for key, variable in self.spawn.items() if variable.get().strip()}
         if pose:
             result['spawn'] = {key: float(value) for key, value in pose.items()}
+        if result['model'] == 'molar_hri' and self.cargo.get():
+            result['cargo'] = CARGO
         return result
 
     def _set_members(self, members):
@@ -435,6 +451,8 @@ class FleetTab(ttk.Frame):
                 command = member['command']
                 lines.append(f"{member['id']} [{member['model']}] {member['mode']} · {position} · {measured} · "
                              f"v={command['linear']:.2f}, ω={command['angular']:.2f} · queued {member.get('queued', 0)}\n  {member['reason']}")
+                if member.get('cargo'):
+                    lines.append('  Cargo: ' + member['cargo']['reason'])
             if 'traffic' in data:
                 self.serial_traffic.set(data['traffic']['serial'])
                 lines.append('Traffic: ' + data['traffic']['policy'])

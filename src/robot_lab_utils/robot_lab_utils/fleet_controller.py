@@ -36,6 +36,7 @@ from std_srvs.srv import Trigger
 from tf2_ros import Buffer, StaticTransformBroadcaster, TransformException, TransformListener
 
 from robot_lab_utils.fleet_lift_recovery import recovery_passengers
+from robot_lab_utils.fleet_cargo import DECK_FRAME, retention
 from robot_lab_utils.fleet_building_graph import approach_boarding_heading, cabin_exit_heading, lift_graph_poses
 from robot_lab_utils.fleet_motion import (Neighbor, angle, scan_guard, separation_guard, swarm_velocities,
                                           turn_away_from_nearest)
@@ -50,6 +51,14 @@ LIFT_TURN_FIELDS = ('cabin_turn_floor', 'approach_turn_floor')
 
 def yaw(q):
     return math.atan2(2 * (q.w * q.z + q.x * q.y), 1 - 2 * (q.y * q.y + q.z * q.z))
+
+
+def pose_frame(position, rotation):
+    return (position.x, position.y, position.z), (rotation.w, rotation.x, rotation.y, rotation.z)
+
+
+def stamp_seconds(header):
+    return header.stamp.sec + header.stamp.nanosec*1e-9
 
 
 def scan_yaw(member):
@@ -92,6 +101,10 @@ class Member:
     truth_at: float = -math.inf
     truth_velocity: tuple = None
     truth_yaw_rate: float = None
+    cargo_odometry: object = None
+    cargo_at: float = -math.inf
+    cargo_seen: bool = False
+    cargo_status: dict = field(default_factory=dict)
     scan: object = None
     scan_at: float = -math.inf
     estimate: tuple = None
@@ -166,6 +179,7 @@ class FleetController(Node):
         self._tf = Buffer(node=self)
         self._listener = TransformListener(self._tf, self)
         self.last_rejection = ''
+        self.cargo_fault = ''
         self.lift_poses = self.lift_transport = self.lift_door = self.open_lift_floor = None
         self.landing_doors = {}
         if self.session.get('floor_maps') and self.session.get('infrastructure_file'):
@@ -196,6 +210,8 @@ class FleetController(Node):
             subscribe(Twist, '/cmd_vel', self._nav)
             subscribe(Odometry, '/robot_lab_controller/odom', self._odom)
             subscribe(Odometry, '/odom/ground_truth', self._truth)
+            if config.get('cargo_config'):
+                subscribe(Odometry, '/cargo/ground_truth', self._cargo)
             subscribe(LaserScan, '/scan', self._scan, qos_profile_sensor_data)
             subscribe(PoseWithCovarianceStamped, '/amcl_pose', self._amcl)
             if self.session['navigation']:
@@ -310,6 +326,42 @@ class FleetController(Node):
             return False
         member.sample_stamps[kind] = stamp
         return True
+
+    def _cargo(self, member, msg):
+        config = member.config['cargo_config']
+        if (msg.header.frame_id != 'map' or msg.child_frame_id != config['frame']
+                or not self._valid_pose(msg.pose.pose)):
+            member.cargo_at = -math.inf
+        elif self._sample_fresh(member, msg, 'cargo'):
+            member.cargo_odometry, member.cargo_at = msg, time.monotonic()
+
+    def _cargo_tick(self, member, now):
+        config = member.config['cargo_config']
+        state = dict(retained=False, reason='Waiting for fresh box, base and deck poses', relative_xyz=None)
+        member.cargo_status = state
+        payload, base = member.cargo_odometry, member.truth
+        if (payload is not None and base is not None and now-min(member.cargo_at, member.truth_at) < .6
+                and abs(stamp_seconds(payload.header)-stamp_seconds(base.header)) < .25):
+            try:
+                deck = self._tf.lookup_transform(member.name+'/base_footprint',
+                                                 member.name+'/'+DECK_FRAME, rclpy.time.Time())
+                if abs(stamp_seconds(deck.header)-stamp_seconds(base.header)) < .35:
+                    transform = deck.transform
+                    retained, relative, reason = retention(config,
+                        pose_frame(base.pose.pose.position, base.pose.pose.orientation),
+                        pose_frame(transform.translation, transform.rotation),
+                        pose_frame(payload.pose.pose.position, payload.pose.pose.orientation))
+                    state.update(retained=retained, relative_xyz=relative, reason=reason,
+                                 world_xyz=pose_frame(payload.pose.pose.position, payload.pose.pose.orientation)[0])
+            except TransformException:
+                pass
+        if state['retained']:
+            member.cargo_seen = True
+        elif member.cargo_seen and not self.cargo_fault:
+            self.cargo_fault = member.name + ' cargo hold: ' + state['reason'] + '; restart after checking the deck'
+            self._stop_all(self.cargo_fault)
+            self._stop_pub.publish(String(data=json.dumps(dict(session_id=self.session_id, op='all_stop'))))
+        state['fault'] = self.cargo_fault
 
     def _odom(self, member, msg):
         if (msg.header.frame_id != member.name + '/odom' or msg.child_frame_id != member.name + '/base_footprint'
@@ -442,6 +494,8 @@ class FleetController(Node):
             if op == 'all_stop':
                 self._stop_all('Operator all-stop')
                 return
+            if self.cargo_fault:
+                raise ValueError(self.cargo_fault)
             if data.get('operator_id') != self.operator or time.monotonic() - self.heartbeat_at > .8:
                 raise ValueError('Connect a live operator before commanding the fleet')
             ids = data.get('targets', [])
@@ -1092,7 +1146,11 @@ class FleetController(Node):
             return
 
     def _nav_ready(self, member, now):
-        return member.lifecycle_active and now - member.lifecycle_at < 2. and member.action.server_is_ready()
+        return (self._cargo_ready(member) and member.lifecycle_active
+                and now - member.lifecycle_at < 2. and member.action.server_is_ready())
+
+    def _cargo_ready(self, member):
+        return not self.cargo_fault and (not member.config.get('cargo_config') or member.cargo_status.get('retained') is True)
 
     def _probe_navigation(self, member, now):
         future = member.lifecycle_future
@@ -1186,6 +1244,8 @@ class FleetController(Node):
                           loss_policy=policy, local=local, started=time.monotonic())
 
     def _request_reset(self, member):
+        if self.cargo_fault or member.config.get('cargo_config'):
+            raise ValueError('Restart the loaded fleet session instead of resetting a deck under loose cargo')
         if member.spawn_pose is None:
             raise ValueError('No measured settled spawn pose recorded for ' + member.name)
         self._stop_member(member, 'Scoped reset: waiting for physical stop and Nav2 cancellation')
@@ -1299,6 +1359,9 @@ class FleetController(Node):
 
     def _tick(self):
         now = time.monotonic()
+        for member in self.members.values():
+            if member.config.get('cargo_config'):
+                self._cargo_tick(member, now)
         if self.session['navigation']:
             for member in self.members.values():
                 self._probe_navigation(member, now)
@@ -1403,6 +1466,10 @@ class FleetController(Node):
             if self.session.get('infrastructure_file') and (now-self.infrastructure_at>.6
                     or member.name in self.infrastructure_holds or turn_floor and turn_floor != self.open_lift_floor):
                 message=Twist();linear=angular=0.;member.reason='Lift interlock / stale facility feedback; wheel input held neutral'
+            if not self._cargo_ready(member):
+                message = Twist()
+                linear = angular = 0.
+                member.reason = self.cargo_fault or member.cargo_status.get('reason', 'Waiting for cargo pose')
             member.publisher.publish(message)
             member.output = (linear, angular)
         if now - self.last_status >= .2:
@@ -1413,7 +1480,9 @@ class FleetController(Node):
                 def age(stamp):
                     return round(now - stamp, 3) if math.isfinite(stamp) else None
                 rows.append(dict(id=member.name, model=member.config['model'], mode=member.mode, reason=member.reason,
-                    included=member.included, ready=fresh[member.name], limits=dict(linear=member.config['max_linear'], angular=member.config['max_angular']),
+                    included=member.included, ready=fresh[member.name] and self._cargo_ready(member),
+                    cargo=member.cargo_status if member.config.get('cargo_config') else None,
+                    limits=dict(linear=member.config['max_linear'], angular=member.config['max_angular']),
                     navigation_ready=self.session['navigation'] and self._nav_ready(member, now),
                     estimate=dict(x=estimate.x, y=estimate.y, yaw=estimate.yaw) if estimate else None,
                     estimate_source=('AMCL transform + wheel feedback' if math.isfinite(member.localization_at) else 'waiting for AMCL; wheel feedback + spawn anchor')

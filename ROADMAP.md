@@ -144,7 +144,7 @@ Work top to bottom. Each line links to its task.
 | I14 | [R5.5](#r55--ackermann-rear-steer-and-anti-ackermann-cars) Cars | 2026-11-15: car course 13/13 on four backends (lookahead 1.25 × turning radius, forward escape when back-up is blocked); park-at-heading runtime and Drive-panel controls | implemented |
 | I15 | [R3.6](#r36--external-robot-assets-in-normal-launch) Assets | 2026-11-18: Kinova Jaco 2 gets lab servos (continuous joints with a declared source range; out-of-range zeros spawn at home); MuJoCo screen passes, PyBullet joint 4 overshoots (display-only 65 → 64); 2026-11-18: KUKA iiwa and both Valkyrie forearms also get lab servos (display-only 69 → 66; R2 refused: placeholder hand limits); 2026-11-18: robot_assets ANYmal walks with a policy trained in a legged_gym template (MuJoCo 2/2 drive screens; display-only 66 → 65); 2026-11-17: UR10, UR5, YuMi controllable with declared lab servos (display-only 73 → 69); 2026-11-15: vendor policies for Booster T1 and Unitree G1/H1/H1_2, controllable siblings named, license/mesh audit (114/163 ok). 47 legged need training, 12 URDFs ship no control interface | partial |
 | I16 | [R6.5](#r65--world-to-occupancy-generation) / [R6.6](#r66--external-world-library) / [R6.2](#r62--dynamic-and-sensor-disturbance-cases) Worlds | 2026-11-17: `<polyline>` geometry supported, polylines world installed (20/20 example scenes); upper floors covered by `--height` slicing. 2026-11-15: fixture review of 100 Gazebo examples, Fuel licences, 16 worlds with grids, actor collisions. Missions in new world classes are V9 | implemented |
-| I17 | [R11](#r11--molar--probot-l-family) MOLAR | CELISCA route and transfer measured; transfer on all four backends. Native lift round trip passes (2/2); Open-RMF round trip passes on revised Gazebo facility (223.7 s, one robot). Fleet peer/payload, mounted sensors and repeats remain | implemented |
+| I17 | [R11](#r11--molar--probot-l-family) MOLAR | CELISCA route and transfer measured; transfer on all four backends. Unladen native and Open-RMF lift round trips pass. Loose cargo and Fleet GUI option implemented; 0.5 kg loaded boarding measured. Loaded lift ride/return, fleet peer, mounted sensors and repeats remain | implemented |
 | I18 | [P4](#p4--mujoco-large-world-speed) MuJoCo speed | 2026-11-14: flex culling, exact tick pacing, oversleep payback, sensor thread (celisca_floor_1 0.81, furnished floor 0.99, hospital 0.43); large worlds remain flex-kinematics bound | partial |
 | I19 | [R7](#r7--algorithm-breadth) Algorithms | 2026-11-14: Gazebo `sim_seed` (300/300 repeat), sensor-fault relay on all backends, 78 per-method ledger records (9 corrected, 8 noted mismatches) | implemented |
 | I20 | [R9.1](#r91--provenance-licenses-and-clean-host-reproduction) Provenance | 2026-11-14: PX4 checkout + 25 submodules and all vendor sources scanned from their license files; 7 trees without license files listed for review | implemented |
@@ -1336,9 +1336,15 @@ parking batch needs its own run. Details and evidence are in the
     the closed gate on the original landing. The widened L1 layout,
     separate forward retreat and guarded waiting-point Spin allow the full
     Gazebo Open-RMF round trip (223.7 s, both maps and measured settling).
-    Mixed fleet and payload carriage remain open. See the
+    Mixed-fleet and loaded lift rides remain open. See the
     [original runtime scope](docs/status/evidence/r11-molar-rmf-2026-11-20/README.md)
     and [return clearance follow-up](docs/status/evidence/r11-molar-rmf-return-2026-11-20/README.md).
+  - **Fleet cargo (2026-11-20):** the Fleet editor can spawn a loose 0.5 kg
+    reference box on the stowed MOLAR deck. The controller checks measured
+    box, base and deck poses and holds motion if retention is lost.
+    Loaded boarding on Gazebo `fleet_facility` retained the box in 184/184
+    samples, with at most 5.0 mm relative drift. The ride and return were
+    not run. [Receipt](docs/status/evidence/r11-molar-fleet-cargo-2026-11-20/README.md).
 - **How to do it:** add sensors to `molar_hri.urdf.xacro`, then reuse the
   Bumperbot SLAM/Nav2 configs with the MOLAR footprint. Payload transfer
   uses the existing articulation contract (`robot_lab_utils/urdf_articulation`).

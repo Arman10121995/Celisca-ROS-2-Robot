@@ -118,6 +118,13 @@ One MOLAR round trip passed with two SDK patrol requests in
 Native
 **Facility → Transport selected robot** is also available.
 
+For an experimental loaded session, select **molar_hri** in the member
+editor, enable **Start with 0.5 kg box on MOLAR deck**, then add or update
+the member before **Run**. The cargo status comes from the measured box
+and deck poses. If the session latches a cargo fault, inspect the deck
+and start a new session. See the
+[cargo guide and measured boarding result](../status/evidence/r11-molar-fleet-cargo-2026-11-20/README.md).
+
 Provisioning includes a process-scoped correction for Humble's upstream graph
 serializer exit-event null dereference. For an existing installation run:
 
