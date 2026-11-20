@@ -1,0 +1,122 @@
+[
+ {
+  "spawn": "corner",
+  "robot": "hexapod_ros2",
+  "acquired_cells": 6877,
+  "goal": [
+   -6.295800669003637,
+   -6.996277066989511,
+   0.0031428967492634907
+  ],
+  "success": false,
+  "reason": "Measured extension workload timed out",
+  "end": [
+   -6.436339147662116,
+   -7.053264291293566,
+   0.11356751327510595
+  ],
+  "end_to_goal_m": 0.152,
+  "heading_error_rad": 0.11,
+  "wall_s": 220.0
+ },
+ {
+  "spawn": "corner",
+  "robot": "lab_octopod",
+  "acquired_cells": 6854,
+  "goal": [
+   -6.294576660624486,
+   -7.0000070287310745,
+   -9.053036086030079e-05
+  ],
+  "success": true,
+  "reason": "Every native goal physically settled",
+  "end": [
+   -6.395163816017836,
+   -7.030561899335356,
+   0.08291335072322435
+  ],
+  "end_to_goal_m": 0.105,
+  "heading_error_rad": 0.083,
+  "wall_s": 76.9
+ },
+ {
+  "spawn": "corner",
+  "robot": "lab_centipede",
+  "acquired_cells": 6871,
+  "goal": [
+   -6.295278238995777,
+   -6.9666433678552675,
+   0.031199670090909112
+  ],
+  "success": false,
+  "reason": "Native Nav2 terminal status 6",
+  "end": [
+   -7.0062819155078975,
+   -6.987303148370166,
+   0.09552870542942557
+  ],
+  "end_to_goal_m": 0.711,
+  "heading_error_rad": 0.064,
+  "wall_s": 9.5
+ },
+ {
+  "spawn": "open",
+  "robot": "hexapod_ros2",
+  "acquired_cells": 21311,
+  "goal": [
+   -2.2957449555290164,
+   2.5043975176904056,
+   0.0039675531541230056
+  ],
+  "success": true,
+  "reason": "Every native goal physically settled",
+  "end": [
+   -2.4230703723884646,
+   2.519905805978401,
+   0.01459537351666018
+  ],
+  "end_to_goal_m": 0.128,
+  "heading_error_rad": 0.011,
+  "wall_s": 97.0
+ },
+ {
+  "spawn": "open",
+  "robot": "lab_octopod",
+  "acquired_cells": 21316,
+  "goal": [
+   -2.29510557619762,
+   2.4998388931789166,
+   -0.00021999695092449233
+  ],
+  "success": true,
+  "reason": "Every native goal physically settled",
+  "end": [
+   -2.3935012709821137,
+   2.4907903362854054,
+   0.00966526516376758
+  ],
+  "end_to_goal_m": 0.099,
+  "heading_error_rad": 0.01,
+  "wall_s": 63.9
+ },
+ {
+  "spawn": "open",
+  "robot": "lab_centipede",
+  "acquired_cells": 21362,
+  "goal": [
+   -2.295112126860289,
+   2.529446014005693,
+   0.029720195471102523
+  ],
+  "success": false,
+  "reason": "Measured extension workload timed out",
+  "end": [
+   -2.4127880714297487,
+   2.5816602369306194,
+   0.20190954494744784
+  ],
+  "end_to_goal_m": 0.129,
+  "heading_error_rad": 0.172,
+  "wall_s": 220.1
+ }
+]

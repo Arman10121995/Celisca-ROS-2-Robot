@@ -25,12 +25,17 @@ from robot_lab_benchmark.concurrent_runner import ConcurrentRunner, RunSpec
 def mission(result):
     path = Path(result['output'])/'run.json'
     run = json.loads(path.read_text()) if path.exists() else result
-    return run.get('mission_result') or {}
+    if run.get('mission_result'):
+        return run['mission_result']
+    # The runner can leave run.json without it; the workload writes its own (2026-11-20).
+    own = Path(result['output'])/'extension-mission-result.json'
+    return json.loads(own.read_text()) if own.exists() else {}
 
 
-def launch(robot, world, task, extra=()):
+def launch(robot, world, task, extra=(), spawn=None):
+    pose = [] if spawn is None else ['spawn_%s:=%g' % (axis, value) for axis, value in zip(('x', 'y', 'yaw'), spawn)]
     return ['ros2', 'launch', 'robot_lab_bringup', 'gait_simulator.launch.py', 'robot_model:='+robot,
-            'task:='+task, 'map_name:='+world, 'gui:=false', 'rviz:=false', *extra]
+            'task:='+task, 'map_name:='+world, 'gui:=false', 'rviz:=false', *pose, *extra]
 
 
 def main():
@@ -39,14 +44,16 @@ def main():
     parser.add_argument('--map', default='nav_empty')
     parser.add_argument('--ahead', type=float, default=.5, help='goal distance along the start heading, m')
     parser.add_argument('--timeout', type=float, default=240.)
+    parser.add_argument('--spawn', type=lambda s: [float(v) for v in s.split(',')],
+                        help='x,y,yaw for both launches (default: the world spawn)')
     parser.add_argument('--output', type=Path, required=True)
     args = parser.parse_args()
     args.output.mkdir(parents=True, exist_ok=False)
     runner = ConcurrentRunner(args.output/'runs', 1, lambda event: None)
     report = []
     for robot in args.robots:
-        entry = dict(robot=robot, map=args.map)
-        acquired = runner.run([RunSpec(command=launch(robot, args.map, 'slam'), duration_s=120.,
+        entry = dict(robot=robot, map=args.map, spawn=args.spawn)
+        acquired = runner.run([RunSpec(command=launch(robot, args.map, 'slam', spawn=args.spawn), duration_s=120.,
             workload=dict(schema='robot_lab.extension_workload.v1', workflow='gait', task='mapping',
                           truth_coordinates='selected_world', distance_m=.2))])[0]
         result = mission(acquired)
@@ -60,7 +67,7 @@ def main():
         goal = [x+args.ahead*math.cos(yaw), y+args.ahead*math.sin(yaw), yaw]
         entry['acquisition'].update(map_yaml=artifact['map_yaml'], known_cells=artifact.get('known_cells'),
                                     start=measured['physical_pose'])
-        navigated = runner.run([RunSpec(command=launch(robot, args.map, 'nav', ['map_yaml:='+artifact['map_yaml']]),
+        navigated = runner.run([RunSpec(command=launch(robot, args.map, 'nav', ['map_yaml:='+artifact['map_yaml']], args.spawn),
             duration_s=args.timeout, workload=dict(schema='robot_lab.extension_workload.v1', workflow='gait',
             task='navigation', truth_coordinates='selected_world', goals=[goal], timeout_s=args.timeout-20.))])[0]
         result = mission(navigated)
