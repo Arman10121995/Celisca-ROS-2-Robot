@@ -35,9 +35,11 @@ SOURCE_LIFT_ADAPTERS = ('umi_gripper',)     # hands with their own vertical sour
 # Object scenes that add MuJoCo's no-slip friction pass. The Allegro tripod's
 # capsule tips carry the box at ~7 % of the friction limit, yet soft-contact
 # creep sank it 1.2 mm/s (7 mm over a hold); with the pass it settles
-# (2026-11-20). Contact stiffness, impratio and the hand are unchanged; the
-# measured Robotiq/UMI/DEX-EE scenes keep their solver as measured.
-NOSLIP_ADAPTERS = {'wonik_allegro': 10}
+# (2026-11-20). The Shadow Hand tripod crept past the 0.15 rad slip limit the
+# same way and settles at 0.09 rad with it. Contact stiffness, impratio and
+# the hands are unchanged; the measured Robotiq/UMI/DEX-EE scenes keep their
+# solver as measured.
+NOSLIP_ADAPTERS = {'wonik_allegro': 10, 'shadow_hand': 10}
 SUPPORT_STAGE = 'lab_support_stage'
 SUPPORT_STAGE_RANGE = (-.2, .02)            # m: drops up to 20 cm, rises at most 2 cm
 SUPPORT_STAGE_KP, SUPPORT_STAGE_KV, SUPPORT_STAGE_FORCE = 20000., 300., 200.
@@ -110,13 +112,23 @@ def author_grasp_home(spec, plan):
         (model.qpos0.copy(), np.zeros(model.nu))]
     for qpos, ctrl in rows:
         for name, value in plan['approach'].items():
+            actuator = mujoco.mj_name2id(model, mujoco.mjtObj.mjOBJ_ACTUATOR, name)
+            if actuator < 0:
+                raise ValueError('Synthesized grasp channel missing in executed model: '+name)
+            ctrl[actuator] = value
+            if 'approach_qpos' in plan:
+                continue
             joint = mujoco.mj_name2id(model, mujoco.mjtObj.mjOBJ_JOINT,
                 plan['joints'][name] if 'joints' in plan else name[:-len('_actuator')])
-            actuator = mujoco.mj_name2id(model, mujoco.mjtObj.mjOBJ_ACTUATOR, name)
-            if joint < 0 or actuator < 0:
+            if joint < 0:
                 raise ValueError('Synthesized grasp channel missing in executed model: '+name)
             qpos[int(model.jnt_qposadr[joint])] = value
-            ctrl[actuator] = value
+        # Joint-space approach pose (a tendon channel moves several joints).
+        for name, value in plan.get('approach_qpos', {}).items():
+            joint = mujoco.mj_name2id(model, mujoco.mjtObj.mjOBJ_JOINT, name)
+            if joint < 0:
+                raise ValueError('Synthesized grasp joint missing in executed model: '+name)
+            qpos[int(model.jnt_qposadr[joint])] = value
     if keys:
         for key, (qpos, ctrl) in zip(keys, rows):
             key.qpos, key.ctrl = qpos, ctrl
@@ -186,7 +198,7 @@ class NativeAssetDisplay(Node):
                     mujoco.mj_resetDataKeyframe(preview, preview_data, 0)
                 mujoco.mj_forward(preview, preview_data)
                 quat = (1., 0., 0., 0.)
-                if adapter in ('shadow_dexee', 'wonik_allegro'):
+                if adapter in ('shadow_dexee', 'wonik_allegro', 'shadow_hand'):
                     # Contacts chosen for the object, not a curl template
                     # (the template tripod rolled the box out, 2026-11-17).
                     from robot_lab_utils.hand_grasp_synthesis import synthesize_tripod

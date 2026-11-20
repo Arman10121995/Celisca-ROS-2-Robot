@@ -135,7 +135,7 @@ Work top to bottom. Each line links to its task.
 | I5 | [R5.11](#r511--drone-moving-obstacles-and-other-drone-backends) Drone moving obstacles | Done 2026-11-13: Kalman tracks, predicted sweeps, walkway look-both-ways and overflight, evasion, sensor-loss hold/land, EKF heading/height gate; 2 passing flights past walkers (Gazebo); PX4 + MuJoCo plant: takeoff, 5 m route and landing | implemented |
 | I6 | [R5.9](#r59--mobile-manipulators) Mobile manipulation | TIAGo fetch, Nav2 transit and RGB-D grasp workflows measured on MuJoCo and PyBullet (11-17/18). Manual tool-pose planning measured in the MuJoCo GUI (11-20). Remaining: general perception, Isaac grasp, Stretch pipeline missions, additional backend planners | partial |
 | I7 | [R5.7](#r57--manipulators-and-motion-planning) Arms | Done-when met 11-17: URDF Panda GUI pick → place on PyBullet and MuJoCo (one run each). Native Panda box tasks on MuJoCo. 11-17: URDF Panda pick and place also passes on Isaac and Gazebo (all four backends); UR5/UR10/YuMi joint control on Gazebo. 11-18: upright-cylinder pick and place on MuJoCo, PyBullet and Gazebo. Remaining: compound/mesh geometry, fixed-arm perception, other coupled mechanisms | partial |
-| I8 | [R5.8](#r58--robot-hands-and-grippers) Hands | Done-when met 11-19: normal GUI grasp → lift 5 cm → hold → return → supported release passes for Robotiq 2F-85 (both variants, support stage), UMI (source axis) and DEX-EE (synthesized tripod, 2/2); parallel-jaw measured in R5.7/R5.9. 11-20: new Wonik Allegro hand passes the same cycle (2/2). Shadow Hand tendon adapter, arm transport and other backends remain | implemented |
+| I8 | [R5.8](#r58--robot-hands-and-grippers) Hands | Done-when met 11-19: normal GUI grasp → lift 5 cm → hold → return → supported release passes for Robotiq 2F-85 (both variants, support stage), UMI (source axis) and DEX-EE (synthesized tripod, 2/2); parallel-jaw measured in R5.7/R5.9. 11-20: new Wonik Allegro and Shadow Hand (coupled tendons) pass the same cycle (2/2 each). Arm transport and other backends remain | implemented |
 | I9 | [R10.2](#r102--fleet-management-and-open-rmf) Fleet / Open-RMF | Done 2026-11-14: shared-zone reservations (map passages, doors, docks), cycle breaker, recovery drive-out, RMF energy from a drivetrain calibration; two crossing runs pass (native and RMF). 11-18: doors, docks and energy without a lift (`fleet_ward`: door crossing, docking and charging pass). Larger fleets are V7 | implemented |
 | I10 | [R10.3](#r103--swarm-robotics) Swarms | Done 2026-11-14: ROS2swarm port of per-member scan-only behaviours, scan-sensed cooperative coverage, ground/air member-loss replanning; dispersion and coverage-with-loss measured; aggregation gathers three Bumperbots in `swarm_arena` (11-18); 3–4 drone flight is validation | implemented |
 | I11 | [R10.5](#r105--underwater-worlds-sensing-slam-and-navigation) / [R10.4](#r104--underwater-robots-and-controllers) Marine | Done 2026-11-14: MuJoCo ROV plant (ported Fortress water forces; matches Gazebo), damping-based current feedforward (1 cm drift in 0.1 m/s), volumetric and current-aware AUV routes (unit-tested). 11-18: PyBullet ROV plant matches MuJoCo (surge 1.041 vs 1.030 m). 11-19: Tethys AUV on MuJoCo (cruise matches Gazebo, turn 0.86 vs 1.19 rad). AUV mission flown from the sensor estimate (11-19, 0.20 m from the goal). Tethys and the ROV run on all four backends. Saved-map relocalization passes 2/2 in a textured tank (11-19). Longer AUV routes remain | implemented |
@@ -508,8 +508,8 @@ parking batch needs its own run. Details and evidence are in the
   [Hand guide](docs/tutorials/native-hand-controls.md).
 - **Force feedback continuation (2026-11-13, Codex):** GUI-requested existing-grasp force regulation adjusts source position targets, retains original PID/transmission/force limits and requested effort fraction, unloads initial over-force and interrupts on contact loss, new/worsening external touch, overload, Stop/loss/deadline. One actual pinned Robotiq component fixture reduced about 12 N to 5.25 N per side for a 5 N request; this is not a GUI/hand-family mission. [Guide](docs/tutorials/native-hand-controls.md#regulate-an-established-grasp) · [receipt](docs/status/hand-force-2026-11-13.md).
 - **Remaining implementation:**
-  - raw torque and tendon hand adapters for the remaining source hands (the Shadow Hand's
-    coupled J1 + J2 tendons need an underactuated IK; the Wonik Allegro position hand is done 11-20);
+  - raw torque and tendon hand adapters: **done 2026-11-20** for the installed source hands
+    (Wonik Allegro position servos; Shadow Hand coupled J1 + J2 tendons);
   - arm transport for fixed-mount hand families and additional object workflows;
   - hands on other backends.
 - **Source-axis object workflow (2026-11-14, Codex):** Hand page now requests
@@ -560,6 +560,15 @@ parking batch needs its own run. Details and evidence are in the
     (2.1–2.6 N, 48.5–48.7 mm). The DEX-EE GUI regression passes. Five in-process failures
     are kept.
   [Receipt](docs/status/evidence/r58-allegro-2026-11-20/README.md).
+- **Shadow Hand (2026-11-20, Claude):**
+  - New native hand `menagerie_shadow_hand` (Menagerie E3M5 right, Apache-2.0): its twenty
+    authored servos, with each finger's J0 tendon driving J1 + J2.
+  - The synthesis handles the underactuated finger. The tip force must lie along the middle
+    phalanx for the tendon joints to balance, so the IK keeps the needed tangential share within
+    0.6 of the normal force (friction 1.0). Each press also carries a third of the box weight.
+  - Normal GUI grasp → lift → hold → return → supported release passes 2/2 (45.5–46.3 mm). The
+    Allegro regression passes.
+  [Receipt](docs/status/evidence/r58-shadow-hand-2026-11-20/README.md).
 - **How to do it:** extend `robot_lab_mujoco/native_hand_control.py` and
   `robot_lab_gui/native_hand_controls.py`. Measure grasp stability from
   contact forces (`test_native_hand_object.py` shows the pattern).

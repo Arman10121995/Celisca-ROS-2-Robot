@@ -613,7 +613,9 @@ class NativeHandControl(NativeHandLift, NativeArticulationControl):
     def extra_state(self):
         return dict(hand=dict(adapter=self.contract['adapter'],
             actuation=dict(shadow_dexee='authored mujoco.pid position plugin',
-                wonik_allegro='authored joint position servos').get(self.contract['adapter'], 'authored coupled position tendon'),
+                wonik_allegro='authored joint position servos',
+                shadow_hand='authored joint and coupled J1+J2 tendon position servos').get(
+                self.contract['adapter'], 'authored coupled position tendon'),
             contract_sha256=self.contract['contract_sha256'],
             groups=[dict(name=group['name'], channels=group['channels']) for group in self.contract['groups']],
             poses=self.contract['poses'], motion=self.motion,

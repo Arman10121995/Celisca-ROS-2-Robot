@@ -4150,6 +4150,7 @@ tasks:
         - docs/status/evidence/extensions-finish-2026-10-08/controls/README.md
         - docs/status/evidence/r58-dexee-synthesis-2026-11-19/README.md
         - docs/status/evidence/r58-allegro-2026-11-20/README.md
+        - docs/status/evidence/r58-shadow-hand-2026-11-20/README.md
         implementation_summary: 'Native source PID/coupled-position hand controls retain bounds and units, guarded closure and existing-grasp force regulation. UMI source-axis lift/hold/lower and sustained supported release are implemented with finger-relative custody, source-positive closure, distal-pad fixture, passive-load effort guard and bounded mount gravity support. One pinned UMI component lifts 49.0 mm, returns to actual support and releases; 38 hand checks pass. Normal GUI missions, arm transport for fixed hands, further torque/tendon sources and other backends remain open. Original Panda qualification remains separate.'
         implementation_validation: Pending; no new physical mission/test campaign
           for October 9 candidates.
@@ -4168,6 +4169,14 @@ tasks:
           no-slip pass. Normal GUI MuJoCo grasp, lift 5 cm, 3 s hold, return and supported release pass 2/2 (2.1-2.6 N,
           48.5-48.7 mm, slip up to 0.065 rad); DEX-EE GUI regression passes. Five in-process failures retained in the
           receipt. docs/status/evidence/r58-allegro-2026-11-20/README.md'
+        shadow_hand_20261120: 'Claude: implemented, experimental. New native hand menagerie_shadow_hand (Menagerie
+          E3M5 right, Apache-2.0, twenty authored position servos; each finger J0 tendon drives J1+J2, source clamps kept;
+          Wrist/Thumb/First/Middle/Ring/Little; Open, Curl, Synthesized tripod). Synthesis handles the underactuated finger
+          - the tip force must lie along the middle phalanx for the tendon joints to balance; the IK keeps the needed
+          tangential share within 0.6 of the normal (friction 1.0) and the press carries a third of the declared box
+          weight. Shadow object scene adds the no-slip pass. Normal GUI MuJoCo grasp, lift, 3 s hold, return and supported
+          release pass 2/2 (1.0-1.9 N, 45.5-46.3 mm, slip up to 0.092 rad); Allegro GUI regression passes. Four in-process
+          failures retained. docs/status/evidence/r58-shadow-hand-2026-11-20/README.md'
         force_hold_20261113: 'Codex: bounded source-position force feedback and GUI request implemented; source gains/limits retained. Pinned Robotiq component fixture unloaded ~12 N to ~5.25 N per side for a 5 N request; Stop interrupted. 40 focused/regression/tutorial checks and GUI protocol smoke pass; three packages build. Other source hands, normal GUI object missions and hardware unqualified. See docs/status/hand-force-2026-11-13.md.'
         next_action: Continue further torque/tendon hand adapters, force-regulated
           grasping and arbitrary-object workflows. Existing source PID/tendon candidates

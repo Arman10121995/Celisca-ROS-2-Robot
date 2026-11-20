@@ -1,6 +1,6 @@
 # Native dexterous hands and coupled grippers
 
-October 14, 2026, R5.8.native_hands (Allegro added November 20). Five installed source models have
+October 14, 2026, R5.8.native_hands (Allegro and Shadow Hand added November 20). Six installed source models have
 experimental controls in the normal Robot Lab GUI. This implements coordinated
 motion and contact feedback; it does not certify an object grasp, lift or
 all-map/all-backend mission. Panda keeps its separate measured gripper workflow.
@@ -12,6 +12,7 @@ all-map/all-backend mission. Panda keeps its separate measured gripper workflow.
 | `menagerie_robotiq_2f85_v4` | Its own source linkage/tendon/equality model | Same controls with its own source/plant identity |
 | `menagerie_umi_gripper` | Original coupled position tendon, 0–0.05 m; six source placement actuators remain separate | Normalized closure and Open; existing placement jogging and taught replay |
 | `menagerie_wonik_allegro` | Original 16 joint position servos (kp 1 N·m/rad), radians, no source effort clamp (the lab effort threshold applies); right hand, palm up, mounted at 0.15 m | Thumb, Index, Middle and Ring groups; Curl and Open (with the object fixture also Synthesized tripod, listed first); individual joint targets and taught replay |
+| `menagerie_shadow_hand` | Original 20 position servos: wrist and thumb joints, and per finger J4, J3 and one J0 tendon driving J1 + J2 (radians, J0 = J1 + J2); source effort clamps (±1 N·m fingers); right hand, palm up, mounted at 0.15 m | Wrist, Thumb, First, Middle, Ring and Little groups; Curl and Open (with the object fixture also Synthesized tripod, listed first); individual targets and taught replay |
 
 All assets are already installed on the SSD. No GUI download is needed. The
 source remains pinned to Menagerie `4d038b3feae26ec82b46a4d586379114012a8ac7`.

@@ -32,6 +32,7 @@ import numpy as np
 
 FINGERS = ('F0', 'F1', 'F2')   # DEX-EE thumb, then its two opposing fingers
 PAD_NORMAL_TOLERANCE_DEG = 35.
+EQUILIBRIUM_TAN = .6          # tangential/normal tip force an underactuated finger may need (source friction 1.0)
 FIT_TOLERANCE_MM = 1.5
 FRICTION_FOR_QUALITY = .5     # below the source fingertip friction (1.0), for margin
 # Box-centre search in the hand_base frame (m). DEX-EE fingers point along +z;
@@ -55,7 +56,7 @@ HANDS = {
     # fingers +z, palm face +x). The thumb comes across the palm and meets
     # index+middle along the finger axis; the box is held above the palm.
     'wonik_allegro': dict(thumb='th', opponents=('ff', 'mf'), base='palm',
-        joint='%sj%d', channel='%sa%d', pad='capsule',
+        joint='%sj%d', channel='%sa%d', pad='capsule', tip_body='%s_tip',
         grasp_axis=2, thumb_side=-1., spread_axis=1,
         grid={0: np.arange(.04, .0901, .01), 1: np.arange(-.02, .0401, .01), 2: np.arange(-.03, .0101, .01)},
         seed={'th': (1.2, .6, .5, .5), 'ff': (0., 1., .8, .6), 'mf': (0., 1., .8, .6)},
@@ -73,7 +74,39 @@ HANDS = {
         # and the 0.006 N m couple pitched the box past the 0.15 rad slip
         # limit on the compliant tips (2026-11-20).
         squeeze_force_n=2.),
+    # Shadow Hand E3M5 right (2026-11-20): palm up, fingers along world +x as
+    # authored (palm frame: fingers +z, palm face -y). Each finger's J1 and J2
+    # share one tendon servo (J0 = J1+J2): the same tendon force acts on both,
+    # so the underactuated finger rests only when the tip force lies along the
+    # middle phalanx (equal torque at J2 and J1). An exact normal press needs
+    # the face normal along that phalanx and was unreachable (4 mm off); the
+    # IK instead keeps the needed tangential share within EQUILIBRIUM_TAN of
+    # the normal force (friction allows it), and the press uses that force.
+    'shadow_hand': dict(thumb='th', opponents=('ff', 'mf'), base='rh_palm', pad='mesh', tip_body='rh_%sdistal',
+        layout={'th': (['rh_THJ5', 'rh_THJ4', 'rh_THJ3', 'rh_THJ2', 'rh_THJ1'],
+                       [('rh_A_THJ%d' % n, [5-n]) for n in (5, 4, 3, 2, 1)]),
+                **{f: (['rh_%sJ4' % f.upper(), 'rh_%sJ3' % f.upper(), 'rh_%sJ2' % f.upper(), 'rh_%sJ1' % f.upper()],
+                       [('rh_A_%sJ4' % f.upper(), [0]), ('rh_A_%sJ3' % f.upper(), [1]), ('rh_A_%sJ0' % f.upper(), [2, 3])])
+                   for f in ('ff', 'mf')}},
+        equilibrium=True,
+        grasp_axis=2, thumb_side=-1., spread_axis=0,
+        grid={0: np.arange(0., .0401, .01), 1: np.arange(-.08, -.0199, .01), 2: np.arange(.05, .1201, .01)},
+        seed={'th': (.3, 1., 0., .3, .6), 'ff': (0., .8, .6, .6), 'mf': (0., .8, .6, .6)},
+        clearance_m=.002, squeeze_force_n=2.,
+        # Its kp 1 / 0.5 servos (+-1 N m) sag ~5 mm under the box once the
+        # support leaves, outside the lift check: each contact's press also
+        # carries a third of the declared object weight upward.
+        carry_weight=True),
 }
+OBJECT_MASS_KG = .05   # the native hand object fixture's free box (native_asset_display.add_hand_object_fixture)
+
+
+def _layout(hand, finger):
+    """A finger's joint names and its channels as (name, indices of the joints it drives)."""
+    if 'layout' in hand:
+        return hand['layout'][finger]
+    return ([hand['joint'] % (finger, i) for i in range(4)],
+            [(hand['channel'] % (finger, i), [i]) for i in range(4)])
 
 
 def _geom_points(model, data, geom):
@@ -115,19 +148,22 @@ def _ids(model, hand):
     joint = lambda name: mj.mj_name2id(model, mj.mjtObj.mjOBJ_JOINT, name)
     ids = {}
     for finger in (hand['thumb'], *hand['opponents']):
-        joints = [joint(hand['joint'] % (finger, i)) for i in range(4)]
+        names, channels = _layout(hand, finger)
+        joints = [joint(name) for name in names]
         if hand['pad'] == 'mesh_site':
             site = mj.mj_name2id(model, mj.mjtObj.mjOBJ_SITE, finger+'/distal_site')
             tip = mj.mj_name2id(model, mj.mjtObj.mjOBJ_GEOM, finger+'/distal_geom_tip_col')
             kind = mj.mjtGeom.mjGEOM_MESH
         else:
-            body = mj.mj_name2id(model, mj.mjtObj.mjOBJ_BODY, finger+'_tip')
+            body = mj.mj_name2id(model, mj.mjtObj.mjOBJ_BODY, hand['tip_body'] % finger)
+            kind = mj.mjtGeom.mjGEOM_CAPSULE if hand['pad'] == 'capsule' else mj.mjtGeom.mjGEOM_MESH
             tips = [g for g in range(model.ngeom) if int(model.geom_bodyid[g]) == body
-                    and int(model.geom_type[g]) == int(mj.mjtGeom.mjGEOM_CAPSULE) and model.geom_contype[g]]
-            site, tip, kind = 0, tips[0] if body >= 0 and len(tips) == 1 else -1, mj.mjtGeom.mjGEOM_CAPSULE
+                    and int(model.geom_type[g]) == int(kind) and model.geom_contype[g]]
+            site, tip = 0, tips[0] if body >= 0 and len(tips) == 1 else -1
         if min(joints+[site, tip]) < 0 or int(model.geom_type[tip]) != int(kind):
             raise ValueError('Hand finger %s joints/fingertip pad missing in executed model' % finger)
         ids[finger] = dict(qpos=[int(model.jnt_qposadr[j]) for j in joints], site=site, tip=tip,
+            names=names, channels=channels, dofs=[int(model.jnt_dofadr[j]) for j in joints],
             low=model.jnt_range[joints, 0].copy(), high=model.jnt_range[joints, 1].copy())
     base = mj.mj_name2id(model, mj.mjtObj.mjOBJ_BODY, hand['base'])
     if base < 0:
@@ -149,7 +185,7 @@ class _Kinematics:
         self.base_rot = self.data.xmat[base].reshape(3, 3).copy()
         self.reference = self.data.qpos.copy()
         self.vertices = {}
-        if self.hand['pad'] == 'mesh_site':
+        if self.hand['pad'] in ('mesh_site', 'mesh'):
             for finger, entry in self.ids.items():
                 mesh = int(model.geom_dataid[entry['tip']])
                 first = int(model.mesh_vertadr[mesh])
@@ -172,38 +208,94 @@ class _Kinematics:
             ends = self.data.geom_xpos[geom]+np.outer([-half, half], axis)
             n = np.asarray(toward, dtype=float)
             return ends[int(np.argmax(ends@n))]+radius*n, n.copy()
+        world = self.vertices[finger]@self.data.geom_xmat[geom].reshape(3, 3).T+self.data.geom_xpos[geom]
+        if self.hand['pad'] == 'mesh':
+            # A rounded fingertip mesh meets the face at its vertex furthest along it.
+            n = np.asarray(toward, dtype=float)
+            return world[int(np.argmax(world@n))], n.copy()
         normal = self.data.site_xmat[entry['site']].reshape(3, 3)[:, 1].copy()
         world = self.vertices[finger]@self.data.geom_xmat[geom].reshape(3, 3).T+self.data.geom_xpos[geom]
         forward = (world-self.data.site_xpos[entry['site']])@normal
         return world[forward >= forward.max()-.002].mean(axis=0), normal
 
-    def normal_press(self, finger, q, inward, actuators):
-        """Per-newton joint offset d = K^-1 J^T n of a position-servo press, and the pad's normal travel per unit d.
+    def phalanx(self, finger, a, b):
+        """Unit direction w x (anchor_b - anchor_a) along which a force gives equal torque at parallel joints a and b."""
+        ids = self.ids[finger]
+        joints = [self.mj.mj_name2id(self.model, self.mj.mjtObj.mjOBJ_JOINT, ids['names'][i]) for i in (a, b)]
+        axis = self.data.xaxis[joints[0]]
+        v = np.cross(axis, self.data.xanchor[joints[1]]-self.data.xanchor[joints[0]])
+        return v/np.linalg.norm(v)
 
-        At the contact pose a servo target ``q + F d`` pushes the pad along
-        ``inward`` with ``F`` N; ``q - s d`` backs it off ``s`` times the travel.
+    def press_force(self, finger, q, inward, extra=np.zeros(3)):
+        """Per-newton tip force: the face normal, tilted for a coupled finger so its tendon joints balance.
+
+        ``extra`` (N, world, e.g. a weight share) is added and balanced the
+        same way and returned separately. Returns the per-newton force, its
+        tangential/normal ratio (0 for a fully actuated finger) and the
+        balanced extra force.
         """
+        n, extra = np.asarray(inward, dtype=float), np.asarray(extra, dtype=float)
+        self.pad(finger, q, n)
+        coupled = [joints for name, joints in self.ids[finger]['channels'] if len(joints) > 1]
+        if not coupled or not self.hand.get('equilibrium'):
+            return n, 0., extra
+        v = self.phalanx(finger, *coupled[0][:2])
+        s = float(n@v)
+        tangent = v-s*n
+        if np.linalg.norm(tangent) < 1e-6:
+            return n, np.inf, extra
+        balance = lambda f: f-float(f@v)*tangent/float(tangent@tangent)
+        force = balance(n)
+        return force, float(np.linalg.norm(force-n)), balance(extra)
+
+    def normal_press(self, finger, q, inward, gains, extra=np.zeros(3)):
+        """Per-newton channel offsets of a position-servo press, the joint motion per unit, and the pad's normal travel.
+
+        The tip force per newton of normal load is ``press_force``; a joint
+        servo offset is its joint torque / kp. A tendon servo moving several
+        joints with unit coefficients applies the same force to each, so its
+        offset is the (balanced) torque of its first joint / kp and its length
+        change is split equally. At the contact pose a target ``c + F offset``
+        presses the pad with ``F`` N normal load; ``c - s offset`` backs it off
+        ``s`` times the travel. The channel offsets for ``extra`` (N, world)
+        are returned last; add them to the press target.
+        """
+        force, ratio, extra = self.press_force(finger, q, inward, extra)
         point = self.pad(finger, q, inward)[0]
         self.mj.mj_comPos(self.model, self.data)   # mj_jac needs the com-based dofs
         entry = self.ids[finger]
         jacp = np.zeros((3, self.model.nv))
-        body = int(self.model.geom_bodyid[entry['tip']])
-        self.mj.mj_jac(self.model, self.data, jacp, None, point, body)
-        dofs = [int(self.model.jnt_dofadr[int(np.flatnonzero(self.model.jnt_qposadr == adr)[0])]) for adr in entry['qpos']]
-        jacobian = jacp[:, dofs]
-        gains = np.array([float(self.model.actuator_gainprm[index, 0]) for index in actuators])
-        offset = jacobian.T@np.asarray(inward)/gains
-        return offset, float(np.asarray(inward)@(jacobian@offset))
+        self.mj.mj_jac(self.model, self.data, jacp, None, point, int(self.model.geom_bodyid[entry['tip']]))
+        jacobian = jacp[:, entry['dofs']]
+        torque, carried = jacobian.T@force, jacobian.T@extra
+        offset, motion, carry = [], np.zeros(len(q)), []
+        for (name, joints), gain in zip(entry['channels'], gains):
+            value = torque[joints[0]]/gain
+            offset.append(value)
+            carry.append(carried[joints[0]]/gain)
+            motion[joints] = value/len(joints)
+        return np.array(offset), motion, float(np.asarray(inward)@(jacobian@motion)), np.array(carry)
+
+    def coordinates(self, finger, q):
+        """Channel coordinates of finger joints ``q`` (a tendon channel is the sum of its joints)."""
+        return np.array([sum(q[j] for j in joints) for name, joints in self.ids[finger]['channels']])
 
     def reach(self, finger, point, normal, seed):
         """Joints putting the pad on ``point`` facing ``normal``; with fit errors (mm, degrees)."""
         from scipy.optimize import least_squares
         entry = self.ids[finger]
+        coupled = any(len(joints) > 1 for name, joints in entry['channels']) and self.hand.get('equilibrium')
         def residual(q):
             p, n = self.pad(finger, q, normal)
-            return np.concatenate([(p-point)*100., n-normal])
+            terms = [(p-point)*100., n-normal]
+            if coupled:
+                ratio = self.press_force(finger, q, normal)[1]
+                terms.append([max(0., min(ratio, 10.)-EQUILIBRIUM_TAN)*10.])
+            return np.concatenate(terms)
         result = least_squares(residual, seed, bounds=(entry['low']+1e-3, entry['high']-1e-3))
         p, n = self.pad(finger, result.x, normal)
+        if coupled and self.press_force(finger, result.x, normal)[1] > EQUILIBRIUM_TAN+.02:
+            return result.x, np.inf, 0.   # no balanced press for the coupled finger here
         return (result.x, float(np.linalg.norm(p-point))*1e3,
                 float(np.degrees(np.arccos(np.clip(n@normal, -1., 1.)))))
 
@@ -280,33 +372,48 @@ def synthesize_tripod(model, data, contract, half=.02, spread=.6, squeeze=.004, 
             best = dict(score=score, local=local, centre=centre, fit=fit, quality=quality, worst=worst)
     if best is None or best['quality'] <= 0:
         raise ValueError('No reachable force-closure tripod for this box on the executed hand')
-    targets = dict(approach={}, grasp={}, joints={})
+    targets = dict(approach={}, grasp={}, joints={}, approach_qpos={})
     channels = {channel['name']: channel for channel in contract['channels']}
     for finger in fingers:
-        entry = best['fit'][finger]
+        entry, ids = best['fit'][finger], kin.ids[finger]
+        names = [name for name, joints in ids['channels']]
         if hand.get('squeeze_force_n'):
-            offset, travel = kin.normal_press(finger, entry['q'], entry['inward'],
-                [channels[hand['channel'] % (finger, n)]['index'] for n in range(4)])
+            gains = [float(model.actuator_gainprm[channels[name]['index'], 0]) for name in names]
+            share = -model.opt.gravity*OBJECT_MASS_KG/len(fingers) if hand.get('carry_weight') else np.zeros(3)
+            offset, motion, travel, carry = kin.normal_press(finger, entry['q'], entry['inward'], gains, share)
             if travel <= 0:
                 raise ValueError('Finger %s cannot press along the face normal' % finger)
-            grasp = entry['q']+hand['squeeze_force_n']*offset
-            approach = entry['q']-backoff/travel*offset
+            contact = kin.coordinates(finger, entry['q'])
+            grasp = contact+hand['squeeze_force_n']*offset+carry
+            approach = contact-backoff/travel*offset
+            approach_q = entry['q']-backoff/travel*motion
         else:
             grasp = kin.reach(finger, entry['point']+entry['inward']*squeeze, entry['inward'], entry['q'])[0]
-            approach = kin.reach(finger, entry['point']-entry['inward']*backoff, entry['inward'], entry['q'])[0]
-        for number in range(4):
-            name = hand['channel'] % (finger, number)
+            approach_q = approach = kin.reach(finger, entry['point']-entry['inward']*backoff, entry['inward'], entry['q'])[0]
+        for number, (name, joints) in enumerate(ids['channels']):
             low, high = channels[name]['limits']
             targets['grasp'][name] = float(np.clip(grasp[number], low, high))
             targets['approach'][name] = float(np.clip(approach[number], low, high))
-            targets['joints'][name] = hand['joint'] % (finger, number)
-    # Fingers outside the tripod (Allegro's ring) stay at their reference pose.
+            if len(joints) == 1:
+                targets['joints'][name] = ids['names'][joints[0]]
+        for joint, value, low, high in zip(ids['names'], approach_q, ids['low'], ids['high']):
+            targets['approach_qpos'][joint] = float(np.clip(value, low, high))
+    # Fingers outside the tripod (Allegro's ring, Shadow's ring/little and
+    # wrist) stay at their reference pose.
     for name, channel in channels.items():
-        if name not in targets['grasp'] and channel.get('joint'):
-            joint = kin.mj.mj_name2id(model, kin.mj.mjtObj.mjOBJ_JOINT, channel['joint'])
-            value = float(np.clip(kin.reference[int(model.jnt_qposadr[joint])], *channel['limits']))
-            targets['grasp'][name] = targets['approach'][name] = value
-            targets['joints'][name] = channel['joint']
+        if name in targets['grasp']:
+            continue
+        index = channel['index']
+        if int(model.actuator_trntype[index]) == int(kin.mj.mjtTrn.mjTRN_TENDON):
+            tendon = int(model.actuator_trnid[index, 0])
+            start = int(model.tendon_adr[tendon])
+            reference = sum(float(model.wrap_prm[w])*kin.reference[int(model.jnt_qposadr[int(model.wrap_objid[w])])]
+                            for w in range(start, start+int(model.tendon_num[tendon])))
+        else:
+            joint = int(model.actuator_trnid[index, 0])
+            reference = kin.reference[int(model.jnt_qposadr[joint])]
+            targets['joints'][name] = kin.mj.mj_id2name(model, kin.mj.mjtObj.mjOBJ_JOINT, joint)
+        targets['grasp'][name] = targets['approach'][name] = float(np.clip(reference, *channel['limits']))
     quat = np.zeros(4)
     kin.mj.mju_mat2Quat(quat, R.reshape(-1))
     if abs(R[2, 2]) < .999:
@@ -320,9 +427,10 @@ def synthesize_tripod(model, data, contract, half=.02, spread=.6, squeeze=.004, 
         quat = np.array([np.cos(yaw/2), 0., 0., np.sin(yaw/2)])
     return dict(centre=best['centre'].tolist(), half_size=[float(half)]*3, quat_wxyz=[float(v) for v in quat],
         centre_in_hand=best['local'].tolist(), approach=targets['approach'], grasp=targets['grasp'],
-        joints=targets['joints'],
+        joints=targets['joints'], approach_qpos=targets['approach_qpos'],
         force_closure_epsilon=round(best['quality'], 4), backoff_m=backoff, spread=spread,
-        **(dict(squeeze_force_n=hand['squeeze_force_n']) if hand.get('squeeze_force_n') else dict(squeeze_m=squeeze)),
+        **(dict(squeeze_force_n=hand['squeeze_force_n'], carried_weight_n=float(np.linalg.norm(model.opt.gravity))*OBJECT_MASS_KG
+                if hand.get('carry_weight') else 0.) if hand.get('squeeze_force_n') else dict(squeeze_m=squeeze)),
         fit={finger: dict(error_mm=round(best['fit'][finger]['error_mm'], 3),
                           pad_normal_deg=round(best['fit'][finger]['normal_deg'], 1)) for finger in fingers},
         scope='Synthesized from the executed kinematics: thumb against %s+%s on opposite faces at the box mid-plane; '

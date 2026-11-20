@@ -2,7 +2,9 @@
 
 DEX-EE uses its authored mujoco.pid position plugin. Robotiq and UMI use
 their authored coupled position tendons. The Wonik Allegro right hand uses its
-sixteen authored joint position servos (kp 1, no source effort clamp). Pose templates are experimental
+sixteen authored joint position servos (kp 1, no source effort clamp). The
+Shadow Hand (E3M5 right) uses its twenty authored position servos: joints,
+and for each finger one fixed tendon driving J1+J2 together. Pose templates are experimental
 operator targets, not grasp policies or a grasp-success certificate.
 """
 import hashlib
@@ -21,10 +23,12 @@ HAND_MODELS = {
     'menagerie_robotiq_2f85_v4': 'robotiq_2f85_v4',
     'menagerie_umi_gripper': 'umi_gripper',
     'menagerie_wonik_allegro': 'wonik_allegro',
+    'menagerie_shadow_hand': 'shadow_hand',
 }
 # Hands whose object grasp is a synthesized tripod (hand_grasp_synthesis.HANDS).
-SYNTHESIS_ADAPTERS = ('shadow_dexee', 'wonik_allegro')
-ACTUATION = {'shadow_dexee': 'authored PID position plugin', 'wonik_allegro': 'authored joint position servos'}
+SYNTHESIS_ADAPTERS = ('shadow_dexee', 'wonik_allegro', 'shadow_hand')
+ACTUATION = {'shadow_dexee': 'authored PID position plugin', 'wonik_allegro': 'authored joint position servos',
+             'shadow_hand': 'authored joint and coupled J1+J2 tendon position servos'}
 
 
 def hand_profile(name, profile):
@@ -201,6 +205,52 @@ def hand_contract(model, native_source, grasp_plan=None):
         open_targets = {c['name']: float(np.clip(0., *c['limits'])) for c in channels}
         template = dict(th=(1.2, .6, .6, .6), ff=(0., .9, .9, .9), mf=(0., .9, .9, .9), rf=(0., .9, .9, .9))
         curled = {c['name']: float(np.clip(template[c['name'][:2]][int(c['name'][-1])], *c['limits'])) for c in channels}
+        poses = ['Curl']
+    elif entry == 'shadow_hand':
+        fingers = dict(WR=('J2', 'J1'), TH=('J5', 'J4', 'J3', 'J2', 'J1'), FF=('J4', 'J3', 'J0'),
+                       MF=('J4', 'J3', 'J0'), RF=('J4', 'J3', 'J0'), LF=('J5', 'J4', 'J3', 'J0'))
+        expected = ['rh_A_%s%s' % (finger, joint) for finger, joints in fingers.items() for joint in joints]
+        if reference.nu != 20 or model.nplugin or reference.neq or reference.ntendon != 4:
+            raise ValueError('Shadow Hand requires its twenty authored servos and four J0 tendons')
+        for finger in ('FF', 'MF', 'RF', 'LF'):
+            tendon = mj.mj_name2id(model, mj.mjtObj.mjOBJ_TENDON, 'rh_%sJ0' % finger)
+            start, count = int(model.tendon_adr[tendon]), int(model.tendon_num[tendon])
+            joints = {_name(mj, model, mj.mjtObj.mjOBJ_JOINT, model.wrap_objid[w]): float(model.wrap_prm[w])
+                      for w in range(start, start+count)}
+            if tendon < 0 or joints != {'rh_%sJ2' % finger: 1., 'rh_%sJ1' % finger: 1.}:
+                raise ValueError('Shadow Hand J0 tendon must couple J1+J2 with unit coefficients')
+        source_joints = {element.get('name') for element in root.findall('.//worldbody//joint')}
+        robot_joints = [j for j in range(model.njnt) if _name(mj, model, mj.mjtObj.mjOBJ_JOINT, j) in source_joints]
+        found = {c['name']: c for c in position_channels(model, max(robot_joints)+1) if c['name'] in expected}
+        if set(found) != set(expected):
+            raise ValueError('Shadow Hand source position servos missing in executed plant')
+        for name in expected:
+            channel, index = found[name], found[name]['index']
+            tendon = name.endswith('J0')
+            gain, bias = model.actuator_gainprm[index, 0], model.actuator_biasprm[index]
+            if (int(model.actuator_trntype[index]) != int(mj.mjtTrn.mjTRN_TENDON if tendon else mj.mjtTrn.mjTRN_JOINT)
+                    or not np.array_equal(model.actuator_gear[index], [1, 0, 0, 0, 0, 0])
+                    or not np.isclose(gain, -bias[1]) or bias[0] != 0 or not model.actuator_forcelimited[index]
+                    or int(model.actuator_dyntype[index]) != int(mj.mjtDyn.mjDYN_NONE)):
+                raise ValueError('Shadow Hand servo binding differs from source: '+name)
+            # A J0 tendon is the sum J1+J2 in radians (unit coefficients above).
+            channel.update(units='rad', source_force_limits=model.actuator_forcerange[index].tolist(),
+                           source_force_units='N m')
+        channels = [found[name] for name in expected]
+        labels = dict(WR='Wrist', TH='Thumb', FF='First', MF='Middle', RF='Ring', LF='Little')
+        for finger, label in labels.items():
+            prefix = 'rh_' + finger.lower()
+            groups.append(dict(name=label, channels=['rh_A_%s%s' % (finger, j) for j in fingers[finger]],
+                bodies=[] if finger == 'WR' else [i for i in range(model.nbody)
+                        if _name(mj, model, mj.mjtObj.mjOBJ_BODY, i).startswith(prefix)]))
+        # Open is the authored zero (inside every range); Curl flexes each
+        # finger (J3 and the J1+J2 tendon) and brings the thumb across. The
+        # wrist stays at zero in both.
+        open_targets = {c['name']: float(np.clip(0., *c['limits'])) for c in channels}
+        template = dict(THJ5=.5, THJ4=1., THJ3=0., THJ2=.3, THJ1=.6, LFJ5=.3)
+        template.update({finger+'J3': .9 for finger in ('FF', 'MF', 'RF', 'LF')})
+        template.update({finger+'J0': 1.6 for finger in ('FF', 'MF', 'RF', 'LF')})
+        curled = {c['name']: float(np.clip(template.get(c['name'][5:], 0.), *c['limits'])) for c in channels}
         poses = ['Curl']
     else:
         source_joints = {element.get('name') for element in root.findall('.//worldbody//joint')}
