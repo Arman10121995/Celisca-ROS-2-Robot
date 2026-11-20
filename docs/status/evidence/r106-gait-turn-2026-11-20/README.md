@@ -100,6 +100,11 @@ Saved-map goals with both changes (MuJoCo, one run each):
 | `nav_obstacle`, open spawn | hexapod | passed | 0.123 m | 0.013 rad | 11-20: 0.128 m |
 | `nav_obstacle`, open spawn | octopod | passed | 0.097 m | 0.003 rad | 11-20: 0.099 m |
 | `nav_empty` | centipede | passed | 0.112 m | 0.048 rad | above: 0.110 m |
+| `nav_empty`, **PyBullet** (600 s budget) | **centipede** | **passed** | **0.083 m** | 0.093 rad | 11-20: not passed (mapping did not reach 0.2 m of travel) |
+
+With the PyBullet centipede, every multi-leg model now has a passing
+saved-map goal on PyBullet: octopod 0.091 m (11-20), hexapod 0.125 m and
+centipede 0.083 m.
 
 This is the centipede's first passing goal in a second world. With one
 run per case, it cannot be credited to the spine change rather than to
@@ -116,9 +121,8 @@ run-to-run spread.
 
 ## Limits
 
-- One run per case. The centipede's PyBullet mapping step (too slow on
-  11-20) and its `nav_obstacle` corner spawn (inside the no-go margin)
-  were not re-run.
+- One run per case. The centipede's `nav_obstacle` corner spawn (inside
+  the no-go margin) was not re-run.
 - The centipede's in-place turn still slips (0.091 m in 0.57 rad).
 - Isaac and Gazebo gait turns were not probed.
 

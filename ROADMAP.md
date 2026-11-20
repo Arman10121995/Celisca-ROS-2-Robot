@@ -1297,7 +1297,8 @@ parking batch needs its own run. Details and evidence are in the
     (drift 0.208 → 0.006 m on MuJoCo, 0.220 → 0.011 m on PyBullet). The hexapod now passes on PyBullet (0.125 m),
     and the MuJoCo goals re-pass for all three models (0.098 / 0.083 / 0.110 m). Legs on the centipede's bending
     spine now take their root pose from the spine angles. The centipede passes `nav_obstacle` from the open spawn
-    (0.113 m, 0.125 rad), its first second-world pass, in one run. Its in-place turn still drifts 0.09 m, from foot slip
+    (0.113 m, 0.125 rad), its first second-world pass, in one run. On PyBullet it now maps and passes too (0.083 m),
+    so all three models have a PyBullet saved-map pass. Its in-place turn still drifts 0.09 m, from foot slip
     ([receipt](docs/status/evidence/r106-gait-turn-2026-11-20/README.md)).
 - **How to do it:** `gait_model.py`, `gait_controller.py`, `gait_odometry.py` and
   `gait_terrain.py` in `robot_lab_utils/`. Keep one owner of `/gait/state`.

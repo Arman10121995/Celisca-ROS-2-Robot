@@ -1964,7 +1964,8 @@ tasks:
           now passes (0.125 m); MuJoCo goals re-pass (hexapod 0.098, octopod 0.083, centipede 0.110 m). Centipede turn
           still drifts 0.112 m (spine). Spine-segment legs then placed from the URDF chain and commanded spine
           angles - centipede turn drift 0.091 m; centipede passes nav_obstacle open spawn (0.113 m, 0.125 rad; first
-          second-world pass, 1 run), hexapod 0.123 m, octopod 0.097 m. docs/status/evidence/r106-gait-turn-2026-11-20/README.md
+          second-world pass, 1 run), hexapod 0.123 m, octopod 0.097 m; centipede PyBullet saved-map now passes (0.083 m).
+          docs/status/evidence/r106-gait-turn-2026-11-20/README.md
         qualification_review: '2026-10-27 documentation review: retain the implemented code, tests and named
           mission certificates. Full declared roadmap acceptance is still open; test counts, metadata and scene
           loads do not qualify remaining robot/map/backend missions. See docs/REMAINING_WORK_GUIDE.md.'

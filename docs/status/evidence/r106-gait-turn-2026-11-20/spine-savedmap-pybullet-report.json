@@ -1,0 +1,51 @@
+[
+ {
+  "robot": "lab_centipede",
+  "map": "nav_empty",
+  "spawn": null,
+  "simulator": "pybullet",
+  "acquisition": {
+   "run": "/workspace/molar/robot_lab_runtime/gait-turn-20261120/spine-savedmap-pybullet/runs/d525401789234763add9cf174f2e3ce2",
+   "success": true,
+   "reason": "Actual travel and nonempty acquired map archived",
+   "map_yaml": "/workspace/molar/robot_lab_runtime/gait_sessions/lab_centipede-rhq5q2vv/saved_maps/map-77f6c27c36/map.yaml",
+   "known_cells": 32780,
+   "start": [
+    -0.298412024974823,
+    -0.517402172088623,
+    -0.04335769163228715
+   ]
+  },
+  "navigation": {
+   "run": "/workspace/molar/robot_lab_runtime/gait-turn-20261120/spine-savedmap-pybullet/runs/1649362c09e5484599a3c15bc33d4fa1",
+   "goal": [
+    0.20111807628931527,
+    -0.5390742262376826,
+    -0.04335769163228715
+   ],
+   "success": true,
+   "reason": "Every native goal physically settled",
+   "measurements": [
+    {
+     "requested": [
+      0.20111807628931527,
+      -0.5390742262376826,
+      -0.04335769163228715
+     ],
+     "physical_pose": [
+      0.11993614584207535,
+      -0.5219159722328186,
+      -0.13620201630925394
+     ],
+     "linear_m_s": 0.00020437388213700162,
+     "angular_rad_s": 0.0004778415936017158,
+     "settled_sim_s": 1.0179999990000042,
+     "member_id": "body",
+     "index": 0,
+     "native_terminal": true,
+     "nav2_status": 4
+    }
+   ]
+  }
+ }
+]
