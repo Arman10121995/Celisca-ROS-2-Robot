@@ -2003,6 +2003,11 @@ tasks:
         - docs/status/evidence/r107-tracked-flight-2026-11-20/README.md
         - docs/status/evidence/r107-tracked-over-2026-11-20/README.md
         - docs/status/evidence/r107-tracked-angled-2026-11-20/README.md
+        - docs/status/evidence/r107-usv-backends-2026-11-20/README.md
+        usv_backends_20261120: 'Claude: implemented, experimental. lab_usv runs its unchanged surface controller on the
+          ported MuJoCo, PyBullet and Isaac marine plants (SurfaceModel via --surface). Probe vs Gazebo - surge 1.87-1.88 vs
+          1.89 m, yaw 0.83-0.85 vs 0.88 rad, current drift 0.88-0.90 vs 0.85 m, loss disarms on all. ROV MuJoCo regression
+          unchanged. No sensors/SLAM on the ported plants (marine mode stays Gazebo). docs/status/evidence/r107-usv-backends-2026-11-20/README.md'
         tracked_angled_20261120: 'Claude: implemented, experimental. New terrain_step_wide (one 0.18 m step, 6 m wide).
           terrain_ahead measures the lower surface out to 2.0 m (a lone curb had read as an unseen ledge), ledge depth 0.25 m,
           and the 3 s step memory also covers deeper treads in view. The strong-flipper vehicle climbs the step at 15, 30 and

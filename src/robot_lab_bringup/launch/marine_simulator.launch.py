@@ -166,8 +166,8 @@ def _setup(context):
     plant={'mujoco':'marine_mujoco_plant.py','pybullet':'marine_pybullet_plant.py',
            'isaac':'marine_isaac_plant.py'}.get(value('simulator'))
     if plant:
-        if robot!='lab_rov':
-            raise ValueError('The %s marine plant currently supports the native lab_rov force interface only'%value('simulator'))
+        if robot not in ('lab_rov','lab_usv'):
+            raise ValueError('The %s marine plant currently supports the native lab_rov and lab_usv force interfaces only'%value('simulator'))
         # Same controller and force/odometry topics; water forces are a port of the declared Fortress
         # buoyancy/hydrodynamics/thrusters. No Gazebo, bridge, sensors or SLAM pipeline.
         actions += [Node(package='robot_state_publisher',executable='robot_state_publisher',
@@ -176,11 +176,13 @@ def _setup(context):
                          '--description',str(description),'--spawn-x',str(spawn['x']),'--spawn-y',str(spawn['y']),
                          '--spawn-z',str(spawn['z']),'--spawn-yaw',str(spawn.get('yaw',0.)),
                          '--surface-z',str(water['surface_z']),'--bottom-z',str(water['bottom_z']),
-                         '--density',str(water['density'])],output='screen')]
-        controller=Node(package='robot_lab_utils',executable='marine_controller.py',parameters=[{
+                         '--density',str(water['density']),*(['--surface'] if surface else [])],output='screen')]
+        # The catamaran uses its surface controller and declared tuning, as on Gazebo (R10.7, 2026-11-20).
+        tuning={'surface_'+key:float(item) for key,item in robot_profile.get('surface_control',{}).items()} if surface else {}
+        controller=Node(package='robot_lab_utils',executable='surface_controller.py' if surface else 'marine_controller.py',parameters=[{
             'use_sim_time':True,'description_file':str(description),'density':float(water['density']),
             'surface_z':float(water['surface_z']),'robot_id':robot,'maximum_depth':float(water['surface_z'])-float(water['bottom_z'])-.6,
-            'control_allowed':enabled('control')}],output='screen')
+            'control_allowed':enabled('control'),**tuning}],output='screen')
         return actions+[controller,RegisterEventHandler(OnProcessExit(target_action=controller,
                 on_exit=[EmitEvent(event=Shutdown(reason='Marine actuator/observer owner exited'))]))]
     arguments='-r -v 2 '+('' if enabled('gui') else '-s --headless-rendering ') + world
@@ -225,7 +227,7 @@ def _setup(context):
 def generate_launch_description():
     return LaunchDescription([
         DeclareLaunchArgument('robot_model',default_value='lab_rov'),
-        DeclareLaunchArgument('simulator',default_value='gazebo',description='gazebo, or mujoco/pybullet/isaac for the ported lab_rov water forces'),
+        DeclareLaunchArgument('simulator',default_value='gazebo',description='gazebo, or mujoco/pybullet/isaac for the ported lab_rov/lab_usv water forces'),
         DeclareLaunchArgument('map_name',default_value='marine_tank'),DeclareLaunchArgument('control',default_value='true'),
         DeclareLaunchArgument('gui',default_value='true'),DeclareLaunchArgument('rviz',default_value='true'),
         DeclareLaunchArgument('slam',default_value='false'),DeclareLaunchArgument('database',default_value=''),

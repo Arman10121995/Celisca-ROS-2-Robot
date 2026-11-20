@@ -72,7 +72,10 @@ def main():
             hull_xyz, hull_size = forces.source['boxes'][0]
         else:
             from robot_lab_utils.marine_mujoco_plant import WaterForces
+            from robot_lab_utils.marine_model import SurfaceModel
             forces = WaterForces()
+            if cfg.get('surface'):
+                forces.model_class = SurfaceModel
             forces._load(cfg['description'], cfg['surface_z'], cfg['bottom_z'], cfg['density'])
             mass, centre = float(forces.model_source.mass), np.asarray(forces.model_source.centre, dtype=float)
             eigen, principal = np.asarray(forces.inertia, dtype=float), np.eye(3)

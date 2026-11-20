@@ -30,7 +30,7 @@ import xml.etree.ElementTree as ET
 
 import numpy as np
 
-from robot_lab_utils.marine_model import MarineModel, hydro_coefficients, rotation
+from robot_lab_utils.marine_model import MarineModel, SurfaceModel, hydro_coefficients, rotation
 
 def displacement_boxes(description):
     """Collision boxes of all links (position in base frame, size), as MarineModel counts them."""
@@ -78,10 +78,15 @@ class WaterForces:
     A plant sets ``model_source``, ``hydro``, ``boxes``, ``mounts``,
     ``surface``, ``density``, ``current`` and ``forces`` and calls
     ``water_wrench`` once per physics step.
+
+    ``model_class`` is the source thruster model: ``MarineModel`` for the
+    ROV, ``SurfaceModel`` for the two-propeller catamaran (``--surface``;
+    lab_usv on the ported plants, 2026-11-20).
     """
+    model_class = MarineModel
 
     def _load(self, description, surface_z, bottom_z, density):
-        self.model_source = MarineModel(description, density)
+        self.model_source = self.model_class(description, density)
         root = ET.fromstring(description)
         origin = root.find("link[@name='base_link']/inertial/origin")
         self.model_source.centre = (np.array([float(v) for v in origin.get('xyz', '0 0 0').split()])
@@ -257,7 +262,10 @@ def plant_arguments():
     parser = argparse.ArgumentParser()
     for key in ('description', 'spawn_x', 'spawn_y', 'spawn_z', 'spawn_yaw', 'surface_z', 'bottom_z', 'density'):
         parser.add_argument('--' + key.replace('_', '-'), required=key == 'description', default='0')
+    parser.add_argument('--surface', action='store_true', help='two-propeller surface craft (SurfaceModel)')
     options = parser.parse_args(rclpy.utilities.remove_ros_args()[1:])
+    if options.surface:
+        WaterForces.model_class = SurfaceModel
     return (Path(options.description).read_text(),
             [float(options.spawn_x), float(options.spawn_y), float(options.spawn_z), float(options.spawn_yaw)],
             float(options.surface_z), float(options.bottom_z), float(options.density))

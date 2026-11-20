@@ -139,3 +139,17 @@ def test_marine_launch_uses_the_explicit_sensor_pipeline_instead_of_a_missing_na
     pipeline=(ROOT/'src/robot_lab_utils/robot_lab_utils/marine_pipeline.py').read_text()
     assert "executable='marine_sensors.py'" in pipeline
     assert "arguments=['simulate']" in pipeline and "arguments=['estimate']" in pipeline
+
+
+def test_ported_marine_plants_take_the_catamaran_with_its_surface_model():
+    from robot_lab_utils.marine_mujoco_plant import WaterForces
+    from robot_lab_utils.marine_model import MarineModel, SurfaceModel
+    assert WaterForces.model_class is MarineModel
+    forces = WaterForces()
+    forces.model_class = SurfaceModel
+    description = __import__('subprocess').check_output(
+        ['xacro', str(ROOT/'src/robot_lab_robots/lab_usv/urdf/lab_usv.urdf.xacro')], text=True)
+    forces._load(description, 0., -6., 1025.)
+    assert len(forces.model_source.joints) == 2 and len(forces.mounts) == 2
+    launch = (ROOT/'src/robot_lab_bringup/launch/marine_simulator.launch.py').read_text()
+    assert "robot not in ('lab_rov','lab_usv')" in launch and "['--surface'] if surface else []" in launch

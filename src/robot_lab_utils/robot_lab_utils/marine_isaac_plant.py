@@ -99,7 +99,8 @@ class MarineIsaacPlant(WaterForces):
     def __init__(self, description, spawn, surface_z, bottom_z, density=1025., isaac_python=None):
         self._load(description, surface_z, bottom_z, density)
         self.child = IsaacChild(dict(kind='rov', description=description, spawn=[float(v) for v in spawn],
-                                     surface_z=float(surface_z), bottom_z=float(bottom_z), density=float(density)),
+                                     surface_z=float(surface_z), bottom_z=float(bottom_z), density=float(density),
+                                     surface=self.model_class.__name__ == 'SurfaceModel'),
                                 isaac_python)
         self.time = 0.
         self.position = np.asarray(spawn[:3], dtype=float)

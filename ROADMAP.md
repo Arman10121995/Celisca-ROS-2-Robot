@@ -1306,7 +1306,9 @@ parking batch needs its own run. Details and evidence are in the
   watcher as the normal GUI launch. Fleet launches also tag their nodes for
   cleanup if the launcher exits abruptly.
 - **Remaining implementation:**
-  - other backends for the forms;
+  - other backends for the forms: **USV done 2026-11-20** (the catamaran's surface controller on the MuJoCo, PyBullet
+    and Isaac marine plants, within a few percent of Gazebo;
+    [receipt](docs/status/evidence/r107-usv-backends-2026-11-20/README.md)); the snake, tracked and amphibious forms remain;
   - angled descents beyond 15° for the tracked vehicle (one track drops first and the 0.35 rad roll hold stops it).
     **Angled approaches done 2026-11-20:** the 0.18 m step is climbed at 15°, 30° and 45° off square and descended
     at 15° (2/2) in a new `terrain_step_wide` ([receipt](docs/status/evidence/r107-tracked-angled-2026-11-20/README.md)).

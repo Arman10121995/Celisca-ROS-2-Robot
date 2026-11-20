@@ -1,0 +1,157 @@
+{
+  "backend": null,
+  "phases": {
+    "hold": {
+      "duration_s": 11.989999999999998,
+      "start": [
+        0.0,
+        0.0,
+        -0.0022329297291152767
+      ],
+      "end": [
+        0.0,
+        0.0,
+        -0.0022329268292848176
+      ],
+      "displacement_m": 0.0,
+      "depth_change_m": 2.899830459091035e-09,
+      "max_depth_dev_m": 5.237022815407499e-09,
+      "max_xy_drift_m": 0.0,
+      "yaw_change_rad": 0.0,
+      "speed_m_s": 0.0,
+      "enabled_end": true,
+      "reason_end": "Surface thrust armed; surge/yaw neutral until input"
+    },
+    "surge": {
+      "duration_s": 9.940000001000001,
+      "start": [
+        0.0,
+        0.0,
+        -0.0022329268280334297
+      ],
+      "end": [
+        1.8713778477254959,
+        0.004162162062697823,
+        -0.002232926829276158
+      ],
+      "displacement_m": 1.8713824762861133,
+      "depth_change_m": -1.242728142614169e-12,
+      "max_depth_dev_m": 3.199829290423395e-12,
+      "max_xy_drift_m": 1.8713824762861133,
+      "yaw_change_rad": -0.0003601392827210615,
+      "speed_m_s": 0.1882678547382138,
+      "enabled_end": true,
+      "reason_end": "Surface thrust armed; surge/yaw neutral until input"
+    },
+    "settle": {
+      "duration_s": 5.960000000000001,
+      "start": [
+        1.879377849627094,
+        0.004160537702774095,
+        -0.0022329268292765464
+      ],
+      "end": [
+        2.0018366668828236,
+        0.0039479989892691175,
+        -0.002232926829268525
+      ],
+      "displacement_m": 0.1224590016959835,
+      "depth_change_m": 8.021361352916756e-15,
+      "max_depth_dev_m": 1.4641066137244252e-14,
+      "max_xy_drift_m": 0.12245900976146458,
+      "yaw_change_rad": 0.0003774837822115944,
+      "speed_m_s": 0.0205468123650979,
+      "enabled_end": true,
+      "reason_end": "Surface thrust armed; surge/yaw neutral until input"
+    },
+    "yaw": {
+      "duration_s": 5.940000000000005,
+      "start": [
+        2.0018366656675832,
+        0.003947472759211625,
+        -0.002232926829268525
+      ],
+      "end": [
+        2.001497740809851,
+        0.003950991029161561,
+        -0.0022329268292683307
+      ],
+      "displacement_m": 0.00033894311825486713,
+      "depth_change_m": 1.942890293094024e-16,
+      "max_depth_dev_m": 1.942890293094024e-16,
+      "max_xy_drift_m": 0.00033894311825486713,
+      "yaw_change_rad": 0.8478150573026119,
+      "speed_m_s": 5.706113101933786e-05,
+      "enabled_end": true,
+      "reason_end": "Surface thrust armed; surge/yaw neutral until input"
+    },
+    "hold2": {
+      "duration_s": 9.960000000000008,
+      "start": [
+        2.0014977314343163,
+        0.003951032218431486,
+        -0.0022329268292683307
+      ],
+      "end": [
+        2.0017561118534712,
+        0.004182590982972638,
+        -0.0022329268292683307
+      ],
+      "displacement_m": 0.0003469580701446574,
+      "depth_change_m": 0.0,
+      "max_depth_dev_m": 0.0,
+      "max_xy_drift_m": 0.0003496542343542417,
+      "yaw_change_rad": -0.007977686830468178,
+      "speed_m_s": 3.483514760488525e-05,
+      "enabled_end": true,
+      "reason_end": "Surface thrust armed; surge/yaw neutral until input"
+    },
+    "current": {
+      "duration_s": 14.939999999000008,
+      "start": [
+        2.001756112749686,
+        0.004182574699650367,
+        -0.0022329268292683307
+      ],
+      "end": [
+        1.4574396195785273,
+        0.6954206545703449,
+        -0.0022329268292683307
+      ],
+      "displacement_m": 0.8798241459527424,
+      "depth_change_m": 0.0,
+      "max_depth_dev_m": 0.0,
+      "max_xy_drift_m": 0.8798241459527424,
+      "yaw_change_rad": 0.007825667448773554,
+      "speed_m_s": 0.05889050508779333,
+      "enabled_end": true,
+      "reason_end": "Surface thrust armed; surge/yaw neutral until input"
+    },
+    "loss": {
+      "duration_s": 5.969999999999999,
+      "start": [
+        1.4549186231792632,
+        0.6984963724494107,
+        -0.0022329268292683307
+      ],
+      "end": [
+        1.3755583276654881,
+        0.7701350827442659,
+        -0.0022329268292683307
+      ],
+      "displacement_m": 0.10691193252740272,
+      "depth_change_m": 0.0,
+      "max_depth_dev_m": 0.0,
+      "max_xy_drift_m": 0.10691193252740272,
+      "yaw_change_rad": -0.0001701440371362217,
+      "speed_m_s": 0.01790819640325004,
+      "enabled_end": false,
+      "reason_end": "Surface feedback/operator lost; thrust removed"
+    }
+  },
+  "samples": 1175,
+  "loss": {
+    "disarmed": true,
+    "reason": "Surface feedback/operator lost; thrust removed"
+  }
+}
