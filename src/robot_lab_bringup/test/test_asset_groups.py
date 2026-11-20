@@ -87,3 +87,17 @@ def test_dataset_static_and_dynamic_sources_share_the_installed_room_identity():
     for room in (2, 3, 4):
         family = f'dataset_room{room}'
         assert groups.members(family, selectable=True) == [family, family+'_world_dynamic']
+
+
+def test_f100_fetch_fixture_shares_static_occupancy_with_the_tall_block():
+    from robot_lab_utils.sdf_world import extract_dynamic_bodies, extract_static_shapes
+
+    maps = Path(__file__).resolve().parents[2]/'robot_lab_maps/maps'
+    original, short = [maps/name/'worlds'/f'{name}.world' for name in
+                       ('mobile_fetch_lab', 'mobile_fetch_lab_f100')]
+    first, _ = extract_static_shapes(str(original), lambda uri, base: '', exclude_dynamic=True)
+    second, _ = extract_static_shapes(str(short), lambda uri, base: '', exclude_dynamic=True)
+    assert first == second
+    cube, = extract_dynamic_bodies(str(short))
+    assert cube['name'] == 'fetch_block'
+    assert cube['shape']['size'] == pytest.approx([.04, .04, .09])

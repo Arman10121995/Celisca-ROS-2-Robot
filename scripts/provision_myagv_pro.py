@@ -203,11 +203,28 @@ def provision(store, download=False, variant='fortress'):
         changes=[*changes,'official Pro630 arm fixed on the deck (declared mount)','Collada visuals converted to metre STL',
                  'declared arm mass/inertia/effort/speed estimates','bounded six-joint position articulation']
     if with_gripper:
+        from robot_lab_utils.sim_frames import rigid_sensor_offsets
+
+        grasp = gripper_receipt['grasp_reference']['frame']
+        carrier = 'pro630_link6'
+        tcp_offset, tcp_quat = rigid_sensor_offsets(ET.tostring(document, encoding='unicode'), grasp)[carrier]
+        leader, = articulation['grip_joints']
+        pick_place = dict(
+            arm_joints=[joint for joint in articulation['joints'] if joint != leader],
+            finger_joints=[leader, *articulation['couplings']], tool_body=carrier,
+            tcp_offset=list(tcp_offset), tcp_quat=list(tcp_quat), tool_yaw_offset=0.,
+            pad_geoms=list(articulation['grip_contact_geoms'].values()),
+            finger_open=1., min_object_width=.035, max_object_width=.048,
+            default_approach=.06, default_lift=.05,
+            arm_seeds=[[-.188, 1.125, -.641, 1.086, -1.571, 2.151]],
+            mobile=dict(reach=.47, base_radius=.37, place_inset=.06, dock_position_tolerance=.01))
         profile.update(supported_simulators=['mujoco'], experimental_modes_by_simulator={'mujoco':['display']},
+            experimental_asset_options={'pick_place': pick_place},
             features=[*profile['features'],'gripper'], notes=profile['notes']+
             ' Vendor F100 mount and one bounded jaw actuator with five linked followers. '
             'Compound finger collisions and a nominal grasp frame are derived from the source CAD. '
-            'The joint effort, rate and damping are declared simulation estimates. Automated grasp is pending.')
+            'The joint effort, rate and damping are declared simulation estimates. A contact-checked fetch candidate '
+            'requires the experimental workflows option. Transport is unqualified.')
         changes.extend(('vendor F100 mount and linkage', 'declared bounded F100 simulation servo',
                         'source CAD finger hulls, separate pad contacts, and nominal grasp frame'))
     receipt=dict(repository=source['repository'],source_id=source['id'],revision=source['revision'],license='BSD-3-Clause',

@@ -33,14 +33,30 @@ the pinned jaw CAD. The calibration samples the inner pad separation at 41
 shaft angles. The nominal grasp frame is centred between the pads at
 0.35 rad, where the calculated gap is 40.6 mm. **Set opening (mm)** uses the
 same interpolation as the estimated jaw readout. Grasp, transport and
-other F100 backends remain open. An isolated loaded fixture lost its block
-during closure. [Failed fixture data](initial-cad-pad-load-bench.jsonl).
+other F100 backends remain open. In the live `nav_empty` GUI the 54 mm
+command settled at a shaft angle of 0.4627364 rad, corresponding to an
+estimated 54.0000 mm opening. [GUI opening report](gui-calibrated-opening-result.json).
+
+An isolated loaded fixture lost its block on full closure. A metered
+closure reached bilateral pad contact in 226 of 250 sampled physics
+steps at the end of the close stage. When the fixture rose 44.2 mm,
+the loose block stayed on its support. [Full closure](initial-cad-pad-load-bench.jsonl) · [metered closure](metered-pad-closure-bench.jsonl).
 
 The live articulation state now reports pad normal load by free object
 name, and the Gripper panel shows the two readings. The force reader passed
 a compiled MuJoCo fixture with both pads acting on one free box and a
 second free box touching only the floor. These readings support future
 custody checks for the selected payload.
+
+## Experimental short-block fetch
+
+The `mobile_fetch_lab_f100` map variant retains the original tables and
+floor. The 40 g block is 90 mm tall and sits 60 mm inside the pickup edge.
+The private MuJoCo scene finds an open, approach, descend, close and lift
+path at the 0.47 m standoff. This establishes kinematic feasibility.
+The first GUI attempt refused to start after private model import made
+its cached odometry stale. The pick/place node now compiles the private
+model during startup before subscribing. [Private planner output](short-block-private-plan.txt).
 
 ## Source and retained diagnostics
 

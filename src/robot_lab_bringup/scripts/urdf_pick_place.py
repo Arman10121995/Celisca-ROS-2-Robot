@@ -152,13 +152,33 @@ class PickPlace(Node):
         articulation = json.loads(self.get_parameter('articulation_config').value)
         from robot_lab_mujoco.arm_pick_place import ArmSpec
         self.spec = ArmSpec.from_config(self.config)
-        self.home = {name: float(articulation['home'][name]) for name in self.spec.arm_joints}
+        self.seeds = [{name: float(articulation['home'][name]) for name in self.spec.arm_joints}]
+        for pose in self.config.get('arm_seeds', ()):
+            seed = dict(zip(self.spec.arm_joints, map(float, pose), strict=True))
+            if not all(articulation['joints'][name]['lower'] <= value <= articulation['joints'][name]['upper']
+                       for name, value in seed.items()):
+                raise ValueError('Arm seed exceeds the source joint bounds')
+            self.seeds.append(seed)
         # Coupled followers (the second Panda finger) are measured, not commanded.
         self.finger_masters = [n for n in self.spec.finger_joints if n in articulation['joints']]
+        if self.spec.pad_geoms:
+            from robot_lab_utils.urdf_articulation import grip_aperture_samples
+            if len(self.finger_masters) != 1 or set(self.spec.pad_geoms) != set(
+                    articulation.get('grip_contact_geoms', {}).values()):
+                raise ValueError('Calibrated grasp requires one shaft and its two measured pads')
+            self.spec.aperture = grip_aperture_samples(articulation, self.finger_masters[0])
+            if not self.spec.aperture:
+                raise ValueError('Calibrated grasp requires a shaft aperture curve')
+        self.min_pad_force = float(self.config.get('min_pad_force_n', .1))
+        if not math.isfinite(self.min_pad_force) or self.min_pad_force <= 0.:
+            raise ValueError('Grasp pad normal load threshold must be finite and positive')
         self.base = tuple(float(self.get_parameter(k).value) for k in ('base_x', 'base_y', 'base_z', 'base_yaw'))
         self.object_shapes = {}
         self.supports, self.object_sizes = self._world_boxes()
-        self.robot_mjcf = None
+        from robot_lab_adapter.legged_training import _package_map
+        from robot_lab_mujoco.mujoco_spawner import _build_mjcf_from_urdf
+        urdf = Path(self.get_parameter('model_path').value).read_text()
+        self.robot_mjcf = _build_mjcf_from_urdf(urdf, _package_map(urdf), robot_name='pick_place_robot')
         self.truth, self.truth_at = {}, -math.inf
         self.state, self.state_at = {}, -math.inf
         self.task = None
@@ -167,6 +187,9 @@ class PickPlace(Node):
         self.last_result = None
         self.message = 'Select an object and a support, then request a pick and place.'
         self.mobile = dict(MOBILE_DEFAULTS, **self.config['mobile']) if self.config.get('mobile') else None
+        self.dock_tolerance = float((self.mobile or {}).get('dock_position_tolerance', POSITION_TOLERANCE))
+        if not .005 <= self.dock_tolerance <= POSITION_TOLERANCE:
+            raise ValueError('Docking position tolerance must be between 5 and 30 mm')
         self.base_pose, self.base_twist, self.base_at = None, (0.0, 0.0), -math.inf
         if self.mobile:
             self.create_subscription(Odometry, '/odom/ground_truth', self._on_odom, 10)
@@ -349,14 +372,16 @@ class PickPlace(Node):
             raise ValueError('unknown support %r (have %s)' % (support_name, sorted(self.supports)))
         if not self.state.get('initialized') or self.state.get('fault') or _now() - self.state_at > STATE_STALE:
             raise ValueError('articulation not ready: %s' % self.state.get('status'))
+        if self.spec.pad_geoms and 'grip_contacts' not in self.state:
+            raise ValueError('Wait for measured grasp pad contact feedback')
         measured = self.measured()
         missing = [n for n in self.spec.arm_joints + self.spec.finger_joints if n not in measured]
         if missing:
             raise ValueError('no measurement for %s' % missing)
         if not self.object_sizes.get(name):
             raise ValueError('object %r is not a loose box or cylinder of the world file' % name)
-        lift = float(request.get('lift', 0.10))
-        approach = float(request.get('approach', 0.10))
+        lift = float(request.get('lift', self.config.get('default_lift', .10)))
+        approach = float(request.get('approach', self.config.get('default_approach', .10)))
         if not 0.03 <= lift <= 0.25 or not 0.03 <= approach <= 0.25:
             raise ValueError('lift and approach must be 0.03-0.25 m')
         pose_source = request.get('pose_source', 'truth')
@@ -370,11 +395,6 @@ class PickPlace(Node):
             missing = [n for n in self.look if n not in measured]
             if missing:
                 raise ValueError('no measurement for look joints %s' % missing)
-        if self.robot_mjcf is None:
-            from robot_lab_adapter.legged_training import _package_map
-            from robot_lab_mujoco.mujoco_spawner import _build_mjcf_from_urdf
-            urdf = Path(self.get_parameter('model_path').value).read_text()
-            self.robot_mjcf = _build_mjcf_from_urdf(urdf, _package_map(urdf), robot_name='pick_place_robot')
         task = dict(phase='executing', request=request, object=name, support=support_name, lift=lift,
                     approach=approach, started=_now(), log=[], plan={}, phase_index=0, pose_source=pose_source,
                     object_start=list(self.truth[name][:3]),
@@ -638,7 +658,7 @@ class PickPlace(Node):
                 if c.get('mode') == 'position' and c.get('measured') is not None and c['name'] not in planned_joints}
         scene = ArmScene(self.robot_mjcf, self.spec, list(self.supports.values()), obj, base=base, held=held)
         start = {n: float(measured[n]) for n in self.spec.arm_joints}
-        options = dict(approach=task['approach'], lift=task['lift'], seeds=[self.home])
+        options = dict(approach=task['approach'], lift=task['lift'], seeds=self.seeds)
         support = self.supports[task['support']]
         if phase['name'] == 'pick_place':
             planned = plan_pick_place(scene, start, obj, support, **options)
@@ -654,7 +674,8 @@ class PickPlace(Node):
         else:
             scene.set_joints(dict(start, **{n: float(measured[n]) for n in self.spec.finger_joints}))
             scene.attach()
-            planned = plan_place(scene, start, obj, support, place_xy=task['plan']['place_xy'], **options)
+            planned = plan_place(scene, start, obj, support, place_xy=task['plan']['place_xy'],
+                                 grasp_width=task['plan']['grasp_width_m'], **options)
             task['plan'].update(place_centre=planned['place_centre'], place_orientation=planned['place_orientation'],
                                 place_base_measured=[round(v, 4) for v in base])
         stages, previous = [], dict(start)
@@ -783,6 +804,11 @@ class PickPlace(Node):
                 offset = self._in_base(self.truth[task['object']][:3]) - np.asarray(phase['reference'])
                 return self._finish('failed', 'object moved %.3f m relative to the base while carrying (%s)'
                                     % (drift, ', '.join('%+.3f' % v for v in offset)))
+            if self.spec.pad_geoms:
+                if self._pad_check(task['object'])['passed']:
+                    phase.pop('pads_lost_at', None)
+                elif _now() - phase.setdefault('pads_lost_at', _now()) > .5:
+                    return self._finish('failed', 'Both pads must keep contact with the carried object')
         if self.state.get('active'):
             # Never drive a moving arm: wait for it to settle.
             interlock['drive_ticks_with_articulation_active'] += 1
@@ -809,7 +835,8 @@ class PickPlace(Node):
         dx, dy = target['x'] - x, target['y'] - y
         distance = math.hypot(dx, dy)
         reverse = target.get('reverse', False)
-        if distance > POSITION_TOLERANCE and not phase.get('at_point'):
+        position_tolerance = self.dock_tolerance if 'yaw' in target else POSITION_TOLERANCE
+        if distance > position_tolerance and not phase.get('at_point'):
             heading = math.atan2(dy, dx) + (math.pi if reverse else 0.0)
             error = _wrap(heading - yaw)
             # Passed it (overshoot along the travel direction): count as reached.
@@ -967,6 +994,8 @@ class PickPlace(Node):
                       fingers=[round(measured[n], 4) for n in self.spec.finger_joints if n in measured],
                       finger_references=[round(c['reference'], 4) for c in self.state.get('channels', [])
                                          if c['name'] in self.spec.finger_joints and c.get('reference') is not None])
+        if self.spec.pad_geoms:
+            sample['pad_normal_force_n'] = self._pad_check(task['object'])['pad_normal_force_n']
         truth = self._tcp_truth()
         if truth is not None:
             sample['tcp_truth'] = [round(float(v), 4) for v in truth]
@@ -1003,6 +1032,13 @@ class PickPlace(Node):
         stopped = len(history) >= 3 and max(spans) < FINGER_STILL_SPAN
         return on_target or (stopped and _now() - self.task['stage_started'] > 1.0)
 
+    def _pad_check(self, name):
+        reading = self.state.get('grip_contacts', {}).get('normal_force_n', {}).get(name, {})
+        forces = {side: float(reading.get(side, 0.)) for side in ('left', 'right')}
+        passed = all(math.isfinite(load) and load >= self.min_pad_force for load in forces.values())
+        return dict(passed=passed, pad_normal_force_n=forces,
+                    reason='' if passed else 'both pads did not press the selected object')
+
     def _check(self, task, stage):
         """Truth checks after a stage; None while a timed observation is still running."""
         name = task['object']
@@ -1012,6 +1048,8 @@ class PickPlace(Node):
         if stage == 'close':
             measured = self.measured()
             gaps = [measured[n] for n in self.spec.finger_joints]
+            if self.spec.pad_geoms:
+                return dict(finger_positions=gaps, **self._pad_check(name))
             width = task['plan']['grasp_width_m']
             # Each finger stopped against the object, not at its closed limit.
             gripping = all(g > 0.25 * width / 2 for g in gaps)
@@ -1025,14 +1063,18 @@ class PickPlace(Node):
                 return None
             if _now() < task['wait_until']:
                 return None
+            force_check = self._pad_check(name) if self.spec.pad_geoms else {}
+            if force_check and not force_check['passed']:
+                return force_check
             position, rotation = self._tcp(task)
             offset = rotation.T @ (pose - position)
             drift = float(np.linalg.norm(offset - np.asarray(task['held_offset'])))
             rise = float(pose[2] - task['object_start'][2])
-            lift = float(task['request'].get('lift', 0.10))
+            lift = task['lift']
             passed = rise > 0.8 * lift and drift < 0.01
             return dict(passed=passed, rise_m=round(rise, 4), hold_drift_m=round(drift, 4),
-                        reason='object did not rise with the tool' if not passed else '')
+                        reason='object did not rise with the tool' if not passed else '',
+                        **({'pad_normal_force_n': force_check['pad_normal_force_n']} if force_check else {}))
         if stage == 'retreat':
             from robot_lab_mujoco.arm_pick_place import Box
             if 'wait_until' not in task:

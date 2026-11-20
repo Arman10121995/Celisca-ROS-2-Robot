@@ -4,8 +4,9 @@ November 20 Codex: the **myAGV Pro + myCobot Pro630** family now includes an
 official-mount F100 variant. Open and Close passed through the normal GUI
 in MuJoCo `nav_empty`, with all five followers observed. The bare arm and
 F100 variants both completed a GUI source-flange move in MuJoCo. The F100
-variant includes separate CAD-derived pad contacts and an opening control
-in millimetres. Contact grasp and transport remain pending.
+variant has CAD-derived pad contacts and accepted a 54 mm opening command
+in the live GUI. Experimental fetch and a short-block map are available.
+The private pickup plan passes. Loaded lift and transport remain pending.
 [F100 receipt](evidence/r143-pro630-f100-2026-11-20/README.md).
 
 November 20 Codex: MuJoCo caches a conservative shortlist for static flex

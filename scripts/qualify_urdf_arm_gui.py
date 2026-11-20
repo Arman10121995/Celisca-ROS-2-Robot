@@ -42,7 +42,11 @@ def pick_place(app, page, args, report, press, settle, until, pump, screenshot):
     previous = json.dumps(page.pick_state.get('last_result'))
     until(lambda: page.pick_run_button.instate(['!disabled']), 20, 'Run pick / place enabled')
     press(page.pick_run_button)
-    until(lambda: page.pick_state.get('phase') == 'executing', 30, 'task started')
+    until(lambda: page.pick_state.get('phase') == 'executing'
+          or json.dumps(page.pick_state.get('last_result')) != previous, 30, 'task started')
+    if page.pick_state.get('phase') != 'executing':
+        report['pick_place'] = dict(result=page.pick_state.get('last_result'), page_status=page.pick_status.get())
+        return
     if page.pick_state.get('mobile'):
         # A fetch drives first: photograph it carrying, mid-route.
         until(lambda: page.pick_state.get('stage') == 'carry' or page.pick_state.get('phase') == 'idle', 300, 'carrying')
@@ -65,6 +69,7 @@ def main():
     parser.add_argument('--simulator', default='pybullet')
     parser.add_argument('--map', default='nav_empty')
     parser.add_argument('--output', type=Path, required=True)
+    parser.add_argument('--experimental', action='store_true', help='allow the selected profile’s experimental workflow')
     task = parser.add_mutually_exclusive_group()
     task.add_argument('--pick-place', nargs=2, metavar=('OBJECT', 'SUPPORT'),
                         help='instead of the joint steps: Home, then Run pick / place of OBJECT onto SUPPORT '
@@ -119,6 +124,7 @@ def main():
         app.mode_var.set('display')
         app.map_var.set(args.map)
         app.gui_var.set('false')
+        app.experimental_assets_var.set(args.experimental)
         app._update_from_selection()
         app.update()
         report['page_selected'] = app.control_notebook.select() == str(page)
@@ -226,6 +232,8 @@ def main():
         report['error'] = repr(exc)
         report['page_state'] = dict(status=page.status.get(), feedback=page.feedback.get(), owned=page.owned(),
                                     visible=page.visible(), selected=page.selected())
+        if args.pick_place:
+            report['pick_state'] = page.pick_state
         try:
             screenshot(args.output / 'failure.png')
         except Exception:

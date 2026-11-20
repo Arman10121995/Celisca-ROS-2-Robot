@@ -164,8 +164,9 @@ class UrdfArmControls(MolarControls):
                   'Stop, heartbeat loss, leaving this page or a selection change hold the measured joints.\n'
                   'Experimental simulator controls; masses and limits are declared estimates where '
                   'the vendor publishes none.', wraplength=295, justify='left').grid(row=9, column=0, sticky='ew', pady=6)
-        self.traces = [(var, var.trace_add('write', self.selection_changed)) for var in
-                       (app.robot_var, app.simulator_var, app.mode_var, app.launch_kind_var, app.map_var)]
+        selection = (app.robot_var, app.simulator_var, app.mode_var, app.launch_kind_var, app.map_var,
+                     getattr(app, 'experimental_assets_var', None))
+        self.traces = [(var, var.trace_add('write', self.selection_changed)) for var in selection if var is not None]
         self.bindings = [(widget, widget.bind('<<NotebookTabChanged>>', self.tab_changed, add='+'))
                          for widget in (app.notebook, notebook)]
         self.rebuild()
@@ -481,6 +482,7 @@ class UrdfArmControls(MolarControls):
         super().selection_changed()
         self.tool_plant = None
         self.plan_request = ''
+        self.pick_lift.set(self.app._robot_config().get('pick_place', {}).get('default_lift', .10))
         self.rebuild()
 
     def validate(self, state):

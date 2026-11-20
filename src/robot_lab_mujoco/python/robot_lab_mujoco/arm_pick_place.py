@@ -56,6 +56,10 @@ class ArmSpec:
     finger_closed: float = 0.0
     max_object_width: float = 0.075
     tool_yaw_offset: float = -math.pi / 4      # Panda: hand x axis is 45 deg from link8
+    tcp_quat: Sequence[float] = (1., 0., 0., 0.)
+    pad_geoms: Sequence[str] = ()
+    aperture: Sequence[Sequence[float]] = ()
+    min_object_width: float = 0.
 
     @classmethod
     def from_config(cls, config):
@@ -63,7 +67,19 @@ class ArmSpec:
                    tool_body=str(config['tool_body']), tcp_offset=tuple(config.get('tcp_offset', (0., 0., .1034))),
                    finger_open=float(config.get('finger_open', .04)), finger_closed=float(config.get('finger_closed', 0.)),
                    max_object_width=float(config.get('max_object_width', .075)),
-                   tool_yaw_offset=float(config.get('tool_yaw_offset', -math.pi / 4)))
+                   tool_yaw_offset=float(config.get('tool_yaw_offset', -math.pi / 4)),
+                   tcp_quat=tuple(config.get('tcp_quat', (1., 0., 0., 0.))),
+                   pad_geoms=tuple(config.get('pad_geoms', ())),
+                   min_object_width=float(config.get('min_object_width', 0.)))
+
+    def closing_targets(self, width, squeeze=.004):
+        """Position-servo references. F100 targets a small calibrated squeeze."""
+        if not self.aperture:
+            angle = self.finger_closed
+        else:
+            from robot_lab_utils.urdf_articulation import grip_aperture_interpolate
+            angle = grip_aperture_interpolate(max(0., width-squeeze), self.aperture, by_gap=True)
+        return dict.fromkeys(self.finger_joints, angle)
 
 
 @dataclass
@@ -136,7 +152,7 @@ class ArmScene:
             for joint in [j for j in body if j.tag == 'freejoint' or (j.tag == 'joint' and j.get('type') == 'free')]:
                 body.remove(joint)
         ET.SubElement(tool, 'site', name='pick_place_tcp', size='0.005',
-                      pos='%g %g %g' % tuple(spec.tcp_offset))
+                      pos='%g %g %g' % tuple(spec.tcp_offset), quat='%.10g %.10g %.10g %.10g' % tuple(spec.tcp_quat))
         if any(abs(v) > 1e-12 for v in base):
             # The URDF arm is welded at the model origin; move the whole tree.
             wrapper = ET.Element('body', name='pick_place_base', pos='%g %g %g' % tuple(base[:3]),
@@ -198,6 +214,11 @@ class ArmScene:
             return False
         self.moving_geoms = {g for g in robot_geoms if moved(int(m.geom_bodyid[g]))}
         self.finger_geoms = {g for g in robot_geoms if int(m.geom_bodyid[g]) in finger_bodies}
+        if spec.pad_geoms:
+            pads = {mujoco.mj_name2id(m, mujoco.mjtObj.mjOBJ_GEOM, name) for name in spec.pad_geoms}
+            if len(pads) != 2 or not pads <= self.finger_geoms:
+                raise ValueError('The compiled grasp scene needs both declared jaw pads')
+            self.finger_geoms = pads
         self.attached = None        # object pose in the TCP frame while held
         # Joints the plan never moves (a mobile manipulator's torso and head)
         # stay at their measured values.
@@ -302,7 +323,7 @@ class ArmScene:
             self.set_joints(dict(zip(names, q), **fingers))
             tcp_position, tcp_rotation = self.tcp()
             error_position = np.asarray(position) - tcp_position
-            error_rotation = 0.5 * sum(np.cross(tcp_rotation[:, k], target_rotation[:, k]) for k in range(3))
+            error_rotation = Rotation.from_matrix(target_rotation @ tcp_rotation.T).as_rotvec()
             if np.linalg.norm(error_position) < POSITION_TOLERANCE_M and np.linalg.norm(error_rotation) < ANGLE_TOLERANCE_RAD:
                 return dict(zip(names, map(float, q)))
             self.mj.mj_jacSite(m, d, jacp, jacr, self.site)
@@ -424,9 +445,13 @@ def plan_pick(scene: ArmScene, current: Dict[str, float], obj: Box, *, approach=
             sides = [(float(obj.size[0]), closing-object_yaw)]
         else:
             raise PlanningError('Cylinder must rest upright or on its side')
-    sides = [side for side in sides if side[0] <= spec.max_object_width]
+    sides = [side for side in sides if spec.min_object_width <= side[0] <= spec.max_object_width]
     if not sides:
-        raise PlanningError('object %.3f m wider than the gripper (%.3f m)' % (min(obj.size[:2]), spec.max_object_width))
+        if spec.min_object_width == 0.:
+            raise PlanningError('object %.3f m wider than the gripper (%.3f m)' %
+                                (min(obj.size[:2]), spec.max_object_width))
+        raise PlanningError('object has no grasp width in the gripper range %.3f–%.3f m' %
+                            (spec.min_object_width, spec.max_object_width))
     scene.set_joints(dict(current, **open_f))
     current_rotation = scene.tcp()[1]
     current_yaw = math.atan2(current_rotation[1, 0], current_rotation[0, 0])
@@ -491,18 +516,19 @@ def _plan_pick_at(scene, current, obj, tool_yaw, width, approach, lift, seeds):
             grasp_point = centre + [0, 0, raise_m]
     stages.append(dict(stage='down_to_grasp', waypoints=down, fingers=open_f))
     grasp = down[-1]
-    closed = {n: spec.finger_closed for n in spec.finger_joints}
+    closed = spec.closing_targets(width)
     stages.append(dict(stage='close', waypoints=[dict(grasp)], fingers=closed))
-    scene.set_joints(dict(grasp, **open_f))
+    holding_f = spec.closing_targets(width, squeeze=0.) if spec.aperture else open_f
+    scene.set_joints(dict(grasp, **holding_f))
     scene.attach()
-    up = scene.straight_line(grasp, grasp_point + [0, 0, lift], rotation, open_f, allow_fingers=True,
+    up = scene.straight_line(grasp, grasp_point + [0, 0, lift], rotation, holding_f, allow_fingers=True,
                              allow_supports=tuple(scene.obstacle_geoms))
     stages.append(dict(stage='lift', waypoints=up, fingers=closed))
     return dict(stages=stages, grasp_width_m=width, tool_yaw=tool_yaw, grasp_point=grasp_point.tolist())
 
 
 def plan_place(scene: ArmScene, current: Dict[str, float], obj: Box, support: Box, *, place_xy=None,
-               approach=0.10, lift=0.10, seeds: Sequence[Dict[str, float]] = ()):
+               approach=0.10, lift=0.10, seeds: Sequence[Dict[str, float]] = (), grasp_width=0.):
     """Stages over the support -> down to the place height -> open -> retreat up.
 
     The scene must already hold the object (``ArmScene.attach``) at the arm
@@ -514,8 +540,9 @@ def plan_place(scene: ArmScene, current: Dict[str, float], obj: Box, support: Bo
     if scene.attached is None:
         raise PlanningError('the scene does not hold the object')
     open_f = {n: spec.finger_open for n in spec.finger_joints}
-    closed = {n: spec.finger_closed for n in spec.finger_joints}
-    scene.set_joints(dict(current, **open_f))
+    closed = spec.closing_targets(grasp_width)
+    holding_f = spec.closing_targets(grasp_width, squeeze=0.) if spec.aperture else open_f
+    scene.set_joints(dict(current, **holding_f))
     _, tool_rotation = scene.tcp()
     tool_yaw = math.atan2(tool_rotation[1, 0], tool_rotation[0, 0])
     rotation = top_down_rotation(tool_yaw)
@@ -529,15 +556,15 @@ def plan_place(scene: ArmScene, current: Dict[str, float], obj: Box, support: Bo
     place_point = place_centre - rotation @ scene.attached[0]
     above_place = place_point + [0, 0, lift]
     seeds = _seeds(current, seeds)
-    over = scene.solve_seeded(above_place, rotation, seeds, open_f)
+    over = scene.solve_seeded(above_place, rotation, seeds, holding_f)
     if over is None:
         raise PlanningError('no IK above the support')
-    high = _high_vias(scene, above_place, rotation, over, open_f)
+    high = _high_vias(scene, above_place, rotation, over, holding_f)
     vias = [{n: s[n] for n in spec.arm_joints} for s in seeds[1:]]
-    stages = [dict(stage='over_support', waypoints=scene.joint_route(current, over, vias, open_f, high=high,
+    stages = [dict(stage='over_support', waypoints=scene.joint_route(current, over, vias, holding_f, high=high,
                                                                       allow_fingers=True),
                    fingers=closed)]
-    lower = scene.straight_line(over, place_point, rotation, open_f, allow_fingers=True,
+    lower = scene.straight_line(over, place_point, rotation, holding_f, allow_fingers=True,
                                 allow_supports=(support.name,))
     stages.append(dict(stage='lower', waypoints=lower, fingers=closed))
     stages.append(dict(stage='release', waypoints=[dict(lower[-1])], fingers=open_f))
@@ -573,7 +600,7 @@ def plan_pick_place(scene: ArmScene, current: Dict[str, float], obj: Box, suppor
     from a fixed base: ``plan_pick`` then ``plan_place`` at the support's centre."""
     pick = plan_pick(scene, current, obj, approach=approach, lift=lift, seeds=seeds)
     place = plan_place(scene, pick['stages'][-1]['waypoints'][-1], obj, support, approach=approach, lift=lift,
-                       seeds=seeds)
+                       seeds=seeds, grasp_width=pick['grasp_width_m'])
     return dict(stages=pick['stages'] + place['stages'], grasp_width_m=pick['grasp_width_m'],
                 tool_yaw=pick['tool_yaw'], place_centre=place['place_centre'],
                 place_orientation=place['place_orientation'], grasp_point=pick['grasp_point'])

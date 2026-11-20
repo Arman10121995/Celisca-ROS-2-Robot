@@ -258,6 +258,12 @@ maps:
       - {id: arm_pick_place_lab, label: Cube}
       - {id: arm_pick_place_can, label: Upright cylinder}
       - {id: arm_pick_place_can_side, label: Cylinder on its side}
+  - id: mobile_fetch_lab
+    name: Mobile fetch lab
+    preferred: mobile_fetch_lab
+    members:
+      - {id: mobile_fetch_lab, label: Tall block for TIAGo}
+      - {id: mobile_fetch_lab_f100, label: Short block for F100}
   - id: mobile_manipulation_lab
     name: Mobile manipulation lab
     complete: true

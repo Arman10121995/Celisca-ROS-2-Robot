@@ -6,8 +6,11 @@ followers. The normal MuJoCo GUI Open/Close screen passes for `nav_empty`,
 and both variants completed small flange moves. Flange plans hold the
 gripper. Use the CAD-derived pad contacts and aperture curve when
 implementing loaded custody. The nominal grasp reference is fixed and
-pad depth varies with angle. The first isolated loaded fixture lost the
-block. Keep the scoped End session cleanup when
+pad depth varies with angle. The short-block Mobile fetch lab variant has
+a collision-checked private pickup path. Gate the experimental fetch on
+normal force on both pads and measured payload rise. The unloaded jaw and
+flange GUI screens pass. The isolated fixture established contact but did
+not lift the loose block. Keep the scoped End session cleanup when
 the ROS context is already closed. [F100 receipt](status/evidence/r143-pro630-f100-2026-11-20/README.md).
 
 November 20 lying cylinders: use the **Arm pick-and-place lab** map family

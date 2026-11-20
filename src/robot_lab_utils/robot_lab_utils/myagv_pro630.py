@@ -296,6 +296,7 @@ def attach_f100(base, articulation, source_root, mesh_dir):
     articulation['couplings'] = couplings
     articulation['grip_joints'] = [leader]
     articulation['grip_presets'] = {leader: {'open': high, 'close': low}}
+    articulation['grip_hold_squeeze'] = .025
     articulation['grip_aperture'] = {
         leader: [[sample['shaft_rad'], sample['gap_m']] for sample in grasp_reference['aperture_samples']]}
     articulation['grip_contact_geoms'] = {

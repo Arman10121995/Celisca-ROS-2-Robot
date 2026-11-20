@@ -845,6 +845,19 @@ maps:
       path: maps/mobile_fetch_lab/maps/map.yaml
     spawn: {x: 0.0, y: 0.0, yaw: 0.0, z: 0.0}
     notes: Mobile pick-carry-place fixture (R5.9) - robot at the origin facing +x, pickup_table (top 0.5 m) at (1.6, 0) with a loose 40 x 40 x 150 mm, 100 g block, drop_table at (0, 2.2); free body on MuJoCo and PyBullet. Lab fixture, not a calibrated workcell.
+  mobile_fetch_lab_f100:
+    gazebo:
+      world_name: mobile_fetch_lab_f100
+      world_package: robot_lab_maps
+      world_path: maps/mobile_fetch_lab_f100/worlds/mobile_fetch_lab_f100.world
+    mujoco:
+      xml_path: mjcf/mobile_fetch_lab_f100.xml
+    map:
+      has_2d_map: true
+      package: robot_lab_maps
+      path: maps/mobile_fetch_lab/maps/map.yaml
+    spawn: {x: 0.0, y: 0.0, yaw: 0.0, z: 0.0}
+    notes: Experimental F100 reach fixture with a 40 x 40 x 90 mm loose block 60 mm inside the pickup edge. Static occupancy matches the mobile fetch lab.
   arm_pick_place_lab:
     gazebo:
       world_name: arm_pick_place_lab

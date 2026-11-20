@@ -126,6 +126,17 @@ that midpoint as the opening changes. Robot Lab uses a 0.8 Nm motor cap,
 and additional backend missions remain open.
 [Pinned vendor source](https://github.com/elephantrobotics/mycobot_ros2/tree/b8176c264e583b073e1c4293c2edb1241b20e1aa/mycobot_pro/mycobotpro630_gazeboros2) · [MuJoCo evidence](../status/evidence/r143-pro630-f100-2026-11-20/README.md).
 
+#### Experimental fetch with the F100
+
+Select **Mobile fetch lab → Short block for F100**. Turn on **Enable
+experimental robot workflows**, run the F100 variant in **MuJoCo → Display**, and open
+**Mobile arm → Fetch**. Select `fetch_block` and `drop_table`. The
+candidate defaults to a 50 mm lift after reaching over the short block.
+It uses the measured pad loads and object motion to check the grasp, and
+stops if it loses custody on the way to the drop table. The variant uses
+the same saved occupancy grid as the original fetch lab because the
+tables and floor have the same geometry. Transport remains experimental.
+
 ## How control and sensing connect
 
 ```mermaid

@@ -1,0 +1,78 @@
+<?xml version="1.0" ?>
+<!-- F100 fetch fixture. Static tables and floor match mobile_fetch_lab.
+     The shorter 40 g block sits 60 mm inside the pickup edge. Reuse the
+     same saved occupancy grid. The loose block stays in the physics scene. -->
+<sdf version="1.7">
+  <world name="mobile_fetch_lab_f100">
+    <physics type="ode">
+      <max_step_size>0.002</max_step_size>
+    </physics>
+    <light name="sun" type="directional">
+      <cast_shadows>true</cast_shadows>
+      <pose>0 0 10 0 0 0</pose>
+      <diffuse>0.8 0.8 0.8 1</diffuse>
+      <specular>0.3 0.3 0.3 1</specular>
+      <direction>-0.3 0.2 -1</direction>
+    </light>
+    <model name="ground_plane">
+      <static>true</static>
+      <pose>0 0 -0.05 0 0 0</pose>
+      <link name="link">
+        <collision name="collision">
+          <geometry><box><size>8.0 8.0 0.1</size></box></geometry>
+          <surface><friction><ode><mu>1.0</mu><mu2>1.0</mu2></ode></friction></surface>
+        </collision>
+        <visual name="visual">
+          <geometry><box><size>8.0 8.0 0.1</size></box></geometry>
+          <material><ambient>0.55 0.55 0.5 1</ambient><diffuse>0.55 0.55 0.5 1</diffuse></material>
+        </visual>
+      </link>
+    </model>
+    <model name="pickup_table">
+      <static>true</static>
+      <pose>1.6 0.0 0.25 0 0 0</pose>
+      <link name="link">
+        <collision name="collision">
+          <geometry><box><size>0.6 1.0 0.5</size></box></geometry>
+          <surface><friction><ode><mu>0.9</mu><mu2>0.9</mu2></ode></friction></surface>
+        </collision>
+        <visual name="visual">
+          <geometry><box><size>0.6 1.0 0.5</size></box></geometry>
+          <material><ambient>0.45 0.35 0.25 1</ambient><diffuse>0.45 0.35 0.25 1</diffuse></material>
+        </visual>
+      </link>
+    </model>
+    <model name="drop_table">
+      <static>true</static>
+      <pose>0.0 2.2 0.25 0 0 0</pose>
+      <link name="link">
+        <collision name="collision">
+          <geometry><box><size>1.0 0.6 0.5</size></box></geometry>
+          <surface><friction><ode><mu>0.9</mu><mu2>0.9</mu2></ode></friction></surface>
+        </collision>
+        <visual name="visual">
+          <geometry><box><size>1.0 0.6 0.5</size></box></geometry>
+          <material><ambient>0.45 0.35 0.25 1</ambient><diffuse>0.45 0.35 0.25 1</diffuse></material>
+        </visual>
+      </link>
+    </model>
+    <model name="fetch_block">
+      <static>false</static>
+      <pose>1.36 0 0.545 0 0 0</pose>
+      <link name="link">
+        <inertial>
+          <mass>0.04</mass>
+          <inertia><ixx>3.233333333e-05</ixx><iyy>3.233333333e-05</iyy><izz>1.066666667e-05</izz><ixy>0</ixy><ixz>0</ixz><iyz>0</iyz></inertia>
+        </inertial>
+        <collision name="collision">
+          <geometry><box><size>0.04 0.04 0.09</size></box></geometry>
+          <surface><friction><ode><mu>1.0</mu><mu2>1.0</mu2></ode></friction></surface>
+        </collision>
+        <visual name="visual">
+          <geometry><box><size>0.04 0.04 0.09</size></box></geometry>
+          <material><ambient>0.85 0.2 0.15 1</ambient><diffuse>0.85 0.2 0.15 1</diffuse></material>
+        </visual>
+      </link>
+    </model>
+  </world>
+</sdf>

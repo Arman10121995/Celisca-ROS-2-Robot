@@ -124,7 +124,7 @@ Work top to bottom. Each line links to its task.
 | Order | Task | Remaining implementation (short) | State |
 |---|---|---|---|
 | I0 | [R14.2](#r142--elephant-robotics-myagv-pro) myAGV Pro | Done: Gazebo source variant plus portable roller variant driving in MuJoCo, PyBullet and Isaac; Nav2 measured in Gazebo and PyBullet | implemented |
-| I0a | [R14.3](#r143--elephant-myagv-pro-mobile-manipulator) Elephant mobile manipulator | Bare Pro630 drive and joints measured on MuJoCo/PyBullet/Isaac. 11-20: both variants completed GUI flange moves in MuJoCo. F100 has CAD pads and opening control. Loaded grasp, pick/place and mobile missions remain | partial |
+| I0a | [R14.3](#r143--elephant-myagv-pro-mobile-manipulator) Elephant mobile manipulator | Bare Pro630 drive and joints measured on MuJoCo/PyBullet/Isaac. Both variants completed GUI flange moves in MuJoCo. F100 opening measured, pad feedback and experimental short-block fetch implemented. Loaded grasp and transport acceptance remain | partial |
 | I0b | [R14.4](#r144--contributor-integration-course) Integration guide chapters | Done 2026-11-13: beginner course part 2 (chapters 9–12) in docs/learn and the GUI docs library; clean-host walkthrough remains | implemented |
 | I1 | [R13.2](#r132--vacuum-carpets-and-mopping) Vacuum carpets and mopping | Done 2026-11-10 (Gazebo mop + rug run passes) | implemented |
 | I2 | [R13.3](#r133--vacuum-camera-obstacle-recognition) Vacuum camera obstacles | Done-when met (ideal and learned). 11-17 retrain 3 installed (fewer pet/cable false positives, pet recall 54 → 60 %); learned zone job passes again (0 contacts, 0.286 m). Sock false positives remain; repeats/held-out room are V1 | implemented |
@@ -1705,10 +1705,15 @@ parking batch needs its own run. Details and evidence are in the
   `nav_empty`. The F100 also has separate pads derived from the vendor CAD,
   a nominal grasp frame and a millimetre opening command.
   [Guide](docs/tutorials/myagv-pro.md#use-the-f100-gripper-in-mujoco) · [GUI receipts](docs/status/evidence/r143-pro630-f100-2026-11-20/README.md).
-- **Remaining implementation:** aperture-aware grasp closure and measured
-  object custody for the F100, pick/place and the navigate–reach–grasp
-  pipeline. Extend the physical linkage to additional backends before
-  exposing those modes. The first loaded fixture lost the block.
+- **2026-11-20 fetch candidate:** MuJoCo Display with **Enable experimental
+  robot workflows** adds a pick/carry/place request for the short-block
+  variant of **Mobile fetch lab**. The plan uses the source pad frame and
+  calibrated jaw stroke. It requires bilateral load from the selected object,
+  an unsupported lift, and a supported release. The private pickup plan
+  passes. Loaded fixtures did not retain the object during lift.
+- **Remaining implementation:** stabilize contact during lifting, qualify
+  pick/carry/release, add Nav2 transport and port the physical linkage to
+  additional backends.
 - **How to do it:** preserve the vendor flange and follower transforms, one
   shaft effort budget and the real measured linkage. Build on the existing
   source planner and R5.9 grasp/release contract.
