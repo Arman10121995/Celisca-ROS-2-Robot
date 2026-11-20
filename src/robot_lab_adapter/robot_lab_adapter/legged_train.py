@@ -112,7 +112,7 @@ def train(args):
         init_layers = read_onnx_mlp(args.init_onnx)
         hidden = tuple(int(w.shape[0]) for w, _ in init_layers[:-1])
     agent = PPO(env.obs_dim, env.act_dim, args.envs, args.steps, device=args.device,
-                learning_rate=args.learning_rate, hidden=hidden, entropy=args.entropy,
+                learning_rate=args.learning_rate, hidden=hidden, entropy=args.entropy, desired_kl=args.desired_kl,
                 normalize=init_layers is None)
     if init_layers is not None:
         permutation = None
@@ -121,7 +121,7 @@ def train(args):
             permutation = input_permutation(env.act_dim)
         agent.init_actor(init_layers, permutation, std=args.init_std)
     run = dict(robot=args.robot, task=args.task, envs=args.envs, steps=args.steps,
-               iterations=args.iterations, learning_rate=args.learning_rate, seed=args.seed,
+               iterations=args.iterations, learning_rate=args.learning_rate, desired_kl=args.desired_kl, seed=args.seed,
                episode_s=args.episode_s, randomize=bool(args.randomize), terrain=args.terrain,
                roughness=args.roughness, obs_noise=args.obs_noise, latency_ms=args.latency_ms, obs_dim=env.obs_dim, act_dim=env.act_dim, hidden=list(hidden),
                height_scan=bool(args.height_scan), riser_start=args.riser_start,
@@ -279,6 +279,8 @@ def main(argv=None):
     t.add_argument('--steps', type=int, default=24, help='policy steps per environment per iteration')
     t.add_argument('--learning-rate', type=float, default=1e-3)
     t.add_argument('--entropy', type=float, default=0.01)
+    t.add_argument('--desired-kl', type=float, default=0.01,
+                   help='adaptive learning-rate KL target; 0 keeps --learning-rate fixed (gentle warm-start fine-tunes)')
     t.add_argument('--seed', type=int, default=1)
     t.add_argument('--episode-s', type=float, default=20.0)
     t.add_argument('--threads', type=int, default=0, help='MuJoCo rollout threads (0: CPUs - 2)')

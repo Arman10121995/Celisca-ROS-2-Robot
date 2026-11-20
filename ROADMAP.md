@@ -355,6 +355,10 @@ parking batch needs its own run. Details and evidence are in the
   the first actor updates (r3 and r4); the vendor policy lasts only 4–6 s per episode under
   random commands in the training environment.
   [Receipt](docs/status/evidence/r53-bhl-training-2026-11-15/README.md).
+- **2026-11-20 (not passed):** a fixed-rate fine-tune (`--desired-kl 0`, lr 3e-5, std 0.05; r5) still
+  collapses at the first actor update (KL ~1000). Corrected reading: the vendor policy turns the right
+  way in the training environment (+1.0 rad in 12 s at +0.3) and stalls at −0.3 as in deployment, so the
+  environment reproduces the problem ([receipt](docs/status/evidence/r53-bhl-finetune-2026-11-20/README.md)).
 - **Done when:** a held ±0.3 rad/s turn and a sustained walk track their
   commands in MuJoCo, with no stall.
 - **Validation later:** Gazebo/Isaac transfer; terrain (V4).
