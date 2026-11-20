@@ -328,6 +328,13 @@ def test_mobile_node_labels_the_section_as_fetch(panel, model):
     assert panel.pick_run_button.instate(['disabled'])
     assert not panel.run_pick_place()
     panel.pick_pub.publish.assert_not_called()
+    panel.receive_pick_place(SimpleNamespace(data=json.dumps(dict(state, ready=False,
+        feedback_blocker='Waiting for measured base pose on /odom/ground_truth'))))
+    panel.update_pick_place()
+    assert panel.pick_run_button.instate(['disabled'])
+    assert 'base pose' in panel.pick_status.get()
+    assert not panel.run_pick_place()
+    panel.pick_pub.publish.assert_not_called()
     panel.receive_pick_place(SimpleNamespace(data=json.dumps(dict(state, mobile=False))))
     panel.update_pick_place()
     assert panel.pick_run_button.cget('text') == 'Run pick / place'

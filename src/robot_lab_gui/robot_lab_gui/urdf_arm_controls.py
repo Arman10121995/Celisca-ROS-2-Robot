@@ -348,6 +348,9 @@ class UrdfArmControls(MolarControls):
         if self.pick_state.get('restart_required'):
             self.pick_status.set(self.pick_state['message'])
             return False
+        if self.pick_state.get('ready') is False:
+            self.pick_status.set(self.pick_state.get('feedback_blocker', 'Waiting for measured pick feedback.'))
+            return False
         lift = finite(self.pick_lift.get())
         if not .03 <= lift <= .25 or self.pick_object.get() not in self.pick_state.get('objects', []) \
                 or self.pick_support.get() not in self.pick_state.get('supports', []):
@@ -392,13 +395,16 @@ class UrdfArmControls(MolarControls):
         if self.pick_frame.cget('text') != title:
             self.pick_frame.configure(text=title)
             self.pick_run_button.configure(text='Run fetch' if mobile else 'Run pick / place')
-        can_start = fresh and idle and not state.get('restart_required') and self.ready()
+        can_start = (fresh and idle and not state.get('restart_required')
+                     and state.get('ready', True) and self.ready())
         self.pick_run_button.state(['!disabled'] if can_start else ['disabled'])
         self.pick_stop_button.state(['!disabled'] if fresh and not idle else ['disabled'])
         if not self.pick_supported():
             self.pick_status.set('This profile has no pick_place description.')
         elif not fresh:
             self.pick_status.set('Waiting for the pick-and-place node.')
+        elif idle and state.get('feedback_blocker') and not state.get('restart_required'):
+            self.pick_status.set(state['feedback_blocker'])
         else:
             text = '%s: %s' % (state.get('phase'), state.get('message'))
             result = state.get('last_result') or {}

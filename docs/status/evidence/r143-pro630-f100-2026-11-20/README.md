@@ -56,7 +56,9 @@ The private MuJoCo scene finds an open, approach, descend, close and lift
 path at the 0.47 m standoff. This establishes kinematic feasibility.
 The first GUI attempt refused to start after private model import made
 its cached odometry stale. The pick/place node now compiles the private
-model during startup before subscribing. [Private planner output](short-block-private-plan.txt).
+model during startup before subscribing. The GUI waits for the feedback
+the node needs before enabling the fetch button.
+[Private planner output](short-block-private-plan.txt).
 
 ## Source and retained diagnostics
 

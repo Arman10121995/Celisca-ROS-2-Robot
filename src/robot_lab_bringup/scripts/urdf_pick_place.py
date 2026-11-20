@@ -326,8 +326,19 @@ class PickPlace(Node):
     def measured(self):
         return {c['name']: c['measured'] for c in self.state.get('channels', []) if c.get('measured') is not None}
 
+    def _feedback_blocker(self):
+        now = _now()
+        if not self.state.get('initialized') or self.state.get('fault') or now-self.state_at > STATE_STALE:
+            return 'Waiting for fresh articulation feedback'
+        if self.spec.pad_geoms and 'grip_contacts' not in self.state:
+            return 'Waiting for measured grasp pad contact feedback'
+        if self.mobile and (self.base_pose is None or now-self.base_at > STATE_STALE):
+            return 'Waiting for measured base pose on /odom/ground_truth'
+        return ''
+
     def _publish_state(self):
         task = self.task or {}
+        blocker = self._feedback_blocker()
         self.state_pub.publish(String(data=json.dumps(dict(
             schema='robot_lab.pick_place_state.v1',
             phase='stopping' if self.stopping_nav else task.get('phase', 'idle'), stage=task.get('stage'),
@@ -336,6 +347,7 @@ class PickPlace(Node):
             rgbd_objects=sorted(self.rgbd_bindings), pose_source=task.get('pose_source'), drive_phase=(task.get('phases') or [{}])[task.get('phase_index', 0)].get('name')
             if task else None,
             restart_required=not task and self.carried_footprint is not None,
+            ready=not blocker, feedback_blocker=blocker,
             last_result=self.last_result, truth_age_s=round(_now() - self.truth_at, 2) if self.truth else None),
             default=_plain)))
 
@@ -370,10 +382,8 @@ class PickPlace(Node):
             raise ValueError('no fresh truth for object %r' % name)
         if support_name not in self.supports:
             raise ValueError('unknown support %r (have %s)' % (support_name, sorted(self.supports)))
-        if not self.state.get('initialized') or self.state.get('fault') or _now() - self.state_at > STATE_STALE:
-            raise ValueError('articulation not ready: %s' % self.state.get('status'))
-        if self.spec.pad_geoms and 'grip_contacts' not in self.state:
-            raise ValueError('Wait for measured grasp pad contact feedback')
+        if blocker := self._feedback_blocker():
+            raise ValueError(blocker)
         measured = self.measured()
         missing = [n for n in self.spec.arm_joints + self.spec.finger_joints if n not in measured]
         if missing:
@@ -404,8 +414,6 @@ class PickPlace(Node):
             task['phases'] = [dict(kind='arm', name='pick_place')]
             self._plan_arm(task, task['phases'][0])
             return task
-        if self.base_pose is None or _now() - self.base_at > STATE_STALE:
-            raise ValueError('no fresh base pose on /odom/ground_truth')
         table = self._table_under(name)
         if table is None:
             raise ValueError('object %r is not resting on a known table' % name)
