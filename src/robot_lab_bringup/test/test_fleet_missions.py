@@ -172,7 +172,9 @@ def test_traffic_yield_retains_original_task_and_waits_for_older_peer():
     positions = dict(alpha=Neighbor('alpha', -.44, 0., math.pi, 0., .118),
                      beta=Neighbor('beta', 0., 0., 0., 0., .18))
     node._neighbor = lambda m: positions[m.name]
-    node._grid = SimpleNamespace(resolution=.1, clear=lambda *args: True)
+    node._observed_floor = lambda *args: None
+    node._goal_grid = lambda *args: SimpleNamespace(resolution=.1, clear=lambda *args: True)
+    node._goal = lambda goal, *args: goal
     node._same_floor = lambda first, second: True
     FleetController._traffic_recovery_tick(node, 10., dict(alpha=True, beta=True))
     FleetController._traffic_recovery_tick(node, 13., dict(alpha=True, beta=True))

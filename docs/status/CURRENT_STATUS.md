@@ -1,5 +1,12 @@
 # Current Robot Lab status
 
+November 20 Codex: Fleet goals now stay bound to the member's acknowledged
+floor map. Nearest-idle allocation and coverage account for floor boundaries,
+and the Fleet GUI displays the confirmed floor. Shared-world Fortress servers
+and clients also inherit the launch lifetime. 78 focused checks passed, two
+skipped, and three packages built. Mixed-floor missions and full simulator
+shutdown remain experimental. [Fleet guide](../tutorials/fleet-infrastructure.md).
+
 November 20 Codex: [MOLAR fleet cargo](evidence/r11-molar-fleet-cargo-2026-11-20/README.md)
 adds an optional loose 0.5 kg box and a measured on-deck motion interlock
 to the Fleet editor. One run boards the Gazebo lift with the box retained

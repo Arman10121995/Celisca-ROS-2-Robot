@@ -80,6 +80,15 @@ landing/car walls and unknown space outside physical support. The frame tree is
 infrastructure places the floor frame vertically; **AMCL alone** supplies the
 planar localization transform. Truth XY/yaw never replace AMCL. Existing worlds
 without declared floors keep their original `map -> <member>/odom` tree.
+
+The member status shows its confirmed navigation floor. **Dispatch goal**
+uses that member's current floor and footprint. For **Nearest idle**, select
+one member to choose its floor. If the goal is clear on multiple eligible
+floors, choose a floor before allocating. Coverage requires all selected
+members to share one confirmed floor map. Queued goals retain their floor and
+wait for the corresponding map before Nav2 dispatch. Use **Facility** to
+change floors between routes.
+
 **Transport selected robot** reserves one idle Nav2 member and the lift,
 approaches, boards, rides, changes maps and exits. Stop cancels the task.
 A full automatic Bumperbot L0-L1-L0 is [measured](../status/evidence/automatic-floor-transport-2026-11-02/README.md);

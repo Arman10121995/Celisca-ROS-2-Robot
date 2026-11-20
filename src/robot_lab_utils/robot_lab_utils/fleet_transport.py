@@ -89,7 +89,9 @@ class LiftTransport:
         self._phase(phase, now, 'Waiting for actual Nav2 and independently settled ' + phase)
         self.route_id = self.prefix + '-' + phase
         self.acknowledged = False
-        return dict(kind='route', request_id=self.route_id, goal=dict(goal, timeout=self.budgets['route_timeout_s']))
+        floor = self.destination if phase in ('exiting', 'parking') else self.origin
+        return dict(kind='route', request_id=self.route_id,
+                    goal=dict(goal, timeout=self.budgets['route_timeout_s'], floor=floor))
 
     def landing(self, floor, exiting):
         # Optional exit goals: a member that cannot turn on a landing leaves

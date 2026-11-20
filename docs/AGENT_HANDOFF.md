@@ -1,5 +1,13 @@
 # Agent Handoff Protocol
 
+November 20 fleet floor binding: keep each queued goal's floor, the
+independently observed body floor, and the acknowledged Nav2 map in agreement.
+The RMF adapter tags graph waypoints and native transport binds approach and
+exit routes to their authored floors. Match coverage members by floor and map.
+Keep `ign gazebo -s` and `-g` as separate directly parent-bound processes in
+shared-world launch. Offline floor and actual subprocess checks pass. A new
+live mixed-floor trial remains pending.
+
 November 20 MOLAR cargo: the Fleet GUI option spawns a loose reference
 box on the stowed deck. Preserve the measured retention gate and restart
 requirement after loss; do not move the deck from under the box with a

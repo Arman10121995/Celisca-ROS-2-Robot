@@ -40,13 +40,17 @@ from robot_lab_utils.fleet_cargo import DECK_FRAME, retention
 from robot_lab_utils.fleet_building_graph import approach_boarding_heading, cabin_exit_heading, lift_graph_poses
 from robot_lab_utils.fleet_motion import (Neighbor, angle, scan_guard, separation_guard, swarm_velocities,
                                           turn_away_from_nearest)
-from robot_lab_utils.fleet_session import finite, ID_PATTERN, MEMBER_MODELS
+from robot_lab_utils.fleet_session import finite, ID_PATTERN, MEMBER_MODELS, SpawnGrid
 from robot_lab_utils.fleet_missions import MissionHistory, coverage_plan, enqueue, mission, settled, traffic_yield_goal
 from robot_lab_utils.fleet_zones import PLAN_FRESH_S, ZoneArbiter, declared_zones, narrow_passages
 from robot_lab_utils.swarm_behaviours import BEHAVIOURS, LocalBehaviour
 from robot_lab_utils.swarm_coverage import SensedCoverage, reachable_from, redistribute
 
 LIFT_TURN_FIELDS = ('cabin_turn_floor', 'approach_turn_floor')
+
+
+class FloorUnavailable(ValueError):
+    """The member has no matching observed floor and acknowledged map."""
 
 
 def yaw(q):
@@ -222,6 +226,8 @@ class FleetController(Node):
         self.infrastructure_holds=set();self.infrastructure_at=-math.inf
         self.infrastructure_reservations = {}
         self.infrastructure_floors = {}
+        self.infrastructure_maps = {}
+        self._goal_grids = {}
         if self.session.get('infrastructure_file'):
             self.create_subscription(String,'/fleet/infrastructure/state',self._infrastructure,10)
         self.create_subscription(ClockMessage, '/clock', self._observe_clock, qos_profile_sensor_data)
@@ -293,7 +299,11 @@ class FleetController(Node):
             spots = [spot for spot in wait['holding'] if math.hypot(spot['x'] - body.x, spot['y'] - body.y) < 4.]
             if spots:
                 spot = min(spots, key=lambda s: math.hypot(s['x'] - body.x, s['y'] - body.y))
-                member.queue.insert(0, mission(dict(spot, timeout=60., not_before=0.), 'zone_hold'))
+                try:
+                    holding = self._goal(dict(spot, timeout=60.), member, original['goal'].get('floor'))
+                    member.queue.insert(0, mission(holding, 'zone_hold'))
+                except ValueError:
+                    spots = []
             member.queue_paused, member.mode = False, 'waiting'
             self._event('zone_wait', member=name, zone=wait['zone'], holder=wait['holder'], entry_m=wait['entry_m'],
                         suspended_task=original['task'], holding=bool(spots))
@@ -503,22 +513,18 @@ class FleetController(Node):
                 raise ValueError('Select distinct session member ids')
             targets = [self.members[name] for name in ids]
             reserved = getattr(self, 'infrastructure_reservations', {})
-            if op in ('allocate', 'coverage') and not ids and reserved:
+            if op == 'coverage' and not ids and reserved:
                 raise ValueError('Lift transport reserves a fleet member; select other members explicitly')
             for name in ids:
-                if name in reserved and op not in ('stop', 'pause', 'reset', 'leave'):
+                if name in reserved and op not in ('allocate', 'stop', 'pause', 'reset', 'leave'):
                     tag = data.get('request_id', '')
                     if op != 'route' or not isinstance(tag, str) or not tag.startswith(reserved[name] + '-'):
                         raise ValueError('Member is reserved for lift transport; Stop cancels it')
             if op == 'swarm':
                 self._start_swarm(data, targets)
             elif op in ('dispatch', 'allocate'):
-                goal = self._goal(data)
                 if op == 'allocate':
-                    candidates = [m for m in self.members.values() if m.mode == 'idle' and m.included and self._fresh(m, time.monotonic())]
-                    if not candidates:
-                        raise ValueError('No idle member with fresh measured state')
-                    targets = [min(candidates, key=lambda m: math.hypot(self._neighbor(m).x - goal['x'], self._neighbor(m).y - goal['y']))]
+                    targets = [self._nearest_idle(data, targets)]
                 if not targets:
                     raise ValueError('Select a member for dispatch')
                 if len(targets) != 1:
@@ -526,7 +532,10 @@ class FleetController(Node):
                 for member in targets:
                     if member.mode not in ('idle', 'navigation', 'dispatching', 'settling', 'waiting', 'paused'):
                         raise ValueError('Stop manual/swarm/reset ownership before queuing navigation')
-                    item = mission(goal)
+                    floor = self._observed_floor(member)
+                    if 'floor' in data and data['floor'] != floor:
+                        raise ValueError('Requested floor does not match the selected member')
+                    item = mission(self._goal(data, member, floor))
                     enqueue(member.queue, item)
                     if member.mode == 'idle' and not member.queue_paused:
                         member.mode = 'waiting'
@@ -545,14 +554,16 @@ class FleetController(Node):
                     raise ValueError('Route requires a bounded request identity')
                 if not isinstance(route, list) or not 1 <= len(route) <= 64:
                     raise ValueError('A route requires 1–64 goals')
-                items = [mission(self._goal(g), 'route:' + tag) for g in route]
                 member = targets[0]
+                items = [mission(self._goal(g, member), 'route:' + tag) for g in route]
+                if len({item['goal'].get('floor') for item in items}) > 1:
+                    raise ValueError('One Nav2 route cannot span floors; request a lift transport between routes')
                 for supplied, item in zip(route, items):
                     markers = [key for key in LIFT_TURN_FIELDS if key in supplied]
                     if markers:
                         marker = markers[0]
                         floor = supplied[marker]
-                        if (len(markers) != 1 or not isinstance(floor, str) or floor not in self.session.get('floor_maps', {})
+                        if (len(markers) != 1 or not isinstance(floor, str) or floor != item['goal'].get('floor')
                                 or not self.operator.startswith('rmf-') or not tag.startswith('rmf-')):
                             raise ValueError('Lift turns require an owned RMF facility route and one declared station')
                         item['goal'][marker] = floor
@@ -624,7 +635,57 @@ class FleetController(Node):
             self._event('command_rejected', reason=str(exc))
             self.get_logger().warning('Fleet command rejected: ' + str(exc))
 
-    def _goal(self, data):
+    def _observed_floor(self, member, now=None):
+        maps = member.config.get('floor_maps') or {}
+        if not maps:
+            return None
+        now = time.monotonic() if now is None else now
+        floor = self.infrastructure_floors.get(member.name)
+        if (not isinstance(floor, str) or floor not in maps or now-self.infrastructure_at >= .6
+                or member.name in self.infrastructure_holds
+                or self.infrastructure_maps.get(member.name) != maps[floor]):
+            raise FloorUnavailable('Wait for the observed floor and its loaded map for ' + member.name)
+        return floor
+
+    def _goal_grid(self, member, floor):
+        maps = member.config.get('floor_maps') or {}
+        if maps and (not isinstance(floor, str) or floor not in maps):
+            raise ValueError('Choose a declared navigation floor for ' + member.name)
+        if not maps and floor is not None:
+            raise ValueError('This session has no floor-specific maps')
+        path = maps[floor] if maps else self.session['map_yaml']
+        if path not in self._goal_grids:
+            self._goal_grids[path] = SpawnGrid(path)
+        return self._goal_grids[path]
+
+    def _nearest_idle(self, data, selected):
+        now = time.monotonic()
+        floor = data.get('floor')
+        if floor is None and len(selected) == 1:
+            floor = self._observed_floor(selected[0], now)
+        candidates = []
+        for member in self.members.values():
+            if (member.mode != 'idle' or member.queue or not member.included
+                    or not self._fresh(member, now) or not self._cargo_ready(member)
+                    or member.name in self.infrastructure_reservations):
+                continue
+            try:
+                actual_floor = self._observed_floor(member, now)
+                if floor is not None and floor != actual_floor:
+                    continue
+                goal = self._goal(data, member, actual_floor)
+            except ValueError:
+                continue
+            pose = self._neighbor(member)
+            distance = math.hypot(pose.x-goal['x'], pose.y-goal['y'])
+            candidates.append((actual_floor, distance, member))
+        if not candidates:
+            raise ValueError('No idle member with a current floor map and clearance to this goal')
+        if len({candidate[0] for candidate in candidates}) > 1:
+            raise ValueError('Select a member to choose the floor for nearest-idle allocation')
+        return min(candidates, key=lambda candidate: (candidate[1], candidate[2].name))[2]
+
+    def _goal(self, data, member, floor=None):
         if not self.session['navigation']:
             raise ValueError('Enable per-instance AMCL/Nav2 before Run')
         goal = {key: finite(data[key], 'goal ' + key) for key in ('x', 'y', 'yaw')}
@@ -636,12 +697,14 @@ class FleetController(Node):
         if not 0 <= not_before <= (self.last_clock or 0.) + 600.:
             raise ValueError('Route departure must be within the next 600 simulation seconds')
         goal['not_before'] = not_before
-        # A robot cannot be allocated to an unknown/occupied map cell.
-        from robot_lab_utils.fleet_session import SpawnGrid
-        if not hasattr(self, '_grid'):
-            self._grid = SpawnGrid(self.session['map_yaml'])
-        if not self._grid.clear(goal['x'], goal['y'], max(m.config['radius'] for m in self.members.values()) + .05):
-            raise ValueError('Goal is not inside known free occupancy with body clearance')
+        if floor is None:
+            floor = data['floor'] if 'floor' in data else self._observed_floor(member)
+        grid = self._goal_grid(member, floor)
+        if not grid.clear(goal['x'], goal['y'], member.config['radius']+.05):
+            raise ValueError('Goal is outside known free occupancy with body clearance' +
+                             (' on '+floor if floor else ''))
+        if floor is not None:
+            goal['floor'] = floor
         return goal
 
     def _dispatch(self, member, goal, item=None):
@@ -649,6 +712,8 @@ class FleetController(Node):
             raise ValueError('Wait for the previous Nav2 action to finish/cancel: ' + member.name)
         if not self._fresh(member, time.monotonic()) or not self._nav_ready(member, time.monotonic()):
             raise ValueError('Fresh localization/sensors and actual Nav2 server required: ' + member.name)
+        if goal.get('floor') != self._observed_floor(member):
+            raise FloorUnavailable('Queued goal belongs to a different floor; use lift transport before dispatch')
         client = member.action
         if any(key in goal for key in LIFT_TURN_FIELDS):
             request = self._lift_turn(member, goal)
@@ -803,13 +868,13 @@ class FleetController(Node):
         if not targets or any(m.mode != 'idle' or m.queue or m.active_item or m.handle or m.sending
                               or not m.included or not self._fresh(m, time.monotonic()) for m in targets):
             raise ValueError('Coverage requires fresh included idle members with empty queues')
-        from robot_lab_utils.fleet_session import SpawnGrid
-        grid = SpawnGrid(self.session['map_yaml'])
+        floor, grid = self._coverage_grid(targets)
         members = [dict(id=m.name, x=self._neighbor(m).x, y=self._neighbor(m).y,
                         radius=m.config['radius']) for m in targets]
         plan = coverage_plan(grid, members, (data['x'], data['y']), data['width'], data['height'], data['spacing'])
         # Validate the complete plan before changing any member's ownership.
-        checked = {name: [mission(self._goal(goal), 'coverage') for goal in goals] for name, goals in plan.items()}
+        checked = {name: [mission(self._goal(goal, self.members[name], floor), 'coverage') for goal in goals]
+                   for name, goals in plan.items()}
         for member in targets:
             member.queue.extend(checked[member.name])
             member.queue_paused = False
@@ -817,6 +882,13 @@ class FleetController(Node):
         self.coverage_group = dict(targets=[m.name for m in targets], loss_policy=loss_policy(data))
         self._event('coverage_planned', targets=plan, loss_policy=self.coverage_group['loss_policy'],
                     scope='Clearance-aware sweep waypoints; actual completion is reported per task')
+
+    def _coverage_grid(self, targets):
+        floors = [self._observed_floor(member) for member in targets]
+        grids = [self._goal_grid(member, floor) for member, floor in zip(targets, floors)]
+        if any(floor != floors[0] or grid is not grids[0] for floor, grid in zip(floors, grids)):
+            raise ValueError('Coverage members must share one observed floor and loaded map')
+        return floors[0], grids[0]
 
     def _start_sensed(self, data, targets):
         """Coverage measured from scans: members go to the nearest unseen free cells."""
@@ -826,17 +898,15 @@ class FleetController(Node):
         if not targets or any(m.mode != 'idle' or m.queue or m.active_item or m.handle or m.sending
                               or not m.included or not self._fresh(m, now) for m in targets):
             raise ValueError('Sensed coverage requires fresh included idle members with empty queues')
-        from robot_lab_utils.fleet_session import SpawnGrid
-        if not hasattr(self, '_grid'):
-            self._grid = SpawnGrid(self.session['map_yaml'])
+        floor, grid = self._coverage_grid(targets)
         goal_fraction = finite(data.get('goal_fraction', .95), 'coverage goal fraction')
         if not .1 <= goal_fraction <= 1.:
             raise ValueError('Coverage goal fraction must be 0.1–1')
-        area = SensedCoverage(self._grid, (finite(data['x'], 'x'), finite(data['y'], 'y')), data['width'], data['height'],
+        area = SensedCoverage(grid, (finite(data['x'], 'x'), finite(data['y'], 'y')), data['width'], data['height'],
                               finite(data.get('sensor_range', 2.), 'sensor range'))
         self.sensed = dict(map=area, targets=[m.name for m in targets], initial=[m.name for m in targets], goal_fraction=goal_fraction,
                            loss_policy=loss_policy(data), goals={}, tasks={}, skipped=[], reachable={},
-                           integrated_at={}, started=now, finished=None)
+                           integrated_at={}, started=now, finished=None, floor=floor, grid=grid)
         for member in targets:
             member.queue_paused, member.mode = False, 'waiting'
         self._event('sensed_coverage_started', targets=self.sensed['targets'], area=area.area,
@@ -848,6 +918,15 @@ class FleetController(Node):
             return
         area, radius = task['map'], max(m.config['radius'] for m in self.members.values())
         names = [n for n in task['targets'] if n not in self.lost_members]
+        if names:
+            try:
+                floor, grid = self._coverage_grid([self.members[name] for name in names])
+                if floor != task['floor'] or grid is not task['grid']:
+                    raise ValueError('Sensed coverage floor or map changed')
+            except FloorUnavailable:
+                return
+            except ValueError as exc:
+                return self._finish_sensed(str(exc))
         for name in names:
             member = self.members[name]
             if fresh[name] and member.scan is not None and now - task['integrated_at'].get(name, -math.inf) >= .2:
@@ -884,7 +963,7 @@ class FleetController(Node):
             member = self.members[name]
             body = self._neighbor(member)
             if now - task['reachable'].get(name, (-math.inf, None))[0] > 10.:
-                task['reachable'][name] = (now, reachable_from(self._grid, (body.x, body.y), radius))
+                task['reachable'][name] = (now, reachable_from(task['grid'], (body.x, body.y), radius))
             held = ([goal for other, goal in task['goals'].items() if other != name and goal]
                     + [(x, y) for x, y, _ in task['skipped']])
             goal = area.next_goal((body.x, body.y), radius, held, task['reachable'][name][1])
@@ -893,7 +972,7 @@ class FleetController(Node):
                 member.reason = 'Sensed coverage: no reachable unseen cells left for this member'
                 continue
             try:
-                item = mission(self._goal(dict(goal, timeout=120.)), 'sensed_coverage')
+                item = mission(self._goal(dict(goal, timeout=120.), member, task['floor']), 'sensed_coverage')
             except ValueError as exc:
                 task['skipped'].append((goal['x'], goal['y'], now))
                 member.reason = 'Sensed coverage goal skipped: ' + str(exc)
@@ -1005,7 +1084,8 @@ class FleetController(Node):
                 member.queue.pop(0)  # Only remove after successful action submission.
             except (ValueError, RuntimeError) as exc:
                 member.reason = 'Queued task waiting: ' + str(exc)
-                if any(key in item['goal'] for key in LIFT_TURN_FIELDS) and now-item.setdefault('dispatch_wait_at', now) > 30.:
+                guarded = isinstance(exc, FloorUnavailable) or any(key in item['goal'] for key in LIFT_TURN_FIELDS)
+                if guarded and now-item.setdefault('dispatch_wait_at', now) > 30.:
                     member.queue.pop(0)
                     self._event('task_finished', member=member.name,
                                 **self.history.finish(item, 'failed', member.reason))
@@ -1041,19 +1121,10 @@ class FleetController(Node):
                 self._finish_task(member, 'failed', 'Traffic recovery limit reached; remaining queue held')
                 continue
             try:
-                floor=getattr(self,'infrastructure_floors',{}).get(member.name)
-                floor_map=member.config.get('floor_maps',{}).get(floor)
-                if floor_map:
-                    from robot_lab_utils.fleet_session import SpawnGrid
-                    if not hasattr(self,'_traffic_grids'):self._traffic_grids={}
-                    if floor_map not in self._traffic_grids:self._traffic_grids[floor_map]=SpawnGrid(floor_map)
-                    grid=self._traffic_grids[floor_map]
-                elif not hasattr(self, '_grid'):
-                    from robot_lab_utils.fleet_session import SpawnGrid
-                    self._grid = SpawnGrid(self.session['map_yaml'])
-                    grid=self._grid
-                else:grid=self._grid
+                floor = self._observed_floor(member, now)
+                grid = self._goal_grid(member, floor)
                 target = traffic_yield_goal(grid, robot, [p for _, p in peers])
+                target = self._goal(target, member, floor)
                 if len(member.queue) > 62:
                     raise ValueError('No queue capacity for a bounded traffic recovery')
             except ValueError as exc:
@@ -1171,6 +1242,13 @@ class FleetController(Node):
             member.lifecycle_future = member.lifecycle_client.call_async(GetState.Request())
 
     def _arrival_tick(self, member, now, fresh):
+        if 'floor' in member.goal:
+            try:
+                if member.goal['floor'] != self._observed_floor(member, now):
+                    self._finish_task(member, 'failed', 'Observed floor differs from the queued goal')
+                    return
+            except FloorUnavailable:
+                fresh = False
         truth = self._truth_row(member)
         observed = ((truth['x'], truth['y'], truth['yaw']) if truth else None)
         if fresh and truth and settled(member.goal, observed, truth['linear'], truth['angular']):
@@ -1351,6 +1429,7 @@ class FleetController(Node):
                 self.infrastructure_holds=set(data['held_members']);self.infrastructure_at=time.monotonic()
                 self.infrastructure_reservations = data.get('reservations', {})
                 self.infrastructure_floors = data.get('robot_floors', {})
+                self.infrastructure_maps = data.get('active_robot_maps', {})
                 floor = (data.get('lift') or {}).get('door_admitted_floor')
                 doors = [self.lift_door, self.landing_doors.get(floor)]
                 self.open_lift_floor = (floor if floor and self.lift_door and all(
@@ -1470,6 +1549,15 @@ class FleetController(Node):
                 message = Twist()
                 linear = angular = 0.
                 member.reason = self.cargo_fault or member.cargo_status.get('reason', 'Waiting for cargo pose')
+            goal_floor = (member.goal or {}).get('floor')
+            if goal_floor is not None and member.mode in ('navigation', 'dispatching'):
+                try:
+                    if self._observed_floor(member, now) != goal_floor:
+                        self._finish_task(member, 'failed', 'Observed floor differs from the active goal')
+                        message, linear, angular = Twist(), 0., 0.
+                except FloorUnavailable as exc:
+                    message, linear, angular = Twist(), 0., 0.
+                    member.reason = str(exc)
             member.publisher.publish(message)
             member.output = (linear, angular)
         if now - self.last_status >= .2:
@@ -1477,13 +1565,18 @@ class FleetController(Node):
             rows = []
             for member in self.members.values():
                 estimate = self._neighbor(member)
+                try:
+                    navigation_floor, map_ready = self._observed_floor(member, now), True
+                except FloorUnavailable:
+                    navigation_floor, map_ready = None, False
                 def age(stamp):
                     return round(now - stamp, 3) if math.isfinite(stamp) else None
                 rows.append(dict(id=member.name, model=member.config['model'], mode=member.mode, reason=member.reason,
                     included=member.included, ready=fresh[member.name] and self._cargo_ready(member),
                     cargo=member.cargo_status if member.config.get('cargo_config') else None,
                     limits=dict(linear=member.config['max_linear'], angular=member.config['max_angular']),
-                    navigation_ready=self.session['navigation'] and self._nav_ready(member, now),
+                    navigation_ready=self.session['navigation'] and map_ready and self._nav_ready(member, now),
+                    navigation_floor=navigation_floor,
                     estimate=dict(x=estimate.x, y=estimate.y, yaw=estimate.yaw) if estimate else None,
                     estimate_source=('AMCL transform + wheel feedback' if math.isfinite(member.localization_at) else 'waiting for AMCL; wheel feedback + spawn anchor')
                         if self.session['navigation'] else 'wheel feedback + spawn/reset anchor',

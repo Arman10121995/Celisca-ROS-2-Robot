@@ -449,7 +449,8 @@ class FleetTab(ttk.Frame):
                 position = f"({pose['x']:.2f}, {pose['y']:.2f})" if pose else 'waiting'
                 measured = f"truth ({truth['x']:.2f}, {truth['y']:.2f})" if truth else 'truth waiting'
                 command = member['command']
-                lines.append(f"{member['id']} [{member['model']}] {member['mode']} · {position} · {measured} · "
+                floor = f" · {member['navigation_floor']}" if member.get('navigation_floor') else ''
+                lines.append(f"{member['id']} [{member['model']}] {member['mode']}{floor} · {position} · {measured} · "
                              f"v={command['linear']:.2f}, ω={command['angular']:.2f} · queued {member.get('queued', 0)}\n  {member['reason']}")
                 if member.get('cargo'):
                     lines.append('  Cargo: ' + member['cargo']['reason'])
@@ -548,9 +549,14 @@ class FleetTab(ttk.Frame):
         self.stop_manual()
         try:
             data = {key: variable.get() for key, variable in self.goal.items()} if operation in ('dispatch', 'allocate') else {}
-            if operation == 'dispatch' and len(self._ids()) != 1:
+            ids = self._ids()
+            if operation == 'dispatch' and len(ids) != 1:
                 raise ValueError('Select one instance for this goal, or use Nearest idle allocation')
-            self._send(operation, **data)
+            if operation in ('dispatch', 'allocate') and len(ids) == 1:
+                selected = next(member for member in self.runtime['members'] if member['id'] == ids[0])
+                if selected.get('navigation_floor'):
+                    data['floor'] = selected['navigation_floor']
+            self._send(operation, targets=ids, **data)
         except (ValueError, tk.TclError) as exc:
             self.status.set(str(exc))
 

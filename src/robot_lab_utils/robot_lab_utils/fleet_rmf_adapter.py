@@ -58,6 +58,11 @@ class Robot(adpt.RobotCommandHandle):
                     self.update.log_error('Robot Lab requires a path of 1–64 waypoints')
                 return
             positions = [list(map(float, wp.position)) for wp in waypoints]
+            floors = [self.owner.waypoint_floors.get(wp.graph_index) for wp in waypoints]
+            known_floors = {floor for floor in floors if floor is not None}
+            # RMF can add an interpolated start or heading waypoint without
+            # a graph index. Keep it on the route's declared floor.
+            route_floor = next(iter(known_floors)) if len(known_floors) == 1 else None
             request_id = 'rmf-' + uuid.uuid4().hex
             self.request = dict(id=request_id, positions=positions, arrived=set(),
                 estimator=next_arrival_estimator, finished=path_finished_callback, sequence=self.sequence,
@@ -67,6 +72,9 @@ class Robot(adpt.RobotCommandHandle):
             for index, (waypoint, p) in enumerate(zip(waypoints, positions)):
                 goal = dict(x=p[0], y=p[1], yaw=p[2], timeout=180.,
                             not_before=self.request['departures'][index])
+                floor = floors[index] or route_floor
+                if floor is not None:
+                    goal['floor'] = floor
                 turn = self.owner.lift_turns.get(waypoint.graph_index)
                 if turn:
                     marker, floor, heading = turn
@@ -150,6 +158,7 @@ class RmfBridge(Node):
         super().__init__('robot_lab_rmf_bridge')
         self.session, self.adapter, self.graph, self.fleet = session, adapter, nav_graph, fleet
         self.vertices = vertices
+        self.waypoint_floors = {v['graph_index']: v['floor'] for v in vertices if 'floor' in v}
         self.lift_turns = {vertex['graph_index']: (marker, vertex['floor'], vertex[heading])
                            for vertex in vertices
                            for heading, marker in (('exit_heading', 'cabin_turn_floor'),

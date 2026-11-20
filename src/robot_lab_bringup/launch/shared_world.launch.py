@@ -21,6 +21,7 @@ import yaml
 
 def _setup(context):
     from robot_lab_utils.fleet_session import prepare_session
+    from robot_lab_utils.process_lifetime import parent_bound_command
     def value(name):
         return LaunchConfiguration(name).perform(context)
     def enabled(name):
@@ -51,11 +52,20 @@ def _setup(context):
     for key, item in environments.items():
         os.environ[key] = item  # ros_gz_sim's OpaqueFunction also reads the environment.
         actions.append(SetEnvironmentVariable(key, item))
-    server = ExecuteProcess(cmd=['ign', 'gazebo', '-r', '-v', '2',
-        *([] if enabled('gui') else ['-s', '--headless-rendering']), session['world'], '--force-version', '6'],
+    # Fortress forks separate process groups in combined mode. Start each
+    # executable directly so the launch owns its lifetime even after SIGKILL.
+    gui_enabled = enabled('gui')
+    world_args = [session['world'], '--force-version', '6']
+    server = ExecuteProcess(cmd=parent_bound_command('ign', 'gazebo', '-r', '-v', '2', '-s',
+        *([] if gui_enabled else ['--headless-rendering']), *world_args),
         sigterm_timeout='12', sigkill_timeout='3', output='screen')
     actions += [server, RegisterEventHandler(OnProcessExit(target_action=server,
         on_exit=[EmitEvent(event=Shutdown(reason='Shared-world Fortress server exited'))]))]
+    if gui_enabled:
+        client = ExecuteProcess(cmd=parent_bound_command('ign', 'gazebo', '-v', '2', '-g', *world_args),
+                                sigterm_timeout='12', sigkill_timeout='3', output='screen')
+        actions += [client, RegisterEventHandler(OnProcessExit(target_action=client,
+            on_exit=[EmitEvent(event=Shutdown(reason='Shared-world Fortress client exited'))]))]
     actions.append(Node(package='ros_gz_bridge', executable='parameter_bridge', name='fleet_sensor_bridge',
                         parameters=[{'config_file': session['bridge_file'], 'use_sim_time': True}], output='screen'))
     if session.get('infrastructure_file'):

@@ -1050,6 +1050,9 @@ parking batch needs its own run. Details and evidence are in the
 - **Have:** namespaced controllers, sensors and TF in one Gazebo world;
   per-instance and group Drive; scoped reset. Two overlapping Nav2 missions
   are measured. [Fleet guide](docs/tutorials/fleet-and-swarm.md).
+- **2026-11-20:** The shared-world Fortress server and optional client run as
+  separate launch-owned processes. A Linux subprocess check measures exit on
+  launcher loss. Multi-member simulator shutdown remains V7.
 - **Done when:** contacts, member loss/reset and shutdown are measured for
   3–8 members on each advertised backend.
 
@@ -1085,6 +1088,11 @@ parking batch needs its own run. Details and evidence are in the
   The energy certificates were re-bound after a system update changed the
   readback library (new readback case passes).
   [Receipt](docs/status/evidence/r102-fleet-ward-2026-11-18/README.md).
+- **2026-11-20 (implemented, experimental):** Goals, coverage, and traffic
+  recovery use the member's observed floor and matching acknowledged Nav2
+  map. Lift transport and RMF preserve floor identities on queued routes.
+  The Fleet GUI shows the confirmed navigation floor. Focused checks use
+  both authored `fleet_facility` grids. Live mixed-floor missions remain V7.
 - **Remaining implementation:** none known; larger fleets and RMF in other
   worlds are validation (V7).
 - **How to do it:** extend `fleet_controller.py`, `fleet_transport_queue.py`,

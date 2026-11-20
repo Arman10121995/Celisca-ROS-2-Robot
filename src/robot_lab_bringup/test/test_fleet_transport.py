@@ -123,7 +123,7 @@ def test_model_exit_goals_replace_landing_heading_only_when_exiting():
     task.phase = 'riding'
     state = context(task, (3.95, 0., 3.))
     state.update(car_floor='L1', floor='L1', door_open=True)
-    assert task.tick(state, 1.)[0]['goal'] == dict(x=2.1, y=0., yaw=3.141593, timeout=90.)
+    assert task.tick(state, 1.)[0]['goal'] == dict(x=2.1, y=0., yaw=3.141593, timeout=90., floor='L1')
     # Without exits the landing is the exit goal, as before.
     assert LiftTransport('alpha', 'operator', 'L0', 'L1', CONFIG, 0.).landing('L1', True) == CONFIG['landings']['L1']
 

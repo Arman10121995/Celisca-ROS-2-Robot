@@ -5,6 +5,7 @@ running hours later, all publishing /clock, /odom and /scan into the same
 ROS domain, so every new run saw several clocks and several robots.
 """
 import os
+import select
 import subprocess
 import sys
 import time
@@ -73,6 +74,36 @@ class ParentDeathTests(unittest.TestCase):
             with open("/proc/%d/stat" % child) as stat:
                 alive = stat.read().split()[2] != "Z"
         self.assertFalse(alive, "child outlived its parent")
+
+    def test_exec_target_exits_when_the_launcher_disappears(self):
+        utils = os.path.dirname(os.path.dirname(os.path.abspath(partition_reaper.__file__)))
+        program = (
+            "import subprocess, sys, time\n"
+            "from robot_lab_utils.process_lifetime import parent_bound_command\n"
+            "subprocess.Popen(parent_bound_command(sys.executable, '-c', "
+            "'import os,time; print(os.getpid(), flush=True); time.sleep(60)'))\n"
+            "time.sleep(60)\n"
+        )
+        inherit = os.environ.get('PYTHONPATH', '')
+        env = dict(os.environ, PYTHONPATH=os.pathsep.join(filter(None, [utils, inherit])))
+        parent = subprocess.Popen([sys.executable, '-c', program], env=env,
+                                  stdout=subprocess.PIPE, text=True)
+        try:
+            self.assertTrue(select.select([parent.stdout], [], [], 5.)[0], 'exec target did not start')
+            child = int(parent.stdout.readline())
+        finally:
+            parent.kill()
+            parent.wait(timeout=3.)
+        deadline = time.monotonic()+3.
+        while time.monotonic() < deadline:
+            try:
+                with open('/proc/%d/stat' % child) as stat:
+                    if stat.read().split()[2] == 'Z':
+                        return
+            except FileNotFoundError:
+                return
+            time.sleep(.02)
+        self.fail('exec target outlived its launcher')
 
 
 class FlightLifetimeTests(unittest.TestCase):
