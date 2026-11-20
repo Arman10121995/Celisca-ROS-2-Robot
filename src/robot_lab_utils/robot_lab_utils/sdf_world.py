@@ -184,7 +184,16 @@ def uri_resolver(model_dirs=(), package_share=None):
         if os.path.isabs(uri):
             return uri if os.path.exists(uri) else ""
         candidate = os.path.normpath(os.path.join(base_dir, uri))
-        return candidate if os.path.exists(candidate) else ""
+        if os.path.exists(candidate):
+            return candidate
+        # Like Gazebo's resource-path search: a relative file such as
+        # ``models/<name>/meshes/x.dae`` (AWS RoboMaker models) is also found
+        # under the root that holds a model directory (R6.5, 2026-11-20).
+        for directory in model_dirs:
+            candidate = os.path.normpath(os.path.join(os.path.dirname(os.path.normpath(directory)), uri))
+            if os.path.exists(candidate):
+                return candidate
+        return ""
     return resolve
 
 

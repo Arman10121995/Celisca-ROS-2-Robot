@@ -4515,6 +4515,11 @@ tasks:
           do not qualify remaining robot/map/backend missions. See docs/REMAINING_WORK_GUIDE.md.'
       R6.5:
         acceptance_ref: ROADMAP.md
+        small_house_projection_20261120: 'Claude: implemented. The occupancy generator searches the installed external dataset
+          model sets after the world''s own folders, and the SDF resolver finds relative files under a model root (Gazebo
+          resource-path search), so the repo small_house world (AWS RoboMaker furniture by model://) projects; its grid agrees
+          with dataset_small_house (occupied IoU 0.846, free IoU 0.949). The checked-in map is not replaced without review.
+          docs/status/evidence/r65-small-house-occupancy-2026-11-20/README.md'
         implementation_state: 2026-11-14 (Claude) free-region labelling from the collision mask (--regions seed|all, regions.json;
           nav_maze seed region matched the plugin flood fill, 322771 cells) and explicit reviewed-grid registration (map_registration.py,
           GUI) refusing changed files/world or a spawn outside free space.

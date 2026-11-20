@@ -76,6 +76,11 @@ def slice_mesh(shape,height,resolution):
 def prepare_mapping_world(source,destination,output,resolution,height,seed):
     maps=Path(get_package_share_directory('robot_lab_maps'))
     dirs=[str(p) for p in maps.glob('maps/*/models')]+[str(source.parent),str(source.parent.parent/'models')]
+    # Installed external world datasets keep their model sets on the SSD (e.g. the
+    # AWS RoboMaker residential furniture that the repo small_house world includes
+    # by model://; R6.5, 2026-11-20). They are searched after the world's own.
+    store=Path(os.environ.get('ROBOT_LAB_RUNTIME_ROOT','/workspace/molar/robot_lab_runtime'))/'external_assets'/'extracted'
+    dirs+=sorted(str(p) for p in store.glob('*/*/*/models') if p.is_dir())
     shapes,skipped=extract_static_shapes(str(source),uri_resolver(dirs,get_package_share_directory),collision_only=True)
     rejected=[s for s in skipped if not s.startswith('actor ')]
     if rejected:
@@ -159,7 +164,7 @@ def prepare_mapping_world(source,destination,output,resolution,height,seed):
         ET.SubElement(plugin,name).text=str(value)
     ET.ElementTree(root).write(destination,encoding='unicode',xml_declaration=True)
     return {'source_world':str(source),'source_sha256':hashlib.sha256(source.read_bytes()).hexdigest(),
-            'mesh_sha256':mesh_files,'mesh_slice_paths':len(mesh_paths),
+            'mesh_sha256':mesh_files,'mesh_slice_paths':len(mesh_paths),'model_search_dirs':dirs,
             'mesh_mask_cells':int(np.sum(np.asarray(mask)>0)),'collision_count':len(projected),
             'projection_recipe':'complete-static-height-slice-v4',
             'terrain_slice_polygons':len(terrain_polygons),

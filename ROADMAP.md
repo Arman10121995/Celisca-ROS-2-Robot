@@ -859,7 +859,8 @@ parking batch needs its own run. Details and evidence are in the
   (`map_registration.py`) that refuses changed files, a changed world or a
   spawn outside free space.
 - **Remaining implementation:** none for the two items; worlds with unresolved
-  external models (e.g. `small_house` AWS furniture) still cannot be projected.
+  external models: **done 2026-11-20** for `small_house` (AWS furniture resolved from the installed dataset; its grid agrees
+  with `dataset_small_house`, occupied IoU 0.846) ([receipt](docs/status/evidence/r65-small-house-occupancy-2026-11-20/README.md)).
 - **Done when:** primitive, rotated and furnished mesh worlds produce grids
   that agree with the geometry, and Nav2 uses them.
 
