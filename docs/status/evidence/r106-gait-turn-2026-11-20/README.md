@@ -63,7 +63,47 @@ against each other. This was true for all three models.
   with back-right), so the horizontal forces cancel. Its root stays at the
   spawn to float precision before and after the change.
 - **Centipede.** Its drift halves but remains. Its spine bends while
-  turning (−0.5 ω), and the leg arms do not model the bend.
+  turning (−0.5 ω), and the leg arms do not model the bend. The second
+  change below adds the bend.
+
+## Second change: legs on a bending spine
+
+The centipede's root (`base_link`) is its head. Five spine joints chain
+six segments 0.18 m apart, and each segment's legs have their foot targets
+in that segment's frame. The model now:
+
+- reads each leg root's planar path from the URDF root (fixed joints, and
+  spine joints about z; any other moving joint is refused);
+- places the root with this tick's commanded spine angles;
+- computes the root-frame stride, then turns it into the segment's frame.
+
+At a straight spine the chain gives the authored `body_offset` (tested).
+On the bent spine of a full-rate turn, measured with the true segment
+geometry, the previous model's stance strides were off a rigid rotation by
+up to 10.4 mm per step; the new model is within 0.2 mm.
+
+| Model / backend | Turned | Root moved |
+|---|---|---|
+| centipede / MuJoCo | 0.569 rad | 0.091 m (first change: 0.112 m) |
+| hexapod / MuJoCo (no spine) | 0.871 rad | 0.006 m (unchanged) |
+
+The centipede still drifts. It turns about its head, so its tail feet need
+strides 0.9 m long in arm. The common scale cuts every stride to about a
+quarter, and it executes 0.028 rad/s of the 0.15 commanded, which points
+to foot slip rather than kinematics. That remains for per-model tuning.
+
+Saved-map goals with both changes (MuJoCo, one run each):
+
+| World | Model | Result | End to goal | Heading | Earlier |
+|---|---|---|---|---|---|
+| `nav_obstacle`, open spawn (−3, 2.5) | **centipede** | **passed** | 0.113 m | 0.125 rad | 11-20: not passed (0.129 m, 0.172 rad off heading) |
+| `nav_obstacle`, open spawn | hexapod | passed | 0.123 m | 0.013 rad | 11-20: 0.128 m |
+| `nav_obstacle`, open spawn | octopod | passed | 0.097 m | 0.003 rad | 11-20: 0.099 m |
+| `nav_empty` | centipede | passed | 0.112 m | 0.048 rad | above: 0.110 m |
+
+This is the centipede's first passing goal in a second world. With one
+run per case, it cannot be credited to the spine change rather than to
+run-to-run spread.
 
 ## Measured: saved-map Nav2 goals (`qualify_gait_saved_map.py`, `nav_empty`, goal 0.5 m ahead, 0.15 m / 0.15 rad)
 
@@ -77,8 +117,9 @@ against each other. This was true for all three models.
 ## Limits
 
 - One run per case. The centipede's PyBullet mapping step (too slow on
-  11-20) and its `nav_obstacle` heading failure were not re-run.
-- The centipede's spine is not in the turn model.
+  11-20) and its `nav_obstacle` corner spawn (inside the no-go margin)
+  were not re-run.
+- The centipede's in-place turn still slips (0.091 m in 0.57 rad).
 - Isaac and Gazebo gait turns were not probed.
 
 ## Reproduce
@@ -89,7 +130,8 @@ GAIT_CASE_DIRECTORY=<new dir> GAIT_BACKEND=pybullet GAIT_ROBOT=hexapod_ros2 GAIT
 python3 scripts/qualify_gait_saved_map.py --output <new dir> --simulator pybullet --timeout 600 --robots hexapod_ros2
 ```
 
-`turn-*.json` are the probe results; the "before" runs are `turn-hexapod-*`
-(HEAD model) and `turn-old-*` (HEAD model on `PYTHONPATH`). Traces are on
+`turn-*.json` are the probe results. The "before" runs are `turn-hexapod-*`
+(the 11-20 HEAD model) and `turn-old-*` (the same model on `PYTHONPATH`);
+`turn-fixed-*` are the first change and `turn-spine-*` the second. Traces are on
 SSD under `robot_lab_runtime/gait-turn-20261120` (hashes in
 `runtime-sha256.txt`).

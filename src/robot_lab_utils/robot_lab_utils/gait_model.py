@@ -49,6 +49,7 @@ class GaitModel:
             self.indices[name]=slice(len(self.names),len(self.names)+3)
             for joint,value in zip(actual,leg['initial']):self._append(robot.joint_map[joint],value)
             self.home[name]=self.position(name,leg['initial'])
+        self.root_paths={leg['root']:self._planar_path(robot,leg['root']) for leg in self.legs}
         for spine in self.config.get('spines',[]):self._append(robot.joint_map[spine['joint']],0.)
         for name,value in self.config.get('passive_targets',{}).items():self._append(robot.joint_map[name],value)
         self.initial=np.array(self.initial);self.lower=np.array(self.lower);self.upper=np.array(self.upper)
@@ -64,6 +65,31 @@ class GaitModel:
         self.lower.append(joint.limit.lower);self.upper.append(joint.limit.upper)
         self.torque.append(min(float(joint.limit.effort),float(self.config['torque_limit'])))
         self.velocity.append(min(float(joint.limit.velocity),2.))
+
+    def _planar_path(self,robot,link):
+        """Joints from the URDF root to a leg's root link, as planar steps (x, y, yaw, moving joint)."""
+        spines={spine['joint'] for spine in self.config.get('spines',[])};steps=[]
+        while link!=robot.get_root():
+            joint_name,parent=robot.parent_map[link];joint=robot.joint_map[joint_name]
+            origin=joint.origin;xyz=origin.xyz if origin is not None and origin.xyz else [0.,0.,0.]
+            rpy=origin.rpy if origin is not None and origin.rpy else [0.,0.,0.]
+            moving=None
+            if joint.type!='fixed':
+                axis=joint.axis or [1.,0.,0.]
+                if joint_name not in spines or abs(abs(axis[2])-1.)>1e-6:
+                    raise ValueError('Leg root %s moves through a non-spine or non-vertical joint %s'%(link,joint_name))
+                moving=(joint_name,math.copysign(1.,axis[2]))
+            steps.append((float(xyz[0]),float(xyz[1]),float(rpy[2]),moving));link=parent
+        return steps[::-1]
+
+    def root_pose(self,link,spine_angles=None):
+        """Planar pose (origin, yaw) of a leg root link in the URDF root frame for the given spine angles."""
+        x=y=heading=0.
+        for ox,oy,oyaw,moving in self.root_paths[link]:
+            x+=math.cos(heading)*ox-math.sin(heading)*oy;y+=math.sin(heading)*ox+math.cos(heading)*oy
+            heading+=oyaw
+            if moving:heading+=moving[1]*float((spine_angles or {}).get(moving[0],0.))
+        return np.array([x,y]),heading
 
     @staticmethod
     def array(values):
@@ -107,17 +133,26 @@ class GaitModel:
         result=np.array(previous,dtype=float).copy();errors=[];planned={}
         yaw=self.config['forward_yaw'];c,s=math.cos(yaw),math.sin(yaw)
         body_velocity=np.array([c*vx-s*vy,s*vx+c*vy])
-        # The twist is the root frame's, as Nav2 and odometry read it: each
-        # foot moves with v + wz x r, r measured from the root origin. Turning
-        # about body_center instead (2026-11-20) swung hexapod_ros2's root,
-        # 0.163 m from its centre, 0.15 m per radian of an in-place turn.
+        spine_angles={}
+        for spine in self.config.get('spines',[]):
+            index=self.names.index(spine['joint'])
+            # Authored limited curvature plus a small propagated body wave.
+            result[index]=spine_angles[spine['joint']]=max(-.12,min(.12,-.5*wz+.015*math.sin(2*math.pi*(phase*spine_freq+spine_phase)-spine['index']*.6)))
+        # The twist is the URDF root frame's, as Nav2 and odometry read it:
+        # each foot moves with v + wz x r, r measured from the root origin.
+        # Turning about body_center instead (2026-11-20) swung hexapod_ros2's
+        # root, 0.163 m from its centre, 0.15 m per radian of an in-place
+        # turn. A leg on a spine segment gets its root's pose from this
+        # tick's spine angles and its stride turned into that segment's frame.
         # One scale for every stride keeps the foot motion rigid; clipping
         # each leg alone made the far feet slip against the near ones.
         strides={}
         for leg in self.legs:
             name=leg['id'];duty=self.offset(leg,gait)[1]
-            arm=self.home[name][:2]+np.array(leg.get('body_offset',[0.,0.]))
-            strides[name]=(body_velocity+wz*np.array([-arm[1],arm[0]]))*self.config['cycle_s']*duty
+            origin,heading=self.root_pose(leg['root'],spine_angles);c,s=math.cos(heading),math.sin(heading)
+            arm=origin+np.array([c*self.home[name][0]-s*self.home[name][1],s*self.home[name][0]+c*self.home[name][1]])
+            velocity=body_velocity+wz*np.array([-arm[1],arm[0]])
+            strides[name]=np.array([c*velocity[0]+s*velocity[1],-s*velocity[0]+c*velocity[1]])*self.config['cycle_s']*duty
         longest=max(np.linalg.norm(stride) for stride in strides.values())
         scale=min(1.,self.config['max_stride']/longest) if longest>0 else 1.
         for leg in self.legs:
@@ -136,8 +171,4 @@ class GaitModel:
                 planned[name]=False
             indices=self.indices[name];q,error=self.solve(name,target,previous[indices])
             result[indices]=q;errors.append(error)
-        for spine in self.config.get('spines',[]):
-            index=self.names.index(spine['joint'])
-            # Authored limited curvature plus a small propagated body wave.
-            result[index]=max(-.12,min(.12,-.5*wz+.015*math.sin(2*math.pi*(phase*spine_freq+spine_phase)-spine['index']*.6)))
         return result,max(errors),planned

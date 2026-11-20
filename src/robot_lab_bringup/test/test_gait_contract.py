@@ -136,37 +136,46 @@ def test_initial_floor_placement_excludes_robot_surfaces():
 
 
 def stance_offsets(model,command,phase=.1):
+    """Each stance foot's stride, and its root-origin arm, both in the URDF root frame."""
     q,error,planned=model.targets(phase,command,model.initial.copy(),model.config['default_gait'])
     assert error<.003
+    angles={spine['joint']:q[model.names.index(spine['joint'])] for spine in model.config.get('spines',[])}
     offsets={}
     for leg in model.legs:
         name=leg['id'];shift,duty=model.offset(leg,model.config['default_gait'])
         p=(phase+shift)%1
         if planned[name] and abs(.5-p/duty)>.1:
+            origin,heading=model.root_pose(leg['root'],angles)
+            rotation=np.array([[np.cos(heading),-np.sin(heading)],[np.sin(heading),np.cos(heading)]])
             foot=model.position(name,q[model.indices[name]])
-            offsets[name]=(foot[:2]-model.home[name][:2])/(.5-p/duty)
+            offsets[name]=(rotation@((foot[:2]-model.home[name][:2])/(.5-p/duty)),origin+rotation@model.home[name][:2])
     assert len(offsets)>=2
     return offsets
 
 
-def test_in_place_turn_is_a_rigid_rotation_about_the_root_origin(source):
-    """2026-11-20: hexapod_ros2 turned about its centre, swinging its root 0.15 m per radian."""
+def test_leg_roots_at_a_straight_spine_match_the_authored_offsets(source):
     name,description,model=source
-    for name,stride in stance_offsets(model,[0.,0.,model.config['max_yaw']]).items():
-        leg=next(l for l in model.legs if l['id']==name)
-        arm=model.home[name][:2]+np.array(leg.get('body_offset',[0.,0.]))
+    for leg in model.legs:
+        origin,heading=model.root_pose(leg['root'])
+        assert np.allclose(origin,leg.get('body_offset',[0.,0.]),atol=1e-6) and abs(heading)<1e-9
+
+
+def test_in_place_turn_is_a_rigid_rotation_about_the_root_origin(source):
+    """2026-11-20: hexapod_ros2 turned about its centre, swinging its root 0.15 m per radian;
+    the centipede's strides ignored its bent spine."""
+    name,description,model=source
+    rates=[]
+    for stride,arm in stance_offsets(model,[0.,0.,model.config['max_yaw']]).values():
         tangent=np.array([-arm[1],arm[0]])
         # Every stance stride is the same rotation rate times its root-origin arm.
         assert abs(float(np.cross(tangent,stride)))<2e-3*np.linalg.norm(tangent)
-        rate=float(stride@tangent)/float(tangent@tangent)
-        assert rate>0
-        assert 'common' not in locals() or abs(rate-common)<.02*common+1e-4
-        common=rate
-    assert np.linalg.norm(stride)<=model.config['max_stride']+1e-3
+        rates.append(float(stride@tangent)/float(tangent@tangent))
+        assert np.linalg.norm(stride)<=model.config['max_stride']+1e-3
+    assert min(rates)>0 and max(rates)-min(rates)<.02*max(rates)+1e-4
 
 
 def test_translation_strides_are_equal_for_every_leg(source):
     name,description,model=source
-    strides=list(stance_offsets(model,[model.config['max_speed'],0.,0.]).values())
+    strides=[stride for stride,arm in stance_offsets(model,[model.config['max_speed'],0.,0.]).values()]
     for stride in strides[1:]:
         assert np.allclose(stride,strides[0],atol=1e-3)

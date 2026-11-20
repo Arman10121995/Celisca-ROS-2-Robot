@@ -1,0 +1,51 @@
+[
+ {
+  "robot": "lab_centipede",
+  "map": "nav_empty",
+  "spawn": null,
+  "simulator": "mujoco",
+  "acquisition": {
+   "run": "/workspace/molar/robot_lab_runtime/gait-turn-20261120/spine-savedmap-mujoco/runs/97758ababbcf4cbc9db818752576e682",
+   "success": true,
+   "reason": "Actual travel and nonempty acquired map archived",
+   "map_yaml": "/workspace/molar/robot_lab_runtime/gait_sessions/lab_centipede-fbtazdoz/saved_maps/map-70448cef87/map.yaml",
+   "known_cells": 32925,
+   "start": [
+    -0.2948199709438949,
+    -0.48538898867988683,
+    0.02653978524547854
+   ]
+  },
+  "navigation": {
+   "run": "/workspace/molar/robot_lab_runtime/gait-turn-20261120/spine-savedmap-mujoco/runs/6358f20627644edab403ce3e54773b0d",
+   "goal": [
+    0.2050039493415453,
+    -0.4721206537996582,
+    0.02653978524547854
+   ],
+   "success": true,
+   "reason": "Every native goal physically settled",
+   "measurements": [
+    {
+     "requested": [
+      0.2050039493415453,
+      -0.4721206537996582,
+      0.02653978524547854
+     ],
+     "physical_pose": [
+      0.09280582289853657,
+      -0.46850663962467093,
+      -0.021398317711582467
+     ],
+     "linear_m_s": 0.0026322411458487038,
+     "angular_rad_s": -0.008445774155587426,
+     "settled_sim_s": 1.0,
+     "member_id": "body",
+     "index": 0,
+     "native_terminal": true,
+     "nav2_status": 4
+    }
+   ]
+  }
+ }
+]
