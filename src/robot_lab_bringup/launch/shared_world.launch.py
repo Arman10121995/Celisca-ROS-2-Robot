@@ -21,6 +21,7 @@ import yaml
 
 def _setup(context):
     from robot_lab_utils.fleet_session import prepare_session
+    from robot_lab_utils.partition_reaper import start_run_reaper
     from robot_lab_utils.process_lifetime import parent_bound_command
     def value(name):
         return LaunchConfiguration(name).perform(context)
@@ -37,6 +38,8 @@ def _setup(context):
             raise ValueError('Open-RMF runtime missing; provision scripts/provision_rmf_runtime.py on SSD and source scripts/rmf_env.sh')
     print('[robot_lab fleet] Resolved shared-world session: ' + session['resolved_file'])
     actions = []
+    if not context.environment.get('ROBOT_LAB_RUN_ID'):
+        actions.append(SetEnvironmentVariable('ROBOT_LAB_RUN_ID', start_run_reaper()))
     partition = os.environ.get('GZ_PARTITION') or os.environ.get('IGN_PARTITION') or 'robot_lab_fleet_' + uuid.uuid4().hex[:12]
     resource_paths = [os.environ.get('GZ_SIM_RESOURCE_PATH', ''), os.environ.get('IGN_GAZEBO_RESOURCE_PATH', '')]
     for package in ('robot_lab_robots', 'robot_lab_maps', 'robot_lab_models', 'robot_lab_description'):

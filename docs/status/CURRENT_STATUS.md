@@ -1,5 +1,11 @@
 # Current Robot Lab status
 
+November 20 Codex: direct tracked and Fleet launches now tag their children
+with a unique run ID and start the detached cleanup watcher. The watcher
+cleans up processes from its run after launcher loss. A subprocess check
+measured that exit, and an actual ROS launch confirmed the Fleet executable
+wrapper. Gazebo mission qualification remains separate.
+
 November 20 Codex: TIAGo's Isaac gripper now uses compliant linked jaws and
 paired targets to address the recorded closure drift. Source actuator caps,
 measured skew and Stop checks remain in the control path. The installed

@@ -1966,6 +1966,7 @@ tasks:
           measured_scope: docs/status/native-workflows-2026-10-27.md
           full_scope_acceptance: partial
       R10.7:
+        tracked_launch_reaper_20261120: 'Codex connected direct tracked and shared-world launches to the existing detached run ID cleanup. Keep private DART and partition settings. 17 focused tests passed, two skipped, including real kill of a launcher with a marked child. The fleet exec wrapper also passed an actual ROS Launch ExecuteProcess exit probe. Existing pre-change processes are untouched.'
         acceptance_ref: ROADMAP.md R10.7
         active_scope: Complete sprung amphibious wheel/propeller source, bank/ramp world, source bounds/leases, hybrid
           flow/range emulation and IMU estimation, RGB-D export/reload and source-aware 2.5D shore Plan/Execute. Existing

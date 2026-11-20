@@ -23,8 +23,20 @@ Usage: python3 -m robot_lab_utils.partition_reaper <launch pid> <partition>
 """
 import os
 import signal
+import subprocess
 import sys
 import time
+import uuid
+
+
+def start_run_reaper():
+    """Start the detached watcher and return its unique child run marker."""
+    run_id = 'robot_lab_run_' + uuid.uuid4().hex
+    subprocess.Popen(
+        [sys.executable, '-m', __name__, str(os.getpid()), 'ROBOT_LAB_RUN_ID=' + run_id],
+        start_new_session=True, stdin=subprocess.DEVNULL,
+        stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+    return run_id
 
 
 def _markers(marker):

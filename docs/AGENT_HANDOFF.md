@@ -1,5 +1,12 @@
 # Agent Handoff Protocol
 
+November 20 process cleanup: direct tracked and shared-world Fleet launches
+now install the detached watcher used by the normal simulation launch.
+Keep the unique per-run marker and automatic inheritance when included from
+another Robot Lab launch. Keep the private track engine, partition, resource
+and plugin paths. Existing pre-change simulator processes are separate from
+the new watcher.
+
 November 20 TIAGo on Isaac: optional compliant native prismatic coupling
 matches jaw openings while preserving the two original position drives.
 Single-finger requests address the pair. Preserve both 16 N caps, measured

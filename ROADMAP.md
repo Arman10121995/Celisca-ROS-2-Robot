@@ -1289,6 +1289,9 @@ parking batch needs its own run. Details and evidence are in the
   (up, along the tread, down) in 2 of 2 runs. Fixed flippers or the default
   climb still fail on the same vehicle.
   [Evidence](docs/status/evidence/flipper-strong-2026-11-19/README.md).
+- **2026-11-20:** standalone tracked launches use the same per-run cleanup
+  watcher as the normal GUI launch. Fleet launches also tag their nodes for
+  cleanup if the launcher exits abruptly.
 - **Remaining implementation:**
   - other backends for the forms;
   - angled descents beyond 15° for the tracked vehicle (one track drops first and the 0.35 rad roll hold stops it).

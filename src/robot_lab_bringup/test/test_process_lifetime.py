@@ -44,6 +44,34 @@ class ReaperTests(unittest.TestCase):
         time.sleep(0.3)
         self.assertEqual([server.pid], partition_reaper.processes_in_partition(partition))
 
+    def test_detached_run_watcher_reaps_children_when_launch_is_killed(self):
+        utils = os.path.dirname(os.path.dirname(os.path.abspath(partition_reaper.__file__)))
+        program = (
+            "import os, subprocess, sys, time\n"
+            "sys.path.insert(0, sys.argv[1])\n"
+            "from robot_lab_utils.partition_reaper import start_run_reaper\n"
+            "run_id = start_run_reaper()\n"
+            "child = subprocess.Popen([sys.executable, '-c', 'import time; time.sleep(60)'], "
+            "env=dict(os.environ, ROBOT_LAB_RUN_ID=run_id))\n"
+            "print(child.pid, flush=True)\n"
+            "time.sleep(60)\n"
+        )
+        inherit = os.environ.get('PYTHONPATH', '')
+        env = dict(os.environ, PYTHONPATH=os.pathsep.join(filter(None, [utils, inherit])))
+        parent = subprocess.Popen([sys.executable, '-c', program, utils], env=env,
+                                  stdout=subprocess.PIPE, text=True)
+        try:
+            self.assertTrue(select.select([parent.stdout], [], [], 5.)[0], 'run did not start')
+            child = int(parent.stdout.readline())
+        finally:
+            parent.kill()
+            parent.wait(timeout=3.)
+            parent.stdout.close()
+        deadline = time.monotonic() + 12.
+        while partition_reaper._alive(child) and time.monotonic() < deadline:
+            time.sleep(.1)
+        self.assertFalse(partition_reaper._alive(child), 'run watcher left the simulator child alive')
+
 
 class ParentDeathTests(unittest.TestCase):
 

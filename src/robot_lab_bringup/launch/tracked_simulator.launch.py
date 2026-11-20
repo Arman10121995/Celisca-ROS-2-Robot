@@ -117,6 +117,9 @@ def setup(context):
     bridge_file=folder/'bridge.yaml';bridge_file.write_text(yaml.safe_dump(bridges))
     partition=os.environ.get('IGN_PARTITION') or os.environ.get('GZ_PARTITION') or 'tracks_'+uuid.uuid4().hex
     actions=[SetEnvironmentVariable(key,partition) for key in ('IGN_PARTITION','GZ_PARTITION')]
+    if not context.environment.get('ROBOT_LAB_RUN_ID'):
+        from robot_lab_utils.partition_reaper import start_run_reaper
+        actions.append(SetEnvironmentVariable('ROBOT_LAB_RUN_ID', start_run_reaper()))
     actions.append(SetEnvironmentVariable('LD_LIBRARY_PATH',os.pathsep.join(engine['library_paths']+[os.environ.get('LD_LIBRARY_PATH','')])))
     resource=os.pathsep.join([os.environ.get('IGN_GAZEBO_RESOURCE_PATH',''),str(source.parent),str(Path(share('robot_lab_maps'))),str(Path(share('robot_lab_robots')))])
     actions.extend(SetEnvironmentVariable(key,resource) for key in ('IGN_GAZEBO_RESOURCE_PATH','GZ_SIM_RESOURCE_PATH'))
