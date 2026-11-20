@@ -1834,6 +1834,12 @@ tasks:
         - docs/status/evidence/marine-mujoco-currents-2026-11-14/README.md
         - docs/status/evidence/r105-auv-relocalization-2026-11-19/README.md
         - docs/status/evidence/r105-auv-long-route-2026-11-20/README.md
+        - docs/status/evidence/r105-auv-geometry-reloc-2026-11-20/README.md
+        geometry_reloc_20261120: 'Claude: implemented, experimental. Geometry-only Tethys localization now starts at the
+          mapped origin (RGBD/StartAtOrigin, valid because the estimator and the mapping run share the spawn); ICP proximity
+          then localizes. In marine_tank_textured a geometry-only saved map relocalizes and the mission completes 2/2 (0.084,
+          0.092 m). The RTAB-Map default start and the plain featureless tank (ICP too-low-complexity) do not localize
+          (retained). docs/status/evidence/r105-auv-geometry-reloc-2026-11-20/README.md'
         long_routes_20261120: 'Claude: implemented, experimental. The 6.5 m divergence had three controller causes - the
           follower subtracted measured sideslip (Munk-moment feedback; now the authored-current crab plus integral LOS), a
           second integral on depth (follower 0.3 /s correction; now 0.05 with slope feed-forward; inner depth hold 0.3 /s,

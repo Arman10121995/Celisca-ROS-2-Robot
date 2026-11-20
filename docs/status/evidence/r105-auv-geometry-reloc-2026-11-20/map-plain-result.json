@@ -1,0 +1,70 @@
+{
+ "target": [
+  -0.93,
+  -1.32,
+  -3.0
+ ],
+ "start_truth": [
+  -4.0,
+  -3.0,
+  -3.0
+ ],
+ "start_estimate": [
+  -3.9384679414231796,
+  -2.9897491218160965,
+  -2.992008349154058
+ ],
+ "mission_status": "completed",
+ "saved_map": {
+  "kind": "acquired_rtabmap",
+  "robot": "tethys_auv",
+  "frame": "map",
+  "directory": "/workspace/molar/robot_lab_runtime/marine_missions/ce23fc969fa740e296b636d536324413/map-c2891ea01a",
+  "estimator_contract": "marine_spawn_imu_v1",
+  "source_world": "/workspace/molar/robot_lab_runtime/marine_sessions/tethys-n3092o0c/world.sdf",
+  "world_sha256": "8020ea0341779d52e5f1db7c2d0c5c6caf9411a2280cd5bdf3dfb5420ffa34f0",
+  "source_database": "/workspace/molar/robot_lab_runtime/marine_sessions/tethys-n3092o0c/marine-rtabmap.db",
+  "database": "/workspace/molar/robot_lab_runtime/marine_missions/ce23fc969fa740e296b636d536324413/map-c2891ea01a/rtabmap.db",
+  "database_observation": {
+   "nodes": 34,
+   "bytes": 2854912,
+   "sha256": "7c63c97951bc65c2670cf56c2d452ad362282e2002d2f82f3ae4109740fc543b"
+  },
+  "points": 7878,
+  "cloud_stamp": {
+   "sec": 34,
+   "nanosec": 600000000
+  },
+  "scope": "Acquired RGB-D SLAM database/cloud; physical reload/mission qualification is separate"
+ },
+ "mapping_status": "saved",
+ "statuses": [
+  "idle",
+  "planning",
+  "planned",
+  "executing",
+  "braking",
+  "completed"
+ ],
+ "final_status": "completed",
+ "final_reason": "Saved actual database and occupied cloud: /workspace/molar/robot_lab_runtime/marine_missions/ce23fc969fa740e296b636d536324413/map-c2891ea01a",
+ "end_truth": [
+  -0.8997523213523136,
+  -1.2799093686431924,
+  -2.912941028732814
+ ],
+ "end_estimate": [
+  -0.8036029381371014,
+  -1.2578683309176784,
+  -2.9123032817369787
+ ],
+ "truth_to_goal_m": 0.1005059464124481,
+ "estimate_to_goal_m": 0.16591345920277925,
+ "estimate_error_end_m": 0.09864541529089921,
+ "estimate_error_max_m": 0.1004737878796876,
+ "position_std_end_m": 0.06565302621837205,
+ "localization_mode": false,
+ "localized_end": false,
+ "localized_seen": false,
+ "mission_seconds": 17.398953468014952
+}

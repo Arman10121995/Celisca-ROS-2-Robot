@@ -124,6 +124,14 @@ def test_tethys_slam_is_geometry_only_unless_visual_features_are_requested():
     assert "DeclareLaunchArgument('visual_features',default_value='false'" in launch
 
 
+def test_geometry_only_tethys_localization_starts_at_the_mapped_origin():
+    # No visual words means no appearance loop closure; ICP proximity needs the
+    # start pose, which the spawn-aligned estimator shares with the mapping run.
+    pipeline=(ROOT/'src/robot_lab_utils/robot_lab_utils/marine_pipeline.py').read_text()
+    assert ("**({'RGBD/StartAtOrigin':'true'} if localization and robot=='tethys_auv' and not visual_features else {})"
+            in pipeline)
+
+
 def test_marine_launch_uses_the_explicit_sensor_pipeline_instead_of_a_missing_native_bridge():
     launch=(ROOT/'src/robot_lab_bringup/launch/marine_simulator.launch.py').read_text()
     assert "'/marine/dvl'" not in launch

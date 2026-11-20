@@ -117,6 +117,13 @@ def pipeline(world, description, spawn, water, robot, folder, control=True,
                     # (opt-in) stores visual words so a saved map in a
                     # textured world can be relocalized (R10.5, 2026-11-19).
                     **depth_registration_parameters(geometry_only=robot=='tethys_auv' and not visual_features),
+                    # Geometry-only maps have no visual words, so localization cannot
+                    # find a loop closure by appearance; RTAB-Map's default also puts
+                    # the robot at the mapping session's last pose. The marine
+                    # estimator starts at the spawn (marine_spawn_imu_v1), as did the
+                    # mapping run: start at the map origin and let ICP proximity
+                    # correct it (R10.5, 2026-11-20). A different start is unsupported.
+                    **({'RGBD/StartAtOrigin':'true'} if localization and robot=='tethys_auv' and not visual_features else {}),
                     **{'Mem/IncrementalMemory':'false' if localization else 'true', 'Mem/InitWMWithAllNodes':'true' if localization else 'false',
                        'Grid/3D':'true', 'Grid/Sensor':'1', 'Grid/RangeMax':'8.0',
                        'RGBD/LinearUpdate':'0.05', 'RGBD/AngularUpdate':'0.05'} )],
