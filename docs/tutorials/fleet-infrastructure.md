@@ -104,18 +104,18 @@ landing and return in one SDK patrol (the macro has no separate mission receipt)
 no door/lift mission is inferred from asset presence.
 
 For a fleet containing MOLAR, the graph uses the configured MOLAR approach,
-boarding and exit positions. `L0_approach` is the waiting point before the
-closed gate; `L0_landing` is the exit destination used by **RMF floor
-round-trip**. At L1 the approach and exit share a position. The SDK uses one
+boarding and exit positions. `L0_approach` and `L1_approach` are the
+waiting points before the gates; `L0_landing` and `L1_landing` are the
+exit destinations used by **RMF floor round-trip**. On L1, the robot
+drives away from the closed gate to turn at the waiting point. The SDK uses one
 graph for the whole fleet, so clearance is checked against its largest
 member. If two explicit model layouts disagree, the SDK launch refuses;
 native Facility transport still chooses goals per member. An RMF in-car turn
 to the declared exit heading uses Nav2 Spin, while the physical floor, door,
 measured settling and Stop checks remain active. See the
-[MOLAR trial results](../status/evidence/r11-molar-rmf-2026-11-20/README.md)
-for the measured upward trip. The SDK return still stalls at the closed
-upper gate. Use native **Facility → Transport selected robot** for the
-measured MOLAR round-trip workflow.
+[MOLAR trial results](../status/evidence/r11-molar-rmf-return-2026-11-20/README.md)
+for the revised landing and its exact support scope. Native
+**Facility → Transport selected robot** is also available.
 
 Provisioning includes a process-scoped correction for Humble's upstream graph
 serializer exit-event null dereference. For an existing installation run:

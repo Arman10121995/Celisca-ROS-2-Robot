@@ -16,8 +16,9 @@ def lift_graph_poses(transport, members):
     overrides = transport.get('models', {})
     models = sorted({member.get('model') for member in members if member.get('model') in overrides})
     candidates = [transport_for_model(transport, model) for model in models or [None]]
-    geometry = [dict(boarding=value['boarding'], landings=value['landings'],
-                     exits=value.get('exits', value['landings'])) for value in candidates]
+    geometry = [dict(boarding=value['boarding'], landings={**value['landings'], **value.get('rmf_approaches', {})},
+                     exits=value.get('exits', value['landings']),
+                     staged_floors=tuple(sorted(value.get('rmf_approaches', {})))) for value in candidates]
     if any(value != geometry[0] for value in geometry[1:]):
         raise ValueError('RMF needs one shared lift layout; incompatible transport overrides for ' +
                          ', '.join(models))
@@ -119,6 +120,11 @@ def building_graph(session, config):
         landing = anchor(floor + '_landing', exit_pose)
         entry = landing if math.hypot(approach['x']-exit_pose['x'], approach['y']-exit_pose['y']) < .001 else anchor(
             floor + '_approach', approach)
+        if floor in transport['staged_floors']:
+            if entry == landing or not clear_segment(exit_pose, approach):
+                raise ValueError('Staged lift approach needs a separate clear retreat on ' + floor)
+            lanes[:] = [lane for lane in lanes if lane[:2] != [landing, entry]]
+            lanes.append([landing, entry, dict(orientation_constraint='forward')])
         boarding = transport['boarding']
         x0, x1, y0, y1 = car_zone
         if (not x0 < boarding['x'] < x1 or not y0 < boarding['y'] < y1

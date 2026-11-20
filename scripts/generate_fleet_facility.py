@@ -13,9 +13,11 @@ FACILITY_WALLS=[((-6,0,1.25),(.2,10,2.5)),((6,0,1.25),(.2,10,2.5)),((0,5,1.25),(
                 ((0,-2.9,1.25),(.15,4.2,2.5)),((0,2.9,1.25),(.15,4.2,2.5))]
 
 
-LANDING_RAILS=[('landing_west_rail',(1.04,0,4.1),(.08,2.,2.2)),
-               ('landing_north_rail',(1.875,1.0,4.1),(1.75,.08,2.2)),
-               ('landing_south_rail',(1.875,-1.0,4.1),(1.75,.08,2.2))]
+LANDING_X_MIN = .3
+LANDING_X_MAX = 3.
+LANDING_RAILS=[('landing_west_rail',(round(LANDING_X_MIN+.04,2),0,4.1),(.08,2.,2.2)),
+               ('landing_north_rail',((LANDING_X_MIN+2.75)/2,1.0,4.1),(2.75-LANDING_X_MIN,.08,2.2)),
+               ('landing_south_rail',((LANDING_X_MIN+2.75)/2,-1.0,4.1),(2.75-LANDING_X_MIN,.08,2.2))]
 CABIN_WALLS=[((.95,0,1.15),(.08,2.,2.2)),((.1,.95,1.15),(1.8,.08,2.2)),((.1,-.95,1.15),(1.8,.08,2.2))]
 
 
@@ -33,7 +35,7 @@ def generate_maps(target,walls):
     upper=Image.new('L',(240,200),205);upper_draw=ImageDraw.Draw(upper)
     def rectangle(x0,y0,x1,y1,value):
         upper_draw.rectangle(((x0+6)/resolution,(5-y1)/resolution,(x1+6)/resolution,(5-y0)/resolution),fill=value)
-    rectangle(1.,-1.5,3.,1.5,254)  # Actual fixed upper landing.
+    rectangle(LANDING_X_MIN,-1.5,LANDING_X_MAX,1.5,254)  # Actual fixed upper landing.
     rectangle(3.,-1.,5.,1.,254)    # Car support, accessible only at a guarded landing.
     for _,pose,size in LANDING_RAILS:
         x,y,_=pose;dx,dy,_=size
@@ -60,7 +62,8 @@ def generate():
     walls=FACILITY_WALLS
     for i,(pose,size) in enumerate(walls):model(w,'wall_'+str(i),pose,size,'.65 .7 .75 1')
     # Upper landing is physical; separate floor navigation maps remain required.
-    model(w,'upper_landing',(2,0,2.85),(2,3,.3),'.35 .6 .7 1')
+    model(w,'upper_landing',((LANDING_X_MIN+LANDING_X_MAX)/2,0,2.85),
+          (LANDING_X_MAX-LANDING_X_MIN,3,.3),'.35 .6 .7 1')
     for name,pose,size in LANDING_RAILS:
         model(w,name,pose,size,'.35 .6 .7 1')
     hardware=child(w,'model',name='facility');child(hardware,'static','false')
@@ -112,7 +115,8 @@ def generate():
                   area=[2.8,5.2,-1.2,1.2]),
         floor_maps=dict(L0='maps/fleet_facility/maps/map.yaml',L1='maps/fleet_facility/maps/map_L1.yaml'),
         docks={'west_charger':dict(x=-4.5,y=-3.,z=0.,yaw=0.,position_tolerance=.12,height_tolerance=.12,yaw_tolerance=.15)},
-        energy=dict(capacity_J=180000.,initial_fraction=.8,hotel_W=3.,drive_efficiency=.75,charge_W=120.,effort_observation_verified=False,effort_sources={},
+        energy=dict(capacity_J=180000.,initial_fraction=.8,hotel_W=3.,drive_efficiency=.75,charge_W=120.,
+                    nominal_voltage_V=11.1,recharge_threshold=.2,effort_observation_verified=False,effort_sources={},
                     scope='Authored battery estimate from actual JointState effort/rate; unknown when motor feedback is missing'))
     for level,z in [('L0',0.),('L1',3.)]:
         config['doors']['landing_'+level] = dict(joint='landing_'+level,closed=0.,opened=2.15,sweep=[2.6,3.1,-1.3,3.5],base_z=z,landing_floor=level)
@@ -126,7 +130,9 @@ def generate():
     # closed gate: at x 2.1 the guard held it (2026-11-20).
     west=round(math.pi,6)
     config['transport']['models']=dict(molar_hri=dict(boarding=dict(x=3.95,y=0.,yaw=0.),
-        landings=dict(L0=dict(x=1.75,y=0.,yaw=0.),L1=dict(x=2.1,y=0.,yaw=west)),exits=dict(L0=dict(x=2.1,y=0.,yaw=west),L1=dict(x=2.1,y=0.,yaw=west))))
+        landings=dict(L0=dict(x=1.75,y=0.,yaw=0.),L1=dict(x=2.1,y=0.,yaw=west)),
+        exits=dict(L0=dict(x=2.1,y=0.,yaw=west),L1=dict(x=2.1,y=0.,yaw=west)),
+        rmf_approaches=dict(L1=dict(x=1.75,y=0.,yaw=0.))))
     config['transport']['parking_slots']={floor:[dict(x=x,y=y,yaw=0.) for y in (-offset,offset)] for floor,x,offset in [('L0',1.5,2.5),('L1',1.55,.55)]}
     if (target/'infrastructure.yaml').exists():
         previous = yaml.safe_load((target/'infrastructure.yaml').read_text()) or {}

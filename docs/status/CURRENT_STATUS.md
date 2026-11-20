@@ -1,5 +1,11 @@
 # Current Robot Lab status
 
+November 20 Codex: [MOLAR's RMF return clearance](evidence/r11-molar-rmf-return-2026-11-20/README.md)
+is implemented. The upper landing is 0.70 m deeper with matching occupancy.
+The actual SDK plans forward retreat to (1.75, 0) m before turning. 43
+focused checks and both packages pass. A physical Gazebo round trip on this
+layout is still pending.
+
 November 20 Codex: MOLAR's [Open-RMF lift graph](evidence/r11-molar-rmf-2026-11-20/README.md)
 uses the model's approach, boarding and exit positions. A guarded Nav2
 Spin replaces the in-car position goal. One Gazebo SDK L0 → L1 trip

@@ -260,12 +260,12 @@
     </model>
     <model name="upper_landing">
       <static>true</static>
-      <pose>2 0 2.85 0 0 0</pose>
+      <pose>1.65 0 2.85 0 0 0</pose>
       <link name="link">
         <visual name="visual">
           <geometry>
             <box>
-              <size>2 3 0.3</size>
+              <size>2.7 3 0.3</size>
             </box>
           </geometry>
           <material>
@@ -276,7 +276,7 @@
         <collision name="collision">
           <geometry>
             <box>
-              <size>2 3 0.3</size>
+              <size>2.7 3 0.3</size>
             </box>
           </geometry>
         </collision>
@@ -284,7 +284,7 @@
     </model>
     <model name="landing_west_rail">
       <static>true</static>
-      <pose>1.04 0 4.1 0 0 0</pose>
+      <pose>0.34 0 4.1 0 0 0</pose>
       <link name="link">
         <visual name="visual">
           <geometry>
@@ -308,12 +308,12 @@
     </model>
     <model name="landing_north_rail">
       <static>true</static>
-      <pose>1.875 1.0 4.1 0 0 0</pose>
+      <pose>1.525 1.0 4.1 0 0 0</pose>
       <link name="link">
         <visual name="visual">
           <geometry>
             <box>
-              <size>1.75 0.08 2.2</size>
+              <size>2.45 0.08 2.2</size>
             </box>
           </geometry>
           <material>
@@ -324,7 +324,7 @@
         <collision name="collision">
           <geometry>
             <box>
-              <size>1.75 0.08 2.2</size>
+              <size>2.45 0.08 2.2</size>
             </box>
           </geometry>
         </collision>
@@ -332,12 +332,12 @@
     </model>
     <model name="landing_south_rail">
       <static>true</static>
-      <pose>1.875 -1.0 4.1 0 0 0</pose>
+      <pose>1.525 -1.0 4.1 0 0 0</pose>
       <link name="link">
         <visual name="visual">
           <geometry>
             <box>
-              <size>1.75 0.08 2.2</size>
+              <size>2.45 0.08 2.2</size>
             </box>
           </geometry>
           <material>
@@ -348,7 +348,7 @@
         <collision name="collision">
           <geometry>
             <box>
-              <size>1.75 0.08 2.2</size>
+              <size>2.45 0.08 2.2</size>
             </box>
           </geometry>
         </collision>

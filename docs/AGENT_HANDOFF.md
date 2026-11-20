@@ -1,5 +1,11 @@
 # Agent Handoff Protocol
 
+November 20 MOLAR return: Codex owns the widened L1 landing and the
+forward-only retreat to the separate upper RMF approach. Keep the
+collision world and occupancy grid generated together. Preserve the
+scan guard and use the [return receipt](status/evidence/r11-molar-rmf-return-2026-11-20/README.md)
+for the exact validation scope. Claude retains the AUV route and map lane.
+
 November 20 fleet continuation: Codex owns MOLAR's Open-RMF lift graph
 and cabin turn. Claude retains Shadow Hand and other manipulation work.
 Use the [fleet receipt](status/evidence/r11-molar-rmf-2026-11-20/README.md)

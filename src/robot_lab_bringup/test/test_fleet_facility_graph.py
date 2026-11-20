@@ -75,15 +75,19 @@ def test_molar_keeps_gate_approach_separate_from_the_exit_in_the_shared_graph():
                dict(radius=.49, id='molar', model='molar_hri', spawn=dict(x=1.5, y=0.))]
     session, config = facility_session(members)
     building, metadata = building_graph(session, config)
-    vertices, lanes = building['levels']['L0']['vertices'], building['levels']['L0']['lanes']
-    index = {options['name']: i for i, (_, _, options) in enumerate(vertices)}
-    approach, car, landing = (index[name] for name in ('L0_approach', 'lift_L0_inside', 'L0_landing'))
-    assert [vertices[i][:2] for i in (approach, car, landing)] == [[1.75, 0.], [3.95, 0.], [2.1, 0.]]
-    assert {(a, b) for a, b, _ in lanes if car in (a, b)} == {(approach, car), (car, landing)}
+    for floor, level in building['levels'].items():
+        vertices, lanes = level['vertices'], level['lanes']
+        index = {options['name']: i for i, (_, _, options) in enumerate(vertices)}
+        approach, car, landing = (index[name] for name in (floor+'_approach', 'lift_'+floor+'_inside', floor+'_landing'))
+        assert [vertices[i][:2] for i in (approach, car, landing)] == [[1.75, 0.], [3.95, 0.], [2.1, 0.]]
+        assert {(a, b) for a, b, _ in lanes if car in (a, b)} == {(approach, car), (car, landing)}
+        if floor == 'L1':
+            assert [props for a, b, props in lanes if (a, b) == (landing, approach)] == [
+                {'orientation_constraint': 'forward'}]
     assert next(v for v in metadata if v['name'] == 'L0_landing').get('selectable', True)
     assert next(v for v in metadata if v['name'] == 'lift_L0_inside')['exit_heading'] == pytest.approx(3.141593)
     assert config['transport']['boarding']['x'] == 3.65
-    assert 'L1_approach' not in {v['name'] for v in metadata}
+    assert config['transport']['models']['molar_hri']['landings']['L1']['x'] == 2.1
 
     config['transport']['models']['bumperbot'] = dict(boarding=dict(x=3.65, y=0., yaw=0.))
     with pytest.raises(ValueError, match='incompatible transport overrides'):
