@@ -23,6 +23,7 @@ GRASP_SIDES = {
     'robotiq_2f85': (('left_',), ('right_',)),       # coupled finger pair
     'robotiq_2f85_v4': (('left_',), ('right_',)),
     'umi_gripper': (('left_finger',), ('right_finger')),
+    'wonik_allegro': (('th_',), ('ff_', 'mf_')),     # thumb vs index+middle tripod
 }
 
 # The distal contact *pads* used to place the object, by exact body name. These
@@ -34,6 +35,7 @@ GRASP_PADS = {
     'robotiq_2f85': (('left_pad',), ('right_pad',)),
     'robotiq_2f85_v4': (('left_pad',), ('right_pad',)),
     'umi_gripper': (('left_finger_holder',), ('right_finger_holder',)),
+    'wonik_allegro': (('th_tip',), ('ff_tip', 'mf_tip')),
 }
 
 

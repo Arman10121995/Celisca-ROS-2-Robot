@@ -214,6 +214,8 @@ def native_model(directory):
                 return path
     candidates = [p for p in sorted(directory.glob('*.xml'))
                   if 'scene' not in p.stem and ET.parse(p).getroot().tag == 'mujoco']
+    # Two-handed sources (Wonik Allegro) ship left_hand/right_hand: install the right.
+    candidates.sort(key=lambda p: p.name != 'right_hand.xml')
     if not candidates:
         raise ValueError('No standalone native robot XML')
     return candidates[0]

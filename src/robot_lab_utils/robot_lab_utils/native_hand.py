@@ -1,7 +1,8 @@
 """Reviewed native hand contracts, without inventing motor transmissions.
 
 DEX-EE uses its authored mujoco.pid position plugin. Robotiq and UMI use
-their authored coupled position tendons. Pose templates are experimental
+their authored coupled position tendons. The Wonik Allegro right hand uses its
+sixteen authored joint position servos (kp 1, no source effort clamp). Pose templates are experimental
 operator targets, not grasp policies or a grasp-success certificate.
 """
 import hashlib
@@ -19,7 +20,11 @@ HAND_MODELS = {
     'menagerie_robotiq_2f85': 'robotiq_2f85',
     'menagerie_robotiq_2f85_v4': 'robotiq_2f85_v4',
     'menagerie_umi_gripper': 'umi_gripper',
+    'menagerie_wonik_allegro': 'wonik_allegro',
 }
+# Hands whose object grasp is a synthesized tripod (hand_grasp_synthesis.HANDS).
+SYNTHESIS_ADAPTERS = ('shadow_dexee', 'wonik_allegro')
+ACTUATION = {'shadow_dexee': 'authored PID position plugin', 'wonik_allegro': 'authored joint position servos'}
 
 
 def hand_profile(name, profile):
@@ -31,7 +36,7 @@ def hand_profile(name, profile):
     result = dict(profile)
     result['native_hand'] = dict(adapter=entry, implementation_state='experimental',
         validation_state='pending', backend='mujoco',
-        actuation='authored PID position plugin' if entry == 'shadow_dexee' else 'authored coupled position tendon')
+        actuation=ACTUATION.get(entry, 'authored coupled position tendon'))
     if not result.get('native_articulation'):
         result['native_articulation'] = dict(implementation_state='experimental', validation_state='pending')
     result['features'] = list(dict.fromkeys([*result.get('features', []), 'native_hand_controls_experimental']))
@@ -52,7 +57,7 @@ def hand_contract(model, native_source, grasp_plan=None):
 
     Returns None for other robots. A recognized but altered/incompatible hand
     raises instead of guessing. World bodies may have been appended already.
-    ``grasp_plan`` (DEX-EE only, from ``hand_grasp_synthesis``) adds the
+    ``grasp_plan`` (DEX-EE and Allegro, from ``hand_grasp_synthesis``) adds the
     synthesized tripod as the first pose, and its approach opening becomes
     Open so opening never sweeps the fingers into the planned object.
     """
@@ -61,8 +66,8 @@ def hand_contract(model, native_source, grasp_plan=None):
     entry = source.parent.name
     if entry not in HAND_MODELS.values():
         return None
-    if grasp_plan is not None and entry != 'shadow_dexee':
-        raise ValueError('Grasp synthesis is reviewed for DEX-EE only')
+    if grasp_plan is not None and entry not in SYNTHESIS_ADAPTERS:
+        raise ValueError('Grasp synthesis is reviewed for DEX-EE and Allegro only')
     root = ET.parse(source).getroot()
     if root.findall('.//freejoint') or root.findall(".//joint[@type='free']"):
         raise ValueError('Native hand requires an authored fixed mount')
@@ -165,16 +170,38 @@ def hand_contract(model, native_source, grasp_plan=None):
         # J1/J2/J3 curl. They make no claim to an object-specific grasp pose.
         curled = {channel['name']: (0., -.4, .9, .5)[int(channel['joint'][-1])] for channel in channels}
         poses = ['Curl', 'Pinch F0 + F1', 'Spread']
-        if grasp_plan is not None:
-            names = {channel['name'] for channel in channels}
-            if set(grasp_plan['approach']) != names or set(grasp_plan['grasp']) != names:
-                raise ValueError('Synthesized grasp must name every DEX-EE channel')
-            for channel in channels:
-                low, high = channel['limits']
-                if not all(low <= grasp_plan[key][channel['name']] <= high for key in ('approach', 'grasp')):
-                    raise ValueError('Synthesized grasp exceeds the executed source bounds')
-            open_targets = {name: float(value) for name, value in grasp_plan['approach'].items()}
-            poses = [SYNTHESIZED_POSE]+poses
+    elif entry == 'wonik_allegro':
+        expected = {'%sa%d' % (finger, number): '%sj%d' % (finger, number)
+                    for finger in ('ff', 'mf', 'rf', 'th') for number in range(4)}
+        if reference.nu != 16 or model.nplugin or reference.ntendon or reference.neq:
+            raise ValueError('Allegro requires its sixteen authored joint position servos only')
+        source_joints = {element.get('name') for element in root.findall('.//worldbody//joint')}
+        robot_joints = [j for j in range(model.njnt) if _name(mj, model, mj.mjtObj.mjOBJ_JOINT, j) in source_joints]
+        found = {c['name']: c for c in position_channels(model, max(robot_joints)+1) if c['name'] in expected}
+        if set(found) != set(expected):
+            raise ValueError('Allegro source position servos missing in executed plant')
+        for name, joint_name in expected.items():
+            channel, index = found[name], found[name]['index']
+            joint = mj.mj_name2id(model, mj.mjtObj.mjOBJ_JOINT, joint_name)
+            # position_channels reports radians only for a gear-1 joint servo
+            # whose gain equals its stiffness bias (a true position servo).
+            if (channel['joint'] != joint_name or channel['units'] != 'rad'
+                    or int(model.jnt_type[joint]) != int(mj.mjtJoint.mjJNT_HINGE)
+                    or int(model.actuator_dyntype[index]) != int(mj.mjtDyn.mjDYN_NONE)):
+                raise ValueError('Allegro joint/servo binding differs from source')
+            channel.update(source_force_limits=(model.actuator_forcerange[index].tolist()
+                if model.actuator_forcelimited[index] else None), source_force_units='N m')
+        channels = [found[name] for name in expected]
+        labels = dict(th='Thumb', ff='Index', mf='Middle', rf='Ring')
+        for finger, label in labels.items():
+            groups.append(dict(name=label, channels=['%sa%d' % (finger, n) for n in range(4)],
+                bodies=[i for i in range(model.nbody) if _name(mj, model, mj.mjtObj.mjOBJ_BODY, i).startswith(finger+'_')]))
+        # Open is the authored zero pose clipped into range (thumb rotation
+        # starts at 0.263 rad); Curl closes every finger toward the palm.
+        open_targets = {c['name']: float(np.clip(0., *c['limits'])) for c in channels}
+        template = dict(th=(1.2, .6, .6, .6), ff=(0., .9, .9, .9), mf=(0., .9, .9, .9), rf=(0., .9, .9, .9))
+        curled = {c['name']: float(np.clip(template[c['name'][:2]][int(c['name'][-1])], *c['limits'])) for c in channels}
+        poses = ['Curl']
     else:
         source_joints = {element.get('name') for element in root.findall('.//worldbody//joint')}
         robot_joints = [j for j in range(model.njnt)
@@ -213,6 +240,16 @@ def hand_contract(model, native_source, grasp_plan=None):
         for channel in channels:
             channel['source_force_units'] = 'N' if channel['units'] == 'm' or (
                 channel['name'] == 'fingers_actuator' and entry == 'umi_gripper') else 'N m'
+    if grasp_plan is not None:
+        names = {channel['name'] for channel in channels}
+        if set(grasp_plan['approach']) != names or set(grasp_plan['grasp']) != names:
+            raise ValueError('Synthesized grasp must name every hand channel')
+        for channel in channels:
+            low, high = channel['limits']
+            if not all(low <= grasp_plan[key][channel['name']] <= high for key in ('approach', 'grasp')):
+                raise ValueError('Synthesized grasp exceeds the executed source bounds')
+        open_targets = {name: float(value) for name, value in grasp_plan['approach'].items()}
+        poses = [SYNTHESIZED_POSE]+poses
     contract = dict(adapter=entry, channels=channels, groups=groups,
         open_targets=open_targets, curled_targets=curled, poses=poses,
         **(dict(grasp_plan={key: grasp_plan[key] for key in ('grasp', 'centre', 'half_size', 'force_closure_epsilon', 'scope')})

@@ -51,6 +51,9 @@ def add_hand_object_fixture(spec, adapter, center, half, quat=(1., 0., 0., 0.)):
     relative to its support. The hand model itself is unchanged.
     """
     import mujoco
+    w, x, y, z = quat
+    if abs(1-2*(x*x+y*y)/max(w*w+x*x+y*y+z*z, 1e-12)) < .999:
+        raise ValueError('The object/support orientation must keep the stage axis vertical')
     support_height = center[2]-half[2]
     pedestal = spec.worldbody.add_body(name='manipulation_pedestal',
         pos=[center[0], center[1], support_height/2], quat=list(quat))
@@ -86,7 +89,7 @@ def add_hand_object_fixture(spec, adapter, center, half, quat=(1., 0., 0., 0.)):
 
 
 def author_grasp_home(spec, plan):
-    """Start a synthesized DEX-EE grasp at its approach opening (lab pre-grasp home).
+    """Start a synthesized tripod grasp at its approach opening (lab pre-grasp home).
 
     The source authors no keyframe, and its zero pose puts a fingertip inside
     the planned box. Existing keys keep every coordinate except the finger
@@ -99,7 +102,8 @@ def author_grasp_home(spec, plan):
         (model.qpos0.copy(), np.zeros(model.nu))]
     for qpos, ctrl in rows:
         for name, value in plan['approach'].items():
-            joint = mujoco.mj_name2id(model, mujoco.mjtObj.mjOBJ_JOINT, name[:-len('_actuator')])
+            joint = mujoco.mj_name2id(model, mujoco.mjtObj.mjOBJ_JOINT,
+                plan['joints'][name] if 'joints' in plan else name[:-len('_actuator')])
             actuator = mujoco.mj_name2id(model, mujoco.mjtObj.mjOBJ_ACTUATOR, name)
             if joint < 0 or actuator < 0:
                 raise ValueError('Synthesized grasp channel missing in executed model: '+name)
@@ -174,7 +178,7 @@ class NativeAssetDisplay(Node):
                     mujoco.mj_resetDataKeyframe(preview, preview_data, 0)
                 mujoco.mj_forward(preview, preview_data)
                 quat = (1., 0., 0., 0.)
-                if adapter == 'shadow_dexee':
+                if adapter in ('shadow_dexee', 'wonik_allegro'):
                     # Contacts chosen for the object, not a curl template
                     # (the template tripod rolled the box out, 2026-11-17).
                     from robot_lab_utils.hand_grasp_synthesis import synthesize_tripod
