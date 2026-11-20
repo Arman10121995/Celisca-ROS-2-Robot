@@ -67,12 +67,24 @@ def test_vendor_f100_preserves_the_mount_and_normalizes_follower_coordinates(com
     bare_model, bare_config, _ = composed
     model, config = copy.deepcopy(bare_model), copy.deepcopy(bare_config)
     receipt = myagv_pro630.attach_f100(model, config, source, tmp_path/'meshes')
-    assert len(model.findall('link')) == len(bare_model.findall('link')) + 9
+    assert len(model.findall('link')) == len(bare_model.findall('link')) + 10
     assert len(config['couplings']) == 5 and len(receipt['reversed_follower_axes']) == 3
     for joint in bare_model.findall('joint'):
         assert ET.tostring(model.find(f"joint[@name='{joint.get('name')}']")) == ET.tostring(joint)
     mount = model.find("joint[@name='pro630_joint6_to_gripper_connect']")
     assert mount.find('parent').get('link') == 'pro630_link6'
+    grasp = receipt['grasp_reference']
+    reference = model.find(f"joint[@name='{grasp['frame']}_joint']")
+    assert reference.find('parent').get('link') == 'pro630_gripper_base'
+    assert grasp['nominal']['gap_m'] == pytest.approx(.04, abs=.005)
+    gaps = [sample['gap_m'] for sample in grasp['aperture_samples']]
+    assert gaps == sorted(set(gaps)) and gaps[-1] == pytest.approx(.109, abs=.001)
+    for side in ('left', 'right'):
+        jaw = f'gripper_{side}1'
+        part = model.find(f"link[@name='pro630_{jaw}']")
+        assert [collision.get('name') for collision in part.findall('collision')] == [
+            f'pro630_{jaw}_{label}_contact' for label in ('mount', 'finger', 'pad')]
+        assert receipt['jaw_collision'][jaw]['pad']['sha256']
     leader, = config['grip_joints']
     assert leader in config['joints'] and config['joints'][leader]['effort'] == .8
     for follower, spec in config['couplings'].items():

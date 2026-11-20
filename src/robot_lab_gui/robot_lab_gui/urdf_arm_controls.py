@@ -13,6 +13,8 @@ import time
 import tkinter as tk
 from tkinter import ttk
 
+from robot_lab_utils.urdf_articulation import grip_aperture_interpolate, grip_aperture_samples
+
 from .molar_controls import BACKENDS, MODES, SCHEMA, MolarControls, finite, validate_identity
 from . import molar_controls
 from .workspace_ui import ScrollPanel
@@ -107,6 +109,7 @@ class UrdfArmControls(MolarControls):
         self.joint_names = ()
         self.target_vars, self.apply_buttons, self.jog_buttons, self.scales, self.fields = {}, {}, {}, {}, []
         self.grip_buttons = []
+        self.grip_openings = {}
         self.status = tk.StringVar(value='Select a mobile manipulator, a simulator and Run.')
         self.feedback = tk.StringVar(value='Waiting for measured joint state.')
         self.step = tk.DoubleVar(value=.05)
@@ -410,6 +413,7 @@ class UrdfArmControls(MolarControls):
         self.target_vars, self.apply_buttons, self.jog_buttons, self.scales = {}, {}, {}, {}
         self.fields = [self.step_entry]
         self.grip_buttons = []
+        self.grip_openings = {}
         prefix = os.path.commonprefix(names) if len(names) > 1 else ''
         prefix = prefix[:prefix.rfind('_') + 1]          # pro630_joint1_to_base -> joint1_to_base
         for row, name in enumerate(names):
@@ -440,6 +444,26 @@ class UrdfArmControls(MolarControls):
                         command=lambda n=name, target=presets[action]: self.apply_grip_preset(n, target))
                     button.grid(row=2, column=2*column, columnspan=2, sticky='ew', padx=2)
                     self.grip_buttons.append(button)
+            try:
+                aperture = grip_aperture_samples(config, name)
+            except ValueError as exc:
+                self.status.set(str(exc))
+                aperture = ()
+            if aperture:
+                self._build_grip_opening(frame, name, aperture)
+
+    def _build_grip_opening(self, frame, name, aperture):
+        feedback = tk.StringVar(value='Waiting for jaw feedback')
+        maximum = math.floor(aperture[-1][1]*1000.)
+        minimum = max(0, math.ceil(aperture[0][1]*1000.))
+        opening = tk.DoubleVar(value=maximum)
+        ttk.Label(frame, textvariable=feedback).grid(row=3, column=0, columnspan=4, sticky='w', pady=3)
+        field = ttk.Spinbox(frame, textvariable=opening, from_=minimum, to=maximum, increment=1, width=6)
+        field.grid(row=4, column=0, sticky='ew', padx=2)
+        button = ttk.Button(frame, text='Set opening (mm)', command=lambda: self.apply_grip_opening(name))
+        button.grid(row=4, column=1, columnspan=3, sticky='ew', padx=2)
+        self.grip_openings[name] = (opening, feedback, aperture, button)
+        self.fields.extend((field, button))
 
     def selected(self):
         return selectable(self.app.robot_var.get(), self.app.simulator_var.get(),
@@ -599,12 +623,35 @@ class UrdfArmControls(MolarControls):
         self.target_vars[name].set(target)
         return True
 
+    def apply_grip_opening(self, name):
+        if not self.ready():
+            return False
+        opening, _feedback, aperture, _button = self.grip_openings[name]
+        try:
+            gap = finite(opening.get())/1000.
+            if gap < 0.:
+                raise ValueError('Opening must be zero or positive.')
+            target = grip_aperture_interpolate(gap, aperture, by_gap=True)
+        except (ValueError, tk.TclError) as exc:
+            self.status.set(str(exc))
+            return False
+        return self.apply_grip_preset(name, target)
+
     def update_buttons(self):
         self.update_pick_place()
         enabled = self.ready()
         for widget in [*self.apply_buttons.values(), *self.jog_buttons.values(), *self.grip_buttons, *self.fields,
                        self.use_measured_button, self.home_button]:
             widget.state(['!disabled'] if enabled else ['disabled'])
+        if self.grip_openings:
+            channels = self.channels() if enabled else {}
+            for name, (_opening, feedback, aperture, _button) in self.grip_openings.items():
+                if name in channels:
+                    angle = max(aperture[0][0], min(aperture[-1][0], channels[name]['measured']))
+                    width = max(0., grip_aperture_interpolate(angle, aperture))*1000.
+                    feedback.set(f'Estimated opening {width:.1f} mm')
+                else:
+                    feedback.set('Waiting for jaw feedback')
         self.stop_button.state(['!disabled'] if self.state else ['disabled'])
         planning = self.planning()
         can_plan = (self.planning_enabled() and not self.state['base_inhibited']

@@ -77,6 +77,38 @@ def effort_budget(feedforward, limit):
     return feedforward, max(0., limit-abs(feedforward))
 
 
+def grip_aperture_samples(config, joint):
+    """Validate one measured/CAD-mapped rotary jaw stroke, in radians and metres."""
+    calibration = config.get('grip_aperture', {})
+    if not isinstance(calibration, dict):
+        raise ValueError('Gripper aperture calibration must be keyed by the grip joint')
+    samples = calibration.get(joint)
+    if samples is None:
+        return ()
+    if (not isinstance(samples, (list, tuple)) or len(samples) < 2
+            or any(not isinstance(pair, (list, tuple)) or len(pair) != 2
+                   or any(isinstance(value, bool) or not isinstance(value, (int, float))
+                          or not math.isfinite(value) for value in pair) for pair in samples)):
+        raise ValueError('Gripper aperture needs finite shaft and gap samples')
+    spec = config['joints'][joint]
+    if (joint not in config.get('grip_joints', ()) or samples[0][0] < spec['lower']
+            or samples[-1][0] > spec['upper'] or samples[-1][1] <= 0.
+            or any(a[0] >= b[0] or a[1] >= b[1] for a, b in zip(samples, samples[1:]))):
+        raise ValueError('Gripper aperture must increase within the declared grip joint stroke')
+    return tuple(tuple(pair) for pair in samples)
+
+
+def grip_aperture_interpolate(value, samples, *, by_gap=False):
+    """Convert an in-range shaft angle to a gap, or a gap to its shaft angle."""
+    index = int(by_gap)
+    for start, end in zip(samples, samples[1:]):
+        low, high = start[index], end[index]
+        if low <= value <= high:
+            ratio = (value-low)/(high-low)
+            return start[1-index] + ratio*(end[1-index]-start[1-index])
+    raise ValueError('Opening must stay within the calibrated grip stroke.')
+
+
 class URDFArticulation:
     """Measured-position hold, bounded targets and one explicit coupling tree."""
     def __init__(self, configuration, urdf, model_path, *, symmetric_grip=False):

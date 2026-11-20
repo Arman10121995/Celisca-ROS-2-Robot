@@ -12,15 +12,34 @@ in [the GUI report](gui-gripper-result.json). [Runtime hashes](runtime-sha256.tx
 | Open | 1.000 rad | 0.999997 rad | 0.0000068 rad | 2.21 s |
 | Close | 0.000 rad | 0.000003 rad | 0.0000071 rad | 2.23 s |
 
-Both Pro630 variants also passed a private source-flange planning check for
-an 8.46 mm move, with 0.00165 mm forward-kinematics error at the planned
-joint endpoint. Live Cartesian execution, contact grasp, transport and
-other simulator versions of the F100 remain open.
+## Live flange planning and CAD pads
+
+Both variants completed one **Plan pose → Execute plan** move in the normal
+MuJoCo GUI on `nav_empty`. The tests used **Position only** and judged the
+measured flange endpoint.
+
+| Variant | Measured move | Endpoint error | Receipt |
+|---|---:|---:|---|
+| Bare Pro630 | 8.34 mm | 0.115 mm | [GUI report](gui-flange-bare-result.json) |
+| Pro630 + F100 | 8.42 mm | 0.032 mm | [GUI report](gui-flange-f100-result.json) |
+
+The collision planner now records the deepest resting contact for each
+collider pair. It continues to reject new or deeper penetration. These
+profiles use 20% of the generic planned slew limit. An earlier F100 move
+was interrupted by the snapshot guard. [Interrupted run](gui-flange-interruption.json).
+
+The current F100 derives the mount and finger hulls and separate pads from
+the pinned jaw CAD. The calibration samples the inner pad separation at 41
+shaft angles. The nominal grasp frame is centred between the pads at
+0.35 rad, where the calculated gap is 40.6 mm. **Set opening (mm)** uses the
+same interpolation as the estimated jaw readout. Grasp, transport and
+other F100 backends remain open. An isolated loaded fixture lost its block
+during closure. [Failed fixture data](initial-cad-pad-load-bench.jsonl).
 
 ## Source and retained diagnostics
 
 The bare arm and its wheel/arm measurements use the existing source pin.
-The F100 mount, collision meshes and linkage come from the vendor Pro630
+The initial F100 mount, collision meshes and linkage came from the vendor Pro630
 Gazebo description at `b8176c264e583b073e1c4293c2edb1241b20e1aa`. Three
 follower joint coordinates reverse sign with their axes to preserve the
 same spatial linkage in the shared positive-ratio contract. One MuJoCo
@@ -39,7 +58,8 @@ GUI cleanup also keeps ownership when publishing neutral fails after ROS
 context shutdown.
 
 79 focused source and GUI checks and two targeted shutdown checks passed.
-Five packages built. Provisioning logs, the bench probes, screenshots and
+The contact, aperture, planner and GUI follow-up passed 36 focused checks
+and built successfully. Provisioning logs, the bench probes, screenshots and
 failed and passing launch outputs are on SSD under
 `$ROBOT_LAB_RUNTIME_ROOT/pro630-gripper-20261120/`.
 

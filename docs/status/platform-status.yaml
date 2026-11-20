@@ -2317,9 +2317,10 @@ tasks:
         state: partial
         updated: '2026-11-20'
         title: Official myAGV Pro plus myCobot Pro630 mobile manipulator
-        gripper_20261120: 'Codex integrated official Pro630 F100 mount and geometry from b8176c2 into a separate same-family variant. One bounded shaft and five measured passive linked joints. Real normal GUI MuJoCo nav_empty Display Open/Close passes with at most 7.1e-6 rad settled skew. Both variants pass private flange plan checks. Live Cartesian execution and grasp/carry/release are pending.'
+        gripper_20261120: 'Codex integrated the official F100 mount and linkage from b8176c2 in a same-family variant. One bounded shaft and five measured passive followers. MuJoCo nav_empty Display Open/Close passes. Separate CAD pad contacts, a nominal grasp frame and a millimetre opening command are implemented. The first loaded fixture lost its block.'
+        flange_20261120: 'Both variants completed a small Plan pose and Execute plan move through the normal MuJoCo nav_empty GUI. The F100 moved 8.42 mm with 0.032 mm endpoint error. The bare arm moved 8.34 mm with 0.115 mm error. An earlier execution stopped at the snapshot guard. The planner keeps the deepest resting contact for each pair and uses a 0.2 planned slew scale for these profiles.'
         gui_shutdown_20261120: 'End session still stops its owned process when the ROS context closes before neutral can publish. Two focused cleanup tests pass.'
-        next_action: 'Implement the F100 source grasp frame, measured object custody and pick/place, then link Nav2 transport and port the mechanical coupling to further backends. Preserve the original Pro630 drive and joint receipts from MuJoCo, PyBullet and Isaac.'
+        next_action: 'Implement aperture-aware closure and measured object custody using the F100 pad contact geometry and grasp reference. Add pick/place, then link Nav2 transport and port the mechanical coupling to further backends. Preserve the original Pro630 drive and joint receipts from MuJoCo, PyBullet and Isaac.'
         evidence: [docs/status/evidence/myagv-pro-2026-11-12/README.md, docs/status/evidence/r143-pro630-f100-2026-11-20/README.md, docs/tutorials/myagv-pro.md]
       R14.4:
         acceptance_ref: ROADMAP.md R14.4

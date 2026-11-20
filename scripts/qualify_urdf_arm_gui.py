@@ -10,6 +10,7 @@ xvfb-run, a sourced workspace, and one simulation at a time.
 """
 import argparse
 import json
+import math
 from pathlib import Path
 import struct
 import subprocess
@@ -70,6 +71,8 @@ def main():
                              'through the page (R5.7), judged by the node\'s truth checks')
     task.add_argument('--gripper-presets', action='store_true',
                       help='use Open and Close and measure the leader and its linked followers')
+    task.add_argument('--flange-offset', type=float, nargs=3, metavar=('DX', 'DY', 'DZ'),
+                      help='plan and execute this offset in metres from the measured source flange')
     args = parser.parse_args()
     args.output.mkdir(parents=True, exist_ok=False)
     report = dict(robot=args.robot, simulator=args.simulator, map=args.map, steps=[], passed=False)
@@ -130,6 +133,31 @@ def main():
         names = page.joint_names
         if args.pick_place:
             pick_place(app, page, args, report, press, settle, until, pump, screenshot)
+        elif args.flange_offset:
+            until(lambda: page.measured_tool() is not None, 30, 'measured source flange')
+            page.use_tool_pose()
+            start = page.measured_tool()['position']
+            target = [round(value + delta, 6) for value, delta in zip(start, args.flange_offset)]
+            for variable, value in zip(page.tool_xyz, target):
+                variable.set(value)
+            page.tool_orientation.set('Position only')
+            outcome = report['flange'] = dict(start_m=start, target_m=target, before_joints=measured())
+            press(page.plan_pose_button)
+            until(lambda: page.plan_matches() or page.planning().get('phase') == 'failed', 20, 'flange plan')
+            outcome['plan'] = page.planning()
+            if not page.plan_matches():
+                raise RuntimeError(outcome['plan'].get('message'))
+            press(page.execute_button)
+            until(lambda: page.planning().get('phase') in {'succeeded', 'failed'}, 95, 'flange execution')
+            outcome['execution'] = page.planning()
+            outcome['measured_m'] = page.measured_tool()['position']
+            outcome['after_joints'] = measured()
+            outcome['motion_m'] = math.dist(start, outcome['measured_m'])
+            outcome['error_m'] = math.dist(target, outcome['measured_m'])
+            report['passed'] = bool(report['page_selected'] and outcome['execution']['phase'] == 'succeeded'
+                                    and outcome['error_m'] <= .006
+                                    and outcome['motion_m'] >= .5 * math.dist(start, target) > 0.)
+            screenshot(args.output / 'flange.png')
         elif args.gripper_presets:
             config = page.arm()
             leader, = config['grip_presets']
@@ -151,6 +179,20 @@ def main():
             report['gripper'] = results
             report['passed'] = bool(report['page_selected'] and all(
                 abs(row['leader']-row['target']) <= .03 and row['max_skew_rad'] <= .01 for row in results.values()))
+            if leader in page.grip_openings:
+                from robot_lab_utils.urdf_articulation import grip_aperture_interpolate
+                opening, feedback, aperture, button = page.grip_openings[leader]
+                requested_mm = round(aperture[-1][1]*500.)
+                opening.set(requested_mm)
+                target = grip_aperture_interpolate(requested_mm/1000., aperture, by_gap=True)
+                press(button)
+                settle({leader: target}, 'calibrated opening')
+                pump(1.)
+                inferred = grip_aperture_interpolate(measured()[leader], aperture)*1000.
+                report['calibrated_opening'] = dict(command_mm=requested_mm, estimated_mm=inferred,
+                    feedback=feedback.get(), shaft_target_rad=target, measured_shaft_rad=measured()[leader])
+                report['passed'] = report['passed'] and abs(inferred-requested_mm) <= 1.
+                screenshot(args.output/'opening.png')
         else:
             home = {n: round(v, 4) for n, v in measured().items()}
             report['home_measured'] = home

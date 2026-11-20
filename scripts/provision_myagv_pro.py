@@ -205,9 +205,11 @@ def provision(store, download=False, variant='fortress'):
     if with_gripper:
         profile.update(supported_simulators=['mujoco'], experimental_modes_by_simulator={'mujoco':['display']},
             features=[*profile['features'],'gripper'], notes=profile['notes']+
-            ' Vendor F100 mount, collision geometry and one bounded jaw actuator with five linked followers. '
-            'The joint effort, rate and damping are declared simulation estimates. Grasp and mobile missions are experimental.')
-        changes.extend(('vendor F100 mount and linkage', 'declared bounded F100 simulation servo'))
+            ' Vendor F100 mount and one bounded jaw actuator with five linked followers. '
+            'Compound finger collisions and a nominal grasp frame are derived from the source CAD. '
+            'The joint effort, rate and damping are declared simulation estimates. Automated grasp is pending.')
+        changes.extend(('vendor F100 mount and linkage', 'declared bounded F100 simulation servo',
+                        'source CAD finger hulls, separate pad contacts, and nominal grasp frame'))
     receipt=dict(repository=source['repository'],source_id=source['id'],revision=source['revision'],license='BSD-3-Clause',
         original=str(root/entry),source_sha256=digest(root/entry),source_expanded_sha256=digest(target/'source-expanded.urdf'),
         description=str(output),description_sha256=digest(output),source_meshes_sha256=resources,

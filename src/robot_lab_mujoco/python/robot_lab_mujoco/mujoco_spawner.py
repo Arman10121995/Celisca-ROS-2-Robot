@@ -2060,7 +2060,7 @@ class MuJoCoSpawner(Node):
             self._articulation = ArticulationROS(self, articulation_contract, urdf, str(model))
             planning = articulation_contract.config.get('planning')
             if planning:
-                if (not isinstance(planning, dict) or set(planning)-{'schema', 'backend', 'joints'}
+                if (not isinstance(planning, dict) or set(planning)-{'schema', 'backend', 'joints', 'rate_scale'}
                         or planning.get('schema') != 'robot_lab.articulation_plan.v1' or planning.get('backend') != 'mujoco'):
                     raise ValueError('Unknown source articulation planning contract')
                 from robot_lab_mujoco.articulation_planner import ArticulationPlanner

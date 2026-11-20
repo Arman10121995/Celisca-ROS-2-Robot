@@ -334,7 +334,8 @@ def test_mobile_node_labels_the_section_as_fetch(panel, model):
 
 
 def test_gripper_presets_are_explicit_and_held_joints_are_excluded_from_plans(panel, model):
-    config = dict(CONFIG, planning={'joints': [J1]}, grip_presets={J2: {'open': .3, 'close': 0.}})
+    config = dict(CONFIG, planning={'joints': [J1]}, grip_presets={J2: {'open': .3, 'close': 0.}},
+                  grip_joints=[J2], grip_aperture={J2: [[0., 0.], [.3, .06]]})
     panel.app._robot_config = lambda: {'articulation': config}
     panel.joint_names = ()
     panel.rebuild()
@@ -344,3 +345,12 @@ def test_gripper_presets_are_explicit_and_held_joints_are_excluded_from_plans(pa
     panel.apply_grip_preset(J2, .3)
     assert json.loads(panel.pub.publish.call_args.args[0].data)['targets'] == {J2: .3}
     assert panel.current_targets() == {J1: panel.target_vars[J1].get()}
+    opening, _feedback, _aperture, button = panel.grip_openings[J2]
+    panel.update_buttons()
+    opening.set(30.)
+    button.invoke()
+    assert json.loads(panel.pub.publish.call_args.args[0].data)['targets'] == {J2: .15}
+    panel.pub.publish.reset_mock()
+    opening.set(61.)
+    button.invoke()
+    panel.pub.publish.assert_not_called()

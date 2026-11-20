@@ -2,9 +2,12 @@
 
 November 20 Pro630/F100: preserve the separate same-family mounted variant,
 original arm mesh hashes and one shaft effort budget with five passive
-followers. The normal MuJoCo GUI Open/Close screen passes for `nav_empty`.
-Flange plans hold the gripper. Pick/place and custody require a measured
-grasp frame and loaded missions. Keep the scoped End session cleanup when
+followers. The normal MuJoCo GUI Open/Close screen passes for `nav_empty`,
+and both variants completed small flange moves. Flange plans hold the
+gripper. Use the CAD-derived pad contacts and aperture curve when
+implementing loaded custody. The nominal grasp reference is fixed and
+pad depth varies with angle. The first isolated loaded fixture lost the
+block. Keep the scoped End session cleanup when
 the ROS context is already closed. [F100 receipt](status/evidence/r143-pro630-f100-2026-11-20/README.md).
 
 November 20 lying cylinders: use the **Arm pick-and-place lab** map family

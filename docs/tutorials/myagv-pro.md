@@ -104,7 +104,10 @@ remain distinct.
 In **Launch → Mobile manipulators**, choose **Elephant Robotics myAGV Pro +
 myCobot Pro630 → Pro630 with vendor F100 gripper**. Choose **MuJoCo**,
 **Display**, and `nav_empty`. **Mobile arm → Gripper** has **Open**, **Close**,
-and a position slider for the single jaw motor. The five followers move from
+and a position slider for the single jaw motor. Enter a gap in millimetres
+and click **Set opening (mm)** for an intermediate position. The estimated
+opening uses the measured shaft angle and the vendor CAD pad spacing. The
+five followers move from
 the mechanical coupling. **Stop / hold**, the heartbeat and the base-motion
 interlock apply to the gripper as well.
 
@@ -114,10 +117,13 @@ current pose, adjust XYZ in `base_footprint`, then press **Plan pose** and
 variant, plans hold the gripper while solving and collision-checking the six
 arm joints. Use **Open / Close** separately when the arm is stationary.
 
-The mounted F100 uses the vendor's Pro630 flange and CAD. Robot Lab uses a
-0.8 Nm motor cap, 0.5 rad/s reference cap and declared model damping. Pick,
-carry, release and additional backend missions still need implementation
-and measurement. [Pinned vendor source](https://github.com/elephantrobotics/mycobot_ros2/tree/b8176c264e583b073e1c4293c2edb1241b20e1aa/mycobot_pro/mycobotpro630_gazeboros2).
+The F100 uses the vendor's Pro630 flange and CAD. The inner pads are
+separate collision meshes. The fixed TF frame `pro630_f100_grasp_reference`
+marks the pad midpoint at a nominal 40.6 mm opening. The jaw linkage shifts
+that midpoint as the opening changes. Robot Lab uses a 0.8 Nm motor cap,
+0.5 rad/s reference cap and declared model damping. Pick, carry, release
+and additional backend missions remain open.
+[Pinned vendor source](https://github.com/elephantrobotics/mycobot_ros2/tree/b8176c264e583b073e1c4293c2edb1241b20e1aa/mycobot_pro/mycobotpro630_gazeboros2) · [MuJoCo evidence](../status/evidence/r143-pro630-f100-2026-11-20/README.md).
 
 ## How control and sensing connect
 

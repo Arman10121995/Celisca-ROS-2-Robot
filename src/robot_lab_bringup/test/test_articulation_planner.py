@@ -101,6 +101,23 @@ def test_blocked_goal_and_source_limit_violation_are_refused(tmp_path):
             plan_joints(scene, goal)
 
 
+def test_multiple_resting_contacts_keep_the_deepest_point_per_pair():
+    model = mj.MjModel.from_xml_string('''
+<mujoco><worldbody><geom type="plane" size="1 1 .01"/>
+<body name="base" pos="0 0 .049" euler="1 0 0">
+  <joint type="slide" name="height" axis="0 0 1"/>
+  <geom type="box" size=".05 .05 .05"/>
+</body></worldbody></mujoco>''')
+    data = mj.MjData(model)
+    mj.mj_forward(model, data)
+    depths = [contact.dist for contact in data.contact[:data.ncon]]
+    assert len(depths) == 4 and max(depths) - min(depths) > .001
+    scene = JointScene(model, data, model.body('base').id, {'height': {'type': 'prismatic'}}, ['height'])
+    assert list(scene.baseline.values()) == [min(depths)]
+    assert scene.collision_free([0.])
+    assert not scene.collision_free([-.001])
+
+
 def test_planning_does_not_move_and_execute_uses_actual_servo_physics(tmp_path):
     node, c, planner, addresses = ready_plan(tmp_path)
     assert node._data.qpos[addresses] == pytest.approx([0., 0.])

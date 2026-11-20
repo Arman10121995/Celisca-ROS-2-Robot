@@ -228,7 +228,9 @@ def attach_f100(base, articulation, source_root, mesh_dir):
         raise ValueError('Unexpected F100 actuator range')
     mesh_dir.mkdir(parents=True, exist_ok=True)
     resources = {}
+    jaw_collision = {}
     for link in links:
+        name = link.get('name')
         for mesh in link.findall('.//mesh'):
             uri = mesh.get('filename', '')
             if not uri.startswith('package://mycobot_description/'):
@@ -247,6 +249,8 @@ def attach_f100(base, articulation, source_root, mesh_dir):
                 visual.export(str(staged))
                 path = staged
             mesh.set('filename', str(path))
+        if name in {'gripper_left1', 'gripper_right1'}:
+            jaw_collision[name] = _f100_jaw_collision(link, mesh_dir)
         link.set('name', PREFIX+link.get('name'))
         base.append(link)
 
@@ -286,12 +290,94 @@ def attach_f100(base, articulation, source_root, mesh_dir):
         base.append(joint)
     if len(couplings) != 5:
         raise ValueError('F100 requires five source follower joints')
+    grasp_reference = _f100_grasp_reference(base, jaw_collision)
     articulation['joints'][leader] = caps
     articulation['home'][leader] = low
     articulation['couplings'] = couplings
     articulation['grip_joints'] = [leader]
     articulation['grip_presets'] = {leader: {'open': high, 'close': low}}
+    articulation['grip_aperture'] = {
+        leader: [[sample['shaft_rad'], sample['gap_m']] for sample in grasp_reference['aperture_samples']]}
     return dict(source_urdf=F100_URDF, source_urdf_sha256=_digest(urdf), resource_sha256=resources,
                 mesh_license_sha256=_digest(source_root/'mycobot_description/LICENSE'),
                 reversed_follower_axes=reversed_axes, lab_servo=caps,
-                source_mount='joint6_to_gripper_connect', original_followers=5)
+                source_mount='joint6_to_gripper_connect', original_followers=5, jaw_collision=jaw_collision,
+                grasp_reference=grasp_reference)
+
+
+def _f100_jaw_collision(link, mesh_dir):
+    """Preserve each distal pad as its own contact mesh from the vendor CAD."""
+    import trimesh
+
+    name = link.get('name')
+    visual = link.find('visual')
+    visual_mesh = trimesh.load(visual.find('geometry/mesh').get('filename'), force='mesh')
+    visual_mesh.apply_transform(_origin_matrix(visual.find('origin')))
+    parts = visual_mesh.split(only_watertight=False)
+    # The source has a separate thin pad on the inner face of the distal
+    # finger. The coarse Gazebo box covers the pad and extends into the gap.
+    pads = [mesh for mesh in parts if len(mesh.faces) == 12 and mesh.bounds[0, 1] > .015
+            and .0008 < mesh.extents[0] < .0013 and .029 < mesh.extents[1] < .031
+            and .011 < mesh.extents[2] < .013]
+    tips = [mesh for mesh in parts if len(mesh.faces) > 1000 and mesh.bounds[1, 1] > .047]
+    if len(pads) != 1 or len(tips) != 1 or not all(mesh.is_watertight for mesh in pads + tips):
+        raise ValueError('F100 source finger and pad geometry differs: '+name)
+    pad, tip = pads[0], tips[0]
+    proximal = trimesh.util.concatenate([mesh for mesh in parts if mesh is not pad and mesh is not tip])
+    original = link.find('collision')
+    trace = {'source_proxy_sha256': _digest(original.find('geometry/mesh').get('filename'))}
+    link.remove(original)
+    for label, shape in (('mount', proximal.convex_hull), ('finger', tip.convex_hull), ('pad', pad)):
+        path = mesh_dir / (name+'_'+label+'_contact.stl')
+        shape.export(str(path))
+        collision = ET.SubElement(link, 'collision', name=PREFIX+name+'_'+label+'_contact')
+        ET.SubElement(ET.SubElement(collision, 'geometry'), 'mesh', filename=str(path))
+        trace[label] = dict(sha256=_digest(path), bounds_m=shape.bounds.tolist())
+    inward = pad.vertices[:, 0] if name.endswith('left1') else -pad.vertices[:, 0]
+    trace['pad']['inner_face_center_m'] = pad.vertices[inward > inward.max()-.00006].mean(axis=0).tolist()
+    return trace
+
+
+def _f100_grasp_reference(urdf, jaw_collision):
+    """Fixed nominal grasp frame and pad geometry expressed in the gripper base."""
+    from scipy.spatial.transform import Rotation
+
+    mount = PREFIX+'gripper_base'
+    joint_by_child = {joint.find('child').get('link'): joint for joint in urdf.findall('joint')}
+    jaw_points = [np.array([*jaw_collision[jaw]['pad']['inner_face_center_m'], 1.])
+                  for jaw in ('gripper_left1', 'gripper_right1')]
+
+    def in_mount(jaw, point, shaft):
+        while jaw != mount:
+            joint = joint_by_child[jaw]
+            offset = _origin_matrix(joint.find('origin'))
+            if joint.get('type') == 'revolute':
+                axis = np.fromstring(joint.find('axis').get('xyz'), sep=' ')
+                offset[:3, :3] @= Rotation.from_rotvec(axis*shaft).as_matrix()
+            point = offset @ point
+            jaw = joint.find('parent').get('link')
+        return point[:3]
+
+    # The source is a parallelogram. The contact surfaces translate in depth
+    # as the jaws move, so this fixed frame names its reference aperture.
+    nominal = .35
+    samples = []
+    for index in range(41):
+        shaft = index/40.
+        left, right = [in_mount(PREFIX+jaw, point, shaft)
+                       for jaw, point in zip(('gripper_left1', 'gripper_right1'), jaw_points)]
+        samples.append(dict(shaft_rad=shaft, gap_m=float(right[0]-left[0]),
+                            midpoint_m=((left+right)*.5).tolist()))
+    reference = next(sample for sample in samples if sample['shaft_rad'] == nominal)
+    gaps = [sample['gap_m'] for sample in samples]
+    if not (all(a < b for a, b in zip(gaps, gaps[1:])) and .035 < reference['gap_m'] < .045):
+        raise ValueError('F100 source pad aperture differs from its nominal grasp frame')
+    # Tool Y closes across jaw centers; tool Z points into the grasp.
+    frame = PREFIX+'f100_grasp_reference'
+    ET.SubElement(urdf, 'link', name=frame)
+    joint = ET.SubElement(urdf, 'joint', name=frame+'_joint', type='fixed')
+    ET.SubElement(joint, 'parent', link=mount)
+    ET.SubElement(joint, 'child', link=frame)
+    ET.SubElement(joint, 'origin', xyz=_vector(reference['midpoint_m']),
+                  rpy=_vector((0., -math.pi/2, -math.pi/2)))
+    return dict(frame=frame, parent=mount, nominal=reference, aperture_samples=samples)

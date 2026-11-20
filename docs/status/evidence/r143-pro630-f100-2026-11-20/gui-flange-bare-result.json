@@ -1,0 +1,276 @@
+{
+  "robot": "asset_elephant_myagv_pro_pro630",
+  "simulator": "mujoco",
+  "map": "nav_empty",
+  "steps": [
+    {
+      "pressed": "Plan pose",
+      "button_state": "()",
+      "page_status": "Tool pose requested. Review the route before Execute."
+    },
+    {
+      "pressed": "Execute plan",
+      "button_state": "()",
+      "page_status": "Holding measured joints for an explicit plan"
+    }
+  ],
+  "passed": true,
+  "page_selected": true,
+  "rows": [
+    "J1 \u00b7 joint1_to_base",
+    "J2 \u00b7 joint2_to_joint1",
+    "J3 \u00b7 joint3_to_joint2",
+    "J4 \u00b7 joint4_to_joint3",
+    "J5 \u00b7 joint5_to_joint4",
+    "J6 \u00b7 joint6_to_joint5"
+  ],
+  "command": "ros2 launch robot_lab_bringup simulated_robot.launch.py robot_model:=asset_elephant_myagv_pro_pro630 simulator:=mujoco use_sim_time:=true map_name:=nav_empty world_package:=robot_lab_maps world_name:=nav_empty world_path:=maps/nav_empty/worlds/nav_empty.world map_yaml:=maps/nav_empty/maps/map.yaml mode:=display gui:=false perception:=none",
+  "flange": {
+    "start_m": [
+      6.4531013985097e-06,
+      0.14099999961760862,
+      1.07499999981195
+    ],
+    "target_m": [
+      -0.008444,
+      0.14075,
+      1.075
+    ],
+    "before_joints": {
+      "pro630_joint1_to_base": 7.212299623490601e-06,
+      "pro630_joint2_to_joint1": -8.150421610881349e-06,
+      "pro630_joint3_to_joint2": -7.897441698855858e-06,
+      "pro630_joint4_to_joint3": -2.5830155772090902e-06,
+      "pro630_joint5_to_joint4": -4.061632534931527e-09,
+      "pro630_joint6_to_joint5": 1.5571126015397171e-09
+    },
+    "plan": {
+      "schema": "robot_lab.articulation_plan.v1",
+      "available": true,
+      "phase": "ready",
+      "message": "Plan ready; inspect targets and explicitly Execute within 10 seconds",
+      "request_id": "ef14dc272d3f4044b8af476e89dc6ad8",
+      "plan_id": "dc2fafc246c64364a253fed6ff189732",
+      "targets": {
+        "pro630_joint1_to_base": 0.0494278810783432,
+        "pro630_joint2_to_joint1": -0.001717410457428297,
+        "pro630_joint3_to_joint2": -0.00022664229547893883,
+        "pro630_joint4_to_joint3": 0.002911821813520312,
+        "pro630_joint5_to_joint4": 0.011472831818368312,
+        "pro630_joint6_to_joint5": -1.981637218127932e-09
+      },
+      "tool": {
+        "schema": "robot_lab.cartesian_goal.v1",
+        "frame": "base_footprint",
+        "tip_frame": "pro630_link6",
+        "position": [
+          1.470206368949739e-05,
+          0.1409999988780592,
+          1.0749999998284587
+        ],
+        "orientation_wxyz": [
+          -3.0933046595664e-05,
+          0.7071744155092665,
+          0.7070391390408531,
+          -3.0929649072692574e-05
+        ],
+        "rpy_deg": [
+          -179.99498736051055,
+          2.041874885510906e-07,
+          89.9890387549283
+        ]
+      },
+      "cartesian_request": {
+        "frame": "base_footprint",
+        "position": [
+          -0.008444,
+          0.14075,
+          1.075
+        ],
+        "orientation": "free"
+      },
+      "waypoint": 0,
+      "waypoints": 1,
+      "planner": {
+        "algorithm": "direct",
+        "nodes": 5,
+        "edges": 6,
+        "inspections": 31,
+        "max_sample_dt_s": 0.025,
+        "position_rates": {
+          "pro630_joint1_to_base": 0.1,
+          "pro630_joint2_to_joint1": 0.1,
+          "pro630_joint3_to_joint2": 0.1,
+          "pro630_joint4_to_joint3": 0.1,
+          "pro630_joint5_to_joint4": 0.1,
+          "pro630_joint6_to_joint5": 0.1
+        },
+        "ik_attempts": [
+          {
+            "seed": 0,
+            "position_m": 1.6940641392843524e-06,
+            "orientation_rad": null,
+            "collision_free": true,
+            "duplicate": false
+          },
+          {
+            "seed": 1,
+            "position_m": 1.4469231757196777e-06,
+            "orientation_rad": null,
+            "collision_free": true,
+            "duplicate": false
+          },
+          {
+            "seed": 2,
+            "position_m": 2.002164866646839e-06,
+            "orientation_rad": null,
+            "collision_free": true,
+            "duplicate": true
+          },
+          {
+            "seed": 3,
+            "position_m": 5.778905836472975e-08,
+            "orientation_rad": null,
+            "collision_free": true,
+            "duplicate": false
+          },
+          {
+            "seed": 4,
+            "position_m": 1.2558169978532968e-06,
+            "orientation_rad": null,
+            "collision_free": true,
+            "duplicate": false
+          }
+        ],
+        "ik_candidates": 4
+      },
+      "scene_sha256": "b59d093c4e703f0efa5310aa55f88d354e437a9888394d8ea965b7044260589d",
+      "snapshot_sha256": "59a5c995a7036bb5105e9c9cc8f7eb3ed7e504bd5dc0300d561677c7bffdec4d",
+      "ready_age_s": 0.06468386802589521
+    },
+    "execution": {
+      "schema": "robot_lab.articulation_plan.v1",
+      "available": true,
+      "phase": "succeeded",
+      "message": "All planned waypoints measured and settled; holding joints",
+      "request_id": "ef14dc272d3f4044b8af476e89dc6ad8",
+      "plan_id": "dc2fafc246c64364a253fed6ff189732",
+      "targets": {
+        "pro630_joint1_to_base": 0.0494278810783432,
+        "pro630_joint2_to_joint1": -0.001717410457428297,
+        "pro630_joint3_to_joint2": -0.00022664229547893883,
+        "pro630_joint4_to_joint3": 0.002911821813520312,
+        "pro630_joint5_to_joint4": 0.011472831818368312,
+        "pro630_joint6_to_joint5": -1.981637218127932e-09
+      },
+      "tool": {
+        "schema": "robot_lab.cartesian_goal.v1",
+        "frame": "base_footprint",
+        "tip_frame": "pro630_link6",
+        "position": [
+          -0.008329144209226626,
+          0.1407572466580067,
+          1.0749999389926392
+        ],
+        "orientation_wxyz": [
+          -0.0004432726931025088,
+          0.6853639715364176,
+          0.7282003969162111,
+          -0.000460391378152544
+        ],
+        "rpy_deg": [
+          -179.92676906193407,
+          -0.000831440561672312,
+          93.47150109706389
+        ]
+      },
+      "cartesian_request": {
+        "frame": "base_footprint",
+        "position": [
+          -0.008444,
+          0.14075,
+          1.075
+        ],
+        "orientation": "free"
+      },
+      "waypoint": 1,
+      "waypoints": 1,
+      "planner": {
+        "algorithm": "direct",
+        "nodes": 5,
+        "edges": 6,
+        "inspections": 31,
+        "max_sample_dt_s": 0.025,
+        "position_rates": {
+          "pro630_joint1_to_base": 0.1,
+          "pro630_joint2_to_joint1": 0.1,
+          "pro630_joint3_to_joint2": 0.1,
+          "pro630_joint4_to_joint3": 0.1,
+          "pro630_joint5_to_joint4": 0.1,
+          "pro630_joint6_to_joint5": 0.1
+        },
+        "ik_attempts": [
+          {
+            "seed": 0,
+            "position_m": 1.6940641392843524e-06,
+            "orientation_rad": null,
+            "collision_free": true,
+            "duplicate": false
+          },
+          {
+            "seed": 1,
+            "position_m": 1.4469231757196777e-06,
+            "orientation_rad": null,
+            "collision_free": true,
+            "duplicate": false
+          },
+          {
+            "seed": 2,
+            "position_m": 2.002164866646839e-06,
+            "orientation_rad": null,
+            "collision_free": true,
+            "duplicate": true
+          },
+          {
+            "seed": 3,
+            "position_m": 5.778905836472975e-08,
+            "orientation_rad": null,
+            "collision_free": true,
+            "duplicate": false
+          },
+          {
+            "seed": 4,
+            "position_m": 1.2558169978532968e-06,
+            "orientation_rad": null,
+            "collision_free": true,
+            "duplicate": false
+          }
+        ],
+        "ik_candidates": 4,
+        "measured_tcp_error": {
+          "position_m": 0.0004508357715238886,
+          "orientation_rad": null
+        }
+      },
+      "scene_sha256": "b59d093c4e703f0efa5310aa55f88d354e437a9888394d8ea965b7044260589d",
+      "snapshot_sha256": "59a5c995a7036bb5105e9c9cc8f7eb3ed7e504bd5dc0300d561677c7bffdec4d",
+      "ready_age_s": null
+    },
+    "measured_m": [
+      -0.008329144209226626,
+      0.1407572466580067,
+      1.0749999389926392
+    ],
+    "after_joints": {
+      "pro630_joint1_to_base": 0.0493119555415355,
+      "pro630_joint2_to_joint1": -0.0016153251421656336,
+      "pro630_joint3_to_joint2": -0.0001397159632557871,
+      "pro630_joint4_to_joint3": 0.0029428192685686913,
+      "pro630_joint5_to_joint4": 0.011471831425561923,
+      "pro630_joint6_to_joint5": -1.4431431702345408e-08
+    },
+    "motion_m": 0.008339131341332589,
+    "error_m": 0.00011508418852449534
+  },
+  "launch_returncode": 0
+}

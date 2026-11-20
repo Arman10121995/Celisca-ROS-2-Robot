@@ -67,22 +67,28 @@ class JointScene:
             elif int(model.jnt_type[joint]) == int(mj.mjtJoint.mjJNT_FREE):
                 self.root_addresses.extend(range(start, end))
         mj.mj_forward(self.model, self.data)
-        self.baseline = {tuple(sorted(map(int, contact.geom))): float(contact.dist)
-                         for contact in self.data.contact[:self.data.ncon]}
+        self.baseline = {}
+        for contact in self.data.contact[:self.data.ncon]:
+            pair = tuple(sorted(map(int, contact.geom)))
+            self.baseline[pair] = min(float(contact.dist), self.baseline.get(pair, math.inf))
 
     def values(self, data):
         return np.array([float(data.qpos[self.addresses[n]]) for n in self.names])
 
     def settled_start(self, data):
+        return not self.snapshot_change(data)
+
+    def snapshot_change(self, data):
         if (not np.array_equal(data.eq_active, self.equalities)
                 or not np.allclose(data.mocap_pos, self.mocap_pos, atol=.001, rtol=0.)
                 or not np.allclose(data.mocap_quat, self.mocap_quat, atol=.001, rtol=0.)):
-            return False
+            return 'Scene constraints or mocap geometry changed'
         if self.scene_addresses and np.max(np.abs(data.qpos[self.scene_addresses]-self.snapshot[self.scene_addresses])) > .001:
-            return False
+            return 'An independent body moved in the scene'
         if self.root_addresses and np.max(np.abs(data.qpos[self.root_addresses]-self.snapshot[self.root_addresses])) > .001:
-            return False
-        return True
+            translation = np.linalg.norm(data.qpos[self.root_addresses[:3]]-self.snapshot[self.root_addresses[:3]])
+            return f'Mobile base drifted {translation*1000:.2f} mm from the planning snapshot'
+        return ''
 
     def configuration_matches(self, data, names=None, factor=2.):
         for name in names if names is not None else self.specs:
@@ -149,12 +155,17 @@ def plan_joints(scene, targets, *, budget=8.):
 class ArticulationPlanner:
     """Requests enqueue in ROS; snapshots/execution run under the physics lock."""
     def __init__(self, node, contract, urdf=None):
-        names = contract.config.get('planning', {}).get('joints', contract.masters)
+        config = contract.config.get('planning', {})
+        names = config.get('joints', contract.masters)
         if (not isinstance(names, (list, tuple)) or not names or len(set(names)) != len(names)
                 or set(names)-set(contract.masters) or any(s['mode'] != 'position' for s in contract.joints.values())):
             raise ValueError('Joint planner requires declared independent source position channels')
         if any(not item.get('passive') or item['joint'] in names for item in contract.couplings.values()):
             raise ValueError('Planning requires coupled attachments to remain held')
+        scale = config.get('rate_scale', 1.)
+        if isinstance(scale, bool) or not isinstance(scale, (int, float)) or not .01 <= scale <= 1.:
+            raise ValueError('Planned position rate scale must be in [0.01, 1]')
+        self.rate_scale = float(scale)
         self.plan_joints = frozenset(names)
         self.node, self.contract = node, contract
         self.lock = threading.RLock()
@@ -270,7 +281,8 @@ class ArticulationPlanner:
         for name in targets:
             spec = self.contract.joints[name]
             tracking = .003 if spec['type'] == 'prismatic' else .04
-            self.rates[name] = min(.5*spec['max_velocity'], .5*tracking*spec['kp']/max(spec['kd'], 1e-9))
+            self.rates[name] = self.rate_scale * min(
+                .5*spec['max_velocity'], .5*tracking*spec['kp']/max(spec['kd'], 1e-9))
             scene.specs[name]['max_velocity'] = self.rates[name]
         generation = self.generation
         def work():
@@ -294,12 +306,19 @@ class ArticulationPlanner:
         self.worker.start()
 
     def _scene_matches(self, data, start=False):
+        return not self._scene_change(data, start=start)
+
+    def _scene_change(self, data, start=False):
         if self.scene is None or self.node._model.nq != len(self.scene.snapshot):
-            return False
-        if geometry_digest(self.node._model) != self.scene.geometry or not self.scene.settled_start(data):
-            return False
+            return 'Compiled scene is missing or has changed dimensions'
+        if geometry_digest(self.node._model) != self.scene.geometry:
+            return 'Collision geometry changed'
+        change = self.scene.snapshot_change(data)
+        if change:
+            return change
         held = set(self.contract.joints)-set(self.targets)
-        return self.scene.configuration_matches(data, names=None if start else held)
+        return '' if self.scene.configuration_matches(data, names=None if start else held) else (
+            'Robot start changed' if start else 'A held joint left its planning position')
 
     def tick(self, positions, velocities, dt, base_moving=False):
         """Before the existing source contract advances its servo references."""
@@ -344,8 +363,10 @@ class ArticulationPlanner:
                     if time.monotonic()-self.ready_at > 10. or not self._scene_matches(data, start=True):
                         raise ValueError('Plan expired or robot/scene changed; Plan again')
                 elif self.phase == 'executing':
-                    if c.holding or not self._scene_matches(data):
-                        raise ValueError('Plan interrupted by hold or changed robot/scene')
+                    if c.holding:
+                        raise ValueError('Plan interrupted by articulation hold')
+                    if change := self._scene_change(data):
+                        raise ValueError(change)
                     if time.monotonic()-self.execution_at > 90. or time.monotonic()-self.segment_at > 30.:
                         raise ValueError('Planned joint motion did not settle within its bounded deadline')
                     # Both actual pose and the next rate-limited servo reference
