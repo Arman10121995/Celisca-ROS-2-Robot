@@ -1,0 +1,13 @@
+[
+ {
+  "robot": "lab_snake",
+  "map": "nav_empty",
+  "spawn": null,
+  "simulator": "pybullet",
+  "acquisition": {
+   "run": "/workspace/molar/robot_lab_runtime/snake-pybullet-20261120/cal2-savedmap-pybullet/runs/82b448a5bcc9462285112bdde552a49e",
+   "success": false,
+   "reason": "Measured extension workload timed out"
+  }
+ }
+]

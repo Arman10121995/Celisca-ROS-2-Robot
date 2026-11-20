@@ -1,0 +1,31 @@
+[
+ {
+  "robot": "lab_snake",
+  "map": "nav_empty",
+  "spawn": null,
+  "simulator": "pybullet",
+  "acquisition": {
+   "run": "/workspace/molar/robot_lab_runtime/snake-pybullet-20261120/cal4-savedmap-pybullet/runs/921c444699164551ae30c434a828252d",
+   "success": true,
+   "reason": "Actual travel and nonempty acquired map archived",
+   "map_yaml": "/workspace/molar/robot_lab_runtime/gait_sessions/lab_snake-r45eum7l/saved_maps/map-d52ecb0cef/map.yaml",
+   "known_cells": 38589,
+   "start": [
+    -0.28385716676712036,
+    -0.5217631459236145,
+    -0.040588181772271525
+   ]
+  },
+  "navigation": {
+   "run": "/workspace/molar/robot_lab_runtime/snake-pybullet-20261120/cal4-savedmap-pybullet/runs/cc0fcd761aad40639f0c4af370487f49",
+   "goal": [
+    0.2157310396450553,
+    -0.5420516651861275,
+    -0.040588181772271525
+   ],
+   "success": false,
+   "reason": "Native Nav2 terminal status 5",
+   "measurements": []
+  }
+ }
+]

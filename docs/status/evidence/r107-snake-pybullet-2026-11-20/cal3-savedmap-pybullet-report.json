@@ -1,0 +1,13 @@
+[
+ {
+  "robot": "lab_snake",
+  "map": "nav_empty",
+  "spawn": null,
+  "simulator": "pybullet",
+  "acquisition": {
+   "run": "/workspace/molar/robot_lab_runtime/snake-pybullet-20261120/cal3-savedmap-pybullet/runs/75cbbd12b84249c2a81b95cc7b29b4b9",
+   "success": false,
+   "reason": "Actual acquisition did not reach the requested physical travel"
+  }
+ }
+]

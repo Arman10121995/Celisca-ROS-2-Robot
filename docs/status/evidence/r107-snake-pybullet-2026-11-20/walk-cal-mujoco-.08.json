@@ -1,0 +1,51 @@
+{
+ "metrics": {
+  "walk_sim_s": 10.06,
+  "turned_rad": -0.2540097133550764,
+  "mean_yaw_rate": -0.02524947448857618,
+  "displacement_m": 3.5528951335301433,
+  "along_initial_heading_m": 3.530541730465246,
+  "across_m": 0.39791823193420256,
+  "drift_per_rad_m": 13.987241222400044
+ },
+ "command": {
+  "yaw": "0",
+  "speed": ".08"
+ },
+ "recovery_reasons": [
+  "null"
+ ],
+ "recovery_history": [
+  {
+   "sim": 1.143999999,
+   "recovery": {
+    "recovering": false,
+    "reason": null,
+    "recoveries_in_window": 0,
+    "budget": 3,
+    "speed_scale": 1.0
+   },
+   "position": {
+    "x": -0.5027153951967777,
+    "y": -0.5000000862682908,
+    "z": 0.054986005059227454
+   },
+   "tilt": 1.0183692842346548e-06
+  }
+ ],
+ "push": "",
+ "passed": true,
+ "reason": "turned -0.254 rad in 10.1 s; moved 3.5529 m (along 3.5305, across 0.3979)",
+ "backend": "mujoco",
+ "robot": "lab_snake",
+ "terrain": false,
+ "wall_seconds": 17.648741567973047,
+ "phase": "holding",
+ "wall_budget_s": 300.0,
+ "state_publishers": [
+  {
+   "node": "source_gait_controller",
+   "namespace": "/"
+  }
+ ]
+}

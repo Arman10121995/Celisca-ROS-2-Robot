@@ -6,7 +6,7 @@ import numpy as np
 
 
 class GaitPlant:
-    def __init__(self,sdk,robot,description,config,probes):
+    def __init__(self,sdk,robot,description,config,probes,contacts=None):
         self.p,self.robot=sdk,robot
         self.config=json.loads(config) if isinstance(config,str) else config
         self.probes=json.loads(probes) if isinstance(probes,str) else probes
@@ -38,7 +38,34 @@ class GaitPlant:
         if len(self.limits)!=count:raise ValueError('Complete source effort vector required')
         self.targets=self.defaults.copy();self.at=None;self.timeout=float(self.config.get('timeout_s',.5))
         self.foot_groups={self.links[probe['foot']]:name for name,probe in self.probes.items()}
-        # Keep ordinary collisions (mask 1) while excluding the whole robot
+        # Named contact groups by URDF collision name, as the MuJoCo plant
+        # takes them (gait_contact_config). The passive-wheel snake has no
+        # foot probes; its odometry needs each wheel's rolling contact.
+        self.groups=[name for name in self.probes]
+        contacts=json.loads(contacts) if isinstance(contacts,str) and contacts else contacts
+        if contacts:
+            owner={collision.get('name'):link.get('name') for link in tree.findall('link')
+                   for collision in link.findall('collision') if collision.get('name')}
+            self.foot_groups={}
+            for group,collisions in contacts.items():
+                for collision in collisions:
+                    if collision not in owner or owner[collision] not in self.links:
+                        raise ValueError('Configured gait contact geometry is missing: '+collision)
+                    index=self.links[owner[collision]]
+                    if self.foot_groups.get(index,group)!=group:raise ValueError('Contact groups must be disjoint')
+                    self.foot_groups[index]=group
+            self.groups=[name for name in contacts if name!='body']
+            # The URDF gives these links no surface friction; MuJoCo's and
+            # Gazebo's default is 1.0, Bullet's 0.5. At 0.5 the snake's passive
+            # wheels slid sideways and 35 % of its rolling-odometry samples
+            # failed their no-slip check (2026-11-20).
+            for index,group in self.foot_groups.items():
+                if group!='body':sdk.changeDynamics(robot,index,lateralFriction=1.)
+        # Bullet's rolling cylinders touch the plane on alternate substeps:
+        # the last substep showed 2-4 of the snake's 20 wheels, short of its
+        # odometry's three supports (2026-11-20). Contact groups average each
+        # substep's normal forces over the publish window instead.
+        self.averaged=bool(contacts);self.window={};self.window_steps=0        # Keep ordinary collisions (mask 1) while excluding the whole robot
         # from the terrain ray's mask 1. Stepping through a hollow trunk in
         # millimetres is neither reliable nor a range observation.
         for body_index in range(sdk.getNumBodies()):
@@ -85,18 +112,37 @@ class GaitPlant:
 
     def align(self,reference):
         lifts=[]
-        for probe in self.probes.values():
-            position=self.link_pose(probe['foot'])[0];origin=position.copy();origin[2]=reference+.6
+        supports=[probe['foot'] for probe in self.probes.values()] or [
+            name for name,index in self.links.items() if self.foot_groups.get(index,'body')!='body']
+        if not supports:raise ValueError('No configured support links to place on the floor')
+        for link in supports:
+            position=self.link_pose(link)[0];origin=position.copy();origin[2]=reference+.6
             distance=self.ray(origin,1.2)
             if distance is None:raise ValueError('No actual initial foot support')
-            lifts.append(origin[2]-distance-self.p.getAABB(self.robot,self.links[probe['foot']])[0][2]+.002)
+            lifts.append(origin[2]-distance-self.p.getAABB(self.robot,self.links[link])[0][2]+.002)
         if max(lifts)-min(lifts)>.04:raise ValueError('Initial source stance needs flatter support')
         position,q=self.p.getBasePositionAndOrientation(self.robot)
         self.p.resetBasePositionAndOrientation(self.robot,[position[0],position[1],position[2]+max(lifts)],q)
 
-    def measure(self,stamp):
-        forces={name:0. for name in self.probes};forces['body']=0.
+    def forces(self):
+        forces={name:0. for name in self.groups};forces['body']=0.
         for contact in self.p.getContactPoints(bodyA=self.robot):
             if contact[2]==self.robot or self.p.getDynamicsInfo(contact[2],-1)[0]>0:continue
             forces[self.foot_groups.get(contact[3],'body')]+=max(0.,float(contact[9]))
-        return dict(schema_version=1,clock_time=stamp,sim_time=stamp,normal_forces_N=forces,source='Actual Bullet static-world collision normal forces')
+        return forces
+
+    def sample(self):
+        """After each physics substep: accumulate averaged contact groups."""
+        if not self.averaged:return
+        # At most the last 50 substeps (50 ms): a window from spawn averaged
+        # the drop onto the floor and failed the arm's support check.
+        if self.window_steps>=50:self.window={};self.window_steps=0
+        for name,value in self.forces().items():self.window[name]=self.window.get(name,0.)+value
+        self.window_steps+=1
+
+    def measure(self,stamp):
+        if self.averaged and self.window_steps:
+            forces={name:self.window.get(name,0.)/self.window_steps for name in self.groups+['body']}
+            self.window={};self.window_steps=0
+        else:forces=self.forces()
+        return dict(schema_version=1,clock_time=stamp,sim_time=stamp,normal_forces_N=forces,source='Actual Bullet static-world collision normal forces'+(' (mean over the window substeps)' if self.averaged else ''))

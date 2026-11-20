@@ -345,7 +345,7 @@ class GaitController(Node):
                 self.filtered[:]=0.
             else:self.filtered+=np.clip(wanted-self.filtered,-np.array([.06,.06,.25])*dt,np.array([.06,.06,.25])*dt)
             if np.linalg.norm(self.filtered)>.001 and dt>0:
-                self.phase=(self.phase+dt/self.cfg['cycle_s']*(self.spine_freq if self.cfg.get('kind')=='serpentine' else 1.))%1.
+                self.phase=(self.phase+dt/self.cfg['cycle_s']*(self.spine_freq*self.model.phase_rate(self.filtered) if self.cfg.get('kind')=='serpentine' else 1.))%1.
                 candidate,error,self.planned=self.model.targets(self.phase,self.filtered,self.targets,self.gait,
                     spine_phase=self.spine_phase,spine_freq=self.spine_freq,**({'terrain':terrain} if self.terrain_enabled else {}))
                 self.max_ik_error=error

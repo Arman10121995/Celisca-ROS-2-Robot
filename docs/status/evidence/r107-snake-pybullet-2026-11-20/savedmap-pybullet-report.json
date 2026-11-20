@@ -1,0 +1,31 @@
+[
+ {
+  "robot": "lab_snake",
+  "map": "nav_empty",
+  "spawn": null,
+  "simulator": "pybullet",
+  "acquisition": {
+   "run": "/workspace/molar/robot_lab_runtime/snake-pybullet-20261120/savedmap-pybullet/runs/a5e556be54064be6ab49212e608f4883",
+   "success": true,
+   "reason": "Actual travel and nonempty acquired map archived",
+   "map_yaml": "/workspace/molar/robot_lab_runtime/gait_sessions/lab_snake-os3byj16/saved_maps/map-635dc9a1b1/map.yaml",
+   "known_cells": 37448,
+   "start": [
+    -0.23276549577713013,
+    -0.5522221326828003,
+    -0.05242669352157053
+   ]
+  },
+  "navigation": {
+   "run": "/workspace/molar/robot_lab_runtime/snake-pybullet-20261120/savedmap-pybullet/runs/8fe3ba2ab39747348cc5d7b4ee6a9274",
+   "goal": [
+    0.2665475220469695,
+    -0.5784234729422292,
+    -0.05242669352157053
+   ],
+   "success": false,
+   "reason": "Measured extension workload timed out",
+   "measurements": []
+  }
+ }
+]

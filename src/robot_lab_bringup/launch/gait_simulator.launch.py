@@ -62,7 +62,7 @@ def setup(context):
     contacts={leg['id']:leg['contact_geoms'] for leg in model.legs}
     contacts['body']=model.body_geoms if model.config.get('kind')=='serpentine' else ['base_link_contact_0'] if name=='hexapod_ros2' else ['base_link_collision']+['segment_'+str(i)+'_collision' for i in range(1,len(model.config.get('spines',[]))+1)]
     probes={leg['id']:dict(root=leg['root'],foot=leg['foot'],home=model.home[leg['id']].tolist()) for leg in model.legs} if model.config.get('kind')!='serpentine' else {}
-    if backend!='mujoco' and not probes:raise ValueError('Passive-wheel snake needs its source-specific contact/rolling adapter; use MuJoCo')
+    if backend not in ('mujoco','pybullet') and not probes:raise ValueError('Passive-wheel snake needs its source-specific contact/rolling adapter; use MuJoCo or PyBullet')
     args=dict(model=str(description),robot_name=name,robot_package='robot_lab_robots',robot_xacro=profile['xacro'],
               world_name=Path(explicit_mjcf).stem,world_path=source_world,gui=value('gui'),use_sim_time='true',
               hold_position='false',joint_pd_config=json.dumps(model.pd_config()),pd_joint_armature='.01',
@@ -82,6 +82,7 @@ def setup(context):
         args=dict(model=str(description),robot_name=name,gui=value('gui'),world_name=gz['world_name'],world_path=source_world,
             hold_position='false',joint_pd_config=json.dumps(model.pd_config()),gait_probe_config=json.dumps(probes),
             gait_floor_reference=floor_reference,physics_rate='1000.',**{'spawn_'+key:str(item) for key,item in pose.items()},
+            **({'gait_contact_config':json.dumps(contacts)} if backend=='pybullet' and not probes else {}),
             **({'sensor_config':args['sensor_config']} if 'sensor_config' in args else {}))
     manifest=dict(robot=name,map=selected,backend=backend,world_xml=explicit_mjcf,spawn=pose,
                   task=task,sensor_kit=task!='gait',

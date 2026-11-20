@@ -27,7 +27,7 @@ class SerpentineOdometry(Node):
         self.model=SerpentineModel(Path(self.get_parameter('description_file').value).read_text(),self.get_parameter('gait_config').value)
         self.reference=float(self.get_parameter('initial_drive_yaw').value)
         self.imu=self.contacts=self.previous=None;self.imu_at=self.contacts_at=-math.inf
-        self.position=np.zeros(2);self.last_stamp=self.engine_stamp=None;self.invalidated=False;self.samples=0
+        self.position=np.zeros(2);self.last_stamp=self.engine_stamp=None;self.invalidated=False;self.samples=0;self.state_at=-math.inf
         self.covariance=.0001
         self.missing_travel_bound=0.
         self.pub=self.create_publisher(Odometry,'/gait/odometry',10)
@@ -81,7 +81,12 @@ class SerpentineOdometry(Node):
                 supports,dt,angular,float(self.model.config['wheel_radius']),relative_velocities=relative_velocities)
         except ValueError as exc:
             if 0<dt<=.5:
-                self.covariance+=(.5*dt)**2;self.missing_travel_bound+=.5*dt
+                # Unobserved travel at twice the configured top speed: the
+                # calibrated wave reaches 0.074-0.085 m/s at max_speed 0.08
+                # (2026-11-20). The 0.5 m/s constant predates that calibration
+                # and exhausted the 0.1 m bound after a few invalid samples.
+                bound=2*float(self.model.config['max_speed'])
+                self.covariance+=(bound*dt)**2;self.missing_travel_bound+=bound*dt
             self.state.publish(String(data=json.dumps(dict(valid=False,measurement_valid=False,reason=str(exc),samples=self.samples,
                 pose_uncertainty_exceeded=self.covariance>.04 or self.missing_travel_bound>.1,
                 missing_travel_bound_m=self.missing_travel_bound,position_std_m=math.sqrt(self.covariance)))))
@@ -104,7 +109,12 @@ class SerpentineOdometry(Node):
         trunk.transform.translation.z=float(self.model.config['standing_height'])
         trunk.transform.rotation.z=math.sin(-relative_heading/2);trunk.transform.rotation.w=math.cos(-relative_heading/2)
         self.tf.sendTransform([transform,trunk]);self.samples+=1
-        if self.samples%10==0:self.state.publish(String(data=json.dumps(dict(valid=self.covariance<=.04 and self.missing_travel_bound<=.1,measurement_valid=True,samples=self.samples,supports=sorted(supports),
+        # Every tenth sample, and at least every 0.2 wall s: the controller
+        # needs a valid state within 0.6 s, and ten samples took ~0.55 s on
+        # PyBullet at 0.36x real time (2026-11-20, navigation interrupted).
+        if self.samples%10==0 or time.monotonic()-self.state_at>=.2:
+            self.state_at=time.monotonic()
+            self.state.publish(String(data=json.dumps(dict(valid=self.covariance<=.04 and self.missing_travel_bound<=.1,measurement_valid=True,samples=self.samples,supports=sorted(supports),
             pose_uncertainty_exceeded=self.covariance>.04 or self.missing_travel_bound>.1,missing_travel_bound_m=self.missing_travel_bound,
             position_std_m=math.sqrt(self.covariance),
             position=self.position.tolist(),velocity_scatter_m_s=scatter,

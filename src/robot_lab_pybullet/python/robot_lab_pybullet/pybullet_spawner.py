@@ -308,6 +308,7 @@ class PyBulletSpawner(Node):
         self.declare_parameter("articulation_config", "")
         self.declare_parameter('joint_pd_config','')
         self.declare_parameter('gait_probe_config','')
+        self.declare_parameter('gait_contact_config','')
         self.declare_parameter('gait_floor_reference','')
         self._gait_plant=None
         self.get_logger().info("Parameters declared")
@@ -1170,7 +1171,8 @@ class PyBulletSpawner(Node):
             from robot_lab_pybullet.gait_plant import GaitPlant
             from std_msgs.msg import Float64MultiArray,String
             self._gait_plant=GaitPlant(p,self._robot_id,urdf,self.get_parameter('joint_pd_config').value,
-                                       self.get_parameter('gait_probe_config').value)
+                                       self.get_parameter('gait_probe_config').value,
+                                       self.get_parameter('gait_contact_config').value)
             self._gait_plant.seed()
             self._gait_terrain_at=-math.inf
             reference=self.get_parameter('gait_floor_reference').value
@@ -1352,6 +1354,7 @@ class PyBulletSpawner(Node):
                         {k: round(v, 3) for k, v in forces.items()},
                         {k: {link: round(n, 2) for link, n in v.items()} for k, v in self._belt.contacts.items()}))
             p.stepSimulation()
+            if self._gait_plant is not None:self._gait_plant.sample()
             self._sim_step += 1
             self._sim_t = self._sim_step * self._dt
 

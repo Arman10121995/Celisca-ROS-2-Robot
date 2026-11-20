@@ -1,0 +1,43 @@
+{
+ "metrics": null,
+ "command": {
+  "yaw": "0",
+  "speed": ".06"
+ },
+ "recovery_reasons": [
+  "null"
+ ],
+ "recovery_history": [
+  {
+   "sim": 1.074,
+   "recovery": {
+    "recovering": false,
+    "reason": null,
+    "recoveries_in_window": 0,
+    "budget": 3,
+    "speed_scale": 1.0
+   },
+   "position": {
+    "x": -0.49694547057151794,
+    "y": -0.5000038146972656,
+    "z": 0.05586455762386322
+   },
+   "tilt": 1.0990232028581642e-05
+  }
+ ],
+ "push": "",
+ "passed": false,
+ "reason": "RuntimeError: Gait interrupted: Measured tilt/body contact interrupted gait",
+ "backend": "pybullet",
+ "robot": "lab_snake",
+ "terrain": false,
+ "wall_seconds": 70.89032422396122,
+ "phase": "walking",
+ "wall_budget_s": 400.0,
+ "state_publishers": [
+  {
+   "node": "source_gait_controller",
+   "namespace": "/"
+  }
+ ]
+}

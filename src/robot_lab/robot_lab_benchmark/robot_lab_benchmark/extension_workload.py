@@ -284,7 +284,10 @@ class ExtensionWorkload(Node):
         body=self.truth['body']
         if self.phase=='acquiring':
             traveled=math.dist(body['pose'][:2],self.initial[:2])
-            if traveled>=self.spec['distance_m']: self.drive.publish(Twist());self.transition('mapping_brake')
+            # Brake 10 % past the requested travel: the PyBullet snake's head
+            # settled back to 0.198 of 0.2 m after a brake at 0.2 (2026-11-20).
+            # The saving check below still requires the requested distance.
+            if traveled>=1.1*self.spec['distance_m']: self.drive.publish(Twist());self.transition('mapping_brake')
             else:
                 msg=Twist();msg.linear.x=.02 if self.workflow=='gait' else .1;self.drive.publish(msg)
         if self.phase=='mapping_brake':

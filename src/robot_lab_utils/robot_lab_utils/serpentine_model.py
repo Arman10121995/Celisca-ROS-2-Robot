@@ -61,10 +61,24 @@ class SerpentineModel:
             mode=['position']*n,kp=[self.config['kp']]*n,kd=[self.config['kd']]*n,
             torque_limit=np.minimum(self.torque,self.config['torque_limit']).tolist(),default=self.initial.tolist())
 
+    def intensity(self,velocity):
+        linear=float(velocity[0])/self.config['max_speed'];yaw=float(velocity[2])/self.config['max_yaw']
+        return min(1.,max(abs(linear),abs(yaw)*.6))
+
+    def phase_rate(self,velocity):
+        """Wave phase advance per configured cycle for this command (1 = full speed).
+
+        With a fixed 2.4 s cycle the snake ran 0.33-0.40 m/s for 0.03-0.06 m/s
+        commands on MuJoCo and PyBullet (2026-11-20); the amplitude law alone
+        barely changes speed. Surge speed follows the wave frequency, so the
+        frequency follows the command.
+        """
+        return self.intensity(velocity)
+
     def targets(self,phase,velocity,previous,gait,spine_phase=0.,spine_freq=1.):
         if gait!='serpenoid' or abs(velocity[1])>1e-9:raise ValueError('The wheeled snake supports serpenoid surge/yaw, not strafe or leg schedules')
         linear=float(velocity[0])/self.config['max_speed'];yaw=float(velocity[2])/self.config['max_yaw']
-        intensity=min(1.,max(abs(linear),abs(yaw)*.6))
+        intensity=self.intensity(velocity)
         if intensity<.01:return np.asarray(previous).copy(),None,{}
         amplitude=self.config['wave_amplitude']*math.sqrt(intensity)
         # With this head-to-tail source chain, increasing spatial phase drives

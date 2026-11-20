@@ -1335,7 +1335,12 @@ accounts for terrain fixtures without saved 2D maps. Details and evidence are in
 - **Remaining implementation:**
   - other backends for the forms: **USV done 2026-11-20** (the catamaran's surface controller on the MuJoCo, PyBullet
     and Isaac marine plants, within a few percent of Gazebo;
-    [receipt](docs/status/evidence/r107-usv-backends-2026-11-20/README.md)); the snake, tracked and amphibious forms remain;
+    [receipt](docs/status/evidence/r107-usv-backends-2026-11-20/README.md)). **Snake on PyBullet 2026-11-20
+    (implemented, navigation not passed):** a rolling-contact adapter lets the snake walk and map on PyBullet. Its
+    serpenoid speed, 0.33–0.40 m/s whatever the command on both backends, now follows the command (0.074–0.085 m/s
+    at 0.08). Saved-map goals still fail: on PyBullet the rolling odometry is interrupted, and on MuJoCo the robot
+    stops 0.17–0.22 m short by truth ([receipt](docs/status/evidence/r107-snake-pybullet-2026-11-20/README.md)).
+    The tracked and amphibious forms remain;
   - angled descents beyond 15° for the tracked vehicle (one track drops first and the 0.35 rad roll hold stops it).
     **Angled approaches done 2026-11-20:** the 0.18 m step is climbed at 15°, 30° and 45° off square and descended
     at 15° (2/2) in a new `terrain_step_wide` ([receipt](docs/status/evidence/r107-tracked-angled-2026-11-20/README.md)).
