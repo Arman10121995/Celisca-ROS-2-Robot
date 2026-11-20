@@ -953,6 +953,14 @@ molar_hri_integration_20261016:
     1000 run stopped 9.4 mm short of L1, retained); Bumperbot ride re-passes. A fleet Nav2 goal on L1 after the
     ride passes 2/2 (0.043/0.047 m); a goal needing a turn beside the landing rail failed (retained). A full
     transport task remains. docs/status/evidence/r11-molar-lift-2026-11-19/README.md'
+  fleet_transport_20261120: 'Claude: implemented, experimental. MOLAR completes the native fleet lift transport
+    (Facility transport requests only; LiftTransport drives Nav2 approach, gate, boarding, ride, floor/map switch
+    and settled exit) L0 -> L1 -> L0 on Gazebo fleet_facility, 2/2 (182.9 and 188.6 s). New per-model transport
+    goals (transport.models) and optional exit goals; MOLAR goals keep the heading it arrives with, so it turns
+    only at route starts. Failures retained - L0 approach at x 2.1 held by the scan guard (forward lidar 0.41 m
+    from the closed gate), and a 180 deg final turn in the car (RPP turns in place only inside the 2 cm goal
+    tolerance; AMCL drifted while turning). Bumperbot transport re-passes (174.2 s). One member, no payload, no
+    RMF graph. docs/status/evidence/r11-molar-transport-2026-11-20/README.md'
   owner: cline-agent
   priority: Latest user request; detailed MOLAR maps and differential-drive/telescope
     robot in native Robot Lab

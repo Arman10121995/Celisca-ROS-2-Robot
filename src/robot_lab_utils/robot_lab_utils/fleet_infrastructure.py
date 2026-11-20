@@ -377,11 +377,18 @@ class Infrastructure(Node):
         self.lift_request = None
         self.lift_gui = False
 
+    def _transport_config(self, name):
+        """The world's lift transport goals, replaced by the member model's own where configured."""
+        config = dict(self.config['transport'])
+        model = next((item.get('model') for item in self.session['members'] if item['id'] == name), None)
+        config.update(config.pop('models', {}).get(model, {}))
+        return config
+
     def _prepare_transport(self, name, destination, operator, now, parking=None):
         row = next((item for item in self.runtime['members'] if item['id'] == name), {})
         if not row.get('navigation_ready') or not row.get('included') or row.get('mode') != 'idle' or row.get('queued'):
             raise ValueError('Waiting for fresh idle member Nav2')
-        task = LiftTransport(name, operator, self.energy[name]['floor'], destination, self.config['transport'], now)
+        task = LiftTransport(name, operator, self.energy[name]['floor'], destination, self._transport_config(name), now)
         if set(self.bodies) != set(self.energy) or any(now - body['at'] >= .6 for body in self.bodies.values()):
             raise ValueError('Fresh independent observations of all fleet bodies required')
         body = self.bodies[name]
@@ -413,7 +420,7 @@ class Infrastructure(Node):
         if path not in self.parking_grids:self.parking_grids[path]=SpawnGrid(path)
         candidates=self.config['transport'].get('parking_slots',{}).get(destination,[]) if parking=='auto' else [parking]
         for goal in candidates:
-            landing=task.config['landings'][destination]
+            landing=task.landing(destination,True)
             if (task.in_cabin([goal['x'],goal['y'],0.]) or not self.parking_grids[path].clear(goal['x'],goal['y'],radii[name]+.05)
                     or math.hypot(goal['x']-landing['x'],goal['y']-landing['y'])<2*radii[name]+.2):
                 continue
@@ -426,7 +433,7 @@ class Infrastructure(Node):
     def _recovery_exit(self, task, now):
         """Hand a recovered passenger to an owned exit transport on the same open car."""
         name = task['passengers'][0]
-        transport = LiftTransport.exit_only(name, task['operator_id'], task['floor'], self.config['transport'], now)
+        transport = LiftTransport.exit_only(name, task['operator_id'], task['floor'], self._transport_config(name), now)
         if task.get('parking'):
             try:
                 transport.parking = self._parking_slot(name, task['floor'], transport, task['parking'])

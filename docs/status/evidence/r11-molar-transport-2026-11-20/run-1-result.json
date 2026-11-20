@@ -1,0 +1,65 @@
+{
+ "robot": "molar",
+ "passed": false,
+ "reason": "RuntimeError: Owned transport Nav2 task failed/canceled",
+ "phase": "up",
+ "landings": [],
+ "phases": [
+  [
+   0.2,
+   null,
+   null
+  ],
+  [
+   0.7,
+   "L1",
+   "starting"
+  ],
+  [
+   1.1,
+   "L1",
+   "approaching"
+  ],
+  [
+   141.8,
+   "L1",
+   "failed"
+  ]
+ ],
+ "wall_seconds": 141.77858087304048,
+ "final_member": {
+  "id": "molar",
+  "model": "molar_hri",
+  "mode": "idle",
+  "reason": "Nav2 ended status=6",
+  "truth": {
+   "x": 1.9730726645159344,
+   "y": -0.10846570093196357,
+   "z": -5.379420765761498e-09,
+   "yaw": 0.8001755061206728,
+   "linear": 0.0,
+   "angular": 0.0,
+   "velocity_source": "finite difference of measured stamped Gazebo poses",
+   "source_reported_twist": {
+    "linear": 0.0,
+    "angular": 0.0
+   }
+  },
+  "estimate": {
+   "x": 1.8795636264525695,
+   "y": -0.13511369472153606,
+   "yaw": 0.8054161698435738
+  }
+ },
+ "final_transport": {
+  "robot": "molar",
+  "operator_id": "transport-trial",
+  "origin": "L0",
+  "destination": "L1",
+  "phase": "failed",
+  "reason": "Owned transport Nav2 task failed/canceled",
+  "request_prefix": "lift-36f0548e1f554e91ba5d2d425b6b92be",
+  "route_id": "lift-36f0548e1f554e91ba5d2d425b6b92be-approaching",
+  "parking_goal": null
+ }
+}

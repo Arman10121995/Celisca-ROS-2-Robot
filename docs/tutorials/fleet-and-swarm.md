@@ -156,6 +156,18 @@ commands are refused. Two robots crossing the door at the same time are
 held by the door reservation, then dock and charge.
 [Evidence](../status/evidence/r102-fleet-ward-2026-11-18/README.md).
 
+### Lift goals per robot model
+
+**Facility → Transport selected robot** drives the robot to the world's
+`transport` goals in its `infrastructure.yaml`: an approach landing per floor,
+a boarding pose in the car, and the same landing as the exit. A
+`transport.models.<model>` entry replaces these goals for robots of that
+model. An optional `exits` map there gives exit goals separate from the
+approach goals. In `fleet_facility`, MOLAR uses this: it stops farther from
+the closed gate, boards deeper, and every goal keeps the heading MOLAR
+arrives with, so it turns only at the start of a route.
+[Evidence](../status/evidence/r11-molar-transport-2026-11-20/README.md).
+
 ## Ground swarm page
 
 Start controls all included members with fresh estimated state and scans.

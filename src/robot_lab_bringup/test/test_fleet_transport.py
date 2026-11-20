@@ -109,3 +109,34 @@ def test_recovered_exit_refuses_a_passenger_outside_the_car():
     task = LiftTransport.exit_only('alpha', 'operator', 'L0', CONFIG, 0.)
     state = context(task, (1., 0., 0.))
     assert task.tick(state, 1.)[-1] == dict(kind='release', hold=True) and task.phase == 'failed'
+
+
+def test_model_exit_goals_replace_landing_heading_only_when_exiting():
+    # MOLAR (R11, 2026-11-20): approach L0 facing the car, exit facing west.
+    config = dict(CONFIG, boarding=dict(x=3.95, y=0., yaw=0.),
+                  landings=dict(L0=dict(x=2.1, y=0., yaw=0.), L1=dict(x=2.1, y=0., yaw=3.141593)),
+                  exits=dict(L0=dict(x=2.1, y=0., yaw=3.141593), L1=dict(x=2.1, y=0., yaw=3.141593)))
+    task = LiftTransport('molar', 'operator', 'L1', 'L0', config, 0.)
+    assert task.tick(context(task, (1., 0., 3.)), .1)[0]['goal']['yaw'] == 3.141593
+    task = LiftTransport('molar', 'operator', 'L0', 'L1', config, 0.)
+    assert task.tick(context(task, (1., 0., 0.)), .1)[0]['goal']['yaw'] == 0.
+    task.phase = 'riding'
+    state = context(task, (3.95, 0., 3.))
+    state.update(car_floor='L1', floor='L1', door_open=True)
+    assert task.tick(state, 1.)[0]['goal'] == dict(x=2.1, y=0., yaw=3.141593, timeout=90.)
+    # Without exits the landing is the exit goal, as before.
+    assert LiftTransport('alpha', 'operator', 'L0', 'L1', CONFIG, 0.).landing('L1', True) == CONFIG['landings']['L1']
+
+
+def test_infrastructure_merges_the_member_model_transport_goals():
+    from types import SimpleNamespace
+    import yaml
+    from robot_lab_utils.fleet_infrastructure import Infrastructure
+    config = yaml.safe_load((ROOT/'src/robot_lab_maps/maps/fleet_facility/infrastructure.yaml').read_text())
+    node = SimpleNamespace(config=config, session=dict(members=[dict(id='molar', model='molar_hri'), dict(id='alpha', model='bumperbot')]))
+    molar = Infrastructure._transport_config(node, 'molar')
+    assert molar['boarding']['x'] == 3.95 and molar['exits']['L1']['yaw'] == 3.141593
+    assert molar['cabin'] == config['transport']['cabin'] and 'models' not in molar
+    alpha = Infrastructure._transport_config(node, 'alpha')
+    assert alpha['boarding'] == config['transport']['boarding'] and 'exits' not in alpha
+    assert 'models' in config['transport']  # The node's own configuration is not consumed.

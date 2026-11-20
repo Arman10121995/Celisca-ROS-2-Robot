@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """First-party physical doors, lift and charging locations, not mission results."""
 import json
+import math
 import argparse
 from pathlib import Path
 import xml.etree.ElementTree as ET
@@ -117,6 +118,15 @@ def generate():
         config['doors']['landing_'+level] = dict(joint='landing_'+level,closed=0.,opened=2.15,sweep=[2.6,3.1,-1.3,3.5],base_z=z,landing_floor=level)
     config['transport'] = dict(boarding=dict(x=3.65,y=0.,yaw=0.), landings=dict(L0=dict(x=2.3,y=0.,yaw=0.),L1=dict(x=2.2,y=0.,yaw=0.)),cabin=[3.4,4.6,-.6,.6])
     config['transport'].update(total_timeout_s=900.,phase_timeout_s=300.,route_timeout_s=180.,queue_wait_timeout_s=1800.)
+    # MOLAR's 0.98 m circle cannot make a final-heading turn beside the L1 rail or in
+    # the car under the scan guard (2026-11-19/20): RPP turns in place there only within
+    # the 2 cm goal tolerance, and AMCL drifts while it turns. Every goal keeps the
+    # heading MOLAR arrives with; turns happen at route starts. Its
+    # lidar is 0.34 m ahead of the base, so the L0 approach stops 0.72 m short of the
+    # closed gate: at x 2.1 the guard held it (2026-11-20).
+    west=round(math.pi,6)
+    config['transport']['models']=dict(molar_hri=dict(boarding=dict(x=3.95,y=0.,yaw=0.),
+        landings=dict(L0=dict(x=1.75,y=0.,yaw=0.),L1=dict(x=2.1,y=0.,yaw=west)),exits=dict(L0=dict(x=2.1,y=0.,yaw=west),L1=dict(x=2.1,y=0.,yaw=west))))
     config['transport']['parking_slots']={floor:[dict(x=x,y=y,yaw=0.) for y in (-offset,offset)] for floor,x,offset in [('L0',1.5,2.5),('L1',1.55,.55)]}
     if (target/'infrastructure.yaml').exists():
         previous = yaml.safe_load((target/'infrastructure.yaml').read_text()) or {}

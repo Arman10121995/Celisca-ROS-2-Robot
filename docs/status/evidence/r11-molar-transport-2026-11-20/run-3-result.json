@@ -1,0 +1,157 @@
+{
+ "robot": "molar",
+ "passed": true,
+ "reason": "Actual autonomous approach/boarding/ride/floor-map/settled exits L0-L1-L0",
+ "phase": "down",
+ "landings": [
+  {
+   "floor": "L1",
+   "wall_s": 93.88223187503172,
+   "body": {
+    "x": 2.142990136039219,
+    "y": -0.0066108114135513376,
+    "z": 2.9999999946038343,
+    "yaw": -3.1073711841355522,
+    "linear": -0.0,
+    "angular": 0.0,
+    "velocity_source": "finite difference of measured stamped Gazebo poses",
+    "source_reported_twist": {
+     "linear": 0.0,
+     "angular": 0.0
+    }
+   },
+   "map": "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_maps/share/robot_lab_maps/maps/fleet_facility/maps/map_L1.yaml"
+  },
+  {
+   "floor": "L0",
+   "wall_s": 182.87958873901516,
+   "body": {
+    "x": 2.1728034265168223,
+    "y": -0.004659756627167384,
+    "z": -5.395812254413456e-09,
+    "yaw": -3.1163784849061327,
+    "linear": -0.0,
+    "angular": 0.0,
+    "velocity_source": "finite difference of measured stamped Gazebo poses",
+    "source_reported_twist": {
+     "linear": 0.0,
+     "angular": 0.0
+    }
+   },
+   "map": "/workspace/molar/ros_ws/bumperbot_ws/install/robot_lab_maps/share/robot_lab_maps/maps/fleet_facility/maps/map.yaml"
+  }
+ ],
+ "phases": [
+  [
+   0.1,
+   null,
+   null
+  ],
+  [
+   0.5,
+   "L1",
+   "starting"
+  ],
+  [
+   0.9,
+   "L1",
+   "approaching"
+  ],
+  [
+   9.3,
+   "L1",
+   "opening"
+  ],
+  [
+   18.0,
+   "L1",
+   "boarding"
+  ],
+  [
+   36.2,
+   "L1",
+   "riding"
+  ],
+  [
+   69.3,
+   "L1",
+   "exiting"
+  ],
+  [
+   93.9,
+   "L1",
+   "succeeded"
+  ],
+  [
+   94.0,
+   "L0",
+   "starting"
+  ],
+  [
+   94.4,
+   "L0",
+   "approaching"
+  ],
+  [
+   96.2,
+   "L0",
+   "opening"
+  ],
+  [
+   98.6,
+   "L0",
+   "boarding"
+  ],
+  [
+   123.7,
+   "L0",
+   "riding"
+  ],
+  [
+   156.5,
+   "L0",
+   "exiting"
+  ],
+  [
+   182.9,
+   "L0",
+   "succeeded"
+  ]
+ ],
+ "wall_seconds": 182.88031229702756,
+ "final_member": {
+  "id": "molar",
+  "model": "molar_hri",
+  "mode": "idle",
+  "reason": "Actual Nav2 success and measured settled arrival",
+  "truth": {
+   "x": 2.1728034265168223,
+   "y": -0.004659756627167384,
+   "z": -5.395812254413456e-09,
+   "yaw": -3.1163784849061327,
+   "linear": -0.0,
+   "angular": 0.0,
+   "velocity_source": "finite difference of measured stamped Gazebo poses",
+   "source_reported_twist": {
+    "linear": 0.0,
+    "angular": 0.0
+   }
+  },
+  "estimate": {
+   "x": 2.0778616210294656,
+   "y": -0.03367592790337404,
+   "yaw": -3.1117384039173888
+  }
+ },
+ "final_transport": {
+  "robot": "molar",
+  "operator_id": "transport-trial",
+  "origin": "L1",
+  "destination": "L0",
+  "phase": "succeeded",
+  "reason": "Actual approach, boarding, floor/map change and settled exit observed",
+  "request_prefix": "lift-d411550b645442b2bc97e12c82499552",
+  "route_id": "lift-d411550b645442b2bc97e12c82499552-exiting",
+  "parking_goal": null
+ }
+}

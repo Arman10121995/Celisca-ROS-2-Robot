@@ -84,6 +84,11 @@ class LiftTransport:
         self.acknowledged = False
         return dict(kind='route', request_id=self.route_id, goal=dict(goal, timeout=self.budgets['route_timeout_s']))
 
+    def landing(self, floor, exiting):
+        # Optional exit goals: a member that cannot turn on a landing leaves
+        # with the heading it drives off the car with (MOLAR, R11 2026-11-20).
+        return self.config.get('exits', self.config['landings'])[floor] if exiting else self.config['landings'][floor]
+
     def in_cabin(self, xyz):
         x0, x1, y0, y1 = self.config['cabin']
         return x0 <= xyz[0] <= x1 and y0 <= xyz[1] <= y1
@@ -102,13 +107,13 @@ class LiftTransport:
             if not self.in_cabin(body['xyz']):
                 return self.cancel('Recovered passenger is no longer in the car', True)
             if context['floor'] == self.destination and context['map_ready'] and context['door_open']:
-                return [self._route('exiting', self.config['landings'][self.destination], now)]
+                return [self._route('exiting', self.landing(self.destination, True), now)]
             return []
         if self.phase == 'starting':
             if self.in_cabin(body['xyz']):
                 self._phase('opening', now, 'Waiting for the origin car door')
                 return [dict(kind='lift', floor=self.origin)]
-            return [self._route('approaching', self.config['landings'][self.origin], now)]
+            return [self._route('approaching', self.landing(self.origin, False), now)]
         if self.phase in ('approaching', 'boarding', 'exiting', 'parking'):
             source = 'route:' + self.route_id
             outcomes = [item for item in context['history'] if item.get('source') == source]
@@ -122,7 +127,7 @@ class LiftTransport:
                 return []
             # Nav2 success alone is insufficient; independently observe the endpoint.
             goal = (self.parking if self.phase == 'parking' else self.config['boarding'] if self.phase == 'boarding'
-                    else self.config['landings'][self.destination if self.phase == 'exiting' else self.origin])
+                    else self.landing(self.destination, True) if self.phase == 'exiting' else self.landing(self.origin, False))
             good = (body['speed'] is not None and body['speed'] < .03
                     and body['angular'] is not None and abs(body['angular']) < .05
                     and math.hypot(body['xyz'][0] - goal['x'], body['xyz'][1] - goal['y']) < .15
@@ -149,5 +154,5 @@ class LiftTransport:
             return [self._route('boarding', self.config['boarding'], now)]
         if self.phase == 'riding' and (context['car_floor'] == self.destination
                 and context['floor'] == self.destination and context['map_ready'] and context['door_open']):
-            return [self._route('exiting', self.config['landings'][self.destination], now)]
+            return [self._route('exiting', self.landing(self.destination, True), now)]
         return []
