@@ -331,3 +331,16 @@ def test_mobile_node_labels_the_section_as_fetch(panel, model):
     panel.receive_pick_place(SimpleNamespace(data=json.dumps(dict(state, mobile=False))))
     panel.update_pick_place()
     assert panel.pick_run_button.cget('text') == 'Run pick / place'
+
+
+def test_gripper_presets_are_explicit_and_held_joints_are_excluded_from_plans(panel, model):
+    config = dict(CONFIG, planning={'joints': [J1]}, grip_presets={J2: {'open': .3, 'close': 0.}})
+    panel.app._robot_config = lambda: {'articulation': config}
+    panel.joint_names = ()
+    panel.rebuild()
+    assert [button.cget('text') for button in panel.grip_buttons] == ['Open', 'Close']
+    assert not panel.apply_grip_preset(J2, .3)
+    activate(panel, model)
+    panel.apply_grip_preset(J2, .3)
+    assert json.loads(panel.pub.publish.call_args.args[0].data)['targets'] == {J2: .3}
+    assert panel.current_targets() == {J1: panel.target_vars[J1].get()}

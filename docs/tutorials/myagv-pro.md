@@ -90,8 +90,7 @@ The vendor publishes no Pro630 weight, joint speeds or mount position, and
 its description has no inertias. The lab declares them: 8 kg spread over the
 links by volume, 1 rad/s per joint, torque caps sized for the rated 2 kg
 payload, and the arm centred on the deck rails. Treat arm dynamics as
-estimates. A gripper, MoveIt planning and pick-and-place for this robot are
-not yet integrated. Measured drive and arm screens for all three simulators,
+estimates. Measured drive and arm screens for all three simulators,
 and the live GUI run, are in the
 [evidence](../status/evidence/myagv-pro-2026-11-12/README.md#myagv-pro--mycobot-pro630-r143-2026-11-13).
 
@@ -99,6 +98,26 @@ The existing Registry preview opens this complete source model inside the GUI.
 **Learn & diagnose → Documentation library** includes this page. Health uses
 the same task ledger as the roadmap; prototype pipelines and measured missions
 remain distinct.
+
+### Use the F100 gripper in MuJoCo
+
+In **Launch → Mobile manipulators**, choose **Elephant Robotics myAGV Pro +
+myCobot Pro630 → Pro630 with vendor F100 gripper**. Choose **MuJoCo**,
+**Display**, and `nav_empty`. **Mobile arm → Gripper** has **Open**, **Close**,
+and a position slider for the single jaw motor. The five followers move from
+the mechanical coupling. **Stop / hold**, the heartbeat and the base-motion
+interlock apply to the gripper as well.
+
+Both Pro630 variants offer **Tool pose in robot base** in MuJoCo. Copy the
+current pose, adjust XYZ in `base_footprint`, then press **Plan pose** and
+**Execute plan**. The reported frame `pro630_link6` is the flange. On the F100
+variant, plans hold the gripper while solving and collision-checking the six
+arm joints. Use **Open / Close** separately when the arm is stationary.
+
+The mounted F100 uses the vendor's Pro630 flange and CAD. Robot Lab uses a
+0.8 Nm motor cap, 0.5 rad/s reference cap and declared model damping. Pick,
+carry, release and additional backend missions still need implementation
+and measurement. [Pinned vendor source](https://github.com/elephantrobotics/mycobot_ros2/tree/b8176c264e583b073e1c4293c2edb1241b20e1aa/mycobot_pro/mycobotpro630_gazeboros2).
 
 ## How control and sensing connect
 

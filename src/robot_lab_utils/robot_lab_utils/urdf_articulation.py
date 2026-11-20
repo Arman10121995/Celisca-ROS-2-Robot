@@ -159,6 +159,8 @@ class URDFArticulation:
         for name, coupling in self.couplings.items():
             if name in self.joints or not isinstance(coupling, dict) or coupling.get('joint') not in self.masters:
                 raise ValueError('Couplings must reference one independent master: '+name)
+            if coupling.get('passive') and coupling.get('mechanical') is not True:
+                raise ValueError('Passive followers require a mechanical coupling: '+name)
             master = self.joints[coupling['joint']]
             if master['mode'] != 'position':
                 raise ValueError('Only bounded position joints can be coupled')
@@ -531,6 +533,8 @@ def add_mujoco_articulation_actuators(mjcf, contract):
             # 20 ms): the spawn landing otherwise pushed the loaded MOLAR
             # lift several mm past its stop (2026-10-19).
             joints[name].set('solreflimit', '0.005 1')
+        if contract.couplings.get(name, {}).get('passive'):
+            continue
         gain = spec['kp'] if position else spec['kd']
         bias = '0 %g %g' % (-spec['kp'], -spec['kd']) if position else '0 0 %g' % -spec['kd']
         ET.SubElement(actuator, 'general', name=name+'_articulation', joint=name,

@@ -149,8 +149,13 @@ def plan_joints(scene, targets, *, budget=8.):
 class ArticulationPlanner:
     """Requests enqueue in ROS; snapshots/execution run under the physics lock."""
     def __init__(self, node, contract, urdf=None):
-        if contract.couplings or any(s['mode'] != 'position' for s in contract.joints.values()):
-            raise ValueError('Joint planner requires independent source position channels')
+        names = contract.config.get('planning', {}).get('joints', contract.masters)
+        if (not isinstance(names, (list, tuple)) or not names or len(set(names)) != len(names)
+                or set(names)-set(contract.masters) or any(s['mode'] != 'position' for s in contract.joints.values())):
+            raise ValueError('Joint planner requires declared independent source position channels')
+        if any(not item.get('passive') or item['joint'] in names for item in contract.couplings.values()):
+            raise ValueError('Planning requires coupled attachments to remain held')
+        self.plan_joints = frozenset(names)
         self.node, self.contract = node, contract
         self.lock = threading.RLock()
         self.worker = None
@@ -169,6 +174,8 @@ class ArticulationPlanner:
         if config is not None:
             from robot_lab_mujoco.articulation_cartesian import SourceTool
             self.tool = SourceTool(node._model, node._body_id, urdf, contract.joints, config)
+            if set(self.tool.names)-self.plan_joints:
+                raise ValueError('Cartesian chain includes a held planning joint')
             self.tool_data = mj.MjData(node._model)
 
     def _tool_kinematics(self, data):
@@ -240,8 +247,8 @@ class ArticulationPlanner:
         request_id = request.get('request_id')
         if not isinstance(request_id, str) or not 1 <= len(request_id) <= 128:
             raise ValueError('Planning needs a bounded request identity')
-        if not isinstance(targets, dict) or not targets or set(targets)-set(self.contract.masters):
-            raise ValueError('Plan targets must name independent source position joints')
+        if not isinstance(targets, dict) or not targets or set(targets)-self.plan_joints:
+            raise ValueError('Plan targets must name the declared planning joints')
         for name, value in targets.items() if pose_goal is None else ():
             spec = self.contract.joints[name]
             if (isinstance(value, bool) or not isinstance(value, (int, float)) or not math.isfinite(value)

@@ -1,5 +1,12 @@
 # Agent Handoff Protocol
 
+November 20 Pro630/F100: preserve the separate same-family mounted variant,
+original arm mesh hashes and one shaft effort budget with five passive
+followers. The normal MuJoCo GUI Open/Close screen passes for `nav_empty`.
+Flange plans hold the gripper. Pick/place and custody require a measured
+grasp frame and loaded missions. Keep the scoped End session cleanup when
+the ROS context is already closed. [F100 receipt](status/evidence/r143-pro630-f100-2026-11-20/README.md).
+
 November 20 lying cylinders: use the **Arm pick-and-place lab** map family
 and the side-lying cylinder variant. Preserve the diameter grasp perpendicular
 to the actual cylinder axis, oriented height and complete support projection,

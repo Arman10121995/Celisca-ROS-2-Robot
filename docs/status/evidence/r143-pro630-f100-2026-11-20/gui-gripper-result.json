@@ -1,0 +1,108 @@
+{
+  "robot": "asset_elephant_myagv_pro_pro630_f100",
+  "simulator": "mujoco",
+  "map": "nav_empty",
+  "steps": [
+    {
+      "pressed": "Open",
+      "button_state": "()",
+      "page_status": "Target requested; inspect actual feedback."
+    },
+    {
+      "step": "gripper open",
+      "targets": {
+        "pro630_gripper_controller": 1.0,
+        "pro630_gripper_base_to_gripper_left2": 1.0,
+        "pro630_gripper_left3_to_gripper_left1": 1.0,
+        "pro630_gripper_base_to_gripper_right3": 1.0,
+        "pro630_gripper_base_to_gripper_right2": 1.0,
+        "pro630_gripper_right3_to_gripper_right1": 1.0
+      },
+      "settled_s": 2.21,
+      "measured": {
+        "pro630_gripper_controller": 0.9863,
+        "pro630_joint1_to_base": -0.0016,
+        "pro630_joint2_to_joint1": 0.0014,
+        "pro630_joint3_to_joint2": 0.0013,
+        "pro630_joint4_to_joint3": 0.0007,
+        "pro630_joint5_to_joint4": -0.0003,
+        "pro630_joint6_to_joint5": -0.0001,
+        "pro630_gripper_base_to_gripper_left2": 0.9897,
+        "pro630_gripper_base_to_gripper_right2": 0.9895,
+        "pro630_gripper_base_to_gripper_right3": 0.9859,
+        "pro630_gripper_left3_to_gripper_left1": 0.9912,
+        "pro630_gripper_right3_to_gripper_right1": 0.9899
+      }
+    },
+    {
+      "pressed": "Close",
+      "button_state": "()",
+      "page_status": "Target requested; inspect actual feedback."
+    },
+    {
+      "step": "gripper close",
+      "targets": {
+        "pro630_gripper_controller": 0.0,
+        "pro630_gripper_base_to_gripper_left2": 0.0,
+        "pro630_gripper_left3_to_gripper_left1": 0.0,
+        "pro630_gripper_base_to_gripper_right3": 0.0,
+        "pro630_gripper_base_to_gripper_right2": 0.0,
+        "pro630_gripper_right3_to_gripper_right1": 0.0
+      },
+      "settled_s": 2.23,
+      "measured": {
+        "pro630_gripper_controller": 0.0171,
+        "pro630_joint1_to_base": -0.0016,
+        "pro630_joint2_to_joint1": 0.0014,
+        "pro630_joint3_to_joint2": 0.0013,
+        "pro630_joint4_to_joint3": 0.0007,
+        "pro630_joint5_to_joint4": -0.0003,
+        "pro630_joint6_to_joint5": -0.0001,
+        "pro630_gripper_base_to_gripper_left2": 0.0132,
+        "pro630_gripper_base_to_gripper_right2": 0.0134,
+        "pro630_gripper_base_to_gripper_right3": 0.0174,
+        "pro630_gripper_left3_to_gripper_left1": 0.0116,
+        "pro630_gripper_right3_to_gripper_right1": 0.0131
+      }
+    }
+  ],
+  "passed": true,
+  "page_selected": true,
+  "rows": [
+    "J1 \u00b7 joint1_to_base",
+    "J2 \u00b7 joint2_to_joint1",
+    "J3 \u00b7 joint3_to_joint2",
+    "J4 \u00b7 joint4_to_joint3",
+    "J5 \u00b7 joint5_to_joint4",
+    "J6 \u00b7 joint6_to_joint5",
+    "Gripper"
+  ],
+  "command": "ros2 launch robot_lab_bringup simulated_robot.launch.py robot_model:=asset_elephant_myagv_pro_pro630_f100 simulator:=mujoco use_sim_time:=true map_name:=nav_empty world_package:=robot_lab_maps world_name:=nav_empty world_path:=maps/nav_empty/worlds/nav_empty.world map_yaml:=maps/nav_empty/maps/map.yaml mode:=display gui:=false perception:=none",
+  "gripper": {
+    "open": {
+      "target": 1.0,
+      "leader": 0.999997226324604,
+      "followers": {
+        "pro630_gripper_base_to_gripper_left2": 1.0000009891830346,
+        "pro630_gripper_left3_to_gripper_left1": 0.9999904557945978,
+        "pro630_gripper_base_to_gripper_right3": 0.9999980709038581,
+        "pro630_gripper_base_to_gripper_right2": 1.0000015105807558,
+        "pro630_gripper_right3_to_gripper_right1": 0.9999953788036431
+      },
+      "max_skew_rad": 6.770530006194875e-06
+    },
+    "close": {
+      "target": 0.0,
+      "leader": 3.056795855007505e-06,
+      "followers": {
+        "pro630_gripper_base_to_gripper_left2": -3.4081840338411705e-06,
+        "pro630_gripper_left3_to_gripper_left1": 5.326267532839554e-06,
+        "pro630_gripper_base_to_gripper_right3": 1.8905382190013061e-06,
+        "pro630_gripper_base_to_gripper_right2": -3.956790496811215e-06,
+        "pro630_gripper_right3_to_gripper_right1": 1.2544282379777655e-06
+      },
+      "max_skew_rad": 7.013586351818719e-06
+    }
+  },
+  "launch_returncode": 0
+}

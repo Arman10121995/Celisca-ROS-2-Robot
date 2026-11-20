@@ -48,10 +48,25 @@ robots:
     - {simulator: isaac, mode: display, map: nav_empty, evidence: docs/status/evidence/myagv-pro-2026-11-12/README.md}
     - {simulator: pybullet, mode: nav, map: nav_empty, evidence: docs/status/evidence/myagv-pro-2026-11-12/README.md}
   asset_elephant_myagv_pro_pro630:
+    articulation:
+      planning: {schema: robot_lab.articulation_plan.v1, backend: mujoco}
+      cartesian: &pro630_flange_pose
+        schema: robot_lab.cartesian_goal.v1
+        reference_frame: base_footprint
+        tip_frame: pro630_link6
+        joints: &pro630_arm_joints [pro630_joint1_to_base, pro630_joint2_to_joint1, pro630_joint3_to_joint2,
+                                   pro630_joint4_to_joint3, pro630_joint5_to_joint4, pro630_joint6_to_joint5]
     measured_screens:
     - {simulator: mujoco, mode: display, map: nav_empty, evidence: docs/status/evidence/myagv-pro-2026-11-12/README.md}
     - {simulator: pybullet, mode: display, map: nav_empty, evidence: docs/status/evidence/myagv-pro-2026-11-12/README.md}
     - {simulator: isaac, mode: display, map: nav_empty, evidence: docs/status/evidence/myagv-pro-2026-11-12/README.md}
+  asset_elephant_myagv_pro_pro630_f100:
+    articulation:
+      planning:
+        schema: robot_lab.articulation_plan.v1
+        backend: mujoco
+        joints: *pro630_arm_joints
+      cartesian: *pro630_flange_pose
 
   # R5.7: the URDF Franka Panda (robot_assets) gets the shared URDF
   # articulation contract, so arm and fingers are position channels on

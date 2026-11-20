@@ -2300,12 +2300,14 @@ tasks:
         evidence: [docs/status/evidence/myagv-pro-2026-11-12/README.md, docs/tutorials/myagv-pro.md]
       R14.3:
         acceptance_ref: ROADMAP.md R14.3
-        owner: claude
-        state: implemented
-        updated: '2026-11-13'
+        owner: codex
+        state: partial
+        updated: '2026-11-20'
         title: Official myAGV Pro plus myCobot Pro630 mobile manipulator
-        next_action: 'Implemented 2026-11-13: asset_elephant_myagv_pro_pro630 (official Pro630 from mycobot_ros2 d42ff61a, BSD-2-Clause, on the roller base) with declared arm mass/speed/effort/mount estimates; drive and arm screens (bounded joints, Stop, watchdog) pass in PyBullet, MuJoCo and Isaac; generic GUI Mobile arm page passed live on PyBullet. Remaining: gripper (no official Pro630 gripper description), MoveIt planning, pick/place pipeline.'
-        evidence: [docs/status/evidence/myagv-pro-2026-11-12/README.md, docs/tutorials/myagv-pro.md]
+        gripper_20261120: 'Codex integrated official Pro630 F100 mount and geometry from b8176c2 into a separate same-family variant. One bounded shaft and five measured passive linked joints. Real normal GUI MuJoCo nav_empty Display Open/Close passes with at most 7.1e-6 rad settled skew. Both variants pass private flange plan checks. Live Cartesian execution and grasp/carry/release are pending.'
+        gui_shutdown_20261120: 'End session still stops its owned process when the ROS context closes before neutral can publish. Two focused cleanup tests pass.'
+        next_action: 'Implement the F100 source grasp frame, measured object custody and pick/place, then link Nav2 transport and port the mechanical coupling to further backends. Preserve the original Pro630 drive and joint receipts from MuJoCo, PyBullet and Isaac.'
+        evidence: [docs/status/evidence/myagv-pro-2026-11-12/README.md, docs/status/evidence/r143-pro630-f100-2026-11-20/README.md, docs/tutorials/myagv-pro.md]
       R14.4:
         acceptance_ref: ROADMAP.md R14.4
         owner: claude

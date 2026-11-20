@@ -64,9 +64,12 @@ def main():
     parser.add_argument('--simulator', default='pybullet')
     parser.add_argument('--map', default='nav_empty')
     parser.add_argument('--output', type=Path, required=True)
-    parser.add_argument('--pick-place', nargs=2, metavar=('OBJECT', 'SUPPORT'),
+    task = parser.add_mutually_exclusive_group()
+    task.add_argument('--pick-place', nargs=2, metavar=('OBJECT', 'SUPPORT'),
                         help='instead of the joint steps: Home, then Run pick / place of OBJECT onto SUPPORT '
                              'through the page (R5.7), judged by the node\'s truth checks')
+    task.add_argument('--gripper-presets', action='store_true',
+                      help='use Open and Close and measure the leader and its linked followers')
     args = parser.parse_args()
     args.output.mkdir(parents=True, exist_ok=False)
     report = dict(robot=args.robot, simulator=args.simulator, map=args.map, steps=[], passed=False)
@@ -127,6 +130,27 @@ def main():
         names = page.joint_names
         if args.pick_place:
             pick_place(app, page, args, report, press, settle, until, pump, screenshot)
+        elif args.gripper_presets:
+            config = page.arm()
+            leader, = config['grip_presets']
+            followers = [name for name, spec in config.get('couplings', {}).items() if spec['joint'] == leader]
+            results = {}
+            for label, button in zip(('open', 'close'), page.grip_buttons, strict=True):
+                target = float(config['grip_presets'][leader][label])
+                press(button)
+                settle({leader: target, **{name: target for name in followers}}, 'gripper '+label)
+                pump(1.)
+                feedback = measured()
+                results[label] = dict(target=target, leader=feedback[leader],
+                    followers={name: feedback[name] for name in followers},
+                    max_skew_rad=max((abs(feedback[name]-feedback[leader]) for name in followers), default=0.))
+                screenshot(args.output/(label+'.png'))
+                pump(.6)
+            if set(results) != {'open', 'close'}:
+                raise RuntimeError('Expected the two declared gripper presets')
+            report['gripper'] = results
+            report['passed'] = bool(report['page_selected'] and all(
+                abs(row['leader']-row['target']) <= .03 and row['max_skew_rad'] <= .01 for row in results.values()))
         else:
             home = {n: round(v, 4) for n, v in measured().items()}
             report['home_measured'] = home

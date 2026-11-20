@@ -51,6 +51,16 @@ sources:
   status: integration_implemented
   license_note: Official BSD-2-Clause (repository LICENSE; mycobot_description package.xml BSD) myCobot Pro630 kinematics, joint limits and Collada visuals (mycobot_pro_630.urdf, as used by the official mycobot_630_moveit2). The source has no inertials and zero velocity limits; arm masses, inertias, efforts and the mount on the myAGV Pro are declared lab estimates (ROADMAP R14.3)
   entries: [mycobot_description/urdf/mycobot_pro_630, mycobot_description/urdf/pro_force_gripper, mycobot_pro/mycobot_630_moveit2]
+- id: elephant_pro630_f100
+  kind: robot
+  repository: https://github.com/elephantrobotics/mycobot_ros2
+  revision: b8176c264e583b073e1c4293c2edb1241b20e1aa
+  status: integration_implemented
+  license_note: Pro630gazebo package declares BSD. The mycobot_description meshes carry the vendor BSD-2-Clause license. Only the F100 subassembly is taken from this pin.
+  entries:
+  - mycobot_pro/mycobotpro630_gazeboros2/config/mycobot_pro_630_force_gripper.urdf
+  - mycobot_description/urdf/mycobot_320_m5_2022/force_control_gripper
+  - mycobot_description/urdf/mycobot_pro_630/collision_gazebo
 - id: mit_racecar_review
   kind: robot_candidate_review
   repository: https://github.com/mit-racecar/racecar_gazebo

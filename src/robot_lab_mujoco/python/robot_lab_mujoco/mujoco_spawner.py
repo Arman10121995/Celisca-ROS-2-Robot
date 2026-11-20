@@ -423,8 +423,13 @@ def _add_mechanical_couplings(mjcf_text, contract):
     if equality is None:
         equality = ET.SubElement(root, "equality")
     for follower, coupling in couplings.items():
-        ET.SubElement(equality, "joint", {"joint1": follower, "joint2": coupling["joint"],
-                                          "polycoef": "%.10g %.10g 0 0 0" % (coupling["offset"], coupling["multiplier"])})
+        attrs = {"joint1": follower, "joint2": coupling["joint"],
+                 "polycoef": "%.10g %.10g 0 0 0" % (coupling["offset"], coupling["multiplier"])}
+        if coupling.get('passive'):
+            # The unpowered followers must transmit the driver's force. The
+            # default soft equality leaves these light links far behind it.
+            attrs.update(solref='0.004 1', solimp='0.9999 0.9999 0.001')
+        ET.SubElement(equality, "joint", attrs)
     return ET.tostring(root, encoding="unicode")
 
 
@@ -2055,7 +2060,8 @@ class MuJoCoSpawner(Node):
             self._articulation = ArticulationROS(self, articulation_contract, urdf, str(model))
             planning = articulation_contract.config.get('planning')
             if planning:
-                if planning != {'schema': 'robot_lab.articulation_plan.v1', 'backend': 'mujoco'}:
+                if (not isinstance(planning, dict) or set(planning)-{'schema', 'backend', 'joints'}
+                        or planning.get('schema') != 'robot_lab.articulation_plan.v1' or planning.get('backend') != 'mujoco'):
                     raise ValueError('Unknown source articulation planning contract')
                 from robot_lab_mujoco.articulation_planner import ArticulationPlanner
                 self._articulation.motion_planner = ArticulationPlanner(self, articulation_contract, urdf)
@@ -2758,11 +2764,19 @@ class MuJoCoSpawner(Node):
         contract's measurement allowance (2026-10-19).
         """
         ramp = max(0., min(1., float(self._data.time)/_ARTICULATION_FEEDFORWARD_RAMP_S))
-        for name, spec in self._articulation.contract.joints.items():
-            if spec['mode'] != 'position':
+        contract = self._articulation.contract
+        passive_load = {}
+        for name, coupling in contract.couplings.items():
+            if coupling.get('passive'):
+                leader = coupling['joint']
+                load = self._data.qfrc_bias[self._joint_name2dofadr[name]] * coupling['multiplier']
+                passive_load[leader] = passive_load.get(leader, 0.) + float(load)
+        for name, spec in contract.joints.items():
+            if spec['mode'] != 'position' or contract.couplings.get(name, {}).get('passive'):
                 continue
             dof = self._joint_name2dofadr[name]
-            feedforward, reserve = effort_budget(ramp*float(self._data.qfrc_bias[dof]), spec['effort'])
+            bias = float(self._data.qfrc_bias[dof]) + passive_load.get(name, 0.)
+            feedforward, reserve = effort_budget(ramp*bias, spec['effort'])
             # Looked up like _set_actuator: a joint may get its first target
             # after this runs (R2's 42-joint upper bodies, 2026-11-18).
             actuator = self._actuator_index(name + '_articulation')

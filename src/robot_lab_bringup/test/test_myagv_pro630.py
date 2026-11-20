@@ -1,4 +1,5 @@
 """Pro630 arm composition onto the myAGV Pro: declared estimates, not missions."""
+import copy
 import os
 from pathlib import Path
 import xml.etree.ElementTree as ET
@@ -6,9 +7,11 @@ import xml.etree.ElementTree as ET
 import pytest
 
 from robot_lab_utils import myagv_pro630
-from robot_lab_utils.urdf_articulation import URDFArticulation, base_motion_limits, DEFAULT_BASE_MOTION_LIMITS
+from robot_lab_utils.urdf_articulation import (
+    URDFArticulation, add_mujoco_articulation_actuators, base_motion_limits, DEFAULT_BASE_MOTION_LIMITS)
 
 REVISION = 'd42ff61a78122c79246623391540d75738b03b23'
+F100_REVISION = 'b8176c264e583b073e1c4293c2edb1241b20e1aa'
 
 
 @pytest.fixture(scope='module')
@@ -54,6 +57,35 @@ def test_contract_accepts_the_composed_arm(composed, tmp_path):
     contract = URDFArticulation(articulation, path.read_text(), str(path))
     assert set(contract.joints) == set(articulation['joints'])
     assert base_motion_limits(articulation) == (.10, .20)
+
+
+def test_vendor_f100_preserves_the_mount_and_normalizes_follower_coordinates(composed, tmp_path):
+    root = Path(os.environ.get('ROBOT_LAB_RUNTIME_ROOT', '/workspace/molar/robot_lab_runtime'))
+    source = root/'external_assets/sources/elephant_pro630_f100'/F100_REVISION
+    if not (source/myagv_pro630.F100_URDF).is_file():
+        pytest.skip('Vendor Pro630 F100 source not provisioned on this host')
+    bare_model, bare_config, _ = composed
+    model, config = copy.deepcopy(bare_model), copy.deepcopy(bare_config)
+    receipt = myagv_pro630.attach_f100(model, config, source, tmp_path/'meshes')
+    assert len(model.findall('link')) == len(bare_model.findall('link')) + 9
+    assert len(config['couplings']) == 5 and len(receipt['reversed_follower_axes']) == 3
+    for joint in bare_model.findall('joint'):
+        assert ET.tostring(model.find(f"joint[@name='{joint.get('name')}']")) == ET.tostring(joint)
+    mount = model.find("joint[@name='pro630_joint6_to_gripper_connect']")
+    assert mount.find('parent').get('link') == 'pro630_link6'
+    leader, = config['grip_joints']
+    assert leader in config['joints'] and config['joints'][leader]['effort'] == .8
+    for follower, spec in config['couplings'].items():
+        urdf_joint = model.find(f"joint[@name='{follower}']")
+        assert spec == dict(joint=leader, multiplier=1., offset=0., mechanical=True, passive=True)
+        assert urdf_joint.find('mimic').get('multiplier') == '1'
+        assert float(urdf_joint.find('axis').get('xyz').split()[-1]) == (-1. if follower in receipt['reversed_follower_axes'] else 1.)
+    output = tmp_path/'pro630_f100.urdf'
+    output.write_text(ET.tostring(model, encoding='unicode'))
+    contract = URDFArticulation(config, output.read_text(), output)
+    assert len(contract.masters) == 7 and len(contract.joints) == 12
+    actuators = ET.fromstring(add_mujoco_articulation_actuators('<mujoco/>', contract)).findall('actuator/general')
+    assert {item.get('joint') for item in actuators} == set(contract.masters)
 
 
 @pytest.mark.parametrize('limits', [[.2, .2], [.1, .5], [0, .1], [-.1, .1]])

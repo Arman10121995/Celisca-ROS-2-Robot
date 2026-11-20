@@ -1,6 +1,8 @@
 # 🤖 Robot Lab — Multi-Robot Simulation & Algorithm Laboratory
 
-November 12–13 top priority: **Elephant Robotics myAGV Pro** is installed in the normal GUI with its official CAD base: Gazebo with directional contact, and MuJoCo/PyBullet/Isaac with a physical-roller variant (drive screens measured on all four; Nav2 measured in Gazebo and PyBullet). The arm-equipped **myAGV Pro + myCobot Pro630** (official arm, declared mass/speed/mount estimates) drives and moves its bounded joints with Stop and watchdog in MuJoCo, PyBullet and Isaac, from the new GUI *Mobile arm* page. Gripper and pick/place remain. New contributors: [Extending the lab](docs/learn/09-extending-the-lab.md) explains adding robots, worlds and GUI controls. [Guide](docs/tutorials/myagv-pro.md) · [receipt](docs/status/evidence/myagv-pro-2026-11-12/README.md).
+The **Elephant Robotics myAGV Pro** is installed in the GUI. Drive screens passed on four backends and Nav2 routes passed on Gazebo and PyBullet. The arm-equipped **myAGV Pro + myCobot Pro630** has bounded joint control, Stop and a watchdog on MuJoCo, PyBullet and Isaac. The separate **Pro630 + F100** variant has measured **Open / Close** control in MuJoCo Display. Both Pro630 variants offer MuJoCo flange planning. Grasp, pick/place and transport with the F100 remain open. [Guide](docs/tutorials/myagv-pro.md) · [base and arm evidence](docs/status/evidence/myagv-pro-2026-11-12/README.md) · [F100 evidence](docs/status/evidence/r143-pro630-f100-2026-11-20/README.md).
+
+[Extending the lab](docs/learn/09-extending-the-lab.md) explains how to add robots, worlds and GUI controls.
 
 
 A ROS 2 Humble simulation laboratory for composing, launching, and measuring multi-robot workflows across wheeled, legged, humanoid, aerial, marine, and tracked platforms — with a native GUI, typed registry, four physics backends, and an interactive architecture explorer.

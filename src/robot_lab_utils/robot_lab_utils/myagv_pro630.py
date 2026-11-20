@@ -26,6 +26,7 @@ the base.
 import hashlib
 import math
 from pathlib import Path
+import subprocess
 import tempfile
 import xml.etree.ElementTree as ET
 
@@ -33,6 +34,8 @@ import numpy as np
 
 PREFIX = 'pro630_'
 ARM_URDF = 'mycobot_description/urdf/mycobot_pro_630/mycobot_pro_630.urdf'
+F100_URDF = 'mycobot_pro/mycobotpro630_gazeboros2/config/mycobot_pro_630_force_gripper.urdf'
+F100_LEADER = 'gripper_controller'
 ARM_MASS_KG = 8.0            # lab estimate: the vendor publishes no arm weight
 PAYLOAD_KG = 2.0             # vendor rated payload
 MAX_JOINT_SPEED = 1.0        # rad/s, lab cap: the vendor publishes no joint speeds
@@ -194,3 +197,101 @@ def compose(base, arm_root, mesh_dir):
                    kept_from_source=['kinematics', 'joint axes', 'URDF position limits', 'collision primitives',
                                      'visual geometry'])
     return articulation, receipt
+
+
+def attach_f100(base, articulation, source_root, mesh_dir):
+    """Mount the vendor F100 subassembly while keeping the pinned bare arm."""
+    import trimesh
+
+    source_root, mesh_dir = Path(source_root).resolve(), Path(mesh_dir)
+    urdf = source_root / F100_URDF
+    expanded = subprocess.check_output(['xacro', str(urdf), 'with_gripper:=true',
+        'collision_mesh_dir:=collision_gazebo', 'gazebo_contact_response:=false'], timeout=45)
+    source = ET.fromstring(expanded)
+    flange_joint = source.find("joint[@name='joint6_to_joint5']")
+    mounted_joint = base.find("joint[@name='pro630_joint6_to_joint5']")
+    if (flange_joint is None or mounted_joint is None or not np.allclose(
+            _origin_matrix(flange_joint.find('origin')), _origin_matrix(mounted_joint.find('origin')),
+            atol=1e-8, rtol=0.)):
+        raise ValueError('F100 source flange transform differs from the composed arm')
+    links = [link for link in source.findall('link') if link.get('name').startswith('gripper_')]
+    names = {link.get('name') for link in links}
+    joints = [joint for joint in source.findall('joint') if joint.find('child').get('link') in names]
+    if len(links) != 9 or len(joints) != 9 or any(joint.find('parent').get('link') not in names | {'link6'}
+                                                 for joint in joints):
+        raise ValueError('Unexpected F100 subassembly topology')
+    driver = next(joint for joint in joints if joint.get('name') == F100_LEADER)
+    if driver.get('type') != 'revolute' or driver.find('mimic') is not None:
+        raise ValueError('F100 source needs one independent rotary actuator')
+    low, high = (float(driver.find('limit').get(key)) for key in ('lower', 'upper'))
+    if (low, high) != (0., 1.):
+        raise ValueError('Unexpected F100 actuator range')
+    mesh_dir.mkdir(parents=True, exist_ok=True)
+    resources = {}
+    for link in links:
+        for mesh in link.findall('.//mesh'):
+            uri = mesh.get('filename', '')
+            if not uri.startswith('package://mycobot_description/'):
+                raise ValueError('Unexpected F100 model mesh '+uri)
+            path = (source_root/uri.removeprefix('package://')).resolve()
+            if not path.is_relative_to(source_root) or not path.is_file():
+                raise ValueError('F100 source mesh is missing: '+uri)
+            resources[uri] = _digest(path)
+            if path.suffix.lower() == '.dae':
+                asset = ET.parse(path).find('{*}asset/{*}unit')
+                if asset is None:
+                    raise ValueError('F100 Collada mesh needs declared source units: '+uri)
+                visual = trimesh.load(str(path), force='mesh')
+                visual.apply_scale(float(asset.get('meter')))
+                staged = mesh_dir/(path.stem+'.stl')
+                visual.export(str(staged))
+                path = staged
+            mesh.set('filename', str(path))
+        link.set('name', PREFIX+link.get('name'))
+        base.append(link)
+
+    leader = PREFIX+F100_LEADER
+    caps = dict(mode='position', lower=low, upper=high, effort=.8, max_velocity=.5, kp=12., kd=.45)
+    couplings, reversed_axes = {}, []
+    for joint in joints:
+        name = PREFIX+joint.get('name')
+        joint.set('name', name)
+        for tag in ('parent', 'child'):
+            frame = joint.find(tag)
+            frame.set('link', PREFIX+frame.get('link'))
+        if joint.get('type') == 'revolute':
+            limit = joint.find('limit')
+            if name != leader:
+                mimic = joint.find('mimic')
+                if (mimic is None or mimic.get('joint') != F100_LEADER or float(mimic.get('offset', 0.)) != 0.
+                        or float(mimic.get('multiplier', 0.)) not in (-1., 1.)):
+                    raise ValueError('Unexpected F100 follower linkage: '+name)
+                sign = float(mimic.get('multiplier'))
+                bounds = sorted(sign*float(limit.get(key)) for key in ('lower', 'upper'))
+                if low < bounds[0] or high > bounds[1]:
+                    raise ValueError('F100 coupled travel exceeds its original follower limits: '+name)
+                # Flip the negative follower's coordinate axis together with
+                # its position sign. The original spatial motion is preserved.
+                if sign < 0.:
+                    axis = joint.find('axis')
+                    axis.set('xyz', _vector(-float(value) for value in axis.get('xyz').split()))
+                    reversed_axes.append(name)
+                mimic.attrib.update(joint=leader, multiplier='1', offset='0')
+                couplings[name] = dict(joint=leader, multiplier=1., offset=0., mechanical=True, passive=True)
+            for key, value in (('lower', low), ('upper', high), ('effort', caps['effort']),
+                               ('velocity', caps['max_velocity'])):
+                limit.set(key, format(value, 'g'))
+            joint.remove(joint.find('dynamics'))
+            ET.SubElement(joint, 'dynamics', damping='.08', friction='0')
+        base.append(joint)
+    if len(couplings) != 5:
+        raise ValueError('F100 requires five source follower joints')
+    articulation['joints'][leader] = caps
+    articulation['home'][leader] = low
+    articulation['couplings'] = couplings
+    articulation['grip_joints'] = [leader]
+    articulation['grip_presets'] = {leader: {'open': high, 'close': low}}
+    return dict(source_urdf=F100_URDF, source_urdf_sha256=_digest(urdf), resource_sha256=resources,
+                mesh_license_sha256=_digest(source_root/'mycobot_description/LICENSE'),
+                reversed_follower_axes=reversed_axes, lab_servo=caps,
+                source_mount='joint6_to_gripper_connect', original_followers=5)

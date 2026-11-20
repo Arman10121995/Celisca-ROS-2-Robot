@@ -547,6 +547,20 @@ def test_stopping_launch_reaches_its_owned_auxiliary_process(app, tmp_path):
         thread.join(timeout=5)
 
 
+def test_stopping_launch_survives_closed_ros_context(app):
+    process = object()
+    app.process, app._launch_running = process, True
+    try:
+        with patch.object(app, '_stop_drive', side_effect=RuntimeError('ROS context closed')), \
+                patch('robot_lab_gui.launcher.threading.Thread') as thread:
+            app._stop_launch()
+            assert thread.call_args.kwargs['args'] == (process,)
+            thread.return_value.start.assert_called_once_with()
+            assert app.status_var.get() == 'Stopping...'
+    finally:
+        app.process, app._launch_running = None, False
+
+
 def test_drive_pad_and_wasd_use_incremental_speed_and_release_ramp(app):
     app.drive_override_var.set(True)
     with patch.object(app, "_publish_drive") as publish, \

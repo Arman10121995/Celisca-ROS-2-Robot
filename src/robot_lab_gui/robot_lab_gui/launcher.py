@@ -3806,22 +3806,27 @@ class SimulationLauncherGui(tk.Tk):
                              daemon=False).start()
 
     def _stop_launch(self):
-        if hasattr(self, 'marine_controls'):
-            self.marine_controls.stop()
-        if hasattr(self, 'fleet_tab'):
-            self.fleet_tab.all_stop()
-        if hasattr(self, 'aerial_swarm_tab'):
-            self.aerial_swarm_tab.all_stop()
-        self._stop_aux_commands()
-        if not self.process or not self._launch_running:
-            return
-        self._stop_drive()
-        if hasattr(self, 'arm_tab'):
-            self.arm_tab.stop()
-        if hasattr(self, 'hand_tab'):
-            self.hand_tab.stop()
-        self.status_var.set("Stopping...")
-        threading.Thread(target=stop_owned_launch, args=(self.process,), daemon=False).start()
+        process = self.process if self._launch_running else None
+        try:
+            if hasattr(self, 'marine_controls'):
+                self.marine_controls.stop()
+            if hasattr(self, 'fleet_tab'):
+                self.fleet_tab.all_stop()
+            if hasattr(self, 'aerial_swarm_tab'):
+                self.aerial_swarm_tab.all_stop()
+            if process is not None:
+                self._stop_drive()
+                if hasattr(self, 'arm_tab'):
+                    self.arm_tab.stop()
+                if hasattr(self, 'hand_tab'):
+                    self.hand_tab.stop()
+        except (RuntimeError, OSError) as exc:
+            self.log('Stop command transport failed: ' + str(exc))
+        finally:
+            self._stop_aux_commands()
+            if process is not None:
+                self.status_var.set("Stopping...")
+                threading.Thread(target=stop_owned_launch, args=(process,), daemon=False).start()
 
     # ---- Control-center APIs used by the lab tabs ----
     def show_tab(self, title):

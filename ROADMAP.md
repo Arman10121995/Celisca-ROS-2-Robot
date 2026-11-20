@@ -124,7 +124,7 @@ Work top to bottom. Each line links to its task.
 | Order | Task | Remaining implementation (short) | State |
 |---|---|---|---|
 | I0 | [R14.2](#r142--elephant-robotics-myagv-pro) myAGV Pro | Done: Gazebo source variant plus portable roller variant driving in MuJoCo, PyBullet and Isaac; Nav2 measured in Gazebo and PyBullet | implemented |
-| I0a | [R14.3](#r143--elephant-myagv-pro-mobile-manipulator) Elephant mobile manipulator | Done 2026-11-13: official Pro630 on the roller base in MuJoCo/PyBullet/Isaac, generic GUI Mobile arm page; gripper and pick/place remain | implemented |
+| I0a | [R14.3](#r143--elephant-myagv-pro-mobile-manipulator) Elephant mobile manipulator | Bare Pro630 drive and joints measured on MuJoCo/PyBullet/Isaac. 11-20: vendor F100 variant and guarded flange planning in MuJoCo. Pick/place and mobile missions with the gripper remain | partial |
 | I0b | [R14.4](#r144--contributor-integration-course) Integration guide chapters | Done 2026-11-13: beginner course part 2 (chapters 9–12) in docs/learn and the GUI docs library; clean-host walkthrough remains | implemented |
 | I1 | [R13.2](#r132--vacuum-carpets-and-mopping) Vacuum carpets and mopping | Done 2026-11-10 (Gazebo mop + rug run passes) | implemented |
 | I2 | [R13.3](#r133--vacuum-camera-obstacle-recognition) Vacuum camera obstacles | Done-when met (ideal and learned). 11-17 retrain 3 installed (fewer pet/cable false positives, pet recall 54 → 60 %); learned zone job passes again (0 contacts, 0.286 m). Sock false positives remain; repeats/held-out room are V1 | implemented |
@@ -1664,12 +1664,22 @@ parking batch needs its own run. Details and evidence are in the
 
 ### R14.3 — Elephant myAGV Pro mobile manipulator
 
-- **State:** implemented (2026-11-13), experimental · **Priority:** I0a (after R14.2, user request 2026-11-12) · **Owner:** claude (from codex, on the user's request)
+- **State:** partial, experimental · **Priority:** I0a (after R14.2, user request 2026-11-12) · **Owner:** codex for the F100 and planning follow-up
 - **Depends on:** R14.2, existing R5.7/R5.9 arm adapters.
 - **Goal:** add the official arm-equipped myAGV Pro as a complete mobile manipulator alongside the base.
 - **Have:** `asset_elephant_myagv_pro_pro630` (`provision_myagv_pro.py --variant pro630`): the roller base plus the official myCobot Pro630 from `elephantrobotics/mycobot_ros2` `d42ff61a` (BSD-2-Clause, the URDF the official MoveIt package uses), composed by `robot_lab_utils/myagv_pro630.py`. Source kinematics, axes, limits, collisions and meshes; declared estimates for arm mass (8 kg), speeds (1 rad/s), effort caps and the deck mount. Bounded position control, Stop, heartbeat watchdog and base interlock on the shared URDF articulation contract, with per-profile `base_motion_limits`. Generic GUI *Mobile arm* page (`robot_lab_gui/urdf_arm_controls.py`) for any profile whose articulation declares `panel: arm`; family `elephant_myagv_pro630` under Mobile manipulators / Arm on omnidirectional base. Drive and arm screens pass in PyBullet, MuJoCo and Isaac; the GUI page passed live on PyBullet ([evidence](docs/status/evidence/myagv-pro-2026-11-12/README.md#myagv-pro--mycobot-pro630-r143-2026-11-13)).
-- **Remaining implementation:** gripper (Elephant publishes no Pro630 gripper description; myGripper F100 pending), MoveIt/Cartesian planning on the composed model, and the R5.9 navigate–reach–grasp pipeline for this robot.
-- **How to do it:** a gripper needs a licensed source description or declared geometry. Planning can reuse the official `mycobot_630_moveit2` SRDF with the `pro630_` prefix.
+- **2026-11-20:** `asset_elephant_myagv_pro_pro630_f100` uses the official
+  Pro630 F100 mount and linkage from `mycobot_ros2` `b8176c2`. The MuJoCo
+  Display variant has one finite-effort jaw actuator, five passive followers
+  and **Open / Close** in Mobile arm. Both Pro630 variants have bounded
+  MuJoCo **Plan pose → Execute plan** for the source flange. The F100 is held
+  while planning arm motions. [Guide](docs/tutorials/myagv-pro.md#use-the-f100-gripper-in-mujoco) · [GUI gripper receipt](docs/status/evidence/r143-pro630-f100-2026-11-20/README.md).
+- **Remaining implementation:** source grasp-frame and object custody for the
+  F100, pick/place and the navigate–reach–grasp pipeline. Extend the physical
+  linkage to additional backends before exposing those modes.
+- **How to do it:** preserve the vendor flange and follower transforms, one
+  shaft effort budget and the real measured linkage. Build on the existing
+  source planner and R5.9 grasp/release contract.
 - **Done when:** met for the composed robot and bounded arm control. Gripper and planning are follow-ups under R5.8/R5.9.
 - **Validation later:** navigation/reach/pick/place transport, contact/calibration and other backend/map missions remain separate measured acceptance.
 

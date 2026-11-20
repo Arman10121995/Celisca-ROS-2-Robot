@@ -1,5 +1,11 @@
 # Current Robot Lab status
 
+November 20 Codex: the **myAGV Pro + myCobot Pro630** family now includes an
+official-mount F100 variant. Open and Close passed through the normal GUI
+in MuJoCo `nav_empty`, with all five followers observed. The bare arm and
+F100 variants have MuJoCo source-flange planning. Physical grasp transport
+and live Cartesian execution remain pending. [F100 receipt](evidence/r143-pro630-f100-2026-11-20/README.md).
+
 November 20 Codex: MuJoCo caches a conservative shortlist for static flex
 culling in larger worlds. A wall-contact comparison kept identical motion
 and contacts. Median culling calculation time was 345 µs before and 85 µs

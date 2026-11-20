@@ -106,6 +106,7 @@ class UrdfArmControls(MolarControls):
         self.tool_plant = None
         self.joint_names = ()
         self.target_vars, self.apply_buttons, self.jog_buttons, self.scales, self.fields = {}, {}, {}, {}, []
+        self.grip_buttons = []
         self.status = tk.StringVar(value='Select a mobile manipulator, a simulator and Run.')
         self.feedback = tk.StringVar(value='Waiting for measured joint state.')
         self.step = tk.DoubleVar(value=.05)
@@ -408,11 +409,14 @@ class UrdfArmControls(MolarControls):
         self.joint_names = names
         self.target_vars, self.apply_buttons, self.jog_buttons, self.scales = {}, {}, {}, {}
         self.fields = [self.step_entry]
+        self.grip_buttons = []
         prefix = os.path.commonprefix(names) if len(names) > 1 else ''
         prefix = prefix[:prefix.rfind('_') + 1]          # pro630_joint1_to_base -> joint1_to_base
         for row, name in enumerate(names):
             spec = config['joints'][name]
-            frame = ttk.LabelFrame(self.joint_frame, text='J%d · %s' % (row + 1, short_name(name, prefix)), padding=4)
+            presets = config.get('grip_presets', {}).get(name, {})
+            label = 'Gripper' if presets else 'J%d · %s' % (row + 1, short_name(name, prefix))
+            frame = ttk.LabelFrame(self.joint_frame, text=label, padding=4)
             frame.grid(row=row, column=0, sticky='ew', pady=3)
             frame.columnconfigure((0, 1, 2, 3), weight=1)
             self.target_vars[name] = tk.DoubleVar(value=0.)
@@ -430,6 +434,12 @@ class UrdfArmControls(MolarControls):
             scale.grid(row=1, column=0, columnspan=4, sticky='ew', pady=3)
             self.scales[name] = scale
             self.fields.extend((entry, scale))
+            for column, action in enumerate(('open', 'close')):
+                if action in presets:
+                    button = ttk.Button(frame, text=action.title(),
+                        command=lambda n=name, target=presets[action]: self.apply_grip_preset(n, target))
+                    button.grid(row=2, column=2*column, columnspan=2, sticky='ew', padx=2)
+                    self.grip_buttons.append(button)
 
     def selected(self):
         return selectable(self.app.robot_var.get(), self.app.simulator_var.get(),
@@ -494,7 +504,10 @@ class UrdfArmControls(MolarControls):
                 and configured.get('backend') == self.app.simulator_var.get())
 
     def current_targets(self):
-        return self.bounded({name: variable.get() for name, variable in self.target_vars.items()})
+        return self.bounded({name: self.target_vars[name].get() for name in self.planning_joints()})
+
+    def planning_joints(self):
+        return (self.arm() or {}).get('planning', {}).get('joints', self.joint_names)
 
     def plan_matches(self):
         state = self.planning()
@@ -538,8 +551,8 @@ class UrdfArmControls(MolarControls):
     def plan_home(self):
         if not self.planning_enabled():
             return False
-        for name, variable in self.target_vars.items():
-            variable.set(float(self.arm().get('home', {}).get(name, 0.)))
+        for name in self.planning_joints():
+            self.target_vars[name].set(float(self.arm().get('home', {}).get(name, 0.)))
         return self.plan_targets()
 
     def execute_plan(self):
@@ -580,10 +593,16 @@ class UrdfArmControls(MolarControls):
             self.target_vars[name].set(value)
         return self.send(home)
 
+    def apply_grip_preset(self, name, target):
+        if not self.send({name: target}):
+            return False
+        self.target_vars[name].set(target)
+        return True
+
     def update_buttons(self):
         self.update_pick_place()
         enabled = self.ready()
-        for widget in [*self.apply_buttons.values(), *self.jog_buttons.values(), *self.fields,
+        for widget in [*self.apply_buttons.values(), *self.jog_buttons.values(), *self.grip_buttons, *self.fields,
                        self.use_measured_button, self.home_button]:
             widget.state(['!disabled'] if enabled else ['disabled'])
         self.stop_button.state(['!disabled'] if self.state else ['disabled'])
