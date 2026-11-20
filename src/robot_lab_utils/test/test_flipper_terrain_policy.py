@@ -80,8 +80,13 @@ def test_full_press_climb_levers_with_both_pairs(step):
 
 def test_drop_descends_and_roll_holds(ledge, flat):
     policy = FlipperPolicy()
-    out = policy.update(terrain_ahead(ledge, HFOV, CAM, GROUND), 0., 0., 0.)
+    # A 0.18 m stair down shows its lower tread in the band: descend. The
+    # 0.3 m ledge's floor is out of view, which since 2026-11-20 stops forward
+    # drive instead (the vehicle drove off an unseen 0.9 m drop and flipped).
+    stair = render(lambda x: -.18 if x > .9 else 0.)
+    out = policy.update(terrain_ahead(stair, HFOV, CAM, GROUND), 0., 0., 0.)
     assert out['state'] == 'descend' and out['elevations'] == (PRESS_RAD, REST_RAD)
+    assert FlipperPolicy().update(terrain_ahead(ledge, HFOV, CAM, GROUND), 0., 0., 0.)['state'] == 'ledge'
     out = policy.update(terrain_ahead(flat, HFOV, CAM, GROUND), 0., .4, 1.)
     assert out['state'] == 'hold' and out['stop_drive']
     assert policy.update(terrain_ahead(flat, HFOV, CAM, GROUND), 0., .2, 2.)['state'] == 'travel'
@@ -92,3 +97,27 @@ def test_missing_depth_falls_back_to_rest_on_level_ground():
     assert policy.update(None, 0., 0., 0.)['state'] == 'travel'
     with pytest.raises(ValueError):
         policy.update(None, float('nan'), 0., 1.)
+
+
+def test_level_tread_on_a_flight_ends_the_climb_toward_the_next_riser():
+    # terrain_stairs_flight (2026-11-20): after the first riser the next one is
+    # always in view; a level hull must still leave the fully pressed climb.
+    policy = FlipperPolicy(full_press=True)
+    riser = dict(rise_m=.18, drop=False, points=200, nearest_rise_m=.8)
+    assert policy.update(riser, .3, 0., 0.)['state'] == 'climb'
+    assert policy.update(riser, 0., 0., 1.)['state'] == 'climb'      # level, hold not yet elapsed
+    out = policy.update(riser, 0., 0., 2.1)
+    from robot_lab_utils.tracked_flippers import FULL_PRESS_RAD
+    assert out["state"] == "approach" and out["elevations"][1] != FULL_PRESS_RAD
+
+
+def test_a_ledge_deeper_than_a_stair_stops_forward_drive_but_a_stair_descends():
+    policy = FlipperPolicy(full_press=True)
+    unseen = FlipperPolicy().update(dict(rise_m=0., drop=True, drop_m=None, step_down_seen=False, points=12,
+                                         nearest_rise_m=None), 0., 0., 0.)
+    assert unseen['state'] == 'ledge' and unseen['stop_forward']   # floor below out of view
+    cliff = policy.update(dict(rise_m=0., drop=True, drop_m=.9, step_down_seen=True, points=200, nearest_rise_m=None), 0., 0., 0.)
+    assert cliff['state'] == 'ledge' and cliff['stop_forward'] and not cliff['stop_drive']
+    assert policy.update(None, 0., 0., 1.)['state'] == 'travel'       # ledge out of view: free again
+    stair = policy.update(dict(rise_m=0., drop=True, drop_m=.18, step_down_seen=True, points=200, nearest_rise_m=None), 0., 0., 2.)
+    assert stair['state'] == 'descend' and not stair['stop_forward']

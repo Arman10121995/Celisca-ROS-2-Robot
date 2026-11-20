@@ -135,6 +135,7 @@ class TrackedControl(Node):
             self.flipper_auto_state=self.flipper_policy.update(terrain,-self.pitch,self.roll,now)
             self.flipper_requested=list(self.flipper_auto_state['targets'])
             if self.flipper_auto_state['stop_drive']:target=[0.,0.]
+            elif self.flipper_auto_state.get('stop_forward') and target[0]>0:target=[0.,target[1]]
         for i in range(2):self.actual[i]+=max(-.4*dt,min(.4*dt,target[i]-self.actual[i]))
         if not ready:self.actual=[0.,0.]
         msg=Twist();msg.linear.x,msg.angular.z=self.actual;self.publisher.publish(msg)

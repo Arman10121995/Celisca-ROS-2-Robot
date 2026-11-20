@@ -1979,6 +1979,13 @@ tasks:
         - docs/status/evidence/amphibious-facility-2026-10-30/README.md
         - docs/status/evidence/flipper-stairs-2026-11-14/README.md
         - docs/status/evidence/flipper-strong-2026-11-19/README.md
+        - docs/status/evidence/r107-tracked-flight-2026-11-20/README.md
+        tracked_flight_20261120: 'Claude: implemented, experimental. New terrain_stairs_flight (the five-step flight with a 2.6
+          m run-up). The flipper policy now ends a climb on a level tread with the next riser in view (it had stayed propped
+          on fully pressed flippers), and a ledge guard stops forward drive when a drop shows no lower tread in the band or
+          one deeper than 0.3 m. lab_tracked_strong_flippers climbs all five 0.18 m risers 3/3 (0.9 m, ~50 s) and stops
+          1.05 m before the 0.9 m end; two earlier runs drove off it and flipped (retained). 11-19 single-step course
+          re-passes. Descent of a flight and angled approaches remain. docs/status/evidence/r107-tracked-flight-2026-11-20/README.md'
         implementation_state: Complete sprung amphibious wheel/propeller source, bank/ramp world, source bounds/leases,
           hybrid flow/range emulation and IMU estimation, RGB-D export/reload and source-aware 2.5D shore Plan/Execute.
           Existing snake/surface/tracked families preserved. 2026-11-14 (Claude) flipper-aware terrain policy from the robot
@@ -2086,6 +2093,7 @@ tasks:
       mission certificates. Full declared roadmap acceptance is still open; test counts, metadata and
       scene loads do not qualify remaining robot/map/backend missions. See docs/REMAINING_WORK_GUIDE.md.'
   R11:
+    rmf_stage_turn_owner_20261120: 'Codex owns the staged L1 Spin dispatch after the wider-landing Gazebo run reached the approach but Nav2 circled at its heading-only goal. Keep clearance, facility state, RMF ownership and measured settling gates. Claude retains tracked-vehicle terrain and control.'
     rmf_return_owner_20261120: 'Codex implemented the MOLAR RMF return clearance fix: fleet_facility L1 platform and rails extend 0.70 m west; matching occupancy and directed forward retreat keep the turn at x=1.75 m. Actual Humble SDK plan, 43 focused checks and two builds pass. Physical Gazebo round trip on the revised layout is pending. Native targets and scan/lease guards are preserved. docs/status/evidence/r11-molar-rmf-return-2026-11-20/README.md'
     rmf_lift_owner_20261120: 'Codex implemented the model-aware Open-RMF lift graph and guarded Nav2 Spin for MOLAR. Gazebo fleet_facility L0 to L1 completes in 114.9 s at 0.047 m from the exit; active map L1 and independent measured settling. The return is held by the scan guard while facing the closed gate. Preserve native per-model routes, RMF events, leveling, Stop and small-base defaults; finish pre-turn gate admission or wider landing. docs/status/evidence/r11-molar-rmf-2026-11-20/README.md'
     isaac_belt_20261118: 'Claude: Isaac deck belt = PhysxSurfaceVelocityAPI on telescope_stage2 (roller rate x 12 mm, authored -x: +x measured to drive the payload backwards on Isaac Sim 6.0.1). MOLAR transfer passes on Isaac 2/2 (0.671/0.673 m, 0.0 mm drag) -> all four backends. docs/status/evidence/r11-molar-isaac-belt-2026-11-18/README.md'
