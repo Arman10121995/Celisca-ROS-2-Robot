@@ -133,7 +133,9 @@ algorithms:
     state_lattice_planner:
       plugin: nav2_smac_planner/SmacPlannerLattice
     dijkstra_planner:
-      plugin: nav2_navfn_planner/NavfnPlanner
+      # robot_lab_planning's eight-connected uniform-cost search, not NavFn's
+      # potential field (2026-11-20; it was dispatched as NavFn before).
+      plugin: robot_lab_planning::DijkstraPlanner
     rrt_planner:
       # Serves Nav2 ComputePathToPose; the navigator's tree calls it.
       # blocked_at 80 keeps sampled paths ~7 cm inside the inflation band:

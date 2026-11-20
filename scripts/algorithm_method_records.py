@@ -39,9 +39,8 @@ NAME_MATH = {
                                  'filter (imu_filter_madgwick_node); the imu_tools complementary filter package is not '
                                  'installed. Kept as the upstream Madgwick reference beside madgwick_filter; family '
                                  'corrected to gradient_descent.'),
-    'dijkstra_planner': ('mismatch', 'Dispatches the same NavFn plugin as navfn_planner (use_astar false, i.e. '
-                         'Dijkstra), so the two ids are one method and not separate comparison arms; '
-                         'robot_lab_planning::DijkstraPlanner is built but not dispatched.'),
+    'dijkstra_planner': ('corrected', 'Dispatched the same NavFn plugin as navfn_planner until 2026-11-20; it now '
+                         'runs robot_lab_planning::DijkstraPlanner, a separate comparison arm.'),
     'pd_motion_planner': ('mismatch', 'Catalogued as a local planner; it is a PD law on pose error toward a lookahead '
                           'point, with no obstacle term or trajectory search.'),
     'ekf_3d_estimator': ('mismatch', 'Id says 3D; the node runs a planar constant turn-rate and velocity (CTRV) EKF '
@@ -103,7 +102,8 @@ MATHEMATICS = {
     'noisy_controller': 'Differential-drive wheel odometry with Gaussian encoder noise (sigma 0.005 rad)',
     'twist_relay': 'Twist / TwistStamped relay',
     'mavros_offboard_controller': 'Retired: constant zero-thrust AttitudeTarget (no control law)',
-    'dijkstra_planner': 'Dijkstra wavefront navigation function on the costmap (NavFn with use_astar false)',
+    'dijkstra_planner': 'Eight-connected uniform-cost (Dijkstra) search on the costmap; a step costs its length '
+                        'times (1 + 3 c/252), cells at or above 253 blocked, no heuristic',
     'pd_motion_planner': 'PD law on distance and heading error to a lookahead point on the path',
     'teb_local_planner': 'Timed elastic band: sparse nonlinear least squares over poses and time intervals '
                          '(upstream; not installed)',

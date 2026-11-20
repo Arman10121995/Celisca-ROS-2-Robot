@@ -89,9 +89,9 @@ ENVIRONMENT_ALIASES = {
 GLOBAL_PLANNER_PLUGINS = {
     # A* -> Smac 2D planner (the navigation stack's current default).
     'a_star_planner': 'nav2_smac_planner/SmacPlanner2D',
-    # Dijkstra-based wavefront planners -> Navfn.
+    # Dijkstra wavefront -> Navfn; plain Dijkstra -> robot_lab_planning.
     'navfn_planner': 'nav2_navfn_planner/NavfnPlanner',
-    'dijkstra_planner': 'nav2_navfn_planner/NavfnPlanner',
+    'dijkstra_planner': 'robot_lab_planning::DijkstraPlanner',
 }
 
 LOCAL_PLANNER_PLUGINS = {

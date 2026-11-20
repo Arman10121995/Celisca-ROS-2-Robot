@@ -4647,9 +4647,10 @@ tasks:
     owner: codex
     state: partial
     takeover_20261114: 'Codex reviewed/integrated pending algorithm dispatch/method records, Gazebo seed system and four-backend sensor-fault wiring after user confirms Claude stopped. Seed runs precede sensors, replace old seed systems and preserve original assets; single-IMU 30/30 repeat and 0/30 cross-seed observed. 13 launch/relay checks pass. Broader missions and fair algorithm comparisons remain separate. docs/status/takeover-2026-11-14.md'
+    dijkstra_dispatch_20261120: 'Implemented, experimental (Claude): dijkstra_planner dispatches robot_lab_planning::DijkstraPlanner (eight-connected uniform-cost search, PlannerException on no path) instead of NavFn. R7.6 Gazebo nav_maze protocol 15/15 (NavFn 15/15, paired time 0.994, path 1.003, worst clearance 0.261 vs 0.030 m). docs/status/evidence/r7-dijkstra-dispatch-2026-11-20/README.md'
     perception_runtime_20261114: 'Implemented: official Humble pointcloud_to_laserscan 2.0.1-3jammy.20260916.045928 arm64 in hash-checked SSD overlay, no OS/dpkg change. Real ROS three-ray LaserScanToPointCloud conversion max XYZ error 1.3113417196564114e-7 m. Current file inventory 72 installed/6 unavailable IDs is not method/mission qualification. docs/status/takeover-2026-11-14.md'
     method_records:
-      generated: '2026-11-14'
+      generated: '2026-11-20'
       generator: scripts/algorithm_method_records.py
       summary:
         methods: 78
@@ -4657,10 +4658,10 @@ tasks:
         not_installed: 0
         unavailable: 6
         with_subrecord: 42
-        with_tests: 57
+        with_tests: 58
         name_math_consistent: 59
-        name_math_corrected: 9
-        name_math_mismatch: 8
+        name_math_corrected: 10
+        name_math_mismatch: 7
         name_math_not_a_method: 2
       records:
         backstepping_controller: 'control; installed; node robot_lab_algorithms/nav2_local_planner planner=backstepping;
@@ -4713,17 +4714,15 @@ tasks:
         a_star_planner: 'global_planning; installed; plugin nav2_smac_planner/SmacPlanner2D; tests 6; math: A* on the
           costmap grid with cost-aware edges; name/math corrected: Runs Nav2 Smac 2D (A* with a cost-aware heuristic);
           the catalog named the undispatched robot_lab_planning::AStarPlanner.'
-        dijkstra_planner: 'global_planning; installed; plugin nav2_navfn_planner/NavfnPlanner; tests 6; math: Dijkstra
-          wavefront navigation function on the costmap (NavFn with use_astar false); name/math mismatch: Dispatches
-          the same NavFn plugin as navfn_planner (use_astar false, i.e. Dijkstra), so the two ids are one method and
-          not separate comparison arms; robot_lab_planning::DijkstraPlanner is built but not dispatched. same dispatch
-          entry as navfn_planner'
+        dijkstra_planner: 'global_planning; installed; plugin robot_lab_planning::DijkstraPlanner; tests 6; math: Eight-connected
+          uniform-cost (Dijkstra) search on the costmap; a step costs its length times (1 + 3 c/252), cells at or above
+          253 blocked, no heuristic; name/math corrected: Dispatched the same NavFn plugin as navfn_planner until 2026-11-20;
+          it now runs robot_lab_planning::DijkstraPlanner, a separate comparison arm.'
         hybrid_a_star_planner: 'global_planning; installed; plugin nav2_smac_planner/SmacPlannerHybrid; tests 0; math:
           A* over (x, y, heading) with Dubins/Reeds-Shepp motion primitives'
         navfn_planner: 'global_planning; installed; plugin nav2_navfn_planner/NavfnPlanner; tests 7; math: Dijkstra
           potential field propagated from the goal; name/math corrected: Was catalogued as a potential field; NavFn
-          is a Dijkstra wavefront navigation function (A* with use_astar) descended by gradient, i.e. grid search. same
-          dispatch entry as dijkstra_planner'
+          is a Dijkstra wavefront navigation function (A* with use_astar) descended by gradient, i.e. grid search.'
         prm_planner: 'global_planning; installed; node robot_lab_algorithms/nav2_global_planner planner=prm_planner;
           tests 2; math: Probabilistic roadmap: 600 free samples, k = 12 nearest-neighbour edges, Dijkstra'
         rrt_planner: 'global_planning; installed; node robot_lab_algorithms/nav2_global_planner planner=rrt_planner;
@@ -4776,7 +4775,7 @@ tasks:
         rgbd_slam_localization: 'localization; unavailable; unavailable retired 2026-10-13 - the node was a simplified
           stand-in; RGB-D localization runs as rtabmap_localization; tests 1; math: Retired stand-in; RGB-D localization
           runs as rtabmap_localization'
-        robot_localization_ekf: 'localization; installed; stack local_localization; tests 0; math: robot_localization
+        robot_localization_ekf: 'localization; installed; stack local_localization; tests 1; math: robot_localization
           EKF: 15-state omnidirectional model, odometry and IMU updates; name/math mismatch: Same robot_localization
           ekf_node as ekf_localization_node (one method, two ids); the catalog executable was nav2_ekf_node, which is
           not a binary (corrected to ekf_node).'
@@ -4834,7 +4833,7 @@ tasks:
           Kalman filter on the constant turn rate and velocity model; name/math mismatch: Id says 3D; the node runs
           a planar constant turn-rate and velocity (CTRV) EKF (tracking_filters.CtrvEkf). state_estimation.EKF3DEstimator
           (per-axis scalar gains, not an EKF) is unused legacy code.'
-        ekf_localization_node: 'state_estimation; installed; stack local_localization; tests 2; math: robot_localization
+        ekf_localization_node: 'state_estimation; installed; stack local_localization; tests 3; math: robot_localization
           EKF: 15-state omnidirectional model, odometry and IMU updates; name/math mismatch: Same robot_localization
           ekf_node as robot_localization_ekf (one method, two ids).'
         error_state_ekf: 'state_estimation; unavailable; unavailable retired 2026-10-13 - its node filtered noiseless

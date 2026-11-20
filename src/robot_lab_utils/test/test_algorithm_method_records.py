@@ -36,8 +36,11 @@ def test_every_method_states_its_mathematics():
 
 def test_identical_dispatch_entries_are_one_method():
     by_id = {r['id']: r for r in rows()}
-    assert by_id['dijkstra_planner']['name_math'] == 'mismatch'
-    assert any('navfn_planner' in n for n in by_id['dijkstra_planner']['notes'])
+    assert by_id['robot_localization_ekf']['name_math'] == 'mismatch'
+    assert any('ekf_localization_node' in n for n in by_id['robot_localization_ekf']['notes'])
+    # dijkstra_planner left NavFn's entry (2026-11-20).
+    assert by_id['dijkstra_planner']['dispatch'] != by_id['navfn_planner']['dispatch']
+    assert not any('same dispatch' in n for n in by_id['dijkstra_planner']['notes'])
     # The same stack for different drive types is not a duplicate.
     assert by_id['native_holonomic_controller']['name_math'] == 'consistent'
 

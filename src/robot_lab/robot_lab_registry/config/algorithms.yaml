@@ -625,14 +625,14 @@
   - republish
 - id: dijkstra_planner
   version: 1.0.0
-  name: Dijkstra Planner (NavFn)
-  description: Dijkstra wavefront on the costmap; dispatched as NavFn with use_astar false, the same method as navfn_planner
+  name: Dijkstra Planner
+  description: Eight-connected uniform-cost search on the global costmap (robot_lab_planning plugin); cost-weighted steps, no heuristic, distinct from NavFn's potential field
   status: integrated
   category: global_planning
   family: grid_search
   implementation:
-    package: nav2_navfn_planner
-    plugin: nav2_navfn_planner/NavfnPlanner
+    package: robot_lab_planning
+    plugin: robot_lab_planning::DijkstraPlanner
     language: cpp
   input_contract:
     required_topics:

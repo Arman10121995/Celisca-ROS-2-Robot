@@ -11,7 +11,9 @@ find_package(rclcpp REQUIRED)
 find_package(rclpy REQUIRED)
 find_package(nav_msgs REQUIRED)
 find_package(geometry_msgs REQUIRED)
+find_package(tf2 REQUIRED)
 find_package(tf2_ros REQUIRED)
+find_package(tf2_geometry_msgs REQUIRED)
 find_package(nav2_core REQUIRED)
 find_package(nav2_costmap_2d REQUIRED)
 find_package(nav2_util REQUIRED)
@@ -25,7 +27,9 @@ set(dependencies
   rclcpp
   nav_msgs
   geometry_msgs
+  tf2
   tf2_ros
+  tf2_geometry_msgs
   nav2_core
   nav2_costmap_2d
   nav2_util
@@ -62,6 +66,13 @@ install(PROGRAMS
   ${PROJECT_NAME}/dijkstra_planner.py
   DESTINATION lib/${PROJECT_NAME}
 )
+
+if(BUILD_TESTING)
+  find_package(ament_cmake_gtest REQUIRED)
+  ament_add_gtest(test_dijkstra_search test/test_dijkstra_search.cpp)
+  target_link_libraries(test_dijkstra_search dijkstra_planner)
+  ament_target_dependencies(test_dijkstra_search ${dependencies})
+endif()
 
 ament_export_include_directories(include)
 ament_export_libraries(

@@ -3,6 +3,7 @@
 
 #include <string>
 #include <memory>
+#include <vector>
 
 #include "rclcpp/rclcpp.hpp"
 #include "rclcpp_action/rclcpp_action.hpp"
@@ -18,31 +19,11 @@
 
 namespace robot_lab_planning
 {
-struct GraphNode
-{
-    int x;
-    int y;
-    int cost;
-    std::shared_ptr<GraphNode> prev;
 
-    GraphNode() : GraphNode(0,0) {}
-
-    GraphNode(int in_x, int in_y) : x(in_x), y(in_y), cost(0){}
-
-    bool operator>(const GraphNode & other) const { 
-        return cost > other.cost;
-    }
-
-    bool operator==(const GraphNode & other) const {
-        return x == other.x && y == other.y;
-    }
-
-    GraphNode operator+(std::pair<int, int> const & other) {
-        GraphNode res(x + other.first, y + other.second);
-        return res;
-    }
-};
-
+// Uniform-cost (Dijkstra) search over the global costmap, eight-connected.
+// It expands by accumulated cost only, with no heuristic, so it is the
+// exact cost-optimal grid path for the edge costs below; NavFn computes a
+// potential field instead and follows its gradient.
 class DijkstraPlanner : public nav2_core::GlobalPlanner
 {
 public:
@@ -64,22 +45,29 @@ public:
     const geometry_msgs::msg::PoseStamped & start,
     const geometry_msgs::msg::PoseStamped & goal) override;
 
+  // The search itself, on a row-major cost grid (exposed for tests).
+  // Returns the cell indices from start to goal, or empty when none.
+  static std::vector<unsigned int> search(
+    const unsigned char * costs, unsigned int size_x, unsigned int size_y,
+    unsigned int start, unsigned int goal, bool allow_unknown,
+    unsigned char lethal_cost, double cost_factor);
+
 private:
   std::shared_ptr<tf2_ros::Buffer> tf_;
   nav2_util::LifecycleNode::SharedPtr node_;
+  std::shared_ptr<nav2_costmap_2d::Costmap2DROS> costmap_ros_;
   nav2_costmap_2d::Costmap2D * costmap_;
   std::string global_frame_, name_;
-  double interpolation_resolution_;
+
+  bool allow_unknown_;
+  int lethal_cost_;
+  double cost_factor_;
+  bool use_smoother_;
+  std::string smoother_id_;
 
   rclcpp_action::Client<nav2_msgs::action::SmoothPath>::SharedPtr smooth_client_;
 
-  bool poseOnMap(const GraphNode & node);
-  
-  GraphNode worldToGrid(const geometry_msgs::msg::Pose & pose);
-  
-  geometry_msgs::msg::Pose gridToWorld(const GraphNode & node);
-  
-  unsigned int poseToCell(const GraphNode & node);
+  void smooth(nav_msgs::msg::Path & path);
 };
 
 }  // namespace robot_lab_planning

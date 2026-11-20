@@ -73,7 +73,7 @@ class AlgorithmDispatchTests(unittest.TestCase):
         self.assertEqual("global_localization", self.dispatch["localization"]["amcl"]["stack"])
         self.assertEqual("nav2_smac_planner/SmacPlanner2D",
                          self.dispatch["global_planning"]["a_star_planner"]["plugin"])
-        self.assertEqual("nav2_navfn_planner/NavfnPlanner",
+        self.assertEqual("robot_lab_planning::DijkstraPlanner",
                          self.dispatch["global_planning"]["dijkstra_planner"]["plugin"])
         self.assertEqual("dwb_core::DWBLocalPlanner",
                          self.dispatch["local_planning"]["dwb_local_planner"]["plugin"])

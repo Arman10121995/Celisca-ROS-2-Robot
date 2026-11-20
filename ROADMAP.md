@@ -1006,8 +1006,8 @@ parking batch needs its own run. Details and evidence are in the
       named a nonexistent TEB package and costmap layer; NavFn was listed as
       a potential field, and the simple/noisy controllers as PID;
       `a_star_planner` and `pure_pursuit` named code that is not dispatched.
-    - **Kept with a note:** `dijkstra_planner` runs the same NavFn as
-      `navfn_planner`; the two robot_localization ids are one node;
+    - **Kept with a note:** `dijkstra_planner` ran the same NavFn as
+      `navfn_planner` (its own plugin since 11-20); the two robot_localization ids are one node;
       `imu_complementary_filter` is Madgwick; `ekf_3d_estimator` is a planar
       CTRV EKF; `motion_model_estimator` is an IMM; `pose_graph_estimator` is
       a sliding-window smoother; `pd_motion_planner` is a PD controller.
@@ -1017,8 +1017,15 @@ parking batch needs its own run. Details and evidence are in the
   a conversion fixture, not a robot mission. Native MuJoCo fault routing and
   seed-before-sensors world copies have focused launch checks.
   [Receipt](docs/status/takeover-2026-11-14.md).
-- **Remaining implementation:** none for I19. Optional: a dispatched Dijkstra distinct from NavFn
-  (`robot_lab_planning::DijkstraPlanner` is built).
+- **Dijkstra (2026-11-20, implemented, experimental):** `dijkstra_planner`
+  now dispatches `robot_lab_planning::DijkstraPlanner` instead of NavFn. It
+  is an eight-connected uniform-cost search with cost-weighted steps, and
+  it raises `PlannerException` when there is no path. On the R7.6 protocol
+  it reached 15/15 goals against NavFn's 15/15, with paired time and path
+  ratios of 0.994 and 1.003. Its worst clearance was 0.261 m, against
+  NavFn's 0.030 m
+  ([evidence](docs/status/evidence/r7-dijkstra-dispatch-2026-11-20/README.md)).
+- **Remaining implementation:** none for I19.
 - **How to do it:** the algorithm code is in `src/robot_lab_algorithms/`,
   with ROS wrappers in `src/robot_lab_adapter/` and the catalog in
   `robot_lab_registry/config/algorithms.yaml`. Dispatch is in
