@@ -1725,6 +1725,12 @@ parking batch needs its own run. Details and evidence are in the
   Live nav RTF: Labbot celisca_floor_1 0.675 → 0.806, Bumperbot 0.832,
   celisca_floor_2_furniture 0.989, hospital 0.344 → 0.431, nav_obstacle
   0.983 ([evidence](docs/status/evidence/p4-mujoco-culling-2026-11-14/README.md)).
+- **2026-11-20:** a conservative cached shortlist reduces repeated AABB
+  work for large static-flex worlds. The final overlap predicate and meshes
+  are unchanged. Compiled wall checks match contacts and trajectory. On a
+  208-bound, 32-geom culling-only benchmark, median calculation time drops
+  from 345 to 85 μs. The live loop profiler now reports `static_flex_culling`
+  separately. Celisca and hospital navigation RTF still need remeasurement.
 - **Remaining implementation:** the large worlds stay below real time.
   MuJoCo updates every static flex vertex and element each step: 3.7 of 4 ms
   per tick on celisca_floor_1, 7.7 ms on the hospital. The options that

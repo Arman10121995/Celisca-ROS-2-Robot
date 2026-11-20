@@ -184,6 +184,9 @@ class StaticFlexCulling:
     and ``restore`` before anything moves bodies outside the step loop.
     """
 
+    _CACHE_MIN_PAIRS = 2048
+    _CACHE_TRAVEL = .20  # m; expands the preliminary distance test only
+
     def __init__(self, model, data, margin=0.5):
         import mujoco
         mujoco.mj_forward(model, data)       # mj_kinematics alone leaves flexvert_xpos unset
@@ -205,7 +208,36 @@ class StaticFlexCulling:
         self.geoms = np.flatnonzero(moving_body[model.geom_bodyid]
                                     & ((model.geom_contype != 0) | (model.geom_conaffinity != 0)))
         self.reach = model.geom_rbound[self.geoms] + model.geom_margin[self.geoms] + float(margin)
+        self._reach_squared = self.reach ** 2
+        self._expanded_reach_squared = (self.reach + self._CACHE_TRAVEL + 1e-12) ** 2
+        self._cached_centers = None
+        self._candidate_indices = None
         self.active = np.ones(len(self.flexes), dtype=bool)
+
+    @staticmethod
+    def _overlaps(lo, hi, centers, reach_squared):
+        gap = np.maximum(0., np.maximum(lo[:, None] - centers[None], centers[None] - hi[:, None]))
+        return (np.einsum('fgk,fgk->fg', gap, gap) <= reach_squared[None]).any(axis=1)
+
+    def _near(self, centers):
+        if len(self.flexes)*len(centers) >= self._CACHE_MIN_PAIRS:
+            if self._cached_centers is None or np.any(
+                    np.sum((centers-self._cached_centers)**2, axis=1) > self._CACHE_TRAVEL**2):
+                # Every centre can move at most CACHE_TRAVEL before refreshing
+                # this list. The distance to an AABB changes by at most the
+                # same amount, so all true overlaps remain candidates.
+                expanded = self._overlaps(self.lo, self.hi, centers, self._expanded_reach_squared)
+                indices = np.flatnonzero(expanded)
+                self._candidate_indices = indices if len(indices)*3 < len(self.flexes)*2 else None
+                if self._candidate_indices is not None:
+                    self._candidate_bounds = self.lo[indices], self.hi[indices]
+                self._cached_centers = centers.copy()
+            if self._candidate_indices is not None:
+                near = np.zeros(len(self.flexes), dtype=bool)
+                lo, hi = self._candidate_bounds
+                near[self._candidate_indices] = self._overlaps(lo, hi, centers, self._reach_squared)
+                return near
+        return self._overlaps(self.lo, self.hi, centers, self._reach_squared)
 
     def update(self, model, data):
         """Enable exactly the static flexes within reach; returns how many are enabled."""
@@ -215,8 +247,10 @@ class StaticFlexCulling:
             near = np.zeros(len(self.flexes), dtype=bool)
         else:
             centers = data.geom_xpos[self.geoms]
-            gap = np.maximum(0., np.maximum(self.lo[:, None] - centers[None], centers[None] - self.hi[:, None]))
-            near = (np.einsum('fgk,fgk->fg', gap, gap) <= self.reach[None] ** 2).any(axis=1)
+            if not np.all(np.isfinite(centers)):
+                self.restore(model)
+                return len(self.flexes)
+            near = self._near(centers)
         changed = near != self.active
         if changed.any():
             index = self.flexes[changed]
@@ -229,6 +263,7 @@ class StaticFlexCulling:
         model.flex_contype[self.flexes] = self.contype
         model.flex_conaffinity[self.flexes] = self.conaffinity
         self.active[:] = True
+        self._cached_centers = None
 
 
 def configure_world_midphase(model, mode='auto'):

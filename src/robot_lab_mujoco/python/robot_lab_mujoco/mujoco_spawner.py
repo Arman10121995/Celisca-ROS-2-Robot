@@ -2633,9 +2633,11 @@ class MuJoCoSpawner(Node):
             from robot_lab_mujoco.world_collision import StaticFlexCulling
             culling = self._flex_culling = StaticFlexCulling(self._model, self._data)
             self.get_logger().info("MuJoCo static flex culling for %d world flexes" % len(culling.flexes))
+        profile = getattr(self, "_profile", _NO_PROFILE)
         if culling:
-            culling.update(self._model, self._data)
-        with getattr(self, "_profile", _NO_PROFILE).phase("mj_step"):
+            with profile.phase("static_flex_culling"):
+                culling.update(self._model, self._data)
+        with profile.phase("mj_step"):
             for _ in range(self._substeps):
                 self._apply_perturbation()
                 if getattr(self, "_belt", None) is not None:

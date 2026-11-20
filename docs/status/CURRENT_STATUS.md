@@ -1,5 +1,11 @@
 # Current Robot Lab status
 
+November 20 Codex: MuJoCo caches a conservative shortlist for static flex
+culling in larger worlds. A wall-contact comparison kept identical motion
+and contacts. Median culling calculation time was 345 µs before and 85 µs
+after in a 208-bound, 32-geom benchmark. The profiler now exposes the culling
+phase. Live Celisca and hospital real-time factor measurements remain pending.
+
 November 20 Codex: Arm pick-and-place now has a **Cylinder on its side**
 variant in the existing GUI map family. The planner closes across the
 measured cylinder axis and checks the whole object footprint on the table.

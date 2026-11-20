@@ -130,9 +130,10 @@ def test_midphase_is_disabled_only_for_large_static_flex_worlds():
     assert MIDPHASE_FLEX_ELEMENTS > 0
 
 
-def test_static_flex_culling_keeps_contacts_and_disables_far_walls(tmp_path):
+def test_static_flex_culling_keeps_contacts_and_disables_far_walls(tmp_path, monkeypatch):
     """P4: far static flexes stop colliding; the trajectory into a wall is unchanged."""
     from robot_lab_mujoco.world_collision import StaticFlexCulling
+    monkeypatch.setattr(StaticFlexCulling, '_CACHE_MIN_PAIRS', 1)
     meshes = []
     for name, x in (('left', -6), ('right', 2)):
         path = tmp_path / (name + '.stl')
@@ -162,3 +163,30 @@ def test_static_flex_culling_keeps_contacts_and_disables_far_walls(tmp_path):
     assert np.array_equal(runs[0][0], runs[1][0]) and runs[0][1] == runs[1][1] > 0
     assert len(runs[1][2]) == 600 and max(runs[1][2]) == 1      # the far left wall never collides
     assert model.flex_contype.all() or model.flex_conaffinity.all()   # restored
+
+
+def test_static_flex_culling_shortlist_matches_full_selection_after_motion_and_reset():
+    from robot_lab_mujoco.world_collision import StaticFlexCulling
+
+    wall_pieces = ''.join(
+        f'<flex name="wall_{x}" body="world" dim="2" radius=".001" '
+        f'vertex="{x} 0 0 {x} 0 1 {x} 1 0" element="0 1 2" />'
+        for x in range(80))
+    geoms = ''.join(f'<geom type="sphere" size=".1" pos="0 {i/100} 0" mass=".1"/>' for i in range(30))
+    model = mujoco.MjModel.from_xml_string(
+        f'<mujoco><worldbody><body pos="2 0 .5"><freejoint/>{geoms}</body></worldbody>'
+        f'<deformable>{wall_pieces}</deformable></mujoco>')
+    data = mujoco.MjData(model)
+    culling = StaticFlexCulling(model, data)
+    assert len(culling.flexes) == 80
+    for x in (2.35, 2.49, 2.61, 10.1, 78.8, 2.35):
+        data.geom_xpos[culling.geoms] = [[x, .1, .4]]
+        after = data.geom_xpos[culling.geoms]
+        gap = np.maximum(0., np.maximum(culling.lo[:, None]-after, after-culling.hi[:, None]))
+        expected = (np.sum(gap**2, axis=2) <= culling.reach**2).any(axis=1)
+        assert culling.update(model, data) == int(expected.sum())
+        np.testing.assert_array_equal(model.flex_contype[culling.flexes] != 0, expected)
+        assert len(culling._candidate_indices) < 4
+    culling.restore(model)
+    assert culling._cached_centers is None
+    assert np.all(model.flex_contype[culling.flexes])

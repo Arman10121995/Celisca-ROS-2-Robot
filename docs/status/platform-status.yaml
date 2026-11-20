@@ -1044,6 +1044,7 @@ priority_patches:
       holes, radius and visible mesh. Unsupported/non-equivalent patches fall back
       to source triangles. Default MuJoCo, robot controllers and sensors remain unchanged.
       Matched geometry/contact/motion/RTF validation follows implementation.'
+    flex_candidate_cache_20261120: 'Codex implemented a 0.20 m conservative travel cache for large static-flex overlap scans, followed by the unchanged exact final predicate. Tests compare full masks through motion and resets and matched 600 simulated wall steps. Culling-only fixture of 208 bounds by 32 moving centres: 345.4 us dense vs 85.2 us cached median, 600 matching masks per sweep. Native profiler phase static_flex_culling added. Live world RTF remains pending. SSD robot_lab_runtime/p4-flex-candidates-20261120.'
     evidence: docs/status/evidence/p4-mujoco-step-2026-10-12/README.md
     owner: cline-agent
     result: '2026-10-12 claude: static-world midphase disabled above 5000 flex elements
