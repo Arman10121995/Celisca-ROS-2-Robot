@@ -1425,7 +1425,7 @@ tasks:
         title: Repair installed entry points and portable paths
       R1.2:
         acceptance_ref: ROADMAP.md
-        regression_20261120: 'Codex repaired the fast-tier regression from run 44811370492. Keep all four ROS-import cases in sourced integration and retain checks for the three terrain fixtures without saved 2D maps. Local unsourced fast tier passes 1502 cases with 64 skips and eight deselections. Five focused sourced checks pass. Published run 44815298868 remains pending. See docs/status/evidence/ci-fast-2026-11-20/README.md.'
+        regression_20261120: 'Codex repaired the fast-tier regression from run 44811370492. Keep all four ROS-import cases in sourced integration and retain checks for the three terrain fixtures without saved 2D maps. Local unsourced fast tier passes 1502 cases with 64 skips and eight deselections. The Fleet queue fixture now binds the production transport helper, and the headless integration tier passes 345 cases with 30 skips. Published verification remains pending. See docs/status/evidence/ci-fast-2026-11-20/README.md.'
         active_scope: '2026-10-07 codex: repair exact dc39922 CI failures without
           removing checks. Three ROS-import tests must run in the sourced integration
           tier; keep pure spring/navigation acceptance tests fast. Correct the unresolved

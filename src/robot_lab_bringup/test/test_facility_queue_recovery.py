@@ -73,7 +73,8 @@ def facility(monkeypatch):
         identity='session', runtime=dict(operator_id='op', operator_fresh=True, members=[dict(id=name, mode='idle', navigation_ready=True, included=True, queued=0) for name in ('alpha', 'beta')]),
         runtime_at=100., joint_at=100., clock_at=100., outputs={}, energy=dict(alpha=dict(floor='L0'), beta=dict(floor='L0')),
         last_rejection='', get_logger=lambda: SimpleNamespace(warning=lambda text: None))
-    for name in ('request_lift', '_admit_transports', '_cancel_transports', '_transport_actions', '_stop_recovery', '_recovery_tick', '_prepare_transport'):
+    for name in ('request_lift', '_admit_transports', '_cancel_transports', '_transport_actions',
+                 '_stop_recovery', '_recovery_tick', '_prepare_transport', '_transport_config'):
         setattr(node, name, MethodType(getattr(Infrastructure, name), node))
     return node
 

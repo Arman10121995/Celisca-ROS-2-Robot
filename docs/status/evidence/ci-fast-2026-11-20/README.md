@@ -15,4 +15,9 @@ ten cases. A prior run on `fdec0619` failed the same cases.
 
 The complete unsourced fast tier passed 1,502 tests with 64 skips and
 eight deselections. The focused sourced run passed the four moved checks
-and the existing Nav2 frame check. [Published repair run](https://github.com/Arman10121995/Celisca-ROS-2-Robot/actions/runs/44815298868).
+and the existing Nav2 frame check. The complete headless integration tier
+passed 345 tests with 30 skips using the CI-pinned MAVLink package.
+The Fleet queue fixture now binds the production per-model transport
+configuration helper. The architecture layout and native 3D framebuffer
+checks both passed separately under Xvfb.
+[Published repair run](https://github.com/Arman10121995/Celisca-ROS-2-Robot/actions/runs/44815298868).

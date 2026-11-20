@@ -124,6 +124,7 @@ FAST_TESTS=(
 
 INTEGRATION_TESTS=(
   "$BRG_TEST/test_rgbd_transport.py"
+  "$BRG_TEST/test_pick_place_nav2.py"
   "$BRG_TEST/test_fiducial_transport.py"
   "$GUI_TEST/test_car_parking_controls.py"
   "$GUI_TEST/test_side_grasp_controls.py"
@@ -202,6 +203,7 @@ PHYSICS_TESTS=(
   "$BRG_TEST/test_myagv_pro_source.py"
   "$BRG_TEST/test_tiago_source.py"
   "$BRG_TEST/test_articulation_planner.py"
+  "$BRG_TEST/test_mujoco_effort.py::test_grip_contact_forces_measure_both_pads_for_the_same_free_object"
   "$BRG_TEST/test_moving_urdf_camera.py"
   "$BRG_TEST/test_molar_backend_contract.py"
   "$BRG_TEST/test_urdf_inertia.py"
