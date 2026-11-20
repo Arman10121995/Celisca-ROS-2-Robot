@@ -47,6 +47,10 @@ Gazebo Fortress with the private native track engine.
 Each step on the descent goes `descend` (front flippers pressed, rear at
 rest), nose down to about 0.3 rad, then level.
 
+**Later the same day:** the lower-surface measurement was extended to 2.0 m, the ledge depth set to 0.25 m,
+and the step memory widened ([angled approaches](../r107-tracked-angled-2026-11-20/README.md)). Up and over
+re-passes on that final policy (`reg2-over`, 96.4 s).
+
 ## Limits
 
 - Straight approaches only: angled approaches to a riser are not run.
