@@ -1,0 +1,129 @@
+[
+ {
+  "robot": "lab_octopod",
+  "map": "nav_empty",
+  "spawn": null,
+  "simulator": "gazebo",
+  "acquisition": {
+   "run": "/workspace/molar/robot_lab_runtime/gait-savedmap-backends-20261120/gazebo/runs/e1432ec3057b4fbe9e3e6e59d98ca867",
+   "success": true,
+   "reason": "Actual travel and nonempty acquired map archived",
+   "map_yaml": "/workspace/molar/robot_lab_runtime/gait_sessions/lab_octopod-e6fd0eqg/saved_maps/map-73941192e8/map.yaml",
+   "known_cells": 35246,
+   "start": [
+    -0.29691280695849825,
+    -0.4997970689841321,
+    -0.000776019214524894
+   ]
+  },
+  "navigation": {
+   "run": "/workspace/molar/robot_lab_runtime/gait-savedmap-backends-20261120/gazebo/runs/d6d37fa030ee4997919d7b0acfc32a47",
+   "goal": [
+    0.203087042490054,
+    -0.500185078552451,
+    -0.000776019214524894
+   ],
+   "success": true,
+   "reason": "Every native goal physically settled",
+   "measurements": [
+    {
+     "requested": [
+      0.203087042490054,
+      -0.500185078552451,
+      -0.000776019214524894
+     ],
+     "physical_pose": [
+      0.13601904312987614,
+      -0.5173131084024122,
+      0.001681780646976315
+     ],
+     "linear_m_s": 0.0,
+     "angular_rad_s": 0.0,
+     "settled_sim_s": 1.0,
+     "member_id": "body",
+     "index": 0,
+     "native_terminal": true,
+     "nav2_status": 4
+    }
+   ]
+  }
+ },
+ {
+  "robot": "hexapod_ros2",
+  "map": "nav_empty",
+  "spawn": null,
+  "simulator": "gazebo",
+  "acquisition": {
+   "run": "/workspace/molar/robot_lab_runtime/gait-savedmap-backends-20261120/gazebo/runs/fbbf84acc4d14f6cb212eb40411de739",
+   "success": true,
+   "reason": "Actual travel and nonempty acquired map archived",
+   "map_yaml": "/workspace/molar/robot_lab_runtime/gait_sessions/hexapod_ros2-7w9k0t8o/saved_maps/map-2f8bf53804/map.yaml",
+   "known_cells": 46812,
+   "start": [
+    -0.2953065621742851,
+    -0.501869381288411,
+    -0.009534870546864083
+   ]
+  },
+  "navigation": {
+   "run": "/workspace/molar/robot_lab_runtime/gait-savedmap-backends-20261120/gazebo/runs/fb87eeffd23b46ddbd84b447af92852f",
+   "goal": [
+    0.204670709558822,
+    -0.5066367443245966,
+    -0.009534870546864083
+   ],
+   "success": false,
+   "reason": "Native Nav2 terminal status 6",
+   "measurements": []
+  }
+ },
+ {
+  "robot": "lab_centipede",
+  "map": "nav_empty",
+  "spawn": null,
+  "simulator": "gazebo",
+  "acquisition": {
+   "run": "/workspace/molar/robot_lab_runtime/gait-savedmap-backends-20261120/gazebo/runs/08acbc9e8e20492e8b9ac218a7c7d165",
+   "success": true,
+   "reason": "Actual travel and nonempty acquired map archived",
+   "map_yaml": "/workspace/molar/robot_lab_runtime/gait_sessions/lab_centipede-wrk5tj84/saved_maps/map-d82b2e0eee/map.yaml",
+   "known_cells": 34727,
+   "start": [
+    -0.29799791602883335,
+    -0.4558312501421908,
+    0.09649220239194577
+   ]
+  },
+  "navigation": {
+   "run": "/workspace/molar/robot_lab_runtime/gait-savedmap-backends-20261120/gazebo/runs/c74c4312c44340199d22b572b1a1a867",
+   "goal": [
+    0.19967620317126844,
+    -0.4076599819587306,
+    0.09649220239194577
+   ],
+   "success": true,
+   "reason": "Every native goal physically settled",
+   "measurements": [
+    {
+     "requested": [
+      0.19967620317126844,
+      -0.4076599819587306,
+      0.0964922023919458
+     ],
+     "physical_pose": [
+      0.1477351263224083,
+      -0.3846028631337271,
+      0.24113823401338128
+     ],
+     "linear_m_s": 0.0,
+     "angular_rad_s": 0.0,
+     "settled_sim_s": 1.0,
+     "member_id": "body",
+     "index": 0,
+     "native_terminal": true,
+     "nav2_status": 4
+    }
+   ]
+  }
+ }
+]

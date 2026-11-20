@@ -47,6 +47,7 @@ class ExtensionWorkload(Node):
         self.operator = 'extension-workload-'+uuid.uuid4().hex
         self.trace = (self.directory/'extension-trace.jsonl').open('w', buffering=1)
         self.trace_bytes = 0
+        self.traced_state_at, self.traced_state_key = -math.inf, None
         self.started = self.phase_at = time.monotonic()
         self.state_at = self.aux_at = self.hb_at = -math.inf
         self.runtime = self.aux = self.mapping = None
@@ -136,7 +137,13 @@ class ExtensionWorkload(Node):
                         lambda message, name=name:self.observe_truth(name, message), qos_profile_sensor_data))
                 self.record(kind='session', session_id=self.session, truth_topics=topics, contract=self.contract)
             self.runtime, self.state_at = data, time.monotonic()
-            self.record(kind='native_state', state=data)
+            # One full state per wall second, and every change of arming,
+            # owner or reason; the 10 Hz copies filled the 32 MiB trace on
+            # slow Isaac gait runs (2026-11-20: 30 of 32 MiB after 37 sim s).
+            key = (data.get('enabled'), data.get('input_owner'), data.get('reason'))
+            if key != self.traced_state_key or self.state_at-self.traced_state_at >= 1.:
+                self.traced_state_at, self.traced_state_key = self.state_at, key
+                self.record(kind='native_state', state=data)
         except (ValueError, KeyError, TypeError) as exc:
             self.fail(exc)
 

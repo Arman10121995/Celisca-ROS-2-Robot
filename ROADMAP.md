@@ -1299,7 +1299,13 @@ parking batch needs its own run. Details and evidence are in the
     spine now take their root pose from the spine angles. The centipede passes `nav_obstacle` from the open spawn
     (0.113 m, 0.125 rad), its first second-world pass, in one run. On PyBullet it now maps and passes too (0.083 m),
     so all three models have a PyBullet saved-map pass. Its in-place turn still drifts 0.09 m, from foot slip
-    ([receipt](docs/status/evidence/r106-gait-turn-2026-11-20/README.md)).
+    ([receipt](docs/status/evidence/r106-gait-turn-2026-11-20/README.md)). **Gazebo and Isaac (2026-11-20):** on
+    Gazebo the octopod (0.069 m) and centipede (0.057 m) pass; the hexapod is 0.157 m off by truth after Nav2
+    succeeds. On Isaac the octopod maps, but at about 0.05× real time its goal does not fit the 900 s workload
+    limit (0.113 m away and closing). Navigation now uses a stance-polygon footprint instead of a circle about the
+    root (the centipede and hexapod then pass `nav_obstacle` from the world's corner spawn) and filters lidar
+    returns from the robot's own legs. The qualifier has Isaac/Gazebo run budgets
+    ([receipt](docs/status/evidence/r106-gait-backends-2026-11-20/README.md)).
 - **How to do it:** `gait_model.py`, `gait_controller.py`, `gait_odometry.py` and
   `gait_terrain.py` in `robot_lab_utils/`. Keep one owner of `/gait/state`.
 - **Done when:** walking on terrain, contacts and saved-map navigation per model and backend.

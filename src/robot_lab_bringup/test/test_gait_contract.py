@@ -179,3 +179,61 @@ def test_translation_strides_are_equal_for_every_leg(source):
     strides=[stride for stride,arm in stance_offsets(model,[model.config['max_speed'],0.,0.]).values()]
     for stride in strides[1:]:
         assert np.allclose(stride,strides[0],atol=1e-3)
+
+
+def test_navigation_footprint_hugs_the_feet_not_a_circle_about_the_root(source):
+    """2026-11-20: the root-centred circle was 0.55 m (hexapod) and 1.09 m (centipede)."""
+    from robot_lab_utils.gait_pipeline import leg_footprint
+    from matplotlib.path import Path as Polygon
+    name,description,model=source
+    polygon=np.array(leg_footprint(model))
+    feet=[model.home[l['id']][:2]+np.array(l.get('body_offset',[0.,0.])) for l in model.legs]
+    outline=Polygon(polygon)
+    assert all(outline.contains_point(foot) for foot in feet)
+    # Convex, counter-clockwise, and no wider than the feet plus the margin.
+    edges=np.roll(polygon,-1,axis=0)-polygon
+    assert (np.cross(edges,np.roll(edges,-1,axis=0))>=-1e-9).all()
+    feet=np.array(feet)
+    assert (polygon.min(0)>=feet.min(0)-.15-1e-4).all() and (polygon.max(0)<=feet.max(0)+.15+1e-4).all()
+    if name=='hexapod_ros2':
+        # The 0.57 m floor return that blocked the 11-20 Gazebo start lies outside.
+        assert not outline.contains_point((.141,.549))
+
+
+def test_lidar_self_filter_drops_returns_inside_the_stance_polygon(source):
+    """2026-11-20: Gazebo's GPU lidar renders the robot's own legs."""
+    from types import SimpleNamespace
+    import math
+    from robot_lab_utils.gait_pipeline import leg_footprint, sensor_description
+    from robot_lab_utils.gait_sensor_relay import Relay
+    from robot_lab_utils.marine_camera_relay import fixed_extrinsic
+    name,description,model=source
+    relay=Relay.__new__(Relay)
+    relay.polygon=[tuple(p) for p in leg_footprint(model,margin=.05)];relay.filtered=0
+    relay.extrinsic=fixed_extrinsic(sensor_description(description,model.config['forward_yaw']),'gait_laser_link')
+    feet=np.array([model.home[l['id']][:2]+np.array(l.get('body_offset',[0.,0.])) for l in model.legs])
+    # One ray straight at a foot (a self-return) and one 2 m away.
+    laser=relay.extrinsic[:2,3];forward=math.atan2(relay.extrinsic[1,0],relay.extrinsic[0,0])
+    target=feet[np.argmax(np.linalg.norm(feet-laser,axis=1))]
+    angle=math.atan2(*(target-laser)[::-1])-forward
+    distance=float(np.linalg.norm(target-laser))
+    scan=SimpleNamespace(ranges=[distance,2.+distance,math.inf],angle_min=angle,angle_increment=0.,range_min=.05,range_max=30.)
+    ranges=relay.without_self(scan)
+    assert ranges[0]==math.inf and ranges[1]==2.+distance and ranges[2]==math.inf and relay.filtered==1
+    relay.polygon=[]
+    assert relay.without_self(scan)==scan.ranges
+
+
+def test_mapping_pipeline_builds_and_passes_the_self_filter(source, tmp_path):
+    """2026-11-20: a shadowed json import broke every gait pipeline launch."""
+    import json
+    from robot_lab_utils.gait_pipeline import pipeline, sensor_description, leg_footprint
+    name,description,model=source
+    urdf=tmp_path/'robot.urdf';urdf.write_text(sensor_description(description,model.config['forward_yaw']))
+    nodes=pipeline('slam',urdf,ROOT/'src/robot_lab_robots'/name/'config/gait.yaml',dict(x=0.,y=0.,yaw=0.),{},tmp_path,model)
+    relay=[n for n in nodes if 'gait_sensor_relay' in str(getattr(n,'_Node__node_executable',''))]
+    assert len(relay)==1
+    text=lambda value:''.join(part.text for part in value) if isinstance(value,(tuple,list)) else value
+    parameters={text(k):text(v) for k,v in relay[0]._Node__parameters[0].items()}
+    import yaml
+    assert json.loads(yaml.safe_load(parameters['self_filter_polygon']))==leg_footprint(model,margin=.05)

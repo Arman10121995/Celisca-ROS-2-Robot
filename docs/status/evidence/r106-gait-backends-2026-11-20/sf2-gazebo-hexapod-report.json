@@ -1,0 +1,31 @@
+[
+ {
+  "robot": "hexapod_ros2",
+  "map": "nav_empty",
+  "spawn": null,
+  "simulator": "gazebo",
+  "acquisition": {
+   "run": "/workspace/molar/robot_lab_runtime/gait-savedmap-backends-20261120/sf2-gazebo-hexapod/runs/15d9a1148dc44d01a5c36741248a8791",
+   "success": true,
+   "reason": "Actual travel and nonempty acquired map archived",
+   "map_yaml": "/workspace/molar/robot_lab_runtime/gait_sessions/hexapod_ros2-omnldb7x/saved_maps/map-ccd277e2f6/map.yaml",
+   "known_cells": 43544,
+   "start": [
+    -0.2956163609316392,
+    -0.5032731340772785,
+    -0.012613573348792206
+   ]
+  },
+  "navigation": {
+   "run": "/workspace/molar/robot_lab_runtime/gait-savedmap-backends-20261120/sf2-gazebo-hexapod/runs/93e173d4886b46ddbe71fe8036e28aeb",
+   "goal": [
+    0.2043438640375667,
+    -0.5095797535156982,
+    -0.012613573348792206
+   ],
+   "success": false,
+   "reason": "Measured extension workload timed out",
+   "measurements": []
+  }
+ }
+]

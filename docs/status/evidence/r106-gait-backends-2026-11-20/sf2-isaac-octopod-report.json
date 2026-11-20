@@ -1,0 +1,31 @@
+[
+ {
+  "robot": "lab_octopod",
+  "map": "nav_empty",
+  "spawn": null,
+  "simulator": "isaac",
+  "acquisition": {
+   "run": "/workspace/molar/robot_lab_runtime/gait-savedmap-backends-20261120/sf2-isaac-octopod/runs/13aafeb4c8974c3bbea0f5e4f1a6a5b5",
+   "success": true,
+   "reason": "Actual travel and nonempty acquired map archived",
+   "map_yaml": "/workspace/molar/robot_lab_runtime/gait_sessions/lab_octopod-y9rdb5x9/saved_maps/map-760c88506f/map.yaml",
+   "known_cells": 32898,
+   "start": [
+    -0.29775649309158325,
+    -0.5005362629890442,
+    -0.0005348166234533206
+   ]
+  },
+  "navigation": {
+   "run": "/workspace/molar/robot_lab_runtime/gait-savedmap-backends-20261120/sf2-isaac-octopod/runs/f813ddb585794cc19b88fe1f74ae870e",
+   "goal": [
+    0.20224343540121326,
+    -0.5008036712880231,
+    -0.0005348166234533206
+   ],
+   "success": false,
+   "reason": "Operator interrupted workload",
+   "measurements": []
+  }
+ }
+]

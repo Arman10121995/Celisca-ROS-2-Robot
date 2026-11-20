@@ -1,0 +1,35 @@
+[
+ {
+  "robot": "lab_octopod",
+  "map": "nav_empty",
+  "spawn": null,
+  "simulator": "isaac",
+  "acquisition": {
+   "run": "/workspace/molar/robot_lab_runtime/gait-savedmap-backends-20261120/sf-isaac/runs/1c107e0d81a24f89b5b7c2e2821ea5d0",
+   "success": false,
+   "reason": "Operator interrupted workload"
+  }
+ },
+ {
+  "robot": "hexapod_ros2",
+  "map": "nav_empty",
+  "spawn": null,
+  "simulator": "isaac",
+  "acquisition": {
+   "run": "/workspace/molar/robot_lab_runtime/gait-savedmap-backends-20261120/sf-isaac/runs/774b977380b84b72b99356186c88ae4d",
+   "success": false,
+   "reason": "Operator interrupted workload"
+  }
+ },
+ {
+  "robot": "lab_centipede",
+  "map": "nav_empty",
+  "spawn": null,
+  "simulator": "isaac",
+  "acquisition": {
+   "run": "/workspace/molar/robot_lab_runtime/gait-savedmap-backends-20261120/sf-isaac/runs/9802c57d493a4fdc8e5e31c1b360ed48",
+   "success": false,
+   "reason": "Operator interrupted workload"
+  }
+ }
+]

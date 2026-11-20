@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Actual lidar samples with fixed source extrinsics on the estimated body."""
 import copy
+import json
 import math
 import time
 from pathlib import Path
@@ -20,11 +21,18 @@ class Relay(Node):
         self.declare_parameter('description_file','')
         self.declare_parameter('virtual_drive_scan',False)
         self.declare_parameter('base_height',0.)
+        # The robot's own stance polygon in base_link (x, y pairs, counter-
+        # clockwise). Gazebo's GPU lidar renders the robot's own legs; their
+        # returns made the hexapod's start lethal (2026-11-20). '[]' disables.
+        self.declare_parameter('self_filter_polygon','[]')
+        self.polygon=[tuple(map(float,p)) for p in json.loads(self.get_parameter('self_filter_polygon').value)]
+        if self.polygon and len(self.polygon)<3:raise ValueError('Self filter polygon needs three or more vertices')
+        self.filtered=0
         self.virtual_drive=self.get_parameter('virtual_drive_scan').value
         self.pending=None
         for key in ('visual_spawn_x','visual_spawn_y','visual_spawn_yaw'):self.declare_parameter(key,0.)
         source=Path(self.get_parameter('description_file').value).read_text()
-        matrix=fixed_extrinsic(source,'gait_laser_link')
+        matrix=fixed_extrinsic(source,'gait_laser_link');self.extrinsic=matrix
         transform=TransformStamped();transform.header.frame_id='gait/base_link';transform.child_frame_id='gait/laser_link'
         q=Rotation.from_matrix(matrix[:3,:3]).as_quat()
         for i,key in enumerate('xyz'):setattr(transform.transform.translation,key,float(matrix[i,3]))
@@ -66,6 +74,7 @@ class Relay(Node):
         if self.virtual_drive:
             self.pending=(msg,time.monotonic());self.flush_pending();return
         output=copy.copy(msg);output.header=copy.copy(msg.header);output.header.frame_id='gait/laser_link'
+        output.ranges=self.without_self(msg)
         self.pub.publish(output)
 
     def flush_pending(self):
@@ -83,7 +92,26 @@ class Relay(Node):
         # AMCL caches its mounting transform, so a moving head TF alone is
         # insufficient even though RViz can display that dynamic frame.
         output.angle_min+=yaw;output.angle_max+=yaw
+        output.ranges=self.without_self(msg)
         self.pub.publish(output);self.pending=None
+
+
+    def inside(self,x,y):
+        n=len(self.polygon)
+        return all((bx-ax)*(y-ay)-(by-ay)*(x-ax)>=0. for (ax,ay),(bx,by) in
+                   ((self.polygon[i],self.polygon[(i+1)%n]) for i in range(n)))
+
+    def without_self(self,msg):
+        """Ranges with returns that end inside the robot's own stance polygon set to +inf."""
+        ranges=list(msg.ranges)
+        if not self.polygon:return ranges
+        m=self.extrinsic
+        for i,r in enumerate(ranges):
+            if not math.isfinite(r) or r<msg.range_min or r>msg.range_max:continue
+            angle=msg.angle_min+i*msg.angle_increment;lx,ly=r*math.cos(angle),r*math.sin(angle)
+            x=m[0,0]*lx+m[0,1]*ly+m[0,3];y=m[1,0]*lx+m[1,1]*ly+m[1,3]
+            if self.inside(x,y):ranges[i]=math.inf;self.filtered+=1
+        return ranges
 
 
 def main(args=None):

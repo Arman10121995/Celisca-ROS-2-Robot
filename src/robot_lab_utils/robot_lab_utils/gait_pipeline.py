@@ -1,5 +1,6 @@
 """Explicit experimental sensing/SLAM/Nav2 over real multi-leg actuators."""
 import copy
+import json
 import math
 from pathlib import Path
 import xml.etree.ElementTree as ET
@@ -22,6 +23,27 @@ def sensor_description(description, forward_yaw):
     return ET.tostring(root,encoding='unicode')
 
 
+def leg_footprint(model, margin=.15, sides=12):
+    """Convex polygon around the stance feet, each widened by margin, in the root frame.
+
+    A circle about the root covered the hexapod's body (root at a corner) with
+    0.55 m and the centipede's (root at the head) with 1.09 m, so a floor
+    return 0.57 m from the hexapod's root made its start lethal (2026-11-20).
+    """
+    points=[]
+    for leg in model.legs:
+        foot=model.home[leg['id']][:2]+np.asarray(leg.get('body_offset',[0.,0.]))
+        points+=[foot+margin*np.array([math.cos(a),math.sin(a)]) for a in np.arange(sides)*2*math.pi/sides]
+    points=sorted(map(tuple,np.round(points,4)))
+    def half(sequence):
+        hull=[]
+        for point in sequence:
+            while len(hull)>=2 and np.cross(np.subtract(hull[-1],hull[-2]),np.subtract(point,hull[-2]))<=0:hull.pop()
+            hull.append(point)
+        return hull[:-1]
+    return [[float(x),float(y)] for x,y in half(points)+half(points[::-1])]
+
+
 def pipeline(task, description_file, config, pose, map_profile, folder, model,
              map_yaml='', database='', localization=False, world_file=''):
     from ament_index_python.packages import get_package_share_directory as share
@@ -38,7 +60,8 @@ def pipeline(task, description_file, config, pose, map_profile, folder, model,
         Node(package='robot_lab_utils',executable='gait_sensor_relay.py',parameters=[dict(use_sim_time=True,
             virtual_drive_scan=serpentine,base_height=float(model.config['standing_height']),
             description_file=str(description_file),visual_spawn_x=float(pose['x']),visual_spawn_y=float(pose['y']),
-            visual_spawn_yaw=float(pose['yaw'])+model.config['forward_yaw'])],output='screen')]
+            visual_spawn_yaw=float(pose['yaw'])+model.config['forward_yaw'],
+            self_filter_polygon='[]' if serpentine else json.dumps(leg_footprint(model,margin=.05)))],output='screen')]
     if task in ('loc','nav'):
         data=map_profile.get('map',{})
         saved_map=bool(map_yaml)
@@ -49,7 +72,7 @@ def pipeline(task, description_file, config, pose, map_profile, folder, model,
         SpawnGrid(map_yaml)  # Validate actual image, resolution and occupancy.
         initial=dict(pose)
         if saved_map:
-            import hashlib,json
+            import hashlib
             metadata=Path(map_yaml).parent/'manifest.json'
             recorded=json.loads(metadata.read_text()) if metadata.is_file() else {}
             if recorded.get('world_sha256') and world_file and recorded['world_sha256']!=hashlib.sha256(Path(world_file).read_bytes()).hexdigest():
@@ -64,6 +87,9 @@ def pipeline(task, description_file, config, pose, map_profile, folder, model,
             if value=='/map':return '/gait/map'
             return '/gait/odometry' if value=='/gait/robot_lab_controller/odom' else value
         params=rewrite(params)
+        if not serpentine:
+            for name in ('local_costmap','global_costmap'):
+                params[name][name]['ros__parameters']['footprint']=str(leg_footprint(model))
         follow=params['controller_server']['ros__parameters']['FollowPath']
         follow.update(desired_linear_vel=float(model.config['max_speed']),min_approach_linear_velocity=.005,
                       regulated_linear_scaling_min_speed=.005,rotate_to_heading_angular_vel=float(model.config['max_yaw']),

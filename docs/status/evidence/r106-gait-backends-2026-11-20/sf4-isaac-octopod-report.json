@@ -1,0 +1,31 @@
+[
+ {
+  "robot": "lab_octopod",
+  "map": "nav_empty",
+  "spawn": null,
+  "simulator": "isaac",
+  "acquisition": {
+   "run": "/workspace/molar/robot_lab_runtime/gait-savedmap-backends-20261120/sf4-isaac-octopod/runs/001f404caeb94207a8b58e844ab543d7",
+   "success": true,
+   "reason": "Actual travel and nonempty acquired map archived",
+   "map_yaml": "/workspace/molar/robot_lab_runtime/gait_sessions/lab_octopod-ysq1a0an/saved_maps/map-903a1fdd43/map.yaml",
+   "known_cells": 32684,
+   "start": [
+    -0.29781726002693176,
+    -0.5003759860992432,
+    -0.0006954665481738099
+   ]
+  },
+  "navigation": {
+   "run": "/workspace/molar/robot_lab_runtime/gait-savedmap-backends-20261120/sf4-isaac-octopod/runs/a0c26df776254e59b76201de6a9d8265",
+   "goal": [
+    0.2021826190546432,
+    -0.5007237193452985,
+    -0.0006954665481738099
+   ],
+   "success": false,
+   "reason": "Trace exceeded its 32 MiB budget",
+   "measurements": []
+  }
+ }
+]

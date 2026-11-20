@@ -1966,6 +1966,11 @@ tasks:
           angles - centipede turn drift 0.091 m; centipede passes nav_obstacle open spawn (0.113 m, 0.125 rad; first
           second-world pass, 1 run), hexapod 0.123 m, octopod 0.097 m; centipede PyBullet saved-map now passes (0.083 m).
           docs/status/evidence/r106-gait-turn-2026-11-20/README.md
+          On 2026-11-20 first Gazebo/Isaac gait saved-map runs - Gazebo octopod 0.069 m and centipede 0.057 m pass; hexapod
+          Nav2 succeeded but truth 0.157 m (not passed). Isaac octopod maps; navigation timed out at the 900 s workload limit
+          0.113 m away (RTF about 0.05). Stance-polygon footprint replaces the root circle (centipede and hexapod then pass
+          nav_obstacle corner spawn); gait relay filters lidar self-returns; qualifier Isaac/Gazebo budgets.
+          docs/status/evidence/r106-gait-backends-2026-11-20/README.md
         qualification_review: '2026-10-27 documentation review: retain the implemented code, tests and named
           mission certificates. Full declared roadmap acceptance is still open; test counts, metadata and scene
           loads do not qualify remaining robot/map/backend missions. See docs/REMAINING_WORK_GUIDE.md.'

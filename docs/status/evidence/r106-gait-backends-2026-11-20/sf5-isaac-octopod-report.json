@@ -1,0 +1,31 @@
+[
+ {
+  "robot": "lab_octopod",
+  "map": "nav_empty",
+  "spawn": null,
+  "simulator": "isaac",
+  "acquisition": {
+   "run": "/workspace/molar/robot_lab_runtime/gait-savedmap-backends-20261120/sf5-isaac-octopod/runs/5ae7b527e7f84e91b46884ff1af47b54",
+   "success": true,
+   "reason": "Actual travel and nonempty acquired map archived",
+   "map_yaml": "/workspace/molar/robot_lab_runtime/gait_sessions/lab_octopod-rfeoq59k/saved_maps/map-60bcd13a5e/map.yaml",
+   "known_cells": 32986,
+   "start": [
+    -0.2977820634841919,
+    -0.5002617835998535,
+    -0.0005550832146573941
+   ]
+  },
+  "navigation": {
+   "run": "/workspace/molar/robot_lab_runtime/gait-savedmap-backends-20261120/sf5-isaac-octopod/runs/ae44a006375e4371aa7dbeb2595bd43d",
+   "goal": [
+    0.2022178594864663,
+    -0.5005393251929297,
+    -0.0005550832146573941
+   ],
+   "success": false,
+   "reason": "Measured extension workload timed out",
+   "measurements": []
+  }
+ }
+]

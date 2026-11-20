@@ -1,0 +1,35 @@
+[
+ {
+  "robot": "lab_octopod",
+  "map": "nav_empty",
+  "spawn": null,
+  "simulator": "isaac",
+  "acquisition": {
+   "run": "/workspace/molar/robot_lab_runtime/gait-savedmap-backends-20261120/isaac/runs/25df1d79fbdb4a62bab32f531a7c9f0b",
+   "success": null,
+   "reason": null
+  }
+ },
+ {
+  "robot": "hexapod_ros2",
+  "map": "nav_empty",
+  "spawn": null,
+  "simulator": "isaac",
+  "acquisition": {
+   "run": "/workspace/molar/robot_lab_runtime/gait-savedmap-backends-20261120/isaac/runs/6952c824dda6405fb8b062d065a796c9",
+   "success": null,
+   "reason": null
+  }
+ },
+ {
+  "robot": "lab_centipede",
+  "map": "nav_empty",
+  "spawn": null,
+  "simulator": "isaac",
+  "acquisition": {
+   "run": "/workspace/molar/robot_lab_runtime/gait-savedmap-backends-20261120/isaac/runs/c188d1c0c322463facbb3c791ef27884",
+   "success": null,
+   "reason": null
+  }
+ }
+]

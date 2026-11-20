@@ -47,16 +47,29 @@ def main():
     parser.add_argument('--timeout', type=float, default=240.)
     parser.add_argument('--spawn', type=lambda s: [float(v) for v in s.split(',')],
                         help='x,y,yaw for both launches (default: the world spawn)')
+    parser.add_argument('--max-rss-mb', type=float,
+                        help='resource budget per run (default 4096; 12288 for Isaac, whose runtime alone exceeds 4 GB)')
+    parser.add_argument('--max-cpu-percent', type=float,
+                        help='CPU budget per run (default 800; 1200 for Isaac and Gazebo, whose start-up used 9-10 cores)')
+    parser.add_argument('--max-log-mb', type=float,
+                        help='artifact budget per run (default 64; 512 for Isaac, whose slow runs wrote 65 MB of telemetry in 7 min)')
+    parser.add_argument('--map-timeout', type=float,
+                        help='mapping run budget, wall s (default 120; 600 for Isaac, which reached 6 s of simulation in 120 s)')
     parser.add_argument('--output', type=Path, required=True)
     args = parser.parse_args()
+    rss = args.max_rss_mb or (12288. if args.simulator == 'isaac' else 4096.)
+    cpu = args.max_cpu_percent or (1200. if args.simulator in ('isaac', 'gazebo') else 800.)
+    log_mb = args.max_log_mb or (512. if args.simulator == 'isaac' else 64.)
+    map_timeout = args.map_timeout or (600. if args.simulator == 'isaac' else 120.)
     args.output.mkdir(parents=True, exist_ok=False)
     runner = ConcurrentRunner(args.output/'runs', 1, lambda event: None)
     report = []
     for robot in args.robots:
         entry = dict(robot=robot, map=args.map, spawn=args.spawn, simulator=args.simulator)
-        acquired = runner.run([RunSpec(command=launch(robot, args.map, 'slam', spawn=args.spawn, simulator=args.simulator), duration_s=120.,
+        acquired = runner.run([RunSpec(command=launch(robot, args.map, 'slam', spawn=args.spawn, simulator=args.simulator), duration_s=map_timeout, max_rss_mb=rss, max_cpu_percent=cpu, max_log_mb=log_mb,
             workload=dict(schema='robot_lab.extension_workload.v1', workflow='gait', task='mapping',
-                          truth_coordinates='selected_world', distance_m=.2))])[0]
+                          truth_coordinates='selected_world', distance_m=.2,
+                          **({'timeout_s': map_timeout-20.} if map_timeout > 320. else {})))])[0]
         result = mission(acquired)
         entry['acquisition'] = dict(run=acquired['output'], success=result.get('success'), reason=result.get('reason'))
         measured = (result.get('measurements') or [{}])[0]
@@ -69,7 +82,7 @@ def main():
         entry['acquisition'].update(map_yaml=artifact['map_yaml'], known_cells=artifact.get('known_cells'),
                                     start=measured['physical_pose'])
         navigated = runner.run([RunSpec(command=launch(robot, args.map, 'nav', ['map_yaml:='+artifact['map_yaml']], args.spawn, args.simulator),
-            duration_s=args.timeout, workload=dict(schema='robot_lab.extension_workload.v1', workflow='gait',
+            duration_s=args.timeout, max_rss_mb=rss, max_cpu_percent=cpu, max_log_mb=log_mb, workload=dict(schema='robot_lab.extension_workload.v1', workflow='gait',
             task='navigation', truth_coordinates='selected_world', goals=[goal], timeout_s=args.timeout-20.))])[0]
         result = mission(navigated)
         entry['navigation'] = dict(run=navigated['output'], goal=goal, success=result.get('success'),

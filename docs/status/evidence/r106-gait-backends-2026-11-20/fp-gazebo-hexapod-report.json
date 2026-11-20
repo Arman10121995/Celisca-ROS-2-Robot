@@ -1,0 +1,31 @@
+[
+ {
+  "robot": "hexapod_ros2",
+  "map": "nav_empty",
+  "spawn": null,
+  "simulator": "gazebo",
+  "acquisition": {
+   "run": "/workspace/molar/robot_lab_runtime/gait-savedmap-backends-20261120/fp-gazebo-hexapod/runs/5e9d976fa08f4fc293dc53891413f0dd",
+   "success": true,
+   "reason": "Actual travel and nonempty acquired map archived",
+   "map_yaml": "/workspace/molar/robot_lab_runtime/gait_sessions/hexapod_ros2-mxtcemw0/saved_maps/map-a7a9ea7ca8/map.yaml",
+   "known_cells": 45248,
+   "start": [
+    -0.2949228973539473,
+    -0.5016773171156639,
+    -0.01047605641228766
+   ]
+  },
+  "navigation": {
+   "run": "/workspace/molar/robot_lab_runtime/gait-savedmap-backends-20261120/fp-gazebo-hexapod/runs/8b5c02fc6847495e8b171b8fcb552338",
+   "goal": [
+    0.20504966595749202,
+    -0.5069152495120248,
+    -0.01047605641228766
+   ],
+   "success": false,
+   "reason": "Native Nav2 terminal status 6",
+   "measurements": []
+  }
+ }
+]

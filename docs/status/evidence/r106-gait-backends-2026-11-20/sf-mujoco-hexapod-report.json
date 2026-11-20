@@ -1,0 +1,51 @@
+[
+ {
+  "robot": "hexapod_ros2",
+  "map": "nav_empty",
+  "spawn": null,
+  "simulator": "mujoco",
+  "acquisition": {
+   "run": "/workspace/molar/robot_lab_runtime/gait-savedmap-backends-20261120/sf-mujoco-hexapod/runs/35fb7bc616d0459b942cb2f1503c19d5",
+   "success": true,
+   "reason": "Actual travel and nonempty acquired map archived",
+   "map_yaml": "/workspace/molar/robot_lab_runtime/gait_sessions/hexapod_ros2-59ggmohr/saved_maps/map-471d6d0bb5/map.yaml",
+   "known_cells": 32964,
+   "start": [
+    -0.29556648213468656,
+    -0.497648524989068,
+    0.003417946811663075
+   ]
+  },
+  "navigation": {
+   "run": "/workspace/molar/robot_lab_runtime/gait-savedmap-backends-20261120/sf-mujoco-hexapod/runs/df1ee89799c847d0afc750c7a26215e5",
+   "goal": [
+    0.2044305972780549,
+    -0.49593955491070835,
+    0.003417946811663075
+   ],
+   "success": true,
+   "reason": "Every native goal physically settled",
+   "measurements": [
+    {
+     "requested": [
+      0.2044305972780549,
+      -0.49593955491070835,
+      0.003417946811663075
+     ],
+     "physical_pose": [
+      0.10183306348574996,
+      -0.4856496749214037,
+      0.010795475740719375
+     ],
+     "linear_m_s": 0.00020457462556146714,
+     "angular_rad_s": -7.62076069692869e-05,
+     "settled_sim_s": 1.0,
+     "member_id": "body",
+     "index": 0,
+     "native_terminal": true,
+     "nav2_status": 4
+    }
+   ]
+  }
+ }
+]

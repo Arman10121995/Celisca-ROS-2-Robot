@@ -1,0 +1,100 @@
+[
+ {
+  "robot": "lab_centipede",
+  "map": "nav_obstacle",
+  "spawn": null,
+  "simulator": "mujoco",
+  "acquisition": {
+   "run": "/workspace/molar/robot_lab_runtime/gait-savedmap-backends-20261120/fp-obstacle-corner/runs/5890681a97794bfa97a30c20a934f963",
+   "success": true,
+   "reason": "Actual travel and nonempty acquired map archived",
+   "map_yaml": "/workspace/molar/robot_lab_runtime/gait_sessions/lab_centipede-dvrj39tx/saved_maps/map-be92e1ba7c/map.yaml",
+   "known_cells": 6797,
+   "start": [
+    -6.794771678919218,
+    -6.984662310014769,
+    0.026788172431483338
+   ]
+  },
+  "navigation": {
+   "run": "/workspace/molar/robot_lab_runtime/gait-savedmap-backends-20261120/fp-obstacle-corner/runs/c016b39ed129405b9bb1eb39a1f01a89",
+   "goal": [
+    -6.294951069736724,
+    -6.971269825688062,
+    0.026788172431483338
+   ],
+   "success": true,
+   "reason": "Every native goal physically settled",
+   "measurements": [
+    {
+     "requested": [
+      -6.294951069736724,
+      -6.971269825688062,
+      0.026788172431483345
+     ],
+     "physical_pose": [
+      -6.418176681719429,
+      -6.992434192057034,
+      -0.0928869311763309
+     ],
+     "linear_m_s": 0.0002081037390170779,
+     "angular_rad_s": 0.00279500110347717,
+     "settled_sim_s": 1.0,
+     "member_id": "body",
+     "index": 0,
+     "native_terminal": true,
+     "nav2_status": 4
+    }
+   ]
+  }
+ },
+ {
+  "robot": "hexapod_ros2",
+  "map": "nav_obstacle",
+  "spawn": null,
+  "simulator": "mujoco",
+  "acquisition": {
+   "run": "/workspace/molar/robot_lab_runtime/gait-savedmap-backends-20261120/fp-obstacle-corner/runs/842b3f66cf6b495585e1e17c53b56428",
+   "success": true,
+   "reason": "Actual travel and nonempty acquired map archived",
+   "map_yaml": "/workspace/molar/robot_lab_runtime/gait_sessions/hexapod_ros2-qs7y9hym/saved_maps/map-e704bc3184/map.yaml",
+   "known_cells": 6855,
+   "start": [
+    -6.795676319400448,
+    -6.997924517762883,
+    0.0035371001496447008
+   ]
+  },
+  "navigation": {
+   "run": "/workspace/molar/robot_lab_runtime/gait-savedmap-backends-20261120/fp-obstacle-corner/runs/1934e8c712c040b89f8adfff090ee32d",
+   "goal": [
+    -6.295679447166554,
+    -6.996155971375803,
+    0.0035371001496447008
+   ],
+   "success": true,
+   "reason": "Every native goal physically settled",
+   "measurements": [
+    {
+     "requested": [
+      -6.295679447166554,
+      -6.996155971375803,
+      0.0035371001496447008
+     ],
+     "physical_pose": [
+      -6.374208922551105,
+      -7.0690945035548225,
+      0.1231158280749558
+     ],
+     "linear_m_s": 0.00018508516897762454,
+     "angular_rad_s": 0.00015193438324115902,
+     "settled_sim_s": 1.0000000000000142,
+     "member_id": "body",
+     "index": 0,
+     "native_terminal": true,
+     "nav2_status": 4
+    }
+   ]
+  }
+ }
+]
