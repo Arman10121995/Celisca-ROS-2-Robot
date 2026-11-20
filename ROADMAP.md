@@ -1195,7 +1195,10 @@ parking batch needs its own run. Details and evidence are in the
     reaches 0.86 / 0.51 / 0.49 rad against 1.19 rad. The added-mass Coriolis term is off
     by default (closest to Fortress 6.18 of three forms).
     [Receipt](docs/status/evidence/r104-tethys-mujoco-2026-11-19/README.md);
-  - why the ported turn is slower than Gazebo's (identification, V8-style).
+  - ~~why the ported turn is slower than Gazebo's~~ **identified 2026-11-20:** Fortress 6.18 applies the SDF's positive
+    added-mass values with the opposite sign to Fossen, leaving Gazebo's hull with 20 % of its yaw inertia; steady turn
+    rates agree and the gap is spin-up. The port stays Fossen-correct
+    ([receipt](docs/status/evidence/r104-tethys-turn-identification-2026-11-20/README.md)).
 - **Done when:** station keeping, all axes, disturbance and loss measured with body and force evidence.
 
 ### R10.5 — Underwater worlds, sensing, SLAM and navigation

@@ -126,7 +126,7 @@ def setup(context):
 def generate_launch_description():
     return LaunchDescription([DeclareLaunchArgument('map_name',default_value='marine_tank'),
         DeclareLaunchArgument('simulator',default_value='gazebo',description='gazebo, or mujoco/pybullet/isaac for the ported Tethys forces'),
-        DeclareLaunchArgument('tethys_coriolis',default_value='off',description='MuJoCo plant added-mass Coriolis: off (closest to Fortress 6.18), fossen or flipped'),DeclareLaunchArgument('control',default_value='true'),
+        DeclareLaunchArgument('tethys_coriolis',default_value='off',description='Ported Tethys added mass/Coriolis: off, fossen, flipped, or fortress (as Fortress 6.18 executes it)'),DeclareLaunchArgument('control',default_value='true'),
         DeclareLaunchArgument('gui',default_value='true'),DeclareLaunchArgument('rviz',default_value='true'),
         DeclareLaunchArgument('slam',default_value='false'),DeclareLaunchArgument('database',default_value=''),
         DeclareLaunchArgument('localization',default_value='false'),

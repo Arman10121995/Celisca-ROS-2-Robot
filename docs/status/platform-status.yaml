@@ -1762,6 +1762,11 @@ tasks:
       R10.4:
         marine_pybullet_20261118: 'Claude: implemented, experimental. marine_mujoco_plant.WaterForces (engine-neutral ported Fortress buoyancy/hydrodynamics/thrusters); marine_pybullet_plant.py (Bullet rigid body, simulator:=pybullet). rov_probe on marine_tank: surge 1.041 m, yaw 1.439 rad, 3.5 cm in 0.1 m/s current, disarm and 0.23 m sink on operator loss (MuJoCo 1.030 m, 1.437 rad, 0.9 cm). MuJoCo plant spawn yaw was read in degrees (fixed; measured lab_rov runs at yaw 0). Parity test. docs/status/evidence/r104-marine-pybullet-2026-11-18/README.md'
         tethys_mujoco_20261119: 'Claude: implemented, experimental. marine_tethys_plant.py: source buoyancy, Fortress hydrodynamics, velocity-control thruster, fin JointPositionController servos and line-by-line LiftDrag; auv_simulator.launch.py simulator:=mujoco. auv_probe vs Gazebo: cruise 2.43 vs 2.45 m, turn yaw 0.86 vs 1.19 rad (rise 0.32 vs 0.24 m), loss disarms. Added-mass Coriolis off by default (Fossen sign: pitch diverged and disarmed; opposite: turned the wrong way). docs/status/evidence/r104-tethys-mujoco-2026-11-19/README.md'
+        tethys_turn_identification_20261120: 'Claude: identified. Fortress 6.18 Hydrodynamics applies +Ma nudot with the SDF
+          values as written (positive for Tethys) and Fossen -C_A nu, so Gazebo''s effective sway mass is 23 kg and yaw inertia
+          8.3 kg m^2 (port, Fossen-correct, 281 kg and 76.9). Steady turn rates agree (0.045 vs 0.050 rad/s); Gazebo spins up
+          faster, which is the 30 % gap. A fortress diagnostic mode reproducing it diverges on MuJoCo; the default is unchanged.
+          docs/status/evidence/r104-tethys-turn-identification-2026-11-20/README.md'
         marine_isaac_20261119: 'Claude: implemented, experimental. marine_isaac_plant.py (ROS) + marine_isaac_runtime.py (Isaac child): one PhysX rigid body with WaterForces each 2 ms; simulator:=isaac in marine_simulator.launch.py. rov_probe: surge 1.038 m, yaw 1.452 rad, current drift 3.2 cm, operator loss disarms (0.27 m sink); matches MuJoCo/PyBullet/Gazebo. GPU PhysX did not load (CPU). First launch failed on the runtime path (kept). docs/status/evidence/r104-marine-isaac-2026-11-19/README.md'
         acceptance_ref: ROADMAP.md R10.4
         active_scope: Source ROV/AUV forces and native controls preserved. Motion observer and controller

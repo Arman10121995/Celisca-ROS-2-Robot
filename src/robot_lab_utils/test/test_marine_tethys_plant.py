@@ -47,3 +47,11 @@ def test_thrust_turns_the_propeller_and_drives_the_vehicle_forward():
     for _ in range(20):
         plant.step(.05)
     assert 0. < plant.fin_angle['vertical_fins'] <= .261799
+
+
+def test_fortress_mode_flips_only_the_added_mass_sign():
+    # Fortress 6.18 applies +Ma nudot (positive SDF Ma) and Fossen's -C_A nu
+    # (identified 2026-11-20); the default stays Fossen-correct -M_A nudot.
+    from robot_lab_utils.marine_tethys_plant import ADDED_MASS_SIGNS, CORIOLIS_SIGNS
+    assert ADDED_MASS_SIGNS['fortress'] == 1. and CORIOLIS_SIGNS['fortress'] == CORIOLIS_SIGNS['fossen']
+    assert all(ADDED_MASS_SIGNS[mode] == -1. for mode in ('off', 'fossen', 'flipped'))

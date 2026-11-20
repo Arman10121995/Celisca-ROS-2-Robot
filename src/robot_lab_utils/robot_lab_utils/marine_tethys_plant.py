@@ -41,7 +41,19 @@ from robot_lab_utils.marine_model import rotation
 
 FINS = ('horizontal_fins', 'vertical_fins')
 # The added-mass Coriolis wrench: Fossen's -C_A(nu) nu, its opposite, or none.
-CORIOLIS_SIGNS = dict(fossen=-1., flipped=1., off=0.)
+# 'fortress' reproduces what Fortress 6.18 Hydrodynamics executes: its wrench
+# is -(-Ma nudot - (-C_A) nu + D nu), i.e. +Ma nudot - C_A nu - D nu, with Ma
+# straight from the SDF's xDotU... values. The Tethys SDF gives them positive,
+# so Fortress *subtracts* added mass from the hull's inertia (the port's other
+# modes add it, as Fossen does) and applies Fossen's Coriolis term
+# (gz-sim ignition-gazebo6_6.18.0 Hydrodynamics.cc / HydrodynamicsUtils.hh,
+# read 2026-11-20). With them the effective sway mass is 23 kg and the yaw
+# inertia 8.3 kg m^2 (rigid 152 kg / 42.6): Gazebo spins up a turn far faster,
+# which is the port's 30 % slower turn (steady rates agree, ~0.045 vs 0.050
+# rad/s). On MuJoCo at 2 ms the lagged +Ma nudot diverged 7.6 s into the turn,
+# so 'fortress' is a diagnostic, not a usable plant mode.
+CORIOLIS_SIGNS = dict(fossen=-1., flipped=1., off=0., fortress=-1.)
+ADDED_MASS_SIGNS = dict(fossen=-1., flipped=-1., off=-1., fortress=1.)
 AXES = 'xyzkmn'
 VELOCITIES = 'UVWPQR'
 
@@ -191,6 +203,7 @@ class TethysForces:
         if coriolis not in CORIOLIS_SIGNS:
             raise ValueError('coriolis must be one of %s' % sorted(CORIOLIS_SIGNS))
         self.coriolis_sign = CORIOLIS_SIGNS[coriolis]
+        self.added_sign = ADDED_MASS_SIGNS[coriolis]
         self.source = source_physics(sdf_text)
         self.surface, self.density = float(surface_z), float(density)
         self.current = np.zeros(3)
@@ -262,7 +275,7 @@ class TethysForces:
         state = np.r_[linear_body - R.T @ self.current, angular_body]
         rate = np.zeros(6) if self.previous is None else (state - self.previous) / self.timestep
         self.previous = state
-        body = ((s['linear'] + s['quadratic'] * np.abs(state)) * state - s['added'] * rate
+        body = ((s['linear'] + s['quadratic'] * np.abs(state)) * state + self.added_sign * s['added'] * rate
                 + self.coriolis_sign * coriolis_added_mass(s['added'], state) @ state)
         force += R @ body[:3]
         torque += R @ body[3:]
