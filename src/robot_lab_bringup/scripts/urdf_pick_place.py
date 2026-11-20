@@ -91,7 +91,7 @@ import numpy as np
 import rclpy
 from action_msgs.msg import GoalStatus
 from rclpy.node import Node
-from geometry_msgs.msg import Point32, Polygon, PoseWithCovarianceStamped, Twist
+from geometry_msgs.msg import Point32, Polygon, PolygonStamped, PoseWithCovarianceStamped, Twist
 from nav_msgs.msg import Odometry
 from rclpy.action import ActionClient
 from std_msgs.msg import Empty, String
@@ -116,6 +116,7 @@ CARRY_DRIFT = 0.03      # m of object motion relative to the base while carrying
 NAV2_MIN_LEG = 0.5      # m: shorter transit legs stay straight (DWB circles on tiny paths)
 NAV2_HANDOFF = 0.15      # m: localization this close to the run-up point hands over to docking
 NAV2_HANDOFF_TIMEOUT = 12.0  # s: await terminal action and measured base stop
+NAV2_FOOTPRINT_TIMEOUT = 12.0  # s: allow both costmaps to acknowledge a loaded footprint
 NAV_BASE_RADIUS = 0.3   # m, the Nav2 overlay's robot_radius (asset_pal_tiago.yaml)
 POSE_SOURCES = ('truth', 'rgbd')
 LOOK_TOLERANCE = 0.02   # rad: the head counts as on its look target
@@ -124,7 +125,7 @@ LOOK_FRAMES = 3         # consecutive RGB-D estimates for one object pose
 LOOK_SPREAD = 0.01      # m: those estimates must lie this close to their median
 LOOK_TIMEOUT = 30.0     # s for the look phase
 MOBILE_DEFAULTS = dict(reach=0.62, max_depth=0.3, back_off=0.6, approach_run=0.6, base_radius=0.35,
-                       carry_radius=0.85, place_inset=0.15)
+                       carry_radius=0.85, place_inset=0.15, nav_footprint_padding=0.01)
 
 
 def _now():
@@ -162,6 +163,7 @@ class PickPlace(Node):
         self.state, self.state_at = {}, -math.inf
         self.task = None
         self.stopping_nav = None
+        self.carried_footprint = None
         self.last_result = None
         self.message = 'Select an object and a support, then request a pick and place.'
         self.mobile = dict(MOBILE_DEFAULTS, **self.config['mobile']) if self.config.get('mobile') else None
@@ -174,6 +176,12 @@ class PickPlace(Node):
             self.nav_client = ActionClient(self, NavigateToPose, 'navigate_to_pose')
             self.footprint_pubs = [self.create_publisher(Polygon, topic, 1) for topic in
                                    ('/local_costmap/footprint', '/global_costmap/footprint')]
+            from rclpy.qos import qos_profile_sensor_data
+            from robot_lab_utils.footprint_receipts import FootprintReceipts
+            self.footprint_receipts = FootprintReceipts(padding=float(self.mobile['nav_footprint_padding']))
+            for consumer in ('local', 'global'):
+                self.create_subscription(PolygonStamped, f'/{consumer}_costmap/published_footprint',
+                    lambda msg, source=consumer: self._on_footprint(source, msg), qos_profile_sensor_data)
             self.amcl_pose, self.amcl_at = None, -math.inf
             self.create_subscription(PoseWithCovarianceStamped, '/amcl_pose', self._on_amcl, 10)
         self.base_frame = None
@@ -281,6 +289,14 @@ class PickPlace(Node):
         self.amcl_pose = (p.x, p.y, math.atan2(2 * (q.w * q.z + q.x * q.y), 1 - 2 * (q.y * q.y + q.z * q.z)))
         self.amcl_at = _now()
 
+    def _on_footprint(self, consumer, message):
+        stamp = message.header.stamp.sec + message.header.stamp.nanosec * 1e-9
+        points = [(point.x, point.y) for point in message.polygon.points]
+        self.footprint_receipts.observe(consumer, message.header.frame_id, stamp, points, self._sim_seconds())
+
+    def _sim_seconds(self):
+        return self.get_clock().now().nanoseconds * 1e-9
+
     def _on_state(self, message):
         self.state = json.loads(message.data)
         self.state_at = _now()
@@ -312,6 +328,9 @@ class PickPlace(Node):
             return
         if self.task is not None:
             self.message = 'A task is already running; Stop it first.'
+            return
+        if self.carried_footprint is not None:
+            self.message = 'Payload footprint retained after Stop. Start a new simulation to reset custody.'
             return
         try:
             request = json.loads(message.data)
@@ -715,6 +734,12 @@ class PickPlace(Node):
                                 tcp_estimate=[round(float(v), 4) for v in tcp], **check))
         if not check.get('passed', True):
             return self._finish('failed', '%s: %s' % (stage['name'], check.get('reason')))
+        if self.mobile and stage['name'] == 'lift':
+            self.carried_footprint = self._carry_outline(task)
+            self._set_footprint(self.carried_footprint, task['object'])
+        elif self.mobile and phase['name'] == 'place' and stage['name'] == 'retreat':
+            self.carried_footprint = None
+            self._set_footprint(None)
         task['index'] += 1
         task['step'] = 0
         task['stage_started'] = _now()
@@ -806,10 +831,22 @@ class PickPlace(Node):
 
     def _nav2_leg(self, task, phase, target):
         """Send one NavigateToPose goal and wait for its result; Nav2 owns /cmd_vel meanwhile."""
+        if phase.get('carrying'):
+            if self.carried_footprint is None:
+                return self._finish('failed', 'Loaded transit requires a retained payload footprint')
+            if not self.footprint_receipts.ready(self._sim_seconds()):
+                if phase.get('nav_goal') is not None:
+                    return self._finish('failed', 'Loaded footprint acknowledgement was lost during Nav2 transit')
+                if _now()-phase.setdefault('footprint_wait_at', _now()) > NAV2_FOOTPRINT_TIMEOUT:
+                    return self._finish('failed', 'Both costmaps must confirm the loaded footprint before Nav2 transit')
+                self.message = 'Waiting for local and global costmap acknowledgement of the loaded footprint.'
+                self._twist(0.0, 0.0)
+                return self._set_footprint(self.carried_footprint, task['object'])
         if phase.get('nav_goal') is None:
             if not self.nav_client.server_is_ready():
                 return self._finish('failed', 'Nav2 navigate_to_pose server lost')
-            self._set_footprint(self._carry_outline(task) if phase.get('carrying') else None)
+            if not phase.get('carrying'):
+                self._set_footprint(None)
             goal = self.nav_action.Goal()
             goal.pose.header.frame_id = 'map'
             goal.pose.header.stamp = self.get_clock().now().to_msg()
@@ -817,6 +854,10 @@ class PickPlace(Node):
             goal.pose.pose.orientation.z = math.sin(target['yaw'] / 2.0)
             goal.pose.pose.orientation.w = math.cos(target['yaw'] / 2.0)
             phase['nav_goal'] = dict(sent=_now(), future=self.nav_client.send_goal_async(goal), result=None)
+            if phase.get('carrying'):
+                task['log'].append(dict(phase=phase['name'] + '_footprint_ready',
+                    consumers=sorted(self.footprint_receipts.received), sim_s=self._sim_seconds()))
+            self.message = 'Nav2 transit to the %s standoff' % ('place' if phase.get('carrying') else 'pick')
             return
         nav = phase['nav_goal']
         now = _now()
@@ -853,7 +894,6 @@ class PickPlace(Node):
         if not accepted:
             reason = 'Nav2 rejected the goal' if status == 'rejected' else 'Nav2 ended with status %d' % status
             return self._finish('failed', '%s: %s' % (phase['name'], reason))
-        self._set_footprint(None)
         phase['nav_goal'] = None
         phase['waypoint'] += 1
         phase['rolling'] = phase['at_point'] = False
@@ -875,11 +915,15 @@ class PickPlace(Node):
         return None
 
     def _carry_outline(self, task):
-        """Base circle plus a strip to 5 cm past the held object, as base-frame points."""
-        reach = float(self._in_base(self.truth[task['object']][:3])[0]) + max(self.object_sizes[task['object']][:2]) / 2.0 + 0.05
-        return [(x, -0.15) for x in (0.0, reach)] + [(reach, 0.15), (0.0, 0.15)]
+        """Arm strip and conservative payload bounds in the measured base frame."""
+        name = task['object']
+        x, y, _ = self._in_base(self.truth[name][:3])
+        radius = math.hypot(*self.object_sizes[name])/2 + CARRY_DRIFT
+        reach = max(0., x + radius)
+        return ([(px, py) for px in (0., reach) for py in (-.15, .15)]
+                + [(x+dx, y+dy) for dx in (-radius, radius) for dy in (-radius, radius)])
 
-    def _set_footprint(self, extra):
+    def _set_footprint(self, extra, payload=None):
         """Costmap footprint (both costmaps): convex hull of the base circle and ``extra`` points."""
         points = [(NAV_BASE_RADIUS * math.cos(a), NAV_BASE_RADIUS * math.sin(a))
                   for a in np.linspace(0.0, 2 * math.pi, 16, endpoint=False)] + list(extra or [])
@@ -896,6 +940,7 @@ class PickPlace(Node):
                 chain.append(point)
             hull += chain[:-1]
         polygon = Polygon(points=[Point32(x=float(x), y=float(y), z=0.0) for x, y in hull])
+        self.footprint_receipts.expect([(point.x, point.y) for point in polygon.points], self._sim_seconds(), payload)
         for publisher in self.footprint_pubs:
             publisher.publish(polygon)
 
@@ -1007,8 +1052,10 @@ class PickPlace(Node):
             nav = phase.get('nav_goal')
             if nav is not None:
                 self.stopping_nav = nav
-            if task and task.get('transit') == 'nav2':
+            if task and task.get('transit') == 'nav2' and self.carried_footprint is None:
                 self._set_footprint(None)
+            if task and self.carried_footprint is not None:
+                message += '. Loaded costmap footprint retained.'
             self._twist(0.0, 0.0)
         if outcome != 'succeeded' and self.stop_client.service_is_ready():
             self.stop_client.call_async(Trigger.Request())

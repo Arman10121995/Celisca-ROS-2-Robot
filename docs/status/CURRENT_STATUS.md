@@ -11,6 +11,11 @@ base stop before docking. Stop handles delayed action acceptance and keeps
 new fetch requests gated until the old action ends. Focused action-transition
 checks pass. Repeats of the live fetch remain pending. [TIAGo guide](../tutorials/tiago.md).
 
+November 20 Codex: TIAGo loaded fetch waits for matching local and global
+costmap polygons before sending Nav2. It cancels if either receipt goes
+stale. The loaded polygon stays active during docking and after an interrupted
+carry. Live consumption on a new fetch remains pending. [Pick-and-place guide](../tutorials/urdf-arm-pick-place.md#fetch-with-tiago-mobile-manipulation).
+
 November 20 Codex: Fleet goals now stay bound to the member's acknowledged
 floor map. Nearest-idle allocation and coverage account for floor boundaries,
 and the Fleet GUI displays the confirmed floor. Shared-world Fortress servers

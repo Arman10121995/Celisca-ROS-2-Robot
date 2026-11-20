@@ -109,11 +109,14 @@ to the run-up point before the pickup table, and, while carrying, to the
 run-up point before the drop table.
 
 - **Hand-off:** once AMCL puts the base within 0.15 m of the run-up point,
-  it cancels the Nav2 goal and docks with the same straight, truth-steered
-  0.6 m move.
+  the node requests cancellation. It waits for the owned action to end and
+  the measured base to stop before starting the 0.6 m truth-steered dock.
 - **Short legs:** a leg under 0.5 m stays straight.
-- **Carry footprint:** while carrying, the costmap footprint covers the arm
-  and object.
+- **Carry footprint:** after the measured lift, the node sends the base
+  circle, an arm strip and conservative measured payload bounds. Both Nav2
+  costmaps must publish matching polygons before loaded transit. The loaded
+  footprint remains through docking and is cleared after supported release.
+  If Stop interrupts the carry, restart the simulation before another fetch.
 - **Forcing straight legs:** `--transit straight` (request
   `"transit": "straight"`) keeps the straight legs in Nav mode.
 

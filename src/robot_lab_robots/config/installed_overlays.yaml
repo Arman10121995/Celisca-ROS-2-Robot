@@ -140,6 +140,7 @@ robots:
         base_radius: 0.35      # PMB2 radius 0.27 m plus margin
         carry_radius: 0.85     # base plus the extended arm and object
         place_inset: 0.15
+        nav_footprint_padding: 0.03  # both costmaps in asset_pal_tiago.yaml
   # Fixed URDF arms with complete source joint limits but no ros2_control
   # (ROADMAP R3.6): declared lab position servos from their own limits by
   # robot_lab_utils.urdf_lab_servos (kp 40 x effort, kd 8 x sqrt(effort),

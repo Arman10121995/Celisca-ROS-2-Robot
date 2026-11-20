@@ -58,3 +58,47 @@ def test_docking_waits_for_nav2_result_and_measured_stop(pick_place):
     assert phase['waypoint'] == 1 and phase['nav_goal'] is None
     assert task['log'][0]['status'] == pick_place.GoalStatus.STATUS_CANCELED
     assert task['log'][0]['handed_over']
+
+
+def test_loaded_nav2_action_requires_two_fresh_shape_receipts(pick_place):
+    from builtin_interfaces.msg import Time
+    from nav2_msgs.action import NavigateToPose
+    from robot_lab_utils.footprint_receipts import FootprintReceipts
+
+    node = object.__new__(pick_place.PickPlace)
+    node.footprint_receipts = FootprintReceipts(padding=.03)
+    node.footprint_pubs = [Mock(), Mock()]
+    node._sim_seconds, node._twist = lambda: 10., Mock()
+    node.get_clock = lambda: SimpleNamespace(now=lambda: SimpleNamespace(to_msg=lambda: Time(sec=10)))
+    node.nav_action, node.nav_client = NavigateToPose, Mock()
+    node.carried_footprint = [(0.6, -0.15), (0.6, 0.15)]
+    phase, task, target = dict(name='carry', carrying=True), dict(object='box', log=[]), dict(x=2., y=1., yaw=0.)
+    node._nav2_leg(task, phase, target)
+    node.nav_client.send_goal_async.assert_not_called()
+    shape = node.footprint_receipts.expected
+    assert node.footprint_receipts.observe('local', 'odom', 10., shape, 10.)
+    node._nav2_leg(task, phase, target)
+    node.nav_client.send_goal_async.assert_not_called()
+    assert node.footprint_receipts.observe('global', 'map', 10., shape, 10.)
+    node._nav2_leg(task, phase, target)
+    node.nav_client.send_goal_async.assert_called_once()
+    assert task['log'][0]['consumers'] == ['global', 'local']
+    node._sim_seconds, node._finish = lambda: 13., Mock()
+    node._nav2_leg(task, phase, target)
+    node._finish.assert_called_once_with('failed', 'Loaded footprint acknowledgement was lost during Nav2 transit')
+
+
+def test_stop_keeps_the_loaded_costmap_polygon(pick_place, tmp_path):
+    node = object.__new__(pick_place.PickPlace)
+    node.mobile, node.carried_footprint = True, [(0.6, 0.15)]
+    node.state, node.receipts = {}, tmp_path
+    node._set_footprint, node._twist, node.get_logger = Mock(), Mock(), Mock()
+    node.stop_client = SimpleNamespace(service_is_ready=lambda: False)
+    nav = dict(result=None, future=Future())
+    node.task = dict(phase_index=0, phases=[dict(name='carry', nav_goal=nav)], transit='nav2',
+                     object='box', support='table', object_start=[0., 0., .2],
+                     request={}, plan={}, log=[], started=pick_place._now())
+    node._finish('stopped', 'Stopped by request')
+    assert node.stopping_nav is nav
+    assert node.carried_footprint == [(0.6, 0.15)]
+    node._set_footprint.assert_not_called()

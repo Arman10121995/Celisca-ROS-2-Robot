@@ -645,6 +645,10 @@ parking batch needs its own run. Details and evidence are in the
     source-specific grasp strategies and further
     source-specific object pipelines;
   - generalize the existing native interlock and measured footprint-consumption gate to other mobile-manipulator adapters;
+    2026-11-20: TIAGo fetch requires both costmaps to echo the loaded shape
+    before Nav2 dispatch and retains the enlarged footprint through docking
+    or Stop until supported release. Full collision-mesh projection and live
+    loaded receipt repetition remain open.
   - Broaden TIAGo task planning, grasp/custody, dynamic footprint and map
     workflows beyond the measured fetch variants. Add other-backend pose/joint
     planners; its separate Fortress port remains unavailable. Further
