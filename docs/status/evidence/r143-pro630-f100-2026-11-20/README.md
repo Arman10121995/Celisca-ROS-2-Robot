@@ -69,6 +69,12 @@ fetch. The candidate now meters the jaw reference at 0.10 rad/s during
 automated closing. Direct Open and Close use their existing limits.
 [Interrupted run](gui-fetch-interrupted.json) · [Closure result](gui-fetch-stopped-at-closure.json).
 
+The metered configuration reached the close stage through the normal GUI.
+Another qualification started on the Jetson, so this trial ended during
+closure. The owned launch exited with code 0. The metered configuration's
+loaded lift and transport remain unmeasured.
+[Metered trial](gui-metered-fetch-interrupted.json).
+
 ## Source and retained diagnostics
 
 The bare arm and its wheel/arm measurements use the existing source pin.

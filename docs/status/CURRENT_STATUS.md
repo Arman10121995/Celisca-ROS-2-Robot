@@ -6,7 +6,10 @@ in MuJoCo `nav_empty`, with all five followers observed. The bare arm and
 F100 variants both completed a GUI source-flange move in MuJoCo. The F100
 variant has CAD-derived pad contacts and accepted a 54 mm opening command
 in the live GUI. Experimental fetch and a short-block map are available.
-The private pickup plan passes. Loaded lift and transport remain pending.
+The private pickup plan passes, and a live GUI run reached closure. The
+loose block slid sideways before lift. The metered retry reached closure
+before it was stopped to leave the simulator slot to another trial.
+Loaded lift and transport remain pending.
 [F100 receipt](evidence/r143-pro630-f100-2026-11-20/README.md).
 
 November 20 Codex: MuJoCo caches a conservative shortlist for static flex
