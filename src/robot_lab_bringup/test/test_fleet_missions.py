@@ -27,14 +27,23 @@ def test_sdk_exit_turn_uses_relative_yaw_and_refuses_closed_or_misaligned_cabin(
     member = SimpleNamespace(name='molar', spin=SimpleNamespace(server_is_ready=lambda: True),
                              localization_at=now)
     goal = dict(x=3.95, y=0., yaw=math.pi, cabin_turn_floor='L1')
-    request = FleetController._cabin_turn(controller, member, goal)
+    request = FleetController._lift_turn(controller, member, goal)
     assert request.target_yaw == pytest.approx(.1-math.pi)
     assert request.time_allowance.sec == 30
     with pytest.raises(ValueError, match='boarding point'):
-        FleetController._cabin_turn(controller, member, dict(goal, x=3.65))
+        FleetController._lift_turn(controller, member, dict(goal, x=3.65))
     controller.open_lift_floor = None
     with pytest.raises(ValueError, match='open and level lift'):
-        FleetController._cabin_turn(controller, member, goal)
+        FleetController._lift_turn(controller, member, goal)
+
+    controller.lift_poses.update(landings={'L1': dict(x=1.75, y=0., yaw=0.)}, staged_floors=('L1',))
+    approach = dict(x=1.75, y=0., yaw=0., approach_turn_floor='L1')
+    with pytest.raises(ValueError, match='staged approach'):
+        FleetController._lift_turn(controller, member, approach)
+    controller._truth_row = lambda member: dict(x=1.80, y=.01)
+    assert FleetController._lift_turn(controller, member, approach).target_yaw == pytest.approx(.1)
+    with pytest.raises(ValueError, match='observed floor'):
+        FleetController._lift_turn(controller, member, dict(approach, approach_turn_floor='L0'))
 
 
 def test_sweep_avoids_unknown_and_walls_and_partitions_without_duplicates(tmp_path):

@@ -35,6 +35,13 @@ def cabin_exit_heading(poses, floor):
     return None
 
 
+def approach_boarding_heading(poses, floor):
+    if floor not in poses['staged_floors']:
+        return None
+    approach, car = poses['landings'][floor], poses['boarding']
+    return math.atan2(car['y']-approach['y'], car['x']-approach['x'])
+
+
 def building_graph(session, config):
     radius = max(member['radius'] for member in session['members']) + .15
     lift = config['lift']
@@ -125,6 +132,7 @@ def building_graph(session, config):
                 raise ValueError('Staged lift approach needs a separate clear retreat on ' + floor)
             lanes[:] = [lane for lane in lanes if lane[:2] != [landing, entry]]
             lanes.append([landing, entry, dict(orientation_constraint='forward')])
+            vertices[entry]['boarding_heading'] = approach_boarding_heading(transport, floor)
         boarding = transport['boarding']
         x0, x1, y0, y1 = car_zone
         if (not x0 < boarding['x'] < x1 or not y0 < boarding['y'] < y1

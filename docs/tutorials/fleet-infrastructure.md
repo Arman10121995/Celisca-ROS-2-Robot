@@ -110,11 +110,12 @@ exit destinations used by **RMF floor round-trip**. On L1, the robot
 drives away from the closed gate to turn at the waiting point. The SDK uses one
 graph for the whole fleet, so clearance is checked against its largest
 member. If two explicit model layouts disagree, the SDK launch refuses;
-native Facility transport still chooses goals per member. An RMF in-car turn
-to the declared exit heading uses Nav2 Spin, while the physical floor, door,
-measured settling and Stop checks remain active. See the
-[MOLAR trial results](../status/evidence/r11-molar-rmf-return-2026-11-20/README.md)
-for the revised landing and its exact support scope. Native
+native Facility transport still chooses goals per member. The staged
+boarding turn and in-car exit turn use Nav2 Spin. Floor, measured station
+and Stop checks apply to both; the in-car turn also needs open lift doors.
+One MOLAR round trip passed with two SDK patrol requests in
+[the revised landing trial](../status/evidence/r11-molar-rmf-return-2026-11-20/README.md).
+Native
 **Facility → Transport selected robot** is also available.
 
 Provisioning includes a process-scoped correction for Humble's upstream graph

@@ -36,7 +36,7 @@ from std_srvs.srv import Trigger
 from tf2_ros import Buffer, StaticTransformBroadcaster, TransformException, TransformListener
 
 from robot_lab_utils.fleet_lift_recovery import recovery_passengers
-from robot_lab_utils.fleet_building_graph import cabin_exit_heading, lift_graph_poses
+from robot_lab_utils.fleet_building_graph import approach_boarding_heading, cabin_exit_heading, lift_graph_poses
 from robot_lab_utils.fleet_motion import (Neighbor, angle, scan_guard, separation_guard, swarm_velocities,
                                           turn_away_from_nearest)
 from robot_lab_utils.fleet_session import finite, ID_PATTERN, MEMBER_MODELS
@@ -44,6 +44,8 @@ from robot_lab_utils.fleet_missions import MissionHistory, coverage_plan, enqueu
 from robot_lab_utils.fleet_zones import PLAN_FRESH_S, ZoneArbiter, declared_zones, narrow_passages
 from robot_lab_utils.swarm_behaviours import BEHAVIOURS, LocalBehaviour
 from robot_lab_utils.swarm_coverage import SensedCoverage, reachable_from, redistribute
+
+LIFT_TURN_FIELDS = ('cabin_turn_floor', 'approach_turn_floor')
 
 
 def yaw(q):
@@ -492,12 +494,14 @@ class FleetController(Node):
                 items = [mission(self._goal(g), 'route:' + tag) for g in route]
                 member = targets[0]
                 for supplied, item in zip(route, items):
-                    if 'cabin_turn_floor' in supplied:
-                        floor = supplied['cabin_turn_floor']
-                        if (not isinstance(floor, str) or floor not in self.session.get('floor_maps', {})
+                    markers = [key for key in LIFT_TURN_FIELDS if key in supplied]
+                    if markers:
+                        marker = markers[0]
+                        floor = supplied[marker]
+                        if (len(markers) != 1 or not isinstance(floor, str) or floor not in self.session.get('floor_maps', {})
                                 or not self.operator.startswith('rmf-') or not tag.startswith('rmf-')):
-                            raise ValueError('Cabin turns require an owned RMF facility route')
-                        item['goal']['cabin_turn_floor'] = floor
+                            raise ValueError('Lift turns require an owned RMF facility route and one declared station')
+                        item['goal'][marker] = floor
                 if member.mode in ('manual', 'swarm', 'resetting'):
                     raise ValueError('Stop manual/group/reset ownership before accepting an external route')
                 self._stop_member(member, 'Explicit external route replacement')
@@ -592,8 +596,8 @@ class FleetController(Node):
         if not self._fresh(member, time.monotonic()) or not self._nav_ready(member, time.monotonic()):
             raise ValueError('Fresh localization/sensors and actual Nav2 server required: ' + member.name)
         client = member.action
-        if 'cabin_turn_floor' in goal:
-            request = self._cabin_turn(member, goal)
+        if any(key in goal for key in LIFT_TURN_FIELDS):
+            request = self._lift_turn(member, goal)
             client = member.spin
         else:
             request = NavigateToPose.Goal()
@@ -619,27 +623,30 @@ class FleetController(Node):
         future.add_done_callback(lambda done, m=member, g=generation: self._goal_sent(m, g, done))
         self._event('nav2_goal_sent', member=member.name, task=member.task, goal=goal, generation=generation)
 
-    def _cabin_turn(self, member, goal):
-        floor = goal['cabin_turn_floor']
+    def _lift_turn(self, member, goal):
+        in_cabin = 'cabin_turn_floor' in goal
+        floor = goal['cabin_turn_floor' if in_cabin else 'approach_turn_floor']
         now = time.monotonic()
         if (not self.lift_transport or now-self.infrastructure_at > .6 or member.name in self.infrastructure_holds
-                or self.open_lift_floor != floor
                 or self.infrastructure_floors.get(member.name) != floor
                 or not member.spin or not member.spin.server_is_ready()
                 or now-member.localization_at > .6):
-            raise ValueError('Cabin turn needs an observed open and level lift and fresh Nav2 localization')
+            raise ValueError('Lift turn needs the observed floor and fresh Nav2 localization')
+        if in_cabin and self.open_lift_floor != floor:
+            raise ValueError('Cabin turn needs an observed open and level lift')
         if self.lift_poses is None:
             self.lift_poses = lift_graph_poses(self.lift_transport, self.session['members'])
-        boarding = self.lift_poses['boarding']
-        heading = cabin_exit_heading(self.lift_poses, floor)
+        station = self.lift_poses['boarding'] if in_cabin else self.lift_poses['landings'][floor]
+        heading = (cabin_exit_heading if in_cabin else approach_boarding_heading)(self.lift_poses, floor)
         truth = self._truth_row(member)
         if (heading is None or abs(angle(heading-goal['yaw'])) > .001
-                or math.hypot(goal['x']-boarding['x'], goal['y']-boarding['y']) > .001
-                or truth is None or math.hypot(truth['x']-boarding['x'], truth['y']-boarding['y']) > .15):
-            raise ValueError('Cabin turn must start at the measured boarding point for the declared exit')
+                or math.hypot(goal['x']-station['x'], goal['y']-station['y']) > .001
+                or truth is None or math.hypot(truth['x']-station['x'], truth['y']-station['y']) > .15):
+            location = 'boarding point' if in_cabin else 'staged approach'
+            raise ValueError('Lift turn must start at the observed '+location+' with the declared heading target')
         estimate = self._neighbor(member)
         if estimate is None:
-            raise ValueError('Cabin turn needs a localized wheel pose')
+            raise ValueError('Lift turn needs a localized wheel pose')
         request = Spin.Goal()
         request.target_yaw = angle(heading-estimate.yaw)
         request.time_allowance = Duration(seconds=30.).to_msg()
@@ -944,7 +951,7 @@ class FleetController(Node):
                 member.queue.pop(0)  # Only remove after successful action submission.
             except (ValueError, RuntimeError) as exc:
                 member.reason = 'Queued task waiting: ' + str(exc)
-                if 'cabin_turn_floor' in item['goal'] and now-item.setdefault('dispatch_wait_at', now) > 30.:
+                if any(key in item['goal'] for key in LIFT_TURN_FIELDS) and now-item.setdefault('dispatch_wait_at', now) > 30.:
                     member.queue.pop(0)
                     self._event('task_finished', member=member.name,
                                 **self.history.finish(item, 'failed', member.reason))

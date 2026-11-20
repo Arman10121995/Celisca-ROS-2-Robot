@@ -67,9 +67,11 @@ class Robot(adpt.RobotCommandHandle):
             for index, (waypoint, p) in enumerate(zip(waypoints, positions)):
                 goal = dict(x=p[0], y=p[1], yaw=p[2], timeout=180.,
                             not_before=self.request['departures'][index])
-                cabin = self.owner.cabin_turns.get(waypoint.graph_index)
-                if cabin and abs(math.remainder(p[2]-cabin['exit_heading'], 2*math.pi)) < .001:
-                    goal['cabin_turn_floor'] = cabin['floor']
+                turn = self.owner.lift_turns.get(waypoint.graph_index)
+                if turn:
+                    marker, floor, heading = turn
+                    if abs(math.remainder(p[2]-heading, 2*math.pi)) < .001:
+                        goal[marker] = floor
                 goals.append(goal)
             self.owner.pending.put((self.name, self.sequence, dict(op='route', targets=[self.name],
                                                                   request_id=request_id, goals=goals)))
@@ -148,7 +150,11 @@ class RmfBridge(Node):
         super().__init__('robot_lab_rmf_bridge')
         self.session, self.adapter, self.graph, self.fleet = session, adapter, nav_graph, fleet
         self.vertices = vertices
-        self.cabin_turns = {v['graph_index']: v for v in vertices if 'exit_heading' in v}
+        self.lift_turns = {vertex['graph_index']: (marker, vertex['floor'], vertex[heading])
+                           for vertex in vertices
+                           for heading, marker in (('exit_heading', 'cabin_turn_floor'),
+                                                   ('boarding_heading', 'approach_turn_floor'))
+                           if heading in vertex}
         self.level_graph = any('floor' in vertex for vertex in vertices)
         self.robot_floors = {}
         self.floor_at = -math.inf

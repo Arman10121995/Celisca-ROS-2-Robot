@@ -86,6 +86,7 @@ def test_molar_keeps_gate_approach_separate_from_the_exit_in_the_shared_graph():
                 {'orientation_constraint': 'forward'}]
     assert next(v for v in metadata if v['name'] == 'L0_landing').get('selectable', True)
     assert next(v for v in metadata if v['name'] == 'lift_L0_inside')['exit_heading'] == pytest.approx(3.141593)
+    assert next(v for v in metadata if v['name'] == 'L1_approach')['boarding_heading'] == pytest.approx(0.)
     assert config['transport']['boarding']['x'] == 3.65
     assert config['transport']['models']['molar_hri']['landings']['L1']['x'] == 2.1
 
