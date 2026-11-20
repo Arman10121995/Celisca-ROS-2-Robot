@@ -1233,6 +1233,27 @@ def _world_normal_contact_force(model, data, geom_ids):
     return sum(_world_contact_forces(model, data, geom_ids))
 
 
+def _grip_contact_forces(model, data, pads, object_roots):
+    """Normal loads for each jaw against identified free objects."""
+    objects = {}
+    force = np.zeros(6)
+    for index, contact in enumerate(data.contact[:data.ncon]):
+        if contact.efc_address < 0:
+            continue
+        for pad, other in ((int(contact.geom1), int(contact.geom2)),
+                           (int(contact.geom2), int(contact.geom1))):
+            if pad not in pads or other < 0:
+                continue
+            name = object_roots.get(int(model.body_rootid[model.geom_bodyid[other]]))
+            if name is None:
+                continue
+            mujoco.mj_contactForce(model, data, index, force)
+            if math.isfinite(force[0]) and force[0] > 0.:
+                reading = objects.setdefault(name, dict.fromkeys(pads.values(), 0.))
+                reading[pads[pad]] += float(force[0])
+    return dict(sim_time_s=float(data.time), normal_force_n=objects)
+
+
 def _world_contact_forces(model, data, geom_ids):
     """Normal contact force [N] per named geom against static world geoms."""
     index_of = {geom_id for geom_id in geom_ids if geom_id >= 0}
@@ -2085,6 +2106,19 @@ class MuJoCoSpawner(Node):
             and mujoco.mj_id2name(self._model, mujoco.mjtObj.mjOBJ_BODY, int(self._model.jnt_bodyid[j]))}
         if self._free_bodies:
             self._free_bodies_pub = self.create_publisher(String, '/simulation/free_bodies', 10)
+        pad_names = articulation_contract.config.get('grip_contact_geoms') if articulation_contract else None
+        if pad_names is not None:
+            if (not isinstance(pad_names, dict) or set(pad_names) != {'left', 'right'}
+                    or any(not isinstance(name, str) for name in pad_names.values())):
+                raise ValueError('Gripper contact telemetry needs left and right source pad geometry')
+            pads = {mujoco.mj_name2id(self._model, mujoco.mjtObj.mjOBJ_GEOM, name): side
+                    for side, name in pad_names.items()}
+            if (len(pads) != 2 or min(pads) < 0
+                    or any(self._model.body_rootid[self._model.geom_bodyid[pad]] != robot_root for pad in pads)):
+                raise ValueError('Expected two distinct gripper pads on the compiled robot')
+            object_roots = {body: name for name, body in self._free_bodies.items()}
+            self._articulation.grip_contacts = lambda: _grip_contact_forces(
+                self._model, self._data, pads, object_roots)
 
         # Display-mode hold: joints keep their spawn pose through physics,
         # not by freezing the state.  Each held joint gets a passive

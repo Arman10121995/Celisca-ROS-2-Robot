@@ -141,6 +141,29 @@ def test_world_contact_telemetry_reports_support_per_geom():
     assert sum(forces) == pytest.approx(10.0 * 9.81, abs=0.5)
 
 
+def test_grip_contact_forces_measure_both_pads_for_the_same_free_object():
+    mujoco = pytest.importorskip('mujoco')
+    from robot_lab_mujoco.mujoco_spawner import _grip_contact_forces
+
+    model = mujoco.MjModel.from_xml_string('''
+<mujoco><worldbody>
+<geom name="floor" type="plane" size="1 1 .01"/>
+<geom name="left" type="box" pos="-.058 0 .052" size=".01 .03 .019"/>
+<geom name="right" type="box" pos=".058 0 .052" size=".01 .03 .019"/>
+<body name="target" pos="0 0 .050"><freejoint/><geom type="box" size=".05 .03 .051"/></body>
+<body name="other" pos="1 0 .05"><freejoint/><geom type="box" size=".05 .03 .051"/></body>
+</worldbody></mujoco>''')
+    data = mujoco.MjData(model)
+    mujoco.mj_step(model, data)
+    contacts = _grip_contact_forces(
+        model, data, {model.geom(side).id: side for side in ('left', 'right')},
+        {model.body(name).id: name for name in ('target', 'other')})
+    assert contacts['sim_time_s'] > 0.
+    assert contacts['normal_force_n'].keys() == {'target'}
+    left, right = (contacts['normal_force_n']['target'][side] for side in ('left', 'right'))
+    assert left > 0. and right == pytest.approx(left, rel=.01)
+
+
 def test_trunk_contact_telemetry_is_zero_in_free_fall():
     """A geom that never touches the world reports 0 N, not a stale value."""
     mujoco = pytest.importorskip('mujoco')

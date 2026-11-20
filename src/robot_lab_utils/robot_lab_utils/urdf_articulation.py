@@ -398,6 +398,7 @@ class ArticulationROS:
         self.contract = configuration if isinstance(configuration, URDFArticulation) else URDFArticulation(configuration, urdf, model_path)
         self.base_moving = False
         self.motion_planner = None  # optional backend-owned private collision model
+        self.grip_contacts = None   # optional backend-owned physical contact reader
         self.base_limits = base_motion_limits(self.contract.config)   # the contract holds the parsed config
         self.publisher = node.create_publisher(String, '/molar/articulation/state', 10)
         self._string = String
@@ -464,6 +465,8 @@ class ArticulationROS:
         now = time.monotonic()
         if now-self.last_publish >= .1:
             state = self.contract.state()
+            if self.grip_contacts is not None:
+                state['grip_contacts'] = self.grip_contacts()
             if self.motion_planner is not None:
                 state['planning'] = self.motion_planner.state()
                 state['base_inhibited'] = self.base_inhibited

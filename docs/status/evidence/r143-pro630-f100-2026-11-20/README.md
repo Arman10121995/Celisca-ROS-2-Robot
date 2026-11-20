@@ -36,6 +36,12 @@ same interpolation as the estimated jaw readout. Grasp, transport and
 other F100 backends remain open. An isolated loaded fixture lost its block
 during closure. [Failed fixture data](initial-cad-pad-load-bench.jsonl).
 
+The live articulation state now reports pad normal load by free object
+name, and the Gripper panel shows the two readings. The force reader passed
+a compiled MuJoCo fixture with both pads acting on one free box and a
+second free box touching only the floor. These readings support future
+custody checks for the selected payload.
+
 ## Source and retained diagnostics
 
 The bare arm and its wheel/arm measurements use the existing source pin.

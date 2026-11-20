@@ -298,6 +298,8 @@ def attach_f100(base, articulation, source_root, mesh_dir):
     articulation['grip_presets'] = {leader: {'open': high, 'close': low}}
     articulation['grip_aperture'] = {
         leader: [[sample['shaft_rad'], sample['gap_m']] for sample in grasp_reference['aperture_samples']]}
+    articulation['grip_contact_geoms'] = {
+        side: PREFIX+'gripper_'+side+'1_pad_contact' for side in ('left', 'right')}
     return dict(source_urdf=F100_URDF, source_urdf_sha256=_digest(urdf), resource_sha256=resources,
                 mesh_license_sha256=_digest(source_root/'mycobot_description/LICENSE'),
                 reversed_follower_axes=reversed_axes, lab_servo=caps,

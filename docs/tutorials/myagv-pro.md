@@ -107,8 +107,9 @@ myCobot Pro630 → Pro630 with vendor F100 gripper**. Choose **MuJoCo**,
 and a position slider for the single jaw motor. Enter a gap in millimetres
 and click **Set opening (mm)** for an intermediate position. The estimated
 opening uses the measured shaft angle and the vendor CAD pad spacing. The
-five followers move from
-the mechanical coupling. **Stop / hold**, the heartbeat and the base-motion
+page shows the left and right normal forces when either pad contacts a loose
+object in MuJoCo. The five followers move through the mechanical coupling.
+**Stop / hold**, the heartbeat and the base-motion
 interlock apply to the gripper as well.
 
 Both Pro630 variants offer **Tool pose in robot base** in MuJoCo. Copy the

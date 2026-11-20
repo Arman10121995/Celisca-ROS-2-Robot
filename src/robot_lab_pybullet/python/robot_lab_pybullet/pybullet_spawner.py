@@ -1091,11 +1091,13 @@ class PyBulletSpawner(Node):
             for follower, coupling in self._articulation.contract.couplings.items():
                 if not coupling.get('mechanical'):
                     continue
+                # Bullet constrains qA + ratio*qB = target; qA is the follower.
                 gear = p.createConstraint(
-                    self._robot_id, self._joint_idx[coupling['joint']], self._robot_id, self._joint_idx[follower],
+                    self._robot_id, self._joint_idx[follower], self._robot_id, self._joint_idx[coupling['joint']],
                     jointType=p.JOINT_GEAR, jointAxis=[1, 0, 0], parentFramePosition=[0, 0, 0],
                     childFramePosition=[0, 0, 0])
                 p.changeConstraint(gear, gearRatio=-float(coupling['multiplier']), erp=0.1,
+                                   relativePositionTarget=float(coupling['offset']),
                                    maxForce=self._articulation.contract.joints[follower]['effort'] * 2.5)
                 self.get_logger().info('Mechanical coupling %s = %g * %s (gear constraint)'
                                        % (follower, coupling['multiplier'], coupling['joint']))
@@ -1252,6 +1254,8 @@ class PyBulletSpawner(Node):
                     or abs(base_angular[2]) > self._articulation.base_limits[1])
                 for kind, values in articulation_targets.items():
                     for name, target in values.items():
+                        if self._articulation.contract.couplings.get(name, {}).get('passive'):
+                            continue  # physical gear transmits load to the sole powered joint
                         spec = self._articulation.contract.joints[name]
                         if kind == 'velocity':
                             # The light roller's explicit torque PD is unstable at

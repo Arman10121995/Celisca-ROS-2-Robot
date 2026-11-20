@@ -51,6 +51,13 @@ def validate_arm_feedback(state, model_path, config):
     followers: measured and shown, never commanded from this page.
     """
     validate_identity(state, model_path)
+    if 'grip_contacts' in state:
+        contact = state['grip_contacts']
+        readings = contact.get('normal_force_n') if isinstance(contact, dict) else None
+        if (not isinstance(readings, dict) or any(
+                not isinstance(load, dict) or set(load) != {'left', 'right'}
+                or any(finite(force) < 0. for force in load.values()) for load in readings.values())):
+            raise ValueError('Incomplete gripper pad force feedback.')
     joints = config['joints']
     couplings = config.get('couplings') or {}
     channels = state.get('channels')
@@ -457,7 +464,8 @@ class UrdfArmControls(MolarControls):
         maximum = math.floor(aperture[-1][1]*1000.)
         minimum = max(0, math.ceil(aperture[0][1]*1000.))
         opening = tk.DoubleVar(value=maximum)
-        ttk.Label(frame, textvariable=feedback).grid(row=3, column=0, columnspan=4, sticky='w', pady=3)
+        ttk.Label(frame, textvariable=feedback, wraplength=280).grid(
+            row=3, column=0, columnspan=4, sticky='w', pady=3)
         field = ttk.Spinbox(frame, textvariable=opening, from_=minimum, to=maximum, increment=1, width=6)
         field.grid(row=4, column=0, sticky='ew', padx=2)
         button = ttk.Button(frame, text='Set opening (mm)', command=lambda: self.apply_grip_opening(name))
@@ -649,7 +657,13 @@ class UrdfArmControls(MolarControls):
                 if name in channels:
                     angle = max(aperture[0][0], min(aperture[-1][0], channels[name]['measured']))
                     width = max(0., grip_aperture_interpolate(angle, aperture))*1000.
-                    feedback.set(f'Estimated opening {width:.1f} mm')
+                    text = f'Estimated opening {width:.1f} mm'
+                    contacts = self.state.get('grip_contacts', {}).get('normal_force_n', {})
+                    if contacts:
+                        target = max(contacts, key=lambda item: sum(contacts[item].values()))
+                        left, right = (contacts[target][side] for side in ('left', 'right'))
+                        text += f'\n{target} · left {left:.2f} N · right {right:.2f} N'
+                    feedback.set(text)
                 else:
                     feedback.set('Waiting for jaw feedback')
         self.stop_button.state(['!disabled'] if self.state else ['disabled'])
