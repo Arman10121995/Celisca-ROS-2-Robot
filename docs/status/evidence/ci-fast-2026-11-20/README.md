@@ -21,3 +21,10 @@ The Fleet queue fixture now binds the production per-model transport
 configuration helper. The architecture layout and native 3D framebuffer
 checks both passed separately under Xvfb.
 [Published repair run](https://github.com/Arman10121995/Celisca-ROS-2-Robot/actions/runs/44815298868).
+
+The later hosted run passed the fast tier and reached five failures in
+the MuJoCo effort-budget fixture. The fixture now supplies the coupling
+and actuator lookup used by the runtime. It checks the existing independent
+joint and a passive follower whose bias must count toward the same shaft
+effort limit. The full local physics tier passed 257 tests.
+[Hosted failure](https://github.com/Arman10121995/Celisca-ROS-2-Robot/actions/runs/44818951392).

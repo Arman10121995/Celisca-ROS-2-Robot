@@ -213,7 +213,8 @@ def test_bullet_roller_uses_native_velocity_motor_with_source_force_cap():
 
 
 @pytest.mark.parametrize('force', (139.302, -139.302, 3000., -3000., 0.))
-def test_mujoco_servo_and_gravity_sum_respects_source_effort(force):
+@pytest.mark.parametrize('follower_bias', (None, 65.))
+def test_mujoco_servo_and_gravity_sum_respects_source_effort(force, follower_bias):
     import numpy as np
     scope = load_nodes([source_function(ARTICULATION, 'effort_budget'),
         source_function(SPAWNERS['mujoco'], '_apply_articulation_gravity')],
@@ -221,20 +222,27 @@ def test_mujoco_servo_and_gravity_sum_respects_source_effort(force):
     joint = 'conveyor_lift_joint'
     ranges = np.array([[-2000., 2000.], [-2., 2.], [-30., 30.]])
     applied = np.array([0., 7., 8.])
+    joints = {joint: dict(mode='position', effort=2000.),
+              'transfer_roller_joint': dict(mode='velocity', effort=2.)}
+    addresses = {joint: 0, 'transfer_roller_joint': 1}
+    couplings = {}
+    if follower_bias is not None:
+        joints['follower'] = dict(mode='position', effort=2000.)
+        addresses['follower'] = 2
+        couplings['follower'] = dict(joint=joint, multiplier=1.5, passive=True)
     subject = SimpleNamespace(
-        _articulation=SimpleNamespace(contract=SimpleNamespace(joints={
-            joint: dict(mode='position', effort=2000.),
-            'transfer_roller_joint': dict(mode='velocity', effort=2.)})),
-        _joint_name2dofadr={joint: 0, 'transfer_roller_joint': 1},
-        _actuator_ids={joint+'_articulation': 0},
+        _articulation=SimpleNamespace(contract=SimpleNamespace(joints=joints, couplings=couplings)),
+        _joint_name2dofadr=addresses,
+        _actuator_index={joint+'_articulation': 0}.__getitem__,
         _model=SimpleNamespace(actuator_forcerange=ranges),
-        _data=SimpleNamespace(qfrc_applied=applied, qfrc_bias=np.array([force, 0., 0.]), time=.25))
+        _data=SimpleNamespace(qfrc_applied=applied, qfrc_bias=np.array([force, 0., follower_bias or 0.]), time=.25))
+    input_effort = force + 1.5*(follower_bias or 0.)
     # A quarter of the way through the post-spawn ramp, then fully in.
     scope['_apply_articulation_gravity'](subject)
-    assert applied[0] == scope['effort_budget'](.25*force, 2000.)[0]
+    assert applied[0] == scope['effort_budget'](.25*input_effort, 2000.)[0]
     subject._data.time = 5.
     scope['_apply_articulation_gravity'](subject)
-    ff, cap = scope['effort_budget'](force, 2000.)
+    ff, cap = scope['effort_budget'](input_effort, 2000.)
     assert applied[0] == ff and ranges[0] == pytest.approx((-cap, cap))
     assert max(abs(ff+servo) for servo in ranges[0]) <= 2000.+1e-9
     assert applied[1:] == pytest.approx((7., 8.))
