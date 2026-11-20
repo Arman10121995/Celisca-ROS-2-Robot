@@ -23,16 +23,16 @@ The complete official **PAL TIAGo** now appears in the normal robot selector
 with base Drive and twelve Mobile arm channels: torso, arm, independent fingers
 and head. Source mechanics and effort limits are retained; lab servo/sensor
 adapters and importer approximations are declared. Head/torso/arm/finger,
-forward, Stop and camera screens pass in MuJoCo, PyBullet and Isaac; higher
-modes and autonomous manipulation remain open.
+forward, Stop and camera screens pass in MuJoCo, PyBullet and Isaac.
+Fetch with Nav2 transit and RGB-D grasp estimation has measured runs on
+MuJoCo and PyBullet.
 [TIAGo guide](docs/tutorials/tiago.md).
 
-TIAGo's MuJoCo **Mobile arm** page now has **Plan targets**, **Plan Home** and
-separate **Execute plan** controls. Private source/world collision checks,
-bounded joint routes, measured execution and Stop are implemented. One normal
-GUI route completes; a later route is interrupted with GUI Stop. Cartesian
-reaches and object manipulation remain open.
-[Planning workflow](docs/tutorials/tiago.md#plan-joint-targets-in-mujoco).
+TIAGo's MuJoCo **Mobile arm** page supports **Plan targets**, **Plan Home**
+and **Plan pose**, followed by a separate **Execute plan**. Copy the
+measured tool pose and jog the XYZ target in the robot's base frame. The
+planner checks the route against a private snapshot and executes through
+the bounded source servos. [Tool-pose workflow](docs/tutorials/tiago.md#move-the-tool-by-xyz-in-mujoco).
 
 Manipulation continuation: native Panda now has an explicit **Run pick / place**
 sequence for selected physical boxes and bench supports. Each stage uses the

@@ -46,17 +46,23 @@ class SourceTool:
         roots = {l.get('name') for l in document.findall('link')}-set(parents)
         self.tip_frame = configuration.get('tip_frame')
         self.reference_frame = configuration.get('reference_frame')
-        self.names = tuple(configuration.get('joints', ()))
+        names = configuration.get('joints')
+        if not isinstance(names, (list, tuple)) or any(not isinstance(name, str) for name in names):
+            raise ValueError('Cartesian configuration needs an ordered source joint list')
+        self.names = tuple(names)
         if (roots != {self.reference_frame} or not self.names or len(self.names) > 8
                 or len(set(self.names)) != len(self.names) or set(self.names)-set(specs)):
             raise ValueError('Cartesian source needs the URDF root and <=8 independent arm/torso joints')
-        ancestors, frame = set(), self.tip_frame
+        ancestors, visited, frame = set(), set(), self.tip_frame
         while frame in parents:
+            if frame in visited:
+                raise ValueError('Cartesian source chain contains a cycle')
+            visited.add(frame)
             joint = parents[frame]
             if joint.get('type') != 'fixed':
                 ancestors.add(joint.get('name'))
             frame = joint.find('parent').get('link')
-        if frame != self.reference_frame or set(self.names)-ancestors:
+        if frame != self.reference_frame or not set(self.names) <= ancestors:
             raise ValueError('Cartesian joints must belong to the declared TCP source chain')
         self.root_body = int(root_body)
         self.body = -1

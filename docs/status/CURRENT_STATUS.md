@@ -1,5 +1,12 @@
 # Current Robot Lab status
 
+November 20 Codex: TIAGo's MuJoCo **Mobile arm** page can copy the measured
+tool pose, jog target XYZ in the base frame and **Plan pose → Execute plan**.
+The 20 mm `nav_empty` GUI reach settled at 0.15 mm position error, with
+head/fingers held. This is a manual endpoint reach in one rigid scene.
+[Guide](../tutorials/tiago.md#move-the-tool-by-xyz-in-mujoco) ·
+[Measured receipt](evidence/tiago-cartesian-2026-11-20/README.md).
+
 November 14 joint-planning continuation: TIAGo's normal MuJoCo **Mobile arm**
 page now separates **Plan targets / Plan Home** from **Execute plan**. The
 planner uses a private compiled source/world snapshot, bounded configuration

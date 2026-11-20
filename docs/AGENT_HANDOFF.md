@@ -1,5 +1,13 @@
 # Agent Handoff Protocol
 
+November 20 parallel work: Claude retains Allegro and object/fetch work.
+Codex delivered TIAGo's manual tool-pose panel (R5.9): source TCP in the
+base frame, held head/fingers, bounded multi-goal IK and explicit joint-route
+execution. Preserve lease, scene and measured endpoint checks. The
+[normal GUI reach receipt](status/evidence/tiago-cartesian-2026-11-20/README.md)
+is scoped to MuJoCo `nav_empty`. Check both `mujoco_spawner` and
+`native_asset_display` before starting a simulation alongside another agent.
+
 November 14 TIAGo joint planning: the normal MuJoCo Mobile arm page has
 **Plan targets / Plan Home → Execute plan**. Preserve the private MjModel/
 MjData clone, compiled scene/snapshot hashes, existing bounded configuration

@@ -133,7 +133,7 @@ Work top to bottom. Each line links to its task.
 | I4a | [R14.5](#r145--robot-status-markers-in-the-gui-selectors) Robot status markers | Done 2026-11-13: ● measured / ◐ experimental / ○ display only / ✕ unavailable plus mode letters in both robot lists, from recorded evidence | implemented |
 | I4b | [R6.8](#r68--real-world-area-import-from-a-globe) Real-world area import | Done 2026-11-13: globe picker (CesiumJS + OSM), Terrain Tiles + OSM buildings/roads/trees/water, SUMO people/traffic; support and roof heights measured on four simulators | implemented |
 | I5 | [R5.11](#r511--drone-moving-obstacles-and-other-drone-backends) Drone moving obstacles | Done 2026-11-13: Kalman tracks, predicted sweeps, walkway look-both-ways and overflight, evasion, sensor-loss hold/land, EKF heading/height gate; 2 passing flights past walkers (Gazebo); PX4 + MuJoCo plant: takeoff, 5 m route and landing | implemented |
-| I6 | [R5.9](#r59--mobile-manipulators) Mobile manipulation | Done-when met 11-17: TIAGo GUI fetch (drive, pick, carry, place) on MuJoCo and PyBullet with stability traces and a base/arm interlock probe. 11-17: Nav2 transit legs with AMCL (Nav mode) pass on MuJoCo 2/2 and PyBullet 1/1. 11-18: grasp planned from the head RGB-D camera (`pose_source: rgbd`, estimate error 1.5 / 5.1 mm) passes on MuJoCo and PyBullet. Remaining: general (non-box) perception, Isaac grasp, Stretch pipeline missions | partial |
+| I6 | [R5.9](#r59--mobile-manipulators) Mobile manipulation | TIAGo fetch, Nav2 transit and RGB-D grasp workflows measured on MuJoCo and PyBullet (11-17/18). Manual tool-pose planning measured in the MuJoCo GUI (11-20). Remaining: general perception, Isaac grasp, Stretch pipeline missions, additional backend planners | partial |
 | I7 | [R5.7](#r57--manipulators-and-motion-planning) Arms | Done-when met 11-17: URDF Panda GUI pick → place on PyBullet and MuJoCo (one run each). Native Panda box tasks on MuJoCo. 11-17: URDF Panda pick and place also passes on Isaac and Gazebo (all four backends); UR5/UR10/YuMi joint control on Gazebo. 11-18: upright-cylinder pick and place on MuJoCo, PyBullet and Gazebo. Remaining: compound/mesh geometry, fixed-arm perception, other coupled mechanisms | partial |
 | I8 | [R5.8](#r58--robot-hands-and-grippers) Hands | Done-when met 11-19: normal GUI grasp → lift 5 cm → hold → return → supported release passes for Robotiq 2F-85 (both variants, support stage), UMI (source axis) and DEX-EE (synthesized tripod, 2/2); parallel-jaw measured in R5.7/R5.9. 11-20: new Wonik Allegro hand passes the same cycle (2/2). Shadow Hand tendon adapter, arm transport and other backends remain | implemented |
 | I9 | [R10.2](#r102--fleet-management-and-open-rmf) Fleet / Open-RMF | Done 2026-11-14: shared-zone reservations (map passages, doors, docks), cycle breaker, recovery drive-out, RMF energy from a drivetrain calibration; two crossing runs pass (native and RMF). 11-18: doors, docks and energy without a lift (`fleet_ward`: door crossing, docking and charging pass). Larger fleets are V7 | implemented |
@@ -597,6 +597,12 @@ parking batch needs its own run. Details and evidence are in the
   approach from above or either horizontal world axis, with a 3–25 cm distance.
   Place retreat uses the same direction; source-pad orientation stays explicit
   and independent. Editing only builds steps. [Receipt](docs/status/takeover-2026-11-14.md).
+- **Have (2026-11-20):** TIAGo manual **Plan pose → Execute plan** in MuJoCo.
+  The GUI copies its measured source grasp frame, edits base-frame XYZ and
+  optionally sets final orientation. The private planner finds bounded torso/arm
+  IK endpoints and checks their joint routes. One 20 mm GUI reach settles
+  within 0.15 mm on `nav_empty`.
+  [Receipt](docs/status/evidence/tiago-cartesian-2026-11-20/README.md).
 - **Remaining implementation:**
   - Done 2026-11-17: fetch with Nav2 transit legs and AMCL in Nav mode;
     the 0.6 m docking moves stay truth-steered (AMCL error 0.07–0.13 m).
@@ -624,7 +630,10 @@ parking batch needs its own run. Details and evidence are in the
     source-specific grasp strategies and further
     source-specific object pipelines;
   - generalize the existing native interlock and measured footprint-consumption gate to other mobile-manipulator adapters;
-  - TIAGo Cartesian/task planning, grasp/custody, dynamic footprint, map workflows and other-backend joint planners; its separate Fortress port remains unavailable. Further Fetch/PR2 sources are optional after completing this second-source workflow.
+  - Broaden TIAGo task planning, grasp/custody, dynamic footprint and map
+    workflows beyond the measured fetch variants. Add other-backend pose/joint
+    planners; its separate Fortress port remains unavailable. Further
+    Fetch/PR2 sources are optional.
 - **TIAGo fetch (2026-11-17, Claude): done-when met.** One GUI request
   drives TIAGo to `pickup_table`, picks a 150 mm block, carries it about
   2.3 m and places it on `drop_table` (`mobile_fetch_lab`).

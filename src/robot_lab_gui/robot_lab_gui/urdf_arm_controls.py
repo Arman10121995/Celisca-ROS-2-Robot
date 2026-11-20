@@ -25,6 +25,8 @@ except ImportError:
 
 # urdf_pick_place.py pose_source values and their labels.
 POSE_SOURCE_LABELS = {'truth': 'Simulator truth', 'rgbd': 'RGB-D camera'}
+CARTESIAN_SCHEMA = 'robot_lab.cartesian_goal.v1'
+ORIENTATION_LABELS = {'Keep final angle': 'keep', 'Set roll / pitch / yaw': 'rpy', 'Position only': 'free'}
 
 
 def arm_config(profile):
@@ -101,6 +103,7 @@ class UrdfArmControls(MolarControls):
         self.closed = False
         self.transfer = None
         self.plan_request = ''
+        self.tool_plant = None
         self.joint_names = ()
         self.target_vars, self.apply_buttons, self.jog_buttons, self.scales, self.fields = {}, {}, {}, {}, []
         self.status = tk.StringVar(value='Select a mobile manipulator, a simulator and Run.')
@@ -112,15 +115,15 @@ class UrdfArmControls(MolarControls):
         ttk.Label(body, textvariable=self.status, wraplength=295).grid(row=1, column=0, sticky='ew', pady=6)
         ttk.Label(body, textvariable=self.feedback, wraplength=295, justify='left').grid(row=2, column=0, sticky='ew', pady=6)
         self.joint_frame = ttk.Frame(body)
-        self.joint_frame.grid(row=3, column=0, sticky='ew')
+        self.joint_frame.grid(row=6, column=0, sticky='ew')
         self.joint_frame.columnconfigure(0, weight=1)
         step = ttk.Frame(body)
-        step.grid(row=4, column=0, sticky='ew', pady=4)
+        step.grid(row=7, column=0, sticky='ew', pady=4)
         ttk.Label(step, text='Jog step (rad or m)').grid(row=0, column=0, sticky='w')
         self.step_entry = ttk.Entry(step, textvariable=self.step, width=8)
         self.step_entry.grid(row=0, column=1, sticky='w', padx=4)
         actions = ttk.Frame(body)
-        actions.grid(row=5, column=0, sticky='ew', pady=6)
+        actions.grid(row=3, column=0, sticky='ew', pady=6)
         actions.columnconfigure((0, 1, 2), weight=1)
         self.use_measured_button = ttk.Button(actions, text='Use measured', command=self.use_measured)
         self.use_measured_button.grid(row=0, column=0, sticky='ew', padx=2)
@@ -129,8 +132,9 @@ class UrdfArmControls(MolarControls):
         self.stop_button = ttk.Button(actions, text='Stop / hold', command=self.stop, style='Danger.TButton')
         self.stop_button.grid(row=0, column=2, sticky='ew', padx=2)
         self._build_pick_place(body)
-        planning = ttk.LabelFrame(body, text='Collision-checked joint route', padding=4)
-        planning.grid(row=6, column=0, sticky='ew', pady=5)
+        self._build_cartesian(body)
+        planning = ttk.LabelFrame(body, text='Plan and execute', padding=4)
+        planning.grid(row=5, column=0, sticky='ew', pady=5)
         planning.columnconfigure((0, 1, 2), weight=1)
         self.plan_button = ttk.Button(planning, text='Plan targets', command=self.plan_targets)
         self.plan_button.grid(row=0, column=0, sticky='ew', padx=2)
@@ -148,7 +152,7 @@ class UrdfArmControls(MolarControls):
                   'moves is refused and holds the arm.\n'
                   'Stop, heartbeat loss, leaving this page or a selection change hold the measured joints.\n'
                   'Experimental simulator controls; masses and limits are declared estimates where '
-                  'the vendor publishes none.', wraplength=295, justify='left').grid(row=8, column=0, sticky='ew', pady=6)
+                  'the vendor publishes none.', wraplength=295, justify='left').grid(row=9, column=0, sticky='ew', pady=6)
         self.traces = [(var, var.trace_add('write', self.selection_changed)) for var in
                        (app.robot_var, app.simulator_var, app.mode_var, app.launch_kind_var, app.map_var)]
         self.bindings = [(widget, widget.bind('<<NotebookTabChanged>>', self.tab_changed, add='+'))
@@ -157,11 +161,119 @@ class UrdfArmControls(MolarControls):
         self.job = self.after(50, self.tick)
         self.update_buttons()
 
+    def _build_cartesian(self, body):
+        self.tool_frame = frame = ttk.LabelFrame(body, text='Tool pose in robot base', padding=4)
+        frame.grid(row=4, column=0, sticky='ew', pady=5)
+        frame.columnconfigure(1, weight=1)
+        self.tool_feedback = tk.StringVar(value='Waiting for measured tool pose.')
+        ttk.Label(frame, textvariable=self.tool_feedback, wraplength=285).grid(
+            row=0, column=0, columnspan=4, sticky='ew')
+        self.tool_xyz = [tk.DoubleVar(value=0.) for _ in range(3)]
+        self.tool_rpy = [tk.DoubleVar(value=0.) for _ in range(3)]
+        self.tool_step = tk.DoubleVar(value=.02)
+        self.tool_orientation = tk.StringVar(value=next(iter(ORIENTATION_LABELS)))
+        self.tool_fields = []
+        for axis, (label, variable) in enumerate(zip(('X forward (m)', 'Y left (m)', 'Z up (m)'), self.tool_xyz)):
+            row = axis+1
+            ttk.Label(frame, text=label).grid(row=row, column=0, sticky='w')
+            entry = ttk.Entry(frame, textvariable=variable, width=9)
+            entry.grid(row=row, column=1, sticky='ew')
+            self.tool_fields.append(entry)
+            for column, sign in ((2, -1), (3, 1)):
+                jog = ttk.Button(frame, text='−' if sign < 0 else '+', width=3,
+                                 command=lambda axis=axis, sign=sign: self.jog_tool(axis, sign))
+                jog.grid(row=row, column=column)
+                self.tool_fields.append(jog)
+        ttk.Label(frame, text='XYZ step (m)').grid(row=4, column=0, sticky='w')
+        step = ttk.Entry(frame, textvariable=self.tool_step, width=9)
+        step.grid(row=4, column=1, sticky='ew')
+        self.tool_fields.append(step)
+        self.tool_orientation_box = ttk.Combobox(frame, textvariable=self.tool_orientation, state='readonly',
+                                                 values=list(ORIENTATION_LABELS))
+        self.tool_orientation_box.grid(row=5, column=0, columnspan=4, sticky='ew', pady=3)
+        angles = ttk.Frame(frame)
+        angles.grid(row=6, column=0, columnspan=4, sticky='ew')
+        ttk.Label(angles, text='RPY (°)').pack(side='left')
+        self.tool_angle_fields = []
+        for variable in self.tool_rpy:
+            entry = ttk.Entry(angles, textvariable=variable, width=7)
+            entry.pack(side='left', expand=True, fill='x', padx=2)
+            self.tool_angle_fields.append(entry)
+        self.copy_tool_button = ttk.Button(frame, text='Use measured tool pose', command=self.use_tool_pose)
+        self.copy_tool_button.grid(row=7, column=0, columnspan=2, sticky='ew', pady=4)
+        self.plan_pose_button = ttk.Button(frame, text='Plan pose', command=self.plan_pose)
+        self.plan_pose_button.grid(row=7, column=2, columnspan=2, sticky='ew', pady=4)
+        ttk.Label(frame, text='XYZ buttons edit the target. Plan, then Execute below. '
+                  'The tool can curve or rotate along the joint route.',
+                  wraplength=285).grid(row=8, column=0, columnspan=4, sticky='ew')
+
+    def tool_config(self):
+        articulation = self.arm() or {}
+        config = articulation.get('cartesian') or {}
+        return config if (config.get('schema') == CARTESIAN_SCHEMA and
+                          articulation.get('planning', {}).get('backend') == self.app.simulator_var.get()) else {}
+
+    def measured_tool(self):
+        config, pose = self.tool_config(), self.planning().get('tool')
+        if (not config or not self.planning_enabled() or not isinstance(pose, dict)
+                or pose.get('schema') != CARTESIAN_SCHEMA
+                or pose.get('frame') != config['reference_frame'] or pose.get('tip_frame') != config['tip_frame']):
+            return None
+        try:
+            if len(pose['position']) != 3 or len(pose['rpy_deg']) != 3:
+                return None
+            return dict(position=list(map(finite, pose['position'])), rpy_deg=list(map(finite, pose['rpy_deg'])))
+        except (ValueError, TypeError, KeyError):
+            return None
+
+    def use_tool_pose(self):
+        pose = self.measured_tool()
+        if pose is None:
+            return
+        for variable, value in zip(self.tool_xyz+self.tool_rpy, pose['position']+pose['rpy_deg']):
+            variable.set(round(value, 6))
+
+    def jog_tool(self, axis, sign):
+        if self.measured_tool() is None:
+            return
+        try:
+            step = finite(self.tool_step.get())
+            if not 0 < step <= .05:
+                raise ValueError('XYZ step must be greater than zero and at most 0.05 m.')
+            variable = self.tool_xyz[axis]
+            variable.set(round(finite(variable.get())+sign*step, 6))
+        except (ValueError, tk.TclError) as exc:
+            self.status.set(str(exc))
+
+    def current_pose(self):
+        if self.measured_tool() is None:
+            raise ValueError('Wait for the measured source tool frame.')
+        orientation = ORIENTATION_LABELS[self.tool_orientation.get()]
+        pose = dict(frame=self.tool_config()['reference_frame'], orientation=orientation,
+                    position=[finite(field.get()) for field in self.tool_xyz])
+        if orientation == 'rpy':
+            pose['rpy_deg'] = [finite(field.get()) for field in self.tool_rpy]
+        if any(abs(value) > 10. for value in pose['position']) or any(
+                abs(value) > 180. for value in pose.get('rpy_deg', [])):
+            raise ValueError('Enter bounded XYZ metres and angles within ±180°.')
+        return pose
+
+    def plan_pose(self):
+        try:
+            identity = uuid.uuid4().hex
+            if self.planning_command('plan_cartesian', request_id=identity, pose=self.current_pose()):
+                self.plan_request = identity
+                self.status.set('Tool pose requested. Review the route before Execute.')
+                return True
+        except (ValueError, TypeError, KeyError, tk.TclError) as exc:
+            self.status.set(str(exc))
+        return False
+
     # --- pick and place (urdf_pick_place.py) ------------------------------------
     def _build_pick_place(self, body):
         """Object pick and place for profiles with a pick_place description."""
         frame = ttk.LabelFrame(body, text='Pick / place', padding=4)
-        frame.grid(row=7, column=0, sticky='ew', pady=5)
+        frame.grid(row=8, column=0, sticky='ew', pady=5)
         frame.columnconfigure(1, weight=1)
         self.pick_frame = frame
         self.pick_state, self.pick_received = {}, -math.inf
@@ -321,6 +433,8 @@ class UrdfArmControls(MolarControls):
 
     def selection_changed(self, *_args):
         super().selection_changed()
+        self.tool_plant = None
+        self.plan_request = ''
         self.rebuild()
 
     def validate(self, state):
@@ -379,12 +493,15 @@ class UrdfArmControls(MolarControls):
     def plan_matches(self):
         state = self.planning()
         try:
+            if not (self.planning_enabled() and state.get('phase') == 'ready'
+                    and self.plan_request and state.get('request_id') == self.plan_request
+                    and isinstance(state.get('plan_id'), str) and len(state['plan_id']) == 32):
+                return False
+            if state.get('cartesian_request') is not None:
+                return self.current_pose() == state['cartesian_request']
             targets = self.current_targets()
             frozen = state.get('targets', {})
-            return bool(self.planning_enabled() and state.get('phase') == 'ready'
-                        and self.plan_request and state.get('request_id') == self.plan_request
-                        and isinstance(state.get('plan_id'), str) and len(state['plan_id']) == 32
-                        and isinstance(frozen, dict) and targets.keys() == frozen.keys()
+            return bool(isinstance(frozen, dict) and targets.keys() == frozen.keys()
                         and all(abs(value-finite(frozen[name])) < 1e-9 for name, value in targets.items()))
         except (ValueError, TypeError, KeyError, tk.TclError):
             return False
@@ -469,12 +586,40 @@ class UrdfArmControls(MolarControls):
                     and planning.get('phase') not in ('requested', 'planning', 'executing'))
         for button in (self.plan_button, self.plan_home_button):
             button.state(['!disabled'] if can_plan else ['disabled'])
+        if self.tool_config():
+            self.tool_frame.grid()
+        else:
+            self.tool_frame.grid_remove()
+        tool = self.measured_tool()
+        if tool:
+            plant = (self.bound_process, self.state['plant_id'])
+            if self.tool_plant != plant:
+                self.use_tool_pose()
+                self.tool_plant = plant
+            self.tool_feedback.set('%s · measured XYZ %.3f, %.3f, %.3f m' %
+                                   (self.tool_config()['tip_frame'], *tool['position']))
+        else:
+            self.tool_feedback.set('Waiting for measured tool pose in a supported rigid scene.')
+        for field in [*self.tool_fields, self.tool_orientation_box, self.copy_tool_button]:
+            field.state(['!disabled'] if tool else ['disabled'])
+        for field in self.tool_angle_fields:
+            field.state(['!disabled'] if tool and ORIENTATION_LABELS[self.tool_orientation.get()] == 'rpy'
+                        else ['disabled'])
+        self.plan_pose_button.state(['!disabled'] if tool and can_plan else ['disabled'])
         self.execute_button.state(['!disabled'] if self.plan_matches() else ['disabled'])
         if planning:
             text = (planning.get('phase', '')+': '+planning.get('message', '')).strip(': ')
             if planning.get('waypoints'):
                 text += '\n%d waypoints · %s · completed %d' % (
                     planning['waypoints'], planning.get('planner', {}).get('algorithm', ''), planning.get('waypoint', 0))
+            summary = planning.get('planner', {})
+            if summary.get('ik_candidates'):
+                text += '\n%d feasible IK candidates' % summary['ik_candidates']
+            if summary.get('measured_tcp_error'):
+                error = summary['measured_tcp_error']
+                text += '\nMeasured tool error %.1f mm' % (1000.*error['position_m'])
+                if error['orientation_rad'] is not None:
+                    text += ' · %.1f°' % math.degrees(error['orientation_rad'])
             self.plan_feedback.set(text)
         else:
             self.plan_feedback.set('Collision planning is unavailable on this backend/profile. Direct joint controls remain available.')

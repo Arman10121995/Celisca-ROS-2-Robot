@@ -108,6 +108,12 @@ robots:
   # the grasp itself (4 N let a 100 g block creep in MuJoCo).
   asset_pal_tiago:
     articulation:
+      cartesian:
+        schema: robot_lab.cartesian_goal.v1
+        reference_frame: base_footprint
+        tip_frame: gripper_grasping_frame
+        joints: [torso_lift_joint, arm_1_joint, arm_2_joint, arm_3_joint, arm_4_joint,
+                 arm_5_joint, arm_6_joint, arm_7_joint]
       grip_joints: [gripper_left_finger_joint, gripper_right_finger_joint]
       grip_hold_squeeze: 0.02
       # Bullet only: keep the two fingers level while squeezing (they drift

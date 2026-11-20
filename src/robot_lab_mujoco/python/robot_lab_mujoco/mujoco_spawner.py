@@ -2058,7 +2058,7 @@ class MuJoCoSpawner(Node):
                 if planning != {'schema': 'robot_lab.articulation_plan.v1', 'backend': 'mujoco'}:
                     raise ValueError('Unknown source articulation planning contract')
                 from robot_lab_mujoco.articulation_planner import ArticulationPlanner
-                self._articulation.motion_planner = ArticulationPlanner(self, articulation_contract)
+                self._articulation.motion_planner = ArticulationPlanner(self, articulation_contract, urdf)
             # MOLAR's deck belt: payloads on the extended deck move with the
             # measured roller (Gazebo uses TrackController; R11 payload transfer).
             if (mujoco.mj_name2id(self._model, mujoco.mjtObj.mjOBJ_BODY, "telescope_stage2") >= 0

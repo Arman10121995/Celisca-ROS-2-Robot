@@ -187,6 +187,31 @@ def enable_planning(panel, model):
                                   phase='idle', message='Choose joint targets')
 
 
+def test_tool_jog_edits_without_moving_then_requires_matching_plan(panel, model):
+    enable_planning(panel, model)
+    articulation = dict(panel.arm(), cartesian=dict(schema='robot_lab.cartesian_goal.v1',
+                                                    reference_frame='base_link', tip_frame='tool'))
+    panel.app._robot_config = lambda: {'articulation': articulation}
+    state = panel.state['planning']
+    state['tool'] = dict(schema='robot_lab.cartesian_goal.v1', frame='base_link', tip_frame='tool',
+                         position=[.4, 0., .6], rpy_deg=[0., 30., 0.])
+    panel.update_buttons()
+    panel.jog_tool(2, 1)
+    panel.pub.publish.assert_not_called()
+    panel.plan_pose_button.invoke()
+    request = sent(panel)
+    assert request['operation'] == 'plan_cartesian'
+    assert request['pose'] == dict(frame='base_link', position=[.4, 0., .62], orientation='keep')
+    state.update(phase='ready', request_id=request['request_id'], plan_id='0'*32,
+                 cartesian_request=request['pose'])
+    panel.update_buttons()
+    assert panel.execute_button.instate(['!disabled'])
+    assert panel.execute_plan()
+    assert sent(panel)['operation'] == 'execute_plan'
+    panel.jog_tool(0, -1)
+    assert not panel.execute_plan()
+
+
 def test_plan_execute_are_separate_and_edits_revoke_local_execution(panel, model):
     enable_planning(panel, model)
     panel.target_vars[J1].set(.4)

@@ -370,7 +370,7 @@ class ArticulationROS:
             if not isinstance(request, dict):
                 raise ValueError('Articulation command must be an object')
             operation = request.get('operation')
-            if operation in ('plan', 'execute_plan'):
+            if operation in ('plan', 'plan_cartesian', 'execute_plan'):
                 if self.motion_planner is None:
                     raise ValueError('Collision planning is unavailable on this backend/profile')
                 self.motion_planner.request(request)

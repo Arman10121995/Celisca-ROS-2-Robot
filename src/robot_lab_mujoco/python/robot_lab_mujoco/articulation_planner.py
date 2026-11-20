@@ -112,12 +112,13 @@ def plan_joints(scene, targets, *, budget=8.):
     """Existing bounded RRT-Connect with exact independent-channel slew edges."""
     deadline = time.monotonic()+min(8., float(budget))
     specs, names = scene.specs, scene.names
-    start = scene.values(scene.data)
+    start = np.array([scene.snapshot[scene.addresses[n]] for n in names])
     limits = np.array([[specs[n]['lower'], specs[n]['upper']] for n in names])
     if np.any(start < limits[:, 0]-.00001) or np.any(start > limits[:, 1]+.00001):
         raise ValueError('Measured start is outside source limits')
     start = np.clip(start, limits[:, 0], limits[:, 1])
-    goal = np.array([targets[n] for n in names], dtype=float)
+    candidates = [targets] if isinstance(targets, dict) else targets
+    goal = np.array([[candidate[n] for n in names] for candidate in candidates], dtype=float)
     rates = np.array([specs[n]['max_velocity'] for n in names])
     # Angular samples <=0.005 rad, linear <=1 mm and time <=25 ms.
     resolution = np.array([.001 if specs[n]['type'] == 'prismatic' else .005 for n in names])
@@ -139,6 +140,7 @@ def plan_joints(scene, targets, *, budget=8.):
     if len(result['path']) > 64:
         raise ValueError('Joint plan exceeds the 64-waypoint execution bound')
     return dict(waypoints=[dict(zip(names, map(float, point))) for point in result['path'][1:]],
+                targets=candidates[result['goal_index']],
                 algorithm=result['planner'], nodes=result['nodes'], edges=result['collision_edges'],
                 inspections=inspections, max_sample_dt_s=sample_dt,
                 position_rates=dict(zip(names, map(float, rates))))
@@ -146,7 +148,7 @@ def plan_joints(scene, targets, *, budget=8.):
 
 class ArticulationPlanner:
     """Requests enqueue in ROS; snapshots/execution run under the physics lock."""
-    def __init__(self, node, contract):
+    def __init__(self, node, contract, urdf=None):
         if contract.couplings or any(s['mode'] != 'position' for s in contract.joints.values()):
             raise ValueError('Joint planner requires independent source position channels')
         self.node, self.contract = node, contract
@@ -162,6 +164,19 @@ class ArticulationPlanner:
         self.ready_at = self.execution_at = self.segment_at = 0.
         self.settled_since = None
         self.plant = contract.plant_id
+        self.tool = self.tool_data = self.pose_request = self.pose_goal = None
+        config = contract.config.get('cartesian')
+        if config is not None:
+            from robot_lab_mujoco.articulation_cartesian import SourceTool
+            self.tool = SourceTool(node._model, node._body_id, urdf, contract.joints, config)
+            self.tool_data = mj.MjData(node._model)
+
+    def _tool_kinematics(self, data):
+        self.tool_data.qpos[:] = data.qpos
+        self.tool_data.mocap_pos[:] = data.mocap_pos
+        self.tool_data.mocap_quat[:] = data.mocap_quat
+        mj.mj_kinematics(self.node._model, self.tool_data)
+        return self.tool_data
 
     @property
     def busy(self):
@@ -170,9 +185,11 @@ class ArticulationPlanner:
     def state(self):
         with self.lock:
             available = not self.node._model.nflex
+            tool = self.tool.relative_pose(self._tool_kinematics(self.node._data)) if self.tool else None
             return dict(schema=SCHEMA, available=available, phase=self.phase,
                         message=self.message if available else 'Flex scenes require a separate full-geometry planning adapter',
                         request_id=self.request_id, plan_id=self.plan_id, targets=dict(self.targets),
+                        tool=tool, cartesian_request=self.pose_request,
                         waypoint=self.index, waypoints=len(self.path or []), planner=dict(self.summary),
                         scene_sha256=self.scene.scene_sha256 if self.scene is not None else '',
                         snapshot_sha256=self.scene.snapshot_sha256 if self.scene is not None else '',
@@ -183,6 +200,7 @@ class ArticulationPlanner:
             self.generation += 1
             self.pending = self.result = self.path = self.scene = None
             self.plan_id = ''
+            self.pose_request = self.pose_goal = None
             self.phase, self.message = phase, reason
             if stop:
                 self.contract.stop(reason)
@@ -190,8 +208,10 @@ class ArticulationPlanner:
 
     def request(self, request):
         with self.lock:
+            if request.get('operation') in ('plan', 'plan_cartesian') and self.phase == 'executing':
+                return
             self.pending = copy.deepcopy(request)
-            if request.get('operation') == 'plan':
+            if request.get('operation') in ('plan', 'plan_cartesian'):
                 self.phase = 'requested'
 
     def identity(self, request):
@@ -211,12 +231,18 @@ class ArticulationPlanner:
         if self.node._model.nflex or getattr(self.node, '_flex_culling', None) is not None:
             raise ValueError('Flex scenes need a separate full-geometry planning adapter')
         targets = request.get('targets')
+        pose_request = pose_goal = None
+        if request.get('operation') == 'plan_cartesian':
+            if self.tool is None or targets is not None:
+                raise ValueError('Cartesian planning needs a declared source tool and no joint targets')
+            pose_request, pose_goal = self.tool.world_goal(request.get('pose'), self._tool_kinematics(data))
+            targets = dict.fromkeys(self.tool.names, 0.)
         request_id = request.get('request_id')
         if not isinstance(request_id, str) or not 1 <= len(request_id) <= 128:
             raise ValueError('Planning needs a bounded request identity')
         if not isinstance(targets, dict) or not targets or set(targets)-set(self.contract.masters):
             raise ValueError('Plan targets must name independent source position joints')
-        for name, value in targets.items():
+        for name, value in targets.items() if pose_goal is None else ():
             spec = self.contract.joints[name]
             if (isinstance(value, bool) or not isinstance(value, (int, float)) or not math.isfinite(value)
                     or not spec['lower'] <= value <= spec['upper']):
@@ -225,8 +251,12 @@ class ArticulationPlanner:
         self.contract.hold_for_planning()
         self.plant = self.contract.plant_id
         self.request_id, self.targets = request_id, dict(targets)
+        self.summary = {}
+        self.pose_request, self.pose_goal = pose_request, pose_goal
         self.scene = scene = JointScene(self.node._model, data, self.node._body_id,
                                        self.contract.joints, sorted(targets))
+        if pose_goal is not None:
+            self.targets = dict(zip(scene.names, map(float, scene.values(data))))
         # Keep the measured tracking guard rather than increasing its allowed
         # error: cap planned slew by source rate and the servo's kd/kp lag.
         self.rates = {}
@@ -238,7 +268,16 @@ class ArticulationPlanner:
         generation = self.generation
         def work():
             try:
-                result, error = plan_joints(scene, targets), ''
+                if pose_goal is None:
+                    result = plan_joints(scene, targets)
+                else:
+                    from robot_lab_mujoco.articulation_cartesian import inverse_candidates
+                    begun = time.monotonic()
+                    candidates, attempts = inverse_candidates(scene, self.tool, pose_goal,
+                        deadline=begun+5., home=self.contract.config.get('home'))
+                    result = plan_joints(scene, candidates, budget=begun+8.-time.monotonic())
+                    result.update(ik_attempts=attempts, ik_candidates=len(candidates))
+                error = ''
             except Exception as exc:
                 result, error = None, str(exc)
             with self.lock:
@@ -269,7 +308,7 @@ class ArticulationPlanner:
                 if self.pending is not None:
                     request, self.pending = self.pending, None
                     operation = request.get('operation')
-                    if operation == 'plan':
+                    if operation in ('plan', 'plan_cartesian'):
                         self._start(request, data)
                     elif operation == 'execute_plan':
                         self.identity(request)
@@ -289,6 +328,7 @@ class ArticulationPlanner:
                     if error or not self._scene_matches(data, start=True):
                         raise ValueError(error or 'Robot/scene moved while planning; Plan again')
                     self.path = result.pop('waypoints')
+                    self.targets = result.pop('targets')
                     self.summary = result
                     self.plan_id = uuid.uuid4().hex
                     self.phase, self.message = 'ready', 'Plan ready; inspect targets and explicitly Execute within 10 seconds'
@@ -322,6 +362,13 @@ class ArticulationPlanner:
                     if self.settled_since is not None and float(data.time)-self.settled_since >= .2:
                         self.index += 1
                         if self.index == len(self.path):
+                            if self.pose_goal is not None:
+                                from robot_lab_mujoco.articulation_cartesian import pose_error
+                                error = pose_error(self.tool, self._tool_kinematics(data), self.pose_goal)
+                                self.summary['measured_tcp_error'] = error
+                                if (error['position_m'] > .006 or
+                                        (error['orientation_rad'] is not None and error['orientation_rad'] > .05)):
+                                    raise ValueError('Settled joints missed the measured tool pose tolerance')
                             self.phase, self.message = 'succeeded', 'All planned waypoints measured and settled; holding joints'
                             c.stop(self.message)
                             self.plant = c.plant_id

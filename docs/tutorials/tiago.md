@@ -91,6 +91,28 @@ interrupts a second route with the GUI Stop button. The source-collision
 detour has a separate physical fixture and dense audit; it is not a TIAGo
 obstacle mission. [Planning receipt](../status/evidence/tiago-joint-planning-2026-11-14/README.md).
 
+## Move the tool by XYZ in MuJoCo
+
+On **Launch → Mobile arm**, use **Tool pose in robot base**. The pose shown
+is the measured PAL grasp frame. Positive X is forward, Y left and Z up
+relative to the base.
+
+1. Start in `nav_empty`, let the robot settle, and select **Use measured tool pose**.
+2. Click **+** on Z to add 0.02 m, or edit the XYZ fields in metres. These
+   edits do not move the robot. Start with small offsets from the measured pose.
+3. Choose **Keep final angle**, **Set roll / pitch / yaw** in degrees, or
+   **Position only** to give the solver more freedom.
+4. Click **Plan pose**. If the plan is ready and the target looks right, click
+   **Execute plan** within ten seconds. **Stop / hold** interrupts the route.
+
+The requested orientation applies to the endpoint. The arm may curve or
+rotate along the route, and its head and fingers are held. If no valid
+solution is found, use a smaller offset, move the base, or try position-only.
+The planner refuses requests over 0.35 m from the measured tool. It uses the
+same rigid-scene and source-servo guards as joint planning. The GUI reports
+the measured final error; a [20 mm reach in `nav_empty`](../status/evidence/tiago-cartesian-2026-11-20/README.md)
+settled within 0.15 mm. Use the separate Fetch panel for grasping objects.
+
 ## Fetch an object (MuJoCo, PyBullet)
 
 In world `mobile_fetch_lab`, the **Mobile arm** page's **Fetch** section

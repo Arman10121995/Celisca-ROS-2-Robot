@@ -1,4 +1,5 @@
 """Private source joint plans and guards; fixtures are not TIAGo missions."""
+import json
 import math
 import time
 from types import SimpleNamespace
@@ -15,7 +16,7 @@ XML = '''<mujoco><option gravity="0 0 0" timestep=".002" integrator="implicitfas
 <body name="robot"><freejoint/><inertial pos="0 0 0" mass="1000" diaginertia="10 10 10"/>
 <body><joint name="x" type="slide" axis="1 0 0" range="-.4 .4"/>
 <inertial pos="0 0 0" mass=".1" diaginertia=".01 .01 .01"/>
-<body><joint name="y" type="slide" axis="0 1 0" range="-.4 .4"/>
+<body name="b"><joint name="y" type="slide" axis="0 1 0" range="-.4 .4"/>
 <geom name="tip" type="sphere" size=".015" pos="0 0 .1" mass=".1"/>
 </body></body></body></worldbody></mujoco>'''
 URDF = '''<robot name="fixture"><link name="base"/><link name="a"/><link name="b"/>
@@ -202,3 +203,41 @@ def test_heartbeat_loss_revokes_an_executing_route(tmp_path):
     c.heartbeat_at = time.monotonic()-1.
     tick(planner, node, c, addresses)
     assert planner.phase == 'failed' and c.holding and c.plant_id != plant
+
+
+def test_cartesian_goal_uses_source_fixed_mount_and_measured_servo_execution(tmp_path):
+    node, c, addresses = make_fixture(tmp_path, obstacle=(.3, .3, .1), start=(.08, -.1))
+    urdf = URDF.replace('</robot>', '''
+      <link name="tcp"/><joint name="tcp_fixed" type="fixed">
+      <parent link="b"/><child link="tcp"/><origin xyz="0 .02 .1" rpy="0 0 1"/>
+      </joint></robot>''')
+    c.config['cartesian'] = dict(schema='robot_lab.cartesian_goal.v1', reference_frame='base',
+                                 tip_frame='tcp', joints=['x', 'y'])
+    planner = ArticulationPlanner(node, c, urdf)
+    assert planner.state()['tool']['position'] == pytest.approx([.08, -.08, .1])
+    bridge = object.__new__(ArticulationROS)
+    bridge.contract, bridge.motion_planner, bridge.base_moving = c, planner, False
+    pose = dict(frame='base', position=[.12, .02, .1], orientation='keep')
+    bridge.command(SimpleNamespace(data=json.dumps(identity(c, operation='plan_cartesian',
+                                                            request_id='cartesian-1', pose=pose))))
+    tick(planner, node, c, addresses)
+    planner.worker.join(timeout=5.)
+    c.heartbeat()
+    tick(planner, node, c, addresses)
+    assert planner.phase == 'ready', planner.state()
+    assert planner.state()['cartesian_request'] == pose
+    assert node._data.qpos[addresses] == pytest.approx([.08, -.1])
+    assert c.holding and planner.targets == pytest.approx(dict(x=.12, y=0.), abs=.0005)
+    planner.request(identity(c, operation='execute_plan', plan_id=planner.plan_id))
+    for _ in range(2000):
+        c.heartbeat()
+        targets = tick(planner, node, c, addresses)
+        for name, value in targets['position'].items():
+            node._data.ctrl[mj.mj_name2id(node._model, mj.mjtObj.mjOBJ_ACTUATOR, name+'_articulation')] = value
+        mj.mj_step(node._model, node._data)
+        if planner.phase in ('succeeded', 'failed'):
+            break
+    state = planner.state()
+    assert state['phase'] == 'succeeded', state
+    assert state['tool']['position'] == pytest.approx(pose['position'], abs=.0006)
+    assert state['planner']['measured_tcp_error']['orientation_rad'] < .001

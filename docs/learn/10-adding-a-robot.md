@@ -199,9 +199,13 @@ the existing Mobile arm page. It supports independent bounded position
 channels on a private compiled rigid collision model. Every edge uses the
 same reduced per-channel slew as execution; world/start/plant changes and
 Stop revoke the route. See the [planning workflow](../tutorials/tiago.md#plan-joint-targets-in-mujoco)
-before enabling another source. Coupled joints, flex worlds, other physics
-backends, Cartesian IK and grasp/custody need their own adapters; a profile
-flag alone must not claim those capabilities.
+before enabling another source. For tool-pose goals, TIAGo's installed
+overlay adds `cartesian` with schema `robot_lab.cartesian_goal.v1`,
+the URDF root as `reference_frame`, the source TCP link as `tip_frame`,
+and an independent torso/arm joint list. Verify the TCP's surviving rigid
+carrier and measured feedback before exposing the controls; then test
+Plan/Execute and Stop with real actuation. Coupled planning joints, flex
+worlds, other physics backends and grasp/custody need separate adapters.
 
 ## Step 4 · For a provisioned robot: the provisioning script
 
