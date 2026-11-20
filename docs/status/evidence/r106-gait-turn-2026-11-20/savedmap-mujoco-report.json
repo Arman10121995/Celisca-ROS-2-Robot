@@ -1,0 +1,149 @@
+[
+ {
+  "robot": "hexapod_ros2",
+  "map": "nav_empty",
+  "spawn": null,
+  "simulator": "mujoco",
+  "acquisition": {
+   "run": "/workspace/molar/robot_lab_runtime/gait-turn-20261120/savedmap-mujoco/runs/90d63980e6cf4e4db5078fa472ac8361",
+   "success": true,
+   "reason": "Actual travel and nonempty acquired map archived",
+   "map_yaml": "/workspace/molar/robot_lab_runtime/gait_sessions/hexapod_ros2-de1hpsos/saved_maps/map-4ba5c2548a/map.yaml",
+   "known_cells": 32746,
+   "start": [
+    -0.29567230721425275,
+    -0.4978808324146596,
+    0.0031124474613555275
+   ]
+  },
+  "navigation": {
+   "run": "/workspace/molar/robot_lab_runtime/gait-turn-20261120/savedmap-mujoco/runs/37619d9a285e4cb3a49e5f009e0a7a83",
+   "goal": [
+    0.20432527095540243,
+    -0.4963246111965892,
+    0.0031124474613555275
+   ],
+   "success": true,
+   "reason": "Every native goal physically settled",
+   "measurements": [
+    {
+     "requested": [
+      0.20432527095540243,
+      -0.4963246111965892,
+      0.0031124474613555275
+     ],
+     "physical_pose": [
+      0.10709364160588486,
+      -0.4809415525047245,
+      -0.02690875770237655
+     ],
+     "linear_m_s": 2.426090285615508e-05,
+     "angular_rad_s": 3.484485426864108e-05,
+     "settled_sim_s": 1.0,
+     "member_id": "body",
+     "index": 0,
+     "native_terminal": true,
+     "nav2_status": 4
+    }
+   ]
+  }
+ },
+ {
+  "robot": "lab_octopod",
+  "map": "nav_empty",
+  "spawn": null,
+  "simulator": "mujoco",
+  "acquisition": {
+   "run": "/workspace/molar/robot_lab_runtime/gait-turn-20261120/savedmap-mujoco/runs/3b564e15cf7f4f4abc5244dea385bdbf",
+   "success": true,
+   "reason": "Actual travel and nonempty acquired map archived",
+   "map_yaml": "/workspace/molar/robot_lab_runtime/gait_sessions/lab_octopod-ul3pcc9r/saved_maps/map-5316454315/map.yaml",
+   "known_cells": 32679,
+   "start": [
+    -0.2954666301414133,
+    -0.49999219313838356,
+    -9.061716469661647e-06
+   ]
+  },
+  "navigation": {
+   "run": "/workspace/molar/robot_lab_runtime/gait-turn-20261120/savedmap-mujoco/runs/77129fb933244c6ab281349d31bbc87e",
+   "goal": [
+    0.20453336983805803,
+    -0.4999967239966183,
+    -9.061716469661647e-06
+   ],
+   "success": true,
+   "reason": "Every native goal physically settled",
+   "measurements": [
+    {
+     "requested": [
+      0.20453336983805803,
+      -0.4999967239966183,
+      -9.061716469661647e-06
+     ],
+     "physical_pose": [
+      0.12162607102410716,
+      -0.4937086561317766,
+      0.0009924999972861798
+     ],
+     "linear_m_s": 2.998553149399283e-07,
+     "angular_rad_s": 4.311274887537534e-05,
+     "settled_sim_s": 1.0,
+     "member_id": "body",
+     "index": 0,
+     "native_terminal": true,
+     "nav2_status": 4
+    }
+   ]
+  }
+ },
+ {
+  "robot": "lab_centipede",
+  "map": "nav_empty",
+  "spawn": null,
+  "simulator": "mujoco",
+  "acquisition": {
+   "run": "/workspace/molar/robot_lab_runtime/gait-turn-20261120/savedmap-mujoco/runs/ef544a8f71164425a76cf1cba3866b29",
+   "success": true,
+   "reason": "Actual travel and nonempty acquired map archived",
+   "map_yaml": "/workspace/molar/robot_lab_runtime/gait_sessions/lab_centipede-83cxc61n/saved_maps/map-165d5c4f3d/map.yaml",
+   "known_cells": 33287,
+   "start": [
+    -0.29490164537871816,
+    -0.4821023115649948,
+    0.032467576222765554
+   ]
+  },
+  "navigation": {
+   "run": "/workspace/molar/robot_lab_runtime/gait-turn-20261120/savedmap-mujoco/runs/e6a80394226849b386f557027b6e1fcf",
+   "goal": [
+    0.2048348418944092,
+    -0.465871375427007,
+    0.032467576222765554
+   ],
+   "success": true,
+   "reason": "Every native goal physically settled",
+   "measurements": [
+    {
+     "requested": [
+      0.2048348418944092,
+      -0.465871375427007,
+      0.03246757622276554
+     ],
+     "physical_pose": [
+      0.10645656370889388,
+      -0.4170267325933085,
+      0.15067671201592092
+     ],
+     "linear_m_s": 0.004094560354950133,
+     "angular_rad_s": 0.013383599873299085,
+     "settled_sim_s": 1.0,
+     "member_id": "body",
+     "index": 0,
+     "native_terminal": true,
+     "nav2_status": 4
+    }
+   ]
+  }
+ }
+]

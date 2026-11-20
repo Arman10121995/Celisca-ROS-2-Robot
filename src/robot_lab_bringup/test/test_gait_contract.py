@@ -133,3 +133,40 @@ def test_initial_floor_placement_excludes_robot_surfaces():
     assert result['floor_min_m']==pytest.approx(.2)
     assert data.qpos[2]==pytest.approx(.422)
     np.testing.assert_array_equal(original,plant.geom_group)
+
+
+def stance_offsets(model,command,phase=.1):
+    q,error,planned=model.targets(phase,command,model.initial.copy(),model.config['default_gait'])
+    assert error<.003
+    offsets={}
+    for leg in model.legs:
+        name=leg['id'];shift,duty=model.offset(leg,model.config['default_gait'])
+        p=(phase+shift)%1
+        if planned[name] and abs(.5-p/duty)>.1:
+            foot=model.position(name,q[model.indices[name]])
+            offsets[name]=(foot[:2]-model.home[name][:2])/(.5-p/duty)
+    assert len(offsets)>=2
+    return offsets
+
+
+def test_in_place_turn_is_a_rigid_rotation_about_the_root_origin(source):
+    """2026-11-20: hexapod_ros2 turned about its centre, swinging its root 0.15 m per radian."""
+    name,description,model=source
+    for name,stride in stance_offsets(model,[0.,0.,model.config['max_yaw']]).items():
+        leg=next(l for l in model.legs if l['id']==name)
+        arm=model.home[name][:2]+np.array(leg.get('body_offset',[0.,0.]))
+        tangent=np.array([-arm[1],arm[0]])
+        # Every stance stride is the same rotation rate times its root-origin arm.
+        assert abs(float(np.cross(tangent,stride)))<2e-3*np.linalg.norm(tangent)
+        rate=float(stride@tangent)/float(tangent@tangent)
+        assert rate>0
+        assert 'common' not in locals() or abs(rate-common)<.02*common+1e-4
+        common=rate
+    assert np.linalg.norm(stride)<=model.config['max_stride']+1e-3
+
+
+def test_translation_strides_are_equal_for_every_leg(source):
+    name,description,model=source
+    strides=list(stance_offsets(model,[model.config['max_speed'],0.,0.]).values())
+    for stride in strides[1:]:
+        assert np.allclose(stride,strides[0],atol=1e-3)

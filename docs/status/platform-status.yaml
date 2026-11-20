@@ -1958,6 +1958,11 @@ tasks:
           On 2026-11-20 saved-map goals on PyBullet (nav_empty, qualifier --simulator) - octopod passes (0.091 m); hexapod not
           (0.173 m at the 220 s budget; with 600 s it crept backward turning in place to 0.441 m); centipede mapping too slow.
           docs/status/evidence/r106-gait-saved-map-pybullet-2026-11-20/README.md
+          On 2026-11-20 the gait turned about the leg centre (hexapod 0.163 m from its root), so in-place turns moved the
+          root 0.15 m per radian on MuJoCo and PyBullet alike; gait_model now moves feet with the root frame's twist under
+          one rigid stride scale (drift 0.208 to 0.006 m MuJoCo, 0.220 to 0.011 m PyBullet). Hexapod PyBullet saved-map goal
+          now passes (0.125 m); MuJoCo goals re-pass (hexapod 0.098, octopod 0.083, centipede 0.110 m). Centipede turn
+          still drifts 0.112 m (spine). docs/status/evidence/r106-gait-turn-2026-11-20/README.md
         qualification_review: '2026-10-27 documentation review: retain the implemented code, tests and named
           mission certificates. Full declared roadmap acceptance is still open; test counts, metadata and scene
           loads do not qualify remaining robot/map/backend missions. See docs/REMAINING_WORK_GUIDE.md.'

@@ -1,0 +1,51 @@
+{
+ "metrics": {
+  "walk_sim_s": 20.07,
+  "turned_rad": 0.9483905129515384,
+  "mean_yaw_rate": 0.0472541361709785,
+  "displacement_m": 0.011425146762840708,
+  "along_initial_heading_m": -0.009058411231419289,
+  "across_m": 0.0069626980772503995,
+  "drift_per_rad_m": 0.012046880063449684
+ },
+ "command": {
+  "yaw": "0.12",
+  "speed": "0"
+ },
+ "recovery_reasons": [
+  "null"
+ ],
+ "recovery_history": [
+  {
+   "sim": 1.094,
+   "recovery": {
+    "recovering": false,
+    "reason": null,
+    "recoveries_in_window": 0,
+    "budget": 3,
+    "speed_scale": 1.0
+   },
+   "position": {
+    "x": -0.49976885318756104,
+    "y": -0.5002848505973816,
+    "z": 0.14298203587532043
+   },
+   "tilt": 2.8513249616754397e-05
+  }
+ ],
+ "push": "",
+ "passed": true,
+ "reason": "turned 0.948 rad in 20.1 s; moved 0.0114 m (along -0.0091, across 0.0070)",
+ "backend": "pybullet",
+ "robot": "hexapod_ros2",
+ "terrain": false,
+ "wall_seconds": 55.2479948119726,
+ "phase": "holding",
+ "wall_budget_s": 400.0,
+ "state_publishers": [
+  {
+   "node": "source_gait_controller",
+   "namespace": "/"
+  }
+ ]
+}

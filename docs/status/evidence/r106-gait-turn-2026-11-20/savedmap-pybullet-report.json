@@ -1,0 +1,51 @@
+[
+ {
+  "robot": "hexapod_ros2",
+  "map": "nav_empty",
+  "spawn": null,
+  "simulator": "pybullet",
+  "acquisition": {
+   "run": "/workspace/molar/robot_lab_runtime/gait-turn-20261120/savedmap-pybullet/runs/6aeffdae74b649d2ad2c79004646c33b",
+   "success": true,
+   "reason": "Actual travel and nonempty acquired map archived",
+   "map_yaml": "/workspace/molar/robot_lab_runtime/gait_sessions/hexapod_ros2-u0_frre1/saved_maps/map-7424ed7d96/map.yaml",
+   "known_cells": 32720,
+   "start": [
+    -0.2991461753845215,
+    -0.5000772476196289,
+    0.00416588724550726
+   ]
+  },
+  "navigation": {
+   "run": "/workspace/molar/robot_lab_runtime/gait-turn-20261120/savedmap-pybullet/runs/6a6f3cb2d56e4bd7833014e330d72e42",
+   "goal": [
+    0.2008494859676176,
+    -0.49799431002165134,
+    0.00416588724550726
+   ],
+   "success": true,
+   "reason": "Every native goal physically settled",
+   "measurements": [
+    {
+     "requested": [
+      0.2008494859676176,
+      -0.49799431002165134,
+      0.00416588724550726
+     ],
+     "physical_pose": [
+      0.07732303440570831,
+      -0.5146970748901367,
+      0.027466702845700297
+     ],
+     "linear_m_s": 0.00036425413528237704,
+     "angular_rad_s": -0.001752298541594662,
+     "settled_sim_s": 1.0,
+     "member_id": "body",
+     "index": 0,
+     "native_terminal": true,
+     "nav2_status": 4
+    }
+   ]
+  }
+ }
+]

@@ -1291,7 +1291,13 @@ parking batch needs its own run. Details and evidence are in the
     (MuJoCo):** hexapod 0.128 m and octopod 0.099/0.105 m pass; the centipede fails on its long footprint and heading
     ([receipt](docs/status/evidence/r106-gait-saved-map-obstacle-2026-11-20/README.md)). **PyBullet:** the octopod
     passes (0.091 m); the hexapod's in-place turn drifts and the centipede maps too slowly
-    ([receipt](docs/status/evidence/r106-gait-saved-map-pybullet-2026-11-20/README.md)).
+    ([receipt](docs/status/evidence/r106-gait-saved-map-pybullet-2026-11-20/README.md)). **Hexapod turn fixed
+    2026-11-20:** the gait turned about the leg centre, 0.163 m from the root frame, so an in-place turn moved the
+    robot 0.15 m per radian on every backend. Feet now follow the root frame's twist under one rigid stride scale
+    (drift 0.208 → 0.006 m on MuJoCo, 0.220 → 0.011 m on PyBullet). The hexapod now passes on PyBullet (0.125 m),
+    and the MuJoCo goals re-pass for all three models (0.098 / 0.083 / 0.110 m). The centipede's in-place turn still
+    drifts 0.11 m, from spine bending
+    ([receipt](docs/status/evidence/r106-gait-turn-2026-11-20/README.md)).
 - **How to do it:** `gait_model.py`, `gait_controller.py`, `gait_odometry.py` and
   `gait_terrain.py` in `robot_lab_utils/`. Keep one owner of `/gait/state`.
 - **Done when:** walking on terrain, contacts and saved-map navigation per model and backend.

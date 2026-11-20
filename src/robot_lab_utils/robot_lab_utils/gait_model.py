@@ -107,13 +107,22 @@ class GaitModel:
         result=np.array(previous,dtype=float).copy();errors=[];planned={}
         yaw=self.config['forward_yaw'];c,s=math.cos(yaw),math.sin(yaw)
         body_velocity=np.array([c*vx-s*vy,s*vx+c*vy])
+        # The twist is the root frame's, as Nav2 and odometry read it: each
+        # foot moves with v + wz x r, r measured from the root origin. Turning
+        # about body_center instead (2026-11-20) swung hexapod_ros2's root,
+        # 0.163 m from its centre, 0.15 m per radian of an in-place turn.
+        # One scale for every stride keeps the foot motion rigid; clipping
+        # each leg alone made the far feet slip against the near ones.
+        strides={}
+        for leg in self.legs:
+            name=leg['id'];duty=self.offset(leg,gait)[1]
+            arm=self.home[name][:2]+np.array(leg.get('body_offset',[0.,0.]))
+            strides[name]=(body_velocity+wz*np.array([-arm[1],arm[0]]))*self.config['cycle_s']*duty
+        longest=max(np.linalg.norm(stride) for stride in strides.values())
+        scale=min(1.,self.config['max_stride']/longest) if longest>0 else 1.
         for leg in self.legs:
             name=leg['id'];shift,duty=self.offset(leg,gait);p=(phase+shift)%1
-            home=self.home[name];arm=home[:2]+np.array(leg.get('body_offset',[0.,0.]))-self.config['body_center']
-            velocity=body_velocity+wz*np.array([-arm[1],arm[0]])
-            stride=velocity*self.config['cycle_s']*duty
-            length=np.linalg.norm(stride)
-            if length>self.config['max_stride']:stride*=self.config['max_stride']/length
+            home=self.home[name];stride=strides[name]*scale
             target=home.copy()
             adjustment=(terrain or {}).get(name,{})
             target[2]+=float(adjustment.get('offset',0.))
