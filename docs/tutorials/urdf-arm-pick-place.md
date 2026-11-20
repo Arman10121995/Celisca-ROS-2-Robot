@@ -127,7 +127,8 @@ run-up point before the drop table.
   oriented payload bounds. Both Nav2
   costmaps must publish matching polygons before loaded transit. The loaded
   footprint remains through docking and is cleared after supported release.
-  If Stop interrupts the carry, restart the simulation before another fetch.
+  If Stop interrupts the carry, **Run fetch** stays disabled until you start
+  a new simulation.
 - **Forcing straight legs:** `--transit straight` (request
   `"transit": "straight"`) keeps the straight legs in Nav mode.
 

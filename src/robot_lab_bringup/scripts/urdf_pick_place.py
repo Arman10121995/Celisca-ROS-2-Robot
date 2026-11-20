@@ -312,6 +312,7 @@ class PickPlace(Node):
             mobile=bool(self.mobile), pose_sources=['truth'] + (['rgbd'] if self.mobile and self.look and self.rgbd_bindings else []),
             rgbd_objects=sorted(self.rgbd_bindings), pose_source=task.get('pose_source'), drive_phase=(task.get('phases') or [{}])[task.get('phase_index', 0)].get('name')
             if task else None,
+            restart_required=not task and self.carried_footprint is not None,
             last_result=self.last_result, truth_age_s=round(_now() - self.truth_at, 2) if self.truth else None),
             default=_plain)))
 
@@ -1067,7 +1068,7 @@ class PickPlace(Node):
             if task and task.get('transit') == 'nav2' and self.carried_footprint is None:
                 self._set_footprint(None)
             if task and self.carried_footprint is not None:
-                message += '. Loaded costmap footprint retained.'
+                message += '. Loaded footprint retained. Restart the simulation before another fetch.'
             self._twist(0.0, 0.0)
         if outcome != 'succeeded' and self.stop_client.service_is_ready():
             self.stop_client.call_async(Trigger.Request())

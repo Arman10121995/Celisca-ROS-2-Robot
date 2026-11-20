@@ -333,6 +333,9 @@ class UrdfArmControls(MolarControls):
         """Explicitly start one pick and place; the node plans, executes and judges it."""
         if not (self.ready() and self.pick_fresh()) or self.pick_state.get('phase') != 'idle':
             return False
+        if self.pick_state.get('restart_required'):
+            self.pick_status.set(self.pick_state['message'])
+            return False
         lift = finite(self.pick_lift.get())
         if not .03 <= lift <= .25 or self.pick_object.get() not in self.pick_state.get('objects', []) \
                 or self.pick_support.get() not in self.pick_state.get('supports', []):
@@ -377,7 +380,8 @@ class UrdfArmControls(MolarControls):
         if self.pick_frame.cget('text') != title:
             self.pick_frame.configure(text=title)
             self.pick_run_button.configure(text='Run fetch' if mobile else 'Run pick / place')
-        self.pick_run_button.state(['!disabled'] if fresh and idle and self.ready() else ['disabled'])
+        can_start = fresh and idle and not state.get('restart_required') and self.ready()
+        self.pick_run_button.state(['!disabled'] if can_start else ['disabled'])
         self.pick_stop_button.state(['!disabled'] if fresh and not idle else ['disabled'])
         if not self.pick_supported():
             self.pick_status.set('This profile has no pick_place description.')

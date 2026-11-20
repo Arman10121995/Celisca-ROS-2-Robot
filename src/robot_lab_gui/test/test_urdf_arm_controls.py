@@ -321,6 +321,13 @@ def test_mobile_node_labels_the_section_as_fetch(panel, model):
     panel.receive_pick_place(SimpleNamespace(data=json.dumps(state)))
     panel.update_pick_place()
     assert panel.pick_frame.cget('text').startswith('Fetch') and panel.pick_run_button.cget('text') == 'Run fetch'
+    panel.pick_pub = Mock()
+    panel.receive_pick_place(SimpleNamespace(data=json.dumps(dict(state, restart_required=True,
+        message='Loaded footprint retained. Restart the simulation before another fetch.'))))
+    panel.update_pick_place()
+    assert panel.pick_run_button.instate(['disabled'])
+    assert not panel.run_pick_place()
+    panel.pick_pub.publish.assert_not_called()
     panel.receive_pick_place(SimpleNamespace(data=json.dumps(dict(state, mobile=False))))
     panel.update_pick_place()
     assert panel.pick_run_button.cget('text') == 'Run pick / place'
