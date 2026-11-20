@@ -617,6 +617,9 @@ parking batch needs its own run. Details and evidence are in the
     the 0.6 m docking moves stay truth-steered (AMCL error 0.07–0.13 m).
     MuJoCo 2/2 (265 s, 262 s), PyBullet 1/1 (117.5 s).
     [Receipt](docs/status/evidence/r59-tiago-nav2-fetch-2026-11-17/README.md);
+  - 2026-11-20: the fetch waits for the owned Nav2 action's terminal result
+    and a measured base stop before docking. Stop during action admission
+    drains a late acceptance. Runtime requalification remains pending.
   - fetch on Isaac: drive and interlock work, but the TIAGo grasp fails
     (2026-11-17: the block tips at the pre-grasp, or the descent stalls).
     [Receipt](docs/status/evidence/r57-isaac-pick-place-2026-11-17/README.md).

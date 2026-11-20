@@ -129,6 +129,11 @@ move together. Object poses come from simulator truth. The
 [pick-and-place tutorial](urdf-arm-pick-place.md#fetch-with-tiago-mobile-manipulation)
 covers the run, the checks and the limits.
 
+In Navigation mode, the fetch waits for Nav2 to finish or cancel its owned
+action, then checks that the base has stopped before steering the short docking
+move. On Stop, the panel stays in **stopping** until the previous action ends,
+including when its acceptance arrives after Stop.
+
 ## What stays original, and what the lab supplies
 
 | Part | Contract |
@@ -136,7 +141,7 @@ covers the run, the checks and the limits.
 | Source mechanics | Original link/joint transforms, axes, collision geometry, URDF inertials, public-simulation fixed casters and their low friction |
 | Base | Original 0.0985 m wheel radius, 0.4044 m separation and 6 Nm limit; lab caps 0.2 m/s and 0.4 rad/s |
 | Arm / head / fingers / torso | Original position ranges and effort limits; lower lab joint rates, bounded position PD and plant gravity support; opt-in native PhysX generalized compensation on Isaac |
-| Fingers | Independent source joints; no invented mimic or coupling |
+| Fingers | Independent source joints in URDF, with synchronized jaw openings in the PyBullet and Isaac simulation adapters |
 | Home | Official motion's final arm/torso endpoint, head zero and lab 0.04 m finger opening; explicit operator command |
 | LiDAR | Declared panoramic lab scan at `base_laser_link`, not the source SICK field of view |
 | RGB-D | Source head camera mount and horizontal field of view; lab 320 × 240 / 5 Hz, 0.3–8 m clipping |

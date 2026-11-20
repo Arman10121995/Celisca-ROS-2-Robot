@@ -89,6 +89,7 @@ from pathlib import Path
 
 import numpy as np
 import rclpy
+from action_msgs.msg import GoalStatus
 from rclpy.node import Node
 from geometry_msgs.msg import Point32, Polygon, PoseWithCovarianceStamped, Twist
 from nav_msgs.msg import Odometry
@@ -114,6 +115,7 @@ STILL_SPEED = 0.01      # m/s and rad/s: the base counts as stopped
 CARRY_DRIFT = 0.03      # m of object motion relative to the base while carrying
 NAV2_MIN_LEG = 0.5      # m: shorter transit legs stay straight (DWB circles on tiny paths)
 NAV2_HANDOFF = 0.15      # m: localization this close to the run-up point hands over to docking
+NAV2_HANDOFF_TIMEOUT = 12.0  # s: await terminal action and measured base stop
 NAV_BASE_RADIUS = 0.3   # m, the Nav2 overlay's robot_radius (asset_pal_tiago.yaml)
 POSE_SOURCES = ('truth', 'rgbd')
 LOOK_TOLERANCE = 0.02   # rad: the head counts as on its look target
@@ -159,6 +161,7 @@ class PickPlace(Node):
         self.truth, self.truth_at = {}, -math.inf
         self.state, self.state_at = {}, -math.inf
         self.task = None
+        self.stopping_nav = None
         self.last_result = None
         self.message = 'Select an object and a support, then request a pick and place.'
         self.mobile = dict(MOBILE_DEFAULTS, **self.config['mobile']) if self.config.get('mobile') else None
@@ -288,7 +291,8 @@ class PickPlace(Node):
     def _publish_state(self):
         task = self.task or {}
         self.state_pub.publish(String(data=json.dumps(dict(
-            schema='robot_lab.pick_place_state.v1', phase=task.get('phase', 'idle'), stage=task.get('stage'),
+            schema='robot_lab.pick_place_state.v1',
+            phase='stopping' if self.stopping_nav else task.get('phase', 'idle'), stage=task.get('stage'),
             message=self.message, objects=sorted(self.truth), supports=sorted(self.supports),
             mobile=bool(self.mobile), pose_sources=['truth'] + (['rgbd'] if self.mobile and self.look and self.rgbd_bindings else []),
             rgbd_objects=sorted(self.rgbd_bindings), pose_source=task.get('pose_source'), drive_phase=(task.get('phases') or [{}])[task.get('phase_index', 0)].get('name')
@@ -303,6 +307,9 @@ class PickPlace(Node):
         return response
 
     def _on_request(self, message):
+        if self.stopping_nav:
+            self.message = 'Waiting for the previous Nav2 action to finish stopping.'
+            return
         if self.task is not None:
             self.message = 'A task is already running; Stop it first.'
             return
@@ -659,6 +666,11 @@ class PickPlace(Node):
             self._finish('failed', 'internal error: %s' % exc)
 
     def _advance(self):
+        if self.stopping_nav:
+            self._twist(0.0, 0.0)
+            if self._nav_status(self.stopping_nav, cancel=True) is not None:
+                self.stopping_nav = None
+            return
         task = self.task
         if task is None:
             return
@@ -807,25 +819,25 @@ class PickPlace(Node):
             phase['nav_goal'] = dict(sent=_now(), future=self.nav_client.send_goal_async(goal), result=None)
             return
         nav = phase['nav_goal']
-        if nav['result'] is None:
-            if not nav['future'].done():
+        now = _now()
+        located = self.amcl_pose is not None and now-self.amcl_at < 2.0
+        near_standoff = located and math.hypot(self.amcl_pose[0]-target['x'], self.amcl_pose[1]-target['y']) < NAV2_HANDOFF
+        if near_standoff and nav.get('handle') and not nav['result'].done():
+            nav.setdefault('handoff_requested', now)
+        handed_over = 'handoff_requested' in nav
+        status = self._nav_status(nav, cancel=handed_over)
+        # Leave Nav2 in sole control until the exact action has terminated.
+        if status is None:
+            if handed_over and now-nav['handoff_requested'] > NAV2_HANDOFF_TIMEOUT:
+                self._finish('failed', 'Nav2 did not acknowledge the docking handoff')
+            return
+        accepted = status == GoalStatus.STATUS_SUCCEEDED or (handed_over and status == GoalStatus.STATUS_CANCELED)
+        if accepted:
+            self._twist(0.0, 0.0)
+            if max(self.base_twist) >= STILL_SPEED:
+                if now-nav.setdefault('settle_started', now) > NAV2_HANDOFF_TIMEOUT:
+                    self._finish('failed', 'Base did not settle after Nav2 released the action')
                 return
-            handle = nav['future'].result()
-            if not handle.accepted:
-                return self._finish('failed', 'Nav2 rejected the %s goal' % phase['name'])
-            nav['handle'], nav['result'] = handle, handle.get_result_async()
-            return
-        from action_msgs.msg import GoalStatus
-        located = self.amcl_pose is not None and _now() - self.amcl_at < 2.0
-        if located and math.hypot(self.amcl_pose[0] - target['x'], self.amcl_pose[1] - target['y']) < NAV2_HANDOFF:
-            if not nav['result'].done():
-                nav['handle'].cancel_goal_async()
-            status = GoalStatus.STATUS_SUCCEEDED
-            handed_over = True
-        elif not nav['result'].done():
-            return
-        else:
-            status, handed_over = nav['result'].result().status, False
         x, y, _z, yaw = self.base_pose
         entry = dict(phase=phase['name'] + '_nav2', status=int(status), handed_over=handed_over,
                      seconds=round(_now() - nav['sent'], 2),
@@ -838,12 +850,29 @@ class PickPlace(Node):
             entry['localization_yaw_error_rad'] = round(_wrap(self.amcl_pose[2] - yaw), 4)
             entry['localization_age_s'] = round(_now() - self.amcl_at, 2)
         task['log'].append(entry)
-        if status != GoalStatus.STATUS_SUCCEEDED:
-            return self._finish('failed', 'Nav2 %s leg ended with status %d' % (phase['name'], status))
+        if not accepted:
+            reason = 'Nav2 rejected the goal' if status == 'rejected' else 'Nav2 ended with status %d' % status
+            return self._finish('failed', '%s: %s' % (phase['name'], reason))
         self._set_footprint(None)
         phase['nav_goal'] = None
         phase['waypoint'] += 1
         phase['rolling'] = phase['at_point'] = False
+
+    @staticmethod
+    def _nav_status(nav, cancel=False):
+        if nav['result'] is None:
+            if not nav['future'].done():
+                return None
+            handle = nav['future'].result()
+            if not handle.accepted:
+                return 'rejected'
+            nav['handle'], nav['result'] = handle, handle.get_result_async()
+        if nav['result'].done():
+            return nav['result'].result().status
+        if cancel and not nav.get('cancel_requested'):
+            nav['handle'].cancel_goal_async()
+            nav['cancel_requested'] = True
+        return None
 
     def _carry_outline(self, task):
         """Base circle plus a strip to 5 cm past the held object, as base-frame points."""
@@ -975,9 +1004,9 @@ class PickPlace(Node):
         task, self.task = self.task, None
         if self.mobile:
             phase = task['phases'][min(task['phase_index'], len(task['phases']) - 1)] if task else {}
-            nav = phase.get('nav_goal') or {}
-            if nav.get('handle') is not None:
-                nav['handle'].cancel_goal_async()
+            nav = phase.get('nav_goal')
+            if nav is not None:
+                self.stopping_nav = nav
             if task and task.get('transit') == 'nav2':
                 self._set_footprint(None)
             self._twist(0.0, 0.0)

@@ -6,6 +6,11 @@ measured skew and Stop checks remain in the control path. The installed
 Isaac 6.0.1 schema and source-contract checks pass. A physical fetch run remains
 pending. [TIAGo guide](../tutorials/tiago.md).
 
+November 20 Codex: TIAGo fetch waits for a terminal Nav2 result and a measured
+base stop before docking. Stop handles delayed action acceptance and keeps
+new fetch requests gated until the old action ends. Focused action-transition
+checks pass. Repeats of the live fetch remain pending. [TIAGo guide](../tutorials/tiago.md).
+
 November 20 Codex: Fleet goals now stay bound to the member's acknowledged
 floor map. Nearest-idle allocation and coverage account for floor boundaries,
 and the Fleet GUI displays the confirmed floor. Shared-world Fortress servers
