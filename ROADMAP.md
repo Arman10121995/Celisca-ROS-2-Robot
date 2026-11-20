@@ -1274,7 +1274,9 @@ parking batch needs its own run. Details and evidence are in the
     ([receipt](docs/status/evidence/r106-gait-push-2026-11-20/README.md));
   - saved-map goals on other backends, and a passing centipede run in a second world. **2026-11-20, `nav_obstacle`
     (MuJoCo):** hexapod 0.128 m and octopod 0.099/0.105 m pass; the centipede fails on its long footprint and heading
-    ([receipt](docs/status/evidence/r106-gait-saved-map-obstacle-2026-11-20/README.md)).
+    ([receipt](docs/status/evidence/r106-gait-saved-map-obstacle-2026-11-20/README.md)). **PyBullet:** the octopod
+    passes (0.091 m); the hexapod's in-place turn drifts and the centipede maps too slowly
+    ([receipt](docs/status/evidence/r106-gait-saved-map-pybullet-2026-11-20/README.md)).
 - **How to do it:** `gait_model.py`, `gait_controller.py`, `gait_odometry.py` and
   `gait_terrain.py` in `robot_lab_utils/`. Keep one owner of `/gait/state`.
 - **Done when:** walking on terrain, contacts and saved-map navigation per model and backend.

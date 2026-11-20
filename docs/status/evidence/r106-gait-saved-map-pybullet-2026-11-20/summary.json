@@ -1,0 +1,86 @@
+[
+ {
+  "run": "budget220",
+  "robot": "hexapod_ros2",
+  "acquisition": {
+   "success": true,
+   "reason": "Actual travel and nonempty acquired map archived",
+   "cells": 32472
+  },
+  "goal": [
+   0.2018015771570848,
+   -0.4979812251873915,
+   0.005423026569498112
+  ],
+  "success": false,
+  "reason": "Measured extension workload timed out",
+  "end": [
+   0.029041416943073273,
+   -0.49442970752716064,
+   0.02026536018295255
+  ],
+  "end_to_goal_m": 0.173,
+  "heading_error_rad": 0.015,
+  "sim_s": 79.1,
+  "wall_s": 220.1
+ },
+ {
+  "run": "budget600",
+  "robot": "hexapod_ros2",
+  "acquisition": {
+   "success": true,
+   "reason": "Actual travel and nonempty acquired map archived",
+   "cells": 32330
+  },
+  "goal": [
+   0.20317514075208415,
+   -0.49622330468852816,
+   0.007287976051258749
+  ],
+  "success": false,
+  "reason": "Measured extension workload timed out",
+  "end": [
+   -0.2375859171152115,
+   -0.475888192653656,
+   -0.2514960900982215
+  ],
+  "end_to_goal_m": 0.441,
+  "heading_error_rad": 0.259,
+  "sim_s": 208.0,
+  "wall_s": 580.1
+ },
+ {
+  "run": "budget600",
+  "robot": "lab_octopod",
+  "acquisition": {
+   "success": true,
+   "reason": "Actual travel and nonempty acquired map archived",
+   "cells": 32896
+  },
+  "goal": [
+   0.2050987768520972,
+   -0.5005542556194136,
+   -0.0013389431955980258
+  ],
+  "success": true,
+  "reason": "Every native goal physically settled",
+  "end": [
+   0.11378860473632812,
+   -0.49511268734931946,
+   -0.0007053851313342338
+  ],
+  "end_to_goal_m": 0.091,
+  "heading_error_rad": 0.001,
+  "sim_s": 60.0,
+  "wall_s": 86.6
+ },
+ {
+  "run": "budget600",
+  "robot": "lab_centipede",
+  "acquisition": {
+   "success": false,
+   "reason": "Actual acquisition did not reach the requested physical travel",
+   "cells": null
+  }
+ }
+]

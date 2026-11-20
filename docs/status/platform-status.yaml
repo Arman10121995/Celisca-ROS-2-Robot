@@ -1950,6 +1950,9 @@ tasks:
           and octopod 0.099 m pass; world corner spawn octopod 0.105 m passes, hexapod stopped 0.152 m short (timed out);
           centipede not passed (corner start in lethal space; open run settled 0.129 m but 0.172 rad off heading).
           docs/status/evidence/r106-gait-saved-map-obstacle-2026-11-20/README.md
+          On 2026-11-20 saved-map goals on PyBullet (nav_empty, qualifier --simulator) - octopod passes (0.091 m); hexapod not
+          (0.173 m at the 220 s budget; with 600 s it crept backward turning in place to 0.441 m); centipede mapping too slow.
+          docs/status/evidence/r106-gait-saved-map-pybullet-2026-11-20/README.md
         qualification_review: '2026-10-27 documentation review: retain the implemented code, tests and named
           mission certificates. Full declared roadmap acceptance is still open; test counts, metadata and scene
           loads do not qualify remaining robot/map/backend missions. See docs/REMAINING_WORK_GUIDE.md.'

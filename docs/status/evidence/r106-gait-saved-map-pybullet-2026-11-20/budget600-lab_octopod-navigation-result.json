@@ -1,0 +1,49 @@
+{
+ "schema": "robot_lab.measured_extension_result.v1",
+ "workflow": "gait",
+ "task": "navigation",
+ "session_id": "42155a9193084adbbc46e1253599ed74",
+ "run_id": "594d7054206d4116aba092b213829505",
+ "ros_domain_id": 20,
+ "success": true,
+ "reason": "Every native goal physically settled",
+ "measurements": [
+  {
+   "requested": [
+    0.2050987768520972,
+    -0.5005542556194136,
+    -0.0013389431955980258
+   ],
+   "physical_pose": [
+    0.11378860473632812,
+    -0.4951126277446747,
+    -0.0007054751203828467
+   ],
+   "linear_m_s": 2.8383165530330985e-06,
+   "angular_rad_s": -4.285192995144418e-06,
+   "settled_sim_s": 1.0179999990000042,
+   "member_id": "body",
+   "index": 0,
+   "native_terminal": true,
+   "nav2_status": 4
+  }
+ ],
+ "goal_contract": {
+  "position_m": 0.15,
+  "heading_rad": 0.15,
+  "linear_m_s": 0.03,
+  "angular_rad_s": 0.05,
+  "settle_sim_s": 1.0
+ },
+ "truth_samples": {
+  "body": 2857
+ },
+ "control_released": true,
+ "wall_duration_s": 86.58457338996232,
+ "contacts": null,
+ "minimum_swept_clearance_m": null,
+ "producer_sha256": "95092cbbbca6e814c44a5cf5ad154cb814d49d8e60d8d0a090bac40c32277566",
+ "workload_sha256": "9f0cf51f466580bb6933a5bc340a8e7e2814bdc1788d1934f870edace428fb46",
+ "trace_sha256": "2566bc8e31368d6e6ac04e486d75d05cf448b428a9029028b2e5d18382d33dc6",
+ "scope": "Actual native task and independent physical measurements; parent runner owns process cleanup"
+}
