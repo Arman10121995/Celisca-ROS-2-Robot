@@ -17,11 +17,11 @@ Robot Lab is a multi-robot simulation and algorithm laboratory. It lets you choo
 
 Instead of wiring simulators, controllers, and planners by hand, you select from a typed registry and the GUI resolves a launch configuration for you. Each robot class keeps its own native controls (Drive, Arm, Hand, Drone, Marine, Gait, Tracks, MOLAR) with explicit Connect/Enable/Plan/Execute gates, so you see exactly what is commanded and what is measured.
 
-**The platform is partial.** It is an active research lab, not a finished product. Some robot × simulator × map combinations are measured and qualified; others are implemented but unqualified. See [Current Status](#current-status) for what is done and what remains.
+**The platform is partial.** Mission evidence applies to the recorded robot, simulator, world and task. See the [current status](docs/status/CURRENT_STATUS.md) for measured and experimental workflows.
 
 The complete official **PAL TIAGo** now appears in the normal robot selector
-with base Drive and twelve Mobile arm channels: torso, arm, independent fingers
-and head. Source mechanics and effort limits are retained; lab servo/sensor
+with base Drive and twelve Mobile arm channels for the torso, arm, fingers
+and head. Source mechanics and effort limits are retained. Lab servo and sensor
 adapters and importer approximations are declared. Head/torso/arm/finger,
 forward, Stop and camera screens pass in MuJoCo, PyBullet and Isaac.
 Fetch with Nav2 transit and RGB-D grasp estimation has measured runs on
@@ -102,10 +102,7 @@ The complete MIT **Light Robotics segmented octopod** is installed with native 2
 ### Build & run the GUI
 
 ```bash
-# From the workspace root
-cd /home/molar1/bumperbot_ws
-
-# Source ROS 2 and the workspace
+# Run from the Robot Lab workspace root
 source /opt/ros/humble/setup.bash
 source install/setup.bash
 
@@ -125,7 +122,12 @@ The GUI opens on **Home**. Nothing is launched, connected, or armed just by open
 3. **Control & observe** — choose Drive & limits, Arm, Hand, Drone & limits, Marine, Marine missions, Gait, Tracks, or MOLAR from the control selector.
 4. **Stop** — use **Stop motion** in the header or **End session** to shut down the owned launch.
 
-Or use the CLI: `ros2 launch robot_lab_bringup simulated_robot.launch.py robot_model:=bumperbot ...`el and articulated-track workflows](docs/status/native-forms-2026-10-30.md): measured snake 2D/3D mapping and saved-map navigation, two-goal surface-vessel navigation, AUV acquisition and four-flipper control. Select these robots in Launch; controls and commands fill automatically.
+The same workflow can start from a terminal.
+
+```bash
+ros2 launch robot_lab_bringup simulated_robot.launch.py \
+  robot_model:=bumperbot simulator:=gazebo map_name:=nav_empty mode:=display
+```
 
 ## 📚 Tutorials & guides
 
@@ -183,21 +185,31 @@ Read the full [architecture overview](docs/architecture/overview.md) and [networ
 
 **The platform and extension are partial.** Tests, counts, and catalog rows do not qualify robot missions.
 
-### What's measured and delivered
-- Curved AUV routes (Tethys tank-curve arrival, measured)
+### Measured and delivered
+
+- Tethys AUV curved routes and geometry-only saved-map relocalization in the textured Gazebo tank. [Relocalization receipt](docs/status/evidence/r105-auv-geometry-reloc-2026-11-20/README.md).
 - Low-relief terrain adaptation — octopod travel/hold on all four backends (Gazebo, PyBullet, MuJoCo, Isaac)
 - Concurrent independent Nav2 missions in a shared facility world
 - Bounded lift/floor queue with explicit interlocked recovery (empty-car recovery measured)
 - One-command Bumperbot L0→L1→L0 floor round-trip (324.259 s measured)
-- Aerial formation itineraries with native Plan/Execute (arming ≠ flight; no flight certificate yet)
+- Unladen MOLAR Open-RMF L0→L1→L0 and a separate 0.5 kg loaded boarding trial. [Lift round trip](docs/status/evidence/r11-molar-rmf-return-2026-11-20/README.md) · [cargo evidence](docs/status/evidence/r11-molar-fleet-cargo-2026-11-20/README.md).
+- Single-drone route flight in Gazebo and the PX4 MuJoCo plant. Two X500s have measured range-reference formation. [Drone flight evidence](docs/status/evidence/drone-moving-2026-11-13/README.md) · [Swarm roadmap](ROADMAP.md#r103--swarm-robotics).
 - GUI redesign: Home, Ctrl+K search, dark theme, right-hand control column, live session indicator
 - Measured planner/local-planning/control/sensor-fusion/perception/localization/state-estimation comparisons (partial — R7/R9.2 remain open)
 
+### Implemented, awaiting live qualification
+
+- Fleet navigation goals use acknowledged floor maps, with the active floor shown in the GUI. [Fleet guide](docs/tutorials/fleet-infrastructure.md).
+- TIAGo loaded fetch checks both costmaps before Nav2 transit and retains its payload footprint through an interrupted carry. Its Isaac gripper uses compliant linked jaws. [TIAGo guide](docs/tutorials/tiago.md).
+- **Arm pick-and-place lab → Cylinder on its side** has source Panda planning checks for the diameter grasp and supported placement. [Arm guide](docs/tutorials/urdf-arm-pick-place.md#pick-a-cylinder-on-its-side).
+
 ### What remains
-- Two-member parked L0→L1→L0 parking wave (full campaign)
+
+- Loaded MOLAR lift round trip and the two-member floor/parking campaign
 - Per-model/backend terrain and higher-mode acceptance (hexapod, centipede)
-- Occupied recovery, concurrent members, new route-flight qualification
+- Occupied lift recovery and three- or four-drone formation routes
 - Wider SDK conflict/contact/loss, calibrated energy scheduling
+- Large-world MuJoCo real-time factor and repeated map/navigation missions
 - Full original roadmap acceptance (R6–R9)
 
 See the [machine-readable ledger](docs/status/platform-status.yaml), [current status](docs/status/CURRENT_STATUS.md), [roadmap](ROADMAP.md), and [remaining-work guide](docs/REMAINING_WORK_GUIDE.md) for exact scopes, owners, and acceptance criteria.
