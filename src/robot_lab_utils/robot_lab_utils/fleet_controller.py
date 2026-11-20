@@ -19,11 +19,12 @@ import uuid
 import rclpy
 from action_msgs.msg import GoalStatus
 from geometry_msgs.msg import PoseWithCovarianceStamped, TransformStamped, Twist
-from nav2_msgs.action import NavigateToPose
+from nav2_msgs.action import NavigateToPose, Spin
 from nav_msgs.msg import Odometry, Path as NavPath
 from lifecycle_msgs.srv import GetState
 from rclpy.action import ActionClient
 from rclpy.clock import Clock, ClockType
+from rclpy.duration import Duration
 from rclpy.executors import ExternalShutdownException
 from rclpy.node import Node
 from rclpy.qos import qos_profile_sensor_data
@@ -35,6 +36,7 @@ from std_srvs.srv import Trigger
 from tf2_ros import Buffer, StaticTransformBroadcaster, TransformException, TransformListener
 
 from robot_lab_utils.fleet_lift_recovery import recovery_passengers
+from robot_lab_utils.fleet_building_graph import cabin_exit_heading, lift_graph_poses
 from robot_lab_utils.fleet_motion import (Neighbor, angle, scan_guard, separation_guard, swarm_velocities,
                                           turn_away_from_nearest)
 from robot_lab_utils.fleet_session import finite, ID_PATTERN, MEMBER_MODELS
@@ -74,6 +76,7 @@ class Member:
     config: dict
     publisher: object = None
     action: object = None
+    spin: object = None
     initial_pub: object = None
     mode: str = 'idle'
     reason: str = 'Waiting for measured feedback'
@@ -161,6 +164,15 @@ class FleetController(Node):
         self._tf = Buffer(node=self)
         self._listener = TransformListener(self._tf, self)
         self.last_rejection = ''
+        self.lift_poses = self.lift_transport = self.lift_door = self.open_lift_floor = None
+        self.landing_doors = {}
+        if self.session.get('floor_maps') and self.session.get('infrastructure_file'):
+            import yaml
+            infrastructure = yaml.safe_load(Path(self.session['infrastructure_file']).read_text())
+            self.lift_transport = infrastructure.get('transport')
+            self.lift_door = (infrastructure.get('lift') or {}).get('door')
+            self.landing_doors = {door['landing_floor']: name for name, door in infrastructure['doors'].items()
+                                  if 'landing_floor' in door}
         self._journal = (Path(self.session['directory']) / 'events.jsonl').open('a', buffering=1)
         self._journal_size = 0
         for config in self.session['members']:
@@ -173,6 +185,8 @@ class FleetController(Node):
             member.publisher = self.create_publisher(Twist, '/' + name + '/robot_lab_controller/cmd_vel_unstamped', 10)
             member.initial_pub = self.create_publisher(PoseWithCovarianceStamped, '/' + name + '/initialpose', 10)
             member.action = ActionClient(self, NavigateToPose, '/' + name + '/navigate_to_pose')
+            if self.session.get('floor_maps'):
+                member.spin = ActionClient(self, Spin, '/' + name + '/spin')
             member.lifecycle_client = self.create_client(GetState, '/' + name + '/bt_navigator/get_state')
             def subscribe(kind, topic, callback, qos=10):
                 self.create_subscription(kind, '/' + name + topic, lambda msg, m=member: callback(m, msg), qos)
@@ -477,6 +491,13 @@ class FleetController(Node):
                     raise ValueError('A route requires 1–64 goals')
                 items = [mission(self._goal(g), 'route:' + tag) for g in route]
                 member = targets[0]
+                for supplied, item in zip(route, items):
+                    if 'cabin_turn_floor' in supplied:
+                        floor = supplied['cabin_turn_floor']
+                        if (not isinstance(floor, str) or floor not in self.session.get('floor_maps', {})
+                                or not self.operator.startswith('rmf-') or not tag.startswith('rmf-')):
+                            raise ValueError('Cabin turns require an owned RMF facility route')
+                        item['goal']['cabin_turn_floor'] = floor
                 if member.mode in ('manual', 'swarm', 'resetting'):
                     raise ValueError('Stop manual/group/reset ownership before accepting an external route')
                 self._stop_member(member, 'Explicit external route replacement')
@@ -570,6 +591,17 @@ class FleetController(Node):
             raise ValueError('Wait for the previous Nav2 action to finish/cancel: ' + member.name)
         if not self._fresh(member, time.monotonic()) or not self._nav_ready(member, time.monotonic()):
             raise ValueError('Fresh localization/sensors and actual Nav2 server required: ' + member.name)
+        client = member.action
+        if 'cabin_turn_floor' in goal:
+            request = self._cabin_turn(member, goal)
+            client = member.spin
+        else:
+            request = NavigateToPose.Goal()
+            request.pose.header.frame_id = member.config.get('map_frame', 'map')
+            request.pose.header.stamp = self.get_clock().now().to_msg()
+            request.pose.pose.position.x, request.pose.pose.position.y = goal['x'], goal['y']
+            request.pose.pose.orientation.z = math.sin(goal['yaw'] / 2)
+            request.pose.pose.orientation.w = math.cos(goal['yaw'] / 2)
         self._stop_member(member, 'Sending actual Nav2 goal', clear_queue=False)
         member.active_item = item or mission(goal)
         member.goal, member.task = copy.deepcopy(goal), member.active_item['task']
@@ -577,12 +609,8 @@ class FleetController(Node):
         member.sending = True
         member.mode = 'dispatching'
         member.deadline = time.monotonic() + goal['timeout']
-        request = NavigateToPose.Goal()
-        request.pose.header.frame_id, request.pose.header.stamp = member.config.get('map_frame', 'map'), self.get_clock().now().to_msg()
-        request.pose.pose.position.x, request.pose.pose.position.y = goal['x'], goal['y']
-        request.pose.pose.orientation.z, request.pose.pose.orientation.w = math.sin(goal['yaw'] / 2), math.cos(goal['yaw'] / 2)
         try:
-            future = member.action.send_goal_async(request)
+            future = client.send_goal_async(request)
         except Exception as exc:
             member.sending = False
             member.active_item, member.goal, member.task = None, None, ''
@@ -590,6 +618,32 @@ class FleetController(Node):
             raise ValueError('Nav2 action submission failed: ' + str(exc)) from exc
         future.add_done_callback(lambda done, m=member, g=generation: self._goal_sent(m, g, done))
         self._event('nav2_goal_sent', member=member.name, task=member.task, goal=goal, generation=generation)
+
+    def _cabin_turn(self, member, goal):
+        floor = goal['cabin_turn_floor']
+        now = time.monotonic()
+        if (not self.lift_transport or now-self.infrastructure_at > .6 or member.name in self.infrastructure_holds
+                or self.open_lift_floor != floor
+                or self.infrastructure_floors.get(member.name) != floor
+                or not member.spin or not member.spin.server_is_ready()
+                or now-member.localization_at > .6):
+            raise ValueError('Cabin turn needs an observed open and level lift and fresh Nav2 localization')
+        if self.lift_poses is None:
+            self.lift_poses = lift_graph_poses(self.lift_transport, self.session['members'])
+        boarding = self.lift_poses['boarding']
+        heading = cabin_exit_heading(self.lift_poses, floor)
+        truth = self._truth_row(member)
+        if (heading is None or abs(angle(heading-goal['yaw'])) > .001
+                or math.hypot(goal['x']-boarding['x'], goal['y']-boarding['y']) > .001
+                or truth is None or math.hypot(truth['x']-boarding['x'], truth['y']-boarding['y']) > .15):
+            raise ValueError('Cabin turn must start at the measured boarding point for the declared exit')
+        estimate = self._neighbor(member)
+        if estimate is None:
+            raise ValueError('Cabin turn needs a localized wheel pose')
+        request = Spin.Goal()
+        request.target_yaw = angle(heading-estimate.yaw)
+        request.time_allowance = Duration(seconds=30.).to_msg()
+        return request
 
     def _goal_sent(self, member, generation, future):
         member.sending = False
@@ -890,6 +944,11 @@ class FleetController(Node):
                 member.queue.pop(0)  # Only remove after successful action submission.
             except (ValueError, RuntimeError) as exc:
                 member.reason = 'Queued task waiting: ' + str(exc)
+                if 'cabin_turn_floor' in item['goal'] and now-item.setdefault('dispatch_wait_at', now) > 30.:
+                    member.queue.pop(0)
+                    self._event('task_finished', member=member.name,
+                                **self.history.finish(item, 'failed', member.reason))
+                    member.queue_paused = True
 
     def _traffic_recovery_tick(self, now, fresh):
         """Bounded measured-peer recovery; retain the interrupted task identity."""
@@ -1225,6 +1284,10 @@ class FleetController(Node):
                 self.infrastructure_holds=set(data['held_members']);self.infrastructure_at=time.monotonic()
                 self.infrastructure_reservations = data.get('reservations', {})
                 self.infrastructure_floors = data.get('robot_floors', {})
+                floor = (data.get('lift') or {}).get('door_admitted_floor')
+                doors = [self.lift_door, self.landing_doors.get(floor)]
+                self.open_lift_floor = (floor if floor and self.lift_door and all(
+                    data.get('doors', {}).get(name, {}).get('mode') == 2 for name in doors if name) else None)
         except (ValueError,KeyError,TypeError):return
 
     def _tick(self):
@@ -1329,7 +1392,9 @@ class FleetController(Node):
                                                else member.mode + ' command active')
             message = Twist()
             message.linear.x, message.angular.z = float(linear), float(angular)
-            if self.session.get('infrastructure_file') and (now-self.infrastructure_at>.6 or member.name in self.infrastructure_holds):
+            turn_floor = (member.goal or {}).get('cabin_turn_floor')
+            if self.session.get('infrastructure_file') and (now-self.infrastructure_at>.6
+                    or member.name in self.infrastructure_holds or turn_floor and turn_floor != self.open_lift_floor):
                 message=Twist();linear=angular=0.;member.reason='Lift interlock / stale facility feedback; wheel input held neutral'
             member.publisher.publish(message)
             member.output = (linear, angular)

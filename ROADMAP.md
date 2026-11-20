@@ -144,7 +144,7 @@ Work top to bottom. Each line links to its task.
 | I14 | [R5.5](#r55--ackermann-rear-steer-and-anti-ackermann-cars) Cars | 2026-11-15: car course 13/13 on four backends (lookahead 1.25 × turning radius, forward escape when back-up is blocked); park-at-heading runtime and Drive-panel controls | implemented |
 | I15 | [R3.6](#r36--external-robot-assets-in-normal-launch) Assets | 2026-11-18: Kinova Jaco 2 gets lab servos (continuous joints with a declared source range; out-of-range zeros spawn at home); MuJoCo screen passes, PyBullet joint 4 overshoots (display-only 65 → 64); 2026-11-18: KUKA iiwa and both Valkyrie forearms also get lab servos (display-only 69 → 66; R2 refused: placeholder hand limits); 2026-11-18: robot_assets ANYmal walks with a policy trained in a legged_gym template (MuJoCo 2/2 drive screens; display-only 66 → 65); 2026-11-17: UR10, UR5, YuMi controllable with declared lab servos (display-only 73 → 69); 2026-11-15: vendor policies for Booster T1 and Unitree G1/H1/H1_2, controllable siblings named, license/mesh audit (114/163 ok). 47 legged need training, 12 URDFs ship no control interface | partial |
 | I16 | [R6.5](#r65--world-to-occupancy-generation) / [R6.6](#r66--external-world-library) / [R6.2](#r62--dynamic-and-sensor-disturbance-cases) Worlds | 2026-11-17: `<polyline>` geometry supported, polylines world installed (20/20 example scenes); upper floors covered by `--height` slicing. 2026-11-15: fixture review of 100 Gazebo examples, Fuel licences, 16 worlds with grids, actor collisions. Missions in new world classes are V9 | implemented |
-| I17 | [R11](#r11--molar--probot-l-family) MOLAR | Done-when met 2026-11-17: route A and a payload transfer both on `celisca_floor_1_detailed` (Gazebo). Earlier: transfer on `nav_empty` (Gazebo 3/3, MuJoCo 4/4). Goal B and the Isaac belt pass 2026-11-18 (transfer on all four backends). 11-19: MOLAR rides the fleet lift L0 → L1 → L0 and reaches a goal on L1 (2/2 each). 11-20: native fleet lift transport L0 → L1 → L0 passes (2/2). Remaining: MOLAR with a fleet peer/payload/RMF graph, mounted sensors (needs the user's layout); repeats are V8 | implemented |
+| I17 | [R11](#r11--molar--probot-l-family) MOLAR | CELISCA route and transfer measured; transfer on all four backends. Native lift round trip passes (2/2); Open-RMF L0 → L1 passes once (11-20). Remaining: RMF return gate sequencing, fleet peer/payload, mounted sensors (needs layout); repeats are V8 | implemented |
 | I18 | [P4](#p4--mujoco-large-world-speed) MuJoCo speed | 2026-11-14: flex culling, exact tick pacing, oversleep payback, sensor thread (celisca_floor_1 0.81, furnished floor 0.99, hospital 0.43); large worlds remain flex-kinematics bound | partial |
 | I19 | [R7](#r7--algorithm-breadth) Algorithms | 2026-11-14: Gazebo `sim_seed` (300/300 repeat), sensor-fault relay on all backends, 78 per-method ledger records (9 corrected, 8 noted mismatches) | implemented |
 | I20 | [R9.1](#r91--provenance-licenses-and-clean-host-reproduction) Provenance | 2026-11-14: PX4 checkout + 25 submodules and all vendor sources scanned from their license files; 7 trees without license files listed for review | implemented |
@@ -1316,7 +1316,16 @@ parking batch needs its own run. Details and evidence are in the
     4000 N with a faster integral (1600 N was too weak for car plus MOLAR); the Bumperbot ride
     still passes ([receipt](docs/status/evidence/r11-molar-lift-2026-11-19/README.md)).
     It then drives off the car to a Nav2 goal on L1 (2/2, 0.04–0.05 m); a goal that needed a turn
-    beside the landing rail failed and is retained. **2026-11-20: the full native fleet transport passes** (Facility transport requests only, L0 → L1 → L0, 2/2, 183–189 s) with per-model transport goals that keep MOLAR's arrival heading; a stop short of the closed gate and a turn in the car failed and are retained; Bumperbot re-passes ([receipt](docs/status/evidence/r11-molar-transport-2026-11-20/README.md)). Remaining: a peer in the facility, payload on board and the RMF graph for MOLAR.
+    beside the landing rail failed and is retained. **2026-11-20: the full native fleet transport passes** (Facility transport requests only, L0 → L1 → L0, 2/2, 183–189 s) with per-model transport goals that keep MOLAR's arrival heading; a stop short of the closed gate and a turn in the car failed and are retained; Bumperbot re-passes ([receipt](docs/status/evidence/r11-molar-transport-2026-11-20/README.md)).
+  - **Open-RMF lift graph for MOLAR (2026-11-20):** implemented, experimental.
+    The SDK uses the configured boarding point and directed approach/exit
+    lanes, and the fleet controller uses a guarded Nav2 Spin for the
+    in-car heading waypoint. The measured Gazebo L0 → L1 leg completes
+    in 114.9 s. L1 → L0 is held by the scan guard during the turn before
+    the closed gate. Implement observed gate admission before that turn,
+    or a wider source landing with matching occupancy. See
+    [SDK/runtime scope](docs/status/evidence/r11-molar-rmf-2026-11-20/README.md).
+    Mixed fleet and payload carriage remain open.
 - **How to do it:** add sensors to `molar_hri.urdf.xacro`, then reuse the
   Bumperbot SLAM/Nav2 configs with the MOLAR footprint. Payload transfer
   uses the existing articulation contract (`robot_lab_utils/urdf_articulation`).

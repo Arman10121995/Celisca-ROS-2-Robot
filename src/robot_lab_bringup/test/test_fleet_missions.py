@@ -2,6 +2,7 @@
 import math
 from pathlib import Path
 import sys
+import time
 from types import MethodType, SimpleNamespace
 
 import numpy as np
@@ -13,6 +14,27 @@ ROOT = Path(__file__).resolve().parents[3]
 sys.path.insert(0, str(ROOT / 'src/robot_lab_utils'))
 from robot_lab_utils.fleet_missions import MissionHistory, coverage_plan, enqueue, mission, settled
 from robot_lab_utils.fleet_session import SpawnGrid
+
+
+def test_sdk_exit_turn_uses_relative_yaw_and_refuses_closed_or_misaligned_cabin():
+    pytest.importorskip('rclpy')
+    from robot_lab_utils.fleet_controller import FleetController
+    now = time.monotonic()
+    controller = SimpleNamespace(lift_transport=True, infrastructure_at=now, infrastructure_holds=set(),
+        infrastructure_floors={'molar': 'L1'}, open_lift_floor='L1',
+        lift_poses=dict(boarding=dict(x=3.95, y=0., yaw=0.), exits={'L1': dict(x=2.1, y=0., yaw=math.pi)}),
+        _truth_row=lambda member: dict(x=3.86, y=.01), _neighbor=lambda member: SimpleNamespace(yaw=-.1))
+    member = SimpleNamespace(name='molar', spin=SimpleNamespace(server_is_ready=lambda: True),
+                             localization_at=now)
+    goal = dict(x=3.95, y=0., yaw=math.pi, cabin_turn_floor='L1')
+    request = FleetController._cabin_turn(controller, member, goal)
+    assert request.target_yaw == pytest.approx(.1-math.pi)
+    assert request.time_allowance.sec == 30
+    with pytest.raises(ValueError, match='boarding point'):
+        FleetController._cabin_turn(controller, member, dict(goal, x=3.65))
+    controller.open_lift_floor = None
+    with pytest.raises(ValueError, match='open and level lift'):
+        FleetController._cabin_turn(controller, member, goal)
 
 
 def test_sweep_avoids_unknown_and_walls_and_partitions_without_duplicates(tmp_path):

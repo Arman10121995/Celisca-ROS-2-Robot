@@ -8,12 +8,36 @@ import math
 from robot_lab_utils.fleet_facility_graph import _touches
 from robot_lab_utils.fleet_missions import rmf_navigation_graph
 from robot_lab_utils.fleet_session import SpawnGrid
+from robot_lab_utils.fleet_transport import transport_for_model
+
+
+def lift_graph_poses(transport, members):
+    """One physical portal layout per RMF fleet, with its largest clearance."""
+    overrides = transport.get('models', {})
+    models = sorted({member.get('model') for member in members if member.get('model') in overrides})
+    candidates = [transport_for_model(transport, model) for model in models or [None]]
+    geometry = [dict(boarding=value['boarding'], landings=value['landings'],
+                     exits=value.get('exits', value['landings'])) for value in candidates]
+    if any(value != geometry[0] for value in geometry[1:]):
+        raise ValueError('RMF needs one shared lift layout; incompatible transport overrides for ' +
+                         ', '.join(models))
+    return geometry[0]
+
+
+def cabin_exit_heading(poses, floor):
+    """A declared forward exit heading distinct from the boarding heading."""
+    car, exit_pose = poses['boarding'], poses['exits'][floor]
+    outward = math.atan2(exit_pose['y']-car['y'], exit_pose['x']-car['x'])
+    error = lambda yaw: abs(math.remainder(yaw-outward, 2*math.pi))
+    if error(exit_pose.get('yaw', 0.)) < .001 and error(car.get('yaw', 0.)) > .1:
+        return outward
+    return None
 
 
 def building_graph(session, config):
     radius = max(member['radius'] for member in session['members']) + .15
     lift = config['lift']
-    transport = config['transport']
+    transport = lift_graph_poses(config['transport'], session['members'])
     levels, metadata = {}, []
     fixed_doors = {name: door for name, door in config['doors'].items()
                    if not door.get('z_joint') and not door.get('landing_floor')}
@@ -23,7 +47,8 @@ def building_graph(session, config):
                          spawn=transport['landings'][floor])
         members = session['members'] if floor == 'L0' else [reference]
         raw = rmf_navigation_graph(grid, members, extent=24.)
-        zones = [[2.8, 5.2, -1.2, 1.2]]  # The source car footprint/portal.
+        car_zone = lift.get('area', [2.8, 5.2, -1.2, 1.2])
+        zones = [car_zone]
         doors = fixed_doors if floor == 'L0' else {}
         for door in doors.values():
             x0, x1, y0, y1 = door['sweep']
@@ -90,14 +115,23 @@ def building_graph(session, config):
 
         # Only these two gated lanes enter/exit each car. Ordinary lattice
         # edges cannot bypass the native lift-session handshake.
-        landing = anchor(floor + '_landing', transport['landings'][floor])
+        approach, exit_pose = transport['landings'][floor], transport['exits'][floor]
+        landing = anchor(floor + '_landing', exit_pose)
+        entry = landing if math.hypot(approach['x']-exit_pose['x'], approach['y']-exit_pose['y']) < .001 else anchor(
+            floor + '_approach', approach)
         boarding = transport['boarding']
-        if not grid.clear(boarding['x'], boarding['y'], radius) or not clear_segment(transport['landings'][floor], boarding, False):
-            raise ValueError('Lift boarding violates declared body clearance')
+        x0, x1, y0, y1 = car_zone
+        if (not x0 < boarding['x'] < x1 or not y0 < boarding['y'] < y1
+                or not clear_segment(approach, boarding, False) or not clear_segment(boarding, exit_pose, False)):
+            raise ValueError('Lift boarding or exit violates declared body clearance on ' + floor)
         inside = len(vertices)
         vertices.append(dict(name='lift_' + floor + '_inside', floor=floor,
                              x=boarding['x'], y=boarding['y'], lift=lift['name'], selectable=False))
-        pair(landing, inside, dict(orientation_constraint='forward'))
+        heading = cabin_exit_heading(transport, floor)
+        if heading is not None:
+            vertices[inside]['exit_heading'] = heading
+        lanes.extend([[entry, inside, dict(orientation_constraint='forward')],
+                      [inside, landing, dict(orientation_constraint='forward')]])
 
         for name, dock in config.get('docks', {}).items():
             if abs(dock.get('z', 0.) - lift['floors'][floor]) > dock.get('height_tolerance', .12):

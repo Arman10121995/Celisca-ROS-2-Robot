@@ -2073,6 +2073,7 @@ tasks:
       mission certificates. Full declared roadmap acceptance is still open; test counts, metadata and
       scene loads do not qualify remaining robot/map/backend missions. See docs/REMAINING_WORK_GUIDE.md.'
   R11:
+    rmf_lift_owner_20261120: 'Codex implemented the model-aware Open-RMF lift graph and guarded Nav2 Spin for MOLAR. Gazebo fleet_facility L0 to L1 completes in 114.9 s at 0.047 m from the exit; active map L1 and independent measured settling. The return is held by the scan guard while facing the closed gate. Preserve native per-model routes, RMF events, leveling, Stop and small-base defaults; finish pre-turn gate admission or wider landing. docs/status/evidence/r11-molar-rmf-2026-11-20/README.md'
     isaac_belt_20261118: 'Claude: Isaac deck belt = PhysxSurfaceVelocityAPI on telescope_stage2 (roller rate x 12 mm, authored -x: +x measured to drive the payload backwards on Isaac Sim 6.0.1). MOLAR transfer passes on Isaac 2/2 (0.671/0.673 m, 0.0 mm drag) -> all four backends. docs/status/evidence/r11-molar-isaac-belt-2026-11-18/README.md'
     nav_goal_b_20261118: 'Claude: MOLAR Nav2 mission on celisca_floor_1_detailed (Gazebo) passes 2/2 including near-obstacle goal B (0.091/0.089 m; route A 0.076/0.122 m). Cause of the 2026-11-15 failure: AMCL drift 0.26 -> 0.49 m put the start in lethal space. Fix: MOLAR AMCL overlay (update 0.05 m/0.05 rad, 180 beams, alpha1/alpha4 0.2). docs/status/evidence/r11-molar-nav-goal-b-2026-11-18/README.md'
     transfer_station_20261117: 'Claude: MOLAR payload transfer passes on PyBullet (and once more on MuJoCo and Gazebo, nav_empty). Root cause of the morning PyBullet failure: the checker station overlapped telescope_stage2''s front frame (0.587 m vs plate end 0.5675 m), stalling the telescope at 0.130 m; its 250 N servo shoved the base on resume. Station now clear of the frame (DECK_FRONT_REACH); pass rule = payload off the deck and centre >= 5 cm onto the station. PyBullet static shapes now take SDF mu below 1 (was default 0.5). Two trials (0.25 s motion window, wider hard stops) reverted; interlock unchanged. docs/status/evidence/r11-molar-transfer-station-2026-11-17/README.md'
@@ -2091,7 +2092,9 @@ tasks:
     - Implementation and validation complete - no hardware required
     implementation_summary: 'molar_hri and probot_l in the normal GUI: Display-mode
       differential drive, conveyor lift, coupled two-stage telescope and roller with
-      Stop, heartbeat watchdog and base inhibit in Gazebo, MuJoCo, PyBullet and Isaac.'
+      Stop, heartbeat watchdog and base inhibit in Gazebo, MuJoCo, PyBullet and Isaac.
+      MOLAR native Gazebo lift round trip passes; Open-RMF upward leg passes with
+      model-specific graph and in-car Spin. SDK return is held at the closed upper gate.'
     implementation_validation: 'Normal-GUI check (drive, lift and both stages to their
       limits, roller, Stop, heartbeat loss) passes for molar_hri in every backend
       on nav_empty and both detailed floors and for probot_l on nav_empty (16 cells,

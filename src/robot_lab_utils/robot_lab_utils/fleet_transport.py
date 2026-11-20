@@ -6,6 +6,13 @@ import uuid
 TERMINAL = {'succeeded', 'failed', 'canceled'}
 
 
+def transport_for_model(transport, model):
+    """Merge the world's lift settings with the selected model's overrides."""
+    config = dict(transport)
+    config.update(config.pop('models', {}).get(model, {}))
+    return config
+
+
 def lift_door_admission(position, rate, floor, height, admitted, precision, tracking):
     """Require precise initial leveling; retain original load-tracking bounds."""
     if not all(math.isfinite(v) for v in (precision,tracking)) or not 0<precision<=tracking:

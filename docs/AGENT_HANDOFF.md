@@ -1,5 +1,11 @@
 # Agent Handoff Protocol
 
+November 20 fleet continuation: Codex owns MOLAR's Open-RMF lift graph
+and cabin turn. Claude retains Shadow Hand and other manipulation work.
+Use the [fleet receipt](status/evidence/r11-molar-rmf-2026-11-20/README.md)
+for scope and reproduction. Preserve the small-base graph defaults,
+car/floor events, physical admission and actual settling checks.
+
 November 20 parallel work: Claude retains Allegro and object/fetch work.
 Codex delivered TIAGo's manual tool-pose panel (R5.9): source TCP in the
 base frame, held head/fingers, bounded multi-goal IK and explicit joint-route

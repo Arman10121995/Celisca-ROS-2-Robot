@@ -1,5 +1,12 @@
 # Current Robot Lab status
 
+November 20 Codex: MOLAR's [Open-RMF lift graph](evidence/r11-molar-rmf-2026-11-20/README.md)
+uses the model's approach, boarding and exit positions. A guarded Nav2
+Spin replaces the in-car position goal. One Gazebo SDK L0 → L1 trip
+settles on `map_L1.yaml` in 114.9 s; the reverse leg still meets the
+scan guard before the closed gate. Native Facility transport already has
+separate measured round trips.
+
 November 20 Codex: TIAGo's MuJoCo **Mobile arm** page can copy the measured
 tool pose, jog target XYZ in the base frame and **Plan pose → Execute plan**.
 The 20 mm `nav_empty` GUI reach settled at 0.15 mm position error, with

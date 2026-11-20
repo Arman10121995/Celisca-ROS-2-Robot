@@ -16,7 +16,7 @@ import uuid
 import xml.etree.ElementTree as ET
 
 from robot_lab_utils.fleet_energy import EnergyEstimate, qualified_source
-from robot_lab_utils.fleet_transport import LiftTransport,lift_door_admission,door_position_mode
+from robot_lab_utils.fleet_transport import LiftTransport,lift_door_admission,door_position_mode,transport_for_model
 from robot_lab_utils.fleet_transport_queue import TransportQueue
 from robot_lab_utils.fleet_lift_recovery import recovery_passengers
 import rclpy
@@ -379,10 +379,8 @@ class Infrastructure(Node):
 
     def _transport_config(self, name):
         """The world's lift transport goals, replaced by the member model's own where configured."""
-        config = dict(self.config['transport'])
         model = next((item.get('model') for item in self.session['members'] if item['id'] == name), None)
-        config.update(config.pop('models', {}).get(model, {}))
-        return config
+        return transport_for_model(self.config['transport'], model)
 
     def _prepare_transport(self, name, destination, operator, now, parking=None):
         row = next((item for item in self.runtime['members'] if item['id'] == name), {})

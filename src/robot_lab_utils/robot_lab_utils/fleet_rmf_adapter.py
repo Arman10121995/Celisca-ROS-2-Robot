@@ -63,9 +63,16 @@ class Robot(adpt.RobotCommandHandle):
                 estimator=next_arrival_estimator, finished=path_finished_callback, sequence=self.sequence,
                 acknowledged=False, failed=False, sent=False, accepted_at=time.monotonic(),
                 departures=[max(0.,waypoints[max(0,index-1)].time.timestamp()) for index in range(len(positions))])
+            goals = []
+            for index, (waypoint, p) in enumerate(zip(waypoints, positions)):
+                goal = dict(x=p[0], y=p[1], yaw=p[2], timeout=180.,
+                            not_before=self.request['departures'][index])
+                cabin = self.owner.cabin_turns.get(waypoint.graph_index)
+                if cabin and abs(math.remainder(p[2]-cabin['exit_heading'], 2*math.pi)) < .001:
+                    goal['cabin_turn_floor'] = cabin['floor']
+                goals.append(goal)
             self.owner.pending.put((self.name, self.sequence, dict(op='route', targets=[self.name],
-                request_id=request_id, goals=[dict(x=p[0], y=p[1], yaw=p[2], timeout=180.,
-                    not_before=max(0.,waypoints[max(0,index-1)].time.timestamp())) for index,p in enumerate(positions)])))
+                                                                  request_id=request_id, goals=goals)))
 
     def stop(self):
         with self.lock:
@@ -141,6 +148,7 @@ class RmfBridge(Node):
         super().__init__('robot_lab_rmf_bridge')
         self.session, self.adapter, self.graph, self.fleet = session, adapter, nav_graph, fleet
         self.vertices = vertices
+        self.cabin_turns = {v['graph_index']: v for v in vertices if 'exit_heading' in v}
         self.level_graph = any('floor' in vertex for vertex in vertices)
         self.robot_floors = {}
         self.floor_at = -math.inf
