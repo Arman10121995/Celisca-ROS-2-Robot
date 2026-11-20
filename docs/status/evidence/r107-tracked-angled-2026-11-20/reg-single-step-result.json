@@ -1,0 +1,29 @@
+{
+  "mode": "auto",
+  "duration_s": 50.013999999999996,
+  "start": {
+    "x": -6.650000000589515,
+    "y": -5.9000001091742895,
+    "z": 0.07191968702118355
+  },
+  "end": {
+    "x": -6.650017357841067,
+    "y": 1.538162223255254,
+    "z": 0.07192051370096379
+  },
+  "max_z": 0.28771996843128317,
+  "max_pitch": 0.25890900678555967,
+  "min_pitch": -0.3236139723911996,
+  "max_roll": 0.0006362762135698904,
+  "steps_climbed": 0,
+  "states": [
+    "approach",
+    "climb",
+    "descend",
+    "travel"
+  ],
+  "not_ready_samples": 0,
+  "on_tread": false,
+  "top_reached_s": null,
+  "end_on_floor": true
+}

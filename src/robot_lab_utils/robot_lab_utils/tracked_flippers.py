@@ -40,7 +40,13 @@ RISE_M, DROP_M = .05, .06
 # about 1.1 m ahead, inside the band; the 0.9 m end of terrain_stairs_flight
 # showed only missing floor, and the vehicle drove off it in 'descend' and
 # flipped (2026-11-20).
-LEDGE_M = .3
+LEDGE_M = .25
+# The lower surface beyond an edge is measured out to this distance. From the
+# camera's 0.41 m height its view reaches a 0.18 m-lower floor only 1.16 m
+# ahead, so the 1.4 m band held too few points and a lone curb read as an
+# unseen ledge (terrain_step_wide, 2026-11-20); a 0.9 m cliff's floor first
+# shows ~2.5 m ahead and stays unseen.
+LOWER_FAR_M = 2.
 # At a stair edge the tread just below is too close for the camera (it sees
 # no nearer than ~1.2 m at that depth), so the drop reads unseen exactly when
 # the vehicle starts down. A stair-depth step measured within this time keeps
@@ -84,17 +90,20 @@ def terrain_ahead(depth, hfov, camera_xyz, ground_z, corridor=.25, near=.55, far
     expected = (dv > 1e-6) & (np.abs(-du * flat) < corridor) & (flat + camera_xyz[0] > near) & (flat + camera_xyz[0] < far)
     missing = expected & (~valid | (z > flat + .3))
     drop = bool(expected.sum() >= 30 and missing.sum() > .3 * expected.sum())
+    reach = valid & (np.abs(Y) < corridor) & (X > near) & (X < LOWER_FAR_M)
+    below = Z[reach] - ground_z
+    # The next step's depth is the shallowest lower level: the window can also
+    # hold the treads beyond it (a median of a whole descending flight read
+    # 0.36 m and stopped a 0.18 m descent, 2026-11-20).
+    lower = below[below < -DROP_M]
+    seen = len(lower) >= 10
+    drop_m = max(0., -float(np.percentile(lower, 90))) if seen else None
     if band.sum() < 30:
-        return dict(rise_m=0., drop=drop, drop_m=None, step_down_seen=False, points=int(band.sum()),
+        return dict(rise_m=0., drop=drop, drop_m=drop_m, step_down_seen=seen, points=int(band.sum()),
                     nearest_rise_m=None) if drop else None
     heights = Z[band] - ground_z
     drop = drop or bool(np.percentile(heights, 10) < -DROP_M)
-    lower = heights[heights < -DROP_M]
-    return dict(rise_m=float(np.percentile(heights, 90)), drop=drop,
-                # The next step's depth is the shallowest lower level: the band can
-                # also hold the treads beyond it (a median of a whole descending
-                # flight read 0.36 m and stopped a 0.18 m descent, 2026-11-20).
-                drop_m=max(0., -float(np.percentile(lower, 90))) if len(lower) >= 10 else None, step_down_seen=len(lower) >= 10,
+    return dict(rise_m=float(np.percentile(heights, 90)), drop=drop, drop_m=drop_m, step_down_seen=seen,
                 points=int(band.sum()), nearest_rise_m=float(X[band][heights > RISE_M].min()) if (heights > RISE_M).any() else None)
 
 
@@ -120,8 +129,11 @@ class FlipperPolicy:
         drop = bool(terrain and terrain['drop'])
         if terrain and terrain.get('step_down_seen') and (terrain.get('drop_m') or 0.) <= LEDGE_M:
             self.step_seen_at = now
-        unseen = bool(terrain) and not terrain.get('step_down_seen') and now - self.step_seen_at > STEP_MEMORY_S
-        ledge = bool(terrain and terrain['drop'] and abs(pitch) < LEVEL_PITCH
+        # Just after a measured stair step, the tread below is too close to see and
+        # only the treads beyond it (deeper) remain in view: the memory covers both.
+        remembered = now - self.step_seen_at <= STEP_MEMORY_S
+        unseen = bool(terrain) and not terrain.get('step_down_seen')
+        ledge = bool(terrain and terrain['drop'] and abs(pitch) < LEVEL_PITCH and not remembered
                      and (unseen or (terrain.get('drop_m') or 0.) > LEDGE_M))
         if abs(roll) > MAX_ROLL:
             self.state = 'hold'

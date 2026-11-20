@@ -1003,6 +1003,35 @@
   version: 1.0.0
   world_file: robot_lab_maps/maps/terrain_rough/worlds/terrain_rough.world
 - created: '2026-11-20'
+  description: terrain_stairs with its flight replaced by one 0.18 m step, 3 m deep and 6 m wide, for angled
+    approaches (R10.7)
+  dimension: 3D
+  dynamics:
+    dynamic_obstacles: false
+    max_dynamic_count: 0
+    static_obstacles: true
+  ground_truth_available: true
+  id: terrain_step_wide
+  name: Wide single step
+  ros_package: robot_lab_maps
+  simulator: gazebo
+  simulators:
+  - gazebo
+  source:
+    license: Apache-2.0
+    repository: internal
+  status: available
+  supported_robot_classes:
+  - mobile
+  - legged
+  tags:
+  - stairs
+  - 3D
+  - terrain
+  - experimental
+  version: 0.1.0
+  world_file: robot_lab_maps/maps/terrain_step_wide/worlds/terrain_step_wide.world
+- created: '2026-11-20'
   description: terrain_stairs with its flight rebuilt as five 0.18 m steps up, a 1.1 m top tread and five steps
     down to the floor (1.1 m treads); tracked multi-step descents (R10.7)
   dimension: 3D

@@ -762,6 +762,22 @@ maps:
       y: '-4.0'
       yaw: '0.0'
       z: '0.1'
+  terrain_step_wide:
+    gazebo:
+      world_name: terrain_step_wide
+      world_package: robot_lab_maps
+      world_path: maps/terrain_step_wide/worlds/terrain_step_wide.world
+    initial_pose:
+      x: '-3.0'
+      y: '-4.0'
+      yaw: '0.0'
+    map:
+      has_2d_map: false
+    spawn:
+      x: '-3.0'
+      y: '-4.0'
+      yaw: '0.0'
+      z: '0.1'
   terrain_stairs_low:
     gazebo:
       world_name: terrain_stairs_low

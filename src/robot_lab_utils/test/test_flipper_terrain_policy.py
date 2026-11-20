@@ -137,3 +137,12 @@ def test_a_measured_stair_edge_stays_a_step_when_the_tread_below_leaves_view():
     assert policy.update(step, 0., 0., 0.)['state'] == 'descend'
     assert policy.update(unseen, 0., 0., 2.)['state'] == 'descend'    # tread below now too close to see
     assert policy.update(unseen, 0., 0., 3.5)['state'] == 'ledge'     # no step seen for 3.5 s: unknown drop
+
+
+def test_deeper_treads_in_view_at_a_measured_edge_continue_the_descent():
+    policy = FlipperPolicy()
+    step = dict(rise_m=0., drop=True, drop_m=.18, step_down_seen=True, points=200, nearest_rise_m=None)
+    beyond = dict(rise_m=0., drop=True, drop_m=.36, step_down_seen=True, points=12, nearest_rise_m=None)
+    assert policy.update(step, 0., 0., 0.)['state'] == 'descend'
+    assert policy.update(beyond, 0., 0., 1.)['state'] == 'descend'
+    assert FlipperPolicy().update(beyond, 0., 0., 1.)['state'] == 'ledge'   # no step measured first

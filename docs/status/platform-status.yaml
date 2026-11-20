@@ -1981,6 +1981,13 @@ tasks:
         - docs/status/evidence/flipper-strong-2026-11-19/README.md
         - docs/status/evidence/r107-tracked-flight-2026-11-20/README.md
         - docs/status/evidence/r107-tracked-over-2026-11-20/README.md
+        - docs/status/evidence/r107-tracked-angled-2026-11-20/README.md
+        tracked_angled_20261120: 'Claude: implemented, experimental. New terrain_step_wide (one 0.18 m step, 6 m wide).
+          terrain_ahead measures the lower surface out to 2.0 m (a lone curb had read as an unseen ledge), ledge depth 0.25 m,
+          and the 3 s step memory also covers deeper treads in view. The strong-flipper vehicle climbs the step at 15, 30 and
+          45 deg off square and descends at 15 deg 2/2; descents at 30/45 deg roll past the 0.35 rad hold (retained).
+          Up-and-over, the flight ledge stop and the 11-19 single-step course re-pass on the final policy.
+          docs/status/evidence/r107-tracked-angled-2026-11-20/README.md'
         tracked_over_20261120: 'Claude: implemented, experimental. New terrain_stairs_over (five 0.18 m steps up, 1.1 m top,
           five down). terrain_ahead reads the next step as the shallowest lower level, and the policy keeps a measured stair
           step for 3 s when the tread below leaves the camera view at the edge. lab_tracked_strong_flippers goes up and over
