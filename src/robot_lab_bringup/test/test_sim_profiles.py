@@ -335,7 +335,10 @@ def test_bumperbot_mode_map_matrix(mode_name, mode_config, map_name, map_config)
         pytest.skip(f"{map_name} is a water world for the marine bases, not a ground map")
     has_2d_map = map_config.get("map", {}).get("has_2d_map", False)
     compatible = not mode_config.get("requires_2d_map", False) or has_2d_map
-    if map_name in {"simple_box", "empty", "residential_demo"}:
+    # These terrain fixtures exercise stair and step traversal without an
+    # authored 2D occupancy grid, just like the ungridded display worlds.
+    if map_name in {"simple_box", "empty", "residential_demo", "terrain_stairs_flight",
+                    "terrain_stairs_over", "terrain_step_wide"}:
         assert compatible == (mode_name not in {"loc", "nav"})
     else:
         assert compatible

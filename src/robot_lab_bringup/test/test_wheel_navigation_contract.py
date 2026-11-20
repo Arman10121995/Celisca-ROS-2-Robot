@@ -104,6 +104,7 @@ def test_behavior_server_provides_the_car_escape():
     assert server['drive_on_heading']['plugin'] == 'nav2_behaviors/DriveOnHeading'
 
 
+@pytest.mark.integration
 def test_car_lookahead_follows_turning_radius_arcs():
     """Round 62: the 0.8 m lookahead cut the S-curve round cone 0 (0.05 m footprint clearance)."""
     import importlib.util

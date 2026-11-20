@@ -147,6 +147,7 @@ def test_catch_up_budget_is_a_parameter_and_resets_with_the_clock():
         LAUNCH.read_text()
 
 
+@pytest.mark.integration
 def test_tick_lasts_exactly_the_physics_it_advances():
     """P4: a 240 Hz request with 2 ms steps paced 4.17 ms of wall time per 4 ms of physics (RTF <= 0.96)."""
     from robot_lab_mujoco.mujoco_spawner import _tick_pacing
@@ -155,6 +156,7 @@ def test_tick_lasts_exactly_the_physics_it_advances():
     assert _tick_pacing(1 / 1000, .002) == (1, .002)
 
 
+@pytest.mark.integration
 def test_oversleep_is_paid_back_from_the_next_sleep():
     """P4: late wake-ups must not accumulate into slower-than-real-time running."""
     from robot_lab_mujoco.mujoco_spawner import _pacing_sleep

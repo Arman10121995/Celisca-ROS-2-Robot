@@ -2,6 +2,8 @@
 from pathlib import Path
 import sys
 
+import pytest
+
 ROOT = Path(__file__).resolve().parents[3]
 sys.path.insert(0, str(ROOT / 'src/robot_lab_utils'))
 from robot_lab_utils.fleet_transport import LiftTransport,lift_door_admission,door_position_mode
@@ -128,6 +130,7 @@ def test_model_exit_goals_replace_landing_heading_only_when_exiting():
     assert LiftTransport('alpha', 'operator', 'L0', 'L1', CONFIG, 0.).landing('L1', True) == CONFIG['landings']['L1']
 
 
+@pytest.mark.integration
 def test_infrastructure_merges_the_member_model_transport_goals():
     from types import SimpleNamespace
     import yaml
