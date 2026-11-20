@@ -353,6 +353,14 @@ def test_close_stops_owned_plant_and_removes_callbacks(panel, model):
     panel.close()
 
 
+def test_stop_clears_ownership_when_ros_graph_has_shut_down(panel, model):
+    activate(panel, model)
+    panel.node.get_publishers_info_by_topic.side_effect = RuntimeError('ROS context closed')
+    panel.stop()
+    assert panel.state is None and panel.publisher_gid is None
+    panel.stop_client.call_async.assert_not_called()
+
+
 def receive_measured(panel, model, **measured):
     state = feedback(model)
     for channel in state['channels']:

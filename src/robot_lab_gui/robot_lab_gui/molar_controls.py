@@ -330,11 +330,13 @@ class MolarControls(ScrollPanel):
 
     def connect(self):
         if self.node:
-            return True
+            return self.node.context.ok()
         if rclpy is None:
             self.status.set('Start Robot Lab from the sourced ROS workspace.')
             return False
         if not rclpy.ok():
+            if rclpy.get_default_context().handle is not None:
+                return False
             rclpy.init(args=None)
         self.node = rclpy.create_node('molar_gui_' + str(id(self)))
         self.executor = SingleThreadedExecutor()
@@ -348,11 +350,14 @@ class MolarControls(ScrollPanel):
     def graph_gid(self):
         if not self.node:
             return None
-        publishers = self.node.get_publishers_info_by_topic(TOPIC + '/state')
-        if (len(publishers) != 1 or self.node.count_subscribers(TOPIC + '/command') != 1
-                or self.node.count_subscribers(TOPIC + '/heartbeat') != 1):
+        try:
+            publishers = self.node.get_publishers_info_by_topic(TOPIC + '/state')
+            if (len(publishers) == 1 and self.node.count_subscribers(TOPIC + '/command') == 1
+                    and self.node.count_subscribers(TOPIC + '/heartbeat') == 1):
+                return bytes(publishers[0].endpoint_gid)
+        except RuntimeError:
             return None
-        return bytes(publishers[0].endpoint_gid)
+        return None
 
     def receive(self, message, info=None):
         try:
@@ -463,9 +468,13 @@ class MolarControls(ScrollPanel):
         # Selection has already changed when its trace runs. Revoke only the
         # previous owned process/graph; do not require the new selection to match.
         if (self.state and self.bound_process is self.app.process and self.bound_process.poll() is None
-                and self.publisher_gid == self.graph_gid() and self.stop_client
-                and self.stop_client.service_is_ready()):
-            self.stop_client.call_async(Trigger.Request())
+                and self.publisher_gid is not None and self.publisher_gid == self.graph_gid() and self.stop_client):
+            try:
+                if self.stop_client.service_is_ready():
+                    self.stop_client.call_async(Trigger.Request())
+            except RuntimeError:
+                # Feedback ownership must be cleared even as ROS shuts down.
+                pass
         self.state = None
         self.received = -math.inf
         self.bound_process = self.publisher_gid = None

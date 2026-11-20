@@ -561,6 +561,25 @@ def test_stopping_launch_survives_closed_ros_context(app):
         app.process, app._launch_running = None, False
 
 
+def test_launch_exit_updates_gui_when_default_ros_context_closed(app):
+    closed_ros = Mock()
+    closed_ros.ok.return_value = False
+    closed_ros.get_default_context.return_value.handle = object()
+    process = Mock()
+    app.process, app._launch_running = process, True
+    app._lifecycle_queue.put((process, 0))
+    try:
+        with patch.object(launcher, 'rclpy', closed_ros), patch.object(app, 'after'), \
+                patch.object(launcher.subprocess, 'Popen') as fallback:
+            app._poll_output()
+        assert not app._launch_running
+        assert app.status_var.get() == 'Idle'
+        closed_ros.init.assert_not_called()
+        fallback.assert_not_called()
+    finally:
+        app.process = None
+
+
 def test_drive_pad_and_wasd_use_incremental_speed_and_release_ramp(app):
     app.drive_override_var.set(True)
     with patch.object(app, "_publish_drive") as publish, \

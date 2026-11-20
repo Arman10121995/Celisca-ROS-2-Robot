@@ -3259,9 +3259,9 @@ class SimulationLauncherGui(tk.Tk):
                 process, return_code = self._lifecycle_queue.get_nowait()
                 launch_lines.append(f'\n[launch exited with code {return_code}]\n')
                 if process is self.process:
+                    self._launch_running = False
                     self._stop_aux_commands()
                     self._stop_drive()
-                    self._launch_running = False
                     self._update_reset_button()
                     self._update_validation_and_command()
                     self.stop_button.configure(state='disabled')
@@ -3469,6 +3469,8 @@ class SimulationLauncherGui(tk.Tk):
         if rclpy is None or Twist is None:
             return False
         if not rclpy.ok():
+            if rclpy.get_default_context().handle is not None:
+                return False
             rclpy.init(args=None)
         if self.ros_node is None:
             self.ros_node = rclpy.create_node("robot_lab_gui")
@@ -3480,14 +3482,20 @@ class SimulationLauncherGui(tk.Tk):
         parking=getattr(self,'car_parking_controls',None)
         if parking is not None and parking.active() and any(abs(v)>1e-9 for v in (linear,angular,lateral,vertical)):
             parking.cancel()
-        if self._ensure_ros_publisher():
+        if rclpy is not None and Twist is not None:
+            if not self._ensure_ros_publisher():
+                return
             msg = Twist()
             msg.linear.x = float(linear)
             msg.linear.y = float(lateral)
             msg.linear.z = float(vertical) if self._flight_selectable() else 0.0
             msg.angular.z = float(angular)
-            self.cmd_vel_pub.publish(msg)
-            rclpy.spin_once(self.ros_node, timeout_sec=0.0)
+            try:
+                self.cmd_vel_pub.publish(msg)
+                rclpy.spin_once(self.ros_node, timeout_sec=0.0)
+            except RuntimeError:
+                if rclpy.ok():
+                    raise
             return
 
         command = [

@@ -103,6 +103,7 @@ SETTLE_TOLERANCE = 0.01  # rad
 STAGE_TIMEOUT = 30.0    # s per stage
 FINGER_STILL_WINDOW = 0.5   # s: fingers count as stopped when they move
 FINGER_STILL_SPAN = 0.0005  # m (or rad) less than this within the window
+CALIBRATED_CLOSE_RATE = 0.10  # rad/s near a loose object
 STATE_STALE = 1.0       # s
 # Base driving (mobile profiles): below TIAGo's 0.2 m/s, 0.4 rad/s limits.
 DRIVE_SPEED = 0.15      # m/s
@@ -702,6 +703,21 @@ class PickPlace(Node):
     def _send(self, targets):
         self.command_pub.publish(String(data=json.dumps(dict(plant_id=self.state.get('plant_id'), targets=targets))))
 
+    def _stage_fingers(self, stage):
+        goals = stage['fingers']
+        if not self.spec.aperture or stage['name'] != 'close':
+            return goals
+        if 'metered_close' not in stage:
+            low, high = self.spec.aperture[0][0], self.spec.aperture[-1][0]
+            measured = self.measured()
+            stage['metered_close'] = {name: min(high, max(low, measured[name])) for name in goals}
+        reference = stage['metered_close']
+        name, = goals
+        error = goals[name]-reference[name]
+        step = CALIBRATED_CLOSE_RATE * PERIOD
+        reference[name] = goals[name] if abs(error) <= step else reference[name]+math.copysign(step, error)
+        return reference
+
     def _tcp(self, task):
         scene = task['scene']
         measured = self.measured()
@@ -750,9 +766,13 @@ class PickPlace(Node):
                 ' (worst joint %s %.4f rad from its target; %d over the %.2f rad settle tolerance)'
                 % (worst, errors[worst], sum(e > SETTLE_TOLERANCE for e in errors.values()), SETTLE_TOLERANCE))
                 if worst else ''))
+        fingers = self._stage_fingers(stage)
         if task['step'] < len(stage['targets']):
-            self._send(dict(stage['targets'][task['step']], **stage['fingers']))
+            self._send(dict(stage['targets'][task['step']], **fingers))
             task['step'] += 1
+            return
+        if fingers != stage['fingers']:
+            self._send(dict(stage['targets'][-1], **fingers))
             return
         if not self._settled(stage):
             self._send(dict(stage['targets'][-1], **stage['fingers']))

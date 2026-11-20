@@ -60,6 +60,15 @@ model during startup before subscribing. The GUI waits for the feedback
 the node needs before enabling the fetch button.
 [Private planner output](short-block-private-plan.txt).
 
+The next GUI trial docked and reached closure before it was interrupted
+when a second simulator qualification started. A separate trial then
+docked at `[0.8836, 0.0]` m, descended and closed. The block shifted
+about 38 mm sideways during closing. Both measured pad loads were zero
+when the controller stopped it before lift. This is a retained failed
+fetch. The candidate now meters the jaw reference at 0.10 rad/s during
+automated closing. Direct Open and Close use their existing limits.
+[Interrupted run](gui-fetch-interrupted.json) · [Closure result](gui-fetch-stopped-at-closure.json).
+
 ## Source and retained diagnostics
 
 The bare arm and its wheel/arm measurements use the existing source pin.

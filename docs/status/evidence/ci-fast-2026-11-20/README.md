@@ -13,7 +13,6 @@ ten cases. A prior run on `fdec0619` failed the same cases.
   car lookahead check imports an installed navigation launch module.
   All four assertions run in the sourced integration tier.
 
-The unsourced map matrix passed 225 cases with 45 marine skips. The
-focused sourced run passed those four checks and the existing Nav2
-frame check in the same file. Full GitHub workflow verification is
-pending.
+The complete unsourced fast tier passed 1,502 tests with 64 skips and
+eight deselections. The focused sourced run passed the four moved checks
+and the existing Nav2 frame check. [Published repair run](https://github.com/Arman10121995/Celisca-ROS-2-Robot/actions/runs/44815298868).

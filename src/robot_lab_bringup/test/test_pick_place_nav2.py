@@ -19,6 +19,17 @@ def pick_place():
     return module
 
 
+def test_calibrated_close_meters_only_the_shaft_during_closure(pick_place):
+    node = object.__new__(pick_place.PickPlace)
+    node.spec = SimpleNamespace(aperture=[(0., 0.), (1., .10)])
+    node.measured = lambda: {'shaft': .36}
+    close = {'name': 'close', 'fingers': {'shaft': .31}}
+    outputs = [node._stage_fingers(close)['shaft'] for _ in range(7)]
+    assert outputs == pytest.approx([.35, .34, .33, .32, .31, .31, .31])
+    release = {'name': 'release', 'fingers': {'shaft': 1.}}
+    assert node._stage_fingers(release) == release['fingers']
+
+
 def test_stop_waits_for_late_nav2_acceptance_and_terminal_cancel(pick_place):
     node = object.__new__(pick_place.PickPlace)
     nav = dict(future=Future(), result=None)
