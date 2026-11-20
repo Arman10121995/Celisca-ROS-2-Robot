@@ -116,9 +116,10 @@ robots:
                  arm_5_joint, arm_6_joint, arm_7_joint]
       grip_joints: [gripper_left_finger_joint, gripper_right_finger_joint]
       grip_hold_squeeze: 0.02
-      # Bullet only: keep the two fingers level while squeezing (they drift
-      # sideways on the floating base); MuJoCo holds without it.
+      # Keep both jaw openings synchronized on backends that measured a
+      # sideways squeeze drift. The original drives retain their effort caps.
       pybullet_symmetric_grip: true
+      isaac_symmetric_grip: true
     pick_place:
       arm_joints: [arm_1_joint, arm_2_joint, arm_3_joint, arm_4_joint, arm_5_joint, arm_6_joint, arm_7_joint]
       finger_joints: [gripper_left_finger_joint, gripper_right_finger_joint]

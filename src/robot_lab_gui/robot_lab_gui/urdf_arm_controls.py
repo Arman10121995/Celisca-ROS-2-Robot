@@ -464,6 +464,8 @@ class UrdfArmControls(MolarControls):
             value = channel['measured']
             angle = ' (%.1f°)' % math.degrees(value) if channel['units'] == 'rad' else ''
             lines.append('J%d %.3f %s%s' % (index + 1, value, channel['units'], angle))
+        if self.state.get('symmetric_grip'):
+            lines.append('Gripper fingers move together. Apply either finger target.')
         lines.append('Base Drive %s' % ('inhibited (arm moving or settling)' if self.state['base_inhibited']
                                         else 'available'))
         self.feedback.set('\n'.join(lines))

@@ -1,5 +1,12 @@
 # Agent Handoff Protocol
 
+November 20 TIAGo on Isaac: optional compliant native prismatic coupling
+matches jaw openings while preserving the two original position drives.
+Single-finger requests address the pair. Preserve both 16 N caps, measured
+skew feedback and Stop generation. The first native run should check jaw
+tracking and block motion during closure, then lift and release. The installed
+Isaac 6.0.1 schema check is on SSD under `tiago-isaac-symmetric-grip-20261120`.
+
 November 20 fleet floor binding: keep each queued goal's floor, the
 independently observed body floor, and the acknowledged Nav2 map in agreement.
 The RMF adapter tags graph waypoints and native transport binds approach and

@@ -798,6 +798,36 @@ def _measured_articulation_hold(robot, dof_names, joints):
             for kind in ('position','velocity')}
 
 
+def _author_symmetric_grip(stage, names, dt):
+    """Equalize opposed slide coordinates while keeping both bounded drives."""
+    from pxr import PhysxSchema, Usd, UsdPhysics
+
+    pair = [prim for prim in stage.Traverse(Usd.TraverseInstanceProxies())
+            if prim.GetName() in names and prim.IsA(UsdPhysics.PrismaticJoint) and not prim.IsInstanceProxy()]
+    if len(pair) != 2 or {prim.GetName() for prim in pair} != set(names):
+        raise ValueError('Expected two unique imported prismatic fingers: '+str(names))
+    by_name = {prim.GetName(): prim for prim in pair}
+    leader, follower = (UsdPhysics.PrismaticJoint(by_name[name]) for name in names)
+    if not leader.GetBody0Rel().GetTargets() or leader.GetBody0Rel().GetTargets() != follower.GetBody0Rel().GetTargets():
+        raise ValueError('Symmetric fingers must attach to the same hand body')
+
+    # PhysX uses rotX for single-DOF joint schemas, including sliders. The
+    # constraint equation is follower + gearing * leader + offset = 0.
+    axis = UsdPhysics.Tokens.rotX
+    mimic = PhysxSchema.PhysxMimicJointAPI.Apply(follower.GetPrim(), axis)
+    if not mimic:
+        raise RuntimeError('Could not apply the PhysX finger mimic schema')
+    mimic.CreateReferenceJointRel().SetTargets([leader.GetPath()])
+    mimic.CreateReferenceJointAxisAttr(axis)
+    mimic.CreateGearingAttr(-1.)
+    mimic.CreateOffsetAttr(0.)
+    # Keep contact compliance at the initial dt*frequency ≈ 1 setting from
+    # NVIDIA's articulation guide. Source motors still supply the squeeze.
+    mimic.CreateNaturalFrequencyAttr(1./dt)
+    mimic.CreateDampingRatioAttr(1.)
+    return str(follower.GetPath())
+
+
 def _apply_articulation_effort_budget(robot, dof_names, joints, efforts, native_gravity=False):
     """Cap native drive + feedforward together on configured position joints.
 
@@ -1566,6 +1596,9 @@ def _run_stage(app, reader, cfg, state):
         articulation_joints = cfg.get('articulation_joints', {})
         if articulation_joints:
             _author_articulation_drives(stage_obj, articulation_joints)
+            if cfg.get('articulation_symmetric_grip'):
+                linked = _author_symmetric_grip(stage_obj, cfg['articulation_symmetric_grip'], dt)
+                _emit({'event': 'log', 'msg': 'Compliant symmetric grip: '+linked})
             passive = _author_passive_caster_drives(stage_obj, cfg.get('passive_casters', {}))
             _emit({'event': 'log', 'msg': 'Passive caster bearing joints: '+str(passive)})
         if joint_pd:

@@ -702,8 +702,10 @@ class IsaacSpawner(Node):
             if articulation_config:
                 if self._policy_targets is not None:
                     raise ValueError('Articulation cannot share ownership with a learned policy')
-                from robot_lab_utils.urdf_articulation import ArticulationROS, gravity_loads
-                self._articulation = ArticulationROS(self, articulation_config, urdf, str(model))
+                from robot_lab_utils.urdf_articulation import ArticulationROS, URDFArticulation, gravity_loads
+                config = json.loads(articulation_config)
+                contract = URDFArticulation(config, urdf, str(model), symmetric_grip=config.get('isaac_symmetric_grip', False))
+                self._articulation = ArticulationROS(self, contract, urdf, str(model))
                 native_gravity = self._articulation.contract.config.get('isaac_native_gravity_compensation', False)
                 if not isinstance(native_gravity, bool):
                     raise ValueError('isaac_native_gravity_compensation must be boolean')
@@ -759,6 +761,7 @@ class IsaacSpawner(Node):
             "gait_floor_reference":self.get_parameter('gait_floor_reference').value,
             "gait_terrain_helper":str(__import__('robot_lab_utils.gait_terrain',fromlist=['__file__']).__file__),
             "articulation_joints": self._articulation.contract.joints if self._articulation else {},
+            "articulation_symmetric_grip": self._articulation.contract.symmetric_grip if self._articulation else (),
             "articulation_native_gravity": (self._articulation.contract.config.get(
                 'isaac_native_gravity_compensation', False) if self._articulation else False),
             "passive_casters": passive_casters,

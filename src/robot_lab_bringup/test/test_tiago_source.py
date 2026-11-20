@@ -42,6 +42,34 @@ def test_preserves_all_source_mechanics_and_independent_fingers(original, tmp_pa
     assert len(articulation.masters) == 12
 
 
+def test_isaac_tiago_pairs_jaw_targets_and_reports_measured_skew(original, tmp_path):
+    _, config = contracts(original)
+    overlay_path = Path(__file__).resolve().parents[2]/'robot_lab_robots/config/installed_overlays.yaml'
+    overlay = yaml.safe_load(overlay_path.read_text())['robots']['asset_pal_tiago']['articulation']
+    config.update(overlay)
+    portable_description(original)
+    model = tmp_path/'tiago.urdf'
+    model.write_text(ET.tostring(original, encoding='unicode'))
+    arm = URDFArticulation(config, model.read_text(), model, symmetric_grip=config['isaac_symmetric_grip'])
+    left, right = arm.symmetric_grip
+    measured = config['home'].copy()
+    still = dict.fromkeys(measured, 0.)
+    arm.step(measured, still, .02, now=1.)
+    arm.heartbeat(now=1.)
+    assert arm.command(dict(plant_id=arm.plant_id, targets={right: .02}), now=1.)
+    targets = arm.step(measured, still, .02, now=1.02)['position']
+    assert targets[left] == targets[right]
+    assert arm.targets[left] == arm.targets[right] == .02
+    measured[right] -= .02
+    arm.step(measured, still, .02, now=1.04)
+    state = arm.state()
+    assert state['coupling_error'][right] == pytest.approx(-.02)
+    assert state['coupling_inhibited'] and state['base_inhibited']
+    generation = arm.plant_id
+    assert not arm.command(dict(plant_id=generation, targets={left: .02, right: .01}), now=1.04)
+    assert arm.holding and arm.plant_id != generation
+
+
 @pytest.mark.parametrize('change', ['wheel_geometry', 'command_interface', 'mimic'])
 def test_rejects_changed_source_contract(original, change):
     if change == 'wheel_geometry':

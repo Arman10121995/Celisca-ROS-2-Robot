@@ -624,8 +624,11 @@ parking batch needs its own run. Details and evidence are in the
     (the high vias were out of reach). The planner now keeps 15 mm from the
     object on transit legs and always comes in over the top. The block no
     longer tips, but while squeezing, the hand drifts 1.8 cm along the
-    closing axis. Next: couple the fingers on Isaac.
-    [Receipt](docs/status/evidence/r59-isaac-tiago-approach-2026-11-18/README.md);
+    closing axis.
+    [Receipt](docs/status/evidence/r59-isaac-tiago-approach-2026-11-18/README.md).
+    2026-11-20: opt-in compliant PhysX jaw coupling and paired commands are
+    implemented. Isaac 6.0.1 schema and source-limit checks pass. An actual
+    close, lift, carry and release run remains pending.
   - Done 2026-11-18 (implemented, experimental): **the fetch's grasp
     planned from TIAGo's head camera** (`"pose_source": "rgbd"`; GUI
     **Object pose → RGB-D camera**). A look phase tilts the head; three

@@ -79,7 +79,7 @@ def effort_budget(feedforward, limit):
 
 class URDFArticulation:
     """Measured-position hold, bounded targets and one explicit coupling tree."""
-    def __init__(self, configuration, urdf, model_path):
+    def __init__(self, configuration, urdf, model_path, *, symmetric_grip=False):
         config = json.loads(configuration) if isinstance(configuration, str) else configuration
         if not isinstance(config, dict) or config.get('schema') != 'robot_lab.urdf_articulation.v1':
             raise ValueError('Expected robot_lab.urdf_articulation.v1 articulation config')
@@ -146,6 +146,13 @@ class URDFArticulation:
         self.grip = tuple(config.get('grip_joints', ()))
         if any(name not in self.joints or self.joints[name]['mode'] != 'position' for name in self.grip):
             raise ValueError('grip_joints must be configured position joints')
+        if not isinstance(symmetric_grip, bool):
+            raise ValueError('Symmetric grip must be boolean')
+        self.symmetric_grip = self.grip if symmetric_grip else ()
+        if symmetric_grip and (len(set(self.grip)) != 2 or len(self.grip) != 2
+                or self.joints[self.grip[0]]['type'] != 'prismatic'
+                or self.joints[self.grip[0]] != self.joints[self.grip[1]]):
+            raise ValueError('Symmetric grip requires two matching prismatic position channels')
         self.grip_squeeze = number(config.get('grip_hold_squeeze', DEFAULT_GRIP_HOLD_SQUEEZE), 'grip_hold_squeeze', True)
         if self.grip_squeeze > MAX_GRIP_HOLD_SQUEEZE:
             raise ValueError('grip_hold_squeeze must be at most %g' % MAX_GRIP_HOLD_SQUEEZE)
@@ -231,6 +238,12 @@ class URDFArticulation:
                     spec = self.joints[name]
                     if isinstance(value, bool) or not isinstance(value, (int, float)) or not math.isfinite(value) or not spec['lower'] <= value <= spec['upper']:
                         raise ValueError('Finite target outside source bounds: '+name)
+                if self.symmetric_grip:
+                    pair_targets = [targets[name] for name in self.symmetric_grip if name in targets]
+                    if pair_targets:
+                        if abs(pair_targets[0]-pair_targets[-1]) > 1e-8:
+                            raise ValueError('The linked fingers require one common target')
+                        targets = dict(targets, **dict.fromkeys(self.symmetric_grip, pair_targets[0]))
                 self.targets.update({name: float(value) for name, value in targets.items()})
                 self.holding = False
                 self.status = 'executing bounded articulation targets'
@@ -304,11 +317,19 @@ class URDFArticulation:
                     self.references[name] = max(spec['lower'], min(spec['upper'], previous+delta))
                 result['position'][name] = self.references[name]
             self.active = any((not self.holding and name not in self.grip and abs(self.targets[name]-self.measured[name]) > .002) or abs(self._rate(name)) > .01 if spec['mode'] == 'position' else abs(self.references[name]) > .001 or abs(self._rate(name)) > .05 for name, spec in self.joints.items())
-            coupling_errors = [self.measured[name]-(self.measured[c['joint']]*c['multiplier']+c['offset']) for name,c in self.couplings.items()]
+            coupling_errors = self._coupling_errors()
             self.base_inhibited = bool(self.fault or self.active
                                        or any(self.measured.get(name, 0.) > .005 for name in ('telescope_stage1_joint', 'telescope_stage2_joint'))
-                                       or any(abs(error) > .01+1e-9 for error in coupling_errors))
+                                       or any(abs(error) > .01+1e-9 for error in coupling_errors.values()))
             return result
+
+    def _coupling_errors(self):
+        errors = {name: self.measured.get(name, 0.)-(self.measured.get(c['joint'], 0.)*c['multiplier']+c['offset'])
+                  for name, c in self.couplings.items()}
+        if self.symmetric_grip:
+            left, right = self.symmetric_grip
+            errors[right] = self.measured.get(right, 0.)-self.measured.get(left, 0.)
+        return errors
 
     def _rate(self, name):
         """Measured motion: position change over the last RATE_WINDOW s.
@@ -323,7 +344,7 @@ class URDFArticulation:
 
     def state(self):
         with self.lock:
-            coupling_error = {name: self.measured.get(name, 0.)-(self.measured.get(c['joint'], 0.)*c['multiplier']+c['offset']) for name,c in self.couplings.items()}
+            coupling_error = self._coupling_errors()
             coupling_inhibited = any(abs(error) > .01+1e-9 for error in coupling_error.values())
             return dict(schema=self.config['schema'], plant_id=self.plant_id,
                 state_monotonic=time.monotonic(),
@@ -331,7 +352,7 @@ class URDFArticulation:
                 initialized=self.initialized, status=self.status+('; coupling deviation inhibits base' if coupling_inhibited else ''), fault=self.fault,
                 base_inhibited=self.base_inhibited, active=self.active,
                 qualification='implemented adapter; runtime validation pending',
-                coupling_error=coupling_error, coupling_inhibited=coupling_inhibited,
+                coupling_error=coupling_error, coupling_inhibited=coupling_inhibited, symmetric_grip=self.symmetric_grip,
                 channels=[dict(name=name, mode=spec['mode'], units=('m' if spec['type']=='prismatic' else 'rad')+('/s' if spec['mode']=='velocity' else ''), measured=self.measured.get(name), target=self.targets.get(name), reference=self.references.get(name), measured_velocity=self.velocities.get(name), limits=[spec['lower'],spec['upper']], max_velocity=spec['max_velocity'], coupled=name in self.couplings) for name,spec in self.joints.items()])
 
 

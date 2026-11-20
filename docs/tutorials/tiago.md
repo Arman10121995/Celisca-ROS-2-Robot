@@ -40,6 +40,13 @@ planning workflow below; other-backend planning remains under R5.9.
 Gazebo is unavailable for this variant: the official
 modern Gazebo controller plugin needs a separate Fortress port.
 
+In Isaac, applying either finger target moves the two jaws together.
+The lab uses a compliant PhysX constraint to keep both reported openings
+aligned during closure. Each original source motor retains its 16 N cap.
+Measured jaw separation over the coupling tolerance inhibits Drive. The
+constraint and command contract are checked on Isaac Sim 6.0.1. The physical
+Isaac fetch remains experimental. [NVIDIA articulation guide](https://docs.omniverse.nvidia.com/kit/docs/omni_physics/110.0/dev_guide/rigid_bodies_articulations/articulations.html#articulation-mimic-joint-compliance).
+
 ## Plan joint targets in MuJoCo
 
 **Mobile arm → Plan targets / Plan Home → Execute plan** is available for

@@ -1,5 +1,11 @@
 # Current Robot Lab status
 
+November 20 Codex: TIAGo's Isaac gripper now uses compliant linked jaws and
+paired targets to address the recorded closure drift. Source actuator caps,
+measured skew and Stop checks remain in the control path. The installed
+Isaac 6.0.1 schema and source-contract checks pass. A physical fetch run remains
+pending. [TIAGo guide](../tutorials/tiago.md).
+
 November 20 Codex: Fleet goals now stay bound to the member's acknowledged
 floor map. Nearest-idle allocation and coverage account for floor boundaries,
 and the Fleet GUI displays the confirmed floor. Shared-world Fortress servers
