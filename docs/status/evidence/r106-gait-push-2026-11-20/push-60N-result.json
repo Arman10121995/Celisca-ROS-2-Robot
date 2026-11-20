@@ -1,0 +1,87 @@
+{
+ "recovery_reasons": [
+  "\"Insufficient actual terrain foot support for 80 ms\"",
+  "null"
+ ],
+ "recovery_history": [
+  {
+   "sim": 1.2439999990000001,
+   "recovery": {
+    "recovering": false,
+    "reason": null,
+    "recoveries_in_window": 0,
+    "budget": 3,
+    "speed_scale": 1.0
+   },
+   "position": {
+    "x": -0.750673837715934,
+    "y": 5.911475999539174e-05,
+    "z": 0.18909153880664342
+   },
+   "tilt": 0.003280432424455554
+  },
+  {
+   "sim": 12.243999999,
+   "recovery": {
+    "recovering": true,
+    "reason": "Insufficient actual terrain foot support for 80 ms",
+    "recoveries_in_window": 1,
+    "budget": 3,
+    "speed_scale": 0.0
+   },
+   "position": {
+    "x": -0.3287801106347285,
+    "y": 0.13253156876457134,
+    "z": 0.19168089756166296
+   },
+   "tilt": 0.013178089119093262
+  },
+  {
+   "sim": 13.523999999,
+   "recovery": {
+    "recovering": false,
+    "reason": null,
+    "recoveries_in_window": 1,
+    "budget": 3,
+    "speed_scale": 0.5
+   },
+   "position": {
+    "x": -0.3262305078182846,
+    "y": 0.29876260510982133,
+    "z": 0.19002829212611913
+   },
+   "tilt": 0.0032693434889853458
+  },
+  {
+   "sim": 16.543999999,
+   "recovery": {
+    "recovering": false,
+    "reason": null,
+    "recoveries_in_window": 1,
+    "budget": 3,
+    "speed_scale": 1.0
+   },
+   "position": {
+    "x": -0.26822437423123624,
+    "y": 0.29970586496976453,
+    "z": 0.1887808531332142
+   },
+   "tilt": 0.00034946880142128873
+  }
+ ],
+ "push": "60,12,0.3,1",
+ "passed": true,
+ "reason": "Actual source gait progress 0.9300 m; held drift 0.0028 m",
+ "backend": "mujoco",
+ "robot": "lab_octopod",
+ "terrain": true,
+ "wall_seconds": 35.46259607898537,
+ "phase": "holding",
+ "wall_budget_s": 180.0,
+ "state_publishers": [
+  {
+   "node": "source_gait_controller",
+   "namespace": "/"
+  }
+ ]
+}

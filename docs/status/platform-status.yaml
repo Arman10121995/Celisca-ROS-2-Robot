@@ -1933,6 +1933,11 @@ tasks:
           On 2026-11-19 a slip mission in the new gait_slip_patch world (friction 0.05, contact priority 2); the octopod
           crossed at 0.045 m/s with no measured slip; 4-6 deg rolled plates exceeded the 2 cm terrain envelope and the
           gait stopped first. Recovery still unit-tested only. docs/status/evidence/r106-gait-slip-2026-11-19/README.md
+          On 2026-11-20 a push-recovery mission - gait_simulator.launch.py passes the MuJoCo base force pulse (perturbation_*,
+          off by default); lateral 0.3 s pushes on the walking octopod (terrain gait, gait_low_relief) trip the 80 ms
+          support-loss check at 60-100 N; the bounded recovery paused, resumed at half speed in 1.3-1.6 s and finished the walk
+          in 4 of 4 tripped pushes (10-30 N and one 60 N run did not trip). Contact-kinematic slip trigger not reached.
+          docs/status/evidence/r106-gait-push-2026-11-20/README.md
         qualification_review: '2026-10-27 documentation review: retain the implemented code, tests and named
           mission certificates. Full declared roadmap acceptance is still open; test counts, metadata and scene
           loads do not qualify remaining robot/map/backend missions. See docs/REMAINING_WORK_GUIDE.md.'

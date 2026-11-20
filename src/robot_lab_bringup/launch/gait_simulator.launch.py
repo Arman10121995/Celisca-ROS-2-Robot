@@ -75,6 +75,9 @@ def setup(context):
             scan_range_max=8.,camera_width=320,camera_height=240,camera_rate=5. if task=='3d_slam' else 0.,camera_horizontal_fov=1.25,
             camera_near=.1,camera_far=8.))
     args['gait_probe_config']=json.dumps(probes)
+    # Optional bounded world-frame force pulse on the base (MuJoCo spawner;
+    # R10.6 push recovery, 2026-11-20). 0 N disables it.
+    args.update({'perturbation_'+key:value('perturbation_'+key) for key in ('force_n','start_s','duration_s','axis')})
     if backend in ('pybullet','isaac'):
         args=dict(model=str(description),robot_name=name,gui=value('gui'),world_name=gz['world_name'],world_path=source_world,
             hold_position='false',joint_pd_config=json.dumps(model.pd_config()),gait_probe_config=json.dumps(probes),
@@ -144,4 +147,7 @@ def generate_launch_description():
         DeclareLaunchArgument('localization',default_value='false',description='Localize in the selected saved 3D database'),
         DeclareLaunchArgument('map_name',default_value='nav_empty'),DeclareLaunchArgument('control',default_value='true'),
         DeclareLaunchArgument('gui',default_value='true'),DeclareLaunchArgument('rviz',default_value='true'),
-        *[DeclareLaunchArgument('spawn_'+axis,default_value='') for axis in ('x','y','z','yaw')],OpaqueFunction(function=setup)])
+        *[DeclareLaunchArgument('spawn_'+axis,default_value='') for axis in ('x','y','z','yaw')],
+        *[DeclareLaunchArgument('perturbation_'+key,default_value=default,description='MuJoCo base force pulse (world axis 0/1/2); 0 N disables')
+          for key,default in (('force_n','0.0'),('start_s','0.0'),('duration_s','0.0'),('axis','1'))],
+        OpaqueFunction(function=setup)])

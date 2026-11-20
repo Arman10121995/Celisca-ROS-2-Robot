@@ -1,0 +1,38 @@
+{
+ "recovery_reasons": [
+  "null"
+ ],
+ "recovery_history": [
+  {
+   "sim": 1.183999999,
+   "recovery": {
+    "recovering": false,
+    "reason": null,
+    "recoveries_in_window": 0,
+    "budget": 3,
+    "speed_scale": 1.0
+   },
+   "position": {
+    "x": -0.7506679109673728,
+    "y": 5.8322301163494244e-05,
+    "z": 0.18909640240481973
+   },
+   "tilt": 0.00328006544239943
+  }
+ ],
+ "push": "10,12,0.3,1",
+ "passed": true,
+ "reason": "Actual source gait progress 0.9917 m; held drift 0.0023 m",
+ "backend": "mujoco",
+ "robot": "lab_octopod",
+ "terrain": true,
+ "wall_seconds": 35.05618408799637,
+ "phase": "holding",
+ "wall_budget_s": 180.0,
+ "state_publishers": [
+  {
+   "node": "source_gait_controller",
+   "namespace": "/"
+  }
+ ]
+}
