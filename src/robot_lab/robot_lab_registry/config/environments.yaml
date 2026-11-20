@@ -124,6 +124,24 @@
   seed: 1
   world_file: robot_lab_maps/maps/arm_pick_place_can/worlds/arm_pick_place_can.world
   occupancy_map: robot_lab_maps/maps/arm_pick_place_can/maps/map.pgm
+- id: arm_pick_place_can_side
+  name: Arm pick-and-place lab (cylinder on its side)
+  description: Tabletop fixture with a loose 50 x 90 mm, 60 g cylinder on its side
+  dimension: 3D
+  dynamics: {dynamic_obstacles: false, static_obstacles: true}
+  ground_truth_available: true
+  ros_package: robot_lab_maps
+  simulator: mujoco
+  simulators: [gazebo, mujoco, pybullet, isaac]
+  source: {license: Apache-2.0, repository: internal}
+  status: available
+  supported_robot_classes: [manipulator]
+  tags: [manipulation, pick_and_place, tabletop, experimental]
+  version: 0.1.0
+  size: {x: 6.0, y: 6.0, z: 0.35}
+  seed: 1
+  world_file: robot_lab_maps/maps/arm_pick_place_can_side/worlds/arm_pick_place_can_side.world
+  occupancy_map: robot_lab_maps/maps/arm_pick_place_can/maps/map.pgm
 - id: gait_low_relief
   name: Gait low relief
   dimension: 3D

@@ -29,6 +29,7 @@ from dataclasses import dataclass, field
 from typing import Dict, List, Optional, Sequence
 
 import numpy as np
+from scipy.spatial.transform import Rotation
 
 CART_STEP_M = 0.01          # spacing of IK solves along straight Cartesian moves
 JOINT_STEP_RAD = 0.02       # collision samples along joint-space segments
@@ -71,11 +72,30 @@ class Box:
     position: Sequence[float]
     quaternion: Sequence[float]      # w, x, y, z
     size: Sequence[float]            # full extents (a cylinder: diameter, diameter, length)
-    shape: str = 'box'               # 'box' or an upright 'cylinder' (axis along the body z)
+    shape: str = 'box'               # 'box' or 'cylinder' (local axis along z)
 
     @property
     def top(self):
         return float(self.position[2]) + float(self.size[2]) / 2.0
+
+    def rotation(self):
+        return Rotation.from_quat(np.asarray(self.quaternion, dtype=float)[[1, 2, 3, 0]]).as_matrix()
+
+    def half_extent(self, direction):
+        """Distance from centre to support plane along a unit world direction."""
+        local = self.rotation().T @ direction
+        half = np.asarray(self.size, dtype=float) * .5
+        if self.shape == 'cylinder':
+            return float(half[2]*abs(local[2]) + half[0]*math.hypot(local[0], local[1]))
+        return float(half @ np.abs(local))
+
+    def supports(self, obj, tolerance=0.):
+        """Check the whole projected object against this level table's edges."""
+        yaw = yaw_of(self.quaternion)
+        c, s = math.cos(yaw), math.sin(yaw)
+        x, y = np.abs(_local(self, obj.position))
+        return (x + obj.half_extent((c, s, 0.)) <= self.size[0]*.5 + tolerance
+                and y + obj.half_extent((-s, c, 0.)) <= self.size[1]*.5 + tolerance)
 
 
 def yaw_of(quaternion):
@@ -386,21 +406,27 @@ def plan_pick(scene: ArmScene, current: Dict[str, float], obj: Box, *, approach=
 
     The object is grasped top-down at its centre, fingers across the
     object's x or y extent (whichever is narrower, within the gripper), or
-    across an upright cylinder's diameter at four wrist yaws. On return the
-    scene holds the object at the lifted pose.
+    across a cylinder's diameter. For a lying cylinder, the fingers close
+    perpendicular to its horizontal axis. The scene holds the lifted object.
     """
     spec = scene.spec
     open_f = {n: spec.finger_open for n in spec.finger_joints}
     # Fingers close along tool y, across one horizontal extent of the object.
     # Grip across each extent that fits (narrower first), facing either way.
     sides = sorted(((float(obj.size[0]), 0.0), (float(obj.size[1]), math.pi / 2)))
+    object_yaw = yaw_of(obj.quaternion)
     if obj.shape == 'cylinder':
-        # Any yaw grips a cylinder across its diameter: more wrist yaws give IK more chances.
-        sides = [(float(obj.size[0]), k * math.pi / 4) for k in range(4)]
+        axis = obj.rotation()[:, 2]
+        if abs(axis[2]) >= math.cos(math.radians(5.)):
+            sides = [(float(obj.size[0]), k * math.pi / 4) for k in range(4)]
+        elif abs(axis[2]) <= math.sin(math.radians(5.)):
+            closing = math.atan2(axis[1], axis[0]) + math.pi/2
+            sides = [(float(obj.size[0]), closing-object_yaw)]
+        else:
+            raise PlanningError('Cylinder must rest upright or on its side')
     sides = [side for side in sides if side[0] <= spec.max_object_width]
     if not sides:
         raise PlanningError('object %.3f m wider than the gripper (%.3f m)' % (min(obj.size[:2]), spec.max_object_width))
-    object_yaw = yaw_of(obj.quaternion)
     scene.set_joints(dict(current, **open_f))
     current_rotation = scene.tcp()[1]
     current_yaw = math.atan2(current_rotation[1, 0], current_rotation[0, 0])
@@ -452,7 +478,7 @@ def _plan_pick_at(scene, current, obj, tool_yaw, width, approach, lift, seeds):
     # Fingertips may reach below the TCP: grip higher on the object (in
     # GRASP_RAISE_STEP_M steps, keeping that much of its upper half) until
     # they clear what the object stands on.
-    half = float(obj.size[2]) / 2.0
+    half = obj.half_extent((0., 0., 1.))
     raise_m = 0.0
     while True:
         try:
@@ -490,13 +516,17 @@ def plan_place(scene: ArmScene, current: Dict[str, float], obj: Box, support: Bo
     open_f = {n: spec.finger_open for n in spec.finger_joints}
     closed = {n: spec.finger_closed for n in spec.finger_joints}
     scene.set_joints(dict(current, **open_f))
-    tool_position, tool_rotation = scene.tcp()
+    _, tool_rotation = scene.tcp()
     tool_yaw = math.atan2(tool_rotation[1, 0], tool_rotation[0, 0])
     rotation = top_down_rotation(tool_yaw)
-    held_centre = tool_position + tool_rotation @ scene.attached[0]
     xy = support.position[:2] if place_xy is None else place_xy
-    place_centre = np.array([float(xy[0]), float(xy[1]), support.top + float(obj.size[2]) / 2.0])
-    place_point = place_centre + (tool_position - held_centre)
+    orientation = Rotation.from_matrix(rotation @ scene.attached[1]).as_quat()[[3, 0, 1, 2]]
+    placed = Box(obj.name, [float(xy[0]), float(xy[1]), 0.], orientation, obj.size, obj.shape)
+    placed.position[2] = support.top + placed.half_extent((0., 0., 1.))
+    if not support.supports(placed):
+        raise PlanningError('The object projection exceeds the selected support')
+    place_centre = np.asarray(placed.position)
+    place_point = place_centre - rotation @ scene.attached[0]
     above_place = place_point + [0, 0, lift]
     seeds = _seeds(current, seeds)
     over = scene.solve_seeded(above_place, rotation, seeds, open_f)
@@ -512,10 +542,10 @@ def plan_place(scene: ArmScene, current: Dict[str, float], obj: Box, support: Bo
     stages.append(dict(stage='lower', waypoints=lower, fingers=closed))
     stages.append(dict(stage='release', waypoints=[dict(lower[-1])], fingers=open_f))
     scene.detach()
-    scene.move_object(place_centre, obj.quaternion)
+    scene.move_object(place_centre, orientation)
     retreat = scene.straight_line(lower[-1], place_point + [0, 0, approach], rotation, open_f, allow_fingers=True)
     stages.append(dict(stage='retreat', waypoints=retreat, fingers=open_f))
-    return dict(stages=stages, place_centre=place_centre.tolist())
+    return dict(stages=stages, place_centre=place_centre.tolist(), place_orientation=orientation.tolist())
 
 
 def _high_vias(scene, point, rotation, seed, fingers, heights=(0.10, 0.15, 0.30)):
@@ -545,7 +575,8 @@ def plan_pick_place(scene: ArmScene, current: Dict[str, float], obj: Box, suppor
     place = plan_place(scene, pick['stages'][-1]['waypoints'][-1], obj, support, approach=approach, lift=lift,
                        seeds=seeds)
     return dict(stages=pick['stages'] + place['stages'], grasp_width_m=pick['grasp_width_m'],
-                tool_yaw=pick['tool_yaw'], place_centre=place['place_centre'], grasp_point=pick['grasp_point'])
+                tool_yaw=pick['tool_yaw'], place_centre=place['place_centre'],
+                place_orientation=place['place_orientation'], grasp_point=pick['grasp_point'])
 
 
 # --- mobile manipulators: where the base stands -------------------------------

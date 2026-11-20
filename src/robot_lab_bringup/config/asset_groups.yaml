@@ -250,6 +250,13 @@ robots:
       - {id: menagerie_ms_human_700, label: Human musculoskeletal reference, role: reference}
       - {id: menagerie_flybody, label: Fruit fly reference, role: reference}
 maps:
+  - id: arm_pick_place_lab
+    name: Arm pick-and-place lab
+    preferred: arm_pick_place_lab
+    members:
+      - {id: arm_pick_place_lab, label: Cube}
+      - {id: arm_pick_place_can, label: Upright cylinder}
+      - {id: arm_pick_place_can_side, label: Cylinder on its side}
   - id: mobile_manipulation_lab
     name: Mobile manipulation lab
     complete: true

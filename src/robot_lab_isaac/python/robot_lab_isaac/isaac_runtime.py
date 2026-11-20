@@ -1263,36 +1263,42 @@ def _off_ground_plane(verts, tris, shape, tolerance=0.005):
 
 
 def _add_free_bodies(world, bodies):
-    """Loose world objects (``sdf_world.extract_dynamic_bodies``) as dynamic boxes.
+    """Loose centred boxes and cylinders from ``sdf_world.extract_dynamic_bodies``.
 
-    Only box shapes are supported; others are reported and skipped. Each
-    keeps its world-file mass and friction. Returns {name: prim object}.
+    Each keeps its world-file pose, mass and friction. Returns {name: prim object}.
     """
     import re
 
     import numpy as np
     from isaacsim.core.api.materials import PhysicsMaterial
-    from isaacsim.core.api.objects import DynamicCuboid
+    from isaacsim.core.api.objects import DynamicCuboid, DynamicCylinder
 
     created = {}
     for body in bodies:
         shape = body.get("shape") or {}
-        if shape.get("type") != "box":
-            _emit({"event": "log", "msg": "Free body %s skipped: only boxes are supported (%s)"
+        if shape.get("type") not in ('box', 'cylinder'):
+            _emit({"event": "log", "msg": "Free body %s skipped: expected a box or cylinder (%s)"
                    % (body.get("name"), shape.get("type"))})
             continue
         name = re.sub(r"[^A-Za-z0-9_]", "_", str(body["name"]))
+        if shape['type'] == 'cylinder' and (not np.allclose(shape['position'], (0., 0., 0.))
+                or not np.allclose(shape['orientation'], (1., 0., 0., 0.))):
+            _emit({'event': 'log', 'msg': 'Free cylinder collision must align with its model frame: '+name})
+            continue
         mu = float(body["mu"]) if body.get("mu") is not None else 1.0
         material = PhysicsMaterial(prim_path="/World/PhysicsMaterials/free_" + name,
                                    static_friction=mu, dynamic_friction=mu, restitution=0.0)
-        cube = DynamicCuboid(prim_path="/World/objects/" + name, name="free_" + name,
-                             position=[float(v) for v in body["position"]],
-                             orientation=[float(v) for v in body["orientation"]],   # w, x, y, z
-                             scale=[float(v) for v in shape["size"]], size=1.0,
-                             mass=float(body["mass"]), color=np.array([.85, .2, .15]),
-                             physics_material=material)
-        world.scene.add(cube)
-        created[str(body["name"])] = cube
+        params = dict(prim_path='/World/objects/' + name, name='free_' + name,
+                      position=[float(v) for v in body['position']],
+                      orientation=[float(v) for v in body['orientation']],   # w, x, y, z
+                      mass=float(body['mass']), color=np.array([.85, .2, .15]), physics_material=material)
+        if shape['type'] == 'cylinder':
+            radius, length = (float(v) for v in shape['size'][:2])
+            obj = DynamicCylinder(radius=radius, height=length, **params)
+        else:
+            obj = DynamicCuboid(scale=[float(v) for v in shape['size']], size=1., **params)
+        world.scene.add(obj)
+        created[str(body['name'])] = obj
     if created:
         _emit({"event": "log", "msg": "Free bodies: %s" % sorted(created)})
     return created
@@ -1361,9 +1367,9 @@ def _link_world_poses(prims):
 def _free_body_poses(bodies):
     """{name: [x, y, z, qw, qx, qy, qz]} for /simulation/free_bodies."""
     poses = {}
-    for name, cube in bodies.items():
+    for name, body in bodies.items():
         try:
-            position, orientation = cube.get_world_pose()
+            position, orientation = body.get_world_pose()
         except Exception:
             continue
         poses[name] = [float(v) for v in position] + [float(v) for v in orientation]

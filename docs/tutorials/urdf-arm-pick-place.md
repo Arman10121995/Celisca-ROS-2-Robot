@@ -73,6 +73,16 @@ floor: the UR10 lying at its zero pose chattered on floor contact.
 
 [Measured runs and limits](../status/evidence/r57-urdf-arm-pick-place-2026-11-17/README.md).
 
+## Pick a cylinder on its side
+
+Choose **Arm pick-and-place lab → Cylinder on its side** in the map selector.
+Launch the URDF Franka Panda in **Display**, press **Home (direct)**, then choose
+`pickup_can` and `place_table` in **Pick / place**. The planner estimates the
+horizontal axis from the measured simulator pose, closes across the diameter
+and checks the full projected cylinder against the support. It checks the
+measured resting axis and height after release. The scene and private Panda
+plans are checked. A physical side-lying run remains experimental.
+
 ## Fetch with TIAGo (mobile manipulation)
 
 From the GUI: choose **Mobile manipulators → PAL Robotics TIAGo** (official source variant),

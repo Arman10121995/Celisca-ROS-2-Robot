@@ -1,5 +1,12 @@
 # Current Robot Lab status
 
+November 20 Codex: Arm pick-and-place now has a **Cylinder on its side**
+variant in the existing GUI map family. The planner closes across the
+measured cylinder axis and checks the whole object footprint on the table.
+Private Panda plans pass in both orientations. Isaac has a free-cylinder
+adapter. Live side-lying pick and place remains pending.
+[Pick-and-place guide](../tutorials/urdf-arm-pick-place.md).
+
 November 20 Codex: direct tracked and Fleet launches now tag their children
 with a unique run ID and start the detached cleanup watcher. The watcher
 cleans up processes from its run after launcher loss. A subprocess check

@@ -230,8 +230,7 @@ class PickPlace(Node):
             if shape['type'] == 'box':
                 sizes[body['name']] = list(shape['size'])
             elif shape['type'] == 'cylinder':
-                # Upright cylinders (radius, length): planned as a cylinder in
-                # its bounding extents (Box.shape).
+                # Cylinder bounds are expressed in the object's local frame.
                 radius, length = (float(v) for v in shape['size'][:2])
                 sizes[body['name']] = [2 * radius, 2 * radius, length]
                 self.object_shapes[body['name']] = 'cylinder'
@@ -354,7 +353,7 @@ class PickPlace(Node):
         if missing:
             raise ValueError('no measurement for %s' % missing)
         if not self.object_sizes.get(name):
-            raise ValueError('object %r is not a loose box or upright cylinder of the world file' % name)
+            raise ValueError('object %r is not a loose box or cylinder of the world file' % name)
         lift = float(request.get('lift', 0.10))
         approach = float(request.get('approach', 0.10))
         if not 0.03 <= lift <= 0.25 or not 0.03 <= approach <= 0.25:
@@ -415,11 +414,12 @@ class PickPlace(Node):
         return task
 
     def _table_under(self, name):
-        from robot_lab_mujoco.arm_pick_place import box_distance
+        from robot_lab_mujoco.arm_pick_place import Box
         pose = self.truth[name]
-        half = float(self.object_sizes[name][2]) / 2.0
+        obj = Box(name, pose[:3], pose[3:], self.object_sizes[name], self.object_shapes.get(name, 'box'))
+        half = obj.half_extent((0., 0., 1.))
         for box in self.supports.values():
-            if box_distance(box, pose) < 1e-6 and abs(pose[2] - half - box.top) < 0.02:
+            if box.supports(obj, tolerance=.001) and abs(pose[2] - half - box.top) < 0.02:
                 return box
         return None
 
@@ -641,7 +641,8 @@ class PickPlace(Node):
         support = self.supports[task['support']]
         if phase['name'] == 'pick_place':
             planned = plan_pick_place(scene, start, obj, support, **options)
-            task['plan'].update(grasp_width_m=planned['grasp_width_m'], place_centre=planned['place_centre'])
+            task['plan'].update(grasp_width_m=planned['grasp_width_m'], place_centre=planned['place_centre'],
+                                place_orientation=planned['place_orientation'])
         elif phase['name'] == 'pick':
             planned = plan_pick(scene, start, obj, **options)
             task['plan'].update(grasp_width_m=planned['grasp_width_m'], pick_base_measured=[round(v, 4) for v in base])
@@ -653,7 +654,8 @@ class PickPlace(Node):
             scene.set_joints(dict(start, **{n: float(measured[n]) for n in self.spec.finger_joints}))
             scene.attach()
             planned = plan_place(scene, start, obj, support, place_xy=task['plan']['place_xy'], **options)
-            task['plan'].update(place_centre=planned['place_centre'], place_base_measured=[round(v, 4) for v in base])
+            task['plan'].update(place_centre=planned['place_centre'], place_orientation=planned['place_orientation'],
+                                place_base_measured=[round(v, 4) for v in base])
         stages, previous = [], dict(start)
         for stage in planned['stages']:
             targets = synchronised(stage['waypoints'], previous, RATE, PERIOD)
@@ -1031,6 +1033,7 @@ class PickPlace(Node):
             return dict(passed=passed, rise_m=round(rise, 4), hold_drift_m=round(drift, 4),
                         reason='object did not rise with the tool' if not passed else '')
         if stage == 'retreat':
+            from robot_lab_mujoco.arm_pick_place import Box
             if 'wait_until' not in task:
                 task['wait_until'] = _now() + 1.0
                 task['rest_sample'] = pose.tolist()
@@ -1038,23 +1041,21 @@ class PickPlace(Node):
             if _now() < task['wait_until']:
                 return None
             support = self.supports[task['support']]
-            half = float(task['obj'].size[2]) / 2.0
-            local = self._in_support(support, pose)
+            original = task['obj']
+            actual = Box(name, pose, self.truth[name][3:], original.size, original.shape)
+            half = actual.half_extent((0., 0., 1.))
             speed = float(np.linalg.norm(pose - np.asarray(task['rest_sample'])))
             on_top = abs(pose[2] - (support.top + half)) < 0.01
-            inside = abs(local[0]) <= support.size[0] / 2.0 and abs(local[1]) <= support.size[1] / 2.0
-            passed = on_top and inside and speed < 0.005
+            inside = support.supports(actual, tolerance=.001)
+            aligned = True
+            if actual.shape == 'cylinder':
+                placed = Box(name, pose, task['plan']['place_orientation'], actual.size, actual.shape)
+                aligned = abs(float(placed.rotation()[:, 2] @ actual.rotation()[:, 2])) >= math.cos(math.radians(10.))
+            passed = on_top and inside and aligned and speed < 0.005
             return dict(passed=passed, final_pose=[round(v, 4) for v in pose], height_error_m=round(pose[2] - support.top - half, 4),
-                        inside_support=inside, moved_last_s_m=round(speed, 4),
+                        inside_support=inside, orientation_aligned=aligned, moved_last_s_m=round(speed, 4),
                         reason='' if passed else 'object not resting on %s' % support.name)
         return dict(passed=True)
-
-    @staticmethod
-    def _in_support(support, point):
-        from robot_lab_mujoco.arm_pick_place import yaw_of
-        yaw = yaw_of(support.quaternion)
-        dx, dy = point[0] - support.position[0], point[1] - support.position[1]
-        return (math.cos(yaw) * dx + math.sin(yaw) * dy, -math.sin(yaw) * dx + math.cos(yaw) * dy)
 
     def _finish(self, outcome, message):
         task, self.task = self.task, None

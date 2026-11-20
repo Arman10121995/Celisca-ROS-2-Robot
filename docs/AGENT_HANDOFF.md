@@ -1,5 +1,13 @@
 # Agent Handoff Protocol
 
+November 20 lying cylinders: use the **Arm pick-and-place lab** map family
+and the side-lying cylinder variant. Preserve the diameter grasp perpendicular
+to the actual cylinder axis, oriented height and complete support projection,
+and measured release checks. Panda planner checks cover both orientations.
+Run a physical pickup, unsupported lift and supported release before changing
+readiness markers. The centred Isaac cylinder uses the original SDF mass,
+pose and friction.
+
 November 20 process cleanup: direct tracked and shared-world Fleet launches
 now install the detached watcher used by the normal simulation launch.
 Keep the unique per-run marker and automatic inheritance when included from

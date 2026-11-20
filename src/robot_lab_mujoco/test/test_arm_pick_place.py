@@ -154,8 +154,11 @@ def test_mobile_scene_welds_the_base_and_holds_unplanned_joints():
     np.testing.assert_allclose(moved.robot_collision_points(), points, atol=3e-6)
 
 
-def test_an_upright_cylinder_is_gripped_across_its_diameter(panda):
-    can = Box('pickup_can', [0.5, -0.25, 0.345], [1, 0, 0, 0], [0.05, 0.05, 0.09], 'cylinder')
+@pytest.mark.parametrize('lying', [False, True], ids=['upright', 'on_side'])
+def test_a_cylinder_is_gripped_across_its_diameter_and_supported(panda, lying):
+    half_height = .025 if lying else .045
+    orientation = [math.sqrt(.5), 0, math.sqrt(.5), 0] if lying else [1, 0, 0, 0]
+    can = Box('pickup_can', [0.5, -0.25, 0.3+half_height], orientation, [0.05, 0.05, 0.09], 'cylinder')
     scene, spec, obstacles, obj, profile = scene_for(panda, can)
     geom = scene.model.geom('object')
     assert geom.type == mujoco.mjtGeom.mjGEOM_CYLINDER
@@ -167,5 +170,13 @@ def test_an_upright_cylinder_is_gripped_across_its_diameter(panda):
     scene.detach()
     lower = next(s for s in plan['stages'] if s['stage'] == 'lower')
     scene.set_joints(dict(lower['waypoints'][-1], **lower['fingers']))
-    # The can is set down upright on the support: its centre half its length above the top.
-    assert plan['place_centre'][2] == pytest.approx(support.top + 0.045)
+    placed = Box(can.name, plan['place_centre'], plan['place_orientation'], can.size, can.shape)
+    assert plan['place_centre'][2] == pytest.approx(support.top + placed.half_extent((0., 0., 1.)))
+    assert plan['place_centre'][2] == pytest.approx(support.top + half_height, abs=.002)
+    assert abs(placed.rotation()[:, 2] @ can.rotation()[:, 2]) > .99
+    if lying:
+        # Compare with the actual hand's frame offset: tool X is along the can
+        # axis, so the jaws close across its diameter rather than its ends.
+        assert abs(math.cos(plan['tool_yaw'] - spec.tool_yaw_offset)) > .99
+        narrow = Box('narrow', support.position, support.quaternion, [.07, .12, .3])
+        assert not narrow.supports(placed)

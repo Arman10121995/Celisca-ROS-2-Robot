@@ -462,7 +462,13 @@ parking batch needs its own run. Details and evidence are in the
     pick and place of a 50 × 90 mm can passes on MuJoCo (28.8 s), PyBullet
     (24.0 s) and Gazebo (25.2 s) in the new `arm_pick_place_can`.
     [Receipt](docs/status/evidence/r57-cylinder-pick-place-2026-11-18/README.md);
-  - compound/mesh geometry, lying cylinders, perception pose sources for
+  - 2026-11-20 (implemented, experimental): lying cylinders use the measured
+    axis to choose a diameter grasp and check the whole oriented footprint
+    on the destination table. The fixed-arm GUI fixture has an upright and
+    side-lying variant. Isaac has a centred free-cylinder adapter. Private
+    Panda planning passes for both orientations. Live side-lying missions
+    remain pending.
+  - compound/mesh geometry, perception pose sources for
     fixed arms and additional gripper-specific pipelines;
   - coupled mechanisms beyond gear-coupled fingers (mimic chains and
     four-bar joints);
