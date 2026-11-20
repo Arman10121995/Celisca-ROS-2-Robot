@@ -121,3 +121,19 @@ def test_a_ledge_deeper_than_a_stair_stops_forward_drive_but_a_stair_descends():
     assert policy.update(None, 0., 0., 1.)['state'] == 'travel'       # ledge out of view: free again
     stair = policy.update(dict(rise_m=0., drop=True, drop_m=.18, step_down_seen=True, points=200, nearest_rise_m=None), 0., 0., 2.)
     assert stair['state'] == 'descend' and not stair['stop_forward']
+
+
+def test_a_descending_flight_reads_its_next_step_not_the_ones_beyond():
+    flight = render(lambda x: 0. if x < .9 else -.18*min(3, 1+int((x-.9)/1.1)))   # 1.1 m treads
+    terrain = terrain_ahead(flight, HFOV, CAM, GROUND)
+    assert terrain['step_down_seen'] and terrain['drop_m'] == pytest.approx(.18, abs=.03)
+    assert FlipperPolicy().update(terrain, 0., 0., 0.)['state'] == 'descend'
+
+
+def test_a_measured_stair_edge_stays_a_step_when_the_tread_below_leaves_view():
+    policy = FlipperPolicy()
+    step = dict(rise_m=0., drop=True, drop_m=.18, step_down_seen=True, points=200, nearest_rise_m=None)
+    unseen = dict(rise_m=0., drop=True, drop_m=None, step_down_seen=False, points=12, nearest_rise_m=None)
+    assert policy.update(step, 0., 0., 0.)['state'] == 'descend'
+    assert policy.update(unseen, 0., 0., 2.)['state'] == 'descend'    # tread below now too close to see
+    assert policy.update(unseen, 0., 0., 3.5)['state'] == 'ledge'     # no step seen for 3.5 s: unknown drop

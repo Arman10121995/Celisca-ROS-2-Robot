@@ -41,6 +41,11 @@ RISE_M, DROP_M = .05, .06
 # showed only missing floor, and the vehicle drove off it in 'descend' and
 # flipped (2026-11-20).
 LEDGE_M = .3
+# At a stair edge the tread just below is too close for the camera (it sees
+# no nearer than ~1.2 m at that depth), so the drop reads unseen exactly when
+# the vehicle starts down. A stair-depth step measured within this time keeps
+# counting as the step (terrain_stairs_over, 2026-11-20).
+STEP_MEMORY_S = 3.
 CLIMB_PITCH, LEVEL_PITCH = .12, .05
 MAX_ROLL = .35
 LEVEL_HOLD_S = 1.
@@ -86,7 +91,10 @@ def terrain_ahead(depth, hfov, camera_xyz, ground_z, corridor=.25, near=.55, far
     drop = drop or bool(np.percentile(heights, 10) < -DROP_M)
     lower = heights[heights < -DROP_M]
     return dict(rise_m=float(np.percentile(heights, 90)), drop=drop,
-                drop_m=max(0., -float(np.percentile(lower, 50))) if len(lower) >= 10 else None, step_down_seen=len(lower) >= 10,
+                # The next step's depth is the shallowest lower level: the band can
+                # also hold the treads beyond it (a median of a whole descending
+                # flight read 0.36 m and stopped a 0.18 m descent, 2026-11-20).
+                drop_m=max(0., -float(np.percentile(lower, 90))) if len(lower) >= 10 else None, step_down_seen=len(lower) >= 10,
                 points=int(band.sum()), nearest_rise_m=float(X[band][heights > RISE_M].min()) if (heights > RISE_M).any() else None)
 
 
@@ -100,6 +108,7 @@ class FlipperPolicy:
     def __init__(self, full_press=False):
         self.full_press = bool(full_press)
         self.state, self.since, self.level_since = 'travel', 0., None
+        self.step_seen_at = -math.inf
         self.elevations = (REST_RAD, REST_RAD)
 
     def update(self, terrain, pitch, roll, now):
@@ -109,8 +118,11 @@ class FlipperPolicy:
         previous = self.state
         rise = terrain['rise_m'] if terrain else 0.
         drop = bool(terrain and terrain['drop'])
+        if terrain and terrain.get('step_down_seen') and (terrain.get('drop_m') or 0.) <= LEDGE_M:
+            self.step_seen_at = now
+        unseen = bool(terrain) and not terrain.get('step_down_seen') and now - self.step_seen_at > STEP_MEMORY_S
         ledge = bool(terrain and terrain['drop'] and abs(pitch) < LEVEL_PITCH
-                     and (not terrain.get('step_down_seen') or (terrain.get('drop_m') or 0.) > LEDGE_M))
+                     and (unseen or (terrain.get('drop_m') or 0.) > LEDGE_M))
         if abs(roll) > MAX_ROLL:
             self.state = 'hold'
         elif ledge:

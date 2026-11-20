@@ -1980,6 +1980,12 @@ tasks:
         - docs/status/evidence/flipper-stairs-2026-11-14/README.md
         - docs/status/evidence/flipper-strong-2026-11-19/README.md
         - docs/status/evidence/r107-tracked-flight-2026-11-20/README.md
+        - docs/status/evidence/r107-tracked-over-2026-11-20/README.md
+        tracked_over_20261120: 'Claude: implemented, experimental. New terrain_stairs_over (five 0.18 m steps up, 1.1 m top,
+          five down). terrain_ahead reads the next step as the shallowest lower level, and the policy keeps a measured stair
+          step for 3 s when the tread below leaves the camera view at the edge. lab_tracked_strong_flippers goes up and over
+          2/2 (~97 s, level on the floor); three failed runs retained (two ledge stops before the fixes, one first-riser stall
+          under host load). Single-step course and the flight ledge stop re-pass. docs/status/evidence/r107-tracked-over-2026-11-20/README.md'
         tracked_flight_20261120: 'Claude: implemented, experimental. New terrain_stairs_flight (the five-step flight with a 2.6
           m run-up). The flipper policy now ends a climb on a level tread with the next riser in view (it had stayed propped
           on fully pressed flippers), and a ledge guard stops forward drive when a drop shows no lower tread in the band or

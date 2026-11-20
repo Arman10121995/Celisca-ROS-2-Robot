@@ -746,6 +746,22 @@ maps:
       y: '-4.0'
       yaw: '0.0'
       z: '0.1'
+  terrain_stairs_over:
+    gazebo:
+      world_name: terrain_stairs_over
+      world_package: robot_lab_maps
+      world_path: maps/terrain_stairs_over/worlds/terrain_stairs_over.world
+    initial_pose:
+      x: '-7.3'
+      y: '-4.0'
+      yaw: '0.0'
+    map:
+      has_2d_map: false
+    spawn:
+      x: '-7.3'
+      y: '-4.0'
+      yaw: '0.0'
+      z: '0.1'
   terrain_stairs_low:
     gazebo:
       world_name: terrain_stairs_low
