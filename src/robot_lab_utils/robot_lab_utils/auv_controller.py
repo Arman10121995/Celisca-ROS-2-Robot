@@ -26,6 +26,10 @@ from tf2_ros import TransformBroadcaster
 from robot_lab_utils.marine_controller import MarineController,angle
 from robot_lab_utils.marine_model import rotation
 
+# Cruise depth hold: depth error gain (1/s), vertical-speed damping, the
+# commanded vertical-rate and pitch limits (m/s, rad).
+DEPTH_GAIN, DEPTH_DAMPING, DEPTH_RATE_LIMIT, PITCH_LIMIT = .3, 1., .05, .1
+
 
 def surge_thrust(target,speed,active=True):
     """Signed native propeller force; armed zero velocity provides braking."""
@@ -117,8 +121,12 @@ class AuvController(MarineController):
                 self.forces[0]=surge_thrust(vx,surge,self.manual_seen)
                 desired=np.zeros(2);guidance=surge>.15 and vx>.05
                 if guidance:
-                    desired_down=max(-.1,min(.1,.6*(self.target_depth-depth)+.7*self.velocity[2]))
-                    target_pitch=max(-.2,min(.2,-math.atan2(desired_down,max(.2,surge))))
+                    # A gentle depth loop: with 0.6 /s and +-0.2 rad pitch, depth on a
+                    # 20 m route swung 0.6 m in a growing 25 s limit cycle, the hull's
+                    # slow (Munk-loaded) pitch lagging the saturated command (2026-11-20).
+                    desired_down=max(-DEPTH_RATE_LIMIT,min(DEPTH_RATE_LIMIT,
+                        DEPTH_GAIN*(self.target_depth-depth)+DEPTH_DAMPING*self.velocity[2]))
+                    target_pitch=max(-PITCH_LIMIT,min(PITCH_LIMIT,-math.atan2(desired_down,max(.2,surge))))
                     desired[0]=-1.8*(target_pitch-pitch)+3.2*self.rates[1]
                     # Native source rudder has negative yaw effectiveness
                     # with the actual -X forward flow; retain its joint axis.

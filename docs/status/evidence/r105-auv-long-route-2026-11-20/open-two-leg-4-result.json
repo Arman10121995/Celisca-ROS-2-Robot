@@ -1,0 +1,71 @@
+{
+ "target": [
+  15.0,
+  5.0,
+  -3.0
+ ],
+ "start_truth": [
+  -20.0,
+  -10.0,
+  -3.0
+ ],
+ "start_estimate": [
+  -19.941171438776287,
+  -10.020563788634355,
+  -3.0002067401715284
+ ],
+ "legs": [
+  {
+   "target": [
+    0.0,
+    -10.0,
+    -3.0
+   ],
+   "end_truth": [
+    -0.13127945874464564,
+    -9.906680205603003,
+    -3.085443866699305
+   ],
+   "end_estimate": [
+    0.0880535000979857,
+    -9.99168064106831,
+    -3.0908838791332873
+   ],
+   "truth_to_goal_m": 0.18232809621973664,
+   "status": "completed",
+   "reason": "AUV signed-thrust braking settled; propulsion stopped",
+   "route_length_m": 19.94118260339773
+  }
+ ],
+ "statuses": [
+  "idle",
+  "planning",
+  "planned",
+  "executing",
+  "braking",
+  "completed",
+  "planning",
+  "planned"
+ ],
+ "final_status": "planned",
+ "final_reason": "Plan a route and Arm native marine control before Execute",
+ "end_truth": [
+  11.17704030579903,
+  -7.324716437472546,
+  -3.0212008768348766
+ ],
+ "end_estimate": [
+  12.197453194714138,
+  -7.399374809320821,
+  -3.020600635593752
+ ],
+ "truth_to_goal_m": 12.904034468520676,
+ "estimate_to_goal_m": 12.712166953121118,
+ "estimate_error_end_m": 1.023140604531292,
+ "estimate_error_max_m": 1.0249850176008322,
+ "position_std_end_m": 0.21471239825706673,
+ "localization_mode": false,
+ "localized_end": false,
+ "localized_seen": false,
+ "mission_seconds": 347.63152584200725
+}

@@ -53,7 +53,7 @@ def test_native_added_mass_opposes_acceleration_on_fortress_618(model):
 
 
 def test_no_unsupported_current_or_light_plugins():
-    for name in ('marine_tank','marine_tank_textured','marine_reef','marine_harbor','marine_cave','marine_wreck'):
+    for name in ('marine_tank','marine_tank_textured','marine_open_water','marine_reef','marine_harbor','marine_cave','marine_wreck'):
         world=ET.parse(ROOT/'src/robot_lab_maps/maps'/name/'worlds'/(name+'.world')).getroot().find('world')
         for plugin in world.findall('plugin'):
             assert 'current-system' not in plugin.get('filename',''), name
@@ -61,7 +61,7 @@ def test_no_unsupported_current_or_light_plugins():
 
 
 def test_water_is_a_density_boundary_not_a_solid_collision_box():
-    for name in ('marine_tank','marine_tank_textured','marine_reef','marine_harbor','marine_cave','marine_wreck'):
+    for name in ('marine_tank','marine_tank_textured','marine_open_water','marine_reef','marine_harbor','marine_cave','marine_wreck'):
         world=ET.parse(ROOT/'src/robot_lab_maps/maps'/name/'worlds'/(name+'.world')).getroot().find('world')
         assert world.find("model[@name='water_surface']/link/collision") is None
         assert world.find("model[@name='seafloor']/link/collision") is not None
@@ -73,7 +73,7 @@ def test_water_is_a_density_boundary_not_a_solid_collision_box():
 
 
 def test_fortress_worlds_do_not_require_the_unavailable_harmonic_dvl_plugin():
-    for name in ('marine_tank','marine_tank_textured','marine_reef','marine_harbor','marine_cave','marine_wreck'):
+    for name in ('marine_tank','marine_tank_textured','marine_open_water','marine_reef','marine_harbor','marine_cave','marine_wreck'):
         world=ET.parse(ROOT/'src/robot_lab_maps/maps'/name/'worlds'/(name+'.world')).getroot().find('world')
         dvl=[p for p in world.findall('plugin') if p.get('name','').endswith('DopplerVelocityLogSystem')]
         assert not dvl, name

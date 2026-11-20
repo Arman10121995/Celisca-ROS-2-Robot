@@ -195,8 +195,29 @@ def plan_auv(scene, start, body_yaw, goal, radius, bottom, surface, canceled,
     raise ValueError('No source-clear curvature-constrained AUV route and 3 m terminal braking corridor')
 
 
+# Line-of-sight guidance (Fossen, integral LOS): lookahead and the bounded
+# cross-track integral gain/limit that absorbs unmodelled steady drift.
+# A 1 m lookahead (1 rad per metre of cross-track) drove a growing heading
+# oscillation on a 20 m route for a hull limited to 0.12 rad/s; about two
+# Tethys lengths is the usual choice (2026-11-20).
+LOS_LOOKAHEAD_M = 4.
+LOS_INTEGRAL_GAIN = .05
+LOS_INTEGRAL_LIMIT = 2.
+LOS_DEPTH_GAIN = .05          # 1/s, path-depth correction on top of the native depth hold
+
+
 class AuvPathFollower:
-    def __init__(self, points, headings):
+    """Course guidance along a sampled AUV path from the sensor estimate.
+
+    The heading command is the path tangent, minus the crab angle the
+    authored current requires (``current``, m/s, world), minus an integral
+    line-of-sight correction. It no longer subtracts the measured sideslip:
+    the source hull's added masses (Y_v' 129 vs X_u' 5) give a destabilizing
+    Munk moment with sideslip, and pointing the nose further off by that
+    sideslip fed it back. A 6.5 m route diverged after 3 m that way
+    (2026-11-20).
+    """
+    def __init__(self, points, headings, current=None, cruise=.3):
         self.points = np.asarray(points, dtype=float)
         self.headings = np.unwrap(np.asarray(headings, dtype=float))
         if (self.points.ndim != 2 or self.points.shape[1] != 3 or len(self.points) < 2
@@ -207,8 +228,19 @@ class AuvPathFollower:
         self.arc = np.r_[0., np.cumsum(segments)]
         self.progress = 0
         self.cross_track = None
+        self.current = np.zeros(2) if current is None else np.asarray(current, dtype=float)[:2]
+        self.cruise = float(cruise)
+        if not np.isfinite(self.current).all() or not self.cruise > 0:
+            raise ValueError('A finite authored current and positive cruise speed are required')
+        self.integral = 0.
+        self.last_time = None
 
-    def command(self, position, body_yaw, velocity):
+    def crab(self, heading):
+        """Heading offset that holds a ground track along ``heading`` in the authored current."""
+        across = math.cos(heading)*self.current[1]-math.sin(heading)*self.current[0]
+        return math.asin(max(-.95, min(.95, across/self.cruise)))
+
+    def command(self, position, body_yaw, velocity, now=None):
         position, velocity = np.asarray(position), np.asarray(velocity)
         if not np.isfinite([position, velocity]).all() or not math.isfinite(body_yaw):
             raise ValueError('Finite sensor-estimated AUV feedback required')
@@ -226,8 +258,12 @@ class AuvPathFollower:
         signed_error = tangent[0]*offset[1]-tangent[1]*offset[0]
         speed=float(np.linalg.norm(velocity[:2]))
         course=math.atan2(velocity[1],velocity[0]) if speed>.15 else body_yaw+math.pi
-        sideslip=angle(course-body_yaw-math.pi)
-        desired = self.headings[nearest]-sideslip-math.atan2(.3*signed_error, .3)
+        if now is not None and self.last_time is not None and speed > .15:
+            dt = max(0., min(.5, now-self.last_time))
+            self.integral = max(-LOS_INTEGRAL_LIMIT, min(LOS_INTEGRAL_LIMIT, self.integral+signed_error*dt))
+        self.last_time = now
+        desired = (self.headings[nearest]-self.crab(self.headings[nearest])
+                   -math.atan2(signed_error+LOS_INTEGRAL_GAIN*self.integral, LOS_LOOKAHEAD_M))
         error = angle(desired-body_yaw-math.pi)
         if abs(error) > 1.:
             raise ValueError('AUV course error exceeds flow-guidance envelope; explicit replan required')
@@ -236,7 +272,12 @@ class AuvPathFollower:
         cruise = .3
         yaw_rate = max(-.12, min(.12, max(.15,speed)*curvature+.6*error))
         slope = (target[2]-self.points[nearest, 2])/delta_arc
-        vertical = max(-.03, min(.03, cruise*slope+.3*(target[2]-position[2])))
+        # The native controller integrates this rate into its depth target and
+        # holds depth itself. A 0.3 /s correction on top made a second, stiff
+        # integral loop: on a 20 m route depth swung 0.8 m with growing
+        # amplitude (2026-11-20). The path slope is fed forward; a weak
+        # correction removes slow offsets.
+        vertical = max(-.03, min(.03, cruise*slope+LOS_DEPTH_GAIN*(target[2]-position[2])))
         remaining = float(self.arc[-1]-self.arc[nearest])
         terminal_error = abs(angle(self.headings[-1]-course))
         brake = (remaining < max(.3, 1.5*float(np.linalg.norm(velocity)))

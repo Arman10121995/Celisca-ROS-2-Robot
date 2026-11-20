@@ -1,0 +1,45 @@
+{
+ "target": [
+  0.0,
+  -10.0,
+  -3.0
+ ],
+ "start_truth": [
+  -20.0,
+  -10.0,
+  -3.0
+ ],
+ "start_estimate": [
+  -19.940911857064346,
+  -10.020776026172319,
+  -2.9971446930117023
+ ],
+ "statuses": [
+  "idle",
+  "planning",
+  "planned",
+  "executing",
+  "canceled"
+ ],
+ "final_status": "canceled",
+ "final_reason": "AUV course error exceeds flow-guidance envelope; explicit replan required",
+ "end_truth": [
+  -3.7685777140138015,
+  -9.535611245008415,
+  -3.2635345912311804
+ ],
+ "end_estimate": [
+  -3.5827463755677025,
+  -9.616169848085955,
+  -3.2627617610905855
+ ],
+ "truth_to_goal_m": 3.8062166757949436,
+ "estimate_to_goal_m": 3.61281620349739,
+ "estimate_error_end_m": 0.20254276621222347,
+ "estimate_error_max_m": 0.2064562386836605,
+ "position_std_end_m": 0.09262249445802397,
+ "localization_mode": false,
+ "localized_end": false,
+ "localized_seen": false,
+ "mission_seconds": 58.99471098498907
+}

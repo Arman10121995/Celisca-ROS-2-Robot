@@ -371,7 +371,8 @@ class MarineNavigation(Node):
                     if getattr(self,'auv',False):
                         if info.get('kind')!='auv_dubins':raise ValueError('Unvalidated AUV path kind')
                         from robot_lab_utils.auv_routes import AuvPathFollower
-                        self.auv_follower=AuvPathFollower(route,info['headings_rad'])
+                        self.auv_follower=AuvPathFollower(route,info['headings_rad'],
+                            current=(info.get('current') or {}).get('vector'))
                         self.auv_plan=info
                     self.route, self.status = route, 'planned'
                     self.reason = 'Source collision route planned; explicit Execute required'
@@ -429,7 +430,8 @@ class MarineNavigation(Node):
                     auv_brake=False
                     if self.auv:
                         try:
-                            command,target,self.index,auv_brake=self.auv_follower.command(self.position,self.orientation[2],self.velocity)
+                            command,target,self.index,auv_brake=self.auv_follower.command(self.position,self.orientation[2],self.velocity,
+                                now=self.native.get('sim_time'))
                         except ValueError as exc:
                             self.cancel(str(exc));return
                     scene = self.shore.with_observation(self.observed) if self.shore else ObservedScene(self.scene, self.observed) if self.observed else self.scene

@@ -1,0 +1,44 @@
+{
+ "target": [
+  4.0,
+  -2.0,
+  -3.0
+ ],
+ "start_truth": [
+  -4.0,
+  -3.0,
+  -3.0
+ ],
+ "start_estimate": [
+  -3.9383487329343696,
+  -2.9900283791665148,
+  -2.9963930696810968
+ ],
+ "plan_failed": "Planning failed: No source-clear curvature-constrained AUV route and 3 m terminal braking corridor",
+ "statuses": [
+  "idle",
+  "planning",
+  "canceled"
+ ],
+ "final_status": "canceled",
+ "final_reason": "Planning failed: No source-clear curvature-constrained AUV route and 3 m terminal braking corridor",
+ "end_truth": [
+  -4.0,
+  -3.0,
+  -3.0
+ ],
+ "end_estimate": [
+  -3.9350715012488795,
+  -2.9902950657934477,
+  -3.0006277446999734
+ ],
+ "truth_to_goal_m": 8.06225774829855,
+ "estimate_to_goal_m": 7.9966270665406425,
+ "estimate_error_end_m": 0.06565279705721691,
+ "estimate_error_max_m": 0.06600787506322918,
+ "position_std_end_m": 0.05204094541800713,
+ "localization_mode": false,
+ "localized_end": false,
+ "localized_seen": false,
+ "mission_seconds": 2.0115392910083756
+}

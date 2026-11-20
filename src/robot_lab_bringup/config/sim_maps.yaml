@@ -373,6 +373,22 @@ maps:
       y: 0.0
       yaw: 0.0
       z: -1.0
+  marine_open_water:
+    gazebo:
+      world_name: marine_open_water
+      world_package: robot_lab_maps
+      world_path: maps/marine_open_water/worlds/marine_open_water.world
+    map:
+      has_2d_map: false
+    marine:
+      bottom_z: -6.0
+      density: 1025.0
+      surface_z: 0.0
+    spawn:
+      x: 0.0
+      y: 0.0
+      yaw: 0.0
+      z: -1.0
   marine_tank_textured:
     gazebo:
       world_name: marine_tank_textured

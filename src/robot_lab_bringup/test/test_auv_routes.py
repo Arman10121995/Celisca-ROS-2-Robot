@@ -114,3 +114,22 @@ def test_current_ranks_by_time_and_refuses_excessive_crab():
     with pytest.raises(ValueError, match='authored current'):
         plan_auv(SimpleNamespace(segment=lambda *args: True), [0., 0., -2.], math.pi, [16., 0., -2.],
                  .5, -6., 0., lambda: False, goal_heading=0., current=[0., .25, 0.])
+
+
+def test_follower_ignores_measured_sideslip_and_uses_the_authored_current_crab():
+    # A straight east route. The hull points along it (body yaw pi: source front -X)
+    # while drifting 0.2 rad left: the old follower turned the nose further off by
+    # that sideslip (Munk-moment feedback, 6.5 m route 2026-11-20).
+    path = [[x, 0., -3.] for x in np.linspace(0., 6., 61)]
+    follower = AuvPathFollower(path, [0.]*61)
+    slipping = [.3*math.cos(.2), .3*math.sin(.2), 0.]
+    command = follower.command([1., 0., -3.], math.pi, slipping, now=0.)[0]
+    assert abs(command[3]) < 1e-9
+    # A known cross-current from the south needs a nose-right crab to hold the line.
+    crabbed = AuvPathFollower(path, [0.]*61, current=[0., .1, 0.])
+    assert crabbed.crab(0.) == pytest.approx(math.asin(.1/.3))
+    assert crabbed.command([1., 0., -3.], math.pi, [.3, 0., 0.], now=0.)[0][3] < 0.
+    # A steady offset builds a bounded integral that keeps steering back.
+    for step in range(200):
+        follower.command([1.+.03*step, .2, -3.], math.pi, [.3, 0., 0.], now=step*.1)
+    assert 0 < follower.integral <= 2.

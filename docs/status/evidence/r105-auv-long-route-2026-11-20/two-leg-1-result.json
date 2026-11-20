@@ -1,0 +1,71 @@
+{
+ "target": [
+  -1.0,
+  2.0,
+  -3.0
+ ],
+ "start_truth": [
+  -4.0,
+  -3.0,
+  -3.0
+ ],
+ "start_estimate": [
+  -3.9386604722479595,
+  -2.9896369750155385,
+  -2.997028511587856
+ ],
+ "legs": [
+  {
+   "target": [
+    1.5,
+    0.0,
+    -3.0
+   ],
+   "end_truth": [
+    1.432974430636296,
+    0.11109787112844643,
+    -3.5286250278956475
+   ],
+   "end_estimate": [
+    1.5471317242556655,
+    0.13490758563191127,
+    -3.5259554217915934
+   ],
+   "truth_to_goal_m": 0.5443157025435474,
+   "status": "completed",
+   "reason": "AUV signed-thrust braking settled; propulsion stopped",
+   "route_length_m": 6.206207150599785
+  }
+ ],
+ "plan_failed": "Planning failed: No source-clear curvature-constrained AUV route and 3 m terminal braking corridor",
+ "statuses": [
+  "idle",
+  "planning",
+  "planned",
+  "executing",
+  "braking",
+  "completed",
+  "canceled"
+ ],
+ "final_status": "canceled",
+ "final_reason": "Planning failed: No source-clear curvature-constrained AUV route and 3 m terminal braking corridor",
+ "end_truth": [
+  1.4939415249301846,
+  0.15836506680594997,
+  -3.5419402241422757
+ ],
+ "end_estimate": [
+  1.616379281041823,
+  0.1873318347367565,
+  -3.5421445396903026
+ ],
+ "truth_to_goal_m": 3.1472309676086896,
+ "estimate_to_goal_m": 3.228796543844122,
+ "estimate_error_end_m": 0.12581780283748956,
+ "estimate_error_max_m": 0.12653308366319183,
+ "position_std_end_m": 0.07338348940693104,
+ "localization_mode": false,
+ "localized_end": false,
+ "localized_seen": false,
+ "mission_seconds": 2.000600580999162
+}

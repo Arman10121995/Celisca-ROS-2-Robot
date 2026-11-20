@@ -1,0 +1,46 @@
+{
+ "target": [
+  -0.93,
+  -1.32,
+  -3.0
+ ],
+ "start_truth": [
+  -4.0,
+  -3.0,
+  -3.0
+ ],
+ "start_estimate": [
+  -3.9386604722479595,
+  -2.9896369750155385,
+  -2.997028511587856
+ ],
+ "statuses": [
+  "idle",
+  "planning",
+  "planned",
+  "executing",
+  "braking",
+  "completed"
+ ],
+ "final_status": "completed",
+ "final_reason": "AUV signed-thrust braking settled; propulsion stopped",
+ "end_truth": [
+  -0.8636695293613808,
+  -1.215572503891678,
+  -2.9933549019738876
+ ],
+ "end_estimate": [
+  -0.7706258463783702,
+  -1.1954569410813662,
+  -2.9900223677167905
+ ],
+ "truth_to_goal_m": 0.12389104328550547,
+ "estimate_to_goal_m": 0.20251085776668895,
+ "estimate_error_end_m": 0.09525160678326271,
+ "estimate_error_max_m": 0.09770044923979027,
+ "position_std_end_m": 0.06492637496015352,
+ "localization_mode": false,
+ "localized_end": false,
+ "localized_seen": false,
+ "mission_seconds": 16.10043664998375
+}
