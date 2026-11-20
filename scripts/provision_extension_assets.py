@@ -657,6 +657,10 @@ def install_robots(store, download, selected_source=None, selected_entry=None):
                         'bodies': model.nbody, 'joints': model.njnt, 'geometries': model.ngeom, 'actuators': model.nu}
                     profile = {'package': 'robot_lab_robots', 'xacro': str(derived), 'native_mjcf': str(model_path),
                                'supported_simulators': ['mujoco'], 'spawn': {'z': '0.0'}}
+                    if name == 'menagerie_wonik_allegro':
+                        # The authored palm sits at the root origin, facing up: raise
+                        # the fixed mount so the palm and ring finger clear the ground.
+                        profile['spawn'] = {'z': '0.15'}
                     if name == 'menagerie_franka_emika_panda':
                         profile['arm_control'] = 'panda'
                     else:
