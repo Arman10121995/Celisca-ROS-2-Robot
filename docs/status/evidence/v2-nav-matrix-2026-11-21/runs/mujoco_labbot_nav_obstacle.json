@@ -1,0 +1,80 @@
+{
+  "steps": {
+    "cancel_a": {
+      "sent": true,
+      "travelled_before_cancel_m": 1.003,
+      "finished_before_cancel": false,
+      "outcome": "canceled",
+      "stopped": true,
+      "stop_sim_s": 0.34,
+      "passed": true
+    },
+    "resume_a": {
+      "outcome": "succeeded",
+      "wall_s": 20.8,
+      "settled_sim_second": true,
+      "final_pose_estimate_xy": [
+        -4.344,
+        -3.806
+      ],
+      "final_error_estimate_m": 0.071,
+      "final_yaw_estimate_deg": 48.05,
+      "final_yaw_error_estimate_deg": -1.31,
+      "final_truth_xy": [
+        -4.332,
+        -3.727
+      ],
+      "truth_age_wall_s": 0.001,
+      "final_truth_yaw_deg": 47.34,
+      "final_error_truth_m": 0.113,
+      "final_yaw_error_truth_deg": -2.02,
+      "passed": true
+    },
+    "near_obstacle_b": {
+      "outcome": "succeeded",
+      "wall_s": 19.4,
+      "settled_sim_second": true,
+      "final_pose_estimate_xy": [
+        1.503,
+        -3.264
+      ],
+      "final_error_estimate_m": 0.073,
+      "final_yaw_estimate_deg": 6.77,
+      "final_yaw_error_estimate_deg": 1.65,
+      "final_truth_xy": [
+        1.491,
+        -3.233
+      ],
+      "truth_age_wall_s": 0.001,
+      "final_truth_yaw_deg": 6.0,
+      "final_error_truth_m": 0.094,
+      "final_yaw_error_truth_deg": 0.88,
+      "passed": true
+    }
+  },
+  "seed": 1,
+  "stack_ready_wall_s": 5.3,
+  "start": [
+    -7.0,
+    -7.0
+  ],
+  "goal_a": {
+    "x": -4.274999922141433,
+    "y": -3.8249999154359102,
+    "path_m": 5.56066025464011,
+    "straight_m": 4.184046939380761,
+    "detour": true
+  },
+  "goal_b": {
+    "x": 1.5750001650303602,
+    "y": -3.2749999072402716,
+    "path_from_a_m": 6.077817549871735,
+    "clearance_m": 0.5147815147201923
+  },
+  "motion_source": "/odom/ground_truth",
+  "motion_forward_m": 11.691,
+  "motion_reverse_m": 0.022,
+  "motion_heading_travel_rad": 8.281,
+  "passed": true,
+  "trace": "/workspace/molar/robot_lab_runtime/v2-nav-matrix-20261121/mujoco_labbot_nav_obstacle.json.trace.json"
+}

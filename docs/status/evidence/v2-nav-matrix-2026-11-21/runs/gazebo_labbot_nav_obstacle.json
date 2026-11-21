@@ -1,0 +1,80 @@
+{
+  "steps": {
+    "cancel_a": {
+      "sent": true,
+      "travelled_before_cancel_m": 1.008,
+      "finished_before_cancel": false,
+      "outcome": "canceled",
+      "stopped": true,
+      "stop_sim_s": 0.36,
+      "passed": true
+    },
+    "resume_a": {
+      "outcome": "succeeded",
+      "wall_s": 14.8,
+      "settled_sim_second": true,
+      "final_pose_estimate_xy": [
+        -5.262,
+        -3.797
+      ],
+      "final_error_estimate_m": 0.047,
+      "final_yaw_estimate_deg": 59.82,
+      "final_yaw_error_estimate_deg": -0.97,
+      "final_truth_xy": [
+        -5.209,
+        -3.631
+      ],
+      "truth_age_wall_s": 0.001,
+      "final_truth_yaw_deg": 59.24,
+      "final_error_truth_m": 0.194,
+      "final_yaw_error_truth_deg": -1.55,
+      "passed": true
+    },
+    "near_obstacle_b": {
+      "outcome": "succeeded",
+      "wall_s": 17.8,
+      "settled_sim_second": true,
+      "final_pose_estimate_xy": [
+        -7.926,
+        -3.005
+      ],
+      "final_error_estimate_m": 0.058,
+      "final_yaw_estimate_deg": 162.07,
+      "final_yaw_error_estimate_deg": -1.08,
+      "final_truth_xy": [
+        -7.941,
+        -2.962
+      ],
+      "truth_age_wall_s": 0.001,
+      "final_truth_yaw_deg": 164.14,
+      "final_error_truth_m": 0.037,
+      "final_yaw_error_truth_deg": 0.99,
+      "passed": true
+    }
+  },
+  "seed": 1,
+  "stack_ready_wall_s": 7.7,
+  "start": [
+    -7.0,
+    -7.0
+  ],
+  "goal_a": {
+    "x": -5.224999936297536,
+    "y": -3.8249999154359102,
+    "path_m": 4.5899495620567405,
+    "straight_m": 3.6374786271712174,
+    "detour": true
+  },
+  "goal_b": {
+    "x": -7.974999977275729,
+    "y": -2.974999902769923,
+    "path_from_a_m": 3.102081574241748,
+    "clearance_m": 0.45000000670552254
+  },
+  "motion_source": "/odom/ground_truth",
+  "motion_forward_m": 7.857,
+  "motion_reverse_m": 0.006,
+  "motion_heading_travel_rad": 7.546,
+  "passed": true,
+  "trace": "/workspace/molar/robot_lab_runtime/v2-nav-matrix-20261121/gazebo_labbot_nav_obstacle.json.trace.json"
+}

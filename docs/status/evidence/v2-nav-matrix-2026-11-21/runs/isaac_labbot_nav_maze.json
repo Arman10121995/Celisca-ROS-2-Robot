@@ -1,0 +1,80 @@
+{
+  "steps": {
+    "cancel_a": {
+      "sent": true,
+      "travelled_before_cancel_m": 1.004,
+      "finished_before_cancel": false,
+      "outcome": "canceled",
+      "stopped": true,
+      "stop_sim_s": 0.4,
+      "passed": true
+    },
+    "resume_a": {
+      "outcome": "succeeded",
+      "wall_s": 37.9,
+      "settled_sim_second": true,
+      "final_pose_estimate_xy": [
+        -3.627,
+        -0.926
+      ],
+      "final_error_estimate_m": 0.002,
+      "final_yaw_estimate_deg": 61.78,
+      "final_yaw_error_estimate_deg": 0.88,
+      "final_truth_xy": [
+        -3.645,
+        -0.861
+      ],
+      "truth_age_wall_s": 0.0,
+      "final_truth_yaw_deg": 63.21,
+      "final_error_truth_m": 0.067,
+      "final_yaw_error_truth_deg": 2.31,
+      "passed": true
+    },
+    "near_obstacle_b": {
+      "outcome": "succeeded",
+      "wall_s": 55.0,
+      "settled_sim_second": true,
+      "final_pose_estimate_xy": [
+        -0.144,
+        -3.471
+      ],
+      "final_error_estimate_m": 0.05,
+      "final_yaw_estimate_deg": -34.91,
+      "final_yaw_error_estimate_deg": 0.6,
+      "final_truth_xy": [
+        -0.141,
+        -3.432
+      ],
+      "truth_age_wall_s": 0.0,
+      "final_truth_yaw_deg": -37.0,
+      "final_error_truth_m": 0.017,
+      "final_yaw_error_truth_deg": -1.49,
+      "passed": true
+    }
+  },
+  "seed": 1,
+  "stack_ready_wall_s": 28.1,
+  "start": [
+    -7.007,
+    -7.002
+  ],
+  "goal_a": {
+    "x": -3.6249999199062586,
+    "y": -0.9249998796731234,
+    "path_m": 9.372792345801273,
+    "straight_m": 6.954521681384252,
+    "detour": true
+  },
+  "goal_b": {
+    "x": -0.1249998677521944,
+    "y": -3.4249999169260263,
+    "path_from_a_m": 7.259798082824071,
+    "clearance_m": 0.5024937885437853
+  },
+  "motion_source": "/odom/ground_truth",
+  "motion_forward_m": 16.912,
+  "motion_reverse_m": 0.003,
+  "motion_heading_travel_rad": 10.755,
+  "passed": true,
+  "trace": "/workspace/molar/robot_lab_runtime/v2-nav-matrix-20261121/isaac_labbot_nav_maze.json.trace.json"
+}

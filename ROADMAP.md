@@ -157,7 +157,7 @@ Blocked: [R9.4](#r94--optional-physical-bumperbot-hil) physical hardware
 | Order | Tasks | What to measure |
 |---|---|---|
 | V1 | R13.1 | Vacuum repeats, more houses, the new carpet/mop/camera features |
-| V2 | R5.1, R6.1 | Bumperbot/Labbot repeats over seeds, actor maps, SLAM/3D modes |
+| V2 | R5.1, R6.1 | Bumperbot/Labbot repeats over seeds, actor maps, SLAM/3D modes. **2026-11-21:** mission repeat on four backends × nav_obstacle/nav_maze, 16/16 passed ([round](docs/status/evidence/v2-nav-matrix-2026-11-21/README.md)); seeds, actor maps and SLAM/3D remain |
 | V3 | R5.5, R5.6, P5, P6 | Car course and 4WS/mecanum patterns on all backends and maps |
 | V4 | R5.2, R5.3, R12, P7 | Legged walking, turning, navigation and terrain, per backend |
 | V5 | R5.4, R5.10, R5.11, P8 | PX4 flight in every installed world; mapped-obstacle flight |
@@ -166,7 +166,7 @@ Blocked: [R9.4](#r94--optional-physical-bumperbot-hil) physical hardware
 | V8 | R11 | MOLAR repeats and identified dynamics |
 | V9 | R6.2–R6.7 | World geometry, actors, disturbances, terrain contact on all backends |
 | V10 | R7.1–R7.8 | Fair five-method comparisons per category |
-| V11 | R8.1, R8.3 | Backend mission matrix; concurrent experiments with budgets |
+| V11 | R8.1, R8.3 | Backend mission matrix; concurrent experiments with budgets. **2026-11-21:** support matrix regenerated, 342 measured cells ([matrix](docs/status/evidence/support-matrix-2026-11-21/README.md)) |
 | V12 | P2 | Physical joystick trial |
 | V13 | R9.1–R9.3 | Clean-host reproduction, seven comparison tutorials, release matrix |
 

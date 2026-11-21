@@ -1,0 +1,80 @@
+{
+  "steps": {
+    "cancel_a": {
+      "sent": true,
+      "travelled_before_cancel_m": 1.008,
+      "finished_before_cancel": false,
+      "outcome": "canceled",
+      "stopped": true,
+      "stop_sim_s": 0.34,
+      "passed": true
+    },
+    "resume_a": {
+      "outcome": "succeeded",
+      "wall_s": 32.0,
+      "settled_sim_second": true,
+      "final_pose_estimate_xy": [
+        -3.758,
+        -0.936
+      ],
+      "final_error_estimate_m": 0.02,
+      "final_yaw_estimate_deg": 63.35,
+      "final_yaw_error_estimate_deg": 1.31,
+      "final_truth_xy": [
+        -3.768,
+        -0.881
+      ],
+      "truth_age_wall_s": 0.001,
+      "final_truth_yaw_deg": 63.97,
+      "final_error_truth_m": 0.044,
+      "final_yaw_error_truth_deg": 1.93,
+      "passed": true
+    },
+    "near_obstacle_b": {
+      "outcome": "succeeded",
+      "wall_s": 28.8,
+      "settled_sim_second": true,
+      "final_pose_estimate_xy": [
+        -3.939,
+        -3.368
+      ],
+      "final_error_estimate_m": 0.037,
+      "final_yaw_estimate_deg": -95.41,
+      "final_yaw_error_estimate_deg": -0.33,
+      "final_truth_xy": [
+        -3.878,
+        -3.29
+      ],
+      "truth_age_wall_s": 0.001,
+      "final_truth_yaw_deg": -93.92,
+      "final_error_truth_m": 0.129,
+      "final_yaw_error_truth_deg": 1.16,
+      "passed": true
+    }
+  },
+  "seed": 1,
+  "stack_ready_wall_s": 5.8,
+  "start": [
+    -7.0,
+    -7.0
+  ],
+  "goal_a": {
+    "x": -3.7749999221414328,
+    "y": -0.9249998796731234,
+    "path_m": 9.434924381083075,
+    "straight_m": 6.877954131916613,
+    "detour": true
+  },
+  "goal_b": {
+    "x": -3.974999925121665,
+    "y": -3.3749999161809683,
+    "path_from_a_m": 2.5328427502169166,
+    "clearance_m": 0.3500000052154064
+  },
+  "motion_source": "/odom/ground_truth",
+  "motion_forward_m": 11.967,
+  "motion_reverse_m": 0.032,
+  "motion_heading_travel_rad": 9.059,
+  "passed": true,
+  "trace": "/workspace/molar/robot_lab_runtime/v2-nav-matrix-20261121/mujoco_labbot_nav_maze.json.trace.json"
+}

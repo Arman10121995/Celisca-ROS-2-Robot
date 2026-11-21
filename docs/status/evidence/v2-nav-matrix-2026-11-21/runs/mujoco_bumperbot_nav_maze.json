@@ -1,0 +1,80 @@
+{
+  "steps": {
+    "cancel_a": {
+      "sent": true,
+      "travelled_before_cancel_m": 1.003,
+      "finished_before_cancel": false,
+      "outcome": "canceled",
+      "stopped": true,
+      "stop_sim_s": 0.16,
+      "passed": true
+    },
+    "resume_a": {
+      "outcome": "succeeded",
+      "wall_s": 33.9,
+      "settled_sim_second": true,
+      "final_pose_estimate_xy": [
+        -2.725,
+        -0.957
+      ],
+      "final_error_estimate_m": 0.059,
+      "final_yaw_estimate_deg": 53.73,
+      "final_yaw_error_estimate_deg": -0.82,
+      "final_truth_xy": [
+        -2.765,
+        -0.9
+      ],
+      "truth_age_wall_s": 0.001,
+      "final_truth_yaw_deg": 55.15,
+      "final_error_truth_m": 0.093,
+      "final_yaw_error_truth_deg": 0.6,
+      "passed": true
+    },
+    "near_obstacle_b": {
+      "outcome": "succeeded",
+      "wall_s": 51.6,
+      "settled_sim_second": true,
+      "final_pose_estimate_xy": [
+        0.316,
+        -3.2
+      ],
+      "final_error_estimate_m": 0.064,
+      "final_yaw_estimate_deg": -34.88,
+      "final_yaw_error_estimate_deg": 0.7,
+      "final_truth_xy": [
+        0.349,
+        -3.154
+      ],
+      "truth_age_wall_s": 0.001,
+      "final_truth_yaw_deg": -35.98,
+      "final_error_truth_m": 0.034,
+      "final_yaw_error_truth_deg": -0.39,
+      "passed": true
+    }
+  },
+  "seed": 1,
+  "stack_ready_wall_s": 7.4,
+  "start": [
+    -7.0,
+    -7.0
+  ],
+  "goal_a": {
+    "x": -2.6749999057501554,
+    "y": -0.9249998796731234,
+    "path_m": 9.579899130073946,
+    "straight_m": 7.457297777619404,
+    "detour": true
+  },
+  "goal_b": {
+    "x": 0.3750001396983862,
+    "y": -3.174999913200736,
+    "path_from_a_m": 7.469848592292901,
+    "clearance_m": 0.30000000447034836
+  },
+  "motion_source": "/odom/ground_truth",
+  "motion_forward_m": 17.192,
+  "motion_reverse_m": 0.0,
+  "motion_heading_travel_rad": 9.918,
+  "passed": true,
+  "trace": "/workspace/molar/robot_lab_runtime/v2-nav-matrix-20261121/mujoco_bumperbot_nav_maze.json.trace.json"
+}

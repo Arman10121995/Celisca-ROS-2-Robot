@@ -1,0 +1,80 @@
+{
+  "steps": {
+    "cancel_a": {
+      "sent": true,
+      "travelled_before_cancel_m": 1.001,
+      "finished_before_cancel": false,
+      "outcome": "canceled",
+      "stopped": true,
+      "stop_sim_s": 0.44,
+      "passed": true
+    },
+    "resume_a": {
+      "outcome": "succeeded",
+      "wall_s": 29.5,
+      "settled_sim_second": true,
+      "final_pose_estimate_xy": [
+        -5.277,
+        -3.816
+      ],
+      "final_error_estimate_m": 0.053,
+      "final_yaw_estimate_deg": 59.66,
+      "final_yaw_error_estimate_deg": -1.14,
+      "final_truth_xy": [
+        -5.255,
+        -3.742
+      ],
+      "truth_age_wall_s": 0.001,
+      "final_truth_yaw_deg": 59.8,
+      "final_error_truth_m": 0.088,
+      "final_yaw_error_truth_deg": -0.99,
+      "passed": true
+    },
+    "near_obstacle_b": {
+      "outcome": "succeeded",
+      "wall_s": 22.3,
+      "settled_sim_second": true,
+      "final_pose_estimate_xy": [
+        -7.923,
+        -2.997
+      ],
+      "final_error_estimate_m": 0.057,
+      "final_yaw_estimate_deg": 161.24,
+      "final_yaw_error_estimate_deg": -1.45,
+      "final_truth_xy": [
+        -7.862,
+        -2.939
+      ],
+      "truth_age_wall_s": 0.0,
+      "final_truth_yaw_deg": 162.31,
+      "final_error_truth_m": 0.119,
+      "final_yaw_error_truth_deg": -0.37,
+      "passed": true
+    }
+  },
+  "seed": 1,
+  "stack_ready_wall_s": 9.1,
+  "start": [
+    -7.0,
+    -7.0
+  ],
+  "goal_a": {
+    "x": -5.224999936297536,
+    "y": -3.8249999154359102,
+    "path_m": 4.5899495620567405,
+    "straight_m": 3.6374786271712036,
+    "detour": true
+  },
+  "goal_b": {
+    "x": -7.974999977275729,
+    "y": -2.974999902769923,
+    "path_from_a_m": 3.102081574241748,
+    "clearance_m": 0.45000000670552254
+  },
+  "motion_source": "/odom/ground_truth",
+  "motion_forward_m": 7.579,
+  "motion_reverse_m": 0.0,
+  "motion_heading_travel_rad": 8.839,
+  "passed": true,
+  "trace": "/workspace/molar/robot_lab_runtime/v2-nav-matrix-20261121/gazebo_bumperbot_nav_obstacle.json.trace.json"
+}

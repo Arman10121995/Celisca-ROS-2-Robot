@@ -1,5 +1,5 @@
 schema_version: 1
-date: '2026-11-10'
+date: '2026-11-21'
 scope: "Exact hashed named simulation screens; unlisted cells remain untested."
 raw_artifact_root: /workspace/molar/robot_lab_runtime/r56-qualification-2026-10-05
 records:
@@ -13195,3 +13195,259 @@ records:
   limitations:
   - 'FAILED on coverage and kept: completed and docked within 0.002 m by truth, but 73.6 % of the target (85 % required),
     26 paths skipped; recovered from 1 wedge and 1 hemmed-in spot'
+- robot_id: bumperbot
+  environment_id: nav_maze
+  simulator: gazebo
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-11-21'
+  revision: 0f918f21 (installed build of that revision)
+  report: docs/status/evidence/v2-nav-matrix-2026-11-21/runs/gazebo_bumperbot_nav_maze.json
+  sha256: d1ceac2b4b152c576ea73208fcb2e2995c027167bc740f5bd710c8b032dd0c26
+  source_hashes: docs/status/evidence/v2-nav-matrix-2026-11-21/runs/source-hashes-0f918f21.json
+  source_hashes_sha256: 680fce2caeaa2557938a4a705ecf8c336a958bbc50b11b063b71177a0636fad8
+  report_kind: mission_screen
+  scope: 'sim_nav_mission: detour goal, cancel, resume and near-obstacle goal, truth-measured; seed 1. Details in
+    docs/status/evidence/v2-nav-matrix-2026-11-21.'
+  limitations:
+  - One seed per cell; repeats of cells measured since October
+- robot_id: bumperbot
+  environment_id: nav_obstacle
+  simulator: gazebo
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-11-21'
+  revision: 0f918f21 (installed build of that revision)
+  report: docs/status/evidence/v2-nav-matrix-2026-11-21/runs/gazebo_bumperbot_nav_obstacle.json
+  sha256: 6d2f767bcfc6be29aed5c0a603297a7012c37a0cd3104f2d2f9fdc4bc46c9f74
+  source_hashes: docs/status/evidence/v2-nav-matrix-2026-11-21/runs/source-hashes-0f918f21.json
+  source_hashes_sha256: 680fce2caeaa2557938a4a705ecf8c336a958bbc50b11b063b71177a0636fad8
+  report_kind: mission_screen
+  scope: 'sim_nav_mission: detour goal, cancel, resume and near-obstacle goal, truth-measured; seed 1. Details in
+    docs/status/evidence/v2-nav-matrix-2026-11-21.'
+  limitations:
+  - One seed per cell; repeats of cells measured since October
+- robot_id: labbot
+  environment_id: nav_maze
+  simulator: gazebo
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-11-21'
+  revision: 0f918f21 (installed build of that revision)
+  report: docs/status/evidence/v2-nav-matrix-2026-11-21/runs/gazebo_labbot_nav_maze.json
+  sha256: c71e72856c3075041456507f30e9df88b23c93ae669a4eeaa1f4e52d509e5fe0
+  source_hashes: docs/status/evidence/v2-nav-matrix-2026-11-21/runs/source-hashes-0f918f21.json
+  source_hashes_sha256: 680fce2caeaa2557938a4a705ecf8c336a958bbc50b11b063b71177a0636fad8
+  report_kind: mission_screen
+  scope: 'sim_nav_mission: detour goal, cancel, resume and near-obstacle goal, truth-measured; seed 1. Details in
+    docs/status/evidence/v2-nav-matrix-2026-11-21.'
+  limitations:
+  - One seed per cell; repeats of cells measured since October
+- robot_id: labbot
+  environment_id: nav_obstacle
+  simulator: gazebo
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-11-21'
+  revision: 0f918f21 (installed build of that revision)
+  report: docs/status/evidence/v2-nav-matrix-2026-11-21/runs/gazebo_labbot_nav_obstacle.json
+  sha256: 6b2f15e7af45081ce2cfc36b37f429bd7a91db2d871e8c89b177effe7ee38092
+  source_hashes: docs/status/evidence/v2-nav-matrix-2026-11-21/runs/source-hashes-0f918f21.json
+  source_hashes_sha256: 680fce2caeaa2557938a4a705ecf8c336a958bbc50b11b063b71177a0636fad8
+  report_kind: mission_screen
+  scope: 'sim_nav_mission: detour goal, cancel, resume and near-obstacle goal, truth-measured; seed 1. Details in
+    docs/status/evidence/v2-nav-matrix-2026-11-21.'
+  limitations:
+  - One seed per cell; repeats of cells measured since October
+- robot_id: bumperbot
+  environment_id: nav_maze
+  simulator: isaac
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-11-21'
+  revision: 0f918f21 (installed build of that revision)
+  report: docs/status/evidence/v2-nav-matrix-2026-11-21/runs/isaac_bumperbot_nav_maze.json
+  sha256: 2f275c8a836fb8bdf307342e331884d7e68054162ac98472ccfe2cc30b7da42e
+  source_hashes: docs/status/evidence/v2-nav-matrix-2026-11-21/runs/source-hashes-0f918f21.json
+  source_hashes_sha256: 680fce2caeaa2557938a4a705ecf8c336a958bbc50b11b063b71177a0636fad8
+  report_kind: mission_screen
+  scope: 'sim_nav_mission: detour goal, cancel, resume and near-obstacle goal, truth-measured; seed 1. Details in
+    docs/status/evidence/v2-nav-matrix-2026-11-21.'
+  limitations:
+  - One seed per cell; repeats of cells measured since October
+- robot_id: bumperbot
+  environment_id: nav_obstacle
+  simulator: isaac
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-11-21'
+  revision: 0f918f21 (installed build of that revision)
+  report: docs/status/evidence/v2-nav-matrix-2026-11-21/runs/isaac_bumperbot_nav_obstacle.json
+  sha256: 5bb378d8052366079198b54126cda0f30282f0866722a1884599652ba7ccb35c
+  source_hashes: docs/status/evidence/v2-nav-matrix-2026-11-21/runs/source-hashes-0f918f21.json
+  source_hashes_sha256: 680fce2caeaa2557938a4a705ecf8c336a958bbc50b11b063b71177a0636fad8
+  report_kind: mission_screen
+  scope: 'sim_nav_mission: detour goal, cancel, resume and near-obstacle goal, truth-measured; seed 1. Details in
+    docs/status/evidence/v2-nav-matrix-2026-11-21.'
+  limitations:
+  - One seed per cell; repeats of cells measured since October
+- robot_id: labbot
+  environment_id: nav_maze
+  simulator: isaac
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-11-21'
+  revision: 0f918f21 (installed build of that revision)
+  report: docs/status/evidence/v2-nav-matrix-2026-11-21/runs/isaac_labbot_nav_maze.json
+  sha256: 029e0c86025702ef10d05a5c38cc38210089884f3ff54b055910810c8894c7ad
+  source_hashes: docs/status/evidence/v2-nav-matrix-2026-11-21/runs/source-hashes-0f918f21.json
+  source_hashes_sha256: 680fce2caeaa2557938a4a705ecf8c336a958bbc50b11b063b71177a0636fad8
+  report_kind: mission_screen
+  scope: 'sim_nav_mission: detour goal, cancel, resume and near-obstacle goal, truth-measured; seed 1. Details in
+    docs/status/evidence/v2-nav-matrix-2026-11-21.'
+  limitations:
+  - One seed per cell; repeats of cells measured since October
+- robot_id: labbot
+  environment_id: nav_obstacle
+  simulator: isaac
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-11-21'
+  revision: 0f918f21 (installed build of that revision)
+  report: docs/status/evidence/v2-nav-matrix-2026-11-21/runs/isaac_labbot_nav_obstacle.json
+  sha256: 4c4781358b57a2e2dd5e75f1971a8d5171ad0542c83c8821a2c7853208919f3d
+  source_hashes: docs/status/evidence/v2-nav-matrix-2026-11-21/runs/source-hashes-0f918f21.json
+  source_hashes_sha256: 680fce2caeaa2557938a4a705ecf8c336a958bbc50b11b063b71177a0636fad8
+  report_kind: mission_screen
+  scope: 'sim_nav_mission: detour goal, cancel, resume and near-obstacle goal, truth-measured; seed 1. Details in
+    docs/status/evidence/v2-nav-matrix-2026-11-21.'
+  limitations:
+  - One seed per cell; repeats of cells measured since October
+- robot_id: bumperbot
+  environment_id: nav_maze
+  simulator: mujoco
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-11-21'
+  revision: 0f918f21 (installed build of that revision)
+  report: docs/status/evidence/v2-nav-matrix-2026-11-21/runs/mujoco_bumperbot_nav_maze.json
+  sha256: 103f92156c36713aa6b352efd505826602d8454d93a8ad05b2c4e1b41d397ca3
+  source_hashes: docs/status/evidence/v2-nav-matrix-2026-11-21/runs/source-hashes-0f918f21.json
+  source_hashes_sha256: 680fce2caeaa2557938a4a705ecf8c336a958bbc50b11b063b71177a0636fad8
+  report_kind: mission_screen
+  scope: 'sim_nav_mission: detour goal, cancel, resume and near-obstacle goal, truth-measured; seed 1. Details in
+    docs/status/evidence/v2-nav-matrix-2026-11-21.'
+  limitations:
+  - One seed per cell; repeats of cells measured since October
+- robot_id: bumperbot
+  environment_id: nav_obstacle
+  simulator: mujoco
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-11-21'
+  revision: 0f918f21 (installed build of that revision)
+  report: docs/status/evidence/v2-nav-matrix-2026-11-21/runs/mujoco_bumperbot_nav_obstacle.json
+  sha256: baf37be2a3a693871bb24193fb8476ac3e482e0ad7ca0f23302fdad67be789b2
+  source_hashes: docs/status/evidence/v2-nav-matrix-2026-11-21/runs/source-hashes-0f918f21.json
+  source_hashes_sha256: 680fce2caeaa2557938a4a705ecf8c336a958bbc50b11b063b71177a0636fad8
+  report_kind: mission_screen
+  scope: 'sim_nav_mission: detour goal, cancel, resume and near-obstacle goal, truth-measured; seed 1. Details in
+    docs/status/evidence/v2-nav-matrix-2026-11-21.'
+  limitations:
+  - One seed per cell; repeats of cells measured since October
+- robot_id: labbot
+  environment_id: nav_maze
+  simulator: mujoco
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-11-21'
+  revision: 0f918f21 (installed build of that revision)
+  report: docs/status/evidence/v2-nav-matrix-2026-11-21/runs/mujoco_labbot_nav_maze.json
+  sha256: 885505b20f872978b9418dc0c5a148163f0bf408a6c3cc86909edbb7669d7515
+  source_hashes: docs/status/evidence/v2-nav-matrix-2026-11-21/runs/source-hashes-0f918f21.json
+  source_hashes_sha256: 680fce2caeaa2557938a4a705ecf8c336a958bbc50b11b063b71177a0636fad8
+  report_kind: mission_screen
+  scope: 'sim_nav_mission: detour goal, cancel, resume and near-obstacle goal, truth-measured; seed 1. Details in
+    docs/status/evidence/v2-nav-matrix-2026-11-21.'
+  limitations:
+  - One seed per cell; repeats of cells measured since October
+- robot_id: labbot
+  environment_id: nav_obstacle
+  simulator: mujoco
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-11-21'
+  revision: 0f918f21 (installed build of that revision)
+  report: docs/status/evidence/v2-nav-matrix-2026-11-21/runs/mujoco_labbot_nav_obstacle.json
+  sha256: e5990255717a2ce6b1cb5a17fa98be805005734fdc282916ccc4088ee8a87280
+  source_hashes: docs/status/evidence/v2-nav-matrix-2026-11-21/runs/source-hashes-0f918f21.json
+  source_hashes_sha256: 680fce2caeaa2557938a4a705ecf8c336a958bbc50b11b063b71177a0636fad8
+  report_kind: mission_screen
+  scope: 'sim_nav_mission: detour goal, cancel, resume and near-obstacle goal, truth-measured; seed 1. Details in
+    docs/status/evidence/v2-nav-matrix-2026-11-21.'
+  limitations:
+  - One seed per cell; repeats of cells measured since October
+- robot_id: bumperbot
+  environment_id: nav_maze
+  simulator: pybullet
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-11-21'
+  revision: 0f918f21 (installed build of that revision)
+  report: docs/status/evidence/v2-nav-matrix-2026-11-21/runs/pybullet_bumperbot_nav_maze.json
+  sha256: 11e03255f389828f859bfbc944868ce2152dba746f3e6cbc50c4122f0c726ea6
+  source_hashes: docs/status/evidence/v2-nav-matrix-2026-11-21/runs/source-hashes-0f918f21.json
+  source_hashes_sha256: 680fce2caeaa2557938a4a705ecf8c336a958bbc50b11b063b71177a0636fad8
+  report_kind: mission_screen
+  scope: 'sim_nav_mission: detour goal, cancel, resume and near-obstacle goal, truth-measured; seed 1. Details in
+    docs/status/evidence/v2-nav-matrix-2026-11-21.'
+  limitations:
+  - One seed per cell; repeats of cells measured since October
+- robot_id: bumperbot
+  environment_id: nav_obstacle
+  simulator: pybullet
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-11-21'
+  revision: 0f918f21 (installed build of that revision)
+  report: docs/status/evidence/v2-nav-matrix-2026-11-21/runs/pybullet_bumperbot_nav_obstacle.json
+  sha256: e5231a56f83b81ea0b2ce74733fe6bbac1074b0f328c90a0d2188ea884c8ddc4
+  source_hashes: docs/status/evidence/v2-nav-matrix-2026-11-21/runs/source-hashes-0f918f21.json
+  source_hashes_sha256: 680fce2caeaa2557938a4a705ecf8c336a958bbc50b11b063b71177a0636fad8
+  report_kind: mission_screen
+  scope: 'sim_nav_mission: detour goal, cancel, resume and near-obstacle goal, truth-measured; seed 1. Details in
+    docs/status/evidence/v2-nav-matrix-2026-11-21.'
+  limitations:
+  - One seed per cell; repeats of cells measured since October
+- robot_id: labbot
+  environment_id: nav_maze
+  simulator: pybullet
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-11-21'
+  revision: 0f918f21 (installed build of that revision)
+  report: docs/status/evidence/v2-nav-matrix-2026-11-21/runs/pybullet_labbot_nav_maze.json
+  sha256: 5e7b84e74ad19bba5b16eb7402e15f54f340a39fd7d2871079ad1ef5513e9b24
+  source_hashes: docs/status/evidence/v2-nav-matrix-2026-11-21/runs/source-hashes-0f918f21.json
+  source_hashes_sha256: 680fce2caeaa2557938a4a705ecf8c336a958bbc50b11b063b71177a0636fad8
+  report_kind: mission_screen
+  scope: 'sim_nav_mission: detour goal, cancel, resume and near-obstacle goal, truth-measured; seed 1. Details in
+    docs/status/evidence/v2-nav-matrix-2026-11-21.'
+  limitations:
+  - One seed per cell; repeats of cells measured since October
+- robot_id: labbot
+  environment_id: nav_obstacle
+  simulator: pybullet
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-11-21'
+  revision: 0f918f21 (installed build of that revision)
+  report: docs/status/evidence/v2-nav-matrix-2026-11-21/runs/pybullet_labbot_nav_obstacle.json
+  sha256: b6c863d1aed9f6f2fb0222f923c8e2200d5568d7423013e7a98566ea3904ccb7
+  source_hashes: docs/status/evidence/v2-nav-matrix-2026-11-21/runs/source-hashes-0f918f21.json
+  source_hashes_sha256: 680fce2caeaa2557938a4a705ecf8c336a958bbc50b11b063b71177a0636fad8
+  report_kind: mission_screen
+  scope: 'sim_nav_mission: detour goal, cancel, resume and near-obstacle goal, truth-measured; seed 1. Details in
+    docs/status/evidence/v2-nav-matrix-2026-11-21.'
+  limitations:
+  - One seed per cell; repeats of cells measured since October

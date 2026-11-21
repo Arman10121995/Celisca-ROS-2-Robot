@@ -1,0 +1,80 @@
+{
+  "steps": {
+    "cancel_a": {
+      "sent": true,
+      "travelled_before_cancel_m": 1.005,
+      "finished_before_cancel": false,
+      "outcome": "canceled",
+      "stopped": true,
+      "stop_sim_s": 0.146,
+      "passed": true
+    },
+    "resume_a": {
+      "outcome": "succeeded",
+      "wall_s": 47.2,
+      "settled_sim_second": true,
+      "final_pose_estimate_xy": [
+        -3.82,
+        -0.924
+      ],
+      "final_error_estimate_m": 0.045,
+      "final_yaw_estimate_deg": 62.1,
+      "final_yaw_error_estimate_deg": 0.07,
+      "final_truth_xy": [
+        -3.824,
+        -0.916
+      ],
+      "truth_age_wall_s": 0.001,
+      "final_truth_yaw_deg": 62.19,
+      "final_error_truth_m": 0.049,
+      "final_yaw_error_truth_deg": 0.15,
+      "passed": true
+    },
+    "near_obstacle_b": {
+      "outcome": "succeeded",
+      "wall_s": 34.5,
+      "settled_sim_second": true,
+      "final_pose_estimate_xy": [
+        -3.925,
+        -3.339
+      ],
+      "final_error_estimate_m": 0.062,
+      "final_yaw_estimate_deg": -92.65,
+      "final_yaw_error_estimate_deg": 0.98,
+      "final_truth_xy": [
+        -3.919,
+        -3.305
+      ],
+      "truth_age_wall_s": 0.001,
+      "final_truth_yaw_deg": -90.77,
+      "final_error_truth_m": 0.089,
+      "final_yaw_error_truth_deg": 2.86,
+      "passed": true
+    }
+  },
+  "seed": 1,
+  "stack_ready_wall_s": 6.5,
+  "start": [
+    -7.0,
+    -7.0
+  ],
+  "goal_a": {
+    "x": -3.7749999221414328,
+    "y": -0.9249998796731234,
+    "path_m": 9.434924381083075,
+    "straight_m": 6.877968304582817,
+    "detour": true
+  },
+  "goal_b": {
+    "x": -3.974999925121665,
+    "y": -3.3749999161809683,
+    "path_from_a_m": 2.5328427502169166,
+    "clearance_m": 0.3500000052154064
+  },
+  "motion_source": "/odom/ground_truth",
+  "motion_forward_m": 11.937,
+  "motion_reverse_m": 0.001,
+  "motion_heading_travel_rad": 7.194,
+  "passed": true,
+  "trace": "/workspace/molar/robot_lab_runtime/v2-nav-matrix-20261121/pybullet_bumperbot_nav_maze.json.trace.json"
+}

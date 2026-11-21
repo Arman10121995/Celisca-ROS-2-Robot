@@ -1,0 +1,30 @@
+# V2/V11 repeat round (2026-11-21): Bumperbot and Labbot on the four backends,
+# nav_obstacle and nav_maze, indexed by scripts/r9_3_index_missions.py.
+date: '2026-11-21'
+scope: "Exact hashed named simulation screens; unlisted cells remain untested."
+source_files:
+  - scripts/sim_nav_mission.py
+  - scripts/sim_nav_mission.sh
+  - scripts/gazebo_isolation.sh
+  - src/robot_lab_bringup/launch/simulated_robot.launch.py
+  - src/robot_lab_bringup/config/sim_maps.yaml
+  - src/robot_lab_navigation/launch/navigation.launch.py
+  - src/robot_lab_navigation/config/controller_server.yaml
+  - src/robot_lab_navigation/config/planner_server.yaml
+  - src/robot_lab_robots/config/robots.yaml
+  - src/robot_lab_mujoco/python/robot_lab_mujoco/mujoco_spawner.py
+  - src/robot_lab_pybullet/python/robot_lab_pybullet/pybullet_spawner.py
+  - src/robot_lab_isaac/python/robot_lab_isaac/isaac_runtime.py
+  - src/robot_lab_isaac/python/robot_lab_isaac/isaac_spawner.py
+groups:
+  - reports:
+      - docs/status/evidence/v2-nav-matrix-2026-11-21/runs/*_nav_obstacle.json
+      - docs/status/evidence/v2-nav-matrix-2026-11-21/runs/*_nav_maze.json
+    date: '2026-11-21'
+    revision: "0f918f21 (installed build of that revision)"
+    hash_revision: 0f918f21
+    scope: >-
+      sim_nav_mission: detour goal, cancel, resume and near-obstacle goal,
+      truth-measured; seed 1. Details in docs/status/evidence/v2-nav-matrix-2026-11-21.
+    limitations:
+      - One seed per cell; repeats of cells measured since October
