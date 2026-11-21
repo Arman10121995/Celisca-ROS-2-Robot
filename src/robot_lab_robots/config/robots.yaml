@@ -12,8 +12,11 @@ robots:
     - marine
     default_mode: marine
     default_map: amphibious_shore
+    # MuJoCo/PyBullet: the ported AmphibiousDrive/Buoyancy in the robot spawner (R10.7 2026-11-21).
     supported_simulators:
     - gazebo
+    - mujoco
+    - pybullet
     features:
     - marine_dynamics
     - surface_vessel

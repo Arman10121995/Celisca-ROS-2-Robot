@@ -1,0 +1,48 @@
+{
+  "schema": "robot_lab.measured_extension_result.v1",
+  "workflow": "marine",
+  "task": "navigation",
+  "session_id": "5b4d8ae05b3a4c3caff37cb0b8bca9c2",
+  "run_id": "80652e778ca2486cad597b8f6a03b289",
+  "ros_domain_id": 20,
+  "success": false,
+  "reason": "Native mission failed: Native marine controller stopped; explicit rearm/replan required",
+  "measurements": [
+    {
+      "requested": [
+        6.3,
+        0.0,
+        0.134
+      ],
+      "physical_pose": [
+        6.437849495793307,
+        -0.028660447659490433,
+        0.13941139974320568
+      ],
+      "linear_m_s": 0.01501038627506553,
+      "angular_rad_s": -6.754934874741976e-05,
+      "settled_sim_s": 1.0,
+      "member_id": "body",
+      "index": 0,
+      "native_terminal": true,
+      "nav2_status": null
+    }
+  ],
+  "goal_contract": {
+    "position_m": 0.2,
+    "linear_m_s": 0.05,
+    "angular_rad_s": 0.05,
+    "settle_sim_s": 1.0
+  },
+  "truth_samples": {
+    "body": 7571
+  },
+  "control_released": true,
+  "wall_duration_s": 155.5092766470043,
+  "contacts": null,
+  "minimum_swept_clearance_m": null,
+  "producer_sha256": "db69c937ce47b992e41e7b31aaa6aa77532c9b01baafc31ca4f25534c83c0b4f",
+  "workload_sha256": "76d61a4e9cf8cc001ef8ac700231c05539f32717345419c3b12faf128a706b21",
+  "trace_sha256": "71eacc9d558c7a52b047017b07742fd062e45513f7ea105795f3070d2f3a8b58",
+  "scope": "Actual native task and independent physical measurements; parent runner owns process cleanup"
+}

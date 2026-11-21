@@ -186,6 +186,7 @@ def _build_mujoco_actions(context):
     joint_pd_config = LaunchConfiguration("joint_pd_config").perform(context).strip()
     spawner_params["gait_contact_config"] = LaunchConfiguration("gait_contact_config").perform(context)
     spawner_params["track_config"] = LaunchConfiguration("track_config").perform(context)
+    spawner_params["amphibious_config"] = LaunchConfiguration("amphibious_config").perform(context)
     spawner_params['gait_probe_config']=LaunchConfiguration('gait_probe_config').perform(context)
     spawner_params["gait_floor_reference"] = LaunchConfiguration("gait_floor_reference").perform(context)
     if joint_pd_config:
@@ -293,6 +294,7 @@ def generate_launch_description():
         DeclareLaunchArgument("initial_joint_positions", default_value=""),
         DeclareLaunchArgument("gait_contact_config", default_value=""),
         DeclareLaunchArgument("track_config", default_value=""),
+        DeclareLaunchArgument("amphibious_config", default_value=""),
         DeclareLaunchArgument('gait_probe_config',default_value=''),
         DeclareLaunchArgument("gait_floor_reference", default_value=""),
         DeclareLaunchArgument("robot_package", default_value="robot_lab_robots"),

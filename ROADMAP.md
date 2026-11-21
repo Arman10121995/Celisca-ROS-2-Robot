@@ -1349,8 +1349,13 @@ accounts for terrain fixtures without saved 2D maps. Details and evidence are in
     0.18 m step (3/3 per backend), climbs the five-step flight to its ledge stop (2/2) and goes up and over it
     (2/2) under the automatic flippers. As on Gazebo, fixed flippers rear and the 4 Nm flippers are back-driven
     ([receipt](docs/status/evidence/r107-tracks-backends-2026-11-21/README.md)). Angled steps there pass at 15° and
-    30° (up and down), but at 45° the vehicle is deflected along the face and does not climb (Gazebo climbs). The
-    amphibious form, Isaac tracks and the 45° ported climb remain;
+    30° (up and down), but at 45° the vehicle is deflected along the face and does not climb (Gazebo climbs). **Amphibious rover on MuJoCo and PyBullet
+    2026-11-21 (implemented, experimental; round trip not passed):** a port of the drive plugin and Fortress
+    buoyancy runs the unchanged controller and shore navigation. It rests and floats at the Gazebo heights and reaches
+    the water goal on every run, but the climb back onto the bank passed once in 6 MuJoCo runs and never on
+    PyBullet. It bounces at the waterline or stalls on the ramp; Gazebo passes 2/2
+    ([receipt](docs/status/evidence/r107-amphibious-backends-2026-11-21/README.md)). Isaac tracks/amphibious, the
+    45° ported climb and the ported shore exit remain;
   - angled descents beyond 15° for the tracked vehicle (one track drops first and the 0.35 rad roll hold stops it).
     **Angled approaches done 2026-11-20:** the 0.18 m step is climbed at 15°, 30° and 45° off square and descended
     at 15° (2/2) in a new `terrain_step_wide` ([receipt](docs/status/evidence/r107-tracked-angled-2026-11-20/README.md)).

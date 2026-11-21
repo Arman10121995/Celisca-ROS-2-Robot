@@ -802,7 +802,11 @@ def _build_simulation_actions(context):
             return _run_id_actions() + [IncludeLaunchDescription(PythonLaunchDescriptionSource(
                 _launch_file(bringup_share, 'gait_simulator.launch.py')), launch_arguments=gait_args.items())]
         if robot_config.get('marine_model'):
-            if _launch_value(context, 'simulator') != 'gazebo' or mode_name not in ('display', 'marine'):
+            # Ported water plants: the ROV/USV plant nodes and the amphibious rover's spawner plant
+            # (marine_simulator.launch.py validates the exact robot/backend pair).
+            ported = robot_model in ('lab_rov', 'lab_usv', 'lab_amphibious')
+            if (_launch_value(context, 'simulator') not in (('gazebo', 'mujoco', 'pybullet', 'isaac') if ported else ('gazebo',))
+                    or mode_name not in ('display', 'marine')):
                 raise RuntimeError('The laboratory ROV currently supports Gazebo Display/Marine only')
             selected_map = ('amphibious_shore' if robot_model=='lab_amphibious' else 'marine_tank') if map_free else map_name
             if not map_configs['maps'].get(selected_map, {}).get('marine') and robot_model!='lab_amphibious':
@@ -812,6 +816,7 @@ def _build_simulation_actions(context):
                 localization=_config_value(context, 'marine_localization', 'false'),
                 gui=_config_value(context, 'gui', 'true'), rviz='true' if _auto_bool(context, 'start_rviz', True) else 'false')
             if robot_model != 'tethys_auv':marine_args['robot_model']=robot_model
+            if ported:marine_args['simulator']=_launch_value(context, 'simulator')
             if _is_auto(marine_args['gui']):
                 marine_args['gui'] = 'true' if os.environ.get('DISPLAY') else 'false'
             for axis in ('x', 'y', 'z', 'yaw'):

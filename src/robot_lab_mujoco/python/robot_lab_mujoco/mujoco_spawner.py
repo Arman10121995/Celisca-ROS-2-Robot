@@ -1541,6 +1541,9 @@ class MuJoCoSpawner(Node):
         # Tracks driven through their contacts (track_plant.TrackPlant, JSON
         # robot_lab_utils.track_drive block); empty for every other robot.
         self.declare_parameter("track_config", "")
+        # The amphibious rover's wheels, springs, propellers and water
+        # (amphibious_plant.AmphibiousPlant, JSON {surface_z, density}).
+        self.declare_parameter("amphibious_config", "")
         self.declare_parameter("gait_floor_reference", "")
         # Optional coarser model timestep for robots that only drive wheels
         # (no effort stream, no explicit physics_timestep).  Off by default:
@@ -1604,6 +1607,7 @@ class MuJoCoSpawner(Node):
         self._height_scan_pub = None
         self._gait_contacts = self._gait_contact_pub = None
         self._tracks = None
+        self._amphibious = None
         self._go2_trunk_pub = None
         self._go2_support_pub = None
         self._effort_subscription = None
@@ -2108,6 +2112,22 @@ class MuJoCoSpawner(Node):
                 self.create_subscription(Float64, "/tracked/flippers/%s/target" % name,
                                          lambda msg, servo=servo: servo.command(msg.data), 10)
             self.get_logger().info("MuJoCo tracks on %d collision geoms" % len(self._tracks.geoms))
+        amphibious_config = self.get_parameter("amphibious_config").value
+        if amphibious_config:
+            from robot_lab_mujoco.amphibious_plant import AmphibiousPlant
+            from std_msgs.msg import Float64
+            self._amphibious = AmphibiousPlant(self._model, self._data, urdf, amphibious_config, self._body_id)
+            drive = self._amphibious.drive
+            self.create_subscription(Twist, "/amphibious/wheels", lambda msg: drive.command_wheels(
+                msg.linear.x, msg.angular.z, msg.linear.y, msg.linear.z, float(self._data.time)), 10)
+            for joint in drive.mounts:
+                self.create_subscription(Float64, "/marine/thrusters/%s/force" % joint,
+                    lambda msg, joint=joint: drive.command_thrust(joint, msg.data, float(self._data.time)), 10)
+            self._marine_odom_pub = self.create_publisher(Odometry, "/marine/odometry", 10)
+            self._marine_imu_pub = self.create_publisher(Imu, "/marine/imu", 10)
+            self._amphibious_pub = self.create_publisher(String, "/amphibious/plant", 10)
+            self._amphibious_state_at = -1.0
+            self.get_logger().info("MuJoCo amphibious plant: %d buoyant shapes" % len(drive.shapes))
 
         # Truth for loose world objects (payloads, boxes): free-jointed
         # bodies outside the robot, as JSON {name: [x, y, z, qw, qx, qy, qz]}
@@ -2528,6 +2548,8 @@ class MuJoCoSpawner(Node):
                 self._pub_odom()
                 if self._tracks is not None:
                     self._pub_track_odom()
+                if self._amphibious is not None:
+                    self._pub_amphibious()
                 self._pub_imu()
                 if self._height_scan_pub is not None:
                     self._pub_height_scan()
@@ -2701,6 +2723,8 @@ class MuJoCoSpawner(Node):
                     self._belt.step()
                 if self._tracks is not None:
                     self._tracks.step(float(self._data.time), float(self._model.opt.timestep))
+                if self._amphibious is not None:
+                    self._amphibious.step(float(self._data.time))
                 mujoco.mj_step(self._model, self._data)
         self._sim_step += 1
         self._read_physics_state()
@@ -2780,6 +2804,9 @@ class MuJoCoSpawner(Node):
         if self._tracks is not None:
             self._data.qfrc_applied[:] = 0.0
             self._tracks.reset()
+        if self._amphibious is not None:
+            self._data.qfrc_applied[:] = 0.0
+            self._amphibious.reset()
         if getattr(self, "_flex_culling", None) is not None:
             self._flex_culling.restore(self._model)    # the robot jumped; cull again next tick
         mujoco.mj_forward(self._model, self._data)
@@ -2901,6 +2928,33 @@ class MuJoCoSpawner(Node):
         m.twist.twist.linear = Vector3(x=self._blin[0], y=self._blin[1], z=self._blin[2])
         m.twist.twist.angular = Vector3(x=self._bang[0], y=self._bang[1], z=self._bang[2])
         self._odom_pub.publish(m)
+
+    def _pub_amphibious(self):
+        """Gazebo's /marine/odometry (map -> base_link, body-frame twist), /marine/imu and /amphibious/plant."""
+        stamp = self._stamp()
+        quaternion = Quaternion(x=self._born[0], y=self._born[1], z=self._born[2], w=self._born[3])
+        rotation = self._data.xmat[self._body_id].reshape(3, 3)
+        velocity = np.zeros(6)
+        mujoco.mj_objectVelocity(self._model, self._data, mujoco.mjtObj.mjOBJ_BODY, self._body_id, velocity, 0)
+        linear = velocity[3:] + np.cross(velocity[:3], self._data.xpos[self._body_id] - self._data.xipos[self._body_id])
+        body_linear, body_angular = rotation.T @ linear, rotation.T @ velocity[:3]
+        m = Odometry()
+        m.header.stamp, m.header.frame_id, m.child_frame_id = stamp, "map", "base_link"
+        position = self._data.xpos[self._body_id]
+        m.pose.pose.position = Point(x=float(position[0]), y=float(position[1]), z=float(position[2]))
+        m.pose.pose.orientation = quaternion
+        m.twist.twist.linear = Vector3(x=float(body_linear[0]), y=float(body_linear[1]), z=float(body_linear[2]))
+        m.twist.twist.angular = Vector3(x=float(body_angular[0]), y=float(body_angular[1]), z=float(body_angular[2]))
+        self._marine_odom_pub.publish(m)
+        imu = Imu()
+        imu.header.stamp, imu.header.frame_id = stamp, "base_link"
+        imu.orientation = quaternion
+        imu.orientation_covariance = [0.001, 0.0, 0.0, 0.0, 0.001, 0.0, 0.0, 0.0, 0.001]
+        imu.angular_velocity = Vector3(x=float(body_angular[0]), y=float(body_angular[1]), z=float(body_angular[2]))
+        self._marine_imu_pub.publish(imu)
+        if self._sim_t - self._amphibious_state_at >= 0.1:
+            self._amphibious_state_at = self._sim_t
+            self._amphibious_pub.publish(String(data=self._amphibious.drive.plant_message(self._sim_t)))
 
     def _on_track_cmd(self, msg):
         if self._tracks is not None:

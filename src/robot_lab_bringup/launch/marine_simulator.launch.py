@@ -165,6 +165,29 @@ def _setup(context):
               IGN_GAZEBO_RESOURCE_PATH=resource,GZ_SIM_RESOURCE_PATH=resource).items()]
     plant={'mujoco':'marine_mujoco_plant.py','pybullet':'marine_pybullet_plant.py',
            'isaac':'marine_isaac_plant.py'}.get(value('simulator'))
+    if amphibious and value('simulator') in ('mujoco','pybullet'):
+        # The rover's own URDF in the robot spawner with the shore world's collision conversion; the
+        # ported AmphibiousDrive/Buoyancy (robot_lab_utils.amphibious_drive) replaces the Gazebo
+        # plugins. Same controller and marine pipeline (simulated sensors, estimator, navigation).
+        backend=value('simulator')
+        sensors=dict(laser_link_name='base_link',imu_link_name='base_link',scan_rate=0.,camera_rate=0.)
+        args=dict(model=str(description),robot_name=robot,gui=value('gui'),use_sim_time='true',hold_position='false',
+                  world_name=world_name,world_path=source_world,sensor_config=json.dumps(sensors),
+                  amphibious_config=json.dumps(dict(surface_z=float(water['surface_z']),density=float(water['density']))),
+                  **{'spawn_'+axis:str(spawn.get(axis,0.)) for axis in ('x','y','z','yaw')})
+        if backend=='mujoco':args.update(physics_timestep='.002',robot_package=robot_profile['package'],robot_xacro=robot_profile['xacro'])
+        else:args.update(physics_rate='500.')
+        actions.append(IncludeLaunchDescription(PythonLaunchDescriptionSource(str(Path(share('robot_lab_'+backend))/'launch'/(backend+'_simulator.launch.py'))),
+                                                launch_arguments=args.items()))
+        controller=Node(package='robot_lab_utils',executable='amphibious_controller.py',parameters=[{
+            'use_sim_time':True,'description_file':str(description),'density':float(water['density']),
+            'surface_z':float(water['surface_z']),'robot_id':robot,'maximum_depth':float(water['surface_z'])-float(water['bottom_z'])-.6,
+            'control_allowed':enabled('control')}],output='screen')
+        actions+=[controller,RegisterEventHandler(OnProcessExit(target_action=controller,
+                  on_exit=[EmitEvent(event=Shutdown(reason='Marine actuator/observer owner exited'))]))]
+        from robot_lab_utils.marine_pipeline import pipeline
+        return actions+pipeline(source_world,description,spawn,water,robot,folder,control=enabled('control'),
+                                slam=False,radius=robot_profile.get('marine_navigation_radius'))
     if plant:
         if robot not in ('lab_rov','lab_usv'):
             raise ValueError('The %s marine plant currently supports the native lab_rov and lab_usv force interfaces only'%value('simulator'))

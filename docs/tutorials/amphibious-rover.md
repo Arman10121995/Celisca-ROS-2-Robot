@@ -53,3 +53,22 @@ autonomous return are preserved. That return unloaded two wheels at the ramp
 edge. The explicit sprung derivative keeps motor limits unchanged and adds
 passive compliance. Use the [current delivery](../status/amphibious-facility-2026-10-30.md)
 for exact model revisions, actual endpoints and remaining scope.
+
+## Other simulators (2026-11-21)
+
+Choose **MuJoCo** or **PyBullet** to run the same rover, controller,
+simulated sensors and shore navigation:
+
+```bash
+ros2 launch robot_lab_bringup simulated_robot.launch.py robot_model:=lab_amphibious \
+  simulator:=mujoco mode:=marine map_name:=amphibious_shore
+```
+
+The robot spawner applies a port of the Gazebo drive plugin and Fortress
+buoyancy (`robot_lab_utils/amphibious_drive.py`): the wheel servos,
+suspension springs, immersion-gated propellers, hull drag and buoyancy. The
+rover rests on the bank and floats at the Gazebo heights, and it reaches
+water goals. The climb from the water back onto the bank is not reliable
+there: 1 of 6 MuJoCo runs passed, and PyBullet stalls on the ramp. Use
+Gazebo for round trips. RGB-D mapping is Gazebo-only.
+[Receipt](../status/evidence/r107-amphibious-backends-2026-11-21/README.md).

@@ -276,6 +276,20 @@ def _rpy_quaternion(roll, pitch, yaw):
         z=cr*cp*sy - sr*sp*cy, w=cr*cp*cy + sr*sp*sy)
 
 
+def _is_water_world(world_path):
+    """True for an SDF world declaring a Buoyancy system (it has its own seabed)."""
+    if not world_path or os.path.splitext(str(world_path))[1].lower() not in (".world", ".sdf") \
+            or not os.path.isfile(str(world_path)):
+        return False
+    import xml.etree.ElementTree as ET
+    try:
+        world = ET.parse(str(world_path)).getroot().find("world")
+    except ET.ParseError:
+        return False
+    return world is not None and any(plugin.get("name", "").endswith("::Buoyancy")
+                                     for plugin in world.findall("plugin"))
+
+
 class PyBulletSpawner(Node):
     """Spawn robot URDF into a PyBullet physics world and publish
     joint_states, TF, odom, scan, imu, and clock."""
@@ -313,6 +327,10 @@ class PyBulletSpawner(Node):
         # Tracks driven through their contacts (track_plant.TrackPlant, JSON
         # robot_lab_utils.track_drive block); empty for every other robot.
         self.declare_parameter('track_config','')
+        # The amphibious rover's wheels, springs, propellers and water
+        # (amphibious_plant.AmphibiousPlant, JSON {surface_z, density}).
+        self.declare_parameter('amphibious_config','')
+        self._amphibious=None
         self._gait_plant=None
         self._tracks=None
         self.get_logger().info("Parameters declared")
@@ -482,6 +500,19 @@ class PyBulletSpawner(Node):
         visuals = [shape for shape in visuals if shape.get("element") == "visual"
                    and shape["type"] == "mesh" and shape["mesh"].lower().endswith(".dae")]
         drawn = self._create_textured_visuals(visuals, client)
+        # In a water world (a Buoyancy system) a model without collision is
+        # the water surface or decoration, never a solid lid, as
+        # gen_mjcf_worlds.py makes it non-colliding for MuJoCo. The amphibious
+        # rover drove on the shore world's water plane until this
+        # (2026-11-21). The mirror client still draws it.
+        if client == 0:
+            import xml.etree.ElementTree as ET
+            source = ET.parse(world_path).getroot().find('world')
+            if source is not None and any(plugin.get('name', '').endswith('::Buoyancy')
+                                          for plugin in source.findall('plugin')):
+                visual_only = {model.get('name') for model in source.findall('model')
+                               if model.find('.//collision') is None}
+                shapes = [shape for shape in shapes if shape.get('model') not in visual_only]
         created = 0
         for shape in shapes:
             if self._create_shape(shape, client=client, hidden=shape.get("model") in drawn):
@@ -886,8 +917,12 @@ class PyBulletSpawner(Node):
         self.get_logger().info("PyBullet physics engine configured")
         p.setRealTimeSimulation(0)
 
-        # Ground
-        p.loadURDF("plane.urdf")
+        # Ground, except in a water world (a Buoyancy system), which has its
+        # own seabed: the default plane at z 0 was a solid lid on the shore
+        # world's water surface (the amphibious rover drove on it, 2026-11-21).
+        self._water_world = _is_water_world(self.get_parameter("world_path").value)
+        if not self._water_world:
+            p.loadURDF("plane.urdf")
 
         # World mesh (optional)
         wp = self.get_parameter("world_path").value
@@ -1000,7 +1035,8 @@ class PyBulletSpawner(Node):
                 p.setAdditionalSearchPath(
                     pybullet_data.getDataPath(),
                     physicsClientId=self._render_client)
-                p.loadURDF("plane.urdf", physicsClientId=self._render_client)
+                if not getattr(self, "_water_world", False):
+                    p.loadURDF("plane.urdf", physicsClientId=self._render_client)
                 self._render_robot_id = p.loadURDF(
                     self._robot_urdf_path, [sx, sy, sz],
                     [orn.x, orn.y, orn.z, orn.w],
@@ -1205,6 +1241,22 @@ class PyBulletSpawner(Node):
                     lambda msg,servo=servo:servo.command(msg.data),10)
             self.get_logger().info('PyBullet tracks on %d links' % len(self._tracks.links))
 
+        if self.get_parameter('amphibious_config').value:
+            from robot_lab_pybullet.amphibious_plant import AmphibiousPlant
+            from std_msgs.msg import Float64,String
+            self._amphibious=AmphibiousPlant(p,self._robot_id,urdf,self.get_parameter('amphibious_config').value)
+            drive=self._amphibious.drive
+            self.create_subscription(Twist,'/amphibious/wheels',lambda msg:drive.command_wheels(
+                msg.linear.x,msg.angular.z,msg.linear.y,msg.linear.z,self._sim_t),10)
+            for joint in drive.mounts:
+                self.create_subscription(Float64,'/marine/thrusters/%s/force'%joint,
+                    lambda msg,joint=joint:drive.command_thrust(joint,msg.data,self._sim_t),10)
+            self._marine_odom_pub=self.create_publisher(Odometry,'/marine/odometry',10)
+            self._marine_imu_pub=self.create_publisher(Imu,'/marine/imu',10)
+            self._amphibious_pub=self.create_publisher(String,'/amphibious/plant',10)
+            self._amphibious_state_at=-1.
+            self.get_logger().info('PyBullet amphibious plant: %d buoyant shapes'%len(drive.shapes))
+
         self.get_logger().info(
             f"Joints: {self._joint_names}  lw={lw} rw={rw}")
         from robot_lab_utils.urdf_springs import joint_springs
@@ -1375,6 +1427,7 @@ class PyBulletSpawner(Node):
                         {k: round(v, 3) for k, v in forces.items()},
                         {k: {link: round(n, 2) for link, n in v.items()} for k, v in self._belt.contacts.items()}))
             if self._tracks is not None:self._tracks.step(self._sim_t,self._dt)
+            if self._amphibious is not None:self._amphibious.step(self._sim_t)
             p.stepSimulation()
             if self._gait_plant is not None:self._gait_plant.sample()
             self._sim_step += 1
@@ -1417,6 +1470,7 @@ class PyBulletSpawner(Node):
                     self._pub_joint_states()
                     self._pub_odom()
                     if self._tracks is not None:self._pub_track_odom()
+                    if self._amphibious is not None:self._pub_amphibious()
                     if self._free_bodies and self._sim_t - self._free_bodies_t + 1e-9 >= 0.1:
                         self._free_bodies_t = self._sim_t
                         self._pub_free_bodies()
@@ -1472,6 +1526,33 @@ class PyBulletSpawner(Node):
         m.twist.twist.linear = Vector3(x=self._blin[0], y=self._blin[1], z=self._blin[2])
         m.twist.twist.angular = Vector3(x=self._bang[0], y=self._bang[1], z=self._bang[2])
         self._odom_pub.publish(m)
+
+    def _pub_amphibious(self):
+        """Gazebo's /marine/odometry (map -> base_link, body-frame twist), /marine/imu and /amphibious/plant."""
+        from std_msgs.msg import String
+        origin, R, com, linear, angular = self._amphibious._frame(-1)
+        linear = linear + np.cross(angular, origin - com)
+        body_linear, body_angular = R.T @ linear, R.T @ angular
+        _, quaternion = p.multiplyTransforms(*p.getBasePositionAndOrientation(self._robot_id),
+            *p.invertTransform(*p.getDynamicsInfo(self._robot_id, -1)[3:5]))
+        stamp = self._stamp()
+        q = Quaternion(x=float(quaternion[0]), y=float(quaternion[1]), z=float(quaternion[2]), w=float(quaternion[3]))
+        m = Odometry()
+        m.header.stamp, m.header.frame_id, m.child_frame_id = stamp, "map", "base_link"
+        m.pose.pose.position = Point(x=float(origin[0]), y=float(origin[1]), z=float(origin[2]))
+        m.pose.pose.orientation = q
+        m.twist.twist.linear = Vector3(x=float(body_linear[0]), y=float(body_linear[1]), z=float(body_linear[2]))
+        m.twist.twist.angular = Vector3(x=float(body_angular[0]), y=float(body_angular[1]), z=float(body_angular[2]))
+        self._marine_odom_pub.publish(m)
+        imu = Imu()
+        imu.header.stamp, imu.header.frame_id = stamp, "base_link"
+        imu.orientation = q
+        imu.orientation_covariance = [0.001, 0.0, 0.0, 0.0, 0.001, 0.0, 0.0, 0.0, 0.001]
+        imu.angular_velocity = Vector3(x=float(body_angular[0]), y=float(body_angular[1]), z=float(body_angular[2]))
+        self._marine_imu_pub.publish(imu)
+        if self._sim_t - self._amphibious_state_at >= 0.1:
+            self._amphibious_state_at = self._sim_t
+            self._amphibious_pub.publish(String(data=self._amphibious.drive.plant_message(self._sim_t)))
 
     def _pub_track_odom(self):
         """Track dead reckoning, as Gazebo's TrackedVehicle odometry."""
@@ -1548,6 +1629,8 @@ class PyBulletSpawner(Node):
                     self._gait_plant.seed();self._gait_plant.at=None
                 if self._tracks is not None:
                     self._tracks.reset()
+                if self._amphibious is not None:
+                    self._amphibious.reset()
                 # A still-fresh cmd_vel would re-accelerate the wheels on
                 # the next physics tick and drag the robot out of its reset
                 # pose, so the pending command is cleared as well.

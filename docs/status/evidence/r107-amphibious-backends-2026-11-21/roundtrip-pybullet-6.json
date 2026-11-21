@@ -1,0 +1,48 @@
+{
+  "schema": "robot_lab.measured_extension_result.v1",
+  "workflow": "marine",
+  "task": "navigation",
+  "session_id": "6ef6f04c3fb24473ada177acca73eafe",
+  "run_id": "8964ab0246c046af919bfcd5f26ae287",
+  "ros_domain_id": 20,
+  "success": false,
+  "reason": "Native mission failed: Marine mission sensor/operator/time budget lost",
+  "measurements": [
+    {
+      "requested": [
+        6.3,
+        0.0,
+        0.134
+      ],
+      "physical_pose": [
+        6.4235310554504395,
+        -0.02993777208030224,
+        0.14194318652153015
+      ],
+      "linear_m_s": 0.017168391435798482,
+      "angular_rad_s": 0.00010912634969061281,
+      "settled_sim_s": 1.0039999999999978,
+      "member_id": "body",
+      "index": 0,
+      "native_terminal": true,
+      "nav2_status": null
+    }
+  ],
+  "goal_contract": {
+    "position_m": 0.2,
+    "linear_m_s": 0.05,
+    "angular_rad_s": 0.05,
+    "settle_sim_s": 1.0
+  },
+  "truth_samples": {
+    "body": 9850
+  },
+  "control_released": true,
+  "wall_duration_s": 249.10515528998803,
+  "contacts": null,
+  "minimum_swept_clearance_m": null,
+  "producer_sha256": "db69c937ce47b992e41e7b31aaa6aa77532c9b01baafc31ca4f25534c83c0b4f",
+  "workload_sha256": "a2980172586488185a6ab6b9ebfbf0c6995e4b16a3b3f1d3529d41ac6055ad05",
+  "trace_sha256": "d813724a52607a0f56cc1c2162e8be4bbafb66e5908a3e807732c832a0d0c2bb",
+  "scope": "Actual native task and independent physical measurements; parent runner owns process cleanup"
+}
