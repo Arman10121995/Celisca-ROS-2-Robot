@@ -224,7 +224,8 @@ def provision(store, download=False, variant='fortress'):
             ' Vendor F100 mount and one bounded jaw actuator with five linked followers. '
             'Compound finger collisions and a nominal grasp frame are derived from the source CAD. '
             'The joint effort, rate and damping are declared simulation estimates. The experimental short-block fetch '
-            'has measured pickup and carry in MuJoCo Display. Supported release and Nav2 transit remain unqualified.')
+            'completed pickup, straight carry, supported release and clearance in one MuJoCo Display GUI run. '
+            'Loaded Nav2 transit remains unqualified.')
         changes.extend(('vendor F100 mount and linkage', 'bounded F100 servo and MuJoCo transmission inertia',
                         'source CAD finger hulls, separate pad contacts, and nominal grasp frame'))
     receipt=dict(repository=source['repository'],source_id=source['id'],revision=source['revision'],license='BSD-3-Clause',

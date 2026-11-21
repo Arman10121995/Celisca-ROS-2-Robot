@@ -1,14 +1,13 @@
 # Agent Handoff Protocol
 
-November 21 Pro630/F100: the normal MuJoCo GUI now has a measured 46.3 mm
-unsupported lift and a completed straight carry leg on the short-block map.
-Preserve the calibrated shaft and follower armature, the single effort
-budget and fresh bilateral pad criteria. The drop table is reached, but the
-original place pose was out of reach. A closer dock solves IK. A private
-replay from the closer dock found a complete place path after retaining the
-observed jaw contact at its initial depth. Before enabling measured support
-in the GUI, record actual supported release and clear-away.
-[Loaded custody evidence](status/evidence/r143-pro630-f100-2026-11-20/README.md#loaded-custody-and-transport-november-21).
+November 21 Pro630/F100: normal MuJoCo Display run 11 completed the
+short-block GUI fetch through supported release and base clearance.
+Preserve the 445 mm place dock, calibrated shaft and follower armature,
+single effort budget, fresh bilateral pad checks and measured-jaw contact
+depth guard. Next, exercise the opt-in Navigation fetch and retain both
+costmap footprint acknowledgements and the Nav2 action outcomes. Keep
+PyBullet experimental work scoped to its own real linkage and pad data.
+[Completed fetch evidence](status/evidence/r143-pro630-f100-2026-11-20/README.md#complete-gui-fetch).
 
 November 20 Pro630/F100: preserve the separate same-family mounted variant,
 original arm mesh hashes and one shaft effort budget with five passive

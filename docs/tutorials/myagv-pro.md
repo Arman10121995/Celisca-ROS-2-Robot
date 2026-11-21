@@ -135,10 +135,10 @@ candidate defaults to a 50 mm lift after reaching over the short block.
 It uses the measured pad loads and object motion to check the grasp, and
 stops if it loses custody on the way to the drop table. The variant uses
 the same saved occupancy grid as the original fetch lab because the
-tables and floor have the same geometry. One run measured an unsupported
-46.3 mm lift and delivery to the drop table, then stopped at place planning.
-The complete fetch workflow remains experimental.
-[Loaded custody evidence](../status/evidence/r143-pro630-f100-2026-11-20/README.md#loaded-custody-and-transport-november-21).
+tables and floor have the same geometry. One full GUI run lifted the block
+46.3 mm, carried it to the drop table, released it and backed away. This
+result covers the short-block map in MuJoCo Display with straight transport.
+[Completed fetch evidence](../status/evidence/r143-pro630-f100-2026-11-20/README.md#complete-gui-fetch).
 
 To try Nav2 transport, keep the same experimental profile and map and
 select **Navigation**. **Run fetch** becomes available when the Nav2 transit

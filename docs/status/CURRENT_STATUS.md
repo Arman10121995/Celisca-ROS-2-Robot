@@ -1,10 +1,11 @@
 # Current Robot Lab status
 
-November 21 Codex: the Pro630/F100 picked up the 40 g block through the
-normal MuJoCo Display GUI on `mobile_fetch_lab_f100`. It lifted 46.3 mm and
-completed the straight carry leg. Place planning stopped above the support.
-Supported release, Nav2 transit and other backend missions remain pending.
-[Loaded custody evidence](evidence/r143-pro630-f100-2026-11-20/README.md#loaded-custody-and-transport-november-21).
+November 21 Codex: the Pro630/F100 completed a normal MuJoCo Display GUI
+fetch on `mobile_fetch_lab_f100`. It lifted the 40 g block 46.3 mm, carried
+it to the drop table, released it with 0.1 mm support height error, and
+backed away. The GUI also exposes experimental Navigation with an explicit
+Nav2 action request. Loaded Nav2 and other backend missions remain pending.
+[Fetch evidence](evidence/r143-pro630-f100-2026-11-20/README.md#complete-gui-fetch).
 
 November 20 Codex: the **myAGV Pro + myCobot Pro630** family now includes an
 official-mount F100 variant. Open and Close passed through the normal GUI

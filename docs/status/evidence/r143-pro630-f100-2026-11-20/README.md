@@ -125,6 +125,28 @@ geometry so a contact on the same link outside the pad stays excluded.
 This implementation has a focused regression test. The F100 profile
 remains MuJoCo-only while the loaded Bullet linkage awaits measurement.
 
+### Complete GUI fetch
+
+Run 11 used the normal GUI on `mobile_fetch_lab_f100` with MuJoCo Display
+and experimental workflows enabled. The F100 picked up the free 40 g block,
+carried it to `drop_table`, released it on the support, withdrew the arm
+and backed the base away. The owned launch exited with code 0.
+
+| Measurement | Run 11 |
+|---|---:|
+| Unsupported lift | 46.3 mm |
+| Payload drift during the lift hold | 0.5 mm |
+| Maximum payload drift during straight carry | 19.1 mm |
+| Final supported height error | −0.1 mm |
+| Block movement during final rest check | 0.0 mm at reported precision |
+| Base clearance after release | 0.572 m |
+| Total task wall time | 170.24 s |
+
+The result covers the short-block map with straight transport. The exact
+GUI command, model hash, stage timings, pad forces, final poses and
+termination are in [run 11](gui-fetch-custody-2026-11-21.json). The full
+trace and screenshots are on SSD under `gui-fetch-11/` in the run directory.
+
 ## Source and retained diagnostics
 
 The bare arm and its wheel/arm measurements use the existing source pin.
