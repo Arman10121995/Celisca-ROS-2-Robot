@@ -1,0 +1,17 @@
+{
+  "simulator": "mujoco",
+  "map": "nav_obstacle",
+  "spawn": [
+    -7.0,
+    -7.0,
+    0.0
+  ],
+  "known_cells": 9849,
+  "occupied_cells": 428,
+  "resolution": 0.05000000074505806,
+  "occupied_error_median_m": 0.0008,
+  "occupied_error_p95_m": 0.0008,
+  "occupied_within_0_1m": 1.0,
+  "travel_m": 1.675,
+  "passed": true
+}

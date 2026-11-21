@@ -310,7 +310,11 @@ class PyBulletSpawner(Node):
         self.declare_parameter('gait_probe_config','')
         self.declare_parameter('gait_contact_config','')
         self.declare_parameter('gait_floor_reference','')
+        # Tracks driven through their contacts (track_plant.TrackPlant, JSON
+        # robot_lab_utils.track_drive block); empty for every other robot.
+        self.declare_parameter('track_config','')
         self._gait_plant=None
+        self._tracks=None
         self.get_logger().info("Parameters declared")
         self.declare_parameter("gui", True)
         self.declare_parameter("physics_rate", 240.0)
@@ -1184,6 +1188,14 @@ class PyBulletSpawner(Node):
             self.create_subscription(Float64MultiArray,self._gait_plant.config.get('topic','/gait/joint_targets'),
                 lambda msg:self._gait_plant.receive(msg.data,self._sim_t),10)
 
+        if self.get_parameter('track_config').value:
+            from robot_lab_pybullet.track_plant import TrackPlant
+            self._tracks=TrackPlant(p,self._robot_id,self.get_parameter('track_config').value)
+            self._track_odom_pub=self.create_publisher(Odometry,'/robot_lab_controller/odom',10)
+            self.create_subscription(Twist,'/tracked/cmd_vel',
+                lambda msg:self._tracks.drive.command(msg.linear.x,msg.angular.z,self._sim_t),10)
+            self.get_logger().info('PyBullet tracks on %d links' % len(self._tracks.links))
+
         self.get_logger().info(
             f"Joints: {self._joint_names}  lw={lw} rw={rw}")
         from robot_lab_utils.urdf_springs import joint_springs
@@ -1353,6 +1365,7 @@ class PyBulletSpawner(Node):
                     self.get_logger().info('Belt: forces %s; contacts by robot link %s' % (
                         {k: round(v, 3) for k, v in forces.items()},
                         {k: {link: round(n, 2) for link, n in v.items()} for k, v in self._belt.contacts.items()}))
+            if self._tracks is not None:self._tracks.step(self._sim_t,self._dt)
             p.stepSimulation()
             if self._gait_plant is not None:self._gait_plant.sample()
             self._sim_step += 1
@@ -1394,6 +1407,7 @@ class PyBulletSpawner(Node):
                     last_pub = self._sim_t
                     self._pub_joint_states()
                     self._pub_odom()
+                    if self._tracks is not None:self._pub_track_odom()
                     if self._free_bodies and self._sim_t - self._free_bodies_t + 1e-9 >= 0.1:
                         self._free_bodies_t = self._sim_t
                         self._pub_free_bodies()
@@ -1449,6 +1463,20 @@ class PyBulletSpawner(Node):
         m.twist.twist.linear = Vector3(x=self._blin[0], y=self._blin[1], z=self._blin[2])
         m.twist.twist.angular = Vector3(x=self._bang[0], y=self._bang[1], z=self._bang[2])
         self._odom_pub.publish(m)
+
+    def _pub_track_odom(self):
+        """Track dead reckoning, as Gazebo's TrackedVehicle odometry."""
+        drive = self._tracks.drive
+        x, y, yaw = drive.pose
+        m = Odometry()
+        m.header.stamp = self._stamp()
+        m.header.frame_id = "odom"
+        m.child_frame_id = self._base_frame
+        m.pose.pose.position = Point(x=x, y=y, z=0.0)
+        m.pose.pose.orientation = Quaternion(x=0.0, y=0.0, z=math.sin(yaw / 2), w=math.cos(yaw / 2))
+        m.twist.twist.linear = Vector3(x=drive.velocity[0], y=0.0, z=0.0)
+        m.twist.twist.angular = Vector3(x=0.0, y=0.0, z=drive.velocity[1])
+        self._track_odom_pub.publish(m)
 
     def _pub_imu(self):
         m = Imu()
@@ -1509,6 +1537,8 @@ class PyBulletSpawner(Node):
                             p.resetJointState(self._robot_id, self._joint_idx[name], value, 0.0)
                 if self._gait_plant is not None:
                     self._gait_plant.seed();self._gait_plant.at=None
+                if self._tracks is not None:
+                    self._tracks.reset()
                 # A still-fresh cmd_vel would re-accelerate the wheels on
                 # the next physics tick and drag the robot out of its reset
                 # pose, so the pending command is cleared as well.

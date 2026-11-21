@@ -1538,6 +1538,9 @@ class MuJoCoSpawner(Node):
         self.declare_parameter('gait_probe_config','')
         self.declare_parameter("pd_joint_armature", 0.01)
         self.declare_parameter("gait_contact_config", "")
+        # Tracks driven through their contacts (track_plant.TrackPlant, JSON
+        # robot_lab_utils.track_drive block); empty for every other robot.
+        self.declare_parameter("track_config", "")
         self.declare_parameter("gait_floor_reference", "")
         # Optional coarser model timestep for robots that only drive wheels
         # (no effort stream, no explicit physics_timestep).  Off by default:
@@ -1600,6 +1603,7 @@ class MuJoCoSpawner(Node):
         self._go2_contact_pub = None
         self._height_scan_pub = None
         self._gait_contacts = self._gait_contact_pub = None
+        self._tracks = None
         self._go2_trunk_pub = None
         self._go2_support_pub = None
         self._effort_subscription = None
@@ -2093,6 +2097,13 @@ class MuJoCoSpawner(Node):
                 from robot_lab_mujoco.conveyor_belt import ConveyorBelt
                 self._belt = ConveyorBelt(self._model, self._data, "telescope_stage2",
                                           "transfer_roller_joint", roller_radius=0.012)
+        track_config = self.get_parameter("track_config").value
+        if track_config:
+            from robot_lab_mujoco.track_plant import TrackPlant
+            self._tracks = TrackPlant(self._model, self._data, urdf, track_config, self._body_id)
+            self._track_odom_pub = self.create_publisher(Odometry, "/robot_lab_controller/odom", 10)
+            self.create_subscription(Twist, "/tracked/cmd_vel", self._on_track_cmd, 10)
+            self.get_logger().info("MuJoCo tracks on %d collision geoms" % len(self._tracks.geoms))
 
         # Truth for loose world objects (payloads, boxes): free-jointed
         # bodies outside the robot, as JSON {name: [x, y, z, qw, qx, qy, qz]}
@@ -2511,6 +2522,8 @@ class MuJoCoSpawner(Node):
                         self._model, self._data, self._go2_support_ids)
                     self._go2_support_pub.publish(support)
                 self._pub_odom()
+                if self._tracks is not None:
+                    self._pub_track_odom()
                 self._pub_imu()
                 if self._height_scan_pub is not None:
                     self._pub_height_scan()
@@ -2682,6 +2695,8 @@ class MuJoCoSpawner(Node):
                 self._apply_perturbation()
                 if getattr(self, "_belt", None) is not None:
                     self._belt.step()
+                if self._tracks is not None:
+                    self._tracks.step(float(self._data.time), float(self._model.opt.timestep))
                 mujoco.mj_step(self._model, self._data)
         self._sim_step += 1
         self._read_physics_state()
@@ -2758,6 +2773,9 @@ class MuJoCoSpawner(Node):
             self._data.xfrc_applied[:, :] = 0.0
         if getattr(self, "_belt", None) is not None:
             self._belt.applied = {}
+        if self._tracks is not None:
+            self._data.qfrc_applied[:] = 0.0
+            self._tracks.reset()
         if getattr(self, "_flex_culling", None) is not None:
             self._flex_culling.restore(self._model)    # the robot jumped; cull again next tick
         mujoco.mj_forward(self._model, self._data)
@@ -2879,6 +2897,24 @@ class MuJoCoSpawner(Node):
         m.twist.twist.linear = Vector3(x=self._blin[0], y=self._blin[1], z=self._blin[2])
         m.twist.twist.angular = Vector3(x=self._bang[0], y=self._bang[1], z=self._bang[2])
         self._odom_pub.publish(m)
+
+    def _on_track_cmd(self, msg):
+        if self._tracks is not None:
+            self._tracks.drive.command(msg.linear.x, msg.angular.z, float(self._data.time))
+
+    def _pub_track_odom(self):
+        """Track dead reckoning, as Gazebo's TrackedVehicle odometry."""
+        drive = self._tracks.drive
+        x, y, yaw = drive.pose
+        m = Odometry()
+        m.header.stamp = self._stamp()
+        m.header.frame_id = "odom"
+        m.child_frame_id = self._base_frame
+        m.pose.pose.position = Point(x=x, y=y, z=0.0)
+        m.pose.pose.orientation = Quaternion(x=0.0, y=0.0, z=math.sin(yaw / 2), w=math.cos(yaw / 2))
+        m.twist.twist.linear = Vector3(x=drive.velocity[0], y=0.0, z=0.0)
+        m.twist.twist.angular = Vector3(x=0.0, y=0.0, z=drive.velocity[1])
+        self._track_odom_pub.publish(m)
 
     def _pub_height_scan(self):
         """Base height above the terrain at the policy's scan points (legged_policy.HEIGHT_SCAN)."""

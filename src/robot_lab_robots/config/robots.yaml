@@ -148,7 +148,8 @@ robots:
     supported_modes: [display, loc, slam, 3d_slam, nav]
     default_mode: display
     default_map: nav_empty
-    supported_simulators: [gazebo]
+    # MuJoCo/PyBullet: the ported track plant (robot_lab_utils.track_drive, R10.7 2026-11-21).
+    supported_simulators: [gazebo, mujoco, pybullet]
     drive_in_display: true
     controllers: []
     features: [native_tracks, lidar_2d, rgbd_camera, imu, velocity_base]
@@ -162,6 +163,8 @@ robots:
   lab_tracked_articulated:
     <<: *lab_tracked_profile
     name: lab_tracked_articulated
+    # Flipper servos exist on the Gazebo plant only.
+    supported_simulators: [gazebo]
     xacro: lab_tracked_articulated/robot.urdf
     tracked_sdf: lab_tracked_articulated/model.sdf
     articulated_flippers: true
@@ -172,6 +175,8 @@ robots:
   lab_tracked_strong_flippers:
     <<: *lab_tracked_profile
     name: lab_tracked_strong_flippers
+    # Flipper servos exist on the Gazebo plant only.
+    supported_simulators: [gazebo]
     xacro: lab_tracked_strong_flippers/robot.urdf
     tracked_sdf: lab_tracked_strong_flippers/model.sdf
     articulated_flippers: true

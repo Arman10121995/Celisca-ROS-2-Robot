@@ -1340,7 +1340,13 @@ accounts for terrain fixtures without saved 2D maps. Details and evidence are in
     serpenoid speed, 0.33–0.40 m/s whatever the command on both backends, now follows the command (0.074–0.085 m/s
     at 0.08). Saved-map goals still fail: on PyBullet the rolling odometry is interrupted, and on MuJoCo the robot
     stops 0.17–0.22 m short by truth ([receipt](docs/status/evidence/r107-snake-pybullet-2026-11-20/README.md)).
-    The tracked and amphibious forms remain;
+    **Tracked vehicle on MuJoCo and PyBullet 2026-11-21 (implemented, experimental):** a shared contact-force track
+    law (`track_drive.py`) on normal-only track geometry runs fixed-flipper `lab_tracked` through the normal
+    launch. It turns in place within 0.001 rad of its odometry with under 0.5 mm of drift, and stops on operator
+    loss. It maps `nav_obstacle` (100 % of occupied cells within 0.1 m of the installed map) and reaches a Nav2
+    goal across it 2/2 on each backend (0.011–0.034 m). Flipper variants stay Gazebo-only
+    ([receipt](docs/status/evidence/r107-tracks-backends-2026-11-21/README.md)). The amphibious form, tracked
+    flippers and Isaac remain;
   - angled descents beyond 15° for the tracked vehicle (one track drops first and the 0.35 rad roll hold stops it).
     **Angled approaches done 2026-11-20:** the 0.18 m step is climbed at 15°, 30° and 45° off square and descended
     at 15° (2/2) in a new `terrain_step_wide` ([receipt](docs/status/evidence/r107-tracked-angled-2026-11-20/README.md)).
