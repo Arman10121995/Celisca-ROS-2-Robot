@@ -1,0 +1,80 @@
+{
+  "steps": {
+    "cancel_a": {
+      "sent": true,
+      "travelled_before_cancel_m": 1.003,
+      "finished_before_cancel": false,
+      "outcome": "canceled",
+      "stopped": true,
+      "stop_sim_s": 0.146,
+      "passed": true
+    },
+    "resume_a": {
+      "outcome": "succeeded",
+      "wall_s": 19.5,
+      "settled_sim_second": true,
+      "final_pose_estimate_xy": [
+        -5.288,
+        -3.877
+      ],
+      "final_error_estimate_m": 0.081,
+      "final_yaw_estimate_deg": 38.25,
+      "final_yaw_error_estimate_deg": -22.54,
+      "final_truth_xy": [
+        -5.266,
+        -3.78
+      ],
+      "truth_age_wall_s": 0.002,
+      "final_truth_yaw_deg": 39.3,
+      "final_error_truth_m": 0.061,
+      "final_yaw_error_truth_deg": -21.49,
+      "passed": true
+    },
+    "near_obstacle_b": {
+      "outcome": "succeeded",
+      "wall_s": 25.1,
+      "settled_sim_second": true,
+      "final_pose_estimate_xy": [
+        -7.803,
+        -2.982
+      ],
+      "final_error_estimate_m": 0.172,
+      "final_yaw_estimate_deg": 171.6,
+      "final_yaw_error_estimate_deg": 10.14,
+      "final_truth_xy": [
+        -7.771,
+        -2.932
+      ],
+      "truth_age_wall_s": 0.0,
+      "final_truth_yaw_deg": 171.73,
+      "final_error_truth_m": 0.208,
+      "final_yaw_error_truth_deg": 10.28,
+      "passed": true
+    }
+  },
+  "seed": 1,
+  "stack_ready_wall_s": 22.5,
+  "start": [
+    -7.0,
+    -7.0
+  ],
+  "goal_a": {
+    "x": -5.224999936297536,
+    "y": -3.8249999154359102,
+    "path_m": 4.5899495620567405,
+    "straight_m": 3.6376170416768003,
+    "detour": true
+  },
+  "goal_b": {
+    "x": -7.974999977275729,
+    "y": -2.974999902769923,
+    "path_from_a_m": 3.102081574241748,
+    "clearance_m": 0.45000000670552254
+  },
+  "motion_source": "/odom/ground_truth",
+  "motion_forward_m": 9.083,
+  "motion_reverse_m": 0.978,
+  "motion_heading_travel_rad": 8.317,
+  "passed": true,
+  "trace": "/workspace/molar/robot_lab_runtime/v3-car-matrix-20261121/r2/pybullet_anti_ackermann_car_nav_obstacle.json.trace.json"
+}

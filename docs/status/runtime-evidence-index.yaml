@@ -13451,3 +13451,195 @@ records:
     docs/status/evidence/v2-nav-matrix-2026-11-21.'
   limitations:
   - One seed per cell; repeats of cells measured since October
+- robot_id: ackermann_car
+  environment_id: nav_obstacle
+  simulator: gazebo
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-11-21'
+  revision: b4ec96ee (installed build of 0f918f21; later commits only docs)
+  report: docs/status/evidence/v3-car-matrix-2026-11-21/runs/gazebo_ackermann_car_nav_obstacle.json
+  sha256: 6d5cb672bc4e8f7dd68c2f08afa70ba6c35c9c805d2cea112c3c9d9424b91f40
+  source_hashes: docs/status/evidence/v3-car-matrix-2026-11-21/runs/source-hashes-b4ec96ee.json
+  source_hashes_sha256: 09f3e63b7805fe96b73094d4d5df9ce0f9004458fb97acedc4d99e5ff3f54772
+  report_kind: mission_screen
+  scope: 'sim_nav_mission: detour goal, cancel, resume and near-obstacle goal, truth-measured within 0.30 m, heading
+    not checked (--max-yaw-error-deg 0, the October car protocol); seed 1. Details in docs/status/evidence/v3-car-matrix-2026-11-21.'
+  limitations:
+  - One seed per cell; repeats of cells measured since October
+- robot_id: anti_ackermann_car
+  environment_id: nav_obstacle
+  simulator: gazebo
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-11-21'
+  revision: b4ec96ee (installed build of 0f918f21; later commits only docs)
+  report: docs/status/evidence/v3-car-matrix-2026-11-21/runs/gazebo_anti_ackermann_car_nav_obstacle.json
+  sha256: 956f657e9be190212e89cb1178046dbbdedf3e846e38206759e57d2b12559eb3
+  source_hashes: docs/status/evidence/v3-car-matrix-2026-11-21/runs/source-hashes-b4ec96ee.json
+  source_hashes_sha256: 09f3e63b7805fe96b73094d4d5df9ce0f9004458fb97acedc4d99e5ff3f54772
+  report_kind: mission_screen
+  scope: 'sim_nav_mission: detour goal, cancel, resume and near-obstacle goal, truth-measured within 0.30 m, heading
+    not checked (--max-yaw-error-deg 0, the October car protocol); seed 1. Details in docs/status/evidence/v3-car-matrix-2026-11-21.'
+  limitations:
+  - One seed per cell; repeats of cells measured since October
+- robot_id: rear_steer_car
+  environment_id: nav_obstacle
+  simulator: gazebo
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-11-21'
+  revision: b4ec96ee (installed build of 0f918f21; later commits only docs)
+  report: docs/status/evidence/v3-car-matrix-2026-11-21/runs/gazebo_rear_steer_car_nav_obstacle.json
+  sha256: c88e08a426bc867ed1b5c4731bf69cf1070a257716a9ef46297d791323e32137
+  source_hashes: docs/status/evidence/v3-car-matrix-2026-11-21/runs/source-hashes-b4ec96ee.json
+  source_hashes_sha256: 09f3e63b7805fe96b73094d4d5df9ce0f9004458fb97acedc4d99e5ff3f54772
+  report_kind: mission_screen
+  scope: 'sim_nav_mission: detour goal, cancel, resume and near-obstacle goal, truth-measured within 0.30 m, heading
+    not checked (--max-yaw-error-deg 0, the October car protocol); seed 1. Details in docs/status/evidence/v3-car-matrix-2026-11-21.'
+  limitations:
+  - One seed per cell; repeats of cells measured since October
+- robot_id: ackermann_car
+  environment_id: nav_obstacle
+  simulator: isaac
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-11-21'
+  revision: b4ec96ee (installed build of 0f918f21; later commits only docs)
+  report: docs/status/evidence/v3-car-matrix-2026-11-21/runs/isaac_ackermann_car_nav_obstacle.json
+  sha256: d84fad4d95774e9c416ecb0ae88dcc6d9aa52167a2ef276f00bc1bcd2d366c16
+  source_hashes: docs/status/evidence/v3-car-matrix-2026-11-21/runs/source-hashes-b4ec96ee.json
+  source_hashes_sha256: 09f3e63b7805fe96b73094d4d5df9ce0f9004458fb97acedc4d99e5ff3f54772
+  report_kind: mission_screen
+  scope: 'sim_nav_mission: detour goal, cancel, resume and near-obstacle goal, truth-measured within 0.30 m, heading
+    not checked (--max-yaw-error-deg 0, the October car protocol); seed 1. Details in docs/status/evidence/v3-car-matrix-2026-11-21.'
+  limitations:
+  - One seed per cell; repeats of cells measured since October
+- robot_id: anti_ackermann_car
+  environment_id: nav_obstacle
+  simulator: isaac
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-11-21'
+  revision: b4ec96ee (installed build of 0f918f21; later commits only docs)
+  report: docs/status/evidence/v3-car-matrix-2026-11-21/runs/isaac_anti_ackermann_car_nav_obstacle.json
+  sha256: 872037cfb366c55a09d9903752818379b36a7a7ffe6636621c42e21593fb187e
+  source_hashes: docs/status/evidence/v3-car-matrix-2026-11-21/runs/source-hashes-b4ec96ee.json
+  source_hashes_sha256: 09f3e63b7805fe96b73094d4d5df9ce0f9004458fb97acedc4d99e5ff3f54772
+  report_kind: mission_screen
+  scope: 'sim_nav_mission: detour goal, cancel, resume and near-obstacle goal, truth-measured within 0.30 m, heading
+    not checked (--max-yaw-error-deg 0, the October car protocol); seed 1. Details in docs/status/evidence/v3-car-matrix-2026-11-21.'
+  limitations:
+  - One seed per cell; repeats of cells measured since October
+- robot_id: rear_steer_car
+  environment_id: nav_obstacle
+  simulator: isaac
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-11-21'
+  revision: b4ec96ee (installed build of 0f918f21; later commits only docs)
+  report: docs/status/evidence/v3-car-matrix-2026-11-21/runs/isaac_rear_steer_car_nav_obstacle.json
+  sha256: 11ea494490097b3bf0c031c30c8cbeaa7a93dfa96f467d45278f8bd48d64b060
+  source_hashes: docs/status/evidence/v3-car-matrix-2026-11-21/runs/source-hashes-b4ec96ee.json
+  source_hashes_sha256: 09f3e63b7805fe96b73094d4d5df9ce0f9004458fb97acedc4d99e5ff3f54772
+  report_kind: mission_screen
+  scope: 'sim_nav_mission: detour goal, cancel, resume and near-obstacle goal, truth-measured within 0.30 m, heading
+    not checked (--max-yaw-error-deg 0, the October car protocol); seed 1. Details in docs/status/evidence/v3-car-matrix-2026-11-21.'
+  limitations:
+  - One seed per cell; repeats of cells measured since October
+- robot_id: ackermann_car
+  environment_id: nav_obstacle
+  simulator: mujoco
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-11-21'
+  revision: b4ec96ee (installed build of 0f918f21; later commits only docs)
+  report: docs/status/evidence/v3-car-matrix-2026-11-21/runs/mujoco_ackermann_car_nav_obstacle.json
+  sha256: 8d9ebef9459fe097201e261f29ab818a4f98f9cc3b1ddc1b797ff3eccf794c76
+  source_hashes: docs/status/evidence/v3-car-matrix-2026-11-21/runs/source-hashes-b4ec96ee.json
+  source_hashes_sha256: 09f3e63b7805fe96b73094d4d5df9ce0f9004458fb97acedc4d99e5ff3f54772
+  report_kind: mission_screen
+  scope: 'sim_nav_mission: detour goal, cancel, resume and near-obstacle goal, truth-measured within 0.30 m, heading
+    not checked (--max-yaw-error-deg 0, the October car protocol); seed 1. Details in docs/status/evidence/v3-car-matrix-2026-11-21.'
+  limitations:
+  - One seed per cell; repeats of cells measured since October
+- robot_id: anti_ackermann_car
+  environment_id: nav_obstacle
+  simulator: mujoco
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-11-21'
+  revision: b4ec96ee (installed build of 0f918f21; later commits only docs)
+  report: docs/status/evidence/v3-car-matrix-2026-11-21/runs/mujoco_anti_ackermann_car_nav_obstacle.json
+  sha256: 400ffa6f68941f22034ec2a488799c7020e2e936bb4d765a00b988faae33b57c
+  source_hashes: docs/status/evidence/v3-car-matrix-2026-11-21/runs/source-hashes-b4ec96ee.json
+  source_hashes_sha256: 09f3e63b7805fe96b73094d4d5df9ce0f9004458fb97acedc4d99e5ff3f54772
+  report_kind: mission_screen
+  scope: 'sim_nav_mission: detour goal, cancel, resume and near-obstacle goal, truth-measured within 0.30 m, heading
+    not checked (--max-yaw-error-deg 0, the October car protocol); seed 1. Details in docs/status/evidence/v3-car-matrix-2026-11-21.'
+  limitations:
+  - One seed per cell; repeats of cells measured since October
+- robot_id: rear_steer_car
+  environment_id: nav_obstacle
+  simulator: mujoco
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-11-21'
+  revision: b4ec96ee (installed build of 0f918f21; later commits only docs)
+  report: docs/status/evidence/v3-car-matrix-2026-11-21/runs/mujoco_rear_steer_car_nav_obstacle.json
+  sha256: 8c1bd8b27d63847207664ef2e6eab4773e4cbfbf412be8b158ea2ef61110f480
+  source_hashes: docs/status/evidence/v3-car-matrix-2026-11-21/runs/source-hashes-b4ec96ee.json
+  source_hashes_sha256: 09f3e63b7805fe96b73094d4d5df9ce0f9004458fb97acedc4d99e5ff3f54772
+  report_kind: mission_screen
+  scope: 'sim_nav_mission: detour goal, cancel, resume and near-obstacle goal, truth-measured within 0.30 m, heading
+    not checked (--max-yaw-error-deg 0, the October car protocol); seed 1. Details in docs/status/evidence/v3-car-matrix-2026-11-21.'
+  limitations:
+  - One seed per cell; repeats of cells measured since October
+- robot_id: ackermann_car
+  environment_id: nav_obstacle
+  simulator: pybullet
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-11-21'
+  revision: b4ec96ee (installed build of 0f918f21; later commits only docs)
+  report: docs/status/evidence/v3-car-matrix-2026-11-21/runs/pybullet_ackermann_car_nav_obstacle.json
+  sha256: b17c63868e2e32054a468214bebb4dbceb0261291c60e32567d9edead2900b8d
+  source_hashes: docs/status/evidence/v3-car-matrix-2026-11-21/runs/source-hashes-b4ec96ee.json
+  source_hashes_sha256: 09f3e63b7805fe96b73094d4d5df9ce0f9004458fb97acedc4d99e5ff3f54772
+  report_kind: mission_screen
+  scope: 'sim_nav_mission: detour goal, cancel, resume and near-obstacle goal, truth-measured within 0.30 m, heading
+    not checked (--max-yaw-error-deg 0, the October car protocol); seed 1. Details in docs/status/evidence/v3-car-matrix-2026-11-21.'
+  limitations:
+  - One seed per cell; repeats of cells measured since October
+- robot_id: anti_ackermann_car
+  environment_id: nav_obstacle
+  simulator: pybullet
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-11-21'
+  revision: b4ec96ee (installed build of 0f918f21; later commits only docs)
+  report: docs/status/evidence/v3-car-matrix-2026-11-21/runs/pybullet_anti_ackermann_car_nav_obstacle.json
+  sha256: 9029623742ae00ff2fdb75ef38cf5fe6f0fb9f71c7bb7a20db5f00aa0884c198
+  source_hashes: docs/status/evidence/v3-car-matrix-2026-11-21/runs/source-hashes-b4ec96ee.json
+  source_hashes_sha256: 09f3e63b7805fe96b73094d4d5df9ce0f9004458fb97acedc4d99e5ff3f54772
+  report_kind: mission_screen
+  scope: 'sim_nav_mission: detour goal, cancel, resume and near-obstacle goal, truth-measured within 0.30 m, heading
+    not checked (--max-yaw-error-deg 0, the October car protocol); seed 1. Details in docs/status/evidence/v3-car-matrix-2026-11-21.'
+  limitations:
+  - One seed per cell; repeats of cells measured since October
+- robot_id: rear_steer_car
+  environment_id: nav_obstacle
+  simulator: pybullet
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-11-21'
+  revision: b4ec96ee (installed build of 0f918f21; later commits only docs)
+  report: docs/status/evidence/v3-car-matrix-2026-11-21/runs/pybullet_rear_steer_car_nav_obstacle.json
+  sha256: b8ad3a34e4e485314a8e1d9861acbeb0e61160119a712ca9c829d16a04a9410a
+  source_hashes: docs/status/evidence/v3-car-matrix-2026-11-21/runs/source-hashes-b4ec96ee.json
+  source_hashes_sha256: 09f3e63b7805fe96b73094d4d5df9ce0f9004458fb97acedc4d99e5ff3f54772
+  report_kind: mission_screen
+  scope: 'sim_nav_mission: detour goal, cancel, resume and near-obstacle goal, truth-measured within 0.30 m, heading
+    not checked (--max-yaw-error-deg 0, the October car protocol); seed 1. Details in docs/status/evidence/v3-car-matrix-2026-11-21.'
+  limitations:
+  - One seed per cell; repeats of cells measured since October

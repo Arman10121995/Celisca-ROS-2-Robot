@@ -228,7 +228,7 @@ Unlisted combinations are untested. No row establishes full mission support.
 | ackermann_car | nav_obstacle | gazebo | navigation_mission /  | passed_screen |
 | anti_ackermann_car | nav_obstacle | gazebo | navigation_mission /  | passed_screen |
 | rear_steer_car | nav_obstacle | gazebo | navigation_mission /  | passed_screen |
-| ackermann_car | nav_obstacle | isaac | navigation_mission /  | passed_screen |
+| ackermann_car | nav_obstacle | isaac | navigation_mission /  | failed_screen |
 | anti_ackermann_car | nav_obstacle | isaac | navigation_mission /  | passed_screen |
 | rear_steer_car | nav_obstacle | isaac | navigation_mission /  | passed_screen |
 | ackermann_car | nav_obstacle | mujoco | navigation_mission /  | passed_screen |

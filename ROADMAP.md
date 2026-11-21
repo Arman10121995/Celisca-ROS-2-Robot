@@ -158,7 +158,7 @@ Blocked: [R9.4](#r94--optional-physical-bumperbot-hil) physical hardware
 |---|---|---|
 | V1 | R13.1 | Vacuum repeats, more houses, the new carpet/mop/camera features |
 | V2 | R5.1, R6.1 | Bumperbot/Labbot repeats over seeds, actor maps, SLAM/3D modes. **2026-11-21:** mission repeat on four backends × nav_obstacle/nav_maze, 16/16 passed ([round](docs/status/evidence/v2-nav-matrix-2026-11-21/README.md)); seeds, actor maps and SLAM/3D remain |
-| V3 | R5.5, R5.6, P5, P6 | Car course and 4WS/mecanum patterns on all backends and maps |
+| V3 | R5.5, R5.6, P5, P6 | Car course and 4WS/mecanum patterns on all backends and maps. **2026-11-21:** the three cars' nav_obstacle mission on four backends, 11/12 (Isaac Ackermann goal B aborted) ([round](docs/status/evidence/v3-car-matrix-2026-11-21/README.md)); 4WS/mecanum and other maps remain |
 | V4 | R5.2, R5.3, R12, P7 | Legged walking, turning, navigation and terrain, per backend |
 | V5 | R5.4, R5.10, R5.11, P8 | PX4 flight in every installed world; mapped-obstacle flight |
 | V6 | R5.7, R5.8, R5.9 | Arm, hand and mobile-manipulation missions per backend |

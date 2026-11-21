@@ -1,5 +1,5 @@
 {
-  "generated_utc": "2026-11-21T14:33:11.551853+00:00",
+  "generated_utc": "2026-11-21T15:16:18.996136+00:00",
   "task": "R9.3",
   "status": "partial",
   "qualification": "Exact hashed screens only; artifact validation does not rerun a mission",
@@ -5044,19 +5044,18 @@
       "task_type": "navigation_mission",
       "support_level": "partially_supported",
       "evidence_level": "runtime_evidence",
-      "last_tested": "2026-10-16",
-      "revision": "32c9cf1 (round 45, 03:40-04:44, 0.1 m goal tolerance and 0.6 m / 2.0 planner inflation)",
+      "last_tested": "2026-11-21",
+      "revision": "b4ec96ee (installed build of 0f918f21; later commits only docs)",
       "test_result": "passed_screen",
       "artifacts": [
-        "docs/status/evidence/car-missions-2026-10-16/round45-inflation/gazebo_ackermann_car_seed3_nav_obstacle.json",
-        "docs/status/evidence/car-missions-2026-10-16/round45-inflation/source-hashes-32c9cf1.json"
+        "docs/status/evidence/v3-car-matrix-2026-11-21/runs/gazebo_ackermann_car_nav_obstacle.json",
+        "docs/status/evidence/v3-car-matrix-2026-11-21/runs/source-hashes-b4ec96ee.json"
       ],
       "limitations": [
-        "Goal seeds 1-3, one world; heading not checked",
-        "MuJoCo anti-Ackermann seed 2 aborted goal B; seed 3 controls that cell",
+        "One seed per cell; repeats of cells measured since October",
         "Screen evidence; full ROADMAP mission acceptance remains separate"
       ],
-      "notes": "nav_obstacle car mission (detour, cancel, resume, near-obstacle goal) with a 0.1 m goal tolerance and a 0.6 m planner inflation, goal seeds 1-3; truth-measured final poses. Details in docs/status/evidence/car-missions-2026-10-16.",
+      "notes": "sim_nav_mission: detour goal, cancel, resume and near-obstacle goal, truth-measured within 0.30 m, heading not checked (--max-yaw-error-deg 0, the October car protocol); seed 1. Details in docs/status/evidence/v3-car-matrix-2026-11-21.",
       "steering_mode": ""
     },
     {
@@ -5066,19 +5065,18 @@
       "task_type": "navigation_mission",
       "support_level": "partially_supported",
       "evidence_level": "runtime_evidence",
-      "last_tested": "2026-10-16",
-      "revision": "32c9cf1 (round 45, 03:40-04:44, 0.1 m goal tolerance and 0.6 m / 2.0 planner inflation)",
+      "last_tested": "2026-11-21",
+      "revision": "b4ec96ee (installed build of 0f918f21; later commits only docs)",
       "test_result": "passed_screen",
       "artifacts": [
-        "docs/status/evidence/car-missions-2026-10-16/round45-inflation/gazebo_anti_ackermann_car_seed3_nav_obstacle.json",
-        "docs/status/evidence/car-missions-2026-10-16/round45-inflation/source-hashes-32c9cf1.json"
+        "docs/status/evidence/v3-car-matrix-2026-11-21/runs/gazebo_anti_ackermann_car_nav_obstacle.json",
+        "docs/status/evidence/v3-car-matrix-2026-11-21/runs/source-hashes-b4ec96ee.json"
       ],
       "limitations": [
-        "Goal seeds 1-3, one world; heading not checked",
-        "MuJoCo anti-Ackermann seed 2 aborted goal B; seed 3 controls that cell",
+        "One seed per cell; repeats of cells measured since October",
         "Screen evidence; full ROADMAP mission acceptance remains separate"
       ],
-      "notes": "nav_obstacle car mission (detour, cancel, resume, near-obstacle goal) with a 0.1 m goal tolerance and a 0.6 m planner inflation, goal seeds 1-3; truth-measured final poses. Details in docs/status/evidence/car-missions-2026-10-16.",
+      "notes": "sim_nav_mission: detour goal, cancel, resume and near-obstacle goal, truth-measured within 0.30 m, heading not checked (--max-yaw-error-deg 0, the October car protocol); seed 1. Details in docs/status/evidence/v3-car-matrix-2026-11-21.",
       "steering_mode": ""
     },
     {
@@ -5088,19 +5086,18 @@
       "task_type": "navigation_mission",
       "support_level": "partially_supported",
       "evidence_level": "runtime_evidence",
-      "last_tested": "2026-10-16",
-      "revision": "32c9cf1 (round 45, 03:40-04:44, 0.1 m goal tolerance and 0.6 m / 2.0 planner inflation)",
+      "last_tested": "2026-11-21",
+      "revision": "b4ec96ee (installed build of 0f918f21; later commits only docs)",
       "test_result": "passed_screen",
       "artifacts": [
-        "docs/status/evidence/car-missions-2026-10-16/round45-inflation/gazebo_rear_steer_car_seed3_nav_obstacle.json",
-        "docs/status/evidence/car-missions-2026-10-16/round45-inflation/source-hashes-32c9cf1.json"
+        "docs/status/evidence/v3-car-matrix-2026-11-21/runs/gazebo_rear_steer_car_nav_obstacle.json",
+        "docs/status/evidence/v3-car-matrix-2026-11-21/runs/source-hashes-b4ec96ee.json"
       ],
       "limitations": [
-        "Goal seeds 1-3, one world; heading not checked",
-        "MuJoCo anti-Ackermann seed 2 aborted goal B; seed 3 controls that cell",
+        "One seed per cell; repeats of cells measured since October",
         "Screen evidence; full ROADMAP mission acceptance remains separate"
       ],
-      "notes": "nav_obstacle car mission (detour, cancel, resume, near-obstacle goal) with a 0.1 m goal tolerance and a 0.6 m planner inflation, goal seeds 1-3; truth-measured final poses. Details in docs/status/evidence/car-missions-2026-10-16.",
+      "notes": "sim_nav_mission: detour goal, cancel, resume and near-obstacle goal, truth-measured within 0.30 m, heading not checked (--max-yaw-error-deg 0, the October car protocol); seed 1. Details in docs/status/evidence/v3-car-matrix-2026-11-21.",
       "steering_mode": ""
     },
     {
@@ -5108,21 +5105,20 @@
       "environment_id": "nav_obstacle",
       "simulator": "isaac",
       "task_type": "navigation_mission",
-      "support_level": "partially_supported",
+      "support_level": "experimental",
       "evidence_level": "runtime_evidence",
-      "last_tested": "2026-10-16",
-      "revision": "32c9cf1 (round 45, 03:40-04:44, 0.1 m goal tolerance and 0.6 m / 2.0 planner inflation)",
-      "test_result": "passed_screen",
+      "last_tested": "2026-11-21",
+      "revision": "b4ec96ee (installed build of 0f918f21; later commits only docs)",
+      "test_result": "failed_screen",
       "artifacts": [
-        "docs/status/evidence/car-missions-2026-10-16/round45-inflation/isaac_ackermann_car_seed3_nav_obstacle.json",
-        "docs/status/evidence/car-missions-2026-10-16/round45-inflation/source-hashes-32c9cf1.json"
+        "docs/status/evidence/v3-car-matrix-2026-11-21/runs/isaac_ackermann_car_nav_obstacle.json",
+        "docs/status/evidence/v3-car-matrix-2026-11-21/runs/source-hashes-b4ec96ee.json"
       ],
       "limitations": [
-        "Goal seeds 1-3, one world; heading not checked",
-        "MuJoCo anti-Ackermann seed 2 aborted goal B; seed 3 controls that cell",
+        "One seed per cell; repeats of cells measured since October",
         "Screen evidence; full ROADMAP mission acceptance remains separate"
       ],
-      "notes": "nav_obstacle car mission (detour, cancel, resume, near-obstacle goal) with a 0.1 m goal tolerance and a 0.6 m planner inflation, goal seeds 1-3; truth-measured final poses. Details in docs/status/evidence/car-missions-2026-10-16.",
+      "notes": "sim_nav_mission: detour goal, cancel, resume and near-obstacle goal, truth-measured within 0.30 m, heading not checked (--max-yaw-error-deg 0, the October car protocol); seed 1. Details in docs/status/evidence/v3-car-matrix-2026-11-21.",
       "steering_mode": ""
     },
     {
@@ -5132,19 +5128,18 @@
       "task_type": "navigation_mission",
       "support_level": "partially_supported",
       "evidence_level": "runtime_evidence",
-      "last_tested": "2026-10-16",
-      "revision": "32c9cf1 (round 45, 03:40-04:44, 0.1 m goal tolerance and 0.6 m / 2.0 planner inflation)",
+      "last_tested": "2026-11-21",
+      "revision": "b4ec96ee (installed build of 0f918f21; later commits only docs)",
       "test_result": "passed_screen",
       "artifacts": [
-        "docs/status/evidence/car-missions-2026-10-16/round45-inflation/isaac_anti_ackermann_car_seed3_nav_obstacle.json",
-        "docs/status/evidence/car-missions-2026-10-16/round45-inflation/source-hashes-32c9cf1.json"
+        "docs/status/evidence/v3-car-matrix-2026-11-21/runs/isaac_anti_ackermann_car_nav_obstacle.json",
+        "docs/status/evidence/v3-car-matrix-2026-11-21/runs/source-hashes-b4ec96ee.json"
       ],
       "limitations": [
-        "Goal seeds 1-3, one world; heading not checked",
-        "MuJoCo anti-Ackermann seed 2 aborted goal B; seed 3 controls that cell",
+        "One seed per cell; repeats of cells measured since October",
         "Screen evidence; full ROADMAP mission acceptance remains separate"
       ],
-      "notes": "nav_obstacle car mission (detour, cancel, resume, near-obstacle goal) with a 0.1 m goal tolerance and a 0.6 m planner inflation, goal seeds 1-3; truth-measured final poses. Details in docs/status/evidence/car-missions-2026-10-16.",
+      "notes": "sim_nav_mission: detour goal, cancel, resume and near-obstacle goal, truth-measured within 0.30 m, heading not checked (--max-yaw-error-deg 0, the October car protocol); seed 1. Details in docs/status/evidence/v3-car-matrix-2026-11-21.",
       "steering_mode": ""
     },
     {
@@ -5154,19 +5149,18 @@
       "task_type": "navigation_mission",
       "support_level": "partially_supported",
       "evidence_level": "runtime_evidence",
-      "last_tested": "2026-10-16",
-      "revision": "32c9cf1 (round 45, 03:40-04:44, 0.1 m goal tolerance and 0.6 m / 2.0 planner inflation)",
+      "last_tested": "2026-11-21",
+      "revision": "b4ec96ee (installed build of 0f918f21; later commits only docs)",
       "test_result": "passed_screen",
       "artifacts": [
-        "docs/status/evidence/car-missions-2026-10-16/round45-inflation/isaac_rear_steer_car_seed3_nav_obstacle.json",
-        "docs/status/evidence/car-missions-2026-10-16/round45-inflation/source-hashes-32c9cf1.json"
+        "docs/status/evidence/v3-car-matrix-2026-11-21/runs/isaac_rear_steer_car_nav_obstacle.json",
+        "docs/status/evidence/v3-car-matrix-2026-11-21/runs/source-hashes-b4ec96ee.json"
       ],
       "limitations": [
-        "Goal seeds 1-3, one world; heading not checked",
-        "MuJoCo anti-Ackermann seed 2 aborted goal B; seed 3 controls that cell",
+        "One seed per cell; repeats of cells measured since October",
         "Screen evidence; full ROADMAP mission acceptance remains separate"
       ],
-      "notes": "nav_obstacle car mission (detour, cancel, resume, near-obstacle goal) with a 0.1 m goal tolerance and a 0.6 m planner inflation, goal seeds 1-3; truth-measured final poses. Details in docs/status/evidence/car-missions-2026-10-16.",
+      "notes": "sim_nav_mission: detour goal, cancel, resume and near-obstacle goal, truth-measured within 0.30 m, heading not checked (--max-yaw-error-deg 0, the October car protocol); seed 1. Details in docs/status/evidence/v3-car-matrix-2026-11-21.",
       "steering_mode": ""
     },
     {
@@ -5176,19 +5170,18 @@
       "task_type": "navigation_mission",
       "support_level": "partially_supported",
       "evidence_level": "runtime_evidence",
-      "last_tested": "2026-10-16",
-      "revision": "32c9cf1 (round 45, 03:40-04:44, 0.1 m goal tolerance and 0.6 m / 2.0 planner inflation)",
+      "last_tested": "2026-11-21",
+      "revision": "b4ec96ee (installed build of 0f918f21; later commits only docs)",
       "test_result": "passed_screen",
       "artifacts": [
-        "docs/status/evidence/car-missions-2026-10-16/round45-inflation/mujoco_ackermann_car_seed3_nav_obstacle.json",
-        "docs/status/evidence/car-missions-2026-10-16/round45-inflation/source-hashes-32c9cf1.json"
+        "docs/status/evidence/v3-car-matrix-2026-11-21/runs/mujoco_ackermann_car_nav_obstacle.json",
+        "docs/status/evidence/v3-car-matrix-2026-11-21/runs/source-hashes-b4ec96ee.json"
       ],
       "limitations": [
-        "Goal seeds 1-3, one world; heading not checked",
-        "MuJoCo anti-Ackermann seed 2 aborted goal B; seed 3 controls that cell",
+        "One seed per cell; repeats of cells measured since October",
         "Screen evidence; full ROADMAP mission acceptance remains separate"
       ],
-      "notes": "nav_obstacle car mission (detour, cancel, resume, near-obstacle goal) with a 0.1 m goal tolerance and a 0.6 m planner inflation, goal seeds 1-3; truth-measured final poses. Details in docs/status/evidence/car-missions-2026-10-16.",
+      "notes": "sim_nav_mission: detour goal, cancel, resume and near-obstacle goal, truth-measured within 0.30 m, heading not checked (--max-yaw-error-deg 0, the October car protocol); seed 1. Details in docs/status/evidence/v3-car-matrix-2026-11-21.",
       "steering_mode": ""
     },
     {
@@ -5198,18 +5191,18 @@
       "task_type": "navigation_mission",
       "support_level": "partially_supported",
       "evidence_level": "runtime_evidence",
-      "last_tested": "2026-10-16",
-      "revision": "38486f4 (round 47, from 08:15; installs also held another agent's gated-off articulation work)",
+      "last_tested": "2026-11-21",
+      "revision": "b4ec96ee (installed build of 0f918f21; later commits only docs)",
       "test_result": "passed_screen",
       "artifacts": [
-        "docs/status/evidence/open-items-2026-10-16/cars-settling/mujoco_anti_ackermann_car_seed2_nav_obstacle.json",
-        "docs/status/evidence/open-items-2026-10-16/cars-settling/source-hashes-38486f4.json"
+        "docs/status/evidence/v3-car-matrix-2026-11-21/runs/mujoco_anti_ackermann_car_nav_obstacle.json",
+        "docs/status/evidence/v3-car-matrix-2026-11-21/runs/source-hashes-b4ec96ee.json"
       ],
       "limitations": [
-        "The three weakest cells of round 45 only; one seed each",
+        "One seed per cell; repeats of cells measured since October",
         "Screen evidence; full ROADMAP mission acceptance remains separate"
       ],
-      "notes": "nav_obstacle car mission with the three-retry car tree; truth-measured final poses. Details in docs/status/evidence/open-items-2026-10-16.",
+      "notes": "sim_nav_mission: detour goal, cancel, resume and near-obstacle goal, truth-measured within 0.30 m, heading not checked (--max-yaw-error-deg 0, the October car protocol); seed 1. Details in docs/status/evidence/v3-car-matrix-2026-11-21.",
       "steering_mode": ""
     },
     {
@@ -5219,18 +5212,18 @@
       "task_type": "navigation_mission",
       "support_level": "partially_supported",
       "evidence_level": "runtime_evidence",
-      "last_tested": "2026-10-16",
-      "revision": "38486f4 (round 47, from 08:15; installs also held another agent's gated-off articulation work)",
+      "last_tested": "2026-11-21",
+      "revision": "b4ec96ee (installed build of 0f918f21; later commits only docs)",
       "test_result": "passed_screen",
       "artifacts": [
-        "docs/status/evidence/open-items-2026-10-16/cars-settling/mujoco_rear_steer_car_seed1_nav_obstacle.json",
-        "docs/status/evidence/open-items-2026-10-16/cars-settling/source-hashes-38486f4.json"
+        "docs/status/evidence/v3-car-matrix-2026-11-21/runs/mujoco_rear_steer_car_nav_obstacle.json",
+        "docs/status/evidence/v3-car-matrix-2026-11-21/runs/source-hashes-b4ec96ee.json"
       ],
       "limitations": [
-        "The three weakest cells of round 45 only; one seed each",
+        "One seed per cell; repeats of cells measured since October",
         "Screen evidence; full ROADMAP mission acceptance remains separate"
       ],
-      "notes": "nav_obstacle car mission with the three-retry car tree; truth-measured final poses. Details in docs/status/evidence/open-items-2026-10-16.",
+      "notes": "sim_nav_mission: detour goal, cancel, resume and near-obstacle goal, truth-measured within 0.30 m, heading not checked (--max-yaw-error-deg 0, the October car protocol); seed 1. Details in docs/status/evidence/v3-car-matrix-2026-11-21.",
       "steering_mode": ""
     },
     {
@@ -5240,19 +5233,18 @@
       "task_type": "navigation_mission",
       "support_level": "partially_supported",
       "evidence_level": "runtime_evidence",
-      "last_tested": "2026-10-16",
-      "revision": "32c9cf1 (round 45, 03:40-04:44, 0.1 m goal tolerance and 0.6 m / 2.0 planner inflation)",
+      "last_tested": "2026-11-21",
+      "revision": "b4ec96ee (installed build of 0f918f21; later commits only docs)",
       "test_result": "passed_screen",
       "artifacts": [
-        "docs/status/evidence/car-missions-2026-10-16/round45-inflation/pybullet_ackermann_car_seed3_nav_obstacle.json",
-        "docs/status/evidence/car-missions-2026-10-16/round45-inflation/source-hashes-32c9cf1.json"
+        "docs/status/evidence/v3-car-matrix-2026-11-21/runs/pybullet_ackermann_car_nav_obstacle.json",
+        "docs/status/evidence/v3-car-matrix-2026-11-21/runs/source-hashes-b4ec96ee.json"
       ],
       "limitations": [
-        "Goal seeds 1-3, one world; heading not checked",
-        "MuJoCo anti-Ackermann seed 2 aborted goal B; seed 3 controls that cell",
+        "One seed per cell; repeats of cells measured since October",
         "Screen evidence; full ROADMAP mission acceptance remains separate"
       ],
-      "notes": "nav_obstacle car mission (detour, cancel, resume, near-obstacle goal) with a 0.1 m goal tolerance and a 0.6 m planner inflation, goal seeds 1-3; truth-measured final poses. Details in docs/status/evidence/car-missions-2026-10-16.",
+      "notes": "sim_nav_mission: detour goal, cancel, resume and near-obstacle goal, truth-measured within 0.30 m, heading not checked (--max-yaw-error-deg 0, the October car protocol); seed 1. Details in docs/status/evidence/v3-car-matrix-2026-11-21.",
       "steering_mode": ""
     },
     {
@@ -5262,18 +5254,18 @@
       "task_type": "navigation_mission",
       "support_level": "partially_supported",
       "evidence_level": "runtime_evidence",
-      "last_tested": "2026-10-16",
-      "revision": "38486f4 (round 47, from 08:15; installs also held another agent's gated-off articulation work)",
+      "last_tested": "2026-11-21",
+      "revision": "b4ec96ee (installed build of 0f918f21; later commits only docs)",
       "test_result": "passed_screen",
       "artifacts": [
-        "docs/status/evidence/open-items-2026-10-16/cars-settling/pybullet_anti_ackermann_car_seed2_nav_obstacle.json",
-        "docs/status/evidence/open-items-2026-10-16/cars-settling/source-hashes-38486f4.json"
+        "docs/status/evidence/v3-car-matrix-2026-11-21/runs/pybullet_anti_ackermann_car_nav_obstacle.json",
+        "docs/status/evidence/v3-car-matrix-2026-11-21/runs/source-hashes-b4ec96ee.json"
       ],
       "limitations": [
-        "The three weakest cells of round 45 only; one seed each",
+        "One seed per cell; repeats of cells measured since October",
         "Screen evidence; full ROADMAP mission acceptance remains separate"
       ],
-      "notes": "nav_obstacle car mission with the three-retry car tree; truth-measured final poses. Details in docs/status/evidence/open-items-2026-10-16.",
+      "notes": "sim_nav_mission: detour goal, cancel, resume and near-obstacle goal, truth-measured within 0.30 m, heading not checked (--max-yaw-error-deg 0, the October car protocol); seed 1. Details in docs/status/evidence/v3-car-matrix-2026-11-21.",
       "steering_mode": ""
     },
     {
@@ -5283,19 +5275,18 @@
       "task_type": "navigation_mission",
       "support_level": "partially_supported",
       "evidence_level": "runtime_evidence",
-      "last_tested": "2026-10-16",
-      "revision": "32c9cf1 (round 45, 03:40-04:44, 0.1 m goal tolerance and 0.6 m / 2.0 planner inflation)",
+      "last_tested": "2026-11-21",
+      "revision": "b4ec96ee (installed build of 0f918f21; later commits only docs)",
       "test_result": "passed_screen",
       "artifacts": [
-        "docs/status/evidence/car-missions-2026-10-16/round45-inflation/pybullet_rear_steer_car_seed3_nav_obstacle.json",
-        "docs/status/evidence/car-missions-2026-10-16/round45-inflation/source-hashes-32c9cf1.json"
+        "docs/status/evidence/v3-car-matrix-2026-11-21/runs/pybullet_rear_steer_car_nav_obstacle.json",
+        "docs/status/evidence/v3-car-matrix-2026-11-21/runs/source-hashes-b4ec96ee.json"
       ],
       "limitations": [
-        "Goal seeds 1-3, one world; heading not checked",
-        "MuJoCo anti-Ackermann seed 2 aborted goal B; seed 3 controls that cell",
+        "One seed per cell; repeats of cells measured since October",
         "Screen evidence; full ROADMAP mission acceptance remains separate"
       ],
-      "notes": "nav_obstacle car mission (detour, cancel, resume, near-obstacle goal) with a 0.1 m goal tolerance and a 0.6 m planner inflation, goal seeds 1-3; truth-measured final poses. Details in docs/status/evidence/car-missions-2026-10-16.",
+      "notes": "sim_nav_mission: detour goal, cancel, resume and near-obstacle goal, truth-measured within 0.30 m, heading not checked (--max-yaw-error-deg 0, the October car protocol); seed 1. Details in docs/status/evidence/v3-car-matrix-2026-11-21.",
       "steering_mode": ""
     },
     {

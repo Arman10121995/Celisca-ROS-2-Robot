@@ -1,0 +1,13 @@
+mujoco ackermann_car nav_obstacle exit=1
+mujoco rear_steer_car nav_obstacle exit=1
+mujoco anti_ackermann_car nav_obstacle exit=1
+pybullet ackermann_car nav_obstacle exit=1
+pybullet rear_steer_car nav_obstacle exit=1
+pybullet anti_ackermann_car nav_obstacle exit=1
+gazebo ackermann_car nav_obstacle exit=1
+gazebo rear_steer_car nav_obstacle exit=1
+gazebo anti_ackermann_car nav_obstacle exit=1
+isaac ackermann_car nav_obstacle exit=1
+isaac rear_steer_car nav_obstacle exit=1
+isaac anti_ackermann_car nav_obstacle exit=1
+ALLDONE
