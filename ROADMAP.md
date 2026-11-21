@@ -1824,6 +1824,9 @@ accounts for terrain fixtures without saved 2D maps. Details and evidence are in
   208-bound, 32-geom culling-only benchmark, median calculation time drops
   from 345 to 85 μs. The live loop profiler now reports `static_flex_culling`
   separately. Celisca and hospital navigation RTF still need remeasurement.
+- **2026-11-21 (measured, not adopted):** CoACD convex decomposition of `celisca_floor_1` (530 hulls)
+  puts 17.5 % of the free map cells inside a hull, so it cannot replace the flexes
+  ([receipt](docs/status/evidence/p4-convex-decomposition-2026-11-21/README.md)).
 - **Remaining implementation:** the large worlds stay below real time.
   MuJoCo updates every static flex vertex and element each step: 3.7 of 4 ms
   per tick on celisca_floor_1, 7.7 ms on the hospital. The options that
