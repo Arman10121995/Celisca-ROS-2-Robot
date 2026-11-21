@@ -145,10 +145,10 @@ def sensor_description(robot_profile):
     return ET.tostring(urdf,encoding='unicode')
 
 
-def owner_node(task,robot_id,robot_profile):
+def owner_node(task,robot_id,robot_profile,**extra):
     return Node(package='robot_lab_utils',executable='tracked_control.py',parameters=[dict(use_sim_time=True,navigation=task=='nav',
         robot_id=robot_id,articulated_flippers=bool(robot_profile.get('articulated_flippers')),
-        flipper_full_press=bool(robot_profile.get('flipper_full_press')))])
+        flipper_full_press=bool(robot_profile.get('flipper_full_press')),**extra)])
 
 
 def pipeline_actions(value,include,task,name,profile,pose):
@@ -179,7 +179,13 @@ def ported(context,value,include,task,name,profile,robot_id,robot_profile,source
     """The same vehicle, owner and pipeline on the MuJoCo or PyBullet track plant."""
     from robot_lab_utils.fleet_session import finite
     backend=value('simulator')
-    if robot_profile.get('articulated_flippers'):raise ValueError('Articulated flippers run on Gazebo only; choose lab_tracked here')
+    tracks=dict(TRACKS)
+    flippers=bool(robot_profile.get('articulated_flippers'))
+    if flippers:
+        # The variant's own JointPositionController gains (model.sdf).
+        from robot_lab_utils.track_drive import sdf_flippers
+        tracks['flippers']=sdf_flippers((Path(share('robot_lab_robots'))/robot_profile['tracked_sdf']).read_text())
+        if len(tracks['flippers'])!=4:raise ValueError('Articulated tracked source needs four flipper servos')
     pose={axis:finite(profile.get('spawn',{}).get(axis,default),'tracked spawn '+axis) for axis,default in (('x',0.),('y',0.),('z',.1),('yaw',0.))}
     for axis in pose:
         text=value('spawn_'+axis).strip()
@@ -190,10 +196,10 @@ def ported(context,value,include,task,name,profile,robot_id,robot_profile,source
     description=folder/'robot.urdf';description.write_text(sensor_description(robot_profile))
     sensors=dict(laser_link_name='laser_link',imu_link_name='imu_link',camera_link_name='camera_link',camera_optical_frame='camera_optical_frame',
         scan_samples=360,scan_rate=10.,scan_range_min=.08,scan_range_max=12.,camera_width=320,camera_height=240,
-        camera_rate=5. if task=='3d_slam' else 0.,camera_horizontal_fov=1.25,camera_near=.1,camera_far=10.)
+        camera_rate=5. if task=='3d_slam' or flippers else 0.,camera_horizontal_fov=1.25,camera_near=.1,camera_far=10.)
     args=dict(model=str(description),robot_name=robot_id,gui=value('gui'),use_sim_time='true',hold_position='false',
         world_name=profile['gazebo'].get('world_name') or name,world_path=str(source),
-        track_config=json.dumps(TRACKS),sensor_config=json.dumps(sensors),**{'spawn_'+axis:str(item) for axis,item in pose.items()})
+        track_config=json.dumps(tracks),sensor_config=json.dumps(sensors),**{'spawn_'+axis:str(item) for axis,item in pose.items()})
     if backend=='mujoco':args.update(physics_timestep='.002',robot_package='robot_lab_robots',robot_xacro=robot_profile['xacro'])
     else:args.update(physics_rate='500.')
     actions=[]
@@ -201,12 +207,12 @@ def ported(context,value,include,task,name,profile,robot_id,robot_profile,source
         from robot_lab_utils.partition_reaper import start_run_reaper
         actions.append(SetEnvironmentVariable('ROBOT_LAB_RUN_ID', start_run_reaper()))
     actions.append(include('robot_lab_'+backend,backend+'_simulator.launch.py',args))
-    owner=owner_node(task,robot_id,robot_profile)
+    owner=owner_node(task,robot_id,robot_profile,depth_topic='/oakd/depth/image_raw')
     actions+=[owner,RegisterEventHandler(OnProcessExit(target_action=owner,on_exit=[EmitEvent(event=Shutdown(reason='Native tracked command owner exited'))]))]
     actions+=pipeline_actions(value,include,task,name,profile,pose)
     if value('rviz')=='true':actions.append(Node(package='rviz2',executable='rviz2',arguments=['-d',str(Path(share('robot_lab_description'))/'rviz/display.rviz'),'-f','map' if task!='display' else 'odom'],parameters=[dict(use_sim_time=True)]))
     (folder/'session.json').write_text(json.dumps(dict(robot=robot_id,map=name,task=task,backend=backend,source_world=str(source),spawn=pose,
-        tracks=TRACKS,odometry='Track dead reckoning from the commanded belt speeds; independent truth remains /odom/ground_truth',
+        tracks=tracks,odometry='Track dead reckoning from the commanded belt speeds; independent truth remains /odom/ground_truth',
         scope='Implemented experimental ported track plant (robot_lab_utils.track_drive); runtime mission acceptance separate'),indent=2)+'\n')
     print('[robot_lab tracked] '+str(folder/'session.json'))
     return actions

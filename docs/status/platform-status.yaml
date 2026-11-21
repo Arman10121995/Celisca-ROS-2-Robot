@@ -1979,7 +1979,9 @@ tasks:
           On 2026-11-21 the tracked vehicle on MuJoCo and PyBullet - shared contact-force track law (track_drive.py) on
           normal-only track geometry; fixed-flipper lab_tracked through the normal launch. Turn in place within 0.001 rad
           of its odometry and under 0.5 mm drift; operator loss stops; nav_obstacle SLAM 100 % of occupied cells within
-          0.1 m; obstacle-route Nav2 goal 2/2 per backend (0.011-0.034 m). Flipper variants stay Gazebo-only.
+          0.1 m; obstacle-route Nav2 goal 2/2 per backend (0.011-0.034 m). Then the flipper servos (SDF gains) -
+          40 Nm vehicle crosses the 0.18 m step 3/3, climbs the five-step flight 2/2 and goes up and over 2/2 per
+          backend; fixed flippers rear and 4 Nm flippers are back-driven, as on Gazebo.
           docs/status/evidence/r107-tracks-backends-2026-11-21/README.md
         qualification_review: '2026-10-27 documentation review: retain the implemented code, tests and named
           mission certificates. Full declared roadmap acceptance is still open; test counts, metadata and scene

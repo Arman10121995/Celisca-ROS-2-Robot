@@ -1,0 +1,47 @@
+{
+  "schema": "robot_lab.measured_nav2_result.v1",
+  "run_id": "5acccf1c23cd4d258453b99866a6ae06",
+  "ros_domain_id": 20,
+  "state": "measured_goals_reached",
+  "reason": "",
+  "success": true,
+  "goals": [
+    {
+      "requested": [
+        -3.0,
+        -4.0,
+        0.0
+      ],
+      "physical_pose": [
+        -3.032238006591797,
+        -3.9955027103424072,
+        -0.051279360044100004
+      ],
+      "position_error_m": 0.032550187146574594,
+      "heading_error_rad": 0.051279360044100004,
+      "settled_sim_s": 1.0219999989999948,
+      "nav2_status": 4,
+      "truth_samples": 2963,
+      "sim_time": 64.204
+    }
+  ],
+  "goal_contract": {
+    "position_m": 0.15,
+    "heading_rad": 0.08726646259971647,
+    "settle_sim_s": 1.0
+  },
+  "physical_path_length_m": 6.472054128486897,
+  "truth_samples": 2963,
+  "clock_samples": 2963,
+  "goal_rejections_before_nav2_active": 2,
+  "nav2_terminal": true,
+  "wall_duration_s": 83.08172066701809,
+  "contacts": null,
+  "swept_footprint_clearance_m": null,
+  "scope": "Actual Nav2 terminal statuses and selected-world independent body endpoints/settling only; full mission/contact qualification separate",
+  "seed_requested": "42",
+  "simulator_seed_applied": null,
+  "producer_sha256": "f9ca5415d6c475aab1e7c57fdcf56a7a55ddadef3ee75ab33f958d550e23de80",
+  "workload_sha256": "2386a0a9e5eeb6c9b2ea9d7759fa439341f8b1f2e549b56de1391a1de66a3bc8",
+  "trace_sha256": "8f3bd3a420cf8ae61f1a3e8e11c06716761113d63076161d0bc72ee36ccba489"
+}

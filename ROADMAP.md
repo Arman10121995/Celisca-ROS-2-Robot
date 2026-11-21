@@ -1344,9 +1344,12 @@ accounts for terrain fixtures without saved 2D maps. Details and evidence are in
     law (`track_drive.py`) on normal-only track geometry runs fixed-flipper `lab_tracked` through the normal
     launch. It turns in place within 0.001 rad of its odometry with under 0.5 mm of drift, and stops on operator
     loss. It maps `nav_obstacle` (100 % of occupied cells within 0.1 m of the installed map) and reaches a Nav2
-    goal across it 2/2 on each backend (0.011–0.034 m). Flipper variants stay Gazebo-only
-    ([receipt](docs/status/evidence/r107-tracks-backends-2026-11-21/README.md)). The amphibious form, tracked
-    flippers and Isaac remain;
+    goal across it 2/2 on each backend (0.011–0.034 m). **Later the same day the flipper servos were ported**
+    (Gazebo's JointPositionController gains from each variant's SDF). With them the 40 Nm vehicle crosses the
+    0.18 m step (3/3 per backend), climbs the five-step flight to its ledge stop (2/2) and goes up and over it
+    (2/2) under the automatic flippers. As on Gazebo, fixed flippers rear and the 4 Nm flippers are back-driven
+    ([receipt](docs/status/evidence/r107-tracks-backends-2026-11-21/README.md)). The amphibious form, Isaac
+    tracks and angled steps off Gazebo remain;
   - angled descents beyond 15° for the tracked vehicle (one track drops first and the 0.35 rad roll hold stops it).
     **Angled approaches done 2026-11-20:** the 0.18 m step is climbed at 15°, 30° and 45° off square and descended
     at 15° (2/2) in a new `terrain_step_wide` ([receipt](docs/status/evidence/r107-tracked-angled-2026-11-20/README.md)).

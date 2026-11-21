@@ -7,7 +7,7 @@ every ``stepSimulation`` (Bullet clears external forces after each step).
 """
 import numpy as np
 
-from robot_lab_utils.track_drive import TrackDrive, parse_config
+from robot_lab_utils.track_drive import FlipperServo, TrackDrive, parse_config
 
 
 class TrackPlant:
@@ -26,7 +26,8 @@ class TrackPlant:
                 if name not in links:
                     raise ValueError('Track link missing from the loaded robot: ' + name)
                 self.links[links[name]] = side
-        mass = sum(sdk.getDynamicsInfo(robot, index)[0] for index in links.values())
+        self.body_masses = {index: sdk.getDynamicsInfo(robot, index)[0] for index in links.values()}
+        mass = sum(self.body_masses.values())
         self.drive = TrackDrive(config, mass)
         for index in self.links:
             sdk.changeDynamics(robot, index, lateralFriction=0., rollingFriction=0., spinningFriction=0.)
@@ -34,9 +35,18 @@ class TrackPlant:
         # hold a zero-width limit; the fixed-flipper source declares its
         # flippers with lower == upper, so hold those at that angle.
         self.held = []
+        self.flippers = {}
+        joints = {sdk.getJointInfo(robot, i)[1].decode(): i for i in range(sdk.getNumJoints(robot))}
+        for name, gains in config['flippers'].items():
+            if name not in joints:
+                raise ValueError('Flipper joint missing from the loaded robot: ' + name)
+            index = joints[name]
+            # Torque control needs the default velocity motor off.
+            sdk.setJointMotorControl2(robot, index, sdk.VELOCITY_CONTROL, targetVelocity=0, force=0)
+            self.flippers[name] = (FlipperServo(gains, sdk.getJointInfo(robot, index)[10]), index)
         for i in range(sdk.getNumJoints(robot)):
             info = sdk.getJointInfo(robot, i)
-            if info[2] == sdk.JOINT_REVOLUTE and info[8] == info[9]:
+            if info[2] == sdk.JOINT_REVOLUTE and info[8] == info[9] and info[1].decode() not in self.flippers:
                 sdk.setJointMotorControl2(robot, i, sdk.POSITION_CONTROL, targetPosition=float(info[8]),
                                           force=float(info[10]) or 25.)
                 self.held.append(info[1].decode())
@@ -44,6 +54,8 @@ class TrackPlant:
 
     def reset(self):
         self.drive.reset()
+        for servo, _ in self.flippers.values():
+            servo.reset()
 
     def _state(self, index):
         """World CoM position, linear and angular velocity of one link."""
@@ -67,6 +79,10 @@ class TrackPlant:
     def step(self, now, dt):
         """Before stepSimulation: apply this step's track forces."""
         self.drive.advance(now, dt)
+        for servo, index in self.flippers.values():
+            position, velocity = self.p.getJointState(self.robot, index)[:2]
+            self.p.setJointMotorControl2(self.robot, index, self.p.TORQUE_CONTROL,
+                                         force=servo.torque(position, velocity, dt))
         sides, points, normals, load, velocities, owners, states = [], [], [], [], [], [], {}
         for contact in self.p.getContactPoints(bodyA=self.robot):
             link = contact[3]
@@ -86,7 +102,7 @@ class TrackPlant:
         origin, hull = self._hull()
         forces = self.drive.forces(sides, np.asarray(normals).reshape(-1, 3), load,
                                    np.asarray(velocities).reshape(-1, 3), hull[:, 1], dt,
-                                   np.asarray(points).reshape(-1, 3), origin, hull[:, 2])
+                                   np.asarray(points).reshape(-1, 3), origin, hull[:, 2], owners, self.body_masses)
         # Per contact point: Bullet's applyExternalTorque frame handling has
         # varied between releases, a force at the point needs no torque.
         for link, point, force in zip(owners, points, forces):

@@ -30,6 +30,8 @@ class TrackedControl(Node):
         self.declare_parameter('robot_id','lab_tracked')
         self.declare_parameter('articulated_flippers',False)
         self.declare_parameter('flipper_full_press',False)
+        # The ported MuJoCo/PyBullet plants publish their RGB-D camera on its own topics.
+        self.declare_parameter('depth_topic','/tracked/raw/camera/depth/image_raw')
         self.robot_id=self.get_parameter('robot_id').value;self.session=uuid.uuid4().hex
         self.articulated=self.get_parameter('articulated_flippers').value
         self.full_press=self.get_parameter('flipper_full_press').value is True
@@ -39,7 +41,7 @@ class TrackedControl(Node):
         if self.articulated:
             from robot_lab_utils.tracked_flippers import FlipperPolicy
             self.flipper_policy=FlipperPolicy(self.full_press)
-            self.create_subscription(Image,'/tracked/raw/camera/depth/image_raw',self.depth_image,qos_profile_sensor_data)
+            self.create_subscription(Image,self.get_parameter('depth_topic').value,self.depth_image,qos_profile_sensor_data)
             self.flipper_publishers=[self.create_publisher(Float64,'/tracked/flippers/'+name+'/target',10) for name in FLIPPER_JOINTS]
             self.create_subscription(JointState,'/joint_states',self.flipper_feedback,10)
             self.create_subscription(String,'/tracked/flipper_command',self.flipper_command,10)

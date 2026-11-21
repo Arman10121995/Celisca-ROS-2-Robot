@@ -1194,6 +1194,10 @@ class PyBulletSpawner(Node):
             self._track_odom_pub=self.create_publisher(Odometry,'/robot_lab_controller/odom',10)
             self.create_subscription(Twist,'/tracked/cmd_vel',
                 lambda msg:self._tracks.drive.command(msg.linear.x,msg.angular.z,self._sim_t),10)
+            from std_msgs.msg import Float64
+            for name,(servo,_) in self._tracks.flippers.items():
+                self.create_subscription(Float64,'/tracked/flippers/%s/target'%name,
+                    lambda msg,servo=servo:servo.command(msg.data),10)
             self.get_logger().info('PyBullet tracks on %d links' % len(self._tracks.links))
 
         self.get_logger().info(

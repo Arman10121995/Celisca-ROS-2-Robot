@@ -2103,6 +2103,10 @@ class MuJoCoSpawner(Node):
             self._tracks = TrackPlant(self._model, self._data, urdf, track_config, self._body_id)
             self._track_odom_pub = self.create_publisher(Odometry, "/robot_lab_controller/odom", 10)
             self.create_subscription(Twist, "/tracked/cmd_vel", self._on_track_cmd, 10)
+            from std_msgs.msg import Float64
+            for name, (servo, _, _) in self._tracks.flippers.items():
+                self.create_subscription(Float64, "/tracked/flippers/%s/target" % name,
+                                         lambda msg, servo=servo: servo.command(msg.data), 10)
             self.get_logger().info("MuJoCo tracks on %d collision geoms" % len(self._tracks.geoms))
 
         # Truth for loose world objects (payloads, boxes): free-jointed

@@ -1,4 +1,4 @@
-# R10.7: the tracked vehicle on MuJoCo and PyBullet (November 21, 2026)
+# R10.7: the tracked vehicles on MuJoCo and PyBullet (November 21, 2026)
 
 **Status: implemented, experimental.** `lab_tracked` (fixed flippers) now
 runs on MuJoCo and PyBullet through the normal launch
@@ -6,8 +6,11 @@ runs on MuJoCo and PyBullet through the normal launch
 command owner, watchdog, EKF, slam_toolbox and Nav2 stack as on Gazebo.
 Until now it ran on Gazebo only. On both new backends it drives, turns in place,
 stops on operator loss, maps `nav_obstacle` and reaches a Nav2 goal across
-it, measured by ground truth. The articulated and strong-flipper variants
-stay Gazebo-only.
+it, measured by ground truth. **Later the same day** the ported plants got
+the flipper servos. The 40 Nm variant then crosses the 0.18 m step, climbs
+the five-step flight and goes up and over it on both backends, with the
+same automatic flipper policy as on Gazebo
+([flippers](#flippers-later-on-november-21)).
 
 ## What changed
 
@@ -115,12 +118,75 @@ map.
   turn about the centre of mass look like one about the origin, which left
   0.07 m of uncorrected drift.
 
+## Flippers (later on November 21)
+
+### What changed
+
+- **`FlipperServo` (`track_drive.py`):** Gazebo's JointPositionController
+  law in force mode. The gains (p 80, i 12 clamped to ±7.5 Nm, d 4, ±40 Nm
+  for the strong variant) are read from the variant's own `model.sdf`
+  (`sdf_flippers`). The plants apply its torque and subscribe the same
+  `/tracked/flippers/<joint>/target` topics.
+- **Flipper policy input:** `tracked_control` takes a `depth_topic`. The
+  ported plants render the Gazebo camera (320×240, 1.25 rad, at
+  .05 0 .34) on `/oakd/depth/image_raw` (32FC1).
+- **Servo mass cap:** each body's contacts servo at most 4× that body's own
+  mass. Before the cap, a 0.75 kg flipper pressed into a riser got a 25 kg
+  servo share. The explicit force then diverged in one step: the flipper
+  went to 0.92 rad past its 0.8 limit, and the vehicle flew off the flight
+  (`flight-mujoco-1`, kept).
+- **MJCF conversions:** `terrain_stairs_flight`, `terrain_stairs_over` and
+  `terrain_step_wide` (by `gen_mjcf_worlds.py`; the other worlds' existing
+  conversions were left as they are).
+- **Profiles:** both flipper variants list Gazebo, MuJoCo and PyBullet.
+
+### Measured (automatic flippers, the Gazebo courses and probes of 11-14, 11-19 and 11-20)
+
+**Single 0.18 m step** (`terrain_stairs`, spawn (−6.65, −5.9) heading +y,
+`stairs_case.sh`, scored by `stairs_crossing.py`). Crossed means level
+samples on the tread, then the floor beyond the far edge. The rule
+reproduces the Gazebo verdicts: auto-full 1 and 2 cross; default climb and
+fixed do not.
+
+| Vehicle / mode | Gazebo 11-19 | MuJoCo | PyBullet |
+|---|---|---|---|
+| 40 Nm, auto (full press) | crossed 2/2 | crossed 3/3 (incl. the final law) | crossed 3/3 |
+| 40 Nm, fixed flippers | rears to 0.658 rad, stops | rears to 0.657 rad, stops | rears to 0.690 rad, stops |
+| 4 Nm (`lab_tracked_articulated`), auto | rear flippers back-driven (−0.03 rad) | not crossed; rear back-driven to −0.025 rad | not crossed; −0.014 rad |
+
+**Five-step flight** (`terrain_stairs_flight`, spawn (−7.3, −4.0) heading +x, 100 s, `course_case.sh`):
+
+| Run | Top reached | Ledge stop | Max roll |
+|---|---|---|---|
+| Gazebo 11-20 `auto-4` | 5 steps (1.01 m base_link) | x 2.55 | 0.001 rad |
+| MuJoCo 1 (before the cap) | **failed**: diverged on tread 1 | — | π |
+| MuJoCo 2, 3 | 5 steps (0.93 m footprint) | x 2.53, 2.54 | 0.02, 0.06 rad |
+| PyBullet 1, 2 | 5 steps (0.94 m) | x 2.36, 2.58 | 0.04, 0.06 rad |
+
+**Up and over** (`terrain_stairs_over`, the drive stops at x 6.0, 180 s):
+
+| Run | Result | Time to x 6.0 | End y (start −4.0) | Max roll |
+|---|---|---|---|---|
+| Gazebo 11-20 `auto-4`, `auto-5` | passed | 97.0, 96.8 s | — | ≤ 0.002 rad |
+| MuJoCo 1, 2 | passed: 5 up, 5 down, on the floor | 92.8, 92.8 s | −4.35, −4.37 | 0.09, 0.07 rad |
+| PyBullet 1, 2 | passed | 94.2, 94.0 s | −3.68, −4.22 | 0.09, 0.12 rad |
+
+**Regression on fixed-flipper `lab_tracked` after the cap:**
+- Turn: truth 1.840 / odom 1.832 rad on MuJoCo, 1.755 / 1.745 on PyBullet,
+  under 0.5 mm of drift.
+- Nav2 route: 0.077 m / 0.035 rad on MuJoCo and 0.033 m / 0.051 rad on
+  PyBullet; both pass.
+
+On the ported plants the vehicle drifts sideways by up to 0.33 m across
+the flight and rolls more than on Gazebo, though it stays on the treads.
+Gazebo's implicit solver holds the track straight. The 0.15 m/s drive is
+open loop in these probes, with no heading hold.
+
 ## Limits
 
-- Fixed flippers only. The 0.18 m step and the stair missions need the
-  flipper servos, which exist on the Gazebo plant only. The MJCF
-  conversions of the stair worlds also do not exist yet.
 - No Isaac track plant yet.
+- No angled-step runs (`terrain_step_wide`) yet on the ported plants; its
+  MJCF exists.
 - Belt friction is 1.0 along the belt (Gazebo uses 150, effectively no
   slip) and 0.7 across. One flat route world and one empty world were
   measured. Real-time factors are 0.8–0.9.
@@ -134,6 +200,9 @@ python3 docs/status/evidence/r107-tracks-backends-2026-11-21/track_probe.py mujo
 LAB_EXTENSION_RUN=<dir> python3 docs/status/evidence/r107-tracks-backends-2026-11-21/tracked_nav_probe.py pybullet nav_obstacle -3 -4
 LAB_EXTENSION_RUN=<dir> python3 docs/status/evidence/r107-tracks-backends-2026-11-21/tracked_loss_probe.py mujoco
 LAB_EXTENSION_RUN=<dir> python3 docs/status/evidence/r107-tracks-backends-2026-11-21/tracked_slam_probe.py pybullet
+docs/status/evidence/r107-tracks-backends-2026-11-21/stairs_case.sh mujoco lab_tracked_strong_flippers <dir> auto
+python3 docs/status/evidence/r107-tracks-backends-2026-11-21/stairs_crossing.py <dir>
+docs/status/evidence/r107-tracks-backends-2026-11-21/course_case.sh pybullet terrain_stairs_over -7.3 -4.0 0.0 <dir> 180 6.0
 ```
 
 Traces are on SSD under `robot_lab_runtime/tracks-backends-20261121`

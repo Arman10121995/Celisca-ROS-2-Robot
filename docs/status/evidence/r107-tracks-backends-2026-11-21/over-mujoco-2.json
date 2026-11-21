@@ -1,0 +1,33 @@
+{
+  "case": "over-mujoco-2",
+  "samples": 12112,
+  "duration_s": 92.8,
+  "max_z": 0.931,
+  "max_z_x": -0.692,
+  "end": [
+    6.0,
+    -4.367,
+    -0.0
+  ],
+  "max_roll": 0.071,
+  "max_pitch": 0.378,
+  "state_sequence": [
+    "travel",
+    "descend",
+    "travel",
+    "approach",
+    "climb",
+    "approach",
+    "climb",
+    "approach",
+    "climb",
+    "approach",
+    "climb",
+    "approach",
+    "climb",
+    "ledge",
+    "travel",
+    "descend",
+    "travel"
+  ]
+}

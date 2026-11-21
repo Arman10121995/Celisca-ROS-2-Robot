@@ -1,0 +1,31 @@
+{
+  "case": "flight-mujoco-2",
+  "samples": 12988,
+  "duration_s": 100.0,
+  "max_z": 0.931,
+  "max_z_x": -0.693,
+  "end": [
+    2.531,
+    -4.003,
+    0.9
+  ],
+  "max_roll": 0.02,
+  "max_pitch": 0.305,
+  "state_sequence": [
+    "travel",
+    "descend",
+    "travel",
+    "approach",
+    "climb",
+    "approach",
+    "climb",
+    "approach",
+    "climb",
+    "approach",
+    "climb",
+    "approach",
+    "climb",
+    "travel",
+    "ledge"
+  ]
+}

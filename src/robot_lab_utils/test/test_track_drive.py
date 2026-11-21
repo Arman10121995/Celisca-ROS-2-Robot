@@ -123,3 +123,33 @@ def test_off_line_contacts_get_their_own_turn_speed():
     forces = drive.forces(['left'], [[0, 0, 1]], [1000.0], [[0, 0, 0]], [0, 1, 0], 0.001,
                           [[0.4, 0.272, 0]], [0, 0, 0], [0, 0, 1])
     assert forces[0][0] == pytest.approx(-0.136 * 50.0 * 20.0)
+
+
+def test_flipper_gains_from_the_strong_variant_sdf():
+    from robot_lab_utils.track_drive import sdf_flippers
+    gains = sdf_flippers((ROBOTS / 'lab_tracked_strong_flippers/model.sdf').read_text())
+    assert set(gains) == {'front_left_flipper_j', 'rear_left_flipper_j', 'front_right_flipper_j', 'rear_right_flipper_j'}
+    assert gains['front_left_flipper_j'] == dict(p=80.0, i=12.0, d=4.0, i_min=-7.5, i_max=7.5, cmd_max=40.0)
+    assert parse_config(dict(TRACKS, flippers=gains))['flippers'] == gains
+    with pytest.raises(ValueError):
+        parse_config(dict(TRACKS, flippers={'a': dict(p=1)}))
+
+
+def test_flipper_servo_is_a_bounded_pid():
+    from robot_lab_utils.track_drive import FlipperServo
+    servo = FlipperServo(dict(p=80.0, i=12.0, d=4.0, i_min=-7.5, i_max=7.5, cmd_max=40.0), 40.0)
+    servo.command(0.5)
+    assert servo.torque(0.0, 0.0, 0.0) == pytest.approx(40.0)          # 80 * 0.5 at the cap
+    assert servo.torque(0.45, 0.2, 0.0) == pytest.approx(80 * 0.05 - 0.8)
+    for _ in range(10000):                                           # integral term held at 7.5 Nm
+        servo.torque(0.45, 0.0, 0.01)
+    assert servo.torque(0.45, 0.0, 0.0) == pytest.approx(80 * 0.05 + 7.5)
+
+
+def test_light_bodies_get_a_capped_servo_mass():
+    drive = TrackDrive(dict(TRACKS, mu_along=10.0), 25.0)
+    drive.velocity = [0.2, 0.0]
+    # All load on a 0.75 kg flipper: its servo mass is 4 * 0.75 = 3 kg, not 25 kg.
+    forces = drive.forces(['left'], [[0, 0, 1]], [100.0], [[0.1, 0, 0]], [0, 1, 0], 0.001,
+                          bodies=[7], body_masses={7: 0.75})
+    assert forces[0][0] == pytest.approx(50.0 * 3.0 * 0.1)

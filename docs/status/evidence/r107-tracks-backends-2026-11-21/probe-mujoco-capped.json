@@ -1,0 +1,95 @@
+{
+  "simulator": "mujoco",
+  "map": "nav_empty",
+  "robot": "lab_tracked",
+  "phases": [
+    {
+      "phase": "forward",
+      "linear": 0.2,
+      "angular": 0.0,
+      "wall_s": 8.0,
+      "sim_s": 6.86,
+      "truth_along_m": 1.317,
+      "truth_lateral_m": -0.0,
+      "truth_yaw_rad": 0.0,
+      "truth_z_m": -0.0,
+      "odom_distance_m": 1.3166,
+      "odom_yaw_rad": 0.0
+    },
+    {
+      "phase": "settle",
+      "linear": 0,
+      "angular": 0,
+      "wall_s": 3.0,
+      "sim_s": 2.48,
+      "truth_along_m": 0.1002,
+      "truth_lateral_m": 0.0,
+      "truth_yaw_rad": 0.0,
+      "truth_z_m": -0.0,
+      "odom_distance_m": 0.1006,
+      "odom_yaw_rad": 0.0
+    },
+    {
+      "phase": "turn",
+      "linear": 0.0,
+      "angular": 0.4,
+      "wall_s": 6.0,
+      "sim_s": 5.14,
+      "truth_along_m": -0.0001,
+      "truth_lateral_m": 0.0003,
+      "truth_yaw_rad": 1.8404,
+      "truth_z_m": -0.0,
+      "odom_distance_m": 0.0,
+      "odom_yaw_rad": 1.8316
+    },
+    {
+      "phase": "settle",
+      "linear": 0,
+      "angular": 0,
+      "wall_s": 3.0,
+      "sim_s": 2.5,
+      "truth_along_m": 0.0001,
+      "truth_lateral_m": -0.0003,
+      "truth_yaw_rad": 0.3069,
+      "truth_z_m": -0.0,
+      "odom_distance_m": 0.0,
+      "odom_yaw_rad": 0.3156
+    },
+    {
+      "phase": "reverse",
+      "linear": -0.15,
+      "angular": 0.0,
+      "wall_s": 6.0,
+      "sim_s": 4.72,
+      "truth_along_m": -0.68,
+      "truth_lateral_m": 0.0,
+      "truth_yaw_rad": -0.0,
+      "truth_z_m": -0.0,
+      "odom_distance_m": 0.6797,
+      "odom_yaw_rad": 0.0
+    },
+    {
+      "phase": "settle",
+      "linear": 0,
+      "angular": 0,
+      "wall_s": 3.0,
+      "sim_s": 2.26,
+      "truth_along_m": -0.0667,
+      "truth_lateral_m": -0.0,
+      "truth_yaw_rad": 0.0,
+      "truth_z_m": -0.0,
+      "odom_distance_m": 0.067,
+      "odom_yaw_rad": 0.0
+    }
+  ],
+  "final_state": {
+    "ready": true,
+    "owner": "idle",
+    "command": [
+      0.0,
+      0.0
+    ],
+    "tilt_rad": 1.1970205831523677e-05
+  },
+  "passed_run": true
+}

@@ -8,7 +8,7 @@ contact with the world. Forces go to ``qfrc_applied`` through
 """
 import numpy as np
 
-from robot_lab_utils.track_drive import TrackDrive, track_collisions
+from robot_lab_utils.track_drive import FlipperServo, TrackDrive, joint_efforts, track_collisions
 
 
 class TrackPlant:
@@ -34,6 +34,16 @@ class TrackPlant:
         for geom in self.geoms:
             model.geom_priority[geom] = top
             model.geom_condim[geom] = 1
+        # Flipper position servos (Gazebo JointPositionController gains).
+        efforts = joint_efforts(description)
+        self.flippers = {}
+        for name, gains in self.drive.config['flippers'].items():
+            joint = mujoco.mj_name2id(model, mujoco.mjtObj.mjOBJ_JOINT, name)
+            if joint < 0:
+                raise ValueError('Flipper joint missing from the compiled model: ' + name)
+            self.flippers[name] = (FlipperServo(gains, efforts.get(name, 0.)), int(model.jnt_qposadr[joint]),
+                                   int(model.jnt_dofadr[joint]))
+        self.body_masses = {b: float(model.body_mass[b]) for b in self.robot_bodies}
         self.applied = np.zeros(model.nv)
         self.wrench = np.zeros(6)
         self.velocity = np.zeros(6)
@@ -41,6 +51,8 @@ class TrackPlant:
 
     def reset(self):
         self.drive.reset()
+        for servo, _, _ in self.flippers.values():
+            servo.reset()
         self.applied[:] = 0.0
 
     def step(self, now, dt):
@@ -49,8 +61,11 @@ class TrackPlant:
         data.qfrc_applied[:] -= self.applied
         self.applied[:] = 0.0
         self.drive.advance(now, dt)
+        for servo, qpos, dof in self.flippers.values():
+            self.applied[dof] += servo.torque(float(data.qpos[qpos]), float(data.qvel[dof]), dt)
         ncon = data.ncon
         if ncon == 0:
+            data.qfrc_applied[:] += self.applied
             self.report = dict(contacts=0, normal_N=0.0)
             return
         contact = data.contact
@@ -61,6 +76,7 @@ class TrackPlant:
         other = np.where(mine1, g2, g1)
         rows = (mine1 != mine2) & ~self.robot_mask[model.geom_bodyid[other]] & (np.asarray(contact.efc_address) >= 0)
         if not rows.any():
+            data.qfrc_applied[:] += self.applied
             self.report = dict(contacts=0, normal_N=0.0)
             self.drive.forces([], np.zeros((0, 3)), [], np.zeros((0, 3)), np.zeros(3), dt)
             return
@@ -83,7 +99,7 @@ class TrackPlant:
         sides = [self.geoms[int(g)] for g in own]
         hull = data.xmat[self.base].reshape(3, 3)
         forces = self.drive.forces(sides, normals, load, velocities, hull[:, 1], dt,
-                                   points, data.xpos[self.base], hull[:, 2])
+                                   points, data.xpos[self.base], hull[:, 2], bodies, self.body_masses)
         for body in np.unique(bodies):
             at = bodies == body
             centre = data.xpos[body]

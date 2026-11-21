@@ -48,7 +48,7 @@ def parse_config(config):
         config = json.loads(config) if config.strip() else {}
     if not isinstance(config, dict) or not config:
         raise ValueError('A track configuration object is required')
-    unknown = set(config) - set(DEFAULTS) - {'left', 'right'}
+    unknown = set(config) - set(DEFAULTS) - {'left', 'right', 'flippers'}
     if unknown:
         raise ValueError('Unknown track settings: ' + ', '.join(sorted(unknown)))
     result = dict(DEFAULTS)
@@ -64,7 +64,76 @@ def parse_config(config):
         if isinstance(value, bool) or not isinstance(value, (int, float)) or not math.isfinite(value) or value <= 0:
             raise ValueError('Track setting must be finite and positive: ' + key)
         result[key] = float(value)
+    result['flippers'] = parse_flippers(config.get('flippers', {}))
     return result
+
+
+FLIPPER_KEYS = ('p', 'i', 'd', 'i_min', 'i_max', 'cmd_max')
+
+
+def parse_flippers(flippers):
+    """{joint: {p, i, d, i_min, i_max, cmd_max}}: Gazebo JointPositionController gains."""
+    if not isinstance(flippers, dict):
+        raise ValueError('Flipper servos must be an object')
+    result = {}
+    for joint, gains in flippers.items():
+        if not isinstance(joint, str) or not joint or not isinstance(gains, dict) or set(gains) != set(FLIPPER_KEYS):
+            raise ValueError('Flipper servo needs ' + ', '.join(FLIPPER_KEYS) + ': ' + str(joint))
+        values = {key: gains[key] for key in FLIPPER_KEYS}
+        if any(isinstance(v, bool) or not isinstance(v, (int, float)) or not math.isfinite(v) for v in values.values()):
+            raise ValueError('Flipper gains must be finite numbers: ' + joint)
+        if min(values['p'], values['cmd_max']) <= 0 or min(values['i'], values['d']) < 0 or values['i_min'] > values['i_max']:
+            raise ValueError('Invalid flipper gains: ' + joint)
+        result[joint] = {key: float(v) for key, v in values.items()}
+    return result
+
+
+def sdf_flippers(sdf_text):
+    """The JointPositionController gains of a tracked model.sdf, by joint."""
+    model = ET.fromstring(sdf_text).find('model')
+    result = {}
+    for plugin in model.findall('plugin'):
+        if not plugin.get('name', '').endswith('JointPositionController'):
+            continue
+        def number(tag, default=0.0):
+            node = plugin.find(tag)
+            return float(node.text) if node is not None and node.text else default
+        cap = max(abs(number('cmd_min', -1e9)), abs(number('cmd_max', 1e9)))
+        result[plugin.find('joint_name').text.strip()] = dict(p=number('p_gain'), i=number('i_gain'), d=number('d_gain'),
+                                                               i_min=number('i_min'), i_max=number('i_max'), cmd_max=cap)
+    return result
+
+
+class FlipperServo:
+    """Gazebo's JointPositionController (ignition::math::PID, force mode) for one joint.
+
+    The error is target - position; the integral term (i * accumulated error)
+    is held within [i_min, i_max]; the derivative acts on the error's rate
+    (-velocity for a held target); the output is held within +-cmd_max and
+    the joint's own effort limit.
+    """
+
+    def __init__(self, gains, effort):
+        self.gains, self.effort = gains, float(effort)
+        self.target = 0.0
+        self.integral = 0.0
+
+    def reset(self):
+        self.target = 0.0
+        self.integral = 0.0
+
+    def command(self, value):
+        if math.isfinite(value):
+            self.target = float(value)
+
+    def torque(self, position, velocity, dt):
+        g = self.gains
+        error = self.target - position
+        if g['i'] > 0:
+            self.integral = max(g['i_min'] / g['i'], min(g['i_max'] / g['i'], self.integral + error * dt))
+        out = g['p'] * error + g['i'] * self.integral - g['d'] * velocity
+        cap = min(g['cmd_max'], self.effort) if self.effort > 0 else g['cmd_max']
+        return max(-cap, min(cap, out))
 
 
 def track_collisions(description, config):
@@ -88,6 +157,16 @@ def track_collisions(description, config):
         raise ValueError('Track links missing from the description: ' + ', '.join(sorted(missing)))
     if not result:
         raise ValueError('The track links have no collision geometry')
+    return result
+
+
+def joint_efforts(description):
+    """{joint: URDF effort limit} for the revolute joints of a description."""
+    result = {}
+    for joint in ET.fromstring(description).findall('joint'):
+        limit = joint.find('limit')
+        if joint.get('type') == 'revolute' and limit is not None:
+            result[joint.get('name')] = float(limit.get('effort', 0) or 0)
     return result
 
 
@@ -185,8 +264,18 @@ class TrackDrive:
                                    self.config['steering_efficiency'])
         return dict(left=left, right=right)
 
-    def forces(self, sides, normals, normal_forces, velocities, axle, dt, points=None, origin=None, up=None):
+    # A body's contacts together servo at most this many times the body's own
+    # mass. The load share of the whole vehicle put 25 kg of servo on a
+    # 0.75 kg flipper pressed into a riser; the explicit force then diverged
+    # in one 2 ms step (MuJoCo, terrain_stairs_flight, 2026-11-21).
+    BODY_MASS_FACTOR = 4.0
+
+    def forces(self, sides, normals, normal_forces, velocities, axle, dt, points=None, origin=None, up=None,
+               bodies=None, body_masses=None):
         """World force at each track contact; ``sides`` holds 'left'/'right' per row.
+
+        ``bodies`` (an id per row) and ``body_masses`` ({id: kg}) cap each
+        body's servo mass at BODY_MASS_FACTOR times its own mass.
 
         With ``points``, the hull ``origin`` and its ``up`` axis, the
         across-belt target is the commanded yaw rate about the origin.
@@ -204,6 +293,14 @@ class TrackDrive:
         speeds = self.speeds()
         c = self.config
         bias = np.where(left, self.bias['left'], self.bias['right'])
+        masses = self.mass * load / total
+        if bodies is not None:
+            bodies = np.asarray(bodies)
+            for body in np.unique(bodies):
+                at = bodies == body
+                cap = self.BODY_MASS_FACTOR * float(body_masses[body.item()])
+                if masses[at].sum() > cap:
+                    masses[at] *= cap / masses[at].sum()
         belt = np.where(left, speeds['left'], speeds['right'])
         targets = None
         if points is not None:
@@ -212,7 +309,7 @@ class TrackDrive:
             offset = arm @ np.asarray(axle, dtype=float)
             belt = belt + self.velocity[1] * (np.where(left, 0.5, -0.5) * c['separation'] - offset)
         forces, slip, usable = contact_forces(belt, axle, normals, load,
-                                              velocities, self.mass * load / total, c['mu_along'], c['mu_lateral'],
+                                              velocities, masses, c['mu_along'], c['mu_lateral'],
                                               c['gain'], bias, targets)
         for name, rows in (('left', left & usable), ('right', ~left & usable)):
             weight = float(load[rows].sum())
