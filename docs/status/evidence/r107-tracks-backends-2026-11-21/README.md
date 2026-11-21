@@ -206,7 +206,11 @@ The yaw comes from the edge's normal force on the front-right corner,
 which belt traction does not cancel. Gazebo's TrackController drives a
 flipper contact along the flipper link's own axis rather than along
 `axle x normal`, and its first contact may be the flipper wheel rather
-than the bar. Comparing that is the next step.
+than the bar. A third offline trial drove flipper contacts along the flipper link's own
+axis, signed forward, as TrackController does. It reduced the final yaw only
+from 1.44 to 1.27 rad and still did not climb, so it was reverted. Gazebo's
+own contacts at that edge are the missing comparison; that needs a contact
+sensor on the Gazebo plant.
 
 **Regression on fixed-flipper `lab_tracked` after the cap:**
 - Turn: truth 1.840 / odom 1.832 rad on MuJoCo, 1.755 / 1.745 on PyBullet,
