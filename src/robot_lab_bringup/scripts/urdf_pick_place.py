@@ -292,13 +292,13 @@ class PickPlace(Node):
             name = shape['model']
             obstacle = Box(name, shape['position'], shape['orientation'], size, kind)
             level = kind == 'box' and obstacle.rotation()[2, 2] >= math.cos(math.radians(.5))
-            if level and max(size[:2]) >= 2. and obstacle.top <= .03:
-                continue  # Ground slab supporting the fixed base in the private model.
-            yaw = yaw_of(obstacle.quaternion)
-            c, s = math.cos(yaw), math.sin(yaw)
-            footprint = [2*obstacle.half_extent(axis) for axis in ((c, s, 0.), (-s, c, 0.))]
-            self.drive_obstacles.append(Box(name, obstacle.position, (math.cos(yaw/2), 0., 0., math.sin(yaw/2)),
-                                            (*footprint, size[2])))
+            obstacle.floor = level and max(size[:2]) >= 2. and obstacle.top <= .03
+            if not obstacle.floor:
+                yaw = yaw_of(obstacle.quaternion)
+                c, s = math.cos(yaw), math.sin(yaw)
+                footprint = [2*obstacle.half_extent(axis) for axis in ((c, s, 0.), (-s, c, 0.))]
+                self.drive_obstacles.append(Box(name, obstacle.position, (math.cos(yaw/2), 0., 0., math.sin(yaw/2)),
+                                                (*footprint, size[2])))
             if level and max(size[:2]) < 2. and size[2] < 1.2:
                 previous = boxes.get(name)
                 if previous is None or obstacle.top > previous.top:

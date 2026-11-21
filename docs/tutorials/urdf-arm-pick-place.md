@@ -85,8 +85,9 @@ from payload collision checks. Other tables remain obstacles.
 The private arm scene checks large walls, sloped collision boxes, cylinders,
 spheres and multi-part tables. For each model, the support selector uses
 the highest eligible level box. The private model welds the robot base to
-its measured pose and omits the broad ground slab. Mesh and heightfield
-collision planning remain open.
+its measured pose. Wide level floor boxes remain obstacles for moving
+links and the payload. Frozen chassis contact with the floor is allowed.
+Mesh and heightfield collision planning remain open.
 
 The carried payload is a mocap body in the planning model. The planner
 queries its distance to each static obstacle because the ordinary contact

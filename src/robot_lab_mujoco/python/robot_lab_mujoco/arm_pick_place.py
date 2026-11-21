@@ -90,6 +90,7 @@ class Box:
     quaternion: Sequence[float]      # w, x, y, z
     size: Sequence[float]            # full extents (a cylinder: diameter, diameter, length)
     shape: str = 'box'               # box, sphere, or cylinder (local axis along z)
+    floor: bool = False
 
     @property
     def top(self):
@@ -201,6 +202,7 @@ class ArmScene:
         self.payload_radius = min(obj.size) / 2
         self.obstacle_geoms = {box.name: mujoco.mj_name2id(m, mujoco.mjtObj.mjOBJ_GEOM, 'obstacle_' + box.name)
                                for box in obstacles}
+        self.floor_geoms = {self.obstacle_geoms[box.name] for box in obstacles if box.floor}
         self.joint_qpos, self.joint_dof, self.limits = {}, {}, {}
         for name in spec.arm_joints + spec.finger_joints:
             j = mujoco.mj_name2id(m, mujoco.mjtObj.mjOBJ_JOINT, name)
@@ -353,6 +355,8 @@ class ArmScene:
                 continue
             elif not (pair & self.robot_geoms):
                 continue                # scenery against scenery
+            elif pair & self.floor_geoms and not (pair & self.moving_geoms):
+                continue                # the planning scene freezes the chassis on the floor
             elif pair <= self.robot_geoms and not (pair & self.moving_geoms):
                 continue                # fixed robot parts against each other
             found.append((self.mj.mj_id2name(m, self.mj.mjtObj.mjOBJ_GEOM, g1) or str(g1),

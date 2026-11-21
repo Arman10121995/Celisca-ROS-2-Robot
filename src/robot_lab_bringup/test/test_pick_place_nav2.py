@@ -76,7 +76,8 @@ def test_pick_place_uses_authored_collision_pose_from_measured_model_pose(pick_p
     assert sizes == {'block': [.04, .03, .08]}
     assert set(supports) == {'table'}
     assert supports['table'].top == pytest.approx(.54)
-    assert sorted(box.name.split('/')[-1] for box in node.arm_obstacles) == ['pillar', 'ramp', 'table', 'table', 'wall']
+    assert sorted(box.name.split('/')[-1] for box in node.arm_obstacles) == ['floor', 'pillar', 'ramp', 'table', 'table', 'wall']
+    assert [box.name.split('/')[-1] for box in node.arm_obstacles if box.floor] == ['floor']
     pillar, = [geometry for geometry in node.arm_obstacles if geometry.shape == 'cylinder']
     assert pillar.size == [.4, .4, 1.]
     assert sorted(box.name for box in node.drive_obstacles) == ['pillar', 'ramp', 'table', 'table', 'wall']

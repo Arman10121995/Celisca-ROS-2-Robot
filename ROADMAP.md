@@ -483,10 +483,12 @@ accounts for terrain fixtures without saved 2D maps. Details and evidence are in
   - 2026-11-21: the private arm scene keeps collision boxes, spheres and
     cylinders, including large walls and multiple primitive colliders in
     a model. The drop selector uses the highest eligible level box for
-    each model. The fixed-base floor slab, meshes and heightfields remain
-    outside this planner. Explicit distance checks cover the mocap
+    each model. Explicit distance checks cover the mocap
     payload against static scenery. Compiled scene tests and a replay of
     the recorded F100 pickup and placement pass.
+  - 2026-11-22: wide level floor boxes stay in the private planner for
+    moving arm links and the carried object. Frozen chassis contact is
+    allowed. Meshes and heightfields remain outside this planner.
   - 2026-11-22: the MuJoCo fixed-arm workcell publishes a calibrated
     overhead RGB-D camera. The existing pick-and-place panel can plan a
     Panda cube grasp from three fresh camera estimates. The normal GUI

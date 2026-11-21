@@ -180,6 +180,26 @@ def test_segment_clearance_measures_the_closest_box():
     assert segment_clearance(boxes, (1.0, 0.0), (2.0, 0.0))[0] == 0.0
 
 
+def test_floor_allows_frozen_chassis_but_rejects_moving_arm_and_payload_penetration():
+    xml = '''<mujoco><worldbody><body name="base">
+      <freejoint/><geom type="box" name="chassis" pos="0 0 0" size=".1 .1 .1"/>
+      <body name="tool" pos=".3 0 .2">
+        <joint name="arm" type="slide" axis="0 0 1" range="-.5 .5"/>
+        <geom type="box" name="moving_tool" size=".03 .03 .03"/>
+      </body>
+    </body></worldbody></mujoco>'''
+    spec = ArmSpec.from_config(dict(arm_joints=['arm'], finger_joints=[], tool_body='tool',
+                                   tcp_offset=[0., 0., 0.], finger_open=.04, finger_closed=0., max_object_width=.1))
+    floor = Box('floor', [0., 0., -.05], [1., 0., 0., 0.], [8., 8., .1], floor=True)
+    obj = Box('pickup', [1., 0., .25], [1., 0., 0., 0.], [.04, .04, .04])
+    scene = ArmScene(xml, spec, [floor], obj)
+    assert not scene.collisions()
+    scene.set_joints({'arm': -.22})
+    assert any({a, b} == {'moving_tool', 'obstacle_floor'} for a, b, _ in scene.collisions())
+    scene.move_object([1., 0., .005], [1., 0., 0., 0.])
+    assert any({a, b} == {'object', 'obstacle_floor'} for a, b, _ in scene.collisions())
+
+
 def test_mobile_scene_welds_the_base_and_holds_unplanned_joints():
     try:
         from robot_lab_utils.installed_assets import installed_profiles

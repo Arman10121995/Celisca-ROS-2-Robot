@@ -4147,6 +4147,7 @@ tasks:
         state: active
         title: Qualify four-wheel steering patterns and physical mecanum travel
       R5.7:
+        arm_floor_owner_20261122: 'Codex retained wide level SDF floor boxes in private URDF arm scenes. Moving links and the free or carried payload are checked against the floor. Frozen chassis support is allowed. 28 executor and native planner checks and two package builds passed.'
         workcell_camera_owner_20261121: 'Codex implemented the stationary RGB-D workcell camera and three-frame estimate stage. Normal GUI on MuJoCo Display completed Panda cube pick/place in arm_pick_place_lab in 26.52 s with a 1.1 mm pose error, 96.2 mm lift, supported release and launch exit 0. Four packages build and 39 focused tests pass. docs/status/evidence/r57-urdf-arm-pick-place-2026-11-17/mujoco-gui-workcell-rgbd-2026-11-22.json'
         direct_dock_clearance_owner_20261121: 'Codex implemented projected primitive obstacle coverage for mobile pick/place direct approaches, precision docking and retreat. Nav2 owns longer transit. The 25 focused executor and native planner checks passed, including a blocking wall, docking post and blocked retreat. Mesh and terrain clearance remain open.'
         isaac_offset_owner_20261121: 'Codex implemented Isaac offset box and cylinder colliders as transformed children of the published rigid model frame. Isaac Sim 6.0.1 OpenUSD stage check confirmed translation, rotation, 40 g model mass and physics material binding for both shapes. A live offset-object mission remains pending.'
