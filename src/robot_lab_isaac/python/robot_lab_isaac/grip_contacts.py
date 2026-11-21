@@ -55,10 +55,18 @@ def pad_colliders(stage, robot, urdf_path, named_pads, load_stl):
 class GripContacts:
     def __init__(self, stage, pads, objects, dt):
         from omni.physx import get_physx_simulation_interface
-        from pxr import PhysicsSchemaTools, PhysxSchema
+        from pxr import PhysicsSchemaTools, PhysxSchema, UsdPhysics
 
         encode = PhysicsSchemaTools.sdfPathToInt
         self.pads = {encode(path): side for path, side in pads.items()}
+        self.jaws = {}
+        for path, side in pads.items():
+            prim = stage.GetPrimAtPath(path)
+            while prim and not prim.IsPseudoRoot():
+                if prim.HasAPI(UsdPhysics.RigidBodyAPI):
+                    self.jaws[encode(prim.GetPath())] = side
+                    break
+                prim = prim.GetParent()
         self.objects = {encode(path): name for name, path in objects.items()}
         self.dt = dt
         self.begin_step()
@@ -69,20 +77,31 @@ class GripContacts:
 
     def begin_step(self):
         self.forces = {name: {'left': 0., 'right': 0.} for name in self.objects.values()}
+        self.other_jaw_forces = {name: {'left': 0., 'right': 0.} for name in self.objects.values()}
 
     def _on_contacts(self, headers, data):
         for header in headers:
-            side, obj = self.pads.get(header.collider0), self.objects.get(header.actor1)
-            if side is None or obj is None:
-                side, obj = self.pads.get(header.collider1), self.objects.get(header.actor0)
-            if side is None or obj is None:
+            obj = self.objects.get(header.actor1)
+            collider, actor = header.collider0, header.actor0
+            if obj is None:
+                obj = self.objects.get(header.actor0)
+                collider, actor = header.collider1, header.actor1
+            if obj is None:
+                continue
+            side = self.pads.get(collider)
+            forces = self.forces
+            if side is None:
+                side = self.jaws.get(actor)
+                forces = self.other_jaw_forces
+            if side is None:
                 continue
             start = header.contact_data_offset
             for index in range(start, start + header.num_contact_data):
                 contact = data[index]
                 impulse = abs(sum(a * b for a, b in zip(contact.impulse, contact.normal)))
                 if math.isfinite(impulse):
-                    self.forces[obj][side] += impulse / self.dt
+                    forces[obj][side] += impulse / self.dt
 
     def measure(self, time):
-        return {'sim_time_s': time, 'normal_force_n': self.forces}
+        return {'sim_time_s': time, 'normal_force_n': self.forces,
+                'non_pad_jaw_normal_force_n': self.other_jaw_forces}

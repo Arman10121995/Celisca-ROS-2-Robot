@@ -184,6 +184,10 @@ samples. The largest sampled follower error was 0.0082 rad. The run
 stopped at closure before lift.
 [Isaac measured trial](isaac-gui-loaded-closure-timeout.json).
 
+New Isaac traces report loads on other distal jaw surfaces separately
+from the named pads. This shows whether the source jaw hull reached the
+block before the pad. Only bilateral load on the named pads can authorize lift.
+
 ### Complete GUI fetch
 
 Run 11 used the normal GUI on `mobile_fetch_lab_f100` with MuJoCo Display

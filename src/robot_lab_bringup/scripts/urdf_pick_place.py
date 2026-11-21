@@ -1190,6 +1190,9 @@ class PickPlace(Node):
                                          if c['name'] in self.spec.finger_joints and c.get('reference') is not None])
         if self.spec.pad_geoms:
             sample['pad_normal_force_n'] = self._pad_check(task['object'])['pad_normal_force_n']
+            non_pad = self.state.get('grip_contacts', {}).get('non_pad_jaw_normal_force_n', {}).get(task['object'])
+            if non_pad is not None:
+                sample['non_pad_jaw_normal_force_n'] = non_pad
             sample['arm_joints'] = {n: round(measured[n], 5) for n in self.spec.arm_joints if n in measured}
         truth = self._tcp_truth()
         if truth is not None:
