@@ -1,13 +1,15 @@
 # Pick and place with a URDF arm (PyBullet, MuJoCo, Isaac and Gazebo)
 
 A backend-neutral pick and place for URDF arms whose profile has a
-`pick_place` block. It is experimental, and object poses come from simulator
-truth. Two robots have the block:
+`pick_place` block. The workflow is experimental. TIAGo can also use
+configured RGB-D targets for the grasp. The catalog includes:
 
 - the robot_assets Franka Panda (`asset_franka_panda_panda`), a fixed arm;
 - the official PAL TIAGo (`asset_pal_tiago`), a mobile manipulator, which
   **fetches**: it drives to the object, picks it, carries it and places it.
   See [Fetch with TIAGo](#fetch-with-tiago-mobile-manipulation).
+- the myAGV Pro with myCobot Pro630 and the F100 gripper, measured through
+  a complete MuJoCo Display fetch. [F100 setup](myagv-pro.md).
 
 ## Run
 
@@ -50,6 +52,13 @@ contract, in these stages:
 7. straight down
 8. release
 9. retreat
+
+The planner transforms each reported world model pose through the declared
+SDF link and collision poses. It uses the physical collision centre and axes
+for grasp, carried clearance and release checks. Configured camera estimates
+already use that centre. The support selector uses level collision boxes.
+Isaac's loose-body importer requires the collider to align with the model
+frame. Offset-object missions on the other backends are pending.
 
 **Checks.** Each stage must pass before the next one starts:
 

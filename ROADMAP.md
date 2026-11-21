@@ -473,6 +473,12 @@ accounts for terrain fixtures without saved 2D maps. Details and evidence are in
     side-lying variant. Isaac has a centred free-cylinder adapter. Private
     Panda planning passes for both orientations. Live side-lying missions
     remain pending.
+  - 2026-11-21: URDF pick/place composes measured poses with the SDF
+    link and collision frames for loose boxes and cylinders. The planner
+    and release checks use the resulting collision centre. Drop supports
+    require level collision boxes. Isaac's primitive importer is limited
+    to collisions aligned with the model frame. Live offset-object
+    missions remain pending.
   - compound/mesh geometry, perception pose sources for
     fixed arms and additional gripper-specific pipelines;
   - coupled mechanisms beyond gear-coupled fingers (mimic chains and

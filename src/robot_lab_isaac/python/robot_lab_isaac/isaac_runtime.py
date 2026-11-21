@@ -1320,9 +1320,9 @@ def _add_free_bodies(world, bodies):
                    % (body.get("name"), shape.get("type"))})
             continue
         name = re.sub(r"[^A-Za-z0-9_]", "_", str(body["name"]))
-        if shape['type'] == 'cylinder' and (not np.allclose(shape['position'], (0., 0., 0.))
+        if (not np.allclose(shape['position'], (0., 0., 0.))
                 or not np.allclose(shape['orientation'], (1., 0., 0., 0.))):
-            _emit({'event': 'log', 'msg': 'Free cylinder collision must align with its model frame: '+name})
+            _emit({'event': 'log', 'msg': 'Free body collision must align with its model frame: '+name})
             continue
         mu = float(body["mu"]) if body.get("mu") is not None else 1.0
         material = PhysicsMaterial(prim_path="/World/PhysicsMaterials/free_" + name,

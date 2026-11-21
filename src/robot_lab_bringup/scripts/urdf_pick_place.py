@@ -63,8 +63,8 @@ or, for the grasp of a mobile fetch, from the robot's RGB-D camera
 - A ``look`` phase after the drive to the object points the head at the
   table (``look`` joint targets), waits ``LOOK_SETTLE`` s after the head
   settles, then fits the object in RGB-D frames with
-  ``robot_lab_utils.rgbd_boxes.estimate_box``: a declared colour and size
-  (``rgbd_boxes.yaml`` next to the world's ``worlds/`` folder), depth,
+  ``robot_lab_utils.rgbd_boxes.estimate_primitive``: a declared colour and size
+  (``rgbd_targets.yaml`` or ``rgbd_boxes.yaml`` next to the world's ``worlds/`` folder), depth,
   calibration and the camera transform (TF from the base frame, the base
   pose from ``/odom/ground_truth`` as for the arm plan).
 - ``LOOK_FRAMES`` consecutive estimates within ``LOOK_SPREAD`` of their
@@ -179,6 +179,7 @@ class PickPlace(Node):
             raise ValueError('Grasp pad normal load threshold must be finite and positive')
         self.base = tuple(float(self.get_parameter(k).value) for k in ('base_x', 'base_y', 'base_z', 'base_yaw'))
         self.object_shapes = {}
+        self.object_collision_frames = {}
         self.supports, self.object_sizes = self._world_boxes()
         from robot_lab_adapter.legged_training import _package_map
         from robot_lab_mujoco.mujoco_spawner import _build_mjcf_from_urdf
@@ -255,20 +256,26 @@ class PickPlace(Node):
         sizes = {}
         for body in extract_dynamic_bodies(path):
             shape = body['shape']
+            name = body['name']
             if shape['type'] == 'box':
-                sizes[body['name']] = list(shape['size'])
+                sizes[name] = list(shape['size'])
             elif shape['type'] == 'cylinder':
                 # Cylinder bounds are expressed in the object's local frame.
                 radius, length = (float(v) for v in shape['size'][:2])
-                sizes[body['name']] = [2 * radius, 2 * radius, length]
-                self.object_shapes[body['name']] = 'cylinder'
-        shapes, _ = extract_static_shapes(path, lambda uri, base: '', exclude_dynamic=True)
+                sizes[name] = [2 * radius, 2 * radius, length]
+                self.object_shapes[name] = 'cylinder'
+            else:
+                continue
+            self.object_collision_frames[name] = (shape['position'], shape['orientation'])
+        shapes, _ = extract_static_shapes(path, lambda uri, base: '', collision_only=True, exclude_dynamic=True)
         boxes = {}
         for shape in shapes:
             # A support is a box a robot could set things on: under 1.2 m tall,
             # not the floor (wider than 2 m).
             if shape['type'] == 'box' and max(shape['size'][:2]) < 2.0 and shape['size'][2] < 1.2:
-                boxes[shape['model']] = Box(shape['model'], shape['position'], shape['orientation'], shape['size'])
+                box = Box(shape['model'], shape['position'], shape['orientation'], shape['size'])
+                if box.rotation()[2, 2] >= math.cos(math.radians(0.5)):
+                    boxes[box.name] = box
         return boxes, sizes
 
     def _rgbd_bindings(self):
@@ -292,7 +299,32 @@ class PickPlace(Node):
         return targets
 
     def _on_truth(self, message):
-        self.truth = json.loads(message.data)
+        """Convert each measured model pose to the source collision frame."""
+        from robot_lab_utils.sdf_world import compose
+
+        try:
+            poses = json.loads(message.data)
+        except ValueError:
+            return
+        if not isinstance(poses, dict):
+            return
+        truth = {}
+        for name, frame in self.object_collision_frames.items():
+            pose = poses.get(name)
+            if not isinstance(pose, list) or len(pose) != 7:
+                continue
+            try:
+                pose = np.asarray(pose, dtype=float)
+            except (TypeError, ValueError):
+                continue
+            if pose.shape != (7,) or not np.isfinite(pose).all():
+                continue
+            norm = np.linalg.norm(pose[3:])
+            if not .99 <= norm <= 1.01:
+                continue
+            position, orientation = compose((pose[:3], pose[3:] / norm), frame)
+            truth[name] = [*position, *orientation]
+        self.truth = truth
         self.truth_at = _now()
 
     def _on_link_poses(self, message):
@@ -402,8 +434,6 @@ class PickPlace(Node):
         missing = [n for n in self.spec.arm_joints + self.spec.finger_joints if n not in measured]
         if missing:
             raise ValueError('no measurement for %s' % missing)
-        if not self.object_sizes.get(name):
-            raise ValueError('object %r is not a loose box or cylinder of the world file' % name)
         lift = float(request.get('lift', self.config.get('default_lift', .10)))
         approach = float(request.get('approach', self.config.get('default_approach', .10)))
         if not 0.03 <= lift <= 0.25 or not 0.03 <= approach <= 0.25:
@@ -415,7 +445,7 @@ class PickPlace(Node):
             if not (self.mobile and self.look):
                 raise ValueError('RGB-D object poses need a mobile profile with a pick_place.look head pose')
             if name not in self.rgbd_bindings:
-                raise ValueError('object %r has no RGB-D binding (rgbd_boxes.yaml next to the world)' % name)
+                raise ValueError('object %r has no RGB-D binding in the world configuration' % name)
             missing = [n for n in self.look if n not in measured]
             if missing:
                 raise ValueError('no measurement for look joints %s' % missing)
@@ -761,6 +791,8 @@ class PickPlace(Node):
         self.heartbeat_pub.publish(Empty())
         if _now() - self.state_at > STATE_STALE or self.state.get('fault'):
             return self._finish('failed', 'articulation state stale or faulted: %s' % self.state.get('status'))
+        if _now() - self.truth_at > STATE_STALE or task['object'] not in self.truth:
+            return self._finish('failed', 'Selected object pose is unavailable or stale')
         phase = task['phases'][task['phase_index']]
         if _now() - task.get('traced', -math.inf) >= TRACE_PERIOD:
             self._trace(task)
@@ -1199,6 +1231,7 @@ class PickPlace(Node):
         if task is None:
             return
         result = dict(schema='robot_lab.pick_place_result.v1', outcome=outcome, passed=outcome == 'succeeded',
+                      object_pose_reference='source_collision_center',
                       message=message, request=task['request'], object=task['object'], support=task['support'],
                       object_start=task['object_start'], plan=task['plan'], stages=task['log'],
                       mobile=bool(self.mobile), interlock=task.get('interlock') if self.mobile else None,

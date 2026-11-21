@@ -1,6 +1,7 @@
 """Owned Nav2 action transitions in the mobile pick-and-place node."""
 from concurrent.futures import Future
 import importlib.util
+import json
 import math
 from pathlib import Path
 from types import SimpleNamespace
@@ -28,6 +29,47 @@ def test_calibrated_close_meters_only_the_shaft_during_closure(pick_place):
     assert outputs == pytest.approx([.35, .34, .33, .32, .31, .31, .31])
     release = {'name': 'release', 'fingers': {'shaft': 1.}}
     assert node._stage_fingers(release) == release['fingers']
+
+
+def test_pick_place_uses_authored_collision_pose_from_measured_model_pose(pick_place, tmp_path):
+    node = object.__new__(pick_place.PickPlace)
+    node.object_shapes, node.object_collision_frames = {}, {}
+    world = tmp_path/'shifted_object.world'
+    world.write_text('''<sdf version="1.7"><world name="lab">
+      <model name="block"><static>false</static>
+        <link name="link"><pose>0.1 0 0 0 0 1.5707963267948966</pose>
+          <inertial><mass>0.04</mass></inertial>
+          <collision name="c"><pose>0.02 0 0 0 0 0.4</pose>
+            <geometry><box><size>0.04 0.03 0.08</size></box></geometry>
+          </collision>
+        </link>
+      </model>
+      <model name="ball"><static>false</static>
+        <link name="link"><inertial><mass>0.04</mass></inertial>
+          <collision name="c"><geometry><sphere><radius>0.02</radius></sphere></geometry></collision>
+        </link>
+      </model>
+      <model name="drawing"><static>true</static><link name="link">
+        <visual name="v"><geometry><box><size>0.3 0.3 0.1</size></box></geometry></visual>
+      </link></model>
+      <model name="ramp"><static>true</static><pose>0 0 0 0.3 0 0</pose><link name="link">
+        <collision name="c"><geometry><box><size>0.3 0.3 0.1</size></box></geometry></collision>
+      </link></model>
+      <model name="table"><static>true</static><pose>0 0 0 0 0 0.3</pose><link name="link">
+        <collision name="c"><geometry><box><size>0.3 0.3 0.1</size></box></geometry></collision>
+      </link></model>
+    </world></sdf>''')
+    node.get_parameter = lambda name: SimpleNamespace(value=str(world))
+    supports, sizes = node._world_boxes()
+    assert sizes == {'block': [.04, .03, .08]}
+    assert set(supports) == {'table'}
+    s = math.sqrt(.5)
+    node._on_truth(SimpleNamespace(data=json.dumps({'block': [2., 1., .5, s, 0., 0., s],
+                                                  'ball': [0., 0., 1., 1., 0., 0., 0.]})))
+    assert node.truth['block'] == pytest.approx([1.98, 1.1, .5, -math.sin(.2), 0., 0., math.cos(.2)])
+    assert 'ball' not in node.truth
+    node._on_truth(SimpleNamespace(data=json.dumps({'block': [2., 1., .5, 0., 0., 0., 0.]})))
+    assert not node.truth
 
 
 def test_pad_settling_needs_independent_bilateral_load_and_stable_payload(pick_place, monkeypatch):
