@@ -6,7 +6,7 @@ set -u
 HERE=$(cd "$(dirname "$0")" && pwd)
 mkdir -p "$6"
 PID=$(python3 $HERE/../flipper-stairs-2026-11-14/launch_tracked.py "$6/launch.log" simulator:=$1 robot_model:=lab_tracked_strong_flippers \
-  map_name:=$2 spawn_x:=$3 spawn_y:=$4 spawn_yaw:=$5)
+  map_name:=$2 spawn_x:=$3 spawn_y:=$4 spawn_yaw:=$5 ${TRACK_OVERRIDES:+track_overrides:=$TRACK_OVERRIDES})
 env CASE_OUTPUT=$6 CASE_FLIPPERS=auto CASE_DURATION=$7 ${8:+CASE_STOP_X=$8} timeout 900 python3 $HERE/../r107-tracked-over-2026-11-20/stairs_probe.py > "$6/probe.log" 2>&1
 kill -INT -- -$PID 2>/dev/null; for i in $(seq 30); do kill -0 -- -$PID 2>/dev/null || break; sleep 1; done; kill -KILL -- -$PID 2>/dev/null
 python3 - "$6" <<'PY'

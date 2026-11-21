@@ -183,7 +183,13 @@ At 45° the ported belts do not pull the hull up the face. It turns
 along the face instead, so the behaviour differs from Gazebo in both
 directions: further at 30°, short at 45°. Gazebo's belts are effectively
 no-slip along the belt (mu 150), while the ported law bounds them at 1.0.
-That is the first suspect; it was not tuned.
+That was the first suspect, and it is ruled out. With a new
+`track_overrides` launch argument, mu_along 2 and 4 end within millimetres of
+the 1.0 run (`angled-mujoco-45deg-mu2`, `-mu4`). So does a trial law giving
+riser-face contacts full Coulomb traction, which was reverted
+(`angled-mujoco-45deg-riser`). The hull turns parallel to the face before any
+climbing force matters. The next step is logging which contact (the front
+flipper or sprocket on the step edge) turns it.
 
 **Regression on fixed-flipper `lab_tracked` after the cap:**
 - Turn: truth 1.840 / odom 1.832 rad on MuJoCo, 1.755 / 1.745 on PyBullet,

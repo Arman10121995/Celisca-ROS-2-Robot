@@ -180,6 +180,9 @@ def ported(context,value,include,task,name,profile,robot_id,robot_profile,source
     from robot_lab_utils.fleet_session import finite
     backend=value('simulator')
     tracks=dict(TRACKS)
+    # Experiment overrides for the ported track law (JSON, e.g. {"mu_along": 3}); empty keeps the measured block.
+    overrides=value('track_overrides').strip()
+    if overrides:tracks.update(json.loads(overrides))
     flippers=bool(robot_profile.get('articulated_flippers'))
     if flippers:
         # The variant's own JointPositionController gains (model.sdf).
@@ -219,7 +222,7 @@ def ported(context,value,include,task,name,profile,robot_id,robot_profile,source
 
 
 def generate_launch_description():
-    return LaunchDescription([DeclareLaunchArgument('robot_model',default_value='lab_tracked'),DeclareLaunchArgument('simulator',default_value='gazebo'),DeclareLaunchArgument('map_name',default_value='nav_empty'),DeclareLaunchArgument('task',default_value='display'),
+    return LaunchDescription([DeclareLaunchArgument('robot_model',default_value='lab_tracked'),DeclareLaunchArgument('simulator',default_value='gazebo'),DeclareLaunchArgument('track_overrides',default_value=''),DeclareLaunchArgument('map_name',default_value='nav_empty'),DeclareLaunchArgument('task',default_value='display'),
         DeclareLaunchArgument('gui',default_value='true'),DeclareLaunchArgument('rviz',default_value='true'),
         DeclareLaunchArgument('global_planner_plugin',default_value='auto'),DeclareLaunchArgument('local_planner_plugin',default_value='auto'),
         *[DeclareLaunchArgument('spawn_'+axis,default_value='') for axis in ('x','y','z','yaw')],OpaqueFunction(function=setup)])

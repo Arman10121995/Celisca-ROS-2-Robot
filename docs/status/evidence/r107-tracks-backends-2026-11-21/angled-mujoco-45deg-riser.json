@@ -1,0 +1,21 @@
+{
+  "case": "angled-mujoco-45deg-riser",
+  "samples": 10354,
+  "duration_s": 90.0,
+  "max_z": 0.097,
+  "max_z_x": -2.5,
+  "end": [
+    0.449,
+    6.318,
+    -0.0
+  ],
+  "max_roll": 0.0,
+  "max_pitch": 0.021,
+  "state_sequence": [
+    "travel",
+    "descend",
+    "travel",
+    "approach",
+    "travel"
+  ]
+}
