@@ -1773,7 +1773,10 @@ accounts for terrain fixtures without saved 2D maps. Details and evidence are in
 - **PyBullet Display:** the normal `nav_empty` GUI reached Open, Close and
   the calibrated 54 mm opening with all five passive followers. The camera
   renders on demand to preserve control feedback. Loaded Bullet missions
-  remain open. [GUI evidence](docs/status/evidence/r143-pro630-f100-2026-11-20/bullet-gui-gripper-confirmed.json).
+  remain open. The first loaded run reached closure, but the block shifted
+  and only one pad registered force. A private candidate can reopen,
+  retract and reapproach once from the new measured object pose.
+  [GUI evidence](docs/status/evidence/r143-pro630-f100-2026-11-20/bullet-gui-gripper-confirmed.json).
 - **Isaac implementation:** rotary follower authoring keeps one powered
   shaft. A source-pad collider observer reports per-object normal force.
   The installed USD schema fixtures passed. Imported-robot travel and

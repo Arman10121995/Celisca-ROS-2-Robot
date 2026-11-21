@@ -108,6 +108,8 @@ PAD_SETTLE_SAMPLES = 3
 PAD_SETTLE_MAX_GAP = 0.25  # s between independent contact samples
 PAD_SETTLE_DRIFT = 0.003  # m over the contact window
 PAD_LOSS_TIMEOUT = 0.5  # s of continuous loss of bilateral contact
+REAPPROACH_MIN_SHIFT_M = .005
+REAPPROACH_MAX_SHIFT_M = .05
 STATE_STALE = 1.0       # s
 # Base driving (mobile profiles): below TIAGo's 0.2 m/s, 0.4 rad/s limits.
 DRIVE_SPEED = 0.15      # m/s
@@ -714,9 +716,10 @@ class PickPlace(Node):
         scene.set_joints({n: measured[n] for n in planned})
         return scene.tcp()
 
-    def _plan_arm(self, task, phase):
+    def _plan_arm(self, task, phase, *, reapproach=False):
         """Plan an arm phase from the measured arm, base and object."""
-        from robot_lab_mujoco.arm_pick_place import ArmScene, Box, plan_pick, plan_pick_place, plan_place, synchronised
+        from robot_lab_mujoco.arm_pick_place import (
+            ArmScene, Box, plan_grasp_retraction, plan_pick, plan_pick_place, plan_place, synchronised)
         measured = self.measured()
         name = task['object']
         pose = self._object_pose(task, phase)
@@ -727,6 +730,12 @@ class PickPlace(Node):
                 if c.get('mode') == 'position' and c.get('measured') is not None and c['name'] not in planned_joints}
         scene = ArmScene(self.robot_mjcf, self.spec, self.arm_obstacles, obj, base=base, held=held)
         start = {n: float(measured[n]) for n in self.spec.arm_joints}
+        previous = dict(start)
+        recovery = []
+        if reapproach:
+            recovery = plan_grasp_retraction(scene, start, {n: measured[n] for n in self.spec.finger_joints},
+                                              obj.position[2] + task['approach'])
+            start = recovery[-1]['waypoints'][-1]
         options = dict(approach=task['approach'], lift=task['lift'], seeds=self.seeds)
         support = self.supports[task['support']]
         if phase['name'] == 'pick_place':
@@ -750,8 +759,8 @@ class PickPlace(Node):
             planned = plan_place(scene, start, obj, support, place_xy=task['plan']['place_xy'],
                                  grasp_width=task['plan']['grasp_width_m'], measured_fingers=fingers, **options)
             task['plan'].update(place_centre=planned['place_centre'], place_orientation=planned['place_orientation'])
-        stages, previous = [], dict(start)
-        for stage in planned['stages']:
+        stages = []
+        for stage in (*recovery, *planned['stages']):
             targets = synchronised(stage['waypoints'], previous, RATE, PERIOD)
             previous = dict(stage['waypoints'][-1])
             stages.append(dict(name=stage['stage'], targets=targets,
@@ -795,6 +804,29 @@ class PickPlace(Node):
             self.get_logger().error('pick and place error: %r' % exc)
             self._finish('failed', 'internal error: %s' % exc)
 
+    def _retry_after_close_timeout(self, task, phase):
+        """Reopen and reapproach one shifted, still-supported object."""
+        if (self.config.get('retry_shifted_grasp') is not True or not self.spec.pad_geoms
+                or task.get('grasp_reapproached') or task['pose_source'] != 'truth'
+                or phase['name'] not in ('pick', 'pick_place') or self.carried_footprint is not None):
+            return False
+        name = task['object']
+        pose = self.truth[name]
+        displacement = math.dist(task['object_start'], pose[:3])
+        if not REAPPROACH_MIN_SHIFT_M <= displacement <= REAPPROACH_MAX_SHIFT_M:
+            return False
+        support = self._table_under(name)
+        if support is None or (task.get('table') and support.name != task['table']):
+            return False
+        task['grasp_reapproached'] = True
+        task['log'].append(dict(phase='grasp_reapproach', object_position=list(pose[:3]),
+                                previous_object_position=list(task['object_start']),
+                                displacement_m=round(displacement, 4), support=support.name,
+                                pad_normal_force_n=self._pad_check(name)['pad_normal_force_n']))
+        task['object_start'] = list(pose[:3])
+        self._plan_arm(task, phase, reapproach=True)
+        return True
+
     def _advance(self):
         if self.stopping_nav:
             self._twist(0.0, 0.0)
@@ -827,6 +859,8 @@ class PickPlace(Node):
                 and self._pads_lost(stage, task['object'])):
             return self._finish('failed', '%s: lost bilateral contact with the payload' % stage['name'])
         if _now() - task['stage_started'] > STAGE_TIMEOUT:
+            if stage['name'] == 'close' and self._retry_after_close_timeout(task, phase):
+                return
             measured, final = self.measured(), stage['targets'][-1]
             errors = {n: abs(measured[n] - final[n]) for n in final if n in measured}
             worst = max(errors, key=errors.get) if errors else None

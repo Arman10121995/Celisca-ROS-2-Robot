@@ -1,0 +1,53 @@
+{
+  "observation_wall_s": 60.98,
+  "observed_base": [
+    0.9015,
+    0.0104,
+    -0.0018,
+    0.0195
+  ],
+  "observed_object": [
+    1.3764,
+    0.0092,
+    0.5451,
+    0.9244,
+    0.0038,
+    0.004,
+    -0.3815
+  ],
+  "grasp_point": [
+    1.3764,
+    0.0092,
+    0.5751000000000001
+  ],
+  "stages": [
+    {
+      "name": "reopen",
+      "points": 1
+    },
+    {
+      "name": "retract_grasp",
+      "points": 3
+    },
+    {
+      "name": "open",
+      "points": 1
+    },
+    {
+      "name": "above_object",
+      "points": 1
+    },
+    {
+      "name": "down_to_grasp",
+      "points": 3
+    },
+    {
+      "name": "close",
+      "points": 1
+    },
+    {
+      "name": "lift",
+      "points": 5
+    }
+  ]
+}

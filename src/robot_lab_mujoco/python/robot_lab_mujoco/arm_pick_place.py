@@ -471,6 +471,25 @@ class ArmScene:
         return [dict(end)]
 
 
+def plan_grasp_retraction(scene: ArmScene, current, measured_fingers, approach_height):
+    """Open and lift the empty tool vertically above a failed supported grasp."""
+    opened = dict.fromkeys(scene.spec.finger_joints, scene.spec.finger_open)
+    count = max(1, math.ceil(max(abs(opened[n] - measured_fingers[n]) for n in opened) / JOINT_STEP_RAD))
+    for index in range(count + 1):
+        fingers = {name: measured_fingers[name] + (value - measured_fingers[name]) * index / count
+                   for name, value in opened.items()}
+        scene.set_joints(dict(current, **fingers))
+        hits = scene.collisions(allow_fingers=True, object_clearance=False)
+        if hits:
+            raise PlanningError('Cannot open at the failed grasp: %s' % hits[:3])
+    position, rotation = scene.tcp()
+    position[2] = max(approach_height, position[2] + OBJECT_CLEARANCE_M + .005)
+    lifted = scene.straight_line(current, position, rotation, opened,
+                                 allow_fingers=True, object_clearance=False)
+    return [dict(stage='reopen', waypoints=[dict(current)], fingers=opened),
+            dict(stage='retract_grasp', waypoints=lifted, fingers=opened)]
+
+
 def plan_pick(scene: ArmScene, current: Dict[str, float], obj: Box, *, approach=0.10, lift=0.10,
               seeds: Sequence[Dict[str, float]] = ()):
     """Stages open -> above the object -> down to the grasp -> close -> lift.

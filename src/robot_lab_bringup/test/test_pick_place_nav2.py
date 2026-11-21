@@ -119,6 +119,28 @@ def test_pad_settling_needs_independent_bilateral_load_and_stable_payload(pick_p
     assert 'pads_lost_at' not in stage
 
 
+def test_shifted_calibrated_grasp_reapproaches_the_original_support_once(pick_place):
+    node = object.__new__(pick_place.PickPlace)
+    node.config = {'retry_shifted_grasp': True}
+    node.spec = SimpleNamespace(pad_geoms=('left_pad', 'right_pad'))
+    node._pad_check = lambda name: {'pad_normal_force_n': {'left': 0., 'right': .3}}
+    node._table_under = lambda name: SimpleNamespace(name='pickup')
+    node._plan_arm = Mock()
+    node.carried_footprint = None
+    node.truth = {'block': [.02, 0., .5, 1., 0., 0., 0.]}
+    phase = {'name': 'pick'}
+    task = dict(object='block', table='pickup', object_start=[0., 0., .5], pose_source='rgbd', log=[])
+    assert not node._retry_after_close_timeout(task, phase)
+    task['pose_source'] = 'truth'
+    task['table'] = 'different support'
+    assert not node._retry_after_close_timeout(task, phase)
+    task['table'] = 'pickup'
+    assert node._retry_after_close_timeout(task, phase)
+    assert task['log'][0]['displacement_m'] == .02
+    assert not node._retry_after_close_timeout(task, phase)
+    node._plan_arm.assert_called_once_with(task, phase, reapproach=True)
+
+
 def test_stop_waits_for_late_nav2_acceptance_and_terminal_cancel(pick_place):
     node = object.__new__(pick_place.PickPlace)
     nav = dict(future=Future(), result=None)

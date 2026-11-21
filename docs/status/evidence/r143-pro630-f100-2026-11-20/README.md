@@ -153,6 +153,15 @@ Timeouts report the measured pad loads and follower error. The solver
 iteration setting remains a private candidate for the loaded retry.
 [Loaded Bullet trial](bullet-gui-loaded-closure-timeout.json).
 
+In the last measured close sample, the source CAD replay showed the
+left pad 7.2 mm away from the shifted block and the right pad 3.4 mm away.
+The experimental recovery opens the hand, checks a vertical retreat and
+plans again from the latest collision pose. It can do this once when the
+object is still supported and has shifted 5–50 mm. Camera-only grasps keep
+their original perception binding. A replay of the failed Bullet state
+found an open, retract, approach and lift plan. Live recovery remains open.
+[Measured-pose planning replay](bullet-grasp-reapproach-plan.json).
+
 ### Complete GUI fetch
 
 Run 11 used the normal GUI on `mobile_fetch_lab_f100` with MuJoCo Display
