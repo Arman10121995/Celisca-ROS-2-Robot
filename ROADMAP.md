@@ -1740,11 +1740,17 @@ accounts for terrain fixtures without saved 2D maps. Details and evidence are in
 - **Experimental Nav2 fetch:** MuJoCo Nav is selectable with experimental
   workflows enabled. The GUI waits for the transit action and requests it
   explicitly. The loaded leg still requires both costmaps to acknowledge the
-  payload footprint. The end-to-end Nav mission remains unmeasured.
+  payload footprint. The first live trial lifted 42.9 mm and received both
+  acknowledgements. It ended on the held-arm interlock. The pause handling
+  and F100 costmap and transit settings are implemented. A full retry remains.
 - **PyBullet Display candidate:** the fixed-base bench measured unloaded
   shaft travel and all five passive followers. Named pad normal forces are
   available from the Bullet backend. Enable experimental workflows to
   select it. Loaded Bullet missions remain open.
+- **Isaac implementation:** rotary follower authoring keeps one powered
+  shaft. A source-pad collider observer reports per-object normal force.
+  The installed USD schema fixtures passed. Imported-robot travel and
+  measured pad contact are still required before offering the GUI mode.
 - **Remaining implementation:** qualify loaded Nav2 and PyBullet missions,
   and port the physical linkage to the remaining backends.
 - **How to do it:** preserve the vendor flange and follower transforms, one

@@ -1531,6 +1531,7 @@ def _run_stage(app, reader, cfg, state):
     except Exception:
         pass
     free_bodies = _add_free_bodies(world, cfg.get("free_bodies") or [])
+    grip_contacts = None
     if cfg.get("ground_material"):
         floors = _apply_ground_material(stage_utils.get_current_stage(), cfg["ground_material"])
         _emit({"event": "log", "msg": "Ground material %s on %d floor prims"
@@ -1646,6 +1647,11 @@ def _run_stage(app, reader, cfg, state):
             if passive_couplings:
                 followers = _author_passive_rotary_couplings(stage_obj, passive_couplings, dt)
                 _emit({'event': 'log', 'msg': 'Passive rotary joint followers: '+str(followers)})
+            if free_bodies and cfg.get('grip_contact_geoms'):
+                from grip_contacts import GripContacts, pad_colliders
+                pads = pad_colliders(stage_obj, root_prim, cfg['urdf_file'], cfg['grip_contact_geoms'], _load_stl)
+                grip_contacts = GripContacts(stage_obj, pads, {name: body.prim_path for name, body in free_bodies.items()}, dt)
+                _emit({'event': 'log', 'msg': 'PhysX named grip pad contacts: '+str(pads)})
             if cfg.get('articulation_symmetric_grip'):
                 linked = _author_symmetric_grip(stage_obj, cfg['articulation_symmetric_grip'], dt)
                 _emit({'event': 'log', 'msg': 'Compliant symmetric grip: '+linked})
@@ -1912,6 +1918,8 @@ def _run_stage(app, reader, cfg, state):
                     _emit({"event": "log",
                            "msg": "Wheel command failed: %s" % exc})
 
+        if grip_contacts is not None:
+            grip_contacts.begin_step()
         if headless:
             # Keep every physics/control step. Render only when a camera
             # sample is due (or periodically to service Kit without a camera).
@@ -1972,6 +1980,7 @@ def _run_stage(app, reader, cfg, state):
         _emit({"event": "state", "t": t, "pos": pos, "orn": orn,
                "lin": lin, "ang": ang, "jpos": jpos, "jvel": jvel,
                **({"free_bodies": free_poses} if free_poses else {}),
+               **({'grip_contacts': grip_contacts.measure(t)} if grip_contacts is not None else {}),
                "runtime_debug_flags": dict(enabled=reader.enabled,terrain_enabled=reader.terrain_enabled,
                    operator_id=reader.operator_id) if reader else {}})
         if gait_observation and time.monotonic()-gait_observed_at>=.1:
@@ -2006,6 +2015,8 @@ def _run_stage(app, reader, cfg, state):
                     frame.update(event="rgbd", t=t)
                     _emit(frame)
 
+    if grip_contacts is not None:
+        grip_contacts.subscription = None
     state["running"] = False
 
 

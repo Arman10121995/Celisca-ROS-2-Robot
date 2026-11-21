@@ -482,6 +482,7 @@ class IsaacSpawner(Node):
                 art_dt = 0. if self._articulation_sim_time is None else max(0., stamp-self._articulation_sim_time)
                 self._articulation_sim_time = stamp
                 if art_dt > 0 or not self._articulation.contract.initialized:
+                    self._articulation_grip_contacts = measured.get('grip_contacts', {})
                     articulation_targets = self._articulation.step(
                         dict(zip(names, measured['jpos'])), dict(zip(names, measured['jvel'])), art_dt,
                         base_moving=self._base_moving(measured))
@@ -706,6 +707,9 @@ class IsaacSpawner(Node):
                 config = json.loads(articulation_config)
                 contract = URDFArticulation(config, urdf, str(model), symmetric_grip=config.get('isaac_symmetric_grip', False))
                 self._articulation = ArticulationROS(self, contract, urdf, str(model))
+                if contract.config.get('grip_contact_geoms'):
+                    self._articulation_grip_contacts = {}
+                    self._articulation.grip_contacts = lambda: self._articulation_grip_contacts
                 native_gravity = self._articulation.contract.config.get('isaac_native_gravity_compensation', False)
                 if not isinstance(native_gravity, bool):
                     raise ValueError('isaac_native_gravity_compensation must be boolean')
@@ -761,6 +765,7 @@ class IsaacSpawner(Node):
             "gait_floor_reference":self.get_parameter('gait_floor_reference').value,
             "gait_terrain_helper":str(__import__('robot_lab_utils.gait_terrain',fromlist=['__file__']).__file__),
             "articulation_joints": self._articulation.contract.joints if self._articulation else {},
+            "grip_contact_geoms": self._articulation.contract.config.get('grip_contact_geoms') if self._articulation else None,
             "articulation_passive_couplings": {
                 name: coupling for name, coupling in self._articulation.contract.couplings.items()
                 if coupling.get('mechanical') and coupling.get('passive')

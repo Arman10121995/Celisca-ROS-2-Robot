@@ -183,9 +183,14 @@ follower's imported rotary axis, disables the imported follower drive and
 excludes followers from driven targets and effort commands. The installed
 Isaac 6.0.1 USD schema fixture verified five relationships across mixed
 joint axes, a single 0.8 Nm shaft drive and zero follower drive effort.
-Physical jaw travel, pad sensing and an installed Isaac F100 profile
-remain open. The fixture and exported stage are on SSD in the F100 run
-directory. [PhysX mimic joints](https://docs.omniverse.nvidia.com/kit/docs/omni_physics/latest/dev_guide/rigid_bodies_articulations/articulations.html#articulation-mimic-joints).
+The pad observer matches each imported collider against the source pad's
+jaw-relative bounds. It reports the normal impulse from that collider
+against each named free object, divided by the simulation step. The USD
+fixture identified both pads among unrelated hull colliders and the
+receiver test separated pad, object and tangential force contributions.
+Physical jaw travel and contacts on the imported robot remain open, so
+the Isaac profile stays unavailable in the GUI. The fixtures and exported
+stage are on SSD in the F100 run directory. [PhysX mimic joints](https://docs.omniverse.nvidia.com/kit/docs/omni_physics/latest/dev_guide/rigid_bodies_articulations/articulations.html#articulation-mimic-joints) · [PhysX contact reports](https://docs.omniverse.nvidia.com/kit/docs/omni_physics/latest/extensions/runtime/source/omni.physx/docs/dev_guide/contact_reports.html).
 
 ## Source and retained diagnostics
 

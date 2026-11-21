@@ -373,6 +373,29 @@ def test_isaac_wheel_loss_port_preserves_torque_units_and_motor_envelope(monkeyp
     assert attrs['armature'] == .005 and values['drive:maxForce'] == 6.
 
 
+def test_isaac_grip_contacts_keep_only_named_pads_and_free_objects():
+    from robot_lab_isaac.grip_contacts import GripContacts
+
+    receiver = object.__new__(GripContacts)
+    receiver.pads = {1: 'left', 2: 'right'}
+    receiver.objects = {3: 'block'}
+    receiver.dt = .02
+    receiver.begin_step()
+    left = SimpleNamespace(collider0=1, actor1=3, collider1=30, actor0=10,
+                           contact_data_offset=0, num_contact_data=1)
+    right = SimpleNamespace(collider0=30, actor1=20, collider1=2, actor0=3,
+                            contact_data_offset=1, num_contact_data=1)
+    hull = SimpleNamespace(collider0=4, actor1=3, collider1=30, actor0=10,
+                           contact_data_offset=1, num_contact_data=1)
+    receiver._on_contacts([left, right, hull], [
+        SimpleNamespace(impulse=(.04, .08, 0.), normal=(1., 0., 0.)),
+        SimpleNamespace(impulse=(0., .06, .09), normal=(0., 1., 0.)),
+    ])
+    assert receiver.measure(1.)['normal_force_n']['block'] == {'left': 2., 'right': 3.}
+    receiver.begin_step()
+    assert receiver.measure(1.02)['normal_force_n']['block'] == {'left': 0., 'right': 0.}
+
+
 def test_isaac_watchdog_hold_retains_gravity_budget():
     tree = ast.parse(RUNTIME.read_text())
     holds = [node for node in ast.walk(tree) if isinstance(node, ast.If)
