@@ -1,0 +1,34 @@
+{
+  "robot": "asset_elephant_myagv_pro_pro630_f100",
+  "simulator": "pybullet",
+  "map": "nav_empty",
+  "mode": "display",
+  "steps": [
+    {
+      "pressed": "Open",
+      "button_state": "()",
+      "page_status": "Target requested; inspect actual feedback."
+    }
+  ],
+  "passed": false,
+  "page_selected": true,
+  "rows": [
+    "J1 \u00b7 joint1_to_base",
+    "J2 \u00b7 joint2_to_joint1",
+    "J3 \u00b7 joint3_to_joint2",
+    "J4 \u00b7 joint4_to_joint3",
+    "J5 \u00b7 joint5_to_joint4",
+    "J6 \u00b7 joint6_to_joint5",
+    "Gripper"
+  ],
+  "command": "ros2 launch robot_lab_bringup simulated_robot.launch.py mode:=display map_name:=nav_empty robot_model:=asset_elephant_myagv_pro_pro630_f100 simulator:=pybullet gui:=false perception:=none allow_experimental_assets:=true",
+  "error": "TimeoutError('gripper open')",
+  "page_state": {
+    "status": "Waiting for fresh feedback from the selected model.",
+    "feedback": "J1 -0.000 rad (-0.0\u00b0)\nJ2 -0.000 rad (-0.0\u00b0)\nJ3 -0.000 rad (-0.0\u00b0)\nJ4 -0.000 rad (-0.0\u00b0)\nJ5 0.000 rad (0.0\u00b0)\nJ6 0.000 rad (0.0\u00b0)\nJ7 0.181 rad (10.4\u00b0)\nBase Drive available",
+    "owned": false,
+    "visible": true,
+    "selected": true
+  },
+  "launch_returncode": 0
+}

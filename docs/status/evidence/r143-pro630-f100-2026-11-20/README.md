@@ -129,6 +129,12 @@ follower skew during travel was 0.000399 rad. PyBullet Display is exposed
 with experimental workflows enabled. Loaded Bullet missions remain open.
 [Fixed-base travel samples](bullet-f100-fixed-base-travel.jsonl).
 
+A normal PyBullet Display launch reached the arm page and accepted the
+Open button request. A separate simulator qualification started during the
+screen, so the owned launch was stopped. The qualifier reported an open
+timeout and the launch exited cleanly. The fixed-base results are the
+current Bullet travel evidence. [Interrupted GUI screen](bullet-gui-interrupted.json).
+
 ### Complete GUI fetch
 
 Run 11 used the normal GUI on `mobile_fetch_lab_f100` with MuJoCo Display
@@ -150,6 +156,9 @@ The result covers the short-block map with straight transport. The exact
 GUI command, model hash, stage timings, pad forces, final poses and
 termination are in [run 11](gui-fetch-custody-2026-11-21.json). The full
 trace and screenshots are on SSD under `gui-fetch-11/` in the run directory.
+The GUI records this Display measurement when the installed model hash
+matches the receipt and its measured lift, custody, release and clearance
+pass the recorded screen checks.
 
 ## Source and retained diagnostics
 

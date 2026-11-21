@@ -7,6 +7,7 @@ import argparse
 import fcntl
 import hashlib
 import json
+import math
 import os
 import re
 from pathlib import Path
@@ -22,6 +23,35 @@ from robot_lab_utils.myagv_pro import ROLES, adapt_source, sensor_kit, lab_compl
 from robot_lab_utils.drive_kinematics import drive_from_config
 from catalog_external_assets import checkout, digest, load_source
 from provision_extension_assets import checkpoint_robots, robot_entity, source_package_prefix, write_json, write_yaml
+
+
+def recorded_f100_fetch(proof, robot, model_sha256):
+    """Accept the measured short-block Display screen for the exact installed mesh model."""
+    map_name = 'mobile_fetch_lab_f100'
+    identity = {f'robot_model:={robot}', f'map_name:={map_name}', 'simulator:=mujoco',
+                'mode:=display', 'allow_experimental_assets:=true'}
+    try:
+        recordings = json.loads(proof.read_text())
+        for trial in reversed(recordings):
+            result = trial['result']
+            if (trial['launch_returncode'] != 0 or result.get('passed') is not True
+                    or result.get('model_sha256') != model_sha256 or result.get('transit') != 'straight'
+                    or result.get('object') != 'fetch_block' or result.get('support') != 'drop_table'
+                    or not identity <= set(trial['command'].split())):
+                continue
+            stages = {stage.get('stage') or stage.get('phase'): stage for stage in result['stages']}
+            lift, carry, retreat = (stages[name] for name in ('lift', 'carry_arrived', 'retreat'))
+            clearance = math.dist(carry['final_pose'][:2], stages['clear_arrived']['final_pose'][:2])
+            loads = [lift['pad_normal_force_n'][side] for side in ('left', 'right')]
+            if (math.isfinite(lift['rise_m']) and lift['rise_m'] >= .04 and 0 <= lift['hold_drift_m'] < .01
+                    and all(math.isfinite(load) and load >= .1 for load in loads)
+                    and 0 <= carry['max_carry_drift_m'] < .03 and stages['release']['passed'] is True
+                    and retreat['inside_support'] is True and abs(retreat['height_error_m']) < .01
+                    and 0 <= retreat['moved_last_s_m'] < .005 and math.isfinite(clearance) and clearance > .5):
+                return map_name
+    except (OSError, ValueError, TypeError, KeyError, AttributeError):
+        return None
+    return None
 
 
 def provision(store, download=False, variant='fortress'):
@@ -231,6 +261,12 @@ def provision(store, download=False, variant='fortress'):
             'Loaded PyBullet and Nav2 transit remain unqualified.')
         changes.extend(('vendor F100 mount and linkage', 'bounded F100 servo and MuJoCo transmission inertia',
                         'source CAD finger hulls, separate pad contacts, and nominal grasp frame'))
+        proof = Path('docs/status/evidence/r143-pro630-f100-2026-11-20/gui-fetch-custody-2026-11-21.json')
+        measured_map = recorded_f100_fetch(ROOT / proof, name, digest(output))
+        if measured_map:
+            report = str(proof)
+            profile['measured_screens'] = [dict(simulator='mujoco', mode='display', map=measured_map, evidence=report)]
+            profile['runtime_screens'] = [dict(backend='mujoco', mode='display', maps=[measured_map], reports=[report])]
     receipt=dict(repository=source['repository'],source_id=source['id'],revision=source['revision'],license='BSD-3-Clause',
         original=str(root/entry),source_sha256=digest(root/entry),source_expanded_sha256=digest(target/'source-expanded.urdf'),
         description=str(output),description_sha256=digest(output),source_meshes_sha256=resources,

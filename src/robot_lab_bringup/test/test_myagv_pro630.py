@@ -1,5 +1,6 @@
 """Pro630 arm composition onto the myAGV Pro: declared estimates, not missions."""
 import copy
+import json
 import os
 from pathlib import Path
 import xml.etree.ElementTree as ET
@@ -12,6 +13,25 @@ from robot_lab_utils.urdf_articulation import (
 
 REVISION = 'd42ff61a78122c79246623391540d75738b03b23'
 F100_REVISION = 'b8176c264e583b073e1c4293c2edb1241b20e1aa'
+
+
+def test_f100_display_badge_requires_matching_measured_release(monkeypatch, tmp_path):
+    repo = Path(__file__).resolve().parents[3]
+    monkeypatch.syspath_prepend(str(repo / 'scripts'))
+    from provision_myagv_pro import recorded_f100_fetch
+
+    proof = repo / 'docs/status/evidence/r143-pro630-f100-2026-11-20/gui-fetch-custody-2026-11-21.json'
+    recordings = json.loads(proof.read_text())
+    completed = next(trial for trial in recordings if trial['run'] == 11)
+    digest = completed['result']['model_sha256']
+    robot = 'asset_elephant_myagv_pro_pro630_f100'
+    assert recorded_f100_fetch(proof, robot, digest) == 'mobile_fetch_lab_f100'
+    assert recorded_f100_fetch(proof, robot, 'changed model') is None
+    retreat = next(stage for stage in completed['result']['stages'] if stage.get('stage') == 'retreat')
+    retreat['inside_support'] = False
+    failed = tmp_path / 'unsupported.json'
+    failed.write_text(json.dumps(recordings))
+    assert recorded_f100_fetch(failed, robot, digest) is None
 
 
 @pytest.fixture(scope='module')
