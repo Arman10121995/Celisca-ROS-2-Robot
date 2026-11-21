@@ -489,9 +489,8 @@ class PickPlace(Node):
         from robot_lab_mujoco.arm_pick_place import Box
         pose = self.truth[name]
         obj = Box(name, pose[:3], pose[3:], self.object_sizes[name], self.object_shapes.get(name, 'box'))
-        half = obj.half_extent((0., 0., 1.))
         for box in self.supports.values():
-            if box.supports(obj, tolerance=.001) and abs(pose[2] - half - box.top) < 0.02:
+            if obj.rests_on(box, height_tolerance=.02):
                 return box
         return None
 

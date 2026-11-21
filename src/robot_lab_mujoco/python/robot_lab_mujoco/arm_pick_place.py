@@ -114,6 +114,10 @@ class Box:
         return (x + obj.half_extent((c, s, 0.)) <= self.size[0]*.5 + tolerance
                 and y + obj.half_extent((-s, c, 0.)) <= self.size[1]*.5 + tolerance)
 
+    def rests_on(self, support, height_tolerance):
+        bottom = self.position[2] - self.half_extent((0., 0., 1.))
+        return abs(bottom - support.top) <= height_tolerance and support.supports(self, tolerance=.001)
+
 
 def yaw_of(quaternion):
     w, x, y, z = quaternion
@@ -185,6 +189,7 @@ class ArmScene:
         self.site = mujoco.mj_name2id(m, mujoco.mjtObj.mjOBJ_SITE, 'pick_place_tcp')
         self.object_geom = mujoco.mj_name2id(m, mujoco.mjtObj.mjOBJ_GEOM, 'object')
         self.object_mocap = m.body_mocapid[mujoco.mj_name2id(m, mujoco.mjtObj.mjOBJ_BODY, 'pick_place_object')]
+        self.obstacles = {box.name: box for box in obstacles}
         self.obstacle_geoms = {box.name: mujoco.mj_name2id(m, mujoco.mjtObj.mjOBJ_GEOM, 'obstacle_' + box.name)
                                for box in obstacles}
         self.joint_qpos, self.joint_dof, self.limits = {}, {}, {}
@@ -544,8 +549,9 @@ def _plan_pick_at(scene, current, obj, tool_yaw, width, approach, lift, seeds):
     holding_f = spec.closing_targets(width, squeeze=0.) if spec.aperture else open_f
     scene.set_joints(dict(grasp, **holding_f))
     scene.attach()
+    pickup_supports = tuple(box.name for box in scene.obstacles.values() if obj.rests_on(box, height_tolerance=.01))
     up = scene.straight_line(grasp, grasp_point + [0, 0, lift], rotation, holding_f, allow_fingers=True,
-                             allow_supports=tuple(scene.obstacle_geoms))
+                             allow_supports=pickup_supports)
     stages.append(dict(stage='lift', waypoints=up, fingers=closed))
     return dict(stages=stages, grasp_width_m=width, tool_yaw=tool_yaw, grasp_point=grasp_point.tolist())
 

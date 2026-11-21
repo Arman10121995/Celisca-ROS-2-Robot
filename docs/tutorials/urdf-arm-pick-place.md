@@ -57,6 +57,8 @@ The planner transforms each reported world model pose through the declared
 SDF link and collision poses. It uses the physical collision centre and axes
 for grasp, carried clearance and release checks. Configured camera estimates
 already use that centre. The support selector uses level collision boxes.
+During the lift, only the source surface supporting the object is exempt
+from payload collision checks. Other tables remain obstacles.
 Isaac's loose-body importer requires the collider to align with the model
 frame. Offset-object missions on the other backends are pending.
 

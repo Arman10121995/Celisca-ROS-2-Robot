@@ -58,6 +58,27 @@ def test_plan_from_home_reaches_grasp_and_place_without_collision(panda):
     assert plan['grasp_width_m'] == pytest.approx(0.04)
 
 
+def test_pick_lift_exempts_only_the_payloads_starting_support(panda, monkeypatch):
+    from robot_lab_mujoco.arm_pick_place import plan_pick
+
+    scene, spec, obstacles, obj, profile = scene_for(panda)
+    home = {name: profile['articulation']['home'][name] for name in spec.arm_joints}
+    expected = tuple(box.name for box in obstacles if obj.rests_on(box, height_tolerance=.01))
+    assert expected == ('pickup_table',)
+    assert any(box.name == 'place_table' for box in obstacles)
+    seen = []
+    original = scene.straight_line
+
+    def record(*args, **kwargs):
+        if scene.attached is not None:
+            seen.append(tuple(kwargs.get('allow_supports', ())))
+        return original(*args, **kwargs)
+
+    monkeypatch.setattr(scene, 'straight_line', record)
+    assert plan_pick(scene, home, obj, seeds=[home])['stages'][-1]['stage'] == 'lift'
+    assert seen == [expected]
+
+
 def test_a_colliding_start_or_a_too_wide_object_is_refused(panda):
     scene, spec, obstacles, obj, profile = scene_for(panda)
     support = next(b for b in obstacles if b.name == 'place_table')
