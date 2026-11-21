@@ -1,0 +1,144 @@
+{
+  "robot": "asset_elephant_myagv_pro_pro630_f100",
+  "simulator": "pybullet",
+  "map": "nav_empty",
+  "mode": "display",
+  "steps": [
+    {
+      "pressed": "Open",
+      "button_state": "()",
+      "page_status": "Target requested; inspect actual feedback."
+    },
+    {
+      "step": "gripper open",
+      "targets": {
+        "pro630_gripper_controller": 1.0,
+        "pro630_gripper_base_to_gripper_left2": 1.0,
+        "pro630_gripper_left3_to_gripper_left1": 1.0,
+        "pro630_gripper_base_to_gripper_right3": 1.0,
+        "pro630_gripper_base_to_gripper_right2": 1.0,
+        "pro630_gripper_right3_to_gripper_right1": 1.0
+      },
+      "settled_s": 3.23,
+      "measured": {
+        "pro630_gripper_controller": 0.9868,
+        "pro630_joint1_to_base": -0.0,
+        "pro630_joint2_to_joint1": 0.0,
+        "pro630_joint3_to_joint2": -0.0,
+        "pro630_joint4_to_joint3": 0.0,
+        "pro630_joint5_to_joint4": -0.0,
+        "pro630_joint6_to_joint5": 0.0,
+        "pro630_gripper_base_to_gripper_left2": 0.9869,
+        "pro630_gripper_base_to_gripper_right2": 0.9868,
+        "pro630_gripper_base_to_gripper_right3": 0.9868,
+        "pro630_gripper_left3_to_gripper_left1": 0.9868,
+        "pro630_gripper_right3_to_gripper_right1": 0.9868
+      }
+    },
+    {
+      "pressed": "Close",
+      "button_state": "()",
+      "page_status": "Target requested; inspect actual feedback."
+    },
+    {
+      "step": "gripper close",
+      "targets": {
+        "pro630_gripper_controller": 0.0,
+        "pro630_gripper_base_to_gripper_left2": 0.0,
+        "pro630_gripper_left3_to_gripper_left1": 0.0,
+        "pro630_gripper_base_to_gripper_right3": 0.0,
+        "pro630_gripper_base_to_gripper_right2": 0.0,
+        "pro630_gripper_right3_to_gripper_right1": 0.0
+      },
+      "settled_s": 3.09,
+      "measured": {
+        "pro630_gripper_controller": 0.0073,
+        "pro630_joint1_to_base": -0.0,
+        "pro630_joint2_to_joint1": 0.0,
+        "pro630_joint3_to_joint2": -0.0,
+        "pro630_joint4_to_joint3": -0.0,
+        "pro630_joint5_to_joint4": 0.0,
+        "pro630_joint6_to_joint5": 0.0,
+        "pro630_gripper_base_to_gripper_left2": 0.0073,
+        "pro630_gripper_base_to_gripper_right2": 0.0073,
+        "pro630_gripper_base_to_gripper_right3": 0.0073,
+        "pro630_gripper_left3_to_gripper_left1": 0.0073,
+        "pro630_gripper_right3_to_gripper_right1": 0.0073
+      }
+    },
+    {
+      "pressed": "Set opening (mm)",
+      "button_state": "()",
+      "page_status": "Target requested; inspect actual feedback."
+    },
+    {
+      "step": "calibrated opening",
+      "targets": {
+        "pro630_gripper_controller": 0.4627363460521461
+      },
+      "settled_s": 1.43,
+      "measured": {
+        "pro630_gripper_controller": 0.4561,
+        "pro630_joint1_to_base": 0.0,
+        "pro630_joint2_to_joint1": -0.0,
+        "pro630_joint3_to_joint2": -0.0,
+        "pro630_joint4_to_joint3": -0.0,
+        "pro630_joint5_to_joint4": 0.0001,
+        "pro630_joint6_to_joint5": -0.0,
+        "pro630_gripper_base_to_gripper_left2": 0.4561,
+        "pro630_gripper_base_to_gripper_right2": 0.4562,
+        "pro630_gripper_base_to_gripper_right3": 0.4561,
+        "pro630_gripper_left3_to_gripper_left1": 0.4561,
+        "pro630_gripper_right3_to_gripper_right1": 0.4561
+      }
+    }
+  ],
+  "passed": true,
+  "page_selected": true,
+  "rows": [
+    "J1 \u00b7 joint1_to_base",
+    "J2 \u00b7 joint2_to_joint1",
+    "J3 \u00b7 joint3_to_joint2",
+    "J4 \u00b7 joint4_to_joint3",
+    "J5 \u00b7 joint5_to_joint4",
+    "J6 \u00b7 joint6_to_joint5",
+    "Gripper"
+  ],
+  "command": "ros2 launch robot_lab_bringup simulated_robot.launch.py mode:=display map_name:=nav_empty robot_model:=asset_elephant_myagv_pro_pro630_f100 simulator:=pybullet gui:=false perception:=none allow_experimental_assets:=true",
+  "gripper": {
+    "open": {
+      "target": 1.0,
+      "leader": 0.9999645719967782,
+      "followers": {
+        "pro630_gripper_base_to_gripper_left2": 0.9999995315286399,
+        "pro630_gripper_left3_to_gripper_left1": 0.9999957852941217,
+        "pro630_gripper_base_to_gripper_right3": 0.9999970046664011,
+        "pro630_gripper_base_to_gripper_right2": 1.000001355216131,
+        "pro630_gripper_right3_to_gripper_right1": 0.9999101721735191
+      },
+      "max_skew_rad": 5.4399823259165814e-05
+    },
+    "close": {
+      "target": 0.0,
+      "leader": 7.488319774576366e-05,
+      "followers": {
+        "pro630_gripper_base_to_gripper_left2": 2.0411593254666934e-05,
+        "pro630_gripper_left3_to_gripper_left1": 0.00013432396625689732,
+        "pro630_gripper_base_to_gripper_right3": 1.17818097427047e-05,
+        "pro630_gripper_base_to_gripper_right2": 0.00015881664077021965,
+        "pro630_gripper_right3_to_gripper_right1": 4.7011017046127647e-05
+      },
+      "max_skew_rad": 8.393344302445599e-05
+    }
+  },
+  "calibrated_opening": {
+    "command_mm": 54,
+    "estimated_mm": 53.99743633782158,
+    "feedback": "Estimated opening 54.0 mm",
+    "shaft_target_rad": 0.4627363460521461,
+    "measured_shaft_rad": 0.4627144733698587
+  },
+  "launch_returncode": 0,
+  "selected_description_sha256": "bf9ef87b82586316cb4ff59956cd87179c1f681bd352f46777468aebd2bb082d",
+  "identity_source": "Catalog description read from the same installation. The GUI enforces the live articulation description identity before each button."
+}

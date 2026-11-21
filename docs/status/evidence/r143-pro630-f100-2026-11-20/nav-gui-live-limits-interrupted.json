@@ -1,0 +1,37 @@
+{
+  "pose": [
+    0.324,
+    0.056
+  ],
+  "limits": {
+    "FollowPath.max_vel_x": 0.15,
+    "FollowPath.max_speed_xy": 0.15,
+    "FollowPath.max_vel_y": 0.1,
+    "FollowPath.acc_lim_y": 0.2,
+    "FollowPath.critics": [
+      "RotateToGoal",
+      "Oscillation",
+      "ObstacleFootprint",
+      "GoalAlign",
+      "PathAlign",
+      "PathDist",
+      "GoalDist"
+    ]
+  },
+  "command": [
+    0.0,
+    0.1,
+    0.191
+  ],
+  "stage": "carry",
+  "message": "Nav2 transit to the place standoff",
+  "qualification": {
+    "simulator": "mujoco",
+    "mode": "nav",
+    "map": "mobile_fetch_lab_f100",
+    "robot": "asset_elephant_myagv_pro_pro630_f100",
+    "outcome": "interrupted after the first loaded transit leg started",
+    "reason": "another simulator qualification started",
+    "nav_terminal_result_observed": false
+  }
+}

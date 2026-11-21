@@ -34,6 +34,25 @@ def test_f100_display_badge_requires_matching_measured_release(monkeypatch, tmp_
     assert recorded_f100_fetch(failed, robot, digest) is None
 
 
+def test_f100_bullet_badge_requires_all_measured_followers(monkeypatch, tmp_path):
+    repo = Path(__file__).resolve().parents[3]
+    monkeypatch.syspath_prepend(str(repo / 'scripts'))
+    from provision_myagv_pro import recorded_f100_bullet_travel
+
+    proof = repo / 'docs/status/evidence/r143-pro630-f100-2026-11-20/bullet-gui-gripper-confirmed.json'
+    report = json.loads(proof.read_text())
+    digest = report['selected_description_sha256']
+    robot = report['robot']
+    followers = list(report['gripper']['open']['followers'])
+    assert len(followers) == 5
+    assert recorded_f100_bullet_travel(proof, robot, digest, followers) == 'nav_empty'
+    assert recorded_f100_bullet_travel(proof, robot, 'changed model', followers) is None
+    report['gripper']['close']['followers'].pop(followers[0])
+    failed = tmp_path / 'incomplete-jaw-data.json'
+    failed.write_text(json.dumps(report))
+    assert recorded_f100_bullet_travel(failed, robot, digest, followers) is None
+
+
 @pytest.fixture(scope='module')
 def composed(tmp_path_factory):
     root = Path(os.environ.get('ROBOT_LAB_RUNTIME_ROOT', '/workspace/molar/robot_lab_runtime'))

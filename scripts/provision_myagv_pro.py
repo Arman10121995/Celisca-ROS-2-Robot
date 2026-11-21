@@ -54,6 +54,31 @@ def recorded_f100_fetch(proof, robot, model_sha256):
     return None
 
 
+def recorded_f100_bullet_travel(proof, robot, model_sha256, followers):
+    """Match the normal GUI jaw measurements to the installed robot model."""
+    try:
+        trial = json.loads(proof.read_text())
+        command = {f'robot_model:={robot}', 'simulator:=pybullet', 'mode:=display', 'map_name:=nav_empty'}
+        description_sha256 = trial.get('model_sha256') or trial.get('selected_description_sha256')
+        if (trial['robot'] != robot or description_sha256 != model_sha256 or trial['passed'] is not True
+                or trial['page_selected'] is not True or trial['launch_returncode'] != 0
+                or not command <= set(trial['command'].split())):
+            return None
+        for name, angle in (('open', 1.), ('close', 0.)):
+            sample = trial['gripper'][name]
+            measured = sample['leader']
+            if (sample['target'] != angle or not abs(measured - angle) <= .03
+                    or set(sample['followers']) != set(followers)
+                    or not all(abs(measured - value) <= .01 for value in sample['followers'].values())):
+                return None
+        calibrated = trial['calibrated_opening']
+        if calibrated['command_mm'] != 54 or not abs(calibrated['estimated_mm'] - 54.) <= 1.:
+            return None
+    except (OSError, ValueError, TypeError, KeyError, AttributeError):
+        return None
+    return 'nav_empty'
+
+
 def provision(store, download=False, variant='fortress'):
     if variant not in ('fortress','rollers','pro630','pro630-f100'):raise ValueError('Unknown myAGV physical adapter')
     portable=variant!='fortress'
@@ -239,6 +264,11 @@ def provision(store, download=False, variant='fortress'):
         carrier = 'pro630_link6'
         tcp_offset, tcp_quat = rigid_sensor_offsets(ET.tostring(document, encoding='unicode'), grasp)[carrier]
         leader, = articulation['grip_joints']
+        bullet = Path('docs/status/evidence/r143-pro630-f100-2026-11-20/bullet-gui-gripper-confirmed.json')
+        bullet_map = recorded_f100_bullet_travel(ROOT / bullet, name, digest(output), articulation['couplings'])
+        bullet_note = ('PyBullet Display Open, Close and the 54 mm opening passed through the normal GUI on nav_empty. '
+                       if bullet_map else
+                       'PyBullet Display is opt-in. Unloaded jaw travel was measured in a fixed-base Bullet fixture. ')
         pick_place = dict(
             arm_joints=[joint for joint in articulation['joints'] if joint != leader],
             finger_joints=[leader, *articulation['couplings']], tool_body=carrier,
@@ -258,8 +288,7 @@ def provision(store, download=False, variant='fortress'):
             'Compound finger collisions and a nominal grasp frame are derived from the source CAD. '
             'The joint effort, rate and damping are declared simulation estimates. The experimental short-block fetch '
             'completed pickup, straight carry, supported release and clearance in one MuJoCo Display GUI run. '
-            'PyBullet Display is opt-in. Unloaded jaw travel was measured in a fixed-base Bullet fixture. '
-            'Loaded PyBullet and Nav2 transit remain unqualified.')
+            + bullet_note + 'Loaded PyBullet and Nav2 transit remain unqualified.')
         changes.extend(('vendor F100 mount and linkage', 'bounded F100 servo and MuJoCo transmission inertia',
                         'source CAD finger hulls, separate pad contacts, and nominal grasp frame'))
         proof = Path('docs/status/evidence/r143-pro630-f100-2026-11-20/gui-fetch-custody-2026-11-21.json')
@@ -268,6 +297,13 @@ def provision(store, download=False, variant='fortress'):
             report = str(proof)
             profile['measured_screens'] = [dict(simulator='mujoco', mode='display', map=measured_map, evidence=report)]
             profile['runtime_screens'] = [dict(backend='mujoco', mode='display', maps=[measured_map], reports=[report])]
+        if bullet_map:
+            report = str(bullet)
+            profile['supported_modes_by_simulator']['pybullet'] = ['display']
+            profile.setdefault('measured_screens', []).append(dict(simulator='pybullet', mode='display', map=bullet_map,
+                                                                evidence=report))
+            profile.setdefault('runtime_screens', []).append(dict(backend='pybullet', mode='display', maps=[bullet_map],
+                                                               reports=[report]))
     receipt=dict(repository=source['repository'],source_id=source['id'],revision=source['revision'],license='BSD-3-Clause',
         original=str(root/entry),source_sha256=digest(root/entry),source_expanded_sha256=digest(target/'source-expanded.urdf'),
         description=str(output),description_sha256=digest(output),source_meshes_sha256=resources,

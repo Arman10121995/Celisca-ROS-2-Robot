@@ -1745,10 +1745,10 @@ accounts for terrain fixtures without saved 2D maps. Details and evidence are in
   payload footprint. The first live trial lifted 42.9 mm and received both
   acknowledgements. It ended on the held-arm interlock. The pause handling
   and F100 costmap and transit settings are implemented. A full retry remains.
-- **PyBullet Display candidate:** the fixed-base bench measured unloaded
-  shaft travel and all five passive followers. Named pad normal forces are
-  available from the Bullet backend. Enable experimental workflows to
-  select it. Loaded Bullet missions remain open.
+- **PyBullet Display:** the normal `nav_empty` GUI reached Open, Close and
+  the calibrated 54 mm opening with all five passive followers. The camera
+  renders on demand to preserve control feedback. Loaded Bullet missions
+  remain open. [GUI evidence](docs/status/evidence/r143-pro630-f100-2026-11-20/bullet-gui-gripper-confirmed.json).
 - **Isaac implementation:** rotary follower authoring keeps one powered
   shaft. A source-pad collider observer reports per-object normal force.
   The installed USD schema fixtures passed. Imported-robot travel and

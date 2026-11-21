@@ -1,4 +1,4 @@
-# Pro630 with F100 gripper in MuJoCo
+# Pro630 with F100 gripper
 
 One normal Robot Lab GUI run on the Jetson used
 `asset_elephant_myagv_pro_pro630_f100`, MuJoCo, `nav_empty` and Display.
@@ -132,8 +132,17 @@ with experimental workflows enabled. Loaded Bullet missions remain open.
 A normal PyBullet Display launch reached the arm page and accepted the
 Open button request. A separate simulator qualification started during the
 screen, so the owned launch was stopped. The qualifier reported an open
-timeout and the launch exited cleanly. The fixed-base results are the
-current Bullet travel evidence. [Interrupted GUI screen](bullet-gui-interrupted.json).
+timeout and the launch exited cleanly. The fixed-base run had already measured full travel. [Interrupted GUI screen](bullet-gui-interrupted.json).
+
+An uninterrupted repeat quantified the failure. The jaw held partway
+open after a GUI feedback gap, and the control lease expired. PyBullet now
+renders RGB-D only when an image consumer is present. Calibration-only
+subscribers still get CameraInfo. With this change, a normal GUI run on
+`nav_empty` reached both presets with all five followers within 0.000084
+rad of the shaft. The measured 54 mm request yielded 53.997 mm. The owned
+launch exited cleanly. The badge checks these measurements against the
+selected model identity and applies to the unloaded Display control screen.
+[Feedback-hold trial](bullet-gui-feedback-hold.json) · [Measured PyBullet GUI presets](bullet-gui-gripper-confirmed.json).
 
 ### Complete GUI fetch
 
@@ -182,9 +191,11 @@ generic limits of 0.30 m/s for planar and lateral speed. The launch now
 passes explicitly declared mecanum DWB limits as ROS parameter overrides.
 An isolated Nav2 launch with static frame transforms returned the intended
 0.15 m/s planar cap, 0.10 m/s lateral cap, and 0.20 m/s² lateral acceleration.
-The probe establishes effective configuration. A physical retry is required
-for transit and release acceptance.
-[Carry timeout](nav-gui-transit-timeout.json) · [Effective DWB limits](f100-dwb-effective-limits.json).
+A normal GUI retry observed those same limits in the running controller
+and a 0.10 m/s lateral command during loaded transit. The operator stopped
+the retry when another qualification started. Nav2 arrival and release
+remain unmeasured with the corrected limits.
+[Carry timeout](nav-gui-transit-timeout.json) · [Effective DWB limits](f100-dwb-effective-limits.json) · [Live loaded transit observation](nav-gui-live-limits-interrupted.json).
 
 ### Isaac joint authoring
 

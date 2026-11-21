@@ -4,9 +4,10 @@ November 21 Codex: the Pro630/F100 completed a normal MuJoCo Display GUI
 fetch on `mobile_fetch_lab_f100`. It lifted the 40 g block 46.3 mm, carried
 it to the drop table, released it with 0.1 mm support height error, and
 backed away. The GUI marks this Display screen on the matching model.
-Experimental MuJoCo Navigation and PyBullet Display are available. The
-Bullet fixed-base fixture verified unloaded gripper travel. Complete
-loaded Nav2 and Bullet missions remain pending.
+The ordinary PyBullet Display GUI on `nav_empty` measured both presets
+and a 53.997 mm opening for a 54 mm command. All five followers tracked
+the source shaft. Experimental MuJoCo Navigation is available. Complete
+loaded Nav2 and PyBullet missions remain pending.
 [Fetch evidence](evidence/r143-pro630-f100-2026-11-20/README.md#complete-gui-fetch).
 
 November 20 Codex: the **myAGV Pro + myCobot Pro630** family now includes an

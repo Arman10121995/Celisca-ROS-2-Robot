@@ -1,0 +1,81 @@
+{
+  "robot": "asset_elephant_myagv_pro_pro630_f100",
+  "simulator": "pybullet",
+  "map": "nav_empty",
+  "mode": "display",
+  "steps": [
+    {
+      "pressed": "Open",
+      "button_state": "()",
+      "page_status": "Target requested; inspect actual feedback."
+    }
+  ],
+  "passed": false,
+  "page_selected": true,
+  "rows": [
+    "J1 \u00b7 joint1_to_base",
+    "J2 \u00b7 joint2_to_joint1",
+    "J3 \u00b7 joint3_to_joint2",
+    "J4 \u00b7 joint4_to_joint3",
+    "J5 \u00b7 joint5_to_joint4",
+    "J6 \u00b7 joint6_to_joint5",
+    "Gripper"
+  ],
+  "command": "ros2 launch robot_lab_bringup simulated_robot.launch.py mode:=display map_name:=nav_empty robot_model:=asset_elephant_myagv_pro_pro630_f100 simulator:=pybullet gui:=false perception:=none allow_experimental_assets:=true",
+  "settle_timeout": {
+    "step": "gripper open",
+    "targets": {
+      "pro630_gripper_controller": 1.0,
+      "pro630_gripper_base_to_gripper_left2": 1.0,
+      "pro630_gripper_left3_to_gripper_left1": 1.0,
+      "pro630_gripper_base_to_gripper_right3": 1.0,
+      "pro630_gripper_base_to_gripper_right2": 1.0,
+      "pro630_gripper_right3_to_gripper_right1": 1.0
+    },
+    "wall_seconds": 30.02,
+    "sim_seconds": 7.7167,
+    "actuator_status": "stopped; holding measured positions",
+    "fault": "",
+    "channels": {
+      "pro630_gripper_controller": {
+        "target": 0.07726112624988181,
+        "reference": 0.07726112624988181,
+        "measured": 0.07729674329379971
+      },
+      "pro630_gripper_base_to_gripper_left2": {
+        "target": 0.07727054121204074,
+        "reference": 0.07727054121204074,
+        "measured": 0.07729889528743497
+      },
+      "pro630_gripper_base_to_gripper_right2": {
+        "target": 0.0773067310907401,
+        "reference": 0.0773067310907401,
+        "measured": 0.0770599324653494
+      },
+      "pro630_gripper_base_to_gripper_right3": {
+        "target": 0.07730058789547647,
+        "reference": 0.07730058789547647,
+        "measured": 0.07711264818306819
+      },
+      "pro630_gripper_left3_to_gripper_left1": {
+        "target": 0.07728516469884539,
+        "reference": 0.07728516469884539,
+        "measured": 0.07718117307256932
+      },
+      "pro630_gripper_right3_to_gripper_right1": {
+        "target": 0.07729472355808979,
+        "reference": 0.07729472355808979,
+        "measured": 0.07719791537608367
+      }
+    }
+  },
+  "error": "TimeoutError('gripper open')",
+  "page_state": {
+    "status": "stopped; holding measured positions",
+    "feedback": "J1 -0.000 rad (-0.0\u00b0)\nJ2 0.000 rad (0.0\u00b0)\nJ3 0.000 rad (0.0\u00b0)\nJ4 0.000 rad (0.0\u00b0)\nJ5 -0.000 rad (-0.0\u00b0)\nJ6 0.000 rad (0.0\u00b0)\nJ7 0.077 rad (4.4\u00b0)\nBase Drive available",
+    "owned": true,
+    "visible": true,
+    "selected": true
+  },
+  "launch_returncode": 0
+}

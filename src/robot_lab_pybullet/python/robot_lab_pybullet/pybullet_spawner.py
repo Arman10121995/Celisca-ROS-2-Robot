@@ -1775,10 +1775,20 @@ class PyBulletSpawner(Node):
                 continue
             last_sim = self._sim_t
             try:
+                want_rgb = self._rgb_pub.get_subscription_count() > 0
+                want_depth = self._depth_pub.get_subscription_count() > 0
+                want_info = self._camera_info_pub.get_subscription_count() > 0
+                if not (want_rgb or want_depth or want_info):
+                    continue
                 # Stamp at the snapshot moment: the image reflects this sim
                 # time, and consecutive stamps then honour the camera_rate
                 # interval exactly regardless of render duration.
                 stamp = self._stamp()
+                if not (want_rgb or want_depth):
+                    self._camera_info_pub.publish(camera_info_msg(
+                        stamp, camera["frame"], camera["width"], camera["height"],
+                        camera["horizontal_fov"], camera_model.TINY_RENDERER))
+                    continue
                 p.resetBasePositionAndOrientation(
                     self._render_robot_id, self._bpos, self._born,
                     physicsClientId=self._render_client)
@@ -1796,10 +1806,10 @@ class PyBulletSpawner(Node):
                 rgb, depth = _render_rgbd(
                     self._cam_pose[0], self._cam_pose[1], camera,
                     client=self._render_client)
-                self._rgb_pub.publish(
-                    image_msg(stamp, camera["frame"], rgb, "rgb8"))
-                self._depth_pub.publish(
-                    image_msg(stamp, camera["frame"], depth, "32FC1"))
+                if want_rgb:
+                    self._rgb_pub.publish(image_msg(stamp, camera["frame"], rgb, "rgb8"))
+                if want_depth:
+                    self._depth_pub.publish(image_msg(stamp, camera["frame"], depth, "32FC1"))
                 # TinyRenderer's optical axis is at (w / 2, h / 2 - 1).
                 self._camera_info_pub.publish(camera_info_msg(
                     stamp, camera["frame"], camera["width"], camera["height"],

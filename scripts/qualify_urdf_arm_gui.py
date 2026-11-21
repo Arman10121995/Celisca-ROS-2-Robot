@@ -105,12 +105,14 @@ def main():
             app.update()
             time.sleep(.02)
 
-    def until(predicate, seconds, label):
+    def until(predicate, seconds, label, *, require_launch=True):
         end = time.monotonic() + seconds
         while time.monotonic() < end:
             app.update()
             if predicate():
                 return
+            if require_launch and app.process is not None and app.process.poll() is not None:
+                raise RuntimeError(f'Run exited while waiting for {label} (code {app.process.returncode})')
             time.sleep(.05)
         raise TimeoutError(label)
 
@@ -161,6 +163,7 @@ def main():
             raise RuntimeError('Requested mode is unavailable for the selected robot, simulator and map')
         app._start_launch()
         until(page.ready, 300, 'arm page ready')
+        report['model_sha256'] = page.state.get('model_sha256')
         pump(3.)
         screenshot(args.output / 'ready.png')
         pump(1.)
@@ -271,7 +274,7 @@ def main():
         if app.process and app.process.poll() is None:
             app._stop_launch()
             try:
-                until(lambda: not app._launch_running, 90, 'shutdown')
+                until(lambda: not app._launch_running, 90, 'shutdown', require_launch=False)
             except TimeoutError:
                 pass
         report['launch_returncode'] = app.process.poll() if app.process else None
