@@ -188,8 +188,25 @@ That was the first suspect, and it is ruled out. With a new
 the 1.0 run (`angled-mujoco-45deg-mu2`, `-mu4`). So does a trial law giving
 riser-face contacts full Coulomb traction, which was reverted
 (`angled-mujoco-45deg-riser`). The hull turns parallel to the face before any
-climbing force matters. The next step is logging which contact (the front
-flipper or sprocket on the step edge) turns it.
+climbing force matters.
+
+**Contact log (offline MuJoCo harness, same vehicle and step, flippers at
+the approach pose: front 0, rear −0.65 rad).** The only contact with the
+step is the front-right flipper's top bar on the step edge, with its
+normal 33° above horizontal. The yaw grows from 0.785 to 1.4 rad as the
+bar slides along the edge. With the measured law the belt push there is
+about 22 N: the contact is on a 0.75 kg flipper, so the servo-mass cap
+binds. Two more trials, reverted:
+- Coulomb traction for edge contacts (normal more than 37° from
+  vertical): the push rises to μN (about 100 N), and the yaw is unchanged.
+- The same with mu_along 2 and 4: the yaw is unchanged; at 4 the vehicle
+  is pushed off the face.
+
+The yaw comes from the edge's normal force on the front-right corner,
+which belt traction does not cancel. Gazebo's TrackController drives a
+flipper contact along the flipper link's own axis rather than along
+`axle x normal`, and its first contact may be the flipper wheel rather
+than the bar. Comparing that is the next step.
 
 **Regression on fixed-flipper `lab_tracked` after the cap:**
 - Turn: truth 1.840 / odom 1.832 rad on MuJoCo, 1.755 / 1.745 on PyBullet,
