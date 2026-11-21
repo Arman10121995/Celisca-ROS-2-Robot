@@ -255,16 +255,14 @@ jaw-relative bounds. It reports the normal impulse from that collider
 against each named free object, divided by the simulation step. The USD
 fixture identified both pads among unrelated hull colliders and the
 receiver test separated pad, object and tangential force contributions.
-Physical jaw travel and contacts on the imported robot remain open, so
-the Isaac profile stays unavailable in the GUI. The fixtures and exported
-stage are on SSD in the F100 run directory. [PhysX mimic joints](https://docs.omniverse.nvidia.com/kit/docs/omni_physics/latest/dev_guide/rigid_bodies_articulations/articulations.html#articulation-mimic-joints) · [PhysX contact reports](https://docs.omniverse.nvidia.com/kit/docs/omni_physics/latest/extensions/runtime/source/omni.physx/docs/dev_guide/contact_reports.html).
+The fixtures and exported stage are on SSD in the F100 run directory.
+[PhysX mimic joints](https://docs.omniverse.nvidia.com/kit/docs/omni_physics/latest/dev_guide/rigid_bodies_articulations/articulations.html#articulation-mimic-joints) · [PhysX contact reports](https://docs.omniverse.nvidia.com/kit/docs/omni_physics/latest/extensions/runtime/source/omni.physx/docs/dev_guide/contact_reports.html).
 
 A private normal GUI launch on `nav_empty` imported all five passive
 followers and published measured joint feedback for the matching F100.
 The bridge sent an empty pad-contact object with no sensor sample and the
 GUI rejected it as incomplete. The bridge now omits unavailable samples.
 The loaded workflow still waits for measured pad feedback before motion.
-Normal Isaac gripper travel remains pending.
 [GUI readiness observation](isaac-gui-unavailable-pad-feedback.json).
 
 The exported stage from that actual F100 launch contains two distinct,
@@ -272,6 +270,13 @@ matching collision pads. Running the observer's pad lookup against the
 export matched both source names. The lookup checks collider identity.
 The normal-force measurements still require a loaded run.
 [Imported pad identities](isaac-imported-pad-identities.json).
+
+After the feedback fix, the normal GUI on Isaac 6.0.1 and `nav_empty`
+reached Open and Close with all five followers within 0.000109 rad of the
+shaft. A 54 mm request measured 53.995 mm and the launch exited cleanly.
+The installed GUI uses this receipt for Isaac Display. Loaded grasp,
+carry and release remain pending.
+[Measured Isaac GUI presets](isaac-gui-gripper-confirmed.json).
 
 ## Source and retained diagnostics
 

@@ -1,5 +1,11 @@
 # Current Robot Lab status
 
+November 21 Codex: the F100 now offers Isaac Display. Its normal GUI
+reached both presets on `nav_empty`, with all five passive followers,
+and measured 53.995 mm for a 54 mm request. Loaded grasp and transport
+remain pending.
+[Isaac GUI evidence](evidence/r143-pro630-f100-2026-11-20/isaac-gui-gripper-confirmed.json).
+
 November 21 Codex: the F100 completed a normal MuJoCo Navigation GUI fetch
 on `mobile_fetch_lab_f100`. It lifted the block 46.4 mm, used two loaded
 costmap confirmations and an owned Nav2 transit, docked after a measured

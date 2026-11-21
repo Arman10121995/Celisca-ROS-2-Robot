@@ -90,13 +90,14 @@ def recorded_f100_navigation(proof, robot, model_sha256, damping, shoulder_effor
     return None
 
 
-def recorded_f100_bullet_travel(proof, robot, model_sha256, followers):
+def recorded_f100_preset_travel(proof, robot, model_sha256, followers, simulator):
     """Match the normal GUI jaw measurements to the installed robot model."""
     try:
         trial = json.loads(proof.read_text())
-        command = {f'robot_model:={robot}', 'simulator:=pybullet', 'mode:=display', 'map_name:=nav_empty'}
+        command = {f'robot_model:={robot}', f'simulator:={simulator}', 'mode:=display', 'map_name:=nav_empty'}
         description_sha256 = trial.get('model_sha256') or trial.get('selected_description_sha256')
-        if (trial['robot'] != robot or description_sha256 != model_sha256 or trial['passed'] is not True
+        if (trial['robot'] != robot or trial['simulator'] != simulator
+                or description_sha256 != model_sha256 or trial['passed'] is not True
                 or trial['page_selected'] is not True or trial['launch_returncode'] != 0
                 or not command <= set(trial['command'].split())):
             return None
@@ -312,10 +313,14 @@ def provision(store, download=False, variant='fortress'):
         tcp_offset, tcp_quat = rigid_sensor_offsets(ET.tostring(document, encoding='unicode'), grasp)[carrier]
         leader, = articulation['grip_joints']
         bullet = Path('docs/status/evidence/r143-pro630-f100-2026-11-20/bullet-gui-gripper-confirmed.json')
-        bullet_map = recorded_f100_bullet_travel(ROOT / bullet, name, digest(output), articulation['couplings'])
+        bullet_map = recorded_f100_preset_travel(ROOT / bullet, name, digest(output), articulation['couplings'], 'pybullet')
         bullet_note = ('PyBullet Display Open, Close and the 54 mm opening passed through the normal GUI on nav_empty. '
                        if bullet_map else
                        'PyBullet Display is opt-in. Unloaded jaw travel was measured in a fixed-base Bullet fixture. ')
+        isaac = bullet.with_name('isaac-gui-gripper-confirmed.json')
+        isaac_map = recorded_f100_preset_travel(ROOT / isaac, name, digest(output), articulation['couplings'], 'isaac')
+        isaac_note = ('Isaac Display measured both jaw presets and the calibrated opening on nav_empty. '
+                      if isaac_map else '')
         pick_place = dict(
             arm_joints=[joint for joint in articulation['joints'] if joint != leader],
             finger_joints=[leader, *articulation['couplings']], tool_body=carrier,
@@ -336,7 +341,7 @@ def provision(store, download=False, variant='fortress'):
             'Compound finger collisions and a nominal grasp frame are derived from the source CAD. '
             'The joint effort, rate and damping are declared simulation estimates. The experimental short-block fetch '
             'completed pickup, straight carry, supported release and clearance in one MuJoCo Display GUI run. '
-            + nav_note + bullet_note + 'Loaded PyBullet fetch remains unqualified.')
+            + nav_note + bullet_note + isaac_note + 'Loaded PyBullet and Isaac fetch remain unqualified.')
         changes.extend(('vendor F100 mount and linkage', 'bounded F100 servo and MuJoCo transmission inertia',
                         'source CAD finger hulls, separate pad contacts, and nominal grasp frame'))
         proof = Path('docs/status/evidence/r143-pro630-f100-2026-11-20/gui-fetch-custody-2026-11-21.json')
@@ -351,12 +356,16 @@ def provision(store, download=False, variant='fortress'):
                                                                 evidence=report))
             profile.setdefault('runtime_screens', []).append(dict(backend='mujoco', mode='nav', maps=[nav_map],
                                                                reports=[report]))
-        if bullet_map:
-            report = str(bullet)
-            profile['supported_modes_by_simulator']['pybullet'] = ['display']
-            profile.setdefault('measured_screens', []).append(dict(simulator='pybullet', mode='display', map=bullet_map,
+        for simulator, map_name, proof in (('pybullet', bullet_map, bullet), ('isaac', isaac_map, isaac)):
+            if not map_name:
+                continue
+            report = str(proof)
+            if simulator not in profile['supported_simulators']:
+                profile['supported_simulators'].append(simulator)
+            profile['supported_modes_by_simulator'][simulator] = ['display']
+            profile.setdefault('measured_screens', []).append(dict(simulator=simulator, mode='display', map=map_name,
                                                                 evidence=report))
-            profile.setdefault('runtime_screens', []).append(dict(backend='pybullet', mode='display', maps=[bullet_map],
+            profile.setdefault('runtime_screens', []).append(dict(backend=simulator, mode='display', maps=[map_name],
                                                                reports=[report]))
     receipt=dict(repository=source['repository'],source_id=source['id'],revision=source['revision'],license='BSD-3-Clause',
         original=str(root/entry),source_sha256=digest(root/entry),source_expanded_sha256=digest(target/'source-expanded.urdf'),

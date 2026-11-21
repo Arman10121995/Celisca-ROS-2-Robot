@@ -1777,12 +1777,13 @@ accounts for terrain fixtures without saved 2D maps. Details and evidence are in
   and only one pad registered force. A private candidate can reopen,
   retract and reapproach once from the new measured object pose.
   [GUI evidence](docs/status/evidence/r143-pro630-f100-2026-11-20/bullet-gui-gripper-confirmed.json).
-- **Isaac implementation:** rotary follower authoring keeps one powered
-  shaft. A source-pad collider observer reports per-object normal force.
-  The installed USD schema fixtures passed. Imported-robot travel and
-  measured pad contact are still required before offering the GUI mode.
-- **Remaining implementation:** qualify loaded PyBullet missions and Isaac
-  gripper travel, pad contact and loaded custody. The physical linkage on
+- **Isaac Display:** the F100 imported with one powered shaft and five
+  passive followers. The normal GUI on `nav_empty` reached both presets
+  and measured 53.995 mm for a 54 mm command. Both named pad colliders were
+  identified in the actual robot export. Loaded pad forces remain open.
+  [GUI evidence](docs/status/evidence/r143-pro630-f100-2026-11-20/isaac-gui-gripper-confirmed.json).
+- **Remaining implementation:** qualify loaded PyBullet and Isaac missions,
+  including measured pad contacts and custody. The physical linkage on
   Gazebo remains open.
 - **How to do it:** preserve the vendor flange and follower transforms, one
   shaft effort budget and the real measured linkage. Build on the existing

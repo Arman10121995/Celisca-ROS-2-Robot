@@ -142,8 +142,10 @@ result covers the short-block map in MuJoCo Display with straight transport.
 
 **PyBullet → Display** also supports the jaw controls. In the normal GUI
 on `nav_empty`, Open, Close and the calibrated 54 mm opening completed
-with all five passive followers. Loaded Bullet fetch remains experimental.
-[Measured Bullet GUI presets](../status/evidence/r143-pro630-f100-2026-11-20/bullet-gui-gripper-confirmed.json).
+with all five passive followers. Isaac Display on the same map also
+measured both presets and 53.995 mm for a 54 mm opening command. Loaded
+PyBullet and Isaac fetch remain experimental.
+[Measured PyBullet presets](../status/evidence/r143-pro630-f100-2026-11-20/bullet-gui-gripper-confirmed.json) · [Measured Isaac presets](../status/evidence/r143-pro630-f100-2026-11-20/isaac-gui-gripper-confirmed.json).
 
 To try Nav2 transport, keep the same experimental profile and map and
 select **MuJoCo → Navigation**. **Run fetch** becomes available when the Nav2 transit
