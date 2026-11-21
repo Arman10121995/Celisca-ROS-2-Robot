@@ -124,7 +124,7 @@ Work top to bottom. Each line links to its task.
 | Order | Task | Remaining implementation (short) | State |
 |---|---|---|---|
 | I0 | [R14.2](#r142--elephant-robotics-myagv-pro) myAGV Pro | Done: Gazebo source variant plus portable roller variant driving in MuJoCo, PyBullet and Isaac; Nav2 measured in Gazebo and PyBullet | implemented |
-| I0a | [R14.3](#r143--elephant-myagv-pro-mobile-manipulator) Elephant mobile manipulator | Bare Pro630 drive and joints measured on MuJoCo/PyBullet/Isaac. F100 passed one complete MuJoCo Display GUI fetch on the short-block map. Loaded Nav2 and additional backend missions remain | partial |
+| I0a | [R14.3](#r143--elephant-myagv-pro-mobile-manipulator) Elephant mobile manipulator | Bare Pro630 drive and joints measured on MuJoCo/PyBullet/Isaac. F100 completed MuJoCo Display and Navigation GUI fetches on the short-block map. Loaded PyBullet and Isaac missions remain | partial |
 | I0b | [R14.4](#r144--contributor-integration-course) Integration guide chapters | Done 2026-11-13: beginner course part 2 (chapters 9–12) in docs/learn and the GUI docs library; clean-host walkthrough remains | implemented |
 | I1 | [R13.2](#r132--vacuum-carpets-and-mopping) Vacuum carpets and mopping | Done 2026-11-10 (Gazebo mop + rug run passes) | implemented |
 | I2 | [R13.3](#r133--vacuum-camera-obstacle-recognition) Vacuum camera obstacles | Done-when met (ideal and learned). 11-17 retrain 3 installed (fewer pet/cable false positives, pet recall 54 → 60 %); learned zone job passes again (0 contacts, 0.286 m). Sock false positives remain; repeats/held-out room are V1 | implemented |
@@ -1758,8 +1758,11 @@ accounts for terrain fixtures without saved 2D maps. Details and evidence are in
   and F100 costmap and transit settings are implemented. The first full retry
   at the declared caps kept bilateral load through a carry timeout. Held J1
   oscillation was measured. The MuJoCo Navigation profile now applies
-  source-bounded servo damping. Loaded transit through release remains open.
-  [Trial](docs/status/evidence/r143-pro630-f100-2026-11-20/nav-gui-declared-limits-timeout.json).
+  source-bounded servo damping. A normal GUI run then completed loaded
+  Nav2 transit, terminal handoff to docking, supported release and backing
+  away in 218.17 s on `mobile_fetch_lab_f100`.
+  [Earlier timeout](docs/status/evidence/r143-pro630-f100-2026-11-20/nav-gui-declared-limits-timeout.json) ·
+  [Measured completed fetch](docs/status/evidence/r143-pro630-f100-2026-11-20/nav-gui-fetch-confirmed.json).
 - **PyBullet Display:** the normal `nav_empty` GUI reached Open, Close and
   the calibrated 54 mm opening with all five passive followers. The camera
   renders on demand to preserve control feedback. Loaded Bullet missions
@@ -1768,13 +1771,15 @@ accounts for terrain fixtures without saved 2D maps. Details and evidence are in
   shaft. A source-pad collider observer reports per-object normal force.
   The installed USD schema fixtures passed. Imported-robot travel and
   measured pad contact are still required before offering the GUI mode.
-- **Remaining implementation:** qualify loaded Nav2 and PyBullet missions,
-  and port the physical linkage to the remaining backends.
+- **Remaining implementation:** qualify loaded PyBullet missions and Isaac
+  gripper travel, pad contact and loaded custody. The physical linkage on
+  Gazebo remains open.
 - **How to do it:** preserve the vendor flange and follower transforms, one
   shaft effort budget and the real measured linkage. Build on the existing
   source planner and R5.9 grasp/release contract.
 - **Done when:** met for the composed robot and bounded arm control. Gripper and planning are follow-ups under R5.8/R5.9.
-- **Validation later:** navigation/reach/pick/place transport, contact/calibration and other backend/map missions remain separate measured acceptance.
+- **Validation later:** repeat the measured Navigation fetch and qualify
+  additional maps, releases and backend missions.
 
 ### R14.4 — Contributor integration course
 

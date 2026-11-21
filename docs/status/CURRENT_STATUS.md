@@ -1,11 +1,11 @@
 # Current Robot Lab status
 
-November 21 Codex: the F100 Nav2 fetch lifted the 40 g block 42.7 mm,
-received both loaded costmap footprints, and held bilateral pad pressure
-through the carry timeout. Shoulder-yaw motion repeatedly engaged the
-base interlock. The replacement servo damping is scoped to F100 MuJoCo
-Navigation. Source checks pass and full transit with the revised settings
-is pending. [Navigation evidence](evidence/r143-pro630-f100-2026-11-20/README.md#navigation-follow-up).
+November 21 Codex: the F100 completed a normal MuJoCo Navigation GUI fetch
+on `mobile_fetch_lab_f100`. It lifted the block 46.4 mm, used two loaded
+costmap confirmations and an owned Nav2 transit, docked after a measured
+stop, released the block on the table and backed away 0.576 m. The updated
+GUI marks this measured screen on the matching installed model.
+[Navigation evidence](evidence/r143-pro630-f100-2026-11-20/README.md#complete-gui-navigation-fetch).
 
 November 21 Codex: native Stretch can build camera-based reaches for a
 declared upright cylinder in the installed Mobile manipulation lab variant.
@@ -20,8 +20,7 @@ it to the drop table, released it with 0.1 mm support height error, and
 backed away. The GUI marks this Display screen on the matching model.
 The ordinary PyBullet Display GUI on `nav_empty` measured both presets
 and a 53.997 mm opening for a 54 mm command. All five followers tracked
-the source shaft. Experimental MuJoCo Navigation is available. Complete
-loaded Nav2 and PyBullet missions remain pending.
+the source shaft. The loaded PyBullet mission remains pending.
 [Fetch evidence](evidence/r143-pro630-f100-2026-11-20/README.md#complete-gui-fetch).
 
 November 20 Codex: the **myAGV Pro + myCobot Pro630** family now includes an

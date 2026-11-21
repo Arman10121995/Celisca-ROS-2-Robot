@@ -1,0 +1,445 @@
+{
+  "robot": "asset_elephant_myagv_pro_pro630_f100",
+  "simulator": "mujoco",
+  "map": "mobile_fetch_lab_f100",
+  "mode": "nav",
+  "steps": [
+    {
+      "pressed": "Home (direct)",
+      "button_state": "()",
+      "page_status": "Target requested; inspect actual feedback."
+    },
+    {
+      "step": "home",
+      "targets": {
+        "pro630_joint1_to_base": 0.0,
+        "pro630_joint2_to_joint1": 0.0,
+        "pro630_joint3_to_joint2": 0.0,
+        "pro630_joint4_to_joint3": 0.0,
+        "pro630_joint5_to_joint4": 0.0,
+        "pro630_joint6_to_joint5": 0.0,
+        "pro630_gripper_controller": 0.0
+      },
+      "settled_s": 0.0,
+      "measured": {
+        "pro630_gripper_controller": -0.0,
+        "pro630_joint1_to_base": -0.0011,
+        "pro630_joint2_to_joint1": 0.0016,
+        "pro630_joint3_to_joint2": 0.0014,
+        "pro630_joint4_to_joint3": 0.0007,
+        "pro630_joint5_to_joint4": -0.0003,
+        "pro630_joint6_to_joint5": -0.0001,
+        "pro630_gripper_base_to_gripper_left2": -0.0,
+        "pro630_gripper_base_to_gripper_right2": 0.0,
+        "pro630_gripper_base_to_gripper_right3": 0.0,
+        "pro630_gripper_left3_to_gripper_left1": 0.0,
+        "pro630_gripper_right3_to_gripper_right1": 0.0
+      }
+    },
+    {
+      "pressed": "Run fetch",
+      "button_state": "()",
+      "page_status": "Target requested; inspect actual feedback."
+    }
+  ],
+  "passed": true,
+  "page_selected": true,
+  "rows": [
+    "J1 \u00b7 joint1_to_base",
+    "J2 \u00b7 joint2_to_joint1",
+    "J3 \u00b7 joint3_to_joint2",
+    "J4 \u00b7 joint4_to_joint3",
+    "J5 \u00b7 joint5_to_joint4",
+    "J6 \u00b7 joint6_to_joint5",
+    "Gripper"
+  ],
+  "command": "ros2 launch robot_lab_bringup simulated_robot.launch.py mode:=nav map_name:=mobile_fetch_lab_f100 robot_model:=asset_elephant_myagv_pro_pro630_f100 simulator:=mujoco gui:=false global_planning:=a_star_planner local_planning:=dwb_local_planner control:=native_holonomic_controller localization:=amcl state_estimation:=ekf_localization_node sensor_fusion:=wheel_imu_fusion allow_experimental_assets:=true",
+  "model_sha256": "bf9ef87b82586316cb4ff59956cd87179c1f681bd352f46777468aebd2bb082d",
+  "pick_place": {
+    "result": {
+      "schema": "robot_lab.pick_place_result.v1",
+      "outcome": "succeeded",
+      "passed": true,
+      "object_pose_reference": "source_collision_center",
+      "message": "Placed fetch_block on drop_table",
+      "request": {
+        "object": "fetch_block",
+        "support": "drop_table",
+        "lift": 0.05,
+        "pose_source": "truth",
+        "transit": "nav2"
+      },
+      "object": "fetch_block",
+      "support": "drop_table",
+      "object_start": [
+        1.3599999996469396,
+        -4.2258844501460944e-10,
+        0.5448922445797842
+      ],
+      "plan": {
+        "transit": "nav2",
+        "pick_base": [
+          0.89,
+          -0.0,
+          0.0
+        ],
+        "place_base": [
+          0.45,
+          1.515,
+          1.571
+        ],
+        "place_xy": [
+          0.45,
+          1.96
+        ],
+        "grasp_width_m": 0.04,
+        "pick_base_measured": [
+          0.8845,
+          0.0006,
+          -0.0038,
+          0.0022
+        ],
+        "place_base_measured": [
+          0.4506,
+          1.507,
+          -0.0037,
+          1.5558
+        ],
+        "place_centre": [
+          0.45,
+          1.96,
+          0.54551824159102
+        ],
+        "place_orientation": [
+          0.711587319051644,
+          -0.009335086312806455,
+          -0.0030599034383659925,
+          0.7025289890953782
+        ]
+      },
+      "stages": [
+        {
+          "phase": "to_object_arrived",
+          "final_pose": [
+            0.8845,
+            0.0006,
+            -0.0038,
+            0.0022
+          ]
+        },
+        {
+          "phase": "to_object",
+          "seconds": 10.16
+        },
+        {
+          "stage": "open",
+          "seconds": 2.38,
+          "object_truth": [
+            1.36,
+            -0.0,
+            0.5449
+          ],
+          "tcp_estimate": [
+            0.884,
+            0.2858,
+            1.071
+          ],
+          "passed": true
+        },
+        {
+          "stage": "above_object",
+          "seconds": 7.82,
+          "object_truth": [
+            1.36,
+            -0.0,
+            0.5449
+          ],
+          "tcp_estimate": [
+            1.3597,
+            -0.0001,
+            0.604
+          ],
+          "passed": true
+        },
+        {
+          "stage": "down_to_grasp",
+          "seconds": 1.15,
+          "object_truth": [
+            1.3595,
+            -0.0001,
+            0.5447
+          ],
+          "tcp_estimate": [
+            1.3608,
+            -0.0,
+            0.5762
+          ],
+          "passed": true
+        },
+        {
+          "stage": "close",
+          "seconds": 7.47,
+          "object_truth": [
+            1.3637,
+            -0.0,
+            0.5453
+          ],
+          "tcp_estimate": [
+            1.3602,
+            0.0,
+            0.5761
+          ],
+          "finger_positions": [
+            0.34428245235202304,
+            0.3442812769849872,
+            0.34427815532743855,
+            0.3442820150184076,
+            0.34428125173559104,
+            0.3442809848629889
+          ],
+          "passed": true,
+          "pad_normal_force_n": {
+            "left": 3.7113747737695855,
+            "right": 2.028070676622337
+          },
+          "reason": ""
+        },
+        {
+          "stage": "lift",
+          "seconds": 3.21,
+          "object_truth": [
+            1.3652,
+            0.0003,
+            0.5913
+          ],
+          "tcp_estimate": [
+            1.3587,
+            0.0,
+            0.6235
+          ],
+          "passed": true,
+          "rise_m": 0.0464,
+          "hold_drift_m": 0.0003,
+          "reason": "",
+          "pad_normal_force_n": {
+            "left": 2.4378005048401943,
+            "right": 2.437158191017377
+          }
+        },
+        {
+          "phase": "pick",
+          "seconds": 23.01
+        },
+        {
+          "phase": "carry_footprint_ready",
+          "consumers": [
+            "global",
+            "local"
+          ],
+          "sim_s": 40.804
+        },
+        {
+          "phase": "carry_nav2",
+          "status": 5,
+          "handed_over": true,
+          "seconds": 142.49,
+          "goal": [
+            0.45,
+            0.915,
+            1.571
+          ],
+          "truth": [
+            0.3859,
+            0.7577,
+            0.9727
+          ],
+          "goal_error_m": 0.1699,
+          "goal_yaw_error_rad": 0.5981,
+          "localization_error_m": 0.1385,
+          "localization_yaw_error_rad": -0.0014,
+          "localization_age_s": 0.12
+        },
+        {
+          "phase": "carry_arrived",
+          "final_pose": [
+            0.4506,
+            1.507,
+            -0.0037,
+            1.5558
+          ],
+          "max_carry_drift_m": 0.0219
+        },
+        {
+          "phase": "carry",
+          "seconds": 165.02
+        },
+        {
+          "stage": "over_support",
+          "seconds": 0.57,
+          "object_truth": [
+            0.45,
+            1.9616,
+            0.5958
+          ],
+          "tcp_estimate": [
+            0.4501,
+            1.9565,
+            0.643
+          ],
+          "passed": true
+        },
+        {
+          "stage": "lower",
+          "seconds": 2.39,
+          "object_truth": [
+            0.4495,
+            1.9596,
+            0.5457
+          ],
+          "tcp_estimate": [
+            0.4499,
+            1.9553,
+            0.5927
+          ],
+          "passed": true
+        },
+        {
+          "stage": "release",
+          "seconds": 1.86,
+          "object_truth": [
+            0.4498,
+            1.959,
+            0.5449
+          ],
+          "tcp_estimate": [
+            0.4499,
+            1.9553,
+            0.5928
+          ],
+          "passed": true
+        },
+        {
+          "stage": "retreat",
+          "seconds": 3.63,
+          "object_truth": [
+            0.4498,
+            1.959,
+            0.5449
+          ],
+          "tcp_estimate": [
+            0.4499,
+            1.954,
+            0.6511
+          ],
+          "passed": true,
+          "final_pose": [
+            0.4498,
+            1.959,
+            0.5449
+          ],
+          "height_error_m": -0.0001,
+          "inside_support": true,
+          "orientation_aligned": true,
+          "moved_last_s_m": 0.0,
+          "reason": ""
+        },
+        {
+          "phase": "place",
+          "seconds": 9.25
+        },
+        {
+          "phase": "clear_arrived",
+          "final_pose": [
+            0.4422,
+            0.931,
+            -0.0039,
+            1.5627
+          ]
+        },
+        {
+          "phase": "clear",
+          "seconds": 10.72
+        }
+      ],
+      "mobile": true,
+      "interlock": {
+        "max_base_speed_in_arm_phases": 0.0032145663716702287,
+        "max_base_turn_in_arm_phases": 0.005900507027638637,
+        "drive_ticks_with_articulation_active": 937,
+        "drive_ticks": 1775
+      },
+      "transit": "nav2",
+      "pose_source": "truth",
+      "perceived": null,
+      "phase": "clear",
+      "seconds": 218.17,
+      "plant_id": "171f6c488b9d4ae497ebdf8ab3d3708b",
+      "model_sha256": "bf9ef87b82586316cb4ff59956cd87179c1f681bd352f46777468aebd2bb082d",
+      "finished": "2026-11-21T22:08:00",
+      "receipt": "/workspace/molar/robot_lab_runtime/pick-place/20261121T220800_fetch_block.json",
+      "trace_samples": 415,
+      "last_sample": {
+        "t": 217.76,
+        "stage": "clear",
+        "object": [
+          0.4498,
+          1.959,
+          0.5449,
+          0.7186,
+          -0.0,
+          -0.0,
+          0.6954
+        ],
+        "fingers": [
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0
+        ],
+        "finger_references": [
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0
+        ],
+        "pad_normal_force_n": {
+          "left": 0.0,
+          "right": 0.0
+        },
+        "arm_joints": {
+          "pro630_joint1_to_base": -0.18013,
+          "pro630_joint2_to_joint1": 0.80002,
+          "pro630_joint3_to_joint2": -0.20147,
+          "pro630_joint4_to_joint3": 0.97131,
+          "pro630_joint5_to_joint4": -1.57056,
+          "pro630_joint6_to_joint5": 2.14319
+        },
+        "base": [
+          0.442,
+          0.9309,
+          -0.0038,
+          1.5622
+        ],
+        "object_in_base": [
+          1.0281,
+          0.001,
+          0.5487
+        ]
+      }
+    },
+    "page_status": "idle: Placed fetch_block on drop_table\nLast: succeeded \u00b7 /workspace/molar/robot_lab_runtime/pick-place/20261121T220800_fetch_block.json"
+  },
+  "launch_returncode": 0,
+  "run_revision": "93500c84",
+  "live_shoulder_parameters": {
+    "damping": {
+      "pro630_joint1_to_base": 12.0
+    },
+    "shoulder_effort": 5.0
+  },
+  "raw_receipt_sha256": "d9894b591c8bc9fcd4659bbdae20e163f0c8ab6b54299d49f5b796ec12eeb74d"
+}

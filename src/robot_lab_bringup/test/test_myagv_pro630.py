@@ -53,6 +53,24 @@ def test_f100_bullet_badge_requires_all_measured_followers(monkeypatch, tmp_path
     assert recorded_f100_bullet_travel(failed, robot, digest, followers) is None
 
 
+def test_f100_nav_badge_requires_both_costmaps_and_the_exact_drive_contract(monkeypatch, tmp_path):
+    repo = Path(__file__).resolve().parents[3]
+    monkeypatch.syspath_prepend(str(repo / 'scripts'))
+    from provision_myagv_pro import recorded_f100_navigation
+
+    path = repo / 'docs/status/evidence/r143-pro630-f100-2026-11-20/nav-gui-fetch-confirmed.json'
+    proof = json.loads(path.read_text())
+    damping = {'pro630_joint1_to_base': 12.}
+    assert recorded_f100_navigation(path, proof['robot'], proof['model_sha256'], damping, 5.) == 'mobile_fetch_lab_f100'
+    assert recorded_f100_navigation(path, proof['robot'], proof['model_sha256'], damping, 6.) is None
+    result = proof['pick_place']['result']
+    receipt = next(stage for stage in result['stages'] if stage.get('phase') == 'carry_footprint_ready')
+    receipt['consumers'] = ['local']
+    altered = tmp_path / 'missing-costmap.json'
+    altered.write_text(json.dumps(proof))
+    assert recorded_f100_navigation(altered, proof['robot'], proof['model_sha256'], damping, 5.) is None
+
+
 @pytest.fixture(scope='module')
 def composed(tmp_path_factory):
     root = Path(os.environ.get('ROBOT_LAB_RUNTIME_ROOT', '/workspace/molar/robot_lab_runtime'))

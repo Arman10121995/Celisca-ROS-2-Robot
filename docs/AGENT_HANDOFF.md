@@ -1,5 +1,13 @@
 # Agent Handoff Protocol
 
+November 21 F100 Navigation passed one normal GUI fetch on
+`mobile_fetch_lab_f100` with DWB, AMCL, and MuJoCo Navigation shoulder
+damping. Preserve the original shoulder effort cap, pad-force and
+footprint gates, the terminal Nav2 handoff and the 445 mm docking reach.
+The readiness marker checks the recorded controller and installed model.
+Continue loaded PyBullet and Isaac gripper missions.
+[Navigation receipt](status/evidence/r143-pro630-f100-2026-11-20/nav-gui-fetch-confirmed.json).
+
 November 21 Stretch camera targets: the Mobile manipulation lab family
 now has an upright-cylinder variant. The native task GUI can build an
 unheld reach from a matching camera observation. Preserve the existing

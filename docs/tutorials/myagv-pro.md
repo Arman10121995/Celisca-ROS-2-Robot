@@ -148,8 +148,11 @@ with all five passive followers. Loaded Bullet fetch remains experimental.
 To try Nav2 transport, keep the same experimental profile and map and
 select **MuJoCo → Navigation**. **Run fetch** becomes available when the Nav2 transit
 action and articulation feedback are ready. The loaded leg waits for both
-costmaps to confirm the payload footprint. A complete run with the new
-MuJoCo shoulder damping is pending. [Navigation trials](../status/evidence/r143-pro630-f100-2026-11-20/README.md#navigation-follow-up).
+costmaps to confirm the payload footprint. The GUI recorded a complete
+DWB and AMCL fetch on this specific map. Nav2 yields to final docking after
+the owned action stops and the base settles. Keep **Enable experimental
+robot workflows** on to use the Fetch panel.
+[Measured Navigation fetch](../status/evidence/r143-pro630-f100-2026-11-20/README.md#complete-gui-navigation-fetch).
 
 ## How control and sensing connect
 

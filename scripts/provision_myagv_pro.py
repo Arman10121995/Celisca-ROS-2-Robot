@@ -25,6 +25,20 @@ from catalog_external_assets import checkout, digest, load_source
 from provision_extension_assets import checkpoint_robots, robot_entity, source_package_prefix, write_json, write_yaml
 
 
+def measured_f100_fetch_stages(result):
+    stages = {stage.get('stage') or stage.get('phase'): stage for stage in result['stages']}
+    lift, carry, retreat = (stages[name] for name in ('lift', 'carry_arrived', 'retreat'))
+    clearance = math.dist(carry['final_pose'][:2], stages['clear_arrived']['final_pose'][:2])
+    loads = [lift['pad_normal_force_n'][side] for side in ('left', 'right')]
+    if (math.isfinite(lift['rise_m']) and lift['rise_m'] >= .04 and 0 <= lift['hold_drift_m'] < .01
+            and all(math.isfinite(load) and load >= .1 for load in loads)
+            and 0 <= carry['max_carry_drift_m'] < .03 and stages['release']['passed'] is True
+            and retreat['inside_support'] is True and abs(retreat['height_error_m']) < .01
+            and 0 <= retreat['moved_last_s_m'] < .005 and math.isfinite(clearance) and clearance > .5):
+        return stages
+    return {}
+
+
 def recorded_f100_fetch(proof, robot, model_sha256):
     """Accept the measured short-block Display screen for the exact installed mesh model."""
     map_name = 'mobile_fetch_lab_f100'
@@ -39,16 +53,38 @@ def recorded_f100_fetch(proof, robot, model_sha256):
                     or result.get('object') != 'fetch_block' or result.get('support') != 'drop_table'
                     or not identity <= set(trial['command'].split())):
                 continue
-            stages = {stage.get('stage') or stage.get('phase'): stage for stage in result['stages']}
-            lift, carry, retreat = (stages[name] for name in ('lift', 'carry_arrived', 'retreat'))
-            clearance = math.dist(carry['final_pose'][:2], stages['clear_arrived']['final_pose'][:2])
-            loads = [lift['pad_normal_force_n'][side] for side in ('left', 'right')]
-            if (math.isfinite(lift['rise_m']) and lift['rise_m'] >= .04 and 0 <= lift['hold_drift_m'] < .01
-                    and all(math.isfinite(load) and load >= .1 for load in loads)
-                    and 0 <= carry['max_carry_drift_m'] < .03 and stages['release']['passed'] is True
-                    and retreat['inside_support'] is True and abs(retreat['height_error_m']) < .01
-                    and 0 <= retreat['moved_last_s_m'] < .005 and math.isfinite(clearance) and clearance > .5):
+            if measured_f100_fetch_stages(result):
                 return map_name
+    except (OSError, ValueError, TypeError, KeyError, AttributeError):
+        return None
+    return None
+
+
+def recorded_f100_navigation(proof, robot, model_sha256, damping, shoulder_effort):
+    """Accept a scoped Nav2 carry, stopped handoff and supported GUI release."""
+    from action_msgs.msg import GoalStatus
+
+    map_name = 'mobile_fetch_lab_f100'
+    command = {f'robot_model:={robot}', f'map_name:={map_name}', 'simulator:=mujoco', 'mode:=nav',
+               'allow_experimental_assets:=true', 'local_planning:=dwb_local_planner', 'localization:=amcl'}
+    try:
+        trial = json.loads(proof.read_text())
+        result = trial['pick_place']['result']
+        if (trial['passed'] is not True or trial['page_selected'] is not True or trial['launch_returncode'] != 0
+                or not command <= set(trial['command'].split())
+                or trial['model_sha256'] != model_sha256 or result['model_sha256'] != model_sha256
+                or trial['live_shoulder_parameters'] != dict(damping=damping, shoulder_effort=shoulder_effort)
+                or result['passed'] is not True or result['transit'] != 'nav2' or result['trace_samples'] < 100
+                or result['object'] != 'fetch_block' or result['support'] != 'drop_table'):
+            return None
+        stages = measured_f100_fetch_stages(result)
+        if set(stages['carry_footprint_ready']['consumers']) != {'local', 'global'}:
+            return None
+        carry = stages['carry_nav2']
+        arrived = carry['status'] == GoalStatus.STATUS_SUCCEEDED
+        stopped_handoff = carry['status'] == GoalStatus.STATUS_CANCELED and carry['handed_over'] is True
+        if (arrived or stopped_handoff) and 0 <= carry['goal_error_m'] <= .20:
+            return map_name
     except (OSError, ValueError, TypeError, KeyError, AttributeError):
         return None
     return None
@@ -265,6 +301,12 @@ def provision(store, download=False, variant='fortress'):
         # N·m·s/rad. The derivative term still shares the original 5 N·m cap.
         damping = {'pro630_joint1_to_base': 12.0}
         gripper_receipt['lab_mujoco_nav_servo_damping_nm_s_rad'] = damping
+        navigation = Path('docs/status/evidence/r143-pro630-f100-2026-11-20/nav-gui-fetch-confirmed.json')
+        nav_map = recorded_f100_navigation(ROOT / navigation, name, digest(output), damping,
+                                          articulation['joints']['pro630_joint1_to_base']['effort'])
+        nav_note = ('MuJoCo Navigation completed a short-block Nav2 fetch with both footprint receipts, '
+                    'stopped docking handoff, supported release and clearance. ' if nav_map
+                    else 'Loaded Nav2 transit remains experimental. ')
         grasp = gripper_receipt['grasp_reference']['frame']
         carrier = 'pro630_link6'
         tcp_offset, tcp_quat = rigid_sensor_offsets(ET.tostring(document, encoding='unicode'), grasp)[carrier]
@@ -294,7 +336,7 @@ def provision(store, download=False, variant='fortress'):
             'Compound finger collisions and a nominal grasp frame are derived from the source CAD. '
             'The joint effort, rate and damping are declared simulation estimates. The experimental short-block fetch '
             'completed pickup, straight carry, supported release and clearance in one MuJoCo Display GUI run. '
-            + bullet_note + 'Loaded PyBullet and Nav2 transit remain unqualified.')
+            + nav_note + bullet_note + 'Loaded PyBullet fetch remains unqualified.')
         changes.extend(('vendor F100 mount and linkage', 'bounded F100 servo and MuJoCo transmission inertia',
                         'source CAD finger hulls, separate pad contacts, and nominal grasp frame'))
         proof = Path('docs/status/evidence/r143-pro630-f100-2026-11-20/gui-fetch-custody-2026-11-21.json')
@@ -303,6 +345,12 @@ def provision(store, download=False, variant='fortress'):
             report = str(proof)
             profile['measured_screens'] = [dict(simulator='mujoco', mode='display', map=measured_map, evidence=report)]
             profile['runtime_screens'] = [dict(backend='mujoco', mode='display', maps=[measured_map], reports=[report])]
+        if nav_map:
+            report = str(navigation)
+            profile.setdefault('measured_screens', []).append(dict(simulator='mujoco', mode='nav', map=nav_map,
+                                                                evidence=report))
+            profile.setdefault('runtime_screens', []).append(dict(backend='mujoco', mode='nav', maps=[nav_map],
+                                                               reports=[report]))
         if bullet_map:
             report = str(bullet)
             profile['supported_modes_by_simulator']['pybullet'] = ['display']

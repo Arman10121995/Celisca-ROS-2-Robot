@@ -206,9 +206,23 @@ Every other joint stayed below 0.0019 rad in the same sample windows.
 At the observed carry pose, the compiled inertia gives estimated critical
 damping of 11.1–17.9 N·m·s/rad under free-to-locked joint assumptions.
 The MuJoCo Navigation profile now uses 12 N·m·s/rad at the existing
-shoulder servo, within its original 5 N·m effort cap. Loaded transit and
-release with this setting remain unmeasured.
+shoulder servo, within its original 5 N·m effort cap.
 [Uninterrupted GUI timeout](nav-gui-declared-limits-timeout.json) · [Joint trace summary and inertia calculation](f100-shoulder-motion.json).
+
+### Complete GUI Navigation fetch
+
+The normal MuJoCo Navigation GUI completed the 40 g short-block fetch in
+218.17 s on `mobile_fetch_lab_f100`. The live plant reported the revised
+shoulder damping and the 5 N·m effort cap. The block rose 46.4 mm, held
+within 0.3 mm during the lift check, and reached both costmaps with about
+2.44 N on each pad. The loaded Nav2 action ran for 142.49 s. AMCL reached
+the handoff radius and the task waited for that action's terminal
+cancellation and a measured base stop. The remaining docking leg used
+simulator odometry. Truth was 0.170 m from the run-up target at handoff.
+Maximum payload drift during carry was 21.9 mm. The arm released the block
+fully on the table, 0.1 mm from the expected support height. The base backed
+away 0.576 m and the launch exited with code 0.
+[Measured GUI Navigation receipt](nav-gui-fetch-confirmed.json).
 
 ### Isaac joint authoring
 

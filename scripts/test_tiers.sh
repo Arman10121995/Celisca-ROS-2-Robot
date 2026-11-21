@@ -166,6 +166,7 @@ INTEGRATION_TESTS=(
   "$BRG_TEST/test_xacro_expansion.py"
   "$BRG_TEST/test_myagv_pro630.py::test_f100_display_badge_requires_matching_measured_release"
   "$BRG_TEST/test_myagv_pro630.py::test_f100_bullet_badge_requires_all_measured_followers"
+  "$BRG_TEST/test_myagv_pro630.py::test_f100_nav_badge_requires_both_costmaps_and_the_exact_drive_contract"
   "$BRG_TEST/test_driven_assembly_hold.py::test_the_shipped_mecanum_description_is_covered"
   "$BRG_TEST/test_simulation_clocks.py"
   "$ADP_TEST/test_r3_3_launch_contracts.py"
