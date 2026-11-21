@@ -67,8 +67,7 @@ ros2 launch robot_lab_bringup simulated_robot.launch.py robot_model:=lab_amphibi
 The robot spawner applies a port of the Gazebo drive plugin and Fortress
 buoyancy (`robot_lab_utils/amphibious_drive.py`): the wheel servos,
 suspension springs, immersion-gated propellers, hull drag and buoyancy. The
-rover rests on the bank and floats at the Gazebo heights, and it reaches
-water goals. The climb from the water back onto the bank is not reliable
-there: 1 of 6 MuJoCo runs passed, and PyBullet stalls on the ramp. Use
-Gazebo for round trips. RGB-D mapping is Gazebo-only.
+rover rests on the bank and floats at the Gazebo heights. The shore round
+trip (bank → water → bank) passes 3/3 on each, within 0.11 m of its goals.
+RGB-D mapping is Gazebo-only.
 [Receipt](../status/evidence/r107-amphibious-backends-2026-11-21/README.md).

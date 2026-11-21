@@ -1,0 +1,67 @@
+{
+  "schema": "robot_lab.measured_extension_result.v1",
+  "workflow": "marine",
+  "task": "navigation",
+  "session_id": "6d1536e5fac547089b721ec51da26ea0",
+  "run_id": "54530f57cf69467ca66ff1caf48fe92c",
+  "ros_domain_id": 20,
+  "success": true,
+  "reason": "Every native goal physically settled",
+  "measurements": [
+    {
+      "requested": [
+        6.3,
+        0.0,
+        0.134
+      ],
+      "physical_pose": [
+        6.401596152260176,
+        -0.029942474939970133,
+        0.13876307424857479
+      ],
+      "linear_m_s": 0.0024980948942427902,
+      "angular_rad_s": 0.0014866579835863293,
+      "settled_sim_s": 1.0,
+      "member_id": "body",
+      "index": 0,
+      "native_terminal": true,
+      "nav2_status": null
+    },
+    {
+      "requested": [
+        -5.8,
+        0.0,
+        0.74
+      ],
+      "physical_pose": [
+        -5.75633354509027,
+        -0.060513911391004996,
+        0.7274508036480599
+      ],
+      "linear_m_s": 2.707227839957655e-05,
+      "angular_rad_s": 1.9743222168234655e-06,
+      "settled_sim_s": 1.0,
+      "member_id": "body",
+      "index": 1,
+      "native_terminal": true,
+      "nav2_status": null
+    }
+  ],
+  "goal_contract": {
+    "position_m": 0.2,
+    "linear_m_s": 0.05,
+    "angular_rad_s": 0.05,
+    "settle_sim_s": 1.0
+  },
+  "truth_samples": {
+    "body": 6678
+  },
+  "control_released": true,
+  "wall_duration_s": 135.37224182201317,
+  "contacts": null,
+  "minimum_swept_clearance_m": null,
+  "producer_sha256": "db69c937ce47b992e41e7b31aaa6aa77532c9b01baafc31ca4f25534c83c0b4f",
+  "workload_sha256": "76d61a4e9cf8cc001ef8ac700231c05539f32717345419c3b12faf128a706b21",
+  "trace_sha256": "1dd25e9858ea4e847a8e96101bbb8dac018cbaf9b8e9a80cfd34cfe72a10c00d",
+  "scope": "Actual native task and independent physical measurements; parent runner owns process cleanup"
+}

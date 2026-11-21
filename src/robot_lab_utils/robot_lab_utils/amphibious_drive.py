@@ -10,9 +10,13 @@ A port of what Gazebo applies to the rover:
   - Hull drag scaled by the wetted fraction.
   - Commands older than 0.4 s give zero wheel effort and thrust.
 - Fortress graded ``Buoyancy`` on the rover's collision boxes and cylinders:
-  fluid density below the surface, nothing above it. Each shape's submerged
-  share is its fraction below the surface along its world vertical extent,
-  as the ported marine plants count boxes.
+  fluid density below the surface, nothing above it, acting at the centroid
+  of the submerged volume. The volume is integrated over a grid of cells in
+  each shape (``CELLS``), so a pitched hull gets its true righting moment.
+  The first port took each shape's fraction along its vertical extent at the
+  shape's centre, as the marine plants count boxes. That dropped the moment
+  of a hull with its stern in the water and its bow on the shore ramp: the
+  hull reared and bounced there (2026-11-21).
 
 The backend supplies link poses, joint states and the hull velocity and
 applies the returned joint efforts and world forces. Leases run on
@@ -32,8 +36,24 @@ PROPELLERS = ('port_propeller_joint', 'starboard_propeller_joint')
 GRAVITY = 9.81
 
 
+CELLS = 8          # cells along a shape's longest axis; at least 4 along each
+
+
+def shape_cells(half, cylinder):
+    """Cell centres (shape frame), one cell's volume and its half extents, for a box or z-axis cylinder."""
+    half = np.asarray(half, dtype=float)
+    step = 2 * float(half.max()) / CELLS
+    counts = np.maximum(4, np.ceil(2 * half / step)).astype(int)
+    axes = [np.linspace(-h + h / n, h - h / n, n) for h, n in zip(half, counts)]
+    grid = np.stack(np.meshgrid(*axes, indexing='ij'), axis=-1).reshape(-1, 3)
+    cell_half = half / counts
+    if cylinder:
+        grid = grid[np.hypot(grid[:, 0], grid[:, 1]) <= half[0]]
+    return grid, float(np.prod(2 * cell_half)), cell_half
+
+
 def collision_shapes(description):
-    """[(link, origin xyz, rotation, half extents, volume)] for box and cylinder collisions.
+    """[(link, origin xyz, rotation, half extents, volume, cell centres, cell volume, cell half extents)] per shape.
 
     A shape on a fixed-joint link (the OAK-D housing) is expressed in its
     nearest moving ancestor's frame, the body MuJoCo fuses it into and
@@ -61,10 +81,11 @@ def collision_shapes(description):
             box, cylinder = collision.find('geometry/box'), collision.find('geometry/cylinder')
             if box is not None:
                 size = np.array([float(v) for v in box.get('size').split()])
-                shapes.append((name, xyz, R, size / 2, float(np.prod(size))))
+                shapes.append((name, xyz, R, size / 2, float(np.prod(size)), *shape_cells(size / 2, False)))
             elif cylinder is not None:
                 r, length = float(cylinder.get('radius')), float(cylinder.get('length'))
-                shapes.append((name, xyz, R, np.array([r, r, length / 2]), math.pi * r * r * length))
+                shapes.append((name, xyz, R, np.array([r, r, length / 2]), math.pi * r * r * length,
+                               *shape_cells(np.array([r, r, length / 2]), True)))
     return shapes
 
 
@@ -159,16 +180,24 @@ class AmphibiousDrive:
         drag = -wet * (self.linear * local + self.quadratic * np.abs(local) * local)
         torque = -wet * self.rotational * rates_body
         hull_force, hull_torque = R @ drag, R @ torque
-        for link, xyz, Rc, half, volume in self.shapes:
+        for link, xyz, Rc, half, volume, cells, cell, cell_half in self.shapes:
             origin, Rl = link_poses[link]
-            centre = np.asarray(origin) + np.asarray(Rl) @ xyz
-            height = float(np.abs((np.asarray(Rl) @ Rc)[2, :]) @ half)
-            fraction = max(0., min(1., (self.surface - (centre[2] - height)) / max(2 * height, 1e-9)))
-            if fraction <= 0:
+            Rl = np.asarray(Rl)
+            centre = np.asarray(origin) + Rl @ xyz
+            if centre[2] - float(np.abs((Rl @ Rc)[2, :]) @ half) >= self.surface:
                 continue
-            point = centre.copy()
-            point[2] = centre[2] - height + fraction * height
-            forces.append((link, np.array([0., 0., self.density * GRAVITY * volume * fraction]), point))
+            points = centre + cells @ (Rl @ Rc).T
+            # Each cell counts by its depth below the surface over its own
+            # height, so the lift changes smoothly as cells cross it.
+            depth = float(np.abs((Rl @ Rc)[2, :]) @ cell_half)
+            submerged = np.clip((self.surface - points[:, 2]) / (2 * depth) + .5, 0., 1.)
+            total = float(submerged.sum())
+            if total <= 0:
+                continue
+            # The cells' total volume is rescaled to the shape's exact volume (a cylinder's grid is not).
+            scale = volume / (cell * len(cells))
+            forces.append((link, np.array([0., 0., self.density * GRAVITY * cell * scale * total]),
+                           (submerged @ points) / total))
         self.state = dict(wet_fraction=wet, wheel_input_fresh=bool(fresh), applied_thrust_N=applied,
                           wheel_rates_rad_s=rates, wheel_efforts_Nm=[efforts[name] for name in WHEELS])
         return efforts, forces, (hull_force, hull_torque, np.asarray(hull_com))

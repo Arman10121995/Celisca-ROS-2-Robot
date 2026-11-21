@@ -1984,8 +1984,8 @@ tasks:
           backend; fixed flippers rear and 4 Nm flippers are back-driven, as on Gazebo. Wide step - 15 and 30 deg pass up
           and down on both; 45 deg not passed (deflected along the face; Gazebo climbs).
           On 2026-11-21 the amphibious rover on MuJoCo/PyBullet - ported drive plugin and buoyancy; rests/floats at the
-          Gazebo heights and reaches the water goal every run; return to the bank 1/6 MuJoCo, 0 PyBullet (waterline bounce,
-          ramp stall); Gazebo 2/2. PyBullet water worlds lose the default plane lid.
+          Gazebo heights; shore round trip 3/3 on each backend (0.07-0.11 m; Gazebo 2/2) after lift moved to the submerged
+          centroid (centre-of-shape buoyancy bounced at the waterline, 1/8). PyBullet water worlds lose the default plane lid.
           docs/status/evidence/r107-amphibious-backends-2026-11-21/README.md
           docs/status/evidence/r107-tracks-backends-2026-11-21/README.md
         qualification_review: '2026-10-27 documentation review: retain the implemented code, tests and named

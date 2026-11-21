@@ -63,3 +63,11 @@ def test_propellers_push_only_when_immersed(description):
     joints, poses = state(.73)
     drive.step(.2, np.eye(3), [0, 0, .73], [0, 0, .61], [0, 0, 0], [0, 0, 0], joints, poses)
     assert drive.state['applied_thrust_N'] == [0., 0.]
+
+
+def test_plant_message_is_json_after_a_wet_step(description):
+    import json
+    drive = AmphibiousDrive(description, dict(surface_z=0.))
+    joints, poses = state(.14)
+    drive.step(0., np.eye(3), [0, 0, .14], [0, 0, .02], [0, 0, 0], [0, 0, 0], joints, poses)
+    assert 0 < json.loads(drive.plant_message(1.))['wet_fraction'] <= 1

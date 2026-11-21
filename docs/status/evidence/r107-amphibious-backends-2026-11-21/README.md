@@ -1,6 +1,8 @@
 # R10.7: the amphibious rover on MuJoCo and PyBullet (November 21, 2026)
 
-**Status: implemented, experimental; the shore round trip is not passed.**
+**Status: implemented, experimental. The shore round trip passes 3/3 on
+each backend** after a buoyancy fix later the same day
+([below](#the-fix-buoyancy-at-the-submerged-centroid)); the failed runs before it are kept.
 `lab_amphibious` now runs on MuJoCo and PyBullet through the normal launch
 (`simulated_robot.launch.py simulator:=mujoco|pybullet mode:=marine`). It
 uses the same amphibious controller, simulated pressure/DVL/sonar sensors,
@@ -9,8 +11,10 @@ only.
 - On both backends it rests on the bank at the Gazebo height and floats at
   the Gazebo draft.
 - It drives down the ramp and reaches the water goal on every run.
-- Climbing back out onto the bank failed in 7 of 8 settled attempts. One
-  MuJoCo run passed. Gazebo passes the same round trip 2/2 today and 1/1
+- With the first buoyancy model, climbing back onto the bank failed in 7 of
+  8 settled attempts; one MuJoCo run passed.
+- With buoyancy acting at the submerged centroid it passes 3/3 on MuJoCo
+  and 3/3 on PyBullet. Gazebo passes the same round trip 2/2 today and 1/1
   on October 30.
 
 ## What changed
@@ -70,7 +74,36 @@ Before any run, a stationary spawn on the bank rests at z 0.727 (MuJoCo)
 and 0.728 (PyBullet); Gazebo gives 0.728. Afloat at x 8 PyBullet gives
 z 0.14.
 
-## What goes wrong at the waterline
+## The fix: buoyancy at the submerged centroid
+
+The first port applied each shape's buoyancy at the shape's centre, scaled
+by the fraction of its vertical extent below the surface, as the
+single-body marine plants count boxes. The mission traces showed what that
+misses. Near the waterline the wheels spun free at their target rate with
+almost no effort, and the hull reared to 0.36 rad nose up as the bow met
+the ramp.
+
+For a pitched hull with its stern in the water, the real centre of buoyancy
+moves toward the stern and levels the hull. Fortress computes the volume
+below the surface and its centroid. The port now integrates each shape over
+a grid of cells:
+- 8 along its longest axis and at least 4 along each;
+- each cell weighted by its depth below the surface over its own height;
+- the total rescaled to the shape's exact volume.
+
+Lift acts at the weighted centroid; for a hull pitched 0.3 rad bow-down
+it moves 0.31 m toward the bow. With this alone, at Gazebo's coefficients:
+
+| Run | Water goal | Bank goal | Time |
+|---|---|---|---|
+| MuJoCo 7, 8, 9 | 0.109, 0.106, 0.105 m (z 0.139) | 0.074, 0.075, 0.074 m (z 0.727) | 138, 135, 136 s |
+| PyBullet 9, 10, 11 | 0.101, 0.104, 0.102 m (z 0.139) | 0.070, 0.082, 0.078 m (z 0.728) | 165, 166, 168 s |
+| Gazebo today, for comparison | 0.106, 0.107 m (z 0.133) | 0.086, 0.088 m (z 0.728) | 145, 146 s |
+
+Earlier attempts that did not fix it, kept below: a 1 ms MuJoCo step, and a
+heave drag of 600 instead of Gazebo's 160 N s/m (reverted).
+
+## What went wrong at the waterline (before the fix)
 
 An offline MuJoCo harness held the rover where the ramp leaves the water
 (x ≈ −0.3), with one actuator at a time:
@@ -95,8 +128,8 @@ item.
 
 ## Limits
 
-- Return to the bank not passed on either ported backend. No RGB-D
-  mapping there (the camera is off); no Isaac version.
+- No RGB-D mapping on the ported backends (the camera is off); no Isaac
+  version.
 - One world (`amphibious_shore`).
 
 ## Reproduce
