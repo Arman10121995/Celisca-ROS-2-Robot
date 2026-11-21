@@ -109,6 +109,16 @@ new or deeper contact still rejects a path. The private replay then planned
 all four place stages, including retreat. This establishes placement
 feasibility from that sample. [Planner replay](loaded-place-replay.txt).
 
+A fixed-base MuJoCo physics replay initialized the loaded arm at that
+recorded dock with a free 40 g block, then executed the planned path with
+the same bounded actuators and transmission inertia. The pads retained
+load above the support, unloaded on opening, and the block stayed fully
+on the table after retreat. Final measured support height error was
+0.11 mm. The initial loaded state came from run 8. This test qualifies
+the place motion from that fixture and leaves the continuous GUI mission
+as a separate check.
+[Physical placement samples](loaded-place-physical-fixture.jsonl).
+
 PyBullet now has a matching normal-force reader for named URDF pads. It
 transforms Bullet's link-level contact points into the source collision
 geometry so a contact on the same link outside the pad stays excluded.

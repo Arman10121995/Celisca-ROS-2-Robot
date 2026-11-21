@@ -5,13 +5,16 @@ import pytest
 from robot_lab_pybullet.grip_contacts import GripContacts
 
 
-def test_force_reader_distinguishes_pad_points_from_the_same_links_hull():
+def test_force_reader_distinguishes_pad_points_from_the_same_links_hull(tmp_path):
     bullet = pytest.importorskip('pybullet')
+    trimesh = pytest.importorskip('trimesh')
     plant = Mock(wraps=bullet)
-    urdf = '''<robot name="gripper">
+    mesh = tmp_path / 'left pad.stl'
+    trimesh.creation.box(extents=(.002, .02, .02)).export(mesh)
+    urdf = f'''<robot name="gripper">
       <link name="left"><collision name="left_pad">
         <origin xyz="0 .03 0" rpy="0 0 1.57079632679"/>
-        <geometry><box size=".002 .02 .02"/></geometry>
+        <geometry><mesh filename="{mesh.as_uri()}"/></geometry>
       </collision></link>
       <link name="right"><collision name="right_pad">
         <geometry><box size=".002 .02 .02"/></geometry>

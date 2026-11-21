@@ -1,6 +1,7 @@
 """Measure free-object contact on two named URDF pads in PyBullet."""
 
 import xml.etree.ElementTree as ET
+from urllib.parse import unquote
 
 import numpy as np
 
@@ -38,7 +39,10 @@ class GripContacts:
             elif mesh is not None:
                 import trimesh
 
-                shape = trimesh.load(mesh.get('filename'), force='mesh')
+                filename = mesh.get('filename')
+                if filename.startswith('file://'):
+                    filename = unquote(filename.removeprefix('file://'))
+                shape = trimesh.load(filename, force='mesh')
                 shape.apply_scale(np.asarray(mesh.get('scale', '1 1 1').split(), dtype=float))
                 to_bounds, bounds = trimesh.bounds.oriented_bounds(shape)
             else:
