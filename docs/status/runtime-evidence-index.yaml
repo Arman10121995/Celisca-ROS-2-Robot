@@ -13963,3 +13963,167 @@ records:
     15 deg, --robot-radius 0.35 (the 10-13 4WS protocol); seed 1. Details in docs/status/evidence/v3-4ws-matrix-2026-11-21.'
   limitations:
   - One seed per cell; repeats of cells measured since October
+- robot_id: oomwoo
+  environment_id: small_house
+  simulator: mujoco
+  task_type: vacuum_rooms
+  steering_mode: ''
+  date: '2026-11-21'
+  revision: e9189e7f (installed build of 0f918f21; later commits only docs)
+  report: docs/status/evidence/v1-vacuum-backends-2026-11-21/runs/mujoco_rooms_office.json
+  sha256: 0b369b56ef8369f8804726b43f4d185ff49b711545a0cf4c4f960f9d8f217f24
+  source_hashes: docs/status/evidence/v1-vacuum-backends-2026-11-21/runs/source-hashes-e9189e7f.json
+  source_hashes_sha256: 1ca41f35162ed8e04ba9c278e6e3ebc02a2f83a3241f3f0b28120bb26bb9c15f
+  report_kind: cleaning_screen
+  scope: Second building, two rooms by points, with the escape, wedge, rejoin and headless-report fixes.
+  limitations:
+  - One run per cell; the November 10 Gazebo start request
+- robot_id: oomwoo
+  environment_id: small_house
+  simulator: mujoco
+  task_type: vacuum_spot
+  steering_mode: ''
+  date: '2026-11-21'
+  revision: e9189e7f (installed build of 0f918f21; later commits only docs)
+  report: docs/status/evidence/v1-vacuum-backends-2026-11-21/runs/mujoco_spot.json
+  sha256: 786bdf1da16b65ee73dcdffdc28a0dd1924301240c1661aae3d640b8c63842c0
+  source_hashes: docs/status/evidence/v1-vacuum-backends-2026-11-21/runs/source-hashes-e9189e7f-7dadd39c.json
+  source_hashes_sha256: 7dadd39c1d71009f3919d32d85d694de097c00e97c923d37b380f884d434d031
+  report_kind: cleaning_screen
+  scope: 'Repeats 2 and 3 of the spot job beside a furniture bar. Judged by cleaning_screen: completed, >= 85 %
+    of the reachable target cleaned, truth on the dock within 0.10 m / 10 deg, no-go and virtual-wall compliance
+    from the simulator-truth trail.'
+  limitations:
+  - One run per cell; the November 10 Gazebo start request
+- robot_id: oomwoo
+  environment_id: small_house
+  simulator: mujoco
+  task_type: vacuum_zone_keepout
+  steering_mode: ''
+  date: '2026-11-21'
+  revision: e9189e7f (installed build of 0f918f21; later commits only docs)
+  report: docs/status/evidence/v1-vacuum-backends-2026-11-21/runs/mujoco_zone_keepout.json
+  sha256: bbf2b699e6ba032fce6c84703df87d9b523a520e00338ec8b03635db0f9d5644
+  source_hashes: docs/status/evidence/v1-vacuum-backends-2026-11-21/runs/source-hashes-e9189e7f-7dadd39c.json
+  source_hashes_sha256: 7dadd39c1d71009f3919d32d85d694de097c00e97c923d37b380f884d434d031
+  report_kind: cleaning_screen
+  scope: 'Repeats 2 and 3 of the zone job with a 1 m no-go box and a 1.6 m virtual wall. Judged by cleaning_screen:
+    completed, >= 85 % of the reachable target cleaned, truth on the dock within 0.10 m / 10 deg, no-go and virtual-wall
+    compliance from the simulator-truth trail.'
+  limitations:
+  - One run per cell; the November 10 Gazebo start request
+- robot_id: oomwoo
+  environment_id: small_house
+  simulator: pybullet
+  task_type: vacuum_rooms
+  steering_mode: ''
+  date: '2026-11-21'
+  revision: e9189e7f (installed build of 0f918f21; later commits only docs)
+  report: docs/status/evidence/v1-vacuum-backends-2026-11-21/runs/pybullet_rooms_office.json
+  sha256: 86297bd4c5edd8f6b21e0859266feadc7747f1339f8e978e3534ae5c0e66e637
+  source_hashes: docs/status/evidence/v1-vacuum-backends-2026-11-21/runs/source-hashes-e9189e7f.json
+  source_hashes_sha256: 1ca41f35162ed8e04ba9c278e6e3ebc02a2f83a3241f3f0b28120bb26bb9c15f
+  report_kind: cleaning_screen
+  scope: Second building, two rooms by points, with the escape, wedge, rejoin and headless-report fixes.
+  limitations:
+  - One run per cell; the November 10 Gazebo start request
+- robot_id: oomwoo
+  environment_id: small_house
+  simulator: pybullet
+  task_type: vacuum_spot
+  steering_mode: ''
+  date: '2026-11-21'
+  revision: e9189e7f (installed build of 0f918f21; later commits only docs)
+  report: docs/status/evidence/v1-vacuum-backends-2026-11-21/runs/pybullet_spot.json
+  sha256: e201049fd724884b25e67abacd5bcf60f6118981059f303be6ae3ac9dc4de7ce
+  source_hashes: docs/status/evidence/v1-vacuum-backends-2026-11-21/runs/source-hashes-e9189e7f-7dadd39c.json
+  source_hashes_sha256: 7dadd39c1d71009f3919d32d85d694de097c00e97c923d37b380f884d434d031
+  report_kind: cleaning_screen
+  scope: 'Repeats 2 and 3 of the spot job beside a furniture bar. Judged by cleaning_screen: completed, >= 85 %
+    of the reachable target cleaned, truth on the dock within 0.10 m / 10 deg, no-go and virtual-wall compliance
+    from the simulator-truth trail.'
+  limitations:
+  - One run per cell; the November 10 Gazebo start request
+- robot_id: oomwoo
+  environment_id: small_house
+  simulator: pybullet
+  task_type: vacuum_zone_keepout
+  steering_mode: ''
+  date: '2026-11-21'
+  revision: e9189e7f (installed build of 0f918f21; later commits only docs)
+  report: docs/status/evidence/v1-vacuum-backends-2026-11-21/runs/pybullet_zone_keepout.json
+  sha256: 0fa0b84d9e64d41dab5a8bde160b59e7ed762122cb045a26049fd09bf6bfd42c
+  source_hashes: docs/status/evidence/v1-vacuum-backends-2026-11-21/runs/source-hashes-e9189e7f-7dadd39c.json
+  source_hashes_sha256: 7dadd39c1d71009f3919d32d85d694de097c00e97c923d37b380f884d434d031
+  report_kind: cleaning_screen
+  scope: 'Repeats 2 and 3 of the zone job with a 1 m no-go box and a 1.6 m virtual wall. Judged by cleaning_screen:
+    completed, >= 85 % of the reachable target cleaned, truth on the dock within 0.10 m / 10 deg, no-go and virtual-wall
+    compliance from the simulator-truth trail.'
+  limitations:
+  - One run per cell; the November 10 Gazebo start request
+- robot_id: oomwoo
+  environment_id: small_house
+  simulator: isaac
+  task_type: vacuum_rooms
+  steering_mode: ''
+  date: '2026-11-21'
+  revision: e9189e7f (installed build of 0f918f21; later commits only docs)
+  report: docs/status/evidence/v1-vacuum-backends-2026-11-21/runs/isaac_rooms_office.json
+  sha256: cbfe274a7e355db34b8a335978d878a388c0a7b20dfe42640e30bd72bb2da108
+  source_hashes: docs/status/evidence/v1-vacuum-backends-2026-11-21/runs/source-hashes-e9189e7f.json
+  source_hashes_sha256: 1ca41f35162ed8e04ba9c278e6e3ebc02a2f83a3241f3f0b28120bb26bb9c15f
+  report_kind: cleaning_screen
+  scope: Second building, two rooms by points, with the escape, wedge, rejoin and headless-report fixes.
+  limitations:
+  - One run per cell; the November 10 Gazebo start request
+- robot_id: oomwoo
+  environment_id: small_house
+  simulator: isaac
+  task_type: vacuum_spot
+  steering_mode: ''
+  date: '2026-11-21'
+  revision: e9189e7f (installed build of 0f918f21; later commits only docs)
+  report: docs/status/evidence/v1-vacuum-backends-2026-11-21/runs/isaac_spot.json
+  sha256: 5e1417fa6d7c755b7600844c24e1d87b2db12b9d30b22fdbb0c72dbf702be5b8
+  source_hashes: docs/status/evidence/v1-vacuum-backends-2026-11-21/runs/source-hashes-e9189e7f-7dadd39c.json
+  source_hashes_sha256: 7dadd39c1d71009f3919d32d85d694de097c00e97c923d37b380f884d434d031
+  report_kind: cleaning_screen
+  scope: 'Repeats 2 and 3 of the spot job beside a furniture bar. Judged by cleaning_screen: completed, >= 85 %
+    of the reachable target cleaned, truth on the dock within 0.10 m / 10 deg, no-go and virtual-wall compliance
+    from the simulator-truth trail.'
+  limitations:
+  - One run per cell; the November 10 Gazebo start request
+- robot_id: oomwoo
+  environment_id: small_house
+  simulator: isaac
+  task_type: vacuum_zone_keepout
+  steering_mode: ''
+  date: '2026-11-21'
+  revision: e9189e7f (installed build of 0f918f21; later commits only docs)
+  report: docs/status/evidence/v1-vacuum-backends-2026-11-21/runs/isaac_zone_keepout.json
+  sha256: a3a832e238898a3eea5c92a8ca1c3560cee368bd5899d6df6fc2abeee2446f46
+  source_hashes: docs/status/evidence/v1-vacuum-backends-2026-11-21/runs/source-hashes-e9189e7f-7dadd39c.json
+  source_hashes_sha256: 7dadd39c1d71009f3919d32d85d694de097c00e97c923d37b380f884d434d031
+  report_kind: cleaning_screen
+  scope: 'Repeats 2 and 3 of the zone job with a 1 m no-go box and a 1.6 m virtual wall. Judged by cleaning_screen:
+    completed, >= 85 % of the reachable target cleaned, truth on the dock within 0.10 m / 10 deg, no-go and virtual-wall
+    compliance from the simulator-truth trail.'
+  limitations:
+  - One run per cell; the November 10 Gazebo start request
+- robot_id: oomwoo
+  environment_id: small_house
+  simulator: gazebo
+  task_type: vacuum_zone_keepout
+  steering_mode: ''
+  date: '2026-11-21'
+  revision: e9189e7f (installed build of 0f918f21; later commits only docs)
+  report: docs/status/evidence/v1-vacuum-backends-2026-11-21/runs/gazebo_zone_keepout.json
+  sha256: 58dc751cb60f26735866f6fb1e856019043ef44fa1e5f6ddfef4c082f7c9400a
+  source_hashes: docs/status/evidence/v1-vacuum-backends-2026-11-21/runs/source-hashes-e9189e7f-7dadd39c.json
+  source_hashes_sha256: 7dadd39c1d71009f3919d32d85d694de097c00e97c923d37b380f884d434d031
+  report_kind: cleaning_screen
+  scope: 'Repeats 2 and 3 of the zone job with a 1 m no-go box and a 1.6 m virtual wall. Judged by cleaning_screen:
+    completed, >= 85 % of the reachable target cleaned, truth on the dock within 0.10 m / 10 deg, no-go and virtual-wall
+    compliance from the simulator-truth trail.'
+  limitations:
+  - One run per cell; the November 10 Gazebo start request

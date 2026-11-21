@@ -1,0 +1,53 @@
+# V1: vacuum jobs on MuJoCo, PyBullet and Isaac (November 21, 2026)
+
+**Status: 5 of 9 screens passed; PyBullet docking regressed.** `run_jobs.sh`
+replays the November 10 Gazebo start requests: the office rooms job, the
+(2, 2) spot job, and the keep-out zone with a no-go box and a virtual wall.
+It runs `oomwoo` in `small_house` through `scripts/sim_vacuum_mission.sh`,
+one job at a time. `cleaning_screen` judges each report:
+- the job completed;
+- 85 % or more of the target was cleaned;
+- the robot is docked within 0.10 m and 10° by truth;
+- no-go zones and virtual walls were respected along the truth trail.
+
+| Backend | Rooms (office) | Spot | Keep-out zone |
+|---|---|---|---|
+| MuJoCo | **failed**: "Stuck", 46 % cleaned | passed (91 %, docked 0.03 m) | passed (99 %, 0.02 m) |
+| PyBullet | **failed**: 92 %, docked 0.18 m off | **failed**: 94 %, 0.15 m off | **failed**: 98 %, 0.14 m off (passed on Nov 10) |
+| Isaac | passed (96 %, 0.04 m) | passed (91 %, 0.04 m) | passed (99.5 %, 0.03 m) |
+| Gazebo (today's reference) | — | — | passed (99.3 %, 0.02 m) |
+
+Six of these cells are new in the support matrix (now 348 measured cells):
+the rooms and spot jobs on the three backends.
+
+## PyBullet docking
+
+All three PyBullet jobs clean fully and come back. Each then ends 0.14–0.18 m
+to the dock's +y side, still reporting "Docked"; its own estimate is
+0.09–0.12 m off. In the truth trail the align phase turns the robot in
+place to about −0.08 rad. While it drives in, the heading keeps rising to
++0.48 rad, and the short 0.25 m entry cannot recover. Gazebo and Isaac
+drive straight in at about −0.1 rad.
+
+Ruled out, each reverted, with runs in `runs-friction/`:
+- Floor friction 1.0 instead of Bullet's 0.5 for undeclared static shapes:
+  still 0.159 m.
+- Leaving out the sub-ground floor and carpet meshes, which became world
+  meshes when the November 20 small_house projection resolved its
+  furniture: still 0.159 m.
+- No charger body is spawned at the dock.
+- The PyBullet wheel force limit is unchanged since October.
+
+The remaining suspect is the robot's in-place rotation overshoot on
+PyBullet after the align phase. It needs a closer look at the spinning
+wheels' braking at that moment.
+
+## MuJoCo rooms job
+
+The rooms job stopped after 283 s with "Stuck – move the robot to open
+floor and resume" (3 freeing attempts), at (6.62, 1.88) in the office.
+It is kept.
+
+Launch logs and the job stores are on SSD under
+`robot_lab_runtime/v1-vacuum-20261121`. Reports are indexed with
+`vacuum-batch.yaml`.

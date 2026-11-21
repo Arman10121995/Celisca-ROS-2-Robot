@@ -340,6 +340,8 @@ November 20: **R7 `dijkstra_planner` is its own planner (implemented, experiment
 
 November 20: **R6.5 the repo `small_house` world projects to an occupancy grid.** Its AWS RoboMaker furniture now resolves from the installed world dataset, and its grid agrees with the dataset copy of the same house (occupied-cell IoU 0.846, free-space IoU 0.949). [Receipt](evidence/r65-small-house-occupancy-2026-11-20/README.md).
 
+November 21: **V1 vacuum jobs on three more backends: 5 of 9 passed.** The office rooms, spot and keep-out jobs pass 3 of 3 on Isaac and 2 of 3 on MuJoCo, where the rooms job got stuck. They fail 3 of 3 on PyBullet: the robot cleans fully but docks 0.14–0.18 m to the side, where the keep-out job passed on November 10. Floor friction and sub-ground meshes are ruled out as the cause. Six new matrix cells (348). [Round](evidence/v1-vacuum-backends-2026-11-21/README.md).
+
 November 21: **V3 4WS/mecanum repeat: 20 of 20 passed.** `four_wheel_steer_car` in its ackermann, in-phase, crab and pivot patterns and `mecanum_car` run the `nav_obstacle` mission on all four backends, within 0.12 m and 4° of truth. The October first run had passed 13 of 20. [Round](evidence/v3-4ws-matrix-2026-11-21/README.md).
 
 November 21: **V3 car repeat: 11 of 12 passed.** The Ackermann, rear-steer and anti-Ackermann cars run the `nav_obstacle` mission on the four backends with the October car protocol (heading not checked). Isaac Ackermann aborted its near-obstacle goal. A first attempt with the default heading check failed all 12 on heading alone; it is kept but not indexed. [Round](evidence/v3-car-matrix-2026-11-21/README.md).

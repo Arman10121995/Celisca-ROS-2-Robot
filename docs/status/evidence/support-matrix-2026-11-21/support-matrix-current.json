@@ -1,5 +1,5 @@
 {
-  "generated_utc": "2026-11-21T15:50:56.170220+00:00",
+  "generated_utc": "2026-11-21T17:38:03.355991+00:00",
   "task": "R9.3",
   "status": "partial",
   "qualification": "Exact hashed screens only; artifact validation does not rerun a mission",
@@ -7034,15 +7034,15 @@
       "task_type": "vacuum_zone_keepout",
       "support_level": "partially_supported",
       "evidence_level": "runtime_evidence",
-      "last_tested": "2026-11-10",
-      "revision": "e3a64f40 (queue T17, claude-v72)",
+      "last_tested": "2026-11-21",
+      "revision": "e9189e7f (installed build of 0f918f21; later commits only docs)",
       "test_result": "passed_screen",
       "artifacts": [
-        "docs/status/evidence/vacuum-2026-11/runs-v72/gazebo_zone_keepout_r3.json",
-        "docs/status/evidence/vacuum-2026-11/runs-v72/source-hashes-e3a64f40.json"
+        "docs/status/evidence/v1-vacuum-backends-2026-11-21/runs/gazebo_zone_keepout.json",
+        "docs/status/evidence/v1-vacuum-backends-2026-11-21/runs/source-hashes-e9189e7f-7dadd39c.json"
       ],
       "limitations": [
-        "Two repeats; with the first run three runs: 99.6 / 99.4 / 99.4 %",
+        "One run per cell; the November 10 Gazebo start request",
         "Screen evidence; full ROADMAP mission acceptance remains separate"
       ],
       "notes": "Repeats 2 and 3 of the zone job with a 1 m no-go box and a 1.6 m virtual wall. Judged by cleaning_screen: completed, >= 85 % of the reachable target cleaned, truth on the dock within 0.10 m / 10 deg, no-go and virtual-wall compliance from the simulator-truth trail.",
@@ -7122,19 +7122,18 @@
       "task_type": "vacuum_zone_keepout",
       "support_level": "partially_supported",
       "evidence_level": "runtime_evidence",
-      "last_tested": "2026-11-10",
-      "revision": "8a122bbe (queue T13, claude-v67; the install was rebuilt at 12:35 from 8a122bbe before this run)",
+      "last_tested": "2026-11-21",
+      "revision": "e9189e7f (installed build of 0f918f21; later commits only docs)",
       "test_result": "passed_screen",
       "artifacts": [
-        "docs/status/evidence/vacuum-2026-11/runs/mujoco_zone_keepout.json",
-        "docs/status/evidence/vacuum-2026-11/runs/source-hashes-8a122bbe.json"
+        "docs/status/evidence/v1-vacuum-backends-2026-11-21/runs/mujoco_zone_keepout.json",
+        "docs/status/evidence/v1-vacuum-backends-2026-11-21/runs/source-hashes-e9189e7f-7dadd39c.json"
       ],
       "limitations": [
-        "One run; battery, dustbin and wear are models",
-        "Localisation is the lab AMCL/slam_toolbox estimate; the screen uses truth",
+        "One run per cell; the November 10 Gazebo start request",
         "Screen evidence; full ROADMAP mission acceptance remains separate"
       ],
-      "notes": "The keep-out zone job in MuJoCo (LiDAR from the bridge; no bumper or cliff sensors). Judged by cleaning_screen: completed, >= 85 % of the reachable target cleaned (mapping: >= 2 rooms), truth on the dock within 0.10 m / 10 deg, no-go and virtual-wall compliance from the simulator-truth trail.",
+      "notes": "Repeats 2 and 3 of the zone job with a 1 m no-go box and a 1.6 m virtual wall. Judged by cleaning_screen: completed, >= 85 % of the reachable target cleaned, truth on the dock within 0.10 m / 10 deg, no-go and virtual-wall compliance from the simulator-truth trail.",
       "steering_mode": ""
     },
     {
@@ -7254,20 +7253,20 @@
       "environment_id": "small_house",
       "simulator": "pybullet",
       "task_type": "vacuum_zone_keepout",
-      "support_level": "partially_supported",
+      "support_level": "experimental",
       "evidence_level": "runtime_evidence",
-      "last_tested": "2026-11-10",
-      "revision": "e3a64f40 (queue T17, claude-v72)",
-      "test_result": "passed_screen",
+      "last_tested": "2026-11-21",
+      "revision": "e9189e7f (installed build of 0f918f21; later commits only docs)",
+      "test_result": "failed_screen",
       "artifacts": [
-        "docs/status/evidence/vacuum-2026-11/runs-v72/pybullet_zone_keepout.json",
-        "docs/status/evidence/vacuum-2026-11/runs-v72/source-hashes-e3a64f40.json"
+        "docs/status/evidence/v1-vacuum-backends-2026-11-21/runs/pybullet_zone_keepout.json",
+        "docs/status/evidence/v1-vacuum-backends-2026-11-21/runs/source-hashes-e9189e7f-7dadd39c.json"
       ],
       "limitations": [
-        "One run; the PyBullet bridge casts a 2D LiDAR but has no bumper or cliff sensor",
+        "One run per cell; the November 10 Gazebo start request",
         "Screen evidence; full ROADMAP mission acceptance remains separate"
       ],
-      "notes": "The zone job with the no-go box and virtual wall in PyBullet. Judged by cleaning_screen: completed, >= 85 % of the reachable target cleaned, truth on the dock within 0.10 m / 10 deg, no-go and virtual-wall compliance from the simulator-truth trail.",
+      "notes": "Repeats 2 and 3 of the zone job with a 1 m no-go box and a 1.6 m virtual wall. Judged by cleaning_screen: completed, >= 85 % of the reachable target cleaned, truth on the dock within 0.10 m / 10 deg, no-go and virtual-wall compliance from the simulator-truth trail.",
       "steering_mode": ""
     },
     {
@@ -7277,19 +7276,18 @@
       "task_type": "vacuum_zone_keepout",
       "support_level": "partially_supported",
       "evidence_level": "runtime_evidence",
-      "last_tested": "2026-11-10",
-      "revision": "e3a64f40 (queue T17, claude-v72)",
+      "last_tested": "2026-11-21",
+      "revision": "e9189e7f (installed build of 0f918f21; later commits only docs)",
       "test_result": "passed_screen",
       "artifacts": [
-        "docs/status/evidence/vacuum-2026-11/runs-v72/isaac_zone_keepout.json",
-        "docs/status/evidence/vacuum-2026-11/runs-v72/source-hashes-e3a64f40.json"
+        "docs/status/evidence/v1-vacuum-backends-2026-11-21/runs/isaac_zone_keepout.json",
+        "docs/status/evidence/v1-vacuum-backends-2026-11-21/runs/source-hashes-e9189e7f-7dadd39c.json"
       ],
       "limitations": [
-        "One run; the Isaac bridge has no bumper or cliff sensor",
-        "imu_republisher and isaac_spawner errors in the log come after the report, at shutdown",
+        "One run per cell; the November 10 Gazebo start request",
         "Screen evidence; full ROADMAP mission acceptance remains separate"
       ],
-      "notes": "The zone job with the no-go box and virtual wall in Isaac Sim. Judged by cleaning_screen: completed, >= 85 % of the reachable target cleaned, truth on the dock within 0.10 m / 10 deg, no-go and virtual-wall compliance from the simulator-truth trail.",
+      "notes": "Repeats 2 and 3 of the zone job with a 1 m no-go box and a 1.6 m virtual wall. Judged by cleaning_screen: completed, >= 85 % of the reachable target cleaned, truth on the dock within 0.10 m / 10 deg, no-go and virtual-wall compliance from the simulator-truth trail.",
       "steering_mode": ""
     },
     {
@@ -7693,6 +7691,132 @@
         "Screen evidence; full ROADMAP mission acceptance remains separate"
       ],
       "notes": "sim_nav_mission: detour goal, cancel, resume and near-obstacle goal, truth-measured; seed 1. Details in docs/status/evidence/v2-nav-matrix-2026-11-21.",
+      "steering_mode": ""
+    },
+    {
+      "robot_id": "oomwoo",
+      "environment_id": "small_house",
+      "simulator": "mujoco",
+      "task_type": "vacuum_rooms",
+      "support_level": "experimental",
+      "evidence_level": "runtime_evidence",
+      "last_tested": "2026-11-21",
+      "revision": "e9189e7f (installed build of 0f918f21; later commits only docs)",
+      "test_result": "failed_screen",
+      "artifacts": [
+        "docs/status/evidence/v1-vacuum-backends-2026-11-21/runs/mujoco_rooms_office.json",
+        "docs/status/evidence/v1-vacuum-backends-2026-11-21/runs/source-hashes-e9189e7f.json"
+      ],
+      "limitations": [
+        "One run per cell; the November 10 Gazebo start request",
+        "Screen evidence; full ROADMAP mission acceptance remains separate"
+      ],
+      "notes": "Second building, two rooms by points, with the escape, wedge, rejoin and headless-report fixes.",
+      "steering_mode": ""
+    },
+    {
+      "robot_id": "oomwoo",
+      "environment_id": "small_house",
+      "simulator": "mujoco",
+      "task_type": "vacuum_spot",
+      "support_level": "partially_supported",
+      "evidence_level": "runtime_evidence",
+      "last_tested": "2026-11-21",
+      "revision": "e9189e7f (installed build of 0f918f21; later commits only docs)",
+      "test_result": "passed_screen",
+      "artifacts": [
+        "docs/status/evidence/v1-vacuum-backends-2026-11-21/runs/mujoco_spot.json",
+        "docs/status/evidence/v1-vacuum-backends-2026-11-21/runs/source-hashes-e9189e7f-7dadd39c.json"
+      ],
+      "limitations": [
+        "One run per cell; the November 10 Gazebo start request",
+        "Screen evidence; full ROADMAP mission acceptance remains separate"
+      ],
+      "notes": "Repeats 2 and 3 of the spot job beside a furniture bar. Judged by cleaning_screen: completed, >= 85 % of the reachable target cleaned, truth on the dock within 0.10 m / 10 deg, no-go and virtual-wall compliance from the simulator-truth trail.",
+      "steering_mode": ""
+    },
+    {
+      "robot_id": "oomwoo",
+      "environment_id": "small_house",
+      "simulator": "pybullet",
+      "task_type": "vacuum_rooms",
+      "support_level": "experimental",
+      "evidence_level": "runtime_evidence",
+      "last_tested": "2026-11-21",
+      "revision": "e9189e7f (installed build of 0f918f21; later commits only docs)",
+      "test_result": "failed_screen",
+      "artifacts": [
+        "docs/status/evidence/v1-vacuum-backends-2026-11-21/runs/pybullet_rooms_office.json",
+        "docs/status/evidence/v1-vacuum-backends-2026-11-21/runs/source-hashes-e9189e7f.json"
+      ],
+      "limitations": [
+        "One run per cell; the November 10 Gazebo start request",
+        "Screen evidence; full ROADMAP mission acceptance remains separate"
+      ],
+      "notes": "Second building, two rooms by points, with the escape, wedge, rejoin and headless-report fixes.",
+      "steering_mode": ""
+    },
+    {
+      "robot_id": "oomwoo",
+      "environment_id": "small_house",
+      "simulator": "pybullet",
+      "task_type": "vacuum_spot",
+      "support_level": "experimental",
+      "evidence_level": "runtime_evidence",
+      "last_tested": "2026-11-21",
+      "revision": "e9189e7f (installed build of 0f918f21; later commits only docs)",
+      "test_result": "failed_screen",
+      "artifacts": [
+        "docs/status/evidence/v1-vacuum-backends-2026-11-21/runs/pybullet_spot.json",
+        "docs/status/evidence/v1-vacuum-backends-2026-11-21/runs/source-hashes-e9189e7f-7dadd39c.json"
+      ],
+      "limitations": [
+        "One run per cell; the November 10 Gazebo start request",
+        "Screen evidence; full ROADMAP mission acceptance remains separate"
+      ],
+      "notes": "Repeats 2 and 3 of the spot job beside a furniture bar. Judged by cleaning_screen: completed, >= 85 % of the reachable target cleaned, truth on the dock within 0.10 m / 10 deg, no-go and virtual-wall compliance from the simulator-truth trail.",
+      "steering_mode": ""
+    },
+    {
+      "robot_id": "oomwoo",
+      "environment_id": "small_house",
+      "simulator": "isaac",
+      "task_type": "vacuum_rooms",
+      "support_level": "partially_supported",
+      "evidence_level": "runtime_evidence",
+      "last_tested": "2026-11-21",
+      "revision": "e9189e7f (installed build of 0f918f21; later commits only docs)",
+      "test_result": "passed_screen",
+      "artifacts": [
+        "docs/status/evidence/v1-vacuum-backends-2026-11-21/runs/isaac_rooms_office.json",
+        "docs/status/evidence/v1-vacuum-backends-2026-11-21/runs/source-hashes-e9189e7f.json"
+      ],
+      "limitations": [
+        "One run per cell; the November 10 Gazebo start request",
+        "Screen evidence; full ROADMAP mission acceptance remains separate"
+      ],
+      "notes": "Second building, two rooms by points, with the escape, wedge, rejoin and headless-report fixes.",
+      "steering_mode": ""
+    },
+    {
+      "robot_id": "oomwoo",
+      "environment_id": "small_house",
+      "simulator": "isaac",
+      "task_type": "vacuum_spot",
+      "support_level": "partially_supported",
+      "evidence_level": "runtime_evidence",
+      "last_tested": "2026-11-21",
+      "revision": "e9189e7f (installed build of 0f918f21; later commits only docs)",
+      "test_result": "passed_screen",
+      "artifacts": [
+        "docs/status/evidence/v1-vacuum-backends-2026-11-21/runs/isaac_spot.json",
+        "docs/status/evidence/v1-vacuum-backends-2026-11-21/runs/source-hashes-e9189e7f-7dadd39c.json"
+      ],
+      "limitations": [
+        "One run per cell; the November 10 Gazebo start request",
+        "Screen evidence; full ROADMAP mission acceptance remains separate"
+      ],
+      "notes": "Repeats 2 and 3 of the spot job beside a furniture bar. Judged by cleaning_screen: completed, >= 85 % of the reachable target cleaned, truth on the dock within 0.10 m / 10 deg, no-go and virtual-wall compliance from the simulator-truth trail.",
       "steering_mode": ""
     }
   ],

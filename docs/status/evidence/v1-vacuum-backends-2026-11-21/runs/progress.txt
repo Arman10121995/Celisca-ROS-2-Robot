@@ -1,0 +1,10 @@
+mujoco rooms_office exit=1
+mujoco spot exit=0
+mujoco zone_keepout exit=0
+pybullet rooms_office exit=0
+pybullet spot exit=0
+pybullet zone_keepout exit=0
+isaac rooms_office exit=0
+isaac spot exit=0
+isaac zone_keepout exit=0
+ALLDONE
