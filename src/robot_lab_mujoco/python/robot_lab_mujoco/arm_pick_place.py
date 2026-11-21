@@ -2,8 +2,8 @@
 
 Backend-neutral: MuJoCo is used here only as a private kinematics and
 collision engine. It holds the robot's URDF import (the bridges' own
-``_build_mjcf_from_urdf``), the world's static boxes and the object as a
-mocap box. The live plant can be PyBullet, MuJoCo or Isaac. The node
+``_build_mjcf_from_urdf``), the world's static primitives and one
+mocap object. The live plant can be PyBullet, MuJoCo or Isaac. The node
 (``robot_lab_bringup/scripts/urdf_pick_place.py``) executes the returned
 joint waypoints through the shared articulation contract and judges grasp
 and release from simulator truth. Nothing here commands or reads a plant.
@@ -89,7 +89,7 @@ class Box:
     position: Sequence[float]
     quaternion: Sequence[float]      # w, x, y, z
     size: Sequence[float]            # full extents (a cylinder: diameter, diameter, length)
-    shape: str = 'box'               # 'box' or 'cylinder' (local axis along z)
+    shape: str = 'box'               # box, sphere, or cylinder (local axis along z)
 
     @property
     def top(self):
@@ -104,7 +104,17 @@ class Box:
         half = np.asarray(self.size, dtype=float) * .5
         if self.shape == 'cylinder':
             return float(half[2]*abs(local[2]) + half[0]*math.hypot(local[0], local[1]))
+        if self.shape == 'sphere':
+            return float(half[0])
         return float(half @ np.abs(local))
+
+    def mjcf_geometry(self):
+        dimensions = self.size
+        if self.shape == 'sphere':
+            dimensions = self.size[:1]
+        elif self.shape == 'cylinder':
+            dimensions = (self.size[0], self.size[2])
+        return dict(type=self.shape, size=' '.join('%g' % (max(value, 1e-6)/2) for value in dimensions))
 
     def supports(self, obj, tolerance=0.):
         """Check the whole projected object against this level table's edges."""
@@ -115,6 +125,8 @@ class Box:
                 and y + obj.half_extent((-s, c, 0.)) <= self.size[1]*.5 + tolerance)
 
     def rests_on(self, support, height_tolerance):
+        if support.shape != 'box' or support.rotation()[2, 2] < math.cos(math.radians(.5)):
+            return False
         bottom = self.position[2] - self.half_extent((0., 0., 1.))
         return abs(bottom - support.top) <= height_tolerance and support.supports(self, tolerance=.001)
 
@@ -139,7 +151,7 @@ class PlanningError(RuntimeError):
 
 
 class ArmScene:
-    """Private MuJoCo model: the arm, static boxes and one object box (mocap)."""
+    """Private MuJoCo model for the arm, static primitives and one mocap object."""
 
     def __init__(self, robot_mjcf, spec: ArmSpec, obstacles: Sequence[Box], obj: Box,
                  base=(0.0, 0.0, 0.0, 0.0), held: Optional[Dict[str, float]] = None):
@@ -167,18 +179,14 @@ class ArmScene:
                 wrapper.append(child)
             world.append(wrapper)
         for box in obstacles:
-            ET.SubElement(world, 'geom', name='obstacle_' + box.name, type='box',
-                          size='%g %g %g' % tuple(max(v, 1e-6) / 2 for v in box.size),
-                          pos='%g %g %g' % tuple(box.position), quat='%g %g %g %g' % tuple(box.quaternion))
+            ET.SubElement(world, 'geom', name='obstacle_' + box.name,
+                          pos='%g %g %g' % tuple(box.position), quat='%g %g %g %g' % tuple(box.quaternion),
+                          **box.mjcf_geometry())
         holder = ET.SubElement(world, 'body', name='pick_place_object', mocap='true',
                                pos='%g %g %g' % tuple(obj.position), quat='%g %g %g %g' % tuple(obj.quaternion))
         # The margin makes MuJoCo report near-misses within the clearance.
-        if obj.shape == 'cylinder':
-            geometry = dict(type='cylinder', size='%g %g' % (max(obj.size[0], 1e-6) / 2, max(obj.size[2], 1e-6) / 2))
-        else:
-            geometry = dict(type='box', size='%g %g %g' % tuple(max(v, 1e-6) / 2 for v in obj.size))
         ET.SubElement(holder, 'geom', name='object', contype='1', conaffinity='1',
-                      margin='%g' % OBJECT_CLEARANCE_M, **geometry)
+                      margin='%g' % OBJECT_CLEARANCE_M, **obj.mjcf_geometry())
         option = root.find('option')
         if option is None:
             option = ET.SubElement(root, 'option')
@@ -190,6 +198,7 @@ class ArmScene:
         self.object_geom = mujoco.mj_name2id(m, mujoco.mjtObj.mjOBJ_GEOM, 'object')
         self.object_mocap = m.body_mocapid[mujoco.mj_name2id(m, mujoco.mjtObj.mjOBJ_BODY, 'pick_place_object')]
         self.obstacles = {box.name: box for box in obstacles}
+        self.payload_radius = min(obj.size) / 2
         self.obstacle_geoms = {box.name: mujoco.mj_name2id(m, mujoco.mjtObj.mjOBJ_GEOM, 'obstacle_' + box.name)
                                for box in obstacles}
         self.joint_qpos, self.joint_dof, self.limits = {}, {}, {}
@@ -310,6 +319,19 @@ class ArmScene:
         into a pre-grasp that straddles the object)."""
         m, d, found = self.model, self.data, []
         allowed_supports = {self.obstacle_geoms[name] for name in allow_supports}
+        # The mocap payload and static world geoms have no free degrees of
+        # freedom. Native distance queries check them outside the solver.
+        for name, geom in self.obstacle_geoms.items():
+            if geom in allowed_supports:
+                continue
+            distance = self.mj.mj_geomDistance(m, d, self.object_geom, geom, CONTACT_MARGIN_M, None)
+            if distance == 0.:
+                # Coincident convex shapes can yield zero from the distance
+                # solver. Overlapping inscribed spheres establish penetration.
+                separation = np.linalg.norm(d.geom_xpos[self.object_geom] - d.geom_xpos[geom])
+                distance = separation - self.payload_radius - min(self.obstacles[name].size) / 2
+            if distance <= -CONTACT_MARGIN_M:
+                found.append(('object', 'obstacle_' + name, round(float(distance), 4)))
         for i in range(d.ncon):
             c = d.contact[i]
             g1, g2 = int(c.geom1), int(c.geom2)

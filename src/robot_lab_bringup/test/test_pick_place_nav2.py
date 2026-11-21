@@ -56,13 +56,29 @@ def test_pick_place_uses_authored_collision_pose_from_measured_model_pose(pick_p
         <collision name="c"><geometry><box><size>0.3 0.3 0.1</size></box></geometry></collision>
       </link></model>
       <model name="table"><static>true</static><pose>0 0 0 0 0 0.3</pose><link name="link">
-        <collision name="c"><geometry><box><size>0.3 0.3 0.1</size></box></geometry></collision>
+        <collision name="top"><pose>0 0 0.52 0 0 0</pose>
+          <geometry><box><size>0.3 0.3 0.04</size></box></geometry>
+        </collision>
+        <collision name="leg"><geometry><box><size>0.03 0.03 0.5</size></box></geometry></collision>
+      </link></model>
+      <model name="floor"><static>true</static><pose>0 0 -0.05 0 0 0</pose><link name="link">
+        <collision name="c"><geometry><box><size>8 8 0.1</size></box></geometry></collision>
+      </link></model>
+      <model name="wall"><static>true</static><pose>0 0 1 0 0 0</pose><link name="link">
+        <collision name="c"><geometry><box><size>0.1 4 2</size></box></geometry></collision>
+      </link></model>
+      <model name="pillar"><static>true</static><link name="link">
+        <collision name="c"><geometry><cylinder><radius>0.2</radius><length>1</length></cylinder></geometry></collision>
       </link></model>
     </world></sdf>''')
     node.get_parameter = lambda name: SimpleNamespace(value=str(world))
     supports, sizes = node._world_boxes()
     assert sizes == {'block': [.04, .03, .08]}
     assert set(supports) == {'table'}
+    assert supports['table'].top == pytest.approx(.54)
+    assert sorted(box.name.split('/')[-1] for box in node.arm_obstacles) == ['pillar', 'ramp', 'table', 'table', 'wall']
+    pillar, = [geometry for geometry in node.arm_obstacles if geometry.shape == 'cylinder']
+    assert pillar.size == [.4, .4, 1.]
     s = math.sqrt(.5)
     node._on_truth(SimpleNamespace(data=json.dumps({'block': [2., 1., .5, s, 0., 0., s],
                                                   'ball': [0., 0., 1., 1., 0., 0., 0.]})))

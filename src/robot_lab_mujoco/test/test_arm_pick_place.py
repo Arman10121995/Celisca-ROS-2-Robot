@@ -103,6 +103,21 @@ def test_synchronised_targets_respect_the_rate():
     assert math.isclose(out[33]['a'], 1.0)          # 1 rad at 0.03 per step: reached at step 34
 
 
+def test_private_arm_scene_retains_cylinder_and_sphere_obstacles():
+    xml = """<mujoco><worldbody><body name="tool" pos="0 0 2">
+      <joint name="arm" type="hinge"/><geom type="sphere" size=".03"/>
+    </body></worldbody></mujoco>"""
+    quat = (1., 0., 0., 0.)
+    sphere = Box('sphere', (.15, 0., 0.), quat, (.12, .12, .12), 'sphere')
+    pillar = Box('pillar', (-.15, 0., 0.), quat, (.12, .12, .4), 'cylinder')
+    payload = Box('payload', (0., 0., 0.), quat, (.06, .06, .06))
+    scene = ArmScene(xml, ArmSpec(['arm'], [], 'tool'), [sphere, pillar], payload)
+    assert not scene.collisions()
+    for obstacle in (sphere, pillar):
+        scene.move_object(obstacle.position, quat)
+        assert any('obstacle_' + obstacle.name in hit[:2] for hit in scene.collisions())
+
+
 def test_measured_grasp_keeps_only_existing_jaw_contact():
     model = """<mujoco><worldbody><body name="tool">
       <joint name="arm" type="hinge"/>

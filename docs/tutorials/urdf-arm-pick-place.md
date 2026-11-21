@@ -39,8 +39,8 @@ python3 scripts/run_with_launch.py --log run.log --launch \
 ## What it does
 
 `urdf_pick_place.py` plans with `robot_lab_mujoco/arm_pick_place.py`, using a
-private MuJoCo model of the arm and the world's static boxes. Nothing in the
-plan touches the plant. It executes the plan through the articulation
+private MuJoCo model of the arm and the world's static collision primitives.
+Nothing in the plan touches the plant. It executes through the articulation
 contract, in these stages:
 
 1. open
@@ -59,6 +59,16 @@ for grasp, carried clearance and release checks. Configured camera estimates
 already use that centre. The support selector uses level collision boxes.
 During the lift, only the source surface supporting the object is exempt
 from payload collision checks. Other tables remain obstacles.
+The private arm scene checks large walls, sloped collision boxes, cylinders,
+spheres and multi-part tables. For each model, the support selector uses
+the highest eligible level box. The private model welds the robot base to
+its measured pose and omits the broad ground slab. Mesh and heightfield
+collision planning remain open.
+
+The carried payload is a mocap body in the planning model. The planner
+queries its distance to each static obstacle because the ordinary contact
+search skips pairs of bodies without dynamic degrees of freedom.
+[MuJoCo collision detection](https://mujoco.readthedocs.io/en/latest/computation.html#collision-detection).
 Isaac's loose-body importer requires the collider to align with the model
 frame. Offset-object missions on the other backends are pending.
 

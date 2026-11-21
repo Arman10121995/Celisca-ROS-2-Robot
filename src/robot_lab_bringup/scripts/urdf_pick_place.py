@@ -247,10 +247,11 @@ class PickPlace(Node):
 
     # --- inputs ---------------------------------------------------------------
     def _world_boxes(self):
-        """Supports (static boxes) and loose box sizes from the world file."""
+        """Keep arm collision obstacles separate from selectable level supports."""
         from robot_lab_mujoco.arm_pick_place import Box
         from robot_lab_utils.sdf_world import extract_dynamic_bodies, extract_static_shapes
         path = self.get_parameter('world_path').value
+        self.arm_obstacles = []
         if not path or not os.path.isfile(path):
             return {}, {}
         sizes = {}
@@ -269,13 +270,30 @@ class PickPlace(Node):
             self.object_collision_frames[name] = (shape['position'], shape['orientation'])
         shapes, _ = extract_static_shapes(path, lambda uri, base: '', collision_only=True, exclude_dynamic=True)
         boxes = {}
-        for shape in shapes:
-            # A support is a box a robot could set things on: under 1.2 m tall,
-            # not the floor (wider than 2 m).
-            if shape['type'] == 'box' and max(shape['size'][:2]) < 2.0 and shape['size'][2] < 1.2:
-                box = Box(shape['model'], shape['position'], shape['orientation'], shape['size'])
-                if box.rotation()[2, 2] >= math.cos(math.radians(0.5)):
-                    boxes[box.name] = box
+        for index, shape in enumerate(shapes):
+            kind = shape['type']
+            size = shape.get('size', [])
+            if kind == 'sphere':
+                size = [2 * size[0]] * 3
+            elif kind == 'cylinder':
+                size = [2 * size[0], 2 * size[0], size[1]]
+            elif kind != 'box':
+                continue
+            if not all(math.isfinite(value) and value > 0. for value in size):
+                continue
+            name = shape['model']
+            obstacle = Box(name, shape['position'], shape['orientation'], size, kind)
+            level = kind == 'box' and obstacle.rotation()[2, 2] >= math.cos(math.radians(.5))
+            if level and max(size[:2]) >= 2. and obstacle.top <= .03:
+                continue  # Ground slab supporting the fixed base in the private model.
+            if level and max(size[:2]) < 2. and size[2] < 1.2:
+                previous = boxes.get(name)
+                if previous is None or obstacle.top > previous.top:
+                    boxes[name] = obstacle
+            obstacle.name = f'collision/{index}/{name}'
+            self.arm_obstacles.append(obstacle)
+        for name, support in boxes.items():
+            support.name = name
         return boxes, sizes
 
     def _rgbd_bindings(self):
@@ -707,7 +725,7 @@ class PickPlace(Node):
         planned_joints = set(self.spec.arm_joints + self.spec.finger_joints)
         held = {c['name']: c['measured'] for c in self.state.get('channels', [])
                 if c.get('mode') == 'position' and c.get('measured') is not None and c['name'] not in planned_joints}
-        scene = ArmScene(self.robot_mjcf, self.spec, list(self.supports.values()), obj, base=base, held=held)
+        scene = ArmScene(self.robot_mjcf, self.spec, self.arm_obstacles, obj, base=base, held=held)
         start = {n: float(measured[n]) for n in self.spec.arm_joints}
         options = dict(approach=task['approach'], lift=task['lift'], seeds=self.seeds)
         support = self.supports[task['support']]
