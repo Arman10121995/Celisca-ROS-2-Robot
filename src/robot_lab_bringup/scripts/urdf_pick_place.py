@@ -349,6 +349,7 @@ class PickPlace(Node):
             phase='stopping' if self.stopping_nav else task.get('phase', 'idle'), stage=task.get('stage'),
             message=self.message, objects=sorted(self.truth), supports=sorted(self.supports),
             mobile=bool(self.mobile), pose_sources=['truth'] + (['rgbd'] if self.mobile and self.look and self.rgbd_bindings else []),
+            nav2_available=bool(self.mobile and self.nav_client.server_is_ready()),
             rgbd_objects=sorted(self.rgbd_bindings), pose_source=task.get('pose_source'), drive_phase=(task.get('phases') or [{}])[task.get('phase_index', 0)].get('name')
             if task else None,
             restart_required=not task and self.carried_footprint is not None,

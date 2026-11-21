@@ -32,9 +32,9 @@ CONFIG = dict(schema=SCHEMA, panel='arm', home={J1: 0., J2: 0.}, base_motion_lim
     J2: dict(mode='position', lower=-2.6, upper=2.6, max_velocity=1., effort=43.4, kp=1736., kd=13.18)})
 
 
-def command(backend='isaac'):
+def command(backend='isaac', mode='display'):
     return ['ros2', 'launch', 'robot_lab_bringup', 'simulated_robot.launch.py',
-            'robot_model:=asset_elephant_myagv_pro_pro630', 'simulator:=' + backend, 'mode:=display',
+            'robot_model:=asset_elephant_myagv_pro_pro630', 'simulator:=' + backend, 'mode:=' + mode,
             'map_name:=nav_empty']
 
 
@@ -127,7 +127,7 @@ def panel(model, monkeypatch):
 
 
 def activate(panel, model):
-    panel.app.process = Mock(args=command(panel.app.simulator_var.get()))
+    panel.app.process = Mock(args=command(panel.app.simulator_var.get(), panel.app.mode_var.get()))
     panel.app.process.poll.return_value = None
     panel.app._launch_running = True
     panel.node = Mock()
@@ -322,6 +322,21 @@ def test_mobile_node_labels_the_section_as_fetch(panel, model):
     panel.update_pick_place()
     assert panel.pick_frame.cget('text').startswith('Fetch') and panel.pick_run_button.cget('text') == 'Run fetch'
     panel.pick_pub = Mock()
+    panel.app.mode_var.set('nav')
+    activate(panel, model)
+    panel.receive_pick_place(SimpleNamespace(data=json.dumps(state)))
+    panel.update_pick_place()
+    assert panel.pick_run_button.instate(['disabled'])
+    assert not panel.run_pick_place()
+    assert 'Nav2 transit action' in panel.pick_status.get()
+    panel.receive_pick_place(SimpleNamespace(data=json.dumps(dict(state, nav2_available=True))))
+    panel.update_pick_place()
+    assert panel.pick_run_button.instate(['!disabled'])
+    assert panel.run_pick_place()
+    assert json.loads(panel.pick_pub.publish.call_args.args[0].data)['transit'] == 'nav2'
+    panel.pick_pub.reset_mock()
+    panel.app.mode_var.set('display')
+    activate(panel, model)
     panel.receive_pick_place(SimpleNamespace(data=json.dumps(dict(state, restart_required=True,
         message='Loaded footprint retained. Restart the simulation before another fetch.'))))
     panel.update_pick_place()

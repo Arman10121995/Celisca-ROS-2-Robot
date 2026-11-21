@@ -341,6 +341,9 @@ class UrdfArmControls(MolarControls):
     def pick_fresh(self):
         return self.pick_supported() and time.monotonic() - self.pick_received < 2.0
 
+    def _pick_uses_nav2(self):
+        return self.pick_state.get('mobile') and self.app.mode_var.get() == 'nav'
+
     def run_pick_place(self):
         """Explicitly start one pick and place; the node plans, executes and judges it."""
         if not (self.ready() and self.pick_fresh()) or self.pick_state.get('phase') != 'idle':
@@ -350,6 +353,10 @@ class UrdfArmControls(MolarControls):
             return False
         if self.pick_state.get('ready') is False:
             self.pick_status.set(self.pick_state.get('feedback_blocker', 'Waiting for measured pick feedback.'))
+            return False
+        use_nav = self._pick_uses_nav2()
+        if use_nav and not self.pick_state.get('nav2_available'):
+            self.pick_status.set('Waiting for the Nav2 transit action.')
             return False
         lift = finite(self.pick_lift.get())
         if not .03 <= lift <= .25 or self.pick_object.get() not in self.pick_state.get('objects', []) \
@@ -363,9 +370,10 @@ class UrdfArmControls(MolarControls):
         if source == 'rgbd' and self.pick_object.get() not in self.pick_state.get('rgbd_objects', []):
             self.pick_status.set('%s has no declared RGB-D colour and size in this world.' % self.pick_object.get())
             return False
-        self.pick_pub.publish(String(data=json.dumps(dict(object=self.pick_object.get(),
-                                                          support=self.pick_support.get(), lift=lift,
-                                                          pose_source=source))))
+        request = dict(object=self.pick_object.get(), support=self.pick_support.get(), lift=lift, pose_source=source)
+        if use_nav:
+            request['transit'] = 'nav2'
+        self.pick_pub.publish(String(data=json.dumps(request)))
         self.pick_status.set('Requested: %s onto %s.' % (self.pick_object.get(), self.pick_support.get()))
         return True
 
@@ -395,7 +403,8 @@ class UrdfArmControls(MolarControls):
         if self.pick_frame.cget('text') != title:
             self.pick_frame.configure(text=title)
             self.pick_run_button.configure(text='Run fetch' if mobile else 'Run pick / place')
-        can_start = (fresh and idle and not state.get('restart_required')
+        waiting_for_nav2 = self._pick_uses_nav2() and not state.get('nav2_available')
+        can_start = (fresh and idle and not state.get('restart_required') and not waiting_for_nav2
                      and state.get('ready', True) and self.ready())
         self.pick_run_button.state(['!disabled'] if can_start else ['disabled'])
         self.pick_stop_button.state(['!disabled'] if fresh and not idle else ['disabled'])
@@ -405,6 +414,8 @@ class UrdfArmControls(MolarControls):
             self.pick_status.set('Waiting for the pick-and-place node.')
         elif idle and state.get('feedback_blocker') and not state.get('restart_required'):
             self.pick_status.set(state['feedback_blocker'])
+        elif idle and waiting_for_nav2 and not state.get('restart_required'):
+            self.pick_status.set('Waiting for the Nav2 transit action.')
         else:
             text = '%s: %s' % (state.get('phase'), state.get('message'))
             result = state.get('last_result') or {}

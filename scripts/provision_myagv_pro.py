@@ -218,7 +218,7 @@ def provision(store, download=False, variant='fortress'):
             default_approach=.06, default_lift=.05,
             arm_seeds=[[-.188, 1.125, -.641, 1.086, -1.571, 2.151]],
             mobile=dict(reach=.47, place_reach=.445, base_radius=.37, place_inset=.06, dock_position_tolerance=.01))
-        profile.update(supported_simulators=['mujoco'], experimental_modes_by_simulator={'mujoco':['display']},
+        profile.update(supported_simulators=['mujoco'], experimental_modes_by_simulator={'mujoco':['display','nav']},
             experimental_asset_options={'pick_place': pick_place},
             features=[*profile['features'],'gripper'], notes=profile['notes']+
             ' Vendor F100 mount and one bounded jaw actuator with five linked followers. '

@@ -40,7 +40,8 @@ def pick_place(app, page, args, report, press, settle, until, pump, screenshot):
     page.pick_object.set(args.pick_place[0])
     page.pick_support.set(args.pick_place[1])
     previous = json.dumps(page.pick_state.get('last_result'))
-    until(lambda: page.pick_run_button.instate(['!disabled']), 20, 'Run pick / place enabled')
+    until(lambda: page.pick_run_button.instate(['!disabled']), 60 if args.mode == 'nav' else 20,
+          'Run pick / place enabled')
     press(page.pick_run_button)
     until(lambda: page.pick_state.get('phase') == 'executing'
           or json.dumps(page.pick_state.get('last_result')) != previous, 30, 'task started')
@@ -61,6 +62,9 @@ def pick_place(app, page, args, report, press, settle, until, pump, screenshot):
     report['pick_place'] = dict(result=result, page_status=page.pick_status.get())
     screenshot(args.output / 'placed.png')
     report['passed'] = bool(report['page_selected'] and result.get('passed'))
+    if args.mode == 'nav':
+        stages = {stage.get('phase') for stage in result.get('stages', [])}
+        report['passed'] = report['passed'] and {'carry_footprint_ready', 'carry_nav2'} <= stages
 
 
 def main():
@@ -68,6 +72,7 @@ def main():
     parser.add_argument('--robot', default='asset_elephant_myagv_pro_pro630')
     parser.add_argument('--simulator', default='pybullet')
     parser.add_argument('--map', default='nav_empty')
+    parser.add_argument('--mode', default='display', choices=('display', 'nav'))
     parser.add_argument('--output', type=Path, required=True)
     parser.add_argument('--experimental', action='store_true', help='allow the selected profile’s experimental workflow')
     task = parser.add_mutually_exclusive_group()
@@ -80,7 +85,7 @@ def main():
                       help='plan and execute this offset in metres from the measured source flange')
     args = parser.parse_args()
     args.output.mkdir(parents=True, exist_ok=False)
-    report = dict(robot=args.robot, simulator=args.simulator, map=args.map, steps=[], passed=False)
+    report = dict(robot=args.robot, simulator=args.simulator, map=args.map, mode=args.mode, steps=[], passed=False)
     app = SimulationLauncherGui()
     page = app.urdf_arm_controls
 
@@ -121,7 +126,7 @@ def main():
     try:
         app.robot_var.set(args.robot)
         app.simulator_var.set(args.simulator)
-        app.mode_var.set('display')
+        app.mode_var.set(args.mode)
         app.map_var.set(args.map)
         app.gui_var.set('false')
         app.experimental_assets_var.set(args.experimental)
@@ -131,6 +136,8 @@ def main():
         report['rows'] = [child.cget('text') for child in page.joint_frame.winfo_children()]
         app.show_tab('Mobile arm')             # the Launch workspace, this page raised
         report['command'] = app.command_var.get()
+        if app.mode_var.get() != args.mode:
+            raise RuntimeError('Requested mode is unavailable for the selected robot, simulator and map')
         app._start_launch()
         until(page.ready, 300, 'arm page ready')
         pump(3.)

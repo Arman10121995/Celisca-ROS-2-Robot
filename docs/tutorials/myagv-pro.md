@@ -140,6 +140,12 @@ tables and floor have the same geometry. One run measured an unsupported
 The complete fetch workflow remains experimental.
 [Loaded custody evidence](../status/evidence/r143-pro630-f100-2026-11-20/README.md#loaded-custody-and-transport-november-21).
 
+To try Nav2 transport, keep the same experimental profile and map and
+select **Navigation**. **Run fetch** becomes available when the Nav2 transit
+action and articulation feedback are ready. The loaded leg waits for both
+costmaps to confirm the payload footprint. The Nav2 fetch mission remains
+unqualified.
+
 ## How control and sensing connect
 
 ```mermaid
