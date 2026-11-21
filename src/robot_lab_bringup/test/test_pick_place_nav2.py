@@ -141,6 +141,34 @@ def test_shifted_calibrated_grasp_reapproaches_the_original_support_once(pick_pl
     node._plan_arm.assert_called_once_with(task, phase, reapproach=True)
 
 
+def test_holonomic_dock_corrects_the_measured_pose_after_settling(pick_place, monkeypatch):
+    node = object.__new__(pick_place.PickPlace)
+    node.base_pose = (.8686, .01, -.002, -.0531)
+    node.base_at, node.base_twist, node.state = 10., (0., 0.), {}
+    node.supports, node.mobile = {}, {'holonomic_docking': True, 'base_radius': .37}
+    node.dock_tolerance = .01
+    node._twist, node._next_phase = Mock(), Mock()
+    monkeypatch.setattr(pick_place, '_now', lambda: 10.)
+    task = dict(interlock={'drive_ticks': 0}, log=[])
+    goal = dict(x=.89, y=0., yaw=0.)
+    phase = dict(started=9., waypoints=[goal], waypoint=0, at_point=True)
+    node._drive(task, phase)
+    args, kwargs = node._twist.call_args
+    assert args[0] > 0 and args[1] > 0 and kwargs['vy'] < 0
+    assert math.hypot(args[0], kwargs['vy']) <= pick_place.HOLONOMIC_DOCK_SPEED_MPS
+    assert phase['precision_dock'] == goal
+    phase.update(waypoint=1, still=9.)
+    node._drive(task, phase)
+    assert phase['waypoint'] == 0 and phase['dock_recaptures'] == 1
+    node._next_phase.assert_not_called()
+    node.base_pose = (.886, .003, -.002, .01)
+    phase.update(waypoint=1, still=9.)
+    phase['name'] = 'to_object'
+    node._drive(task, phase)
+    node._next_phase.assert_called_once_with(task)
+    assert task['log'][0]['dock_recaptures'] == 1
+
+
 def test_stop_waits_for_late_nav2_acceptance_and_terminal_cancel(pick_place):
     node = object.__new__(pick_place.PickPlace)
     nav = dict(future=Future(), result=None)

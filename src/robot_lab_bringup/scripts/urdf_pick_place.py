@@ -119,6 +119,9 @@ YAW_TOLERANCE = 0.03        # rad
 DRIVE_TIMEOUT = 240.0   # s per drive phase (Nav2 transit legs took 65-75 s under load)
 TRACE_PERIOD = 0.5      # s between stability samples in the receipt
 STILL_SPEED = 0.01      # m/s and rad/s: the base counts as stopped
+HOLONOMIC_DOCK_CAPTURE_M = .12
+HOLONOMIC_DOCK_SPEED_MPS = .045
+HOLONOMIC_DOCK_TURN_RPS = .12
 CARRY_DRIFT = 0.03      # m of object motion relative to the base while carrying
 NAV2_MIN_LEG = 0.5      # m: shorter transit legs stay straight (DWB circles on tiny paths)
 NAV2_HANDOFF = 0.15      # m: localization this close to the run-up point hands over to docking
@@ -958,7 +961,16 @@ class PickPlace(Node):
             if max(self.base_twist) < STILL_SPEED:
                 phase['still'] = phase.get('still') or _now()
                 if _now() - phase['still'] > 0.5:
+                    dock = phase.get('precision_dock')
+                    if dock and (math.hypot(dock['x']-x, dock['y']-y) > self.dock_tolerance
+                                 or abs(_wrap(dock['yaw']-yaw)) > YAW_TOLERANCE):
+                        phase.update(waypoint=len(phase['waypoints'])-1, rolling=False, at_point=False)
+                        phase.pop('still', None)
+                        phase['dock_recaptures'] = phase.get('dock_recaptures', 0) + 1
+                        return
                     entry = dict(final_pose=[round(v, 4) for v in self.base_pose])
+                    if dock:
+                        entry['dock_recaptures'] = phase.get('dock_recaptures', 0)
                     if phase.get('carrying'):
                         entry['max_carry_drift_m'] = round(phase.get('max_drift', 0.0), 4)
                     task['log'].append(dict(phase=phase['name'] + '_arrived', **entry))
@@ -971,6 +983,22 @@ class PickPlace(Node):
         distance = math.hypot(dx, dy)
         reverse = target.get('reverse', False)
         position_tolerance = self.dock_tolerance if 'yaw' in target else POSITION_TOLERANCE
+        precision = (self.mobile.get('holonomic_docking') is True and 'yaw' in target
+                     and phase['waypoint'] == len(phase['waypoints'])-1)
+        if precision:
+            phase['precision_dock'] = target
+        if precision and distance <= HOLONOMIC_DOCK_CAPTURE_M:
+            from robot_lab_mujoco.arm_pick_place import segment_clearance
+
+            clearance, obstacle = segment_clearance(list(self.supports.values()), (x, y), (target['x'], target['y']))
+            if clearance < self.mobile['base_radius']:
+                return self._finish('failed', f'Precision docking blocked by {obstacle}')
+            yaw_error = _wrap(target['yaw'] - yaw)
+            if distance > position_tolerance or abs(yaw_error) > YAW_TOLERANCE:
+                scale = min(.8, HOLONOMIC_DOCK_SPEED_MPS/distance) if distance > position_tolerance else 0.
+                c, s = math.cos(yaw), math.sin(yaw)
+                wz = max(-HOLONOMIC_DOCK_TURN_RPS, min(HOLONOMIC_DOCK_TURN_RPS, 1.5*yaw_error))
+                return self._twist(scale*(c*dx+s*dy), wz, vy=scale*(-s*dx+c*dy))
         if distance > position_tolerance and not phase.get('at_point'):
             heading = math.atan2(dy, dx) + (math.pi if reverse else 0.0)
             error = _wrap(heading - yaw)
@@ -1149,9 +1177,10 @@ class PickPlace(Node):
                 sample['object_in_base'] = [round(float(v), 4) for v in self._in_base(self.truth[task['object']][:3])]
         task.setdefault('trace', []).append(sample)
 
-    def _twist(self, linear, angular):
+    def _twist(self, linear, angular, *, vy=0.):
         message = Twist()
-        message.linear.x, message.angular.z = float(linear), float(angular)
+        message.linear.x, message.linear.y = float(linear), float(vy)
+        message.angular.z = float(angular)
         self.cmd_pub.publish(message)
 
     def _settled(self, stage):

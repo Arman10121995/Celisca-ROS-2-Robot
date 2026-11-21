@@ -162,6 +162,14 @@ their original perception binding. A replay of the failed Bullet state
 found an open, retract, approach and lift plan. Live recovery remains open.
 [Measured-pose planning replay](bullet-grasp-reapproach-plan.json).
 
+The next PyBullet trial stopped 23.6 mm from its pickup dock and 0.053 rad
+from the intended heading. The private arm planner could not reach the
+grasp from that pose. Replay of the same object planned a pickup at the
+declared dock. The optional holonomic correction uses bounded translation
+and yaw near the target and checks the actual settled pose before starting
+the arm. Its physical trial is pending.
+[Dock observation and planning replay](bullet-gui-dock-off-target.json).
+
 ### Complete GUI fetch
 
 Run 11 used the normal GUI on `mobile_fetch_lab_f100` with MuJoCo Display
