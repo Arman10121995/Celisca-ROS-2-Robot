@@ -148,8 +148,8 @@ with all five passive followers. Loaded Bullet fetch remains experimental.
 To try Nav2 transport, keep the same experimental profile and map and
 select **MuJoCo → Navigation**. **Run fetch** becomes available when the Nav2 transit
 action and articulation feedback are ready. The loaded leg waits for both
-costmaps to confirm the payload footprint. The Nav2 fetch mission remains
-unqualified.
+costmaps to confirm the payload footprint. A complete run with the new
+MuJoCo shoulder damping is pending. [Navigation trials](../status/evidence/r143-pro630-f100-2026-11-20/README.md#navigation-follow-up).
 
 ## How control and sensing connect
 
@@ -222,10 +222,12 @@ step, with no GUI download requirement:
 python3 scripts/provision_myagv_pro.py --download                    # Gazebo variant
 python3 scripts/provision_myagv_pro.py --download --variant rollers  # MuJoCo / PyBullet / Isaac
 python3 scripts/provision_myagv_pro.py --download --variant pro630   # with the Pro630 arm
+python3 scripts/provision_myagv_pro.py --download --variant pro630-f100
 ```
 
-The `pro630` variant also needs `trimesh`, `scipy` and `pybullet` (mesh
-conversion, link inertias and the payload torque estimate).
+Both Pro630 variants also need `trimesh`, `pycollada`, `scipy` and
+`pybullet` for Collada mesh conversion, link inertias and the payload
+torque estimate.
 
 Source checkouts, CAD assets, generated URDF/SDF, license, resource hashes,
 contact/control recipe and installation receipts stay under

@@ -197,6 +197,19 @@ the retry when another qualification started. Nav2 arrival and release
 remain unmeasured with the corrected limits.
 [Carry timeout](nav-gui-transit-timeout.json) · [Effective DWB limits](f100-dwb-effective-limits.json) · [Live loaded transit observation](nav-gui-live-limits-interrupted.json).
 
+The uninterrupted run with the declared limits lifted the block 42.7 mm.
+Both costmaps acknowledged the footprint. Both pads still measured about
+2.43 N after 240 s of carry, at base position `(0.389, 0.644)` m. The
+interlock held 1,554 of 2,403 drive ticks. In the sampled held-arm
+intervals, shoulder yaw moved up to 0.0131 rad within 0.25 wall seconds.
+Every other joint stayed below 0.0019 rad in the same sample windows.
+At the observed carry pose, the compiled inertia gives estimated critical
+damping of 11.1–17.9 N·m·s/rad under free-to-locked joint assumptions.
+The MuJoCo Navigation profile now uses 12 N·m·s/rad at the existing
+shoulder servo, within its original 5 N·m effort cap. Loaded transit and
+release with this setting remain unmeasured.
+[Uninterrupted GUI timeout](nav-gui-declared-limits-timeout.json) · [Joint trace summary and inertia calculation](f100-shoulder-motion.json).
+
 ### Isaac joint authoring
 
 The Isaac bridge forwards passive mechanical couplings separately from

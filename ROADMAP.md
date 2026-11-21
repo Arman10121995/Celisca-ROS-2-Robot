@@ -1749,7 +1749,11 @@ accounts for terrain fixtures without saved 2D maps. Details and evidence are in
   explicitly. The loaded leg still requires both costmaps to acknowledge the
   payload footprint. The first live trial lifted 42.9 mm and received both
   acknowledgements. It ended on the held-arm interlock. The pause handling
-  and F100 costmap and transit settings are implemented. A full retry remains.
+  and F100 costmap and transit settings are implemented. The first full retry
+  at the declared caps kept bilateral load through a carry timeout. Held J1
+  oscillation was measured. The MuJoCo Navigation profile now applies
+  source-bounded servo damping. Loaded transit through release remains open.
+  [Trial](docs/status/evidence/r143-pro630-f100-2026-11-20/nav-gui-declared-limits-timeout.json).
 - **PyBullet Display:** the normal `nav_empty` GUI reached Open, Close and
   the calibrated 54 mm opening with all five passive followers. The camera
   renders on demand to preserve control feedback. Loaded Bullet missions

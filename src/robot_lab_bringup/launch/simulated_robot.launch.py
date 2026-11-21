@@ -907,8 +907,11 @@ def _build_simulation_actions(context):
     drive_args["drive_config"] = json.dumps(drive_config, sort_keys=True)
     # Empty for robots without an articulation: the spawners treat any
     # non-empty string, even "{}", as a configuration to load.
-    drive_args["articulation_config"] = (json.dumps(robot_config["articulation"], sort_keys=True)
-                                         if robot_config.get("articulation") else "")
+    articulation = robot_config.get('articulation')
+    nav_damping = robot_config.get('mujoco_nav_servo_damping')
+    if articulation and nav_damping and mode_name == 'nav' and _launch_value(context, 'simulator') == 'mujoco':
+        articulation = dict(articulation, mujoco_joint_servo_damping=nav_damping)
+    drive_args["articulation_config"] = json.dumps(articulation, sort_keys=True) if articulation else ""
     # Explicit imported sensors carry their actual mounting frame and source
     # calibration into each physics bridge. Empty retains existing defaults.
     drive_args['sensor_config'] = json.dumps(robot_config.get('sensor_config', {}), sort_keys=True)

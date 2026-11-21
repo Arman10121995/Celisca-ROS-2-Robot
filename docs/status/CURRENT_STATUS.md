@@ -1,5 +1,12 @@
 # Current Robot Lab status
 
+November 21 Codex: the F100 Nav2 fetch lifted the 40 g block 42.7 mm,
+received both loaded costmap footprints, and held bilateral pad pressure
+through the carry timeout. Shoulder-yaw motion repeatedly engaged the
+base interlock. The replacement servo damping is scoped to F100 MuJoCo
+Navigation. Source checks pass and full transit with the revised settings
+is pending. [Navigation evidence](evidence/r143-pro630-f100-2026-11-20/README.md#navigation-follow-up).
+
 November 21 Codex: native Stretch can build camera-based reaches for a
 declared upright cylinder in the installed Mobile manipulation lab variant.
 The executor checks the live camera receipt against the compiled collision

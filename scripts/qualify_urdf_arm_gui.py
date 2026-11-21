@@ -36,8 +36,12 @@ def pick_place(app, page, args, report, press, settle, until, pump, screenshot):
     home = app._robot_config()['articulation']['home']
     press(page.home_button)
     settle(home, 'home', 60.)
-    until(lambda: page.pick_fresh() and args.pick_place[0] in page.pick_state.get('objects', []), 60,
-          'pick-and-place node sees the object')
+    until(lambda: page.pick_fresh() and page.pick_state.get('truth_age_s') is not None, 60,
+          'pick-and-place workflow and measured free-object feedback')
+    for value, key in zip(args.pick_place, ('objects', 'supports'), strict=True):
+        available = page.pick_state.get(key) or []
+        if value not in available:
+            raise ValueError(f'{value!r} is unavailable in {key}: {", ".join(available)}')
     page.pick_object.set(args.pick_place[0])
     page.pick_support.set(args.pick_place[1])
     if args.pose_source != 'truth':

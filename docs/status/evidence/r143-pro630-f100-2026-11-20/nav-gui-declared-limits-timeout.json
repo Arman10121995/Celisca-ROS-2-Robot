@@ -1,0 +1,297 @@
+{
+  "robot": "asset_elephant_myagv_pro_pro630_f100",
+  "simulator": "mujoco",
+  "map": "mobile_fetch_lab_f100",
+  "mode": "nav",
+  "steps": [
+    {
+      "pressed": "Home (direct)",
+      "button_state": "()",
+      "page_status": "Target requested; inspect actual feedback."
+    },
+    {
+      "step": "home",
+      "targets": {
+        "pro630_joint1_to_base": 0.0,
+        "pro630_joint2_to_joint1": 0.0,
+        "pro630_joint3_to_joint2": 0.0,
+        "pro630_joint4_to_joint3": 0.0,
+        "pro630_joint5_to_joint4": 0.0,
+        "pro630_joint6_to_joint5": 0.0,
+        "pro630_gripper_controller": 0.0
+      },
+      "settled_s": 0.0,
+      "measured": {
+        "pro630_gripper_controller": 0.0,
+        "pro630_joint1_to_base": -0.001,
+        "pro630_joint2_to_joint1": 0.0003,
+        "pro630_joint3_to_joint2": 0.0004,
+        "pro630_joint4_to_joint3": 0.0005,
+        "pro630_joint5_to_joint4": -0.0002,
+        "pro630_joint6_to_joint5": -0.0001,
+        "pro630_gripper_base_to_gripper_left2": 0.0,
+        "pro630_gripper_base_to_gripper_right2": 0.0,
+        "pro630_gripper_base_to_gripper_right3": 0.0,
+        "pro630_gripper_left3_to_gripper_left1": 0.0,
+        "pro630_gripper_right3_to_gripper_right1": 0.0
+      }
+    },
+    {
+      "pressed": "Run fetch",
+      "button_state": "()",
+      "page_status": "Target requested; inspect actual feedback."
+    }
+  ],
+  "passed": false,
+  "page_selected": true,
+  "rows": [
+    "J1 \u00b7 joint1_to_base",
+    "J2 \u00b7 joint2_to_joint1",
+    "J3 \u00b7 joint3_to_joint2",
+    "J4 \u00b7 joint4_to_joint3",
+    "J5 \u00b7 joint5_to_joint4",
+    "J6 \u00b7 joint6_to_joint5",
+    "Gripper"
+  ],
+  "command": "ros2 launch robot_lab_bringup simulated_robot.launch.py mode:=nav map_name:=mobile_fetch_lab_f100 robot_model:=asset_elephant_myagv_pro_pro630_f100 simulator:=mujoco gui:=false global_planning:=a_star_planner local_planning:=dwb_local_planner control:=native_holonomic_controller localization:=amcl state_estimation:=ekf_localization_node sensor_fusion:=wheel_imu_fusion allow_experimental_assets:=true",
+  "model_sha256": "bf9ef87b82586316cb4ff59956cd87179c1f681bd352f46777468aebd2bb082d",
+  "pick_place": {
+    "result": {
+      "schema": "robot_lab.pick_place_result.v1",
+      "outcome": "failed",
+      "passed": false,
+      "message": "drive carry timed out. Loaded footprint retained. Restart the simulation before another fetch.",
+      "request": {
+        "object": "fetch_block",
+        "support": "drop_table",
+        "lift": 0.05,
+        "pose_source": "truth",
+        "transit": "nav2"
+      },
+      "object": "fetch_block",
+      "support": "drop_table",
+      "object_start": [
+        1.3599999996109344,
+        -4.656840881681941e-10,
+        0.5448922445797842
+      ],
+      "plan": {
+        "transit": "nav2",
+        "pick_base": [
+          0.89,
+          -0.0,
+          0.0
+        ],
+        "place_base": [
+          0.45,
+          1.515,
+          1.571
+        ],
+        "place_xy": [
+          0.45,
+          1.96
+        ],
+        "grasp_width_m": 0.04,
+        "pick_base_measured": [
+          0.8839,
+          0.0002,
+          -0.0038,
+          -0.0021
+        ]
+      },
+      "stages": [
+        {
+          "phase": "to_object_arrived",
+          "final_pose": [
+            0.8839,
+            0.0002,
+            -0.0038,
+            -0.0021
+          ]
+        },
+        {
+          "phase": "to_object",
+          "seconds": 11.55
+        },
+        {
+          "stage": "open",
+          "seconds": 2.46,
+          "object_truth": [
+            1.36,
+            -0.0,
+            0.5449
+          ],
+          "tcp_estimate": [
+            0.8845,
+            0.2855,
+            1.071
+          ],
+          "passed": true
+        },
+        {
+          "stage": "above_object",
+          "seconds": 5.66,
+          "object_truth": [
+            1.36,
+            -0.0,
+            0.5449
+          ],
+          "tcp_estimate": [
+            1.3586,
+            0.0002,
+            0.6025
+          ],
+          "passed": true
+        },
+        {
+          "stage": "down_to_grasp",
+          "seconds": 1.04,
+          "object_truth": [
+            1.3598,
+            0.0002,
+            0.5447
+          ],
+          "tcp_estimate": [
+            1.3604,
+            -0.0002,
+            0.5754
+          ],
+          "passed": true
+        },
+        {
+          "stage": "close",
+          "seconds": 7.52,
+          "object_truth": [
+            1.3637,
+            0.0001,
+            0.5453
+          ],
+          "tcp_estimate": [
+            1.3603,
+            -0.0,
+            0.5761
+          ],
+          "finger_positions": [
+            0.34318929162505657,
+            0.3431875224599079,
+            0.3431873001331559,
+            0.3431952006908866,
+            0.34318758190917226,
+            0.3431828861313516
+          ],
+          "passed": true,
+          "pad_normal_force_n": {
+            "left": 2.1529560347198666,
+            "right": 3.3989539535397197
+          },
+          "reason": ""
+        },
+        {
+          "stage": "lift",
+          "seconds": 3.27,
+          "object_truth": [
+            1.3652,
+            -0.0001,
+            0.5876
+          ],
+          "tcp_estimate": [
+            1.3586,
+            0.0,
+            0.6234
+          ],
+          "passed": true,
+          "rise_m": 0.0427,
+          "hold_drift_m": 0.0006,
+          "reason": "",
+          "pad_normal_force_n": {
+            "left": 2.427330703662685,
+            "right": 2.4251335246630523
+          }
+        },
+        {
+          "phase": "pick",
+          "seconds": 20.76
+        },
+        {
+          "phase": "carry_footprint_ready",
+          "consumers": [
+            "global",
+            "local"
+          ],
+          "sim_s": 41.504000000000005
+        }
+      ],
+      "mobile": true,
+      "interlock": {
+        "max_base_speed_in_arm_phases": 0.0020068756451139987,
+        "max_base_turn_in_arm_phases": 0.0014841007647016272,
+        "drive_ticks_with_articulation_active": 1554,
+        "drive_ticks": 2403
+      },
+      "transit": "nav2",
+      "pose_source": "truth",
+      "perceived": null,
+      "phase": "carry",
+      "seconds": 272.39,
+      "plant_id": "0313db7d00414dc588e9124a5c4c1470",
+      "model_sha256": "bf9ef87b82586316cb4ff59956cd87179c1f681bd352f46777468aebd2bb082d",
+      "finished": "2026-11-21T21:53:37",
+      "receipt": "/workspace/molar/robot_lab_runtime/pick-place/20261121T215337_fetch_block.json",
+      "trace_samples": 520,
+      "last_sample": {
+        "t": 272.29,
+        "stage": "carry",
+        "object": [
+          0.6699,
+          1.0334,
+          0.5644,
+          0.8899,
+          0.0051,
+          0.0067,
+          0.456
+        ],
+        "fingers": [
+          0.3362,
+          0.3362,
+          0.3362,
+          0.3362,
+          0.3362,
+          0.3362
+        ],
+        "finger_references": [
+          0.3121,
+          0.3361,
+          0.3361,
+          0.3361,
+          0.3361,
+          0.3361
+        ],
+        "pad_normal_force_n": {
+          "left": 2.4352424017209864,
+          "right": 2.427831601352
+        },
+        "arm_joints": {
+          "pro630_joint1_to_base": -0.18446,
+          "pro630_joint2_to_joint1": 0.65596,
+          "pro630_joint3_to_joint2": 0.24043,
+          "pro630_joint4_to_joint3": 0.67514,
+          "pro630_joint5_to_joint4": -1.57073,
+          "pro630_joint6_to_joint5": -0.99103
+        },
+        "base": [
+          0.3889,
+          0.6439,
+          -0.0037,
+          0.9389
+        ],
+        "object_in_base": [
+          0.4804,
+          0.0033,
+          0.5681
+        ]
+      }
+    },
+    "page_status": "idle: drive carry timed out. Loaded footprint retained. Restart the simulation before another fetch.\nLast: failed \u00b7 /workspace/molar/robot_lab_runtime/pick-place/20261121T215337_fetch_block.json"
+  },
+  "launch_returncode": 0
+}

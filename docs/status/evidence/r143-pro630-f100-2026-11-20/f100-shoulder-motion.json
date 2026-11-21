@@ -1,0 +1,86 @@
+{
+  "observed_topic": "/molar/articulation/state",
+  "wall_samples": 118,
+  "active_samples": 84,
+  "window_scope": "Observed radians across the last 0.25 wall seconds for samples marked active and holding with at least three observations",
+  "observed_excursion": {
+    "pro630_gripper_controller": {
+      "windows": 82,
+      "median_rad": 1.3659375039110078e-05,
+      "max_rad": 8.036948650236297e-05
+    },
+    "pro630_joint1_to_base": {
+      "windows": 82,
+      "median_rad": 0.005098113516212241,
+      "max_rad": 0.013053377124580712
+    },
+    "pro630_joint2_to_joint1": {
+      "windows": 82,
+      "median_rad": 0.000618522631932128,
+      "max_rad": 0.0017861719407116228
+    },
+    "pro630_joint3_to_joint2": {
+      "windows": 82,
+      "median_rad": 0.0005018624710365904,
+      "max_rad": 0.0018598307278366033
+    },
+    "pro630_joint4_to_joint3": {
+      "windows": 82,
+      "median_rad": 0.00010531301139776739,
+      "max_rad": 0.0007893988062148694
+    },
+    "pro630_joint5_to_joint4": {
+      "windows": 82,
+      "median_rad": 0.00022690756604348827,
+      "max_rad": 0.0007161264683608337
+    },
+    "pro630_joint6_to_joint5": {
+      "windows": 82,
+      "median_rad": 9.495696500660955e-06,
+      "max_rad": 3.143307476716206e-05
+    },
+    "pro630_gripper_base_to_gripper_left2": {
+      "windows": 82,
+      "median_rad": 1.4628194971583186e-05,
+      "max_rad": 8.533335156885036e-05
+    },
+    "pro630_gripper_base_to_gripper_right2": {
+      "windows": 82,
+      "median_rad": 1.4549702637561834e-05,
+      "max_rad": 8.542766373137445e-05
+    },
+    "pro630_gripper_base_to_gripper_right3": {
+      "windows": 82,
+      "median_rad": 1.4955462220217486e-05,
+      "max_rad": 8.767509991342015e-05
+    },
+    "pro630_gripper_left3_to_gripper_left1": {
+      "windows": 82,
+      "median_rad": 1.4568277639626093e-05,
+      "max_rad": 8.541076462814656e-05
+    },
+    "pro630_gripper_right3_to_gripper_right1": {
+      "windows": 82,
+      "median_rad": 1.4600111738150012e-05,
+      "max_rad": 8.552726990734838e-05
+    }
+  },
+  "raw_on_ssd": "/workspace/molar/robot_lab_runtime/pro630-gripper-20261120/nav-limits-physical-qiLcdh/holding-joints.jsonl",
+  "raw_sha256": "f16d0f14b1a76ae36aff37d27d36d3d2c1a483c697e630d2d41173e8440a756e",
+  "mass_matrix": [
+    {
+      "pose": "home",
+      "diagonal_inertia_kg_m2": 0.035218174986564536,
+      "free_joint_effective_inertia_kg_m2": 0.012536398396146849,
+      "critical_damping_fixed_rad_s": 5.307969478929926,
+      "critical_damping_free_rad_s": 3.1668783868215526
+    },
+    {
+      "pose": "carry",
+      "diagonal_inertia_kg_m2": 0.4020642334264836,
+      "free_joint_effective_inertia_kg_m2": 0.1536587776033451,
+      "critical_damping_fixed_rad_s": 17.934642085672824,
+      "critical_damping_free_rad_s": 11.08724591964461
+    }
+  ]
+}

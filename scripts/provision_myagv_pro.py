@@ -260,6 +260,11 @@ def provision(store, download=False, variant='fortress'):
     if with_gripper:
         from robot_lab_utils.sim_frames import rigid_sensor_offsets
 
+        # The loaded MuJoCo trace isolated shoulder yaw. At the observed carry
+        # pose its compiled free-to-constrained critical damping is 11–18
+        # N·m·s/rad. The derivative term still shares the original 5 N·m cap.
+        damping = {'pro630_joint1_to_base': 12.0}
+        gripper_receipt['lab_mujoco_nav_servo_damping_nm_s_rad'] = damping
         grasp = gripper_receipt['grasp_reference']['frame']
         carrier = 'pro630_link6'
         tcp_offset, tcp_quat = rigid_sensor_offsets(ET.tostring(document, encoding='unicode'), grasp)[carrier]
@@ -282,6 +287,7 @@ def provision(store, download=False, variant='fortress'):
         profile.update(supported_simulators=['mujoco', 'pybullet'],
             supported_modes_by_simulator={'mujoco': ['display'], 'pybullet': []},
             experimental_modes_by_simulator={'mujoco': ['display', 'nav'], 'pybullet': ['display']},
+            mujoco_nav_servo_damping=damping,
             experimental_asset_options={'pick_place': pick_place},
             features=[*profile['features'],'gripper'], notes=profile['notes']+
             ' Vendor F100 mount and one bounded jaw actuator with five linked followers. '

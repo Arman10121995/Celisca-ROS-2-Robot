@@ -568,6 +568,14 @@ def add_mujoco_articulation_actuators(mjcf, contract):
                 or not math.isfinite(value) or value < 0.):
             raise ValueError('Invalid MuJoCo armature for '+name)
         joints[name].set('armature', str(value))
+    damping = contract.config.get('mujoco_joint_servo_damping', {})
+    powered_positions = {name for name in contract.masters if contract.joints[name]['mode'] == 'position'}
+    if not isinstance(damping, dict) or set(damping) - powered_positions:
+        raise ValueError('MuJoCo servo damping must name an independent position joint')
+    for name, value in damping.items():
+        if (name not in joints or isinstance(value, bool) or not isinstance(value, (int, float))
+                or not math.isfinite(value) or value < 0.):
+            raise ValueError('Invalid MuJoCo servo damping for ' + name)
     for name, spec in contract.joints.items():
         if name in existing:
             raise ValueError('Articulation joint already controlled: '+name)
@@ -580,7 +588,8 @@ def add_mujoco_articulation_actuators(mjcf, contract):
         if contract.couplings.get(name, {}).get('passive'):
             continue
         gain = spec['kp'] if position else spec['kd']
-        bias = '0 %g %g' % (-spec['kp'], -spec['kd']) if position else '0 0 %g' % -spec['kd']
+        kd = damping.get(name, spec['kd'])
+        bias = '0 %g %g' % (-spec['kp'], -kd) if position else '0 0 %g' % -kd
         ET.SubElement(actuator, 'general', name=name+'_articulation', joint=name,
             gaintype='fixed', gainprm=str(gain), biastype='affine', biasprm=bias,
             ctrllimited='true', ctrlrange='%g %g'%(spec['lower'],spec['upper']),

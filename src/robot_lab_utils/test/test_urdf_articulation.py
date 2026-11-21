@@ -120,6 +120,24 @@ def test_source_bounds_and_actuator_limits_are_preserved(controller, tmp_path):
         URDFArticulation(config, URDF, controller.model_path)
 
 
+def test_mujoco_position_damping_keeps_the_motor_force_limit(controller):
+    name = 'conveyor_lift_joint'
+    fixture = f'<mujoco><worldbody><body><joint name="{name}"/></body></worldbody></mujoco>'
+    config = controller.config
+    config['mujoco_joint_servo_damping'] = {name: 12.0}
+    root = ET.fromstring(add_mujoco_articulation_actuators(fixture, controller))
+    actuator = root.find(f"actuator/general[@joint='{name}']")
+    assert actuator.get('biasprm').split()[-1] == '-12'
+    assert actuator.get('forcerange') == '-2000 2000'
+    assert controller.joints[name]['kd'] == CONFIG['joints'][name]['kd']
+    config['mujoco_joint_servo_damping'] = {'transfer_roller_joint': 12.0}
+    with pytest.raises(ValueError, match='independent position joint'):
+        add_mujoco_articulation_actuators(fixture, controller)
+    config['mujoco_joint_servo_damping'] = {name: float('nan')}
+    with pytest.raises(ValueError, match='Invalid MuJoCo servo damping'):
+        add_mujoco_articulation_actuators(fixture, controller)
+
+
 def test_start_and_stop_clamp_only_targets_not_measured_limit_epsilon(controller):
     position, velocity = measurement(controller, lift=-1e-6, slide=-1e-6)
     result = controller.step(position, velocity, .01, now=1.)

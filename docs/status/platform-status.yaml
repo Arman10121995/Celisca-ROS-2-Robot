@@ -2336,7 +2336,7 @@ tasks:
       R14.3:
         acceptance_ref: ROADMAP.md R14.3
         owner: codex
-        active_scope: 'Codex continues R14.3 with a normal GUI MuJoCo Navigation fetch, the Nav2 action and footprint handoff, and free-base PyBullet gripper diagnostics.'
+        active_scope: 'Codex continues R14.3 with an observed MuJoCo loaded-transit interlock diagnostic and source-bounded shoulder damping. Preserve existing F100 pad force, articulation ownership and footprint gates.'
         state: partial
         updated: '2026-11-21'
         title: Official myAGV Pro plus myCobot Pro630 mobile manipulator
@@ -2350,6 +2350,7 @@ tasks:
         nav_fetch_20261121: 'The opt-in MuJoCo Nav selection explicitly requests the Nav2 action through the Fetch panel and waits for it to become available. The loaded leg retains its two-costmap acknowledgement gate. Physical Nav2 fetch remains unmeasured.'
         nav_interlock_20261121: 'The first uninterrupted GUI Navigation trial lifted the block 42.9 mm and recorded both loaded footprint acknowledgements, then stopped on a held-arm interlock. The controller now retains an owned goal during a held-arm pause with the plant drive gate active. The F100 overlay configures sampled footprint collision checks and limited transit speeds. A complete Nav2 fetch still needs a measured run.'
         nav_live_limits_20261121: 'A repeat kept both pads loaded to the carry timeout. The active controller reported the generic 0.30 m/s limits despite the F100 overlay. The launch now supplies the declared mecanum DWB limits as explicit parameter overrides. An isolated Nav2 probe confirmed 0.15 m/s planar and 0.10 m/s lateral with the footprint critic. End-to-end acceptance remains pending.'
+        nav_shoulder_20261121: 'An uninterrupted GUI trial with those limits lifted the block 42.7 mm and held both pads at approximately 2.43 N through the 240 s carry timeout. 1,554 of 2,403 drive ticks were inhibited. A live sample saw J1 spans up to 0.0131 rad in 0.25 s, greater than all other joints. The MuJoCo Navigation profile applies a 12 N m s/rad J1 derivative term within the existing 5 N m effort cap. Full transit and release remain open.'
         isaac_passive_couplings_20261121: 'The Isaac runtime can author rotary follower constraints from the passive mechanical contract. The installed 6.0.1 USD schema fixture confirms only the 0.8 Nm shaft drive remains powered, with five follower relationships and no follower efforts. A separate USD fixture binds the named pad geometry and a receiver test checks normal-force attribution. Isaac F100 remains unavailable in the catalog pending physical joint travel and measured pad contact on the imported model.'
         place_planner_20261121: 'A 25 mm closer drop dock resolves the first IK failure. A private replay of the second loaded arrival plans all four placement stages when it preserves existing jaw contact with the measured payload. New or deeper contacts still reject. Live supported release remains pending.'
         place_physics_fixture_20261121: 'A fixed-base MuJoCo replay initialized from GUI run 8 moved the free 40 g block over the support, lowered, opened and retreated. The block stayed inside the support with 0.11 mm final height error. Continuous normal GUI fetch remains a separate check.'
