@@ -66,7 +66,8 @@ def pick_place(app, page, args, report, press, settle, until, pump, screenshot):
     result = page.pick_state.get('last_result') or {}
     report['pick_place'] = dict(result=result, page_status=page.pick_status.get())
     screenshot(args.output / 'placed.png')
-    report['passed'] = bool(report['page_selected'] and result.get('passed'))
+    report['passed'] = bool(report['page_selected'] and result.get('passed')
+                            and result.get('pose_source', 'truth') == args.pose_source)
     if args.mode == 'nav':
         stages = {stage.get('phase') for stage in result.get('stages', [])}
         report['passed'] = report['passed'] and {'carry_footprint_ready', 'carry_nav2'} <= stages

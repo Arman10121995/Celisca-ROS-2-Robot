@@ -11,6 +11,7 @@ from launch import LaunchDescription
 from launch.actions import DeclareLaunchArgument, OpaqueFunction
 from launch.substitutions import LaunchConfiguration
 from launch_ros.actions import Node
+from launch_ros.descriptions import Parameter
 from nav2_common.launch import RewrittenYaml
 
 
@@ -380,6 +381,18 @@ def _with_base_frame(path, base_frame):
                          convert_types=True) if base_frame else path
 
 
+def _holonomic_dwb_limits(overlay):
+    """Explicit robot limits take precedence over generated ROS parameter files."""
+    with open(overlay, encoding='utf-8') as stream:
+        data = yaml.safe_load(stream) or {}
+    follow = data.get('controller_server', {}).get('ros__parameters', {}).get('FollowPath', {})
+    names = ('min_vel_x', 'max_vel_x', 'min_vel_y', 'max_vel_y', 'max_vel_theta',
+             'min_speed_xy', 'max_speed_xy', 'min_speed_theta',
+             'acc_lim_x', 'acc_lim_y', 'acc_lim_theta', 'decel_lim_x', 'decel_lim_y', 'decel_lim_theta',
+             'vx_samples', 'vy_samples', 'vtheta_samples')
+    return [Parameter(f'FollowPath.{name}', follow[name]) for name in names if name in follow]
+
+
 def _setup(context, *args, **kwargs):
     pkg = get_package_share_directory("robot_lab_navigation")
     use_sim_time = LaunchConfiguration("use_sim_time").perform(context).lower() == "true"
@@ -408,6 +421,8 @@ def _setup(context, *args, **kwargs):
 
     overlay = os.path.join(pkg, "config", "robots", f"{robot_model}.yaml")
     overlay_params = [_with_base_frame(overlay, base_frame)] if os.path.exists(overlay) else []
+    dwb_limits = (_holonomic_dwb_limits(overlay) if overlay_params and motion_model == 'omni'
+                  and local_planner_plugin == 'dwb_core::DWBLocalPlanner' else [])
     arrival = _uses_arrival_controller(
         local_planner_plugin, motion_model, follow_path_server,
         LaunchConfiguration("arrival_controller").perform(context).strip().lower())
@@ -417,12 +432,12 @@ def _setup(context, *args, **kwargs):
         parameters.extend(_planner_parameter_overrides(
             exec_name, global_planner_plugin, local_planner_plugin))
         # Robot-specific footprints, arrival windows and critics override the
-        # generic plugin defaults. Loading DWB defaults last erased the full
-        # footprint critic configured for nonparallel four-wheel steering.
+        # generic plugin defaults.
         parameters += overlay_params
         parameters.append({"use_sim_time": use_sim_time})
-        parameters.extend(_motion_model_overrides(
-            exec_name, motion_model, global_planner_plugin, turning_radius))
+        parameters.extend(_motion_model_overrides(exec_name, motion_model, global_planner_plugin, turning_radius))
+        if exec_name in _CONTROLLER_SERVERS:
+            parameters.extend(dwb_limits)
         if exec_name == 'planner_server' and car_search_model != 'auto':
             parameters.append({'GridBased.motion_model_for_search': car_search_model})
         if exec_name in _CONTROLLER_SERVERS and arrival:

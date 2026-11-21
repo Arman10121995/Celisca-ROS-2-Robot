@@ -175,6 +175,17 @@ radius and DWB rates bounded for the payload workflow. The DWB footprint
 critic checks each sampled pose against the active polygon.
 [First Navigation trial](nav-gui-held-interlock.json) · [Nav2 footprint critic](https://docs.nav2.org/jazzy/configuration_and_development/configuration_guide/controller_plugins/dwb_controller/trajectory_critics/obstacle_footprint/).
 
+The next Navigation trial retained both pad contacts through its 240 s
+carry timeout. The loaded base reached `(0.625, 0.627)` m and 1,377 of 2,238
+drive ticks were held by the interlock. The running DWB server reported
+generic limits of 0.30 m/s for planar and lateral speed. The launch now
+passes explicitly declared mecanum DWB limits as ROS parameter overrides.
+An isolated Nav2 launch with static frame transforms returned the intended
+0.15 m/s planar cap, 0.10 m/s lateral cap, and 0.20 m/s² lateral acceleration.
+The probe establishes effective configuration. A physical retry is required
+for transit and release acceptance.
+[Carry timeout](nav-gui-transit-timeout.json) · [Effective DWB limits](f100-dwb-effective-limits.json).
+
 ### Isaac joint authoring
 
 The Isaac bridge forwards passive mechanical couplings separately from

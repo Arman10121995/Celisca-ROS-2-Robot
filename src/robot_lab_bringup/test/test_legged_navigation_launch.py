@@ -197,6 +197,23 @@ def test_parallel_steering_samples_backward_translation():
     assert follow['FollowPath.min_vel_x'] < 0 < follow['FollowPath.max_vel_y']
     assert 'robot_lab_controller::ParallelSteeringCritic' in follow['FollowPath.critics']
 
+
+def test_holonomic_payload_overlay_provides_explicit_dwb_limits():
+    import importlib.util
+    from pathlib import Path
+    from launch import LaunchContext
+
+    package = Path(__file__).resolve().parents[2] / 'robot_lab_navigation'
+    spec = importlib.util.spec_from_file_location('robot_lab_navigation_launch_payload', package / 'launch/navigation.launch.py')
+    navigation = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(navigation)
+    overlay = package / 'config/robots/asset_elephant_myagv_pro_pro630_f100.yaml'
+    limits = dict(parameter.evaluate(LaunchContext()) for parameter in navigation._holonomic_dwb_limits(overlay))
+    assert limits['FollowPath.max_vel_x'] == limits['FollowPath.max_speed_xy'] == .15
+    assert limits['FollowPath.max_vel_y'] == .10
+    assert limits['FollowPath.acc_lim_y'] == .20
+
+
 def test_mppi_on_a_differential_base_gets_the_arrival_controller():
     """MPPI came within 0.05-0.19 m of 8 of 15 goals without settling (R7.7):
     a Regulated Pure Pursuit 'Arrival' controller finishes its approach."""
