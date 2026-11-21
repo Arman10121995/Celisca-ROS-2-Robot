@@ -267,6 +267,12 @@ The loaded workflow still waits for measured pad feedback before motion.
 Normal Isaac gripper travel remains pending.
 [GUI readiness observation](isaac-gui-unavailable-pad-feedback.json).
 
+The exported stage from that actual F100 launch contains two distinct,
+matching collision pads. Running the observer's pad lookup against the
+export matched both source names. The lookup checks collider identity.
+The normal-force measurements still require a loaded run.
+[Imported pad identities](isaac-imported-pad-identities.json).
+
 ## Source and retained diagnostics
 
 The bare arm and its wheel/arm measurements use the existing source pin.
