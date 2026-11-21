@@ -167,8 +167,22 @@ from the intended heading. The private arm planner could not reach the
 grasp from that pose. Replay of the same object planned a pickup at the
 declared dock. The optional holonomic correction uses bounded translation
 and yaw near the target and checks the actual settled pose before starting
-the arm. Its physical trial is pending.
+the arm.
 [Dock observation and planning replay](bullet-gui-dock-off-target.json).
+
+The precision-docking trial settled 7.6 mm away after four recaptures.
+The first closure observed both pads with at least 0.1 N in 34/51 samples.
+All 34 exceeded the 0.01 rad follower tolerance. Opening and retracting
+then moved the cube another 17.9 mm, so the retry uses fresh stable samples
+from after the retract before it rebuilds the arm plan. The updated retry
+still needs a physical mission.
+[PyBullet measured trial](bullet-gui-precision-dock-grasp.json).
+
+An Isaac Sim 6.0.1 loaded trial reached the block in the same world. Its
+right pad peaked at 5.89 N and its left pad recorded zero in all 46 closure
+samples. The largest sampled follower error was 0.0082 rad. The run
+stopped at closure before lift.
+[Isaac measured trial](isaac-gui-loaded-closure-timeout.json).
 
 ### Complete GUI fetch
 

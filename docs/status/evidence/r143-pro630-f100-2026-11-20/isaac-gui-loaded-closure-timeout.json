@@ -1,0 +1,173 @@
+{
+  "robot": "asset_elephant_myagv_pro_pro630_f100",
+  "simulator": "isaac",
+  "mode": "display",
+  "map": "mobile_fetch_lab_f100",
+  "command": "ros2 launch robot_lab_bringup simulated_robot.launch.py mode:=display map_name:=mobile_fetch_lab_f100 robot_model:=asset_elephant_myagv_pro_pro630_f100 simulator:=isaac gui:=false perception:=none allow_experimental_assets:=true",
+  "model_sha256": "bf9ef87b82586316cb4ff59956cd87179c1f681bd352f46777468aebd2bb082d",
+  "passed": false,
+  "launch_returncode": 0,
+  "executor_feature_baseline": "de9501a3",
+  "private_profile_overrides": {},
+  "observed_stage": "pick",
+  "seconds": 288.74,
+  "message": "stage close timed out (worst joint pro630_joint4_to_joint3 0.0037 rad from its target; 0 over the 0.01 rad settle tolerance) (pad loads left 0.000 N, right 5.865 N; maximum follower error 0.0082 rad)",
+  "stages": [
+    {
+      "phase": "to_object_arrived",
+      "final_pose": [
+        0.883,
+        0.0004,
+        -0.0036,
+        -0.0237
+      ]
+    },
+    {
+      "phase": "to_object",
+      "seconds": 229.18
+    },
+    {
+      "stage": "open",
+      "seconds": 6.84,
+      "object_truth": [
+        1.36,
+        -0.0,
+        0.545
+      ],
+      "tcp_estimate": [
+        0.8895,
+        0.2856,
+        1.0712
+      ],
+      "passed": true
+    },
+    {
+      "stage": "above_object",
+      "seconds": 18.21,
+      "object_truth": [
+        1.36,
+        -0.0,
+        0.545
+      ],
+      "tcp_estimate": [
+        1.3607,
+        0.0001,
+        0.5992
+      ],
+      "passed": true
+    },
+    {
+      "stage": "down_to_grasp",
+      "seconds": 3.38,
+      "object_truth": [
+        1.359,
+        0.0002,
+        0.5454
+      ],
+      "tcp_estimate": [
+        1.3628,
+        -0.0004,
+        0.5752
+      ],
+      "passed": true
+    }
+  ],
+  "plan": {
+    "transit": "straight",
+    "pick_base": [
+      0.89,
+      -0.0,
+      0.0
+    ],
+    "place_base": [
+      0.45,
+      1.515,
+      1.571
+    ],
+    "place_xy": [
+      0.45,
+      1.96
+    ],
+    "grasp_width_m": 0.04,
+    "pick_base_measured": [
+      0.883,
+      0.0004,
+      -0.0036,
+      -0.0237
+    ]
+  },
+  "closure": [
+    {
+      "samples": 46,
+      "bilateral_samples": 0,
+      "bilateral_and_max_follower_error_at_most_0_01_samples": 0,
+      "peak_force_n": {
+        "left": 0.0,
+        "right": 5.89364
+      },
+      "max_follower_error_rad": 0.0082,
+      "min_follower_error_during_bilateral_rad": null,
+      "selected_samples": [
+        {
+          "time_s": 259.0,
+          "pad_normal_force_n": {
+            "left": 0.0,
+            "right": 0.0
+          },
+          "max_follower_error_rad": 0.0002,
+          "object_center_m": [
+            1.3587,
+            0.0002,
+            0.5455
+          ],
+          "base": [
+            0.8808,
+            -0.0005,
+            -0.0034,
+            -0.0148
+          ]
+        },
+        {
+          "time_s": 274.14,
+          "pad_normal_force_n": {
+            "left": 0.0,
+            "right": 0.0
+          },
+          "max_follower_error_rad": 0.0002,
+          "object_center_m": [
+            1.3587,
+            0.0002,
+            0.5455
+          ],
+          "base": [
+            0.8808,
+            -0.0004,
+            -0.0032,
+            -0.0146
+          ]
+        },
+        {
+          "time_s": 288.42,
+          "pad_normal_force_n": {
+            "left": 0.0,
+            "right": 5.893635307918916
+          },
+          "max_follower_error_rad": 0.0082,
+          "object_center_m": [
+            1.3601,
+            0.0001,
+            0.5447
+          ],
+          "base": [
+            0.8808,
+            -0.0004,
+            -0.0034,
+            -0.0146
+          ]
+        }
+      ]
+    }
+  ],
+  "ssd_raw_report_relative": "isaac-f100-loaded-kBKyvS/gui/report.json",
+  "ssd_raw_report_sha256": "cb2e70d3eab3ec6d2fe1f10514b06cb094c4e462f5fe2fa3bdbd21f0e9d2c9d9"
+}

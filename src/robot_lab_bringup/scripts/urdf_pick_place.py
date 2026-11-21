@@ -759,14 +759,12 @@ class PickPlace(Node):
         scene = ArmScene(self.robot_mjcf, self.spec, self.arm_obstacles, obj, base=base, held=held)
         start = {n: float(measured[n]) for n in self.spec.arm_joints}
         previous = dict(start)
-        recovery = []
-        if reapproach:
-            recovery = plan_grasp_retraction(scene, start, {n: measured[n] for n in self.spec.finger_joints},
-                                              obj.position[2] + task['approach'])
-            start = recovery[-1]['waypoints'][-1]
         options = dict(approach=task['approach'], lift=task['lift'], seeds=self.seeds)
         support = self.supports[task['support']]
-        if phase['name'] == 'pick_place':
+        if reapproach:
+            planned = dict(stages=plan_grasp_retraction(scene, start,
+                {n: measured[n] for n in self.spec.finger_joints}, obj.position[2] + task['approach']))
+        elif phase['name'] == 'pick_place':
             planned = plan_pick_place(scene, start, obj, support, **options)
             task['plan'].update(grasp_width_m=planned['grasp_width_m'], place_centre=planned['place_centre'],
                                 place_orientation=planned['place_orientation'])
@@ -788,7 +786,7 @@ class PickPlace(Node):
                                  grasp_width=task['plan']['grasp_width_m'], measured_fingers=fingers, **options)
             task['plan'].update(place_centre=planned['place_centre'], place_orientation=planned['place_orientation'])
         stages = []
-        for stage in (*recovery, *planned['stages']):
+        for stage in planned['stages']:
             targets = synchronised(stage['waypoints'], previous, RATE, PERIOD)
             previous = dict(stage['waypoints'][-1])
             stages.append(dict(name=stage['stage'], targets=targets,
@@ -847,11 +845,13 @@ class PickPlace(Node):
         if support is None or (task.get('table') and support.name != task['table']):
             return False
         task['grasp_reapproached'] = True
+        task['reapproach_support'] = support.name
+        coupling = self.state.get('coupling_error') or {}
         task['log'].append(dict(phase='grasp_reapproach', object_position=list(pose[:3]),
                                 previous_object_position=list(task['object_start']),
                                 displacement_m=round(displacement, 4), support=support.name,
+                                max_follower_error_rad=max(map(abs, coupling.values()), default=0.),
                                 pad_normal_force_n=self._pad_check(name)['pad_normal_force_n']))
-        task['object_start'] = list(pose[:3])
         self._plan_arm(task, phase, reapproach=True)
         return True
 
@@ -933,6 +933,9 @@ class PickPlace(Node):
         task.pop('wait_until', None)
         task.pop('finger_history', None)
         if task['index'] >= len(task['stages']):
+            if stage['name'] == 'retract_grasp':
+                task['object_start'] = list(self.truth[task['object']][:3])
+                return self._plan_arm(task, phase)
             return self._next_phase(task)
         task['stage'] = task['stages'][task['index']]['name']
         self.message = 'Stage %s' % task['stage']
@@ -1267,6 +1270,25 @@ class PickPlace(Node):
         if _now() - self.truth_at > STATE_STALE:
             return dict(passed=False, reason='object truth stale')
         pose = np.asarray(self.truth[name][:3])
+        if stage == 'retract_grasp':
+            samples = task.setdefault('reapproach_observations', [])
+            if (_now() - self.truth_at > PAD_SETTLE_MAX_GAP
+                    or (self.mobile and max(self.base_twist) >= STILL_SPEED)):
+                samples.clear()
+                return None
+            if not samples or self.truth_at > samples[-1][0]:
+                if samples and self.truth_at - samples[-1][0] > PAD_SETTLE_MAX_GAP:
+                    samples.clear()
+                samples.append((self.truth_at, pose))
+                del samples[:-PAD_SETTLE_SAMPLES]
+            if len(samples) < PAD_SETTLE_SAMPLES or any(
+                    np.linalg.norm(sample-samples[0][1]) > PAD_SETTLE_DRIFT for _, sample in samples):
+                return None
+            support = self._table_under(name)
+            passed = (support is not None and support.name == task['reapproach_support']
+                      and math.dist(task['object_start'], pose) <= REAPPROACH_MAX_SHIFT_M)
+            return dict(passed=passed, samples=len(samples),
+                        reason='' if passed else 'object moved outside the retry bounds or left its original support')
         if stage == 'close':
             measured = self.measured()
             gaps = [measured[n] for n in self.spec.finger_joints]

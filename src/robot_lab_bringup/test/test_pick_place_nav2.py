@@ -130,6 +130,7 @@ def test_shifted_calibrated_grasp_reapproaches_the_original_support_once(pick_pl
     node._table_under = lambda name: SimpleNamespace(name='pickup')
     node._plan_arm = Mock()
     node.carried_footprint = None
+    node.state = {'coupling_error': {'follower': .12}}
     node.truth = {'block': [.02, 0., .5, 1., 0., 0., 0.]}
     phase = {'name': 'pick'}
     task = dict(object='block', table='pickup', object_start=[0., 0., .5], pose_source='rgbd', log=[])
@@ -140,8 +141,32 @@ def test_shifted_calibrated_grasp_reapproaches_the_original_support_once(pick_pl
     task['table'] = 'pickup'
     assert node._retry_after_close_timeout(task, phase)
     assert task['log'][0]['displacement_m'] == .02
+    assert task['log'][0]['max_follower_error_rad'] == .12
+    assert task['object_start'] == [0., 0., .5]
+    assert task['reapproach_support'] == 'pickup'
     assert not node._retry_after_close_timeout(task, phase)
     node._plan_arm.assert_called_once_with(task, phase, reapproach=True)
+
+
+def test_retry_uses_fresh_post_retract_pose_on_the_same_support(pick_place, monkeypatch):
+    node = object.__new__(pick_place.PickPlace)
+    node.mobile, node.base_twist = True, (0., 0.)
+    task = dict(object='block', object_start=[0., 0., .5], reapproach_support='pickup')
+    node.truth = {'block': [.02, 0., .5]}
+    node.truth_at = 10.
+    node._table_under = lambda name: SimpleNamespace(name='pickup')
+    monkeypatch.setattr(pick_place, '_now', lambda: node.truth_at + .05)
+    assert node._check(task, 'retract_grasp') is None
+    assert node._check(task, 'retract_grasp') is None
+    node.truth['block'][0] = .031
+    node.truth_at += .1
+    assert node._check(task, 'retract_grasp') is None
+    for _ in range(2):
+        node.truth_at += .1
+        result = node._check(task, 'retract_grasp')
+    assert result['passed'] and result['samples'] == 3
+    node._table_under = lambda name: SimpleNamespace(name='another table')
+    assert not node._check(task, 'retract_grasp')['passed']
 
 
 def test_holonomic_dock_corrects_the_measured_pose_after_settling(pick_place, monkeypatch):

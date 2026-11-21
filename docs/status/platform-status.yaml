@@ -2334,6 +2334,7 @@ tasks:
         next_action: 'Implemented 2026-11-13 (claude, on the user''s request): Gazebo source variant plus the portable roller variant measured driving in MuJoCo, PyBullet and Isaac; Nav2 measured in Gazebo (nav_empty) and PyBullet. Validation: other maps, SLAM, MuJoCo/Isaac navigation.'
         evidence: [docs/status/evidence/myagv-pro-2026-11-12/README.md, docs/tutorials/myagv-pro.md]
       R14.3:
+        measured_reapproach_owner_20261122: 'Codex implemented two-stage F100 recovery. Open and retract first, then remeasure three fresh stable object samples on the same support and confirm the stopped base before replanning. PyBullet precision dock passed at 7.6 mm error, but 34/34 bilateral closure samples exceeded 0.01 rad follower error and retract shifted the object 17.9 mm. Isaac loaded closure measured 5.89 N right and zero left. Both trials stopped before lift. The revised physical recovery remains pending.'
         acceptance_ref: ROADMAP.md R14.3
         owner: codex
         active_scope: 'Codex continues R14.3 with an observed MuJoCo loaded-transit interlock diagnostic and source-bounded shoulder damping. Preserve existing F100 pad force, articulation ownership and footprint gates.'

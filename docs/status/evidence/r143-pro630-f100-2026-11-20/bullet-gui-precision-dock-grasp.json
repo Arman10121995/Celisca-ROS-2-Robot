@@ -1,0 +1,343 @@
+{
+  "robot": "asset_elephant_myagv_pro_pro630_f100",
+  "simulator": "pybullet",
+  "mode": "display",
+  "map": "mobile_fetch_lab_f100",
+  "command": "ros2 launch robot_lab_bringup simulated_robot.launch.py mode:=display map_name:=mobile_fetch_lab_f100 robot_model:=asset_elephant_myagv_pro_pro630_f100 simulator:=pybullet gui:=false perception:=none allow_experimental_assets:=true",
+  "model_sha256": "bf9ef87b82586316cb4ff59956cd87179c1f681bd352f46777468aebd2bb082d",
+  "passed": false,
+  "launch_returncode": 0,
+  "executor_feature_baseline": "1d4e0402",
+  "private_profile_overrides": {
+    "pybullet_noncontact_iterations": 4,
+    "holonomic_docking": true,
+    "retry_shifted_grasp": true
+  },
+  "observed_stage": "pick",
+  "seconds": 173.78,
+  "message": "stage close timed out (worst joint pro630_joint1_to_base 0.0000 rad from its target; 0 over the 0.01 rad settle tolerance) (pad loads left 0.000 N, right 0.000 N; maximum follower error 0.0000 rad)",
+  "stages": [
+    {
+      "phase": "to_object_arrived",
+      "final_pose": [
+        0.884,
+        0.0047,
+        -0.002,
+        0.0051
+      ],
+      "dock_recaptures": 4
+    },
+    {
+      "phase": "to_object",
+      "seconds": 85.63
+    },
+    {
+      "stage": "open",
+      "seconds": 3.12,
+      "object_truth": [
+        1.36,
+        -0.0,
+        0.545
+      ],
+      "tcp_estimate": [
+        0.8827,
+        0.29,
+        1.0728
+      ],
+      "passed": true
+    },
+    {
+      "stage": "above_object",
+      "seconds": 11.49,
+      "object_truth": [
+        1.36,
+        0.0,
+        0.545
+      ],
+      "tcp_estimate": [
+        1.3596,
+        0.0002,
+        0.6048
+      ],
+      "passed": true
+    },
+    {
+      "stage": "down_to_grasp",
+      "seconds": 3.14,
+      "object_truth": [
+        1.3547,
+        -0.0089,
+        0.5453
+      ],
+      "tcp_estimate": [
+        1.3606,
+        0.0,
+        0.5757
+      ],
+      "passed": true
+    },
+    {
+      "phase": "grasp_reapproach",
+      "object_position": [
+        1.3670478577255574,
+        -0.0043723012032819255,
+        0.5480182756384551
+      ],
+      "previous_object_position": [
+        1.3600005143206488,
+        -7.63895633072068e-06,
+        0.5449869916935125
+      ],
+      "displacement_m": 0.0088,
+      "support": "pickup_table",
+      "pad_normal_force_n": {
+        "left": 1.0626214241671543,
+        "right": 1.709056942513557
+      }
+    },
+    {
+      "stage": "reopen",
+      "seconds": 4.66,
+      "object_truth": [
+        1.3618,
+        -0.0249,
+        0.5469
+      ],
+      "tcp_estimate": [
+        1.3671,
+        -0.0196,
+        0.576
+      ],
+      "passed": true
+    },
+    {
+      "stage": "retract_grasp",
+      "seconds": 1.71,
+      "object_truth": [
+        1.3589,
+        -0.02,
+        0.545
+      ],
+      "tcp_estimate": [
+        1.3657,
+        -0.0196,
+        0.6064
+      ],
+      "passed": true
+    },
+    {
+      "stage": "open",
+      "seconds": 0.31,
+      "object_truth": [
+        1.3589,
+        -0.02,
+        0.545
+      ],
+      "tcp_estimate": [
+        1.3657,
+        -0.0196,
+        0.6068
+      ],
+      "passed": true
+    },
+    {
+      "stage": "above_object",
+      "seconds": 0.49,
+      "object_truth": [
+        1.3589,
+        -0.02,
+        0.545
+      ],
+      "tcp_estimate": [
+        1.3665,
+        -0.0055,
+        0.6077
+      ],
+      "passed": true
+    },
+    {
+      "stage": "down_to_grasp",
+      "seconds": 1.47,
+      "object_truth": [
+        1.3589,
+        -0.02,
+        0.545
+      ],
+      "tcp_estimate": [
+        1.3676,
+        -0.0043,
+        0.5792
+      ],
+      "passed": true
+    }
+  ],
+  "plan": {
+    "transit": "straight",
+    "pick_base": [
+      0.89,
+      -0.0,
+      0.0
+    ],
+    "place_base": [
+      0.45,
+      1.515,
+      1.571
+    ],
+    "place_xy": [
+      0.45,
+      1.96
+    ],
+    "grasp_width_m": 0.04,
+    "pick_base_measured": [
+      0.8907,
+      -0.0032,
+      -0.0017,
+      -0.0196
+    ]
+  },
+  "closure": [
+    {
+      "samples": 51,
+      "bilateral_samples": 34,
+      "bilateral_and_max_follower_error_at_most_0_01_samples": 0,
+      "peak_force_n": {
+        "left": 3.07223,
+        "right": 2.06444
+      },
+      "max_follower_error_rad": 0.1575,
+      "min_follower_error_during_bilateral_rad": 0.1008,
+      "selected_samples": [
+        {
+          "time_s": 104.49,
+          "pad_normal_force_n": {
+            "left": 0.0,
+            "right": 0.0
+          },
+          "max_follower_error_rad": 0.0028,
+          "object_center_m": [
+            1.3546,
+            -0.0085,
+            0.5453
+          ],
+          "base": [
+            0.8805,
+            -0.0113,
+            -0.0017,
+            0.0109
+          ]
+        },
+        {
+          "time_s": 119.86,
+          "pad_normal_force_n": {
+            "left": 2.542506676147596,
+            "right": 1.4516613271680698
+          },
+          "max_follower_error_rad": 0.1509,
+          "object_center_m": [
+            1.3645,
+            0.0004,
+            0.5453
+          ],
+          "base": [
+            0.8859,
+            0.0012,
+            -0.0016,
+            -0.0103
+          ]
+        },
+        {
+          "time_s": 134.07,
+          "pad_normal_force_n": {
+            "left": 0.18773997523325467,
+            "right": 1.8775263455159794
+          },
+          "max_follower_error_rad": 0.1174,
+          "object_center_m": [
+            1.3663,
+            -0.0051,
+            0.548
+          ],
+          "base": [
+            0.8886,
+            -0.0038,
+            -0.0017,
+            -0.0171
+          ]
+        }
+      ]
+    },
+    {
+      "samples": 51,
+      "bilateral_samples": 0,
+      "bilateral_and_max_follower_error_at_most_0_01_samples": 0,
+      "peak_force_n": {
+        "left": 0.78337,
+        "right": 0.0
+      },
+      "max_follower_error_rad": 0.0449,
+      "min_follower_error_during_bilateral_rad": null,
+      "selected_samples": [
+        {
+          "time_s": 143.82,
+          "pad_normal_force_n": {
+            "left": 0.0,
+            "right": 0.0
+          },
+          "max_follower_error_rad": 0.0,
+          "object_center_m": [
+            1.3589,
+            -0.02,
+            0.545
+          ],
+          "base": [
+            0.9052,
+            0.0062,
+            -0.0018,
+            -0.0498
+          ]
+        },
+        {
+          "time_s": 158.7,
+          "pad_normal_force_n": {
+            "left": 0.0,
+            "right": 0.0
+          },
+          "max_follower_error_rad": 0.0001,
+          "object_center_m": [
+            1.3711,
+            -0.0364,
+            0.5488
+          ],
+          "base": [
+            0.8942,
+            0.0009,
+            -0.002,
+            -0.052
+          ]
+        },
+        {
+          "time_s": 173.78,
+          "pad_normal_force_n": {
+            "left": 0.0,
+            "right": 0.0
+          },
+          "max_follower_error_rad": 0.0,
+          "object_center_m": [
+            1.4038,
+            -0.0445,
+            0.52
+          ],
+          "base": [
+            0.8943,
+            -0.0073,
+            -0.002,
+            -0.0298
+          ]
+        }
+      ]
+    }
+  ],
+  "ssd_raw_report_relative": "bullet-loaded-constraint-retry-lcM0FU/gui-dock/report.json",
+  "ssd_raw_report_sha256": "4d87d49082edd39baee6b155d9d67ffbf8f5c1dffe7e026db57ed1809b79a343",
+  "measured_center_change_while_reopening_and_retracting_m": 0.01788
+}

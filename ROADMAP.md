@@ -1786,12 +1786,19 @@ accounts for terrain fixtures without saved 2D maps. Details and evidence are in
   renders on demand to preserve control feedback. Loaded Bullet missions
   remain open. The first loaded run reached closure, but the block shifted
   and only one pad registered force. A private candidate can reopen,
-  retract and reapproach once from the new measured object pose.
+  retract and reapproach once from a fresh supported pose. In the precision
+  docking trial, 34/51 first-closure samples had bilateral force and all
+  34 exceeded the 0.01 rad follower tolerance. Opening and retracting moved
+  the block another 17.9 mm. The retry now rebuilds its plan after observing
+  the settled block and base. The method remains experimental.
+  [Loaded trial](docs/status/evidence/r143-pro630-f100-2026-11-20/bullet-gui-precision-dock-grasp.json).
   [GUI evidence](docs/status/evidence/r143-pro630-f100-2026-11-20/bullet-gui-gripper-confirmed.json).
 - **Isaac Display:** the F100 imported with one powered shaft and five
   passive followers. The normal GUI on `nav_empty` reached both presets
   and measured 53.995 mm for a 54 mm command. Both named pad colliders were
-  identified in the actual robot export. Loaded pad forces remain open.
+  identified in the actual robot export. The loaded trial measured up to
+  5.89 N on the right pad and zero on the left, then stopped before lift.
+  [Loaded trial](docs/status/evidence/r143-pro630-f100-2026-11-20/isaac-gui-loaded-closure-timeout.json).
   [GUI evidence](docs/status/evidence/r143-pro630-f100-2026-11-20/isaac-gui-gripper-confirmed.json).
 - **Remaining implementation:** qualify loaded PyBullet and Isaac missions,
   including measured pad contacts and custody. The physical linkage on
