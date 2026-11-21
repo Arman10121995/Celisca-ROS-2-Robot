@@ -48,6 +48,9 @@ The overhead workcell camera publishes synchronized colour, depth and
 calibration. The executor checks three fresh estimates against each other
 before it plans the grasp. It uses physical object feedback to judge lift
 and release. The fixture recognizes the authored red 40 mm cube.
+The normal GUI run on 2026-11-22 took 26.52 seconds, measured a 1.1 mm
+camera position error, lifted the cube 96.2 mm and left it stable on the
+destination table. [GUI receipt](../status/evidence/r57-urdf-arm-pick-place-2026-11-17/mujoco-gui-workcell-rgbd-2026-11-22.json).
 
 To add a stationary camera to another MuJoCo fixed-arm workcell, set
 `workcell_rgbd_pose` on the map entry in `sim_maps.yaml`. Give the camera's

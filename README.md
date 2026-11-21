@@ -197,6 +197,7 @@ Read the full [architecture overview](docs/architecture/overview.md) and [networ
 - Unladen MOLAR Open-RMF L0→L1→L0 and a separate 0.5 kg loaded boarding trial. [Lift round trip](docs/status/evidence/r11-molar-rmf-return-2026-11-20/README.md) · [cargo evidence](docs/status/evidence/r11-molar-fleet-cargo-2026-11-20/README.md).
 - Single-drone route flight in Gazebo and the PX4 MuJoCo plant. Two X500s have measured range-reference formation. [Drone flight evidence](docs/status/evidence/drone-moving-2026-11-13/README.md) · [Swarm roadmap](ROADMAP.md#r103--swarm-robotics).
 - GUI redesign: Home, Ctrl+K search, dark theme, right-hand control column, live session indicator
+- The URDF Franka Panda completed a camera-guided cube pick and place on MuJoCo in 26.52 s using the fixed-arm workcell. [Arm guide](docs/tutorials/urdf-arm-pick-place.md#pick-the-cube-with-the-workcell-camera).
 - Measured planner/local-planning/control/sensor-fusion/perception/localization/state-estimation comparisons (partial — R7/R9.2 remain open)
 
 ### Implemented, awaiting live qualification

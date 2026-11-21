@@ -81,6 +81,11 @@ robots:
     features: [articulated_arm, joint_control]
     implementation_state: experimental
     validation_state: pending
+    measured_screens:
+      - simulator: mujoco
+        mode: display
+        map: arm_pick_place_lab
+        evidence: docs/status/evidence/r57-urdf-arm-pick-place-2026-11-17/mujoco-gui-workcell-rgbd-2026-11-22.json
     articulation:
       schema: robot_lab.urdf_articulation.v1
       panel: arm

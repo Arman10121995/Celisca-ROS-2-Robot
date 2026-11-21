@@ -489,9 +489,11 @@ accounts for terrain fixtures without saved 2D maps. Details and evidence are in
     the recorded F100 pickup and placement pass.
   - 2026-11-22: the MuJoCo fixed-arm workcell publishes a calibrated
     overhead RGB-D camera. The existing pick-and-place panel can plan a
-    Panda cube grasp from three fresh camera estimates. An offscreen
-    fixture resolved the cube centre within 1.1 mm; a complete camera-led
-    physical mission remains to be measured.
+    Panda cube grasp from three fresh camera estimates. The normal GUI
+    completed the `arm_pick_place_lab` camera-led cube mission in 26.52 s.
+    The estimate was 1.1 mm from simulator truth. The arm lifted the cube
+    96.2 mm, then released and retreated with the cube on the destination.
+    [GUI receipt](docs/status/evidence/r57-urdf-arm-pick-place-2026-11-17/mujoco-gui-workcell-rgbd-2026-11-22.json).
   - compound/mesh geometry, other fixed-arm perception backends and
     additional gripper-specific pipelines;
   - coupled mechanisms beyond gear-coupled fingers (mimic chains and

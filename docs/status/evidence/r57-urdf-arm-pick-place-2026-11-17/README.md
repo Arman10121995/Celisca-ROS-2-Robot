@@ -94,6 +94,13 @@ runs press Home, choose the object and support, and press **Run pick /
 place** on the normal arm page (`gui_*_report.json`, `gui_*_receipt.json`,
 `gui_pybullet_carrying.png`).
 
+On 2026-11-22 the normal GUI selected **RGB-D camera** on MuJoCo Display
+in `arm_pick_place_lab`. The stationary camera estimated `pickup_cube`
+from three frames with a 1.1 mm position error. The arm lifted the cube
+96.2 mm and rested it within `place_table` with a −0.1 mm height error.
+The task took 26.52 s and the owned launch exited with status 0.
+[GUI receipt](mujoco-gui-workcell-rgbd-2026-11-22.json).
+
 **Stage checks:**
 
 - **Grasp:** the fingers stop on the cube (about 0.02 m each).
