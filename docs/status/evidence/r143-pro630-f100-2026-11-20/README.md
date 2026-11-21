@@ -144,6 +144,15 @@ launch exited cleanly. The badge checks these measurements against the
 selected model identity and applies to the unloaded Display control screen.
 [Feedback-hold trial](bullet-gui-feedback-hold.json) · [Measured PyBullet GUI presets](bullet-gui-gripper-confirmed.json).
 
+The normal PyBullet short-block fetch docked and descended to the pickup.
+The block moved 18.8 mm during closure. Across 51 close-stage samples, the
+left pad stayed at zero, the right pad peaked at 1.14 N, and the largest
+follower error reached 0.089 rad. The task timed out before attempting
+lift. Friction anchors now apply to the links carrying the actual pads.
+Timeouts report the measured pad loads and follower error. The solver
+iteration setting remains a private candidate for the loaded retry.
+[Loaded Bullet trial](bullet-gui-loaded-closure-timeout.json).
+
 ### Complete GUI fetch
 
 Run 11 used the normal GUI on `mobile_fetch_lab_f100` with MuJoCo Display
@@ -240,6 +249,14 @@ receiver test separated pad, object and tangential force contributions.
 Physical jaw travel and contacts on the imported robot remain open, so
 the Isaac profile stays unavailable in the GUI. The fixtures and exported
 stage are on SSD in the F100 run directory. [PhysX mimic joints](https://docs.omniverse.nvidia.com/kit/docs/omni_physics/latest/dev_guide/rigid_bodies_articulations/articulations.html#articulation-mimic-joints) · [PhysX contact reports](https://docs.omniverse.nvidia.com/kit/docs/omni_physics/latest/extensions/runtime/source/omni.physx/docs/dev_guide/contact_reports.html).
+
+A private normal GUI launch on `nav_empty` imported all five passive
+followers and published measured joint feedback for the matching F100.
+The bridge sent an empty pad-contact object with no sensor sample and the
+GUI rejected it as incomplete. The bridge now omits unavailable samples.
+The loaded workflow still waits for measured pad feedback before motion.
+Normal Isaac gripper travel remains pending.
+[GUI readiness observation](isaac-gui-unavailable-pad-feedback.json).
 
 ## Source and retained diagnostics
 

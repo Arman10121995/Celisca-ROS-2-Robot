@@ -86,6 +86,11 @@ def test_contact_solver_choice_does_not_override_other_robot_defaults():
     assert bullet_contact_parameters({}) == {}
     assert bullet_contact_parameters({'pybullet_enable_cone_friction':False}) == {'enableConeFriction':0}
     assert bullet_contact_parameters({'pybullet_enable_cone_friction':True}) == {'enableConeFriction':1}
+    assert bullet_contact_parameters({'pybullet_enable_cone_friction': True, 'pybullet_noncontact_iterations': 4}) == {
+        'enableConeFriction': 1, 'numNonContactInnerIterations': 4}
+    for value in (True, 0, 1.5):
+        with pytest.raises(ValueError, match='positive integer'):
+            bullet_contact_parameters({'pybullet_noncontact_iterations': value})
     for value in (0,1,'false',[],{}):
         with pytest.raises(ValueError):
             bullet_contact_parameters({'pybullet_enable_cone_friction':value})

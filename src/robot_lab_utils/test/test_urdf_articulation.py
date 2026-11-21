@@ -8,7 +8,7 @@ import xml.etree.ElementTree as ET
 import pytest
 
 from robot_lab_utils.urdf_articulation import (
-    URDFArticulation, add_mujoco_articulation_actuators, effort_budget,
+    ArticulationROS, URDFArticulation, add_mujoco_articulation_actuators, effort_budget,
     gravity_feedforward, gravity_loads, measured_motion_rate,
 )
 
@@ -136,6 +136,24 @@ def test_mujoco_position_damping_keeps_the_motor_force_limit(controller):
     config['mujoco_joint_servo_damping'] = {name: float('nan')}
     with pytest.raises(ValueError, match='Invalid MuJoCo servo damping'):
         add_mujoco_articulation_actuators(fixture, controller)
+
+
+def test_optional_pad_reader_distinguishes_unavailable_from_a_valid_empty_report(controller):
+    from types import SimpleNamespace
+
+    bridge = object.__new__(ArticulationROS)
+    bridge.contract = controller
+    bridge.motion_planner = None
+    bridge._string = SimpleNamespace
+    reports = []
+    bridge.publisher = SimpleNamespace(publish=lambda message: reports.append(json.loads(message.data)))
+    position, velocity = measurement(controller)
+    for sample in (None, {'sim_time_s': .1, 'normal_force_n': {}}):
+        bridge.grip_contacts = lambda: sample
+        bridge.last_publish = -math.inf
+        bridge.step(position, velocity, .01)
+    assert 'grip_contacts' not in reports[0]
+    assert reports[1]['grip_contacts'] == {'sim_time_s': .1, 'normal_force_n': {}}
 
 
 def test_start_and_stop_clamp_only_targets_not_measured_limit_epsilon(controller):

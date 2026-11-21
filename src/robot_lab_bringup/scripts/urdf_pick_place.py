@@ -830,10 +830,15 @@ class PickPlace(Node):
             measured, final = self.measured(), stage['targets'][-1]
             errors = {n: abs(measured[n] - final[n]) for n in final if n in measured}
             worst = max(errors, key=errors.get) if errors else None
-            return self._finish('failed', 'stage %s timed out%s' % (stage['name'], (
-                ' (worst joint %s %.4f rad from its target; %d over the %.2f rad settle tolerance)'
-                % (worst, errors[worst], sum(e > SETTLE_TOLERANCE for e in errors.values()), SETTLE_TOLERANCE))
-                if worst else ''))
+            details = ' (worst joint %s %.4f rad from its target; %d over the %.2f rad settle tolerance)' % (
+                worst, errors[worst], sum(e > SETTLE_TOLERANCE for e in errors.values()), SETTLE_TOLERANCE) if worst else ''
+            if stage['name'] == 'close' and self.spec.pad_geoms:
+                loads = self._pad_check(task['object'])['pad_normal_force_n']
+                coupling = self.state.get('coupling_error') or {}
+                skew = max((abs(value) for value in coupling.values()), default=0.)
+                details += ' (pad loads left %.3f N, right %.3f N; maximum follower error %.4f rad)' % (
+                    loads['left'], loads['right'], skew)
+            return self._finish('failed', 'stage %s timed out%s' % (stage['name'], details))
         fingers = self._stage_fingers(stage)
         if task['step'] < len(stage['targets']):
             self._send(dict(stage['targets'][task['step']], **fingers))

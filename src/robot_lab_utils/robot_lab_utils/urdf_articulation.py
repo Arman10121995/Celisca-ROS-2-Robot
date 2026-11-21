@@ -466,7 +466,9 @@ class ArticulationROS:
         if now-self.last_publish >= .1:
             state = self.contract.state()
             if self.grip_contacts is not None:
-                state['grip_contacts'] = self.grip_contacts()
+                contacts = self.grip_contacts()
+                if contacts is not None:
+                    state['grip_contacts'] = contacts
             if self.motion_planner is not None:
                 state['planning'] = self.motion_planner.state()
                 state['base_inhibited'] = self.base_inhibited

@@ -134,10 +134,16 @@ def wheel_friction_axes(config):
 
 
 def bullet_contact_parameters(config):
-    """Explicit per-plant friction solver choice; legacy profiles are unchanged."""
+    """Explicit per-plant Bullet solver options."""
+    options = {}
     cone = config.get('pybullet_enable_cone_friction')
-    if cone is None:
-        return {}
-    if not isinstance(cone,bool):
-        raise ValueError('pybullet_enable_cone_friction must be a boolean')
-    return {'enableConeFriction':int(cone)}
+    if cone is not None:
+        if not isinstance(cone, bool):
+            raise ValueError('pybullet_enable_cone_friction must be a boolean')
+        options['enableConeFriction'] = int(cone)
+    iterations = config.get('pybullet_noncontact_iterations')
+    if iterations is not None:
+        if type(iterations) is not int or iterations < 1:
+            raise ValueError('pybullet_noncontact_iterations must be a positive integer')
+        options['numNonContactInnerIterations'] = iterations
+    return options
