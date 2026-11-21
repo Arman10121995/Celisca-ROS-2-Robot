@@ -846,12 +846,15 @@ class PickPlace(Node):
                                     % (drift, ', '.join('%+.3f' % v for v in offset)))
             if self.spec.pad_geoms and self._pads_lost(phase, task['object']):
                 return self._finish('failed', 'Both pads must keep contact with the carried object')
-        if self.state.get('active'):
-            # Never drive a moving arm: wait for it to settle.
+        if self.state.get('base_inhibited', self.state.get('active')):
+            # The plant inhibits every drive command while the held arm moves.
+            # An already-owned Nav2 goal can wait through that pause. Direct
+            # driving and new goals need the interlock to clear first.
             interlock['drive_ticks_with_articulation_active'] += 1
-            if phase.get('nav_goal') is not None:
-                return self._finish('failed', 'the arm moved during a Nav2 leg')
-            return self._twist(0.0, 0.0)
+            if phase.get('nav_goal') is None:
+                return self._twist(0.0, 0.0)
+            if self.state.get('holding') is not True or self.state.get('coupling_inhibited'):
+                return self._finish('failed', 'Articulation interlock during a Nav2 leg')
         x, y, _z, yaw = self.base_pose
         if phase['waypoint'] < len(phase['waypoints']) and phase['waypoints'][phase['waypoint']].get('nav2'):
             return self._nav2_leg(task, phase, phase['waypoints'][phase['waypoint']])
@@ -947,7 +950,7 @@ class PickPlace(Node):
                     self._finish('failed', 'Base did not settle after Nav2 released the action')
                 return
         x, y, _z, yaw = self.base_pose
-        entry = dict(phase=phase['name'] + '_nav2', status=int(status), handed_over=handed_over,
+        entry = dict(phase=phase['name'] + '_nav2', status=status, handed_over=handed_over,
                      seconds=round(_now() - nav['sent'], 2),
                      goal=[round(target['x'], 3), round(target['y'], 3), round(target['yaw'], 3)],
                      truth=[round(x, 4), round(y, 4), round(yaw, 4)],
@@ -1002,9 +1005,12 @@ class PickPlace(Node):
         return list(hull.exterior.coords)[:-1]
 
     def _set_footprint(self, extra, payload=None):
-        """Costmap footprint (both costmaps): convex hull of the base circle and ``extra`` points."""
-        points = [(NAV_BASE_RADIUS * math.cos(a), NAV_BASE_RADIUS * math.sin(a))
-                  for a in np.linspace(0.0, 2 * math.pi, 16, endpoint=False)] + list(extra or [])
+        """Publish the hull of the configured base and any measured payload bounds."""
+        base = self.mobile.get('nav_base_footprint')
+        if base is None:
+            base = [(NAV_BASE_RADIUS * math.cos(a), NAV_BASE_RADIUS * math.sin(a))
+                    for a in np.linspace(0.0, 2 * math.pi, 16, endpoint=False)]
+        points = [tuple(point) for point in base] + list(extra or [])
         points = sorted(set(points))
 
         def turn(o, a, b):

@@ -160,6 +160,21 @@ The GUI records this Display measurement when the installed model hash
 matches the receipt and its measured lift, custody, release and clearance
 pass the recorded screen checks.
 
+### Navigation follow-up
+
+The first uninterrupted Navigation trial reached the pickup, lifted the
+block 42.9 mm, and got the loaded footprint acknowledged by both local and
+global costmaps. It stopped just after entering Nav2 transit when the held
+arm's motion registered in the base interlock. The prior controller treated
+that transient as an unconditional failure. The new path keeps the exact
+Nav2 goal owned through a held-arm pause and leaves velocity inhibition to
+the simulator. Active arm commands, coupling disagreement and lost payload
+or footprint feedback still stop the task. The F100 Nav2 overlay uses the
+source base outline, with inflation above the measured loaded inscribed
+radius and DWB rates bounded for the payload workflow. The DWB footprint
+critic checks each sampled pose against the active polygon.
+[First Navigation trial](nav-gui-held-interlock.json) · [Nav2 footprint critic](https://docs.nav2.org/jazzy/configuration_and_development/configuration_guide/controller_plugins/dwb_controller/trajectory_critics/obstacle_footprint/).
+
 ## Source and retained diagnostics
 
 The bare arm and its wheel/arm measurements use the existing source pin.

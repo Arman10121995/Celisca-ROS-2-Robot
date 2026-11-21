@@ -119,7 +119,18 @@ def main():
 
     def settle(targets, label, seconds=30.):
         start = time.monotonic()
-        until(lambda: page.ready() and all(abs(measured()[n] - v) < .03 for n, v in targets.items()), seconds, label)
+        sim_start = (page.state or {}).get('grip_contacts', {}).get('sim_time_s')
+        try:
+            until(lambda: page.ready() and all(abs(measured()[n] - v) < .03 for n, v in targets.items()), seconds, label)
+        except TimeoutError:
+            state = page.state or {}
+            sim_end = state.get('grip_contacts', {}).get('sim_time_s')
+            report['settle_timeout'] = dict(step=label, targets=targets, wall_seconds=round(time.monotonic() - start, 2),
+                sim_seconds=round(sim_end - sim_start, 4) if sim_start is not None and sim_end is not None else None,
+                actuator_status=state.get('status'), fault=state.get('fault'),
+                channels={name: {key: channel.get(key) for key in ('target', 'reference', 'measured')}
+                          for name, channel in page.channels().items() if name in targets})
+            raise
         report['steps'].append(dict(step=label, targets=targets, settled_s=round(time.monotonic() - start, 2),
                                     measured={n: round(v, 4) for n, v in measured().items()}))
 
@@ -236,6 +247,7 @@ def main():
             settle({n: 0. for n in names}, 'home after stop', 40.)
             report['passed'] = bool(report['page_selected'] and len(report['rows']) == len(names) and stop_ok)
     except BaseException as exc:
+        report['passed'] = False
         report['error'] = repr(exc)
         report['page_state'] = dict(status=page.status.get(), feedback=page.feedback.get(), owned=page.owned(),
                                     visible=page.visible(), selected=page.selected())

@@ -384,7 +384,7 @@ class URDFArticulation:
                 state_monotonic=time.monotonic(),
                 model_path=self.model_path, model_sha256=self.model_sha256, urdf_sha256=self.urdf_sha256,
                 initialized=self.initialized, status=self.status+('; coupling deviation inhibits base' if coupling_inhibited else ''), fault=self.fault,
-                base_inhibited=self.base_inhibited, active=self.active,
+                base_inhibited=self.base_inhibited, active=self.active, holding=self.holding,
                 qualification='implemented adapter; runtime validation pending',
                 coupling_error=coupling_error, coupling_inhibited=coupling_inhibited, symmetric_grip=self.symmetric_grip,
                 channels=[dict(name=name, mode=spec['mode'], units=('m' if spec['type']=='prismatic' else 'rad')+('/s' if spec['mode']=='velocity' else ''), measured=self.measured.get(name), target=self.targets.get(name), reference=self.references.get(name), measured_velocity=self.velocities.get(name), limits=[spec['lower'],spec['upper']], max_velocity=spec['max_velocity'], coupled=name in self.couplings) for name,spec in self.joints.items()])
@@ -470,6 +470,7 @@ class ArticulationROS:
             if self.motion_planner is not None:
                 state['planning'] = self.motion_planner.state()
                 state['base_inhibited'] = self.base_inhibited
+                state['holding'] = state['holding'] and not self.motion_planner.busy
             self.publisher.publish(self._string(data=json.dumps(state, allow_nan=False)))
             self.last_publish = now
         return targets

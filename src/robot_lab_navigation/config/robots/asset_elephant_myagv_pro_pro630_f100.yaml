@@ -1,0 +1,47 @@
+# Source myAGV Pro roller base envelope. A fetch supplies a measured larger
+# footprint during carry. Keep inflation outside the observed 0.304 m
+# loaded inscribed radius. These DWB limits are for the lab payload workflow.
+global_costmap:
+  global_costmap:
+    ros__parameters:
+      footprint: '[[0.29,0.205],[0.29,-0.205],[-0.29,-0.205],[-0.29,0.205]]'
+      footprint_padding: 0.01
+      inflation_layer:
+        inflation_radius: 0.40
+local_costmap:
+  local_costmap:
+    ros__parameters:
+      footprint: '[[0.29,0.205],[0.29,-0.205],[-0.29,-0.205],[-0.29,0.205]]'
+      footprint_padding: 0.01
+      inflation_layer:
+        inflation_radius: 0.40
+controller_server:
+  ros__parameters:
+    controller_frequency: 10.0
+    min_y_velocity_threshold: 0.001
+    general_goal_checker:
+      xy_goal_tolerance: 0.12
+      yaw_goal_tolerance: 0.10
+    progress_checker:
+      required_movement_radius: 0.04
+      movement_time_allowance: 30.0
+    FollowPath:
+      critics: [RotateToGoal, Oscillation, ObstacleFootprint, GoalAlign, PathAlign, PathDist, GoalDist]
+      ObstacleFootprint.scale: 0.02
+      xy_goal_tolerance: 0.12
+      trans_stopped_velocity: 0.02
+      min_vel_x: 0.0
+      max_vel_x: 0.15
+      min_vel_y: -0.10
+      max_vel_y: 0.10
+      max_speed_xy: 0.15
+      max_vel_theta: 0.30
+      acc_lim_x: 0.2
+      acc_lim_y: 0.2
+      acc_lim_theta: 0.4
+      decel_lim_x: -0.2
+      decel_lim_y: -0.2
+      decel_lim_theta: -0.4
+      vx_samples: 10
+      vy_samples: 5
+      vtheta_samples: 12

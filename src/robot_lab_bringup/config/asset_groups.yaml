@@ -15,7 +15,7 @@ robots:
     name: Elephant Robotics myAGV Pro + myCobot Pro630
     members:
       - {id: asset_elephant_myagv_pro_pro630, label: Official base and arm · physical rollers · declared arm mass/mount estimates}
-      - {id: asset_elephant_myagv_pro_pro630_f100, label: Pro630 with vendor F100 gripper · experimental MuJoCo controls}
+      - {id: asset_elephant_myagv_pro_pro630_f100, label: Pro630 with vendor F100 gripper}
   - id: light_robotics_octopod
     name: Light Robotics octopod
     members: [{id: asset_light_robotics_octopod, label: Source segmented octopod · experimental scripted gait}]

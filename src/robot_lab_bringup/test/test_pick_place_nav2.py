@@ -109,6 +109,7 @@ def test_loaded_nav2_action_requires_two_fresh_shape_receipts(pick_place):
     from robot_lab_utils.footprint_receipts import FootprintReceipts
 
     node = object.__new__(pick_place.PickPlace)
+    node.mobile = {'nav_base_footprint': [[.29, .205], [.29, -.205], [-.29, -.205], [-.29, .205]]}
     node.footprint_receipts = FootprintReceipts(padding=.03)
     node.footprint_pubs = [Mock(), Mock()]
     node._sim_seconds, node._twist = lambda: 10., Mock()
@@ -129,6 +130,45 @@ def test_loaded_nav2_action_requires_two_fresh_shape_receipts(pick_place):
     node._sim_seconds, node._finish = lambda: 13., Mock()
     node._nav2_leg(task, phase, target)
     node._finish.assert_called_once_with('failed', 'Loaded footprint acknowledgement was lost during Nav2 transit')
+
+
+def test_rejected_dock_goal_records_rejection_and_stops(pick_place):
+    node = object.__new__(pick_place.PickPlace)
+    node.amcl_pose, node.base_pose = None, (0., 0., 0., 0.)
+    node._finish = Mock()
+    future = Future()
+    future.set_result(SimpleNamespace(accepted=False))
+    phase = dict(nav_goal=dict(sent=pick_place._now(), future=future, result=None), name='to_object', waypoint=0)
+    task = dict(log=[])
+
+    node._nav2_leg(task, phase, dict(x=2., y=1., yaw=0.))
+
+    assert phase['waypoint'] == 0
+    assert task['log'][0]['status'] == 'rejected'
+    node._finish.assert_called_once_with('failed', 'to_object: Nav2 rejected the goal')
+
+
+def test_held_arm_interlock_leaves_existing_nav2_goal_owned(pick_place):
+    node = object.__new__(pick_place.PickPlace)
+    node.base_pose, node.base_at = (0., 0., 0., 0.), pick_place._now()
+    node._nav2_leg, node._twist, node._finish = Mock(), Mock(), Mock()
+    target = dict(x=2., y=1., yaw=0., nav2=True)
+    phase = dict(started=node.base_at, waypoint=0, waypoints=[target])
+    task = dict(interlock=dict(drive_ticks=0, drive_ticks_with_articulation_active=0))
+    node.state = dict(base_inhibited=True, holding=True)
+
+    node._drive(task, phase)
+    node._twist.assert_called_once_with(0., 0.)
+    node._nav2_leg.assert_not_called()
+    node._twist.reset_mock()
+    phase['nav_goal'] = dict()
+    node._drive(task, phase)
+    node._nav2_leg.assert_called_once_with(task, phase, target)
+    node._twist.assert_not_called()
+
+    node.state['holding'] = False
+    node._drive(task, phase)
+    node._finish.assert_called_once_with('failed', 'Articulation interlock during a Nav2 leg')
 
 
 def test_stop_keeps_the_loaded_costmap_polygon(pick_place, tmp_path):
