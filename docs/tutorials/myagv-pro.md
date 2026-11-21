@@ -135,7 +135,10 @@ candidate defaults to a 50 mm lift after reaching over the short block.
 It uses the measured pad loads and object motion to check the grasp, and
 stops if it loses custody on the way to the drop table. The variant uses
 the same saved occupancy grid as the original fetch lab because the
-tables and floor have the same geometry. Transport remains experimental.
+tables and floor have the same geometry. One run measured an unsupported
+46.3 mm lift and delivery to the drop table, then stopped at place planning.
+The complete fetch workflow remains experimental.
+[Loaded custody evidence](../status/evidence/r143-pro630-f100-2026-11-20/README.md#loaded-custody-and-transport-november-21).
 
 ## How control and sensing connect
 

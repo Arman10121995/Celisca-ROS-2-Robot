@@ -2331,9 +2331,9 @@ tasks:
       R14.3:
         acceptance_ref: ROADMAP.md R14.3
         owner: codex
-        active_scope: 'Codex is resuming the metered MuJoCo fetch run and repairing the hosted effort-budget checks for the passive linkage.'
+        active_scope: 'Codex owns the MuJoCo short-block place planning and measured release follow-up.'
         state: partial
-        updated: '2026-11-20'
+        updated: '2026-11-21'
         title: Official myAGV Pro plus myCobot Pro630 mobile manipulator
         gripper_20261120: 'Codex integrated the official F100 mount and linkage from b8176c2 in a same-family variant. One bounded shaft and five measured passive followers. MuJoCo nav_empty Display Open/Close passes. Separate CAD pad contacts, a nominal grasp frame and a millimetre opening command are implemented. The first loaded fixture lost its block.'
         flange_20261120: 'Both variants completed a small Plan pose and Execute plan move through the normal MuJoCo nav_empty GUI. The F100 moved 8.42 mm with 0.032 mm endpoint error. The bare arm moved 8.34 mm with 0.115 mm error. An earlier execution stopped at the snapshot guard. The planner keeps the deepest resting contact for each pair and uses a 0.2 planned slew scale for these profiles.'
@@ -2341,7 +2341,8 @@ tasks:
         fetch_candidate_20261120: 'An opt-in MuJoCo Display fetch candidate uses the CAD tool frame, calibrated aperture closure and bilateral force on the selected object. The short-block Mobile fetch lab variant reuses the equal static occupancy grid. A private pickup plan reaches and lifts kinematically. Physical lift, carry and release are unqualified.'
         live_fetch_20261120: 'Normal GUI MuJoCo Display on mobile_fetch_lab_f100 docked, approached, and closed. The loose block slid approximately 38 mm across the pads and the node stopped before lift on zero bilateral load. The 0.10 rad/s metered candidate reached closure through the normal GUI. A competing simulator trial started and this run stopped cleanly before loaded lift.'
         gui_shutdown_20261120: 'End session still stops its owned process when the ROS context closes before neutral can publish. Two focused cleanup tests pass.'
-        next_action: 'Stabilize bilateral contact and qualify pickup, carry and supported release on the short-block fixture. Then link Nav2 transport and port the mechanical coupling to additional backends. Preserve the original Pro630 drive and joint receipts from MuJoCo, PyBullet and Isaac.'
+        loaded_custody_20261121: 'Normal GUI MuJoCo Display on mobile_fetch_lab_f100 lifted the 40 g block 46.3 mm unsupported and carried it to the drop table. Hold drift was 0.4 mm. Maximum carry drift was 19.1 mm. Place planning stopped at no IK above the support. The isolated CAD bench established a tuned effective transmission inertia within the existing shaft effort limit.'
+        next_action: 'Finish place planning and measured release and clearance. Then link Nav2 transport and port the mechanical coupling to additional backends. Preserve the original Pro630 drive and joint receipts from MuJoCo, PyBullet and Isaac.'
         evidence: [docs/status/evidence/myagv-pro-2026-11-12/README.md, docs/status/evidence/r143-pro630-f100-2026-11-20/README.md, docs/tutorials/myagv-pro.md]
       R14.4:
         acceptance_ref: ROADMAP.md R14.4

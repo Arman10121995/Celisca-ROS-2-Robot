@@ -72,8 +72,32 @@ automated closing. Direct Open and Close use their existing limits.
 The metered configuration reached the close stage through the normal GUI.
 Another qualification started on the Jetson, so this trial ended during
 closure. The owned launch exited with code 0. The metered configuration's
-loaded lift and transport remain unmeasured.
+loaded lift and transport were measured in the later trials below.
 [Metered trial](gui-metered-fetch-interrupted.json).
+
+## Loaded custody and transport, November 21
+
+Three subsequent runs used the normal GUI in MuJoCo Display. The first
+metered run kept the block near its starting pose, but the jaw could not
+meet the angular settling threshold. The next run used three fresh
+bilateral force samples and a 3 mm block stability window to admit the
+lift. The block still stayed on the table.
+
+An isolated top-down fixture with the same CAD linkage tested effective
+transmission inertia as a MuJoCo tuning parameter. Adding 0.003 kg·m² at
+the shaft and 0.00015 kg·m² at each follower lifted the 40 g block by
+43.54 mm with both pads in contact for 250 of 250 lift-hold samples.
+Peak shaft effort was 0.293 Nm within the existing 0.8 Nm limit. The values
+are Lab simulation tuning. [Bench sweep](cad-topdown-inertia-sweep.jsonl).
+
+The full robot with that tuning lifted the block 46.3 mm unsupported.
+Drift during the lift hold was 0.4 mm, with roughly 2.43 N on each pad.
+It completed the straight carry leg to the drop table with a maximum
+19.1 mm payload drift in the base frame. The place planner then rejected
+the measured arrival pose with `no IK above the support`. The owned
+launch exited cleanly. This run establishes loaded pickup and carry on
+this fixture. Supported release remains open.
+[GUI measurements, exact commands and terminal samples](gui-fetch-custody-2026-11-21.json).
 
 ## Source and retained diagnostics
 

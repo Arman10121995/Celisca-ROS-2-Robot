@@ -30,6 +30,37 @@ def test_calibrated_close_meters_only_the_shaft_during_closure(pick_place):
     assert node._stage_fingers(release) == release['fingers']
 
 
+def test_pad_settling_needs_independent_bilateral_load_and_stable_payload(pick_place, monkeypatch):
+    node = object.__new__(pick_place.PickPlace)
+    node.task = {'object': 'block'}
+    node.min_pad_force = .1
+    node.truth, node.truth_at = {'block': [0., 0., .5]}, 10.
+    monkeypatch.setattr(pick_place, '_now', lambda: 10.)
+    stage = {}
+    contacts = {'sim_time_s': 2., 'normal_force_n': {'block': {'left': .9, 'right': 1.1}}}
+    node.state = {'grip_contacts': contacts}
+    for _ in range(4):
+        assert not node._pads_settled(stage)
+    contacts['sim_time_s'] = 2.1
+    assert not node._pads_settled(stage)
+    contacts['sim_time_s'] = 2.2
+    node.truth['block'] = [.008, 0., .5]
+    assert not node._pads_settled(stage)
+    contacts['sim_time_s'] = 2.3
+    assert not node._pads_settled(stage)
+    contacts['sim_time_s'] = 2.4
+    assert node._pads_settled(stage)
+    contacts['normal_force_n']['block']['right'] = 0.
+    assert not node._pads_settled(stage)
+    assert not stage['pad_settle']
+    assert not node._pads_lost(stage, 'block')
+    monkeypatch.setattr(pick_place, '_now', lambda: 10.5)
+    assert node._pads_lost(stage, 'block')
+    contacts['normal_force_n']['block']['right'] = .5
+    assert not node._pads_lost(stage, 'block')
+    assert 'pads_lost_at' not in stage
+
+
 def test_stop_waits_for_late_nav2_acceptance_and_terminal_cancel(pick_place):
     node = object.__new__(pick_place.PickPlace)
     nav = dict(future=Future(), result=None)

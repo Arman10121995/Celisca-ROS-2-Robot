@@ -1,0 +1,605 @@
+[
+  {
+    "run": 5,
+    "launch_returncode": 0,
+    "command": "ros2 launch robot_lab_bringup simulated_robot.launch.py mode:=display map_name:=mobile_fetch_lab_f100 robot_model:=asset_elephant_myagv_pro_pro630_f100 simulator:=mujoco gui:=false perception:=none allow_experimental_assets:=true",
+    "result": {
+      "schema": "robot_lab.pick_place_result.v1",
+      "outcome": "failed",
+      "passed": false,
+      "message": "stage close timed out (worst joint pro630_joint1_to_base 0.0011 rad from its target; 0 over the 0.01 rad settle tolerance)",
+      "request": {
+        "object": "fetch_block",
+        "support": "drop_table",
+        "lift": 0.05,
+        "pose_source": "truth"
+      },
+      "object": "fetch_block",
+      "support": "drop_table",
+      "object_start": [
+        1.3599999995926797,
+        -4.875345734059512e-10,
+        0.5448922445797842
+      ],
+      "plan": {
+        "transit": "straight",
+        "pick_base": [
+          0.89,
+          -0.0,
+          0.0
+        ],
+        "place_base": [
+          0.45,
+          1.49,
+          1.571
+        ],
+        "place_xy": [
+          0.45,
+          1.96
+        ],
+        "grasp_width_m": 0.04,
+        "pick_base_measured": [
+          0.8836,
+          -0.0002,
+          -0.0038,
+          0.0031
+        ]
+      },
+      "stages": [
+        {
+          "phase": "to_object_arrived",
+          "final_pose": [
+            0.8836,
+            -0.0002,
+            -0.0038,
+            0.0031
+          ]
+        },
+        {
+          "phase": "to_object",
+          "seconds": 12.17
+        },
+        {
+          "stage": "open",
+          "seconds": 2.49,
+          "object_truth": [
+            1.36,
+            -0.0,
+            0.5449
+          ],
+          "tcp_estimate": [
+            0.8829,
+            0.2851,
+            1.071
+          ],
+          "passed": true
+        },
+        {
+          "stage": "above_object",
+          "seconds": 8.08,
+          "object_truth": [
+            1.36,
+            -0.0,
+            0.5449
+          ],
+          "tcp_estimate": [
+            1.3597,
+            -0.0005,
+            0.6036
+          ],
+          "passed": true
+        },
+        {
+          "stage": "down_to_grasp",
+          "seconds": 1.17,
+          "object_truth": [
+            1.3596,
+            -0.0001,
+            0.5447
+          ],
+          "tcp_estimate": [
+            1.3608,
+            0.0,
+            0.5764
+          ],
+          "passed": true
+        }
+      ],
+      "mobile": true,
+      "interlock": {
+        "max_base_speed_in_arm_phases": 0.0015135254471182772,
+        "max_base_turn_in_arm_phases": 0.0007777695201892869,
+        "drive_ticks_with_articulation_active": 7,
+        "drive_ticks": 112
+      },
+      "transit": "straight",
+      "pose_source": "truth",
+      "perceived": null,
+      "phase": "pick",
+      "seconds": 55.02,
+      "plant_id": "809dc3bbf78944a09d2989513b79d849",
+      "model_sha256": "bf9ef87b82586316cb4ff59956cd87179c1f681bd352f46777468aebd2bb082d",
+      "finished": "2026-11-20T23:57:27",
+      "receipt": "/workspace/molar/robot_lab_runtime/pick-place/20261120T235727_fetch_block.json",
+      "last_sample": {
+        "t": 55.01,
+        "stage": "close",
+        "object": [
+          1.3653,
+          -0.0052,
+          0.5451,
+          0.9998,
+          0.0095,
+          0.0171,
+          -0.0
+        ],
+        "fingers": [
+          0.3305,
+          0.3357,
+          0.336,
+          0.334,
+          0.3356,
+          0.3348
+        ],
+        "finger_references": [
+          0.3121,
+          0.3121,
+          0.3121,
+          0.3121,
+          0.3121,
+          0.3121
+        ],
+        "pad_normal_force_n": {
+          "left": 1.450459246732633,
+          "right": 2.1374879729287777
+        },
+        "base": [
+          0.8853,
+          0.0001,
+          -0.0037,
+          0.0021
+        ],
+        "object_in_base": [
+          0.4801,
+          -0.0063,
+          0.5489
+        ]
+      },
+      "sample_count": 100
+    }
+  },
+  {
+    "run": 6,
+    "launch_returncode": 0,
+    "command": "ros2 launch robot_lab_bringup simulated_robot.launch.py mode:=display map_name:=mobile_fetch_lab_f100 robot_model:=asset_elephant_myagv_pro_pro630_f100 simulator:=mujoco gui:=false perception:=none allow_experimental_assets:=true",
+    "result": {
+      "schema": "robot_lab.pick_place_result.v1",
+      "outcome": "failed",
+      "passed": false,
+      "message": "stage lift timed out (worst joint pro630_joint1_to_base 0.0000 rad from its target; 0 over the 0.01 rad settle tolerance)",
+      "request": {
+        "object": "fetch_block",
+        "support": "drop_table",
+        "lift": 0.05,
+        "pose_source": "truth"
+      },
+      "object": "fetch_block",
+      "support": "drop_table",
+      "object_start": [
+        1.3599999995414755,
+        -5.488226446092025e-10,
+        0.5448922445797842
+      ],
+      "plan": {
+        "transit": "straight",
+        "pick_base": [
+          0.89,
+          -0.0,
+          0.0
+        ],
+        "place_base": [
+          0.45,
+          1.49,
+          1.571
+        ],
+        "place_xy": [
+          0.45,
+          1.96
+        ],
+        "grasp_width_m": 0.04,
+        "pick_base_measured": [
+          0.8838,
+          -0.0002,
+          -0.0037,
+          0.0045
+        ]
+      },
+      "stages": [
+        {
+          "phase": "to_object_arrived",
+          "final_pose": [
+            0.8838,
+            -0.0002,
+            -0.0037,
+            0.0045
+          ]
+        },
+        {
+          "phase": "to_object",
+          "seconds": 14.17
+        },
+        {
+          "stage": "open",
+          "seconds": 2.53,
+          "object_truth": [
+            1.36,
+            -0.0,
+            0.5449
+          ],
+          "tcp_estimate": [
+            0.883,
+            0.2851,
+            1.0711
+          ],
+          "passed": true
+        },
+        {
+          "stage": "above_object",
+          "seconds": 8.1,
+          "object_truth": [
+            1.36,
+            -0.0,
+            0.5449
+          ],
+          "tcp_estimate": [
+            1.3612,
+            -0.0002,
+            0.606
+          ],
+          "passed": true
+        },
+        {
+          "stage": "down_to_grasp",
+          "seconds": 1.36,
+          "object_truth": [
+            1.3599,
+            -0.0001,
+            0.5445
+          ],
+          "tcp_estimate": [
+            1.3606,
+            -0.0001,
+            0.5762
+          ],
+          "passed": true
+        },
+        {
+          "stage": "close",
+          "seconds": 8.14,
+          "object_truth": [
+            1.3671,
+            0.002,
+            0.5452
+          ],
+          "tcp_estimate": [
+            1.3605,
+            0.0007,
+            0.576
+          ],
+          "finger_positions": [
+            0.33210645521546434,
+            0.3279834634682558,
+            0.32689891107319324,
+            0.334749437169627,
+            0.3280042468185233,
+            0.32789958282910275
+          ],
+          "passed": true,
+          "pad_normal_force_n": {
+            "left": 3.5435839314848145,
+            "right": 1.8502331867766468
+          },
+          "reason": ""
+        }
+      ],
+      "mobile": true,
+      "interlock": {
+        "max_base_speed_in_arm_phases": 0.002171997018771096,
+        "max_base_turn_in_arm_phases": 0.002181728612156245,
+        "drive_ticks_with_articulation_active": 15,
+        "drive_ticks": 129
+      },
+      "transit": "straight",
+      "pose_source": "truth",
+      "perceived": null,
+      "phase": "pick",
+      "seconds": 65.09,
+      "plant_id": "e55e156b62254404ba4291d822fdf489",
+      "model_sha256": "bf9ef87b82586316cb4ff59956cd87179c1f681bd352f46777468aebd2bb082d",
+      "finished": "2026-11-21T00:01:15",
+      "receipt": "/workspace/molar/robot_lab_runtime/pick-place/20261121T000115_fetch_block.json",
+      "last_sample": {
+        "t": 64.87,
+        "stage": "lift",
+        "object": [
+          1.3588,
+          0.0059,
+          0.5449,
+          0.9999,
+          -0.0,
+          0.0,
+          0.0114
+        ],
+        "fingers": [
+          0.3121,
+          0.3121,
+          0.3121,
+          0.3121,
+          0.3121,
+          0.3121
+        ],
+        "finger_references": [
+          0.3121,
+          0.3121,
+          0.3121,
+          0.3121,
+          0.3121,
+          0.3121
+        ],
+        "pad_normal_force_n": {
+          "left": 0.0,
+          "right": 0.0
+        },
+        "base": [
+          0.8868,
+          0.0001,
+          -0.0038,
+          0.0023
+        ],
+        "object_in_base": [
+          0.472,
+          0.0047,
+          0.5487
+        ]
+      },
+      "sample_count": 119
+    }
+  },
+  {
+    "run": 7,
+    "launch_returncode": 0,
+    "command": "ros2 launch robot_lab_bringup simulated_robot.launch.py mode:=display map_name:=mobile_fetch_lab_f100 robot_model:=asset_elephant_myagv_pro_pro630_f100 simulator:=mujoco gui:=false perception:=none allow_experimental_assets:=true",
+    "result": {
+      "schema": "robot_lab.pick_place_result.v1",
+      "outcome": "failed",
+      "passed": false,
+      "message": "place not planned: no IK above the support. Loaded footprint retained. Restart the simulation before another fetch.",
+      "request": {
+        "object": "fetch_block",
+        "support": "drop_table",
+        "lift": 0.05,
+        "pose_source": "truth"
+      },
+      "object": "fetch_block",
+      "support": "drop_table",
+      "object_start": [
+        1.3599999995745005,
+        -5.092943909594775e-10,
+        0.5448922445797842
+      ],
+      "plan": {
+        "transit": "straight",
+        "pick_base": [
+          0.89,
+          -0.0,
+          0.0
+        ],
+        "place_base": [
+          0.45,
+          1.49,
+          1.571
+        ],
+        "place_xy": [
+          0.45,
+          1.96
+        ],
+        "grasp_width_m": 0.04,
+        "pick_base_measured": [
+          0.8837,
+          -0.0001,
+          -0.0038,
+          0.0012
+        ]
+      },
+      "stages": [
+        {
+          "phase": "to_object_arrived",
+          "final_pose": [
+            0.8837,
+            -0.0001,
+            -0.0038,
+            0.0012
+          ]
+        },
+        {
+          "phase": "to_object",
+          "seconds": 12.58
+        },
+        {
+          "stage": "open",
+          "seconds": 2.42,
+          "object_truth": [
+            1.36,
+            -0.0,
+            0.5449
+          ],
+          "tcp_estimate": [
+            0.8834,
+            0.2852,
+            1.071
+          ],
+          "passed": true
+        },
+        {
+          "stage": "above_object",
+          "seconds": 7.89,
+          "object_truth": [
+            1.36,
+            -0.0,
+            0.5449
+          ],
+          "tcp_estimate": [
+            1.3604,
+            0.0009,
+            0.6031
+          ],
+          "passed": true
+        },
+        {
+          "stage": "down_to_grasp",
+          "seconds": 1.17,
+          "object_truth": [
+            1.3598,
+            0.0001,
+            0.5446
+          ],
+          "tcp_estimate": [
+            1.3608,
+            -0.0001,
+            0.5763
+          ],
+          "passed": true
+        },
+        {
+          "stage": "close",
+          "seconds": 7.63,
+          "object_truth": [
+            1.3647,
+            0.0001,
+            0.5455
+          ],
+          "tcp_estimate": [
+            1.3602,
+            0.0,
+            0.5761
+          ],
+          "finger_positions": [
+            0.34698848704087054,
+            0.3469865339860234,
+            0.3469822094747827,
+            0.34698915496660204,
+            0.34698654707590487,
+            0.3469862165407414
+          ],
+          "passed": true,
+          "pad_normal_force_n": {
+            "left": 3.8765496168144242,
+            "right": 2.30054192252609
+          },
+          "reason": ""
+        },
+        {
+          "stage": "lift",
+          "seconds": 3.47,
+          "object_truth": [
+            1.3665,
+            0.0004,
+            0.5912
+          ],
+          "tcp_estimate": [
+            1.3586,
+            0.0,
+            0.6234
+          ],
+          "passed": true,
+          "rise_m": 0.0463,
+          "hold_drift_m": 0.0004,
+          "reason": "",
+          "pad_normal_force_n": {
+            "left": 2.433466952338287,
+            "right": 2.4415167661123958
+          }
+        },
+        {
+          "phase": "pick",
+          "seconds": 23.57
+        },
+        {
+          "phase": "carry_arrived",
+          "final_pose": [
+            0.4511,
+            1.4816,
+            -0.0038,
+            1.5917
+          ],
+          "max_carry_drift_m": 0.0191
+        },
+        {
+          "phase": "carry",
+          "seconds": 120.11
+        }
+      ],
+      "mobile": true,
+      "interlock": {
+        "max_base_speed_in_arm_phases": 0.0019087405431839292,
+        "max_base_turn_in_arm_phases": 0.001522354146309039,
+        "drive_ticks_with_articulation_active": 425,
+        "drive_ticks": 1223
+      },
+      "transit": "straight",
+      "pose_source": "truth",
+      "perceived": null,
+      "phase": "place",
+      "seconds": 157.94,
+      "plant_id": "1ddc81818cb041349b8841772d2c4616",
+      "model_sha256": "bf9ef87b82586316cb4ff59956cd87179c1f681bd352f46777468aebd2bb082d",
+      "finished": "2026-11-21T00:06:34",
+      "receipt": "/workspace/molar/robot_lab_runtime/pick-place/20261121T000634_fetch_block.json",
+      "last_sample": {
+        "t": 155.84,
+        "stage": "carry",
+        "object": [
+          0.442,
+          1.9623,
+          0.5811,
+          0.6989,
+          0.0023,
+          0.0098,
+          0.7152
+        ],
+        "fingers": [
+          0.3361,
+          0.3361,
+          0.3361,
+          0.3362,
+          0.3361,
+          0.3361
+        ],
+        "finger_references": [
+          0.3121,
+          0.3361,
+          0.3361,
+          0.3361,
+          0.3361,
+          0.3361
+        ],
+        "pad_normal_force_n": {
+          "left": 2.4217683065521416,
+          "right": 2.4273171902178157
+        },
+        "base": [
+          0.4511,
+          1.4816,
+          -0.0038,
+          1.5915
+        ],
+        "object_in_base": [
+          0.4808,
+          -0.0008,
+          0.5849
+        ]
+      },
+      "sample_count": 287
+    }
+  }
+]

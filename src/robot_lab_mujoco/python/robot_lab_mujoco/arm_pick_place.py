@@ -528,20 +528,27 @@ def _plan_pick_at(scene, current, obj, tool_yaw, width, approach, lift, seeds):
 
 
 def plan_place(scene: ArmScene, current: Dict[str, float], obj: Box, support: Box, *, place_xy=None,
-               approach=0.10, lift=0.10, seeds: Sequence[Dict[str, float]] = (), grasp_width=0.):
+               approach=0.10, lift=0.10, seeds: Sequence[Dict[str, float]] = (), grasp_width=0.,
+               measured_fingers: Optional[Dict[str, float]] = None):
     """Stages over the support -> down to the place height -> open -> retreat up.
 
     The scene must already hold the object (``ArmScene.attach``) at the arm
     pose ``current``. The object is set down at ``place_xy`` (default: the
     support's centre) on the support's top, keeping its pose relative to the
     tool; the tool stays pointing straight down.
+
+    A calibrated jaw may stop against the object before reaching its commanded
+    angle. Plan the loaded motion at the measured geometry while retaining the
+    closing reference for custody.
     """
     spec = scene.spec
     if scene.attached is None:
         raise PlanningError('the scene does not hold the object')
     open_f = {n: spec.finger_open for n in spec.finger_joints}
     closed = spec.closing_targets(grasp_width)
-    holding_f = spec.closing_targets(grasp_width, squeeze=0.) if spec.aperture else open_f
+    holding_f = open_f
+    if spec.aperture:
+        holding_f = measured_fingers if measured_fingers is not None else spec.closing_targets(grasp_width, squeeze=0.)
     scene.set_joints(dict(current, **holding_f))
     _, tool_rotation = scene.tcp()
     tool_yaw = math.atan2(tool_rotation[1, 0], tool_rotation[0, 0])

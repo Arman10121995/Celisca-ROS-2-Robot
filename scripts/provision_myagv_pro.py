@@ -217,15 +217,15 @@ def provision(store, download=False, variant='fortress'):
             finger_open=1., min_object_width=.035, max_object_width=.048,
             default_approach=.06, default_lift=.05,
             arm_seeds=[[-.188, 1.125, -.641, 1.086, -1.571, 2.151]],
-            mobile=dict(reach=.47, base_radius=.37, place_inset=.06, dock_position_tolerance=.01))
+            mobile=dict(reach=.47, place_reach=.445, base_radius=.37, place_inset=.06, dock_position_tolerance=.01))
         profile.update(supported_simulators=['mujoco'], experimental_modes_by_simulator={'mujoco':['display']},
             experimental_asset_options={'pick_place': pick_place},
             features=[*profile['features'],'gripper'], notes=profile['notes']+
             ' Vendor F100 mount and one bounded jaw actuator with five linked followers. '
             'Compound finger collisions and a nominal grasp frame are derived from the source CAD. '
-            'The joint effort, rate and damping are declared simulation estimates. A contact-checked fetch candidate '
-            'requires the experimental workflows option. Transport is unqualified.')
-        changes.extend(('vendor F100 mount and linkage', 'declared bounded F100 simulation servo',
+            'The joint effort, rate and damping are declared simulation estimates. The experimental short-block fetch '
+            'has measured pickup and carry in MuJoCo Display. Supported release and Nav2 transit remain unqualified.')
+        changes.extend(('vendor F100 mount and linkage', 'bounded F100 servo and MuJoCo transmission inertia',
                         'source CAD finger hulls, separate pad contacts, and nominal grasp frame'))
     receipt=dict(repository=source['repository'],source_id=source['id'],revision=source['revision'],license='BSD-3-Clause',
         original=str(root/entry),source_sha256=digest(root/entry),source_expanded_sha256=digest(target/'source-expanded.urdf'),

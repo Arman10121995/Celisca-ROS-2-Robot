@@ -558,7 +558,15 @@ def add_mujoco_articulation_actuators(mjcf, contract):
     if actuator is None:
         actuator = ET.SubElement(root, 'actuator')
     existing = {child.get('joint') for child in actuator}
-    joints = {joint.get('name'): joint for joint in root.iter('joint')}
+    joints = {joint.get('name'): joint for joint in root.findall('worldbody//joint')}
+    armature = contract.config.get('mujoco_joint_armature', {})
+    if not isinstance(armature, dict) or set(armature)-contract.joints.keys():
+        raise ValueError('MuJoCo armature must name configured articulation joints')
+    for name, value in armature.items():
+        if (name not in joints or isinstance(value, bool) or not isinstance(value, (int, float))
+                or not math.isfinite(value) or value < 0.):
+            raise ValueError('Invalid MuJoCo armature for '+name)
+        joints[name].set('armature', str(value))
     for name, spec in contract.joints.items():
         if name in existing:
             raise ValueError('Articulation joint already controlled: '+name)

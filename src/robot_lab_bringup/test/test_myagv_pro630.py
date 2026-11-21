@@ -96,8 +96,13 @@ def test_vendor_f100_preserves_the_mount_and_normalizes_follower_coordinates(com
     output.write_text(ET.tostring(model, encoding='unicode'))
     contract = URDFArticulation(config, output.read_text(), output)
     assert len(contract.masters) == 7 and len(contract.joints) == 12
-    actuators = ET.fromstring(add_mujoco_articulation_actuators('<mujoco/>', contract)).findall('actuator/general')
-    assert {item.get('joint') for item in actuators} == set(contract.masters)
+    fixture = '<mujoco><worldbody><body>' + ''.join(
+        f'<joint name="{name}"/>' for name in contract.joints) + '</body></worldbody></mujoco>'
+    compiled = ET.fromstring(add_mujoco_articulation_actuators(fixture, contract))
+    assert {item.get('joint') for item in compiled.findall('actuator/general')} == set(contract.masters)
+    expected = {leader: .003, **dict.fromkeys(contract.couplings, .00015)}
+    assert {item.get('name'): float(item.get('armature'))
+            for item in compiled.findall('worldbody//joint[@armature]')} == expected
 
 
 @pytest.mark.parametrize('limits', [[.2, .2], [.1, .5], [0, .1], [-.1, .1]])

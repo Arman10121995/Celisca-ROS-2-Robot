@@ -104,6 +104,10 @@ STAGE_TIMEOUT = 30.0    # s per stage
 FINGER_STILL_WINDOW = 0.5   # s: fingers count as stopped when they move
 FINGER_STILL_SPAN = 0.0005  # m (or rad) less than this within the window
 CALIBRATED_CLOSE_RATE = 0.10  # rad/s near a loose object
+PAD_SETTLE_SAMPLES = 3
+PAD_SETTLE_MAX_GAP = 0.25  # s between independent contact samples
+PAD_SETTLE_DRIFT = 0.003  # m over the contact window
+PAD_LOSS_TIMEOUT = 0.5  # s of continuous loss of bilateral contact
 STATE_STALE = 1.0       # s
 # Base driving (mobile profiles): below TIAGo's 0.2 m/s, 0.4 rad/s limits.
 DRIVE_SPEED = 0.15      # m/s
@@ -463,7 +467,8 @@ class PickPlace(Node):
 
     def _place_standoff(self, task, robot_xy):
         from robot_lab_mujoco.arm_pick_place import place_standoff
-        return place_standoff(self.supports[task['support']], robot_xy, self.mobile['place_inset'], self.mobile['reach'])
+        reach = self.mobile.get('place_reach', self.mobile['reach'])
+        return place_standoff(self.supports[task['support']], robot_xy, self.mobile['place_inset'], reach)
 
     def _route(self, task, goal, start, back_off, clearance):
         """Waypoints start -> (back off) -> run-up point -> goal; checked against every table.
@@ -681,12 +686,13 @@ class PickPlace(Node):
             # The object's planned pose relative to the tool at the grasp.
             task['held_in_tool'] = tuple(np.array(a, dtype=float) for a in scene.attached)
         else:
-            scene.set_joints(dict(start, **{n: float(measured[n]) for n in self.spec.finger_joints}))
+            fingers = {n: float(measured[n]) for n in self.spec.finger_joints}
+            task['plan']['place_base_measured'] = [round(v, 4) for v in base]
+            scene.set_joints(dict(start, **fingers))
             scene.attach()
             planned = plan_place(scene, start, obj, support, place_xy=task['plan']['place_xy'],
-                                 grasp_width=task['plan']['grasp_width_m'], **options)
-            task['plan'].update(place_centre=planned['place_centre'], place_orientation=planned['place_orientation'],
-                                place_base_measured=[round(v, 4) for v in base])
+                                 grasp_width=task['plan']['grasp_width_m'], measured_fingers=fingers, **options)
+            task['plan'].update(place_centre=planned['place_centre'], place_orientation=planned['place_orientation'])
         stages, previous = [], dict(start)
         for stage in planned['stages']:
             targets = synchronised(stage['waypoints'], previous, RATE, PERIOD)
@@ -758,6 +764,9 @@ class PickPlace(Node):
             interlock['max_base_speed_in_arm_phases'] = max(interlock['max_base_speed_in_arm_phases'], self.base_twist[0])
             interlock['max_base_turn_in_arm_phases'] = max(interlock['max_base_turn_in_arm_phases'], self.base_twist[1])
         stage = task['stages'][task['index']]
+        if (self.spec.pad_geoms and stage['name'] in ('lift', 'over_support', 'lower')
+                and self._pads_lost(stage, task['object'])):
+            return self._finish('failed', '%s: lost bilateral contact with the payload' % stage['name'])
         if _now() - task['stage_started'] > STAGE_TIMEOUT:
             measured, final = self.measured(), stage['targets'][-1]
             errors = {n: abs(measured[n] - final[n]) for n in final if n in measured}
@@ -832,11 +841,8 @@ class PickPlace(Node):
                 offset = self._in_base(self.truth[task['object']][:3]) - np.asarray(phase['reference'])
                 return self._finish('failed', 'object moved %.3f m relative to the base while carrying (%s)'
                                     % (drift, ', '.join('%+.3f' % v for v in offset)))
-            if self.spec.pad_geoms:
-                if self._pad_check(task['object'])['passed']:
-                    phase.pop('pads_lost_at', None)
-                elif _now() - phase.setdefault('pads_lost_at', _now()) > .5:
-                    return self._finish('failed', 'Both pads must keep contact with the carried object')
+            if self.spec.pad_geoms and self._pads_lost(phase, task['object']):
+                return self._finish('failed', 'Both pads must keep contact with the carried object')
         if self.state.get('active'):
             # Never drive a moving arm: wait for it to settle.
             interlock['drive_ticks_with_articulation_active'] += 1
@@ -1014,7 +1020,7 @@ class PickPlace(Node):
             publisher.publish(polygon)
 
     def _trace(self, task):
-        """One stability sample: base and object truth, fingers and the object in the base frame."""
+        """One stability sample with base pose, object truth and measured joints."""
         task['traced'] = _now()
         measured = self.measured()
         sample = dict(t=round(_now() - task['started'], 2), stage=task.get('stage'),
@@ -1024,6 +1030,7 @@ class PickPlace(Node):
                                          if c['name'] in self.spec.finger_joints and c.get('reference') is not None])
         if self.spec.pad_geoms:
             sample['pad_normal_force_n'] = self._pad_check(task['object'])['pad_normal_force_n']
+            sample['arm_joints'] = {n: round(measured[n], 5) for n in self.spec.arm_joints if n in measured}
         truth = self._tcp_truth()
         if truth is not None:
             sample['tcp_truth'] = [round(float(v), 4) for v in truth]
@@ -1047,7 +1054,10 @@ class PickPlace(Node):
         measured = self.measured()
         final = stage['targets'][-1]
         if any(abs(measured[n] - final[n]) > SETTLE_TOLERANCE for n in final):
+            stage.pop('pad_settle', None)
             return False
+        if self.spec.pad_geoms and stage['name'] in ('close', 'lift', 'over_support', 'lower'):
+            return self._pads_settled(stage)
         # Fingers settle on target, or once stopped (held by the object) after
         # they had time to start moving. Stopped is judged from positions:
         # Bullet's reported finger velocities jitter while squeezing.
@@ -1060,12 +1070,38 @@ class PickPlace(Node):
         stopped = len(history) >= 3 and max(spans) < FINGER_STILL_SPAN
         return on_target or (stopped and _now() - self.task['stage_started'] > 1.0)
 
+    def _pads_settled(self, stage):
+        """Require measured bilateral load on a stable, named payload."""
+        name = self.task['object']
+        pose = self.truth.get(name)
+        stamp = self.state.get('grip_contacts', {}).get('sim_time_s')
+        samples = stage.setdefault('pad_settle', [])
+        if (pose is None or _now()-self.truth_at > PAD_SETTLE_MAX_GAP or self.state.get('coupling_inhibited')
+                or not isinstance(stamp, (int, float)) or not math.isfinite(stamp)
+                or not self._pad_check(name)['passed']):
+            samples.clear()
+            return False
+        if not samples or stamp != samples[-1][0]:
+            if samples and not 0. < stamp-samples[-1][0] <= PAD_SETTLE_MAX_GAP:
+                samples.clear()
+            samples.append((stamp, np.asarray(pose[:3], dtype=float)))
+            del samples[:-PAD_SETTLE_SAMPLES]
+        return len(samples) == PAD_SETTLE_SAMPLES and all(
+            np.linalg.norm(position-samples[0][1]) <= PAD_SETTLE_DRIFT for _stamp, position in samples)
+
     def _pad_check(self, name):
         reading = self.state.get('grip_contacts', {}).get('normal_force_n', {}).get(name, {})
         forces = {side: float(reading.get(side, 0.)) for side in ('left', 'right')}
         passed = all(math.isfinite(load) and load >= self.min_pad_force for load in forces.values())
         return dict(passed=passed, pad_normal_force_n=forces,
                     reason='' if passed else 'both pads did not press the selected object')
+
+    def _pads_lost(self, motion, name):
+        if self._pad_check(name)['passed']:
+            motion.pop('pads_lost_at', None)
+            return False
+        now = _now()
+        return now-motion.setdefault('pads_lost_at', now) >= PAD_LOSS_TIMEOUT
 
     def _check(self, task, stage):
         """Truth checks after a stage; None while a timed observation is still running."""

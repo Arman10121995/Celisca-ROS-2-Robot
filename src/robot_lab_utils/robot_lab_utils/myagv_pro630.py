@@ -295,6 +295,10 @@ def attach_f100(base, articulation, source_root, mesh_dir):
     articulation['home'][leader] = low
     articulation['couplings'] = couplings
     articulation['grip_joints'] = [leader]
+    # Effective inertia of the driven transmission and passive rotating links.
+    # These lab values suppress contact chatter without adding follower motors.
+    armature = {leader: .003, **dict.fromkeys(couplings, .00015)}
+    articulation['mujoco_joint_armature'] = armature
     articulation['grip_presets'] = {leader: {'open': high, 'close': low}}
     articulation['grip_hold_squeeze'] = .025
     articulation['grip_aperture'] = {
@@ -303,7 +307,7 @@ def attach_f100(base, articulation, source_root, mesh_dir):
         side: PREFIX+'gripper_'+side+'1_pad_contact' for side in ('left', 'right')}
     return dict(source_urdf=F100_URDF, source_urdf_sha256=_digest(urdf), resource_sha256=resources,
                 mesh_license_sha256=_digest(source_root/'mycobot_description/LICENSE'),
-                reversed_follower_axes=reversed_axes, lab_servo=caps,
+                reversed_follower_axes=reversed_axes, lab_servo=caps, lab_mujoco_joint_armature_kg_m2=armature,
                 source_mount='joint6_to_gripper_connect', original_followers=5, jaw_collision=jaw_collision,
                 grasp_reference=grasp_reference)
 
